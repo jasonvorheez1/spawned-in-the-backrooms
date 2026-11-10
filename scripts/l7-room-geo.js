@@ -12,9 +12,9 @@ const LINEN = "cdn/texture-white-damask-linen-tablecloth.png";
 export function geometry(ctx) {
   const k = ctx.params?.kind ?? "table", M = ctx.lod <= 2 ? 12 : 7;
   if (k === "table") { // low coffee table, water-swollen veneer, one ring stain
-    ctx.albedo(HARDWOOD); ctx.roughness(0.55); ctx.color("oklch(0.36 0.05 50)");
+    ctx.albedo(HARDWOOD); ctx.roughness(0.55); ctx.color("oklch(0.65 0.05 50)");
     slab(ctx, [0, 0.42, 0], [0.55, 0.025, 0.32]);
-    ctx.color("oklch(0.3 0.04 50)"); slab(ctx, [0, 0.36, 0], [0.5, 0.04, 0.27]);
+    ctx.color("oklch(0.60 0.04 50)"); slab(ctx, [0, 0.36, 0], [0.5, 0.04, 0.27]);
     for (const sx of [-0.47, 0.47]) for (const sz of [-0.24, 0.24]) tube(ctx, [[sx, 0.34, sz], [sx, 0, sz]], [0.03, 0.022], 6);
     ctx.albedo(null); ctx.color("oklch(0.25 0.03 50)"); ctx.roughness(0.9); slab(ctx, [0, 0.12, 0], [0.45, 0.012, 0.22]);
     ctx.color("oklch(0.85 0.02 90)"); ctx.roughness(0.3); tube(ctx, [[0.2, 0.445, 0.05], [0.2, 0.54, 0.05]], [0.04, 0.045], M); // a mug, left
@@ -23,14 +23,14 @@ export function geometry(ctx) {
   }
   if (k === "drawers") { // Wikidot reference photo: central submerged table with pyramid stack of antique bureau drawers
     // 1. Submerged table base with 4 legs and apron
-    ctx.albedo(HARDWOOD); ctx.roughness(0.5); ctx.color("oklch(0.32 0.05 45)");
+    ctx.albedo(HARDWOOD); ctx.roughness(0.5); ctx.color("oklch(0.62 0.05 45)");
     slab(ctx, [0, 0.42, 0], [0.58, 0.025, 0.36]); // table top
     slab(ctx, [0, 0.36, 0], [0.52, 0.035, 0.30]); // apron
     for (const sx of [-0.50, 0.50]) for (const sz of [-0.28, 0.28]) {
       tube(ctx, [[sx, 0.35, sz], [sx, 0, sz]], [0.036, 0.028], 6); // table legs in water
     }
     // 2. Bottom Drawer: Wide antique mahogany bureau drawer with brass pulls
-    ctx.color("oklch(0.30 0.06 42)"); ctx.roughness(0.48);
+    ctx.color("oklch(0.64 0.06 42)"); ctx.roughness(0.48);
     slab(ctx, [0, 0.54, 0], [0.52, 0.09, 0.32]);
     // Brass drop-bail handles & keyhole on bottom drawer
     ctx.albedo(null); ctx.metalness(0.8); ctx.roughness(0.25); ctx.color("oklch(0.75 0.14 85)"); // Brass
@@ -40,7 +40,7 @@ export function geometry(ctx) {
     }
     slab(ctx, [0, 0.57, 0.325], [0.008, 0.015, 0.004]); // brass keyhole
     // 3. Middle Drawer: Stacked antique drawer
-    ctx.albedo(HARDWOOD); ctx.color("oklch(0.28 0.05 40)"); ctx.roughness(0.5);
+    ctx.albedo(HARDWOOD); ctx.color("oklch(0.60 0.05 40)"); ctx.roughness(0.5);
     slab(ctx, [0, 0.72, 0], [0.46, 0.085, 0.28]);
     ctx.albedo(null); ctx.metalness(0.8); ctx.roughness(0.25); ctx.color("oklch(0.75 0.14 85)");
     for (const bx of [-0.22, 0.22]) {
@@ -48,7 +48,7 @@ export function geometry(ctx) {
       tube(ctx, [[bx - 0.02, 0.72, 0.29], [bx, 0.70, 0.296], [bx + 0.02, 0.72, 0.29]], [0.005, 0.005, 0.005], 6);
     }
     // 4. Top Drawer: Dark olive-tinted drawer, angled slightly on top, slightly open
-    ctx.albedo(HARDWOOD); ctx.color("oklch(0.34 0.05 90)"); ctx.roughness(0.65);
+    ctx.albedo(HARDWOOD); ctx.color("oklch(0.62 0.05 90)"); ctx.roughness(0.65);
     slab(ctx, [-0.02, 0.88, 0.04], [0.39, 0.075, 0.24]);
     // Top drawer brass knob pull
     ctx.albedo(null); ctx.metalness(0.85); ctx.roughness(0.25); ctx.color("oklch(0.78 0.14 85)");
@@ -61,7 +61,7 @@ export function geometry(ctx) {
     return;
   }
   if (k === "armoire") { // Wikidot reference photo: tall dark antique wardrobe on the left with open doors, hanging white linen & silver tea service
-    ctx.albedo(HARDWOOD); ctx.roughness(0.48); ctx.color("oklch(0.26 0.04 42)");
+    ctx.albedo(HARDWOOD); ctx.roughness(0.48); ctx.color("oklch(0.62 0.04 42)");
     // Carcass: sides, back, bottom, top crown
     slab(ctx, [-0.56, 1.15, 0], [0.025, 1.05, 0.30]); // left wall
     slab(ctx, [0.56, 1.15, 0], [0.025, 1.05, 0.30]);  // right wall
@@ -77,7 +77,7 @@ export function geometry(ctx) {
     slab(ctx, [0, 0.95, 0], [0.54, 0.018, 0.27]);
     slab(ctx, [0, 1.55, 0], [0.54, 0.018, 0.27]);
     // Left door swung open into room (~55 degrees)
-    ctx.color("oklch(0.28 0.04 42)");
+    ctx.color("oklch(0.64 0.04 42)");
     slab(ctx, [-0.74, 1.18, 0.22], [0.24, 0.82, 0.018]);
     // Right door swung open (~40 degrees)
     slab(ctx, [0.72, 1.18, 0.18], [0.24, 0.82, 0.018]);
@@ -201,7 +201,7 @@ export function geometry(ctx) {
     ctx.albedo(null); ctx.color("oklch(0.14 0.01 240)");
     slab(ctx, [-0.12, 0.42, 0], [0.12, 0.42, 0.42]);
     // Carved hardwood mantel shelf
-    ctx.albedo(HARDWOOD); ctx.roughness(0.55); ctx.color("oklch(0.35 0.06 50)");
+    ctx.albedo(HARDWOOD); ctx.roughness(0.55); ctx.color("oklch(0.63 0.06 50)");
     slab(ctx, [-0.04, 1.42, 0], [0.28, 0.05, 0.84]);
     // Turned wooden candlestick/finial on the mantel
     ctx.smooth(); ctx.color("oklch(0.45 0.08 55)");
