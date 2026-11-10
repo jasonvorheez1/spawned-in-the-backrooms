@@ -26,8 +26,12 @@ export function layDepths(ctx, { sp, bx, cyl }) {
   const floor = (id, x, z, w, d, m = FLOOR) => { bx(id, x, FL - 0.3, z, w, 0.3, d, m); bx(id + "-c", x, CEIL, z, w, 0.18, d, { color: "oklch(0.22 0.01 60)", roughness: 0.95 }); };
   // A: the service tunnel north of the pit, x 7..11, z 89..140
   floor("l11d-a-floor", 9, 114.5, 4.2, 51); W("l11d-a-w", 6.8, 114.5, 0.4, 51); W("l11d-a-e", 11.2, 112.5, 0.4, 47);
-  for (let z = 92; z < 136; z += 4) { bx(`l11d-a-rib-${z}`, 9, CEIL - 0.25, z, 4.4, 0.25, 0.3, PIPE, { physics: "none", castShadow: false, visibleRange: { max: 50 } }); }
-  cyl("l11d-a-pipe", 7.3, CEIL - 0.45, 114.5, 0.12, 0.12, 51, PIPE, { rotation: { pitch: 90 }, physics: "none", castShadow: false });
+  // the bore: a rounded concrete vault drawn just inside the box walls (they stay the colliders)
+  const shell = (id, x, z, params) => sp(id, { feetPosition: { x, y: FL, z }, primitive: { kind: "scripted", script: "scripts/l11-crawl-geo.js", params }, physics: "none", castShadow: false, receiveShadow: true });
+  shell("l11d-a-shell", 9, 89, { len: 47, w: 3.96, spring: 1.9, rise: 1.3, rib: 4, cables: 1 });
+  shell("l11d-b-shell", 7, 140, { len: 39, w: 7.76, spring: 2.1, rise: 1.1, rib: 5, axis: "x", gaps: [[-1, 0, 4.2], [1, 33, 37.2]] });
+  shell("l11d-c-shell", 42, 144, { len: 46, w: 3.96, spring: 1.9, rise: 1.3, rib: 4 });
+  cyl("l11d-a-pipe", 7.3, FL + 2.3, 114.5, 0.12, 0.12, 51, PIPE, { rotation: { pitch: 90 }, physics: "none", castShadow: false });
   [[95, 1], [103, 0], [111, 0.6], [119, 1], [127, 0], [134, 0.8]].forEach(([z, on], i) => bulb(sp, `l11d-a-lamp-${i}`, 9, z, on));
   sp("l11d-a-sign", { feetPosition: { x: 10.95, y: FL + 1.7, z: 92 }, rotation: { yaw: -90 }, vector: "<svg viewBox='0 0 160 60' width='1m'><rect width='160' height='60' fill='#c9b24a'/><rect x='5' y='5' width='150' height='50' fill='none' stroke='#1a1a1a' stroke-width='4'/><text x='80' y='28' font-family='sans-serif' font-size='18' text-anchor='middle' fill='#1a1a1a'>NO TRAINS</text><text x='80' y='48' font-family='sans-serif' font-size='12' text-anchor='middle' fill='#1a1a1a'>SVC TUNNEL 14-N</text></svg>" });
   sp("l11d-a-pallets", { feetPosition: { x: 10, y: FL, z: 109 }, rotation: { yaw: 20 }, model: { id: MODELS.barricade_pallets, forward: "-z" }, physics: { body: "static", collider: "box" } });
@@ -38,7 +42,7 @@ export function layDepths(ctx, { sp, bx, cyl }) {
   sp("l11d-b-water", { feetPosition: { x: 28, y: FL + 0.06, z: 140 }, primitive: { kind: "plane", width: 34, height: 7.6 }, rotation: { pitch: -90 }, material: WATER, castShadow: false });
   for (const x of [15, 23, 31, 39]) sp(`l11d-b-beam-${x}`, { feetPosition: { x, y: FL, z: 136.4 }, model: { id: MODELS.ibeam, forward: "-z" }, physics: { body: "static", collider: "box" }, layout: { box: { min: { x: -0.2, y: 0, z: -0.2 }, max: { x: 0.2, y: CEIL - FL, z: 0.2 } } } });
   cyl("l11d-b-pump", 28, FL, 143, 0.8, 0.9, 1.6, { color: "oklch(0.4 0.06 150)", metalness: 0.6, roughness: 0.5 });
-  cyl("l11d-b-main", 27, CEIL - 0.6, 143.4, 0.25, 0.25, 38, PIPE, { rotation: { roll: 90 }, physics: "none", castShadow: false });
+  cyl("l11d-b-main", 27, FL + 2.1, 143.2, 0.25, 0.25, 38, PIPE, { rotation: { roll: 90 }, physics: "none", castShadow: false });
   sp("l11d-b-sheet", { feetPosition: { x: 19, y: FL, z: 142.5 }, rotation: { yaw: 70 }, model: { id: MODELS.corrugated, forward: "-z" }, physics: { body: "static", collider: "box" } });
   [[13, 0.5], [21, 0], [29, 1, "oklch(0.75 0.12 140)"], [37, 0], [44, 0.7]].forEach(([x, on, c], i) => bulb(sp, `l11d-b-lamp-${i}`, x, 140, on, c));
   // C: the cable corridor north to the seal, x 40..44, z 144..190
