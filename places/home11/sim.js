@@ -1,7 +1,7 @@
 import { builtSpec } from "../../scripts/lib/build-piece.js";
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 37;
+const V = 38;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -81,7 +81,8 @@ export function tick(ctx) {
   // the leaf child is scripts/door-geo.js: its origin IS the hinge (the root's feet), running toward dir; the frame stands at the opening's centre
   const swing = (id, hx, hz, dir, w, open, name) => {
     const dp = { style: "wood", w, h: 2.05, hingeSide: dir > 0 ? "left" : "right", swing: open * dir > 0 ? -1 : 1, d: 0.12, seed: id.length };
-    sp(id, { feetPosition: { x: hx, y: 0.05, z: hz }, rotation: { yaw: 0 }, physics: "kinematic", state: { open: false, openYaw: open },
+    sp(id, { feetPosition: { x: hx, y: 0.05, z: hz }, rotation: { yaw: 0 }, physics: "kinematic", tags: ["usable"], behavior: "scripts/home11-door.js", state: { open: false, openYaw: open, kind: "door", name, verb: "Open", hinge: id }, // the leaf's collider joins this root, so a look at the door lands here
+
       children: [{ id: "leaf", tags: ["usable"], feetPosition: { x: 0, y: 0, z: 0 }, primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { ...dp, part: "leaf" } }, material: { pbr: true }, physics: "static", behavior: "scripts/home11-door.js", state: { kind: "door", name, verb: "Open", hinge: id } }] });
     sp(id + "-frame", { feetPosition: { x: hx + dir * w / 2, y: 0.05, z: hz }, rotation: { yaw: 0 }, physics: { body: "static", collider: "auto" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { ...dp, part: "frame" } }, material: { pbr: true } });
   };
