@@ -1,4 +1,4 @@
-import { hearOf, shotAt } from './lib/hunt.js';
+import { hearOf, shotAt, wallSteer, wedged } from './lib/hunt.js';
 import { clearSight } from './lib/sight.js';
 // Level 1's hounds: one manager steps the pack. They roam the halls, hunt when they see or hear you,
 // hunt harder in a Flickering, and never cross into the corridors (safe ground).
@@ -169,6 +169,7 @@ export function update(ctx, dt) {
     if (now - m.sk.at > 800) {
       const moved = Math.hypot(pos.x - m.sk.x, pos.z - m.sk.z);
       if (sp > 1 && moved < 0.25) { m.side = { s: ctx.random() < 0.5 ? -1 : 1, until: now + 500 }; m.roam = null; }
+      if (wedged(m, moved, sp > 0.5) && Math.hypot(dx, dz) > 0.01) { h.feetPosition = { x: pos.x - (dx / d) * 0.7, y: pos.y + 0.05, z: pos.z - (dz / d) * 0.7 }; h.velocity = { x: 0, y: 0, z: 0 }; m.roam = null } // stuck against a wall for seconds: backed off it
       m.sk = { x: pos.x, z: pos.z, at: now };
     }
     if (m.side && now < m.side.until) { const s = m.side.s; ux = ux * 0.4 + -uz * s * 0.9; uz = uz * 0.4 + (dx / d) * s * 0.9; }
@@ -180,6 +181,7 @@ export function update(ctx, dt) {
     }
     if (m.sep) { ux += m.sep.x * 1.1; uz += m.sep.z * 1.1; }
     const ul = Math.hypot(ux, uz) || 1; ux /= ul; uz /= ul;
+    if (sp > 0) [ux, uz] = wallSteer(ctx, m, now, pos, ux, uz, h.id)
     const nx = pos.x + ux * sp * dt, nz = pos.z + uz * sp * dt;
     if (safeAt(nx, nz)) sp = 0; // the corridors turn them back
     const near = way && way.cells > 0 ? 0.35 : 1.2;

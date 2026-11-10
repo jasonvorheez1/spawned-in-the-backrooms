@@ -1,5 +1,6 @@
 // what every Level 0 hunter shares: hearing a wanderer through walls, and guessing where a lost one went.
 import L from "./data/level0.yml";
+import { raycast } from "builtin/physics";
 // the nearest wanderer this hunter hears from pos (sprinting carries far, walking near, crouching never)
 let clock = () => 0;
 const now = () => clock();
@@ -29,6 +30,19 @@ export function alertFor(ctx, pos) {
 }
 // where the thing that just hit this creature stood (player.js hitTarget writes state.shot): known at any distance for 8 s, never through a hide
 export function shotAt(st, now) { const a = st?.shot; return a && now - a.at < 8000 ? a : null }
+// walls on any level: a short ray along the way it is going (every 120 ms); a wall in the way turns the heading away along it. Returns the new unit heading.
+export function wallSteer(ctx, m, now, pos, ux, uz, selfId) {
+  if (now >= (m.wsAt ?? 0)) {
+    m.wsAt = now + 120
+    const hit = raycast(ctx, { x: pos.x, y: pos.y + 0.6, z: pos.z }, { x: ux, y: 0, z: uz }, { distance: 1.4, physicsOnly: true, ignoreEntities: [selfId] })
+    m.ws = hit?.normal && Math.abs(hit.normal.y) < 0.5 ? { nx: hit.normal.x, nz: hit.normal.z, k: 1 - Math.min(1, (hit.distance ?? 0.7) / 1.4) } : null
+  }
+  if (!m.ws) return [ux, uz]
+  const f = 1.2 * m.ws.k + 0.3, vx = ux + m.ws.nx * f, vz = uz + m.ws.nz * f, l = Math.hypot(vx, vz) || 1
+  return [vx / l, vz / l]
+}
+// a body that has not budged for ~2.4 s while walking (a wall slid onto it, a corner): true once, and the caller backs it off
+export function wedged(m, moved, walking) { m.wedge = moved < 0.05 && walking ? (m.wedge ?? 0) + 1 : 0; if (m.wedge >= 3) { m.wedge = 0; return true } return false }
 // lit: a wanderer standing under a working fluorescent is seen farther than one in a dead patch
 export function litMul(p) { return p.state?.dark ? 0.75 : 1; }
 // the last sighting, plus where the wanderer was heading

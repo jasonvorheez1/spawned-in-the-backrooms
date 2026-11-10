@@ -12,6 +12,7 @@ import { npcMul, dmgAfterArmor } from "./lib/stats.js";
 import { critterSpec, GAIT_LIB } from "./lib/critter-model.js";
 import { npcLook } from "./lib/clothes.js";
 import { stepToward as stepToward1 } from "./lib/maze1path.js";
+import { wallSteer, wedged } from "./lib/hunt.js";
 import { raycast } from "builtin/physics";
 
 const GLB = "/cdn/value.6cc392a43a5cb12b4557b1fb35e23d329ad01c9d707b4267d923bdc14abcde2d.glb";
@@ -421,6 +422,7 @@ export function update(ctx, dt) {
         m.side = { s: ctx.random() < 0.5 ? -1 : 1, until: now + 500 };
         m.roam = null;
       }
+      if (wedged(m, moved, sp > 0.5) && d > 0.01) { e.feetPosition = { x: pos.x - (dx / d) * 0.7, y: pos.y + 0.05, z: pos.z - (dz / d) * 0.7 }; e.velocity = { x: 0, y: 0, z: 0 }; m.roam = null } // stuck against a wall for seconds: backed off it
       m.sk = { x: pos.x, z: pos.z, at: now };
     }
 
@@ -460,6 +462,7 @@ export function update(ctx, dt) {
     const ul = Math.hypot(ux, uz) || 1;
     ux /= ul;
     uz /= ul;
+    if (sp > 0) [ux, uz] = wallSteer(ctx, m, now, pos, ux, uz, e.id);
 
     if (safeZone(zoneAt(pos.x + ux * sp * dt * 4, pos.z + uz * sp * dt * 4))) {
       sp = 0;
