@@ -1,7 +1,8 @@
 // Level 11 strip mall pieces. params.kind:
 //  "shell": the building (w along X, h, d along Z; storefront face is +X): stucco body with control-joint reveals, a dark plinth,
 //           a projecting cornice band and coping, downspouts on the back, two rooftop AC units. Collider: the plain body.
-//  "awning": a curved canvas awning (projects along +X by p, length d along Z, drop r) on pipe arms, with a valance.
+//  "awning": a shallow sloping canvas canopy (projects along +X by p, length d along Z, drop r) on pipe arms, with a valance.
+import { pipe } from "./lib/l5-hall-kit.js";
 const STUCCO = "cdn/texture-weathered-cream-stucco-wall.png", CANVAS = "cdn/texture-faded-blue-canvas-awning-fabric.png";
 const P = (c) => ({ kind: c.params.kind ?? "shell", w: c.params.w ?? 16, h: c.params.h ?? 5.2, d: c.params.d ?? 22, p: c.params.p ?? 2, r: c.params.r ?? 0.9 });
 function boxer(ctx) {
@@ -15,29 +16,26 @@ function boxer(ctx) {
 export function geometry(ctx) {
   const p = P(ctx), box = boxer(ctx), lod = ctx.lod ?? 1;
   if (p.kind === "awning") {
-    const { p: pr, d, r } = p, N = lod >= 4 ? 3 : 10;
-    ctx.albedo(CANVAS); ctx.color("oklch(0.7 0.19 255)");
-    // the canvas: a quarter curve from the wall (x=0, y=0) out to (pr, -r), both sides drawn
-    const pt = (t) => [pr * Math.sin((t * Math.PI) / 2), -r * (1 - Math.cos((t * Math.PI) / 2))];
-    for (let i = 0; i < N; i++) {
-      const [x0, y0] = pt(i / N), [x1, y1] = pt((i + 1) / N);
-      ctx.quad(x0, y0, -d / 2, x0, y0, d / 2, x1, y1, d / 2, x1, y1, -d / 2);
-      ctx.quad(x1, y1, -d / 2, x1, y1, d / 2, x0, y0, d / 2, x0, y0, -d / 2);
+    const { p: pr, d, r } = p, drop=r*.4, N=lod>=3?3:8;
+    ctx.albedo(CANVAS);ctx.roughness(.85);ctx.color("oklch(0.76 0.11 248)");
+    // Reference 3: a shallow blue canopy, not a barrel-shaped shop awning.
+    const pt=t=>[pr*t,-drop*t-.035*Math.sin(t*Math.PI)];
+    for(let i=0;i<N;i++){
+      const [x0,y0]=pt(i/N),[x1,y1]=pt((i+1)/N);
+      ctx.quad(x0,y0,-d/2,x0,y0,d/2,x1,y1,d/2,x1,y1,-d/2);
+      ctx.quad(x1,y1,-d/2,x1,y1,d/2,x0,y0,d/2,x0,y0,-d/2);
     }
-    // valance: a hanging skirt at the front edge, darker hem
-    const [fx, fy] = pt(1);
-    ctx.color("oklch(0.62 0.19 255)"); box(fx - 0.01, fy - 0.28, -d / 2, fx + 0.02, fy, d / 2);
-    ctx.color("oklch(0.9 0.02 250)"); box(fx - 0.012, fy - 0.3, -d / 2, fx + 0.022, fy - 0.26, d / 2);
-    // end caps (both sides)
-    ctx.color("oklch(0.64 0.19 255)");
-    for (const z of [-d / 2, d / 2]) for (let i = 0; i < N; i++) {
-      const [x0, y0] = pt(i / N), [x1, y1] = pt((i + 1) / N);
-      ctx.tri(0, -r, z, x0, y0, z, x1, y1, z); ctx.tri(0, -r, z, x1, y1, z, x0, y0, z);
+    ctx.color("oklch(0.67 0.1 248)");box(pr-.01,-drop-.14,-d/2,pr+.015,-drop,d/2);
+    ctx.albedo(null);ctx.color("oklch(0.78 0.02 235)");
+    pipe(ctx,[pr,-drop-.14,-d/2],[pr,-drop-.14,d/2],.012,8);
+    ctx.color("oklch(0.56 0.015 235)");ctx.metalness(.45);ctx.roughness(.5);
+    const arms=Math.max(2,Math.round(d/2.4)+1);
+    for(let i=0;i<arms;i++){
+      const z=-d/2+.05+(d-.1)*i/(arms-1);
+      pipe(ctx,[.015,-drop-.28,z],[pr-.015,-drop-.07,z],.022,8);
+      pipe(ctx,[.015,-.08,z],[pr-.015,-drop-.07,z],.018,8);
     }
-    // pipe arms every ~2.4 m
-    ctx.albedo(null); ctx.color("oklch(0.35 0.01 250)");
-    const arms = Math.max(2, Math.round(d / 2.4) + 1);
-    for (let i = 0; i < arms; i++) { const z = -d / 2 + 0.05 + ((d - 0.1) * i) / (arms - 1); box(0, -r - 0.04, z - 0.025, fx, -r + 0.01, z + 0.025); }
+    ctx.metalness(0);
     return;
   }
   if (p.kind === "interior") return interior(ctx, box, ctx.params.shop, ctx.params.w ?? 5, ctx.params.d ?? 10, lod);
