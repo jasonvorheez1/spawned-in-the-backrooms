@@ -149,7 +149,7 @@ export function tick(ctx) {
   if (!s.puddles) { s.puddles = true;
     for (let i = 0; i < 70; i++) { const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N); if (zoneOf(cx, cz) !== "halls" && zoneOf(cx, cz) !== "storage") continue;
       const c = cellCenter(cx, cz), r = 0.6 + ctx.random() * 1.4;
-      ctx.spawn({ tags: ["puddle"], feetPosition: { x: c.x + (ctx.random() - 0.5) * 5, y: 0.012, z: c.z + (ctx.random() - 0.5) * 5 }, rotation: { yaw: ctx.random() * 360, pitch: -90 }, scale: { x: 1, y: 0.5 + ctx.random() * 0.5, z: 1 }, primitive: { kind: "circle", radius: r, segments: 20 }, visibleRange: { max: 35 }, castShadow: false, material: { color: "oklch(0.18 0.01 240 / 0.75)", roughness: 0.05, metalness: 0.3, transparent: true } });
+      ctx.spawn({ tags: ["puddle"], feetPosition: { x: c.x + (ctx.random() - 0.5) * 5, y: 0.012, z: c.z + (ctx.random() - 0.5) * 5 }, rotation: { yaw: ctx.random() * 360, pitch: -90 }, scale: { x: 1, y: 0.5 + ctx.random() * 0.5, z: 1 }, primitive: { kind: "circle", radius: r, segments: 20 }, visibleRange: { max: 35 }, castShadow: false, material: { color: "oklch(0.5 0.012 240 / 0.32)", roughness: 0.02, metalness: 0.55, transparent: true } });
     }
   }
   if (now >= (s.nextClang ?? 0)) { s.nextClang = now + 9000 + ctx.random() * 14000;

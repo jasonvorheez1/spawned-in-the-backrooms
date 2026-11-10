@@ -410,10 +410,10 @@ ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;
   ${s.chargeAt && !W[s.equipped ?? 'fists']?.ranged ? `<style>@keyframes pwrfill{from{stroke-dashoffset:113}to{stroke-dashoffset:0}}@keyframes pwrfull{0%,100%{opacity:1}50%{opacity:.45}}</style><svg id="pwr${s.chargeAt}" width="44" height="44" viewBox="0 0 44 44" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-90deg)"><circle cx="22" cy="22" r="18" fill="none" stroke="rgba(20,16,8,.6)" stroke-width="4"/><circle cx="22" cy="22" r="18" fill="none" stroke="#ffb347" stroke-width="3" stroke-dasharray="113" style="filter:drop-shadow(0 0 3px rgba(255,170,40,.9));animation:pwrfill ${(W.power?.charge ?? 0.9)}s linear forwards, pwrfull .25s ${(W.power?.charge ?? 0.9)}s steps(2) infinite"/></svg>` : ''}
 
   <!-- Subtle Sanity Edge Vignette (gently narrows peripheral vision as sanity drops) -->
-  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 55%,rgba(8,7,5,0.92) 100%);opacity:${(1 - sanF) * 0.85}"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 55%,rgba(8,7,5,0.92) 100%);opacity:${Math.round((1 - sanF) * 42.5) / 50}"></div>
 
   <!-- Low Health Edge Pulse -->
-  ${hpF < 0.3 ? `<div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 60%,rgba(140,20,15,0.6) 100%);animation:pulse-red 1.2s infinite;opacity:${(0.3 - hpF) * 2.5}"></div>` : ''}
+  ${hpF < 0.3 ? `<div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 60%,rgba(140,20,15,0.6) 100%);animation:pulse-red 1.2s infinite;opacity:${Math.round((0.3 - hpF) * 125) / 50}"></div>` : ''}
 
   <!-- BOTTOM-LEFT: HP, sanity, compass, rank -->
   <div class="bl" style="position:absolute;left:28px;bottom:22px;width:min(300px,44vw)">

@@ -75,6 +75,7 @@ function layLamps(ctx) {
 }
 
 // everything placed by the seeded layout (lamps, leaks, live boxes, plates): laid at seeding, relaid when the layout's version moves
+const JBOX = { model: { id: "/cdn/value.62a2ddb4b4b1421238b3ba91297c1bf2dc348478d02802caf7b4bc3e5a328d38.glb", forward: "+x" }, layout: { box: { min: { x: -0.225, y: 0, z: -0.225 }, max: { x: 0.225, y: 0.6, z: 0.225 } } } }; // the real wall junction box (Tripo)
 function layLayout(ctx) {
   layLamps(ctx);
     // hazards: black sludge pooled under leaking pipes; live junction boxes that arc
@@ -84,7 +85,7 @@ function layLayout(ctx) {
   }
   for (const h of SPARKS) {
     const [nx, nz] = D4[h.d];
-    ctx.spawn({ tags: ["live-box", "breakable"], feetPosition: { x: h.wx - nx * 0.1, y: 1.2, z: h.wz - nz * 0.1 }, physics: { body: "static", collider: "box" }, visibleRange: { max: 35 }, castShadow: false, state: { mat: "machine", hp: 90, maxHp: 90, name: "Junction box" }, primitive: { kind: "box", width: 0.45, height: 0.6, depth: 0.45 }, material: { color: "oklch(0.55 0.01 240)", metalness: 0.6, roughness: 0.5 },
+    ctx.spawn({ tags: ["live-box", "breakable"], feetPosition: { x: h.wx - nx * 0.1, y: 1.2, z: h.wz - nz * 0.1 }, physics: { body: "static", collider: "box" }, visibleRange: { max: 35 }, castShadow: false, state: { mat: "machine", hp: 90, maxHp: 90, name: "Junction box" }, rotation: { yaw: Math.atan2(nx, nz) * 180 / Math.PI }, ...JBOX,
       fx: { script: ARC, params: { dir: { x: -nx, y: 0.2, z: -nz } } }, audio: { clip: GRIT("electrical-arc-buzz-loop"), gain: 0.3, loop: true, spatial: true, maxDistance: 9 } });
   }
   // yellow OUT OF BOUNDS plates with real lettering, hung on the bars
@@ -151,6 +152,7 @@ export function tick(ctx) {
   if (!(Math.abs(now - (ctx.session.wallTick ?? -1e9)) < 2000)) { ctx.session.wallTick = now; tickWalls(ctx); } // broken interior walls: holes drawn, regrown after a while (lib/breakables.js)
   if (!s.almondTidy) { s.almondTidy = 1; for (const o of ctx.query({ tags: ["almond"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const p = o.feetPosition ?? { x: 0, y: 0, z: 0 }; if (p.y < 0.15 && !(false)) ctx.destroy(o.id); } } // loose floor bottles cleared once: almond water lives in containers and drops now
   if (s.seeded && s.gammaExtV !== 1) layGammaExterior(ctx);
+  if (s.seeded && s.jboxV !== 1) { s.jboxV = 1; for (const o of ctx.query({ tags: ["live-box"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const b = ctx.getObject(o.id); if (!b) continue; const h = SPARKS.find((q) => Math.hypot(q.wx - D4[q.d][0] * 0.1 - o.feetPosition.x, q.wz - D4[q.d][1] * 0.1 - o.feetPosition.z) < 0.3); b.primitive = null; b.material = null; b.model = JBOX.model; b.layout = JBOX.layout; if (h) b.rotation = { yaw: Math.atan2(D4[h.d][0], D4[h.d][1]) * 180 / Math.PI }; } } // grey boxes become the real junction box
   if (s.seeded && s.signsV !== 1) { s.signsV = 1; layGammaSignage(ctx); }
   if (s.furnitureSeeded !== 2) { // loot moved from crates into fuse cabinets, toolboxes, lockers and satchels: clear the old crates once
     for (const o of ctx.query({ tags: ["crate"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (o.tags?.includes("container")) ctx.destroy(o.id);
