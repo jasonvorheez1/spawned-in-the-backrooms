@@ -19,7 +19,7 @@ export function material(ctx) {
     col = base.mul(float(0.95).add(pores.mul(0.05))).mul(vec3(1.0, float(0.97).add(mottle.mul(0.03)), float(0.96).add(mottle.mul(0.04))));
     // subsurface: the edge that turns away from the eye flushes warm, as light through a cheek or a knuckle does
     const sss = smoothstep(0.15, 0.75, float(1).sub(ndv)).mul(smoothstep(1.0, 0.85, float(1).sub(ndv)));
-    glow = base.mul(vec3(0.85, 0.5, 0.42)).mul(sss).mul(0.12).add(base.mul(vec3(0.1, 0.03, 0.0))); // a living warmth under even the palest skin
+    glow = base.mul(vec3(0.85, 0.6, 0.55)).mul(sss).mul(0.08); // a living warmth under even the palest skin
     m.roughness = 0.52; m.metalness = 0;
   } else if (kind === "hair") {
     const h = dot(N, normalize(vec3(0, 1, 0).add(V.mul(0.6))));
@@ -44,10 +44,10 @@ export function material(ctx) {
     glow = base.mul(0.5).add(vec3(0.18, 0.17, 0.16)).mul(fres).mul(0.22); // fabric sheen at grazing angles
     m.roughness = 0.88; m.metalness = 0;
   }
-  m.colorNode = kind === "skin" ? col.mul(vec3(0.97, 0.88, 0.8)).mul(float(1).sub(lift).mul(0.95)) : col.mul(float(1).sub(lift).mul(0.9)); // skin carries a little blood warmth in its albedo: pale picks read peach, not grey-white
-  const shade = kind === "skin" ? col.mul(vec3(1.0, 0.8, 0.7)) : col.mul(vec3(0.92, 0.92, 1.0));
+  m.colorNode = kind === "skin" ? col.mul(vec3(0.98, 0.95, 0.93)).mul(float(1).sub(lift).mul(0.95)) : col.mul(float(1).sub(lift).mul(0.9)); // skin carries a little blood warmth in its albedo: pale picks read peach, not grey-white
+  const shade = kind === "skin" ? col.mul(vec3(1.0, 0.94, 0.92)) : col.mul(vec3(0.92, 0.92, 1.0));
   const rim = fres.mul(kind === "skin" ? 0.04 : kind === "hair" ? 0.0 : 0.12); // a rim on every strand edge outlined the shards
-  const rimCol = kind === "skin" ? base.mul(vec3(1.1, 0.7, 0.55)) : vec3(1, 0.96, 0.9); // skin rims in its own blood-warm tone, never white
+  const rimCol = kind === "skin" ? base.mul(vec3(1.0, 0.85, 0.8)) : vec3(1, 0.96, 0.9); // skin rims in its own blood-warm tone, never white
   m.emissiveNode = shade.mul(lift).add(glow).add(rimCol.mul(rim).mul(max(base.r, max(base.g, base.b)).mul(0.6).add(0.2)));
   return m;
 }
