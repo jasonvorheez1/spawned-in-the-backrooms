@@ -38,7 +38,16 @@ function lay(ctx) {
   for (const q of ctx.query({ tags: ["l5-radio"] })) { const o = ctx.getObject(q.id); if (o) o.primitive = { kind: "scripted", script: FIX, params: { kind: "radio" } }; }
   for (const q of ctx.query({ tags: ["l5-sealed"] })) { const o = ctx.getObject(q.id); if (o) { o.primitive = { kind: "scripted", script: DOOR, params: { style: "hotel", part: "set", w: 1.1, h: 2.3, hingeSide: "left", swing: 1, seed: q.id.length } }; o.material = { pbr: true }; } } // sealed: a shut door in its frame, never opens
 }
+// rooms laid before the hinge-at-feet leaf kept their old centred spot: the leaf stood half a metre out of its frame (shelly Nov 10). Re-seat leaves only, furniture untouched
+const SEAT_V = 1;
+function seatLeaves(ctx) {
+  for (const l of LEAVES) { const o = l.leafFor, z = ZONES.find((q) => q.id === l.room), dir = Math.sign((z.z0 + z.z1) / 2 - o.at), z0 = o.at + dir * 0.09;
+    const leaf = ctx.getObject("l5-hall-leaf-" + l.room), fr = ctx.getObject("l5-hall-frame-" + l.room);
+    if (leaf) { leaf.feetPosition = { x: o.a0 + 0.02, y: 0, z: z0 }; leaf.rotation = { yaw: 0 }; leaf.state.baseYaw = 0; leaf.state.openYaw = dir > 0 ? -90 : 90; leaf.state.c = { x: (o.a0 + o.a1) / 2, y: 1.1, z: z0 }; }
+    if (fr) fr.feetPosition = { x: (o.a0 + o.a1) / 2, y: 0, z: z0 }; }
+}
 export function update(ctx) {
+  if (ctx.self.state.v === V && ctx.self.state.seatV !== SEAT_V) { ctx.commit("Level 5 doors back in their frames", () => { seatLeaves(ctx); ctx.self.state.seatV = SEAT_V; }); }
   if (ctx.self.state.v === V) return ctx.sleep(30);
-  ctx.commit("Main Hall furnished", () => { lay(ctx); ctx.self.state.v = V; });
+  ctx.commit("Main Hall furnished", () => { lay(ctx); ctx.self.state.v = V; ctx.self.state.seatV = SEAT_V; });
 }
