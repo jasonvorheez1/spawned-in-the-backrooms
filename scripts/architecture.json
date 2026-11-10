@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 4661,
-  "updatedAt": "2026-11-10T20:55:14.838Z",
+  "basedOnSpecVersion": 4670,
+  "updatedAt": "2026-11-10T21:07:22.128Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG across an authored Level 0 maze, deeper levels, and shared destinations. `templates/player.js` composes player behaviors; place simulations and shared scripts own environment generation, NPCs, combat, loot, crafting, UI, avatar presentation, and progression.",
   "scriptPaths": [],
   "places": [
-    "places/bonus (3D) - shared vaporwave mall with shops, landmarks, simulated staff/shoppers, arcade games, salon and visual effects; authored mall humans use the shared human avatar models.",
+    "places/bonus (3D) - shared vaporwave mall with shops, landmarks, simulated staff/shoppers, arcade games, salon and visual effects; authored mall humans use shared human avatar models with soft cheek blush.",
     "places/main (3D) - authored Level 0/Lobby maze; sim generates maze furniture and loot, safe rooms, shifting walls, creature ecology, route guidance, Kade and Zenith's sealed breach.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo ephemeral) - character creation/waking space and staged tutorial route with HALOGEN.",
     "places/level01 (3D) - Level 0.1 Zenith Station: station/gallery, doors, breakables, bots/hazards, climate rooms, recorder quest and drone-refilled posts.",
     "places/level1, level2, level21 (3D) - Habitable Zone garage maze and M.E.G. camp; Pipe Dreams industrial rooms/camp/fixtures; Level 2.1 Locked.",
-    "places/level3, gamma, level4, level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; L4 office props/fixtures, residents and hazards; authored human residents use shared body models.",
+    "places/level3, gamma, level4, level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; L4 office props/fixtures, residents and hazards; scene-authored human residents use the current shared bodies and blush materials.",
     "places/level6, level7, level10, level11, level12 (3D) - later levels include Level 11's generated city, canal/bridges and renovation office, Level 7's drowned house, and other authored levels.",
     "places/level26, level27, debug, spamton (3D) - Level 26 quests, Level 27 Bunker Springs, debug studio and Spamton destination; no places/testlab in the tree."
   ],
@@ -38,7 +38,7 @@
     "scripts/grab.js - setDown, onInput, update, looseSpent; scripts/kick.js - onInput, kickSnap, kickEnd, update.",
     "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, onInput, hitTarget, fishNibble, HOLO and holoEnd; throwable fuse/arm callbacks and blast hits.",
     "scripts/lib/quick-items.js - quickItems, assignQuick; scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
-    "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - body/face/head/spec, hair and wardrobe seating, restyle/clearAppearance, humanBodyMorph, speciesOf, anime, FURRY_HEAD and STYLE_V (sw91).",
+    "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - body/face/head/spec, hair and wardrobe seating, restyle/clearAppearance, humanBodyMorph, speciesOf, anime, FURRY_HEAD and STYLE_V (sw92).",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, stagger3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
     "scripts/lib/craft.js - recipeStatus, maxMakes, craftOne, benchAvailable, stationOf, scrapCount, CRAFT_LIMIT, CATS; scripts/craft.js - onInput, update.",
     "scripts/lib/prop-interactions.js - propKind, interactiveSpec, upgradeProp, containerPose, toggleLamp, upgradeNearby; scripts/lib/prop-easing.js - MOTION_MS, sampleMotion, propFrames; scripts/l11-masonry.js - geometry, collider."
@@ -49,12 +49,12 @@
     "scripts/kick.js + scripts/grab.js - per-player kick rolls/cooldowns, carried prop/body IDs, held-body grip, drag/heave/throw session fields and carryMul; held targets own heldBy/down/stagger state; kick input is inert in Bonus.",
     "scripts/lib/loose.js + scripts/lib/breakables.js - loose props own state.loose/mat/hp and flight sessions; breakables own wreck transitions and permanently smashed root IDs in place.state.gone for rebuilds; both guard Bonus.",
     "scripts/lib/knock.js + scripts/lib/stats.js - foe attributes/weight and shared down/stagger knock outcomes; enemy managers retain AI state and write player-targeting sneakTarget.",
-    "places/level1/sim.js and places/level2/sim.js - place.state version markers own one-time seeded/dressing/fixture/door migrations; places/level4/sim.js owns officeV and islandSplit conversion; places/level27/sim.js owns its place-level build state.",
+    "places/level1/sim.js, places/level2/sim.js, places/level4/sim.js and places/level27/sim.js own their place-state migration/version markers and one-time conversions (officeV, islandSplit in Level 4).",
     "scripts/lib/prop-interactions.js and scripts/prop-part.js - prop state owns interactiveV, propArt, containerOpen/lampOn and part motion goals; child sessions track native tween keys, while prop parts animate from replicated state.",
     "places/level11/sim.js - place.state.builtV and session build version/queue own generated-city rebuild progress; refreshed existing specs update layout, primitive and placement while preserving object state."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker; touch mappings route to those actions.",
+    "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker; touch mappings invoke the same actions.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes aimPt and ranged aimPitch → player.js ballistics.",
     "scripts/routing.js accepts permitted requested rooms; otherwise scripts/lib/hub.js soloRoom selects the player's solo Backrooms room and bonus overflow IDs; toHub/toSolo perform crossings and track roomHop/save-place state.",
     "Fresh visit → scripts/main-menu.js; START enters intake for creation or bonus for completed characters; wardrobe close runs intro-cut then tutorial0 unless t0Done; menu UI renders on menuOpen and solo pause sets place.timeScale.",
@@ -72,9 +72,9 @@
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + home reconstruction scripts - per-piece models/dimensions with common placement, persistence and rebuild path.",
     "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to each supported kind and migrated while preserving root state.",
     "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + Zenith door/bots/hatch/flicker/drones/use scripts - Zenith Station geometry, breach, hazards and interactive systems.",
-    "places/level4/cells/x0z0.scene + places/level4/sim.js + scripts/l4-office.js/l4-office-geo.js/l4-home.js + scripts/lib/l4-people.js/level4-people.yml and scripts/lib/l5-people.js/level5-people.yml - authored office/hotel, role/look/dialogue residents and fixtures.",
-    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/body/rig/transfer/body-shape + art/human-body/neck_fit.py/neck_weights.py/neck_hem.py + scripts/mat-anime.js - shared human/furry avatar assembly, skinning, faces, hair, garments and anime materials; human neck mesh fit, joint weights and collar seam are part of the body pipeline.",
-    "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js + scripts/lib/data/combat-anims.yml - retargeted first-person and DS third-person melee families select strikes by weapon type; combat poses are shared by viewmodels and character rigs.",
+    "places/level4/cells/x0z0.scene + places/level4/sim.js + scripts/l4-office.js/l4-office-geo.js/l4-home.js + scripts/lib/l4-people.js/level4-people.yml and scripts/lib/l5-people.js/level5-people.yml - authored office/hotel, role/look/dialogue residents, fixtures and hazards.",
+    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/body/rig/transfer/body-shape + art/human-body/neck_fit.py/neck_weights.py/neck_hem.py/blush_soft.py + scripts/mat-anime.js - shared human/furry avatar assembly, skin/wardrobe seating and face appearance; blush uses the BlushSoft radial-fade material slot.",
+    "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js + scripts/lib/data/combat-anims.yml - retargeted first-person and DS third-person melee families select strikes by weapon type; combat poses are shared.",
     "Level 11 geometry family: scripts/l11-mall.js, scripts/l11-masonry.js and scripts/l11-reno.js parameterize mall, canal/bridge and renovation-office pieces; tests/level11-reference.test.js checks bridge clearance, rebuild fitting and workstand geometry."
   ],
   "probableOrphans": [
@@ -82,10 +82,10 @@
     "scripts/hairtest-rig.js - header marks it as a temporary hair lane test rig; no tree/package references found."
   ],
   "migrationNotes": [
-    "Human avatar STYLE_V is sw91: sw89 widened the head neck to meet the body's neck ring (art/human-body/neck_fit.py); sw90 blends Head→Neck→Spine2 weights so the neck bends with the body (neck_weights.py); sw91 lowers the rear/side open head-neck rim into the collar (neck_hem.py), retaining the chin rim.",
-    "Human body registry in scripts/lib/data/critter-models.yml and wardrobe-split.yml points to the current regenerated male/female body GLBs; update both registries when swapping the body asset so avatar assembly and split garment pipeline stay aligned.",
-    "scripts/lib/critter-model.js restyle repairs older human models when their face atlas or blush opacity is stale; it reapplies the soft blush while preserving look-specific blush color where supplied.",
-    "Authored human models in places/bonus/cells/x0z0.scene and places/level4/cells/x0z0.scene were refreshed to the current body assets; their authored looks/materials remain scene-owned, including Level 4's rose blush tint.",
+    "Human avatar STYLE_V is sw92: blush_soft.py cuts two cheek patches into their own BlushSoft slot with radial UV fade; scripts/lib/critter-model.js applies the radial PNG and keeps Blush as the uniform base material.",
+    "Human body registry in scripts/lib/data/critter-models.yml and wardrobe-split.yml points to the current regenerated male/female body GLBs; update both registries when swapping body assets so avatar assembly and split garments stay aligned.",
+    "scripts/lib/critter-model.js restyle repairs older human models when their face atlas or blush opacity/map is stale; it reapplies both blush materials while preserving look-specific blush color where supplied.",
+    "Authored human models in places/bonus/cells/x0z0.scene and places/level4/cells/x0z0.scene use the refreshed body assets and BlushSoft slot; their authored looks/materials remain scene-owned, including Level 4's rose blush tint.",
     "scripts/lib/critter-model.js humanBodyMorph omits unsupported male Bust on the body while humanMorph keeps its explicit zero for garments; body changes compare state.headBody and clear/reseat skinned attachments without deleting equipment.",
     "art/body-transfer/reshape.py and fit.py preserve game bone names and downstream bones.json/field.json contracts; art/body-redo and art/cloth-redo are separate workflows. Level 11 V=136 refreshes kept placements while retaining object state."
   ]
