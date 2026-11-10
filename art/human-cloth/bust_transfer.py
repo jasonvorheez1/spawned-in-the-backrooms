@@ -17,6 +17,8 @@ for o in bpy.data.objects:
     o.data.calc_loop_triangles()
     tris += [tuple(base + j for j in t.vertices) for t in o.data.loop_triangles]
 T = BVHTree.FromPolygons(verts, tris)
+TB = BVHTree.FromPolygons([v + d for v, d in zip(verts, deltas)], tris)   # the full-chest skin the keyed cloth must clear
+GAP = 0.007   # cloth at least 7 mm off the full-chest skin. Savi's pick
 print("SRC", len(verts), "moving", sum(1 for d in deltas if d.length > 1e-4), "max", max(d.length for d in deltas))
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=gar_f)
@@ -34,6 +36,13 @@ nb = [[] for _ in g.data.vertices]
 for e in g.data.edges: a, b = e.vertices; nb[a].append(b); nb[b].append(a)
 for _ in range(4):   # knit lumps smoothed so the swell reads as cloth, not a decal
     D = [(D[i] * 0.5 + sum((D[j] for j in nb[i]), Vector()) * (0.5 / len(nb[i]))) if nb[i] else D[i] for i in range(len(D))]
+pushed = 0
+for i, v in enumerate(g.data.vertices):
+    q = M @ v.co + D[i]; hit, n, fi, dist = TB.find_nearest(q, 0.05)
+    if hit is None: continue
+    s = (q - hit).dot(n)
+    if s < GAP: D[i] += n * (GAP - s); pushed += 1
+print("PUSHED", pushed)
 g.shape_key_add(name="Basis"); k = g.shape_key_add(name="Bust", from_mix=False)
 for i, v in enumerate(g.data.vertices): k.data[i].co = Mi @ ((M @ v.co) + D[i])
 print("GAR", g.name, len(D), "moved", sum(1 for d in D if d.length > 1e-4), "max", max(d.length for d in D))
