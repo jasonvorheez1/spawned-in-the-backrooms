@@ -81,16 +81,28 @@ for o in list(bpy.context.selected_objects): bpy.data.objects.remove(o, do_unlin
 pts = []
 for j in range(25):   # a U from one collarbone, round the back of the neck, to the other
     th = math.pi * 0.02 + (math.pi * 0.96) * j / 24; sb = math.sin(th)
-    pts.append(Vector((nk.x + math.cos(th) * rn, nk.y + sb * (rn + 0.012), nk.z + 0.004 - 0.035 * sb ** 3)))   # sags onto the upper back
-hood = bpy.data.objects.new('hood', tube(pts, lambda t: 0.006 + 0.03 * math.sin(t * math.pi) ** 2, 14, 2.0)); bpy.context.collection.objects.link(hood)
+    pts.append(Vector((nk.x + math.cos(th) * rn, nk.y + sb * (rn + 0.012), nk.z + 0.012 - 0.05 * sb ** 3)))   # sags onto the upper back
+hood = bpy.data.objects.new('hood', tube(pts, lambda t: 0.008 + 0.042 * math.sin(t * math.pi) ** 1.6, 14, 1.7)); bpy.context.collection.objects.link(hood)
 hz = min(p.z for p in P0) + 0.035
 sy = min(p.y for p in P0 if abs(p.x) < 0.05 and abs(p.z - (hz + 0.05)) < 0.03)
-bm = bmesh.new(); W, H, D = 0.13, 0.11, 0.008
-for x, z in ((-W, 0), (W, 0), (W * 0.75, H), (-W * 0.75, H)): pass
-pv = [bm.verts.new(Vector((x, sy - D + 0.004, hz + z))) for x, z in ((-W, 0), (W, 0), (W * 0.72, H), (-W * 0.72, H))]
-f = bm.faces.new(pv); f.normal_update()
-if f.normal.y > 0: f.normal_flip()
-bmesh.ops.solidify(bm, geom=[f], thickness=0.006); bmesh.ops.recalc_face_normals(bm, faces=bm.faces); me = bpy.data.meshes.new('pocket'); bm.to_mesh(me)
+W, H = 0.13, 0.11
+from mathutils.kdtree import KDTree
+front = [p for p in P0 if p.y < sy + 0.05 and abs(p.x) < W + 0.04 and hz - 0.02 < p.z < hz + H + 0.03]
+kd = KDTree(len(front))
+for i, p in enumerate(front): kd.insert(Vector((p.x, 0, p.z)), i)
+kd.balance()
+def onfront(x, z, off):   # the cloth's own front at (x, z), stood off by off: the pocket curves round the belly
+    near = kd.find_n(Vector((x, 0, z)), 6); y = sum(front[i].y for _, i, _ in near) / len(near)
+    return Vector((x, y - off, z))
+bm = bmesh.new(); NX, NZ = 10, 6; grid = []
+for j in range(NZ + 1):
+    zz = hz + H * j / NZ; ww = W * (1 - 0.28 * j / NZ)
+    grid.append([bm.verts.new(onfront(-ww + 2 * ww * i / NX, zz, 0.006)) for i in range(NX + 1)])
+for j in range(NZ):
+    for i in range(NX): bm.faces.new((grid[j][i], grid[j][i + 1], grid[j + 1][i + 1], grid[j + 1][i]))
+bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+if sum(f.normal.y for f in bm.faces) > 0: bmesh.ops.reverse_faces(bm, faces=bm.faces)
+bmesh.ops.solidify(bm, geom=bm.faces[:], thickness=0.005); me = bpy.data.meshes.new('pocket'); bm.to_mesh(me)
 pocket = bpy.data.objects.new('pocket', me); bpy.context.collection.objects.link(pocket)
 for o in (hood, pocket):
     s = o.modifiers.new('sub', 'SUBSURF'); s.levels = 1
