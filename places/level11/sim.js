@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 134; // supplied Level 11 references: skyline variation and modern canal bridges
+const V = 135; // supplied Level 11 references: skyline variation and modern canal bridges
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -841,7 +841,7 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
   // Construction Work Light Tripod casting bright halogen beam
   sp("l11-reno-worklight", {
     feetPosition: { x: -23, y: 0.27, z: -3 }, rotation: { yaw: 200 },
-    model: { id: MODELS.floodlight, forward: "-z" }, layout: { box: { min: { x: -.55, y: 0, z: -.55 }, max: { x: .55, y: 1.8, z: .55 } } },
+    model: { id: MODELS.floodlight, forward: "-z" }, layout: { box: { min: { x: -.9, y: 0, z: -.8 }, max: { x: .9, y: 1.8, z: .8 } } },
     children: [{ feetPosition: { x: 0, y: 1.72, z: 0.2 }, light: { kind: "point", color: "oklch(0.98 0.08 90)", intensity: 8.5, distance: 18 } }],
   });
 
@@ -1775,7 +1775,7 @@ export function tick(ctx) {
       if (old && (!!old.model !== !!spec.model || (old.model && spec.model?.id && (old.model.id ?? old.model) !== spec.model.id) || !!old.primitive !== !!spec.primitive || (old.primitive && spec.primitive && (old.primitive.kind !== spec.primitive.kind || old.primitive.script !== spec.primitive.script)) || (!spec.children && ctx.place.objects[id + "/child-0"]) || (spec.tags && !old.tags?.includes("wreck") && spec.tags.join() !== (old.tags ?? []).join()) || (spec.physics?.collider && old.physics?.collider && spec.physics.collider !== old.physics.collider) || (spec.feetPosition && old.feetPosition && !old.tags?.includes("wreck") && old.physics?.body !== "dynamic" && !old.behavior?.length && Math.hypot((spec.feetPosition.x ?? 0) - old.feetPosition.x, (spec.feetPosition.z ?? 0) - old.feetPosition.z) > 0.3))) { ctx.destroy(id); break; } // a box row turned model: clear it, lay it fresh next tick
       ctx.spawn(id, spec);
       const now2 = old && ctx.place.objects[id]; // a piece that already stood takes its new place, turn and size too
-      if (now2) { if (spec.primitive && JSON.stringify(spec.primitive) !== JSON.stringify(now2.primitive)) now2.primitive = spec.primitive; if (spec.feetPosition) now2.feetPosition = spec.feetPosition; if (spec.rotation !== undefined) now2.rotation = spec.rotation; if (spec.scale !== undefined) now2.scale = spec.scale; if (spec.material !== undefined) now2.material = spec.material; if (spec.model?.materials && JSON.stringify(spec.model.materials) !== JSON.stringify(now2.model?.materials)) now2.model = spec.model; if (spec.visibleRange !== undefined) now2.visibleRange = spec.visibleRange; if (spec.state) for (const k in spec.state) if (now2.state[k] === undefined) now2.state[k] = spec.state[k]; } // Nov 10: a rebuild used to keep an old piece's paint, draw distance and tags (the 70 m ground, the buried grates)
+      if (now2) { if (spec.layout && JSON.stringify(spec.layout) !== JSON.stringify(now2.layout)) now2.layout = spec.layout; if (spec.primitive && JSON.stringify(spec.primitive) !== JSON.stringify(now2.primitive)) now2.primitive = spec.primitive; if (spec.feetPosition) now2.feetPosition = spec.feetPosition; if (spec.rotation !== undefined) now2.rotation = spec.rotation; if (spec.scale !== undefined) now2.scale = spec.scale; if (spec.material !== undefined) now2.material = spec.material; if (spec.model?.materials && JSON.stringify(spec.model.materials) !== JSON.stringify(now2.model?.materials)) now2.model = spec.model; if (spec.visibleRange !== undefined) now2.visibleRange = spec.visibleRange; if (spec.state) for (const k in spec.state) if (now2.state[k] === undefined) now2.state[k] = spec.state[k]; } // Nov 10: a rebuild used to keep an old piece's paint, draw distance and tags (the 70 m ground, the buried grates)
     }
     lq.i = i;
     if (i >= q.rows.length) {

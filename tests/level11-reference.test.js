@@ -37,8 +37,8 @@ test('the canal water and subway opening are not covered by the city under-slab'
  expect(covered(13.6,60.5)).toBe(false);for(const [x,z]of [[0,0],[0,-60],[0,100],[-280,-30],[280,-30],[10,60.5],[17,60.5]])expect(covered(x,z)).toBe(true)
 })
 import {readFileSync}from'node:fs'
-test('existing rooms receive new bridge dimensions without losing object state',()=>{
+test('existing rooms receive new bridge dimensions and model fitting without losing object state',()=>{
  const source=readFileSync(new URL('../places/level11/sim.js',import.meta.url),'utf8'),tick=Function('V','LAY_STEP','WALKERS',source.slice(source.indexOf('export function tick(ctx)')).replace('export function tick','function tick')+';return tick')(134,1,[]);
- const old={id:'deck',feetPosition:{x:0,y:-.45,z:-30},primitive:{kind:'box',width:17,height:.6,depth:24},physics:'static',state:{open:true,items:'kept'}},primitive={kind:'box',width:32,height:.6,depth:24},place={players:[{}],state:{lq:{i:0}},objects:{deck:old}},ctx={place,session:{l11q:{v:134,sorted:true,rows:[['deck',{feetPosition:old.feetPosition,primitive}]],keep:{deck:true}}},now:()=>0,spawn(){},destroy(){throw Error('unexpected replacement')}};
- tick(ctx);expect(old.primitive).toEqual(primitive);expect(old.state).toEqual({open:true,items:'kept'});expect(place.state.builtV).toBe(134)
+ const old={id:'deck',feetPosition:{x:0,y:-.45,z:-30},primitive:{kind:'box',width:17,height:.6,depth:24},physics:'static',state:{open:true,items:'kept'}},primitive={kind:'box',width:32,height:.6,depth:24},place={players:[{}],state:{lq:{i:0}},objects:{deck:old}},ctx={place,session:{l11q:{v:134,sorted:true,rows:[['deck',{feetPosition:old.feetPosition,primitive,layout:{box:{min:{x:-16,y:0,z:-12},max:{x:16,y:.6,z:12}}}}]],keep:{deck:true}}},now:()=>0,spawn(){},destroy(){throw Error('unexpected replacement')}};
+ tick(ctx);expect(old.primitive).toEqual(primitive);expect(old.layout.box.max.x).toBe(16);expect(old.state).toEqual({open:true,items:'kept'});expect(place.state.builtV).toBe(134)
 })
