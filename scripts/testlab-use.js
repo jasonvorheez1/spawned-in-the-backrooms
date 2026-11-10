@@ -3,7 +3,7 @@ import { setQuest, endQuest } from "./lib/quests.js";
 export const QID = "range-check";
 export const STEPS = [
   ["Take any weapon off an armory plinth", "tl-plinth-0"],
-  ["Kick, shoot or break something in the physics bay", "tl-phys-crate-0"],
+  ["Kick, shoot or break something in the physics bay", "tl-phys-d0"],
   ["Step on a red pad at the range and kill what comes out", "tl-pad-smiler"],
   ["Take parts from the bin and craft anything at the workbench", "tl-bench"],
   ["Eat or drink something from the fridge (I > Aid)", "tl-fridge"],
