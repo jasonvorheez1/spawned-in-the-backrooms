@@ -36,16 +36,16 @@ l4-lift-door:
   visible: false
 l4-office-1-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: -16.6, y: 0, z: -26.55}
   id: l4-office-1-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 360}
   state: {c: {x: -16.6, y: 1.1, z: -26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-1-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-1-plate:
   behavior: scripts/l4-home.js
@@ -61,16 +61,16 @@ l4-office-1-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-01</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-10-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: 0.6, y: 0, z: 26.55}
   id: l4-office-10-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 180}
   state: {c: {x: 0.6, y: 1.1, z: 26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-10-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-10-plate:
   behavior: scripts/l4-home.js
@@ -86,16 +86,16 @@ l4-office-10-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-10</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-11-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: 15.4, y: 0, z: 26.55}
   id: l4-office-11-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 180}
   state: {c: {x: 15.4, y: 1.1, z: 26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-11-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-11-plate:
   behavior: scripts/l4-home.js
@@ -111,16 +111,16 @@ l4-office-11-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-11</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-12-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: 16.6, y: 0, z: 26.55}
   id: l4-office-12-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 180}
   state: {c: {x: 16.6, y: 1.1, z: 26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-12-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-12-plate:
   behavior: scripts/l4-home.js
@@ -136,16 +136,16 @@ l4-office-12-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-12</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-13-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: -26.55, y: 0, z: -16.6}
   id: l4-office-13-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 90}
   state: {c: {x: -26.55, y: 1.1, z: -16.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-13-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-13-plate:
   behavior: scripts/l4-home.js
@@ -161,16 +161,16 @@ l4-office-13-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-13</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-15-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: -26.55, y: 0, z: -0.6}
   id: l4-office-15-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 90}
   state: {c: {x: -26.55, y: 1.1, z: -0.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-15-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-15-plate:
   behavior: scripts/l4-home.js
@@ -186,16 +186,16 @@ l4-office-15-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-15</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-16-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: -26.55, y: 0, z: 0.6}
   id: l4-office-16-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 90}
   state: {c: {x: -26.55, y: 1.1, z: 0.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-16-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-16-plate:
   behavior: scripts/l4-home.js
@@ -211,16 +211,16 @@ l4-office-16-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-16</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-17-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: -26.55, y: 0, z: 15.4}
   id: l4-office-17-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 90}
   state: {c: {x: -26.55, y: 1.1, z: 15.4}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-17-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-17-plate:
   behavior: scripts/l4-home.js
@@ -236,16 +236,16 @@ l4-office-17-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-17</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-18-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: -26.55, y: 0, z: 16.6}
   id: l4-office-18-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 90}
   state: {c: {x: -26.55, y: 1.1, z: 16.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-18-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-18-plate:
   behavior: scripts/l4-home.js
@@ -261,16 +261,16 @@ l4-office-18-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-18</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-19-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: 26.55, y: 0, z: -16.6}
   id: l4-office-19-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 270}
   state: {c: {x: 26.55, y: 1.1, z: -16.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-19-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-19-plate:
   behavior: scripts/l4-home.js
@@ -286,16 +286,16 @@ l4-office-19-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-19</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-2-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: -15.4, y: 0, z: -26.55}
   id: l4-office-2-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 360}
   state: {c: {x: -15.4, y: 1.1, z: -26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-2-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-2-plate:
   behavior: scripts/l4-home.js
@@ -311,16 +311,16 @@ l4-office-2-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-02</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-20-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: 26.55, y: 0, z: -15.4}
   id: l4-office-20-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 270}
   state: {c: {x: 26.55, y: 1.1, z: -15.4}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-20-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-20-plate:
   behavior: scripts/l4-home.js
@@ -336,16 +336,16 @@ l4-office-20-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-20</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-22-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: 26.55, y: 0, z: 0.6}
   id: l4-office-22-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 270}
   state: {c: {x: 26.55, y: 1.1, z: 0.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-22-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-22-plate:
   behavior: scripts/l4-home.js
@@ -361,16 +361,16 @@ l4-office-22-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-22</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-23-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: 26.55, y: 0, z: 15.4}
   id: l4-office-23-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 270}
   state: {c: {x: 26.55, y: 1.1, z: 15.4}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-23-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-23-plate:
   behavior: scripts/l4-home.js
@@ -386,16 +386,16 @@ l4-office-23-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-23</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-24-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: 26.55, y: 0, z: 16.6}
   id: l4-office-24-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 270}
   state: {c: {x: 26.55, y: 1.1, z: 16.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-24-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-24-plate:
   behavior: scripts/l4-home.js
@@ -411,16 +411,16 @@ l4-office-24-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-24</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-3-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: -0.6, y: 0, z: -26.55}
   id: l4-office-3-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 360}
   state: {c: {x: -0.6, y: 1.1, z: -26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-3-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-3-plate:
   behavior: scripts/l4-home.js
@@ -436,16 +436,16 @@ l4-office-3-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-03</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-4-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: 0.6, y: 0, z: -26.55}
   id: l4-office-4-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 360}
   state: {c: {x: 0.6, y: 1.1, z: -26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-4-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-4-plate:
   behavior: scripts/l4-home.js
@@ -461,16 +461,16 @@ l4-office-4-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-04</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-6-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: 16.6, y: 0, z: -26.55}
   id: l4-office-6-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 360}
   state: {c: {x: 16.6, y: 1.1, z: -26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-6-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-6-plate:
   behavior: scripts/l4-home.js
@@ -486,16 +486,16 @@ l4-office-6-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-06</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-7-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: -16.6, y: 0, z: 26.55}
   id: l4-office-7-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 180}
   state: {c: {x: -16.6, y: 1.1, z: 26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-7-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-7-plate:
   behavior: scripts/l4-home.js
@@ -511,16 +511,16 @@ l4-office-7-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-07</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-8-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: -15.4, y: 0, z: 26.55}
   id: l4-office-8-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 180}
   state: {c: {x: -15.4, y: 1.1, z: 26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-8-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-8-plate:
   behavior: scripts/l4-home.js
@@ -536,16 +536,16 @@ l4-office-8-plate:
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-08</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-9-cooler:
   behavior: scripts/l4-home.js
+  castShadow: false
   children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
   feetPosition: {x: -0.6, y: 0, z: 26.55}
   id: l4-office-9-cooler
-  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  layout: {box: {max: {x: 0.18, y: 1.2, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
+  model: {id: /cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb}
   physics: static
-  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
   rotation: {yaw: 180}
   state: {c: {x: -0.6, y: 1.1, z: 26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-9-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
-  castShadow: false
   visibleRange: {max: 45}
 l4-office-9-plate:
   behavior: scripts/l4-home.js
