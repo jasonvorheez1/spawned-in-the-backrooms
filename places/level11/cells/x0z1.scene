@@ -1,4 +1,89 @@
 # spawn-scene v2 yaml x0z1
+l11-vault-nose-0:
+  castShadow: false
+  feetPosition: {x: 10.98, y: -2.62, z: 88.2}
+  id: l11-vault-nose-0
+  material: {color: oklch(0.75 0.13 85), metalness: 0.6, roughness: 0.4}
+  primitive: {depth: 1.5, height: 0.025, kind: box, width: 0.05}
+l11-vault-nose-1:
+  castShadow: false
+  feetPosition: {x: 10.5, y: -2.82, z: 88.2}
+  id: l11-vault-nose-1
+  material: {color: oklch(0.75 0.13 85), metalness: 0.6, roughness: 0.4}
+  primitive: {depth: 1.5, height: 0.025, kind: box, width: 0.05}
+l11-vault-nose-2:
+  castShadow: false
+  feetPosition: {x: 10.02, y: -3.02, z: 88.2}
+  id: l11-vault-nose-2
+  material: {color: oklch(0.75 0.13 85), metalness: 0.6, roughness: 0.4}
+  primitive: {depth: 1.5, height: 0.025, kind: box, width: 0.05}
+l11-vault-nose-3:
+  castShadow: false
+  feetPosition: {x: 9.540000000000001, y: -3.22, z: 88.2}
+  id: l11-vault-nose-3
+  material: {color: oklch(0.75 0.13 85), metalness: 0.6, roughness: 0.4}
+  primitive: {depth: 1.5, height: 0.025, kind: box, width: 0.05}
+l11-vault-nose-4:
+  castShadow: false
+  feetPosition: {x: 9.06, y: -3.42, z: 88.2}
+  id: l11-vault-nose-4
+  material: {color: oklch(0.75 0.13 85), metalness: 0.6, roughness: 0.4}
+  primitive: {depth: 1.5, height: 0.025, kind: box, width: 0.05}
+l11-vault-stair-0:
+  feetPosition: {x: 10.76, y: -3.6, z: 88.2}
+  id: l11-vault-stair-0
+  material: {color: oklch(0.55 0.015 80), repeat: [0.6, 0.6], roughness: 0.85, texture: cdn/texture-grimy-wet-concrete-floor-with-puddles.png, wrap: repeat}
+  primitive: {depth: 1.5, height: 1, kind: box, width: 0.48}
+  receiveShadow: true
+l11-vault-stair-1:
+  feetPosition: {x: 10.28, y: -3.6, z: 88.2}
+  id: l11-vault-stair-1
+  material: {color: oklch(0.55 0.015 80), repeat: [0.6, 0.6], roughness: 0.85, texture: cdn/texture-grimy-wet-concrete-floor-with-puddles.png, wrap: repeat}
+  primitive: {depth: 1.5, height: 0.8000000000000003, kind: box, width: 0.48}
+  receiveShadow: true
+l11-vault-stair-2:
+  feetPosition: {x: 9.799999999999999, y: -3.6, z: 88.2}
+  id: l11-vault-stair-2
+  material: {color: oklch(0.55 0.015 80), repeat: [0.6, 0.6], roughness: 0.85, texture: cdn/texture-grimy-wet-concrete-floor-with-puddles.png, wrap: repeat}
+  primitive: {depth: 1.5, height: 0.6000000000000001, kind: box, width: 0.48}
+  receiveShadow: true
+l11-vault-stair-3:
+  feetPosition: {x: 9.32, y: -3.6, z: 88.2}
+  id: l11-vault-stair-3
+  material: {color: oklch(0.55 0.015 80), repeat: [0.6, 0.6], roughness: 0.85, texture: cdn/texture-grimy-wet-concrete-floor-with-puddles.png, wrap: repeat}
+  primitive: {depth: 1.5, height: 0.3999999999999999, kind: box, width: 0.48}
+  receiveShadow: true
+l11-vault-stair-4:
+  feetPosition: {x: 8.84, y: -3.6, z: 88.2}
+  id: l11-vault-stair-4
+  material: {color: oklch(0.55 0.015 80), repeat: [0.6, 0.6], roughness: 0.85, texture: cdn/texture-grimy-wet-concrete-floor-with-puddles.png, wrap: repeat}
+  primitive: {depth: 1.5, height: 0.20000000000000018, kind: box, width: 0.48}
+  receiveShadow: true
+l11-vault-stair-hand:
+  feetPosition: {x: 9.8, y: -2.1500000000000004, z: 87.4}
+  id: l11-vault-stair-hand
+  material: {color: oklch(0.4 0.03 140), metalness: 0.8, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.9, kind: cylinder, radiusBottom: 0.025, radiusTop: 0.025}
+  rotation: {roll: -67.38013505195957}
+l11-vault-stair-post-0:
+  feetPosition: {x: 8.75, y: -3.6, z: 87.4}
+  id: l11-vault-stair-post-0
+  material: {color: oklch(0.4 0.03 140), metalness: 0.8, roughness: 0.4}
+  primitive: {height: 1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.03}
+l11-vault-stair-post-1:
+  feetPosition: {x: 10.85, y: -2.75, z: 87.4}
+  id: l11-vault-stair-post-1
+  material: {color: oklch(0.4 0.03 140), metalness: 0.8, roughness: 0.4}
+  primitive: {height: 1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.03}
+l11-vault-stair-ramp:
+  feetPosition: {x: 9.8, y: -3.1, z: 88.2}
+  id: l11-vault-stair-ramp
+  physics: {body: static, collider: box}
+  pivot: center
+  primitive: {depth: 1.5, height: 0.1, kind: box, width: 2.6}
+  rotation: {roll: 22.619864948040426}
+  visible: false
 l11d-a-shell:
   castShadow: false
   feetPosition: {x: 9, y: -3.6, z: 89}

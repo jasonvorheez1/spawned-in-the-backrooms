@@ -55,16 +55,6 @@ l11-sub-ramp:
   primitive: {depth: 4.372001829825783, height: 0.12, kind: box, width: 2.2}
   rotation: {pitch: 36.817477002178606}
   visible: false
-l11-vault-stair-rail:
-  feetPosition: {x: 0, y: 0, z: 0}
-  id: l11-vault-stair-rail
-  material: {color: oklch(0.35 0.02 140), metalness: 0.7, roughness: 0.5}
-  spline: {kind: fence, points: [[12.3, -2.6, 87.45], [9.3, -3.6, 87.45]]}
-l11-vault-stairs:
-  feetPosition: {x: 0, y: 0, z: 0}
-  id: l11-vault-stairs
-  material: {color: oklch(0.42 0.015 80), roughness: 0.85}
-  spline: {kind: stairs, points: [[12.3, -2.6, 88.25], [9.3, -3.6, 88.25]], width: 1.5}
 spam-return:
   feetPosition: {x: 44.3, y: 0.15, z: 27.3}
   id: spam-return
