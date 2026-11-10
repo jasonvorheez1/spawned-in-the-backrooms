@@ -40,7 +40,13 @@ export function layCity(ctx, h) {
   const X_AVE = [-140, -70, 0, 70, 140], Z_ST = [-160, -92, 12, 84, 156, 228], CANAL_Z = -30, ROAD_Z = [12, 84, 156, -92, -160, 228];
 
   // ---- the ground, so the city stands on something to the edge of the fog
-  bx("l11-ground", 0, -0.45, 40, 620, 0.3, 700, { ...T("stained-concrete-floor", 40), color: "oklch(0.55 0.015 85)", roughness: 0.9 });
+  { // the city's under-slab, cut open over the subway stairwell (x 12.4..14.8, z 58.4..62.6)
+    const G = { ...T("stained-concrete-floor", 40), color: "oklch(0.55 0.015 85)", roughness: 0.9 };
+    bx("l11-ground", 0, -0.45, -125.8, 620, 0.3, 368.4, G);
+    bx("l11-ground-n", 0, -0.45, 226.3, 620, 0.3, 327.4, G);
+    bx("l11-ground-w", -148.8, -0.45, 60.5, 322.4, 0.3, 4.2, G);
+    bx("l11-ground-e", 162.4, -0.45, 60.5, 295.2, 0.3, 4.2, G);
+  }
   // ---- avenues (north-south) and streets (east-west): long slabs, kerbs, sidewalks; the centre already has its own (sim.js), so these start where those stop
   // sidewalks and kerbs stop at every crossing road, so a car drives straight through an intersection instead of hopping a kerb
   const cutsFor = (list, half) => list.map((c) => [c - half, c + half]);
@@ -160,10 +166,32 @@ export function layStreet(ctx, h) {
 pop steam rate=14 on=disc(.35) life=1.6..2.6 v=up(.9..1.5)+sdir()*.12 size=.18..0.4 acc=drag(1.1)+buoy(.25) col=<.9,.9,.93> a=.3>0 sz=$size*(1>2.6) r=sprite(smoke-puff,alpha)`;
   for (const [i, [x, z]] of [[3.4, 32], [-3.6, -8], [2.4, 66], [-3, -60]].entries()) { cyl(`l11-manhole-${i}`, x, 0.06, z, 0.5, 0.5, 0.04, { color: "oklch(0.2 0.01 250)", metalness: 0.7, roughness: 0.5 }, { physics: undefined }); sp(`l11-manhole-steam-${i}`, { feetPosition: { x, y: 0.15, z }, fx: { script: STEAM } }); }
   const SUB = { x: 13.6, z: 60.5 };
-  for (const w of [-1, 1]) bx(`l11-sub-well-${w}`, SUB.x + w * 1.6, -2.9, SUB.z, 0.2, 2.85, 4.0, { color: "oklch(0.72 0.05 160)", roughness: 0.7 }); // the stairwell's tiled sides, down to the platform corridor
-  for (let k = 0; k < 7; k++) bx(`l11-sub-step-${k}`, SUB.x, -0.1 - k * 0.38, SUB.z - 1.6 + k * 0.5, 2.2, 0.12, 0.5, { color: "oklch(0.5 0.02 250)", roughness: 0.8 });
-  for (const s of [-1, 1]) { bx(`l11-sub-rail-${s}`, SUB.x + s * 1.2, 0.5, SUB.z, 0.07, 0.9, 4.0, { color: "oklch(0.25 0.1 150)", metalness: 0.6, roughness: 0.4 }); cyl(`l11-sub-post-${s}`, SUB.x + s * 1.2, 0.1, SUB.z - 2.1, 0.07, 0.07, 2.6, { color: "oklch(0.25 0.1 150)", metalness: 0.6 }); sp(`l11-sub-globe-${s}`, { feetPosition: { x: SUB.x + s * 1.2, y: 2.9, z: SUB.z - 2.1 }, primitive: { kind: "sphere", radius: 0.2 }, material: { color: "oklch(0.8 0.2 145)", emissive: "oklch(0.8 0.2 145)", emissiveIntensity: 2.4 }, light: { kind: "point", color: "oklch(0.85 0.2 145)", intensity: 2.5, distance: 8 } }); }
-  sp("l11-sub-sign", { feetPosition: { x: SUB.x, y: 2.5, z: SUB.z - 2.1 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 1.6, height: 0.5, depth: 0.06 }, material: { color: "oklch(0.2 0.02 250)" }, ui: `<div face="front" width="1.6m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;font-size:240px;letter-spacing:8px;color:#fff;background:#1a6b3a">SUBWAY</div>` });
+  for (const w of [-1, 1]) bx(`l11-sub-well-${w}`, SUB.x + w * 1.3, -2.9, SUB.z, 0.2, 3.24, 4.2, { color: "oklch(0.72 0.05 160)", roughness: 0.7 }); // the stairwell's tiled sides, down to the platform corridor
+  // the flight: sidewalk top (0.336, z 58.4) down to the hall landing (-2.6, z 62.6): 11 solid risers of 0.267 m (under the body's 0.3 m step),
+  // each with a worn steel nosing; an unseen 35° ramp under them carries the feet smoothly
+  const ST = { n: 11, top: 0.336, z0: 58.4, run: 4.2, drop: 2.94 }, rise = ST.drop / ST.n, tread = ST.run / ST.n;
+  for (let k = 0; k < ST.n; k++) {
+    const y = ST.top - (k + 1) * rise, z = ST.z0 + (k + 0.5) * tread;
+    bx(`l11-sub-step-${k}`, SUB.x, -2.9, z, 2.4, y + 2.9, tread, { color: "oklch(0.52 0.015 80)", roughness: 0.9 });
+    bx(`l11-sub-nose-${k}`, SUB.x, y - 0.02, z - tread / 2 + 0.04, 2.4, 0.03, 0.08, { color: "oklch(0.62 0.02 90)", metalness: 0.7, roughness: 0.35 }, { physics: undefined });
+  }
+  { const len = Math.hypot(ST.run, ST.drop), a = Math.atan2(ST.drop, ST.run) * 180 / Math.PI, n = 0.06 / Math.cos(a * Math.PI / 180);
+    sp("l11-sub-ramp", { feetPosition: { x: SUB.x, y: ST.top - ST.drop / 2 - n, z: ST.z0 + ST.run / 2 }, pivot: "center", rotation: { pitch: a }, primitive: { kind: "box", width: 2.4, height: 0.12, depth: len }, visible: false, physics: { body: "static", collider: "box" } }); }
+  const IRON = { color: "oklch(0.3 0.09 150)", metalness: 0.65, roughness: 0.45 }; // MTA green cast iron, worn at the grip
+  for (const s of [-1, 1]) {
+    const kids = [
+      { feetPosition: { x: 0, y: 0.84, z: 0 }, primitive: { kind: "box", width: 0.06, height: 0.06, depth: 4, bevel: 0.025 }, material: { ...IRON, color: "oklch(0.36 0.07 140)", roughness: 0.3 } },
+      { feetPosition: { x: 0, y: 0.1, z: 0 }, primitive: { kind: "box", width: 0.04, height: 0.05, depth: 4 }, material: IRON },
+      ...Array.from({ length: 15 }, (_, i) => ({ feetPosition: { x: 0, y: 0.1, z: -1.75 + i * 0.25 }, primitive: { kind: "cylinder", radiusTop: 0.012, radiusBottom: 0.012, height: 0.74 }, material: IRON })),
+      ...Array.from({ length: 4 }, (_, i) => ({ feetPosition: { x: 0, y: 0.45, z: -1.5 + i * 1 }, primitive: { kind: "torus", radius: 0.12, tube: 0.012 }, rotation: { yaw: 90 }, pivot: "center", material: IRON })),
+      { feetPosition: { x: 0, y: 0, z: 1.98 }, primitive: { kind: "box", width: 0.09, height: 0.95, depth: 0.09 }, material: IRON },
+      { feetPosition: { x: 0, y: 0.95, z: 1.98 }, primitive: { kind: "sphere", radius: 0.06 }, material: IRON },
+    ];
+    sp(`l11-sub-rail-${s}`, { feetPosition: { x: SUB.x + s * 1.2, y: 0.336, z: SUB.z }, primitive: { kind: "box", width: 0.07, height: 0.9, depth: 4.0 }, material: { color: "oklch(0 0 0 / 0)", transparent: true, opacity: 0, depthWrite: false }, castShadow: false, physics: { body: "static", collider: "box" }, children: kids });
+    cyl(`l11-sub-post-${s}`, SUB.x + s * 1.2, 0.336, SUB.z - 2.1, 0.05, 0.08, 2.6, IRON);
+    sp(`l11-sub-globe-${s}`, { feetPosition: { x: SUB.x + s * 1.2, y: 3.14, z: SUB.z - 2.1 }, primitive: { kind: "sphere", radius: 0.2 }, material: { color: "oklch(0.8 0.2 145)", emissive: "oklch(0.8 0.2 145)", emissiveIntensity: 2.4 }, light: { kind: "point", color: "oklch(0.85 0.2 145)", intensity: 2.5, distance: 8 }, behavior: "scripts/l11-globe.js", state: { base: 2.5 }, children: [{ feetPosition: { x: 0, y: -0.24, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.09, radiusBottom: 0.06, height: 0.08 }, material: IRON }] });
+  }
+  sp("l11-sub-sign", { feetPosition: { x: SUB.x, y: 2.74, z: SUB.z - 2.1 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 1.6, height: 0.5, depth: 0.06 }, material: { color: "oklch(0.2 0.02 250)" }, ui: `<div face="front" width="1.6m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;font-size:240px;letter-spacing:8px;color:#fff;background:#1a6b3a">SUBWAY</div>` });
   // billboards on stilts that change their ads when nobody is looking
   const bb = [];
   [[-17.5, 74, -90], [17.5, -74, 90]].forEach(([x, z, yaw], b) => {

@@ -22,7 +22,7 @@ meg_table: "/cdn/value.dd3c190eacb8ea0abb48c136aae6af4b30b1ac33502ed6de0342bd4f1
 meg_cache: "/cdn/value.425e3801e0e441533b3d2703f643ba3f3a74b0d554f3e5aad6ebe0e1545c745c.glb"
 reno_office: "/cdn/value.34efbb6c2fafbf2728459d8bb15389865ef7891c885561254c4a76b7d3a955c0.glb"
 spam_alley: "/cdn/value.d3be766fad76b4b0d0dbbce94bb28194fde6587f32a9e36ada6904f2a9e5e574.glb"
-turnstile: "/cdn/value.62007c2a80fea7a3196cdbeb1a7c6e9a8e044d0c275450f55e13195b4ddf03b0.glb"
+turnstile: "/cdn/value.2a9552771a95c8b4df9fcf8f0e5dae13ebd36ca9c2dabacc3ace2af6bc15df90.glb"
 trashcan: "/cdn/value.7f3b0f23d817d7de6669f46da8e24c82a9b2793fb84d658ceec35d392cbdfc71.glb" # tripo
 taxi_wheel: "/cdn/value.84b0c57de2a5b1d18f1191f15bc0761bf99c351c56f3a6958f537966dec7fd74.glb"
 taxi: "/cdn/value.e70e7b30733d180bec589809df34cc0768d7ebebcee02ba8cfac3f29e1d0826a.glb" # tripo crown vic cab, 4.16 m long raw, wheels baked in

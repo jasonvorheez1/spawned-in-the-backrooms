@@ -707,15 +707,18 @@ function inventory(s) {
   const misc = `${s.compass > 0 ? `<button class="it" onclick="sendAction('inv',{k:'compass'})"><span class="cur">&gt;</span><span class="nm" style="color:#d8b56a">Old compass</span><span class="stat-r">${s.compass} reads</span></button>` : ''}
     ${s.firesalt > 0 ? `<button class="it" onclick="sendAction('inv',{k:'firesalt'})"><span class="cur">&gt;</span><span class="nm" style="color:#ff8a3a">Firesalt</span><span class="stat-r">${s.firesalt} pinches</span></button>` : ''}
     ${s.bobbypins ? `<div class="it${sel === 'bobbypin' ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'bobbypin'})"><span class="cur">&gt;</span><span class="nm">Bobby pins</span><span class="stat-r">${s.bobbypins}</span></div>` : ''}
-    ${String(s.holotapes ?? '').split(',').filter(Boolean).map((id) => { const on = s.holoPlay?.id === id; return `<button class="it${on ? ' sel' : ''}" onclick="sendAction('inv',{k:'holo',id:'${id}'})"><span class="cur">&gt;</span><span class="nm" style="color:#ff9a6a">Tape: Atomic Age Defender</span><span class="stat-r">${on ? '■ STOP' : '▶ PLAY'}</span></button>` }).join('')}
     ${s.pages ? String(s.pages).split(',').filter(Boolean).sort((x, y) => x - y).map((n) => `<button class="it" onclick="sendAction('inv',{k:'read',n:${+n}})"><span class="cur">&gt;</span><span class="nm" style="color:#e8dcc0">${+n === 24 ? 'Field doc 24' : +n >= 21 && +n <= 23 ? 'Field doc ' + (+n - 20) : +n >= 11 && +n <= 17 ? 'Alef papers ' + (+n - 10) : 'Torn page ' + +n}</span><span class="stat-r">READ</span></button>`).join('') : ''}` || '<div class="em">No miscellaneous items.</div>'
 
+  // tapes get their own tab, each by its own title (Shelly, Nov 10: "the tape for the 50s ad is nowhere to be seen")
+  const TAPE_NAMES = { r55: 'Atomic Age Defender (1950s ad)', walt41: 'Field Test 41' }
+  const tapes = String(s.holotapes ?? '').split(',').filter(Boolean).map((id) => { const on = s.holoPlay?.id === id; return `<button class="it${on ? ' sel' : ''}" onclick="sendAction('inv',{k:'holo',id:'${id}'})"><span class="cur">&gt;</span><span class="nm" style="color:#ff9a6a">Tape: ${TAPE_NAMES[id] ?? id}</span><span class="stat-r">${on ? '■ STOP' : '▶ PLAY'}</span></button>` }).join('') || '<div class="em">No tapes.</div>'
   const keyRows = (s.keyItems ?? []).includes('spamton') ? `<div class="it on" title="Can't be dropped. Weighs nothing."><span class="cur">&gt;</span><span class="nm" style="color:#ff6fd0">[[SPAMTON G. SPAMTON]]</span><span class="stat-r"><span>0 kg</span><span style="color:#ffe14d">LOOT $$ +</span></span><div style="font-size:11px;opacity:.75;padding-left:18px">A [[Big Shot]] riding in your pocket. 10% chance of a backquarter in any loot, +2% on money you find.</div></div>` : ''
   const SECS = {
     key: ['Key items', keyRows],
     weapons: ['Weapons', weapons],
     apparel: ['Apparel', app],
     aid: ['Aid', aid],
+    tapes: ['Tapes', tapes],
     misc: ['Misc', misc],
     ammo: ['Ammo', ammo],
     repair: ['Repair', repairSec(s)]
@@ -727,7 +730,7 @@ function inventory(s) {
     : (SECS[tab][1] || '<div class="em">None.</div>')
 
   const cnt = (h) => (String(h).match(/class="it/g) || []).length
-  const GLY = { all: '◈', key: '✦', weapons: '⚔', apparel: '⛨', aid: '✚', misc: '✎', ammo: '⁂', repair: '⚙' }
+  const GLY = { all: '◈', key: '✦', weapons: '⚔', apparel: '⛨', aid: '✚', misc: '✎', tapes: '▶', ammo: '⁂', repair: '⚙' }
   const rail = ['all', ...Object.keys(SECS)].map((t, i) => {
     const n = t === 'all' ? Object.values(SECS).reduce((a, [, h]) => a + cnt(h), 0) : cnt(SECS[t][1])
     return `<button class="hg-rb${t === tab ? ' on' : ''}" style="--i:${i}" onclick="sendAction('inv',{k:'tab',t:'${t}'})"><span class="g">${GLY[t]}</span><span class="l">${t === 'all' ? 'ALL' : SECS[t][0].toUpperCase()}</span>${n ? `<span class="n">${n}</span>` : ''}</button>`

@@ -1,7 +1,7 @@
 // cloth patterns for the critter garments (Shelly, Nov 7: "add textures to most of the clothes"). Drawn on the garment's own
 // bind-pose geometry (positionGeometry), so a pattern sticks to the cloth as it moves, and needs no UVs (many garment meshes have none).
 // The garment's colour (material color = the look's hex) is the base; each pattern darkens/lightens it. params: { pat, s }
-import { materialColor, positionGeometry, vec2, vec3, float, abs, fract, floor, sin, mix, smoothstep, step, max, min, mx_noise_float, mx_fractal_noise_float, mx_worley_noise_float } from "builtin/tsl";
+import { materialColor, positionGeometry, positionWorld, normalWorld, cameraPosition, normalize, dot, pow, saturate, vec2, vec3, float, abs, fract, floor, sin, mix, smoothstep, step, max, min, mx_noise_float, mx_fractal_noise_float, mx_worley_noise_float } from "builtin/tsl";
 import { MeshStandardNodeMaterial } from "builtin/three";
 
 // the printed pieces: picture, centre on the torso (bind-pose metres, front = -z: the critter faces -z), square size; split = the other half's colour; x = sleeve marks
@@ -165,7 +165,13 @@ export function material(ctx) {
     const wv = abs(sin(u.mul(300))).mul(0.5).add(abs(sin(v.mul(300))).mul(0.5));
     col = base.mul(float(0.9).add(wv.mul(0.1)).add(fine.mul(0.04)));
   }
-  m.colorNode = col;
+  // realistic-anime finish shared by every pattern (Nov 10): soft folds, a fabric sheen at grazing angles, and a lift so cloth never goes black in shadow
+  const folds = mx_fractal_noise_float(p.mul(vec3(7, 3.5, 7))).mul(0.5).add(0.5);
+  col = col.mul(float(0.84).add(smoothstep(0.25, 0.75, folds).mul(0.2)));
+  const N = normalize(normalWorld), V = normalize(cameraPosition.sub(positionWorld)), fres = pow(float(1).sub(saturate(dot(N, V))), 3.0);
+  const sheen = col.mul(0.5).add(vec3(0.18, 0.17, 0.16)).mul(fres).mul(0.2), lift = col.mul(vec3(0.92, 0.92, 1.0)).mul(0.18);
+  m.colorNode = col.mul(0.86);
+  m.emissiveNode = m.emissiveNode ? m.emissiveNode.add(sheen).add(lift) : sheen.add(lift);
   m.roughness = rough;
   return m;
 }

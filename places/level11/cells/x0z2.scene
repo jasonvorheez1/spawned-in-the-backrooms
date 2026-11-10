@@ -1,4 +1,10 @@
 # spawn-scene v2 yaml x0z2
+l11-ground-n:
+  feetPosition: {x: 0, y: -0.45, z: 226.3}
+  id: l11-ground-n
+  material: {key: Std/PBR, map: cdn/texture-stained-concrete-floor.png, mapRepeat: [40, 40], roughness: 0.9, textureWrapMode: repeat, tint: 4285952360, wrap: repeat}
+  physics: static
+  primitive: {depth: 327.4, height: 0.3, kind: box, width: 620}
 l11d-d-arm:
   feetPosition: {x: 47.6, y: -3.6, z: 199.8}
   id: l11d-d-arm

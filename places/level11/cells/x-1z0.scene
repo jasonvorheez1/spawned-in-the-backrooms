@@ -1,0 +1,7 @@
+# spawn-scene v2 yaml x-1z0
+l11-ground-w:
+  feetPosition: {x: -148.8, y: -0.45, z: 60.5}
+  id: l11-ground-w
+  material: {key: Std/PBR, map: cdn/texture-stained-concrete-floor.png, mapRepeat: [40, 40], roughness: 0.9, textureWrapMode: repeat, tint: 4285952360, wrap: repeat}
+  physics: static
+  primitive: {depth: 4.2, height: 0.3, kind: box, width: 322.4}

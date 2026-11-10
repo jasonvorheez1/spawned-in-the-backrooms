@@ -18,7 +18,7 @@ export function layVaults(ctx, { sp, bx, cyl }) {
   // landing + corridor from the last stair step (z ~62) to the hall
   bx("l11-vault-landing", SUB.x, FY - 0.3, 64.5, 3.2, 0.3, 5.0, GRIME);
   for (const s of [-1, 1]) bx(`l11-vault-cwall-${s}`, SUB.x + s * 1.7, FY, 64.5, 0.2, 2.5, 5.0, WALL);
-  bx("l11-vault-cceil", SUB.x, -0.42, 64.5, 3.6, 0.15, 5.0, DARK);
+  bx("l11-vault-cceil", SUB.x, -0.17, 64.8, 3.6, 0.25, 4.4, DARK); // starts where the stair has dropped below head height (z 62.6), flush under the sidewalk
   sp("l11-gate-sub", { tags: ["usable"], feetPosition: { x: SUB.x, y: FY, z: 63.6 }, primitive: { kind: "box", width: 3.2, height: 2.4, depth: 0.12 }, material: { ...STEEL, color: "oklch(0.38 0.02 140)" }, physics: { body: "kinematic", collider: "box" }, behavior: "scripts/l11-gate.js", state: { exit: { axis: "z", sign: 1 },  key: "sub", host: "MTA-GATE-07", name: "Station Gate", verb: "Locked:", info: "MTA-GATE-07 controls it", drop: 2.6 } });
   sp("l11-vault-lamp-c", LAMP("c", SUB.x, 64.5));
   // the hall: platform x 11..19.6, track pit x 7..11 (1 m down), z 67..89
@@ -59,7 +59,7 @@ export function layVaults(ctx, { sp, bx, cyl }) {
     model: { id: "/cdn/value.a88f9bd98e36032436f4cfbcfd82ee1304a484081effe4fc993245613abb7616.glb" },
     layout: { box: { min: { x: -7.5, y: 0, z: -1.6 }, max: { x: 7.5, y: 3.1, z: 1.6 } } }, physics: { body: "static", collider: "box" } });
   // turnstiles, benches, bins, a newspaper-strewn corner
-  for (let k = 0; k < 3; k++) sp(`l11-vault-turn-${k}`, { feetPosition: { x: 13.3 + k * 1.1, y: FY, z: 68.4 }, primitive: null, material: null, model: { id: MODELS.turnstile, forward: "-z" }, physics: { body: "static", collider: "box" } });
+  for (let k = 0; k < 3; k++) sp(`l11-vault-turn-${k}`, { feetPosition: { x: 13.3 + k * 1.1, y: FY, z: 68.4 }, primitive: null, material: null, model: { id: MODELS.turnstile, forward: "-z" }, scale: 0.82, physics: "none" }); // a 1.0 m steel token turnstile, arms swing aside so the lanes stay walkable
   sp("l11-vault-mvm", { feetPosition: { x: 18.95, y: FY, z: 69.2 }, rotation: { yaw: -90 }, model: { id: MODELS.mvm, forward: "-z" }, physics: { body: "static", collider: "box" } });
   for (const [i, z] of [[0, 74], [1, 83]]) sp(`l11-vault-bench-${i}`, { feetPosition: { x: 18.9, y: FY, z }, rotation: { yaw: -90 }, model: { id: MODELS.bench, forward: "-z" }, physics: { body: "static", collider: "box" } });
   sp("l11-vault-bin", { feetPosition: { x: 18.9, y: FY, z: 78.5 }, model: { id: MODELS.bin, forward: "-z" }, physics: { body: "static", collider: "box" } });
