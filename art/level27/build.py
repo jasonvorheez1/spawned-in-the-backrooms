@@ -29,6 +29,9 @@ parts = [
     ell(13.5, 4.0, -2.5, 1.5, 1.2, 1.4),
     box(-9.5, -4.6, -0.75, -0.25, 0.05, 0.55),  # the drain, too small to crawl
 ]
+for p in parts:
+    bpy.ops.object.select_all(action="DESELECT"); p.select_set(True); bpy.context.view_layer.objects.active = p
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 base = parts[0]
 for p in parts[1:]:
     m = base.modifiers.new("u", "BOOLEAN"); m.operation = "UNION"; m.object = p; m.solver = "EXACT"
