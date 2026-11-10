@@ -40,7 +40,13 @@ export function layCity(ctx, h) {
   const X_AVE = [-140, -70, 0, 70, 140], Z_ST = [-160, -92, 12, 84, 156, 228], CANAL_Z = -30, ROAD_Z = [12, 84, 156, -92, -160, 228];
 
   // ---- the ground, so the city stands on something to the edge of the fog
-  bx("l11-ground", 0, -0.45, 40, 620, 0.3, 700, { ...T("stained-concrete-floor", 40), color: "oklch(0.55 0.015 85)", roughness: 0.9 });
+  { // the city's under-slab, cut open over the subway stairwell (x 12.4..14.8, z 58.4..62.6)
+    const G = { ...T("stained-concrete-floor", 40), color: "oklch(0.55 0.015 85)", roughness: 0.9 };
+    bx("l11-ground", 0, -0.45, -125.8, 620, 0.3, 368.4, G);
+    bx("l11-ground-n", 0, -0.45, 226.3, 620, 0.3, 327.4, G);
+    bx("l11-ground-w", -148.8, -0.45, 60.5, 322.4, 0.3, 4.2, G);
+    bx("l11-ground-e", 162.4, -0.45, 60.5, 295.2, 0.3, 4.2, G);
+  }
   // ---- avenues (north-south) and streets (east-west): long slabs, kerbs, sidewalks; the centre already has its own (sim.js), so these start where those stop
   // sidewalks and kerbs stop at every crossing road, so a car drives straight through an intersection instead of hopping a kerb
   const cutsFor = (list, half) => list.map((c) => [c - half, c + half]);
