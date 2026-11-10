@@ -25,6 +25,7 @@ def hang(P):
             r, b = pol(p); ref[int(b) % NB] = max(ref[int(b) % NB], r)
     for k in range(NB):   # fill empty bins from neighbours
         if ref[k] == 0: ref[k] = max(ref[(k - 1) % NB], ref[(k + 1) % NB])
+    for _ in range(3): ref = [(ref[(k - 1) % NB] + 2 * ref[k] + ref[(k + 1) % NB]) / 4 for k in range(NB)]   # no bin steps
     for i in sorted(tor, key=lambda i: -P[i].z):
         p = P[i]; r, b = pol(p); k0 = int(b) % NB; f = b - int(b)
         R = ref[k0] * (1 - f) + ref[(k0 + 1) % NB] * f + EASE * min(1, (cz - p.z) / 0.08)
@@ -37,7 +38,8 @@ def hang(P):
         idx = [i for i, p in enumerate(P) if (p.x > 0) == (side == 'Left') and abs(p.x) > abs(J['LeftArm'].x) * 0.9]
         rs = [((P[i] - A) - d * (P[i] - A).dot(d)).length for i in idx]
         if not rs: continue
-        Rm = sorted(rs)[int(len(rs) * 0.9)] + EASE * 0.6
+        mid = [r for i, r in zip(idx, rs) if 0.3 < (P[i] - A).dot(d) / L < 0.8]
+        Rm = sorted(mid)[len(mid) // 2] * 1.18 + 0.004 if mid else max(rs)   # the sleeve's own median, a little roomier
         for i, r in zip(idx, rs):
             t = (P[i] - A).dot(d) / L
             if t < 0.15: continue
@@ -57,8 +59,6 @@ if keys:
     for v, c in zip(g.data.vertices, keys[0].data): v.co = c.co
 else:
     for v, p in zip(g.data.vertices, hang(base)): v.co = Mi @ p
-# smooth the hung cloth a little so the bin seams vanish
-m = g.modifiers.new('sm', 'CORRECTIVE_SMOOTH'); m.iterations = 6; m.smooth_type = 'LENGTH_WEIGHTED'; m.use_only_smooth = True
 # hood (lying down) and pocket: new parts, skinned from the body by nearest weights
 def tube(curve_pts, radius, ring=12, flat=1.0):
     bm = bmesh.new(); rings = []
@@ -72,8 +72,12 @@ def tube(curve_pts, radius, ring=12, flat=1.0):
     bm.faces.new(rings[0][::-1]); bm.faces.new(rings[-1])
     me = bpy.data.meshes.new('part'); bm.to_mesh(me); return me
 nk = J['Neck']; P0 = [M @ v.co for v in g.data.vertices]
-collar = [p for p in P0 if abs(p.z - (nk.z + 0.02)) < 0.02 and abs(p.x - nk.x) < 0.12]
-rn = max(((p - nk).to_2d().length for p in collar), default=0.08) + 0.012
+B = None
+bpy.ops.import_scene.gltf(filepath=bodyf); bo = next(o for o in bpy.context.selected_objects if o.name.startswith('Body'))
+BP = [bo.matrix_world @ v.co for v in bo.data.vertices]
+nr = sorted((p - nk).to_2d().length for p in BP if abs(p.z - (nk.z + 0.03)) < 0.008)
+rn = (nr[len(nr) * 3 // 4] if nr else 0.05) + 0.03   # rests on the trapezius just outside the neck tube
+for o in list(bpy.context.selected_objects): bpy.data.objects.remove(o, do_unlink=True)
 pts = []
 for j in range(25):   # a U from one collarbone, round the back of the neck, to the other
     th = -math.pi * 0.15 + (math.pi * 1.3) * j / 24
@@ -94,7 +98,6 @@ for o in (hood, pocket):
     dt.layers_vgroup_select_src = 'ALL'; dt.layers_vgroup_select_dst = 'NAME'
     bpy.ops.object.modifier_apply(modifier='dt')
     o.parent = arm; am = o.modifiers.new('arm', 'ARMATURE'); am.object = arm
-bpy.context.view_layer.objects.active = g; bpy.ops.object.modifier_apply(modifier='sm')
 if keys:   # parts ride the Bust key: give them Basis + Bust with the pocket moved by the torso's own delta
     for o in (hood, pocket): o.shape_key_add(name='Basis'); o.shape_key_add(name='Bust')
 bpy.ops.object.select_all(action='DESELECT'); hood.select_set(True); pocket.select_set(True); g.select_set(True)
