@@ -40,15 +40,33 @@ for f in files:
     Lm = Matrix((left, -fwd, up))  # rows: neck-local -> world X(left) , Y(back), Z(up)
     sideR = Lm @ Vector(F[0]["_neck"]["RHandPos"])
     print("map", stem, "R hand x", round(sideR.x, 2))
+    # twist rides frame to frame: each bone turns from where IT pointed last frame (parallel transport), never from the
+    # parent's rest aim, whose rotation_difference goes unstable near 180 deg and popped the arm's roll (the choppy swings)
+    prev = {}
+    D = []
     for fi, fr in enumerate(F):
         delta = {"Hips": Quaternion()}
         for m in ORDER:
             d = delta[PAR[m]].copy(); key = ARM.get(m)
             if key and key in fr["_neck"]:
                 d1 = (Lm @ Vector(fr["_neck"][key])).normalized()
-                h0 = d @ (ht[m] - hp[m]).normalized()
-                d = h0.rotation_difference(d1) @ d
+                if m in prev:
+                    pq, pdir = prev[m]; d = (pdir.rotation_difference(d1) @ pq).normalized()
+                else:
+                    h0 = d @ (ht[m] - hp[m]).normalized(); d = h0.rotation_difference(d1) @ d
+                prev[m] = (d.copy(), d1)
             delta[m] = d
+        D.append(delta)
+    # one 1-2-1 pass on each bone's turn, signs aligned first: the decoded joints carry sub-frame jitter
+    for m in ORDER:
+        qs = [x[m] for x in D]
+        for i in range(1, len(qs)):
+            if qs[i].dot(qs[i-1]) < 0: qs[i] = -qs[i]
+        sm = [qs[0]] + [Quaternion([(a + 2*b + c) / 4 for a, b, c in zip(qs[i-1], qs[i], qs[i+1])]).normalized() for i in range(1, len(qs)-1)] + [qs[-1]]
+        for x, q in zip(D, sm): x[m] = q
+    for fi, delta in enumerate(D):
+        for m in ORDER:
+            d = delta[m]
             M = (d @ hq[m]).to_matrix().to_4x4(); M.translation = RW @ rig.pose.bones[m].head
             pb = rig.pose.bones[m]; pb.matrix = RW.inverted() @ M
             bpy.context.view_layer.update()
