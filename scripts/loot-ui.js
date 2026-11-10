@@ -582,6 +582,13 @@ function pane(s, sel, eqKey) {
     card = `<div class="dt def"><div class="dt-header"><h4>${v.name}</h4><span class="dt-rarity">${v.drink ? 'DRINK' : 'FOOD'}</span></div><div class="art-box">${SVG_AID}</div><div class="g">${v.drink ? cell('THIRST', '+' + v.thirst) : cell('HUNGER', '+' + v.hunger)}${cell('CARRIED', s.snacks[sel.slice(6)], true)}</div></div>`
     acts.push(btn(v.drink ? 'DRINK' : 'EAT', { k: 'snack', c: sel.slice(6) }), btn('DROP ONE', { k: 'dropItem', t: sel }))
   } else if ((sel === 'ammo' || sel === 'shells' || sel === 'cells') && s[sel] > 0) { card = detail(sel, s, true); acts.push(btn('DROP A BOX', { k: 'dropItem', t: sel })) }
+  else if ((sel === 'frag' && s.grenades > 0) || (sel === 'molotov' && s.molotovs > 0)) {
+    const fr = sel === 'frag'
+    card = `<div class="dt def"><div class="dt-header"><h4>${fr ? 'Frag grenade' : 'Molotov cocktail'}</h4><span class="dt-rarity">THROWABLE</span></div><div class="g">${fr
+      ? cell('DAMAGE', '120 AT CENTRE') + cell('RADIUS', '6 M') + cell('FUSE', '2.2 S FROM THE PIN') + cell('CARRIED', s.grenades) + cell('HOW', 'HOLD G TO COOK, LET GO', true)
+      : cell('DAMAGE', '9 EVERY 0.5 S') + cell('FIRE', '7 S, 2.6 M') + cell('ON HIT', 'SHATTERS') + cell('CARRIED', s.molotovs) + cell('HOW', 'HOLD G, LET GO', true)}</div></div>`
+    acts.push(btn('READY FOR G', { k: 'nadePick', t: sel }), btn('DROP ONE', { k: 'dropItem', t: sel }))
+  }
   else if (sel === 'bobbypin' && s.bobbypins > 0) { card = detail(sel, s, true); acts.push(btn('DROP ONE', { k: 'dropItem', t: sel })) }
   if (!card) { card = detail(eqKey, s, true); acts = eqKey !== 'fists' ? [btn('DROP ONE', { k: 'drop', w: eqKey })] : [] }
   const bar = acts.length ? `<div class="acts">${acts.join('')}</div>` : ''
@@ -703,6 +710,13 @@ function inventory(s) {
       <span class="stat-r"><span>×${s[t]}</span></span>
     </button>`).join('') || '<div class="em">Out of ammunition.</div>'
 
+  // Throwables: listed with the ammo, a THROW button and a card each
+  const THROWN = { grenades: ['frag', 'Frag grenade'], molotovs: ['molotov', 'Molotov cocktail'] }
+  const throwRows = Object.entries(THROWN).filter(([k]) => s[k] > 0).map(([k, [t, nm]]) => `
+    <button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})">
+      <span class="cur">&gt;</span><span class="nm" style="color:${t === 'frag' ? '#b8c49a' : '#f0a050'}">${nm}</span>
+      <span class="stat-r"><span>×${s[k]}</span></span>
+    </button>`).join('')
   // Misc list
   const misc = `${s.compass > 0 ? `<button class="it" onclick="sendAction('inv',{k:'compass'})"><span class="cur">&gt;</span><span class="nm" style="color:#d8b56a">Old compass</span><span class="stat-r">${s.compass} reads</span></button>` : ''}
     ${s.firesalt > 0 ? `<button class="it" onclick="sendAction('inv',{k:'firesalt'})"><span class="cur">&gt;</span><span class="nm" style="color:#ff8a3a">Firesalt</span><span class="stat-r">${s.firesalt} pinches</span></button>` : ''}
@@ -721,6 +735,7 @@ function inventory(s) {
     tapes: ['Tapes', tapes],
     misc: ['Misc', misc],
     ammo: ['Ammo', ammo],
+    throw: ['Throwables', throwRows],
     repair: ['Repair', repairSec(s)]
   }
 
@@ -730,7 +745,7 @@ function inventory(s) {
     : (SECS[tab][1] || '<div class="em">None.</div>')
 
   const cnt = (h) => (String(h).match(/class="it/g) || []).length
-  const GLY = { all: '◈', key: '✦', weapons: '⚔', apparel: '⛨', aid: '✚', misc: '✎', tapes: '▶', ammo: '⁂', repair: '⚙' }
+  const GLY = { throw: '✸', all: '◈', key: '✦', weapons: '⚔', apparel: '⛨', aid: '✚', misc: '✎', tapes: '▶', ammo: '⁂', repair: '⚙' }
   const rail = ['all', ...Object.keys(SECS)].map((t, i) => {
     const n = t === 'all' ? Object.values(SECS).reduce((a, [, h]) => a + cnt(h), 0) : cnt(SECS[t][1])
     return `<button class="hg-rb${t === tab ? ' on' : ''}" style="--i:${i}" onclick="sendAction('inv',{k:'tab',t:'${t}'})"><span class="g">${GLY[t]}</span><span class="l">${t === 'all' ? 'ALL' : SECS[t][0].toUpperCase()}</span>${n ? `<span class="n">${n}</span>` : ''}</button>`

@@ -413,6 +413,7 @@ ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;
     <div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px">
       <span>LIGHT</span><span style="${s.light ? '' : 'opacity:.45'}">${s.light ? Math.round(s.battery) + '%' : 'OFF'}</span>
     </div>
+    ${(s.grenades ?? 0) + (s.molotovs ?? 0) > 0 ? `<div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px"><span>G</span><span>${s.grenades ? `FRAG ${s.grenades}` : ''}${s.grenades && s.molotovs ? ' · ' : ''}${s.molotovs ? `MOLOTOV ${s.molotovs}` : ''}</span></div>` : ''}
   </div>
 
   <!-- CENTER: Minimal Zone Header -->

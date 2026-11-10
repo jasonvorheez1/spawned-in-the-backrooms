@@ -12,6 +12,7 @@ import PLAYER from './lib/data/player.yml'
 import L from './lib/data/level0.yml'
 import W, { baseOf } from './lib/weapons.js'
 import { raycast } from 'builtin/physics'
+import { animate } from 'builtin/tween'
 import BRK from './lib/data/breakables.yml'
 import { strike } from './lib/breakables.js'
 import { startFishing, handleFishingClick, onFishNibble, onFishBite, finishFishingCatch, cancelFishing } from './lib/fishing.js'
@@ -44,6 +45,7 @@ const zoneHere = (ctx, x, z) => ctx.self.place === 'spamton' ? 'spam_arena' : ct
 
 import SOUNDS from './lib/data/sounds.yml'
 import THROW from './lib/data/throwables.yml'
+import { RAG } from './nade.js'
 import { stepTick } from './lib/footsteps.js'
 import { useCompass, COMPASS } from './lib/compass.js'
 import L3I from './lib/data/l3items.yml'
@@ -424,7 +426,8 @@ export function onInput(ctx, input) {
     if (input.released.reload || (w.rDown && !input.held.reload)) { if (w.rDown && !w.rHeld && !bld) startReload(ctx); w.rDown = 0; w.rHeld = false } // R turns the piece in build mode
   }
   if (input.pressed.flashlight) toggleLight(ctx)
-  if (input.pressed.throw && !ctx.self.state.building && !ctx.self.state.invOpen) throwOne(ctx)
+  if (input.pressed.throw && !ctx.self.state.building && !ctx.self.state.invOpen) pullPin(ctx)
+  if (input.released.throw || (walkOf(ctx).nade && !input.held.throw)) letFly(ctx)
 }
 
 export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pellets = 1) {
@@ -709,6 +712,7 @@ export function pullToken(ctx, t) { // one carried thing out of the bag as its p
     else if (t.startsWith('almond:')) { const k = AW_KEY[t.slice(7)]; if (k && s[k] > 0) { s[k] -= 1; tok = t } }
     else if (t.startsWith('meat:')) { const c = t.slice(5); if ((s.meat?.[c] ?? 0) > 0) { s.meat = { ...s.meat, [c]: s.meat[c] - 1 }; tok = t } }
     else if (t.startsWith('snack:')) { const c = t.slice(6); if ((s.snacks?.[c] ?? 0) > 0) { s.snacks = { ...s.snacks, [c]: s.snacks[c] - 1 }; tok = c } }
+    else if (t === 'frag' || t === 'molotov') { const k = THROW[t].key; if ((s[k] ?? 0) > 0) { s[k] -= 1; tok = t } }
     else if (t === 'ammo' || t === 'shells' || t === 'cells') { const per = W[t]?.perPickup ?? 1; if ((s[t] ?? 0) >= per) { s[t] -= per; tok = t } else s.notice = { text: `Need a full box (${per})`, at: ctx.now() } }
     else if (t === 'bobbypin') { if (s.bobbypins > 0) { s.bobbypins -= 1; tok = 'bobbypin' } }
   return tok
@@ -745,6 +749,7 @@ function invAction(ctx, d) {
     else spawnRemains(ctx, at, [tok], 'Dropped bag')
     sound(ctx, 'gun-raise-cloth-rustle', 0.5, true); return
   }
+  if (d.k === 'nadePick') { s.nadePick = d.t === 'molotov' ? 'molotov' : 'frag'; s.notice = { text: `G throws: ${THROW[s.nadePick].name}`, at: ctx.now() }; return }
   if (d.k === 'sel') { s.invSel = String(d.t || '').slice(0, 80); return }
   if (d.k === 'tab') { s.invTab = ['all', 'weapons', 'repair', 'aid', 'apparel', 'ammo', 'misc', 'tapes', 'key'].includes(d.t) ? d.t : 'all'; return }
   if (d.k === 'sort') { s.invSort = ['name', 'dam', 'wg', 'cnd'].includes(d.s) ? d.s : 'name'; return }
@@ -1367,23 +1372,62 @@ function tickStats(ctx, t, moving) {
   }
 }
 
-// G: a frag if you carry one, else a molotov. It leaves the hand along your aim and flies on scripts/nade.js.
-function throwOne(ctx) {
+// G: press pulls the pin (a frag's fuse starts there: hold to cook it), the arm draws back; let go and it flies.
+// Which one: the one picked in HALOGEN (READY FOR G), else a frag if you carry one, else a molotov. Held past the fuse, it goes off in your hand.
+const OVERHAND = { clip: 'cdn/clip-ual-overhandthrow-ada55cac.glb', mask: 'upper', weight: 6, blendIn: 0.08, blendOut: 0.3 }
+function pullPin(ctx) {
   const s = ctx.self.state, now = ctx.now(), w = walkOf(ctx)
-  if (s.dead || now < (w.throwAt ?? 0)) return
-  const kind = (s.grenades ?? 0) > 0 ? 'frag' : (s.molotovs ?? 0) > 0 ? 'molotov' : null
+  if (s.dead || w.nade || now < (w.throwAt ?? 0)) return
+  const pick = s.nadePick && (s[THROW[s.nadePick].key] ?? 0) > 0 ? s.nadePick : null
+  const kind = pick ?? ((s.grenades ?? 0) > 0 ? 'frag' : (s.molotovs ?? 0) > 0 ? 'molotov' : null)
   if (!kind) { s.notice = { text: 'Nothing to throw', at: now }; return }
-  const T = THROW[kind]; w.throwAt = now + THROW.cooldown * 1000
+  const T = THROW[kind]
+  w.nade = { kind, at: now, fuseAt: now + (T.fuse ?? 0) }
+  // the arm draws back and holds there (the clip's wind-up, slowed) until you let go
+  ctx.self.anim.nade = { clip: OVERHAND.clip, weight: OVERHAND.weight, loop: 'once', speed: 0.55, time: 0, mask: OVERHAND.mask, blendIn: OVERHAND.blendIn, blendOut: OVERHAND.blendOut, clampWhenFinished: true }
+  // in first person: the grenade or bottle comes up in your right hand
+  w.nadeVm = ctx.spawn({ audience: 'local', scope: 'session', feetPosition: { attach: 'camera', x: 0.24, y: -0.3, depth: 0.55 }, rotation: { yaw: 20, pitch: kind === 'frag' ? 0 : -20 }, model: T.model,
+    layout: { box: { min: { x: -T.size / 2, y: 0, z: -T.size / 2 }, max: { x: T.size / 2, y: T.size, z: T.size / 2 } } }, visibleInFirstPerson: true, castShadow: false })
+  animate(ctx, w.nadeVm, { 'feetPosition.y': [-0.5, -0.22], 'feetPosition.x': [0.3, 0.32] }, { duration: 0.25, easing: 'easeOutCubic' })
+  ctx.emit('playSound', { clip: kind === 'frag' ? '/cdn/moodboard-realistic-gritty/sfx-grenade-pin-pull-metal-ring-click.mp3' : '/cdn/moodboard-realistic-gritty/sfx-lighter-flick-cloth-rag-catches-fire.mp3', volume: 0.75 })
+  if (kind === 'frag') w.nadeCook = ctx.after(T.fuse / 1000, 'cookedOff', { at: w.nade.at })
+}
+export function cookedOff(ctx, p) { // held too long: it goes off where you stand
+  const w = walkOf(ctx); if (!w.nade || w.nade.at !== p?.at) return
+  w.nade.cooked = true; letFly(ctx)
+}
+function letFly(ctx) {
+  const s = ctx.self.state, now = ctx.now(), w = walkOf(ctx), n = w.nade
+  if (!n) return
+  w.nade = null; if (w.nadeCook) { ctx.cancel(w.nadeCook); w.nadeCook = null }
+  const T = THROW[n.kind]; w.throwAt = now + THROW.cooldown * 1000
+  if ((s[T.key] ?? 0) <= 0) { if (w.nadeVm) { ctx.destroy(w.nadeVm); w.nadeVm = null } ctx.self.anim.nade = null; return }
   s[T.key] -= 1
-  const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }, pc = Math.max(-0.6, Math.min(1.1, s.aimPitch ?? 0)), cp = Math.cos(pc)
-  const eye = { x: p.x + f.x * 0.5, y: p.y + (s.crouch ? 1.0 : 1.45), z: p.z + f.z * 0.5 }
-  const vel = { x: f.x * cp * T.speed, y: Math.sin(pc) * T.speed + T.lift, z: f.z * cp * T.speed }
+  // the arm whips through: the rest of the clip at full speed from the wind-up
+  ctx.self.anim.nade = { clip: OVERHAND.clip, weight: OVERHAND.weight, loop: 'once', speed: 1.6, time: 0.62, mask: OVERHAND.mask, blendIn: 0.05, blendOut: 0.3 }
+  ctx.after(0.5, 'nadeArmDown', { at: now })
+  if (w.nadeVm) { const vm = w.nadeVm; w.nadeVm = null; animate(ctx, vm, { 'feetPosition.y': [-0.22, 0.05], 'feetPosition.depth': [0.55, 1.1], 'feetPosition.x': [0.32, 0.05] }, { duration: 0.12 }); ctx.after(0.12, 'nadeVmGone', { id: vm }) }
+  ctx.emit('cameraPunch', { direction: { x: 0, y: -0.2, z: -1 }, intensity: 0.25 }, { audience: { player: ctx.self.id } })
+  const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
+  const eye = { x: p.x + f.x * 0.5, y: p.y + (s.crouch ? 1.0 : 1.5), z: p.z + f.z * 0.5 }
+  if (n.cooked) { // too late: it never leaves your hand
+    ctx.spawn({ tags: ['thrown'], lifetime: 3, feetPosition: { x: p.x, y: p.y + 0.3, z: p.z }, behavior: 'scripts/nade.js', state: { kind: n.kind, vel: { x: 0, y: 0, z: 0 }, ownerId: ctx.self.id, fuseAt: now, rest: true } })
+    s.notice = { text: 'You held it too long', at: now }
+    return
+  }
+  // a longer wind-up throws harder: a flick at 60%, full strength after 0.6 s held
+  const power = 0.6 + 0.4 * Math.min(1, (now - n.at) / 600)
+  const pc = Math.max(-0.6, Math.min(1.1, s.aimPitch ?? 0)), cp = Math.cos(pc), sp = T.speed * power
+  const vel = { x: f.x * cp * sp, y: Math.sin(pc) * sp + T.lift * power, z: f.z * cp * sp }
   const half = T.size / 2
   ctx.spawn({ tags: ['thrown'], lifetime: 12, feetPosition: eye, model: T.model, layout: { box: { min: { x: -half, y: 0, z: -half }, max: { x: half, y: T.size, z: half } } },
-    behavior: 'scripts/nade.js', state: { kind, vel, ownerId: ctx.self.id, fuseAt: now + (T.fuse ?? 0) } })
+    fx: n.kind === 'molotov' ? { script: RAG } : null,
+    behavior: 'scripts/nade.js', state: { kind: n.kind, vel, ownerId: ctx.self.id, fuseAt: n.fuseAt } })
   ctx.emit('playSound', { clip: '/cdn/moodboard-realistic-gritty/sfx-throw-whoosh-arm-swing.mp3', position: eye, volume: 0.6 })
   s.notice = { text: `${T.name} · ${s[T.key]} left`, at: now }
 }
+export function nadeArmDown(ctx) { if (!walkOf(ctx).nade) ctx.self.anim.nade = null }
+export function nadeVmGone(ctx, p) { if (p?.id) ctx.destroy(p.id) }
 // a blast or a fire patch you made reports who it reached: each lands as your hit (XP, loot, ragdoll); some of it can be you
 export const ears = {
   blast(ctx, b) {
