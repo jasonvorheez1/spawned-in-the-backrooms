@@ -4,7 +4,7 @@ from mathutils import Vector
 args = sys.argv[sys.argv.index('--')+1:]; src, dst, sex = args[0], args[1], args[2]
 # k = cross-section scale along each bone, [at head, at tail]; picked against the refs (Anime Girl / Miyu, Zhongli)
 K = {
- 'f': {'LeftUpLeg': (1.14, 1.13), 'LeftLeg': (1.11, 1.0), 'Hips': (1.06, 1.06), 'Spine': (1.04, 1.0), 'LeftArm': (1.10, 1.06), 'LeftForeArm': (1.05, 1.0)},
+ 'f': {'LeftShoulder': (1.03, 1.07), 'LeftUpLeg': (1.14, 1.13), 'LeftLeg': (1.11, 1.0), 'Hips': (1.06, 1.06), 'Spine': (1.04, 1.0), 'LeftArm': (1.07, 1.05), 'LeftForeArm': (1.05, 1.0)},
  'm': {'LeftUpLeg': (1.18, 1.12), 'LeftLeg': (1.14, 1.04), 'Hips': (1.06, 1.08), 'Spine': (1.02, 1.06), 'Spine1': (1.08, 1.16), 'Spine2': (1.2, 1.2), 'LeftShoulder': (1.12, 1.18), 'LeftArm': (1.2, 1.12), 'LeftForeArm': (1.14, 1.06), 'Neck': (1.12, 1.05)},
 }[sex]
 for n in list(K):
@@ -38,6 +38,12 @@ for o in bpy.data.objects:
             if SHIFT and g.weight > 0: d.x += (1 if p.x > 0 else -1) * SHIFT * arm_w(nm, g.weight)
         return inv @ (p + d) - co
     ds = [move(v.co, v.groups) for v in o.data.vertices]
+    # the move is smoothed over the mesh's own edges: no step where one bone's thickening meets the next (shoulder dip, Nov 10)
+    nb = [[] for _ in ds]
+    for e in o.data.edges:
+        i, j = e.vertices; nb[i].append(j); nb[j].append(i)
+    for _ in range(12):
+        ds = [d * 0.4 + sum((ds[j] for j in nb[i]), Vector()) * (0.6 / len(nb[i])) if nb[i] else d for i, d in enumerate(ds)]
     sk = o.data.shape_keys
     if sk:
         for kb in sk.key_blocks:
