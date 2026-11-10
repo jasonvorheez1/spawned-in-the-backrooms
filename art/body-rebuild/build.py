@@ -74,13 +74,34 @@ for v in miss:
     _, i, _ = kd.find(v.co); src = wv[i]
     for g in src.groups: body.vertex_groups[g.group].add([v.index], g.weight, 'REPLACE')
 print("groups", len(body.vertex_groups), "unweighted", sum(1 for v in body.data.vertices if not v.groups))
-# elbows: heat weights hand off arm to forearm in a hard step, which pinches a bent elbow; blend the hand-off wider
-bpy.context.view_layer.objects.active = body
+# elbows: heat weights hand off arm to forearm in a hard step, which pinches a bent elbow; blend the hand-off wider (Laplacian on those two groups)
+nbr = [[] for _ in body.data.vertices]
+for e in body.data.edges: i, j = e.vertices; nbr[i].append(j); nbr[j].append(i)
+def gw(v, gi):
+    for g in v.groups:
+        if g.group == gi: return g.weight
+    return 0.0
 for side_ in ("Left", "Right"):
-    for g in (side_ + "Arm", side_ + "ForeArm"):
-        body.vertex_groups.active_index = body.vertex_groups[g].index
-        bpy.ops.object.vertex_group_smooth(group_select_mode='ACTIVE', factor=0.6, repeat=6, expand=0.15)
-bpy.ops.object.vertex_group_normalize_all(lock_active=False)
+    ga, gf = body.vertex_groups[side_ + "Arm"], body.vertex_groups[side_ + "ForeArm"]
+    vs = body.data.vertices
+    A = [gw(v, ga.index) for v in vs]; F = [gw(v, gf.index) for v in vs]
+    zone = [i for i in range(len(vs)) if A[i] + F[i] > 0.5 and min(A[i], F[i]) > 0.0 or (A[i] > 0.05 and any(F[k] > 0.05 for k in nbr[i]))]
+    zs = set(zone)
+    for k in list(zs):
+        for n in nbr[k]: zs.add(n)
+    zone = [i for i in zs if A[i] + F[i] > 0.9]
+    tot = {i: A[i] + F[i] for i in zone}
+    for _ in range(8):
+        nA = dict()
+        for i in zone:
+            ns = [k for k in nbr[i] if A[k] + F[k] > 0.9]
+            if not ns: continue
+            fa = sum(A[k] / (A[k] + F[k]) for k in ns) / len(ns)
+            nA[i] = 0.5 * (A[i] / tot[i]) + 0.5 * fa
+        for i, fa in nA.items(): A[i] = fa * tot[i]; F[i] = (1 - fa) * tot[i]
+    for i in zone:
+        ga.add([i], A[i], 'REPLACE'); gf.add([i], F[i], 'REPLACE')
+    print(side_, "elbow verts blended", len(zone))
 # smooth (Shelly: "still seeing jagginess"): one Catmull-Clark level applied after weighting, so every new vertex inherits blended weights
 nb = len(body.data.polygons)
 sub = body.modifiers.new("sub", "SUBSURF"); sub.levels = 1; sub.render_levels = 1; sub.quality = 3
