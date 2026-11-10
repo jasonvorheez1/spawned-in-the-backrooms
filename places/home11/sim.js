@@ -1,7 +1,7 @@
 import { builtSpec } from "../../scripts/lib/build-piece.js";
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 38;
+const V = 39;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -76,6 +76,7 @@ export function tick(ctx) {
   bx("h-bed-wall-e", 2.2, 0, -4.3, 0.12, H, 3.4, PAPER); // the bedroom's east wall; the bathroom sits behind it
   bx("h-base-bed-e", 2.13, 0.05, -4.3, 0.02, 0.12, 3.4, TRIM, { physics: "none" });
   // the bathroom (Shelly: "give this door a room too"): x 2.2..5, z -2.6..-6
+  for (const id of ["h-bath-knob", "h-faucet", "h-shower-curtain", "h-shower-rod", "h-toilet-bowl", "h-toilet-lid", "h-toilet-seat", "h-toilet-tank", "h-tub-skirt", "h-tub-water-line"]) if (ctx.place.objects[id]) ctx.destroy(id); // old block fixtures under the tripo pieces, and a second knob on the bath door
   const BY = 0.1, TILE = T("white-square-ceramic-bathroom-floor-tile", 0.6, "oklch(0.95 0.01 90)"), PORC = { color: "oklch(0.97 0.006 95)", roughness: 0.25 }, CHROME = { color: "oklch(0.85 0.01 250)", metalness: 0.9, roughness: 0.2 };
   // hinged doors (Shelly: "make openable and closeable doors"): a kinematic hinge at the jamb, the leaf its child; E on the leaf swings the hinge
   // the leaf child is scripts/door-geo.js: its origin IS the hinge (the root's feet), running toward dir; the frame stands at the opening's centre
