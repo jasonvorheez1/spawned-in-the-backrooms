@@ -213,7 +213,7 @@ export function update(ctx) {
   const feet = pc.door ? (() => { const o = turn(-0.5, 0, at.rot); return { x: at.x + o.x, y: at.y, z: at.z + o.z } })() : { x: at.x, y: at.y, z: at.z }
   if (m.gk !== key) {
     dropGhost(ctx)
-    const look = pc.furn ? furnModel(pc) : { primitive: { kind: 'scripted', script: 'scripts/build-geo.js', params: { kind: s.building, dmg: 0 } } }
+    const look = pc.furn ? furnModel(pc) : { primitive: pc.door ? doorPrim(s.building) : { kind: 'scripted', script: 'scripts/build-geo.js', params: { kind: s.building, dmg: 0 } } }
     m.ghost = ctx.spawn({ audience: 'local', scope: 'session', tags: ['ghost'], castShadow: false, feetPosition: feet, rotation: { yaw: at.rot }, ...look,
       material: { color: good ? '#7dffb0' : '#ff6a4a', emissive: good ? '#2f9a5a' : '#9a2a1a', transparent: true, opacity: 0.42, depthWrite: false } })
     m.gk = key

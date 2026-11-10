@@ -15,6 +15,8 @@ const TV_AT = { x: 0, y: 0.78, z: -0.01, w: 0.66, h: 0.48 } // the tube's face o
 export function furnModel(pc) { const [w, h, d] = pc.size; return { model: { id: pc.model, ...(pc.forward ? { forward: pc.forward } : {}) }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } } } }
 const rad = (d) => d * Math.PI / 180
 export function hingeOf(at) { const r = rad(at.rot ?? 0); return { x: at.x - 0.5 * Math.cos(r), y: at.y, z: at.z + 0.5 * Math.sin(r) } } // the leaf's left edge on the wall line
+// a built door's leaf: scripts/door-geo.js, origin its bottom hinge corner (= hingeOf(slot)), running +x, opening toward -z (build-door.js swings +100)
+export function doorPrim(kind) { return { kind: 'scripted', script: 'scripts/door-geo.js', params: { style: kind === 'door_metal' ? 'metal' : 'wood', part: 'leaf', w: 1.0, h: 2.1, hingeSide: 'left', swing: -1, dmg: 0 } } }
 export function builtSpec(kind, at, by, opts = {}) {
   const pc = pieceOf(kind)
   if (!pc) return null
@@ -30,7 +32,7 @@ export function builtSpec(kind, at, by, opts = {}) {
   if (pc.trap) state.trap = pc.trap
   const spec = {
     tags, feetPosition: feet, rotation: { yaw: slot.rot },
-    primitive: { kind: 'scripted', script: 'scripts/build-geo.js', params: { kind, dmg: 0 } },
+    primitive: pc.door ? doorPrim(kind) : { kind: 'scripted', script: 'scripts/build-geo.js', params: { kind, dmg: 0 } },
     material: { pbr: true }, physics: { body: pc.door ? 'kinematic' : 'static', collider: pc.collider ?? (kind === 'ramp' ? 'mesh' : 'box') },
     state,
   }
