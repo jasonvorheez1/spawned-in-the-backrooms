@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 4132,
-  "updatedAt": "2026-11-10T11:10:58.052Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning authored levels, player-specific rooms, and shared destinations. `templates/player.js` composes player behaviors; place simulations and shared scripts own local worlds, combat, NPCs, loot, UI, avatar presentation, and progression.",
+  "basedOnSpecVersion": 4144,
+  "updatedAt": "2026-11-10T11:22:46.556Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning authored levels, player-specific rooms, and shared destinations. `templates/player.js` composes player behaviors while place simulations and shared scripts own local worlds, combat, NPCs, loot, UI, avatar presentation, and progression.",
   "scriptPaths": [],
   "places": [
     "places/bonus (3D) - shared vaporwave mall with shops, landmarks, simulated staff/shoppers, arcade games, Glow Up Salon, and one-time visual effects.",
@@ -11,7 +11,7 @@
     "places/intake + places/tutorial0 (3D; tutorial0 solo ephemeral) - bedroom character creation/waking space and authored tutorial route with staged encounter and HALOGEN.",
     "places/level1, level2, level21 (3D) - Habitable Zone, Pipe Dreams, and Level 2.1 'Locked'; Dina's camp and M.E.G./B.N.T.G. quests, Refrigerator Paradise operations, and The Edges.",
     "places/level3, gamma, level4, level5 (3D) - Electrical Station, Base Gamma, Abandoned Office, and Terror Hotel; residents, hazards, office/home systems, Boiler Room rats, and library ladders.",
-    "places/level6, level7, level10, level11, level12, level26 (3D) - Lights Out, Thalassophobia, Bumper Crop, Infinite City, Matrix, and SS Fun =) liner; Level 11 has a generated city/canal, Sedco shop, subway crawls and quests.",
+    "places/level6, level7, level10, level11, level12, level26 (3D) - Lights Out, Thalassophobia, Bumper Crop, Infinite City, Matrix, and SS Fun =) liner; Level 11 includes city/canal, Sedco, crawl quests, alley window and Harris tape; Level 12's furnished white room and copy-door ritual.",
     "places/debug, spamton, and other configured destinations - debug mannequin/body gallery, Spamton fight space, and auxiliary authored routes."
   ],
   "roots": [
@@ -19,20 +19,20 @@
     "places/<place>/config.yaml + cells/*.scene + sim.js - place settings, authored placements, and local generated/ticked behavior; main and Level 11 sims build and maintain large environments.",
     "scripts/main-menu.js + scripts/main-menu-ui.js + intake/tutorial scripts - title/pause, character creation, arrival, tutorial routing, first-arrival cutscene, BODIES toggle, and solo pause time-scale.",
     "places/level1/cells/x0z0.scene + scripts/dina-diary.js + scripts/lib/dina-quest.js - Dina camp/diary entry and quest progression; Voss and Cabin 23/Phoebe/stow-nest interactions are in Level 26.",
-    "scripts/camera.js + scripts/view3.js + scripts/ui.js - camera, third-person toggle, HUD and panels; scripts/loot-ui.js renders HALOGEN inventory and quick slots.",
+    "scripts/camera.js + scripts/view3.js + scripts/ui.js - camera, third-person toggle, HUD and panels; scripts/loot-ui.js renders HALOGEN inventory, quick slots, and carried tapes.",
     "scripts/quest-marker.js + scripts/lib/quests.js + scripts/lib/quest-mark.js - per-player journal, tracking, objective resolution and markers; folds legacy quest state into shared records.",
-    "places/level11/sim.js + scripts/lib/level11-city.js + scripts/lib/level11-vaults.js + scripts/lib/level11-depths.js + scripts/level11-use.js - city/extensions generation, usable props, crawl and Level 11 quest interactions.",
-    "places/level12/sim.js + places/level12/cells/*.scene - versioned Matrix room/void construction and shared ticking ritual clock; avatar art/scripts and tools build/validate presentation assets."
+    "places/level11/sim.js + scripts/lib/level11-city.js + scripts/lib/level11-vaults.js + scripts/lib/level11-depths.js + scripts/level11-use.js - city/extensions generation, usable props, crawl and Level 11 quest interactions; Harris's log is collected from the alley recorder.",
+    "places/level12/sim.js + scripts/level12-use.js + scripts/level12-window.js - Matrix room construction and ticking ritual, door/copy-door interactions, and Level 11 window entry; scripts/ui.js displays ritual progress."
   ],
   "shared": [
-    "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings, and LEVEL_NAMES used by hub-ui for the last-level row; routing and hub handlers use it.",
+    "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings, and LEVEL_NAMES used by hub-ui; routing and hub handlers use it.",
     "scripts/lib/loot.js + scripts/lib/items.js + scripts/lib/weapons.js/weapons.yml - common loot spawning, container rolls, remains, place pools, item descriptions, weapon definitions/rarity and variants; throwables are defined in lib/data/throwables.yml.",
     "scripts/lib/level11-vaults.js + scripts/lib/level11-depths.js + scripts/l11-crawl-geo.js + scripts/lib/data/l11-depths.yml + scripts/lib/data/l11-crawl-kit.yml - Level 11 security gates, crawl geometry/data, rooms, foe roster and storeroom.",
     "scripts/lib/build-piece.js + breakables.yml + furniture.yml - canonical build specs/models shared by B-mode and home reconstruction; CRT TV builds attach scripts/built-tv.js.",
-    "scripts/lib/screen.js - derived read-only screen classifier and wrist gates; scripts/lib/quests.js + scripts/lib/quest-mark.js - quest records/tracking and resolving place/id or coordinate goals; scripts/lib/data/npc-lore.yml and talk.yml supply NPC lore and dialogue place context.",
+    "scripts/lib/screen.js - derived read-only screen classifier and wrist gates; scripts/lib/quests.js + scripts/lib/quest-mark.js - quest records/tracking and resolving place/id or coordinate goals; scripts/lib/data/npc-lore.yml and talk.yml supply dialogue data.",
     "scripts/lib/maze.js + scripts/lib/maze0path.js - seeded Level 0 cell/zone/wall/pit/pillar layout and open-point/BFS doorway steering; bounded route cache serves cross-cell creature navigation.",
     "scripts/lib/clothes.js + clothes/wardrobe/hair/body data + scripts/lib/critter-model.js - clothing loot/armor, deterministic looks, human/furry body and face presentation, hair, masks and split garment fitting.",
-    "scripts/lib/body3.js + scripts/lib/data/combat-anims.yml + scripts/lib/knock.js + scripts/lib/nav.js + scripts/lib/sight.js + scripts/lib/breakables.js + scripts/lib/weapon-look.js - shared combat/path/sight/destructible-world helpers; weapon and NPC handlers reuse them."
+    "scripts/lib/body3.js + scripts/lib/data/combat-anims.yml + scripts/lib/knock.js + scripts/lib/nav.js + scripts/lib/sight.js + scripts/lib/breakables.js + scripts/lib/weapon-look.js - shared combat/path/sight/destructible-world helpers; weapon handling and enemy managers reuse these."
   ],
   "notableExports": [
     "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollLock, rollCash, rollItem, spawnCrate and Level 2 container/loot helpers; scripts/lib/weapons.js - baseOf, variantOf, rollVariant, rarityIdx, rarityCap, default.",
@@ -42,41 +42,41 @@
     "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - body/face/head/spec, speciesOf, wardrobe fitting/restyling, anime, FURRY_HEAD (1.2), Dandy morph helpers.",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
     "scripts/lib/bonus-extra.js - layBonusExtra; scripts/lib/level11-city.js - layCity, layStreet, tickCity; scripts/l11-streetlamp.js - geometry, collider; scripts/lib/level11-depths.js - layDepths; scripts/lib/level11-vaults.js - layVaults.",
-    "scripts/l11-crawlers.js and scripts/l11-r55-case.js - update; scripts/l11-rail.js and scripts/l11-sedco-counter.js/l11-sedco-gondola.js/l11-sedco-monitors.js - procedural geometry; scripts/loot-ui.js - lootUi; scripts/lib/feed.js - LIFE, MAX, PLACE_NAMES, pushFeed, watch."
+    "scripts/l11-crawlers.js and scripts/l11-r55-case.js - update; scripts/l11-rail.js and scripts/l11-sedco-counter.js/l11-sedco-gondola.js/l11-sedco-monitors.js - procedural geometry; scripts/loot-ui.js - lootUi; scripts/lib/feed.js - LIFE, MARKS, watch."
   ],
   "ownership": [
-    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo, needs, money, appearance, combat/rewards, level access, saved place/position, wakeAtSave restoration, heat/cold, carried tapes and playback; scripts/lib/rep.js owns karma and per-faction rep updates.",
+    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo, needs, money, appearance, combat/rewards, level access, saved place/position, wakeAtSave restoration, heat/cold, carried tapes and playback, and tape-unlocked Level 12 access.",
     "scripts/lib/dina-quest.js - dinaQ, dinaDiary and dcut, and seeds player.state.quests['the-way-back']; scripts/lib/quests.js owns player.state.quests, qtrack and qdone; level quest handlers own their per-player quest fields.",
     "scripts/kick.js + scripts/grab.js - per-player kick rolls/cooldowns, carried prop/body IDs, held-body grip, drag/heave/throw session fields and carryMul; held targets own heldBy/down/stagger state.",
     "scripts/lib/loose.js + scripts/lib/breakables.js - loose props own state.loose/mat/hp/maxHp and flight sessions; breakables own wreck transitions and record permanently smashed root objects in place.state.gone for rebuilds.",
     "scripts/lib/knock.js + scripts/lib/stats.js - foe attributes/weight and shared down/stagger knock outcomes; enemy managers retain AI state and write player-targeting sneakTarget.",
-    "scripts/lib/quick-items.js + scripts/player.js - player.state.quickSlots maps digit slots to item IDs; assignQuick validates unique carried items and player quick-use executes actions; scripts/lib/feed.js writes player.state.feed and first-discovery player.state.disc.",
+    "scripts/lib/quick-items.js + scripts/player.js - player.state.quickSlots maps digit slots to item IDs; assignQuick validates unique carried items and player quick-use executes actions; scripts/lib/feed.js writes player.state.feed/disc and first-discovery data.",
     "scripts/l11-crawlers.js - place.state.foes/deadAt/roster track crawl foe IDs, deaths/respawns and roster migration; each foe state holds its kind, HP, home and corpse loot while session memory holds AI/path state.",
-    "scripts/nade.js - each thrown grenade, molotov, and resulting fire patch owns projectile/fuse/flight or burn state; damage reaches the thrower's player.js callback for HP, XP, loot, and ragdoll handling."
+    "places/level12/sim.js + scripts/level12-use.js - player.state.r12 {sat,tried,back} ritual progress and reset/completion; Level 12 place.state versions the constructed room, while sim session tracks its ticking clock and per-player chime latch."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes aimPt and ranged aimPitch → player.js ballistics.",
     "scripts/routing.js accepts permitted requested rooms; otherwise scripts/lib/hub.js soloRoom selects the player's solo Backrooms room and bonus overflow IDs; toHub/toSolo perform crossings and track roomHop/save-place state.",
     "Fresh visit → scripts/main-menu.js; START enters intake for creation or bonus for completed characters; wardrobe close runs intro-cut then tutorial0 unless t0Done; menu UI renders on menuOpen and solo pause sets place.timeScale.",
-    "scripts/main-menu.js BODIES action or debug pad → world.state.bodyStyle (menu also persists player.state.bodyStyle); root sim.js/critter.js select avatar and restyle occupants via critter-model.js; Avatar look/state.wear → critter-model.js and wardrobe data select rigged body/head and fitted garment children, including Dandy morph.",
+    "scripts/main-menu.js BODIES action or debug pad → world.state.bodyStyle (menu also persists player.state.bodyStyle); root sim.js/critter.js select avatar and restyle occupants via critter-model.js; Avatar look/state.wear → critter-model.js presentation.",
     "scripts/lib/hub.js destinations → hub-ui.js and world/player crossings; Bonus Room sim lays NPCs/effects, while hubOffer and mall counters write shop/food state read by handlers and UI.",
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; weapon variants roll through weapons.js.",
     "Player and M.E.G. combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → combat-anims.yml; lib/stats.js and ballistics.js apply weapon skill/handling; enemy managers including Level 11 crawlers read sneak stats and damage players.",
     "Level 0 main sim → maze.js seeded geometry/cell helpers and level0-moments.js; moments.js handles placed moments; smilers/lurkers use maze0path and sneak.crouchMul while hunter managers publish pursuit cues.",
-    "scripts/lib/quests.js writes player.state.quests/qtrack/qdone; level quest handlers and quest-marker.js sync records, resolve goals through quest-mark.js, then draw player-only markers and journal rows; Level 11 usable props dispatch through their handler.",
-    "scripts/stats.js copies new player.state.notice and polls feed.watch; scripts/lib/feed.js writes player.state.feed/disc using PLACE_NAMES for first-visit discovery labels (including Levels 12, 26 and 184); scripts/feed-ui.js draws the expiring stack.",
-    "world.config.yaml G/throw input → scripts/player.js pulls a pin, cooks a frag while held, or throws the selected/carried throwable; scripts/nade.js handles bounce, fuse/blast or shatter/fire and reports hits back to player.js; loot-ui displays inventory/quick slots."
+    "scripts/lib/quests.js writes player.state.quests/qtrack/qdone; level quest handlers and quest-marker.js sync records, resolve goals through quest-mark.js, then draw player-only markers and journal rows; Level 11 usable props dispatch through level11-use.js.",
+    "Level 11's harris-log recorder → scripts/level12-use.js adds matrix to player.state.holotapes; loot-ui.js offers playback, player.js HOLO/holoEnd completes playback and sets know12/quest, then scripts/level12-window.js ends that quest and crosses the player to level12.",
+    "Level 12 sim accumulates player.state.r12 while seated and tracks the copy-door/hour ritual; level12-use.js consumes that state for door attempts and exits, while scripts/ui.js reads it for the ritual checklist and countdown/chime cue."
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/lib/bonus-extra.js + mall-shopper.js/salon-stylist.js/salon-ui.js - authored mall, simulated mall life and one-time neon/fountain lighting effects.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence and rebuild path; CRT TV builds attach screen, sound and glow.",
-    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js - Zenith Station geometry, breach, bots, lighting and interactive route.",
+    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js - Zenith Station generation, security, bots and quest interactions.",
     "places/level4/cells/x0z0.scene + l4-office.js/l4-office-geo.js/l4-home.js + scripts/lib/l4-people.js/level4-people.yml and scripts/lib/l5-people.js/level5-people.yml - authored offices/hotel with role-, look-, dialogue- and schedule-driven residents.",
-    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/* + art/human-body/* + art/human-head/* + art/human-hair/* + art/character-polish/* + scripts/mat-anime.js - shared human/furry avatar rig, fitted wardrobe, face, hair and material presentation.",
+    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/* + art/human-body/* + art/human-head/* + art/human-hair/* + art/character-polish/* + scripts/mat-anime.js - shared human/furry avatar rig, fitted wardrobe and presentation variants.",
     "scripts/lib/nav.js + scripts/meg-agent.js + scripts/l5-staff.js + scripts/l61-staff.js - independent NPC walkers share exact-endpoint/options-aware, short-lived path cache and query budget; Level 26 quest trail points to Voss.",
-    "places/level11/sim.js + scripts/lib/level11-city.js + scripts/lib/level11-vaults.js + scripts/lib/level11-depths.js + scripts/l11-crawlers.js + scripts/l11-globe.js + scripts/l11-shutter.js + scripts/lib/data/l11-depths.yml + scripts/l11-use.js - generated city, vault/crawl spaces, quest-use handlers and enemy network.",
-    "scripts/l11-rail.js and scripts/l11-sedco-counter.js/l11-sedco-gondola.js/l11-sedco-monitors.js - reusable procedural geometry instantiated in Level 11 as canal rail and detailed Sedco store fixtures; counter/monitor props are reusable fixtures."
+    "places/level11/sim.js + scripts/lib/level11-city.js + scripts/lib/level11-vaults.js + scripts/lib/level11-depths.js + scripts/l11-crawlers.js + scripts/l11-globe.js + scripts/l11-shutter.js + scripts/lib/data/l11-depths.yml + scripts/lib/data/l11-crawl-kit.yml + l11 rail/Sedco fixtures - generated city, crawls, foes, quests and procedural/reused fixtures; ATM, vending machine, diesel compressor and signal heads include imported GLB models.",
+    "places/level12/sim.js + scripts/level12-use.js + scripts/level12-window.js + scripts/player.js + scripts/ui.js - Matrix access via Harris's collectable/playable tape and lit Level 11 window, then a player-owned chair/copy-door/one-hour ritual with shared room ticking and HUD checklist."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
@@ -85,9 +85,9 @@
   "migrationNotes": [
     "Level 11 subway stair flight has 11 solid risers and an invisible static ramp carrying feet smoothly; the overhead city ground slab and east sidewalk are split around the opening. Preserve that stair/ramp/cutout relationship.",
     "Level 11 extension uses stable l11d-* IDs; crawl roster changes use D.roster to clear tracked and stray l11foe entities. Foe state owns death/loot and place deadAt gates respawn; case state.items is the container reward source.",
-    "Level 11 city sim V is 126; its rebuild refreshes model materials on existing pieces and skips IDs in place.state.gone, preserving permanent stayGone damage; visibleRange for large box primitives scales with span so ground/roads do not cull.",
+    "Level 11 city sim V is 127; its rebuild refreshes model materials on existing pieces and skips IDs in place.state.gone, preserving permanent stayGone damage; visibleRange for large box primitives scales with span so ground/roads do not cull early.",
     "Level 11 fishing recognizes the Grand Canal at z=-30 within |bz+30|<=9.6 and |bx|<=249.5; l11-gate onSpawn must physically drop any gate whose saved state is open after a rebuild.",
-    "Human wardrobe remains split: humanBody omits Ward_ meshes and wardChildren attaches fitted skinned garment children; body/garment IDs and material slots must stay aligned. Dandy's morph target exists on furry bodies and each matching garment.",
-    "Found-item rarity gates apply to found weapon tokens; search gating excludes storage and NPC containers. Weapon IDs may include a ~variant suffix; baseOf handles kind lookup and W[k] resolves the full variant. Place identifiers such as level21 stay stable; hub/feed labels (Level 2.1, Locked) are display text, not place IDs."
+    "Level 12's r12 state is per player, but room construction/clock live in place/sim; keep the same sat/tried/back fields shared by the ritual handler and HUD. Matrix access requires fully playing the matrix tape (know12), not merely collecting it.",
+    "Human wardrobe remains split: humanBody omits Ward_ meshes and wardChildren attaches fitted skinned garment children; body/garment IDs and material slots must stay aligned. Dandy morph targets also need matching garment morphs."
   ]
 }
