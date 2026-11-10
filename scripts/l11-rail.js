@@ -19,6 +19,7 @@ export function geometry(ctx) {
     box(ctx, x - 0.04, 0, -0.04, x + 0.04, 1.02, 0.04);
     box(ctx, x - 0.055, 1.02, -0.055, x + 0.055, 1.08, 0.055);
   }
-  const n = Math.round(L / 0.14);
+  if ((ctx.lod ?? 1) >= 4) return; // far off: rails and posts read alone
+  const n = Math.round(L / ((ctx.lod ?? 1) >= 3 ? 0.28 : 0.14));
   for (let i = 1; i < n; i++) { const x = -h + (i * L) / n; box(ctx, x - 0.012, 0.12, -0.012, x + 0.012, 0.9, 0.012); }
 }
