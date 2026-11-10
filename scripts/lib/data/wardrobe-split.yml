@@ -1,7 +1,7 @@
 # the packed human bodies split apart (art/human-cloth/split_wardrobe.py): a bare body per sex, each Ward_ garment its own skinned glb
 # riding the body as a child (attachment: { skin: true }). Packed sources: m 782c6614…, f de9de999… (now legacyHuman m_sw30/f_sw30)
 m:
-  body: "/cdn/value.06e3a5b9460c5cc1d98f4bd17759bb5aaf3d5dfac14bf20eeb986f466fd75f77.glb"
+  body: "/cdn/value.676a7377bc2fe94502419eb2cab00a5bcf96bd39cf6a09f722970103b2d4fb6b.glb"
   parts:
     Ward_abysshauberk: "/cdn/value.14f879b180e7d4f4252c6ec9e3a00d99d9639f493479cc5cee5e4c3a9431082d.glb"
     Ward_apron: "/cdn/value.f876d57f244797fec0947460e678e825f461f9a1804f007beb553351d274eaa7.glb"
@@ -80,7 +80,7 @@ m:
     Ward_vest: "/cdn/value.c576e0c51554070cd7094392a503dd41ab85ed112e5a5df4b2215a8c0c359856.glb"
     Ward_wirehood: "/cdn/value.2e2ce0b30b45397b82eda8436ec48a9beeaffce2c26acd5063d68d7100c2adb4.glb"
 f:
-  body: "/cdn/value.c40b56b5d34276ea7dd8f0e9b75dd40b5ee9da6c238fc93803e78cf6eedccf08.glb"
+  body: "/cdn/value.6ac26ce6cfb58e129717047c207f7dba71b604eb915760af7e3b597a091404d9.glb"
   parts:
     Ward_abysshauberk: "/cdn/value.d8ae364293885e41898969fca7d88de3d512a482a084a8dc696a684d666c2926.glb"
     Ward_apron: "/cdn/value.6dc7da30ba534434d2e3bff665af1b6f810b91bf346e1789eb1ae56927925626.glb"
