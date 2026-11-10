@@ -12,6 +12,7 @@ export function update(ctx) {
   if (has === m.has) return ctx.sleep(0.5);
   m.has = has; show(ctx, has);
   if (has) return ctx.sleep(0.5);
+  if (st.full) st.full = st.full.split(",").filter((t) => t !== "weapon:raygun").join(","); // one R-55 per world (Shelly, Nov 10): the hourly refill brings back the cells only
   const at = ctx.self.feetPosition, near = ctx.place.players.filter((p) => Math.hypot(p.feetPosition.x - at.x, p.feetPosition.z - at.z) < 14);
   const taker = near.slice().sort((a, b) => Math.hypot(a.feetPosition.x - at.x, a.feetPosition.z - at.z) - Math.hypot(b.feetPosition.x - at.x, b.feetPosition.z - at.z))[0];
   for (const p of near) p.state.notice = { text: p === taker ? "Atomic Ray-Gun R-55 · prototype 3 of 3. It hums in your hand." : "Someone lifted the R-55 out of its case.", at: ctx.now() };
