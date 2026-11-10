@@ -332,9 +332,10 @@ export function bodyModel(l) {
   const trousers = bottomRow && ['pants', 'pjpants', 'overalls', 'jeans'].includes(bottomRow.kind), bottom = Boolean(bottomRow) || topRow?.kind === 'dress'
   const openFront = ['jacket', 'blazer', 'vest'].includes(topRow?.kind) || topRow?.id === 'hotelrobe'
   const longSkirt = bottomRow?.kind === 'longskirt' || topRow?.id === 'gown'
-  const tank = ['tank', 'vest'].includes(topRow?.kind) // a vest is armless too: its armholes showed the hollow torso (Kael, Nov 10) // a tank is grown off the skin (tank_shell.py), so the whole torso stays under it: hidden, the waist above the shorts showed a hole with the hips' saw edge (Nov 10)
+  const grown = topRow?.id === 'tee' // the Nov 10 tee is grown off the skin (tee_shell.py) like the tank: the torso and upper arms stay drawn under it, hidden they left a hole under the sleeve and the forearm's saw edge at the elbow
+  const tank = ['tank', 'vest'].includes(topRow?.kind) || grown // a vest is armless too: its armholes showed the hollow torso (Kael, Nov 10) // a tank is grown off the skin (tank_shell.py), so the whole torso stays under it: hidden, the waist above the shorts showed a hole with the hips' saw edge (Nov 10)
   const skin = { torso: !covered || tank, torso_front: !covered || openFront || tank, torso_upper_front: !covered || openFront || topRow?.kind === 'tank', // a tank's deep neckline shows the chest under it: hiding it left a void and the neck region's saw edge in the V (shelly Nov 10: 'my breasts are cracked')
-    hips: !bottom, upperarms: !sleeves, forearms: !longSleeves, hands: true, neck: true, thigh_hi: !bottom, thigh_low: !trousers && !longSkirt, shin_hi: !trousers && !longSkirt, shin_low: !trousers && !longSkirt && shoeRow?.kind !== 'boots', feet: !shoeRow }
+    hips: !bottom, upperarms: !sleeves || grown, forearms: !longSleeves, hands: true, neck: true, thigh_hi: !bottom, thigh_low: !trousers && !longSkirt, shin_hi: !trousers && !longSkirt, shin_low: !trousers && !longSkirt && shoeRow?.kind !== 'boots', feet: !shoeRow }
   for (const [region, visible] of Object.entries(skin)) parts['Skin_' + region] = { visible }
   for (const [slot, pre] of Object.entries(M.slots)) {
     const row = rowOf(slot, l[slot], l[CL.colourKey[slot]])
