@@ -1,7 +1,7 @@
 # Level 11's modelled kit (art/level11/build.py, uploaded by art/level11/upload.py): name -> cdn id
 bench: "/cdn/value.d38530fe8881dbb3291b160c5f1fdd94d2e468130a063e0e7797ff41048561d1.glb" # tripo
-bin: "/cdn/value.8e2e048ba8546298c3de00a42dbd53265af4b9c43d27731e9521968179197b93.glb"
-box: "/cdn/value.9091a41fb3e3a6d3769ca29e4ad81e1c6a88170e2122520ffd6bac0142ac2074.glb"
+bin: "/cdn/value.7882d5eb8a9aed00c5f8a278239830957440daf2509ba84bac746ebdaeacc3f9.glb"
+box: "/cdn/value.0df1b5a7279372d53d264e8e2b5546726efb06a19c6362b904886bb94d4e5557.glb"
 brick_a: "/cdn/value.4c2f777ab42e4d952aa5fcd17121cb0f4b802b74d2957056d90e44fc9e52d9ec.glb"
 brick_b: "/cdn/value.e97f665aac7fca7fd4ca00d7aef83bc7b147e41e7dfc5bfc77fe5e16089911b9.glb"
 glass_a: "/cdn/value.45ebeae511d5630c8a31ee89821e0e89261df4155efdd3aa3cc5795400fb826b.glb"
