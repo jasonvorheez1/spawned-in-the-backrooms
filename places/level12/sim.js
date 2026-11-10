@@ -69,6 +69,33 @@ function lay(ctx) {
   ctx.spawn("l12-hum", { feetPosition: { x: 0, y: 1, z: 0 }, audio: { clip: "cdn/moodboard-realistic-gritty/ambience-empty-white-void-faint-high-tinnitus-ring-and-air-hiss-loop.mp3", loop: true, gain: 0.14, spatial: false }, audience: "all" });
 }
 
+// what earlier visitors left: wear, small fixtures, Harris's notes, and the ritual in pencil by the door
+function layDetail(ctx) {
+  const bx = (id, x, y, z, w, h, d, mat, extra = {}) => ctx.spawn(id, { feetPosition: { x, y, z }, primitive: { kind: "box", width: w, height: h, depth: d }, material: mat, castShadow: false, ...extra });
+  const TRIM = { color: "oklch(0.86 0.008 90)", roughness: 0.8 };
+  bx("l12d-skirt-e", 2.91, 0, 0, 0.03, 0.1, 6, TRIM); bx("l12d-skirt-w", -2.91, 0, 0, 0.03, 0.1, 6, TRIM);
+  bx("l12d-skirt-s1", -1.95, 0, 2.91, 1.6, 0.1, 0.03, TRIM); bx("l12d-skirt-s2", 1.95, 0, 2.91, 1.6, 0.1, 0.03, TRIM);
+  // scuffs along the baseboard where chairs were shoved back
+  [[-1.2, -2.89], [1.6, -2.89], [2.89, 1.1]].forEach(([x, z], i) => bx(`l12d-scuff-${i}`, x, 0.1, z, z > 0 ? 0.01 : 0.5, 0.05, z > 0 ? 0.4 : 0.01, { color: "oklch(0.55 0.02 80 / 0.5)", transparent: true }));
+  // light switch and outlet by the door
+  bx("l12d-switch", 0.85, 1.2, -2.915, 0.08, 0.12, 0.015, { color: "oklch(0.93 0.01 90)" }, { children: [{ feetPosition: { x: 0, y: 0.04, z: 0.01 }, primitive: { kind: "box", width: 0.018, height: 0.035, depth: 0.012 }, material: { color: "oklch(0.88 0.01 90)" } }] });
+  bx("l12d-outlet", 2.915, 0.3, 1.4, 0.015, 0.11, 0.07, { color: "oklch(0.93 0.01 90)" }, { children: [-0.02, 0.02].map((y) => ({ feetPosition: { x: 0.009, y: 0.035 + y, z: 0 }, primitive: { kind: "box", width: 0.004, height: 0.012, depth: 0.02 }, material: { color: "#222" } })) });
+  // ceiling vent, dust streaks under it, and an old water stain
+  bx("l12d-vent", 1.9, 2.97, 1.9, 0.5, 0.02, 0.5, { color: "oklch(0.88 0.006 90)", metalness: 0.4, roughness: 0.6 }, { children: [-0.16, -0.08, 0, 0.08, 0.16].map((z) => ({ feetPosition: { x: 0, y: -0.012, z }, primitive: { kind: "box", width: 0.44, height: 0.006, depth: 0.03 }, material: { color: "oklch(0.35 0.01 90)" } })) });
+  ctx.spawn("l12d-stain", { feetPosition: { x: -1.6, y: 2.944, z: 0.8 }, rotation: { pitch: 90 }, primitive: { kind: "circle", radius: 0.55 }, material: { color: "oklch(0.78 0.05 80 / 0.35)", transparent: true, roughness: 1 }, castShadow: false });
+  ctx.spawn("l12d-stain-ring", { feetPosition: { x: -1.6, y: 2.943, z: 0.8 }, rotation: { pitch: 90 }, primitive: { kind: "ring", innerRadius: 0.5, outerRadius: 0.56 }, material: { color: "oklch(0.62 0.06 70 / 0.45)", transparent: true }, castShadow: false });
+  // Harris's notes and a coffee long gone cold on the table
+  const PAPER = { color: "oklch(0.95 0.02 95)", roughness: 0.95 };
+  ctx.spawn("l12d-notes", { feetPosition: { x: -0.25, y: 0.775, z: -0.35 }, rotation: { yaw: 12 }, primitive: { kind: "box", width: 0.21, height: 0.004, depth: 0.29 }, material: PAPER, castShadow: false,
+    state: { name: "Notes", info: "Harris's handwriting. \"Chair, 15. Door. Out. 60 on the dot. Door. If the clock skips, you got up.\"" },
+    children: [{ feetPosition: { x: 0.03, y: 0.004, z: 0.02 }, rotation: { yaw: -20 }, primitive: { kind: "box", width: 0.21, height: 0.003, depth: 0.29 }, material: PAPER }] });
+  ctx.spawn("l12d-pencil", { feetPosition: { x: -0.08, y: 0.78, z: -0.3 }, rotation: { yaw: 70, roll: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.004, radiusBottom: 0.004, height: 0.17 }, material: { color: "oklch(0.8 0.15 90)" }, castShadow: false });
+  ctx.spawn("l12d-mug", { feetPosition: { x: 0.28, y: 0.775, z: -0.55 }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.036, height: 0.095, radialSegments: 20 }, material: { color: "oklch(0.92 0.01 90)", roughness: 0.4 },
+    children: [{ feetPosition: { x: 0, y: 0.08, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.035, radiusBottom: 0.035, height: 0.003 }, material: { color: "oklch(0.25 0.04 55)" } }, { feetPosition: { x: 0.045, y: 0.03, z: 0 }, rotation: { pitch: 90 }, primitive: { kind: "torus", radius: 0.022, tube: 0.006 }, material: { color: "oklch(0.92 0.01 90)" } }] });
+  // pencil on the wall beside the door: tallies from everyone who tried, and the ritual itself
+  ctx.spawn("l12d-scrawl", { feetPosition: { x: -1.25, y: 1.15, z: -2.92 }, vector: `<svg viewBox='0 0 120 90' width='0.9m'><g stroke='#4a4a48' stroke-width='1.2' fill='none' opacity='.75'>${Array.from({ length: 4 }, (_, g) => `<g transform='translate(${6 + g * 22} 6)'><path d='M0 0v16M4 0v16M8 0v16M12 0v16M-2 13l16 -10'/></g>`).join("")}<path d='M94 6v16M98 6v16'/></g><g font-family='serif' font-size='8' fill='#4a4a48' opacity='.8'><text x='4' y='40'>sit 15  (don't stand)</text><text x='4' y='51'>door. locked. good</text><text x='4' y='62'>out a copy</text><text x='4' y='73'>60 EXACT  watch the clock</text><text x='4' y='84'>door</text></g></svg>` });
+}
+
 function doorAt(ctx, id, x, z, yaw, state, inWall) {
   const kids = [
     { id: "slab", feetPosition: { x: 0.47, y: 0, z: 0 }, pivot: [1, 0, 0.5], primitive: { kind: "box", width: 0.94, height: 2.06, depth: 0.045 }, material: DOOR,
@@ -84,6 +111,7 @@ function doorAt(ctx, id, x, z, yaw, state, inWall) {
 export function tick(ctx) {
   const st = ctx.place.state;
   if (st.v !== V) { st.v = V; lay(ctx); }
+  if (st.d !== 1) { st.d = 1; layDetail(ctx); }
   // the clock's minute hand: one turn per clock hour, on the room's clock so every machine agrees
   if (!ctx.session.clock12) { const h = ctx.place.objects["l12-hand-m"]; if (h) { ctx.session.clock12 = true; animate(ctx, h, { "rotation.roll": [0, -360] }, { duration: R.hour, loop: true, easing: "linear" }); } }
   for (const p of ctx.place.players) {
