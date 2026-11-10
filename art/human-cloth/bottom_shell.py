@@ -112,6 +112,11 @@ def F(co):  # >0 inside the garment, the cut is its zero line (a contour, so eve
         g = max(g, bib, strap, back, side)
     return min(g, cuff(p))
 f = {v: F(v.co) for v in bm.verts}
+if os.environ.get('DBGH'):
+    for v in bm.verts:
+        q = W(v.co)
+        if abs(q.x) > 0.13 and J['Hips'].z < q.z < J['Spine1'].z and f[v] < 0: print('NEG', [round(c, 3) for c in q], round(f[v], 3), 'waist', round(waistz, 3), 'cuff', round(cuff(q), 3))
+
 cross = [e for e in bm.edges if (f[e.verts[0]] > 0) != (f[e.verts[1]] > 0)]
 made = set()
 for e in cross:
