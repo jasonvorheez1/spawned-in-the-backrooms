@@ -46,7 +46,7 @@ for f in files:
     BODY = os.environ.get("BODY") and "_body" in F[0]
     if BODY:  # third person: the body's own frame from frame 0 (pelvis->head up, clavicles right), spine included
         B0 = F[0]["_body"]; P = lambda n: Vector(B0[n][0])
-        up = (P("Bip01 Head" if "Bip01 Head" in B0 else "Bip01 Neck1") - P("Bip01 Pelvis")).normalized()  # 1st-person kfs carry no head; rt = P("Bip01 R Clavicle") - P("Bip01 L Clavicle")
+        up = (P("Bip01 Head" if "Bip01 Head" in B0 else "Bip01 Neck1") - P("Bip01 Pelvis")).normalized(); rt = P("Bip01 R Clavicle") - P("Bip01 L Clavicle")
         rt = (rt - rt.project(up)).normalized(); fw = up.cross(rt)
         Lm = Matrix((-rt, -fw, up))
         print("body map R clav x", round((Lm @ rt).x, 2))
