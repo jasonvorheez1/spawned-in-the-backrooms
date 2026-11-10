@@ -33,5 +33,7 @@ for g in [o for o in new if o.type == 'MESH' and o.vertex_groups]:
     print('WT', g.name, 'groups', len(g.vertex_groups))
 for o in list(bpy.data.objects):
     if o not in new: bpy.data.objects.remove(o)
+for o in new:
+    if o.type == 'ARMATURE': o.name = 'Armature'  # the body's rig took the name on import; the engine reads the garment's own
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.export_scene.gltf(filepath=out, export_apply=False, export_skins=True, export_morph=True, export_animations=False)
