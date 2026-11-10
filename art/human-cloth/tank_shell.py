@@ -15,13 +15,17 @@ for o in list(bpy.data.objects):
 body.name = body.data.name = 'Ward_tank'
 hipz, neckz, ax, sy = J['Hips'].z, J['Neck'].z, J['LeftArm'].x, J['Spine2'].y
 s = neckz / 1.276
-hem = hipz + 0.045 * s
+hem = hipz + 0.10 * s  # top of the hip bones: pants take it from there
 xstrap, xpit, zpit = ax * 0.66, ax * 1.06, J['LeftArm'].z - 0.075 * s
 slope = (xpit - xstrap) / (neckz - 0.03 * s - zpit)
 def armlim(z): return xstrap + slope * (neckz - 0.03 * s - z)
-def necklim(x, y):  # scoop: low in front, curved across, high at the back
-    front = max(0.0, min(1.0, (sy - y) / (0.12 * s)))
-    return neckz - 0.035 * s - front * (0.075 * s - 0.9 * (x / s) ** 2 * 6)
+NW = 0.062  # half-width of the neck opening; outside it the straps run over the shoulder
+def necklim(x, y):  # a U scoop, deep in front, shallow at the back, capped below the neck
+    u = abs(x) / (NW * s)
+    if u >= 1: return neckz - 0.004 * s
+    front = max(0.0, min(1.0, (sy - y) / (0.06 * s) + 0.5))
+    depth = (0.03 + 0.075 * front) * s
+    return neckz - 0.004 * s - depth * (1 - u * u) ** 0.5
 me = body.data
 M = body.matrix_world.copy(); Mi = M.inverted(); R = Mi.to_3x3()
 W = lambda co: M @ co   # the tests run in world space (glTF bodies sit under a rotated armature)
@@ -48,7 +52,7 @@ for v in bm.verts:
     p = W(v.co)
     if p.z > neckz - 0.13 * s and abs(p.x) < armlim(p.z) - 0.012:
         dz = necklim(p.x, p.y) - p.z
-        if abs(dz) < 0.03 * s: lift(v, dz)
+        if abs(dz) < 0.025 * s and abs(p.x) < NW * s * 0.97: lift(v, dz)
 # rings from the open edge
 ring = {}
 front = [v for v in bm.verts if any(e.is_boundary for e in v.link_edges)]
