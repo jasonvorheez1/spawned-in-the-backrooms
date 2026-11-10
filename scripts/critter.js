@@ -239,8 +239,8 @@ export function update(ctx) {
     life(ctx, face)
     }
   }
-  if (ses.lookKey == null || ses.lookVer !== 'human6' || (!MESH && ses.lastFace !== face)) {
-    ses.lookVer = 'human6' // refresh the body after the overalls layering fix
+  if (ses.lookKey == null || ses.lookVer !== 'human6' + STYLE_V || (!MESH && ses.lastFace !== face)) {
+    ses.lookVer = 'human6' + STYLE_V // a STYLE_V bump re-dresses standing bodies too; refresh the body after the overalls layering fix
     const params = { species: l.species, sex: l.sex, ftype: l.ftype || 'oval', trait: l.trait || 'placid', blush: l.blush, nose: l.nose || undefined, eye: l.eye, topw: l.topw, botw: l.botw, shoes: l.shoes, hat: l.hat, eyew: l.eyew, neck: l.neck, top: l.top, bottom: l.bottom, shoec: l.shoec, hatc: l.hatc, neckc: l.neckc, expr: face, eyes: l.eyes, marks: l.marks, hair: l.hair, hairc: l.hairc, skin: l.skin || undefined, beard: l.beard, beardc: l.beardc } // skin rides the body key: without it a salon skin pick never rebuilt the body (Shelly, Nov 9)
     if (l.fur) params.fur = l.fur
     const worn = l.modelUrl ? { url: l.modelUrl } : l.model && C.models?.[l.model] // an imported model worn instead of the critter
