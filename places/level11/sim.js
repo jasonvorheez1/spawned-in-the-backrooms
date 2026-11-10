@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 112; // bump to rebuild the city in rooms that are already open
+const V = 113; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -433,7 +433,7 @@ function lay(ctx) {
   // front (-X, the sign side) is glass with a door gap at the centre; inside a showroom floor under drop-ceiling light.
   const SX0 = SEDCO_X - SEDCO_W / 2, SX1 = SEDCO_X + SEDCO_W / 2, SZ0 = SEDCO_Z - SEDCO_D / 2, SZ1 = SEDCO_Z + SEDCO_D / 2, WT = 0.3, DOOR = 1.6;
   sp("l11-sedco-shell", { feetPosition: { x: SEDCO_X, y: 0.1, z: SEDCO_Z }, primitive: { kind: "scripted", script: "scripts/l11-sedco-shell.js", params: { w: SEDCO_W, d: SEDCO_D, h: SEDCO_H, t: WT, door: DOOR } }, physics: "static" });
-  bx("l11-sedco-floor", SEDCO_X, 0.1, SEDCO_Z, SEDCO_W - WT, 0.04, SEDCO_D - WT, { color: "oklch(0.62 0.02 80)", roughness: 0.35 }); // waxed vinyl tile
+  bx("l11-sedco-floor", SEDCO_X, 0.12, SEDCO_Z, SEDCO_W - WT, 0.04, SEDCO_D - WT, { color: "oklch(0.62 0.02 80)", roughness: 0.35 }, { state: { floor: "vinyl" } }); // waxed vinyl tile; top 0.16 clears the cross street (top 0.15) it used to hide under
   bx("l11-sedco-ceiling", SEDCO_X, SEDCO_H - 0.1, SEDCO_Z, SEDCO_W, 0.2, SEDCO_D, { color: "oklch(0.86 0.01 90)", roughness: 0.9 });
   for (const [i, dx] of [[0, -2.5], [1, 1.5]].values()) for (const [j, dz] of [[0, -2], [1, 2]].values()) {
     bx(`l11-sedco-troffer-${i}${j}`, SEDCO_X + dx, SEDCO_H - 0.13, SEDCO_Z + dz, 1.2, 0.03, 0.6, { color: "#fffbe8", emissive: "#fff4d0", emissiveIntensity: 1.4 }, { physics: undefined });
