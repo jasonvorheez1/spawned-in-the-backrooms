@@ -26,7 +26,7 @@ s = neckz / 1.276
 hem = J['Spine'].z + 0.07 * s  # just under the navel: pants take it from there
 xstrap, xpit, zpit = ax * 0.66, ax * 1.06, J['LeftArm'].z - 0.075 * s
 slope = (xpit - xstrap) / (neckz - 0.03 * s - zpit)
-def armlim(z): return xstrap + slope * (neckz - 0.03 * s - z)
+def armlim(z): return xstrap + max(0.0, slope * (neckz - 0.03 * s - z))  # straps keep their width up and over
 # measured off this body: the neck's own half-width just above its base, and the shoulder line beside it
 _P = [body.matrix_world @ v.co for v in body.data.vertices]
 _top = max(p.z for p in _P)
