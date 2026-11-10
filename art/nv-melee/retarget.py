@@ -40,30 +40,31 @@ for f in files:
     Lm = Matrix((left, -fwd, up))  # rows: neck-local -> world X(left) , Y(back), Z(up)
     sideR = Lm @ Vector(F[0]["_neck"]["RHandPos"])
     print("map", stem, "R hand x", round(sideR.x, 2))
-    # twist rides frame to frame: each bone turns from where IT pointed last frame (parallel transport), never from the
-    # parent's rest aim, whose rotation_difference goes unstable near 180 deg and popped the arm's roll (the choppy swings)
-    prev = {}
-    D = []
+    # frame 0: each arm bone aimed where NV's limb points (parent's turn carried). Every later frame copies NV's own
+    # rotation change since frame 0, mapped into our frame: twist, wrist roll and timing exactly as the .kf keys them.
+    # No position re-derivation and no smoothing pass: those flattened the hits and lost the forearm roll.
+    LmQ = Lm.to_quaternion()
+    def mapq(v): return (LmQ @ Quaternion(v) @ LmQ.inverted()).normalized()
+    D, base, q0 = [], {}, {}
     for fi, fr in enumerate(F):
         delta = {"Hips": Quaternion()}
         for m in ORDER:
-            d = delta[PAR[m]].copy(); key = ARM.get(m)
-            if key and key in fr["_neck"]:
+            key = ARM.get(m)
+            if not key or key not in fr["_neck"]:
+                delta[m] = delta[PAR[m]].copy(); continue
+            qk = fr["_neck"].get(key + "Q")
+            if fi == 0 or not qk:
+                d = delta[PAR[m]].copy()
                 d1 = (Lm @ Vector(fr["_neck"][key])).normalized()
-                if m in prev:
-                    pq, pdir = prev[m]; d = (pdir.rotation_difference(d1) @ pq).normalized()
-                else:
-                    h0 = d @ (ht[m] - hp[m]).normalized(); d = h0.rotation_difference(d1) @ d
-                prev[m] = (d.copy(), d1)
-            delta[m] = d
+                h0 = d @ (ht[m] - hp[m]).normalized(); d = (h0.rotation_difference(d1) @ d).normalized()
+                if fi == 0: base[m] = d.copy(); q0[m] = mapq(qk) if qk else None
+                delta[m] = d
+            else:
+                delta[m] = ((mapq(qk) @ q0[m].inverted()) @ base[m]).normalized() if q0.get(m) else delta[PAR[m]].copy()
         D.append(delta)
-    # one 1-2-1 pass on each bone's turn, signs aligned first: the decoded joints carry sub-frame jitter
-    for m in ORDER:
-        qs = [x[m] for x in D]
-        for i in range(1, len(qs)):
-            if qs[i].dot(qs[i-1]) < 0: qs[i] = -qs[i]
-        sm = [qs[0]] + [Quaternion([(a + 2*b + c) / 4 for a, b, c in zip(qs[i-1], qs[i], qs[i+1])]).normalized() for i in range(1, len(qs)-1)] + [qs[-1]]
-        for x, q in zip(D, sm): x[m] = q
+    for m in ORDER:  # one hemisphere per bone so the keyed curve never takes the long way round
+        for i in range(1, len(D)):
+            if D[i][m].dot(D[i-1][m]) < 0: D[i][m] = -D[i][m]
     for fi, delta in enumerate(D):
         for m in ORDER:
             d = delta[m]
