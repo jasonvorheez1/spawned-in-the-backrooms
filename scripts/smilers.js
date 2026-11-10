@@ -117,7 +117,7 @@ export function update(ctx, dt) {
     const pos = w.feetPosition;
     const mu = npcMul(st);
 
-    if (pos.y < -2 && !st.dead) { w.feetPosition = { x: pos.x, y: 0.05, z: pos.z }; w.velocity = { x: 0, y: 0, z: 0 }; continue } // seeded where no floor is streamed in yet (the far cells at boot), it fell forever, 6 of them at -11 m on a fresh room: stand it back on the floor line and hold it there until the floor arrives
+    if (pos.y < -0.4 && !st.dead && w.place === 'main') { w.feetPosition = { x: pos.x, y: 0.05, z: pos.z }; w.velocity = { x: 0, y: 0, z: 0 }; continue } // seeded where no floor is streamed in yet (the far cells at boot), it fell forever, 6 of them at -11 m on a fresh room: stand it back on the floor line (Level 0 only: other levels have floors below zero) and hold it there until the floor arrives
 
     if (st.mdl !== MDL) {
       w.primitive = null;
