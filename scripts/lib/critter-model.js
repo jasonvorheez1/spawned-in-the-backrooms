@@ -252,6 +252,7 @@ export const humanBody = (l) => {
   for (const name of ['soft', 'heart', 'star', 'hash']) parts['Blush_' + name] = { visible: !maskOf(l) && blush === name }
   // a closed top hides the overalls' bib, and the bib's straps poked through it: under one, the overalls are just their legs (Dolores, Nov 9)
   if (parts.Ward_overalls?.visible && ['jacket', 'sweater', 'hoodie', 'longsleeve', 'pajamas'].includes(rowOf('topw', l?.topw, l?.top)?.kind)) { parts.Ward_overalls = { visible: false }; parts.Ward_pants = { visible: true } }
+  for (const k of Object.keys(parts)) if (k.startsWith('Ward_')) delete parts[k] // garments ride as their own skinned children now (wardrobe-split); the body file has no Ward_ nodes
   const hairc = l?.hairc || '#3a2a20', eye = l?.eye && l.eye !== '#000000' ? l.eye : '#5b4a3a'
   // clothes take the cel step too, so a person is one drawing and not a drawn head on a clay body; a slot that is already more than a plain colour keeps itself
   const cloth = {}
