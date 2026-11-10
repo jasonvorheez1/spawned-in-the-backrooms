@@ -15,7 +15,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 
 export const cadence = "1s";
-const V = 15;
+const V = 16;
 const BRK = (mat, hp) => ({ mat, hp, maxHp: hp });
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BARN = (w, d, h, ridge, wall, door) => ({ primitive: { kind: "scripted", script: "scripts/barn10.js", params: { w, d, h, ridge, wall, door } }, physics: "static" });
@@ -79,8 +79,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   // Farmhouse Porch Lantern
   sp("l10-porch-lamp", {
     feetPosition: T(-24, -42, 2.8),
-    primitive: { kind: "cylinder", radiusTop: 0.1, radiusBottom: 0.12, height: 0.35 },
-    material: { color: "oklch(0.3 0.02 50)" },
+    model: { id: "/cdn/value.e35d991141e696f8e60fa7772fc3debae53a38c2a91f75de29e919f908388284.glb" }, layout: { box: { min: { x: -0.13, y: 0, z: -0.13 }, max: { x: 0.13, y: 0.36, z: 0.13 } } },
     light: { kind: "point", color: "oklch(0.9 0.16 75)", intensity: 3.2, distance: 9 },
   });
 
@@ -141,8 +140,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   sp("l10-windmill-quern", {
     tags: ["usable"],
     feetPosition: T(-55, -33.2, 0),
-    primitive: { kind: "cylinder", radiusTop: 0.65, radiusBottom: 0.75, height: 0.8 },
-    material: { color: "oklch(0.65 0.02 70)", roughness: 0.9 },
+    model: { id: "/cdn/value.b694bae83206a1a1d3452d6de15bf2c65e839432920cda393a3c8357e473a908.glb", materials: { "*": { texture: "cdn/texture-weathered-grey-granite.png", roughness: 0.9 } } }, layout: { box: { min: { x: -0.75, y: 0, z: -0.75 }, max: { x: 0.75, y: 0.8, z: 0.75 } } },
     behavior: "scripts/level10-use.js",
     state: { kind: "windmill-quern", name: "Windmill Stone Rotary Quern", verb: "Grind Flour" },
   });
@@ -326,7 +324,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   const fire = T(-13, -49, 0);
   for (let i = 0; i < 9; i++) { const a = i * 0.698; sp(`l10-fire-stone-${i}`, { feetPosition: { x: fire.x + Math.cos(a) * 0.75, y: fire.y, z: fire.z + Math.sin(a) * 0.75 }, rotation: { yaw: i * 47 }, scale: { x: 1, y: 0.6, z: 0.8 }, primitive: { kind: "sphere", radius: 0.2, widthSegments: 7, heightSegments: 5 }, material: { color: "oklch(0.5 0.01 80)", roughness: 0.95 }, castShadow: false, visibleRange: { max: 60 } }); }
   for (let i = 0; i < 3; i++) sp(`l10-fire-log-${i}`, { feetPosition: { x: fire.x, y: fire.y + 0.08, z: fire.z }, rotation: { yaw: i * 60, roll: 90, pitch: 18 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.08, height: 0.9, radialSegments: 7 }, material: { color: "oklch(0.25 0.03 50)", roughness: 1 }, castShadow: false });
-  [[1.9, 0.4], [-1.6, 1.1], [0.3, -2]].forEach(([dx, dz], i) => sp(`l10-fire-stump-${i}`, { tags: ["seat"], feetPosition: { x: fire.x + dx, y: fire.y, z: fire.z + dz }, primitive: { kind: "cylinder", radiusTop: 0.24, radiusBottom: 0.28, height: 0.42, radialSegments: 10 }, material: { color: "oklch(0.42 0.05 60)", texture: "cdn/texture-worn-hardwood-grain.png", roughness: 0.95 }, physics: "static", visibleRange: { max: 80 } }));
+  [[1.9, 0.4], [-1.6, 1.1], [0.3, -2]].forEach(([dx, dz], i) => sp(`l10-fire-stump-${i}`, { tags: ["seat"], feetPosition: { x: fire.x + dx, y: fire.y, z: fire.z + dz }, rotation: { yaw: i * 110 }, model: { id: "/cdn/value.faf38ade6590b20ecc867e6aab0a951600de1e16f38674f972858a1c6cf44b62.glb" }, layout: { box: { min: { x: -0.3, y: 0, z: -0.3 }, max: { x: 0.3, y: 0.42, z: 0.3 } } }, physics: { body: "static", collider: "box" }, visibleRange: { max: 80 } }));
   sp("l10-fire", { feetPosition: { x: fire.x, y: fire.y + 0.05, z: fire.z }, fx: { script: `fx
 pop flame rate=flick(.45,.2)*50 on=disc(.25) life=.5..0.9 v=up(1.4)+cone(22)*(.3..0.8) size=.2..0.38 acc=curl(.5)*1.2+buoy(2.2)+drag(1.5) sz=$size*(.5>.25:1>.7:.7>.14) col=hdr(4.6,3.4,1.4)>.3:hdr(3.2,1.4,.3)>.65:hdr(1.8,.5,.1)>hdr(.6,.12,.03) a=0>.12:1>.75:.85>0 rot=spin(.2) r=sprite(flame-wisp,add)
 pop embers rate=4 on=disc(.25) life=.7..1.4 v=up(2.2)+cone(30)*(.4..1.2) size=.02..0.05 acc=curl(.8)+grav()*.45+drag(.5) col=hdr(5,2.8,.8)>hdr(1,.22,.04) a=(0>.08:1>.65:.9>0)*flick(11,.35) r=sprite(ember,add,velocity,.02)
@@ -392,10 +390,8 @@ pop glow n=1 at=disc(.2).c(.45) glo=fire()*(#flame/35)~ r=light(<1,.55,.24>,$glo
   // Hay bales stacked near the barn entrance
   const bale = (id, x, y, z, yaw) => sp(id, {
     tags: ["breakable"], feetPosition: { x, y: { terrain: y }, z }, rotation: { yaw },
-    primitive: { kind: "cylinder", radiusTop: 0.75, radiusBottom: 0.75, height: 1.2 },
-    pivot: "center",
-    material: { texture: "cdn/texture-golden-rolled-straw-hay-bale.png", color: "oklch(0.82 0.08 85)" },
-    physics: "static",
+    model: { id: "/cdn/value.b604eba14800316ce63cb9fe06ad6449a0b7d192f5f1e963cf3a225ebdf6f0e9.glb" }, layout: { box: { min: { x: -0.6, y: 0, z: -0.75 }, max: { x: 0.6, y: 1.5, z: 0.75 } } },
+    physics: { body: "static", collider: "box" },
     state: { name: "Hay bale", ...BRK("cloth", 30) },
   });
   bale("l10-bale-0", -40, 0, -63, 0);

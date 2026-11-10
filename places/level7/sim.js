@@ -81,7 +81,7 @@ export function breakables(FY, PY) {
   return R;
 }
 
-const V = 27;
+const V = 28;
 // 24: Wikidot canonical drowned antique entrance room (stacked bureau drawers, armoire with draped linen & silver tea service, stone hearth, turned pedestal, show-don't-tell)
 const V_OLD = 14; // 12: Fort Surrender moved to the nearest island, new fort, circle and skeletons
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
@@ -689,10 +689,9 @@ function lay(ctx) {
   ctx.spawn("l7-still", {
     tags: ["usable"],
     feetPosition: { x: -65.2, y: 11.0, z: -92.5 },
-    physics: "static",
+    physics: { body: "static", collider: "box" },
     visibleRange: { max: 45 }, castShadow: false,
-    primitive: { kind: "cylinder", radiusTop: 0.35, radiusBottom: 0.42, height: 1.25 },
-    material: { color: "oklch(0.58 0.12 60)", metalness: 0.75, roughness: 0.35 },
+    model: { id: "/cdn/value.d1a1c3e07217e0227ce8b234f2b09498eb8c2b424fb48699c11ebf9fc96bbd93.glb" }, layout: { box: { min: { x: -0.55, y: 0, z: -0.4 }, max: { x: 0.55, y: 1.45, z: 0.4 } } },
     behavior: "scripts/l7-use.js",
     state: {
       kind: "still",
