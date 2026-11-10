@@ -198,7 +198,8 @@ function kickAny(ctx, s, f, p) {
     return true
   }
   const fp = best.feetPosition
-  if (best.physics?.body === 'dynamic') best.velocity = { x: f.x * dist * 3, y: 1.2, z: f.z * dist * 3 }
+  if (best.ragdoll) ctx.emit('impulse', { target: best.id, impulse: { x: f.x * kg * dist * 2.2, y: kg * 0.6, z: f.z * kg * dist * 2.2 }, position: hitAt }) // a corpse tumbles: its own limbs carry the blow
+  else if (best.physics?.body === 'dynamic') best.velocity = { x: f.x * dist * 3, y: 1.2, z: f.z * dist * 3 }
   else animate(ctx, best, { 'feetPosition.x': fp.x + f.x * dist, 'feetPosition.z': fp.z + f.z * dist }, { duration: 0.25 + dist * 0.12, easing: 'easeOutQuad' })
   ctx.emit('playSound', { clip: SND(bdead ? 'solid-kick-into-body-thump' : 'kick-object-thud'), position: hitAt, volume: 0.9, maxDistance: 18 })
   ctx.emit('fx', { position: { x: fp.x, y: fp.y + 0.05, z: fp.z }, script: `fx\npop dust burst=8..12 life=.4..0.8 v=sdir()*(.6..1.6)+up(.4) size=.12..0.24 acc=buoy(.3)+drag(2.2) col=<.6,.54,.4> a=0>.35:.35>.7:.15>0 sz=$size*(.6>1.7) r=sprite(smoke-puff,alpha)` })

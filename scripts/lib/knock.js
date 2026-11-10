@@ -73,5 +73,5 @@ export function powerKnock(ctx, e, f, power, atk) {
 export function deathRag(e) {
   const h = e.state?.hitDir ?? { x: 0, z: 0, p: 0 }, kg = e.state?.kg ?? 90, k = kg * (0.25 + (h.p ?? 0) * 0.4)
   e.anim.body = null
-  e.ragdoll = { impulse: { x: h.x * k * 4, y: kg * 0.3, z: h.z * k * 4 }, settleSeconds: 1.5 }
+  e.ragdoll = { impulse: { x: h.x * k * 4, y: kg * 0.3, z: h.z * k * 4 }, settleSeconds: 1.5, settleFreeze: false } // stays loose: a kick shoves it (Shelly, Nov 10)
 }
