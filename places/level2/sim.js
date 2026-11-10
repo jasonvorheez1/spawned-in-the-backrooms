@@ -101,7 +101,7 @@ export function tick(ctx) {
   if ((s.rev ?? 0) >= 4 && (s.snapped ?? 0) < 1) { snapContainers(ctx); s.snapped = 1; }
   if (STAIR && (s.rev ?? 0) >= 4 && !s.stairV) sideRoom(ctx, STAIR); // rooms that were laid before the stairwell existed get it now
   if (s.seeded && (s.rev ?? 0) >= 4 && s.propsV !== 2) reprop(ctx, s);
-  if (s.seeded && s.propsV === 2 && s.brkV !== 8) { s.brkV = 8; fixBreak(ctx); fixBreak2(ctx); } // break rooms: fridge turned to face in, props at true size // rooms dressed before the Tripo props: re-dress them once
+  if (s.seeded && s.propsV === 2 && s.brkV !== 9) { s.brkV = 9; fixBreak(ctx); fixBreak2(ctx); } // break rooms: fridge turned to face in, props at true size // rooms dressed before the Tripo props: re-dress them once
   if ((s.rev ?? 0) >= 4 && (s.fixV ?? 0) < 3) { s.fixV = 3; fixtures(ctx); } // the modelled fixtures (art/level2/fixtures.py) take over the old box/sphere lamps, slicks and stair in place
   if ((s.rev ?? 0) >= 4 && (s.doorV ?? 0) < 1) { s.doorV = 1; redoor(ctx); } // the door pass: door-geo leaves and frames
   if ((s.rev ?? 0) < 4) revamp(ctx, s); // the revamp lays itself over a few ticks: rooms, doors, the hall, vents
@@ -392,7 +392,10 @@ function fixBreak2(ctx) {
     const ct = near.find((q) => q.tags.includes("l2p-counter"));
     if (ct) { const o = ctx.getObject(ct.id); o.layout = { box: { min: { x: -1.2, y: 0, z: -0.6 }, max: { x: 1.2, y: 0.92, z: 0.6 } } };
       const p = o.feetPosition, ax = p.x - c.x, az = p.z - c.z, d = Math.abs(ax) > Math.abs(az) ? { x: Math.sign(ax), z: 0 } : { x: 0, z: Math.sign(az) }, dw = wall(p, d, [o.id]);
-      if (dw != null) o.feetPosition = { x: p.x + d.x * (dw - 0.5), y: p.y, z: p.z + d.z * (dw - 0.5) }; }
+      if (dw != null) o.feetPosition = { x: p.x + d.x * (dw - 0.62), y: p.y, z: p.z + d.z * (dw - 0.62) };
+      const fb = fr && ctx.getObject(fr.id)?.bounds, ob = o.bounds; // slide along the wall clear of the fridge
+      if (fb && ob) { const along = d.x ? "z" : "x", lo = ob.min[along] < fb.max[along] && ob.max[along] > fb.min[along]; const ov = (d.x ? Math.min(ob.max.x, fb.max.x) > Math.max(ob.min.x, fb.min.x) : Math.min(ob.max.z, fb.max.z) > Math.max(ob.min.z, fb.min.z));
+        if (lo && ov) { const sgn = (ob.min[along] + ob.max[along]) / 2 > (fb.min[along] + fb.max[along]) / 2 ? 1 : -1, push = sgn > 0 ? fb.max[along] - ob.min[along] + 0.05 : fb.min[along] - ob.max[along] - 0.05; o.feetPosition = { ...o.feetPosition, [along]: o.feetPosition[along] + push }; } } }
   }
 }
 function reprop(ctx, s) {
