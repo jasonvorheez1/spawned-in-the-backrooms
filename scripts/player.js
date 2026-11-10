@@ -1395,7 +1395,8 @@ function tickStats(ctx, t, moving) {
 
 // G: press pulls the pin (a frag's fuse starts there: hold to cook it), the arm draws back; let go and it flies.
 // Which one: the one picked in HALOGEN (READY FOR G), else a frag if you carry one, else a molotov. Held past the fuse, it goes off in your hand.
-const OVERHAND = { clip: 'cdn/clip-ual-overhandthrow-ada55cac.glb', mask: 'upper', weight: 6, blendIn: 0.08, blendOut: 0.3 }
+const OVERHAND = { clip: '/cdn/clip-overhand-throw-left-b23ba93b.glb', // mirrored (art/nade-left/mirror.py): the free left arm throws, the gun stays in the right
+  mask: 'upper', weight: 6, blendIn: 0.08, blendOut: 0.3 }
 function pullPin(ctx) {
   const s = ctx.self.state, now = ctx.now(), w = walkOf(ctx)
   if (s.dead || w.nade || now < (w.throwAt ?? 0)) return
