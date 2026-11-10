@@ -162,6 +162,7 @@ export function tick(ctx) {
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz), at = Object.fromEntries(AGENTS.map(([id, dx, dz]) => [id, [dx, dz]]));
     keepPeople(ctx, Object.keys(at), (ctx, id) => { ctx.spawn(id, agentSpec(a, id, ...at[id])); ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody("pistol") }); });
   }
+  if (s.l1StockV !== 2) { s.l1StockV = 2; for (const o of ctx.query({ tags: ["l1stock"] })) delete ctx.place.objects[o.id]; s.l1Stock = 0; } // stock v2: real box models
   if (!s.l1Stock) { s.l1Stock = layStock(ctx) || 1; }
   if (!s.puddles) { s.puddles = true;
     for (let i = 0; i < 70; i++) { const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N); if (zoneOf(cx, cz) !== "halls" && zoneOf(cx, cz) !== "storage") continue;
@@ -258,7 +259,7 @@ function layStock(ctx) {
       if (h0 < 0.95) {
         const w = 0.3 + hash(cx, k, li) * 0.25, d = 0.3 + hash(k, cz, li) * 0.2, hh = 0.22 + hash(li, k, cz) * 0.28;
         ctx.spawn({ tags: ["container", "breakable", "l1stock"], feetPosition: { x: bx, y, z: bz }, rotation: { yaw: (hash(cx, k, 99) - 0.5) * 16 }, physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 40 },
-          primitive: { kind: "scripted", script: "scripts/l1-stock-geo.js", params: { kind: "carton", w, d, h: hh, tint: h0 < 0.9 ? "oklch(0.78 0.06 70)" : "oklch(0.7 0.05 65)" } },
+          model: { id: hash(cx, k, li + 7) < 0.5 ? "/cdn/value.d4da0db276e9457c56a83cce2ef518cccc8065d0f8e158c7c82f747f45c97b2f.glb" : "/cdn/value.b38dc81280c35d3f87435921844ff0ee4594c8f1609dc3b020faf26416d137c6.glb" }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: hh, z: d / 2 } } }, // the real cardboard boxes cut from the pallet model, not flat blocks
           state: { name: "Carton", mat: "wood", hp: 20, maxHp: 20, items: items.join(",") } });
       } else {
         ctx.spawn({ tags: ["container", "breakable", "l1stock"], feetPosition: { x: bx, y, z: bz }, rotation: { yaw: hash(cx, k, 98) * 360 }, physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 40 },
