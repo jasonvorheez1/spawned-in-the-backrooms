@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 132; // 132: spam bags/box, lab counter, kiosk, reel tin modelled // 130: scored sidewalk squares // bump to rebuild the city in rooms that are already open
+const V = 133; // 133: lab counter long axis along the counter // 132: spam bags/box, lab counter, kiosk, reel tin modelled // 130: scored sidewalk squares // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -636,7 +636,7 @@ function lay(ctx) {
     fit("l11-derma-cab", CAB, MALL_X - 4.6, MALL_Z - 6.5, 90, [1.6, 0.85, 0.45]);
     sp("l11-derma-poster", { feetPosition: { x: MALL_X - 5.1, y: 1.9, z: MALL_Z - 8.2 }, rotation: { yaw: 90 }, ui: `<div face="front" width="1.1m" style="width:1100px;height:1400px;background:#f7fbfa;border:18px solid #1b8a5a;font-family:Arial,sans-serif;color:#13324a;padding:60px;box-sizing:border-box"><div style="font-size:110px;font-weight:900;color:#1b8a5a">dermika</div><div style="font-size:60px;margin-top:40px">cuida tu piel</div><div style="font-size:46px;margin-top:80px;line-height:1.5">consultas · láser · cosmética</div></div>`, primitive: { kind: "box", width: 1.1, height: 1.4, depth: 0.02 }, material: { color: "#ffffff" } });
     // lab: a sample counter with a divider, two chairs, a plant
-    sp("l11-lab-counter", { feetPosition: { x: MALL_X - 1.2, y: Y0, z: MALL_Z - 0.6 }, rotation: { yaw: -90 }, model: { id: MODELS.lab_counter, forward: "+x" }, layout: { box: { min: { x: -1.7, y: 0, z: -0.4 }, max: { x: 1.7, y: 1.05, z: 0.4 } } }, physics: { body: "static", collider: "box" } }); // tripo lab base cabinet
+    sp("l11-lab-counter", { feetPosition: { x: MALL_X - 1.2, y: Y0, z: MALL_Z - 0.6 }, rotation: { yaw: -90 }, model: { id: MODELS.lab_counter }, layout: { box: { min: { x: -1.7, y: 0, z: -0.4 }, max: { x: 1.7, y: 1.05, z: 0.4 } } }, physics: { body: "static", collider: "box" } }); // tripo lab base cabinet
     bx("l11-lab-counter-top", MALL_X - 1.2, Y0 + 1.05, MALL_Z - 0.6, 0.95, 0.05, 3.55, { color: "oklch(0.45 0.12 250)", roughness: 0.3 }, { physics: undefined });
     bx("l11-lab-glass", MALL_X - 1.35, Y0 + 1.1, MALL_Z - 0.6, 0.03, 0.7, 3.2, GLASS_TINT, { physics: undefined });
     fit("l11-lab-chair-1", CHAIR, FX - 1.2, MALL_Z - 1.6, -90, [0.75, 0.9, 0.75]);
