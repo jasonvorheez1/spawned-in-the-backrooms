@@ -124,7 +124,8 @@ export function stance(ctx) {
   const wp = W[s.equipped ?? 'fists'], ss = me.session
   // a reload plays Gunplay's handling once per reload
   if (s.reloading && wp?.ranged) { if (!ss.rel3) { ss.rel3 = true; handle3(ctx, me, 'reload', s.equipped) } } else ss.rel3 = false
-  if (!wp?.ranged || s.sheathed || s.sit || s.downAt || s.os || s.talkWith || s.mj?.seats || s.building) { aimPose(me, null, null); return null }
+  if (!wp?.ranged || s.sheathed || s.sit || s.downAt || s.mj?.seats) { aimPose(me, null, null); return null }
+  if (s.os || s.talkWith || s.building) { aimPose(me, famOf(s.equipped), 'ready', 0); return { bones: null, aiming: false } } // in a talk, a menu or build mode the gun stays at low ready: with no clip at all it hung from a slack hand, muzzle at the floor (Shelly's screenshot at the camp)
   const cam = me.camera?.rotation ?? null; if (!cam) return null
   const aiming = !s.reloading && (!!s.ads || now - (s.swingAt ?? 0) < 1400)
   // resting hands ride the BODY's facing; only an aimed gun follows the camera (Shelly: arms moving with the camera)
