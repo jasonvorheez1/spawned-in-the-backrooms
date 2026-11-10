@@ -53,6 +53,7 @@ export function layDepths(ctx, { sp, bx, cyl }) {
   sp("l11d-shutter", { tags: ["door"], feetPosition: { x: 43.1, y: FL, z: 190 }, primitive: { kind: "box", width: 1.2, height: 2.5, depth: 0.12 }, material: RUST, physics: { body: "kinematic", collider: "box" }, behavior: "scripts/l11-shutter.js",
     state: { lock: "lockpick:50", y0: FL, name: "Padlocked shutter", c: { x: 43.1, y: FL + 1.2, z: 189.7 } },
     children: [{ feetPosition: { x: 0.3, y: 1.0, z: -0.1 }, primitive: { kind: "box", width: 0.09, height: 0.12, depth: 0.05 }, material: { color: "oklch(0.55 0.08 80)", metalness: 0.9, roughness: 0.35 } }] });
+  sp("l11d-crawlers", { feetPosition: { x: 9, y: FL, z: 92 }, behavior: "scripts/l11-crawlers.js", state: {} }); // steps every foe in the crawl
   // D: the storeroom, x 34..50, z 190..202, last lit in 1958
   bx("l11d-d-floor", 42, FL - 0.3, 196, 16.4, 0.3, 12.4, LINO); bx("l11d-d-ceil", 42, CEIL, 196, 16.4, 0.18, 12.4, { color: "oklch(0.75 0.02 90)", roughness: 0.9 });
   bx("l11d-d-s1", 37, FL, 190, 6, CEIL - FL, 0.4, ROOMWALL); bx("l11d-d-s2", 47.1, FL, 190, 6, CEIL - FL, 0.4, ROOMWALL);
