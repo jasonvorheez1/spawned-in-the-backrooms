@@ -16,7 +16,14 @@ const KIT = { trim: { ...TEX.stone, color: "oklch(0.95 0.02 85)" }, roof: { ...T
 const hs = (a, b = 0, c = 0) => { let h = 2166136261 ^ (a * 374761393) ^ (b * 668265263) ^ (c * 1274126177); h = Math.imul(h ^ (h >>> 15), 2246822519); h = Math.imul(h ^ (h >>> 13), 3266489917); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
 const hue = (u, l = 0.62, c = 0.08) => `oklch(${l} ${c} ${Math.round(u * 360)})`;
 // what colour each kind of building is dressed in, per lot
-function dress(kind, u) {
+// Nov 10 (Shelly: "the rendering is very poor here"): the kit's flat window slots read as paper; glass now mirrors the sky, lit rooms glow a warm dim amber behind it
+const WIN = (u) => ({
+  glass: { color: `oklch(${0.3 + u * 0.08} 0.03 ${225 + u * 30})`, metalness: 0.92, roughness: 0.06 },
+  glassBlue: { color: `oklch(${0.5 + u * 0.1} 0.06 ${215 + u * 25})`, metalness: 0.95, roughness: 0.04 },
+  glassLit: { color: "oklch(0.62 0.08 75)", emissive: "oklch(0.78 0.11 72)", emissiveIntensity: 0.35, roughness: 0.15, metalness: 0.2 },
+});
+function dress(kind, u) { return { ...WIN(u), ...dress0(kind, u) }; }
+function dress0(kind, u) {
   const ld = 0.55 + u * 0.3;
   if (kind === "brick_a" || kind === "brick_b") return { brick: { ...TEX.brick, color: `oklch(${0.72 + u * 0.14} ${0.07 + u * 0.05} ${30 + u * 14})` }, concrete: { ...TEX.concrete, color: "oklch(0.88 0.01 80)" }, ...KIT };
   if (kind === "mall") return { brick: { ...TEX.brick, color: `oklch(${0.74 + u * 0.12} 0.07 ${40 + u * 30})` }, concrete: { ...TEX.concrete, color: "oklch(0.72 0.01 80)" } };
