@@ -23,33 +23,32 @@ def necklim(x, y):  # scoop: low in front, curved across, high at the back
     front = max(0.0, min(1.0, (sy - y) / (0.12 * s)))
     return neckz - 0.035 * s - front * (0.075 * s - 0.9 * (x / s) ** 2 * 6)
 me = body.data
+M = body.matrix_world.copy(); Mi = M.inverted(); R = Mi.to_3x3()
+W = lambda co: M @ co   # the tests run in world space (glTF bodies sit under a rotated armature)
 bm = bmesh.new(); bm.from_mesh(me)
+def cut(co, no): bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=Mi @ Vector(co), plane_no=(R @ Vector(no)).normalized())
 # clean cut lines: bisect along the hem, both armholes and a fan of planes for the scoop
-geom = lambda: bm.verts[:] + bm.edges[:] + bm.faces[:]
-bmesh.ops.bisect_plane(bm, geom=geom(), plane_co=(0, 0, hem), plane_no=(0, 0, 1))
-for sg in (1, -1):
-    bmesh.ops.bisect_plane(bm, geom=geom(), plane_co=(sg * xstrap, 0, neckz - 0.03 * s), plane_no=(sg, 0, slope).__class__((sg, 0, slope)))
-for xi in [-0.06, -0.035, -0.012, 0.012, 0.035, 0.06]:
-    x = xi * s; z0 = necklim(x, sy - 0.2)
-    bmesh.ops.bisect_plane(bm, geom=geom(), plane_co=(x, sy - 0.2, z0), plane_no=(0.0, 0.0, 1.0)) if False else None
+cut((0, 0, hem), (0, 0, 1))
+for sg in (1, -1): cut((sg * xstrap, 0, neckz - 0.03 * s), (sg, 0, slope))
 bm.verts.ensure_lookup_table()
 def inside(p):
     return p.z > hem - 1e-4 and abs(p.x) < armlim(p.z) + 1e-4 and p.z < necklim(p.x, p.y) + 1e-4
-dead = [f for f in bm.faces if not inside(f.calc_center_median())]
+dead = [f for f in bm.faces if not inside(W(f.calc_center_median()))]
 bmesh.ops.delete(bm, geom=dead, context='FACES')
 # trim the scoop along a smooth curve: snap the neck-edge vertices onto the curve (their own x,y), so the line reads drawn, not stepped
 bm.verts.ensure_lookup_table()
 sk = bm.verts.layers.shape
 keys = list(sk.keys())
+up = (R @ Vector((0, 0, 1))).normalized()
+def lift(v, dz):
+    d = up * dz; v.co += d
+    for k in keys: v[sk[k]] += d
 for v in bm.verts:
-    if any(e.is_boundary for e in v.link_edges) and v.co.z > neckz - 0.13 * s and abs(v.co.x) < armlim(v.co.z) - 0.01:
-        dz = necklim(v.co.x, v.co.y) - v.co.z
-        if abs(dz) < 0.03 * s:
-            v.co.z += dz
-            for k in keys: v[sk[k]].z += dz
-    if any(e.is_boundary for e in v.link_edges) and abs(v.co.z - hem) < 0.02 * s: 
-        dz = hem - v.co.z; v.co.z += dz
-        for k in keys: v[sk[k]].z += dz
+    if not any(e.is_boundary for e in v.link_edges): continue
+    p = W(v.co)
+    if p.z > neckz - 0.13 * s and abs(p.x) < armlim(p.z) - 0.012:
+        dz = necklim(p.x, p.y) - p.z
+        if abs(dz) < 0.03 * s: lift(v, dz)
 # rings from the open edge
 ring = {}
 front = [v for v in bm.verts if any(e.is_boundary for e in v.link_edges)]
