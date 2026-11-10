@@ -19,7 +19,7 @@ export function layVaults(ctx, { sp, bx, cyl }) {
   bx("l11-vault-landing", SUB.x, FY - 0.3, 64.5, 3.2, 0.3, 5.0, GRIME);
   for (const s of [-1, 1]) bx(`l11-vault-cwall-${s}`, SUB.x + s * 1.7, FY, 64.5, 0.2, 2.5, 5.0, WALL);
   bx("l11-vault-cceil", SUB.x, -0.42, 64.5, 3.6, 0.15, 5.0, DARK);
-  sp("l11-gate-sub", { tags: ["usable"], feetPosition: { x: SUB.x, y: FY, z: 63.6 }, primitive: { kind: "box", width: 3.2, height: 2.4, depth: 0.12 }, material: { ...STEEL, color: "oklch(0.38 0.02 140)" }, physics: { body: "kinematic", collider: "box" }, behavior: "scripts/l11-gate.js", state: { key: "sub", host: "MTA-GATE-07", name: "Station Gate", verb: "Locked:", info: "MTA-GATE-07 controls it", drop: 2.6 } });
+  sp("l11-gate-sub", { tags: ["usable"], feetPosition: { x: SUB.x, y: FY, z: 63.6 }, primitive: { kind: "box", width: 3.2, height: 2.4, depth: 0.12 }, material: { ...STEEL, color: "oklch(0.38 0.02 140)" }, physics: { body: "kinematic", collider: "box" }, behavior: "scripts/l11-gate.js", state: { exit: { axis: "z", sign: 1 },  key: "sub", host: "MTA-GATE-07", name: "Station Gate", verb: "Locked:", info: "MTA-GATE-07 controls it", drop: 2.6 } });
   sp("l11-vault-lamp-c", LAMP("c", SUB.x, 64.5));
   // the hall: platform x 11..19.6, track pit x 7..11 (1 m down), z 67..89
   bx("l11-vault-plat", 15.3, FY - 0.3, 78, 8.6, 0.3, 22, TILE);

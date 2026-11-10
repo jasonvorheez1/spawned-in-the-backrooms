@@ -16,6 +16,8 @@ export const ears = {
   press: (ctx, { by }) => {
     const s = ctx.self.state, who = ctx.getObject(by); if (!who || s.open) return
     if (has(who, s.key)) return open(ctx)
+    const ex = s.exit, me = ctx.self.feetPosition, at = who.feetPosition // exit: { axis: "z", sign: 1 } = the side you leave from; a push bar opens it, no hack
+    if (ex && Math.sign((at[ex.axis] ?? 0) - me[ex.axis]) === ex.sign) return open(ctx)
     who.state.notice = { text: `ACCESS DENIED. This gate answers to terminal ${s.host}.`, at: ctx.now() }
     heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-security-keypad-access-denied-double-buzz.mp3", position: { ...ctx.self.feetPosition, y: (s.y0 ?? 0) + 1.2 }, volume: 0.7, maxDistance: 12 }, { audience: { player: by } })
   },
