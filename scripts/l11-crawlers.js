@@ -164,7 +164,7 @@ function hallLights(ctx, on) { // the Relay Hall's lamps go red while its watch 
 export function update(ctx, dt) {
   const st = ctx.self.state, now = ctx.now(), ses = ctx.self.session, mem = (ses.m ??= {}), g = ctx.place.gravity?.y ?? -9.8;
   st.foes ??= {}; st.deadAt ??= {};
-  if (st.roster !== D.roster) { for (const fid of Object.values(st.foes)) if (fid in ctx.place.objects) ctx.destroy(fid); st.foes = {}; st.deadAt = {}; st.roster = D.roster; } // a new roster replaces the old crew
+  if (st.roster !== D.roster) { for (const fid of Object.values(st.foes)) if (fid in ctx.place.objects) ctx.destroy(fid); st.foes = {}; st.deadAt = {}; st.roster = D.roster; ses.swept = false; } // a new roster replaces the old crew
   if (!ses.swept) { ses.swept = true; const mine = new Set(Object.values(st.foes)); for (const o of ctx.query({ tags: ["l11foe"] })) if (!mine.has(o.id)) ctx.destroy(o.id); } // strays a rebuilt manager lost track of
   D.foes.forEach(([kind, x, z, opts], i) => { // lay the roster; the dead come back after an hour
     const id = st.foes[i];
