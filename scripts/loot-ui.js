@@ -326,18 +326,12 @@ const worn = (s, slot) => { const l = fullLook(s.look), c = CLOTHES.colourKey[sl
 const maxHp = (lv, s) => L.hp + (lv - 1) * L.perLevel.hp + (s?.attr ? derived(s).hpBonus : 0)
 const cell = (k, v, wide, cls = '') => `<div class="${wide ? 'w' : ''} ${cls}"><span>${k}</span>${v}</div>`
 
-// CND bracket meter: [ ■■■■■■■■□□ ] 80% GOOD
-function cndMeter(c, len = 10) {
-  const pips = Math.max(0, Math.min(len, Math.round((c / 100) * len)))
-  const col = bandColor(c), b = band(c)
-  return `<span style="color:${col};font-weight:bold">[ <span style="letter-spacing:1px">${'■'.repeat(pips)}</span><span style="color:var(--al);letter-spacing:1px">${'□'.repeat(len - pips)}</span> ] ${Math.round(c)}% ${b}</span>`
+// Condition stays readable at a glance, without a second row of bracket glyphs.
+function cndMeter(c) {
+  const value=Math.round(c),col=c<40?bandColor(c):'var(--ui-muted,#a8b29b)'
+  return `<span class="condition-meter"><i><b style="width:${value}%;background:${col}"></b></i><span>${value}% · ${band(c).toLowerCase()}</span></span>`
 }
-
-function cndMini(c) {
-  const col = bandColor(c)
-  const pips = Math.max(0, Math.min(6, Math.round((c / 100) * 6)))
-  return `<span class="cnd-mini" style="color:${col}">[${'■'.repeat(pips)}${'·'.repeat(6 - pips)}] ${Math.round(c)}%</span>`
-}
+function cndMini(c) { return `<span class="cnd-mini" style="color:${c<40?bandColor(c):'inherit'}">${Math.round(c)}%</span>` }
 
 // Estimated value in Backdollars/caps
 function itemVal(t) {
@@ -357,65 +351,6 @@ function itemVal(t) {
 }
 
 // Animated Vector Artwork SVGs
-const SVG_GUN = `<svg width="120" height="52" viewBox="0 0 120 52" class="nv-art">
-  <defs><radialGradient id="glwG" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffb642" stop-opacity="0.25"/><stop offset="100%" stop-color="#ffb642" stop-opacity="0"/></radialGradient></defs>
-  <rect x="0" y="0" width="120" height="52" fill="url(#glwG)"/>
-  <path d="M16 20 h56 v6 h-24 v18 h-12 v-15 h-20 z" fill="none" stroke="var(--a)" stroke-width="1.8"/>
-  <rect x="72" y="22" width="28" height="3" fill="none" stroke="var(--a)" stroke-width="1.2"/>
-  <g class="nv-spin" style="transform-origin:86px 23.5px">
-    <circle cx="86" cy="23.5" r="10" fill="none" stroke="var(--ad)" stroke-width="1" stroke-dasharray="3 3"/>
-    <line x1="86" y1="9" x2="86" y2="15" stroke="var(--a)" stroke-width="1.4"/>
-    <line x1="86" y1="32" x2="86" y2="38" stroke="var(--a)" stroke-width="1.4"/>
-    <line x1="72" y1="23.5" x2="78" y2="23.5" stroke="var(--a)" stroke-width="1.4"/>
-    <line x1="94" y1="23.5" x2="100" y2="23.5" stroke="var(--a)" stroke-width="1.4"/>
-  </g>
-  <circle cx="86" cy="23.5" r="2" fill="var(--ab)"/>
-</svg>`
-
-const SVG_MELEE = `<svg width="120" height="52" viewBox="0 0 120 52" class="nv-art">
-  <defs><radialGradient id="glwM" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffb642" stop-opacity="0.25"/><stop offset="100%" stop-color="#ffb642" stop-opacity="0"/></radialGradient></defs>
-  <rect x="0" y="0" width="120" height="52" fill="url(#glwM)"/>
-  <line x1="20" y1="38" x2="94" y2="14" stroke="var(--a)" stroke-width="3" stroke-linecap="round"/>
-  <line x1="86" y1="10" x2="102" y2="18" stroke="var(--ab)" stroke-width="2.2"/>
-  <line x1="26" y1="40" x2="32" y2="32" stroke="var(--a)" stroke-width="2"/>
-  <circle cx="60" cy="26" r="15" fill="none" stroke="var(--ad)" stroke-width="1" stroke-dasharray="2 4" class="nv-spin"/>
-  <line x1="60" y1="8" x2="60" y2="44" stroke="var(--al)" stroke-width="1"/>
-</svg>`
-
-const SVG_ARMOR = `<svg width="120" height="52" viewBox="0 0 120 52" class="nv-art">
-  <circle cx="60" cy="12" r="6" fill="none" stroke="var(--a)" stroke-width="1.6"/>
-  <path d="M46 22 c0 -4 6 -6 14 -6 s14 2 14 6 v14 c0 6 -8 10 -14 10 s-14 -4 -14 -10 z" fill="none" stroke="var(--a)" stroke-width="1.8"/>
-  <path d="M51 27 h18 M53 33 h14" stroke="var(--ad)" stroke-width="1.3"/>
-  <circle cx="60" cy="28" r="19" fill="none" stroke="var(--ad)" stroke-width="1" stroke-dasharray="4 4" class="nv-pulse"/>
-</svg>`
-
-const SVG_AID = `<svg width="120" height="52" viewBox="0 0 120 52" class="nv-art">
-  <rect x="52" y="10" width="16" height="6" fill="none" stroke="var(--a)" stroke-width="1.5"/>
-  <path d="M48 16 h24 l4 6 v22 h-32 v-22 z" fill="none" stroke="var(--a)" stroke-width="1.8"/>
-  <path d="M12 32 h28 l3 -10 l4 20 l3 -12 l2 4 h56" fill="none" stroke="var(--ab)" stroke-width="1.6" class="nv-ecg"/>
-</svg>`
-
-const SVG_AMMO = `<svg width="120" height="52" viewBox="0 0 120 52" class="nv-art">
-  <rect x="40" y="20" width="8" height="22" fill="none" stroke="var(--a)" stroke-width="1.4"/>
-  <path d="M40 20 l4 -8 l4 8 z" fill="var(--ad)" stroke="var(--a)" stroke-width="1.2"/>
-  <rect x="55" y="15" width="10" height="27" fill="none" stroke="var(--a)" stroke-width="1.4"/>
-  <path d="M55 15 l5 -9 l5 9 z" fill="var(--ad)" stroke="var(--a)" stroke-width="1.2"/>
-  <rect x="72" y="22" width="8" height="20" fill="none" stroke="var(--a)" stroke-width="1.4"/>
-  <path d="M72 22 l4 -8 l4 8 z" fill="var(--ad)" stroke="var(--a)" stroke-width="1.2"/>
-  <line x1="20" y1="44" x2="100" y2="44" stroke="var(--a)" stroke-width="1.2"/>
-</svg>`
-
-const SVG_REPAIR = `<svg width="120" height="52" viewBox="0 0 120 52" class="nv-art">
-  <g class="nv-spin" style="transform-origin:60px 26px">
-    <circle cx="60" cy="26" r="13" fill="none" stroke="var(--a)" stroke-width="2"/>
-    <circle cx="60" cy="26" r="5" fill="none" stroke="var(--a)" stroke-width="1.5"/>
-    <line x1="60" y1="10" x2="60" y2="42" stroke="var(--a)" stroke-width="3"/>
-    <line x1="44" y1="26" x2="76" y2="26" stroke="var(--a)" stroke-width="3"/>
-    <line x1="48" y1="14" x2="72" y2="38" stroke="var(--a)" stroke-width="3"/>
-    <line x1="48" y1="38" x2="72" y2="14" stroke="var(--a)" stroke-width="3"/>
-  </g>
-</svg>`
-
 // The right-hand details pane for an item token
 function detail(t, s, def) {
   const cls = `dt${def ? ' def' : ''}`
@@ -450,7 +385,7 @@ function detail(t, s, def) {
         <h4>${w.name}</h4>
         <span class="dt-rarity" style="color:${r?.color ?? 'var(--ad)'}">${r?.label ?? 'STANDARD'}</span>
       </div>
-      <div class="art-box">${w.ranged ? SVG_GUN : SVG_MELEE}</div>
+
       <div class="g">
         ${cell('DAM', `${w.damage}${cmp}`)}
         ${cell('DPS', `${dps}`)}
@@ -493,7 +428,7 @@ function detail(t, s, def) {
         <h4>${p.row.name}</h4>
         <span class="dt-rarity" style="color:${r.color ?? 'var(--ad)'}">${(r.label ?? 'COMMON').toUpperCase()}</span>
       </div>
-      <div class="art-box">${SVG_ARMOR}</div>
+
       <div class="g">
         ${cell('DR', `${p.row.dr}${cmp}`)}
         ${cell('SLOT', SLOT_NAME[p.slot].toUpperCase())}
@@ -511,7 +446,7 @@ function detail(t, s, def) {
     const c = t.slice(7), a = AW[c], key = { grey: 'almonds', green: 'almondsG', red: 'almondsR', blue: 'almondsB' }[c]
     return `<div class="${cls}">
       <div class="dt-header"><h4>${a.name}</h4><span class="dt-rarity" style="color:${a.color}">AID</span></div>
-      <div class="art-box">${SVG_AID}</div>
+
       <div class="g">
         ${cell('HP', `+${a.hp}`)}${cell('SANITY', `+${a.sanity}`)}
         ${cell('WG', '0.5 KG')}${cell('VAL', '$6.00')}
@@ -523,7 +458,7 @@ function detail(t, s, def) {
   if (t === 'almond') {
     return `<div class="${cls}">
       <div class="dt-header"><h4>Almond water</h4><span class="dt-rarity">AID</span></div>
-      <div class="art-box">${SVG_AID}</div>
+
       <div class="g">
         ${cell('HP', `+${L.almondHp}`)}${cell('SANITY', `+${L.almondSanity}`)}
         ${cell('WG', '0.5 KG')}${cell('VAL', '$5.00')}
@@ -535,7 +470,7 @@ function detail(t, s, def) {
     const a = W[t], nm = t === 'ammo' ? 'Pistol rounds' : 'Shotgun shells'
     return `<div class="${cls}">
       <div class="dt-header"><h4>${nm}</h4><span class="dt-rarity">AMMO</span></div>
-      <div class="art-box">${SVG_AMMO}</div>
+
       <div class="g">
         ${cell('CALIBER', t === 'ammo' ? '9MM / .38' : '12 GAUGE')}
         ${cell('BOX QTY', `+${a.perPickup}`)}
@@ -547,7 +482,7 @@ function detail(t, s, def) {
   if (t === 'bobbypin') {
     return `<div class="${cls}">
       <div class="dt-header"><h4>Bobby pin</h4><span class="dt-rarity">MISC</span></div>
-      <div class="art-box">${SVG_REPAIR}</div>
+
       <div class="g">
         ${cell('TYPE', 'LOCKPICK TOOL')}
         ${cell('CARRIED', `${s.bobbypins != null ? s.bobbypins : 6}`)}
@@ -576,11 +511,11 @@ function pane(s, sel, eqKey) {
     if (s[key] > 0) { card = detail(sel, s, true); acts.push(btn('DRINK', { k: 'drink', c }), btn('DROP ONE', { k: 'dropItem', t: sel })) }
   } else if (sel.startsWith('meat:') && (s.meat?.[sel.slice(5)] ?? 0) > 0 && MEAT[sel.slice(5)]) {
     const m = MEAT[sel.slice(5)]
-    card = `<div class="dt def"><div class="dt-header"><h4 style="color:${m.color}">${m.name}</h4><span class="dt-rarity">AID</span></div><div class="art-box">${SVG_AID}</div><div class="g">${cell('HP', '+' + m.hp)}${cell('HUNGER', '+' + (m.food ?? 0))}${cell('CARRIED', s.meat[sel.slice(5)], true)}</div></div>`
+    card = `<div class="dt def"><div class="dt-header"><h4 style="color:${m.color}">${m.name}</h4><span class="dt-rarity">AID</span></div><div class="g">${cell('HP', '+' + m.hp)}${cell('HUNGER', '+' + (m.food ?? 0))}${cell('CARRIED', s.meat[sel.slice(5)], true)}</div></div>`
     acts.push(btn('EAT', { k: 'eat', c: sel.slice(5) }), btn('DROP ONE', { k: 'dropItem', t: sel }))
   } else if (sel.startsWith('snack:') && (s.snacks?.[sel.slice(6)] ?? 0) > 0 && SNACKS[sel.slice(6)]) {
     const v = SNACKS[sel.slice(6)]
-    card = `<div class="dt def"><div class="dt-header"><h4>${v.name}</h4><span class="dt-rarity">${v.drink ? 'DRINK' : 'FOOD'}</span></div><div class="art-box">${SVG_AID}</div><div class="g">${v.drink ? cell('THIRST', '+' + v.thirst) : cell('HUNGER', '+' + v.hunger)}${cell('CARRIED', s.snacks[sel.slice(6)], true)}</div></div>`
+    card = `<div class="dt def"><div class="dt-header"><h4>${v.name}</h4><span class="dt-rarity">${v.drink ? 'DRINK' : 'FOOD'}</span></div><div class="g">${v.drink ? cell('THIRST', '+' + v.thirst) : cell('HUNGER', '+' + v.hunger)}${cell('CARRIED', s.snacks[sel.slice(6)], true)}</div></div>`
     acts.push(btn(v.drink ? 'DRINK' : 'EAT', { k: 'snack', c: sel.slice(6) }), btn('DROP ONE', { k: 'dropItem', t: sel }))
   } else if ((sel === 'ammo' || sel === 'shells' || sel === 'cells') && s[sel] > 0) { card = detail(sel, s, true); acts.push(btn('DROP A BOX', { k: 'dropItem', t: sel })) }
   else if ((sel === 'frag' && s.grenades > 0) || (sel === 'molotov' && s.molotovs > 0)) {
@@ -658,7 +593,7 @@ function inventory(s) {
     <button class="it${sel === 'almond:' + c ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'almond:${c}'})" ondblclick="sendAction('inv',{k:'drink',c:'${c}'})">
       <span class="cur">&gt;</span><span class="nm" style="color:${col}">${nm}</span>
       <span class="stat-r"><span>×${s[k]}</span><span style="color:#9ee08a">+${AW[c]?.hp ?? 25} HP</span></span>
-      
+
     </button>`).join('') + `` : ''
 
   const meatRows = Object.entries(s.meat ?? {}).filter(([c, n]) => n > 0 && MEAT[c]).map(([c, n]) => `
@@ -691,7 +626,7 @@ function inventory(s) {
       <span class="cur">&gt;</span><span class="eq-tag">EQ</span>
       <span class="nm">${p.row.name}</span>
       <span class="stat-r"><span>DR ${p.row.dr}</span>${cndMini(c)}</span>
-      
+
     </button>`
   }).join('') + [...new Set(bag)].map((t) => {
     const p = parseCloth(t); if (!p) return ''
@@ -699,7 +634,7 @@ function inventory(s) {
     return `<button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})" ondblclick="sendAction('inv',{k:'wear',w:'${t}'})">
       <span class="cur">&gt;</span><span class="nm">${p.row.name}${n > 1 ? ` ×${n}` : ''}</span>
       <span class="stat-r"><span>DR ${p.row.dr}</span>${cndMini(c)}</span>
-      
+
     </button>`
   }).join('') || '<div class="em">No apparel carried.</div>'
 
@@ -763,17 +698,17 @@ function inventory(s) {
   const selQ = qi.find((x) => (x.id === sel || x.id === 'weapon:' + sel) && x.count > 0) // the picked item, when it can ride a slot
   const slots = [1,2,3,4,5,6,7,8,9,0].map((slot) => {
     const id = s.quickSlots?.[slot], it = qi.find((x) => x.id === id), mine = selQ && id === selQ.id
-    return `<div class="hg-q${id ? ' set' : ''}${id && it && !it.count ? ' out' : ''}${selQ ? ' arm' : ''}${mine ? ' mine' : ''}" data-interactive onclick="sendAction('inv',{k:'quickSlot',slot:${slot}})" title="${selQ ? (mine ? 'Take ' + selQ.name + ' off slot ' + slot : 'Put ' + selQ.name + ' on slot ' + slot) : 'Quick slot ' + slot}"><span class="k">${slot}</span><span class="v">${it ? it.name : id ? 'EMPTY' : selQ ? '+ ADD' : 'empty'}</span>${it?.count ? `<span class="c">×${it.count}</span>` : ''}${id ? `<button class="x" onclick="event.stopPropagation();sendAction('inv',{k:'quickAssign',slot:${slot},id:''})" title="Clear slot ${slot}">✕</button>` : ''}</div>`
+    return `<div class="hg-q${id ? ' set' : ''}${id && it && !it.count ? ' out' : ''}${selQ ? ' arm' : ''}${mine ? ' mine' : ''}" data-interactive role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" onclick="sendAction('inv',{k:'quickSlot',slot:${slot}})" title="${selQ ? (mine ? 'Take ' + selQ.name + ' off slot ' + slot : 'Put ' + selQ.name + ' on slot ' + slot) : 'Quick slot ' + slot}"><span class="k">${slot}</span><span class="v">${it ? it.name : id ? 'EMPTY' : selQ ? '+ ADD' : 'empty'}</span>${it?.count ? `<span class="c">×${it.count}</span>` : ''}${id ? `<button class="x" onclick="event.stopPropagation();sendAction('inv',{k:'quickAssign',slot:${slot},id:''})" title="Clear slot ${slot}">✕</button>` : ''}</div>`
   }).join('')
   const qHint = selQ ? `<b>${selQ.name}</b>: click a slot or press its number` : 'Pick an item below, then click a slot or press 0–9'
 
   return `<div class="pbw pb"><div class="pbp inv hg" data-modal>
     <div class="hg-top">
-      <div class="hg-brand"><span class="hg-led"></span><h2>HALOGEN<sup>™</sup></h2><span class="hg-cur">_</span></div>
+      <div class="hg-brand"><h2>Inventory</h2></div>
       <div class="hg-modes">
-        <button onclick="sendAction('inv',{k:'sheet'})"><kbd>K</kbd>STATS</button>
-        <button class="on">ITEMS</button>
-        <button onclick="sendAction('inv',{k:'quests'})">QUESTS</button>
+        <button onclick="sendAction('inv',{k:'sheet'})"><kbd>K</kbd>Character</button>
+        <button class="on">Inventory</button>
+        <button onclick="sendAction('inv',{k:'quests'})">Journal</button>
       </div>
       <div class="hg-vit">
         <div class="hg-gauge"><span>HP</span><b>${hp}<i>/${hpMax}</i></b><div class="bar"><em style="width:${hpPct.toFixed(0)}%"></em></div></div>
@@ -788,8 +723,8 @@ function inventory(s) {
     <div class="hg-bd">
       <nav class="hg-rail">${rail}</nav>
       <div class="hg-mid">
-        <div class="hg-sort"><span>${tab === 'all' ? 'EVERYTHING YOU CARRY' : SECS[tab][0].toUpperCase()}</span><span class="sp"></span>
-          ${[['name', 'A–Z'], ['dam', 'POWER'], ['wg', 'WEIGHT'], ['cnd', 'WEAR']].map(([k, l]) => `<button class="${sortMode === k ? 'on' : ''}" onclick="sendAction('inv',{k:'sort',s:'${k}'})">${l}</button>`).join('')}
+        <div class="hg-sort"><span>${tab === 'all' ? 'All items' : SECS[tab][0].toUpperCase()}</span><span class="sp"></span>
+          ${[['name', 'A–Z'], ['dam', 'Damage'], ['wg', 'Weight'], ['cnd', 'Condition']].map(([k, l]) => `<button class="${sortMode === k ? 'on' : ''}" onclick="sendAction('inv',{k:'sort',s:'${k}'})">${l}</button>`).join('')}
         </div>
         <div class="ls">${list}</div>
       </div>

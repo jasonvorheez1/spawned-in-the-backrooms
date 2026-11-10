@@ -91,11 +91,11 @@ export function craftUi(ctx, player) {
     const req = [r.skill ? `<span class="${st.skillOk ? '' : 'bad'}">${SKN[r.skill[0]]} ${r.skill[1]} (you ${sk[r.skill[0]] ?? 0})</span>` : '', r.bench ? `<span class="${st.benchOk ? '' : 'bad'}">WORKBENCH</span>` : ''].filter(Boolean).join(' · ')
     const per = st.bonusChance>0 ? `<em>${Math.round(st.bonusChance*100)}% bonus chance</em>` : ''
     const cls = st.ok ? '' : st.skillOk && st.benchOk ? 'no' : 'lk'
-    rows += `<div class="row ${cls}"><div class="n">${esc(r.name)}${per}<small>${esc(r.desc)}</small><div class="result">OUTPUT · ${outputs(r)}</div>${makes(s,r)?`<small class="mk">${esc(makes(s,r))}</small>`:''}<div class="in">${ins}</div>${req ? `<div class="rq">${req}</div>` : ''}${!st.roomOk?'<div class="rq"><span class="bad">No room for the complete output</span></div>':''}</div>
+    rows += `<div class="row ${cls}"><div class="n">${esc(r.name)}${per}<small>${esc(r.desc)}</small><div class="result">Makes ${outputs(r)}</div>${makes(s,r)?`<small class="mk">${esc(makes(s,r))}</small>`:''}<div class="in">${ins}</div>${req ? `<div class="rq">${req}</div>` : ''}${!st.roomOk?'<div class="rq"><span class="bad">No room for the complete output</span></div>':''}</div>
       <div class="bt"><button ${st.ok ? '' : 'disabled'} onclick="sendAction('make',{k:'make',id:'${id}',n:1})">CRAFT 1</button>${st.ok && mx >= 5 ? `<button class="s" onclick="sendAction('make',{k:'make',id:'${id}',n:5})">×5</button>` : ''}${st.ok && mx >= 2 ? `<button class="s" onclick="sendAction('make',{k:'make',id:'${id}',n:'max'})">MAX ${mx}</button>` : ''}</div></div>`
   }
   if (!rows) rows = `<div class="em">${tab === 'ready' ? 'Nothing you can make yet. The red parts are what you are short of.' : 'Nothing here.'}</div>`
-  return out + `<div id="cr" data-modal><div class="hd"><h2>${bench ? 'WORKBENCH' : 'FIELD CRAFTING'}</h2><span class="md">${bench ? 'ALL RECIPES' : 'HANDS ONLY · BUILD A WORKBENCH (B) FOR THE REST'}</span></div>
+  return out + `<div id="cr" data-modal><div class="hd"><h2>${bench ? 'Workbench' : 'Crafting'}</h2><span class="md">${bench ? 'All recipes' : 'Field recipes · B to build a workbench'}</span></div>
     <div class="tb">${tabs}</div><div class="sc">${stock}</div><div class="ls">${rows}</div>
-    <div class="ft"><span>${ready} READY OF ${all.length} · UP TO ${CRAFT_LIMIT} BATCHES PER CLICK</span><button onclick="sendAction('make',{k:'close'})">CLOSE (Y)</button></div></div>`
+    <div class="ft"><span>${ready} READY OF ${all.length} · Batch limit ${CRAFT_LIMIT}</span><button onclick="sendAction('make',{k:'close'})">CLOSE (Y)</button></div></div>`
 }
