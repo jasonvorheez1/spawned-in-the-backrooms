@@ -25,7 +25,7 @@ const V = 110; // bump to rebuild the city in rooms that are already open
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
 
-const ASPHALT = { ...T("cracked-dark-asphalt-road", 4), color: "oklch(0.78 0.008 250)", roughness: 0.85 }; // lifted: the old tint read as a black void
+const ASPHALT = { ...T("weathered-grey-asphalt-road-with-fine-gravel", 4), color: "oklch(0.92 0.005 250)", roughness: 0.85 }; // lifted: the old tint read as a black void
 const SIDEWALK = { ...T("plain-light-grey-concrete-pavement-slab-fine-aggregate", 3), color: "oklch(0.93 0.004 250)", roughness: 0.85 };
 const CURB_MAT = { ...T("smooth-cold-poured-concrete-wall", 1), color: "oklch(0.72 0.02 85)", roughness: 0.65 };
 const STONE_TOWER = { ...T("large-grey-brick-wall-dusty-mortar", 3), color: "oklch(0.82 0.025 80)", roughness: 0.75 };
