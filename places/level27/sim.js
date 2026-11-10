@@ -6,7 +6,7 @@
 import { maxHp, maxSan } from "../../scripts/player.js";
 import { DRIP, RIPPLE } from "../../scripts/lib/ambient.js";
 export const cadence = "1s";
-const V = 6;
+const V = 7;
 const CAVE = "/cdn/value.8ee97464d76b59ba323139f76410fd015f304ffe8a5df300024cac2cac8cee69.glb";
 const FLOW = "/cdn/value.fc172db4defdc02603c499ccc386d3fea6fb504d8b388408de18c1ef734f6c34.glb"; // Level 8's flowstone mound
 const ROCK = (kind, color) => ({ texture: kind === "wet" ? "cdn/texture-wet-grey-limestone-cave-wall-rock.png" : "cdn/texture-pale-cream-flowstone-calcite-cave-formation.png", wrap: "repeat", repeat: [0.4, 0.4], color, roughness: kind === "wet" ? 0.35 : 0.6, side: "double" });
@@ -28,6 +28,11 @@ function lay(ctx) {
   // the spring and its east lobe: warm, clear, waist deep
   sp("l27-pool", { tags: ["swimwater"], feetPosition: { x: BATH.cx, y: -1.3, z: BATH.cz }, primitive: { kind: "cylinder", radiusTop: 1, radiusBottom: 1, height: 1.18, radialSegments: 48 }, scale: { x: BATH.rx, y: 1, z: BATH.rz }, material: WATER });
   sp("l27-lobe", { tags: ["swimwater"], feetPosition: { x: LOBE.cx, y: -0.95, z: LOBE.cz }, primitive: { kind: "cylinder", radiusTop: 1, radiusBottom: 1, height: 0.83, radialSegments: 40 }, scale: { x: LOBE.rx, y: 1, z: LOBE.rz }, material: WATER });
+  // a rock skin behind the shell: wherever the shell's roof thins out, the eye meets limestone, not the void
+  sp("l27-backrock", { feetPosition: { x: 0, y: -1, z: -1.5 }, scale: { x: 10.5, y: 9.5, z: 9.5 }, primitive: { kind: "sphere", radius: 1, widthSegments: 40, heightSegments: 24 },
+    material: { texture: "cdn/texture-wet-grey-limestone-cave-wall-rock.png", wrap: "repeat", repeat: [0.15, 0.15], color: "oklch(0.5 0.03 75)", roughness: 0.4, side: "back" } });
+  sp("l27-backrock-tunnel", { feetPosition: { x: -6.2, y: 1.5, z: -13.8 }, scale: { x: 2.6, y: 3.2, z: 8.5 }, primitive: { kind: "sphere", radius: 1, widthSegments: 24, heightSegments: 16 },
+    material: { texture: "cdn/texture-wet-grey-limestone-cave-wall-rock.png", wrap: "repeat", repeat: [0.15, 0.15], color: "oklch(0.5 0.03 75)", roughness: 0.4, side: "back" } });
   sp("l27-pool-glow", { feetPosition: { x: -1.2, y: -0.7, z: -2.6 }, light: { kind: "point", color: "oklch(0.75 0.1 195)", intensity: 2.2, distance: 9, shadow: { enabled: false } } });
   sp("l27-steam", { feetPosition: { x: 0.2, y: -0.05, z: -2.6 }, fx: { script: STEAM } });
   // the stream down the exit tunnel, along its east side, and the fall where it pours off the lip beside the stairs
