@@ -11,14 +11,14 @@ import { LURKER_MODEL, LURKER_SCALE } from "../../scripts/lurkers.js";
 import { MODEL as SMILER_MODEL, SCALE as SMILER_SCALE } from "../../scripts/smilers.js";
 import { stepQuest } from "../../scripts/testlab-use.js";
 export const cadence = "250ms";
-const V = 1, REFILL = 4000; // ms before a taken thing comes back (my pick)
+const V = 2, REFILL = 4000; // ms before a taken thing comes back (my pick)
 const HX = 24, HZ0 = -26, HZ1 = 24, H = 6; // the hall: x -24..24, z -26..24, 6 m to the ceiling
 const WEAPONS = W.order.slice(1);
 const AMMO = "ammo,ammo,ammo,shells,shells,shells,cells,cells,cells,frag,frag,frag,molotov,molotov,molotov";
 const FOOD = Object.keys(SNACKS).join(",");
 const PARTS = Object.entries({ scrap_metal: 8, bolts: 8, nails: 8, wire: 8, scrap_wood: 8, drywall: 6, steel_pipe: 4, springs: 4, gears: 4, rebar_rod: 3, copper_wire: 4, sheet_steel: 3, circuit: 2 }).flatMap(([k, n]) => Array(n).fill(k)).join(",");
 const CABINET = "bandage,firstaid,battery,bobbypin,tape,compass";
-export const WEAPON_SLOT = (i) => { const col = i % 2, row = Math.floor(i / 2), t = Math.floor(row / 2); return { x: col ? -15.6 : -20.4, z: -15 + t * 2.1, dx: (row % 2 ? 0.35 : -0.35) }; }; // two weapons a table, two columns of tables
+export const WEAPON_SLOT = (i) => { const t = Math.floor(i / 2), col = t % 2, row = Math.floor(t / 2); return { t, x: col ? -16 : -20.4, z: -18 + row * 2.4, dx: i % 2 ? 0.4 : -0.4 }; }; // two weapons a table, two columns of tables
 const PHYS = [ // [id, l2props kind, x, z, yaw]
   ["d0", "drum", 11, -4, 0], ["d1", "drum", 11.8, -4.4, 40], ["d2", "drum", 11.4, -3.3, 80],
   ["p0", "canister", 18, -4, 0], ["p1", "canister", 18.6, -4.2, 0],
@@ -33,7 +33,7 @@ const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, wrap: "re
 const sign = (text, w = 3.2) => `<svg viewBox='0 0 400 70' width='${w}m'><rect x='0' y='0' width='400' height='70' rx='6' fill='#14161a' opacity='0.85'/><rect x='6' y='6' width='388' height='58' rx='4' fill='none' stroke='#e8c25a' stroke-width='3'/><text x='200' y='47' text-anchor='middle' font-family='display' font-size='34' fill='#f3d27a'>${text}</text></svg>`;
 const label = (text) => `<svg viewBox='0 0 300 40' width='0.9m'><rect x='0' y='0' width='300' height='40' fill='#101010' opacity='0.8'/><text x='150' y='28' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#e9e2c4'>${text}</text></svg>`;
 
-function weaponSpec(kind, i) { const p = WEAPON_SLOT(i); return { tags: ["weapon"], state: { kind }, feetPosition: { x: p.x + p.dx, y: 0.8, z: p.z }, rotation: 90, castShadow: false, ...weaponBody(kind) }; }
+function weaponSpec(kind, i) { const p = WEAPON_SLOT(i); return { tags: ["weapon"], state: { kind }, feetPosition: { x: p.x + p.dx, y: 0.79, z: p.z }, rotation: 0, castShadow: false, ...weaponBody(kind) }; }
 function physSpawn(ctx) {
   for (const [id, kind, x, z, yaw] of PHYS) spawnProp(ctx, kind, { x, z }, yaw, { id: "tl-phys-" + id, tags: ["tl-phys", "l2prop", "breakable", ...(PROPS.kinds[kind].tags ?? [])] });
   BOXES.forEach(([x, z, k], i) => { const [m, w, h, d] = BOX[k]; ctx.spawn("tl-phys-box" + i, { tags: ["tl-phys", "breakable"], feetPosition: { x, y: 0, z }, rotation: { yaw: i * 37 }, model: { id: m }, layout: fitBox([w, h, d]), physics: { body: "static", collider: "box" }, castShadow: false, state: { name: "Cardboard Box", loose: "wood", mat: "wood", hp: 20, maxHp: 20, home: { x, y: 0, z } } }); });
@@ -63,8 +63,8 @@ function build(ctx) {
     ctx.spawn("tl-sign-" + id, { feetPosition: { x, y: 3.6, z }, rotation: { yaw }, vector: sign(text) });
   // armory: tables, a label per weapon
   WEAPONS.forEach((k, i) => { const p = WEAPON_SLOT(i);
-    if (i % 2 === 0) spawnProp(ctx, "table", { x: p.x, z: p.z }, 90, { id: "tl-plinth-" + (i / 2), tags: ["tl-table"], state: { name: "Armory table", mat: "wood", hp: 99999, maxHp: 99999 } });
-    ctx.spawn("tl-wlabel-" + k, { feetPosition: { x: p.x + p.dx + (p.x < -18 ? 0.5 : -0.5) * 0 , y: 0.81, z: p.z + 0.48 }, rotation: { yaw: p.x < -18 ? 0 : 0, pitch: -70 }, vector: label((W[k]?.name ?? k).slice(0, 24)) }); });
+    if (i % 2 === 0) spawnProp(ctx, "table", { x: p.x, z: p.z }, 0, { id: "tl-plinth-" + p.t, tags: ["tl-table"], state: { name: "Armory table", mat: "wood", hp: 99999, maxHp: 99999 } });
+    ctx.spawn("tl-wlabel-" + k, { feetPosition: { x: p.x + p.dx, y: 0.79, z: p.z + 0.5 }, rotation: { yaw: 0, pitch: -70 }, vector: label((W[k]?.name ?? k).slice(0, 24)) }); });
   container(ctx, "tl-ammo", "locker", "Ammo & throwables locker", AMMO, -23.3, 15, 90, [0.5, 1.9, 0.5]);
   container(ctx, "tl-ammo2", "locker", "Ammo & throwables locker", AMMO, -23.3, 16, 90, [0.5, 1.9, 0.5]);
   // break room
