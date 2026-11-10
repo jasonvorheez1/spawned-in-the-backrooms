@@ -5,7 +5,7 @@ import { plainLook, honest, wornTokens, parseCloth } from './lib/clothes.js'
 import C from './lib/data/critter.yml'
 import { standUp } from './lib/seat.js'
 const SCRIPT = 'scripts/critter2-geo.js'
-import { bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, STYLE_V, seatHead, humanMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
+import { bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, STYLE_V, seatHead, humanMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard, speciesOf } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
 const LID_SCALE = 1000 // the lids are modelled this many times too small (scripts/critter2-geo.js)
 const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 import { weaponBody, HOLD } from './lib/weapon-look.js'
@@ -230,8 +230,10 @@ export function update(ctx) {
   } else {
     // the Blender critter's file carries no clips of its own: its humanoid bones play the library gait; the scripted one has its own
     if (MESH) { const g = gaitFor(ctx); if (ctx.self.state.gaitClips?.idle !== g.idle || ctx.self.state.gaitClips?.walk !== g.walk) ctx.self.state.gaitClips = g } else if (ctx.self.state.gaitClips) delete ctx.self.state.gaitClips
-    if (HUMAN) { if (ses.flair !== 'human') { ses.flair = 'human'; ctx.self.anim.flair = null; ctx.self.anim.cute = null; ctx.self.bones = {}; ses.lids = false; ses.twitch = null } } // the human rig has no tail, ears or lids
-    if (HUMAN && ses.cachedParams) humanFaceTick(ctx, face)
+    const humanNow = HUMAN || speciesOf(ses.cachedParams) === 'human'
+    if (humanNow) { if (ses.flair !== 'human') { ses.flair = 'human'; ctx.self.anim.flair = null; ctx.self.anim.cute = null; ctx.self.bones = {}; ses.lids = false; ses.twitch = null } } // the human rig has no tail, ears or lids
+    if (humanNow && ses.cachedParams) humanFaceTick(ctx, face)
+    else if (humanNow) {}
     else {
     if (ses.flair !== face) { ses.flair = face; flair(ctx.self, face) }
     life(ctx, face)
@@ -315,7 +317,7 @@ export function update(ctx) {
     const isF = params.sex === 'f'
     const look = worn ? { model: wornModel(worn) } : MESH && HUMAN ? { model: bodyModel(params), morph: humanMorph(params) ?? undefined } : MESH ? { model: bodyModel(params), morph: bustMorph(params) ?? undefined, children: [{ id: HEAD_ID, attachment: { skin: true }, model: headModel({ ...params, vary: false }), morph: faceMorph(face, false, isF, params), audience: 'local' }, maskChild(params, true), hairChild(params, true), beardChild(params, true)].filter(Boolean) } : { primitive: { kind: 'scripted', script: SCRIPT, params } }
     if (!mirror) { ses.mirror = ctx.spawn({ audience: 'local', feetPosition: pos, rotation: rot, ...look, material: HUMAN && !worn ? null : { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.6, bounce: 0.6 }, light: { kind: 'point', color: '#fff2d8', intensity: 2, distance: 4 } }); const m = ctx.getObject(ses.mirror); if (m) { if (HUMAN && MESH && !worn) seatHead(ctx, m, params) // a human mirror wears its own head and hair, never the species head
-      m.anim.idle = { clip: worn || MESH ? GAIT_LIB.idle : 'Idle', loop: 'loop', weight: 1 }; if (!worn && !(HUMAN && MESH)) flair(m, face) } }
+      m.anim.idle = { clip: worn || MESH ? GAIT_LIB.idle : 'Idle', loop: 'loop', weight: 1 }; if (!worn && !(HUMAN && MESH) && speciesOf(params) !== 'human') flair(m, face) } }
     else { mirror.feetPosition = pos; mirror.rotation = rot; if (ses.mirrorKey !== key) { if (worn) { mirror.primitive = null; mirror.model = wornModel(worn); dropHead(ctx, mirror); mirror.anim.flair = null; mirror.anim.idle = { clip: GAIT_LIB.idle, loop: 'loop', weight: 1 } } else if (MESH) { mirror.primitive = null; mirror.model = bodyModel(params); if (HUMAN) { seatHead(ctx, mirror, params); mirror.anim.idle = { clip: GAIT_LIB.idle, loop: 'loop', weight: 1 } } else { mirror.morph = bustMorph(params) ?? null; wearHead(ctx, mirror, params); flair(mirror, face) } } else { mirror.model = null; mirror.primitive = { kind: 'scripted', script: SCRIPT, params }; flair(mirror, face) } }
       if (MESH && !worn) { const mh = ctx.getObject(mirror.id + '/' + HEAD_ID); if (mh) mh.morph = faceMorph(face, false, isF, params) }
       if (worn && ctx.getObject(mirror.id + '/' + HEAD_ID)) dropHead(ctx, mirror) // the mirror wears a plymodel bare too
