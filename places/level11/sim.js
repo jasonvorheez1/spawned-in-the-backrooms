@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 111; // bump to rebuild the city in rooms that are already open
+const V = 116; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -72,8 +72,9 @@ export function l11Lean(id, spec) {
   const kids = Array.isArray(spec.children) ? spec.children.map((c) => l11Lean(id, c)) : spec.children // children carry their own range and shadow (lagscope #109-113: l11-taxi/child, payphone/child...)
   const o = { ...spec }
   if (kids !== undefined) o.children = kids
-  if (!o.visibleRange) o.visibleRange = { max: L11_FAR.test(id) ? 260 : 70 }
   const pr = o.primitive
+  const span = pr && pr.kind === "box" ? Math.max(pr.width ?? 1, pr.depth ?? 1) : 0 // range is measured to its centre: a 620 m slab culled at 70 m left the city floating on sky
+  if (!o.visibleRange) o.visibleRange = { max: L11_FAR.test(id) ? 260 : span >= 12 ? 90 + span * 0.6 : 70 }
   if (pr && pr.kind === "box" && Math.max(pr.width ?? 1, pr.height ?? 1, pr.depth ?? 1) < 1.2 && o.castShadow === undefined) o.castShadow = false
   if (pr && pr.kind === "cylinder" && (pr.height ?? 1) < 1.2 && o.castShadow === undefined) o.castShadow = false
   if (o.light) {
@@ -272,8 +273,8 @@ function lay(ctx) {
   // Wrought Iron Promenade Safety Railings
   for (let rx = -58; rx <= 58; rx += 5) {
     if ((rx > -12 && rx < 12) || rx === 42) continue; // 42: the iron footbridge (l11-footbridge)
-    bx(`l11-rail-s-${rx}`, rx, 0.45, CANAL_Z + CANAL_W / 2 + 0.5, 4.8, 0.85, 0.06, IRON_RAIL);
-    bx(`l11-rail-n-${rx}`, rx, 0.45, CANAL_Z - CANAL_W / 2 - 0.5, 4.8, 0.85, 0.06, IRON_RAIL);
+    for (const [sd, zz] of [["s", CANAL_Z + CANAL_W / 2 + 0.5], ["n", CANAL_Z - CANAL_W / 2 - 0.5]]) // open iron balusters, not a black slab
+      sp(`l11-rail-${sd}-${rx}`, { feetPosition: { x: rx, y: 0.35, z: zz }, primitive: { kind: "scripted", script: "scripts/l11-rail.js", params: { len: 4.8 } }, material: IRON_RAIL, physics: { body: "static", collider: "box" }, state: { floor: "metal" } });
   }
 
   // Canal Life Buoys Mounted on Posts
@@ -432,7 +433,7 @@ function lay(ctx) {
   // front (-X, the sign side) is glass with a door gap at the centre; inside a showroom floor under drop-ceiling light.
   const SX0 = SEDCO_X - SEDCO_W / 2, SX1 = SEDCO_X + SEDCO_W / 2, SZ0 = SEDCO_Z - SEDCO_D / 2, SZ1 = SEDCO_Z + SEDCO_D / 2, WT = 0.3, DOOR = 1.6;
   sp("l11-sedco-shell", { feetPosition: { x: SEDCO_X, y: 0.1, z: SEDCO_Z }, primitive: { kind: "scripted", script: "scripts/l11-sedco-shell.js", params: { w: SEDCO_W, d: SEDCO_D, h: SEDCO_H, t: WT, door: DOOR } }, physics: "static" });
-  bx("l11-sedco-floor", SEDCO_X, 0.1, SEDCO_Z, SEDCO_W - WT, 0.04, SEDCO_D - WT, { color: "oklch(0.62 0.02 80)", roughness: 0.35 }); // waxed vinyl tile
+  bx("l11-sedco-floor", SEDCO_X, 0.12, SEDCO_Z, SEDCO_W - WT, 0.04, SEDCO_D - WT, { texture: "cdn/texture-worn-beige-waxed-vinyl-composition-floor-tile-12-inch.png", wrap: "repeat", repeat: [0.33, 0.33], color: "oklch(0.86 0.02 80)", roughness: 0.3 }); // waxed vinyl tile; top 0.16 clears the cross street (top 0.15) it used to hide under
   bx("l11-sedco-ceiling", SEDCO_X, SEDCO_H - 0.1, SEDCO_Z, SEDCO_W, 0.2, SEDCO_D, { color: "oklch(0.86 0.01 90)", roughness: 0.9 });
   for (const [i, dx] of [[0, -2.5], [1, 1.5]].values()) for (const [j, dz] of [[0, -2], [1, 2]].values()) {
     bx(`l11-sedco-troffer-${i}${j}`, SEDCO_X + dx, SEDCO_H - 0.13, SEDCO_Z + dz, 1.2, 0.03, 0.6, { color: "#fffbe8", emissive: "#fff4d0", emissiveIntensity: 1.4 }, { physics: undefined });
@@ -475,7 +476,7 @@ function lay(ctx) {
     behavior: "scripts/level11-use.js",
     state: { kind: "sedco-counter", name: "Sedco Sales Counter & Register", verb: "Search Counter" },
   });
-  for (const [i, dz] of [-2.0, 2.0].entries()) md(`l11-sedco-int-gondola-${i}`, "sedco_gondola", SEDCO_X - 1, 0.14, SEDCO_Z + dz, { peg: { texture: "cdn/texture-brown-pegboard-holes.png", repeat: [4, 2.5], roughness: 0.85 }, steel: { texture: "cdn/texture-brushed-steel.png", roughness: 0.4, metalness: 0.7 } });
+  for (const [i, dz] of [-2.0, 2.0].entries()) sp(`l11-sedco-int-gondola-${i}`, { feetPosition: { x: SEDCO_X - 1, y: 0.14, z: SEDCO_Z + dz }, primitive: { kind: "scripted", script: "scripts/l11-sedco-gondola.js", seed: 11 + i * 29 }, material: { roughness: 0.5 }, physics: { body: "static", collider: "box" }, castShadow: true, state: { floor: "metal" } }); // 2009 stock: funyuns, doritos, spongebob (Nov 10)
   md("l11-sedco-int-monitors", "sedco_monitors", SEDCO_X - 1, 0.14, SZ0 + 0.45, { crt: { color: "#1c2a26", emissive: "#9fc0b0", emissiveIntensity: 0.55, roughness: 0.15 }, beige: { texture: "cdn/texture-smooth-off-white-abs-plastic.png", color: "#e8dcc0", roughness: 0.55 } }, "box", {
     rotation: { yaw: 180 },
     tags: ["usable"],

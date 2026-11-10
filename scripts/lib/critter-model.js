@@ -12,15 +12,13 @@ import HAIR_TEX from './data/hair-tex.yml'
 import WARD_SLOTS from './data/ward-slots.yml'
 // hair: its own GLB skinned whole to the Head bone (scripts/lib/data/hair.yml), tinted by the look's hairc; a mask hides it
 export const HAIR_ID = 'critter-hair'
-const HAIR_HATCUT = { 14: 0, 15: 1, 16: 2 }
 export const humanHairOf = (l) => {
   if (l?.hair == null || l.hair === '' || l.hair === 'none' || maskOf(l)) return null
   if (speciesOf(l) === 'faceling') return null
   const n = typeof l.hair === 'number' ? l.hair : (HAIR.humanPick?.[l.hair] ?? (Number.isFinite(Number(l.hair)) ? Number(l.hair) : null))
   const hat = Boolean(l.hat && l.hat !== 'none')
   const set = HAIR.human?.[l.sex === 'f' ? 'f' : 'm']
-  const pick = hat && (n in HAIR_HATCUT) ? HAIR_HATCUT[n] : n
-  const row = n == null ? null : (set?.[pick] ?? HAIR.human?.[l.sex === 'f' ? 'm' : 'f']?.[pick])
+  const row = n == null ? null : (set?.[n] ?? HAIR.human?.[l.sex === 'f' ? 'm' : 'f']?.[n])
   return row ? (hat ? row.hat : row.free) : null
 }
 export const hairOf = (l) => {
@@ -260,7 +258,7 @@ const humanBodyFull = (l) => {
   for (const [k, v] of Object.entries(m.materials || {})) cloth[k] = v && typeof v === 'object' && !v.kind && typeof v.color === 'string' && !v.map && !v.texture && !v.transparent && !(v.metalness > 0.3) && !(v.emissiveIntensity > 0) ? anime('cloth', v.color) : v
   return { id: HUMAN[l?.sex === 'f' ? 'f' : 'm'], forward: '+z', parts, materials: { ...cloth,
     Body_Skin: skin, Head_Skin: skin, under: { color: '#2b2a30', roughness: 0.85, metalness: 0 },
-    Iris: { color: eye, roughness: 0.18, metalness: 0, emissive: eye, emissiveIntensity: 0.45 }, Brow: { color: hairc, roughness: 0.9, metalness: 0 }, Lash: { color: '#2a2024', roughness: 0.9, metalness: 0 }, Beard: { color: l?.beardc || hairc, roughness: 0.86, metalness: 0 }, Blush: { color: typeof l?.blush === 'string' && l.blush.startsWith('#') ? l.blush : '#ed7890', roughness: 0.9, metalness: 0 } } }
+    Iris: { color: eye, map: '/cdn/value.d2cf169d248898314e631eb26d71f42378a79c8a51a0b6097d73f09862c7c0ea.png', roughness: 0.4, metalness: 0 }, Brow: { color: hairc, roughness: 0.9, metalness: 0 }, Lash: { color: '#2a2024', roughness: 0.9, metalness: 0 }, Beard: { color: l?.beardc || hairc, roughness: 0.86, metalness: 0 }, Blush: { color: typeof l?.blush === 'string' && l.blush.startsWith('#') ? l.blush : '#ed7890', roughness: 0.9, metalness: 0 } } }
 }
 // what the body file itself holds: garments ride as their own skinned children (wardrobe-split), and furry slots (fur, mark…) are not on the human file
 const HB_MATS = new Set(['Body_Skin', 'cloth_bottom', 'metal', 'lens', 'cloth_hat', 'gold', 'Head_Skin', 'Eye', 'Iris', 'Lash', 'Brow', 'Mouth', 'Teeth', 'cloth_neck', 'cloth_shoes', 'cloth_top', 'button', 'strap', 'under', 'Beard', 'Blush'])
@@ -283,18 +281,18 @@ export function humanMorph(l) {
   let h = [...String(l?.fseed ?? l?.id ?? l?.name ?? ((l?.skin || '') + (l?.eye || '') + (l?.hair || '') + (l?.hairc || '')))].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) >>> 0, 2166136261)
   const u = () => { h = (h * 1664525 + 1013904223) >>> 0; return h / 4294967296 }
   const m = l?.sex !== 'f', o = {}
-  for (const k of H_KEYS) o[k] = Math.round(u() * 100) / 100
+  for (const k of H_KEYS) o[k] = Math.round(u() * 45) / 100
   if (o.JawWide > o.JawNarrow) o.JawNarrow = 0; else o.JawWide = 0
-  if (m) { o.JawWide = Math.max(o.JawWide, 0.35 + u() * 0.5); o.JawNarrow = 0; o.BrowHeavy = 0.4 + o.BrowHeavy * 0.6 } else { o.BrowHeavy *= 0.3; o.JawWide *= 0.35 }
+  if (m) { o.JawWide = Math.max(o.JawWide, 0.18 + u() * 0.22); o.JawNarrow = 0; o.BrowHeavy = 0.15 + o.BrowHeavy * 0.4 } else { o.BrowHeavy *= 0.3; o.JawWide *= 0.35 }
   // the head type: a whole skull and face shape, one per person, a second softly mixed in so no two match
   const T = m ? ['HT_Square', 'HT_Square', 'HT_Angular', 'HT_Angular', 'HT_Broad', 'HT_Long', 'HT_Round', 'HT_Heart'] : ['HT_Heart', 'HT_Heart', 'HT_Round', 'HT_Round', 'HT_Long', 'HT_Angular', 'HT_Square', 'HT_Broad']
   for (const k of new Set(T)) o[k] = 0
   const FT = FT_HEAD[l?.ftype] // the creator's FACE SHAPE pick leads the skull; the seed still mixes a second in (johnadams2 Nov 9: face gen)
   const a0 = T[Math.floor(u() * T.length)], b = T[Math.floor(u() * T.length)], a = FT?.[0] ?? a0
-  o[a] = Math.round((0.6 + u() * 0.4) * 100) / 100; if (b !== a) o[b] = Math.round(u() * 0.35 * 100) / 100
+  o[a] = Math.round((0.3 + u() * 0.2) * 100) / 100; if (b !== a) o[b] = Math.round(u() * 0.15 * 100) / 100
   if (FT?.[1]) for (const [k, v] of Object.entries(FT[1])) o[k] = v
   if (m) o.Bust = 0 // a men's garment file can ship its Bust key at weight 1 (the male vest did): a man's chest stays flat
-  if (m) { o.M_Jaw = Math.round((0.55 + u() * 0.45) * 100) / 100; o.M_Chin = Math.round((0.45 + u() * 0.5) * 100) / 100 } // men's own jaw and chin keys (art/human-face/male-jaw.py): a squarer jaw angle and a broad chin, never the female V
+  if (m) { o.M_Jaw = Math.round((0.28 + u() * 0.25) * 100) / 100; o.M_Chin = Math.round((0.22 + u() * 0.25) * 100) / 100 } // men's own jaw and chin keys (art/human-face/male-jaw.py): a squarer jaw angle and a broad chin, never the female V
   if (o.HT_Long > 0.4) o.FaceLong *= 0.4; if (o.HT_Round > 0.4) o.HeadRound *= 0.4 // no doubled stretch
   o.HeadRound = Math.round(o.HeadRound * 0.4 * 100) / 100; o.CheekFull = Math.round(o.CheekFull * 0.45 * 100) / 100; if (o.HT_Broad) o.HT_Broad = Math.round(o.HT_Broad * 0.45 * 100) / 100; if (o.HT_Round) o.HT_Round = Math.round(o.HT_Round * 0.6 * 100) / 100; if (o.HT_Burly) o.HT_Burly = Math.round(o.HT_Burly * 0.75 * 100) / 100; if (o.HT_Rugged) o.HT_Rugged = Math.round(o.HT_Rugged * 0.75 * 100) / 100; if (o.JawWide) o.JawWide = Math.min(o.JawWide, m ? 0.6 : 0.2) // human proportions: no wide, round critter skulls
   if (!m) { // the female human Body carries a Bust key: the slider leads, else a per-person roll (rule: breast size more random)
@@ -742,7 +740,7 @@ export function critterSpec(l) {
 }
 // a mesh critter's look read back off its own model (the bodies laid before state.wear existed): parts shown = garments, cloth_* = their colours, head GLB = species and sex
 const CLOTH_KEY = { topw: 'top', botw: 'bottom', shoes: 'shoec', hat: 'hatc', neck: 'neckc' }
-const femaleBody = (id) => [M.body.f, M.human?.f].includes(id) || [WARDROBE.legacyHuman, WARDROBE.legacyFur].some((rows) => Object.entries(rows ?? {}).some(([sex, ref]) => sex.startsWith('f') && ref === id))
+const femaleBody = (id) => [M.body.f, M.human?.f, '/cdn/value.371afb217c343ae5aaf7ec3daa8dded862e4221ae0ec32239baf1813c0bf6c25.glb'].includes(id) || [WARDROBE.legacyHuman, WARDROBE.legacyFur].some((rows) => Object.entries(rows ?? {}).some(([sex, ref]) => sex.startsWith('f') && ref === id))
 export function lookFromModel(model, headId) {
   if (!model || typeof model !== 'object') return null
   const vis = (n) => model.parts?.[n]?.visible
@@ -805,9 +803,8 @@ export function seatHead(ctx, obj, l) {
 export const staleBody = (model) => !!model && !Object.values(M.body).includes(model.id ?? model) && !Object.values(M.human ?? {}).includes(model.id ?? model)
 const SPECIES = Object.keys(M.species)
 const hashOf = (str) => { let h = 2166136261; for (const c of String(str)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return h >>> 0 }
-const NEWSP = ['rat', 'squirrel', 'leopard', 'jackal', 'badger', 'ferret', 'beaver', 'capybara', 'lop', 'fennec'].filter((k) => SPECIES.includes(k)), OLDSP = SPECIES.filter((k) => !NEWSP.includes(k) && !['human', 'faceling'].includes(k))
-// about a third of the people with no species of their own are one of the newer ones; the rest keep the species they always had
-export const speciesFor = (id) => (NEWSP.length && hashOf(id + ':sp2') % 100 < 34 ? NEWSP[hashOf(id + ':sp3') % NEWSP.length] : OLDSP[hashOf(id + ':sp') % OLDSP.length])
+const CORE_SPECIES = ['cat', 'dog', 'fox', 'bunny', 'bear', 'deer', 'wolf'].filter((k) => SPECIES.includes(k))
+export const speciesFor = (id) => CORE_SPECIES[hashOf(id + ':sp') % CORE_SPECIES.length]
 // each body its own height and build, stable by id: h 0.86..1.14, w 0.88..1.16 (Savi's picks)
 export function buildFor(id, sex) {
   const a = (hashOf(id + ':h') % 1000) / 1000, b = (hashOf(id + ':w') % 1000) / 1000
@@ -849,6 +846,7 @@ const _bust = (l) => {
 const OLD_HUMAN = ['/cdn/value.fd49318b8e8c14d0e98cf8d8b38433601bad2db2515aa8ed3585e8842e2cd80c.glb', '/cdn/value.8d0f43bf3da06253fd58a24473034d2ff3ff1ad4b551d69fcbced89ff58251c1.glb', '/cdn/value.20d3f3631f90a37ce5dc3131af7fe01f6ad38cdbfd21516e1ba50a5ebfc10234.glb', '/cdn/value.80059b609922b38626d38fbf30c31a25046ecff490b20427cb02e791988fe6bc.glb', '/cdn/value.4802b6cd4b09d80a1b730817fb9ec8620f5d861e9e208cd3d6b6b811a18d0df4.glb', '/cdn/value.59bdc78b4240c5fd51dda3dcd5d717d6636cb08500bbd87acb891a290756daee.glb', '/cdn/value.571a6f2a3b9368cb26c62e6dd96129a7eb7a1b680a6358295b76445e8d5fa96b.glb', '/cdn/value.10792bc623f260a37572790868aab1cd2ead38a1846531279036279fa8c4ad02.glb', '/cdn/value.551f4e076eedd9dccfef9bee30c7daf33456a882eae186be97c104ebd4216151.glb', '/cdn/value.fd4025b2266d959bfa29cd593f61d69d34d73fd7d8f8c6009c7f18cd9f3325d4.glb', '/cdn/value.215e73e7f0164538308a283c66bc194938e60bc791594a8cc7a01adc4fcbd5e4.glb', '/cdn/value.2258e9d53f054bba011a1c4debaaf11ada9d46cd13f286a0f3488d7ea9fa7d0a.glb', '/cdn/value.d953bd900d564f7cc054655d9303e4a91cec7ca3b504b00da73e20f620c53442.glb', '/cdn/value.b42693b9f0cb8c435569bee04cb525e504ea3bd6d71d08769fcdb6fc9a256de1.glb', '/cdn/value.0033bae86efe9c3c2592b24d12521cb4a3a67eb297d6793f28439be336017d55.glb', '/cdn/value.3ebbead620d2a09b8b27374f5ce9779c98c6098ac45ee2cc789b7ab1a9f01267.glb', '/cdn/value.00b66aa4a9630ab5e5de51193052868d52103a14d1f121559e366a19761c7b47.glb', '/cdn/value.945580877b9ce16d0a234ad063cc4202d2565dcb5265c2422d8af80fa9b2c17d.glb', '/cdn/value.471a036ab6de34d7962d0c8b2eafd12bf4d52ce8868594e3544a6ad699e0cea0.glb', '/cdn/value.f472a5f4ffdbcca87896d905eac6a9dbc746234980aa3841933abbf854808144.glb', '/cdn/value.a72d639444162250d9952ce8abf7c92aa06a6085f867c5cda3dabffd461b8809.glb', '/cdn/value.4ea845d5772c35f3c8923973f3078cb9153a7ef21e0ae2f8776f7643c0b519cb.glb']
 OLD_HUMAN.push('/cdn/value.0f804808a2834486f121cadfec8de8784cfdbead3a5d0939ca0e6f027bd8526d.glb', '/cdn/value.6f11c2c9ec0cbb44c796db314811f269b1c5cdc19a5f7f34c42ecd221208fe48.glb')
 OLD_HUMAN.push('/cdn/value.89d74113d2bb60c5fcf7de629388fd77d62b8c67452400f826bdce3f35ce4267.glb', '/cdn/value.20023a98cea753bd84c6ff72d4e8cc2d8506b70f0dc65170a0f69b31bd82830a.glb')
+OLD_HUMAN.push('/cdn/value.85e6596c07f25851628cfcf28b105e0552c2e5a4d3ec7507523ecbb21fab92c0.glb', '/cdn/value.371afb217c343ae5aaf7ec3daa8dded862e4221ae0ec32239baf1813c0bf6c25.glb')
 const FURRY_IDS = () => [...Object.values(M.body), ...Object.values(WARDROBE.legacyFur ?? {})], HUMAN_IDS = () => [...Object.values(M.human ?? {}), ...OLD_HUMAN, ...Object.values(WARDROBE.legacyHuman ?? {})]
 export const STYLE_V = 'sw59' // sw59: tanks held 5 mm off the skin (art/human-cloth/clear_skin.py); sw58: loose strips off both tanks' straps (art/human-cloth/fill_slits.py); sw57: shoulder seam welded on both bodies, no crack when the arm moves (art/human-body/weld_weights.py); sw56: women's arms filled out, deltoid, upper arm and forearm (art/human-body/arms.py K=1.8); sw55: women's shoulders squared and widened, arm joints moved with them (art/human-body/shoulders.py), neck seam welded; sw53: tee-under-vest tried and dropped (the tee swallowed the vest); sw51: Bust 0 on men; sw50: skin stays under vests; sw49: tank straps smoothed (cup_smooth z>1.22 + keep_normals); sw48: no bra under a worn top; sw47: back to the sw44 tank (strap smooth lost its morph keys); sw45: torso skin kept under tanks (no waist hole); sw44: women's tank neckline and armholes smoothed (hem_smooth.py); sw42: chest skin kept under tanks; sw41: tank straps curve into the neckline (no square notch); sw40: tank grown from the body's own skin (art/human-cloth/tank_shell.py); sw39: tank straps 6 mm off the shoulder (art/human-cloth/tank_strap.py); sw38: sweater cuffs re-cut; sw37: armholes and sleeve ends re-cut clean on a plane (art/human-cloth/hem_cut.py); sw36: refits swap on worn clothes, slot-filtered mats, hats back on skin; sw35: boots slimmed and shortened (art/human-cloth/boots_fit.py); sw34: tees pushed 8 mm out (art/human-cloth/tee_fit.py); // sw33: sw32 undone (upper arm poked through the tee); sw31: the wardrobe split, outfits ride the bare body as their own files; sw30: overalls bib stays under closed tops; sw29: chest drape and matched bust morphs; sw28: neckline follows the rig, not the old collar; sw27: garment widths measured from the body, not sleeves; sw26: constructed footwear, old wardrobe bodies migrate with their sex; sw25: distinct wardrobe meshes and skin masks; sw24: furry bodies missing their head re-seat it; sw23: worn hair re-seats when its file changed; sw22: rebuilt scalp caps (smooth shell, feathered root-textured hairline), cap tint near the hair colour; sw20: hair keys on the head-fitted pack (Tripo rows off); sw19: skin swatch unshaded, wider tones; sw18: men's lid-line lashes and M_Jaw/M_Chin head; sw15: scarf knot at the side, overalls drop to pants under closed tops; sw13: scarf is a thick wrap with short splayed ends; sw12: male longsleeve collar smoothed, scarf wraps the neck; sw11: tops hang off the chest (no belly pouch); sw10: tripo hair rows 14-16; sw9: overalls clear of tops (no z-fight); sw8: sleeves cover the upper arm's back, the shoulder blend band has room; sw7: bodies with head types; sw6: skirt waist below the top hem; sw5: skirts tucked under tops (new body glbs); sw4: the hair pack on human heads
 export function furrySpec(l) { const h = HUMAN; HUMAN = null; try { return critterSpec(l) } finally { HUMAN = h } } // a character who stays a critter in both modes (Phoebe)

@@ -4,11 +4,17 @@
 # Nov 8: Shelly, "level 10's footsteps are horrid": Level 10 reads its terrain (wheat, barley, stubble → field; dirt → soil), quieter takes.
 # Order matters: the first word that matches wins.
 match:
-  - [metal, "steel|metal|diamond|grate|iron|aluminum"]
+  - [puddle, "puddle|wet-pavement|rain-soaked"]          # Nov 10: Shelly, "add new materials (for footstep sounds)"
+  - [grate, "grate|grating|mesh|subway-vent|catwalk"]
+  - [glass, "glass-floor|skylight"]
+  - [rubber, "rubber|gym-mat|anti-slip"]
+  - [marble, "marble|granite|polished-stone"]
+  - [asphalt, "asphalt|road|street|tarmac"]              # above gravel: "asphalt road with fine gravel" is a road
+  - [metal, "steel|metal|diamond|iron|aluminum"]
   - [wood, "wood|plank|hardwood|floorboard|deck|parquet"]
   - [terrazzo, "terrazzo"]
   - [checker, "checker|linoleum"]
-  - [tile, "tile|vinyl|ceramic|porcelain|marble"]
+  - [tile, "tile|vinyl|ceramic|porcelain"]
   - [snow, "snow|ice"]
   - [hotel, "plush|hotel"]
   - [office, "office-carpet|carpet-tile|low-pile"]
@@ -18,7 +24,6 @@ match:
   - [rock, "rock|basalt|cliff|boulder"]
   - [gravel, "gravel|sand|rubble"]
   - [grass, "grass|lawn|moss|turf"]
-  - [asphalt, "asphalt|road|street|tarmac"]
   - [concrete, "concrete|sidewalk|stone|brick|plaster|cement|pavement|curb"]
 # stride in metres: a step lands every stride walked, so a faster walk steps faster on its own
 stride: { crouch: 0.55, walk: 0.78, run: 1.25 }
@@ -50,7 +55,12 @@ surfaces:
   hotel:    { walk: footstep-shoe-on-thick-plush-hotel-hallway-carpet-single-step, run: footstep-shoe-running-on-thick-hotel-carpet-single-step, v: 0.2, land: landing-soft }
   office:   { walk: footstep-shoe-on-low-pile-office-carpet-tile-single-step, run: footstep-shoe-running-on-low-pile-office-carpet-single-step, v: 0.2, land: landing-soft }
   concrete: { walk: "@concrete", run: "@concrete", v: 0.3, land: landing-hard }
-  asphalt:  { walk: "@stone", run: "@stone", v: 0.3, land: landing-hard }
+  asphalt:  { walk: footstep-sneaker-on-dry-gritty-asphalt-street-single-step, run: footstep-sneaker-running-on-gritty-asphalt-street-single-step, v: 0.26, land: landing-hard }
+  grate:    { walk: footstep-boot-on-hollow-steel-subway-grate-rattle-single-step, run: footstep-boot-running-on-hollow-steel-grate-rattle-single-step, v: 0.24, land: landing-grate }
+  marble:   { walk: footstep-hard-shoe-heel-click-on-polished-marble-lobby-floor-single-step, run: footstep-shoe-running-on-polished-marble-floor-single-step, v: 0.13, land: landing-hard }
+  glass:    { walk: footstep-shoe-on-thick-glass-floor-panel-dull-tap-single-step, run: footstep-shoe-running-on-thick-glass-floor-panel-single-step, v: 0.14, land: landing-hard }
+  rubber:   { walk: footstep-sneaker-on-ribbed-rubber-floor-mat-soft-thud-single-step, run: footstep-sneaker-running-on-ribbed-rubber-mat-single-step, v: 0.18, land: landing-soft }
+  puddle:   { walk: footstep-sneaker-splash-in-shallow-street-puddle-single-step, run: footstep-sneaker-running-through-shallow-street-puddle-splash-single-step, v: 0.28, land: landing-water }
   tile:     { walk: footstep-sneaker-on-vinyl-school-floor-tile-single-step, run: footstep-sneaker-running-on-vinyl-floor-tile-single-step, v: 0.11, land: landing-hard }
   terrazzo: { walk: footstep-sneaker-on-polished-mall-terrazzo-floor-squeak-single-step, run: footstep-sneaker-running-on-polished-mall-floor-single-step, v: 0.09, land: landing-hard }
   checker:  { walk: footstep-boot-on-worn-checkered-linoleum-locker-room-single-step, run: footstep-boot-running-on-worn-linoleum-tile-single-step, v: 0.11, land: landing-hard }
@@ -70,6 +80,7 @@ landings:
   landing-gravel: body-landing-feet-crunch-into-loose-gravel-after-jump
   landing-wood:   body-landing-feet-thud-on-hollow-wooden-floorboards-after-jump
   landing-metal:  body-landing-boots-clang-on-steel-plate-floor-after-jump
+  landing-grate:  body-landing-boots-on-hollow-steel-grate-rattle-clang-after-jump
   landing-soil:   "@landDirt"
   landing-grass:  "@landGrass"
   landing-water:  body-landing-feet-splash-into-shallow-water-after-jump

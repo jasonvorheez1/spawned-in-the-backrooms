@@ -138,8 +138,7 @@ export function rollCloth(ctx, regular = false, level) {
 // an NPC dressed from its faction's leveled list, the same every time for the same id: species, fur, face and a signature
 // agency top (the M.E.G. lime) stay; everything else is rolled from what that faction wears at that level
 const hashOf = (str) => { let h = 2166136261; for (const c of String(str)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return h >>> 0 }
-const NEWSP = ['rat', 'squirrel', 'leopard', 'jackal', 'badger', 'ferret', 'beaver', 'capybara', 'lop', 'fennec'].filter((k) => C.species.includes(k))
-const OLDSP = C.species.filter((k) => !NEWSP.includes(k) && !['human', 'faceling'].includes(k))
+const CORE_SPECIES = C.species.filter((k) => !['human', 'faceling'].includes(k))
 export const speciesFor = (id, faction, role) => {
   const h = hashOf(id + ':sp')
   if (['meg', 'guard', 'officer'].includes(faction) || ['guard', 'scout', 'captain'].includes(role)) {
@@ -147,7 +146,7 @@ export const speciesFor = (id, faction, role) => {
   } else if (['survivor', 'wanderer', 'bntg', 'civ'].includes(faction)) {
     if (h % 100 < 25) return 'human'
   }
-  return NEWSP.length && hashOf(id + ':sp2') % 100 < 34 ? NEWSP[hashOf(id + ':sp3') % NEWSP.length] : OLDSP[h % OLDSP.length]
+  return CORE_SPECIES[h % CORE_SPECIES.length]
 }
 
 // bump NPC_GEN to reroll every NPC's clothes, fur, body and face at once (sex and species stay: stories and pronouns name them)

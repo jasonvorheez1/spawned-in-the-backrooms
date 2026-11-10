@@ -7,8 +7,8 @@ meetDwell: 45
 phoneReach: 22        # a resident this close walks over to answer a ringing phone nobody's near
 greetAgain: 120       # seconds before the same person greets you again
 people:
-  omega-okafor: { faction: omega, role: scout, voice: reyes, gun: shotgun, name: "Sgt. Okafor · M.E.G. Base Omega", night: guard }
-  omega-rhea: { faction: omega, role: medic, voice: ito, gun: wrench, name: "Rhea · Omega Medic" }
+  omega-okafor: { faction: omega, role: scout, voice: reyes, gun: shotgun, name: "Sgt. Okafor · M.E.G. Base Omega", night: guard, look: { species: human, sex: m, hair: m_crop, hairc: "#302722", skin: "#835538", eye: "#6a8a2a", ftype: chiseled, trait: focused, expr: wary, topw: megjacket, top: "#b6e04a", botw: pants, bottom: "#272d35", shoes: boots, shoec: "#2a2420", beard: stubble, hat: none, eyew: none, neck: none } }
+  omega-rhea: { faction: omega, role: medic, voice: ito, gun: wrench, name: "Rhea · Omega Medic", look: { species: human, sex: f, hair: f_ponytail, hairc: "#422c32", skin: "#e8c39c", eye: "#2aa0a0", ftype: heart, trait: warm, expr: smile, topw: jacket, top: "#eef2f0", botw: pants, bottom: "#293946", shoes: boots, shoec: "#2a2420", neck: scarf, neckc: "#c0392b", hat: none, eyew: none, beard: none } }
   omega-dace:
     { faction: omega, role: quarter, voice: dace, gun: pistol, name: "Dace · Omega Quartermaster",
       build: { h: 1.12, w: 1.18 }, look: { species: panda, sex: m, topw: longsleeve, top: "#3d5a98", botw: pants, bottom: "#3a3a32", shoes: boots, shoec: "#22201c", hat: cap, hatc: "#4a5a2a", expr: smile, eyew: none, neck: bowtie, neckc: "#c9a227", fur: "#efeae0" } }

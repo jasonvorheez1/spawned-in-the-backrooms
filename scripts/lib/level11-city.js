@@ -132,7 +132,7 @@ export function layStreet(ctx, h) {
     const x = s * 13.4, zz = z + (s > 0 ? 4 : 0), u = hs(i, s, 1);
     if (Math.hypot(x - 13.6, zz - 60.5) < 6) return; // the subway stairs stand here (SUB)
     sp(`l11-st-tree-${i}-${s}`, { feetPosition: { x, y: 0.1, z: zz }, rotation: { yaw: u * 360 }, physics: { body: "static" }, primitive: { kind: "scripted", script: "scripts/tree10.js", params: { kind: u > 0.5 ? "ash" : "oak", h: 6.5 + u * 2.5 }, seed: i * 7 + (s > 0 ? 3 : 0) }, material: { alphaTest: 0.5, side: "double" }, visibleRange: { max: 220 } }); // a branching street tree, not a blob (#74739)
-    bx(`l11-st-grate-${i}-${s}`, x, 0.09, zz, 1.7, 0.01, 1.7, { color: "oklch(0.3 0.04 70)", metalness: 0.8, roughness: 0.45 }, { physics: undefined });
+    bx(`l11-st-grate-${i}-${s}`, x, 0.332, zz, 1.7, 0.01, 1.7, { texture: "cdn/texture-square-cast-iron-tree-grate-radial-slots-top-down-rusted.png", color: "oklch(0.8 0.03 60)", metalness: 0.7, roughness: 0.55 }, { physics: undefined, state: { floor: "grate" } });
   }));
   for (const [i, [x, z]] of [[-8.6, 3], [8.6, 11], [-8.6, 62], [8.6, -12], [8.6, 48]].entries()) put(`l11-st-hyd-${i}`, "hydrant", x, z, x < 0 ? -90 : 90, { collider: "cylinder" });
   for (const [i, [x, z]] of [[-8.7, -10], [8.7, 26], [-8.7, 21], [8.7, -64], [-8.7, 70]].entries()) put(`l11-st-bin-${i}`, "trashcan", x, z, 0, { collider: "cylinder" });
