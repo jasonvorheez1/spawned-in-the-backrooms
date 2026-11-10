@@ -15,7 +15,7 @@ import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor
 import { navPath } from "./lib/nav.js";
 import { raycast } from "builtin/physics";
 import { animate } from "builtin/tween";
-import { swing3, fire3, aimPose, aimMode, longHands, famOf, tick3, heldRot } from "./lib/body3.js";
+import { swing3, fire3, aimPose, aimMode, longHands, famOf, tick3, heldRot, stagger3 } from "./lib/body3.js";
 import G from "./lib/data/meg.yml";
 import WP from "./lib/data/weapons.yml";
 import { weaponBody } from "./lib/weapon-look.js";
@@ -450,7 +450,7 @@ export function update(ctx, dt) {
   if (m.lastHp != null && (s.hp ?? 0) < m.lastHp - 0.5) {
     m.hitAt = now;
     if (ctx.random() < 0.6) bark(ctx, me, "hit");
-    me.anim.hit = { clip: "cdn/clip-hit-react.glb", loop: "once", weight: 0.8, blendIn: 0.05, blendOut: 0.3, timeAt: now };
+    stagger3(ctx, me);
   }
   m.lastHp = s.hp;
   // life: natural blinks, cute ear twitches, and responsive facial expressions

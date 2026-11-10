@@ -13,6 +13,26 @@ families:
   chop: [hatchet, cleaver]
   heavy: [fire_axe, sledgehammer, pickaxe]
 common:
+  # Shelly's Modern Stagger pack (NV .kf, reconverted Nov 10): one picked at random per hit, upper body so the legs keep the gait
+  stagger:
+    - { clip: cdn/clip-stagger-hitarmleft-591d869c.glb, weight: 4, mask: upper, blendIn: 0.04, blendOut: 0.25 }
+    - { clip: cdn/clip-stagger-hitarmleftb-39b423d5.glb, weight: 4, mask: upper, blendIn: 0.04, blendOut: 0.25 }
+    - { clip: cdn/clip-stagger-hitarmleftc-803488f7.glb, weight: 4, mask: upper, blendIn: 0.04, blendOut: 0.25 }
+    - { clip: cdn/clip-stagger-hitarmright-654e44b9.glb, weight: 4, mask: upper, blendIn: 0.04, blendOut: 0.25 }
+    - { clip: cdn/clip-stagger-hitarmrightb-f66d35cc.glb, weight: 4, mask: upper, blendIn: 0.04, blendOut: 0.25 }
+    - { clip: cdn/clip-stagger-hitarmrightc-4bc31b5d.glb, weight: 4, mask: upper, blendIn: 0.04, blendOut: 0.25 }
+    - { clip: cdn/clip-stagger-hithead-75d1bf1f.glb, weight: 4, mask: upper, blendIn: 0.04, blendOut: 0.25 }
+    - { clip: cdn/clip-stagger-hitheadb-7c89808d.glb, weight: 4, mask: upper, blendIn: 0.04, blendOut: 0.25 }
+    - { clip: cdn/clip-stagger-hitheadc-b97a1551.glb, weight: 4, mask: upper, blendIn: 0.04, blendOut: 0.25 }
+    - { clip: cdn/clip-stagger-hitlegleft-d359edfa.glb, weight: 4, mask: upper, blendIn: 0.04, blendOut: 0.25 }
+    - { clip: cdn/clip-stagger-hitlegleftb-cdfca3fe.glb, weight: 4, mask: upper, blendIn: 0.04, blendOut: 0.25 }
+    - { clip: cdn/clip-stagger-hitlegleftc-503393fd.glb, weight: 4, mask: upper, blendIn: 0.04, blendOut: 0.25 }
+    - { clip: cdn/clip-stagger-hitlegright-4bf0906b.glb, weight: 4, mask: upper, blendIn: 0.04, blendOut: 0.25 }
+    - { clip: cdn/clip-stagger-hitlegrightb-6f09c289.glb, weight: 4, mask: upper, blendIn: 0.04, blendOut: 0.25 }
+    - { clip: cdn/clip-stagger-hitlegrightc-f3cfaae4.glb, weight: 4, mask: upper, blendIn: 0.04, blendOut: 0.25 }
+    - { clip: cdn/clip-stagger-hittorso-372a344b.glb, weight: 4, mask: upper, blendIn: 0.04, blendOut: 0.25 }
+    - { clip: cdn/clip-stagger-hittorsob-6f16bfeb.glb, weight: 4, mask: upper, blendIn: 0.04, blendOut: 0.25 }
+    - { clip: cdn/clip-stagger-hittorsoc-66d529ac.glb, weight: 4, mask: upper, blendIn: 0.04, blendOut: 0.25 }
   hit: { clip: cdn/clip-hit-react.glb, weight: 3, mask: upper, blendIn: 0.05, blendOut: 0.3, cut: 0.8 }
   knockdown: { clip: cdn/clip-ual-hit-knockback-a79b859a.glb, weight: 6, mask: full, blendIn: 0.05, blendOut: 0.2, clamp: true }
   getup: { clip: cdn/clip-ual-laytoidle-3a7ed6c0.glb, weight: 6, mask: full, blendIn: 0.15, blendOut: 0.35 }

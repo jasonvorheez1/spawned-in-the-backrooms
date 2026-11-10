@@ -64,6 +64,8 @@ export function handle3(ctx, me = ctx.self, what = 'reload', kind) {
   const G = CA.gun[famOf(kind ?? me.state.arm ?? me.state.equipped)] ?? CA.gun.pistol
   play(me, 'reload', G[what], { now: ctx.now() })
 }
+// a stagger take on a hit: one of the pack's 18 at random (Shelly Nov 10 'implement staggering')
+export function stagger3(ctx, me) { const L = CA.common.stagger; if (!L?.length) return 0; const row = L[Math.floor(ctx.random() * L.length)]; return play(me, ALT(me, 'hit0', 'hit1'), row, { now: ctx.now() }) }
 // a common take by name (hit, knockdown, getup, throw, block)
 export function react3(ctx, me, what) { return play(me, what === 'hit' ? 'hit' : 'react', CA.common[what], { now: ctx.now() }) }
 

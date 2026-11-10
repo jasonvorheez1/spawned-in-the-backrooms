@@ -18,7 +18,7 @@ import BRK from './lib/data/breakables.yml'
 import { strike } from './lib/breakables.js'
 import { startFishing, handleFishingClick, onFishNibble, onFishBite, finishFishingCatch, cancelFishing } from './lib/fishing.js'
 import { fire as fireBullets, show as showBullets } from './lib/ballistics.js'
-import { swing3, fire3 } from './lib/body3.js'
+import { swing3, fire3, stagger3, tick3 } from './lib/body3.js'
 import { dropLoot, rollLoot, spawnWeapon, poolOf, spawnRemains } from './lib/loot.js'
 import { becomeCorpse } from './lib/l5-hostile.js'
 import { markKill } from './lib/witness.js'
@@ -1117,6 +1117,7 @@ function plyArm(ctx, w) {
 }
 
 export function update(ctx, dt) {
+  { const me = ctx.self, ses = me.session, hp = me.state.hp ?? 0, nowS = ctx.now(); tick3(me, nowS); if (ses.hpSeen != null && hp < ses.hpSeen - 2.5 && hp > 0 && nowS - (ses.stagAt ?? 0) > 450) { ses.stagAt = nowS; stagger3(ctx, me) } ses.hpSeen = hp } // a stagger take each real hit (Shelly Nov 10)
   { const st = ctx.self.state; if (st.reloading && (st.equipped !== st.reloading || !st.reloadAt || ctx.now() - st.reloadAt > 9000)) { st.reloading = ''; st.reloadTok = (st.reloadTok ?? 0) + 1 } } // a reload stranded by a swap, a page reload or a lost timer clears itself
   const fp = ctx.self.feetPosition, fz = zoneHere(ctx, fp.x, fp.z)
   {
