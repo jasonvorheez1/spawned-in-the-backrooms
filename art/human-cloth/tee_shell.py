@@ -157,6 +157,8 @@ for v in newv:
 for f in bm.faces: f.smooth = True
 bm.normal_update()
 bm.to_mesh(me); bm.free(); me.update()
+for _m in list(bpy.data.materials):
+    if _m.name.startswith('cloth_'): _m.name = 'old_' + _m.name  # the body file carries cloth_* slots: free the name or ours exports as .001
 me.materials.clear(); me.materials.append(bpy.data.materials.new('cloth_top'))
 me.materials[0].name = 'cloth_top'
 print('TEE', len(me.vertices), 'hem', round(hem, 3), 'strap', round(xstrap, 3), 'pit', round(xpit, 3), round(zpit, 3), 'keys', keys)
