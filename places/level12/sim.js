@@ -5,7 +5,7 @@ import R from "../../scripts/lib/data/level12.yml";
 import { heard } from "../../scripts/lib/hear.js";
 import { animate } from "builtin/tween";
 export const cadence = "1s";
-const V = 2;
+const V = 3; // 3: moulded door casings
 const MODEL = {
   chair: "/cdn/value.b579afa379fe0730c5aaa825796dba3705faf3c6b1ab0a11aaa6e326405aabe9.glb",
   office: "/cdn/value.e02cceb0c66d902fced411a31f21de9e9584de3272263a09e20b85c9455411be.glb",
@@ -103,9 +103,9 @@ function doorAt(ctx, id, x, z, yaw, state, inWall) {
   const kids = [
     { id: "slab", feetPosition: { x: 0.47, y: 0, z: 0 }, pivot: [1, 0, 0.5], primitive: { kind: "box", width: 0.94, height: 2.06, depth: 0.045 }, material: { color: "#fff", opacity: 0, transparent: true }, castShadow: false,
       children: [{ feetPosition: { x: 0, y: 0, z: 0 }, model: { id: MODEL.door }, layout: { box: { min: { x: -0.47, y: 0, z: -0.03 }, max: { x: 0.47, y: 2.06, z: 0.03 } } } }, { id: "knob", feetPosition: { x: -0.4, y: 1.0, z: 0.05 }, primitive: { kind: "sphere", radius: 0.001 }, material: BRASS }] },
-    { feetPosition: { x: -0.53, y: 0, z: 0 }, primitive: { kind: "box", width: 0.07, height: 2.14, depth: 0.2 }, material: PAINT },
-    { feetPosition: { x: 0.53, y: 0, z: 0 }, primitive: { kind: "box", width: 0.07, height: 2.14, depth: 0.2 }, material: PAINT },
-    { feetPosition: { x: 0, y: 2.08, z: 0 }, primitive: { kind: "box", width: 1.13, height: 0.08, depth: 0.2 }, material: PAINT },
+    // the frame: one jamb-and-head piece with eased edges, then a stepped casing proud of the wall on both faces
+    { feetPosition: { x: 0, y: 0, z: 0 }, primitive: { kind: "extrude", shape: [[-0.565, 0], [-0.495, 0], [-0.495, 2.08], [0.495, 2.08], [0.495, 0], [0.565, 0], [0.565, 2.16], [-0.565, 2.16]], depth: 0.18, bevelEnabled: true, bevelThickness: 0.01, bevelSize: 0.008, bevelSegments: 3 }, material: PAINT },
+    { feetPosition: { x: 0, y: 0, z: 0 }, primitive: { kind: "extrude", shape: [[-0.62, 0], [-0.505, 0], [-0.505, 2.09], [0.505, 2.09], [0.505, 0], [0.62, 0], [0.62, 2.2], [-0.62, 2.2]], depth: inWall ? 0.25 : 0.2, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.014, bevelSegments: 4 }, material: PAINT, castShadow: false },
   ];
   if (!inWall) kids.push({ feetPosition: { x: 0, y: 2.16, z: 0 }, primitive: { kind: "box", width: 1.6, height: 0.9, depth: 0.12 }, material: PAINT }, { feetPosition: { x: -0.9, y: 0, z: 0 }, primitive: { kind: "box", width: 0.7, height: 3.06, depth: 0.12 }, material: PAINT }, { feetPosition: { x: 0.9, y: 0, z: 0 }, primitive: { kind: "box", width: 0.7, height: 3.06, depth: 0.12 }, material: PAINT });
   return ctx.spawn(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, tags: ["usable"], primitive: { kind: "box", width: 1, height: 2.06, depth: 0.08 }, material: { color: "#fff", opacity: 0, transparent: true }, physics: "static", behavior: "scripts/level12-use.js", state: { ...state, c: { x, y: 1.05, z } }, children: kids }); // c: where the look ray finds it (interact.js), the knob's height
