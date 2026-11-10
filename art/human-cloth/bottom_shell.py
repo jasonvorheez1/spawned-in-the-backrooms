@@ -94,7 +94,7 @@ _up = [e for e in bm.edges if max(W(v.co).z for v in e.verts) < (neckz + 0.06 * 
 bmesh.ops.subdivide_edges(bm, edges=_up, cuts=1, use_grid_fill=True)
 if BIB > 0:
     _up2 = [e for e in bm.edges if min(W(v.co).z for v in e.verts) > waistz - 0.03 * s and max(W(v.co).z for v in e.verts) < neckz + 0.06 * s]
-    bmesh.ops.subdivide_edges(bm, edges=_up2, cuts=2, use_grid_fill=True)
+    bmesh.ops.subdivide_edges(bm, edges=_up2, cuts=1, use_grid_fill=True)
 def F(co):  # >0 inside the garment, the cut is its zero line (a contour, so every edge is drawn, not stepped)
     p = W(co)
     top = waistz
