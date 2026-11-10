@@ -20,8 +20,9 @@ for c in co:
     n = c + Vector((0, 0, LIFT * back * up))
     hit = tree.find_nearest(n)
     if hit[0] is not None and back * up > 0.01:
-        p, nrm = hit[0], hit[1]
-        n = p + nrm.normalized() * 0.004                # 4 mm off the skin, as sw65
+        p, nrm = hit[0], hit[1].normalized()
+        gap = (n - p).dot(nrm)                          # only pushed straight out where it sank under 4 mm, never slid along the skin (sliding tore it)
+        if gap < 0.004: n = n + nrm * (0.004 - gap)
     delta.append(Mi.to_3x3() @ (n - c))
 for i, v in enumerate(U.data.vertices): v.co += delta[i]
 if U.data.shape_keys:
