@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 110; // bump to rebuild the city in rooms that are already open
+const V = 111; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -72,8 +72,9 @@ export function l11Lean(id, spec) {
   const kids = Array.isArray(spec.children) ? spec.children.map((c) => l11Lean(id, c)) : spec.children // children carry their own range and shadow (lagscope #109-113: l11-taxi/child, payphone/child...)
   const o = { ...spec }
   if (kids !== undefined) o.children = kids
-  if (!o.visibleRange) o.visibleRange = { max: L11_FAR.test(id) ? 260 : 70 }
   const pr = o.primitive
+  const span = pr && pr.kind === "box" ? Math.max(pr.width ?? 1, pr.depth ?? 1) : 0 // range is measured to its centre: a 620 m slab culled at 70 m left the city floating on sky
+  if (!o.visibleRange) o.visibleRange = { max: L11_FAR.test(id) ? 260 : span >= 12 ? 90 + span * 0.6 : 70 }
   if (pr && pr.kind === "box" && Math.max(pr.width ?? 1, pr.height ?? 1, pr.depth ?? 1) < 1.2 && o.castShadow === undefined) o.castShadow = false
   if (pr && pr.kind === "cylinder" && (pr.height ?? 1) < 1.2 && o.castShadow === undefined) o.castShadow = false
   if (o.light) {
@@ -272,8 +273,8 @@ function lay(ctx) {
   // Wrought Iron Promenade Safety Railings
   for (let rx = -58; rx <= 58; rx += 5) {
     if ((rx > -12 && rx < 12) || rx === 42) continue; // 42: the iron footbridge (l11-footbridge)
-    bx(`l11-rail-s-${rx}`, rx, 0.45, CANAL_Z + CANAL_W / 2 + 0.5, 4.8, 0.85, 0.06, IRON_RAIL);
-    bx(`l11-rail-n-${rx}`, rx, 0.45, CANAL_Z - CANAL_W / 2 - 0.5, 4.8, 0.85, 0.06, IRON_RAIL);
+    for (const [sd, zz] of [["s", CANAL_Z + CANAL_W / 2 + 0.5], ["n", CANAL_Z - CANAL_W / 2 - 0.5]]) // open iron balusters, not a black slab
+      sp(`l11-rail-${sd}-${rx}`, { feetPosition: { x: rx, y: 0.35, z: zz }, primitive: { kind: "scripted", script: "scripts/l11-rail.js", params: { len: 4.8 } }, material: IRON_RAIL, physics: { body: "static", collider: "box" }, state: { floor: "metal" } });
   }
 
   // Canal Life Buoys Mounted on Posts
