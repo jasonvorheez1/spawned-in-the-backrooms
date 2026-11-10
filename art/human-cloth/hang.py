@@ -106,6 +106,9 @@ bmesh.ops.solidify(bm, geom=bm.faces[:], thickness=0.005); me = bpy.data.meshes.
 pocket = bpy.data.objects.new('pocket', me); bpy.context.collection.objects.link(pocket)
 for o in (hood, pocket):
     s = o.modifiers.new('sub', 'SUBSURF'); s.levels = 1
+    if not o.data.uv_layers: o.data.uv_layers.new(name=g.data.uv_layers[0].name if g.data.uv_layers else 'UVMap')
+    bpy.context.view_layer.objects.active = o; o.select_set(True); bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.select_all(action='SELECT')
+    bpy.ops.uv.smart_project(angle_limit=1.15, island_margin=0.01); bpy.ops.object.mode_set(mode='OBJECT'); o.select_set(False)   # patterns (knit, camo) tile across the hood and pocket too
     o.data.materials.append(g.data.materials[0])
     bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier='sub')
     for vg in g.vertex_groups: o.vertex_groups.new(name=vg.name)
