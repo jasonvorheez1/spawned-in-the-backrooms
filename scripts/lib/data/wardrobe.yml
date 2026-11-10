@@ -90,6 +90,8 @@ legacyHuman:
   m_sw28: /cdn/value.1627ae4ddde78fc6953105799956116d9ea9dbaa8a8df28ea7346c8830928ae6.glb
   f_sw28: /cdn/value.b9653c9c28376fd8fab3f02b1cf42e3584cd477be702c2d015f1b1e2d573e08a.glb
 legacyFur:
+  m_predandy: /cdn/value.9cf50c5021c4443970c1fe193d6917865363c1be778845f8870cda68c2607fd8.glb  # the bodies before the Dandy key (Nov 10)
+  f_predandy: /cdn/value.deabd82b6e4ad3959a0713f9e21a48658b70eb954ae75649ebdc0a08efb6a97d.glb
   m: /cdn/value.72a8b9bf28216baab5b949a31bbff68251f892d11e4ca39e3b68c27ef0557e76.glb
   f: /cdn/value.234a83fd493cd046995cd5526a69249cd845b14a19372cdf61be068d24fc5d56.glb
   m_sw25: /cdn/value.79ae2a0afd0403a8cc798b2cda82158f74396c20a726c6703908e399b7254281.glb

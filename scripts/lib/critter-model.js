@@ -726,6 +726,7 @@ export function critterSpec(l) {
   return {
     model: bodyModel(l),
     morph: bustMorph(l) ?? undefined,
+    bones: baseBones(null, l),
     children: [{
       id: HEAD_ID,
       attachment: { skin: true },
@@ -819,9 +820,11 @@ export function buildFor(id, sex) {
   return sex === 'f' ? { v: 3, h, w, bust, head, curl, ear } : { v: 3, h, w, head, curl, ear } // stable per npc
 }
 // the resting pose every npc keeps under its other bone writes: its head size and an S-curve in the tail (up off the hips, tip curling back)
+// furry proportions (Shelly Nov 9: Dandy's World refs): a big head on a little body. The Head bone scales, so hats and masks on it grow with it
+export const FURRY_HEAD = 1.2
 export function baseBones(b, l) {
   if (HUMAN) return { Head: { scale: 1 } } // the human rig: true head size, no tail or ears
-  const k = b?.curl ?? 1, hs = b?.head ?? l?.headS ?? 1
+  const k = b?.curl ?? 1, hs = (b?.head ?? l?.headS ?? 1) * FURRY_HEAD
   const es = b?.ear ?? l?.earS ?? 1
   const bones = { Head: { scale: hs }, Tail: { rotate: [-28 * k, 0, 0] }, Tail1: { rotate: [34 * k, 0, 0] } }
   if (es && Math.abs(es - 1) > 0.02) {
@@ -831,7 +834,8 @@ export function baseBones(b, l) {
   return bones
 }
 // the body's Bust morph: female critters have natural curvy breasts (base 0.38), modulated by bust / bustS
-export function bustMorph(l) { return _bust(l) }
+// + Dandy (art/critter-cute/dandy-morph.mjs): the furry body's stubby shape, every garment in the body GLB carries the same key so clothes stay fitted
+export function bustMorph(l) { return { ...(_bust(l) ?? {}), Dandy: 1 } }
 const _bust = (l) => {
   if (l?.sex !== 'f') return null
   let val = 0.38

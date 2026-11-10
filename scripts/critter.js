@@ -5,7 +5,7 @@ import { plainLook, honest, wornTokens, parseCloth } from './lib/clothes.js'
 import C from './lib/data/critter.yml'
 import { standUp } from './lib/seat.js'
 const SCRIPT = 'scripts/critter2-geo.js'
-import { bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, STYLE_V, seatHead, humanMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard, speciesOf } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
+import { FURRY_HEAD, bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, STYLE_V, seatHead, humanMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard, speciesOf } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
 const LID_SCALE = 1000 // the lids are modelled this many times too small (scripts/critter2-geo.js)
 const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 import { weaponBody, HOLD } from './lib/weapon-look.js'
@@ -29,7 +29,7 @@ function applyBones(ctx) {
   }
   else if (ses.lids) { b.LidL = { scale: LID_SCALE }; b.LidR = { scale: LID_SCALE } }
   if (ses.twitch) b[ses.twitch] = { rotate: [0, 0, ses.twitchDir * 24] }
-  if (ses.headS && ses.headS !== 1) b.Head = { scale: ses.headS }
+  if (!HUMAN && !ses.cachedWorn) b.Head = { scale: (ses.headS || 1) * FURRY_HEAD } // furry: the Dandy big head, times the player's own head slider
   if (ses.tailS && ses.tailS !== 1) b.Tail = { scale: ses.tailS }
   if (ses.pose) Object.assign(b, ses.pose) // the hands on a gun: IK reach points (scripts/lib/body3.js)
   ctx.self.bones = b
@@ -321,7 +321,7 @@ export function update(ctx) {
     else { mirror.feetPosition = pos; mirror.rotation = rot; if (ses.mirrorKey !== key) { if (worn) { mirror.primitive = null; mirror.model = wornModel(worn); dropHead(ctx, mirror); mirror.anim.flair = null; mirror.anim.idle = { clip: GAIT_LIB.idle, loop: 'loop', weight: 1 } } else if (MESH) { mirror.primitive = null; mirror.model = bodyModel(params); if (HUMAN) { seatHead(ctx, mirror, params); mirror.anim.idle = { clip: GAIT_LIB.idle, loop: 'loop', weight: 1 } } else { mirror.morph = bustMorph(params) ?? null; wearHead(ctx, mirror, params); flair(mirror, face) } } else { mirror.model = null; mirror.primitive = { kind: 'scripted', script: SCRIPT, params }; flair(mirror, face) } }
       if (MESH && !worn) { const mh = ctx.getObject(mirror.id + '/' + HEAD_ID); if (mh) mh.morph = faceMorph(face, false, isF, params) }
       if (worn && ctx.getObject(mirror.id + '/' + HEAD_ID)) dropHead(ctx, mirror) // the mirror wears a plymodel bare too
-      mirror.bones = { ...(hs !== 1 ? { Head: { scale: hs } } : {}), ...(ts !== 1 ? { Tail: { scale: ts } } : {}) } }
+      mirror.bones = { ...(!HUMAN ? { Head: { scale: hs * FURRY_HEAD } } : {}), ...(ts !== 1 ? { Tail: { scale: ts } } : {}) } }
     ses.mirrorKey = key
     if (ses.mirror) {
       if (ses.mirrorHeldKind !== eq) {
