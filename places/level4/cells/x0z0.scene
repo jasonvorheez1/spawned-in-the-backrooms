@@ -563,255 +563,278 @@ l4-prop-0:
   castShadow: false
   feetPosition: {x: -11.5, y: 0, z: 3.2}
   id: l4-prop-0
+  layout: {box: {max: {x: 0.33, y: 1, z: 0.33}, min: {x: -0.33, y: 0, z: -0.33}}}
+  model: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 35}
   state: {hp: 64, mat: metal, maxHp: 64, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
   tags: [l4-prop, breakable, seat]
+  visibleRange: {max: 45}
 l4-prop-1:
   castShadow: false
   feetPosition: {x: 5.4, y: 0, z: -12.6}
   id: l4-prop-1
+  layout: {box: {max: {x: 0.33, y: 1, z: 0.33}, min: {x: -0.33, y: 0, z: -0.33}}}
+  model: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 200}
   state: {hp: 64, mat: metal, maxHp: 64, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
   tags: [l4-prop, breakable, seat]
+  visibleRange: {max: 45}
 l4-prop-10:
   castShadow: false
   feetPosition: {x: -5.2, y: 0, z: 13.6}
   id: l4-prop-10
+  layout: {box: {max: {x: 0.28, y: 0.5, z: 0.25}, min: {x: -0.28, y: 0, z: -0.25}}}
+  model: /cdn/value.9bfec9af129aaa4b7b4c57556bba6dbf864c015f8141f3dc12d500fc2a08d32b.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: box}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 80}
   state: {hp: 35, mat: wood, maxHp: 35}
   tags: [l4-prop, breakable]
+  visibleRange: {max: 45}
 l4-prop-11:
   castShadow: false
   feetPosition: {x: 12.6, y: 0, z: -21.8}
   id: l4-prop-11
+  layout: {box: {max: {x: 0.275, y: 0.75, z: 0.225}, min: {x: -0.275, y: 0, z: -0.225}}}
+  model: /cdn/value.e5ed56b84bef188cc6c3ecde7d4ce92d9b7e95cde01ecf07f0d78964da71ec57.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: boxes}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 5}
   state: {hp: 56, mat: wood, maxHp: 56}
   tags: [l4-prop, breakable]
+  visibleRange: {max: 45}
 l4-prop-12:
   castShadow: false
   feetPosition: {x: -23.6, y: 0, z: 23.6}
   id: l4-prop-12
+  layout: {box: {max: {x: 0.3, y: 1, z: 0.3}, min: {x: -0.3, y: 0, z: -0.3}}}
+  model: /cdn/value.4d7639b0dfacf37e47ef1201a69eafbd014a170f2bd3bdca5b0dbde7946025af.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: plant}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 0}
   state: {hp: 28, mat: wood, maxHp: 28}
   tags: [l4-prop, breakable]
+  visibleRange: {max: 45}
 l4-prop-13:
   castShadow: false
   feetPosition: {x: 23.4, y: 0, z: -23.4}
   id: l4-prop-13
+  layout: {box: {max: {x: 0.3, y: 1, z: 0.3}, min: {x: -0.3, y: 0, z: -0.3}}}
+  model: /cdn/value.4d7639b0dfacf37e47ef1201a69eafbd014a170f2bd3bdca5b0dbde7946025af.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: plant}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 40}
   state: {hp: 28, mat: wood, maxHp: 28}
   tags: [l4-prop, breakable]
+  visibleRange: {max: 45}
 l4-prop-14:
   castShadow: false
   feetPosition: {x: 1.6, y: 0, z: -24.2}
   id: l4-prop-14
+  layout: {box: {max: {x: 0.3, y: 1, z: 0.3}, min: {x: -0.3, y: 0, z: -0.3}}}
+  model: /cdn/value.4d7639b0dfacf37e47ef1201a69eafbd014a170f2bd3bdca5b0dbde7946025af.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: plant}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 90}
   state: {hp: 28, mat: wood, maxHp: 28}
   tags: [l4-prop, breakable]
+  visibleRange: {max: 45}
 l4-prop-15:
   castShadow: false
   feetPosition: {x: -14.5, y: 0, z: 13}
   id: l4-prop-15
+  layout: {box: {max: {x: 0.78, y: 1.5, z: 0.2}, min: {x: -0.78, y: 0, z: -0.2}}}
+  model: /cdn/value.8612285ca3c16cd450c63da8345f8b518cacd0c1c649aeed35deedefa666117b.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: panel}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 20}
   state: {hp: 63, mat: wood, maxHp: 63}
   tags: [l4-prop, breakable]
+  visibleRange: {max: 45}
 l4-prop-16:
   castShadow: false
   feetPosition: {x: 15.5, y: 0, z: 4.6}
   id: l4-prop-16
+  layout: {box: {max: {x: 0.78, y: 1.5, z: 0.2}, min: {x: -0.78, y: 0, z: -0.2}}}
+  model: /cdn/value.8612285ca3c16cd450c63da8345f8b518cacd0c1c649aeed35deedefa666117b.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: panel}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 95}
   state: {hp: 63, mat: wood, maxHp: 63}
   tags: [l4-prop, breakable]
+  visibleRange: {max: 45}
 l4-prop-17:
   castShadow: false
   feetPosition: {x: -2.5, y: 0, z: -16}
   id: l4-prop-17
+  layout: {box: {max: {x: 0.78, y: 1.5, z: 0.2}, min: {x: -0.78, y: 0, z: -0.2}}}
+  model: /cdn/value.8612285ca3c16cd450c63da8345f8b518cacd0c1c649aeed35deedefa666117b.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: panel}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 170}
   state: {hp: 63, mat: wood, maxHp: 63}
   tags: [l4-prop, breakable]
+  visibleRange: {max: 45}
 l4-prop-18:
   castShadow: false
   feetPosition: {x: 6.8, y: 0, z: 15.2}
   id: l4-prop-18
+  layout: {box: {max: {x: 0.78, y: 1.5, z: 0.2}, min: {x: -0.78, y: 0, z: -0.2}}}
+  model: /cdn/value.8612285ca3c16cd450c63da8345f8b518cacd0c1c649aeed35deedefa666117b.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: panel}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 60}
   state: {hp: 63, mat: wood, maxHp: 63}
   tags: [l4-prop, breakable]
+  visibleRange: {max: 45}
 l4-prop-19:
   castShadow: false
   feetPosition: {x: 25.2, y: 0, z: 9.6}
   id: l4-prop-19
+  layout: {box: {max: {x: 0.25, y: 1.32, z: 0.35}, min: {x: -0.25, y: 0, z: -0.35}}}
+  model: /cdn/value.b3235e64d5fc141bdce6e6173694de1b520a094fdead52f6b0f207ad34a5b401.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: cabinet}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 90}
   state: {hp: 120, mat: sheet_steel, maxHp: 120}
   tags: [l4-prop, breakable]
+  visibleRange: {max: 45}
 l4-prop-2:
   castShadow: false
   feetPosition: {x: 13.8, y: 0, z: 11.2}
   id: l4-prop-2
+  layout: {box: {max: {x: 0.33, y: 1, z: 0.33}, min: {x: -0.33, y: 0, z: -0.33}}}
+  model: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 110}
   state: {hp: 64, mat: metal, maxHp: 64, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
   tags: [l4-prop, breakable, seat]
+  visibleRange: {max: 45}
 l4-prop-20:
   castShadow: false
   feetPosition: {x: -25.2, y: 0, z: -10.4}
   id: l4-prop-20
+  layout: {box: {max: {x: 0.25, y: 1.32, z: 0.35}, min: {x: -0.25, y: 0, z: -0.35}}}
+  model: /cdn/value.b3235e64d5fc141bdce6e6173694de1b520a094fdead52f6b0f207ad34a5b401.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: cabinet}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: -90}
   state: {hp: 120, mat: sheet_steel, maxHp: 120}
   tags: [l4-prop, breakable]
+  visibleRange: {max: 45}
 l4-prop-21:
   castShadow: false
   feetPosition: {x: -9.6, y: 0, z: 25.2}
   id: l4-prop-21
+  layout: {box: {max: {x: 0.25, y: 1.32, z: 0.35}, min: {x: -0.25, y: 0, z: -0.35}}}
+  model: /cdn/value.b3235e64d5fc141bdce6e6173694de1b520a094fdead52f6b0f207ad34a5b401.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: cabinet}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 180}
   state: {hp: 120, mat: sheet_steel, maxHp: 120}
   tags: [l4-prop, breakable]
+  visibleRange: {max: 45}
 l4-prop-22:
   castShadow: false
   feetPosition: {x: 10.4, y: 0, z: -25.2}
   id: l4-prop-22
+  layout: {box: {max: {x: 0.25, y: 1.32, z: 0.35}, min: {x: -0.25, y: 0, z: -0.35}}}
+  model: /cdn/value.b3235e64d5fc141bdce6e6173694de1b520a094fdead52f6b0f207ad34a5b401.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: cabinet}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 0}
   state: {hp: 120, mat: sheet_steel, maxHp: 120}
   tags: [l4-prop, breakable]
+  visibleRange: {max: 45}
 l4-prop-3:
   castShadow: false
   feetPosition: {x: -3.1, y: 0, z: 21.5}
   id: l4-prop-3
+  layout: {box: {max: {x: 0.33, y: 1, z: 0.33}, min: {x: -0.33, y: 0, z: -0.33}}}
+  model: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 290}
   state: {hp: 64, mat: metal, maxHp: 64, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
   tags: [l4-prop, breakable, seat]
+  visibleRange: {max: 45}
 l4-prop-4:
   castShadow: false
   feetPosition: {x: 22.5, y: 0, z: -2.2}
   id: l4-prop-4
+  layout: {box: {max: {x: 0.33, y: 1, z: 0.33}, min: {x: -0.33, y: 0, z: -0.33}}}
+  model: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 160}
   state: {hp: 64, mat: metal, maxHp: 64, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
   tags: [l4-prop, breakable, seat]
+  visibleRange: {max: 45}
 l4-prop-5:
   castShadow: false
   feetPosition: {x: -21.6, y: 0, z: -12.4}
   id: l4-prop-5
+  layout: {box: {max: {x: 0.33, y: 1, z: 0.33}, min: {x: -0.33, y: 0, z: -0.33}}}
+  model: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 60}
   state: {hp: 64, mat: metal, maxHp: 64, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
   tags: [l4-prop, breakable, seat]
+  visibleRange: {max: 45}
 l4-prop-6:
   castShadow: false
   feetPosition: {x: -13.2, y: 0, z: -21.5}
   id: l4-prop-6
+  layout: {box: {max: {x: 0.275, y: 0.75, z: 0.225}, min: {x: -0.275, y: 0, z: -0.225}}}
+  model: /cdn/value.e5ed56b84bef188cc6c3ecde7d4ce92d9b7e95cde01ecf07f0d78964da71ec57.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: boxes}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 12}
   state: {hp: 56, mat: wood, maxHp: 56}
   tags: [l4-prop, breakable]
+  visibleRange: {max: 45}
 l4-prop-7:
   castShadow: false
   feetPosition: {x: -12.4, y: 0, z: -20.9}
   id: l4-prop-7
+  layout: {box: {max: {x: 0.28, y: 0.5, z: 0.25}, min: {x: -0.28, y: 0, z: -0.25}}}
+  model: /cdn/value.9bfec9af129aaa4b7b4c57556bba6dbf864c015f8141f3dc12d500fc2a08d32b.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: box}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 70}
   state: {hp: 35, mat: wood, maxHp: 35}
   tags: [l4-prop, breakable]
+  visibleRange: {max: 45}
 l4-prop-8:
   castShadow: false
   feetPosition: {x: 21.2, y: 0, z: 13.4}
   id: l4-prop-8
+  layout: {box: {max: {x: 0.275, y: 0.75, z: 0.225}, min: {x: -0.275, y: 0, z: -0.225}}}
+  model: /cdn/value.e5ed56b84bef188cc6c3ecde7d4ce92d9b7e95cde01ecf07f0d78964da71ec57.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: boxes}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: -20}
   state: {hp: 56, mat: wood, maxHp: 56}
   tags: [l4-prop, breakable]
+  visibleRange: {max: 45}
 l4-prop-9:
   castShadow: false
   feetPosition: {x: 3.6, y: 0, z: 4.1}
   id: l4-prop-9
+  layout: {box: {max: {x: 0.28, y: 0.5, z: 0.25}, min: {x: -0.28, y: 0, z: -0.25}}}
+  model: /cdn/value.9bfec9af129aaa4b7b4c57556bba6dbf864c015f8141f3dc12d500fc2a08d32b.glb
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: box}, script: scripts/l4-prop-geo.js}
-  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 33}
   state: {hp: 35, mat: wood, maxHp: 35}
   tags: [l4-prop, breakable]
+  visibleRange: {max: 45}
 object/xad4c834675863151/0:
   feetPosition: {x: -24, y: 2.85, z: -24}
   id: object/xad4c834675863151/0
