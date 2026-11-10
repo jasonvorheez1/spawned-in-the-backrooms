@@ -20,13 +20,13 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 129; // bump to rebuild the city in rooms that are already open
+const V = 130; // 130: scored sidewalk squares // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
 
 const ASPHALT = { ...T("weathered-grey-asphalt-road-with-fine-gravel", 4), color: "oklch(0.92 0.005 250)", roughness: 0.85 }; // lifted: the old tint read as a black void
-const SIDEWALK = { ...T("plain-light-grey-concrete-pavement-slab-fine-aggregate", 3), color: "oklch(0.93 0.004 250)", roughness: 0.85 };
+const SIDEWALK = { ...T("weathered-city-sidewalk-concrete-squares-scored-joints-gum-stains", 0.6), color: "oklch(0.95 0.006 80)", roughness: 0.88 }; // 0.6 tiles a metre: each square reads ~1.6 m, the joints show
 const CURB_MAT = { ...T("smooth-cold-poured-concrete-wall", 1), color: "oklch(0.72 0.02 85)", roughness: 0.65 };
 const STONE_TOWER = { ...T("large-grey-brick-wall-dusty-mortar", 3), color: "oklch(0.82 0.025 80)", roughness: 0.75 };
 const BRICK_BLDG = { ...T("old-red-brick-wall", 3), color: "oklch(0.58 0.1 35)", roughness: 0.8 };
