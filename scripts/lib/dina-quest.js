@@ -16,7 +16,8 @@ const STEP = {
   3: { step: "Find Cabin 23 on the SS Fun's cabin deck", mark: { place: "level26", id: "l26-cabin23" } },
   4: { step: "Someone took River's drive before you. The wet prints lead below decks, to the party", mark: { place: "level26", id: "l26d-phoebe-room" } },
   5: { step: "Phoebe says the thief never left the ship. The wet prints go on past the party, to the end of the hall", mark: { place: "level26", id: "l26d-stow-nest" } },
-  6: { step: "The bedroll had a B.N.T.G. chit stuffed in it, the kind Voss hands out in the Habitable Zone. Ask him who he sold it to", mark: { place: "level1", id: "bntg-voss" } }, // Savi's pick; never the Bonus Room (Shelly: it's a hub, no quests go there) // the story past here is unwritten
+  6: { step: "The bedroll had a B.N.T.G. chit stuffed in it, the kind Voss hands out in the Habitable Zone. Ask him who he sold it to", mark: { place: "level1", id: "bntg-voss" } },
+  7: { step: "Voss says the kid in the wet coat had a buyer waiting at the Electrical Station", mark: null }, // Savi's pick; Level 3's meeting isn't built yet // Savi's pick; never the Bonus Room (Shelly: it's a hub, no quests go there) // the story past here is unwritten
 };
 export { setStep as setDinaStep };
 const RADIO = "Patrol to base. There's a light on at the courier's camp. Say again, someone is at Dina's camp. Moving to check.";

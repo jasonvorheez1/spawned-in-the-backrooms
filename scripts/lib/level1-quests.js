@@ -8,6 +8,7 @@ import { addRep, addKarma, GROUPS, repOf } from "./rep.js";
 const NAMES = Object.fromEntries(Object.entries(GROUPS).map(([k, v]) => [k, v.name]));
 import { setQuest, endQuest } from "./quests.js";
 import { pushFeed } from "./feed.js";
+import { setDinaStep } from "./dina-quest.js";
 import { heard } from "./hear.js";
 
 const CHIME = "cdn/sfx-soft-bright-two-note-success-chime.mp3";
@@ -52,6 +53,9 @@ const C = {
   rCover: "Rats got into the crates. Gnawed tins everywhere. Nobody took anything.",
   rKilled: "It was Ale. She won't be taking anything anymore.",
   rVossTip: "Callum's cans are walking. You see everything that moves here. Who?",
+  dVossAsk: "Found this chit in a bedroll on the SS Fun. Yours. Who'd you give it to?",
+  dVossPay: "Fifty Backdollars says you remember the face.",
+  dVossLean: "That drive starts a war, Voss. You want your name on it when it does?",
   rVossSell: "Ale's skimming Callum's crates for a family in the east halls. What's that worth to you?",
   wStart: "You look worried, doc. What's going on?",
   wAsk: "Ortiz needs purification tablets. She says you've got a tin.",
@@ -60,8 +64,8 @@ const C = {
   wGive: "Here. Purification tablets, straight from Callum's shelf.",
   wDone: "How's the patient?",
 };
-const TAG = { rTrack: "Survival 30", rAleSpeech: "Speech 40", rAleBarter: "Barter 30", rAleThreat: "Speech 55", rCover: "Speech 45", rVossTip: "Barter 35", wMed: "Medicine 35", wBuy: "Barter 25" };
-const CHECK = { rTrack: ["survival", 30], rAleSpeech: ["speech", 40], rAleBarter: ["barter", 30], rAleThreat: ["speech", 55], rCover: ["speech", 45], rVossTip: ["barter", 35], wMed: ["medicine", 35], wBuy: ["barter", 25] };
+const TAG = { rTrack: "Survival 30", rAleSpeech: "Speech 40", rAleBarter: "Barter 30", rAleThreat: "Speech 55", rCover: "Speech 45", rVossTip: "Barter 35", dVossLean: "Speech 50", wMed: "Medicine 35", wBuy: "Barter 25" };
+const CHECK = { rTrack: ["survival", 30], rAleSpeech: ["speech", 40], rAleBarter: ["barter", 30], rAleThreat: ["speech", 55], rCover: ["speech", 45], rVossTip: ["barter", 35], dVossLean: ["speech", 50], wMed: ["medicine", 35], wBuy: ["barter", 25] };
 const opt = (k, tag) => ({ text: C[k], tag: tag ?? TAG[k] ?? "Quest" });
 const who = (it) => String(it?.id ?? "").split("/").pop();
 
@@ -82,6 +86,11 @@ export function l1Choice(ctx, it, s, list) {
   } else if (id === "bntg-voss" && repOf(s, "bntg") > -35) {
     if (r === 1 && (s.cents ?? 0) >= 1000) add.push(opt("rVossTip"));
     if (r === 3 && !s.rAleDead && s.rAleTalked && s.rAleTalked !== "lift") add.push(opt("rVossSell", "Quest"));
+  }
+  if (id === "bntg-voss" && s.dinaQ === 6) { // The Undelivered step 6 (dina-quest.js): who bought the chit. Talk, pay, or lean on him; or lift his ledger (questLift1)
+    add.push(opt("dVossAsk", "Quest")); if ((s.cents ?? 0) >= 5000) add.push(opt("dVossPay", "$50")); add.push(opt("dVossLean"));
+  }
+  if (false) {
   } else if (id === "meg-ale") {
     if (r === 2) { add.push(opt("rAleSpeech")); if ((s.cents ?? 0) >= 2000) add.push(opt("rAleBarter")); add.push(opt("rAleThreat")); if ((s.almonds ?? 0) >= 2) add.push(opt("rAid", "2 almond water")); }
   }
@@ -197,6 +206,21 @@ export function handleDialogueQuest1(ctx, p, it, text) {
     return { reply: "Unlicensed supply line. That's a debt now, and debts get paid. She'll work it off hauling for us. Forty, and you never heard my name.", mood: "happy" };
   }
 
+  // ---------------- The Undelivered, step 6: the stowaway's chit
+  if (id === "bntg-voss" && s.dinaQ === 6 && (k === "dVossAsk" || k === "dVossPay" || k === "dVossLean")) {
+    if (k === "dVossAsk") return { reply: "I hand out a lot of chits. Memory's a service, friend. Services cost.", mood: "calm" };
+    if (k === "dVossPay") {
+      if ((s.cents ?? 0) < 5000) return { reply: "That's not fifty.", mood: "annoyed" };
+      s.cents -= 5000; addRep(s, "bntg", 3);
+      setDinaStep(ctx, s, 7, "Quest Updated: The Undelivered");
+      return { reply: "Fifty. Lovely. Skinny kid, wet coat, wanted passage below the ship's waterline. Paid me in batteries. Said he had a buyer at the Electrical Station. That's all you bought.", mood: "happy" };
+    }
+    if (!roll(ctx, p, it, k)) { addRep(s, "bntg", -2); return { reply: "Threats from a nobody. Cute. Walk away before that gets expensive.", mood: "angry" }; }
+    addRep(s, "bntg", -4);
+    setDinaStep(ctx, s, 7, "Quest Updated: The Undelivered");
+    return { reply: "...Fine. Keep my name out of it. Skinny kid, wet coat. Said his buyer waits at the Electrical Station. I never saw what he was carrying.", mood: "annoyed" };
+  }
+
   // ---------------- Bad Water
   if (k === "wStart" && id === "meg-ortiz" && !w) {
     setStep1(ctx, p, "water", 1, "Quest started: Bad Water");
@@ -225,6 +249,7 @@ export function handleDialogueQuest1(ctx, p, it, text) {
 export function questLift1(ctx, p, it) {
   const s = p?.state, id = who(it); if (!s) return;
   if (id === "meg-ale" && (s.rationsQ === 1 || s.rationsQ === 2)) { s.rAleTalked = "lift"; setStep1(ctx, p, "rations", 3, "In Ale's pocket: Callum's crate tags, torn off seven cans."); }
+  if (id === "bntg-voss" && s.dinaQ === 6) setDinaStep(ctx, s, 7, "In Voss's ledger: one chit, paid in batteries, \"buyer at the Electrical Station\".");
   if (id === "meg-callum" && s.waterQ === 1) setStep1(ctx, p, "water", 2, "Lifted the purification tablets off Callum.");
 }
 export function questKill1(ctx, p, victim) {
