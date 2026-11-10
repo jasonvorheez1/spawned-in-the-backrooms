@@ -159,6 +159,7 @@ for o in body:
         t = _TRI[hit[2]]
         nw = _bt(_W0[(o.name, i)], _B0[t[0]], _B0[t[1]], _B0[t[2]], _bv[t[0]], _bv[t[1]], _bv[t[2]])
         d = inv.to_3x3() @ (nw - w)
+        if any(c != c for c in d) or d.length > 0.06: continue
         if o.data.shape_keys:
             for kb in o.data.shape_keys.key_blocks: kb.data[i].co += d
         else: o.data.vertices[i].co += d
