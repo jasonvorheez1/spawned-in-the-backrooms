@@ -159,6 +159,7 @@ export function gain(ctx, n) {
 // eaten food also feeds hunger (scripts/craft.js drains it)
 // holotapes HALOGEN can play: id → the reel and its length in seconds
 export const HOLO = { r55: { clip: '/cdn/value.27d6f69ab630980fe70d56528803137bd92ffccf167b961cbf9fa5f2dac7795e.mp3', len: 34, name: 'Atomic Age Defender' } }
+export function holoEnd(ctx, p) { if (ctx.self.state.holoPlay?.at === p?.at) ctx.self.state.holoPlay = null }
 export function takeToken(ctx, token) {
   const r = takeToken0(ctx, token), f = CR.food[token]
   if (r.ok && f && !SNACKS[token]) { const s = ctx.self.state; s.hunger = Math.min(100, (s.hunger ?? 100) + f) }
@@ -762,7 +763,7 @@ function invAction(ctx, d) {
     if (ctx.self.session.holoSnd != null) ctx.emit('stopSound', { soundId: ctx.self.session.holoSnd })
     if (s.holoPlay?.id === id && ctx.now() - s.holoPlay.at < T.len * 1000) { ctx.self.session.holoSnd = null; s.holoPlay = null; return } // a second press stops it
     ctx.self.session.holoSnd = ctx.emit('playSound', { clip: T.clip, volume: 0.9, bus: 'Voice' })
-    s.holoPlay = { id, at: ctx.now() }; return
+    s.holoPlay = { id, at: ctx.now() }; if (ctx.self.session.holoEnd) ctx.cancel(ctx.self.session.holoEnd); ctx.self.session.holoEnd = ctx.after(T.len, 'holoEnd', { at: s.holoPlay.at }); return
   }
   if (d.k === 'read') { s.reading = parseInt(d.n) || null; s.invOpen = false; return }
   if (d.k === 'repair') { repairAction(ctx, d); return }
