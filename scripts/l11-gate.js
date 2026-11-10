@@ -12,11 +12,13 @@ function open(ctx, now) {
 }
 export function onSpawn(ctx) {
   const s = ctx.self.state; s.y0 = ctx.self.feetPosition.y
-  if ((ctx.place.players ?? []).some((p) => has(p, s.key))) { s.open = false; open(ctx, true) }
+  // Nov 10 (Shelly: "the entrance to the tunnel is blocked again"): a rebuild re-lays the gate up while its saved state still reads open; an open gate always stands dropped
+  if (s.open || (ctx.place.players ?? []).some((p) => has(p, s.key))) { s.open = false; open(ctx, true) }
 }
 export const ears = {
   press: (ctx, { by }) => {
-    const s = ctx.self.state, who = ctx.getObject(by); if (!who || s.open) return
+    const s = ctx.self.state, who = ctx.getObject(by); if (!who) return
+    if (s.open) { if (ctx.self.feetPosition.y > (s.y0 ?? 0) - 0.5) { s.open = false; open(ctx) } return } // open on paper, still standing: drop it
     if (has(who, s.key)) return open(ctx)
     const ex = s.exit, me = ctx.self.feetPosition, at = who.feetPosition // exit: { axis: "z", sign: 1 } = the side you leave from; a push bar opens it, no hack
     if (ex && Math.sign((at[ex.axis] ?? 0) - me[ex.axis]) === ex.sign) return open(ctx)

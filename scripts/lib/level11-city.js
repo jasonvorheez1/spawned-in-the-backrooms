@@ -125,7 +125,7 @@ export function layStreet(ctx, h) {
   const { sp, bx, cyl } = h, put = (id, kind, x, z, yaw, extra = {}, y = 0) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, physics: extra.nophys ? undefined : { body: "static", collider: extra.collider ?? "box" }, model: { id: MODELS[kind], forward: TRIPO[kind]?.forward ?? "-z", materials: extra.materials }, ...(TRIPO[kind] ? { scale: TRIPO[kind].scale } : {}), ...(extra.spec ?? {}) });
   const LEN = [-66, -52, -9, 24, 40, 56, 72];
   LEN.forEach((z, i) => [-1, 1].forEach((s) => {
-    put(`l11-st-lamp-${i}-${s}`, "lamp", s * 8.9, z + (s > 0 ? 3 : 0), s > 0 ? 90 : -90, { collider: "cylinder" });
+    sp(`l11-st-lamp-${i}-${s}`, { feetPosition: { x: s * 8.9, y: 0, z: z + (s > 0 ? 3 : 0) }, rotation: { yaw: s > 0 ? 90 : -90 }, primitive: { kind: "scripted", script: "scripts/l11-streetlamp.js", seed: 1 }, material: { roughness: 0.5 }, physics: { body: "static" }, castShadow: true }); // Nov 10: scripted cast-iron lamp; the tripo lamp had holes ("street lamp is missing faces")
     if (i % 2 === 0) sp(`l11-st-lamp-light-${i}-${s}`, { feetPosition: { x: s * 6.9, y: 6.6, z: z + (s > 0 ? 3 : 0) }, light: { kind: "point", color: "oklch(0.93 0.14 80)", intensity: 5, distance: 17, shadow: { enabled: false } } });
   }));
   [-64, -48, -8, 26, 38, 52, 66].forEach((z, i) => [-1, 1].forEach((s) => {
