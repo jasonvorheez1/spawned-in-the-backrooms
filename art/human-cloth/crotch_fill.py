@@ -43,9 +43,12 @@ N3 = M.to_3x3(); Mi3 = N3.inverted(); keys = [bm.verts.layers.shape[k] for k in 
 moved = 0
 for v in bm.verts:
     p = M @ v.co; dx = p.x - hx
-    if abs(dx) < R and bot < p.z < top:
+    if abs(dx) < R * 1.5 and bot < p.z < top:
         zw = max(0.0, min(1.0, (top - p.z) / 0.04, (p.z - bot) / 0.04))
-        w = (1 - abs(dx) / R) ** 1.5 * zw
+        back = (M @ v.co).y > J['Hips'].y  # the seat: the cleft is deeper there, the cloth spans it wider and further out
+        Rb = R * 1.5 if back else R
+        if abs(dx) >= Rb: continue
+        w = (1 - abs(dx) / Rb) ** 1.5 * zw * (2.2 if back else 1.0)
         n = (N3 @ v.normal).normalized()
         d = Mi3 @ (n * PUSH * w)
         v.co += d
