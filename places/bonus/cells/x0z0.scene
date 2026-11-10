@@ -1338,7 +1338,8 @@ bm-glass:
   id: bm-glass
   model: {id: /cdn/value.4d5d3e41935915e6da597ff66c84d1bb66b651b8a8eb3d23cd91d5fb9e475d46.glb}
   physics: {body: static, collider: mesh}
-  tags: [bonus-mall]
+  tags: [bonus-mall, breakable]
+  visible: true
 bm-lights:
   children: [{feetPosition: {x: -17, y: 4.4, z: -15}, id: l0, light: {color: "#ffe2c0", distance: 14, intensity: 2.5, kind: point}}, {feetPosition: {x: -17, y: 4.4, z: 13}, id: l1, light: {color: "#ffe6f2", distance: 14, intensity: 2.5, kind: point}}, {feetPosition: {x: 17, y: 4.4, z: 13}, id: l2, light: {color: "#ffe9d2", distance: 14, intensity: 2.5, kind: point}}, {feetPosition: {x: 17, y: 4.4, z: -15}, id: l3, light: {color: "#e8d6ff", distance: 14, intensity: 2.5, kind: point}}, {feetPosition: {x: -15, y: 9.8, z: -14}, id: l4, light: {color: "#e9f4ff", distance: 14, intensity: 2.5, kind: point}}, {feetPosition: {x: 17, y: 9.8, z: -14}, id: l5, light: {color: "#fff3e2", distance: 14, intensity: 2.5, kind: point}}, {feetPosition: {x: -8, y: 4.5, z: -14}, id: l6, light: {color: "#ffd9a8", distance: 12, intensity: 2, kind: point}}, {feetPosition: {x: -8, y: 4.5, z: 14}, id: l7, light: {color: "#ffd9a8", distance: 12, intensity: 2, kind: point}}, {feetPosition: {x: 8, y: 4.5, z: -14}, id: l8, light: {color: "#ffd9a8", distance: 12, intensity: 2, kind: point}}, {feetPosition: {x: 8, y: 4.5, z: 14}, id: l9, light: {color: "#ffd9a8", distance: 12, intensity: 2, kind: point}}, {feetPosition: {x: -8, y: 10, z: -16}, id: l10, light: {color: "#ffd9a8", distance: 12, intensity: 2, kind: point}}, {feetPosition: {x: -8, y: 10, z: 12}, id: l11, light: {color: "#ffd9a8", distance: 12, intensity: 2, kind: point}}, {feetPosition: {x: 8, y: 10, z: -16}, id: l12, light: {color: "#ffd9a8", distance: 12, intensity: 2, kind: point}}, {feetPosition: {x: 8, y: 10, z: 12}, id: l13, light: {color: "#ffd9a8", distance: 12, intensity: 2, kind: point}}, {feetPosition: {x: 0, y: 9.5, z: 20}, id: l14, light: {color: "#ffe8f6", distance: 30, intensity: 3, kind: point}}, {feetPosition: {x: 0, y: 9.5, z: 0}, id: l15, light: {color: "#f2ecff", distance: 30, intensity: 3, kind: point}}, {feetPosition: {x: 0, y: 9.5, z: -22}, id: l16, light: {color: "#e6f6ff", distance: 30, intensity: 3, kind: point}}]
   feetPosition: {x: 0, y: 0, z: 0}
@@ -1453,7 +1454,8 @@ bonus-salon-desk:
   receiveShadow: true
   rotation: {yaw: 90}
   scale: 1.25
-  tags: [bonus-mall, salon-prop]
+  tags: [bonus-mall, salon-prop, breakable]
+  visible: true
 bonus-salon-dryer-1:
   castShadow: true
   feetPosition: {x: 13.5, y: 0, z: -4.95}
