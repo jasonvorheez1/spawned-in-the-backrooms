@@ -1,3 +1,4 @@
+import {interactiveSpec} from './prop-interactions.js'
 // Loot: one place that knows how almond water and weapons appear in the maze, whether from the
 // floor spawner (places/main/sim.js) or from a smiler that just died (scripts/player.js).
 import L from "./data/level0.yml";
@@ -152,9 +153,9 @@ const L2MODEL = {
 };
 export function spawnContainerL2(ctx, kind, p, yaw, opts = {}) {
   const C0 = L2C.containers[kind], C = opts.size ? { ...C0, size: opts.size } : C0, lk = opts.noLock ? null : rollLock(ctx), M = opts.model ?? L2MODEL[kind] ?? (containerModel(kind) ? { id: containerModel(kind), tripo: true } : null), seed = Math.floor(ctx.random() * 1000);
-  return ctx.spawn({ tags: ["container", "l2box"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: { yaw }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, castShadow: false,
+  return ctx.spawn(interactiveSpec({ tags: ["container", "l2box"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: { yaw }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, castShadow: false,
     ...(M ? { model: M.tripo ? { id: M.id, forward: PROPS.forward } : { id: M.id, materials: { paint: { color: M.paints[seed % M.paints.length], roughness: 0.55, metalness: 0.15 } } }, layout: { box: { min: { x: -C.size[0] / 2, y: 0, z: -C.size[2] / 2 }, max: { x: C.size[0] / 2, y: C.size[1], z: C.size[2] / 2 } } } } : { primitive: { kind: "scripted", script: "scripts/l2-props-geo.js", params: { kind, seed } } }),
-    state: { name: lk ? `${C.name} (locked)` : C.name, kind, items: fillContainerL2(ctx, kind, (opts.bonus ?? 0) + (lk ? lk.bonus : 0)), ...(lk ? { lock: lk.lock } : {}), room: opts.room ?? -1 } });
+    state: { name: lk ? `${C.name} (locked)` : C.name, kind, items: fillContainerL2(ctx, kind, (opts.bonus ?? 0) + (lk ? lk.bonus : 0)), ...(lk ? { lock: lk.lock } : {}), room: opts.room ?? -1 } }));
 }
 
 // ---- Level 5 (Terror Hotel): what a hotel room's dresser, wardrobe or kitchen holds. Meat feeds Samantha; the SMG and knife are this floor's guns.

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 4486,
-  "updatedAt": "2026-11-10T17:54:44.482Z",
+  "basedOnSpecVersion": 4497,
+  "updatedAt": "2026-11-10T18:11:44.665Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG across an authored Level 0 maze, deeper levels, and shared destinations. `templates/player.js` composes player behaviors while place simulations and shared scripts own environments, combat, NPCs, loot, crafting, UI, avatar presentation, and progression.",
   "scriptPaths": [],
   "places": [
@@ -55,7 +55,7 @@
     "places/testlab/sim.js owns local builtV/seeded, refill timers and requested physics/enemy resets; testlab-pad.js writes test requests and player healing/level state, while testlab-use.js and the sim own Range Check progress."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker; touch mappings reach the same handlers.",
+    "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker; touch mappings share the action handlers.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes aimPt and ranged aimPitch → player.js ballistics.",
     "scripts/routing.js accepts permitted requested rooms; otherwise scripts/lib/hub.js soloRoom selects the player's solo Backrooms room and bonus overflow IDs; toHub/toSolo perform crossings and track roomHop/save-place state.",
     "Fresh visit → scripts/main-menu.js; START enters intake for creation or bonus for completed characters; wardrobe close runs intro-cut then tutorial0 unless t0Done; menu UI renders on menuOpen and solo pause sets place.timeScale.",
@@ -63,10 +63,10 @@
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; weapon variants roll through weapons.js.",
     "interact.js focus → player.state.focus and loot-ui.js prompt only on the play screen; ui-theme/screen hide prompts behind panels, and interact.js clears focus outlines in menus/talk/cutscenes/build mode.",
     "player.js hitTarget writes shooter position/velocity/time to target state.shot → hunt.js shotAt exposes it for 8 s → smilers and lurkers treat it as a heard lead and hounds set lastSeen to the shot location.",
-    "Player and M.E.G. combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → combat-anims.yml; player HP loss and M.E.G. hit detection select random upper-body stagger clips; weapons.yml supplies firearm cycle/sfx/chamber data and optional loadPose.",
+    "Player and M.E.G. combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → combat-anims.yml; player HP loss and M.E.G. hit detection select random upper-body stagger clips; weapons.yml supplies firearm cycle/sfx/chamber data.",
     "scripts/player.js hitAt/hitHeavy and jammedAt → scripts/lib/vmpose.js held viewmodel recoil/jolt; NV melee swings sampled in nv-swings.js drive first-person pose, DS pack swings drive third-person melee; Modern weapons use their own rows.",
     "scripts/lib/data/weapons.yml loadPose → scripts/lib/vmpose.js per-shell tube reload pose; absent loadPose uses the shared shotgun load pose. The hunting rifle's custom pose keeps the rifle low while loading.",
-    "G input → scripts/player.js pullPin cooks a frag or readies a molotov, creates the first-person throwable prop at the left camera side and plays the overhand throw animation; release emits the throwable, while the held firearm stays in the right hand; the mirrored left-arm clip serves third person."
+    "G input → scripts/player.js pullPin cooks a frag or readies a molotov, creates the first-person throwable prop at the left camera side and plays the overhand throw animation; release emits the throwable while the held firearm stays in the other hand."
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/lib/bonus-extra.js + mall-shopper.js/salon-stylist.js/salon-ui.js - authored mall, simulated mall life and one-time neon/fountain lighting effects.",
@@ -74,8 +74,8 @@
     "scripts/door-geo.js + scripts/lib/door-swing.js + build-door and level-specific door handlers - parametric leaves/frames and eased hinge motion; Level 2 migration preserves fixtures and Test Range reuses the geometry.",
     "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + Zenith door/bots/hatch/flicker/drones/use scripts - Zenith Station geometry, breach, hazards and interactive systems.",
     "places/level4/cells/x0z0.scene + l4-office.js/l4-office-geo.js/l4-home.js + scripts/lib/l4-people.js/level4-people.yml and scripts/lib/l5-people.js/level5-people.yml - authored office/hotel with role-, look-, dialogue- and schedule-driven residents.",
-    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art human-cloth/body/rig/transfer + scripts/mat-anime.js - shared human/furry avatar assembly, skinning, faces, hair and garments; scripts/lib/data/hair.yml selects fitted meshes by look and hat state.",
-    "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js + scripts/lib/data/combat-anims.yml - retargeted first-person and DS third-person melee families select strikes by weapon type; combat poses also share weapon-specific reload/recoil handling.",
+    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art human-cloth/body/rig/transfer + scripts/mat-anime.js - shared human/furry avatar assembly, skinning, faces, hair and garments; scripts/lib/data/hair.yml selects fitted free/hat hair pairs by sex/style index.",
+    "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js + scripts/lib/data/combat-anims.yml - retargeted first-person and DS third-person melee families select strikes by weapon type; combat poses also share stagger/aim machinery.",
     "scripts/lib/nav.js + scripts/meg-agent.js + scripts/l5-staff.js + scripts/l61-staff.js - independent NPC walkers share exact-endpoint/options-aware short-lived path cache and query budget; Level 26 quest trail points to Voss."
   ],
   "probableOrphans": [
@@ -86,8 +86,8 @@
     "Human rig/wardrobe refresh is STYLE_V = sw79; art/body-rig/assets.json pins body and fitted garment outputs. Keep game skeleton/bone names, animation axes, face/head, hands, morph keys and weights when replacing transferred meshes.",
     "scripts/lib/critter-model.js humanBodyMorph omits unsupported male Bust on the body while humanMorph keeps its explicit zero for garments; body changes compare state.headBody and clear/reseat skinned attachments without deleting equipment.",
     "art/body-transfer/reshape.py and fit.py preserve game bone names and downstream bones.json/field.json contracts while reshaping the rig/rest pose and fitting garments with clearance and shape-key deltas.",
-    "art/tripo-hair/fit.py maps source names to styles, fits crown width/position against the live head, removes face/mannequin geometry, and adds a hair-coloured scalp cap; preserve the free/hat GLB outputs consumed by scripts/lib/data/hair.yml. proof.py renders four head angles.",
-    "scripts/lib/data/hair.yml humanPick indexes per-sex human hair variants; current newly fitted picks are female curtainmid=28/wolfcut=27 and male curtains=18, with both free and hat meshes. Keep style-to-pick indices aligned with the generated outputs.",
-    "scripts/lib/vmpose.js reads weapon loadPose as [x, y, depth, pitch, yaw, roll] for the tube-reload lift and per-shell cycles; weapons without it use SHOTGUN_LOAD. Third-person melee rows in combat-anims.yml use DS clips for club/slash/stab/chop/heavy; fists remain NV takes."
+    "art/tripo-hair/fit.py maps source names to styles and fits crown width/position against the live head, strips face/mannequin geometry, and adds a hair-coloured scalp cap; hat outputs remove only original hair above the brim, preserving the appended cap faces to avoid a bald band.",
+    "scripts/lib/data/hair.yml humanPick indexes per-sex human hair variants; current mappings use female curly=30/pixie=29 and male crop=19/curlytop=20. Keep these style-to-index picks aligned with the fit.py named free/hat GLB outputs; curly5 and pixie6 have both variants.",
+    "scripts/lib/vmpose.js reads weapon loadPose as [x, y, depth, pitch, yaw, roll] for the tube-reload lift and per-shell cycles; weapons without it use SHOTGUN_LOAD. Third-person melee rows in combat-anims.yml use DS clips for club/slash/stab."
   ]
 }

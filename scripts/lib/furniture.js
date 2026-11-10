@@ -1,3 +1,4 @@
+import {interactiveSpec} from './prop-interactions.js'
 // Searchable furniture: the loot that used to sit in crates now lives in what a place would really hold
 // (filing cabinets and dropped backpacks on Level 0, bins and lockers on Level 1, fuse cabinets and a dead
 // worker's satchel on Level 3). Kinds in data/furniture-loot.yml; Level 2 keeps its own (spawnContainerL2).
@@ -30,10 +31,10 @@ export function spawnFurniture(ctx, level, kind, spot, opts = {}) {
   const n = K.n[0] + Math.floor(ctx.random() * (K.n[1] - K.n[0] + 1)) + (lk ? lk.bonus : 0) + (opts.bonus ?? 0), items = [];
   for (let i = 0; i < n; i++) items.push(ROLL[level](ctx, table));
   const hp = Math.round((B.materials[K.mat]?.hp ?? 80) * 0.5), name = opts.name ?? K.name;
-  return ctx.spawn({ tags: ["container", "furniture", "lootfurn", "breakable"], feetPosition: { x, y: (spot.y ?? 0.01) + (K.y ?? 0), z }, rotation: { yaw }, physics: { body: "static", collider: "box" },
+  return ctx.spawn(interactiveSpec({ tags: ["container", "furniture", "lootfurn", "breakable"], feetPosition: { x, y: (spot.y ?? 0.01) + (K.y ?? 0), z }, rotation: { yaw }, physics: { body: "static", collider: "box" },
     castShadow: false, visibleRange: { max: 45 },
     primitive: { kind: "scripted", script: K.geo === "l2" ? "scripts/l2-props-geo.js" : "scripts/loot-bags-geo.js", params: { kind, seed: Math.floor(ctx.random() * 1000) } },
-    state: { kind, mat: K.mat, hp, maxHp: hp, name: lk ? `${name} (locked)` : name, items: items.join(","), ...(lk ? { lock: lk.lock } : {}), ...(opts.state ?? {}) } });
+    state: { kind, mat: K.mat, hp, maxHp: hp, name: lk ? `${name} (locked)` : name, items: items.join(","), ...(lk ? { lock: lk.lock } : {}), ...(opts.state ?? {}) } }));
 }
 
 // the face point of side d of a cell (0 +x, 1 +z, 2 -x, 3 -z), slid `along` metres; T = half wall thickness
