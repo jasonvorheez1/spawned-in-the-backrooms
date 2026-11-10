@@ -215,6 +215,7 @@ export function update(ctx, dt) {
     if (m.mode === "search" && now > (m.searchUntil ?? 0)) { m.mode = "home"; m.hunt = null; }
     if (m.mode !== "idle" && flat(pos, f.state.home) > D.leash) { m.mode = "home"; m.hunt = null; m.ignoreUntil = now + 5000; }
     const prey = m.mode === "hunt" ? sense?.p ?? null : null, best = sense?.d ?? 1e9;
+    if (f.state.ai !== m.mode) f.state.ai = m.mode; // idle | hunt | search | home: readable from outside (agent exec, a future HUD)
     if (BOTS.has(f.state.kind)) { if (prey && !m.spoke) { m.spoke = 1; m.talkUntil = 0; speak(ctx, f, m, "spot", now); } if (m.mode !== "hunt" && m.spoke) { m.spoke = 0; m.talkUntil = 0; speak(ctx, f, m, "lost", now); }
       if ((m.lastHp ?? f.state.hp) - f.state.hp >= 25) speak(ctx, f, m, "hurt", now, 4000); m.lastHp = f.state.hp; }
     let vx = 0, vz = 0, clip = "idle", face = null;
