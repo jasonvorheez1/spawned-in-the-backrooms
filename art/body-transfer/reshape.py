@@ -14,28 +14,50 @@ G = next(o for o in game if o.type == 'ARMATURE')
 bpy.ops.import_scene.gltf(filepath=REB)
 R = next(o for o in bpy.data.objects if o.type == 'ARMATURE' and o not in game)
 RB = next(o for o in bpy.data.objects if o.type == 'MESH' and o not in game and o.find_armature() == R)
-gh = (G.matrix_world @ G.data.bones['Hips'].head_local); rh = (R.matrix_world @ R.data.bones['Hips'].head_local)
-s = gh.z / rh.z; R.scale = tuple(x * s for x in R.scale); bpy.context.view_layer.update()
-rh = R.matrix_world @ R.data.bones['Hips'].head_local; R.location += Vector((gh.x - rh.x, gh.y - rh.y, 0)); bpy.context.view_layer.update()
-RJ = {b.name: (R.matrix_world @ b.head_local, R.matrix_world @ b.tail_local) for b in R.data.bones}
-OLD = {b.name: (G.matrix_world @ b.matrix_local) for b in G.data.bones}
+bpy.ops.object.select_all(action='DESELECT')
+for o in bpy.data.objects:
+    if o not in game: o.select_set(True)
+bpy.context.view_layer.objects.active = R; bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+GW = G.matrix_world.copy(); GWi = GW.inverted()
+gh = GW @ G.data.bones['Hips'].head_local; rh = R.data.bones['Hips'].head_local.copy()
+s = gh.z / rh.z; R.scale = (s, s, s); R.location = Vector((gh.x - rh.x * s, gh.y - rh.y * s, 0)); bpy.context.view_layer.update()
+bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 FING = ('Thumb', 'Index', 'Middle', 'Ring', 'Pinky')
-STRETCH = ('Spine', 'Neck', 'Shoulder', 'Arm', 'ForeArm', 'UpLeg', 'Leg', 'Foot')
+STRETCH = ('Spine', 'Spine1', 'Spine2', 'Neck', 'LeftShoulder', 'RightShoulder', 'LeftArm', 'RightArm', 'LeftForeArm', 'RightForeArm', 'LeftUpLeg', 'RightUpLeg', 'LeftLeg', 'RightLeg')
+def order(arm):
+    out = []
+    def walk(b): out.append(b.name); [walk(c) for c in b.children]
+    for b in arm.data.bones:
+        if b.parent is None: walk(b)
+    return out
+OLD = {b.name: (GW @ b.matrix_local) for b in G.data.bones}
+GD = {n: ((GW @ G.data.bones[n].tail_local) - (GW @ G.data.bones[n].head_local)).normalized() for n in OLD}
+# 1. her rig turned into the game's T-pose, her own bone lengths kept
+bpy.context.view_layer.objects.active = R; bpy.ops.object.mode_set(mode='POSE')
+for n in order(R):
+    if n not in GD or any(f in n for f in FING): continue
+    pb = R.pose.bones[n]; bpy.context.view_layer.update()
+    h = pb.head.copy(); rr = pb.bone.matrix_local.to_3x3()
+    q = rr.col[1].normalized().rotation_difference(GD[n])
+    pb.matrix = Matrix.Translation(h) @ (q.to_matrix() @ rr).to_4x4()
+bpy.context.view_layer.update()
+RJ = {pb.name: pb.head.copy() for pb in R.pose.bones}
+RL = {b.name: b.length for b in R.data.bones}
+bpy.ops.object.mode_set(mode='OBJECT')
 meshes = [o for o in game if o.type == 'MESH']
 for o in meshes:
     if o.data.shape_keys:
         for k in o.data.shape_keys.key_blocks: k.value = 0
+# 2. the game rig takes her joints: each bone's head to hers, its length to hers, its direction its own
 bpy.context.view_layer.objects.active = G; bpy.ops.object.mode_set(mode='POSE')
-emp = []
-for pb in G.pose.bones:
-    if pb.name not in RJ or any(f in pb.name for f in FING): continue
-    h, t = RJ[pb.name]
-    e = bpy.data.objects.new('h', None); bpy.context.scene.collection.objects.link(e); e.location = h; emp.append(e)
-    c = pb.constraints.new('COPY_LOCATION'); c.target = e
-    if pb.name.endswith(STRETCH) or pb.name in ('Hips',):
-        f = bpy.data.objects.new('t', None); bpy.context.scene.collection.objects.link(f); f.location = t; emp.append(f)
-        c = pb.constraints.new('STRETCH_TO'); c.target = f; c.volume = 'NO_VOLUME'; c.rest_length = pb.bone.length
+for n in order(G):
+    if n not in RJ or any(f in n for f in FING) or n.endswith(('Toe_End', 'HeadTop_End')): continue
+    pb = G.pose.bones[n]; bpy.context.view_layer.update()
+    rot = OLD[n].to_3x3().normalized()
+    sc = RL[n] / ((GW @ pb.bone.tail_local) - (GW @ pb.bone.head_local)).length if n in STRETCH else 1
+    pb.matrix = GWi @ (Matrix.Translation(RJ[n]) @ rot.to_4x4() @ Matrix.Diagonal((1, sc, 1, 1)))
 bpy.ops.object.mode_set(mode='OBJECT'); bpy.context.view_layer.update()
+emp = []
 dg = bpy.context.evaluated_depsgraph_get()
 posed = {}
 for o in meshes:
@@ -52,7 +74,6 @@ for o in meshes:
         for v, dd in zip(pts, d): v.co += dd
     o.data.update()
 bpy.context.view_layer.objects.active = G; bpy.ops.object.mode_set(mode='POSE')
-bpy.ops.pose.select_all(action='SELECT'); bpy.ops.pose.visual_transform_apply()
 for pb in G.pose.bones:
     for c in list(pb.constraints): pb.constraints.remove(c)
 bpy.ops.pose.armature_apply(selected=False)
@@ -61,7 +82,7 @@ for e in emp: bpy.data.objects.remove(e)
 bpy.context.view_layer.update()
 J = {b.name: (G.matrix_world @ b.head_local) for b in G.data.bones}
 # draw the skin onto the approved surface
-R.data.pose_position = 'REST'; bpy.context.view_layer.update(); dg = bpy.context.evaluated_depsgraph_get()
+bpy.context.view_layer.update(); dg = bpy.context.evaluated_depsgraph_get()
 ev = RB.evaluated_get(dg); me = ev.to_mesh(); bvh = BVHTree.FromPolygons([RB.matrix_world @ v.co for v in me.vertices], [tuple(p.vertices) for p in me.polygons]); ev.to_mesh_clear()
 NECK0, NECK1 = J['Neck'].z - .06, J['Neck'].z
 WR = abs(J['LeftHand'].x)
