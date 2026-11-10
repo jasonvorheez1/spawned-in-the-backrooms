@@ -17,7 +17,9 @@ for o in garm:
     ctr = {s: (sum((p.x for p in ps)) / len(ps), (min(p.y for p in ps) + max(p.y for p in ps)) / 2, min(p.z for p in ps)) for s, ps in sides.items()}
     def f(p):
         cx, cy, z0 = ctr[p.x >= 0]
-        return mathutils.Vector((cx + (p.x - cx) * hf, cy + (p.y - cy) * hf, z0 + (p.z - z0) * vf))
+        t = min(1, max(0, (p.z - z0 - 0.06) / 0.08)); t = t * t * (3 - 2 * t)
+        h = hf + (0.985 - hf) * t  # the foot slims, the shaft keeps the shin's width so no skin breaks through
+        return mathutils.Vector((cx + (p.x - cx) * h, cy + (p.y - cy) * h, z0 + (p.z - z0) * vf))
     if me.shape_keys:
         for kb in me.shape_keys.key_blocks:
             for i, d in enumerate(kb.data):
