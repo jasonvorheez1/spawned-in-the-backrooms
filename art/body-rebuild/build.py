@@ -106,6 +106,18 @@ if MALE:
     for i in range(len(vs)): isl.setdefault(fnd(i), []).append(i)
     G_ = GROW
     for ids in isl.values():
+        c = sum((vs[i].co for i in ids), mathutils.Vector()) / len(ids); z0 = c.z / G_
+        mx_ = max(abs(vs[i].co.x / G_) for i in ids)
+        if 1.748 < z0 < 1.778 and mx_ > .085 and abs(c.x / G_) > .03 and 100 <= len(ids) < 1500:   # the real upper lash strip (measured on the export: z 1.854-1.883 grown, |x| to .099): outer third laid onto the lid
+            mid = [i for i in ids if .045 < abs(vs[i].co.x / G_) < .065]
+            zl = sorted(vs[i].co.z for i in mid)[len(mid) // 2]; yl = sorted(vs[i].co.y for i in mid)[len(mid) // 2]
+            print("LASH island", len(ids), round(z0, 3), round(mx_, 3))
+            for i in ids:
+                t = sm(.065, .088, abs(vs[i].co.x / G_))
+                if vs[i].co.z > zl: vs[i].co.z -= t * (vs[i].co.z - zl) * .85
+                vs[i].co.y += t * (yl - vs[i].co.y) * .85
+                vs[i].co.x *= 1 - .05 * t
+            continue
         if len(ids) > 200: continue
         c = sum((vs[i].co for i in ids), mathutils.Vector()) / len(ids); z0 = c.z / G_
         if 1.765 < z0 < 1.8 and len(ids) < 120 and max(abs(vs[i].co.x / G_) for i in ids) > .07:   # upper lash line: the outer wing folded down along the lid, no flick
@@ -122,18 +134,6 @@ if MALE:
                     if ax_ > .08: vs[i].co.x = math.copysign(.08 * G_, vs[i].co.x)
                     if vs[i].co.z > zl:   # the fringe above the lid line: pressed into a band on the lid, strands no longer stand off the face
                         vs[i].co.z = zl + (vs[i].co.z - zl) * .35; vs[i].co.y = yl + (vs[i].co.y - yl) * .2
-        mx_ = max(abs(vs[i].co.x / G_) for i in ids)
-        if 1.72 < z0 < 1.8 and mx_ > .07 and len(ids) > 20: print("CAND", len(ids), round(z0, 4), round(mx_, 3), round(c.x / G_, 3), round(c.y / G_, 3))
-        if 1.748 < z0 < 1.778 and mx_ > .085 and abs(c.x / G_) > .03 and len(ids) >= 100:   # the real upper lash strip (measured on the export: z 1.854-1.883 grown, |x| to .099): outer third laid onto the lid
-            mid = [i for i in ids if .045 < abs(vs[i].co.x / G_) < .065]
-            zl = sorted(vs[i].co.z for i in mid)[len(mid) // 2]; yl = sorted(vs[i].co.y for i in mid)[len(mid) // 2]
-            print("LASH island", len(ids), round(z0, 3), round(mx_, 3))
-            for i in ids:
-                t = sm(.065, .088, abs(vs[i].co.x / G_))
-                if vs[i].co.z > zl: vs[i].co.z -= t * (vs[i].co.z - zl) * .85
-                vs[i].co.y += t * (yl - vs[i].co.y) * .85
-                vs[i].co.x *= 1 - .05 * t
-            continue
         if 1.71 < z0 < 1.785 and .02 < abs(c.x / G_) < .1 and c.y / G_ < .05:          # eyes: narrower, less tall, a touch lower
             for i in ids: d = vs[i].co - c; vs[i].co = c + mathutils.Vector((d.x * .88, d.y, d.z * .78)) + mathutils.Vector((0, 0, -.003))
         elif 1.784 < z0 < 1.8 and abs(c.x / G_) > .02:                                    # brow/lash line: heavier, flatter
