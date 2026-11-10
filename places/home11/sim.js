@@ -1,7 +1,7 @@
 import { builtSpec } from "../../scripts/lib/build-piece.js";
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 40;
+const V = 41;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -98,8 +98,8 @@ export function tick(ctx) {
   fit("h-vanity", VAN, 2.55, -3.6, 90, [0.95, 0.9, 0.55]); // tripo: oak vanity, cultured-marble top and sink, under the mirror
   sp("h-mirror", { feetPosition: { x: 2.27, y: 1.1, z: -3.6 }, primitive: { kind: "box", width: 0.02, height: 0.8, depth: 0.7 }, material: { color: "oklch(0.92 0.01 230)", metalness: 1, roughness: 0.05 } });
   sp("h-vanity-bar", { feetPosition: { x: 2.3, y: 1.95, z: -3.6 }, primitive: { kind: "box", width: 0.08, height: 0.1, depth: 0.75 }, material: { color: "oklch(0.97 0.03 90)", emissive: "oklch(0.95 0.05 85)", emissiveIntensity: 1 }, light: { kind: "point", color: "oklch(0.9 0.06 80)", intensity: 1.2, distance: 5 } });
-  hang("h-towel", "/cdn/value.e91dbe5d0f3513c532c9d868514bf97938bb8b3178451df26274996f7495eb31.glb", 4.88, 0.85, -4.8, 270, [0.6, 0.62, 0.16]); // tripo: seafoam towel over a chrome bar on the east wall
-  hang("h-curtain", "/cdn/value.d86ecf170b9702b0d9fed4701b6ed8e3a4ba112783ec2d3037af9acfc48b403a.glb", 4.0, 0.45, -4.98, 0, [1.25, 1.75, 0.14]); // tripo: wave-print vinyl curtain on a curved chrome rod, half drawn over the tub
+  sp("h-towel", { feetPosition: { x: 4.88, y: 0.85, z: -4.8 }, rotation: { yaw: 270 }, model: { id: "/cdn/value.e91dbe5d0f3513c532c9d868514bf97938bb8b3178451df26274996f7495eb31.glb" }, layout: { box: { min: { x: -0.6 / 2, y: 0, z: -0.16 / 2 }, max: { x: 0.6 / 2, y: 0.62, z: 0.16 / 2 } } } }); // tripo: seafoam towel over a chrome bar on the east wall
+  sp("h-curtain", { feetPosition: { x: 4.0, y: 0.45, z: -4.98 }, rotation: { yaw: 0 }, model: { id: "/cdn/value.d86ecf170b9702b0d9fed4701b6ed8e3a4ba112783ec2d3037af9acfc48b403a.glb" }, layout: { box: { min: { x: -1.25 / 2, y: 0, z: -0.14 / 2 }, max: { x: 1.25 / 2, y: 1.75, z: 0.14 / 2 } } } }); // tripo: wave-print vinyl curtain on a curved chrome rod, half drawn over the tub
   sp("h-light-hall", { feetPosition: { x: -1.2, y: 2.55, z: -1.8 }, primitive: { kind: "cylinder", radiusTop: 0.17, radiusBottom: 0.12, height: 0.12 }, material: { color: "oklch(0.97 0.02 90)", emissive: "oklch(0.9 0.05 85)", emissiveIntensity: 0.6 }, light: { kind: "point", color: "oklch(0.88 0.07 70)", intensity: 1.0, distance: 6 } }); // frosted flush-mount dome
   for (const [id, x, z, w, d] of [["h-base-w", -4.9, 0, 0.04, D], ["h-base-e", 4.9, 0, 0.04, D], ["h-base-n", 0, -5.9, W, 0.04]]) bx(id, x, 0.05, z, w, 0.12, d, TRIM, { physics: "none" });
 
