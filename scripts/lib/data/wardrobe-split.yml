@@ -99,7 +99,7 @@ f:
     Ward_canvasskirt: "/cdn/value.52295b9602e2559e71373f0241eddf461170660a7d68981dc4c3f8032978842d.glb"
     Ward_cap: "/cdn/value.71edea9b77708d4db7cc7ac9192a5e6aaabf3bbd03f8a2ea519ce121a2dc6dc1.glb"
     Ward_cape: "/cdn/value.8517d467b0fd521e368d623b5b145083b3f5a15d31d5ee5452f62c512d876d15.glb"
-    Ward_cargo: "/cdn/value.98c5d0c4bc55551e0cdece985f657ee0a43efebe5a5c425a3abb14b53f05c180.glb"
+    Ward_cargo: "/cdn/value.6a4649fb0e731d8a46c61fdd6d1deda9da8d039e02d8232acdc2f58865d4147d.glb"   # Nov 10 bottoms redo: body-grown, seam welded, crotch+seat bridged (art/human-cloth/crotch_fill.py)
     Ward_carpetponcho: "/cdn/value.da3d4eddede06f146d8fcc9b3e1d95cb513851c9011b776978f80e4733d53013.glb"
     Ward_chitinhelm: "/cdn/value.48971002a61ea0f112fdce23f4fff9c65cb87215da6f058ade177e801d3b49f4.glb"
     Ward_chitinplate: "/cdn/value.62272c0b1b67400c13750f5075c40068e44eef8f49f82902f0f4ba749d1c79e5.glb"   # Nov 10 tops redo: clean body-grown shell + Bust key (art/human-cloth/tops_redo.sh)
@@ -116,7 +116,7 @@ f:
     Ward_hotelrobe: "/cdn/value.de9dc78eb79faf1d28670195e8d6c155df78dc93444ac99f117ec94b04a75cbc.glb"   # Nov 10 tops redo: clean body-grown shell + Bust key (art/human-cloth/tops_redo.sh)
     Ward_hotelslip: "/cdn/value.d22ce4238334765dc42d919a70e08fd85fb0f17a5e19ffdfd09545584ab965fc.glb"
     Ward_jacket: "/cdn/value.70852205c6cb643cfdd93f1f2e563f844d6133289ca7a16d20178c5b922da6e7.glb"   # Nov 10 tops redo: clean body-grown shell + Bust key (art/human-cloth/tops_redo.sh)
-    Ward_jeans: "/cdn/value.f849569a3482f57168fc5fcac10a29863c2446ed5b719af7016f175222621075.glb"
+    Ward_jeans: "/cdn/value.fce7d1d4a0700af49911151ad6f8727cd04f3a499c05c8a7f6465e1858509a52.glb"   # Nov 10 bottoms redo: body-grown, seam welded, crotch+seat bridged (art/human-cloth/crotch_fill.py)
     Ward_jerrytee: "/cdn/value.e95f92b063b9a18f1e42aee62de1a8070b6a85779fb0c492c97f1a40195098e4.glb"
     Ward_lifemantle: "/cdn/value.cb8958df630bfdf847b096c8297152648b786d8282404910b8106c5baa99d8c0.glb"
     Ward_longskirt: "/cdn/value.40071b3bf1fd093dc4097a7bc01f16de0ee58c731c579acb34921baaf3ba3401.glb"
@@ -130,13 +130,13 @@ f:
     Ward_padbeanie: "/cdn/value.6764de44d96d7b411018566077caf5ba4ce5e06594c8fa82c06d5781915a0995.glb"
     Ward_padjacket: "/cdn/value.12780ae86742e5e9064222276bb6bd10497ddff8c73e734953f851f7d37744a3.glb"   # Nov 10 tops redo: clean body-grown shell + Bust key (art/human-cloth/tops_redo.sh)
     Ward_pajamas: "/cdn/value.b8e08df7d2c52465a16dc4494d11e7e5bf6e183201be3f20ec4279f6ef43d403.glb"   # Nov 10 tops redo: clean body-grown shell + Bust key (art/human-cloth/tops_redo.sh)
-    Ward_pants: "/cdn/value.f03992a37fea3f99b96838791d8b6772296af42f774fb3f9e199727d6a1823d9.glb"
+    Ward_pants: "/cdn/value.317a71179fa3b193dc2015cd717abf6ca1c19ce5e80085f48385ee6ec2243b48.glb"   # Nov 10 bottoms redo: body-grown, seam welded, crotch+seat bridged (art/human-cloth/crotch_fill.py)
     Ward_partyhat: "/cdn/value.8e853701296f028a57e3b14124d12cbf32b3ce79e62ac97efbc9bc37eb11091d.glb"
     Ward_pgcoat: "/cdn/value.0a0003821cb117d2ce7b3a5b46ff123a11afa8b87e9eac5fe7faa500a32dda25.glb"   # Nov 10 tops redo: clean body-grown shell + Bust key (art/human-cloth/tops_redo.sh)
     Ward_pghoodie: "/cdn/value.c3fa633da9de65faf4840da4aa00ebb0d63e223d3b2e248af884df837c9b781a.glb"   # Nov 10 tops redo: clean body-grown shell + Bust key (art/human-cloth/tops_redo.sh)
-    Ward_pinstripe: "/cdn/value.d4a1d0237bb6916123f8bd7514bbd93788e9a9223aa40631949a17207e69b966.glb"
+    Ward_pinstripe: "/cdn/value.1c19393dd4008925ae686419140fd846f87bdcadd234af64df47fd239f31dd36.glb"   # Nov 10 bottoms redo: body-grown, seam welded, crotch+seat bridged (art/human-cloth/crotch_fill.py)
     Ward_pitchboots: "/cdn/value.db6e63c519cf96ef2fb30d5f3c6eeb838502963b3728b9873aed7225c4e4644e.glb"
-    Ward_pjpants: "/cdn/value.58798e2e081adf7019f74b99f958dd7fd554353219b33b6b7934d2b34ff6845d.glb"
+    Ward_pjpants: "/cdn/value.601f67f9a3ccc3eb94805edbee4a80df0b252b555113ab90b1e665b873294735.glb"   # Nov 10 bottoms redo: body-grown, seam welded, crotch+seat bridged (art/human-cloth/crotch_fill.py)
     Ward_platevest: "/cdn/value.e14db1002317a3c1062416807c01460a4ea8743a4fd75bcd24914bea2a9dfbd4.glb"   # Nov 10 tops redo: clean body-grown shell + Bust key (art/human-cloth/tops_redo.sh)
     Ward_pphoodie: "/cdn/value.124145356b78c6549593c8129e48577bfde5ff16cdbf65a9f53c4350d6cbe565.glb"   # Nov 10 tops redo: clean body-grown shell + Bust key (art/human-cloth/tops_redo.sh)
     Ward_scarf: "/cdn/value.33c5ce6ae39bc312278a632ca2024db9204034ee2d51a39196765731a311ac8a.glb"
@@ -146,7 +146,7 @@ f:
     Ward_shorts: "/cdn/value.8c9abb1ae7aadaec4b03ef97acbd0694c5932aff470810268f74dc9bd9ea9ae4.glb"
     Ward_silkcloak: "/cdn/value.31663a451eac95fbdc7cc246cbe284d19baf7d8ea6d242c63b9f27766441f741.glb"
     Ward_skirt: "/cdn/value.d9db052cde219bef1ef014f929baf20a2cfc5278c9c88abbd2fea6db63578190.glb"
-    Ward_slacks: "/cdn/value.7f1f5fe483514586a1bc67e3d4a8070f2c04eb3a0514c0211ee30cb78b7faf00.glb"
+    Ward_slacks: "/cdn/value.34480c73e7bc50e3e9fae9bc118f29034f5693791eea5e7350601575f61f16bf.glb"   # Nov 10 bottoms redo: body-grown, seam welded, crotch+seat bridged (art/human-cloth/crotch_fill.py)
     Ward_slippers: "/cdn/value.d6350985d778dac2097d01af91045dff9a4aa1fb027160bdb40f33f5a0a386fb.glb"
     Ward_sneakers: "/cdn/value.fba1b8fa314791435457863d9b4c74ce428b8902af4f21a2934bcfa0a0c81266.glb"
     Ward_souwester: "/cdn/value.b59d340e7aefb1ab1045fdecf38b7acd95b4953d0c0fc102467ac3a53442ab20.glb"
