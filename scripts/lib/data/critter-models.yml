@@ -14,7 +14,7 @@ mesh: true
 # split (Nov 9, Shelly yes #137497): bare bodies; garments ride as skinned children (wardrobe-split.yml)
 human: { m: "/cdn/value.7c334339571b407794f9e2373ac64130bac8ff3ad24dfa024b0aea1c6b75b973.glb", f: "/cdn/value.903f7c6b970dc30efedb534743b29fa26c289af527b4aa2dd89f9fd97cb23837.glb" }
 # Dandy (Shelly Nov 9 "the furry models are awful"; Nov 10 rebuild: neck term bounded so hats keep their shape, headphone cups pushed out of the bigger heads): the bodies below are the wardrobe pipeline's (before: m 9cf50c5021c4443970c1fe193d6917865363c1be778845f8870cda68c2607fd8 f deabd82b6e4ad3959a0713f9e21a48658b70eb954ae75649ebdc0a08efb6a97d) with one more key, Dandy, on every mesh (art/critter-cute/dandy-morph.mjs). A rebuilt body must be run through it again.
-body: { m: "/cdn/value.e411560354fb4ca9da197df17e263b0a67f341b1ed0537006b53b2a327b2320e.glb", f: "/cdn/value.3b4d7ece16d3e436b810d500330cb4e624270aff962cd0952da9ed0695ae3365.glb" }
+body: { m: "/cdn/value.06a60b4a5b3965c032abe1a55667ec1dc71e355f399abde039a355139ee388ec.glb", f: "/cdn/value.8021d9842ea70817ecba60b5a0239345239251aa5cbfccf519d9b7e0e37737e8.glb" }
 bodyMats: [fur, limb, pad, cloth_top, cloth_bottom, cloth_shoes, cloth_hat, cloth_neck, button, metal, lens, gold, sole]
 slots: { topw: Top, botw: Bot, shoes: Shoes, hat: Hat, eyew: Eyew, neck: Neck }
 parts: [Top_apron, Top_dress, Top_hoodie, Top_jacket, Top_longsleeve, Top_pajamas, Top_sweater, Top_tank, Top_tee, Top_plate, Bot_longskirt, Bot_overalls, Bot_pants, Bot_pjpants, Bot_shorts, Bot_skirt, Shoes_boots, Shoes_slippers, Shoes_sneakers, Hat_beanie, Hat_bow, Hat_cap, Hat_crown, Hat_flower, Hat_headphones, Hat_partyhat, Hat_tophat, Eyew_glasses, Eyew_shades, Neck_bell, Neck_bowtie, Neck_cape, Neck_scarf]

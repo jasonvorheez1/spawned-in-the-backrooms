@@ -92,6 +92,8 @@ legacyHuman:
   m_sw28: /cdn/value.1627ae4ddde78fc6953105799956116d9ea9dbaa8a8df28ea7346c8830928ae6.glb
   f_sw28: /cdn/value.b9653c9c28376fd8fab3f02b1cf42e3584cd477be702c2d015f1b1e2d573e08a.glb
 legacyFur:
+  m_prelimb: /cdn/value.e411560354fb4ca9da197df17e263b0a67f341b1ed0537006b53b2a327b2320e.glb  # the furry bodies before the limb material (Nov 10)
+  f_prelimb: /cdn/value.3b4d7ece16d3e436b810d500330cb4e624270aff962cd0952da9ed0695ae3365.glb
   m_rig59: /cdn/value.5e4ed0ba1c6446e180d1b8ef9af4d5f64755f4d355fe58514abe6bbeb93ac8c2.glb
   f_rig59: /cdn/value.1f11cf8da23ff31afae5780810d368c734a9ee749282a9d2c2b03496e2ec4c80.glb
   m_predandy: /cdn/value.9cf50c5021c4443970c1fe193d6917865363c1be778845f8870cda68c2607fd8.glb  # the bodies before the Dandy key (Nov 10)
