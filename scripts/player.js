@@ -444,6 +444,7 @@ export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pe
   }
   if (m.state.hp <= 0 && !m.state.dead) {
     m.state.dead = true
+    if (W[s.equipped]?.vaporize) vaporize(ctx, m, hit, npc) // the R-55: the thing burns to light and ash where it stood
     { const seen = markKill(ctx, m, ctx.self); if ((m.tags ?? []).includes('npc')) { repKill(ctx, m, ctx.self, seen); questKill1(ctx, ctx.self, m) } if (!seen.length && s.crouch) s.notice = { text: 'Nobody saw that', at: ctx.now() } } // witnesses: scripts/lib/witness.js
     s.kills += 1
     gain(ctx, m.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
@@ -451,6 +452,20 @@ export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pe
     if (ent) dropLoot(ctx, m.feetPosition, tg.includes('lurker') ? 'Lurker remains' : 'Smiler remains', npcMul(m.state).loot, derived(s).clothFind, poolOf(ctx.self.place)) // only smilers and lurkers leave smiler/lurker remains
     else if (!npc && !tg.some((g) => g === 'zdrone' || g === 'l5staff' || g === 'l5rat' || g === 'l10worm' || g === 'l7beast' || g === 'remains' || g === 'spamboss')) becomeCorpse(ctx, m, (m.state?.name ?? 'Body').split(' ·')[0] + "'s body", rollLoot(ctx, npcMul(m.state).loot, derived(s).clothFind, poolOf(ctx.self.place)), ctx.self.feetPosition) // anything else stays its own body, limp and searchable // an agent's own body is searched (scripts/meg-agent.js)
   }
+}
+
+// the R-55's kill: a white-green flash, a shell of light and ash rising, a warble. An entity is gone at once (its manager clears the row); a person still leaves their things
+const VAPOR = `fx
+pop flash burst=1 life=.25 size=2.2 col=hdr(3,6,3.5) a=1>0 sz=$size*(.6>1.4) r=sprite(soft-disc,add)
+pop motes burst=70..90 on=box(.35,.9,.35) life=.8..1.6 v=up(.6..1.8)+sdir()*(.3..0.9) size=.03..0.07 acc=buoy(1.2)+curl(.8)+drag(1.2) col=hdr(2.6,5,2.8)>.4:hdr(1.6,2.2,1)>hdr(.3,.3,.25) a=1>.6:.9>0 sz=$size*(1>.4) r=sprite(ember,add,velocity,.02)
+pop ash burst=30..40 on=box(.3,.8,.3) life=1.4..2.4 v=up(.3..0.8)+sdir()*.3 size=.05..0.1 spin=-4..4 acc=buoy(.4)+curl(.5)+drag(1) col=<.12,.12,.11> a=0>.1:.9>.7:.6>0 rot=$age*$spin r=sprite(stalk,alpha)
+pop glow n=1 life=.6 r=light(<.6,1,.65>,40>0,8)`
+function vaporize(ctx, m, hit, npc) {
+  ctx.emit('fx', { position: { ...hit, y: hit.y - 0.5 }, script: VAPOR })
+  sound(ctx, 'sci-fi-disintegration-crackle-whoosh-into-ash', 0.95)
+  ctx.emit('damageNumber', { position: { ...hit, y: hit.y + 0.6 }, text: 'VAPORIZED', color: '#9dffb0', size: 1.3 })
+  ctx.emit('screenFlash', { color: '#c8ffd0', duration: 0.12, intensity: 0.25 }, { audience: { player: ctx.self.id } })
+  if (!npc) m.visible = false
 }
 
 function swing(ctx, power = 0) {
@@ -507,8 +522,8 @@ function swing(ctx, power = 0) {
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
   if (wp.ranged) { // real bullets: spread, drop and drag down each pellet's path (scripts/lib/ballistics.js)
     const pc = s.aimPitch ?? 0
-    const eye = { x: p.x, y: p.y + (s.crouch ? 1.0 : 1.45), z: p.z }, crit = ctx.random() < derived(s).crit
-    const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * (crit ? D.crit : 1)
+    const eye = { x: p.x, y: p.y + (s.crouch ? 1.0 : 1.45), z: p.z }, crit = ctx.random() < derived(s).crit + (wp.critBonus ?? 0) // the R-55 crits far more often and far harder
+    const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * (crit ? (wp.critMul ?? D.crit) : 1)
     let fv = f, pv = pc // in third person the shot goes from your eye to the point under the crosshair (scripts/camera.js keeps it in state.aimPt)
     if (s.tp && s.aimPt) { const dx = s.aimPt.x - eye.x, dy = s.aimPt.y - eye.y, dz = s.aimPt.z - eye.z, hh = Math.hypot(dx, dz); if (hh > 1.2) { fv = { x: dx / hh, z: dz / hh }; pv = Math.atan2(dy, hh) } }
     const res = fireBullets(ctx, s, wp, w, eye, fv, pv, base)
@@ -548,7 +563,7 @@ function swing(ctx, power = 0) {
     strike(ctx, s, wp, s.equipped, sb, f, pc)
     return
   }
-  const dv = derived(s), crit = ctx.random() < dv.crit
+  const dv = derived(s), crit = ctx.random() < dv.crit + (wp.critBonus ?? 0)
   if (wp.sneak && !wp.ranged) {
     found.sort((x, y) => x.d - y.d); if (unaware(ctx, s, found[0].m)) { // a blade in the back: x3, and the halls don't hear it
       const m = found[0].m, dmg = Math.round((wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * wp.sneak)
@@ -557,7 +572,7 @@ function swing(ctx, power = 0) {
       sound(ctx, 'knife-stab-flesh-quiet', 0.6, true); hitTarget(ctx, s, m, dmg, f, false, 0, penOf(wp, s.equipped)); return
     }
   }
-  const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * (crit ? D.crit : 1) * (!wp.ranged && (s.firesaltUntil ?? 0) > ctx.now() ? L3I.firesalt.damage : 1)
+  const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * (crit ? (wp.critMul ?? D.crit) : 1) * (!wp.ranged && (s.firesaltUntil ?? 0) > ctx.now() ? L3I.firesalt.damage : 1)
   if (crit) ctx.emit('damageNumber', { position: { x: found[0].m.feetPosition.x, y: found[0].m.feetPosition.y + 2, z: found[0].m.feetPosition.z }, text: 'CRIT', color: '#ff5a3a', size: 1.2 })
   if (wp.pellets) {
     // a spread of pellets: everything in the cone is hit, hard up close and weak at range
