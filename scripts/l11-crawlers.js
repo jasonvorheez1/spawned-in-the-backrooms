@@ -98,7 +98,7 @@ export function update(ctx, dt) {
       else if (K.grab && best < K.grab && best > K.reach && now > (m.nextGrab ?? 0) && clearSight(ctx, { x: pos.x, y: pos.y + 0.6, z: pos.z }, { x: prey.feetPosition.x, y: prey.feetPosition.y + 1, z: prey.feetPosition.z }, [id, prey.id])) {
         m.nextGrab = now + K.grabCd * 1000; m.nextHit = now + 350; // the longest arm snaps out and reels you in to the mouth
         ctx.emit("impulse", { target: prey.id, impulse: { x: -dx / n * 260, y: 60, z: -dz / n * 260 } });
-        ctx.emit("squash", { target: id, axis: "z", intensity: 0.35, duration: 0.35 });
+        ctx.emit("squash", { target: id, axis: "y", intensity: -0.3, duration: 0.3 }); ctx.emit("shake", { target: id, intensity: 0.12, duration: 0.3 });
         ctx.emit("playSound", { clip: SND("dozens-of-hands-grabbing-and-slapping"), position: pos, volume: 1 });
         ctx.emit("screenShake", { intensity: 0.25, duration: 0.2 }, { audience: { player: prey.id } });
       }
@@ -120,6 +120,12 @@ export function update(ctx, dt) {
       if (m.clip !== mv) { m.clip = mv; f.anim.main = { clip: mv, loop: true, weight: 1, blend: 0.25 }; }
       if (m.up !== up) { m.up = up; f.anim.aim = up ? { clip: "cdn/clip-rifle-aim-f07bf7f5-loop.glb", loop: true, weight: 1, mask: "Spine", blend: 0.3 } : null; } }
     f.velocity = { x: vx, y: f.grounded ? -0.5 : (f.velocity?.y ?? 0) + g * dt, z: vz };
+    if (f.state.kind === "clump" && now > (m.tw ?? 0)) { // a knot of limbs never sits still: it lurches crawling, shudders at rest
+      const mv = !!(vx || vz), yaw = (vx || vz) ? Math.atan2(-vx, -vz) * 180 / Math.PI : (f.rotation?.yaw ?? 0);
+      m.tw = now + (mv ? 140 : 260 + ctx.random() * 500);
+      f.rotation = { yaw: yaw + (ctx.random() - 0.5) * (mv ? 18 : 8), pitch: (mv ? -6 : 0) + (ctx.random() - 0.5) * (mv ? 14 : 5), roll: (ctx.random() - 0.5) * (mv ? 16 : 6) };
+      if (!mv && ctx.random() < 0.08) ctx.emit("shake", { target: id, intensity: 0.06, duration: 0.35 });
+    }
     if (f.state.kind === "sentry") { const c = (vx || vz) ? "cdn/clip-walk-loop.glb" : "cdn/clip-rifle-aim-f07bf7f5-loop.glb"; if (m.sclip !== c) { m.sclip = c; f.anim.main = { clip: c, loop: true, weight: 1, blend: 0.25 }; } }
     if (f.state.kind === "hound" && m.clip !== clip) { m.clip = clip; f.anim.main = { clip, loop: clip !== "pounce" && clip !== "maul", weight: 1, blend: 0.2 }; }
   }
