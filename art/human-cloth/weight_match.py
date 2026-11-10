@@ -27,9 +27,8 @@ for g in [o for o in new if o.type == 'MESH' and o.vertex_groups]:
     bpy.ops.object.modifier_apply(modifier='wt')  # works with shape keys: data transfer writes weights only
     bpy.ops.object.vertex_group_normalize_all(lock_active=False)
     bpy.ops.object.vertex_group_limit_total(limit=4)
-    used = {gg.group for v in g.data.vertices for gg in v.groups if gg.weight > 0}
-    for vg in list(g.vertex_groups):
-        if vg.index not in used: g.vertex_groups.remove(vg)
+    used = {g.vertex_groups[gg.group].name for v in g.data.vertices for gg in v.groups if gg.weight > 0}
+    for n in [vg.name for vg in g.vertex_groups if vg.name not in used]: g.vertex_groups.remove(g.vertex_groups[n])  # by name: indices shift as groups go
     print('WT', g.name, 'groups', len(g.vertex_groups))
 for o in list(bpy.data.objects):
     if o not in new: bpy.data.objects.remove(o)
