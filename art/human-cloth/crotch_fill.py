@@ -21,6 +21,20 @@ while bnd:
                 if f in bnd: bnd.discard(f); loop.add(f); st.append(f)
     loops.append(loop)
 filled = 0
+# the centre seam: the body's left and right halves meet there unwelded, the shell inherits the split as a slit. Weld it.
+hx0 = J['Hips'].x
+seam = [v for v in bm.verts if v.is_boundary and abs((M @ v.co).x - hx0) < 0.03 and kz < (M @ v.co).z < hz + 0.12]
+r = bmesh.ops.remove_doubles(bm, verts=seam, dist=float(__import__('os').environ.get('WELD', '0.012')))
+print('WELD', len(seam))
+bnd = set(e for e in bm.edges if e.is_boundary); loops = []
+while bnd:
+    e = bnd.pop(); loop = {e}; st = [e]
+    while st:
+        c = st.pop()
+        for v in c.verts:
+            for f in v.link_edges:
+                if f in bnd: bnd.discard(f); loop.add(f); st.append(f)
+    loops.append(loop)
 # the slit: the body has a cleft between the legs and the shell follows it in, so skin shows through.
 # Lift the cloth off the cleft along its normals (more at the centre line), every shape key too: it bridges instead of tucking.
 bm.normal_update()
