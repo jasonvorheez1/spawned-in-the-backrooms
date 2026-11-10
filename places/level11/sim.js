@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 124; // bump to rebuild the city in rooms that are already open
+const V = 125; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -210,6 +210,7 @@ function lay(ctx) {
   cyl("l11-tlight-mast", -7.8, 0.1, 7.5, 0.16, 0.2, 5.8, IRON_RAIL);
   bx("l11-tlight-arm", 0, 5.7, 7.5, 15.5, 0.14, 0.14, IRON_RAIL);
 
+  [[-9.4, -4.4, 45], [9.4, 18.4, 225], [-9.4, 30.6, 135]].forEach(([x, z, yaw], k) => md(`l11-street-sign-${k}`, "street_sign", x, 0.1, z, undefined, "cylinder", { rotation: { yaw }, layout: { box: { min: { x: -0.6, y: 0, z: -0.6 }, max: { x: 0.6, y: 3.2, z: 0.6 } } } })); // Nov 10 audit: the batch's corner signs
   [[-9.6, 4.6, 0], [9.6, 10.4, 180]].forEach(([x, z, yaw], k) => md(`l11-signal-pole-${k}`, "traffic_signal", x, 0.1, z, undefined, "cylinder", { rotation: { yaw }, layout: { box: { min: { x: -6, y: 0, z: -6 }, max: { x: 6, y: 5.6, z: 6 } } } }));
 
   // Blue Intersection Street Name Signs
