@@ -46,15 +46,135 @@ l11-mall-sign-pizza:
   primitive: {depth: 0.12, height: 1.53, kind: box, width: 4.6}
   rotation: {yaw: 90}
   tags: [l11]
+l11-sub-nose-0:
+  feetPosition: {x: 13.6, y: 0.048727272727272744, z: 58.44}
+  id: l11-sub-nose-0
+  material: {color: oklch(0.62 0.02 90), metalness: 0.7, roughness: 0.35}
+  primitive: {depth: 0.08, height: 0.03, kind: box, width: 2.4}
+l11-sub-nose-1:
+  feetPosition: {x: 13.6, y: -0.21854545454545451, z: 58.82181818181818}
+  id: l11-sub-nose-1
+  material: {color: oklch(0.62 0.02 90), metalness: 0.7, roughness: 0.35}
+  primitive: {depth: 0.08, height: 0.03, kind: box, width: 2.4}
+l11-sub-nose-10:
+  feetPosition: {x: 13.6, y: -2.624, z: 62.25818181818182}
+  id: l11-sub-nose-10
+  material: {color: oklch(0.62 0.02 90), metalness: 0.7, roughness: 0.35}
+  primitive: {depth: 0.08, height: 0.03, kind: box, width: 2.4}
+l11-sub-nose-2:
+  feetPosition: {x: 13.6, y: -0.48581818181818176, z: 59.20363636363636}
+  id: l11-sub-nose-2
+  material: {color: oklch(0.62 0.02 90), metalness: 0.7, roughness: 0.35}
+  primitive: {depth: 0.08, height: 0.03, kind: box, width: 2.4}
+l11-sub-nose-3:
+  feetPosition: {x: 13.6, y: -0.753090909090909, z: 59.585454545454546}
+  id: l11-sub-nose-3
+  material: {color: oklch(0.62 0.02 90), metalness: 0.7, roughness: 0.35}
+  primitive: {depth: 0.08, height: 0.03, kind: box, width: 2.4}
+l11-sub-nose-4:
+  feetPosition: {x: 13.6, y: -1.0203636363636364, z: 59.96727272727273}
+  id: l11-sub-nose-4
+  material: {color: oklch(0.62 0.02 90), metalness: 0.7, roughness: 0.35}
+  primitive: {depth: 0.08, height: 0.03, kind: box, width: 2.4}
+l11-sub-nose-5:
+  feetPosition: {x: 13.6, y: -1.2876363636363635, z: 60.34909090909091}
+  id: l11-sub-nose-5
+  material: {color: oklch(0.62 0.02 90), metalness: 0.7, roughness: 0.35}
+  primitive: {depth: 0.08, height: 0.03, kind: box, width: 2.4}
+l11-sub-nose-6:
+  feetPosition: {x: 13.6, y: -1.5549090909090908, z: 60.730909090909094}
+  id: l11-sub-nose-6
+  material: {color: oklch(0.62 0.02 90), metalness: 0.7, roughness: 0.35}
+  primitive: {depth: 0.08, height: 0.03, kind: box, width: 2.4}
+l11-sub-nose-7:
+  feetPosition: {x: 13.6, y: -1.8221818181818181, z: 61.11272727272728}
+  id: l11-sub-nose-7
+  material: {color: oklch(0.62 0.02 90), metalness: 0.7, roughness: 0.35}
+  primitive: {depth: 0.08, height: 0.03, kind: box, width: 2.4}
+l11-sub-nose-8:
+  feetPosition: {x: 13.6, y: -2.0894545454545455, z: 61.49454545454545}
+  id: l11-sub-nose-8
+  material: {color: oklch(0.62 0.02 90), metalness: 0.7, roughness: 0.35}
+  primitive: {depth: 0.08, height: 0.03, kind: box, width: 2.4}
+l11-sub-nose-9:
+  feetPosition: {x: 13.6, y: -2.356727272727273, z: 61.876363636363635}
+  id: l11-sub-nose-9
+  material: {color: oklch(0.62 0.02 90), metalness: 0.7, roughness: 0.35}
+  primitive: {depth: 0.08, height: 0.03, kind: box, width: 2.4}
 l11-sub-ramp:
-  feetPosition: {x: 13.6, y: -1.29, z: 60.4}
+  feetPosition: {x: 13.6, y: -1.207239333694402, z: 60.5}
   id: l11-sub-ramp
-  material: {color: oklch(0.3 0.01 60)}
   physics: {body: static, collider: box}
   pivot: center
-  primitive: {depth: 4.372001829825783, height: 0.12, kind: box, width: 2.2}
-  rotation: {pitch: 36.817477002178606}
+  primitive: {depth: 5.1267533586081555, height: 0.12, kind: box, width: 2.4}
+  rotation: {pitch: 34.992020198558656}
   visible: false
+l11-sub-step-0:
+  feetPosition: {x: 13.6, y: -2.9, z: 58.590909090909086}
+  id: l11-sub-step-0
+  material: {color: oklch(0.52 0.015 80), roughness: 0.9}
+  physics: static
+  primitive: {depth: 0.38181818181818183, height: 2.9687272727272727, kind: box, width: 2.4}
+l11-sub-step-1:
+  feetPosition: {x: 13.6, y: -2.9, z: 58.97272727272727}
+  id: l11-sub-step-1
+  material: {color: oklch(0.52 0.015 80), roughness: 0.9}
+  physics: static
+  primitive: {depth: 0.38181818181818183, height: 2.7014545454545456, kind: box, width: 2.4}
+l11-sub-step-10:
+  feetPosition: {x: 13.6, y: -2.9, z: 62.40909090909091}
+  id: l11-sub-step-10
+  material: {color: oklch(0.52 0.015 80), roughness: 0.9}
+  physics: static
+  primitive: {depth: 0.38181818181818183, height: 0.2959999999999998, kind: box, width: 2.4}
+l11-sub-step-2:
+  feetPosition: {x: 13.6, y: -2.9, z: 59.35454545454545}
+  id: l11-sub-step-2
+  material: {color: oklch(0.52 0.015 80), roughness: 0.9}
+  physics: static
+  primitive: {depth: 0.38181818181818183, height: 2.434181818181818, kind: box, width: 2.4}
+l11-sub-step-3:
+  feetPosition: {x: 13.6, y: -2.9, z: 59.736363636363635}
+  id: l11-sub-step-3
+  material: {color: oklch(0.52 0.015 80), roughness: 0.9}
+  physics: static
+  primitive: {depth: 0.38181818181818183, height: 2.166909090909091, kind: box, width: 2.4}
+l11-sub-step-4:
+  feetPosition: {x: 13.6, y: -2.9, z: 60.11818181818182}
+  id: l11-sub-step-4
+  material: {color: oklch(0.52 0.015 80), roughness: 0.9}
+  physics: static
+  primitive: {depth: 0.38181818181818183, height: 1.8996363636363636, kind: box, width: 2.4}
+l11-sub-step-5:
+  feetPosition: {x: 13.6, y: -2.9, z: 60.5}
+  id: l11-sub-step-5
+  material: {color: oklch(0.52 0.015 80), roughness: 0.9}
+  physics: static
+  primitive: {depth: 0.38181818181818183, height: 1.6323636363636365, kind: box, width: 2.4}
+l11-sub-step-6:
+  feetPosition: {x: 13.6, y: -2.9, z: 60.88181818181818}
+  id: l11-sub-step-6
+  material: {color: oklch(0.52 0.015 80), roughness: 0.9}
+  physics: static
+  primitive: {depth: 0.38181818181818183, height: 1.3650909090909091, kind: box, width: 2.4}
+l11-sub-step-7:
+  feetPosition: {x: 13.6, y: -2.9, z: 61.263636363636365}
+  id: l11-sub-step-7
+  material: {color: oklch(0.52 0.015 80), roughness: 0.9}
+  physics: static
+  primitive: {depth: 0.38181818181818183, height: 1.0978181818181818, kind: box, width: 2.4}
+l11-sub-step-8:
+  feetPosition: {x: 13.6, y: -2.9, z: 61.64545454545454}
+  id: l11-sub-step-8
+  material: {color: oklch(0.52 0.015 80), roughness: 0.9}
+  physics: static
+  primitive: {depth: 0.38181818181818183, height: 0.8305454545454545, kind: box, width: 2.4}
+l11-sub-step-9:
+  feetPosition: {x: 13.6, y: -2.9, z: 62.027272727272724}
+  id: l11-sub-step-9
+  material: {color: oklch(0.52 0.015 80), roughness: 0.9}
+  physics: static
+  primitive: {depth: 0.38181818181818183, height: 0.5632727272727269, kind: box, width: 2.4}
 l11-sw-east-south-e:
   feetPosition: {x: 15.3, y: 0.08, z: 60.5}
   id: l11-sw-east-south-e
