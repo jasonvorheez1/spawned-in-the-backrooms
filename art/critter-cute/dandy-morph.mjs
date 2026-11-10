@@ -20,7 +20,7 @@ const sm = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
 const LX = 0.09, SHY = 0.955; // leg axis x, shoulder/arm axis height (glTF: y up)
 // monotonic remap of |x| that thickens a limb about the axis at a0 by k, without crossing 0
 const thick = (ax, a0, k) => ax >= a0 ? a0 + (ax - a0) * k : ax + ((k - 1) / a0) * ax * (ax - a0);
-export function field(x, y, z) {
+export function field(x, y, z, mesh = "") {
   let X = x, Y = y, Z = z; const s = x < 0 ? -1 : 1;
   // hips: pull the widest part in (bean torso, not an hourglass)
   { const w = Math.exp(-(((y - 0.63) / 0.085) ** 2)) * (1 - sm(0.2, 0.34, Math.abs(X))); X *= 1 - 0.13 * w }
@@ -33,9 +33,11 @@ export function field(x, y, z) {
   // arms: rounder, mitten hands
   { const ax = Math.abs(X), near = 1 - sm(0.16, 0.24, Math.abs(y - SHY)), on = sm(0.15, 0.24, ax) * near
     if (on > 0) { const k = 1 + on * (0.2 + 0.2 * sm(0.48, 0.55, ax)); Y = SHY + (Y - SHY) * k; Z = Z * k } }
-  // neck: fill it out
-  { const w = sm(0.95, 1.0, y) * (1 - sm(0.09, 0.14, Math.abs(X)))
+  // neck: fill it out, between the neck joint (1.0) and just over the Head bone (1.06); unbounded above, it widened every hat and pair of glasses 42% at the middle (Nov 10)
+  { const w = sm(0.95, 1.0, y) * (1 - sm(1.08, 1.14, y)) * (1 - sm(0.09, 0.14, Math.abs(X)))
     if (w > 0) { const k = 1 + 0.42 * w; X *= k; Z *= k } }
+  // headphones (two cups, no band) were fitted to a human head and sat buried inside every furry skull (half-width up to 0.38 here): cups out 9 cm, snug on the wide skulls and only a little off the narrow ones (Nov 10)
+  if (/headphones/i.test(mesh)) X += s * 0.09 * sm(0.15, 0.22, Math.abs(x));
   return [X, Y, Z];
 }
 const doc = await io.read(src);
@@ -46,7 +48,7 @@ for (const mesh of doc.getRoot().listMeshes()) {
   if (names.includes("Dandy")) continue;
   for (const prim of mesh.listPrimitives()) {
     const pos = prim.getAttribute("POSITION"), cnt = pos.getCount(), d = new Float32Array(cnt * 3), v = [0, 0, 0];
-    for (let i = 0; i < cnt; i++) { pos.getElement(i, v); const f = field(v[0], v[1], v[2]); d[i * 3] = f[0] - v[0]; d[i * 3 + 1] = f[1] - v[1]; d[i * 3 + 2] = f[2] - v[2] }
+    for (let i = 0; i < cnt; i++) { pos.getElement(i, v); const f = field(v[0], v[1], v[2], mesh.getName()); d[i * 3] = f[0] - v[0]; d[i * 3 + 1] = f[1] - v[1]; d[i * 3 + 2] = f[2] - v[2] }
     const acc = doc.createAccessor().setType("VEC3").setArray(d).setBuffer(pos.getBuffer());
     const t = doc.createPrimitiveTarget("Dandy").setAttribute("POSITION", acc); // gltf-transform writes targetNames from the targets' own names
     // every target in a mesh carries the same attribute set (glTF rule): a target with normals gets zero normal deltas
