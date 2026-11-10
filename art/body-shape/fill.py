@@ -7,7 +7,7 @@ import sys, json, struct, numpy as np
 CT = {5126: np.float32, 5123: np.uint16, 5121: np.uint8, 5125: np.uint32}
 NC = {'SCALAR': 1, 'VEC2': 2, 'VEC3': 3, 'VEC4': 4, 'MAT4': 16}
 # her pick: fuller but not the ref's full exaggeration; men less in the legs, same in the arms
-AMT = {'f': dict(thigh=.20, calf=.13, arm=.10, hip=.06), 'm': dict(thigh=.10, calf=.08, arm=.10, hip=.0)}
+AMT = {'f': dict(thigh=.38, calf=.24, arm=.16, hip=.07), 'm': dict(thigh=.24, calf=.18, arm=.22, hip=.0)}
 def load(p):
     d = bytearray(open(p, 'rb').read()); jl = struct.unpack_from('<I', d, 12)[0]
     J = json.loads(d[20:20 + jl]); b0 = 20 + jl + 8; return d, J, b0
