@@ -107,4 +107,6 @@ if SHIFT:
         elif eb.name in ('LeftShoulder', 'RightShoulder'): eb.tail.x += sg * SHIFT
     bpy.ops.object.mode_set(mode='OBJECT')
 print('RESHAPED', n, 'meshes')
+if len(args) > 3:  # the skin's move field, for art/body-transfer/garment.py: every Ward_ garment takes the same move (Nov 10, Shelly ok on shoulders)
+    json.dump([[list(KP[k]), list(D[k])] for k in kl], open(args[3], 'w'))
 bpy.ops.export_scene.gltf(filepath=dst, export_apply=False, export_morph=True, export_skins=True)
