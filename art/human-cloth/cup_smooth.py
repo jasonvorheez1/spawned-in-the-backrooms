@@ -37,6 +37,12 @@ for g in [o for o in new if o.type == 'MESH' and o.vertex_groups]:
             p, n, _, d = hit
             s = (c - p).dot(n)
             if s < GAP: co[i] = p + n * GAP
+    for i, c in enumerate(co):  # a last stand-off pass (IT=0 runs this alone: push out, no smoothing)
+        if w[i] == 0: continue
+        hit = tree.find_nearest(c)
+        if hit[0] is None: continue
+        p, n, _, d = hit
+        if (c - p).dot(n) < GAP: co[i] = p + n * GAP
     moved = 0
     delta = [Mi @ c - Mi @ o for c, o in zip(co, orig)]
     if me.shape_keys:
