@@ -104,7 +104,8 @@ def F(co):  # >0 inside the garment, the cut is its zero line (a contour, so eve
         sc = 0.5 * (NW * s + xstrap)  # strap centre: midway between neck and shoulder edge on THIS body
         strap = min(neckz + 0.06 * s - p.z, 0.022 * s - abs(abs(p.x) - sc))
         back = min(J['Spine1'].z - p.z, 0.11 * s - abs(p.x), -fr + 0.02 * s)  # a back rise to mid-back the straps meet
-        g = max(g, bib, strap, back)
+        side = J['Spine'].z + 0.03 * s - p.z  # the sides rise above the hip bone, no window over the hip
+        g = max(g, bib, strap, back, side)
     return min(g, cuff(p))
 f = {v: F(v.co) for v in bm.verts}
 cross = [e for e in bm.edges if (f[e.verts[0]] > 0) != (f[e.verts[1]] > 0)]
