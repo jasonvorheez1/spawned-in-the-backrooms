@@ -13,7 +13,7 @@ function spec(kind, x, z, i) {
   const K = D.kinds[kind], base = { tags: ["l8-hostile", "l11foe", kind === "hound" ? "l11hound" : "l11clump"], feetPosition: { x, y: D.floor + 0.05, z }, physics: { body: "character" },
     state: { kind, name: K.name, hp: K.hp, maxHp: K.hp, home: { x, z }, slot: i } };
   return kind === "hound"
-    ? { ...base, model: { id: HOUND, forward: "+z" }, scale: 1, audio: { clip: SND("low-wet-animal-growl-breathing-loop"), loop: true, gain: 0.25, spatial: true, maxDistance: 14 } }
+    ? { ...base, model: { id: HOUND }, scale: 1, audio: { clip: SND("low-wet-animal-growl-breathing-loop"), loop: true, gain: 0.25, spatial: true, maxDistance: 14 } }
     : { ...base, model: { id: CLUMP, forward: "-z" }, scale: 1.35, audio: { clip: SND("many-fingers-knuckles-cracking-and-skin-dragging-on-concrete-loop"), loop: true, gain: 0.35, spatial: true, maxDistance: 16 } };
 }
 export function update(ctx, dt) {
@@ -66,7 +66,7 @@ export function update(ctx, dt) {
         ctx.emit("cameraPunch", { direction: { x: dx / n, y: 0, z: dz / n }, intensity: 0.45 }, { audience: { player: prey.id } });
         ctx.emit("screenShake", { intensity: 0.35, duration: 0.2 }, { audience: { player: prey.id } });
       }
-    } else if (flat(pos, f.state.home) > 1.5) { const dx = f.state.home.x - pos.x, dz = f.state.home.z - pos.z, n = Math.hypot(dx, dz); vx = dx / n * 1.2; vz = dz / n * 1.2; clip = "prowl"; }
+    } else if (flat(pos, f.state.home) > 1.5) { const dx = f.state.home.x - pos.x, dz = f.state.home.z - pos.z, n = Math.hypot(dx, dz); vx = dx / n * 1.2; vz = dz / n * 1.2; clip = "prowl"; f.rotation = { yaw: Math.atan2(-dx, -dz) * 180 / Math.PI }; }
     f.velocity = { x: vx, y: f.grounded ? -0.5 : (f.velocity?.y ?? 0) + g * dt, z: vz };
     if (f.state.kind === "hound" && m.clip !== clip) { m.clip = clip; f.anim.main = { clip, loop: clip !== "pounce" && clip !== "maul", weight: 1, blend: 0.2 }; }
   }
