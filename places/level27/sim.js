@@ -21,6 +21,7 @@ pop mist rate=?mobile:4|8 on=point() pos=<0,-%drop|2.4,.6> life=1..1.8 v=sdir()*
 const pts = (n, f) => Array.from({ length: n }, (_, i) => f(i));
 function lay(ctx) {
   const sp = (id, spec) => { if (ctx.place.objects[id]) ctx.destroy(id); return ctx.spawn(id, spec); };
+  for (const id of ["l27-fall-w-sheet", "l27-fall-e-sheet"]) if (ctx.place.objects[id]) ctx.destroy(id);
   // the cave: the model's own box is min (-9.36,-1.31,-22.68) max (15.02,7.27,6.47); its bottom centre goes there so it stands in its own coordinates
   sp("l27-cave", { feetPosition: { x: 2.827, y: -1.314, z: -8.105 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, state: { floor: "rock" },
     model: { id: CAVE, materials: { limestone: ROCK("wet", "oklch(0.42 0.03 70)"), flowstone: ROCK("rock", "oklch(0.66 0.035 80)"), steel: { color: "oklch(0.34 0.01 230)", metalness: 0.8, roughness: 0.45 }, paint: { color: "oklch(0.74 0.15 85)", metalness: 0.2, roughness: 0.6 } } } });
