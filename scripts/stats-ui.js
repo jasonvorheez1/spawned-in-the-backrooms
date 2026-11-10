@@ -5,6 +5,7 @@ import L from './lib/data/level0.yml'
 import W from './lib/weapons.js'
 import { ATTRS, SKILLS, ATTR_MAX, SKILL_MAX, attrsOf, skillsOf, spentOf, tagsOf, dmgMul, derived, carried, burden, handling, reqText } from './lib/stats.js'
 
+const escT = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 const CSS = `<style>
 #wt{position:fixed;left:22px;bottom:128px;font-size:11px;letter-spacing:.14em;color:#ffcf87;text-shadow:0 1px 3px #000;pointer-events:none;opacity:.85}
 #wt.hv{color:#ff9a6a;opacity:1}
@@ -57,7 +58,7 @@ export function statsUi(ctx, player) {
   const cap = derived(s).carry, kg = carried(s)
   if (s.target && !s.sheetOpen) {
     const t = s.target
-    out += `<div id="tg"><b>${t.title ? t.title + ' ' : ''}${t.name}</b>${t.info ? `<i>${t.info}</i>` : ''}${t.hp >= 0 ? `<div class="bar"><u style="width:${Math.max(0, Math.min(100, (t.hp / (t.mx || 1)) * 100))}%"></u></div>` : ''}${t.attr ? `<div class="at">${ATTRS.map((a, i) => `${a.short} ${t.attr.split(',')[i]}`).join(' · ')}</div>` : ''}</div>`
+    out += `<div id="tg"><b>${t.title ? escT(t.title) + ' ' : ''}${escT(t.name)}</b>${t.info ? `<i>${escT(t.info)}</i>` : ''}${t.hp >= 0 ? `<div class="bar"><u style="width:${Math.max(0, Math.min(100, (t.hp / (t.mx || 1)) * 100))}%"></u></div>` : ''}${t.attr ? `<div class="at">${ATTRS.map((a, i) => `${a.short} ${t.attr.split(',')[i]}`).join(' · ')}</div>` : ''}</div>`
   }
   if (!s.sheetOpen) return out
   const at = attrsOf(s), sk = skillsOf(s), sp = spentOf(s), d = derived(s), apts = s.apts ?? 0, spts = s.spts ?? 0
