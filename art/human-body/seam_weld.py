@@ -7,6 +7,13 @@ from mathutils import Vector
 a = sys.argv[sys.argv.index('--') + 1:]; src, out = a[0], a[1]
 bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(filepath=src)
 parts = [o for o in bpy.data.objects if o.type == 'MESH' and (o.name == 'Body' or o.name.startswith('Skin_'))]
+# the centre line: both halves stop 0.1 mm short of x=0, a sliver of daylight up the back of the neck; snap them onto it
+for o in parts:
+    for v in o.data.vertices:
+        if abs(v.co.x) < 5e-4:
+            d = -v.co.x; v.co.x = 0.0
+            if o.data.shape_keys:
+                for k in o.data.shape_keys.key_blocks: k.data[v.index].co.x += d
 Q = lambda p: (round(p.x / 2e-4), round(p.y / 2e-4), round(p.z / 2e-4))
 groups = collections.defaultdict(list)
 for o in parts:
