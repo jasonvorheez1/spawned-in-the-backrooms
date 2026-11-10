@@ -2,7 +2,7 @@
 # riding the body as a child (attachment: { skin: true }). Packed sources: m 782c6614…, f de9de999… (now legacyHuman m_sw30/f_sw30)
 m:
   inner: "/cdn/value.6a2fa5c5170b98f66b98fb0dbffe14b87bfbc2fa9b9f0cb7e08ff75cee55ec3c.glb"   # the plain tee worn under open-front tops, settled 2 mm off the skin (art/human-cloth/inner_tee.mjs)
-  body: "/cdn/value.680e92450a867056e800c55b35366bd656b484d6a8bc064c03b781bde2d13faa.glb"
+  body: "/cdn/value.9b3a3e2bbc627a3479a1ae0dabf120e3047aeaaf5cf2c97aa9232ef4afe40918.glb"
   parts:
     Ward_abysshauberk: "/cdn/value.660884defd37d0125bf1340c58e9d862e58bb8b98f360dfb6f56b8a07362e321.glb"
     Ward_apron: "/cdn/value.ed168794a24b363f5f713badbd3c29e98c4e7829e4c782e676486f6ad57b9058.glb"
@@ -82,7 +82,7 @@ m:
     Ward_wirehood: "/cdn/value.c768676683762b223a75e24a3a11a312bbd35facb935f8e00baf334f2bdd2e5c.glb"
 f:
   inner: "/cdn/value.9b1486e93523492f5b5e58111196903df33d9612c7a382b90b72cbf723eb6e4c.glb"   # the plain tee worn under open-front tops, settled 2 mm off the skin (art/human-cloth/inner_tee.mjs)
-  body: "/cdn/value.bf1c7c5b87d3cf865e64e0d2c925f22d3802eed5afa5ee9f5b0e75df592bfbf8.glb"
+  body: "/cdn/value.d7afa31b1b1a18d66973818f86285bace27c51a14d24047858b931891dc5e3d9.glb"
   parts:
     Ward_abysshauberk: "/cdn/value.6c67e8b9d4c467af67bed287e6ea47c38c55781de58dc44c1138b263aa52a7b3.glb"
     Ward_apron: "/cdn/value.e08b2badfb1b520679646be0d1c0100a3f5ad420c1b5370ce582f1064078d777.glb"
