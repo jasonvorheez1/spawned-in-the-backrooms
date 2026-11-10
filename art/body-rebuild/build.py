@@ -123,6 +123,7 @@ if MALE:
                     if vs[i].co.z > zl:   # the fringe above the lid line: pressed into a band on the lid, strands no longer stand off the face
                         vs[i].co.z = zl + (vs[i].co.z - zl) * .35; vs[i].co.y = yl + (vs[i].co.y - yl) * .2
         mx_ = max(abs(vs[i].co.x / G_) for i in ids)
+        if 1.72 < z0 < 1.8 and mx_ > .07 and len(ids) > 20: print("CAND", len(ids), round(z0, 4), round(mx_, 3), round(c.x / G_, 3), round(c.y / G_, 3))
         if 1.748 < z0 < 1.778 and mx_ > .085 and abs(c.x / G_) > .03 and len(ids) >= 100:   # the real upper lash strip (measured on the export: z 1.854-1.883 grown, |x| to .099): outer third laid onto the lid
             mid = [i for i in ids if .045 < abs(vs[i].co.x / G_) < .065]
             zl = sorted(vs[i].co.z for i in mid)[len(mid) // 2]; yl = sorted(vs[i].co.y for i in mid)[len(mid) // 2]
