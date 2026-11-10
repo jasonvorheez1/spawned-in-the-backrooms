@@ -32,7 +32,7 @@ export function layDepths(ctx, { sp, bx, cyl }) {
   // the bore: a rounded concrete vault drawn just inside the box walls (they stay the colliders)
   const shell = (id, x, z, params) => sp(id, { feetPosition: { x, y: FL, z }, primitive: { kind: "scripted", script: "scripts/l11-crawl-geo.js", params }, physics: "none", castShadow: false, receiveShadow: true });
   shell("l11d-a-shell", 9, 89, { len: 47, w: 3.96, spring: 1.9, rise: 1.3, rib: 4, cables: 1 });
-  shell("l11d-b-shell", 7, 140, { len: 39, w: 7.76, spring: 2.1, rise: 1.1, rib: 5, axis: "x", gaps: [[-1, 0, 4.2], [1, 33, 37.2]] });
+  shell("l11d-b-shell", 7, 140, { len: 39, w: 7.76, spring: 2.1, rise: 1.1, rib: 5, axis: "x", gaps: [[-1, 0, 4.2], [1, 15, 19], [1, 33, 37.2]] });
   shell("l11d-c-shell", 42, 144, { len: 14, w: 3.96, spring: 1.9, rise: 1.3, rib: 4, cables: -1 });
   shell("l11d-c-shell2", 42, 178, { len: 12, w: 3.96, spring: 1.9, rise: 1.3, rib: 4, cables: -1 });
   for (let k = 0; k < 12; k++) sp(`l11d-a-pipes-${k}`, { feetPosition: { x: 7.32, y: FL + 1.6, z: 91 + k * 4 }, model: { id: KIT.pipes, forward: "-z" }, physics: "none", castShadow: false, visibleRange: { max: 45 } });
@@ -43,17 +43,23 @@ export function layDepths(ctx, { sp, bx, cyl }) {
   const portal = (id, x, z, yaw, label) => { sp(id, { feetPosition: { x, y: FL, z }, rotation: { yaw }, model: { id: KIT.portal, forward: "-z", materials: { concrete: CONC } }, physics: "none" });
     for (const s of [-1, 1]) { const o = 1.9 * s, a = (yaw % 180) !== 0; sp(`${id}-j${s}`, { feetPosition: { x: x + (a ? 0 : o), y: FL, z: z + (a ? o : 0) }, primitive: { kind: "box", width: a ? 0.6 : 0.6, height: 3.3, depth: 0.6 }, visible: false, physics: "static" }); }
     if (label) sp(`${id}-plate`, { feetPosition: { x, y: FL + 2.82, z: z - 0.33 }, rotation: { yaw: yaw + 180 }, vector: `<svg viewBox='0 0 180 56' width='0.88m'><rect width='180' height='56' fill='#2a2620'/><text x='90' y='37' font-family='sans-serif' font-weight='700' font-size='24' text-anchor='middle' fill='#d8c890'>${label}</text></svg>` }); };
-  portal("l11d-portal-ab", 9, 135.7, 0, "PUMP GALLERY"); portal("l11d-portal-bc", 42, 144.3, 0, "RELAY HALL");
+  portal("l11d-portal-ab", 9, 135.7, 0, "PUMP GALLERY"); portal("l11d-portal-bc", 42, 144.3, 0, "RELAY HALL"); portal("l11d-portal-p2", 24, 144.3, 0, "PUMP ROOM 2");
+  // a side room off the gallery, x 22..26 doorway, room x 20..28 z 144..152: an optional detour with a cache, guarded by a clump in the dark
+  floor("l11d-p2-floor", 24, 148.2, 8.4, 7.8); W("l11d-p2-w", 19.8, 148.2, 0.4, 8.2); W("l11d-p2-e", 28.2, 148.2, 0.4, 8.2); W("l11d-p2-n", 24, 152.3, 8.8, 0.4);
+  for (const [k, x] of [[0, 21.5], [1, 26.5]]) cyl(`l11d-p2-pump-${k}`, x, FL, 150.5, 0.7, 0.8, 1.5, { color: "oklch(0.4 0.06 150)", metalness: 0.6, roughness: 0.5 });
+  sp("l11d-p2-water", { feetPosition: { x: 24, y: FL + 0.05, z: 148 }, primitive: { kind: "plane", width: 7.8, height: 7.4 }, rotation: { pitch: -90 }, material: WATER, castShadow: false });
+  sp("l11d-p2-locker", { tags: ["container"], feetPosition: { x: 27.6, y: FL, z: 146.2 }, rotation: { yaw: 90 }, model: { id: KIT.locker, forward: "-z" }, physics: { body: "static", collider: "box" }, state: { name: "Pump crew locker", items: "ammo,cells,kit,almond", c: { x: 27.35, y: FL + 1.2, z: 146.2 } } });
+  bulb(sp, "l11d-p2-lamp", 24, 148, 0.4, "oklch(0.75 0.12 140)");
   sp("l11d-a-sign", { feetPosition: { x: 10.95, y: FL + 1.7, z: 92 }, rotation: { yaw: -90 }, vector: "<svg viewBox='0 0 160 60' width='1m'><rect width='160' height='60' fill='#c9b24a'/><rect x='5' y='5' width='150' height='50' fill='none' stroke='#1a1a1a' stroke-width='4'/><text x='80' y='28' font-family='sans-serif' font-size='18' text-anchor='middle' fill='#1a1a1a'>NO TRAINS</text><text x='80' y='48' font-family='sans-serif' font-size='12' text-anchor='middle' fill='#1a1a1a'>SVC TUNNEL 14-N</text></svg>" });
   sp("l11d-a-pallets", { feetPosition: { x: 10, y: FL, z: 109 }, rotation: { yaw: 20 }, model: { id: MODELS.barricade_pallets, forward: "-z" }, physics: { body: "static", collider: "box" } });
   sp("l11d-a-spool", { feetPosition: { x: 7.8, y: FL, z: 121 }, model: { id: MODELS.ot_spool, forward: "-z" }, physics: { body: "static", collider: "box" } });
   sp("l11d-a-junk", { feetPosition: { x: 10.2, y: FL, z: 129 }, rotation: { yaw: -40 }, model: { id: MODELS.th_junk, forward: "-z" }, physics: { body: "static", collider: "box" } });
   // B: the pump gallery, z 136..144, x 7..46, a sheet of standing water
-  floor("l11d-b-floor", 26.5, 140, 39.4, 8.2); W("l11d-b-s", 28.6, 135.9, 35.2, 0.4); W("l11d-b-n1", 23.4, 144.1, 33.2, 0.4); W("l11d-b-n2", 45.1, 144.1, 2.2, 0.4); W("l11d-b-e", 46.2, 140, 0.4, 8.6);
+  floor("l11d-b-floor", 26.5, 140, 39.4, 8.2); W("l11d-b-s", 28.6, 135.9, 35.2, 0.4); W("l11d-b-n1", 14.4, 144.1, 15.2, 0.4); W("l11d-b-n1b", 33, 144.1, 14, 0.4); W("l11d-b-n2", 45.1, 144.1, 2.2, 0.4); W("l11d-b-e", 46.2, 140, 0.4, 8.6);
   sp("l11d-b-water", { feetPosition: { x: 28, y: FL + 0.06, z: 140 }, primitive: { kind: "plane", width: 34, height: 7.6 }, rotation: { pitch: -90 }, material: WATER, castShadow: false });
   for (const x of [15, 23, 31, 39]) sp(`l11d-b-beam-${x}`, { feetPosition: { x, y: FL, z: 136.4 }, model: { id: MODELS.ibeam, forward: "-z" }, physics: { body: "static", collider: "box" }, layout: { box: { min: { x: -0.2, y: 0, z: -0.2 }, max: { x: 0.2, y: CEIL - FL, z: 0.2 } } } });
   cyl("l11d-b-pump", 28, FL, 143, 0.8, 0.9, 1.6, { color: "oklch(0.4 0.06 150)", metalness: 0.6, roughness: 0.5 });
-  for (let k = 0; k < 9; k++) sp(`l11d-b-pipes-${k}`, { feetPosition: { x: 10 + k * 4, y: FL + 1.7, z: 143.55 }, rotation: { yaw: 90 }, model: { id: KIT.pipes, forward: "-z" }, physics: "none", castShadow: false, visibleRange: { max: 45 } });
+  for (const k of [0, 1, 2, 5, 6, 7]) sp(`l11d-b-pipes-${k}`, { feetPosition: { x: 10 + k * 4, y: FL + 1.7, z: 143.55 }, rotation: { yaw: 90 }, model: { id: KIT.pipes, forward: "-z" }, physics: "none", castShadow: false, visibleRange: { max: 45 } });
   sp("l11d-b-sheet", { feetPosition: { x: 19, y: FL, z: 142.5 }, rotation: { yaw: 70 }, model: { id: MODELS.corrugated, forward: "-z" }, physics: { body: "static", collider: "box" } });
   [[13, 0.9], [21, 0.6], [29, 1, "oklch(0.75 0.12 140)"], [37, 0], [44, 0.9]].forEach(([x, on, c], i) => bulb(sp, `l11d-b-lamp-${i}`, x, 140, on, c));
   // C: the cable corridor north to the seal, x 40..44, z 144..190

@@ -42,3 +42,5 @@ foes:   # [kind, x, z, { sleep: dormant until it is close or roused, hall: one o
   - [clump, 42, 182]
   - [hound, 41, 186]
   - [sentry, 43, 188.5]
+  # the side pump room off the gallery
+  - [clump, 24, 150]

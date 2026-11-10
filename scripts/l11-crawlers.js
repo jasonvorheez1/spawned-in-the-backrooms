@@ -101,12 +101,11 @@ function steer(ctx, f, m, goal, speed, now, r) {
   const pos = f.feetPosition, d = flat(pos, goal);
   m.want = true;
   if (now > (m.progAt ?? 0)) { // progress check once a second: barely moved while meaning to? sidestep and plan afresh
-    if (m.progPos && m.wanted && flat(pos, m.progPos) < 0.25) { m.stuckN = (m.stuckN ?? 0) + 1; m.side = ctx.random() < 0.5 ? 1 : -1; m.sideUntil = now + 600; m.repathAt = 0; }
+    if (m.progPos && flat(pos, m.progPos) < 0.25) { m.stuckN = (m.stuckN ?? 0) + 1; m.side = ctx.random() < 0.5 ? 1 : -1; m.sideUntil = now + 600; m.repathAt = 0; }
     else if (m.progPos && flat(pos, m.progPos) > 0.8) m.stuckN = 0;
-    m.progAt = now + 1000; m.progPos = { x: pos.x, z: pos.z }; m.wanted = false;
+    m.progAt = now + 1000; m.progPos = { x: pos.x, z: pos.z };
   }
-  m.wanted = true;
-  if (d < 0.35) { m.path = null; return { x: 0, z: 0 }; }
+  if (d < 0.35) { m.path = null; m.want = false; return { x: 0, z: 0 }; } // arrived: standing still is not stuck
   let tgt = goal;
   if ((m.stuckN ?? 0) === 0 && d < 30 && clearLane(ctx, pos, goal, r, [f.id])) m.path = null;
   else {
