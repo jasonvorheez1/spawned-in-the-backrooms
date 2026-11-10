@@ -50,12 +50,13 @@ for v in me.vertices:
     gx, gy, gz = v.co.x, v.co.z, -v.co.y
     nrm = v.normal
     floor = nrm.z > 0.8 and gy < 0.4
-    amp = 0.04 if floor else (0.32 if gy > 1.0 else 0.15)
+    amp = 0.04 if floor else (0.16 if gy > 1.0 else 0.12)  # deeper pushes folded the ceiling through itself: black jagged patches
     if -2 < gy < 2.4 and nrm.z > 0.8 and gx < -4.3 and gz < -1.5: amp = 0.01  # stair foot / tunnel floor stay walkable
     if gy > 2.3 and gy < 2.6 and nrm.z > 0.8: amp = 0.02
     d = N.noise(Vector((gx * 0.5, gy * 0.9, gz * 0.5))) * 0.7 + N.noise(Vector((gx * 1.7, gy * 1.7, gz * 1.7))) * 0.3
     d += 0.25 * abs(math.sin(gy * 4.0 + N.noise(Vector((gx, 0, gz))) * 2))  # limestone bedding
     v.co -= nrm * d * amp  # normals point out of the air: minus pushes into the air for bumps
+sm2 = base.modifiers.new("s2", "SMOOTH"); sm2.iterations = 3; sm2.factor = 0.5; bpy.ops.object.modifier_apply(modifier="s2")
 bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT"); bpy.ops.mesh.normals_make_consistent(inside=True); bpy.ops.object.mode_set(mode="OBJECT")
 base.data.materials.append(ROCK); base.data.materials.append(FLOW)
 for f in base.data.polygons:
