@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 133; // 133: lab counter long axis along the counter // 132: spam bags/box, lab counter, kiosk, reel tin modelled // 130: scored sidewalk squares // bump to rebuild the city in rooms that are already open
+const V = 134; // supplied Level 11 references: skyline variation and modern canal bridges
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -271,13 +271,13 @@ function lay(ctx) {
   sp("l11-embank-south", { feetPosition: { x: 0, y: -4.25, z: CANAL_Z + CANAL_W / 2 + 0.5 }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "quay", L: 120, t: 1.0, H: 4.4, side: -1 } }, physics: "static" });
   sp("l11-embank-north", { feetPosition: { x: 0, y: -4.25, z: CANAL_Z - CANAL_W / 2 - 0.5 }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "quay", L: 120, t: 1.0, H: 4.4, side: 1 } }, physics: "static" });
   for (const s of [-1, 1]) { // coping stops at the bridge so the avenue rolls straight across
-    bx(`l11-cope-south-${s}`, s * 34.25, 0.2, CANAL_Z + CANAL_W / 2 + 0.5, 51.5, 0.3, 1.3, CURB_MAT);
-    bx(`l11-cope-north-${s}`, s * 34.25, 0.2, CANAL_Z - CANAL_W / 2 - 0.5, 51.5, 0.3, 1.3, CURB_MAT);
+    bx(`l11-cope-south-${s}`, s * 38.1, 0.2, CANAL_Z + CANAL_W / 2 + 0.5, 43.8, 0.3, 1.3, CURB_MAT);
+    bx(`l11-cope-north-${s}`, s * 38.1, 0.2, CANAL_Z - CANAL_W / 2 - 0.5, 43.8, 0.3, 1.3, CURB_MAT);
   }
 
   // Wrought Iron Promenade Safety Railings
   for (let rx = -58; rx <= 58; rx += 5) {
-    if ((rx > -12 && rx < 12) || rx === 42) continue; // 42: the iron footbridge (l11-footbridge)
+    if ((rx > -18 && rx < 18) || rx === 42) continue; // 42: the iron footbridge (l11-footbridge)
     for (const [sd, zz] of [["s", CANAL_Z + CANAL_W / 2 + 0.5], ["n", CANAL_Z - CANAL_W / 2 - 0.5]]) // open iron balusters, not a black slab
       sp(`l11-rail-${sd}-${rx}`, { feetPosition: { x: rx, y: 0.35, z: zz }, primitive: { kind: "scripted", script: "scripts/l11-rail.js", params: { len: 4.8 } }, material: IRON_RAIL, physics: { body: "static", collider: "box" }, state: { floor: "metal" } });
   }
@@ -293,15 +293,17 @@ function lay(ctx) {
   bx("l11-dock-pier", -14, -2.0, CANAL_Z + 2.5, 4.5, 0.35, 6.5, { ...T("worn-hardwood-grain", 1), color: "oklch(0.5 0.06 60)", roughness: 0.85 });
 
   // The Grand Canal Bridge
-  bx("l11-bridge-deck", 0, -0.45, CANAL_Z, 17, 0.6, CANAL_W + 4, ASPHALT);
-  sp("l11-bridge-arch-w", { feetPosition: { x: -8.5, y: -2.4, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "arch", L: CANAL_W + 4, t: 1.2, H: 4.2, S: CANAL_W - 3, r: 2.9 } }, physics: "static" });
-  sp("l11-bridge-arch-e", { feetPosition: { x: 8.5, y: -2.4, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "arch", L: CANAL_W + 4, t: 1.2, H: 4.2, S: CANAL_W - 3, r: 2.9 } }, physics: "static" });
-  sp("l11-bridge-parapet-w", { feetPosition: { x: -8.4, y: 0.5, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "parapet", L: CANAL_W + 4, t: 0.4, H: 0.95 } }, physics: "static" });
-  sp("l11-bridge-parapet-e", { feetPosition: { x: 8.4, y: 0.5, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "parapet", L: CANAL_W + 4, t: 0.4, H: 0.95 } }, physics: "static" });
+  bx("l11-bridge-deck", 0, -0.45, CANAL_Z, 32, 0.6, CANAL_W + 4, ASPHALT);
+  sp("l11-bridge-arch-w", { feetPosition: { x: -15.8, y: -2.4, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "arch", L: CANAL_W + 4, t: 1.2, H: 4.2, S: CANAL_W - 3, r: 2.9 } }, physics: "static" });
+  sp("l11-bridge-arch-e", { feetPosition: { x: 15.8, y: -2.4, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "arch", L: CANAL_W + 4, t: 1.2, H: 4.2, S: CANAL_W - 3, r: 2.9 } }, physics: "static" });
+  sp("l11-bridge-parapet-w", { feetPosition: { x: -15.5, y: 0.5, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "parapet", L: CANAL_W + 4, t: 0.4, H: 0.95 } }, physics: "static" });
+  sp("l11-bridge-parapet-e", { feetPosition: { x: 15.5, y: 0.5, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "parapet", L: CANAL_W + 4, t: 0.4, H: 0.95 } }, physics: "static" });
+
+  for(const side of [-1,1])sp(`l11-bridge-walk-${side}`,{feetPosition:{x:side*12,y:.08,z:CANAL_Z},primitive:{kind:"scripted",script:"scripts/sidewalk11.js",params:{w:7.6,d:24,h:.25}},material:SIDEWALK,physics:{body:"static",collider:"box"}});
 
   // Bridge Warm Lanterns
-  [-7.5, 7.5].forEach((lx, k) => {
-    cyl(`l11-blamp-pole-${k}`, lx, 1.4, CANAL_Z, 0.06, 0.08, 1.8, IRON_RAIL);
+  [-12, 12].forEach((lx, k) => {
+    cyl(`l11-blamp-pole-${k}`, lx, .33, CANAL_Z, 0.06, 0.08, 2.8, IRON_RAIL);
     sp(`l11-blamp-light-${k}`, {
       feetPosition: { x: lx, y: 3.2, z: CANAL_Z },
       light: { kind: "point", color: "oklch(0.9 0.14 85)", intensity: 4.5, distance: 14, shadow: { enabled: false } },
@@ -836,7 +838,7 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
   // Construction Work Light Tripod casting bright halogen beam
   sp("l11-reno-worklight", {
     feetPosition: { x: -23, y: 0.27, z: -3 }, rotation: { yaw: 200 },
-    primitive: RENO_KIT("worklight"), material: { color: "oklch(1 0 0)", roughness: 0.5 },
+    model: { id: MODELS.floodlight, forward: "-z" }, layout: { box: { min: { x: -.55, y: 0, z: -.55 }, max: { x: .55, y: 1.8, z: .55 } } },
     children: [{ feetPosition: { x: 0, y: 1.72, z: 0.2 }, light: { kind: "point", color: "oklch(0.98 0.08 90)", intensity: 8.5, distance: 18 } }],
   });
 
@@ -1424,7 +1426,9 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     [-4, 4].forEach((dx, i) => sp(`l11-ot-off-duct-${i}`, { feetPosition: { x: OX + dx, y: OH - 0.55 - (OD - 1.2) / 2, z: OZ }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.3, radiusBottom: 0.3, height: OD - 1.2, radialSegments: 20 }, material: SILVER_FOIL }));
     [-6, 0, 6].forEach((dz, i) => sp(`l11-ot-off-tube-${i}`, { feetPosition: { x: OX, y: OH - 0.32, z: OZ + dz }, primitive: { kind: "box", width: 3, height: 0.06, depth: 0.12 }, material: { color: "#f4f6f0", emissive: "#f4f8ff", emissiveIntensity: 1.6 }, light: { kind: "point", color: "oklch(0.96 0.02 220)", intensity: 1.6, distance: 11 } }));
     // half-hung drywall: a studded partition with the boards stopping short
-    for (let k = 0; k < 9; k++) bx(`l11-ot-off-stud-${k}`, OX - 1 + k * 0.6, 0.15, OZ + 9.5, 0.09, OH - 0.15, 0.06, WOOD, { physics: k % 4 ? "none" : "static" });
+    for(const [side,z]of [["s",CANAL_Z+CANAL_W/2+.5],["n",CANAL_Z-CANAL_W/2-.5]])
+    sp(`l11-rail-bridge-return-${side}`,{feetPosition:{x:17.8,y:.35,z},primitive:{kind:"scripted",script:"scripts/l11-rail.js",params:{len:3.6}},material:IRON_RAIL,physics:{body:"static",collider:"box"},state:{floor:"metal"}});
+  for (let k = 0; k < 9; k++) bx(`l11-ot-off-stud-${k}`, OX - 1 + k * 0.6, 0.15, OZ + 9.5, 0.09, OH - 0.15, 0.06, WOOD, { physics: k % 4 ? "none" : "static" });
     bx("l11-ot-off-board-0", OX - 1.5, 0.15, OZ + 9.55, 1.2, 2.4, 0.03, DRYWALL_MAT);
     bx("l11-ot-off-board-1", OX - 0.3, 0.15, OZ + 9.55, 1.2, 2.4, 0.03, DRYWALL_MAT);
     // the work left where it stopped
@@ -1770,7 +1774,7 @@ export function tick(ctx) {
       if (old && (!!old.model !== !!spec.model || (old.model && spec.model?.id && (old.model.id ?? old.model) !== spec.model.id) || !!old.primitive !== !!spec.primitive || (old.primitive && spec.primitive && (old.primitive.kind !== spec.primitive.kind || old.primitive.script !== spec.primitive.script)) || (!spec.children && ctx.place.objects[id + "/child-0"]) || (spec.tags && !old.tags?.includes("wreck") && spec.tags.join() !== (old.tags ?? []).join()) || (spec.physics?.collider && old.physics?.collider && spec.physics.collider !== old.physics.collider) || (spec.feetPosition && old.feetPosition && !old.tags?.includes("wreck") && old.physics?.body !== "dynamic" && !old.behavior?.length && Math.hypot((spec.feetPosition.x ?? 0) - old.feetPosition.x, (spec.feetPosition.z ?? 0) - old.feetPosition.z) > 0.3))) { ctx.destroy(id); break; } // a box row turned model: clear it, lay it fresh next tick
       ctx.spawn(id, spec);
       const now2 = old && ctx.place.objects[id]; // a piece that already stood takes its new place, turn and size too
-      if (now2) { if (spec.feetPosition) now2.feetPosition = spec.feetPosition; if (spec.rotation !== undefined) now2.rotation = spec.rotation; if (spec.scale !== undefined) now2.scale = spec.scale; if (spec.material !== undefined) now2.material = spec.material; if (spec.model?.materials && JSON.stringify(spec.model.materials) !== JSON.stringify(now2.model?.materials)) now2.model = spec.model; if (spec.visibleRange !== undefined) now2.visibleRange = spec.visibleRange; if (spec.state) for (const k in spec.state) if (now2.state[k] === undefined) now2.state[k] = spec.state[k]; } // Nov 10: a rebuild used to keep an old piece's paint, draw distance and tags (the 70 m ground, the buried grates)
+      if (now2) { if (spec.primitive && JSON.stringify(spec.primitive) !== JSON.stringify(now2.primitive)) now2.primitive = spec.primitive; if (spec.feetPosition) now2.feetPosition = spec.feetPosition; if (spec.rotation !== undefined) now2.rotation = spec.rotation; if (spec.scale !== undefined) now2.scale = spec.scale; if (spec.material !== undefined) now2.material = spec.material; if (spec.model?.materials && JSON.stringify(spec.model.materials) !== JSON.stringify(now2.model?.materials)) now2.model = spec.model; if (spec.visibleRange !== undefined) now2.visibleRange = spec.visibleRange; if (spec.state) for (const k in spec.state) if (now2.state[k] === undefined) now2.state[k] = spec.state[k]; } // Nov 10: a rebuild used to keep an old piece's paint, draw distance and tags (the 70 m ground, the buried grates)
     }
     lq.i = i;
     if (i >= q.rows.length) {
