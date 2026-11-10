@@ -37,6 +37,7 @@ for o in [o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith(
         P = np.array([[*(v.co - c)] for v in vs]); w, V = np.linalg.eigh(P.T @ P); n = Vector(V[:, 0])
         if n.x * (c.x - cx) < 0: n = -n            # normal points out toward the arm
         d = min((v.co - c).dot(n) for v in vs)     # the deepest tooth toward the body
+        if abs(n.z) > 0.7: continue                # a level ring is a hem or leg opening, not an armhole
         cuts.append((c + n * (d - 0.002), n, len(vs)))
     for co, n, k in cuts:
         geom = bm.verts[:] + bm.edges[:] + bm.faces[:]
