@@ -59,12 +59,6 @@ for o in [o for o in bpy.data.objects if o.type == 'EMPTY']: bpy.data.objects.re
 bpy.ops.object.join(); body = bpy.context.view_layer.objects.active
 body.name = "Body"
 bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.select_all(action='SELECT'); bpy.ops.mesh.remove_doubles(threshold=0.0001); bpy.ops.object.mode_set(mode='OBJECT')
-# smooth (Shelly: "still seeing jagginess"): one Catmull-Clark level, then smooth shading, before the rig is measured
-nb = len(body.data.polygons)
-sub = body.modifiers.new("sub", "SUBSURF"); sub.levels = 1; sub.render_levels = 1; sub.quality = 3
-bpy.context.view_layer.objects.active = body; bpy.ops.object.modifier_apply(modifier="sub")
-for poly in body.data.polygons: poly.use_smooth = True
-print("faces", nb, "->", len(body.data.polygons))
 body.select_set(True); rig.select_set(True); bpy.context.view_layer.objects.active = rig
 bpy.ops.object.parent_set(type='ARMATURE_AUTO')
 dg=bpy.context.evaluated_depsgraph_get(); ev=body.evaluated_get(dg); zs=[(body.matrix_world@v.co) for v in ev.data.vertices]; print("restbox",[round(min(p[i] for p in zs),3) for i in range(3)],[round(max(p[i] for p in zs),3) for i in range(3)], "parent", body.parent, tuple(body.matrix_world.to_scale()))
@@ -80,6 +74,13 @@ for v in miss:
     _, i, _ = kd.find(v.co); src = wv[i]
     for g in src.groups: body.vertex_groups[g.group].add([v.index], g.weight, 'REPLACE')
 print("groups", len(body.vertex_groups), "unweighted", sum(1 for v in body.data.vertices if not v.groups))
+# smooth (Shelly: "still seeing jagginess"): one Catmull-Clark level applied after weighting, so every new vertex inherits blended weights
+nb = len(body.data.polygons)
+sub = body.modifiers.new("sub", "SUBSURF"); sub.levels = 1; sub.render_levels = 1; sub.quality = 3
+bpy.context.view_layer.objects.active = body
+bpy.ops.object.modifier_move_to_index(modifier="sub", index=0); bpy.ops.object.modifier_apply(modifier="sub")
+for poly in body.data.polygons: poly.use_smooth = True
+print("faces", nb, "->", len(body.data.polygons), "unweighted after", sum(1 for v in body.data.vertices if not v.groups))
 bpy.ops.export_scene.gltf(filepath=OUT, export_apply=False, export_animations=False)
 # proof: arms down + elbow bent, knee bent
 P_ = rig.pose.bones
