@@ -504,7 +504,7 @@ function swing(ctx, power = 0) {
   if (now < (w.nextSwing ?? 0) || (s.downAt && now - s.downAt < 1200)) return
   const wp = weaponOf(s)
   if (s.equipped !== 'fists' && isBroken(cndOf(s, s.equipped))) { w.nextSwing = now + 700; if (now - (w.brokeSay ?? 0) > 2500) { w.brokeSay = now; s.notice = { text: `Your ${wp.name.toLowerCase()} is BROKEN: repair it in the inventory (I)`, at: now } } return }
-  if (s.equipped !== 'fists' && !s.reloading && ctx.random() < jamChance(cndOf(s, s.equipped)) * (wp.ranged ? 1 : 0.5)) {
+  if (s.equipped !== 'fists' && !s.reloading && !(wp.ranged && (s['loaded_' + s.equipped] ?? 0) <= 0) && ctx.random() < jamChance(cndOf(s, s.equipped)) * (wp.ranged ? 1 : 0.5)) {
     w.nextSwing = now + 650; s.jammedAt = now
     s.notice = { text: wp.ranged ? `JAM: your ${wp.name.toLowerCase()} will not cycle (${band(cndOf(s, s.equipped))})` : `Your ${wp.name.toLowerCase()} slips in your hand (${band(cndOf(s, s.equipped))})`, at: now }
     sound(ctx, 'flashlight-switch-click', 0.5, true)
@@ -532,14 +532,14 @@ function swing(ctx, power = 0) {
     }
     s[loadedKey] -= 1
     sound(ctx, wp.sound ?? (wp.pellets ? 'shotgun-blast-boom' : 'pistol-gunshot-echo'), 0.95)
-    ctx.emit('screenFlash', { color: '#fff1c8', duration: 0.06, intensity: wp.pellets ? 0.45 : wp.auto ? 0.12 : 0.25 }, { audience: { player: ctx.self.id } })
+    ctx.emit('screenFlash', { color: wp.beam ? '#d6f2ff' : '#fff1c8', duration: 0.06, intensity: wp.pellets ? 0.45 : wp.auto ? 0.12 : 0.25 }, { audience: { player: ctx.self.id } })
     if (wp.spread) { // full auto: the barrel climbs and the cone opens the longer the trigger stays down; heat bleeds off between bursts
       w.heat = Math.min(1, (w.heat ?? 0) * Math.exp(-Math.max(0, now - (w.heatAt ?? 0)) / 350) + (wp.heatPer ?? 0.1)); w.heatAt = now
       ctx.emit('cameraPunch', { direction: { x: (ctx.random() - 0.5) * 0.4, y: 1, z: -0.3 }, intensity: 0.12 + w.heat * 0.18 }, { audience: { player: ctx.self.id } })
     }
     if (wp.pellets || wp.tube) {
       if (wp.pellets) ctx.emit('screenShake', { intensity: 0.35, duration: 0.2 }, { audience: { player: ctx.self.id } })
-      ctx.after(wp.pump ?? 0.55, 'pumpRack', {})
+      if (!wp.breech) ctx.after(wp.pump ?? 0.55, 'pumpRack', {}) // a break-action has nothing to work between its two barrels
     }
   }
   w.stamina = (w.stamina ?? s.stamina) - wp.stamina * Hd.stam * (power ? P.stamina : 1)
@@ -711,8 +711,10 @@ export function reloadStep(ctx, p) {
 }
 
 export function pumpRack(ctx) {
-  sound(ctx, 'shotgun-pump-rack', 0.8)
-  ctx.self.state.pumpAt = ctx.now()
+  const s = ctx.self.state, wp = weaponOf(s)
+  if (!(wp.pellets || wp.tube) || s.sheathed) return // swapped to something else before the stroke: nothing to rack
+  sound(ctx, wp.rack ?? (wp.breech ? 'shotgun-break-action-close-snap' : 'shotgun-pump-rack'), 0.8) // a lever or a bolt has its own clack (weapons.yml rack)
+  s.pumpAt = ctx.now()
 }
 
 export function pullToken(ctx, t) { // one carried thing out of the bag as its pickup token (drop, fridge), null if you have none

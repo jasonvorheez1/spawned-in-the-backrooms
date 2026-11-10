@@ -98,10 +98,12 @@ pop dust burst=3..4 life=.9..1.6 on=point() v=<%nx|0,%ny|1,%nz|0>*(.5..1.2)+sdir
 const HOLE = `fx
 pop hole burst=1 life=40 on=point() size=.05 col=<.035,.035,.04> a=.95>.9:.9>0 r=sprite(soft-disc,alpha)
 pop ring burst=1 life=40 on=point() size=.085 col=<.12,.11,.1> a=.35>.3:.3>0 r=sprite(soft-disc,alpha)`
+const BEAMS = {} // an energy weapon's bolt flies in its own colour (weapons.yml beam)
+const tracerOf = (wp) => wp.beam ? (BEAMS[wp.beam] ??= TRACER.replace('hdr(7,5,2)', `hdr(${wp.beam})`).replace('size=.028', 'size=.04')) : TRACER
 export function show(ctx, res, wp, muzzle) {
   for (const b of res.bullets) {
     const end = b.pts[b.pts.length - 1], dx = end.x - muzzle.x, dy = end.y - muzzle.y, dz = end.z - muzzle.z, dist = Math.hypot(dx, dy, dz) || 1, speed = dist / 0.12 // the streak crosses its whole path in its short life
-    if (dist > 1.2) ctx.emit('fx', { position: muzzle, script: TRACER, params: { vx: dx / dist * speed, vy: dy / dist * speed, vz: dz / dist * speed } })
+    if (dist > 1.2) ctx.emit('fx', { position: muzzle, script: tracerOf(wp), params: { vx: dx / dist * speed, vy: dy / dist * speed, vz: dz / dist * speed } })
     if (b.hit && !b.body) {
       const nm = b.hit.normal ?? { x: 0, y: 1, z: 0 }, at = { x: b.hit.position.x + nm.x * 0.012, y: b.hit.position.y + nm.y * 0.012, z: b.hit.position.z + nm.z * 0.012 }
       ctx.emit('fx', { position: at, script: IMPACT, params: { nx: nm.x, ny: nm.y, nz: nm.z } })

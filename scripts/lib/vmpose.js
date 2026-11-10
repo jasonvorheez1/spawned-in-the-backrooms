@@ -163,10 +163,10 @@ export function poseViewmodel(ctx, dt) {
       m.sv[4] += (rc.side ?? 50) * rnd(-1, 1) * aimDamp
       m.sv[5] += (rc.twist ?? 70) * rnd(-0.4, 1) * aimDamp
       const muzzle = ctx.getObjectSocket(ps.vmId, 'muzzle')
-      if (muzzle && muzzle.position) ctx.emit('fx', { position: muzzle.position, attachTo: ps.vmId, script: wp.pellets ? FLASH_BIG : FLASH })
+      if (muzzle && muzzle.position) ctx.emit('fx', { position: muzzle.position, attachTo: ps.vmId, script: wp.beam ? beamFlash(wp.beam) : wp.pellets ? FLASH_BIG : FLASH })
       m.shotT = 0 // the slide's blowback
       if (wp.pellets || wp.tube) m.eject = true // the pump or lever throws the spent case
-      else if (muzzle && muzzle.position && view) emitCasing(ctx, muzzle.position, view.yaw, false)
+      else if (!wp.energy && !wp.wheel && muzzle && muzzle.position && view) emitCasing(ctx, muzzle.position, view.yaw, false)
     }
   }
   if ((ps.reloadN ?? 0) !== m.lastReload) {
@@ -255,6 +255,7 @@ export function poseViewmodel(ctx, dt) {
   // ---- compose: position
   const ads = ps.vmTune?.ads ?? wp.ads ?? REST, a = ease(m.ads), sway = 1 - 0.7 * m.ads
   let x = REST[0] + (ads[0] - REST[0]) * a, y = REST[1] + (ads[1] - REST[1]) * a, d = REST[2] + (ads[2] - REST[2]) * a
+  if (wp.scope) y -= 0.3 * a // through the scope the rifle drops out of the glass (it used to cover everything under the crosshair)
   if (!gun && kind !== 'fists') { x += wp.two ? 0.03 : 0.1; y -= 0.1; d += 0.3 } // a melee weapon rides out at the right edge, the fist low; two hands bring it to the middle
   else if (gun && wp.two) { x -= 0.07 * (1 - m.ads); y += 0.015 * (1 - m.ads) } // the carry offset fades away at the sights
   x += m.swayX * sway + bobX + m.sp[0] + m.off[0] + pump[0]
@@ -381,6 +382,11 @@ function emitCasing(ctx, at, viewYaw, shell) {
   ctx.emit('fx', { position: at, script: shell ? HULL : CASING, params: { side: r } })
 }
 
+// an energy weapon's muzzle: a bloom in the beam's own colour, no powder smoke (weapons.yml beam: "r,g,b" hdr)
+const BEAMS = {}
+const beamFlash = (c) => (BEAMS[c] ??= `fx
+pop flash burst=5 life=.05..0.1 on=point() v=sdir()*(.5..2) size=.05..0.13 col=hdr(${c}) a=1>0 r=sprite(ember,add)
+pop glow burst=1 life=.07 on=point() r=light(<${c.split(',').map((v) => +(v / 8).toFixed(2)).join(',')}>,6,5)`)
 const FLASH = `fx
 pop flash burst=6 life=.04..0.09 on=point() v=sdir()*(1..3) size=.06..0.15 col=hdr(5,4,2.5) a=1>0 r=sprite(ember,add)
 pop smoke burst=2..3 life=.4..0.7 on=point() v=sdir()*(.2..0.5)+up(.4) size=.05..0.1 acc=buoy(.3)+drag(1.5) col=<.5,.5,.5> a=0>.22:.6>0 sz=$size*(1>2) r=sprite(smoke-puff,alpha)
