@@ -128,7 +128,8 @@ export function stance(ctx) {
   const cam = me.camera?.rotation ?? null; if (!cam) return null
   const aiming = !s.reloading && (!!s.ads || now - (s.swingAt ?? 0) < 1400)
   // resting hands ride the BODY's facing; only an aimed gun follows the camera (Shelly: arms moving with the camera)
-  const fam = famOf(s.equipped), yaw = aiming ? (cam.yaw ?? 0) * RAD : bodyYaw(me), pitch = aiming ? pitchOf(cam) : 0
+  const fam = famOf(s.equipped), yaw = aiming ? (cam.yaw ?? 0) * RAD : bodyYaw(me)
+  let pitch = aiming ? pitchOf(cam) : 0
   if (aiming && s.tp && s.aimPt) { const e = me.feetPosition, dy = s.aimPt.y - (e.y + (s.crouch ? 1.0 : 1.45)), hh = Math.hypot(s.aimPt.x - e.x, s.aimPt.z - e.z); if (hh > 1.2) pitch = Math.atan2(dy, hh) } // third person: the camera looks down on you from behind, so its pitch folded the body forward; aim at the crosshair's point instead
   pitch = Math.max(-0.7, Math.min(0.7, pitch)) // and never past 40 degrees, whatever the camera does
   aimPose(me, fam, s.reloading ? 'ready' : aimMode(me, aiming, s.crouch), pitch)
