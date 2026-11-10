@@ -59,31 +59,31 @@ melee: # third person: Shelly's DS attack pack (Meshes/Characters/_male 1hm/2hm 
     heavy: { clip: cdn/clip-nv-fists-right-smooth-1bb713c4.glb, weight: 5, mask: upper, blendIn: 0.05, blendOut: 0.25, hit: 0.62, speed: 1.0, cut: 1.32 }
   club:
     combo:
-      - { clip: cdn/clip-ds-1hm-right-a-0370a8f6.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.10 }
-      - { clip: cdn/clip-ds-1hm-left-a-b9b7345d.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.30, speed: 1.1, cut: 0.95 }
-      - { clip: cdn/clip-ds-1hm-rightdown-a-688e2c45.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.10 }
-    heavy: { clip: cdn/clip-ds-1hm-rightup-b-a4157677.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 0.9, cut: 1.10 }
+      - { clip: cdn/clip-ds2-1hm-right-a-e10f7ab7.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.10 }
+      - { clip: cdn/clip-ds2-1hm-left-a-343fa87c.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.30, speed: 1.1, cut: 0.95 }
+      - { clip: cdn/clip-ds2-1hm-rightdown-a-34d8a280.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.10 }
+    heavy: { clip: cdn/clip-ds2-1hm-rightup-b-789ae950.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 0.9, cut: 1.10 }
   slash:
     combo:
-      - { clip: cdn/clip-ds-1hm-right-b-2c978d25.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.10 }
-      - { clip: cdn/clip-ds-1hm-left-b-2163dc76.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.30, speed: 1.1, cut: 0.95 }
-      - { clip: cdn/clip-ds-1hm-leftdown-a-4d316d3d.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.30, speed: 1.1, cut: 0.95 }
-    heavy: { clip: cdn/clip-ds-1hm-rightup-a-49d0c407.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 0.9, cut: 1.10 }
+      - { clip: cdn/clip-ds2-1hm-right-b-391b50e5.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.10 }
+      - { clip: cdn/clip-ds2-1hm-left-b-ae6a695e.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.30, speed: 1.1, cut: 0.95 }
+      - { clip: cdn/clip-ds2-1hm-leftdown-a-02e3b26c.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.30, speed: 1.1, cut: 0.95 }
+    heavy: { clip: cdn/clip-ds2-1hm-rightup-a-26bd4e03.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 0.9, cut: 1.10 }
   stab:
     combo:
-      - { clip: cdn/clip-ds-1hm-rightdown-b-117eb398.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.10 }
-      - { clip: cdn/clip-ds-1hm-leftup-a-5b392c8e.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.30, speed: 1.1, cut: 0.95 }
-    heavy: { clip: cdn/clip-ds-1hm-rightdown-a-688e2c45.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 0.9, cut: 1.10 }
+      - { clip: cdn/clip-ds2-1hm-rightdown-b-4c3c474e.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.10 }
+      - { clip: cdn/clip-ds2-1hm-leftup-a-c313db93.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.30, speed: 1.1, cut: 0.95 }
+    heavy: { clip: cdn/clip-ds2-1hm-rightdown-a-34d8a280.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 0.9, cut: 1.10 }
   chop:
     combo:
-      - { clip: cdn/clip-ds-1hm-right-a-0370a8f6.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.10 }
-      - { clip: cdn/clip-ds-1hm-leftdown-b-94298153.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.30, speed: 1.1, cut: 0.95 }
-      - { clip: cdn/clip-ds-1hm-leftup-b-619fe14a.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.30, speed: 1.1, cut: 0.95 }
-    heavy: { clip: cdn/clip-ds-1hm-rightup-b-a4157677.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 0.9, cut: 1.10 }
+      - { clip: cdn/clip-ds2-1hm-right-a-e10f7ab7.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.10 }
+      - { clip: cdn/clip-ds2-1hm-leftdown-b-b2b71690.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.30, speed: 1.1, cut: 0.95 }
+      - { clip: cdn/clip-ds2-1hm-leftup-b-d57cfa24.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.30, speed: 1.1, cut: 0.95 }
+    heavy: { clip: cdn/clip-ds2-1hm-rightup-b-789ae950.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 0.9, cut: 1.10 }
   heavy:
     combo:
-      - { clip: cdn/clip-ds-2hm-right-a-a20ddaa5.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.45, speed: 1.1, cut: 1.20 }
-      - { clip: cdn/clip-ds-2hm-left-a-ae46e816.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.20 }
-      - { clip: cdn/clip-ds-2hm-rightdown-a-99714a12.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.45, speed: 1.1, cut: 1.20 }
-      - { clip: cdn/clip-ds-2hm-leftup-a-72c2231a.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.20 }
-    heavy: { clip: cdn/clip-ds-2hm-rightup-b-994c2fd5.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.45, speed: 0.9, cut: 1.20 }
+      - { clip: cdn/clip-ds2-2hm-right-a-b7f51e84.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.45, speed: 1.1, cut: 1.20 }
+      - { clip: cdn/clip-ds2-2hm-left-a-a26ff9f3.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.20 }
+      - { clip: cdn/clip-ds2-2hm-rightdown-a-8da1666e.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.45, speed: 1.1, cut: 1.20 }
+      - { clip: cdn/clip-ds2-2hm-leftup-a-adcb4c10.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.20 }
+    heavy: { clip: cdn/clip-ds2-2hm-rightup-b-207fe282.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.45, speed: 0.9, cut: 1.20 }
