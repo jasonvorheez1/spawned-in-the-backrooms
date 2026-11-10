@@ -20,5 +20,5 @@ import os; parts = []
 for i, ang in enumerate((0, 40, 100, 180)):
     r = math.radians(ang); p = c + Vector((math.sin(r) * 0.9, -math.cos(r) * 0.9, 0.08)); cam.location = p
     cam.rotation_euler = (c - p).to_track_quat("-Z", "Y").to_euler(); L.rotation_euler = cam.rotation_euler
-    f = f"/tmp/pf_{i}.png"; sc.render.filepath = f; bpy.ops.render.render(write_still=True); parts.append(f)
+    f = f"{OUT}.pf_{i}.png"; sc.render.filepath = f; bpy.ops.render.render(write_still=True); parts.append(f)
 os.system(f"montage {' '.join(parts)} -tile 4x1 -geometry +2+2 {OUT}")
