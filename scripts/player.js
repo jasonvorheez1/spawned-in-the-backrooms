@@ -468,7 +468,7 @@ const VAPOR = `fx
 pop flash burst=1 life=.25 size=2.2 col=hdr(3,6,3.5) a=1>0 sz=$size*(.6>1.4) r=sprite(soft-disc,add)
 pop motes burst=70..90 on=box(.35,.9,.35) life=.8..1.6 v=up(.6..1.8)+sdir()*(.3..0.9) size=.03..0.07 acc=buoy(1.2)+curl(.8)+drag(1.2) col=hdr(2.6,5,2.8)>.4:hdr(1.6,2.2,1)>hdr(.3,.3,.25) a=1>.6:.9>0 sz=$size*(1>.4) r=sprite(ember,add,velocity,.02)
 pop ash burst=30..40 on=box(.3,.8,.3) life=1.4..2.4 v=up(.3..0.8)+sdir()*.3 size=.05..0.1 spin=-4..4 acc=buoy(.4)+curl(.5)+drag(1) col=<.12,.12,.11> a=0>.1:.9>.7:.6>0 rot=$age*$spin r=sprite(stalk,alpha)
-pop glow n=1 life=.6 r=light(<.6,1,.65>,40>0,8)`
+pop glow burst=1 life=.6 r=light(<.6,1,.65>,40>0,8)`
 function vaporize(ctx, m, hit, npc) {
   ctx.emit('fx', { position: { ...hit, y: hit.y - 0.5 }, script: VAPOR })
   sound(ctx, 'sci-fi-disintegration-crackle-whoosh-into-ash', 0.95)
@@ -1022,7 +1022,7 @@ function viewmodel(ctx, moving, sprinting) {
       ? (GUN_FIX[bk]
         // the Tripo shotgun mesh lies tilted ~35 deg muzzle-up with its butt at the origin: level it and put its trigger in the fist
         ? { feetPosition: { x: 0, y: 0.01, z: 0.02 }, rotation: s.vmTune?.rot ?? GUN_FIX[bk].outer ?? Q_GUN, audience: 'local', children: [{ feetPosition: s.vmTune?.at ?? GUN_FIX[bk].at, rotation: s.vmTune?.q ?? (s.vmTune?.pitch != null || s.vmTune?.yaw != null ? eulerQ(s.vmTune?.yaw ?? 0, s.vmTune?.pitch ?? 0, s.vmTune?.roll ?? 0) : GUN_FIX[bk].q), castShadow: false, ...weaponBody(kind), audience: 'local' }] }
-        : { id: 'gun', feetPosition: s.vmTune?.at ?? { x: 0, y: (bk === 'pistol' || bk === 'laser_pistol' || bk === 'raygun') ? 0.03 : -0.04, z: (bk === 'pistol' || bk === 'laser_pistol' || bk === 'raygun') ? 0.04 : 0.14 }, rotation: s.vmTune?.rot ?? ((bk === 'pistol' || bk === 'laser_pistol') ? Q_ID : Q_GUN), castShadow: false, ...weaponBody(kind), audience: 'local' })
+        : { id: 'gun', feetPosition: s.vmTune?.at ?? { x: 0, y: (bk === 'pistol' || bk === 'laser_pistol' || bk === 'raygun') ? 0.03 : -0.04, z: (bk === 'pistol' || bk === 'laser_pistol' || bk === 'raygun') ? 0.04 : 0.14 }, rotation: s.vmTune?.rot ?? ((bk === 'pistol' || bk === 'laser_pistol' || bk === 'raygun') ? Q_ID : Q_GUN), castShadow: false, ...weaponBody(kind), audience: 'local' })
       : MESHGRIP[bk]
         ? { feetPosition: s.vmTune?.mat ?? { x: MESHGRIP[bk].at[0], y: MESHGRIP[bk].at[1], z: MESHGRIP[bk].at[2] }, rotation: s.vmTune?.mrot ?? { x: MESHGRIP[bk].q[0], y: MESHGRIP[bk].q[1], z: MESHGRIP[bk].q[2], w: MESHGRIP[bk].q[3] }, castShadow: false, ...weaponBody(kind), audience: 'local' }
         : { feetPosition: s.vmTune?.mat ?? { x: 0, y: -g, z: 0 }, rotation: s.vmTune?.mrot ?? Q_MELEE, castShadow: false, ...weaponBody(kind), audience: 'local' }]
