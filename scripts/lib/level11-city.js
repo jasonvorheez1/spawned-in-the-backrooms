@@ -34,7 +34,7 @@ const PAINT = ["#b81c28", "#2f4f8a", "#e8e4d8", "#2a2a30", "#3a6a4a", "#c8a24a",
 export function layCity(ctx, h) {
   if (!DBG.city) return { TOWER: { x: 27, z: 31 }, nBuildings: 0 };
   const { sp, bx } = h, put = (id, kind, x, z, yaw, extra = {}, y = 0) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, physics: { body: "static", collider: extra.collider ?? "box" }, model: { id: MODELS[kind], forward: "-z", materials: extra.materials }, castShadow: Math.hypot(x, z - 20) < SHADOW_R, ...(extra.spec ?? {}) }); // a building far from the middle casts no shadow: the sun's shadow pass drew the whole city every frame for shadows nobody could see
-  const ASPH = { ...T("cracked-dark-asphalt-road", 6), color: "oklch(0.4 0.01 250)", roughness: 0.88 }, WALK = { ...T("plain-light-grey-concrete-pavement-slab-fine-aggregate", 4), color: "oklch(0.93 0.004 250)", roughness: 0.85 };
+  const ASPH = { ...T("cracked-dark-asphalt-road", 6), color: "oklch(0.78 0.008 250)", roughness: 0.88 }, WALK = { ...T("plain-light-grey-concrete-pavement-slab-fine-aggregate", 4), color: "oklch(0.93 0.004 250)", roughness: 0.85 };
   const CANAL = { ...T("smooth-cold-poured-concrete-wall", 2), color: "oklch(0.62 0.02 240)", roughness: 0.65 }, CURB = { ...T("smooth-cold-poured-concrete-wall", 1), color: "oklch(0.72 0.02 85)", roughness: 0.65 };
   const YEL = { color: "oklch(0.84 0.18 88)", roughness: 0.45 };
   const X_AVE = [-140, -70, 0, 70, 140], Z_ST = [-160, -92, 12, 84, 156, 228], CANAL_Z = -30, ROAD_Z = [12, 84, 156, -92, -160, 228];
