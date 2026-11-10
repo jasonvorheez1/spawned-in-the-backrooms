@@ -60,7 +60,6 @@ bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT"); 
 base.data.materials.append(ROCK); base.data.materials.append(FLOW)
 for f in base.data.polygons:
     c = f.center; gy = c.z
-    if f.normal.z < -0.3 and gy > 3.2 and N.noise(Vector((c.x * 0.3, c.y * 0.3, 1))) > 0.05: f.material_index = 1
     if gy < 0.2 and abs(f.normal.z) > 0.6 and ((c.x + 1.2) / 5.2) ** 2 + ((-c.y + 2.6) / 4.6) ** 2 < 1.15: f.material_index = 1  # pale travertine rim
     f.use_smooth = True
 base.name = "cave"

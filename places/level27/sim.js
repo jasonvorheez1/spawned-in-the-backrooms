@@ -6,7 +6,7 @@
 import { maxHp, maxSan } from "../../scripts/player.js";
 import { DRIP, RIPPLE } from "../../scripts/lib/ambient.js";
 export const cadence = "1s";
-const V = 4;
+const V = 7;
 const CAVE = "/cdn/value.8ee97464d76b59ba323139f76410fd015f304ffe8a5df300024cac2cac8cee69.glb";
 const FLOW = "/cdn/value.fc172db4defdc02603c499ccc386d3fea6fb504d8b388408de18c1ef734f6c34.glb"; // Level 8's flowstone mound
 const ROCK = (kind, color) => ({ texture: kind === "wet" ? "cdn/texture-wet-grey-limestone-cave-wall-rock.png" : "cdn/texture-pale-cream-flowstone-calcite-cave-formation.png", wrap: "repeat", repeat: [0.4, 0.4], color, roughness: kind === "wet" ? 0.35 : 0.6, side: "double" });
@@ -21,10 +21,10 @@ pop mist rate=?mobile:4|8 on=point() pos=<0,-%drop|2.4,.6> life=1..1.8 v=sdir()*
 const pts = (n, f) => Array.from({ length: n }, (_, i) => f(i));
 function lay(ctx) {
   const sp = (id, spec) => { if (ctx.place.objects[id]) ctx.destroy(id); return ctx.spawn(id, spec); };
-  for (const id of ["l27-fall-w-sheet", "l27-fall-e-sheet"]) if (ctx.place.objects[id]) ctx.destroy(id);
+  for (const id of ["l27-fall-w-sheet", "l27-fall-e-sheet", "l27-backrock", "l27-backrock-tunnel"]) if (ctx.place.objects[id]) ctx.destroy(id);
   // the cave: the model's own box is min (-9.36,-1.31,-22.68) max (15.02,7.27,6.47); its bottom centre goes there so it stands in its own coordinates
   sp("l27-cave", { feetPosition: { x: 2.827, y: -1.314, z: -8.105 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, state: { floor: "rock" },
-    model: { id: CAVE, materials: { limestone: ROCK("wet", "oklch(0.42 0.03 70)"), flowstone: ROCK("rock", "oklch(0.66 0.035 80)"), steel: { color: "oklch(0.34 0.01 230)", metalness: 0.8, roughness: 0.45 }, paint: { color: "oklch(0.74 0.15 85)", metalness: 0.2, roughness: 0.6 } } } });
+    model: { id: CAVE, materials: { limestone: ROCK("wet", "oklch(0.42 0.03 70)"), flowstone: { color: "oklch(0.72 0.04 80)", roughness: 0.5, side: "double" }, steel: { color: "oklch(0.34 0.01 230)", metalness: 0.8, roughness: 0.45 }, paint: { color: "oklch(0.74 0.15 85)", metalness: 0.2, roughness: 0.6 } } } });
   // the spring and its east lobe: warm, clear, waist deep
   sp("l27-pool", { tags: ["swimwater"], feetPosition: { x: BATH.cx, y: -1.3, z: BATH.cz }, primitive: { kind: "cylinder", radiusTop: 1, radiusBottom: 1, height: 1.18, radialSegments: 48 }, scale: { x: BATH.rx, y: 1, z: BATH.rz }, material: WATER });
   sp("l27-lobe", { tags: ["swimwater"], feetPosition: { x: LOBE.cx, y: -0.95, z: LOBE.cz }, primitive: { kind: "cylinder", radiusTop: 1, radiusBottom: 1, height: 0.83, radialSegments: 40 }, scale: { x: LOBE.rx, y: 1, z: LOBE.rz }, material: WATER });
@@ -37,7 +37,7 @@ function lay(ctx) {
   sp("l27-fall-e", { feetPosition: { x: 7.05, y: 3.1, z: -2.5 }, rotation: { yaw: 90 }, fx: { script: FALL, params: { drop: 3.4 } }, audio: { clip: "cdn/sfx-small-waterfall-splashing-into-rock-pool-loop.mp3", loop: true, gain: 0.28, spatial: true, maxDistance: 20, bus: "Ambience" } });
   sp("l27-drain", { feetPosition: { x: -7.6, y: 0.05, z: 0.3 }, fx: { script: RIPPLE } });
   // light: a cold spot on the flowstone over the pool, as in the photo; warm M.E.G. work lamps by the stairs and up the tunnel
-  sp("l27-spot", { feetPosition: { x: 2.5, y: 5.6, z: 3.5 }, light: { kind: "spot", color: "oklch(0.93 0.03 230)", intensity: 9, distance: 18, angle: 38, penumbra: 0.6, aim: { x: -1.5, y: 1.5, z: -5.5 }, shadow: { enabled: true } } });
+  sp("l27-spot", { feetPosition: { x: 2.5, y: 5.6, z: 3.5 }, light: { kind: "spot", color: "oklch(0.93 0.03 230)", intensity: 9, distance: 18, angle: 38, penumbra: 0.6, aim: { x: -1.5, y: 1.5, z: -5.5 }, shadow: { enabled: false } } });
   const lamp = (id, x, y, z) => sp(id, { feetPosition: { x, y, z }, physics: "static", primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.04, height: 1.6 }, material: { color: "oklch(0.74 0.15 85)", metalness: 0.3, roughness: 0.6 },
     children: [
       { feetPosition: { x: 0, y: 1.55, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.11, height: 0.14 }, material: { color: "oklch(0.3 0.01 230)", metalness: 0.7, roughness: 0.4 } },
