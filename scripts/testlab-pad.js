@@ -1,0 +1,16 @@
+// Test Range floor pads: step on one and it acts. state.act: smiler | lurker | heal | lv10 | resetphys | exit
+import { heard } from "./lib/hear.js";
+import L from "./lib/data/level0.yml";
+import { toHub } from "./lib/hub.js";
+const maxHp = (lv) => L.hp + (lv - 1) * L.perLevel.hp, maxSan = (lv) => L.sanity + (lv - 1) * L.perLevel.sanity;
+export function onTriggerEnter(ctx, other) {
+  const s = other?.state; if (!s || s.level == null) return;
+  const act = ctx.self.state.act, now = ctx.now();
+  if ((ctx.self.session.at ?? 0) > now - 800) return; ctx.self.session.at = now;
+  heard(ctx, { maxDistance: 18, refDistance: 3, clip: "/cdn/moodboard-realistic-gritty/sfx-eerie-low-chime-level-up.mp3", position: other.feetPosition, volume: 0.5 }, { audience: { player: other.id } });
+  if (act === "exit") { toHub(ctx, other); return; }
+  if (act === "smiler" || act === "lurker" || act === "resetphys") { ctx.place.state["want_" + act] = now; s.notice = { text: act === "resetphys" ? "Physics bay resetting" : `A ${act} is coming out of the pen`, at: now }; return; }
+  if (act === "lv10") { s.level = Math.max(10, s.level); s.leveledAt = now; }
+  s.hp = maxHp(s.level); s.sanity = maxSan(s.level); s.stamina = L.stamina; s.battery = L.battery; s.hunger = 100; s.thirst = 100;
+  s.notice = { text: act === "lv10" ? "Level 10 and topped up" : "Health, sanity, food and water topped up", at: now };
+}
