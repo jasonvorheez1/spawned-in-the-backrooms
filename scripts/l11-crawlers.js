@@ -6,7 +6,7 @@ import { clearSight } from "./lib/sight.js";
 import { dmgAfterArmor, sneakMul } from "./lib/stats.js";
 import { crouchMul } from "./lib/sneak.js";
 import BOT from "./lib/data/l11-sentry.yml";
-const SENTRY = "/cdn/value.59718c2fb90f95d3e456c5bdf3c1b552975bc471218facc9b61450cc6ce23053.glb";
+const SENTRY = "/cdn/value.5a18bb1b3ab741080cf1b881ad99be1a9ace445a5e3fa9a4c7c2c6cb9dafb71d.glb";
 const SAY = (t) => `/cdn/${BOT.throat}-saying-${encodeURIComponent(t)}.mp3`;
 const BOLT = `fx
 pop arc burst=14..20 life=.1..0.25 v=sdir()*(2..4) size=.03..0.05 acc=drag(3) col=hdr(5,2.6,.6)>hdr(2,.8,.1) a=1>0 sz=$size r=sprite(ember,add,velocity,.03)
@@ -45,7 +45,7 @@ export function update(ctx, dt) {
     if (f.state.dead || f.state.hp <= 0) { // player.js marks the kill; we lay it down and clear it
       if (!m.died) { m.died = now; st.deadAt = { ...st.deadAt, [i]: now }; f.velocity = { x: 0, y: 0, z: 0 }; f.audio = null;
         if (f.state.kind === "hound") f.anim.main = { clip: "death", loop: false, clampWhenFinished: true, weight: 1 };
-        else if (f.state.kind === "sentry") { m.talkUntil = 0; speak(ctx, f, m, "die", now); ctx.emit("fx", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, script: BOLT }); f.rotation = { yaw: f.rotation?.yaw ?? 0, roll: 80 }; }
+        else if (f.state.kind === "sentry") { m.talkUntil = 0; speak(ctx, f, m, "die", now); ctx.emit("fx", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, script: BOLT }); f.anim.main = { clip: "cdn/clip-die.glb", loop: false, clampWhenFinished: true, weight: 1 }; f.anim.aim = null; }
         else ctx.emit("playSound", { clip: SND("wet-bone-crunch-and-limp-limbs-collapsing"), position: pos, volume: 0.9 }); }
       if (now - m.died > (f.visible === false ? 300 : f.state.kind === "sentry" ? 60000 : 4000)) delete ctx.place.objects[id];
       continue;
@@ -78,6 +78,7 @@ export function update(ctx, dt) {
         const L = Math.hypot(end.x - muzzle.x, end.y - muzzle.y, end.z - muzzle.z);
         ctx.spawn({ feetPosition: { x: (muzzle.x + end.x) / 2, y: (muzzle.y + end.y) / 2 - 0.025, z: (muzzle.z + end.z) / 2 }, pivot: "center", rotation: { lookAt: end, include: ["yaw", "pitch"] }, primitive: { kind: "box", width: 0.05, height: 0.05, depth: L }, material: { color: "oklch(0.85 0.17 65)", emissive: "oklch(0.8 0.18 60)", emissiveIntensity: 6 }, castShadow: false, lifetime: 0.12, audience: "near" });
         ctx.emit("fx", { position: muzzle, script: BOLT });
+        f.anim.fire = { clip: "cdn/clip-rifle-fire-01972c51.glb", loop: false, weight: 1, mask: "RightShoulder", blend: 0.05 };
         ctx.emit("playSound", { clip: "/cdn/moodboard-scifi-neon/sfx-retro-1950s-ray-gun-zap-with-warbling-oscillator.mp3", position: muzzle, volume: 0.9, mode: "overlap" });
         if (ctx.random() < 0.35) speak(ctx, f, m, "shoot", now, 7000);
         if (hits) {
@@ -115,6 +116,9 @@ export function update(ctx, dt) {
       }
     } else if (flat(pos, f.state.home) > 1.5) { const dx = f.state.home.x - pos.x, dz = f.state.home.z - pos.z, n = Math.hypot(dx, dz); vx = dx / n * 1.2; vz = dz / n * 1.2; clip = "prowl"; f.rotation = { yaw: Math.atan2(-dx, -dz) * 180 / Math.PI }; }
     if (f.state.kind === "sentry" && (vx || vz) && now > (m.step ?? 0)) { m.step = now + 520; ctx.emit("playSound", { clip: "/cdn/moodboard-scifi-neon/sfx-heavy-metal-robot-footstep-clank-on-concrete.mp3", position: pos, volume: 0.6, pitch: 0.9 + ctx.random() * 0.2, maxDistance: 26 }); }
+    if (f.state.kind === "sentry") { const mv = (vx || vz) ? "cdn/clip-walk-loop.glb" : "cdn/clip-idle-loop.glb", up = !!(prey && K.range);
+      if (m.clip !== mv) { m.clip = mv; f.anim.main = { clip: mv, loop: true, weight: 1, blend: 0.25 }; }
+      if (m.up !== up) { m.up = up; f.anim.aim = up ? { clip: "cdn/clip-rifle-aim-f07bf7f5-loop.glb", loop: true, weight: 1, mask: "Spine", blend: 0.3 } : null; } }
     f.velocity = { x: vx, y: f.grounded ? -0.5 : (f.velocity?.y ?? 0) + g * dt, z: vz };
     if (f.state.kind === "hound" && m.clip !== clip) { m.clip = clip; f.anim.main = { clip, loop: clip !== "pounce" && clip !== "maul", weight: 1, blend: 0.2 }; }
   }
