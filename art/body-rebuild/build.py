@@ -119,7 +119,7 @@ if MALE:
                     vs[i].co.x *= 1 - .06 * t
         if 1.71 < z0 < 1.785 and .02 < abs(c.x / G_) < .1 and c.y / G_ < .05:          # eyes: narrower, less tall, a touch lower
             for i in ids: d = vs[i].co - c; vs[i].co = c + mathutils.Vector((d.x * .88, d.y, d.z * .78)) + mathutils.Vector((0, 0, -.003))
-        elif 1.784 < z0 < 1.8 and abs(c.x / G_) > .02:                                    # brow/lash line: heavier, flatter
+        elif 1.784 < z0 < 1.8 and abs(c.x / G_) > .02 and not (len(ids) < 120 and max(abs(vs[i].co.x / G_) for i in ids) > .07 and min(abs(vs[i].co.x / G_) for i in ids) > .02 and (max(vs[i].co.z for i in ids) - min(vs[i].co.z for i in ids)) / G_ > .006):   # the tall lash fringes keep their height: stretching them is what flicked the tips                                    # brow/lash line: heavier, flatter
             for i in ids: d = vs[i].co - c; vs[i].co = c + mathutils.Vector((d.x * 1.06, d.y, d.z * 1.9)) + mathutils.Vector((0, 0, -.003))   # brows: thicker, lower
         elif 1.66 < z0 < 1.7 and abs(c.x / G_) < .03:                                     # mouth: a bit wider, thinner
             for i in ids: d = vs[i].co - c; vs[i].co = c + mathutils.Vector((d.x * 1.08, d.y, d.z * .85))
