@@ -11,7 +11,19 @@ const SAY = (t) => `/cdn/${BOT.throat}-saying-${encodeURIComponent(t)}.mp3`;
 const BOLT = `fx
 pop arc burst=14..20 life=.1..0.25 v=sdir()*(2..4) size=.03..0.05 acc=drag(3) col=hdr(5,2.6,.6)>hdr(2,.8,.1) a=1>0 sz=$size r=sprite(ember,add,velocity,.03)
 pop glow burst=1 life=.15 col=<1,.6,.2> a=1>0 r=light(<1,.6,.2>,6,5)`;
-const CLUMP = "/cdn/value.56bba7d5e11a2cb4b4cffa35c09f8f5d248aa661813218a2f8b26f9852337f0a.glb";
+const CLUMP = "/cdn/value.aeb91c70e11f57592fd7fe510b2e8bfd86065edacbb87155c02fa34a5761c396.glb";
+
+// the clump's own limbs, keyed by hand: eight limbs reach and drag out of step, the knot heaves; at rest they twitch
+const LIMBS = ["0_Left", "0_Right", "1_Left", "1_Right", "2_Left", "2_Right", "3_Left", "3_Right"];
+const shift = (a, k) => a.map((_, i) => a[(i + k) % (a.length - 1)]).slice(0, a.length - 1).concat([a[k % (a.length - 1)]]);
+function limbClip(dur, amp, jitter) {
+  const tracks = { "tripo::Spine_0": { pitch: [0, amp * 0.25, 0, -amp * 0.2, 0] }, "tripo::Spine_1": { roll: [0, -amp * 0.2, 0, amp * 0.2, 0] }, "tripo::Head_0": { yaw: [0, amp * 0.5, -amp * 0.3, amp * 0.6, 0] } };
+  LIMBS.forEach((l, i) => { const k = (i * 3) % 4, side = l.endsWith("Left") ? 1 : -1;
+    tracks[`tripo::${l}_Limb_0`] = { pitch: shift([0, -amp, -amp * 0.4, amp * 0.6, 0], k), yaw: shift([0, side * amp * 0.5, 0, -side * amp * 0.3 * jitter, 0], k) };
+    tracks[`tripo::${l}_Limb_1`] = { pitch: shift([0, amp * 0.9, amp * 0.2, -amp * 0.5, 0], k) }; });
+  return { duration: dur, tracks };
+}
+const CRAWL = limbClip(0.8, 32, 1), FIDGET = limbClip(2.2, 9, 2.5);
 const HOUND = "/cdn/value.180d1072a97d34551e1394960b70202777c9d0b51fb0ca67779a59e429ef6fa7.glb";
 const SND = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
@@ -120,6 +132,8 @@ export function update(ctx, dt) {
       if (m.clip !== mv) { m.clip = mv; f.anim.main = { clip: mv, loop: true, weight: 1, blend: 0.25 }; }
       if (m.up !== up) { m.up = up; f.anim.aim = up ? { clip: "cdn/clip-rifle-up-50cc7349-loop.glb", loop: true, weight: 1, mask: "Spine", blend: 0.3 } : null; } }
     f.velocity = { x: vx, y: f.grounded ? -0.5 : (f.velocity?.y ?? 0) + g * dt, z: vz };
+    if (f.state.kind === "clump") { const mode = (vx || vz) ? "crawl" : "fidget";
+      if (m.limbs !== mode) { m.limbs = mode; f.anim.main = { clip: mode === "crawl" ? CRAWL : FIDGET, loop: true, weight: 1, blend: 0.2 }; } }
     if (f.state.kind === "clump" && now > (m.tw ?? 0)) { // a knot of limbs never sits still: it lurches crawling, shudders at rest
       const mv = !!(vx || vz), yaw = (vx || vz) ? Math.atan2(-vx, -vz) * 180 / Math.PI : (f.rotation?.yaw ?? 0);
       m.tw = now + (mv ? 140 : 260 + ctx.random() * 500);
