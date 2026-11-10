@@ -3,20 +3,35 @@
 // white ducts, glossy wet stains and tyre tracks on the floor, glaring strip lights on the walls, hose-reel
 // cabinets on pillars, cement bags, rebar bundles and loose cables. Placed from the seeded layout.
 import { N, S, H, HALF, zoneOf, cellCenter, hash, hasPillar, ARRIVE } from "./lib/level1.js";
-import { slab, prism, tube } from "./lib/shapes.js";
+import { face, slab, prism, tube } from "./lib/shapes.js";
 
 const box = (ctx, x0, x1, y0, y1, z0, z1) => slab(ctx, [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], [(x1 - x0) / 2, (y1 - y0) / 2, (z1 - z0) / 2]);
 const open = (cx, cz) => { const z = zoneOf(cx, cz); return z === "halls" || z === "storage"; };
 const blob = (x, z, r, n, seed) => Array.from({ length: n }, (_, i) => { const a = (i / n) * 6.2832, k = 0.7 + 0.5 * hash(i, seed, 9); return [x + Math.cos(a) * r * k * 1.3, z + Math.sin(a) * r * k]; });
 
+// a downstand beam along x or z at cross-position c, 0.56 wide, 0.62 deep, its two bottom edges chamfered 6 cm
+function beam(ctx, axis, c, a, b) {
+  const w = 0.28, yb = H - 0.62, ch = 0.06, cy = H - 0.31;
+  const prof = [[-w, H], [-w, yb + ch], [-w + ch, yb], [w - ch, yb], [w, yb + ch], [w, H]];
+  const P = (u, y, t) => axis === "x" ? [t, y, c + u] : [c + u, y, t];
+  for (let k = 0; k < prof.length - 1; k++) {
+    const [u0, y0] = prof[k], [u1, y1] = prof[k + 1], mu = (u0 + u1) / 2, my = (y0 + y1) / 2, n = axis === "x" ? [0, my - cy, mu] : [mu, my - cy, 0];
+    face(ctx, P(u0, y0, a), P(u1, y1, a), P(u1, y1, b), P(u0, y0, b), n);
+  }
+}
 export function geometry(ctx) {
   const hi = ctx.lod <= 2;
   ctx.smooth(); ctx.metalness(0);
 
   // downstand beams on the pillar grid: a structural ceiling instead of a flat slab
-  ctx.color("oklch(0.74 0.008 250)"); ctx.roughness(0.9);
-  for (let j = 2; j < N; j += 2) box(ctx, -HALF, HALF, H - 0.62, H, j * S - HALF - 0.28, j * S - HALF + 0.28);
-  for (let i = 2; i < N; i += 2) box(ctx, i * S - HALF - 0.28, i * S - HALF + 0.28, H - 0.62, H, -HALF, HALF);
+  // (Shelly: "the ceiling is blocky too"): each beam is cast in board formwork, its bottom arrises chamfered, rust-brown drip stains under it
+  ctx.albedo("cdn/texture-board-formed-cast-concrete-beam-wood-grain-imprint.png"); ctx.color("oklch(0.8 0.008 250)"); ctx.roughness(0.9);
+  for (let j = 2; j < N; j += 2) beam(ctx, "x", j * S - HALF, -HALF, HALF);
+  for (let i = 2; i < N; i += 2) beam(ctx, "z", i * S - HALF, -HALF, HALF);
+  if (hi) { ctx.albedo(null); ctx.color("oklch(0.55 0.04 60)"); ctx.roughness(0.95); // seep stains on the beam soffits, where the slab above leaks
+    for (let j = 2; j < N; j += 2) for (let i = 0; i < N; i++) if (hash(i, j, 77) < 0.3) { const x = i * S - HALF + hash(i, j, 78) * S, z = j * S - HALF, l = 0.4 + hash(i, j, 79) * 1.2; box(ctx, x - l / 2, x + l / 2, H - 0.623, H - 0.621, z - 0.14, z + 0.14); }
+    ctx.albedo(null); }
+  ctx.albedo(null);
 
   if (hi) {
     // red sprinkler mains along x, branches along z, heads and hangers
