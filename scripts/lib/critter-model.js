@@ -114,7 +114,7 @@ export function seatWardrobe(ctx, o, l) {
   for (const [k, c] of want) {
     const h = ctx.getObject(o.id + '/' + k)
     if (!h) { ctx.spawn(k, { parent: o.id, ...c }); continue }
-    if (JSON.stringify(h.model?.materials ?? null) !== JSON.stringify(c.model.materials)) h.model = c.model
+    if ((h.model?.id ?? h.model) !== c.model.id || JSON.stringify(h.model?.materials ?? null) !== JSON.stringify(c.model.materials)) h.model = c.model // a refit file swaps in on bodies already wearing the old one
     if (JSON.stringify(h.morph ?? null) !== JSON.stringify(c.morph)) h.morph = c.morph
   }
 }
