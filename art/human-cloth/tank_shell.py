@@ -2,7 +2,8 @@
 pushed out along its normals per shape key, cleavage bridged, the edges rolled into a lip. Same weights + Bust key as the skin
 under it, so it bends exactly with the body and can't poke or float. Skin stays drawn underneath (no jagged holes).
 Usage: blender -b --python-exit-code 1 -P tank_shell.py -- body.glb out.glb"""
-import bpy, bmesh, sys
+import bpy, bmesh, sys, os
+NAME = os.environ.get('WARD', 'Ward_tank'); STRAP = float(os.environ.get('STRAP', '0.66')); NECKD = float(os.environ.get('NECKD', '1')); HEM = float(os.environ.get('HEM', '0.07'))  # a vest: WARD=Ward_vest STRAP=0.86 NECKD=0.6
 from mathutils import Vector
 a = sys.argv[sys.argv.index('--') + 1:]; src, out = a[0], a[1]
 T = 0.0065  # cloth stand-off, metres
@@ -20,11 +21,11 @@ if parts:
     body.select_set(True); bpy.context.view_layer.objects.active = body
     bpy.ops.object.join()
 print('JOINED', len(parts))
-body.name = body.data.name = 'Ward_tank'
+body.name = body.data.name = NAME
 hipz, neckz, ax, sy = J['Hips'].z, J['Neck'].z, J['LeftArm'].x, J['Spine2'].y
 s = neckz / 1.276
-hem = J['Spine'].z + 0.07 * s  # just under the navel: pants take it from there
-xstrap, xpit, zpit = ax * 0.66, ax * 1.06, J['LeftArm'].z - 0.075 * s
+hem = J['Spine'].z + HEM * s  # just under the navel: pants take it from there
+xstrap, xpit, zpit = ax * STRAP, ax * 1.06, J['LeftArm'].z - 0.075 * s
 slope = (xpit - xstrap) / (neckz - 0.03 * s - zpit)
 def armlim(z): return xstrap + max(0.0, slope * (neckz - 0.03 * s - z))  # straps keep their width up and over
 # measured off this body: the neck's own half-width just above its base, and the shoulder line beside it
@@ -43,7 +44,7 @@ def necklim(x, y):  # a U scoop, deep in front, shallow at the back
         t = min(1.0, (u - 1) / 0.18); t = t * t * (3 - 2 * t)
         return base + (min(capz, shz) - base) * t
     front = max(0.0, min(1.0, (sy - y) / (0.06 * s) + 0.5))
-    depth = (0.025 + 0.05 * front) * s
+    depth = (0.025 + 0.05 * front) * s * NECKD
     return min(capz, neckz + 0.01 * s) - depth * (1 - u * u) ** 0.5
 me = body.data
 M = body.matrix_world.copy(); Mi = M.inverted(); R = Mi.to_3x3()
