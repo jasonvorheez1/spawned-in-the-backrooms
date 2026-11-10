@@ -104,11 +104,11 @@ def F(co):  # >0 inside the garment, the cut is its zero line (a contour, so eve
     g = waistz - p.z  # a continuous signed field: union of pants, bib and straps, so the contour cut runs smooth
     if BIB > 0:  # overalls: a bib up the front to the chest, straps over each shoulder to the back
         fr = J['Spine'].y - p.y + 0.01 * s  # >0 in front of the spine (front is -Y)
-        bib = min(J['Spine2'].z + BIB * s - p.z, 0.085 * s - abs(p.x), fr)
+        bib = min(J['Spine2'].z + BIB * s - p.z, 0.1 * s - abs(p.x), fr)
         sc = 0.5 * (NW * s + xstrap)  # strap centre: midway between neck and shoulder edge on THIS body
         strap = min(neckz + 0.06 * s - p.z, 0.022 * s - abs(abs(p.x) - sc))
         back = min(J['Spine1'].z - p.z, 0.11 * s - abs(p.x), -fr + 0.02 * s)  # a back rise to mid-back the straps meet
-        side = J['Spine'].z + 0.4 * (J['Spine1'].z - J['Spine'].z) - p.z  # the sides rise above the hip bone, no window over the hip
+        side = J['Spine1'].z + 0.01 * s - p.z  # the sides rise above the hip bone, no window over the hip
         g = max(g, bib, strap, back, side)
     return min(g, cuff(p))
 f = {v: F(v.co) for v in bm.verts}
