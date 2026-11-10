@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 4576,
-  "updatedAt": "2026-11-10T19:21:14.844Z",
+  "basedOnSpecVersion": 4577,
+  "updatedAt": "2026-11-10T19:22:41.090Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG across an authored Level 0 maze, deeper levels, and shared destinations. `templates/player.js` composes player behaviors; place simulations and shared scripts own environment generation, NPCs, combat, loot, crafting, UI, avatar presentation, and progression.",
   "scriptPaths": [],
   "places": [
@@ -41,7 +41,7 @@
     "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - body/face/head/spec, hair and wardrobe seating, restyle/clearAppearance, humanBodyMorph, speciesOf, anime, FURRY_HEAD and STYLE_V (sw82).",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, stagger3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
     "scripts/lib/craft.js - recipeStatus, maxMakes, craftOne, benchAvailable, stationOf, scrapCount, CRAFT_LIMIT, CATS; scripts/craft.js - onInput, update.",
-    "scripts/lib/prop-interactions.js - propKind, interactiveSpec, upgradeProp, containerPose, toggleLamp, upgradeNearby; scripts/lib/prop-easing.js - MOTION_MS, sampleMotion, propFrames; scripts/l11-masonry.js - geometry, collider; scripts/l11-reno.js - geometry; scripts/l11-mall.js - geometry."
+    "scripts/lib/prop-interactions.js - propKind, interactiveSpec, upgradeProp, containerPose, toggleLamp, upgradeNearby; scripts/lib/prop-easing.js - MOTION_MS, sampleMotion, propFrames; scripts/l11-masonry.js - geometry, collider; scripts/l11…"
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo, needs, money, appearance, combat/rewards, level access, saved place/position, wakeAtSave restoration, heat/cold and carried tapes/playback.",
@@ -54,7 +54,7 @@
     "places/level11/sim.js - place.state.builtV and session build version/queue own generated-city rebuild progress; refreshed existing specs update primitive and placement without replacing object state."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker; touch mappings invoke the same action owners.",
+    "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker; touch mappings share actions.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes aimPt and ranged aimPitch → player.js ballistics.",
     "scripts/routing.js accepts permitted requested rooms; otherwise scripts/lib/hub.js soloRoom selects the player's solo Backrooms room and bonus overflow IDs; toHub/toSolo perform crossings and track roomHop/save-place state.",
     "Fresh visit → scripts/main-menu.js; START enters intake for creation or bonus for completed characters; wardrobe close runs intro-cut then tutorial0 unless t0Done; menu UI renders on menuOpen and solo pause sets place.timeScale.",
@@ -65,7 +65,7 @@
     "scripts/lib/prop-interactions.js interactiveSpec → generated furniture from scripts/lib/furniture.js and upgradeNearby nearby legacy props; preserves root collider/state and tags; prop-part children provide moving doors/drawers/lids.",
     "Player craft action/UI → scripts/lib/craft.js stationOf + craft.yml; built pieces in breakables.yml carry bench=cook/ammo and state.station; craft.js/craft-ui.js filter station recipes while hand menu lists all recipes.",
     "player.js hitTarget writes shooter position/velocity/time to target state.shot → hunt.js shotAt exposes it for 8 s → smilers/lurkers follow as sound and hounds update lastSeen; wallSteer/wedged in hunt.js drive hounds/stealers around walls.",
-    "scripts/zenith-drones.js hit callback stamps shooter coordinates in drone state.last → alert/combat movement without a visible target circles that location and then can reacquire/fire; Level 11 sim tick at V=134 rebuilds city specs and refreshes changed primitive/placement in existing objects without losing their state."
+    "scripts/zenith-drones.js hit callback stamps shooter coordinates in drone state.last → alert/combat movement without a visible target circles that location and then can reacquire/fire; Level 11 sim tick at V=134 rebuilds city specs and refreshes placements without replacing object state."
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/lib/bonus-extra.js + mall-shopper.js/salon-stylist.js/salon-ui.js - authored mall, simulated mall life and one-time neon/fountain lighting effects.",
@@ -73,9 +73,9 @@
     "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to each supported kind and migrated while preserving root state.",
     "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + Zenith door/bots/hatch/flicker/drones/use scripts - Zenith Station geometry, breach, hazards and interactive systems.",
     "places/level4/cells/x0z0.scene + l4-office.js/l4-office-geo.js/l4-home.js + scripts/lib/l4-people.js/level4-people.yml and scripts/lib/l5-people.js/level5-people.yml - authored office/hotel with role-, look-, dialogue- and schedule-driven residents.",
-    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art human-cloth/body/rig/transfer/body-shape + scripts/mat-anime.js - shared human/furry avatar assembly, skinning, faces, hair and garments; split human outfits are fitted to body shape.",
-    "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js + scripts/lib/data/combat-anims.yml - retargeted first-person and DS third-person melee families select strikes by weapon type; combat poses also vary by weapon.",
-    "Level 11 geometry family: scripts/l11-mall.js, scripts/l11-masonry.js and scripts/l11-reno.js parameterize mall, modern canal/bridge and renovation-office pieces; tests/level11-reference.test.js checks boat clearance/colliders, open ceiling bays, deterministic city tiers, canal/subway gaps and in-place rebuild state."
+    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art human-cloth/body/rig/transfer/body-shape + scripts/mat-anime.js - shared human/furry avatar assembly, skinning, faces, hair and garments; split human outfits are fitted to body shapes.",
+    "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js + scripts/lib/data/combat-anims.yml - retargeted first-person and DS third-person melee families select strikes by weapon type; combat poses also feed shared hit reactions.",
+    "Level 11 geometry family: scripts/l11-mall.js, scripts/l11-masonry.js and scripts/l11-reno.js parameterize mall, modern canal/bridge and renovation-office pieces; tests/level11-reference.test.js checks boat clearance/colliders and open-ceiling references."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
@@ -83,7 +83,7 @@
   ],
   "migrationNotes": [
     "Human avatar STYLE_V remains sw82: fuller thighs, calves, hips and upper arms on both bodies, with split garments refitted; `art/body-shape/run.sh` fills garments against body fields.",
-    "Pass 2 `art/body-shape/shape.py` saves bind-pose vertex deltas to sex-specific NPZ fields; `run2.sh` applies those fields to split garment GLBs via `fill.py garment` and uploads shape2 outputs, but does not change runtime IDs in `wardrobe-…`.",
+    "Pass 2 `art/body-shape/shape.py` saves bind-pose vertex deltas to sex-specific NPZ fields; `run2.sh` applies those fields to split garment GLBs via `fill.py garment` and uploads shape2 outputs, but does not change runtime IDs in wardrobe data.",
     "scripts/lib/data/ward-slots.yml maps each garment GLB URI to its actual material slots; `wardChildren` filters body cloth materials through that list when present and otherwise passes all cloth slots, so keep entries aligned to each file.",
     "scripts/lib/critter-model.js humanBodyMorph omits unsupported male Bust on the body while humanMorph keeps its explicit zero for garments; body changes compare state.headBody and clear/reseat skinned attachments without deleting equipment.",
     "art/body-transfer/reshape.py and fit.py preserve game bone names and downstream bones.json/field.json contracts while reshaping the rig/rest pose and fitting garments with clearance and shape-key deltas.",
