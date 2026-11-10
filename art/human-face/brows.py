@@ -29,8 +29,8 @@ for mesh in J['meshes']:
             t = (x-x0)/(x1-x0)
             zfit = np.polyval(np.polyfit(x, P[k, 2], 2), x)
             base = np.median(P[k, 1])
-            arch = base + 0.0035*np.sin(np.pi*np.clip(0.12+0.88*t, 0, 1)**0.85) - 0.0010*t
-            hw = 0.0034*(1-t)**0.8 + 0.0011
+            arch = base + 0.0055*np.sin(np.pi*np.clip(0.12+0.88*t, 0, 1)**0.85) - 0.0010*t
+            hw = 0.0085*(1-t)**0.7 + 0.0028
             P[k, 0] = side*(x0 + (x1-x0)*t)
             P[k, 1] = arch - hw + 2*hw*rel
             P[k, 2] = zfit + 0.0005
