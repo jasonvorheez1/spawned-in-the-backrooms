@@ -9,7 +9,7 @@ import { MeshStandardNodeMaterial } from "builtin/three";
 export function material(ctx) {
   const kind = String(ctx.params.kind ?? "skin");
   const m = new MeshStandardNodeMaterial();
-  const lift = Number(ctx.params.lift ?? (kind === "skin" ? 0.3 : kind === "hair" ? 0.28 : 0.22));
+  const lift = Number(ctx.params.lift ?? (kind === "skin" ? 0.3 : kind === "hair" ? 0.5 : 0.22));
   const base = materialColor, N = normalize(normalWorld), V = normalize(cameraPosition.sub(positionWorld));
   const ndv = saturate(dot(N, V)), fres = pow(float(1).sub(ndv), 3.0);
   const g = positionGeometry;
@@ -27,8 +27,8 @@ export function material(ctx) {
     const streak = mx_noise_float(g.mul(vec3(90, 6, 90))).mul(0.5).add(0.5);
     col = base.mul(float(0.82).add(streak.mul(0.22)));
     col = col.add(base.mul(1.1).add(vec3(0.14, 0.13, 0.15)).mul(band.mul(0.5)));
-    col = col.mul(float(0.8).add(ndv.mul(0.26)));
-    m.roughness = 0.45; m.metalness = 0;
+    // no per-face view darkening: on thin two-sided strands it lit each strand apart, the shards look
+    m.roughness = 0.8; m.metalness = 0;
   } else { // cloth
     const u = g.x.add(g.z.mul(0.7)), v = g.y;
     const weave = abs(sin(u.mul(320))).mul(0.5).add(abs(sin(v.mul(320))).mul(0.5));
@@ -40,7 +40,7 @@ export function material(ctx) {
   }
   m.colorNode = col.mul(float(1).sub(lift).mul(0.9));
   const shade = kind === "skin" ? col.mul(vec3(1.0, 0.72, 0.6)) : col.mul(vec3(0.92, 0.92, 1.0));
-  const rim = fres.mul(kind === "skin" ? 0.04 : 0.12);
+  const rim = fres.mul(kind === "skin" ? 0.04 : kind === "hair" ? 0.0 : 0.12); // a rim on every strand edge outlined the shards
   const rimCol = kind === "skin" ? base.mul(vec3(1.1, 0.7, 0.55)) : vec3(1, 0.96, 0.9); // skin rims in its own blood-warm tone, never white
   m.emissiveNode = shade.mul(lift).add(glow).add(rimCol.mul(rim).mul(max(base.r, max(base.g, base.b)).mul(0.6).add(0.2)));
   return m;
