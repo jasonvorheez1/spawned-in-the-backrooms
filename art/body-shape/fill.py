@@ -103,5 +103,6 @@ def garment(fld, src, out):
         Dl = np.einsum('vij,vj->vi', np.linalg.inv(M[:, :3, :3]), D); NP = P + Dl; put(d, off, st, NP)
         a = J['accessors'][at['POSITION']]; a['min'] = NP.min(0).tolist(); a['max'] = NP.max(0).tolist(); mx = max(mx, float(np.abs(D).max()))
     save(d, J, b0, out); print('garment', src.split('/')[-1], 'max mm', round(mx * 1000, 1))
-if sys.argv[1] == 'body': body(*sys.argv[2:6])
-else: garment(*sys.argv[2:5])
+if __name__ == '__main__':
+    if sys.argv[1] == 'body': body(*sys.argv[2:6])
+    else: garment(*sys.argv[2:5])
