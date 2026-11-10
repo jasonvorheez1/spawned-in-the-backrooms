@@ -96,7 +96,8 @@ const SWING = {
     [1, 0, 0, 0, 0, 0, 0]] },
 }
 const STYLE = { table_leg: 'club', pipe_scrap: 'club', crowbar: 'club', bat: 'club', rebar: 'club', wrench: 'club', stun_baton: 'club',
-  hatchet: 'chop', fire_axe: 'heavy', sledgehammer: 'heavy', knife: 'stab', screwdriver: 'stab', lineman_machete: 'slash', fishing_rod: 'cast' }
+  hatchet: 'chop', fire_axe: 'heavy', sledgehammer: 'heavy', knife: 'stab', screwdriver: 'stab', lineman_machete: 'slash', fishing_rod: 'cast',
+  pickaxe: 'heavy', cleaver: 'chop', golf_club: 'slash', tire_iron: 'club', baton: 'club', soup_bowl: 'chop' } // the same families scripts/lib/body3.js gives the third-person body: these five used to swing as plain clubs in first person
 
 const NV_PACE = 0.55 // NV's takes run long with their recovery: played at 55% of their length so a swing keeps this game's rhythm (my pick)
 const ZERO_POSE = [0, 0, 0, 0, 0, 0]
@@ -146,7 +147,7 @@ export function poseViewmodel(ctx, dt) {
     lastSwing: 0, lastReload: 0, lastPump: 0, lastEquip: 0, lastDry: 0, equipT: 1, pumpT: 1,
     relT: 0, relOn: false, relKind: null, eject: false, lastYaw: null, lastPitch: 0, bob: 0, vy: 0,
   })
-  if (m.id !== ps.vmId) { m.id = ps.vmId; if (!m.seeded) { m.lastEquip = ps.equipAt ?? 0; m.seeded = true } /* a draw rebuilds the viewmodel: keep the old equip stamp so the new one still rises */ m.lastSwing = ps.swingAt ?? 0; m.lastPump = ps.pumpAt ?? 0; m.lastReload = ps.reloadN ?? 0; m.lastDry = ps.dryAt ?? 0; try { vm.interpolation = null } catch (e) { /* the engine keeps its default smoothing */ } }
+  if (m.id !== ps.vmId) { m.id = ps.vmId; if (!m.seeded) { m.lastEquip = ps.equipAt ?? 0; m.seeded = true } /* a draw rebuilds the viewmodel: keep the old equip stamp so the new one still rises */ m.lastSwing = ps.swingAt ?? 0; m.lastPump = ps.pumpAt ?? 0; m.lastReload = ps.reloadN ?? 0; m.lastDry = ps.dryAt ?? 0; m.lastJam = ps.jammedAt ?? 0; m.lastHit2 = ps.hitAt ?? 0; try { vm.interpolation = null } catch (e) { /* the engine keeps its default smoothing */ } }
 
   const kind = ps.equipped ?? 'fists', wp = W[kind] ?? W.fists, gun = !!wp.ranged
   const rc = wp.recoil ?? {}, hd = handling(ps, wp), aimDamp = (1 - 0.55 * m.ads) * hd.recoil // a heavy gun in weak arms kicks harder
@@ -176,6 +177,8 @@ export function poseViewmodel(ctx, dt) {
   if (ps.pumpAt && ps.pumpAt !== m.lastPump) { m.lastPump = ps.pumpAt; m.pumpT = 0; m.pumpEjected = false }
   if (ps.equipAt && ps.equipAt !== m.lastEquip) { m.lastEquip = ps.equipAt; m.equipT = 0 }
   if (ps.dryAt && ps.dryAt !== m.lastDry) { m.lastDry = ps.dryAt; m.sv[3] += 45; m.sv[2] -= 0.15 }
+  if (ps.jammedAt && ps.jammedAt !== m.lastJam) { m.lastJam = ps.jammedAt; m.pumpT = 0; m.shotT = 0; m.pumpEjected = true; m.sv[3] += 70; m.sv[5] += 35; m.sv[2] -= 0.2 } // a jam: the gun bucks in the hand and the slide is hauled back to clear it
+  if (!gun && ps.hitAt && ps.hitAt !== m.lastHit2) { m.lastHit2 = ps.hitAt; const hv = 1 + 1.4 * (ps.hitHeavy ?? 0); m.sv[2] -= 0.22 * hv; m.sv[3] += 55 * hv; m.sv[5] -= 22 * hv * ((m.combo ?? 0) % 2 ? -1 : 1) } // a blow that lands jolts the weapon back into the hand
 
   // ---- reload clock, local to this machine
   const reloading = !!ps.reloading && gun

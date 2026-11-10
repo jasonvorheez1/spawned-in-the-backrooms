@@ -467,6 +467,7 @@ export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pe
   ctx.emit('squash', { target: m.id, axis: 'y', intensity: 0.25, duration: 0.18 })
   ctx.emit('flash', { target: m.id, color: '#ffffff', duration: 0.1 })
   ctx.emit('hitstop', { duration: 0.06 + heavy * 0.07 }, { audience: { player: ctx.self.id } })
+  s.hitAt = ctx.now(); s.hitHeavy = heavy // scripts/lib/vmpose.js jolts a held melee weapon on it
   ctx.emit('cameraPunch', { direction: { x: f.x, y: 0, z: f.z }, intensity: 0.3 + heavy * 0.5 }, { audience: { player: ctx.self.id } })
   if (heavy) {
     ctx.emit('screenShake', { intensity: 0.25 * heavy, duration: 0.18 }, { audience: { player: ctx.self.id } })
