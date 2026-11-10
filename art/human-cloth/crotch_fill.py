@@ -21,6 +21,21 @@ while bnd:
                 if f in bnd: bnd.discard(f); loop.add(f); st.append(f)
     loops.append(loop)
 filled = 0
+# the slit: the inner-thigh panels stand off into each other's skin and leave a groove of skin between the legs.
+# Pull the cloth near the centre plane together (a gusset), the deeper the more, on every shape key too.
+hx = J['Hips'].x; R = 0.055; top = hz + 0.03; bot = hz - 0.13
+Mi = M.inverted(); keys = [bm.verts.layers.shape[k] for k in bm.verts.layers.shape.keys()]
+moved = 0
+for v in bm.verts:
+    p = M @ v.co; dx = p.x - hx
+    if abs(dx) < R and bot < p.z < top:
+        zw = min(1.0, (top - p.z) / 0.03, (p.z - bot) / 0.05)
+        k = 1 - (1 - abs(dx) / R) ** 2 * 0.85 * zw  # 0.15 at the centre: the two panels meet
+        d = Mi.to_3x3() @ Vector((hx + dx * k - p.x, 0, 0))
+        v.co += d
+        for L in keys: v[L] += d
+        moved += 1
+print('GUSSET', moved)
 for L in loops:
     vs = {v for e in L for v in e.verts}; c = sum((M @ v.co for v in vs), Vector()) / len(vs)
     span = max((M @ v.co).z for v in vs) - min((M @ v.co).z for v in vs)
