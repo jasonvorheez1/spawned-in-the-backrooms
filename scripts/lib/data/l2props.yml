@@ -13,10 +13,10 @@ kinds:
   canister:    { id: /cdn/value.f6da85fb2964fae153be333cecccc61db1a0a412645c25de98f495b18824ec7b.glb, size: [0.32, 0.6, 0.32], name: Propane tank,     mat: metal,   hp: 30 }
   fuse:        { id: /cdn/value.2268805ae5f337235de318b92236f96c3475a7caaea724697c13e30c88a27545.glb, size: [0.6, 0.9, 0.24], name: Fuse box,          mat: junction, hp: 80 }
   transformer: { id: /cdn/value.60f9ddc457b425e28e331ae1a63e32fabaa6422a7e605ddf5115f266c3d5bfa6.glb, size: [0.9, 1.15, 0.9], name: Transformer,       mat: machine, hp: 200 }
-  table:       { id: /cdn/value.cf4b7e08e8b8ebeae461128c58b33779289448325288361133e27aa7f17a212d.glb, size: [1.2, 0.76, 0.8], name: Break table,       mat: wood,    hp: 70 }
-  stackchair:  { id: /cdn/value.b579afa379fe0730c5aaa825796dba3705faf3c6b1ab0a11aaa6e326405aabe9.glb, size: [0.48, 0.85, 0.5], name: Stacking chair,   mat: metal,   hp: 40 }
-  counter:     { id: /cdn/value.4f71805b2a0e53229ed5894dbb189ce58e73fc3ae96ccccf711def093a035ae2.glb, size: [2.2, 0.92, 0.6], name: Kitchen counter,   mat: wood,    hp: 120 }
-  microwave:   { id: /cdn/value.74930cb789fa761fe722e0971e233ad9b61080257135f182850c61c51300b5d4.glb, size: [0.5, 0.3, 0.38], name: Microwave,         mat: junction, hp: 30 }
+  table:       { id: /cdn/value.cf4b7e08e8b8ebeae461128c58b33779289448325288361133e27aa7f17a212d.glb, size: [1.5, 0.78, 0.9], name: Break table,       mat: wood,    hp: 70 }
+  stackchair:  { id: /cdn/value.b579afa379fe0730c5aaa825796dba3705faf3c6b1ab0a11aaa6e326405aabe9.glb, size: [0.52, 0.9, 0.55], name: Stacking chair,   mat: metal,   hp: 40 }
+  counter:     { id: /cdn/value.4f71805b2a0e53229ed5894dbb189ce58e73fc3ae96ccccf711def093a035ae2.glb, size: [2.4, 0.95, 0.65], name: Kitchen counter,   mat: wood,    hp: 120 }
+  microwave:   { id: /cdn/value.74930cb789fa761fe722e0971e233ad9b61080257135f182850c61c51300b5d4.glb, size: [0.56, 0.34, 0.42], name: Microwave,         mat: junction, hp: 30 }
   stove:       { id: /cdn/value.4c288814480bee5bc0698991caa539a68f89a43818ddf332974a5f6a92a6a51c.glb, size: [0.36, 0.16, 0.3], name: Camp stove,       mat: metal,   hp: 30 }
   lantern:     { id: /cdn/value.c10572b2de804fd98cf1690adb38d1337fc5d9a43e100401319716ff9611058b.glb, size: [0.2, 0.34, 0.2], name: Lantern,           mat: fixture, hp: 15 }
 # container kinds (loot.js spawnContainerL2 / spawnCrateL2) -> their Tripo mesh; the box collider and loot state stay the container's own
@@ -46,7 +46,7 @@ rooms:
   pump:       [[pump, 0.15, -1.15, -b], [pump, 0.15, 1.15, +b], [canister, -0.9, 1.8, -b]]
   office:     [[chair, 1.0, 0.25, back], [shelf, 0.95, 1.85, -b], [stackchair, -1.0, -0.6, door]]
   cage:       [[shelf, -0.4, -1.85, +b], [shelf, -0.4, 1.85, -b], [drum, 0.5, -1.6, door], [canister, 0.7, 1.2, -b]]
-  break:      [[table, 0.2, -0.1, door], [stackchair, 0.2, -0.85, +b], [stackchair, 0.2, 0.75, -b], [counter, -0.3, 1.8, -b], [microwave, 0.3, 1.82, -b, 0.92]]
+  break:      [[table, 0.2, -0.1, door], [stackchair, 0.2, -0.85, +b], [stackchair, 0.2, 0.75, -b], [counter, -0.3, 1.8, -b], [microwave, 0.3, 1.82, -b, 0.96]]
   electrical: [[fuse, -0.85, -1.98, +b, 0.9], [fuse, 0.55, -1.98, +b, 0.9], [fuse, -0.85, 1.98, -b, 0.9], [fuse, 0.55, 1.98, -b, 0.9], [transformer, 0.6, 1.6, -b]]
 # props on the Boiler Hall floor, offsets from the hall centre (x, z) and a yaw
 hall: [[pump, 1.2, -3.7, 0], [heater, 9.2, -3.2, 90], [heater, 9.2, -2.3, 90], [drum, -9.5, 5.6, 0], [drum, -8.8, 6.0, 30], [canister, -9.6, 4.8, 0], [bench, 3.5, 6.3, 180], [shelf, -3.0, 6.6, 180]]

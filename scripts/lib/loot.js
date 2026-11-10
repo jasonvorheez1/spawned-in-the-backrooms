@@ -148,7 +148,7 @@ export function fillContainerL2(ctx, kind, bonus = 0) {
 // containers modelled in Blender (art/props/build.py): the lockers and fridges are real objects with louvres, handles and rounded edges; the rest still draw as scripted boxes
 const L2MODEL = {
   locker: { id: "/cdn/value.c6241c9ef9004df7d80aae0e234ed284e1f3e9ea13a77cc4183bbf4f92977eca.glb", paints: ["#8c8c84", "#7d8a7c", "#9a9484", "#6f7a86", "#8a6a4a", "#a8a8a2"] },
-  fridge: { id: "/cdn/value.c531369907056aa1f04bdb183de1d8def0d01e1134bb98f4f359f69ff9bfa95a.glb", paints: ["#dcdcd6", "#d8d4c4", "#c8ccc8", "#e4e0d0"] },
+  // fridge: the Tripo fridge (l2props containers) faces its room; the old Blender one stood backwards (Shelly: "break room has backwards placement")
 };
 export function spawnContainerL2(ctx, kind, p, yaw, opts = {}) {
   const C0 = L2C.containers[kind], C = opts.size ? { ...C0, size: opts.size } : C0, lk = opts.noLock ? null : rollLock(ctx), M = opts.model ?? L2MODEL[kind] ?? (containerModel(kind) ? { id: containerModel(kind), tripo: true } : null), seed = Math.floor(ctx.random() * 1000);
