@@ -45,6 +45,16 @@ RJ = {pb.name: pb.head.copy() for pb in R.pose.bones}
 RL = {b.name: b.length for b in R.data.bones}
 bpy.ops.object.mode_set(mode='OBJECT')
 meshes = [o for o in game if o.type == 'MESH']
+SEAM = []
+_body0 = [o for o in meshes if o.name == 'Body' or o.name.startswith('Skin_')]
+_p0 = [(o, v.index, o.matrix_world @ v.co) for o in _body0 for v in o.data.vertices]
+_kd0 = KDTree(len(_p0))
+for i, (_, _, q) in enumerate(_p0): _kd0.insert(q, i)
+_kd0.balance(); _seen = set()
+for i, (_, _, q) in enumerate(_p0):
+    if i in _seen: continue
+    g = [j for _, j, _ in _kd0.find_range(q, 2e-4)]
+    if len(g) > 1: SEAM.append([(_p0[j][0], _p0[j][1]) for j in g]); _seen.update(g)
 for o in meshes:
     if o.data.shape_keys:
         for k in o.data.shape_keys.key_blocks: k.value = 0
@@ -89,6 +99,7 @@ WR = abs(J['LeftHand'].x)
 def weight(p):
     w = 1 - ss(NECK0, NECK1, p.z)
     if p.z > J['LeftArm'].z - .3: w *= 1 - ss(WR - .06, WR - .01, abs(p.x))
+    if p.z > J['LeftArm'].z - .2: w *= 1 - ss(abs(J['LeftArm'].x) - .02, abs(J['LeftArm'].x) + .06, abs(p.x))
     hz = J['Hips'].z
     w *= 1 - (1 - ss(.04, .08, abs(p.x))) * (1 - ss(.05, .11, abs(p.z - (hz - .1))))
     return w
@@ -120,6 +131,14 @@ for (o, vi), d in zip(own, dl):
     if o.data.shape_keys:
         for kb in o.data.shape_keys.key_blocks: kb.data[vi].co += ld
     else: o.data.vertices[vi].co += ld
+def _co(o, i): return (o.data.shape_keys.key_blocks[0].data[i].co if o.data.shape_keys else o.data.vertices[i].co)
+for g in SEAM:
+    avg = sum((o.matrix_world @ _co(o, i) for o, i in g), Vector()) / len(g)
+    for o, i in g:
+        d = o.matrix_world.inverted() @ avg - _co(o, i)
+        if o.data.shape_keys:
+            for kb in o.data.shape_keys.key_blocks: kb.data[i].co += d
+        else: o.data.vertices[i].co += d
 for o in body: o.data.update()
 sys.path.insert(0, __import__('os').path.join(__import__('os').path.dirname(__import__('os').path.abspath(__file__)), '..', 'body-rig'))
 from arm_shape import weld_skin_normals
