@@ -46,7 +46,7 @@ for (const node of root.listNodes()) {
         const sw = kS >= 0 ? ws[kS] : 0, aw = kA >= 0 ? ws[kA] : 0, tot = sw + aw;
         if (tot < 1e-4) continue;
         const q = p, d = ((q[0]-s.J[0])*s.ax[0] + (q[1]-s.J[1])*s.ax[1] + (q[2]-s.J[2])*s.ax[2]) / s.u;
-        const t = ss(-0.045, 0.06, d), na = tot * t, ns = tot - na;
+        const t = ss(-0.045, 0.06, d), o = aw / tot, K = +(process.env.K ?? 0.5), na = tot * (o + (t - o) * K), ns = tot - na;
         const slot = (excl) => { let b = -1; for (let k = 0; k < 4; k++) if (k !== excl && (b < 0 || ws[k] < ws[b])) b = k; return b; };
         if (kA < 0 && na > 1e-4) { kA = slot(kS); js[kA] = s.iA; ws[kA] = 0; }
         if (kS < 0 && ns > 1e-4) { kS = slot(kA); js[kS] = s.iS; ws[kS] = 0; }
@@ -66,3 +66,4 @@ console.log('meshes', meshes, 'vertex-sides', touched);
 await doc.transform(prune({ keepAttributes: true, keepLeaves: true }));
 if (outPlain) await io.write(outPlain, doc);
 if (outPacked) { await doc.transform(meshopt({ encoder: MeshoptEncoder, level: 'medium' })); await io.write(outPacked, doc); }
+// run with K=0.35: arm takes 35% of the way from its own weight to the joint blend; 1.0 droops (coat-hanger), 0 keeps the peak
