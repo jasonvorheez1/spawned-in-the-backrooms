@@ -6,10 +6,10 @@
 import { maxHp, maxSan } from "../../scripts/player.js";
 import { DRIP, RIPPLE } from "../../scripts/lib/ambient.js";
 export const cadence = "1s";
-const V = 2;
+const V = 3;
 const CAVE = "/cdn/value.8ee97464d76b59ba323139f76410fd015f304ffe8a5df300024cac2cac8cee69.glb";
 const FLOW = "/cdn/value.fc172db4defdc02603c499ccc386d3fea6fb504d8b388408de18c1ef734f6c34.glb"; // Level 8's flowstone mound
-const ROCK = (kind, color) => ({ kind: "scripted", script: "scripts/mat-cave.js", params: { kind, s: 1 }, color });
+const ROCK = (kind, color) => ({ kind: "scripted", script: "scripts/mat-cave.js", params: { kind, s: 1 }, color, side: "double" });
 const WATER = { kind: "water", color: "oklch(0.55 0.08 195)", opacity: 0.78, waveIntensity: 0.04 };
 const BATH = { cx: -1.2, cz: -2.6, rx: 4.4, rz: 3.8 }, LOBE = { cx: 4.2, cz: -2.6, rx: 3.4, rz: 2.3 };
 const inPool = (p) => p.y < 0.25 && [BATH, LOBE].some((e) => ((p.x - e.cx) / e.rx) ** 2 + ((p.z - e.cz) / e.rz) ** 2 < 0.95);
@@ -23,7 +23,7 @@ function lay(ctx) {
   const sp = (id, spec) => { if (ctx.place.objects[id]) ctx.destroy(id); return ctx.spawn(id, spec); };
   // the cave: the model's own box is min (-9.36,-1.31,-22.68) max (15.02,7.27,6.47); its bottom centre goes there so it stands in its own coordinates
   sp("l27-cave", { feetPosition: { x: 2.827, y: -1.314, z: -8.105 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, state: { floor: "rock" },
-    model: { id: CAVE, materials: { limestone: ROCK("rock", "oklch(0.58 0.035 75)"), flowstone: ROCK("flow", "oklch(0.8 0.03 85)"), steel: { color: "oklch(0.34 0.01 230)", metalness: 0.8, roughness: 0.45 }, paint: { color: "oklch(0.74 0.15 85)", metalness: 0.2, roughness: 0.6 } } } });
+    model: { id: CAVE, materials: { limestone: ROCK("wet", "oklch(0.42 0.03 70)"), flowstone: ROCK("rock", "oklch(0.66 0.035 80)"), steel: { color: "oklch(0.34 0.01 230)", metalness: 0.8, roughness: 0.45 }, paint: { color: "oklch(0.74 0.15 85)", metalness: 0.2, roughness: 0.6 } } } });
   // the spring and its east lobe: warm, clear, waist deep
   sp("l27-pool", { tags: ["swimwater"], feetPosition: { x: BATH.cx, y: -1.3, z: BATH.cz }, primitive: { kind: "cylinder", radiusTop: 1, radiusBottom: 1, height: 1.18, radialSegments: 48 }, scale: { x: BATH.rx, y: 1, z: BATH.rz }, material: WATER });
   sp("l27-lobe", { tags: ["swimwater"], feetPosition: { x: LOBE.cx, y: -0.95, z: LOBE.cz }, primitive: { kind: "cylinder", radiusTop: 1, radiusBottom: 1, height: 0.83, radialSegments: 40 }, scale: { x: LOBE.rx, y: 1, z: LOBE.rz }, material: WATER });
@@ -32,10 +32,8 @@ function lay(ctx) {
   // the stream down the exit tunnel, along its east side, and the fall where it pours off the lip beside the stairs
   sp("l27-stream", { feetPosition: { x: -4.85, y: 2.41, z: -13.6 }, primitive: { kind: "box", width: 0.7, height: 0.02, depth: 14 }, material: WATER });
   sp("l27-fall-w", { feetPosition: { x: -4.85, y: 2.4, z: -6.55 }, fx: { script: FALL, params: { drop: 2.5 } }, audio: { clip: "cdn/sfx-small-waterfall-splashing-into-rock-pool-loop.mp3", loop: true, gain: 0.32, spatial: true, maxDistance: 22, bus: "Ambience" } });
-  sp("l27-fall-w-sheet", { feetPosition: { x: -4.85, y: 0, z: -6.62 }, primitive: { kind: "plane", width: 0.6, height: 2.4 }, rotation: { yaw: 0 }, material: { color: "oklch(0.86 0.04 200)", opacity: 0.35, transparent: true, emissive: "oklch(0.5 0.05 200)", emissiveIntensity: 0.3 } });
   // the second fall, out of the tunnel that leads nowhere, into the east lobe
   sp("l27-fall-e", { feetPosition: { x: 7.05, y: 3.1, z: -2.5 }, rotation: { yaw: 90 }, fx: { script: FALL, params: { drop: 3.4 } }, audio: { clip: "cdn/sfx-small-waterfall-splashing-into-rock-pool-loop.mp3", loop: true, gain: 0.28, spatial: true, maxDistance: 20, bus: "Ambience" } });
-  sp("l27-fall-e-sheet", { feetPosition: { x: 7.0, y: -0.2, z: -2.5 }, primitive: { kind: "plane", width: 0.7, height: 3.3 }, rotation: { yaw: 90 }, material: { color: "oklch(0.86 0.04 200)", opacity: 0.35, transparent: true, emissive: "oklch(0.5 0.05 200)", emissiveIntensity: 0.3 } });
   sp("l27-drain", { feetPosition: { x: -7.6, y: 0.05, z: 0.3 }, fx: { script: RIPPLE } });
   // light: a cold spot on the flowstone over the pool, as in the photo; warm M.E.G. work lamps by the stairs and up the tunnel
   sp("l27-spot", { feetPosition: { x: 2.5, y: 5.6, z: 3.5 }, light: { kind: "spot", color: "oklch(0.93 0.03 230)", intensity: 9, distance: 18, angle: 38, penumbra: 0.6, aim: { x: -1.5, y: 1.5, z: -5.5 }, shadow: { enabled: true } } });
