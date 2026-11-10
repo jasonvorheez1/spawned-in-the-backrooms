@@ -28,6 +28,9 @@ function fold(ctx, s, ses) {
   registry(); if (!REG_STATE.list) { ses.qregAt = now - 1500; return; }
   for (const r of REG_STATE.list) { // each older quest's own step number is the truth: in progress = in the journal, finished = out of it
     const id = qid(r.name), step = s[r.key], tip = r.tips[step];
+    if (step === -1) continue; // failed for good: its record is already in the journal log
+    const gm = tip ? r.marks?.[step] : null, giver = gm?.id && gm.place === ctx.place?.id ? ctx.place.objects?.[gm.id] : null;
+    if (giver?.tags?.includes?.("npc") && giver.state?.dead) { s[r.key] = -1; endQuest(s, id, `${String(giver.state.name ?? "Your contact").split(" ·")[0]} is dead, so the job is lost`, "failed"); continue; } // the one you work for was killed: the quest fails instead of hanging in the journal
     if (tip) setQuest(s, id, { name: r.name, step: tip, mark: r.marks?.[step] ?? null }); else if (s.quests?.[id]) endQuest(s, id);
   }
 }
