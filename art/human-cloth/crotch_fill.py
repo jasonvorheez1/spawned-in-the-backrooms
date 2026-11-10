@@ -21,17 +21,19 @@ while bnd:
                 if f in bnd: bnd.discard(f); loop.add(f); st.append(f)
     loops.append(loop)
 filled = 0
-# the slit: the inner-thigh panels stand off into each other's skin and leave a groove of skin between the legs.
-# Pull the cloth near the centre plane together (a gusset), the deeper the more, on every shape key too.
-hx = J['Hips'].x; R = 0.055; top = hz + 0.03; bot = hz - 0.13
-Mi = M.inverted(); keys = [bm.verts.layers.shape[k] for k in bm.verts.layers.shape.keys()]
+# the slit: the body has a cleft between the legs and the shell follows it in, so skin shows through.
+# Lift the cloth off the cleft along its normals (more at the centre line), every shape key too: it bridges instead of tucking.
+bm.normal_update()
+hx = J['Hips'].x; R = 0.07; top = hz + 0.09; bot = hz - 0.14; PUSH = float(__import__('os').environ.get('PUSH', '0.018'))
+N3 = M.to_3x3(); Mi3 = N3.inverted(); keys = [bm.verts.layers.shape[k] for k in bm.verts.layers.shape.keys()]
 moved = 0
 for v in bm.verts:
     p = M @ v.co; dx = p.x - hx
     if abs(dx) < R and bot < p.z < top:
-        zw = min(1.0, (top - p.z) / 0.03, (p.z - bot) / 0.05)
-        k = 1 - (1 - abs(dx) / R) ** 2 * 0.85 * zw  # 0.15 at the centre: the two panels meet
-        d = Mi.to_3x3() @ Vector((hx + dx * k - p.x, 0, 0))
+        zw = max(0.0, min(1.0, (top - p.z) / 0.04, (p.z - bot) / 0.04))
+        w = (1 - abs(dx) / R) ** 1.5 * zw
+        n = (N3 @ v.normal).normalized()
+        d = Mi3 @ (n * PUSH * w)
         v.co += d
         for L in keys: v[L] += d
         moved += 1
