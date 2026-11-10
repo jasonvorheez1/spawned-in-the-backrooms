@@ -131,7 +131,17 @@ def normals(C):
         vs = f.verts; c = [C[v] for v in vs]; fn = Vector()
         for i in range(len(c)): fn += c[i].cross(c[(i + 1) % len(c)])
         for v in vs: n[v] += fn
-    return {v: (x.normalized() if x.length > 1e-12 else Vector((0, 0, 1))) for v, x in n.items()}
+    out = {v: (x.normalized() if x.length > 1e-12 else Vector((0, 0, 1))) for v, x in n.items()}
+    M3 = M.to_3x3()
+    for v, x in out.items():  # leg parts come wound either way: the push always points away from the leg's own bone line
+        q = W(C[v])
+        side = 'Left' if q.x > 0 else 'Right'
+        best = None
+        for a_, b_ in ((J[side + 'UpLeg'], J[side + 'Leg']), (J[side + 'Leg'], J[side + 'Foot']), (J['Hips'], J['Spine'])):
+            d = b_ - a_; t = max(0.0, min(1.0, (q - a_).dot(d) / d.length_squared)); c = a_ + d * t
+            if best is None or (q - c).length < (q - best).length: best = c
+        if (M3 @ x).dot(q - best) < 0: out[v] = -x
+    return out
 def fill(C):  # bridge hollows (cleavage, spine groove) the way fabric does, outward only
     for it in range(6):
         N = normals(C); new = {}
