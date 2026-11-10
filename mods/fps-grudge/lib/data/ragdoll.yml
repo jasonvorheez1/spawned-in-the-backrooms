@@ -1,0 +1,7 @@
+# Hit-driven ragdolls (creator's rule: a hit over 90 damage ragdolls the unit for 2 seconds).
+threshold: 90        # damage in ONE hit, after armor, that throws the body limp
+seconds: 2           # how long it stays limp before it gets back up (a killing blow stays down)
+push: 2.4            # N·s per kg along the shot: ~170 N·s on a 70 kg body, a hard shove back
+lift: 0.9            # N·s per kg straight up, so the legs leave the ground
+mass: 70
+blend: 0.35          # s, the cross-fade from limp back into the animator

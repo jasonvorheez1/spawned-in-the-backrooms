@@ -1,0 +1,8 @@
+acceleration: 70
+deceleration: 90
+jumpSpeed: 8.6
+turnInPlace: 90
+turnSmoothing: 0.02
+turnSpeed: 1440
+turnTo: camera
+walkSpeed: 6

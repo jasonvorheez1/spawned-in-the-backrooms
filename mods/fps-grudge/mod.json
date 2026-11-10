@@ -1,0 +1,15 @@
+{
+  "name": "fps-grudge",
+  "displayName": "FPS Grudge",
+  "description": "A full first-person shooter kit from ASHLINE: wrapped first-person arms and guns with draw, fire, reload, inspect and melee clips, ADS sight lines and scopes, real projectile ballistics, frag, flash and smoke grenades, molotovs, a syringe heal, knives and melee, hit and near-miss sounds, impact debris, blood, headshot gore and ragdolls, a third-person shoulder camera on U, and a buy menu catalog.",
+  "tags": [
+    "fps",
+    "shooter",
+    "guns",
+    "melee",
+    "first-person",
+    "combat"
+  ],
+  "visibility": "public",
+  "version": "1.0.0"
+}

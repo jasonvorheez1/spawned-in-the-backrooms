@@ -1,0 +1,15 @@
+# The creator's hit pack (Oct 9), measured: length, loudness, brightness (spectral centroid Hz).
+# bodySmall: 0.45-0.62 s, bright 2.3-3.1 kHz: a round into a body
+bodySmall: [/cdn/sfx-body-hit-small-impact-1dx9l52q.mp3, /cdn/sfx-body-hit-small-impact-4eqjf7rx.mp3, /cdn/sfx-body-hit-small-impact-58whjx4j.mp3, /cdn/body-hit-small-impact-et6cma3r.mp3]
+# bodyLarge: 0.53-0.74 s, low 1.2-2.3 kHz: a heavy round, a punch that lands, a body hitting the ground
+bodyLarge: [/cdn/sfx-body-hit-large-impact-u061zaf1.mp3, /cdn/body-hit-large-impact-wq6cremo.mp3, /cdn/sfx-body-hit-large-impact-i609xhge.mp3]
+# finisher: 0.74-1.0 s, punchy: the kill, heard by the one who made it
+finisher: [/cdn/sfx-body-hit-finisher-impact-k26om4lt.mp3, /cdn/body-hit-finisher-combat-impact-oa1ehqu3.mp3, /cdn/body-hit-finisher-impact-wytqutp6.mp3]
+crunch: /cdn/sfx-bone-breaking-crunch-impact-9vlljb8l.mp3   # 1.85 s, quiet body, bright tail: headshot kills
+whoosh: /cdn/sfx-punch-short-whoosh-impact-aydj1ukk.mp3     # 0.43 s: a fist swing
+blade: /cdn/blade-hit-metal-impact-2ju21rbk.mp3             # 0.74 s: a blade meeting a block / a knife on metal
+# blocks: short 0.19-0.38 s knocks, layered under bullet impacts by surface, and debris after a grenade
+wood: [/cdn/sfx-block-medium-impact-wood-xz1rthkl.mp3, /cdn/sfx-block-small-wood-impact-6d0ze6k3.mp3]
+stone: [/cdn/sfx-block-medium-impact-2dhvz6pw.mp3, /cdn/sfx-block-small-impact-u70pglnq.mp3]
+heavy: [/cdn/sfx-block-large-heavy-impact-y0sc4abb.mp3, /cdn/sfx-block-large-impact-530z68hn.mp3]
+heavyDmg: 50   # a hit at or over this lands with a bodyLarge thud instead of a bodySmall

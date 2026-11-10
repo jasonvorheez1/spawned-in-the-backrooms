@@ -1,0 +1,62 @@
+# FPS Grudge bindings: merge under world.config.yaml inputs:
+  actions:
+    jump: { keys: [space], gamepad: a }
+    fire: { mouse: left, gamepad: rt }
+    ads: { mouse: right, gamepad: lt }
+    crouch: { keys: [ctrl, c], gamepad: b }
+    reload: { keys: [r], gamepad: x }
+    gunsmith: { mouse: middle, keys: [b], gamepad: select }
+    use: { keys: [g], gamepad: y }
+    melee: { keys: [v], gamepad: r3 }
+    slot1: { keys: ["1"] }
+    slot2: { keys: ["2"] }
+    slot3: { keys: ["3"] }
+    slot4: { keys: ["4"] }
+    slot5: { keys: ["5"] }
+    slot6: { keys: ["6"] }
+    slot7: { keys: ["7"] }
+    slot8: { keys: ["8"] }
+    slot9: { keys: ["9"] }
+    menuBack: { keys: [escape, backspace] }
+    grenade: { keys: [f], gamepad: lb }
+    nadeCycle: { keys: [x], gamepad: dpadleft }
+    molotov: { keys: [t] }
+    heal: { keys: [h] }
+    inspect: { keys: [i] }
+    swap: { gamepad: rb }
+    zoomUp: { mouse: wheelUp }
+    zoomDown: { mouse: wheelDown }
+    buyWeapon: {}
+    buyAtt: {}
+    fitAtt: {}
+    buyArmor: {}
+    closePanel: {}
+    buyCat: {}
+    buyGrenade: {}
+    buySyringe: {}
+    buyMolotov: {}
+    tps: { keys: [u], gamepad: dpaddown }
+  axes:
+    moveX: { keys: a/d }
+    moveZ: { keys: s/w }
+    lean: { keys: q/e }
+  touch:
+    surfaces:
+      default:
+        sticks: [{ x: moveX, y: moveZ }]
+        look: true
+        pinch: false
+        buttons:
+          - { action: fire, slot: 1, size: primary, label: FIRE }
+          - { action: ads, slot: 2, label: AIM }
+          - { action: jump, slot: 3, label: JUMP }
+          - { action: crouch, slot: 4, label: DUCK }
+          - { action: reload, slot: 5, label: RELOAD }
+          - { action: gunsmith, slot: 6, label: GUNS }
+          - { action: use, slot: 7, label: USE }
+    style: |
+      [data-part="button"] { background: oklch(0.24 0.03 55 / 0.78); border: 2px solid oklch(0.72 0.12 60); color: oklch(0.9 0.08 75); font-weight: 800; letter-spacing: .06em; }
+      [data-part="button"][data-pressed] { background: oklch(0.62 0.14 50); color: oklch(0.15 0.02 50); transform: translateY(2px); }
+      [data-part="button"][data-size="primary"] { background: oklch(0.45 0.15 35 / 0.85); }
+      [data-part="stick"] { background: oklch(0.24 0.03 55 / 0.4); border: 2px solid oklch(0.72 0.12 60); }
+      [data-part="thumb"] { background: oklch(0.72 0.12 60); border: none; }

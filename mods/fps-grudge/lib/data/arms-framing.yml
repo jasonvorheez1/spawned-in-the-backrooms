@@ -1,0 +1,7 @@
+x: 0
+y: -0.50
+depth: 0.25
+fov: null # use the world lens so fingers and physical contact points share perspective
+scale: 1
+rotation: { yaw: 0, pitch: -55, roll: 0 }
+offset: [0, 0, 0]

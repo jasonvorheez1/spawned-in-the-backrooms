@@ -1,0 +1,7 @@
+# ASHLINE throwables: one row per grenade type. key = the player.state count; size = the model's longest side (m);
+# fuse ms from release; the thrown body, the held one in first person and the buy row all read this table.
+order: [frag, flash, smoke]
+frag:  { name: Frag Grenade, hud: FRAG, key: grenades, price: 300, max: 1, model: /cdn/model-grenade-hand-classic-grey-fgy1xkgw.glb, size: 0.1, fuse: 1800 }
+flash: { name: Flashbang, hud: FLASH, key: flashes, price: 200, max: 2, model: /cdn/model-flashbang-grenade-olive-green-dvq9xujo.glb, size: 0.13, fuse: 1500, radius: 20, blind: 2.5 }
+smoke: { name: Smoke Grenade, hud: SMOKE, key: smokes, price: 300, max: 1, model: /cdn/value.ef34cef372cc22ce3ae93d8309c773259c84fc22cb5aae5403c91b9e5e9f5d41.glb, size: 0.15, fuse: 1600, radius: 6, life: 18 }
+throw: { release: 0.28, window: 700, speed: 16, lift: 3, ahead: 0.6, palm: [0.165, -0.125, -0.43], hide: 0.28 }  # palm: eye-frame point in the throwable row's right hand (art/nades/vmthrow.py PALM_GLTF); hide: the held one goes when the body leaves the hand

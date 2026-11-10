@@ -1,0 +1,34 @@
+# ASHLINE attachments. slot: optic muzzle barrel grip mag stock. Multipliers act on the weapon's numbers.
+# zoom: optic magnification (replaces iron zoom); zoomMax: a variable scope (wheel steps between). reticle: dot holo cross chevron thermal.
+# fits: classes it mounts on (omitted = all).
+attachments:
+  - { id: reddot,   slot: optic,  name: "Red Dot",        price: 200, zoom: 1.35, reticle: dot, adsTime: 1.0 }
+  - { id: holo,     slot: optic,  name: "Holo Sight",     price: 250, zoom: 1.4,  reticle: holo, adsTime: 1.0 }
+  - { id: x2,       slot: optic,  name: "2x Tube",        price: 350, zoom: 2.0,  reticle: chevron, adsTime: 1.1 }
+  - { id: acog,     slot: optic,  name: "4x ACOG",        price: 500, zoom: 4.0,  reticle: chevron, adsTime: 1.25, fits: [smg, rifle, lmg, sniper] }
+  - { id: var36,    slot: optic,  name: "3-6x Variable",  price: 650, zoom: 3.0,  zoomMax: 6.0,  reticle: cross, adsTime: 1.3, fits: [rifle, lmg, sniper] }
+  - { id: x8,       slot: optic,  name: "8x Longscope",   price: 800, zoom: 8.0,  reticle: cross, adsTime: 1.45, fits: [rifle, sniper] }
+  - { id: var412,   slot: optic,  name: "4-12x Hunter",   price: 1100,zoom: 4.0,  zoomMax: 12.0, reticle: cross, adsTime: 1.5, fits: [sniper] }
+  - { id: thermal,  slot: optic,  name: "Heat Seer 3x",   price: 1200,zoom: 3.0,  reticle: thermal, adsTime: 1.3, fits: [smg, rifle, lmg, sniper] }
+  - { id: comp,     slot: muzzle, name: "Compensator",    price: 150, recoil: 0.8, spread: 1.05 }
+  - { id: supp,     slot: muzzle, name: "Suppressor",     price: 300, recoil: 0.9, range: 0.9, suppressed: true }
+  - { id: flashhider,slot: muzzle,name: "Flash Hider",    price: 100, recoil: 0.95, flash: 0.3 }
+  - { id: brake,    slot: muzzle, name: "Muzzle Brake",   price: 200, recoil: 0.7, spread: 1.1 }
+  - { id: choke,    slot: muzzle, name: "Choke",          price: 150, spread: 0.65, fits: [shotgun, pistol] }
+  - { id: cansupp,  slot: muzzle, name: "Oil Can Silencer",price: 80, recoil: 0.95, dmg: 0.92, suppressed: true }
+  - { id: shortbar, slot: barrel, name: "Short Barrel",   price: 100, spread: 1.1, move: 1.04, adsTime: 0.85, len: 0.8 }
+  - { id: longbar,  slot: barrel, name: "Long Barrel",    price: 250, spread: 0.85, range: 1.3, move: 0.97, len: 1.25 }
+  - { id: heavybar, slot: barrel, name: "Heavy Barrel",   price: 300, recoil: 0.85, dmg: 1.08, move: 0.95, len: 1.15 }
+  - { id: fluted,   slot: barrel, name: "Fluted Barrel",  price: 200, adsTime: 0.9, spread: 0.95, len: 1.0 }
+  - { id: rifled,   slot: barrel, name: "Rifled Barrel",  price: 350, range: 1.5, dmg: 1.05, len: 1.1, fits: [pistol, shotgun, sniper, rifle] }
+  - { id: vgrip,    slot: grip,   name: "Vertical Grip",  price: 150, recoil: 0.82 }
+  - { id: agrip,    slot: grip,   name: "Angled Grip",    price: 150, adsTime: 0.8, recoil: 0.92 }
+  - { id: stubby,   slot: grip,   name: "Stubby Grip",    price: 120, spread: 0.85 }
+  - { id: handstop, slot: grip,   name: "Handstop",       price: 100, recoil: 0.9, spread: 0.92 }
+  - { id: laser,    slot: grip,   name: "Laser Sight",    price: 250, spread: 0.6, laser: true }
+  - { id: extmag,   slot: mag,    name: "Extended Mag",   price: 200, mag: 1.5, reload: 1.1 }
+  - { id: drum,     slot: mag,    name: "Drum Mag",       price: 400, mag: 2.5, reload: 1.35, move: 0.95, fits: [smg, rifle, shotgun, lmg] }
+  - { id: fastmag,  slot: mag,    name: "Coupled Mags",   price: 200, reload: 0.7 }
+  - { id: hollow,   slot: mag,    name: "Hollow Points",  price: 300, dmg: 1.15, range: 0.8 }
+  - { id: heavystock,slot: stock, name: "Heavy Stock",    price: 150, recoil: 0.85, move: 0.97 }
+  - { id: skelstock,slot: stock,  name: "Skeleton Stock", price: 150, adsTime: 0.8, move: 1.03 }

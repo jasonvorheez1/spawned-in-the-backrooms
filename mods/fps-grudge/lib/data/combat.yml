@@ -1,0 +1,20 @@
+# ASHLINE feel numbers.
+dodge: { tapWindow: 0.26, speed: 12.5, time: 0.42, combatSpeed: 10, combatTime: 0.36, cooldown: 0.85, forwardClip: cdn/clip-roll.glb, backClip: cdn/clip-backflip.glb, sideClip: cdn/clip-roll.glb, jumpClip: Jump }
+move: { adsMul: 0.6, crouchMul: 0.5, slideSpeed: 11.5, slideTime: 0.75, slideMinSpeed: 4.5, wallKickUp: 8.2, wallKickPush: 6.5, wallReach: 0.75 }
+camera: { fov: 72, eye: 1.62, crouchEye: 1.1, slideEye: 0.9, leanDeg: 13, leanShift: 0.42, adsSens: 1.0 }
+spread: { moveHip: 1.6, air: 4, crouch: 0.7, bloomPerShot: 0.18, bloomMax: 2.5, recover: 6 }
+recoil: { recoverDegS: 9, yawWobble: 0.35 }
+assist: { slowdown: 0.45, slowRadius: 0.9, magnetRadius: 0.45, magnetRange: 60, autofireRadius: 0.22 }
+hp: { max: 100, armorAbsorb: 0.5, armorPrice: 650 }
+melee: { dmg: 55, backstab: 100, reach: 2.2, cooldown: 0.7 }
+fists: { dmg: 28, reach: 1.9, cooldown: 0.42, jabCooldown: 0.65, jabDmg: 34, blockSoak: 0.6, speedMul: 1.12 }
+# bullets fly: muzzle speed m/s per class, a straight march under gravity (no drag), solved on the shooter's machine (scripts/lib/ballistics.js)
+ballistics: { speed: { pistol: 360, smg: 400, shotgun: 380, rifle: 880, lmg: 850, sniper: 950 }, gravity: 9.81, drag: 0, step: 0.05, stepFar: 0.12, maxT: 1.2, maxDist: 400, instant: 0.03, bucket: 0.04, tracerEvery: 3, tracerGapMs: 350, tracerRadius: 150, smoke: [rifle, sniper], whizRadius: 3, nearMiss: 1.5, crackSpeed: 700 }
+# healing syringe (H): one per life, buy up to max; 2.2 s on the needle, the heal pours in over the last 0.4 s; a hit over `interrupt` or a weapon switch cancels
+syringe: { price: 200, max: 2, perLife: 1, time: 2.2, ramp: 0.4, heal: 50, interrupt: 25, speedMul: 0.6 }
+# molotov (T): thrown on the frag's arc, shatters on the first ground or wall it meets; a fire patch radius m for burn s, dmg every tick s (thrower takes half, no friendly fire)
+molotov: { price: 400, max: 1, speed: 15, lift: 3, ahead: 0.6, radius: 3, burn: 7, dmg: 8, tick: 0.5, height: 2 }
+
+# who may shoot whom (mods/fps-grudge/player.js pvpOn): place.state.pvp wins when a game writes it; else a mode listed here is player-vs-player
+pvpModes: [pvp, duel, duo, squad]
+pvpDefault: false   # no mode on the place: players never hurt players (set true for a free-for-all)

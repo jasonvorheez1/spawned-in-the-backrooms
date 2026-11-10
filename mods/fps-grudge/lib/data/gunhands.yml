@@ -1,0 +1,23 @@
+# How the mod's articulated hands (mods/realistic-first-person-hands) hold every gun.
+# Points are in the modular gun's own frame (scripts/gen/gun.js: barrel along -Z, origin at the grip, metres).
+# basis = the wrist's axes in that frame: x = thumb side for L / away from thumb for R (rig convention),
+# y = where the fingers point before they curl, z = back of the hand (the palm faces -z).
+# palm = from the wrist joint to the palm's contact: back along y, out along z.
+clip: Fist            # the mod clip that curls the fingers around what the wrist holds
+sway: true
+classes:
+  pistol:
+    R: { at: [0, -0.05, 0.11], x: [0, -1, 0], y: [0, -0.35, -1], palm: [0.07, 0.03] }
+    L: { at: [-0.012, -0.08, 0.105], x: [0, 1, 0.3], y: [0.25, -0.2, -1], palm: [0.06, 0.035], flipZ: true }
+  default:
+    R: { at: [0, -0.075, 0.11], x: [0, -1, 0.15], y: [0, -0.25, -1], palm: [0.075, 0.035] }
+    L: { at: [0, -0.03, guard], x: [0, 0, -1], y: [1, 0, 0], palm: [0.07, 0.035] }
+fists:
+  # guard stance in the camera frame (x right, y up, depth ahead); a jab drives one hand out
+  R: { at: [0.17, -0.2, 0.36], x: [1, 0, 0], y: [0, 0.2, -1], palm: [0.0, 0.0] }
+  L: { at: [-0.17, -0.2, 0.36], x: [1, 0, 0], y: [0, 0.2, -1], palm: [0.0, 0.0] }
+  jab: 0.22            # m the striking fist travels
+  jabMs: 260
+# where the gun rides at the hip when these hands hold it (camera frame: x right, y up, depth ahead):
+# high and close enough that the grip hand and the support hand are both on screen
+hip: { x: 0.13, y: -0.12, depth: 0.36 }

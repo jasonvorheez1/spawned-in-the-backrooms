@@ -1,0 +1,57 @@
+# The visual mirror: what a Warden does, others see on the third-person body. scripts/humanoid-locomotion.js is the one
+# writer of the body's anim; player.js (and whoever hits the body) only write state it reads: fireAt, ads, slot, crouch,
+# reloadUntil, nadeAt, punchAt, dodge, jumpAt, flinch { dir, at }, lastHitHead, killAt, hp/dead. Seconds; weights are shares per bone (gait = 1).
+# Every address is the platform humanoid library (spawn clips) or a library cook; Clint/Lefthander clips are gone (they turned no bone).
+idle: cdn/clip-idle-loop.glb
+aim: { rifle: cdn/clip-ash-rifle-aim-idle-52df6ff4-loop.glb, pistol: cdn/clip-pistol-aim-idle-loop.glb }      # gun up, spine mask
+walk: { f: cdn/clip-walk-loop.glb, b: cdn/clip-walk-backward-loop.glb, l: cdn/clip-walk-strafe-left-loop.glb, r: cdn/clip-walk-strafe-right-loop.glb }
+run:  { f: cdn/clip-run-loop.glb,  b: cdn/clip-run-backward-loop.glb,  l: cdn/clip-run-strafe-left-loop.glb,  r: cdn/clip-run-strafe-right-loop.glb }
+sprint: cdn/clip-sprint-loop.glb
+crouch: cdn/clip-crouch-idle-loop.glb
+crouchWalk: { f: cdn/clip-crouch-walk-loop.glb, b: cdn/clip-crouch-walk-backward-loop.glb, l: cdn/clip-crouch-walk-left-loop.glb, r: cdn/clip-crouch-walk-right-loop.glb }
+jump: cdn/clip-jump.glb
+air: cdn/clip-fall-loop.glb
+land: cdn/clip-land.glb
+roll: { f: cdn/clip-roll.glb, b: cdn/clip-backflip.glb, l: cdn/clip-dodge-roll-left.glb, r: cdn/clip-dodge-roll-right.glb }
+rollSpeed: { f: 1.25, b: 1.5, l: 1.25, r: 1.25 }
+fire: { rifle: cdn/clip-ash-rifle-fire-bcb27e4a.glb, pistol: cdn/clip-pistol-fire.glb }
+reload: { rifle: cdn/clip-ash-rifle-reload-e429ce55.glb, pistol: cdn/clip-pistol-reload.glb }
+throw: cdn/clip-ash-toss-grenade-9c2266a6.glb
+slash: [cdn/clip-attack.glb, cdn/clip-knife-slash-backhand.glb]
+flinch: { front: cdn/clip-hit-react.glb, back: cdn/clip-hit-react-from-behind.glb, left: cdn/clip-hit-react-left.glb, right: cdn/clip-hit-react-right.glb }
+death: { front: cdn/clip-die.glb, back: cdn/clip-death-falling-backward.glb, head: cdn/clip-headshot-death.glb }
+turn: { l: cdn/clip-turn-left-in-place.glb, r: cdn/clip-turn-right-in-place.glb }
+victory: cdn/clip-victory.glb
+taunt: cdn/clip-thumbs-up.glb
+# Armed locomotion: the creator's Mixamo packs (Basic Shooter Pack, Pistol Handgun Locomotion Pack) replace the
+# unarmed gait set while a gun is in hand, so the body walks, runs, strafes, turns and jumps holding it. Fists/knife keep the set above.
+armed:
+  rifle:
+    idle: cdn/clip-ash-rifle-idle-17015494-loop.glb
+    walk: { f: cdn/clip-ash-rifle-walk-86589409-loop.glb, b: cdn/clip-ash-rifle-walk-back-a99a8bdc-loop.glb, l: cdn/clip-ash-rifle-walk-left-384a4451-loop.glb, r: cdn/clip-ash-rifle-walk-right-a4cb54c4-loop.glb }
+    run:  { f: cdn/clip-ash-rifle-run-b0a2e9dd-loop.glb,  b: cdn/clip-ash-rifle-run-back-25b7a511-loop.glb,  l: cdn/clip-ash-rifle-run-left-a663e6c9-loop.glb,  r: cdn/clip-ash-rifle-run-right-a1a3f376-loop.glb }
+    turn: { l: cdn/clip-ash-rifle-turn-left-504f6b56.glb, r: cdn/clip-ash-rifle-turn-right-bf13b9de.glb }
+    jump: cdn/clip-ash-rifle-jump-b44c6c42.glb
+  pistol:
+    idle: cdn/clip-ash-pistol-idle-404e382a-loop.glb
+    walk: { f: cdn/clip-ash-pistol-walk-c45d9520-loop.glb, b: cdn/clip-ash-pistol-walk-back-27440531-loop.glb, l: cdn/clip-ash-pistol-strafe-left-0238b5f6-loop.glb, r: cdn/clip-ash-pistol-strafe-right-57cae610-loop.glb }
+    run:  { f: cdn/clip-ash-pistol-run-ca6948da-loop.glb,  b: cdn/clip-ash-pistol-run-back-c61f8207-loop.glb,  l: cdn/clip-ash-pistol-strafe-left-0238b5f6-loop.glb, r: cdn/clip-ash-pistol-strafe-right-57cae610-loop.glb }
+    crouch: cdn/clip-ash-pistol-kneel-idle-b5ba3073-loop.glb
+    jump: cdn/clip-ash-pistol-jump-05c15082.glb
+# the creator's hit takes: a hit from the front rotates through them so no two flinches look alike
+hitFront: [cdn/clip-ash-rifle-hit-222d51fa.glb, cdn/clip-ash-hit-react-b-ea2c690f.glb, cdn/clip-ash-hit-react-c-ddde7cfb.glb]
+deathRun: cdn/clip-ash-rifle-run-death-41b74877.glb   # killed while running with a gun: the run-to-dying fall
+weights: { hold: 3, holdAds: 4, fire: 6, act: 6, flinch: 8 }
+fireSpeed: 1.4
+kickGap: 0.2        # s between restarts of the recoil act (an auto rifle rides one act)
+fireHold: 0.35      # s the recoil channel stands after the last kick
+holdAfterFire: 1.2  # s the gun stays up after a hip shot
+throwHold: 1.1
+slashHold: 0.7
+tauntHold: 1.4
+landHold: 0.45
+flinchHold: 0.55
+dodgeHold: 0.9
+jumpHold: 0.5
+body: { up: 1.42, crouchUp: 1.0, fwd: 0.55, right: 0.18 }   # the held gun's muzzle on the body, for what others see
+nudge: 0.4          # m a raider is pushed from the shot
