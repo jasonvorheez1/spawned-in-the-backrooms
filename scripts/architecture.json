@@ -1,81 +1,81 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 4471,
-  "updatedAt": "2026-11-10T17:37:22.592Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG across an authored Level 0 maze, authored deeper levels, and shared destinations. `templates/player.js` composes player behaviors; place simulations and shared scripts own local environments, combat, NPCs, loot, crafting, UI, avatar presentation, progression, and reusable world systems. The builder-only Test Range is a standalone systems sandbox; player hits now give selected hunters a short-lived shooter location to investigate.",
+  "basedOnSpecVersion": 4478,
+  "updatedAt": "2026-11-10T17:44:01.699Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG across an authored Level 0 maze, deeper levels, and shared destinations. `templates/player.js` composes player behaviors; place simulations and shared scripts own local environments, combat, NPCs, loot, crafting, UI, avatar presentation, progression, and reusable world systems. Player combat now includes a mirrored left-arm grenade/molotov throw while the firearm remains in the right hand.",
   "scriptPaths": [],
   "places": [
-    "places/bonus (3D) - shared vaporwave mall with shops, landmarks, simulated staff/shoppers, arcade games, salon and visual effects; breakable-tagged fixtures remain protected from damage and loose-prop breaks here.",
+    "places/bonus (3D) - shared vaporwave mall with shops, landmarks, simulated staff/shoppers, arcade games, salon and visual effects; damage and loose-prop breaks are guarded here.",
     "places/main (3D) - authored Level 0/Lobby maze; sim generates maze furniture and loot, safe rooms, shifting walls, creature ecology, route guidance, Kade and Zenith's sealed breach.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo ephemeral) - character creation/waking space and staged tutorial route with HALOGEN.",
     "places/level01 (3D) - Level 0.1 Zenith Station: station/gallery, doors, breakables, bots/hazards, climate rooms, recorder quest and drone-refilled posts.",
     "places/level1, level2, level21 (3D) - Habitable Zone garage maze and M.E.G. camp; Pipe Dreams industrial rooms/camp/fixtures; Level 2.1 Locked.",
     "places/level3, gamma, level4, level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; residents, hazards, office/home systems and generated details.",
-    "places/level6, level7, level10, level11, level12, level26, level27 (3D) - later levels include Level 11 city/crawl/vaults, Level 26 quests and Level 27 Bunker Springs; home11 is not a current place.",
-    "places/testlab (3D, Test Range) - builder-only systems test hall: armory, ammo/consumable/parts supplies, physics bay, workbench, interactables, enemy pads and Range Check quest."
+    "places/level6, level7, level10, level11, level12, level26, level27 (3D) - later authored levels include Level 11 city/crawl/vaults, Level 26 quests and Level 27 Bunker Springs.",
+    "places/testlab (3D, Test Range) - builder-only systems test hall with armory, supplies, physics bay, workbench, interactables, enemy pads and Range Check quest."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, player/camera setup, ordered behavior composition and keyboard/touch action mappings.",
-    "places/<place>/config.yaml + cells/*.scene + sim.js - place configuration, authored placements and local generated/ticked behavior; main, Level 11, Level 27 and other sims build their environments.",
-    "scripts/main-menu.js + scripts/main-menu-ui.js + intake/tutorial scripts - title/pause, character creation, arrival, tutorial routing, first-arrival cutscene, BODIES toggle and solo pause time-scale.",
-    "places/level1/sim.js + scripts/lib/level1.js + scripts/level1-geo.js, level1-details-geo.js, level1-deck-geo.js - seeded Level 1 ground-floor/deck generation and shared deck/ramp layout.",
+    "places/<place>/config.yaml + cells/*.scene + sim.js - place configuration, authored placements and local generated/ticked behavior.",
+    "scripts/main-menu.js + scripts/main-menu-ui.js + intake/tutorial scripts - title/pause, character creation, arrival, tutorial routing, first-arrival cutscene and solo pause time-scale.",
+    "places/level1/sim.js + scripts/lib/level1.js + level1 geometry scripts - seeded Level 1 ground-floor/deck generation and shared deck/ramp layout.",
     "places/level1/cells/x0z0.scene + scripts/dina-diary.js + scripts/lib/dina-quest.js - Dina camp/diary entry and quest progression; Voss and Cabin 23/Phoebe/stow-nest interactions are in Level 26.",
-    "scripts/camera.js + scripts/view3.js + scripts/ui.js - camera, third-person toggle and HUD/panels; scripts/loot-ui.js renders inventory, equipment, quick slots, carried tapes and play-screen interaction prompt.",
+    "scripts/camera.js + scripts/view3.js + scripts/ui.js + scripts/loot-ui.js - camera, third-person toggle, HUD/panels and inventory/equipment/quick-slot UI.",
     "scripts/quest-marker.js + scripts/lib/quests.js + scripts/lib/quest-mark.js - per-player journal, tracking, objective resolution and markers; folds legacy quest state into shared records.",
-    "places/testlab/config.yaml + places/testlab/sim.js - no-terrain physics test hall, built/versioned and replenished locally; scripts/testlab-pad.js and scripts/testlab-use.js serve its floor controls, switch and terminal."
+    "places/testlab/config.yaml + places/testlab/sim.js - no-terrain physics test hall, built/versioned and replenished locally; testlab-pad.js and testlab-use.js serve controls and terminal."
   ],
   "shared": [
-    "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings, LEVEL_NAMES used by hub-ui; Test Range is a named destination, entered through the editor-only Teleport Station row and hub.js handler.",
-    "scripts/lib/loot.js + scripts/lib/items.js + scripts/lib/weapons.js/weapons.yml - common loot spawning, container rolls, remains, place pools, item descriptions, weapon definitions/rarity and variants; Test Range reads weapon order and specs.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js - parametric leaf/frame/sealed-set geometry and eased hinge motion/sounds shared by built doors and level-specific doors.",
-    "scripts/lib/level11-vaults.js + scripts/lib/level11-depths.js + scripts/l11-crawl-geo.js + scripts/lib/data/l11-depths.yml + scripts/lib/data/l11-crawl-kit.yml - Level 11 security gates, crawl geometry/data, rooms, foe roster and storeroom.",
-    "scripts/lib/build-piece.js + scripts/lib/data/breakables.yml + scripts/lib/data/furniture.yml - canonical breakable/material/build specs and furniture models shared by B-mode, harvesting and reconstruction; breakables.js blocks mall damage.",
-    "scripts/lib/data/craft.yml + scripts/lib/craft.js - recipe catalog, skill/bench requirements, ingredients and outputs; craft helpers are shared by action and UI, and Test Range supplies a tagged bench and parts.",
-    "scripts/lib/screen.js + scripts/lib/ui-theme.js - derived read-only screen classifier/wrist gates and shared UI styling; UI theme hides HUD clutter behind wrist panels and styles interaction prompts.",
-    "scripts/lib/maze.js + scripts/lib/maze0path.js and scripts/lib/critter-model.js + avatar hair/face/wardrobe data - shared Level 0 layout/navigation and fitted human/furry avatar assembly, skinning, faces, hair and garments."
+    "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings, LEVEL_NAMES used by hub-ui; Test Range is an editor-only destination.",
+    "scripts/lib/loot.js + scripts/lib/items.js + scripts/lib/weapons.js/weapons.yml - common loot spawning, container rolls, remains, place pools, item descriptions, weapon definitions/rarity and variants.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js - parametric leaf/frame/sealed-set geometry and eased hinge motion/sounds shared by built and level-specific doors.",
+    "scripts/lib/level11-vaults.js + scripts/lib/level11-depths.js + scripts/l11-crawl-geo.js + l11 data - Level 11 security gates, crawl geometry, rooms, foe roster and storeroom.",
+    "scripts/lib/build-piece.js + scripts/lib/data/breakables.yml + scripts/lib/data/furniture.yml - canonical breakable/material/build specs and furniture models shared by B-mode, harvesting and reconstruction.",
+    "scripts/lib/data/craft.yml + scripts/lib/craft.js - recipe catalog, skill/bench requirements, ingredients and outputs shared by action and UI.",
+    "scripts/lib/screen.js + scripts/lib/ui-theme.js - derived read-only screen classifier/wrist gates and shared UI styling.",
+    "scripts/lib/maze.js + scripts/lib/maze0path.js and scripts/lib/critter-model.js + avatar data - shared Level 0 layout/navigation and fitted human/furry avatar assembly, skinning, faces, hair and garments."
   ],
   "notableExports": [
     "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollLock, rollCash, rollItem, spawnCrate and Level 2 container/loot helpers; scripts/lib/weapons.js - baseOf, variantOf, rollVariant, rarityIdx, rarityCap, default.",
     "scripts/grab.js - setDown, onInput, update, looseSpent; scripts/kick.js - onInput, kickSnap, kickEnd, update.",
-    "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, onInput, hitTarget, fishing handlers, HOLO and holoEnd; throwable fuse/arm callbacks and blast hits.",
+    "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, onInput, hitTarget, fishNibble, HOLO and holoEnd; throwable fuse/arm callbacks and blast hits.",
     "scripts/lib/quick-items.js - quickItems, assignQuick; scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
     "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - body/face/head/spec, hair and wardrobe seating, restyle/clearAppearance, humanBodyMorph, speciesOf, anime, FURRY_HEAD and STYLE_V (sw79).",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, stagger3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
     "scripts/lib/craft.js - recipeStatus, maxMakes, craftOne, benchAvailable, scrapCount, CRAFT_LIMIT, CATS; scripts/craft.js - onInput, update.",
-    "scripts/lib/stats.js - skillsOf, SKILLS, canCarry, canCarryAll and carry/weight helpers; scripts/lib/hunt.js - hearOf, raise, alertFor, shotAt, litMul, sighting, leadOf; places/testlab/sim.js - cadence, WEAPON_SLOT, tick; scripts/testlab-use.js - QID, STEPS, stepQuest, ears."
+    "scripts/lib/stats.js - skillsOf, SKILLS, canCarry, canCarryAll and carry/weight helpers; scripts/lib/hunt.js - hearOf, raise, alertFor, shotAt, litMul, sighting, leadOf; places/testlab/sim.js - cadence, WEAPON_SLOT, tick."
   ],
   "ownership": [
-    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo, needs, money, appearance, combat/rewards, level access, saved place/position, wakeAtSave restoration, heat/cold, carried tapes and playback.",
+    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo, needs, money, appearance, combat/rewards, level access, saved place/position, wakeAtSave restoration, heat/cold and carried tapes/playback; per-player throwable state and fuse/arm callbacks.",
     "scripts/lib/dina-quest.js - dinaQ, dinaDiary and dcut, and seeds player.state.quests['the-way-back']; scripts/lib/quests.js owns player.state.quests, qtrack and qdone; level quest handlers own their per-player quest fields.",
     "scripts/kick.js + scripts/grab.js - per-player kick rolls/cooldowns, carried prop/body IDs, held-body grip, drag/heave/throw session fields and carryMul; held targets own heldBy/down/stagger state; kick input is inert in Bonus.",
-    "scripts/lib/loose.js + scripts/lib/breakables.js - loose props own state.loose/mat/hp/maxHp and flight sessions; breakables own wreck transitions and permanently smashed root IDs in place.state.gone for rebuilds; both guard Bonus from destruction.",
+    "scripts/lib/loose.js + scripts/lib/breakables.js - loose props own state.loose/mat/hp/maxHp and flight sessions; breakables own wreck transitions and permanently smashed root IDs in place.state.gone for rebuilds; both guard Bonus.",
     "scripts/lib/knock.js + scripts/lib/stats.js - foe attributes/weight and shared down/stagger knock outcomes; enemy managers retain AI state and write player-targeting sneakTarget.",
     "scripts/lib/quick-items.js + scripts/player.js - player.state.quickSlots maps digit slots to item IDs; assignQuick validates unique carried items and player quick-use executes actions; scripts/lib/feed.js writes player.state.feed/disc.",
     "places/level1/sim.js and places/level2/sim.js - place.state version markers own one-time seeded/dressing/fixture/door migrations; places/level27/sim.js owns builtV=10, gone/mineral regrowth; player.state.bathAt tracks continuous bathing.",
-    "places/testlab/sim.js owns local builtV/seeded, refill timers and requested physics/enemy resets; testlab-pad.js writes test requests and player healing/level state, while testlab-use.js and the sim's checks own per-player rangeQ progression; player.js hitTarget stamps target state.shot."
+    "places/testlab/sim.js owns local builtV/seeded, refill timers and requested physics/enemy resets; testlab-pad.js writes test requests and player healing/level state, while testlab-use.js and the sim own Range Check progress."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker; touch mappings share actions.",
+    "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker; touch mappings route to the same actions.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes aimPt and ranged aimPitch → player.js ballistics.",
     "scripts/routing.js accepts permitted requested rooms; otherwise scripts/lib/hub.js soloRoom selects the player's solo Backrooms room and bonus overflow IDs; toHub/toSolo perform crossings and track roomHop/save-place state.",
     "Fresh visit → scripts/main-menu.js; START enters intake for creation or bonus for completed characters; wardrobe close runs intro-cut then tutorial0 unless t0Done; menu UI renders on menuOpen and solo pause sets place.timeScale.",
     "scripts/lib/hub.js destinations → hub-ui.js and hub.js crossings; editor-only Test Range row sends travel=testlab; Bonus sim lays NPCs/effects and mall counters write shop/food state consumed by handlers/UI.",
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; weapon variants roll through weapons.js.",
-    "interact.js focus → player.state.focus and loot-ui.js prompt only on the play screen; ui-theme/screen hide prompts behind panels, and interact.js clears focus outlines in menus/talk/cutscenes/build mode; usable tall objects resolve aim against bounds from base to top.",
-    "player.js hitTarget writes a shooter position/velocity/time to target state.shot → hunt.js shotAt exposes it for 8 s → smilers and lurkers treat it as a heard lead and hounds set lastSeen to the shot location.",
+    "interact.js focus → player.state.focus and loot-ui.js prompt only on the play screen; ui-theme/screen hide prompts behind panels, and interact.js clears focus outlines in menus/talk/cutscenes/build mode.",
+    "player.js hitTarget writes shooter position/velocity/time to target state.shot → hunt.js shotAt exposes it for 8 s → smilers and lurkers treat it as a heard lead and hounds set lastSeen to the shot location.",
     "Player and M.E.G. combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → combat-anims.yml; player HP loss and M.E.G. hit detection select random upper-body stagger clips; weapons.yml supplies firearm cycle/sfx/chamber data.",
     "scripts/player.js hitAt/hitHeavy and jammedAt → scripts/lib/vmpose.js held viewmodel recoil/jolt; NV melee swings sampled in nv-swings.js drive first-person pose, DS pack swings drive third-person melee; Modern weapons use their own rows.",
-    "Craft UI reads craft.yml, skill/bench status and inventory via scripts/lib/craft.js → scripts/craft.js; craftOne validates complete batches before commit; Test Range bench/parts support its crafting station.",
-    "Test Range controls → testlab-pad.js writes want_smiler/lurker/resetphys or heals/levels/exits player → places/testlab/sim.js spawns/refills; testlab-use.js terminal starts/ends range-check and switch toggles lamp; sim detects inventory/kills/crafting/snack changes, updates player.state.rangeQ quest markers and final payout."
+    "G input → scripts/player.js pullPin cooks a frag or readies a molotov, creates the first-person throwable prop at the left camera side and plays the overhand throw animation; release emits the throwable, while the held firearm stays in the right hand.",
+    "Third-person nade animation in player.js uses /cdn/clip-overhand-throw-left-b23ba93b.glb (generated via art/nade-left/mirror.py); the uploaded mirrored clip supplies the left-arm throw take."
   ],
   "behaviorFamilies": [
-    "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/lib/bonus-extra.js + mall-shopper.js/salon-stylist.js/salon-ui.js - authored mall, simulated mall life and one-time neon/fountain lighting effects; fixtures are protected from damage.",
+    "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/lib/bonus-extra.js + mall-shopper.js/salon-stylist.js/salon-ui.js - authored mall, simulated mall life and one-time neon/fountain lighting effects.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + home reconstruction scripts - per-piece models/dimensions with common placement, persistence and rebuild path.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js + build-door and level-specific door handlers - parametric leaves/frames and eased hinge motion; Level 2 migration preserves fixtures, and the Test Range uses the same geometry for its sample door.",
-    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js - Zenith Station's linked generated architecture, hazards, doors, bots and quest/drone systems.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js + build-door and level-specific door handlers - parametric leaves/frames and eased hinge motion; Level 2 migration preserves fixtures and Test Range reuses the geometry.",
+    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + Zenith door/bots/hatch/flicker/drones/use scripts - Zenith Station geometry, breach, hazards and interactive systems.",
     "places/level4/cells/x0z0.scene + l4-office.js/l4-office-geo.js/l4-home.js + scripts/lib/l4-people.js/level4-people.yml and scripts/lib/l5-people.js/level5-people.yml - authored office/hotel with role-, look-, dialogue- and schedule-driven residents.",
-    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/* + art/human-body/* + art/body-rig/* + art/body-transfer/* + scripts/mat-anime.js - shared human/furry avatar assembly, skinning, faces, hair and garments.",
-    "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js + scripts/lib/data/combat-anims.yml - retargeted NV first-person and DS third-person melee families choose strikes by weapon type; common stance/viewmodel sampling preserves pose.",
+    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art human-cloth/body/rig/transfer + scripts/mat-anime.js - shared human/furry avatar assembly, skinning, faces, hair and garments.",
+    "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js + scripts/lib/data/combat-anims.yml - retargeted first-person and DS third-person melee families select strikes by weapon type; combat poses also cover firearm actions.",
     "scripts/lib/nav.js + scripts/meg-agent.js + scripts/l5-staff.js + scripts/l61-staff.js - independent NPC walkers share exact-endpoint/options-aware short-lived path cache and query budget; Level 26 quest trail points to Voss."
   ],
   "probableOrphans": [
@@ -85,9 +85,9 @@
   "migrationNotes": [
     "Human rig/wardrobe refresh is STYLE_V = sw79; art/body-rig/assets.json pins body and fitted garment outputs. Keep game skeleton/bone names, animation axes, face/head, hands, morph keys and weights when replacing transferred meshes.",
     "scripts/lib/critter-model.js humanBodyMorph omits unsupported male Bust on the body while humanMorph keeps its explicit zero for garments; body changes compare state.headBody and clear/reseat skinned attachments without deleting equipment.",
-    "art/body-transfer/reshape.py and fit.py preserve game bone names and downstream bones.json/field.json contracts while reshaping the rig/rest pose and fitting garments with clearance and shape-key deltas; wardrobe-split.yml keeps body skin assignments.",
-    "art/tripo-hair/fit.py's source-name/output map, MANNEQUIN/FINE_CUT sets and skull-relative width tuning are coupled to generated hair meshes; art/tripo-hair/proof.py renders multi-angle head-fit proofs.",
-    "Third-person melee rows in scripts/lib/data/combat-anims.yml use DS one-/two-hand clips for club/slash/stab/chop/heavy; fists remain NV takes. NV retargeting preserves keyed arm/wrist/body rotation and rig mapping; first-person samples drive vmpose.",
-    "player.js hitTarget's state.shot timestamp is milliseconds and hunt.js shotAt expires after 8000 ms; the shot stimulus is read by smilers, lurkers and hounds, not every enemy. Test Range sim's builtV controls rebuilds; its Range Check stage checks are per-player save state and depend on station object IDs."
+    "art/body-transfer/reshape.py and fit.py preserve game bone names and downstream bones.json/field.json contracts while reshaping the rig/rest pose and fitting garments with clearance and shape-key deltas.",
+    "art/tripo-hair/fit.py source-name/output map, MANNEQUIN/FINE_CUT sets and skull-relative width tuning are coupled to generated hair meshes; art/tripo-hair/proof.py renders multi-angle head-fit proofs.",
+    "Third-person melee rows in scripts/lib/data/combat-anims.yml use DS one-/two-hand clips for club/slash/stab/chop/heavy; fists remain NV takes. NV retargeting preserves keyed arm/wrist/body rotation and rig mapping.",
+    "Grenade/molotov throw take is the mirrored left-arm asset /cdn/clip-overhand-throw-left-b23ba93b.glb; scripts/player.js depends on it for third person while moving the local first-person throwable to camera x=-0.26. Keep clip path and handedness aligned with art/nade-left/mirror.py output."
   ]
 }
