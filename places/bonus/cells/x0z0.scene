@@ -1615,7 +1615,7 @@ bonus-stylist/critter-ward-sneakers:
 bonus-stylist/critter-ward-tee:
   attachment: {skin: true}
   id: bonus-stylist/critter-ward-tee
-  model: {forward: "+z", id: /cdn/value.2b5c4562bf7a3826c0c0959fef21da3c36a27a5097b2461e619bd6394af3ef3a.glb, materials: {cloth_top: {color: "#20202a", kind: scripted, metalness: 0, params: {pat: weave, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}}}
+  model: {forward: "+z", id: /cdn/value.b851008e0d18983230118f9632324a47f2a89595f09afa364e3e893692333c40.glb, materials: {cloth_top: {color: "#20202a", kind: scripted, metalness: 0, params: {pat: weave, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}}}
   morph: {BrowHeavy: 0.066, Bust: 0.95, CheekFull: 0.13, ChinLong: 0.16, FaceLong: 0.06, HT_Angular: 0, HT_Broad: 0, HT_Heart: 0.43, HT_Long: 0, HT_Round: 0, HT_Square: 0, HeadRound: 0.08, JawNarrow: 0, JawWide: 0.154, NoseBig: 0.41}
   parent: bonus-stylist
 bs-clothes:
