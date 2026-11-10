@@ -46,6 +46,15 @@ l11-mall-sign-pizza:
   primitive: {depth: 0.12, height: 1.53, kind: box, width: 4.6}
   rotation: {yaw: 90}
   tags: [l11]
+l11-sub-ramp:
+  feetPosition: {x: 13.6, y: -1.29, z: 60.4}
+  id: l11-sub-ramp
+  material: {color: oklch(0.3 0.01 60)}
+  physics: {body: static, collider: box}
+  pivot: center
+  primitive: {depth: 4.372001829825783, height: 0.12, kind: box, width: 2.2}
+  rotation: {pitch: 36.817477002178606}
+  visible: false
 spam-return:
   feetPosition: {x: 44.3, y: 0.15, z: 27.3}
   id: spam-return
