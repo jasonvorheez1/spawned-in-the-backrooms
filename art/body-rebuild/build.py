@@ -108,13 +108,14 @@ if MALE:
     for ids in isl.values():
         if len(ids) > 200: continue
         c = sum((vs[i].co for i in ids), mathutils.Vector()) / len(ids); z0 = c.z / G_
-        if 1.765 < z0 < 1.8 and len(ids) < 40 and max(abs(vs[i].co.x / G_) for i in ids) > .08:   # upper lash line: the outer wing folded down along the lid, no flick
-            mid = [vs[i].co.z for i in ids if .05 < abs(vs[i].co.x / G_) < .066]
+        if 1.765 < z0 < 1.8 and len(ids) < 120 and max(abs(vs[i].co.x / G_) for i in ids) > .07:   # upper lash line: the outer wing folded down along the lid, no flick
+            mid = [i for i in ids if .04 < abs(vs[i].co.x / G_) < .062]
             if mid:
-                zl = sum(mid) / len(mid)
+                zl = sum(vs[i].co.z for i in mid) / len(mid); yl = sum(vs[i].co.y for i in mid) / len(mid)
                 for i in ids:
-                    t = sm(.066, .09, abs(vs[i].co.x / G_))
-                    if vs[i].co.z > zl: vs[i].co.z -= t * (vs[i].co.z - zl) * .9
+                    t = sm(.058, .085, abs(vs[i].co.x / G_))
+                    if vs[i].co.z > zl: vs[i].co.z -= t * (vs[i].co.z - zl) * .95
+                    vs[i].co.y -= t * (vs[i].co.y - yl) * .8   # tips pulled back to the lid, nothing pokes out side-on
                     vs[i].co.x *= 1 - .06 * t
         if 1.71 < z0 < 1.785 and .02 < abs(c.x / G_) < .1 and c.y / G_ < .05:          # eyes: narrower, less tall, a touch lower
             for i in ids: d = vs[i].co - c; vs[i].co = c + mathutils.Vector((d.x * .88, d.y, d.z * .78)) + mathutils.Vector((0, 0, -.003))
