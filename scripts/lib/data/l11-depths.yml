@@ -1,0 +1,25 @@
+# Level 11 depths: the crawl under the dead subway (Savi's picks, Nov 10). Units m, s, hp.
+spine: [[9, 89], [9, 140], [42, 140], [42, 196]]   # the route's centre line, platform pit to storeroom
+floor: -3.6
+sight: 18        # sees you this far with a clear line
+hear: 6          # hears you this close, any line (crouch and sneak shrink both)
+respawnMin: 60   # the dead come back after an hour (Shelly's rule)
+kinds:
+  clump: { name: Clump, hp: 160, speed: 2.0, lunge: 6.5, lungeRange: 6, dmg: 18, reach: 1.7, cd: 1.3, xp: 60 }
+  hound: { name: Hound, hp: 90, speed: 5.2, lunge: 5.2, lungeRange: 0, dmg: 11, reach: 1.5, cd: 0.9, xp: 35 }
+foes:
+  - [hound, 9, 100]
+  - [hound, 10, 106]
+  - [clump, 8.5, 114]
+  - [hound, 9.5, 124]
+  - [clump, 9, 131]
+  - [hound, 16, 139]
+  - [clump, 22, 141]
+  - [hound, 27, 138]
+  - [clump, 33, 142]
+  - [hound, 38, 139]
+  - [clump, 42, 152]
+  - [hound, 41, 160]
+  - [clump, 43, 168]
+  - [hound, 42, 176]
+  - [clump, 41.5, 184]

@@ -5,6 +5,7 @@
 // safe-deposit wall, cash cart, the good crate. Both stay open for the player who hacked them (player.state.l11Access).
 import { terminalSpec } from "./terminal.js";
 import MODELS from "./data/level11-models.yml";
+import { layDepths } from "./level11-depths.js";
 const SUB = { x: 13.6, z: 60.5 }, FY = -2.6; // the platform floor's top
 const TILE = { color: "oklch(0.78 0.03 95)", roughness: 0.55 }, GRIME = { color: "oklch(0.42 0.03 80)", roughness: 0.9 };
 const WALL = { texture: "cdn/texture-grimy-cream-ceramic-subway-tile-wall.png", wrap: "repeat", repeat: [0.6, 0.6], color: "oklch(0.93 0.02 90)", roughness: 0.35 }, STEEL = { color: "oklch(0.45 0.01 250)", metalness: 0.7, roughness: 0.4 };
@@ -61,4 +62,5 @@ export function layVaults(ctx, { sp, bx, cyl }) {
   sp("l11-vault-lamp-s", LAMP("s", 23, 79, "oklch(0.95 0.05 85)", 2.6));
   sp("l11-vault-crate-sedco", { tags: ["usable"], feetPosition: { x: 23.5, y: FY, z: 81.4 }, model: { id: MODELS.meg_cache, forward: "-z", materials: { metal: VAULT } }, physics: { body: "static", collider: "box" }, behavior: "scripts/level11-use.js", state: { kind: "supply-chest", name: "Sedco Deposit Strongbox", verb: "Crack Open" } });
   sp("l11-vault-crate-sedco2", { tags: ["usable"], feetPosition: { x: 22, y: FY, z: 77 }, model: { id: MODELS.meg_cache, forward: "-z", materials: { metal: VAULT } }, physics: { body: "static", collider: "box" }, behavior: "scripts/level11-use.js", state: { kind: "supply-chest", name: "Sedco Cash Cart", verb: "Take" } });
+  layDepths(ctx, { sp, bx, cyl }); // the crawl north of the pit to the sealed Backrooms Robotics storeroom
 }

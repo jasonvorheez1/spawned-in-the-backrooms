@@ -41,6 +41,7 @@ export function gateItems(ctx, items, level, pool = "l0") {
   return String(items ?? "").split(",").filter(Boolean).map((t) => {
     if (!t.startsWith("weapon:")) return t;
     const k = t.slice(7);
+    if (W[k]?.unique) return t; // a one-of-a-kind (the R-55) is never rerolled
     return rarityIdx(k) <= cap ? t : "weapon:" + rollWeapon(ctx, pool, cap);
   }).join(",");
 }
