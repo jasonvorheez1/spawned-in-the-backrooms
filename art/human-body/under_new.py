@@ -45,7 +45,7 @@ for f in bm.faces:
     cen = f.calc_center_median()
     h = btree.find_nearest(cen)
     if h[0] is not None and (cen - h[0]).dot(f.normal) < 0 and (cen - h[0]).length < 0.05: drop.append(f)
-bmesh.ops.delete(bm, geom=drop, context='FACES')
+if os.environ.get('DROP') == '1': bmesh.ops.delete(bm, geom=drop, context='FACES')  # off: where the mould dips under the skin the test flips and eats the outer face (the holes in the Nov 10 render); the closed slab's inner face hides under the skin
 bm.to_mesh(me); bm.free()
 print('NEW', len(me.vertices), 'verts', len(me.polygons), 'faces, dropped inner', len(drop))
 for p in me.polygons: p.use_smooth = True
