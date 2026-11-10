@@ -56,6 +56,8 @@ import { MEAT } from './lib/items.js'
 import SNACKS from './lib/data/snacks.yml'
 const sndTurn = {}
 const SND = (n) => { const takes = SOUNDS[n]; if (!takes?.length) return `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`; sndTurn[n] = ((sndTurn[n] ?? -1) + 1 + (takes.length > 2 ? Math.floor(takes.length / 2) : 0)) % takes.length; return takes[sndTurn[n]] }
+const GS = (wp, key, fb) => wp?.sfx?.[key] ?? fb // a gun's own handling sound (weapons.yml sfx: open, eject, insert, shell, done, dry), else the stock one
+const perRound = (wp) => !!(wp.pellets || wp.tube || wp.wheel) // loaded one round at a time, and a shot can interrupt it
 const ZAP = `fx
 pop arc burst=18..26 life=.12..0.3 v=sdir()*(2.5..5) size=.03..0.06 acc=drag(3) col=hdr(3,4,6)>hdr(1.2,1.8,4) a=1>0 sz=$size r=sprite(ember,add,velocity,.03)
 pop glow burst=1 life=.18 col=<.6,.8,1> a=1>0 r=light(<.6,.8,1>,6,4)`
@@ -521,13 +523,13 @@ function swing(ctx, power = 0) {
   if (wp.ranged) {
     if (s.reloading) {
       // a shotgun can be fired mid-reload (the reload stops); a magazine gun has to finish
-      if ((wp.pellets || wp.tube) && (s[loadedKey] ?? 0) > 0) cancelReload(ctx)
+      if (perRound(wp) && (s[loadedKey] ?? 0) > 0) cancelReload(ctx)
       else return
     }
     if ((s[loadedKey] ?? 0) <= 0) {
       w.nextSwing = now + 350
       if ((s[ammoKey] ?? 0) > 0) startReload(ctx)
-      else { sound(ctx, 'gun-dry-fire-click', 0.6, true); s.dryAt = now }
+      else { sound(ctx, GS(wp, 'dry', 'gun-dry-fire-click'), 0.6, true); s.dryAt = now }
       return
     }
     s[loadedKey] -= 1
@@ -537,6 +539,7 @@ function swing(ctx, power = 0) {
       w.heat = Math.min(1, (w.heat ?? 0) * Math.exp(-Math.max(0, now - (w.heatAt ?? 0)) / 350) + (wp.heatPer ?? 0.1)); w.heatAt = now
       ctx.emit('cameraPunch', { direction: { x: (ctx.random() - 0.5) * 0.4, y: 1, z: -0.3 }, intensity: 0.12 + w.heat * 0.18 }, { audience: { player: ctx.self.id } })
     }
+    if (!wp.spread) ctx.emit('cameraPunch', { direction: { x: (ctx.random() - 0.5) * 0.5, y: 1, z: -0.3 }, intensity: Math.min(0.55, (wp.recoil?.up ?? 150) / 1000 * 1.1 * handling(s, wp).recoil * (s.ads ? 0.6 : 1)) }, { audience: { player: ctx.self.id } }) // a shot kicks the view up, heavier guns harder
     if (wp.pellets || wp.tube) {
       if (wp.pellets) ctx.emit('screenShake', { intensity: 0.35, duration: 0.2 }, { audience: { player: ctx.self.id } })
       if (!wp.breech) ctx.after(wp.pump ?? 0.55, 'pumpRack', {}) // a break-action has nothing to work between its two barrels
@@ -666,9 +669,11 @@ function startReload(ctx) {
   const tok = (s.reloadTok ?? 0) + 1
   s.reloadTok = tok; s.reloadAt = ctx.now() // the token lives in state, so a page reload or a machine change never strands a reload
   s.reloading = k; s.ads = false; s.reloadDur = (wp.reloadTime ?? 1.7) * derived(s).reload // the viewmodel plays its timeline over the real length
-  if (wp.pellets || wp.tube) ctx.after(wp.reloadStart ?? 0.4, 'reloadStep', { k, tok }) // a shell, or a cartridge into a tube or box magazine, one at a time
-  else {
-    sound(ctx, 'pistol-magazine-eject-click', 0.6, true)
+  if (perRound(wp)) { // a shell, or a cartridge into a tube, a cylinder or a break-action's barrels, one at a time
+    if (wp.sfx?.open) sound(ctx, wp.sfx.open, 0.65, true)
+    ctx.after(wp.reloadStart ?? 0.4, 'reloadStep', { k, tok })
+  } else {
+    sound(ctx, GS(wp, 'eject', 'pistol-magazine-eject-click'), 0.6, true)
     ctx.after(wp.reloadTime * derived(s).reload * 0.55, 'reloadMagIn', { k, tok })
     ctx.after(wp.reloadTime * derived(s).reload, 'reloadDone', { k, tok })
   }
@@ -682,19 +687,20 @@ function cancelReload(ctx) {
 
 export function reloadMagIn(ctx, p) {
   if (!reloadLive(ctx, p)) return
-  sound(ctx, 'pistol-magazine-insert-slide', 0.65, true)
+  sound(ctx, GS(W[p.k], 'insert', 'pistol-magazine-insert-slide'), 0.65, true)
   ctx.self.state.reloadN = (ctx.self.state.reloadN ?? 0) + 1
 }
 
 export function reloadDone(ctx, p) {
   if (!reloadLive(ctx, p)) return
   const s = ctx.self.state, wp = W[p.k], rk = wp.ammoType ?? 'ammo'
-  const take = Math.min(wp.magSize - (s['loaded_' + p.k] ?? 0), s[rk] ?? 0)
+  const chambered = wp.chamber && (s['loaded_' + p.k] ?? 0) > 0 ? 1 : 0 // a round left in the chamber: the magazine and one more
+  const take = Math.min(wp.magSize + chambered - (s['loaded_' + p.k] ?? 0), s[rk] ?? 0)
   s['loaded_' + p.k] = (s['loaded_' + p.k] ?? 0) + take
   s[rk] = (s[rk] ?? 0) - take
   s.reloading = ''
   s.reloadN = (s.reloadN ?? 0) + 1
-  sound(ctx, 'pistol-slide-rack', 0.7, true)
+  sound(ctx, GS(wp, 'done', 'pistol-slide-rack'), 0.7, true)
 }
 
 export function reloadStep(ctx, p) {
@@ -704,16 +710,17 @@ export function reloadStep(ctx, p) {
     s['loaded_' + p.k] = (s['loaded_' + p.k] ?? 0) + 1
     s[rk] -= 1
     s.reloadN = (s.reloadN ?? 0) + 1
-    sound(ctx, 'shotgun-shell-insert-click', 0.7, true)
+    sound(ctx, GS(wp, 'shell', 'shotgun-shell-insert-click'), 0.7, true)
   }
   if ((s['loaded_' + p.k] ?? 0) < wp.magSize && (s[rk] ?? 0) > 0) ctx.after(wp.reloadShell ?? 0.55, 'reloadStep', p)
+  else if (wp.wheel || wp.breech) { s.reloading = ''; sound(ctx, GS(wp, 'done', 'shotgun-break-action-close-snap'), 0.75, true) } // the cylinder snaps shut, the barrels close: nothing to rack
   else { s.reloading = ''; ctx.after(0.25, 'pumpRack', {}) }
 }
 
 export function pumpRack(ctx) {
   const s = ctx.self.state, wp = weaponOf(s)
-  if (!(wp.pellets || wp.tube) || s.sheathed) return // swapped to something else before the stroke: nothing to rack
-  sound(ctx, wp.rack ?? (wp.breech ? 'shotgun-break-action-close-snap' : 'shotgun-pump-rack'), 0.8) // a lever or a bolt has its own clack (weapons.yml rack)
+  if (!(wp.pellets || wp.tube) || wp.breech || s.sheathed) return // swapped to something else before the stroke: nothing to rack
+  sound(ctx, wp.rack ?? 'shotgun-pump-rack', 0.8) // a lever or a bolt has its own clack (weapons.yml rack)
   s.pumpAt = ctx.now()
 }
 

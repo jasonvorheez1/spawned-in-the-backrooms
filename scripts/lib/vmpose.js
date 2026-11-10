@@ -171,7 +171,7 @@ export function poseViewmodel(ctx, dt) {
   }
   if ((ps.reloadN ?? 0) !== m.lastReload) {
     m.lastReload = ps.reloadN ?? 0
-    if ((wp.pellets || wp.tube) && ps.reloading) { m.sv[1] += 0.55; m.sv[2] += 0.5; m.sv[3] -= 90; m.sv[5] += 40 } // thumb a shell in
+    if ((wp.pellets || wp.tube || wp.wheel) && ps.reloading) { m.sv[1] += 0.55; m.sv[2] += 0.5; m.sv[3] -= 90; m.sv[5] += 40 } // thumb a shell in
   }
   if (ps.pumpAt && ps.pumpAt !== m.lastPump) { m.lastPump = ps.pumpAt; m.pumpT = 0; m.pumpEjected = false }
   if (ps.equipAt && ps.equipAt !== m.lastEquip) { m.lastEquip = ps.equipAt; m.equipT = 0 }
@@ -179,7 +179,11 @@ export function poseViewmodel(ctx, dt) {
 
   // ---- reload clock, local to this machine
   const reloading = !!ps.reloading && gun
-  if (reloading && !m.relOn) { m.relOn = true; m.relT = 0; m.relKind = kind; m.relEmpty = (ps['loaded_' + kind] ?? 1) <= 0 }
+  if (reloading && !m.relOn) { m.relOn = true; m.relT = 0; m.relKind = kind; m.relEmpty = (ps['loaded_' + kind] ?? 1) <= 0
+    if (wp.wheel || wp.breech) { // the cylinder swings out, or the barrels break open: every spent case falls out at once
+      const mz = ctx.getObjectSocket(ps.vmId, 'muzzle'), spent = Math.min(6, Math.max(0, (wp.magSize ?? 6) - (ps['loaded_' + kind] ?? 0)))
+      if (mz?.position && view) for (let i = 0; i < spent; i++) emitCasing(ctx, { x: mz.position.x, y: mz.position.y - 0.05, z: mz.position.z }, view.yaw, !!wp.breech)
+    } }
   if (!reloading) m.relOn = false
   if (m.relOn) m.relT += dt
 
@@ -226,7 +230,7 @@ export function poseViewmodel(ctx, dt) {
   // reload pose target: the pistol plays its timeline, the shotgun holds the loading roll
   let target = ZERO_POSE, rate = 10
   if (m.relOn && m.relKind === kind) {
-    if (wp.pellets || wp.tube) {
+    if (wp.pellets || wp.tube || wp.wheel) {
       const start = wp.reloadStart ?? 0.4, per = wp.reloadShell ?? 0.55, ph = (m.relT - start) / per
       if (ph < 0) { const k = ease(Math.max(0, m.relT / start)); for (let i = 0; i < 6; i++) SAMPLE_BUF[i] = SHOTGUN_LOAD[i] * k; target = SAMPLE_BUF; rate = 14 }
       else { const c = sample(SHELL_CYCLE, ph - Math.floor(ph), PUMP_BUF); for (let i = 0; i < 6; i++) SAMPLE_BUF[i] = SHOTGUN_LOAD[i] + c[i]; target = SAMPLE_BUF; rate = 22 }
