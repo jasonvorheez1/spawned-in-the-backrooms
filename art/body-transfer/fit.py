@@ -6,7 +6,7 @@ import bpy, sys, os
 from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 a = sys.argv[sys.argv.index('--') + 1:]; BODY, OUT, FILES = a[0], a[1], a[2:]
-MIN, MAX_UP, MAX_LO, PULL_LIMIT, HIPS_Z = 0.005, 0.016, 0.03, 0.06, 0.92
+MIN, MAX_UP, MAX_LO, PULL_LIMIT, HIPS_Z = float(os.environ.get("FIT_MIN", 0.005)), 0.016, 0.03, 0.06, 0.92
 def body_bvh():
     bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(filepath=BODY)
     dg = bpy.context.evaluated_depsgraph_get(); verts, polys = [], []
