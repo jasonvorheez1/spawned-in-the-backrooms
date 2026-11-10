@@ -1,6 +1,7 @@
 # the packed human bodies split apart (art/human-cloth/split_wardrobe.py): a bare body per sex, each Ward_ garment its own skinned glb
 # riding the body as a child (attachment: { skin: true }). Packed sources: m 782c6614…, f de9de999… (now legacyHuman m_sw30/f_sw30)
 m:
+  inner: "/cdn/value.f7d5f7a3e8c04638c24f73fa486dd65718bc2ee076add644e4d119bd99606ffb.glb"   # the plain tee worn under open-front tops, settled 2 mm off the skin (art/human-cloth/inner_tee.mjs)
   body: "/cdn/value.7c334339571b407794f9e2373ac64130bac8ff3ad24dfa024b0aea1c6b75b973.glb"
   parts:
     Ward_abysshauberk: "/cdn/value.91ab6a4767ffff459118698e71c8ce0e127a0c2ffb77269ebf8818145abe3ee3.glb"
@@ -80,6 +81,7 @@ m:
     Ward_vest: "/cdn/value.1767d941b32dc830394443d2ecae815bcb00e29360d9eefddfd334688dafb933.glb"
     Ward_wirehood: "/cdn/value.42a0155dea1a8103606a958eff0506a7949407934a1d3e0fd05c6b8537c33b86.glb"
 f:
+  inner: "/cdn/value.3b888b2d86423cb4c81ff9bbe4628b3c71fa63f6ed1364fd392501a7f0b52ddf.glb"   # the plain tee worn under open-front tops, settled 2 mm off the skin (art/human-cloth/inner_tee.mjs)
   body: "/cdn/value.903f7c6b970dc30efedb534743b29fa26c289af527b4aa2dd89f9fd97cb23837.glb"
   parts:
     Ward_abysshauberk: "/cdn/value.93a83bb709e4c5e991332d0d361081101663eb892043c659aa827d20da640d18.glb"

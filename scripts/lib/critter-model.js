@@ -108,11 +108,12 @@ export function wardChildren(l, local) {
   const b = humanBodyFull(l), morph = humanMorph(l), out = []
   const clothMats = Object.fromEntries(Object.entries(b.materials || {}).filter(([k]) => k.startsWith('cloth_'))) // a garment file carries only its cloth_ slots: skin and fur keys there matched nothing
   for (const [n, v] of Object.entries(b.parts)) if (n.startsWith('Ward_') && v.visible && r.parts[n]) out.push({ id: wardKey(n), attachment: { skin: true }, model: { id: r.parts[n], forward: '+z', materials: WARD_SLOTS?.[r.parts[n]] ? Object.fromEntries(Object.entries(clothMats).filter(([k]) => WARD_SLOTS[r.parts[n]].includes(k))) : clothMats }, morph, ...(local ? { audience: 'local' } : {}) })
+  if (r.inner && OPEN_TOPS.includes(rowOf('topw', l?.topw, l?.top)?.kind)) out.push({ id: INNER_ID, attachment: { skin: true }, model: { id: r.inner, forward: '+z', materials: { cloth_top: anime('cloth', INNER_TEE) } }, morph, ...(local ? { audience: 'local' } : {}) }) // an open-front top wears a plain tee under it: the bare strip of chest down its front read as no shirt at all
   return out
 }
 export function seatWardrobe(ctx, o, l) {
   const want = new Map(wardChildren(l, o.audience === 'local').map((c) => [c.id, c]))
-  for (const n of WARDROBE.parts) { const k = wardKey(n); if (!want.has(k) && ctx.getObject(o.id + '/' + k)) ctx.destroy(o.id + '/' + k) }
+  for (const k of [...WARDROBE.parts.map(wardKey), INNER_ID]) if (!want.has(k) && ctx.getObject(o.id + '/' + k)) ctx.destroy(o.id + '/' + k)
   for (const [k, c] of want) {
     const h = ctx.getObject(o.id + '/' + k)
     if (!h) { ctx.spawn(k, { parent: o.id, ...c }); continue }
@@ -243,6 +244,9 @@ const SKIN = ['#fde7d9', '#f3d2b3', '#e8c39c', '#d1a27b', '#c48d63', '#b07a52', 
 export const skinOf = (l) => l?.skin || SKIN[[...String(l?.fur || l?.species || '')].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % SKIN.length]
 // human bodies (art/human-base/build.py): the same parts and cloth_* slots as the furry bodies, skin tinted per look, eyes/brows tinted, face keys rolled per NPC
 const warm = (c, k) => toHex(hx(c).map((v, i) => v * k * [1, 0.42, 0.3][i]))
+const OPEN_TOPS = ['jacket', 'blazer', 'vest'] // kinds whose front is open; the inner tee (wardChildren) is drawn under them
+const INNER_ID = 'critter-ward-inner'
+const INNER_TEE = '#e6e1d6'
 const humanBodyFull = (l) => {
   const c = skinOf(l), skin = anime('skin', c) // the first-person arms wear this same material (player.js spreads it), so the body and the arms still read as one skin (Shelly, Nov 9)
   const m = l ? bodyModel({ ...l, _human: true }) : { materials: {}, parts: {} }
