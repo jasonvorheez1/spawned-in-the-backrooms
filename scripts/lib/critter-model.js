@@ -28,8 +28,10 @@ export const hairOf = (l) => {
   return (l.hat && l.hat !== 'none' && HAIR.hatted?.[l.hair]) || HAIR.styles[l.hair] || null
 }
 const rootOf = (c) => { const m = String(c).match(/^#?([0-9a-f]{6})$/i); if (!m) return c; const n = parseInt(m[1], 16); return '#' + [16, 8, 0].map((b) => Math.round(((n >> b) & 255) * 0.8).toString(16).padStart(2, '0')).join('') }
+// the drawn look (scripts/mat-anime.js; Shelly Nov 9: "anime styled characters"): a soft-lit face that never goes muddy or black, cel hair with a shine band, cel cloth
+export const anime = (kind, color, extra) => ({ kind: 'scripted', script: 'scripts/mat-anime.js', color, params: { kind }, ...(extra || {}) })
 const hairMats = (c) => ({
-  hair: { color: c, roughness: 0.58, metalness: 0.02 },
+  hair: anime('hair', c),
   scalp: { color: rootOf(c), roughness: 0.9, metalness: 0 }, // the scalp and cap read as hair in shadow at the roots, never a flat bright shell through the strands (Shelly: "this is ugly fix hairs")
   scalp_cap: { color: rootOf(c), roughness: 0.9, metalness: 0 },
   hairtie: { color: '#e85d75', roughness: 0.45, metalness: 0.05 }
@@ -238,7 +240,7 @@ export const skinOf = (l) => l?.skin || SKIN[[...String(l?.fur || l?.species || 
 // human bodies (art/human-base/build.py): the same parts and cloth_* slots as the furry bodies, skin tinted per look, eyes/brows tinted, face keys rolled per NPC
 const warm = (c, k) => toHex(hx(c).map((v, i) => v * k * [1, 0.42, 0.3][i]))
 export const humanBody = (l) => {
-  const c = skinOf(l), skin = { color: c, roughness: 0.6, metalness: 0, emissive: '#000000', emissiveIntensity: 0 } // no glow: the third-person body reads the same skin as the first-person arms (Shelly, Nov 9)
+  const c = skinOf(l), skin = anime('skin', c) // the first-person arms wear this same material (player.js spreads it), so the body and the arms still read as one skin (Shelly, Nov 9)
   const m = l ? bodyModel({ ...l, _human: true }) : { materials: {}, parts: {} }
   const parts = { ...(m.parts || {}), Under_top: { visible: l?.sex === 'f' && m.parts?.Skin_torso?.visible !== false }, Under_bottom: { visible: m.parts?.Skin_hips?.visible !== false } }
   for (const name of ['stubble', 'mustache', 'goatee', 'handlebars', 'fullbeard', 'chinstrap', 'anchor']) parts['Beard_' + name] = { visible: !maskOf(l) && (l?.beard === 'moustache' ? 'mustache' : l?.beard) === name }
@@ -247,9 +249,12 @@ export const humanBody = (l) => {
   // a closed top hides the overalls' bib, and the bib's straps poked through it: under one, the overalls are just their legs (Dolores, Nov 9)
   if (parts.Ward_overalls?.visible && ['jacket', 'sweater', 'hoodie', 'longsleeve', 'pajamas'].includes(rowOf('topw', l?.topw, l?.top)?.kind)) { parts.Ward_overalls = { visible: false }; parts.Ward_pants = { visible: true } }
   const hairc = l?.hairc || '#3a2a20', eye = l?.eye && l.eye !== '#000000' ? l.eye : '#5b4a3a'
-  return { id: HUMAN[l?.sex === 'f' ? 'f' : 'm'], forward: '+z', parts, materials: { ...(m.materials || {}),
+  // clothes take the cel step too, so a person is one drawing and not a drawn head on a clay body; a slot that is already more than a plain colour keeps itself
+  const cloth = {}
+  for (const [k, v] of Object.entries(m.materials || {})) cloth[k] = v && typeof v === 'object' && !v.kind && typeof v.color === 'string' && !v.map && !v.texture && !v.transparent && !(v.metalness > 0.3) && !(v.emissiveIntensity > 0) ? anime('cloth', v.color) : v
+  return { id: HUMAN[l?.sex === 'f' ? 'f' : 'm'], forward: '+z', parts, materials: { ...cloth,
     Body_Skin: skin, Head_Skin: skin, under: { color: '#2b2a30', roughness: 0.85, metalness: 0 },
-    Iris: { color: eye, roughness: 0.25, metalness: 0 }, Brow: { color: hairc, roughness: 0.9, metalness: 0 }, Lash: { color: '#2a2024', roughness: 0.9, metalness: 0 }, Beard: { color: l?.beardc || hairc, roughness: 0.86, metalness: 0 }, Blush: { color: typeof l?.blush === 'string' && l.blush.startsWith('#') ? l.blush : '#ed7890', roughness: 0.9, metalness: 0 } } }
+    Iris: { color: eye, roughness: 0.18, metalness: 0, emissive: eye, emissiveIntensity: 0.45 }, Brow: { color: hairc, roughness: 0.9, metalness: 0 }, Lash: { color: '#2a2024', roughness: 0.9, metalness: 0 }, Beard: { color: l?.beardc || hairc, roughness: 0.86, metalness: 0 }, Blush: { color: typeof l?.blush === 'string' && l.blush.startsWith('#') ? l.blush : '#ed7890', roughness: 0.9, metalness: 0 } } }
 }
 // FACE SHAPE → the human head: [lead head type, keys set outright]
 const FT_HEAD = {
