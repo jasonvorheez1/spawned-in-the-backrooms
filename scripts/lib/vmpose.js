@@ -247,8 +247,8 @@ export function poseViewmodel(ctx, dt) {
   if (m.relOn && m.relKind === kind) {
     if (wp.pellets || wp.tube || wp.wheel) {
       const start = wp.reloadStart ?? 0.4, per = wp.reloadShell ?? 0.55, ph = (m.relT - start) / per
-      if (ph < 0) { const k = ease(Math.max(0, m.relT / start)); for (let i = 0; i < 6; i++) SAMPLE_BUF[i] = SHOTGUN_LOAD[i] * k; target = SAMPLE_BUF; rate = 14 }
-      else { const c = sample(SHELL_CYCLE, ph - Math.floor(ph), PUMP_BUF); for (let i = 0; i < 6; i++) SAMPLE_BUF[i] = SHOTGUN_LOAD[i] + c[i]; target = SAMPLE_BUF; rate = 22 }
+      if (ph < 0) { const k = ease(Math.max(0, m.relT / start)); const LP = wp.loadPose ?? SHOTGUN_LOAD; for (let i = 0; i < 6; i++) SAMPLE_BUF[i] = LP[i] * k; target = SAMPLE_BUF; rate = 14 }
+      else { const c = sample(SHELL_CYCLE, ph - Math.floor(ph), PUMP_BUF); const LP = wp.loadPose ?? SHOTGUN_LOAD; for (let i = 0; i < 6; i++) SAMPLE_BUF[i] = LP[i] + c[i]; target = SAMPLE_BUF; rate = 22 }
     }
     else { target = sample(m.relEmpty ? PISTOL_RELOAD_EMPTY : PISTOL_RELOAD, m.relT / (ps.reloadDur || wp.reloadTime || 1.7), SAMPLE_BUF); rate = 30 }
   }
