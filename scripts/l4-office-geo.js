@@ -65,9 +65,9 @@ function partition(ctx, hi) {
   for (const x of [-1.65, 0, 1.65]) for (const s of [-1, 1]) panelRun(ctx, x - 0.03, x + 0.03, s > 0 ? 0.03 : -0.85, s > 0 ? 0.85 : -0.03, 1.15, hi); // side wings
   // a wall clock on the spine, stopped at twenty to four
   ctx.metalness(0); ctx.roughness(0.6);
-  ctx.color("oklch(0.25 0.01 250)"); lathe(ctx, 0, 1.46, 0.035, [[0, 0], [0.135, 0], [0.135, 0.025], [0, 0.025]], hi ? 24 : 12);
-  ctx.color("oklch(0.95 0.01 90)"); lathe(ctx, 0, 1.46, 0.04, [[0, 0], [0.12, 0], [0.12, 0.022], [0, 0.022]], hi ? 24 : 12);
-  ctx.color("oklch(0.2 0.01 250)"); box(ctx, -0.004, 0.004, 1.46, 1.555, 0.03, 0.07, 0); box(ctx, -0.07, 0, 1.425, 1.462, 0.03, 0.07, 0);
+  ctx.color("oklch(0.25 0.01 250)"); box(ctx, -0.135, 0.135, 1.325, 1.595, 0.03, 0.06, 0.03);
+  ctx.color("oklch(0.95 0.01 90)"); box(ctx, -0.115, 0.115, 1.345, 1.575, 0.055, 0.064, 0.004);
+  ctx.color("oklch(0.2 0.01 250)"); box(ctx, -0.004, 0.004, 1.46, 1.555, 0.064, 0.068, 0); box(ctx, -0.07, 0, 1.456, 1.464, 0.064, 0.068, 0);
   for (const [x, z, c] of [[-1.2, 0.035, "oklch(0.9 0.12 95)"], [0.5, -0.035, "oklch(0.85 0.1 200)"], [1.1, 0.035, "oklch(0.9 0.1 20)"]]) { ctx.color(c); box(ctx, x - 0.07, x + 0.07, 0.95, 1.09, z - 0.003, z + 0.003, 0); }
 }
 

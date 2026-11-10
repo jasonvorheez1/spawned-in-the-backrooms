@@ -150,6 +150,16 @@ export function tick(ctx) {
     ctx.spawn({ tags: ["usable", "computer"], feetPosition: { x: -28.5, y: 0.76, z: -30.5 }, visible: false, behavior: "scripts/computer.js", physics: "static", primitive: { kind: "box", width: 0.46, height: 0.36, depth: 0.36 },
       state: { kind: "computer", host: "OMEGA-OVERSEER", lock: "science:35", name: "Overseer's computer", verb: "Log in", info: "Locked · Science 35 or a password", tint: "#f2c200" } });
   }
+  if ((s.officeV ?? 0) >= 3 && !s.islandSplit) { // Shelly: the cubicle islands were one blocky mesh; each island is now its partitions plus four desks, each its own object
+    s.islandSplit = 1;
+    for (const o of ctx.query({ tags: ["l4-island"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
+      const h = ctx.getObject(o.id); if (h?.primitive?.params?.kind !== "island") continue;
+      const { x, z } = o.feetPosition; ctx.destroy(o.id);
+      ctx.spawn({ tags: ["l4-island", "l4-partition"], feetPosition: { x, y: 0, z }, physics: { body: "static", collider: "mesh" }, visibleRange: { max: 50 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/l4-office-geo.js", params: { kind: "partition" } } });
+      let seed = 0;
+      for (const face of [-1, 1]) for (const cx of [-0.82, 0.82]) ctx.spawn({ tags: ["l4-island", "l4-desk"], feetPosition: { x: x + cx, y: 0, z: z + face * 0.45 }, rotation: { yaw: face > 0 ? 0 : 180 }, physics: { body: "static", collider: "mesh" }, visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/l4-office-geo.js", params: { kind: "desk", seed: seed++ } } });
+    }
+  }
   if (s.officeV < 2) { // the shift board: a corkboard on legs by the north desks, handing out office tasks (scripts/l4-office.js)
     s.officeV = 2;
     ctx.spawn("l4-shift-board", { tags: ["usable", "l4-board"], feetPosition: { x: -3.2, y: 0, z: 13 }, rotation: { yaw: 90 }, physics: "static", behavior: "scripts/l4-office.js",
@@ -172,7 +182,7 @@ export function tick(ctx) {
 }
 
 // what each Level 4 prop breaks as (Savi's picks); hp is the material's, scaled
-const PROP4 = { chair: ["metal", 0.4], box: ["wood", 0.5], boxes: ["wood", 0.8], plant: ["wood", 0.4], panel: ["wood", 0.9], cabinet: ["sheet_steel", 0.6], island: ["wood", 2.2], printer: ["machine", 0.8] };
+const PROP4 = { chair: ["metal", 0.4], box: ["wood", 0.5], boxes: ["wood", 0.8], plant: ["wood", 0.4], panel: ["wood", 0.9], cabinet: ["sheet_steel", 0.6], island: ["wood", 2.2], desk: ["wood", 0.9], partition: ["wood", 1.4], printer: ["machine", 0.8] };
 function breakProps(ctx) {
   for (const r of ctx.query({ excludeTags: ["breakable"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
     const o = ctx.getObject(r.id); if (!o || !o.physics) continue;
