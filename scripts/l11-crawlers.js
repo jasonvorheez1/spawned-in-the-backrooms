@@ -122,6 +122,7 @@ export function update(ctx, dt) {
         f.anim.fire = { clip: "cdn/clip-rifle-fire-01972c51.glb", loop: false, weight: 1, mask: "RightShoulder", blend: 0.05 };
         ctx.emit("playSound", { clip: "/cdn/moodboard-scifi-neon/sfx-retro-1950s-ray-gun-zap-with-warbling-oscillator.mp3", position: muzzle, volume: K.burst ? 0.6 : 0.9, pitch: K.burst ? 1.5 + ctx.random() * 0.15 : 1, mode: "overlap" });
         if (!m.shots && ctx.random() < 0.35) speak(ctx, f, m, "shoot", now, 7000);
+        if (!hits) ctx.emit("playSound", { clip: "/cdn/moodboard-scifi-neon/sfx-laser-bolt-whizzing-past-ear-close-flyby.mp3", position: { x: prey.feetPosition.x + (end.x - aim.x) * 0.5, y: aim.y + 0.5, z: prey.feetPosition.z + (end.z - aim.z) * 0.5 }, volume: 0.9, pitch: 0.9 + ctx.random() * 0.2, maxDistance: 10 }, { player: prey.id }); // near-miss, the shot player alone (borrowed from fps-grudge)
         if (hits) {
           prey.state.hp -= dmgAfterArmor(prey.state.look, K.dmg);
           ctx.emit("damageNumber", { position: aim, value: K.dmg, color: "#ffb040" });
