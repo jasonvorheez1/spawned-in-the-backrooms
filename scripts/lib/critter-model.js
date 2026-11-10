@@ -321,7 +321,7 @@ export function bodyModel(l) {
   }
   for (const [slot, [mat, key]] of Object.entries(CLOTH)) if (l[key]) {
     const row = l[slot] && l[slot] !== 'none' ? rowOf(slot, l[slot], l[key]) : null, pat = row ? patOk(row, l[CL.patKey[slot]]) : null
-    materials[mat] = pat ? { kind: 'scripted', script: 'scripts/mat-cloth.js', color: l[key], roughness: 0.8, metalness: 0, params: { pat, s: 1 } } : { color: l[key], roughness: 0.75, metalness: 0 } // fabric patterns: scripts/mat-cloth.js
+    materials[mat] = { kind: 'scripted', script: 'scripts/mat-cloth.js', color: l[key], roughness: 0.8, metalness: 0, params: { pat: pat || 'weave', s: 1 } } // every garment wears real fabric now, plain ones a weave (Nov 10) // fabric patterns: scripts/mat-cloth.js
   }
   return { id: M.body[l.sex === 'f' ? 'f' : 'm'], materials: only(materials, M.bodyMats), parts }
 }
