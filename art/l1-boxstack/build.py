@@ -33,6 +33,14 @@ for k,nm in enumerate(names):
             for f in new:
                 for l in f.loops: l[uv].uv=c  # the filled cap wears the cardboard's own colour
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    if nm in ("box0","box1"):  # the top was baked in the shadow of the box that sat on it: repaint it plain cardboard
+        uv=bm.loops.layers.uv.active; bm.normal_update()
+        side=sorted([f for f in bm.faces if abs(f.normal.z)<0.3], key=lambda f:-f.calc_area())
+        c=sum((l[uv].uv for l in side[0].loops), Vector((0,0)))/len(side[0].loops)
+        top=max(v.co.z for v in bm.verts)
+        for f in bm.faces:
+            if f.normal.z>0.6 and f.calc_center_median().z>top-0.08:
+                for l in f.loops: l[uv].uv=c
     bm.to_mesh(o.data); bm.free()
     vs=[v.co for v in o.data.vertices]
     mn=Vector((min(v.x for v in vs),min(v.y for v in vs),min(v.z for v in vs))); mx=Vector((max(v.x for v in vs),max(v.y for v in vs),max(v.z for v in vs)))
