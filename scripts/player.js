@@ -157,6 +157,8 @@ export function gain(ctx, n) {
 // Apply one looted item (a token from scripts/lib/items.js) to the player. Returns { ok } or { ok: false, msg }.
 // Nothing is picked up by walking over it: scripts/interact.js calls this when you press E on what you are looking at.
 // eaten food also feeds hunger (scripts/craft.js drains it)
+// holotapes HALOGEN can play: id → the reel and its length in seconds
+export const HOLO = { r55: { clip: '/cdn/value.27d6f69ab630980fe70d56528803137bd92ffccf167b961cbf9fa5f2dac7795e.mp3', len: 34, name: 'Atomic Age Defender' } }
 export function takeToken(ctx, token) {
   const r = takeToken0(ctx, token), f = CR.food[token]
   if (r.ok && f && !SNACKS[token]) { const s = ctx.self.state; s.hunger = Math.min(100, (s.hunger ?? 100) + f) }
@@ -222,6 +224,12 @@ function takeToken0(ctx, token) {
   }
   if (token === 'bobbypin' || token === 'pin' || token === 'bobby_pin') { s.bobbypins = (s.bobbypins ?? 0) + 1; s.pickedAt = now; s.notice = { text: `Bobby pin (${s.bobbypins} carried)`, at: now }; sound(ctx, 'pickup-ammo', 0.5, true); return { ok: true } }
   if (token === 'firesalt') { s.firesalt = (s.firesalt ?? 0) + 1; s.pickedAt = now; sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true } }
+  if (token.startsWith('holo:')) { // a holotape: kept, played on HALOGEN (I > Misc > PLAY)
+    const id = token.slice(5), have = String(s.holotapes ?? '').split(',').filter(Boolean)
+    if (!have.includes(id)) have.push(id)
+    s.holotapes = have.join(','); s.pickedAt = now; s.notice = { text: 'Holotape · play it on HALOGEN (I > Misc)', at: now }
+    sound(ctx, 'loot-take-all-rustle', 0.4, true); return { ok: true }
+  }
   if (token.startsWith('page:')) { // a torn notebook page: kept and read now
     const n = parseInt(token.slice(5)) || 1, have = String(s.pages ?? '').split(',').filter(Boolean)
     if (!have.includes(String(n))) have.push(String(n))
@@ -748,6 +756,13 @@ function invAction(ctx, d) {
     s.firesalt -= 1; s.firesaltUntil = ctx.now() + L3I.firesalt.seconds * 1000
     s.notice = { text: `Firesalt on your ${W[s.equipped]?.name?.toLowerCase() ?? 'weapon'}: x${L3I.firesalt.damage} melee for ${L3I.firesalt.seconds}s`, at: ctx.now() }
     sound(ctx, 'gun-raise-cloth-rustle', 0.5, true); return
+  }
+  if (d.k === 'holo') { // HALOGEN plays a carried holotape into this player's ears alone
+    const id = String(d.id ?? ''), T = HOLO[id]; if (!T || !String(s.holotapes ?? '').split(',').includes(id)) return
+    if (ctx.self.session.holoSnd != null) ctx.emit('stopSound', { soundId: ctx.self.session.holoSnd })
+    if (s.holoPlay?.id === id && ctx.now() - s.holoPlay.at < T.len * 1000) { ctx.self.session.holoSnd = null; s.holoPlay = null; return } // a second press stops it
+    ctx.self.session.holoSnd = ctx.emit('playSound', { clip: T.clip, volume: 0.9, bus: 'Voice' })
+    s.holoPlay = { id, at: ctx.now() }; return
   }
   if (d.k === 'read') { s.reading = parseInt(d.n) || null; s.invOpen = false; return }
   if (d.k === 'repair') { repairAction(ctx, d); return }
