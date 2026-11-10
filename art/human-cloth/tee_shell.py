@@ -3,7 +3,7 @@ pushed out along its normals per shape key, cleavage bridged, the edges rolled i
 under it, so it bends exactly with the body and can't poke or float. Skin stays drawn underneath (no jagged holes).
 Usage: blender -b --python-exit-code 1 -P tank_shell.py -- body.glb out.glb"""
 import bpy, bmesh, sys, os
-NAME = os.environ.get('WARD', 'Ward_tee'); SLEEVE = float(os.environ.get('SLEEVE', '0.42')); FLARE = float(os.environ.get('FLARE', '0.007')); STRAP = float(os.environ.get('STRAP', '0.66')); NECKD = float(os.environ.get('NECKD', '1')); HEM = float(os.environ.get('HEM', '0.03'))  # a vest: WARD=Ward_vest STRAP=0.86 NECKD=0.6
+NAME = os.environ.get('WARD', 'Ward_tee'); SLEEVE = float(os.environ.get('SLEEVE', '0.42')); FLARE = float(os.environ.get('FLARE', '0.007')); STRAP = float(os.environ.get('STRAP', '0.66')); NECKD = float(os.environ.get('NECKD', '1')); HEM = float(os.environ.get('HEM', '-0.035'))  # a vest: WARD=Ward_vest STRAP=0.86 NECKD=0.6
 from mathutils import Vector
 a = sys.argv[sys.argv.index('--') + 1:]; src, out = a[0], a[1]
 T = float(os.environ.get('STANDOFF', '0.008'))  # cloth stand-off, metres (a vest sits thicker)
@@ -24,7 +24,7 @@ print('JOINED', len(parts))
 body.name = body.data.name = NAME
 hipz, neckz, ax, sy = J['Hips'].z, J['Neck'].z, J['LeftArm'].x, J['Spine2'].y
 s = neckz / 1.276
-hem = J['Hips'].z + HEM * s  # just under the navel: pants take it from there
+hem = J['Spine'].z + HEM * s  # just under the navel: pants take it from there
 xstrap, xpit, zpit = ax * STRAP, ax * 1.06, J['LeftArm'].z - 0.075 * s
 slope = (xpit - xstrap) / (neckz - 0.03 * s - zpit)
 def armlim(z): return xstrap + max(0.0, slope * (neckz - 0.03 * s - z))
@@ -40,7 +40,8 @@ def armt(p):  # 0 at the shoulder joint .. 1 at the sleeve hem: the sleeve opens
 _P = [body.matrix_world @ v.co for v in body.data.vertices]
 _top = max(p.z for p in _P)
 neckR = max(abs(p.x) for p in _P if _top - 0.035 * s < p.z < _top - 0.005)  # the neck tube where the head file takes over
-_nk = [abs(p.x) for p in _P if abs(p.z - (neckz + 0.02 * s)) < 0.008 and abs(p.y - J['Neck'].y) < 0.08]
+_mz = min((neckz + J['Head'].z) / 2, _top - 0.01)
+_nk = [abs(p.x) for p in _P if abs(p.z - _mz) < 0.006]
 neckR = max(_nk) if _nk else neckR
 NW = (neckR + 0.014) / s
 print('JZ', {k: round(J[k].z, 3) for k in ('Hips', 'Spine', 'Spine1', 'Spine2', 'Neck', 'Head')}, 'neckR', round(neckR, 3))  # half-width of the neck opening; outside it the straps run over the shoulder
