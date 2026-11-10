@@ -20,7 +20,7 @@ export function layHouse(ctx, FY) {
     tags: ["container", "usable"],
     feetPosition: { x: 0.95, y: FY, z: -0.65 },
     rotation: { yaw: -18 },
-    primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "drawers" } },
+    model: "/cdn/value.be3cc98286edd1f7d911b5b2aa667e5f550fb276478d84c165946d2369ac2f31.glb", layout: { box: { min: { x: -0.665, y: 0, z: -0.52 }, max: { x: 0.665, y: 0.972, z: 0.52 } } },
     physics: { body: "static", collider: "box" },
     behavior: "scripts/l7-use.js",
     state: {
@@ -37,7 +37,7 @@ export function layHouse(ctx, FY) {
     tags: ["container", "usable"],
     feetPosition: { x: -2.3, y: FY, z: -0.4 },
     rotation: { yaw: 82 },
-    primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "armoire" } },
+    model: "/cdn/value.419152ea1d7730fe02da40e345de61590c052bf729dd24d48ba5b04ead052071.glb", layout: { box: { min: { x: -0.462, y: 0, z: -1.005 }, max: { x: 0.462, y: 2.31, z: 1.005 } } },
     physics: { body: "static", collider: "box" },
     behavior: "scripts/l7-use.js",
     state: {
@@ -53,7 +53,7 @@ export function layHouse(ctx, FY) {
   sp("hearth", {
     feetPosition: { x: 2.82, y: FY, z: 0.35 },
     rotation: { yaw: -90 },
-    primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "hearth" } },
+    model: "/cdn/value.4c34d29e6734a84a27729cbb266a8336c429b583b1dcfda07c30d6fab7660ebd.glb", layout: { box: { min: { x: -0.84, y: 0, z: -0.28 }, max: { x: 0.84, y: 1.9, z: 0.28 } } },
     physics: { body: "static", collider: "box" },
   });
 
@@ -61,7 +61,7 @@ export function layHouse(ctx, FY) {
   sp("pedestal", {
     feetPosition: { x: 2.15, y: FY, z: -1.35 },
     rotation: { yaw: 25 },
-    primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "pedestal" } },
+    model: "/cdn/value.0f8f05a49f2787ce7bce78e05088f44ecc4e83ff772f729f525be16265987344.glb", layout: { box: { min: { x: -0.412, y: 0, z: -0.412 }, max: { x: 0.412, y: 0.799, z: 0.412 } } },
     physics: { body: "static", collider: "box" },
   });
 
@@ -69,7 +69,7 @@ export function layHouse(ctx, FY) {
   sp("wirerack", {
     feetPosition: { x: -2.38, y: FY, z: 1.55 },
     rotation: { yaw: 85 },
-    primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "wirerack" } },
+    model: "/cdn/value.88804d4445533de106db8554ae10da76f568c980258f36adb1943101b1ed494c.glb", layout: { box: { min: { x: -0.2685, y: 0, z: -0.3595 }, max: { x: 0.2685, y: 1.56, z: 0.3595 } } },
     physics: { body: "static", collider: "box" },
   });
 
@@ -83,14 +83,14 @@ export function layHouse(ctx, FY) {
   });
   sp("bouquet", {
     feetPosition: { x: -0.85, y: FY + 0.95, z: 2.35 },
-    primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "bouquet" } },
+    model: "/cdn/value.0c66d10973e9781baddd30eb4be412a96bd419939276387af7f01ac215cf9cb9.glb", layout: { box: { min: { x: -0.197, y: 0, z: -0.157 }, max: { x: 0.197, y: 0.901, z: 0.157 } } },
   });
 
   // 7. Antique Turned Spindle Chair standing in the knee-deep floodwater
   sp("chair", {
     feetPosition: { x: 1.65, y: FY, z: 0.55 },
     rotation: { yaw: -65 },
-    primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "chair" } },
+    model: "/cdn/value.3f03c5a041552a2699cd8fe8fcd2d9a220328ba5440dbb226a8375df048fd4cc.glb", layout: { box: { min: { x: -0.319, y: 0, z: -0.319 }, max: { x: 0.319, y: 0.935, z: 0.319 } } },
     physics: { body: "static", collider: "box" },
   });
 
