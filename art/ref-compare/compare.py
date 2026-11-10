@@ -10,10 +10,13 @@ for i, f in enumerate(files):
     bpy.ops.import_scene.gltf(filepath=f)
     new = [o for o in bpy.context.scene.objects if o not in before]
     roots = [o for o in new if o.parent is None]
-    dg = bpy.context.evaluated_depsgraph_get()
+    if i == 0:  # ours: the bare body and head, no wardrobe parts
+        for o in new:
+            if o.type == 'MESH' and o.name not in ('Body', 'Head'): o.hide_render = True; o.hide_set(True)
+    bpy.context.view_layer.update(); dg = bpy.context.evaluated_depsgraph_get()
     zs = []; xs = []; ys = []
     for o in new:
-        if o.type == 'MESH':
+        if o.type == 'MESH' and not o.hide_render:
             e = o.evaluated_get(dg)
             for v in e.data.vertices:
                 p = e.matrix_world @ v.co; zs.append(p.z); xs.append(p.x); ys.append(p.y)
