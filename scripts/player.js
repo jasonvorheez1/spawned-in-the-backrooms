@@ -158,7 +158,7 @@ export function gain(ctx, n) {
 // Nothing is picked up by walking over it: scripts/interact.js calls this when you press E on what you are looking at.
 // eaten food also feeds hunger (scripts/craft.js drains it)
 // holotapes HALOGEN can play: id → the reel and its length in seconds
-export const HOLO = { r55: { clip: '/cdn/value.b7bbbfcb923978bb4ac8ae234d44454562debf569936a5f20c378f0e28110e01.mp3', len: 35, name: 'Atomic Age Defender' } }
+export const HOLO = { r55: { clip: '/cdn/value.b7bbbfcb923978bb4ac8ae234d44454562debf569936a5f20c378f0e28110e01.mp3', len: 35, name: 'Atomic Age Defender' }, walt41: { clip: '/cdn/value.13b431f3dead226e2ffab8155644c00c326ef6767b9b57df23b71353cbd1a50e.mp3', len: 28, name: 'Field Test 41' } }
 export function holoEnd(ctx, p) { if (ctx.self.state.holoPlay?.at === p?.at) ctx.self.state.holoPlay = null }
 export function takeToken(ctx, token) {
   const r = takeToken0(ctx, token), f = CR.food[token]
