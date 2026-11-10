@@ -42,6 +42,9 @@ WR = abs(J['LeftHand'][0].x)
 def weight(p):
     w = 1 - ss(NECK0, NECK1, p.z)
     if p.z > J['LeftArm'][0].z - .25: w *= 1 - ss(WR - .07, WR - .015, abs(p.x))
+    if SEX == 'm':  # his chest stays the game's flat one: the rebuilt base still carries the female bust there
+        cz = (J['Spine1'][0].z + J['LeftArm'][0].z) / 2; sy = J['Spine2'][0].y
+        w *= 1 - (1 - ss(.10, .17, abs(p.x))) * (1 - ss(.07, .13, abs(p.z - cz))) * ss(sy + .02, sy - .04, p.y)
     return w
 body = [o for o in game if o.type == 'MESH' and (o.name == 'Body' or o.name.startswith('Skin_'))]
 pts, dl, own = [], [], []
@@ -74,6 +77,18 @@ for (o, vi), d in zip(own, dl):
     if o.data.shape_keys:
         for kb in o.data.shape_keys.key_blocks: kb.data[vi].co += ld
 for o in body: o.data.update()
+# shading: the old baked normals no longer match the moved skin; regions share one normal at every seam
+sys.path.insert(0, __import__('os').path.join(__import__('os').path.dirname(__import__('os').path.abspath(__file__)), '..', 'body-rig'))
+from arm_shape import weld_skin_normals
+for o in body:
+    bpy.context.view_layer.objects.active = o
+    if o.data.has_custom_normals:
+        o.select_set(True)
+        try: bpy.ops.mesh.customdata_custom_splitnormals_clear()
+        except RuntimeError: pass
+        o.select_set(False)
+    for f in o.data.polygons: f.use_smooth = True
+weld_skin_normals()
 mx = max(d.length for d in dl); print('MOVED', len(pts), 'max', round(mx, 4), 'mean', round(sum(d.length for d in dl) / len(dl), 4))
 json.dump([[list(p), list(d)] for p, d in zip(pts, dl) if d.length > 1e-5 or True], open(FIELD, 'w'))
 # 4. out: only the game's own file, rebuilt pieces dropped
