@@ -88,6 +88,10 @@ bm = bmesh.new(); bm.from_mesh(me)
 def cut(co, no): bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=Mi @ Vector(co), plane_no=(R @ Vector(no)).normalized())
 # clean cut lines: bisect along the hem, both armholes and a fan of planes for the scoop
 bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=4e-4)  # the mirrored halves meet at x=0: weld, or the push opens a seam down the spine
+if os.environ.get('BIB'):  # the women's skin leaves windows at the hip (the underwear covers them): close every gap between the hip and the chest before the cut
+    bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=3e-3)
+    _hb = [e for e in bm.edges if e.is_boundary and all(J['Hips'].z - 0.06 * s < W(v.co).z < J['Spine2'].z for v in e.verts)]
+    _r = bmesh.ops.holes_fill(bm, edges=_hb, sides=80); print('HIPFILL', len(_hb), len(_r['faces']))
 sk = bm.verts.layers.shape; keys = list(sk.keys())
 # a coarse body (the male base) has faces wider than a strap: a cut through one deletes it whole and the strap floats off the back panel. Split the upper body finer first.
 _up = [e for e in bm.edges if max(W(v.co).z for v in e.verts) < (neckz + 0.06 * s if BIB > 0 else waistz + 0.05 * s) and min(W(v.co).z for v in e.verts) > J['LeftFoot'].z]
