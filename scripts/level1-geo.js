@@ -148,18 +148,7 @@ export function geometry(ctx) {
       // a yellow end guard bolted at the aisle end
       ctx.albedo(null); ctx.color("oklch(0.8 0.16 90)"); ctx.metalness(0.3); ctx.roughness(0.5);
       if (hi) { tube(ctx, [[x1 + 0.18, 0, z0 - 0.05], [x1 + 0.18, 0.45, z0 - 0.05], [x1 + 0.18, 0.45, z1 + 0.05], [x1 + 0.18, 0, z1 + 0.05]], [0.04, 0.04, 0.04, 0.04], 10, [1, 1], 0, 1, 1); }
-      // stock: taped cartons, paint pails and a shrink-wrapped pallet top, laid by hash so every rack differs (the loot crates keep their own slots)
-      if (hi) for (const [li, y] of RACK.levels.entries()) for (let k = 0; k < 6; k++) {
-        const h0 = hash(cx * 7 + li, cz * 5 + k, r > 0 ? 71 : 73); if (h0 < 0.4) continue;
-        const bx = x0 + 0.35 + k * 0.9 + (hash(cx, cz, 80 + k) - 0.5) * 0.2, bz = c.z + r + (hash(cx, cz, 90 + k) - 0.5) * 0.25;
-        if (Math.abs(bx - c.x) < 0.15) continue;
-        if (h0 < 0.78) { const w = 0.3 + hash(cx, k, li) * 0.25, d = 0.3 + hash(k, cz, li) * 0.2, hh = 0.22 + hash(li, k, cz) * 0.28;
-          ctx.albedo(CARTON); ctx.color(h0 < 0.6 ? "oklch(0.78 0.06 70)" : "oklch(0.7 0.05 65)"); ctx.roughness(0.9); box(ctx, bx - w / 2, bx + w / 2, y, y + hh, bz - d / 2, bz + d / 2);
-          if (h0 > 0.7 && y + hh * 2 < (RACK.levels[li + 1] ?? RACK.top) - 0.1) box(ctx, bx - w / 2 + 0.03, bx + w / 2 - 0.05, y + hh, y + hh * 1.8, bz - d / 2 + 0.02, bz + d / 2 - 0.03); }
-        else { ctx.albedo(null); ctx.color(h0 < 0.9 ? "oklch(0.88 0.01 250)" : "oklch(0.55 0.13 250)"); ctx.metalness(0.3); ctx.roughness(0.4);
-          for (const dz of [-0.14, 0.14]) { tube(ctx, [[bx, y, bz + dz], [bx, y + 0.24, bz + dz]], [0.11, 0.115], 8, [1, 1], 0, 1, 1); ctx.color("oklch(0.3 0.01 250)"); tube(ctx, [[bx, y + 0.24, bz + dz], [bx, y + 0.255, bz + dz]], [0.118, 0.118], 8, [1, 1], 0, 1, 1); ctx.color(h0 < 0.9 ? "oklch(0.88 0.01 250)" : "oklch(0.55 0.13 250)"); }
-          ctx.metalness(0); }
-      }
+      // stock: the cartons and pails on these decks are searchable containers, laid by places/level1/sim.js (layStock)
       ctx.albedo(null); ctx.metalness(0); ctx.roughness(null);
     }
   }
