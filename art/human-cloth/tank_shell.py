@@ -21,7 +21,8 @@ slope = (xpit - xstrap) / (neckz - 0.03 * s - zpit)
 def armlim(z): return xstrap + slope * (neckz - 0.03 * s - z)
 # measured off this body: the neck's own half-width just above its base, and the shoulder line beside it
 _P = [body.matrix_world @ v.co for v in body.data.vertices]
-neckR = max(abs(p.x) for p in _P if neckz + 0.02 * s < p.z < neckz + 0.05 * s and abs(p.y - sy) < 0.1)
+_top = max(p.z for p in _P)
+neckR = max(abs(p.x) for p in _P if _top - 0.035 * s < p.z < _top - 0.005)  # the neck tube where the head file takes over
 NW = (neckR + 0.012) / s  # half-width of the neck opening; outside it the straps run over the shoulder
 capz = max(p.z for p in _P if NW * s < abs(p.x) < xstrap and p.z < neckz + 0.08 * s) + 0.01
 print('NECK', round(neckR, 3), 'cap', round(capz, 3))
