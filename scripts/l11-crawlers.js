@@ -77,7 +77,7 @@ export function update(ctx, dt) {
         const end = hits ? aim : { x: aim.x + (ctx.random() - 0.5) * 1.6, y: aim.y + (ctx.random() - 0.3), z: aim.z + (ctx.random() - 0.5) * 1.6 };
         const L = Math.hypot(end.x - muzzle.x, end.y - muzzle.y, end.z - muzzle.z);
         ctx.spawn({ feetPosition: { x: (muzzle.x + end.x) / 2, y: (muzzle.y + end.y) / 2 - 0.025, z: (muzzle.z + end.z) / 2 }, pivot: "center", rotation: { lookAt: end, include: ["yaw", "pitch"] }, primitive: { kind: "box", width: 0.05, height: 0.05, depth: L }, material: { color: "oklch(0.85 0.17 65)", emissive: "oklch(0.8 0.18 60)", emissiveIntensity: 6 }, castShadow: false, lifetime: 0.12, audience: "near" });
-        ctx.emit("fx", { position: muzzle, script: BOLT });
+        ctx.emit("fx", { position: muzzle, script: BOLT }); f.anim.fire = { clip: "cdn/clip-rifle-fire-01972c51.glb", loop: false, weight: 1, mask: "upper" };
         f.anim.fire = { clip: "cdn/clip-rifle-fire-01972c51.glb", loop: false, weight: 1, mask: "RightShoulder", blend: 0.05 };
         ctx.emit("playSound", { clip: "/cdn/moodboard-scifi-neon/sfx-retro-1950s-ray-gun-zap-with-warbling-oscillator.mp3", position: muzzle, volume: 0.9, mode: "overlap" });
         if (ctx.random() < 0.35) speak(ctx, f, m, "shoot", now, 7000);
@@ -120,6 +120,7 @@ export function update(ctx, dt) {
       if (m.clip !== mv) { m.clip = mv; f.anim.main = { clip: mv, loop: true, weight: 1, blend: 0.25 }; }
       if (m.up !== up) { m.up = up; f.anim.aim = up ? { clip: "cdn/clip-rifle-aim-f07bf7f5-loop.glb", loop: true, weight: 1, mask: "Spine", blend: 0.3 } : null; } }
     f.velocity = { x: vx, y: f.grounded ? -0.5 : (f.velocity?.y ?? 0) + g * dt, z: vz };
+    if (f.state.kind === "sentry") { const c = (vx || vz) ? "cdn/clip-walk-loop.glb" : "cdn/clip-rifle-aim-f07bf7f5-loop.glb"; if (m.sclip !== c) { m.sclip = c; f.anim.main = { clip: c, loop: true, weight: 1, blend: 0.25 }; } }
     if (f.state.kind === "hound" && m.clip !== clip) { m.clip = clip; f.anim.main = { clip, loop: clip !== "pounce" && clip !== "maul", weight: 1, blend: 0.2 }; }
   }
 }
