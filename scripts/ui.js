@@ -117,7 +117,8 @@ function questPip(ctx, player, yaw) {
     const o = ((Math.round(yawTo(p, t)) - Math.round(yaw)) % 360 + 540) % 360 - 180, a = Math.abs(o)
     const edge = a >= 75, n = edge ? side[o < 0 ? 'l' : 'r']++ : 0
     const x = !edge ? 50 + o / 75 * 50 : (o < 0 ? -n * 4.5 : 100 + n * 4.5)
-    out += `<div style="position:absolute;left:${x}%;top:-9px;transform:translateX(-50%);color:${q.tint};font-size:${edge ? 13 : 12}px;text-shadow:0 0 6px ${q.tint},0 1px 2px #000">${edge ? (o < 0 ? '◀' : '▶') : '◆'}</div>`
+    const d = Math.round(Math.hypot(t.x - p.x, t.z - p.z))
+    out += `<div style="position:absolute;left:${x}%;top:-9px;transform:translateX(-50%);color:${q.tint};font-size:${edge ? 13 : 12}px;text-shadow:0 0 6px ${q.tint},0 1px 2px #000;text-align:center;line-height:1">${edge ? (o < 0 ? '◀' : '▶') : '◆'}<div style="font-size:9px;letter-spacing:.04em;margin-top:1px">${d}m</div></div>`
   }
   return out ? `<div style="position:absolute;left:28px;width:300px;bottom:6px;height:22px;pointer-events:none">${out}</div>` : ''
 }
@@ -184,7 +185,7 @@ function sniperScope(s, wp) {
 
 // camp chatter: the line an npc is saying floats over its head while it lasts (chatter.js writes state.line)
 // the doorway transition: black that fades off the new level, its name in the middle
-const LEVEL_NAMES = { bonus: ['THE BONUS ROOM', 'THE BONUS ROOM'], main: ['LEVEL 0', 'THE LOBBY'], level1: ['LEVEL 1', 'HABITABLE ZONE'], level2: ['LEVEL 2', 'PIPE DREAMS'], level3: ['LEVEL 3', 'ELECTRICAL STATION'], level4: ['LEVEL 4', 'ABANDONED OFFICE'], level5: ['LEVEL 5', 'TERROR HOTEL'], level6: ['LEVEL 6', 'LIGHTS OUT'], level61: ['LEVEL 6.1', 'THE SNACKROOMS'], level11: ['LEVEL 11', 'THE INFINITE CITY'], level10: ['LEVEL 10', 'BUMPER CROP'], level7: ['LEVEL 7', 'THALASSOPHOBIA'], level8: ['LEVEL 8', 'CAVE SYSTEMS'], level21: ['LEVEL 2.1', 'LOCKED'], level26: ['LEVEL 26', 'THE SS FUN =)'], gamma: ['M.E.G.', 'BASE GAMMA'], spamton: ['[[NOWHERE]]', "SPAMTON'S BASEMENT"] }
+const LEVEL_NAMES = { bonus: ['THE BONUS ROOM', 'THE BONUS ROOM'], main: ['LEVEL 0', 'THE LOBBY'], level1: ['LEVEL 1', 'HABITABLE ZONE'], level2: ['LEVEL 2', 'PIPE DREAMS'], level3: ['LEVEL 3', 'ELECTRICAL STATION'], level4: ['LEVEL 4', 'ABANDONED OFFICE'], level5: ['LEVEL 5', 'TERROR HOTEL'], level6: ['LEVEL 6', 'LIGHTS OUT'], level61: ['LEVEL 6.1', 'THE SNACKROOMS'], level11: ['LEVEL 11', 'THE INFINITE CITY'], level10: ['LEVEL 10', 'BUMPER CROP'], level7: ['LEVEL 7', 'THALASSOPHOBIA'], level8: ['LEVEL 8', 'CAVE SYSTEMS'], level21: ['LEVEL 2.1', 'LOCKED'], level26: ['LEVEL 26', 'THE SS FUN =)'], gamma: ['M.E.G.', 'BASE GAMMA'], level01: ['LEVEL 0.1', 'ZENITH STATION'], level12: ['LEVEL 12', 'MATRIX'], level184: ['LEVEL 184', ''], home11: ['YOUR HOUSE', 'THE INFINITE CITY'], spamton: ['[[NOWHERE]]', "SPAMTON'S BASEMENT"] }
 function xferCard(s, now) {
   const x = s.xfer; if (!x || now - x.at > 2600) return ''
   const to = String(x.to ?? '').startsWith('tutorial0') ? 'main' : x.to // a solo tutorial copy is still Level 0
