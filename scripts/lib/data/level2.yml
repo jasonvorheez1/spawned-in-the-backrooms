@@ -44,8 +44,8 @@ containers:
   cabinet:   { name: "Supply cabinet",   size: [0.9, 1.1, 0.42],   n: [2, 3], table: tools }
   filing:    { name: "Filing cabinet",   size: [0.48, 1.32, 0.62], n: [1, 2], table: office }
   desk:      { name: "Desk drawers",     size: [1.4, 0.76, 0.7],   n: [1, 2], table: office }
-  vending:   { name: "Vending machine",  size: [1.0, 1.9, 0.8],    n: [3, 5], table: food }
-  fridge:    { name: "Break-room fridge", size: [0.7, 1.7, 0.7],   n: [2, 3], table: food }
+  vending:   { name: "Vending machine",  size: [1.0, 1.95, 0.85],  n: [3, 5], table: food }
+  fridge:    { name: "Break-room fridge", size: [0.8, 1.85, 0.75], n: [2, 3], table: food }
   cagecrate: { name: "Caged supply crate", size: [0.9, 0.7, 0.7],  n: [2, 4], table: cage }
   lockbox:   { name: "Foreman's lockbox", size: [0.7, 0.45, 0.45], n: [3, 4], table: cage }
 # loot tables: token weights. "weapon" rolls a Level 2 weapon, "book" a skill book
