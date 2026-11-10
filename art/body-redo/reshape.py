@@ -25,30 +25,36 @@ def disp(p, b):
 SHIFT = {'f': 0.0, 'm': 0.04}[sex]
 ARMB = lambda nm: nm and any(nm.startswith(sd + k) for sd in ('Left', 'Right') for k in ('Arm', 'ForeArm', 'Hand'))
 def arm_w(nm, w): return w if ARMB(nm) else (0.5 * w if nm in ('LeftShoulder', 'RightShoulder') else 0)
-n = 0
-for o in bpy.data.objects:
-    if o.type != 'MESH' or not o.vertex_groups: continue
-    gi = {g.index: g.name for g in o.vertex_groups}
-    mw = o.matrix_world; inv = mw.inverted()
-    def move(co, groups):
-        p = mw @ co; d = Vector(); 
-        for g in groups:
+# one move field over the welded surface: split verts (uv seams, part borders) share one key, so nothing tears (Nov 10)
+objs = [o for o in bpy.data.objects if o.type == 'MESH' and o.vertex_groups]
+key = lambda p: (round(p.x, 4), round(p.y, 4), round(p.z, 4))
+KD, KN, KADJ, per = {}, {}, {}, []
+for o in objs:
+    gi = {g.index: g.name for g in o.vertex_groups}; mw = o.matrix_world; ks = []
+    for v in o.data.vertices:
+        p = mw @ v.co; d = Vector()
+        for g in v.groups:
             nm = gi.get(g.group)
-            if nm in K and g.weight > 0: d += disp(p, nm) * g.weight
-            if SHIFT and g.weight > 0: d.x += (1 if p.x > 0 else -1) * SHIFT * arm_w(nm, g.weight)
-        return inv @ (p + d) - co
-    ds = [move(v.co, v.groups) for v in o.data.vertices]
-    # the move is smoothed over the mesh's own edges: no step where one bone's thickening meets the next (shoulder dip, Nov 10)
-    nb = [[] for _ in ds]
+            if g.weight <= 0: continue
+            if nm in K: d += disp(p, nm) * g.weight
+            if SHIFT: d.x += (1 if p.x > 0 else -1) * SHIFT * arm_w(nm, g.weight)
+        k = key(p); ks.append(k); KD[k] = KD.get(k, Vector()) + d; KN[k] = KN.get(k, 0) + 1; KADJ.setdefault(k, set())
     for e in o.data.edges:
-        i, j = e.vertices; nb[i].append(j); nb[j].append(i)
-    for _ in range(12):
-        ds = [d * 0.4 + sum((ds[j] for j in nb[i]), Vector()) * (0.6 / len(nb[i])) if nb[i] else d for i, d in enumerate(ds)]
+        i, j = e.vertices; KADJ[ks[i]].add(ks[j]); KADJ[ks[j]].add(ks[i])
+    per.append((o, ks))
+D = {k: KD[k] / KN[k] for k in KD}
+for _ in range(10):
+    D = {k: D[k] * 0.4 + sum((D[j] for j in KADJ[k]), Vector()) * (0.6 / len(KADJ[k])) if KADJ[k] else D[k] for k in D}
+n = 0
+for o, ks in per:
+    inv = o.matrix_world.inverted().to_3x3()
+    ds = [inv @ D[k] for k in ks]
     sk = o.data.shape_keys
     if sk:
         for kb in sk.key_blocks:
             for i, d in enumerate(ds): kb.data[i].co += d
     for i, d in enumerate(ds): o.data.vertices[i].co += d
+    o.data.shade_smooth() if hasattr(o.data, 'shade_smooth') else None
     n += 1
 if SHIFT:
     bpy.context.view_layer.objects.active = arm; bpy.ops.object.mode_set(mode='EDIT')
