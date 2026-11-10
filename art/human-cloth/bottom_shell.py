@@ -88,6 +88,10 @@ bm = bmesh.new(); bm.from_mesh(me)
 def cut(co, no): bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=Mi @ Vector(co), plane_no=(R @ Vector(no)).normalized())
 # clean cut lines: bisect along the hem, both armholes and a fan of planes for the scoop
 bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=4e-4)  # the mirrored halves meet at x=0: weld, or the push opens a seam down the spine
+if os.environ.get('BIB'):  # the women's skin leaves windows at the hip (the underwear covers them): close every gap between the hip and the chest before the cut
+    bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=3e-3)
+    _hb = [e for e in bm.edges if e.is_boundary and all(J['Hips'].z - 0.06 * s < W(v.co).z < J['Spine2'].z for v in e.verts)]
+    _r = bmesh.ops.holes_fill(bm, edges=_hb, sides=80); print('HIPFILL', len(_hb), len(_r['faces']))
 sk = bm.verts.layers.shape; keys = list(sk.keys())
 # a coarse body (the male base) has faces wider than a strap: a cut through one deletes it whole and the strap floats off the back panel. Split the upper body finer first.
 _up = [e for e in bm.edges if max(W(v.co).z for v in e.verts) < (neckz + 0.06 * s if BIB > 0 else waistz + 0.05 * s) and min(W(v.co).z for v in e.verts) > J['LeftFoot'].z]
@@ -99,14 +103,20 @@ def F(co):  # >0 inside the garment, the cut is its zero line (a contour, so eve
     p = W(co)
     g = waistz - p.z  # a continuous signed field: union of pants, bib and straps, so the contour cut runs smooth
     if BIB > 0:  # overalls: a bib up the front to the chest, straps over each shoulder to the back
-        fr = p.y - J['Spine'].y + 0.01 * s  # >0 in front of the spine (front is +Y in this world space)
-        bib = min(J['Spine2'].z + BIB * s - p.z, 0.085 * s - abs(p.x), fr)
+        fr = J['Spine'].y - p.y + 0.01 * s  # >0 in front of the spine (front is -Y)
+        bib = min(J['Spine2'].z + BIB * s - p.z, 0.1 * s - abs(p.x), fr)
         sc = 0.5 * (NW * s + xstrap)  # strap centre: midway between neck and shoulder edge on THIS body
         strap = min(neckz + 0.06 * s - p.z, 0.022 * s - abs(abs(p.x) - sc))
         back = min(J['Spine1'].z - p.z, 0.11 * s - abs(p.x), -fr + 0.02 * s)  # a back rise to mid-back the straps meet
-        g = max(g, bib, strap, back)
+        side = J['Spine1'].z + 0.01 * s - p.z  # the sides rise above the hip bone, no window over the hip
+        g = max(g, bib, strap, back, side)
     return min(g, cuff(p))
 f = {v: F(v.co) for v in bm.verts}
+if os.environ.get('DBGH'):
+    for v in bm.verts:
+        q = W(v.co)
+        if abs(q.x) > 0.13 and J['Hips'].z < q.z < J['Spine1'].z and f[v] < 0: print('NEG', [round(c, 3) for c in q], round(f[v], 3), 'waist', round(waistz, 3), 'cuff', round(cuff(q), 3))
+
 cross = [e for e in bm.edges if (f[e.verts[0]] > 0) != (f[e.verts[1]] > 0)]
 made = set()
 for e in cross:
