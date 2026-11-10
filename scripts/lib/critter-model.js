@@ -8,6 +8,7 @@ import HAIR from './data/hair.yml'
 import WARDROBE from './data/wardrobe.yml'
 import SPLIT from './data/wardrobe-split.yml'
 import HAIR_SLOTS from './data/hair-slots.yml'
+import HAIR_TEX from './data/hair-tex.yml'
 import WARD_SLOTS from './data/ward-slots.yml'
 // hair: its own GLB skinned whole to the Head bone (scripts/lib/data/hair.yml), tinted by the look's hairc; a mask hides it
 export const HAIR_ID = 'critter-hair'
