@@ -12,7 +12,10 @@ def acc(i):
     st = v.get("byteOffset", 0) + a.get("byteOffset", 0)
     return st, n, a["count"]
 def mirror(i, path):
-    st, n, c = acc(i); arr = np.frombuffer(BIN, np.float32, c * n, st).reshape(c, n).copy()
+    st, n, c = acc(i); ct = J["accessors"][i]["componentType"]
+    dt = {5126: np.float32, 5122: np.int16, 5120: np.int8}[ct]  # rotations may be normalized shorts
+    arr = np.frombuffer(BIN, dt, c * n, st).reshape(c, n).copy()
+    if dt is not np.float32: arr = np.maximum(arr, -np.iinfo(dt).max)
     if path == "rotation": arr[:, 1] *= -1; arr[:, 2] *= -1
     elif path == "translation": arr[:, 0] *= -1
     BIN[st: st + arr.nbytes] = arr.tobytes()
