@@ -1,5 +1,5 @@
 // Puts art/body-rig/bra.py's band into the female body as Under_top, same node, skin, material and Bust morph; meshopt-packed.
-// bun bra-splice.mjs <body.glb> <bra.json> <out.glb>
+// bun bra-splice.mjs <body-plain.glb: the dequantized body, metres> <bra.json> <out.glb>
 import { NodeIO } from '@gltf-transform/core';
 import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
 import { MeshoptDecoder, MeshoptEncoder } from 'meshoptimizer';
