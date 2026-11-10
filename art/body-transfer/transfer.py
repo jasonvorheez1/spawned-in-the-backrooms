@@ -42,6 +42,9 @@ WR = abs(J['LeftHand'][0].x)
 def weight(p):
     w = 1 - ss(NECK0, NECK1, p.z)
     if p.z > J['LeftArm'][0].z - .25: w *= 1 - ss(WR - .07, WR - .015, abs(p.x))
+    hz = J['Hips'][0].z  # pelvis: hers keeps the game's curves (Shelly: curvy females), and nobody's crotch takes the move (it creased)
+    w *= 1 - (0.8 if SEX == 'f' else 0.5) * (1 - ss(.10, .2, abs(p.z - (hz - .02))))
+    w *= 1 - (1 - ss(.05, .09, abs(p.x))) * (1 - ss(.06, .12, abs(p.z - (hz - .1))))
     if SEX == 'm':  # his chest stays the game's flat one: the rebuilt base still carries the female bust there
         cz = J['LeftArm'][0].z - .07; sy = J['Spine2'][0].y
         w *= 1 - (1 - ss(.10, .17, abs(p.x))) * (1 - ss(.09, .16, abs(p.z - cz))) * ss(sy + .02, sy - .04, p.y)
