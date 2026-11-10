@@ -67,6 +67,9 @@ def cut(co, no): bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.
 # clean cut lines: bisect along the hem, both armholes and a fan of planes for the scoop
 bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=2e-5)  # the mirrored halves meet at x=0: weld, or the push opens a seam down the spine
 sk = bm.verts.layers.shape; keys = list(sk.keys())
+# a coarse body (the male base) has faces wider than a strap: a cut through one deletes it whole and the strap floats off the back panel. Split the upper body finer first.
+_up = [e for e in bm.edges if min(W(v.co).z for v in e.verts) > neckz - 0.16 * s]
+bmesh.ops.subdivide_edges(bm, edges=_up, cuts=2, use_grid_fill=True)
 def F(co):  # >0 inside the garment, the cut is its zero line (a contour, so every edge is drawn, not stepped)
     p = W(co)
     return min(p.z - hem, armlim(p.z) - abs(p.x), necklim(p.x, p.y) - p.z)
