@@ -4,7 +4,7 @@ from mathutils import Vector
 args = sys.argv[sys.argv.index('--')+1:]; src, dst, sex = args[0], args[1], args[2]
 # k = cross-section scale along each bone, [at head, at tail]; picked against the refs (Anime Girl / Miyu, Zhongli)
 K = {
- 'f': {'LeftUpLeg': (1.24, 1.14), 'LeftLeg': (1.10, 1.02), 'Hips': (1.12, 1.12), 'Spine': (1.04, 1.0), 'LeftArm': (1.10, 1.06), 'LeftForeArm': (1.05, 1.0)},
+ 'f': {'LeftUpLeg': (1.14, 1.13), 'LeftLeg': (1.11, 1.0), 'Hips': (1.06, 1.06), 'Spine': (1.04, 1.0), 'LeftArm': (1.10, 1.06), 'LeftForeArm': (1.05, 1.0)},
  'm': {'LeftUpLeg': (1.18, 1.12), 'LeftLeg': (1.14, 1.04), 'Hips': (1.06, 1.08), 'Spine': (1.06, 1.12), 'Spine1': (1.12, 1.18), 'Spine2': (1.18, 1.16), 'LeftShoulder': (1.15, 1.25), 'LeftArm': (1.25, 1.14), 'LeftForeArm': (1.14, 1.06), 'Neck': (1.12, 1.05)},
 }[sex]
 for n in list(K):
