@@ -16,7 +16,7 @@ l12-chair-seat:
   feetPosition: {x: 0, y: 0, z: 0.45}
   id: l12-chair-seat
   rotation: {yaw: 0}
-  state: {name: Chair, seat: {d: 0.02, w: 1, y: 0.44}, verb: Sit}
+  state: {c: {x: 0, y: 0.45, z: 0.45}, name: Chair, seat: {d: 0.02, w: 1, y: 0.44}, verb: Sit}
   tags: [seat]
 l12-clock:
   audio: {clip: cdn/moodboard-realistic-gritty/sfx-wall-clock-slow-mechanical-tick-tock-loop.mp3, gain: 0.25, loop: true, maxDistance: 7, spatial: true}
@@ -37,7 +37,7 @@ l12-copy-0:
   physics: static
   primitive: {depth: 0.08, height: 2.06, kind: box, width: 1}
   rotation: {yaw: 35}
-  state: {kind: copydoor, name: Door, verb: Open the Door}
+  state: {c: {x: -34, y: 1.05, z: -22}, kind: copydoor, name: Door, verb: Open the Door}
   tags: [usable]
 l12-copy-1:
   behavior: scripts/level12-use.js
@@ -48,7 +48,7 @@ l12-copy-1:
   physics: static
   primitive: {depth: 0.08, height: 2.06, kind: box, width: 1}
   rotation: {yaw: -80}
-  state: {kind: copydoor, name: Door, verb: Open the Door}
+  state: {c: {x: 41, y: 1.05, z: 9}, kind: copydoor, name: Door, verb: Open the Door}
   tags: [usable]
 l12-copy-2:
   behavior: scripts/level12-use.js
@@ -59,7 +59,7 @@ l12-copy-2:
   physics: static
   primitive: {depth: 0.08, height: 2.06, kind: box, width: 1}
   rotation: {yaw: 170}
-  state: {kind: copydoor, name: Door, verb: Open the Door}
+  state: {c: {x: -12, y: 1.05, z: 58}, kind: copydoor, name: Door, verb: Open the Door}
   tags: [usable]
 l12-copy-3:
   behavior: scripts/level12-use.js
@@ -70,7 +70,7 @@ l12-copy-3:
   physics: static
   primitive: {depth: 0.08, height: 2.06, kind: box, width: 1}
   rotation: {yaw: 20}
-  state: {kind: copydoor, name: Door, verb: Open the Door}
+  state: {c: {x: 27, y: 1.05, z: -51}, kind: copydoor, name: Door, verb: Open the Door}
   tags: [usable]
 l12-copy-4:
   behavior: scripts/level12-use.js
@@ -81,7 +81,7 @@ l12-copy-4:
   physics: static
   primitive: {depth: 0.08, height: 2.06, kind: box, width: 1}
   rotation: {yaw: 110}
-  state: {kind: copydoor, name: Door, verb: Open the Door}
+  state: {c: {x: -63, y: 1.05, z: 31}, kind: copydoor, name: Door, verb: Open the Door}
   tags: [usable]
 l12-door:
   behavior: scripts/level12-use.js
@@ -92,7 +92,7 @@ l12-door:
   physics: static
   primitive: {depth: 0.08, height: 2.06, kind: box, width: 1}
   rotation: {yaw: 0}
-  state: {kind: door12, name: Door, verb: Try the Door}
+  state: {c: {x: 0, y: 1.05, z: -3}, kind: door12, name: Door, verb: Try the Door}
   tags: [usable]
 l12-floor:
   castShadow: false
