@@ -2377,7 +2377,7 @@ l5-hall-mgr:
   behavior: scripts/l5-hall-lay.js
   feetPosition: {x: -38, y: -3, z: 0}
   id: l5-hall-mgr
-  state: {v: 6}
+  state: {seatV: 1, v: 6}
   tags: [l5-hall-mgr]
   visible: false
 l5-hall-palm0:
