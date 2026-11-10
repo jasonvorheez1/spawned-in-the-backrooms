@@ -27,6 +27,8 @@ export function alertFor(ctx, pos) {
   if (!a || ctx.now() - a.at > 5000) return null;
   return Math.hypot(a.x - pos.x, a.z - pos.z) < (L.callRange ?? 24) ? a : null;
 }
+// where the thing that just hit this creature stood (player.js hitTarget writes state.shot): known at any distance for 8 s, never through a hide
+export function shotAt(st, now) { const a = st?.shot; return a && now - a.at < 8000 ? a : null }
 // lit: a wanderer standing under a working fluorescent is seen farther than one in a dead patch
 export function litMul(p) { return p.state?.dark ? 0.75 : 1; }
 // the last sighting, plus where the wanderer was heading

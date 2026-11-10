@@ -6,7 +6,7 @@ import { clearSight } from './lib/sight.js';
 import { knocked, deathRag } from "./lib/knock.js";
 import { heard } from "./lib/hear.js";
 import { crouchMul } from "./lib/sneak.js";
-import { hearOf, sighting, leadOf, raise, alertFor } from "./lib/hunt.js";
+import { hearOf, sighting, leadOf, raise, alertFor, shotAt } from "./lib/hunt.js";
 import L from "./lib/data/level0.yml";
 import { cellAt, cellCenter as cellMid, openPoint, hasPillar, inHub, wallX, wallZ, hasPit, N } from "./lib/maze.js";
 const cellCenter = openPoint; // every standing spot this pack picks is clear of the cell's pillar
@@ -292,6 +292,8 @@ export function update(ctx, dt) {
             m.lead = null;
           }
         }
+        const sh = shotAt(st, now); // shot from beyond hearing: it still turns on the shooter
+        if (sh && (!m.last || m.last.at < sh.at)) { m.last = { ...sh }; m.heard = true; m.lead = null; m.search = null }
       }
 
       if (best) {

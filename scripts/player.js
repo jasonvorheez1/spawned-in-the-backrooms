@@ -451,6 +451,7 @@ export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pe
   }
   if (npc) dmg = pellets > 1 ? pellets * dmgAfterArmor(lookOfNpc(m), dmg / pellets, false, pen) : dmgAfterArmor(lookOfNpc(m), dmg, false, pen) // an agent's or survivor's clothes soak the hit like yours do: a shotgun's pellets one by one, and a hit's armor penetration takes some of it off
   m.state.hp -= dmg
+  if (!npc && !m.tags?.includes('l61fc')) { const sp0 = ctx.self.feetPosition, v0 = ctx.self.velocity ?? {}; m.state.shot = { x: sp0.x, z: sp0.z, vx: v0.x ?? 0, vz: v0.z ?? 0, at: ctx.now() } } // a creature that is hit knows where from, however far: smilers, lurkers and hounds go to the spot (hunt.js shotAt)
   m.state.hitDir = { x: Math.round(f.x * 100) / 100, z: Math.round(f.z * 100) / 100, p: Math.round(heavy * 100) / 100 } // the killing blow's push for a ragdoll death
   if (heavy && !W[s.equipped]?.ranged && powerKnock(ctx, m, f, heavy, attrsOfS(s)) > 0) { ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2.2, z: m.feetPosition.z }, text: 'KNOCKDOWN', color: '#ff9a3c', size: 1.2 }); sound(ctx, 'brutal-kick-body-flies-and-crashes', 1) }
   if (npc || m.tags?.includes('l61fc')) { m.state.angry = { ...(m.state.angry ?? {}), [ctx.self.id]: true }; m.state.fresh = { ...(m.state.fresh ?? {}), [ctx.self.id]: true } } // the camp remembers who shot first; a fresh shot spreads even after a pardon

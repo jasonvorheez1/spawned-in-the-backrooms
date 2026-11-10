@@ -1,4 +1,4 @@
-import { hearOf } from './lib/hunt.js';
+import { hearOf, shotAt } from './lib/hunt.js';
 import { clearSight } from './lib/sight.js';
 // Level 1's hounds: one manager steps the pack. They roam the halls, hunt when they see or hear you,
 // hunt harder in a Flickering, and never cross into the corridors (safe ground).
@@ -123,6 +123,7 @@ export function update(ctx, dt) {
       if (prey) best = Math.hypot(prey.feetPosition.x - pos.x, prey.feetPosition.z - pos.z);
     }
     if (prey) m.lastSeen = { x: prey.feetPosition.x, z: prey.feetPosition.z, at: now };
+    else { const sh = shotAt(st, now); if (sh && (!m.lastSeen || (m.lastSeen.at ?? 0) < sh.at)) m.lastSeen = { x: sh.x, z: sh.z, at: now } } // shot from afar: it runs to where the shot came from
     if (L3) {
       if (!prey) { // ambush: crouched in a dead end until someone walks past or turns their back
         m.home ??= { x: pos.x, z: pos.z };
