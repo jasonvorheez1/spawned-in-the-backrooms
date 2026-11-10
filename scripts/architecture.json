@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 4421,
-  "updatedAt": "2026-11-10T16:33:03.535Z",
+  "basedOnSpecVersion": 4435,
+  "updatedAt": "2026-11-10T16:39:12.171Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG across an authored Level 0 maze, authored deeper levels, and shared destinations. `templates/player.js` composes player behaviors; place simulations and shared scripts own local environments, combat, NPCs, loot, crafting, UI, avatar presentation, progression, and reusable world systems.",
   "scriptPaths": [],
   "places": [
@@ -20,7 +20,7 @@
     "scripts/main-menu.js + scripts/main-menu-ui.js + intake/tutorial scripts - title/pause, character creation, arrival, tutorial routing, first-arrival cutscene, BODIES toggle and solo pause time-scale.",
     "places/level1/sim.js + scripts/lib/level1.js + scripts/level1-geo.js, level1-details-geo.js, level1-deck-geo.js - seeded Level 1 ground-floor/deck generation and shared deck/ramp layout.",
     "places/level1/cells/x0z0.scene + scripts/dina-diary.js + scripts/lib/dina-quest.js - Dina camp/diary entry and quest progression; Voss and Cabin 23/Phoebe/stow-nest interactions are in Level 26.",
-    "scripts/camera.js + scripts/view3.js + scripts/ui.js - camera, third-person toggle, HUD and panels; scripts/loot-ui.js renders HALOGEN inventory, quick slots and carried tapes.",
+    "scripts/camera.js + scripts/view3.js + scripts/ui.js - camera, third-person toggle, HUD and panels; scripts/loot-ui.js renders inventory, equipment, quick slots and carried tapes.",
     "scripts/quest-marker.js + scripts/lib/quests.js + scripts/lib/quest-mark.js - per-player journal, tracking, objective resolution and markers; folds legacy quest state into shared records.",
     "places/level27/sim.js + places/level27/cells/x0z0.scene - Level 27 cave/spring local construction and its two authored roof-light placements; sim also owns mineral nodes and bath tick."
   ],
@@ -31,7 +31,7 @@
     "scripts/lib/level11-vaults.js + scripts/lib/level11-depths.js + scripts/l11-crawl-geo.js + scripts/lib/data/l11-depths.yml + scripts/lib/data/l11-crawl-kit.yml - Level 11 security gates, crawl geometry/data, rooms, foe roster and storeroom.",
     "scripts/lib/build-piece.js + scripts/lib/data/breakables.yml + scripts/lib/data/furniture.yml - canonical breakable/material/build specs and furniture models shared by B-mode, harvesting and reconstruction.",
     "scripts/lib/data/craft.yml + scripts/lib/craft.js - recipe catalog, skill/bench requirements, ingredients and outputs; craft helpers are shared by action and UI.",
-    "scripts/lib/screen.js - derived read-only screen classifier and wrist gates; scripts/lib/quests.js + scripts/lib/quest-mark.js resolve quest records and goals; NPC lore/talk data feed talk handlers.",
+    "scripts/lib/screen.js + scripts/lib/ui-theme.js - derived read-only screen classifier/wrist gates and shared restrained UI styling injected by scripts/ui.js across HUD, inventory, crafting, stats, wardrobe and journal; scripts/lib/quests.js + quest-mark.js resolve quest records/goals, with NPC lore/talk data feeding handlers.",
     "scripts/lib/maze.js + scripts/lib/maze0path.js and scripts/lib/critter-model.js + avatar hair/face/wardrobe data - shared Level 0 layout/navigation and fitted human/furry avatar assembly, skinning, faces, hair and garments."
   ],
   "notableExports": [
@@ -52,30 +52,30 @@
     "scripts/lib/knock.js + scripts/lib/stats.js - foe attributes/weight and shared down/stagger knock outcomes; enemy managers retain AI state and write player-targeting sneakTarget.",
     "scripts/lib/quick-items.js + scripts/player.js - player.state.quickSlots maps digit slots to item IDs; assignQuick validates unique carried items and player quick-use executes actions; scripts/lib/feed.js writes player.state.feed/disc.",
     "places/level1/sim.js and places/level2/sim.js - place.state version markers own one-time seeded/dressing/fixture/door migrations.",
-    "places/level27/sim.js - place.state.builtV and gone own versioned cave layout and mineral regrowth timers; player.state.bathAt tracks continuous bathing, while scripts/l27-use.js changes thirst, sanity and notice on spring-water use."
+    "places/level27/sim.js - place.state.builtV=10 and gone own versioned cave layout and mineral regrowth timers (180 seconds); player.state.bathAt tracks continuous bathing, while scripts/l27-use.js changes thirst, sanity and notice on spring-water use."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker; touch mappings provide corresponding mobile controls.",
+    "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker; touch mappings feed the same named actions.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes aimPt and ranged aimPitch → player.js ballistics.",
     "scripts/routing.js accepts permitted requested rooms; otherwise scripts/lib/hub.js soloRoom selects the player's solo Backrooms room and bonus overflow IDs; toHub/toSolo perform crossings and track roomHop/save-place state.",
     "Fresh visit → scripts/main-menu.js; START enters intake for creation or bonus for completed characters; wardrobe close runs intro-cut then tutorial0 unless t0Done; menu UI renders on menuOpen and solo pause sets place.timeScale.",
-    "scripts/main-menu.js BODIES action or debug pad → world.state.bodyStyle; scripts/critter.js applies style and sweeps occupants through critter-model.js; Avatar look/state.wear → body/head/hair/mask/beard/wardrobe children, with STYLE_V prompting refit/restyle.",
-    "scripts/lib/critter-model.js seatHead compares the current body model with state.headBody → clearAppearance removes incompatible skinned attachments and seats them on the new rig; player/critter update paths recover avatar and held-weapon presentation after unexpected restamps.",
+    "scripts/main-menu.js BODIES action or debug pad → world.state.bodyStyle; scripts/critter.js applies style and sweeps occupants through critter-model.js; Avatar look/state.wear → body/head/hair/mask/beard/wardrobe children, with STYLE_V protecting avatar asset compatibility.",
+    "scripts/lib/critter-model.js seatHead compares the current body model with state.headBody → clearAppearance removes incompatible skinned attachments and seats them on the new rig; player/critter update paths recover avatar and held-weapon presentation.",
     "scripts/lib/hub.js destinations → hub-ui.js and world/player crossings; Bonus Room sim lays NPCs/effects, while hubOffer and mall counters write shop/food state read by handlers and UI.",
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; weapon variants roll through weapons.js.",
     "Player and M.E.G. combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → combat-anims.yml; weapons.yml supplies firearm cycle/sfx/chamber data to player.js and vmpose.js, while stats.js and ballistics.js apply skill/handling.",
-    "scripts/player.js hitAt/hitHeavy and jammedAt → scripts/lib/vmpose.js held viewmodel recoil/jolt; NV melee swing rows in nv-swings.js are smoothly sampled there; third-person body stance and first-person viewmodel share weapon families.",
-    "Craft UI reads craft.yml, skill/bench status and inventory via scripts/lib/craft.js → sends make action to scripts/craft.js; craftOne drafts complete input/output batches before committing player state, with carry checks, optional bonus outputs and reachable/visible/clear workbench validation.",
+    "scripts/player.js hitAt/hitHeavy and jammedAt → scripts/lib/vmpose.js held viewmodel recoil/jolt; NV melee swings are smoothly sampled in nv-swings.js for first-person vmpose, while combat-anims.yml uses DS pack swings on the third-person body (fists retain NV takes).",
+    "Craft UI reads craft.yml, skill/bench status and inventory via scripts/lib/craft.js → sends make action to scripts/craft.js; craftOne drafts complete input/output batches before committing player state, with carry checks, optional bonus output and batch limits.",
     "Level 0 main sim → maze.js seeded geometry/cell helpers and level0-moments.js; moments.js handles placed moments; smilers/lurkers use maze0path and sneak.crouchMul while hunter managers publish pursuit cues."
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/lib/bonus-extra.js + mall-shopper.js/salon-stylist.js/salon-ui.js - authored mall, simulated mall life and one-time neon/fountain lighting effects.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + home reconstruction scripts - per-piece models/dimensions with common placement, persistence and rebuild path.",
     "scripts/door-geo.js + scripts/lib/door-swing.js + build-door and level-specific door handlers - shared parametric leaves/frames and eased hinge motion; Level 2's versioned door pass migrates pre-existing fixtures.",
-    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js - Zenith Station geometry, doors, breach, bots, hazards and station quests.",
+    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js - Zenith Station construction, systems, hazards and bots.",
     "places/level4/cells/x0z0.scene + l4-office.js/l4-office-geo.js/l4-home.js + scripts/lib/l4-people.js/level4-people.yml and scripts/lib/l5-people.js/level5-people.yml - authored office/hotel with role-, look-, dialogue- and schedule-driven residents.",
-    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/* + art/human-body/* + art/body-rig/* + art/body-transfer/* + scripts/mat-anime.js - shared human/furry avatar assembly, skinned attachments and fitted garments; body swaps clear stale children and hair data maps GLB material slots.",
-    "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js - decoded New Vegas melee takes retargeted to the human rig, smoothed for first-person timing and sampled for melee viewmodel swings; weapon styles vary by weapon family.",
+    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/* + art/human-body/* + art/body-rig/* + art/body-transfer/* + scripts/mat-anime.js - shared human/furry avatar assembly, skinning, faces, hair and garments; art/tripo-hair/fit.py fits generated styles to the head.",
+    "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js + scripts/lib/data/combat-anims.yml - retargeted/smoothed NV first-person swings and DS third-person melee clip sets; weapon family chooses strike data.",
     "scripts/lib/nav.js + scripts/meg-agent.js + scripts/l5-staff.js + scripts/l61-staff.js - independent NPC walkers share exact-endpoint/options-aware, short-lived path cache and query budget; Level 26 quest trail points to Voss."
   ],
   "probableOrphans": [
@@ -84,10 +84,10 @@
   ],
   "migrationNotes": [
     "Human rig/wardrobe refresh is STYLE_V = sw79; art/body-rig/assets.json pins body and fitted garment outputs. Keep game skeleton/bone names, animation axes, face/head, hands, morph keys and weights when replacing transferred meshes.",
-    "scripts/lib/critter-model.js humanBodyMorph omits unsupported male Bust on the body while humanMorph keeps its explicit zero for garments; body changes compare state.headBody and clear/reseat skinned attachments, without deleting equipment children.",
-    "art/body-transfer/reshape.py reshapes the game rig/rest pose to approved body joint positions while preserving game bone names, face/morph keys, and downstream bones.json/field.json contracts.",
-    "art/body-transfer/fit.py uses optional FIT_MIN (default 0.005; women's tank used 0.012); it fits garments to the reshaped skin with clearance and carries deltas across shape keys. wardrobe-split.yml keeps body skin separate from skinned wardrobe children; hair GLBs use hair-slots.yml to restrict material overrides to existing slots.",
-    "Crafting output grants are copy-on-write: validate all inputs and every output token before committing state; consumed input weight frees capacity first and a failed optional bonus must not reject the base batch. Keep the 100 craft-per-request bound and bench reach/line-of-sight checks.",
-    "Level 27's sim version is V=10; its cave build migration and place.state.gone mineral regrowth (180 seconds) are place-owned. Keep pool/tunnel positions and exit behavior aligned with scripts/l27-use.js and the home tub crossing markers."
+    "scripts/lib/critter-model.js humanBodyMorph omits unsupported male Bust on the body while humanMorph keeps its explicit zero for garments; body changes compare state.headBody and clear/reseat skinned attachments without deleting equipment.",
+    "art/body-transfer/reshape.py and fit.py preserve game bone names and downstream bones.json/field.json contracts while reshaping the rig/rest pose and fitting garments with clearance and shape-key deltas; wardrobe-split.yml keeps body skin separate from skinned wardrobe pieces.",
+    "art/tripo-hair/fit.py's source-name/output map, MANNEQUIN/FINE_CUT sets and skull-relative width tuning are coupled to generated hair meshes; art/tripo-hair/proof.py renders multi-angle head-fit proofs.",
+    "Third-person melee rows in scripts/lib/data/combat-anims.yml use DS one-/two-hand clips for club/slash/stab/chop/heavy; fists remain NV takes. First-person NV swing samples in nv-swings.js feed vmpose.js separately.",
+    "Crafting output grants are copy-on-write: validate all inputs and every output token before committing state; consumed input weight frees capacity first and a failed optional bonus must not reject the base batch. Keep the 100 craft-per-request limit."
   ]
 }
