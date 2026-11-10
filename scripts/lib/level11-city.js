@@ -47,9 +47,11 @@ export function layCity(ctx, h) {
   const X_AVE = [-140, -70, 0, 70, 140], Z_ST = [-160, -92, 12, 84, 156, 228], CANAL_Z = -30, ROAD_Z = [12, 84, 156, -92, -160, 228];
 
   // ---- the ground, so the city stands on something to the edge of the fog
-  { // the city's under-slab, cut open over the subway stairwell (x 12.4..14.8, z 58.4..62.6)
+  { // Leave the canal and the subway stairwell open; a continuous slab hid the water.
     const G = { ...T("stained-concrete-floor", 40), color: "oklch(0.55 0.015 85)", roughness: 0.9 };
-    bx("l11-ground", 0, -0.45, -125.8, 620, 0.3, 368.4, G);
+    bx("l11-ground",0,-.45,-175,620,.3,270,G);
+    bx("l11-ground-before-subway",0,-.45,19.2,620,.3,78.4,G);
+    for(const side of [-1,1])bx(`l11-ground-canal-end-${side}`,side*280,-.45,-30,60,.3,20,G);
     bx("l11-ground-n", 0, -0.45, 226.3, 620, 0.3, 327.4, G);
     bx("l11-ground-w", -148.8, -0.45, 60.5, 322.4, 0.3, 4.2, G);
     bx("l11-ground-e", 162.4, -0.45, 60.5, 295.2, 0.3, 4.2, G);
@@ -94,26 +96,31 @@ export function layCity(ctx, h) {
   for (const [x0, x1] of [[-250, -59], [59, 250]]) {
     const xc = (x0 + x1) / 2, L = x1 - x0;
     bx(`l11-canal-bed-${x0}`, xc, -4.5, CANAL_Z, L, 0.4, 24, CANAL); bx(`l11-canal-water-${x0}`, xc, -2.2, CANAL_Z, L, 0.08, 20, { color: "oklch(0.38 0.09 220)", opacity: 0.88, transparent: true, roughness: 0.06, metalness: 0.2 });
-    for (const s of [-1, 1]) { sp(`l11-canal-wall-${x0}-${s}`, { feetPosition: { x: xc, y: -4.25, z: CANAL_Z + s * 10.5 }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "quay", L, t: 1.0, H: 4.4, side: -s } }, physics: "static" }); bx(`l11-canal-cope-${x0}-${s}`, xc, 0.2, CANAL_Z + s * 10.5, L, 0.3, 1.3, CURB); }
+    for (const s of [-1, 1]) { sp(`l11-canal-wall-${x0}-${s}`, { feetPosition: { x: xc, y: -4.25, z: CANAL_Z + s * 10.5 }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "quay", L, t: 1.0, H: 4.4, side: -s } }, physics: "static" }); for(const [a,b] of spans(x0,x1,X_AVE.map(x=>[x-12.3,x+12.3])))bx(`l11-canal-cope-${x0}-${s}-${Math.round(a)}`,(a+b)/2,.2,CANAL_Z+s*10.5,b-a,.3,1.3,CURB); }
   }
   for (const ax of X_AVE) if (ax !== 0) {
-    bx(`l11-bridge-${ax}`, ax, -0.45, CANAL_Z, 13, 0.6, 24, ASPH); for (const s of [-1, 1]) { sp(`l11-bridge-par-${ax}-${s}`, { feetPosition: { x: ax + s * 6.4, y: 0.5, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "parapet", L: 24, t: 0.4, H: 0.95 } }, physics: "static" }); sp(`l11-bridge-arch-${ax}-${s}`, { feetPosition: { x: ax + s * 6.4, y: -2.4, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "arch", L: 24, t: 1.2, H: 4.2, S: 17, r: 2.9 } }, physics: "static" }); }
+    bx(`l11-bridge-${ax}`, ax, -0.45, CANAL_Z, 24, 0.6, 24, ASPH); for (const s of [-1, 1]) { sp(`l11-bridge-par-${ax}-${s}`, { feetPosition: { x: ax + s * 11.5, y: 0.5, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "parapet", L: 24, t: 0.4, H: 0.95 } }, physics: "static" }); sp(`l11-bridge-arch-${ax}-${s}`, { feetPosition: { x: ax + s * 11.7, y: -2.4, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "arch", L: 24, t: 1.2, H: 4.2, S: 17, r: 2.9 } }, physics: "static" }); }
   }
 
   // ---- the lots: blocks between the roads, buildings facing outward to the avenues, density thinning with distance from downtown
   const ROWS = [[-149, -103, 2], [-81, -45, 1], [-17, 1, 1], [23, 73, 2], [95, 145, 2], [167, 217, 2]];
   const GAPS = [[-200, -140], [-140, -70], [-70, 0], [0, 70], [70, 140], [140, 200]];
+  // All three density tiers must fit inside RADIUS; the old outer tier began beyond the city edge.
   const KINDS = [["glass_a", "glass_b", "stone", "glass_b", "brick_a", "glass_a", "stone"], ["brick_a", "stone", "brick_b", "mall", "glass_b", "brick_a", "brick_b"], ["house", "house", "brick_b", "mall", "brick_a", "house", "house"]];
   let n = 0;
   if (DBG.buildings) for (const [gx0, gx1] of GAPS) for (const [rz0, rz1, subs] of ROWS) for (const side of [0, 1]) for (let sub = 0; sub < subs; sub++) {
     const cx = side ? gx1 - 11 - 12 : gx0 + 11 + 12, depthZ = (rz1 - rz0) / subs, cz = rz0 + depthZ * (sub + 0.5), yaw = side ? -90 : 90; // west column faces west, east column faces east
     if (Math.abs(cx) <= 47 && cz > -85 && cz < 76) continue; // the centre is hand-placed (sim.js)
     if (cz < -22 && cz > -45 && true) continue; // the canal
-    const d = Math.hypot(cx, cz - 20), tier = d < 120 ? 0 : d < 190 ? 1 : 2, u = hs(Math.round(cx), Math.round(cz), 3), kind = KINDS[tier][Math.floor(hs(Math.round(cx), Math.round(cz), 7) * KINDS[tier].length)];
+    const d = Math.hypot(cx, cz - 20), tier = d < 90 ? 0 : d < 145 ? 1 : 2, u = hs(Math.round(cx), Math.round(cz), 3), kind = Math.abs(cz-CANAL_Z)<38 && d<145 ? (hs(Math.round(cx),Math.round(cz),7)<.5 ? "glass_a" : "glass_b") : KINDS[tier][Math.floor(hs(Math.round(cx), Math.round(cz), 7) * KINDS[tier].length)];
     if (d > RADIUS) continue;
     const dr = dress(kind, hs(Math.round(cx), Math.round(cz), 11));
     if (kind === "house") { for (const k of [-1, 1]) put(`l11-b-${n++}`, kind, cx, cz + k * Math.min(7.5, depthZ / 4 + 3), yaw, { materials: dress(kind, hs(n, 2, 5)) }); }
-    else put(`l11-b-${n++}`, kind, cx, cz, yaw, { materials: dr });
+    else {
+      // Background blocks vary; the enterable tower and skydeck retain authored heights.
+      const tall=kind.startsWith("glass"),height=kind==="mall"?1:(tall ? .86 : .92)+u*(tall ? .22 : .16);
+      put(`l11-b-${n++}`,kind,cx,cz,yaw,{materials:dr,spec:{scale:{x:1,y:height,z:1}}});
+    }
   }
   // ---- hand-placed hero buildings around the old centre (the new ones the level was missing)
   const dressOf = (kind, s) => dress(kind, s);

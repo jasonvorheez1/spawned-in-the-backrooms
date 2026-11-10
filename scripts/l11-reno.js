@@ -8,6 +8,7 @@
 //  "worklight": a halogen work light on a tripod stand, 1.8 m, the lamp head facing +z.
 //  "sawhorse":  a plywood work table on two steel sawhorses, 2.4 x 1.2, top at 0.86.
 // Vertex colours carry the paint; the placement's material is white.
+import { path } from "./lib/l5-hall-kit.js";
 const BLOCK = "oklch(0.8 0.025 85)", BLOCK_DIRTY = "oklch(0.68 0.03 75)", CONC = "oklch(0.7 0.015 80)", CONC_DARK = "oklch(0.55 0.015 80)";
 const STUD = "oklch(0.78 0.01 240)", DRY = "oklch(0.9 0.015 90)", DRY_TAPE = "oklch(0.95 0.01 90)", FRAME = "oklch(0.3 0.01 250)";
 const GRID = "oklch(0.92 0.005 90)", TILE = "oklch(0.86 0.02 90)", DUCT = "oklch(0.8 0.005 240)", ALU = "oklch(0.82 0.01 240)";
@@ -77,10 +78,15 @@ function shell(ctx, lod) {
     let k = 0;
     for (let i = 0; i < 14; i++) for (let j = 0; j < 28; j++) {
       k = (k * 1103 + i * 31 + j * 17 + 7) % 97;
-      if (k > 34 && !(i > 3 && i < 9)) continue; // the middle bays stripped for the duct run
+      if (k > 34 || (i > 3 && i < 9)) continue; // the middle bays stripped for the duct run
       const x0 = -8.4 + i * 1.2, z0 = -8.4 + j * 0.6, sag = k % 5 === 0 ? 0.04 : 0;
       box(ctx, x0 + 0.014, gy + 0.02 - sag, z0 + 0.014, x0 + 1.186, gy + 0.035 - sag, z0 + 0.586);
     }
+  }
+  if(lod<3){
+    ctx.color(BLACK);
+    for(const [x,z,sag]of [[-7.6,-6.4,1.15],[-6.4,-4.1,.85],[-5.2,-6.1,1.4],[-3.4,6.3,1.1]])
+      path(ctx,[[x,gy,z],[x+.12,gy-.4,z+.08],[x+.22,gy-sag,z+.14],[x+.38,gy-sag-.12,z+.04]],.008,6);
   }
   // the main duct: round, spiral seams, hung on straps, a branch to the north wall
   const n = lod >= 3 ? 8 : 16;
