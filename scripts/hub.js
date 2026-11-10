@@ -80,6 +80,7 @@ export function onInput(ctx, input) {
     s.hubShop = null; s.hubFood = null
     if (ctx.session.ride) return
     if (d.v === "level0") return board(ctx, s, "main", false)
+    if (d.v === "testlab") return board(ctx, s, "testlab", false) // the Test Range (Shelly, Nov 10)
     if (d.v === "last") { const l = lastLevel(s); if (l) return board(ctx, s, l, true) }
     const h = HOMES.find((x) => x.key === d.v)
     if (h && h.has(s)) return board(ctx, s, h.to, false)

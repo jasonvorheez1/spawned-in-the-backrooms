@@ -39,7 +39,7 @@ export function hubUi(ctx, player) {
   } else if (k === "station") {
     title = "Teleport Station"; sub = "Back to your own Backrooms. Solo from here on."
     const last = lastLevel(s)
-    rows = (last ? `<div class="row"><div><div class="n">Last level</div><div class="i">${LEVEL_NAMES[last] ?? last} · where you left off</div></div><button onclick="${act("travel", "last")}">GO</button></div>` : "") + `<div class="row"><div><div class="n">Level 0</div><div class="i">The Lobby</div></div><button onclick="${act("travel", "level0")}">GO</button></div>` +
+    rows = (last ? `<div class="row"><div><div class="n">Last level</div><div class="i">${LEVEL_NAMES[last] ?? last} · where you left off</div></div><button onclick="${act("travel", "last")}">GO</button></div>` : "") + `<div class="row"><div><div class="n">Level 0</div><div class="i">The Lobby</div></div><button onclick="${act("travel", "level0")}">GO</button></div>` + (player?.isEditor ? `<div class="row"><div><div class="n">Test Range</div><div class="i">Every weapon, consumable, physics, crafting · builders only</div></div><button onclick="${act("travel", "testlab")}">GO</button></div>` : "") +
       HOMES.map((h) => `<div class="row"><div><div class="n">${h.name}</div><div class="i">${h.has(s) ? h.where : "Locked · not unlocked yet"}</div></div><button ${h.has(s) ? "" : "disabled"} onclick="${act("travel", h.key)}">GO</button></div>`).join("")
   }
   return `${CSS}<div id="hubp" data-modal><button class="x" onclick="${act("close")}">×</button><h2>${title}</h2><div class="sub">${sub}</div>${k !== "station" ? `<div class="cash">Backdollars: ${bd(cash)}</div>` : ""}${rows}</div>`
