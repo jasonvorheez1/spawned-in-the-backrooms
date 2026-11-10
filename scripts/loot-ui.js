@@ -464,6 +464,7 @@ function detail(t, s, def) {
         ${w.pellets ? cell('PELLETS', `${w.pellets} BUCKSHOT`, true) : ''}
         ${w.sneak && w.sneak > 1 ? cell('SNEAK CRIT', `x${w.sneak} DAMAGE`, true) : ''}
       </div>
+      ${passivesOf(w).length ? `<div class="rep-box"><div class="rep-box-title"><span>PASSIVES</span></div>${passivesOf(w).map(([n, d]) => `<div style="display:flex;justify-content:space-between;gap:8px;padding:2px 0"><span>${n}</span><b style="font-weight:normal;opacity:.8">${d}</b></div>`).join('')}</div>` : ''}
       ${repHtml}
     </div>`
   }
@@ -855,5 +856,20 @@ export function lootUi(ctx, player) {
     out += `<div id="lp" class="pb"><div class="nm"><span class="key">${key}</span><span>${f.verb}</span><span style="color:${f.color || 'inherit'}">${f.name}</span></div><div class="in">${f.info || ''}</div></div>`
   }
   if (false && s.notice && ctx.now() - s.notice.at < 2200) out += `<div id="ln" class="pb"><span>${s.notice.text}</span></div>`
+  return out
+}
+
+// what a weapon does beyond its numbers, read off its weapons.yml row (Shelly, Nov 10: passives belong on the card)
+function passivesOf(w) {
+  const out = []
+  if (w.vaporize) out.push(['VAPORIZE', 'KILLS BURN TO ASH'])
+  if (w.critBonus) out.push(['STEADY AIM', `+${Math.round(w.critBonus * 100)}% CRIT CHANCE`])
+  if (w.critMul && w.critMul !== 2) out.push(['CRIT DAMAGE', `x${w.critMul}`])
+  if (w.stun) out.push(['STUN', 'HITS STAGGER'])
+  if (w.energy) out.push(['ENERGY', 'RUNS ON CELLS'])
+  if (w.auto) out.push(['FULL AUTO', 'HOLD TO FIRE'])
+  if (w.quiet) out.push(['SUPPRESSED', 'HUNTERS HEAR LESS'])
+  if (w.two) out.push(['TWO-HANDED', 'BOTH HANDS'])
+  if (w.unique) out.push(['UNIQUE', 'ONE OF A KIND'])
   return out
 }
