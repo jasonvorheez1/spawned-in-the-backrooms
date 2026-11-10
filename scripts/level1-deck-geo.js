@@ -68,8 +68,7 @@ export function geometry(ctx) {
     prism(ctx, chamf(x, z, r, c), Y + 0.14, Y + 1.4); prism(ctx, chamf(x, z, r, c), Y + 1.75, TOP);
     ctx.albedo(null); ctx.roughness(0.7); ctx.color(sectorOf(Math.min(N - 1, i), Math.min(N - 1, j)).band); prism(ctx, chamf(x, z, r + 0.004, c), Y + 1.4, Y + 1.75);
     ctx.color("oklch(0.42 0.01 250)"); ctx.roughness(0.85); prism(ctx, chamf(x, z, r + 0.03, c + 0.02), Y, Y + 0.14);
-    if (hi) { ctx.color("oklch(0.82 0.15 88)"); for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { // yellow corner guards, scuffed
-      const gx = x + dx * (r + 0.02), gz = z + dz * (r + 0.02); if (dx) box(ctx, gx - 0.015, gx + 0.015, Y + 0.14, Y + 1.1, z - 0.06, z + 0.06); else box(ctx, x - 0.06, x + 0.06, Y + 0.14, Y + 1.1, gz - 0.015, gz + 0.015); } }
+    // corner guards: a Tripo model per column (places/level1/sim.js, l1-dg-*)
   }
   // ceiling with its downstand beams on the column lines, and the white service pipes
   ctx.albedo(CEIL); ctx.color("oklch(0.88 0.004 250)"); ctx.roughness(0.95);
@@ -97,10 +96,7 @@ export function geometry(ctx) {
   // ramp holes: a curb and a pipe rail on the three sides you could fall from
   for (const r of RAMPS) { const b = rampBox(r);
     ctx.albedo(WALL); ctx.color("oklch(0.74 0.012 80)");
-    box(ctx, b.x0, b.x1, Y, Y + 0.9, b.z0 - 0.14, b.z0); box(ctx, b.x0, b.x1, Y, Y + 0.9, b.z1, b.z1 + 0.14); box(ctx, b.xl - 0.07, b.xl + 0.07, Y, Y + 0.9, b.z0, b.z1);
-    ctx.albedo(null); ctx.color("oklch(0.8 0.16 90)"); ctx.metalness(0.3); ctx.roughness(0.5);
-    for (const z of [b.z0 - 0.07, b.z1 + 0.07]) tube(ctx, [[b.x0, Y + 1.15, z], [b.x1, Y + 1.15, z]], [0.035, 0.035], 8, [1, 1], 0, 1, 1);
-    tube(ctx, [[b.xl, Y + 1.15, b.z0], [b.xl, Y + 1.15, b.z1]], [0.035, 0.035], 8, [1, 1], 0, 1, 1); ctx.metalness(0);
+    box(ctx, b.x0, b.x1, Y, Y + 0.25, b.z0 - 0.14, b.z0); box(ctx, b.x0, b.x1, Y, Y + 0.25, b.z1, b.z1 + 0.14); box(ctx, b.xl - 0.07, b.xl + 0.07, Y, Y + 0.25, b.z0, b.z1); // a 25 cm curb; the Tripo guard rails stand on it (l1-dr-*)
   }
   // the ramps: a solid poured wedge, ground to deck, curbed both sides with a rail, yellow chevrons at the foot
   for (const r of RAMPS) { const b = rampBox(r), dir = r.dir;

@@ -162,7 +162,7 @@ export function tick(ctx) {
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz), at = Object.fromEntries(AGENTS.map(([id, dx, dz]) => [id, [dx, dz]]));
     keepPeople(ctx, Object.keys(at), (ctx, id) => { ctx.spawn(id, agentSpec(a, id, ...at[id])); ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody("pistol") }); });
   }
-  if (s.l1Deck !== 2) { s.l1Deck = 2; for (const o of ctx.query({ tags: ["l1deck"] })) delete ctx.place.objects[o.id]; // the upper deck (Shelly: "there should be at least a second floor"): its slab, ramps, lamps and what was left up there
+  if (s.l1Deck !== 3) { s.l1Deck = 3; for (const o of ctx.query({ tags: ["l1deck"] })) delete ctx.place.objects[o.id]; // the upper deck (Shelly: "there should be at least a second floor"): its slab, ramps, lamps and what was left up there
     for (const r of RAMPS) { const b = rampBox(r); for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id], f = o?.feetPosition; if (!f || id === "l1-geo" || o.tags?.includes?.("player") || f.y > 3.5) continue;
       if (f.x > b.x0 - 0.3 && f.x < b.x1 + 0.3 && f.z > b.z0 + 0.4 && f.z < b.z1 - 0.4) delete ctx.place.objects[id]; } } // nothing parked on the ramps
     ctx.spawn("l1-deck", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level1-deck-geo.js" }, material: { roughness: 0.85, emissiveIntensity: 3 } });
@@ -180,6 +180,18 @@ export function tick(ctx) {
     const stack = (id, x, z, yaw) => BOXSTACK.slice(0, 2 + Math.floor(hash(x, z, 7) * 2.99) + 1).forEach(([m, y, w, h, d], i) => { const bx = i > 0, j = bx ? hash(x, z, 30 + i) - 0.5 : 0;
       ctx.spawn(id + (bx ? "-b" + (i - 1) : "-p"), { tags: bx ? ["l1prop", "l1deck", "container", "breakable"] : ["l1prop", "l1deck"], feetPosition: { x: x + j * 0.08, y: Y + y, z: z - j * 0.06 }, rotation: { yaw: yaw + j * 14 }, model: { id: m }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 },
         state: bx ? { name: "Cardboard Box", loose: "wood", mat: "wood", hp: 20, maxHp: 20, items: rollItemL1(ctx) } : { name: "Pallet", loose: "wood", mat: "wood", items: "scrap_wood" } }); });
+    // Tripo pieces (Shelly: "make them not blocky using tripo"): guard rails round the ramp holes, rubber corner guards on every column, wheel stops in the bays
+    const RAIL = "/cdn/value.be04f02e2a445068518e992e9c7a1813ef6cc5a7eb5c337211af69ba5babfc44.glb", CGUARD = "/cdn/value.694ad4a95ed42749ebfbc4893edb3a22bd6d676c4c219b786fbe7cf4d55b828f.glb", STOP = "/cdn/value.9bb20ea40f4fe00c4725e7939096b42e95266469a2015a09133e471af18e3891.glb";
+    const rail = (id, x, z, yaw, len) => ctx.spawn(id, { tags: ["l1deck"], feetPosition: { x, y: Y + 0.25, z }, rotation: { yaw }, model: { id: RAIL }, layout: { box: { min: { x: -len / 2, y: 0, z: -0.12 }, max: { x: len / 2, y: 1.0, z: 0.12 } } }, physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 45 } });
+    for (const r of RAMPS) { const b = rampBox(r), n = Math.round((b.x1 - b.x0) / 2), m = Math.round((b.z1 - b.z0) / 2);
+      for (let k = 0; k < n; k++) { const x = b.x0 + ((k + 0.5) / n) * (b.x1 - b.x0); rail(`l1-dr-${r.cx}-a${k}`, x, b.z0 - 0.07, 0, (b.x1 - b.x0) / n); rail(`l1-dr-${r.cx}-b${k}`, x, b.z1 + 0.07, 0, (b.x1 - b.x0) / n); }
+      for (let k = 0; k < m; k++) rail(`l1-dr-${r.cx}-e${k}`, b.xl, b.z0 + ((k + 0.5) / m) * (b.z1 - b.z0), 90, (b.z1 - b.z0) / m); }
+    for (let i = DECK.cx0; i <= DECK.cx1 + 1; i++) for (let j = DECK.cz0; j <= DECK.cz1 + 1; j++) { if (!hasPillar(i, j)) continue;
+      ctx.spawn(`l1-dg-${i}-${j}`, { tags: ["l1deck"], feetPosition: { x: i * S - HALF, y: Y, z: j * S - HALF }, rotation: { yaw: (i * 7 + j * 3) % 4 * 90 }, model: { id: CGUARD }, layout: { box: { min: { x: -0.55, y: 0, z: -0.55 }, max: { x: 0.55, y: 1.41, z: 0.55 } } }, castShadow: false, visibleRange: { max: 40 } }); }
+    for (let cx = DECK.cx0; cx <= DECK.cx1; cx++) for (const cz of [DECK.cz0, DECK.cz1]) { if (rampCell(cx, cz) || hash(cx, cz, 511) <= 0.32) continue;
+      const x0 = cx * S - HALF, z = cz === DECK.cz0 ? cz * S - HALF + 1.0 : (cz + 1) * S - HALF - 1.0;
+      for (let k = 0; k < 3; k++) { if (hash(cx, cz, 520 + k) < 0.18) continue; // a few bays lost theirs
+        ctx.spawn(`l1-dw-${cx}-${cz}-${k}`, { tags: ["l1deck"], feetPosition: { x: x0 + ((k + 0.5) / 3) * S + (hash(cx, cz, 530 + k) - 0.5) * 0.3, y: Y, z }, rotation: { yaw: (hash(cx, cz, 540 + k) - 0.5) * 8 }, model: { id: STOP }, layout: { box: { min: { x: -0.9, y: 0, z: -0.16 }, max: { x: 0.9, y: 0.2, z: 0.16 } } }, physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 35 } }); } }
     for (let cx = DECK.cx0; cx <= DECK.cx1; cx++) for (const cz of [DECK.cz0, DECK.cz1]) { // pallets left in the bays, nosed to the parapet
       if (rampCell(cx, cz) || hash(cx, cz, 511) > 0.32) continue; const c = cellCenter(cx, cz), out = cz === DECK.cz0 ? -1 : 1;
       stack("l1dp-" + cx + "-" + cz, c.x + (hash(cx, cz, 513) - 0.5) * 4, c.z + out * 2.2, hash(cx, cz, 515) * 30 - 15 + 90);
