@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 128; // bump to rebuild the city in rooms that are already open
+const V = 129; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -188,6 +188,11 @@ function lay(ctx) {
   bx("l11-curb-e-mid", 8.1, 0.08, -6, 0.2, 0.28, 24, CURB_MAT);
   bx("l11-curb-e-south", 8.1, 0.08, 48, 0.2, 0.28, 56, CURB_MAT);
   bx("l11-curb-e-north", 8.1, 0.08, -55, 0.2, 0.28, 50, CURB_MAT);
+  // the crossing's corners (z 6..20) were bare road: the ATM, hydrant, signals and food cart stood in the gutter
+  for (const s of [-1, 1]) {
+    sp(`l11-sw-cnr-${s}`, { feetPosition: { x: s * 12, y: 0.08, z: 13 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 14, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
+    bx(`l11-curb-cnr-${s}`, s * 8.1, 0.08, 13, 0.2, 0.28, 14, CURB_MAT);
+  }
 
   // Storm Drain Gutter Grates
   for (const gz of [-45, -12, 28, 58]) {
@@ -207,10 +212,10 @@ function lay(ctx) {
   });
 
   // Overhead Traffic Light Gantry at Intersection Z: 12
-  cyl("l11-tlight-mast", -7.8, 0.1, 7.5, 0.16, 0.2, 5.8, IRON_RAIL);
-  bx("l11-tlight-arm", 0, 5.7, 7.5, 15.5, 0.14, 0.14, IRON_RAIL);
+  cyl("l11-tlight-mast", -8.7, 0.33, 7.5, 0.16, 0.2, 5.8, IRON_RAIL);
+  bx("l11-tlight-arm", 0, 5.93, 7.5, 17.4, 0.14, 0.14, IRON_RAIL);
 
-  [[-9.6, 4.6, 0], [9.6, 10.4, 180]].forEach(([x, z, yaw], k) => md(`l11-signal-pole-${k}`, "traffic_signal", x, 0.1, z, undefined, "cylinder", { rotation: { yaw }, layout: { box: { min: { x: -6, y: 0, z: -6 }, max: { x: 6, y: 5.6, z: 6 } } } }));
+  [[-9.6, 4.6, 0], [9.6, 10.4, 180]].forEach(([x, z, yaw], k) => md(`l11-signal-pole-${k}`, "traffic_signal", x, 0.33, z, undefined, "cylinder", { rotation: { yaw }, layout: { box: { min: { x: -6, y: 0, z: -6 }, max: { x: 6, y: 5.6, z: 6 } } } }));
 
   // Blue Intersection Street Name Signs
   sp("l11-st-sign-11th", {
@@ -911,7 +916,7 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
   // First Capital Municipal Street ATM (Animated Cash Dispenser)
   sp("l11-atm", {
     tags: ["usable"],
-    feetPosition: { x: 9.0, y: 0.1, z: 8.5 },
+    feetPosition: { x: 9.0, y: 0.33, z: 8.5 },
     rotation: { yaw: -90 },
     primitive: null, model: { id: "/cdn/value.6cb2687468bbe7dced2e2d4af67085ad72c0b69e324d52a4ffe9c2c925a13451.glb", forward: "-z" }, layout: { box: { min: { x: -0.45, y: 0, z: -0.4 }, max: { x: 0.45, y: 1.9, z: 0.4 } } }, physics: { body: "static", collider: "box" }, // tripo atm
     material: STEEL_BRUSHED,
@@ -955,7 +960,7 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
   // Almond Water Street Vending Machine (Animated Illuminated Cabinet)
   sp("l11-vending", {
     tags: ["usable"],
-    feetPosition: { x: -8.8, y: 0.1, z: 20 },
+    feetPosition: { x: -8.8, y: 0.33, z: 20 },
     rotation: { yaw: 90 },
     primitive: null, model: { id: "/cdn/value.841812d69f4307a900ce500187517702dc1f59e427eb8d7599f6c1f463642e54.glb", forward: "-z" }, layout: { box: { min: { x: -0.6, y: 0, z: -0.475 }, max: { x: 0.6, y: 2.1, z: 0.475 } } }, physics: { body: "static", collider: "box" }, // tripo vend
     material: { color: "oklch(0.25 0.1 230)" },
@@ -1118,7 +1123,7 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
   });
   sp("l11-payphone", {
     tags: ["usable"],
-    feetPosition: { x: -8.8, y: 0.1, z: 15.5 },
+    feetPosition: { x: -8.8, y: 0.33, z: 15.5 },
     rotation: { yaw: 90 },
     primitive: null, material: null, scale: 1.15, model: { id: MODELS.payphone_tripo, forward: "-x" }, physics: { body: "static", collider: "box" }, // tripo street payphone, 1.8 m raw x1.15
     behavior: "scripts/level11-use.js",
@@ -1129,7 +1134,7 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
   // 14. AL'S HOT DOG & PRETZEL CART
   // ==========================================
   sp("l11-foodcart", {
-    feetPosition: { x: 9.2, y: 0.1, z: 15 },
+    feetPosition: { x: 9.2, y: 0.33, z: 15 },
     rotation: { yaw: -90 },
     primitive: null, material: null, scale: 1.8, model: { id: MODELS.foodcart, forward: "+x" }, // tripo hot dog cart, 1.2 m raw x1.8 = 2.2 m with the umbrella
     fx: { script: STEAM_CART },

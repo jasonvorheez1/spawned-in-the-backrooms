@@ -140,9 +140,10 @@ function adSign(sp, b, k, x, z, yaw) {
 }
 // the tripo street kit is already in metres (sedan 4.65 m, van 4.7 m long, along its own X): turned to run along the kerb, a touch up to sit with the 5.6 m taxi
 const TRIPO = { sedan: { forward: "+x", scale: 1.15 }, van: { forward: "+x", scale: 1.15 }, bench: { forward: "+x", scale: 1.1 }, newsbox: { scale: 1.1 }, hydrant: { scale: 1.1 }, trashcan: { scale: 1.1 }, shelter: { forward: "+x", scale: 1.35 }, lamp: { scale: 2.1 } }; // tripo shelter 2.2 m raw -> 3 m, lamp 3.5 m raw -> 7.3 m
+const FURN = new Set(["hydrant", "trashcan", "bench", "shelter", "newsbox"]); // street furniture stands ON the sidewalk (top 0.33), not sunk into it
 export function layStreet(ctx, h) {
   if (!DBG.street) return { cars: [], billboards: [] };
-  const { sp, bx, cyl } = h, put = (id, kind, x, z, yaw, extra = {}, y = 0) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, physics: extra.nophys ? undefined : { body: "static", collider: extra.collider ?? "box" }, model: { id: MODELS[kind], forward: TRIPO[kind]?.forward ?? "-z", materials: extra.materials }, ...(TRIPO[kind] ? { scale: TRIPO[kind].scale } : {}), ...(extra.spec ?? {}) });
+  const { sp, bx, cyl } = h, put = (id, kind, x, z, yaw, extra = {}, y = (FURN.has(kind) && Math.abs(x) >= 8.2 && Math.abs(x) <= 15.8 ? 0.33 : 0)) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, physics: extra.nophys ? undefined : { body: "static", collider: extra.collider ?? "box" }, model: { id: MODELS[kind], forward: TRIPO[kind]?.forward ?? "-z", materials: extra.materials }, ...(TRIPO[kind] ? { scale: TRIPO[kind].scale } : {}), ...(extra.spec ?? {}) });
   const LEN = [-66, -52, -9, 24, 40, 56, 72];
   LEN.forEach((z, i) => [-1, 1].forEach((s) => {
     sp(`l11-st-lamp-${i}-${s}`, { feetPosition: { x: s * 8.9, y: 0, z: z + (s > 0 ? 3 : 0) }, rotation: { yaw: s > 0 ? 90 : -90 }, primitive: { kind: "scripted", script: "scripts/l11-streetlamp.js", seed: 1 }, material: { roughness: 0.5 }, physics: { body: "static" }, castShadow: true }); // Nov 10: scripted cast-iron lamp; the tripo lamp had holes ("street lamp is missing faces")
