@@ -563,7 +563,7 @@ l4-prop-0:
   castShadow: false
   feetPosition: {x: -2.4, y: 0, z: 13}
   id: l4-prop-0
-  layout: {box: {max: {x: 0.33, y: 1, z: 0.33}, min: {x: -0.33, y: 0, z: -0.33}}}
+  layout: {box: {max: {x: 0.45, y: 1.1, z: 0.45}, min: {x: -0.45, y: 0, z: -0.45}}}
   model: {id: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb, materials: {tripo_material_0d61672f-fb28-4bf7-bfcd-1b81e8255e5b: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -575,7 +575,7 @@ l4-prop-1:
   castShadow: false
   feetPosition: {x: -2.4, y: 0, z: -13}
   id: l4-prop-1
-  layout: {box: {max: {x: 0.33, y: 1, z: 0.33}, min: {x: -0.33, y: 0, z: -0.33}}}
+  layout: {box: {max: {x: 0.45, y: 1.1, z: 0.45}, min: {x: -0.45, y: 0, z: -0.45}}}
   model: {id: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb, materials: {tripo_material_0d61672f-fb28-4bf7-bfcd-1b81e8255e5b: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -587,7 +587,7 @@ l4-prop-10:
   castShadow: false
   feetPosition: {x: -23.8, y: 0, z: 9.1}
   id: l4-prop-10
-  layout: {box: {max: {x: 0.28, y: 0.5, z: 0.25}, min: {x: -0.28, y: 0, z: -0.25}}}
+  layout: {box: {max: {x: 0.4, y: 0.48, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
   model: {id: /cdn/value.9bfec9af129aaa4b7b4c57556bba6dbf864c015f8141f3dc12d500fc2a08d32b.glb, materials: {tripo_material_d8def8be-7204-458f-9488-9b06888925c9: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -599,7 +599,7 @@ l4-prop-11:
   castShadow: false
   feetPosition: {x: 8, y: 0, z: -23.7}
   id: l4-prop-11
-  layout: {box: {max: {x: 0.275, y: 0.75, z: 0.225}, min: {x: -0.275, y: 0, z: -0.225}}}
+  layout: {box: {max: {x: 0.45, y: 0.95, z: 0.45}, min: {x: -0.45, y: 0, z: -0.45}}}
   model: {id: /cdn/value.e5ed56b84bef188cc6c3ecde7d4ce92d9b7e95cde01ecf07f0d78964da71ec57.glb, materials: {tripo_material_3ee01d45-c98f-4e24-8a96-018f5680a63e: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -611,7 +611,7 @@ l4-prop-12:
   castShadow: false
   feetPosition: {x: -23.3, y: 0, z: 23.3}
   id: l4-prop-12
-  layout: {box: {max: {x: 0.3, y: 1, z: 0.3}, min: {x: -0.3, y: 0, z: -0.3}}}
+  layout: {box: {max: {x: 0.5, y: 1.3, z: 0.5}, min: {x: -0.5, y: 0, z: -0.5}}}
   model: {id: /cdn/value.4d7639b0dfacf37e47ef1201a69eafbd014a170f2bd3bdca5b0dbde7946025af.glb, materials: {tripo_material_44f9ff0f-9894-49b8-9f56-8e7e0d88da80: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -623,7 +623,7 @@ l4-prop-13:
   castShadow: false
   feetPosition: {x: 23.3, y: 0, z: -23.3}
   id: l4-prop-13
-  layout: {box: {max: {x: 0.3, y: 1, z: 0.3}, min: {x: -0.3, y: 0, z: -0.3}}}
+  layout: {box: {max: {x: 0.5, y: 1.3, z: 0.5}, min: {x: -0.5, y: 0, z: -0.5}}}
   model: {id: /cdn/value.4d7639b0dfacf37e47ef1201a69eafbd014a170f2bd3bdca5b0dbde7946025af.glb, materials: {tripo_material_44f9ff0f-9894-49b8-9f56-8e7e0d88da80: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -635,7 +635,7 @@ l4-prop-14:
   castShadow: false
   feetPosition: {x: 23.3, y: 0, z: 23.3}
   id: l4-prop-14
-  layout: {box: {max: {x: 0.3, y: 1, z: 0.3}, min: {x: -0.3, y: 0, z: -0.3}}}
+  layout: {box: {max: {x: 0.5, y: 1.3, z: 0.5}, min: {x: -0.5, y: 0, z: -0.5}}}
   model: {id: /cdn/value.4d7639b0dfacf37e47ef1201a69eafbd014a170f2bd3bdca5b0dbde7946025af.glb, materials: {tripo_material_44f9ff0f-9894-49b8-9f56-8e7e0d88da80: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -647,7 +647,7 @@ l4-prop-15:
   castShadow: false
   feetPosition: {x: 0, y: 0, z: 15.3}
   id: l4-prop-15
-  layout: {box: {max: {x: 0.78, y: 1.5, z: 0.2}, min: {x: -0.78, y: 0, z: -0.2}}}
+  layout: {box: {max: {x: 0.95, y: 1.55, z: 0.35}, min: {x: -0.95, y: 0, z: -0.35}}}
   model: {id: /cdn/value.8612285ca3c16cd450c63da8345f8b518cacd0c1c649aeed35deedefa666117b.glb, materials: {tripo_material_469f43ae-87a0-4ed2-bbf8-943092f782e3: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -659,7 +659,7 @@ l4-prop-16:
   castShadow: false
   feetPosition: {x: 0, y: 0, z: -15.3}
   id: l4-prop-16
-  layout: {box: {max: {x: 0.78, y: 1.5, z: 0.2}, min: {x: -0.78, y: 0, z: -0.2}}}
+  layout: {box: {max: {x: 0.95, y: 1.55, z: 0.35}, min: {x: -0.95, y: 0, z: -0.35}}}
   model: {id: /cdn/value.8612285ca3c16cd450c63da8345f8b518cacd0c1c649aeed35deedefa666117b.glb, materials: {tripo_material_469f43ae-87a0-4ed2-bbf8-943092f782e3: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -671,7 +671,7 @@ l4-prop-17:
   castShadow: false
   feetPosition: {x: 13, y: 0, z: -2.6}
   id: l4-prop-17
-  layout: {box: {max: {x: 0.78, y: 1.5, z: 0.2}, min: {x: -0.78, y: 0, z: -0.2}}}
+  layout: {box: {max: {x: 0.95, y: 1.55, z: 0.35}, min: {x: -0.95, y: 0, z: -0.35}}}
   model: {id: /cdn/value.8612285ca3c16cd450c63da8345f8b518cacd0c1c649aeed35deedefa666117b.glb, materials: {tripo_material_469f43ae-87a0-4ed2-bbf8-943092f782e3: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -683,7 +683,7 @@ l4-prop-18:
   castShadow: false
   feetPosition: {x: -13, y: 0, z: 2.6}
   id: l4-prop-18
-  layout: {box: {max: {x: 0.78, y: 1.5, z: 0.2}, min: {x: -0.78, y: 0, z: -0.2}}}
+  layout: {box: {max: {x: 0.95, y: 1.55, z: 0.35}, min: {x: -0.95, y: 0, z: -0.35}}}
   model: {id: /cdn/value.8612285ca3c16cd450c63da8345f8b518cacd0c1c649aeed35deedefa666117b.glb, materials: {tripo_material_469f43ae-87a0-4ed2-bbf8-943092f782e3: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -695,7 +695,7 @@ l4-prop-19:
   castShadow: false
   feetPosition: {x: 23.8, y: 0, z: 9.6}
   id: l4-prop-19
-  layout: {box: {max: {x: 0.25, y: 1.32, z: 0.35}, min: {x: -0.25, y: 0, z: -0.35}}}
+  layout: {box: {max: {x: 0.45, y: 1.32, z: 0.45}, min: {x: -0.45, y: 0, z: -0.45}}}
   model: {id: /cdn/value.b3235e64d5fc141bdce6e6173694de1b520a094fdead52f6b0f207ad34a5b401.glb, materials: {tripo_material_ec6aa51b-2aee-427b-9eec-bdf766565006: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0.6, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -707,7 +707,7 @@ l4-prop-2:
   castShadow: false
   feetPosition: {x: 10.8, y: 0, z: 0}
   id: l4-prop-2
-  layout: {box: {max: {x: 0.33, y: 1, z: 0.33}, min: {x: -0.33, y: 0, z: -0.33}}}
+  layout: {box: {max: {x: 0.45, y: 1.1, z: 0.45}, min: {x: -0.45, y: 0, z: -0.45}}}
   model: {id: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb, materials: {tripo_material_0d61672f-fb28-4bf7-bfcd-1b81e8255e5b: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -719,7 +719,7 @@ l4-prop-20:
   castShadow: false
   feetPosition: {x: -23.8, y: 0, z: -10.4}
   id: l4-prop-20
-  layout: {box: {max: {x: 0.25, y: 1.32, z: 0.35}, min: {x: -0.25, y: 0, z: -0.35}}}
+  layout: {box: {max: {x: 0.45, y: 1.32, z: 0.45}, min: {x: -0.45, y: 0, z: -0.45}}}
   model: {id: /cdn/value.b3235e64d5fc141bdce6e6173694de1b520a094fdead52f6b0f207ad34a5b401.glb, materials: {tripo_material_ec6aa51b-2aee-427b-9eec-bdf766565006: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0.6, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -731,7 +731,7 @@ l4-prop-21:
   castShadow: false
   feetPosition: {x: -9.6, y: 0, z: 23.8}
   id: l4-prop-21
-  layout: {box: {max: {x: 0.25, y: 1.32, z: 0.35}, min: {x: -0.25, y: 0, z: -0.35}}}
+  layout: {box: {max: {x: 0.45, y: 1.32, z: 0.45}, min: {x: -0.45, y: 0, z: -0.45}}}
   model: {id: /cdn/value.b3235e64d5fc141bdce6e6173694de1b520a094fdead52f6b0f207ad34a5b401.glb, materials: {tripo_material_ec6aa51b-2aee-427b-9eec-bdf766565006: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0.6, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -743,7 +743,7 @@ l4-prop-22:
   castShadow: false
   feetPosition: {x: 10.4, y: 0, z: -23.8}
   id: l4-prop-22
-  layout: {box: {max: {x: 0.25, y: 1.32, z: 0.35}, min: {x: -0.25, y: 0, z: -0.35}}}
+  layout: {box: {max: {x: 0.45, y: 1.32, z: 0.45}, min: {x: -0.45, y: 0, z: -0.45}}}
   model: {id: /cdn/value.b3235e64d5fc141bdce6e6173694de1b520a094fdead52f6b0f207ad34a5b401.glb, materials: {tripo_material_ec6aa51b-2aee-427b-9eec-bdf766565006: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0.6, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -755,7 +755,7 @@ l4-prop-3:
   castShadow: false
   feetPosition: {x: -15.3, y: 0, z: 0}
   id: l4-prop-3
-  layout: {box: {max: {x: 0.33, y: 1, z: 0.33}, min: {x: -0.33, y: 0, z: -0.33}}}
+  layout: {box: {max: {x: 0.45, y: 1.1, z: 0.45}, min: {x: -0.45, y: 0, z: -0.45}}}
   model: {id: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb, materials: {tripo_material_0d61672f-fb28-4bf7-bfcd-1b81e8255e5b: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -767,7 +767,7 @@ l4-prop-4:
   castShadow: false
   feetPosition: {x: 2.1, y: 0, z: 23.6}
   id: l4-prop-4
-  layout: {box: {max: {x: 0.33, y: 1, z: 0.33}, min: {x: -0.33, y: 0, z: -0.33}}}
+  layout: {box: {max: {x: 0.45, y: 1.1, z: 0.45}, min: {x: -0.45, y: 0, z: -0.45}}}
   model: {id: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb, materials: {tripo_material_0d61672f-fb28-4bf7-bfcd-1b81e8255e5b: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -779,7 +779,7 @@ l4-prop-5:
   castShadow: false
   feetPosition: {x: -23.6, y: 0, z: 2.1}
   id: l4-prop-5
-  layout: {box: {max: {x: 0.33, y: 1, z: 0.33}, min: {x: -0.33, y: 0, z: -0.33}}}
+  layout: {box: {max: {x: 0.45, y: 1.1, z: 0.45}, min: {x: -0.45, y: 0, z: -0.45}}}
   model: {id: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb, materials: {tripo_material_0d61672f-fb28-4bf7-bfcd-1b81e8255e5b: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -791,7 +791,7 @@ l4-prop-6:
   castShadow: false
   feetPosition: {x: 8, y: 0, z: 23.7}
   id: l4-prop-6
-  layout: {box: {max: {x: 0.275, y: 0.75, z: 0.225}, min: {x: -0.275, y: 0, z: -0.225}}}
+  layout: {box: {max: {x: 0.45, y: 0.95, z: 0.45}, min: {x: -0.45, y: 0, z: -0.45}}}
   model: {id: /cdn/value.e5ed56b84bef188cc6c3ecde7d4ce92d9b7e95cde01ecf07f0d78964da71ec57.glb, materials: {tripo_material_3ee01d45-c98f-4e24-8a96-018f5680a63e: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -803,7 +803,7 @@ l4-prop-7:
   castShadow: false
   feetPosition: {x: 9.1, y: 0, z: -23.8}
   id: l4-prop-7
-  layout: {box: {max: {x: 0.28, y: 0.5, z: 0.25}, min: {x: -0.28, y: 0, z: -0.25}}}
+  layout: {box: {max: {x: 0.4, y: 0.48, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
   model: {id: /cdn/value.9bfec9af129aaa4b7b4c57556bba6dbf864c015f8141f3dc12d500fc2a08d32b.glb, materials: {tripo_material_d8def8be-7204-458f-9488-9b06888925c9: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -815,7 +815,7 @@ l4-prop-8:
   castShadow: false
   feetPosition: {x: -23.7, y: 0, z: 8}
   id: l4-prop-8
-  layout: {box: {max: {x: 0.275, y: 0.75, z: 0.225}, min: {x: -0.275, y: 0, z: -0.225}}}
+  layout: {box: {max: {x: 0.45, y: 0.95, z: 0.45}, min: {x: -0.45, y: 0, z: -0.45}}}
   model: {id: /cdn/value.e5ed56b84bef188cc6c3ecde7d4ce92d9b7e95cde01ecf07f0d78964da71ec57.glb, materials: {tripo_material_3ee01d45-c98f-4e24-8a96-018f5680a63e: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
@@ -827,7 +827,7 @@ l4-prop-9:
   castShadow: false
   feetPosition: {x: 9.1, y: 0, z: 23.8}
   id: l4-prop-9
-  layout: {box: {max: {x: 0.28, y: 0.5, z: 0.25}, min: {x: -0.28, y: 0, z: -0.25}}}
+  layout: {box: {max: {x: 0.4, y: 0.48, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
   model: {id: /cdn/value.9bfec9af129aaa4b7b4c57556bba6dbf864c015f8141f3dc12d500fc2a08d32b.glb, materials: {tripo_material_d8def8be-7204-458f-9488-9b06888925c9: {emissive: oklch(0.32 0.02 80), emissiveIntensity: 0.35, metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
