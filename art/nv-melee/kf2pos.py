@@ -99,6 +99,8 @@ for fi in range(nf):
     if "Weapon" in S: loc["WeaponPos"] = [round(c, 4) for c in qrot(inv, tuple(y - x for x, y in zip(world("Bip01 Neck")[0], world("Weapon")[0])))]
     for s in "LR": loc[f"{s}HandPos"] = [round(c, 4) for c in qrot(inv, tuple(y - x for x, y in zip(world("Bip01 Neck")[0], world(f"Bip01 {s} Hand")[0])))]
     frames[-1]["_neck"] = loc
+    # third-person packs: every bone's raw world pose, so the torso's own twist and lean carry over (retarget BODY=1)
+    frames[-1]["_body"] = {n: [[round(c, 4) for c in world(n)[0]], [round(c, 6) for c in world(n)[1]]] for n in PARENT if n in S}
     if fi == 0:
         def lp(n): return qrot(inv, tuple(y - x for x, y in zip(world("Bip01 Neck")[0], world(n)[0])))
         axes = {"up": lp("Bip01 Neck1") if "Bip01 Neck1" in S else lp("Bip01 Neck"), "right": tuple(r - l for l, r in zip(lp("Bip01 L Clavicle"), lp("Bip01 R Clavicle")))}

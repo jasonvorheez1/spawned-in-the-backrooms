@@ -8,7 +8,7 @@ argv = sys.argv[sys.argv.index("--") + 1:]
 hum, outdir, files = argv[0], argv[1], argv[2:]
 G = Matrix.Rotation(math.radians(-90), 3, "Z")
 SRC = {"Spine": ("Bip01 Spine", "Bip01 Spine1"), "Spine1": ("Bip01 Spine1", "Bip01 Spine2"), "Spine2": ("Bip01 Spine2", "Bip01 Neck"),
-       "Neck": ("Bip01 Neck", "Bip01 Neck1"), "Head": None}
+       "Neck": ("Bip01 Neck", "Bip01 Neck1"), "Head": ("Bip01 Head", "Bip01 Head")}
 for s, L in (("Left", "L"), ("Right", "R")):
     SRC.update({s+"Shoulder": (f"Bip01 {L} Clavicle", f"Bip01 {L} UpperArm"), s+"Arm": (f"Bip01 {L} UpperArm", f"Bip01 {L} Forearm"),
                 s+"ForeArm": (f"Bip01 {L} Forearm", f"Bip01 {L} Hand"), s+"Hand": (f"Bip01 {L} Hand", f"Bip01 {L} Finger2")})
@@ -43,12 +43,32 @@ for f in files:
     # frame 0: each arm bone aimed where NV's limb points (parent's turn carried). Every later frame copies NV's own
     # rotation change since frame 0, mapped into our frame: twist, wrist roll and timing exactly as the .kf keys them.
     # No position re-derivation and no smoothing pass: those flattened the hits and lost the forearm roll.
+    BODY = os.environ.get("BODY") and "_body" in F[0]
+    if BODY:  # third person: the body's own frame from frame 0 (pelvis->head up, clavicles right), spine included
+        B0 = F[0]["_body"]; P = lambda n: Vector(B0[n][0])
+        up = (P("Bip01 Head") - P("Bip01 Pelvis")).normalized(); rt = P("Bip01 R Clavicle") - P("Bip01 L Clavicle")
+        rt = (rt - rt.project(up)).normalized(); fw = up.cross(rt)
+        Lm = Matrix((-rt, -fw, up))
+        print("body map R clav x", round((Lm @ rt).x, 2))
     LmQ = Lm.to_quaternion()
     def mapq(v): return (LmQ @ Quaternion(v) @ LmQ.inverted()).normalized()
     D, base, q0 = [], {}, {}
     for fi, fr in enumerate(F):
         delta = {"Hips": Quaternion()}
         for m in ORDER:
+            if BODY:
+                src = SRC.get(m); bd = fr["_body"]
+                if not src or src[0] not in bd or src[1] not in bd:
+                    delta[m] = delta[PAR[m]].copy(); continue
+                qk = bd[src[0]][1]
+                if fi == 0:
+                    d = delta[PAR[m]].copy()
+                    d1 = (Lm @ (Vector(bd[src[1]][0]) - Vector(bd[src[0]][0]))).normalized()
+                    h0 = d @ (ht[m] - hp[m]).normalized(); d = (h0.rotation_difference(d1) @ d).normalized()
+                    base[m] = d.copy(); q0[m] = mapq(qk); delta[m] = d
+                else:
+                    delta[m] = ((mapq(qk) @ q0[m].inverted()) @ base[m]).normalized()
+                continue
             key = ARM.get(m)
             if not key or key not in fr["_neck"]:
                 delta[m] = delta[PAR[m]].copy(); continue
