@@ -5,7 +5,7 @@ import { plainLook, honest, wornTokens, parseCloth } from './lib/clothes.js'
 import C from './lib/data/critter.yml'
 import { standUp } from './lib/seat.js'
 const SCRIPT = 'scripts/critter2-geo.js'
-import { FURRY_HEAD, bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, STYLE_V, seatHead, humanMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard, speciesOf } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
+import { FURRY_HEAD, bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, STYLE_V, seatHead, clearAppearance, humanBodyMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard, speciesOf } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
 const LID_SCALE = 1000 // the lids are modelled this many times too small (scripts/critter2-geo.js)
 const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 import { weaponBody, HOLD } from './lib/weapon-look.js'
@@ -44,7 +44,7 @@ function humanFaceTick(ctx, face) {
   const k = (ses.key ?? '') + face + (blink ? 1 : 0) + (mouth ? mouth.map((v) => v.toFixed(1)).join() : '')
   if (k === ses.hFaceK) return
   ses.hFaceK = k
-  if (ses.hBaseK !== ses.key) { ses.hBaseK = ses.key; ses.hBase = humanMorph(ses.cachedParams) ?? {} }
+  if (ses.hBaseK !== ses.key) { ses.hBaseK = ses.key; ses.hBase = humanBodyMorph(ses.cachedParams) ?? {} }
   ctx.self.morph = { ...ses.hBase, ...humanFace(face, blink, mouth) }
 }
 export function blinkEnd(ctx) { if (ctx.self.session.flair === 'worn') return; ctx.self.session.lids = false; applyBones(ctx) }
@@ -99,7 +99,7 @@ function lookOf(ctx) {
 // every wardrobe change goes through here: it can restyle the plain set freely, never conjure armor,
 // and any found garment it takes off goes back into the bag (player.state.clothes) instead of vanishing
 function dress(st, cur, next) {
-  const out = honest(cur, next), keep = wornTokens(out), bag = st.clothes ? st.clothes.split(',').filter(Boolean) : []
+  const out = honest(cur, next), keep = wornTokens(out), bag = st.clothes ? String(st.clothes).split(',').filter(Boolean) : []
   for (const t of wornTokens(cur)) { const i = keep.indexOf(t); if (i >= 0) keep.splice(i, 1); else if (!parseCloth(t)?.row.regular) bag.push(t) }
   st.clothes = bag.join(',')
   st.look = out
@@ -158,7 +158,7 @@ export function onInput(ctx, input) {
     if (d.k === 'model') { if (d.v && !C.models?.[d.v]) return; st.look = { ...lookOf(ctx), model: d.v || '', modelUrl: '' }; return }
     if (d.k === 'modelUrl') { const m = String(d.v || '').match(/\/cdn\/[\w.\-]+\.glb$/); st.look = { ...lookOf(ctx), modelUrl: m ? m[0] : '', model: '' }; return } // a player's own uploaded .plymodel
     if (d.k === 'hair' && d.v !== 'none' && !(lookOf(ctx).sex === 'f' ? C.hairF : C.hairM).includes(d.v)) return
-    if (d.k === 'sex' && C.sex.includes(d.v)) { const cur = lookOf(ctx); const keep = cur.hair && cur.hair.startsWith(d.v + '_') ? cur.hair : 'none'; dress(st, cur, { ...cur, sex: d.v, hair: keep }); return }
+    if (d.k === 'sex' && C.sex.includes(d.v)) { const cur = lookOf(ctx); const keep = typeof cur.hair==='string' && cur.hair.startsWith(d.v + '_') ? cur.hair : 'none'; dress(st, cur, { ...cur, sex: d.v, hair: keep }); return }
     if (!(d.k in C.default)) return
     const list = C[d.k === 'top' || d.k === 'bottom' || d.k === 'shoec' || d.k === 'hatc' || d.k === 'neckc' ? 'cloth' : d.k]
     if (Array.isArray(list) && !list.includes(d.v)) return
@@ -232,15 +232,13 @@ export function update(ctx) {
     if (MESH) { const g = gaitFor(ctx); if (ctx.self.state.gaitClips?.idle !== g.idle || ctx.self.state.gaitClips?.walk !== g.walk) ctx.self.state.gaitClips = g } else if (ctx.self.state.gaitClips) delete ctx.self.state.gaitClips
     const humanNow = HUMAN || speciesOf(ses.cachedParams) === 'human'
     if (humanNow) { if (ses.flair !== 'human') { ses.flair = 'human'; ctx.self.anim.flair = null; ctx.self.anim.cute = null; ctx.self.bones = {}; ses.lids = false; ses.twitch = null } } // the human rig has no tail, ears or lids
-    if (humanNow && ses.cachedParams) humanFaceTick(ctx, face)
-    else if (humanNow) {}
-    else {
+    if (!humanNow) {
     if (ses.flair !== face) { ses.flair = face; flair(ctx.self, face) }
     life(ctx, face)
     }
   }
-  if (ses.lookKey == null || ses.lookVer !== 'human6' + STYLE_V || (!MESH && ses.lastFace !== face)) {
-    ses.lookVer = 'human6' + STYLE_V // a STYLE_V bump re-dresses standing bodies too; refresh the body after the overalls layering fix
+  if (ses.lookKey == null || ses.lookVer !== 'human7' + STYLE_V || (!MESH && ses.lastFace !== face)) {
+    ses.lookVer = 'human7' + STYLE_V // a STYLE_V bump re-dresses standing bodies too; refresh the body after the overalls layering fix
     const params = { species: l.species, sex: l.sex, ftype: l.ftype || 'oval', trait: l.trait || 'placid', blush: l.blush, nose: l.nose || undefined, eye: l.eye, topw: l.topw, botw: l.botw, shoes: l.shoes, hat: l.hat, eyew: l.eyew, neck: l.neck, top: l.top, bottom: l.bottom, shoec: l.shoec, hatc: l.hatc, neckc: l.neckc, expr: face, eyes: l.eyes, marks: l.marks, hair: l.hair, hairc: l.hairc, skin: l.skin || undefined, beard: l.beard, beardc: l.beardc } // skin rides the body key: without it a salon skin pick never rebuilt the body (Shelly, Nov 9)
     if (l.fur) params.fur = l.fur
     const worn = l.modelUrl ? { url: l.modelUrl } : l.model && C.models?.[l.model] // an imported model worn instead of the critter
@@ -254,7 +252,7 @@ export function update(ctx) {
   if (key !== ses.key || ses.keyPlace !== ctx.self.place || (MESH && !ses.cachedWorn && typeof ctx.self.model === 'string' && ctx.self.model.includes('neutral-default-avatar'))) { // a place crossing restamps the body: dress it again there
     ses.key = key; ses.keyPlace = ctx.self.place
     const params = ses.cachedParams, worn = ses.cachedWorn
-    if (worn) { ctx.self.primitive = null; ctx.self.model = wornModel(worn); dropHead(ctx, ctx.self); ctx.self.jiggle = null }
+    if (worn) { ctx.self.primitive = null; ctx.self.model = wornModel(worn); dropHead(ctx, ctx.self); ctx.self.morph=null; ctx.self.bones={}; ctx.self.material=null; ctx.self.jiggle = null }
     else if (MESH) {
       ctx.self.primitive = null
       ctx.self.model = bodyModel(params)
@@ -270,6 +268,7 @@ export function update(ctx) {
     else { ctx.self.model = null; ctx.self.primitive = { kind: 'scripted', script: SCRIPT, params } }
   }
   const worn = ses.cachedWorn
+  if(!worn && HUMAN && ses.cachedParams)humanFaceTick(ctx,face)
   if (worn && ctx.getObject(ctx.self.id + '/' + HEAD_ID)) dropHead(ctx, ctx.self) // a worn body never keeps the critter head, whoever put it back
   if (MESH && !HUMAN && !worn && ses.headFace !== face) { ses.headFace = face; applyBones(ctx) }
   const hs = Number(l.headS) || 1, ts = Number(l.tailS) || 1
@@ -315,10 +314,10 @@ export function update(ctx) {
     const params = ses.cachedParams, worn = ses.cachedWorn
     if (!params) return
     const isF = params.sex === 'f'
-    const look = worn ? { model: wornModel(worn) } : MESH && HUMAN ? { model: bodyModel(params), morph: humanMorph(params) ?? undefined } : MESH ? { model: bodyModel(params), morph: bustMorph(params) ?? undefined, children: [{ id: HEAD_ID, attachment: { skin: true }, model: headModel({ ...params, vary: false }), morph: faceMorph(face, false, isF, params), audience: 'local' }, maskChild(params, true), hairChild(params, true), beardChild(params, true)].filter(Boolean) } : { primitive: { kind: 'scripted', script: SCRIPT, params } }
+    const look = worn ? { model: wornModel(worn) } : MESH && HUMAN ? { model: bodyModel(params), morph: humanBodyMorph(params) ?? undefined } : MESH ? { model: bodyModel(params), morph: bustMorph(params) ?? undefined, children: [{ id: HEAD_ID, attachment: { skin: true }, model: headModel({ ...params, vary: false }), morph: faceMorph(face, false, isF, params), audience: 'local' }, maskChild(params, true), hairChild(params, true), beardChild(params, true)].filter(Boolean) } : { primitive: { kind: 'scripted', script: SCRIPT, params } }
     if (!mirror) { ses.mirror = ctx.spawn({ audience: 'local', feetPosition: pos, rotation: rot, ...look, material: HUMAN && !worn ? null : { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.6, bounce: 0.6 }, light: { kind: 'point', color: '#fff2d8', intensity: 2, distance: 4 } }); const m = ctx.getObject(ses.mirror); if (m) { if (HUMAN && MESH && !worn) seatHead(ctx, m, params) // a human mirror wears its own head and hair, never the species head
       m.anim.idle = { clip: worn || MESH ? GAIT_LIB.idle : 'Idle', loop: 'loop', weight: 1 }; if (!worn && !(HUMAN && MESH) && speciesOf(params) !== 'human') flair(m, face) } }
-    else { mirror.feetPosition = pos; mirror.rotation = rot; if (ses.mirrorKey !== key) { if (worn) { mirror.primitive = null; mirror.model = wornModel(worn); dropHead(ctx, mirror); mirror.anim.flair = null; mirror.anim.idle = { clip: GAIT_LIB.idle, loop: 'loop', weight: 1 } } else if (MESH) { mirror.primitive = null; mirror.model = bodyModel(params); if (HUMAN) { seatHead(ctx, mirror, params); mirror.anim.idle = { clip: GAIT_LIB.idle, loop: 'loop', weight: 1 } } else { mirror.morph = bustMorph(params) ?? null; wearHead(ctx, mirror, params); flair(mirror, face) } } else { mirror.model = null; mirror.primitive = { kind: 'scripted', script: SCRIPT, params }; flair(mirror, face) } }
+    else { mirror.feetPosition = pos; mirror.rotation = rot; if (ses.mirrorKey !== key) { if (worn) { mirror.primitive = null; mirror.model = wornModel(worn); dropHead(ctx, mirror); mirror.morph=null; mirror.bones={}; mirror.material=null; mirror.anim.flair = null; mirror.anim.idle = { clip: GAIT_LIB.idle, loop: 'loop', weight: 1 } } else if (MESH) { mirror.primitive = null; mirror.model = bodyModel(params); if (HUMAN) { seatHead(ctx, mirror, params); mirror.anim.idle = { clip: GAIT_LIB.idle, loop: 'loop', weight: 1 } } else { mirror.morph = bustMorph(params) ?? null; wearHead(ctx, mirror, params); flair(mirror, face) } } else { mirror.model = null; mirror.primitive = { kind: 'scripted', script: SCRIPT, params }; flair(mirror, face) } }
       if (MESH && !worn) { const mh = ctx.getObject(mirror.id + '/' + HEAD_ID); if (mh) mh.morph = faceMorph(face, false, isF, params) }
       if (worn && ctx.getObject(mirror.id + '/' + HEAD_ID)) dropHead(ctx, mirror) // the mirror wears a plymodel bare too
       mirror.bones = { ...(!HUMAN ? { Head: { scale: hs * FURRY_HEAD } } : {}), ...(ts !== 1 ? { Tail: { scale: ts } } : {}) } }
@@ -347,27 +346,7 @@ export function update(ctx) {
 }
 
 function wornModel(w) { return w.url } // facing is fixed at import (scripts/lib/plyimport.js)
-function dropHead(ctx, o) { if (ctx.getObject(o.id + '/' + HEAD_ID)) ctx.destroy(o.id + '/' + HEAD_ID) }
+function dropHead(ctx, o) { clearAppearance(ctx,o) }
 // the species head (face, ears, tail) rides the body's rig as a skinned child; restyled when the look changes
-function wearHead(ctx, o, l) {
-  if (HUMAN) return seatHead(ctx, o, l)
-  const isF = l?.sex === 'f'
-  const h = ctx.getObject(o.id + '/' + HEAD_ID), model = headModel({ ...l, vary: false })
-  if (h) {
-    h.model = model
-    h.visible = true
-    h.morph = faceMorph(l.expr, false, isF, l)
-    if (!h.jiggle) h.jiggle = { bones: ['EarL', 'EarR'], amount: 0.58, bounce: 0.72 }
-  } else {
-    ctx.spawn({
-      parent: o.id,
-      id: HEAD_ID,
-      attachment: { skin: true },
-      model,
-      morph: faceMorph(l.expr, false, isF, l),
-      jiggle: { bones: ['EarL', 'EarR'], amount: 0.58, bounce: 0.72 },
-      ...(o.audience === 'local' ? { audience: 'local' } : {})
-    })
-  }
-  seatMask(ctx, o, l); seatHair(ctx, o, l); seatBeard(ctx, o, l)
-}
+function wearHead(ctx, o, l) { seatHead(ctx,o,{...l,vary:false}) }
+

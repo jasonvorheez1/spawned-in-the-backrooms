@@ -307,6 +307,12 @@ export function humanMorph(l) {
   }
   return o
 }
+// Male bodies have no Bust key; male garments still need humanMorph's explicit zero.
+export function humanBodyMorph(l) {
+  const morph=humanMorph(l)
+  if(l?.sex!=='f')delete morph.Bust
+  return morph
+}
 export function bodyModel(l) {
   if (HUMAN && !l?._human) return humanBody(l)
   const parts = {}
@@ -720,7 +726,7 @@ export function critterSpec(l) {
     const hc = hairChild(l), bc = beardChild(l)
     return {
       model: humanBody(l),
-      morph: humanMorph(l),
+      morph: humanBodyMorph(l),
       children: [hc, bc, ...wardChildren(l)].filter(Boolean),
       ...(l?.heightS || l?.buildS ? { scale: { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 } } : {})
     }
@@ -786,13 +792,20 @@ export function strayHeads(ctx, obj) {
   for (const c of obj?.children ?? []) { const h = typeof c === 'string' ? ctx.getObject(c) : c?.id ? ctx.getObject(c.id) ?? c : c; const m = h?.model?.id ?? h?.model; if (h?.id && typeof m === 'string' && ids.has(m)) out.push(h) }
   return out
 }
+// Skin attachments must be rebuilt when their parent rig changes.
+export function clearAppearance(ctx,obj) {
+  for(const key of [HEAD_ID,MASK_ID,HAIR_ID,BEARD_ID,INNER_ID,...WARDROBE.parts.map(wardKey)]) {
+    const id=obj.id+'/'+key
+    if(ctx.getObject(id))ctx.destroy(id)
+  }
+  for(const h of strayHeads(ctx,obj))if(ctx.getObject(h.id))ctx.destroy(h.id)
+}
 export function seatHead(ctx, obj, l) {
-  if (HUMAN) { for (const k of [HEAD_ID, MASK_ID]) if (ctx.getObject(obj.id + '/' + k)) ctx.destroy(obj.id + '/' + k); seatHumanHair(ctx, obj, l); seatBeard(ctx, obj, l); seatWardrobe(ctx, obj, l); for (const h of strayHeads(ctx, obj)) ctx.destroy(h.id); obj.jiggle = null; obj.morph = humanMorph(l); if (obj.material?.outline) obj.material = null; return } // a human body carries its own head; its face keys rolled per NPC
+  const body=obj.model?.id??obj.model
+  if(obj.state && obj.state.headBody!==body){clearAppearance(ctx,obj);obj.state.headBody=body}
+
+  if (HUMAN) { for (const k of [HEAD_ID, MASK_ID]) if (ctx.getObject(obj.id + '/' + k)) ctx.destroy(obj.id + '/' + k); seatHumanHair(ctx, obj, l); seatBeard(ctx, obj, l); seatWardrobe(ctx, obj, l); for (const h of strayHeads(ctx, obj)) ctx.destroy(h.id); obj.jiggle = null; obj.morph = humanBodyMorph(l); if (obj.material?.outline) obj.material = null; return } // a human body carries its own head; its face keys rolled per NPC
   const want = critterSpec(l).children[0]; let h = ctx.getObject(obj.id + '/' + HEAD_ID)
-  // a head skinned to the body's old model loses its skin when the body swaps: re-spawn it on the new one
-  const body = obj.model?.id ?? obj.model
-  if (h && obj.state && obj.state.headBody !== body) { ctx.destroy(h.id ?? obj.id + '/' + HEAD_ID); h = null }
-  if (obj.state && obj.state.headBody !== body) obj.state.headBody = body
   seatMask(ctx, obj, l); seatHair(ctx, obj, l); seatBeard(ctx, obj, l)
   if (!h) { ctx.spawn(HEAD_ID, { parent: obj.id, ...want }); return }
   if (!h.attachment?.skin) {
@@ -856,7 +869,7 @@ OLD_HUMAN.push('/cdn/value.85e6596c07f25851628cfcf28b105e0552c2e5a4d3ec7507523ec
 OLD_HUMAN.push('/cdn/value.06e3a5b9460c5cc1d98f4bd17759bb5aaf3d5dfac14bf20eeb986f466fd75f77.glb', '/cdn/value.c40b56b5d34276ea7dd8f0e9b75dd40b5ee9da6c238fc93803e78cf6eedccf08.glb')
 OLD_HUMAN.push('/cdn/value.97b14c3b33cdee840f365da5c692b5101d89379a778041bf729b46531d5e43aa.glb', '/cdn/value.19706fd66ac157fe4eed3d856132ca2327696e1580ad0d36ca5f1bff990943b5.glb') // the bodies before the underwear was lifted off the skin (art/human-body/fix_under.mjs)
 const FURRY_IDS = () => [...Object.values(M.body), ...Object.values(WARDROBE.legacyFur ?? {})], HUMAN_IDS = () => [...Object.values(M.human ?? {}), ...OLD_HUMAN, ...Object.values(WARDROBE.legacyHuman ?? {})]
-export const STYLE_V = 'sw73' // sw73: hair pushed off the skull where it cut in; sw72: every human hair file refit to the live heads (crown ~1.2 cm off the skull, bangs off the face, hairfit.mjs); sw69: female shoulder skin blends Shoulder to Arm across the joint (tmp shw.mjs rule, ~10 cm), so a lowered arm rounds the shoulder instead of standing a peak; sw68: raccoon and badger wear their dark legs and paws; sw67: the female bra rebuilt as a clean band cut from the torso skin, no shoulder pieces to spike when the arms move (art/body-rig/bra.py + bra-splice.mjs.txt); sw66: panda and red panda have their dark limbs (the furry bodies carry a limb material); sw65: the underwear sits 4 mm off the skin on both bodies, no more shorts that read as two leg tubes with skin through the seat; sw62: women's tank refit to the rebuilt female body (fit.py FIT_MIN 0.012), the back no longer shows skin; sw60: rounded shoulder caps, shared skin seams and arm/leg weights (art/body-rig); sw59: tanks held 5 mm off the skin (art/human-cloth/clear_skin.py); sw58: loose strips off both tanks' straps (art/human-cloth/fill_slits.py); sw57: shoulder seam welded on both bodies, no crack when the arm moves (art/human-body/weld_weights.py); sw56: women's arms filled out, deltoid, upper arm and forearm (art/human-body/arms.py K=1.8); sw55: women's shoulders squared and widened, arm joints moved with them (art/human-body/shoulders.py), neck seam welded; sw53: tee-under-vest tried and dropped (the tee swallowed the vest); sw51: Bust 0 on men; sw50: skin stays under vests; sw49: tank straps smoothed (cup_smooth z>1.22 + keep_normals); sw48: no bra under a worn top; sw47: back to the sw44 tank (strap smooth lost its morph keys); sw45: torso skin kept under tanks (no waist hole); sw44: women's tank neckline and armholes smoothed (hem_smooth.py); sw42: chest skin kept under tanks; sw41: tank straps curve into the neckline (no square notch); sw40: tank grown from the body's own skin (art/human-cloth/tank_shell.py); sw39: tank straps 6 mm off the shoulder (art/human-cloth/tank_strap.py); sw38: sweater cuffs re-cut; sw37: armholes and sleeve ends re-cut clean on a plane (art/human-cloth/hem_cut.py); sw36: refits swap on worn clothes, slot-filtered mats, hats back on skin; sw35: boots slimmed and shortened (art/human-cloth/boots_fit.py); sw34: tees pushed 8 mm out (art/human-cloth/tee_fit.py); // sw33: sw32 undone (upper arm poked through the tee); sw31: the wardrobe split, outfits ride the bare body as their own files; sw30: overalls bib stays under closed tops; sw29: chest drape and matched bust morphs; sw28: neckline follows the rig, not the old collar; sw27: garment widths measured from the body, not sleeves; sw26: constructed footwear, old wardrobe bodies migrate with their sex; sw25: distinct wardrobe meshes and skin masks; sw24: furry bodies missing their head re-seat it; sw23: worn hair re-seats when its file changed; sw22: rebuilt scalp caps (smooth shell, feathered root-textured hairline), cap tint near the hair colour; sw20: hair keys on the head-fitted pack (Tripo rows off); sw19: skin swatch unshaded, wider tones; sw18: men's lid-line lashes and M_Jaw/M_Chin head; sw15: scarf knot at the side, overalls drop to pants under closed tops; sw13: scarf is a thick wrap with short splayed ends; sw12: male longsleeve collar smoothed, scarf wraps the neck; sw11: tops hang off the chest (no belly pouch); sw10: tripo hair rows 14-16; sw9: overalls clear of tops (no z-fight); sw8: sleeves cover the upper arm's back, the shoulder blend band has room; sw7: bodies with head types; sw6: skirt waist below the top hem; sw5: skirts tucked under tops (new body glbs); sw4: the hair pack on human heads
+export const STYLE_V = 'sw74' // sw73: hair pushed off the skull where it cut in; sw72: every human hair file refit to the live heads (crown ~1.2 cm off the skull, bangs off the face, hairfit.mjs); sw69: female shoulder skin blends Shoulder to Arm across the joint (tmp shw.mjs rule, ~10 cm), so a lowered arm rounds the shoulder instead of standing a peak; sw68: raccoon and badger wear their dark legs and paws; sw67: the female bra rebuilt as a clean band cut from the torso skin, no shoulder pieces to spike when the arms move (art/body-rig/bra.py + bra-splice.mjs.txt); sw66: panda and red panda have their dark limbs (the furry bodies carry a limb material); sw65: the underwear sits 4 mm off the skin on both bodies, no more shorts that read as two leg tubes with skin through the seat; sw62: women's tank refit to the rebuilt female body (fit.py FIT_MIN 0.012), the back no longer shows skin; sw60: rounded shoulder caps, shared skin seams and arm/leg weights (art/body-rig); sw59: tanks held 5 mm off the skin (art/human-cloth/clear_skin.py); sw58: loose strips off both tanks' straps (art/human-cloth/fill_slits.py); sw57: shoulder seam welded on both bodies, no crack when the arm moves (art/human-body/weld_weights.py); sw56: women's arms filled out, deltoid, upper arm and forearm (art/human-body/arms.py K=1.8); sw55: women's shoulders squared and widened, arm joints moved with them (art/human-body/shoulders.py), neck seam welded; sw53: tee-under-vest tried and dropped (the tee swallowed the vest); sw51: Bust 0 on men; sw50: skin stays under vests; sw49: tank straps smoothed (cup_smooth z>1.22 + keep_normals); sw48: no bra under a worn top; sw47: back to the sw44 tank (strap smooth lost its morph keys); sw45: torso skin kept under tanks (no waist hole); sw44: women's tank neckline and armholes smoothed (hem_smooth.py); sw42: chest skin kept under tanks; sw41: tank straps curve into the neckline (no square notch); sw40: tank grown from the body's own skin (art/human-cloth/tank_shell.py); sw39: tank straps 6 mm off the shoulder (art/human-cloth/tank_strap.py); sw38: sweater cuffs re-cut; sw37: armholes and sleeve ends re-cut clean on a plane (art/human-cloth/hem_cut.py); sw36: refits swap on worn clothes, slot-filtered mats, hats back on skin; sw35: boots slimmed and shortened (art/human-cloth/boots_fit.py); sw34: tees pushed 8 mm out (art/human-cloth/tee_fit.py); // sw33: sw32 undone (upper arm poked through the tee); sw31: the wardrobe split, outfits ride the bare body as their own files; sw30: overalls bib stays under closed tops; sw29: chest drape and matched bust morphs; sw28: neckline follows the rig, not the old collar; sw27: garment widths measured from the body, not sleeves; sw26: constructed footwear, old wardrobe bodies migrate with their sex; sw25: distinct wardrobe meshes and skin masks; sw24: furry bodies missing their head re-seat it; sw23: worn hair re-seats when its file changed; sw22: rebuilt scalp caps (smooth shell, feathered root-textured hairline), cap tint near the hair colour; sw20: hair keys on the head-fitted pack (Tripo rows off); sw19: skin swatch unshaded, wider tones; sw18: men's lid-line lashes and M_Jaw/M_Chin head; sw15: scarf knot at the side, overalls drop to pants under closed tops; sw13: scarf is a thick wrap with short splayed ends; sw12: male longsleeve collar smoothed, scarf wraps the neck; sw11: tops hang off the chest (no belly pouch); sw10: tripo hair rows 14-16; sw9: overalls clear of tops (no z-fight); sw8: sleeves cover the upper arm's back, the shoulder blend band has room; sw7: bodies with head types; sw6: skirt waist below the top hem; sw5: skirts tucked under tops (new body glbs); sw4: the hair pack on human heads
 export function furrySpec(l) { const h = HUMAN; HUMAN = null; try { return critterSpec(l) } finally { HUMAN = h } } // a character who stays a critter in both modes (Phoebe)
 export function restyle(ctx, o) {
   const mid = o?.model?.id ?? o?.model
@@ -869,6 +882,7 @@ export function restyle(ctx, o) {
     if (ctx.getObject(o.id + '/' + HEAD_ID) || stray.length || !o.state?.wear || maskOf(o.state.wear)) return false
     seatHead(ctx, o, o.state.wear); return true
   }
+  if(want==='h' && isH && Object.values(M.human).includes(mid) && o.state?.wear && o.state.headBody!==mid){seatHead(ctx,o,o.state.wear);return true}
   if (want === 'h' && isH && Object.values(M.human).includes(mid)) { if (!stray.length && !o.material?.outline) { const w = o.state?.wear, h = ctx.getObject(o.id + '/' + HAIR_ID); if (w && w.hair !== 'none' && !maskOf(w) && (!h || (h.model?.id ?? h.model) !== humanHairOf({ sex: w.sex ?? (mid === M.human.f ? 'f' : 'm'), ...w }))) { seatHumanHair(ctx, o, w); if (!h) seatBeard(ctx, o, w); return true } return false } if (o.state && !o.state.wear) o.state.wear = { ...(lookFromModel(o.model, stray[0]?.model?.id ?? stray[0]?.model) ?? {}) }; seatHead(ctx, o, o.state?.wear ?? {}); return true }
   const local = String(o.id).split('/').pop()
   const hm = ctx.getObject(o.id + '/' + HEAD_ID)?.model ?? stray[0]?.model

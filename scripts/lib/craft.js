@@ -6,14 +6,14 @@ export const scrapCount=(s,k)=>{const n=Number(s.scrap?.[k]??0);return Number.is
 const valid=(r)=>r && Array.isArray(r.out) && r.out.length && r.out.every(t=>typeof t==='string'&&t.length) && Object.keys(r.in??{}).length && Object.values(r.in).every(n=>Number.isInteger(n)&&n>0)
 const weights=(r)=>({input:Object.entries(r.in).reduce((kg,[k,n])=>kg+tokenWeight(k)*n,0),output:r.out.reduce((kg,t)=>kg+pickupWeight(t),0)})
 export function recipeStatus(s,id) {
-  const r=C.recipes[id]
+  const r=Object.hasOwn(C.recipes,id)?C.recipes[id]:null
   if(!valid(r))return {ok:false,lack:[],skillOk:false,benchOk:false,roomOk:false,got:0,need:0,bonusChance:0,reason:'Recipe unavailable'}
   const lack=Object.entries(r.in).filter(([k,n])=>scrapCount(s,k)<n).map(([k])=>k),sk=skillsOf(s),need=r.skill?.[1]??0,got=r.skill?(sk[r.skill[0]]??0):0,skillOk=got>=need,benchOk=!r.bench||s.craftOpen==='bench',w=weights(r)
   const roomOk=w.output===0 || inventoryWeight(s)-w.input+w.output<=derived(s).carry+1e-6
   return {ok:!lack.length&&skillOk&&benchOk&&roomOk,lack,skillOk,benchOk,roomOk,got,need,bonusChance:r.skill?Math.max(0,Math.min(1,(got-need)/100)):0,reason:!benchOk?'Needs a workbench':!skillOk?'Skill too low':lack.length?'Missing ingredients':!roomOk?'No room for the complete output':''}
 }
 export function maxMakes(s,id) {
-  const r=C.recipes[id]
+  const r=Object.hasOwn(C.recipes,id)?C.recipes[id]:null
   if(!valid(r))return 0
   const materials=Math.min(CRAFT_LIMIT,...Object.entries(r.in).map(([k,n])=>Math.floor(scrapCount(s,k)/n)))
   if(!materials)return 0
@@ -27,7 +27,7 @@ export function maxMakes(s,id) {
   return count
 }
 export function craftOne(s,id,give,bonus=false) {
-  const status=recipeStatus(s,id),r=C.recipes[id]
+  const status=recipeStatus(s,id),r=Object.hasOwn(C.recipes,id)?C.recipes[id]:null
   if(!status.ok)return {ok:false,msg:status.reason}
   // Inventory grants use copy-on-write state; nothing reaches the live player until the whole recipe succeeds.
   let draft={...s,scrap:{...(s.scrap??{})},snacks:{...(s.snacks??{})},meat:{...(s.meat??{})}}

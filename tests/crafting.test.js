@@ -92,3 +92,14 @@ test('crafted weapons retain the maker skill-based condition',()=>{
  action(()=>({ok:true}))(ctx,s,{k:'make',id,n:1})
  expect(s['cnd_'+key]).toBe(71)
 })
+
+test('prototype names and malformed recipe definitions cannot crash crafting actions',()=>{
+ const s=player({wire:1,nails:1}),ctx=context(s),before=JSON.stringify(s)
+ for(const id of ['constructor','toString','__proto__','hasOwnProperty']){
+  expect(()=>action(()=>({ok:true}))(ctx,s,{k:'make',id,n:1})).not.toThrow()
+  expect(craftOne(s,id,()=>({ok:true})).ok).toBe(false)
+ }
+ expect(JSON.stringify(s)).toBe(before)
+ C.recipes.test_bad_recipe={in:{wire:1},out:[]}
+ try{expect(()=>action(()=>({ok:true}))(ctx,s,{k:'make',id:'test_bad_recipe',n:1})).not.toThrow();expect(s.scrap.wire).toBe(1)}finally{delete C.recipes.test_bad_recipe}
+})

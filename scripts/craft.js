@@ -28,11 +28,13 @@ function act(ctx, s, d) {
   if (d.k === 'close') { s.craftOpen = ''; return }
   if (d.k === 'tab') { if (CATS.some(([c]) => c === d.c)) s.craftTab = d.c; return }
   if (d.k !== 'make' || !s.craftOpen) return
-  const id = String(d.id), r = C.recipes[id]; if (!r) return
+  const id = String(d.id); if (!Object.hasOwn(C.recipes,id)) return
+  const r=C.recipes[id]
   const deny = (t) => { note(s, ctx, t); heard(ctx, { clip: SND('ui-denied-click'), position: ctx.self.feetPosition, volume: .35, maxDistance: 8 }, { audience: { player: ctx.self.id } }) }
   if(s.dead || !canOpen(s,ctx.self.place,'craft'))return
   if(s.craftOpen==='bench' && !liveBench(ctx,s)){s.craftOpen='';s.craftBench='';return deny('Workstation is out of reach or blocked')}
   const st=recipeStatus(s,id)
+  if(st.reason==='Recipe unavailable')return deny(st.reason)
   if(!st.benchOk)return deny('Needs a workbench')
   if(!st.skillOk)return deny(`Needs ${SKN[r.skill[0]]} ${r.skill[1]}`)
   if(st.lack.length)return deny(`Missing ${st.lack.map(k=>`${B.scrap[k]?.name??k} ×${r.in[k]-(Number(s.scrap?.[k])||0)}`).join(', ')}`)
