@@ -103,8 +103,8 @@ NECK0, NECK1 = J['Neck'].z - .06, J['Neck'].z
 WR = abs(J['LeftHand'].x)
 def weight(p):
     w = 1 - ss(NECK0, NECK1, p.z)
-    if p.z > J['LeftArm'].z - .3: w *= 1 - ss(WR - .06, WR - .01, abs(p.x))
-    if p.z > J['LeftArm'].z - .2: w *= 1 - ss(abs(J['LeftArm'].x) - .02, abs(J['LeftArm'].x) + .06, abs(p.x))
+    w *= 1 - ss(J['LeftArm'].z - .4, J['LeftArm'].z - .25, p.z) * ss(WR - .06, WR - .01, abs(p.x))
+    w *= 1 - ss(J['LeftArm'].z - .14, J['LeftArm'].z - .04, p.z) * ss(abs(J['LeftArm'].x) + .01, abs(J['LeftArm'].x) + .08, abs(p.x))  # arms keep their own shape past the shoulder; z and x both eased, no hard line
     hz = J['Hips'].z
     w *= 1 - (1 - ss(.04, .08, abs(p.x))) * (1 - ss(.05, .11, abs(p.z - (hz - .1))))
     return w
