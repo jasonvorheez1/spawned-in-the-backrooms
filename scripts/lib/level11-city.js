@@ -18,9 +18,9 @@ const hue = (u, l = 0.62, c = 0.08) => `oklch(${l} ${c} ${Math.round(u * 360)})`
 // what colour each kind of building is dressed in, per lot
 // Nov 10 (Shelly: "the rendering is very poor here"): the kit's flat window slots read as paper; glass now mirrors the sky, lit rooms glow a warm dim amber behind it
 const WIN = (u) => ({
-  glass: { color: `oklch(${0.3 + u * 0.08} 0.03 ${225 + u * 30})`, metalness: 0.92, roughness: 0.06 },
+  glass: { color: `oklch(${0.42 + u * 0.08} 0.04 ${225 + u * 20})`, metalness: 0.85, roughness: 0.08 },
   glassBlue: { color: `oklch(${0.5 + u * 0.1} 0.06 ${215 + u * 25})`, metalness: 0.95, roughness: 0.04 },
-  glassLit: { color: "oklch(0.62 0.08 75)", emissive: "oklch(0.78 0.11 72)", emissiveIntensity: 0.35, roughness: 0.15, metalness: 0.2 },
+  glassLit: { color: "oklch(0.86 0.025 85)", emissive: "oklch(0.9 0.04 85)", emissiveIntensity: 0.18, roughness: 0.2, metalness: 0.1 },
 });
 function dress(kind, u) { return { ...WIN(u), ...dress0(kind, u) }; }
 function dress0(kind, u) {
