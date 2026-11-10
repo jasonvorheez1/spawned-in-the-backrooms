@@ -141,6 +141,8 @@ export const speciesOf = (l) => M.species[l?.species] ? l.species : 'cat'
 // a look's own fur re-tones its face: belly, tip and markings mix from that fur (cream-lit, shadow-dark) by a seed of the look, so two of one species never share a face
 const hx = (c) => { const n = parseInt(String(c).slice(1, 7), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255] }
 // an iris colour multiplies a grey iris picture: a near-black pick crushed it to a solid black blob, so its brightest channel is lifted to ~150 (Shelly: work on the eyes, Nov 10)
+// the face atlas with the red-brown eye outline and peach lids painted out to skin (Shelly, Nov 10: "take off the red thing around her eyes"); both bodies share this atlas
+const FACE_ATLAS = '/cdn/value.d0f2b91534867ac2c19c9523fe4215f3e82eeac98c94082ea581ea823a6f5382.png'
 const liftEye = (c) => { const v = hx(c), mx = Math.max(...v, 8); return mx >= 150 ? c : toHex(v.map((x) => Math.max(x, 30) * 150 / mx)) }
 const toHex = (a) => '#' + a.map((v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('')
 const mix = (a, b, t) => toHex(hx(a).map((v, i) => v + (hx(b)[i] - v) * t))
@@ -266,7 +268,7 @@ const humanBodyFull = (l) => {
   for (const [k, v] of Object.entries(m.materials || {})) cloth[k] = v && typeof v === 'object' && !v.kind && typeof v.color === 'string' && !v.map && !v.texture && !v.transparent && !(v.metalness > 0.3) && !(v.emissiveIntensity > 0) ? anime('cloth', v.color) : v
   return { id: HUMAN[l?.sex === 'f' ? 'f' : 'm'], forward: '+z', parts, materials: { ...cloth,
     Body_Skin: skin, Head_Skin: skin, under: { color: '#2b2a30', roughness: 0.85, metalness: 0 },
-    Iris: { color: eye, map: '/cdn/value.d2cf169d248898314e631eb26d71f42378a79c8a51a0b6097d73f09862c7c0ea.png', roughness: 0.4, metalness: 0 }, Brow: { color: hairc, roughness: 0.9, metalness: 0 }, Lash: { color: '#2a2024', roughness: 0.9, metalness: 0 }, Beard: { color: l?.beardc || hairc, roughness: 0.86, metalness: 0 }, Blush: { color: typeof l?.blush === 'string' && l.blush.startsWith('#') ? l.blush : '#ed7890', roughness: 0.9, metalness: 0 } } }
+    Iris: { color: eye, map: '/cdn/value.d2cf169d248898314e631eb26d71f42378a79c8a51a0b6097d73f09862c7c0ea.png', roughness: 0.4, metalness: 0 }, Eye: { color: '#ffffff', map: FACE_ATLAS, roughness: 0.5, metalness: 0 }, Brow: { color: hairc, map: FACE_ATLAS, roughness: 0.9, metalness: 0 }, Lash: { color: '#2a2024', map: FACE_ATLAS, roughness: 0.9, metalness: 0 }, Beard: { color: l?.beardc || hairc, roughness: 0.86, metalness: 0 }, Blush: { color: typeof l?.blush === 'string' && l.blush.startsWith('#') ? l.blush : '#ed7890', roughness: 0.9, metalness: 0 } } }
 }
 // what the body file itself holds: garments ride as their own skinned children (wardrobe-split), and furry slots (fur, mark…) are not on the human file
 const HB_MATS = new Set(['Body_Skin', 'cloth_bottom', 'metal', 'lens', 'cloth_hat', 'gold', 'Head_Skin', 'Eye', 'Iris', 'Lash', 'Brow', 'Mouth', 'Teeth', 'cloth_neck', 'cloth_shoes', 'cloth_top', 'button', 'strap', 'under', 'Beard', 'Blush'])
