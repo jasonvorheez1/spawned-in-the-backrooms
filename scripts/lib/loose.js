@@ -58,6 +58,7 @@ export function impact(ctx, o, speed, kg, at) {
 }
 // it breaks: its own act. Returns true when the act owns what's left (no generic rubble)
 export function breakIt(ctx, o, k, at, n) {
+  if (String(ctx.self?.place ?? o?.place ?? '').replace(/-.*/, '') === 'bonus') return 'keep' // Bonus Room: nothing breaks (Shelly Nov 10)
   k ??= looseOf(o); if (!k) return false
   o.state.broke = true
   const p = at ?? { x: o.feetPosition.x, y: o.feetPosition.y + 0.3, z: o.feetPosition.z }
