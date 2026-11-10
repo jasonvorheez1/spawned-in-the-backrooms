@@ -1,0 +1,20 @@
+# Level 27 "The Bunker Springs" (Shelly, Nov 10: "a simple level. make level 27. a good introduction to new crafting items")
+mode: 3d
+terrain:
+  kind: "off"
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: -6.2, y: 2.5, z: -17 }
+defaultSpawnRotation: { yaw: 180 }
+worldBounds: { bottom: -20 }
+atmosphere:
+  look: { script: scripts/look-photo.js }
+  clouds: { enabled: false }
+  fog: { kind: linear, near: 6, far: 40, color: oklch(0.16 0.02 210) }
+  moon: { enabled: false, intensity: 0 }
+  sky: { kind: color, color: oklch(0.03 0.005 220) }
+  stars: { enabled: false }
+  timeOfDay: 0
+  wind: { direction: 0, speed: 0 }
+  ambient: { light: { color: oklch(0.62 0.03 210), intensity: 0.75 } }
+  hemisphere: { skyColor: oklch(0.32 0.03 210), groundColor: oklch(0.2 0.03 70), intensity: 0.6 }
+acoustics: { reverb: 0.8 }

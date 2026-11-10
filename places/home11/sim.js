@@ -1,7 +1,7 @@
 import { builtSpec } from "../../scripts/lib/build-piece.js";
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 36;
+const V = 37;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -91,7 +91,7 @@ export function tick(ctx) {
   bx("h-bath-floor", 3.6, BY, -4.3, 2.7, 0.015, 3.3, TILE, { physics: "none" });
   bx("h-bath-tile-wall", 3.6, BY, -5.9, 2.7, 1.2, 0.03, TILE, { physics: "none" }); // tiled wainscot behind the tub
   const TUB = "/cdn/value.41d0f172f22f0963c0cdb6b958c4a3e95e6b3aa065b3c91c096683efc4c87a4b.glb", LOO = "/cdn/value.28601a408e0ea5cc0d4ad5e63b60d0044db81cc693682addc38ae0e75b28cea5.glb", VAN = "/cdn/value.a30ff86587854900fffcfd845866aa93ccabcb94e10e503cb75a73dcc64bac6f.glb";
-  fit("h-tub", TUB, 3.7, -5.4, 0, [1.75, 1.0, 0.85]); // tripo: porcelain soaking tub with a gooseneck tap, along the tiled north wall
+  fit("h-tub", TUB, 3.7, -5.4, 0, [1.75, 1.0, 0.85], use("tub", "Bathtub", "Run it hottest")); sp("h-from-l27", { feetPosition: { x: 3.7, y: 0.1, z: -4.2 }, rotation: { yaw: 0 } }); // Level 27: the tap at its hottest, eyes closed // tripo: porcelain soaking tub with a gooseneck tap, along the tiled north wall
   fit("h-toilet", LOO, 4.6, -3.9, 270, [0.45, 0.8, 0.7]); // tripo: two-piece toilet, lid down, facing the room
   fit("h-vanity", VAN, 2.55, -3.6, 90, [0.95, 0.9, 0.55]); // tripo: oak vanity, cultured-marble top and sink, under the mirror
   sp("h-mirror", { feetPosition: { x: 2.27, y: 1.1, z: -3.6 }, primitive: { kind: "box", width: 0.02, height: 0.8, depth: 0.7 }, material: { color: "oklch(0.92 0.01 230)", metalness: 1, roughness: 0.05 } });

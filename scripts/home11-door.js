@@ -28,6 +28,13 @@ export const ears = {
       ctx.cross(who, "level11#l11-from-home");
       return;
     }
+    if (k === "tub") { // Level 27 lore: turn a bath to its hottest and close your eyes; you come back out here
+      ctx.emit("playSound", { clip: "cdn/sfx-bathtub-faucet-turned-on-full-hot-water-gushing.mp3", position: ctx.self.feetPosition, volume: 0.8 });
+      ctx.emit("screenFlash", { color: "#ffffff", duration: 1.2, intensity: 0.9 }, { audience: { player: who.id } });
+      w.l27from = "home11#h-from-l27"; w.notice = { text: "Hot as it goes. You close your eyes in the steam...", at: now };
+      ctx.cross(who, "level27#l27-from-tub");
+      return;
+    }
     if (k === "tote") { // carrying something (Z): E drops it in. Empty hands: E takes the newest thing out, a step ahead
       const st = ctx.place.state, ids = Object.keys(st.packed ?? {});
       const o = w.carryId && ctx.getObject(w.carryId);
