@@ -9,7 +9,7 @@ function chair(ctx, hi) {
   paint(ctx, "oklch(0.2 0.005 250)", null, 0.5, 0.2);
   for (let k = 0; k < 5; k++) { const a = (k / 5) * Math.PI * 2; rod(ctx, [0, 0.07, 0], [Math.cos(a) * 0.32, 0.05, Math.sin(a) * 0.32], 0.022, hi ? 10 : 6); sphere(ctx, [Math.cos(a) * 0.32, 0.03, Math.sin(a) * 0.32], 0.03, 6); }
   paint(ctx, "oklch(0.6 0.01 250)", null, 0.3, 0.9); cyl(ctx, 0, 0, 0.07, 0.42, 0.025, M);
-  paint(ctx, "oklch(0.3 0.03 250)", FAB, 0.95); rounded(ctx, [0,.46,.01], [.24,.04,.23], .038);
+  paint(ctx, "oklch(0.47 0.03 250)", FAB, 0.95); rounded(ctx, [0,.46,.01], [.24,.04,.23], .038);
   rounded(ctx, [0,.80,.28], [.22,.22,.03], .028);
   paint(ctx, "oklch(0.2 0.005 250)", null, 0.5, 0.2); box(ctx, -0.03, 0.03, 0.42, 0.62, 0.24, 0.27);
   for (const s of [-1, 1]) { box(ctx, s * 0.26 - 0.02, s * 0.26 + 0.02, 0.5, 0.66, 0.0, 0.04); rounded(ctx, [s*.26,.675,.03], [.03,.015,.15], .014); }
