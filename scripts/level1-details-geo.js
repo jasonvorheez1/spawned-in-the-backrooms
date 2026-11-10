@@ -35,20 +35,7 @@ export function geometry(ctx) {
     ctx.metalness(0);
   }
 
-  // floor: wet stains, tyre tracks and dust, so the concrete is not one flat colour
-  ctx.roughness(0.12); ctx.color("oklch(0.2 0.008 250)");
-  for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
-    if (!open(cx, cz)) continue;
-    const c = cellCenter(cx, cz), r = hash(cx, cz, 301);
-    if (r < 0.2) prism(ctx, blob(c.x + (hash(cx, cz, 303) - 0.5) * 4, c.z + (hash(cx, cz, 305) - 0.5) * 4, 0.8 + hash(cx, cz, 307) * 1.6, 10, cx * 31 + cz), 0.004, 0.006);
-  }
-  for (let cz = 2; cz < N; cz += 4) for (let cx = 0; cx < N - 3; cx++) {
-    if (!open(cx, cz) || !open(cx + 1, cz) || hash(cx, cz, 311) < 0.35) continue;
-    const c = cellCenter(cx, cz), z = c.z + (hash(cx, cz, 313) - 0.5) * 2;
-    for (const dz of [-0.75, 0.75]) box(ctx, c.x - S / 2, c.x + S / 2, 0.004, 0.006, z + dz - 0.1, z + dz + 0.1);
-  }
-  ctx.roughness(0.98); ctx.color("oklch(0.7 0.01 80)");
-  for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) if (open(cx, cz) && hash(cx, cz, 321) < 0.18) { const c = cellCenter(cx, cz); prism(ctx, blob(c.x + (hash(cx, cz, 323) - 0.5) * 3, c.z + (hash(cx, cz, 325) - 0.5) * 3, 1.2, 9, cx * 17 + cz), 0.003, 0.005); }
+  // floor: the paint, tracks and wet sheen live in level1-geo.js now (the old opaque black blots and white dust patches read as holes and paper)
 
   // glaring strip lights set into the outer walls, and a few hose-reel cabinets on pillars
   ctx.roughness(0.4);
