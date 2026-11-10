@@ -288,16 +288,35 @@ def lamp():
     M.box("metal", (0, 1.4, 7.0), (0.5, 1.2, 0.15)); M.box("dark", (0, 1.4, 6.95), (0.5, 1.0, 0.08)); M.box("lamp", (0, 1.45, 6.9), (0.38, 0.8, 0.06))
     ob = M.finish("l11_lamp"); preview("lamp", ob, 60, 0.0, 1.2); return ob
 def hydrant():
-    M = Mesh(); M.cyl("red", (0, 0, 0.25), 0.17, 0.5, r2=0.15, seg=14); M.cyl("red", (0, 0, 0.55), 0.19, 0.1, seg=14); M.sph("red", (0, 0, 0.7), 0.15, (1, 1, 0.9), 12)
-    M.cyl("red", (0, 0, 0.82), 0.04, 0.1, seg=8); M.cyl("chrome", (0.2, 0, 0.4), 0.07, 0.14, seg=10, rot=(0, math.pi / 2, 0)); M.cyl("chrome", (-0.2, 0, 0.4), 0.07, 0.14, seg=10, rot=(0, math.pi / 2, 0)); M.cyl("chrome", (0, 0.2, 0.36), 0.09, 0.14, seg=10, rot=(math.pi / 2, 0, 0))
-    M.cyl("dark", (0, 0, 0.04), 0.22, 0.08, seg=14)
+    M = Mesh(); P = math.pi / 2
+    M.cyl("dark", (0, 0, 0.02), 0.25, 0.04, seg=16)                                  # the cast footing in the kerb
+    M.cyl("red", (0, 0, 0.09), 0.22, 0.1, r2=0.2, seg=16)                            # base flange
+    for k in range(8): a = k / 8 * math.tau; M.cyl("chrome", (math.cos(a) * 0.205, math.sin(a) * 0.205, 0.15), 0.017, 0.035, seg=6)   # flange bolts
+    M.cyl("red", (0, 0, 0.36), 0.165, 0.46, r2=0.145, seg=18)                        # the barrel, narrowing upward
+    M.cyl("red", (0, 0, 0.62), 0.19, 0.06, seg=18); M.cyl("red", (0, 0, 0.67), 0.17, 0.04, seg=18)   # the collar rings
+    M.cyl("red", (0, 0, 0.76), 0.15, 0.14, r2=0.13, seg=18)                          # upper barrel
+    M.sph("red", (0, 0, 0.82), 0.15, (1, 1, 0.78), 18)                               # the dome bonnet
+    M.cyl("red", (0, 0, 0.93), 0.045, 0.06, seg=10); M.cyl("chrome", (0, 0, 0.975), 0.05, 0.035, seg=5)   # operating nut under a pentagon cap
+    for sx in (-1, 1):                                                               # two hose nozzles, each with a cap and a chain
+        M.cyl("red", (sx * 0.2, 0, 0.5), 0.075, 0.2, seg=14, rot=(0, P, 0)); M.cyl("chrome", (sx * 0.31, 0, 0.5), 0.09, 0.05, seg=14, rot=(0, P, 0))
+        M.cyl("chrome", (sx * 0.34, 0, 0.5), 0.03, 0.04, seg=6, rot=(0, P, 0))
+        for j in range(4): M.sph("chrome", (sx * 0.2, 0.04 + j * 0.012, 0.48 - j * 0.06), 0.018, seg=6)
+    M.cyl("red", (0, 0.2, 0.42), 0.11, 0.22, seg=16, rot=(P, 0, 0)); M.cyl("chrome", (0, 0.33, 0.42), 0.125, 0.06, seg=16, rot=(P, 0, 0))   # the big pumper nozzle
+    for k in range(6): a = k / 6 * math.tau; M.cyl("chrome", (math.cos(a) * 0.1, 0.355, 0.42 + math.sin(a) * 0.1), 0.014, 0.03, seg=6, rot=(P, 0, 0))
+    M.box("chrome", (0, 0.36, 0.42), (0.07, 0.03, 0.07))
     ob = M.finish("l11_hydrant"); preview("hydrant", ob, 35, 0.2, 3.0); return ob
 def bench():
-    M = Mesh()
-    for sx in (-0.8, 0.8):
-        M.box("metal", (sx, 0, 0.22), (0.07, 0.5, 0.44)); M.box("metal", (sx, -0.28, 0.6), (0.07, 0.07, 0.5), rot=(0.2, 0, 0)); M.box("metal", (sx, 0, 0.45), (0.09, 0.55, 0.05))
-    for k in range(4): M.box("wood", (0, -0.2 + k * 0.14, 0.47), (1.8, 0.11, 0.05))
-    for k in range(3): M.box("wood", (0, -0.3, 0.62 + k * 0.13), (1.8, 0.04, 0.1), rot=(0.2, 0, 0))
+    M = Mesh(); P = math.pi / 2
+    for sx in (-0.82, 0.82):                                                         # a cast-iron end frame: foot, leg, seat rail, raked back leg, arm
+        M.box("metal", (sx, 0.0, 0.03), (0.1, 0.62, 0.06)); M.box("metal", (sx, 0.22, 0.24), (0.07, 0.07, 0.42)); M.box("metal", (sx, -0.2, 0.24), (0.07, 0.07, 0.42))
+        M.box("metal", (sx, 0.0, 0.45), (0.08, 0.56, 0.06)); M.box("metal", (sx, -0.3, 0.7), (0.07, 0.07, 0.6), rot=(0.2, 0, 0)); M.box("metal", (sx, 0.04, 0.68), (0.07, 0.62, 0.05))
+        M.box("metal", (sx, 0.2, 0.57), (0.06, 0.06, 0.24)); M.cyl("metal", (sx, 0.34, 0.68), 0.04, 0.07, seg=10, rot=(0, P, 0))
+        M.box("metal", (sx, 0.0, 0.15), (0.05, 0.4, 0.04), rot=(0.3, 0, 0))          # diagonal brace
+    for k in range(5): M.box("wood", (0, -0.2 + k * 0.1, 0.475), (1.64, 0.085, 0.045))   # five seat slats with gaps
+    for k in range(4): M.box("wood", (0, -0.31 - k * 0.012, 0.6 + k * 0.115), (1.64, 0.035, 0.09), rot=(0.2, 0, 0))   # four back slats, raked
+    for sx in (-0.55, 0.0, 0.55): M.box("metal", (sx, -0.26, 0.45), (0.05, 0.05, 0.1)); M.box("metal", (sx, -0.3, 0.7), (0.04, 0.05, 0.5), rot=(0.2, 0, 0))   # the middle supports
+    for sx in (-0.82, 0.82):
+        for z in (0.5, 0.72): M.cyl("chrome", (sx, 0.06, z), 0.018, 0.12, seg=6, rot=(0, P, 0))   # bolts
     ob = M.finish("l11_bench"); preview("bench", ob, 35, 0.3, 2.2); return ob
 def shelter():
     M = Mesh()
@@ -334,12 +353,31 @@ def car(name, L, W, H, cab0, cab1, hood, van=False):
 def sedan(): return car("l11_sedan", 4.5, 1.8, 1.45, 0, 0, 0)
 def van(): return car("l11_van", 5.2, 2.0, 2.0, 0, 0, 0, van=True)
 def bin_():
-    M = Mesh(); M.cyl("green", (0, 0, 0.45), 0.3, 0.9, r2=0.27, seg=14); M.cyl("metal", (0, 0, 0.93), 0.32, 0.06, seg=14); M.sph("green", (0, 0, 0.93), 0.3, (1, 1, 0.3), 12)
-    for k in range(6): M.box("metal", (math.cos(k) * 0.3, math.sin(k) * 0.3, 0.45), (0.03, 0.03, 0.8)) if False else None
-    M.cyl("metal", (0, 0, 0.12), 0.3, 0.04, seg=14)
+    M = Mesh(); P = math.pi / 2
+    M.cyl("metal", (0, 0, 0.04), 0.3, 0.08, seg=16)                                  # the foot ring
+    M.cyl("green", (0, 0, 0.5), 0.29, 0.82, r2=0.26, seg=18)                         # the drum, a little narrower below
+    for z in (0.2, 0.46, 0.72): M.cyl("metal", (0, 0, z), 0.3 - (0.72 - z) * 0.05 + 0.005, 0.035, seg=18)   # three steel bands
+    M.cyl("metal", (0, 0, 0.93), 0.32, 0.05, seg=18)                                 # the rim
+    M.sph("green", (0, 0, 0.95), 0.3, (1, 1, 0.26), 18)                              # the domed lid
+    M.cyl("dark", (0.1, 0.0, 0.99), 0.12, 0.03, seg=14)                              # the flap opening
+    M.box("metal", (0.1, 0, 1.0), (0.04, 0.3, 0.03)); M.cyl("metal", (-0.18, 0, 0.96), 0.03, 0.34, seg=8, rot=(P, 0, 0))   # flap hinge
+    M.box("metal", (0.0, 0.3, 0.55), (0.03, 0.05, 0.16)); M.box("metal", (0.0, -0.3, 0.55), (0.03, 0.05, 0.16))      # carrying lugs
+    M.box("white", (0.0, 0.282, 0.6), (0.18, 0.015, 0.1))                            # a faded sticker
     ob = M.finish("l11_bin"); preview("bin", ob, 35, 0.2, 3.2); return ob
 def box_():   # a newspaper box
-    M = Mesh(); M.box("red", (0, 0, 0.5), (0.5, 0.45, 0.9)); M.box("glass", (0, 0.226, 0.65), (0.32, 0.03, 0.34)); M.box("dark", (0, 0.226, 0.34), (0.2, 0.03, 0.1)); M.box("metal", (0, 0, 0.05), (0.52, 0.47, 0.1)); M.box("chrome", (0.1, 0.23, 0.18), (0.12, 0.03, 0.04))
+    M = Mesh(); P = math.pi / 2
+    M.box("metal", (0, 0, 0.04), (0.56, 0.5, 0.08))                                  # the base plate
+    M.box("metal", (0, 0, 0.18), (0.26, 0.24, 0.2))   # a slim pedestal
+    M.box("red", (0, 0, 0.62), (0.5, 0.44, 0.66))                                    # the body
+    M.box("red", (0, 0.0, 1.0), (0.54, 0.48, 0.1), rot=(-0.08, 0, 0))                # the slanted top
+    M.box("white", (0, 0.236, 0.94), (0.46, 0.02, 0.14)); M.box("metal", (0, 0.24, 0.94), (0.5, 0.012, 0.012))   # the paper's title plate
+    M.box("glass", (0, 0.226, 0.7), (0.34, 0.03, 0.34)); M.box("metal", (0, 0.232, 0.7), (0.38, 0.02, 0.03)); M.box("metal", (0, 0.232, 0.7), (0.03, 0.02, 0.38))   # the pane and its cross frame
+    for sx in (-0.2, 0.2): M.box("metal", (sx, 0.23, 0.7), (0.025, 0.02, 0.38))
+    M.box("white", (0, 0.222, 0.7), (0.26, 0.012, 0.28))                             # the front page showing through
+    M.box("metal", (-0.04, 0.226, 0.42), (0.34, 0.024, 0.07)); M.box("chrome", (-0.04, 0.24, 0.45), (0.3, 0.012, 0.012))   # the paper pull door
+    M.box("chrome", (0.2, 0.234, 0.56), (0.05, 0.02, 0.14)); M.box("dark", (0.2, 0.244, 0.6), (0.012, 0.012, 0.05))   # the coin plate and slot, up the right edge
+    M.cyl("chrome", (0.2, 0.238, 0.44), 0.024, 0.025, seg=10, rot=(P, 0, 0))        # the lock under it
+    M.box("metal", (0.0, 0.23, 0.31), (0.36, 0.018, 0.03))                           # the sill
     ob = M.finish("l11_box"); preview("box", ob, 35, 0.2, 4); return ob
 
 # ============================================================== Level 11 set dressing (replaces the primitive boxes in places/level11/sim.js)
