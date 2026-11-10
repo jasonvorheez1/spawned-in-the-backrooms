@@ -183,8 +183,8 @@ const CSS = `<style>
 .nv-spin { transform-origin: center; animation: nvSpin 8s linear infinite }
 @keyframes nvPulse { 0%,100% { transform: scale(1); opacity: .7 } 50% { transform: scale(1.1); opacity: 1 } }
 .nv-pulse { transform-origin: center; animation: nvPulse 2.4s ease-in-out infinite }
-@keyframes nvEcg { 0% { stroke-dashoffset: 100 } 100% { stroke-dashoffset: 0 } }
-.nv-ecg { animation: nvEcg 2s linear infinite }
+@keyframes nvEcg { 0%,100% { opacity: .45 } 50% { opacity: 1 } }
+.nv-ecg { animation: nvEcg 2s ease-in-out infinite }
 
 /* Stats grid */
 .g { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px; row-gap: 2px }
@@ -266,8 +266,9 @@ const CSS = `<style>
 .hg-qrow { display:flex; gap:5px; align-items:stretch; padding:8px 18px; border-bottom:1px solid var(--al); background:rgba(0,0,0,.25) }
 .hg-qt { font-size:9px; letter-spacing:.16em; color:var(--ad); line-height:1.25; align-self:center; margin-right:4px }
 .hg-q { position:relative; flex:1; min-width:0; height:52px; display:flex; flex-direction:column; justify-content:flex-end; padding:4px 6px; border:1px dashed var(--al); border-radius:3px; cursor:pointer; overflow:hidden; transition:border-color .15s, background .15s, transform .15s; pointer-events:auto }
-.hg-q.arm { border-color:var(--a); animation:hgq-pulse 1.4s ease-in-out infinite }
-@keyframes hgq-pulse { 50% { background:rgba(255,182,66,.13) } }
+.hg-q.arm { border-color:var(--a) }
+.hg-q.arm::before { content:''; position:absolute; inset:0; background:rgba(255,182,66,.13); opacity:0; animation:hgq-pulse 1.4s ease-in-out infinite; pointer-events:none }
+@keyframes hgq-pulse { 50% { opacity:1 } }
 .hg-q.mine { border-style:solid; border-width:2px; border-color:var(--ab); background:rgba(255,182,66,.2); animation:none }
 .hg-q .x { position:absolute; bottom:3px; right:3px; width:16px; height:16px; line-height:14px; font-size:10px; border:1px solid var(--ad); border-radius:2px; color:var(--ad); background:rgba(0,0,0,.4); opacity:0; transition:opacity .15s; cursor:pointer }
 .hg-q:hover .x { opacity:1 }
@@ -391,7 +392,7 @@ const SVG_ARMOR = `<svg width="120" height="52" viewBox="0 0 120 52" class="nv-a
 const SVG_AID = `<svg width="120" height="52" viewBox="0 0 120 52" class="nv-art">
   <rect x="52" y="10" width="16" height="6" fill="none" stroke="var(--a)" stroke-width="1.5"/>
   <path d="M48 16 h24 l4 6 v22 h-32 v-22 z" fill="none" stroke="var(--a)" stroke-width="1.8"/>
-  <path d="M12 32 h28 l3 -10 l4 20 l3 -12 l2 4 h56" fill="none" stroke="var(--ab)" stroke-width="1.6" stroke-dasharray="120" class="nv-ecg"/>
+  <path d="M12 32 h28 l3 -10 l4 20 l3 -12 l2 4 h56" fill="none" stroke="var(--ab)" stroke-width="1.6" class="nv-ecg"/>
 </svg>`
 
 const SVG_AMMO = `<svg width="120" height="52" viewBox="0 0 120 52" class="nv-art">
