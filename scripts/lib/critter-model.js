@@ -54,7 +54,7 @@ export function seatHumanHair(ctx, o, l) {
   const want = humanHairOf(l), id = o.id + '/' + HAIR_ID, h = ctx.getObject(id)
   if (!want) { if (h) ctx.destroy(id); return }
   const c = l.hairc || '#5a3a26', m = { id: want, materials: hairMats(c, want) }
-  if (h) { if ((h.model?.id ?? h.model) !== want || h.model?.materials?.hair?.color !== c || JSON.stringify(Object.keys(h.model?.materials ?? {})) !== JSON.stringify(Object.keys(m.materials))) h.model = m; return }
+  if (h) { if ((h.model?.id ?? h.model) !== want || h.model?.materials?.hair?.color !== c || h.model?.materials?.hair?.params?.tex !== m.materials.hair?.params?.tex || JSON.stringify(Object.keys(h.model?.materials ?? {})) !== JSON.stringify(Object.keys(m.materials))) h.model = m; return }
   ctx.spawn(HAIR_ID, { parent: o.id, id: HAIR_ID, attachment: { skin: true }, model: m, ...(o.audience === 'local' ? { audience: 'local' } : {}) })
 }
 export function seatHair(ctx, o, l) {
@@ -63,7 +63,7 @@ export function seatHair(ctx, o, l) {
   const want = hairOf(l), id = o.id + '/' + HAIR_ID, h = ctx.getObject(id)
   if (!want) { if (h) ctx.destroy(id); return }
   const m = hairModel(l)
-  if (h) { if ((h.model?.id ?? h.model) !== want || h.model?.materials?.hair?.color !== m.materials.hair.color) h.model = m; return }
+  if (h) { if ((h.model?.id ?? h.model) !== want || h.model?.materials?.hair?.color !== m.materials.hair.color || h.model?.materials?.hair?.params?.tex !== m.materials.hair?.params?.tex) h.model = m; return }
   ctx.spawn(HAIR_ID, { parent: o.id, ...hairChild(l, o.audience === 'local') })
 }
 export const BEARD_ID = 'critter-beard'
