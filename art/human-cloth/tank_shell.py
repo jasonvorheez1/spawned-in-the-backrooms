@@ -6,7 +6,7 @@ import bpy, bmesh, sys, os
 NAME = os.environ.get('WARD', 'Ward_tank'); STRAP = float(os.environ.get('STRAP', '0.66')); NECKD = float(os.environ.get('NECKD', '1')); HEM = float(os.environ.get('HEM', '0.07'))  # a vest: WARD=Ward_vest STRAP=0.86 NECKD=0.6
 from mathutils import Vector
 a = sys.argv[sys.argv.index('--') + 1:]; src, out = a[0], a[1]
-T = 0.0065  # cloth stand-off, metres
+T = float(os.environ.get('STANDOFF', '0.0065'))  # cloth stand-off, metres (a vest sits thicker)
 bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(filepath=src)
 arm = next(o for o in bpy.data.objects if o.type == 'ARMATURE')
 J = {b.name: arm.matrix_world @ b.head_local for b in arm.data.bones}
