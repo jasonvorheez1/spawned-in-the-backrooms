@@ -11,7 +11,7 @@ m = bpy.data.materials.new("h"); m.use_nodes = True; b = m.node_tree.nodes["Prin
 for o in set(bpy.data.objects) - before:
     if o.type == "MESH": o.data.materials.clear(); o.data.materials.append(m)
 for o in bpy.data.objects:
-    if o.type == "MESH" and o.name.lower().startswith(("cloth", "shirt", "skirt")): o.hide_render = True
+    if o.type == "MESH" and o.name not in ("Body", "Head", "Icosphere") and o.name.split("_")[0] in ("Hat", "Eyew", "Top", "Bot", "Neck", "Shoes", "Under"): o.hide_render = True
 sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 16; sc.render.resolution_x = sc.render.resolution_y = 600
 w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True; w.node_tree.nodes["Background"].inputs[0].default_value = (0.6, 0.6, 0.62, 1); w.node_tree.nodes["Background"].inputs[1].default_value = 1.0
 c = Vector((0, 0, hz.z + 0.08)); cam = bpy.data.objects.new("c", bpy.data.cameras.new("c")); sc.collection.objects.link(cam); cam.data.lens = 85; sc.camera = cam
