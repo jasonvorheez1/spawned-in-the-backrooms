@@ -21,7 +21,11 @@ for o in bpy.data.objects:
     bot = min(p.z for p in ring)
     cx = sum(p.x for p in ring) / len(ring); cy = sum(p.y for p in ring) / len(ring)
     inner = min(((p.x - cx) ** 2 + (p.y - cy) ** 2) ** 0.5 for p in ring)
-    dz = (trap - 0.012) - bot
+    def surf(p):  # the body's own top under this point
+        c = [q.z for q in P if abs(q.x - p.x) < 0.012 and abs(q.y - p.y) < 0.012 and q.z < p.z + 0.3]
+        return max(c) if c else None
+    gaps = [p.z - z for p in ring for z in [surf(p)] if z is not None]
+    dz = -(min(gaps) - 0.004) if gaps else (trap - 0.012) - bot  # the lowest ring point lands just on the skin
     k = max(0.8, min(1.0, (neckR + 0.012) / inner)) if inner > 0 else 1.0
     print('SCARF', o.name, 'drop', round(dz, 3), 'inner', round(inner, 3), 'neck', round(neckR, 3), 'k', round(k, 3))
     def fix(co):
