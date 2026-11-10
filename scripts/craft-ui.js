@@ -5,6 +5,16 @@ import C from './lib/data/craft.yml'
 import B from './lib/data/breakables.yml'
 import { skillsOf, SKILLS } from './lib/stats.js'
 import { recipeStatus, maxMakes, CATS } from './lib/craft.js'
+import W from './lib/weapons.js'
+import { parseCloth } from './lib/clothes.js'
+// what a recipe makes, in a line: a weapon's numbers, a garment's armor, or how many of the thing you carry already
+const OWN = { ammo: ['ammo', 'rounds'], shells: ['shells', 'shells'], kit: ['kits', 'weapon kits'], akit: ['akits', 'armor kits'], tape: ['tapes', 'tape'], bobbypin: ['bobbypins', 'pins'], fuse: ['fuses', 'fuses'], valve: ['valves', 'valves'], compass: ['compass', 'reads'] }
+function makes(s, r) {
+  const o = String(r.out[0])
+  if (o.startsWith('weapon:')) { const k = o.slice(7), w = W[k]; if (!w) return ''; const own = String(s.weapons ?? '').split(',').includes(k); return `${w.damage} dmg · reach ${w.reach} m · ${(w.cooldown ?? 0).toFixed(2)} s${own ? ' · you have one' : ''}` }
+  if (o.startsWith('cloth:')) { const c = parseCloth(o); return c ? `armor ${c.row.dr} · ${c.slot === 'topw' ? 'top' : c.slot}` : '' }
+  const n = OWN[o]; return n ? `you carry ${s[n[0]] ?? 0} ${n[1]}` : ''
+}
 
 const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
 const CSS = `<style>
@@ -35,6 +45,7 @@ const CSS = `<style>
 #cr .n{flex:1;min-width:0;font-size:14.5px;color:#ffd79a}
 #cr .n em{font-style:normal;font-size:11px;color:#9fe07a;margin-left:6px}
 #cr .n small{display:block;font-size:11px;opacity:.7;color:#e9dfc4}
+#cr .n small.mk{color:#9fe07a;opacity:.85}
 #cr .in{font-size:11px;margin-top:3px;display:flex;flex-wrap:wrap;gap:3px 10px}
 #cr .in i{font-style:normal;color:#cfc4a4}
 #cr .in i.lack{color:#ff7a5a}
@@ -74,7 +85,7 @@ export function craftUi(ctx, player) {
     const req = [r.skill ? `<span class="${st.skillOk ? '' : 'bad'}">${SKN[r.skill[0]]} ${r.skill[1]} (you ${sk[r.skill[0]] ?? 0})</span>` : '', r.bench ? `<span class="${st.benchOk ? '' : 'bad'}">WORKBENCH</span>` : ''].filter(Boolean).join(' · ')
     const per = r.out.length > 1 ? `<em>×${r.out.length}</em>` : ''
     const cls = st.ok ? '' : st.skillOk && st.benchOk ? 'no' : 'lk'
-    rows += `<div class="row ${cls}"><div class="n">${r.name}${per}<small>${r.desc}</small><div class="in">${ins}</div>${req ? `<div class="rq">${req}</div>` : ''}</div>
+    rows += `<div class="row ${cls}"><div class="n">${r.name}${per}<small>${r.desc}</small>${makes(s, r) ? `<small class="mk">${makes(s, r)}</small>` : ''}<div class="in">${ins}</div>${req ? `<div class="rq">${req}</div>` : ''}</div>
       <div class="bt"><button ${st.ok ? '' : 'disabled'} onclick="sendAction('make',{k:'make',id:'${id}',n:1})">MAKE</button>${st.ok && mx >= 5 ? `<button class="s" onclick="sendAction('make',{k:'make',id:'${id}',n:5})">×5</button>` : ''}${st.ok && mx >= 2 ? `<button class="s" onclick="sendAction('make',{k:'make',id:'${id}',n:'max'})">MAX ${mx}</button>` : ''}</div></div>`
   }
   if (!rows) rows = `<div class="em">${tab === 'ready' ? 'Nothing you can make yet. The red parts are what you are short of.' : 'Nothing here.'}</div>`

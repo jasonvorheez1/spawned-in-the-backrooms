@@ -7,7 +7,7 @@ import { heard } from "./lib/hear.js";
 import C from './lib/data/craft.yml'
 import L21H from './lib/data/level21.yml'
 import B from './lib/data/breakables.yml'
-import { skillsOf, SKILLS, canCarry } from './lib/stats.js'
+import { skillsOf, SKILLS, canCarryAll } from './lib/stats.js'
 import { takeToken, gain } from './player.js'
 import { recipeStatus, maxMakes, CATS } from './lib/craft.js'
 
@@ -36,16 +36,21 @@ function act(ctx, s, d) {
   const want = d.n === 'max' ? maxMakes(s, id) : Math.max(1, Math.min(10, +d.n || 1)) // ×1, ×5 or MAX from the menu
   let made = 0, extra = 0, why = ''
   for (let i = 0; i < want && maxMakes(s, id) > 0; i++) {
-    const cw = canCarry(s, r.out[0] === 'ammo' ? 'ammo' : r.out[0]); if (!cw.ok) { why = cw.msg; break }
+    const out = [...r.out], bonus = r.skill && ctx.random() < Math.max(0, st.got - st.need) / 100 // spare skill: an extra one
+    if (bonus) out.push(r.out[0])
+    const cw = canCarryAll(s, out); if (!cw.ok) { why = cw.msg; break } // the whole batch must fit before any scrap is spent: a half-taken craft used to eat the rest
     const sc = { ...s.scrap }; for (const [k, n] of Object.entries(r.in)) sc[k] -= n; s.scrap = sc
-    const out = [...r.out]
-    if (r.skill && ctx.random() < Math.max(0, st.got - st.need) / 100) { out.push(r.out[0]); extra++ } // spare skill: an extra one
-    for (const t of out) takeToken(ctx, t)
+    for (const t of out) {
+      const k = t.startsWith('weapon:') ? t.slice(7) : null, had = k && String(s.weapons ?? '').split(',').includes(k)
+      takeToken(ctx, t)
+      if (k && !had && r.skill) s['cnd_' + k] = Math.round(Math.max(60, Math.min(100, 60 + (st.got - st.need)))) // a bench job is as sound as the maker is skilled (Fallout): worn at the minimum skill, whole 40 points over it
+    }
+    if (bonus) extra++
     made++
   }
   if (!made) return deny(why || 'Nothing made')
   gain(ctx, (r.skill?.[1] ?? 5) * 0.2 * made) // a little XP for every make, more for harder recipes (Savi's pick)
-  note(s, ctx, `Made ${r.name}${made > 1 ? ' ×' + made : ''}${extra ? ` (+${extra} extra)` : ''}${why ? ' · ' + why : ''}`)
+  note(s, ctx, `Made ${r.name}${made > 1 ? ' ×' + made : ''}${extra ? ` (+${extra} extra)` : ''}${why ? ' · ' + why : ''}${r.out[0].startsWith('weapon:') && r.skill ? ` · condition ${Math.round(s['cnd_' + r.out[0].slice(7)] ?? 100)}%` : ''}`)
   heard(ctx, { clip: SND(r.bench ? 'hammer-nail-wood-build' : 'bandage-wrap-cloth'), position: ctx.self.feetPosition, volume: 0.6, maxDistance: 14 })
 }
 

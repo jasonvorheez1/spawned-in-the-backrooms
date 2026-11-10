@@ -27,6 +27,8 @@ recipes:
   ammo:       { cat: ammo, name: Pistol rounds,   in: { scrap_metal: 2, springs: 1 },                  out: [ammo, ammo],       skill: [guns, 20],     bench: true, desc: "Two boxes of rounds" }
   shells:     { cat: ammo, name: Shotgun shells,  in: { scrap_metal: 2, wire: 1, nails: 1 },           out: [shells],           skill: [guns, 30],     bench: true, desc: "One box of shells" }
   battery:    { cat: tools, name: Battery,         in: { copper_coil: 1, scrap_metal: 1, bolts: 1 },    out: [battery],          skill: [science, 20],  bench: true, desc: "Recharges the flashlight" }
+  dynamo:     { cat: tools, name: Hand dynamo,      in: { motor: 1, gears: 1, wire: 2 },             out: [battery, battery],      skill: [science, 30],  bench: true, desc: "A small motor run backwards: two batteries' worth of charge" }
+  generator:  { cat: tools, name: Salvage generator charge, in: { motor: 2, copper_coil: 1, bolts: 2 }, out: [battery, battery, battery, battery, battery], skill: [science, 45], bench: true, desc: "Two motors and a coil wound into a charger: five batteries" }
   fuse:       { cat: tools, name: Fuse,            in: { wire: 2, scrap_metal: 1 },                     out: [fuse],             skill: [repair, 20],   bench: true, desc: "Opens a fused door" }
   bandage:    { cat: aid, name: Bandage,         in: { drywall: 2, wire: 1 },                          out: [bandage],          skill: [medicine, 15], desc: "Heals on the spot" }
   firstaid:   { cat: aid, name: First aid kit,   in: { drywall: 3, wire: 2, copper_coil: 1 },          out: [firstaid],         skill: [medicine, 40], bench: true, desc: "A proper kit: a big heal" }
@@ -50,7 +52,7 @@ recipes:
   machete:    { cat: weapons, name: "Lineman's machete", in: { sheet_steel: 2, scrap_wood: 1, rust_flakes: 2 }, out: ["weapon:lineman_machete"], skill: [repair, 55], bench: true, desc: "Hammered from sheet steel" }
   baton:      { cat: weapons, name: Stun baton,        in: { steel_pipe: 1, circuit: 1, copper_coil: 1, copper_wire: 2 }, out: ["weapon:stun_baton"], skill: [science, 50], bench: true, desc: "Wired to bite" }
   # more weapons (Savi's picks, 2026-11-08): each one's model already lies in scripts/weapon-geo.js
-  nailbat:    { cat: weapons, name: Nail bat,          in: { scrap_wood: 3, nails: 4, wire: 1 },            out: ["weapon:bat"],          skill: [repair, 10],   desc: "A turned club, nails driven through the barrel" }
+  nailbat:    { cat: weapons, name: Nail bat,          in: { scrap_wood: 3, nails: 4, wire: 1 },            out: ["weapon:bat~nailed"],   skill: [repair, 10],   desc: "A turned club, nails driven through the barrel" }
   shiv:       { cat: weapons, name: Screwdriver shiv,  in: { scrap_metal: 1, wire: 1, drywall: 1 },         out: ["weapon:screwdriver"],  skill: [repair, 5],    desc: "A long flathead ground to a point" }
   tireiron:   { cat: weapons, name: Tire iron,         in: { steel_pipe: 1, bolts: 2, scrap_metal: 1 },     out: ["weapon:tire_iron"],    skill: [repair, 20],   bench: true, desc: "A lug wrench bent to an L, socket on one end" }
   pbaton:     { cat: weapons, name: Side-handle baton, in: { steel_pipe: 1, scrap_metal: 1, wire: 2, bolts: 1 }, out: ["weapon:baton"],   skill: [repair, 25],   bench: true, desc: "A pipe with a cross handle, rubber-wrapped" }
@@ -69,8 +71,8 @@ recipes:
   smelt:      { cat: tools, name: Smelt ironstone,   in: { ironstone: 2, pitch: 1 },                       out: [scrap_metal, scrap_metal, bolts, nails], skill: [repair, 20], bench: true, desc: "Pitch-fired ore becomes scrap metal, bolts and nails" }
   limeburn:   { cat: tools, name: Burn flowstone to lime, in: { flowstone: 2, pitch: 1 },                  out: [mortar_dust, mortar_dust, rubble], skill: [survival, 15], bench: true, desc: "Mortar and rubble for brick and rebar barricades" }
   flowpick:   { cat: weapons, name: Flowstone pickaxe, in: { flowstone: 3, ironstone: 2, scrap_wood: 2 },  out: ["weapon:pickaxe"],  skill: [repair, 25],   bench: true, desc: "A pickaxe: it breaks flowstone and ironstone properly" }
-  chitinknife: { cat: weapons, name: Chitin knife,   in: { chitin: 2, spider_silk: 1 },                    out: ["weapon:knife"],    skill: [repair, 10],   desc: "A knife ground from a spider's plate, grip wrapped in silk" }
-  chitinhatchet: { cat: weapons, name: Chitin hatchet, in: { chitin: 3, flowstone: 1, scrap_wood: 2, spider_silk: 1 }, out: ["weapon:hatchet"], skill: [repair, 30], bench: true, desc: "A hatchet with a chitin blade" }
+  chitinknife: { cat: weapons, name: Chitin knife,   in: { chitin: 2, spider_silk: 1 },                    out: ["weapon:knife~serrated"], skill: [repair, 10],   desc: "A knife ground from a spider's plate, grip wrapped in silk" }
+  chitinhatchet: { cat: weapons, name: Chitin hatchet, in: { chitin: 3, flowstone: 1, scrap_wood: 2, spider_silk: 1 }, out: ["weapon:hatchet~honed"], skill: [repair, 30], bench: true, desc: "A hatchet with a chitin blade, edge ground keen" }
   silkcloak:  { cat: armor, name: Silk caving cloak, in: { spider_silk: 6, wire: 1 },                      out: ["cloth:neck:cape:dfe6ea"], skill: [survival, 15], desc: "Neck · pale as a web, warm as a blanket" }
   chitinhelm: { cat: armor, name: Chitin caving helm, in: { chitin: 3, spider_silk: 2, pitch: 1 },        out: ["cloth:hat:cap:3a302a"], skill: [survival, 25], bench: true, desc: "Hat · a spider's carapace on a caver's cap" }
   chitinplate: { cat: armor, name: Chitin plate vest, in: { chitin: 6, spider_silk: 3, pitch: 2 },        out: ["cloth:topw:apron:2a2420"], skill: [survival, 35], bench: true, desc: "Top · overlapping plates, the best armor on the Road" }

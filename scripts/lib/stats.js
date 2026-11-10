@@ -157,6 +157,16 @@ export function canCarry(s, token) {
   const now = carried(s)
   return now + add <= cap + 1e-6 ? { ok: true } : { ok: false, msg: `Too heavy to carry (${now.toFixed(1)}/${cap} kg)` }
 }
+// can all of these tokens be taken together (a recipe's whole output), and if not why: the ones used on the spot weigh nothing, as in canCarry
+export function canCarryAll(s, tokens) {
+  const cap = derived(s).carry; let add = 0
+  for (const t of tokens) {
+    if (['ration', 'bandage', 'battery', 'kit', 'akit', 'beans', 'bar', 'firstaid', 'tape', 'fuse', 'valve', 'keycard', 'royal_ration'].includes(t) || t.startsWith('book:') || t.startsWith('page:')) continue
+    add += t === 'ammo' ? W.ammo.perPickup * 0.03 : t === 'shells' ? W.shells.perPickup * 0.07 : tokenWeight(t)
+  }
+  const now = carried(s)
+  return now + add <= cap + 1e-6 ? { ok: true } : { ok: false, msg: `Too heavy to carry (${now.toFixed(1)} + ${add.toFixed(1)} of ${cap} kg)` }
+}
 // how much slower the weight makes you when you are over the limit
 export const burden = (s) => { const cap = derived(s).carry, now = carried(s); return now <= cap ? 1 : Math.max(0.5, 1 - (now - cap) / cap) }
 
