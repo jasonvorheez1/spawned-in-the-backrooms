@@ -346,7 +346,12 @@ function journalUi(s, player, ctx) {
 }
 
 // F3: the LAGSCOPE lag panel floats over whatever the HUD draws (builders only; players never see it)
-export default function render(ctx, player) { return renderHud(ctx, player) + lagscopeOverlay(ctx, player) } // the 3D studio button is off the HUD (Shelly, Nov 9: bothersome)
+function unlock12(ctx, player) { // shows once as Harris's tape ends: Level 12's window is open to them
+  const at = player.state.u12At; if (!at || ctx.now() - at > 9000 || ctx.now() < at - 30000) return ""
+  const wait = Math.max(0, (at - ctx.now()) / 1000).toFixed(1)
+  return `<style>@keyframes u12{0%{opacity:0;transform:translateY(8px)}8%{opacity:1;transform:none}85%{opacity:1}100%{opacity:0;visibility:hidden}}</style><div id="u12-${Math.round(at)}" style="position:fixed;left:0;right:0;top:22%;display:flex;justify-content:center;pointer-events:none;opacity:0;animation:u12 7s ${wait}s forwards"><div style="background:rgba(10,8,4,.88);border:2px solid #ffb43c;box-shadow:4px 4px 0 #000;padding:10px 22px;text-align:center;font-family:monospace;color:#ffb43c;letter-spacing:.12em"><div style="font-size:13px;opacity:.75">NEW WAY THROUGH</div><div style="font-size:30px;font-weight:900;margin:2px 0">LEVEL 12 UNLOCKED</div><div style="font-size:13px;color:#ffe2a8">walk into the lit window in the alley</div></div></div>`
+}
+export default function render(ctx, player) { return renderHud(ctx, player) + unlock12(ctx, player) + lagscopeOverlay(ctx, player) } // the 3D studio button is off the HUD (Shelly, Nov 9: bothersome)
 function renderHud(ctx, player) {
   const s = player.state ?? {}
   const quick = !s.building && screen(s,player.place)==='play' && Object.keys(s.quickSlots??{}).length ? quickItems(s) : []

@@ -8,6 +8,7 @@ const RATTLE = G + "sfx-locked-door-handle-rattle-and-jiggle.mp3";
 const CREAK = G + "sfx-old-interior-wooden-door-creak-open.mp3";
 const CLICK = G + "sfx-cassette-recorder-play-button-clunk.mp3";
 const HARRIS = (t) => "cdn/voice-gravel-voiced-weary-military-commander-saying-" + encodeURIComponent(t) + ".mp3";
+const TAPE = "/cdn/value.a39bb477f8132dc691b97e44f8176bb55b7faf1e7cf241e1e54b2e0a8c0e013b.mp3"; // Harris, voice acted
 const LOG = "Sit in the chair a quarter hour. Try the door, even if it's locked. Go out through one of the copy doors. Then wait exactly one hour, and try it again.";
 const ROOM = { x: 0, y: 0.05, z: 1.6 };
 
@@ -19,9 +20,10 @@ export const ears = {
     const me = { audience: { player: who.id } };
     if (s.kind === "harris-log") {
       heard(ctx, { clip: CLICK, position: pos, volume: 0.7, maxDistance: 8 });
-      heard(ctx, { clip: HARRIS(LOG), position: pos, volume: 1, maxDistance: 8, bus: "Voice" });
+      heard(ctx, { clip: TAPE, position: pos, volume: 1, maxDistance: 8, bus: "Voice" }); // performed: Jerry B., 23.7 s
+      if (!who.state.know12) who.state.u12At = now + 24000; // the unlock notice shows as the tape ends, first listen only
       who.state.know12 = true;
-      who.state.sub = { who: "CMDR. HARRIS · EXPEDITION LOG \"MATRIX\"", t: "\"" + LOG + " The lit window in the alley with the green dumpster. It isn't a window. Walk straight into it. Don't try it unless you know all this.\"", at: now, d: 11000 };
+      who.state.sub = { who: "CMDR. HARRIS · EXPEDITION LOG \"MATRIX\"", t: "\"" + LOG + " The lit window in the alley with the green dumpster. It isn't a window. Walk straight into it. Don't try it unless you know all this.\"", at: now, d: 24000 };
       return;
     }
     const slab = ctx.getObject(ctx.self.id + "/slab");
