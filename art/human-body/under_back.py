@@ -29,11 +29,11 @@ if U.data.shape_keys:
     for kb in U.data.shape_keys.key_blocks:
         for i, d in enumerate(kb.data): d.co += delta[i]
 import bmesh
-# the seat's mesh came crumpled (folded slivers showed skin through it in game): relax it in place, edges held, and carry the same move onto every shape key
+# RELAX off: the seat is loose triangles, not one sheet, so relaxing tore it open (Nov 10 render). Kept for a welded remake. Was: relax it in place, edges held, and carry the same move onto every shape key
 _b = bmesh.new(); _b.from_mesh(U.data); _b.verts.ensure_lookup_table()
 _b0 = [v.co.copy() for v in _b.verts]
 _free = [v for v in _b.verts if not v.is_boundary]
-for _ in range(int(__import__('os').environ.get('RELAX', '12'))):
+for _ in range(int(__import__('os').environ.get('RELAX', '0'))):
     bmesh.ops.smooth_vert(_b, verts=_free, factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
 _d = [v.co - _b0[i] for i, v in enumerate(_b.verts)]
 _b.free()
