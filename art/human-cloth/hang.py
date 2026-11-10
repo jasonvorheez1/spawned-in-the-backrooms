@@ -39,13 +39,13 @@ def hang(P):
         rs = [((P[i] - A) - d * (P[i] - A).dot(d)).length for i in idx]
         if not rs: continue
         mid = [r for i, r in zip(idx, rs) if 0.3 < (P[i] - A).dot(d) / L < 0.8]
-        Rm = sorted(mid)[len(mid) // 2] * 1.18 + 0.004 if mid else max(rs)   # the sleeve's own median, a little roomier
+        Rm = sorted(mid)[len(mid) // 2] * 1.07 + 0.003 if mid else max(rs)   # the sleeve's own median, a little roomier
         for i, r in zip(idx, rs):
             t = (P[i] - A).dot(d) / L
             if t < 0.15: continue
             cuff = max(0.0, min(1.0, (t - 0.82) / 0.1)) if t > 0.82 else 0
             R = (Rm * (1 - cuff) + (r + 0.003) * cuff)
-            ramp = min(1.0, (t - 0.15) / 0.15)
+            ramp = min(1.0, (t - 0.15) / 0.3) ** 2
             if R > r:
                 q = (P[i] - A) - d * (P[i] - A).dot(d); q.normalize(); P[i] = P[i] + q * (R - r) * ramp
     return P
@@ -76,13 +76,13 @@ B = None
 bpy.ops.import_scene.gltf(filepath=bodyf); bo = next(o for o in bpy.context.selected_objects if o.name.startswith('Body'))
 BP = [bo.matrix_world @ v.co for v in bo.data.vertices]
 nr = sorted((p - nk).to_2d().length for p in BP if abs(p.z - (nk.z + 0.03)) < 0.008)
-rn = (nr[len(nr) * 3 // 4] if nr else 0.05) + 0.03   # rests on the trapezius just outside the neck tube
+rn = (nr[len(nr) * 3 // 4] if nr else 0.05) + 0.018   # rests on the trapezius just outside the neck tube
 for o in list(bpy.context.selected_objects): bpy.data.objects.remove(o, do_unlink=True)
 pts = []
 for j in range(25):   # a U from one collarbone, round the back of the neck, to the other
-    th = -math.pi * 0.15 + (math.pi * 1.3) * j / 24
-    pts.append(Vector((nk.x + math.cos(th) * rn * 1.05, nk.y + math.sin(th) * rn * 1.1, nk.z + 0.012 + 0.03 * math.sin(th) ** 2)))
-hood = bpy.data.objects.new('hood', tube(pts, lambda t: 0.012 + 0.03 * math.sin(t * math.pi) ** 1.5, 14, 1.25)); bpy.context.collection.objects.link(hood)
+    th = math.pi * 0.02 + (math.pi * 0.96) * j / 24; sb = math.sin(th)
+    pts.append(Vector((nk.x + math.cos(th) * rn, nk.y + sb * (rn + 0.012), nk.z + 0.004 - 0.035 * sb ** 3)))   # sags onto the upper back
+hood = bpy.data.objects.new('hood', tube(pts, lambda t: 0.006 + 0.022 * math.sin(t * math.pi) ** 2, 14, 1.6)); bpy.context.collection.objects.link(hood)
 sy = min(p.y for p in P0 if abs(p.x) < 0.04 and abs(p.z - (J['Spine'].z - 0.02)) < 0.02)
 bm = bmesh.new(); W, H, D = 0.13, 0.11, 0.008
 for x, z in ((-W, 0), (W, 0), (W * 0.75, H), (-W * 0.75, H)): pass
