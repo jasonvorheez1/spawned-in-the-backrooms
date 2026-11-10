@@ -7,9 +7,10 @@ import { heard } from "./lib/hear.js";
 import C from './lib/data/craft.yml'
 import L21H from './lib/data/level21.yml'
 import B from './lib/data/breakables.yml'
-import { skillsOf, SKILLS, canCarryAll } from './lib/stats.js'
+import { SKILLS } from './lib/stats.js'
 import { takeToken, gain } from './player.js'
-import { recipeStatus, maxMakes, CATS } from './lib/craft.js'
+import { recipeStatus, maxMakes, craftOne, benchAvailable, CRAFT_LIMIT, CATS } from './lib/craft.js'
+import {raycast} from 'builtin/physics'
 
 const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
@@ -28,29 +29,28 @@ function act(ctx, s, d) {
   if (d.k === 'tab') { if (CATS.some(([c]) => c === d.c)) s.craftTab = d.c; return }
   if (d.k !== 'make' || !s.craftOpen) return
   const id = String(d.id), r = C.recipes[id]; if (!r) return
-  const st = recipeStatus(s, id)
-  const deny = (t) => { note(s, ctx, t); heard(ctx, { clip: SND('ui-denied-click'), position: ctx.self.feetPosition, volume: 0.35, maxDistance: 8 }, { audience: { player: ctx.self.id } }) }
-  if (!st.benchOk) return deny('Needs a workbench')
-  if (!st.skillOk) return deny(`Needs ${SKN[r.skill[0]]} ${r.skill[1]}`)
-  if (st.lack.length) return deny(`Missing ${st.lack.map((k) => B.scrap[k]?.name ?? k).join(', ')}`)
-  const want = d.n === 'max' ? maxMakes(s, id) : Math.max(1, Math.min(10, +d.n || 1)) // ×1, ×5 or MAX from the menu
-  let made = 0, extra = 0, why = ''
-  for (let i = 0; i < want && maxMakes(s, id) > 0; i++) {
-    const out = [...r.out], bonus = r.skill && ctx.random() < Math.max(0, st.got - st.need) / 100 // spare skill: an extra one
-    if (bonus) out.push(r.out[0])
-    const cw = canCarryAll(s, out); if (!cw.ok) { why = cw.msg; break } // the whole batch must fit before any scrap is spent: a half-taken craft used to eat the rest
-    const sc = { ...s.scrap }; for (const [k, n] of Object.entries(r.in)) sc[k] -= n; s.scrap = sc
-    for (const t of out) {
-      const k = t.startsWith('weapon:') ? t.slice(7) : null, had = k && String(s.weapons ?? '').split(',').includes(k)
-      takeToken(ctx, t)
-      if (k && !had && r.skill) s['cnd_' + k] = Math.round(Math.max(60, Math.min(100, 60 + (st.got - st.need)))) // a bench job is as sound as the maker is skilled (Fallout): worn at the minimum skill, whole 40 points over it
-    }
-    if (bonus) extra++
-    made++
+  const deny = (t) => { note(s, ctx, t); heard(ctx, { clip: SND('ui-denied-click'), position: ctx.self.feetPosition, volume: .35, maxDistance: 8 }, { audience: { player: ctx.self.id } }) }
+  if(s.dead || !canOpen(s,ctx.self.place,'craft'))return
+  if(s.craftOpen==='bench' && !liveBench(ctx,s)){s.craftOpen='';s.craftBench='';return deny('Workstation is out of reach or blocked')}
+  const st=recipeStatus(s,id)
+  if(!st.benchOk)return deny('Needs a workbench')
+  if(!st.skillOk)return deny(`Needs ${SKN[r.skill[0]]} ${r.skill[1]}`)
+  if(st.lack.length)return deny(`Missing ${st.lack.map(k=>`${B.scrap[k]?.name??k} ×${r.in[k]-(Number(s.scrap?.[k])||0)}`).join(', ')}`)
+  if(!st.roomOk)return deny(st.reason)
+  const raw=Number(d.n),requested=Number.isFinite(raw)?Math.max(1,Math.min(CRAFT_LIMIT,Math.floor(raw))):1,want=d.n==='max'?maxMakes(s,id):Math.min(requested,maxMakes(s,id))
+  let made=0,extra=0,why=''
+  const sounds=new Set()
+  for(let i=0;i<want;i++){
+    const effects=[],draftContext=(draft)=>({self:{id:ctx.self.id,state:draft,feetPosition:ctx.self.feetPosition,session:{}},now:()=>ctx.now(),random:()=>ctx.random(),emit:(...args)=>effects.push(args)})
+    const result=craftOne(s,id,(draft,token)=>{const mark=effects.length,k=token.startsWith('weapon:')?token.slice(7):null,had=k&&String(draft.weapons??'').split(',').includes(k),result=takeToken(draftContext(draft),token);if(result?.ok&&k&&!had&&r.skill)draft['cnd_'+k]=Math.round(Math.max(60,Math.min(100,60+st.got-st.need)));if(!result?.ok)effects.length=mark;return result},ctx.random()<st.bonusChance)
+    if(!result.ok){why=result.msg;break}
+    for(const [key,value]of Object.entries(result.state))if(value!==s[key])s[key]=value
+    for(const args of effects){if(args[0]==='playSound'){const clip=args[1]?.clip;if(sounds.has(clip))continue;sounds.add(clip)}ctx.emit(...args)}
+    made++;extra+=result.extra
   }
   if (!made) return deny(why || 'Nothing made')
   gain(ctx, (r.skill?.[1] ?? 5) * 0.2 * made) // a little XP for every make, more for harder recipes (Savi's pick)
-  note(s, ctx, `Made ${r.name}${made > 1 ? ' ×' + made : ''}${extra ? ` (+${extra} extra)` : ''}${why ? ' · ' + why : ''}${r.out[0].startsWith('weapon:') && r.skill ? ` · condition ${Math.round(s['cnd_' + r.out[0].slice(7)] ?? 100)}%` : ''}`)
+  note(s, ctx, `Made ${r.name}${made > 1 ? ' ×' + made : ''}${extra ? ` (+${extra} extra)` : ''}${why ? ' · ' + why : ''}`)
   heard(ctx, { clip: SND(r.bench ? 'hammer-nail-wood-build' : 'bandage-wrap-cloth'), position: ctx.self.feetPosition, volume: 0.6, maxDistance: 14 })
 }
 
@@ -74,6 +74,13 @@ export function update(ctx, dt) {
   if (m.acc >= 0.5) { // a bench you walk away from closes
     m.acc = 0
     if (s.payout) { const p = s.payout; s.payout = null; gain(ctx, p.xp ?? 0); for (const t of p.items ?? []) takeToken(ctx, t); if (p.text) s.notice = { text: p.text, at: ctx.now() } } // rewards other things owe you (Level 4's office tasks)
-    if (s.craftOpen === 'bench') { const b = s.craftBench ? ctx.getObject(s.craftBench) : null, p = ctx.self.feetPosition; if (!b || Math.hypot(b.feetPosition.x - p.x, b.feetPosition.z - p.z) > 4.5) s.craftOpen = '' }
+    if (s.craftOpen === 'bench') { if (!liveBench(ctx,s)) { s.craftOpen = ''; s.craftBench = '' } }
   }
+}
+
+function liveBench(ctx,s) {
+  const bench=s.craftBench&&ctx.getObject(s.craftBench)
+  if(!benchAvailable(ctx.self,bench))return false
+  const f=ctx.self.worldFeetPosition??ctx.self.feetPosition,eye={x:f.x,y:f.y+1.4,z:f.z},to=bench.bounds?.center??{...(bench.worldFeetPosition??bench.feetPosition),y:(bench.worldFeetPosition??bench.feetPosition).y+.8},dx=to.x-eye.x,dy=to.y-eye.y,dz=to.z-eye.z,distance=Math.hypot(dx,dy,dz)
+  return distance<.001 || !raycast(ctx,eye,{x:dx/distance,y:dy/distance,z:dz/distance},{distance,physicsOnly:true,bodies:'all',ignoreEntities:[ctx.self.id,bench.id]})
 }
