@@ -19,13 +19,12 @@ export const ears = {
     if (!who) return;
     const pos = { ...(ctx.self.worldFeetPosition ?? ctx.self.feetPosition), y: 1.1 };
     const me = { audience: { player: who.id } };
-    if (s.kind === "harris-log") {
+    if (s.kind === "harris-log") { // a collectable tape: it goes in the bag, played from HALOGEN's tapes tab; hearing it through sets know12 (player.js holoEnd)
+      const have = String(who.state.holotapes ?? "").split(",").filter(Boolean);
+      if (have.includes("matrix")) { who.state.notice = { text: "You already have Harris's tape. Play it on HALOGEN (I > Tapes)", at: now }; return; }
       heard(ctx, { clip: CLICK, position: pos, volume: 0.7, maxDistance: 8 });
-      heard(ctx, { clip: TAPE, position: pos, volume: 1, maxDistance: 8, bus: "Voice" }); // performed: Jerry B., 23.7 s
-      if (!who.state.know12) who.state.u12At = now + 24000; // the unlock notice shows as the tape ends, first listen only
-      who.state.know12 = true;
-      if (!who.state.qdone?.["the-lit-window"]) setQuest(who.state, "the-lit-window", { name: "The Lit Window", step: "Walk straight into the lit window in the alley with the green dumpster", mark: { place: "level11", id: "l11-win12" } });
-      who.state.sub = { who: "CMDR. HARRIS · EXPEDITION LOG \"MATRIX\"", t: "\"" + LOG + " The lit window in the alley with the green dumpster. It isn't a window. Walk straight into it. Don't try it unless you know all this.\"", at: now, d: 24000 };
+      have.push("matrix"); who.state.holotapes = have.join(","); who.state.pickedAt = now;
+      who.state.notice = { text: "Tape: \"Expedition Log: Matrix\" · play it on HALOGEN (I > Tapes)", at: now };
       return;
     }
     const slab = ctx.getObject(ctx.self.id + "/slab");

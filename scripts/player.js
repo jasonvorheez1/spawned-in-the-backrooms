@@ -1,3 +1,4 @@
+import { setQuest } from './lib/quests.js'
 import { powerKnock } from './lib/knock.js'
 import SNK from "./lib/data/sneak.yml"
 import { yawOf } from "./lib/sneak.js"
@@ -161,8 +162,16 @@ export function gain(ctx, n) {
 // Nothing is picked up by walking over it: scripts/interact.js calls this when you press E on what you are looking at.
 // eaten food also feeds hunger (scripts/craft.js drains it)
 // tapes HALOGEN can play: id → the reel and its length in seconds
-export const HOLO = { r55: { clip: '/cdn/value.b7bbbfcb923978bb4ac8ae234d44454562debf569936a5f20c378f0e28110e01.mp3', len: 35, name: 'Atomic Age Defender' }, walt41: { clip: '/cdn/value.13b431f3dead226e2ffab8155644c00c326ef6767b9b57df23b71353cbd1a50e.mp3', len: 28, name: 'Field Test 41' } }
-export function holoEnd(ctx, p) { if (ctx.self.state.holoPlay?.at === p?.at) ctx.self.state.holoPlay = null }
+export const HOLO = { r55: { clip: '/cdn/value.b7bbbfcb923978bb4ac8ae234d44454562debf569936a5f20c378f0e28110e01.mp3', len: 35, name: 'Atomic Age Defender' }, walt41: { clip: '/cdn/value.13b431f3dead226e2ffab8155644c00c326ef6767b9b57df23b71353cbd1a50e.mp3', len: 28, name: 'Field Test 41' }, matrix: { clip: '/cdn/value.a39bb477f8132dc691b97e44f8176bb55b7faf1e7cf241e1e54b2e0a8c0e013b.mp3', len: 24, name: 'Expedition Log: Matrix' } }
+export function holoEnd(ctx, p) {
+  const s = ctx.self.state
+  if (s.holoPlay?.at !== p?.at) return
+  if (s.holoPlay?.id === 'matrix' && !s.know12) { // Harris's log heard to the end: the lit window in Level 11's alley lets them through
+    s.know12 = true; s.u12At = ctx.now()
+    if (!s.qdone?.['the-lit-window']) setQuest(s, 'the-lit-window', { name: 'The Lit Window', step: 'Walk straight into the lit window in the alley with the green dumpster', mark: { place: 'level11', id: 'l11-win12' } })
+  }
+  s.holoPlay = null
+}
 export function takeToken(ctx, token) {
   const r = takeToken0(ctx, token), f = CR.food[token]
   if (r.ok && f && !SNACKS[token]) { const s = ctx.self.state; s.hunger = Math.min(100, (s.hunger ?? 100) + f) }
