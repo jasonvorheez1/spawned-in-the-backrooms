@@ -6,13 +6,13 @@ blender -b --factory-startup --python-exit-code 1 --python hang.py -- in.glb bod
 import bpy, bmesh, sys, math
 from mathutils import Vector
 a = sys.argv[sys.argv.index('--') + 1:]; src, bodyf, out = a
-EASE = 0.012   # extra room on the hanging part, metres. Savi's pick
+EASE = 0.016   # extra room on the hanging part, metres. Savi's pick
 bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(filepath=src)
 arm = next(o for o in bpy.data.objects if o.type == 'ARMATURE')
 J = {b.name: arm.matrix_world @ b.head_local for b in arm.data.bones}
 g = next(o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith('Ward_'))
 M = g.matrix_world; Mi = M.inverted()
-cz = J['Spine1'].z; hemz = J['Hips'].z - 0.2
+cz = J['Spine1'].z + 0.04; hemz = J['Hips'].z - 0.2
 NB = 48
 def hang(P):
     # torso: per angle bin, the widest radius at or above each height down from the chest line
@@ -82,12 +82,15 @@ pts = []
 for j in range(25):   # a U from one collarbone, round the back of the neck, to the other
     th = math.pi * 0.02 + (math.pi * 0.96) * j / 24; sb = math.sin(th)
     pts.append(Vector((nk.x + math.cos(th) * rn, nk.y + sb * (rn + 0.012), nk.z + 0.004 - 0.035 * sb ** 3)))   # sags onto the upper back
-hood = bpy.data.objects.new('hood', tube(pts, lambda t: 0.006 + 0.022 * math.sin(t * math.pi) ** 2, 14, 1.6)); bpy.context.collection.objects.link(hood)
-sy = min(p.y for p in P0 if abs(p.x) < 0.04 and abs(p.z - (J['Spine'].z - 0.02)) < 0.02)
+hood = bpy.data.objects.new('hood', tube(pts, lambda t: 0.006 + 0.03 * math.sin(t * math.pi) ** 2, 14, 2.0)); bpy.context.collection.objects.link(hood)
+hz = min(p.z for p in P0) + 0.035
+sy = min(p.y for p in P0 if abs(p.x) < 0.05 and abs(p.z - (hz + 0.05)) < 0.03)
 bm = bmesh.new(); W, H, D = 0.13, 0.11, 0.008
 for x, z in ((-W, 0), (W, 0), (W * 0.75, H), (-W * 0.75, H)): pass
-pv = [bm.verts.new(Vector((x, sy - D, J['Spine'].z - 0.07 + z))) for x, z in ((-W, 0), (W, 0), (W * 0.72, H), (-W * 0.72, H))]
-f = bm.faces.new(pv); bmesh.ops.solidify(bm, geom=[f], thickness=0.006); me = bpy.data.meshes.new('pocket'); bm.to_mesh(me)
+pv = [bm.verts.new(Vector((x, sy - D + 0.004, hz + z))) for x, z in ((-W, 0), (W, 0), (W * 0.72, H), (-W * 0.72, H))]
+f = bm.faces.new(pv); f.normal_update()
+if f.normal.y > 0: f.normal_flip()
+bmesh.ops.solidify(bm, geom=[f], thickness=0.006); bmesh.ops.recalc_face_normals(bm, faces=bm.faces); me = bpy.data.meshes.new('pocket'); bm.to_mesh(me)
 pocket = bpy.data.objects.new('pocket', me); bpy.context.collection.objects.link(pocket)
 for o in (hood, pocket):
     s = o.modifiers.new('sub', 'SUBSURF'); s.levels = 1
