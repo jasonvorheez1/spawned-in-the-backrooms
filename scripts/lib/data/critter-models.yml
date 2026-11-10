@@ -13,7 +13,7 @@ mesh: true
 # men (Shelly Nov 9 #121141/#121179): art/human-face/male-jaw.py trims the winged lashes to a lid line and adds M_Jaw/M_Chin; before: m 0f4d6b4922fbd0e8a97b8d6b71836871b2def3b39574b7e0d21aea73d7586843
 # split (Nov 9, Shelly yes #137497): bare bodies; garments ride as skinned children (wardrobe-split.yml)
 # brows (Nov 10, Shelly "work on the head"): art/human-face/brows.py redraws the scribbled brow strip as a tapered arch; before: m 7c334339571b407794f9e2373ac64130bac8ff3ad24dfa024b0aea1c6b75b973 f 9c21a96fae4342143b4a5c7e51b7769d956ad18c1f915880e06d73ead80e5040
-human: { m: "/cdn/value.6d82a47207167ef69b35b49f0903b56ec4e7895dabb5faf723776c1a1ea83258.glb", f: "/cdn/value.cfce82dca345dede89f2b912d2be72ca5141ea5a2f5c68a02d5e19543cfb9dce.glb" }
+human: { m: "/cdn/value.a7909f9c5a5c2ee1e19878e64defa509257d618b4a033b22179088fdd208ae6f.glb", f: "/cdn/value.b7e9e975757bd462383a34e82b2214aa10a8a589b2625ab820e71f5385a8dd7d.glb" }
 # Dandy (Shelly Nov 9 "the furry models are awful"; Nov 10 rebuild: neck term bounded so hats keep their shape, headphone cups pushed out of the bigger heads): the bodies below are the wardrobe pipeline's (before: m 9cf50c5021c4443970c1fe193d6917865363c1be778845f8870cda68c2607fd8 f deabd82b6e4ad3959a0713f9e21a48658b70eb954ae75649ebdc0a08efb6a97d) with one more key, Dandy, on every mesh (art/critter-cute/dandy-morph.mjs). A rebuilt body must be run through it again.
 body: { m: "/cdn/value.06a60b4a5b3965c032abe1a55667ec1dc71e355f399abde039a355139ee388ec.glb", f: "/cdn/value.8021d9842ea70817ecba60b5a0239345239251aa5cbfccf519d9b7e0e37737e8.glb" }
 bodyMats: [fur, limb, pad, cloth_top, cloth_bottom, cloth_shoes, cloth_hat, cloth_neck, button, metal, lens, gold, sole]
