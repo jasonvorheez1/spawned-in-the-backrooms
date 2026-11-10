@@ -38,6 +38,7 @@ function fwd(ctx) { const y = ((ctx.self.camera?.rotation?.yaw ?? 0) * Math.PI) 
 export function onInput(ctx, input) {
   if (!input.pressed?.kick) return
   const s = ctx.self.state; if (s.menuOpen || s.lootOpen || s.sit || s.sheetOpen) return
+  if (String(ctx.self.place ?? '').replace(/-.*/, '') === 'bonus') return // Bonus Room: kicks touch nothing (Shelly Nov 10)
   const f = fwd(ctx), o = wheeledNear(ctx, KICK_REACH, f), p = ctx.self.feetPosition
   const hold = s.lurkHold, lk = hold && ctx.getObject(hold.by)
   if (lk) { // grabbed: the kick lands on the lurker, it lets go and reels
