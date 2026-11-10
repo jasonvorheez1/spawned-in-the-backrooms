@@ -139,6 +139,21 @@ for g in SEAM:
         if o.data.shape_keys:
             for kb in o.data.shape_keys.key_blocks: kb.data[i].co += d
         else: o.data.vertices[i].co += d
+# Skin_ pieces are the Body's own surface doubled (shown behind cut clothes): at rest they lay ON it, so they go back on it,
+# or the two layers z-fight into patches. Snapped to the reshaped Body's nearest point; every morph key keeps its own offset.
+_B = next(o for o in body if o.name == 'Body')
+_bv = [_B.matrix_world @ _co(_B, i) for i in range(len(_B.data.vertices))]
+_bvh = BVHTree.FromPolygons(_bv, [list(p.vertices) for p in _B.data.polygons])
+for o in body:
+    if not o.name.startswith('Skin_'): continue
+    inv = o.matrix_world.inverted()
+    for i in range(len(o.data.vertices)):
+        w = o.matrix_world @ _co(o, i); hit = _bvh.find_nearest(w)
+        if not hit[0] or hit[3] > 0.02: continue
+        d = inv.to_3x3() @ (hit[0] - w)
+        if o.data.shape_keys:
+            for kb in o.data.shape_keys.key_blocks: kb.data[i].co += d
+        else: o.data.vertices[i].co += d
 for o in body: o.data.update()
 sys.path.insert(0, __import__('os').path.join(__import__('os').path.dirname(__import__('os').path.abspath(__file__)), '..', 'body-rig'))
 from arm_shape import weld_skin_normals
