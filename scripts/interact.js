@@ -120,7 +120,7 @@ function refocus(ctx, force = false) {
       }
     }
   }
-  const key = info ? `${info.id}|${info.info}` : ''
+  const key = info ? JSON.stringify(info) : ''
   if (key !== m.key) { m.key = key; s.focus = info }
 }
 

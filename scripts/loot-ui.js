@@ -1,3 +1,4 @@
+import {screen} from './lib/screen.js'
 // The looting HUD and the inventory, after Shelly's Fallout NV reference (#1134): amber CRT lines on dark,
 // balanced 2-column Pip-Boy 3000 terminal with CRT scanlines, animated vector wireframes, condition bracket meters,
 // direct one-click repair actions, multi-column sorting, and tactile audio feedback.
@@ -24,10 +25,15 @@ const CSS = `<style>
   text-transform: uppercase;
   text-shadow: 0 0 3px rgba(255,160,30,.55);
 }
-#lp { position:fixed; inset-inline:0; top:57%; display:flex; flex-direction:column; align-items:center; pointer-events:none; z-index:40 }
-#lp .nm { font-size:17px; display:flex; align-items:center; gap:8px; text-shadow:0 1px 3px #000, 0 0 4px rgba(255,160,30,.6) }
-#lp .key { display:inline-block; min-width:20px; padding:1px 5px; border:1px solid var(--a); font-size:12px; text-align:center; background:rgba(20,14,5,.8) }
-#lp .in { font-size:12px; opacity:.85; margin-top:3px; text-shadow:0 1px 2px #000, 0 0 4px #000 }
+#lp{position:fixed;left:50%;top:57%;transform:translateX(-50%);width:max-content;max-width:min(440px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 16px)));pointer-events:none;z-index:40;font-family:var(--ui-font,'Segoe UI',Arial,sans-serif);text-transform:none;letter-spacing:0;color:#eceee3;text-shadow:none}
+#lp .interact-card{display:flex;align-items:center;gap:14px;min-width:220px;padding:12px 18px 12px 12px;background:linear-gradient(90deg,#131910f2,#131910d9 75%,#13191080);border-left:2px solid var(--hint,#c9b77c);border-top:1px solid #bac5a320;box-shadow:0 8px 24px #0003}
+#lp .interact-key{flex:none;width:auto;min-width:40px;max-width:96px;min-height:40px;padding:0 10px;overflow-wrap:anywhere;display:grid;place-items:center;border:1px solid #b6bea1;border-bottom-width:3px;border-radius:3px;background:#2b3324;color:#f2f1da;font:600 16px/1 var(--ui-font,'Segoe UI',Arial,sans-serif);box-shadow:inset 0 1px #e4eaca16;pointer-events:auto;cursor:pointer;transition:background-color .13s,transform .13s,border-color .13s}
+#lp .interact-key:hover{background:#454e32;border-color:#d6c88d}#lp .interact-key:active{transform:translateY(2px);border-bottom-width:1px;background:#c9b77c;color:#20251a}#lp .interact-key:focus-visible{outline:2px solid #d6c88d;outline-offset:4px}
+#lp .interact-copy{min-width:0;max-width:340px}#lp .interact-verb{display:block;font-size:10px;line-height:1.4;letter-spacing:.13em;text-transform:uppercase;color:#c9b77c;font-weight:600;margin-bottom:3px}#lp .interact-name{display:block;font-size:19px;line-height:1.2;font-weight:500;overflow-wrap:anywhere;letter-spacing:-.015em;color:#eceee3}#lp .interact-info{font-size:12px;line-height:1.45;color:#b2bca5;margin-top:5px;overflow-wrap:anywhere}#lp .is-blocked{--hint:#cf9684}#lp .is-blocked .interact-verb{color:#dfa391}#lp .is-blocked .interact-key{color:#bdb6a9;border-color:#796a5f;background:#302b23}
+@keyframes interact-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:no-preference){#lp .interact-card{animation:interact-in .16s ease-out backwards}}
+@media(prefers-reduced-motion:reduce){#lp .interact-card,#lp .interact-key{animation:none;transition:none}}
+@media(max-width:640px){#lp{left:12px;top:58%;transform:none;width:calc(100vw - var(--spawn-chrome-reservation-right-inset,50px) - 24px);max-width:none}#lp .interact-card{min-width:0;gap:12px;padding:11px 12px}#lp .interact-key{width:auto;min-width:44px;min-height:44px}#lp .interact-name{font-size:17px}#lp .interact-info{font-size:11px}}
 #ln { position:fixed; inset-inline:0; top:66%; display:flex; justify-content:center; pointer-events:none; z-index:40 }
 #ln span { padding:4px 14px; background:rgba(10,7,2,.94); border-left:3px solid var(--a); border-right:3px solid var(--a); font-size:12px; box-shadow:0 0 10px rgba(0,0,0,.8) }
 
@@ -794,6 +800,13 @@ function container(s, key) {
   </div></div>`
 }
 
+const promptText=(v)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
+function interactPrompt(f,key){
+  const verb=String(f.verb??'Use').replace(/:\s*$/,''),blocked=/^(Locked|Taken)$/i.test(verb),info=['open','shut'].includes(f.info)?'':f.info
+  const tint=/^#[0-9a-f]{3,8}$/i.test(f.color??'')?f.color:'#c9b77c'
+  return `<div id="lp"><div id="interaction-${encodeURIComponent(f.id??f.name??'target')}" class="interact-card${blocked?' is-blocked':''}" style="--hint:${blocked?'#cf9684':tint}" role="group" aria-label="${promptText(verb+' '+(f.name??''))}"><button class="interact-key" type="button" data-interactive aria-label="${promptText(verb+' '+(f.name??''))}" onclick="sendAction('interact')">${promptText(key)}</button><div class="interact-copy"><span class="interact-verb">${promptText(verb)}</span><span class="interact-name">${promptText(f.name??'Object')}</span>${info?`<div class="interact-info">${promptText(info)}</div>`:''}</div></div></div>`
+}
+
 export function lootUi(ctx, player) {
   const s = player.state ?? {}
   if (s.level == null) return ''
@@ -801,10 +814,7 @@ export function lootUi(ctx, player) {
   let out = CSS
   if (s.lootOpen) out += s.lootStore ? storage(s, key) : container(s, key)
   else if (s.invOpen) out += inventory(s)
-  else if (s.focus) {
-    const f = s.focus
-    out += `<div id="lp" class="pb"><div class="nm"><span class="key">${key}</span><span>${f.verb}</span><span style="color:${f.color || 'inherit'}">${f.name}</span></div><div class="in">${f.info || ''}</div></div>`
-  }
+  else if (s.focus && screen(s,player.place)==='play') out+=interactPrompt(s.focus,key)
   if (false && s.notice && ctx.now() - s.notice.at < 2200) out += `<div id="ln" class="pb"><span>${s.notice.text}</span></div>`
   return out
 }
