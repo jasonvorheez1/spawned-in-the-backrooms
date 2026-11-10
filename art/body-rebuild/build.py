@@ -108,6 +108,11 @@ if MALE:
     for ids in isl.values():
         if len(ids) > 200: continue
         c = sum((vs[i].co for i in ids), mathutils.Vector()) / len(ids); z0 = c.z / G_
+        if len(ids) == 171 and 1.74 < z0 < 1.78:                                          # the lash strip: the outer wing folded down flat, no flick
+            for i in ids:
+                ax = abs(vs[i].co.x / G_); t = sm(.066, .093, ax)
+                vs[i].co.z = vs[i].co.z - t * (vs[i].co.z - (1.758 * G_)) * .85
+                vs[i].co.x = vs[i].co.x * (1 - .12 * t)
         if 1.71 < z0 < 1.785 and .02 < abs(c.x / G_) < .1 and c.y / G_ < .05:          # eyes: narrower, less tall, a touch lower
             for i in ids: d = vs[i].co - c; vs[i].co = c + mathutils.Vector((d.x * .88, d.y, d.z * .78)) + mathutils.Vector((0, 0, -.003))
         elif 1.784 < z0 < 1.8 and abs(c.x / G_) > .02:                                    # brow/lash line: heavier, flatter
