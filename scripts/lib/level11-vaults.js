@@ -59,7 +59,7 @@ export function layVaults(ctx, { sp, bx, cyl }) {
     model: { id: "/cdn/value.a88f9bd98e36032436f4cfbcfd82ee1304a484081effe4fc993245613abb7616.glb" },
     layout: { box: { min: { x: -7.5, y: 0, z: -1.6 }, max: { x: 7.5, y: 3.1, z: 1.6 } } }, physics: { body: "static", collider: "box" } });
   // turnstiles, benches, bins, a newspaper-strewn corner
-  for (let k = 0; k < 3; k++) sp(`l11-vault-turn-${k}`, { feetPosition: { x: 13.3 + k * 1.1, y: FY, z: 68.4 }, primitive: null, material: null, model: { id: MODELS.turnstile, forward: "-z" }, physics: { body: "static", collider: "box" } });
+  for (let k = 0; k < 3; k++) sp(`l11-vault-turn-${k}`, { feetPosition: { x: 13.3 + k * 1.1, y: FY, z: 68.4 }, primitive: null, material: null, model: { id: MODELS.turnstile, forward: "-z" }, layout: { box: { min: { x: -0.2, y: 0, z: -0.45 }, max: { x: 0.2, y: 1.05, z: 0.45 } } }, physics: { body: "static", collider: "box" } });
   sp("l11-vault-mvm", { feetPosition: { x: 18.95, y: FY, z: 69.2 }, rotation: { yaw: -90 }, model: { id: MODELS.mvm, forward: "-z" }, physics: { body: "static", collider: "box" } });
   for (const [i, z] of [[0, 74], [1, 83]]) sp(`l11-vault-bench-${i}`, { feetPosition: { x: 18.9, y: FY, z }, rotation: { yaw: -90 }, model: { id: MODELS.bench, forward: "-z" }, physics: { body: "static", collider: "box" } });
   sp("l11-vault-bin", { feetPosition: { x: 18.9, y: FY, z: 78.5 }, model: { id: MODELS.bin, forward: "-z" }, physics: { body: "static", collider: "box" } });
