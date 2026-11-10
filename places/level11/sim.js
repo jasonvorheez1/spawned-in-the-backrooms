@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 126; // bump to rebuild the city in rooms that are already open
+const V = 127; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -230,12 +230,12 @@ function lay(ctx) {
   [-3.5, 3.5].forEach((hx, k) => {
     sp(`l11-tlight-sig-${k}`, {
       feetPosition: { x: hx, y: 5.1, z: 7.5 },
-      primitive: { kind: "box", width: 0.4, height: 1.1, depth: 0.3 },
+      primitive: null, model: { id: "/cdn/value.9959eb13258e672f0ee37ad63e51244ab9e97a02e0c63041b5ef449902db442a.glb", forward: "-z" }, layout: { box: { min: { x: -0.26, y: -0.62, z: -0.16 }, max: { x: 0.26, y: 0.62, z: 0.17 } } }, // tripo signal head, lenses lit by the lamp children
       material: { color: "oklch(0.2 0.01 250)" },
       children: [
-        { id: "lamp-g", feetPosition: { x: 0, y: 0.35, z: 0.16 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.05 }, rotation: { pitch: 90 }, material: { color: "oklch(0.85 0.22 145)", emissive: "oklch(0.85 0.22 145)", emissiveIntensity: 3.0 } },
-        { id: "lamp-y", feetPosition: { x: 0, y: 0, z: 0.16 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.05 }, rotation: { pitch: 90 }, material: { color: "oklch(0.3 0.05 85)" } },
-        { id: "lamp-r", feetPosition: { x: 0, y: -0.35, z: 0.16 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.05 }, rotation: { pitch: 90 }, material: { color: "oklch(0.3 0.05 25)" } },
+        { id: "lamp-g", feetPosition: { x: 0, y: -0.36, z: 0.17 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.05 }, rotation: { pitch: 90 }, material: { color: "oklch(0.85 0.22 145)", emissive: "oklch(0.85 0.22 145)", emissiveIntensity: 3.0 } },
+        { id: "lamp-y", feetPosition: { x: 0, y: 0, z: 0.17 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.05 }, rotation: { pitch: 90 }, material: { color: "oklch(0.3 0.05 85)" } },
+        { id: "lamp-r", feetPosition: { x: 0, y: 0.36, z: 0.17 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.05 }, rotation: { pitch: 90 }, material: { color: "oklch(0.3 0.05 25)" } },
       ],
     });
   });
@@ -913,11 +913,11 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
     tags: ["usable"],
     feetPosition: { x: 9.0, y: 0.1, z: 8.5 },
     rotation: { yaw: -90 },
-    primitive: { kind: "scripted", script: "scripts/props11.js", params: { kind: "cabinet", w: 0.9, h: 1.9, d: 0.8, r: 0.08 } },
+    primitive: null, model: { id: "/cdn/value.6cb2687468bbe7dced2e2d4af67085ad72c0b69e324d52a4ffe9c2c925a13451.glb", forward: "-z" }, layout: { box: { min: { x: -0.45, y: 0, z: -0.4 }, max: { x: 0.45, y: 1.9, z: 0.4 } } }, physics: { body: "static", collider: "box" }, // tripo atm
     material: STEEL_BRUSHED,
     behavior: "scripts/level11-use.js",
     state: { kind: "atm", name: "First Capital Bank ATM", verb: "Withdraw Capital Credits" },
-    children: [
+    children: void [
       // Illuminated header marquee
       { feetPosition: { x: 0, y: 1.72, z: 0.41 }, primitive: { kind: "box", width: 0.86, height: 0.26, depth: 0.04 }, material: { color: "#000000" }, ui: `<div face="front" width="0.86m" style="width:100%;height:100%;background:#092318;border:2px solid #2ecc71;box-sizing:border-box;color:#2ecc71;font-family:Arial Black,sans-serif;font-size:28px;text-align:center;padding:4px;letter-spacing:1px;font-weight:900;display:flex;align-items:center;justify-content:center">FIRST CAPITAL BANK · ATM</div>` },
       // Keypad & card entry slot
@@ -957,11 +957,11 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
     tags: ["usable"],
     feetPosition: { x: -8.8, y: 0.1, z: 20 },
     rotation: { yaw: 90 },
-    primitive: { kind: "scripted", script: "scripts/props11.js", params: { kind: "cabinet", w: 1.2, h: 2.1, d: 0.95, r: 0.07 } },
+    primitive: null, model: { id: "/cdn/value.841812d69f4307a900ce500187517702dc1f59e427eb8d7599f6c1f463642e54.glb", forward: "-z" }, layout: { box: { min: { x: -0.6, y: 0, z: -0.475 }, max: { x: 0.6, y: 2.1, z: 0.475 } } }, physics: { body: "static", collider: "box" }, // tripo vend
     material: { color: "oklch(0.25 0.1 230)" },
     behavior: "scripts/level11-use.js",
     state: { kind: "vending", name: "Almond Water Vending Machine", verb: "Buy Cold Almond Water" },
-    children: [
+    children: void [
       // Backlit Marquee Header
       { feetPosition: { x: 0, y: 1.88, z: 0.48 }, primitive: { kind: "box", width: 1.12, height: 0.24, depth: 0.04 }, material: { color: "#000" }, ui: `<div face="front" width="1.12m" style="width:100%;height:100%;background:#052444;border:2px solid #00d2d3;box-sizing:border-box;color:#00d2d3;font-family:Arial Black,sans-serif;font-size:32px;text-align:center;padding:4px;letter-spacing:2px;font-weight:900;display:flex;align-items:center;justify-content:center">ALMOND WATER · CHILLED</div>` },
       // Illuminated Product Display Glass with Coils & Cans
@@ -1295,11 +1295,11 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     tags: ["usable"],
     feetPosition: { x: RW_X - 1.2, y: 0.1, z: RW_Z - 0.6 },
     rotation: { yaw: 90 },
-    primitive: { kind: "scripted", script: "scripts/props11.js", params: { kind: "cabinet", w: 1.1, h: 0.9, d: 1.6, r: 0.18 } },
+    primitive: null, model: { id: "/cdn/value.19b410ec2f93558c9d4ffb904adb215f156e5407c83fe9d86f6b69a5eba451b5.glb", forward: "-z" }, layout: { box: { min: { x: -0.55, y: 0, z: -0.8 }, max: { x: 0.55, y: 0.95, z: 0.8 } } }, physics: { body: "static", collider: "box" }, // tripo gen
     material: { color: "oklch(0.78 0.18 85)", metalness: 0.7, roughness: 0.35 },
     behavior: "scripts/level11-use.js",
     state: { kind: "roadwork-gen", name: "B.R.C. Infrastructure Diesel Compressor", verb: "Inspect Compressor" },
-    children: [
+    children: void [
       { feetPosition: { x: 0, y: 0.95, z: 0.4 }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.04, height: 0.45 }, material: STEEL_BRUSHED },
       { feetPosition: { x: 0.56, y: 0.55, z: -0.3 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.04 }, rotation: { pitch: 90 }, material: STEEL_BRUSHED },
     ],
