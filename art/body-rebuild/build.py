@@ -170,6 +170,10 @@ bpy.context.view_layer.objects.active = body
 bpy.ops.object.modifier_move_to_index(modifier="sub", index=0); bpy.ops.object.modifier_apply(modifier="sub")
 for poly in body.data.polygons: poly.use_smooth = True
 print("faces", nb, "->", len(body.data.polygons), "unweighted after", sum(1 for v in body.data.vertices if not v.groups))
+if MALE:   # his face picture: the lash strip repainted with the wings and spikes smoothed off
+    for im in bpy.data.images:
+        if tuple(im.size) == (2048, 2048) and im.name in ("Image_0",):
+            im.filepath = "/workspace/art/body-rebuild/male_face_tex.png"; im.source = "FILE"; im.reload(); im.pack()
 bpy.ops.export_scene.gltf(filepath=OUT, export_apply=False, export_animations=False)
 # proof: arms down + elbow bent, knee bent
 P_ = rig.pose.bones
