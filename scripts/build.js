@@ -7,7 +7,7 @@
 import { heard } from './lib/hear.js'
 import B from './lib/data/breakables.yml'
 import { raycast, overlapPoint, getInputRay } from 'builtin/physics'
-import { builtSpec, pieceOf, furnModel, tabsFor } from './lib/build-piece.js'
+import { builtSpec, pieceOf, furnModel, tabsFor, doorPrim } from './lib/build-piece.js'
 
 const BASE = B.tabs, REACH = B.buildReach ?? 7, CAP = B.buildCap ?? 250
 const isTool = (k) => !!B.tools?.[k]

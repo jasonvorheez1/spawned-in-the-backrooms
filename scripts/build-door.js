@@ -1,11 +1,8 @@
-// A built door (scripts/lib/build-piece.js): interact.js flips state.open on E; this swings the leaf about its hinge.
-const SWING = 100, SPEED = 260 // her pick: degrees open, degrees a second
-export function update(ctx, dt) {
-  const s = ctx.self.state, target = (s.yaw0 ?? 0) + (s.open ? SWING : 0)
-  const m = ctx.self.session
-  m.yaw ??= target
-  const d = target - m.yaw
-  if (Math.abs(d) < 0.5) { if (m.yaw !== target) { m.yaw = target; ctx.self.rotation = { yaw: target } } ctx.sleep(); return }
-  m.yaw += Math.sign(d) * Math.min(Math.abs(d), SPEED * dt)
-  ctx.self.rotation = { yaw: m.yaw }
+// A built door (scripts/lib/build-piece.js, a scripts/door-geo.js leaf whose feet ARE its hinge): interact.js flips state.open on E;
+// this swings the leaf about its hinge, eased (scripts/lib/door-swing.js) with a creak open and a latch shut.
+import { swingTo } from "./lib/door-swing.js";
+const SWING = 100 // her pick: degrees open
+export function update(ctx) {
+  const s = ctx.self.state;
+  if (!swingTo(ctx, (s.yaw0 ?? 0) + (s.open ? SWING : 0), !!s.open, s.mat === "metal" ? "metal" : "wood")) ctx.sleep();
 }
