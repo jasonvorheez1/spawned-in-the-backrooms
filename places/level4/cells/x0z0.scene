@@ -1632,7 +1632,7 @@ omega-rhea/critter-ward-maidapron:
 omega-rhea/critter-ward-slacks:
   attachment: {skin: true}
   id: omega-rhea/critter-ward-slacks
-  model: {forward: "+z", id: /cdn/value.7f1f5fe483514586a1bc67e3d4a8070f2c04eb3a0514c0211ee30cb78b7faf00.glb, materials: {cloth_bottom: {color: "#55565c", kind: scripted, metalness: 0, params: {pat: weave, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}}}
+  model: {forward: "+z", id: /cdn/value.34480c73e7bc50e3e9fae9bc118f29034f5693791eea5e7350601575f61f16bf.glb, materials: {cloth_bottom: {color: "#55565c", kind: scripted, metalness: 0, params: {pat: weave, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}}}
   morph: {BrowHeavy: 0.027, Bust: 0.9, CheekFull: 0.19, ChinLong: 0.26, FaceLong: 0.4, HT_Angular: 0.14, HT_Broad: 0, HT_Heart: 0, HT_Long: 0, HT_Round: 0, HT_Square: 0.38, HeadRound: 0.03, JawNarrow: 0.05, JawWide: 0, NoseBig: 0.1}
   parent: omega-rhea
 omega-rhea/object/xad4c834675863151/107:
