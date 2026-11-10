@@ -11,7 +11,7 @@ const SAY = (t) => `/cdn/${BOT.throat}-saying-${encodeURIComponent(t)}.mp3`;
 const BOLT = `fx
 pop arc burst=14..20 life=.1..0.25 v=sdir()*(2..4) size=.03..0.05 acc=drag(3) col=hdr(5,2.6,.6)>hdr(2,.8,.1) a=1>0 sz=$size r=sprite(ember,add,velocity,.03)
 pop glow burst=1 life=.15 col=<1,.6,.2> a=1>0 r=light(<1,.6,.2>,6,5)`;
-const CLUMP = "/cdn/value.70d3d539720ee6e47b163258a06c502182ef9c7ee20f0721edda9dbc892314d8.glb";
+const CLUMP = "/cdn/value.56bba7d5e11a2cb4b4cffa35c09f8f5d248aa661813218a2f8b26f9852337f0a.glb";
 const HOUND = "/cdn/value.180d1072a97d34551e1394960b70202777c9d0b51fb0ca67779a59e429ef6fa7.glb";
 const SND = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
@@ -21,7 +21,7 @@ function spec(kind, x, z, i) {
   if (kind === "sentry") return { ...base, tags: [...base.tags, "zdrone"], model: { id: SENTRY, forward: "+x" }, audio: { clip: "/cdn/moodboard-scifi-neon/sfx-old-vacuum-tube-electrical-hum-and-relay-ticking-loop.mp3", loop: true, gain: 0.25, spatial: true, maxDistance: 12 } };
   return kind === "hound"
     ? { ...base, model: { id: HOUND }, scale: 1, audio: { clip: SND("low-wet-animal-growl-breathing-loop"), loop: true, gain: 0.25, spatial: true, maxDistance: 14 } }
-    : { ...base, model: { id: CLUMP, forward: "-z" }, scale: 1.35, audio: { clip: SND("many-fingers-knuckles-cracking-and-skin-dragging-on-concrete-loop"), loop: true, gain: 0.35, spatial: true, maxDistance: 16 } };
+    : { ...base, model: { id: CLUMP, forward: "+x" }, layout: { box: { min: { x: -0.8, y: 0, z: -0.8 }, max: { x: 0.8, y: 1.2, z: 0.8 } } }, scale: 1, audio: { clip: SND("many-fingers-knuckles-cracking-and-skin-dragging-on-concrete-loop"), loop: true, gain: 0.35, spatial: true, maxDistance: 16 } };
 }
 function speak(ctx, f, m, ev, now, gap = 6000) {
   if (now < (m.talkUntil ?? 0)) return;
