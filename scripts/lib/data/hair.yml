@@ -118,6 +118,12 @@ human:
     24: *id001
     25: *id002
     26: *id003
+    27:
+      free: /cdn/value.0baf8f1c41fbde18b42b99d05a3148c2865fb85dff67c79b9f0bdd0cc49f1c4a.glb
+      hat: /cdn/value.1581a874a124508240514640a91533e5f0b8c23891825fe31cbcfee8e9390d6c.glb
+    28:
+      free: /cdn/value.79b3ec2a30f8fd098c6b75f241b4da1061ec46f82c880607e41f16c4595550f7.glb
+      hat: /cdn/value.df0f7c2fb68b90e236f3351c0300bf95ac0d09371608e33c63f5d73c52e26897.glb
   m:
     0: &id009
       free: /cdn/value.26e08211854d12e82d74a84651bc6b81646fbf01123b215b164ea03589a3218a.glb
@@ -152,11 +158,17 @@ human:
     14: *id015
     15: *id016
     16: *id009
+    17:
+      free: /cdn/value.b09594ef5e10d1e50ca00768f4d90f8c6c8206335473477136c7ad659caa22fe.glb
+      hat: /cdn/value.7b78d5eab04a2ed8939796ee7ef953c1d677dc52c5a393067e00b45d7cc1bd00.glb
+    18:
+      free: /cdn/value.86382623485c4eff8883e70ff11f9f463cee3ae144235f8f69cf2c473eb42f9f.glb
+      hat: /cdn/value.5af5e50a51d37cf515ef191a451984fb718906aa33d50fa2ebfb0c83a1bba3a7.glb
 humanPick:
   f_afropuff: 2
   f_bob: 3
   f_curly: 2
-  f_curtainmid: 1
+  f_curtainmid: 28
   f_halfup: 5
   f_hime: 5
   f_long: 5
@@ -170,12 +182,12 @@ humanPick:
   f_twinbraids: 7
   f_twintails: 7
   f_wavy: 5
-  f_wolfcut: 4
+  f_wolfcut: 27
   f_silver: 5
   m_buzz: 0
   m_crop: 0
   m_curlytop: 2
-  m_curtains: 1
+  m_curtains: 18
   m_fluffy: 2
   m_manbun: 6
   m_mohawk: 0
