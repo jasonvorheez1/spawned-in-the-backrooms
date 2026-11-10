@@ -1,7 +1,9 @@
 // Level 7 entrance-room furnishings and sea-rock dressing: coffee table, fluorescent troffer, boulders,
 // plus the Wikidot reference photo's stacked bureau drawers, antique armoire with draped linen & silver tea service,
 // stone hearth, turned pedestal table, wire rack with green vase, dried floral bouquet, and antique spindle chair.
-import { tube, slab, sphere } from "./lib/shapes.js";
+import { tube, sphere } from "./lib/shapes.js";
+import { bx } from "./lib/l5-hall-kit.js";
+const slab = (ctx,c,h) => bx(ctx,c[0]-h[0],c[0]+h[0],c[1]-h[1],c[1]+h[1],c[2]-h[2],c[2]+h[2]);
 const HARDWOOD = "cdn/texture-worn-hardwood-grain.png";
 const ROCK = "cdn/texture-terrain-wet-dark-basalt-rock.png";
 const METAL = "cdn/texture-scratched-worn-steel.png";
@@ -34,7 +36,7 @@ export function geometry(ctx) {
     ctx.albedo(null); ctx.metalness(0.8); ctx.roughness(0.25); ctx.color("oklch(0.75 0.14 85)"); // Brass
     for (const bx of [-0.28, 0.28]) {
       slab(ctx, [bx, 0.54, 0.325], [0.035, 0.012, 0.005]); // backplate
-      tube(ctx, [[bx - 0.025, 0.54, 0.33], [bx, 0.515, 0.338], [bx + 0.025, 0.54, 0.33]], [0.006, 0.006], 6); // bail handle
+      tube(ctx, [[bx - 0.025, 0.54, 0.33], [bx, 0.515, 0.338], [bx + 0.025, 0.54, 0.33]], [0.006, 0.006, 0.006], 6); // bail handle
     }
     slab(ctx, [0, 0.57, 0.325], [0.008, 0.015, 0.004]); // brass keyhole
     // 3. Middle Drawer: Stacked antique drawer
@@ -43,7 +45,7 @@ export function geometry(ctx) {
     ctx.albedo(null); ctx.metalness(0.8); ctx.roughness(0.25); ctx.color("oklch(0.75 0.14 85)");
     for (const bx of [-0.22, 0.22]) {
       slab(ctx, [bx, 0.72, 0.285], [0.03, 0.01, 0.005]);
-      tube(ctx, [[bx - 0.02, 0.72, 0.29], [bx, 0.70, 0.296], [bx + 0.02, 0.72, 0.29]], [0.005, 0.005], 6);
+      tube(ctx, [[bx - 0.02, 0.72, 0.29], [bx, 0.70, 0.296], [bx + 0.02, 0.72, 0.29]], [0.005, 0.005, 0.005], 6);
     }
     // 4. Top Drawer: Dark olive-tinted drawer, angled slightly on top, slightly open
     ctx.albedo(HARDWOOD); ctx.color("oklch(0.34 0.05 90)"); ctx.roughness(0.65);

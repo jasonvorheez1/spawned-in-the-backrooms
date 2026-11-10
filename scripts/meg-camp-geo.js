@@ -2,6 +2,7 @@
 // West (-x) stays open toward the flickering wall home. Tents east, barricades of crates and sandbags round the rest,
 // a radio table, cots, a stove, the lime eagle banner on a scaffold pole. Faces built thin and bevelled; lod 3+ drops trim.
 import { tube, sphere, slab } from "./lib/shapes.js";
+import { bx } from "./lib/l5-hall-kit.js";
 const box = (ctx, x0, x1, y0, y1, z0, z1) => slab(ctx, [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], [(x1 - x0) / 2, (y1 - y0) / 2, (z1 - z0) / 2]);
 const LIME = "oklch(0.86 0.21 125)", CANVAS = "oklch(0.62 0.06 110)", WOOD = "cdn/texture-worn-hardwood-grain.png", STEEL = "oklch(0.55 0.01 250)";
 
@@ -26,7 +27,7 @@ function tent(ctx, x, z, w, d, h, rot, hi) { // an A-frame ridge tent; rot 0 = r
 function crate(ctx, x, y, z, s, yaw = 0) {
   const c = Math.cos(yaw), sn = Math.sin(yaw);
   ctx.albedo(WOOD); ctx.color("oklch(0.93 0.04 70)");
-  slab(ctx, [x, y + s / 2, z], [s / 2, s / 2, s / 2]);
+  bx(ctx,x-s/2,x+s/2,y,y+s,z-s/2,z+s/2,.012);
   ctx.albedo(null); ctx.color("oklch(0.5 0.05 60)");
   for (const k of [-1, 1]) slab(ctx, [x, y + s / 2 + k * s * 0.35, z - s / 2 - 0.005], [s / 2, 0.025, 0.006]);
 }

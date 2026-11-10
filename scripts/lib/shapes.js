@@ -72,3 +72,21 @@ export function prism(ctx, poly, y0, y1) {
     face(ctx, [a[0], y0, a[1]], [b[0], y0, b[1]], [b[0], y1, b[1]], [a[0], y1, a[1]], [mx, 0, mz]);
   }
 }
+
+// Rounded upholstery: preserve the flat centre and roll the edges into a closed padded volume.
+export function rounded(ctx, c, h, radius) {
+  if (ctx.lod >= 3) return slab(ctx,c,h);
+  const r = Math.min(radius,...h.map(n=>n*.95)), steps=ctx.lod<=1?2:1;
+  const axis=h.map(n=>[...Array.from({length:steps+1},(_,i)=>-n+r*i/steps),...Array.from({length:steps+1},(_,i)=>n-r+r*i/steps)]);
+  const point=(v)=>{
+    const core=v.map((n,i)=>Math.max(-h[i]+r,Math.min(h[i]-r,n))), d=v.map((n,i)=>n-core[i]), len=Math.hypot(...d);
+    return v.map((n,i)=>c[i]+core[i]+d[i]*r/len);
+  };
+  ctx.smooth();
+  for(let a=0;a<3;a++)for(const sign of [-1,1]){
+    const b=(a+1)%3,d=(a+2)%3,u=axis[b],v=axis[d],normal=[0,0,0];normal[a]=sign;
+    const P=(i,j)=>{const p=[0,0,0];p[a]=sign*h[a];p[b]=u[i];p[d]=v[j];return point(p)};
+    for(let i=0;i<u.length-1;i++)for(let j=0;j<v.length-1;j++)face(ctx,P(i,j),P(i+1,j),P(i+1,j+1),P(i,j+1),normal);
+  }
+  ctx.flat();
+}

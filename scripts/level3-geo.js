@@ -3,7 +3,7 @@
 // humming generator rooms, assembly lines, sealed vaults seen only through the bars. Layout: scripts/lib/level3.js.
 import { SPARKS, N, S, H, TH, HALF, isOpen, isBars, isGate, openings, zoneOf, blockOf, hash, cellCenter, ceilingAt, BLOCKS, BACK, LIFT, inGamma, TW, TSP, tightArms, tightSpans } from "./lib/level3.js";
 import { vault } from "./lib/level3-arch.js";
-import { slab, tube } from "./lib/shapes.js";
+import { slab, tube, rounded } from "./lib/shapes.js";
 
 const BRICK = "cdn/texture-photoreal-weathered-orange-clay-brick-wall-thin-grey-mortar-soot-stains.png", FLOOR = "cdn/texture-dusty-cracked-concrete-floor.png", CEIL = "cdn/texture-dirty-concrete-ceiling-slab.png", STEEL = "cdn/texture-scratched-worn-steel.png";
 const T = 0.3;
@@ -20,7 +20,7 @@ const TERRAZZO = "cdn/texture-grey-terrazzo-floor-tiles-dusty.png", PEEL = "cdn/
 const box = (ctx, x0, x1, y0, y1, z0, z1) => slab(ctx, [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], [Math.abs(x1 - x0) / 2, Math.abs(y1 - y0) / 2, Math.abs(z1 - z0) / 2]);
 const D4 = [[1, 0], [0, 1], [-1, 0], [0, -1]];
 const solid = (cx, cz, d) => !isOpen(cx, cz, d) && !isBars(cx, cz, d);
-const rod = (ctx, a, b, r, M) => tube(ctx, [a, b], [r, r], M, [1, 1], 0, 1, 1);
+const rod = (ctx, a, b, r, M) => { if(M>=6)ctx.smooth();tube(ctx,[a,b],[r,r],M,[1,1],0,1,1);if(M>=6)ctx.flat(); };
 
 // a row of bars across one cell edge: (x0,z0)->(x1,z1), floor to h, cross rails top and middle
 function barRow(ctx, x0, z0, x1, z1, h, M, gap = 0.26) {
@@ -31,7 +31,7 @@ function barRow(ctx, x0, z0, x1, z1, h, M, gap = 0.26) {
 
 export function geometry(ctx) {
   const CUT = new Set(ctx.params?.cut ?? []); // broken walls (lib/breakables.js): scripts/wallpatch-geo.js draws what is left
-  const hi = ctx.lod <= 2, M = 4;
+  const hi = ctx.lod <= 2, M = hi ? 6 : 4;
   // floor: terrazzo tile in the kept halls, dusty cracked concrete in the crawls and blind halls
   for (const terr of [true, false]) {
     ctx.albedo(terr ? TERRAZZO : FLOOR); ctx.roughness(terr ? 0.45 : 0.95);
@@ -104,8 +104,8 @@ export function geometry(ctx) {
       if (!solid(cx, cz, d) || hash(cx * 4 + d, cz, 91) > 0.16) continue;
       const [nx, nz] = D4[d], tx = -nz, tz = nx, w = S / 2 - T - 0.08;
       const P = (along, y, off = w) => [c.x + nx * off + tx * along, y, c.z + nz * off + tz * along];
-      rod(ctx, P(-S / 2 + 0.2, 0.92), P(S / 2 - 0.2, 0.92), 0.022, 4);
-      for (const a of [-1.4, 0, 1.4]) rod(ctx, P(a, 0.92), P(a, 0.92, w + 0.08), 0.012, 4);
+      rod(ctx, P(-S / 2 + 0.2, 0.92), P(S / 2 - 0.2, 0.92), 0.022, M);
+      for (const a of [-1.4, 0, 1.4]) rod(ctx, P(a, 0.92), P(a, 0.92, w + 0.08), 0.012, M);
     }
   }
   // conduit: 3-4 grey steel pipes side by side along the ceiling edge; now and then the bundle bends down the wall together
@@ -126,10 +126,10 @@ export function geometry(ctx) {
       const drop = h ? { a: (h.wx - c.x) * tx + (h.wz - c.z) * tz, by: 1.62, glb: true } : hash(cx * 4 + d, cz, 37) < 0.22 ? { a: (hash(cx, cz, 39) - 0.5) * 1.8, by: 0.9 + hash(cx, cz, 41) * 0.3 } : null;
       for (let i = 0; i < k; i++) {
         const off = w - i * 0.095, r = 0.03 + (i === 0 ? 0.01 : 0);
-        rod(ctx, P(off, -S / 2, y), P(off, S / 2, y), r, 4);
+        rod(ctx, P(off, -S / 2, y), P(off, S / 2, y), r, M);
         if (drop) { // the bundle turns down the wall, fanning in to sit side by side over the box
           const sx = drop.a + (i - (k - 1) / 2) * (drop.glb ? 0.16 : 0.055), lo = drop.glb ? drop.by : drop.by + 0.6;
-          tube(ctx, [P(off, sx, y), P(off - 0.02, sx, y - 0.12), P((off + w) / 2, sx, y - 0.32), P(w, sx, y - 0.55), P(w, sx, lo + 0.08)], [r, r, r, r, r], 4, [1, 1], 0, 1, 1);
+          tube(ctx, [P(off, sx, y), P(off - 0.02, sx, y - 0.12), P((off + w) / 2, sx, y - 0.32), P(w, sx, y - 0.55), P(w, sx, lo + 0.08)], [r, r, r, r, r], M, [1, 1], 0, 1, hi ? 3 : 1);
         }
       }
       for (let j = -1; j <= 1; j++) { const sa = j * 1.3; const p0 = P(w - (k - 1) * 0.095 - 0.05, sa - 0.025, y - 0.05), p1 = P(w + 0.02, sa + 0.025, y + 0.05); box(ctx, Math.min(p0[0], p1[0]), Math.max(p0[0], p1[0]), y + 0.04, top, Math.min(p0[2], p1[2]), Math.max(p0[2], p1[2])); }
@@ -148,7 +148,7 @@ export function geometry(ctx) {
   ctx.albedo(null); ctx.color("oklch(0.14 0.005 250)"); ctx.metalness(0.05); ctx.roughness(0.7);
   for (const { P, w, y } of cables) {
     const pts = [], rs = []; for (let j = 0; j <= 4; j++) { const along = -S / 2 + (j / 4) * S; pts.push(P(w - 0.02, along, y - 0.28 - (j % 2 ? 0.14 : 0))); rs.push(0.022); }
-    tube(ctx, pts, rs, 4, [1, 1], 0, 1, 1);
+    tube(ctx, pts, rs, M, [1, 1], 0, 1, hi ? 3 : 1);
   }
   ctx.metalness(0);
   // generator rooms: three big humming generator housings with stacks of cable, a catwalk rail around the middle one
@@ -199,7 +199,7 @@ export function geometry(ctx) {
   // the checkpoint: sandbag line, a folding table, crates; the freight lift's frame in the far east wall
   ctx.albedo(null); ctx.metalness(0); ctx.roughness(0.95);
   const g = cellCenter(3, 12);
-  ctx.color("oklch(0.6 0.04 85)"); for (let i = 0; i < 6; i++) box(ctx, g.x + 1.4, g.x + 1.95, 0, 0.55 + (i % 2) * 0.1, g.z - 4 + i * 1.5, g.z - 3 + i * 1.5); // sandbags on the gamma line
+  ctx.color("oklch(0.6 0.04 85)"); for (let i = 0; i < 6; i++) rounded(ctx, [g.x+1.675,.275+(i%2)*.05,g.z-3.5+i*1.5], [.275,.275+(i%2)*.05,.5], .16); // sandbags on the gamma line
   ctx.albedo(STEEL); ctx.metalness(0.6); ctx.roughness(0.45); ctx.color("oklch(0.5 0.01 250)");
   const lz = LIFT.z, lx = HALF - T;
   box(ctx, lx - 0.25, lx, 0, H, lz - 1.5, lz - 1.3); box(ctx, lx - 0.25, lx, 0, H, lz + 1.3, lz + 1.5); box(ctx, lx - 0.25, lx, 2.5, H, lz - 1.3, lz + 1.3);

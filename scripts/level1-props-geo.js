@@ -4,13 +4,20 @@
 import { N, S, H, HALF, zoneOf, cellCenter, hash, ARRIVE, BACK, sectorOf, hasPillar, rampCell } from "./lib/level1.js";
 import { slab, prism, tube, face } from "./lib/shapes.js";
 
+import { lathe } from "./lib/l5-hall-kit.js";
 const box = (ctx, x, y, z, hx, hy, hz) => slab(ctx, [x, y, z], [hx, hy, hz]);
 const ring = (r, n, cx, cz) => Array.from({ length: n }, (_, i) => [cx + Math.cos((i / n) * 6.2832) * r, cz + Math.sin((i / n) * 6.2832) * r]);
 
 function drum(ctx, x, z, h, hue) {
-  ctx.metalness(0.3); ctx.roughness(0.6); ctx.color(hue); prism(ctx, ring(0.3, 10, x, z), 0, h);
-  ctx.color("oklch(0.3 0.02 60)"); prism(ctx, ring(0.312, 10, x, z), h * 0.3, h * 0.3 + 0.05); prism(ctx, ring(0.312, 10, x, z), h * 0.7, h * 0.7 + 0.05);
-  ctx.color("oklch(0.25 0.02 60)"); prism(ctx, ring(0.26, 10, x, z), h, h + 0.03);
+  if(ctx.lod>=3){
+    ctx.metalness(.3);ctx.roughness(.6);ctx.color(hue);prism(ctx,ring(.3,10,x,z),0,h);
+    ctx.color("oklch(0.3 0.02 60)");for(const y of [h*.3,h*.7])prism(ctx,ring(.312,10,x,z),y,y+.05);
+    ctx.color("oklch(0.25 0.02 60)");prism(ctx,ring(.26,10,x,z),h,h+.03);ctx.metalness(0);return;
+  }
+  const M=16;
+  ctx.metalness(.3);ctx.roughness(.6);ctx.color(hue);
+  lathe(ctx,x,0,z,[[0,0],[.28,0],[.303,.018],[.303,.04],[.292,.055],[.292,h*.28],[.312,h*.30],[.312,h*.34],[.292,h*.36],[.292,h*.67],[.312,h*.69],[.312,h*.73],[.292,h*.75],[.292,h-.035],[.305,h-.02],[.305,h],[.27,h],[0,h]],M);
+  ctx.color("oklch(0.25 0.02 60)");lathe(ctx,x+.13,h,z,[[0,0],[.031,0],[.031,.012],[0,.012]],ctx.lod<=2?12:6);
   ctx.metalness(0);
 }
 function pallet(ctx, x, z, yaw, stack) {

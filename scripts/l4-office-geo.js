@@ -1,9 +1,8 @@
 // Level 4's open-plan furniture (params.kind): "island" = four desks back to back behind fabric partitions, each with a beige CRT,
 // keyboard, papers and a mug, a wall clock stopped on the spine; "printer" = a tired office printer on its stand.
 // Feet at the floor centre; the island runs along x. The ringing phones are their own objects (scripts/l4-office.js).
-import { slab } from "./lib/shapes.js";
+import { bx as box, lathe, path, qc, sheet } from "./lib/l5-hall-kit.js";
 
-const box = (ctx, x0, x1, y0, y1, z0, z1) => slab(ctx, [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], [Math.abs(x1 - x0) / 2, Math.abs(y1 - y0) / 2, Math.abs(z1 - z0) / 2]);
 const FAB = "cdn/texture-worn-canvas-fabric.png";
 
 function desk(ctx, cx, cz, face, hi, seed) { // face: +1 = the desk's user sits on +z
@@ -14,10 +13,19 @@ function desk(ctx, cx, cz, face, hi, seed) { // face: +1 = the desk's user sits 
   ctx.color("oklch(0.55 0.005 250)"); for (const y of [0.25, 0.45, 0.62]) box(ctx, cx + 0.42, cx + 0.6, y, y + 0.02, cz + face * 0.33, cz + face * 0.345);
   // CRT monitor, pushed to the back of the desk
   const mz = cz - face * 0.12;
-  ctx.color("oklch(0.82 0.03 85)"); ctx.roughness(0.5); box(ctx, cx - 0.22, cx + 0.22, 0.76, 1.12, mz - 0.17, mz + 0.17); box(ctx, cx - 0.15, cx + 0.15, 0.75, 0.79, mz - 0.12, mz + 0.12);
+  ctx.color("oklch(0.82 0.03 85)");ctx.roughness(.5);
+  // A CRT narrows around its tube at the back; the bezel stays broad at the user's side.
+  const F=(x,y)=>[cx+x,y,mz+face*.13],B=(x,y)=>[cx+x,y,mz-face*.17],O=[cx,.94,mz];
+  qc(ctx,O,F(-.22,.78),F(.22,.78),B(.12,.82),B(-.12,.82));
+  qc(ctx,O,F(-.22,1.12),B(-.12,1.04),B(.12,1.04),F(.22,1.12));
+  qc(ctx,O,F(-.22,.78),B(-.12,.82),B(-.12,1.04),F(-.22,1.12));
+  qc(ctx,O,F(.22,.78),F(.22,1.12),B(.12,1.04),B(.12,.82));
+  qc(ctx,O,B(-.12,.82),B(.12,.82),B(.12,1.04),B(-.12,1.04));
+  box(ctx,cx-.22,cx+.22,.78,1.12,mz+face*.13,mz+face*.17);
+  box(ctx,cx-.15,cx+.15,.75,.79,mz-.12,mz+.12);
   ctx.color("oklch(0.7 0.18 145)"); ctx.emissive("oklch(0.8 0.2 145)"); box(ctx, cx + 0.15, cx + 0.17, 0.77, 0.785, mz + face * 0.17, mz + face * 0.173); ctx.emissive(null); // power led
-  ctx.color("oklch(0.24 0.05 80)"); ctx.emissive("oklch(0.42 0.1 82)"); box(ctx, cx - 0.17, cx + 0.17, 0.82, 1.08, mz + face * 0.17, mz + face * 0.175); ctx.emissive(null);
-  if (hi) { ctx.color("oklch(0.85 0.15 85)"); ctx.emissive("oklch(0.75 0.16 85)"); for (let i = 0; i < 4; i++) box(ctx, cx - 0.14, cx - 0.14 + 0.08 + ((seed * 7 + i * 3) % 5) * 0.035, 1.03 - i * 0.04, 1.045 - i * 0.04, mz + face * 0.176, mz + face * 0.178); ctx.emissive(null); }
+  ctx.color("oklch(0.24 0.05 80)"); ctx.emissive("oklch(0.42 0.1 82)"); sheet(ctx,(u,v)=>[cx+(u-.5)*.34,.82+v*.26,mz+face*(.176+.008*Math.sin(u*Math.PI)*Math.sin(v*Math.PI))],hi?6:2,hi?4:2,()=>[0,0,face]); ctx.emissive(null);
+  if (hi) { ctx.color("oklch(0.85 0.15 85)"); ctx.emissive("oklch(0.75 0.16 85)"); for (let i = 0; i < 4; i++) box(ctx, cx - 0.14, cx - 0.14 + 0.08 + ((seed * 7 + i * 3) % 5) * 0.035, 1.03 - i * 0.04, 1.045 - i * 0.04, mz + face * 0.187, mz + face * 0.189); ctx.emissive(null); }
   // keyboard, mousepad & mouse
   ctx.color("oklch(0.78 0.02 85)"); box(ctx, cx - 0.2, cx + 0.2, 0.75, 0.775, cz + face * 0.14, cz + face * 0.28);
   ctx.color("oklch(0.25 0.02 240)"); box(ctx, cx + 0.24, cx + 0.42, 0.75, 0.754, cz + face * 0.13, cz + face * 0.29);
@@ -29,7 +37,8 @@ function desk(ctx, cx, cz, face, hi, seed) { // face: +1 = the desk's user sits 
   ctx.color("oklch(0.7 0.18 145)"); ctx.emissive("oklch(0.8 0.2 145)"); box(ctx, cx - 0.52, cx - 0.5, 0.22, 0.235, cz + face * 0.24, cz + face * 0.245); ctx.emissive(null);
   // papers, a mug
   ctx.color("oklch(0.95 0.01 90)"); box(ctx, cx - 0.62, cx - 0.36, 0.75, 0.758, cz + face * 0.02, cz + face * 0.3); box(ctx, cx - 0.6, cx - 0.4, 0.758, 0.762, cz + face * 0.06, cz + face * 0.26);
-  ctx.color(["oklch(0.6 0.15 25)", "oklch(0.6 0.1 250)", "oklch(0.85 0.05 90)"][seed % 3]); box(ctx, cx + 0.5, cx + 0.58, 0.75, 0.85, cz + face * 0.18, cz + face * 0.26);
+  ctx.color(["oklch(0.6 0.15 25)", "oklch(0.6 0.1 250)", "oklch(0.85 0.05 90)"][seed % 3]); lathe(ctx, cx + 0.54, 0.75, cz + face * 0.22, [[0,0],[.037,0],[.042,.012],[.044,.095],[.038,.1],[.035,.09],[.032,.018],[0,.018]], hi ? 16 : 8);
+  if (hi) path(ctx, [[cx+.58,.83,cz+face*.22],[cx+.615,.83,cz+face*.22],[cx+.615,.775,cz+face*.22],[cx+.58,.775,cz+face*.22]], .008, 8);
 }
 
 export function geometry(ctx) {

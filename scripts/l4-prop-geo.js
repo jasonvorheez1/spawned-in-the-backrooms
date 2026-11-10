@@ -1,17 +1,18 @@
 // Level 4's few leftovers, one per object so each stands at its own angle: params.kind = chair | chairdown | box | boxes |
 // plant | panel | cabinet. Abandoned, not staged: dust on the seat, a box split at its tape, a plant dead in its pot.
-import { box, paint, cyl, rod } from "./lib/gamma-kit.js";
-import { sphere } from "./lib/shapes.js";
+import { paint, cyl, rod } from "./lib/gamma-kit.js";
+import { sphere, rounded } from "./lib/shapes.js";
+import { bx as box } from "./lib/l5-hall-kit.js";
 const CARD = "cdn/texture-corrugated-cardboard.png", FAB = "cdn/texture-worn-canvas-fabric.png";
 function chair(ctx, hi) {
   const M = hi ? 10 : 6;
   paint(ctx, "oklch(0.2 0.005 250)", null, 0.5, 0.2);
-  for (let k = 0; k < 5; k++) { const a = (k / 5) * Math.PI * 2; rod(ctx, [0, 0.07, 0], [Math.cos(a) * 0.32, 0.05, Math.sin(a) * 0.32], 0.022, 5); sphere(ctx, [Math.cos(a) * 0.32, 0.03, Math.sin(a) * 0.32], 0.03, 6); }
+  for (let k = 0; k < 5; k++) { const a = (k / 5) * Math.PI * 2; rod(ctx, [0, 0.07, 0], [Math.cos(a) * 0.32, 0.05, Math.sin(a) * 0.32], 0.022, hi ? 10 : 6); sphere(ctx, [Math.cos(a) * 0.32, 0.03, Math.sin(a) * 0.32], 0.03, 6); }
   paint(ctx, "oklch(0.6 0.01 250)", null, 0.3, 0.9); cyl(ctx, 0, 0, 0.07, 0.42, 0.025, M);
-  paint(ctx, "oklch(0.3 0.03 250)", FAB, 0.95); box(ctx, -0.24, 0.24, 0.42, 0.5, -0.22, 0.24);
-  box(ctx, -0.22, 0.22, 0.58, 1.02, 0.25, 0.31);
+  paint(ctx, "oklch(0.3 0.03 250)", FAB, 0.95); rounded(ctx, [0,.46,.01], [.24,.04,.23], .038);
+  rounded(ctx, [0,.80,.28], [.22,.22,.03], .028);
   paint(ctx, "oklch(0.2 0.005 250)", null, 0.5, 0.2); box(ctx, -0.03, 0.03, 0.42, 0.62, 0.24, 0.27);
-  for (const s of [-1, 1]) { box(ctx, s * 0.26 - 0.02, s * 0.26 + 0.02, 0.5, 0.66, 0.0, 0.04); box(ctx, s * 0.26 - 0.03, s * 0.26 + 0.03, 0.66, 0.69, -0.12, 0.18); }
+  for (const s of [-1, 1]) { box(ctx, s * 0.26 - 0.02, s * 0.26 + 0.02, 0.5, 0.66, 0.0, 0.04); rounded(ctx, [s*.26,.675,.03], [.03,.015,.15], .014); }
 }
 function carton(ctx, w, h, d, y = 0, open = false) {
   paint(ctx, "oklch(0.68 0.07 70)", CARD, 0.95); box(ctx, -w / 2, w / 2, y, y + h, -d / 2, d / 2);
