@@ -3,7 +3,6 @@ import C from './lib/data/critter.yml'
 const NAMES = { m: 'boy', f: 'girl', none: 'none', tee: 't-shirt', tank: 'tank top', longsleeve: 'long sleeve', hoodie: 'hoodie', sweater: 'sweater', jacket: 'jacket', pajamas: 'pyjama top', apron: 'apron', dress: 'dress', pants: 'pants', shorts: 'shorts', pjpants: 'pyjama pants', overalls: 'overalls', skirt: 'skirt', longskirt: 'long skirt', sneakers: 'sneakers', boots: 'boots', slippers: 'slippers', bow: 'bow', flower: 'flower', cap: 'cap', beanie: 'beanie', tophat: 'top hat', crown: 'crown', headphones: 'headphones', partyhat: 'party hat', tuft: 'hair tuft', glasses: 'glasses', shades: 'sunglasses', scarf: 'scarf', bowtie: 'bow tie', bell: 'bell collar', cape: 'cape', round: 'round', tall: 'tall', wide: 'wide', freckles: 'freckles', stripes: 'stripes', patch: 'eye patch', heart: 'heart', stubble: 'stubble', mustache: 'mustache', goatee: 'goatee', handlebars: 'handlebars', fullbeard: 'full beard', chinstrap: 'chin strap', anchor: 'anchor', burly: 'burly', rugged: 'rugged', diamond: 'diamond' }
 const TABS = [['body', 'BODY', '01'], ['face', 'FACE', '02'], ['clothes', 'CLOTHES', '03'], ['outfits', 'OUTFITS', '04']]
 const CSS = `<style>
-@media (max-width:700px){#hud{visibility:hidden}}
 @keyframes ccIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
 @keyframes ccScan{from{transform:translateY(-6px)}to{transform:translateY(0)}}
 #cc{--a:#ffb347;--a2:#ffcf87;--ink:#16140e;--bg:oklch(0.17 0.025 75 / .97);position:absolute;left:24px;top:24px;bottom:24px;width:min(560px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 24px)));display:flex;flex-direction:column;background:var(--bg);border:2px solid var(--a);box-shadow:8px 8px 0 rgba(0,0,0,0.7),0 0 30px rgba(255,170,40,.18) inset,0 0 0 1px rgba(255,179,71,.25);color:var(--a2);font-family:'Geist Pixel Square',ui-monospace,monospace;animation:ccIn .18s ease-out;overflow:hidden}
@@ -124,7 +123,7 @@ export function wardrobe(ctx, player) {
     }).join('') + `<div class="hint">saving keeps your whole look: ${human ? 'skin' : 'animal'}, colours, face and clothes. wear it again in one click.</div>`
   }
   return `${CSS}<div id="cc" data-modal>
-  <div class="hd"><div class="ttl"><h2>${human ? 'CHARACTER CREATOR' : 'CRITTER CREATOR'}</h2><div class="sub">${human ? '' : l.species + ' · '}${NAMES[l.sex] || l.sex} · ${Math.round(170 * (Number(l.heightS) || 1))} cm · M.E.G. intake form 7-B</div></div><button class="x" onclick="${act('close')}">✕</button></div>
+  <div class="hd"><div class="ttl"><h2>${human ? 'Character' : 'Character'}</h2><div class="sub">${human ? '' : l.species + ' · '}${NAMES[l.sex] || l.sex} · ${Math.round(170 * (Number(l.heightS) || 1))} cm</div></div><button class="x" onclick="${act('close')}">✕</button></div>
   <div class="main"><div class="tabs">${tabs.map(([k, n, i]) => `<button class="${tab === k ? 'on' : ''}" onclick="${act('tab', k)}"><span class="n">${i}</span>${n}</button>`).join('')}</div>
   <div class="bd">${body}</div></div>
   <div class="ft"><button onclick="${act('spin', -45)}">◀ turn</button><button onclick="${act('spin', 45)}">turn ▶</button><button onclick="${act('random', 'all')}">randomize</button><button onclick="${act('reset')}">reset</button><button class="go" onclick="${act('close')}">done</button></div>
