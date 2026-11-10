@@ -30,7 +30,16 @@ export function layVaults(ctx, { sp, bx, cyl }) {
   bx("l11-vault-wall-n", 15.4, FY - 1, 89.1, 8.8, 3.6, 0.2, WALL); // the pit end stays open: the service tunnel runs on north
   bx("l11-vault-wall-n-lintel", 8.95, FY + 1.3, 89.1, 4.1, 1.3, 0.2, WALL);
   // service steps from the platform's end down into the pit (and back up)
-  for (const [k, h] of [[1, 0.75], [2, 0.5], [3, 0.25]]) bx(`l11-vault-step-${k}`, 11 - k * 0.4 + 0.2, FY - 1, 88.2, 0.4, h, 1.4, GRIME);
+  { // a poured stair with brass nosings and a pipe rail; an unseen ramp under it carries the feet
+    const Z = 88.2, W = 1.5, CON = { texture: "cdn/texture-grimy-wet-concrete-floor-with-puddles.png", wrap: "repeat", repeat: [0.6, 0.6], color: "oklch(0.55 0.015 80)", roughness: 0.85 };
+    const RAIL = { color: "oklch(0.4 0.03 140)", metalness: 0.8, roughness: 0.4 }, a = Math.atan2(1, 2.4) * 180 / Math.PI, L = Math.hypot(2.4, 1);
+    for (let i = 0; i < 5; i++) { const top = FY - 0.2 * i, x = 11 - 0.48 * i - 0.24;
+      sp(`l11-vault-stair-${i}`, { feetPosition: { x, y: FY - 1, z: Z }, primitive: { kind: "box", width: 0.48, height: top - (FY - 1), depth: W }, material: CON });
+      sp(`l11-vault-nose-${i}`, { feetPosition: { x: x + 0.22, y: top - 0.02, z: Z }, primitive: { kind: "box", width: 0.05, height: 0.025, depth: W }, material: { color: "oklch(0.75 0.13 85)", metalness: 0.6, roughness: 0.4 }, castShadow: false }); }
+    sp("l11-vault-stair-ramp", { feetPosition: { x: 9.8, y: FY - 0.5, z: Z }, pivot: "center", rotation: { roll: a }, primitive: { kind: "box", width: L, height: 0.1, depth: W }, visible: false, physics: { body: "static", collider: "box" } });
+    sp("l11-vault-stair-hand", { feetPosition: { x: 9.8, y: FY - 1, z: Z - W / 2 - 0.05 }, pivot: "center", rotation: { roll: a - 90 }, primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.025, height: L + 0.3 }, material: RAIL });
+    for (const [k, x, y] of [[0, 8.75, FY - 1], [1, 10.85, FY - 0.15]]) sp(`l11-vault-stair-post-${k}`, { feetPosition: { x, y, z: Z - W / 2 - 0.05 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.03, height: 1.0 }, material: RAIL });
+  }
   for (const [x, w] of [[9.55, 5.3], [17.65, 4.1]]) bx(`l11-vault-wall-s-${x}`, x, FY - 1, 67, w, 3.6, 0.2, WALL);
   bx("l11-vault-ceil", 13.3, -0.42, 78, 13, 0.15, 22.4, DARK);
   // 2006 IRT tile: a maroon band at shoulder height and a mosaic cap, riveted girders on painted columns under the slab
