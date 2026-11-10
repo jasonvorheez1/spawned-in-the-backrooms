@@ -164,7 +164,10 @@ export function spawnRubble(ctx, at, items, name = 'Rubble') {
 }
 
 // one hit on a breakable entity or a wall. dmg is already the structure damage. Returns true if it landed on something breakable.
+export const SAFE_PLACES = ['bonus'] // Shelly Nov 10: "you shouldnt be able to destroy anything in bonus rooms"
+export const safeHere = (ctx) => SAFE_PLACES.includes(String(ctx.self?.place ?? ctx.place?.id ?? '').replace(/-.*/, ''))
 export function damageEntity(ctx, o, dmg, at, normal, kind) {
+  if (safeHere(ctx)) return false
   const mat = o.state?.mat ?? 'wood'
   if (o.state.hp == null) o.state.hp = B.materials[mat]?.hp ?? 60
   o.state.hp -= dmg
@@ -241,6 +244,7 @@ function breach(V, gone, pop) {
     if (!gone(u, v) && gone(u, v - 1) && (gone(u - 1, v) || gone(u + 1, v))) pop(u, v)
 }
 export function damageWall(ctx, w, dmg, at, normal, kind) {
+  if (safeHere(ctx)) return false
   const st = ctx.place.state, V = B.voxel ?? { cols: 4, rows: 3 }
   if (w.prot) { chip(ctx, at, normal, w.mat ?? 'concrete', 0); return true } // shells, edges and exits never give
   if (w.G) return damageGridWall(ctx, w, dmg, at, normal, kind)
