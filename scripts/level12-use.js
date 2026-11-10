@@ -3,6 +3,7 @@
 import R from "./lib/data/level12.yml";
 import { heard } from "./lib/hear.js";
 import { animate } from "builtin/tween";
+import { setQuest } from "./lib/quests.js";
 const G = "cdn/moodboard-realistic-gritty/";
 const RATTLE = G + "sfx-locked-door-handle-rattle-and-jiggle.mp3";
 const CREAK = G + "sfx-old-interior-wooden-door-creak-open.mp3";
@@ -23,6 +24,7 @@ export const ears = {
       heard(ctx, { clip: TAPE, position: pos, volume: 1, maxDistance: 8, bus: "Voice" }); // performed: Jerry B., 23.7 s
       if (!who.state.know12) who.state.u12At = now + 24000; // the unlock notice shows as the tape ends, first listen only
       who.state.know12 = true;
+      if (!who.state.qdone?.["the-lit-window"]) setQuest(who.state, "the-lit-window", { name: "The Lit Window", step: "Walk straight into the lit window in the alley with the green dumpster", mark: { place: "level11", id: "l11-win12" } });
       who.state.sub = { who: "CMDR. HARRIS · EXPEDITION LOG \"MATRIX\"", t: "\"" + LOG + " The lit window in the alley with the green dumpster. It isn't a window. Walk straight into it. Don't try it unless you know all this.\"", at: now, d: 24000 };
       return;
     }
