@@ -62,6 +62,7 @@ def necklim(x, y):  # a U scoop, deep in front, shallow at the back
 me = body.data
 CUFF = float(os.environ.get('CUFF', '0.92')); WAIST = float(os.environ.get('WAIST', '0.03'))
 waistz = J['Spine'].z + WAIST * s
+BIB = float(os.environ.get('BIB', '0'))
 def cuff(p):
     side = 'Left' if p.x > 0 else 'Right'
     K, A = J[side + 'Leg'], J[side + 'Foot']
@@ -93,7 +94,14 @@ _up = [e for e in bm.edges if max(W(v.co).z for v in e.verts) < waistz + 0.05 * 
 bmesh.ops.subdivide_edges(bm, edges=_up, cuts=1, use_grid_fill=True)
 def F(co):  # >0 inside the garment, the cut is its zero line (a contour, so every edge is drawn, not stepped)
     p = W(co)
-    return min(waistz - p.z, cuff(p))
+    top = waistz
+    if BIB > 0:  # overalls: a bib up the front to the chest, straps over each shoulder to the back
+        fr = J['Spine'].y - p.y  # >0 in front of the spine
+        bx = 0.085 * s
+        if fr > -0.01 * s and abs(p.x) < bx: top = J['Spine2'].z + BIB * s
+        sx = abs(abs(p.x) - 0.07 * s)
+        if sx < 0.022 * s: top = neckz + 0.04 * s  # the strap runs up over the shoulder top
+    return min(top - p.z, cuff(p))
 f = {v: F(v.co) for v in bm.verts}
 cross = [e for e in bm.edges if (f[e.verts[0]] > 0) != (f[e.verts[1]] > 0)]
 made = set()
