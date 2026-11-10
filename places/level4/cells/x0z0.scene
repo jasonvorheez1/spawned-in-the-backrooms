@@ -564,7 +564,7 @@ l4-prop-0:
   feetPosition: {x: -11.5, y: 0, z: 3.2}
   id: l4-prop-0
   layout: {box: {max: {x: 0.33, y: 1, z: 0.33}, min: {x: -0.33, y: 0, z: -0.33}}}
-  model: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb
+  model: {id: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb, materials: {tripo_material_0d61672f-fb28-4bf7-bfcd-1b81e8255e5b: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 35}
@@ -576,7 +576,7 @@ l4-prop-1:
   feetPosition: {x: 5.4, y: 0, z: -12.6}
   id: l4-prop-1
   layout: {box: {max: {x: 0.33, y: 1, z: 0.33}, min: {x: -0.33, y: 0, z: -0.33}}}
-  model: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb
+  model: {id: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb, materials: {tripo_material_0d61672f-fb28-4bf7-bfcd-1b81e8255e5b: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 200}
@@ -588,7 +588,7 @@ l4-prop-10:
   feetPosition: {x: -5.2, y: 0, z: 13.6}
   id: l4-prop-10
   layout: {box: {max: {x: 0.28, y: 0.5, z: 0.25}, min: {x: -0.28, y: 0, z: -0.25}}}
-  model: /cdn/value.9bfec9af129aaa4b7b4c57556bba6dbf864c015f8141f3dc12d500fc2a08d32b.glb
+  model: {id: /cdn/value.9bfec9af129aaa4b7b4c57556bba6dbf864c015f8141f3dc12d500fc2a08d32b.glb, materials: {tripo_material_d8def8be-7204-458f-9488-9b06888925c9: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 80}
@@ -600,7 +600,7 @@ l4-prop-11:
   feetPosition: {x: 12.6, y: 0, z: -21.8}
   id: l4-prop-11
   layout: {box: {max: {x: 0.275, y: 0.75, z: 0.225}, min: {x: -0.275, y: 0, z: -0.225}}}
-  model: /cdn/value.e5ed56b84bef188cc6c3ecde7d4ce92d9b7e95cde01ecf07f0d78964da71ec57.glb
+  model: {id: /cdn/value.e5ed56b84bef188cc6c3ecde7d4ce92d9b7e95cde01ecf07f0d78964da71ec57.glb, materials: {tripo_material_3ee01d45-c98f-4e24-8a96-018f5680a63e: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 5}
@@ -612,7 +612,7 @@ l4-prop-12:
   feetPosition: {x: -23.6, y: 0, z: 23.6}
   id: l4-prop-12
   layout: {box: {max: {x: 0.3, y: 1, z: 0.3}, min: {x: -0.3, y: 0, z: -0.3}}}
-  model: /cdn/value.4d7639b0dfacf37e47ef1201a69eafbd014a170f2bd3bdca5b0dbde7946025af.glb
+  model: {id: /cdn/value.4d7639b0dfacf37e47ef1201a69eafbd014a170f2bd3bdca5b0dbde7946025af.glb, materials: {tripo_material_44f9ff0f-9894-49b8-9f56-8e7e0d88da80: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 0}
@@ -624,7 +624,7 @@ l4-prop-13:
   feetPosition: {x: 23.4, y: 0, z: -23.4}
   id: l4-prop-13
   layout: {box: {max: {x: 0.3, y: 1, z: 0.3}, min: {x: -0.3, y: 0, z: -0.3}}}
-  model: /cdn/value.4d7639b0dfacf37e47ef1201a69eafbd014a170f2bd3bdca5b0dbde7946025af.glb
+  model: {id: /cdn/value.4d7639b0dfacf37e47ef1201a69eafbd014a170f2bd3bdca5b0dbde7946025af.glb, materials: {tripo_material_44f9ff0f-9894-49b8-9f56-8e7e0d88da80: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 40}
@@ -636,7 +636,7 @@ l4-prop-14:
   feetPosition: {x: 1.6, y: 0, z: -24.2}
   id: l4-prop-14
   layout: {box: {max: {x: 0.3, y: 1, z: 0.3}, min: {x: -0.3, y: 0, z: -0.3}}}
-  model: /cdn/value.4d7639b0dfacf37e47ef1201a69eafbd014a170f2bd3bdca5b0dbde7946025af.glb
+  model: {id: /cdn/value.4d7639b0dfacf37e47ef1201a69eafbd014a170f2bd3bdca5b0dbde7946025af.glb, materials: {tripo_material_44f9ff0f-9894-49b8-9f56-8e7e0d88da80: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 90}
@@ -648,7 +648,7 @@ l4-prop-15:
   feetPosition: {x: -14.5, y: 0, z: 13}
   id: l4-prop-15
   layout: {box: {max: {x: 0.78, y: 1.5, z: 0.2}, min: {x: -0.78, y: 0, z: -0.2}}}
-  model: /cdn/value.8612285ca3c16cd450c63da8345f8b518cacd0c1c649aeed35deedefa666117b.glb
+  model: {id: /cdn/value.8612285ca3c16cd450c63da8345f8b518cacd0c1c649aeed35deedefa666117b.glb, materials: {tripo_material_469f43ae-87a0-4ed2-bbf8-943092f782e3: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 20}
@@ -660,7 +660,7 @@ l4-prop-16:
   feetPosition: {x: 15.5, y: 0, z: 4.6}
   id: l4-prop-16
   layout: {box: {max: {x: 0.78, y: 1.5, z: 0.2}, min: {x: -0.78, y: 0, z: -0.2}}}
-  model: /cdn/value.8612285ca3c16cd450c63da8345f8b518cacd0c1c649aeed35deedefa666117b.glb
+  model: {id: /cdn/value.8612285ca3c16cd450c63da8345f8b518cacd0c1c649aeed35deedefa666117b.glb, materials: {tripo_material_469f43ae-87a0-4ed2-bbf8-943092f782e3: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 95}
@@ -672,7 +672,7 @@ l4-prop-17:
   feetPosition: {x: -2.5, y: 0, z: -16}
   id: l4-prop-17
   layout: {box: {max: {x: 0.78, y: 1.5, z: 0.2}, min: {x: -0.78, y: 0, z: -0.2}}}
-  model: /cdn/value.8612285ca3c16cd450c63da8345f8b518cacd0c1c649aeed35deedefa666117b.glb
+  model: {id: /cdn/value.8612285ca3c16cd450c63da8345f8b518cacd0c1c649aeed35deedefa666117b.glb, materials: {tripo_material_469f43ae-87a0-4ed2-bbf8-943092f782e3: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 170}
@@ -684,7 +684,7 @@ l4-prop-18:
   feetPosition: {x: 6.8, y: 0, z: 15.2}
   id: l4-prop-18
   layout: {box: {max: {x: 0.78, y: 1.5, z: 0.2}, min: {x: -0.78, y: 0, z: -0.2}}}
-  model: /cdn/value.8612285ca3c16cd450c63da8345f8b518cacd0c1c649aeed35deedefa666117b.glb
+  model: {id: /cdn/value.8612285ca3c16cd450c63da8345f8b518cacd0c1c649aeed35deedefa666117b.glb, materials: {tripo_material_469f43ae-87a0-4ed2-bbf8-943092f782e3: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 60}
@@ -696,7 +696,7 @@ l4-prop-19:
   feetPosition: {x: 25.2, y: 0, z: 9.6}
   id: l4-prop-19
   layout: {box: {max: {x: 0.25, y: 1.32, z: 0.35}, min: {x: -0.25, y: 0, z: -0.35}}}
-  model: /cdn/value.b3235e64d5fc141bdce6e6173694de1b520a094fdead52f6b0f207ad34a5b401.glb
+  model: {id: /cdn/value.b3235e64d5fc141bdce6e6173694de1b520a094fdead52f6b0f207ad34a5b401.glb, materials: {tripo_material_ec6aa51b-2aee-427b-9eec-bdf766565006: {metalness: 0.6, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 90}
@@ -708,7 +708,7 @@ l4-prop-2:
   feetPosition: {x: 13.8, y: 0, z: 11.2}
   id: l4-prop-2
   layout: {box: {max: {x: 0.33, y: 1, z: 0.33}, min: {x: -0.33, y: 0, z: -0.33}}}
-  model: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb
+  model: {id: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb, materials: {tripo_material_0d61672f-fb28-4bf7-bfcd-1b81e8255e5b: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 110}
@@ -720,7 +720,7 @@ l4-prop-20:
   feetPosition: {x: -25.2, y: 0, z: -10.4}
   id: l4-prop-20
   layout: {box: {max: {x: 0.25, y: 1.32, z: 0.35}, min: {x: -0.25, y: 0, z: -0.35}}}
-  model: /cdn/value.b3235e64d5fc141bdce6e6173694de1b520a094fdead52f6b0f207ad34a5b401.glb
+  model: {id: /cdn/value.b3235e64d5fc141bdce6e6173694de1b520a094fdead52f6b0f207ad34a5b401.glb, materials: {tripo_material_ec6aa51b-2aee-427b-9eec-bdf766565006: {metalness: 0.6, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: -90}
@@ -732,7 +732,7 @@ l4-prop-21:
   feetPosition: {x: -9.6, y: 0, z: 25.2}
   id: l4-prop-21
   layout: {box: {max: {x: 0.25, y: 1.32, z: 0.35}, min: {x: -0.25, y: 0, z: -0.35}}}
-  model: /cdn/value.b3235e64d5fc141bdce6e6173694de1b520a094fdead52f6b0f207ad34a5b401.glb
+  model: {id: /cdn/value.b3235e64d5fc141bdce6e6173694de1b520a094fdead52f6b0f207ad34a5b401.glb, materials: {tripo_material_ec6aa51b-2aee-427b-9eec-bdf766565006: {metalness: 0.6, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 180}
@@ -744,7 +744,7 @@ l4-prop-22:
   feetPosition: {x: 10.4, y: 0, z: -25.2}
   id: l4-prop-22
   layout: {box: {max: {x: 0.25, y: 1.32, z: 0.35}, min: {x: -0.25, y: 0, z: -0.35}}}
-  model: /cdn/value.b3235e64d5fc141bdce6e6173694de1b520a094fdead52f6b0f207ad34a5b401.glb
+  model: {id: /cdn/value.b3235e64d5fc141bdce6e6173694de1b520a094fdead52f6b0f207ad34a5b401.glb, materials: {tripo_material_ec6aa51b-2aee-427b-9eec-bdf766565006: {metalness: 0.6, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 0}
@@ -756,7 +756,7 @@ l4-prop-3:
   feetPosition: {x: -3.1, y: 0, z: 21.5}
   id: l4-prop-3
   layout: {box: {max: {x: 0.33, y: 1, z: 0.33}, min: {x: -0.33, y: 0, z: -0.33}}}
-  model: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb
+  model: {id: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb, materials: {tripo_material_0d61672f-fb28-4bf7-bfcd-1b81e8255e5b: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 290}
@@ -768,7 +768,7 @@ l4-prop-4:
   feetPosition: {x: 22.5, y: 0, z: -2.2}
   id: l4-prop-4
   layout: {box: {max: {x: 0.33, y: 1, z: 0.33}, min: {x: -0.33, y: 0, z: -0.33}}}
-  model: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb
+  model: {id: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb, materials: {tripo_material_0d61672f-fb28-4bf7-bfcd-1b81e8255e5b: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 160}
@@ -780,7 +780,7 @@ l4-prop-5:
   feetPosition: {x: -21.6, y: 0, z: -12.4}
   id: l4-prop-5
   layout: {box: {max: {x: 0.33, y: 1, z: 0.33}, min: {x: -0.33, y: 0, z: -0.33}}}
-  model: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb
+  model: {id: /cdn/value.2ec9e206b3b1212e56cf0322ecf16fdc333ddacb4a2ba21e00ddff32920705c6.glb, materials: {tripo_material_0d61672f-fb28-4bf7-bfcd-1b81e8255e5b: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 60}
@@ -792,7 +792,7 @@ l4-prop-6:
   feetPosition: {x: -13.2, y: 0, z: -21.5}
   id: l4-prop-6
   layout: {box: {max: {x: 0.275, y: 0.75, z: 0.225}, min: {x: -0.275, y: 0, z: -0.225}}}
-  model: /cdn/value.e5ed56b84bef188cc6c3ecde7d4ce92d9b7e95cde01ecf07f0d78964da71ec57.glb
+  model: {id: /cdn/value.e5ed56b84bef188cc6c3ecde7d4ce92d9b7e95cde01ecf07f0d78964da71ec57.glb, materials: {tripo_material_3ee01d45-c98f-4e24-8a96-018f5680a63e: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 12}
@@ -804,7 +804,7 @@ l4-prop-7:
   feetPosition: {x: -12.4, y: 0, z: -20.9}
   id: l4-prop-7
   layout: {box: {max: {x: 0.28, y: 0.5, z: 0.25}, min: {x: -0.28, y: 0, z: -0.25}}}
-  model: /cdn/value.9bfec9af129aaa4b7b4c57556bba6dbf864c015f8141f3dc12d500fc2a08d32b.glb
+  model: {id: /cdn/value.9bfec9af129aaa4b7b4c57556bba6dbf864c015f8141f3dc12d500fc2a08d32b.glb, materials: {tripo_material_d8def8be-7204-458f-9488-9b06888925c9: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 70}
@@ -816,7 +816,7 @@ l4-prop-8:
   feetPosition: {x: 21.2, y: 0, z: 13.4}
   id: l4-prop-8
   layout: {box: {max: {x: 0.275, y: 0.75, z: 0.225}, min: {x: -0.275, y: 0, z: -0.225}}}
-  model: /cdn/value.e5ed56b84bef188cc6c3ecde7d4ce92d9b7e95cde01ecf07f0d78964da71ec57.glb
+  model: {id: /cdn/value.e5ed56b84bef188cc6c3ecde7d4ce92d9b7e95cde01ecf07f0d78964da71ec57.glb, materials: {tripo_material_3ee01d45-c98f-4e24-8a96-018f5680a63e: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: -20}
@@ -828,7 +828,7 @@ l4-prop-9:
   feetPosition: {x: 3.6, y: 0, z: 4.1}
   id: l4-prop-9
   layout: {box: {max: {x: 0.28, y: 0.5, z: 0.25}, min: {x: -0.28, y: 0, z: -0.25}}}
-  model: /cdn/value.9bfec9af129aaa4b7b4c57556bba6dbf864c015f8141f3dc12d500fc2a08d32b.glb
+  model: {id: /cdn/value.9bfec9af129aaa4b7b4c57556bba6dbf864c015f8141f3dc12d500fc2a08d32b.glb, materials: {tripo_material_d8def8be-7204-458f-9488-9b06888925c9: {metalness: 0, roughness: 0.8}}}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 33}
