@@ -53,9 +53,9 @@ bpy.ops.object.datalayout_transfer(modifier='dt'); bpy.ops.object.modifier_apply
 bpy.data.objects.remove(src)
 for p in g.data.polygons: p.use_smooth = True
 # take the old slot's place: name, material, rig
-g.data.materials.clear()
-for m in mats: g.data.materials.append(m)
-for p in g.data.polygons: p.material_index = 0
+# tripo's own material (its UVs match it), renamed to the slot name the game tints; the old texture smeared on the new UVs
+tm = g.data.materials[0]; oldm = mats[0]; nm = oldm.name; oldm.name = nm + '_old'; tm.name = nm
+print('material', nm)
 oldname = old.name; bpy.data.objects.remove(old); g.name = oldname
 g.parent = rig; am = g.modifiers.new('Armature', 'ARMATURE'); am.object = rig
 print('groups', len(g.vertex_groups), 'tris', sum(len(p.vertices) - 2 for p in g.data.polygons))
