@@ -195,6 +195,8 @@ function xferCard(s, now) {
   return `<style>@keyframes xferOut{0%,45%{opacity:1}100%{opacity:0;visibility:hidden}}</style><div id="xfer${x.at}" style="position:absolute;inset:0;background:#050403;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:xferOut 2.4s forwards;color:#f2c14e;text-shadow:2px 2px #000"><div style="font-size:44px;letter-spacing:.2em">${a}</div><div style="font-size:18px;letter-spacing:.3em;opacity:.75;margin-top:6px">${b}</div></div>`
 }
 const TALKERS = ['meg-ale', 'meg-ortiz', 'meg-callum', 'surv-wren', 'surv-hollis', 'surv-mags', 'omega-okafor', 'omega-rhea', 'hk-constance', 'hk-vance', 'homely-barnaby', 'homely-auguste', 'l5-samantha', 'l5-ambrose', 'l5-dolores', 'l5-pip', 'l5-odette', 'l5-harlan', 'l5-vesna', 'l5-tobias', 'l5-imani', 'l5-millie', 'l5-whitlock', 'l5-vanderholt', 'l5-zelda', 'l5-wat', 'l11-meg-agent-vance', 'l11-trader-kael', 'l11-commuter-faceling', 'l11-walker-1', 'l11-walker-2', 'l11-walker-3']
+// everyone who can bark: the named camp crews above plus any npc with a fresh line, so a combat shout always gets its bubble and subtitle
+const speakers = (objs) => { const ids = new Set(TALKERS); for (const id in objs) { if (!ids.has(id) && !id.includes('/') && objs[id]?.tags?.includes?.('npc') && objs[id].state?.line) ids.add(id) } return ids }
 const CB_CACHE = { at: 0, html: '' }
 function chatBubbles(ctx, now, player) {
   if (now - CB_CACHE.at < 120) return CB_CACHE.html
@@ -202,9 +204,12 @@ function chatBubbles(ctx, now, player) {
   const objs = ctx.place?.objects
   if (!objs) return (CB_CACHE.html = '')
   let h = ''
-  for (const id of TALKERS) {
+  let nb = 0
+  for (const id of speakers(objs)) {
     const o = objs[id], l = o?.state?.line
     if (!l || now - l.at > l.d || o.state?.dead) continue
+    if (player?.feetPosition && o.feetPosition && Math.hypot(o.feetPosition.x - player.feetPosition.x, o.feetPosition.z - player.feetPosition.z) > 28) continue
+    if (++nb > 5) break
     if (o.place && player?.place && o.place !== player.place) continue
     const who = String(o.state.name ?? '').split(' ·')[0]
     h += `<div data-world-anchor="${id}" data-anchor-offset="0 2.05 0" style="transform:translate(-50%,-100%);opacity:clamp(0,calc(1.6 - var(--anchor-depth,0) / 14),1)"><div id="cb${l.at}" style="max-width:260px;padding:6px 10px;background:oklch(0.16 0.02 80 / .88);border:1px solid oklch(0.7 0.12 85 / .55);color:oklch(0.93 0.03 90);font-size:14px;line-height:1.3;animation:hud-pop .18s ease-out"><span style="color:oklch(0.8 0.13 85);font-size:11px;letter-spacing:.06em">${esc(who.toUpperCase())}</span><br>${esc(l.t)}</div></div>`
@@ -219,7 +224,7 @@ function subtitles(ctx, player, now) {
   SUB_CACHE.at = now
   const rows = [], s = player.state ?? {}, me = player.feetPosition, objs = ctx.place?.objects
   if (s.talkWith) return (SUB_CACHE.html = '') // the open talk card already shows the line
-  if (objs && me) for (const id of TALKERS) {
+  if (objs && me) for (const id of speakers(objs)) {
     const o = objs[id], l = o?.state?.line
     if (!l || now - l.at > l.d || o.state?.dead) continue
     if ((o.place && player.place && o.place !== player.place) || Math.hypot(o.feetPosition.x - me.x, o.feetPosition.z - me.z) > 12) continue // same level, in earshot

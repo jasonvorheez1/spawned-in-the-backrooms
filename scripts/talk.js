@@ -406,7 +406,7 @@ function cine(ctx, s) {
 }
 
 // combat breaks a conversation (like New Vegas): you get hurt, the one you talk to is fighting or hurt, or a hostile closes in
-const FOES = ['hound', 'stealer', 'smiler', 'lurker', 'l5rat', 'l3rat', 'l5staff', 'hostile', 'moth']
+const FOES = ['hound', 'stealer', 'smiler', 'lurker', 'l5rat', 'l3rat', 'l5staff', 'hostile', 'moth', 'moths', 'l8spider', 'l8-hostile', 'zdrone', 'l11foe', 'l7beast', 'l10worm']
 function combat(ctx, it, ses) {
   const s = ctx.self.state, hp = s.hp ?? 0, ihp = it.state?.hp ?? 0
   const hurt = ses.tkHp != null && hp < ses.tkHp - 0.5, ihurt = ses.tkIt === it.id && ses.tkIhp != null && ihp < ses.tkIhp - 0.5
