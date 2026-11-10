@@ -90,7 +90,7 @@ const maxHp = (lv, s) => L.hp + (lv - 1) * L.perLevel.hp + (s?.attr ? derived(s)
 const maxSan = (lv, s) => L.sanity + (lv - 1) * L.perLevel.sanity + (s?.attr ? derived(s).sanBonus : 0)
 
 function bar(label, cur, max, color, valText = '', left = false) {
-  const pct = Math.max(0, Math.min(100, (cur / max) * 100))
+  const pct = Math.round(Math.max(0, Math.min(100, (cur / max) * 100))) // whole percents: a drifting stat restyles the bar only when it moves a step
   return `<div style="margin-top:6px">
     <div class="row"><span>${label}</span><span style="font-size:11px">${valText}</span></div>
     <div class="fb${left ? ' l' : ''}"><div class="fbi" style="${left ? 'display:flex;justify-content:flex-end' : ''}"><div class="fbf" style="width:${pct}%;--c:${color}"></div></div></div>
