@@ -99,8 +99,10 @@ export const reqText = (w) => (w?.req ? [w.req.h ? `HAR ${w.req.h}` : '', w.req.
 // a broken mind: at 0 sanity every attribute but Luck reads 2 lower (min 1) until sanity comes back (Savi's pick)
 export const isBroken = (s) => s?.sanity != null && s.sanity <= 0
 function shaken(a, s) { if (!isBroken(s)) return a; const o = { ...a }; for (const k of Object.keys(o)) if (k !== 'l') o[k] = Math.max(1, o[k] - 2); return o }
+const sneakFromSkill = (skill) => Math.max(0.35, 1 - (skill - 15) * 0.0065)
+export const sneakMul = (s) => sneakFromSkill(skillsOf(s).sneak)
 export function derived(s) {
-  const a = shaken(attrsOf(s), s), k = skillsOf(s)
+  const raw = attrsOf(s), a = shaken(raw, s), k = skillsOf(s)
   return {
     hpBonus: (a.e - 5) * 10,
     sanBonus: (a.n - 5) * 8,
@@ -111,13 +113,14 @@ export function derived(s) {
     speed: 1 + (a.a - 5) * 0.025,
     swing: 1 - (a.a - 5) * 0.03 - (k.unarmed - 15) * 0.0015,
     reload: Math.max(0.5, 1 - (a.a - 5) * 0.03 - (k.guns - 15) * 0.002),
-    melee: dmgMul(s, { damage: 1 }),
-    gun: dmgMul(s, { ranged: true }),
+    // These baseline weapons have no handling requirements; reuse the sheet already calculated.
+    melee: (1 + (raw.h - 5) * 0.06) * skillMul(k.melee),
+    gun: (1 + (raw.o - 5) * 0.04) * skillMul(k.guns),
     crit: 0.03 + a.l * 0.012,
     scav: Math.min(0.5, a.l * 0.012), // the chance of one extra find in a container
     clothFind: 0.5 + a.o * 0.07 + a.l * 0.03, // Observation (Perception) spots the wearable, Luck helps: x1 at O5 L5, x1.35 at O10 (Savi's pick)
     dr: wornDR(s?.look), // damage resistance from worn clothes (scripts/lib/data/clothes.yml)
-    sneak: Math.max(0.35, 1 - (k.sneak - 15) * 0.0065),
+    sneak: sneakFromSkill(k.sneak),
     heal: D.healMul * (1 + (k.survival - 15) * 0.006), // almond water, rations
     healMed: D.healMul * (1 + (k.medicine - 15) * 0.008), // bandages and the medic
     drain: Math.max(0.4, 1 - (a.n - 5) * 0.04 - (k.survival - 15) * 0.002),

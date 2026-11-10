@@ -8,7 +8,7 @@ import { heard } from "./lib/hear.js";
 import L from "./lib/data/level1.yml";
 import { zoneAt, safeZone, cellCenter, N } from "./lib/level1.js";
 import { zoneAt as zoneAt2 } from "./lib/level2.js";
-import { npcMul, derived, dmgAfterArmor } from "./lib/stats.js";
+import { npcMul, sneakMul, dmgAfterArmor } from "./lib/stats.js";
 import { zoneAt as zoneAt3, cellAt as cellAt3, cellCenter as cellCenter3, openings as openings3 } from "./lib/level3.js";
 import { zoneAt as zoneAt5 } from "./lib/level5.js";
 import { stepToward as stepToward1 } from "./lib/maze1path.js";
@@ -19,7 +19,7 @@ import { stepToward as stepTowardBoiler } from "./lib/boilerpath.js";
 import { stepToward6 } from "./lib/level6path.js";
 import C from "./lib/data/creatures3.yml";
 const H3 = C.hounds3;
-const sn = (p) => (p?.state?.attr ? derived(p.state).sneak : 1);
+const sn = (p) => (p?.state?.attr ? sneakMul(p.state) : 1);
 const SND = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
 
 function hasClearSight(ctx,a,b,ignoreId,targetId) {

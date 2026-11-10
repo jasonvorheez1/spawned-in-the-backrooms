@@ -13,9 +13,9 @@ import L from "./lib/data/level0.yml";
 import { cellAt, cellCenter as cellMid, openPoint, hasPillar, inHub, wallX, wallZ, hasPit, N } from "./lib/maze.js";
 const cellCenter = openPoint; // every standing spot this pack picks is clear of the cell's pillar
 import { stepToward as stepToward0 } from "./lib/maze0path.js";
-import { npcMul, derived, dmgAfterArmor } from "./lib/stats.js";
+import { npcMul, sneakMul, dmgAfterArmor } from "./lib/stats.js";
 
-const sn = (p) => (p?.state?.attr ? derived(p.state).sneak : 1) * crouchMul(p); // sneak skill, and a crouch hides you (scripts/lib/sneak.js)
+const sn = (p) => (p?.state?.attr ? sneakMul(p.state) : 1) * crouchMul(p); // sneak skill, and a crouch hides you (scripts/lib/sneak.js)
 
 export const MODEL = {
   id: "/cdn/value.fb443f6a23bcd4977c437db42b3f9abe2510fcb6cf2076ee4956fb235d581b26.glb",
