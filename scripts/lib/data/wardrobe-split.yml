@@ -151,7 +151,7 @@ f:
     Ward_sneakers: "/cdn/value.083337f34911f4f1836abef679de9ed4e846810589bdce667a73645b477705ed.glb"
     Ward_souwester: "/cdn/value.d80f77addf13320700def93870ee8cad496f6fa9643e657e01f5d438511e2acf.glb"
     Ward_steeltoe: "/cdn/value.435a70abab644f39a398045107e71a2233da4e58993116c4ab8923d53c531ced.glb"
-    Ward_sweater: "/cdn/value.4f051eb53d1b46bbd996cc304730b5e76932da8d164ffea6f99fbe5d78d528f4.glb"   # Tripo remesh fitted to the redo body (art/cloth-redo, Shelly #178061); before: c95bd7ab
+    Ward_sweater: "/cdn/value.c95bd7ab1de6591fbf53f473aaccf2429bf045409cebd0c917d5884df1c7260b.glb"   # next: 4f051eb5 (Tripo remesh fitted to the redo body, art/cloth-redo) goes in once Shelly oks the redo body
     Ward_tailcoat: "/cdn/value.50e57d85c094f2d5a7713404eadcfc4d84c977e37a4b033635efe383a595fd97.glb"
     Ward_tank: "/cdn/value.27ca0667db4a49c1adb4fea89eb696f0432ad4956f90af946c254ecc98cf19f4.glb"
     Ward_tarwaders: "/cdn/value.4b89e42b3ad9a1e12ba8d96f4d4aa0468ef6f0506cd68267a1d0257a44d55019.glb"
