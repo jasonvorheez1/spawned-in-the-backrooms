@@ -154,6 +154,7 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     bmesh.ops.delete(hb, geom=[v for v in hb.verts if not v.link_faces], context="VERTS")
     hb.normal_update()
     for v in hb.verts: v.co += v.normal * 0.003
+    nh = len(me.polygons)  # faces past nh are the scalp cap: a hatted copy keeps them so no skin shows under the brim
     bm2 = bmesh.new(); bm2.from_mesh(me); hb.to_mesh(cap); bm2.from_mesh(cap); bm2.to_mesh(me); bm2.free(); hb.free()
     me.materials.clear(); me.materials.append(mat)
     for p in me.polygons: p.use_smooth = True
@@ -161,7 +162,7 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
         m = me.copy()
         if hat:
             bm = bmesh.new(); bm.from_mesh(m); line = top - 0.075
-            bmesh.ops.delete(bm, geom=[fc for fc in bm.faces if any(v.co.z > line for v in fc.verts)], context="FACES")
+            bm.faces.ensure_lookup_table(); bmesh.ops.delete(bm, geom=[fc for fc in bm.faces if fc.index < nh and any(v.co.z > line for v in fc.verts)], context="FACES")
             bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS"); bm.to_mesh(m); bm.free()
         o = bpy.data.objects.new(NAMES[stem], m); bpy.context.scene.collection.objects.link(o)
         vg = o.vertex_groups.new(name="Head"); vg.add(list(range(len(m.vertices))), 1.0, "REPLACE")
