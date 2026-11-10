@@ -90,7 +90,7 @@ function build(ctx) {
   ctx.spawn("tl-lamp", { feetPosition: { x: 3, y: 2.5, z: 8.6 }, primitive: { kind: "sphere", radius: 0.12 }, material: { color: "oklch(0.95 0.05 90)", emissive: "oklch(0.9 0.1 90)", emissiveIntensity: 3 }, light: { kind: "point", color: "oklch(0.92 0.09 85)", intensity: 3, distance: 9 }, castShadow: false });
   spawnProp(ctx, "stackchair", { x: -3, z: 11 }, 180, { id: "tl-seat", tags: ["seat"], state: { name: "Chair", hp: 99999, maxHp: 99999, c: { x: -3, y: 0.5, z: 11 }, seat: { d: 0.05, out: { x: 0, z: 0.7 }, y: 0.02 } } });
   container(ctx, "tl-cabinet", "cabinet", "Supply cabinet", CABINET, 5, 11.5, 180, [0.9, 1.1, 0.42]);
-  ctx.spawn("tl-terminal", { tags: ["usable"], feetPosition: { x: 0, y: 0, z: 15 }, rotation: { yaw: 0 }, model: { id: PROPS.kinds.fuse.id, forward: PROPS.forward }, layout: fitBox([0.6, 1.4, 0.3]), physics: { body: "static", collider: "box" }, behavior: "scripts/testlab-use.js", state: { kind: "terminal", name: "Range terminal", verb: "Use", c: { x: 0, y: 1, z: 15 } } });
+  ctx.spawn("tl-terminal", { tags: ["usable"], feetPosition: { x: 0, y: 0, z: 15 }, rotation: { yaw: 0 }, model: { id: PROPS.kinds.fuse.id, forward: PROPS.forward }, layout: fitBox([0.6, 1.4, 0.3]), physics: { body: "static", collider: "box" }, behavior: "scripts/testlab-use.js", state: { kind: "terminal", name: "Range terminal", verb: "Use", c: { x: 0, y: 1.3, z: 15 } } });
   ctx.spawn("tl-terminal-sign", { feetPosition: { x: 0, y: 1.9, z: 15 }, rotation: { yaw: 180 }, vector: sign("RANGE CHECK · E", 1.6) });
   // physics bay
   physSpawn(ctx);
