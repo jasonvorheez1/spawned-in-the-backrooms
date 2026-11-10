@@ -25,6 +25,7 @@ for g in [o for o in new if o.type == 'MESH' and o.vertex_groups]:
     mods = [x for x in g.modifiers if x.type == 'ARMATURE']
     bpy.ops.object.modifier_move_to_index(modifier='wt', index=0)
     bpy.ops.object.modifier_apply(modifier='wt')  # works with shape keys: data transfer writes weights only
+    bpy.ops.object.mode_set(mode='WEIGHT_PAINT'); bpy.ops.object.vertex_group_smooth(group_select_mode='ALL', factor=0.6, repeat=int(a[3]) if len(a) > 3 else 12); bpy.ops.object.mode_set(mode='OBJECT')  # cloth bends broader than skin: no crumple where arm and chest weights meet
     bpy.ops.object.vertex_group_normalize_all(lock_active=False)
     bpy.ops.object.vertex_group_limit_total(limit=4)
     used = {g.vertex_groups[gg.group].name for v in g.data.vertices for gg in v.groups if gg.weight > 0}
