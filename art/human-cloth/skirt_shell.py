@@ -39,6 +39,13 @@ def rings(P):
             rad = sup + T + FLARE * (waistz - z) * (1.0 if r else 0.0)
             ring.append(Vector((cx + d.x * rad, cy + d.y * rad, z)))
         out.append(ring)
+    # smooth down each column: the support steps where a new bulge enters the band; cloth hangs over those as one curve
+    for _ in range(6):
+        for i in range(SEG):
+            c = [out[r][i].copy() for r in range(len(out))]
+            for r in range(1, len(out) - 1):
+                cen = Vector((cx, cy, c[r].z)); m = ((c[r - 1] - Vector((cx, cy, c[r - 1].z))).length + 2 * (c[r] - cen).length + (c[r + 1] - Vector((cx, cy, c[r + 1].z))).length) / 4
+                out[r][i] = cen + (c[r] - cen).normalized() * max(m, (c[r] - cen).length - 0.004)
     # smooth around each ring so the support's corners don't read as facets
     for ring in out:
         for _ in range(2):
