@@ -24,3 +24,6 @@ test('equipment binds and unavailable equipment retains its slot',()=>{
  expect(quickItems(s).find(x=>x.id==='weapon:pistol').count).toBe(0)
  expect(s.quickSlots[1]).toBe('weapon:pistol')
 })
+test('malformed saved quick slots do not break the inventory',()=>{
+ expect(()=>quickItems({quickSlots:{0:null,1:42}})).not.toThrow()
+})
