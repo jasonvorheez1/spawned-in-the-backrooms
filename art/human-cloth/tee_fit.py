@@ -32,6 +32,8 @@ for o in bpy.data.objects:
         m.use_nodes = True; m.node_tree.nodes['Principled BSDF'].inputs[0].default_value = m.diffuse_color
         o.data.materials.clear(); o.data.materials.append(m)
         if o.name.startswith('Icosphere'): o.hide_render = True
+        # the body as the game draws it under a tee: only these skin regions show
+        if o not in garm and o.name not in ('Skin_forearms', 'Skin_hands', 'Skin_neck', 'Skin_thigh_hi', 'Skin_hips', 'Head', 'Skin_head'): o.hide_render = True
 dg = bpy.context.evaluated_depsgraph_get()
 pts = [o.matrix_world @ v.co for o in garm for v in o.evaluated_get(dg).data.vertices]
 c = sum(pts, mathutils.Vector()) / len(pts); top = max(p.z for p in pts)
