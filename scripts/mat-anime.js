@@ -17,6 +17,7 @@ export function material(ctx) {
   if (kind === "skin") {
     const pores = mx_noise_float(g.mul(420)).mul(0.5).add(0.5), mottle = mx_fractal_noise_float(g.mul(9)).mul(0.5).add(0.5);
     col = base.mul(float(0.95).add(pores.mul(0.05))).mul(vec3(1.0, float(0.97).add(mottle.mul(0.03)), float(0.96).add(mottle.mul(0.04))));
+    const lum = dot(col, vec3(0.3, 0.59, 0.11)); col = col.mul(0.72).add(vec3(lum, lum, lum).mul(0.28)); // a quarter toward grey: the Backrooms' yellow light and grade double the warmth, tan read orange (Shelly, Nov 10)
     // subsurface: the edge that turns away from the eye flushes warm, as light through a cheek or a knuckle does
     const sss = smoothstep(0.15, 0.75, float(1).sub(ndv)).mul(smoothstep(1.0, 0.85, float(1).sub(ndv)));
     glow = base.mul(vec3(0.85, 0.6, 0.55)).mul(sss).mul(0.08); // a living warmth under even the palest skin
