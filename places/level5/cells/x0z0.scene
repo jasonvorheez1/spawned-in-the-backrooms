@@ -4029,11 +4029,12 @@ l5-nvg-case:
   behavior: scripts/l5-goggles.js
   castShadow: false
   children: [{castShadow: false, feetPosition: {x: 0, y: 0.22, z: 0}, material: {color: oklch(0.2 0 0), metalness: 0.6, roughness: 0.55}, primitive: {depth: 0.05, height: 0.04, kind: box, width: 0.2}, visibleRange: {max: 40, min: 0}}, {feetPosition: {x: 0, y: 0.3, z: 0}, light: {color: oklch(0.8 0.15 145), distance: 2.5, intensity: 0.25, kind: point}}]
+  children.child-0: null
   feetPosition: {x: 31.5, y: 0, z: 23.4}
   id: l5-nvg-case
-  material: {color: oklch(0.45 0.09 75), metalness: 0.6, roughness: 0.55}
-  physics: static
-  primitive: {depth: 0.36, height: 0.22, kind: box, width: 0.55}
+  layout: {box: {max: {x: 0.28, y: 0.22, z: 0.19}, min: {x: -0.28, y: 0, z: -0.19}}}
+  model: {id: /cdn/value.f9c90e939dbc4cd25eccee303bc20d9844c0d1fbdea94947c97a0dabe7749e59.glb}
+  physics: {body: static, collider: box}
   rotation: {yaw: 25}
   state: {info: "INES · M.E.G. MAINT.", kind: case, name: Ines's goggle case, verb: Check}
   tags: [usable]
