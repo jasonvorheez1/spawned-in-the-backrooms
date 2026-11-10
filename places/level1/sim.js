@@ -99,12 +99,13 @@ export function tick(ctx) {
     for (const [dx, dz, col] of [[6, 4.2, "oklch(0.85 0.12 75)"], [6, -4.2, "oklch(0.85 0.12 75)"], [13, 0, "oklch(0.92 0.04 220)"]]) ctx.spawn({ feetPosition: { x: a.x + dx, y: 2.3, z: a.z + dz }, visibleRange: { max: 42 }, light: { kind: "point", color: col, intensity: 2.5, distance: 9, shadow: { enabled: false } } });
     for (const [id, dx, dz] of AGENTS) ctx.spawn(id, agentSpec(a, id, dx, dz));
   }
-  if (s.megCamp && s.megTripo !== 1) { s.megTripo = 1; // the camp's tents, cots, table, stove, sandbags and pallets as real models (Shelly: less blocky)
+  if (s.megCamp && s.megTripo !== 2) { s.megTripo = 2; // the camp's tents, cots, table, stove, sandbags and pallets as real models (Shelly: less blocky)
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz), camp = ctx.place.objects["meg-camp"]
     if (camp) camp.primitive = { kind: "scripted", script: "scripts/meg-camp-geo.js", params: { tripo: true } }
     const M = { tent: "/cdn/value.876d02a55c4b5fe879189ef5684d6e5d4836e9e5f6b7295f7e9b0b85ad9f7b58.glb", cot: "/cdn/value.7c6ab929e07fc61864842584ca2d254442f6dc31bfa7d2e2b9e4e3f48588f485.glb", table: "/cdn/value.c015312d6391f45684bfd1e30ad93c9391f659d879584af998cf53decc1613de.glb", stove: "/cdn/value.330d65cefe10f77c51d0fea1858662db291a4746b272dfdc2f81d21c681479f7.glb", bags: "/cdn/value.3ef438addb021fb2564e48689de4b5281d9464d3a65b502624bd0244ce8cad87.glb", pallet: "/cdn/value.e55e3090a6f8a13ae4db1cc993f62b0f07ee7a16a6c05c0fccde459bf7f1d9f8.glb" }
     const put = (id, m, dx, dz, w, h, yaw, solid = true) => ctx.spawn(id, { feetPosition: { x: a.x + dx, y: 0, z: a.z + dz }, rotation: { yaw }, model: { id: M[m] }, layout: { box: { min: { x: -w / 2, y: 0, z: -w / 2 }, max: { x: w / 2, y: h, z: w / 2 } } }, physics: solid ? (m === "tent" ? { body: "static", collider: "mesh" } : "static") : undefined, visibleRange: { max: 70 } }) // tents: mesh colliders so the door is a door (Shelly: "i cant get in tents")
-    put("meg-t-tent-n", "tent", 8.5, 6.5, 4.2, 2.4, 90); put("meg-t-tent-s", "tent", 8.5, -6.5, 4.2, 2.4, 90); put("meg-t-tent-med", "tent", 13, 0, 6, 3.0, 90)
+    put("meg-t-tent-n", "tent", 8.5, 6.5, 4.2, 2.4, 90, false); put("meg-t-tent-s", "tent", 8.5, -6.5, 4.2, 2.4, 90, false); put("meg-t-tent-med", "tent", 13, 0, 6, 3.0, 90, false)
+    tentWalls(ctx, a) // canvas sides solid, both ends open: you walk in (Shelly: "i cant get in tents")
     put("meg-t-cot-0", "cot", 5.5, 3.2, 2.0, 0.6, 0); put("meg-t-cot-1", "cot", 5.5, -3.2, 2.0, 0.6, 0); put("meg-t-cot-2", "cot", 11.6, 1.6, 2.0, 0.6, 0)
     put("meg-t-table", "table", 6.4, -0.5, 1.6, 1.4, 0); put("meg-t-stove", "stove", 9.5, -2.8, 0.75, 1.0, 30)
     for (const [i, dx, dz] of [[0, 14.5, 5.5], [1, 14.5, -5.5], [2, 11, -9], [3, 11, 9]]) put("meg-t-pallet-" + i, "pallet", dx + 0.35, dz, 1.3, 1.4, i * 20)
@@ -225,6 +226,11 @@ function placeOne(ctx) {
 }
 // rack stock (Shelly: "the stock could be useable too"): cartons and paint pails on the rack decks, each one searchable.
 // Laid once per place; the shelf bins keep their own slots (k at the bay middle is skipped, crates sit at ±0.75/2.2).
+// the tents' long canvas sides as invisible walls; the door ends stay open
+function tentWalls(ctx, a) {
+  for (const [k, dx, dz, hw, hd, h] of [["n", 8.5, 6.5, 1.66, 2.1, 2.1], ["s", 8.5, -6.5, 1.66, 2.1, 2.1], ["med", 13, 0, 2.37, 3, 3]])
+    for (const sx of [-1, 1]) ctx.spawn("meg-t-tentwall-" + k + (sx > 0 ? "e" : "w"), { feetPosition: { x: a.x + dx + sx * (hw - 0.25), y: 0, z: a.z + dz }, primitive: { kind: "box", width: 0.5, height: h * 0.7, depth: hd * 2 }, visible: false, physics: "static" })
+}
 function layStock(ctx) {
   const PAILS = ["oklch(0.88 0.01 250)", "oklch(0.55 0.13 250)", "oklch(0.6 0.16 30)"];
   let n = 0;
