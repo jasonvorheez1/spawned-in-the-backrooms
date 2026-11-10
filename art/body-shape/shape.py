@@ -42,7 +42,7 @@ def run(sex, src, out, fld):
         # torso: x-scale bands by height, off past the shoulder joint so the arm root and shoulder tip never peak
         y = Pw[:, 1]; ax_ = np.abs(Pw[:, 0]); inside = 1 - ss(xA * .7, xA * 1.05, ax_)
         waist = ss(yS - .06, yS + .02, y) * (1 - ss(yS1 + .02, yS1 + .10, y))
-        chest = ss(yS1, yS2, y) * (1 - ss(yN - .10, yN - .02, y))
+        chest = ss(yS2 - .02, yS2 + .09, y) * (1 - ss(yN - .07, yN - .01, y))   # armpit height up: started at Spine1 it read as a belly
         f = (A['waist'] * waist + A['chest'] * chest) * inside
         D[:, 0] += f * Pw[:, 0]; D[:, 2] += .35 * A['chest'] * chest * inside * Pw[:, 2] * (Pw[:, 2] < 0)   # a man's back fills a little behind, no front change to the chest
         Dl = np.einsum('vij,vj->vi', np.linalg.inv(M[:, :3, :3]), D); NP = P + Dl; put(d, off, st, NP)
