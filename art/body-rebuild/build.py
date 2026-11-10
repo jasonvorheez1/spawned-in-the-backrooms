@@ -78,7 +78,7 @@ if MALE:
         x, y, z = v.co; sg = 1 if x >= 0 else -1; A = arm[i]; T = 1 - A
         x = x * (1 + .26 * bump(1.3, 1.42, 1.5, 1.57, z) * T) + sg * SH * A          # broad shoulders and upper chest
         x *= 1 - .13 * bump(.82, .92, 1.12, 1.24, z) * T                           # narrower hips, straighter waist
-        x *= 1 + .07 * bump(1.12, 1.2, 1.26, 1.32, z) * T                          # thicker waist (no hourglass)
+        x *= 1 + .16 * bump(1.1, 1.2, 1.28, 1.36, z) * T                          # thicker waist (no hourglass)
         band = bump(1.2, 1.25, 1.44, 1.49, z) * (1 - sm(.1, .17, abs(x))) * T     # flat chest: front clamped to the line, a slight pec
         line = yb + (yt - yb) * (z - 1.21) / .26 + .008 * bump(1.32, 1.37, 1.42, 1.46, z) * bump(.01, .04, .09, .12, abs(x))
         if y > line: y = y + (line - y) * band
