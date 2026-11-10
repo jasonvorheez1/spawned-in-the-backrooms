@@ -46,6 +46,7 @@ const MESH = { // kind: [model, offset y, scale, the mesh's material slot]
   fire_axe:   ["/cdn/value.4cfc50ea098875687d7a11fbd93a6b8adc191957807e0b002f30007a8eead02e.glb", 0.008, 0.62, "tripo_material_3cfa6f0b-ba20-4b5f-9185-3a08bf3967ed"],
   pistol:     ["/cdn/value.bd1a0ff99d2e34491523ee49853ebddcbe4ec10b685abfb66bab58f6db1cbb00.glb", -0.064, 0, "tripo_material_b831ab79-8033-43a9-83a4-7a26d07345fd"],
   laser_pistol: ["/cdn/value.afc92601e16196774888d48d52c9190c30da80702539c50ed1b91b9ecc55ce69.glb", -0.064, 0, "tripo_material_f3f04c5a-c731-4a15-be64-91e2d56cb4f6", null, -0.034], // Tripo ZL-2 re-baked into the pistol's frame (art/zl2/build.py): grip where the pistol's grip is, 26 cm long
+  raygun: ["/cdn/value.f78423b01c71d65f4b04e41bf27a0b3c5f3b06820933ae52d304cad136a54db5.glb", -0.064, 0, "tripo_material_8bf6ffb4-cb81-461e-b4da-146b73330a4d", null, -0.034], // Tripo R-55 re-baked into the ZL-2 frame (art/r55/build.py)
   shotgun:    ["/cdn/value.104163217085585686f5b41208ef60d422b0c1836d7ef20078f129b016e8fdaf.glb", -0.18, 0, "tripo_material_7b83893e-ced9-4331-b685-1a4a787052e6"],
 };
 // each mesh's box centre in the scripted frame (x, z), from art/weapons/fit.json
