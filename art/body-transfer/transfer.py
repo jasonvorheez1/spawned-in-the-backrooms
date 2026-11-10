@@ -43,8 +43,8 @@ def weight(p):
     w = 1 - ss(NECK0, NECK1, p.z)
     if p.z > J['LeftArm'][0].z - .25: w *= 1 - ss(WR - .07, WR - .015, abs(p.x))
     if SEX == 'm':  # his chest stays the game's flat one: the rebuilt base still carries the female bust there
-        cz = (J['Spine1'][0].z + J['LeftArm'][0].z) / 2; sy = J['Spine2'][0].y
-        w *= 1 - (1 - ss(.10, .17, abs(p.x))) * (1 - ss(.07, .13, abs(p.z - cz))) * ss(sy + .02, sy - .04, p.y)
+        cz = J['LeftArm'][0].z - .07; sy = J['Spine2'][0].y
+        w *= 1 - (1 - ss(.10, .17, abs(p.x))) * (1 - ss(.09, .16, abs(p.z - cz))) * ss(sy + .02, sy - .04, p.y)
     return w
 body = [o for o in game if o.type == 'MESH' and (o.name == 'Body' or o.name.startswith('Skin_'))]
 pts, dl, own = [], [], []
@@ -60,10 +60,10 @@ for o in body:
 kd = KDTree(len(pts))
 for i, p in enumerate(pts): kd.insert(p, i)
 kd.balance()
-for it in range(4):
+for it in range(8):
     nd = []
     for i, p in enumerate(pts):
-        nb = kd.find_range(p, .018); acc = Vector(); ws = 0
+        nb = kd.find_range(p, .028); acc = Vector(); ws = 0
         for _, j, dd in nb: ww = 1 / (dd + .004); acc += dl[j] * ww; ws += ww
         nd.append(acc / ws if ws else dl[i])
     dl = [nd[i] * (1 if weight(pts[i]) > .001 else 0) for i in range(len(pts))]
