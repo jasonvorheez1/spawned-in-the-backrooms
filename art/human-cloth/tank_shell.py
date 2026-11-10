@@ -15,7 +15,7 @@ for o in list(bpy.data.objects):
 body.name = body.data.name = 'Ward_tank'
 hipz, neckz, ax, sy = J['Hips'].z, J['Neck'].z, J['LeftArm'].x, J['Spine2'].y
 s = neckz / 1.276
-hem = hipz + 0.10 * s  # top of the hip bones: pants take it from there
+hem = J['Spine'].z + 0.07 * s  # just under the navel: pants take it from there
 xstrap, xpit, zpit = ax * 0.66, ax * 1.06, J['LeftArm'].z - 0.075 * s
 slope = (xpit - xstrap) / (neckz - 0.03 * s - zpit)
 def armlim(z): return xstrap + slope * (neckz - 0.03 * s - z)
@@ -24,7 +24,7 @@ def necklim(x, y):  # a U scoop, deep in front, shallow at the back, capped belo
     u = abs(x) / (NW * s)
     if u >= 1: return neckz - 0.004 * s
     front = max(0.0, min(1.0, (sy - y) / (0.06 * s) + 0.5))
-    depth = (0.03 + 0.075 * front) * s
+    depth = (0.025 + 0.05 * front) * s
     return neckz - 0.004 * s - depth * (1 - u * u) ** 0.5
 me = body.data
 M = body.matrix_world.copy(); Mi = M.inverted(); R = Mi.to_3x3()
@@ -32,27 +32,28 @@ W = lambda co: M @ co   # the tests run in world space (glTF bodies sit under a 
 bm = bmesh.new(); bm.from_mesh(me)
 def cut(co, no): bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=Mi @ Vector(co), plane_no=(R @ Vector(no)).normalized())
 # clean cut lines: bisect along the hem, both armholes and a fan of planes for the scoop
-cut((0, 0, hem), (0, 0, 1))
-for sg in (1, -1): cut((sg * xstrap, 0, neckz - 0.03 * s), (sg, 0, slope))
-bm.verts.ensure_lookup_table()
-def inside(p):
-    return p.z > hem - 1e-4 and abs(p.x) < armlim(p.z) + 1e-4 and p.z < necklim(p.x, p.y) + 1e-4
-dead = [f for f in bm.faces if not inside(W(f.calc_center_median()))]
+bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=2e-5)  # the mirrored halves meet at x=0: weld, or the push opens a seam down the spine
+sk = bm.verts.layers.shape; keys = list(sk.keys())
+def F(co):  # >0 inside the garment, the cut is its zero line (a contour, so every edge is drawn, not stepped)
+    p = W(co)
+    return min(p.z - hem, armlim(p.z) - abs(p.x), necklim(p.x, p.y) - p.z)
+f = {v: F(v.co) for v in bm.verts}
+cross = [e for e in bm.edges if (f[e.verts[0]] > 0) != (f[e.verts[1]] > 0)]
+made = set()
+for e in cross:
+    v0, v1 = e.verts; a0, a1 = f[v0], f[v1]
+    t = a0 / (a0 - a1)
+    ne, nv = bmesh.utils.edge_split(e, v0, t)
+    f[nv] = 0.0; made.add(nv)
+for face in list(bm.faces):
+    cv = [v for v in face.verts if v in made]
+    if len(cv) == 2 and not any(cv[1] in [e.other_vert(cv[0]) for e in cv[0].link_edges if face in e.link_faces] for _ in [0]):
+        try: bmesh.ops.connect_verts(bm, verts=cv)
+        except Exception: pass
+dead = [fc for fc in bm.faces if sum(f.get(v, F(v.co)) for v in fc.verts) / len(fc.verts) < -1e-6 or any(f.get(v, 0) < -1e-6 for v in fc.verts)]
 bmesh.ops.delete(bm, geom=dead, context='FACES')
-# trim the scoop along a smooth curve: snap the neck-edge vertices onto the curve (their own x,y), so the line reads drawn, not stepped
+bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context='VERTS')
 bm.verts.ensure_lookup_table()
-sk = bm.verts.layers.shape
-keys = list(sk.keys())
-up = (R @ Vector((0, 0, 1))).normalized()
-def lift(v, dz):
-    d = up * dz; v.co += d
-    for k in keys: v[sk[k]] += d
-for v in bm.verts:
-    if not any(e.is_boundary for e in v.link_edges): continue
-    p = W(v.co)
-    if p.z > neckz - 0.13 * s and abs(p.x) < armlim(p.z) - 0.012:
-        dz = necklim(p.x, p.y) - p.z
-        if abs(dz) < 0.025 * s and abs(p.x) < NW * s * 0.97: lift(v, dz)
 # rings from the open edge
 ring = {}
 front = [v for v in bm.verts if any(e.is_boundary for e in v.link_edges)]
