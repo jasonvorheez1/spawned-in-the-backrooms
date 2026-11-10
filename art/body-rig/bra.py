@@ -8,7 +8,7 @@ sc = bpy.context.scene
 B = sc.objects["Body"]; old = sc.objects["Under_top"]
 names = [g.name for g in B.vertex_groups]
 TORSO = {"Spine", "Spine1", "Spine2", "Chest", "UpperChest", "Hips"}
-OFF, TOP_F, TOP_B, BOT = 0.0045, 1.185, 1.150, 1.018   # metres: skin gap, top edge front/back, bottom edge
+OFF, TOP_F, TOP_B, BOT = 0.0045, 1.212, 1.168, 1.040   # metres: skin gap, top edge front/back, bottom edge
 SIDE = 0.120                                            # half-width past which the armpit is cut off
 bm = bmesh.new(); bm.from_mesh(B.data)
 dl = bm.verts.layers.deform.active
@@ -28,9 +28,8 @@ def cut(co, no):
 cut((0, ymin, TOP_F), mathutils.Vector((0, -slope, 1)).normalized())
 cut((0, 0, BOT), (0, 0, -1))
 cut((SIDE, 0, 0), (1, 0, 0)); cut((-SIDE, 0, 0), (-1, 0, 0))
-# keep the torso surface only: drop islands/faces whose verts are arm-dominant
-arm = [f for f in bm.faces if any(("Arm" in dom(v) or "Shoulder" in dom(v) or "Neck" in dom(v)) for v in f.verts)]
-bmesh.ops.delete(bm, geom=arm, context="FACES")
+# weld uv seams so the offset can't crack the back open
+bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=1e-5)
 loose = [v for v in bm.verts if not v.link_faces]; bmesh.ops.delete(bm, geom=loose, context="VERTS")
 bm.normal_update()
 sk = {k.name: bm.verts.layers.shape.get(k.name) for k in B.data.shape_keys.key_blocks}
@@ -38,6 +37,8 @@ for v in bm.verts:
     n = v.normal.copy()
     v.co += n * OFF
     for nm, L in sk.items(): v[L] = v[L] + n * OFF
+bm.verts.index_update(); BL = sk.get("Bust"); BA = sk.get("Basis")
+bdel = [(v[BL] - v[BA]) if BL else mathutils.Vector() for v in bm.verts]
 me = bpy.data.meshes.new("bra"); bm.to_mesh(me)
 ob = bpy.data.objects.new("BraNew", me); sc.collection.objects.link(ob)
 ob.parent = B.parent; ob.matrix_world = B.matrix_world.copy()
@@ -46,6 +47,8 @@ for g in B.vertex_groups: ob.vertex_groups.new(name=g.name)
 ob.data.materials.append(old.data.materials[0])
 mod = ob.modifiers.new("arm", "ARMATURE"); mod.object = B.find_armature()
 for p in ob.data.polygons: p.use_smooth = True
+ob.shape_key_add(name="Basis"); kb = ob.shape_key_add(name="Bust", from_mix=False)
+for i, v in enumerate(me.vertices): kb.data[i].co = v.co + bdel[i]
 print("bra verts", len(me.vertices), "tris", sum(len(p.vertices) - 2 for p in me.polygons), "keys", [k.name for k in me.shape_keys.key_blocks] if me.shape_keys else None)
 # dump for splice: glTF space (x, z, -y)
 uv = me.uv_layers.active.data
@@ -62,6 +65,7 @@ me.calc_loop_triangles()
 json.dump({"v": V, "i": [i for t in me.loop_triangles for i in t.vertices]}, open(out, "w"))
 # proof: old bra hidden, new shown, on the body, back/front/side
 old.hide_render = True
+B.data.shape_keys.key_blocks["Bust"].value = 0.7; me.shape_keys.key_blocks["Bust"].value = 0.7
 for o in sc.objects:
     if o.type == "MESH" and o.name not in ("Body", "BraNew") and not o.name.startswith("Skin_") and "Eye" not in o.name: o.hide_render = True
 sc.render.engine = "CYCLES"; sc.cycles.samples = 16; sc.render.resolution_x = 656; sc.render.resolution_y = 560
