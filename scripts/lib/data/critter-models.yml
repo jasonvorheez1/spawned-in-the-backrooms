@@ -12,7 +12,7 @@ mesh: true
 # faces (Shelly Nov 9 #116046): bodies re-exported through art/human-face/expressions.py with X_ expression and talk keys; before: m a72d639444162250d9952ce8abf7c92aa06a6085f867c5cda3dabffd461b8809 f 4ea845d5772c35f3c8923973f3078cb9153a7ef21e0ae2f8776f7643c0b519cb
 # men (Shelly Nov 9 #121141/#121179): art/human-face/male-jaw.py trims the winged lashes to a lid line and adds M_Jaw/M_Chin; before: m 0f4d6b4922fbd0e8a97b8d6b71836871b2def3b39574b7e0d21aea73d7586843
 # split (Nov 9, Shelly yes #137497): bare bodies; garments ride as skinned children (wardrobe-split.yml)
-human: { m: "/cdn/value.069d7657f5164132588d8b09446b6b15cb430ec242a79e9dda7c1b1cb7e668dd.glb", f: "/cdn/value.1117d8ae02b376bc0dcb81840b0615ebac3a934600d53b35c585a8447780efc2.glb" }
+human: { m: "/cdn/value.069d7657f5164132588d8b09446b6b15cb430ec242a79e9dda7c1b1cb7e668dd.glb", f: "/cdn/value.e5adef254fe2761f15b7c669178e400e6a93270f7853a6221af072b9cc78e405.glb" }
 body: { m: "/cdn/value.9cf50c5021c4443970c1fe193d6917865363c1be778845f8870cda68c2607fd8.glb", f: "/cdn/value.deabd82b6e4ad3959a0713f9e21a48658b70eb954ae75649ebdc0a08efb6a97d.glb" }
 bodyMats: [fur, limb, pad, cloth_top, cloth_bottom, cloth_shoes, cloth_hat, cloth_neck, button, metal, lens, gold, sole]
 slots: { topw: Top, botw: Bot, shoes: Shoes, hat: Hat, eyew: Eyew, neck: Neck }
