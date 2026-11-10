@@ -28,7 +28,7 @@ for o in bpy.data.objects:
     gaps = [p.z - z for p in out_ for z in [surf(p)] if z is not None]
     dz = -(min(gaps) - 0.004) if gaps else (trap - 0.012) - bot  # the lowest ring point lands just on the skin
     k = max(0.8, min(1.0, (neckR + 0.012) / inner)) if inner > 0 else 1.0
-    print('SCARF', o.name, 'drop', round(dz, 3), 'inner', round(inner, 3), 'neck', round(neckR, 3), 'k', round(k, 3))
+    print("RING", round(bot,3), round(top,3), "trap", round(trap,3), "neck", [round(c,3) for c in neck], "minsurf", round(min([surf(p) or 9 for p in out_] or [9]),3), "n", len(out_)); print("SCARF", o.name, 'drop', round(dz, 3), 'inner', round(inner, 3), 'neck', round(neckR, 3), 'k', round(k, 3))
     def fix(co):
         p = W @ co
         isring = p.z > top - 0.07
