@@ -10,12 +10,17 @@ import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import L from "../../scripts/lib/data/level1.yml";
 import { RACK } from "../../scripts/lib/level1.js";
 import { rollItemL1 } from "../../scripts/lib/loot.js";
-import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, ONWARD, ARRIVE, hash, S, HALF, hasPillar } from "../../scripts/lib/level1.js";
+import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, ONWARD, ARRIVE, hash, S, HALF, hasPillar, DECK, RAMPS, rampBox, rampCell } from "../../scripts/lib/level1.js";
 import { spawnAlmond } from "../../scripts/lib/loot.js";
 import { spawnFurniture, pickKind, wallSpot1, sizeOf } from "../../scripts/lib/furniture.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 const L1M = { door: "/cdn/value.020545cb36957131cc5f5eab3f6c2c38511e55076fb5e5542b93aff45e424288.glb", wall: "/cdn/value.1aa1542440b2b55ab177731e12bade8dfdb7ca60226cb2b55ff2491a998298fe.glb", board: "/cdn/value.1ed44cd9733b0a1d469ee47af7a8f609fcaee84b4aef6828e976544608979e8b.glb", wallDx: 0, boardYaw: 0 }; // Blender builds: art/level1/build.py
 
+const BOXSTACK = [ // the Tripo pallet-of-boxes cut into its pallet and three boxes in Blender (art/l1-boxstack/build.py): [model, y, width, height, depth]
+      ["/cdn/value.55df1d3983bde51837c396491fff9015cc09598507749cb199fa144a6b53fd9b.glb", 0, 0.954, 0.261, 1.36],
+      ["/cdn/value.bd7c0cbac7eefbb5c1584bd63005a7c39bfacfb2beb3d4e60a47252820cf552e.glb", 0.165, 0.677, 0.461, 0.991],
+      ["/cdn/value.b38dc81280c35d3f87435921844ff0ee4594c8f1609dc3b020faf26416d137c6.glb", 0.612, 0.552, 0.421, 0.766],
+      ["/cdn/value.d4da0db276e9457c56a83cce2ef518cccc8065d0f8e158c7c82f747f45c97b2f.glb", 0.982, 0.467, 0.318, 0.554]];
 export const cadence = "250ms";
 const LAMP_ON = 9;
 // the M.E.G. agents are critters like the players: lime hi-vis jackets, the agency's look
@@ -117,11 +122,6 @@ export function tick(ctx) {
     const DRUM = "/cdn/value.de68d3453156f6d0341dc0143da17f0a5f60f2da731a9b018363a51fcf233712.glb", PAL = "/cdn/value.52adc0a974c9920d51033154da8dae242fd9a7271b1190ad5a9d3a0f0b9f6c1f.glb";
     for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id]; if (o.primitive?.script === "scripts/level1-props-geo.js") o.primitive = { ...o.primitive, params: { tripo: true } }; }
     const drum = (id, x, z, yaw) => ctx.spawn(id, { tags: ["l1prop"], feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: DRUM }, layout: { box: { min: { x: -0.3, y: 0, z: -0.3 }, max: { x: 0.3, y: 0.9, z: 0.3 } } }, physics: { body: "static", collider: "cylinder" }, visibleRange: { max: 45 }, state: { name: "Oil Drum", loose: "metal", mat: "sheet_steel" } });
-    const BOXSTACK = [ // the Tripo pallet-of-boxes cut into its pallet and three boxes in Blender (art/l1-boxstack/build.py): [model, y, width, height, depth]
-      ["/cdn/value.55df1d3983bde51837c396491fff9015cc09598507749cb199fa144a6b53fd9b.glb", 0, 0.954, 0.261, 1.36],
-      ["/cdn/value.bd7c0cbac7eefbb5c1584bd63005a7c39bfacfb2beb3d4e60a47252820cf552e.glb", 0.165, 0.677, 0.461, 0.991],
-      ["/cdn/value.b38dc81280c35d3f87435921844ff0ee4594c8f1609dc3b020faf26416d137c6.glb", 0.612, 0.552, 0.421, 0.766],
-      ["/cdn/value.d4da0db276e9457c56a83cce2ef518cccc8065d0f8e158c7c82f747f45c97b2f.glb", 0.982, 0.467, 0.318, 0.554]];
     const pal = (id, x, z, yaw) => { // separate pieces (Shelly: "the boxes in this model should be separated"): the pallet, then each box its own thing you open, kick, grab or break
       for (const k of ["", "-p", "-b0", "-b1", "-b2", "-b3"]) if (ctx.place.objects[id + k]) delete ctx.place.objects[id + k];
       const n = 2 + Math.floor(hash(x, z, 7) * 2.99); // 1 to 3 boxes still on it
@@ -161,6 +161,29 @@ export function tick(ctx) {
   if (s.megCamp) { // a fallen agent is replaced after a while; the new one holds no grudge
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz), at = Object.fromEntries(AGENTS.map(([id, dx, dz]) => [id, [dx, dz]]));
     keepPeople(ctx, Object.keys(at), (ctx, id) => { ctx.spawn(id, agentSpec(a, id, ...at[id])); ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody("pistol") }); });
+  }
+  if (s.l1Deck !== 1) { s.l1Deck = 1; // the upper deck (Shelly: "there should be at least a second floor"): its slab, ramps, lamps and what was left up there
+    for (const r of RAMPS) { const b = rampBox(r); for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id], f = o?.feetPosition; if (!f || id === "l1-geo" || o.tags?.includes?.("player") || f.y > 3.5) continue;
+      if (f.x > b.x0 - 0.3 && f.x < b.x1 + 0.3 && f.z > b.z0 + 0.4 && f.z < b.z1 - 0.4) delete ctx.place.objects[id]; } } // nothing parked on the ramps
+    ctx.spawn("l1-deck", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level1-deck-geo.js" }, material: { roughness: 0.85, emissiveIntensity: 3 } });
+    const Y = DECK.y, TOP = DECK.y + DECK.h;
+    for (let cx = DECK.cx0; cx <= DECK.cx1; cx++) for (let cz = DECK.cz0; cz <= DECK.cz1; cz++) { // a tube in every other bay, a few dead
+      if ((cx + cz) % 2) continue; const c = cellCenter(cx, cz), dead = hash(cx, cz, 501) < 0.15;
+      ctx.spawn("l1-dl-" + cx + "-" + cz, { tags: ["l1lamp", "l1deck"], feetPosition: { x: c.x, y: TOP - 0.62, z: c.z }, primitive: { kind: "box", width: 2.4, height: 0.06, depth: 0.3 }, castShadow: false, visibleRange: { max: 50 },
+        material: dead ? { color: "oklch(0.55 0.01 240)" } : { color: "oklch(0.97 0.02 220)", emissive: "oklch(0.95 0.03 220)", emissiveIntensity: 2.4 },
+        light: dead ? undefined : { kind: "point", color: "oklch(0.95 0.02 220)", intensity: LAMP_ON, distance: 18, shadow: { enabled: false } } });
+    }
+    for (const r of RAMPS) { const b = rampBox(r); ctx.spawn("l1-rl-" + r.cx, { tags: ["l1lamp", "l1deck"], feetPosition: { x: (b.x0 + b.x1) / 2, y: TOP - 0.62, z: (b.za + b.zb) / 2 }, primitive: { kind: "box", width: 2.4, height: 0.06, depth: 0.3 }, castShadow: false, visibleRange: { max: 50 },
+      material: { color: "oklch(0.97 0.02 220)", emissive: "oklch(0.95 0.03 220)", emissiveIntensity: 2.4 }, light: { kind: "point", color: "oklch(0.95 0.02 220)", intensity: LAMP_ON, distance: 20, shadow: { enabled: false } } }); }
+    for (const z of [DECK.cz0 * S - HALF - 1.2, (DECK.cz1 + 1) * S - HALF + 1.2]) for (let cx = DECK.cx0; cx <= DECK.cx1; cx += 2) // daylight spilling in through the slots, cold and flat
+      ctx.spawn("l1-day-" + cx + "-" + (z < 0 ? "a" : "b"), { tags: ["l1deck"], feetPosition: { x: (cx + 1) * S - HALF, y: Y + 2.4, z }, light: { kind: "point", color: "oklch(0.96 0.02 95)", intensity: 6, distance: 14, shadow: { enabled: false } } });
+    const stack = (id, x, z, yaw) => BOXSTACK.slice(0, 2 + Math.floor(hash(x, z, 7) * 2.99) + 1).forEach(([m, y, w, h, d], i) => { const bx = i > 0, j = bx ? hash(x, z, 30 + i) - 0.5 : 0;
+      ctx.spawn(id + (bx ? "-b" + (i - 1) : "-p"), { tags: bx ? ["l1prop", "l1deck", "container", "breakable"] : ["l1prop", "l1deck"], feetPosition: { x: x + j * 0.08, y: Y + y, z: z - j * 0.06 }, rotation: { yaw: yaw + j * 14 }, model: { id: m }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 },
+        state: bx ? { name: "Cardboard Box", loose: "wood", mat: "wood", hp: 20, maxHp: 20, items: rollItemL1(ctx) } : { name: "Pallet", loose: "wood", mat: "wood", items: "scrap_wood" } }); });
+    for (let cx = DECK.cx0; cx <= DECK.cx1; cx++) for (const cz of [DECK.cz0, DECK.cz1]) { // pallets left in the bays, nosed to the parapet
+      if (rampCell(cx, cz) || hash(cx, cz, 511) > 0.32) continue; const c = cellCenter(cx, cz), out = cz === DECK.cz0 ? -1 : 1;
+      stack("l1dp-" + cx + "-" + cz, c.x + (hash(cx, cz, 513) - 0.5) * 4, c.z + out * 2.2, hash(cx, cz, 515) * 30 - 15 + 90);
+    }
   }
   if (s.l1StockV !== 2) { s.l1StockV = 2; for (const o of ctx.query({ tags: ["l1stock"] })) delete ctx.place.objects[o.id]; s.l1Stock = 0; } // stock v2: real box models
   if (!s.l1Stock) { s.l1Stock = layStock(ctx) || 1; }
