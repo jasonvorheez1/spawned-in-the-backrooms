@@ -122,15 +122,13 @@ export function geometry(ctx) {
         ctx.color("oklch(0.48 0.13 255)");
         box(ctx, x - 0.045, x + 0.045, 0, RACK.top, z - 0.008 + out * 0.035, z + 0.008 + out * 0.035); // web, on the aisle face
         box(ctx, x - 0.045, x - 0.037, 0, RACK.top, z - 0.035, z + 0.035); box(ctx, x + 0.037, x + 0.045, 0, RACK.top, z - 0.035, z + 0.035); // flanges
-        if (hi) { ctx.color("oklch(0.2 0.02 255)"); for (let y = 0.2; y < RACK.top - 0.1; y += 0.1) box(ctx, x - 0.012, x + 0.012, y, y + 0.045, z + out * 0.044 - 0.002, z + out * 0.044 + 0.002); } // teardrop slots
         ctx.color("oklch(0.4 0.02 250)"); box(ctx, x - 0.08, x + 0.08, 0, 0.008, z - 0.07, z + 0.07); // foot plate
-        if (hi) { ctx.color("oklch(0.75 0.01 250)"); for (const d of [-0.055, 0.055]) box(ctx, x + d - 0.01, x + d + 0.01, 0.008, 0.026, z - 0.01, z + 0.01); }
       }
       // frame bracing between the front and back upright: horizontals at the foot and top, diagonals in between
       ctx.color("oklch(0.5 0.12 255)");
       for (const x of bays) {
-        const brace = (ya, za, yb, zb) => tube(ctx, [[x, ya, za], [x, yb, zb]], [0.014, 0.014], 6, [1, 1], 0, 1, 1);
-        brace(0.15, z0 + 0.03, 0.15, z1 - 0.03); brace(RACK.top - 0.08, z0 + 0.03, RACK.top - 0.08, z1 - 0.03);
+        const brace = (ya, za, yb, zb) => tube(ctx, [[x, ya, za], [x, yb, zb]], [0.014, 0.014], 4, [1, 1], 0, 1, 1);
+        brace(0.15, z0 + 0.03, 0.15, z1 - 0.03); if (hi) brace(RACK.top - 0.08, z0 + 0.03, RACK.top - 0.08, z1 - 0.03);
         if (hi) for (let y = 0.15, k = 0; y < RACK.top - 0.4; y += 0.6, k++) brace(y, k % 2 ? z1 - 0.03 : z0 + 0.03, y + 0.6, k % 2 ? z0 + 0.03 : z1 - 0.03);
       }
       // step beams, front and back, at each level: a boxed orange beam with a stepped lip and connector plates at the ends
@@ -138,7 +136,7 @@ export function geometry(ctx) {
         const out = z === z0 ? -1 : 1, by = Math.max(0.06, y);
         ctx.color("oklch(0.66 0.17 50)"); box(ctx, x0 + 0.045, x1 - 0.045, by - 0.11, by - 0.01, z + out * 0.03 - 0.025, z + out * 0.03 + 0.025);
         if (hi) { ctx.color("oklch(0.6 0.16 48)"); box(ctx, x0 + 0.045, x1 - 0.045, by - 0.03, by, z - out * 0.0 - 0.02, z + 0.02); // the step the deck sits on
-          ctx.color("oklch(0.62 0.015 250)"); for (const bx of bays) for (const d of [-1, 1]) if ((bx > x0 || d > 0) && (bx < x1 || d < 0)) box(ctx, bx + d * 0.045, bx + d * 0.1, by - 0.14, by + 0.02, z + out * 0.06 - 0.004, z + out * 0.06 + 0.004); }
+}
       }
       // decks: wire mesh on the lowest level, OSB above, each bay its own board with a gap at the upright
       ctx.metalness(0); ctx.roughness(0.8);
@@ -159,7 +157,7 @@ export function geometry(ctx) {
           ctx.albedo(CARTON); ctx.color(h0 < 0.6 ? "oklch(0.78 0.06 70)" : "oklch(0.7 0.05 65)"); ctx.roughness(0.9); box(ctx, bx - w / 2, bx + w / 2, y, y + hh, bz - d / 2, bz + d / 2);
           if (h0 > 0.7 && y + hh * 2 < (RACK.levels[li + 1] ?? RACK.top) - 0.1) box(ctx, bx - w / 2 + 0.03, bx + w / 2 - 0.05, y + hh, y + hh * 1.8, bz - d / 2 + 0.02, bz + d / 2 - 0.03); }
         else { ctx.albedo(null); ctx.color(h0 < 0.9 ? "oklch(0.88 0.01 250)" : "oklch(0.55 0.13 250)"); ctx.metalness(0.3); ctx.roughness(0.4);
-          for (const dz of [-0.14, 0.14]) { tube(ctx, [[bx, y, bz + dz], [bx, y + 0.24, bz + dz]], [0.11, 0.115], 12, [1, 1], 0, 1, 1); ctx.color("oklch(0.3 0.01 250)"); tube(ctx, [[bx, y + 0.24, bz + dz], [bx, y + 0.255, bz + dz]], [0.118, 0.118], 12, [1, 1], 0, 1, 1); ctx.color(h0 < 0.9 ? "oklch(0.88 0.01 250)" : "oklch(0.55 0.13 250)"); }
+          for (const dz of [-0.14, 0.14]) { tube(ctx, [[bx, y, bz + dz], [bx, y + 0.24, bz + dz]], [0.11, 0.115], 8, [1, 1], 0, 1, 1); ctx.color("oklch(0.3 0.01 250)"); tube(ctx, [[bx, y + 0.24, bz + dz], [bx, y + 0.255, bz + dz]], [0.118, 0.118], 8, [1, 1], 0, 1, 1); ctx.color(h0 < 0.9 ? "oklch(0.88 0.01 250)" : "oklch(0.55 0.13 250)"); }
           ctx.metalness(0); }
       }
       ctx.albedo(null); ctx.metalness(0); ctx.roughness(null);
