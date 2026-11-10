@@ -31,8 +31,12 @@ for name, par, tail in CHAIN:
     b.roll = 0
 bpy.ops.object.mode_set(mode='OBJECT')
 # weights: join, auto weights from bone heat
+bpy.ops.object.select_all(action='DESELECT')
 for o in meshes: o.select_set(True)
-bpy.context.view_layer.objects.active = meshes[0]; bpy.ops.object.join(); body = bpy.context.view_layer.objects.active
+bpy.context.view_layer.objects.active = meshes[0]
+bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM'); bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+for o in [o for o in bpy.data.objects if o.type == 'EMPTY']: bpy.data.objects.remove(o)
+bpy.ops.object.join(); body = bpy.context.view_layer.objects.active
 body.name = "Body"
 bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.select_all(action='SELECT'); bpy.ops.mesh.remove_doubles(threshold=0.0001); bpy.ops.object.mode_set(mode='OBJECT')
 body.select_set(True); rig.select_set(True); bpy.context.view_layer.objects.active = rig
