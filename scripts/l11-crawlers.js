@@ -94,6 +94,13 @@ export function update(ctx, dt) {
       if (m.lungeTo > now) { vx = m.lv.x; vz = m.lv.z; clip = "pounce"; }
       else if (m.windUntil > now) { clip = "pounce"; } // the tell: it gathers before it throws itself
       else if (m.windUntil && now >= m.windUntil && now - m.windUntil < 100) { m.lv = { x: dx / n * K.lunge * 1.6, z: dz / n * K.lunge * 1.6 }; m.lungeTo = now + 450; m.windUntil = 0; }
+      else if (K.grab && best < K.grab && best > K.reach && now > (m.nextGrab ?? 0) && clearSight(ctx, { x: pos.x, y: pos.y + 0.6, z: pos.z }, { x: prey.feetPosition.x, y: prey.feetPosition.y + 1, z: prey.feetPosition.z }, [id, prey.id])) {
+        m.nextGrab = now + K.grabCd * 1000; m.nextHit = now + 350; // the longest arm snaps out and reels you in to the mouth
+        ctx.emit("impulse", { target: prey.id, impulse: { x: -dx / n * 260, y: 60, z: -dz / n * 260 } });
+        ctx.emit("squash", { target: id, axis: "z", intensity: 0.35, duration: 0.35 });
+        ctx.emit("playSound", { clip: SND("dozens-of-hands-grabbing-and-slapping"), position: pos, volume: 1 });
+        ctx.emit("screenShake", { intensity: 0.25, duration: 0.2 }, { audience: { player: prey.id } });
+      }
       else if (K.lungeRange && best < K.lungeRange && best > K.reach && now > (m.nextLunge ?? 0)) { m.windUntil = now + 600; m.nextLunge = now + 4500; ctx.emit("squash", { target: id, axis: "y", intensity: 0.3, duration: 0.6 }); }
       else if (best > K.reach * 0.8) { vx = dx / n * K.speed; vz = dz / n * K.speed; clip = K.speed > 3.5 ? "sprint" : "prowl"; }
       if (best < K.reach && now > (m.nextHit ?? 0) && clearSight(ctx, { x: pos.x, y: pos.y + 0.8, z: pos.z }, { x: prey.feetPosition.x, y: prey.feetPosition.y + 1, z: prey.feetPosition.z }, [id, prey.id])) {

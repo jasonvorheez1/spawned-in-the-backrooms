@@ -5,7 +5,7 @@ sight: 18        # sees you this far with a clear line
 hear: 6          # hears you this close, any line (crouch and sneak shrink both)
 respawnMin: 60   # the dead come back after an hour (Shelly's rule)
 kinds:
-  clump: { name: Clump, hp: 160, speed: 2.0, lunge: 6.5, lungeRange: 6, dmg: 18, reach: 1.7, cd: 1.3, xp: 60 }
+  clump: { name: Clump, hp: 160, speed: 3.4, lunge: 6.5, lungeRange: 6, dmg: 18, reach: 1.7, cd: 1.3, xp: 60, grab: 2.6, grabCd: 5 }   # wiki: the longest limb snags prey within 8 ft
   sentry: { name: Custodian Unit, hp: 220, speed: 1.6, lunge: 0, lungeRange: 0, dmg: 9, reach: 0, cd: 1.7, xp: 80, range: 16, keep: 8, spread: 0.12 }   # Backrooms Robotics guard: shoots, keeps its distance
   hound: { name: Hound, hp: 90, speed: 5.2, lunge: 5.2, lungeRange: 0, dmg: 11, reach: 1.5, cd: 0.9, xp: 35 }
 foes:
