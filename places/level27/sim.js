@@ -6,7 +6,7 @@
 import { maxHp, maxSan } from "../../scripts/player.js";
 import { DRIP, RIPPLE } from "../../scripts/lib/ambient.js";
 export const cadence = "1s";
-const V = 8;
+const V = 10;
 const CAVE = "/cdn/value.d9257aa6046661ac256e1a7d8a3902fab9d555c3c320667045ce81b942b70252.glb";
 const FLOW = "/cdn/value.fc172db4defdc02603c499ccc386d3fea6fb504d8b388408de18c1ef734f6c34.glb"; // Level 8's flowstone mound
 const ROCK = (kind, color) => ({ texture: kind === "wet" ? "cdn/texture-wet-grey-limestone-cave-wall-rock.png" : "cdn/texture-pale-cream-flowstone-calcite-cave-formation.png", wrap: "repeat", repeat: [0.4, 0.4], color, roughness: kind === "wet" ? 0.35 : 0.6, side: "double" });
@@ -24,6 +24,10 @@ function lay(ctx) {
   for (const id of ["l27-fall-w-sheet", "l27-fall-e-sheet"]) if (ctx.place.objects[id]) ctx.destroy(id);
   const BACK = { ...ROCK("wet", "oklch(0.2 0.02 70)"), side: "back" }; // seen only from inside: wherever the shell has a gap, rock shows, never sky
   sp("l27-backrock", { feetPosition: { x: 2, y: -2, z: -6 }, pivot: "center", primitive: { kind: "sphere", radius: 1, widthSegments: 32, heightSegments: 16 }, scale: { x: 16, y: 11, z: 20 }, material: BACK, castShadow: false, receiveShadow: false });
+  if (ctx.place.objects["l27-vault"]) ctx.destroy("l27-vault"); // tried a vault shell: it cut across the stairs
+  // the roof reads: two low warm washes from the lamps' side and the spring's teal from below, so the rock the stalactites grow from shows its grain
+  sp("l27-roof-wash", { feetPosition: { x: 1.5, y: 3.2, z: -4 }, light: { kind: "point", color: "oklch(0.82 0.06 80)", intensity: 1.6, distance: 11, shadow: { enabled: false } } });
+  sp("l27-roof-wash-2", { feetPosition: { x: 5.5, y: 3.4, z: -9 }, light: { kind: "point", color: "oklch(0.8 0.05 75)", intensity: 1.3, distance: 10, shadow: { enabled: false } } });
   sp("l27-backrock-tunnel", { feetPosition: { x: -6.2, y: 1.5, z: -15 }, primitive: { kind: "box", width: 6, height: 5, depth: 16 }, material: BACK, castShadow: false, receiveShadow: false });
   // the cave: the model's own box is min (-9.36,-1.31,-22.68) max (15.02,7.27,6.47); its bottom centre goes there so it stands in its own coordinates
   sp("l27-cave", { feetPosition: { x: 2.827, y: -1.314, z: -8.105 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, state: { floor: "rock" },
