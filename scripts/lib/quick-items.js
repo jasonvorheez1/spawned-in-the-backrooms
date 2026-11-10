@@ -8,13 +8,17 @@ export function quickItems(s) {
   for (const [c,v] of Object.entries(SNACKS)) rows.push({id:'snack:'+c,name:v.name,count:s.snacks?.[c]??0,action:{k:'snack',c}})
   rows.push({id:'compass',name:'Old compass',count:s.compass??0,action:{k:'compass'}},{id:'firesalt',name:'Firesalt',count:s.firesalt??0,action:{k:'firesalt'}},{id:'soup',name:'Bowl of soup',count:s.equipped==='soup_bowl'?1:0,action:{k:'soupEat'}})
   const weapons=['fists',...(s.weapons??'').split(',').filter(Boolean)], bag=(s.clothes??'').split(',').filter(Boolean), worn=wornTokens(s.look)
-  const saved=Object.values(s.quickSlots??{})
+  const saved=Object.values(s.quickSlots??{}).filter(x=>typeof x==='string')
+  const weaponCounts=new Map(), clothCounts=new Map()
+  for(const k of weapons) weaponCounts.set(k,(weaponCounts.get(k)??0)+1)
+  for(const k of bag) clothCounts.set(k,(clothCounts.get(k)??0)+1)
+  for(const k of worn) clothCounts.set(k,(clothCounts.get(k)??0)+1)
   for(const k of new Set([...weapons,...saved.filter(x=>x.startsWith('weapon:')).map(x=>x.slice(7))])) {
-    if(W[k]?.name) rows.push({id:'weapon:'+k,name:W[k].name,count:weapons.filter(x=>x===k).length,action:{k:'equip',w:k}})
+    if(W[k]?.name) rows.push({id:'weapon:'+k,name:W[k].name,count:weaponCounts.get(k)??0,action:{k:'equip',w:k}})
   }
   for(const token of new Set([...bag,...worn,...saved.filter(x=>x.startsWith('cloth:'))])) {
     const p=parseCloth(token)
-    if(p?.row) rows.push({id:token,name:p.row.name,count:bag.filter(x=>x===token).length+(worn.includes(token)?1:0),action:{k:'wear',w:token}})
+    if(p?.row) rows.push({id:token,name:p.row.name,count:clothCounts.get(token)??0,action:{k:'wear',w:token}})
   }
   return rows
 }
