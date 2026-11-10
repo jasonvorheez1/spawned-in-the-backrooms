@@ -172,11 +172,18 @@ function dropGhost(ctx) { const g = ctx.self.session.ghost; if (g) { ctx.destroy
 function clearHl(ctx) { const m = ctx.self.session; if (m.hl) { ctx.emit('highlightClear', { target: m.hl }, { audience: { player: ctx.self.id } }); m.hl = null } }
 function pick(s, k) { s.building = k; s.buildLast = k; s.buildTab = tabOf(s, k) }
 
+const inBonus = (ctx) => String(ctx.self.place ?? '').startsWith('bonus')
+
 export function onInput(ctx, input) {
   const s = ctx.self.state
   const sin = input.axes.aimYawSin, cos = input.axes.aimYawCos
   if (sin != null && cos != null) ctx.self.session.bfwd = { x: -sin, z: -cos }
   const ray = getInputRay(ctx, input); if (ray) ctx.self.session.bray = ray
+  if (inBonus(ctx)) { // the Bonus Room mall is shared: no building there (Shelly, Nov 10)
+    if (input.pressed.build) ctx.emit('uiEvent', { name: 'toast', payload: { text: 'No building in the Bonus Room' } }, { audience: { player: ctx.self.id } })
+    if (valid(s.building)) { s.building = null; dropGhost(ctx); clearHl(ctx) }
+    return
+  }
   if (input.pressed.build) {
     if (valid(s.building)) { s.building = null; dropGhost(ctx); clearHl(ctx) }
     else { pick(s, valid(s.buildLast) ? s.buildLast : BASE[0].pieces[0]); s.buildRot ??= 0; s.invOpen = false }
@@ -194,6 +201,7 @@ export function onInput(ctx, input) {
 export function update(ctx) {
   const s = ctx.self.state
   if (!ctx.self.isLocal && ctx.self.isLocal !== undefined) return
+  if (inBonus(ctx) && valid(s.building)) { s.building = null; dropGhost(ctx); clearHl(ctx); return }
   if (!valid(s.building)) { if (ctx.self.session.ghost) dropGhost(ctx); clearHl(ctx); return }
   const m = ctx.self.session
   if (isTool(s.building)) { // tools: no ghost, the piece you look at glows and the menu names it
