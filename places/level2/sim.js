@@ -101,7 +101,7 @@ export function tick(ctx) {
   if ((s.rev ?? 0) >= 4 && (s.snapped ?? 0) < 1) { snapContainers(ctx); s.snapped = 1; }
   if (STAIR && (s.rev ?? 0) >= 4 && !s.stairV) sideRoom(ctx, STAIR); // rooms that were laid before the stairwell existed get it now
   if (s.seeded && (s.rev ?? 0) >= 4 && s.propsV !== 2) reprop(ctx, s);
-  if (s.seeded && s.propsV === 2 && s.brkV !== 7) { s.brkV = 7; fixBreak(ctx); } // break rooms: fridge turned to face in, props at true size // rooms dressed before the Tripo props: re-dress them once
+  if (s.seeded && s.propsV === 2 && s.brkV !== 8) { s.brkV = 8; fixBreak(ctx); fixBreak2(ctx); } // break rooms: fridge turned to face in, props at true size // rooms dressed before the Tripo props: re-dress them once
   if ((s.rev ?? 0) >= 4 && (s.fixV ?? 0) < 3) { s.fixV = 3; fixtures(ctx); } // the modelled fixtures (art/level2/fixtures.py) take over the old box/sphere lamps, slicks and stair in place
   if ((s.rev ?? 0) >= 4 && (s.doorV ?? 0) < 1) { s.doorV = 1; redoor(ctx); } // the door pass: door-geo leaves and frames
   if ((s.rev ?? 0) < 4) revamp(ctx, s); // the revamp lays itself over a few ticks: rooms, doors, the hall, vents
@@ -378,6 +378,22 @@ function fixBreak(ctx) {
     o.model = { id: containerModel("fridge"), forward: PROPS.forward }; o.layout = fitBox(L.containers.fridge.size); if (vend[o.state.room]) o.rotation = vend[o.state.room]; }
   for (const k of ["table", "stackchair", "counter", "microwave"]) for (const row of ctx.query({ tags: ["l2p-" + k], ...all })) { const o = ctx.getObject(row.id); if (o) o.layout = fitBox(PROPS.kinds[k].size);
     if (o && k === "microwave") { const t = ctx.query({ tags: ["l2p-table"], center: o.feetPosition, radius: 5 })[0], b = t && ctx.getObject(t.id)?.bounds; if (b) o.feetPosition = { x: b.center.x + (b.max.x - b.center.x) * 0.45, y: b.max.y + 0.005, z: b.center.z }; const v = ctx.query({ tags: ["l2box"], center: o.feetPosition, radius: 5 }).find((q) => q.state?.kind === "vending"); if (v) o.rotation = ctx.getObject(v.id).rotation; } } // microwave on the table, door facing the room like the machine
+}
+// Shelly: "move this fridge and resize the sink": the fridge goes to the back corner away from the vending machine, the sink cabinet grows to counter height on its wall
+function fixBreak2(ctx) {
+  const all = { radius: 1e5, center: { x: 0, y: 0, z: 0 } }, wall = (o, d, skip) => { const h = raycast(ctx, { x: o.x, y: 1.5, z: o.z }, { x: d.x, y: 0, z: d.z }, { distance: 8, bodies: "static", ignoreEntities: skip }); return h ? h.distance : null; };
+  for (const t of ctx.query({ tags: ["l2p-table"], ...all })) {
+    const c = ctx.getObject(t.id)?.bounds?.center; if (!c) continue;
+    const near = ctx.query({ center: c, radius: 4 }), fr = near.find((q) => q.state?.kind === "fridge"), vd = near.find((q) => q.state?.kind === "vending");
+    if (fr && vd) { const f = ctx.getObject(fr.id), v = ctx.getObject(vd.id), vb = v.bounds.center, dx = vb.x - c.x, dz = vb.z - c.z;
+      const back = Math.abs(dx) > Math.abs(dz) ? { x: Math.sign(dx), z: 0 } : { x: 0, z: Math.sign(dz) }, side = back.x ? { x: 0, z: -Math.sign(dz) || 1 } : { x: -Math.sign(dx) || 1, z: 0 };
+      const skip = [f.id, v.id], db = wall(c, back, skip), ds = wall(c, side, skip);
+      if (db && ds) { f.feetPosition = { x: c.x + back.x * (db - 0.42) + side.x * (ds - 0.45), y: f.feetPosition.y, z: c.z + back.z * (db - 0.42) + side.z * (ds - 0.45) }; f.rotation = v.rotation; } }
+    const ct = near.find((q) => q.tags.includes("l2p-counter"));
+    if (ct) { const o = ctx.getObject(ct.id); o.layout = { box: { min: { x: -1.2, y: 0, z: -0.6 }, max: { x: 1.2, y: 0.92, z: 0.6 } } };
+      const p = o.feetPosition, ax = p.x - c.x, az = p.z - c.z, d = Math.abs(ax) > Math.abs(az) ? { x: Math.sign(ax), z: 0 } : { x: 0, z: Math.sign(az) }, dw = wall(p, d, [o.id]);
+      if (dw != null) o.feetPosition = { x: p.x + d.x * (dw - 0.5), y: p.y, z: p.z + d.z * (dw - 0.5) }; }
+  }
 }
 function reprop(ctx, s) {
   const step = s.propsStep ?? 0, all = { radius: 1e5, center: { x: 0, y: 0, z: 0 } }, rooms = SIDE.filter((r) => r.type !== "stair"), half = Math.ceil(rooms.length / 2);
