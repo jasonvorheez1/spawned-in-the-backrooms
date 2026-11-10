@@ -162,14 +162,14 @@ export function tick(ctx) {
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz), at = Object.fromEntries(AGENTS.map(([id, dx, dz]) => [id, [dx, dz]]));
     keepPeople(ctx, Object.keys(at), (ctx, id) => { ctx.spawn(id, agentSpec(a, id, ...at[id])); ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody("pistol") }); });
   }
-  if (s.l1Deck !== 1) { s.l1Deck = 1; // the upper deck (Shelly: "there should be at least a second floor"): its slab, ramps, lamps and what was left up there
+  if (s.l1Deck !== 2) { s.l1Deck = 2; for (const o of ctx.query({ tags: ["l1deck"] })) delete ctx.place.objects[o.id]; // the upper deck (Shelly: "there should be at least a second floor"): its slab, ramps, lamps and what was left up there
     for (const r of RAMPS) { const b = rampBox(r); for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id], f = o?.feetPosition; if (!f || id === "l1-geo" || o.tags?.includes?.("player") || f.y > 3.5) continue;
       if (f.x > b.x0 - 0.3 && f.x < b.x1 + 0.3 && f.z > b.z0 + 0.4 && f.z < b.z1 - 0.4) delete ctx.place.objects[id]; } } // nothing parked on the ramps
     ctx.spawn("l1-deck", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level1-deck-geo.js" }, material: { roughness: 0.85, emissiveIntensity: 3 } });
     const Y = DECK.y, TOP = DECK.y + DECK.h;
     for (let cx = DECK.cx0; cx <= DECK.cx1; cx++) for (let cz = DECK.cz0; cz <= DECK.cz1; cz++) { // a tube in every other bay, a few dead
       if ((cx + cz) % 2) continue; const c = cellCenter(cx, cz), dead = hash(cx, cz, 501) < 0.15;
-      ctx.spawn("l1-dl-" + cx + "-" + cz, { tags: ["l1lamp", "l1deck"], feetPosition: { x: c.x, y: TOP - 0.62, z: c.z }, primitive: { kind: "box", width: 2.4, height: 0.06, depth: 0.3 }, castShadow: false, visibleRange: { max: 50 },
+      ctx.spawn("l1-dl-" + cx + "-" + cz, { tags: dead ? ["l1deck"] : ["l1lamp", "l1deck"], feetPosition: { x: c.x, y: TOP - 0.62, z: c.z }, primitive: { kind: "box", width: 2.4, height: 0.06, depth: 0.3 }, castShadow: false, visibleRange: { max: 50 },
         material: dead ? { color: "oklch(0.55 0.01 240)" } : { color: "oklch(0.97 0.02 220)", emissive: "oklch(0.95 0.03 220)", emissiveIntensity: 2.4 },
         light: dead ? undefined : { kind: "point", color: "oklch(0.95 0.02 220)", intensity: LAMP_ON, distance: 18, shadow: { enabled: false } } });
     }
