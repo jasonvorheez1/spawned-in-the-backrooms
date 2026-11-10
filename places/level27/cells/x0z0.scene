@@ -1,0 +1,10 @@
+# spawn-scene v2 yaml x0z0
+l27-vault:
+  castShadow: false
+  feetPosition: {x: 2.8, y: -1.5, z: -7}
+  id: l27-vault
+  material: {color: oklch(0.45 0.03 70), repeat: [6, 4], roughness: 0.35, side: back, texture: cdn/texture-wet-grey-limestone-cave-wall-rock.png, wrap: repeat}
+  pivot: center
+  primitive: {heightSegments: 24, kind: sphere, radius: 1, widthSegments: 48}
+  receiveShadow: true
+  scale: {x: 12.5, y: 8.6, z: 16}
