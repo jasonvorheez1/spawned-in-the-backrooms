@@ -43,32 +43,31 @@ for i, v in enumerate(g.data.vertices):
     s = (q - hit).dot(n)
     if s < GAP: D[i] += n * (GAP - s); pushed += 1
 print("PUSHED", pushed)
-# skin points that still slip between cloth vertices: cast from 5 cm out along the skin normal; cloth landing under the skin + GAP is lifted
+# skin points that still slip between cloth vertices (the chest band only): cast from 2 cm out along the skin normal; cloth closer than GAP is
+# lifted, each cloth vertex by the largest need near it, never a sum
 def lift(skin, key):
     P = [M @ v.co + (D[i] if key else Vector()) for i, v in enumerate(g.data.vertices)]
     g.data.calc_loop_triangles(); C = BVHTree.FromPolygons(P, [tuple(t.vertices) for t in g.data.loop_triangles])
-    bump = {}
-    for ti in range(len(tris)):
-        a, b, c = (skin[k] for k in tris[ti]); n = (b - a).cross(c - a)
+    zs = sorted(v.z for v in skin); top = zs[-1]
+    up = {}
+    for tri in tris:
+        a, b, c = (skin[k] for k in tri); n = (b - a).cross(c - a)
         if n.length < 1e-9: continue
         n.normalize(); s = (a + b + c) / 3
-        if n.dot(s - Vector((0, 0, s.z))) < 0: continue   # only outward-facing skin
-        h = C.ray_cast(s + n * 0.05, -n, 0.05 + GAP)
+        if not (top * 0.68 < s.z < top * 0.79) or n.y > -0.3: continue   # front of the chest, below the collar
+        h = C.ray_cast(s + n * 0.02, -n, 0.02 + GAP)
         if h[0] is None: continue
         need = GAP - (h[0] - s).dot(n)
-        if need > 0:
-            cp = h[0]
-            bump.setdefault(ti, (cp, n, need))
-    moved = 0
-    for cp, n, need in bump.values():
+        if need <= 0: continue
         for i, q in enumerate(P):
-            r = (q - cp).length
-            if r < 0.02:
-                f = need * (1 - r / 0.02)
-                if key: D[i] += n * f
-                else: g.data.vertices[i].co = Mi @ (M @ g.data.vertices[i].co + n * f)
-                moved += 1
-    return len(bump), moved
+            r = (q - h[0]).length
+            if r < 0.015:
+                f = need * (1 - r / 0.015)
+                if f > up.get(i, (0,))[0]: up[i] = (f, n)
+    for i, (f, n) in up.items():
+        if key: D[i] += n * f
+        else: g.data.vertices[i].co = Mi @ (M @ g.data.vertices[i].co + n * f)
+    return len(up)
 print("LIFT0", lift(verts, False)); print("LIFT1", lift([v + d for v, d in zip(verts, deltas)], True))
 g.shape_key_add(name="Basis"); k = g.shape_key_add(name="Bust", from_mix=False)
 for i, v in enumerate(g.data.vertices): k.data[i].co = Mi @ ((M @ v.co) + D[i])
