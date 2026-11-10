@@ -20,6 +20,19 @@ const STEP = {
   7: { step: "Voss says the kid in the wet coat had a buyer waiting at the Electrical Station", mark: null }, // Savi's pick; Level 3's meeting isn't built yet // Savi's pick; never the Bonus Room (Shelly: it's a hub, no quests go there) // the story past here is unwritten
 };
 export { setStep as setDinaStep };
+// The spine (Shelly, Nov 10): like finding who shot the courier, the nobody's own question runs under every lead: where the hell am i, and how do i get home.
+export const HOME = { id: "the-way-back", name: "The Way Back" }; // my name for it
+const HOME_STEP = [ // the first whose test passes is the step shown
+  [(st) => (st.dinaQ ?? 0) >= 2, "River's backup drive maps every way in and out of the Backrooms. Whoever has it has your way home. Find it", null],
+  [(st, place) => place && place !== "main" && place !== "intake" && place !== "tutorial0", "You're not in your bedroom anymore. Ask around on Level 1: somebody here has to know a way out", { place: "level1", id: "dina-radio", x: CAMP.x, y: 0, z: CAMP.z }],
+  [() => true, "Where the hell is this? Find a way out of the yellow rooms. Then figure out how to get home", null],
+];
+function homeTick(ctx, st, place) {
+  if (st.menuOpen || st.cut || place === "intake" || place === "tutorial0") return;
+  const row = HOME_STEP.find(([ok]) => ok(st, place)); if (!row) return;
+  const fresh = setQuest(st, HOME.id, { name: HOME.name, step: row[1], mark: row[2], main: true });
+  if (fresh) { const n = "Quest Started: The Way Back"; st.notice = { text: n, at: ctx.now() }; pushFeed(st, n, ctx.now(), "info"); }
+}
 const RADIO = "Patrol to base. There's a light on at the courier's camp. Say again, someone is at Dina's camp. Moving to check.";
 const VO = `/cdn/voice-gruff-tired-man-field-operative-over-crackly-two-way-radio-saying-${encodeURIComponent(RADIO)}.mp3`;
 const CLICK = "/cdn/moodboard-realistic-gritty/sfx-walkie-talkie-radio-click-static-burst.mp3";
@@ -38,6 +51,7 @@ function setStep(ctx, st, n, note) {
 // called every tick from scripts/main-menu.js on the player's own machine; true while the cutscene owns the player
 export function dinaTick(ctx, ses, st) {
   const me = ctx.self, place = me.place;
+  if (!st.dcut) homeTick(ctx, st, place);
   if (!st.dcut) {
     if (place === "level1" && !st.dinaQ && !st.menuOpen && !st.cut) setStep(ctx, st, 1, "Quest Started: The Undelivered");
     else if (place === "level26" && st.dinaQ === 2 && !st.l26cut) setStep(ctx, st, 3, "Quest Updated: The Undelivered"); // aboard: now the cabin
