@@ -1,4 +1,4 @@
-// Level 21 "Numbered Doors" - Quests & Refrigerator Paradise Operations
+// Level 2.1 "Locked" - Quests & Refrigerator Paradise Operations
 import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
 import { setQuest, endQuest, qid } from "./quests.js";
@@ -119,7 +119,7 @@ export function finishQuest21(ctx, p, qKey, { xp = 100, cents = 5000, items = []
   }
 }
 
-// Dialogue quest triggers & turn-ins for Level 21
+// Dialogue quest triggers & turn-ins for Level 2.1
 export function handleDialogueQuest21(ctx, p, npc, text) {
   const t = String(text ?? "").toLowerCase();
   const s = p?.state;

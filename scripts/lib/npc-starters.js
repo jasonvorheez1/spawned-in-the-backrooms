@@ -2377,7 +2377,7 @@ export const STARTERS = {
     ],
   },
 
-  // ---- Level 21 (Refrigerator Paradise) ----
+  // ---- Level 2.1 (Refrigerator Paradise) ----
   'l21-ned': {
     greeting: "Welcome to Refrigerator Paradise, wanderer. Grab a carton of Saltines from the table and watch your step on the frost.",
     mood: 'calm',
@@ -2442,7 +2442,7 @@ export const STARTERS = {
       {
         text: "What happened when John Banks blew the dynamite plunger?",
         tag: "Lore",
-        reply: "Banks was trying to blast open the sealed vault door of Base Alef. The blast fractured the spatial membrane of Level 21, opening permanent rifts into the freezer aisles and releasing the cold air that created Refrigerator Paradise.",
+        reply: "Banks was trying to blast open the sealed vault door of Base Alef. The blast fractured the spatial membrane of Level 2.1, opening permanent rifts into the freezer aisles and releasing the cold air that created Refrigerator Paradise.",
         mood: 'calm',
       },
       {
