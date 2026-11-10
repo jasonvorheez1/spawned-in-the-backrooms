@@ -13,6 +13,8 @@ for m in J['meshes']:
     for p in m['primitives']:
         po, c = view(p['attributes']['POSITION']); no, _ = view(p['attributes']['NORMAL'])
         P = np.frombuffer(d, np.float32, c * 3, po).reshape(-1, 3).copy(); N = np.frombuffer(d, np.float32, c * 3, no).reshape(-1, 3)
+        k = np.round(P / 1e-4).astype(np.int64); _, inv = np.unique(k, axis=0, return_inverse=True); inv = inv.ravel()
+        A = np.zeros((inv.max() + 1, 3)); np.add.at(A, inv, N); A /= np.linalg.norm(A, axis=1, keepdims=True) + 1e-9; N = A[inv]  # welded: split seams move together, no tears
         w = np.clip((P[:, 1] - Y0) / 0.05, 0, 1)[:, None]
         P += N * D * w; d[po:po + c * 12] = P.astype(np.float32).tobytes(); n += int((w > 0).sum())
         a = J['accessors'][p['attributes']['POSITION']]; a['min'] = P.min(0).tolist(); a['max'] = P.max(0).tolist()
