@@ -8,14 +8,14 @@ worldBounds: { bottom: -30 }
 atmosphere:
   look: { script: scripts/look-photo.js }
   clouds: { enabled: true, density: 0.35, speed: 0.7 }
-  fog: { kind: linear, near: 55, far: 320, color: oklch(0.74 0.05 70) }
+  fog: { kind: linear, near: 70, far: 380, color: oklch(0.8 0.035 225) }
   timeOfDay: 17.3
   cycle: { frozen: 17.3 }
-  sky: { kind: color, color: oklch(0.68 0.06 65) }
+  sky: { kind: color, color: oklch(0.76 0.07 232) }
   sun: { light: { intensity: 1.85, color: oklch(0.95 0.12 75), shadow: { enabled: true, bias: 0.001 } } }
   moon: { enabled: false }
   stars: { enabled: false }
-  ambient: { light: { color: oklch(0.76 0.04 80), intensity: 0.85 } }
-  hemisphere: { skyColor: oklch(0.85 0.08 75), groundColor: oklch(0.35 0.03 80), intensity: 0.75 }
+  ambient: { light: { color: oklch(0.8 0.02 220), intensity: 0.8 } }
+  hemisphere: { skyColor: oklch(0.82 0.06 230), groundColor: oklch(0.42 0.03 70), intensity: 0.8 }
   wind: { direction: 120, speed: 2.2 }
 acoustics: { reverb: 0.28 }
