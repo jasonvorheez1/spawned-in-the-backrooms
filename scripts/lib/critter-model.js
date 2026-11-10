@@ -106,7 +106,7 @@ const WARD_PRE = 'critter-ward-', wardKey = (n) => WARD_PRE + n.slice(5).toLower
 const splitOf = (l) => { const r = SPLIT?.[l?.sex === 'f' ? 'f' : 'm']; return r?.parts && Object.keys(r.parts).length ? r : null }
 export function wardChildren(l, local) {
   const r = splitOf(l); if (!r) return []
-  const b = humanBody(l), morph = humanMorph(l), out = []
+  const b = humanBodyFull(l), morph = humanMorph(l), out = []
   const clothMats = Object.fromEntries(Object.entries(b.materials || {}).filter(([k]) => k.startsWith('cloth_'))) // a garment file carries only its cloth_ slots: skin and fur keys there matched nothing
   for (const [n, v] of Object.entries(b.parts)) if (n.startsWith('Ward_') && v.visible && r.parts[n]) out.push({ id: wardKey(n), attachment: { skin: true }, model: { id: r.parts[n], forward: '+z', materials: WARD_SLOTS?.[r.parts[n]] ? Object.fromEntries(Object.entries(clothMats).filter(([k]) => WARD_SLOTS[r.parts[n]].includes(k))) : clothMats }, morph, ...(local ? { audience: 'local' } : {}) })
   return out
@@ -243,7 +243,7 @@ const SKIN = ['#fde7d9', '#f3d2b3', '#e8c39c', '#d1a27b', '#c48d63', '#b07a52', 
 export const skinOf = (l) => l?.skin || SKIN[[...String(l?.fur || l?.species || '')].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % SKIN.length]
 // human bodies (art/human-base/build.py): the same parts and cloth_* slots as the furry bodies, skin tinted per look, eyes/brows tinted, face keys rolled per NPC
 const warm = (c, k) => toHex(hx(c).map((v, i) => v * k * [1, 0.42, 0.3][i]))
-export const humanBody = (l) => {
+const humanBodyFull = (l) => {
   const c = skinOf(l), skin = anime('skin', c) // the first-person arms wear this same material (player.js spreads it), so the body and the arms still read as one skin (Shelly, Nov 9)
   const m = l ? bodyModel({ ...l, _human: true }) : { materials: {}, parts: {} }
   const parts = { ...(m.parts || {}), Under_top: { visible: l?.sex === 'f' && m.parts?.Skin_torso?.visible !== false }, Under_bottom: { visible: m.parts?.Skin_hips?.visible !== false } }
@@ -252,7 +252,6 @@ export const humanBody = (l) => {
   for (const name of ['soft', 'heart', 'star', 'hash']) parts['Blush_' + name] = { visible: !maskOf(l) && blush === name }
   // a closed top hides the overalls' bib, and the bib's straps poked through it: under one, the overalls are just their legs (Dolores, Nov 9)
   if (parts.Ward_overalls?.visible && ['jacket', 'sweater', 'hoodie', 'longsleeve', 'pajamas'].includes(rowOf('topw', l?.topw, l?.top)?.kind)) { parts.Ward_overalls = { visible: false }; parts.Ward_pants = { visible: true } }
-  for (const k of Object.keys(parts)) if (k.startsWith('Ward_')) delete parts[k] // garments ride as their own skinned children now (wardrobe-split); the body file has no Ward_ nodes
   const hairc = l?.hairc || '#3a2a20', eye = l?.eye && l.eye !== '#000000' ? l.eye : '#5b4a3a'
   // clothes take the cel step too, so a person is one drawing and not a drawn head on a clay body; a slot that is already more than a plain colour keeps itself
   const cloth = {}
@@ -260,6 +259,12 @@ export const humanBody = (l) => {
   return { id: HUMAN[l?.sex === 'f' ? 'f' : 'm'], forward: '+z', parts, materials: { ...cloth,
     Body_Skin: skin, Head_Skin: skin, under: { color: '#2b2a30', roughness: 0.85, metalness: 0 },
     Iris: { color: eye, roughness: 0.18, metalness: 0, emissive: eye, emissiveIntensity: 0.45 }, Brow: { color: hairc, roughness: 0.9, metalness: 0 }, Lash: { color: '#2a2024', roughness: 0.9, metalness: 0 }, Beard: { color: l?.beardc || hairc, roughness: 0.86, metalness: 0 }, Blush: { color: typeof l?.blush === 'string' && l.blush.startsWith('#') ? l.blush : '#ed7890', roughness: 0.9, metalness: 0 } } }
+}
+// what the body file itself holds: garments ride as their own skinned children (wardrobe-split), and furry slots (fur, mark…) are not on the human file
+const HB_MATS = new Set(['Body_Skin', 'cloth_bottom', 'metal', 'lens', 'cloth_hat', 'gold', 'Head_Skin', 'Eye', 'Iris', 'Lash', 'Brow', 'Mouth', 'Teeth', 'cloth_neck', 'cloth_shoes', 'cloth_top', 'button', 'strap', 'under', 'Beard', 'Blush'])
+export const humanBody = (l) => {
+  const b = humanBodyFull(l)
+  return { ...b, parts: Object.fromEntries(Object.entries(b.parts || {}).filter(([k]) => !k.startsWith('Ward_'))), materials: Object.fromEntries(Object.entries(b.materials || {}).filter(([k]) => HB_MATS.has(k))) }
 }
 // FACE SHAPE → the human head: [lead head type, keys set outright]
 const FT_HEAD = {
