@@ -1181,7 +1181,7 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
     primitive: { kind: "box", width: 0.24, height: 0.07, depth: 0.15 },
     material: { color: "oklch(0.25 0.01 250)", roughness: 0.6 },
     behavior: "scripts/level12-use.js",
-    state: { kind: "harris-log", name: "Tape Recorder · \"MATRIX\"", verb: "Play Tape" },
+    state: { kind: "harris-log", name: "Tape Recorder · \"MATRIX\"", verb: "Take Tape" },
     children: [
       { feetPosition: { x: -0.05, y: 0.07, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.025, height: 0.01 }, material: { color: "oklch(0.85 0.01 90)" } },
       { feetPosition: { x: 0.05, y: 0.07, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.025, height: 0.01 }, material: { color: "oklch(0.85 0.01 90)" } },
