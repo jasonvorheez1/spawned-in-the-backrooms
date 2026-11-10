@@ -321,7 +321,7 @@ export function talkUi(ctx, player) {
 
       <!-- Actions & Gestures Deck -->
       ${sysActions.length ? `<div class="tc-deck" data-interactive>${sysActions.join('')}</div>` : ''}
-      <details class="tc-extra" data-interactive><summary>More actions</summary><div class="tc-social">${socialActions}</div></details>
+      
     </div>
   </div>`
 }
