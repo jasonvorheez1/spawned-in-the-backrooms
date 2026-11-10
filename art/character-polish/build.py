@@ -42,6 +42,15 @@ def head_polish(sex):
     if len(neighbors[i])>=4 and front>0 and chin+.015<p.z<eye+.08:
      avg=sum((mw@original[j]for j in neighbors[i]),Vector())/len(neighbors[i]);p=p.lerp(avg,.18*front)
     key.data[i].co=mi@p
+ # Smooth the closed lid surface without changing the lash line or eyeball keys.
+ if 'X_Blink' in keys:
+  key=keys['X_Blink']
+  for _ in range(3):
+   old=[v.co.copy()for v in key.data]
+   for i in skin:
+    p=mw@old[i]
+    if .015<abs(p.x)<.092 and abs(p.z-eye)<.037 and p.y<.045 and len(neighbors[i])>=4:
+     avg=sum((old[j]for j in neighbors[i]),Vector())/len(neighbors[i]);key.data[i].co=old[i].lerp(avg,.55)
  # Seat teeth behind the resting lips, retaining their expression deltas.
  teethids={i for i,m in enumerate(h.data.materials)if m.name.split('.')[0]=='Teeth'};teeth={v for p in h.data.polygons if p.material_index in teethids for v in p.vertices}
  for key in keys:
@@ -112,6 +121,10 @@ def hair(sex,style,hat=False):
   for sign in ([0]if style=='ponytail'else[-1,1]):
    for j in range(7):
     x=sign*.105+(j-3)*.008;root=Vector((x,cy+.11,top-.07));lock(v,f,[root,Vector((x+sign*.045,cy+.20,top-.10)),Vector((x+sign*.055,cy+.17,top-.35)),Vector((x+sign*.05+(j-3)*.008,cy+.13,top-.44+.012*abs(j-3)))],.019,.006)
+ # Allow the curated identity morph range without the scalp cutting through the cap.
+ for p in v:
+  p.x*=1.10;p.y=cy+(p.y-cy)*1.10
+  if p.z>eye:p.z=eye+(p.z-eye)*1.13
  if hat:
   for p in v:p.z=min(p.z,top-.065)
  mesh=bpy.data.meshes.new('AnimeHair');mesh.from_pydata(v,[],f);mesh.update();bm=bmesh.new();bm.from_mesh(mesh);bmesh.ops.recalc_face_normals(bm,faces=list(bm.faces));bm.to_mesh(mesh);bm.free();o=bpy.data.objects.new('AnimeHair',mesh);bpy.context.collection.objects.link(o);mesh.materials.append(mat('hair',(.055,.026,.032),.6));group=o.vertex_groups.new(name='Head');group.add(list(range(len(v))),1,'REPLACE');mod=o.modifiers.new('Rig','ARMATURE');mod.object=rig;clean_normals(o)
