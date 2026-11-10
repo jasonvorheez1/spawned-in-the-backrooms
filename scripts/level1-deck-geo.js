@@ -103,16 +103,40 @@ export function geometry(ctx) {
     ctx.albedo(FLOOR); ctx.color("oklch(0.8 0.007 85)"); ctx.roughness(0.35);
     face(ctx, [b.xl, 0.002, b.za], [b.xh, Y, b.za], [b.xh, Y, b.zb], [b.xl, 0.002, b.zb], [0, 1, 0]);
     ctx.albedo(WALL); ctx.color("oklch(0.72 0.012 80)"); ctx.roughness(0.9);
-    for (const [z, n] of [[b.za, -1], [b.zb, 1]]) { // the wedge's flank and a 25 cm curb on top of it
-      const zo = z + n * 0.18;
-      face(ctx, [b.xl, 0, zo], [b.xh, 0, zo], [b.xh, Y + 0.25, zo], [b.xl, 0.25, zo], [0, 0, n]);
-      face(ctx, [b.xl, 0.002, z], [b.xh, Y, z], [b.xh, Y + 0.25, z], [b.xl, 0.25, z], [0, 0, -n]);
-      face(ctx, [b.xl, 0.25, z], [b.xh, Y + 0.25, z], [b.xh, Y + 0.25, zo], [b.xl, 0.25, zo], [0, 1, 0]);
+    const L = Math.abs(b.xh - b.xl), yAt = (x) => (Math.abs(x - b.xl) / L) * Y, xs = (t) => b.xl + dir * t; // height along the slope
+    for (const [z, n] of [[b.za, -1], [b.zb, 1]]) { // the wedge's flank, and a curb with a bevelled lip (Shelly: "improve the ramps to be less blocky")
+      const zo = z + n * 0.22, zc = z + n * 0.05;
+      face(ctx, [b.xl, 0, zo], [b.xh, 0, zo], [b.xh, Y + 0.2, zo], [b.xl, 0.2, zo], [0, 0, n]);
+      face(ctx, [b.xl, 0.002, z], [b.xh, Y, z], [b.xh, Y + 0.19, z], [b.xl, 0.19, z], [0, 0, -n]); // inner face
+      face(ctx, [b.xl, 0.19, z], [b.xh, Y + 0.19, z], [b.xh, Y + 0.25, zc], [b.xl, 0.25, zc], [0, 0.7, -n * 0.7]); // the bevel
+      face(ctx, [b.xl, 0.25, zc], [b.xh, Y + 0.25, zc], [b.xh, Y + 0.25, zo - n * 0.03], [b.xl, 0.25, zo - n * 0.03], [0, 1, 0]);
+      face(ctx, [b.xl, 0.25, zo - n * 0.03], [b.xh, Y + 0.25, zo - n * 0.03], [b.xh, Y + 0.2, zo], [b.xl, 0.2, zo], [0, 0.7, n * 0.7]); // outer round-over
       face(ctx, [b.xl, 0, z], [b.xh, 0, z], [b.xh, Y, z], [b.xh, Y, z], [0, 0, n]);
+      if (hi) { ctx.color("oklch(0.6 0.012 80)"); // pour joints down the flank every 4 m, a dark weep stain under each
+        for (let t = 4; t < L - 0.5; t += 4) { const x = xs(t), y = yAt(x); face(ctx, [x - 0.02, 0.05, zo + n * 0.004], [x + 0.02, 0.05, zo + n * 0.004], [x + 0.02, y + 0.15, zo + n * 0.004], [x - 0.02, y + 0.15, zo + n * 0.004], [0, 0, n]); }
+        ctx.color("oklch(0.72 0.012 80)"); }
     }
-    face(ctx, [b.xh, 0, b.za - 0.18], [b.xh, 0, b.zb + 0.18], [b.xh, Y, b.zb + 0.18], [b.xh, Y, b.za - 0.18], [dir, 0, 0]); // its tall end, under the deck
+    face(ctx, [b.xh, 0, b.za - 0.22], [b.xh, 0, b.zb + 0.22], [b.xh, Y, b.zb + 0.22], [b.xh, Y, b.za - 0.22], [dir, 0, 0]); // its tall end, under the deck
+    if (hi) { // anti-slip grooves across the slope, an expansion joint at mid-run, steel plates at the foot and the top, a trench drain at the foot
+      ctx.albedo(null); ctx.color("oklch(0.42 0.008 80)"); ctx.roughness(0.95);
+      for (let t = 1.2; t < L - 0.9; t += 0.45) { const x0 = xs(t), x1 = xs(t + 0.07), y0 = yAt(x0) + 0.006, y1 = yAt(x1) + 0.006; face(ctx, [x0, y0, b.za + 0.12], [x1, y1, b.za + 0.12], [x1, y1, b.zb - 0.12], [x0, y0, b.zb - 0.12], [0, 1, 0]); }
+      ctx.color("oklch(0.18 0.01 80)"); { const x0 = xs(L / 2 - 0.03), x1 = xs(L / 2 + 0.03); face(ctx, [x0, yAt(x0) + 0.008, b.za], [x1, yAt(x1) + 0.008, b.za], [x1, yAt(x1) + 0.008, b.zb], [x0, yAt(x0) + 0.008, b.zb], [0, 1, 0]); }
+      ctx.color("oklch(0.5 0.01 240)"); ctx.metalness(0.8); ctx.roughness(0.45);
+      for (const [t0, t1] of [[0, 0.5], [L - 0.5, L]]) { const x0 = xs(t0), x1 = xs(t1); face(ctx, [x0, yAt(x0) + 0.012, b.za], [x1, yAt(x1) + 0.012, b.za], [x1, yAt(x1) + 0.012, b.zb], [x0, yAt(x0) + 0.012, b.zb], [0, 1, 0]); }
+      ctx.color("oklch(0.12 0.005 240)"); const xd = b.xl - dir * 0.6; // the drain: a dark slot with cast bars across it
+      face(ctx, [xd - 0.18, 0.01, b.za], [xd + 0.18, 0.01, b.za], [xd + 0.18, 0.01, b.zb], [xd - 0.18, 0.01, b.zb], [0, 1, 0]);
+      ctx.color("oklch(0.32 0.01 240)"); for (let z = b.za + 0.1; z < b.zb; z += 0.16) box(ctx, xd - 0.18, xd + 0.18, 0.01, 0.025, z, z + 0.05);
+      ctx.metalness(0);
+    }
     ctx.albedo(null); ctx.color("oklch(0.8 0.16 90)"); ctx.metalness(0.3); ctx.roughness(0.5);
-    for (const z of [b.za - 0.09, b.zb + 0.09]) tube(ctx, [[b.xl, 1.15, z], [b.xh, Y + 1.15, z]], [0.035, 0.035], 8, [1, 1], 0, 1, 1);
+    for (const [z, n] of [[b.za - 0.11, -1], [b.zb + 0.11, 1]]) { // a double pipe rail on posts, its ends bent down into the curb
+      const e0 = xs(-0.25), e1 = xs(L + 0.25);
+      tube(ctx, [[xs(0.3), 0.25, z], [xs(0.3), 1.0, z], [xs(0.55), 1.12, z], [xs(L - 0.4), Y + 1.12, z]], [0.035, 0.035, 0.035, 0.035], 8, [1, 1], 0, 1, 1);
+      tube(ctx, [[xs(0.6), 0.6, z], [xs(L - 0.4), Y + 0.6, z]], [0.028, 0.028], 8, [1, 1], 0, 1, 1);
+      for (let t = 2; t < L - 0.6; t += 2) { const x = xs(t), y = yAt(x); tube(ctx, [[x, y + 0.25, z], [x, y + 1.14, z]], [0.03, 0.03], 8, [1, 1], 0, 1, 1); }
+      if (hi) { ctx.color("oklch(0.25 0.01 240)"); for (let t = 2; t < L - 0.6; t += 2) { const x = xs(t), y = yAt(x); box(ctx, x - 0.07, x + 0.07, y + 0.25, y + 0.27, z - 0.07, z + 0.07); } ctx.color("oklch(0.8 0.16 90)"); } // base plates
+      void e0; void e1;
+    }
     ctx.metalness(0); ctx.roughness(0.6);
     if (hi) { ctx.color("oklch(0.8 0.15 88)"); const m = (b.za + b.zb) / 2; // chevrons at the foot, pointing up the slope
       for (let k = 0; k < 3; k++) { const x = b.xl + dir * (0.8 + k * 1.1), yy = (Math.abs(x - b.xl) / (2 * S)) * Y + 0.01, t = dir * 0.5;
