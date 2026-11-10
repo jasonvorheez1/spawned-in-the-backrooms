@@ -738,7 +738,7 @@ function invAction(ctx, d) {
     sound(ctx, 'gun-raise-cloth-rustle', 0.5, true); return
   }
   if (d.k === 'sel') { s.invSel = String(d.t || '').slice(0, 80); return }
-  if (d.k === 'tab') { s.invTab = ['all', 'weapons', 'repair', 'aid', 'apparel', 'ammo', 'misc'].includes(d.t) ? d.t : 'all'; return }
+  if (d.k === 'tab') { s.invTab = ['all', 'weapons', 'repair', 'aid', 'apparel', 'ammo', 'misc', 'tapes', 'key'].includes(d.t) ? d.t : 'all'; return }
   if (d.k === 'sort') { s.invSort = ['name', 'dam', 'wg', 'cnd'].includes(d.s) ? d.s : 'name'; return }
   if (d.k === 'sheet') { s.invOpen = false; s.sheetOpen = true; return }
   if (d.k === 'quests') { s.invOpen = false; s.jrnOpen = true; return } // HALOGEN's QUESTS tab: the journal (scripts/quest-marker.js)
