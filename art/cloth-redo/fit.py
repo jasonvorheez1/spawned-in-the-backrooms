@@ -19,31 +19,26 @@ bpy.ops.object.select_all(action='DESELECT'); g.select_set(True); bpy.context.vi
 bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 for o in set(bpy.data.objects) - before:
     if o != g: bpy.data.objects.remove(o)
-# tripo cloth is a thick shell: its inner wall, pushed out with the outer, flickers through it. drop faces facing the skin
-bm2 = bmesh.new(); bm2.from_mesh(g.data); bm2.normal_update(); dead = []
-for f in bm2.faces:
-    loc, nrm, _, _ = tree.find_nearest(f.calc_center_median())
-    if loc is not None and f.normal.dot(nrm) < -0.2: dead.append(f)
-bmesh.ops.delete(bm2, geom=dead, context='FACES'); bm2.to_mesh(g.data); bm2.free()
-print('inner faces dropped', len(dead))
-# push every vertex inside or hugging the skin out to 1.2 cm off it, ease loose cloth within 4 cm in toward 1.8 cm
-pushed = 0
-for v in g.data.vertices:
-    loc, nrm, _, dist = tree.find_nearest(v.co)
-    if loc is None: continue
-    side = (v.co - loc).dot(nrm)
-    if side < 0.012:
-        v.co = loc + nrm * 0.012; pushed += 1
-    elif side < 0.04:
-        v.co = loc + nrm * (0.018 + (side - 0.018) * 0.5)
-print('pushed', pushed, 'of', len(g.data.vertices))
-# smooth twice to hide the push, keep it off the skin
-for _ in range(2):
-    sm = g.modifiers.new('s', 'SMOOTH'); sm.factor = 0.4; sm.iterations = 2
-    bpy.ops.object.modifier_apply(modifier='s')
-    for v in g.data.vertices:
-        loc, nrm, _, _ = tree.find_nearest(v.co)
-        if loc is not None and (v.co - loc).dot(nrm) < 0.01: v.co = loc + nrm * 0.01
+# weld first: tripo splits verts at uv seams, and a move that differs across a seam tears holes
+bm2 = bmesh.new(); bm2.from_mesh(g.data); bmesh.ops.remove_doubles(bm2, verts=bm2.verts, dist=0.0005); bm2.to_mesh(g.data); bm2.free()
+# the push is a displacement field eased over the cloth's own edges: the knit keeps its folds, nothing creases flat on the skin
+V = g.data.vertices; D = []
+for v in V:
+    loc, nrm, _, _ = tree.find_nearest(v.co)
+    side = (v.co - loc).dot(nrm) if loc is not None else 1
+    D.append(nrm * (0.014 - side) if side < 0.014 else Vector())
+nb = [[] for _ in V]
+for e in g.data.edges:
+    i, j = e.vertices; nb[i].append(j); nb[j].append(i)
+for _ in range(8):
+    D = [max(d, sum((D[j] for j in nb[i]), Vector()) / len(nb[i]), key=lambda x: x.length) * 0.5 + (sum((D[j] for j in nb[i]), Vector()) / len(nb[i])) * 0.5 if nb[i] else d for i, d in enumerate(D)]
+for v, d in zip(V, D): v.co += d
+# last guard: nothing left under 8 mm
+low = 0
+for v in V:
+    loc, nrm, _, _ = tree.find_nearest(v.co)
+    if loc is not None and (v.co - loc).dot(nrm) < 0.008: v.co = loc + nrm * 0.008; low += 1
+print('welded verts', len(V), 'guarded', low)
 # weights: nearest skin face's groups, from a joined skin copy
 src = bpy.data.objects.new('wsrc', bpy.data.meshes.new('wsrc')); bpy.context.scene.collection.objects.link(src)
 bpy.ops.object.select_all(action='DESELECT')
