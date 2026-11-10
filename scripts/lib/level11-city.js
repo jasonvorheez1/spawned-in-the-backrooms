@@ -162,7 +162,20 @@ pop steam rate=14 on=disc(.35) life=1.6..2.6 v=up(.9..1.5)+sdir()*.12 size=.18..
   const SUB = { x: 13.6, z: 60.5 };
   for (const w of [-1, 1]) bx(`l11-sub-well-${w}`, SUB.x + w * 1.6, -2.9, SUB.z, 0.2, 2.85, 4.0, { color: "oklch(0.72 0.05 160)", roughness: 0.7 }); // the stairwell's tiled sides, down to the platform corridor
   for (let k = 0; k < 7; k++) bx(`l11-sub-step-${k}`, SUB.x, -0.1 - k * 0.38, SUB.z - 1.6 + k * 0.5, 2.2, 0.12, 0.5, { color: "oklch(0.5 0.02 250)", roughness: 0.8 });
-  for (const s of [-1, 1]) { bx(`l11-sub-rail-${s}`, SUB.x + s * 1.2, 0.5, SUB.z, 0.07, 0.9, 4.0, { color: "oklch(0.25 0.1 150)", metalness: 0.6, roughness: 0.4 }); cyl(`l11-sub-post-${s}`, SUB.x + s * 1.2, 0.1, SUB.z - 2.1, 0.07, 0.07, 2.6, { color: "oklch(0.25 0.1 150)", metalness: 0.6 }); sp(`l11-sub-globe-${s}`, { feetPosition: { x: SUB.x + s * 1.2, y: 2.9, z: SUB.z - 2.1 }, primitive: { kind: "sphere", radius: 0.2 }, material: { color: "oklch(0.8 0.2 145)", emissive: "oklch(0.8 0.2 145)", emissiveIntensity: 2.4 }, light: { kind: "point", color: "oklch(0.85 0.2 145)", intensity: 2.5, distance: 8 } }); }
+  const IRON = { color: "oklch(0.3 0.09 150)", metalness: 0.65, roughness: 0.45 }; // MTA green cast iron, worn at the grip
+  for (const s of [-1, 1]) {
+    const kids = [
+      { feetPosition: { x: 0, y: 0.84, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.035, radiusBottom: 0.035, height: 4 }, rotation: { pitch: 90 }, pivot: "center", material: { ...IRON, color: "oklch(0.36 0.07 140)", roughness: 0.3 } },
+      { feetPosition: { x: 0, y: 0.1, z: 0 }, primitive: { kind: "box", width: 0.04, height: 0.05, depth: 4 }, material: IRON },
+      ...Array.from({ length: 15 }, (_, i) => ({ feetPosition: { x: 0, y: 0.1, z: -1.75 + i * 0.25 }, primitive: { kind: "cylinder", radiusTop: 0.012, radiusBottom: 0.012, height: 0.74 }, material: IRON })),
+      ...Array.from({ length: 4 }, (_, i) => ({ feetPosition: { x: 0, y: 0.45, z: -1.5 + i * 1 }, primitive: { kind: "torus", radius: 0.12, tube: 0.012 }, rotation: { yaw: 90 }, pivot: "center", material: IRON })),
+      { feetPosition: { x: 0, y: 0, z: 1.98 }, primitive: { kind: "box", width: 0.09, height: 0.95, depth: 0.09 }, material: IRON },
+      { feetPosition: { x: 0, y: 0.95, z: 1.98 }, primitive: { kind: "sphere", radius: 0.06 }, material: IRON },
+    ];
+    sp(`l11-sub-rail-${s}`, { feetPosition: { x: SUB.x + s * 1.2, y: 0.08, z: SUB.z }, primitive: { kind: "box", width: 0.07, height: 0.9, depth: 4.0 }, material: { color: "oklch(0 0 0 / 0)", transparent: true, opacity: 0, depthWrite: false }, castShadow: false, physics: { body: "static", collider: "box" }, children: kids });
+    cyl(`l11-sub-post-${s}`, SUB.x + s * 1.2, 0.1, SUB.z - 2.1, 0.05, 0.08, 2.6, IRON);
+    sp(`l11-sub-globe-${s}`, { feetPosition: { x: SUB.x + s * 1.2, y: 2.9, z: SUB.z - 2.1 }, primitive: { kind: "sphere", radius: 0.2 }, material: { color: "oklch(0.8 0.2 145)", emissive: "oklch(0.8 0.2 145)", emissiveIntensity: 2.4 }, light: { kind: "point", color: "oklch(0.85 0.2 145)", intensity: 2.5, distance: 8 }, behavior: "scripts/l11-globe.js", state: { base: 2.5 }, children: [{ feetPosition: { x: 0, y: -0.24, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.09, radiusBottom: 0.06, height: 0.08 }, material: IRON }] });
+  }
   sp("l11-sub-sign", { feetPosition: { x: SUB.x, y: 2.5, z: SUB.z - 2.1 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 1.6, height: 0.5, depth: 0.06 }, material: { color: "oklch(0.2 0.02 250)" }, ui: `<div face="front" width="1.6m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;font-size:240px;letter-spacing:8px;color:#fff;background:#1a6b3a">SUBWAY</div>` });
   // billboards on stilts that change their ads when nobody is looking
   const bb = [];
