@@ -82,14 +82,14 @@ export function update(ctx, dt) {
       const los = clearSight(ctx, eye, aim, [id, prey.id]);
       if (!los || best > K.range) { vx = dx / n * K.speed; vz = dz / n * K.speed; }
       else if (best < K.keep - 2) { vx = -dx / n * K.speed * 0.7; vz = -dz / n * K.speed * 0.7; }
-      if (los && best < K.range && now > (m.nextHit ?? now + 1)) {
+      if (los && best < K.range && now > (m.nextHit ?? 0)) {
         m.nextHit = now + K.cd * 1000 * (0.85 + ctx.random() * 0.3);
         const muzzle = { x: pos.x + dx / n * 0.6, y: pos.y + 1.25, z: pos.z + dz / n * 0.6 };
         const hits = ctx.random() > K.spread * (best / 4) * (prey.velocity && Math.hypot(prey.velocity.x, prey.velocity.z) > 3 ? 1.6 : 1);
         const end = hits ? aim : { x: aim.x + (ctx.random() - 0.5) * 1.6, y: aim.y + (ctx.random() - 0.3), z: aim.z + (ctx.random() - 0.5) * 1.6 };
         const L = Math.hypot(end.x - muzzle.x, end.y - muzzle.y, end.z - muzzle.z);
         ctx.spawn({ feetPosition: { x: (muzzle.x + end.x) / 2, y: (muzzle.y + end.y) / 2 - 0.025, z: (muzzle.z + end.z) / 2 }, pivot: "center", rotation: { lookAt: end, include: ["yaw", "pitch"] }, primitive: { kind: "box", width: 0.05, height: 0.05, depth: L }, material: { color: "oklch(0.85 0.17 65)", emissive: "oklch(0.8 0.18 60)", emissiveIntensity: 6 }, castShadow: false, lifetime: 0.12, audience: "near" });
-        ctx.emit("fx", { position: muzzle, script: BOLT }); f.anim.fire = { clip: "cdn/clip-rifle-fire-01972c51.glb", loop: false, weight: 1, mask: "upper" };
+        ctx.emit("fx", { position: muzzle, script: BOLT });
         f.anim.fire = { clip: "cdn/clip-rifle-fire-01972c51.glb", loop: false, weight: 1, mask: "RightShoulder", blend: 0.05 };
         ctx.emit("playSound", { clip: "/cdn/moodboard-scifi-neon/sfx-retro-1950s-ray-gun-zap-with-warbling-oscillator.mp3", position: muzzle, volume: 0.9, mode: "overlap" });
         if (ctx.random() < 0.35) speak(ctx, f, m, "shoot", now, 7000);
