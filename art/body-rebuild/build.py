@@ -94,6 +94,31 @@ if MALE:
         x *= 1 + .1 * jaw
         if A > .5: y = .11 + (y - .11) * (1 + .15 * A)                             # fuller arms
         v.co = mathutils.Vector((x * GROW, y * GROW, z * GROW))
+    # his face (measured on the base, pre-grow): eyes are small islands at z 1.715-1.782, |x| .02-.095; a lash line at 1.787-1.794; chin at 1.641
+    par = list(range(len(vs)))
+    def fnd(a):
+        while par[a] != a: par[a] = par[par[a]]; a = par[a]
+        return a
+    for e in body.data.edges:
+        a_, b_ = fnd(e.vertices[0]), fnd(e.vertices[1])
+        if a_ != b_: par[a_] = b_
+    isl = {}
+    for i in range(len(vs)): isl.setdefault(fnd(i), []).append(i)
+    G_ = GROW
+    for ids in isl.values():
+        if len(ids) > 200: continue
+        c = sum((vs[i].co for i in ids), mathutils.Vector()) / len(ids); z0 = c.z / G_
+        if 1.71 < z0 < 1.785 and .02 < abs(c.x / G_) < .1 and c.y / G_ < .05:          # eyes: narrower, less tall, a touch lower
+            for i in ids: d = vs[i].co - c; vs[i].co = c + mathutils.Vector((d.x * .88, d.y, d.z * .78)) + mathutils.Vector((0, 0, -.003))
+        elif 1.784 < z0 < 1.8 and abs(c.x / G_) > .02:                                    # brow/lash line: heavier, flatter
+            for i in ids: d = vs[i].co - c; vs[i].co = c + mathutils.Vector((d.x * 1.04, d.y, d.z * 1.7)) + mathutils.Vector((0, 0, -.002))
+        elif 1.66 < z0 < 1.7 and abs(c.x / G_) < .03:                                     # mouth: a bit wider, thinner
+            for i in ids: d = vs[i].co - c; vs[i].co = c + mathutils.Vector((d.x * 1.08, d.y, d.z * .85))
+    for v in vs:
+        z0 = v.co.z / G_
+        if v.co.y / G_ < .02:
+            v.co.y -= .004 * G_ * bump(1.775, 1.79, 1.81, 1.83, z0) * (1 - sm(.03, .08, abs(v.co.x / G_)))   # brow ridge
+            v.co.y -= .004 * G_ * bump(1.635, 1.645, 1.66, 1.675, z0) * (1 - sm(.02, .045, abs(v.co.x / G_)))  # squarer chin
     body.data.update()
 body.select_set(True); rig.select_set(True); bpy.context.view_layer.objects.active = rig
 bpy.ops.object.parent_set(type='ARMATURE_AUTO')
