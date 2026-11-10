@@ -60,7 +60,7 @@ for _ in range(3):
     P = {k: (P[k] * (1 - 0.25 * min(1, KS[k])) + (sum((P[j] for j in KADJ[k]), Vector()) / len(KADJ[k])) * 0.25 * min(1, KS[k])) if KADJ[k] and KS[k] > 0.05 else P[k] for k in P}
 # the shoulder cap (Shelly "do you know what a shoulder is"): inflate the skin over each arm joint toward a sphere, top and outer side only,
 # so the trap rolls over a round deltoid into the arm instead of ramping into a thin tube
-CAP = {'m': (0.074, 0.012, 0.010), 'f': (0.052, 0.008, 0.006)}[sex]   # radius, centre in from the joint, centre up from it
+CAP = {'m': (0.07, 0.002, 0.03), 'f': (0.05, 0.0, 0.018)}[sex]   # radius, centre in from the joint, centre up from it
 for sd in ('Left', 'Right'):
     h = bones[sd + 'Arm'][0]; sg = 1 if h.x > 0 else -1
     c = Vector((h.x - sg * CAP[1], h.y, h.z + CAP[2])); R = CAP[0]
@@ -70,7 +70,7 @@ for sd in ('Left', 'Right'):
         u = q / d; face = u.x * sg * 0.6 + u.z * 0.8   # outward and up; the armpit side is left alone
         if face < -0.1: continue
         w = min(1, (face + 0.1) / 0.5) * (1 - max(0, (d - R) / (R * 0.25)))
-        if d < R: P[k] = c + u * (d + (R - d) * 0.85 * w)
+        if d < R: P[k] = c + u * (d + (R - d) * 0.95 * w)
 for _ in range(2):
     P = {k: (P[k] * 0.7 + (sum((P[j] for j in KADJ[k]), Vector()) / len(KADJ[k])) * 0.3) if KADJ[k] and KS[k] > 0.05 else P[k] for k in P}
 D = {k: P[k] - KP[k] for k in P}
