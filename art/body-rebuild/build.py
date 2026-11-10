@@ -42,6 +42,17 @@ bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.select_all(action='SELECT'); 
 body.select_set(True); rig.select_set(True); bpy.context.view_layer.objects.active = rig
 bpy.ops.object.parent_set(type='ARMATURE_AUTO')
 dg=bpy.context.evaluated_depsgraph_get(); ev=body.evaluated_get(dg); zs=[(body.matrix_world@v.co) for v in ev.data.vertices]; print("restbox",[round(min(p[i] for p in zs),3) for i in range(3)],[round(max(p[i] for p in zs),3) for i in range(3)], "parent", body.parent, tuple(body.matrix_world.to_scale()))
+# heat weighting misses some islands (eyes, lashes, inner mouth): each takes the weights of its nearest weighted vertex
+from mathutils import kdtree
+wv = [v for v in body.data.vertices if v.groups and sum(g.weight for g in v.groups) > 0.01]
+kd = kdtree.KDTree(len(wv))
+for i, v in enumerate(wv): kd.insert(v.co, i)
+kd.balance()
+miss = [v for v in body.data.vertices if not v.groups or sum(g.weight for g in v.groups) <= 0.01]
+print("unweighted at z", sorted(set(round(v.co.z, 1) for v in miss)))
+for v in miss:
+    _, i, _ = kd.find(v.co); src = wv[i]
+    for g in src.groups: body.vertex_groups[g.group].add([v.index], g.weight, 'REPLACE')
 print("groups", len(body.vertex_groups), "unweighted", sum(1 for v in body.data.vertices if not v.groups))
 bpy.ops.export_scene.gltf(filepath=OUT, export_apply=False, export_animations=False)
 # proof: arms down + elbow bent, knee bent
@@ -53,7 +64,8 @@ def aim(n, d):
     b.matrix = nm; bpy.context.view_layer.update()
 for s, x in (("Left", 1), ("Right", -1)):
     aim(s+"Arm", (x*.18, 0.05, -1)); aim(s+"ForeArm", (x*.1, .9, -.5))
-aim("LeftLeg", (0, -.6, -1))
+aim("LeftUpLeg", (0, .7, -.7)); aim("LeftLeg", (0, -.5, -1))
+aim("RightArm", (-.7, .1, .1)); aim("RightForeArm", (-.2, .3, 1))
 dg=bpy.context.evaluated_depsgraph_get(); ev=body.evaluated_get(dg); zs=[(body.matrix_world@v.co) for v in ev.data.vertices]; print("posebox",[round(min(p[i] for p in zs),3) for i in range(3)],[round(max(p[i] for p in zs),3) for i in range(3)])
 sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = 500; sc.render.resolution_y = 700
 w = bpy.data.worlds.new("w"); w.color = (.55, .55, .6); sc.world = w
