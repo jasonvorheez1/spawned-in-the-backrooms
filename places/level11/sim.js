@@ -282,6 +282,9 @@ function lay(ctx) {
       sp(`l11-rail-${sd}-${rx}`, { feetPosition: { x: rx, y: 0.35, z: zz }, primitive: { kind: "scripted", script: "scripts/l11-rail.js", params: { len: 4.8 } }, material: IRON_RAIL, physics: { body: "static", collider: "box" }, state: { floor: "metal" } });
   }
 
+  for(const [side,z]of [["s",CANAL_Z+CANAL_W/2+.5],["n",CANAL_Z-CANAL_W/2-.5]])
+    sp(`l11-rail-bridge-return-${side}`,{feetPosition:{x:17.8,y:.35,z},primitive:{kind:"scripted",script:"scripts/l11-rail.js",params:{len:3.6}},material:IRON_RAIL,physics:{body:"static",collider:"box"},state:{floor:"metal"}});
+
   // Canal Life Buoys Mounted on Posts
   [-16, 16].forEach((bxPos, k) => {
     sp(`l11-canal-buoy-${k}`, { feetPosition: { x: bxPos, y: 0.2, z: CANAL_Z + CANAL_W / 2 + 0.5 }, model: { id: MODELS.canal_buoy, forward: "-z" }, layout: { box: { min: { x: -0.3, y: 0, z: -0.3 }, max: { x: 0.3, y: 0.95, z: 0.3 } } }, physics: { body: "static", collider: "cylinder" } }); // tripo mooring post
@@ -1426,9 +1429,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     [-4, 4].forEach((dx, i) => sp(`l11-ot-off-duct-${i}`, { feetPosition: { x: OX + dx, y: OH - 0.55 - (OD - 1.2) / 2, z: OZ }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.3, radiusBottom: 0.3, height: OD - 1.2, radialSegments: 20 }, material: SILVER_FOIL }));
     [-6, 0, 6].forEach((dz, i) => sp(`l11-ot-off-tube-${i}`, { feetPosition: { x: OX, y: OH - 0.32, z: OZ + dz }, primitive: { kind: "box", width: 3, height: 0.06, depth: 0.12 }, material: { color: "#f4f6f0", emissive: "#f4f8ff", emissiveIntensity: 1.6 }, light: { kind: "point", color: "oklch(0.96 0.02 220)", intensity: 1.6, distance: 11 } }));
     // half-hung drywall: a studded partition with the boards stopping short
-    for(const [side,z]of [["s",CANAL_Z+CANAL_W/2+.5],["n",CANAL_Z-CANAL_W/2-.5]])
-    sp(`l11-rail-bridge-return-${side}`,{feetPosition:{x:17.8,y:.35,z},primitive:{kind:"scripted",script:"scripts/l11-rail.js",params:{len:3.6}},material:IRON_RAIL,physics:{body:"static",collider:"box"},state:{floor:"metal"}});
-  for (let k = 0; k < 9; k++) bx(`l11-ot-off-stud-${k}`, OX - 1 + k * 0.6, 0.15, OZ + 9.5, 0.09, OH - 0.15, 0.06, WOOD, { physics: k % 4 ? "none" : "static" });
+    for (let k = 0; k < 9; k++) bx(`l11-ot-off-stud-${k}`, OX - 1 + k * 0.6, 0.15, OZ + 9.5, 0.09, OH - 0.15, 0.06, WOOD, { physics: k % 4 ? "none" : "static" });
     bx("l11-ot-off-board-0", OX - 1.5, 0.15, OZ + 9.55, 1.2, 2.4, 0.03, DRYWALL_MAT);
     bx("l11-ot-off-board-1", OX - 0.3, 0.15, OZ + 9.55, 1.2, 2.4, 0.03, DRYWALL_MAT);
     // the work left where it stopped
