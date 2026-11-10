@@ -119,8 +119,9 @@ if MALE:
                     vs[i].co.x *= 1 - .06 * t
                 for i in ids:   # the far ends: clipped at |x| .08 and laid onto the lid, so no tip shows past the corner side-on
                     ax_ = abs(vs[i].co.x / G_)
-                    if ax_ > .08:
-                        vs[i].co.x = math.copysign(.08 * G_, vs[i].co.x); vs[i].co.z = min(vs[i].co.z, zl); vs[i].co.y = min(vs[i].co.y, yl)
+                    if ax_ > .08: vs[i].co.x = math.copysign(.08 * G_, vs[i].co.x)
+                    if vs[i].co.z > zl:   # the fringe above the lid line: pressed into a band on the lid, strands no longer stand off the face
+                        vs[i].co.z = zl + (vs[i].co.z - zl) * .35; vs[i].co.y = yl + (vs[i].co.y - yl) * .2
         if 1.71 < z0 < 1.785 and .02 < abs(c.x / G_) < .1 and c.y / G_ < .05:          # eyes: narrower, less tall, a touch lower
             for i in ids: d = vs[i].co - c; vs[i].co = c + mathutils.Vector((d.x * .88, d.y, d.z * .78)) + mathutils.Vector((0, 0, -.003))
         elif 1.784 < z0 < 1.8 and abs(c.x / G_) > .02:                                    # brow/lash line: heavier, flatter
