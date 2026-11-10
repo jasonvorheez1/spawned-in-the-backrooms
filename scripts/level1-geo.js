@@ -1,6 +1,7 @@
 // Level 1 "The Habitable Zone": concrete floor and ceiling, banded pillars, corridor walls with push-door gaps
 // and green EXIT signs, steel storage racks, ceiling pipes, the flickering wall home. Layout: scripts/lib/level1.js.
-import { N, S, H, HALF, DOOR, zoneOf, edge, hasPillar, sectorOf, cellCenter, RACK, hash, BACK, ARRIVE } from "./lib/level1.js";
+import { N, S, H, HALF, DOOR, zoneOf, edge, hasPillar, sectorOf, cellCenter, RACK, hash, BACK, ARRIVE, rampCell } from "./lib/level1.js";
+import { puddle } from "./level1-deck-geo.js";
 import { slab, prism, tube } from "./lib/shapes.js";
 
 const FLOOR = "cdn/texture-wet-sealed-parking-garage-concrete-floor-tire-scuffs-oil-stains-hairline-cracks.png", STALL = "cdn/texture-worn-chipped-white-road-line-paint-on-concrete.png", WALL = "cdn/texture-discolored-poured-concrete-wall-water-stains.png", CEIL = "cdn/texture-concrete-ceiling-panels.png";
@@ -63,9 +64,17 @@ export function geometry(ctx) {
       }
     }
   }
+  // standing water: glassy puddles in the low spots of the halls and storage, the tubes smeared across them (Shelly's wet-garage reference)
+  ctx.albedo(null); ctx.metalness(0); ctx.roughness(0.03); ctx.color("oklch(0.3 0.01 240 / 0.9)");
+  for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
+    const zone = zoneOf(cx, cz); if ((zone !== "halls" && zone !== "storage") || rampCell(cx, cz) || hash(cx, cz, 461) > 0.4) continue;
+    const x0 = cx * S - HALF, z0 = cz * S - HALF;
+    for (let k = 0; k < 1 + Math.floor(hash(cx, cz, 462) * 3); k++) puddle(ctx, x0 + 1.2 + hash(cx, cz, 470 + k) * 5.6, 0.006, z0 + 1.2 + hash(cx, cz, 480 + k) * 5.6, 0.5 + hash(cx, cz, 490 + k) * 1.8, cx * 131 + cz * 17 + k);
+  }
   ctx.roughness(null); ctx.albedo(CEIL); ctx.color("oklch(0.93 0.004 250)");
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     const x0 = cx * S - HALF, z0 = cz * S - HALF;
+    if (rampCell(cx, cz)) continue; // the ramps climb through here to the upper deck
     ctx.quad(x0, H, z0, x0 + S, H, z0, x0 + S, H, z0 + S, x0, H, z0 + S);
   }
   // walls: every cell edge, the outer ring included

@@ -91,3 +91,12 @@ export const ONWARD = { x: HALF - 0.6, z: cellCenter(N - 1, 12).z };
 export const L1_NAMES = {
   l1_halls: "The Halls", l1_storage: "Storage Racks", l1_corridors: "The Corridors", l1_camp: "M.E.G. Waypoint", l1_pipes: "The Pipeworks", l1_void: "The Halls",
 };
+
+// the upper deck (Shelly: "there should be at least a second floor"): a second parking floor over the long hall band,
+// reached by two ramps cut through the ground floor's ceiling. Cells inclusive; a ramp is two cells along x, rising by dir.
+export const DECK = { cx0: 8, cx1: 19, cz0: 10, cz1: 13, y: 4.5, h: 3.6 }; // floor top at 4.5 (ceiling 4.2 + 0.3 slab), 3.6 m to its own ceiling
+export const RAMPS = [{ cx: 9, cz: 11, dir: 1 }, { cx: 17, cz: 13, dir: -1 }]; // cells cx and cx+1 in row cz
+export const rampCell = (cx, cz) => RAMPS.some((r) => r.cz === cz && (cx === r.cx || cx === r.cx + 1));
+export const onDeck = (cx, cz) => cx >= DECK.cx0 && cx <= DECK.cx1 && cz >= DECK.cz0 && cz <= DECK.cz1;
+// a ramp's footprint in metres: low end xl (ground), high end xh (deck), z from za to zb
+export const rampBox = (r) => { const x0 = r.cx * S - HALF, x1 = x0 + 2 * S, z0 = r.cz * S - HALF; return { xl: r.dir > 0 ? x0 : x1, xh: r.dir > 0 ? x1 : x0, za: z0 + 1, zb: z0 + S - 1, x0, x1, z0, z1: z0 + S }; };
