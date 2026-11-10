@@ -184,6 +184,29 @@ export function geometry(ctx) {
     ctx.color("oklch(0.5 0.15 30)"); box(ctx, 0.35, 0.98, 0.1, 0.18, 0.1, 0.12);
     return;
   }
+  if (kind === "cookfire") { // a low ring of stones round a fire pit with logs, an iron grill on legs and a pot
+    ctx.albedo(null)
+    ctx.color("oklch(0.55 0.02 60)")
+    for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2; box(ctx, Math.cos(a) * 0.45, 0, Math.sin(a) * 0.45, 0.26, 0.16 + (i % 3) * 0.03, 0.26) }
+    ctx.color("oklch(0.15 0.01 60)"); box(ctx, 0, 0, 0, 0.6, 0.05, 0.6)
+    ctx.color("oklch(0.42 0.06 55)"); box(ctx, -0.1, 0.05, 0, 0.5, 0.09, 0.09); box(ctx, 0.1, 0.1, 0.05, 0.09, 0.09, 0.5)
+    ctx.color("oklch(0.62 0.2 45)"); box(ctx, 0, 0.1, 0, 0.18, 0.08, 0.18)
+    ctx.albedo(METAL); ctx.color("oklch(0.35 0.02 250)")
+    for (const x of [-0.4, 0.4]) for (const z of [-0.4, 0.4]) box(ctx, x, 0, z, 0.05, 0.5, 0.05)
+    box(ctx, 0, 0.5, 0, 0.9, 0.03, 0.9)
+    ctx.color("oklch(0.28 0.02 250)"); box(ctx, 0, 0.53, 0, 0.36, 0.24, 0.36)
+    return;
+  }
+  if (kind === "ammobench") { // a steel-topped bench: a reloading press, a powder scale and rows of brass
+    ctx.albedo(METAL); ctx.color("oklch(0.5 0.02 250)"); box(ctx, 0, 0.9, 0, 1.3, 0.08, 0.7)
+    ctx.color("oklch(0.35 0.03 250)"); for (const x of [-0.58, 0.58]) for (const z of [-0.28, 0.28]) box(ctx, x, 0, z, 0.08, 0.9, 0.08)
+    box(ctx, 0, 0.3, 0, 1.2, 0.05, 0.6)
+    ctx.color("oklch(0.55 0.15 30)"); box(ctx, -0.4, 0.98, 0, 0.14, 0.38, 0.16); box(ctx, -0.4, 1.34, 0, 0.3, 0.05, 0.12)
+    ctx.albedo(null); ctx.color("oklch(0.78 0.1 85)"); for (let i = 0; i < 6; i++) box(ctx, 0.05 + i * 0.1, 0.98, -0.15, 0.04, 0.1, 0.04)
+    ctx.color("oklch(0.3 0.02 250)"); box(ctx, 0.35, 0.98, 0.18, 0.22, 0.1, 0.14)
+    ctx.albedo(WOOD); ctx.color("oklch(0.5 0.05 60)"); box(ctx, 0, 1.45, -0.34, 1.2, 0.5, 0.03)
+    return;
+  }
   if (kind === "plank_wall") {
     ctx.albedo(WOOD);
     for (let i = 0; i < 6; i++) { ctx.color(`oklch(${0.62 + ((i * 37) % 7) * 0.02} 0.06 65)`); box(ctx, 0, 0.02 + i * 0.4, 0, 2, 0.37, 0.06); }

@@ -35,7 +35,7 @@ function act(ctx, s, d) {
   if(s.craftOpen==='bench' && !liveBench(ctx,s)){s.craftOpen='';s.craftBench='';return deny('Workstation is out of reach or blocked')}
   const st=recipeStatus(s,id)
   if(st.reason==='Recipe unavailable')return deny(st.reason)
-  if(!st.benchOk)return deny('Needs a workbench')
+  if(!st.benchOk)return deny(st.reason)
   if(!st.skillOk)return deny(`Needs ${SKN[r.skill[0]]} ${r.skill[1]}`)
   if(st.lack.length)return deny(`Missing ${st.lack.map(k=>`${B.scrap[k]?.name??k} ×${r.in[k]-(Number(s.scrap?.[k])||0)}`).join(', ')}`)
   if(!st.roomOk)return deny(st.reason)

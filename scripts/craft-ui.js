@@ -4,7 +4,7 @@
 import C from './lib/data/craft.yml'
 import B from './lib/data/breakables.yml'
 import { skillsOf, SKILLS } from './lib/stats.js'
-import { recipeStatus, maxMakes, scrapCount, CRAFT_LIMIT, CATS } from './lib/craft.js'
+import { recipeStatus, maxMakes, scrapCount, CRAFT_LIMIT, CATS, stationOf } from './lib/craft.js'
 
 import {describe} from './lib/items.js'
 import W from './lib/weapons.js'
@@ -75,9 +75,10 @@ export function craftUi(ctx, player) {
   if (s.l4task) out += `<div id="tk">TASK · ${esc(s.l4task.text)} <b>${s.l4task.have ?? 0}/${s.l4task.need}</b></div>` // Level 4's office task (scripts/l4-office.js)
   if (!s.craftOpen) return out
   const sk = skillsOf(s), bench = s.craftOpen === 'bench', tab = CATS.some(([k])=>k===s.craftTab) ? s.craftTab : 'all'
-  const all = Object.entries(C.recipes).map(([id, r]) => ({ id, r, st: recipeStatus(s, id), mx: maxMakes(s, id), cat: r.cat ?? 'tools' }))
+  const station = bench ? (s.craftStation ?? 'bench') : 'hand'
+  const all = Object.entries(C.recipes).filter(([, r]) => !bench || stationOf(r) === station).map(([id, r]) => ({ id, r, st: recipeStatus(s, id), mx: maxMakes(s, id), cat: r.cat ?? 'tools' })) // a station shows only its own recipes; the hands list them all so you can see what a bench would give you
   const ready = all.filter((x) => x.st.ok).length
-  const tabs = CATS.map(([c, l]) => { const n = c === 'ready' ? ready : c === 'all' ? 0 : all.filter((x) => x.cat === c && x.st.ok).length
+  const tabs = CATS.filter(([c]) => c === 'all' || c === 'ready' || all.some((x) => x.cat === c)).map(([c, l]) => { const n = c === 'ready' ? ready : c === 'all' ? 0 : all.filter((x) => x.cat === c && x.st.ok).length
     return `<button class="${tab === c ? 'on' : ''}" onclick="sendAction('make',{k:'tab',c:'${c}'})">${l}${n ? `<i>${n}</i>` : ''}</button>` }).join('')
   const stock = Object.entries(B.scrap).filter(([k]) => scrapCount(s,k) > 0).map(([k, v]) => `<span>${esc(v.name)} <b>${scrapCount(s,k)}</b></span>`).join('') || '<span>No scrap yet. Break walls, furniture and machines down.</span>'
   const shown = all.filter((x) => tab === 'all' || (tab === 'ready' ? x.st.ok : x.cat === tab))
@@ -88,14 +89,14 @@ export function craftUi(ctx, player) {
   for (const { id, r, st, mx, cat } of shown) {
     if (tab === 'all' || tab === 'ready') { if (cat !== last) { rows += `<div class="sh">${TITLE[cat] ?? cat.toUpperCase()}</div>`; last = cat } }
     const ins = Object.entries(r.in).map(([k,n])=>{const have=scrapCount(s,k);return `<i class="${have<n?'lack':''}">${esc(B.scrap[k]?.name??k)} ${have}/${n}${have<n?' · '+(n-have)+' short':''}</i>`}).join('')
-    const req = [r.skill ? `<span class="${st.skillOk ? '' : 'bad'}">${SKN[r.skill[0]]} ${r.skill[1]} (you ${sk[r.skill[0]] ?? 0})</span>` : '', r.bench ? `<span class="${st.benchOk ? '' : 'bad'}">WORKBENCH</span>` : ''].filter(Boolean).join(' · ')
+    const req = [r.skill ? `<span class="${st.skillOk ? '' : 'bad'}">${SKN[r.skill[0]]} ${r.skill[1]} (you ${sk[r.skill[0]] ?? 0})</span>` : '', r.bench ? `<span class="${st.benchOk ? '' : 'bad'}">${stationOf(r) === 'cook' ? 'COOKING FIRE' : stationOf(r) === 'ammo' ? 'RELOADING BENCH' : 'WORKBENCH'}</span>` : ''].filter(Boolean).join(' · ')
     const per = st.bonusChance>0 ? `<em>${Math.round(st.bonusChance*100)}% bonus chance</em>` : ''
     const cls = st.ok ? '' : st.skillOk && st.benchOk ? 'no' : 'lk'
     rows += `<div class="row ${cls}"><div class="n">${esc(r.name)}${per}<small>${esc(r.desc)}</small><div class="result">Makes ${outputs(r)}</div>${makes(s,r)?`<small class="mk">${esc(makes(s,r))}</small>`:''}<div class="in">${ins}</div>${req ? `<div class="rq">${req}</div>` : ''}${!st.roomOk?'<div class="rq"><span class="bad">No room for the complete output</span></div>':''}</div>
       <div class="bt"><button ${st.ok ? '' : 'disabled'} onclick="sendAction('make',{k:'make',id:'${id}',n:1})">CRAFT 1</button>${st.ok && mx >= 5 ? `<button class="s" onclick="sendAction('make',{k:'make',id:'${id}',n:5})">×5</button>` : ''}${st.ok && mx >= 2 ? `<button class="s" onclick="sendAction('make',{k:'make',id:'${id}',n:'max'})">MAX ${mx}</button>` : ''}</div></div>`
   }
   if (!rows) rows = `<div class="em">${tab === 'ready' ? 'Nothing you can make yet. The red parts are what you are short of.' : 'Nothing here.'}</div>`
-  return out + `<div id="cr" data-modal><div class="hd"><h2>${bench ? 'Workbench' : 'Crafting'}</h2><span class="md">${bench ? 'All recipes' : 'Field recipes · B to build a workbench'}</span></div>
+  return out + `<div id="cr" data-modal><div class="hd"><h2>${bench ? ({ cook: 'Cooking fire', ammo: 'Reloading bench' }[station] ?? 'Workbench') : 'Crafting'}</h2><span class="md">${bench ? 'This station only' : 'Everything · stations (B) unlock the rest'}</span></div>
     <div class="tb">${tabs}</div><div class="sc">${stock}</div><div class="ls">${rows}</div>
     <div class="ft"><span>${ready} READY OF ${all.length} · Batch limit ${CRAFT_LIMIT}</span><button onclick="sendAction('make',{k:'close'})">CLOSE (Y)</button></div></div>`
 }

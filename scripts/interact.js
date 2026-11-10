@@ -113,7 +113,7 @@ function refocus(ctx, force = false) {
         const full = spotsOf(it).every((sp) => { const h = holder(ctx, it, sp.i); return h && h !== ctx.self.id })
         info = { id: f.id, name: it.state?.name ?? 'Chair', info: full ? (it.state?.salon ? 'taken · try another chair' : 'taken') : '', verb: full ? 'Taken:' : 'Sit', color: full ? '#e0644f' : '#d9d3b8' }
       } else if (f.tag === 'bench') {
-        info = { id: f.id, name: it.state?.name ?? 'Workbench', info: 'Craft ammo, repair kits, batteries, fuses', verb: 'Use', color: '#f2c14e' }
+        info = { id: f.id, name: it.state?.name ?? 'Workbench', info: it.state?.station === 'cook' ? 'Cook stews and boil water' : it.state?.station === 'ammo' ? 'Load pistol rounds and shells' : 'Craft tools, repair kits, weapons, armor', verb: 'Use', color: '#f2c14e' }
       } else if (f.tag === 'npc') {
         const fac = it.state?.faction5 === 'hotel' ? 'Homely Hotel' : it.state?.faction5 === 'orig' ? 'The Originals' : it.state?.faction5 === 'hk' ? 'M.E.G.' : (it.state?.faction ?? 'M.E.G.')
         info = { id: f.id, name: it.state?.name ?? 'Stranger', info: fac, verb: 'Talk', color: '#c6f060' }
@@ -364,7 +364,7 @@ function press(ctx) {
   if (f.tag === 'usable') { ctx.emit('press', { by: ctx.self.id }, { to: f.id }); if (it.tags?.includes?.('l5-elev-panel')) s.elevPanel = f.id; m.key = ''; return } // an elevator plate opens a clickable floor list (ui.js)
   if (f.tag === 'seat' && it.state?.salon) { if (spotsOf(it).every((sp) => { const h = holder(ctx, it, sp.i); return h && h !== ctx.self.id })) { note(ctx, 'That chair is taken'); m.key = ''; return } if (sitDown(ctx, it)) { s.salonOpen = true; s.salonTab = s.salonTab || 'hair'; s.wrMenu = false; s.wardrobeOpen = true } m.key = ''; return } // a salon chair at the mirrors: sit and the stylist comes over (scripts/salon-stylist.js)
   if (f.tag === 'seat') { if (sitDown(ctx, it) && it.state?.boat) ctx.emit('press', { by: ctx.self.id }, { to: it.id }); m.key = ''; return } // a boat's seat also takes the oars
-  if (f.tag === 'bench') { s.craftOpen = 'bench'; s.craftBench = f.id; return }
+  if (f.tag === 'bench') { s.craftOpen = 'bench'; s.craftBench = f.id; s.craftStation = it.state?.station ?? 'bench'; return }
   if (f.tag === 'container') { openLoot(ctx, it); return }
   if (f.tag === 'door') { useDoor(ctx, it); m.key = ''; refocus(ctx, true); return }
   const r = takeToken(ctx, tokenOf(f.tag, it))

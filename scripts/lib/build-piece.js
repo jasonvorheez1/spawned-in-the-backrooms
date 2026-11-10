@@ -26,7 +26,7 @@ export function builtSpec(kind, at, by, opts = {}) {
   if (pc.store) tags.push('container', 'storage')
   const slot = { x: at.x, y: at.y, z: at.z, rot: at.rot ?? 0 }
   const feet = pc.door ? hingeOf(slot) : { x: at.x, y: at.y, z: at.z }
-  const state = { mat: pc.mat, hp: pc.hp, maxHp: pc.hp, name: pc.name, size: Math.max(...pc.size), by, byUser: opts.byUser ?? null, buildKind: kind, slot, stayGone: true }
+  const state = { mat: pc.mat, hp: pc.hp, maxHp: pc.hp, name: pc.name, size: Math.max(...pc.size), by, byUser: opts.byUser ?? null, buildKind: kind, slot, stayGone: true, ...(pc.bench ? { station: pc.bench === true ? 'bench' : pc.bench } : {}) }
   if (pc.door) Object.assign(state, { open: false, c: { x: at.x, y: at.y + 1, z: at.z }, yaw0: slot.rot })
   if (pc.store) { state.items = ''; if (opts.id && opts.owner) { state.saveKey = 'hst_' + opts.id; state.items = opts.owner['hst_' + opts.id] ?? '' } }
   if (pc.trap) state.trap = pc.trap

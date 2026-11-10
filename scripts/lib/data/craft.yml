@@ -24,8 +24,8 @@ recipes:
   akit:       { cat: aid, name: Armor repair kit, in: { drywall: 2, wire: 2, nails: 1 },              out: [akit],             skill: [repair, 20],   desc: "Mends every piece you wear +24% (I menu)" }
   tape:       { cat: aid, name: Duct tape,       in: { wire: 1, drywall: 1 },                         out: [tape],             skill: [repair, 5],    desc: "A quick patch +15%, never past 45%" }
   bobbypin:   { cat: tools, name: Bobby pins,      in: { wire: 1, nails: 1 },                            out: [bobbypin, bobbypin, bobbypin], skill: [repair, 10],   desc: "3 bobby pins for picking locks" }
-  ammo:       { cat: ammo, name: Pistol rounds,   in: { scrap_metal: 2, springs: 1 },                  out: [ammo, ammo],       skill: [guns, 20],     bench: true, desc: "Two boxes of rounds" }
-  shells:     { cat: ammo, name: Shotgun shells,  in: { scrap_metal: 2, wire: 1, nails: 1 },           out: [shells],           skill: [guns, 30],     bench: true, desc: "One box of shells" }
+  ammo:       { cat: ammo, name: Pistol rounds,   in: { scrap_metal: 2, springs: 1 },                  out: [ammo, ammo],       skill: [guns, 20],     bench: ammo, desc: "Two boxes of rounds" }
+  shells:     { cat: ammo, name: Shotgun shells,  in: { scrap_metal: 2, wire: 1, nails: 1 },           out: [shells],           skill: [guns, 30],     bench: ammo, desc: "One box of shells" }
   battery:    { cat: tools, name: Battery,         in: { copper_coil: 1, scrap_metal: 1, bolts: 1 },    out: [battery],          skill: [science, 20],  bench: true, desc: "Recharges the flashlight" }
   dynamo:     { cat: tools, name: Hand dynamo,      in: { motor: 1, gears: 1, wire: 2 },             out: [battery, battery],      skill: [science, 30],  bench: true, desc: "A small motor run backwards: two batteries' worth of charge" }
   generator:  { cat: tools, name: Salvage generator charge, in: { motor: 2, copper_coil: 1, bolts: 2 }, out: [battery, battery, battery, battery, battery], skill: [science, 45], bench: true, desc: "Two motors and a coil wound into a charger: five batteries" }
@@ -34,12 +34,12 @@ recipes:
   firstaid:   { cat: aid, name: First aid kit,   in: { drywall: 3, wire: 2, copper_coil: 1 },          out: [firstaid],         skill: [medicine, 40], bench: true, desc: "A proper kit: a big heal" }
   kit2:       { cat: aid, name: Field repair set, in: { scrap_metal: 4, gears: 1, springs: 1, bolts: 3 }, out: [kit, kit, akit], skill: [repair, 50],   bench: true, desc: "Two weapon kits and an armor kit" }
   # food and water (Shelly: "no cooking or water recipes"): scrap from the caves and springs becomes something to eat and drink
-  stew:       { cat: food, name: Glow-cap stew,       in: { glow_cap: 3, spring_salt: 1 },                out: [stew],            skill: [survival, 10], desc: "Hunger +28 · eat it from I > Aid" }
-  stillwater: { cat: food, name: Pipe-still water,    in: { steel_pipe: 1, scrap_metal: 1, wire: 1 },     out: [stillwater, stillwater], skill: [survival, 15], bench: true, desc: "Condensed off hot pipe: two safe drinks" }
+  stew:       { cat: food, name: Glow-cap stew,       in: { glow_cap: 3, spring_salt: 1 },                out: [stew],            skill: [survival, 10], bench: cook, desc: "Hunger +28 · cooked at a fire, eaten from I > Aid" }
+  stillwater: { cat: food, name: Pipe-still water,    in: { steel_pipe: 1, scrap_metal: 1, wire: 1 },     out: [stillwater, stillwater], skill: [survival, 15], bench: cook, desc: "Condensed off hot pipe: two safe drinks" }
   mineralwater: { cat: food, name: Spring mineral water, in: { spring_salt: 2, travertine: 1 },         out: [mineralwater],     skill: [survival, 8],  desc: "A bottle of the spring, salt and chalk left in" }
   # improvised firearms (Shelly: "you can't craft firearms"): weak, worn and few rounds, so a found gun stays worth finding
-  zipgun:     { cat: weapons, name: Improvised pistol, in: { steel_pipe: 1, springs: 2, nails: 2, scrap_wood: 1 }, out: ["weapon:pistol~zip"],  skill: [guns, 25], bench: true, desc: "A pipe, a spring and a firing pin · two rounds, jams when worn" }
-  pipeshotgun: { cat: weapons, name: Pipe shotgun,    in: { steel_pipe: 2, springs: 2, bolts: 2, scrap_wood: 2 }, out: ["weapon:shotgun~pipe"], skill: [guns, 35], bench: true, desc: "A length of pipe and a hammer · one shell, short and wide" }
+  zipgun:     { cat: weapons, name: Improvised pistol, in: { steel_pipe: 1, springs: 2, nails: 2, scrap_wood: 1 }, out: ["weapon:pistol~zip"],  skill: [guns, 25], bench: ammo, desc: "A pipe, a spring and a firing pin · two rounds, jams when worn" }
+  pipeshotgun: { cat: weapons, name: Pipe shotgun,    in: { steel_pipe: 2, springs: 2, bolts: 2, scrap_wood: 2 }, out: ["weapon:shotgun~pipe"], skill: [guns, 35], bench: ammo, desc: "A length of pipe and a hammer · one shell, short and wide" }
   # outfits (Savi's picks): improvised armor from what the levels break into. Each lands as a garment you can wear (I menu).
   poncho:     { cat: armor, name: Carpet poncho,      in: { wire: 2, drywall: 1 },                          out: ["cloth:neck:cape:b39a4e"],      skill: [repair, 5],    desc: "Neck · DR 2 · cut from Level 0 carpet" }
   padbeanie:  { cat: armor, name: Padded beanie,      in: { wire: 1, drywall: 2 },                          out: ["cloth:hat:beanie:4a5a3a"],     skill: [repair, 10],   desc: "Hat · DR 2" }
@@ -67,7 +67,7 @@ recipes:
   fireaxe:    { cat: weapons, name: Fire axe,          in: { sheet_steel: 2, scrap_wood: 3, bolts: 2, rust_flakes: 1 }, out: ["weapon:fire_axe"], skill: [repair, 50], bench: true, desc: "A red head on a long haft · slow, deep cuts" }
   fishing_rod: { cat: tools, name: Salvaged fishing rod, in: { scrap_wood: 2, wire: 2, nails: 1 },           out: ["weapon:fishing_rod"],  skill: [survival, 10], desc: "Cast into lakes or the sea to catch fresh fish and sunken salvage" }
   # more ammo and tools
-  ammo4:      { cat: ammo,  name: Pistol rounds (bulk), in: { scrap_metal: 4, springs: 2, rust_flakes: 1 }, out: [ammo, ammo, ammo, ammo], skill: [guns, 45], bench: true, desc: "Four boxes at once" }
+  ammo4:      { cat: ammo,  name: Pistol rounds (bulk), in: { scrap_metal: 4, springs: 2, rust_flakes: 1 }, out: [ammo, ammo, ammo, ammo], skill: [guns, 45], bench: ammo, desc: "Four boxes at once" }
   valve:      { cat: tools, name: Valve wheel,       in: { brass_valve: 1, bolts: 1 },                     out: [valve],                 skill: [repair, 15],   bench: true, desc: "Opens a PUMP ROOM door" }
   # Level 8, Cave Systems: the 9th Road's own resources become light, bandages, armor, a pickaxe and building stone
   glowcell:   { cat: tools, name: Glow-cap cell,     in: { glow_cap: 3, pitch: 1 },                        out: [battery],          skill: [science, 10],  desc: "Bioluminescent charge: recharges the flashlight" }
