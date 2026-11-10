@@ -5,7 +5,13 @@ import bpy, sys
 a = sys.argv[sys.argv.index('--') + 1:]; body, garm, out = a[:3]
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=body)
-src = bpy.data.objects.get('Body') or next(o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith('Skin_torso'))
+parts = [o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith(('Skin_torso', 'Skin_upperarms', 'Skin_neck', 'Skin_hips'))]
+bpy.ops.object.select_all(action='DESELECT')
+cp = []
+for o in parts:
+    c = o.copy(); c.data = o.data.copy(); bpy.context.scene.collection.objects.link(c); cp.append(c)
+for c in cp: c.select_set(True)
+bpy.context.view_layer.objects.active = cp[0]; bpy.ops.object.join(); src = cp[0]  # the visible skin the cloth rides, not the hidden full Body
 keep = set(bpy.data.objects)
 bpy.ops.import_scene.gltf(filepath=garm)
 new = [o for o in bpy.data.objects if o not in keep]
