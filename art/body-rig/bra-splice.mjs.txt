@@ -10,6 +10,8 @@ const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies(
 const [src, braPath, out] = process.argv.slice(2);
 const doc = await io.read(src), B = JSON.parse(fs.readFileSync(braPath, 'utf8'));
 const node = doc.getRoot().listNodes().find((n) => n.getName() === 'Under_top');
+const body = doc.getRoot().listNodes().find((n) => n.getName() === 'Body');
+node.setSkin(body.getSkin()); // the band was cut from Body's surface in Body's bind space: it rides Body's skin
 const joints = node.getSkin().listJoints().map((j) => j.getName());
 const prim = node.getMesh().listPrimitives()[0], buf = doc.getRoot().listBuffers()[0], N = B.v.length;
 const acc = (type, arr) => doc.createAccessor().setType(type).setArray(arr).setBuffer(buf);
