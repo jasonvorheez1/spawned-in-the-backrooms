@@ -15,9 +15,9 @@ export function geometry(ctx) {
     Q([x0, y1, z0], [x0, y1, z1], [x1, y1, z1], [x1, y1, z0]); Q([x0, y0, z1], [x0, y0, z0], [x1, y0, z0], [x1, y0, z1]);
   };
   // a box tipped back by `tilt` degrees about its front-bottom edge (a keypad, a screen)
-  const tbox = (x0, x1, y, z, w, h, d, tilt) => {
+  const tbox = (x0, x1, y, z, w, h, d, tilt, dir = 1) => { // dir -1 mirrors the slope toward -z
     const t = (tilt * Math.PI) / 180, c = Math.cos(t), s = Math.sin(t); // w unused: x0..x1 set it
-    const p = (x, v, n) => [x, y + v * s + n * c, z + v * c - n * s]; // v along the slope (toward +z, up), n its thickness
+    const p = (x, v, n) => [x, y + v * s + n * c, z + dir * (v * c - n * s)]; // v along the slope (toward +z, up), n its thickness
     const a = [x0, x1];
     Q(p(a[1], 0, h), p(a[0], 0, h), p(a[0], d, h), p(a[1], d, h)); // top face (sloped)
     Q(p(a[0], 0, 0), p(a[1], 0, 0), p(a[1], d, 0), p(a[0], d, 0));
@@ -81,7 +81,7 @@ export function geometry(ctx) {
   paint("#cfc6b0", 0.5); box(rx - 0.2, H + 0.015, 0.26, rx + 0.2, H + 0.095, 0.27); // drawer face
   paint("#8a8578", 0.4, 0.6); box(rx - 0.05, H + 0.04, 0.27, rx + 0.05, H + 0.055, 0.285); // drawer lock/handle
   paint("#e9e2d0", 0.5);
-  const kp = tbox(rx - 0.21, rx + 0.21, H + 0.11, -0.02, 0.42, 0.05, 0.25, 22); // key deck, rising toward the back
+  const kp = tbox(rx - 0.21, rx + 0.21, H + 0.11, 0.24, 0.42, 0.05, 0.25, 22, -1); // key deck, rising away from the cashier
   if (lod < 3) {
     // key grid: 6 x 10, a few coloured function keys
     for (let r = 0; r < 6; r++) for (let c = 0; c < 10; c++) {
@@ -93,10 +93,6 @@ export function geometry(ctx) {
       Q(a2, b2, c3, d2); Q(a, b, b2, a2); Q(d, d2, c3, c2); Q(a, a2, d2, d); Q(b, c2, c3, b2);
     }
   }
-  // cashier display: a small green VFD on a short neck behind the keys
-  paint("#2a2a2a", 0.5); box(rx - 0.02, H + 0.2, -0.1, rx + 0.02, H + 0.3, -0.07);
-  paint("#1a1a1a", 0.4); box(rx - 0.16, H + 0.3, -0.12, rx + 0.16, H + 0.38, -0.06);
-  ctx.albedo(null); ctx.color("#0b2a1a"); ctx.emissive("#3fffa0"); box(rx - 0.14, H + 0.31, -0.06, rx + 0.14, H + 0.37, -0.055); ctx.emissive(null);
   // customer pole display, facing -Z
   paint("#2a2a2a", 0.4, 0.5); box(rx + 0.15, H + 0.11, -0.1, rx + 0.18, H + 0.52, -0.07);
   paint("#1a1a1a", 0.4); box(rx + 0.04, H + 0.5, -0.13, rx + 0.3, H + 0.6, -0.06);
