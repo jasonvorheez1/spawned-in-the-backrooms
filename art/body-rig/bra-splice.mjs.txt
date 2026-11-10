@@ -1,0 +1,38 @@
+// Puts art/body-rig/bra.py's band into the female body as Under_top, same node, skin, material and Bust morph; meshopt-packed.
+// bun bra-splice.mjs <body-plain.glb: the dequantized body, metres> <bra.json> <out.glb>
+import { NodeIO } from '@gltf-transform/core';
+import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
+import { MeshoptDecoder, MeshoptEncoder } from 'meshoptimizer';
+import { prune, meshopt } from '@gltf-transform/functions';
+import fs from 'fs';
+await Promise.all([MeshoptDecoder.ready, MeshoptEncoder.ready]);
+const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({ 'meshopt.decoder': MeshoptDecoder, 'meshopt.encoder': MeshoptEncoder });
+const [src, braPath, out] = process.argv.slice(2);
+const doc = await io.read(src), B = JSON.parse(fs.readFileSync(braPath, 'utf8'));
+const node = doc.getRoot().listNodes().find((n) => n.getName() === 'Under_top');
+const body = doc.getRoot().listNodes().find((n) => n.getName() === 'Body');
+node.setSkin(body.getSkin()); // the band was cut from Body's surface in Body's bind space: it rides Body's skin
+const joints = node.getSkin().listJoints().map((j) => j.getName());
+const prim = node.getMesh().listPrimitives()[0], buf = doc.getRoot().listBuffers()[0], N = B.v.length;
+const acc = (type, arr) => doc.createAccessor().setType(type).setArray(arr).setBuffer(buf);
+// Blender reads Body in metres; the file keeps it in its own packed space: map by Body's bounds on each axis
+const bp = body.getMesh().listPrimitives()[0].getAttribute('POSITION'), gmin = [1e9, 1e9, 1e9], gmax = [-1e9, -1e9, -1e9], e = [];
+for (let i = 0; i < bp.getCount(); i++) { bp.getElement(i, e); for (let k = 0; k < 3; k++) { gmin[k] = Math.min(gmin[k], e[k]); gmax[k] = Math.max(gmax[k], e[k]); } }
+const [bmin, bmax] = B.bodyBounds, S = [0, 1, 2].map((k) => (gmax[k] - gmin[k]) / (bmax[k] - bmin[k]));
+console.log('scale per axis', S.map((x) => x.toFixed(4)).join(' '));
+for (const v of B.v) { v.p = v.p.map((c, k) => gmin[k] + (c - bmin[k]) * S[k]); v.bust = v.bust.map((c, k) => c * S[k]); }
+const P = new Float32Array(N * 3), Nn = new Float32Array(N * 3), UV = new Float32Array(N * 2), J = new Uint16Array(N * 4), W = new Float32Array(N * 4), D = new Float32Array(N * 3);
+B.v.forEach((v, i) => {
+  P.set(v.p, i * 3); Nn.set(v.n, i * 3); UV.set(v.uv, i * 2); D.set(v.bust, i * 3);
+  v.w.forEach(([name, w], k) => { const j = joints.indexOf(name); if (j < 0) throw new Error('no joint ' + name); J[i * 4 + k] = j; W[i * 4 + k] = w; });
+});
+const old = prim.getAttribute('POSITION').getCount();
+for (const s of ['POSITION', 'NORMAL', 'TEXCOORD_0', 'JOINTS_0', 'WEIGHTS_0']) prim.setAttribute(s, null);
+prim.setAttribute('POSITION', acc('VEC3', P)).setAttribute('NORMAL', acc('VEC3', Nn)).setAttribute('TEXCOORD_0', acc('VEC2', UV)).setAttribute('JOINTS_0', acc('VEC4', J)).setAttribute('WEIGHTS_0', acc('VEC4', W));
+prim.setIndices(acc('SCALAR', new Uint32Array(B.i)));
+for (const t of prim.listTargets()) { prim.removeTarget(t); t.dispose(); }
+prim.addTarget(doc.createPrimitiveTarget('Bust').setAttribute('POSITION', acc('VEC3', D)));
+await doc.transform(prune({ keepAttributes: true, keepLeaves: true }), meshopt({ encoder: MeshoptEncoder, level: 'medium' }));
+await io.write(out, doc);
+const chk = (await io.read(out)).getRoot().listNodes().find((n) => n.getName() === 'Under_top').getMesh().listPrimitives()[0];
+console.log('Under_top', old, '->', chk.getAttribute('POSITION').getCount(), 'verts, targets', chk.listTargets().length, 'extras', JSON.stringify(node.getMesh().getExtras()));
