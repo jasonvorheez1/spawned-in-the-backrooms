@@ -36,7 +36,7 @@ export function lay(ctx) {
         state: { kind: "claim", label: r.label, label2: "vacant", name: `Office ${r.label}`, verb: "Claim", info: "Vacant office · make it your home", tint: "#f2c14e",
           room: { id: r.id, kit: { cot: inside(r, kitA, 4.6), desk: inside(r, r.door.c < r.mid ? a0 + 1.6 : a1 - 1.6, 4.9), yaw: yaw + 180 } } } });
       const cp = inside(r, coolerA, 0.55);
-      ctx.spawn(`${r.id}-cooler`, { tags: ["usable", "l4-cooler"], feetPosition: cp, rotation: { yaw: yaw + 180 }, physics: "static", visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 0.36, height: 0.95, depth: 0.36 }, material: { color: "oklch(0.93 0.01 90)", roughness: 0.5 },
+      ctx.spawn(`${r.id}-cooler`, { tags: ["usable", "l4-cooler"], feetPosition: cp, rotation: { yaw: yaw + 180 }, physics: "static", visibleRange: { max: 40 }, castShadow: false, model: { id: "/cdn/value.40b1e114cdbad77d13350e630508cf974d8b20422cbfbe323ad5769a7fed6014.glb" }, layout: { box: { min: { x: -0.18, y: 0, z: -0.18 }, max: { x: 0.18, y: 1.2, z: 0.18 } } },
         behavior: "scripts/l4-home.js", state: { kind: "cooler", plate: plate, jugs: 3, fill: 0, name: "Water cooler", verb: "Fill a bottle", info: "Your office's almond water", tint: "#7fd6ff", c: { x: cp.x, y: 1.1, z: cp.z } },
         children: [{ feetPosition: { x: 0, y: 0.95, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.15, radiusBottom: 0.16, height: 0.42 }, material: { color: "oklch(0.8 0.08 230 / 0.55)", roughness: 0.1, transparent: true } },
           { feetPosition: { x: 0, y: 1.45, z: 0 }, primitive: { kind: "box", width: 0.01, height: 0.01, depth: 0.01 }, visible: true, ui: coolerUi }] });

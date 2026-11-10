@@ -197,8 +197,7 @@ export function lay(ctx) {
       feetPosition: { x: -22.37, y: 0, z: -14 },
       rotation: { yaw: -90 },
       physics: "static",
-      primitive: { kind: "box", width: 0.7, height: 1.3, depth: 0.6 },
-      material: { color: "oklch(0.35 0.04 40)", roughness: 0.5 },
+      model: { id: "/cdn/value.8df9a0a088d4df2df92c0a316e9feb3b3439886bf6251649db4b3e95cf159a34.glb" }, layout: { box: { min: { x: -0.5, y: 0, z: -0.3 }, max: { x: 0.5, y: 1.6, z: 0.3 } } },
       state: {
         name: "Archival filing cabinet",
         items: "book:science,book:lockpick,page:7,almond,ammo",
@@ -214,8 +213,7 @@ export function lay(ctx) {
       feetPosition: { x: 5, y: 0, z: 22.8 },
       rotation: { yaw: 180 },
       physics: "static",
-      primitive: { kind: "box", width: 2.2, height: 0.86, depth: 0.9 },
-      material: { color: "oklch(0.42 0.05 50)", roughness: 0.7 },
+      model: { id: "/cdn/value.a38bcbd4f551deb9aaf6fba383d7eaadb341a1aaba258f537471bcb5159c7f26.glb" }, layout: { box: { min: { x: -1.1, y: 0, z: -0.45 }, max: { x: 1.1, y: 1.7, z: 0.45 } } },
       state: { name: "M.E.G. Workbench", verb: "Use", info: "Craft ammo, repair kits, batteries, fuses, bobby pins" },
     });
   }

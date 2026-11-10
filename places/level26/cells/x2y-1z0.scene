@@ -485,23 +485,23 @@ l26d-r0e-t0-c3b:
 l26d-r0e-t0-cup0:
   feetPosition: {x: 305.3, y: -79.23, z: -8.3}
   id: l26d-r0e-t0-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r0e-t0-cup1:
   feetPosition: {x: 306.3, y: -79.23, z: -7.7}
   id: l26d-r0e-t0-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r0e-t0-cup2:
   feetPosition: {x: 307.3, y: -79.23, z: -8.3}
   id: l26d-r0e-t0-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r0e-t0-cup3:
   feetPosition: {x: 308.3, y: -79.23, z: -7.7}
   id: l26d-r0e-t0-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r0e-t1:
   feetPosition: {x: 306.8, y: -80, z: -4}
   id: l26d-r0e-t1
@@ -568,23 +568,23 @@ l26d-r0e-t1-c3b:
 l26d-r0e-t1-cup0:
   feetPosition: {x: 305.3, y: -79.23, z: -4.3}
   id: l26d-r0e-t1-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r0e-t1-cup1:
   feetPosition: {x: 306.3, y: -79.23, z: -3.7}
   id: l26d-r0e-t1-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r0e-t1-cup2:
   feetPosition: {x: 307.3, y: -79.23, z: -4.3}
   id: l26d-r0e-t1-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r0e-t1-cup3:
   feetPosition: {x: 308.3, y: -79.23, z: -3.7}
   id: l26d-r0e-t1-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r0w-back:
   feetPosition: {x: 289.2, y: -80, z: -6}
   id: l26d-r0w-back
@@ -679,23 +679,23 @@ l26d-r0w-t0-c3b:
 l26d-r0w-t0-cup0:
   feetPosition: {x: 291.7, y: -79.23, z: -8.3}
   id: l26d-r0w-t0-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r0w-t0-cup1:
   feetPosition: {x: 292.7, y: -79.23, z: -7.7}
   id: l26d-r0w-t0-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r0w-t0-cup2:
   feetPosition: {x: 293.7, y: -79.23, z: -8.3}
   id: l26d-r0w-t0-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r0w-t0-cup3:
   feetPosition: {x: 294.7, y: -79.23, z: -7.7}
   id: l26d-r0w-t0-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r0w-t1:
   feetPosition: {x: 293.2, y: -80, z: -4}
   id: l26d-r0w-t1
@@ -762,23 +762,23 @@ l26d-r0w-t1-c3b:
 l26d-r0w-t1-cup0:
   feetPosition: {x: 291.7, y: -79.23, z: -4.3}
   id: l26d-r0w-t1-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r0w-t1-cup1:
   feetPosition: {x: 292.7, y: -79.23, z: -3.7}
   id: l26d-r0w-t1-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r0w-t1-cup2:
   feetPosition: {x: 293.7, y: -79.23, z: -4.3}
   id: l26d-r0w-t1-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r0w-t1-cup3:
   feetPosition: {x: 294.7, y: -79.23, z: -3.7}
   id: l26d-r0w-t1-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r1e-back:
   feetPosition: {x: 310.8, y: -80, z: -18}
   id: l26d-r1e-back
@@ -873,23 +873,23 @@ l26d-r1e-t0-c3b:
 l26d-r1e-t0-cup0:
   feetPosition: {x: 305.3, y: -79.23, z: -20.3}
   id: l26d-r1e-t0-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r1e-t0-cup1:
   feetPosition: {x: 306.3, y: -79.23, z: -19.7}
   id: l26d-r1e-t0-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r1e-t0-cup2:
   feetPosition: {x: 307.3, y: -79.23, z: -20.3}
   id: l26d-r1e-t0-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r1e-t0-cup3:
   feetPosition: {x: 308.3, y: -79.23, z: -19.7}
   id: l26d-r1e-t0-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r1e-t1:
   feetPosition: {x: 306.8, y: -80, z: -16}
   id: l26d-r1e-t1
@@ -956,23 +956,23 @@ l26d-r1e-t1-c3b:
 l26d-r1e-t1-cup0:
   feetPosition: {x: 305.3, y: -79.23, z: -16.3}
   id: l26d-r1e-t1-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r1e-t1-cup1:
   feetPosition: {x: 306.3, y: -79.23, z: -15.7}
   id: l26d-r1e-t1-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r1e-t1-cup2:
   feetPosition: {x: 307.3, y: -79.23, z: -16.3}
   id: l26d-r1e-t1-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r1e-t1-cup3:
   feetPosition: {x: 308.3, y: -79.23, z: -15.7}
   id: l26d-r1e-t1-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r1w-back:
   feetPosition: {x: 289.2, y: -80, z: -18}
   id: l26d-r1w-back
@@ -1067,23 +1067,23 @@ l26d-r1w-t0-c3b:
 l26d-r1w-t0-cup0:
   feetPosition: {x: 291.7, y: -79.23, z: -20.3}
   id: l26d-r1w-t0-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r1w-t0-cup1:
   feetPosition: {x: 292.7, y: -79.23, z: -19.7}
   id: l26d-r1w-t0-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r1w-t0-cup2:
   feetPosition: {x: 293.7, y: -79.23, z: -20.3}
   id: l26d-r1w-t0-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r1w-t0-cup3:
   feetPosition: {x: 294.7, y: -79.23, z: -19.7}
   id: l26d-r1w-t0-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r1w-t1:
   feetPosition: {x: 293.2, y: -80, z: -16}
   id: l26d-r1w-t1
@@ -1150,23 +1150,23 @@ l26d-r1w-t1-c3b:
 l26d-r1w-t1-cup0:
   feetPosition: {x: 291.7, y: -79.23, z: -16.3}
   id: l26d-r1w-t1-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r1w-t1-cup1:
   feetPosition: {x: 292.7, y: -79.23, z: -15.7}
   id: l26d-r1w-t1-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r1w-t1-cup2:
   feetPosition: {x: 293.7, y: -79.23, z: -16.3}
   id: l26d-r1w-t1-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r1w-t1-cup3:
   feetPosition: {x: 294.7, y: -79.23, z: -15.7}
   id: l26d-r1w-t1-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r2e-back:
   feetPosition: {x: 310.8, y: -80, z: -30}
   id: l26d-r2e-back
@@ -1261,23 +1261,23 @@ l26d-r2e-t0-c3b:
 l26d-r2e-t0-cup0:
   feetPosition: {x: 305.3, y: -79.23, z: -32.3}
   id: l26d-r2e-t0-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r2e-t0-cup1:
   feetPosition: {x: 306.3, y: -79.23, z: -31.7}
   id: l26d-r2e-t0-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r2e-t0-cup2:
   feetPosition: {x: 307.3, y: -79.23, z: -32.3}
   id: l26d-r2e-t0-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r2e-t0-cup3:
   feetPosition: {x: 308.3, y: -79.23, z: -31.7}
   id: l26d-r2e-t0-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r2e-t1:
   feetPosition: {x: 306.8, y: -80, z: -28}
   id: l26d-r2e-t1
@@ -1344,23 +1344,23 @@ l26d-r2e-t1-c3b:
 l26d-r2e-t1-cup0:
   feetPosition: {x: 305.3, y: -79.23, z: -28.3}
   id: l26d-r2e-t1-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r2e-t1-cup1:
   feetPosition: {x: 306.3, y: -79.23, z: -27.7}
   id: l26d-r2e-t1-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r2e-t1-cup2:
   feetPosition: {x: 307.3, y: -79.23, z: -28.3}
   id: l26d-r2e-t1-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r2e-t1-cup3:
   feetPosition: {x: 308.3, y: -79.23, z: -27.7}
   id: l26d-r2e-t1-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r2w-back:
   feetPosition: {x: 289.2, y: -80, z: -30}
   id: l26d-r2w-back
@@ -1455,23 +1455,23 @@ l26d-r2w-t0-c3b:
 l26d-r2w-t0-cup0:
   feetPosition: {x: 291.7, y: -79.23, z: -32.3}
   id: l26d-r2w-t0-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r2w-t0-cup1:
   feetPosition: {x: 292.7, y: -79.23, z: -31.7}
   id: l26d-r2w-t0-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r2w-t0-cup2:
   feetPosition: {x: 293.7, y: -79.23, z: -32.3}
   id: l26d-r2w-t0-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r2w-t0-cup3:
   feetPosition: {x: 294.7, y: -79.23, z: -31.7}
   id: l26d-r2w-t0-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r2w-t1:
   feetPosition: {x: 293.2, y: -80, z: -28}
   id: l26d-r2w-t1
@@ -1538,23 +1538,23 @@ l26d-r2w-t1-c3b:
 l26d-r2w-t1-cup0:
   feetPosition: {x: 291.7, y: -79.23, z: -28.3}
   id: l26d-r2w-t1-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r2w-t1-cup1:
   feetPosition: {x: 292.7, y: -79.23, z: -27.7}
   id: l26d-r2w-t1-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r2w-t1-cup2:
   feetPosition: {x: 293.7, y: -79.23, z: -28.3}
   id: l26d-r2w-t1-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r2w-t1-cup3:
   feetPosition: {x: 294.7, y: -79.23, z: -27.7}
   id: l26d-r2w-t1-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r3e-back:
   feetPosition: {x: 310.8, y: -80, z: -42}
   id: l26d-r3e-back
@@ -1649,23 +1649,23 @@ l26d-r3e-t0-c3b:
 l26d-r3e-t0-cup0:
   feetPosition: {x: 305.3, y: -79.23, z: -44.3}
   id: l26d-r3e-t0-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r3e-t0-cup1:
   feetPosition: {x: 306.3, y: -79.23, z: -43.7}
   id: l26d-r3e-t0-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r3e-t0-cup2:
   feetPosition: {x: 307.3, y: -79.23, z: -44.3}
   id: l26d-r3e-t0-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r3e-t0-cup3:
   feetPosition: {x: 308.3, y: -79.23, z: -43.7}
   id: l26d-r3e-t0-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r3e-t1:
   feetPosition: {x: 306.8, y: -80, z: -40}
   id: l26d-r3e-t1
@@ -1732,23 +1732,23 @@ l26d-r3e-t1-c3b:
 l26d-r3e-t1-cup0:
   feetPosition: {x: 305.3, y: -79.23, z: -40.3}
   id: l26d-r3e-t1-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r3e-t1-cup1:
   feetPosition: {x: 306.3, y: -79.23, z: -39.7}
   id: l26d-r3e-t1-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r3e-t1-cup2:
   feetPosition: {x: 307.3, y: -79.23, z: -40.3}
   id: l26d-r3e-t1-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r3e-t1-cup3:
   feetPosition: {x: 308.3, y: -79.23, z: -39.7}
   id: l26d-r3e-t1-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r3w-back:
   feetPosition: {x: 289.2, y: -80, z: -42}
   id: l26d-r3w-back
@@ -1843,23 +1843,23 @@ l26d-r3w-t0-c3b:
 l26d-r3w-t0-cup0:
   feetPosition: {x: 291.7, y: -79.23, z: -44.3}
   id: l26d-r3w-t0-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r3w-t0-cup1:
   feetPosition: {x: 292.7, y: -79.23, z: -43.7}
   id: l26d-r3w-t0-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r3w-t0-cup2:
   feetPosition: {x: 293.7, y: -79.23, z: -44.3}
   id: l26d-r3w-t0-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r3w-t0-cup3:
   feetPosition: {x: 294.7, y: -79.23, z: -43.7}
   id: l26d-r3w-t0-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r3w-t1:
   feetPosition: {x: 293.2, y: -80, z: -40}
   id: l26d-r3w-t1
@@ -1926,23 +1926,23 @@ l26d-r3w-t1-c3b:
 l26d-r3w-t1-cup0:
   feetPosition: {x: 291.7, y: -79.23, z: -40.3}
   id: l26d-r3w-t1-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r3w-t1-cup1:
   feetPosition: {x: 292.7, y: -79.23, z: -39.7}
   id: l26d-r3w-t1-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r3w-t1-cup2:
   feetPosition: {x: 293.7, y: -79.23, z: -40.3}
   id: l26d-r3w-t1-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r3w-t1-cup3:
   feetPosition: {x: 294.7, y: -79.23, z: -39.7}
   id: l26d-r3w-t1-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r4e-back:
   feetPosition: {x: 310.8, y: -80, z: -54}
   id: l26d-r4e-back
@@ -2037,23 +2037,23 @@ l26d-r4e-t0-c3b:
 l26d-r4e-t0-cup0:
   feetPosition: {x: 305.3, y: -79.23, z: -56.3}
   id: l26d-r4e-t0-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r4e-t0-cup1:
   feetPosition: {x: 306.3, y: -79.23, z: -55.7}
   id: l26d-r4e-t0-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r4e-t0-cup2:
   feetPosition: {x: 307.3, y: -79.23, z: -56.3}
   id: l26d-r4e-t0-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r4e-t0-cup3:
   feetPosition: {x: 308.3, y: -79.23, z: -55.7}
   id: l26d-r4e-t0-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r4e-t1:
   feetPosition: {x: 306.8, y: -80, z: -52}
   id: l26d-r4e-t1
@@ -2120,23 +2120,23 @@ l26d-r4e-t1-c3b:
 l26d-r4e-t1-cup0:
   feetPosition: {x: 305.3, y: -79.23, z: -52.3}
   id: l26d-r4e-t1-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r4e-t1-cup1:
   feetPosition: {x: 306.3, y: -79.23, z: -51.7}
   id: l26d-r4e-t1-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r4e-t1-cup2:
   feetPosition: {x: 307.3, y: -79.23, z: -52.3}
   id: l26d-r4e-t1-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r4e-t1-cup3:
   feetPosition: {x: 308.3, y: -79.23, z: -51.7}
   id: l26d-r4e-t1-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r4w-back:
   feetPosition: {x: 289.2, y: -80, z: -54}
   id: l26d-r4w-back
@@ -2231,23 +2231,23 @@ l26d-r4w-t0-c3b:
 l26d-r4w-t0-cup0:
   feetPosition: {x: 291.7, y: -79.23, z: -56.3}
   id: l26d-r4w-t0-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r4w-t0-cup1:
   feetPosition: {x: 292.7, y: -79.23, z: -55.7}
   id: l26d-r4w-t0-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r4w-t0-cup2:
   feetPosition: {x: 293.7, y: -79.23, z: -56.3}
   id: l26d-r4w-t0-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r4w-t0-cup3:
   feetPosition: {x: 294.7, y: -79.23, z: -55.7}
   id: l26d-r4w-t0-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r4w-t1:
   feetPosition: {x: 293.2, y: -80, z: -52}
   id: l26d-r4w-t1
@@ -2314,23 +2314,23 @@ l26d-r4w-t1-c3b:
 l26d-r4w-t1-cup0:
   feetPosition: {x: 291.7, y: -79.23, z: -52.3}
   id: l26d-r4w-t1-cup0
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r4w-t1-cup1:
   feetPosition: {x: 292.7, y: -79.23, z: -51.7}
   id: l26d-r4w-t1-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r4w-t1-cup2:
   feetPosition: {x: 293.7, y: -79.23, z: -52.3}
   id: l26d-r4w-t1-cup2
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r4w-t1-cup3:
   feetPosition: {x: 294.7, y: -79.23, z: -51.7}
   id: l26d-r4w-t1-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r5e-s:
   feetPosition: {x: 306.3, y: -80, z: -60.1}
   id: l26d-r5e-s
@@ -2375,13 +2375,13 @@ l26d-r5e-t1-c3a:
 l26d-r5e-t1-cup1:
   feetPosition: {x: 306.3, y: -79.23, z: -63.7}
   id: l26d-r5e-t1-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r5e-t1-cup3:
   feetPosition: {x: 308.3, y: -79.23, z: -63.7}
   id: l26d-r5e-t1-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r5w-s:
   feetPosition: {x: 293.7, y: -80, z: -60.1}
   id: l26d-r5w-s
@@ -2426,13 +2426,13 @@ l26d-r5w-t1-c3a:
 l26d-r5w-t1-cup1:
   feetPosition: {x: 292.7, y: -79.23, z: -63.7}
   id: l26d-r5w-t1-cup1
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-r5w-t1-cup3:
   feetPosition: {x: 294.7, y: -79.23, z: -63.7}
   id: l26d-r5w-t1-cup3
-  material: {color: oklch(0.7 0.18 50)}
-  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
+  layout: {box: {max: {x: 0.045, y: 0.11, z: 0.045}, min: {x: -0.045, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.67b34d233639f4ebade82520c7e5b03014e48128f2f92e25a8690ed457df5a1f.glb}
 l26d-shell-e:
   feetPosition: {x: 311, y: -80, z: -54}
   id: l26d-shell-e
