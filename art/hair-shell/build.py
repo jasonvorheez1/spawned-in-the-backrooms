@@ -74,7 +74,15 @@ bm = bmesh.new(); bm.from_mesh(me); bmesh.ops.remove_doubles(bm, verts=bm.verts,
 bmesh.ops.recalc_face_normals(bm, faces=bm.faces); bm.to_mesh(me); bm.free()
 for o in olds: bpy.data.objects.remove(o, do_unlink=True)
 ob = bpy.data.objects.new("AnimeHair", me); bpy.context.collection.objects.link(ob)
-if hm: me.materials.append(hm)
+if hm:
+    # the old hair picture was painted for the old strands' UVs; on this shell it reads as white blotches: flat colour, the game tints it
+    if hm.use_nodes:
+        bsdf = next((n for n in hm.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None)
+        if bsdf:
+            for l in list(bsdf.inputs["Base Color"].links): hm.node_tree.links.remove(l)
+            bsdf.inputs["Base Color"].default_value = (0.82, 0.82, 0.82, 1); bsdf.inputs["Roughness"].default_value = 0.55
+        for n in [n for n in hm.node_tree.nodes if n.type == "TEX_IMAGE"]: hm.node_tree.nodes.remove(n)
+    me.materials.append(hm)
 for p in me.polygons: p.use_smooth = True
 bpy.context.view_layer.objects.active = ob; ob.select_set(True)
 sol = ob.modifiers.new("Sol", "SOLIDIFY"); sol.thickness = 0.007; sol.offset = -1; sol.use_even_offset = True
