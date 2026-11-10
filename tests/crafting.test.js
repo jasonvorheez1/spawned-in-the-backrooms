@@ -103,3 +103,8 @@ test('prototype names and malformed recipe definitions cannot crash crafting act
  C.recipes.test_bad_recipe={in:{wire:1},out:[]}
  try{expect(()=>action(()=>({ok:true}))(ctx,s,{k:'make',id:'test_bad_recipe',n:1})).not.toThrow();expect(s.scrap.wire).toBe(1)}finally{delete C.recipes.test_bad_recipe}
 })
+
+test('leaving a bench closes crafting even where hunger drain is disabled',()=>{
+ const run=Function('C','liveBench','L21H','gain','takeToken',source.slice(source.indexOf('export function update('),source.indexOf('function liveBench(')).replace('export function','function')+';return update')(C,()=>false,{},()=>{},()=>{})
+ for(const place of ['level6','bonus']){const s={...player(),craftBench:'old-bench',hunger:60,thirst:70},ctx=context(s);ctx.self.session={};ctx.self.place=place;run(ctx,.5);expect(s.craftOpen).toBe('');expect(s.craftBench).toBe('');expect(s.hunger).toBe(60);expect(s.thirst).toBe(70)}
+})
