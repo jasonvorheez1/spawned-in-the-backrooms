@@ -38,6 +38,26 @@ function cot(ctx, x, z, yaw) {
   ctx.color("oklch(0.85 0.03 90)"); const [px, pz] = at(0, -0.65); box(ctx, px, 0.5, pz, 0.28 * Math.abs(c) + 0.14 * Math.abs(s), 0.06, 0.14 * Math.abs(c) + 0.28 * Math.abs(s));
 }
 
+// fallen concrete (Shelly: "found a blocky"): a jagged broken slab, its spalled underside chunks around it, rebar bent out of the break, grit
+const jag = (x, z, rx, rz, n, seed, rot = 0) => Array.from({ length: n }, (_, i) => { const a = rot + (i / n) * 6.2832, k = 0.62 + 0.5 * hash(i, seed, 17); return [x + Math.cos(a) * rx * k, z + Math.sin(a) * rz * k]; });
+function rubble(ctx, x, z, seed, hi) {
+  const k = 0.16 + hash(seed, 1, 213) * 0.14, rot = hash(seed, 2, 5) * 6.28;
+  ctx.albedo("cdn/texture-broken-concrete-rubble-exposed-aggregate.png"); ctx.color("oklch(0.78 0.008 250)"); ctx.roughness(0.95);
+  prism(ctx, jag(x, z, 0.62, 0.42, 9, seed, rot), 0, k); // the slab
+  prism(ctx, jag(x + 0.08, z - 0.04, 0.42, 0.28, 7, seed + 3, rot + 0.4), k, k + 0.05); // its stepped broken top
+  for (let i = 0; i < (hi ? 7 : 3); i++) { // chunks thrown off it, smaller the farther out
+    const a = hash(seed, i, 41) * 6.28, d = 0.6 + hash(seed, i, 43) * 0.7, s = 0.07 + hash(seed, i, 47) * 0.12 * (1.4 - d / 1.3);
+    prism(ctx, jag(x + Math.cos(a) * d, z + Math.sin(a) * d, s, s * 0.8, 6, seed + i * 7, a), 0, s * 0.9);
+  }
+  if (hi) {
+    ctx.albedo(null); ctx.color("oklch(0.42 0.06 45)"); ctx.metalness(0.6); ctx.roughness(0.7); // rusted rebar out of the break, bent where it tore
+    for (let i = 0; i < 3; i++) { const a = rot + 0.3 + i * 0.35, bx = x + Math.cos(a) * 0.45, bz = z + Math.sin(a) * 0.3, up = 0.25 + hash(seed, i, 51) * 0.3;
+      tube(ctx, [[bx, k * 0.6, bz], [bx + Math.cos(a) * 0.12, k + up * 0.5, bz + Math.sin(a) * 0.12], [bx + Math.cos(a + 0.6) * 0.2, k + up, bz + Math.sin(a + 0.6) * 0.2]], [0.008, 0.008, 0.007], 5, [1, 1], 0, 1, 1); }
+    ctx.metalness(0); ctx.color("oklch(0.62 0.01 80 / 0.7)"); ctx.roughness(1); // grit and dust spread under it
+    prism(ctx, jag(x, z, 1.1, 0.9, 12, seed + 9, rot), 0.002, 0.004);
+  }
+  ctx.albedo(null); ctx.roughness(0.85);
+}
 export function geometry(ctx) {
   const hi = ctx.lod <= 2, real = !!ctx.params?.tripo; // real: drums and pallets stand as their own models (places/level1/sim.js l1Tripo)
   ctx.smooth(); ctx.roughness(0.85); ctx.metalness(0);
@@ -49,7 +69,7 @@ export function geometry(ctx) {
     if (real && r < 0.19) {}
     else if (r < 0.1) { const hue = ["oklch(0.45 0.13 28)", "oklch(0.42 0.1 250)", "oklch(0.5 0.1 145)"][Math.floor(hash(cx, cz, 207) * 3)]; drum(ctx, x, z, 0.9, hue); drum(ctx, x + 0.68, z + 0.1, 0.9, hue); if (r < 0.05) drum(ctx, x + 0.3, z + 0.65, 0.9, hue); }
     else if (r < 0.19) pallet(ctx, x, z, hash(cx, cz, 209) * 3.14, 1 + Math.floor(hash(cx, cz, 211) * 3));
-    else if (r < 0.23 && zone === "halls") { ctx.color("oklch(0.7 0.01 250)"); const k = 0.25 + hash(cx, cz, 213) * 0.3; box(ctx, x, k / 2, z, 0.5, k / 2, 0.35); box(ctx, x + 0.5, k * 0.35, z + 0.2, 0.3, k * 0.35, 0.25); }
+    else if (r < 0.23 && zone === "halls") rubble(ctx, x, z, cx * 13 + cz, hi); // a chunk of ceiling slab that came down
     // ceiling ducts across the hall rows
     if (hi && zone === "halls" && cz % 3 === 1 && cx % 2 === 0) { ctx.color("oklch(0.62 0.01 250)"); ctx.metalness(0.6); box(ctx, c.x, H - 0.55, c.z, S / 2, 0.22, 0.42); ctx.color("oklch(0.4 0.01 250)"); for (let g = -3; g <= 3; g += 2) box(ctx, c.x + g, H - 0.33, c.z, 0.04, 0.02, 0.4); ctx.metalness(0); }
   }
