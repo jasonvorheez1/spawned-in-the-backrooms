@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 108; // bump to rebuild the city in rooms that are already open
+const V = 109; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -278,15 +278,8 @@ function lay(ctx) {
 
   // Canal Life Buoys Mounted on Posts
   [-16, 16].forEach((bxPos, k) => {
-    sp(`l11-canal-buoy-${k}`, {
-      feetPosition: { x: bxPos, y: 0.2, z: CANAL_Z + CANAL_W / 2 + 0.5 },
-      primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.04, height: 1.1 },
-      material: STEEL_BRUSHED,
-      children: [
-        { feetPosition: { x: 0, y: 0.9, z: -0.1 }, primitive: { kind: "cylinder", radiusTop: 0.32, radiusBottom: 0.32, height: 0.08 }, rotation: { pitch: 90 }, material: { color: "#e74c3c" } },
-        { feetPosition: { x: 0, y: 0.9, z: -0.1 }, primitive: { kind: "cylinder", radiusTop: 0.16, radiusBottom: 0.16, height: 0.09 }, rotation: { pitch: 90 }, material: { color: "oklch(0.2 0.01 250)" } },
-      ],
-    });
+    sp(`l11-canal-buoy-${k}`, { feetPosition: { x: bxPos, y: 0.2, z: CANAL_Z + CANAL_W / 2 + 0.5 }, model: { id: MODELS.canal_buoy, forward: "-z" }, layout: { box: { min: { x: -0.3, y: 0, z: -0.3 }, max: { x: 0.3, y: 0.95, z: 0.3 } } }, physics: { body: "static", collider: "cylinder" } }); // tripo mooring post
+    sp(`l11-canal-lamp-${k}`, { feetPosition: { x: bxPos + 2.4, y: 0.2, z: CANAL_Z + CANAL_W / 2 + 0.7 }, model: { id: MODELS.canal_lamp, forward: "-z" }, layout: { box: { min: { x: -0.25, y: 0, z: -0.25 }, max: { x: 0.25, y: 2.6, z: 0.25 } } }, physics: { body: "static", collider: "cylinder" }, children: [{ feetPosition: { x: 0, y: 2.05, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.1 75)", intensity: 1.6, distance: 7 } }] });
   });
 
   // Floating Wooden Boat Dock & Stairs
@@ -423,7 +416,7 @@ function lay(ctx) {
     ui: `<div face="front" width="0.45m" style="width:100%;height:100%;background:#060d16;border:2px solid #00d2d3;box-sizing:border-box;color:#00d2d3;font-family:'Courier New',monospace;font-weight:900;font-size:26px;text-align:center;padding:4px 6px;letter-spacing:2px;text-shadow:0 0 10px #00d2d3;display:flex;align-items:center;justify-content:center">[ 14 ]</div>`,
   });
 
-  sp("l11-skydeck-binoculars", { tags: ["usable"], feetPosition: { x: TOWER_X - 5.2, y: SKY_Y, z: TOWER_Z - 4.5 }, rotation: { yaw: 90 }, primitive: { kind: "cylinder", radiusTop: 0.14, radiusBottom: 0.22, height: 1.35 }, material: STEEL_BRUSHED, behavior: "scripts/level11-use.js", state: { kind: "binoculars", name: "Panoramic Observation Viewfinder", verb: "Look through Viewfinder" }, children: [{ feetPosition: { x: 0, y: 1.3, z: -0.15 }, primitive: { kind: "box", width: 0.35, height: 0.18, depth: 0.45 }, material: STEEL_BRUSHED }] });
+  sp("l11-skydeck-binoculars", { tags: ["usable"], feetPosition: { x: TOWER_X - 5.2, y: SKY_Y, z: TOWER_Z - 4.5 }, rotation: { yaw: 90 }, model: { id: MODELS.tower_viewer, forward: "-z" }, layout: { box: { min: { x: -0.3, y: 0, z: -0.3 }, max: { x: 0.3, y: 1.6, z: 0.3 } } }, physics: { body: "static", collider: "box" }, behavior: "scripts/level11-use.js", state: { kind: "binoculars", name: "Panoramic Observation Viewfinder", verb: "Look through Viewfinder" } });
 
   // ==========================================
   // 5. SCENE 2: HIGH/LOW TRANSITION BLOCK WITH "SEDCO SPOTLIGHT" & PARKING LOT (Wikidot Image 2)
@@ -451,9 +444,9 @@ function lay(ctx) {
     children: [{ feetPosition: { x: 0, y: 1.0, z: -0.08 }, primitive: { kind: "box", width: 1.2, height: 0.05, depth: 0.05 }, material: STEEL_BRUSHED }, { feetPosition: { x: 0, y: 1.6, z: -0.05 }, primitive: { kind: "plane", width: 0.5, height: 0.18 }, material: { color: "#111" }, ui: `<div face="front" width="0.5m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#d33;font:900 70px Arial;background:#111">CLOSED</div>` }] });
   sp("l11-sedco-door-mat", { feetPosition: { x: SX0 + 0.9, y: 0.15, z: SEDCO_Z }, primitive: { kind: "box", width: 1.2, height: 0.02, depth: 1.6 }, material: { color: "oklch(0.25 0.02 30)", roughness: 1 } });
   bx("l11-sedco-roof-trim", SEDCO_X, SEDCO_H + 0.1, SEDCO_Z, SEDCO_W + 0.3, 0.3, SEDCO_D + 0.3, CURB_MAT);
-  cyl("l11-sedco-vent1", SEDCO_X - 2.5, SEDCO_H + 0.25, SEDCO_Z - 1.5, 0.4, 0.35, 0.6, STEEL_BRUSHED);
-  cyl("l11-sedco-vent2", SEDCO_X + 2.0, SEDCO_H + 0.25, SEDCO_Z + 1.2, 0.4, 0.35, 0.6, STEEL_BRUSHED);
-  bx("l11-sedco-ac", SEDCO_X + 2.5, SEDCO_H + 0.25, SEDCO_Z - 1.5, 1.4, 0.9, 1.2, STEEL_BRUSHED);
+  md("l11-sedco-vent1", "roof_vent", SEDCO_X - 2.5, SEDCO_H + 0.25, SEDCO_Z - 1.5, undefined, "cylinder", { layout: { box: { min: { x: -0.35, y: 0, z: -0.35 }, max: { x: 0.35, y: 0.9, z: 0.35 } } } });
+  md("l11-sedco-vent2", "roof_vent", SEDCO_X + 2.0, SEDCO_H + 0.25, SEDCO_Z + 1.2, undefined, "cylinder", { layout: { box: { min: { x: -0.35, y: 0, z: -0.35 }, max: { x: 0.35, y: 0.9, z: 0.35 } } } });
+  md("l11-sedco-ac", "rooftop_ac", SEDCO_X + 2.5, SEDCO_H + 0.25, SEDCO_Z - 1.5, undefined, "box", { layout: { box: { min: { x: -0.7, y: 0, z: -0.65 }, max: { x: 0.7, y: 1.1, z: 0.65 } } } });
 
   // Iconic Illuminated "SEDCO SPOTLIGHT" Horizontal Neon Sign
   sp("l11-sedco-sign", {
@@ -498,7 +491,7 @@ function lay(ctx) {
   });
 
   // Interactive Sedco Closed-Circuit Security Terminal (BackOS)
-  bx("l11-sedco-desk", SEDCO_X - SEDCO_W / 2 - 1.2, 0.1, SEDCO_Z - 2.8, 0.9, 0.76, 0.75, STEEL_BRUSHED);
+  md("l11-sedco-desk", "office_desk", SEDCO_X - SEDCO_W / 2 - 1.2, 0.1, SEDCO_Z - 2.8, undefined, "box", { rotation: { yaw: 90 }, layout: { box: { min: { x: -0.75, y: 0, z: -0.375 }, max: { x: 0.75, y: 0.78, z: 0.375 } } } });
   sp("l11-sedco-terminal", terminalSpec({
     host: "SEDCO-SEC-01",
     lock: "science:10",
@@ -650,14 +643,12 @@ function lay(ctx) {
   bx("l11-pizza-wall-div", MALL_X + 2, 0.38, MALL_Z + 2.5, 10, 4.6, 0.2, STUCCO_MALL);
 
   // Brick Wood-Fired Pizza Oven with Animated Flickering Embers & Hearth
-  bx("l11-pizza-oven-base", MALL_X - 1.5, 0.38, MALL_Z + 8.5, 2.4, 1.2, 2.4, BRICK_BLDG);
-  cyl("l11-pizza-oven-dome", MALL_X - 1.5, 1.58, MALL_Z + 8.5, 1.1, 1.2, 1.0, BRICK_BLDG);
-  bx("l11-pizza-oven-logs", MALL_X - 0.7, 0.45, MALL_Z + 8.5, 0.8, 0.22, 0.8, { color: "#301605", roughness: 0.95 });
-  bx("l11-pizza-oven-embers", MALL_X - 0.6, 0.67, MALL_Z + 8.5, 0.7, 0.12, 0.7, { color: "#ff4500", emissive: "#ff3300", emissiveIntensity: 3.5 });
-  sp("l11-pizza-oven-fire", {
-    feetPosition: { x: MALL_X - 0.4, y: 1.1, z: MALL_Z + 8.5 },
-    primitive: { kind: "cylinder", radiusTop: 0.25, radiusBottom: 0.35, height: 0.4 },
-    material: { color: "oklch(0.65 0.22 40)", emissive: "oklch(0.65 0.22 40)", emissiveIntensity: 3.5 },
+  md("l11-pizza-oven", "pizza_oven", MALL_X - 1.5, 0.38, MALL_Z + 8.5, undefined, "box", { rotation: { yaw: 90 }, layout: { box: { min: { x: -1.1, y: 0, z: -1.1 }, max: { x: 1.1, y: 2.3, z: 1.1 } } } }); // tripo brick dome, mouth toward the shop (+X)
+  sp("l11-pizza-oven-fire", { // the hearth's glow inside the mouth: fire and light, no solid
+    feetPosition: { x: MALL_X - 1.0, y: 1.45, z: MALL_Z + 8.5 },
+    fx: { script: `fx
+pop coals n=10 on=disc(.3) size=.05..0.1 tint=<2.4,.9,.25>..<1.1,.3,.08> sz=$size*flick(.5,.12) col=$tint*flick(.8,.3) a=.9 r=sprite(soft-disc,add)
+pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2..0.5) size=.12..0.25 acc=curl(.5)+buoy(1.6)+drag(1.5) sz=$size*(.5>1:.4>.2) col=hdr(4.6,3.4,1.4)>.4:hdr(3.2,1.4,.3)>hdr(.6,.12,.03) a=0>.15:1>.7:.8>0 r=sprite(flame-wisp,add)` },
     light: { kind: "point", color: "oklch(0.75 0.2 45)", intensity: 4.8, distance: 9 },
   });
 
@@ -665,14 +656,10 @@ function lay(ctx) {
   sp("l11-pizza-peel", {
     tags: ["usable"],
     feetPosition: { x: MALL_X - 0.2, y: 0.38, z: MALL_Z + 9.5 },
-    rotation: { pitch: 12, yaw: 30 },
-    primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.025, height: 1.7 },
-    material: { ...T("worn-hardwood-grain", 1), color: "oklch(0.72 0.08 65)" },
+    rotation: { yaw: 30 },
+    model: { id: MODELS.pizza_peel, forward: "-z" }, layout: { box: { min: { x: -0.75, y: 0, z: -0.75 }, max: { x: 0.75, y: 1.5, z: 0.75 } } },
     behavior: "scripts/level11-use.js",
     state: { kind: "pizza-peel", name: "Baker's Wood Pizza Peel", verb: "Bake Pizza in Hearth Oven" },
-    children: [
-      { feetPosition: { x: 0, y: 1.4, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.22, radiusBottom: 0.22, height: 0.03 }, material: { ...T("worn-hardwood-grain", 1), color: "oklch(0.75 0.08 65)" } },
-    ],
   });
 
   // Pizza Service Counter & Cutting Board
@@ -696,15 +683,14 @@ function lay(ctx) {
   sp("l11-pizza-case-light", { feetPosition: { x: MALL_X + 3.0, y: 1.25, z: MALL_Z + 3.4 }, light: { kind: "point", color: "oklch(0.95 0.04 85)", intensity: 0.6, distance: 2.5 } });
 
   // Dining Bistro Table & Chairs
-  cyl("l11-pizza-table", MALL_X + 0.5, 0.38, MALL_Z + 4.5, 0.7, 0.7, 0.85, STEEL_BRUSHED);
-  cyl("l11-pizza-chair1", MALL_X + 0.5, 0.38, MALL_Z + 3.4, 0.25, 0.25, 0.55, STEEL_BRUSHED);
-  cyl("l11-pizza-chair2", MALL_X + 0.5, 0.38, MALL_Z + 5.6, 0.25, 0.25, 0.55, STEEL_BRUSHED);
+  md("l11-pizza-table", "bistro_table", MALL_X + 0.5, 0.38, MALL_Z + 4.5, undefined, "cylinder", { layout: { box: { min: { x: -0.45, y: 0, z: -0.45 }, max: { x: 0.45, y: 0.75, z: 0.45 } } } });
+  md("l11-pizza-chair1", "bistro_chair", MALL_X + 0.5, 0.38, MALL_Z + 3.6, undefined, "box", { rotation: { yaw: 180 }, layout: { box: { min: { x: -0.25, y: 0, z: -0.26 }, max: { x: 0.25, y: 0.88, z: 0.26 } } } });
+  md("l11-pizza-chair2", "bistro_chair", MALL_X + 0.5, 0.38, MALL_Z + 5.4, undefined, "box", { rotation: { yaw: 0 }, layout: { box: { min: { x: -0.25, y: 0, z: -0.26 }, max: { x: 0.25, y: 0.88, z: 0.26 } } } });
+  sp("l11-pizza-soda", { feetPosition: { x: MALL_X + 0.65, y: 1.13, z: MALL_Z + 4.4 }, model: { id: MODELS.soda_can, forward: "-z" }, layout: { box: { min: { x: -0.033, y: 0, z: -0.033 }, max: { x: 0.033, y: 0.122, z: 0.033 } } } }); // someone's half-drunk can
+  [[MALL_X + 4.6, MALL_Z - 1.0], [MALL_X + 4.9, MALL_Z - 0.4], [MALL_X + 4.5, MALL_Z + 0.2]].forEach(([x, z], i) => sp(`l11-trashbag-${i}`, { feetPosition: { x, y: 0.1, z }, rotation: { yaw: i * 70 }, model: { id: MODELS.trash_bag, forward: "-z" }, layout: { box: { min: { x: -0.3, y: 0, z: -0.3 }, max: { x: 0.3, y: 0.75, z: 0.3 } } }, physics: { body: "static", collider: "box" } })); // bags set out on the curb for a pickup that never comes
 
   // --- ROOFTOP COMMUNICATIONS RIG (Wikidot Image 3) ---
-  cyl("l11-mall-dish-base", MALL_X + 2.0, MALL_H + 0.3, MALL_Z - 5.0, 0.12, 0.15, 0.8, STEEL_BRUSHED);
-  cyl("l11-mall-dish-bowl", MALL_X + 2.0, MALL_H + 1.1, MALL_Z - 5.0, 1.2, 0.4, 0.35, { color: "#f0f0f0", roughness: 0.4 }, {
-    rotation: { pitch: 45, yaw: -45 },
-  });
+  md("l11-mall-dish", "sat_dish", MALL_X + 2.0, MALL_H + 0.3, MALL_Z - 5.0, undefined, "box", { rotation: { yaw: -45 }, layout: { box: { min: { x: -1.1, y: 0, z: -1.1 }, max: { x: 1.1, y: 2.3, z: 1.1 } } } });
 
   const MAST_X = MALL_X - 2.0;
   const MAST_Z = MALL_Z + 4.0;
@@ -775,7 +761,9 @@ function lay(ctx) {
   }
 
   // Unfinished Drywall Partition Boards
-  bx("l11-drywall-stack", -28.5, 0.22, -4.5, 1.2, 2.4, 0.35, DRYWALL_MAT, { rotation: { pitch: 12 } });
+  md("l11-drywall-stack", "drywall_stack", -28.5, 0.22, -4.5, undefined, "box", { layout: { box: { min: { x: -0.625, y: 0, z: -0.3 }, max: { x: 0.625, y: 1.25, z: 0.3 } } } });
+  md("l11-reno-toolbox", "red_toolbox", -27.2, 0.22, -3.6, undefined, "box", { rotation: { yaw: 20 }, layout: { box: { min: { x: -0.25, y: 0, z: -0.15 }, max: { x: 0.25, y: 0.4, z: 0.15 } } } });
+  sp("l11-reno-jackhammer", { feetPosition: { x: -26.4, y: 0.22, z: -5.6 }, rotation: { yaw: -60 }, model: { id: MODELS.jackhammer, forward: "-z" }, layout: { box: { min: { x: -0.45, y: 0, z: -0.45 }, max: { x: 0.45, y: 0.9, z: 0.45 } } }, physics: { body: "static", collider: "box" } }); // left mid-job
   bx("l11-drywall-wall-w", -25, 0.22, -6.8, 6.5, 4.2, 0.15, DRYWALL_MAT);
   bx("l11-reno-int-glass", -23, 0.22, 1.5, 0.04, 4.2, 6.0, GLASS_TINT);
 
@@ -900,10 +888,9 @@ function lay(ctx) {
 
   sp("l11-memorial-candle", {
     feetPosition: { x: BARRICADE_X + 0.8, y: 0.1, z: BARRICADE_Z + 1.2 },
-    primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.04, height: 0.22 },
-    material: { color: "oklch(0.9 0.05 85)" },
+    model: { id: MODELS.memorial_candle, forward: "-z" }, layout: { box: { min: { x: -0.06, y: 0, z: -0.06 }, max: { x: 0.06, y: 0.14, z: 0.06 } } },
     children: [
-      { feetPosition: { x: 0, y: 0.22, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.18 75)", intensity: 2.2, distance: 4.5 } },
+      { feetPosition: { x: 0, y: 0.2, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.18 75)", intensity: 2.2, distance: 4.5 } },
     ],
   });
 
@@ -1246,11 +1233,7 @@ function lay(ctx) {
       info: "Affected by the Level 11 Effect. Completely calm and friendly, like a domestic stray dog.",
     },
   });
-  cyl("l11-hound-bowl", 7.8, 0.1, -5, 0.22, 0.26, 0.12, STEEL_BRUSHED, {
-    children: [
-      { feetPosition: { x: 0, y: 0.08, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.2, radiusBottom: 0.2, height: 0.02 }, material: { color: "#00d2d3", roughness: 0.1, metalness: 0.3 } },
-    ],
-  });
+  md("l11-hound-bowl", "dog_bowl", 7.8, 0.1, -5, undefined, "cylinder", { layout: { box: { min: { x: -0.18, y: 0, z: -0.18 }, max: { x: 0.18, y: 0.14, z: 0.18 } } } });
 
   sp("l11-commuter-faceling", {
     tags: ["npc", "faceling"],
@@ -1372,7 +1355,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     // floodlights on poles, the gate lit like a stage
     [[-2.6, 1], [2.6, -1]].forEach(([x, k], i) => {
       cyl(`l11-th-pole-${i}`, x, 0.1, TZ + 0.4, 0.07, 0.09, 4.6, { color: "oklch(0.35 0.01 240)", metalness: 0.7, roughness: 0.5 });
-      sp(`l11-th-flood-${i}`, { feetPosition: { x, y: 4.5, z: TZ + 0.6 }, primitive: { kind: "box", width: 0.5, height: 0.32, depth: 0.25 }, material: { color: "#d8dbe0", emissive: "#fff6e0", emissiveIntensity: 2.2 }, light: { kind: "spot", color: "oklch(0.97 0.03 90)", intensity: 9, distance: 22, angle: 50, penumbra: 0.5, aim: { x: x * 0.5, y: 0, z: TZ + 8 } }, castShadow: false });
+      sp(`l11-th-flood-${i}`, { feetPosition: { x, y: 4.5, z: TZ + 0.6 }, rotation: { yaw: 180, pitch: -25 }, model: { id: MODELS.floodlight, forward: "-z" }, layout: { box: { min: { x: -0.25, y: 0, z: -0.15 }, max: { x: 0.25, y: 0.5, z: 0.15 } } }, light: { kind: "spot", color: "oklch(0.97 0.03 90)", intensity: 9, distance: 22, angle: 50, penumbra: 0.5, aim: { x: x * 0.5, y: 0, z: TZ + 8 } }, castShadow: false });
     });
     // the sign wired over the gate
     sp("l11-th-sign", {
@@ -1521,15 +1504,9 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   sp("l11-market-produce-crate", {
     tags: ["usable"],
     feetPosition: { x: MKT_X - 0.2, y: 1.05, z: MKT_Z - 1.1 },
-    primitive: { kind: "box", width: 0.7, height: 0.35, depth: 0.9 },
-    material: WOOD,
+    model: { id: MODELS.produce_crate, forward: "-z" }, layout: { box: { min: { x: -0.35, y: 0, z: -0.45 }, max: { x: 0.35, y: 0.42, z: 0.45 } } },
     behavior: "scripts/level11-use.js",
     state: { kind: "market-produce", name: "Crate of Capital Apples & Fresh Bread", verb: "Take Free Citizen Ration" },
-    children: [
-      { feetPosition: { x: -0.15, y: 0.22, z: 0 }, primitive: { kind: "sphere", radius: 0.1 }, material: { color: "#e74c3c", roughness: 0.3 } },
-      { feetPosition: { x: 0.15, y: 0.22, z: 0 }, primitive: { kind: "sphere", radius: 0.1 }, material: { color: "#c0392b", roughness: 0.3 } },
-      { feetPosition: { x: 0, y: 0.24, z: 0.2 }, primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.09, height: 0.3 }, rotation: { roll: 90 }, material: { color: "#d35400", roughness: 0.9 } },
-    ],
   });
 
   // Pamphlet Display Stand: "A Different Kind of Urban" (Wikidot Lore)
@@ -1577,8 +1554,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     tags: ["usable", "pet"],
     feetPosition: { x: CRANE_X, y: 0.35, z: CRANE_Z },
     rotation: { yaw: -45 },
-    primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.12, height: 0.22 },
-    material: { color: "#ffffff", emissive: "#ffffff", emissiveIntensity: 0.35, roughness: 0.8 },
+    model: { id: MODELS.paper_crane, forward: "-z", materials: { "*": { emissive: "#ffffff", emissiveIntensity: 0.2 } } }, layout: { box: { min: { x: -0.2, y: 0, z: -0.2 }, max: { x: 0.2, y: 0.32, z: 0.2 } } },
     behavior: "scripts/level11-use.js",
     state: {
       kind: "lucky-crane",
@@ -1586,16 +1562,6 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
       verb: "Pet Paper Crane",
       info: "A sentient origami paper crane resting on the canal wall. Completely docile under the Level 11 Effect.",
     },
-    children: [
-      // Left Wing
-      { feetPosition: { x: -0.16, y: 0.14, z: 0 }, rotation: { roll: 25 }, primitive: { kind: "box", width: 0.26, height: 0.02, depth: 0.16 }, material: { color: "#ffffff", roughness: 0.8 } },
-      // Right Wing
-      { feetPosition: { x: 0.16, y: 0.14, z: 0 }, rotation: { roll: -25 }, primitive: { kind: "box", width: 0.26, height: 0.02, depth: 0.16 }, material: { color: "#ffffff", roughness: 0.8 } },
-      // Slender Origami Neck & Beak
-      { feetPosition: { x: 0, y: 0.24, z: -0.1 }, rotation: { pitch: -35 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.04, height: 0.2 }, material: { color: "#ffffff", roughness: 0.8 } },
-      // Folded Tail
-      { feetPosition: { x: 0, y: 0.18, z: 0.12 }, rotation: { pitch: 45 }, primitive: { kind: "cylinder", radiusTop: 0.01, radiusBottom: 0.03, height: 0.16 }, material: { color: "#ffffff", roughness: 0.8 } },
-    ],
   });
 
   // B.N.T.G. North Canal Spillway Pumping Station & Water Lock Valve
