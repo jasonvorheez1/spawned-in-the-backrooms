@@ -90,8 +90,11 @@ def cut(co, no): bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.
 bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=4e-4)  # the mirrored halves meet at x=0: weld, or the push opens a seam down the spine
 sk = bm.verts.layers.shape; keys = list(sk.keys())
 # a coarse body (the male base) has faces wider than a strap: a cut through one deletes it whole and the strap floats off the back panel. Split the upper body finer first.
-_up = [e for e in bm.edges if max(W(v.co).z for v in e.verts) < waistz + 0.05 * s and min(W(v.co).z for v in e.verts) > J['LeftFoot'].z]
+_up = [e for e in bm.edges if max(W(v.co).z for v in e.verts) < (neckz + 0.06 * s if BIB > 0 else waistz + 0.05 * s) and min(W(v.co).z for v in e.verts) > J['LeftFoot'].z]
 bmesh.ops.subdivide_edges(bm, edges=_up, cuts=1, use_grid_fill=True)
+if BIB > 0:
+    _up2 = [e for e in bm.edges if min(W(v.co).z for v in e.verts) > waistz - 0.03 * s and max(W(v.co).z for v in e.verts) < neckz + 0.06 * s]
+    bmesh.ops.subdivide_edges(bm, edges=_up2, cuts=1, use_grid_fill=True)
 def F(co):  # >0 inside the garment, the cut is its zero line (a contour, so every edge is drawn, not stepped)
     p = W(co)
     top = waistz
