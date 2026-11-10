@@ -117,13 +117,10 @@ export function tick(ctx) {
     const DRUM = "/cdn/value.de68d3453156f6d0341dc0143da17f0a5f60f2da731a9b018363a51fcf233712.glb", PAL = "/cdn/value.52adc0a974c9920d51033154da8dae242fd9a7271b1190ad5a9d3a0f0b9f6c1f.glb";
     for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id]; if (o.primitive?.script === "scripts/level1-props-geo.js") o.primitive = { ...o.primitive, params: { tripo: true } }; }
     const drum = (id, x, z, yaw) => ctx.spawn(id, { tags: ["l1prop"], feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: DRUM }, layout: { box: { min: { x: -0.3, y: 0, z: -0.3 }, max: { x: 0.3, y: 0.9, z: 0.3 } } }, physics: { body: "static", collider: "cylinder" }, visibleRange: { max: 45 }, state: { name: "Oil Drum", loose: "metal", mat: "sheet_steel" } });
-    const pal = (id, x, z, yaw) => { // a bare pallet and its cartons as separate things (Shelly: "the boxes in this model should be separated")
-      if (ctx.place.objects[id]) delete ctx.place.objects[id];
-      ctx.spawn(id + "-p", { tags: ["l1prop"], feetPosition: { x, y: 0, z }, rotation: { yaw }, primitive: { kind: "box", width: 1.2, height: 0.14, depth: 1.0 }, material: { texture: "cdn/texture-weathered-pine-shipping-pallet-slats.png", color: "oklch(0.72 0.05 70)", roughness: 0.9 }, physics: "static", visibleRange: { max: 45 }, state: { name: "Pallet", loose: "wood", mat: "wood", items: "scrap_wood" } });
-      let y = 0.14; const n = 2 + Math.floor(hash(x, z, 7) * 2);
-      for (let i = 0; i < n; i++) { const w = 0.7 - i * 0.12 + hash(x, i, 3) * 0.1, d = 0.6 - i * 0.08, h = 0.32 + hash(z, i, 5) * 0.12, ox = (hash(x, z, 11 + i) - 0.5) * 0.25, oz = (hash(z, x, 13 + i) - 0.5) * 0.2;
-        ctx.spawn(id + "-b" + i, { tags: ["l1prop", "container", "breakable"], feetPosition: { x: x + ox, y, z: z + oz }, rotation: { yaw: yaw + (hash(x, z, 17 + i) - 0.5) * 24 }, primitive: { kind: "scripted", script: "scripts/l1-stock-geo.js", params: { kind: "carton", w, d, h } }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, state: { name: "Carton", loose: "wood", mat: "wood", hp: 20, maxHp: 20, items: rollItemL1(ctx) } });
-        y += h; }
+    const pal = (id, x, z, yaw) => { // a stack of separate cartons (Shelly: "the boxes in this model should be separated"): each its own box you grab, kick or open
+      const n = 2 + Math.floor(hash(x, z, 7) * 3); let y = 0;
+      for (let i = 0; i < n; i++) { const w = 0.62 - i * 0.08, d = 0.5 - i * 0.05, h = 0.42 - i * 0.05, ox = (hash(x, i, 3) - 0.5) * 0.12, oz = (hash(z, i, 5) - 0.5) * 0.12;
+        ctx.spawn(id + "-b" + i, { tags: ["l1prop", "container", "breakable"], feetPosition: { x: x + ox, y, z: z + oz }, rotation: { yaw: yaw + (hash(x, z, i) - 0.5) * 24 }, primitive: { kind: "scripted", script: "scripts/l1-stock-geo.js", params: { kind: "carton", w, d, h } }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, state: { name: "Cardboard Box", loose: "wood", mat: "wood", hp: 20, maxHp: 20, items: "scrap_wood" } }); y += h; }
     };
     for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
       const zone = zoneOf(cx, cz); if (zone !== "halls" && zone !== "storage") continue;
