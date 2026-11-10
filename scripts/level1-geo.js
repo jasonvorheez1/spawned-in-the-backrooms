@@ -29,7 +29,7 @@ export function geometry(ctx) {
     ctx.color(zone === "corridors" ? "oklch(0.8 0.012 80)" : hash(cx, cz, 3) < 0.25 ? "oklch(0.62 0.01 250)" : hash(cx, cz, 4) < 0.5 ? "oklch(0.74 0.008 80)" : "oklch(0.82 0.006 250)"); ctx.roughness(hash(cx, cz, 5) < 0.3 ? 0.22 : 0.55); // wet patches catch the tubes
     ctx.quad(x0, 0, z0, x0, 0, z0 + S, x0 + S, 0, z0 + S, x0 + S, 0, z0);
   }
-  ctx.roughness(null); ctx.albedo(CEIL); ctx.color("oklch(0.72 0.006 250)");
+  ctx.roughness(null); ctx.albedo(CEIL); ctx.color("oklch(0.93 0.004 250)");
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     const x0 = cx * S - HALF, z0 = cz * S - HALF;
     ctx.quad(x0, H, z0, x0 + S, H, z0, x0 + S, H, z0 + S, x0, H, z0 + S);
