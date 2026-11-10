@@ -19,10 +19,30 @@ for s, x in (("Left", 1), ("Right", -1)):
     J[s+"Hand"] = (x*.555, .13, 1.175); J[s+"HandEnd"] = (x*.665, .14, 1.105)
     J[s+"UpLeg"] = (x*.085, .09, .93); J[s+"Leg"] = (x*.085, .095, .5); J[s+"Foot"] = (x*.085, .1, .085)
     J[s+"ToeBase"] = (x*.085, .16, .02); J[s+"Toe_End"] = (x*.085, .2, .02)
+# fingers: measured along the hand axis (t from the wrist, y across the knuckles, s toward the palm)
+HA = V((.555, .13, 1.175)); HD = (V((.665, .14, 1.105)) - HA).normalized(); HS = HD.cross(V((0, 1, 0))).normalized()
+def hp(t, y, s=-.012): return HA + HD * t + V((0, 1, 0)) * y + HS * s
+FING = {"Index": (-.02, .128), "Middle": (.005, .135), "Ring": (.03, .128), "Pinky": (.05, .105)}
+HANDCH = []
+for side_, xs in (("Left", 1), ("Right", -1)):
+    def m(p): return (p.x * xs, p.y, p.z)
+    for f, (y, tip) in FING.items():
+        ts = [.05, .05 + (tip - .05) * .45, .05 + (tip - .05) * .75, tip]
+        for i in range(4): J[f"{side_}Hand{f}{i+1}"] = m(hp(ts[i], y))
+        J[f"{side_}Hand{f}End"] = m(hp(tip + .01, y))
+    thumb = [hp(-.02, -.035, -.02), hp(.01, -.055, -.03), hp(.03, -.062, -.032), hp(.048, -.068, -.03)]
+    for i in range(4): J[f"{side_}HandThumb{i+1}"] = m(thumb[i])
+    J[f"{side_}HandThumbEnd"] = m(hp(.058, -.07, -.03))
+    for f in list(FING) + ["Thumb"]:
+        HANDCH.append((f"{side_}Hand{f}1", side_ + "Hand", f"{side_}Hand{f}2"))
+        HANDCH.append((f"{side_}Hand{f}2", f"{side_}Hand{f}1", f"{side_}Hand{f}3"))
+        HANDCH.append((f"{side_}Hand{f}3", f"{side_}Hand{f}2", f"{side_}Hand{f}4"))
+        HANDCH.append((f"{side_}Hand{f}4", f"{side_}Hand{f}3", f"{side_}Hand{f}End"))
 CHAIN = [("Hips",None,"Spine"),("Spine","Hips","Spine1"),("Spine1","Spine","Spine2"),("Spine2","Spine1","Neck"),("Neck","Spine2","Head"),("Head","Neck","HeadTop_End")]
 for s in ("Left","Right"):
     CHAIN += [(s+"Shoulder","Spine2",s+"Arm"),(s+"Arm",s+"Shoulder",s+"ForeArm"),(s+"ForeArm",s+"Arm",s+"Hand"),(s+"Hand",s+"ForeArm",s+"HandEnd"),
               (s+"UpLeg","Hips",s+"Leg"),(s+"Leg",s+"UpLeg",s+"Foot"),(s+"Foot",s+"Leg",s+"ToeBase"),(s+"ToeBase",s+"Foot",s+"Toe_End")]
+CHAIN += HANDCH
 ad = bpy.data.armatures.new("Armature"); rig = bpy.data.objects.new("Armature", ad); bpy.context.scene.collection.objects.link(rig)
 bpy.context.view_layer.objects.active = rig; bpy.ops.object.mode_set(mode='EDIT')
 for name, par, tail in CHAIN:
@@ -64,15 +84,26 @@ def aim(n, d):
     b.matrix = nm; bpy.context.view_layer.update()
 for s, x in (("Left", 1), ("Right", -1)):
     aim(s+"Arm", (x*.18, 0.05, -1)); aim(s+"ForeArm", (x*.1, .9, -.5))
+def curl(n, deg, axis=(0, 1, 0)):
+    b = P_[n]; bpy.context.view_layer.update()
+    dv = (b.tail - b.head); q = mathutils.Quaternion(V(axis), math.radians(deg))
+    aim(n, q @ dv)
+for side_, xs in (("Left", 1), ("Right", -1)):
+    for f in FING:
+        for i, a_ in ((1, 25), (2, 35), (3, 25)): curl(f"{side_}Hand{f}{i}", a_ * xs)
+    for i, a_ in ((2, 20), (3, 20)): curl(f"{side_}HandThumb{i}", a_ * xs)
 aim("LeftUpLeg", (0, .7, -.7)); aim("LeftLeg", (0, -.5, -1))
 aim("RightArm", (-.7, .1, .1)); aim("RightForeArm", (-.2, .3, 1))
 dg=bpy.context.evaluated_depsgraph_get(); ev=body.evaluated_get(dg); zs=[(body.matrix_world@v.co) for v in ev.data.vertices]; print("posebox",[round(min(p[i] for p in zs),3) for i in range(3)],[round(max(p[i] for p in zs),3) for i in range(3)])
 sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = 500; sc.render.resolution_y = 700
 w = bpy.data.worlds.new("w"); w.color = (.55, .55, .6); sc.world = w
 c = V((0, .08, 1.25))
-for name, d in (("front", (0, 1, .1)), ("q", (.9, .7, .25)), ("back", (0, -1, .15)), ("side", (1, 0, .1))):
+bpy.context.view_layer.update()
+hc = rig.matrix_world @ P_["RightHand"].tail
+for name, d, cc, dist in (("front", (0, 1, .1), c, 1.5), ("q", (.9, .7, .25), c, 1.5), ("hand", (-.6, .8, .1), hc, .35), ("hand2", (-.9, -.3, .1), hc, .35)):
+    c_ = cc
     cam = bpy.data.objects.new(name, bpy.data.cameras.new(name)); sc.collection.objects.link(cam)
-    cam.location = c + V(d).normalized() * 1.5; cam.data.lens = 35
-    cam.rotation_euler = (c - cam.location).to_track_quat('-Z', 'Y').to_euler()
+    cam.location = c_ + V(d).normalized() * dist; cam.data.lens = 35
+    cam.rotation_euler = (c_ - cam.location).to_track_quat('-Z', 'Y').to_euler()
     L = bpy.data.objects.new(name+"L", bpy.data.lights.new(name+"L", "SUN")); sc.collection.objects.link(L); L.rotation_euler = cam.rotation_euler; L.data.energy = 3
     sc.camera = cam; sc.render.filepath = f"{PROOF}/{name}.png"; bpy.ops.render.render(write_still=True); sc.collection.objects.unlink(L)
