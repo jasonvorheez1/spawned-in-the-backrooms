@@ -104,6 +104,18 @@ const ZERO_POSE = [0, 0, 0, 0, 0, 0]
 const SAMPLE_BUF = [0, 0, 0, 0, 0, 0]
 const PUMP_BUF = [0, 0, 0, 0, 0, 0]
 
+// a decoded NV take: Catmull-Rom through its rows, no per-key ease, so the hand never stops at a key mid-swing
+function sampleSmooth(frames, t, out) {
+  t = Math.max(0, Math.min(1, t))
+  let i = 1
+  while (i < frames.length - 1 && frames[i][0] < t) i++
+  const p1 = frames[i - 1], p2 = frames[i], p0 = frames[Math.max(0, i - 2)], p3 = frames[Math.min(frames.length - 1, i + 1)]
+  const u = Math.max(0, Math.min(1, (t - p1[0]) / Math.max(1e-4, p2[0] - p1[0]))), u2 = u * u, u3 = u2 * u
+  const res = out || [0, 0, 0, 0, 0, 0]
+  for (let k = 1; k < 7; k++) res[k - 1] = 0.5 * (2 * p1[k] + (p2[k] - p0[k]) * u + (2 * p0[k] - 5 * p1[k] + 4 * p2[k] - p3[k]) * u2 + (3 * p1[k] - p0[k] - 3 * p2[k] + p3[k]) * u3)
+  return res
+}
+
 function sample(frames, t, out) {
   t = Math.max(0, Math.min(1, t))
   let i = 1
@@ -294,7 +306,7 @@ export function poseViewmodel(ctx, dt) {
     const e = ease(Math.sin(m.swingT * Math.PI))
     const h = 1 + 0.7 * (m.heavy ?? 0), side = (m.combo ?? 0) % 2 ? -1 : 1
     if (m.nv) { // the decoded NV path, unmirrored (its own left swing rides the combo)
-      const o = sample(m.nv.f, m.swingT, SAMPLE_BUF), g = 1 + 0.45 * (m.heavy ?? 0)
+      const o = sampleSmooth(m.nv.f, m.swingT, SAMPLE_BUF), g = 1 + 0.45 * (m.heavy ?? 0)
       x += o[0] * g; y += o[1] * g; d += o[2] * g; pitch += o[3]; yaw += o[4]; roll += o[5]
       if (style === SWING.heavy && m.swingT > 0.4 && !m.thud) { m.thud = true; ctx.emit('cameraPunch', { direction: { x: 0, y: -1, z: -0.3 }, intensity: 0.22 + 0.3 * (m.heavy ?? 0) }, { audience: { player: ctx.self.id } }) }
     } else if (kind === 'fists') { d += 0.28 * e * h; x -= 0.07 * e * h * side; y += 0.03 * e; roll -= 10 * e * side; yaw += 8 * e * side }
