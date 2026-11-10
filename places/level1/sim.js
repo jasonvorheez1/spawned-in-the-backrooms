@@ -123,6 +123,25 @@ export function tick(ctx) {
     }
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz); pal("l1p-camp", a.x - 2.5, a.z + 7.4, 11); drum("l1d-camp", a.x + 5.6, a.z - 1.4, 40);
   }
+  if (s.l1Kit !== 1) { s.l1Kit = 1; // the car park's kit as real models: hanging tube fixtures, hose reels, cement sacks, rebar, cones (Shelly: level 1 the blockiest)
+    const K = { lamp: "/cdn/value.e1d7e9d8285363fde672073e9fa6ea81325922de9f94306bc9ce454a7b0b53b7.glb", hose: "/cdn/value.62af66caeebc701ab7021c12a15afee889aee3a7232b0e2fb74a6e352c9e2593.glb", cement: "/cdn/value.6f370e387809e6002bc4ee4ad843ad10de7dd44da5962e3aee65b7b8ecf5c221.glb", rebar: "/cdn/value.629540d3c37c77cf85e34278659821898a559fdc86122ac7b51315a9948b7eab.glb", cone: "/cdn/value.a551b5000627f75d0d6595406211bf3c968f4ec63f676742b66ef4c667374d92.glb" };
+    const fit = (w, h, d) => ({ box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } });
+    for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id];
+      if (o.primitive?.script === "scripts/level1-details-geo.js") o.primitive = { ...o.primitive, params: { tripo: true } };
+      if (o.tags?.includes("l1lamp") && o.primitive?.kind === "box") { const f = o.feetPosition; // the old glowing slab becomes a chain-hung twin-tube batten with its tubes still lit
+        o.primitive = null; o.material = null; o.model = { id: K.lamp }; o.layout = fit(2.4, 0.55, 0.3); o.rotation = { yaw: 90 }; o.feetPosition = { x: f.x, y: H - 0.55, z: f.z };
+        ctx.spawn({ parent: id, feetPosition: { x: 0, y: 0.015, z: 0 }, primitive: { kind: "box", width: 2.2, height: 0.035, depth: 0.07 }, material: { color: "oklch(0.97 0.02 220)", emissive: "oklch(0.95 0.03 220)", emissiveIntensity: 2.4 }, castShadow: false, visibleRange: { max: 42 } }); }
+    }
+    for (let i = 2; i < N; i += 4) for (let j = 2; j < N; j += 4) { if (!hasPillar(i, j) || hash(i, j, 331) > 0.45) continue;
+      ctx.spawn(`l1k-hose-${i}-${j}`, { tags: ["l1kit"], feetPosition: { x: i * S - HALF, y: 0.95, z: j * S - HALF + 0.54 }, rotation: { yaw: 180 }, model: { id: K.hose, forward: "+z" }, layout: fit(0.5, 0.5, 0.16), castShadow: false, visibleRange: { max: 45 } }); }
+    for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
+      const zone = zoneOf(cx, cz); if ((zone !== "halls" && zone !== "storage") || Math.abs(cx - ARRIVE.cx) + Math.abs(cz - ARRIVE.cz) < 3) continue;
+      const c = cellCenter(cx, cz), r = hash(cx, cz, 341), x = c.x + (hash(cx, cz, 343) - 0.5) * 5, z = c.z + (hash(cx, cz, 345) - 0.5) * 5, k = `l1k-${cx}-${cz}`;
+      if (r < 0.06) ctx.spawn(k, { tags: ["l1kit"], feetPosition: { x, y: 0, z }, rotation: { yaw: r * 6000 }, model: { id: K.cement }, layout: fit(0.75, 0.5, 0.5), physics: { body: "static", collider: "box" }, visibleRange: { max: 45 } });
+      else if (r < 0.1) ctx.spawn(k, { tags: ["l1kit"], feetPosition: { x, y: 0, z }, rotation: { yaw: r * 3000 }, model: { id: K.rebar }, layout: fit(1.9, 0.3, 0.45), physics: { body: "static", collider: "box" }, visibleRange: { max: 40 } });
+      if (zone === "halls" && hash(cx, cz, 351) < 0.08) for (let q = 0; q < 3; q++) ctx.spawn(`${k}-cone${q}`, { tags: ["l1kit"], feetPosition: { x: c.x + 1.2 + q * 0.9, y: 0, z: c.z - 2 + hash(q, cx, cz) * 0.6 }, rotation: { yaw: q * 40 }, model: { id: K.cone }, layout: fit(0.36, 0.5, 0.36), visibleRange: { max: 40 } });
+    }
+  }
   if (s.megCamp) { // a fallen agent is replaced after a while; the new one holds no grudge
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz), at = Object.fromEntries(AGENTS.map(([id, dx, dz]) => [id, [dx, dz]]));
     keepPeople(ctx, Object.keys(at), (ctx, id) => { ctx.spawn(id, agentSpec(a, id, ...at[id])); ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody("pistol") }); });

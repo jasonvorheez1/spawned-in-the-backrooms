@@ -59,7 +59,8 @@ export function geometry(ctx) {
     box(ctx, t - 0.14, t + 0.14, 1.0, 3.0, -HALF + 0.12, -HALF + 0.2); box(ctx, t - 0.14, t + 0.14, 1.0, 3.0, HALF - 0.2, HALF - 0.12);
   }
   ctx.emissive(null);
-  if (hi) for (let i = 2; i < N; i += 4) for (let j = 2; j < N; j += 4) {
+  const kit = !!ctx.params?.tripo; // hose reels, cement and rebar are real models laid by places/level1/sim.js
+  if (hi && !kit) for (let i = 2; i < N; i += 4) for (let j = 2; j < N; j += 4) {
     if (!hasPillar(i, j) || hash(i, j, 331) > 0.45) continue;
     const x = i * S - HALF, z = j * S - HALF + 0.46;
     ctx.color("oklch(0.5 0.21 27)"); ctx.metalness(0.3);
@@ -73,6 +74,7 @@ export function geometry(ctx) {
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     if (!open(cx, cz) || Math.abs(cx - ARRIVE.cx) + Math.abs(cz - ARRIVE.cz) < 3) continue;
     const c = cellCenter(cx, cz), r = hash(cx, cz, 341), x = c.x + (hash(cx, cz, 343) - 0.5) * 5, z = c.z + (hash(cx, cz, 345) - 0.5) * 5;
+    if (kit && r < 0.1) continue;
     if (r < 0.06) { ctx.color("oklch(0.88 0.015 85)"); for (let q = 0; q < 3; q++) box(ctx, x + q * 0.1 - 0.3, x + q * 0.1 + 0.3, 0.02 + q * 0.16, 0.16 + q * 0.16, z - 0.2 + q * 0.06, z + 0.2 + q * 0.06); }
     else if (r < 0.1) { ctx.color("oklch(0.42 0.05 40)"); ctx.metalness(0.6); for (let q = 0; q < 5; q++) box(ctx, x - 0.9, x + 0.9, 0.02 + (q % 2) * 0.04, 0.05 + (q % 2) * 0.04, z + q * 0.05, z + q * 0.05 + 0.03); ctx.metalness(0); }
     else if (hi && r < 0.15) { ctx.color("oklch(0.18 0.01 250)"); tube(ctx, [[x - 1, 0.02, z], [x - 0.4, 0.02, z + 0.5], [x + 0.2, 0.02, z - 0.3], [x + 1, 0.02, z + 0.2]], [0.02, 0.02, 0.02, 0.02], 5); }

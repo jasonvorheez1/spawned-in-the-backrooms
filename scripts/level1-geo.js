@@ -3,7 +3,7 @@
 import { N, S, H, HALF, DOOR, zoneOf, edge, hasPillar, sectorOf, cellCenter, RACK, hash, BACK, ARRIVE } from "./lib/level1.js";
 import { slab, prism, tube } from "./lib/shapes.js";
 
-const FLOOR = "cdn/texture-stained-concrete-floor.png", WALL = "cdn/texture-painted-cinder-block-wall-clean.png", CEIL = "cdn/texture-concrete-ceiling-panels.png";
+const FLOOR = "cdn/texture-stained-concrete-floor.png", WALL = "cdn/texture-discolored-poured-concrete-wall-water-stains.png", CEIL = "cdn/texture-concrete-ceiling-panels.png";
 const box = (ctx, x0, x1, y0, y1, z0, z1) => slab(ctx, [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], [(x1 - x0) / 2, (y1 - y0) / 2, (z1 - z0) / 2]);
 const T = 0.12;
 const PILLAR = "cdn/texture-painted-concrete-column-scuffed.png";
@@ -11,9 +11,13 @@ const PILLAR = "cdn/texture-painted-concrete-column-scuffed.png";
 const chamf = (x, z, r, c) => [[x - r + c, z - r], [x + r - c, z - r], [x + r, z - r + c], [x + r, z + r - c], [x + r - c, z + r], [x - r + c, z + r], [x - r, z + r - c], [x - r, z - r + c]]; // half wall thickness
 
 // one wall segment along the edge; axis "x" = a wall at fixed x running along z
-function wallSeg(ctx, axis, fixed, a, b, y0 = 0, y1 = H) {
+function wallSeg(ctx, axis, fixed, a, b, y0 = 0, y1 = H, grime = null) {
   if (b - a < 0.01) return;
   if (axis === "x") box(ctx, fixed - T, fixed + T, y0, y1, a, b); else box(ctx, a, b, y0, y1, fixed - T, fixed + T);
+  if (grime && y0 === 0) { // a damp, scuffed kick band where the floor water wicks up
+    const t = T + 0.012, col = grime[0];
+    ctx.color(grime[1]); if (axis === "x") box(ctx, fixed - t, fixed + t, 0, 0.28, a, b); else box(ctx, a, b, 0, 0.28, fixed - t, fixed + t); ctx.color(col);
+  }
 }
 
 export function geometry(ctx) {
@@ -22,10 +26,10 @@ export function geometry(ctx) {
   ctx.albedo(FLOOR);
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     const x0 = cx * S - HALF, z0 = cz * S - HALF, zone = zoneOf(cx, cz);
-    ctx.color(zone === "corridors" ? "oklch(0.93 0.01 80)" : hash(cx, cz, 3) < 0.15 ? "oklch(0.86 0.015 250)" : "oklch(0.97 0.006 250)");
+    ctx.color(zone === "corridors" ? "oklch(0.8 0.012 80)" : hash(cx, cz, 3) < 0.25 ? "oklch(0.62 0.01 250)" : hash(cx, cz, 4) < 0.5 ? "oklch(0.74 0.008 80)" : "oklch(0.82 0.006 250)"); ctx.roughness(hash(cx, cz, 5) < 0.3 ? 0.22 : 0.55); // wet patches catch the tubes
     ctx.quad(x0, 0, z0, x0, 0, z0 + S, x0 + S, 0, z0 + S, x0 + S, 0, z0);
   }
-  ctx.albedo(CEIL); ctx.color("oklch(0.9 0.005 250)");
+  ctx.roughness(null); ctx.albedo(CEIL); ctx.color("oklch(0.72 0.006 250)");
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     const x0 = cx * S - HALF, z0 = cz * S - HALF;
     ctx.quad(x0, H, z0, x0 + S, H, z0, x0 + S, H, z0 + S, x0, H, z0 + S);
@@ -38,11 +42,13 @@ export function geometry(ctx) {
     const e = edge(cx, cz, axis); if (!e) continue;
     if (cut.has(`${axis}:${cx}:${cz}`)) continue;
     const corridor = zoneOf(cx, cz) === "corridors" || zoneOf(axis === "x" ? cx + 1 : cx, axis === "z" ? cz + 1 : cz) === "corridors";
-    ctx.color(corridor ? "oklch(0.95 0.01 85)" : "oklch(0.8 0.012 250)");
+    const wcol = corridor ? "oklch(0.84 0.014 85)" : ["oklch(0.76 0.01 250)", "oklch(0.7 0.014 75)", "oklch(0.8 0.006 240)", "oklch(0.66 0.012 90)"][Math.floor(hash(cx, cz, axis === "x" ? 11 : 13) * 4)];
+    const gr = [wcol, corridor ? "oklch(0.5 0.02 80)" : "oklch(0.42 0.015 70)"];
+    ctx.color(wcol);
     const fixed = axis === "x" ? (cx + 1) * S - HALF : (cz + 1) * S - HALF, start = axis === "x" ? cz * S - HALF : cx * S - HALF;
-    if (e.door == null) { wallSeg(ctx, axis, fixed, start, start + S); continue; }
+    if (e.door == null) { wallSeg(ctx, axis, fixed, start, start + S, 0, H, gr); continue; }
     const d0 = start + e.door - DOOR / 2, d1 = start + e.door + DOOR / 2;
-    wallSeg(ctx, axis, fixed, start, d0); wallSeg(ctx, axis, fixed, d1, start + S); wallSeg(ctx, axis, fixed, d0, d1, 2.3, H);
+    wallSeg(ctx, axis, fixed, start, d0, 0, H, gr); wallSeg(ctx, axis, fixed, d1, start + S, 0, H, gr); wallSeg(ctx, axis, fixed, d0, d1, 2.3, H);
     if (e.sign) signs.push([axis, fixed, (d0 + d1) / 2]);
   }
   ctx.albedo(null);
@@ -80,8 +86,9 @@ export function geometry(ctx) {
   }
   // pipes along the ceiling, every other row
   if (hi) {
-    ctx.color("oklch(0.45 0.02 60)"); ctx.metalness(0.7); ctx.roughness(0.45);
-    for (let cz = 0; cz < N; cz += 3) { const z = cz * S - HALF + 1.17; tube(ctx, [[-HALF, H - 0.285, z], [HALF, H - 0.285, z]], [0.065, 0.065], 10, [1, 1], 0, 1, 1); }
+    ctx.color("oklch(0.9 0.004 250)"); ctx.metalness(0.2); ctx.roughness(0.4); // white service pipes, paired, on drop hangers, as in the photographs
+    for (let cz = 0; cz < N; cz += 3) { const z = cz * S - HALF + 1.17; for (const dz of [0, 0.22]) tube(ctx, [[-HALF, H - 0.285, z + dz], [HALF, H - 0.285, z + dz]], [dz ? 0.04 : 0.065, dz ? 0.04 : 0.065], 10, [1, 1], 0, 1, 1);
+      ctx.color("oklch(0.4 0.01 250)"); for (let x = -HALF + 2; x < HALF; x += 4) { box(ctx, x - 0.012, x + 0.012, H - 0.36, H, z - 0.012, z + 0.012); box(ctx, x - 0.02, x + 0.02, H - 0.37, H - 0.35, z - 0.08, z + 0.3); } ctx.color("oklch(0.9 0.004 250)"); }
     ctx.metalness(0);
   }
   // the flickering wall home: a warped panel of level 0 wallpaper on a freestanding wall
