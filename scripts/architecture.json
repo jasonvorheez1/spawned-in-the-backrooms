@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 4705,
-  "updatedAt": "2026-11-10T22:03:31.896Z",
+  "basedOnSpecVersion": 4739,
+  "updatedAt": "2026-11-10T22:57:31.760Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG across an authored Level 0 maze, deeper levels, and shared destinations. `templates/player.js` composes player behaviors; place simulations and shared scripts own environment generation, NPCs, combat, loot, crafting, UI, avatar presentation, and progression.",
   "scriptPaths": [],
   "places": [
@@ -38,7 +38,7 @@
     "scripts/grab.js - setDown, onInput, update, looseSpent; scripts/kick.js - onInput, kickSnap, kickEnd, update.",
     "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, onInput, hitTarget, fishNibble, HOLO and holoEnd; throwable fuse/arm callbacks and blast hits.",
     "scripts/lib/quick-items.js - quickItems, assignQuick; scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
-    "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - body/face/head/spec, hair and wardrobe seating, restyle/clearAppearance, humanBodyMorph, speciesOf, anime, FURRY_HEAD and STYLE_V (sw92).",
+    "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - body/face/head/spec, hair and wardrobe seating, restyle/clearAppearance, humanBodyMorph, speciesOf, anime, FURRY_HEAD and STYLE_V (sw95).",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, stagger3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
     "scripts/lib/craft.js - recipeStatus, maxMakes, craftOne, benchAvailable, stationOf, scrapCount, CRAFT_LIMIT, CATS; scripts/craft.js - onInput, update.",
     "scripts/lib/prop-interactions.js - propKind, interactiveSpec, upgradeProp, containerPose, toggleLamp, upgradeNearby; scripts/lib/prop-easing.js - MOTION_MS, sampleMotion, propFrames; scripts/l11-masonry.js - geometry, collider."
@@ -54,7 +54,7 @@
     "places/level11/sim.js - place.state.builtV and session build version/queue own generated-city rebuild progress; refreshed existing specs update layout, primitive and placement while preserving object state."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker; touch mappings trigger the same actions.",
+    "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker; touch mappings feed the same actions.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes aimPt and ranged aimPitch → player.js ballistics.",
     "scripts/routing.js accepts permitted requested rooms; otherwise scripts/lib/hub.js soloRoom selects the player's solo Backrooms room and bonus overflow IDs; toHub/toSolo perform crossings and track roomHop/save-place state.",
     "Fresh visit → scripts/main-menu.js; START enters intake for creation or bonus for completed characters; wardrobe close runs intro-cut then tutorial0 unless t0Done; menu UI renders on menuOpen and solo pause sets place.timeScale.",
@@ -70,23 +70,23 @@
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/lib/bonus-extra.js + mall-shopper.js/salon-stylist.js/salon-ui.js - authored mall, simulated mall life and one-time neon/fountain lighting effects.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + home reconstruction scripts - per-piece models/dimensions with common placement, persistence and rebuild path.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to each supported kind and migrated while preserving root state.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to each supported kind and migrated while preserving state.",
     "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + Zenith door/bots/hatch/flicker/drones/use scripts - Zenith Station geometry, breach, hazards and interactive systems.",
-    "places/level4/cells/x0z0.scene + places/level4/sim.js + scripts/l4-office.js/l4-office-geo.js/l4-home.js + scripts/lib/l4-people.js/level4-people.yml and scripts/lib/l5-people.js/level5-people.yml - authored office/hotel, role/look/dialogue people and fixtures.",
-    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/body/rig/transfer/body-shape + art/human-body/neck_fit.py/neck_weights.py/neck_hem.py/blush_soft.py + scripts/mat-anime.js - shared human/furry avatar assembly, morphs, materials and split wardrobe assets.",
-    "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js + scripts/lib/data/combat-anims.yml - retargeted first-person and DS third-person melee families select strikes by weapon type; combat poses are shared.",
-    "Level 11 geometry family: scripts/l11-mall.js, scripts/l11-masonry.js and scripts/l11-reno.js parameterize mall, canal/bridge and renovation-office pieces; tests/level11-reference.test.js checks bridge clearance, rebuild fitting and workstand geometry."
+    "places/level4/cells/x0z0.scene + places/level4/sim.js + scripts/l4-office.js/l4-office-geo.js/l4-home.js + scripts/lib/l4-people.js/level4-people.yml and scripts/lib/l5-people.js/level5-people.yml - authored office/hotel, role/look/dialogue and resident behavior.",
+    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/body/rig/transfer/body-shape + art/human-body/neck_fit.py/neck_weights.py/neck_hem.py/blush_soft.py/under_back.py + art/human-cloth/bottom_shell.py/hang.py/bust_transfer.py + scripts/mat-anime.js - shared human/furry avatar rig, face, morph and split garments; per-sex GLBs and slot mappings vary the wardrobe, while restyle updates NPC attachments.",
+    "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js + scripts/lib/data/combat-anims.yml - retargeted first-person and DS third-person melee families select strikes by weapon type; combat poses are shared across weapon variants.",
+    "Level 11 geometry family: scripts/l11-mall.js, scripts/l11-masonry.js and scripts/l11-reno.js parameterize mall, canal/bridge and renovation-office pieces; tests/level11-reference.test.js checks bridge clearance, rebuild fitting and workstand layout."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
     "scripts/hairtest-rig.js - header marks it as a temporary hair lane test rig; no tree/package references found."
   ],
   "migrationNotes": [
-    "Human avatar STYLE_V is sw92: blush_soft.py cuts two faded cheek patches into their own BlushSoft slot with radial UV fade; scripts/lib/critter-model.js applies the radial PNG and keeps Blush as the uniform base material.",
+    "Human avatar STYLE_V is sw95: critter-model restyle compares worn wardrobe child model IDs and re-seats changed garment files as well as missing children; keep this migration behavior when changing the wardrobe registry.",
     "Human bodies are registered in scripts/lib/data/critter-models.yml; split garment GLBs are registered by sex in wardrobe-split.yml and their material slots in ward-slots.yml. Keep both wardrobe registries aligned when replacing assets.",
-    "Both body variants' Ward_jerrytee, Ward_longsleeve, Ward_officeshirt and Ward_pajamas split GLBs were remade and repointed in wardrobe-split.yml; ward-slots.yml maps each replacement to cloth_top (button where applicable).",
-    "scripts/lib/critter-model.js restyle repairs older human models when their face atlas or blush opacity/map is stale; it reapplies both blush materials while preserving look-specific blush color where supplied.",
-    "Authored human models in places/bonus/cells/x0z0.scene and places/level4/cells/x0z0.scene use refreshed body assets and BlushSoft; the scenes also pin outfit child models/material colors, including Level 4's rose blush tint.",
-    "scripts/lib/critter-model.js humanBodyMorph omits unsupported male Bust on the body while humanMorph keeps its explicit zero for garments; body changes compare state.headBody and clear/reseat skinned attachments without deleting equipment. The refreshed Ward_tee requires torso/front/upperarm skin to remain drawn underneath (`grown` shares the tank/vest mask path)."
+    "The current split hoodie, overalls, sweater and tarwaders use sex-specific GLBs; art/human-cloth/hang.py builds the loose hood-down hoodie, bust_transfer.py carries the body's female Bust key to clothing, and Ward_sweater's female key remains registered.",
+    "critter-model.js hides the overalls bib and shows pants when a closed top is worn; keep this visual pairing alongside the bib/strap garment files. Hoodie's cloth pattern also depends on the garment UV/slot mappings in ward-slots.yml.",
+    "art/human-body/under_back.py is a female underwear waistband/back fit correction; the new bottom_shell.py is the reusable body-grown bottoms shell, not a runtime garment registry or behavior.",
+    "The two faded cheek patches are BlushSoft with a radial map while Blush remains the uniform base material; authored human models in Bonus and Level 4 use the refreshed bodies and pinned outfit children/material colors."
   ]
 }
