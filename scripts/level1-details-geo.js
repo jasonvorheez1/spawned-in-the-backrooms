@@ -2,7 +2,7 @@
 // car park: downstand concrete beams, red fire-sprinkler pipes with heads and hangers, orange cable trays,
 // white ducts, glossy wet stains and tyre tracks on the floor, glaring strip lights on the walls, hose-reel
 // cabinets on pillars, cement bags, rebar bundles and loose cables. Placed from the seeded layout.
-import { N, S, H, HALF, zoneOf, cellCenter, hash, hasPillar, ARRIVE } from "./lib/level1.js";
+import { N, S, H, HALF, zoneOf, cellCenter, hash, hasPillar, ARRIVE, runs, inHole } from "./lib/level1.js";
 import { face, slab, prism, tube } from "./lib/shapes.js";
 
 const box = (ctx, x0, x1, y0, y1, z0, z1) => slab(ctx, [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], [(x1 - x0) / 2, (y1 - y0) / 2, (z1 - z0) / 2]);
@@ -26,27 +26,27 @@ export function geometry(ctx) {
   // downstand beams on the pillar grid: a structural ceiling instead of a flat slab
   // (Shelly: "the ceiling is blocky too"): each beam is cast in board formwork, its bottom arrises chamfered, rust-brown drip stains under it
   ctx.albedo("cdn/texture-board-formed-cast-concrete-beam-wood-grain-imprint.png"); ctx.color("oklch(0.8 0.008 250)"); ctx.roughness(0.9);
-  for (let j = 2; j < N; j += 2) beam(ctx, "x", j * S - HALF, -HALF, HALF);
-  for (let i = 2; i < N; i += 2) beam(ctx, "z", i * S - HALF, -HALF, HALF);
+  for (let j = 2; j < N; j += 2) for (const [a, b] of runs("x", j * S - HALF, -HALF, HALF)) beam(ctx, "x", j * S - HALF, a, b);
+  for (let i = 2; i < N; i += 2) for (const [a, b] of runs("z", i * S - HALF, -HALF, HALF)) beam(ctx, "z", i * S - HALF, a, b);
   if (hi) { ctx.albedo(null); ctx.color("oklch(0.55 0.04 60)"); ctx.roughness(0.95); // seep stains on the beam soffits, where the slab above leaks
-    for (let j = 2; j < N; j += 2) for (let i = 0; i < N; i++) if (hash(i, j, 77) < 0.3) { const x = i * S - HALF + hash(i, j, 78) * S, z = j * S - HALF, l = 0.4 + hash(i, j, 79) * 1.2; box(ctx, x - l / 2, x + l / 2, H - 0.623, H - 0.621, z - 0.14, z + 0.14); }
+    for (let j = 2; j < N; j += 2) for (let i = 0; i < N; i++) if (hash(i, j, 77) < 0.3) { const x = i * S - HALF + hash(i, j, 78) * S, z = j * S - HALF, l = 0.4 + hash(i, j, 79) * 1.2; if (inHole(x, z)) continue; box(ctx, x - l / 2, x + l / 2, H - 0.623, H - 0.621, z - 0.14, z + 0.14); }
     ctx.albedo(null); }
   ctx.albedo(null);
 
   if (hi) {
     // red sprinkler mains along x, branches along z, heads and hangers
     ctx.color("oklch(0.5 0.2 28)"); ctx.roughness(0.45); ctx.metalness(0.4);
-    for (let j = 1; j < N; j += 2) { const z = j * S - HALF + 1.9; tube(ctx, [[-HALF, H - 0.66, z], [HALF, H - 0.66, z]], [0.042, 0.042], 10, [1, 1], 0, 1, 1); tube(ctx, [[-HALF, H - 0.66, z + 0.14], [HALF, H - 0.66, z + 0.14]], [0.042, 0.042], 10, [1, 1], 0, 1, 1); }
-    for (let i = 1; i < N; i += 2) { const x = i * S - HALF - 1.5; tube(ctx, [[x, H - 0.62, -HALF], [x, H - 0.62, HALF]], [0.035, 0.035], 10, [1, 1], 0, 1, 1); }
+    for (let j = 1; j < N; j += 2) { const z = j * S - HALF + 1.9; for (const [a, b] of runs("x", z + 0.07, -HALF, HALF)) { tube(ctx, [[a, H - 0.66, z], [b, H - 0.66, z]], [0.042, 0.042], 10, [1, 1], 0, 1, 1); tube(ctx, [[a, H - 0.66, z + 0.14], [b, H - 0.66, z + 0.14]], [0.042, 0.042], 10, [1, 1], 0, 1, 1); } }
+    for (let i = 1; i < N; i += 2) { const x = i * S - HALF - 1.5; for (const [a, b] of runs("z", x, -HALF, HALF)) tube(ctx, [[x, H - 0.62, a], [x, H - 0.62, b]], [0.035, 0.035], 10, [1, 1], 0, 1, 1); }
     ctx.color("oklch(0.7 0.14 40)");
-    for (let j = 1; j < N; j += 2) for (let i = 0; i < N; i += 2) { const x = i * S - HALF + 2, z = j * S - HALF + 1.9; box(ctx, x - 0.025, x + 0.025, H - 0.9, H - 0.7, z - 0.025, z + 0.025); box(ctx, x - 0.07, x + 0.07, H - 0.92, H - 0.9, z - 0.07, z + 0.07); }
+    for (let j = 1; j < N; j += 2) for (let i = 0; i < N; i += 2) { const x = i * S - HALF + 2, z = j * S - HALF + 1.9; if (inHole(x, z)) continue; box(ctx, x - 0.025, x + 0.025, H - 0.9, H - 0.7, z - 0.025, z + 0.025); box(ctx, x - 0.07, x + 0.07, H - 0.92, H - 0.9, z - 0.07, z + 0.07); }
     ctx.color("oklch(0.45 0.02 250)");
-    for (let j = 1; j < N; j += 2) for (let i = 0; i < N; i += 2) { const x = i * S - HALF + 5.6, z = j * S - HALF + 1.9; box(ctx, x - 0.012, x + 0.012, H - 0.62, H, z - 0.012, z + 0.012); }
+    for (let j = 1; j < N; j += 2) for (let i = 0; i < N; i += 2) { const x = i * S - HALF + 5.6, z = j * S - HALF + 1.9; if (inHole(x, z)) continue; box(ctx, x - 0.012, x + 0.012, H - 0.62, H, z - 0.012, z + 0.012); }
     // orange cable trays and a white duct
     ctx.metalness(0.2); ctx.roughness(0.6); ctx.color("oklch(0.62 0.16 48)");
-    for (let i = 3; i < N; i += 6) { const x = i * S - HALF + 2.2; box(ctx, x - 0.22, x + 0.22, H - 0.82, H - 0.78, -HALF, HALF); box(ctx, x - 0.22, x - 0.19, H - 0.82, H - 0.66, -HALF, HALF); box(ctx, x + 0.19, x + 0.22, H - 0.82, H - 0.66, -HALF, HALF); }
+    for (let i = 3; i < N; i += 6) { const x = i * S - HALF + 2.2; for (const [a, b] of runs("z", x, -HALF, HALF)) { box(ctx, x - 0.22, x + 0.22, H - 0.82, H - 0.78, a, b); box(ctx, x - 0.22, x - 0.19, H - 0.82, H - 0.66, a, b); box(ctx, x + 0.19, x + 0.22, H - 0.82, H - 0.66, a, b); } }
     ctx.metalness(0.4); ctx.color("oklch(0.82 0.005 250)");
-    for (let j = 5; j < N; j += 10) { const z = j * S - HALF + 3; box(ctx, -HALF, HALF, H - 1.05, H - 0.78, z - 0.28, z + 0.28); }
+    for (let j = 5; j < N; j += 10) { const z = j * S - HALF + 3; for (const [a, b] of runs("x", z, -HALF, HALF)) box(ctx, a, b, H - 1.05, H - 0.78, z - 0.28, z + 0.28); }
     ctx.metalness(0);
   }
 

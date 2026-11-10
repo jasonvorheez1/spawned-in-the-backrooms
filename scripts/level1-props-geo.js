@@ -1,7 +1,7 @@
 // Level 1's clutter, one static mesh: oil drums, pallets of boxes, fallen concrete, ceiling ducts and cables
 // in the halls, a painted guide line home, and the M.E.G. waypoint's tents, cots, table and map board at the
 // camp. Everything is placed from the seeded layout (scripts/lib/level1.js), so it is the same every time.
-import { N, S, H, HALF, zoneOf, cellCenter, hash, ARRIVE, BACK, sectorOf, hasPillar } from "./lib/level1.js";
+import { N, S, H, HALF, zoneOf, cellCenter, hash, ARRIVE, BACK, sectorOf, hasPillar, rampCell } from "./lib/level1.js";
 import { slab, prism, tube, face } from "./lib/shapes.js";
 
 const box = (ctx, x, y, z, hx, hy, hz) => slab(ctx, [x, y, z], [hx, hy, hz]);
@@ -71,13 +71,13 @@ export function geometry(ctx) {
     else if (r < 0.19) pallet(ctx, x, z, hash(cx, cz, 209) * 3.14, 1 + Math.floor(hash(cx, cz, 211) * 3));
     else if (r < 0.23 && zone === "halls") rubble(ctx, x, z, cx * 13 + cz, hi); // a chunk of ceiling slab that came down
     // ceiling ducts across the hall rows
-    if (hi && zone === "halls" && cz % 3 === 1 && cx % 2 === 0) { ctx.color("oklch(0.62 0.01 250)"); ctx.metalness(0.6); box(ctx, c.x, H - 0.55, c.z, S / 2, 0.22, 0.42); ctx.color("oklch(0.4 0.01 250)"); for (let g = -3; g <= 3; g += 2) box(ctx, c.x + g, H - 0.33, c.z, 0.04, 0.02, 0.4); ctx.metalness(0); }
+    if (hi && zone === "halls" && cz % 3 === 1 && cx % 2 === 0 && !rampCell(cx, cz)) { ctx.color("oklch(0.62 0.01 250)"); ctx.metalness(0.6); box(ctx, c.x, H - 0.55, c.z, S / 2, 0.22, 0.42); ctx.color("oklch(0.4 0.01 250)"); for (let g = -3; g <= 3; g += 2) box(ctx, c.x + g, H - 0.33, c.z, 0.04, 0.02, 0.4); ctx.metalness(0); }
   }
   // cables sagging between ceiling hooks
   if (hi) {
     ctx.color("oklch(0.2 0.01 250)");
     for (let cz = 2; cz < N; cz += 3) for (let cx = 0; cx < N - 2; cx += 2) {
-      if (zoneOf(cx, cz) === "corridors" || zoneOf(cx + 2, cz) === "corridors" || hash(cx, cz, 215) < 0.4) continue;
+      if (zoneOf(cx, cz) === "corridors" || zoneOf(cx + 2, cz) === "corridors" || hash(cx, cz, 215) < 0.4 || rampCell(cx, cz) || rampCell(cx + 1, cz) || rampCell(cx + 2, cz)) continue;
       const a = cellCenter(cx, cz), z = a.z + (hash(cx, cz, 217) - 0.5) * 4;
       tube(ctx, [[a.x, H - 0.1, z], [a.x + S * 0.5, H - 0.55, z], [a.x + S, H - 0.75, z], [a.x + S * 1.5, H - 0.55, z], [a.x + S * 2, H - 0.1, z]], [0.025, 0.025, 0.025, 0.025, 0.025], 5);
     }

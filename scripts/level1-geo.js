@@ -1,6 +1,6 @@
 // Level 1 "The Habitable Zone": concrete floor and ceiling, banded pillars, corridor walls with push-door gaps
 // and green EXIT signs, steel storage racks, ceiling pipes, the flickering wall home. Layout: scripts/lib/level1.js.
-import { N, S, H, HALF, DOOR, zoneOf, edge, hasPillar, sectorOf, cellCenter, RACK, hash, BACK, ARRIVE, rampCell } from "./lib/level1.js";
+import { N, S, H, HALF, DOOR, zoneOf, edge, hasPillar, sectorOf, cellCenter, RACK, hash, BACK, ARRIVE, rampCell, runs, inHole } from "./lib/level1.js";
 import { puddle } from "./level1-deck-geo.js";
 import { slab, prism, tube } from "./lib/shapes.js";
 
@@ -164,8 +164,8 @@ export function geometry(ctx) {
   // pipes along the ceiling, every other row
   if (hi) {
     ctx.color("oklch(0.9 0.004 250)"); ctx.metalness(0.2); ctx.roughness(0.4); // white service pipes, paired, on drop hangers, as in the photographs
-    for (let cz = 0; cz < N; cz += 3) { const z = cz * S - HALF + 1.17; for (const dz of [0, 0.22]) tube(ctx, [[-HALF, H - 0.285, z + dz], [HALF, H - 0.285, z + dz]], [dz ? 0.04 : 0.065, dz ? 0.04 : 0.065], 10, [1, 1], 0, 1, 1);
-      ctx.color("oklch(0.4 0.01 250)"); for (let x = -HALF + 2; x < HALF; x += 4) { box(ctx, x - 0.012, x + 0.012, H - 0.36, H, z - 0.012, z + 0.012); box(ctx, x - 0.02, x + 0.02, H - 0.37, H - 0.35, z - 0.08, z + 0.3); } ctx.color("oklch(0.9 0.004 250)"); }
+    for (let cz = 0; cz < N; cz += 3) { const z = cz * S - HALF + 1.17; for (const dz of [0, 0.22]) for (const [ra, rb] of runs("x", z + dz, -HALF, HALF)) tube(ctx, [[ra, H - 0.285, z + dz], [rb, H - 0.285, z + dz]], [dz ? 0.04 : 0.065, dz ? 0.04 : 0.065], 10, [1, 1], 0, 1, 1);
+      ctx.color("oklch(0.4 0.01 250)"); for (let x = -HALF + 2; x < HALF; x += 4) { if (inHole(x, z)) continue; box(ctx, x - 0.012, x + 0.012, H - 0.36, H, z - 0.012, z + 0.012); box(ctx, x - 0.02, x + 0.02, H - 0.37, H - 0.35, z - 0.08, z + 0.3); } ctx.color("oklch(0.9 0.004 250)"); }
     ctx.metalness(0);
   }
   // the flickering wall home: a warped panel of level 0 wallpaper on a freestanding wall

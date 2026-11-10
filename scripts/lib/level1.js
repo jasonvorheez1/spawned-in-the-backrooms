@@ -100,3 +100,12 @@ export const rampCell = (cx, cz) => RAMPS.some((r) => r.cz === cz && (cx === r.c
 export const onDeck = (cx, cz) => cx >= DECK.cx0 && cx <= DECK.cx1 && cz >= DECK.cz0 && cz <= DECK.cz1;
 // a ramp's footprint in metres: low end xl (ground), high end xh (deck), z from za to zb
 export const rampBox = (r) => { const x0 = r.cx * S - HALF, x1 = x0 + 2 * S, z0 = r.cz * S - HALF; return { xl: r.dir > 0 ? x0 : x1, xh: r.dir > 0 ? x1 : x0, za: z0 + 1, zb: z0 + S - 1, x0, x1, z0, z1: z0 + S }; };
+// a ceiling run along axis ("x" or "z") at cross-position c from a to b, cut where it would cross a ramp opening: [[a, b], …]
+export function runs(axis, c, a, b) {
+  let out = [[a, b]];
+  for (const r of RAMPS) { const k = rampBox(r), lo = axis === "x" ? k.x0 : k.z0, hi = axis === "x" ? k.x1 : k.z1, c0 = axis === "x" ? k.z0 : k.x0, c1 = axis === "x" ? k.z1 : k.x1;
+    if (c <= c0 + 0.3 || c >= c1 - 0.3) continue;
+    out = out.flatMap(([p, q]) => q <= lo || p >= hi ? [[p, q]] : [p < lo ? [p, lo] : null, q > hi ? [hi, q] : null].filter(Boolean)); }
+  return out;
+}
+export const inHole = (x, z) => RAMPS.some((r) => { const k = rampBox(r); return x > k.x0 && x < k.x1 && z > k.z0 && z < k.z1; });
