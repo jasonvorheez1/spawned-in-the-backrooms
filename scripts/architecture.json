@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 4375,
-  "updatedAt": "2026-11-10T15:19:48.990Z",
+  "basedOnSpecVersion": 4389,
+  "updatedAt": "2026-11-10T15:44:32.866Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG across an authored Level 0 maze, authored and generated deeper levels, player-specific rooms, and shared destinations. `templates/player.js` composes player behaviors; place simulations and shared scripts own local environments, combat, NPCs, loot, crafting, UI, avatar presentation, progression, and reusable world systems.",
   "scriptPaths": [],
   "places": [
@@ -12,7 +12,7 @@
     "places/level1 (3D) - Habitable Zone: seeded parking-garage/concrete maze, M.E.G. camp, searchable stock and generated upper parking deck with ramps, bays, lights and props.",
     "places/level2 + places/level21 (3D) - Pipe Dreams and Level 2.1 'Locked'; Level 2 sim seeds industrial rooms, survivor camp, modeled fixtures/doors and fitted break-room props.",
     "places/level3, gamma, level4, level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; residents, hazards, office/home systems and generated details.",
-    "places/level6, level7, level10, level11, level12, level26, level27 + places/home11 (3D) - later levels include Level 11 city/crawl/vaults, Level 26 quests and Level 27's rebuilt warm spring cave; home11 is the player's green-house interior with bathroom and buildable home."
+    "places/level6, level7, level10, level11, level12, level26, level27 + places/home11 (3D) - later levels include Level 11 city/crawl/vaults, Level 26 quests and Level 27's rebuilt warm spring cave; home11 is the player's green-house interior."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, player/camera setup, ordered behavior composition and keyboard/touch action mappings.",
@@ -30,7 +30,7 @@
     "scripts/door-geo.js + scripts/lib/door-swing.js - parametric leaf/frame/sealed-set geometry and eased hinge motion/sounds shared by built doors, home11, Level 2 and Level 5.",
     "scripts/lib/level11-vaults.js + scripts/lib/level11-depths.js + scripts/l11-crawl-geo.js + scripts/lib/data/l11-depths.yml + scripts/lib/data/l11-crawl-kit.yml - Level 11 security gates, crawl geometry/data, rooms, foe roster and storeroom.",
     "scripts/lib/build-piece.js + scripts/lib/data/breakables.yml + scripts/lib/data/furniture.yml - canonical breakable/material/build specs and furniture models shared by B-mode, harvesting and home reconstruction.",
-    "scripts/lib/data/craft.yml - crafting recipes, skills and bench requirements; Level 27 mineral recipes consume travertine, calcite and spring_salt.",
+    "scripts/lib/data/craft.yml + scripts/lib/craft.js - recipe catalog, skill and bench requirements, ingredients and outputs; includes motor-to-battery recipes and crafted weapon variants.",
     "scripts/lib/screen.js - derived read-only screen classifier and wrist gates; scripts/lib/quests.js + scripts/lib/quest-mark.js resolve quest records and goals; NPC lore/talk data feed talk handlers.",
     "scripts/lib/maze.js + scripts/lib/maze0path.js and scripts/lib/critter-model.js + clothes/wardrobe data - shared Level 0 layout/navigation and fitted human/furry avatar assembly, skinning, faces, hair and garments."
   ],
@@ -39,10 +39,10 @@
     "scripts/grab.js - setDown, onInput, update, looseSpent; scripts/kick.js - onInput, kickSnap, kickEnd, update.",
     "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, onInput, hitTarget, fishing handlers, HOLO and holoEnd; also resolves throwable fuse/arm callbacks and blast hits.",
     "scripts/lib/quick-items.js - quickItems, assignQuick; scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
-    "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - body/face/head/spec, speciesOf, wardrobe fitting/restyling, anime, FURRY_HEAD (1.2), Dandy morph helpers and STYLE_V (sw66).",
+    "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - body/face/head/spec, speciesOf, wardrobe fitting/restyling, anime, FURRY_HEAD (1.2), Dandy morph helpers and STYLE_V (sw70).",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
     "scripts/door-geo.js - geometry, collider; scripts/lib/build-piece.js - doorPrim, builtSpec; scripts/lib/door-swing.js - swingTo, sfx; scripts/home11-door.js - ding, ears (interact handler for home appliances, doors, tub and tote).",
-    "scripts/lib/bonus-extra.js - layBonusExtra; scripts/lib/level11-city.js - layCity, layStreet, tickCity; scripts/l11-streetlamp.js - geometry, collider; scripts/lib/level11-depths.js - layDepths; scripts/lib/level11-vaults.js - layVaults."
+    "scripts/lib/stats.js - skillsOf, SKILLS, canCarry, canCarryAll and carry/weight helpers; scripts/lib/bonus-extra.js - layBonusExtra; Level 11 city/depths/vault helpers export their lay/tick APIs."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo, needs, money, appearance, combat/rewards, level access, saved place/position, wakeAtSave restoration, heat/cold, carried tapes and playback.",
@@ -52,42 +52,42 @@
     "scripts/lib/knock.js + scripts/lib/stats.js - foe attributes/weight and shared down/stagger knock outcomes; enemy managers retain AI state and write player-targeting sneakTarget.",
     "scripts/lib/quick-items.js + scripts/player.js - player.state.quickSlots maps digit slots to item IDs; assignQuick validates unique carried items and player quick-use executes actions; scripts/lib/feed.js writes player.state.feed/disc.",
     "places/level1/sim.js and places/level2/sim.js - place.state version markers own one-time seeded/dressing/fixture/door migrations; Level 2 also versions props and break-room fixes.",
-    "places/level27/sim.js - place.state.builtV and gone own cave layout/regrowth timers; player.state.bathAt tracks continuous bathing, while scripts/l27-use.js changes thirst, sanity and notice on spring-water use. places/home11/sim.js owns home construction and home layout rebuild versioning."
+    "places/level27/sim.js - place.state.builtV and gone own cave layout/regrowth timers; player.state.bathAt tracks continuous bathing, while scripts/l27-use.js changes thirst, sanity and notice on spring-water use. places/home11/sim.js owns home reconstruction state."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker; touch mappings share actions.",
+    "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker; touch mappings dispatch the same actions.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes aimPt and ranged aimPitch → player.js ballistics.",
     "scripts/routing.js accepts permitted requested rooms; otherwise scripts/lib/hub.js soloRoom selects the player's solo Backrooms room and bonus overflow IDs; toHub/toSolo perform crossings and track roomHop/save-place state.",
     "Fresh visit → scripts/main-menu.js; START enters intake for creation or bonus for completed characters; wardrobe close runs intro-cut then tutorial0 unless t0Done; menu UI renders on menuOpen and solo pause sets place.timeScale.",
-    "scripts/main-menu.js BODIES action or debug pad → world.state.bodyStyle (menu also persists player.state.bodyStyle); root sim.js/critter.js select avatar and restyle occupants via critter-model.js; Avatar look/state.wear → fitted wardrobe and body presentation.",
+    "scripts/main-menu.js BODIES action or debug pad → world.state.bodyStyle (menu also persists player.state.bodyStyle); root sim.js/critter.js select avatar and restyle occupants via critter-model.js; Avatar look/state.wear → fitted wardrobe assembly.",
     "scripts/lib/hub.js destinations → hub-ui.js and world/player crossings; Bonus Room sim lays NPCs/effects, while hubOffer and mall counters write shop/food state read by handlers and UI.",
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; weapon variants roll through weapons.js.",
     "Player and M.E.G. combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → combat-anims.yml; weapons.yml supplies firearm cycle/sfx/chamber data to player.js and vmpose.js; lib/stats.js and ballistics.js apply skill/handling.",
+    "Craft UI reads craft.yml, skill/bench status and inventory → sends make action to scripts/craft.js; craft checks the entire output with stats.canCarryAll before spending scrap, then takeToken/gain apply outputs/XP and new crafted weapons get skill-scaled condition.",
     "Level 0 main sim → maze.js seeded geometry/cell helpers and level0-moments.js; moments.js handles placed moments; smilers/lurkers use maze0path and sneak.crouchMul while hunter managers publish pursuit cues.",
-    "scripts/lib/quests.js writes player.state.quests/qtrack/qdone; level quest handlers and quest-marker.js sync records, resolve goals through quest-mark.js, then draw player-only markers and journal rows; Level 11 usable props dispatch through its interaction handlers.",
-    "Level 27 entry: home11 bathtub → scripts/home11-door.js stores player.state.l27from and crosses to level27#l27-from-tub; level27 tunnel trigger → scripts/l27-use.js returns to that marker (fallback home11#h-from-l27). Spring use adds thirst/sanity effects; breakable formations feed mineral crafting.",
-    "Level 27 cave rebuild: art/level27/build.py produces the l27-cave model recorded in world.assets; places/level27/sim.js selects it and lays double-sided limestone plus dark backing rock behind the shell to conceal sky at roof gaps."
+    "scripts/lib/quests.js writes player.state.quests/qtrack/qdone; level quest handlers and quest-marker.js sync records, resolve goals through quest-mark.js, then draw player-only markers and journal rows; Level 11 usable props dispatch through their handlers.",
+    "Level 27 entry: home11 bathtub → scripts/home11-door.js stores player.state.l27from and crosses to level27#l27-from-tub; level27 tunnel trigger → scripts/l27-use.js returns to that marker (fallback home11#h-from-l27). Spring use adds thirst/sanity effects."
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/lib/bonus-extra.js + mall-shopper.js/salon-stylist.js/salon-ui.js - authored mall, simulated mall life and one-time neon/fountain lighting effects.",
-    "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence and rebuild path; home11 additionally restores owner-built pieces and lays its authored room fixtures, including the full-size bathroom mirror cabinet.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/build-door.js/home11-door.js/l2-door.js/l5-hall-door.js + home11/level2 sims - shared parametric leaves/frames and eased hinge motion; Level 2's versioned door pass migrates pre-existing doors.",
-    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js - Zenith station geometry, doors, bots, hazards and interactions.",
+    "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence and rebuild path; home11 additionally restores owner-built pieces and lays its interior.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/build-door.js/home11-door.js/l2-door.js/l5-hall-door.js + home11/level2 sims - shared parametric leaves/frames and eased hinge motion; Level 2's versioned door pass migrates pre-existing fixtures.",
+    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js - Zenith Station environment, hazards, bots and interactions.",
     "places/level4/cells/x0z0.scene + l4-office.js/l4-office-geo.js/l4-home.js + scripts/lib/l4-people.js/level4-people.yml and scripts/lib/l5-people.js/level5-people.yml - authored office/hotel with role-, look-, dialogue- and schedule-driven residents.",
-    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/* + art/human-body/* + art/body-rig/* + art/body-rebuild/* + art/body-transfer/* + scripts/mat-anime.js - shared human/furry avatar assembly, skinning, faces, hair, garments and morph styling.",
+    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/* + art/human-body/* + art/body-rig/* + art/body-rebuild/* + art/body-transfer/* + scripts/mat-anime.js - shared human/furry avatar assembly, skinning, faces, hair and split garment fitting; STYLE_V sw70 refreshes the female bra/shoulder rig and raccoon/badger limb colors.",
     "scripts/lib/nav.js + scripts/meg-agent.js + scripts/l5-staff.js + scripts/l61-staff.js - independent NPC walkers share exact-endpoint/options-aware, short-lived path cache and query budget; Level 26 quest trail points to Voss.",
-    "places/level11/sim.js + scripts/lib/level11-city.js/vaults.js/depths.js + scripts/l11-crawlers.js/globe.js/shutter.js + Level 11 data - city, crawl, vaults and smarter enemies; places/level27/sim.js + scripts/l27-use.js + home11 tub form a linked cave/bathing excursion."
+    "places/level11/sim.js + scripts/lib/level11-city.js/vaults.js/depths.js + scripts/l11-crawl-geo.js + scripts/l11-crawlers.js/globe.js/shutter.js + Level 11 data - city, crawl, vaults and smarter enemies; places/level27/sim.js + scripts/l27-use.js + home11 tub form a linked destination loop."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
     "scripts/hairtest-rig.js - header marks it as a temporary hair lane test rig; no tree/package references found."
   ],
   "migrationNotes": [
-    "Human rig/wardrobe refresh is STYLE_V = sw66; art/body-rig/assets.json pins body and fitted garment outputs. Keep game skeleton/bone names, animation axes, face/head, hands, morph keys and weights when replacing transferred meshes.",
-    "art/body-transfer/reshape.py reshapes the game rig/rest pose to approved body joint positions, preserves game bone names/face/morph keys, and writes bones.json plus field.json; downstream garment fitting depends on those outputs.",
-    "art/body-transfer/fit.py takes optional FIT_MIN from the environment (default 0.005; women's tank fit used 0.012); it fits garments to the reshaped skin with clearance, smooths deltas and applies them to all shape keys, so preserve morph clearance.",
-    "Human wardrobe stays split: humanBody omits Ward_ meshes and wardChildren attaches fitted skinned garment children; wardrobe-split.yml's inner tee is attached only beneath open-front jacket/blazer/vest. Keep body/garment IDs and material slots stable.",
-    "Level 1 upper deck layout is shared through scripts/lib/level1.js DECK/RAMPS; geometry in level1-deck-geo.js and generated placements/collision in level1/sim.js must agree on deck height, ramp holes and cell footprint. l1Deck is a versioned migration.",
-    "Level 2 sim's kit/props/fixture/door state versions control migrations of already-seeded rooms; preserve legacy IDs when replacing room props. Level 27's builtV gates rebuilds: keep the generated cave mesh, its placement coordinates, spring/tunnel triggers and rock backing aligned, and advance the version for layout changes."
+    "Human rig/wardrobe refresh is STYLE_V = sw70; art/body-rig/assets.json pins body and fitted garment outputs. Keep game skeleton/bone names, animation axes, face/head, hands, morph keys and weights when replacing transferred meshes.",
+    "art/body-transfer/reshape.py reshapes the game rig/rest pose to approved body joint positions while preserving game bone names, face/morph keys, and downstream bones.json/field.json contracts.",
+    "art/body-transfer/fit.py uses optional FIT_MIN (default 0.005; women's tank used 0.012); it fits garments to the reshaped skin with clearance and carries deltas across shape keys. wardrobe-split.yml keeps body skin separate from wardChildren garments; inner tee attaches only beneath open-front tops.",
+    "The female body asset now has the bra band spliced into Under_top; bra.py builds it without shoulder pieces and shoulder weights blend Shoulder to Arm so lowered arms round rather than peak. Keep body/garment IDs and material slots aligned with wardrobe-split.yml.",
+    "Crafting must check every output token as a batch before subtracting recipe inputs: canCarryAll preserves scrap on weight refusal; on-the-spot consumables and books/pages are weightless as in canCarry.",
+    "Level 1 upper deck layout is shared through scripts/lib/level1.js DECK/RAMPS; geometry in level1-deck-geo.js and generated placements/collision in level1/sim.js must agree on deck height, ramp holes and cell footprint. Level 2 sim's kit/props/fixture/door versions and Level 27 builtV gate migrations/rebuilds."
   ]
 }
