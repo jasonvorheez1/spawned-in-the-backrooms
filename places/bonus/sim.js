@@ -3,6 +3,7 @@
 import B from "../../scripts/lib/data/bonus.yml"
 import { critterSpec, seatHumanHair, STYLE_V } from "../../scripts/lib/critter-model.js"
 import { npcLook } from "../../scripts/lib/clothes.js"
+import { layBonusExtra } from "../../scripts/lib/bonus-extra.js"
 export const cadence = "2s"
 const STAFF = {
   "bonus-tom":    { name: "Tom", info: "Tom's Diner", look: { species: "bear", sex: "m", topw: "tee", top: "#f4f1ea", botw: "pants", bottom: "#2b2b33", shoes: "sneakers", hat: "cap", hatc: "#e85d75" } },
@@ -37,6 +38,7 @@ function people(ctx) {
 export function tick(ctx) {
   const s = ctx.place.state
   if (s.peopleV !== 1) { people(ctx); s.peopleV = 1 }
+  if (s.shineV !== 1) { layBonusExtra(ctx); s.shineV = 1 }
   if (s.hairV !== STYLE_V) { // the mall's people keep their look on state.wear so a hair rebuild re-seats on them too
     s.hairV = STYLE_V
     const rows = [...Object.entries(SHOPPERS).map(([id, p]) => [id, p.look, "civilian"]), ...Object.entries(LOUNGERS).map(([id, p]) => [id, p.look, "civilian"]), ...Object.entries(STAFF).map(([id, p]) => [id, p.look, "trader"])]
