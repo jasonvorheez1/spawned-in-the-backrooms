@@ -3,7 +3,7 @@
 import { N, S, H, HALF, DOOR, zoneOf, edge, hasPillar, sectorOf, cellCenter, RACK, hash, BACK, ARRIVE } from "./lib/level1.js";
 import { slab, prism, tube } from "./lib/shapes.js";
 
-const FLOOR = "cdn/texture-wet-sealed-parking-garage-concrete-floor-tire-scuffs-oil-stains-hairline-cracks.png", STALL = "cdn/texture-worn-chipped-white-road-line-paint-on-concrete.png", WALL = "cdn/texture-discolored-poured-concrete-wall-water-stains.png", CEIL = "cdn/texture-smooth-cast-concrete-slab-soffit-formwork-joints-water-stains.png";
+const FLOOR = "cdn/texture-wet-sealed-parking-garage-concrete-floor-tire-scuffs-oil-stains-hairline-cracks.png", STALL = "cdn/texture-worn-chipped-white-road-line-paint-on-concrete.png", WALL = "cdn/texture-discolored-poured-concrete-wall-water-stains.png", CEIL = "cdn/texture-concrete-ceiling-panels.png";
 const box = (ctx, x0, x1, y0, y1, z0, z1) => slab(ctx, [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], [(x1 - x0) / 2, (y1 - y0) / 2, (z1 - z0) / 2]);
 const T = 0.12;
 const STEELTEX = "cdn/texture-scratched-worn-steel.png";
