@@ -34,7 +34,7 @@ for o in bpy.data.objects:
         m = bpy.data.materials.new('p'); m.diffuse_color = (0.08, 0.08, 0.08, 1) if o in garm else (0.95, 0.75, 0.62, 1)
         m.use_nodes = True; m.node_tree.nodes['Principled BSDF'].inputs[0].default_value = m.diffuse_color
         o.data.materials.clear(); o.data.materials.append(m)
-        if o.name.startswith('Icosphere') or (o not in garm and o.name in ('Skin_feet', 'Skin_shin_low')): o.hide_render = True
+        if o not in garm and (o.name in ('Skin_feet', 'Skin_shin_low') or not (o.name.startswith('Skin_') or o.name in ('Body', 'Head'))): o.hide_render = True
 w = bpy.data.worlds.new('w'); sc.world = w; w.use_nodes = True; w.node_tree.nodes['Background'].inputs[1].default_value = 1.2
 dg = bpy.context.evaluated_depsgraph_get()
 pts = [o.matrix_world @ v.co for o in garm for v in o.evaluated_get(dg).data.vertices]
