@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 3837,
-  "updatedAt": "2026-11-10T00:05:33.706Z",
+  "basedOnSpecVersion": 3843,
+  "updatedAt": "2026-11-10T00:09:20.234Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning authored levels, player-specific rooms, and shared destinations. `templates/player.js` composes player behaviors; place simulations and scenes provide local worlds while shared scripts own combat, NPCs, loot, UI, avatar presentation, and progression. Dina's Level 26 stowaway trail now leads from the bedroll to Voss on Level 1, with talk, payment, threat, or ledger-lifting routes to the Electrical Station lead.",
   "scriptPaths": [],
   "places": [
@@ -42,17 +42,17 @@
     "scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
     "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - body/face/head/spec and wardrobe fitting/restyling helpers.",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
-    "scripts/lib/nav.js - NAV, navBudget, navPath; scripts/lib/sight.js - clearSight; scripts/lib/dina-quest.js - DINA, CAMP, DCUT_LEN, PAGE1, PAGE2, PAGES, dinaTick; scripts/l26-stow-nest.js - ears."
+    "scripts/lib/stats.js - ATTRS, SKILLS, SKILL_KEYS, ATTR_MAX, START, attrsOf, packAttrs, tagsOf, spentOf, baseSkill, skillsOf, wclass, sneakMul; scripts/lib/nav.js - NAV, navBudget, navPath; scripts/lib/sight.js - clearSight; scripts/lib/dina-quest.js - DINA, CAMP, DCUT_LEN, PAGE1, PAGE2, PAGES, dinaTick; scripts/l26-stow-nest.js - ears."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo, needs, money, appearance, combat/rewards, level access, saved place/position, wakeAtSave restoration, and heat/cold meters.",
-    "scripts/lib/dina-quest.js - Dina progression fields dinaQ, dinaDiary and dcut; steps 6-7 point to Voss then the unwired Electrical Station lead. scripts/lib/quests.js owns player.state.quests, qtrack and qdone; quest-marker.js folds legacy quest state into active records.",
+    "scripts/lib/dina-quest.js - Dina progression fields dinaQ, dinaDiary and dcut; steps 6-7 point to Voss then the unwired Electrical Station lead. scripts/lib/quests.js owns player.state.quests, qtrack and qdone; quest-marker.js folds legacy quest state into shared records.",
     "scripts/lib/level1-quests.js - per-player rationsQ/waterQ steps, route/check flags, rewards, faction/karma changes and objective markers; also owns Dina step-6 Voss talk/pay/threat outcomes and the ledger-lift shortcut.",
     "scripts/lib/level8-quests.js, level10-quests.js, level11-quests.js, level21-quests.js, zenith-quest.js and l5-goggles.js - level-specific quest step keys and turn-in/reward effects synchronized with journal records/markers.",
     "scripts/kick.js + scripts/grab.js - per-player kick rolls/cooldowns, carried prop/body IDs, held-body grip, and throw/carry session fields; target heldBy/down state controls hold/release.",
     "scripts/lib/loose.js - arms matched props with state.loose/mat/hp/maxHp and owns broke/act effects; per-player session.loose tracks kicked/thrown item flights until impact.",
     "scripts/lib/knock.js + scripts/lib/stats.js - foe attributes/weight and shared down/stagger knock outcomes; enemy managers retain AI state and write player-targeting sneakTarget.",
-    "scripts/lib/quick-items.js + scripts/player.js - player.state.quickSlots maps digit slots to item IDs; assignQuick validates unique carried items and player quick-use executes the action; l26-phoebe-early writes player.state.freeze for humanoid-locomotion."
+    "scripts/lib/quick-items.js + scripts/player.js - player.state.quickSlots maps digit slots to item IDs; assignQuick validates unique carried items and player quick-use executes the action; l26-phoebe-early writes player.state.freeze for hum triggers."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker.",
@@ -63,31 +63,32 @@
     "Human avatar look/state.wear → critter-model.js humanBody + humanMorph and wardrobe-split.yml; visible Ward_ outfit pieces become tinted morphed skinned children using cloth_ material slots.",
     "scripts/lib/hub.js toHub/toSolo → room/place crossings and roomHop distinguishes intentional crossings from launch/resume; hubOffer → hub-ui.js and mall counters write shop/food state for handlers and UI.",
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; weapon variants roll through weapons.js.",
-    "Player and M.E.G. combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → combat-anims.yml; lib/stats.js and ballistics.js apply weapon skill/handling; meg-agent.js, partygoers.js and smilers.js use lib/sight.js clearSight to gate combat.",
+    "Player and M.E.G. combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → combat-anims.yml; lib/stats.js and ballistics.js apply weapon skill/handling; hounds, Level 7 fauna, lurkers and smilers read stats.sneakMul for visibility and use lib/sight.js clearSight for sight checks.",
     "Level 0 main sim → maze.js seeded geometry/cell helpers and level0-moments.js; moments.js handles placed moments; smilers/lurkers use maze0path and sneak.crouchMul while hunter managers publish pursuit cues.",
-    "scripts/lib/quests.js writes player.state.quests/qtrack/qdone; level quest handlers and quest-marker.js sync records, resolve goals through quest-mark.js, then draw player-only markers and journal rows. Dina steps 5-6 lead to the Level 26 stow-nest then Voss at level1/bntg-voss; talk/pay/threat or lift his ledger advances to step 7, whose Electrical Station meeting is not built.",
-    "HALOGEN inventory in scripts/loot-ui.js sends quickSlot/quickAssign actions → scripts/player.js + lib/quick-items.js update player.state.quickSlots; scripts/ui.js builds quick-item rows once per HUD render for slot counts; Phoebe trigger writes state.freeze → humanoid-locomotion stops translation and camera holds facing."
+    "scripts/lib/quests.js writes player.state.quests/qtrack/qdone; level quest handlers and quest-marker.js sync records, resolve goals through quest-mark.js, then draw player-only markers and journal rows. Dina steps 5-6 lead to the Level 26 bedroll, Phoebe and stow-nest; step 6 goes to Voss on Level 1.",
+    "HALOGEN inventory in scripts/loot-ui.js sends quickSlot/quickAssign actions → scripts/player.js + lib/quick-items.js update player.state.quickSlots; scripts/ui.js builds quick-item rows once per HUD render for slot counts; Phoebe trigger writes freeze and advances Dina's trail.",
+    "Level 12 sim lays the versioned Matrix and updates its ritual clock; its seat and usable doors carry state.c look-ray anchors → scripts/interact.js targeting and scripts/level12-use.js door responses."
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js + scripts/salon-stylist.js/scripts/salon-ui.js - authored mall shops/landmarks and simulated mall life; salon chairs queue sitters.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence and rebuild path; CRT TV builds attach screen, sound and glow.",
-    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js - Zenith Station authored structures and reusable station hazards/doors/robots.",
+    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js - Zenith station geometry, systems and encounter behaviors share a generated/versioned site.",
     "places/level4/cells/x0z0.scene + l4-office.js/l4-office-geo.js/l4-home.js + scripts/lib/l4-people.js/level4-people.yml - office layout/fixtures and resident schedules, roles and home claims.",
     "scripts/lib/l5-people.js + level5-people.yml - Level 5 per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
     "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/* + art/human-head/* + art/human-hair/build.py - deterministic avatar looks, fitted wardrobe meshes and validation/build tooling.",
     "scripts/lib/data/combat-anims.yml + scripts/lib/body3.js + scripts/humanoid-locomotion.js + scripts/critter.js + scripts/meg-agent.js - shared human combat/gait, idles, head tracking, fidgets, expressions, and dialogue.",
-    "scripts/lib/nav.js + scripts/meg-agent.js + scripts/l5-staff.js + scripts/l61-staff.js - independent NPC walkers share exact-endpoint/options-aware, short-lived path cache and query budget; Level 26 quest trail points to Voss rather than Bonus Room."
+    "scripts/lib/nav.js + scripts/meg-agent.js + scripts/l5-staff.js + scripts/l61-staff.js - independent NPC walkers share exact-endpoint/options-aware, short-lived path cache and query budget; Level 26 quest trail points to Voss rather than Base Gamma."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
     "scripts/hairtest-rig.js - header marks it as a temporary hair lane test rig; no tree/package references found."
   ],
   "migrationNotes": [
-    "Bonus Room uses shared room/place bonus; soloRoom(userId) names each player's Backrooms room and overflow mall rooms use bonus-N IDs. Teleport Station travel derives from savePlace; level01 is not a solo home, and story quests stay out of Bonus Room.",
+    "Bonus Room uses shared room/place bonus; soloRoom(userId) names each player's Backrooms room and overflow mall rooms use bonus-N IDs. Teleport Station travel derives from savePlace; level01 is not a solo home, and story quests stay out of room routing.",
     "Found-item rarity gates apply to found weapon tokens; search gating excludes storage and NPC containers. Weapon IDs may include a ~variant suffix; baseOf handles kind lookup and W[k] resolves the full variant.",
     "Level 0 place.state.momentsV is 7: migration deletes old tagged moment entities before relaying them. Selected Level 0 furniture/clutter has explicit visibleRange and disabled shadows; preserve interaction tags/state alongside placements.",
-    "Level 12 ritual tuning is in scripts/lib/data/level12.yml: sit/hour/tol are seconds (45/180/12 currently); r12.back is a ctx.now() millisecond timestamp and the exit requires the return-door attempt within tol seconds of one hour.",
-    "scripts/lib/data/sneak.yml tunes crouch visibility and awareness; crouch still/moving, dark and flashlight multipliers combine in crouchMul. Hunters publish player state.sneakTarget while pursuing and clear it when sight is lost.",
-    "Level 26 wet shoeprint planes are authored scene placements; Phoebe's early trigger freezes the player facing away for 13.6 s and advances Dina step 4→5. Searching l26d-stow-nest can sequence-break step 5 and advances to step 6 at level1/bntg-voss; Voss's ledger or talk/pay/threat advances to step 7, whose marker is null until the Electrical Station scene exists."
+    "Level 12 ritual tuning is in scripts/lib/data/level12.yml: sit/hour/tol are seconds (45/180/12 currently); r12.back is a ctx.now() millisecond timestamp and the exit requires the return-door attempt within tol seconds of one hour. Level 12 state.c on the chair/door is the world-space look-ray target anchor, not ritual state.",
+    "scripts/lib/data/sneak.yml tunes crouch visibility and awareness; crouch still/moving, dark and flashlight multipliers combine in crouchMul. Hunters publish player state.sneakTarget while pursuing and clear it when sight is lost; stats.sneakMul derives from HALOGEN sneak skill.",
+    "Level 26 wet shoeprint planes are authored scene placements; Phoebe's early trigger freezes the player facing away for 13.6 s and advances Dina step 4→5. Searching l26d-stow-nest can sequence-break step 5 and advances to step 6 at level1/bunk-voss."
   ]
 }
