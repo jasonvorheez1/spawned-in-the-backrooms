@@ -19,7 +19,7 @@ export function material(ctx) {
     col = base.mul(float(0.95).add(pores.mul(0.05))).mul(vec3(1.0, float(0.97).add(mottle.mul(0.03)), float(0.96).add(mottle.mul(0.04))));
     // subsurface: the edge that turns away from the eye flushes warm, as light through a cheek or a knuckle does
     const sss = smoothstep(0.15, 0.75, float(1).sub(ndv)).mul(smoothstep(1.0, 0.85, float(1).sub(ndv)));
-    glow = base.mul(vec3(0.85, 0.32, 0.24)).mul(sss).mul(0.22);
+    glow = base.mul(vec3(0.95, 0.38, 0.3)).mul(sss).mul(0.3).add(base.mul(vec3(0.06, 0.012, 0.0))); // a living warmth under even the palest skin
     m.roughness = 0.52; m.metalness = 0;
   } else if (kind === "hair") {
     const h = dot(N, normalize(vec3(0, 1, 0).add(V.mul(0.6))));
@@ -39,7 +39,7 @@ export function material(ctx) {
     m.roughness = 0.88; m.metalness = 0;
   }
   m.colorNode = col.mul(float(1).sub(lift).mul(0.9));
-  const shade = kind === "skin" ? col.mul(vec3(1.0, 0.84, 0.8)) : col.mul(vec3(0.92, 0.92, 1.0));
+  const shade = kind === "skin" ? col.mul(vec3(1.0, 0.8, 0.74)) : col.mul(vec3(0.92, 0.92, 1.0));
   const rim = fres.mul(kind === "skin" ? 0.1 : 0.12);
   m.emissiveNode = shade.mul(lift).add(glow).add(vec3(1, 0.96, 0.9).mul(rim).mul(max(base.r, max(base.g, base.b)).mul(0.6).add(0.2)));
   return m;
