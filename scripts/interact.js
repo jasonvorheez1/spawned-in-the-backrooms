@@ -55,8 +55,17 @@ function findFocus(ctx, ray) {
     const big = BIG_KINDS.has(tag)
     // a usable hung on a parent (the boiler door's panel) reads local feet: aim at its world spot, mid-height for a door
     const wp = !it.state?.c && tag === 'usable' ? ctx.getObject(it.id)?.worldFeetPosition : null
-    const p = it.state?.c ?? (wp ? { x: wp.x, y: wp.y + (it.state?.kind === 'boilerdoor' ? 0.9 : 0), z: wp.z } : it.feetPosition)
-    let lift = it.state?.c ? 0 : big ? 0.28 : 0.1
+    let p = it.state?.c ?? (wp ? { x: wp.x, y: wp.y + (it.state?.kind === 'boilerdoor' ? 0.9 : 0), z: wp.z } : it.feetPosition)
+    let lift = it.state?.c ? 0 : big ? 0.28 : 0.1, reachR = big ? 0.55 : 0.3
+    if (!it.state?.c && tag !== 'npc') { // a tall thing (door, fridge, locker, cabinet) answers wherever the look crosses it, base to top, not only at its feet
+      const b = ctx.getObject(it.id)?.bounds
+      if (b && b.size.y > 0.6) {
+        p = { x: b.center.x, y: b.min.y, z: b.center.z }
+        const hd = Math.hypot(d.x, d.z) || 1e-3, along = ((p.x - o.x) * d.x + (p.z - o.z) * d.z) / hd
+        lift = Math.max(0.1, Math.min(b.size.y - 0.1, o.y + d.y / hd * Math.max(0, along) - p.y))
+        reachR = Math.max(reachR, Math.min(0.6, Math.max(b.size.x, b.size.z) / 2))
+      }
+    }
     if (tag === 'seat' && it.state?.c) { // a chair is its whole height: aim at its seat, its back or its cushion from front or side and the look finds it
       const hd = Math.hypot(d.x, d.z) || 1e-3, along = ((p.x - o.x) * d.x + (p.z - o.z) * d.z) / hd
       lift = Math.max(-0.45, Math.min(0.65, o.y + d.y / hd * Math.max(0, along) - p.y))
