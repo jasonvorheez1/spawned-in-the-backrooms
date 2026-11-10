@@ -395,10 +395,15 @@ export function update(ctx, dt) {
   { const still = rung === 'idle' && !creeping && !ctx.self.state?.crouch && !ctx.self.state?.sit && !ctx.self.state?.dead
     let h = 0; for (const c of String(ctx.self.id)) h = (h * 31 + c.charCodeAt(0)) | 0
     if (human) { if (ctx.self.anim.cute) ctx.self.anim.cute = null } else ctx.self.anim.cute = { clip: CUTE, loop: 'loop', weight: still ? 0.35 : 0.001, speed: 0.85 + (Math.abs(h) % 30) / 100, blendIn: 0.6 } }
+  if (!ctx.self.state?.crouch && ctx.self.anim.crouch) ctx.self.anim.crouch = null
   if (ctx.self.state?.crouch) { // crouched: the crouch pair takes the body; the walk's share is the crouch-walk's
     const go = Math.min(1, Math.max(0.001, 1 - idleWeight))
-    ctx.self.anim.idle = { clip: 'cdn/clip-crouch-idle-loop.glb', loop: 'loop', weight: Math.max(0.001, 1 - go), blendIn: 0.2 }
-    ctx.self.anim.walk = { clip: 'cdn/clip-crouch-walk-loop.glb', loop: 'loop', weight: go, speed: Math.max(0.5, walkRate * 1.3), blendIn: 0.2 }
+    // the crouch pair sat 0.46 m (idle) and 0.81 m (walk) off the ground at the hips against 0.94 standing: a full squat that popped up into an almost
+    // upright stoop the moment you moved, a body far above the lowered eye and hitbox. Both now blend to one sneaking height (about 0.65 m): the idle takes
+    // a third of the standing idle under the squat, the walk takes some of the squat under it.
+    ctx.self.anim.idle = { clip: clips.idle || 'Idle', loop: 'loop', weight: Math.max(0.001, (1 - go) * 0.35), blendIn: 0.2, ...(human && !steered ? { speed: idleRate(ctx) } : {}) }
+    ctx.self.anim.crouch = { clip: 'cdn/clip-crouch-idle-loop.glb', loop: 'loop', weight: Math.max(0.001, (1 - go) * 0.65 + go * 0.4), blendIn: 0.2 }
+    ctx.self.anim.walk = { clip: 'cdn/clip-crouch-walk-loop.glb', loop: 'loop', weight: Math.max(0.001, go * 0.6), speed: Math.max(0.5, walkRate * 1.3), blendIn: 0.2 }
     ctx.self.anim.run = { clip: runClip, loop: 'loop', weight: 0.001, blendIn: 0.2 }
     if (ctx.self.anim.sprint) ctx.self.anim.sprint = { ...ctx.self.anim.sprint, weight: 0.001 }
   }
