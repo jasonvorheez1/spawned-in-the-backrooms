@@ -1,0 +1,1 @@
+<tool-error code="tripo_lane_full" fault="planned" retriable="true" execution="didnt_start" retry_in_ms="30000">spawn tripo generate: Tripo is busy with other tasks for about 30 s.</tool-error>
