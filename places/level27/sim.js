@@ -21,18 +21,13 @@ pop mist rate=?mobile:4|8 on=point() pos=<0,-%drop|2.4,.6> life=1..1.8 v=sdir()*
 const pts = (n, f) => Array.from({ length: n }, (_, i) => f(i));
 function lay(ctx) {
   const sp = (id, spec) => { if (ctx.place.objects[id]) ctx.destroy(id); return ctx.spawn(id, spec); };
-  for (const id of ["l27-fall-w-sheet", "l27-fall-e-sheet"]) if (ctx.place.objects[id]) ctx.destroy(id);
+  for (const id of ["l27-fall-w-sheet", "l27-fall-e-sheet", "l27-backrock", "l27-backrock-tunnel"]) if (ctx.place.objects[id]) ctx.destroy(id);
   // the cave: the model's own box is min (-9.36,-1.31,-22.68) max (15.02,7.27,6.47); its bottom centre goes there so it stands in its own coordinates
   sp("l27-cave", { feetPosition: { x: 2.827, y: -1.314, z: -8.105 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, state: { floor: "rock" },
     model: { id: CAVE, materials: { limestone: ROCK("wet", "oklch(0.42 0.03 70)"), flowstone: { color: "oklch(0.72 0.04 80)", roughness: 0.5, side: "double" }, steel: { color: "oklch(0.34 0.01 230)", metalness: 0.8, roughness: 0.45 }, paint: { color: "oklch(0.74 0.15 85)", metalness: 0.2, roughness: 0.6 } } } });
   // the spring and its east lobe: warm, clear, waist deep
   sp("l27-pool", { tags: ["swimwater"], feetPosition: { x: BATH.cx, y: -1.3, z: BATH.cz }, primitive: { kind: "cylinder", radiusTop: 1, radiusBottom: 1, height: 1.18, radialSegments: 48 }, scale: { x: BATH.rx, y: 1, z: BATH.rz }, material: WATER });
   sp("l27-lobe", { tags: ["swimwater"], feetPosition: { x: LOBE.cx, y: -0.95, z: LOBE.cz }, primitive: { kind: "cylinder", radiusTop: 1, radiusBottom: 1, height: 0.83, radialSegments: 40 }, scale: { x: LOBE.rx, y: 1, z: LOBE.rz }, material: WATER });
-  // a rock skin behind the shell: wherever the shell's roof thins out, the eye meets limestone, not the void
-  sp("l27-backrock", { feetPosition: { x: 0, y: -1, z: -1.5 }, scale: { x: 10.5, y: 9.5, z: 9.5 }, primitive: { kind: "sphere", radius: 1, widthSegments: 40, heightSegments: 24 },
-    material: { texture: "cdn/texture-wet-grey-limestone-cave-wall-rock.png", wrap: "repeat", repeat: [0.15, 0.15], color: "oklch(0.5 0.03 75)", roughness: 0.4, side: "back" } });
-  sp("l27-backrock-tunnel", { feetPosition: { x: -6.2, y: 1.5, z: -13.8 }, scale: { x: 2.6, y: 3.2, z: 8.5 }, primitive: { kind: "sphere", radius: 1, widthSegments: 24, heightSegments: 16 },
-    material: { texture: "cdn/texture-wet-grey-limestone-cave-wall-rock.png", wrap: "repeat", repeat: [0.15, 0.15], color: "oklch(0.5 0.03 75)", roughness: 0.4, side: "back" } });
   sp("l27-pool-glow", { feetPosition: { x: -1.2, y: -0.7, z: -2.6 }, light: { kind: "point", color: "oklch(0.75 0.1 195)", intensity: 2.2, distance: 9, shadow: { enabled: false } } });
   sp("l27-steam", { feetPosition: { x: 0.2, y: -0.05, z: -2.6 }, fx: { script: STEAM } });
   // the stream down the exit tunnel, along its east side, and the fall where it pours off the lip beside the stairs
