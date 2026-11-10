@@ -118,7 +118,7 @@ export function update(ctx, dt) {
     if (f.state.kind === "sentry" && (vx || vz) && now > (m.step ?? 0)) { m.step = now + 520; ctx.emit("playSound", { clip: "/cdn/moodboard-scifi-neon/sfx-heavy-metal-robot-footstep-clank-on-concrete.mp3", position: pos, volume: 0.6, pitch: 0.9 + ctx.random() * 0.2, maxDistance: 26 }); }
     if (f.state.kind === "sentry") { const mv = (vx || vz) ? "cdn/clip-walk-loop.glb" : "cdn/clip-idle-loop.glb", up = !!(prey && K.range);
       if (m.clip !== mv) { m.clip = mv; f.anim.main = { clip: mv, loop: true, weight: 1, blend: 0.25 }; }
-      if (m.up !== up) { m.up = up; f.anim.aim = up ? { clip: "cdn/clip-rifle-aim-f07bf7f5-loop.glb", loop: true, weight: 1, mask: "Spine", blend: 0.3 } : null; } }
+      if (m.up !== up) { m.up = up; f.anim.aim = up ? { clip: "cdn/clip-rifle-up-50cc7349-loop.glb", loop: true, weight: 1, mask: "Spine", blend: 0.3 } : null; } }
     f.velocity = { x: vx, y: f.grounded ? -0.5 : (f.velocity?.y ?? 0) + g * dt, z: vz };
     if (f.state.kind === "clump" && now > (m.tw ?? 0)) { // a knot of limbs never sits still: it lurches crawling, shudders at rest
       const mv = !!(vx || vz), yaw = (vx || vz) ? Math.atan2(-vx, -vz) * 180 / Math.PI : (f.rotation?.yaw ?? 0);
@@ -126,7 +126,6 @@ export function update(ctx, dt) {
       f.rotation = { yaw: yaw + (ctx.random() - 0.5) * (mv ? 18 : 8), pitch: (mv ? -6 : 0) + (ctx.random() - 0.5) * (mv ? 14 : 5), roll: (ctx.random() - 0.5) * (mv ? 16 : 6) };
       if (!mv && ctx.random() < 0.08) ctx.emit("shake", { target: id, intensity: 0.06, duration: 0.35 });
     }
-    if (f.state.kind === "sentry") { const c = (vx || vz) ? "cdn/clip-walk-loop.glb" : "cdn/clip-rifle-aim-f07bf7f5-loop.glb"; if (m.sclip !== c) { m.sclip = c; f.anim.main = { clip: c, loop: true, weight: 1, blend: 0.25 }; } }
     if (f.state.kind === "hound" && m.clip !== clip) { m.clip = clip; f.anim.main = { clip, loop: clip !== "pounce" && clip !== "maul", weight: 1, blend: 0.2 }; }
   }
 }
