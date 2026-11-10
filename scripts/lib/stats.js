@@ -143,29 +143,29 @@ export function tokenWeight(token) {
   return FIXED[token] ?? 0.2
 }
 // what the wanderer is carrying now: almond water 0.5 each, rounds 0.03 each, shells 0.07, every owned weapon
-export function carried(s) {
+export function inventoryWeight(s) {
   let kg = ((s.almonds ?? 0) + (s.almondsG ?? 0) + (s.almondsR ?? 0) + (s.almondsB ?? 0)) * FIXED.almond + (s.ammo ?? 0) * 0.03 + (s.shells ?? 0) * 0.07 + (s.firesalt ?? 0) * FIXED.firesalt
   for (const k of String(s.weapons ?? '').split(',').filter(Boolean)) kg += weaponWeight(k)
   for (const [t, n] of Object.entries(s.scrap ?? {})) kg += (BRK.scrap[t]?.kg ?? 0.2) * n // building scrap
   for (const t of String(s.clothes ?? '').split(',').filter(Boolean)) kg += tokenWeight(t) // spare clothes; what's worn weighs nothing
-  return Math.round(kg * 10) / 10
+  return kg
 }
-// can this token be taken, and if not why
+export const carried = (s) => Math.round(inventoryWeight(s) * 10) / 10
+// The amount one pickup adds; crafting uses this same rule for complete recipe outputs.
+export function pickupWeight(token) {
+  if (['ration', 'bandage', 'battery', 'kit', 'akit', 'beans', 'bar', 'firstaid', 'tape', 'fuse', 'valve', 'keycard', 'royal_ration', 'bobbypin', 'compass', 'nvg'].includes(token) || token.startsWith('book:') || token.startsWith('page:')) return 0
+  return token === 'ammo' ? W.ammo.perPickup * .03 : token === 'shells' ? W.shells.perPickup * .07 : tokenWeight(token)
+}
 export function canCarry(s, token) {
-  const cap = derived(s).carry, add = token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : tokenWeight(token)
-  if (['ration', 'bandage', 'battery', 'kit', 'akit', 'beans', 'bar', 'firstaid', 'tape', 'fuse', 'valve', 'keycard', 'royal_ration'].includes(token) || token.startsWith('book:') || token.startsWith('page:')) return { ok: true } // used on the spot (or a Level 2 key), weigh nothing
-  const now = carried(s)
+  const cap = derived(s).carry, add = pickupWeight(token)
+  if (!add) return { ok: true }
+  const now = inventoryWeight(s)
   return now + add <= cap + 1e-6 ? { ok: true } : { ok: false, msg: `Too heavy to carry (${now.toFixed(1)}/${cap} kg)` }
 }
-// can all of these tokens be taken together (a recipe's whole output), and if not why: the ones used on the spot weigh nothing, as in canCarry
-export function canCarryAll(s, tokens) {
-  const cap = derived(s).carry; let add = 0
-  for (const t of tokens) {
-    if (['ration', 'bandage', 'battery', 'kit', 'akit', 'beans', 'bar', 'firstaid', 'tape', 'fuse', 'valve', 'keycard', 'royal_ration'].includes(t) || t.startsWith('book:') || t.startsWith('page:')) continue
-    add += t === 'ammo' ? W.ammo.perPickup * 0.03 : t === 'shells' ? W.shells.perPickup * 0.07 : tokenWeight(t)
-  }
-  const now = carried(s)
-  return now + add <= cap + 1e-6 ? { ok: true } : { ok: false, msg: `Too heavy to carry (${now.toFixed(1)} + ${add.toFixed(1)} of ${cap} kg)` }
+// Batch callers share the same precise pickup weights as individual grants.
+export function canCarryAll(s,tokens) {
+  const cap=derived(s).carry,now=inventoryWeight(s),add=tokens.reduce((kg,t)=>kg+pickupWeight(t),0)
+  return !add||now+add<=cap+1e-6?{ok:true}:{ok:false,msg:`Too heavy to carry (${now.toFixed(1)} + ${add.toFixed(1)} of ${cap} kg)`}
 }
 // how much slower the weight makes you when you are over the limit
 export const burden = (s) => { const cap = derived(s).carry, now = carried(s); return now <= cap ? 1 : Math.max(0.5, 1 - (now - cap) / cap) }
