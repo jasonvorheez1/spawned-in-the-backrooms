@@ -6,7 +6,7 @@
 import { maxHp, maxSan } from "../../scripts/player.js";
 import { DRIP, RIPPLE } from "../../scripts/lib/ambient.js";
 export const cadence = "1s";
-const V = 4;
+const V = 5;
 const CAVE = "/cdn/value.8ee97464d76b59ba323139f76410fd015f304ffe8a5df300024cac2cac8cee69.glb";
 const FLOW = "/cdn/value.fc172db4defdc02603c499ccc386d3fea6fb504d8b388408de18c1ef734f6c34.glb"; // Level 8's flowstone mound
 const ROCK = (kind, color) => ({ texture: kind === "wet" ? "cdn/texture-wet-grey-limestone-cave-wall-rock.png" : "cdn/texture-pale-cream-flowstone-calcite-cave-formation.png", wrap: "repeat", repeat: [0.4, 0.4], color, roughness: kind === "wet" ? 0.35 : 0.6, side: "double" });
@@ -37,7 +37,7 @@ function lay(ctx) {
   sp("l27-fall-e", { feetPosition: { x: 7.05, y: 3.1, z: -2.5 }, rotation: { yaw: 90 }, fx: { script: FALL, params: { drop: 3.4 } }, audio: { clip: "cdn/sfx-small-waterfall-splashing-into-rock-pool-loop.mp3", loop: true, gain: 0.28, spatial: true, maxDistance: 20, bus: "Ambience" } });
   sp("l27-drain", { feetPosition: { x: -7.6, y: 0.05, z: 0.3 }, fx: { script: RIPPLE } });
   // light: a cold spot on the flowstone over the pool, as in the photo; warm M.E.G. work lamps by the stairs and up the tunnel
-  sp("l27-spot", { feetPosition: { x: 2.5, y: 5.6, z: 3.5 }, light: { kind: "spot", color: "oklch(0.93 0.03 230)", intensity: 9, distance: 18, angle: 38, penumbra: 0.6, aim: { x: -1.5, y: 1.5, z: -5.5 }, shadow: { enabled: true } } });
+  sp("l27-spot", { feetPosition: { x: 2.5, y: 5.6, z: 3.5 }, light: { kind: "spot", color: "oklch(0.93 0.03 230)", intensity: 9, distance: 18, angle: 38, penumbra: 0.6, aim: { x: -1.5, y: 1.5, z: -5.5 }, shadow: { enabled: false } } });
   const lamp = (id, x, y, z) => sp(id, { feetPosition: { x, y, z }, physics: "static", primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.04, height: 1.6 }, material: { color: "oklch(0.74 0.15 85)", metalness: 0.3, roughness: 0.6 },
     children: [
       { feetPosition: { x: 0, y: 1.55, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.11, height: 0.14 }, material: { color: "oklch(0.3 0.01 230)", metalness: 0.7, roughness: 0.4 } },
