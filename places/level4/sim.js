@@ -11,6 +11,19 @@ import { settle, tickPeople } from "../../scripts/lib/l4-people.js";
 import { tickWalls, B as BRK } from "../../scripts/lib/breakables.js";
 export const cadence = "1s";
 const V = 2;
+const KIT = { // real models at the old boxes' size (Shelly: never blocky)
+  fountain: "/cdn/value.ca40f4685743a33712b754baebd3f66acb4944b92a4cce1e363ebac5669f4a93.glb",
+  vend: "/cdn/value.b5e982116d78ae3868f9b9db3ccbd35f5d24d5d57451cfbb6122f9d28f2e2b53.glb",
+  phone: "/cdn/value.0c816cdc27bbb95974064b42a5e4cd33049904823827e49a153522abd7d08406.glb",
+  table: "/cdn/value.8f446d2c7ec3b01c3b65bebe678c95cd5d57e2dc33220316cfa50f92d04fb39e.glb",
+};
+const box = (w, h, d) => ({ box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } });
+const KITROW = {
+  fountain: { model: { id: KIT.fountain }, layout: box(0.5, 1.0, 0.4), physics: { body: "static", collider: "box" } },
+  vend: { model: { id: KIT.vend }, layout: box(1, 1.85, 0.8), physics: { body: "static", collider: "box" } },
+  phone: { model: { id: KIT.phone }, layout: box(0.24, 0.1, 0.2), physics: { body: "static", collider: "box" } },
+  table: { model: { id: KIT.table }, layout: box(1.2, 0.74, 1.2), physics: { body: "static", collider: "box" } },
+};
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const OMEGA = {
   "omega-okafor": { name: "Sgt. Okafor · M.E.G. Base Omega", role: "scout", voice: "reyes", gun: "shotgun", at: [-25.5, -22.6], yaw: 180, look: { species: "human", sex: "m", eye: "#7a4820", topw: "jacket", top: "#b8d040", botw: "pants", bottom: "#3a3a32", shoes: "boots", shoec: "#22201c", hat: "cap", hatc: "#4a5a2a", expr: "wary" } },
@@ -49,19 +62,17 @@ export function lay(ctx) {
   // fountains on the open floor
   for (const [x, z, yaw] of FOUNTAINS) {
     const dx = yaw === -90 ? 0.55 : yaw === 90 ? -0.55 : 0, dz = yaw === 0 ? -0.55 : yaw === 180 ? 0.55 : 0, p = { x: x + dx, y: 0, z: z + dz };
-    ctx.spawn({ tags: ["usable", "l4-fountain"], feetPosition: p, rotation: { yaw }, physics: "static", visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 0.5, height: 0.9, depth: 0.4 }, material: { color: "oklch(0.75 0.01 250)", metalness: 0.7, roughness: 0.3, texture: "cdn/texture-scratched-worn-steel.png" },
-      behavior: "scripts/l4-home.js", state: { kind: "fountain", name: "Drinking fountain", verb: "Drink", info: "Almond water, cold", tint: "#7fd6ff" },
-      children: [{ feetPosition: { x: 0, y: 0.9, z: 0 }, primitive: { kind: "box", width: 0.46, height: 0.06, depth: 0.36 }, material: { color: "oklch(0.85 0.01 250)", metalness: 0.8, roughness: 0.2 } }] });
+    ctx.spawn({ tags: ["usable", "l4-fountain"], feetPosition: p, rotation: { yaw }, visibleRange: { max: 40 }, castShadow: false, ...KITROW.fountain,
+      behavior: "scripts/l4-home.js", state: { kind: "fountain", name: "Drinking fountain", verb: "Drink", info: "Almond water, cold", tint: "#7fd6ff" } });
   }
   // break room: three vending machines on its south wall, a table
   for (const i of [0, 1, 2]) {
     const x = HALF - 7 + i * 1.3;
-    ctx.spawn({ tags: ["usable", "l4-vend"], feetPosition: { x, y: 0, z: HALF - 0.75 }, rotation: { yaw: 0 }, physics: "static", visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "box", width: 1, height: 1.85, depth: 0.8 }, material: { color: ["oklch(0.45 0.15 25)", "oklch(0.4 0.1 250)", "oklch(0.55 0.13 140)"][i], roughness: 0.4, metalness: 0.3 },
+    ctx.spawn({ tags: ["usable", "l4-vend"], feetPosition: { x, y: 0, z: HALF - 0.75 }, rotation: { yaw: 0 }, visibleRange: { max: 45 }, castShadow: false, ...KITROW.vend,
       behavior: "scripts/l4-home.js", state: { kind: "vend", name: "Vending machine", verb: "Push the button", info: "Restocks itself. Nobody knows how.", tint: "#f2c14e" },
-      children: [{ feetPosition: { x: -0.12, y: 0.55, z: -0.405 }, primitive: { kind: "box", width: 0.62, height: 1.1, depth: 0.01 }, material: { color: "oklch(0.85 0.04 90)", emissive: "oklch(0.8 0.05 90)", emissiveIntensity: 0.9 } },
-        { feetPosition: { x: 0, y: 0.6, z: -0.6 }, light: { kind: "point", color: "oklch(0.9 0.05 90)", intensity: 1.2, distance: 3.5, shadow: { enabled: false }, visibleRange: { max: 30 } } }] });
+      children: [{ feetPosition: { x: 0, y: 0.6, z: -0.6 }, light: { kind: "point", color: "oklch(0.9 0.05 90)", intensity: 1.2, distance: 3.5, shadow: { enabled: false }, visibleRange: { max: 30 } } }] });
   }
-  ctx.spawn({ feetPosition: { x: HALF - 4, y: 0, z: HALF - 4.5 }, physics: "static", visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.6, radiusBottom: 0.6, height: 0.74 }, material: { color: "oklch(0.85 0.01 90)", roughness: 0.5 } });
+  ctx.spawn({ tags: ["l4-break-table"], feetPosition: { x: HALF - 4, y: 0, z: HALF - 4.5 }, visibleRange: { max: 40 }, castShadow: false, ...KITROW.table });
   // the lift home to Level 3, its lit call button, a sign; where you step out
   ctx.spawn("l4-lift-door", { tags: ["door"], feetPosition: { x: LIFT.x - 0.6, y: 0, z: LIFT.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.3, depth: 1.6 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level3#l3-lift-arrive" } });
   ctx.spawn("l4-lift-arrive", { feetPosition: { x: LIFT.x - 3.2, y: 0.1, z: LIFT.z + 1 }, rotation: { yaw: 180 } });
@@ -94,9 +105,7 @@ function layOffice(ctx) {
   for (const [x, z] of [[0, 13], [0, -13], [13, 0], [-13, 0]]) {
     ctx.spawn({ tags: ["l4-island"], feetPosition: { x, y: 0, z }, physics: { body: "static", collider: "mesh" }, visibleRange: { max: 50 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/l4-office-geo.js", params: { kind: "island" } } });
     for (const [cx, face] of [[0.82, 1], [-0.82, -1], [-0.82, 1], [0.82, -1]]) ctx.spawn({ tags: ["l4-island"], feetPosition: { x: x + cx, y: 0, z: z + face * 1.25 }, rotation: { yaw: face > 0 ? 0 : 180 }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/l4-prop-geo.js", params: { kind: "chair" } } });
-    for (const [cx, face] of [[0.82, 1], [-0.82, -1]]) ctx.spawn({ tags: ["usable", "l4-phone"], feetPosition: { x: x + cx + 0.42, y: 0.75, z: z + face * 0.3 }, physics: "static", visibleRange: { max: 35 }, castShadow: false, behavior: "scripts/l4-office.js",
-      primitive: { kind: "box", width: 0.22, height: 0.08, depth: 0.18 }, material: { color: "oklch(0.82 0.03 85)", roughness: 0.6 },
-      children: [{ feetPosition: { x: 0, y: 0.08, z: 0 }, primitive: { kind: "box", width: 0.2, height: 0.04, depth: 0.05 }, material: { color: "oklch(0.78 0.03 85)" } }],
+    for (const [cx, face] of [[0.82, 1], [-0.82, -1]]) ctx.spawn({ tags: ["usable", "l4-phone"], feetPosition: { x: x + cx + 0.42, y: 0.75, z: z + face * 0.3 }, rotation: { yaw: face > 0 ? 0 : 180 }, visibleRange: { max: 35 }, castShadow: false, behavior: "scripts/l4-office.js", ...KITROW.phone,
       state: { kind: "phone", name: "Desk phone", verb: "Pick up", info: "Desk phone" } });
     ctx.spawn({ tags: ["usable", "l4-printer"], feetPosition: { x: x + 2.15, y: 0, z }, rotation: { yaw: 90 }, physics: "static", visibleRange: { max: 40 }, castShadow: false, behavior: "scripts/l4-office.js",
       primitive: { kind: "scripted", script: "scripts/l4-office-geo.js", params: { kind: "printer" } }, state: { kind: "printer", name: "Printer", verb: "Read", info: "Something is half printed" } });
@@ -124,6 +133,14 @@ export function tick(ctx) {
   // breakables: smashed office walls (lib/wallgrid.js level4) grow back after a while; every loose prop takes a material and hp
   if (!(Math.abs(ctx.now() - (ctx.session.wallTick ?? -1e9)) < 3000)) { ctx.session.wallTick = ctx.now(); try { tickWalls(ctx, "level4"); breakProps(ctx); } catch (e) { ctx.log("[l4] breakables", String(e?.stack ?? e).slice(0, 300)); } }
   if (!s.officeV) { s.officeV = 1; layOffice(ctx); }
+  if (s.kitV !== 1) { s.kitV = 1; // rooms laid before the real models: swap the boxes in place by tag
+    const all = (t) => ctx.query({ tags: [t], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
+    const swap = (o, k, extra) => { const h = ctx.place.objects[o.id]; if (!h) return; h.primitive = null; h.material = null; Object.assign(h, KITROW[k], extra ?? {}); };
+    for (const o of all("l4-fountain")) swap(o, "fountain", { children: [] });
+    for (const o of all("l4-vend")) { const h = ctx.place.objects[o.id]; swap(o, "vend", { children: (h?.children ?? []).filter((c) => c.light).map((c) => ({ feetPosition: c.feetPosition, light: c.light })) }); }
+    for (const o of all("l4-phone")) { swap(o, "phone", { children: [], rotation: { yaw: o.feetPosition.z % 13 > 0 === (o.feetPosition.z > 0) ? 0 : 180 } }); }
+    for (const o of ctx.query({ radius: 0.3, center: { x: HALF - 4, y: 0, z: HALF - 4.5 } })) { const h = ctx.place.objects[o.id]; if (h?.primitive?.kind === "cylinder") { swap(o, "table"); h.tags = ["l4-break-table"]; } }
+  }
   if (s.officeV < 3) { // working computers (scripts/computer.js, Back OS): every island desk, and the locked one in Base Omega
     s.officeV = 3; let n = 1;
     for (const [x, z] of [[0, 13], [0, -13], [13, 0], [-13, 0]]) for (const [cx, face] of [[0.82, 1], [-0.82, -1], [-0.82, 1], [0.82, -1]])
