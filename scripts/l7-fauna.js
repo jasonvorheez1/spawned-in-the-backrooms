@@ -4,7 +4,7 @@
 // The Deep: Thalassophobia's leviathan. Swim out past the islands and it notices, circles under you, then takes you.
 //   On a boat you're safe, but now and then its shadow slides under the hull.
 import { heard } from "./lib/hear.js";
-import { derived, dmgAfterArmor } from "./lib/stats.js";
+import { sneakMul, dmgAfterArmor } from "./lib/stats.js";
 import { becomeCorpse, killerOf } from "./lib/l5-hostile.js";
 import { RESPAWN_MS } from "./lib/npc-respawn.js";
 import { ISLES } from "./terrain7.js";
@@ -79,7 +79,7 @@ export function update(ctx, dt) {
     let prey = null, best = Infinity;
     for (const p of players) {
       const pp = p.feetPosition; if (pp.y < -0.4 || p.controlling) continue;
-      const d = Math.hypot(pp.x - pos.x, pp.z - pos.z), sight = C.sight * (1 - Math.min(0.5, (derived(p.state).sneak ?? 0) / 200)) * (p.state?.crouch ? 0.6 : 1);
+      const d = Math.hypot(pp.x - pos.x, pp.z - pos.z), sight = C.sight * (1 - Math.min(0.5, (sneakMul(p.state) ?? 0) / 200)) * (p.state?.crouch ? 0.6 : 1);
       if ((d < sight || (m.prey === p.id && d < C.sight * 2) || (m.angryAt && now - m.angryAt < 8000 && d < 30)) && d < best && Math.hypot(pp.x - home.x, pp.z - home.z) < C.leash) { best = d; prey = p; }
     }
     if (prey && m.prey !== prey.id) { m.prey = prey.id; heard(ctx, { clip: HISS, position: pos, volume: 0.7, refDistance: 3, maxDistance: 24 }); }
