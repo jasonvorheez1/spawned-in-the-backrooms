@@ -21,6 +21,12 @@ for o in [o for o in bpy.data.objects if o.type == 'MESH']:
     bnb = {}
     for (a1, b1), c in ecount.items():
         if c == 1: bnb.setdefault(a1, set()).add(b1); bnb.setdefault(b1, set()).add(a1)
+    # the garments are solid shells: an armhole or sleeve end is a rim wall, its outline a sharp crease on each face of the cloth.
+    # those crease chains are cut stair-stepped, so they're smoothed like boundaries
+    for e in bm.edges:
+        if len(e.link_faces) == 2 and e.calc_face_angle(0) > 0.75:
+            a1, b1 = rep[e.verts[0].index], rep[e.verts[1].index]
+            if a1 != b1: bnb.setdefault(a1, set()).add(b1); bnb.setdefault(b1, set()).add(a1)
     if not bnb: bm.free(); continue
     nbr = {}
     for (a1, b1) in ecount: nbr.setdefault(a1, set()).add(b1); nbr.setdefault(b1, set()).add(a1)
