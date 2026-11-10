@@ -22,7 +22,16 @@ for k,nm in enumerate(names):
     kill=[f for f in bm.faces if band(f.calc_center_median().z)!=k]
     bmesh.ops.delete(bm, geom=kill, context="FACES")
     edges=[e for e in bm.edges if e.is_boundary]
-    if edges: bmesh.ops.holes_fill(bm, edges=edges, sides=0)
+    if edges:
+        uv=bm.loops.layers.uv.active
+        side=[f for f in bm.faces if abs(f.normal.z)<0.3 and f.calc_area()>0]
+        side.sort(key=lambda f:-f.calc_area())
+        pick=side[0] if side else None
+        c=sum((l[uv].uv for l in pick.loops), Vector((0,0)))/len(pick.loops) if pick and uv else None
+        new=bmesh.ops.holes_fill(bm, edges=edges, sides=0)["faces"]
+        if c is not None:
+            for f in new:
+                for l in f.loops: l[uv].uv=c  # the filled cap wears the cardboard's own colour
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
     bm.to_mesh(o.data); bm.free()
     vs=[v.co for v in o.data.vertices]
