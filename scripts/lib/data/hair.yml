@@ -128,8 +128,8 @@ human:
       free: /cdn/value.b99855982632a4f40eea9e2d7ebd705d77103210d728531b5c478b37c77aa332.glb
       hat: /cdn/value.c72be94e03a22b1bf0c29a991d2438bb6af53b26f68210254bddab1cd14eeabb.glb
     30:
-      free: /cdn/value.cb1681f15c093460bd466571e97f67ad7f9505e41224e53032865c7e833c5ea3.glb
-      hat: /cdn/value.3ac196bab7eeeb42b3912fc61abeeae118b811a2a8ef6186d89ea3fdec10be0b.glb
+      free: /cdn/value.1e6c5087d9658c15a18857ea7af57b91635629c0abccd777894db8432a314b9d.glb
+      hat: /cdn/value.2d5ab7f60054413079ecc32089b45a6c5775707ee48293f5f2aeb392f0039ee9.glb
   m:
     0: &id009
       free: /cdn/value.26e08211854d12e82d74a84651bc6b81646fbf01123b215b164ea03589a3218a.glb
@@ -174,8 +174,8 @@ human:
       free: /cdn/value.31d4721d56b741b975f1017c36770cb4b417059d1d01e80ce47a4d78197cb8aa.glb
       hat: /cdn/value.af892af4a698be4dfad660c8367d793df064cfe5cc438ad1360471dee2f85107.glb
     20:
-      free: /cdn/value.a1a075324590e8d3fa2a6bacf234e8939b6d5f214338cff1df92662f0371731f.glb
-      hat: /cdn/value.b22a8f94dacbd050bf44e18cfcefc66e06683baf573bde5af98567eeff1c5c31.glb
+      free: /cdn/value.e2de4cee12ef9e21be5b4886d3e9f9d4ce40c6c79682d36dc1530ff85b5b54af.glb
+      hat: /cdn/value.2151fa0a817a880d900c4f534c1dd92172ac782c416508b25ce9ebfc9eb68e81.glb
 humanPick:
   f_afropuff: 2
   f_bob: 3
