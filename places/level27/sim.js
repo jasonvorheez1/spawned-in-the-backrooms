@@ -6,10 +6,10 @@
 import { maxHp, maxSan } from "../../scripts/player.js";
 import { DRIP, RIPPLE } from "../../scripts/lib/ambient.js";
 export const cadence = "1s";
-const V = 3;
+const V = 4;
 const CAVE = "/cdn/value.8ee97464d76b59ba323139f76410fd015f304ffe8a5df300024cac2cac8cee69.glb";
 const FLOW = "/cdn/value.fc172db4defdc02603c499ccc386d3fea6fb504d8b388408de18c1ef734f6c34.glb"; // Level 8's flowstone mound
-const ROCK = (kind, color) => ({ kind: "scripted", script: "scripts/mat-cave.js", params: { kind, s: 1 }, color, side: "double" });
+const ROCK = (kind, color) => ({ texture: kind === "wet" ? "cdn/texture-wet-grey-limestone-cave-wall-rock.png" : "cdn/texture-pale-cream-flowstone-calcite-cave-formation.png", wrap: "repeat", repeat: [0.4, 0.4], color, roughness: kind === "wet" ? 0.35 : 0.6, side: "double" });
 const WATER = { kind: "water", color: "oklch(0.55 0.08 195)", opacity: 0.78, waveIntensity: 0.04 };
 const BATH = { cx: -1.2, cz: -2.6, rx: 4.4, rz: 3.8 }, LOBE = { cx: 4.2, cz: -2.6, rx: 3.4, rz: 2.3 };
 const inPool = (p) => p.y < 0.25 && [BATH, LOBE].some((e) => ((p.x - e.cx) / e.rx) ** 2 + ((p.z - e.cz) / e.rz) ** 2 < 0.95);
