@@ -64,8 +64,8 @@ const CSS = `<style>
 #cr .in i.lack{color:#ff9c83}#cr button:focus-visible{outline:2px solid #fff3d6;outline-offset:2px}
 @media(max-width:650px){#cr .row{flex-direction:column;align-items:stretch;gap:7px}#cr .bt{flex-wrap:wrap}#cr .hd{align-items:flex-start;flex-direction:column;gap:5px}#cr .md{line-height:1.5}#cr .ft{flex-wrap:wrap;gap:8px}#cr .tb button{padding:7px 8px}}
 </style>`
-const ORDER = { weapons: 0, ammo: 1, aid: 2, tools: 3, armor: 4 }
-const TITLE = { weapons: 'WEAPONS', ammo: 'AMMO', aid: 'AID & REPAIR', tools: 'TOOLS & KEYS', armor: 'ARMOR' }
+const ORDER = { weapons: 0, ammo: 1, aid: 2, food: 3, tools: 4, armor: 5 }
+const TITLE = { weapons: 'WEAPONS', ammo: 'AMMO', aid: 'AID & REPAIR', tools: 'TOOLS & KEYS', armor: 'ARMOR', food: 'FOOD & WATER' }
 
 export function craftUi(ctx, player) {
   const s = player.state ?? {}

@@ -25,6 +25,10 @@ jackcoke: { name: "Jack and Coke", info: "Jack Daniel's Old No. 7 over ice, a sp
 whiskey: { name: "Jim Beam (a neat pour)", info: "Bourbon, poured by a faceling who does not blink", hunger: 0, thirst: -4, sanity: 22, hp: -4, color: "#b8702a", drink: true, drunk: 40 }
 margarita: { name: "Jose Cuervo margarita", info: "Salt rim, too much tequila", hunger: 3, thirst: 12, sanity: 16, hp: -2, color: "#c8e870", drink: true, drunk: 30 }
 # found loot that used to be eaten on pickup: now carried, eaten or used from I > Aid (johnadams2: "no item should be instantly used from loot"). Values kept from the old pickup effects.
+# crafted food and water (scripts/lib/data/craft.yml, FOOD tab): carried, eaten or drunk from I > Aid like any snack
+stew:    { name: "Glow-cap stew", info: "Caps and spring salt simmered in a tin. Tastes of wet pennies, warms you through", hunger: 28, thirst: 4, sanity: 8, hp: 14, color: "#6fe8d8" }
+stillwater: { name: "Distilled water", info: "Condensed off a pipe still. Flat, clean, safe", hunger: 0, thirst: 40, sanity: 3, hp: 2, color: "#cfe8f0", drink: true }
+mineralwater: { name: "Spring mineral water", info: "Bottled where the springs run, with the salt and chalk left in", hunger: 0, thirst: 36, sanity: 4, hp: 4, color: "#dfe8e4", drink: true }
 lobby_wafer: { name: "Lobby Wafers", info: "Stale yellow wafers from a desk drawer. Crunchy, somehow damp", hunger: 18, thirst: -3, sanity: 5, hp: 8, color: "#d4b96a" }
 ration:  { name: "M.E.G. ration", info: "A foil-wrapped field ration", hunger: 30, thirst: 0, sanity: 8, hp: 32, color: "#8a8a5a" }
 bandage: { name: "Bandage", info: "Wrap a wound. Medicine helps", hunger: 0, thirst: 0, sanity: 0, hp: 18, color: "#e8e0d0", aid: true }

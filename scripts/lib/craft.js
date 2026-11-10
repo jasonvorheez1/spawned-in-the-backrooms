@@ -42,4 +42,4 @@ export function benchAvailable(player,bench) {
   const a=player.worldFeetPosition??player.feetPosition,b=bench.worldFeetPosition??bench.feetPosition
   return !!a&&!!b&&Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z)<=4.5
 }
-export const CATS=[['all','ALL'],['ready','READY'],['weapons','WEAPONS'],['ammo','AMMO'],['aid','AID'],['tools','TOOLS'],['armor','ARMOR']]
+export const CATS=[['all','ALL'],['ready','READY'],['weapons','WEAPONS'],['ammo','AMMO'],['aid','AID'],['tools','TOOLS'],['armor','ARMOR'],['food','FOOD']]

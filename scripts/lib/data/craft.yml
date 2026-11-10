@@ -33,6 +33,13 @@ recipes:
   bandage:    { cat: aid, name: Bandage,         in: { drywall: 2, wire: 1 },                          out: [bandage],          skill: [medicine, 15], desc: "Heals on the spot" }
   firstaid:   { cat: aid, name: First aid kit,   in: { drywall: 3, wire: 2, copper_coil: 1 },          out: [firstaid],         skill: [medicine, 40], bench: true, desc: "A proper kit: a big heal" }
   kit2:       { cat: aid, name: Field repair set, in: { scrap_metal: 4, gears: 1, springs: 1, bolts: 3 }, out: [kit, kit, akit], skill: [repair, 50],   bench: true, desc: "Two weapon kits and an armor kit" }
+  # food and water (Shelly: "no cooking or water recipes"): scrap from the caves and springs becomes something to eat and drink
+  stew:       { cat: food, name: Glow-cap stew,       in: { glow_cap: 3, spring_salt: 1 },                out: [stew],            skill: [survival, 10], desc: "Hunger +28 · eat it from I > Aid" }
+  stillwater: { cat: food, name: Pipe-still water,    in: { steel_pipe: 1, scrap_metal: 1, wire: 1 },     out: [stillwater, stillwater], skill: [survival, 15], bench: true, desc: "Condensed off hot pipe: two safe drinks" }
+  mineralwater: { cat: food, name: Spring mineral water, in: { spring_salt: 2, travertine: 1 },         out: [mineralwater],     skill: [survival, 8],  desc: "A bottle of the spring, salt and chalk left in" }
+  # improvised firearms (Shelly: "you can't craft firearms"): weak, worn and few rounds, so a found gun stays worth finding
+  zipgun:     { cat: weapons, name: Improvised pistol, in: { steel_pipe: 1, springs: 2, nails: 2, scrap_wood: 1 }, out: ["weapon:pistol~zip"],  skill: [guns, 25], bench: true, desc: "A pipe, a spring and a firing pin · two rounds, jams when worn" }
+  pipeshotgun: { cat: weapons, name: Pipe shotgun,    in: { steel_pipe: 2, springs: 2, bolts: 2, scrap_wood: 2 }, out: ["weapon:shotgun~pipe"], skill: [guns, 35], bench: true, desc: "A length of pipe and a hammer · one shell, short and wide" }
   # outfits (Savi's picks): improvised armor from what the levels break into. Each lands as a garment you can wear (I menu).
   poncho:     { cat: armor, name: Carpet poncho,      in: { wire: 2, drywall: 1 },                          out: ["cloth:neck:cape:b39a4e"],      skill: [repair, 5],    desc: "Neck · DR 2 · cut from Level 0 carpet" }
   padbeanie:  { cat: armor, name: Padded beanie,      in: { wire: 1, drywall: 2 },                          out: ["cloth:hat:beanie:4a5a3a"],     skill: [repair, 10],   desc: "Hat · DR 2" }
