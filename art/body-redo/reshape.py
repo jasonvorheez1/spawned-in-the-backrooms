@@ -4,11 +4,11 @@ from mathutils import Vector
 args = sys.argv[sys.argv.index('--')+1:]; src, dst, sex = args[0], args[1], args[2]
 # k = cross-section scale along each bone, [at head, at tail]; picked against the refs (Anime Girl / Miyu, Zhongli)
 K = {
- 'f': {'LeftShoulder': (1.03, 1.07), 'LeftUpLeg': (1.14, 1.13), 'LeftLeg': (1.11, 1.0), 'Hips': (1.06, 1.06), 'Spine': (1.04, 1.0), 'LeftArm': (1.07, 1.05), 'LeftForeArm': (1.05, 1.0)},
- 'm': {'LeftUpLeg': (1.18, 1.12), 'LeftLeg': (1.14, 1.04), 'Hips': (1.06, 1.08), 'Spine': (1.02, 1.06), 'Spine1': (1.08, 1.16), 'Spine2': (1.2, 1.2), 'LeftShoulder': (1.12, 1.18), 'LeftArm': (1.3, 1.14), 'LeftForeArm': (1.18, 1.08), 'Neck': (1.12, 1.05)},
+ 'f': {'LeftShoulder': (1.03, 1.07), 'LeftUpLeg': (1.14, 1.13), 'LeftLeg': (1.11, 1.0), 'Hips': (1.06, 1.06), 'Spine': (1.04, 1.0), 'LeftArm': (1.12, 1.06), 'LeftForeArm': (1.05, 1.0)},
+ 'm': {'LeftUpLeg': (1.18, 1.12), 'LeftLeg': (1.14, 1.04), 'Hips': (1.06, 1.08), 'Spine': (1.02, 1.06), 'Spine1': (1.08, 1.16), 'Spine2': (1.2, 1.2), 'LeftShoulder': (1.12, 1.18), 'LeftArm': (1.3, 1.16), 'LeftForeArm': (1.16, 1.06), 'Neck': (1.12, 1.05)},
 }[sex]
 # Shelly #178124 + "still look off": no deltoid and a tall trapezius ramp read as a coat hanger. a cap on the arm, the ramp lowered
-DELT, TRAP = {'f': 0.12, 'm': 0.26}[sex], {'f': 0.006, 'm': 0.018}[sex]
+DELT, TRAP = {'f': 0.22, 'm': 0.4}[sex], {'f': 0.006, 'm': 0.016}[sex]
 for n in list(K):
     if n.startswith('Left'): K['Right' + n[4:]] = K[n]
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -25,7 +25,7 @@ def disp(p, b):
     if b in ('Hips', 'Spine', 'Spine1', 'Spine2', 'Neck'): r.z = 0; r.y *= 0.35  # trunk: widen across, barely deeper (no belly), never up
     return r * (k - 1)
 # shoulders: the whole arm slides outward (bones and skin together), the shoulder bone stretches to meet it
-SHIFT = {'f': 0.0, 'm': 0.04}[sex]
+SHIFT = {'f': 0.0, 'm': 0.0}[sex]  # the 4 cm arm slide stretched the trap into a coat-hanger ramp (Shelly 'do you know what a shoulder is'); breadth comes from the deltoid now
 ARMB = lambda nm: nm and any(nm.startswith(sd + k) for sd in ('Left', 'Right') for k in ('Arm', 'ForeArm', 'Hand'))
 def arm_w(nm, w): return w if ARMB(nm) else (0.5 * w if nm in ('LeftShoulder', 'RightShoulder') else 0)
 # one move field over the welded surface: split verts (uv seams, part borders) share one key, so nothing tears (Nov 10)
@@ -57,7 +57,7 @@ for _ in range(10):
 # iron the shoulder/arm surface: the base's facets and the armpit pinch read blocky in T-pose (Shelly #177961, Nov 10)
 P = {k: KP[k] + D[k] for k in D}
 for _ in range(3):
-    P = {k: (P[k] * (1 - 0.5 * min(1, KS[k])) + (sum((P[j] for j in KADJ[k]), Vector()) / len(KADJ[k])) * 0.5 * min(1, KS[k])) if KADJ[k] and KS[k] > 0.05 else P[k] for k in P}
+    P = {k: (P[k] * (1 - 0.25 * min(1, KS[k])) + (sum((P[j] for j in KADJ[k]), Vector()) / len(KADJ[k])) * 0.25 * min(1, KS[k])) if KADJ[k] and KS[k] > 0.05 else P[k] for k in P}
 D = {k: P[k] - KP[k] for k in P}
 from mathutils.kdtree import KDTree
 kl = list(D); kdt = KDTree(len(kl))
