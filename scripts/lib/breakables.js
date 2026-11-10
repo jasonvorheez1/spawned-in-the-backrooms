@@ -193,7 +193,7 @@ export function damageEntity(ctx, o, dmg, at, normal, kind) {
 // a smashed prop isn't deleted: it goes out of sight, untouchable, and stands again an hour later (Shelly 2026-11-07)
 export const REGROW_MS = (B.propRegrowMinutes ?? 60) * 60000
 function wreck(ctx, o) {
-  if (o.tags?.includes('rubble') || o.lifetime || o.state?.stayGone) { ctx.destroy(o.id); return }
+  if (o.tags?.includes('rubble') || o.lifetime || o.state?.stayGone) { if (o.state?.stayGone && !o.id.includes('/')) { const g = ctx.place.state.gone ?? {}; if (!g[o.id]) ctx.place.state.gone = { ...g, [o.id]: 1 } } ctx.destroy(o.id); return } // Nov 10 (Shelly: "fix the wall rebuilding itself"): a place's rebuild skips what was smashed for good
   o.state.wreck = { at: ctx.now(), tags: [...(o.tags ?? [])], physics: o.physics ?? null, items: o.state.items ?? null }
   o.tags = ['wreck']; o.visible = false; o.physics = 'none'
   const wr = (ctx.place.state.wrecks ??= [])

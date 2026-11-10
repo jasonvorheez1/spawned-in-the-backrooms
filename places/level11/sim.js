@@ -1761,6 +1761,7 @@ export function tick(ctx) {
     const end = Math.min(q.rows.length, i + LAY_STEP);
     for (; i < end; i++) {
       const [id, spec] = q.rows[i], old = ctx.place.objects[id];
+      if (st.gone?.[id]) { q.keep[id] = true; continue; } // smashed for good (breakables.js records it): never re-laid
       if (old && (!!old.model !== !!spec.model || (old.model && spec.model?.id && (old.model.id ?? old.model) !== spec.model.id) || !!old.primitive !== !!spec.primitive || (old.primitive && spec.primitive && (old.primitive.kind !== spec.primitive.kind || old.primitive.script !== spec.primitive.script)) || (!spec.children && ctx.place.objects[id + "/child-0"]) || (spec.tags && !old.tags?.includes("wreck") && spec.tags.join() !== (old.tags ?? []).join()) || (spec.physics?.collider && old.physics?.collider && spec.physics.collider !== old.physics.collider) || (spec.feetPosition && old.feetPosition && !old.tags?.includes("wreck") && old.physics?.body !== "dynamic" && !old.behavior?.length && Math.hypot((spec.feetPosition.x ?? 0) - old.feetPosition.x, (spec.feetPosition.z ?? 0) - old.feetPosition.z) > 0.3))) { ctx.destroy(id); break; } // a box row turned model: clear it, lay it fresh next tick
       ctx.spawn(id, spec);
       const now2 = old && ctx.place.objects[id]; // a piece that already stood takes its new place, turn and size too
