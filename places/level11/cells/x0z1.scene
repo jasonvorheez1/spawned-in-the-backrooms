@@ -60,7 +60,7 @@ l11-vault-stair-4:
   primitive: {depth: 1.5, height: 0.20000000000000018, kind: box, width: 0.48}
   receiveShadow: true
 l11-vault-stair-hand:
-  feetPosition: {x: 9.8, y: -2.1500000000000004, z: 87.4}
+  feetPosition: {x: 8.461538371685364, y: -2.7076923493833904, z: 87.4}
   id: l11-vault-stair-hand
   material: {color: oklch(0.4 0.03 140), metalness: 0.8, roughness: 0.4}
   pivot: center
