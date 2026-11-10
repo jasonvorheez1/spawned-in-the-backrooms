@@ -108,7 +108,6 @@ if MALE:
     for ids in isl.values():
         if len(ids) > 200: continue
         c = sum((vs[i].co for i in ids), mathutils.Vector()) / len(ids); z0 = c.z / G_
-        if 1.71 < z0 < 1.785 and .02 < abs(c.x / G_) < .1 and c.y / G_ < .05: print('EYEISL', len(ids), round(z0,3), round(c.x/G_,3))
         if len(ids) == 171 and 1.74 < z0 < 1.78:                                          # the lash strip: the outer wing folded down flat, no flick
             for i in ids:
                 ax = abs(vs[i].co.x / G_); t = sm(.066, .093, ax)
