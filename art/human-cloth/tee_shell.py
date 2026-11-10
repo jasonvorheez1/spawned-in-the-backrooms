@@ -5,6 +5,7 @@ Usage: blender -b --python-exit-code 1 -P tank_shell.py -- body.glb out.glb"""
 import bpy, bmesh, sys, os
 NAME = os.environ.get('WARD', 'Ward_tee'); SLEEVE = float(os.environ.get('SLEEVE', '0.42')); FLARE = float(os.environ.get('FLARE', '0.007')); STRAP = float(os.environ.get('STRAP', '0.66')); NECKD = float(os.environ.get('NECKD', '1')); HEM = float(os.environ.get('HEM', '-0.035'))  # a vest: WARD=Ward_vest STRAP=0.86 NECKD=0.6
 from mathutils import Vector
+TANK = os.environ.get('TANK') == '1'  # TANK=1 WARD=Ward_tank: armholes from the strap line (armlim) instead of sleeves, deeper scoop via NECKD
 a = sys.argv[sys.argv.index('--') + 1:]; src, out = a[0], a[1]
 T = float(os.environ.get('STANDOFF', '0.008'))  # cloth stand-off, metres (a vest sits thicker)
 bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(filepath=src)
@@ -82,7 +83,7 @@ _up = [e for e in bm.edges if min(W(v.co).z for v in e.verts) > hem - 0.05 * s a
 bmesh.ops.subdivide_edges(bm, edges=_up, cuts=1, use_grid_fill=True)
 def F(co):  # >0 inside the garment, the cut is its zero line (a contour, so every edge is drawn, not stepped)
     p = W(co)
-    return min(p.z - hem, sleeve(p), necklim(p.x, p.y) - p.z)
+    return min(p.z - hem, (armlim(p.z) - abs(p.x)) if TANK else sleeve(p), necklim(p.x, p.y) - p.z)
 f = {v: F(v.co) for v in bm.verts}
 cross = [e for e in bm.edges if (f[e.verts[0]] > 0) != (f[e.verts[1]] > 0)]
 made = set()
@@ -112,7 +113,7 @@ for r in range(1, 4):
             if w not in ring: ring[w] = r; nxt.append(w)
     front = nxt
 feather = {0: 1.0, 1: 1.0, 2: 1.0}  # a tee's hem stands off like the rest (no taper back to the skin): the lip below closes it
-AT = {v: (armt(W(v.co)) if abs(W(v.co).x) > xpit * 0.85 else 0.0) for v in bm.verts}
+AT = {v: (0.0 if TANK else armt(W(v.co)) if abs(W(v.co).x) > xpit * 0.85 else 0.0) for v in bm.verts}
 def coords(layer): return {v: (v[layer].copy() if layer is not None else v.co.copy()) for v in bm.verts}
 def normals(C):
     n = {v: Vector() for v in bm.verts}
@@ -157,6 +158,7 @@ for f in bm.faces: f.smooth = True
 bm.normal_update()
 bm.to_mesh(me); bm.free(); me.update()
 me.materials.clear(); me.materials.append(bpy.data.materials.new('cloth_top'))
+me.materials[0].name = 'cloth_top'
 print('TEE', len(me.vertices), 'hem', round(hem, 3), 'strap', round(xstrap, 3), 'pit', round(xpit, 3), round(zpit, 3), 'keys', keys)
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.export_scene.gltf(filepath=out, export_skins=True, export_morph=True, export_animations=False, export_apply=False)
