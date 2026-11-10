@@ -40,7 +40,7 @@ for o in objs:
             if g.weight <= 0: continue
             if nm in K: d += disp(p, nm) * g.weight
             if SHIFT: d.x += (1 if p.x > 0 else -1) * SHIFT * arm_w(nm, g.weight)
-        sw = sum(g.weight for g in v.groups if (gi.get(g.group) or '').endswith(('Shoulder', 'Arm', 'ForeArm')) or gi.get(g.group) == 'Spine2')
+        sw = sum(g.weight for g in v.groups if (gi.get(g.group) or '').endswith(('Shoulder', 'Arm', 'ForeArm')))
         k = key(p); KP[k] = p; KS[k] = max(KS.get(k, 0), sw); ks.append(k); KD[k] = KD.get(k, Vector()) + d; KN[k] = KN.get(k, 0) + 1; KADJ.setdefault(k, set())
     for e in o.data.edges:
         i, j = e.vertices; KADJ[ks[i]].add(ks[j]); KADJ[ks[j]].add(ks[i])
@@ -50,7 +50,7 @@ for _ in range(10):
     D = {k: D[k] * 0.4 + sum((D[j] for j in KADJ[k]), Vector()) * (0.6 / len(KADJ[k])) if KADJ[k] else D[k] for k in D}
 # iron the shoulder/arm surface: the base's facets and the armpit pinch read blocky in T-pose (Shelly #177961, Nov 10)
 P = {k: KP[k] + D[k] for k in D}
-for _ in range(6):
+for _ in range(3):
     P = {k: (P[k] * (1 - 0.5 * min(1, KS[k])) + (sum((P[j] for j in KADJ[k]), Vector()) / len(KADJ[k])) * 0.5 * min(1, KS[k])) if KADJ[k] and KS[k] > 0.05 else P[k] for k in P}
 D = {k: P[k] - KP[k] for k in P}
 from mathutils.kdtree import KDTree
