@@ -71,17 +71,23 @@ def bump(a, b_, c_, d, x): return sm(a, b_, x) * (1 - sm(c_, d, x))
 if MALE:
     vs = body.data.vertices
     arm = [sm(.15, .2, abs(v.co.x)) * sm(1.08, 1.18, v.co.z) * (1 - sm(1.56, 1.6, v.co.z)) for v in vs]
-    # the chest's front line, measured above and below the bust on the centre strip
-    def front(z): return max((v.co.y for v in vs if abs(v.co.z - z) < .015 and abs(v.co.x) < .1 and v.co.y > .05), default=.15)
-    yt, yb = front(1.47), front(1.21); print("chest front", round(yt, 3), round(yb, 3))
+    # the base faces -Y (measured: the bust and nose are the min-y side). front line read under the bust
+    def front(z): return min((v.co.y for v in vs if abs(v.co.z - z) < .015 and abs(v.co.x) < .1), default=-.03)
+    yb = front(1.22); print("chest front", round(yb, 3))
+    # the silhouette by measurement: female half-widths per z (hips .183 at 1.04, waist .094 at 1.34) remapped to a male line
+    W = [(.8, 1), (.9, .88), (1.04, .84), (1.12, .88), (1.2, 1.0), (1.28, 1.25), (1.34, 1.42), (1.4, 1.38), (1.46, 1.22), (1.52, 1.16), (1.58, 1.0)]
+    def wf(z):
+        if z <= W[0][0] or z >= W[-1][0]: return 1.0
+        for (z0, f0), (z1, f1) in zip(W, W[1:]):
+            if z <= z1: return f0 + (f1 - f0) * (z - z0) / (z1 - z0)
     for i, v in enumerate(vs):
         x, y, z = v.co; sg = 1 if x >= 0 else -1; A = arm[i]; T = 1 - A
-        x = x * (1 + .26 * bump(1.3, 1.42, 1.5, 1.57, z) * T) + sg * SH * A          # broad shoulders and upper chest
-        x *= 1 - .13 * bump(.82, .92, 1.12, 1.24, z) * T                           # narrower hips, straighter waist
-        x *= 1 + .16 * bump(1.1, 1.2, 1.28, 1.36, z) * T                          # thicker waist (no hourglass)
-        band = bump(1.2, 1.25, 1.44, 1.49, z) * (1 - sm(.1, .17, abs(x))) * T     # flat chest: front clamped to the line, a slight pec
-        line = yb + (yt - yb) * (z - 1.21) / .26 + .008 * bump(1.32, 1.37, 1.42, 1.46, z) * bump(.01, .04, .09, .12, abs(x))
-        if y > line: y = y + (line - y) * band
+        f = wf(z); x = x * (1 + (f - 1) * T) + sg * SH * A
+        y = .08 + (y - .08) * (1 + (f - 1) * .35 * T * bump(1.2, 1.26, 1.4, 1.46, z))   # ribcage gets depth too
+        if y > .1: y = .1 + (y - .1) * (1 - .45 * bump(.9, .98, 1.1, 1.18, z) * T)        # smaller seat
+        band = bump(1.24, 1.3, 1.48, 1.53, z) * (1 - sm(.1, .16, abs(x))) * T         # flat chest: the bust pushed back to the line
+        line = yb - .008 * bump(1.36, 1.4, 1.46, 1.5, z) * bump(.01, .04, .09, .12, abs(x))
+        if y < line: y = y + (line - y) * band
         nk = bump(1.48, 1.52, 1.6, 1.66, z) * T                                    # thicker neck
         x *= 1 + .3 * nk; y = .08 + (y - .08) * (1 + .18 * nk)
         jaw = bump(1.6, 1.64, 1.72, 1.77, z) * T                                   # squarer, wider jaw
