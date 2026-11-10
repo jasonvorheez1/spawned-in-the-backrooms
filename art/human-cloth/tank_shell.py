@@ -10,8 +10,16 @@ bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(file
 arm = next(o for o in bpy.data.objects if o.type == 'ARMATURE')
 J = {b.name: arm.matrix_world @ b.head_local for b in arm.data.bones}
 body = bpy.data.objects['Body']
+# the skin is split into parts (Body + Skin_*): join them so straps can run up over the shoulder, the cut drops the rest
+parts = [o for o in bpy.data.objects if o.type == 'MESH' and o != body and o.name.startswith('Skin_')]
 for o in list(bpy.data.objects):
-    if o.type == 'MESH' and o != body: bpy.data.objects.remove(o, do_unlink=True)
+    if o.type == 'MESH' and o != body and o not in parts: bpy.data.objects.remove(o, do_unlink=True)
+if parts:
+    bpy.ops.object.select_all(action='DESELECT')
+    for o in parts: o.select_set(True)
+    body.select_set(True); bpy.context.view_layer.objects.active = body
+    bpy.ops.object.join()
+print('JOINED', len(parts))
 body.name = body.data.name = 'Ward_tank'
 hipz, neckz, ax, sy = J['Hips'].z, J['Neck'].z, J['LeftArm'].x, J['Spine2'].y
 s = neckz / 1.276
