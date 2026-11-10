@@ -59,6 +59,7 @@ export function onInput(ctx, input) {
     if (ses.zDown && input.released?.grab) { const quick = ctx.now() - ses.zDown < HOLD_MS; ses.zDown = null; return quick ? setDown(ctx, held) : toss(ctx, held, h); }
     return;
   }
+  if (ses.drag) { if (input.pressed?.grab) letGo(ctx); return; } // a body dragged: Z lets it go
   const foe = ses.heldFoe && ctx.getObject(ses.heldFoe);
   if (foe) { // a body in your arms: tap Z drops it at your feet, hold Z hurls it
     if (input.pressed?.grab) ses.zDown = ctx.now();
@@ -69,6 +70,7 @@ export function onInput(ctx, input) {
   if (!input.pressed?.grab) return;
   ses.held = null;
   if (grabFoe(ctx, input)) return;
+  if (grabCorpse(ctx, input)) return;
   const f = ctx.self.feetPosition, eye = { x: f.x, y: f.y + 1.5, z: f.z }, d = ses.dir ?? look(ctx, input);
   const hit = raycast(ctx, eye, d, { distance: 2.6, ignoreEntities: [ctx.self.id] });
   let o = hit?.id && ctx.getObject(hit.id);
@@ -163,6 +165,7 @@ function hurl(ctx, e, drop) {
   heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-heavy-object-throw-whoosh.mp3", position: e.feetPosition, volume: 0.8, maxDistance: 18 });
 }
 export function update(ctx) {
+  if (ctx.self.session.drag) dragTick(ctx);
   if (ctx.self.anim?.grab && ctx.now() > (ctx.self.session.grabAnimEnd ?? 0)) ctx.self.anim.grab = null; // a once-clip left at weight 1 freezes the body in its last frame
   const ses = ctx.self.session;
   if (ses.heldFoe) { const e = ctx.getObject(ses.heldFoe), f = ctx.self.feetPosition, d = ses.dir ?? { x: 0, y: 0, z: -1 }, hl = Math.hypot(d.x, d.z) || 1;
@@ -244,3 +247,52 @@ function spill(ctx, o) {
 }
 // an extinguisher's jet runs dry: the cloud stops and it's an empty can (lib/loose.js spray)
 export function looseSpent(ctx, { id }) { const o = ctx.getObject(id); if (o) { o.fx = null; o.state.broke = true; o.state.loose = "plastic"; } }
+
+// dead bodies (Shelly, Nov 10: "z can grab anything as normal just dead bodies included"): Z takes a corpse by the arm and
+// drags it behind you on its own ragdoll: tugs pull it toward your heels, its limbs trail and catch on the floor.
+// Savi's picks: reach 2.2 m; drag works up to 2.5 x your lift (dragging beats lifting); walk speed 1 - 0.6 x kg / lift, at least 0.4;
+// past 3.2 m from you the grip slips; tugs at 10 Hz toward 1 m behind you, at most 2.4 m/s.
+const CORPSE = [...BODIES, "l11foe", "remains", "enemy", "corpse"];
+function grabCorpse(ctx, input) {
+  const ses = ctx.self.session, f = ctx.self.feetPosition, d = ses.dir ?? look(ctx, input), hl = Math.hypot(d.x, d.z) || 1;
+  let e = null, bd = 2.2;
+  for (const c of ctx.query({ anyTags: CORPSE, radius: 3.2 })) {
+    if (c.id === ctx.self.id || !(c.state?.dead || (c.state?.hp ?? 1) <= 0) || c.state?.heldBy) continue;
+    const o = ctx.getObject(c.id), b = o?.bounds; if (!b) continue;
+    const dx = b.center.x - f.x, dz = b.center.z - f.z, dist = Math.max(0, Math.hypot(dx, dz) - Math.max(b.size.x, b.size.z) * 0.4);
+    if (dist > bd || (Math.hypot(dx, dz) > 0.4 && (dx * d.x + dz * d.z) / (Math.hypot(dx, dz) * hl) < 0.4)) continue;
+    bd = dist; e = o;
+  }
+  if (!e) return false;
+  const S = ctx.self.state;
+  if (!S.sheathed && S.equipped && S.equipped !== "fists") { note(ctx, "Holster your weapon (H) to grab."); return true; }
+  const kg = e.state?.kg ?? foeStats(ctx, e).kg ?? bodyKg(e), cap = power(ctx);
+  if (kg > cap * 2.5) { note(ctx, `Too heavy to drag (${Math.round(kg)} kg).`); heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-straining-grunt-failed-lift.mp3", position: f, volume: 0.5, maxDistance: 10 }); return true; }
+  if (!e.ragdoll) e.ragdoll = { settleFreeze: false, settleSeconds: 2 }; // a body that settled stiff goes loose again in your hands
+  e.state.heldBy = ctx.self.id;
+  ses.drag = { id: e.id, kg, at: 0, c: null };
+  S.carryMul = Math.max(0.4, 1 - 0.6 * kg / cap);
+  ctx.self.anim.grab = { clip: "cdn/clip-pick-up.glb", loop: "once", weight: 1, blendIn: 0.1, blendOut: 0.3 }; ses.grabAnimEnd = ctx.now() + 700;
+  heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-grab-body-cloth-rustle-and-lift-grunt.mp3", position: e.bounds.center, volume: 0.7, maxDistance: 14 });
+  note(ctx, "Dragging. Z to let go.");
+  return true;
+}
+function letGo(ctx) {
+  const ses = ctx.self.session, e = ses.drag && ctx.getObject(ses.drag.id);
+  if (e && e.state?.heldBy === ctx.self.id) e.state.heldBy = null;
+  ses.drag = null; ctx.self.state.carryMul = 1;
+}
+function dragTick(ctx) {
+  const ses = ctx.self.session, g = ses.drag, e = ctx.getObject(g.id), now = ctx.now();
+  if (!e || ctx.self.state.dead || e.state?.heldBy !== ctx.self.id) return letGo(ctx);
+  if (now - g.at < 100) return;
+  const c = e.bounds?.center; if (!c) return letGo(ctx);
+  const f = ctx.self.feetPosition, d = ses.dir ?? { x: 0, y: 0, z: -1 }, hl = Math.hypot(d.x, d.z) || 1;
+  const tx = f.x - (d.x / hl) * 1.0, tz = f.z - (d.z / hl) * 1.0;
+  if (Math.hypot(c.x - f.x, c.z - f.z) > 3.2) { note(ctx, "It slipped out of your grip."); return letGo(ctx); }
+  const dt = g.c ? (now - g.at) / 1000 : 0.1, vx = g.c ? (c.x - g.c.x) / dt : 0, vz = g.c ? (c.z - g.c.z) / dt : 0;
+  let wx = (tx - c.x) * 3, wz = (tz - c.z) * 3; const wl = Math.hypot(wx, wz); if (wl > 2.4) { wx *= 2.4 / wl; wz *= 2.4 / wl; }
+  const near = { x: c.x + (f.x - c.x) * 0.3, y: c.y + 0.15, z: c.z + (f.z - c.z) * 0.3 }; // the end nearest you takes the pull, the rest trails
+  ctx.emit("impulse", { target: e.id, impulse: { x: g.kg * (wx - vx) * 0.45, y: g.kg * 0.12, z: g.kg * (wz - vz) * 0.45 }, position: near });
+  g.at = now; g.c = { x: c.x, z: c.z };
+}

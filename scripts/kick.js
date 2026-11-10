@@ -165,7 +165,8 @@ function kickFoe(ctx, s, f, p) {
 
 // anything else in your way (Shelly: "anything in my way", Nov 10): a corpse, a crate, a chair, furniture, a body.
 // The boot shoves it along the floor by your HAR + 0.6 AGI against its weight, stopping short of walls. Savi's picks:
-// reach 1.9 m, slide = 1.4 x power / sqrt(kg / 10) m, capped 2.6 m, under 0.15 m it only rocks; nothing over 3 m tall or 8 m3
+// reach 1.9 m, slide = 0.12 x power x 20 / kg m (Nov 10, Shelly: "too goofy, i can just kick heavy stuff"): a 10 kg chair skids
+// about 1.6 m, a 40 kg crate half a metre, a body a hand's width, past ~150 kg it only rocks; capped 1.6 m; nothing over 3 m tall or 8 m3
 const SHOVE_SKIP = ['player', 'helper', 'door', 'wall', 'floor', 'ceiling', 'terrain', 'stairs', 'ladder', 'portal', 'vehicle', 'boat', 'train']
 function kickAny(ctx, s, f, p) {
   let best = null, bd = 1.9, bdead = false
@@ -183,8 +184,8 @@ function kickAny(ctx, s, f, p) {
   }
   if (!best) return false
   const at = attrsOf(s), power = at.h + 0.6 * at.a, b = best.bounds.size
-  const kg = best.state?.kg ?? best.measure?.mass ?? Math.min(300, Math.max(5, b.x * b.y * b.z * 60))
-  let dist = Math.min(2.6, 1.4 * power / Math.sqrt(kg / 10))
+  const kg = best.state?.kg ?? best.measure?.mass ?? Math.min(600, Math.max(3, b.x * b.y * b.z * 160))
+  let dist = Math.min(1.6, 0.12 * power * 20 / kg)
   const from = { x: best.bounds.center.x, y: best.feetPosition.y + Math.min(0.35, b.y * 0.5), z: best.bounds.center.z }, half = Math.max(b.x, b.z) * 0.5
   const wall = raycast(ctx, from, { x: f.x, y: 0, z: f.z }, { distance: dist + half, physicsOnly: true, ignoreEntities: [best.id, ctx.self.id] })
   if (wall) dist = Math.max(0, wall.distance - half - 0.05)
@@ -198,8 +199,8 @@ function kickAny(ctx, s, f, p) {
     return true
   }
   const fp = best.feetPosition
-  if (best.ragdoll) ctx.emit('impulse', { target: best.id, impulse: { x: f.x * kg * dist * 2.2, y: kg * 0.6, z: f.z * kg * dist * 2.2 }, position: hitAt }) // a corpse tumbles: its own limbs carry the blow
-  else if (best.physics?.body === 'dynamic') best.velocity = { x: f.x * dist * 3, y: 1.2, z: f.z * dist * 3 }
+  if (best.ragdoll) ctx.emit('impulse', { target: best.id, impulse: { x: f.x * kg * dist * 1.6, y: kg * 0.3, z: f.z * kg * dist * 1.6 }, position: hitAt }) // a corpse tumbles: its own limbs carry the blow
+  else if (best.physics?.body === 'dynamic') best.velocity = { x: f.x * dist * 2.5, y: Math.min(1, dist), z: f.z * dist * 2.5 }
   else animate(ctx, best, { 'feetPosition.x': fp.x + f.x * dist, 'feetPosition.z': fp.z + f.z * dist }, { duration: 0.25 + dist * 0.12, easing: 'easeOutQuad' })
   ctx.emit('playSound', { clip: SND(bdead ? 'solid-kick-into-body-thump' : 'kick-object-thud'), position: hitAt, volume: 0.9, maxDistance: 18 })
   ctx.emit('fx', { position: { x: fp.x, y: fp.y + 0.05, z: fp.z }, script: `fx\npop dust burst=8..12 life=.4..0.8 v=sdir()*(.6..1.6)+up(.4) size=.12..0.24 acc=buoy(.3)+drag(2.2) col=<.6,.54,.4> a=0>.35:.35>.7:.15>0 sz=$size*(.6>1.7) r=sprite(smoke-puff,alpha)` })
