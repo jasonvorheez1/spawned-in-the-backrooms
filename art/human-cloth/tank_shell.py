@@ -33,14 +33,14 @@ _top = max(p.z for p in _P)
 neckR = max(abs(p.x) for p in _P if _top - 0.035 * s < p.z < _top - 0.005)  # the neck tube where the head file takes over
 NW = min((neckR + 0.012) / s, 0.62 * xstrap / s)  # half-width of the neck opening; outside it the straps run over the shoulder
 _sh = [p.z for p in _P if NW * s < abs(p.x) < xstrap and p.z < neckz + 0.08 * s]
-shz = (max(_sh) + 0.004) if _sh else _top + 0.01  # the shoulder's own top: straps lie on it, never ride up the neck tube
+shz = (max(_sh) + 0.012 * s) if _sh else _top + 0.01  # the shoulder's own top: straps lie on it, never ride up the neck tube
 capz = _top + 0.01  # straps run up and over until this body's own edge  # over the shoulder top; the neck line when this body splits there
 print('NECK', round(neckR, 3), 'cap', round(capz, 3))
 def necklim(x, y):  # a U scoop, deep in front, shallow at the back
     u = abs(x) / (NW * s)
     base = min(capz, neckz + 0.01 * s)
     if u >= 1:  # past the scoop the strap's inner edge rises in a smooth shoulder curve: a step here was the square notch
-        t = min(1.0, (u - 1) / 0.45); t = t * t * (3 - 2 * t)
+        t = min(1.0, (u - 1) / 0.18); t = t * t * (3 - 2 * t)
         return base + (min(capz, shz) - base) * t
     front = max(0.0, min(1.0, (sy - y) / (0.06 * s) + 0.5))
     depth = (0.025 + 0.05 * front) * s
