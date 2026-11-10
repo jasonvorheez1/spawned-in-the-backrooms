@@ -7,6 +7,7 @@ import { rowOf, patOk } from './clothes.js'
 import HAIR from './data/hair.yml'
 import WARDROBE from './data/wardrobe.yml'
 import SPLIT from './data/wardrobe-split.yml'
+import HAIR_SLOTS from './data/hair-slots.yml'
 // hair: its own GLB skinned whole to the Head bone (scripts/lib/data/hair.yml), tinted by the look's hairc; a mask hides it
 export const HAIR_ID = 'critter-hair'
 const HAIR_HATCUT = { 14: 0, 15: 1, 16: 2 }
@@ -30,15 +31,16 @@ export const hairOf = (l) => {
 const rootOf = (c) => { const m = String(c).match(/^#?([0-9a-f]{6})$/i); if (!m) return c; const n = parseInt(m[1], 16); return '#' + [16, 8, 0].map((b) => Math.round(((n >> b) & 255) * 0.8).toString(16).padStart(2, '0')).join('') }
 // the drawn look (scripts/mat-anime.js; Shelly Nov 9: "anime styled characters"): a soft-lit face that never goes muddy or black, cel hair with a shine band, cel cloth
 export const anime = (kind, color, extra) => ({ kind: 'scripted', script: 'scripts/mat-anime.js', color, params: { kind }, ...(extra || {}) })
-const hairMats = (c) => ({
+const hairMatsAll = (c) => ({
   hair: anime('hair', c),
   scalp: { color: rootOf(c), roughness: 0.9, metalness: 0 }, // the scalp and cap read as hair in shadow at the roots, never a flat bright shell through the strands (Shelly: "this is ugly fix hairs")
   scalp_cap: { color: rootOf(c), roughness: 0.9, metalness: 0 },
   hairtie: { color: '#e85d75', roughness: 0.45, metalness: 0.05 }
 })
+const hairMats = (c, id) => { const all = hairMatsAll(c), have = id && HAIR_SLOTS?.[id]; return have ? Object.fromEntries(have.filter((k) => all[k]).map((k) => [k, all[k]])) : all } // a file's own slots only
 const hairModel = (l) => {
   const want = hairOf(l)
-  return want ? { id: want, materials: hairMats(l?.hairc || '#5a3a26') } : null
+  return want ? { id: want, materials: hairMats(l?.hairc || '#5a3a26', want) } : null
 }
 export const hairChild = (l, local) => {
   const want = hairOf(l)
@@ -49,8 +51,8 @@ export function seatHumanHair(ctx, o, l) {
   if (l && (l.hair == null || l.hair === '')) { const ks = Object.keys(HAIR.humanPick ?? {}).filter((k) => k[0] === (l.sex === 'f' ? 'f' : 'm')); let h = 7; for (const c of String(o.id)) h = (h * 31 + c.charCodeAt(0)) >>> 0; const cs = ['#2a1d16', '#4a3122', '#6b4a2e', '#1a1a1a', '#8a6a3c', '#b08a52']; l = { ...l, hair: ks[h % ks.length], hairc: l.hairc || cs[(h >>> 4) % cs.length] } }
   const want = humanHairOf(l), id = o.id + '/' + HAIR_ID, h = ctx.getObject(id)
   if (!want) { if (h) ctx.destroy(id); return }
-  const c = l.hairc || '#5a3a26', m = { id: want, materials: hairMats(c) }
-  if (h) { if ((h.model?.id ?? h.model) !== want || h.model?.materials?.hair?.color !== c || h.model?.materials?.scalp_cap?.color !== m.materials.scalp_cap.color) h.model = m; return }
+  const c = l.hairc || '#5a3a26', m = { id: want, materials: hairMats(c, want) }
+  if (h) { if ((h.model?.id ?? h.model) !== want || h.model?.materials?.hair?.color !== c || JSON.stringify(Object.keys(h.model?.materials ?? {})) !== JSON.stringify(Object.keys(m.materials))) h.model = m; return }
   ctx.spawn(HAIR_ID, { parent: o.id, id: HAIR_ID, attachment: { skin: true }, model: m, ...(o.audience === 'local' ? { audience: 'local' } : {}) })
 }
 export function seatHair(ctx, o, l) {
