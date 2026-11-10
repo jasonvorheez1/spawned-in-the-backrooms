@@ -29,12 +29,12 @@ if U.data.shape_keys:
     for kb in U.data.shape_keys.key_blocks:
         for i, d in enumerate(kb.data): d.co += delta[i]
 import bmesh
-# RELAX off: the seat is loose triangles, not one sheet, so relaxing tore it open (Nov 10 render). Kept for a welded remake. Was: relax it in place, edges held, and carry the same move onto every shape key
+# WELD/RELAX off by default: welding left 819 open edges and relaxing tore the seat open (Nov 10 renders). The live seat is the plain lift.
 import os
-WELD = float(os.environ.get('WELD', '0.0006')); RELAX = int(os.environ.get('RELAX', '8'))
+WELD = float(os.environ.get('WELD', '0')); RELAX = int(os.environ.get('RELAX', '0'))
 _b = bmesh.new(); _b.from_mesh(U.data)
 _nb0 = sum(1 for x in _b.edges if x.is_boundary)
-bmesh.ops.remove_doubles(_b, verts=_b.verts[:], dist=WELD)          # one sheet: the loose triangles share their corners again (shape keys and weights ride along in bmesh)
+if WELD > 0: bmesh.ops.remove_doubles(_b, verts=_b.verts[:], dist=WELD)          # one sheet: the loose triangles share their corners again (shape keys and weights ride along in bmesh)
 _sl = list(_b.verts.layers.shape.values())
 _free = [v for v in _b.verts if not v.is_boundary]
 _c0 = {v: v.co.copy() for v in _b.verts}
