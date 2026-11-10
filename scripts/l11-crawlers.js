@@ -7,6 +7,8 @@ import { dmgAfterArmor, sneakMul } from "./lib/stats.js";
 import { crouchMul } from "./lib/sneak.js";
 import BOT from "./lib/data/l11-sentry.yml";
 import { knocked, deathRag } from "./lib/knock.js";
+import { rollLoot, rollCash } from "./lib/loot.js";
+import { rollVariant } from "./lib/weapons.js";
 const SENTRY = "/cdn/value.5a18bb1b3ab741080cf1b881ad99be1a9ace445a5e3fa9a4c7c2c6cb9dafb71d.glb";
 const SAY = (t) => `/cdn/${BOT.throat}-saying-${encodeURIComponent(t)}.mp3`;
 const BOLT = `fx
@@ -43,6 +45,27 @@ function speak(ctx, f, m, ev, now, gap = 6000) {
   const pool = BOT.lines[ev]; m.talkUntil = now + gap;
   ctx.emit("playSound", { clip: SAY(pool[Math.floor(ctx.random() * pool.length)]), position: f.feetPosition, bus: "Voice", volume: 1, refDistance: 4, maxDistance: 30, follow: f.id, mode: "restart" });
 }
+
+// what a body carries, searched like any remains (Shelly: improve their loot). Savi's picks: robots are the payday, cells and parts.
+function bodyLoot(ctx, f) {
+  const k = f.state.kind, r = () => ctx.random(), it = [];
+  if (BOTS.has(k)) {
+    it.push("cells", "scrap_metal", "wire");
+    if (r() < 0.6) it.push("cells");
+    if (r() < 0.55) it.push("circuit");
+    if (r() < 0.4) it.push(r() < 0.5 ? "copper_coil" : "fuse");
+    if (r() < 0.25) it.push("motor");
+    if (r() < 0.5) it.push(rollCash(ctx));
+    if (r() < (k === "smgbot" ? 0.18 : 0.12)) it.push("weapon:" + rollVariant(ctx, k === "smgbot" ? "laser_rifle" : "laser_pistol"));
+  } else if (k === "clump") {
+    it.push(...rollLoot(ctx, 1.6)); // what it swallowed: a dead man's pockets
+    if (r() < 0.35) it.push(rollCash(ctx));
+  } else return;
+  if (!it.length) return;
+  f.tags = [...new Set([...(f.tags ?? []), "container", "remains"])];
+  f.state.items = it.join(",");
+  f.state.name = (BOTS.has(k) ? "Wrecked " : "Dead ") + (f.state.name ?? k);
+}
 export function update(ctx, dt) {
   const st = ctx.self.state, now = ctx.now(), mem = (ctx.self.session.m ??= {}), g = ctx.place.gravity?.y ?? -9.8;
   st.foes ??= {}; st.deadAt ??= {};
@@ -59,11 +82,11 @@ export function update(ctx, dt) {
     const K = D.kinds[f.state.kind], m = (mem[id] ??= {}), pos = f.feetPosition;
     if (f.state.dead || f.state.hp <= 0) { // player.js marks the kill; we lay it down and clear it
       if (!m.died && f.state.diedAt) m.died = f.state.diedAt; // a fresh machine remembers the corpse, no second death cry
-      if (!m.died) { m.died = now; f.state.diedAt = now; st.deadAt = { ...st.deadAt, [i]: now }; f.velocity = { x: 0, y: 0, z: 0 }; f.audio = null;
+      if (!m.died) { m.died = now; f.state.diedAt = now; bodyLoot(ctx, f); st.deadAt = { ...st.deadAt, [i]: now }; f.velocity = { x: 0, y: 0, z: 0 }; f.audio = null;
         if (f.state.kind === "hound") f.anim.main = { clip: "death", loop: false, clampWhenFinished: true, weight: 1 };
         else if (BOTS.has(f.state.kind)) { m.talkUntil = 0; speak(ctx, f, m, "die", now); ctx.emit("fx", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, script: BOLT }); f.anim.main = null; f.anim.aim = null; f.anim.fire = null; f.state.kg = 160; deathRag(f); }
         else { ctx.emit("playSound", { clip: SND("wet-bone-crunch-and-limp-limbs-collapsing"), position: pos, volume: 0.9 }); f.anim.main = null; f.state.kg = 70; deathRag(f); } }
-      if (now - m.died > (f.visible === false ? 300 : BOTS.has(f.state.kind) ? 15000 : 20000)) delete ctx.place.objects[id];
+      if (now - m.died > (f.visible === false ? 300 : 3600000)) delete ctx.place.objects[id];
       continue;
     }
     if (knocked(ctx, f, now, dt)) { m.limbs = m.sclip = m.clip = null; continue; }
