@@ -16,44 +16,24 @@ for mesh in J['meshes']:
     for pr in mesh['primitives']:
         if mats[pr.get('material', -1)] not in ('Brow',) or 'Brow' not in mats: continue
         P = view(pr['attributes']['POSITION'])
-        ia = J['accessors'][pr['indices']]; iv = J['bufferViews'][ia['bufferView']]
-        I = np.frombuffer(B, {5125: '<u4', 5123: '<u2'}[ia['componentType']], ia['count'], iv.get('byteOffset', 0)+ia.get('byteOffset', 0)).reshape(-1, 3)
-        from collections import Counter, defaultdict
-        ec = Counter(tuple(sorted(e)) for t in I for e in ((t[0], t[1]), (t[1], t[2]), (t[2], t[0])))
-        nb = defaultdict(set)
-        for (a_, b_), n in ec.items():
-            if n == 1: nb[a_].add(b_); nb[b_].add(a_)
-        # welded copies (uv seams) share a position: group by position so the loop walks across them
+        # the strip's UVs lay it out as three clean rows (v ~0.978 bottom, ~0.987 middle, ~0.995 top) along u:
+        # the mesh's own zigzag is a placement mistake, so each vertex goes back to its row on a smooth arch
+        ua = J['accessors'][pr['attributes']['TEXCOORD_0']]; uvv = J['bufferViews'][ua['bufferView']]
+        UV = np.ndarray((ua['count'], 2), '<f4', B, uvv.get('byteOffset', 0)+ua.get('byteOffset', 0), (uvv.get('byteStride', 8), 4))
         for side in (-1, 1):
             k = np.where(np.sign(P[:, 0]) == side)[0]
             if len(k) < 4: continue
-            ks = set(k.tolist()); bnd = [v for v in k if v in nb]
-            x = np.abs(P[:, 0])
-            inner = min(bnd, key=lambda v: x[v]); outer = max(bnd, key=lambda v: x[v])
-            # two walks from inner to outer along the boundary: the upper chain and the lower chain
-            chains = []
-            for first in list(nb[inner])[:2]:
-                path = [inner, first]; seen = {inner, first}
-                while path[-1] != outer:
-                    nxt = [n for n in nb[path[-1]] if n not in seen and n in ks]
-                    if not nxt: break
-                    path.append(nxt[0]); seen.add(nxt[0])
-                chains.append(path)
-            if len(chains) < 2: print('side', side, 'no loop'); continue
-            top, bot = sorted(chains, key=lambda c: -P[c, 1].mean())
-            def env(c):
-                c = sorted(c, key=lambda v: x[v]); return x[c], P[c, 1]
-            tx, ty = env(top); bx, by = env(bot)
-            x0, x1 = x[inner], x[outer]
-            yt = np.interp(x[k], tx, ty); yb = np.interp(x[k], bx, by)
-            rel = np.clip((P[k, 1]-yb)/np.maximum(yt-yb, 1e-6), 0, 1)
-            rel[np.isin(k, top)] = 1; rel[np.isin(k, bot)] = 0
-            t = np.clip((x[k]-x0)/(x1-x0), 0, 1)
-            mid = np.polyval(np.polyfit(x[k], (P[k, 1]+0)*1, 1), x[k]) * 0 + P[k, 1].mean()
-            arch = mid + 0.0040*np.sin(np.pi*np.clip(t*0.9+0.08, 0, 1)) - 0.0012*t
-            hw = 0.0024*(1-t)**0.8 + 0.0006
+            x = np.abs(P[k, 0]); x0, x1 = x.min(), x.max()
+            v = UV[k, 1]; lo, hi = np.percentile(v, 3), np.percentile(v, 97)
+            rel = np.clip((v-lo)/(hi-lo), 0, 1)
+            t = (x-x0)/(x1-x0)
+            zfit = np.polyval(np.polyfit(x, P[k, 2], 2), x)
+            base = np.median(P[k, 1])
+            arch = base + 0.0035*np.sin(np.pi*np.clip(0.12+0.88*t, 0, 1)**0.85) - 0.0010*t
+            hw = 0.0022*(1-t)**0.9 + 0.0005
+            P[k, 0] = side*(x0 + (x1-x0)*t)
             P[k, 1] = arch - hw + 2*hw*rel
-            P[k, 2] = P[k, 2] + 0.0004
+            P[k, 2] = zfit + 0.0005
         a = J['accessors'][pr['attributes']['POSITION']]; a['min'] = P.min(0).tolist(); a['max'] = P.max(0).tolist()
         done += 1
 print('brow primitives', done)
