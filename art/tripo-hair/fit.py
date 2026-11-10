@@ -70,7 +70,7 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     lo, hi = (0.12, 0.88) if key.startswith("t_s_") else (0.03, 0.97)  # the soft wigs: ties and flyaways off the crown don't set the size
     cw = q([v.x for v in crown], hi) - q([v.x for v in crown], lo)
     cys = sorted(v.y for v in crown); ccx = (q([v.x for v in crown], 0.97) + q([v.x for v in crown], 0.03)) / 2; ccy = (cys[0] + cys[-1]) / 2
-    W = {"t_s_curly5": 0.98, "t_s_pixie6": 0.92, "t_s_pixie4": 0.9, "t_s_curly4": 0.95, "t_s_curtain4": 1.12, "t_s_wolfcut4": 1.14, "t_s_pixie": 1.12, "t_s_pixie2": 1.14, "t_s_curly2": 1.2, "t_s_wolfcut2": 1.18, "t_s_curtain3": 1.12, "t_s_curly3": 1.18, "t_s_wolfcut3": 1.14, "t_s_hime": 1.12, "t_s_messybun": 1.15, "t_s_sidebraid": 1.12, "t_s_twintails": 1.15, "t_s_ponytail": 1.22, "t_s_wolfcut": 1.3, "t_s_wavy": 1.12, "t_twintails": 1.05, "t_long": 1.1, "t_silver": 1.1}.get(key, 1.18)
+    W = {"t_s_curly5": 0.8, "t_s_pixie6": 0.74, "t_s_pixie4": 0.9, "t_s_curly4": 0.95, "t_s_curtain4": 1.12, "t_s_wolfcut4": 1.14, "t_s_pixie": 1.12, "t_s_pixie2": 1.14, "t_s_curly2": 1.2, "t_s_wolfcut2": 1.18, "t_s_curtain3": 1.12, "t_s_curly3": 1.18, "t_s_wolfcut3": 1.14, "t_s_hime": 1.12, "t_s_messybun": 1.15, "t_s_sidebraid": 1.12, "t_s_twintails": 1.15, "t_s_ponytail": 1.22, "t_s_wolfcut": 1.3, "t_s_wavy": 1.12, "t_twintails": 1.05, "t_long": 1.1, "t_silver": 1.1}.get(key, 1.18)
     s = (2 * rx * W) / max(cw, 1e-4)
     # the crown band is the top 18%, so its width runs a little under the skull's: the push-out below seats whatever lands inside
     M = Matrix.Translation(Vector((0, cy + 0.004, top + 0.014))) @ Matrix.Scale(s, 4) @ Matrix.Translation(Vector((-ccx, -ccy, -t)))
