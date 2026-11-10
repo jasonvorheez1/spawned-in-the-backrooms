@@ -109,6 +109,7 @@ export function update(ctx, dt) {
     if (s.lastHp != null && s.hp < s.lastHp) { // hurt: it squeals, sparks, juke sideways, and turns on you
       if (ctx.random() < 0.5) say(ctx, d, "hit"); ctx.emit("fx", { position: f, script: SPARKS });
       if (s.mode !== "combat") { s.mode = "combat"; m.saw = now; const p = players.reduce((a, q) => (!a || Math.hypot(q.feetPosition.x - f.x, q.feetPosition.z - f.z) < Math.hypot(a.feetPosition.x - f.x, a.feetPosition.z - f.z) ? q : a), null); if (p) { s.target = p.id; call(ctx, d, p, p.feetPosition); } }
+      { const q = players.reduce((a, b) => (!a || Math.hypot(b.feetPosition.x - f.x, b.feetPosition.z - f.z) < Math.hypot(a.feetPosition.x - f.x, a.feetPosition.z - f.z) ? b : a), null); if (q) { s.last = { x: q.feetPosition.x, z: q.feetPosition.z }; m.saw = now } } // every hit tells it where the shooter is, in sight or not
       if (now > (m.dodgeCd ?? 0) && ctx.random() < T.dodge.chance) { m.dodgeCd = now + T.dodge.cd * 1000; const side = ctx.random() < 0.5 ? -1 : 1, yaw = (d.rotation?.yaw ?? 0) * Math.PI / 180; m.dodge = { x: Math.cos(yaw) * side, z: -Math.sin(yaw) * side, until: now + 280 }; }
       if (s.hp < s.maxHp * 0.5 && !m.hurtFx) { m.hurtFx = true; d.fx = { script: SMOKE.replace("rate=40", "rate=8").replace("rate=30", "rate=4") }; } // smoking when half gone
     }
@@ -130,7 +131,7 @@ export function update(ctx, dt) {
       const tp = tgt.feetPosition, base = Math.atan2(f.z - tp.z, f.x - tp.x), off = ((m.slot % 3) - 1) * 0.7 + Math.sin(now / 1900 + m.bob) * 0.35;
       const a = base + off * dt * 2, r = s.hp < s.maxHp * 0.35 && s.type !== "watcher" ? t.keep * 1.4 : t.keep; // a hurt enforcer or warden backs off
       goal = { x: tp.x + Math.cos(a + off * 0.15) * r, z: tp.z + Math.sin(a + off * 0.15) * r };
-    } else if ((s.mode === "search" || (s.mode === "alert" && !tgt)) && s.last) goal = { x: s.last.x + Math.cos(now / 1500 + m.bob) * 2, z: s.last.z + Math.sin(now / 1500 + m.bob) * 2 }; // circles where you were
+    } else if ((s.mode === "search" || ((s.mode === "alert" || s.mode === "combat") && !tgt)) && s.last) goal = { x: s.last.x + Math.cos(now / 1500 + m.bob) * 2, z: s.last.z + Math.sin(now / 1500 + m.bob) * 2 }; // circles where you were
     else goal = { x: s.home.x + Math.cos(now / 4000 + m.bob) * 1.5, z: s.home.z + Math.sin(now / 4000 + m.bob) * 1.5 };
     let nx = f.x, nz = f.z;
     if (m.dodge && now < m.dodge.until) { const dir = { x: m.dodge.x, y: 0, z: m.dodge.z }, st = free(ctx, d, f, dir, T.dodge.dist * dt / 0.28, t.size); nx += dir.x * st; nz += dir.z * st; }
