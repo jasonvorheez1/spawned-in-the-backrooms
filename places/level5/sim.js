@@ -265,7 +265,7 @@ export function lay(ctx) {
     const pos = ax === "z" ? (isNorth ? { x: o.a0, y: 0, z: at } : { x: o.a1, y: 0, z: at }) : { x: at, y: 0, z: o.a0 };
     const yaw0 = ax === "z" ? (isNorth ? 0 : 180) : 90;
 
-    ctx.spawn(doorId, {
+    if (OLD_LEAVES) ctx.spawn(doorId, {
       tags: ["door"],
       feetPosition: pos,
       rotation: { yaw: yaw0 },
@@ -339,6 +339,7 @@ function retuneL5(ctx) {
 }
 // a guest-room leaf: origin its bottom hinge corner, running +X (scripts/door-geo.js PIVOT CONVENTION); the opening's own width, the old 2.36 m height
 const hotelLeaf = (o, num) => ({ kind: "scripted", script: "scripts/door-geo.js", params: { style: "hotel", part: "leaf", w: Math.max(0.8, Math.min(1.2, Math.abs(o.a1 - o.a0) || 1.05)), h: 2.3, hingeSide: "left", swing: 1, seed: Number(num) || 0 } });
+const OLD_LEAVES = false; // the guest-room leaves are scripts/l5-hall-lay.js's (frame, plaque, swing); these stood inside the same doorways (shelly Nov 10: 'a door on top of the other door')
 export function tick(ctx) {
   if (!ctx.session.l5Tuned) { retuneL5(ctx); ctx.session.l5Tuned = true; }
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
@@ -347,6 +348,11 @@ export function tick(ctx) {
   if (s.builtV !== V) {
     s.builtV = V;
     lay(ctx);
+  }
+  if (s.doorDedupV !== 1) { // one leaf per doorway: the old one hands its lock (picked or not) to the hall leaf, then goes
+    let all = true
+    for (const roomId of Object.keys(PLACARDS)) { const old = ctx.getObject(`l5-door-${roomId}`), leaf = ctx.getObject(`l5-hall-leaf-${roomId}`); if (!leaf) { all = false; continue } const t = leaf.tags ?? []; if (!t.includes("door")) leaf.tags = [...t, "door"]; if (old) { leaf.state.lock = old.state?.lock ?? ""; ctx.destroy(old.id) } }
+    if (all) s.doorDedupV = 1
   }
   if (s.doorGeoV !== 1) { // the door pass: every guest-room leaf takes scripts/door-geo.js (same ids, hinge at its feet as before)
     s.doorGeoV = 1;

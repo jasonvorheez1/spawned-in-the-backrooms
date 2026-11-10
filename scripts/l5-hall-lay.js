@@ -3,6 +3,7 @@
 import { PIECES, LEAVES } from "./lib/l5-hall-layout.js";
 import { ZONES } from "./lib/level5.js";
 const DOOR = "scripts/door-geo.js";
+export const LOCKS = { "room-n4": "lockpick:75", "room-s3": "lockpick:50", "suite-sw": "lockpick:50" }; // the locked guest rooms (were on the old leaves in places/level5/sim.js)
 const V = 6, GEO = "scripts/l5-hall-geo.js", FIX = "scripts/l5-hall-fix.js";
 const FIXK = new Set(["chandelier", "pendant", "sconce", "flush", "lamp", "bulb", "stairs", "leaf", "placard"]);
 const NOCOL = new Set(["rug", "painting", "letter", "typewriter", "tomes", "birdcage", "window", "chandelier", "pendant", "sconce", "flush", "lamp", "bulb", "placard"]);
@@ -27,9 +28,9 @@ function lay(ctx) {
   for (const l of LEAVES) { const o = l.leafFor, z = ZONES.find((q) => q.id === l.room), dir = Math.sign((z.z0 + z.z1) / 2 - o.at), w = o.a1 - o.a0;
     // scripts/door-geo.js: the leaf's feet ARE its hinge (bottom corner at a0), it runs +X; the frame stands at the opening's centre, same plane
     const z0 = o.at + dir * 0.09, dp = { style: "hotel", w: w - 0.04, h: 2.2, hingeSide: "left", swing: dir > 0 ? 1 : -1, seed: Number(l.no) || 0 };
-    ctx.spawn("l5-hall-leaf-" + l.room, { tags: ["l5-hall", "usable", "l5-hall-door"], feetPosition: { x: o.a0 + 0.02, y: 0, z: z0 }, rotation: { yaw: 0 },
+    ctx.spawn("l5-hall-leaf-" + l.room, { tags: ["l5-hall", "door", "usable", "l5-hall-door"], feetPosition: { x: o.a0 + 0.02, y: 0, z: z0 }, rotation: { yaw: 0 },
       physics: "kinematic", primitive: { kind: "scripted", script: DOOR, params: { ...dp, part: "leaf" } }, material: { pbr: true }, behavior: "scripts/l5-hall-door.js",
-      state: { name: "Room " + l.no, verb: "Open", info: "Guest room door", open: false, openYaw: dir > 0 ? -90 : 90, baseYaw: 0, mat: "wood", hp: 60, maxHp: 60, c: { x: (o.a0 + o.a1) / 2, y: 1.1, z: z0 } } });
+      state: { lock: LOCKS[l.room] ?? "", name: "Room " + l.no, verb: "Open", info: "Guest room door", open: false, openYaw: dir > 0 ? -90 : 90, baseYaw: 0, mat: "wood", hp: 60, maxHp: 60, c: { x: (o.a0 + o.a1) / 2, y: 1.1, z: z0 } } });
     ctx.spawn("l5-hall-frame-" + l.room, { tags: ["l5-hall"], feetPosition: { x: (o.a0 + o.a1) / 2, y: 0, z: z0 }, rotation: { yaw: 0 }, castShadow: false,
       physics: { body: "static", collider: "auto" }, primitive: { kind: "scripted", script: DOOR, params: { ...dp, part: "frame" } }, material: { pbr: true } });
     ctx.spawn("l5-hall-plaque-" + l.room, { tags: ["l5-hall"], feetPosition: { x: o.a1 + 0.32, y: 1.5, z: o.at - dir * 0.09 }, rotation: { yaw: dir > 0 ? 0 : 180 },

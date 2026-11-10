@@ -12,7 +12,7 @@ function sound(ctx, open) { heard(ctx, { maxDistance: 18, refDistance: 3, clip: 
 export function update(ctx) {
   const s = ctx.self.state, me = s.c ?? ctx.self.feetPosition, base = s.baseYaw ?? 0;
   let near = false; for (const p of ctx.place.players) { const f = p.feetPosition; if (f && Math.hypot(f.x - me.x, f.z - me.z) < NEAR) { near = true; break; } }
-  if (near) { ctx.self.session.seen = ctx.now(); if (!s.open) { s.open = true; s.held = 0; sound(ctx, true); } }
+  if (near && !s.lock) { ctx.self.session.seen = ctx.now(); if (!s.open) { s.open = true; s.held = 0; sound(ctx, true); } }
   else if (s.open && !s.held && ctx.now() - (ctx.self.session.seen ?? 0) > SHUT_AFTER) { s.open = false; sound(ctx, false); }
   else if (s.open && s.held && ctx.now() - s.held > SHUT_AFTER * 4) s.held = 0;
   if (!swingTo(ctx, base + (s.open ? s.openYaw ?? 90 : 0), !!s.open, "wood", true)) ctx.sleep(0.25);

@@ -232,6 +232,7 @@ function useDoor(ctx, it) {
       it.state.lock = ''; note(ctx, `[${SKN[sk]} ${lv}] You pick the lock`); snd(ctx, 'lock-picking-click', 0.5)
     }
   }
+  if ((it.tags ?? []).includes('l5-hall-door')) { ctx.emit('press', {}, { to: it.id }); return } // Level 5 hotel leaves swing and creak in their own script
   it.state.open = !it.state.open
   loud(it.state.open ? 'heavy-metal-door-creak-open' : 'heavy-metal-door-slam-shut', 0.7)
 }
