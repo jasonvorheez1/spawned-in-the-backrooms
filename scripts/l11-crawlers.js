@@ -29,10 +29,11 @@ const HOUND = "/cdn/value.180d1072a97d34551e1394960b70202777c9d0b51fb0ca67779a59
 const SND = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
 const BOTS = new Set(["sentry", "smgbot"]);
+const SMGBOT = "/cdn/value.43aa4b081f1cd7b36230499f345e1768336249a85f6e12e9e3707a38c4b5e3b7.glb"; // the Suppressor: gunmetal and red repaint of the rigged custodian
 function spec(kind, x, z, i) {
   const K = D.kinds[kind], base = { tags: ["l8-hostile", "l11foe", kind === "hound" ? "l11hound" : BOTS.has(kind) ? "l11sentry" : "l11clump"], feetPosition: { x, y: D.floor + 0.05, z }, physics: { body: "character" },
     state: { kind, name: K.name, hp: K.hp, maxHp: K.hp, home: { x, z }, slot: i } };
-  if (BOTS.has(kind)) return { ...base, tags: [...base.tags, "zdrone"], model: { id: SENTRY, forward: "+x" }, layout: { box: { min: { x: -0.5, y: 0, z: -0.5 }, max: { x: 0.5, y: 1.9, z: 0.5 } } }, audio: { clip: "/cdn/moodboard-scifi-neon/sfx-old-vacuum-tube-electrical-hum-and-relay-ticking-loop.mp3", loop: true, gain: 0.25, spatial: true, maxDistance: 12 } };
+  if (BOTS.has(kind)) return { ...base, tags: [...base.tags, "zdrone"], model: { id: kind === "smgbot" ? SMGBOT : SENTRY, forward: "+x" }, layout: { box: { min: { x: -0.5, y: 0, z: -0.5 }, max: { x: 0.5, y: 1.9, z: 0.5 } } }, audio: { clip: "/cdn/moodboard-scifi-neon/sfx-old-vacuum-tube-electrical-hum-and-relay-ticking-loop.mp3", loop: true, gain: 0.25, spatial: true, maxDistance: 12 } };
   return kind === "hound"
     ? { ...base, model: { id: HOUND }, scale: 1, audio: { clip: SND("low-wet-animal-growl-breathing-loop"), loop: true, gain: 0.25, spatial: true, maxDistance: 14 } }
     : { ...base, model: { id: CLUMP, forward: "+x" }, layout: { box: { min: { x: -0.8, y: 0, z: -0.8 }, max: { x: 0.8, y: 1.2, z: 0.8 } } }, scale: 1, audio: { clip: SND("many-fingers-knuckles-cracking-and-skin-dragging-on-concrete-loop"), loop: true, gain: 0.35, spatial: true, maxDistance: 16 } };
