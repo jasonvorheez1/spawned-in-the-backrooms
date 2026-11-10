@@ -7,7 +7,7 @@
 import { heard } from './lib/hear.js'
 import B from './lib/data/breakables.yml'
 import { raycast, overlapPoint, getInputRay } from 'builtin/physics'
-import { builtSpec, pieceOf, furnModel, tabsFor } from './lib/build-piece.js'
+import { builtSpec, pieceOf, furnModel, tabsFor, doorPrim } from './lib/build-piece.js'
 
 const BASE = B.tabs, REACH = B.buildReach ?? 7, CAP = B.buildCap ?? 250
 const isTool = (k) => !!B.tools?.[k]
@@ -213,7 +213,7 @@ export function update(ctx) {
   const feet = pc.door ? (() => { const o = turn(-0.5, 0, at.rot); return { x: at.x + o.x, y: at.y, z: at.z + o.z } })() : { x: at.x, y: at.y, z: at.z }
   if (m.gk !== key) {
     dropGhost(ctx)
-    const look = pc.furn ? furnModel(pc) : { primitive: { kind: 'scripted', script: 'scripts/build-geo.js', params: { kind: s.building, dmg: 0 } } }
+    const look = pc.furn ? furnModel(pc) : { primitive: pc.door ? doorPrim(s.building) : { kind: 'scripted', script: 'scripts/build-geo.js', params: { kind: s.building, dmg: 0 } } }
     m.ghost = ctx.spawn({ audience: 'local', scope: 'session', tags: ['ghost'], castShadow: false, feetPosition: feet, rotation: { yaw: at.rot }, ...look,
       material: { color: good ? '#7dffb0' : '#ff6a4a', emissive: good ? '#2f9a5a' : '#9a2a1a', transparent: true, opacity: 0.42, depthWrite: false } })
     m.gk = key

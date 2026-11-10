@@ -271,7 +271,7 @@ export function lay(ctx) {
       rotation: { yaw: yaw0 },
       physics: { body: "kinematic", collider: "box" },
       visibleRange: { max: 45 }, castShadow: false,
-      primitive: { kind: "scripted", script: "scripts/level5-props-geo.js", params: { kind: "hotel_door", num } },
+      primitive: hotelLeaf(o, num), material: { pbr: true },
       behavior: "scripts/l2-door.js",
       state: {
         name: `Room ${num}`,
@@ -337,6 +337,8 @@ function retuneL5(ctx) {
   for (const sid of ["suite-ne", "suite-nw", "suite-se", "suite-sw", "room-n5", "room-s4"]) { L5_TUNE[`l5-people-trunk-${sid}`] = 40; L5_TUNE[`l5-people-rack-${sid}`] = 40; }
   for (const [id, max] of Object.entries(L5_TUNE)) { const o = ctx.getObject(id); if (!o || o.visibleRange) continue; o.visibleRange = { min: 0, max }; if (max <= 40) o.castShadow = false; }
 }
+// a guest-room leaf: origin its bottom hinge corner, running +X (scripts/door-geo.js PIVOT CONVENTION); the opening's own width, the old 2.36 m height
+const hotelLeaf = (o, num) => ({ kind: "scripted", script: "scripts/door-geo.js", params: { style: "hotel", part: "leaf", w: Math.max(0.8, Math.min(1.2, Math.abs(o.a1 - o.a0) || 1.05)), h: 2.3, hingeSide: "left", swing: 1, seed: Number(num) || 0 } });
 export function tick(ctx) {
   if (!ctx.session.l5Tuned) { retuneL5(ctx); ctx.session.l5Tuned = true; }
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
@@ -345,6 +347,10 @@ export function tick(ctx) {
   if (s.builtV !== V) {
     s.builtV = V;
     lay(ctx);
+  }
+  if (s.doorGeoV !== 1) { // the door pass: every guest-room leaf takes scripts/door-geo.js (same ids, hinge at its feet as before)
+    s.doorGeoV = 1;
+    for (const [roomId, num] of Object.entries(PLACARDS)) { const d = ctx.getObject(`l5-door-${roomId}`), o = OPENINGS.find((p) => p.room === roomId); if (d && o) { d.primitive = hotelLeaf(o, num); d.material = { pbr: true }; } }
   }
   if (s.exitsV !== 1) {
     s.exitsV = 1;

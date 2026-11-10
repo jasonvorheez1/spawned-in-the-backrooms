@@ -51,6 +51,11 @@ _p0 = [(o, v.index, o.matrix_world @ v.co) for o in _body0 for v in o.data.verti
 _kd0 = KDTree(len(_p0))
 for i, (_, _, q) in enumerate(_p0): _kd0.insert(q, i)
 _kd0.balance(); _seen = set()
+_B0o = next(o for o in _body0 if o.name == 'Body'); _B0o.data.calc_loop_triangles()
+_TRI = [tuple(t.vertices) for t in _B0o.data.loop_triangles]
+_B0 = [_B0o.matrix_world @ (_B0o.data.shape_keys.key_blocks[0].data[i].co if _B0o.data.shape_keys else v.co) for i, v in enumerate(_B0o.data.vertices)]
+_BVH0 = BVHTree.FromPolygons(_B0, _TRI)
+_W0 = {(o.name, j): q for o, j, q in _p0}
 for i, (_, _, q) in enumerate(_p0):
     if i in _seen: continue
     g = [j for _, j, _ in _kd0.find_range(q, 2e-4)]
@@ -98,8 +103,8 @@ NECK0, NECK1 = J['Neck'].z - .06, J['Neck'].z
 WR = abs(J['LeftHand'].x)
 def weight(p):
     w = 1 - ss(NECK0, NECK1, p.z)
-    if p.z > J['LeftArm'].z - .3: w *= 1 - ss(WR - .06, WR - .01, abs(p.x))
-    if p.z > J['LeftArm'].z - .2: w *= 1 - ss(abs(J['LeftArm'].x) - .02, abs(J['LeftArm'].x) + .06, abs(p.x))
+    w *= 1 - ss(J['LeftArm'].z - .4, J['LeftArm'].z - .25, p.z) * ss(WR - .06, WR - .01, abs(p.x))
+    w *= 1 - ss(J['LeftArm'].z - .14, J['LeftArm'].z - .04, p.z) * ss(abs(J['LeftArm'].x) + .01, abs(J['LeftArm'].x) + .08, abs(p.x))  # arms keep their own shape past the shoulder; z and x both eased, no hard line
     hz = J['Hips'].z
     w *= 1 - (1 - ss(.04, .08, abs(p.x))) * (1 - ss(.05, .11, abs(p.z - (hz - .1))))
     return w
@@ -136,6 +141,25 @@ for g in SEAM:
     avg = sum((o.matrix_world @ _co(o, i) for o, i in g), Vector()) / len(g)
     for o, i in g:
         d = o.matrix_world.inverted() @ avg - _co(o, i)
+        if o.data.shape_keys:
+            for kb in o.data.shape_keys.key_blocks: kb.data[i].co += d
+        else: o.data.vertices[i].co += d
+# Skin_ pieces are the Body's own surface doubled (shown behind cut clothes): at rest they lay ON it, so they go back on it,
+# or the two layers z-fight into patches. Snapped to the reshaped Body's nearest point; every morph key keeps its own offset.
+from mathutils.geometry import barycentric_transform as _bt
+_B = next(o for o in body if o.name == 'Body')
+_bv = [_B.matrix_world @ _co(_B, i) for i in range(len(_B.data.vertices))]
+for o in body:
+    if not o.name.startswith('Skin_'): continue
+    inv = o.matrix_world.inverted()
+    for i in range(len(o.data.vertices)):
+        w = o.matrix_world @ _co(o, i)
+        hit = _BVH0.find_nearest(_W0[(o.name, i)])
+        if not hit[0] or hit[3] > 0.03: continue
+        t = _TRI[hit[2]]
+        nw = _bt(_W0[(o.name, i)], _B0[t[0]], _B0[t[1]], _B0[t[2]], _bv[t[0]], _bv[t[1]], _bv[t[2]])
+        d = inv.to_3x3() @ (nw - w)
+        if any(c != c for c in d) or d.length > 0.06: continue
         if o.data.shape_keys:
             for kb in o.data.shape_keys.key_blocks: kb.data[i].co += d
         else: o.data.vertices[i].co += d

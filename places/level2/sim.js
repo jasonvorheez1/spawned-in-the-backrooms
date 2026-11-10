@@ -102,6 +102,7 @@ export function tick(ctx) {
   if (STAIR && (s.rev ?? 0) >= 4 && !s.stairV) sideRoom(ctx, STAIR); // rooms that were laid before the stairwell existed get it now
   if (s.seeded && (s.rev ?? 0) >= 4 && s.propsV !== 2) reprop(ctx, s); // rooms dressed before the Tripo props: re-dress them once
   if ((s.rev ?? 0) >= 4 && (s.fixV ?? 0) < 3) { s.fixV = 3; fixtures(ctx); } // the modelled fixtures (art/level2/fixtures.py) take over the old box/sphere lamps, slicks and stair in place
+  if ((s.rev ?? 0) >= 4 && (s.doorV ?? 0) < 1) { s.doorV = 1; redoor(ctx); } // the door pass: door-geo leaves and frames
   if ((s.rev ?? 0) < 4) revamp(ctx, s); // the revamp lays itself over a few ticks: rooms, doors, the hall, vents
   if (s.sludgeV !== 1) { s.sludgeV = 1; laySludge2(ctx); }
   if (s.graffitiV !== 1) { s.graffitiV = 1; layGraffiti2(ctx); }
@@ -225,6 +226,26 @@ const yawOf = (dx, dz) => Math.atan2(-dx, -dz) * 180 / Math.PI; // the yaw that 
 const SLOTS = { boiler: [[-1.85, 1.2], [-1.85, -0.4]], locker: [[-1.85, -1.2], [-1.85, -0.5], [-1.85, 0.2]], pump: [[-1.85, 0], [1.5, -1.6], [1.5, 1.6]],
   office: [[-1.75, -1.5], [-1.75, 1.5], [0.2, 0]], cage: [[-1.7, 0], [1.4, -1.5], [1.4, 1.5]], break: [[-1.7, -1.2], [-1.75, 0.6]], electrical: [[-1.85, 0], [-1.9, -1.4]] };
 
+// the side-room door: scripts/door-geo.js leaf (origin = its bottom hinge corner at P(E, -0.55), runs +X along the wall) in a moulded frame at P(E, 0)
+const l2DoorPrim = (r, style) => ({ kind: "scripted", script: "scripts/door-geo.js", params: { style: "office", part: "leaf", w: 1.1, h: 2.15, hingeSide: "left", swing: 1, vision: style === "cage", seed: r.i } });
+function l2Frame(ctx, r, P, tx, tz) {
+  const E = S / 2;
+  ctx.spawn(`l2-door-frame-${r.i}`, { tags: ["l2door-frame"], feetPosition: P(E, 0), rotation: { yaw: Math.atan2(-tz, tx) * 180 / Math.PI }, physics: { body: "static", collider: "auto" },
+    visibleRange: { max: 45 }, castShadow: false, material: { pbr: true },
+    primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: "office", part: "frame", w: 1.1, h: 2.15, hingeSide: "left", seed: r.i } } });
+}
+// rooms laid before the door pass: the same leaf ids take the new mesh, and each gets its frame
+function redoor(ctx) {
+  for (const r of SIDE) {
+    if (r.type === "stair") continue;
+    const d = ctx.place.objects[`l2-door-${r.i}`]; if (!d) continue;
+    const c = cellCenter(r.cx, r.cz), [nx, nz] = D4[r.o], tx = -nz, tz = nx;
+    const P = (a, b, y = 0) => ({ x: c.x + nx * a + tx * b, y, z: c.z + nz * a + tz * b });
+    d.primitive = l2DoorPrim(r, r.type === "cage" ? "cage" : "x"); d.material = { pbr: true };
+    if (!ctx.place.objects[`l2-door-frame-${r.i}`]) l2Frame(ctx, r, P, tx, tz);
+  }
+}
+
 function sideRoom(ctx, r) {
   const c = cellCenter(r.cx, r.cz), [nx, nz] = D4[r.o], tx = -nz, tz = nx, E = S / 2, T = L.types[r.type];
   const P = (a, b, y = 0) => ({ x: c.x + nx * a + tx * b, y, z: c.z + nz * a + tz * b });
@@ -233,8 +254,9 @@ function sideRoom(ctx, r) {
   const label = T.label.charAt(0) + T.label.slice(1).toLowerCase();
   ctx.spawn(`l2-door-${r.i}`, { tags: ["door", "l2door"], feetPosition: P(E, -0.55), rotation: { yaw: Math.atan2(-tz, tx) * 180 / Math.PI }, physics: { body: "kinematic", collider: "box" },
     visibleRange: { max: 45 }, castShadow: false,
-    primitive: { kind: "scripted", script: "scripts/l2-props-geo.js", params: { kind: "door", style, seed: r.i } }, behavior: "scripts/l2-door.js",
+    primitive: l2DoorPrim(r, style), material: { pbr: true }, behavior: "scripts/l2-door.js",
     state: { name: `${label} door`, lock: r.lock, open: false, yaw0: Math.atan2(-tz, tx) * 180 / Math.PI, c: P(E, 0, 1.1) } });
+  l2Frame(ctx, r, P, tx, tz);
   // the stencil over the door, on the tunnel side
   ctx.spawn({ feetPosition: P(E + 0.14, 0, 2.4), rotation: { yaw: yawOf(nx, nz) }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 1.1, height: 0.22, depth: 0.02 }, material: { color: "oklch(0.3 0.01 250)", roughness: 0.8 },
     ui: `<div face="front" width="1.1m" style="font-size:150px;font-weight:900;color:#e6dcc0;text-align:center;letter-spacing:12px;line-height:1.4">${T.label}</div>` });

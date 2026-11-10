@@ -2,7 +2,8 @@
 // and dresses the radios and sealed doors in their real meshes (same ids, state/audio/behavior kept).
 import { PIECES, LEAVES } from "./lib/l5-hall-layout.js";
 import { ZONES } from "./lib/level5.js";
-const V = 5, GEO = "scripts/l5-hall-geo.js", FIX = "scripts/l5-hall-fix.js";
+const DOOR = "scripts/door-geo.js";
+const V = 6, GEO = "scripts/l5-hall-geo.js", FIX = "scripts/l5-hall-fix.js";
 const FIXK = new Set(["chandelier", "pendant", "sconce", "flush", "lamp", "bulb", "stairs", "leaf", "placard"]);
 const NOCOL = new Set(["rug", "painting", "letter", "typewriter", "tomes", "birdcage", "window", "chandelier", "pendant", "sconce", "flush", "lamp", "bulb", "placard"]);
 const SEATK = new Set(["chair", "sofa", "stool", "bench", "armchair"]);
@@ -24,13 +25,17 @@ function row(r) {
 function lay(ctx) {
   for (const r of PIECES) ctx.spawn(r.id, row(r));
   for (const l of LEAVES) { const o = l.leafFor, z = ZONES.find((q) => q.id === l.room), dir = Math.sign((z.z0 + z.z1) / 2 - o.at), w = o.a1 - o.a0;
-    ctx.spawn("l5-hall-leaf-" + l.room, { tags: ["l5-hall", "usable", "l5-hall-door"], feetPosition: { x: (o.a0 + o.a1) / 2, y: 0, z: o.at + dir * 0.09 }, rotation: { yaw: 0 }, pivot: [0, 0.5, 0.5],
-      physics: "kinematic", primitive: { kind: "scripted", script: FIX, params: { kind: "leaf", w: w - 0.04, h: 2.2 } }, behavior: "scripts/l5-hall-door.js",
-      state: { name: "Room " + l.no, verb: "Open", info: "Guest room door", open: false, openYaw: dir > 0 ? -90 : 90, baseYaw: 0, mat: "wood", hp: 60, maxHp: 60 } });
+    // scripts/door-geo.js: the leaf's feet ARE its hinge (bottom corner at a0), it runs +X; the frame stands at the opening's centre, same plane
+    const z0 = o.at + dir * 0.09, dp = { style: "hotel", w: w - 0.04, h: 2.2, hingeSide: "left", swing: dir > 0 ? 1 : -1, seed: Number(l.no) || 0 };
+    ctx.spawn("l5-hall-leaf-" + l.room, { tags: ["l5-hall", "usable", "l5-hall-door"], feetPosition: { x: o.a0 + 0.02, y: 0, z: z0 }, rotation: { yaw: 0 },
+      physics: "kinematic", primitive: { kind: "scripted", script: DOOR, params: { ...dp, part: "leaf" } }, material: { pbr: true }, behavior: "scripts/l5-hall-door.js",
+      state: { name: "Room " + l.no, verb: "Open", info: "Guest room door", open: false, openYaw: dir > 0 ? -90 : 90, baseYaw: 0, mat: "wood", hp: 60, maxHp: 60, c: { x: (o.a0 + o.a1) / 2, y: 1.1, z: z0 } } });
+    ctx.spawn("l5-hall-frame-" + l.room, { tags: ["l5-hall"], feetPosition: { x: (o.a0 + o.a1) / 2, y: 0, z: z0 }, rotation: { yaw: 0 }, castShadow: false,
+      physics: { body: "static", collider: "auto" }, primitive: { kind: "scripted", script: DOOR, params: { ...dp, part: "frame" } }, material: { pbr: true } });
     ctx.spawn("l5-hall-plaque-" + l.room, { tags: ["l5-hall"], feetPosition: { x: o.a1 + 0.32, y: 1.5, z: o.at - dir * 0.09 }, rotation: { yaw: dir > 0 ? 0 : 180 },
       primitive: { kind: "scripted", script: FIX, params: { kind: "placard", no: String(l.no), text: String(l.no), label: String(l.no) } } }); }
   for (const q of ctx.query({ tags: ["l5-radio"] })) { const o = ctx.getObject(q.id); if (o) o.primitive = { kind: "scripted", script: FIX, params: { kind: "radio" } }; }
-  for (const q of ctx.query({ tags: ["l5-sealed"] })) { const o = ctx.getObject(q.id); if (o) o.primitive = { kind: "scripted", script: FIX, params: { kind: "sealed", seed: q.id.length } }; }
+  for (const q of ctx.query({ tags: ["l5-sealed"] })) { const o = ctx.getObject(q.id); if (o) { o.primitive = { kind: "scripted", script: DOOR, params: { style: "hotel", part: "set", w: 1.1, h: 2.3, hingeSide: "left", swing: 1, seed: q.id.length } }; o.material = { pbr: true }; } } // sealed: a shut door in its frame, never opens
 }
 export function update(ctx) {
   if (ctx.self.state.v === V) return ctx.sleep(30);
