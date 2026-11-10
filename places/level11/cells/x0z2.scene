@@ -1,0 +1,23 @@
+# spawn-scene v2 yaml x0z2
+l11d-d-arm:
+  feetPosition: {x: 47.6, y: -3.6, z: 199.8}
+  id: l11d-d-arm
+  layout: {box: {max: {x: 0.7, y: 2, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {forward: "-z", id: /cdn/value.e45a8b24d4e45d56f4d2c01ad261d70d356ee5584657acb2e5d22896103ac9ed.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 210}
+l11d-d-console:
+  feetPosition: {x: 34.7, y: -3.6, z: 196.4}
+  id: l11d-d-console
+  layout: {box: {max: {x: 0.85, y: 1.25, z: 0.5}, min: {x: -0.85, y: 0, z: -0.5}}}
+  light: {color: oklch(0.8 0.15 150), distance: 3, intensity: 0.25, kind: point}
+  model: {forward: "-z", id: /cdn/value.cccf6c2955ec7543b9b147682f6f3ab6b638f4cb587bf2030be70bd062c19919.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 90}
+l11d-d-hanging:
+  feetPosition: {x: 45.4, y: -3.35, z: 193.2}
+  id: l11d-d-hanging
+  layout: {box: {max: {x: 0.9, y: 3.05, z: 0.5}, min: {x: -0.9, y: 0, z: -0.5}}}
+  model: {forward: "-z", id: /cdn/value.d92617d843fc1723da8e5e7d7b98ed425c2827b80fed78be756e2455b65ff3bd.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 160}
