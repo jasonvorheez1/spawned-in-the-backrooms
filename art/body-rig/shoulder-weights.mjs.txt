@@ -1,0 +1,68 @@
+// shoulder weight blend: across the shoulder joint, skin hands from Shoulder to Arm over ~10 cm, so lowering the arm rounds the shoulder instead of leaving a peak
+// bun shw.mjs <in.glb> <out-plain.glb> <out-packed.glb>
+import { NodeIO } from '@gltf-transform/core';
+import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
+import { MeshoptDecoder, MeshoptEncoder } from 'meshoptimizer';
+import { prune, meshopt } from '@gltf-transform/functions';
+await Promise.all([MeshoptDecoder.ready, MeshoptEncoder.ready]);
+const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({ 'meshopt.decoder': MeshoptDecoder, 'meshopt.encoder': MeshoptEncoder });
+const [src, outPlain, outPacked] = process.argv.slice(2);
+const doc = await io.read(src), root = doc.getRoot();
+const mul = (m, p) => [m[0]*p[0]+m[4]*p[1]+m[8]*p[2]+m[12], m[1]*p[0]+m[5]*p[1]+m[9]*p[2]+m[13], m[2]*p[0]+m[6]*p[1]+m[10]*p[2]+m[14]];
+const ss = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+const buf = root.listBuffers()[0];
+// glTF skinning ignores the mesh node's transform: a vertex's bind position is its own POSITION, a joint's is where its inverse bind matrix sends the origin from
+function bindPos(skin, i) { const m = []; skin.getInverseBindMatrices().getElement(i, m);
+  const a = m[0], b = m[4], c = m[8], d = m[1], e = m[5], f = m[9], g = m[2], h = m[6], k = m[10], t = [m[12], m[13], m[14]];
+  const A = e*k - f*h, B = -(d*k - f*g), C = d*h - e*g, det = a*A + b*B + c*C;
+  const inv = [[A, -(b*k - c*h), b*f - c*e], [B, a*k - c*g, -(a*f - c*d)], [C, -(a*h - b*g), a*e - b*d]].map((r) => r.map((x) => x / det));
+  return inv.map((r) => -(r[0]*t[0] + r[1]*t[1] + r[2]*t[2])); }
+let touched = 0, meshes = 0;
+const done = new Set();
+for (const node of root.listNodes()) {
+  const skin = node.getSkin(), mesh = node.getMesh(); if (!skin || !mesh) continue;
+  const joints = skin.listJoints(), names = joints.map((j) => j.getName());
+  const sides = [];
+  for (const side of ['Left', 'Right']) {
+    const iS = names.indexOf(side + 'Shoulder'), iA = names.indexOf(side + 'Arm'), iF = names.indexOf(side + 'ForeArm');
+    if (iS < 0 || iA < 0 || iF < 0) continue;
+    const J = bindPos(skin, iA), F = bindPos(skin, iF);
+    const ax = [F[0]-J[0], F[1]-J[1], F[2]-J[2]], L = Math.hypot(...ax); ax.forEach((_, k) => ax[k] /= L);
+    sides.push({ iS, iA, J, ax, u: L / 0.218 }); // the upper arm is 0.218 m in metres: u turns metres into this mesh's own units
+  }
+  if (!sides.length) continue;
+  const wm = node.getWorldMatrix();
+  for (const prim of mesh.listPrimitives()) {
+    if (done.has(prim)) continue; done.add(prim);
+    const P = prim.getAttribute('POSITION'), JA = prim.getAttribute('JOINTS_0'), WA = prim.getAttribute('WEIGHTS_0');
+    if (!P || !JA || !WA) continue;
+    const n = P.getCount(), Jn = new Uint16Array(n * 4), Wn = new Float32Array(n * 4), p = [], j = [], w = [];
+    let any = 0;
+    for (let i = 0; i < n; i++) {
+      P.getElement(i, p); JA.getElement(i, j); WA.getElement(i, w);
+      const ws = w.slice(0, 4), js = j.slice(0, 4);
+      for (const s of sides) {
+        let kS = js.indexOf(s.iS), kA = js.indexOf(s.iA);
+        const sw = kS >= 0 ? ws[kS] : 0, aw = kA >= 0 ? ws[kA] : 0, tot = sw + aw;
+        if (tot < 1e-4) continue;
+        const q = p, d = ((q[0]-s.J[0])*s.ax[0] + (q[1]-s.J[1])*s.ax[1] + (q[2]-s.J[2])*s.ax[2]) / s.u;
+        const t = ss(-0.045, 0.06, d), na = tot * t, ns = tot - na;
+        const slot = (excl) => { let b = -1; for (let k = 0; k < 4; k++) if (k !== excl && (b < 0 || ws[k] < ws[b])) b = k; return b; };
+        if (kA < 0 && na > 1e-4) { kA = slot(kS); js[kA] = s.iA; ws[kA] = 0; }
+        if (kS < 0 && ns > 1e-4) { kS = slot(kA); js[kS] = s.iS; ws[kS] = 0; }
+        if (kA >= 0) ws[kA] = na; if (kS >= 0) ws[kS] = ns;
+        any++;
+      }
+      const sum = ws.reduce((a, b) => a + b, 0) || 1;
+      for (let k = 0; k < 4; k++) { Jn[i*4+k] = js[k]; Wn[i*4+k] = ws[k] / sum; }
+    }
+    if (!any) continue;
+    prim.setAttribute('JOINTS_0', doc.createAccessor().setType('VEC4').setArray(Jn).setBuffer(buf));
+    prim.setAttribute('WEIGHTS_0', doc.createAccessor().setType('VEC4').setArray(Wn).setBuffer(buf));
+    touched += any; meshes++;
+  }
+}
+console.log('meshes', meshes, 'vertex-sides', touched);
+await doc.transform(prune({ keepAttributes: true, keepLeaves: true }));
+if (outPlain) await io.write(outPlain, doc);
+if (outPacked) { await doc.transform(meshopt({ encoder: MeshoptEncoder, level: 'medium' })); await io.write(outPacked, doc); }
