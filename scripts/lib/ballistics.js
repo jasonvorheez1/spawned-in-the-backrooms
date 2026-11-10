@@ -91,8 +91,10 @@ export function fire(ctx, s, wp, w, eye, fwd, pitch, base) {
 const TRACER = `fx
 pop t burst=1 life=.12 v=<%vx|0,%vy|0,%vz|-1> size=.028 col=hdr(7,5,2) a=1>0 sz=$size r=sprite(ember,add,velocity,.09)`
 const IMPACT = `fx
-pop spark burst=3..5 life=.08..0.16 on=point() v=<%nx|0,%ny|1,%nz|0>*(1.5..4)+sdir()*(.6..1.4) size=.012..0.022 acc=grav() col=hdr(5,3.4,1.4) a=1>0 r=sprite(ember,add)
-pop dust burst=3..5 life=.5..0.9 on=point() v=<%nx|0,%ny|1,%nz|0>*(.3..0.8)+sdir()*(.1..0.3) size=.04..0.08 acc=buoy(.2)+drag(1.6) col=<.62,.6,.56> a=0>.35:.5>0 sz=$size*(1>2.4) r=sprite(smoke-puff,alpha)`
+pop sparks burst=4..8 life=.12..0.3 on=point() v=<%nx|0,%ny|1,%nz|0>*(2..5)+sdir()*(1.5..3) size=.012..0.022 acc=grav()*.8 col=hdr(5,2.8,.8) a=1>0 sz=$size r=sprite(ember,add,velocity,.02)
+pop chunks burst=5..9 life=.7..1.4 on=point() v=<%nx|0,%ny|1,%nz|0>*(2..4.5)+sdir()*(1..2)+up(.5..1.5) size=.012..0.035 spin=-14..14 tint=<.5,.47,.42>..<.7,.66,.6> acc=grav() col=$tint a=1 sz=$size rot=$age*$spin floor=bounce(.25) r=mesh(box,1,.6,.8)
+pop grit burst=10..16 life=.3..0.6 on=point() v=<%nx|0,%ny|1,%nz|0>*(3..6)+sdir()*(1.5..3) size=.006..0.012 acc=grav()+drag(.8) col=<.62,.58,.52> a=1>0 sz=$size r=sprite(grain,alpha,velocity,.015)
+pop dust burst=3..4 life=.9..1.6 on=point() v=<%nx|0,%ny|1,%nz|0>*(.5..1.2)+sdir()*.35 size=.12..0.2 acc=buoy(.15)+drag(1.6)+curl(.3)*.2 col=<.64,.58,.5> a=0>.45:.25>.6:.12>0 sz=$size*(.6>3) rot=spin(.25) r=sprite(smoke-puff,alpha)`  // impact debris borrowed from fps-grudge
 const HOLE = `fx
 pop hole burst=1 life=40 on=point() size=.05 col=<.035,.035,.04> a=.95>.9:.9>0 r=sprite(soft-disc,alpha)
 pop ring burst=1 life=40 on=point() size=.085 col=<.12,.11,.1> a=.35>.3:.3>0 r=sprite(soft-disc,alpha)`
