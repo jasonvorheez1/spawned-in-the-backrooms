@@ -6,7 +6,7 @@ Inputs are pinned in inputs.json; shipped CDN outputs are in assets.json. Never 
 
 Rebuild in an external cache folder:
 1. Download the input GLBs by replacing `/cdn/value.<sha>.glb` with `https://spawnfile.io/dev/magic-assets/v5/values/<sha>.glb`.
-2. Install @gltf-transform/core, @gltf-transform/extensions, @gltf-transform/functions and meshoptimizer in that cache; run decode-core.mjs there on the fourteen species GLBs.
+2. Copy the `.mjs.txt` tools into the cache as `.mjs` (they are offline tools, not world modules). Install @gltf-transform/core, @gltf-transform/extensions, @gltf-transform/functions and meshoptimizer in that cache; run decode-core.mjs there on the fourteen species GLBs.
 3. Run Blender `-b --factory-startup --python-exit-code 1 --python build.py -- <cache> human`, then stages `hair` and `fur`.
 4. Run pack.mjs in that cache. It asserts that mesh names, primitive counts and expression target names survive compression. Upload the packed GLBs and out/anime-iris.png using the Spawn asset door; update CDN references together.
 
