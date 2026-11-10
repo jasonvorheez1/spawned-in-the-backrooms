@@ -105,7 +105,7 @@ function layOffice(ctx) {
   for (const [x, z] of [[0, 13], [0, -13], [13, 0], [-13, 0]]) {
     ctx.spawn({ tags: ["l4-island"], feetPosition: { x, y: 0, z }, physics: { body: "static", collider: "mesh" }, visibleRange: { max: 50 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/l4-office-geo.js", params: { kind: "island" } } });
     for (const [cx, face] of [[0.82, 1], [-0.82, -1], [-0.82, 1], [0.82, -1]]) ctx.spawn({ tags: ["l4-island"], feetPosition: { x: x + cx, y: 0, z: z + face * 1.25 }, rotation: { yaw: face > 0 ? 0 : 180 }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/l4-prop-geo.js", params: { kind: "chair" } } });
-    for (const [cx, face] of [[0.82, 1], [-0.82, -1]]) ctx.spawn({ tags: ["usable", "l4-phone"], feetPosition: { x: x + cx + 0.42, y: 0.75, z: z + face * 0.3 }, rotation: { yaw: face > 0 ? 0 : 180 }, visibleRange: { max: 35 }, castShadow: false, behavior: "scripts/l4-office.js", ...KITROW.phone,
+    for (const [cx, face] of [[0.82, 1], [-0.82, -1]]) ctx.spawn({ tags: ["usable", "l4-phone"], feetPosition: { x: x + cx + 0.42, y: 0.75, z: z + face * 0.3 }, rotation: { yaw: face > 0 ? 180 : 0 }, visibleRange: { max: 35 }, castShadow: false, behavior: "scripts/l4-office.js", ...KITROW.phone,
       state: { kind: "phone", name: "Desk phone", verb: "Pick up", info: "Desk phone" } });
     ctx.spawn({ tags: ["usable", "l4-printer"], feetPosition: { x: x + 2.15, y: 0, z }, rotation: { yaw: 90 }, physics: "static", visibleRange: { max: 40 }, castShadow: false, behavior: "scripts/l4-office.js",
       primitive: { kind: "scripted", script: "scripts/l4-office-geo.js", params: { kind: "printer" } }, state: { kind: "printer", name: "Printer", verb: "Read", info: "Something is half printed" } });
@@ -138,7 +138,7 @@ export function tick(ctx) {
     const swap = (o, k, extra) => { const h = ctx.place.objects[o.id]; if (!h) return; h.primitive = null; h.material = null; Object.assign(h, KITROW[k], extra ?? {}); };
     for (const o of all("l4-fountain")) swap(o, "fountain", { children: [] });
     for (const o of all("l4-vend")) { const h = ctx.place.objects[o.id]; swap(o, "vend", { children: (h?.children ?? []).filter((c) => c.light).map((c) => ({ feetPosition: c.feetPosition, light: c.light })) }); }
-    for (const o of all("l4-phone")) { swap(o, "phone", { children: [], rotation: { yaw: o.feetPosition.z % 13 > 0 === (o.feetPosition.z > 0) ? 0 : 180 } }); }
+    for (const o of all("l4-phone")) { swap(o, "phone", { children: [], rotation: { yaw: o.feetPosition.z - Math.round(o.feetPosition.z) > 0 ? 180 : 0 } }); }
     for (const o of ctx.query({ radius: 0.3, center: { x: HALF - 4, y: 0, z: HALF - 4.5 } })) { const h = ctx.place.objects[o.id]; if (h?.primitive?.kind === "cylinder") { swap(o, "table"); h.tags = ["l4-break-table"]; } }
   }
   if (s.officeV < 3) { // working computers (scripts/computer.js, Back OS): every island desk, and the locked one in Base Omega

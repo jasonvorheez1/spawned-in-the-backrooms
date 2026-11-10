@@ -1398,45 +1398,41 @@ object/xad4c834675863151/85:
   rotation: {roll: 4, yaw: 90}
 object/xad4c834675863151/86:
   behavior: scripts/l4-home.js
-  children: [{feetPosition: {x: 0, y: 0.9, z: 0}, material: {color: oklch(0.85 0.01 250), metalness: 0.8, roughness: 0.2}, primitive: {depth: 0.36, height: 0.06, kind: box, width: 0.46}}]
   feetPosition: {x: -4, y: 0, z: -20.55}
   id: object/xad4c834675863151/86
-  material: {color: oklch(0.75 0.01 250), metalness: 0.7, roughness: 0.3, texture: cdn/texture-scratched-worn-steel.png}
-  physics: static
-  primitive: {depth: 0.4, height: 0.9, kind: box, width: 0.5}
+  layout: {box: {max: {x: 0.25, y: 1, z: 0.2}, min: {x: -0.25, y: 0, z: -0.2}}}
+  model: {id: /cdn/value.ca40f4685743a33712b754baebd3f66acb4944b92a4cce1e363ebac5669f4a93.glb}
+  physics: {body: static, collider: box}
   rotation: {yaw: 0}
   state: {info: "Almond water, cold", kind: fountain, name: Drinking fountain, tint: "#7fd6ff", verb: Drink}
   tags: [usable, l4-fountain]
 object/xad4c834675863151/87:
   behavior: scripts/l4-home.js
-  children: [{feetPosition: {x: 0, y: 0.9, z: 0}, material: {color: oklch(0.85 0.01 250), metalness: 0.8, roughness: 0.2}, primitive: {depth: 0.36, height: 0.06, kind: box, width: 0.46}}]
   feetPosition: {x: 4, y: 0, z: 20.55}
   id: object/xad4c834675863151/87
-  material: {color: oklch(0.75 0.01 250), metalness: 0.7, roughness: 0.3, texture: cdn/texture-scratched-worn-steel.png}
-  physics: static
-  primitive: {depth: 0.4, height: 0.9, kind: box, width: 0.5}
+  layout: {box: {max: {x: 0.25, y: 1, z: 0.2}, min: {x: -0.25, y: 0, z: -0.2}}}
+  model: {id: /cdn/value.ca40f4685743a33712b754baebd3f66acb4944b92a4cce1e363ebac5669f4a93.glb}
+  physics: {body: static, collider: box}
   rotation: {yaw: 180}
   state: {info: "Almond water, cold", kind: fountain, name: Drinking fountain, tint: "#7fd6ff", verb: Drink}
   tags: [usable, l4-fountain]
 object/xad4c834675863151/88:
   behavior: scripts/l4-home.js
-  children: [{feetPosition: {x: 0, y: 0.9, z: 0}, material: {color: oklch(0.85 0.01 250), metalness: 0.8, roughness: 0.2}, primitive: {depth: 0.36, height: 0.06, kind: box, width: 0.46}}]
   feetPosition: {x: -19.45, y: 0, z: 4}
   id: object/xad4c834675863151/88
-  material: {color: oklch(0.75 0.01 250), metalness: 0.7, roughness: 0.3, texture: cdn/texture-scratched-worn-steel.png}
-  physics: static
-  primitive: {depth: 0.4, height: 0.9, kind: box, width: 0.5}
+  layout: {box: {max: {x: 0.25, y: 1, z: 0.2}, min: {x: -0.25, y: 0, z: -0.2}}}
+  model: {id: /cdn/value.ca40f4685743a33712b754baebd3f66acb4944b92a4cce1e363ebac5669f4a93.glb}
+  physics: {body: static, collider: box}
   rotation: {yaw: -90}
   state: {info: "Almond water, cold", kind: fountain, name: Drinking fountain, tint: "#7fd6ff", verb: Drink}
   tags: [usable, l4-fountain]
 object/xad4c834675863151/89:
   behavior: scripts/l4-home.js
-  children: [{feetPosition: {x: 0, y: 0.9, z: 0}, material: {color: oklch(0.85 0.01 250), metalness: 0.8, roughness: 0.2}, primitive: {depth: 0.36, height: 0.06, kind: box, width: 0.46}}]
   feetPosition: {x: 19.45, y: 0, z: -4}
   id: object/xad4c834675863151/89
-  material: {color: oklch(0.75 0.01 250), metalness: 0.7, roughness: 0.3, texture: cdn/texture-scratched-worn-steel.png}
-  physics: static
-  primitive: {depth: 0.4, height: 0.9, kind: box, width: 0.5}
+  layout: {box: {max: {x: 0.25, y: 1, z: 0.2}, min: {x: -0.25, y: 0, z: -0.2}}}
+  model: {id: /cdn/value.ca40f4685743a33712b754baebd3f66acb4944b92a4cce1e363ebac5669f4a93.glb}
+  physics: {body: static, collider: box}
   rotation: {yaw: 90}
   state: {info: "Almond water, cold", kind: fountain, name: Drinking fountain, tint: "#7fd6ff", verb: Drink}
   tags: [usable, l4-fountain]
@@ -1448,43 +1444,44 @@ object/xad4c834675863151/9:
   visibleRange: {max: 42}
 object/xad4c834675863151/90:
   behavior: scripts/l4-home.js
-  children: [{feetPosition: {x: -0.12, y: 0.55, z: -0.405}, material: {color: oklch(0.85 0.04 90), emissive: oklch(0.8 0.05 90), emissiveIntensity: 0.9}, primitive: {depth: 0.01, height: 1.1, kind: box, width: 0.62}}, {feetPosition: {x: 0, y: 0.6, z: -0.6}, light: {color: oklch(0.9 0.05 90), distance: 3.5, intensity: 1.2, kind: point}}]
+  children: [{feetPosition: {x: 0, y: 0.6, z: -0.6}, light: {color: oklch(0.9 0.05 90), distance: 3.5, intensity: 1.2, kind: point}}]
   feetPosition: {x: 25, y: 0, z: 31.25}
   id: object/xad4c834675863151/90
-  material: {color: oklch(0.45 0.15 25), metalness: 0.3, roughness: 0.4}
-  physics: static
-  primitive: {depth: 0.8, height: 1.85, kind: box, width: 1}
+  layout: {box: {max: {x: 0.5, y: 1.85, z: 0.4}, min: {x: -0.5, y: 0, z: -0.4}}}
+  model: {id: /cdn/value.b5e982116d78ae3868f9b9db3ccbd35f5d24d5d57451cfbb6122f9d28f2e2b53.glb}
+  physics: {body: static, collider: box}
   rotation: {yaw: 0}
   state: {info: Restocks itself. Nobody knows how., kind: vend, name: Vending machine, tint: "#f2c14e", verb: Push the button}
   tags: [usable, l4-vend]
 object/xad4c834675863151/91:
   behavior: scripts/l4-home.js
-  children: [{feetPosition: {x: -0.12, y: 0.55, z: -0.405}, material: {color: oklch(0.85 0.04 90), emissive: oklch(0.8 0.05 90), emissiveIntensity: 0.9}, primitive: {depth: 0.01, height: 1.1, kind: box, width: 0.62}}, {feetPosition: {x: 0, y: 0.6, z: -0.6}, light: {color: oklch(0.9 0.05 90), distance: 3.5, intensity: 1.2, kind: point}}]
+  children: [{feetPosition: {x: 0, y: 0.6, z: -0.6}, light: {color: oklch(0.9 0.05 90), distance: 3.5, intensity: 1.2, kind: point}}]
   feetPosition: {x: 26.3, y: 0, z: 31.25}
   id: object/xad4c834675863151/91
-  material: {color: oklch(0.4 0.1 250), metalness: 0.3, roughness: 0.4}
-  physics: static
-  primitive: {depth: 0.8, height: 1.85, kind: box, width: 1}
+  layout: {box: {max: {x: 0.5, y: 1.85, z: 0.4}, min: {x: -0.5, y: 0, z: -0.4}}}
+  model: {id: /cdn/value.b5e982116d78ae3868f9b9db3ccbd35f5d24d5d57451cfbb6122f9d28f2e2b53.glb}
+  physics: {body: static, collider: box}
   rotation: {yaw: 0}
   state: {info: Restocks itself. Nobody knows how., kind: vend, name: Vending machine, tint: "#f2c14e", verb: Push the button}
   tags: [usable, l4-vend]
 object/xad4c834675863151/92:
   behavior: scripts/l4-home.js
-  children: [{feetPosition: {x: -0.12, y: 0.55, z: -0.405}, material: {color: oklch(0.85 0.04 90), emissive: oklch(0.8 0.05 90), emissiveIntensity: 0.9}, primitive: {depth: 0.01, height: 1.1, kind: box, width: 0.62}}, {feetPosition: {x: 0, y: 0.6, z: -0.6}, light: {color: oklch(0.9 0.05 90), distance: 3.5, intensity: 1.2, kind: point}}]
+  children: [{feetPosition: {x: 0, y: 0.6, z: -0.6}, light: {color: oklch(0.9 0.05 90), distance: 3.5, intensity: 1.2, kind: point}}]
   feetPosition: {x: 27.6, y: 0, z: 31.25}
   id: object/xad4c834675863151/92
-  material: {color: oklch(0.55 0.13 140), metalness: 0.3, roughness: 0.4}
-  physics: static
-  primitive: {depth: 0.8, height: 1.85, kind: box, width: 1}
+  layout: {box: {max: {x: 0.5, y: 1.85, z: 0.4}, min: {x: -0.5, y: 0, z: -0.4}}}
+  model: {id: /cdn/value.b5e982116d78ae3868f9b9db3ccbd35f5d24d5d57451cfbb6122f9d28f2e2b53.glb}
+  physics: {body: static, collider: box}
   rotation: {yaw: 0}
   state: {info: Restocks itself. Nobody knows how., kind: vend, name: Vending machine, tint: "#f2c14e", verb: Push the button}
   tags: [usable, l4-vend]
 object/xad4c834675863151/93:
   feetPosition: {x: 28, y: 0, z: 27.5}
   id: object/xad4c834675863151/93
-  material: {color: oklch(0.85 0.01 90), roughness: 0.5}
-  physics: static
-  primitive: {height: 0.74, kind: cylinder, radiusBottom: 0.6, radiusTop: 0.6}
+  layout: {box: {max: {x: 0.6, y: 0.74, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.8f446d2c7ec3b01c3b65bebe678c95cd5d57e2dc33220316cfa50f92d04fb39e.glb}
+  physics: {body: static, collider: box}
+  tags: [l4-break-table]
 object/xad4c834675863151/94:
   feetPosition: {x: 31.63, y: 2.55, z: -28}
   id: object/xad4c834675863151/94
