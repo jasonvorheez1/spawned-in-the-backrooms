@@ -173,11 +173,12 @@ function kickAny(ctx, s, f, p) {
     if (t.id === ctx.self.id || t.tags?.some((g) => SHOVE_SKIP.includes(g))) continue
     if (ctx.place.players.some((q) => q.id === t.id)) continue
     const o = ctx.getObject(t.id); if (!o || o.parent || o.visible === false) continue
-    const b = o.bounds?.size; if (!b || b.y > 3 || b.x * b.y * b.z > 8 || Math.max(b.x, b.z) > 3.2) continue
+    const dead0 = !!(o.state?.dead || (o.state?.hp ?? 1) <= 0) && t.tags?.some((g) => FOES.includes(g) || g === 'l11foe') // a corpse sprawls wide: any size goes
+    const b = o.bounds?.size; if (!b || (!dead0 && (b.y > 3 || b.x * b.y * b.z > 8 || Math.max(b.x, b.z) > 3.2))) continue
     const c = o.bounds.center, dx = c.x - p.x, dz = c.z - p.z, d = Math.max(0, Math.hypot(dx, dz) - Math.max(b.x, b.z) * 0.4)
     if (d > 1.9 || (Math.hypot(dx, dz) > 0.3 && (dx * f.x + dz * f.z) / Math.hypot(dx, dz) < 0.5)) continue
     if (o.bounds.min.y > p.y + 1.2 || o.bounds.max.y < p.y + 0.05) continue // a lamp overhead, a rug underfoot
-    const dead = !!(o.state?.dead || (o.state?.hp ?? 1) <= 0)
+    const dead = dead0
     if ((dead && !bdead) || d < bd) { best = o; bd = d; bdead = dead }
   }
   if (!best) return false
