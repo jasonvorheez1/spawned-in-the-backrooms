@@ -19,13 +19,18 @@ hem = J['Spine'].z + 0.07 * s  # just under the navel: pants take it from there
 xstrap, xpit, zpit = ax * 0.66, ax * 1.06, J['LeftArm'].z - 0.075 * s
 slope = (xpit - xstrap) / (neckz - 0.03 * s - zpit)
 def armlim(z): return xstrap + slope * (neckz - 0.03 * s - z)
-NW = 0.062  # half-width of the neck opening; outside it the straps run over the shoulder
-def necklim(x, y):  # a U scoop, deep in front, shallow at the back, capped below the neck
+# measured off this body: the neck's own half-width just above its base, and the shoulder line beside it
+_P = [body.matrix_world @ v.co for v in body.data.vertices]
+neckR = max(abs(p.x) for p in _P if neckz + 0.02 * s < p.z < neckz + 0.05 * s and abs(p.y - sy) < 0.1)
+NW = (neckR + 0.012) / s  # half-width of the neck opening; outside it the straps run over the shoulder
+capz = max(p.z for p in _P if NW * s < abs(p.x) < xstrap and p.z < neckz + 0.08 * s) + 0.01
+print('NECK', round(neckR, 3), 'cap', round(capz, 3))
+def necklim(x, y):  # a U scoop, deep in front, shallow at the back
     u = abs(x) / (NW * s)
-    if u >= 1: return neckz - 0.004 * s
+    if u >= 1: return capz
     front = max(0.0, min(1.0, (sy - y) / (0.06 * s) + 0.5))
     depth = (0.025 + 0.05 * front) * s
-    return neckz - 0.004 * s - depth * (1 - u * u) ** 0.5
+    return min(capz, neckz + 0.01 * s) - depth * (1 - u * u) ** 0.5
 me = body.data
 M = body.matrix_world.copy(); Mi = M.inverted(); R = Mi.to_3x3()
 W = lambda co: M @ co   # the tests run in world space (glTF bodies sit under a rotated armature)
