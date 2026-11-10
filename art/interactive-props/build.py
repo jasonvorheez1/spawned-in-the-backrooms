@@ -18,10 +18,10 @@ def export(objs,name):
   o.select_set(True);bpy.context.view_layer.objects.active=o
   for m in list(o.modifiers):bpy.ops.object.modifier_apply(modifier=m.name)
  bpy.context.view_layer.objects.active=objs[0];bpy.ops.object.join();o=bpy.context.object;o.name=name;bpy.context.view_layer.update();a,b=bounds([o]);center=(a+b)/2
- # glTF geometry is centered, and the runtime explicitly uses a center pivot.
+ # Center the glTF; the runtime offsets its feet anchor by the exported height.
  o.data.transform(Matrix.Translation(-center)@o.matrix_world);o.matrix_world=Matrix.Identity(4)
  bpy.ops.export_scene.gltf(filepath=str(OUT/(name+'.glb')),export_format='GLB',use_selection=True,export_apply=True,export_yup=True,export_materials='EXPORT')
- o.location=center;return o,center
+ o.location=center;return o,center,b.z-a.z
 for kind,(w,h,d)in SIZES.items():
  bpy.ops.wm.read_factory_settings(use_empty=True)
  paint=material('paint',(.45,.49,.43)if kind!='fridge' else(.8,.81,.76),.44,.25);metal=material('metal',(.40,.43,.44),.3,.8);dark=material('dark',(.065,.077,.068),.85,.05);liner=material('interior',(.21,.25,.21)if kind!='fridge'else(.67,.7,.63),.65,.05);wood=material('wood',(.25,.16,.085),.62,0);paper=material('label',(.66,.64,.49),.95,0)
@@ -86,13 +86,13 @@ for kind,(w,h,d)in SIZES.items():
   B('Handle',0,0,.345,.17,.03,.022,dark,.009,ps)
   for x in [-.20,.20]:B('Latch',x,front+.007,.23,.045,.018,.065,metal,.006,ps)
   moving.append(('lid',ps,(0,-d/2,.225),'pitch',105))
- shell_obj,shell_center=export(body,kind+'-body');parts=[];parents=[]
+ shell_obj,shell_center,shell_height=export(body,kind+'-body');parts=[];parents=[]
  for name,objs,pivot,axis,travel in moving:
-  ob,center=export(objs,kind+'-'+name);offset=center-Vector(pivot)
+  ob,center,part_height=export(objs,kind+'-'+name);offset=center-Vector(pivot)
   bpy.ops.object.empty_add(location=pivot);par=bpy.context.object;par.name='hinge_'+name;ob.parent=par;ob.location=offset;parents.append((par,axis,travel))
   cv=lambda v:[round(v[0],6),round(v[2],6),round(-v[1],6)]
-  parts.append({'id':name,'file':kind+'-'+name+'.glb','pivot':cv(pivot),'offset':cv(offset),'axis':axis,'travel':travel})
- manifest[kind]={'size':[w,h,d],'body':kind+'-body.glb','center':[round(shell_center.x,6),round(shell_center.z,6),round(-shell_center.y,6)],'parts':parts}
+  parts.append({'id':name,'file':kind+'-'+name+'.glb','pivot':cv(pivot),'offset':cv(offset),'axis':axis,'travel':travel,'height':round(part_height,6)})
+ manifest[kind]={'size':[w,h,d],'body':kind+'-body.glb','height':round(shell_height,6),'center':[round(shell_center.x,6),round(shell_center.z,6),round(-shell_center.y,6)],'parts':parts}
  # Editable movement cycle and representative closed/open views.
  for par,axis,travel in parents:
   par.rotation_mode='XYZ';par.keyframe_insert(data_path='location'if axis=='slide'else'rotation_euler',frame=1)
