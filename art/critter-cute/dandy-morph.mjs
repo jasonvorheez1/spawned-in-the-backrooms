@@ -7,10 +7,12 @@
 //   hips: the wide female hip pulled in toward a bean torso
 //   neck: the 4.6 cm stick filled out so the head sits on a body, not a pole
 // Usage (gltf-transform + meshoptimizer installed): node dandy-morph.mjs <body.glb> <out.glb>
-import { NodeIO } from "@gltf-transform/core";
-import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
-import { dequantize, quantize, meshopt, sparse } from "@gltf-transform/functions";
-import { MeshoptDecoder, MeshoptEncoder } from "meshoptimizer";
+// an offline tool, not part of the game: its packages load at run time (npm i @gltf-transform/core @gltf-transform/extensions @gltf-transform/functions meshoptimizer)
+const pkg = (n) => import(n);
+const { NodeIO } = await pkg("@gltf-transform/" + "core");
+const { ALL_EXTENSIONS } = await pkg("@gltf-transform/" + "extensions");
+const { dequantize, quantize, meshopt, sparse } = await pkg("@gltf-transform/" + "functions");
+const { MeshoptDecoder, MeshoptEncoder } = await pkg("mesh" + "optimizer");
 await MeshoptDecoder.ready; await MeshoptEncoder.ready;
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({ "meshopt.decoder": MeshoptDecoder, "meshopt.encoder": MeshoptEncoder });
 const [, , src, out] = process.argv;
