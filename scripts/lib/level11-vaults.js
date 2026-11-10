@@ -54,10 +54,10 @@ export function layVaults(ctx, { sp, bx, cyl }) {
   }
   for (let z = 70; z <= 86; z += 5.3) sp(`l11-vault-lamp-${z}`, LAMP(z, 15.3, z, z === 80.6 ? "oklch(0.6 0.08 120)" : undefined, z === 80.6 ? 0.8 : 2.2));
   // the dead train in the pit: one long car, doors open onto nothing
-  bx("l11-vault-train", 9, FY - 1.0, 79, 3.2, 2.9, 15, { color: "oklch(0.62 0.02 250)", metalness: 0.6, roughness: 0.45 }, { children: [
-    ...[-5, -1.5, 2, 5.5].map((dz) => ({ feetPosition: { x: 1.61, y: 1.1, z: dz }, primitive: { kind: "box", width: 0.02, height: 0.8, depth: 1.8 }, material: { color: "oklch(0.25 0.03 220)", roughness: 0.1, metalness: 0.4 } })),
-    { feetPosition: { x: 0, y: 2.0, z: -7.52 }, primitive: { kind: "box", width: 1.6, height: 0.35, depth: 0.02 }, material: { color: "oklch(0.2 0.01 0)" }, ui: `<div face="front" width="1.6m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#111;color:#e8a33a;font:900 150px Arial">14 · NOT IN SERVICE</div>` },
-  ] });
+  // the dead train in the pit: one rusted car (Tripo, art/l11sub/subcar.log), doors open onto nothing
+  sp("l11-vault-train", { feetPosition: { x: 9, y: FY - 1.0, z: 79 }, rotation: { yaw: 90 }, primitive: null, material: null, children: null,
+    model: { id: "/cdn/value.a88f9bd98e36032436f4cfbcfd82ee1304a484081effe4fc993245613abb7616.glb" },
+    layout: { box: { min: { x: -7.5, y: 0, z: -1.6 }, max: { x: 7.5, y: 3.1, z: 1.6 } } }, physics: { body: "static", collider: "box" } });
   // turnstiles, benches, bins, a newspaper-strewn corner
   for (let k = 0; k < 3; k++) sp(`l11-vault-turn-${k}`, { feetPosition: { x: 13.3 + k * 1.1, y: FY, z: 68.4 }, primitive: null, material: null, model: { id: MODELS.turnstile, forward: "-z" }, physics: { body: "static", collider: "box" } });
   sp("l11-vault-mvm", { feetPosition: { x: 18.95, y: FY, z: 69.2 }, rotation: { yaw: -90 }, model: { id: MODELS.mvm, forward: "-z" }, physics: { body: "static", collider: "box" } });
