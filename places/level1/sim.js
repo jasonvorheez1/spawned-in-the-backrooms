@@ -232,14 +232,14 @@ function layStock(ctx) {
     if (zoneOf(cx, cz) !== "storage") continue;
     const c = cellCenter(cx, cz), x0 = c.x - RACK.len / 2;
     for (const r of RACK.rows) for (const [li, y] of RACK.levels.entries()) for (let k = 0; k < 6; k++) {
-      const h0 = hash(cx * 7 + li, cz * 5 + k, r > 0 ? 71 : 73); if (h0 < 0.55) continue;
+      const h0 = hash(cx * 7 + li, cz * 5 + k, r > 0 ? 71 : 73); if (h0 < 0.84) continue; // about 350 across the level: each is its own draw
       const bx = x0 + 0.35 + k * 0.9 + (hash(cx, cz, 80 + k) - 0.5) * 0.2, bz = c.z + r + (hash(cx, cz, 90 + k) - 0.5) * 0.25;
       if (Math.abs(bx - c.x) < 0.15 || [-2.2, -0.75, 0.75, 2.2].some((dx) => Math.abs(bx - (c.x + dx)) < 0.35)) continue;
       const items = []; const m = 1 + Math.floor(ctx.random() * 2); for (let i = 0; i < m; i++) items.push(rollItemL1(ctx));
-      if (h0 < 0.85) {
+      if (h0 < 0.95) {
         const w = 0.3 + hash(cx, k, li) * 0.25, d = 0.3 + hash(k, cz, li) * 0.2, hh = 0.22 + hash(li, k, cz) * 0.28;
         ctx.spawn({ tags: ["container", "breakable", "l1stock"], feetPosition: { x: bx, y, z: bz }, rotation: { yaw: (hash(cx, k, 99) - 0.5) * 16 }, physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 40 },
-          primitive: { kind: "scripted", script: "scripts/l1-stock-geo.js", params: { kind: "carton", w, d, h: hh, tint: h0 < 0.7 ? "oklch(0.78 0.06 70)" : "oklch(0.7 0.05 65)" } },
+          primitive: { kind: "scripted", script: "scripts/l1-stock-geo.js", params: { kind: "carton", w, d, h: hh, tint: h0 < 0.9 ? "oklch(0.78 0.06 70)" : "oklch(0.7 0.05 65)" } },
           state: { name: "Carton", mat: "wood", hp: 20, maxHp: 20, items: items.join(",") } });
       } else {
         ctx.spawn({ tags: ["container", "breakable", "l1stock"], feetPosition: { x: bx, y, z: bz }, rotation: { yaw: hash(cx, k, 98) * 360 }, physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 40 },
