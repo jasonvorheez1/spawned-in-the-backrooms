@@ -6,6 +6,7 @@ import { clearSight } from "./lib/sight.js";
 import { dmgAfterArmor, sneakMul } from "./lib/stats.js";
 import { crouchMul } from "./lib/sneak.js";
 import BOT from "./lib/data/l11-sentry.yml";
+import { knocked, deathRag } from "./lib/knock.js";
 const SENTRY = "/cdn/value.5a18bb1b3ab741080cf1b881ad99be1a9ace445a5e3fa9a4c7c2c6cb9dafb71d.glb";
 const SAY = (t) => `/cdn/${BOT.throat}-saying-${encodeURIComponent(t)}.mp3`;
 const BOLT = `fx
@@ -58,11 +59,12 @@ export function update(ctx, dt) {
     if (f.state.dead || f.state.hp <= 0) { // player.js marks the kill; we lay it down and clear it
       if (!m.died) { m.died = now; st.deadAt = { ...st.deadAt, [i]: now }; f.velocity = { x: 0, y: 0, z: 0 }; f.audio = null;
         if (f.state.kind === "hound") f.anim.main = { clip: "death", loop: false, clampWhenFinished: true, weight: 1 };
-        else if (BOTS.has(f.state.kind)) { m.talkUntil = 0; speak(ctx, f, m, "die", now); ctx.emit("fx", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, script: BOLT }); f.anim.main = { clip: "cdn/clip-die.glb", loop: false, clampWhenFinished: true, weight: 1 }; f.anim.aim = null; }
-        else ctx.emit("playSound", { clip: SND("wet-bone-crunch-and-limp-limbs-collapsing"), position: pos, volume: 0.9 }); }
-      if (now - m.died > (f.visible === false ? 300 : BOTS.has(f.state.kind) ? 60000 : 4000)) delete ctx.place.objects[id];
+        else if (BOTS.has(f.state.kind)) { m.talkUntil = 0; speak(ctx, f, m, "die", now); ctx.emit("fx", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, script: BOLT }); f.anim.main = null; f.anim.aim = null; f.anim.fire = null; f.state.kg = 160; deathRag(f); }
+        else { ctx.emit("playSound", { clip: SND("wet-bone-crunch-and-limp-limbs-collapsing"), position: pos, volume: 0.9 }); f.anim.main = null; f.state.kg = 70; deathRag(f); } }
+      if (now - m.died > (f.visible === false ? 300 : BOTS.has(f.state.kind) ? 60000 : 20000)) delete ctx.place.objects[id];
       continue;
     }
+    if (knocked(ctx, f, now, dt)) { m.limbs = m.sclip = m.clip = null; continue; }
     let prey = null, best = 1e9;
     for (const p of players) { // sight and hearing, both shrunk by sneaking
       const d = flat(p.feetPosition, pos), sn = (p.state?.attr ? sneakMul(p.state) : 1) * crouchMul(ctx, p);
