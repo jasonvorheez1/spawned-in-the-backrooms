@@ -3,7 +3,7 @@
 import { N, S, H, HALF, DOOR, zoneOf, edge, hasPillar, sectorOf, cellCenter, RACK, hash, BACK, ARRIVE } from "./lib/level1.js";
 import { slab, prism, tube } from "./lib/shapes.js";
 
-const FLOOR = "cdn/texture-stained-concrete-floor.png", WALL = "cdn/texture-discolored-poured-concrete-wall-water-stains.png", CEIL = "cdn/texture-concrete-ceiling-panels.png";
+const FLOOR = "cdn/texture-wet-sealed-parking-garage-concrete-floor-tire-scuffs-oil-stains-hairline-cracks.png", STALL = "cdn/texture-worn-chipped-white-road-line-paint-on-concrete.png", WALL = "cdn/texture-discolored-poured-concrete-wall-water-stains.png", CEIL = "cdn/texture-concrete-ceiling-panels.png";
 const box = (ctx, x0, x1, y0, y1, z0, z1) => slab(ctx, [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], [(x1 - x0) / 2, (y1 - y0) / 2, (z1 - z0) / 2]);
 const T = 0.12;
 const PILLAR = "cdn/texture-painted-concrete-column-scuffed.png";
@@ -26,8 +26,41 @@ export function geometry(ctx) {
   ctx.albedo(FLOOR);
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     const x0 = cx * S - HALF, z0 = cz * S - HALF, zone = zoneOf(cx, cz);
-    ctx.color(zone === "corridors" ? "oklch(0.8 0.012 80)" : hash(cx, cz, 3) < 0.25 ? "oklch(0.62 0.01 250)" : hash(cx, cz, 4) < 0.5 ? "oklch(0.74 0.008 80)" : "oklch(0.82 0.006 250)"); ctx.roughness(hash(cx, cz, 5) < 0.3 ? 0.22 : 0.55); // wet patches catch the tubes
+    // light poured concrete like the reference garages: pale and even, a few cells darker where water sits (Shelly: "the floor textures need improvement")
+    ctx.color(zone === "corridors" ? "oklch(0.86 0.01 80)" : hash(cx, cz, 3) < 0.18 ? "oklch(0.74 0.008 240)" : hash(cx, cz, 4) < 0.5 ? "oklch(0.84 0.007 85)" : "oklch(0.9 0.005 240)");
+    ctx.roughness(hash(cx, cz, 5) < 0.35 ? 0.16 : 0.48); // wet patches catch the tubes
     ctx.quad(x0, 0, z0, x0, 0, z0 + S, x0 + S, 0, z0 + S, x0 + S, 0, z0);
+  }
+  // painted floor: parking stall lines along the hall cells, a yellow walkway edge, tire tracks darkening the drive lanes
+  if (hi) {
+    ctx.albedo(STALL); ctx.roughness(0.6);
+    for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
+      if (zoneOf(cx, cz) !== "halls") continue;
+      const x0 = cx * S - HALF, z0 = cz * S - HALF, along = hash(cx, cz, 21) < 0.5, worn = hash(cx, cz, 22);
+      ctx.color(worn < 0.3 ? "oklch(0.8 0.01 90)" : "oklch(0.95 0.006 90)");
+      const n = Math.max(2, Math.floor(S / 2.6));
+      for (let k = 0; k <= n; k++) { // stall dividers, 2.6 m apart, 5 m long, from one side of the cell
+        const t = (k / n) * S;
+        if (along) ctx.quad(x0 + t - 0.06, 0.004, z0 + 0.3, x0 + t - 0.06, 0.004, z0 + 5.3, x0 + t + 0.06, 0.004, z0 + 5.3, x0 + t + 0.06, 0.004, z0 + 0.3);
+        else ctx.quad(x0 + 0.3, 0.004, z0 + t + 0.06, x0 + 5.3, 0.004, z0 + t + 0.06, x0 + 5.3, 0.004, z0 + t - 0.06, x0 + 0.3, 0.004, z0 + t - 0.06);
+      }
+      if (hash(cx, cz, 23) < 0.35) { // a yellow pedestrian edge line across the cell
+        ctx.color("oklch(0.78 0.15 90)"); const m = z0 + S * 0.72;
+        ctx.quad(x0 + 0.2, 0.004, m + 0.08, x0 + S - 0.2, 0.004, m + 0.08, x0 + S - 0.2, 0.004, m - 0.08, x0 + 0.2, 0.004, m - 0.08);
+      }
+    }
+    ctx.albedo(null); ctx.roughness(0.9);
+    for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
+      if (zoneOf(cx, cz) !== "halls" || hash(cx, cz, 24) > 0.55) continue;
+      const x0 = cx * S - HALF, z0 = cz * S - HALF, along = hash(cx, cz, 21) < 0.5;
+      ctx.color("oklch(0.42 0.01 250 / 0.5)");
+      for (const off of [S * 0.62, S * 0.62 + 1.6]) { // two tire tracks down the drive lane, a little wavy
+        for (let k = 0; k < 4; k++) { const a = (k / 4) * S, b = ((k + 1) / 4) * S, w = 0.09 + hash(cx, cz, 30 + k) * 0.05, d = (hash(cx, cz, 40 + k) - 0.5) * 0.25;
+          if (along) ctx.quad(x0 + a, 0.003, z0 + off + d - w, x0 + a, 0.003, z0 + off + d + w, x0 + b, 0.003, z0 + off + d + w, x0 + b, 0.003, z0 + off + d - w);
+          else ctx.quad(x0 + off + d + w, 0.003, z0 + a, x0 + off + d + w, 0.003, z0 + b, x0 + off + d - w, 0.003, z0 + b, x0 + off + d - w, 0.003, z0 + a);
+        }
+      }
+    }
   }
   ctx.roughness(null); ctx.albedo(CEIL); ctx.color("oklch(0.93 0.004 250)");
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
