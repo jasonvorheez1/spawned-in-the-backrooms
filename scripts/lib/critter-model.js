@@ -38,7 +38,7 @@ const hairMatsAll = (c) => ({
   scalp_cap: { color: rootOf(c), roughness: 0.9, metalness: 0 },
   hairtie: { color: '#e85d75', roughness: 0.45, metalness: 0.05 }
 })
-const hairMats = (c, id) => { const all = hairMatsAll(c), have = id && HAIR_SLOTS?.[id]; return have ? Object.fromEntries(have.filter((k) => all[k]).map((k) => [k, all[k]])) : all } // a file's own slots only
+const hairMats = (c, id) => { const all = hairMatsAll(c), tex = id && HAIR_TEX?.[id]; if (tex) all.hair = anime('hair', c, { params: { kind: 'hair', tex }, alphaTest: 0.35, side: 'double' }); const have = id && HAIR_SLOTS?.[id]; return have ? Object.fromEntries(have.filter((k) => all[k]).map((k) => [k, all[k]])) : all } // a file's own slots only
 const hairModel = (l) => {
   const want = hairOf(l)
   return want ? { id: want, materials: hairMats(l?.hairc || '#5a3a26', want) } : null

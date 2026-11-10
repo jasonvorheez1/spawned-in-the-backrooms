@@ -3,7 +3,7 @@
 // skin: a soft wrap with warm subsurface red where light turns away, a faint oily sheen, pores; cloth: woven thread, soft fold shading, a fabric sheen at grazing angles;
 // hair: the shine band (the "angel ring") over strand streaks.
 // params: { kind: "skin" | "hair" | "cloth", lift?: 0..1 } · the material's colour (the look's skin / hair / cloth hex) is the base.
-import { materialColor, normalWorld, positionWorld, positionGeometry, cameraPosition, vec3, float, dot, normalize, pow, smoothstep, max, saturate, mx_noise_float, mx_fractal_noise_float, abs, sin } from "builtin/tsl";
+import { uv, materialColor, normalWorld, positionWorld, positionGeometry, cameraPosition, vec3, float, dot, normalize, pow, smoothstep, max, saturate, mx_noise_float, mx_fractal_noise_float, abs, sin } from "builtin/tsl";
 import { MeshStandardNodeMaterial } from "builtin/three";
 
 export function material(ctx) {
@@ -26,6 +26,12 @@ export function material(ctx) {
     const band = smoothstep(0.46, 0.56, h).mul(float(1).sub(smoothstep(0.66, 0.8, h)));
     const streak = mx_noise_float(g.mul(vec3(90, 6, 90))).mul(0.5).add(0.5);
     col = base.mul(float(0.82).add(streak.mul(0.22)));
+    if (ctx.params.tex) { // the hair file's own strand map: its alpha cuts each card into strands, its grey is the strand shading (Nov 10: shards were cards drawn solid)
+      const t = ctx.texture(String(ctx.params.tex)).sample(uv());
+      const lum = t.r.mul(0.3).add(t.g.mul(0.59)).add(t.b.mul(0.11));
+      col = base.mul(float(0.55).add(lum.mul(0.65)));
+      m.opacityNode = t.a; m.alphaTest = 0.35; m.transparent = false; m.side = 2;
+    }
     col = col.add(base.mul(1.1).add(vec3(0.14, 0.13, 0.15)).mul(band.mul(0.5)));
     // no per-face view darkening: on thin two-sided strands it lit each strand apart, the shards look
     m.roughness = 0.8; m.metalness = 0;
