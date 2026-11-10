@@ -59,3 +59,26 @@ ot_spool: /cdn/value.ef43f5c3a0ff372a1836db93e70be3be781790d37f5306f1678ce67eccc
 ot_wallad: /cdn/value.76a417867c21aeefb7d8d29c151233865229e1cc7231f9d7fd2ab532cbb33f88.png
 payphone_tripo: "/cdn/value.3f1d4bfdace9e0a5bab2fd07823e1022063a15ec0ffc77e118074a8f2df30836.glb" # tripo, 1.8 m
 wchair: "/cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb" # tripo clinic chair
+# Nov 10 tripo batch (/workspace/tripo11): Level 11's last primitive props
+bistro_table: "/cdn/value.ab86e01108e114d76f5e48af61e1bc8b080f6cfdc3e81f3e483f9a671481cfe8.glb" # tripo
+bistro_chair: "/cdn/value.8c161eb878826996b4d3329c94a7a2022e544020baa04cdf6f7bf2f4efb05789.glb" # tripo
+pizza_oven: "/cdn/value.58c8f03201047ef9cbd069cf689542426f13ec9b45be73849594be629901eb5c.glb" # tripo
+pizza_peel: "/cdn/value.ca1eedd52494765f937bc1120e9d50f420a31dd6a29eaeef87418e7784d37ee6.glb" # tripo
+trash_bag: "/cdn/value.995feda9ff8f26806fc11b84645a37bf2ae5bd8cb1bcfe8a8146d20b5aba877a.glb" # tripo
+canal_buoy: "/cdn/value.28269784e513ebf5c0aa3d498d2ebc7944a0e8736234e20673113b294f0a4a77.glb" # tripo
+canal_lamp: "/cdn/value.b52823e88a4c1ee04d53a20aab20ad60961efd9c2bd6a14299967e0669e1d6b3.glb" # tripo
+sat_dish: "/cdn/value.3ab2cc1739896261e46ccdd6774965a8b25481727ea6d4ab2bb7004859844fe4.glb" # tripo
+drywall_stack: "/cdn/value.dd3c11a087dce509414d840925e8477ce72ec546947a8628f600be9ebd25f27c.glb" # tripo
+red_toolbox: "/cdn/value.9d8c68159e95179d0e7e42aa72a680c2c66ff482b0faffd34bd4477c591226f6.glb" # tripo
+office_desk: "/cdn/value.5b6a81b0b5c3ff351fed398c495805ec293eb603941e494dc3249cabbc0f5528.glb" # tripo
+rooftop_ac: "/cdn/value.31468b783408736150ccb07585fe6e6cdbcd455f65049d7faf06079484e31cd4.glb" # tripo
+roof_vent: "/cdn/value.e39db86695f677a4e6e0809e78d2074b7fabd0c08406a46a459361e9b226ae22.glb" # tripo
+dog_bowl: "/cdn/value.7a01a23f7d9d2cdcf91eaf5bb43843892874df29e2bf3362fa3650f8ef5222eb.glb" # tripo
+jackhammer: "/cdn/value.1ef841c0ba09cd0bd15a46f9ad823a94278a0584fcd93dca3856da309d5513c3.glb" # tripo
+tower_viewer: "/cdn/value.9c65bd515ae09e816ce2d62ab9534608c78f02655de82e366734ff5785577353.glb" # tripo
+floodlight: "/cdn/value.957aea4e46520867bd05425b2e48f74387e34553c47b8652cd06b9e6049d577e.glb" # tripo
+produce_crate: "/cdn/value.a922d28ced8ae3d25554208e2453d7caf334f53cf0736b5c50155d263d0b1a03.glb" # tripo
+memorial_candle: "/cdn/value.7cec64cbf91474d747abd0f31e1485584e549f8f48301f1e442ccd7de94e1cc8.glb" # tripo
+soda_can: "/cdn/value.a377d17823fcf9efef6b233d209e1641d83ed5657248ddf24982ba4f2ab3b85c.glb" # tripo
+paper_crane: "/cdn/value.58e20786786d2bbe9e23804c65fdc3fade0f361e0f687f314d9a2b45948e648d.glb" # tripo
+street_sign: "/cdn/value.7dccbc5d93e8229eb8dd118b80a2e8b8ebccffd6455c661172dd08a03cbb7e64.glb" # tripo
