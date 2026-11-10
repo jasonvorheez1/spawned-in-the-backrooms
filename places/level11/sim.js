@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 119; // bump to rebuild the city in rooms that are already open
+const V = 120; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -470,7 +470,7 @@ function lay(ctx) {
     state: { kind: "sedco-spot", name: "Stage Fresnel Spotlight", verb: "Calibrate Spotlight" },
   });
   SPOT("l11-sedco-int-spot-1", SX1 - 1.4, SZ0 + 0.8, SEDCO_X, SEDCO_Z + 1, false);
-  md("l11-sedco-int-counter", "sedco_counter", SX1 - 2.0, 0.14, SEDCO_Z + 0.5, { laminate: { texture: "cdn/texture-wood-grain-laminate.png", color: "#d8c8b0", roughness: 0.6 }, pkgW: { texture: "cdn/texture-white-formica-countertop.png", roughness: 0.4 } }, "box", {
+  sp("l11-sedco-int-counter", { feetPosition: { x: SX1 - 2.0, y: 0.16, z: SEDCO_Z + 0.5 }, primitive: { kind: "scripted", script: "scripts/l11-sedco-counter.js", seed: 3 }, material: { roughness: 0.5 }, physics: { body: "static" }, castShadow: true, // Nov 10: scripted 2009 checkout, not the boxy glb
     rotation: { yaw: 90 },
     tags: ["usable"],
     behavior: "scripts/level11-use.js",

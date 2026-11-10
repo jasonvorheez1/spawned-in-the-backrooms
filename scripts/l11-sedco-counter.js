@@ -16,8 +16,7 @@ export function geometry(ctx) {
   };
   // a box tipped back by `tilt` degrees about its front-bottom edge (a keypad, a screen)
   const tbox = (x0, x1, y, z, w, h, d, tilt) => {
-    const t = (tilt * Math.PI) / 180, c = Math.cos(t), s = Math.sin(t);
-    const P = (u, v, n) => [0, y + v * c + n * s * 0 + n * Math.sin(t) * 0, 0]; // placeholder, replaced below
+    const t = (tilt * Math.PI) / 180, c = Math.cos(t), s = Math.sin(t); // w unused: x0..x1 set it
     const p = (x, v, n) => [x, y + v * s + n * c, z + v * c - n * s]; // v along the slope (toward +z, up), n its thickness
     const a = [x0, x1];
     Q(p(a[1], 0, h), p(a[0], 0, h), p(a[0], d, h), p(a[1], d, h)); // top face (sloped)
@@ -54,7 +53,6 @@ export function geometry(ctx) {
   ctx.smooth();
   const prof = []; for (let k = 0; k <= n; k++) { const a = -Math.PI / 2 + (k / n) * Math.PI; prof.push([TOPH / 2 * Math.cos(a), yTop + TOPH / 2 + TOPH / 2 * Math.sin(a)]); } // half-round, out toward -z
   for (let k = 0; k < n; k++) { const [o0, y0] = prof[k], [o1, y1] = prof[k + 1]; Q([xb, y0, zf + 0.02 - o0], [xa, y0, zf + 0.02 - o0], [xa, y1, zf + 0.02 - o1], [xb, y1, zf + 0.02 - o1]); }
-  ctx.flat?.();
   box(xa, yTop, zf + 0.02, xb, H, z1);
   // a rubber bumper strip on the cashier edge
   paint("#2a2a2a", 0.8); box(xa, yTop - 0.005, z1, xb, H, z1 + 0.012);
@@ -128,4 +126,4 @@ export function geometry(ctx) {
   paint("#b87333", 0.3, 0.9); for (let i = 0; i < 5; i++) { const x = -0.43 + rnd() * 0.08, z = -0.29 + rnd() * 0.06; box(x, H + 0.012, z, x + 0.018, H + 0.016, z + 0.018); }
 }
 
-export function collider() { return { kind: "box", min: { x: -1.37, y: 0, z: -0.42 }, max: { x: 1.37, y: 1.05, z: 0.39 } }; }
+export function collider() { return { kind: "box", width: 2.74, height: 1.05, depth: 0.81, center: [0, 0.525, -0.015] }; }
