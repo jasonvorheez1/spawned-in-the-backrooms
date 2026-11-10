@@ -1,7 +1,8 @@
 # Shelly's female base (/cdn/model-humanoid-genshin-anime-female-base-yfbdzh16.glb), rigged by hand:
 # a mixamo skeleton measured onto the mesh (Tripo's auto-rig put both shoulder joints in the middle of the chest).
 import bpy, math, mathutils, sys, os
-SRC = "/workspace/rb/base_one.glb"; OUT = "/workspace/rb/female_rig.glb"; PROOF = "/workspace/rb/proof"
+MALE = os.environ.get("MALE") == "1"   # MALE=1: the male built off Shelly's female base (she asked for one: "they never made a male version")
+SRC = "/workspace/rb/base_one.glb"; OUT = "/workspace/rb/male_rig.glb" if MALE else "/workspace/rb/female_rig.glb"; PROOF = "/workspace/rb/proof_m" if MALE else "/workspace/rb/proof"
 os.makedirs(PROOF, exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=SRC)
@@ -38,6 +39,11 @@ for side_, xs in (("Left", 1), ("Right", -1)):
         HANDCH.append((f"{side_}Hand{f}2", f"{side_}Hand{f}1", f"{side_}Hand{f}3"))
         HANDCH.append((f"{side_}Hand{f}3", f"{side_}Hand{f}2", f"{side_}Hand{f}4"))
         HANDCH.append((f"{side_}Hand{f}4", f"{side_}Hand{f}3", f"{side_}Hand{f}End"))
+SH, GROW = .055, 1.06   # male: arms ride out with the broader shoulders; 6% taller
+if MALE:
+    for k, (x, y, z) in list(J.items()):
+        if "Arm" in k or "Hand" in k: x += SH * (1 if x > 0 else -1)
+        J[k] = (x * GROW, y * GROW, z * GROW)
 CHAIN = [("Hips",None,"Spine"),("Spine","Hips","Spine1"),("Spine1","Spine","Spine2"),("Spine2","Spine1","Neck"),("Neck","Spine2","Head"),("Head","Neck","HeadTop_End")]
 for s in ("Left","Right"):
     CHAIN += [(s+"Shoulder","Spine2",s+"Arm"),(s+"Arm",s+"Shoulder",s+"ForeArm"),(s+"ForeArm",s+"Arm",s+"Hand"),(s+"Hand",s+"ForeArm",s+"HandEnd"),
@@ -59,6 +65,30 @@ for o in [o for o in bpy.data.objects if o.type == 'EMPTY']: bpy.data.objects.re
 bpy.ops.object.join(); body = bpy.context.view_layer.objects.active
 body.name = "Body"
 bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.select_all(action='SELECT'); bpy.ops.mesh.remove_doubles(threshold=0.0001); bpy.ops.object.mode_set(mode='OBJECT')
+def sm(a, b_, x):
+    t = max(0.0, min(1.0, (x - a) / (b_ - a))); return t * t * (3 - 2 * t)
+def bump(a, b_, c_, d, x): return sm(a, b_, x) * (1 - sm(c_, d, x))
+if MALE:
+    vs = body.data.vertices
+    arm = [sm(.15, .2, abs(v.co.x)) * sm(1.08, 1.18, v.co.z) * (1 - sm(1.56, 1.6, v.co.z)) for v in vs]
+    # the chest's front line, measured above and below the bust on the centre strip
+    def front(z): return max((v.co.y for v in vs if abs(v.co.z - z) < .015 and abs(v.co.x) < .1 and v.co.y > .05), default=.15)
+    yt, yb = front(1.47), front(1.21); print("chest front", round(yt, 3), round(yb, 3))
+    for i, v in enumerate(vs):
+        x, y, z = v.co; sg = 1 if x >= 0 else -1; A = arm[i]; T = 1 - A
+        x = x * (1 + .26 * bump(1.3, 1.42, 1.5, 1.57, z) * T) + sg * SH * A          # broad shoulders and upper chest
+        x *= 1 - .13 * bump(.82, .92, 1.12, 1.24, z) * T                           # narrower hips, straighter waist
+        x *= 1 + .07 * bump(1.12, 1.2, 1.26, 1.32, z) * T                          # thicker waist (no hourglass)
+        band = bump(1.2, 1.25, 1.44, 1.49, z) * (1 - sm(.1, .17, abs(x))) * T     # flat chest: front clamped to the line, a slight pec
+        line = yb + (yt - yb) * (z - 1.21) / .26 + .008 * bump(1.32, 1.37, 1.42, 1.46, z) * bump(.01, .04, .09, .12, abs(x))
+        if y > line: y = y + (line - y) * band
+        nk = bump(1.48, 1.52, 1.6, 1.66, z) * T                                    # thicker neck
+        x *= 1 + .3 * nk; y = .08 + (y - .08) * (1 + .18 * nk)
+        jaw = bump(1.6, 1.64, 1.72, 1.77, z) * T                                   # squarer, wider jaw
+        x *= 1 + .1 * jaw
+        if A > .5: y = .11 + (y - .11) * (1 + .15 * A)                             # fuller arms
+        v.co = mathutils.Vector((x * GROW, y * GROW, z * GROW))
+    body.data.update()
 body.select_set(True); rig.select_set(True); bpy.context.view_layer.objects.active = rig
 bpy.ops.object.parent_set(type='ARMATURE_AUTO')
 dg=bpy.context.evaluated_depsgraph_get(); ev=body.evaluated_get(dg); zs=[(body.matrix_world@v.co) for v in ev.data.vertices]; print("restbox",[round(min(p[i] for p in zs),3) for i in range(3)],[round(max(p[i] for p in zs),3) for i in range(3)], "parent", body.parent, tuple(body.matrix_world.to_scale()))
