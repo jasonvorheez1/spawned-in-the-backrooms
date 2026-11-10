@@ -1406,10 +1406,10 @@ function pullPin(ctx) {
   w.nade = { kind, at: now, fuseAt: now + (T.fuse ?? 0) }
   // the arm draws back and holds there (the clip's wind-up, slowed) until you let go
   ctx.self.anim.nade = { clip: OVERHAND.clip, weight: OVERHAND.weight, loop: 'once', speed: 0.55, time: 0, mask: OVERHAND.mask, blendIn: OVERHAND.blendIn, blendOut: OVERHAND.blendOut, clampWhenFinished: true }
-  // in first person: the grenade or bottle comes up in your right hand
-  w.nadeVm = ctx.spawn({ audience: 'local', scope: 'session', feetPosition: { attach: 'camera', x: 0.24, y: -0.3, depth: 0.55 }, rotation: { yaw: 20, pitch: kind === 'frag' ? 0 : -20 }, model: T.model,
+  // in first person: the grenade or bottle comes up in your free left hand, the gun stays up in the right
+  w.nadeVm = ctx.spawn({ audience: 'local', scope: 'session', feetPosition: { attach: 'camera', x: -0.26, y: -0.3, depth: 0.55 }, rotation: { yaw: -20, pitch: kind === 'frag' ? 0 : -20 }, model: T.model,
     layout: { box: { min: { x: -T.size / 2, y: 0, z: -T.size / 2 }, max: { x: T.size / 2, y: T.size, z: T.size / 2 } } }, visibleInFirstPerson: true, castShadow: false })
-  animate(ctx, w.nadeVm, { 'feetPosition.y': [-0.5, -0.22], 'feetPosition.x': [0.3, 0.32] }, { duration: 0.25, easing: 'easeOutCubic' })
+  animate(ctx, w.nadeVm, { 'feetPosition.y': [-0.5, -0.22], 'feetPosition.x': [-0.3, -0.32] }, { duration: 0.25, easing: 'easeOutCubic' })
   ctx.emit('playSound', { clip: kind === 'frag' ? '/cdn/moodboard-realistic-gritty/sfx-grenade-pin-pull-metal-ring-click.mp3' : '/cdn/moodboard-realistic-gritty/sfx-lighter-flick-cloth-rag-catches-fire.mp3', volume: 0.75 })
   if (kind === 'frag') w.nadeCook = ctx.after(T.fuse / 1000, 'cookedOff', { at: w.nade.at })
 }
@@ -1427,7 +1427,7 @@ function letFly(ctx) {
   // the arm whips through: the rest of the clip at full speed from the wind-up
   ctx.self.anim.nade = { clip: OVERHAND.clip, weight: OVERHAND.weight, loop: 'once', speed: 1.6, time: 0.62, mask: OVERHAND.mask, blendIn: 0.05, blendOut: 0.3 }
   ctx.after(0.5, 'nadeArmDown', { at: now })
-  if (w.nadeVm) { const vm = w.nadeVm; w.nadeVm = null; animate(ctx, vm, { 'feetPosition.y': [-0.22, 0.05], 'feetPosition.depth': [0.55, 1.1], 'feetPosition.x': [0.32, 0.05] }, { duration: 0.12 }); ctx.after(0.12, 'nadeVmGone', { id: vm }) }
+  if (w.nadeVm) { const vm = w.nadeVm; w.nadeVm = null; animate(ctx, vm, { 'feetPosition.y': [-0.22, 0.05], 'feetPosition.depth': [0.55, 1.1], 'feetPosition.x': [-0.32, -0.05] }, { duration: 0.12 }); ctx.after(0.12, 'nadeVmGone', { id: vm }) }
   ctx.emit('cameraPunch', { direction: { x: 0, y: -0.2, z: -1 }, intensity: 0.25 }, { audience: { player: ctx.self.id } })
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
   const eye = { x: p.x + f.x * 0.5, y: p.y + (s.crouch ? 1.0 : 1.5), z: p.z + f.z * 0.5 }
