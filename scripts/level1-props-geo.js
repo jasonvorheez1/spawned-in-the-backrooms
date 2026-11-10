@@ -53,7 +53,7 @@ function rubble(ctx, x, z, seed, hi) {
     ctx.albedo(null); ctx.color("oklch(0.42 0.06 45)"); ctx.metalness(0.6); ctx.roughness(0.7); // rusted rebar out of the break, bent where it tore
     for (let i = 0; i < 3; i++) { const a = rot + 0.3 + i * 0.35, bx = x + Math.cos(a) * 0.45, bz = z + Math.sin(a) * 0.3, up = 0.25 + hash(seed, i, 51) * 0.3;
       tube(ctx, [[bx, k * 0.6, bz], [bx + Math.cos(a) * 0.12, k + up * 0.5, bz + Math.sin(a) * 0.12], [bx + Math.cos(a + 0.6) * 0.2, k + up, bz + Math.sin(a + 0.6) * 0.2]], [0.008, 0.008, 0.007], 5, [1, 1], 0, 1, 1); }
-    ctx.metalness(0); ctx.color("oklch(0.62 0.01 80 / 0.7)"); ctx.roughness(1); // grit and dust spread under it
+    ctx.metalness(0); ctx.color("oklch(0.48 0.01 80)"); ctx.roughness(1); // grit and dust spread under it
     prism(ctx, jag(x, z, 1.1, 0.9, 12, seed + 9, rot), 0.002, 0.004);
   }
   ctx.albedo(null); ctx.roughness(0.85);
