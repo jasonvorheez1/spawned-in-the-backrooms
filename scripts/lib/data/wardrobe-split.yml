@@ -151,7 +151,7 @@ f:
     Ward_sneakers: "/cdn/value.fba1b8fa314791435457863d9b4c74ce428b8902af4f21a2934bcfa0a0c81266.glb"
     Ward_souwester: "/cdn/value.b59d340e7aefb1ab1045fdecf38b7acd95b4953d0c0fc102467ac3a53442ab20.glb"
     Ward_steeltoe: "/cdn/value.1a1b24a4ede9db18dfcbcd58f3076cd07990a45ee009f9c0f16e30dcad011c94.glb"
-    Ward_sweater: "/cdn/value.e69a0e183784bf21e4f6bc8af4c8f5cf9c1a30b0f5bbffa95374f7927e4adc42.glb"   # Tripo knit remesh fitted to the Nov 10 redo body (art/cloth-redo), Shelly yes #178749
+    Ward_sweater: "/cdn/value.392e627c0f54eb37666423b6f3d232d1803cbc7ac6a2e1a8a1810a74640d7b39.glb"   # Tripo knit remesh fitted to the Nov 10 redo body (art/cloth-redo), Shelly yes #178749; Bust key carried from the body (art/human-cloth/bust_transfer.py)
     Ward_tailcoat: "/cdn/value.703a9822e3a576c594c09fc1a66d3dc21f5139d3e95ac7ab38a594258e861c73.glb"
     Ward_tank: "/cdn/value.acd15f7b971367d67b22655f98e29ad81ccb5491503f4000c32ccefc0b49fead.glb"
     Ward_tarwaders: "/cdn/value.ddc3c89fb771aa6a7a45141fd54f438ae912742cad89e448f914672b40818fb1.glb"
