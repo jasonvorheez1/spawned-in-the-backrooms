@@ -37,7 +37,13 @@ for k,nm in enumerate(names):
         uv=bm.loops.layers.uv.active; bm.normal_update()
         side=sorted([f for f in bm.faces if abs(f.normal.z)<0.3], key=lambda f:-f.calc_area())
         c=sum((l[uv].uv for l in side[0].loops), Vector((0,0)))/len(side[0].loops)
-        top=max(v.co.z for v in bm.verts)
+        top=max(v.co.z for v in bm.verts); xs=[v.co.x for v in bm.verts]; ys=[v.co.y for v in bm.verts]
+        x0,x1,y0,y1=min(xs)+0.012,max(xs)-0.012,min(ys)+0.012,max(ys)-0.012
+        vv=[bm.verts.new((x,y,top-0.006)) for x,y in ((x0,y0),(x1,y0),(x1,y1),(x0,y1))]
+        lid=bm.faces.new(vv)  # a closed lid where the next box used to sit
+        for l in lid.loops: l[uv].uv=c
+        lid.normal_update()
+        if lid.normal.z<0: lid.normal_flip()
         for f in bm.faces:
             if f.normal.z>0.6 and f.calc_center_median().z>top-0.08:
                 for l in f.loops: l[uv].uv=c
