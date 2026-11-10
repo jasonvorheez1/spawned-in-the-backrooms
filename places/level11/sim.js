@@ -180,7 +180,9 @@ function lay(ctx) {
   bx("l11-curb-w-north", -8.1, 0.08, -55, 0.2, 0.28, 50, CURB_MAT);
 
   sp("l11-sw-east-mid", { feetPosition: { x: 12, y: 0.08, z: -6 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 24, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } }); // stops at the 11th street crossing (z 6..18) so cars drive through
-  sp("l11-sw-east-south", { feetPosition: { x: 12, y: 0.08, z: 48 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 56, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
+  // east-south sidewalk, cut open around the subway stairwell (x 12.4..14.8, z 58.4..62.6) so the stair goes down through it
+  for (const [id, x, z, w, d] of [["l11-sw-east-south", 12, 39.2, 7.6, 38.4], ["l11-sw-east-south-n", 12, 69.3, 7.6, 13.4], ["l11-sw-east-south-w", 10.3, 60.5, 4.2, 4.2], ["l11-sw-east-south-e", 15.3, 60.5, 1, 4.2]])
+    sp(id, { feetPosition: { x, y: 0.08, z }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w, d, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
   sp("l11-sw-east-north", { feetPosition: { x: 12, y: 0.08, z: -55 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 50, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
   bx("l11-curb-e-mid", 8.1, 0.08, -6, 0.2, 0.28, 24, CURB_MAT);
   bx("l11-curb-e-south", 8.1, 0.08, 48, 0.2, 0.28, 56, CURB_MAT);
