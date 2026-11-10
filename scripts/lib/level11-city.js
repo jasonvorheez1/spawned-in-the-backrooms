@@ -77,6 +77,19 @@ export function layCity(ctx, h) {
     }
     if (zs !== 12) for (let x = -140; x < 140; x += 28) bx(`l11-st-ln-${zs}-${x}`, x, 0.06, zs, 8, 0.01, 0.14, YEL, { physics: undefined });
   }
+  // corner pads: where an avenue's sidewalk meets a street's, the square between them was bare road, so lamps, hydrants and signals stood in the asphalt
+  for (const ax of X_AVE) for (const zs of Z_ST) {
+    if (zs === 12 && Math.abs(ax) < 36) continue; // the centre crossing is sim.js's own
+    const inner = ax === 0 ? 8.2 : 6, outer = ax === 0 ? 15.8 : 12;
+    for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+      const za = zs + sz * 6, zb = zs + sz * 12;
+      if (ax === 0 && Math.max(za, zb) > -82 && Math.min(za, zb) < 78) continue; // inside the old centre: sim.js laid it
+      const xc = ax + sx * (inner + outer) / 2, w = outer - inner, zc = zs + sz * 9, k = `l11-cnr-${ax}-${zs}-${sx}${sz}`;
+      bx(k, xc, 0.08, zc, w, 0.25, 6, WALK);
+      bx(`${k}-kz`, xc, 0.08, zs + sz * 6.1, w + 0.2, 0.28, 0.2, CURB); // kerb along the street
+      bx(`${k}-kx`, ax + sx * (inner - 0.1), 0.08, zc, 0.2, 0.28, 6, CURB); // kerb along the avenue
+    }
+  }
   // the canal runs on past the old ends, with a bridge at every avenue
   for (const [x0, x1] of [[-250, -59], [59, 250]]) {
     const xc = (x0 + x1) / 2, L = x1 - x0;
