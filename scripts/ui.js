@@ -400,7 +400,7 @@ function renderHud(ctx, player) {
 
 
   return `${THEME}${LIVE}
-${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
+${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','journal'].includes(screen(s,player.place))}" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
   ${questTracker(s, player, ctx)}
   ${!s.building && screen(s,player.place)==='play' && Object.keys(s.quickSlots??{}).length ? `<div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:4px;max-width:70vw;flex-wrap:wrap;justify-content:center;pointer-events:auto">${Object.entries(s.quickSlots).map(([slot,id])=>{const item=quick.find(x=>x.id===id);return item?`<button data-interactive title="${esc(item.name)}" onclick="sendAction('quickUse',{slot:${Number(slot)}})" style="background:rgba(20,15,7,.9);color:${item.count?'#ffe0a6':'#a89b83'};border:1px solid #927249;padding:5px 8px;font:inherit;font-size:11px"><b>${slot}</b> ${esc(item.name)} ×${item.count}</button>`:''}).join('')}</div>` : ''}
   ${s.nvgOn ? `<div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,oklch(0.75 0.2 145 / .10) 35%,oklch(0.08 0.05 145 / .92) 78%);mix-blend-mode:normal"></div><div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,oklch(0.6 0.2 145 / .08) 0 1px,transparent 1px 3px)"></div><div style="position:absolute;top:18px;left:50%;transform:translateX(-50%);color:#7cf08a;font-size:12px;letter-spacing:.3em;opacity:.8">NV · ${Math.round(s.battery)}%</div>` : ''}${xferCard(s, now)}${tutUi(s, now)}${t0Fade(ctx, player)}${restUi(ctx, s)}${mahjongPanel(s, now)}
