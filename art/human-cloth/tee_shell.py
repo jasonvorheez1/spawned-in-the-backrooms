@@ -42,20 +42,20 @@ _top = max(p.z for p in _P)
 neckR = max(abs(p.x) for p in _P if _top - 0.035 * s < p.z < _top - 0.005)  # the neck tube where the head file takes over
 _mz = min((neckz + J['Head'].z) / 2, _top - 0.01)
 _nk = [abs(p.x) for p in _P if abs(p.z - _mz) < 0.006]
-neckR = max(_nk) if _nk else neckR
-NW = (neckR + 0.014) / s
+_tw = [abs(p.x) for p in _P if abs(p.z - (_top - 0.005)) < 0.004]
+neckR = max(_tw) if _tw else neckR  # the neck tube's own half-width at its top, before it flares into the trapezius
+NW = (neckR + 0.022) / s
 print('JZ', {k: round(J[k].z, 3) for k in ('Hips', 'Spine', 'Spine1', 'Spine2', 'Neck', 'Head')}, 'neckR', round(neckR, 3))  # half-width of the neck opening; outside it the straps run over the shoulder
 _sh = [p.z for p in _P if NW * s < abs(p.x) < xstrap and p.z < neckz + 0.08 * s]
 shz = (max(_sh) + 0.012 * s) if _sh else _top + 0.01  # the shoulder's own top: straps lie on it, never ride up the neck tube
 capz = _top + 0.01  # straps run up and over until this body's own edge  # over the shoulder top; the neck line when this body splits there
 print('NECK', round(neckR, 3), 'cap', round(capz, 3))
 def necklim(x, y):  # a U scoop, deep in front, shallow at the back
-    u = abs(x) / (NW * s)
-    base = min(capz, neckz + 0.01 * s)
-    if u >= 1: return capz + 1.0  # a tee covers the whole shoulder
+    u = ((x - J['Neck'].x) ** 2 + ((y - J['Neck'].y) * 1.15) ** 2) ** 0.5 / (NW * s)  # round, around the neck's own axis
+    if u >= 1: return neckz + (0.035 + 0.02 * min(1.0, (u - 1) * 2)) * s  # a crew collar: the trapezius stays covered, the neck tube above stays bare
     front = max(0.0, min(1.0, (sy - y) / (0.06 * s) + 0.5))
-    depth = (0.012 + 0.03 * front) * s * NECKD
-    return min(capz, neckz + 0.01 * s) - depth * (1 - u * u) ** 0.5
+    depth = (0.01 + 0.035 * front) * s * NECKD
+    return neckz + 0.035 * s - depth * (1 - u * u) ** 0.5
 me = body.data
 if os.environ.get('DBG'):
     sy0=sy
