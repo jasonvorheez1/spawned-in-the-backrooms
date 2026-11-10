@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 135; // supplied Level 11 references: skyline variation and modern canal bridges
+const V = 136; // supplied Level 11 references: skyline variation and modern canal bridges
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -841,8 +841,8 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
   // Construction Work Light Tripod casting bright halogen beam
   sp("l11-reno-worklight", {
     feetPosition: { x: -23, y: 0.27, z: -3 }, rotation: { yaw: 200 },
-    model: { id: MODELS.floodlight, forward: "-z" }, layout: { box: { min: { x: -.9, y: 0, z: -.8 }, max: { x: .9, y: 1.8, z: .8 } } },
-    children: [{ feetPosition: { x: 0, y: 1.72, z: 0.2 }, light: { kind: "point", color: "oklch(0.98 0.08 90)", intensity: 8.5, distance: 18 } }],
+    primitive: RENO_KIT("workstand"), material: RENO_PAINT,
+    children: [{ id:"lamp-head",feetPosition:{x:0,y:1.56,z:.04},model:{id:MODELS.floodlight,forward:"-z"},layout:{box:{min:{x:-.275,y:0,z:-.175},max:{x:.275,y:.42,z:.175}}} },{ feetPosition: { x: 0, y: 1.77, z: 0.2 }, light: { kind: "point", color: "oklch(0.98 0.08 90)", intensity: 8.5, distance: 18 } }],
   });
 
   // Work Table with City Blueprints & B.R.C. Task Clipboard: plywood on sawhorses
