@@ -19,6 +19,13 @@ bpy.ops.object.select_all(action='DESELECT'); g.select_set(True); bpy.context.vi
 bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 for o in set(bpy.data.objects) - before:
     if o != g: bpy.data.objects.remove(o)
+# tripo cloth is a thick shell: its inner wall, pushed out with the outer, flickers through it. drop faces facing the skin
+bm2 = bmesh.new(); bm2.from_mesh(g.data); bm2.normal_update(); dead = []
+for f in bm2.faces:
+    loc, nrm, _, _ = tree.find_nearest(f.calc_center_median())
+    if loc is not None and f.normal.dot(nrm) < -0.2: dead.append(f)
+bmesh.ops.delete(bm2, geom=dead, context='FACES'); bm2.to_mesh(g.data); bm2.free()
+print('inner faces dropped', len(dead))
 # push every vertex inside or hugging the skin out to 1.2 cm off it, ease loose cloth within 4 cm in toward 1.8 cm
 pushed = 0
 for v in g.data.vertices:
@@ -55,6 +62,7 @@ for p in g.data.polygons: p.use_smooth = True
 # take the old slot's place: name, material, rig
 # tripo's own material (its UVs match it), renamed to the slot name the game tints; the old texture smeared on the new UVs
 tm = g.data.materials[0]; oldm = mats[0]; nm = oldm.name; oldm.name = nm + '_old'; tm.name = nm
+tm.use_backface_culling = False
 print('material', nm)
 oldname = old.name; bpy.data.objects.remove(old); g.name = oldname
 g.parent = rig; am = g.modifiers.new('Armature', 'ARMATURE'); am.object = rig
