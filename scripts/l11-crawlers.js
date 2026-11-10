@@ -6,7 +6,7 @@ import { clearSight } from "./lib/sight.js";
 import { dmgAfterArmor, sneakMul } from "./lib/stats.js";
 import { crouchMul } from "./lib/sneak.js";
 import BOT from "./lib/data/l11-sentry.yml";
-const SENTRY = "SENTRY_GLB";
+const SENTRY = "/cdn/value.59718c2fb90f95d3e456c5bdf3c1b552975bc471218facc9b61450cc6ce23053.glb";
 const SAY = (t) => `/cdn/${BOT.throat}-saying-${encodeURIComponent(t)}.mp3`;
 const BOLT = `fx
 pop arc burst=14..20 life=.1..0.25 v=sdir()*(2..4) size=.03..0.05 acc=drag(3) col=hdr(5,2.6,.6)>hdr(2,.8,.1) a=1>0 sz=$size r=sprite(ember,add,velocity,.03)
@@ -18,7 +18,7 @@ const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
 function spec(kind, x, z, i) {
   const K = D.kinds[kind], base = { tags: ["l8-hostile", "l11foe", kind === "hound" ? "l11hound" : kind === "sentry" ? "l11sentry" : "l11clump"], feetPosition: { x, y: D.floor + 0.05, z }, physics: { body: "character" },
     state: { kind, name: K.name, hp: K.hp, maxHp: K.hp, home: { x, z }, slot: i } };
-  if (kind === "sentry") return { ...base, tags: [...base.tags, "zdrone"], model: { id: SENTRY, forward: "+x" }, audio: { clip: "/cdn/moodboard-scifi-neon/sfx-old-vacuum-tube-electrical-hum-and-relay-ticking-loop.mp3", loop: true, gain: 0.25, spatial: true, maxDistance: 12 } };
+  if (kind === "sentry") return { ...base, tags: [...base.tags, "zdrone"], model: { id: SENTRY, forward: "+x" }, layout: { box: { min: { x: -0.5, y: 0, z: -0.5 }, max: { x: 0.5, y: 1.9, z: 0.5 } } }, audio: { clip: "/cdn/moodboard-scifi-neon/sfx-old-vacuum-tube-electrical-hum-and-relay-ticking-loop.mp3", loop: true, gain: 0.25, spatial: true, maxDistance: 12 } };
   return kind === "hound"
     ? { ...base, model: { id: HOUND }, scale: 1, audio: { clip: SND("low-wet-animal-growl-breathing-loop"), loop: true, gain: 0.25, spatial: true, maxDistance: 14 } }
     : { ...base, model: { id: CLUMP, forward: "+x" }, layout: { box: { min: { x: -0.8, y: 0, z: -0.8 }, max: { x: 0.8, y: 1.2, z: 0.8 } } }, scale: 1, audio: { clip: SND("many-fingers-knuckles-cracking-and-skin-dragging-on-concrete-loop"), loop: true, gain: 0.35, spatial: true, maxDistance: 16 } };

@@ -157,7 +157,7 @@ export function gain(ctx, n) {
 // Apply one looted item (a token from scripts/lib/items.js) to the player. Returns { ok } or { ok: false, msg }.
 // Nothing is picked up by walking over it: scripts/interact.js calls this when you press E on what you are looking at.
 // eaten food also feeds hunger (scripts/craft.js drains it)
-// holotapes HALOGEN can play: id → the reel and its length in seconds
+// tapes HALOGEN can play: id → the reel and its length in seconds
 export const HOLO = { r55: { clip: '/cdn/value.b7bbbfcb923978bb4ac8ae234d44454562debf569936a5f20c378f0e28110e01.mp3', len: 35, name: 'Atomic Age Defender' }, walt41: { clip: '/cdn/value.13b431f3dead226e2ffab8155644c00c326ef6767b9b57df23b71353cbd1a50e.mp3', len: 28, name: 'Field Test 41' } }
 export function holoEnd(ctx, p) { if (ctx.self.state.holoPlay?.at === p?.at) ctx.self.state.holoPlay = null }
 export function takeToken(ctx, token) {
@@ -225,10 +225,10 @@ function takeToken0(ctx, token) {
   }
   if (token === 'bobbypin' || token === 'pin' || token === 'bobby_pin') { s.bobbypins = (s.bobbypins ?? 0) + 1; s.pickedAt = now; s.notice = { text: `Bobby pin (${s.bobbypins} carried)`, at: now }; sound(ctx, 'pickup-ammo', 0.5, true); return { ok: true } }
   if (token === 'firesalt') { s.firesalt = (s.firesalt ?? 0) + 1; s.pickedAt = now; sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true } }
-  if (token.startsWith('holo:')) { // a holotape: kept, played on HALOGEN (I > Misc > PLAY)
+  if (token.startsWith('holo:')) { // a tape: kept, played on HALOGEN (I > Misc > PLAY)
     const id = token.slice(5), have = String(s.holotapes ?? '').split(',').filter(Boolean)
     if (!have.includes(id)) have.push(id)
-    s.holotapes = have.join(','); s.pickedAt = now; s.notice = { text: 'Holotape · play it on HALOGEN (I > Misc)', at: now }
+    s.holotapes = have.join(','); s.pickedAt = now; s.notice = { text: 'Tape · play it on HALOGEN (I > Misc)', at: now }
     sound(ctx, 'loot-take-all-rustle', 0.4, true); return { ok: true }
   }
   if (token.startsWith('page:')) { // a torn notebook page: kept and read now
@@ -758,7 +758,7 @@ function invAction(ctx, d) {
     s.notice = { text: `Firesalt on your ${W[s.equipped]?.name?.toLowerCase() ?? 'weapon'}: x${L3I.firesalt.damage} melee for ${L3I.firesalt.seconds}s`, at: ctx.now() }
     sound(ctx, 'gun-raise-cloth-rustle', 0.5, true); return
   }
-  if (d.k === 'holo') { // HALOGEN plays a carried holotape into this player's ears alone
+  if (d.k === 'holo') { // HALOGEN plays a carried tape into this player's ears alone
     const id = String(d.id ?? ''), T = HOLO[id]; if (!T || !String(s.holotapes ?? '').split(',').includes(id)) return
     if (ctx.self.session.holoSnd != null) ctx.emit('stopSound', { soundId: ctx.self.session.holoSnd })
     if (s.holoPlay?.id === id && ctx.now() - s.holoPlay.at < T.len * 1000) { ctx.self.session.holoSnd = null; s.holoPlay = null; return } // a second press stops it
