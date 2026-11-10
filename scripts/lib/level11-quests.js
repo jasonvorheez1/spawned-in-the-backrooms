@@ -37,7 +37,7 @@ export const QUESTS = {
     name: "The Paper Bird's Blessing",
     tips: {
       1: "Seek out Entity 14 (Lucky Crane) resting on the Grand Canal balustrade",
-      2: "Follow the canal promenade to the North Canal Pumping Spillway",
+      2: "Follow the canal promenade to the Grand Canal Spillway Valve Station",
       3: "Clear the jammed spillway valve and collect pure Canal Almond Water",
       4: "Deliver the pure Almond Water to Trader Kael at the Central Market",
     },

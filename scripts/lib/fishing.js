@@ -94,9 +94,9 @@ export function checkFishableWater(ctx, p, f, pc, power = 0) {
     return { ok: false, reason: 'Hook landed in yellow canola fields! Cast towards the pond.' };
   }
 
-  // 4. LEVEL 11: INFINITE CITY (Grand Urban Promenade Canal at z: -30, width: 20, x: -60..60)
+  // 4. LEVEL 11: INFINITE CITY (Grand Urban Promenade Canal at z: -30, width: 20, x: -250..250)
   if (place === 'level11') {
-    if (Math.abs(bz - (-30)) <= 9.6 && Math.abs(bx) <= 59.5) {
+    if (Math.abs(bz - (-30)) <= 9.6 && Math.abs(bx) <= 249.5) {
       return {
         ok: true,
         waterY: -2.2,

@@ -482,7 +482,7 @@ export const ears = {
       }, { audience: { player: who.id } });
 
       if (w.craneQ === 1) {
-        setCraneStep(ctx, who, 2, "Objective Complete: Lucky Crane blessed you · Follow the promenade to the North Canal Spillway");
+        setCraneStep(ctx, who, 2, "Objective Complete: Lucky Crane blessed you · Follow the promenade to the Grand Canal Spillway");
       }
 
       if (w) w.notice = { text: "Entity 14 (Lucky Crane): The folded paper crane flutters its delicate wings peacefully under the Level 11 Effect.", at: now };
