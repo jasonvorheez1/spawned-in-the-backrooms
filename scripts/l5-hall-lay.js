@@ -35,7 +35,7 @@ function lay(ctx) {
     ctx.spawn("l5-hall-plaque-" + l.room, { tags: ["l5-hall"], feetPosition: { x: o.a1 + 0.32, y: 1.5, z: o.at - dir * 0.09 }, rotation: { yaw: dir > 0 ? 0 : 180 },
       primitive: { kind: "scripted", script: FIX, params: { kind: "placard", no: String(l.no), text: String(l.no), label: String(l.no) } } }); }
   for (const q of ctx.query({ tags: ["l5-radio"] })) { const o = ctx.getObject(q.id); if (o) o.primitive = { kind: "scripted", script: FIX, params: { kind: "radio" } }; }
-  for (const q of ctx.query({ tags: ["l5-sealed"] })) { const o = ctx.getObject(q.id); if (o) o.primitive = { kind: "scripted", script: FIX, params: { kind: "sealed", seed: q.id.length } }; }
+  for (const q of ctx.query({ tags: ["l5-sealed"] })) { const o = ctx.getObject(q.id); if (o) { o.primitive = { kind: "scripted", script: DOOR, params: { style: "hotel", part: "set", w: 1.1, h: 2.3, hingeSide: "left", swing: 1, seed: q.id.length } }; o.material = { pbr: true }; } } // sealed: a shut door in its frame, never opens
 }
 export function update(ctx) {
   if (ctx.self.state.v === V) return ctx.sleep(30);
