@@ -6,7 +6,7 @@
 import { maxHp, maxSan } from "../../scripts/player.js";
 import { DRIP, RIPPLE } from "../../scripts/lib/ambient.js";
 export const cadence = "1s";
-const V = 1;
+const V = 2;
 const CAVE = "/cdn/value.8ee97464d76b59ba323139f76410fd015f304ffe8a5df300024cac2cac8cee69.glb";
 const FLOW = "/cdn/value.fc172db4defdc02603c499ccc386d3fea6fb504d8b388408de18c1ef734f6c34.glb"; // Level 8's flowstone mound
 const ROCK = (kind, color) => ({ kind: "scripted", script: "scripts/mat-cave.js", params: { kind, s: 1 }, color });
@@ -17,7 +17,7 @@ const STEAM = `fx
 pop steam rate=?mobile:5|9 on=disc(3.6) life=4..7 v=up(.15..0.35)+sdir()*.05 size=.6..1.2 acc=curl(.2)*.3+drag(.4) sz=$size*(.6>2.4) col=<.92,.94,.95> a=0>.18:.12>.7:.06>0 rot=spin(.08) r=sprite(smoke-puff,alpha)`;
 const FALL = `fx
 pop sheet rate=?mobile:40|80 on=line(<-.35,0,0>,<.35,0,0>) life=.55..0.75 v=<0,-.5,.45>+sdir()*.08 size=.07..0.12 acc=grav()*.9 col=<.82,.9,.92> a=.75>.6:.6>0 sz=$size r=sprite(soft-disc,alpha,velocity,.05)
-pop mist rate=?mobile:4|8 at=<0,-%drop|2.4,.6> life=1..1.8 v=sdir()*.4+up(.2) size=.3..0.6 acc=drag(1)+buoy(.2) sz=$size*(.6>2) col=<.9,.94,.96> a=0>.2:.14>.6:.08>0 r=sprite(smoke-puff,alpha)`;
+pop mist rate=?mobile:4|8 on=point() pos=<0,-%drop|2.4,.6> life=1..1.8 v=sdir()*.4+up(.2) size=.3..0.6 acc=drag(1)+buoy(.2) sz=$size*(.6>2) col=<.9,.94,.96> a=0>.2:.14>.6:.08>0 r=sprite(smoke-puff,alpha)`;
 const pts = (n, f) => Array.from({ length: n }, (_, i) => f(i));
 function lay(ctx) {
   const sp = (id, spec) => { if (ctx.place.objects[id]) ctx.destroy(id); return ctx.spawn(id, spec); };
