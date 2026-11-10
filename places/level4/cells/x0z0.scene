@@ -1572,7 +1572,7 @@ omega-okafor/critter-ward-cap:
 omega-okafor/critter-ward-cargo:
   attachment: {skin: true}
   id: omega-okafor/critter-ward-cargo
-  model: {forward: "+z", id: /cdn/value.0afe50a3cdfd59cb0e92887496925a31151aa5874b72eb17d60c257381bc6945.glb, materials: {cloth_bottom: {color: "#5a5040", kind: scripted, metalness: 0, params: {pat: canvas, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}}}
+  model: {forward: "+z", id: /cdn/value.025ceeab94b0bdefbb30f25e69cae2d655d39a7c374bccb5a4ce44e3e939ceb9.glb, materials: {cloth_bottom: {color: "#5a5040", kind: scripted, metalness: 0, params: {pat: canvas, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}}}
   morph: {BrowHeavy: 0.258, Bust: 0, CheekFull: 0.1, ChinLong: 0.14, FaceLong: 0.01, HT_Angular: 0, HT_Broad: 0.01, HT_Heart: 0.45, HT_Long: 0, HT_Round: 0, HT_Square: 0, HeadRound: 0.15, JawNarrow: 0, JawWide: 0.2108856731886044, M_Chin: 0.22, M_Jaw: 0.42, NoseBig: 0.17}
   parent: omega-okafor
 omega-okafor/critter-ward-inner:
@@ -1632,7 +1632,7 @@ omega-rhea/critter-ward-maidapron:
 omega-rhea/critter-ward-slacks:
   attachment: {skin: true}
   id: omega-rhea/critter-ward-slacks
-  model: {forward: "+z", id: /cdn/value.e40cbb5d5bf97d15b016ffdde0f2db8af4710730c006f314aba4e21721cfa8ac.glb, materials: {cloth_bottom: {color: "#55565c", kind: scripted, metalness: 0, params: {pat: weave, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}}}
+  model: {forward: "+z", id: /cdn/value.7f1f5fe483514586a1bc67e3d4a8070f2c04eb3a0514c0211ee30cb78b7faf00.glb, materials: {cloth_bottom: {color: "#55565c", kind: scripted, metalness: 0, params: {pat: weave, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}}}
   morph: {BrowHeavy: 0.027, Bust: 0.9, CheekFull: 0.19, ChinLong: 0.26, FaceLong: 0.4, HT_Angular: 0.14, HT_Broad: 0, HT_Heart: 0, HT_Long: 0, HT_Round: 0, HT_Square: 0.38, HeadRound: 0.03, JawNarrow: 0.05, JawWide: 0, NoseBig: 0.1}
   parent: omega-rhea
 omega-rhea/object/xad4c834675863151/107:
