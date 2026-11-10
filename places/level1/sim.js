@@ -99,12 +99,13 @@ export function tick(ctx) {
     for (const [dx, dz, col] of [[6, 4.2, "oklch(0.85 0.12 75)"], [6, -4.2, "oklch(0.85 0.12 75)"], [13, 0, "oklch(0.92 0.04 220)"]]) ctx.spawn({ feetPosition: { x: a.x + dx, y: 2.3, z: a.z + dz }, visibleRange: { max: 42 }, light: { kind: "point", color: col, intensity: 2.5, distance: 9, shadow: { enabled: false } } });
     for (const [id, dx, dz] of AGENTS) ctx.spawn(id, agentSpec(a, id, dx, dz));
   }
-  if (s.megCamp && s.megTripo !== 1) { s.megTripo = 1; // the camp's tents, cots, table, stove, sandbags and pallets as real models (Shelly: less blocky)
+  if (s.megCamp && s.megTripo !== 3) { s.megTripo = 3; // the camp's tents, cots, table, stove, sandbags and pallets as real models (Shelly: less blocky)
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz), camp = ctx.place.objects["meg-camp"]
     if (camp) camp.primitive = { kind: "scripted", script: "scripts/meg-camp-geo.js", params: { tripo: true } }
     const M = { tent: "/cdn/value.876d02a55c4b5fe879189ef5684d6e5d4836e9e5f6b7295f7e9b0b85ad9f7b58.glb", cot: "/cdn/value.7c6ab929e07fc61864842584ca2d254442f6dc31bfa7d2e2b9e4e3f48588f485.glb", table: "/cdn/value.c015312d6391f45684bfd1e30ad93c9391f659d879584af998cf53decc1613de.glb", stove: "/cdn/value.330d65cefe10f77c51d0fea1858662db291a4746b272dfdc2f81d21c681479f7.glb", bags: "/cdn/value.3ef438addb021fb2564e48689de4b5281d9464d3a65b502624bd0244ce8cad87.glb", pallet: "/cdn/value.e55e3090a6f8a13ae4db1cc993f62b0f07ee7a16a6c05c0fccde459bf7f1d9f8.glb" }
     const put = (id, m, dx, dz, w, h, yaw, solid = true) => ctx.spawn(id, { feetPosition: { x: a.x + dx, y: 0, z: a.z + dz }, rotation: { yaw }, model: { id: M[m] }, layout: { box: { min: { x: -w / 2, y: 0, z: -w / 2 }, max: { x: w / 2, y: h, z: w / 2 } } }, physics: solid ? (m === "tent" ? { body: "static", collider: "mesh" } : "static") : undefined, visibleRange: { max: 70 } }) // tents: mesh colliders so the door is a door (Shelly: "i cant get in tents")
-    put("meg-t-tent-n", "tent", 8.5, 6.5, 4.2, 2.4, 90); put("meg-t-tent-s", "tent", 8.5, -6.5, 4.2, 2.4, 90); put("meg-t-tent-med", "tent", 13, 0, 6, 3.0, 90)
+    put("meg-t-tent-n", "tent", 8.5, 6.5, 4.6, 3.3, 90, false); put("meg-t-tent-s", "tent", 8.5, -6.5, 4.6, 3.3, 90, false); put("meg-t-tent-med", "tent", 13, 0, 6.4, 3.9, 90, false) // tall enough to walk in standing
+    tentWalls(ctx, a) // canvas sides solid, both ends open: you walk in (Shelly: "i cant get in tents")
     put("meg-t-cot-0", "cot", 5.5, 3.2, 2.0, 0.6, 0); put("meg-t-cot-1", "cot", 5.5, -3.2, 2.0, 0.6, 0); put("meg-t-cot-2", "cot", 11.6, 1.6, 2.0, 0.6, 0)
     put("meg-t-table", "table", 6.4, -0.5, 1.6, 1.4, 0); put("meg-t-stove", "stove", 9.5, -2.8, 0.75, 1.0, 30)
     for (const [i, dx, dz] of [[0, 14.5, 5.5], [1, 14.5, -5.5], [2, 11, -9], [3, 11, 9]]) put("meg-t-pallet-" + i, "pallet", dx + 0.35, dz, 1.3, 1.4, i * 20)
@@ -112,11 +113,24 @@ export function tick(ctx) {
     for (const sz of [-1, 1]) for (let x = -3; x <= 2; x += 1.6) put("meg-t-bags-" + n++, "bags", x, sz * 10.5, 1.6, 1.0, 90)
     for (const sz of [-1, 1]) for (let z = 2.8; z <= 8.5; z += 1.6) put("meg-t-bags-" + n++, "bags", 15.4, sz * z, 1.6, 1.0, 0)
   }
-  if (s.l1Tripo !== 1) { s.l1Tripo = 1; // the halls' drums and box pallets as real models, each a loose thing you can hit, kick, grab and break (Shelly: less blocky)
+  if (s.l1Tripo !== 3) { s.l1Tripo = 3; // the halls' drums and box pallets as real models, each a loose thing you can hit, kick, grab and break (Shelly: less blocky)
     const DRUM = "/cdn/value.de68d3453156f6d0341dc0143da17f0a5f60f2da731a9b018363a51fcf233712.glb", PAL = "/cdn/value.52adc0a974c9920d51033154da8dae242fd9a7271b1190ad5a9d3a0f0b9f6c1f.glb";
     for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id]; if (o.primitive?.script === "scripts/level1-props-geo.js") o.primitive = { ...o.primitive, params: { tripo: true } }; }
     const drum = (id, x, z, yaw) => ctx.spawn(id, { tags: ["l1prop"], feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: DRUM }, layout: { box: { min: { x: -0.3, y: 0, z: -0.3 }, max: { x: 0.3, y: 0.9, z: 0.3 } } }, physics: { body: "static", collider: "cylinder" }, visibleRange: { max: 45 }, state: { name: "Oil Drum", loose: "metal", mat: "sheet_steel" } });
-    const pal = (id, x, z, yaw) => ctx.spawn(id, { tags: ["l1prop"], feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: PAL }, layout: { box: { min: { x: -0.6, y: 0, z: -0.6 }, max: { x: 0.6, y: 1.3, z: 0.6 } } }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, state: { name: "Pallet of Boxes", loose: "wood", mat: "wood", items: "scrap_wood" } });
+    const BOXSTACK = [ // the Tripo pallet-of-boxes cut into its pallet and three boxes in Blender (art/l1-boxstack/build.py): [model, y, width, height, depth]
+      ["/cdn/value.55df1d3983bde51837c396491fff9015cc09598507749cb199fa144a6b53fd9b.glb", 0, 0.954, 0.261, 1.36],
+      ["/cdn/value.bd7c0cbac7eefbb5c1584bd63005a7c39bfacfb2beb3d4e60a47252820cf552e.glb", 0.165, 0.677, 0.461, 0.991],
+      ["/cdn/value.b38dc81280c35d3f87435921844ff0ee4594c8f1609dc3b020faf26416d137c6.glb", 0.612, 0.552, 0.421, 0.766],
+      ["/cdn/value.d4da0db276e9457c56a83cce2ef518cccc8065d0f8e158c7c82f747f45c97b2f.glb", 0.982, 0.467, 0.318, 0.554]];
+    const pal = (id, x, z, yaw) => { // separate pieces (Shelly: "the boxes in this model should be separated"): the pallet, then each box its own thing you open, kick, grab or break
+      for (const k of ["", "-p", "-b0", "-b1", "-b2", "-b3"]) if (ctx.place.objects[id + k]) delete ctx.place.objects[id + k];
+      const n = 2 + Math.floor(hash(x, z, 7) * 2.99); // 1 to 3 boxes still on it
+      BOXSTACK.slice(0, n + 1).forEach(([m, y, w, h, d], i) => {
+        const box = i > 0, j = box ? (hash(x, z, 30 + i) - 0.5) : 0;
+        ctx.spawn(id + (box ? "-b" + (i - 1) : "-p"), { tags: box ? ["l1prop", "container", "breakable"] : ["l1prop"], feetPosition: { x: x + j * 0.08, y, z: z - j * 0.06 }, rotation: { yaw: yaw + j * 14 }, model: { id: m }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 },
+          state: box ? { name: "Cardboard Box", loose: "wood", mat: "wood", hp: 20, maxHp: 20, items: "scrap_wood" } : { name: "Pallet", loose: "wood", mat: "wood", items: "scrap_wood" } });
+      });
+    };
     for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
       const zone = zoneOf(cx, cz); if (zone !== "halls" && zone !== "storage") continue;
       const r = hash(cx, cz, 201), c = cellCenter(cx, cz), x = c.x + (hash(cx, cz, 203) - 0.5) * 3.2, z = c.z + (zone === "storage" ? 0 : (hash(cx, cz, 205) - 0.5) * 3.2), k = `l1d-${cx}-${cz}`;
@@ -148,6 +162,7 @@ export function tick(ctx) {
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz), at = Object.fromEntries(AGENTS.map(([id, dx, dz]) => [id, [dx, dz]]));
     keepPeople(ctx, Object.keys(at), (ctx, id) => { ctx.spawn(id, agentSpec(a, id, ...at[id])); ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody("pistol") }); });
   }
+  if (s.l1StockV !== 2) { s.l1StockV = 2; for (const o of ctx.query({ tags: ["l1stock"] })) delete ctx.place.objects[o.id]; s.l1Stock = 0; } // stock v2: real box models
   if (!s.l1Stock) { s.l1Stock = layStock(ctx) || 1; }
   if (!s.puddles) { s.puddles = true;
     for (let i = 0; i < 70; i++) { const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N); if (zoneOf(cx, cz) !== "halls" && zoneOf(cx, cz) !== "storage") continue;
@@ -225,6 +240,11 @@ function placeOne(ctx) {
 }
 // rack stock (Shelly: "the stock could be useable too"): cartons and paint pails on the rack decks, each one searchable.
 // Laid once per place; the shelf bins keep their own slots (k at the bay middle is skipped, crates sit at ±0.75/2.2).
+// the tents' long canvas sides as invisible walls; the door ends stay open
+function tentWalls(ctx, a) {
+  for (const [k, dx, dz, hw, hd, h] of [["n", 8.5, 6.5, 1.85, 2.3, 2.6], ["s", 8.5, -6.5, 1.85, 2.3, 2.6], ["med", 13, 0, 2.55, 3.2, 3.2]])
+    for (const sx of [-1, 1]) ctx.spawn("meg-t-tentwall-" + k + (sx > 0 ? "e" : "w"), { feetPosition: { x: a.x + dx + sx * (hw - 0.25), y: 0, z: a.z + dz }, primitive: { kind: "box", width: 0.5, height: h * 0.7, depth: hd * 2 }, visible: false, physics: "static" })
+}
 function layStock(ctx) {
   const PAILS = ["oklch(0.88 0.01 250)", "oklch(0.55 0.13 250)", "oklch(0.6 0.16 30)"];
   let n = 0;
@@ -239,7 +259,7 @@ function layStock(ctx) {
       if (h0 < 0.95) {
         const w = 0.3 + hash(cx, k, li) * 0.25, d = 0.3 + hash(k, cz, li) * 0.2, hh = 0.22 + hash(li, k, cz) * 0.28;
         ctx.spawn({ tags: ["container", "breakable", "l1stock"], feetPosition: { x: bx, y, z: bz }, rotation: { yaw: (hash(cx, k, 99) - 0.5) * 16 }, physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 40 },
-          primitive: { kind: "scripted", script: "scripts/l1-stock-geo.js", params: { kind: "carton", w, d, h: hh, tint: h0 < 0.9 ? "oklch(0.78 0.06 70)" : "oklch(0.7 0.05 65)" } },
+          model: { id: hash(cx, k, li + 7) < 0.5 ? "/cdn/value.d4da0db276e9457c56a83cce2ef518cccc8065d0f8e158c7c82f747f45c97b2f.glb" : "/cdn/value.b38dc81280c35d3f87435921844ff0ee4594c8f1609dc3b020faf26416d137c6.glb" }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: hh, z: d / 2 } } }, // the real cardboard boxes cut from the pallet model, not flat blocks
           state: { name: "Carton", mat: "wood", hp: 20, maxHp: 20, items: items.join(",") } });
       } else {
         ctx.spawn({ tags: ["container", "breakable", "l1stock"], feetPosition: { x: bx, y, z: bz }, rotation: { yaw: hash(cx, k, 98) * 360 }, physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 40 },
