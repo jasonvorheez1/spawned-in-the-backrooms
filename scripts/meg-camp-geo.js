@@ -114,7 +114,7 @@ export function geometry(ctx) {
 }
 export function collider(ctx) { // only what a body should bump: tents, barricades, table, stove, stacks
   const C = (x0, x1, y1, z0, z1) => box(ctx, x0, x1, 0, y1, z0, z1);
-  C(6.9, 10.1, 2, 4.4, 8.6); C(6.9, 10.1, 2, -8.6, -4.4); C(10.9, 15.1, 2.6, -3, 3);
+  if (!ctx.params?.tripo) { C(6.9, 10.1, 2, 4.4, 8.6); C(6.9, 10.1, 2, -8.6, -4.4); C(10.9, 15.1, 2.6, -3, 3); } // the tent models carry their own mesh colliders, door open (Shelly: "i cant get in tents")
   C(5.2, 7.6, 0.84, -1, 0); C(9.2, 9.8, 0.7, -3.1, -2.5);
   for (const s of [-1, 1]) { C(-4.4, 3.6, 1.5, s * 11.4 - 0.4, s * 11.4 + 0.4); C(6.4, 14.4, 1.5, s * 11.4 - 0.4, s * 11.4 + 0.4); C(-4.3, 3.3, 0.45, s * 10.5 - 0.3, s * 10.5 + 0.3); }
   C(16, 16.8, 0.8, -10.4, -1.4); C(16, 16.8, 0.8, 1.4, 10.4);
