@@ -42,3 +42,9 @@ test('existing rooms receive new bridge dimensions and model fitting without los
  const old={id:'deck',feetPosition:{x:0,y:-.45,z:-30},primitive:{kind:'box',width:17,height:.6,depth:24},physics:'static',state:{open:true,items:'kept'}},primitive={kind:'box',width:32,height:.6,depth:24},place={players:[{}],state:{lq:{i:0}},objects:{deck:old}},ctx={place,session:{l11q:{v:134,sorted:true,rows:[['deck',{feetPosition:old.feetPosition,primitive,layout:{box:{min:{x:-16,y:0,z:-12},max:{x:16,y:.6,z:12}}}}]],keep:{deck:true}}},now:()=>0,spawn(){},destroy(){throw Error('unexpected replacement')}};
  tick(ctx);expect(old.primitive).toEqual(primitive);expect(old.layout.box.max.x).toBe(16);expect(old.state).toEqual({open:true,items:'kept'});expect(place.state.builtV).toBe(134)
 })
+
+test('bank coping leaves the outer bridge roadways clear',()=>{
+ const rows=[];layCity({}, {sp(){},bx:(id,x,y,z,w,h,d)=>{if(id.startsWith('l11-canal-cope'))rows.push({x,z,w,d})}});
+ for(const x of [-140,-70,70,140])for(const z of [-40.5,-19.5])expect(rows.some(r=>Math.abs(x-r.x)<r.w/2&&Math.abs(z-r.z)<r.d/2)).toBe(false)
+ expect(collect(reno,{kind:'workstand'}).length).toBeGreaterThan(0)
+})

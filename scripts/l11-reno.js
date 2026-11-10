@@ -8,7 +8,7 @@
 //  "worklight": a halogen work light on a tripod stand, 1.8 m, the lamp head facing +z.
 //  "sawhorse":  a plywood work table on two steel sawhorses, 2.4 x 1.2, top at 0.86.
 // Vertex colours carry the paint; the placement's material is white.
-import { path } from "./lib/l5-hall-kit.js";
+import { path, pipe } from "./lib/l5-hall-kit.js";
 const BLOCK = "oklch(0.8 0.025 85)", BLOCK_DIRTY = "oklch(0.68 0.03 75)", CONC = "oklch(0.7 0.015 80)", CONC_DARK = "oklch(0.55 0.015 80)";
 const STUD = "oklch(0.78 0.01 240)", DRY = "oklch(0.9 0.015 90)", DRY_TAPE = "oklch(0.95 0.01 90)", FRAME = "oklch(0.3 0.01 250)";
 const GRID = "oklch(0.92 0.005 90)", TILE = "oklch(0.86 0.02 90)", DUCT = "oklch(0.8 0.005 240)", ALU = "oklch(0.82 0.01 240)";
@@ -115,12 +115,12 @@ function ladder(ctx) {
   ctx.color(BLACK); beam(ctx, [0.18, 1.2, 0.25], [0.18, 1.2, -0.3], 0.012); beam(ctx, [-0.18, 1.2, 0.25], [-0.18, 1.2, -0.3], 0.012); // spreader bars
   ctx.color(RUB); for (const s of [-1, 1]) { box(ctx, s * w0 / 2 - 0.04, 0, sf - 0.04, s * w0 / 2 + 0.04, 0.04, sf + 0.04); box(ctx, s * w0 / 2 - 0.035, 0, -sb - 0.035, s * w0 / 2 + 0.035, 0.04, -sb + 0.035); }
 }
-function worklight(ctx) {
+function worklight(ctx,drawHead=true) {
   ctx.color(YEL);
-  for (let i = 0; i < 3; i++) { const a = i * 2.094; beam(ctx, [Math.cos(a) * 0.55, 0.02, Math.sin(a) * 0.55], [0, 0.75, 0], 0.03); }
-  ctx.color(BLACK); beam(ctx, [0, 0.7, 0], [0, 1.65, 0], 0.035); box(ctx, -0.05, 0.72, -0.05, 0.05, 0.8, 0.05);
+  for (let i = 0; i < 3; i++) { const a = i * 2.094; pipe(ctx, [Math.cos(a) * 0.55, 0.02, Math.sin(a) * 0.55], [0, 0.75, 0], .015, 8); }
+  ctx.color(BLACK); pipe(ctx, [0, 0.7, 0], [0, 1.65, 0], .0175, 10); box(ctx, -0.05, 0.72, -0.05, 0.05, 0.8, 0.05);
   beam(ctx, [-0.25, 1.65, 0], [0.25, 1.65, 0], 0.03);
-  for (const s of [-1, 1]) { ctx.color(YEL); box(ctx, s * 0.25 - 0.13, 1.6, -0.08, s * 0.25 + 0.13, 1.84, 0.08); ctx.color(BLACK); for (let k = 0; k < 4; k++) box(ctx, s * 0.25 - 0.12 + k * 0.07, 1.62, -0.1, s * 0.25 - 0.1 + k * 0.07, 1.82, -0.08); ctx.color("oklch(0.98 0.05 90)"); box(ctx, s * 0.25 - 0.11, 1.62, 0.08, s * 0.25 + 0.11, 1.82, 0.095); }
+  if(drawHead)for (const s of [-1, 1]) { ctx.color(YEL); box(ctx, s * 0.25 - 0.13, 1.6, -0.08, s * 0.25 + 0.13, 1.84, 0.08); ctx.color(BLACK); for (let k = 0; k < 4; k++) box(ctx, s * 0.25 - 0.12 + k * 0.07, 1.62, -0.1, s * 0.25 - 0.1 + k * 0.07, 1.82, -0.08); ctx.color("oklch(0.98 0.05 90)"); box(ctx, s * 0.25 - 0.11, 1.62, 0.08, s * 0.25 + 0.11, 1.82, 0.095); }
   ctx.color(RUB); for (let i = 0; i < 3; i++) { const a = i * 2.094; box(ctx, Math.cos(a) * 0.55 - 0.04, 0, Math.sin(a) * 0.55 - 0.04, Math.cos(a) * 0.55 + 0.04, 0.03, Math.sin(a) * 0.55 + 0.04); }
 }
 function sawhorse(ctx) {
@@ -137,6 +137,7 @@ export function geometry(ctx) {
   ctx.smooth?.();
   if (p.kind === "ladder") return ladder(ctx);
   if (p.kind === "worklight") return worklight(ctx);
+  if (p.kind === "workstand") return worklight(ctx,false);
   if (p.kind === "sawhorse") return sawhorse(ctx);
   return shell(ctx, lod);
 }
