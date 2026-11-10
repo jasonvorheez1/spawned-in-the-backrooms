@@ -82,7 +82,7 @@ m:
     Ward_wirehood: "/cdn/value.c768676683762b223a75e24a3a11a312bbd35facb935f8e00baf334f2bdd2e5c.glb"
 f:
   inner: "/cdn/value.9b1486e93523492f5b5e58111196903df33d9612c7a382b90b72cbf723eb6e4c.glb"   # the plain tee worn under open-front tops, settled 2 mm off the skin (art/human-cloth/inner_tee.mjs)
-  body: "/cdn/value.f99b8cd9ed464225836f5c6703202b1cfb43e540a42d0df4adee2b6cfc153844.glb"
+  body: "/cdn/value.96cb937132921c75c0646e3ccc549507c80a4ad94e3b72e35e0ea7e49275138b.glb"
   parts:
     Ward_abysshauberk: "/cdn/value.6c67e8b9d4c467af67bed287e6ea47c38c55781de58dc44c1138b263aa52a7b3.glb"
     Ward_apron: "/cdn/value.e08b2badfb1b520679646be0d1c0100a3f5ad420c1b5370ce582f1064078d777.glb"
