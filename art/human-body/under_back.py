@@ -30,18 +30,22 @@ if U.data.shape_keys:
         for i, d in enumerate(kb.data): d.co += delta[i]
 import bmesh
 # RELAX off: the seat is loose triangles, not one sheet, so relaxing tore it open (Nov 10 render). Kept for a welded remake. Was: relax it in place, edges held, and carry the same move onto every shape key
-_b = bmesh.new(); _b.from_mesh(U.data); _b.verts.ensure_lookup_table()
-_b0 = [v.co.copy() for v in _b.verts]
+import os
+WELD = float(os.environ.get('WELD', '0.0006')); RELAX = int(os.environ.get('RELAX', '8'))
+_b = bmesh.new(); _b.from_mesh(U.data)
+_nb0 = sum(1 for x in _b.edges if x.is_boundary)
+bmesh.ops.remove_doubles(_b, verts=_b.verts[:], dist=WELD)          # one sheet: the loose triangles share their corners again (shape keys and weights ride along in bmesh)
+_sl = list(_b.verts.layers.shape.values())
 _free = [v for v in _b.verts if not v.is_boundary]
-for _ in range(int(__import__('os').environ.get('RELAX', '0'))):
+_c0 = {v: v.co.copy() for v in _b.verts}
+for _ in range(RELAX):
     bmesh.ops.smooth_vert(_b, verts=_free, factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
-_d = [v.co - _b0[i] for i, v in enumerate(_b.verts)]
-_b.free()
-for i, v in enumerate(U.data.vertices): v.co += _d[i]
-if U.data.shape_keys:
-    for kb in U.data.shape_keys.key_blocks:
-        for i, d in enumerate(kb.data): d.co += _d[i]
-U.data.update()
+for v in _b.verts:                                                  # every shape key moves with its basis
+    d = v.co - _c0[v]
+    for L in _sl: v[L] = v[L] + d
+bmesh.ops.recalc_face_normals(_b, faces=_b.faces[:])
+print('UB weld', _nb0, '->', sum(1 for x in _b.edges if x.is_boundary), 'boundary edges;', len(_b.verts), 'verts')
+_b.to_mesh(U.data); _b.free(); U.data.update()
 import bmesh                                            # flipped faces drew see-through in game (white skin flecks on the seat): face them all outward
 _b = bmesh.new(); _b.from_mesh(U.data); bmesh.ops.recalc_face_normals(_b, faces=_b.faces[:]); _b.to_mesh(U.data); _b.free(); U.data.update()
 print('UB lifted', sum(1 for d in delta if d.length > 1e-4), 'of', len(delta))
