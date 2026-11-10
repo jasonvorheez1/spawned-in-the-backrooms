@@ -106,9 +106,8 @@ export function layDepths(ctx, { sp, bx, cyl }) {
   sp("l11d-d-shelf", { feetPosition: { x: 49.7, y: FL, z: 194 }, rotation: { yaw: -90 }, model: { id: FURN.shelf, forward: "+x" }, physics: { body: "static", collider: "box" } });
   sp("l11d-d-lamp", { feetPosition: { x: 35, y: FL, z: 200.8 }, model: { id: FURN.lamp, forward: "+x" }, physics: { body: "static", collider: "box" }, light: { kind: "point", color: "oklch(0.85 0.12 70)", intensity: 1.6, distance: 12 } });
   // the tape: a scuffed reel tin on the desk, beside a dead reel-to-reel
-  sp("l11d-tape", { tags: ["container"], feetPosition: { x: 43.6, y: FL + 0.86, z: 199.4 }, primitive: { kind: "cylinder", radiusTop: 0.11, radiusBottom: 0.11, height: 0.04 }, material: { color: "oklch(0.6 0.04 70)", metalness: 0.8, roughness: 0.45 }, physics: { body: "static", collider: "box" },
-    state: { name: "Reel tin marked R-55", items: "holo:r55" },
-    children: [{ feetPosition: { x: 0, y: 0.041, z: 0 }, rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 0.1 }, material: { color: "oklch(0.75 0.12 40)", roughness: 0.7 } }] });
+  sp("l11d-tape", { tags: ["container"], feetPosition: { x: 43.6, y: FL + 0.86, z: 199.4 }, model: { id: MODELS.reel_tin, forward: "+x" }, layout: { box: { min: { x: -0.11, y: 0, z: -0.11 }, max: { x: 0.11, y: 0.06, z: 0.11 } } }, physics: { body: "static", collider: "box" },
+    state: { name: "Reel tin marked R-55", items: "holo:r55" } }); // tripo reel tin
   // Walt Kessler's own reel, still threaded in his recorder: test 41, the day he looked
   sp("l11d-reel", { tags: ["container"], feetPosition: { x: 44.75, y: FL + 0.78, z: 199.6 }, rotation: { yaw: 180 }, model: { id: NEW.reel, forward: "-z" }, layout: { box: { min: { x: -0.3, y: 0, z: -0.2 }, max: { x: 0.3, y: 0.3, z: 0.2 } } }, physics: { body: "static", collider: "box" },
     state: { name: "Reel-to-reel recorder", items: "holo:walt41" } });

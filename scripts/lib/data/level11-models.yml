@@ -82,3 +82,6 @@ memorial_candle: "/cdn/value.7cec64cbf91474d747abd0f31e1485584e549f8f48301f1e442
 soda_can: "/cdn/value.a377d17823fcf9efef6b233d209e1641d83ed5657248ddf24982ba4f2ab3b85c.glb" # tripo
 paper_crane: "/cdn/value.58e20786786d2bbe9e23804c65fdc3fade0f361e0f687f314d9a2b45948e648d.glb" # tripo
 street_sign: "/cdn/value.7dccbc5d93e8229eb8dd118b80a2e8b8ebccffd6455c661172dd08a03cbb7e64.glb" # tripo
+reel_tin: "/cdn/value.35b2fa1a26d4b4e1c194970cd95f42efdf4827be47dfe56cec4308d8e0f0a8fc.glb" # tripo, 1950s film reel tin (l11d-tape)
+mta_kiosk: "/cdn/value.0b46c1f1d7c9892856938750731dcce9d9f7b914ef2954e5deec0c0260c9f8fe.glb" # tripo, street ticket kiosk (l11-vault-kiosk)
+lab_counter: "/cdn/value.6cad6e7da8ba65c68064a72edd1bb3370bdbae78e154aa796eb08abda979e6fe.glb" # tripo, lab base cabinet (l11-lab-counter)

@@ -13,7 +13,7 @@ const DARK = { color: "oklch(0.16 0.01 250)", roughness: 0.9 }, VAULT = { color:
 const LAMP = (id, x, z, c = "oklch(0.92 0.06 120)", i = 2.2) => ({ feetPosition: { x, y: FY + 2.3, z }, primitive: { kind: "box", width: 1.2, height: 0.08, depth: 0.2 }, material: { color: c, emissive: c, emissiveIntensity: 2 }, light: { kind: "point", color: c, intensity: i, distance: 9 } });
 export function layVaults(ctx, { sp, bx, cyl }) {
   // the kiosk terminal on the street, beside the stair
-  bx("l11-vault-kiosk", SUB.x + 2.4, 0.1, SUB.z - 1.2, 0.8, 1.0, 0.6, { color: "oklch(0.3 0.08 150)", metalness: 0.5 });
+  sp("l11-vault-kiosk", { feetPosition: { x: SUB.x + 2.4, y: 0.1, z: SUB.z - 1.2 }, rotation: { yaw: 90 }, model: { id: MODELS.mta_kiosk, forward: "+x" }, layout: { box: { min: { x: -0.3, y: 0, z: -0.4 }, max: { x: 0.3, y: 1.0, z: 0.4 } } }, physics: { body: "static", collider: "box" } }); // tripo street kiosk
   sp("l11-vault-mta-terminal", terminalSpec({ host: "MTA-GATE-07", lock: "science:15", name: "MTA Station Gate Terminal", at: { x: SUB.x + 2.4, y: 1.1, z: SUB.z - 1.2 }, yaw: 90, tint: "#3fb86b", note: "pw: fourteenth" }));
   // landing + corridor from the last stair step (z ~62) to the hall
   bx("l11-vault-landing", SUB.x, FY - 0.3, 64.5, 3.2, 0.3, 5.0, GRIME);

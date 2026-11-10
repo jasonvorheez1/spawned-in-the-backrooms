@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 131; // 130: scored sidewalk squares // bump to rebuild the city in rooms that are already open
+const V = 132; // 132: spam bags/box, lab counter, kiosk, reel tin modelled // 130: scored sidewalk squares // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -636,7 +636,7 @@ function lay(ctx) {
     fit("l11-derma-cab", CAB, MALL_X - 4.6, MALL_Z - 6.5, 90, [1.6, 0.85, 0.45]);
     sp("l11-derma-poster", { feetPosition: { x: MALL_X - 5.1, y: 1.9, z: MALL_Z - 8.2 }, rotation: { yaw: 90 }, ui: `<div face="front" width="1.1m" style="width:1100px;height:1400px;background:#f7fbfa;border:18px solid #1b8a5a;font-family:Arial,sans-serif;color:#13324a;padding:60px;box-sizing:border-box"><div style="font-size:110px;font-weight:900;color:#1b8a5a">dermika</div><div style="font-size:60px;margin-top:40px">cuida tu piel</div><div style="font-size:46px;margin-top:80px;line-height:1.5">consultas · láser · cosmética</div></div>`, primitive: { kind: "box", width: 1.1, height: 1.4, depth: 0.02 }, material: { color: "#ffffff" } });
     // lab: a sample counter with a divider, two chairs, a plant
-    bx("l11-lab-counter", MALL_X - 1.2, Y0, MALL_Z - 0.6, 0.8, 1.05, 3.4, { color: "oklch(0.93 0.01 230)", roughness: 0.5 });
+    sp("l11-lab-counter", { feetPosition: { x: MALL_X - 1.2, y: Y0, z: MALL_Z - 0.6 }, rotation: { yaw: -90 }, model: { id: MODELS.lab_counter, forward: "+x" }, layout: { box: { min: { x: -1.7, y: 0, z: -0.4 }, max: { x: 1.7, y: 1.05, z: 0.4 } } }, physics: { body: "static", collider: "box" } }); // tripo lab base cabinet
     bx("l11-lab-counter-top", MALL_X - 1.2, Y0 + 1.05, MALL_Z - 0.6, 0.95, 0.05, 3.55, { color: "oklch(0.45 0.12 250)", roughness: 0.3 }, { physics: undefined });
     bx("l11-lab-glass", MALL_X - 1.35, Y0 + 1.1, MALL_Z - 0.6, 0.03, 0.7, 3.2, GLASS_TINT, { physics: undefined });
     fit("l11-lab-chair-1", CHAIR, FX - 1.2, MALL_Z - 1.6, -90, [0.75, 0.9, 0.75]);
@@ -1049,8 +1049,8 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
     });
 
     for (const [i, x, z, s] of [[0, AX - 1.3, Z0 + LEN - 0.8, 0.7], [1, AX - 0.8, Z0 + LEN - 1.6, 0.55], [2, AX + 1.6, Z0 + LEN - 2.4, 0.5]])
-      sp(`l11-spam-bag-${i}`, { feetPosition: { x, y: 0.08, z }, primitive: { kind: "sphere", radius: s / 2 }, scale: { x: 1.15, y: 0.85, z: 1 }, material: { color: "oklch(0.18 0.01 260)", roughness: 0.35 }, physics: "static", castShadow: false });
-    bx("l11-spam-box", AX - 1.4, 0.08, Z0 + 6.5, 0.7, 0.35, 0.5, { color: "oklch(0.55 0.07 70)", roughness: 0.95 }, { rotation: { yaw: 23 }, castShadow: false });
+      sp(`l11-spam-bag-${i}`, { feetPosition: { x, y: 0.08, z }, rotation: { yaw: i * 70 + 15 }, model: { id: MODELS.trash_bag, forward: "-z" }, layout: { box: { min: { x: -s * 0.575, y: 0, z: -s / 2 }, max: { x: s * 0.575, y: s * 0.85, z: s / 2 } } }, physics: { body: "static", collider: "box" }, castShadow: false }); // tripo trash bag
+    sp("l11-spam-box", { feetPosition: { x: AX - 1.4, y: 0.08, z: Z0 + 6.5 }, rotation: { yaw: 23 }, model: { id: MODELS.box, forward: "-z" }, layout: { box: { min: { x: -0.35, y: 0, z: -0.25 }, max: { x: 0.35, y: 0.35, z: 0.25 } } }, physics: { body: "static", collider: "box" }, castShadow: false }); // cardboard box model
     sp("l11-spam-bulb", { feetPosition: { x: AX + W / 2 - 0.1, y: 2.7, z: Z0 + 8 }, primitive: { kind: "sphere", radius: 0.09 }, material: { color: "#ffe9b0", emissive: "#ffcf70", emissiveIntensity: 3 }, light: { kind: "point", color: "#ffcf8a", intensity: 2.2, distance: 9 }, castShadow: false });
     sp("l11-spam-sign", { feetPosition: { x: AX - W / 2 + 0.02, y: 2.0, z: Z0 + LEN - 1 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 1.1, height: 0.5, depth: 0.03 }, material: { color: "oklch(0.92 0.02 90)", roughness: 0.8 },
       ui: `<div face="front" width="1.1m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:Arial Black,Arial,sans-serif;color:#1b1b1b;font-size:64px;text-align:center;line-height:1">NO DUMPING<br><span style="font-size:34px;color:#b01818">VIOLATORS WILL BE [[PROSECUTED]]</span></div>` });
