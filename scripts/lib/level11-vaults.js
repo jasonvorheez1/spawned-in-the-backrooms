@@ -35,7 +35,7 @@ export function layVaults(ctx, { sp, bx, cyl }) {
   bx("l11-vault-ceil", 13.3, -0.42, 78, 13, 0.15, 22.4, DARK);
   // 2006 IRT tile: a maroon band at shoulder height and a mosaic cap, riveted girders on painted columns under the slab
   const BAND = { color: "oklch(0.42 0.11 25)", roughness: 0.4 }, CAP = { color: "oklch(0.55 0.08 75)", roughness: 0.45 };
-  for (const [id, x, z, w, d] of [["w", 7.02, 78, 0.02, 22], ["e", 19.58, 78, 0.02, 22], ["n", 13.3, 88.98, 12.8, 0.02]]) {
+  for (const [id, x, z, w, d] of [["w", 7.02, 78, 0.02, 22], ["e", 19.58, 78, 0.02, 22], ["n", 15.4, 88.98, 8.6, 0.02]]) {
     bx(`l11-vault-band-${id}`, x, FY + 1.45, z, w, 0.22, d, BAND, { physics: undefined });
     bx(`l11-vault-cap-${id}`, x, FY + 0.0, z, w, 0.28, d, CAP, { physics: undefined });
   }
