@@ -249,7 +249,7 @@ export function update(ctx) {
     ses.lastFace = face
   }
   const key = ses.lookKey
-  if (key !== ses.key || ses.keyPlace !== ctx.self.place || (MESH && !ses.cachedWorn && typeof ctx.self.model === 'string' && ctx.self.model.includes('neutral-default-avatar'))) { // a place crossing restamps the body: dress it again there
+  if (key !== ses.key || ses.keyPlace !== ctx.self.place || (MESH && ses.bodyId && (ctx.self.model?.id??ctx.self.model)!==ses.bodyId)) { // a place crossing restamps the body: dress it again there
     ses.key = key; ses.keyPlace = ctx.self.place
     const params = ses.cachedParams, worn = ses.cachedWorn
     if (worn) { ctx.self.primitive = null; ctx.self.model = wornModel(worn); dropHead(ctx, ctx.self); ctx.self.morph=null; ctx.self.bones={}; ctx.self.material=null; ctx.self.jiggle = null }
@@ -267,6 +267,7 @@ export function update(ctx) {
     }
     else { ctx.self.model = null; ctx.self.primitive = { kind: 'scripted', script: SCRIPT, params } }
   }
+  ses.bodyId=ctx.self.model?.id??ctx.self.model
   const worn = ses.cachedWorn
   if(!worn && HUMAN && ses.cachedParams)humanFaceTick(ctx,face)
   if (worn && ctx.getObject(ctx.self.id + '/' + HEAD_ID)) dropHead(ctx, ctx.self) // a worn body never keeps the critter head, whoever put it back
@@ -276,7 +277,7 @@ export function update(ctx) {
 
   // held weapon in third person: attached to RightHand bone so other players and third-person camera see it
   const eq = ctx.self.state.equipped ?? 'fists'
-  if (ses.heldKind !== eq || !ses.heldSwept) {
+  if (ses.heldKind !== eq || !ses.heldSwept || (eq!=='fists' && (!ses.heldObj || !ctx.getObject(ses.heldObj)))) {
     ses.heldKind = eq; ses.heldSwept = true
     // old held guns from earlier sessions (some from before the held3p tag) stay parented to the body: clear every hand-held child but the mall's food
     for (const c of ctx.getObject(ctx.self.id)?.children ?? []) { const cid = c?.id ?? c; const o = ctx.getObject(cid); if (o?.attachment?.bone === 'RightHand' && cid !== ctx.session?.hubHeld && cid !== ses.heldObj) { try { ctx.destroy(cid) } catch (e) {} } }
@@ -315,13 +316,14 @@ export function update(ctx) {
     if (!params) return
     const isF = params.sex === 'f'
     const look = worn ? { model: wornModel(worn) } : MESH && HUMAN ? { model: bodyModel(params), morph: humanBodyMorph(params) ?? undefined } : MESH ? { model: bodyModel(params), morph: bustMorph(params) ?? undefined, children: [{ id: HEAD_ID, attachment: { skin: true }, model: headModel({ ...params, vary: false }), morph: faceMorph(face, false, isF, params), audience: 'local' }, maskChild(params, true), hairChild(params, true), beardChild(params, true)].filter(Boolean) } : { primitive: { kind: 'scripted', script: SCRIPT, params } }
-    if (!mirror) { ses.mirror = ctx.spawn({ audience: 'local', feetPosition: pos, rotation: rot, ...look, material: HUMAN && !worn ? null : { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.6, bounce: 0.6 }, light: { kind: 'point', color: '#fff2d8', intensity: 2, distance: 4 } }); const m = ctx.getObject(ses.mirror); if (m) { if (HUMAN && MESH && !worn) seatHead(ctx, m, params) // a human mirror wears its own head and hair, never the species head
+    if (!mirror) { ses.mirrorFaceKey=null; ses.mirror = ctx.spawn({ audience: 'local', feetPosition: pos, rotation: rot, ...look, material: HUMAN && !worn ? null : { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.6, bounce: 0.6 }, light: { kind: 'point', color: '#fff2d8', intensity: 2, distance: 4 } }); const m = ctx.getObject(ses.mirror); if (m) { if (HUMAN && MESH && !worn) seatHead(ctx, m, params) // a human mirror wears its own head and hair, never the species head
       m.anim.idle = { clip: worn || MESH ? GAIT_LIB.idle : 'Idle', loop: 'loop', weight: 1 }; if (!worn && !(HUMAN && MESH) && speciesOf(params) !== 'human') flair(m, face) } }
     else { mirror.feetPosition = pos; mirror.rotation = rot; if (ses.mirrorKey !== key) { if (worn) { mirror.primitive = null; mirror.model = wornModel(worn); dropHead(ctx, mirror); mirror.morph=null; mirror.bones={}; mirror.material=null; mirror.anim.flair = null; mirror.anim.idle = { clip: GAIT_LIB.idle, loop: 'loop', weight: 1 } } else if (MESH) { mirror.primitive = null; mirror.model = bodyModel(params); if (HUMAN) { seatHead(ctx, mirror, params); mirror.anim.idle = { clip: GAIT_LIB.idle, loop: 'loop', weight: 1 } } else { mirror.morph = bustMorph(params) ?? null; wearHead(ctx, mirror, params); flair(mirror, face) } } else { mirror.model = null; mirror.primitive = { kind: 'scripted', script: SCRIPT, params }; flair(mirror, face) } }
       if (MESH && !worn) { const mh = ctx.getObject(mirror.id + '/' + HEAD_ID); if (mh) mh.morph = faceMorph(face, false, isF, params) }
       if (worn && ctx.getObject(mirror.id + '/' + HEAD_ID)) dropHead(ctx, mirror) // the mirror wears a plymodel bare too
       mirror.bones = { ...(!HUMAN ? { Head: { scale: hs * FURRY_HEAD } } : {}), ...(ts !== 1 ? { Tail: { scale: ts } } : {}) } }
     ses.mirrorKey = key
+    if(HUMAN && MESH && !worn && ses.mirrorFaceKey!==ses.hFaceK){const m=ctx.getObject(ses.mirror);if(m){m.morph=ctx.self.morph;ses.mirrorFaceKey=ses.hFaceK}}
     if (ses.mirror) {
       if (ses.mirrorHeldKind !== eq) {
         ses.mirrorHeldKind = eq
@@ -341,7 +343,7 @@ export function update(ctx) {
   } else if (ses.mirror) {
     if (ses.mirrorHeldId) { try { ctx.destroy(ses.mirrorHeldId) } catch (e) {} ses.mirrorHeldId = null }
     ses.mirrorHeldKind = null
-    ctx.destroy(ses.mirror); ses.mirror = null; ses.mirrorKey = null
+    ctx.destroy(ses.mirror); ses.mirror = null; ses.mirrorKey = null; ses.mirrorFaceKey=null
   }
 }
 

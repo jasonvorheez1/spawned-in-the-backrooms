@@ -8,8 +8,9 @@ from mathutils import Vector
 a = sys.argv[sys.argv.index("--") + 1:]
 SRC, OUT, SEX, HAT = a[0], a[1], a[2], a[3] == "1"
 PROOF = a[4] if len(a) > 4 else None
-HEAD = {"f": dict(x=0.112, top=0.254, front=0.101, back=0.134), "m": dict(x=0.123, top=0.274, front=0.112, back=0.145)}[SEX]
-OFF = 0.012
+# head extents off the live bodies (art/body-rig human_f/m, Head-weighted verts, scaled to the hair rig): the old numbers let the crown poke through
+HEAD = {"f": dict(x=0.116, top=0.272, front=0.116, back=0.132), "m": dict(x=0.126, top=0.284, front=0.132, back=0.142)}[SEX]
+OFF = 0.016
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=SRC)
 rig = next(o for o in bpy.context.scene.objects if o.type == "ARMATURE")

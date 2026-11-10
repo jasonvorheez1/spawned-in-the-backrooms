@@ -61,6 +61,9 @@ export function update(ctx, dt) {
   if (s.level == null) return
   const N = C.needs
   if (m.h == null) { m.h = s.hunger ?? 100; m.t = s.thirst ?? 100 }
+  m.acc += dt
+  const poll=m.acc>=.5
+  if(poll){m.acc=0;if(s.craftOpen==='bench'&&!liveBench(ctx,s)){s.craftOpen='';s.craftBench=''}}
   if (ctx.self.place === 'level6' || ctx.self.place === 'bonus') { m.h = s.hunger ?? m.h; m.t = s.thirst ?? m.t; return } // Shelly: no hunger or thirst drain in Level 6
   const mul = (s.sprinting ? N.sprintMul : 1) * (ctx.self.place === 'level21' ? L21H.heat : 1) // Level 2.1 is hot and humid
   // the bars follow the state (eating and drinking write it from scripts/player.js)
@@ -72,11 +75,8 @@ export function update(ctx, dt) {
   if (t !== s.thirst) s.thirst = t
   if ((m.h <= 0 || m.t <= 0) && s.hp > 1) s.hp = Math.max(1, s.hp - N.starveHp * dt)
   if (m.h < N.low || m.t < N.low) s.sanity = Math.max(0, (s.sanity ?? 0) - N.lowSanity * dt)
-  m.acc += dt
-  if (m.acc >= 0.5) { // a bench you walk away from closes
-    m.acc = 0
+  if (poll) {
     if (s.payout) { const p = s.payout; s.payout = null; gain(ctx, p.xp ?? 0); for (const t of p.items ?? []) takeToken(ctx, t); if (p.text) s.notice = { text: p.text, at: ctx.now() } } // rewards other things owe you (Level 4's office tasks)
-    if (s.craftOpen === 'bench') { if (!liveBench(ctx,s)) { s.craftOpen = ''; s.craftBench = '' } }
   }
 }
 
