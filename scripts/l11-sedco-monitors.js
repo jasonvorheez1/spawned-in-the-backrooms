@@ -77,7 +77,7 @@ export function geometry(ctx) {
     ctx.albedo(FEEDS); ctx.color("#e8f2ec"); ctx.roughness(0.08); ctx.metalness(0); ctx.emissive("#1c2c25");
     const n = lod >= 3 ? 2 : 6, zs = zf + 0.028, b = 0.022;
     const pt = (s, t) => { const a = 2 * s - 1, d = 2 * t - 1; return [Hi[0] + s * (Hi[2] - Hi[0]), Hi[1] + t * (Hi[3] - Hi[1]), zs - b * (1 - 0.6 * a * a) * (1 - 0.6 * d * d)]; };
-    const uv = (s, t) => [u0 + s * (u1 - u0), v0 + t * (v1 - v0)];
+    const uv = (s, t) => [u1 - s * (u1 - u0), v0 + t * (v1 - v0)]; // seen from -Z, +x is the viewer's left
     for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
       const s0 = i / n, s1 = (i + 1) / n, t0 = j / n, t1 = (j + 1) / n;
       Q(pt(s1, t0), pt(s0, t0), pt(s0, t1), pt(s1, t1), uv(s1, t0), uv(s0, t0), uv(s0, t1), uv(s1, t1));
