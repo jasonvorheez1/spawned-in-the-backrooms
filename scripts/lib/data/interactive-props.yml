@@ -1,0 +1,251 @@
+{
+  "filing": {
+    "size": [
+      0.48,
+      1.32,
+      0.62
+    ],
+    "body": "/cdn/value.ba238af73cd0628479a22a07ac9fcfd8eb782e72f6723e28cdbb704baa42e284.glb",
+    "center": [
+      0.0,
+      0.66,
+      -0.033
+    ],
+    "parts": [
+      {
+        "id": "drawer",
+        "file": "/cdn/value.b4d567e147e2fa352e118297b697d778cab98a5fb2d41e4252dd42182e3589cd.glb",
+        "pivot": [
+          0,
+          1.12,
+          0
+        ],
+        "offset": [
+          0.0,
+          0.0,
+          -0.04575
+        ],
+        "axis": "slide",
+        "travel": -0.32
+      }
+    ]
+  },
+  "desk": {
+    "size": [
+      1.4,
+      0.76,
+      0.7
+    ],
+    "body": "/cdn/value.697fbaa680b753c54712fe5ce8416d90b9dcea14a7cccbdff5f2cc1a4dfe075f.glb",
+    "center": [
+      0.0,
+      0.38,
+      -0.0345
+    ],
+    "parts": [
+      {
+        "id": "drawer",
+        "file": "/cdn/value.90b02c51968bae2d2319d9ff3b84690ddc24b05b4aca77c12fa2b8b14f15438e.glb",
+        "pivot": [
+          0.45,
+          0.6,
+          0
+        ],
+        "offset": [
+          0.0,
+          0.0,
+          -0.04575
+        ],
+        "axis": "slide",
+        "travel": -0.25
+      }
+    ]
+  },
+  "cabinet": {
+    "size": [
+      0.9,
+      1.1,
+      0.42
+    ],
+    "body": "/cdn/value.ee228f439d973db47534fa0a495fdda234d40dd16fc62ca026b2b6ab627065ab.glb",
+    "center": [
+      -0.0,
+      0.55,
+      -0.01075
+    ],
+    "parts": [
+      {
+        "id": "left_door",
+        "file": "/cdn/value.84469b4969fcc56c7a442ea29fb96dd81d15e2e49c2113ff1ca611fc46db42c0.glb",
+        "pivot": [
+          -0.43,
+          0.572,
+          -0.222
+        ],
+        "offset": [
+          0.205,
+          0.0,
+          -0.013
+        ],
+        "axis": "yaw",
+        "travel": 106
+      },
+      {
+        "id": "right_door",
+        "file": "/cdn/value.11a355c3aa6cbb05f82b9788efa80fcf3fe1ffe4a16af25f38b956eee05d2713.glb",
+        "pivot": [
+          0.43,
+          0.572,
+          -0.222
+        ],
+        "offset": [
+          -0.205,
+          0.0,
+          -0.013
+        ],
+        "axis": "yaw",
+        "travel": -106
+      }
+    ]
+  },
+  "locker": {
+    "size": [
+      0.5,
+      1.9,
+      0.5
+    ],
+    "body": "/cdn/value.8fb2ddecdaea5956763772db8ab7a6cefdda9b218aaa043d1ebb70063ee18557.glb",
+    "center": [
+      0.0,
+      0.95,
+      -0.01075
+    ],
+    "parts": [
+      {
+        "id": "door",
+        "file": "/cdn/value.12bfa984cef2fe0c1998ad17a8a74e17cefef7d04cced468ef6222a46cdab2e1.glb",
+        "pivot": [
+          -0.23,
+          0.969,
+          -0.262
+        ],
+        "offset": [
+          0.23,
+          0.0,
+          -0.013
+        ],
+        "axis": "yaw",
+        "travel": 106
+      }
+    ]
+  },
+  "toolbox": {
+    "size": [
+      0.62,
+      0.32,
+      0.3
+    ],
+    "body": "/cdn/value.9525141d90811b368972eee2e12e2d246f23b97c3b074d2a3c74a9edfa0e29f1.glb",
+    "center": [
+      0.0,
+      0.1125,
+      -0.0
+    ],
+    "parts": [
+      {
+        "id": "lid",
+        "file": "/cdn/value.88da5295a04eea473d4117321adafa51ce359c8ed3d73ab99930c371aa5d0fc3.glb",
+        "pivot": [
+          0,
+          0.225,
+          0.15
+        ],
+        "offset": [
+          0.0,
+          0.05175,
+          -0.162
+        ],
+        "axis": "pitch",
+        "travel": 105
+      }
+    ]
+  },
+  "fridge": {
+    "size": [
+      0.8,
+      1.85,
+      0.75
+    ],
+    "body": "/cdn/value.a234e4208dbae1b83583f37f004299f903ca19b42dcf379331e031cd428bc6bd.glb",
+    "center": [
+      0.0,
+      0.925,
+      -0.01075
+    ],
+    "parts": [
+      {
+        "id": "main_door",
+        "file": "/cdn/value.d5c1557f43c3930da17f563c78eb5be3a2108d612ac3ff26917ccd3816b5f6c0.glb",
+        "pivot": [
+          -0.378,
+          0.7,
+          -0.387
+        ],
+        "offset": [
+          0.378,
+          0.0,
+          -0.013
+        ],
+        "axis": "yaw",
+        "travel": 106
+      },
+      {
+        "id": "freezer_door",
+        "file": "/cdn/value.eaae81afa52aa0f9ba354ac6db89e33e2c967e4cb32820fb52c9556aae4eeb6b.glb",
+        "pivot": [
+          -0.378,
+          1.6,
+          -0.387
+        ],
+        "offset": [
+          0.378,
+          0.0,
+          -0.013
+        ],
+        "axis": "yaw",
+        "travel": 106
+      }
+    ]
+  },
+  "fuse": {
+    "size": [
+      0.7,
+      0.95,
+      0.24
+    ],
+    "body": "/cdn/value.ad6fefb15effac2b632467dc58d1ada6b2533776195b7aa7811ec110c868771c.glb",
+    "center": [
+      0.0,
+      0.475,
+      -0.01075
+    ],
+    "parts": [
+      {
+        "id": "door",
+        "file": "/cdn/value.58cf3ecd1a85ec18e1b96d275756877414c800834726a4d5b7f2b43c53cab81d.glb",
+        "pivot": [
+          -0.33,
+          0.494,
+          -0.132
+        ],
+        "offset": [
+          0.33,
+          0.0,
+          -0.013
+        ],
+        "axis": "yaw",
+        "travel": 100
+      }
+    ]
+  }
+}

@@ -1,3 +1,4 @@
+import {upgradeNearby,upgradeProp,containerPose,toggleLamp} from './lib/prop-interactions.js'
 import { screen } from './lib/screen.js'
 import { regrowWrecks } from "./lib/breakables.js";
 import { vo } from './lib/voices.js';
@@ -135,6 +136,7 @@ function refocus(ctx, force = false) {
 
 function closeLoot(ctx) {
   const s = ctx.self.state, c = s.lootOpen ? ctx.getObject(s.lootOpen) : null
+  if(c)containerPose(ctx,c,false)
   if (c) snd(ctx, 'container-close-thud', 0.35)
   if (c && c.tags?.includes('remains') && !itemsOf(c.state?.items).length) ctx.destroy(c.id) // an emptied corpse is cleared away
   s.lootOpen = ''; s.lootList = ''; s.lootName = ''; s.pocket = false; s.lootStore = false
@@ -157,6 +159,7 @@ function spamtonPerk(ctx, c) {
   if (fired) { ctx.emit('playSound', { clip: SPAM_LAUGH, volume: 0.55 }, { audience: { player: ctx.self.id } }); note(ctx, '[[SPAMTON]]: A [[Deal]] FOR YOU, KID!') }
 }
 export function openLoot(ctx, c) {
+  upgradeProp(ctx,c)
   const s = ctx.self.state
   refill(ctx, c)
   if (c.state.lock) { // Fallout-style lock: you need the skill level, no minigame
@@ -178,6 +181,7 @@ export function openLoot(ctx, c) {
   }
   const own = ownerOf(ctx, c)
   s.lootOpen = c.id; s.lootName = (own ? `${c.state.ownerName ?? 'Someone'}'s · ` : '') + (c.state?.name ?? 'Container'); s.lootList = c.state?.items ?? ''; s.focus = null; s.lootStore = !!c.tags?.includes('storage') // storage (your fridge): you put things in too
+  containerPose(ctx,c,true)
   snd(ctx, 'container-open-rustle', 0.5)
 }
 
@@ -356,6 +360,7 @@ function press(ctx) {
     ctx.self.velocity = { x: 0, y: 0, z: 0 }; m.carAt = ctx.now(); m.key = ''; return
   }
   if (f.tag === 'usable' && it.state?.kind === 'salon') { s.salonOpen = true; s.salonTab = s.salonTab || 'hair'; s.wrMenu = false; s.wardrobeOpen = true; m.key = ''; return } // Glow Up Salon: its own makeover menu (scripts/salon-ui.js)
+  if(f.tag==='usable'&&it.state.propLamp){toggleLamp(ctx,it);m.key='';refocus(ctx,true);return}
   if (f.tag === 'usable') { ctx.emit('press', { by: ctx.self.id }, { to: f.id }); if (it.tags?.includes?.('l5-elev-panel')) s.elevPanel = f.id; m.key = ''; return } // an elevator plate opens a clickable floor list (ui.js)
   if (f.tag === 'seat' && it.state?.salon) { if (spotsOf(it).every((sp) => { const h = holder(ctx, it, sp.i); return h && h !== ctx.self.id })) { note(ctx, 'That chair is taken'); m.key = ''; return } if (sitDown(ctx, it)) { s.salonOpen = true; s.salonTab = s.salonTab || 'hair'; s.wrMenu = false; s.wardrobeOpen = true } m.key = ''; return } // a salon chair at the mirrors: sit and the stylist comes over (scripts/salon-stylist.js)
   if (f.tag === 'seat') { if (sitDown(ctx, it) && it.state?.boat) ctx.emit('press', { by: ctx.self.id }, { to: it.id }); m.key = ''; return } // a boat's seat also takes the oars
@@ -469,6 +474,7 @@ export function onInput(ctx, input) {
 }
 
 export function update(ctx, dt) {
+  if(ctx.self.state.level!=null&&ctx.self.isLocal!==false)upgradeNearby(ctx)
   { // in a car the wheel went back (E inside, or the car let go): step out beside the driver's door
     const car = ctx.self.parent, mm = mem(ctx)
     if (car?.tags?.includes?.('vehicle') && car.controller !== ctx.self.id && ctx.now() - (mm.carAt ?? 0) > 1200) {

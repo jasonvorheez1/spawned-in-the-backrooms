@@ -1,3 +1,4 @@
+import {interactiveSpec} from './prop-interactions.js'
 // Level 2 props: every visible prop is a Tripo mesh from lib/data/l2props.yml, fitted to real size, with its own box collider.
 // Tagged for the shared systems: "breakable" + state { mat, hp, maxHp, name } (breakables.js, loose.yml by name), chair+furniture (kick.js),
 // dynamic light bodies (grab.js lifts anything breakable within strength).
@@ -7,11 +8,11 @@ export const fitBox = (sz) => ({ box: { min: { x: -sz[0] / 2, y: 0, z: -sz[2] / 
 export function spawnProp(ctx, kind, pos, yaw, extra = {}) {
   const K = P.kinds[kind]; if (!K) return null;
   const kg = P.dynamic[kind];
-  return ctx.spawn({ tags: ["l2prop", "l2p-" + kind, "breakable", ...(K.tags ?? [])], feetPosition: { x: pos.x, y: pos.y ?? 0.01, z: pos.z }, rotation: { yaw },
+  return ctx.spawn(interactiveSpec({ tags: ["l2prop", "l2p-" + kind, "breakable", ...(K.tags ?? [])], feetPosition: { x: pos.x, y: pos.y ?? 0.01, z: pos.z }, rotation: { yaw },
     physics: { body: "static", collider: "box" }, // laid static (a dynamic body spawned before the floor mesh cooks falls through); grab and kick move it themselves
     visibleRange: { max: 45 }, castShadow: false, receiveShadow: true,
     model: { id: K.id, forward: P.forward }, layout: fitBox(K.size),
-    ...extra, state: { name: K.name, kind, mat: K.mat, hp: K.hp, maxHp: K.hp, ...(kg ? { carryKg: kg, home: { x: pos.x, y: pos.y ?? 0, z: pos.z } } : {}), ...(extra.state ?? {}) } });
+    ...extra, state: { name: K.name, kind, mat: K.mat, hp: K.hp, maxHp: K.hp, ...(kg ? { carryKg: kg, home: { x: pos.x, y: pos.y ?? 0, z: pos.z } } : {}), ...(extra.state ?? {}) } }));
 }
 // a side room's dressing, in its frame: P(a, b, y) the room's point maker, n the door's way out, t across
 export function dressRoom(ctx, type, Pt, [nx, nz], yawOf) {
