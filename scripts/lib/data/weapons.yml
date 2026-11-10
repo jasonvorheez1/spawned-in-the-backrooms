@@ -82,6 +82,7 @@ variants:
   drum:     { name: Drum-fed,     for: [smg], chance: 10, magSize: 1.67, reloadTime: 1.3, rarity: 1, xp: 1.5 }
   serrated: { name: Serrated,     for: [knife], chance: 10, damage: 1.25, rarity: 1, xp: 1.4 }
   lucky13:  { name: "Callum's Lucky Thirteen", for: [revolver], chance: 0, unique: true, damage: 1.35, cooldown: 0.85, cone: 0.5, magSize: 1, reloadTime: 0.8, rarity: 2, xp: 3, cnd: 100, look: meg, tint: "oklch(0.72 0.12 80)" }  # unique: Short Rations reward only, never rolled
+  calcite:  { name: Calcite-studded, for: [blunt], chance: 0, unique: true, damage: 1.3, stamina: 1.08, rarity: 1, xp: 1.8, cnd: 100, look: nails, tint: "oklch(0.93 0.025 90)" }  # crafted only (Level 27 calcite), never rolled
   meg:      { name: M.E.G.-issue, for: [melee, ranged], chance: 4, damage: 1.12, cooldown: 0.92, cone: 0.7, rarity: 2, xp: 2.2, cnd: 100, look: meg }
 # Zenith Station energy weapons (Shelly, Nov 9: "introduce laser weapons (using the energy weapons stat)"). energy: true = the Energy Weapons skill
 # (Observation behind it), ammoType cells. A beam is a near-instant bolt: mv 2400 m/s, no drag. Found only on Zenith drones and in the station (pools: [l01]).
