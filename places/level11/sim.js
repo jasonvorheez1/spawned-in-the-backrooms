@@ -1768,7 +1768,7 @@ export function tick(ctx) {
     if (i >= q.rows.length) {
       for (const w of WALKERS) q.keep[w.id] = true;
       let n = 0;
-      for (const id of Object.keys(ctx.place.objects ?? {})) if (/^l11-/.test(id) && !id.includes("/") && !q.keep[id] && n++ < 120) ctx.destroy(id);
+      for (const id of Object.keys(ctx.place.objects ?? {})) if (/^l11d?-/.test(id) && !id.includes("/") && !q.keep[id] && n++ < 120) ctx.destroy(id);
       if (n <= 120) { delete st.lq; delete ctx.session.l11q; st.builtV = V; st.walkV = 0; }
     }
     return;
