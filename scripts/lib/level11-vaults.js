@@ -30,7 +30,7 @@ export function layVaults(ctx, { sp, bx, cyl }) {
   bx("l11-vault-wall-n", 15.4, FY - 1, 89.1, 8.8, 3.6, 0.2, WALL); // the pit end stays open: the service tunnel runs on north
   bx("l11-vault-wall-n-lintel", 8.95, FY + 1.3, 89.1, 4.1, 1.3, 0.2, WALL);
   // service steps from the platform's end down into the pit (and back up)
-  bx("l11-vault-step-1", 10.75, FY - 1, 88.2, 0.5, 0.67, 1.4, GRIME); bx("l11-vault-step-2", 10.25, FY - 1, 88.2, 0.5, 0.34, 1.4, GRIME);
+  for (const [k, h] of [[1, 0.75], [2, 0.5], [3, 0.25]]) bx(`l11-vault-step-${k}`, 11 - k * 0.4 + 0.2, FY - 1, 88.2, 0.4, h, 1.4, GRIME);
   for (const [x, w] of [[9.55, 5.3], [17.65, 4.1]]) bx(`l11-vault-wall-s-${x}`, x, FY - 1, 67, w, 3.6, 0.2, WALL);
   bx("l11-vault-ceil", 13.3, -0.42, 78, 13, 0.15, 22.4, DARK);
   // 2006 IRT tile: a maroon band at shoulder height and a mosaic cap, riveted girders on painted columns under the slab
