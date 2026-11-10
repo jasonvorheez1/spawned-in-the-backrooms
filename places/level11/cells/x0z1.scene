@@ -1,4 +1,10 @@
 # spawn-scene v2 yaml x0z1
+l11-sw-east-south-n:
+  feetPosition: {x: 12, y: 0.08, z: 69.3}
+  id: l11-sw-east-south-n
+  material: {key: Std/PBR, map: cdn/texture-plain-light-grey-concrete-pavement-slab-fine-aggregate.png, mapRepeat: [3, 3], roughness: 0.85, textureWrapMode: repeat, tint: 4293322986, wrap: repeat}
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {d: 13.4, h: 0.25, w: 7.6}, script: scripts/sidewalk11.js}
 l11-vault-nose-0:
   castShadow: false
   feetPosition: {x: 10.98, y: -2.62, z: 88.2}

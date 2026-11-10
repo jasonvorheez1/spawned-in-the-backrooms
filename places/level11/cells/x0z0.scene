@@ -55,6 +55,18 @@ l11-sub-ramp:
   primitive: {depth: 4.372001829825783, height: 0.12, kind: box, width: 2.2}
   rotation: {pitch: 36.817477002178606}
   visible: false
+l11-sw-east-south-e:
+  feetPosition: {x: 15.3, y: 0.08, z: 60.5}
+  id: l11-sw-east-south-e
+  material: {key: Std/PBR, map: cdn/texture-plain-light-grey-concrete-pavement-slab-fine-aggregate.png, mapRepeat: [3, 3], roughness: 0.85, textureWrapMode: repeat, tint: 4293322986, wrap: repeat}
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {d: 4.2, h: 0.25, w: 1}, script: scripts/sidewalk11.js}
+l11-sw-east-south-w:
+  feetPosition: {x: 10.3, y: 0.08, z: 60.5}
+  id: l11-sw-east-south-w
+  material: {key: Std/PBR, map: cdn/texture-plain-light-grey-concrete-pavement-slab-fine-aggregate.png, mapRepeat: [3, 3], roughness: 0.85, textureWrapMode: repeat, tint: 4293322986, wrap: repeat}
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {d: 4.2, h: 0.25, w: 4.2}, script: scripts/sidewalk11.js}
 spam-return:
   feetPosition: {x: 44.3, y: 0.15, z: 27.3}
   id: spam-return
