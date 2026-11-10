@@ -74,6 +74,13 @@ for v in miss:
     _, i, _ = kd.find(v.co); src = wv[i]
     for g in src.groups: body.vertex_groups[g.group].add([v.index], g.weight, 'REPLACE')
 print("groups", len(body.vertex_groups), "unweighted", sum(1 for v in body.data.vertices if not v.groups))
+# elbows: heat weights hand off arm to forearm in a hard step, which pinches a bent elbow; blend the hand-off wider
+bpy.context.view_layer.objects.active = body
+for side_ in ("Left", "Right"):
+    for g in (side_ + "Arm", side_ + "ForeArm"):
+        body.vertex_groups.active_index = body.vertex_groups[g].index
+        bpy.ops.object.vertex_group_smooth(group_select_mode='ACTIVE', factor=0.6, repeat=6, expand=0.15)
+bpy.ops.object.vertex_group_normalize_all(lock_active=False)
 # smooth (Shelly: "still seeing jagginess"): one Catmull-Clark level applied after weighting, so every new vertex inherits blended weights
 nb = len(body.data.polygons)
 sub = body.modifiers.new("sub", "SUBSURF"); sub.levels = 1; sub.render_levels = 1; sub.quality = 3
