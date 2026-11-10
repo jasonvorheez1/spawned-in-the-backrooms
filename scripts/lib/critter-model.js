@@ -345,7 +345,7 @@ export function headModel(l0) {
   const icon = ICONIC[spName] || {};
   return {
     id: (isFemale ? sp.headF : sp.headM) || sp.head,
-    materials: only({
+    materials: flatFace(only({
       ...furMats(l),
       eyewhite: { color: l?.sclera || '#fffdf8', roughness: 0.35, metalness: 0 }, // l.sclera: one look's own (Phoebe's black)
       eyeink: { color: '#16101c', roughness: 0.95, metalness: 0 },
@@ -366,9 +366,13 @@ export function headModel(l0) {
       beard: wearsBeard
         ? { color: beardCol, roughness: 0.65, metalness: 0.02 }
         : { color: beardCol, visible: false, transparent: true, opacity: 0, depthWrite: false }
-    }, sp.mats)
+    }, sp.mats))
   }
 }
+// the drawn face (eyes, mouth, nose, blush, markings) sits a hair over the head: the ink outline traced that step and doubled every ring and patch
+// (Shelly Nov 9: "the furry models are awful"). Those slots draw no outline; the fur keeps it, so the head's silhouette is still inked.
+const FLAT_FACE = ['eyewhite', 'eyeink', 'pupil', 'iris', 'blush', 'mouth', 'tongue', 'nose', 'beard', 'mark', 'belly']
+function flatFace(m) { for (const k of FLAT_FACE) if (m[k]) m[k] = { ...m[k], outline: false }; return m }
 // face variety (data/faces.yml): a look with no trait of its own (an NPC) rolls one, an eye colour, cheeks and a nose from its seed (l.fseed, set from the NPC's id by
 // clothes.js npcLook, else from the look itself); anything the look already says is kept. A player's look always carries its trait, so it is never rolled.
 function rngOf(l) { let h = 2166136261; for (const c of String(l.fseed ?? `${l.species}|${l.sex}|${l.fur}|${l.top}|${l.bottom}`)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 100000) / 100000 } }
