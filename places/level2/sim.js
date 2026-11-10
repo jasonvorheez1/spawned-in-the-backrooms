@@ -101,7 +101,7 @@ export function tick(ctx) {
   if ((s.rev ?? 0) >= 4 && (s.snapped ?? 0) < 1) { snapContainers(ctx); s.snapped = 1; }
   if (STAIR && (s.rev ?? 0) >= 4 && !s.stairV) sideRoom(ctx, STAIR); // rooms that were laid before the stairwell existed get it now
   if (s.seeded && (s.rev ?? 0) >= 4 && s.propsV !== 2) reprop(ctx, s);
-  if (s.seeded && s.propsV === 2 && s.brkV !== 2) { s.brkV = 2; fixBreak(ctx); } // break rooms: fridge turned to face in, props at true size // rooms dressed before the Tripo props: re-dress them once
+  if (s.seeded && s.propsV === 2 && s.brkV !== 3) { s.brkV = 3; fixBreak(ctx); } // break rooms: fridge turned to face in, props at true size // rooms dressed before the Tripo props: re-dress them once
   if ((s.rev ?? 0) >= 4 && (s.fixV ?? 0) < 3) { s.fixV = 3; fixtures(ctx); } // the modelled fixtures (art/level2/fixtures.py) take over the old box/sphere lamps, slicks and stair in place
   if ((s.rev ?? 0) >= 4 && (s.doorV ?? 0) < 1) { s.doorV = 1; redoor(ctx); } // the door pass: door-geo leaves and frames
   if ((s.rev ?? 0) < 4) revamp(ctx, s); // the revamp lays itself over a few ticks: rooms, doors, the hall, vents
@@ -377,7 +377,7 @@ function fixBreak(ctx) {
   for (const row of ctx.query({ tags: ["l2box"], ...all })) { const o = ctx.getObject(row.id); if (o?.state?.kind !== "fridge") continue;
     o.model = { id: containerModel("fridge"), forward: PROPS.forward }; o.layout = fitBox(L.containers.fridge.size); if (vend[o.state.room]) o.rotation = vend[o.state.room]; }
   for (const k of ["table", "stackchair", "counter", "microwave"]) for (const row of ctx.query({ tags: ["l2p-" + k], ...all })) { const o = ctx.getObject(row.id); if (o) o.layout = fitBox(PROPS.kinds[k].size);
-    if (o && k === "microwave") { const c = ctx.query({ tags: ["l2p-counter"], center: o.feetPosition, radius: 2.5 })[0]; if (c) o.feetPosition = { x: c.feetPosition.x + (o.feetPosition.x - c.feetPosition.x) * 0.15, y: 0.97, z: c.feetPosition.z + (o.feetPosition.z - c.feetPosition.z) * 0.15 }; } } // onto its counter
+    if (o && k === "microwave") { const c = ctx.query({ tags: ["l2p-counter"], center: o.feetPosition, radius: 2.5 })[0]; if (c) { const r = SIDE.filter((q) => q.type === "break").map((q) => [q, cellCenter(q.cx, q.cz)]).sort((p, q) => Math.hypot(p[1].x - c.feetPosition.x, p[1].z - c.feetPosition.z) - Math.hypot(q[1].x - c.feetPosition.x, q[1].z - c.feetPosition.z))[0]; const [nx, nz] = r ? D4[r[0].o] : [0, 0]; o.feetPosition = { x: c.feetPosition.x - nx * 0.8, y: 0.97, z: c.feetPosition.z - nz * 0.8 }; } } } // onto the sink end of its counter
 }
 function reprop(ctx, s) {
   const step = s.propsStep ?? 0, all = { radius: 1e5, center: { x: 0, y: 0, z: 0 } }, rooms = SIDE.filter((r) => r.type !== "stair"), half = Math.ceil(rooms.length / 2);
