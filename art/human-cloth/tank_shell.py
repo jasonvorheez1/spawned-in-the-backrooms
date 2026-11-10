@@ -23,9 +23,9 @@ def armlim(z): return xstrap + slope * (neckz - 0.03 * s - z)
 _P = [body.matrix_world @ v.co for v in body.data.vertices]
 _top = max(p.z for p in _P)
 neckR = max(abs(p.x) for p in _P if _top - 0.035 * s < p.z < _top - 0.005)  # the neck tube where the head file takes over
-NW = (neckR + 0.012) / s  # half-width of the neck opening; outside it the straps run over the shoulder
+NW = min((neckR + 0.012) / s, 0.62 * xstrap / s)  # half-width of the neck opening; outside it the straps run over the shoulder
 _sh = [p.z for p in _P if NW * s < abs(p.x) < xstrap and p.z < neckz + 0.08 * s]
-capz = (max(_sh) + 0.01) if _sh else neckz + 0.01 * s  # over the shoulder top; the neck line when this body splits there
+capz = _top + 0.01  # straps run up and over until this body's own edge  # over the shoulder top; the neck line when this body splits there
 print('NECK', round(neckR, 3), 'cap', round(capz, 3))
 def necklim(x, y):  # a U scoop, deep in front, shallow at the back
     u = abs(x) / (NW * s)
