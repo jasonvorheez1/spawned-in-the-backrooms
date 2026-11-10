@@ -15,6 +15,12 @@ node.setSkin(body.getSkin()); // the band was cut from Body's surface in Body's 
 const joints = node.getSkin().listJoints().map((j) => j.getName());
 const prim = node.getMesh().listPrimitives()[0], buf = doc.getRoot().listBuffers()[0], N = B.v.length;
 const acc = (type, arr) => doc.createAccessor().setType(type).setArray(arr).setBuffer(buf);
+// Blender reads Body in metres; the file keeps it in its own packed space: map by Body's bounds on each axis
+const bp = body.getMesh().listPrimitives()[0].getAttribute('POSITION'), gmin = [1e9, 1e9, 1e9], gmax = [-1e9, -1e9, -1e9], e = [];
+for (let i = 0; i < bp.getCount(); i++) { bp.getElement(i, e); for (let k = 0; k < 3; k++) { gmin[k] = Math.min(gmin[k], e[k]); gmax[k] = Math.max(gmax[k], e[k]); } }
+const [bmin, bmax] = B.bodyBounds, S = [0, 1, 2].map((k) => (gmax[k] - gmin[k]) / (bmax[k] - bmin[k]));
+console.log('scale per axis', S.map((x) => x.toFixed(4)).join(' '));
+for (const v of B.v) { v.p = v.p.map((c, k) => gmin[k] + (c - bmin[k]) * S[k]); v.bust = v.bust.map((c, k) => c * S[k]); }
 const P = new Float32Array(N * 3), Nn = new Float32Array(N * 3), UV = new Float32Array(N * 2), J = new Uint16Array(N * 4), W = new Float32Array(N * 4), D = new Float32Array(N * 3);
 B.v.forEach((v, i) => {
   P.set(v.p, i * 3); Nn.set(v.n, i * 3); UV.set(v.uv, i * 2); D.set(v.bust, i * 3);

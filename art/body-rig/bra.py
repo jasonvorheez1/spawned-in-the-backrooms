@@ -62,7 +62,8 @@ for v in me.vertices:
     d = (bust[v.index].co - v.co) if bust else mathutils.Vector()
     V.append({"p": [v.co.x, v.co.z, -v.co.y], "n": [v.normal.x, v.normal.z, -v.normal.y], "uv": [vuv[v.index][0], 1 - vuv[v.index][1]] if vuv[v.index] else [0, 0], "w": [[n, w / t] for n, w in ws], "bust": [d.x, d.z, -d.y]})
 me.calc_loop_triangles()
-json.dump({"v": V, "i": [i for t in me.loop_triangles for i in t.vertices]}, open(out, "w"))
+bb = [[f(c[k] for c in ([v.co.x, v.co.z, -v.co.y] for v in B.data.vertices)) for k in range(3)] for f in (min, max)]
+json.dump({"bodyBounds": bb, "v": V, "i": [i for t in me.loop_triangles for i in t.vertices]}, open(out, "w"))
 # proof: old bra hidden, new shown, on the body, back/front/side
 old.hide_render = True
 B.data.shape_keys.key_blocks["Bust"].value = 0.7; me.shape_keys.key_blocks["Bust"].value = 0.7
