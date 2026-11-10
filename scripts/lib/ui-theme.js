@@ -64,4 +64,40 @@ export const UI_THEME = `<style id="field-ui">
 #hud{visibility:visible}#cc{left:12px;top:16px;bottom:16px;width:calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 12px))}#cc .main{flex-direction:column}#cc .tabs{width:auto;flex-direction:row;flex:none;border-right:0;border-bottom:1px solid var(--ui-line)}#cc .tabs button{flex:1;padding:8px 4px;font-size:10px}#cc h2{font-size:21px}#cc .hd .ttl{padding:16px}#cc .bd{padding:6px 16px 16px}.tkw{padding-left:12px;padding-right:calc(var(--spawn-chrome-reservation-right-inset,50px) + 12px)}
 }
 @media(prefers-reduced-motion:reduce){:is(.pbp,#cr,#sh,#cc,.tc-chassis,#hud) *{animation:none!important;transition:none!important}}
+
+/* Brief terminal motion; text stays still after the reveal. */
+@keyframes field-open{0%{opacity:0;clip-path:inset(49% 0 49%)}22%{opacity:1;clip-path:inset(46% 0 46%)}100%{opacity:1;clip-path:inset(0)}}
+@keyframes field-row{from{opacity:0;transform:translateX(-5px)}to{opacity:1;transform:none}}
+@keyframes field-detail{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes field-tab{from{background-size:0 2px}to{background-size:100% 2px}}
+@media(prefers-reduced-motion:no-preference){
+:is(.pbp.hg,#cr,#sh,#cc,#gl,.tc-chassis,#journal .journal-panel){animation:field-open .26s cubic-bezier(.2,.7,.2,1) backwards!important}
+:is(.pbp.hg .it,#cr .row,#sh .row,.tc-choices-list .tc-choice,#journal button[data-tracked]){animation:field-row .18s ease-out backwards!important;animation-delay:60ms!important}
+:is(.pbp.hg .it,#cr .row,#sh .row,.tc-choices-list .tc-choice,#journal button[data-tracked]):nth-child(2){animation-delay:80ms!important}
+:is(.pbp.hg .it,#cr .row,#sh .row,.tc-choices-list .tc-choice,#journal button[data-tracked]):nth-child(3){animation-delay:100ms!important}
+:is(.pbp.hg .it,#cr .row,#sh .row,.tc-choices-list .tc-choice,#journal button[data-tracked]):nth-child(4){animation-delay:120ms!important}
+:is(.pbp.hg .it,#cr .row,#sh .row,.tc-choices-list .tc-choice,#journal button[data-tracked]):nth-child(n+5){animation-delay:140ms!important}
+.pbp.hg .hg-card{animation:field-detail .2s 80ms ease-out backwards}
+:is(.hg-modes button.on,#cr .tb button.on){background-image:linear-gradient(var(--ui-accent),var(--ui-accent));background-repeat:no-repeat;background-position:left bottom;border-bottom-color:transparent;animation:field-tab .18s ease-out both}
+:is(.pbp,#cr,#sh,#cc,.tc-chassis,#journal) :is(button,.hg-q){transition:background-color .14s,border-color .14s,color .14s,box-shadow .14s}
+:is(.hg-gauge .bar em,.condition-meter>i>b,#hud .fbf){transition:width .24s ease-out}
+#mm .col{animation:field-detail .32s ease-out backwards}
+}
+@media(hover:hover){:is(.pbp.hg .it,#cr .row,.tc-choice):hover{background-color:#262d23}.hg-q:hover{border-color:var(--ui-accent)}.hg-rb:hover{box-shadow:inset 2px 0 var(--ui-accent)}}
+@media(prefers-reduced-motion:reduce){:is(.pbp,#cr,#sh,#cc,#gl,.tc-chassis,#journal .journal-panel,#mm .col),:is(.pbp,#cr,#sh,#cc,#gl,.tc-chassis,#journal,#mm) *{animation:none!important;transition:none!important}}
+
+:is(.pbp.hg,#cr,#sh,#cc,#gl,.tc-chassis,#journal .journal-panel){box-shadow:0 24px 90px #0009,inset 0 1px 0 #d2c49325!important;border-top-color:#8d9275!important}
+.pbp.hg .hg-card{background:#1d231a}.hg-card .dt-header{margin-bottom:24px}.hg-card .dt-header h4{font-size:29px;letter-spacing:-.035em;line-height:1.12}.hg-card .g>div:first-child{grid-column:1/-1;align-items:baseline;font-size:34px;font-variant-numeric:tabular-nums;padding:2px 0 14px;color:#f0f0df;border-bottom:1px solid #697154}.hg-card .g>div:first-child span{font-size:11px;letter-spacing:.1em;color:var(--ui-muted)}
+.hg-card .acts .act{min-height:40px}.hg-rb.on{box-shadow:inset 2px 0 var(--ui-accent)}
+:is(.pbp,#cr,#sh,#cc,.tc-chassis,#journal) button:active{background-color:#4c553d;box-shadow:inset 0 0 0 1px var(--ui-accent)}
+@keyframes field-trace{0%{opacity:0;transform:scaleX(0)}25%{opacity:1;transform:scaleX(.4)}75%{opacity:.75;transform:scaleX(1)}100%{opacity:0;transform:scaleX(1)}}
+@keyframes field-title{from{opacity:0;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0)}}
+@media(prefers-reduced-motion:no-preference){
+:is(.pbp.hg,#cr,#sh,#cc)::before{display:block!important;content:'';position:absolute;inset:0 0 auto;height:2px;background:var(--ui-accent);pointer-events:none;z-index:5;transform-origin:left center;animation:field-trace .65s .08s ease-out both}
+.pbp.hg .ls .it{transition:background-color .14s,transform .14s}.pbp.hg .ls .it:hover{transform:translateX(3px)}
+#mm .col h1{animation:field-title .65s cubic-bezier(.2,.65,.2,1) backwards}
+#mm .col>button:first-of-type::after{content:'→';display:inline-block;margin-left:14px;opacity:0;transform:translateX(-6px);transition:opacity .16s,transform .16s}
+#mm .col>button:first-of-type:is(:hover,:focus-visible)::after{opacity:1;transform:none}
+}
+@media(max-width:760px){.hg-card .dt-header h4{font-size:25px}.hg-card .g>div:first-child{font-size:30px}}
 </style>`
