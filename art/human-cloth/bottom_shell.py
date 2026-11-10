@@ -177,7 +177,7 @@ def fill(C):  # bridge hollows (cleavage, spine groove) the way fabric does, out
     return C
 def shell(C):
     N = normals(C)
-    TB = float(os.environ.get('BIBOFF', '0.017')) if BIB > 0 else T  # the bib and straps ride over a shirt: tops stand 6.5-8 mm off the skin
+    TB = float(os.environ.get('BIBOFF', '0.026')) if BIB > 0 else T  # the bib and straps ride over a shirt: tops stand 6.5-8 mm off the skin
     def _t(v):
         z = W(C[v]).z; k = max(0.0, min(1.0, (z - (waistz - 0.06 * s)) / (0.08 * s)))
         return T + (TB - T) * k
