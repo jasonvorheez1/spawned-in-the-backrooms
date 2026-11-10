@@ -8,6 +8,7 @@ import { N, EDGE_X, LANE, cellAt, cellCenter, openings, isEdge } from "./lib/lev
 import { stepToward } from "./lib/maze21path.js";
 import { npcState, npcMul, dmgAfterArmor } from "./lib/stats.js";
 import { setEdgesStep } from "./lib/level21-quests.js";
+import { addRep, repOf } from "./lib/rep.js";
 
 export const updateSchedule = { every: { seconds: 0.1 } };
 
@@ -140,6 +141,7 @@ export const ears = {
     }
 
     if (s.kind === "board") {
+      if (repOf(w, "survivors") <= -35) { ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "THE BOARD IGNORES YOU (SURVIVORS HATE YOU)", color: "#e06050", size: 0.9 }, { audience: { player: who.id } }); return; }
       const Q = [
         { name: "Wire for the Compressors", need: { wire: 3 }, xp: 65, items: ["almond", "battery", "cash:1500"], text: "Ned needs 3 spools of copper wire to keep Refrigerator Paradise's freezers running." },
         { name: "Steel for the Shutter Watch", need: { metal: 4 }, xp: 80, items: ["ammo", "bandage", "cash:2000"], text: "Goknar wants 4 scrap metal to reinforce the doors against the hounds." },
@@ -166,7 +168,10 @@ export const ears = {
       if (need) { const left = { ...sc }; for (const [k, n] of Object.entries(need)) left[k] = (left[k] ?? 0) - n; w.scrap = left; }
       w.l21q = (w.l21q ?? 0) + 1; snd("pickup-ammo", 0.65);
       const xp = Math.round(q.xp * (1 + lap * 0.5));
-      w.payout = { xp, items: q.items };
+      const sv = repOf(w, "survivors"), bonus = sv >= 35 ? 0.25 : sv >= 12 ? 0.1 : 0; // friends of the camp are paid better, as in every level
+      const items = q.items.map((it) => (bonus && String(it).startsWith("cash:") ? `cash:${Math.round(Number(String(it).slice(5)) * (1 + bonus))}` : it));
+      const tier = addRep(w, "survivors", 2);
+      w.payout = { xp, items, text: `ERRAND DONE: ${q.name}${bonus ? " · Survivors bonus" : ""}${tier ? ` · ${tier}` : " · Survivors +2"}` };
       const line = "Good work on that salvage. That keeps the freezers running.";
       heard(ctx, { clip: vo("hollis", line), position: pos, volume: 0.9, maxDistance: 16 });
       ctx.self.ui = `<div face="front" width="1.4m" style="font-family:Arial,sans-serif;font-weight:900;color:#e8e0c0;text-align:center;line-height:1.15;background:#181814;padding:8px;border:2px solid #3fa860"><div style="font-size:46px;color:#7aff9a;border-bottom:1px solid #3fa860;margin-bottom:6px">ERRAND COMPLETED!</div><div style="font-size:32px;color:#ffffff;margin-bottom:4px">${q.name.toUpperCase()} (+${xp} XP)</div><div style="font-size:24px;color:#a8d8c8">BOUNTY PAID IN CASH &amp; SUPPLIES</div></div>`;

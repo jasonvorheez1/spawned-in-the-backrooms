@@ -5,6 +5,7 @@
 import { heard } from "./lib/hear.js";
 import { vo } from "./lib/voices.js";
 import { setCarlaStep, setKarstStep, finishQuest8 } from "./lib/level8-quests.js";
+import { addRep, repOf } from "./lib/rep.js";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const say = (who, text, ctx) => { if (who?.state) who.state.notice = { text, at: ctx.now() }; };
 const CARLA = [
@@ -151,6 +152,7 @@ export const ears = {
       return ctx.destroy(ctx.self.id);
     }
     if (s.kind === "board") {
+      if (repOf(w, "survivors") <= -35) return say(who, "Board: the camp has struck your name off the errand list. Make amends with the Survivors first.", ctx);
       const Q = [
         { name: "Lights for the Road", need: { glow_cap: 4 }, xp: 60, items: ["battery", "cash:1500"], text: "The camp wants four glow caps for the lamps." },
         { name: "Plate for the Perimeter", need: { chitin: 3 }, xp: 80, items: ["bandage", "bandage", "cash:2500"], text: "Three chitin plates, for the sentries' armor. They come off cave spiders." },
@@ -170,7 +172,10 @@ export const ears = {
       }
       if (need) { const left = { ...sc }; for (const [k, n] of Object.entries(need)) left[k] = (left[k] ?? 0) - n; w.scrap = left; }
       w.l8q = (w.l8q ?? 0) + 1; snd("pickup-ammo", 0.6);
-      w.payout = { xp: Math.round(q.xp * (1 + lap * 0.5)), items: q.items, text: `ERRAND DONE: ${q.name}. "Good. That helps more than you think." The camp pays you. (+${Math.round(q.xp * (1 + lap * 0.5))} XP)` };
+      const sv = repOf(w, "survivors"), bonus = sv >= 35 ? 0.25 : sv >= 12 ? 0.1 : 0; // friends of the camp are paid better, as in every level
+      const items = q.items.map((it) => (bonus && String(it).startsWith("cash:") ? `cash:${Math.round(Number(String(it).slice(5)) * (1 + bonus))}` : it));
+      const tier = addRep(w, "survivors", 2);
+      w.payout = { xp: Math.round(q.xp * (1 + lap * 0.5)), items, text: `ERRAND DONE: ${q.name}. "Good. That helps more than you think." The camp pays you. (+${Math.round(q.xp * (1 + lap * 0.5))} XP${bonus ? ", Survivors bonus" : ""}${tier ? `, ${tier}` : ", Survivors +2"})` };
       return;
     }
     if (s.kind === "carla") {
