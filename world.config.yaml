@@ -83,6 +83,9 @@ inputs:
         button: false
     drink: {}
     compass: {}
+    throw:
+      keys:
+        - g
     flashlight:
       keys:
         - f

@@ -34,6 +34,8 @@ const L2_DESC = {
   tape: () => ({ name: 'Duct tape', info: 'Patches a weapon +15%, never past 45% (I menu > REPAIR)', color: '#b8c0c8' }),
   fuse: () => ({ name: 'Fuse', info: 'Opens an ELECTRICAL door', color: '#7fc8ff' }),
   valve: () => ({ name: 'Valve wheel', info: 'Opens a PUMP ROOM door', color: '#e05a3a' }),
+  frag: () => ({ name: 'Frag grenade', info: 'G throws it. Bounces, 2 s fuse, 6 m blast', color: '#9aa58a' }),
+  molotov: () => ({ name: 'Molotov cocktail', info: 'G throws it. Shatters into a 7 s fire', color: '#e08a3a' }),
   keycard: () => ({ name: 'Keycard', info: 'Opens a STORAGE cage', color: '#9ff0b0' }),
 }
 // Meat: what Samantha takes for a reading (Level 5). Eaten from I > Aid for a little HP; quality tiers premium/good/poor.

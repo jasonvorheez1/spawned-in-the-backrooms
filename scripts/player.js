@@ -43,6 +43,7 @@ import L3 from './lib/data/level3.yml'
 const zoneHere = (ctx, x, z) => ctx.self.place === 'spamton' ? 'spam_arena' : ctx.self.place === 'level7' ? (Math.hypot(x - 46, z + 120) < 34 ? 'l7_seawatch' : Math.hypot(x + 70, z + 95) < 55 ? 'l7_fort' : z > -4 && Math.hypot(x, z) < 12 ? 'l7_room1' : z > -36 && Math.abs(x) < 10 ? 'l7_pier' : 'l7_sea') : ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : ctx.self.place === 'level2' ? 'l2_' + zoneAt2(x, z) : ctx.self.place === 'level3' ? 'l3_' + zoneAt3(x, z) : ctx.self.place === 'gamma' ? 'l3_gamma' : ctx.self.place === 'level4' ? 'l4_' + zoneAt4(x, z, ctx.self.state.home) : ctx.self.place === 'level5' ? 'l5_' + (zoneAt5(x, z)?.id ?? 'lobby') : ctx.self.place === 'level6' ? 'l6_halls' : ctx.self.place === 'level61' ? 'l61_court' : ctx.self.place === 'level11' ? 'l11_city' : ctx.self.place === 'level10' ? 'l10_fields' : ctx.self.place === 'level8' ? 'l8_cave' : ctx.self.place === 'level21' ? 'l21_' + zoneAt21(x, z) : (ctx.place?.state?.moments?.manilaAt && Math.abs(x - ctx.place.state.moments.manilaAt.x) < 5.8 && Math.abs(z - ctx.place.state.moments.manilaAt.z) < 5.8 ? 'manila' : zoneAt(x, z))
 
 import SOUNDS from './lib/data/sounds.yml'
+import THROW from './lib/data/throwables.yml'
 import { stepTick } from './lib/footsteps.js'
 import { useCompass, COMPASS } from './lib/compass.js'
 import L3I from './lib/data/l3items.yml'
@@ -316,6 +317,12 @@ function takeToken1(ctx, token) {
     sound(ctx, 'pickup-ammo', 0.5, true)
     return { ok: true }
   }
+  if (token === 'frag' || token === 'molotov') { // throwables: counted, G throws (data/throwables.yml)
+    const T = THROW[token]; s[T.key] = (s[T.key] ?? 0) + 1; s.pickedAt = now
+    s.notice = { text: `${T.name} (${s[T.key]} carried) · G to throw`, at: now }
+    sound(ctx, 'pickup-ammo', 0.6, true)
+    return { ok: true }
+  }
   if (token === 'fuse' || token === 'valve' || token === 'keycard') { // Level 2 keys: carried until a door takes one
     const f = token + 's'; s[f] = (s[f] ?? 0) + 1; s.pickedAt = now
     s.notice = { text: `${token === 'fuse' ? 'Fuse' : token === 'valve' ? 'Valve wheel' : 'Keycard'} (${s[f]} carried)`, at: now }
@@ -417,6 +424,7 @@ export function onInput(ctx, input) {
     if (input.released.reload || (w.rDown && !input.held.reload)) { if (w.rDown && !w.rHeld && !bld) startReload(ctx); w.rDown = 0; w.rHeld = false } // R turns the piece in build mode
   }
   if (input.pressed.flashlight) toggleLight(ctx)
+  if (input.pressed.throw && !ctx.self.state.building && !ctx.self.state.invOpen) throwOne(ctx)
 }
 
 export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pellets = 1) {
@@ -1357,4 +1365,34 @@ function tickStats(ctx, t, moving) {
     ctx.self.ragdoll = { impulse: { x: Math.sin(yaw) * 70, y: 30, z: Math.cos(yaw) * 70 }, settleSeconds: 2.5 }
     w.fellAt = { ...p }; w.respawnAt = now + DOWN_MS
   }
+}
+
+// G: a frag if you carry one, else a molotov. It leaves the hand along your aim and flies on scripts/nade.js.
+function throwOne(ctx) {
+  const s = ctx.self.state, now = ctx.now(), w = walkOf(ctx)
+  if (s.dead || now < (w.throwAt ?? 0)) return
+  const kind = (s.grenades ?? 0) > 0 ? 'frag' : (s.molotovs ?? 0) > 0 ? 'molotov' : null
+  if (!kind) { s.notice = { text: 'Nothing to throw', at: now }; return }
+  const T = THROW[kind]; w.throwAt = now + THROW.cooldown * 1000
+  s[T.key] -= 1
+  const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }, pc = Math.max(-0.6, Math.min(1.1, s.aimPitch ?? 0)), cp = Math.cos(pc)
+  const eye = { x: p.x + f.x * 0.5, y: p.y + (s.crouch ? 1.0 : 1.45), z: p.z + f.z * 0.5 }
+  const vel = { x: f.x * cp * T.speed, y: Math.sin(pc) * T.speed + T.lift, z: f.z * cp * T.speed }
+  const half = T.size / 2
+  ctx.spawn({ tags: ['thrown'], lifetime: 12, feetPosition: eye, model: T.model, layout: { box: { min: { x: -half, y: 0, z: -half }, max: { x: half, y: T.size, z: half } } },
+    behavior: 'scripts/nade.js', state: { kind, vel, ownerId: ctx.self.id, fuseAt: now + (T.fuse ?? 0) } })
+  ctx.emit('playSound', { clip: '/cdn/moodboard-realistic-gritty/sfx-throw-whoosh-arm-swing.mp3', position: eye, volume: 0.6 })
+  s.notice = { text: `${T.name} · ${s[T.key]} left`, at: now }
+}
+// a blast or a fire patch you made reports who it reached: each lands as your hit (XP, loot, ragdoll); some of it can be you
+export const ears = {
+  blast(ctx, b) {
+    const s = ctx.self.state
+    if (b.self) s.hp = Math.max(0, (s.hp ?? 1) - b.self)
+    for (const h of b.hits ?? []) {
+      const m = ctx.getObject(h.id); if (!m || m.state?.dead) continue
+      const eq = s.equipped; s.equipped = 'fists' // a grenade kill is the grenade's, never the gun in your hand (no vaporize)
+      try { hitTarget(ctx, s, m, h.d, { x: h.dir.x, z: h.dir.z }, true, h.heavy) } finally { s.equipped = eq }
+    }
+  },
 }
