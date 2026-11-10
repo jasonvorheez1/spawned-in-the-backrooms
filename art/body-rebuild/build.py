@@ -106,6 +106,8 @@ if MALE:
     for i in range(len(vs)): isl.setdefault(fnd(i), []).append(i)
     G_ = GROW
     for ids in isl.values():
+        _c = sum((vs[i].co for i in ids), mathutils.Vector()) / len(ids)
+        if 1.70 < _c.z / G_ < 1.80 and abs(_c.x / G_) < .12: print('ISL', len(ids), round(_c.z/G_,3), round(_c.x/G_,3), round(_c.y/G_,3), round(max(vs[i].co.x/G_ for i in ids),3))
         if len(ids) > 200: continue
         c = sum((vs[i].co for i in ids), mathutils.Vector()) / len(ids); z0 = c.z / G_
         if len(ids) == 171 and 1.74 < z0 < 1.78:                                          # the lash strip: the outer wing folded down flat, no flick
