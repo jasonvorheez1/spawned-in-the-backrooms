@@ -46,7 +46,7 @@ function lay(ctx) {
   ctx.spawn("l12-table", { feetPosition: { x: 0, y: 0, z: -0.4 }, model: { id: MODEL.table }, physics: "static", state: { name: "Table", info: "It won't budge." } });
   ctx.spawn("l12-hole", { feetPosition: { x: 0.1, y: 0.012, z: -0.35 }, rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 0.32 }, material: { color: "#050505", roughness: 1 }, castShadow: false });
   ctx.spawn("l12-chair", { feetPosition: { x: 0, y: 0, z: 0.45 }, rotation: { yaw: 180 }, model: { id: MODEL.chair }, physics: "static" });
-  ctx.place.state.chair = ctx.spawn("l12-chair-seat", { feetPosition: { x: 0, y: 0, z: 0.45 }, rotation: { yaw: 0 }, tags: ["seat"], state: { seat: { w: 1, d: 0.02, y: 0.44 }, verb: "Sit", name: "Chair" } });
+  ctx.place.state.chair = ctx.spawn("l12-chair-seat", { feetPosition: { x: 0, y: 0, z: 0.45 }, rotation: { yaw: 0 }, tags: ["seat"], state: { seat: { w: 1, d: 0.02, y: 0.44 }, verb: "Sit", name: "Chair", c: { x: 0, y: 0.45, z: 0.45 } } });
   // the clock over the door: a full hour in R.hour seconds
   const clock = ctx.spawn("l12-clock", { feetPosition: { x: 0, y: 2.55, z: -2.91 }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.22, radiusBottom: 0.22, height: 0.05, radialSegments: 40 }, material: { color: "oklch(0.97 0.004 95)", roughness: 0.4 }, castShadow: false,
     children: [{ feetPosition: { x: 0, y: -0.03, z: 0 }, primitive: { kind: "torus", radius: 0.22, tube: 0.018 }, rotation: { pitch: 90 }, material: { color: "#1a1a1a" } }],
@@ -78,7 +78,7 @@ function doorAt(ctx, id, x, z, yaw, state, inWall) {
     { feetPosition: { x: 0, y: 2.08, z: 0 }, primitive: { kind: "box", width: 1.13, height: 0.08, depth: 0.2 }, material: PAINT },
   ];
   if (!inWall) kids.push({ feetPosition: { x: 0, y: 2.16, z: 0 }, primitive: { kind: "box", width: 1.6, height: 0.9, depth: 0.12 }, material: PAINT }, { feetPosition: { x: -0.9, y: 0, z: 0 }, primitive: { kind: "box", width: 0.7, height: 3.06, depth: 0.12 }, material: PAINT }, { feetPosition: { x: 0.9, y: 0, z: 0 }, primitive: { kind: "box", width: 0.7, height: 3.06, depth: 0.12 }, material: PAINT });
-  return ctx.spawn(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, tags: ["usable"], primitive: { kind: "box", width: 1, height: 2.06, depth: 0.08 }, material: { color: "#fff", opacity: 0, transparent: true }, physics: "static", behavior: "scripts/level12-use.js", state, children: kids });
+  return ctx.spawn(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, tags: ["usable"], primitive: { kind: "box", width: 1, height: 2.06, depth: 0.08 }, material: { color: "#fff", opacity: 0, transparent: true }, physics: "static", behavior: "scripts/level12-use.js", state: { ...state, c: { x, y: 1.05, z } }, children: kids }); // c: where the look ray finds it (interact.js), the knob's height
 }
 
 export function tick(ctx) {
