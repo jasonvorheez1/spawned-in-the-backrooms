@@ -26,7 +26,9 @@ SHIFT = {'f': 0.0, 'm': 0.04}[sex]
 ARMB = lambda nm: nm and any(nm.startswith(sd + k) for sd in ('Left', 'Right') for k in ('Arm', 'ForeArm', 'Hand'))
 def arm_w(nm, w): return w if ARMB(nm) else (0.5 * w if nm in ('LeftShoulder', 'RightShoulder') else 0)
 # one move field over the welded surface: split verts (uv seams, part borders) share one key, so nothing tears (Nov 10)
-objs = [o for o in bpy.data.objects if o.type == 'MESH' and o.vertex_groups]
+ALL = [o for o in bpy.data.objects if o.type == 'MESH' and o.vertex_groups]
+SKIN = lambda o: o.name == 'Body' or o.name.startswith('Skin_')
+objs = [o for o in ALL if SKIN(o)]   # the field lives on the skin alone; head and garments take it from the nearest skin point
 key = lambda p: (round(p.x, 3), round(p.y, 3), round(p.z, 3))  # 1 mm weld
 KD, KN, KADJ, per, KP, KS = {}, {}, {}, [], {}, {}
 for o in objs:
@@ -51,6 +53,19 @@ P = {k: KP[k] + D[k] for k in D}
 for _ in range(6):
     P = {k: (P[k] * (1 - 0.5 * min(1, KS[k])) + (sum((P[j] for j in KADJ[k]), Vector()) / len(KADJ[k])) * 0.5 * min(1, KS[k])) if KADJ[k] and KS[k] > 0.05 else P[k] for k in P}
 D = {k: P[k] - KP[k] for k in P}
+from mathutils.kdtree import KDTree
+kl = list(D); kdt = KDTree(len(kl))
+for i, k in enumerate(kl): kdt.insert(KP[k], i)
+kdt.balance()
+for o in ALL:
+    if SKIN(o): continue
+    mw = o.matrix_world; ks = []
+    for v in o.data.vertices:
+        p = mw @ v.co; near = kdt.find_n(p, 6)
+        w = [1 / max(.003, d) ** 2 for _, _, d in near]; dd = sum((D[kl[i]] * wi for (_, i, _), wi in zip(near, w)), Vector()) / sum(w)
+        if o.name == 'Head' or o.name.startswith(('Eye', 'Beard', 'Blush', 'Hair', 'Brow', 'Lash')): dd = sum((D[kl[i]] * wi for (_, i, _), wi in zip(kdt.find_n(KP[kl[kdt.find(Vector((0, p.y, 1.29)))[1]]], 1), [1])), Vector())  # rigid: the whole head rides the neck's move
+        k = ('g', o.name, v.index); D[k] = dd; ks.append(k)
+    per.append((o, ks))
 n = 0
 for o, ks in per:
     inv = o.matrix_world.inverted().to_3x3()
