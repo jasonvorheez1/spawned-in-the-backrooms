@@ -9,7 +9,7 @@ src = bpy.data.objects.get('Body') or next(o for o in bpy.data.objects if o.type
 keep = set(bpy.data.objects)
 bpy.ops.import_scene.gltf(filepath=garm)
 new = [o for o in bpy.data.objects if o not in keep]
-for g in [o for o in new if o.type == 'MESH']:
+for g in [o for o in new if o.type == 'MESH' and o.vertex_groups]:
     for vg in list(g.vertex_groups): g.vertex_groups.remove(vg)
     for vg in src.vertex_groups: g.vertex_groups.new(name=vg.name)
     sk = g.data.shape_keys; g.active_shape_key_index = 0
