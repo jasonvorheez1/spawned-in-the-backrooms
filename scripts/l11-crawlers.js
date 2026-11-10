@@ -27,10 +27,11 @@ const CRAWL = limbClip(0.8, 32, 1), FIDGET = limbClip(2.2, 9, 2.5);
 const HOUND = "/cdn/value.180d1072a97d34551e1394960b70202777c9d0b51fb0ca67779a59e429ef6fa7.glb";
 const SND = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
+const BOTS = new Set(["sentry", "smgbot"]);
 function spec(kind, x, z, i) {
-  const K = D.kinds[kind], base = { tags: ["l8-hostile", "l11foe", kind === "hound" ? "l11hound" : kind === "sentry" ? "l11sentry" : "l11clump"], feetPosition: { x, y: D.floor + 0.05, z }, physics: { body: "character" },
+  const K = D.kinds[kind], base = { tags: ["l8-hostile", "l11foe", kind === "hound" ? "l11hound" : BOTS.has(kind) ? "l11sentry" : "l11clump"], feetPosition: { x, y: D.floor + 0.05, z }, physics: { body: "character" },
     state: { kind, name: K.name, hp: K.hp, maxHp: K.hp, home: { x, z }, slot: i } };
-  if (kind === "sentry") return { ...base, tags: [...base.tags, "zdrone"], model: { id: SENTRY, forward: "+x" }, layout: { box: { min: { x: -0.5, y: 0, z: -0.5 }, max: { x: 0.5, y: 1.9, z: 0.5 } } }, audio: { clip: "/cdn/moodboard-scifi-neon/sfx-old-vacuum-tube-electrical-hum-and-relay-ticking-loop.mp3", loop: true, gain: 0.25, spatial: true, maxDistance: 12 } };
+  if (BOTS.has(kind)) return { ...base, tags: [...base.tags, "zdrone"], model: { id: SENTRY, forward: "+x" }, layout: { box: { min: { x: -0.5, y: 0, z: -0.5 }, max: { x: 0.5, y: 1.9, z: 0.5 } } }, audio: { clip: "/cdn/moodboard-scifi-neon/sfx-old-vacuum-tube-electrical-hum-and-relay-ticking-loop.mp3", loop: true, gain: 0.25, spatial: true, maxDistance: 12 } };
   return kind === "hound"
     ? { ...base, model: { id: HOUND }, scale: 1, audio: { clip: SND("low-wet-animal-growl-breathing-loop"), loop: true, gain: 0.25, spatial: true, maxDistance: 14 } }
     : { ...base, model: { id: CLUMP, forward: "+x" }, layout: { box: { min: { x: -0.8, y: 0, z: -0.8 }, max: { x: 0.8, y: 1.2, z: 0.8 } } }, scale: 1, audio: { clip: SND("many-fingers-knuckles-cracking-and-skin-dragging-on-concrete-loop"), loop: true, gain: 0.35, spatial: true, maxDistance: 16 } };
@@ -57,9 +58,9 @@ export function update(ctx, dt) {
     if (f.state.dead || f.state.hp <= 0) { // player.js marks the kill; we lay it down and clear it
       if (!m.died) { m.died = now; st.deadAt = { ...st.deadAt, [i]: now }; f.velocity = { x: 0, y: 0, z: 0 }; f.audio = null;
         if (f.state.kind === "hound") f.anim.main = { clip: "death", loop: false, clampWhenFinished: true, weight: 1 };
-        else if (f.state.kind === "sentry") { m.talkUntil = 0; speak(ctx, f, m, "die", now); ctx.emit("fx", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, script: BOLT }); f.anim.main = { clip: "cdn/clip-die.glb", loop: false, clampWhenFinished: true, weight: 1 }; f.anim.aim = null; }
+        else if (BOTS.has(f.state.kind)) { m.talkUntil = 0; speak(ctx, f, m, "die", now); ctx.emit("fx", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, script: BOLT }); f.anim.main = { clip: "cdn/clip-die.glb", loop: false, clampWhenFinished: true, weight: 1 }; f.anim.aim = null; }
         else ctx.emit("playSound", { clip: SND("wet-bone-crunch-and-limp-limbs-collapsing"), position: pos, volume: 0.9 }); }
-      if (now - m.died > (f.visible === false ? 300 : f.state.kind === "sentry" ? 60000 : 4000)) delete ctx.place.objects[id];
+      if (now - m.died > (f.visible === false ? 300 : BOTS.has(f.state.kind) ? 60000 : 4000)) delete ctx.place.objects[id];
       continue;
     }
     let prey = null, best = 1e9;
@@ -70,7 +71,7 @@ export function update(ctx, dt) {
       if (seen && d < best) { best = d; prey = p; }
     }
     if (prey && m.hunt !== prey.id) { m.hunt = prey.id; ctx.emit("playSound", { clip: SND(f.state.kind === "hound" ? "hound-snarl-and-bark-echoing" : "chorus-of-moaning-voices-and-snapping-fingers"), position: pos, volume: 1 }); }
-    if (f.state.kind === "sentry") { if (prey && !m.spoke) { m.spoke = 1; m.talkUntil = 0; speak(ctx, f, m, "spot", now); } if (!prey && m.spoke) { m.spoke = 0; m.talkUntil = 0; speak(ctx, f, m, "lost", now); }
+    if (BOTS.has(f.state.kind)) { if (prey && !m.spoke) { m.spoke = 1; m.talkUntil = 0; speak(ctx, f, m, "spot", now); } if (!prey && m.spoke) { m.spoke = 0; m.talkUntil = 0; speak(ctx, f, m, "lost", now); }
       if ((m.lastHp ?? f.state.hp) - f.state.hp >= 25) speak(ctx, f, m, "hurt", now, 4000); m.lastHp = f.state.hp; }
     if (!prey) m.hunt = null;
     let vx = 0, vz = 0, clip = "idle";
@@ -83,16 +84,17 @@ export function update(ctx, dt) {
       if (!los || best > K.range) { vx = dx / n * K.speed; vz = dz / n * K.speed; }
       else if (best < K.keep - 2) { vx = -dx / n * K.speed * 0.7; vz = -dz / n * K.speed * 0.7; }
       if (los && best < K.range && now > (m.nextHit ?? 0)) {
-        m.nextHit = now + K.cd * 1000 * (0.85 + ctx.random() * 0.3);
+        if (K.burst) { m.shots = ((m.shots ?? 0) + 1) % K.burst; m.nextHit = m.shots ? now + K.burstGap * 1000 : now + K.cd * 1000 * (0.85 + ctx.random() * 0.3); }
+        else m.nextHit = now + K.cd * 1000 * (0.85 + ctx.random() * 0.3);
         const muzzle = { x: pos.x + dx / n * 0.6, y: pos.y + 1.25, z: pos.z + dz / n * 0.6 };
         const hits = ctx.random() > K.spread * (best / 4) * (prey.velocity && Math.hypot(prey.velocity.x, prey.velocity.z) > 3 ? 1.6 : 1);
         const end = hits ? aim : { x: aim.x + (ctx.random() - 0.5) * 1.6, y: aim.y + (ctx.random() - 0.3), z: aim.z + (ctx.random() - 0.5) * 1.6 };
         const L = Math.hypot(end.x - muzzle.x, end.y - muzzle.y, end.z - muzzle.z);
-        ctx.spawn({ feetPosition: { x: (muzzle.x + end.x) / 2, y: (muzzle.y + end.y) / 2 - 0.025, z: (muzzle.z + end.z) / 2 }, pivot: "center", rotation: { lookAt: end, include: ["yaw", "pitch"] }, primitive: { kind: "box", width: 0.05, height: 0.05, depth: L }, material: { color: "oklch(0.85 0.17 65)", emissive: "oklch(0.8 0.18 60)", emissiveIntensity: 6 }, castShadow: false, lifetime: 0.12, audience: "near" });
+        ctx.spawn({ feetPosition: { x: (muzzle.x + end.x) / 2, y: (muzzle.y + end.y) / 2 - 0.025, z: (muzzle.z + end.z) / 2 }, pivot: "center", rotation: { lookAt: end, include: ["yaw", "pitch"] }, primitive: { kind: "box", width: 0.05, height: 0.05, depth: L }, material: { color: `oklch(0.85 0.17 ${K.bolt ?? 65})`, emissive: `oklch(0.8 0.18 ${K.bolt ?? 60})`, emissiveIntensity: 6 }, castShadow: false, lifetime: 0.12, audience: "near" });
         ctx.emit("fx", { position: muzzle, script: BOLT });
         f.anim.fire = { clip: "cdn/clip-rifle-fire-01972c51.glb", loop: false, weight: 1, mask: "RightShoulder", blend: 0.05 };
-        ctx.emit("playSound", { clip: "/cdn/moodboard-scifi-neon/sfx-retro-1950s-ray-gun-zap-with-warbling-oscillator.mp3", position: muzzle, volume: 0.9, mode: "overlap" });
-        if (ctx.random() < 0.35) speak(ctx, f, m, "shoot", now, 7000);
+        ctx.emit("playSound", { clip: "/cdn/moodboard-scifi-neon/sfx-retro-1950s-ray-gun-zap-with-warbling-oscillator.mp3", position: muzzle, volume: K.burst ? 0.6 : 0.9, pitch: K.burst ? 1.5 + ctx.random() * 0.15 : 1, mode: "overlap" });
+        if (!m.shots && ctx.random() < 0.35) speak(ctx, f, m, "shoot", now, 7000);
         if (hits) {
           prey.state.hp -= dmgAfterArmor(prey.state.look, K.dmg);
           ctx.emit("damageNumber", { position: aim, value: K.dmg, color: "#ffb040" });
@@ -127,8 +129,8 @@ export function update(ctx, dt) {
         ctx.emit("screenShake", { intensity: 0.35, duration: 0.2 }, { audience: { player: prey.id } });
       }
     } else if (flat(pos, f.state.home) > 1.5) { const dx = f.state.home.x - pos.x, dz = f.state.home.z - pos.z, n = Math.hypot(dx, dz); vx = dx / n * 1.2; vz = dz / n * 1.2; clip = "prowl"; f.rotation = { yaw: Math.atan2(-dx, -dz) * 180 / Math.PI }; }
-    if (f.state.kind === "sentry" && (vx || vz) && now > (m.step ?? 0)) { m.step = now + 520; ctx.emit("playSound", { clip: "/cdn/moodboard-scifi-neon/sfx-heavy-metal-robot-footstep-clank-on-concrete.mp3", position: pos, volume: 0.6, pitch: 0.9 + ctx.random() * 0.2, maxDistance: 26 }); }
-    if (f.state.kind === "sentry") { const mv = (vx || vz) ? "cdn/clip-walk-loop.glb" : "cdn/clip-idle-loop.glb", up = !!(prey && K.range);
+    if (BOTS.has(f.state.kind) && (vx || vz) && now > (m.step ?? 0)) { m.step = now + 520; ctx.emit("playSound", { clip: "/cdn/moodboard-scifi-neon/sfx-heavy-metal-robot-footstep-clank-on-concrete.mp3", position: pos, volume: 0.6, pitch: 0.9 + ctx.random() * 0.2, maxDistance: 26 }); }
+    if (BOTS.has(f.state.kind)) { const mv = (vx || vz) ? "cdn/clip-walk-loop.glb" : "cdn/clip-idle-loop.glb", up = !!(prey && K.range);
       if (m.clip !== mv) { m.clip = mv; f.anim.main = { clip: mv, loop: true, weight: 1, blend: 0.25 }; }
       if (m.up !== up) { m.up = up; f.anim.aim = up ? { clip: "cdn/clip-rifle-up-50cc7349-loop.glb", loop: true, weight: 1, mask: "Spine", blend: 0.3 } : null; } }
     f.velocity = { x: vx, y: f.grounded ? -0.5 : (f.velocity?.y ?? 0) + g * dt, z: vz };
