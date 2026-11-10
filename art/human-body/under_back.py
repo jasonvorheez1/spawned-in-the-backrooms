@@ -1,0 +1,40 @@
+# Female default underwear: the back rose too low and showed the seat (Shelly, Nov 10 screenshot). Lifts the back's waistband
+# to the front's height and keeps it on the skin. blender -b --factory-startup --python-exit-code 1 --python art/human-body/under_back.py -- in.glb out.glb proofdir
+import bpy, sys
+from mathutils import Vector
+from mathutils.bvhtree import BVHTree
+a = sys.argv[sys.argv.index('--') + 1:]
+bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(filepath=a[0])
+U = bpy.data.objects['Under_bottom']; B = bpy.data.objects['Body']
+dg = bpy.context.evaluated_depsgraph_get(); be = B.evaluated_get(dg); bm = be.to_mesh()
+tree = BVHTree.FromPolygons([B.matrix_world @ v.co for v in bm.vertices], [p.vertices[:] for p in bm.polygons])
+Mi = U.matrix_world.inverted(); M = U.matrix_world
+co = [M @ v.co for v in U.data.vertices]
+zs = [c.z for c in co]; zlo, zhi = min(zs), max(zs)
+ys = [c.y for c in co]; ymid = (min(ys) + max(ys)) / 2
+LIFT = 0.075   # 7.5 cm more at the very top of the back, fading to 0 at the crotch and at the sides. Savi's pick
+delta = []
+for c in co:
+    back = max(0.0, min(1.0, (c.y - ymid) / 0.06))       # Blender front is -Y: +Y is the seat
+    up = max(0.0, (c.z - (zlo + 0.08)) / (zhi - zlo - 0.08)) ** 1.5
+    n = c + Vector((0, 0, LIFT * back * up))
+    hit = tree.find_nearest(n)
+    if hit[0] is not None and back * up > 0.01:
+        p, nrm = hit[0], hit[1]
+        n = p + nrm.normalized() * 0.004                # 4 mm off the skin, as sw65
+    delta.append(Mi.to_3x3() @ (n - c))
+for i, v in enumerate(U.data.vertices): v.co += delta[i]
+if U.data.shape_keys:
+    for kb in U.data.shape_keys.key_blocks:
+        for i, d in enumerate(kb.data): d.co += delta[i]
+print('UB lifted', sum(1 for d in delta if d.length > 1e-4), 'of', len(delta))
+bpy.ops.export_scene.gltf(filepath=a[1], export_apply=False, export_morph=True, export_skins=True)
+# proof: the back and a 3/4 back
+for o in bpy.data.objects:
+    if o.type == 'MESH' and not (o.name in ('Body', 'Under_bottom', 'Head') or o.name.startswith('Skin_')): o.hide_render = True
+sc = bpy.context.scene; sc.render.engine = 'CYCLES'; sc.cycles.samples = 8; sc.render.resolution_x = sc.render.resolution_y = 500
+for nm, pos in (('back', (0, 2.0, 0.9)), ('q', (1.4, 1.4, 0.95))):
+    c = bpy.data.cameras.new(nm); c.lens = 85; co_ = bpy.data.objects.new(nm, c); sc.collection.objects.link(co_); co_.location = pos
+    co_.rotation_euler = (Vector((0, 0, 0.85)) - Vector(pos)).to_track_quat('-Z', 'Y').to_euler()
+    L = bpy.data.lights.new(nm, 'SUN'); L.energy = 3; lo = bpy.data.objects.new(nm + 'L', L); sc.collection.objects.link(lo); lo.rotation_euler = co_.rotation_euler
+    sc.camera = co_; sc.render.filepath = f'{a[2]}/{nm}.png'; bpy.ops.render.render(write_still=True); lo.hide_render = True
