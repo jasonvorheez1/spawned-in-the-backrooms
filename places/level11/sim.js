@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 111; // bump to rebuild the city in rooms that are already open
+const V = 112; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -476,7 +476,7 @@ function lay(ctx) {
     behavior: "scripts/level11-use.js",
     state: { kind: "sedco-counter", name: "Sedco Sales Counter & Register", verb: "Search Counter" },
   });
-  for (const [i, dz] of [-2.0, 2.0].entries()) md(`l11-sedco-int-gondola-${i}`, "sedco_gondola", SEDCO_X - 1, 0.14, SEDCO_Z + dz, { peg: { texture: "cdn/texture-brown-pegboard-holes.png", repeat: [4, 2.5], roughness: 0.85 }, steel: { texture: "cdn/texture-brushed-steel.png", roughness: 0.4, metalness: 0.7 } });
+  for (const [i, dz] of [-2.0, 2.0].entries()) sp(`l11-sedco-int-gondola-${i}`, { feetPosition: { x: SEDCO_X - 1, y: 0.14, z: SEDCO_Z + dz }, primitive: { kind: "scripted", script: "scripts/l11-sedco-gondola.js", seed: 11 + i * 29 }, material: { roughness: 0.5 }, physics: { body: "static", collider: "box" }, castShadow: true, state: { floor: "metal" } }); // 2009 stock: funyuns, doritos, spongebob (Nov 10)
   md("l11-sedco-int-monitors", "sedco_monitors", SEDCO_X - 1, 0.14, SZ0 + 0.45, { crt: { color: "#1c2a26", emissive: "#9fc0b0", emissiveIntensity: 0.55, roughness: 0.15 }, beige: { texture: "cdn/texture-smooth-off-white-abs-plastic.png", color: "#e8dcc0", roughness: 0.55 } }, "box", {
     rotation: { yaw: 180 },
     tags: ["usable"],
