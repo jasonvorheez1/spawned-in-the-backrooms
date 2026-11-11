@@ -435,16 +435,17 @@ print("sculpt relief relaxed (chin :3, lash flaps)", len(_relax), "BOX z0", roun
 # laid onto a least-squares surface y = f(x, z) fitted to the clean jaw around it (decal-pressed verts kept out)
 import numpy as _np
 _band = lambda v: abs(v.co.x) < 0.075 and BOX[2] + 0.02 < v.co.z < BOX[2] + 0.062 and v.co.y < -0.12
-_ring = [v for v in bm.verts if v.index not in moved and not _band(v) and abs(v.co.x) < 0.11 and BOX[2] - 0.01 < v.co.z < BOX[2] + 0.09 and v.co.y < -0.12]
+_ring = [v for v in bm.verts if not _band(v) and abs(v.co.x) < 0.11 and BOX[2] - 0.01 < v.co.z < BOX[2] + 0.09 and v.co.y < -0.12]
 _feat = lambda x, z: [1, x * x, z, z * z, x * x * z, x ** 4]
 if len(_ring) > 12:
     _A = _np.array([_feat(v.co.x, v.co.z) for v in _ring]); _k = _np.linalg.lstsq(_A, _np.array([v.co.y for v in _ring]), rcond=None)[0]
     _ironed = 0
     for v in bm.verts:
-        if _band(v) and (v.index not in moved or v.co.z < BOX[2] + 0.05):
+        if _band(v):
             v.co.y = float(_np.dot(_feat(v.co.x, v.co.z), _k)); _ironed += 1
     for _ in range(6): _bm.ops.smooth_vert(bm, verts=[v for v in bm.verts if _band(v) and not v.is_boundary], factor=0.5, use_axis_x=True, use_axis_y=False, use_axis_z=True)
     print("chin :3 folds ironed", _ironed, "ring", len(_ring))
+else: print("chin iron SKIPPED ring", len(_ring))
 # the ':3' sculpt also sits on the Body's side of the neck seam (under the jaw): relaxed the same way, seam verts held so nothing opens
 _bb = _bm.new(); _bb.from_mesh(BODY.data)
 _rb = [v for v in _bb.verts if not v.is_boundary and v.co.y < -0.01 and BOX[0] - 0.03 < v.co.x < BOX[1] + 0.03 and BOX[2] - 0.16 < v.co.z < BOX[2] + 0.02]
