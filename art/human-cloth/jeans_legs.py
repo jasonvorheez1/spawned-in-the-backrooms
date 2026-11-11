@@ -124,6 +124,12 @@ for sd in 'LR':
       f.smooth=True; f.normal_update()
       if (f.normal.x>0)==((sd=='L')==(lsign>0)): f.normal_flip()
       caps+=1
+# what the zipper missed (a slot whose edge branched, so its walk never closed): fill each leftover hole on the inner leg
+rest=[e for e in bm.edges if len(e.link_faces)==1 and all(abs(W(v).x)<0.02 and W(v).z<crotch-0.02 for v in e.verts)]
+r=bmesh.ops.holes_fill(bm,edges=rest,sides=40)
+for f in r['faces']: f.smooth=True
+if r['faces']: bmesh.ops.triangulate(bm,faces=r['faces'],quad_method='BEAUTY',ngon_method='BEAUTY')
+print("HOLES filled",len(r['faces']),"of",len(rest),"edges")
 print("CAPS",caps)
 bm.normal_update(); bm.to_mesh(me); bm.free(); me.update()
 # the imported custom normals still pointed across the old shared seam: those faces lit pale mid-stride. Recompute them from the split mesh
