@@ -464,7 +464,7 @@ for (i, j), (co, uv_) in list(grid.items()):   # smoothed normals: an even 3 mm 
 # the decal rode the old lumps (the body's chin and the old ':3' poke through under the muzzle): its depth is relaxed over the grid,
 # edge cells held, then any head or body vertex standing in front of it is pressed 2 mm behind it, so no bump shows through or around
 g0 = {k: co.y for k, (co, _) in grid.items()}; gy = dict(g0)
-for _ in range(14):
+for _ in range(2):   # was 14: a deep relax flattened the decal and pressed the head flat behind it, a plate from the side
     n_ = {}
     for (i, j), y in gy.items():
         nb = [(i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)]
@@ -477,8 +477,8 @@ for o_ in (HEAD, BODY):
     for v in o_.data.vertices:
         w_ = M @ v.co
         i = round((w_.x - BOXD[0]) / (BOXD[1] - BOXD[0]) * NX); j = round((w_.z - BOXD[2]) / (BOXD[3] - BOXD[2]) * NZ)
-        if (i, j) not in gy or w_.y < gy[i, j] - 0.03 or w_.y > gy[i, j] + 0.006: continue
-        w_.y = max(w_.y, gy[i, j] + 0.006); v.co = Mi @ w_; npress += 1
+        if (i, j) not in gy or w_.y < gy[i, j] - 0.008 or w_.y > gy[i, j] + 0.003: continue
+        w_.y = max(w_.y, gy[i, j] + 0.003); v.co = Mi @ w_; npress += 1
     o_.data.update()
 print("decal relaxed, verts pressed behind it", npress)
 verts, uvs, faces, vid = [], [], [], {}
