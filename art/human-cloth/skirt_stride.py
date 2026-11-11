@@ -4,13 +4,14 @@ import bpy, sys, math
 args = sys.argv[sys.argv.index("--") + 1:]
 src, out, mode = args[0], args[1], args[2]  # mode: render | export
 MAXLEG = 0.95
-RAMP = 0.35  # fraction of hip-to-hem over which the leg takes over
+RAMP = 0.28
+LIFT = 0.05  # the blend starts this far above the hip joints, where the thigh bulges first  # fraction of hip-to-hem over which the leg takes over
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=src)
 arm = next(o for o in bpy.data.objects if o.type == "ARMATURE")
 H = lambda n: arm.matrix_world @ arm.data.bones[n].head_local
 lh, rh = H("LeftUpLeg"), H("RightUpLeg")
-hipz = (lh.z + rh.z) / 2; cx = (lh.x + rh.x) / 2; half = abs(lh.x - rh.x) / 2
+hipz = (lh.z + rh.z) / 2 + LIFT; cx = (lh.x + rh.x) / 2; half = abs(lh.x - rh.x) / 2
 lsign = 1 if lh.x > cx else -1
 g = next(o for o in bpy.data.objects if o.type == "MESH" and o.name.startswith("Ward_"))
 zs = [(g.matrix_world @ v.co).z for v in g.data.vertices]; hem = min(zs)
