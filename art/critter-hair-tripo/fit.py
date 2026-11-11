@@ -11,6 +11,9 @@ ROOT = os.environ.get("HAIR_ROOT", "/workspace/hair/tripo8")  # a second lane po
 BODY = f"{ROOT}/{'female' if ID.startswith('f_') else 'male'}.glb"
 RAW, OUT, PROOF = f"{ROOT}/{ID}-raw.glb", f"{ROOT}/{ID}.glb", f"{ROOT}/proof_{ID}"
 TRIS = 5900
+import json as _j
+_tp = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tune.json")
+TUNE = (_j.load(open(_tp)) if os.path.exists(_tp) else {}).get(ID, {})
 Z = Vector((0, 0, 1))
 os.makedirs(PROOF, exist_ok=True)
 
@@ -221,6 +224,49 @@ for _ in range(2):  # relax the snapped hairline ring a touch
             loc, n, _, d = bvh.find_nearest(v.co)
             if (v.co - loc).dot(n) < OFF[0]: v.co = loc + n * OFF[0]
 bm.to_mesh(raw.data); bm.free()
+# scalp underlayer (Shelly wants no skull through the hair): the head's own scalp, 1.5 mm out, in the hair slot, under the sculpt.
+# covers crown slits and ear-base notches; stops at the sculpt's own front hairline and clears each ear by 1.3x the ear cut.
+if not TUNE.get("noscalp"):
+    hv_ = np.array([v.co[:] for v in raw.data.vertices])
+    Fh = (hv_ - np.array(c[:])) @ np.array(f[:])
+    front_band = Fh > 0.45 * headF
+    hairline = hv_[front_band, 2].min() if front_band.any() else eye_top + 0.25 * headH
+    side_floor = hv_[:, 2].min()
+    bb = bmesh.new(); bb.from_mesh(body.data); bb.faces.ensure_lookup_table()
+    keep = []
+    for fa in bb.faces:
+        m = fa.calc_center_median(); F_, L_, Z_ = FLZ(m)
+        if Z_ < crown - 0.75 * headH * 0.5: continue          # below the skull band
+        if Z_ < eye_top + 0.08 * headH: continue              # never on the eyes
+        if F_ > 0.25 * headF and Z_ < hairline + 0.01 * headH: continue   # forehead below the sculpt's hairline stays fur
+        if F_ <= 0.25 * headF and Z_ < max(side_floor, eye_top) : continue
+        if kd.find(m)[2] < 1.3 * EAR_R: continue              # ears and a collar round each base stay clear
+        if any(kd.find(v.co)[2] < 1.15 * EAR_R for v in fa.verts): continue
+        if fa.normal.z < -0.35: continue                      # underside of the jaw/neck
+        keep.append(fa.index)
+    keepset = set(keep)
+    bb2 = bmesh.new(); vmap = {}
+    for i in keep:
+        fa = bb.faces[i]; vs = []
+        for v in fa.verts:
+            if v.index not in vmap: vmap[v.index] = bb2.verts.new(v.co + v.normal * (0.0012 * Hb))
+            vs.append(vmap[v.index])
+        try: bb2.faces.new(vs)
+        except ValueError: pass
+    # trim any scalp the sculpt does not hang over (a scalp poking past the hair's own silhouette)
+    hbvh = BVHTree.FromPolygons([v.co.copy() for v in raw.data.vertices], [p.vertices[:] for p in raw.data.polygons])
+    bb2.faces.ensure_lookup_table(); bare = []
+    for fa in bb2.faces:
+        m = fa.calc_center_median(); n = fa.normal
+        hit = hbvh.ray_cast(m + n * 0.0002, n, 0.06 * Hb)
+        near = hbvh.find_nearest(m)
+        if hit[0] is None and (near[0] is None or near[3] > 0.02 * Hb): bare.append(fa)
+    bmesh.ops.delete(bb2, geom=bare, context="FACES")
+    me2 = bpy.data.meshes.new("scalp"); bb2.to_mesh(me2); bb2.free(); bb.free()
+    sc_o = bpy.data.objects.new("scalp", me2); bpy.context.collection.objects.link(sc_o)
+    bpy.ops.object.select_all(action="DESELECT"); sc_o.select_set(True); raw.select_set(True)
+    bpy.context.view_layer.objects.active = raw; bpy.ops.object.join()
+    print(f"SCALP {ID} faces {len(keep)} kept {len(keep)-len(bare)}")
 for p in raw.data.polygons: p.use_smooth = True
 tri = sum(len(p.vertices) - 2 for p in raw.data.polygons)
 print(f"STATS {ID} tris {tri} islands {n_isl} pushed {pushed} snapped {snapped} floating_edge {floating}")
