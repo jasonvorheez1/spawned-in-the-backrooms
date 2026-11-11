@@ -5,7 +5,7 @@
 import bpy, bmesh, sys
 from mathutils import Vector
 a = sys.argv[sys.argv.index('--')+1:]; src, dst = a[0], a[1]
-ZLO, ZHI, IT = 1.30, 1.47, 12
+ZLO, ZHI, IT = 1.30, 1.47, 24
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=src)
 skins = [o for o in bpy.data.objects if o.type == 'MESH' and (o.name.startswith('Skin_') or o.name in ('Body',))]
@@ -18,7 +18,7 @@ for o in skins:
     for e in me.edges:
         k1, k2 = key(W[e.vertices[0]]), key(W[e.vertices[1]])
         nb.setdefault(k1, set()).add(k2); nb.setdefault(k2, set()).add(k1)
-band = [k for k, p in pos.items() if ZLO < p.z < ZHI and abs(p.x) < 0.16]
+band = [k for k, p in pos.items() if ZLO < p.z < ZHI and abs(p.x) < 0.24]
 cur = {k: pos[k].copy() for k in pos}
 for _ in range(IT):
     nxt = {}
