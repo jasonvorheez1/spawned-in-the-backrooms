@@ -9,9 +9,10 @@ a = sys.argv[sys.argv.index('--') + 1:]; bodyf, shirtf, zlo, out = a[0], a[1], f
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=shirtf)
 sh = [o for o in bpy.data.objects if o.type == 'MESH']
+shirt = [o for o in sh if o.name.startswith('Ward_')] or sh
 dg = bpy.context.evaluated_depsgraph_get()
 bm = bmesh.new()
-for o in sh:
+for o in shirt:
     t = bmesh.new(); t.from_object(o, dg); t.transform(o.matrix_world); m = bpy.data.meshes.new('t'); t.to_mesh(m); bm.from_mesh(m)
 tree = BVHTree.FromBMesh(bm)
 for o in sh: bpy.data.objects.remove(o)
@@ -24,6 +25,7 @@ for p in to.data.polygons:
     c = mw @ p.center; n = (mw.to_3x3() @ p.normal).normalized()
     hit = tree.ray_cast(c + n * 0.002, n, 0.08)[0] or tree.find_nearest(c, 0.012)[0]
     p.select = (c.z > zlo and max(abs((mw @ to.data.vertices[i].co).x) for i in p.vertices) < (XW if c.y < 0 else XW * 0.8))  # the neckline alone: the band out to the shoulders bulged through the shirt as flaps in-game (Nov 11)
+    if c.z > 1.36 and not tree.ray_cast(c + n * 0.002, n, 0.08)[0] and not tree.ray_cast(c, Vector((0, 0, 1)), 0.03)[0]: p.select = True  # open to the sky through the neckline: no shirt over it outward or above (Nov 11: the jagged region edge read as white teeth)
     sel += p.select
 KEEP = {p.index for p in to.data.polygons if p.select}
 for o in bpy.context.selected_objects: o.select_set(False)
