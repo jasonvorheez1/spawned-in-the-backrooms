@@ -113,7 +113,7 @@ f:
     Ward_gown: "/cdn/value.deed690aef8696a8ae1c5eec2768690106dcb83ec009e2f9dbb0ffef61f13b7f.glb"
     Ward_headphones: "/cdn/value.c9aae2ae918914989cd90c8d8b5f84d682752fc14cb2234e34de20d4d2a2291f.glb"
     Ward_heels: "/cdn/value.5a6bb2357a1bed410029c934c48aaf72748f5899368d73420d16649eaa5dc496.glb"
-    Ward_hoodie: "/cdn/value.b8d17df472380417a06641de25839a7fb31cf0845b9c16b12b445b19714cea8b.glb"  # Nov 11 back rim under the scarf (art/human-cloth/hoodie_backneck.py, was dbdaa5e9)
+    Ward_hoodie: "/cdn/value.dbdaa5e9beb174eeecc26642e0ab5e108cc3b862ed07fa7c3f53197823980f65.glb"
     Ward_hotelrobe: "/cdn/value.e86c246e3a98756fbc1e3bb0a1bca1c84584a578c32909839d1f967cebdcc327.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
     Ward_hotelslip: "/cdn/value.d22ce4238334765dc42d919a70e08fd85fb0f17a5e19ffdfd09545584ab965fc.glb"
     Ward_jacket: "/cdn/value.89a15ff3eb92a7c25311434b76f3d184f0a1cba198794177565cf4e7a5ef1e1f.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
