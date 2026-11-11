@@ -4,7 +4,7 @@ and that skin poked through the shoulders and under scarves as jagged teeth. Thi
 Usage: -- body.glb shirt.glb zlo out.glb"""
 import bpy, bmesh, sys
 from mathutils.bvhtree import BVHTree
-a = sys.argv[sys.argv.index('--') + 1:]; bodyf, shirtf, zlo, out = a[0], a[1], float(a[2]), a[3]
+a = sys.argv[sys.argv.index('--') + 1:]; bodyf, shirtf, zlo, out = a[0], a[1], float(a[2]), a[3]; XW = float(a[4]) if len(a) > 4 else 0.085
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=shirtf)
 sh = [o for o in bpy.data.objects if o.type == 'MESH']
@@ -20,7 +20,7 @@ sel = 0
 for p in to.data.polygons:
     c = mw @ p.center; n = (mw.to_3x3() @ p.normal).normalized()
     hit = tree.ray_cast(c + n * 0.002, n, 0.08)[0] or tree.find_nearest(c, 0.012)[0]
-    p.select = (c.z > zlo and abs(c.x) < 0.13 and hit is None)
+    p.select = (c.z > zlo and hit is None and max(abs((mw @ to.data.vertices[i].co).x) for i in p.vertices) < XW)  # whole face inside the neck: long flaps out to the shoulder were the teeth
     sel += p.select
 KEEP = {p.index for p in to.data.polygons if p.select}
 for o in bpy.context.selected_objects: o.select_set(False)
