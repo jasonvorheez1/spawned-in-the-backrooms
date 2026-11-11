@@ -39,16 +39,19 @@ def rebuild_head(head, sex):
     def face(indices, material=0):
         faces.append(indices)
         mats.append(material)
-    levels=[spline(rings,i,j/5) for i in range(len(rings)-1) for j in range(5)]+[Vector(rings[-1])]
+    levels=[spline(rings,i,j/7) for i in range(len(rings)-1) for j in range(7)]+[Vector(rings[-1])]
     seg=64
     from math import cos,sin,pi
     for z,rx,ry,cy in levels:
         for i in range(seg):
             a=2*pi*i/seg
             x,y=rx*cos(a),cy+ry*sin(a)
-            # A low, soft muzzle gives the artwork a catlike profile without a ledge.
-            muzzle=max(0,1-abs(z-(.778 if female else .863))/.067)
-            y-=.009*muzzle*max(0,-sin(a))**12
+            # Broad muzzle volume under the painted nose and mouth, joined into the cheeks.
+            center = .793 if female else .853
+            muzzle = 1 - smoothstep(.012 if female else .020, .058 if female else .066, abs(z - center))
+            cheek = 1 - smoothstep(.040 if female else .052, .137 if female else .155, abs(x))
+            if sin(a) < 0:
+                y -= (.034 if female else .061) * muzzle * cheek
             verts.append((x,y,z))
     face(tuple(reversed(range(seg))))
     for j in range(len(levels)-1):
