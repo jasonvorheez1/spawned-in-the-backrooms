@@ -15,28 +15,24 @@ for o in list(bpy.context.scene.objects): bpy.data.objects.remove(o, do_unlink=T
 bpy.ops.import_scene.gltf(filepath=apron_p)
 ap = next(o for o in bpy.context.scene.objects if o.type=="MESH" and o.name.startswith("Ward_"))
 mw, mi = ap.matrix_world, ap.matrix_world.inverted()
+keys = ap.data.shape_keys.key_blocks if ap.data.shape_keys else None
 moved = 0
 CLEAR = 0.015
 for v in ap.data.vertices:
-    p = mw @ v.co
+    base = keys[0].data[v.index].co if keys else v.co
+    p = mw @ base
     if p.z > 1.02: continue                      # bib and waist stay as fitted
-    hits = tree.find_n(p, 6)
-    for co, i, d in hits:
+    q = p.copy()
+    for co, i, d in tree.find_n(q, 6):
         n = skn[i]
-        off = (p - co).dot(n)                    # how far the apron sits outside the skirt here
-        if off < CLEAR and d < 0.06:
-            p = p + n * (CLEAR - off); off = CLEAR
-    np_ = mi @ p
-    if (np_ - v.co).length > 1e-5: v.co = np_; moved += 1
-    for kb in (ap.data.shape_keys.key_blocks if ap.data.shape_keys else []):
-        pass
-# shape keys: carry the same offset onto every key
-if ap.data.shape_keys:
-    base = ap.data.shape_keys.reference_key
-    for kb in ap.data.shape_keys.key_blocks:
-        if kb == base: continue
-for kb in (ap.data.shape_keys.key_blocks if ap.data.shape_keys else []):
-    pass
+        off = (q - co).dot(n)                    # how far the apron sits outside the skirt here
+        if off < CLEAR and d < 0.06: q = q + n * (CLEAR - off)
+    delta = (mi.to_3x3() @ (q - p))
+    if delta.length < 1e-5: continue
+    moved += 1
+    v.co = v.co + delta
+    if keys:
+        for kb in keys: kb.data[v.index].co = kb.data[v.index].co + delta
 print("moved", moved, "of", len(ap.data.vertices))
 bpy.ops.object.select_all(action="SELECT")
 bpy.ops.export_scene.gltf(filepath=out_p, export_apply=False, export_morph=True, export_skins=True)
