@@ -19,7 +19,7 @@ def slitverts():
     return list(s)
 sv = slitverts(); print("slit verts before", len(sv))
 bmesh.ops.remove_doubles(bm, verts=sv, dist=dist)
-print("slit verts after", len(slitverts()), "boundary", sum(1 for e in bm.edges if e.is_boundary))
+print("left", sorted((round((M@v.co).x,3),round((M@v.co).z,3)) for v in slitverts())); print("slit verts after", len(slitverts()), "boundary", sum(1 for e in bm.edges if e.is_boundary))
 bm.to_mesh(T.data); bm.free()
 for o in bpy.data.objects: o.select_set(True)
 bpy.ops.export_scene.gltf(filepath=out, use_selection=True, export_apply=False, export_skins=True, export_morph=True, export_animations=False)
