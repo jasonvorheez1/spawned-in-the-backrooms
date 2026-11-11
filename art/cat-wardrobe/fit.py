@@ -56,6 +56,8 @@ elif KIND == "skirt":
     top = P[P[:, 2] > z_top - 0.02 * (z_top - z_bot) / 0.1]
     sx = (np.abs(wb[:, 0]).max() + 0.012) / np.abs(top[:, 0]).max(); P[:, 0] *= sx
     sy = ((wb[:, 1].max() - wb[:, 1].min()) / 2 + 0.012) / np.abs(top[:, 1]).max(); P[:, 1] = P[:, 1] * sy + (wb[:, 1].max() + wb[:, 1].min()) / 2
+    fl = 1 - 0.38 * np.clip((z_top - P[:, 2]) / (z_top - z_bot), 0, 1) ** 1.3      # tame Tripo's flare toward the hem
+    yc = (wb[:, 1].max() + wb[:, 1].min()) / 2; P[:, 0] *= fl; P[:, 1] = (P[:, 1] - yc) * fl + yc
     region = lambda q: (q[:, 2] > z_bot - 0.03) & (q[:, 2] < z_top + 0.03)
 else:  # boots: a pair side by side -> each foot
     z_top = B["leg"][2] + (B["leg"][1] - B["leg"][2]) * 0.45
@@ -98,6 +100,21 @@ if KIND == "top":   # nothing on a top follows the tail or the legs
     for n in [vg.name for vg in g.vertex_groups if "Tail" in vg.name or "Leg" in vg.name or "Foot" in vg.name or "Toe" in vg.name]: g.vertex_groups.remove(g.vertex_groups[n])
 if KIND != "top":
     for n in [vg.name for vg in g.vertex_groups if "Tail" in vg.name]: g.vertex_groups.remove(g.vertex_groups[n])
+def setw(v, ws):
+    for vg in g.vertex_groups: vg.remove([v.index])
+    for n, w in ws.items():
+        vg = g.vertex_groups.get("mixamorig:" + n)
+        if vg and w > 0: vg.add([v.index], w, "REPLACE")
+if KIND == "skirt":   # cloth hung from the hips; the lower half leans a little with the thigh on its side so a stride lifts it instead of tearing it
+    for v in me.vertices:
+        t = min(1.0, max(0.0, (z_top - v.co.z) / (z_top - z_bot))); side = min(1.0, max(-1.0, v.co.x / 0.06)); k = 0.45 * t
+        setw(v, {"Hips": 1 - k, "LeftUpLeg": k * (0.5 + 0.5 * side), "RightUpLeg": k * (0.5 - 0.5 * side)})
+if KIND == "boots":   # each boot is rigid on its own foot; the cuff follows the shin
+    bm = bmesh.new(); bm.from_mesh(me)
+    bmesh.ops.delete(bm, geom=[f for f in bm.faces if min(v.co.x for v in f.verts) < -0.004 and max(v.co.x for v in f.verts) > 0.004], context="FACES"); bm.to_mesh(me); bm.free()
+    for v in me.vertices:
+        S = "Left" if v.co.x > 0 else "Right"; t = min(1.0, max(0.0, (v.co.z - B["leg"][2] * 0.75) / 0.03))
+        setw(v, {S + "Foot": 1 - t, S + "Leg": t})
 if KIND == "top":   # the hood and collar ride the upper spine, never an arm
     sp = g.vertex_groups.get("mixamorig:Spine2"); allg = [vg for vg in g.vertex_groups]
     for v in me.vertices:
