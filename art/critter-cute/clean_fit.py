@@ -181,7 +181,11 @@ def skirt(rig, sex, cloth):
             rx = width + .069*t + pleat + (.006 if j<2 else 0)
             ry = depth + .084*t + pleat + (.006 if j<2 else 0)
             x,y=rx*math.cos(a),cy+ry*math.sin(a)
-            vent=.041*(t**3)*smoothstep(.76,.995,math.sin(a))
+            # Shape a rear vent around the tail's sweep, rather than letting it
+            # punch through the fabric. Keep the waistband joined above it.
+            center = 1.34 if female else 1.15
+            vent_width = .64 if female else .70
+            vent = (.133 if female else .146)*t*(1-smoothstep(.20,vent_width,abs(a-center)))
             verts.append((x,y,z+vent))
             legmix.append((.62*t,smoothstep(-.085,.085,x)))
     for j in range(11):
