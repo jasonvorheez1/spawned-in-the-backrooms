@@ -44,7 +44,7 @@ export function material(ctx) {
   const topBand = min(q.y.sub(tLo), tHi.sub(q.y));
   // The fitted top needs fabric backing above the usual shirt line at the shoulder seam.
   const shoulder = min(min(ax.sub(0.069), float(0.215).sub(ax)), tHi.add(0.021).sub(q.y));
-  const upper = max(topBand, min(min(shoulder, q.y.sub(tHi.sub(0.05))), P("tShoulder").sub(1)));
+  const upper = max(topBand, min(min(shoulder, q.y.sub(tHi.sub(0.05))), P("tShoulder").mul(2).sub(1)));
   const topD = min(upper, min(tSl.sub(ax), min(scoop, notTail)));
   // --- bottom: waist..leg hem
   const bLo = P("bLo"), bHi = P("bHi");
