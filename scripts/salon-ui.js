@@ -73,6 +73,9 @@ export function salon(ctx, player) {
       + (human ? row('Skin', '') + dots('skin', C.skin) : row('Fur', '') + dots('fur', C.fur))
       + row('Markings', nice(l.marks)) + chips('marks', human ? C.marks.filter((m) => ['none', 'freckles'].includes(m)) : C.marks)
       + row('Proportions', '') + `<div class="card">${sliders((k) => !['heightS', 'buildS'].includes(k) && !(human && FURRY.includes(k)) && (l.sex === 'f' || !['hipS', 'bustS'].includes(k)))}</div>`
+      + row('Custom model', l.modelUrl ? 'your plymodel' : l.model ? (C.models?.[l.model]?.name ?? '') : 'none')
+      + `<div class="card"><div class="chips" style="margin-top:8px"><button class="${!l.model && !l.modelUrl ? 'on' : ''}" onclick="${act('model', '')}">${human ? 'your body' : 'critter'}</button>${Object.entries(C.models || {}).map(([k, m]) => `<button class="${l.model === k ? 'on' : ''}" onclick="${act('model', k)}">${m.name}</button>`).join('')}${l.modelUrl ? `<button class="on">your plymodel</button>` : ''}</div>`
+      + `<div class="chips" style="margin-top:8px"><button onclick="this.nextElementSibling.click()">⬆ upload .plymodel</button><input type="file" accept=".plymodel" style="display:none" onchange="plyUpload(this)"></div><div id="ply-st" class="tip" style="margin-top:6px">any tower unite .plymodel, worn as your body</div></div>`
   } else {
     const slot = (t, k, ck) => `<div class="card">${row(t, nice(l[k]))}${chips(k, C[k])}${ck && l[k] !== 'none' ? `<div style="margin-top:7px">${dots(ck, C.cloth)}</div>` : ''}</div>`
     const fits = st.outfits || []
