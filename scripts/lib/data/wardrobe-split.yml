@@ -86,7 +86,7 @@ f:
   body: "/cdn/value.39c91126ecd7a0122901a93d97db7b6224fd5dccac1dd3bdcf94f0ff2d42e7ea.glb"   # Nov 11 collar split; before 7afa2ad9
   parts:
     Ward_abysshauberk: "/cdn/value.70a36d2b233500bbee45a34591267515e5a7a45dcca0af6feae1676f463cdfbc.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
-    Ward_apron: "/cdn/value.b4692b38720de6a8e71244373d3d3299321a24edc58a39d43bd1b7324e6bc4d1.glb"   # Nov 11 stride: hem rides the thigh (art/human-cloth/skirt_stride.py); before 9dc51351
+    Ward_apron: "/cdn/value.093419359d5766d3997450b4a6a40c9abd702b3c330c56df89eb4e0378c2df4e.glb"   # Nov 11 apron fit: front and its Bust key held 1.2 cm in front of the tee (art/human-cloth/apron_hem.py); before b4692b38
     Ward_ballastboots: "/cdn/value.dd8c229ad8395e1d513c7c4e774bbffef0e9c617d43e39028290ab6f6845fa86.glb"
     Ward_balltie: "/cdn/value.75875fde4bc03282fcc97d883e566d1f454cdd5369b341c31dac18b2da8432c1.glb"
     Ward_beanie: "/cdn/value.bf5974e458103d20a3f910e157a5f7ffeb71ecf5f973c6b8358dd309d15f4fe2.glb"
