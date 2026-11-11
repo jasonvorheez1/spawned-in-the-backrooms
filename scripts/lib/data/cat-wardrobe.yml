@@ -56,13 +56,14 @@ fluff:
   lynx: { f: '/cdn/value.8b49b5df71e6041972cca45d7d51c549ff549acb86157d7eb4b2f6ca5ed6db69.glb', m: '/cdn/value.6e498c17f72bfee6f9772cba4935f28fd6cfccf508fe3f9dbb8d744b5ab09fd4.glb' }
   nape: { f: '/cdn/value.2547a28b55a76d1b7b4c75589828b9ca665607bb05f28a42367af77723ef0200.glb', m: '/cdn/value.c4fec0dbaec6194b22d10be9b48c2fd41d3abfbc1631fb565154a54de0f2b336.glb' }
 
+# hairstyles (art/cat-wardrobe/hair-register.py): the Tripo hair carried onto the current cat heads, skinned to the head, tinted by look.hairc. look.hair: one key
 hair:
-  afropuff: { f: '/cdn/value.f8511d525ae367674429160104cebdaf2767586418e7ac87fe8ca5083a86513d.glb', m: '/cdn/value.681676b9e5c4aee1087480862bbd4af731e65fb61d451ec2e2669659b2db3b1a.glb' }
-  crop: { f: '/cdn/value.818ed7952b816efa209f40fcb4c8fe00f9d9afd0fa4e4d51e3252f7334a1c99b.glb', m: '/cdn/value.2ad3e093370c0605ebcb5be2deb386e0173df6e2ba3d40ce0ec92a594ac4979c.glb' }
-  halfup: { f: '/cdn/value.14f9162ff1a6d219e9c09993fed1a1f4047dad8682ecd6af27f05073f5004f73.glb', m: '/cdn/value.d0be047308c73ab5ff4c1e7d54ccc3f107e609315002513710fe19d5d3d618d1.glb' }
-  long: { f: '/cdn/value.6c8211253255088534611d6e686c7cf813fe99fb6a227eabda65247866208deb.glb', m: '/cdn/value.28e76ccf49bba1bcd2dd93e30cd6e04f103c83ae4cbea3574f5d752eb1e15380.glb' }
-  pixie: { f: '/cdn/value.5128d3f06b55cbd5da6448033b10a577355ebf2f30d1b8ee07d5fc5772c95842.glb', m: '/cdn/value.f4eb60c24d62752405135018a2f177a054ddaff978d1325dee6a90749caf6f57.glb' }
-  shaggy: { f: '/cdn/value.73d1741b3c956d18b75e6e178b394736c0018d87015a9655769f00ecdc2367c7.glb', m: '/cdn/value.43e947bc95247b9aebcc2d08082232eedd8fbbb015cacdc5e82dbcbd00342798.glb' }
-  sidetail: { f: '/cdn/value.5d59d4a1f3032c1e78c12d64963df3e0a8f7acdb6ab6baf145432c8c20f89b87.glb', m: '/cdn/value.75816ff1120b569225bbd4968946249359d848edf7b11fac79ab2642abfb87a1.glb' }
-  twintails: { f: '/cdn/value.f5ff3368a42894877cbff766505d9c8655295a4826c199300b1f2106d6d36ccc.glb', m: '/cdn/value.2287d0528dff30b1e4af4891c7e836448ec32f8df32ee9b0175cbafc1fbb642e.glb' }
-  undercut: { f: '/cdn/value.c45acda84bcef9135fd232874a6f526c9173e5289d0c5281151491b8ad4f36d3.glb', m: '/cdn/value.431ae90a0cea75cb3a861e911981b3e3d40128f74ff210d0e77c4b8aa455c3fa.glb' }
+  afropuff: { f: '/cdn/value.dcc27484a90148205daabb02ef5ea1ecdbcae9b590571eef2730492e7021b3f2.glb' }
+  crop: { m: '/cdn/value.25bd58a740a6153e814fd02aa8aa32e150f0446b79d1a997e679e5443669aa2a.glb' }
+  halfup: { f: '/cdn/value.9369c4dd96617ea2d32f4658b9ac24f3a987650c0429a64ba50a41a3db5b4c85.glb' }
+  long: { m: '/cdn/value.c0759ed3e12f2a83edf7d43ae083ba423b8e675eca612a9e71d6dd5bbad42703.glb' }
+  pixie: { f: '/cdn/value.649c534dd0e4aa833d4700600609622ee9102159d61ba0aac1301358c1b66d51.glb' }
+  shaggy: { m: '/cdn/value.e33da16fe7c51e35ccc7e953e2d96edbc7236af7d19f2419453c056d777af094.glb' }
+  sidetail: { f: '/cdn/value.cb055c07a254d6c523707891790cc7b1d6e7fc89ecf9a10f26ef5db026737408.glb' }
+  twintails: { f: '/cdn/value.1df6dab4d1e0452d6258d60232764c51fb2d1030d6169d569a792e69ef1e9547.glb' }
+  undercut: { m: '/cdn/value.66e7e5dbed6c98fc262220da8a5ef42dc01cb53a3b050f7191f942c565b9bcd7.glb' }
