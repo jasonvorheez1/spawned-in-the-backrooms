@@ -21,10 +21,10 @@ def build(sex, arm):
     # cap: locks rooted along the crown part line, combed down over the skull and lying flat on it
     for i in range(22):
         a = (i / 21) * 2 - 1                      # -1 left .. 1 right
-        for row, (fy, fz) in enumerate(((-0.25, 1), (0.25, 1), (0.6, 0.8))):
+        for row, (fy, fz) in enumerate(((0.15, 1), (0.5, 0.85), (0.8, 0.5))):
             h, n = hit((a * 0.9, fy, fz))
             if h is None: continue
-            down = Vector((a * 0.9, 0.35 + fy * 0.4, -0.55)).normalized()
+            down = Vector((a * 0.5, 0.8, -0.6)).normalized()
             d = (n * 0.18 + down * 0.82).normalized()
             lock(bm, h, d, 0.16 * S * rng.uniform(.85, 1.1), 0.05 * S, down * 1.4, 0, rng)
     # fringe: pointed bangs over the brow
@@ -39,8 +39,8 @@ def build(sex, arm):
         tie = tie + n * 0.012 * S
         for k in range(9):
             ang = k / 9 * 2 * math.pi; off = Vector((math.cos(ang) * 0.02, math.sin(ang) * 0.02, math.sin(ang) * 0.015)) * S
-            d = Vector((sx * 0.8, 0.35, 0.2)).normalized()
-            lock(bm, tie + off, d, (0.62 + 0.08 * math.sin(k * 2.3)) * S, 0.05 * S, Vector((sx * -0.25, 0.25, -1.9)), 0, rng, segs=9, ring=6)
+            d = Vector((sx * 0.55, 0.35, -0.25)).normalized()
+            lock(bm, tie + off, d, (0.48 + 0.06 * math.sin(k * 2.3)) * S, 0.05 * S, Vector((sx * -0.35, 0.15, -3.2)), 0, rng, segs=9, ring=6)
         # scrunchie ring: a short fat torus of locks around the tie
         for k in range(10):
             ang = k / 10 * 2 * math.pi
