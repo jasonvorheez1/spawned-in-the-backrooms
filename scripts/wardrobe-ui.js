@@ -131,6 +131,15 @@ export function wardrobe(ctx, player) {
     ${human ? '' : `<div class="sec"><span>NOSE</span><span>${l.nose ? '' : 'the animal’s own'}</span></div>${sws('nose', C.nose)}`}
     <div class="sec"><span>RESTING FACE</span><span>${l.expr}</span></div>${grid('expr', C.expr, {})}
     <div class="hint">T cycles faces while you play. getting hit, low hp and low sanity show on your face on their own.</div>`
+  else if (tab === 'clothes' && cat) { // every cat garment for testing (Shelly: "give me every apparel too")
+    const cwTops = ['none', ...Object.keys(CW.tops || {}), ...Object.keys(CW.models || {}).filter((k) => CW.models[k].under && Object.keys(CW.tops || {}).includes(CW.models[k].under))]
+    const cwBots = ['none', ...Object.keys(CW.bottoms || {}), ...Object.keys(CW.models || {}).filter((k) => CW.models[k].under && Object.keys(CW.bottoms || {}).includes(CW.models[k].under))]
+    const cwShoes = ['none', ...Object.keys(CW.feet || {}), ...Object.keys(CW.models || {}).filter((k) => CW.models[k].under && Object.keys(CW.feet || {}).includes(CW.models[k].under))]
+    const cwHats = ['none', ...Object.keys(CW.masks || {})]
+    const row = (title, k, list, cur, ck) => `<div class="slot"><div class="sec" style="margin-top:2px"><span>${title}</span><span>${NAMES[cur] || cur || 'none'}</span></div><div class="grid">${list.map((v) => tile('cw-' + k, v, (cur || 'none') === v, NAMES[v] || v)).join('')}</div>${ck && cur && cur !== 'none' ? sws(ck, C.cloth) : ''}</div>`
+    body = `${row('TOP', 'topw', cwTops, l.topw, 'top')}${row('BOTTOM', 'botw', cwBots, l.botw, 'bottom')}${row('FEET', 'shoes', cwShoes, l.shoes, 'shoec')}${row('MASK', 'hat', cwHats, l.hat)}
+    <div class="ft" style="padding:10px 0 0;border:0"><button onclick="${act('strip')}">clear clothes</button></div>`
+  }
   else if (tab === 'clothes') body = `
     ${slot('TOP', 'topw', 'top')}${slot('BOTTOM', 'botw', 'bottom')}${slot('SHOES', 'shoes', 'shoec')}
     ${slot('HAT', 'hat', 'hatc')}${slot('GLASSES', 'eyew')}${slot('NECK', 'neck', 'neckc')}
