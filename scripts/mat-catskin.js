@@ -38,7 +38,7 @@ export function material(ctx) {
     // eyeshadow (look.shadow): a soft wash on the lid above each painted eye, found by sampling the picture just below: where the eye's white or iris sits under bare fur
     if (Number(ctx.params.shA ?? 0) > 0) {
       const eyeAt = (du, dv) => { const s = ctx.texture(String(ctx.params.face)).sample(vec2(u.add(du), v.sub(dv))); return s.a.mul(smoothstep(0.55, 0.85, max(max(s.r, s.g), s.b))); };
-      const lid = max(max(eyeAt(0, 0.025), eyeAt(0, 0.045)), max(eyeAt(-0.02, 0.035), eyeAt(0.02, 0.035)));
+      const lid = max(max(max(eyeAt(0, 0.03), eyeAt(0, 0.055)), max(eyeAt(-0.025, 0.045), eyeAt(0.025, 0.045))), max(eyeAt(0, 0.08), max(eyeAt(-0.04, 0.065), eyeAt(0.04, 0.065)))).mul(smoothstep(0.47, 0.52, v));   // only above the muzzle's cream: the eyes' own band
       const wash = lid.mul(pic.a.oneMinus().mul(0.7).add(0.3).mul(smoothstep(0.6, 0.95, pic.a).oneMinus())).mul(inside).mul(front).mul(P("shA", 0.7));
       col = mix(col, C("sh").mul(col.add(0.35)).min(vec3(1, 1, 1)), wash);
     }
