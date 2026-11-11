@@ -57,6 +57,7 @@ for (const mesh of doc.getRoot().listMeshes()) {
   mesh.setExtras({ ...(mesh.getExtras() ?? {}), targetNames: [...names, "Andy"] });
   mesh.setWeights([...mesh.getWeights(), 0]); n++;
 }
-await doc.transform(sparse({ ratio: 1 / 3 }), quantize({ quantizePosition: 14, quantizeNormal: 10 }), meshopt({ encoder: MeshoptEncoder, level: "high" }));
+// Nov 11: no sparse() and no re-quantize: the served copy of the sparse/quantized pass tore every garment into spikes in game
+await doc.transform(meshopt({ encoder: MeshoptEncoder, level: "high" }));
 await io.write(out, doc);
 console.log("Andy target on", n, "meshes");
