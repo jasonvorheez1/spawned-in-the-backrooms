@@ -392,7 +392,7 @@ moved = set()
 for v in bm.verts:
     fi_, fj_ = cell(v.co); i, j = int(round(fi_)), int(round(fj_))
     if not (0 <= i <= NX and 0 <= j <= NZ) or v.co.y > -0.03 or np.isnan(H0[i, j]): continue
-    if v.co.y > -H0[i, j] + 0.02: continue          # behind the front surface (inside / back of head): leave
+    if v.co.y > -H0[i, j] + 0.04: continue          # behind the front surface (inside / back of head): leave
     e = min(fi_, NX - fi_, fj_, NZ - fj_); w = min(1.0, max(0.0, (e - 1) / 7.0)); w = w * w * (3 - 2 * w)
     v.co.y = -(w * clo[i, j] + (1 - w) * H0[i, j]); moved.add(v.index)
 nlash = 0
@@ -402,6 +402,17 @@ for f in bm.faces:
     if min(fi_, NX - fi_, fj_, NZ - fj_) < 2: continue
     for l in f.loops: l[uvk].uv = UVF
     f.material_index = 0; nlash += 1
+# the head shows plain fur under the whole face layer: every front face over the patch box plus a 2 cm margin reads the fur texel,
+# and dark lash flicks just past it go fur too (no ghost rings, lashes or old mouth under or beside the new face)
+for f in bm.faces:
+    c = f.calc_center_median()
+    if c.y > -0.03 or f.normal.y > 0.1: continue
+    inb = BOX[0] - 0.02 < c.x < BOX[1] + 0.02 and BOX[2] - 0.02 < c.z < BOX[3] + 0.02
+    near = BOX[0] - 0.05 < c.x < BOX[1] + 0.05 and BOX[2] - 0.03 < c.z < BOX[3] + 0.05
+    dark = near and min(lum[int(l[uvk].uv.y * TH) % TH, int(l[uvk].uv.x * TW) % TW] for l in f.loops) < 0.3
+    if inb or dark:
+        for l in f.loops: l[uvk].uv = UVF
+        f.material_index = 0; nlash += 1
 dead = []
 print("head front verts pressed", len(moved), "faces to fur", nlash)
 bm.to_mesh(hm); bm.free(); lift = len(dead)
@@ -573,7 +584,20 @@ ARM.animation_data.action = None; clear_pose()
 
 # ---------- export + audit ----------
 sc.frame_set(1)
-for nm in ("ClothTop", "ClothBottom"):   # clothes are painted by the game's skin shader now: shells stay out of the glb
+# ---------- Chest shape key: 0 = the approved body, 1 = a little fuller (female ~25%, male a slight pec), soft and round ----------
+BODY.shape_key_add(name="Basis", from_mix=False); CK = BODY.shape_key_add(name="Chest", from_mix=False)
+zc0, zc1 = J["Spine1"][0][2], J["Neck"][0][2]; bvb = np.array([v.co[:] for v in BODY.data.vertices]); ymid = bvb[:, 1].mean()
+CEN = []
+for sg in (-1, 1):
+    m_ = (bvb[:, 0] * sg > 0.02) & (bvb[:, 0] * sg < 0.14) & (bvb[:, 2] > zc0) & (bvb[:, 2] < zc1) & (bvb[:, 1] < ymid)
+    k = np.nonzero(m_)[0][np.argmin(bvb[m_, 1])]; CEN.append(Vector(bvb[k]))
+AMP, SIG = (0.011, 0.045) if SEX == "f" else (0.005, 0.055)
+for v in BODY.data.vertices:
+    if v.co.y > ymid: continue
+    w = sum(math.exp(-((v.co - c).length ** 2) / (2 * SIG * SIG)) for c in CEN)
+    if w > 1e-3: CK.data[v.index].co = v.co + (v.normal * 0.6 + Vector((0, -0.4, 0))).normalized() * AMP * min(1.0, w)
+print("CHEST centres", [tuple(round(x, 3) for x in c) for c in CEN], "amp", AMP)
+for nm in ():   # clothes are painted by the game's skin shader now: shells stay out of the glb
     if nm in bpy.data.objects: bpy.data.objects.remove(bpy.data.objects[nm])
 bpy.ops.export_scene.gltf(filepath=GLB, export_apply=False, export_morph=True, export_skins=True, export_animation_mode="ACTIONS", export_image_format="AUTO")
 SAVE = f"{OUT}/cat-{WHO}-rigged.blend"; bpy.ops.wm.save_as_mainfile(filepath=SAVE)
