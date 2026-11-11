@@ -136,6 +136,8 @@ export function stance(ctx) {
   if (aiming && s.tp && s.aimPt) { const e = me.feetPosition, dy = s.aimPt.y - (e.y + (s.crouch ? 1.0 : 1.45)), hh = Math.hypot(s.aimPt.x - e.x, s.aimPt.z - e.z); if (hh > 1.2) pitch = Math.atan2(dy, hh) } // third person: the camera looks down on you from behind, so its pitch folded the body forward; aim at the crosshair's point instead
   pitch = Math.max(-0.7, Math.min(0.7, pitch)) // and never past 40 degrees, whatever the camera does
   aimPose(me, fam, s.reloading ? 'ready' : aimMode(me, aiming, s.crouch), pitch)
-  // no IK on the hands: the clips alone pose the arms (the reach solver chased world points and read as floppy, physics arms)
+  // the clips pose the arms; on our own bodies a long gun's left hand also closes on the gun itself (it rides the gun, never a world point, so it can't flop). Shelly Nov 11: her plymodel held the gun right, the basic bodies' left arm hung off it
+  const worn = !!(s.look?.modelUrl || s.look?.model), gun = me.session?.heldObj
+  if (fam === 'long' && !worn && gun && ctx.getObject(gun)) return { bones: { LeftHand: { reach: { object: gun, offset: { x: 0, y: -0.04, z: 0.43 }, blendIn: 0.18, blendOut: 0.25 } } }, aiming }
   return { bones: null, aiming }
 }
