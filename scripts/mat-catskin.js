@@ -35,6 +35,13 @@ export function material(ctx) {
     const eye = vec3(P("eyeR", 0.85), P("eyeG", 0.6), P("eyeB", 0.15));
     const art = min(pic.rgb, vec3(grey, grey, grey)).add(eye.mul(irisAmt.mul(1.3)));
     let col = mix(materialColor, art, pic.a.mul(inside).mul(front).mul(facing));
+    // eyeshadow (look.shadow): a soft wash on the lid above each painted eye, found by sampling the picture just below: where the eye's white or iris sits under bare fur
+    if (Number(ctx.params.shA ?? 0) > 0) {
+      const eyeAt = (du, dv) => { const s = ctx.texture(String(ctx.params.face)).sample(vec2(u.add(du), v.sub(dv))); return s.a.mul(smoothstep(0.55, 0.85, max(max(s.r, s.g), s.b))); };
+      const lid = max(max(eyeAt(0, 0.025), eyeAt(0, 0.045)), max(eyeAt(-0.02, 0.035), eyeAt(0.02, 0.035)));
+      const wash = lid.mul(pic.a.oneMinus().mul(0.7).add(0.3).mul(smoothstep(0.6, 0.95, pic.a).oneMinus())).mul(inside).mul(front).mul(P("shA", 0.7));
+      col = mix(col, C("sh").mul(col.add(0.35)).min(vec3(1, 1, 1)), wash);
+    }
     // one nose, on the sculpted snout tip itself (bind space): a soft rounded triangle, wider on top, with a small shine
     const ns = P("noseS", 1), ny = q.y.sub(P("noseY", 0.797)).div(0.0125 * 1).div(ns);
     const nx = q.x.div(float(0.017).mul(ns)).div(float(1).add(ny.mul(0.28)).max(0.3));

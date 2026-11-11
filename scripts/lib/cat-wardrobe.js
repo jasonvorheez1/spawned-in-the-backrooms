@@ -59,6 +59,14 @@ function eyeRGB(e) {
   const lin = (c) => Math.pow(c / 255, 2.2)
   return { eyeR: lin((n >> 16) & 255), eyeG: lin((n >> 8) & 255), eyeB: lin(n & 255) }
 }
+// look.shadow: eyeshadow, '#rrggbb' or a name from SHADOWS; none when unset
+export const SHADOWS = { none: '', pink: '#f07aa8', plum: '#9a4aa8', lilac: '#b494e8', peach: '#f0a070', gold: '#e8c050', teal: '#3ab4b0', smoky: '#4a4048', red: '#d04040' }
+function shadowRGB(s) {
+  const hex = (SHADOWS[s] ?? s ?? '').replace('#', '')
+  if (!/^[0-9a-f]{6}$/i.test(hex)) return {}
+  const n = parseInt(hex, 16), lin = (c) => Math.pow(c / 255, 2.2)
+  return { shR: lin((n >> 16) & 255), shG: lin((n >> 8) & 255), shB: lin(n & 255), shA: 0.75 }
+}
 // the whole model spec: her body with the painted skin on both fur slots (fur takes the tint, fur2 is her pale belly/markings and stays as drawn)
 export function catModel(sex, look) {
   const params = skinParams(sex, look)
@@ -78,7 +86,7 @@ export function catModel(sex, look) {
       fur: skin(fur), fur2: skin('#ffffff'),
       headFur: {
         kind: 'scripted', script: 'scripts/mat-catskin.js', color: fur,
-        params: { face, ...(mouth ? { mouth } : {}), faceVScale: projection[0], faceVBias: projection[1], faceNear: projection[2], ...(sex === 'm' ? { noseCutV: 0.40, noseY: 0.855, noseZ: 0.315, noseS: 1.2 } : { noseCutV: 0.39, noseY: 0.797, noseZ: 0.249, noseS: 1 }), ...eyeRGB(look?.eyes) }
+        params: { face, ...(mouth ? { mouth } : {}), faceVScale: projection[0], faceVBias: projection[1], faceNear: projection[2], ...(sex === 'm' ? { noseCutV: 0.40, noseY: 0.855, noseZ: 0.315, noseS: 1.2 } : { noseCutV: 0.39, noseY: 0.797, noseZ: 0.249, noseS: 1 }), ...eyeRGB(look?.eyes), ...shadowRGB(look?.shadow) }
       },
       innerEar: { color: look?.inner || '#d58e8a', roughness: 0.74 }
     }
