@@ -72,7 +72,7 @@ sub('pw, ph = .047, .059; pc = (-s * .004, -.010)', 'pw, ph = .060, .079; pc = (
 # the eye's top is flattened into a lid line that lifts at the outer corner (a soft cat-eye), the bottom stays round;
 # the black pupil is cut flat under that lid so it reads tucked under it, the way anime eyes do; lashes follow the new lid
 sub('FACE_KEYS = [', '''def _A(x, y, s, ew=.066):
-    if y > 0: y = y * .74
+    if y > 0: y = y * .64
     return (x, y + .012 * max(0.0, s * x / ew) ** 1.6)
 def _top(x, s, ew=.066, eh=.088):
     t = max(0.0, 1 - (x / ew) ** 2) ** .5
@@ -89,6 +89,11 @@ sub('spike(H, b2, n2 * .038 + f * .016 + V(s * .012, 0, 0), n2 * .028 + f * .024
 # cheek fluff: two short soft tufts a side, not three long spikes
 sub('for v_, ln, r0, dz in ((-.09, .064, .028, -.008), (-.21, .078, .032, -.018), (-.33, .060, .026, -.026)):',
     'for v_, ln, r0, dz in ((-.14, .040, .026, -.008), (-.27, .046, .028, -.016)):')
+# markings off (Shelly #205720 "take off the markings too"): no tabby M, no cheek stripes, no two-tone ear tips on the cat
+sub('tail="cat", ex=["eartip"], muzzle=True, snout=.024, whisk=True, catnose=True, fang=True, fluff=True, mark="#d9843a", marks=["tabby"]',
+    'tail="cat", ex=[], muzzle=True, snout=.024, whisk=True, catnose=True, fang=True, fluff=True, mark="#d9843a", marks=[]')
+# the crown tuft off entirely: a smooth round skull between the ears
+sub('    if "mane" not in sp["ex"] and "wool" not in sp["ex"]:\n        # Soft kemono crown', '    if False:\n        # Soft kemono crown')
 exec(compile(src, os.path.join(HERE, "build.py"), "exec"))
 # proofs show the head as the game draws it by default: no beard, no blush unless worn (the game hides those slots)
 _ht = head_turn
