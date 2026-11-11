@@ -7,6 +7,7 @@ a = sys.argv[sys.argv.index("--")+1:]; SRC, OUT = a[0], a[1]
 ARM = float(a[2]) if len(a) > 2 else 0.35; LEG = float(a[3]) if len(a) > 3 else 0.2
 TOR = float(a[4]) if len(a) > 4 else 0.2
 DEL = float(a[5]) if len(a) > 5 else 0.8
+PAW = float(a[6]) if len(a) > 6 else 0.32
 def sm(e0, e1, x): t = max(0, min(1, (x-e0)/(e1-e0))); return t*t*(3-2*t)
 def bump(a_, b, c, d, x): return sm(a_, b, x)*(1-sm(c, d, x))
 SHY = 0.955; LX = 0.09
@@ -22,7 +23,7 @@ def field(x, y, z):  # glTF frame: y up, front -z
   if arm > 0:
     delt = math.exp(-(((ax-0.175)/0.045)**2))*sm(0.125, 0.15, ax)/max(arm, 0.05)  # the Dandy key leaves the arm root thin: a deltoid fill, full strength at the joint whatever the arm blend there
     paw = sm(0.46, 0.56, ax)  # mitten paws: the hand scaled up whole about the arm's axis
-    k = 1+arm*(ARM*(0.75+0.25*sm(0.2, 0.32, ax))+DEL*delt+0.32*paw); Y = SHY+(Y-SHY)*k; Z = Z*k
+    k = 1+arm*(ARM*(0.75+0.25*sm(0.2, 0.32, ax))+DEL*delt+PAW*paw); Y = SHY+(Y-SHY)*k; Z = Z*k
   legW = 1-sm(0.56, 0.66, y)
   if legW > 0 and ax < 0.32:
     k = 1+legW*LEG*(0.6+0.4*sm(0.25, 0.5, y))

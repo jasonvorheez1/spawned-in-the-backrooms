@@ -3,13 +3,15 @@
 const pkg = (n) => import(n);
 const { NodeIO } = await pkg("@gltf-transform/" + "core");
 const { ALL_EXTENSIONS } = await pkg("@gltf-transform/" + "extensions");
-const { simplify, weld, sparse, quantize, meshopt } = await pkg("@gltf-transform/" + "functions");
+const { simplifyPrimitive, weld, sparse, quantize, meshopt } = await pkg("@gltf-transform/" + "functions");
 const { MeshoptDecoder, MeshoptEncoder, MeshoptSimplifier } = await pkg("mesh" + "optimizer");
 await MeshoptDecoder.ready; await MeshoptEncoder.ready; await MeshoptSimplifier.ready;
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({ "meshopt.decoder": MeshoptDecoder, "meshopt.encoder": MeshoptEncoder });
 const [, , src, out, r = ".5", e = ".003"] = process.argv;
 const doc = await io.read(src);
-await doc.transform(simplify({ simplifier: MeshoptSimplifier, ratio: +r, error: +e, lockBorder: true }), sparse(), quantize({ quantizePosition: 14 }), meshopt({ encoder: MeshoptEncoder }));
+// the skin is already light: simplifying it tore the fur into spikes (Nov 11). Only garments slim.
+for (const m of doc.getRoot().listMeshes()) if (!/^(Body|Skin)/.test(m.getName())) for (const p of m.listPrimitives()) simplifyPrimitive(p, { simplifier: MeshoptSimplifier, ratio: +r, error: +e, lockBorder: true });
+await doc.transform(sparse(), quantize({ quantizePosition: 14 }), meshopt({ encoder: MeshoptEncoder }));
 await io.write(out, doc);
 let v = 0; for (const m of doc.getRoot().listMeshes()) for (const p of m.listPrimitives()) v += p.getAttribute("POSITION").getCount();
 console.log("verts", v);
