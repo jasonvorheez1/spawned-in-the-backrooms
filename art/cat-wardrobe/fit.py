@@ -90,6 +90,17 @@ if kill.any():
     bmesh.ops.delete(bm, geom=[bm.verts[i] for i in np.nonzero(kill)[0]], context="VERTS"); bm.to_mesh(me); bm.free()
 import bmesh
 bm = bmesh.new(); bm.from_mesh(me); bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bm.to_mesh(me); bm.free()   # weld Tripo's UV-seam splits so a push never tears them
+if KIND == "top":   # a hem is one even line: the open edge round the waist levels to its median height, the loop above eased toward it
+    bm = bmesh.new(); bm.from_mesh(me); bm.verts.ensure_lookup_table()
+    lo = min(v.co.z for v in bm.verts)
+    hem = [v for v in bm.verts if v.is_boundary and v.co.z < lo + 0.06 and abs(v.co.x) < half * 0.5]
+    if hem:
+        zh = float(np.median([v.co.z for v in hem])); hs = set(hem)
+        for v in hem: v.co.z = zh
+        for v in bm.verts:
+            if v not in hs and v.co.z < zh + 0.025 and abs(v.co.x) < half * 0.5: v.co.z = max(v.co.z, zh + 0.004) if v.co.z < zh else zh + (v.co.z - zh) * 0.6 + 0.004
+        print("hem verts", len(hem), "at", round(zh, 3))
+    bm.to_mesh(me); bm.free()
 # push out of the skin
 dg = bpy.context.evaluated_depsgraph_get(); bvh = BVHTree.FromObject(body, dg)
 moved = 0; M = {"boots": 0.004, "top": 0.013}.get(KIND, 0.007)   # a top rides well clear: its cloth bends by position, the skin by its own weights, and the gap covers the difference
