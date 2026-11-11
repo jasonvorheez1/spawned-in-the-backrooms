@@ -301,15 +301,15 @@ print("paint-out texels", int(bad.sum()))
 fur_all, _ = classes(px)
 lum = 0.2126 * px[..., 0] + 0.7152 * px[..., 1] + 0.0722 * px[..., 2]
 # the Body's top (under the chin, neck front) still carried the old muzzle cream and ':3' below the raised face: those texels go fur
-_bu = BODY.data.uv_layers.active.data; _nb = 0
+_bu = BODY.data.uv_layers.active.data; _nb = 0; _fm = float(np.median(lum[fur_all]))
 for poly in BODY.data.polygons:
     c = poly.center
-    if c.y > -0.03 or poly.normal.y > 0.3 or c.z < CFG["zc"] - 0.03 or not (BOX[0] - 0.02 < c.x < BOX[1] + 0.02): continue
+    if c.y > -0.03 or poly.normal.y > 0.3 or c.z < ZC - 0.03 or not (BOX[0] - 0.02 < c.x < BOX[1] + 0.02): continue
     us = [_bu[li].uv for li in poly.loop_indices]
     i0, i1 = int(min(u.x for u in us) * TW) - 1, int(max(u.x for u in us) * TW) + 2
     j0, j1 = int(min(u.y for u in us) * TH) - 1, int(max(u.y for u in us) * TH) + 2
     if i1 - i0 > TW // 8 or j1 - j0 > TH // 8: continue
-    fur_all[max(0, j0):j1, max(0, i0):i1] = True; _nb += 1
+    fur_all[max(0, j0):j1, max(0, i0):i1] = True; lum[max(0, j0):j1, max(0, i0):i1] = _fm; _nb += 1
 print("body chin faces to fur", _nb)
 fl_med = float(np.median(lum[fur_all])); FURC = np.median(px[fur_all][:, :3], 0)
 TINT = tuple(float(x) for x in np.clip(FURC / 0.92, 0, 1))
