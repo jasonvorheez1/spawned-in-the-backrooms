@@ -184,7 +184,12 @@ if os.environ.get("PROOF"):
     sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 10; sc.render.resolution_x = 440; sc.render.resolution_y = 520; sc.view_settings.view_transform = "Standard"
     w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True; w.node_tree.nodes["Background"].inputs[0].default_value = (0.5, 0.5, 0.55, 1); w.node_tree.nodes["Background"].inputs[1].default_value = 1.0
     zc = float(bw[:, 2].max()) * 0.5
-    for pose in ("rest", "walk"):
+    for pose in (os.environ.get("POSES") or "rest,walk").split(","):
+        for pb in arm.pose.bones: pb.rotation_mode = "QUATERNION"; pb.rotation_quaternion = (1, 0, 0, 0)
+        if pose == "idle":   # both arms hanging, as the game's Idle holds them
+            for n, q in (("LeftArm", (0, 0, -65)), ("RightArm", (0, 0, 65))):
+                pb = arm.pose.bones.get("mixamorig:" + n)
+                if pb: pb.rotation_mode = "XYZ"; pb.rotation_euler = [math.radians(v) for v in q]
         if pose == "walk":
             for n, q in (("LeftUpLeg", (-40, 0, 0)), ("RightUpLeg", (35, 0, 0)), ("LeftArm", (0, 0, 60)), ("RightArm", (0, 0, -70)), ("RightForeArm", (0, 0, -40)), ("Spine1", (14, 0, 0))):
                 pb = arm.pose.bones.get("mixamorig:" + n)
