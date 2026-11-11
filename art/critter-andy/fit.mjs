@@ -58,7 +58,7 @@ for (const m of meshes) { const name = m.getName(); if (SKIP.test(name)) continu
     const nd = new Float32Array(cnt * 3), nb = new Float32Array(cnt * 3), v = [0,0,0], d = [0,0,0];
     for (let i = 0; i < cnt; i++) { P.getElement(i, v); D.getElement(i, d); const x = v[0]+d[0], y = v[1]+d[1], z = v[2]+d[2];
       const wy = y * S + OY, on = Math.max(0, Math.min(1, (1.12 - wy) / 0.04)) * Math.max(0, Math.min(1, (wy - 0.1) / 0.04)); // body only, not head or soles
-      const isBot = BOTTOM.test(lname), nn = near(x, y, z, 4, isBot || !/sleeve|hoodie|sweater|jacket|coat|blazer|robe|pajamas|shirt|tailcoat|oilskin|suit|opera|bellhop|pinstripe|megjacket|padjacket/.test(lname) || Math.abs(x * S) < 0.13); let dx = d[0], dy = d[1], dz = d[2], bx = 0, by = 0, bz = 0;
+      const isBot = BOTTOM.test(lname), nn = near(x, y, z, 4, isBot || !/sleeve|hoodie|sweater|jacket|coat|blazer|robe|pajamas|shirt|tailcoat|oilskin|suit|opera|bellhop|pinstripe|megjacket|padjacket/.test(lname) || Math.abs(x * S) < 0.13); let hemmed = false, dx = d[0], dy = d[1], dz = d[2], bx = 0, by = 0, bz = 0;
       if (nn.length && on > 0) { let ws = 0, nx = 0, ny = 0, nz = 0, sx = 0, sy = 0, sz = 0;
         for (const [q, j] of nn) { const w = 1 / (Math.sqrt(q) + 1e-4), s = sk[j]; ws += w; nx += w*s[3]; ny += w*s[4]; nz += w*s[5]; bx += w*s[6]; by += w*s[7]; bz += w*s[8]; sx += w*s[0]; sy += w*s[1]; sz += w*s[2] }
         bx /= ws; by /= ws; bz /= ws; sx /= ws; sy /= ws; sz /= ws; const nl = Math.hypot(nx, ny, nz) || 1; nx /= nl; ny /= nl; nz /= nl;
@@ -76,8 +76,8 @@ for (const m of meshes) { const name = m.getName(); if (SKIP.test(name)) continu
           if (d1 < gap && d0 >= gap) { /* already clear */ }
         } else { bx *= 0.5; by *= 0.5; bz *= 0.5 } }
       else { bx = by = bz = 0 }
-      if (!BOTTOM.test(lname) && !OUTER.test(lname) && /^(Top_|Ward_)(tee|tank|longsleeve|shirt|officeshirt|jerrytee|sweater)$/.test(name)) { const py = (y + dy - d[1]) * S + OY, hem = WAIST - 0.05; if (py < hem && py > 0.2) { dy += (hem - py) / S; lifted++ } } // the hem stops 5 cm inside the waistband: a tail lower than that showed through the seat (Nov 11: Andrew's blue patch)
-      if (!BOTTOM.test(lname) && !OUTER.test(lname) && pc.length && wy < WAIST + 0.015 && Math.abs(x * S) < 0.2) { // tuck: same height, just inside the trousers' own ring there
+      if (!BOTTOM.test(lname) && !OUTER.test(lname) && /^(Top_|Ward_)(tee|tank|longsleeve|shirt|officeshirt|jerrytee|sweater)$/.test(name)) { const py = (y + dy - d[1]) * S + OY, hem = WAIST - 0.05; if (py < hem && py > 0.2) { dy += (hem - py) / S; lifted++; hemmed = true } } // the hem stops 5 cm inside the waistband: a tail lower than that showed through the seat (Nov 11: Andrew's blue patch)
+      if (!BOTTOM.test(lname) && !OUTER.test(lname) && pc.length && (hemmed || (wy < WAIST + 0.03 && Math.abs(x * S) < 0.26))) { // every hem point, sides too (Nov 11: a blue rim flared over Andrew's waistband) // tuck: same height, just inside the trousers' own ring there
         const px = x + dx - d[0], py = y + dy - d[1], pz = z + dz - d[2], c = sliceC(py); if (c) { const ox = px - c[0], oz = pz - c[1], r0 = Math.hypot(ox, oz) || 1e-6, q = nearPants(px, py, pz);
           if (q) { const rq = Math.hypot(q[0] - c[0], q[2] - c[1]), lim = rq - TUCK; if (r0 > lim && lim > 0) { const f = lim / r0; dx = c[0] + ox * f - v[0] + (dx - (px - v[0])); dz = c[1] + oz * f - v[2] + (dz - (pz - v[2])); tucked++ } } } }
       nd[i*3] = dx; nd[i*3+1] = dy; nd[i*3+2] = dz; nb[i*3] = bx * on; nb[i*3+1] = by * on; nb[i*3+2] = bz * on }
