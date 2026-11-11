@@ -107,7 +107,8 @@ export function wardChildren(l, local) {
   const r = splitOf(l); if (!r) return []
   const b = humanBodyFull(l), morph = humanMorph(l), out = []
   const clothMats = Object.fromEntries(Object.entries(b.materials || {}).filter(([k]) => k.startsWith('cloth_'))) // a garment file carries only its cloth_ slots: skin and fur keys there matched nothing
-  for (const [n, v] of Object.entries(b.parts)) if (n.startsWith('Ward_') && v.visible && r.parts[n]) out.push({ id: wardKey(n), attachment: { skin: true }, model: { id: r.parts[n], forward: '+z', materials: WARD_SLOTS?.[r.parts[n]] ? Object.fromEntries(Object.entries(clothMats).filter(([k]) => WARD_SLOTS[r.parts[n]].includes(k))) : clothMats }, morph, ...(local ? { audience: 'local' } : {}) })
+  const booted = rowOf('shoes', l?.shoes, l?.shoec)?.kind === 'boots' // trousers worn with boots take their tucked cut (art/human-cloth/jeans_tuck.py): the straight leg's hem poked out through the shaft
+  for (const [n, v] of Object.entries(b.parts)) if (n.startsWith('Ward_') && v.visible && r.parts[n]) { const f = (booted && r.parts[n + '_tuck']) || r.parts[n]; out.push({ id: wardKey(n), attachment: { skin: true }, model: { id: f, forward: '+z', materials: WARD_SLOTS?.[f] ? Object.fromEntries(Object.entries(clothMats).filter(([k]) => WARD_SLOTS[f].includes(k))) : clothMats }, morph, ...(local ? { audience: 'local' } : {}) }) }
   if (r.inner && OPEN_TOPS.includes(rowOf('topw', l?.topw, l?.top)?.kind)) out.push({ id: INNER_ID, attachment: { skin: true }, model: { id: r.inner, forward: '+z', materials: { cloth_top: anime('cloth', INNER_TEE) } }, morph, ...(local ? { audience: 'local' } : {}) }) // an open-front top wears a plain tee under it: the bare strip of chest down its front read as no shirt at all
   return out
 }
