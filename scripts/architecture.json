@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 4794,
-  "updatedAt": "2026-11-11T00:15:03.471Z",
+  "basedOnSpecVersion": 4825,
+  "updatedAt": "2026-11-11T00:54:05.214Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG across an authored Level 0 maze, deeper levels, and shared destinations. `templates/player.js` composes player behaviors; place simulations and shared scripts own environment generation, NPCs, combat, loot, crafting, UI, avatar presentation, and progression.",
   "scriptPaths": [],
   "places": [
-    "places/bonus (3D) - shared vaporwave mall with shops, landmarks, simulated staff/shoppers, arcade games, salon and visual effects; authored mall humans use shared avatar models, with some NPC trousers on the rebuilt closed-crotch assets.",
+    "places/bonus (3D) - shared vaporwave mall with shops, landmarks, simulated staff/shoppers, arcade games, salon and visual effects; authored mall humans use shared avatar models.",
     "places/main (3D) - authored Level 0/Lobby maze; sim generates maze furniture and loot, safe rooms, shifting walls, creature ecology, route guidance, Kade and Zenith's sealed breach.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo ephemeral) - character creation/waking space and staged tutorial route with HALOGEN.",
     "places/level01 (3D) - Level 0.1 Zenith Station: station/gallery, doors, breakables, bots/hazards, climate rooms, recorder quest and drone-refilled posts.",
     "places/level1, level2, level21 (3D) - Habitable Zone garage maze and M.E.G. camp; Pipe Dreams industrial rooms/camp/fixtures; Level 2.1 Locked.",
-    "places/level3, gamma, level4, level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; L4 office props/fixtures, residents and hazards; authored resident avatars use the shared split body/wardrobe assets.",
+    "places/level3, gamma, level4, level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; L4 office props/fixtures, residents and hazards.",
     "places/level6, level7, level10, level11, level12 (3D) - later levels include Level 11's generated city, canal/bridges and renovation office, Level 7's drowned house, and other authored levels.",
     "places/level26, level27, debug, spamton (3D) - Level 26 quests, Level 27 Bunker Springs, debug studio and Spamton destination; no places/testlab in the tree."
   ],
@@ -54,7 +54,7 @@
     "places/level11/sim.js - place.state.builtV and session build version/queue own generated-city rebuild progress; refreshed existing specs update layout, primitive and placement while retaining object state."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker; touch mappings expose the same actions.",
+    "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker; touch mappings share actions.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes aimPt and ranged aimPitch → player.js ballistics.",
     "scripts/routing.js accepts permitted requested rooms; otherwise scripts/lib/hub.js soloRoom selects the player's solo Backrooms room and bonus overflow IDs; toHub/toSolo perform crossings and track roomHop/save-place state.",
     "Fresh visit → scripts/main-menu.js; START enters intake for creation or bonus for completed characters; wardrobe close runs intro-cut then tutorial0 unless t0Done; menu UI renders on menuOpen and solo pause sets place.timeScale.",
@@ -70,12 +70,12 @@
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/lib/bonus-extra.js + mall-shopper.js/salon-stylist.js/salon-ui.js - authored mall, simulated mall life and one-time neon/fountain lighting effects.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + home reconstruction scripts - per-piece models/dimensions with common placement, persistence and rebuild path.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to each supported kind and migrated while preserving root state.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preserving roots.",
     "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + Zenith door/bots/hatch/flicker/drones/use scripts - Zenith Station geometry, breach, hazards and interactive systems.",
-    "places/level4/cells/x0z0.scene + places/level4/sim.js + scripts/l4-office.js/l4-office-geo.js/l4-home.js + scripts/lib/l4-people.js/level4-people.yml and scripts/lib/l5-people.js/level5-people.yml - authored office/hotel, props, fixtures, resident rosters and hazards.",
-    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/body/rig/transfer/body-shape + art/human-body and art/human-cloth build scripts - shared sex/species avatar and split garment pipeline varied by body, garment, material slots and morphs; shoulder caps and rebuilt tops/bottoms feed wardrobe registries.",
-    "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js + scripts/lib/data/combat-anims.yml - retargeted first-person and DS third-person melee families select strikes by weapon type; combat poses are shared across weapon variants.",
-    "Level 11 geometry family: scripts/l11-mall.js, scripts/l11-masonry.js and scripts/l11-reno.js parameterize mall, canal bridge/quay/guard and renovation-office pieces; tests/level11-reference.test.js checks bridge clearance, rebuild fitting and workstand geometry."
+    "places/level4/cells/x0z0.scene + places/level4/sim.js + scripts/l4-office.js/l4-office-geo.js/l4-home.js + scripts/lib/l4-people.js/level4-people.yml and scripts/lib/l5-people.js/level5-people.yml - authored office/hotel, props, fixtures, residents and hazards.",
+    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/body/rig/transfer/body-shape + art/human-body and art/human-cloth build scripts - shared sex/species avatar and split garment pipeline varied by body, garment, skin visibility and material slots.",
+    "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js + scripts/lib/data/combat-anims.yml - retargeted first-person and DS third-person melee families select strikes by weapon type; combat poses are shared.",
+    "Level 11 geometry family: scripts/l11-mall.js, scripts/l11-masonry.js and scripts/l11-reno.js parameterize mall, canal bridge/quay/guard and renovation-office pieces; tests/level11-reference.test.js checks bridge clearance and rebuild fitting."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
@@ -84,9 +84,9 @@
   "migrationNotes": [
     "Human avatar STYLE_V is sw98: critter-model restyle recognizes historical body IDs and swaps worn wardrobe children when files change; keep this migration behavior when changing body or wardrobe registries.",
     "scripts/lib/data/critter-models.yml registers bodies; wardrobe-split.yml maps each sex's body and garment GLBs; ward-slots.yml assigns GLB material slots. Keep all three aligned when regenerating or replacing split assets.",
-    "The male human body now uses art/human-body/shoulder_cap.py's rounded cap, and the 22 male tops use the corresponding shoulder treatment; wardrobe-split.yml points to these refreshed assets. Female pants/slacks variants use closed crotch/seat meshes from the crotch-fill rebuild.",
-    "art/human-cloth/tee_shell.py builds clean skinned tops; its HEMOUT is zero unless explicitly set, while NOFILL excludes shoulder/armpit vertices to avoid a filled box. top_join.py combines shell and optional skirt tail and preserves original collar/hood geometry; tops_redo.sh/list drive the batch.",
-    "critter-model.js hides the overalls bib and shows pants when a closed top is worn; keep this visual pairing alongside bib/strap garment files. Hoodie cloth pattern depends on UV/material-slot mappings in ward-slots.yml.",
-    "places/bonus/cells/x0z0.scene and places/level4/cells/x0z0.scene pin authored NPC body and garment asset IDs; refresh those references with registry asset changes. Female default Under_bottom remains a closed solid, and BlushSoft uses the radial map while Blush is the uniform base material."
+    "The male human body uses art/human-body/shoulder_cap.py's rounded cap and male tops use the matching shoulder treatment; wardrobe-split.yml points at refreshed assets. Male Ward_jeans now points to /cdn/value.2738eca13f7660d71bf41c9bfe89f73651e59f1e7580855701142501b2deb729.glb, rebuilt by art/human-cloth/jeans_legs.py with mirrored leg weights and revised inseam/knee bridge; its cloth_bottom/button slots are registered in ward-slots.yml.",
+    "Male long-sleeve shirt collars expose torso and front chest skin in critter-model.js (scoop), avoiding the neck gap/jagged white points; preserve this visibility alongside the upper-front skin used for tank necklines.",
+    "art/human-cloth/tee_shell.py builds clean skinned tops; its HEMOUT is zero unless explicitly set, while NOFILL excludes shoulder/armpit vertices to avoid a filled box. top_join.py combines shell and optional skirt tail and preserves origin.",
+    "critter-model.js hides the overalls bib and shows pants when a closed top is worn; keep this visual pairing alongside bib/strap garment files. Hoodie cloth pattern depends on UV/material-slot mappings in ward-slots.yml."
   ]
 }
