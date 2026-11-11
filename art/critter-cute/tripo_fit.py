@@ -132,7 +132,5 @@ def _lump_dbg(scene, *a):
     for o in scene.objects:
         if o.type != "MESH" or o.hide_render: continue
         bb = [o.matrix_world @ Vector(c) for c in o.bound_box]
-        x0 = min(p.x for p in bb); x1 = max(p.x for p in bb); y0 = min(p.y for p in bb); z0 = min(p.z for p in bb); z1 = max(p.z for p in bb)
-        if x1 > .05 and z0 < 1.25 and y0 < -.1:
-            log("LUMP", o.name, "parent", o.parent.name if o.parent else None, "x", round(x0, 3), round(x1, 3), "y", round(y0, 3), "z", round(z0, 3), round(z1, 3), "faces", len(o.data.polygons))
+        print("LUMP", o.name, "parent", o.parent.name if o.parent else None, "x", round(min(p.x for p in bb), 3), round(max(p.x for p in bb), 3), "y", round(min(p.y for p in bb), 3), round(max(p.y for p in bb), 3), "z", round(min(p.z for p in bb), 3), round(max(p.z for p in bb), 3), "faces", len(o.data.polygons), "mats", [m.name for m in o.data.materials if m][:4], flush=True)
 bpy.app.handlers.render_pre.append(_lump_dbg)
