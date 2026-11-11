@@ -13,18 +13,24 @@ def band(z0, z1): return [p for p in pts if z0 < p.z < z1 and abs(p.y) < .03]
 cz = zmin + h * float(os.environ.get("CZ", ".47"))
 row = band(cz - .004, cz + .004); fx = max(p.x for p in row) if row else .03
 print("CHEST z", round(cz, 4), "front x", round(fx, 4), "h", round(h, 4))
-R = h * .05; A = h * .05 * CHEST; SX = h * .07
+# a broad soft swell (Shelly 13:15 "why is it pointy"): two wide lobes that merge, a flat-topped (1-d^2)^2 falloff,
+# pushed outward from the torso's axis rather than straight ahead, so the curve rolls into the sides with no tip
+RZ, RY, A, SX = h * .07, h * .055, h * .024 * CHEST, h * .028
+bx = fx - h * .075   # the torso's axis at chest height
 for o in ms:
     mw = o.matrix_world; inv = mw.inverted()
     for v in o.data.vertices:
         p = mw @ v.co
-        if p.x < fx - h * .07: continue
-        for s in (-1, 1):
-            c = Vector((fx, s * SX * .5, cz))
-            d2 = ((p.y - c.y) ** 2 + ((p.z - c.z) * 1.15) ** 2) / (R * R)
-            if d2 > 4: continue
-            w = math.exp(-d2 * 1.6) * max(0, 1 - (fx - p.x) / (h * .07))
-            p = p + Vector((A * w, s * A * .15 * w, -A * .25 * w))
+        dep = (p.x - bx) / (fx - bx)
+        if dep < .25: continue
+        gate = min(1, (dep - .25) / .45) ** 2 * (3 - 2 * min(1, (dep - .25) / .45))
+        w = 0
+        for s_ in (-1, 1):
+            d2 = ((p.y - s_ * SX) / RY) ** 2 + ((p.z - cz) / RZ) ** 2
+            if d2 < 1: w = max(w, (1 - d2) ** 2)
+        if w <= 0: continue
+        out = Vector((p.x - bx, p.y * .5, 0)).normalized()
+        p = p + out * (A * w * gate) + Vector((0, 0, -A * .2 * w * gate))
         v.co = inv @ p
     o.data.update()
 
