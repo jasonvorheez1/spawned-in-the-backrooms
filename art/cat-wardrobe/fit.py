@@ -107,6 +107,34 @@ if old and old.use_nodes:   # keep Tripo's grey fabric picture as the base map
 mat.node_tree.nodes["Principled BSDF"].inputs["Roughness"].default_value = 0.85
 me.materials.clear(); me.materials.append(mat)
 bpy.ops.object.shade_smooth()
+
+# proof: the garment on its own body and rig, rest then a stride with one arm up, three sides each, lit from the camera
+import os
+if os.environ.get("PROOF"):
+    arm.data.pose_position = "POSE"
+    for a in list(bpy.data.actions): bpy.data.actions.remove(a)
+    arm.animation_data_clear()
+    for pb in arm.pose.bones: pb.rotation_mode = "QUATERNION"; pb.rotation_quaternion = (1, 0, 0, 0); pb.location = (0, 0, 0); pb.scale = (1, 1, 1)
+    pm = bpy.data.materials.new("pg"); pm.diffuse_color = (0.8, 0.22, 0.28, 1); pm.use_nodes = True; pm.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.8, 0.22, 0.28, 1)
+    me.materials.clear(); me.materials.append(pm)
+    fm = bpy.data.materials.new("pf"); fm.use_nodes = True; fm.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.85, 0.7, 0.45, 1)
+    body.data.materials.clear(); body.data.materials.append(fm)
+    sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 10; sc.render.resolution_x = 440; sc.render.resolution_y = 520; sc.view_settings.view_transform = "Standard"
+    w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True; w.node_tree.nodes["Background"].inputs[0].default_value = (0.5, 0.5, 0.55, 1); w.node_tree.nodes["Background"].inputs[1].default_value = 1.0
+    zc = float(bw[:, 2].max()) * 0.5
+    for pose in ("rest", "walk"):
+        if pose == "walk":
+            for n, q in (("LeftUpLeg", (-40, 0, 0)), ("RightUpLeg", (35, 0, 0)), ("LeftArm", (0, 0, 60)), ("RightArm", (0, 0, -70)), ("RightForeArm", (0, 0, -40)), ("Spine1", (14, 0, 0))):
+                pb = arm.pose.bones.get("mixamorig:" + n)
+                if pb: pb.rotation_mode = "XYZ"; pb.rotation_euler = [math.radians(v) for v in q]
+        for ang in (25, 115, 180):
+            r = math.radians(ang); cd = bpy.data.cameras.new("c"); cd.lens = 55; c = bpy.data.objects.new("c", cd); sc.collection.objects.link(c)
+            c.location = (2.9 * math.sin(r), -2.9 * math.cos(r), zc + 0.25); c.rotation_euler = (Vector((0, 0, zc)) - c.location).to_track_quat("-Z", "Y").to_euler()
+            ld = bpy.data.lights.new("l", "SUN"); ld.energy = 3; l = bpy.data.objects.new("l", ld); sc.collection.objects.link(l); l.rotation_euler = c.rotation_euler
+            sc.camera = c; sc.render.filepath = f"{os.environ['PROOF']}_{pose}_{ang:03d}.png"; bpy.ops.render.render(write_still=True)
+            bpy.data.objects.remove(l); bpy.data.objects.remove(c)
+    for pb in arm.pose.bones: pb.rotation_mode = "QUATERNION"; pb.rotation_quaternion = (1, 0, 0, 0)
+    me.materials.clear(); me.materials.append(mat)
 arm.data.pose_position = "POSE"
 bpy.data.objects.remove(body, do_unlink=True)
 for a in list(bpy.data.actions): bpy.data.actions.remove(a)
