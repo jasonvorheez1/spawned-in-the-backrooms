@@ -117,6 +117,12 @@ def build_head(name, sp, rig, F):
         bb = [t.matrix_world @ Vector(c) for c in t.bound_box]
         log("TRIPO DBG in scene", t.name in bpy.context.scene.objects, "hide", t.hide_render, "faces", len(t.data.polygons), "z", round(min(p.z for p in bb), 3), round(max(p.z for p in bb), 3), "y", round(min(p.y for p in bb), 3), round(max(p.y for p in bb), 3), "mats", [m.name for m in t.data.materials if m], "HC", tuple(round(x, 3) for x in HC))
     except Exception as e: log("TRIPO DBG err", repr(e))
+    if os.environ.get("DBGLUMP") == "1":
+        bpy.context.view_layer.update()
+        for ob in bpy.context.scene.objects:
+            if ob.type != "MESH": continue
+            bb = [ob.matrix_world @ Vector(c) for c in ob.bound_box]
+            log("PART", ob.name, "par", ob.parent.name if ob.parent else None, "hide", ob.hide_render, "x", round(min(p.x for p in bb), 3), round(max(p.x for p in bb), 3), "y", round(min(p.y for p in bb), 3), round(max(p.y for p in bb), 3), "z", round(min(p.z for p in bb), 3), round(max(p.z for p in bb), 3), "f", len(ob.data.polygons), [m.name for m in ob.data.materials if m][:3])
     log("tripo parented to", o.name, "head at", tuple(round(x, 3) for x in o.matrix_world.translation))
     return o
 build_ear = lambda *a, **k: None                                   # Tripo's ears stand in
