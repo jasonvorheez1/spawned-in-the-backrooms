@@ -76,7 +76,7 @@ for (const m of meshes) { const name = m.getName(); if (SKIP.test(name)) continu
           if (d1 < gap && d0 >= gap) { /* already clear */ }
         } else { bx *= 0.5; by *= 0.5; bz *= 0.5 } }
       else { bx = by = bz = 0 }
-      if (!BOTTOM.test(lname) && !OUTER.test(lname) && /^(Top_|Ward_)(tee|tank|longsleeve|shirt|officeshirt|jerrytee|sweater)$/.test(name)) { const py = (y + dy - d[1]) * S + OY, hem = WAIST - 0.05; if (py < hem && py > 0.2) { dy += (hem - py) / S; lifted++; hemmed = true } } // the hem stops 5 cm inside the waistband: a tail lower than that showed through the seat (Nov 11: Andrew's blue patch)
+      if (!BOTTOM.test(lname) && !OUTER.test(lname) && /^(Top_|Ward_)(tee|tank|longsleeve|shirt|officeshirt|jerrytee|sweater)$/.test(name) && Math.abs(x * S) < 0.12) { const py = (y + dy - d[1]) * S + OY, hem = WAIST - 0.05; if (py < hem && py > 0.2) { dy += (hem - py) / S; lifted++; hemmed = true } } // the hem stops 5 cm inside the waistband: a tail lower than that showed through the seat (Nov 11: Andrew's blue patch)
       if (!BOTTOM.test(lname) && !OUTER.test(lname) && pc.length && (hemmed || (wy < WAIST + 0.03 && Math.abs(x * S) < 0.26))) { // every hem point, sides too (Nov 11: a blue rim flared over Andrew's waistband) // tuck: same height, just inside the trousers' own ring there
         const px = x + dx - d[0], py = y + dy - d[1], pz = z + dz - d[2], c = sliceC(py); if (c) { const ox = px - c[0], oz = pz - c[1], r0 = Math.hypot(ox, oz) || 1e-6, q = nearPants(px, py, pz);
           if (q) { const rq = Math.hypot(q[0] - c[0], q[2] - c[1]), lim = rq - TUCK; if (r0 > lim && lim > 0) { const f = lim / r0; dx = c[0] + ox * f - v[0] + (dx - (px - v[0])); dz = c[1] + oz * f - v[2] + (dz - (pz - v[2])); tucked++ } } } }
