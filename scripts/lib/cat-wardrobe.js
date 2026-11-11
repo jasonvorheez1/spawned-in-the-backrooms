@@ -125,7 +125,7 @@ export function catChildren(sex, look) {
   for (const k of fl) {
     const g = W.fluff?.[k]?.[sex]
     if (!g) continue
-    const morph = k === 'lynx' ? Object.fromEntries(Object.values(EAR_KEY).map(key => [key, W.ears ? 0 : Number(EAR_KEY[look?.ears] === key)])) : null
+    const morph = catMorph(look)   // the locks carry the body's keys (fluff-keys.py), so they ride the snout and ears instead of being pierced
     out.push({
       id: 'cw-fluff-' + k, attachment: { skin: true },
       ...(morph ? { morph } : {}),
