@@ -51,8 +51,6 @@ def classify(rgb):
     lab[(sat > 0.5) & (mx > 0.45)] = 0         # orange fur
     lab[(sat >= 0.12) & (sat <= 0.5) & (mx > 0.72)] = 0  # cream muzzle, pink inner ear
     lab[mx < 0.12] = 2                         # black (eyes, nose, lashes)
-    if (lab == 2).sum() < 0.004 * len(lab):    # a sculpt with dark-grey eyes: its darkest faces
-        lab[mx <= np.quantile(mx, 0.015)] = 2
     return lab
 
 def smooth_labels(o, lab, it=2):
@@ -76,7 +74,8 @@ def smooth_labels(o, lab, it=2):
             for j in nb[i]:
                 if lab[j] == 1: continue
                 if not seen[j]: seen[j] = True; st.append(j)
-        if len(comp) < 0.015 * N: lab[comp] = 1
+        touches_hair = any(lab[j] == 1 for i in comp for j in nb[i])
+        if len(comp) < 0.015 * N and touches_hair: lab[comp] = 1  # a loose eyeball island stays an eye
     return lab
 
 def landmarks(o, lab, top_frac=None):
