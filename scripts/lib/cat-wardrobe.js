@@ -39,7 +39,7 @@ export function skinParams(sex, look) {
 // the whole model spec: her body with the painted skin on both fur slots (fur takes the tint, fur2 is her pale belly/markings and stays as drawn)
 export function catModel(sex, look) {
   const params = skinParams(sex, look), skin = (color) => ({ kind: 'scripted', script: 'scripts/mat-catskin.js', color, params })
-  return { id: CAT_BODY[sex].glb, forward: '+z', materials: { fur: skin(look?.fur || '#f3c98a'), fur2: skin('#ffffff') }, parts: { ClothTop: { visible: false }, ClothBottom: { visible: false } }, morph: chestOf(look) }
+  return { id: CAT_BODY[sex].glb, forward: '+z', materials: { fur: skin(look?.fur || '#f3c98a'), fur2: skin('#ffffff') }, parts: { ClothTop: { visible: false }, ClothBottom: { visible: false } }}
 }
 // the Chest slider 0..1 (look.chest), the body's Chest key; a top's cloth carries the same key so it swells with her
 export const chestOf = (look) => ({ Chest: Math.max(0, Math.min(1, +(look?.chest ?? 0.5))) })
