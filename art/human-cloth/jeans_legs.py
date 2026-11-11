@@ -44,6 +44,7 @@ def ld(v):
   w=v[dl]; l=sum(x for g,x in w.items() if gi[g] in LN['L']); r=sum(x for g,x in w.items() if gi[g] in LN['R'])
   return 'L' if l>r+0.05 else 'R' if r>l+0.05 else '?'
 gid={n:g.index for n,g in G.items()}
+fresh=[]
 bridge=[f for f in bm.faces if {'L','R'}<={ld(v) for v in f.verts} and sum(W(v).z for v in f.verts)/len(f.verts)<crotch]
 for f in bridge:
   sides=[ld(v) for v in f.verts]; s_=max('LR',key=sides.count); o_='R' if s_=='L' else 'L'
@@ -59,9 +60,15 @@ for f in bridge:
     w[tgt]=w.get(tgt,0)+moved
     for g,x in w.items(): c[dl][g]=x
     nv.append(c)
-  nf=bm.faces.new(nv,f); nf.copy_from(f)
-  for l0,l1 in zip(f.loops,nf.loops): l1.copy_from(l0)
-bmesh.ops.delete(bm,geom=bridge,context='FACES_ONLY'); bm.to_mesh(o.data); bm.free(); o.data.update()
+  uvs=[[l[u].uv.copy() for u in bm.loops.layers.uv.values()] for l in f.loops]; mi=f.material_index; sm=f.smooth
+  fresh.append((nv,uvs,mi,sm))
+bmesh.ops.delete(bm,geom=bridge,context='FACES_ONLY')
+for nv,uvs,mi,sm in fresh:
+  nf=bm.faces.new(nv); nf.material_index=mi; nf.smooth=sm
+  for l,uv in zip(nf.loops,uvs):
+    for u,x in zip(bm.loops.layers.uv.values(),uv): l[u].uv=x
+bm.normal_update()
+if False: bmesh.ops.delete(bm,geom=bridge,context='FACES_ONLY'); bm.to_mesh(o.data); bm.free(); o.data.update()
 print("BRIDGE resewn",len(bridge))
 # the imported custom normals still pointed across the old shared seam: those faces lit pale mid-stride. Recompute them from the split mesh
 bpy.context.view_layer.objects.active=o; o.select_set(True)
