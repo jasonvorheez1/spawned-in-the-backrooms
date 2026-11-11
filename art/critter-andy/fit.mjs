@@ -78,7 +78,7 @@ for (const m of meshes) { const name = m.getName(); if (SKIP.test(name)) continu
       else { bx = by = bz = 0 }
       if (!BOTTOM.test(lname) && !OUTER.test(lname) && pc.length && wy < WAIST + 0.015 && Math.abs(x * S) < 0.2) { // tuck: same height, just inside the trousers' own ring there
         const px = x + dx - d[0], py = y + dy - d[1], pz = z + dz - d[2], c = sliceC(py); if (c) { const ox = px - c[0], oz = pz - c[1], r0 = Math.hypot(ox, oz) || 1e-6, q = nearPants(px, py, pz);
-          if (q) { const rq = Math.hypot(q[0] - c[0], q[2] - c[1]), lim = rq - TUCK; if (r0 > lim && lim > 0) { const f = lim / r0; dx = c[0] + ox * f - v[0] + (dx - (px - v[0])); dz = c[1] + oz * f - v[2] + (dz - (pz - v[2])); tucked++ } } } }
+          if (q) { const rq = Math.hypot(q[0] - c[0], q[2] - c[1]), lim = Math.min(rq - TUCK, rq * 0.85); if (r0 > lim && lim > 0) { const f = lim / r0; dx = c[0] + ox * f - v[0] + (dx - (px - v[0])); dz = c[1] + oz * f - v[2] + (dz - (pz - v[2])); tucked++ } } } }
       if (!BOTTOM.test(lname) && !OUTER.test(lname) && CROTCH < 1e8 && Math.abs(x) < W(0.09)) { const py = y + dy - d[1], lim = CROTCH + W(0.03); if (py < lim) { dy += lim - py; lifted++ } }
       nd[i*3] = dx; nd[i*3+1] = dy; nd[i*3+2] = dz; nb[i*3] = bx * on; nb[i*3+1] = by * on; nb[i*3+2] = bz * on }
     T[di].setAttribute("POSITION", doc.createAccessor().setType("VEC3").setArray(nd).setBuffer(P.getBuffer()));
