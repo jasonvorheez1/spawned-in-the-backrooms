@@ -109,6 +109,7 @@ export function wardrobe(ctx, player) {
     <div class="sec"><span>SNOUT</span><span>${CATN[l.snout] || 'random'}</span></div>${pick('snout', ['button', 'long', 'pointy', 'flat', 'puff'], l.snout)}
     <div class="sec"><span>EARS</span><span>${CATN[l.ears] || 'random'}</span></div>${pick('ears', ['upright', 'tall', 'small', 'fold', 'wide'], l.ears)}
     <div class="sec"><span>EYE COLOUR</span></div>${sws('eye', C.eye)}
+    <div class="sec"><span>EYESHADOW</span><span>${l.shadow || 'none'}</span></div><div class="grid">${['none', 'pink', 'plum', 'lilac', 'peach', 'gold', 'teal', 'smoky', 'red'].map((v) => tile('catshadow', v, (l.shadow || 'none') === v, v)).join('')}</div>
     <div class="sec"><span>RESTING FACE</span><span>${CATF[l.expr] || 'calm'}</span></div><div class="grid">${Object.keys(CATF).map((v) => tile('catface', v, (CATF[l.expr] ? l.expr : 'neutral') === v, CATF[v])).join('')}</div>
     <div class="sec"><span>EYES</span><span>${l.etype || 'classic'}</span></div><div class="grid">${['classic', 'sparkle', 'sleepy', 'slit', 'sharp', 'bean'].map((v) => tile('cateye', v, (l.etype || 'classic') === v, v)).join('')}</div>
     <div class="sec"><span>MOUTH</span><span>${l.mtype || 'classic'}</span></div><div class="grid">${['classic', 'fang', 'grin', 'smirk', 'open', 'line'].map((v) => tile('catmouth', v, (l.mtype || 'classic') === v, v)).join('')}</div>

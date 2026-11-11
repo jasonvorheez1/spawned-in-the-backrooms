@@ -40,9 +40,9 @@ export function material(ctx) {
       const eyeAt = (du, dv) => { const s = ctx.texture(String(ctx.params.face)).sample(vec2(u.add(du), v.sub(dv))); return s.a.mul(smoothstep(0.55, 0.85, max(max(s.r, s.g), s.b))); };
       let acc = float(0); const taps = [[0, .03], [0, .05], [0, .07], [-.025, .04], [.025, .04], [-.045, .06], [.045, .06], [-.02, .075], [.02, .075], [0, .09]];
       for (const [du, dv] of taps) acc = acc.add(eyeAt(du, dv));   // averaged, not maxed: lashes and outlines blur out, the wash fades evenly up the lid
-      const lid = smoothstep(0.05, 0.45, acc.div(taps.length)).mul(smoothstep(0.47, 0.52, v)).mul(smoothstep(0.08, 0.13, abs(u.sub(0.5))));   // above the muzzle, never across the bridge of the nose
+      const lid = smoothstep(0.02, 0.22, acc.div(taps.length)).mul(smoothstep(0.47, 0.52, v)).mul(smoothstep(0.08, 0.13, abs(u.sub(0.5))));   // above the muzzle, never across the bridge of the nose
       const wash = lid.mul(pic.a.oneMinus().mul(0.7).add(0.3).mul(smoothstep(0.6, 0.95, pic.a).oneMinus())).mul(inside).mul(front).mul(P("shA", 0.7));
-      col = mix(col, C("sh").mul(col.add(0.35)).min(vec3(1, 1, 1)), wash);
+      col = mix(col, mix(C("sh").mul(col.add(0.5)).min(vec3(1, 1, 1)), C("sh"), 0.4), wash);
     }
     // one nose, on the sculpted snout tip itself (bind space): a soft rounded triangle, wider on top, with a small shine
     const ns = P("noseS", 1), ny = q.y.sub(P("noseY", 0.797)).div(0.0125 * 1).div(ns);

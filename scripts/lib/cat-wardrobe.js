@@ -65,7 +65,7 @@ function shadowRGB(s) {
   const hex = (SHADOWS[s] ?? s ?? '').replace('#', '')
   if (!/^[0-9a-f]{6}$/i.test(hex)) return {}
   const n = parseInt(hex, 16), lin = (c) => Math.pow(c / 255, 2.2)
-  return { shR: lin((n >> 16) & 255), shG: lin((n >> 8) & 255), shB: lin(n & 255), shA: 0.75 }
+  return { shR: lin((n >> 16) & 255), shG: lin((n >> 8) & 255), shB: lin(n & 255), shA: 0.85 }
 }
 // the whole model spec: her body with the painted skin on both fur slots (fur takes the tint, fur2 is her pale belly/markings and stays as drawn)
 export function catModel(sex, look) {
