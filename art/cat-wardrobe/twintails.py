@@ -28,7 +28,7 @@ def build(sex, arm):
             d = (n * 0.18 + down * 0.82).normalized()
             lock(bm, h, d, 0.16 * S * rng.uniform(.85, 1.1), 0.05 * S, down * 1.4, 0, rng)
     # fringe: pointed bangs over the brow
-    for x, L in ((-0.5, .75), (-0.3, 1), (-0.12, 1.15), (0.06, 1.05), (0.24, 1.1), (0.42, .85)):
+    for x, L in ():   # no fringe: fur bangs are their own tuft pick
         h, n = hit((x, -0.45, 1))
         if h is None: continue
         dv = Vector((x * 0.25, -0.5, -1)).normalized()
