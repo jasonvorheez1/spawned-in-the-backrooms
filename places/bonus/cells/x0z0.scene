@@ -288,12 +288,12 @@ bc-claw-1:
   tags: ["bonus-arcade"]
 bc-dance:
   children: [{feetPosition: {x: 0, y: 2.2, z: 0.6}, id: glow, light: {color: "#ff4fd8", distance: 4, intensity: 0.9, kind: point}}]
-  feetPosition: {x: 21.6, y: 0.02, z: -7.4}
+  feetPosition: {x: 21.9, y: 0.02, z: -7.4}
   id: bc-dance
   model: {forward: "+x", id: /cdn/value.22e3bb9a51f04f83b49e2eaa4d3e91e9d6eab33c7924debc0369f0eae86d0ad7.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: 0}
-  scale: 1
+  scale: 1.33
   tags: [bonus-arcade]
 bc-dest-1:
   feetPosition: {x: -15.5, y: 8, z: -27.9}
