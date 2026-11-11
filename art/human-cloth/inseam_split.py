@@ -95,6 +95,10 @@ print("MOVED", moved)
 bm = bmesh.new(); bm.from_mesh(J.data)
 lf = [f for f in bm.faces if (mw @ f.calc_center_median()).z < CROTCH + 0.04]
 bmesh.ops.dissolve_degenerate(bm, edges=list({e for f in lf for e in f.edges}), dist=0.0015)
+# the glTF import arrives split at every UV/normal seam: smooth shading over split vertices is flat facets (the pale patches of v2).
+# weld every duplicate except the new midline cut, which must stay open
+keepcut = lambda v: abs((mw @ v.co).x) < 5e-4 and (mw @ v.co).z < CROTCH - 0.005
+bmesh.ops.remove_doubles(bm, verts=[v for v in bm.verts if not keepcut(v)], dist=1e-5)
 bm.to_mesh(J.data); bm.free()
 with bpy.context.temp_override(object=J, active_object=J, selected_objects=[J], selected_editable_objects=[J]):
     try: bpy.ops.mesh.customdata_custom_splitnormals_clear()
