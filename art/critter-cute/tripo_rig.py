@@ -424,6 +424,13 @@ for f in bm.faces:
     if inb or dark:
         for l in f.loops: l[uvk].uv = UVF
         f.material_index = 0; nlash += 1
+# the old sculpt still stood in the mesh: the ':3' relief under the jaw and the lash flaps at the eye corners (outside the press box)
+# shade through the fur. Laplacian-relaxed in place: front verts under the box down to the throat, and the side bands by the eyes
+_relax = [v for v in bm.verts if v.index not in moved and not v.is_boundary and v.co.y < -0.01 and (
+    (BOX[0] - 0.03 < v.co.x < BOX[1] + 0.03 and BOX[2] - 0.13 < v.co.z < BOX[2] + 0.015) or
+    ((BOX[0] - 0.09 < v.co.x < BOX[0] + 0.01 or BOX[1] - 0.01 < v.co.x < BOX[1] + 0.09) and BOX[2] < v.co.z < BOX[3] + 0.03))]
+for _ in range(14): _bm.ops.smooth_vert(bm, verts=_relax, factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
+print("sculpt relief relaxed (chin :3, lash flaps)", len(_relax))
 dead = []
 print("head front verts pressed", len(moved), "faces to fur", nlash)
 bm.to_mesh(hm); bm.free(); lift = len(dead)
