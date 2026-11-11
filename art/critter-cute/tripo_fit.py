@@ -52,7 +52,13 @@ def _tripo_load():
         nt.links.new(img_n.outputs["Color"], mx.inputs["A"] if "A" in mx.inputs else mx.inputs[6])
         mx.inputs[7].default_value = (*lin, 1)
         nt.links.new(mx.outputs[2], bsdf.inputs["Base Color"])
-        log("tripo fur", [round(float(c), 3) for c in fur])
+        fm = bpy.data.materials.new("tripo_fur"); fm.use_nodes = True
+        fb = next(n for n in fm.node_tree.nodes if n.type == "BSDF_PRINCIPLED"); fb.inputs["Base Color"].default_value = (*lin, 1); fb.inputs["Roughness"].default_value = .8
+        t.data.materials.append(fm); fi = len(t.data.materials) - 1; nfur = 0
+        for pg in t.data.polygons:
+            c = pg.center
+            if c.z < thr and not (abs(c.x) > .2 and c.z > thr - .08): pg.material_index = fi; nfur += 1
+        log("tripo fur", [round(float(c), 3) for c in fur], "faces", nfur, "of", len(t.data.polygons), "slots", len(t.data.materials))
     except Exception as e: log("tripo fur err", repr(e))
     bm = bmesh.new(); bm.from_mesh(t.data); bm.transform(t.matrix_world)
     _TRI["bvh"] = BVHTree.FromBMesh(bm); bm.free(); _TRI["obj"] = t
