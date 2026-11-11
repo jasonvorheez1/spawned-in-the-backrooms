@@ -122,7 +122,7 @@ f:
     Ward_lifemantle: "/cdn/value.ef369e19f65b38b3ce2781976d859e2e951e9e37f7273e57467ecdbfe03738d3.glb"
     Ward_longskirt: "/cdn/value.d466f88886e91d4f69f6204ce29ce49005c258506a2e574a6ef0403792b5e639.glb"   # Nov 11 stride: hem rides the thigh (art/human-cloth/skirt_stride.py); before 40071b3b
     Ward_longsleeve: "/cdn/value.e14056fae3fc5af7a02065190daf737f0b2e303bfe3a3feac207604138a2efdc.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
-    Ward_maidapron: "/cdn/value.2674e4c769fd6ba36e4085630088e55292f5247674538554cbdf3375d26af77b.glb"   # Nov 11 hem: skirt part 1.5 cm off the long skirt (art/human-cloth/apron_hem.py); before 080c132a
+    Ward_maidapron: "/cdn/value.77eb9ac6309dd40844497216332750b02ba6108b24d665d55a6216b7b8c3b756.glb"   # Nov 11 hem: skirt part 1.5 cm off the long skirt (art/human-cloth/apron_hem.py); before 080c132a
     Ward_megjacket: "/cdn/value.278aab3d545d583e78ccbca4254b6dd365e31b9e923e67d3fda92fb1afb812a7.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
     Ward_officeshirt: "/cdn/value.8b6348c0bca4546388cbfba16d747cc153fe12adc2da4073a6d72aad784e14dd.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
     Ward_oilskin: "/cdn/value.a5e948da85e802469c4fdc12070422ea503811576f25af091f0f1c3f93ec0d0b.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
