@@ -6,7 +6,7 @@ import { PRINTS } from '../mat-cloth.js'
 
 export const CAT_BODY = {
   f: { glb: '/cdn/value.4187fbc61c1a2aeb1636c6e6a3bc7b06f08afad41c681ca7070c5f801b9fe46b.glb', fur: '/cdn/value.eb86c240c4daf27effe00523a7f1f216e7239f8eca99359e5a04fcf67c289a6f.jpg' },
-  m: { glb: '/cdn/value.284ea8adabf4aa83a76b4dc23b33ea6e460dfcbcefb28ae9e398b834f5c2e87d.glb', fur: '/cdn/value.a400e6f824bf75d1c5dfafb1cadbe30c177543404d39b9c350d4feadc8dfd313.jpg' }
+  m: { glb: '/cdn/value.a598a799e09636a3c6829bc2e4da01a1a6cfe2fb630e1ce82ddd0de080dbeea8.glb', fur: '/cdn/value.a400e6f824bf75d1c5dfafb1cadbe30c177543404d39b9c350d4feadc8dfd313.jpg' }
 }
 const rgb = (hex, lin = true) => { const n = parseInt(String(hex || '#ffffff').replace('#', '').slice(0, 6).padEnd(6, 'f'), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { const s = v / 255; return lin ? (s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4)) : s }) }
 const lerp = (a, b, t) => a + (b - a) * t
@@ -53,7 +53,7 @@ export function catModel(sex, look) {
   const faces = FACES.faces[sex === 'm' ? 'male' : 'female']
   const expression = faces[look?.expression]
   const face = typeof expression === 'string' ? expression : faces.neutral
-  const projection = sex === 'm' ? [2.9878, -2.2377, 0.105] : [2.9946, -2.0648, 0.055]
+  const projection = sex === 'm' ? [2.9946, -2.2355, -0.011] : [2.9946, -2.0648, 0.055]
   const skin = (color) => ({ kind: 'scripted', script: 'scripts/mat-catskin.js', color, params })
   return {
     id: CAT_BODY[sex].glb, forward: '+z',
