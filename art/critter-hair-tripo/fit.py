@@ -257,7 +257,7 @@ if not TUNE.get("noscalp"):
     for fa in bb.faces:
         m = fa.calc_center_median(); F_, L_, Z_ = FLZ(m)
         _band = 0.75 * headH * 0.5
-        if TUNE.get("fullscalp") and F_ < -0.1 * headF: _band = 0.62 * headH   # fullscalp: the back of the skull down to the nape
+        if TUNE.get("fullscalp") and F_ < -0.1 * headF: _band = 0.95 * headH   # fullscalp: the back of the skull down to the nape
         if Z_ < crown - _band: continue          # below the skull band
         if Z_ < eye_top + 0.08 * headH: continue              # never on the eyes
         if F_ > 0.25 * headF and Z_ < hairline + 0.01 * headH: continue   # forehead below the sculpt's hairline stays fur
