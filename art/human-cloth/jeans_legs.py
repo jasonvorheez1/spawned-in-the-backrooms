@@ -35,22 +35,6 @@ for v in o.data.vertices:
     if own: max(own,key=lambda g:g.weight).weight+=rem
     else: G[s+'UpLeg'].add([v.index],rem,'ADD')
 print("FIX crotch",round(crotch,3),"seam edges",len(seam),"fixed",fixed)
-# inner-thigh faces pointed into the leg, so they lit pale from the wrong side: face every leg face away from its leg's axis
-from mathutils import Vector
-P=[M@v.co for v in o.data.vertices]; Rm=M.to_3x3()
-bm=bmesh.new(); bm.from_mesh(o.data); bm.faces.ensure_lookup_table(); flips=[]
-for f in bm.faces:
-  c=sum((P[v.index] for v in f.verts),Vector())/len(f.verts)
-  if c.z>crotch or c.z<0.12: continue
-  sd=1 if c.x>0 else -1
-  ring=[q for q in P if abs(q.z-c.z)<0.02 and q.x*sd>0]
-  if len(ring)<6: continue
-  ax=sum(ring,Vector())/len(ring); ax.z=c.z
-  if (Rm@f.normal).dot(c-ax)<0: flips.append(f)
-bmesh.ops.reverse_faces(bm,faces=flips); bm.to_mesh(o.data); bm.free(); o.data.update()
-if hasattr(o.data,'free_normals_split'): o.data.free_normals_split()
-print("FLIP",len(flips))
-# one-sided cloth: where a stride crosses the thighs, a double-sided leg showed its lit inside as pale slivers; culled, the other leg's denim shows instead
-for m in o.data.materials: m.use_backface_culling=True
+# tried: flipping inner-thigh faces outward and one-sided cloth; neither cleared the slivers in a stride test (Nov 11)
 for ob in bpy.data.objects: ob.select_set(ob==o or ob.type=='ARMATURE')
 bpy.ops.export_scene.gltf(filepath=dst,use_selection=True,export_morph=True,export_skins=True)
