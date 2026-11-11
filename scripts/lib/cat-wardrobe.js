@@ -36,7 +36,7 @@ export function skinParams(sex, look) {
 }
 // the whole model spec: her body with the painted skin on both fur slots (fur takes the tint, fur2 is her pale belly/markings and stays as drawn)
 export function catModel(sex, look) {
-  const params = { ...skinParams(sex, look), ...(look?.flipV ? { flipV: 1 } : {}) }, skin = (color) => ({ kind: 'scripted', script: 'scripts/mat-catskin.js', color, params })
+  const params = skinParams(sex, look), skin = (color) => ({ kind: 'scripted', script: 'scripts/mat-catskin.js', color, params })
   return { id: CAT_BODY[sex].glb, forward: '+z', materials: { fur: skin(look?.fur || '#f3c98a'), fur2: skin('#ffffff') }, parts: { ClothTop: { visible: false }, ClothBottom: { visible: false } } }
 }
 // the Tripo garments a look wears, as skinned children of the cat
