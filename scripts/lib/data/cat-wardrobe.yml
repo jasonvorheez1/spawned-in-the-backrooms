@@ -49,6 +49,7 @@ masks:
 
 # Head tufts are sculpted on each cat rig in art/cat-wardrobe/style_fit.py (Nov 11: layered, pointed kemono locks).
 fluff:
+  bangs: { f: '/cdn/value.244c10c84f6b3b05d12828bf3ba99fb9c94476236f1de7e219b7d8bd248fdc31.glb', m: '/cdn/value.ebd2754e9df3219be0af45ebbe28fbfd7b06f538607f586cd3e7663fe799a83d.glb' }   # fur fringe over the brow (Shelly: "fur bangs on the head would be nice too")
   burns: { f: '/cdn/value.303553aaded1f588e3131ae0fed0d90e75c14dbadc15506278762461767f018e.glb', m: '/cdn/value.310395d4d1ba31a043ebae075520338e4c0c629f6d2ac9fe18b4593a62b5824c.glb' }
   cheeks: { f: '/cdn/value.c622647e029c4d9da0d479e399571f63f0f47b4a58fe795759ec29dd656bf3d6.glb', m: '/cdn/value.0cdf049099a9dd8e2f60ffe91472e1db6fb3e3449bb4cb10da722db0ee353d5e.glb' }
   cowlick: { f: '/cdn/value.e4c3f6eca79f860d00ff385acad5f11c3eab7916dd9d5da5e95eafc29bd2a0cc.glb', m: '/cdn/value.7fb6c81a6acd943c9616c6e9a72ddab081bc20b8de0c4dec5f48054b5c30334e.glb' }

@@ -90,7 +90,7 @@ export function wardrobe(ctx, player) {
   const slot = (title, k, colourKey) => `<div class="slot"><div class="sec" style="margin-top:2px"><span>${title}</span><span>${NAMES[l[k]] || l[k]}</span></div>${grid(k, C[k])}${colourKey && l[k] !== 'none' ? sws(colourKey, C.cloth) : ''}</div>`
   let body = ''
   const cat = !human
-  const CATN = { button: 'button', long: 'long', pointy: 'pointy', flat: 'flat', puff: 'mochi', upright: 'upright', tall: 'tall', small: 'small', fold: 'fold', wide: 'airplane', classic: 'classic', fluffy: 'fluffy', bob: 'bobtail', whip: 'whip', curl: 'curl', cheeks: 'cheeks', burns: 'sideburns', crest: 'crest', lynx: 'lynx tips', nape: 'nape', cowlick: 'cowlick', afropuff: 'afro puff', crop: 'crop', halfup: 'half up', long_h: 'long', pixie: 'pixie', shaggy: 'shaggy', sidetail: 'side tail', twintails: 'twin tails', undercut: 'undercut' }
+  const CATN = { button: 'button', long: 'long', pointy: 'pointy', flat: 'flat', puff: 'mochi', upright: 'upright', tall: 'tall', small: 'small', fold: 'fold', wide: 'airplane', classic: 'classic', fluffy: 'fluffy', bob: 'bobtail', whip: 'whip', curl: 'curl', cheeks: 'cheeks', burns: 'sideburns', crest: 'crest', lynx: 'lynx tips', nape: 'nape', cowlick: 'cowlick', bangs: 'fur bangs', afropuff: 'afro puff', crop: 'crop', halfup: 'half up', long_h: 'long', pixie: 'pixie', shaggy: 'shaggy', sidetail: 'side tail', twintails: 'twin tails', undercut: 'undercut' }
   const pick = (k, list, cur) => `<div class="grid">${list.map((v) => tile(k, v, cur === v, CATN[v] || v)).join('')}</div>`
   const fl = Array.isArray(l.fluff) ? l.fluff : l.fluff ? [l.fluff] : ['cheeks']
   const sx = l.sex === 'f' ? 'f' : 'm', catHairs = Object.keys(CW.hair || {}).filter((k) => CW.hair[k][sx])
