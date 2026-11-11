@@ -66,5 +66,12 @@ hair:
   pixie: { f: '/cdn/value.1fec14dfceb740a57aa44c831d5bd5e7849cc278be54fd7be921fcca06a1422a.glb' }
   shaggy: { m: '/cdn/value.5ed22abbb5cb2f2154824d875b34e6fdde75cb52b3d0b319ce442fc322ee5c31.glb' }
   sidetail: { f: '/cdn/value.bddcfff0c0d30e49a86bc03abfdfb44a0b342c857e5b77c9e586797631fb6d81.glb' }
-  twintails: { f: '/cdn/value.a6a110bbfb86e6efcadab080fbbeabaf79a4e29f9f44dfe3f1f17c052734b811.glb' }
+  twintails: { f: '/cdn/value.c02edb338f4720fbd75668f7a17fbe5229e9615e0a88cdb12b686221b87ec0c8.glb' }   # Nov 11 Tripo remake (old one rejected #219816)
+  ponytail: { f: '/cdn/value.a8b52d04c886ef9346da31ebfd64cb565255c855c5da1f6e7dc12362f539c8b7.glb' }
+  bob: { f: '/cdn/value.8dc3f475755eb9e4eed76c5b33dcb47e4c25b783afcd159298be14920f38b51b.glb' }
+  hime: { f: '/cdn/value.851231a2702b4914b322d1e9ed705e20b85f40a538e10eb4e1a2dcaf78147d31.glb' }
+  braid: { f: '/cdn/value.6f45a7d83b4c2f9305aaa8c1ff344e3e4ad3ca74c0c95f9f9dc5d1c8a1b30fa0.glb' }
+  messybun: { f: '/cdn/value.9485159663f97f890991e825440760784da3c410a47936192622d6037f06dd34.glb' }
+  spiky: { m: '/cdn/value.672aa51331b31421b6e733645f063d5487ba3b621fe6e4de9c0b4381661c4c85.glb' }
+  fluffy: { m: '/cdn/value.17f54e6a5515a927dae7f76ab6179934d7e8dbbc174866594319f74a01eebfd6.glb' }
   undercut: { m: '/cdn/value.2d83eb01b8e9cabc02503782fdd382a9bde90d7c4df55bae8b85eae9cc47b3c0.glb' }
