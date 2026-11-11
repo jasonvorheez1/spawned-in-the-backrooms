@@ -114,7 +114,7 @@ export function wardChildren(l, local) {
 }
 export function seatWardrobe(ctx, o, l) {
   const want = new Map(wardChildren(l, o.audience === 'local').map((c) => [c.id, c]))
-  for (const k of [...WARDROBE.parts.map(wardKey), INNER_ID]) if (!want.has(k) && ctx.getObject(o.id + '/' + k)) ctx.destroy(o.id + '/' + k)
+  for (const k of [...WARDROBE.parts.map(wardKey), INNER_ID]) if (!want.has(k) && ctx.getObject(o.id + '/' + k)) { try { ctx.destroy(o.id + '/' + k) } catch (e) { return } } // a body drawn from another room (a solo save's NPC) isn't ours to undress: leave it whole
   for (const [k, c] of want) {
     const h = ctx.getObject(o.id + '/' + k)
     if (!h) { ctx.spawn(k, { parent: o.id, ...c }); continue }
