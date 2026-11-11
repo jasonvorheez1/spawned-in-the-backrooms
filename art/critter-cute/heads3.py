@@ -135,9 +135,10 @@ def _faces(heads, SEX):
     # expression sheet: the front camera, one still per face set
     sc = bpy.context.scene; cam = sc.camera; tgt = Vector((0, 0, 1.30))
     cam.location = tgt + Vector((0, 1.3, .06)); cam.rotation_euler = (tgt - cam.location).to_track_quat('-Z', 'Y').to_euler()
-    sc.render.resolution_x = sc.render.resolution_y = 360
+    sc.render.resolution_x = sc.render.resolution_y = 480
     for name, head in heads.items():
         for nm_, ks in FACESETS:
+            ks = FACEFIX.get(nm_, ks)
             for kb in head.data.shape_keys.key_blocks[1:]: kb.value = ks.get(kb.name, 0)
             sc.render.filepath = os.path.join(PROOF, f"fx_{SEX}_{name}_{nm_}.png"); bpy.ops.render.render(write_still=True)
         for kb in head.data.shape_keys.key_blocks[1:]: kb.value = 0
