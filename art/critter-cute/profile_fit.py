@@ -28,13 +28,17 @@ def rebuild_head(head, sex):
     """Round skull, tapered jaw and cupped ears on the original Head bone."""
     female = sex == "f"
     # Height, half-width, half-depth, depth center. The neck connection stays at bind height.
-    rings = ([(.609,.057,.056,-.042),(.640,.060,.060,-.040),(.659,.069,.067,-.038),
-              (.684,.126,.112,-.025),(.712,.185,.162,-.006),(.755,.231,.205,.005),(.83,.244,.216,.011),(.91,.225,.205,.012),
-              (.982,.193,.168,.008),(1.033,.117,.105,.006),(1.052,.001,.001,.005)]
-             if female else
-             [(.724,.058,.059,-.078),(.756,.090,.081,-.081),(.790,.137,.121,-.087),(.832,.182,.163,-.090),
-              (.876,.219,.193,-.090),(.939,.225,.203,-.086),(.996,.204,.180,-.080),
-              (1.051,.153,.130,-.073),(1.087,.085,.079,-.069),(1.105,.001,.001,-.068)])
+    # The male head is the female's approved round skull and soft muzzle, raised to his
+    # taller neck (DZ), set back to his deeper neck (DY) and a touch broader.
+    F_RINGS = [(.609,.057,.056,-.042),(.640,.060,.060,-.040),(.659,.069,.067,-.038),
+               (.684,.126,.112,-.025),(.712,.185,.162,-.006),(.755,.231,.205,.005),(.83,.244,.216,.011),(.91,.225,.205,.012),
+               (.982,.193,.168,.008),(1.033,.117,.105,.006),(1.052,.001,.001,.005)]
+    DZ, DY, WIDE = .057, -.066, 1.03
+    if female:
+        rings = F_RINGS
+    else:
+        rings = [(z+DZ, rx*WIDE, ry, (-.078 if i < 3 else -.085 if i == 3 else cy+DY))
+                 for i,(z,rx,ry,cy) in enumerate(F_RINGS)]
     verts,faces,mats = [],[],[]
     def face(indices, material=0):
         faces.append(indices)
@@ -48,15 +52,15 @@ def rebuild_head(head, sex):
             x,y=rx*cos(a),cy+ry*sin(a)
             # Keep the orbital surface round. The muzzle sits below the eyes and
             # only the narrow center of the nose rises between their lower corners.
-            lo, mid, tip, brow = (.729, .774, .799, .829) if female else (.779, .828, .850, .880)
+            lo, mid, tip, brow = (z0 + (0 if female else DZ) for z0 in (.729, .774, .799, .829))
             rise = smoothstep(lo, mid, z)
             fall = 1 - smoothstep(tip, brow, z)
-            cheek = 1 - smoothstep(.034, .118 if female else .130, abs(x))
-            nose_z = .810 if female else .867
+            cheek = 1 - smoothstep(.034, .118 if female else .122, abs(x))
+            nose_z = .810 + (0 if female else DZ)
             nose = (1 - smoothstep(.003, .027, abs(z - nose_z))) * (1 - smoothstep(.014, .043, abs(x)))
             if sin(a) < 0:
-                y -= (.027 if female else .048) * rise * fall * cheek
-                y -= (.009 if female else .017) * nose
+                y -= .027 * rise * fall * cheek
+                y -= .009 * nose
             verts.append((x,y,z))
     face(tuple(reversed(range(seg))))
     for j in range(len(levels)-1):
