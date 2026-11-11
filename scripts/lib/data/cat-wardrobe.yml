@@ -51,12 +51,12 @@ masks:
 # Head tufts are sculpted on each cat rig in art/cat-wardrobe/style_fit.py (Nov 11: layered, pointed kemono locks).
 fluff:
   bangs: { f: '/cdn/value.6b9a5e1ccccdaf680220e740561e079f63f16bacd1b226ef452d36ac39f99bc4.glb', m: '/cdn/value.c5e23ef2e2704f545e785162beac27b65d6b309653436cda97f8dc533b9c29f9.glb' }   # fur fringe over the brow (Shelly: "fur bangs on the head would be nice too")
-  burns: { f: '/cdn/value.f4aad0d12a380ca53eea3f03aa387272de26c3e6975e0a71b99c7950f207e669.glb', m: '/cdn/value.b1c933e6faa348331cfa17b7e6ffef414bef1925b7a0afa93951c70b875f155f.glb' }
-  cheeks: { f: '/cdn/value.bb9e5311579b8365fb65f5366903be3c2d42341bb8b820e90f895bedde4f4075.glb', m: '/cdn/value.a194c483b83363414e15cd7c16f0b71fa74f25e8d0e8f1f830d9b19ff427a94a.glb' }
+  burns: { f: '/cdn/value.1ae05e35b1296a5c9b245402247f50ca11b3d3554b620b32ba2607e102375b6f.glb', m: '/cdn/value.2927ba7952107e76b5d441a8e69a5367d82f0dfc3376193ae03b76cb815b5f87.glb' }
+  cheeks: { f: '/cdn/value.701d5466ddb2eed7df2ee0915d9b5739e51da2552082eb449cb56b45aacf49c3.glb', m: '/cdn/value.8780817bb3cd62251c97fb47edbc8a54a75a8f87b9b270ffd3e67a4e9377f33e.glb' }
   cowlick: { f: '/cdn/value.c520cd8bf5671decb30c96530dda5d069c4a072c69f2320bcf6def9c8eb7c9da.glb', m: '/cdn/value.b1eef825c6c138e4862a1e26f75daa1907f8dbee52d55b97e0edc3c6ff6f3cf9.glb' }
   crest: { f: '/cdn/value.ac9827cf902572b6dd0f6ff6799d2ef177ac4f98383e75c2a2f3bc2ec9a69100.glb', m: '/cdn/value.c03ea920c4f7d8ea89f7a202baee5848a98e05882d90484399e4316aee3036be.glb' }
   lynx: { f: '/cdn/value.bead68d68c6727e7fd5e728fd07c75f5448a759ec2f6063f56897442029d6078.glb', m: '/cdn/value.a2528ced416c61720328a3a0ca22a49e98a448bbb02f6ce5dbb2237865b5ebf0.glb' }
-  nape: { f: '/cdn/value.b229d3903dd6e4e56cec149df8ffe1c1b3db2f2717c80c84608ef49e217222d0.glb', m: '/cdn/value.54e76c85c8fcd79e73fa81d6ead39221f6547c8973cb12dca1330b07184b3327.glb' }
+  nape: { f: '/cdn/value.0a5b906b76b388e6cc60b1e5672c016daa87d514f8a66844e18edd67df19787f.glb', m: '/cdn/value.3178f73a3573136327268d8ff5b72d855ef9365b528250f5d2d048a45f6f4e71.glb' }
 
 # hairstyles (art/cat-wardrobe/hair-register.py); Nov 11 cleaned: strands smoothed away from the skull (seams kept as authored), a hair-coloured scalp cap only where hidden, double-sided: the Tripo hair carried onto the current cat heads, skinned to the head, tinted by look.hairc. look.hair: one key
 hair:
