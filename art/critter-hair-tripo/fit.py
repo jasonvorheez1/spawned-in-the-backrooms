@@ -47,8 +47,10 @@ def face_rgb(o):
 def classify(rgb):
     mx, mn = rgb.max(1), rgb.min(1); sat = (mx - mn) / np.maximum(mx, 1e-4)
     lab = np.zeros(len(rgb), np.int8)
-    lab[(sat < 0.14) & (mx > 0.33)] = 1      # light grey hair
-    lab[mx < 0.16] = 2                         # black (eyes, nose, lashes)
+    lab[:] = 1                                 # hair = whatever is not skin: grey incl. its shaded grooves
+    lab[(sat > 0.5) & (mx > 0.45)] = 0         # orange fur
+    lab[(sat >= 0.12) & (sat <= 0.5) & (mx > 0.72)] = 0  # cream muzzle, pink inner ear
+    lab[mx < 0.12] = 2                         # black (eyes, nose, lashes)
     return lab
 
 def smooth_labels(o, lab, it=2):
@@ -62,6 +64,17 @@ def smooth_labels(o, lab, it=2):
             if s * 2 > len(n) + 1: new[i] = 1
             elif lab[i] == 1: new[i] = 0
         lab = new
+    # non-hair specks fully enclosed by hair (shaded grooves) become hair: no cracks in the shell
+    seen = np.zeros(len(lab), bool); N = len(lab)
+    for i0 in range(N):
+        if seen[i0] or lab[i0] == 1: continue
+        st, comp, edge_ok = [i0], [], True; seen[i0] = True
+        while st:
+            i = st.pop(); comp.append(i)
+            for j in nb[i]:
+                if lab[j] == 1: continue
+                if not seen[j]: seen[j] = True; st.append(j)
+        if len(comp) < 0.015 * N: lab[comp] = 1
     return lab
 
 def landmarks(o, lab, top_frac=None):
