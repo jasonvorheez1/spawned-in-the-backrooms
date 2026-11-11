@@ -19,7 +19,9 @@ inputs:
         - p
       touch:
         button: false
-    qtrack: {}
+    qtrack:
+      keys:
+        - m
     quickUse: {}
     quick0:
       keys: ["0"]
@@ -108,7 +110,8 @@ inputs:
       touch:
         button: false
     holster:
-      keys: []
+      keys:
+        - u
       touch:
         button: false
     interact:
