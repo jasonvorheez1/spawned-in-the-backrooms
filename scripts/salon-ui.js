@@ -68,7 +68,8 @@ export function salon(ctx, player) {
       + row('Cheeks', '') + dots('blush', C.blush) + row('Resting face', nice(l.expr)) + chips('expr', C.expr) + row('Demeanor', nice(l.trait)) + chips('trait', C.trait)
   } else if (tab === 'body') {
     const FURRY = ['earS', 'snoutS', 'tailS', 'waistS', 'hipS', 'headS']
-    body = row('Body', nice(l.sex)) + chips('sex', C.sex)
+    body = (human ? '' : row('Species', nice(l.species)) + chips('species', C.species.filter((s) => s !== 'human' && s !== 'faceling'))) // facelings are the mall's staff, never a pick
+      + row('Body', nice(l.sex)) + chips('sex', C.sex)
       + row('Stature', `${Math.round(170 * (Number(l.heightS) || 1))} cm`) + `<div class="card">${sliders((k) => k === 'heightS' || k === 'buildS')}</div>`
       + (human ? row('Skin', '') + dots('skin', C.skin) : row('Fur', '') + dots('fur', C.fur))
       + row('Markings', nice(l.marks)) + chips('marks', human ? C.marks.filter((m) => ['none', 'freckles'].includes(m)) : C.marks)
