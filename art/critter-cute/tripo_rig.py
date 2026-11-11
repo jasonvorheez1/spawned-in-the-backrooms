@@ -463,7 +463,7 @@ for poly in fm.polygons:
 FACE = bpy.data.objects.new("Face", fm); sc.collection.objects.link(FACE); skin_to_head(FACE)
 used = {fm.loops[li].vertex_index for p in fm.polygons for li in p.loop_indices}
 print("face decal verts", len(verts), "quads", len(faces))
-FACEIMG = {nm: bpy.data.images.load(f"{OUT}/faces/{nm}.png") for nm in C["faces"]}
+FACEIMG = {nm: bpy.data.images.load(f"{OUT}/faces/clean/{nm}.png")  # 4x smooth-edged, art/critter-cute/face_clean.py for nm in C["faces"]}
 def fill_holes(im_):
     w_, h_ = im_.size; a = np.array(im_.pixels[:]).reshape(h_, w_, 4); op = a[..., 3] >= 0.5
     ext = np.zeros_like(op); st = [(y, x) for y in range(h_) for x in (0, w_ - 1)] + [(y, x) for x in range(w_) for y in (0, h_ - 1)]
