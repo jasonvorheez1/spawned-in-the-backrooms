@@ -70,30 +70,6 @@ for nv,uvs,mi,sm in fresh:
 bm.normal_update()
 bm.normal_update(); bm.to_mesh(o.data); bm.free(); o.data.update()
 print("BRIDGE resewn",len(bridge))
-# the jeans were two nested shells (outer denim + a lining a few mm inside). Skinned apart, the lining poked through mid-stride as pale slivers.
-# The lining is the big island sitting closer to the legs: it goes; the outer shell is double-sided, so its inside still reads as denim at the hem
-bm=bmesh.new(); bm.from_mesh(o.data); bm.faces.ensure_lookup_table()
-key=lambda v:(round(v.co.x,5),round(v.co.y,5),round(v.co.z,5))
-par={}
-def fd(a):
-  while par.setdefault(a,a)!=a: par[a]=par[par[a]]; a=par[a]
-  return a
-for f in bm.faces:
-  ks=[key(v) for v in f.verts]
-  for k in ks[1:]: par[fd(ks[0])]=fd(k)
-isl={}
-for f in bm.faces: isl.setdefault(fd(key(f.verts[0])),[]).append(f)
-big=sorted(isl.values(),key=len,reverse=True)[:2]
-def rad(c):
-  t=0;n=0
-  for f in c:
-    for v in f.verts:
-      p=W(v)
-      if 0.2<p.z<0.6: t+=abs(abs(p.x)-0.09)+abs(p.y); n+=1
-  return t/max(n,1)
-r0,r1=rad(big[0]),rad(big[1]); lining=big[0] if r0<r1 else big[1]
-print("LINING",len(big[0]),len(big[1]),round(r0,4),round(r1,4),"cut",len(lining))
-bmesh.ops.delete(bm,geom=lining,context='FACES'); bm.to_mesh(o.data); bm.free(); o.data.update()
 # the imported custom normals still pointed across the old shared seam: those faces lit pale mid-stride. Recompute them from the split mesh
 bpy.context.view_layer.objects.active=o; o.select_set(True)
 bpy.ops.mesh.customdata_custom_splitnormals_clear()
