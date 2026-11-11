@@ -450,6 +450,10 @@ else: print("chin iron SKIPPED ring", len(_ring))
 _under = [v for v in bm.verts if abs(v.co.x) < 0.09 and BOX[2] - 0.045 < v.co.z < BOX[2] + 0.03 and -0.09 < v.co.y < 0.015]
 for _ in range(20): _bm.ops.smooth_vert(bm, verts=_under, factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
 print("jaw underside relaxed", len(_under))
+# the old sculpted :3 itself sits under the muzzle, z0+0.06..0.13, as creases with torn rims: relaxed whole, before the decal is laid over it
+_mouth = [v for v in bm.verts if abs(v.co.x) < 0.105 and BOX[2] + 0.04 < v.co.z < BOX[2] + 0.135 and v.co.y < -0.12]
+for _ in range(25): _bm.ops.smooth_vert(bm, verts=_mouth, factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
+print("old mouth crease relaxed", len(_mouth))
 # the ':3' sculpt also sits on the Body's side of the neck seam (under the jaw): relaxed the same way, seam verts held so nothing opens
 _bb = _bm.new(); _bb.from_mesh(BODY.data)
 _rb = [v for v in _bb.verts if not v.is_boundary and v.co.y < -0.01 and BOX[0] - 0.03 < v.co.x < BOX[1] + 0.03 and BOX[2] - 0.16 < v.co.z < BOX[2] + 0.02]
