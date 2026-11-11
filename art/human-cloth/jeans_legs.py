@@ -94,16 +94,18 @@ for sd in 'LR':
   seen=set()
   for start in list(adj):
     if start in seen: continue
-    loop=[start]; seen.add(start); cur=start
-    while True:
-      nx=[n for n in adj[cur] if n not in seen]
-      if not nx: break
-      cur=nx[0]; loop.append(cur); seen.add(cur)
-    if len(loop)<4 or start not in adj[cur]: continue
+    comp=[start]; seen.add(start); q=[start]
+    while q:
+      c_=q.pop()
+      for n in adj[c_]:
+        if n not in seen: seen.add(n); comp.append(n); q.append(n)
+    if len(comp)<4: continue
     bm.verts.ensure_lookup_table()
-    src=[bm.verts[rep[(k,sd)]] for k in loop]; Z=[W(v).z for v in src]
-    lo=Z.index(min(Z)); src=src[lo:]+src[:lo]; Z=Z[lo:]+Z[:lo]; hi=Z.index(max(Z))
-    A=src[:hi+1]; B=[src[0]]+src[hi:][::-1]
+    vs=[bm.verts[rep[(k,sd)]] for k in comp]
+    # a slot is a front edge and a back edge meeting at its ends: split by depth about the slot's own middle, each sorted by height
+    my=sum(W(v).y for v in vs)/len(vs)
+    A=sorted([v for v in vs if W(v).y<my],key=lambda v:W(v).z); B=sorted([v for v in vs if W(v).y>=my],key=lambda v:W(v).z)
+    if len(A)<2 or len(B)<2: continue
     push=0.003*(1 if (sd=='L')==(lsign>0) else -1)/M.to_scale().x
     cp={}
     def cv(v):
@@ -124,12 +126,6 @@ for sd in 'LR':
       f.smooth=True; f.normal_update()
       if (f.normal.x>0)==((sd=='L')==(lsign>0)): f.normal_flip()
       caps+=1
-# what the zipper missed (a slot whose edge branched, so its walk never closed): fill each leftover hole on the inner leg
-rest=[e for e in bm.edges if len(e.link_faces)==1 and all(abs(W(v).x)<0.02 and W(v).z<crotch-0.02 for v in e.verts)]
-r=bmesh.ops.holes_fill(bm,edges=rest,sides=40)
-for f in r['faces']: f.smooth=True
-if r['faces']: bmesh.ops.triangulate(bm,faces=r['faces'],quad_method='BEAUTY',ngon_method='BEAUTY')
-print("HOLES filled",len(r['faces']),"of",len(rest),"edges")
 print("CAPS",caps)
 bm.normal_update(); bm.to_mesh(me); bm.free(); me.update()
 # the imported custom normals still pointed across the old shared seam: those faces lit pale mid-stride. Recompute them from the split mesh
