@@ -94,7 +94,7 @@ def landmarks(o, lab, top_frac=None):
         band = V[:, 2] > z1 - 0.42 * (z1 - z0)
         blk = band & (vlab == 2) & (np.abs(V[:, 1] - c[1]) < 0.06) & (np.abs(V[:, 0] - c[0]) < 0.08)
     ec = V[blk].mean(0); f = Vector((ec[0] - c[0], ec[1] - c[1], 0)).normalized(); 
-    if top_frac:  # the target body is authored square: its front is the nearest axis
+    if True:  # body and Tripo sculpt are both authored square: front is the nearest axis
         f = Vector((round(f.x), 0, 0)) if abs(f.x) > abs(f.y) else Vector((0, round(f.y), 0))
     l = Z.cross(f)
     F, L = V @ np.array(f[:]), V @ np.array(l[:]); cF, cL = c @ np.array(f[:]), c @ np.array(l[:])
@@ -176,12 +176,14 @@ earmask = HVs & (np.abs(Lr) > 0.12 * T["W"]) & (T["V"][:, 2] > crown - 0.2 * (ti
 kd = KDTree(int(earmask.sum()))
 for i, p in enumerate(T["V"][earmask]): kd.insert(Vector(p), i)
 kd.balance()
-EAR_R = 0.09 * headH
+EAR_R = 0.09 * headH; EAR_R2 = 0.2 * headH
+earz0 = crown + 0.15 * (tipz - crown)
 cut = []
 for fa in bm.faces:
     m = fa.calc_center_median(); F_, L_, Z_ = FLZ(m)
-    if F_ > 0.2 * headF and Z_ < eye_top + 0.03 * headH and abs(L_) < eye_lat: cut.append(fa); continue
-    if any(kd.find(v.co)[2] < EAR_R for v in fa.verts): cut.append(fa)
+    if F_ > 0.1 * headF and Z_ < eye_top + 0.06 * headH and abs(L_) < eye_lat: cut.append(fa); continue
+    if any(kd.find(v.co)[2] < EAR_R for v in fa.verts): cut.append(fa); continue
+    if Z_ > earz0 and kd.find(m)[2] < EAR_R2: cut.append(fa)  # hair sculpted as ear sleeves
 delete_faces(bm, cut); bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
 drop_islands(bm)
 bmesh.ops.holes_fill(bm, edges=bm.edges[:], sides=40)
