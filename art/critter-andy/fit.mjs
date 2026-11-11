@@ -32,8 +32,8 @@ function near(x, y, z, K = 4, noArm = false) { const cx = Math.floor(x/C), cy = 
   best.sort((p, q) => p[0] - q[0]); return best.slice(0, K) }
 const hasBust = sk.some((s) => s[6] || s[7] || s[8]);
 // the trousers' waistband height, world metres (top of Ward_pants at the game pose)
-let WAIST = 0; for (const m of meshes) if (m.getName() === "Ward_pants") { const di = tIdx(m, "Dandy"); for (const p of m.listPrimitives()) { const P = p.getAttribute("POSITION"), D = p.listTargets()[di]?.getAttribute("POSITION"), v = [0,0,0], d = [0,0,0]; for (let i = 0; i < P.getCount(); i++) { P.getElement(i, v); if (D) D.getElement(i, d); WAIST = Math.max(WAIST, (v[1]+d[1]) * S + OY) } } }
-WAIST -= 0.01; console.log("waist", WAIST.toFixed(3));
+const wys = []; let WAIST = 0; for (const m of meshes) if (m.getName() === "Ward_pants") { const di = tIdx(m, "Dandy"); for (const p of m.listPrimitives()) { const P = p.getAttribute("POSITION"), D = p.listTargets()[di]?.getAttribute("POSITION"), v = [0,0,0], d = [0,0,0]; for (let i = 0; i < P.getCount(); i++) { P.getElement(i, v); if (D) D.getElement(i, d); wys.push((v[1]+d[1]) * S + OY) } } }
+wys.sort((a, b) => a - b); WAIST = Math.min(0.7, wys[Math.floor(wys.length * 0.97)] ?? 0.68) - 0.01; // pants top; a stray high vert never sets it console.log("waist", WAIST.toFixed(3));
 let fitted = 0, pushed = 0, pulled = 0;
 for (const m of meshes) { const name = m.getName(); if (SKIP.test(name)) continue; if (!/^(Top_|Bot_|Ward_|Neck_)/.test(name)) continue;
   const lname = name.toLowerCase(), gap = BOTTOM.test(lname) ? GAP.bottom : OUTER.test(lname) ? GAP.outer : GAP.top;
