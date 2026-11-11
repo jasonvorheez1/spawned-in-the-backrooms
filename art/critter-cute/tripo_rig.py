@@ -520,6 +520,18 @@ for _ in range(14):
         nb = [(i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)]
         n_[i, j] = y if not all(k in gy for k in nb) else max(gfloor[i, j], 0.5 * y + 0.125 * sum(gy[k] for k in nb))   # may sink into a lump, never float off the curve (the side-view beak)
     gy = n_
+# the old :3 chin bulged 2 cm further forward than the muzzle above it (the in-game point under the chin): below the
+# mouth line each column may only curve back from its mouth-height depth, so the chin rounds away like a real jaw
+_zc = 0.80; _ncap = 0
+for i in range(NX + 1):
+    col = [(j, grid[i, j][0].z) for j in range(NZ + 1) if (i, j) in gy]
+    if not col: continue
+    jr = min(col, key=lambda t: abs(t[1] - _zc))[0]; yref = gy[i, jr]
+    for j, z_ in col:
+        if z_ < _zc:
+            cap = yref + 0.9 * (_zc - z_) ** 2
+            if gy[i, j] < cap: gy[i, j] = cap; _ncap += 1
+print("chin capped cells", _ncap)
 for k, (co, uv_) in list(grid.items()): grid[k] = (Vector((co.x, gy[k], co.z)), uv_)
 npress = 0
 for o_ in (HEAD, BODY):
