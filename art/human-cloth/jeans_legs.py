@@ -68,7 +68,7 @@ for nv,uvs,mi,sm in fresh:
   for l,uv in zip(nf.loops,uvs):
     for u,x in zip(bm.loops.layers.uv.values(),uv): l[u].uv=x
 bm.normal_update()
-if False: bmesh.ops.delete(bm,geom=bridge,context='FACES_ONLY'); bm.to_mesh(o.data); bm.free(); o.data.update()
+bm.normal_update(); bm.to_mesh(o.data); bm.free(); o.data.update()
 print("BRIDGE resewn",len(bridge))
 # the imported custom normals still pointed across the old shared seam: those faces lit pale mid-stride. Recompute them from the split mesh
 bpy.context.view_layer.objects.active=o; o.select_set(True)
