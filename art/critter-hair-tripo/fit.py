@@ -90,7 +90,10 @@ def landmarks(o, lab, top_frac=None):
         z0, z1 = V[:, 2].min(), V[:, 2].max(); sel = V[:, 2] > z1 - top_frac * (z1 - z0)
     HV = V[sel]; c = HV.mean(0)
     blk = sel & (vlab == 2)
-    ec = V[blk].mean(0); f = Vector((ec[0] - c[0], ec[1] - c[1], 0)).normalized(); l = Z.cross(f)
+    ec = V[blk].mean(0); f = Vector((ec[0] - c[0], ec[1] - c[1], 0)).normalized(); 
+    if top_frac:  # the target body is authored square: its front is the nearest axis
+        f = Vector((round(f.x), 0, 0)) if abs(f.x) > abs(f.y) else Vector((0, round(f.y), 0))
+    l = Z.cross(f)
     F, L = V @ np.array(f[:]), V @ np.array(l[:]); cF, cL = c @ np.array(f[:]), c @ np.array(l[:])
     W = L[sel].max() - L[sel].min()
     eyes = blk & (F > cF) & (np.abs(L - cL) > 0.1 * W)
