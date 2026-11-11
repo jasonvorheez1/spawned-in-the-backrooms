@@ -383,7 +383,8 @@ for i in range(NX):
         if all(k in pid for k in q) and max(pv[pid[k]].y for k in q) - min(pv[pid[k]].y for k in q) < 0.05: pf.append(q)
 def inner(c, m):
     fi_ = (c.x - BOX[0]) / (BOX[1] - BOX[0]) * NX; fj_ = (c.z - BOX[2]) / (BOX[3] - BOX[2]) * NZ
-    return min(fi_, NX - f# no faces deleted, no holes: the head's own front vertices inside the box are pressed onto the smooth closed hull
+    return min(fi_, NX - fi_, fj_, NZ - fj_) > m
+# no faces deleted, no holes: the head's own front vertices inside the box are pressed onto the smooth closed hull
 # (eye bulges, sockets, lashes, old mouth flattened), easing back to the real surface at the rim; inner faces read one fur texel
 bm = _bm.new(); bm.from_mesh(hm); bm.faces.ensure_lookup_table(); uvk = bm.loops.layers.uv.active
 def cell(c): return (c.x - BOX[0]) / (BOX[1] - BOX[0]) * NX, (c.z - BOX[2]) / (BOX[3] - BOX[2]) * NZ
@@ -401,8 +402,7 @@ for f in bm.faces:
     if min(fi_, NX - fi_, fj_, NZ - fj_) < 2: continue
     for l in f.loops: l[uvk].uv = UVF
     f.material_index = 0; nlash += 1
-dead = []; pf = pf
-_index = 0; nlash += 1
+dead = []
 print("head front verts pressed", len(moved), "faces to fur", nlash)
 bm.to_mesh(hm); bm.free(); lift = len(dead)
 bpy.context.view_layer.objects.active = HEAD
