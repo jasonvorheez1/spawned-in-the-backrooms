@@ -248,8 +248,8 @@ const MESH_SWAP = {
     carpetponcho: 'cape',
   }
 }
-export let HUMAN = M.human ?? null // live: the menu's BODIES setting flips it (setStyle)
-export function setStyle(v) { const h = v === 'furry' ? null : (M.human ?? null); if (h !== HUMAN) HUMAN = h; return v === 'furry' ? 'furry' : 'human' }
+export let HUMAN = null // live: the menu's BODIES setting flips it (setStyle)
+export function setStyle(v) { const h = v === 'human' ? (M.human ?? null) : null; if (h !== HUMAN) HUMAN = h; return v === 'human' ? 'human' : 'furry' } // Shelly Nov 11: critters are the default again, humans only by pick
 const SKIN = ['#fde7d9', '#f3d2b3', '#e8c39c', '#d1a27b', '#c48d63', '#b07a52', '#9a6744', '#835538', '#6c442c', '#573522'] // her picks: pale to deep
 export const skinOf = (l) => l?.skin || SKIN[[...String(l?.fur || l?.species || '')].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % SKIN.length]
 // human bodies (art/human-base/build.py): the same parts and cloth_* slots as the furry bodies, skin tinted per look, eyes/brows tinted, face keys rolled per NPC

@@ -46,7 +46,7 @@ const CSS = `<style>
 export function salon(ctx, player) {
   const st = player.state
   const l = { ...C.default, ...(st.look || {}) }
-  const human = (st.bodyStyle ?? ctx.world.state?.bodyStyle) !== 'furry'
+  const human = (st.bodyStyle ?? ctx.world.state?.bodyStyle) === 'human'
   const tab = SERVICES.some(([k]) => k === st.salonTab) ? st.salonTab : 'hair'
   const chips = (k, list) => `<div class="chips">${list.map((v) => `<button class="${(l[k] ?? 'none') === v ? 'on' : ''}" onclick="${act(k, v)}">${nice(v)}</button>`).join('')}</div>`
   const dots = (k, list) => `<div class="dots">${(list || []).map((v) => `<button class="${l[k] === v ? 'on' : ''}" style="background:${/^#|^oklch|^rgb/.test(v) ? v : '#ff9fc8'}" title="${v}" onclick="${act(k, v)}">${/^#|^oklch|^rgb/.test(v) ? '' : v === 'none' ? '✕' : '♥'}</button>`).join('')}</div>`

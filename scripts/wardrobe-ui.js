@@ -80,7 +80,7 @@ export function wardrobe(ctx, player) {
   if (!st.wardrobeOpen) return ''
   const l = { ...C.default, ...(st.look || {}) }
   SL_LOOK = l
-  const human = (st.bodyStyle ?? ctx.world.state?.bodyStyle) !== 'furry' // human mode: no animal, fur, ears, snout or tail
+  const human = (st.bodyStyle ?? ctx.world.state?.bodyStyle) === 'human' // human mode: no animal, fur, ears, snout or tail
   const FURRY_SL = ['earS', 'snoutS', 'tailS', 'waistS', 'hipS', 'headS'], FURRY_FT = ['snouty', 'foxlike'] // the human bodies carry no keys for these
   const tabs = st.wrMenu ? TABS.slice(0, 2) : TABS // from the main menu: body and face only, clothes come from the world
   const tab = st.wrMenu && !['body', 'face'].includes(st.wrTab) ? 'body' : (st.wrTab || 'body')

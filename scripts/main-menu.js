@@ -88,7 +88,7 @@ export function onInput(ctx, input) {
     if (st.bodyStyle && ctx.world.state.bodyStyle !== st.bodyStyle) ctx.world.state.bodyStyle = st.bodyStyle // their saved pick rides into whichever room they wake in
     if (d.k === "start") { st.menuOpen = false; if (st.t0Done && st.madeChar && ctx.self.place !== "bonus") toHub(ctx); else if (ctx.self.place !== "bonus") { st.introFrom = ctx.self.place; ctx.cross(ctx.self, "intake") } } // after the tutorial, launch lands in the Bonus Room (johnadams2)
     if (d.k === "resume") st.menuOpen = false
-    if (d.k === "style") { st.bodyStyle = (st.bodyStyle ?? ctx.world.state.bodyStyle) === "furry" ? "human" : "furry"; ctx.world.state.bodyStyle = st.bodyStyle } // BODIES: the player's pick, saved; the room's characters follow it
+    if (d.k === "style") { st.bodyStyle = (st.bodyStyle ?? ctx.world.state.bodyStyle) === "human" ? "furry" : "human"; ctx.world.state.bodyStyle = st.bodyStyle } // BODIES: the player's pick, saved; the room's characters follow it
   }
   holdTime(ctx, st)
 }

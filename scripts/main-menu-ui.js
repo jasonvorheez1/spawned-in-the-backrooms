@@ -15,6 +15,6 @@ export function mainMenu(ctx, player, launch = false) {
   return `${CSS}<div id="mm" data-modal><div class="col">
     <h1>The Backrooms</h1>
     <button onclick="sendAction('mmenu',{k:'${k}'},{relockPointer:true})">${pause ? "RESUME" : "START"}</button><br>
-    <button style="font-size:clamp(12px,1vw,15px);margin-top:2vh" onclick="sendAction('mmenu',{k:'style'})">BODIES: ${(player.state?.bodyStyle ?? ctx.world.state?.bodyStyle) === "furry" ? "FURRY" : "HUMAN"}</button>
+    <button style="font-size:clamp(12px,1vw,15px);margin-top:2vh" onclick="sendAction('mmenu',{k:'style'})">BODIES: ${(player.state?.bodyStyle ?? ctx.world.state?.bodyStyle) !== "human" ? "FURRY" : "HUMAN"}</button>
   </div></div>`
 }
