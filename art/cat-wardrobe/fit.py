@@ -187,9 +187,12 @@ if os.environ.get("PROOF"):
     for pose in (os.environ.get("POSES") or "rest,walk").split(","):
         for pb in arm.pose.bones: pb.rotation_mode = "QUATERNION"; pb.rotation_quaternion = (1, 0, 0, 0)
         if pose == "idle":   # both arms hanging, as the game's Idle holds them
-            for n, q in (("LeftArm", (0, 0, -65)), ("RightArm", (0, 0, 65))):
+            from mathutils import Quaternion
+            for n, a in (("LeftArm", 68), ("RightArm", -68)):   # about the body's front axis, in world terms
                 pb = arm.pose.bones.get("mixamorig:" + n)
-                if pb: pb.rotation_mode = "XYZ"; pb.rotation_euler = [math.radians(v) for v in q]
+                if pb:
+                    bq = pb.bone.matrix_local.to_quaternion(); pb.rotation_mode = "QUATERNION"
+                    pb.rotation_quaternion = bq.inverted() @ Quaternion((0, 1, 0), math.radians(a)) @ bq
         if pose == "walk":
             for n, q in (("LeftUpLeg", (-40, 0, 0)), ("RightUpLeg", (35, 0, 0)), ("LeftArm", (0, 0, 60)), ("RightArm", (0, 0, -70)), ("RightForeArm", (0, 0, -40)), ("Spine1", (14, 0, 0))):
                 pb = arm.pose.bones.get("mixamorig:" + n)
