@@ -11,7 +11,7 @@ J = [o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith('Ward
 keep = set(bpy.data.objects)
 bpy.ops.import_scene.gltf(filepath=bod)
 new = [o for o in bpy.data.objects if o not in keep]
-B = max((o for o in new if o.type == 'MESH' and o.vertex_groups), key=lambda o: len(o.data.vertices))
+B = next(o for o in new if o.type == 'MESH' and o.name == 'Body')  # the bare skin, not the head or a garment
 mw = J.matrix_world
 vg = J.vertex_groups.get('LEGSEL') or J.vertex_groups.new(name='LEGSEL')
 sel = [v.index for v in J.data.vertices if (mw @ v.co).z < 0.78]
