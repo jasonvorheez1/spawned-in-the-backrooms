@@ -49,7 +49,8 @@ for i, p in enumerate(jp):
     if r < 1e-4: continue
     wr = wall_at(s, p.z, ai)
     if not wr: continue
-    want = wr - CLEAR
+    deep = min(1, max(0, (TOP - 0.03 - p.z) / 0.06))  # lower in the shaft the leg is wrapped tighter: the foot bends the boot there and the hem flicked out
+    want = max(0.028, wr - CLEAR - 0.022 * deep)
     if r <= want: continue
     t = 1.0 if p.z <= TOP else 1 - (p.z - TOP) / FADE; t = t * t * (3 - 2 * t)
     k = 1 + (want / r - 1) * t; worst = max(worst, r - want)
