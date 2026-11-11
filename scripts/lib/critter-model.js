@@ -342,7 +342,7 @@ export function bodyModel(l) {
   const banded = scoop && l?.sex === 'm' // Nov 11: the men's long sleeve carries a crew collar band up the neck (art/human-cloth/collar_band.py): the collar strip and upper chest stay hidden under it, shown they spiked out over the band as pale teeth
   const skin = { collar: scoop && !banded, // Nov 11: the neckline band cut off the torso (collar_split.py); the rest of the torso hides under the shirt, its shoulder teeth poked through
     torso: !covered || tank, torso_front: !covered || openFront || tank, torso_upper_front: !banded && (!covered || openFront || topRow?.kind === 'tank'), // a tank's deep neckline shows the chest under it: hiding it left a void and the neck region's saw edge in the V (shelly Nov 10: 'my breasts are cracked')
-    hips: !bottom, upperarms: !sleeves || grown, forearms: !longSleeves, hands: true, neck: true, thigh_hi: !bottom, thigh_low: !trousers && !longSkirt, shin_hi: !trousers && !longSkirt, shin_low: !trousers && !longSkirt && shoeRow?.kind !== 'boots', feet: !shoeRow }
+    hips: !bottom, upperarms: !sleeves || grown, forearms: !longSleeves, hands: true, neck: !banded, /* the body's neck ring poked out over the collar band as a jagged pale strip */ thigh_hi: !bottom, thigh_low: !trousers && !longSkirt, shin_hi: !trousers && !longSkirt, shin_low: !trousers && !longSkirt && shoeRow?.kind !== 'boots', feet: !shoeRow }
   for (const [region, visible] of Object.entries(skin)) parts['Skin_' + region] = { visible }
   for (const [slot, pre] of Object.entries(M.slots)) {
     const row = rowOf(slot, l[slot], l[CL.colourKey[slot]])
