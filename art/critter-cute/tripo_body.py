@@ -62,11 +62,15 @@ for o in ms:
         e = -.08
         mask[y0:y1 + 1, x0:x1 + 1] |= (l1 >= e) & (l2 >= e) & (l3 >= e)
     rgb = px[..., :3]; mx = rgb.max(-1); mn = rgb.min(-1); sat = (mx - mn) / np.maximum(mx, 1e-4)
+    for _ in range(6):   # grow into the UV gutters, so the islands' seams carry no cream line
+        g = mask.copy(); g[1:] |= mask[:-1]; g[:-1] |= mask[1:]; g[:, 1:] |= mask[:, :-1]; g[:, :-1] |= mask[:, 1:]; mask = g
     fur = mask & (sat > .45) & (mx > .3); cream = mask & (sat < .38) & (mx > .45)
-    col = np.median(rgb[fur], axis=0)
-    # keep the fur's own shading: scale the orange by the cream texel's brightness against the cream's median
-    lum = mx[cream] / np.median(mx[cream])
-    rgb[cream] = np.clip(col[None, :] * lum[:, None], 0, 1)
+    col = np.median(rgb[fur], axis=0); cm = np.median(mx[cream])
+    # a soft edge: the paler a texel, the more it takes the fur; the fur's own shading rides on its brightness
+    soft = mask & (mx > .35) & (sat < .62)
+    w = np.clip((.6 - sat[soft]) / .22, 0, 1)[:, None]
+    tgt = np.clip(col[None, :] * (mx[soft] / cm)[:, None], 0, 1)
+    rgb[soft] = rgb[soft] * (1 - w) + tgt * w
     px[..., :3] = rgb; img.pixels.foreach_set(px.ravel()); img.pack()
     print("BACK texels", int(cream.sum()), "fur", [round(float(v), 3) for v in col], "tris", len(tris))
 
