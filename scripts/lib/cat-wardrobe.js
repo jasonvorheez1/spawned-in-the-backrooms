@@ -49,6 +49,14 @@ export function skinParams(sex, look) {
   if (p.sock) { o.sock = 1; o.sHi = lerp(B.leg[2], B.leg[1], p.sock.top); put(o, 'sock', p.sock.c) }
   return o
 }
+// look.eyes: any '#rrggbb' or a named colour from EYE_COLORS; amber when unset
+export const EYE_COLORS = { amber: '#e0a020', green: '#2fbf5a', blue: '#3a8cf0', teal: '#1fbfb0', violet: '#9a5af0', pink: '#f06aa8', red: '#e03838', gold: '#f0d040', hazel: '#a8803a', brown: '#7a4a26', grey: '#9aa6b4', ice: '#9ae0ff' }
+function eyeRGB(e) {
+  const hex = (EYE_COLORS[e] || e || EYE_COLORS.amber).replace('#', '')
+  const n = parseInt(hex.length === 3 ? hex.split('').map(c => c + c).join('') : hex, 16)
+  const lin = (c) => Math.pow(c / 255, 2.2)
+  return { eyeR: lin((n >> 16) & 255), eyeG: lin((n >> 8) & 255), eyeB: lin(n & 255) }
+}
 // the whole model spec: her body with the painted skin on both fur slots (fur takes the tint, fur2 is her pale belly/markings and stays as drawn)
 export function catModel(sex, look) {
   const params = skinParams(sex, look)
@@ -64,7 +72,7 @@ export function catModel(sex, look) {
       fur: skin(fur), fur2: skin('#ffffff'),
       headFur: {
         kind: 'scripted', script: 'scripts/mat-catskin.js', color: fur,
-        params: { face, faceVScale: projection[0], faceVBias: projection[1], faceNear: projection[2] }
+        params: { face, faceVScale: projection[0], faceVBias: projection[1], faceNear: projection[2], ...eyeRGB(look?.eyes) }
       },
       innerEar: { color: look?.inner || '#d58e8a', roughness: 0.74 }
     }

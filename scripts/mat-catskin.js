@@ -21,9 +21,13 @@ export function material(ctx) {
     const pic = ctx.texture(String(ctx.params.face)).sample(vec2(u, v));
     // on the snout the projection grazes its sides and the mouth smears: muzzle paint only lands where the surface faces the front
     const facing = mix(float(1), smoothstep(0.32, 0.62, normalLocal.z), muzzle);
-    const col = mix(materialColor, pic.rgb, pic.a.mul(inside).mul(front).mul(facing));
+    // iris: the picture's blue above max(r,g) is the iris shading (art/cat-wardrobe/iris.py); look.eyes colours it, the pupil stays black
+    const grey = max(pic.r, pic.g), irisAmt = saturate(pic.b.sub(grey));
+    const eye = vec3(P("eyeR", 0.85), P("eyeG", 0.6), P("eyeB", 0.15));
+    const art = min(pic.rgb, vec3(grey, grey, grey)).add(eye.mul(irisAmt.mul(1.3)));
+    const col = mix(materialColor, art, pic.a.mul(inside).mul(front).mul(facing));
     m.colorNode = col;
-    m.emissiveNode = col.mul(0.06);
+    m.emissiveNode = col.mul(0.06).add(eye.mul(irisAmt.mul(pic.a).mul(inside).mul(front).mul(0.35)));   // a little glow so the iris reads in the dim yellow light
     m.roughness = 0.68;
     return m;
   }
