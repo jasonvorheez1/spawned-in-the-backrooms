@@ -67,8 +67,9 @@ def build(sex, kind, arm):
     if kind in ("cheeks", "burns"):
         for sx in (-1, 1):
             if kind == "cheeks":
-                dirs = [Vector((sx, -0.55, -0.25)), Vector((sx, -0.2, -0.45))]
-                grow(bm, hb, C, dirs, rng, 0.085 * S, 0.055 * S, 2, 0.02 * S, 0.3, Vector((sx * 0.7, 0.15, -0.55)).normalized())
+                # cheek tufts sit on the side of the face and point out and back, like an anime cat's whisker fluff, never under the jaw
+                dirs = [Vector((sx, 0.05, -0.15)), Vector((sx, 0.3, -0.3))]
+                grow(bm, hb, C, dirs, rng, 0.075 * S, 0.05 * S, 2, 0.018 * S, 0.35, Vector((sx * 0.85, 0.4, -0.25)).normalized())
             else:
                 # sideburns hang off the jaw like an anime cat's cheek tufts: low, short, swept back and down, never out like wings
                 dirs = [Vector((sx, -0.25, -0.55)), Vector((sx, 0.0, -0.6)), Vector((sx, 0.2, -0.45))]

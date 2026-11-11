@@ -49,7 +49,7 @@ masks:
 
 # fluff types (art/cat-wardrobe/fluff.py): soft clumps skinned to the cat, white base tinted with her fur. look.fluff: a list of these keys
 fluff:
-  cheeks: { f: '/cdn/value.3642e9647ef4093ad7145420b2dd67b2430737e2f2cbbd0f73db310311a5d493.glb', m: '/cdn/value.f93433684f8928db463f90675663a4734127ee45d6a0398aa1be3e58439ef94b.glb' }
+  cheeks: { f: '/cdn/value.2b4da82638ebda11f6a9db4de60bc3cb3bb3280a8eb88d44533d11a9bc74611d.glb', m: '/cdn/value.9da1f7d7c4ecff824c031b6fa92e7426d669e1afc99245056906733239910f4c.glb' }
   burns: { f: '/cdn/value.a55f242162c98b5ec7f83ae204da342c9aec6d9b09c5c09627e95df83de0ce84.glb', m: '/cdn/value.fdf5ebdab38981ce716f87d750254c6b609058674c16f958e5ff3e05adb4d9dc.glb' }
   crest: { f: '/cdn/value.313a3e3ccbb6abe824b5c31fc09df0a865d0b59d18160d550848721c0747ec05.glb', m: '/cdn/value.a3dbf411e9948f95c24b3c8649d898506c9963d00ac91ff030f0703d0dedec96.glb' }
   lynx: { f: '/cdn/value.f8d0a6820ef8d164f0a5b8e2b9c219a1dcc2c8b02f8293b9ea9239a7f82a2e26.glb', m: '/cdn/value.766e25e68619e22247fc946c5c3699921b7261ec3365368c086818330e42cb18.glb' }
