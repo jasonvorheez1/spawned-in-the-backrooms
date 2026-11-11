@@ -93,7 +93,7 @@ const SNOUT_KEY = { long: 'Snout_Long', pointy: 'Snout_Pointy', flat: 'Snout_Fla
 // how far each snout key goes: pointy at full read as a beak (Shelly #218xxx 'too silly'), long reined in with it
 const TAIL_KEY = { fluffy: 'Tail_Fluffy', bob: 'Tail_Bob', puff: 'Tail_Puff', whip: 'Tail_Whip', curl: 'Tail_Curl' }
 const SNOUT_AMT = { pointy: 0.4, long: 0.6, flat: 1, puff: 1 }
-const EAR_HIDE = 3
+const EAR_HIDE = 1
 export function catMorph(look) {
   const m = chestOf(look)
   for (const k of Object.values(SNOUT_KEY)) m[k] = 0
