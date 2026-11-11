@@ -6,14 +6,14 @@ import bpy, sys, math
 from mathutils import Vector
 a = sys.argv[sys.argv.index("--") + 1:]; SRC, OUT = a[0], a[1]; CLOTH = len(a) > 2
 bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(filepath=SRC)
-CX, CZ, SIG, AMP = 0.040, 0.488, 0.031, 0.048          # glb units: body 0.668 tall, chest line at Spine1/2
-if CLOTH: SIG, AMP = 0.035, 0.050                       # cloth spans the gap between the two forms
+CX, CZ, SIG, AMP = 0.040, 0.527, 0.026, 0.044          # glb units: body 0.668 tall; armpit ~0.55, belly peaks at 0.40, so the forms sit just under the armpit line (0.488 read as a belly, Shelly)
+if CLOTH: SIG, AMP = 0.029, 0.046                       # cloth spans the gap between the two forms
 def field(p, n):
     if p.y > -0.055 or n.y > 0.15: return Vector((0, 0, 0))
     best = Vector((0, 0, 0)); bl = 0
     for sx in (-1, 1):
         dx = p.x - sx * CX; dz = p.z - CZ
-        dz = dz / (1.35 if dz < 0 else 0.85)            # fuller underneath, flatter toward the collarbone
+        dz = dz / (1.15 if dz < 0 else 0.8)            # fuller underneath, flatter toward the collarbone
         w = math.exp(-(dx * dx + dz * dz) / (2 * SIG * SIG))
         if CLOTH and abs(p.x) < CX: w = max(w, math.exp(-(dz * dz) / (2 * SIG * SIG)) * 0.92)
         if w > bl: bl = w; best = Vector((sx * 0.12 * AMP * w, -AMP * w, -0.18 * AMP * w))
