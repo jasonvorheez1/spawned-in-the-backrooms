@@ -127,7 +127,7 @@ src = src.replace('"Wide": [(pc[0] + (x - pc[0]) * .76, pc[1] + (y - pc[1]) * .7
 src = src.replace('Oc, Or = (0, -.020), .024', 'Oc, Or = (0, -.015), .014')
 src = src.replace('"mouth": "#4a1622"', '"mouth": "#7a2638"')
 # blep: the tongue tip pokes out lower and further forward so it reads
-src = src.replace('tc_blep = (0, -.018)', 'tc_blep = (0, -.010)').replace('t_blep = [tc_blep] + [(tc_blep[0] + x * .78, tc_blep[1] + y * 1.15 - .004) for x, y in tp]', 't_blep = [tc_blep] + [(tc_blep[0] + x * .80, tc_blep[1] + (y * 1.9 if y < 0 else y * .6) - .004) for x, y in tp]')
+src = src.replace('tc_blep = (0, -.018)', 'tc_blep = (0, .002)').replace('t_blep = [tc_blep] + [(tc_blep[0] + x * .78, tc_blep[1] + y * 1.15 - .004) for x, y in tp]', 't_blep = [tc_blep] + [(tc_blep[0] + x * .80, tc_blep[1] + (y * 2.5 if y < 0 else y * .5) - .002) for x, y in tp]')
 src = src.replace('"Open": .0154, "Blep": .0160}', '"Open": .0154, "Blep": .0215}')
 FACEFIX = {"grin": {"Smile": 1, "Open": .85}, "shock": {"Wide": 1, "O": 1, "EyeTall": .4},
            "blep": {"Smile": .7, "Blep": 1, "Half": .2}, "pout": {"Frown": .5, "Half": .45, "Angry": .4, "Blush": 1},
