@@ -31,6 +31,8 @@ export function skinParams(sex, look) {
   for (const n of ['top', 'bot', 'sock', 'trim']) put(o, n, '#ffffff')
   if (p.top) { const t = p.top; o.top = 1; o.tLo = lerp(B.top[0], B.top[1], t.hem); o.tSl = armAt(B, t.sleeve); o.nF = B.neck[1] * t.scoop; o.nB = B.neck[2] * Math.min(t.scoop, 1.1); o.tpat = t.pat; put(o, 'top', t.c); if (t.band) { o.tband = 1; put(o, 'trim', t.trim || '#d98a9a') } }
   if (p.bot) { const b = p.bot; o.bot = 1; o.bLo = legAt(B, b.leg); o.bHi = B.waist + b.rise; o.bpat = b.pat; put(o, 'bot', b.c) }
+  { const l = { ...W.defaults[sex], ...(look || {}) }   // modelled garments tuck the skin under them
+    o.tuckT = W.models[l.topw] ? 0.014 : 0; o.tuckB = W.models[l.botw] ? 0.01 : 0; o.tuckS = W.models[l.shoes] ? 0.006 : 0 }
   if (p.sock) { o.sock = 1; o.sHi = lerp(B.leg[2], B.leg[1], p.sock.top); put(o, 'sock', p.sock.c) }
   return o
 }

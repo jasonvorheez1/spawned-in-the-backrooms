@@ -2,7 +2,7 @@
 // from the body's bind-pose position (positionGeometry: metres, y up, front +z, arms out along x), so a hem is a clean line and nothing can clip or tear.
 // The material colour is the fur tint (white fur picture × colour). Every number and colour is a live param (ctx.param): one compiled program dresses every cat.
 // params: fur (picture), top/bot/sock = 0|1, pats, hems (see scripts/lib/cat-wardrobe.js catSkin), colours as r,g,b triples.
-import { uv, materialColor, positionGeometry, positionWorld, normalWorld, cameraPosition, normalize, dot, pow, saturate, vec2, vec3, float, abs, fract, sin, mix, smoothstep, step, max, min, clamp, mx_noise_float, mx_fractal_noise_float } from "builtin/tsl";
+import { uv, materialColor, positionGeometry, positionLocal, normalLocal, positionWorld, normalWorld, cameraPosition, normalize, dot, pow, saturate, vec2, vec3, float, abs, fract, sin, mix, smoothstep, step, max, min, clamp, mx_noise_float, mx_fractal_noise_float } from "builtin/tsl";
 import { MeshStandardNodeMaterial } from "builtin/three";
 
 const E = 0.0025; // edge softness, metres
@@ -63,6 +63,10 @@ export function material(ctx) {
     const bd = inside(topD, 0).mul(onTop).mul(smoothstep(0.016 + E, 0.016 - E, q.y.sub(tLo)));
     col = mix(col, C("trim"), bd.mul(0.9));
   }
+  // tuck: under a modelled garment the skin itself sinks inward (metres, fading in over 2 cm from the edge) so a sleeve or hem bending a little differently never shows fur through it
+  const tuck = (d, n) => smoothstep(0.003, 0.022, d).mul(P(n, 0));
+  const sink = max(max(tuck(topD, "tuckT").mul(onTop), tuck(botD, "tuckB").mul(onBot)), tuck(sockD, "tuckS").mul(onSock));
+  m.positionNode = positionLocal.sub(normalLocal.mul(sink));
   const N = normalize(normalWorld), V = normalize(cameraPosition.sub(positionWorld)), fres = pow(float(1).sub(saturate(abs(dot(N, V)))), 3.0);
   m.colorNode = col;
   m.emissiveNode = col.mul(0.06).add(col.mul(0.5).add(vec3(0.16, 0.15, 0.14)).mul(fres).mul(0.16).mul(cloth));
