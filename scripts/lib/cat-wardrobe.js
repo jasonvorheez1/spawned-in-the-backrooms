@@ -48,7 +48,7 @@ export function catChildren(sex, look) {
   const l = { ...W.defaults[sex], ...(look || {}) }, out = []
   for (const [slot, ck] of [['topw', 'top'], ['botw', 'bottom'], ['shoes', 'shoec'], ['hat', 'hatc']]) {
     const g = W.models[l[slot]]; if (!g?.[sex]) continue
-    out.push({ id: 'cw-' + slot, attachment: { skin: true }, model: { id: g[sex], forward: '+z', ...(g.tint === false ? {} : { materials: { cloth: { kind: 'scripted', script: 'scripts/mat-cloth.js', color: l[ck] || '#ffffff', params: { pat: g.pat || 'weave' } } } }) } })
+    out.push({ id: 'cw-' + slot, attachment: { skin: true }, model: { id: g[sex], forward: '+z', ...(g.tint === false ? {} : { materials: { cloth: { kind: 'scripted', script: 'scripts/mat-cloth.js', color: l[ck] || '#ffffff', params: { pat: g.pat || 'weave' } } } }) }, ...(slot === 'topw' ? { morph: chestOf(look) } : {}) })
   }
   return out
 }
