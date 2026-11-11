@@ -38,7 +38,7 @@ CFG = {
              rows=[(0.22, "#d98a9a"), (1.0, "#f3ead8")]),
     bot=dict(lo=0.245, hi=0.435, off=0.006, rows=[(0.2, "#4a6c9c"), (0.24, "#3f5f8c"), (1.0, "#5b7fb0")]),
     faces=["f_neutral", "f_ko"]),
- "male": dict(src="value.389310dd2c44bde2f302548e56ae6dc7d1d7174dd44a4bb29332fc672e5cfce7.glb", zc=0.748,
+ "male": dict(src="value.389310dd2c44bde2f302548e56ae6dc7d1d7174dd44a4bb29332fc672e5cfce7.glb", zc=0.742,
     spine_y=-0.082, hip_z=0.40, spine_z=(0.47, 0.54, 0.61, 0.695, 0.745), arm=(0.11, 0.27, 0.405, 0.482, 0.668, -0.08), sh_x=0.03,
     legs=((0.075, 0.40), (0.10, 0.21), (0.105, 0.075), (0.11, 0.03), -0.075, -0.15),
     tail=((0.05, 0.06, 0.38), (0.11, 0.16, 0.37), (0.18, 0.23, 0.45), (0.25, 0.28, 0.56)), tail_y=0.08, neck_r=0.11,
@@ -84,6 +84,7 @@ while stack:
         for g in e.link_faces:
             if g.index not in head and g.calc_center_median().z > ZC:
                 head.add(g.index); stack.append(g)
+head |= {f.index for f in bm.faces if f.calc_center_median().z > ZC + 0.06}   # loose ears (male source)
 print("head faces", len(head), "of", len(bm.faces)); bm.free()
 def subset(name, keep):
     o = src.copy(); o.data = src.data.copy(); o.name = o.data.name = name; sc.collection.objects.link(o)
@@ -299,6 +300,7 @@ FACE = bpy.data.objects.new("Face", fm); sc.collection.objects.link(FACE); skin_
 used = {fm.loops[li].vertex_index for p in fm.polygons for li in p.loop_indices}
 print("face decal verts", len(verts), "quads", len(faces))
 FACEIMG = {nm: bpy.data.images.load(f"{OUT}/faces/{nm}.png") for nm in C["faces"]}
+for im_ in FACEIMG.values(): im_.use_fake_user = True
 mf = bpy.data.materials.new("face"); mf.use_nodes = True; nt = mf.node_tree
 fb = next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"); FT = nt.nodes.new("ShaderNodeTexImage"); FT.image = FACEIMG[C["faces"][0]]
 FT.extension = "CLIP"; nt.links.new(FT.outputs["Color"], fb.inputs["Base Color"]); nt.links.new(FT.outputs["Alpha"], fb.inputs["Alpha"])
@@ -430,7 +432,7 @@ dg = bpy.context.evaluated_depsgraph_get(); arm = next(o for o in bpy.data.objec
 print("AUDIT bones", len(arm.data.bones), ",".join(b.name.replace(P, "") for b in arm.data.bones))
 tris = 0; zall = []
 for o in bpy.data.objects:
-    if o.type != "MESH": continue
+    if o.type != "MESH" or not o.vertex_groups: continue   # importer's bone-shape icosphere
     e = o.evaluated_get(dg); m = e.to_mesh(); m.calc_loop_triangles(); tris += len(m.loop_triangles); zall += [(e.matrix_world @ v.co).z for v in m.vertices]
     print("AUDIT mesh", o.name, "slots", [mm.name for mm in o.data.materials], "tris", len(m.loop_triangles), "groups", len(o.vertex_groups),
           "shapekeys", [kb.name for kb in o.data.shape_keys.key_blocks] if o.data.shape_keys else [])
