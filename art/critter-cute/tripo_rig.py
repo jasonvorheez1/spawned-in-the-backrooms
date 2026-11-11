@@ -304,7 +304,7 @@ lum = 0.2126 * px[..., 0] + 0.7152 * px[..., 1] + 0.0722 * px[..., 2]
 _bu = BODY.data.uv_layers.active.data; _nb = 0; _fm = float(np.median(lum[fur_all]))
 for poly in BODY.data.polygons:
     c = poly.center
-    if c.y > -0.03 or poly.normal.y > 0.3 or c.z < ZC - 0.03 or not (BOX[0] - 0.02 < c.x < BOX[1] + 0.02): continue
+    if c.y > -0.03 or poly.normal.y > 0.3 or c.z < BOX[2] - 0.18 or not (BOX[0] - 0.02 < c.x < BOX[1] + 0.02): continue
     us = [_bu[li].uv for li in poly.loop_indices]
     i0, i1 = int(min(u.x for u in us) * TW) - 1, int(max(u.x for u in us) * TW) + 2
     j0, j1 = int(min(u.y for u in us) * TH) - 1, int(max(u.y for u in us) * TH) + 2
@@ -418,15 +418,15 @@ for f in bm.faces:
 for f in bm.faces:
     c = f.calc_center_median()
     if c.y > -0.03: continue
-    inb = BOX[0] - 0.02 < c.x < BOX[1] + 0.02 and BOX[2] - 0.09 < c.z < BOX[3] + 0.02 and f.normal.y < 0.5   # down to the chin: the old muzzle and ':3' sat below the raised face
-    near = BOX[0] - 0.07 < c.x < BOX[1] + 0.07 and BOX[2] - 0.09 < c.z < BOX[3] + 0.06
-    dark = near and min(lum[int(l[uvk].uv.y * TH) % TH, int(l[uvk].uv.x * TW) % TW] for l in f.loops) < 0.38
+    inb = BOX[0] - 0.02 < c.x < BOX[1] + 0.02 and BOX[2] - 0.15 < c.z < BOX[3] + 0.02 and f.normal.y < 0.5   # down to the chin: the old muzzle and ':3' sat below the raised face
+    near = BOX[0] - 0.10 < c.x < BOX[1] + 0.10 and BOX[2] - 0.15 < c.z < BOX[3] + 0.06
+    dark = near and min(lum[int(l[uvk].uv.y * TH) % TH, int(l[uvk].uv.x * TW) % TW] for l in f.loops) < 0.5
     if inb or dark:
         for l in f.loops: l[uvk].uv = UVF
         f.material_index = 0; nlash += 1
 # the old sculpt still stood in the mesh: the ':3' relief under the jaw and the lash flaps at the eye corners (outside the press box)
 # shade through the fur. Laplacian-relaxed in place: front verts under the box down to the throat, and the side bands by the eyes
-_relax = [v for v in bm.verts if v.index not in moved and v.co.y < -0.01 and (not v.is_boundary or v.co.z > BOX[2]) and (
+_relax = [v for v in bm.verts if v.index not in moved and not v.is_boundary and v.co.y < -0.01 and (
     (BOX[0] - 0.03 < v.co.x < BOX[1] + 0.03 and BOX[2] - 0.13 < v.co.z < BOX[2] + 0.015) or
     ((BOX[0] - 0.09 < v.co.x < BOX[0] + 0.01 or BOX[1] - 0.01 < v.co.x < BOX[1] + 0.09) and BOX[2] < v.co.z < BOX[3] + 0.03))]
 for _ in range(14): _bm.ops.smooth_vert(bm, verts=_relax, factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
