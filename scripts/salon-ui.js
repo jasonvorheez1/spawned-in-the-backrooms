@@ -1,6 +1,8 @@
 // Glow Up Salon (Bonus Room, east ground floor): the in-world makeover menu. A salon service card, not the intake form.
 // Every button sends the same 'dress' action scripts/critter.js already handles; 'stab' picks the service tab.
 import C from './lib/data/critter.yml'
+import M from './lib/data/critter-models.yml'
+const PICKS = Object.keys(M.species || {}).filter((s) => s !== 'human' && s !== 'faceling') // every species with a head; facelings are the mall's staff
 const SERVICES = [['hair', 'Hair', '✂'], ['face', 'Face', '✿'], ['body', 'Body', '◐'], ['wear', 'Clothes', '♡']]
 const NM = { m: 'boy', f: 'girl', none: 'none', longsleeve: 'long sleeve', pjpants: 'pj pants', pajamas: 'pj top', longskirt: 'long skirt', tophat: 'top hat', partyhat: 'party hat', bowtie: 'bow tie', fullbeard: 'full beard' }
 const nice = (v) => NM[v] ?? String(v ?? 'none').replace(/^[mf]_/, '').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ')
@@ -68,7 +70,7 @@ export function salon(ctx, player) {
       + row('Cheeks', '') + dots('blush', C.blush) + row('Resting face', nice(l.expr)) + chips('expr', C.expr) + row('Demeanor', nice(l.trait)) + chips('trait', C.trait)
   } else if (tab === 'body') {
     const FURRY = ['earS', 'snoutS', 'tailS', 'waistS', 'hipS', 'headS']
-    body = (human ? '' : row('Species', nice(l.species)) + chips('species', C.species.filter((s) => s !== 'human' && s !== 'faceling'))) // facelings are the mall's staff, never a pick
+    body = (human ? '' : row('Species', nice(l.species)) + chips('species', PICKS))
       + row('Body', nice(l.sex)) + chips('sex', C.sex)
       + row('Stature', `${Math.round(170 * (Number(l.heightS) || 1))} cm`) + `<div class="card">${sliders((k) => k === 'heightS' || k === 'buildS')}</div>`
       + (human ? row('Skin', '') + dots('skin', C.skin) : row('Fur', '') + dots('fur', C.fur))
