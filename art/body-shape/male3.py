@@ -37,7 +37,7 @@ def run(src, out, fld):
     mid = np.abs(T[:, 0]) < .025; zs = []
     for a, b in zip(bins[:-1], bins[1:]):
         m = mid & (T[:, 1] >= a) & (T[:, 1] < b); zs.append(T[m, 2].max() if m.any() else np.nan)
-    zs = np.array(zs); zs = np.where(np.isnan(zs), np.nanmax(zs), zs); yc = (bins[:-1] + bins[1:]) / 2
+    zs = np.array(zs); med = np.nanmedian(zs); zs = np.where(np.isnan(zs) | (zs < med - .03), med, zs); yc = (bins[:-1] + bins[1:]) / 2
     print('sternum z range', round(float(zs.min()), 3), round(float(zs.max()), 3))
     for name, P, off, st, at, Jt, Wt, joints, M, Pw in prs:
         D = np.zeros_like(Pw); x, y, z = Pw[:, 0], Pw[:, 1], Pw[:, 2]; ax_ = np.abs(x)
@@ -46,7 +46,7 @@ def run(src, out, fld):
         chestB = ss(yS1 - .02, yS2 - .02, y) * (1 - ss(yS2 + .07, yN - .03, y))
         zline = np.interp(y, yc, zs) + PEC * ss(.02, .07, ax_) * (1 - ss(.12, .16, ax_))
         over = np.maximum(0, z - zline) * (z > 0)
-        D[:, 2] -= FLAT * over * chestB * inside
+        D[:, 2] -= np.minimum(FLAT * over, .035) * chestB * inside; c1 = np.abs(D).max()
         # hips: the outer pelvis (past 6 cm from centre) pulled in; fades by mid thigh and above the waist
         hipB = ss(yL - .16, yL - .04, y) * (1 - ss(yS - .02, yS + .06, y))
         outer = np.maximum(0, ax_ - .06)
@@ -54,7 +54,7 @@ def run(src, out, fld):
         D[:, 2] += HIP * .35 * hipB * np.minimum(z, 0) * (z < -.04)   # a flatter seat
         # lats/upper back: wider under the arms, tapering down to the waist
         latB = ss(yS1 + .02, yS2, y) * (1 - ss(yS2 + .08, yN - .04, y))
-        D[:, 0] += LAT * latB * x * inside * (1 - .5 * (z > 0))
+        D[:, 0] += LAT * latB * x * inside * (1 - .5 * (z > 0)); c2 = np.abs(D).max()
         # deltoid: radial swell near the shoulder about the arm bone, by Arm weight
         for k in range(4):
             for b, (h, t) in seg.items():
@@ -66,6 +66,7 @@ def run(src, out, fld):
                 rn = r / (np.linalg.norm(r, axis=1, keepdims=True) + 1e-9)
                 prof = ss(0, .12, u) * (1 - ss(.25, .55, u)) * (.4 + .6 * np.clip(rn[:, 1], 0, 1) + .3 * np.abs(rn[:, 2]))  # top/front/back, not the pit
                 D += (w * DELT * prof)[:, None] * r
+        if np.abs(D).max() > .02: print(name, 'chest/lat', round(c1*1000), round(c2*1000), 'all', round(float(np.abs(D).max())*1000))
         Dl = np.einsum('vij,vj->vi', np.linalg.inv(M[:, :3, :3]), D); NP = P + Dl; put(d, off, st, NP)
         a = J['accessors'][at['POSITION']]; a['min'] = NP.min(0).tolist(); a['max'] = NP.max(0).tolist()
         pts.append(Pw); dls.append(D)
