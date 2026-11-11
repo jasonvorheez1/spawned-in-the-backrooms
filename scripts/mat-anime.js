@@ -27,7 +27,6 @@ export function material(ctx) {
     const band = smoothstep(0.46, 0.56, h).mul(float(1).sub(smoothstep(0.66, 0.8, h)));
     const streak = mx_noise_float(g.mul(vec3(90, 6, 90))).mul(0.5).add(0.5);
     col = base.mul(float(0.82).add(streak.mul(0.22)));
-    m.side = 2; // hair cards draw both faces: one-sided, every card turned away from the eye vanished and the back of the head showed holes (Nov 11)
     if (ctx.params.tex) { // the hair file's own strand map: its alpha cuts each card into strands, its grey is the strand shading (Nov 10: shards were cards drawn solid)
       const t = ctx.texture(String(ctx.params.tex)).sample(uv());
       const lum = t.r.mul(0.3).add(t.g.mul(0.59)).add(t.b.mul(0.11));
