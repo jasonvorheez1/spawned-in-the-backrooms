@@ -10,7 +10,7 @@ const { dequantize, quantize, meshopt, sparse } = await pkg("@gltf-transform/" +
 const { MeshoptDecoder, MeshoptEncoder } = await pkg("mesh" + "optimizer");
 await MeshoptDecoder.ready; await MeshoptEncoder.ready;
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({ "meshopt.decoder": MeshoptDecoder, "meshopt.encoder": MeshoptEncoder });
-const [, , src, out] = process.argv;
+const [, , src, out, mode] = process.argv; const FOLD = mode === "fold"; // fold: Andy rides inside Dandy, one morph target
 const S = 0.625, OY = 0.583, OZ = -0.002;
 const sm = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t) };
 const bump = (a, b, c, d, x) => sm(a, b, x) * (1 - sm(c, d, x));
@@ -39,7 +39,7 @@ const doc = await io.read(src);
 let n = 0;
 for (const mesh of doc.getRoot().listMeshes()) {
   const names = [...(mesh.getExtras()?.targetNames ?? [])];
-  if (names.includes("Andy")) continue;
+  if (names.includes("Andy")) continue; // (fold mode keeps the name list as is)
   const di = names.indexOf("Dandy");
   for (const prim of mesh.listPrimitives()) {
     const pos = prim.getAttribute("POSITION"), dt = di >= 0 ? prim.listTargets()[di]?.getAttribute("POSITION") : null, cnt = pos.getCount(), d = new Float32Array(cnt * 3), v = [0, 0, 0], e = [0, 0, 0];
@@ -48,13 +48,17 @@ for (const mesh of doc.getRoot().listMeshes()) {
       const wx = v[0] * S, wy = v[1] * S + OY, wz = v[2] * S + OZ, f = field(wx, wy, wz, mesh.getName());
       d[i * 3] = (f[0] - wx) / S; d[i * 3 + 1] = (f[1] - wy) / S; d[i * 3 + 2] = (f[2] - wz) / S
     }
+    if (FOLD && dt) { // fold Andy into Dandy: the game tore every garment on a second morph target, one target draws clean
+      const e2 = [0, 0, 0]; const fd = new Float32Array(cnt * 3); for (let i = 0; i < cnt; i++) { dt.getElement(i, e2); fd[i * 3] = e2[0] + d[i * 3]; fd[i * 3 + 1] = e2[1] + d[i * 3 + 1]; fd[i * 3 + 2] = e2[2] + d[i * 3 + 2] }
+      prim.listTargets()[di].setAttribute("POSITION", doc.createAccessor().setType("VEC3").setArray(fd).setBuffer(pos.getBuffer())); continue }
     const acc = doc.createAccessor().setType("VEC3").setArray(d).setBuffer(pos.getBuffer());
-    const t = doc.createPrimitiveTarget("Andy").setAttribute("POSITION", acc);
+    const t = doc.createPrimitiveTarget(FOLD ? "Dandy" : "Andy").setAttribute("POSITION", acc);
     const other = prim.listTargets()[0];
     if (other) for (const sem of other.listSemantics()) if (sem !== "POSITION") t.setAttribute(sem, doc.createAccessor().setType("VEC3").setArray(new Float32Array(cnt * 3)).setBuffer(pos.getBuffer()));
     prim.addTarget(t);
   }
-  mesh.setExtras({ ...(mesh.getExtras() ?? {}), targetNames: [...names, "Andy"] });
+  if (FOLD && di >= 0) { n++; continue }
+  mesh.setExtras({ ...(mesh.getExtras() ?? {}), targetNames: [...names, FOLD ? "Dandy" : "Andy"] });
   mesh.setWeights([...mesh.getWeights(), 0]); n++;
 }
 // Nov 11: no transform pass: dequantize/sparse/meshopt re-packed the base and pruned 126 skins, and the served file tore every garment into spikes; the file is written uncompressed
