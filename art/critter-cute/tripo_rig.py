@@ -352,7 +352,7 @@ for _ in range(3): clo = (clo + np.roll(clo, 1, 0) + np.roll(clo, -1, 0) + np.ro
 # grid skin (the face's closed hull in the middle, easing to the real surface at the rim) takes their place, textured from the head's own fur
 from mathutils.interpolate import poly_3d_calc
 import bmesh as _bm
-VAL = clo > -1; hgt = np.where(np.isnan(hgt), clo, hgt); bvh0 = BVHTree.FromObject(HEAD, bpy.context.evaluated_depsgraph_get()); hm = HEAD.data; uvl = hm.uv_layers.active.data
+H0 = hgt.copy(); VAL = ~np.isnan(hgt); hgt = np.where(np.isnan(hgt), clo, hgt); bvh0 = BVHTree.FromObject(HEAD, bpy.context.evaluated_depsgraph_get()); hm = HEAD.data; uvl = hm.uv_layers.active.data
 pv, puv, pmat, pid = [], [], [], {}
 for i in range(NX + 1):
     for j in range(NZ + 1):
@@ -383,26 +383,27 @@ for i in range(NX):
         if all(k in pid for k in q) and max(pv[pid[k]].y for k in q) - min(pv[pid[k]].y for k in q) < 0.05: pf.append(q)
 def inner(c, m):
     fi_ = (c.x - BOX[0]) / (BOX[1] - BOX[0]) * NX; fj_ = (c.z - BOX[2]) / (BOX[3] - BOX[2]) * NZ
-    return min(fi_, NX - fi_, fj_, NZ - fj_) > m
-bm = _bm.new(); bm.from_mesh(hm); bm.faces.ensure_lookup_table()
-dead = [f for f in bm.faces if f.calc_center_median().y < -0.03 and inner(f.calc_center_median(), 0.6)]
-_bm.ops.delete(bm, geom=dead, context="FACES")
-uvk = bm.loops.layers.uv.active; dk = bm.verts.layers.deform.verify(); gi_ = HEAD.vertex_groups[P + "Head"].index
-bv = []
-for co in pv:
-    v = bm.verts.new(co); v[dk][gi_] = 1.0; bv.append(v)
-for q in pf:
-    f = bm.faces.new([bv[pid[k]] for k in q]); f.smooth = True
-    f.material_index = int(sum(pmat[pid[k]] for k in q) >= 2)
-    for l in f.loops: l[uvk].uv = UVC if f.material_index else UVF   # one flat texel per face: no UV smear across the atlas
-nlash = 0   # lash tips that poke past the patch rim turn fur-coloured (no holes cut)
+    return min(fi_, NX - f# no faces deleted, no holes: the head's own front vertices inside the box are pressed onto the smooth closed hull
+# (eye bulges, sockets, lashes, old mouth flattened), easing back to the real surface at the rim; inner faces read one fur texel
+bm = _bm.new(); bm.from_mesh(hm); bm.faces.ensure_lookup_table(); uvk = bm.loops.layers.uv.active
+def cell(c): return (c.x - BOX[0]) / (BOX[1] - BOX[0]) * NX, (c.z - BOX[2]) / (BOX[3] - BOX[2]) * NZ
+moved = set()
+for v in bm.verts:
+    fi_, fj_ = cell(v.co); i, j = int(round(fi_)), int(round(fj_))
+    if not (0 <= i <= NX and 0 <= j <= NZ) or v.co.y > -0.03 or np.isnan(H0[i, j]): continue
+    if v.co.y > -H0[i, j] + 0.02: continue          # behind the front surface (inside / back of head): leave
+    e = min(fi_, NX - fi_, fj_, NZ - fj_); w = min(1.0, max(0.0, (e - 1) / 7.0)); w = w * w * (3 - 2 * w)
+    v.co.y = -(w * clo[i, j] + (1 - w) * H0[i, j]); moved.add(v.index)
+nlash = 0
 for f in bm.faces:
-    c = f.calc_center_median()
-    if c.y > -0.03 or not (BOX[0] - 0.04 < c.x < BOX[1] + 0.04 and BOX[2] - 0.02 < c.z < BOX[3] + 0.04) or f.verts[0] in bv: continue
-    if min(lum[int(l[uvk].uv.y * TH) % TH, int(l[uvk].uv.x * TW) % TW] for l in f.loops) < 0.2:
-        for l in f.loops: l[uvk].uv = UVF
-        f.material_index = 0; nlash += 1
-print("lash faces recoloured", nlash)
+    if not all(v.index in moved for v in f.verts): continue
+    fi_, fj_ = cell(f.calc_center_median())
+    if min(fi_, NX - fi_, fj_, NZ - fj_) < 2: continue
+    for l in f.loops: l[uvk].uv = UVF
+    f.material_index = 0; nlash += 1
+dead = []; pf = pf
+_index = 0; nlash += 1
+print("head front verts pressed", len(moved), "faces to fur", nlash)
 bm.to_mesh(hm); bm.free(); lift = len(dead)
 bpy.context.view_layer.objects.active = HEAD
 if HEAD.data.has_custom_normals: bpy.ops.mesh.customdata_custom_splitnormals_clear()   # old normals kept the sockets' shading
