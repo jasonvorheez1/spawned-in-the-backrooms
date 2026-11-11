@@ -51,6 +51,60 @@ key("Ear_Small", lambda: ears(lambda p, sx: Vector((p.x * 0.85, p.y, p.z * 0.6))
 key("Ear_Fold", lambda: ears(lambda p, sx: Matrix.Rotation(math.radians(80) * min(1, max(0, p.z / (0.1 * S))), 3, "X") @ p))   # scottish fold: tips bent down to the front
 key("Ear_Wide", lambda: ears(lambda p, sx: Matrix.Rotation(math.radians(-58 * sx), 3, "Y") @ p))        # airplane ears, tipped out to the sides
 H.data.update()
+CURL = 230
+
+# --- tail types (Shelly: "new tail types too", kemono artist's eye): shape keys on the Body's tail, the root stays seated in the body
+B = bpy.data.objects["Body"]; MB = B.matrix_world; MBi = MB.inverted()
+Arm = B.find_armature(); TB = [b for b in Arm.data.bones if "Tail" in b.name]
+TB.sort(key=lambda b: b.name)
+P = [Arm.matrix_world @ TB[0].head_local] + [Arm.matrix_world @ b.tail_local for b in TB]
+segL = [(P[i + 1] - P[i]).length for i in range(len(P) - 1)]; TL = sum(segL)
+gi = {g.index for g in B.vertex_groups if "Tail" in g.name}
+def onchain(q):
+    best = None; acc = 0
+    for i in range(len(P) - 1):
+        a, b = P[i], P[i + 1]; ab = b - a; h = max(0, min(1, (q - a).dot(ab) / ab.dot(ab))); c = a + ab * h; d = (q - c).length
+        if best is None or d < best[0]: best = (d, c, (acc + h * segL[i]) / TL)
+        acc += segL[i]
+    return best[1], best[2]
+TV = []
+for v in B.data.vertices:
+    w = sum(g.weight for g in v.groups if g.group in gi)
+    if w > 0.02:
+        q = MB @ v.co; c, t = onchain(q); TV.append((v.index, q, c, t, min(1.0, w * 1.6)))
+print("TAIL verts", len(TV), "len", round(TL, 3))
+up = Vector((0, 0, 1)); dirn = (P[-1] - P[0]).normalized(); side = dirn.cross(up).normalized()
+sm = lambda t: t * t * (3 - 2 * t)
+def tkey(name, fn):
+    k = B.shape_key_add(name=name, from_mix=False)
+    for i, q, c, t, w in TV:
+        n = fn(q, c, t); k.data[i].co = MBi @ (q + (n - q) * w)
+    print("KEY", name)
+P0 = P[0]
+tkey("Tail_Fluffy", lambda q, c, t: c + (q - c) * (1.15 + 0.95 * sm(t)))                          # a big brushy tail, fattest near the tip
+tkey("Tail_Bob", lambda q, c, t: P0 + (c - P0) * 0.3 + (q - c) * (1.0 + 0.5 * t))                 # a short bobtail stub
+tkey("Tail_Puff", lambda q, c, t: P0 + (c - P0) * 0.22 + (q - c) * (1.0 + 1.5 * sm(t)))           # a round pompom
+tkey("Tail_Whip", lambda q, c, t: P0 + (c - P0) * 1.3 + (q - c) * (0.62 - 0.22 * t))              # long thin whip, tapering
+tkey("Tail_Curl", lambda q, c, t: P0 + Matrix.Rotation(math.radians(CURL * t * t), 3, side) @ (q - P0))   # curls up into a hook
+B.data.update()
+if "--tailproof" in sys.argv:
+    sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 10; sc.render.resolution_x = sc.render.resolution_y = 300
+    w_ = bpy.data.worlds.new("w"); sc.world = w_; w_.use_nodes = True; w_.node_tree.nodes["Background"].inputs[0].default_value = (.35, .35, .37, 1)
+    L = bpy.data.lights.new("l", "SUN"); L.energy = 3; lo = bpy.data.objects.new("l", L); sc.collection.objects.link(lo); lo.rotation_euler = (math.radians(50), 0, math.radians(150))
+    mt = bpy.data.materials.new("s"); mt.use_nodes = True; mt.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (.9, .45, .12, 1)
+    for o in bpy.data.objects:
+        if o.type == "MESH": o.data.materials.clear(); o.data.materials.append(mt)
+    for a in bpy.data.objects:
+        if a.type == "ARMATURE" and a.animation_data: a.animation_data.action = None
+    cams = []
+    for pos in [(1.8, 0.6, 0.45), (0.6, 1.8, 0.5)]:
+        c = bpy.data.cameras.new("c"); c.lens = 50; co = bpy.data.objects.new("c", c); sc.collection.objects.link(co); co.location = pos
+        co.rotation_euler = (Vector((0.05, 0.05, 0.45)) - co.location).to_track_quat('-Z', 'Y').to_euler(); cams.append(co)
+    for kn in ["Basis", "Tail_Fluffy", "Tail_Bob", "Tail_Puff", "Tail_Whip", "Tail_Curl"]:
+        for kb in B.data.shape_keys.key_blocks: kb.value = 1.0 if kb.name == kn else 0.0
+        for j, co in enumerate(cams):
+            sc.camera = co; sc.render.filepath = f"/tmp/tk/{W}-{kn}-{j}.png"; bpy.ops.render.render(write_still=True)
+    sys.exit(0)
 if PROOF:
     sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 10; sc.render.resolution_x = sc.render.resolution_y = 300
     w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True; w.node_tree.nodes["Background"].inputs[0].default_value = (.35, .35, .37, 1)
