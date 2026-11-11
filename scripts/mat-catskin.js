@@ -11,7 +11,7 @@ export function material(ctx) {
   const P = (n, d = 0) => ctx.param(n, Number(ctx.params[n] ?? d));
   const C = (n) => vec3(P(n + "R", 1), P(n + "G", 1), P(n + "B", 1));
   const q = positionGeometry, ax = abs(q.x);
-  const furT = ctx.params.fur ? ctx.texture(String(ctx.params.fur)).sample(uv()).rgb : vec3(1, 1, 1);
+  const furT = ctx.params.fur ? ctx.texture(String(ctx.params.fur)).sample(ctx.params.flipV ? vec2(uv().x, uv().y.oneMinus()) : uv()).rgb : vec3(1, 1, 1);
   const fur = furT.mul(materialColor);
   // --- tail: a capsule line the garments leave a hole for
   const tl = [0, 1, 2, 3].map((i) => vec3(P("t" + i + "x"), P("t" + i + "y"), P("t" + i + "z")));
