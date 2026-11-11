@@ -591,7 +591,7 @@ CEN = []
 for sg in (-1, 1):
     m_ = (bvb[:, 0] * sg > 0.02) & (bvb[:, 0] * sg < 0.14) & (bvb[:, 2] > zc0) & (bvb[:, 2] < zc1) & (bvb[:, 1] < ymid)
     k = np.nonzero(m_)[0][np.argmin(bvb[m_, 1])]; CEN.append(Vector(bvb[k]))
-AMP, SIG = (0.011, 0.045) if SEX == "f" else (0.005, 0.055)
+AMP, SIG = (0.011, 0.045) if WHO == "female" else (0.005, 0.055)
 for v in BODY.data.vertices:
     if v.co.y > ymid: continue
     w = sum(math.exp(-((v.co - c).length ** 2) / (2 * SIG * SIG)) for c in CEN)
@@ -656,4 +656,10 @@ mix.inputs[7].default_value = (*TINT, 1)
 for o in cloth: o.hide_render = False
 ARM.animation_data.action = bpy.data.actions["Walk"]
 for i, f in enumerate((1, 7, 13, 19)): sc.frame_set(f); shoot(f"{PR}/w{i}.png", (0, 0, 0.6), 90, 3.4, 85)
+Bq = bpy.data.objects["Body"]
+if Bq.data.shape_keys:
+    for val in (0, 1):
+        Bq.data.shape_keys.key_blocks["Chest"].value = val
+        shoot(f"{PR}/chest{val}s.png", (0, 0, 0.55), 70, 1.4, 70); shoot(f"{PR}/chest{val}f.png", (0, 0, 0.55), 20, 1.4, 70)
+    Bq.data.shape_keys.key_blocks["Chest"].value = 0
 print("PROOFS DONE")
