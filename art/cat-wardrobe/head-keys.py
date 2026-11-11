@@ -51,7 +51,7 @@ key("Ear_Small", lambda: ears(lambda p, sx: Vector((p.x * 0.85, p.y, p.z * 0.6))
 key("Ear_Fold", lambda: ears(lambda p, sx: Matrix.Rotation(math.radians(80) * min(1, max(0, p.z / (0.1 * S))), 3, "X") @ p))   # scottish fold: tips bent down to the front
 key("Ear_Wide", lambda: ears(lambda p, sx: Matrix.Rotation(math.radians(-58 * sx), 3, "Y") @ p))        # airplane ears, tipped out to the sides
 H.data.update()
-CURL = 230
+CURL = 150
 
 # --- tail types (Shelly: "new tail types too", kemono artist's eye): shape keys on the Body's tail, the root stays seated in the body
 B = bpy.data.objects["Body"]; MB = B.matrix_world; MBi = MB.inverted()
@@ -81,11 +81,22 @@ def tkey(name, fn):
         n = fn(q, c, t); k.data[i].co = MBi @ (q + (n - q) * w)
     print("KEY", name)
 P0 = P[0]
-tkey("Tail_Fluffy", lambda q, c, t: c + (q - c) * (1.15 + 0.95 * sm(t)))                          # a big brushy tail, fattest near the tip
+tkey("Tail_Fluffy", lambda q, c, t: c + (q - c) * (1.05 + 0.8 * math.sin(math.pi * min(1, t) * 0.92)))   # a brush: full through the middle, tapering to a soft point
 tkey("Tail_Bob", lambda q, c, t: P0 + (c - P0) * 0.3 + (q - c) * (1.0 + 0.5 * t))                 # a short bobtail stub
-tkey("Tail_Puff", lambda q, c, t: P0 + (c - P0) * 0.22 + (q - c) * (1.0 + 1.5 * sm(t)))           # a round pompom
+PC = P0 + dirn * (0.055 * TL / 0.39); PR = 0.062 * TL / 0.39
+def puff(q, c, t):
+    d = q - PC; ball = PC + (d.normalized() * PR if d.length > 1e-6 else d)
+    return q.lerp(ball, sm(min(1, t * 4)))
+tkey("Tail_Puff", puff)                                                                              # a round pompom right at the base
 tkey("Tail_Whip", lambda q, c, t: P0 + (c - P0) * 1.3 + (q - c) * (0.62 - 0.22 * t))              # long thin whip, tapering
-tkey("Tail_Curl", lambda q, c, t: P0 + Matrix.Rotation(math.radians(CURL * t * t), 3, side) @ (q - P0))   # curls up into a hook
+def chainAt(u):
+    acc = 0
+    for i in range(len(P) - 1):
+        if acc + segL[i] >= u * TL: return P[i].lerp(P[i + 1], (u * TL - acc) / segL[i])
+        acc += segL[i]
+    return P[-1]
+PM = chainAt(0.45)
+tkey("Tail_Curl", lambda q, c, t: q if t <= 0.45 else PM + Matrix.Rotation(math.radians(CURL * ((t - 0.45) / 0.55) ** 1.4), 3, side) @ (q - PM))   # the tip curls into a hook
 B.data.update()
 if "--tailproof" in sys.argv:
     sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 10; sc.render.resolution_x = sc.render.resolution_y = 300
