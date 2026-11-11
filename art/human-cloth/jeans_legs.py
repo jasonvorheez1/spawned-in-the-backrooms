@@ -36,5 +36,10 @@ for v in o.data.vertices:
     else: G[s+'UpLeg'].add([v.index],rem,'ADD')
 print("FIX crotch",round(crotch,3),"seam edges",len(seam),"fixed",fixed)
 # tried: flipping inner-thigh faces outward and one-sided cloth; neither cleared the slivers in a stride test (Nov 11)
+# the imported custom normals still pointed across the old shared seam: those faces lit pale mid-stride. Recompute them from the split mesh
+bpy.context.view_layer.objects.active=o; o.select_set(True)
+bpy.ops.mesh.customdata_custom_splitnormals_clear()
+bpy.ops.object.shade_smooth()
+print("NORMALS custom", o.data.has_custom_normals)
 for ob in bpy.data.objects: ob.select_set(ob==o or ob.type=='ARMATURE')
 bpy.ops.export_scene.gltf(filepath=dst,use_selection=True,export_morph=True,export_skins=True)
