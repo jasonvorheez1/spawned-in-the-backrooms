@@ -5,8 +5,8 @@ import FACES from './data/critter-faces.yml'
 import { PRINTS } from '../mat-cloth.js'
 
 export const CAT_BODY = {
-  f: { glb: '/cdn/value.24fa00535c911c6986365d75a1db3ce475872cd81d71110645c4b22ed6841d14.glb', fur: '/cdn/value.eb86c240c4daf27effe00523a7f1f216e7239f8eca99359e5a04fcf67c289a6f.jpg' },
-  m: { glb: '/cdn/value.f7eb5915844e52fcecf1cb1fe9962f80c7c1d9964bf53e5ee216b559243aaa5c.glb', fur: '/cdn/value.a400e6f824bf75d1c5dfafb1cadbe30c177543404d39b9c350d4feadc8dfd313.jpg' }
+  f: { glb: '/cdn/value.17dc28da059a11f46ab2c1b1e95ae384f82a1bc045951b17c0898e45c232f20b.glb', fur: '/cdn/value.eb86c240c4daf27effe00523a7f1f216e7239f8eca99359e5a04fcf67c289a6f.jpg' },
+  m: { glb: '/cdn/value.284ea8adabf4aa83a76b4dc23b33ea6e460dfcbcefb28ae9e398b834f5c2e87d.glb', fur: '/cdn/value.a400e6f824bf75d1c5dfafb1cadbe30c177543404d39b9c350d4feadc8dfd313.jpg' }
 }
 const rgb = (hex, lin = true) => { const n = parseInt(String(hex || '#ffffff').replace('#', '').slice(0, 6).padEnd(6, 'f'), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { const s = v / 255; return lin ? (s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4)) : s }) }
 const lerp = (a, b, t) => a + (b - a) * t

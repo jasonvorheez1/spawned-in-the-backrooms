@@ -46,12 +46,17 @@ def rebuild_head(head, sex):
         for i in range(seg):
             a=2*pi*i/seg
             x,y=rx*cos(a),cy+ry*sin(a)
-            # Broad muzzle volume under the painted nose and mouth, joined into the cheeks.
-            center = .793 if female else .853
-            muzzle = 1 - smoothstep(.012 if female else .020, .058 if female else .066, abs(z - center))
-            cheek = 1 - smoothstep(.040 if female else .052, .137 if female else .155, abs(x))
+            # Keep the orbital surface round. The muzzle sits below the eyes and
+            # only the narrow center of the nose rises between their lower corners.
+            lo, mid, tip, brow = (.729, .774, .799, .829) if female else (.779, .828, .850, .880)
+            rise = smoothstep(lo, mid, z)
+            fall = 1 - smoothstep(tip, brow, z)
+            cheek = 1 - smoothstep(.034, .118 if female else .130, abs(x))
+            nose_z = .810 if female else .867
+            nose = (1 - smoothstep(.003, .027, abs(z - nose_z))) * (1 - smoothstep(.014, .043, abs(x)))
             if sin(a) < 0:
-                y -= (.034 if female else .061) * muzzle * cheek
+                y -= (.027 if female else .048) * rise * fall * cheek
+                y -= (.009 if female else .017) * nose
             verts.append((x,y,z))
     face(tuple(reversed(range(seg))))
     for j in range(len(levels)-1):
