@@ -16,6 +16,7 @@ for sex, faces in Y["faces"].items():
         filled = nd.binary_fill_holes(dark)
         k = max(2, int(W * 0.03)); disc = nd.binary_opening(filled, structure=np.ones((k, k)))
         lab, n = nd.label(disc); res = im.copy(); count = 0
+        if ex in ("hit", "ko", "joy", "blink"): n = 0   # squints, Xs and closed lids are ink marks, not eyes
         for i in range(1, n + 1):
             m = lab == i; ys, xs = np.nonzero(m)
             if m.sum() < W * H * 0.012 or ys.mean() > H * 0.62: continue
