@@ -3,7 +3,15 @@
 # skin it to mixamorig:Head and export /workspace/cathair/<style>-<sex>.glb. Prints the fit error so a bad registration shows.
 import bpy, glob, os, itertools, numpy as np
 from mathutils import Matrix
-from scipy.spatial import cKDTree
+from mathutils.kdtree import KDTree
+class cKDTree:
+    def __init__(self, P):
+        self.P = np.asarray(P); self.k = KDTree(len(self.P))
+        for i, q in enumerate(self.P): self.k.insert(q, i)
+        self.k.balance()
+    def query(self, Q):
+        r = [self.k.find(q) for q in np.asarray(Q)]
+        return np.array([x[2] for x in r]), np.array([x[1] for x in r])
 SRC = {"f": "/tmp/fl/f.glb", "m": "/tmp/fl/m.glb"}; SCULPT = {"f": "/workspace/hair/tripo8/female.glb", "m": "/workspace/hair/tripo8/male.glb"}
 os.makedirs("/workspace/cathair", exist_ok=True)
 def verts(o): M = np.array(o.matrix_world); v = np.array([tuple(x.co) for x in o.data.vertices]); return v @ M[:3, :3].T + M[:3, 3]
@@ -24,13 +32,13 @@ def umeyama(A, B):
     R = U @ D @ Vt; s = (S * np.diag(D)).sum() / (a ** 2).sum() * len(A); return s, R, mb - s * R @ ma
 T = {}
 for sex in ("f", "m"):
-    tgt = load_mesh(SRC[sex], "Head"); src = load_mesh(SCULPT[sex])
-    rng = np.random.default_rng(0); src_s = src[rng.choice(len(src), min(3000, len(src)), replace=False)]
+    tgt = load_mesh(SRC[sex], "Head"); tgt = tgt[np.random.default_rng(1).choice(len(tgt), min(4000, len(tgt)), replace=False)]; src = load_mesh(SCULPT[sex])
+    rng = np.random.default_rng(0); src_s = src[rng.choice(len(src), min(1500, len(src)), replace=False)]
     kd = cKDTree(tgt); best = None
     for R0 in rots():
         p = src_s @ R0.T; s0 = np.ptp(tgt, 0).max() / np.ptp(p, 0).max(); p = (p - p.mean(0)) * s0 + tgt.mean(0)
         s, R, t = s0, R0, None; cur = p
-        for _ in range(30):
+        for _ in range(12):
             d, i = kd.query(cur); s2, R2, t2 = umeyama(cur, tgt[i]); cur = s2 * cur @ R2.T + t2
         d, _ = kd.query(cur); e = np.median(d)
         # also the reverse error (target covered), so a shrunken fit can't win
