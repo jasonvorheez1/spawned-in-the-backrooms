@@ -83,7 +83,7 @@ def tkey(name, fn):
 P0 = P[0]
 tkey("Tail_Fluffy", lambda q, c, t: c + (q - c) * (1.05 + 0.8 * math.sin(math.pi * min(1, t) * 0.92)))   # a brush: full through the middle, tapering to a soft point
 tkey("Tail_Bob", lambda q, c, t: P0 + (c - P0) * 0.3 + (q - c) * (1.0 + 0.5 * t))                 # a short bobtail stub
-PC = P0 + dirn * (0.055 * TL / 0.39); PR = 0.062 * TL / 0.39
+PC = P0 + dirn * (0.08 * TL / 0.39); PR = 0.088 * TL / 0.39
 def puff(q, c, t):
     d = q - PC; ball = PC + (d.normalized() * PR if d.length > 1e-6 else d)
     return q.lerp(ball, sm(min(1, t * 4)))
