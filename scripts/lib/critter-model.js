@@ -110,7 +110,7 @@ export function wardChildren(l, local) {
   const booted = rowOf('shoes', l?.shoes, l?.shoec)?.kind === 'boots' // trousers worn with boots take their tucked cut (art/human-cloth/jeans_tuck.py): the straight leg's hem poked out through the shaft
   for (const [n, v] of Object.entries(b.parts)) if (n.startsWith('Ward_') && v.visible && r.parts[n]) { const f = (booted && r.parts[n + '_tuck']) || r.parts[n]; out.push({ id: wardKey(n), attachment: { skin: true }, model: { id: f, forward: '+z', materials: WARD_SLOTS?.[f] ? Object.fromEntries(Object.entries(clothMats).filter(([k]) => WARD_SLOTS[f].includes(k))) : clothMats }, morph, ...(local ? { audience: 'local' } : {}) }) }
   if (OPEN_IDS.includes(l?.topw) && r.parts.Ward_tee) out.push({ id: wardKey('Ward_tee'), attachment: { skin: true }, model: { id: r.parts.Ward_tee, forward: '+z', materials: { cloth_top: anime('cloth', INNER_TEE) } }, morph, ...(local ? { audience: 'local' } : {}) }) // an apron covers the front only: a whole tee under it, the inner strip poked through and left the back bare
-  else if (r.inner && OPEN_TOPS.includes(rowOf('topw', l?.topw, l?.top)?.kind)) out.push({ id: INNER_ID, attachment: { skin: true }, model: { id: r.inner, forward: '+z', materials: { cloth_top: anime('cloth', INNER_TEE) } }, morph, ...(local ? { audience: 'local' } : {}) }) // an open-front top wears a plain tee under it: the bare strip of chest down its front read as no shirt at all
+  else if (r.inner && OPEN_TOPS.includes(rowOf('topw', l?.topw, l?.top)?.kind)) out.push({ id: INNER_ID, attachment: { skin: true }, model: { id: r.inner, forward: '+z', materials: { cloth_top: anime('cloth', innerTee(l)) } }, morph, ...(local ? { audience: 'local' } : {}) }) // an open-front top wears a plain tee under it: the bare strip of chest down its front read as no shirt at all
   return out
 }
 export function seatWardrobe(ctx, o, l) {
@@ -257,6 +257,8 @@ const warm = (c, k) => toHex(hx(c).map((v, i) => v * k * [1, 0.42, 0.3][i]))
 const OPEN_TOPS = ['jacket', 'blazer', 'vest'], OPEN_IDS = ['apron', 'maidapron'] // OPEN_IDS: aprons are front panels only; with nothing under them the whole back read bare (Nov 11) // kinds whose front is open; the inner tee (wardChildren) is drawn under them
 const INNER_ID = 'critter-ward-inner'
 const INNER_TEE = '#e6e1d6'
+const DARK_UNDER = { megjacket: '#24262a', padjacket: '#26262a' } // uniform jackets close at the front: a pale tee showing through the seam read as a white stripe (Nov 11)
+const innerTee = (l) => DARK_UNDER[l?.topw] ?? INNER_TEE
 const humanBodyFull = (l) => {
   const c = skinOf(l), skin = anime('skin', c) // the first-person arms wear this same material (player.js spreads it), so the body and the arms still read as one skin (Shelly, Nov 9)
   const m = l ? bodyModel({ ...l, _human: true }) : { materials: {}, parts: {} }
