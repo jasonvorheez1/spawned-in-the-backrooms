@@ -358,7 +358,7 @@ if os.environ.get("DBGFACE"):
     nb = sum(1 for v in HEAD.data.vertices if BOX[0] < v.co.x < BOX[1] and BOX[2] < v.co.z < BOX[3] and v.co.y < -0.03)
     print("DBG inbox", nb, "moved", len(moves), "VAL frac", VAL.mean(), "clo range", np.nanmin(clo[VAL]), np.nanmax(clo[VAL]), "hgt range", np.nanmin(hgt), np.nanmax(hgt))
     print("DBG mw", HEAD.matrix_world, HEAD.parent, [m.type for m in HEAD.modifiers])
-    sh = [abs(HEAD.data.vertices[i].co.y - y) for i, y in moves]; print("DBG", HEAD.data.vertices[moves[0][0]].co, moves[:3])
+    sh = [abs(HEAD.data.vertices[i].co.y - y) for i, y in moves]; print("DBG shift max", max(sh), "mean", sum(sh)/len(sh), "n>2mm", sum(x > 0.002 for x in sh))
     sys.exit(0)
 lift = len(moves)
 bpy.context.view_layer.objects.active = HEAD
