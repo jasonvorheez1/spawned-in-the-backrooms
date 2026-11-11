@@ -323,6 +323,8 @@ export function update(ctx) {
     ses.spin = (ses.spin || 0) + 0.2 * 40
     const pos = { x: f.x + fx * 2.1 + rx * 0.6, y: f.y, z: f.z + fz * 2.1 + rz * 0.6 }
     const rot = { yaw: (yaw * 180) / Math.PI + 180 + (ctx.self.state.wrSpin || 0) + Math.sin(ctx.now() / 1600) * 18 }
+    if (ses.mirror && ses.mirrorCat !== (MESH && !HUMAN && !ses.cachedWorn && isNewCat(ses.cachedParams))) { try { ctx.destroy(ses.mirror) } catch (e) {} ses.mirror = null; ses.mirrorKey = null } // a preview built as the legacy cat is thrown away
+    ses.mirrorCat = MESH && !HUMAN && !ses.cachedWorn && isNewCat(ses.cachedParams)
     const mirror = ses.mirror && ctx.getObject(ses.mirror)
     const params = ses.cachedParams, worn = ses.cachedWorn
     if (!params) return
