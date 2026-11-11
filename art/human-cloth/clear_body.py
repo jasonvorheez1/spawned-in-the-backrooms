@@ -19,11 +19,11 @@ for g in a[4:]:
         gw = o.matrix_world; inv = gw.inverted(); me = o.data; cs = {}
         for i, v in enumerate(me.vertices):
             p = gw @ v.co
-            if not (zlo <= p.z <= zhi): continue
+            if not (zlo <= p.z <= zhi) or abs(p.x) > 0.17: continue  # the collar band only, clear of the armpits
             hit = tree.find_nearest(p, 0.03)
             if not hit[0]: continue
             loc, nor = hit[0], hit[1].normalized(); d = (p - loc).dot(nor)
-            if d < M: cs[i] = nor * (M - d)
+            if -0.015 < d < M: cs[i] = nor * (M - d)
         if not cs: continue
         n += len(cs); mx = max([mx] + [c.length for c in cs.values()])
         blocks = me.shape_keys.key_blocks if me.shape_keys else None
