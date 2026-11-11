@@ -8,8 +8,10 @@ a = sys.argv[sys.argv.index('--') + 1:]; bodyf, zlo, zhi, od = a[0], float(a[1])
 def load(f):
     bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(filepath=f)
     return [o for o in bpy.data.objects if o.type == 'MESH']
-bo = max(load(bodyf), key=lambda o: len(o.data.vertices))
-mw = bo.matrix_world; V = [mw @ v.co for v in bo.data.vertices]; P = [list(p.vertices) for p in bo.data.polygons]
+V, P = [], []
+for bo in load(bodyf):  # every skin region and the head: the whole surface a collar can meet
+    if not (bo.name.startswith('Skin_') or 'Head' in bo.name): continue
+    mw = bo.matrix_world; k = len(V); V += [mw @ v.co for v in bo.data.vertices]; P += [[k + i for i in p.vertices] for p in bo.data.polygons]
 tree = BVHTree.FromPolygons(V, P)
 for g in a[4:]:
     mx = 0.0; n = 0
