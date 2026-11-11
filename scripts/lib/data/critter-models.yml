@@ -16,7 +16,7 @@ mesh: true
 # brows (Nov 10, Shelly "work on the head"): art/human-face/brows.py redraws the scribbled brow strip as a tapered arch; before: m 7c334339571b407794f9e2373ac64130bac8ff3ad24dfa024b0aea1c6b75b973 f 9c21a96fae4342143b4a5c7e51b7769d956ad18c1f915880e06d73ead80e5040
 # redo (Nov 10, Shelly yes #178749): art/body-redo/reshape.py, round deltoid caps, lower trap; before: m a7c2f40f f 44b0539f
 # cap (Nov 10, boxy shoulders when arms drop): art/human-body/shoulder_cap.py moves arm weight off the trapezius; before: m 9b3a3e2bbc627a34
-human: { m: "/cdn/value.62fd48fd0a4ca9f4e9784e37dba818df3b807c6aba385cf63692e86f17b10989.glb", f: "/cdn/value.b1696d5328e685bda81be34e91903a24506f79cce5092458ca84ab0d2c1a2d95.glb" }
+human: { m: "/cdn/value.5ef3b89d3ccca82d8e00a007a00156b2f9e4fbd71ff5e0e9a8b7dcdf7d57a4f4.glb", f: "/cdn/value.dfa4672a265b56bce8e42ba0e353772be5f834b79a4ba96a1f5ab2b14799ea7a.glb" }
 # Dandy (Shelly Nov 9 "the furry models are awful"; Nov 10 rebuild: neck term bounded so hats keep their shape, headphone cups pushed out of the bigger heads): the bodies below are the wardrobe pipeline's (before: m 9cf50c5021c4443970c1fe193d6917865363c1be778845f8870cda68c2607fd8 f deabd82b6e4ad3959a0713f9e21a48658b70eb954ae75649ebdc0a08efb6a97d) with one more key, Dandy, on every mesh (art/critter-cute/dandy-morph.mjs). A rebuilt body must be run through it again.
 body: { m: "/cdn/value.06a60b4a5b3965c032abe1a55667ec1dc71e355f399abde039a355139ee388ec.glb", f: "/cdn/value.8021d9842ea70817ecba60b5a0239345239251aa5cbfccf519d9b7e0e37737e8.glb" }
 bodyMats: [fur, limb, pad, cloth_top, cloth_bottom, cloth_shoes, cloth_hat, cloth_neck, button, metal, lens, gold, sole]
