@@ -169,7 +169,7 @@ export function material(ctx) {
   // realistic-anime finish shared by every pattern (Nov 10): soft folds, a fabric sheen at grazing angles, and a lift so cloth never goes black in shadow
   const folds = mx_fractal_noise_float(p.mul(vec3(7, 3.5, 7))).mul(0.5).add(0.5);
   col = col.mul(float(0.84).add(smoothstep(0.25, 0.75, folds).mul(0.2)));
-  const N = normalize(normalWorld), V = normalize(cameraPosition.sub(positionWorld)), fres = pow(float(1).sub(saturate(dot(N, V))), 3.0);
+  const N = normalize(normalWorld), V = normalize(cameraPosition.sub(positionWorld)), fres = pow(float(1).sub(saturate(abs(dot(N, V)))), 3.0); // abs: a face seen from its back (lining, a fold turned over) read dot<0 as full grazing and glowed as a pale patch (Nov 11)
   const sheen = col.mul(0.5).add(vec3(0.18, 0.17, 0.16)).mul(fres).mul(0.2), lift = col.mul(vec3(0.92, 0.92, 1.0)).mul(0.18);
   m.colorNode = col.mul(0.86);
   m.emissiveNode = m.emissiveNode ? m.emissiveNode.add(sheen).add(lift) : sheen.add(lift);
