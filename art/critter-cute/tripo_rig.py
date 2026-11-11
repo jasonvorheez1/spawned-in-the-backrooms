@@ -553,6 +553,8 @@ ARM.animation_data.action = None; clear_pose()
 
 # ---------- export + audit ----------
 sc.frame_set(1)
+for nm in ("ClothTop", "ClothBottom"):   # clothes are painted by the game's skin shader now: shells stay out of the glb
+    if nm in bpy.data.objects: bpy.data.objects.remove(bpy.data.objects[nm])
 bpy.ops.export_scene.gltf(filepath=GLB, export_apply=False, export_morph=True, export_skins=True, export_animation_mode="ACTIONS", export_image_format="AUTO")
 SAVE = f"{OUT}/cat-{WHO}-rigged.blend"; bpy.ops.wm.save_as_mainfile(filepath=SAVE)
 with open(GLB, "rb") as fh:
@@ -589,7 +591,7 @@ def wrot(nm, Rm): M = rest3(nm); ARM.pose.bones[P + nm].rotation_quaternion = (M
 def clear_pose():
     for pb in ARM.pose.bones: pb.rotation_quaternion = (1, 0, 0, 0); pb.location = (0, 0, 0)
 ARM.animation_data.action = None; clear_pose(); bpy.context.view_layer.update()
-cloth = [bpy.data.objects["ClothTop"], bpy.data.objects["ClothBottom"]]
+cloth = []
 FT = next(n for n in bpy.data.materials["face"].node_tree.nodes if n.type == "TEX_IMAGE")
 mix = next(n for n in bpy.data.materials["fur"].node_tree.nodes if n.type == "MIX")
 EZ = (BOX[2] + BOX[3]) / 2
