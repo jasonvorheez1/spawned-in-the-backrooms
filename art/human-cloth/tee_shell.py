@@ -113,6 +113,10 @@ for r in range(1, 4):
             if w not in ring: ring[w] = r; nxt.append(w)
     front = nxt
 feather = {0: 1.0, 1: 1.0, 2: 1.0}  # a tee's hem stands off like the rest (no taper back to the skin): the lip below closes it
+# Nov 10: the hem rides OVER the waistband (pants stand 8 mm off): below the navel the cloth eases out up to HEMOUT more, so pants never poke through an untucked top
+HEMOUT = float(os.environ.get('HEMOUT', '0.007'))
+def _hz(z): t = max(0.0, min(1.0, (J['Spine'].z + 0.03 * s - z) / (0.08 * s))); return t * t * (3 - 2 * t)
+HO = {v: HEMOUT * _hz(W(v.co).z) for v in bm.verts}
 AT = {v: (0.0 if TANK else armt(W(v.co)) if abs(W(v.co).x) > xpit * 0.85 else 0.0) for v in bm.verts}
 def coords(layer): return {v: (v[layer].copy() if layer is not None else v.co.copy()) for v in bm.verts}
 def normals(C):
@@ -135,7 +139,7 @@ def fill(C):  # bridge hollows (cleavage, spine groove) the way fabric does, out
     return C
 def shell(C):
     N = normals(C)
-    C = {v: C[v] + N[v] * (T + FLARE * AT[v]) * feather.get(ring.get(v, 9), 1.0) for v in bm.verts}
+    C = {v: C[v] + N[v] * (T + HO[v] + FLARE * AT[v]) * feather.get(ring.get(v, 9), 1.0) for v in bm.verts}
     return fill(C)
 layers = [None] + [sk[k] for k in keys]
 basisN = normals(coords(None))
