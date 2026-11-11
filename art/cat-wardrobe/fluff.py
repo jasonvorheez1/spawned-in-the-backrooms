@@ -70,8 +70,9 @@ def build(sex, kind, arm):
                 dirs = [Vector((sx, -0.55, -0.25)), Vector((sx, -0.2, -0.45))]
                 grow(bm, hb, C, dirs, rng, 0.085 * S, 0.055 * S, 2, 0.02 * S, 0.3, Vector((sx * 0.7, 0.15, -0.55)).normalized())
             else:
-                dirs = [Vector((sx, -0.3, -0.1)), Vector((sx, -0.1, -0.35)), Vector((sx, 0.15, -0.2))]
-                grow(bm, hb, C, dirs, rng, 0.115 * S, 0.055 * S, 2, 0.025 * S, 0.25, Vector((sx * 0.55, 0.45, -0.6)).normalized())
+                # sideburns hang off the jaw like an anime cat's cheek tufts: low, short, swept back and down, never out like wings
+                dirs = [Vector((sx, -0.25, -0.55)), Vector((sx, 0.0, -0.6)), Vector((sx, 0.2, -0.45))]
+                grow(bm, hb, C, dirs, rng, 0.08 * S, 0.05 * S, 2, 0.02 * S, 0.12, Vector((sx * 0.3, 0.45, -0.85)).normalized())
     elif kind == "crest":
         top = Vector((0, cy - 0.02, zmax + 0.5))
         dirs = [Vector((0, -0.45, 1)), Vector((0.25, -0.3, 1)), Vector((-0.25, -0.3, 1)), Vector((0, -0.15, 1))]

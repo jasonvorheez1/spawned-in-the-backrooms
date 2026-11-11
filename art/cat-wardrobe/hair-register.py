@@ -49,7 +49,7 @@ for sex in ("f", "m"):
     T[sex] = (R0, k, pl, lo2, tgt)
     print("REG", sex, "neck", round(float(zn), 3), "scale", round(sc, 3))
 for sex in ("f", "m"):
-    R0, k, pl, lo2, tgt = T[sex]; kdh = cKDTree(tgt); ctr = (tgt.min(0) + tgt.max(0)) / 2
+    R0, k, pl, lo2, tgt = T[sex]; crown_t = lo2[2]; kdh = cKDTree(tgt); ctr = (tgt.min(0) + tgt.max(0)) / 2
     for hp in sorted(glob.glob(f"/workspace/hair/cat/{sex}_*.glb")):
         if hp.endswith("-raw.glb"): continue
         st = os.path.basename(hp)[2:-4]
@@ -68,6 +68,10 @@ for sex in ("f", "m"):
         d, i = kdh.query(V); dirs = V - ctr; dirs /= np.linalg.norm(dirs, axis=1, keepdims=True) + 1e-9
         inside = np.einsum("ij,ij->i", V - tgt[i], dirs) < 0.006
         V[inside] = tgt[i][inside] + dirs[inside] * 0.006 + (V[inside] - tgt[i][inside]) * 0.15
+        sh = {"twintails": 0.72, "afropuff": 0.9}.get(st)   # styles that read too big: what hangs below the crown pulls in toward the skull and up
+        if sh:
+            top = crown_t; far = V[:, 2] < top - 0.12; c2 = np.array([ctr[0], ctr[1], top - 0.12])
+            V[far] = c2 + (V[far] - c2) * sh
         for v, c in zip(hair.data.vertices, V): v.co = c
         hair.data.update()
         hair.name = "hair"; hair.vertex_groups.clear()
