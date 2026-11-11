@@ -1,86 +1,86 @@
 # the packed human bodies split apart (art/human-cloth/split_wardrobe.py): a bare body per sex, each Ward_ garment its own skinned glb
 # riding the body as a child (attachment: { skin: true }). Packed sources: m 782c6614…, f de9de999… (now legacyHuman m_sw30/f_sw30)
 m:
-  inner: "/cdn/value.e932095bdd7f6d11ec17da5978271fdbad49a6c544f309fc0c1a562fdc073e99.glb"   # the plain tee worn under open-front tops, settled 2 mm off the skin (art/human-cloth/inner_tee.mjs)
-  body: "/cdn/value.e53a50e82d43485032c9f29a58ea18cdab06e8894ece35d9bb3d292ecdd4fb0e.glb"   # Nov 11 collar split (art/human-body/collar_split.py): neckline skin its own Skin_collar; before fa40bdfd   # Nov 10 shoulder cap (art/human-body/shoulder_cap.py); before 9b3a3e2b
+  inner: "/cdn/value.568d7f65c2b3078ae890a514f41968bb3474dc4e2171905c2002b5d44f0f3fa3.glb"   # the plain tee worn under open-front tops, settled 2 mm off the skin (art/human-cloth/inner_tee.mjs)
+  body: "/cdn/value.ffa88b12900006be2f285f876caccb1174e0519858a6ba51e529ac8a6d360180.glb"   # Nov 11 collar split (art/human-body/collar_split.py): neckline skin its own Skin_collar; before fa40bdfd   # Nov 10 shoulder cap (art/human-body/shoulder_cap.py); before 9b3a3e2b
   parts:
-    Ward_abysshauberk: "/cdn/value.e19023ccde39d4730ff4c6abbecc47f9509176239f2cdaa3a8b8e7a5ecf3d402.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_apron: "/cdn/value.5f8fd3adb51baa8dc952995a7ca3033d97d3ea3728de33dbbefe214f0686d300.glb"   # Nov 11 stride: hem rides the thigh (art/human-cloth/skirt_stride.py); before ed168794
-    Ward_ballastboots: "/cdn/value.08de37c4ec3c5c5dc6808d2d7c285083099eda6e1f987e73ba369ee0f2a62abb.glb"
-    Ward_balltie: "/cdn/value.3a26f7dfc927544d5bbed6ae9f1a769a9565d024a5f0d43cabccaa5d8fdf92c8.glb"
-    Ward_beanie: "/cdn/value.f536fe6a596a5cacdb8445ceb2976a46c4ddd537abd927f7fdd5362f5851f5e9.glb"
-    Ward_bell: "/cdn/value.70786cdee2b1b270d89a96e1a4569311ac62d718b226052f177c631b6f067801.glb"
-    Ward_bellhop: "/cdn/value.f78fabb96c20db5bdd0bb07f0c9ada6d6ce6c4d882ae868d44b02ce9f8c91097.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_beret: "/cdn/value.319273c20c0269f6378335457c4d92bc3fe09c0e8db30faae9870c3052d118ad.glb"
-    Ward_blazer: "/cdn/value.e1b6dd418d4ab6e1e79d531002800d310312e5a9fd3aeeea5d9cd28c6d355e63.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_boots: "/cdn/value.dd92cdd5a98e8750918f981b787308e8a5ac890e02afa08312fe7ba4a8334fda.glb"
-    Ward_bow: "/cdn/value.2e9e2c53829a64fb6c48ba1621214c81c519f844434eb12caf46c58715634f13.glb"
-    Ward_bowtie: "/cdn/value.f63bb70a7eba2a5a31ee1e5ef33f343b5643ed68c3b07f23287314a6f7d50739.glb"
-    Ward_canvasskirt: "/cdn/value.664e7839cf8893da3be455f41428282747f366aa74c432fd695e6ad092691ced.glb"   # Nov 11 stride: hem rides the thigh (art/human-cloth/skirt_stride.py); before c32dca30
-    Ward_cap: "/cdn/value.55e24469e64912323fab30321ae2df7939d85faa8e300019779b03fc89734957.glb"
-    Ward_cape: "/cdn/value.1068556f18507135a92703c4eed3bb4835d440995acc03a97a446da8a3a5457f.glb"
-    Ward_cargo: "/cdn/value.025ceeab94b0bdefbb30f25e69cae2d655d39a7c374bccb5a4ce44e3e939ceb9.glb"
-    Ward_carpetponcho: "/cdn/value.cabb0a511f1d08adeffce556558cdaa76d2355572fb66422f470b37c1edcf9b1.glb"
-    Ward_chitinhelm: "/cdn/value.0881c6ec88fa06740b48e2a5f9f0d112fe6b8e2ca29d639e18cde128cd3c954c.glb"
-    Ward_chitinplate: "/cdn/value.5a9306998f1df8cc16a85304ab646f836dfc6963e1e22b47e1127a50af880c5b.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_crown: "/cdn/value.9ce3574e8520c1ca70edca64784950b31101a33e64891a3560906bb189250347.glb"
-    Ward_divehelm: "/cdn/value.30824463ff3e72d0b6fe21e71582b411b22116f7616fb4eb2778bd81c87bc4c1.glb"
-    Ward_dress: "/cdn/value.a94ed22bb55bed37089e7c85c107325dceb39b37d454d3299edf94027933d34f.glb"
-    Ward_flower: "/cdn/value.b69e33c6f6a12ee09cf8b476577868a2bb838aae0362f790395a1e39601ec62d.glb"
-    Ward_glasses: "/cdn/value.ef72cf809370b3d30fccf68741956c9bbfa1aac84e1393a0011c9426044cb042.glb"  # Nov 11: every head key copied from the Head (art/human-cloth/eyewear_keys.py), frame follows broad/long/round heads; before 4a64fedc
-    Ward_gmhoodie: "/cdn/value.23fb2deb2982cf07c9566a4d0bbc133591c33120bf8fa15b8e635689b630f63f.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_gown: "/cdn/value.9c616830b1fc18ee2a294446f4f6ccd5371264f19c1c9424c27da693d6511da3.glb"   # Nov 11 stride: hem rides the thigh (art/human-cloth/skirt_stride.py); before 992a879e
-    Ward_headphones: "/cdn/value.5d995157d10be614763547df1c5169e8f906854ef6c7516f930ad0716094a2a0.glb"
-    Ward_heels: "/cdn/value.3749d8d3adeaa0e35d4a721dbf20e237c89d595a1445241482dda2f3b21fcd00.glb"
-    Ward_hoodie: "/cdn/value.1f3d3c650e6db990febf08d74ff6d9c132c582a68dea240215a3f7765b906085.glb"   # Nov 10 shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_hotelrobe: "/cdn/value.effa3906ad6bd91c066b4f31fb02b468537a1a878846564aab2b65763b2098fc.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_hotelslip: "/cdn/value.7a172a6db5ad84fde4897e8b5deb0e2dc14293ca1d8b9477c289d68d317b3b71.glb"
-    Ward_jacket: "/cdn/value.fce893f531693419a4f4107b71a55ee232a7fc87e511a2774126d6bec7a96733.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_jeans: "/cdn/value.505fbd254f99252b5cb1a7e9e17ddc85d46eddf64a6dbc29f24c9073a453f2a1.glb"  # Nov 11: legs cut apart at the midline (59 faces bridged left leg to right below the crotch), inner panels rebuilt on the skin (art/human-cloth/inseam_split.py); before d386ff4a
-    Ward_jeans_tuck: "/cdn/value.7d667eecee09a828c96bc797b8d71d9c1e30d170ae4f9be121fcc89b434c24d8.glb"  # Nov 11 inseam split too; before a53b4ae0;   # Nov 11: the jeans legs pulled inside the boot shaft, worn only with boots (art/human-cloth/jeans_tuck.py)
-    Ward_jerrytee: "/cdn/value.434b187c0ed6e4f33016d33709f7608aa900b19b2368f255ba7a83f4a08c2c46.glb"
-    Ward_lifemantle: "/cdn/value.6cee840a91ee7ec865240cc7ece61e54b33b228426bae8c95294110dc1cc2b7d.glb"
-    Ward_longskirt: "/cdn/value.f3e09e488d6114f2893d7c2651b58bd07ba1e6f6deaad99765526b3d9ad15ed0.glb"   # Nov 11 stride: hem rides the thigh (art/human-cloth/skirt_stride.py); before 698ad9a9
-    Ward_longsleeve: "/cdn/value.cc705d20f342d57e862e6d7cdf80d510934b2b06457cd72aadbc5b699f3afda4.glb"   # Nov 11 crew collar band up the neck (art/human-cloth/collar_band.py); before b5b072f1; Nov 11 hem held 11 mm off skin over pants (art/human-cloth/shirt_out.py); before 7e587b9f; Nov 11 back-of-shoulder crumple smoothed (art/human-cloth/shoulder_smooth.py); before 261c9d3e;   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_maidapron: "/cdn/value.88d5facc0aecc7de13d95c9d6b91535691287e48d1596f834a7b35211094bc3f.glb"   # Nov 11 stride: hem rides the thigh (art/human-cloth/skirt_stride.py); before 478277c9
-    Ward_megjacket: "/cdn/value.0140e4e72e52d1ed8edb4a5cc3c6df7c8732d39d91dc5581b2a35f9e17f208f3.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_officeshirt: "/cdn/value.5247372ee8ca48612492357bd18939b69bcbfe5d362e758bac98bc41b6b16d89.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_oilskin: "/cdn/value.9f24c24d4b5a7de34174cd73302084e37080d4546397db343391925286341d15.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_opera: "/cdn/value.294b05db0afe4f36344ae8fae1d376e34b68a313404e9868d2fc15043ddfc432.glb"
-    Ward_overalls: "/cdn/value.05781737c7f19570fb05778761d49a3e0c444b20f81cd3c8b5d9a4a83111ff56.glb"
-    Ward_padbeanie: "/cdn/value.1ab0223f8867734cac27424d23c8e87479937190f29763e410079ab120c31b72.glb"
-    Ward_padjacket: "/cdn/value.c89c3d70804b8229b625004bf7866a685399dc003775909f5c274b02310f28a7.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_pajamas: "/cdn/value.767dc5fb42e4f83ef0deda0825690d7e9ed4c4a940b4a3dc2bd25e87e6a3f8ef.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_pants: "/cdn/value.864f50d538880eb59bcd9f00c2e15ccbee6a9f93a82c7d33b17e833bb505aa6f.glb"   # Nov 11 waistband pulled in under tops (art/human-cloth/waist_snug.py); before ca70ffab
-    Ward_partyhat: "/cdn/value.6313f986723ed1cbd2a1a730c4de9c200389e9a3b990ba174449b990e66e53b3.glb"
-    Ward_pgcoat: "/cdn/value.4a810e0cfe8a9c981f6eb99671d06eab9e2f6b7be4f20f0412aadbbc176638df.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_pghoodie: "/cdn/value.bb52cc86ab26b46664a43642edead664eb5fe9c14ac6abf4448115cc1f0d7c17.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_pinstripe: "/cdn/value.f0988dd8e1468f7d479865ddf58e8e9c75e35ca6ee54ec256fdb5c03aa365c96.glb"
-    Ward_pitchboots: "/cdn/value.db1af14dd2f797846aaca77060796398999b5fc6329bce454afdd083961e7153.glb"
-    Ward_pjpants: "/cdn/value.d1005f8fd97e8a38c8cd70ef1cd7efc7015e158b86665610822da37b4d845086.glb"
-    Ward_platevest: "/cdn/value.9215da2f884f69dba5815c62e1451a9ed12599ee4499eaf0b8ab895ed5b8af6f.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_pphoodie: "/cdn/value.55590e15450686d408db433c4362a6114f9b7fd656ae4f6bb2dd12f8bb069774.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_scarf: "/cdn/value.1ea5a5fb55f5712edb0440f13fe60a3913d2619f7a9c73b80c0c5b28709db42a.glb"
-    Ward_seawatchsuit: "/cdn/value.ed6945766191ba3eaa97a6af462b7d8f5f85ae3812f35b26d65bf04d36dd4a15.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_shades: "/cdn/value.ed295aab9bd9348db4be773d999de614de983245d7a8a895b7d2b9eb2be88754.glb"  # Nov 11 head keys too (eyewear_keys.py); before 940bd6f8
-    Ward_shirt: "/cdn/value.a51ffa7b9ba60e484ef511f2f56c62ad0a3910e3f690c133bddff3670b4a7507.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_shorts: "/cdn/value.d5c7ccf91783774558f4613e6314be4148c3585f1d51b8a5d28290027bbe13fd.glb"
-    Ward_silkcloak: "/cdn/value.37a50fb3b8d3edb2e73c0be43fe703f273d0dfe2249f943580883494f61f1021.glb"
-    Ward_skirt: "/cdn/value.bcaeed4de8efc0d13adeb115d878b7a28f2fdd218fc6958cdcf40387de7c8de4.glb"
-    Ward_slacks: "/cdn/value.850cef89903f1045c6f14909303d86e71eb113164d624bc0da7a2479d58de592.glb"
-    Ward_slippers: "/cdn/value.9ca5fefd5360cbe56cd78cb20cf4446a7d9a71d7bb67a75660b771d0f91dff99.glb"
-    Ward_sneakers: "/cdn/value.b2be6d4c8a559c2c7f278cf4eef625ed48cdff96179928dd35f75139909964ac.glb"
-    Ward_souwester: "/cdn/value.bf9a82d43520a52b4a9e1b2cbb74bd7742c1852b605840a13750845bb5012714.glb"
-    Ward_steeltoe: "/cdn/value.a627c109e5ac90aa455fb5c09b9b5ff42ec97a70389046f364a1e623a1b1226e.glb"
-    Ward_sweater: "/cdn/value.0a15318d15f13495cc49fd05c0a5ad60f8623e451c319121aa7f23b6b49f6117.glb"
-    Ward_tailcoat: "/cdn/value.f1cbfa10c73a44655f76379451db4b976a1d104f881c2f127b1a4314cc9bbaf3.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_tank: "/cdn/value.afebf7fd1d39d820957c047492efff1a6ff9de898f271a956ae39da2a2e9a2e6.glb"
-    Ward_tarwaders: "/cdn/value.9b05f1aee794aab721218b722c110d0107f2246ab90380e53ee2d9cf2ecf6a2d.glb"
-    Ward_tee: "/cdn/value.53087111945bcb10e075df35f8dfa5e6ec56235f287bb6238f4ded3619f54934.glb"   # Nov 11 sleeves hug the arm, chest smoothed, shoulder band on the body's weights (art/human-cloth/tee_sleeve.py, tee_weights.py, tee_hem.py, tee_slit.py); before 97176737
-    Ward_tophat: "/cdn/value.a8560fb9c9dfaf41850bb14e73d906f3165b1215ca0f595b3fb2bd11eecd9fb5.glb"
-    Ward_velvetskirt: "/cdn/value.1952326fb32a7265702a195124dc6782aafd245489ed694837c2b09fe226033a.glb"   # Nov 11 stride: hem rides the thigh (art/human-cloth/skirt_stride.py); before b003a35e
-    Ward_vest: "/cdn/value.1794cde95fb9b3426d800a5535fdf59e88aad21d41072a30283342faccecaf41.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_wirehood: "/cdn/value.1211430ab4895ec5090c51816074c9de6d70eab946ca7e17f22b3ea0ff26d276.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_abysshauberk: "/cdn/value.57454710ba85b73b49aa4679f71f15d5b1f799a4e387a84a145a3267eb762b28.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_apron: "/cdn/value.e56e882dac67dfbc6b3e775f5d8882bb9e7d6c9c6981ed4d738e71b3865b409f.glb"   # Nov 11 stride: hem rides the thigh (art/human-cloth/skirt_stride.py); before ed168794
+    Ward_ballastboots: "/cdn/value.2d09889a5c226be4b3f570ecea358158c4c950d2ab8f714b3e87cfb92c57a1ef.glb"
+    Ward_balltie: "/cdn/value.bd2ff084309e1bf33428c9dea64c8b75523ce334723bf666f042eb7e6cc1f50e.glb"
+    Ward_beanie: "/cdn/value.a867ff32ea994b0940a7103b4f65c2a6cde8e31569851b1cbeb3c29e85894fe9.glb"
+    Ward_bell: "/cdn/value.d4d187c906afb5689be808727267f3e80ad55fa0f3437abccd4223a62409237e.glb"
+    Ward_bellhop: "/cdn/value.9907538364699f14896c8d14cc4ecd5f7527c8a745398da9b547a28d13f99ecc.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_beret: "/cdn/value.2b556c95a4378d68d599f03d94390e13b502e08257c77404c4e572d7923e6cdd.glb"
+    Ward_blazer: "/cdn/value.390b7938df8c1eba4d0ccdcf0c1df9babb2515db0327abed1aeca623112f8f61.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_boots: "/cdn/value.4fe53400e97e922c309c70442323d4c0f74f10e91ad5a56ddde35ed3bd871b9b.glb"
+    Ward_bow: "/cdn/value.527c6be920dc87974bf86793c51e630989c6c1f6677d359cf866cdd9767f6875.glb"
+    Ward_bowtie: "/cdn/value.89f15034d2d22a02be8913b62058a2d103eaec8c0f05aeed8ce989c48a597219.glb"
+    Ward_canvasskirt: "/cdn/value.dc7aa0eafc82769105fd4cdb17b1661dbf64a1f5851ab8505ab60ab2a730f2b8.glb"   # Nov 11 stride: hem rides the thigh (art/human-cloth/skirt_stride.py); before c32dca30
+    Ward_cap: "/cdn/value.2147ec62b88bb26d81dac07f8b9d04fdff4804f236cdbad1b48c6a1970413725.glb"
+    Ward_cape: "/cdn/value.af223a6648bb16a5fa74794d64ddb1b7b141c8fab805bac9a7eec19e041299e8.glb"
+    Ward_cargo: "/cdn/value.9c3b43960deed73ef446ab93bfbcc3524bcf79fd4c0477a8c2ceee7e44b77bb1.glb"
+    Ward_carpetponcho: "/cdn/value.49c1e6b0d53e57d7108fdca937f09dfde6225a1a2c7faa8c961cb1c58b0d09ae.glb"
+    Ward_chitinhelm: "/cdn/value.296c1f436b79722143f95aaf4b9bc21a7be98fa57776aa213ae244ae3e1e1181.glb"
+    Ward_chitinplate: "/cdn/value.406a2fa5bf9634d7c5b41f77eaeaad148501d9ea29851f58c69a8191b6184a3c.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_crown: "/cdn/value.da7a90a1c1d89d3fcc6b91c6fa87949f5296aafa01a9c10b33dd0aac575c873a.glb"
+    Ward_divehelm: "/cdn/value.da41edcdbb01831d9a3b0b1e31ce06098cffd58dab024c20b9f47467ee8b34d6.glb"
+    Ward_dress: "/cdn/value.3fbc0794ed761b4324dac4bab3c313a76e138ed5b7955815f0879481fd574d0c.glb"
+    Ward_flower: "/cdn/value.16d3957b71956c4564f6152e12f96bee1e217f4d2938612e11a8b73697faebf3.glb"
+    Ward_glasses: "/cdn/value.2f419282d9dcf7c090b491ff303ce3dc7a9dc4f62f741bfa9098a60c1e8ee8fb.glb"  # Nov 11: every head key copied from the Head (art/human-cloth/eyewear_keys.py), frame follows broad/long/round heads; before 4a64fedc
+    Ward_gmhoodie: "/cdn/value.3e146c70500e10fe432899fdc748944aacf754c5f30f66a3c7364de87207a873.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_gown: "/cdn/value.ede28427285b0afa0a23b511a9436db76f8454764e652bbb21831d46ac8398ee.glb"   # Nov 11 stride: hem rides the thigh (art/human-cloth/skirt_stride.py); before 992a879e
+    Ward_headphones: "/cdn/value.971abb7c2df0e7e520b5c5ddb2773cde50750c88c674b46fc93a2e7db46d1bc9.glb"
+    Ward_heels: "/cdn/value.4c18ece541e2d43c8136b6acc1550b336c306fb1c10ef753dbfdd8882c5f18f2.glb"
+    Ward_hoodie: "/cdn/value.e90a56d5174fbe87b98818b2bd379ff55313ec41cdf6de86d855253fc56911e8.glb"   # Nov 10 shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_hotelrobe: "/cdn/value.a0d51d529be545744824f90d2802609f60e3c33dc18e07c307428d5ccf679784.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_hotelslip: "/cdn/value.1fd888d9fcda51a16fd6a282a935342d489a9ae3c308a8effe1aed4e60738253.glb"
+    Ward_jacket: "/cdn/value.856b44b84918e66ae69b7c7da0ca9e8ab896a726298514e7bf8e0f75ee406521.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_jeans: "/cdn/value.4d790f7204b2ae431a31b6a93d573328c31c3685a53848d395b14f2ffdf93ae2.glb"  # Nov 11: legs cut apart at the midline (59 faces bridged left leg to right below the crotch), inner panels rebuilt on the skin (art/human-cloth/inseam_split.py); before d386ff4a
+    Ward_jeans_tuck: "/cdn/value.b9d18b85e61e6757cb21132f64d70ebf4af9897895518c56b7b5c4ecfefaa11d.glb"  # Nov 11 inseam split too; before a53b4ae0;   # Nov 11: the jeans legs pulled inside the boot shaft, worn only with boots (art/human-cloth/jeans_tuck.py)
+    Ward_jerrytee: "/cdn/value.752b2340f2c11607d82c83ddc26be22e509c983a9b7a8ef99fb6ad7a1951a1f7.glb"
+    Ward_lifemantle: "/cdn/value.ef46cfb9124607886569276f4f570948a1d20c60800fa3db7ae640cac9275b28.glb"
+    Ward_longskirt: "/cdn/value.ec656c12aafa642daef1e3017e7b61aafffc8bd65821d1f358fef85bb063390e.glb"   # Nov 11 stride: hem rides the thigh (art/human-cloth/skirt_stride.py); before 698ad9a9
+    Ward_longsleeve: "/cdn/value.400b519843f1dcc059ae6b8d084f36d8bad94b9356d921a5c25d26f43c2a3bc9.glb"   # Nov 11 crew collar band up the neck (art/human-cloth/collar_band.py); before b5b072f1; Nov 11 hem held 11 mm off skin over pants (art/human-cloth/shirt_out.py); before 7e587b9f; Nov 11 back-of-shoulder crumple smoothed (art/human-cloth/shoulder_smooth.py); before 261c9d3e;   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_maidapron: "/cdn/value.4030e40fb11c7dca60d3cea0b9544045e093661dc3db45d1d07b38eafd07a597.glb"   # Nov 11 stride: hem rides the thigh (art/human-cloth/skirt_stride.py); before 478277c9
+    Ward_megjacket: "/cdn/value.4732ed121af47e973b02ebd58c04f783157ae3a562170cadddf2c9207a13fa1b.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_officeshirt: "/cdn/value.54786581363f55d37a8ad5d2fe8deddad4a6e7fe4e96b821f1019761b739ad13.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_oilskin: "/cdn/value.c6d06d4d6b01a7d994203f36c6fa840ab559fd3d21e8922482122703a81bca87.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_opera: "/cdn/value.af9099dd267b467a46bbd77ef60ff3f8e9a730f8bdde8cb8ce0100654a13f555.glb"
+    Ward_overalls: "/cdn/value.76fe948954b11c1ab80c97b051945966fb6ddb3a922db0a15ec422887b9e7a1e.glb"
+    Ward_padbeanie: "/cdn/value.275ac4315f73118c3a181cf8219c52f6a2af8860a06a289d43c1018bdfe9eaff.glb"
+    Ward_padjacket: "/cdn/value.65d4f00dea67c8c358af140e6944a7c0577d6826f417976a2ecbd75a98042ca7.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_pajamas: "/cdn/value.b7403f1a43bd58cb95330b2102fec4b837201b384ff27164ecd6b7ae3cbf5cd8.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_pants: "/cdn/value.6bb24b3542ed359d042d0290732ce08ebe2fcfcbf79c19d607d32a080c1c69cb.glb"   # Nov 11 waistband pulled in under tops (art/human-cloth/waist_snug.py); before ca70ffab
+    Ward_partyhat: "/cdn/value.111f039e642b154395d334ad30f5dce25882cf86853aebf3eb07b776b271dce4.glb"
+    Ward_pgcoat: "/cdn/value.ec8ae3d457ccf7dedbd0cc528a1f1b1c1024e4b8e5e0888b062095f1c10d57be.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_pghoodie: "/cdn/value.ed4b129c7f998dac30ce17bbe1ffccb201a2b0f5b03d93982faaadb46bd1b9c8.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_pinstripe: "/cdn/value.091b0bf40cfa46d523f52046637ddea1351385ec6daa9ff9d5bc81690daa85d4.glb"
+    Ward_pitchboots: "/cdn/value.f4560a8b5cfd0a73fe8fce96e1028c9470144f0345ce7934c68f20d074397f55.glb"
+    Ward_pjpants: "/cdn/value.59c8dabcfea8b060d619adef366245ee98f8a52425759decb12374f54fc00158.glb"
+    Ward_platevest: "/cdn/value.401a0ca1c6824db9b6ce5aa85d1f43ef2045363109b95f130a38fa3240417cd5.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_pphoodie: "/cdn/value.b23e120d19e38986740c177f81636fac91ffef6eac6baa2ee3fee3307784b380.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_scarf: "/cdn/value.1a5c26b1a8f6704919265d391c79b59e5ea910881f366f9d4d34bce764ea98c2.glb"
+    Ward_seawatchsuit: "/cdn/value.2332a3a7a0021cb22a3fb28a3defca77d4ef3f48fa07a1ed798a15f7976d9874.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_shades: "/cdn/value.c245eab6e0c5c3dbdd7d0247861eb515ca6587656bb54277a0c61bb295e9a552.glb"  # Nov 11 head keys too (eyewear_keys.py); before 940bd6f8
+    Ward_shirt: "/cdn/value.5e6617714d0923081b5ae54b900a0c979e1e18585a7561de2a41be9bd7dbaf37.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_shorts: "/cdn/value.e40fc6a527d1da0fca899f3245dd352a5177ac7543cc5e7f15211253b21baf63.glb"
+    Ward_silkcloak: "/cdn/value.7f80e9e41b4517a9b18a9e86f9ca75d9279a2700da12c12a5f957ab670dc1186.glb"
+    Ward_skirt: "/cdn/value.39384bb6e7ae493bba30cae9f07f283e265f51b4f18eb07d20cfaebd92289b4c.glb"
+    Ward_slacks: "/cdn/value.9e5819e6e8a9f2d0845bf612832d4b15c9243501813bc7d7acdb3f372fe85c30.glb"
+    Ward_slippers: "/cdn/value.c0b0153252a415774b07d10883e2d0623a7be476023cc4ec1c462e9b6c91af38.glb"
+    Ward_sneakers: "/cdn/value.06e59bf947a5c6fa346efd5ea9ff8312ef821e49c79d2517606b051d9cf37ef5.glb"
+    Ward_souwester: "/cdn/value.2f5c91cd3f273dd4cb7e5deef71800e3ecf67687e6645e18cea21d57790b3b6d.glb"
+    Ward_steeltoe: "/cdn/value.b37b654e7c103f019328bb7f0521ef3a73800a06465cd760bf127d7a95b22ba4.glb"
+    Ward_sweater: "/cdn/value.5d267cb147c88809f09f7f74b27c1b0acfd25a8d0b04648c4957739bcf324e75.glb"
+    Ward_tailcoat: "/cdn/value.363736ff60f21f31288958c1ed175c7f274517a8262aa38fe5b4f42b337508af.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_tank: "/cdn/value.397cc1435b26456003c27a64b04cebc66618ea36cc29f99625159a9706f7f225.glb"
+    Ward_tarwaders: "/cdn/value.5862764156ecff8a0106d6654f1e3a7f8dd798bd03202552e0c5b43736812ba2.glb"
+    Ward_tee: "/cdn/value.a5f00a94483ae853c6c923f520db214d69dac043265ac75e39ffb8a1203e51eb.glb"   # Nov 11 sleeves hug the arm, chest smoothed, shoulder band on the body's weights (art/human-cloth/tee_sleeve.py, tee_weights.py, tee_hem.py, tee_slit.py); before 97176737
+    Ward_tophat: "/cdn/value.124d15f22f319cafed02aa1c0e1d160023a2f5b10aa76fc023dd5e0a6dfd4581.glb"
+    Ward_velvetskirt: "/cdn/value.b7e4f793f048c1f17e0534b4b83bd4f8042e5342f9b5315493a2368d8e9787c6.glb"   # Nov 11 stride: hem rides the thigh (art/human-cloth/skirt_stride.py); before b003a35e
+    Ward_vest: "/cdn/value.2c5d4dd771fae79a5709e767c5cdf7de08574ee75777518cffade13ac330f612.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
+    Ward_wirehood: "/cdn/value.0162d5d42f5fbfd451fdb56fb0ee59712382db2cf6da573c46385f8119e79f44.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
 f:
   inner: "/cdn/value.c67010cfed8394921dd539c0003049942e28d4a67201c7e860761956160908d6.glb"   # the plain tee worn under open-front tops, settled 2 mm off the skin (art/human-cloth/inner_tee.mjs)
   body: "/cdn/value.39c91126ecd7a0122901a93d97db7b6224fd5dccac1dd3bdcf94f0ff2d42e7ea.glb"   # Nov 11 collar split; before 7afa2ad9
