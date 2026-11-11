@@ -5,8 +5,8 @@ import FACES from './data/critter-faces.yml'
 import { PRINTS } from '../mat-cloth.js'
 
 export const CAT_BODY = {
-  f: { glb: '/cdn/value.9e083ca65a7cef805e43f549e27e0752c0b23682fe0bf0ccec44ee2fc71fe5af.glb', fur: '/cdn/value.eb86c240c4daf27effe00523a7f1f216e7239f8eca99359e5a04fcf67c289a6f.jpg' },
-  m: { glb: '/cdn/value.5e2f7613bbf5d9c28926f8ed3407788c7759d5b9f0308f776ba1b2da4a23edc2.glb', fur: '/cdn/value.a400e6f824bf75d1c5dfafb1cadbe30c177543404d39b9c350d4feadc8dfd313.jpg' }
+  f: { glb: '/cdn/value.9e083ca65a7cef805e43f549e27e0752c0b23682fe0bf0ccec44ee2fc71fe5af.glb', fur: '/cdn/value.1c4f4402e22ebd41f1cca9b45fc42ef2bec051041b40c8a3c40b88028a23ca58.jpg' },
+  m: { glb: '/cdn/value.5e2f7613bbf5d9c28926f8ed3407788c7759d5b9f0308f776ba1b2da4a23edc2.glb', fur: '/cdn/value.58ce243610699df44f4552ccfdfc667580c63c99f28103ecf2d1dd72c94657fe.jpg' }
 }
 const rgb = (hex, lin = true) => { const n = parseInt(String(hex || '#ffffff').replace('#', '').slice(0, 6).padEnd(6, 'f'), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { const s = v / 255; return lin ? (s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4)) : s }) }
 const lerp = (a, b, t) => a + (b - a) * t
