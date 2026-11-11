@@ -12,7 +12,7 @@ TYPES = {
     "upright": dict(h=1.05, w=1.0, lean=8,  fold=0,   foldAt=1,    round=0.55, key="Ear_Small"),
     "tall":    dict(h=1.42, w=0.86, lean=12, fold=0,  foldAt=1,    round=0.4,  key="Ear_Small"),
     "small":   dict(h=0.72, w=0.95, lean=6,  fold=0,  foldAt=1,    round=0.9,  key="Ear_Small"),
-    "fold":    dict(h=0.98, w=1.04, lean=4,  fold=95, foldAt=0.5,  round=0.8,  key="Ear_Small"),
+    "fold":    dict(h=1.0, w=1.04, lean=4,  fold=125, foldAt=0.4,  round=0.8,  key="Ear_Small"),
     "wide":    dict(h=1.0,  w=1.02, lean=6,  fold=0,  foldAt=1,    round=0.6,  key="Ear_Wide", tip=-58),
 }
 
@@ -61,6 +61,7 @@ def ear(bm, E, T, sx, mats):
         taper = taper * (1 - T["round"] * 0.0) if tt < 0.85 else taper
         w = W0 * max(taper, 0); d = D0 * max((1 - tt) ** 0.7, 0)
         if tt > 0.82: k = (tt - 0.82) / 0.18; w *= 1 - (1 - math.cos(k * math.pi / 2)) * (1 - T["round"] * 0.4) * 0.15; d *= 1 - k * 0.2
+        if t < 0.18: g = (0.18 - t) / 0.48; w *= 1 + 0.4 * g; d *= 1 + 0.9 * g   # the base flares into the skull, swallowing the head's own ear root
         w = max(w, 0.0015); d = max(d, 0.0012)
         cup = 1.25 * (1 - 0.55 * tt) if t > -0.05 else 0
         ring = []
@@ -103,11 +104,11 @@ def ear(bm, E, T, sx, mats):
         root = Vector((ox * W0 * sx, D0 * 0.25, 0.08 * h))
         dirv = Matrix.Rotation(math.radians(ang * sx), 3, "Y") @ Vector((0, 0.7, 1)).normalized()
         if T.get("tip"): pass
-        segs, ringn = 7, 8; prev = None; rr = W0 * 0.24
+        segs, ringn = 7, 8; prev = None; rr = W0 * 0.3
         rowsv = []
         for i in range(segs + 1):
             u = i / segs; pc = root + dirv * (L * h * u) + Vector((0, 0.12 * h * u * u, -0.05 * h * u * u))
-            rad = rr * (1 - u) ** 0.9 + 0.0008
+            rad = rr * math.sin(math.pi * (0.15 + 0.85 * u)) ** 0.7 * (1 - u) ** 0.35 + 0.0008
             row = [bm.verts.new(C + E["ac"] * ((pc.x * sx + math.cos(2 * math.pi * q / ringn) * rad) ) + E["fr"] * ((pc.y + math.sin(2 * math.pi * q / ringn) * rad * 0.6)) + E["up"] * pc.z) for q in range(ringn)]
             rowsv.append(row)
         for i in range(segs):
