@@ -424,20 +424,6 @@ for f in bm.faces:
     if inb or dark:
         for l in f.loops: l[uvk].uv = UVF
         f.material_index = 0; nlash += 1
-# the old face's sculpt reaches past the box: lash flaps beside the eyes, the ':3' crease on the chin, little muzzle lumps.
-# Relaxed in place with every open edge pinned (the neck seam, the ear cuts): a plain smooth there tore the cheeks open.
-_bm.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5)
-pin = {v for v in bm.verts if v.is_boundary or not v.is_manifold}
-for v in list(pin):
-    for e in v.link_edges: pin.add(e.other_vert(v))
-ring = []
-for v in bm.verts:
-    c = v.co
-    if c.y > -0.03 or v in pin: continue
-    dx = max(BOX[0] - 0.07 - c.x, c.x - BOX[1] - 0.07, 0); dz = max(BOX[2] - 0.10 - c.z, c.z - BOX[3] - 0.05, 0)
-    if dx == 0 and dz == 0: ring.append(v)
-for _ in range(25): _bm.ops.smooth_vert(bm, verts=ring, factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
-print("old-face ring relaxed", len(ring), "pinned", len(pin))
 dead = []
 print("head front verts pressed", len(moved), "faces to fur", nlash)
 bm.to_mesh(hm); bm.free(); lift = len(dead)
