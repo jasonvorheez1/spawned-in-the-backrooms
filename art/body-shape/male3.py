@@ -6,7 +6,8 @@
 import sys, numpy as np
 sys.path.insert(0, __file__.rsplit('/', 1)[0])
 from fill import load, acc, put, worlds, prims, ss, save
-FLAT, PEC, HIP, LAT, DELT = .80, .010, -.11, .06, .07
+FLAT, PEC, HIP, LAT, DELT = .80, .010, -.14, .10, 0.0
+CHESTZ = .12   # chest depth: front and back of the ribcage pushed out from the spine plane
 def run(src, out, fld):
     d, J, b0 = load(src); W = worlds(J); pts = []; dls = []
     names = {i: n.get('name', '') for i, n in enumerate(J['nodes'])}
@@ -55,6 +56,7 @@ def run(src, out, fld):
         # lats/upper back: wider under the arms, tapering down to the waist
         latB = ss(yS1 + .02, yS2, y) * (1 - ss(yS2 + .08, yN - .04, y))
         D[:, 0] += LAT * latB * x * inside * (1 - .5 * (z > 0)); c2 = np.abs(D).max()
+        D[:, 2] += CHESTZ * latB * (z - .0) * inside * (z < 0) + .5 * CHESTZ * latB * np.maximum(z, 0) * inside * (ax_ < .05)
         # deltoid: radial swell near the shoulder about the arm bone, by Arm weight
         for k in range(4):
             for b, (h, t) in seg.items():
