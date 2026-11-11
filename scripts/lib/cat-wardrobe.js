@@ -39,8 +39,10 @@ export function skinParams(sex, look) {
       o.tHi += sex === 'm' ? 0.018 : 0.012
       o.tuckT = 0.023
       o.tShoulder = 1
+      if (l.topw === 'hoodie') o.tLo = sex === 'm' ? 0.462 : 0.428
     }
     o.tuckB = W.models[l.botw]?.[sex] ? 0.014 : 0
+    if (l.botw === 'skirt' && W.models.skirt[sex]) o.bHi = B.waist + 0.012
     o.tuckS = W.models[l.shoes]?.[sex] ? 0.011 : 0
   }
   { const pr = printOf(sex, { ...W.defaults[sex], ...(look || {}) }); if (pr && !W.models[(look || {}).topw ?? W.defaults[sex].topw] && PRINTS[pr.pat]) { o.tprint = PRINTS[pr.pat].tex; o.tpx = pr.pax; o.tpy = pr.pay; o.tps = pr.psz } }
