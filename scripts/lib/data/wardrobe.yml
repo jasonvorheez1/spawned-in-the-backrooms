@@ -76,6 +76,8 @@ parts:
 - Ward_heels
 - Ward_beret
 legacyHuman:
+  m_sw106: /cdn/value.fa40bdfd07ca1d7f0f4795d350d835f9710c23815a21daa606da4b11d3353934.glb   # before the Nov 11 collar split
+  f_sw106: /cdn/value.7afa2ad9d19dccfe5185934b2bb92fdfadae3be7399f8b60a1a3dd872db56bcd.glb
   m_mall: /cdn/value.069d7657f5164132588d8b09446b6b15cb430ec242a79e9dda7c1b1cb7e668dd.glb   # bonus mall bodies that predated the redo (Nov 10)
   f_mall: /cdn/value.ed5db0e27548e200185ddae95d951a9f7e5a97aafa6059720b98cf51712a3ace.glb
   x_mall1: /cdn/value.5dec0e3c2fcfaede078334c85bb756119412143a36ed1f4c02ed39a959bad200.glb
