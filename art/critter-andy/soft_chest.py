@@ -22,7 +22,7 @@ for i, p in enumerate(W):
   ex = line - p.y                                  # how far in front of the line
   if ex <= 0: continue
   edge = ss((p.z - (Z0 - 0.04)) / 0.06) * ss(((Z1 + 0.04) - p.z) / 0.06)
-  side = ss((0.17 - abs(p.x)) / 0.06)               # fade out at the flanks
+  side = ss((0.19 - abs(p.x)) / 0.13)               # fade out at the flanks
   dy = ex * (1 - KEEP) * edge * side                 # pull back toward the line
   worst = max(worst, ex)
   d = Mi @ Vector((0, dy, 0))
