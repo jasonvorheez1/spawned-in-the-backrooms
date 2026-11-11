@@ -25,14 +25,13 @@ for p in to.data.polygons:
 KEEP = {p.index for p in to.data.polygons if p.select}
 for o in bpy.context.selected_objects: o.select_set(False)
 bpy.context.view_layer.objects.active = to; to.select_set(True)
-for v in to.data.vertices: v.select = False
-for e in to.data.edges: e.select = False
-for p in to.data.polygons:
-    if p.select:
-        for vi in p.vertices: to.data.vertices[vi].select = True
-bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.select_mode(use_extend=False, type='FACE'); bpy.ops.mesh.select_all(action='DESELECT'); bpy.ops.object.mode_set(mode='OBJECT')
-for p in to.data.polygons: p.select = all(to.data.vertices[i].select for i in p.vertices) and (mw @ p.center).z > zlo and abs((mw @ p.center).x) < 0.13 and ((mw.to_3x3() @ p.normal).normalized() is not None) and p.index in KEEP
-bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.separate(type='SELECTED'); bpy.ops.object.mode_set(mode='OBJECT')
+bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.select_mode(use_extend=False, type='FACE')
+eb = bmesh.from_edit_mesh(to.data); eb.faces.ensure_lookup_table()
+for f in eb.faces: f.select_set(False)
+for f in eb.faces:
+    if f.index in KEEP: f.select_set(True)
+eb.select_flush_mode(); bmesh.update_edit_mesh(to.data)
+bpy.ops.mesh.separate(type='SELECTED'); bpy.ops.object.mode_set(mode='OBJECT')
 new = [o for o in bpy.context.selected_objects if o is not to][0]; new.name = 'Skin_collar'; new.data.name = 'Skin_collar'
 print('COLLAR', sel, len(new.data.vertices), round(min((new.matrix_world @ v.co).z for v in new.data.vertices), 3))
 bpy.ops.export_scene.gltf(filepath=out, export_format='GLB', export_skins=True, export_morph=True, export_apply=False, export_animations=False, export_yup=True)
