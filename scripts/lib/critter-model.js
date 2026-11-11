@@ -979,7 +979,7 @@ export function humanFace(expr, blink, mouth) {
 // ---- the new cat (Shelly Nov 11: "replace these demo cats as our new cat model"): every furry cat wears the Tripo cat of scripts/lib/cat-wardrobe.js,
 // its face painted in its skin shader, eye colour, hair and head tufts as skinned children. Other species keep the old body for now.
 const CAT_FACE = { neutral: 'neutral', smile: 'smile', happy: 'smile', catmouth: 'smile', smug: 'smile', shy: 'smile', love: 'smile', beam: 'joy', joy: 'joy', laugh: 'joy', sad: 'sad', cry: 'sad', nervous: 'sad', angry: 'angry', mad: 'angry', shock: 'shock', surprised: 'shock', scared: 'shock', flustered: 'shock', blink: 'blink', sleep: 'blink', blep: 'blep', tongue: 'blep', hit: 'hit', hurt: 'hit', ko: 'ko', dizzy: 'ko' }
-const CAT_KIDS = ['topw', 'botw', 'shoes', 'hat', 'mask', 'hair', ...Object.keys(CW.fluff || {}).map((k) => 'fluff-' + k), 'fluff-ruff', 'fluff-mane'].map((k) => 'cw-' + k)
+const CAT_KIDS = ['topw', 'botw', 'shoes', 'hat', 'mask', 'hair', ...Object.keys(CW.fluff || {}).map((k) => 'fluff-' + k), 'fluff-ruff', 'fluff-mane', 'ears'].map((k) => 'cw-' + k)
 const colourOk = (c) => typeof c === 'string' && (EYE_COLORS[c] || /^#[0-9a-f]{3}([0-9a-f]{3})?$/i.test(c))
 const hashPick = (str, arr) => arr[[...String(str)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % arr.length]
 export const isNewCat = (l) => !HUMAN && MESH && speciesOf(l) === 'cat'
