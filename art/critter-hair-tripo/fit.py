@@ -90,13 +90,16 @@ def landmarks(o, lab, top_frac=None):
         z0, z1 = V[:, 2].min(), V[:, 2].max(); sel = V[:, 2] > z1 - top_frac * (z1 - z0)
     HV = V[sel]; c = HV.mean(0)
     blk = sel & (vlab == 2)
+    if top_frac:  # eyes can sit below the top band on a short head: look further down, near the middle
+        band = V[:, 2] > z1 - 0.42 * (z1 - z0)
+        blk = band & (vlab == 2) & (np.abs(V[:, 1] - c[1]) < 0.06) & (np.abs(V[:, 0] - c[0]) < 0.08)
     ec = V[blk].mean(0); f = Vector((ec[0] - c[0], ec[1] - c[1], 0)).normalized(); 
     if top_frac:  # the target body is authored square: its front is the nearest axis
         f = Vector((round(f.x), 0, 0)) if abs(f.x) > abs(f.y) else Vector((0, round(f.y), 0))
     l = Z.cross(f)
     F, L = V @ np.array(f[:]), V @ np.array(l[:]); cF, cL = c @ np.array(f[:]), c @ np.array(l[:])
     W = L[sel].max() - L[sel].min()
-    eyes = blk & (F > cF) & (np.abs(L - cL) > 0.1 * W)
+    eyes = blk & (F > cF) & (np.abs(L - cL) > 0.1 * W) & (np.abs(L - cL) < 0.45 * W)
     eL, eR = V[eyes & (L > cL)].mean(0), V[eyes & (L < cL)].mean(0)
     skin = sel & ~vhair & (vlab != 2)
     def tip(m):
