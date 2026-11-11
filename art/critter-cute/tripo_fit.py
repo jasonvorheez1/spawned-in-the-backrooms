@@ -33,7 +33,7 @@ def _tripo_load():
         c = v.co; v.co = Vector(((c.x - cx) * k, (c.y - cy) * k + float(os.environ.get("TRIPO_DY", "0")), (c.z - zmin) * k + pz))
     t.data.update(); bpy.context.view_layer.update()
     # Tripo modelled a raised paw over the right cheek: every island but the head goes, and what still bulges low-front-right over our mouth goes too
-    bm = bmesh.new(); bm.from_mesh(t.data); bm.faces.ensure_lookup_table()
+    bm = bmesh.new(); bm.from_mesh(t.data); bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-4); bm.faces.ensure_lookup_table()
     seen = set(); isl = []
     for f0 in bm.faces:
         if f0.index in seen: continue
@@ -48,7 +48,7 @@ def _tripo_load():
     for g in isl[:6]:
         cs = [f.calc_center_median() for f in g]
         log("tripo island", len(g), "x", round(min(c.x for c in cs), 3), round(max(c.x for c in cs), 3), "y", round(min(c.y for c in cs), 3), round(max(c.y for c in cs), 3), "z", round(min(c.z for c in cs), 3), round(max(c.z for c in cs), 3))
-    kill = [f for g in isl[1:] for f in g]
+    kill = [f for g in isl[1:] for f in g if len(g) < .2 * len(isl[0])]
     if os.environ.get("TRIPO_PAWCUT", "1") == "1":
         zc = min(v.co.z for v in bm.verts); zt = max(v.co.z for v in bm.verts); hz = zt - zc
         kill += [f for f in isl[0] if (lambda c: c.x > .035 and c.z < zc + .26 * hz and c.y < -.12)(f.calc_center_median())]
