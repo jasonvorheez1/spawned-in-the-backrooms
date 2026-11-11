@@ -27,7 +27,7 @@ m:
     Ward_divehelm: "/cdn/value.30824463ff3e72d0b6fe21e71582b411b22116f7616fb4eb2778bd81c87bc4c1.glb"
     Ward_dress: "/cdn/value.a94ed22bb55bed37089e7c85c107325dceb39b37d454d3299edf94027933d34f.glb"
     Ward_flower: "/cdn/value.b69e33c6f6a12ee09cf8b476577868a2bb838aae0362f790395a1e39601ec62d.glb"
-    Ward_glasses: "/cdn/value.ef72cf809370b3d30fccf68741956c9bbfa1aac84e1393a0011c9426044cb042.glb"  # Nov 11: every head key copied from the Head (art/human-cloth/eyewear_keys.py), frame follows broad/long/round heads; before 4a64fedc
+    Ward_glasses: "/cdn/value.b32c217f0d5b543f24e4c8e0f637fab20e7b0daf386476dde97ea212f6c8c4c0.glb"  # Nov 11 5% narrower (art/human-cloth/eyewear_narrow5.py, was ef72cf80); Nov 11: every head key copied from the Head (art/human-cloth/eyewear_keys.py), frame follows broad/long/round heads; before 4a64fedc
     Ward_gmhoodie: "/cdn/value.23fb2deb2982cf07c9566a4d0bbc133591c33120bf8fa15b8e635689b630f63f.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
     Ward_gown: "/cdn/value.992a879ee09e80ee2047e022a05fb3c9d81cd314209abd777719d5183eec8bd8.glb"
     Ward_headphones: "/cdn/value.5d995157d10be614763547df1c5169e8f906854ef6c7516f930ad0716094a2a0.glb"
