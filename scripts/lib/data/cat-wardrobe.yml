@@ -29,8 +29,8 @@ feet:
   socks: { top: 0.55 }      # share of the shin, ankle up
 # Tripo garments: glb per body (f/m), under = the painted layer hidden beneath it
 models:
-  hoodie: { under: longsleeve, pat: weave, f: /cdn/value.b9312431fdb404e3d3e357370d90824369c89e3a3a272c40e1bd9af7b5759c96.glb, m: /cdn/value.8ecef46fa9bd9b360ebad2f5ea836c96d2c45cc29a2dae7ed89d18ec139c208c.glb }
-  jacket: { under: longsleeve, pat: weave, f: /cdn/value.88e43e30149d9fe0c6cae89bc0134be61b21b7e0def531f28537ae09a2dc1551.glb, m: /cdn/value.4ea0b487ac544fda7c1adaea65dce0f1173fa329556635dab98308fd57ee13d1.glb }
+  hoodie: { under: longsleeve, pat: weave, f: /cdn/value.ce0f77df53cf4350ce4bdde40935f6eb723c1dde8c063373f79f97a37a1df5af.glb, m: /cdn/value.ed69d4a3a43283e85bd097afad067e0b7ea08da6a8fd89e5c378dbd0ef0be87c.glb }
+  jacket: { under: longsleeve, pat: weave, f: /cdn/value.9e3ae5e81050efe5a1021f635181e7d3b0d3ec4040bb66c62914a128bc1b2971.glb, m: /cdn/value.521e85a80df452803332e4cae7c1ea8a39afae84c50ddd098c0691d995e2618b.glb }
   skirt:  { under: briefs, pat: weave, f: /cdn/value.922502c69b0adade55a37355e696d0703e10ef282d88ffd97271aa6114365c99.glb, m: /cdn/value.6629cad87e84d97628144caff61c69999c630cf75bcd71a5c5f959ecf5916096.glb }
   boots:  { under: socks, pat: weave, f: /cdn/value.a038dba26ba8066ba71fbbb08c4fbad1cf257ac4b39ac7f553ca1bcf4e641cf3.glb, m: /cdn/value.9b3e97dd8ee779eb8d508d1cd7f2c523383cd697569310496e069e72da598891.glb }
 defaults:
