@@ -36,6 +36,12 @@ for v in o.data.vertices:
     else: G[s+'UpLeg'].add([v.index],rem,'ADD')
 print("FIX crotch",round(crotch,3),"seam edges",len(seam),"fixed",fixed)
 # tried: flipping inner-thigh faces outward and one-sided cloth; neither cleared the slivers in a stride test (Nov 11)
+# 14 faces near the knees bridged one leg to the other (verts led by opposite legs): a stride stretched them into a web. Cut them
+lead=lambda v:(lambda l,r:'L' if l>r+0.05 else 'R' if r>l+0.05 else '?')(sum(g.weight for g in v.groups if gi[g.group] in legs('Left')),sum(g.weight for g in v.groups if gi[g.group] in legs('Right')))
+bm=bmesh.new(); bm.from_mesh(o.data); dv=o.data.vertices
+bridge=[f for f in bm.faces if (lambda s:'L' in s and 'R' in s)({lead(dv[v.index]) for v in f.verts}) and sum(W(v).z for v in f.verts)/len(f.verts)<crotch]
+bmesh.ops.delete(bm,geom=bridge,context='FACES_ONLY'); bm.to_mesh(o.data); bm.free(); o.data.update()
+print("BRIDGE cut",len(bridge))
 # the imported custom normals still pointed across the old shared seam: those faces lit pale mid-stride. Recompute them from the split mesh
 bpy.context.view_layer.objects.active=o; o.select_set(True)
 bpy.ops.mesh.customdata_custom_splitnormals_clear()
