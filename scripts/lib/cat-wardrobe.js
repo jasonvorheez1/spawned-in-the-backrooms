@@ -79,7 +79,8 @@ export function catModel(sex, look) {
   }
 }
 // the Chest slider 0..1 (look.chest), the body's Chest key; a top's cloth carries the same key so it swells with her
-export const chestOf = (look) => ({ Chest: Math.max(0, Math.min(1, +(look?.chest ?? 0.5))) })
+// the Chest key on the Tripo body moves ~1 cm at weight 1, too little to read (Shelly: 'i dont really have breasts anymore'): the slider drives it past 1, 0 → 0.4, 0.5 → 1.6, 1 → 2.8; garments carry the same key and follow
+export const chestOf = (look) => { const c = Math.max(0, Math.min(1, +(look?.chest ?? 0.5))); return { Chest: +(0.4 + c * 2.4).toFixed(3) } }
 // snout and ear types (Shelly Nov 11): shape keys on the head (art/cat-wardrobe/head-keys.py and style_fit.py). look.snout: button (default) | long | pointy | flat | puff; look.ears: upright (default) | tall | small | fold | wide
 export const SNOUTS = ['button', 'long', 'pointy', 'flat', 'puff'], EARS = ['upright', 'tall', 'small', 'fold', 'wide'], TAILS = ['classic', 'fluffy', 'bob', 'puff', 'whip', 'curl'] // look.tail (Shelly 'new tail types too'): Tail_* keys on the body
 const SNOUT_KEY = { long: 'Snout_Long', pointy: 'Snout_Pointy', flat: 'Snout_Flat', puff: 'Snout_Puff' }, EAR_KEY = { tall: 'Ear_Tall', small: 'Ear_Small', fold: 'Ear_Fold', wide: 'Ear_Wide' }
