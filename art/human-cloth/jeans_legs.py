@@ -34,6 +34,25 @@ for v in o.data.vertices:
     fixed+=1; own=[g for g in v.groups if gi[g.group] in legs(s)]
     if own: max(own,key=lambda g:g.weight).weight+=rem
     else: G[s+'UpLeg'].add([v.index],rem,'ADD')
+# the jeans are double-walled: the inner lining poked through the outer shell when a knee bent (pale slivers). Pull the lining 5 mm in toward its own leg's axis.
+from mathutils import Vector
+P=[M@v.co for v in o.data.vertices]; Rm=M.to_3x3(); Mi=M.inverted()
+inner={}
+for f in o.data.polygons:
+  c=sum((P[i] for i in f.vertices),Vector())/len(f.vertices)
+  if c.z>crotch: continue
+  sd=1 if c.x>0 else -1
+  ring=[q for q in P if abs(q.z-c.z)<0.02 and q.x*sd>0]
+  if not ring: continue
+  ax=sum(ring,Vector())/len(ring); ax.z=c.z
+  inw=(Rm@f.normal).normalized().dot((c-ax).normalized())<-0.3
+  for i in f.vertices: inner.setdefault(i,[]).append((inw,ax))
+tucked=0
+for i,l in inner.items():
+  if all(x[0] for x in l):
+    ax=l[0][1]; p0=P[i]; d=Vector((ax.x-p0.x,ax.y-p0.y,0))
+    if d.length>0.01: o.data.vertices[i].co=Mi@(p0+d.normalized()*0.005); tucked+=1
+print("TUCK",tucked)
 print("FIX crotch",round(crotch,3),"seam edges",len(seam),"fixed",fixed)
 for ob in bpy.data.objects: ob.select_set(ob==o or ob.type=='ARMATURE')
 bpy.ops.export_scene.gltf(filepath=dst,use_selection=True,export_morph=True,export_skins=True)
