@@ -335,18 +335,26 @@ Wn = 3; opn = win(win(np.where(np.isnan(hgt), 9, hgt), np.minimum), np.maximum)
 Wn = 13; pad = np.where(np.isnan(hgt), -9, opn)
 dil = win(pad, np.maximum); clo = win(np.where(np.isnan(hgt), 9, dil), np.minimum)
 for _ in range(3): clo = (clo + np.roll(clo, 1, 0) + np.roll(clo, -1, 0) + np.roll(clo, 1, 1) + np.roll(clo, -1, 1)) / 5
-lift = 0
-def rr(co, e): return math.hypot((co.x - e[0]) / (0.75 * D), (co.z - e[1] - 0.05 * D) / (0.75 * D))
-for e in EYE:   # each eye: the bulge, socket and lash ridges become a smooth quadric fitted to the skin ring around it
-    ring = [v.co for v in HEAD.data.vertices if 1.35 < rr(v.co, e) < 1.8 and v.normal.y < -0.3 and v.co.y < -0.1]
-    Am = np.array([[1, c.x, c.z, c.x * c.x, c.x * c.z, c.z * c.z] for c in ring]); cf = np.linalg.lstsq(Am, np.array([c.y for c in ring]), rcond=None)[0]
-    for v in HEAD.data.vertices:
-        co = v.co; r = rr(co, e)
-        if r >= 1.35 or co.y > -0.05: continue
-        tgt = float(np.dot(cf, [1, co.x, co.z, co.x * co.x, co.x * co.z, co.z * co.z]))
-        if v.normal.y < -0.3:
-            w = 1 if r < 1.05 else (1.35 - r) / 0.3; w = w * w * (3 - 2 * w); co.y += (tgt - co.y) * w; lift += 1
-        elif r < 1.1 and co.y < tgt + 0.004: co.y = tgt + 0.004; lift += 1
+lift = 0   # head under the decal becomes the decal's smooth hull (eyes, sockets, lashes, mouth folded flat); hidden shells keep their depth behind it
+VAL = ~np.isnan(hgt); bvh0 = BVHTree.FromObject(HEAD, bpy.context.evaluated_depsgraph_get())
+def hull(x, z):
+    fi = (x - BOX[0]) / (BOX[1] - BOX[0]) * NX; fj = (z - BOX[2]) / (BOX[3] - BOX[2]) * NZ
+    i0, j0 = int(math.floor(fi)), int(math.floor(fj))
+    if i0 < 0 or j0 < 0 or i0 >= NX or j0 >= NZ or not VAL[i0:i0 + 2, j0:j0 + 2].all(): return None
+    tx, tz = fi - i0, fj - j0; c = clo
+    return (c[i0, j0] * (1 - tx) + c[i0 + 1, j0] * tx) * (1 - tz) + (c[i0, j0 + 1] * (1 - tx) + c[i0 + 1, j0 + 1] * tx) * tz, min(fi, NX - fi, fj, NZ - fj)
+moves = []
+for v in HEAD.data.vertices:
+    co = v.co; h = hull(co.x, co.z)
+    if h is None or co.y > -0.03: continue
+    hit = bvh0.ray_cast(Vector((co.x, -1, co.z)), Vector((0, 1, 0)))
+    if hit[0] is None: continue
+    depth = co.y - hit[0].y
+    if depth > 0.03: continue
+    w = min(1.0, h[1] / 6.0); w = w * w * (3 - 2 * w)
+    moves.append((v.index, co.y + ((-h[0] + max(depth, 0) * 1.0 + (0.0015 if depth > 0.001 else 0)) - co.y) * w))
+for i, y in moves: HEAD.data.vertices[i].co.y = y
+lift = len(moves)
 bpy.context.view_layer.objects.active = HEAD
 if HEAD.data.has_custom_normals: bpy.ops.mesh.customdata_custom_splitnormals_clear()   # old normals kept the sockets' shading
 for poly in HEAD.data.polygons: poly.use_smooth = True
