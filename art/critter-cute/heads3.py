@@ -120,6 +120,18 @@ src = src.replace('- .036 * (0.40 - s * x / .096)', '- .070 * (0.40 - s * x / .0
 # frown: a real downturned mouth, corners sinking (the pout's base too)
 src = src.replace('return (t * .040, .014 * (1 - t * t) - .005)', 'return (t * .034, .024 * (1 - t * t) - .010)')
 src = src.replace('("pout", {"Frown": .8, "Blush": .4})', '("pout", {"Frown": .7, "Blush": 1, "Sad": .35, "Half": .2})')
+# Shelly's verdict on the faces: smile, joy, sad, neutral good; angry could be better; shock, blep, grin, pout awful
+# shock keeps the black eyes she likes (they grow instead of shrinking into a ringed stare), with a small round "o" mouth
+src = src.replace('"Wide": [(ic[0] + (x - ic[0]) * .80, ic[1] + (y - ic[1]) * .80) for x, y in pts_i]', '"Wide": [(ic[0] + (x - ic[0]) * 1.08, ic[1] + (y - ic[1]) * 1.08) for x, y in pts_i]')
+src = src.replace('"Wide": [(pc[0] + (x - pc[0]) * .76, pc[1] + (y - pc[1]) * .76) for x, y in pts]', '"Wide": [(pc[0] + (x - pc[0]) * 1.10, pc[1] + (y - pc[1]) * 1.10) for x, y in pts]')
+src = src.replace('Oc, Or = (0, -.020), .024', 'Oc, Or = (0, -.015), .014')
+src = src.replace('"mouth": "#4a1622"', '"mouth": "#7a2638"')
+# blep: the tongue tip pokes out lower and further forward so it reads
+src = src.replace('tc_blep = (0, -.018)', 'tc_blep = (0, -.024)')
+src = src.replace('"Open": .0154, "Blep": .0160}', '"Open": .0154, "Blep": .0215}')
+FACEFIX = {"grin": {"Smile": 1, "Open": .85}, "shock": {"Wide": 1, "O": 1, "EyeTall": .4},
+           "blep": {"Smile": .7, "Blep": 1, "Half": .2}, "pout": {"Frown": .5, "Half": .45, "Angry": .4, "Blush": 1},
+           "angry": {"Angry": 1, "Frown": .7, "Open": .3}}
 exec(compile(src, os.path.join(HERE, "build.py"), "exec"))
 # proofs show the head as the game draws it by default: no beard, no blush unless worn (the game hides those slots)
 _ht = head_turn
