@@ -15,7 +15,7 @@ const armAt = (B, s) => s <= 0 ? B.arm[0] + 0.012 : s <= 1 ? lerp(B.arm[0], B.ar
 const legAt = (B, l) => l <= 1 ? lerp(B.leg[0], B.leg[1], l) : lerp(B.leg[1], B.leg[2], l - 1)
 
 // a look with the default outfit filled in wherever a top or bottom is unpicked or 'none' (Shelly: "wheres the default outfit when theyre not wearing any apparel")
-const dressed = (sex, look) => { const l = { ...W.defaults[sex], ...(look || {}) }; for (const [k, c] of [['topw', 'top'], ['botw', 'bottom']]) if (!l[k] || l[k] === 'none') { l[k] = W.defaults[sex][k]; l[c] = W.defaults[sex][c] } return l }
+const dressed = (sex, look) => { const l = { ...W.defaults[sex], ...(look || {}) }; for (const [k, c] of [['topw', 'top'], ['botw', 'bottom']]) if (!l[k] || l[k] === 'none' || !(W.models[l[k]] || (k === 'topw' ? W.tops : W.bottoms)[l[k]])) { l[k] = W.defaults[sex][k]; l[c] = W.defaults[sex][c] } return l }
 // the painted layers a look asks for, modelled garments folded to the layer drawn under them
 export function paintOf(sex, look) {
   const l = dressed(sex, look), out = { top: null, bot: null, sock: null }
