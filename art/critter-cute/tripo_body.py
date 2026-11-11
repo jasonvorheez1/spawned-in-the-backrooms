@@ -10,20 +10,20 @@ pts = [o.matrix_world @ v.co for o in ms for v in o.data.vertices]
 zmin = min(p.z for p in pts); zmax = max(p.z for p in pts); h = zmax - zmin
 # the torso band: find the narrowest-width row under the head to locate the chest front
 def band(z0, z1): return [p for p in pts if z0 < p.z < z1 and abs(p.y) < .03]
-cz = zmin + h * float(os.environ.get("CZ", ".43"))
+cz = zmin + h * float(os.environ.get("CZ", ".47"))
 row = band(cz - .004, cz + .004); fx = max(p.x for p in row) if row else .03
 print("CHEST z", round(cz, 4), "front x", round(fx, 4), "h", round(h, 4))
-R = h * .052; A = h * .016 * CHEST; SX = h * .047
+R = h * .045; A = h * .03 * CHEST; SX = h * .06
 for o in ms:
     mw = o.matrix_world; inv = mw.inverted()
     for v in o.data.vertices:
         p = mw @ v.co
-        if p.x < fx - h * .05: continue
+        if p.x < fx - h * .07: continue
         for s in (-1, 1):
             c = Vector((fx, s * SX * .5, cz))
             d2 = ((p.y - c.y) ** 2 + ((p.z - c.z) * 1.15) ** 2) / (R * R)
             if d2 > 4: continue
-            w = math.exp(-d2 * 1.6) * max(0, 1 - (fx - p.x) / (h * .05))
+            w = math.exp(-d2 * 1.6) * max(0, 1 - (fx - p.x) / (h * .07))
             p = p + Vector((A * w, s * A * .15 * w, -A * .25 * w))
         v.co = inv @ p
     o.data.update()
