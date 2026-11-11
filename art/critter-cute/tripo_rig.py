@@ -247,6 +247,19 @@ BOX = (ECX - (lx + rx_) / 2 * k, ECX + (FW - (lx + rx_) / 2) * k, EZ - (FH - ly)
 print("eyes", [tuple(round(c, 4) for c in e) for e in EYE], "spacing", round(D, 4))
 print("FACE UV BOX head-space x[%.4f, %.4f] z[%.4f, %.4f] (front view, u=0 at x0 (character's right), v=0 at z0)" % BOX)
 bpy.data.objects.remove(camo)
+_bv = BVHTree.FromObject(HEAD, bpy.context.evaluated_depsgraph_get())
+_yc = sum(c.y for c in hb) / 8
+CROWN = _bv.ray_cast(Vector((0, _yc, 3)), Vector((0, 0, -1)))[0].z
+CHIN = EZ
+for zz in np.arange(EZ, HZ0, -0.002):
+    h_ = _bv.ray_cast(Vector((0, -1, zz)), Vector((0, 1, 0)))
+    if h_[0] is None or h_[1].z < -0.6: break
+    CHIN = zz
+FRAC0 = (EZ - CHIN) / (CROWN - CHIN)
+EZD = CHIN + 0.50 * (CROWN - CHIN); kD = k * 1.12          # eyes at mid-skull, face 12% larger
+BOXD = (ECX - (lx + rx_) / 2 * kD, ECX + (FW - (lx + rx_) / 2) * kD, EZD - (FH - ly) * kD, EZD + ly * kD)
+print("SKULL chin %.4f crown %.4f eye-centre fraction before %.3f after %.3f" % (CHIN, CROWN, FRAC0, (EZD - CHIN) / (CROWN - CHIN)))
+print("DECAL UV BOX head-space x[%.4f, %.4f] z[%.4f, %.4f] (front view, u=0 at x0 (character's right), v=0 at z0)" % BOXD)
 
 # ---------- paint out eyes / nose / mouth under the decal ----------
 def classes(c):
@@ -356,12 +369,12 @@ for i in range(NX + 1):
 def clean(mask):
     m = mask.copy()
     for _ in range(8): m[1:-1, 1:-1] &= m[:-2, 1:-1] & m[2:, 1:-1] & m[1:-1, :-2] & m[1:-1, 2:]
-    r, c = np.nonzero(m); k = len(r) // 2; return Vector(((c[k] + 0.5) / TW, (r[k] + 0.5) / TH))
+    r, c = np.nonzero(m); kk = int(np.argmin(np.abs(lum[r, c] - np.median(lum[r, c])))); return Vector(((c[kk] + 0.5) / TW, (r[kk] + 0.5) / TH))
 _, cream_all = classes(px); UVF, UVC = clean(fur_all), clean(cream_all & (lum > 0.6))
 cm = np.zeros((NX + 1, NZ + 1))
 for (i, j), n in pid.items(): cm[i, j] = pmat[n]
 for _ in range(12): cm = (cm + np.roll(cm, 1, 0) + np.roll(cm, -1, 0) + np.roll(cm, 1, 1) + np.roll(cm, -1, 1)) / 5
-for (i, j), n in pid.items(): pmat[n] = int(cm[i, j] > 0.45); puv[n] = UVC if pmat[n] else UVF
+for (i, j), n in pid.items(): pmat[n] = 0; puv[n] = UVF
 pf = []
 for i in range(NX):
     for j in range(NZ):
@@ -371,8 +384,7 @@ def inner(c, m):
     fi_ = (c.x - BOX[0]) / (BOX[1] - BOX[0]) * NX; fj_ = (c.z - BOX[2]) / (BOX[3] - BOX[2]) * NZ
     return min(fi_, NX - fi_, fj_, NZ - fj_) > m
 bm = _bm.new(); bm.from_mesh(hm); bm.faces.ensure_lookup_table()
-dead = [f for f in bm.faces if f.calc_center_median().y < -0.03 and inner(f.calc_center_median(), 2.0)
-        and all(inner(v.co, 1.0) for v in f.verts)]
+dead = [f for f in bm.faces if f.calc_center_median().y < -0.03 and inner(f.calc_center_median(), 0.6)]
 _bm.ops.delete(bm, geom=dead, context="FACES")
 uvk = bm.loops.layers.uv.active; dk = bm.verts.layers.deform.verify(); gi_ = HEAD.vertex_groups[P + "Head"].index
 bv = []
@@ -386,8 +398,7 @@ nlash = 0   # lash tips that poke past the patch rim turn fur-coloured (no holes
 for f in bm.faces:
     c = f.calc_center_median()
     if c.y > -0.03 or not (BOX[0] - 0.04 < c.x < BOX[1] + 0.04 and BOX[2] - 0.02 < c.z < BOX[3] + 0.04) or f.verts[0] in bv: continue
-    u = sum((l[uvk].uv for l in f.loops), Vector((0, 0))) / len(f.loops)
-    if lum[int(u.y * TH) % TH, int(u.x * TW) % TW] < 0.2:
+    if min(lum[int(l[uvk].uv.y * TH) % TH, int(l[uvk].uv.x * TW) % TW] for l in f.loops) < 0.2:
         for l in f.loops: l[uvk].uv = UVF
         f.material_index = 0; nlash += 1
 print("lash faces recoloured", nlash)
@@ -398,12 +409,18 @@ for poly in HEAD.data.polygons: poly.use_smooth = True
 HEAD.data.update()
 if os.environ.get("DBGFACE"): bpy.ops.wm.save_as_mainfile(filepath="/tmp/dbg.blend"); sys.exit(0)
 print("head front faces replaced by smooth skin", lift, "patch quads", len(pf))
-bvh = BVHTree.FromObject(HEAD, bpy.context.evaluated_depsgraph_get()); grid = {}
+bvh = BVHTree.FromObject(HEAD, bpy.context.evaluated_depsgraph_get()); grid = {}; hn = {}
 for j in range(NZ + 1):
     for i in range(NX + 1):
-        u, v = i / NX, j / NZ; Xp = BOX[0] + u * (BOX[1] - BOX[0]); Zp = BOX[2] + v * (BOX[3] - BOX[2])
+        u, v = i / NX, j / NZ; Xp = BOXD[0] + u * (BOXD[1] - BOXD[0]); Zp = BOXD[2] + v * (BOXD[3] - BOXD[2])
         hit = bvh.ray_cast(Vector((Xp, -1, Zp)), Vector((0, 1, 0)))
-        if hit[0] is not None and hit[1].y < -0.15: grid[i, j] = (hit[0] + hit[1].normalized() * 0.0005, (u, v))
+        if hit[0] is not None and hit[1].y < -0.15: grid[i, j] = (hit[0], (u, v)); hn[i, j] = hit[1].normalized()
+for (i, j), (co, uv_) in list(grid.items()):   # smoothed normals: an even 3 mm stand-off, no faceted ripple
+    nn = Vector((0, 0, 0))
+    for di in range(-2, 3):
+        for dj in range(-2, 3):
+            if (i + di, j + dj) in hn: nn += hn[i + di, j + dj]
+    grid[i, j] = (co + nn.normalized() * 0.003, uv_)
 verts, uvs, faces, vid = [], [], [], {}
 for key, (co, uv_) in grid.items(): vid[key] = len(verts); verts.append(co[:]); uvs.append(uv_)
 for j in range(NZ):
@@ -423,9 +440,10 @@ FACEIMG = {nm: bpy.data.images.load(f"{OUT}/faces/{nm}.png") for nm in C["faces"
 for im_ in FACEIMG.values(): im_.use_fake_user = True
 mf = bpy.data.materials.new("face"); mf.use_nodes = True; nt = mf.node_tree
 fb = next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"); FT = nt.nodes.new("ShaderNodeTexImage"); FT.image = FACEIMG[C["faces"][0]]
-FT.extension = "CLIP"; nt.links.new(FT.outputs["Color"], fb.inputs["Base Color"]); nt.links.new(FT.outputs["Alpha"], fb.inputs["Alpha"])
+FT.extension = "CLIP"; nt.links.new(FT.outputs["Color"], fb.inputs["Base Color"])
+rnd = nt.nodes.new("ShaderNodeMath"); rnd.operation = "ROUND"; nt.links.new(FT.outputs["Alpha"], rnd.inputs[0]); nt.links.new(rnd.outputs[0], fb.inputs["Alpha"])   # glTF MASK, cutoff 0.5
 fb.inputs["Roughness"].default_value = 0.45
-mf.surface_render_method = "BLENDED"; mf.use_backface_culling = True; fm.materials.append(mf)
+mf.surface_render_method = "DITHERED"; mf.use_backface_culling = True; fm.materials.append(mf)
 bpy.data.materials.remove(mh)
 
 # ---------- outfit ----------
@@ -594,7 +612,7 @@ ARM.animation_data.action = None; clear_pose(); bpy.context.view_layer.update()
 cloth = []
 FT = next(n for n in bpy.data.materials["face"].node_tree.nodes if n.type == "TEX_IMAGE")
 mix = next(n for n in bpy.data.materials["fur"].node_tree.nodes if n.type == "MIX")
-EZ = (BOX[2] + BOX[3]) / 2
+EZ = (BOXD[2] + BOXD[3]) / 2
 for i, nm in enumerate(C["faces"]):
     FT.image = bpy.data.images[f"{nm}.png"]
     shoot(f"{PR}/f{i}a.png", (0, -0.1, EZ), 0, 1.3, 85)
