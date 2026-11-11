@@ -40,7 +40,8 @@ const pg = new Map(); pc.forEach((q, i) => { const k = key(q[0], q[1], q[2]); (p
 function nearPants(x, y, z) { const cx = Math.floor(x/C), cy = Math.floor(y/C), cz = Math.floor(z/C); let b = null, bd = 1e9;
   for (let a = -2; a <= 2; a++) for (let e = -2; e <= 2; e++) for (let c = -2; c <= 2; c++) for (const i of pg.get(`${cx+a},${cy+e},${cz+c}`) ?? []) { const q = pc[i], dd = (q[0]-x)**2 + (q[1]-y)**2 + (q[2]-z)**2; if (dd < bd) { bd = dd; b = q } }
   return b }
-const TUCK = W(0.02); let tucked = 0;
+const TUCK = W(0.02); let tucked = 0, lifted = 0;
+const CROTCH = pc.filter(q => Math.abs(q[0]) < W(0.015)).reduce((m, q) => Math.min(m, q[1]), 1e9); // the trousers' centre seam: a shirt tail below it shows between the legs (Nov 11: Andrew's blue seat patch)
 const SL = new Map(); for (const q of pc) { const k = Math.round(q[1] / C); const e = SL.get(k) ?? SL.set(k, [0, 0, 0]).get(k); e[0] += q[0]; e[1] += q[2]; e[2]++ }
 function sliceC(y) { for (const o of [0, -1, 1, -2, 2]) { const e = SL.get(Math.round(y / C) + o); if (e && e[2] > 8) return [e[0] / e[2], e[1] / e[2]] } return null }
 let fitted = 0, pushed = 0, pulled = 0;
@@ -78,10 +79,11 @@ for (const m of meshes) { const name = m.getName(); if (SKIP.test(name)) continu
       if (!BOTTOM.test(lname) && !OUTER.test(lname) && pc.length && wy < WAIST + 0.015 && Math.abs(x * S) < 0.2) { // tuck: same height, just inside the trousers' own ring there
         const px = x + dx - d[0], py = y + dy - d[1], pz = z + dz - d[2], c = sliceC(py); if (c) { const ox = px - c[0], oz = pz - c[1], r0 = Math.hypot(ox, oz) || 1e-6, q = nearPants(px, py, pz);
           if (q) { const rq = Math.hypot(q[0] - c[0], q[2] - c[1]), lim = rq - TUCK; if (r0 > lim && lim > 0) { const f = lim / r0; dx = c[0] + ox * f - v[0] + (dx - (px - v[0])); dz = c[1] + oz * f - v[2] + (dz - (pz - v[2])); tucked++ } } } }
+      if (!BOTTOM.test(lname) && !OUTER.test(lname) && CROTCH < 1e8 && Math.abs(x) < W(0.09)) { const py = y + dy - d[1], lim = CROTCH + W(0.03); if (py < lim) { dy += lim - py; lifted++ } }
       nd[i*3] = dx; nd[i*3+1] = dy; nd[i*3+2] = dz; nb[i*3] = bx * on; nb[i*3+1] = by * on; nb[i*3+2] = bz * on }
     T[di].setAttribute("POSITION", doc.createAccessor().setType("VEC3").setArray(nd).setBuffer(P.getBuffer()));
     if (B) T[bi].setAttribute("POSITION", doc.createAccessor().setType("VEC3").setArray(nb).setBuffer(P.getBuffer())) }
   fitted++ }
 for (const e of doc.getRoot().listExtensionsUsed()) if (e.extensionName === "EXT_meshopt_compression") e.dispose();
 await io.write(out, doc);
-console.log("tucked", tucked, "fitted", fitted, "garments; pushed", pushed, "pulled", pulled, "verts; bust", hasBust);
+console.log("lifted", lifted, "tucked", tucked, "fitted", fitted, "garments; pushed", pushed, "pulled", pulled, "verts; bust", hasBust);
