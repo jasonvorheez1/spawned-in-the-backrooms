@@ -2,7 +2,7 @@
 # riding the body as a child (attachment: { skin: true }). Packed sources: m 782c6614…, f de9de999… (now legacyHuman m_sw30/f_sw30)
 m:
   inner: "/cdn/value.e932095bdd7f6d11ec17da5978271fdbad49a6c544f309fc0c1a562fdc073e99.glb"   # the plain tee worn under open-front tops, settled 2 mm off the skin (art/human-cloth/inner_tee.mjs)
-  body: "/cdn/value.c30f0fed34eb9c806180aafa2625c4ee52350bb0da340e11d184aada75edf1e7.glb"   # Nov 11 collar split (art/human-body/collar_split.py): neckline skin its own Skin_collar; before fa40bdfd   # Nov 10 shoulder cap (art/human-body/shoulder_cap.py); before 9b3a3e2b
+  body: "/cdn/value.e53a50e82d43485032c9f29a58ea18cdab06e8894ece35d9bb3d292ecdd4fb0e.glb"   # Nov 11 collar split (art/human-body/collar_split.py): neckline skin its own Skin_collar; before fa40bdfd   # Nov 10 shoulder cap (art/human-body/shoulder_cap.py); before 9b3a3e2b
   parts:
     Ward_abysshauberk: "/cdn/value.e19023ccde39d4730ff4c6abbecc47f9509176239f2cdaa3a8b8e7a5ecf3d402.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
     Ward_apron: "/cdn/value.5f8fd3adb51baa8dc952995a7ca3033d97d3ea3728de33dbbefe214f0686d300.glb"   # Nov 11 stride: hem rides the thigh (art/human-cloth/skirt_stride.py); before ed168794
