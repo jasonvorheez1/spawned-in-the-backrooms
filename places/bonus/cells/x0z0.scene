@@ -820,6 +820,26 @@ bc-skee-2:
   rotation: {yaw: 180}
   scale: 1.9
   tags: [bonus-arcade]
+bc-snd-dance:
+  audio: {bus: Ambience, clip: /cdn/moodboard-scifi-neon/sfx-dance-arcade-machine-attract-mode-thumping-music-loop.mp3, gain: 0.12, loop: true, maxDistance: 9, spatial: true}
+  feetPosition: {x: 21.6, y: 1.2, z: -7.6}
+  id: bc-snd-dance
+  tags: [bonus-arcade]
+bc-snd-hockey:
+  audio: {bus: Ambience, clip: /cdn/moodboard-toon-vibrant/sfx-air-hockey-table-fan-hum-and-puck-clacks-loop.mp3, gain: 0.1, loop: true, maxDistance: 9, spatial: true}
+  feetPosition: {x: 16, y: 1.2, z: -15}
+  id: bc-snd-hockey
+  tags: [bonus-arcade]
+bc-snd-pinball:
+  audio: {bus: Ambience, clip: /cdn/moodboard-toon-vibrant/sfx-pinball-machine-attract-mode-bells-and-bumpers-loop.mp3, gain: 0.12, loop: true, maxDistance: 9, spatial: true}
+  feetPosition: {x: 11, y: 1.2, z: -10.4}
+  id: bc-snd-pinball
+  tags: [bonus-arcade]
+bc-snd-skee:
+  audio: {bus: Ambience, clip: /cdn/moodboard-toon-vibrant/sfx-skee-ball-wooden-balls-rolling-and-dropping-in-rings-loop.mp3, gain: 0.12, loop: true, maxDistance: 9, spatial: true}
+  feetPosition: {x: 19.8, y: 1.2, z: -19}
+  id: bc-snd-skee
+  tags: [bonus-arcade]
 bc-station-light:
   feetPosition: {x: -17, y: 9.6, z: -14}
   id: bc-station-light
