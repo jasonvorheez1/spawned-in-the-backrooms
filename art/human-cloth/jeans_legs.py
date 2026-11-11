@@ -1,35 +1,39 @@
-# men's jeans: inner-leg verts below the crotch carried weight from the OTHER leg, so a stride tore the inseam open (pale inside showing). Each leg's cloth follows its own leg only.
-import bpy,sys
+# men's jeans: the two legs shared their inseam verts at x=0 all the way to the ankle, so a stride stretched a web between them (the pale patches).
+# Rip that seam below the crotch, then each copy follows only the leg its faces belong to.
+import bpy,bmesh,sys
 src,dst=sys.argv[-2],sys.argv[-1]
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=src)
 o=max([o for o in bpy.data.objects if o.type=='MESH' and o.vertex_groups],key=lambda o:len(o.data.vertices))
-M=o.matrix_world; G={g.name:g for g in o.vertex_groups}; gi={g.index:g.name for g in o.vertex_groups}
-# which x side is Left: mean x of verts led by LeftUpLeg
-xs=[(M@v.co).x for v in o.data.vertices for g in v.groups if gi[g.group]=='LeftUpLeg' and g.weight>0.8]
+M=o.matrix_world
+xs=[(M@v.co).x for v in o.data.vertices for g in v.groups if o.vertex_groups[g.group].name=='LeftUpLeg' and g.weight>0.8]
 lsign=1 if sum(xs)/len(xs)>0 else -1
-zs=[(M@v.co).z for v in o.data.vertices for g in v.groups if gi[g.group] in('LeftUpLeg','RightUpLeg') and g.weight>0.95]
-crotch=max(zs)-0.02 if zs else 0.8
+span=[f for f in o.data.polygons if min((M@o.data.vertices[i].co).x for i in f.vertices)<-0.005 and max((M@o.data.vertices[i].co).x for i in f.vertices)>0.005]
+crotch=min(sum((M@o.data.vertices[i].co).z for i in f.vertices)/len(f.vertices) for f in span)-0.01
+bm=bmesh.new(); bm.from_mesh(o.data)
+W=lambda v:(M@v.co)
+seam=[e for e in bm.edges if all(abs(W(v).x)<0.003 and W(v).z<crotch for v in e.verts)]
+bmesh.ops.split_edges(bm,edges=seam)
+bm.to_mesh(o.data); bm.free(); o.data.update()
+# side per vertex from the faces around it
+side={}
+for f in o.data.polygons:
+  cx=sum(W(o.data.vertices[i]).x for i in f.vertices)/len(f.vertices)
+  for i in f.vertices: side.setdefault(i,[]).append(cx*lsign)
+gi={g.index:g.name for g in o.vertex_groups}; G={g.name:g for g in o.vertex_groups}
 legs=lambda s:[n for n in G if n.startswith(s) and any(k in n for k in('UpLeg','Leg','Foot','Toe'))]
 fixed=0
 for v in o.data.vertices:
-  p=M@v.co
-  if p.z>crotch: continue
-  lw=sum(g.weight for g in v.groups if gi[g.group] in legs('Left')); rw=sum(g.weight for g in v.groups if gi[g.group] in legs('Right'))
-  if lw==rw: continue
-  side='Left' if lw>rw else 'Right'; other='Right' if side=='Left' else 'Left'  # its own leg is the one leading it, never its x: the legs touch at x=0
-  ow=[(n,v) for n in legs(other)]
-  removed=0
+  if W(v).z>=crotch or v.index not in side: continue
+  s='Left' if sum(side[v.index])>0 else 'Right'; other='Right' if s=='Left' else 'Left'
+  rem=0
   for g in list(v.groups):
     n=gi[g.group]
-    if n.startswith(other) and n in legs(other) and g.weight>0: removed+=g.weight; G[n].remove([v.index])
-  if removed>0:
-    fixed+=1
-    own=[g for g in v.groups if gi[g.group].startswith(side)]
-    tgt=own[0] if own else None
-    if tgt: tgt.weight=min(1,tgt.weight+removed)
-    else: G[side+'UpLeg'].add([v.index],removed,'ADD')
-print("FIX lsign",lsign,"crotch",round(crotch,3),"fixed",fixed)
-for ob in list(bpy.data.objects):
-  ob.select_set(ob==o or ob.type=='ARMATURE')
+    if n in legs(other): rem+=g.weight; G[n].remove([v.index])
+  if rem:
+    fixed+=1; own=[g for g in v.groups if gi[g.group] in legs(s)]
+    if own: max(own,key=lambda g:g.weight).weight+=rem
+    else: G[s+'UpLeg'].add([v.index],rem,'ADD')
+print("FIX crotch",round(crotch,3),"seam edges",len(seam),"fixed",fixed)
+for ob in bpy.data.objects: ob.select_set(ob==o or ob.type=='ARMATURE')
 bpy.ops.export_scene.gltf(filepath=dst,use_selection=True,export_morph=True,export_skins=True)
