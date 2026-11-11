@@ -1,10 +1,11 @@
 # Adult furry body, Andy's thick limbs (Shelly #203319 + "a adult with thick limbs").
 # Adds a thickening field on top of each mesh's Dandy key (skin + every garment, so clothes keep fit).
-# Usage: blender -b --python thick.py -- <in.glb> <out.glb> [arm=0.35] [leg=0.2]
+# Usage: blender -b --python thick.py -- <in.glb> <out.glb> [arm=0.35] [leg=0.2] [torso=0.2]
 import bpy, sys, math
 from mathutils import Vector
 a = sys.argv[sys.argv.index("--")+1:]; SRC, OUT = a[0], a[1]
 ARM = float(a[2]) if len(a) > 2 else 0.35; LEG = float(a[3]) if len(a) > 3 else 0.2
+TOR = float(a[4]) if len(a) > 4 else 0.2
 def sm(e0, e1, x): t = max(0, min(1, (x-e0)/(e1-e0))); return t*t*(3-2*t)
 def bump(a_, b, c, d, x): return sm(a_, b, x)*(1-sm(c, d, x))
 SHY = 0.955; LX = 0.09
@@ -12,8 +13,13 @@ def thick(ax, a0, k): return a0+(ax-a0)*k if ax >= a0 else ax+((k-1)/a0)*ax*(ax-
 def field(x, y, z):  # glTF frame: y up, front -z
   X, Y, Z = x, y, z; s = -1 if x < 0 else 1; ax = abs(x)
   arm = sm(0.13, 0.19, ax)*bump(0.8, 0.86, 1.08, 1.14, y)
+  w = bump(0.56, 0.64, 0.93, 1.0, y)*(1-arm)
+  if w > 0:  # torso: a rounder bean, soft belly forward (front is -z)
+    X *= 1+TOR*0.4*w*sm(0.62, 0.8, y); Z *= 1+TOR*w
+    belly = math.exp(-(((y-0.72)/0.1)**2))*w
+    if Z < 0: Z -= TOR*0.12*belly*sm(0, -0.05, z)
   if arm > 0:
-    k = 1+arm*(ARM+0.15*sm(0.46, 0.56, ax)); Y = SHY+(Y-SHY)*k; Z = Z*k
+    k = 1+arm*(ARM*sm(0.17, 0.3, ax)+0.25*sm(0.46, 0.56, ax))+arm*ARM*0.5*(1-sm(0.17, 0.3, ax)); Y = SHY+(Y-SHY)*k; Z = Z*k
   legW = 1-sm(0.56, 0.66, y)
   if legW > 0 and ax < 0.32:
     k = 1+legW*LEG*(0.6+0.4*sm(0.25, 0.5, y))
