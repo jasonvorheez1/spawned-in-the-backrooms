@@ -342,7 +342,10 @@ for v in HEAD.data.vertices:
     if -co.y < hgt[i, j] - 0.004: continue          # not the front skin (inner shell)
     r = min(math.hypot((co.x - ex) / (0.75 * D), (co.z - ez - 0.05 * D) / (0.75 * D)) for ex, ez in EYE)
     w = 1 if r < 0.75 else max(0, (1.0 - r) / 0.25); w = w * w * (3 - 2 * w)
-    if w > 0: co.y = co.y + (-clo[i, j] - co.y) * w; lift += 1
+    if w > 0 and abs(-clo[i, j] - co.y) < 0.03: co.y = co.y + (-clo[i, j] - co.y) * w; lift += 1
+bpy.context.view_layer.objects.active = HEAD
+if HEAD.data.has_custom_normals: bpy.ops.mesh.customdata_custom_splitnormals_clear()   # old normals kept the sockets' shading
+for poly in HEAD.data.polygons: poly.use_smooth = True
 HEAD.data.update(); print("head verts flattened at the eyes", lift)
 bvh = BVHTree.FromObject(HEAD, bpy.context.evaluated_depsgraph_get()); grid = {}
 for j in range(NZ + 1):
@@ -387,6 +390,12 @@ def cloth_mat(name, img, rough):
     t.extension = "EXTEND"; nt.links.new(t.outputs["Color"], bs.inputs["Base Color"]); bs.inputs["Roughness"].default_value = rough
     return m
 body_bvh = BVHTree.FromObject(BODY, bpy.context.evaluated_depsgraph_get())
+TKD = KDTree(len(BODY.data.vertices)); TAILV = set()
+for v in BODY.data.vertices:
+    TKD.insert(v.co, v.index)
+    if sum(BODY.vertex_groups[gg.group].name.endswith(("Tail1", "Tail2", "Tail3")) * gg.weight for gg in v.groups) > 0.2: TAILV.add(v.index)
+TKD.balance()
+def tailish(c): return any(i in TAILV for _, i, _ in TKD.find_n(c, 4))
 bidx = {gg.index: gg.name for gg in BODY.vertex_groups}
 def make_cloth(name, keep, off, vfun, material, drape):
     o = BODY.copy(); o.data = BODY.data.copy(); o.name = o.data.name = name; sc.collection.objects.link(o)
@@ -420,7 +429,7 @@ def make_cloth(name, keep, off, vfun, material, drape):
         b.normal_update()
     for v in b.verts:
         loc, nrm, fi, dist = body_bvh.find_nearest(v.co); d_ = (v.co - loc).dot(nrm)
-        if d_ < off: v.co += nrm * (off - d_)
+        if d_ < off and off - d_ < 0.02: v.co += nrm * (off - d_)
     uv = b.loops.layers.uv.verify()
     for f in b.faces:
         f.smooth = True
@@ -445,12 +454,12 @@ def make_cloth(name, keep, off, vfun, material, drape):
     return o
 T, Bt = C["top"], C["bot"]
 def top_keep(c):
-    if is_tail(c) or not (T["lo"] < c.z < T["hi"]) or abs(c.x) > T["sleeve"]: return False
+    if is_tail(c) or tailish(c) or not (T["lo"] < c.z < T["hi"]) or abs(c.x) > T["sleeve"]: return False
     if c.z > T["nf"][0] and abs(c.x) < T["nf"][1] and c.y < C["spine_y"]: return False
     if c.z > T["nb"][0] and abs(c.x) < T["nb"][1]: return False
     return True
 def bot_keep(c):
-    if is_tail(c) or (c - Vector(J["Tail1"][0])).length < 0.032: return False
+    if is_tail(c) or tailish(c) or (c - Vector(J["Tail1"][0])).length < 0.032: return False
     return Bt["lo"] < c.z < Bt["hi"]
 TOP = make_cloth("ClothTop", top_keep, T["off"], lambda co: min(1, max(0, (co.z - T["lo"]) / 0.1)), cloth_mat("cloth_top", grad_img("cloth_top", T["rows"]), 0.8), T["drape"])
 BOT = make_cloth("ClothBottom", bot_keep, Bt["off"], lambda co: min(1, max(0, (Bt["hi"] - co.z) / 0.1)), cloth_mat("cloth_bottom", grad_img("cloth_bottom", Bt["rows"]), 0.85), False)
