@@ -16,7 +16,8 @@ for o in sh:
 tree = BVHTree.FromBMesh(bm)
 for o in sh: bpy.data.objects.remove(o)
 bpy.ops.import_scene.gltf(filepath=bodyf)
-for o in [o for o in bpy.data.objects if o.name.startswith('Skin_collar')]: bpy.data.objects.remove(o)  # re-cut over an already split body
+old = bpy.data.objects.get('Skin_collar')  # re-cut over an already split body: the new band joins the old one (Nov 11: lowered to cover the scoop's lowest point)
+if old: old.name = 'Skin_collar_old'
 to = bpy.data.objects['Skin_torso']; mw = to.matrix_world
 sel = 0
 for p in to.data.polygons:
@@ -35,5 +36,14 @@ for f in eb.faces:
 eb.select_flush_mode(); bmesh.update_edit_mesh(to.data)
 bpy.ops.mesh.duplicate(); bpy.ops.mesh.separate(type='SELECTED'); bpy.ops.object.mode_set(mode='OBJECT')
 new = [o for o in bpy.context.selected_objects if o is not to][0]; new.name = 'Skin_collar'; new.data.name = 'Skin_collar'
+if old:
+    oldf = {tuple(sorted((round(c,4) for c in (old.matrix_world @ v.co)) for v in [old.data.vertices[i] for i in p.vertices])) for p in old.data.polygons}
+    for o in bpy.context.selected_objects: o.select_set(False)
+    new.select_set(True); bpy.context.view_layer.objects.active = new
+    bpy.ops.object.mode_set(mode='EDIT'); eb = bmesh.from_edit_mesh(new.data)
+    dup = [f for f in eb.faces if tuple(sorted(tuple(round(c,4) for c in (new.matrix_world @ v.co)) for v in f.verts)) in oldf]
+    bmesh.ops.delete(eb, geom=dup, context='FACES'); bmesh.update_edit_mesh(new.data); bpy.ops.object.mode_set(mode='OBJECT')
+    old.select_set(True); bpy.context.view_layer.objects.active = old; bpy.ops.object.join()
+    old.name = 'Skin_collar'; old.data.name = 'Skin_collar'; new = old
 print('COLLAR', sel, len(new.data.vertices), round(min((new.matrix_world @ v.co).z for v in new.data.vertices), 3))
 bpy.ops.export_scene.gltf(filepath=out, export_format='GLB', export_skins=True, export_morph=True, export_apply=False, export_animations=False, export_yup=True)
