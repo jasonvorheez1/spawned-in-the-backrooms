@@ -83,11 +83,13 @@ export const chestOf = (look) => ({ Chest: Math.max(0, Math.min(1, +(look?.chest
 // snout and ear types (Shelly Nov 11): shape keys on the head (art/cat-wardrobe/head-keys.py). look.snout: button (default) | long | pointy | flat | puff; look.ears: upright (default) | tall | small | fold | wide
 export const SNOUTS = ['button', 'long', 'pointy', 'flat', 'puff'], EARS = ['upright', 'tall', 'small', 'fold', 'wide']
 const SNOUT_KEY = { long: 'Snout_Long', pointy: 'Snout_Pointy', flat: 'Snout_Flat', puff: 'Snout_Puff' }, EAR_KEY = { tall: 'Ear_Tall', small: 'Ear_Small', fold: 'Ear_Fold', wide: 'Ear_Wide' }
+// how far each snout key goes: pointy at full read as a beak (Shelly #218xxx 'too silly'), long reined in with it
+const SNOUT_AMT = { pointy: 0.4, long: 0.6, flat: 1, puff: 1 }
 export function catMorph(look) {
   const m = chestOf(look)
   for (const k of Object.values(SNOUT_KEY)) m[k] = 0
   for (const k of Object.values(EAR_KEY)) m[k] = 0
-  if (SNOUT_KEY[look?.snout]) m[SNOUT_KEY[look.snout]] = 1
+  if (SNOUT_KEY[look?.snout]) m[SNOUT_KEY[look.snout]] = SNOUT_AMT[look.snout] ?? 1
   if (EAR_KEY[look?.ears]) m[EAR_KEY[look.ears]] = 1
   return m
 }
