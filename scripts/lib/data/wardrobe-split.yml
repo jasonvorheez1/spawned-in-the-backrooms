@@ -76,7 +76,7 @@ m:
     Ward_tailcoat: "/cdn/value.f1cbfa10c73a44655f76379451db4b976a1d104f881c2f127b1a4314cc9bbaf3.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
     Ward_tank: "/cdn/value.afebf7fd1d39d820957c047492efff1a6ff9de898f271a956ae39da2a2e9a2e6.glb"
     Ward_tarwaders: "/cdn/value.9b05f1aee794aab721218b722c110d0107f2246ab90380e53ee2d9cf2ecf6a2d.glb"
-    Ward_tee: "/cdn/value.1e1563d276d1a6365533f287fb890e10b1e26cf420b7553f0453993342b45b58.glb"   # Nov 11 sleeves hug the arm, chest smoothed (art/human-cloth/tee_sleeve.py); before 97176737
+    Ward_tee: "/cdn/value.264f8033ab1f5c94b4572ab5d7cf15e77c9500b0ad5c91a7f347bba0803c5a1c.glb"   # Nov 11 sleeves hug the arm, chest smoothed, shoulder band on the body's weights (art/human-cloth/tee_sleeve.py, tee_weights.py); before 97176737
     Ward_tophat: "/cdn/value.a8560fb9c9dfaf41850bb14e73d906f3165b1215ca0f595b3fb2bd11eecd9fb5.glb"
     Ward_velvetskirt: "/cdn/value.1952326fb32a7265702a195124dc6782aafd245489ed694837c2b09fe226033a.glb"   # Nov 11 stride: hem rides the thigh (art/human-cloth/skirt_stride.py); before b003a35e
     Ward_vest: "/cdn/value.1794cde95fb9b3426d800a5535fdf59e88aad21d41072a30283342faccecaf41.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
