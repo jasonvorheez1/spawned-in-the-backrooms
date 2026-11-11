@@ -85,7 +85,7 @@ export function material(ctx) {
 export function lighting(surface, lights, ctx) {
   const direct = lights.each((light) => {
     const ndl = clamp(dot(surface.normal, light.direction), 0, 1);
-    const band = mix(float(0.8), float(1.0), smoothstep(-0.1, 0.7, ndl));
+    const band = mix(float(0.22), float(0.36), smoothstep(-0.1, 0.7, ndl));
     return surface.albedo.mul(light.color).mul(band).mul(light.shadow);
   });
   return direct.add(surface.albedo.mul(lights.ambient).add(lights.environment).mul(surface.occlusion));
