@@ -127,18 +127,6 @@ for sd in 'LR':
       if (f.normal.x>0)==((sd=='L')==(lsign>0)): f.normal_flip()
       caps+=1
 print("CAPS",caps)
-# last holes on the inner leg (left by the knee resew): weld same-leg copies so only real holes stay open, then fill each small one
-gnm={g.index:g.name for g in o.vertex_groups}
-def lg(v):
-  w=v[dl]; l=sum(x for g,x in w.items() if gnm[g].startswith('Left')); r=sum(x for g,x in w.items() if gnm[g].startswith('Right')); return 'L' if l>r else 'R'
-grp=defaultdict(list)
-for v in bm.verts: grp[(tuple(round(c,4) for c in v.co),lg(v))].append(v)
-bmesh.ops.weld_verts(bm,targetmap={v:vs[0] for vs in grp.values() for v in vs[1:]})
-hole=[e for e in bm.edges if len(e.link_faces)==1 and all(abs(W(v).x)<0.03 and 0.12<W(v).z<crotch-0.03 for v in e.verts)]
-r=bmesh.ops.holes_fill(bm,edges=hole,sides=16)
-for f in r['faces']: f.smooth=True
-if r['faces']: bmesh.ops.triangulate(bm,faces=r['faces'],quad_method='BEAUTY',ngon_method='BEAUTY')
-print("HOLES",len(hole),"edges ->",len(r['faces']),"fills")
 bm.normal_update(); bm.to_mesh(me); bm.free(); me.update()
 # the imported custom normals still pointed across the old shared seam: those faces lit pale mid-stride. Recompute them from the split mesh
 bpy.context.view_layer.objects.active=o; o.select_set(True)
