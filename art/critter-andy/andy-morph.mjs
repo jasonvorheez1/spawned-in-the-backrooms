@@ -10,7 +10,8 @@ const { dequantize, quantize, meshopt, sparse } = await pkg("@gltf-transform/" +
 const { MeshoptDecoder, MeshoptEncoder } = await pkg("mesh" + "optimizer");
 await MeshoptDecoder.ready; await MeshoptEncoder.ready;
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({ "meshopt.decoder": MeshoptDecoder, "meshopt.encoder": MeshoptEncoder });
-const [, , src, out, mode] = process.argv; const FOLD = mode === "fold", BAKE = mode === "bake"; // fold: Andy rides inside Dandy, one morph target
+const [, , src, out, mode] = process.argv; const AMP = +(process.env.AMP ?? 1); // a test knob: how much of the Andy field
+const FOLD = mode === "fold", BAKE = mode === "bake"; // fold: Andy rides inside Dandy, one morph target
 const S = 0.625, OY = 0.583, OZ = -0.002;
 const sm = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t) };
 const bump = (a, b, c, d, x) => sm(a, b, x) * (1 - sm(c, d, x));
@@ -46,7 +47,7 @@ for (const mesh of doc.getRoot().listMeshes()) {
     for (let i = 0; i < cnt; i++) {
       pos.getElement(i, v); if (dt) { dt.getElement(i, e); v[0] += e[0]; v[1] += e[1]; v[2] += e[2] }
       const wx = v[0] * S, wy = v[1] * S + OY, wz = v[2] * S + OZ, f = field(wx, wy, wz, mesh.getName());
-      d[i * 3] = (f[0] - wx) / S; d[i * 3 + 1] = (f[1] - wy) / S; d[i * 3 + 2] = (f[2] - wz) / S
+      d[i * 3] = AMP * (f[0] - wx) / S; d[i * 3 + 1] = AMP * (f[1] - wy) / S; d[i * 3 + 2] = AMP * (f[2] - wz) / S
     }
     if (BAKE) { // bake: Andy goes into the base positions themselves (float), Dandy rides untouched on top; the game tore any changed morph data
       const b = new Float32Array(cnt * 3), p0 = [0, 0, 0]; for (let i = 0; i < cnt; i++) { pos.getElement(i, p0); b[i * 3] = p0[0] + d[i * 3]; b[i * 3 + 1] = p0[1] + d[i * 3 + 1]; b[i * 3 + 2] = p0[2] + d[i * 3 + 2] }
