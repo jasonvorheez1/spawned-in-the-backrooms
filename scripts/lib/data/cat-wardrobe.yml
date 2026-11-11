@@ -44,5 +44,5 @@ prints:
   badge: { pgcoat: [0.055, 0.05, 0.45] }   # dx, dy, size share: the coat's print is a small chest badge
 # Thrift Mode masks refit to each new cat head (art/cat-wardrobe/masks.py: the shop's own bag and shell, ears inside), skinned to her head bone
 masks:
-  bagmask: { f: "/cdn/value.7fa728c2636f08801bc6b7a91e0bf6f83d842cec7e1ea6acc8be63c4da144029.glb", m: "/cdn/value.eb9d18aa0a3553dcbaa9f98de74b5d0a158290d0171ba0bb1c0f93ca003d2817.glb" }
+  bagmask: { f: "/cdn/value.bc18246d4a4b2ba8ce84a1a92e6662b939f2fbe90cdc6fb9411dad9ae8167150.glb", m: "/cdn/value.8e5ac77aa50da1a896a947c90ee01816bc15f8483b822841bf66d4e3e71497aa.glb" }
   shellmask: { f: "/cdn/value.cc38d73c3aa334473337f765ebf45f20949ef21ef0547cdc513d53edd547e480.glb", m: "/cdn/value.45981231ad8af5dd54859ea8bc0d6a6b321f7f1906ebecaad555500f8ebb0c37.glb" }
