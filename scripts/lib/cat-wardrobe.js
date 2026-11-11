@@ -54,7 +54,7 @@ export function catModel(sex, look) {
   const faces = FACES.faces[sex === 'm' ? 'male' : 'female']
   const expression = faces[look?.expression]
   const face = typeof expression === 'string' ? expression : faces.neutral
-  const projection = sex === 'm' ? [2.9946, -2.2355, -0.011] : [2.9946, -2.0648, 0.055]
+  const projection = sex === 'm' ? [2.9946, -2.163, -0.011] : [2.9946, -2.0648, 0.055]
   const skin = (color) => ({ kind: 'scripted', script: 'scripts/mat-catskin.js', color, params })
   return {
     id: CAT_BODY[sex].glb, forward: '+z',
