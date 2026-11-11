@@ -41,7 +41,8 @@ if KIND == "top":
     kill = np.abs(P[:, 0]) > half * 0.90                      # the hands Tripo grows past the cuffs
     cuff = half * 0.90
     sl = P[(np.abs(P[:, 0]) > half * 0.55) & ~kill]; zs = np.median(sl[:, 2])     # sleeve axis height
-    ba = bw[(np.abs(bw[:, 0]) > B["arm"][1] - 0.03) & (np.abs(bw[:, 0]) < B["arm"][1] + 0.03)]; za = np.median(ba[:, 2])
+    ba = bw[(np.abs(bw[:, 0]) > B["arm"][1] - 0.03) & (np.abs(bw[:, 0]) < B["arm"][1] + 0.03) & (bw[:, 2] > B["waist"] + 0.04) & (bw[:, 1] < 0.07)]; za = np.median(ba[:, 2])   # the arm alone: her tail passes this x lower and behind
+    print("arm z", round(float(za), 3), "sleeve z", round(float(zs), 3))
     z_hem = B["top"][0] - 0.035
     sz = (za - z_hem) / zs; P[:, 2] = z_hem + P[:, 2] * sz
     sx = (B["arm"][2] - 0.025) / cuff; P[:, 0] *= sx
@@ -68,6 +69,8 @@ if kill.any():
     import bmesh
     bm = bmesh.new(); bm.from_mesh(me); bm.verts.ensure_lookup_table()
     bmesh.ops.delete(bm, geom=[bm.verts[i] for i in np.nonzero(kill)[0]], context="VERTS"); bm.to_mesh(me); bm.free()
+import bmesh
+bm = bmesh.new(); bm.from_mesh(me); bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bm.to_mesh(me); bm.free()   # weld Tripo's UV-seam splits so a push never tears them
 # push out of the skin
 dg = bpy.context.evaluated_depsgraph_get(); bvh = BVHTree.FromObject(body, dg)
 M = 0.007 if KIND != "boots" else 0.004; moved = 0
@@ -95,6 +98,16 @@ if KIND == "top":   # nothing on a top follows the tail or the legs
     for n in [vg.name for vg in g.vertex_groups if "Tail" in vg.name or "Leg" in vg.name or "Foot" in vg.name or "Toe" in vg.name]: g.vertex_groups.remove(g.vertex_groups[n])
 if KIND != "top":
     for n in [vg.name for vg in g.vertex_groups if "Tail" in vg.name]: g.vertex_groups.remove(g.vertex_groups[n])
+if KIND == "top":   # the hood and collar ride the upper spine, never an arm
+    sp = g.vertex_groups.get("mixamorig:Spine2"); allg = [vg for vg in g.vertex_groups]
+    for v in me.vertices:
+        t = min(1.0, max(0.0, (v.co.z - (za + 0.035)) / 0.03)) * min(1.0, max(0.0, (B["arm"][0] + 0.03 - abs(v.co.x)) / 0.03))
+        if t > 0 and sp:
+            for vg in allg:
+                try: w = vg.weight(v.index)
+                except RuntimeError: continue
+                vg.add([v.index], w * (1 - t), "REPLACE")
+            sp.add([v.index], t, "ADD")
 bpy.ops.object.vertex_group_normalize_all(lock_active=False); bpy.ops.object.vertex_group_limit_total(limit=4)
 g.parent = arm; am = g.modifiers.new("Armature", "ARMATURE"); am.object = arm
 mat = bpy.data.materials.new("cloth"); mat.use_nodes = True
