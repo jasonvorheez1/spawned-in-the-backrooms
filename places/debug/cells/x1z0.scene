@@ -837,13 +837,13 @@ dbg-cat-profile-f:
   behavior: scripts/cat-demo.js
   feetPosition: {x: 98.6, y: 0, z: 1.5}
   id: dbg-cat-profile-f
-  rotation: {yaw: 0}
+  rotation: {yaw: 209}
   state: {sex: f, clip: Idle, look: {fur: "#ebac6e", topw: hoodie, top: "#5b8a85", botw: skirt, bottom: "#344762", shoes: boots, shoec: "#403440"}}
   tags: [dbg-gallery]
 dbg-cat-profile-m:
   behavior: scripts/cat-demo.js
   feetPosition: {x: 101.4, y: 0, z: 1.5}
   id: dbg-cat-profile-m
-  rotation: {yaw: -28}
+  rotation: {yaw: 151}
   state: {sex: m, clip: Walk, look: {fur: "#ceac96", topw: jacket, top: "#576c8a", botw: shorts, bottom: "#414657", shoes: boots, shoec: "#38343d"}}
   tags: [dbg-gallery]

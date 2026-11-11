@@ -30,9 +30,9 @@ feet:
 # Tripo garments: glb per body (f/m), under = the painted layer hidden beneath it
 models:
   hoodie: { under: longsleeve, pat: weave, f: /cdn/value.fb44171ccb1af34ec58ddd789e24e0052ad7848bb370f5172bae2bc81a49fdb1.glb, m: /cdn/value.6cdb6401cc5c7c1ee06bd20b61ecbf7085566161f5734f09c763f2953c9b2439.glb }
-  jacket: { under: longsleeve, pat: weave, f: /cdn/value.e0d1a17d3a7ae426ccefd28f56564cab95200936f6053d3b811587f3c65660d8.glb, m: /cdn/value.c090f21ea5f6b26b685d2ac472ac20f7187d6ebb9674dd17bec7a38c54609b25.glb }
-  skirt:  { under: briefs, pat: weave, f: /cdn/value.feeb75fe0b78f31bf92abcf7ef4e8d57b02c18b193c54e9c5d191ab862554185.glb, m: /cdn/value.725bf264603fde33a2d7f37df806777bf75d54cf3c910e9e2155f63436423534.glb }
-  boots:  { under: socks, pat: weave, f: /cdn/value.6211db1f2f744b8131a38d915c06ad8136f003e7bfa2ca63ca054695a39643b0.glb, m: /cdn/value.b2044ed799a36dbd82ddba4995fd05ec99d69e05eb92ce2152c03f38a837571b.glb }
+  jacket: { under: longsleeve, pat: weave, f: /cdn/value.c8ddb6156015a2c580388bdd3931976ef22f46dae05186a0b0420ac785a3a2a4.glb, m: /cdn/value.3a3d33796214fdbfdf6336e8789eb77caa9f90fe65563970dbe5d3465cd9b23b.glb }
+  skirt:  { under: briefs, pat: weave, f: /cdn/value.4c35fdb6dbc6b4cf9f4ea08910bb52efd671502894331171245ade6b9925c16b.glb, m: /cdn/value.53394702ea12ada72fc55f081ce28548c4bfa109de1be87b3b03f5692ef9c0cf.glb }
+  boots:  { under: socks, pat: weave, f: /cdn/value.67796aed215e26f07a3c3f527e8f9f1775658cefd9b293db7b6007cfbc8bb17d.glb, m: /cdn/value.7fa7e884e55b39c2bde1e34a1d509cf9a12c176ef3c8b894c4248584c1fc6c73.glb }
 defaults:
   f: { topw: crop, top: "#f3ead8", botw: shorts, bottom: "#5b7fb0" }
   m: { topw: tee, top: "#9b9da1", botw: shorts, bottom: "#2f3d5c" }
