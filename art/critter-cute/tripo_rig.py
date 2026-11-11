@@ -103,10 +103,12 @@ for v in [g for g in ext["geom"] if isinstance(g, bmesh.types.BMVert)]:
 b.normal_update(); b.to_mesh(BODY.data); b.free()
 print("neck collar ring edges", len(ring))
 
+r0, el, wr, tip = C["arm"][:4]
 # ---------- tail: measured (geodesic walk from the tip, stops where the section widens into the rump) ----------
 import heapq
 bmv = BODY.data.vertices; hp = Vector((0, C["spine_y"], C["hip_z"]))
-cand = [v for v in bmv if v.co.y > AY + 0.06 and C["hip_z"] - 0.05 < v.co.z < AZ + 0.02]
+cand = [v for v in bmv if v.co.y > AY + 0.06 and C["hip_z"] - 0.05 < v.co.z < AZ + 0.02
+        and not (abs(v.co.x) > r0 - 0.03 and math.hypot(v.co.y - AY, v.co.z - AZ) < 0.07)]   # not an arm
 tipv = max(cand, key=lambda v: (v.co - hp).length).index
 adj = [[] for _ in bmv]
 for e in BODY.data.edges:
@@ -140,7 +142,6 @@ for v in bmv: tkd.insert(v.co, v.index)
 tkd.balance()
 # ---------- armature ----------
 J = build_J(C)
-r0, el, wr, tip = C["arm"][:4]
 for sd, k in (("Left", 1), ("Right", -1)):
     J[sd + "Shoulder"] = ((C["sh_x"] * k, C["spine_y"] + 0.01, AZ - 0.012), (r0 * k, AY, AZ))
     J[sd + "Arm"] = ((r0 * k, AY, AZ), (el * k, AY, AZ)); J[sd + "ForeArm"] = ((el * k, AY, AZ), (wr * k, AY, AZ))
@@ -250,8 +251,10 @@ bpy.data.objects.remove(camo)
 # ---------- paint out eyes / nose / mouth under the decal ----------
 def classes(c):
     mx = c[..., :3].max(-1); mn = c[..., :3].min(-1); sat = (mx - mn) / np.maximum(mx, 1e-3)
-    fur = (c[..., 0] >= c[..., 1]) & (c[..., 1] >= c[..., 2] - 0.02) & (c[..., 0] - c[..., 2] > 0.2) & (sat > 0.38)
-    cream = ~fur & (mx > 0.55) & (sat < 0.38)
+    lum_ = 0.2126 * c[..., 0] + 0.7152 * c[..., 1] + 0.0722 * c[..., 2]
+    cream = (mx > 0.55) & (sat < 0.38)
+    pink = (c[..., 0] - c[..., 1] > 0.1) & (c[..., 1] - c[..., 2] < 0.08)
+    fur = ~cream & ~pink & (lum_ > 0.25)
     return fur, cream
 hm = HEAD.data; hm.calc_loop_triangles(); uvl = hm.uv_layers.active.data
 SX, SIJ = [], []
@@ -306,7 +309,7 @@ for o in (BODY, HEAD):
     uv = o.data.uv_layers.active.data; nf = 0
     for poly in o.data.polygons:
         pts = [uv[li].uv for li in poly.loop_indices]; pts.append(sum(pts, Vector((0, 0))) / len(pts))
-        anyfur = any(fur_all[int(p.y * TH) % TH, int(p.x * TW) % TW] for p in pts)
+        anyfur = sum(bool(fur_all[int(p.y * TH) % TH, int(p.x * TW) % TW]) for p in pts) * 2 > len(pts)
         poly.material_index = 0 if anyfur else 1; nf += anyfur
     print(o.name, "faces fur", nf, "fur2", len(o.data.polygons) - nf)
 
@@ -328,13 +331,25 @@ def win(a, f):
             if di * di + dj * dj > Wn * Wn: continue
             out = f(out, np.roll(np.roll(a, di, 0), dj, 1))
     return out
+Wn = 3; opn = win(win(np.where(np.isnan(hgt), 9, hgt), np.minimum), np.maximum)
+Wn = 13; pad = np.where(np.isnan(hgt), -9, opn)
 dil = win(pad, np.maximum); clo = win(np.where(np.isnan(hgt), 9, dil), np.minimum)
 for _ in range(3): clo = (clo + np.roll(clo, 1, 0) + np.roll(clo, -1, 0) + np.roll(clo, 1, 1) + np.roll(clo, -1, 1)) / 5
 lift = 0
-for (i, j), (co, uv_) in list(grid.items()):
-    if clo[i, j] > hgt[i, j] + 0.001 and abs(clo[i, j]) < 5:
-        grid[i, j] = (Vector((co.x, -clo[i, j] - 0.0005, co.z)), uv_); lift += 1
-print("decal verts lifted over sockets", lift)
+for v in HEAD.data.vertices:
+    co = v.co; i = round((co.x - BOX[0]) / (BOX[1] - BOX[0]) * NX); j = round((co.z - BOX[2]) / (BOX[3] - BOX[2]) * NZ)
+    if not (0 <= i <= NX and 0 <= j <= NZ) or co.y > -0.1 or abs(clo[i, j]) > 5 or np.isnan(hgt[i, j]): continue
+    if -co.y < hgt[i, j] - 0.004: continue          # not the front skin (inner shell)
+    r = min(math.hypot((co.x - ex) / (0.75 * D), (co.z - ez - 0.05 * D) / (0.75 * D)) for ex, ez in EYE)
+    w = 1 if r < 0.75 else max(0, (1.0 - r) / 0.25); w = w * w * (3 - 2 * w)
+    if w > 0: co.y = co.y + (-clo[i, j] - co.y) * w; lift += 1
+HEAD.data.update(); print("head verts flattened at the eyes", lift)
+bvh = BVHTree.FromObject(HEAD, bpy.context.evaluated_depsgraph_get()); grid = {}
+for j in range(NZ + 1):
+    for i in range(NX + 1):
+        u, v = i / NX, j / NZ; Xp = BOX[0] + u * (BOX[1] - BOX[0]); Zp = BOX[2] + v * (BOX[3] - BOX[2])
+        hit = bvh.ray_cast(Vector((Xp, -1, Zp)), Vector((0, 1, 0)))
+        if hit[0] is not None and hit[1].y < -0.15: grid[i, j] = (hit[0] + hit[1].normalized() * 0.0005, (u, v))
 verts, uvs, faces, vid = [], [], [], {}
 for key, (co, uv_) in grid.items(): vid[key] = len(verts); verts.append(co[:]); uvs.append(uv_)
 for j in range(NZ):
@@ -364,7 +379,7 @@ def grad_img(name, rows):
     hgt = 128; arr = np.ones((hgt, 4, 4), np.float32)
     for r in range(hgt):
         f = (r + 0.5) / hgt; hx = next(c for e, c in rows if f <= e)
-        arr[r, :, :3] = [(int(hx[i:i + 2], 16) / 255) ** 2.2 for i in (1, 3, 5)]
+        arr[r, :, :3] = [(int(hx[i:i + 2], 16) / 255) for i in (1, 3, 5)]
     return save_img(name, arr, f"{OUT}/{WHO}-{name}.png", "PNG")
 def cloth_mat(name, img, rough):
     m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree
@@ -403,7 +418,9 @@ def make_cloth(name, keep, off, vfun, material, drape):
                 if v.co.y < ymin: ymin, zat = v.co.y, v.co.z
                 v.co.y = min(v.co.y, ymin + 0.3 * (zat - v.co.z))
         b.normal_update()
-    for v in b.verts: v.co += v.normal * off
+    for v in b.verts:
+        loc, nrm, fi, dist = body_bvh.find_nearest(v.co); d_ = (v.co - loc).dot(nrm)
+        if d_ < off: v.co += nrm * (off - d_)
     uv = b.loops.layers.uv.verify()
     for f in b.faces:
         f.smooth = True
