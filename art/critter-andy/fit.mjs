@@ -10,7 +10,7 @@ const { MeshoptDecoder } = await pkg("mesh" + "optimizer"); await MeshoptDecoder
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({ "meshopt.decoder": MeshoptDecoder });
 const [, , src, out] = process.argv;
 const S = 0.625, OY = 0.583, W = (m) => m / S, RY = (wy) => (wy - OY) / S; // world metres -> raw
-const GAP = { top: W(0.006), bottom: W(0.009), outer: W(0.014) }; // her picks: skin < tee < trousers < jackets
+const GAP = { top: W(0.006), bottom: W(0.016), outer: W(0.022) }; // her picks: skin < tee < trousers < jackets; wide enough to survive the phone simplify (Nov 11: hem tore at 6/9 mm)
 const OUTER = /hoodie|jacket|coat|blazer|robe|poncho|cloak|cape|mantle|oilskin|tailcoat|vest|hauberk|plate|apron|seawatch|opera|bellhop|pinstripe/;
 const BOTTOM = /^Bot_|pants|jeans|cargo|slacks|shorts|skirt|overalls|waders|pjpants/;
 const SKIP = /^(Body|Skin_|Hat_|Eyew_|Shoes_)|beanie|beret|cap$|crown|helm|hood$|hat$|bow$|flower|glasses|shades|headphones|boots|sneakers|slippers|heels|steeltoe|souwester|bell$|partyhat|tophat/;
@@ -57,7 +57,7 @@ for (const m of meshes) { const name = m.getName(); if (SKIP.test(name)) continu
           // bust 0: push out to the gap
           const d0 = (x - sx) * nx + (y - sy) * ny + (z - sz) * nz;
           if (d0 < gap) { const k = (gap - d0) * on; dx += nx * k; dy += ny * k; dz += nz * k; pushed++ }
-          else if (!isBot && !OUTER.test(lname) && wy < WAIST && d0 > gap) { const k = -(d0 - gap) * on; dx += nx * k; dy += ny * k; dz += nz * k; pulled++ }
+          else if (!isBot && !OUTER.test(lname) && wy < WAIST && d0 > gap) { const k = -(d0 - gap * 0.5) * on; dx += nx * k; dy += ny * k; dz += nz * k; pulled++ }
           else if (!BOTTOM.test(lname) && !OUTER.test(lname)) { // a top floating off the chest is drawn in snug (Shelly: "breast area very loose")
             const chest = Math.max(0, Math.min(1, (wy - 0.7) / 0.05)) * Math.max(0, Math.min(1, (1.02 - wy) / 0.05)), slack = d0 - gap * 1.5;
             if (slack > 0 && d0 < W(0.06)) { const k = -slack * 0.85 * chest * on; dx += nx * k; dy += ny * k; dz += nz * k; pulled++ } }
