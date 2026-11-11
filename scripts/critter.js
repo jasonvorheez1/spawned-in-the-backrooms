@@ -5,7 +5,7 @@ import { plainLook, honest, wornTokens, parseCloth } from './lib/clothes.js'
 import C from './lib/data/critter.yml'
 import { standUp } from './lib/seat.js'
 const SCRIPT = 'scripts/critter2-geo.js'
-import { FURRY_HEAD, armSplay, bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, STYLE_V, seatHead, clearAppearance, humanBodyMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard, speciesOf } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
+import { FURRY_HEAD, armSplay, bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, restyleQueue, restyleStep, STYLE_V, seatHead, clearAppearance, humanBodyMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard, speciesOf } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
 const LID_SCALE = 1000 // the lids are modelled this many times too small (scripts/critter2-geo.js)
 const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 import { weaponBody, HOLD } from './lib/weapon-look.js'
@@ -199,7 +199,7 @@ function gaitFor(ctx) {
   return (ss.gaitArmed ??= { ...ss.gaitNpc, walk: WARRIOR.walk, run: WARRIOR.run, sprint: WARRIOR.run })
 }
 export function update(ctx) {
-  { const sty = setStyle(ctx.world.state.bodyStyle), ps = ctx.place?.state, k = sty + ':' + STYLE_V; if (ps && ctx.self.isLocal !== false && ps.bodyStyleV !== k) { ps.bodyStyleV = k; ctx.log('restyle', ctx.place.id ?? '', sty, restylePlace(ctx)) } } // the room's people follow the BODIES pick: one sweep per place per flip
+  { const sty = setStyle(ctx.world.state.bodyStyle), ps = ctx.place?.state, k = sty + ':' + STYLE_V; if (ps && ctx.self.isLocal !== false && ps.bodyStyleV !== k) { ps.bodyStyleV = k; ctx.self.session.rq = restyleQueue(ctx) } const rq = ctx.self.session.rq; if (rq?.length) restyleStep(ctx, rq, 6) } // the sweep runs 6 things a tick, never a whole place at once // the room's people follow the BODIES pick: one sweep per place per flip
   { const sty = setStyle(ctx.world.state.bodyStyle), ss = ctx.self.session; if (ss.style !== sty) { if (ss.style) { ss.lookKey = null; ss.key = null; ss.flair = null; ss.headSwept = false; if (sty === 'furry') ctx.self.anim.idle = null } ss.style = sty } } // the menu's BODIES: humans or furries, everyone in the room
   if (!MESH && !ctx.self.session.headSwept) { ctx.self.session.headSwept = true; dropHead(ctx, ctx.self) }
   if (!ctx.self.state.look) ctx.self.state.look = randomLook(ctx, { ...C.default }, 'clothes') // a new critter: regular clothes only (saved looks are never touched)

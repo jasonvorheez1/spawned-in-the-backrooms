@@ -927,6 +927,9 @@ export function restyle(ctx, o) {
   return true
 }
 // one pass over a place: skips players and what only one machine sees; returns how many changed
+// a sweep spread over ticks (Nov 11: one whole-place sweep in a tick cost 1271 ms): a queue of ids, n restyled per call
+export function restyleQueue(ctx, place) { const P = place ?? ctx.place, skip = new Set((P.players ?? []).map((p) => p.id)); return Object.keys(P.objects ?? {}).filter((id) => !skip.has(id) && !id.startsWith('player/')) }
+export function restyleStep(ctx, q, n = 6) { let k = 0; while (q.length && k < n) { const o = ctx.place.objects[q.pop()]; if (!o || o.audience === 'local') continue; k++; restyle(ctx, o) } return q.length }
 export function restylePlace(ctx, place) {
   const P = place ?? ctx.place, skip = new Set((P.players ?? []).map((p) => p.id)); let n = 0
   for (const id in P.objects) { if (skip.has(id) || id.startsWith('player/')) continue; const o = P.objects[id]; if (!o || o.audience === 'local') continue; if (restyle(ctx, o)) n++ }
