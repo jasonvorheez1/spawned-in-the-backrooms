@@ -487,11 +487,19 @@ for (i, j), (co, uv_) in list(grid.items()):   # smoothed normals: an even 3 mm 
 # the decal rode the old lumps (the body's chin and the old ':3' poke through under the muzzle): its depth is relaxed over the grid,
 # edge cells held, then any head or body vertex standing in front of it is pressed 2 mm behind it, so no bump shows through or around
 g0 = {k: co.y for k, (co, _) in grid.items()}; gy = dict(g0)
+# the floor the relax may rise to: a smooth fit of the face's curve that ignores sunken mouth slots, so a recess fills
+# (the boy's old open mouth) while the dome's sides never lift off (the side-view beak)
+_ks = list(g0); _X = np.array([[grid[k][0].x, grid[k][0].z] for k in _ks]); _Y = np.array([g0[k] for k in _ks])
+_F = lambda X: np.stack([X[:, 0] ** a_ * X[:, 1] ** b_ for a_ in range(5) for b_ in range(5) if a_ + b_ <= 4], 1)
+_m = np.ones(len(_ks), bool)
+for _ in range(4):
+    _c = np.linalg.lstsq(_F(_X[_m]), _Y[_m], rcond=None)[0]; _fit = _F(_X) @ _c; _m = _Y < _fit + 0.003
+gfloor = {k: min(g0[k], float(_fit[n])) - 0.002 for n, k in enumerate(_ks)}
 for _ in range(14):
     n_ = {}
     for (i, j), y in gy.items():
         nb = [(i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)]
-        n_[i, j] = y if not all(k in gy for k in nb) else max(g0[i, j] - 0.002, 0.5 * y + 0.125 * sum(gy[k] for k in nb))   # may sink into a lump, never float off the curve (the side-view beak)
+        n_[i, j] = y if not all(k in gy for k in nb) else max(gfloor[i, j], 0.5 * y + 0.125 * sum(gy[k] for k in nb))   # may sink into a lump, never float off the curve (the side-view beak)
     gy = n_
 for k, (co, uv_) in list(grid.items()): grid[k] = (Vector((co.x, gy[k], co.z)), uv_)
 npress = 0
