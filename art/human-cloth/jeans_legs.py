@@ -35,5 +35,7 @@ for v in o.data.vertices:
     if own: max(own,key=lambda g:g.weight).weight+=rem
     else: G[s+'UpLeg'].add([v.index],rem,'ADD')
 print("FIX crotch",round(crotch,3),"seam edges",len(seam),"fixed",fixed)
+# one-sided cloth: where a stride crosses the thighs, a double-sided leg showed its lit inside as pale slivers; culled, the other leg's denim shows instead
+for m in o.data.materials: m.use_backface_culling=True
 for ob in bpy.data.objects: ob.select_set(ob==o or ob.type=='ARMATURE')
 bpy.ops.export_scene.gltf(filepath=dst,use_selection=True,export_morph=True,export_skins=True)
