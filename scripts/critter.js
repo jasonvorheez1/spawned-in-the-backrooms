@@ -347,7 +347,7 @@ export function update(ctx) {
   }
 }
 
-function wornModel(w) { return w.url } // facing is fixed at import (scripts/lib/plyimport.js)
+function wornModel(w) { return w.name ? w.url : { id: w.url, forward: '+z' } } // a player's own .plymodel upload comes out of scripts/lib/plyimport.js facing +Z (seen backwards, Nov 11): turned to face forward here; catalog models already face -Z
 function dropHead(ctx, o) { clearAppearance(ctx,o) }
 // the species head (face, ears, tail) rides the body's rig as a skinned child; restyled when the look changes
 function wearHead(ctx, o, l) { seatHead(ctx,o,{...l,vary:false}) }
