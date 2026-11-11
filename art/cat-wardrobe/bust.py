@@ -9,9 +9,9 @@ bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(file
 # v2 (Shelly #221537 'do better with breasts'): v1 was a narrow gaussian taller than it was wide, so it read as a shelf with a hard underside.
 # Now: two soft lobes joined by a smooth union, a long gentle slope from the collarbone, a round fuller underside, the peak a touch low and
 # turned slightly outward; cloth never undercuts: below the peak it drapes straight down and fades over the ribs. Modest PG (ruling), fuller than Tripo's.
-CX, CZ, AMP = 0.043, 0.522, 0.036
+CX, CZ, AMP = 0.043, 0.522, 0.044
 SX, SUP, SDN = 0.031, 0.046, 0.023
-if CLOTH: AMP = 0.039
+if CLOTH: AMP = 0.047
 def lobe(p, sx):
     dx = (p.x - sx * CX) / SX; dz = p.z - CZ
     dz = dz / (SUP if dz > 0 else SDN)
