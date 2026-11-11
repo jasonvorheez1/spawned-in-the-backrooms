@@ -70,6 +70,49 @@ for nv,uvs,mi,sm in fresh:
 bm.normal_update()
 bm.normal_update(); bm.to_mesh(o.data); bm.free(); o.data.update()
 print("BRIDGE resewn",len(bridge))
+# the legs were one closed skin: front and back met at x=0 with no inner-leg cloth at all. Ripped apart, each leg is an open slot there,
+# and the slot showed the pale lining-side mid-stride. Close each leg's slot with its own cap, weighted like the edge it hangs from
+from collections import Counter,defaultdict
+LS={'L':set(legs('Left')),'R':set(legs('Right'))}
+def vside(v):
+  l=sum(g.weight for g in v.groups if gi[g.group] in LS['L']); r=sum(g.weight for g in v.groups if gi[g.group] in LS['R'])
+  return 'L' if l>r+0.05 else 'R' if r>l+0.05 else '?'
+me=o.data; K=lambda i:tuple(round(x,5) for x in me.vertices[i].co)
+fside={f.index:Counter(vside(me.vertices[i]) for i in f.vertices).most_common(1)[0][0] for f in me.polygons}
+ek=defaultdict(list); rep={}
+for f in me.polygons:
+  vs=list(f.vertices)
+  for a,b in zip(vs,vs[1:]+vs[:1]):
+    ek[frozenset((K(a),K(b)))].append(fside[f.index])
+    for i in (a,b): rep.setdefault((K(i),fside[f.index]),i)
+caps=0
+bm=bmesh.new(); bm.from_mesh(me); bm.verts.ensure_lookup_table(); dl=bm.verts.layers.deform.active
+for sd in 'LR':
+  od='R' if sd=='L' else 'L'
+  bnd=[tuple(e) for e,s_ in ek.items() if s_.count(sd)==1 and od in s_ and all(W(me.vertices[rep[(k,sd)]]).z<crotch for k in e if (k,sd) in rep) and all((k,sd) in rep for k in e)]
+  adj=defaultdict(list)
+  for a,b in bnd: adj[a].append(b); adj[b].append(a)
+  seen=set()
+  for start in list(adj):
+    if start in seen: continue
+    loop=[start]; seen.add(start); cur=start
+    while True:
+      nx=[n for n in adj[cur] if n not in seen]
+      if not nx: break
+      cur=nx[0]; loop.append(cur); seen.add(cur)
+    if len(loop)<3 or start not in adj[cur]: continue
+    cx=sum(W(me.vertices[rep[(k,sd)]]).x for k in loop)/len(loop)
+    push=0.003*(1 if (sd=='L')==(lsign>0) else -1)
+    nv=[]
+    for k in loop:
+      src_=bm.verts[rep[(k,sd)]]; c=bm.verts.new(src_.co.copy()); c.co.x+=push/ M.to_scale().x
+      for g,x in src_[dl].items(): c[dl][g]=x
+      nv.append(c)
+    try: f=bm.faces.new(nv)
+    except ValueError: continue
+    r=bmesh.ops.triangulate(bm,faces=[f]); caps+=1
+print("CAPS",caps)
+bm.normal_update(); bm.to_mesh(me); bm.free(); me.update()
 # the imported custom normals still pointed across the old shared seam: those faces lit pale mid-stride. Recompute them from the split mesh
 bpy.context.view_layer.objects.active=o; o.select_set(True)
 bpy.ops.mesh.customdata_custom_splitnormals_clear()
