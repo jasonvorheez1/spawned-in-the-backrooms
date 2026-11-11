@@ -61,10 +61,10 @@ fluff:
 # ears: art/cat-wardrobe/ears.py (Nov 11, Shelly "massively improve ears"): sculpted anime ears skinned to the head, slots earFur/earInner/earTuft; the head's own ear sinks under them (Ear_Small 3)
 ears:
   upright: { f: '/cdn/value.0719aa2d5320de1b9a58522b4c48f597db3b30573677f2b6cf72aeeb5a63c8c2.glb', m: '/cdn/value.90d4adabbd753c6906e3ce70780af54b66da7528e99c67b639525537a684d4e5.glb' }
-  tall: { f: '/cdn/value.e61e0b7685d50943c49ac67e1404ba4f8fd2d71a99d303db2d95010488270db1.glb', m: '/cdn/value.fd004c505923afad4c7e99145592fbf8fef38c4d54592984f158c4629af102c7.glb' }
-  small: { f: '/cdn/value.926498823362359463084d15eb5c4b2767f1a171bb4f191846021b77b8dcb74b.glb', m: '/cdn/value.8af75fddb41562969d082775fa2b2ad5d98ded57f92e19a14b9323953e3acdc9.glb' }
-  fold: { f: '/cdn/value.47eb72229eb59d51867f9e288ae9397c9540900cd1620f7a14e89bf1901242b0.glb', m: '/cdn/value.1c9cb038c9f6c7db38c038009f31d96c8a6d48b51dab036e34e78af2c71700ac.glb' }
-  wide: { f: '/cdn/value.4c728ec72ae68365fcd396862969f1d3d11013a34c1b88a3cbb5285e92d69c8b.glb', m: '/cdn/value.b23c0bb63e1956a447b1a74eca5c8b436d0bcb09eb4de59d43770d7480ed3232.glb' }
+  tall: { f: '/cdn/value.75a29635cc0345947ef4388c7bf477609c923e36cbc84d148b8766e3de30e805.glb', m: '/cdn/value.9293f23c1b60319d3d950f29a7ef31acf69f319fe00af3ec9e8083a3c89a9ba4.glb' }
+  small: { f: '/cdn/value.725e5d11097eca16e468a6a41cbe4ba48e242529133e686771b37cf5500040b2.glb', m: '/cdn/value.5da0daa4459b182f9c6408f0fd869baaceb8a1437585d0917501d150fafd702a.glb' }
+  fold: { f: '/cdn/value.3d8c8dc98ea6762c1ae9351972c76dc7fe02c1bc98b629f21bd0979038ae2859.glb', m: '/cdn/value.d7fc8fc1c975f0c9667150b99e0faf58493995f641b43a474dba932d8846bf91.glb' }
+  wide: { f: '/cdn/value.34f795b121a0bfde46805e04ec9e244c6e03c0d53e2e0245898263de139745d1.glb', m: '/cdn/value.82a044813384a47fc3fe4b11833ee035e14581a890e33353b137e8674ad9b33f.glb' }
 
 # hairstyles (art/cat-wardrobe/hair-register.py); Nov 11 cleaned: strands smoothed away from the skull (seams kept as authored), a hair-coloured scalp cap only where hidden, double-sided: the Tripo hair carried onto the current cat heads, skinned to the head, tinted by look.hairc. look.hair: one key
 hair:
