@@ -36,12 +36,33 @@ for v in o.data.vertices:
     else: G[s+'UpLeg'].add([v.index],rem,'ADD')
 print("FIX crotch",round(crotch,3),"seam edges",len(seam),"fixed",fixed)
 # tried: flipping inner-thigh faces outward and one-sided cloth; neither cleared the slivers in a stride test (Nov 11)
-# 14 faces near the knees bridged one leg to the other (verts led by opposite legs): a stride stretched them into a web. Cut them
-lead=lambda v:(lambda l,r:'L' if l>r+0.05 else 'R' if r>l+0.05 else '?')(sum(g.weight for g in v.groups if gi[g.group] in legs('Left')),sum(g.weight for g in v.groups if gi[g.group] in legs('Right')))
-bm=bmesh.new(); bm.from_mesh(o.data); dv=o.data.vertices
-bridge=[f for f in bm.faces if (lambda s:'L' in s and 'R' in s)({lead(dv[v.index]) for v in f.verts}) and sum(W(v).z for v in f.verts)/len(f.verts)<crotch]
+# faces near the knees bridged one leg to the other (verts led by opposite legs): a stride stretched them into a web.
+# Each goes whole to the leg most of its verts follow; its stray verts are copied and re-weighted to that leg, so the surface stays closed
+LN={'L':legs('Left'),'R':legs('Right')}
+bm=bmesh.new(); bm.from_mesh(o.data); dl=bm.verts.layers.deform.active
+def ld(v):
+  w=v[dl]; l=sum(x for g,x in w.items() if gi[g] in LN['L']); r=sum(x for g,x in w.items() if gi[g] in LN['R'])
+  return 'L' if l>r+0.05 else 'R' if r>l+0.05 else '?'
+gid={n:g.index for n,g in G.items()}
+bridge=[f for f in bm.faces if {'L','R'}<={ld(v) for v in f.verts} and sum(W(v).z for v in f.verts)/len(f.verts)<crotch]
+for f in bridge:
+  sides=[ld(v) for v in f.verts]; s_=max('LR',key=sides.count); o_='R' if s_=='L' else 'L'
+  nv=[]
+  for v,sd in zip(f.verts,sides):
+    if sd!=o_: nv.append(v); continue
+    c=bm.verts.new(v.co); w=dict(v[dl].items()); moved=0
+    for g in list(w):
+      if gi[g] in LN[o_]: moved+=w.pop(g)
+    k=gid[('Left' if s_=='L' else 'Right')+'UpLeg'] if v.co is None else None
+    own=[g for g in w if gi[g] in LN[s_]]
+    tgt=max(own,key=lambda g:w[g]) if own else gid[('Left' if s_=='L' else 'Right')+('Leg' if W(v).z<0.5 else 'UpLeg')]
+    w[tgt]=w.get(tgt,0)+moved
+    for g,x in w.items(): c[dl][g]=x
+    nv.append(c)
+  nf=bm.faces.new(nv,f); nf.copy_from(f)
+  for l0,l1 in zip(f.loops,nf.loops): l1.copy_from(l0)
 bmesh.ops.delete(bm,geom=bridge,context='FACES_ONLY'); bm.to_mesh(o.data); bm.free(); o.data.update()
-print("BRIDGE cut",len(bridge))
+print("BRIDGE resewn",len(bridge))
 # the imported custom normals still pointed across the old shared seam: those faces lit pale mid-stride. Recompute them from the split mesh
 bpy.context.view_layer.objects.active=o; o.select_set(True)
 bpy.ops.mesh.customdata_custom_splitnormals_clear()
