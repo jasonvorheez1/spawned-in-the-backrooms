@@ -20,7 +20,7 @@ human: { m: "/cdn/value.ffa88b12900006be2f285f876caccb1174e0519858a6ba51e529ac8a
 # Dandy (Shelly Nov 9 "the furry models are awful"; Nov 10 rebuild: neck term bounded so hats keep their shape, headphone cups pushed out of the bigger heads): the bodies below are the wardrobe pipeline's (before: m 9cf50c5021c4443970c1fe193d6917865363c1be778845f8870cda68c2607fd8 f deabd82b6e4ad3959a0713f9e21a48658b70eb954ae75649ebdc0a08efb6a97d) with one more key, Dandy, on every mesh (art/critter-cute/dandy-morph.mjs). A rebuilt body must be run through it again.
 # Andy (Nov 11, Shelly yes #198456 "body and face first", ref Eclipsed Andy #175181): one more key, Andy, on every mesh (art/critter-andy/andy-morph.mjs): chunkier torso, thick arms and thighs, bean feet; clothes ride the same key
 # Nov 11 07:40: the Andy upload tore every garment into spikes once served; back on the Dandy body till it is rebuilt
-body: { m: "/cdn/value.06a60b4a5b3965c032abe1a55667ec1dc71e355f399abde039a355139ee388ec.glb", f: "/cdn/value.8021d9842ea70817ecba60b5a0239345239251aa5cbfccf519d9b7e0e37737e8.glb" }
+body: { m: "/cdn/value.c7519811530033221b8a18874716bb3cc63cc44ac67b50b391f81e6400c6b4fc.glb", f: "/cdn/value.8021d9842ea70817ecba60b5a0239345239251aa5cbfccf519d9b7e0e37737e8.glb" }
 bodyOld: ["/cdn/value.8c9b37356eea9fa455feec66eba67898e238fe9fc3b1759e91f6d3fce4522cc4.glb", "/cdn/value.b0c24105220db757dd63771846106cb75554f1416026bd13ddaafb4f5783e4fd.glb"]
 bodyMats: [fur, limb, pad, cloth_top, cloth_bottom, cloth_shoes, cloth_hat, cloth_neck, button, metal, lens, gold, sole]
 slots: { topw: Top, botw: Bot, shoes: Shoes, hat: Hat, eyew: Eyew, neck: Neck }
