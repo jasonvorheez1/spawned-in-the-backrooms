@@ -91,6 +91,7 @@ export function wardrobe(ctx, player) {
   let body = ''
   const cat = !human
   const CATN = { button: 'button', long: 'long', pointy: 'pointy', flat: 'flat', puff: 'mochi', upright: 'upright', tall: 'tall', small: 'small', fold: 'fold', wide: 'airplane', classic: 'classic', fluffy: 'fluffy', bob: 'bobtail', whip: 'whip', curl: 'curl', cheeks: 'cheeks', burns: 'sideburns', crest: 'crest', lynx: 'lynx tips', nape: 'nape', cowlick: 'cowlick', bangs: 'fur bangs', afropuff: 'afro puff', crop: 'crop', halfup: 'half up', long_h: 'long', pixie: 'pixie', shaggy: 'shaggy', sidetail: 'side tail', twintails: 'twin tails', undercut: 'undercut' }
+  const CATF = { neutral: 'calm', smile: 'smile', joy: 'happy', blep: 'blep', sad: 'sad', angry: 'angry', shock: 'shocked' } // the cat's real painted faces (critter-faces.yml); blink, hit and ko are the game's own
   const pick = (k, list, cur) => `<div class="grid">${list.map((v) => tile(k, v, cur === v, CATN[v] || v)).join('')}</div>`
   const fl = Array.isArray(l.fluff) ? l.fluff : l.fluff ? [l.fluff] : ['cheeks']
   const sx = l.sex === 'f' ? 'f' : 'm', catHairs = Object.keys(CW.hair || {}).filter((k) => CW.hair[k][sx])
@@ -108,8 +109,8 @@ export function wardrobe(ctx, player) {
     <div class="sec"><span>SNOUT</span><span>${CATN[l.snout] || 'random'}</span></div>${pick('snout', ['button', 'long', 'pointy', 'flat', 'puff'], l.snout)}
     <div class="sec"><span>EARS</span><span>${CATN[l.ears] || 'random'}</span></div>${pick('ears', ['upright', 'tall', 'small', 'fold', 'wide'], l.ears)}
     <div class="sec"><span>EYE COLOUR</span></div>${sws('eye', C.eye)}
-    <div class="sec"><span>RESTING FACE</span><span>${l.expr}</span></div>${grid('expr', C.expr, {})}
-    <div class="hint">T cycles faces while you play. getting hit, low hp and low sanity show on your face on their own.</div>`
+    <div class="sec"><span>RESTING FACE</span><span>${CATF[l.expr] || 'calm'}</span></div><div class="grid">${Object.keys(CATF).map((v) => tile('catface', v, (CATF[l.expr] ? l.expr : 'neutral') === v, CATF[v])).join('')}</div>
+    <div class="hint">your face reacts on its own: a hit, a knockout, fear and joy show up while you play.</div>`
   else if (tab === 'body') body = `
     <div class="sec"><span>BODY</span></div>${grid('sex', C.sex)}
     <div class="sec"><span>STATURE</span><span>${Math.round(170 * (Number(l.heightS) || 1))} cm</span></div><div class="big">${sliderRows(C.sliders.filter((r) => ['heightS', 'buildS'].includes(r[0])))}</div>

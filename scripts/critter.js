@@ -165,6 +165,7 @@ export function onInput(ctx, input) {
     if (d.k === 'snout' || d.k === 'ears' || d.k === 'tail') { const list = { snout: SNOUTS, ears: EARS, tail: TAILS }[d.k]; if (!list.includes(d.v)) return; dress(st, lookOf(ctx), { ...lookOf(ctx), species: 'cat', [d.k]: d.v }); return }
     if (d.k === 'cathair') { const cur = lookOf(ctx), sx = cur.sex === 'f' ? 'f' : 'm'; if (d.v !== 'none' && !CW.hair?.[d.v]?.[sx]) return; dress(st, cur, { ...cur, species: 'cat', hair: d.v }); return }
     if (d.k === 'fluff') { if (!CW.fluff?.[d.v]) return; const cur = lookOf(ctx), have = Array.isArray(cur.fluff) ? cur.fluff : cur.fluff ? [cur.fluff] : ['cheeks']; const next = have.includes(d.v) ? have.filter((f) => f !== d.v) : [...have, d.v]; dress(st, cur, { ...cur, species: 'cat', fluff: next }); return }
+    if (d.k === 'catface') { if (!['neutral', 'smile', 'joy', 'blep', 'sad', 'angry', 'shock'].includes(d.v)) return; const cur = lookOf(ctx); dress(st, cur, { ...cur, expr: d.v }); st.face = null; return }
     if (typeof d.k === 'string' && d.k.startsWith('cw-')) { // a cat garment from the creator's clothes tab: any piece in cat-wardrobe.yml
       const slot = d.k.slice(3), v = String(d.v), ok = v === 'none' || !!(CW.tops?.[v] || CW.bottoms?.[v] || CW.feet?.[v] || CW.models?.[v] || CW.masks?.[v])
       if (!['topw', 'botw', 'shoes', 'hat'].includes(slot) || !ok) return

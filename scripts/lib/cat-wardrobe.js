@@ -64,7 +64,7 @@ export function catModel(sex, look) {
   const params = skinParams(sex, look)
   const fur = look?.fur || '#f3c98a'
   const faces = FACES.faces[sex === 'm' ? 'male' : 'female']
-  const expression = faces[look?.expression]
+  const expression = faces[look?.expression] ?? faces[look?.expr] // a mood swap writes expression; the creator's resting pick is expr
   const face = typeof expression === 'string' ? expression : faces.neutral
   const projection = sex === 'm' ? [2.9946, -2.163, -0.011] : [2.9946, -2.0648, 0.055]
   const skin = (color) => ({ kind: 'scripted', script: 'scripts/mat-catskin.js', color, params })
