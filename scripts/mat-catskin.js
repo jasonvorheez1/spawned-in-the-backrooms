@@ -41,7 +41,11 @@ export function material(ctx) {
   const nD = mix(nB, nF, isFront);
   const ex = q.x.div(nW), ey = q.y.sub(tHi.add(0.004)).div(nD.max(0.001));
   const scoop = ex.mul(ex).add(ey.mul(ey)).sqrt().sub(1).mul(min(nW, nD.max(0.012))); // >0 outside the collar hole
-  const topD = min(min(q.y.sub(tLo), tHi.sub(q.y)), min(tSl.sub(ax), min(scoop, notTail)));
+  const topBand = min(q.y.sub(tLo), tHi.sub(q.y));
+  // The fitted top needs fabric backing above the usual shirt line at the shoulder seam.
+  const shoulder = min(min(ax.sub(0.069), float(0.215).sub(ax)), tHi.add(0.021).sub(q.y));
+  const upper = max(topBand, min(min(shoulder, q.y.sub(tHi.sub(0.05))), P("tShoulder").sub(1)));
+  const topD = min(upper, min(tSl.sub(ax), min(scoop, notTail)));
   // --- bottom: waist..leg hem
   const bLo = P("bLo"), bHi = P("bHi");
   const botD = min(min(q.y.sub(bLo), bHi.sub(q.y)), min(notTail, float(0.2).sub(ax)));

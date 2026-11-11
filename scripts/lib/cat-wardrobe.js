@@ -38,6 +38,7 @@ export function skinParams(sex, look) {
       o.tSl = B.arm[2] - 0.024
       o.tHi += sex === 'm' ? 0.018 : 0.012
       o.tuckT = 0.023
+      o.tShoulder = 1
     }
     o.tuckB = W.models[l.botw]?.[sex] ? 0.014 : 0
     o.tuckS = W.models[l.shoes]?.[sex] ? 0.011 : 0

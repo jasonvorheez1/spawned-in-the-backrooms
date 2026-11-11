@@ -29,10 +29,10 @@ feet:
   socks: { top: 0.55 }      # share of the shin, ankle up
 # Tripo garments: glb per body (f/m), under = the painted layer hidden beneath it
 models:
-  hoodie: { under: longsleeve, pat: weave, f: /cdn/value.fb44171ccb1af34ec58ddd789e24e0052ad7848bb370f5172bae2bc81a49fdb1.glb, m: /cdn/value.6cdb6401cc5c7c1ee06bd20b61ecbf7085566161f5734f09c763f2953c9b2439.glb }
-  jacket: { under: longsleeve, pat: weave, f: /cdn/value.c8ddb6156015a2c580388bdd3931976ef22f46dae05186a0b0420ac785a3a2a4.glb, m: /cdn/value.3a3d33796214fdbfdf6336e8789eb77caa9f90fe65563970dbe5d3465cd9b23b.glb }
-  skirt:  { under: briefs, pat: weave, f: /cdn/value.4c35fdb6dbc6b4cf9f4ea08910bb52efd671502894331171245ade6b9925c16b.glb, m: /cdn/value.53394702ea12ada72fc55f081ce28548c4bfa109de1be87b3b03f5692ef9c0cf.glb }
-  boots:  { under: socks, pat: weave, f: /cdn/value.c2db8d8db820966a6b0a93780027cfce9ce3a890f1da6ba20bfb0b56e4a86017.glb, m: /cdn/value.dcfebd4370d0c0aa932157cae6acd02db2afb18e59cc83e6ef34261ed69176f2.glb }
+  hoodie: { under: longsleeve, pat: weave, f: /cdn/value.3fbf6cd2e998c24eca9173d2c3b465d9acef86115dc37ab45670d694ece707b4.glb, m: /cdn/value.0f162c066426d2b3f87358ff475fb8f78c4bca4c83669294b4f52fb528b752fc.glb }
+  jacket: { under: longsleeve, pat: weave, f: /cdn/value.6b9faa9d69b4bc332252c11b7ea1dd7bcb4005d8d80183d7cfb868f40fde5422.glb, m: /cdn/value.1d1a8c0beab47df6e6e763e2b0963e34261adc444195c887d9691e0f84deefa1.glb }
+  skirt:  { under: briefs, pat: weave, f: /cdn/value.d5ae2e8f1bb0203bff01db113ec3186e769193320d3c0d3990c1d6c94f391f8d.glb, m: /cdn/value.5de53b6abb5b0e43ffb22eea6bd32ec9a02d8308e826190d1f472abe446fc5cc.glb }
+  boots:  { under: socks, pat: weave, f: /cdn/value.3f9b0636806b0ebabcd12d5037ca8aecf54984a63ea3e5b5c979c1f61c9c9983.glb, m: /cdn/value.dcfebd4370d0c0aa932157cae6acd02db2afb18e59cc83e6ef34261ed69176f2.glb }
 defaults:
   f: { topw: crop, top: "#f3ead8", botw: shorts, bottom: "#5b7fb0" }
   m: { topw: tee, top: "#9b9da1", botw: shorts, bottom: "#2f3d5c" }
