@@ -32,6 +32,28 @@ def _tripo_load():
     for v in t.data.vertices:
         c = v.co; v.co = Vector(((c.x - cx) * k, (c.y - cy) * k + float(os.environ.get("TRIPO_DY", "0")), (c.z - zmin) * k + pz))
     t.data.update(); bpy.context.view_layer.update()
+    # Tripo modelled a raised paw over the right cheek: every island but the head goes, and what still bulges low-front-right over our mouth goes too
+    bm = bmesh.new(); bm.from_mesh(t.data); bm.faces.ensure_lookup_table()
+    seen = set(); isl = []
+    for f0 in bm.faces:
+        if f0.index in seen: continue
+        st = [f0]; grp = []; seen.add(f0.index)
+        while st:
+            f = st.pop(); grp.append(f)
+            for e in f.edges:
+                for g in e.link_faces:
+                    if g.index not in seen: seen.add(g.index); st.append(g)
+        isl.append(grp)
+    isl.sort(key=len, reverse=True)
+    for g in isl[:6]:
+        cs = [f.calc_center_median() for f in g]
+        log("tripo island", len(g), "x", round(min(c.x for c in cs), 3), round(max(c.x for c in cs), 3), "y", round(min(c.y for c in cs), 3), round(max(c.y for c in cs), 3), "z", round(min(c.z for c in cs), 3), round(max(c.z for c in cs), 3))
+    kill = [f for g in isl[1:] for f in g]
+    if os.environ.get("TRIPO_PAWCUT", "1") == "1":
+        zc = min(v.co.z for v in bm.verts); zt = max(v.co.z for v in bm.verts); hz = zt - zc
+        kill += [f for f in isl[0] if (lambda c: c.x > .035 and c.z < zc + .26 * hz and c.y < -.12)(f.calc_center_median())]
+    log("tripo cut faces", len(kill), "islands", len(isl))
+    bmesh.ops.delete(bm, geom=list(set(kill)), context="FACES"); bm.to_mesh(t.data); bm.free(); t.data.update()
     t.name = "TripoHead"
     # Tripo baked its own nose and muzzle into the texture: below the ears the head wears one flat fur colour so only our face shows
     try:
