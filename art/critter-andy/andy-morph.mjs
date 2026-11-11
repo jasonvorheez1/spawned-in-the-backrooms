@@ -32,7 +32,8 @@ export function field(x, y, z, mesh = "") {
   { const legW = 1 - sm(0.56, 0.66, y)
     if (legW > 0 && ax < 0.32 && PART("legs")) {
       const k = 1 + legW * (0.26 + 0.16 * sm(0.25, 0.5, y)) + 0.12 * sm(0.13, 0.05, y)
-      const kx = 1 + (k - 1) * (1 - sm(0.36, 0.5, y)) // the hips stay narrow so hanging arms clear them (Shelly: arm fitting off)
+      const hip = bump(0.4, 0.48, 0.62, 0.7, y) * (+(process.env.HIP ?? 0.1)) // the hip pulled in where the hanging paw rests (Shelly: arm fitting off)
+      const kx = (1 + (k - 1) * (1 - sm(0.36, 0.5, y))) * (1 - hip)
       X = s * thick(ax, LX, kx); Z = Z * k
       if (y < 0.1) Z += (Z < 0 ? -0.025 : 0.01) * sm(0.1, 0.03, y) } }
   return [X, Y, Z];
