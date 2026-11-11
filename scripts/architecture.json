@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 5556,
-  "updatedAt": "2026-11-11T19:53:15.523Z",
+  "basedOnSpecVersion": 5561,
+  "updatedAt": "2026-11-11T20:18:37.256Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning an authored Level 0 maze, deeper levels and shared destinations. `templates/player.js` composes player behaviors while place simulations and shared scripts own environments, NPCs, combat, loot, crafting, UI and progression; a separate Tripo cat pipeline feeds a debug-studio wardrobe gallery.",
   "scriptPaths": [],
   "places": [
@@ -52,7 +52,7 @@
     "scripts/lib/knock.js + scripts/lib/stats.js - foe attributes/weight and shared down/stagger knock outcomes; enemy managers retain AI state and write player-targeting sneakTarget.",
     "places/level1/sim.js, places/level2/sim.js, places/level4/sim.js and places/level27/sim.js - place-state migration/version markers and one-time conversions (officeV, islandSplit in Level 4).",
     "scripts/lib/prop-interactions.js + scripts/prop-part.js - prop state owns interactiveV, propArt, containerOpen/lampOn and part motion goals; child sessions track native tween keys while prop parts animate from replicated state.",
-    "scripts/cat-demo.js owns demo object's sex/look/clip inputs and periodically detects body/garment model changes; scripts/lib/cat-wardrobe.js derives body/material and garment/mask children from sex/look, while shaders consume those material parameters."
+    "scripts/cat-demo.js owns demo object's sex/look/clip inputs and periodically detects body/garment model changes; scripts/lib/cat-wardrobe.js derives body/material and garment/mask children from sex/look, while shaders consume those materials."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors for locomotion, player/foe steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest markers.",
@@ -66,17 +66,17 @@
     "interact.js openLoot/closeLoot → prop-interactions.containerPose → child part state.goal; scripts/prop-part.js samples cubic motion and builtin tween animates articulated storage fronts; toggleLamp flips light part goals.",
     "scripts/lib/prop-interactions.js interactiveSpec → generated furniture from scripts/lib/furniture.js and upgradeNearby nearby legacy props; preserves root collider/state and tags; prop-part children provide moving doors/drawers/lids.",
     "Player craft action/UI → scripts/lib/craft.js stationOf + craft.yml; built pieces in breakables.yml carry bench=cook/ammo and state.station; craft.js/craft-ui.js filter station recipes while hand menu lists all recipes.",
-    "places/debug/cells/x1z0.scene cat gallery → scripts/cat-demo.js reads state.sex/look/clip and checks body/child model IDs every two seconds; cat-wardrobe.js supplies sex-specific body, face projection, painted skin and fitted garment children; mat-catskin paints in bind-pose coordinates."
+    "places/debug/cells/x1z0.scene cat gallery → scripts/cat-demo.js reads state.sex/look/clip and checks body/child model IDs every two seconds; cat-wardrobe.js supplies sex-specific body, face projection, painted skin and fitted garment children."
   ],
   "behaviorFamilies": [
-    "places/bonus/cells/x0z0.scene + objects.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + bonus-extra and mall shopper/salon scripts - authored mall, NPC attachments and simulation; escalator decoration has frozen steps removed and moving step entities handle tread motion.",
-    "art/bonus-mall/escalator.py + world.assets bonus-mall-deco-moving-escalators/escalator-step + scripts/esc-step.js - offline Blender build strips frozen tread geometry and makes reusable detailed steps; scene placements vary direction and pitch.",
+    "places/bonus/cells/x0z0.scene + objects.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + bonus-extra and mall shopper/salon scripts - authored mall, NPC attachments and simulation; escalator decoration has frozen steps removed and moving steps/audio are separate entities.",
+    "art/bonus-mall/escalator.py + world.assets bonus-mall-deco-moving-escalators/escalator-step + scripts/esc-step.js - offline Blender build strips frozen tread geometry and makes reusable detailed steps; scene placements vary direction and pitch while steps loop from their feet positions.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + home reconstruction scripts - per-piece models/dimensions with common placement, persistence and rebuild path.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preserving roots.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preserving root state/colliders.",
     "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + Zenith door/bots/hatch/flicker/drones/use scripts - Zenith Station geometry, breach, hazards and interactive systems.",
     "places/level4 scenes + places/level4/sim.js + scripts/l4-office.js/l4-office-geo.js/l4-home.js + Level 4/5 resident data - authored office/hotel props, fixtures, NPC bodies and attached critter behavior.",
     "scripts/lib/critter-model.js + critter-models.yml + wardrobe*.yml + clothes.js + art/critter-cute and art/critter-andy - shared furry/optional-human avatars; art/critter-cute/tripo_rig.py builds Mixamo-rigged cat bodies and fitted face details.",
-    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + mat-catskin.js + mat-cloth.js + art/critter-cute/profile_fit.py - debug gallery's four Tripo cats use updated sex-specific body/face meshes, painted outfits and fitted skinned garment children; fitter preserves boot-side weights and cleans generated Blender mesh/material data."
+    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + mat-catskin.js + mat-cloth.js + art/critter-cute/profile_fit.py - debug gallery's four Tripo cats use sex-specific body/face meshes, painted outfits and fitted skinned garment children; male body now uses the round, soft-snouted head with matched face projection."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
@@ -88,7 +88,7 @@
     "Current furry body GLBs in scripts/lib/data/critter-models.yml are thick, smoothed Andy variants with shortened arms (hands retained); female uses the soft-chest GLB and bodyOld holds prior furry assets for migration/compatibility.",
     "Bare furry avatars show the whole Body shell and hide segmented Skin_* regions to avoid overlapping seams; STYLE_V is in the appearance cache key so existing avatars redraw after asset changes.",
     "NPC body-style changes are processed in batches of six per update via self.session.rq; preserve the queue lifecycle and exclude player/local-only objects rather than synchronously sweeping a place.",
-    "Tripo cats remain separate from legacy critter clothing; cat-wardrobe.js points at the updated female/male body GLBs and per-sex hoodie/jacket/skirt/boots GLBs, with painted underlayers and fit tuck values coupled to the garments.",
-    "Cat body, face and garment fitter coordinates are bind-space metres, y-up, front +z; profile_fit.py keeps boot vertices constrained to their originally weighted Left/Right foot during fitting to prevent stride tearing, and skin face projection uses face/faceVScale/faceVBias/faceNear."
+    "Tripo cats remain separate from legacy critter clothing; cat-wardrobe.js selects sex-specific body GLBs (male now /cdn/value.a598a799e09636a3c6829bc2e4da01a1a6cfe2fb630e1ce82ddd0de080dbeea8.glb), painted face projection and garment assets, with painted underlayers and fit tuck values coupled to garments.",
+    "Cat body, face and garment fitter coordinates are bind-space metres, y-up, front +z; profile_fit.py now makes the male head from the approved female round-skull/soft-muzzle profile, translated to his neck and slightly widened, and reuses existing headFur/innerEar materials so fur and face-paint slots remain available; boot vertices must stay constrained to their original Left/Right foot weights."
   ]
 }
