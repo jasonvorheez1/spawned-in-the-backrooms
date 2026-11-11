@@ -34,20 +34,32 @@ for p in samp:
     k = (s, int(p.z / 0.02), int((ang + math.pi) / (math.pi / 12)) % 24)
     r = math.hypot(p.x - c.x, p.y - c.y); bins[k] = max(bins.get(k, 0), r)
 mw = B.matrix_world; inv = mw.inverted(); top = max((mw @ v.co).z for v in B.data.vertices)
-def need(p):
-    if p.z < 0.12: return None
-    s = 1 if p.x >= 0 else -1; c = axis(s, p.z); dx, dy = p.x - c.x, p.y - c.y; r = math.hypot(dx, dy)
-    if r < 1e-4: return None
-    ang = math.atan2(dy, dx); zi = int(p.z / 0.02); ai = int((ang + math.pi) / (math.pi / 12)) % 24
+def key(p):
+    s = 1 if p.x >= 0 else -1; c = axis(s, p.z); dx, dy = p.x - c.x, p.y - c.y
+    return s, c, dx, dy, math.hypot(dx, dy), int(p.z / 0.02), int((math.atan2(dy, dx) + math.pi) / (math.pi / 12)) % 24
+base = [mw @ v.co for v in B.data.vertices]
+# the shaft opens as one piece: per height and angle, one factor from the boot's innermost wall, so buttons and trim ride along
+inner = {}
+for p in base:
+    if p.z < 0.12: continue
+    s, c, dx, dy, r, zi, ai = key(p)
+    if r > 1e-4: inner[(s, zi, ai)] = min(inner.get((s, zi, ai), 9), r)
+fac = {}
+for k_, r in inner.items():
+    s, zi, ai = k_
     jr = max((bins.get((s, zi + dz, (ai + da) % 24), 0) for dz in (-1, 0, 1) for da in (-1, 0, 1)), default=0)
-    if jr <= 0 or r >= jr + CLEAR: return None
-    w = min(1, (p.z - 0.12) / 0.04); w = w * w * (3 - 2 * w)
-    k = 1 + ((jr + CLEAR) / r - 1) * w
-    return (c.x + dx * k, c.y + dy * k)
-moved = 0; base = [mw @ v.co for v in B.data.vertices]; delta = {}
+    fac[k_] = max(1.0, (jr + CLEAR) / r) if jr > 0 else 1.0
+def sm(s, zi, ai):  # neighbours averaged so the shaft stays round, never faceted
+    v = [fac.get((s, zi + dz, (ai + da) % 24)) for dz in (-1, 0, 1) for da in (-1, 0, 1)]
+    v = [x for x in v if x]; return max(fac.get((s, zi, ai), 1.0), sum(v) / len(v)) if v else 1.0
+moved = 0; delta = {}
 for i, p in enumerate(base):
-    n = need(p)
-    if n: delta[i] = (n[0] - p.x, n[1] - p.y); moved += 1
+    if p.z < 0.12: continue
+    s, c, dx, dy, r, zi, ai = key(p)
+    k = sm(s, zi, ai)
+    if k <= 1.0001: continue
+    w = min(1, (p.z - 0.12) / 0.04); w = w * w * (3 - 2 * w); k = 1 + (k - 1) * w
+    delta[i] = (dx * (k - 1), dy * (k - 1)); moved += 1
 def apply(co_list):
     for i, (dx, dy) in delta.items():
         w = mw @ co_list[i].co; w.x += dx; w.y += dy; co_list[i].co = inv @ w
