@@ -51,6 +51,19 @@ def legtree(s):
 trees = {1: legtree(1), -1: legtree(-1)}
 bn = {g.index: g.name for g in B.vertex_groups}; jn = {g.name: g for g in J.vertex_groups}
 legs = ('UpLeg', 'Leg', 'Foot', 'ToeBase'); moved = 0
+# the jeans are 3-4 stacked shells (lining, doubles): all landing at one gap z-fights into shiny streaks. Only the outermost
+# layer at a spot takes GAP; every layer under it sits 4 mm deeper, so the order survives and only one face shows
+from mathutils.kdtree import KDTree
+d0 = {}
+for v in J.data.vertices:
+    p = mw @ v.co
+    if p.z > CROTCH + 0.04: continue
+    tree, ids = trees[side_of[v.index]]; hit, n, fi, d = tree.find_nearest(p)
+    if hit is not None: d0[v.index] = (p - hit).dot(n)
+kd = KDTree(len(d0))
+for i in d0: kd.insert(mw @ J.data.vertices[i].co, i)
+kd.balance()
+outer = {i for i in d0 if d0[i] >= max(d0[j] for _, j, _ in kd.find_range(mw @ J.data.vertices[i].co, 0.015)) - 0.001}
 for v in J.data.vertices:
     p = mw @ v.co
     if p.z > CROTCH + 0.04: continue
@@ -59,7 +72,7 @@ for v in J.data.vertices:
     if w <= 0: continue
     tree, ids = trees[s]; hit, n, fi, d = tree.find_nearest(p)
     if hit is None: continue
-    v.co = inv @ p.lerp(hit + n.normalized() * GAP, w); moved += 1
+    v.co = inv @ p.lerp(hit + n.normalized() * (GAP if v.index in outer else max(0.0015, GAP - 0.004)), w); moved += 1
     ws = {}
     for ci in polys[ids[fi]]:
         k = 1.0 / max(1e-4, (verts[ci] - hit).length)
