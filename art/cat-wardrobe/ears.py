@@ -61,7 +61,7 @@ def ear(bm, E, T, sx, mats):
         taper = taper * (1 - T["round"] * 0.0) if tt < 0.85 else taper
         w = W0 * max(taper, 0); d = D0 * max((1 - tt) ** 0.7, 0)
         if tt > 0.82: k = (tt - 0.82) / 0.18; w *= 1 - (1 - math.cos(k * math.pi / 2)) * (1 - T["round"] * 0.4) * 0.15; d *= 1 - k * 0.2
-        if t < 0.18: g = (0.18 - t) / 0.48; w *= 1 + 0.4 * g; d *= 1 + 0.9 * g   # the base flares into the skull, swallowing the head's own ear root
+        if t < 0.06: g = (0.06 - t) / 0.36; w *= 1 + 0.12 * g; d *= 1 + 0.5 * g   # the base flares into the skull, swallowing the head's own ear root
         w = max(w, 0.0015); d = max(d, 0.0012)
         cup = 1.25 * (1 - 0.55 * tt) if t > -0.05 else 0
         ring = []
