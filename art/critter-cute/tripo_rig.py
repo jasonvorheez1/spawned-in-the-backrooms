@@ -103,6 +103,41 @@ for v in [g for g in ext["geom"] if isinstance(g, bmesh.types.BMVert)]:
 b.normal_update(); b.to_mesh(BODY.data); b.free()
 print("neck collar ring edges", len(ring))
 
+# ---------- tail: measured (geodesic walk from the tip, stops where the section widens into the rump) ----------
+import heapq
+bmv = BODY.data.vertices; hp = Vector((0, C["spine_y"], C["hip_z"]))
+cand = [v for v in bmv if v.co.y > AY + 0.06 and C["hip_z"] - 0.05 < v.co.z < AZ + 0.02]
+tipv = max(cand, key=lambda v: (v.co - hp).length).index
+adj = [[] for _ in bmv]
+for e in BODY.data.edges:
+    a_, b_ = e.vertices; L_ = (bmv[a_].co - bmv[b_].co).length; adj[a_].append((b_, L_)); adj[b_].append((a_, L_))
+gd = {tipv: 0.0}; hq = [(0.0, tipv)]
+while hq:
+    d_, i_ = heapq.heappop(hq)
+    if d_ > gd.get(i_, 9) or d_ > 0.7: continue
+    for j_, L_ in adj[i_]:
+        if d_ + L_ < gd.get(j_, 9): gd[j_] = d_ + L_; heapq.heappush(hq, (d_ + L_, j_))
+bins = {}
+for i_, d_ in gd.items(): bins.setdefault(int(d_ / 0.01), []).append(i_)
+cents, rads = [], []
+for bi in range(max(bins) + 1):
+    vs = bins.get(bi, [])
+    if not vs: break
+    cc = sum((bmv[i].co for i in vs), Vector()) / len(vs); cents.append(cc); rads.append(sum((bmv[i].co - cc).length for i in vs) / len(vs))
+ref = float(np.median(rads[2:max(4, len(rads) // 2)]))
+stop = next((bi for bi in range(4, len(rads)) if rads[bi] > 1.7 * ref), len(rads))
+TLEN = stop * 0.01; TAILV = {i for i, d_ in gd.items() if d_ < TLEN}
+chain = list(reversed(cents[:stop]))           # base -> tip
+acc_ = [0.0]
+for a_, b_ in zip(chain, chain[1:]): acc_.append(acc_[-1] + (b_ - a_).length)
+def at(f):
+    t = f * acc_[-1]; k_ = max(i for i in range(len(acc_)) if acc_[i] <= t + 1e-9); k_ = min(k_, len(chain) - 2)
+    u_ = (t - acc_[k_]) / max(1e-6, acc_[k_ + 1] - acc_[k_]); return tuple(chain[k_].lerp(chain[k_ + 1], u_))
+C["tail"] = (at(0), at(1 / 3), at(2 / 3), at(1))
+print("tail verts", len(TAILV), "length", round(TLEN, 3), "ref radius", round(ref, 4), "chain", [tuple(round(x, 3) for x in q) for q in C["tail"]])
+tkd = KDTree(len(bmv))
+for v in bmv: tkd.insert(v.co, v.index)
+tkd.balance()
 # ---------- armature ----------
 J = build_J(C)
 r0, el, wr, tip = C["arm"][:4]
@@ -145,8 +180,7 @@ def tailinfo(p):
         d, t = segd(p, *J[nm]); best = min(best, (d, i, t))
     return best
 def is_tail(p):
-    d, i, t = tailinfo(p)
-    return d < 0.045 and not (i == 0 and t < 0.12) and (p.y > C["tail_y"] or p.x > 0.13)
+    return tkd.find(p)[1] in TAILV
 G = {g.name: g for g in BODY.vertex_groups}
 for nm in BONES:
     if nm not in G: G[nm] = BODY.vertex_groups.new(name=nm)
@@ -237,7 +271,7 @@ for t in hm.loop_triangles:
 SX = np.concatenate(SX); SIJ = np.concatenate(SIJ); col = px[SIJ[:, 0], SIJ[:, 1]]
 fur, cream = classes(col)
 ine = np.zeros(len(SX), bool)
-for ex, ez in EYE: ine |= ((SX[:, 0] - ex) / (0.47 * D)) ** 2 + ((SX[:, 2] - ez - 0.05 * D) / (0.5 * D)) ** 2 < 1
+for ex, ez in EYE: ine |= ((SX[:, 0] - ex) / (0.6 * D)) ** 2 + ((SX[:, 2] - ez - 0.05 * D) / (0.6 * D)) ** 2 < 1
 bad = (~fur & ~cream) | (ine & ~fur)
 good = ~bad & ~ine
 kd = KDTree(int(good.sum())); gi = np.nonzero(good)[0]
@@ -284,6 +318,23 @@ for j in range(NZ + 1):
         u, v = i / NX, j / NZ; Xp = BOX[0] + u * (BOX[1] - BOX[0]); Zp = BOX[2] + v * (BOX[3] - BOX[2])
         hit = bvh.ray_cast(Vector((Xp, -1, Zp)), Vector((0, 1, 0)))
         if hit[0] is not None and hit[1].y < -0.15: grid[i, j] = (hit[0] + hit[1].normalized() * 0.0005, (u, v))
+hgt = np.full((NX + 1, NZ + 1), np.nan)
+for (i, j), (co, uv_) in grid.items(): hgt[i, j] = -co.y
+Wn = 13; pad = np.where(np.isnan(hgt), -9, hgt)
+def win(a, f):
+    out = a.copy()
+    for di in range(-Wn, Wn + 1):
+        for dj in range(-Wn, Wn + 1):
+            if di * di + dj * dj > Wn * Wn: continue
+            out = f(out, np.roll(np.roll(a, di, 0), dj, 1))
+    return out
+dil = win(pad, np.maximum); clo = win(np.where(np.isnan(hgt), 9, dil), np.minimum)
+for _ in range(3): clo = (clo + np.roll(clo, 1, 0) + np.roll(clo, -1, 0) + np.roll(clo, 1, 1) + np.roll(clo, -1, 1)) / 5
+lift = 0
+for (i, j), (co, uv_) in list(grid.items()):
+    if clo[i, j] > hgt[i, j] + 0.001 and abs(clo[i, j]) < 5:
+        grid[i, j] = (Vector((co.x, -clo[i, j] - 0.0005, co.z)), uv_); lift += 1
+print("decal verts lifted over sockets", lift)
 verts, uvs, faces, vid = [], [], [], {}
 for key, (co, uv_) in grid.items(): vid[key] = len(verts); verts.append(co[:]); uvs.append(uv_)
 for j in range(NZ):
@@ -444,14 +495,14 @@ bpy.ops.wm.open_mainfile(filepath=SAVE)
 sc = bpy.context.scene; ARM = bpy.data.objects["Armature"]
 sc.render.engine = "CYCLES"; sc.cycles.samples = 20; sc.cycles.use_denoising = True; sc.render.film_transparent = False
 sc.render.resolution_x = sc.render.resolution_y = 656; sc.view_settings.view_transform = "Standard"
-wd = bpy.data.worlds.new("w"); sc.world = wd; wd.use_nodes = True; wd.node_tree.nodes["Background"].inputs[0].default_value = (0.55, 0.55, 0.55, 1)
+wd = bpy.data.worlds.new("w"); sc.world = wd; wd.use_nodes = True; wd.node_tree.nodes["Background"].inputs[0].default_value = (0.55, 0.55, 0.55, 1); wd.node_tree.nodes["Background"].inputs[1].default_value = 0.35
 camd = bpy.data.cameras.new("cam"); cam = bpy.data.objects.new("cam", camd); sc.collection.objects.link(cam); sc.camera = cam
 ld = bpy.data.lights.new("key", "AREA"); ld.size = 1.2; L = bpy.data.objects.new("key", ld); sc.collection.objects.link(L)
 def shoot(path, target, yaw, dist, lens):
     t = Vector(target); d = Vector((math.sin(math.radians(yaw)), -math.cos(math.radians(yaw)), 0.06)).normalized()
     cam.location = t + d * dist; camd.lens = lens; cam.rotation_euler = (t - cam.location).to_track_quat("-Z", "Y").to_euler()
     L.location = t + (d + Vector((0.25, 0, 0.35))).normalized() * dist * 0.9; L.rotation_euler = (t - L.location).to_track_quat("-Z", "Y").to_euler()
-    ld.energy = 110 * dist ** 2; sc.render.filepath = path; bpy.ops.render.render(write_still=True)
+    ld.energy = 14 * dist ** 2; sc.render.filepath = path; bpy.ops.render.render(write_still=True)
 for pb in ARM.pose.bones: pb.rotation_mode = "QUATERNION"
 def rest3(nm): return ARM.data.bones[P + nm].matrix_local.to_3x3()
 def wrot(nm, Rm): M = rest3(nm); ARM.pose.bones[P + nm].rotation_quaternion = (M.inverted() @ Rm @ M).to_quaternion()
