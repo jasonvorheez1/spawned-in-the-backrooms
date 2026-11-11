@@ -60,7 +60,7 @@ if KIND == "top":
     # a hood lies down on the upper back: what rises past the collar folds flat behind the neck, never a flap out past the shoulder
     zc = B["top"][1] - 0.04
     nb = bw[(bw[:, 2] > zc - 0.05) & (bw[:, 2] < zc + 0.02) & (np.abs(bw[:, 0]) < 0.1)]; yb = nb[:, 1].max() + 0.015; nw = np.abs(nb[:, 0]).max()
-    hd = (P[:, 2] > zc) & (P[:, 1] > yb - 0.03)
+    hd = (P[:, 2] > zc - 0.06) & (P[:, 1] > yb - 0.01)
     P[hd, 1] = np.minimum(P[hd, 1], yb + (P[hd, 1] - yb).clip(0) * 0.35)
     P[hd, 0] = np.sign(P[hd, 0]) * np.minimum(np.abs(P[hd, 0]), nw * 1.15 + (np.abs(P[hd, 0]) - nw * 1.15).clip(0) * 0.25)
     P[hd, 2] = zc + (P[hd, 2] - zc) * 0.6
