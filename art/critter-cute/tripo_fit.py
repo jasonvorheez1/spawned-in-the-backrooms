@@ -63,6 +63,10 @@ def build_head(name, sp, rig, F):
             m.blend_method = "HASHED" if hasattr(m, "blend_method") else None
     import mathutils
     t = _TRI["obj"]; t.parent = o; t.matrix_parent_inverse = mathutils.Matrix.Identity(4); t.location = (0, 0, 0); t.rotation_euler = (0, 0, 0); t.scale = (1, 1, 1)
+    try:
+        bb = [t.matrix_world @ Vector(c) for c in t.bound_box]
+        log("TRIPO DBG in scene", t.name in bpy.context.scene.objects, "hide", t.hide_render, "faces", len(t.data.polygons), "z", round(min(p.z for p in bb), 3), round(max(p.z for p in bb), 3), "y", round(min(p.y for p in bb), 3), round(max(p.y for p in bb), 3), "mats", [m.name for m in t.data.materials if m], "HC", tuple(round(x, 3) for x in HC))
+    except Exception as e: log("TRIPO DBG err", repr(e))
     log("tripo parented to", o.name, "head at", tuple(round(x, 3) for x in o.matrix_world.translation))
     return o
 build_ear = lambda *a, **k: None                                   # Tripo's ears stand in
@@ -72,14 +76,3 @@ def _tripo_show(scene, *a):
     t = _TRI.get("obj")
     if t and t.name in bpy.data.objects: t.hide_render = False
 bpy.app.handlers.render_pre.append(_tripo_show)
-def _tripo_dbg(scene, *a):
-    t = _TRI.get("obj")
-    if not t or _TRI.get("dbg"): return
-    _TRI["dbg"] = 1
-    try:
-        bb = [t.matrix_world @ Vector(c) for c in t.bound_box]
-        log("TRIPO DBG hide", t.hide_render, t.hide_get(), "in scene", t.name in scene.objects, "verts", len(t.data.vertices), "faces", len(t.data.polygons),
-            "zmin", round(min(p.z for p in bb), 3), "zmax", round(max(p.z for p in bb), 3), "ymin", round(min(p.y for p in bb), 3), "ymax", round(max(p.y for p in bb), 3),
-            "mats", [(m.name, getattr(m, "blend_method", None)) for m in t.data.materials if m], "HC", tuple(round(x, 3) for x in HC))
-    except Exception as e: log("TRIPO DBG err", e)
-bpy.app.handlers.render_pre.append(_tripo_dbg)
