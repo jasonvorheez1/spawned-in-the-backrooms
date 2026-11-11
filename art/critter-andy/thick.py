@@ -12,14 +12,16 @@ SHY = 0.955; LX = 0.09
 def thick(ax, a0, k): return a0+(ax-a0)*k if ax >= a0 else ax+((k-1)/a0)*ax*(ax-a0)
 def field(x, y, z):  # glTF frame: y up, front -z
   X, Y, Z = x, y, z; s = -1 if x < 0 else 1; ax = abs(x)
-  arm = sm(0.13, 0.19, ax)*bump(0.8, 0.86, 1.08, 1.14, y)
+  arm = sm(0.11, 0.22, ax)*bump(0.8, 0.86, 1.08, 1.14, y)  # a wider blend at the joint: the narrow one pinched the shoulder
   w = bump(0.56, 0.64, 0.93, 1.0, y)*(1-arm)
   if w > 0:  # torso: a rounder bean, soft belly forward (front is -z)
     X *= 1+TOR*0.4*w*sm(0.62, 0.8, y); Z *= 1+TOR*w
     belly = math.exp(-(((y-0.72)/0.1)**2))*w
     if Z < 0: Z -= TOR*0.12*belly*sm(0, -0.05, z)
   if arm > 0:
-    k = 1+arm*(ARM*sm(0.17, 0.3, ax)+0.25*sm(0.46, 0.56, ax))+arm*ARM*0.5*(1-sm(0.17, 0.3, ax)); Y = SHY+(Y-SHY)*k; Z = Z*k
+    delt = math.exp(-(((ax-0.21)/0.06)**2))  # a round deltoid cap where the arm meets the torso
+    paw = sm(0.46, 0.56, ax)  # mitten paws: the hand scaled up whole about the arm's axis
+    k = 1+arm*(ARM*(0.75+0.25*sm(0.2, 0.32, ax))+ARM*0.35*delt+0.32*paw); Y = SHY+(Y-SHY)*k; Z = Z*k
   legW = 1-sm(0.56, 0.66, y)
   if legW > 0 and ax < 0.32:
     k = 1+legW*LEG*(0.6+0.4*sm(0.25, 0.5, y))
