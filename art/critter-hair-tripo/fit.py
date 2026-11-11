@@ -276,11 +276,18 @@ if not TUNE.get("noscalp"):
     # trim any scalp the sculpt does not hang over (a scalp poking past the hair's own silhouette)
     hbvh = BVHTree.FromPolygons([v.co.copy() for v in raw.data.vertices], [p.vertices[:] for p in raw.data.polygons])
     bb2.faces.ensure_lookup_table(); bare = []
+    hc = Vector(T["c"]); hc.z = crown - 0.35 * headH          # a point deep inside the skull
+    def _hits(d): return hbvh.ray_cast(hc, d, 3 * headH)[0] is not None
     for fa in bb2.faces:
-        m = fa.calc_center_median(); n = fa.normal
-        hit = hbvh.ray_cast(m + n * 0.0002, n, 0.06 * Hb)
-        near = hbvh.find_nearest(m)
-        if hit[0] is None and (near[0] is None or near[3] > 0.035 * Hb): bare.append(fa)  # a gap is ringed by hair: keep scalp within reach of it
+        m = fa.calc_center_median(); d0 = (m - hc).normalized()
+        if _hits(d0): continue                                 # hair right over it
+        t1 = d0.orthogonal().normalized(); t2 = d0.cross(t1)
+        ring = 0; opp = [False] * 4
+        for k, t in enumerate((t1, t2, -t1, -t2)):
+            for a_ in (0.12, 0.24, 0.36):
+                if _hits((d0 + t * a_).normalized()): opp[k] = True; break
+        # a gap is hair on opposite sides (crown slit, ear-base notch); a bare forehead has hair on one side only
+        if not ((opp[0] and opp[2]) or (opp[1] and opp[3])): bare.append(fa)
     bmesh.ops.delete(bb2, geom=bare, context="FACES")
     me2 = bpy.data.meshes.new("scalp"); bb2.to_mesh(me2); bb2.free(); bb.free()
     sc_o = bpy.data.objects.new("scalp", me2); bpy.context.collection.objects.link(sc_o)
