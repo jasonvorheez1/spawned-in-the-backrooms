@@ -495,6 +495,25 @@ _m = np.ones(len(_ks), bool)
 for _ in range(4):
     _c = np.linalg.lstsq(_F(_X[_m]), _Y[_m], rcond=None)[0]; _fit = _F(_X) @ _c; _m = _Y < _fit + 0.003
 gfloor = {k: min(g0[k], float(_fit[n])) - 0.002 for n, k in enumerate(_ks)}
+# rays that fell into the boy's old mouth slit found nothing in front: those cells are holes in the muzzle. bridged on the fit, row by row
+_nfill = 0
+for j in range(NZ + 1):
+    row = sorted(i for (i, jj) in grid if jj == j)
+    for i0, i1 in zip(row, row[1:]):
+        if 1 < i1 - i0 <= 10:
+            for i in range(i0 + 1, i1):
+                u, v = i / NX, j / NZ; Xp = BOXD[0] + u * (BOXD[1] - BOXD[0]); Zp = BOXD[2] + v * (BOXD[3] - BOXD[2])
+                y_ = float(_F(np.array([[Xp, Zp]])) @ _c) - 0.003
+                grid[i, j] = (Vector((Xp, y_, Zp)), (u, v)); g0[i, j] = y_; gy[i, j] = y_; gfloor[i, j] = y_ - 0.002; _nfill += 1
+for i in range(NX + 1):
+    col = sorted(jj for (ii, jj) in grid if ii == i)
+    for j0, j1 in zip(col, col[1:]):
+        if 1 < j1 - j0 <= 10:
+            for j in range(j0 + 1, j1):
+                u, v = i / NX, j / NZ; Xp = BOXD[0] + u * (BOXD[1] - BOXD[0]); Zp = BOXD[2] + v * (BOXD[3] - BOXD[2])
+                y_ = float(_F(np.array([[Xp, Zp]])) @ _c) - 0.003
+                grid[i, j] = (Vector((Xp, y_, Zp)), (u, v)); g0[i, j] = y_; gy[i, j] = y_; gfloor[i, j] = y_ - 0.002; _nfill += 1
+print("muzzle holes bridged", _nfill)
 for _ in range(14):
     n_ = {}
     for (i, j), y in gy.items():
