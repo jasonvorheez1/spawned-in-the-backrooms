@@ -22,7 +22,13 @@ for i, p in enumerate(base): kd.insert(p, i)
 kd.balance()
 H.data.calc_loop_triangles() if hasattr(H.data, 'calc_loop_triangles') else None
 nrm = [hm.to_3x3() @ v.normal for v in H.data.vertices]
-ep = [em @ v.co for v in E.data.vertices]
+# a garment file can sit in an older armature's space (the women's eyewear rode a Head bone 7.3 cm higher than the live body's):
+# match it by the Head bone, look up and push there, and write back in the file's own space
+def headpos(objs):
+    a = next(o for o in objs if o.type == 'ARMATURE'); return a.matrix_world @ a.data.bones['Head'].head_local
+OFF = headpos(bpy.data.objects[o.name] for o in [x for x in bpy.data.objects if x not in keep]) - headpos(keep)
+print("OFF", [round(x, 3) for x in OFF])
+ep = [em @ v.co + OFF for v in E.data.vertices]
 near = []
 for p in ep:
     hits = kd.find_n(p, 12); ws = [(i, 1 / max(d, 1e-4)) for _, i, d in hits]; s = sum(w for _, w in ws)
@@ -31,12 +37,12 @@ for p in ep:
 pushed = 0
 for k, p in enumerate(ep):
     i = near[k][0][0]; n = nrm[i].normalized(); d = (p - base[i]).dot(n)
-    if p.y > 0.012 and d < CLEAR and (p - base[i]).length < 0.03: # the temple arms only: the rims keep their shape
+    if p.y - OFF.y > 0.012 and d < CLEAR and (p - base[i]).length < 0.03: # the temple arms only: the rims keep their shape
         ep[k] = p + n * (CLEAR - d); pushed += 1
 if not E.data.shape_keys: E.shape_key_add(name='Basis')
 eb = E.data.shape_keys.key_blocks
 for k, v in enumerate(E.data.vertices):
-    v.co = emi @ ep[k]; eb['Basis'].data[k].co = v.co
+    v.co = emi @ (ep[k] - OFF); eb['Basis'].data[k].co = v.co
 # 2) every non-expression head key the eyewear lacks
 added = []
 for kb in hb:
@@ -45,7 +51,7 @@ for kb in hb:
     for k in range(len(ep)):
         dlt = Vector()
         for i, w in near[k]: dlt += ((hm @ kb.data[i].co) - base[i]) * w
-        kk.data[k].co = emi @ (ep[k] + dlt)
+        kk.data[k].co = emi @ (ep[k] - OFF + dlt)
     added.append(kb.name)
 print("PUSHED", pushed, "ADDED", added)
 for o in list(bpy.data.objects):
