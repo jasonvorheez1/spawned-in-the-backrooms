@@ -407,8 +407,8 @@ for f in bm.faces:
 for f in bm.faces:
     c = f.calc_center_median()
     if c.y > -0.03: continue
-    inb = BOX[0] - 0.02 < c.x < BOX[1] + 0.02 and BOX[2] - 0.02 < c.z < BOX[3] + 0.02 and f.normal.y < 0.3
-    near = BOX[0] - 0.05 < c.x < BOX[1] + 0.05 and BOX[2] - 0.07 < c.z < BOX[3] + 0.05 and f.normal.y < 0.1
+    inb = BOX[0] - 0.02 < c.x < BOX[1] + 0.02 and BOX[2] - 0.09 < c.z < BOX[3] + 0.02 and f.normal.y < 0.5   # down to the chin: the old muzzle and ':3' sat below the raised face
+    near = BOX[0] - 0.07 < c.x < BOX[1] + 0.07 and BOX[2] - 0.09 < c.z < BOX[3] + 0.06
     dark = near and min(lum[int(l[uvk].uv.y * TH) % TH, int(l[uvk].uv.x * TW) % TW] for l in f.loops) < 0.38
     if inb or dark:
         for l in f.loops: l[uvk].uv = UVF
