@@ -25,13 +25,13 @@ nrm = [hm.to_3x3() @ v.normal for v in H.data.vertices]
 ep = [em @ v.co for v in E.data.vertices]
 near = []
 for p in ep:
-    hits = kd.find_n(p, 4); ws = [(i, 1 / max(d, 1e-4)) for _, i, d in hits]; s = sum(w for _, w in ws)
+    hits = kd.find_n(p, 12); ws = [(i, 1 / max(d, 1e-4)) for _, i, d in hits]; s = sum(w for _, w in ws)
     near.append([(i, w / s) for i, w in ws])
 # 1) temples off the skin: any eyewear vertex closer than CLEAR to the skin (or inside it) goes out along the skin normal
 pushed = 0
 for k, p in enumerate(ep):
     i = near[k][0][0]; n = nrm[i].normalized(); d = (p - base[i]).dot(n)
-    if d < CLEAR and (p - base[i]).length < 0.03:
+    if p.y > 0.012 and d < CLEAR and (p - base[i]).length < 0.03: # the temple arms only: the rims keep their shape
         ep[k] = p + n * (CLEAR - d); pushed += 1
 if not E.data.shape_keys: E.shape_key_add(name='Basis')
 eb = E.data.shape_keys.key_blocks
