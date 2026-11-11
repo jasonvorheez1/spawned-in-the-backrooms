@@ -159,7 +159,7 @@ export function onInput(ctx, input) {
     if (d.k === 'modelUrl') { const m = String(d.v || '').match(/\/cdn\/[\w.\-]+\.glb$/); st.look = { ...lookOf(ctx), modelUrl: m ? m[0] : '', model: '' }; return } // a player's own uploaded .plymodel
     if (d.k === 'hair' && d.v !== 'none' && !(lookOf(ctx).sex === 'f' ? C.hairF : C.hairM).includes(d.v)) return
     if (d.k === 'sex' && C.sex.includes(d.v)) { const cur = lookOf(ctx); const keep = typeof cur.hair==='string' && cur.hair.startsWith(d.v + '_') ? cur.hair : 'none'; dress(st, cur, { ...cur, sex: d.v, hair: keep }); return }
-    if (d.k === 'species') { if (d.v === 'human' || d.v === 'faceling' || speciesOf({ species: d.v }) !== d.v) return; dress(st, lookOf(ctx), { ...lookOf(ctx), species: d.v }); return } // any species with a head (critter-models.yml), the salon's list
+    if (d.k === 'species') { if (!['cat', 'dog', 'fox', 'bunny', 'wolf', 'mouse'].includes(d.v) || speciesOf({ species: d.v }) !== d.v) return; dress(st, lookOf(ctx), { ...lookOf(ctx), species: d.v }); return } // any species with a head (critter-models.yml), the salon's list
     if (!(d.k in C.default)) return
     const list = C[d.k === 'top' || d.k === 'bottom' || d.k === 'shoec' || d.k === 'hatc' || d.k === 'neckc' ? 'cloth' : d.k]
     if (Array.isArray(list) && !list.includes(d.v)) return
