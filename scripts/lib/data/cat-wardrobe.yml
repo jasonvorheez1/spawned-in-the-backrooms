@@ -58,6 +58,14 @@ fluff:
   lynx: { f: '/cdn/value.bead68d68c6727e7fd5e728fd07c75f5448a759ec2f6063f56897442029d6078.glb', m: '/cdn/value.a2528ced416c61720328a3a0ca22a49e98a448bbb02f6ce5dbb2237865b5ebf0.glb' }
   nape: { f: '/cdn/value.0a5b906b76b388e6cc60b1e5672c016daa87d514f8a66844e18edd67df19787f.glb', m: '/cdn/value.3178f73a3573136327268d8ff5b72d855ef9365b528250f5d2d048a45f6f4e71.glb' }
 
+# ears: art/cat-wardrobe/ears.py (Nov 11, Shelly "massively improve ears"): sculpted anime ears skinned to the head, slots earFur/earInner/earTuft; the head's own ear sinks under them (Ear_Small 3)
+ears:
+  upright: { f: '/cdn/value.8430743bf12fe34debd14cc03097a63cfe72742c0f77aa20f81e73bddfbaa7f9.glb', m: '/cdn/value.38cfd1364a8c80223a668797e410ea85ab5e0686252ef85db8d8d57253b43d68.glb' }
+  tall: { f: '/cdn/value.0478c12c406df788f45fee7f44479c495d67a14bf77ccd125e96cd7f9c9242dc.glb', m: '/cdn/value.ef1ce6d9501e82df99e69bb9626405a8cf3cd7dd4fee07c616276e6a2cfec829.glb' }
+  small: { f: '/cdn/value.8ce85fb9d810772182dc19306d5bb2afc199e88f4fc8e3dd2e801470285347c9.glb', m: '/cdn/value.3ce1f169fed3d9cb0b948794b44aaf18c81bfe8ffb1267f658d179a544551131.glb' }
+  fold: { f: '/cdn/value.426b211b7b10706ec874cc6f4270222357365aac292a9954c9934f273a68186e.glb', m: '/cdn/value.8e8b739544eadf4d7971873e3c61a53e7e6a21c6b6b2df800a32d8403ff8fb3a.glb' }
+  wide: { f: '/cdn/value.81e207e861b63c4d1e1060c378b7a07f4e7462ed9d4421e1586117d6f4b5d6b3.glb', m: '/cdn/value.eb67405f598edef3d1d5c0cfc5a8ef79a30fe805ecc0c4c3ef0c147ba26a740d.glb' }
+
 # hairstyles (art/cat-wardrobe/hair-register.py); Nov 11 cleaned: strands smoothed away from the skull (seams kept as authored), a hair-coloured scalp cap only where hidden, double-sided: the Tripo hair carried onto the current cat heads, skinned to the head, tinted by look.hairc. look.hair: one key
 hair:
   afropuff: { f: '/cdn/value.f19c80caffdd0f2177f89574513d49ff3bad36910533d2bbd62be0cf0c6b4981.glb' }

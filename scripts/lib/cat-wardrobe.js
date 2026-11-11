@@ -93,12 +93,14 @@ const SNOUT_KEY = { long: 'Snout_Long', pointy: 'Snout_Pointy', flat: 'Snout_Fla
 // how far each snout key goes: pointy at full read as a beak (Shelly #218xxx 'too silly'), long reined in with it
 const TAIL_KEY = { fluffy: 'Tail_Fluffy', bob: 'Tail_Bob', puff: 'Tail_Puff', whip: 'Tail_Whip', curl: 'Tail_Curl' }
 const SNOUT_AMT = { pointy: 0.4, long: 0.6, flat: 1, puff: 1 }
+const EAR_HIDE = 3
 export function catMorph(look) {
   const m = chestOf(look)
   for (const k of Object.values(SNOUT_KEY)) m[k] = 0
   for (const k of Object.values(EAR_KEY)) m[k] = 0
   if (SNOUT_KEY[look?.snout]) m[SNOUT_KEY[look.snout]] = SNOUT_AMT[look.snout] ?? 1
-  if (EAR_KEY[look?.ears]) m[EAR_KEY[look.ears]] = 1
+  if (W.ears) m.Ear_Small = EAR_HIDE   // the sculpted ear (catChildren) stands over the head's own, pressed flat under it
+  else if (EAR_KEY[look?.ears]) m[EAR_KEY[look.ears]] = 1
   for (const k of Object.values(TAIL_KEY)) m[k] = 0
   if (TAIL_KEY[look?.tail]) m[TAIL_KEY[look.tail]] = 1
   return m
@@ -114,7 +116,7 @@ export function catChildren(sex, look) {
   for (const k of fl) {
     const g = W.fluff?.[k]?.[sex]
     if (!g) continue
-    const morph = k === 'lynx' ? Object.fromEntries(Object.values(EAR_KEY).map(key => [key, Number(EAR_KEY[look?.ears] === key)])) : null
+    const morph = k === 'lynx' ? Object.fromEntries(Object.values(EAR_KEY).map(key => [key, W.ears ? (key === 'Ear_Small' ? EAR_HIDE : 0) : Number(EAR_KEY[look?.ears] === key)])) : null
     out.push({
       id: 'cw-fluff-' + k, attachment: { skin: true },
       ...(morph ? { morph } : {}),
@@ -127,6 +129,9 @@ export function catChildren(sex, look) {
       }
     })
   }
+  const eg = W.ears?.[EARS.includes(look?.ears) ? look.ears : 'upright']?.[sex]   // sculpted ears (art/cat-wardrobe/ears.py): fur outside, pink bowl, cream tuft
+  if (eg) out.push({ id: 'cw-ears', attachment: { skin: true }, model: { id: eg, forward: '+z', materials: {
+    earFur: { color: look?.fur || '#f3c98a', roughness: 0.82 }, earInner: { color: '#f2b3b0', roughness: 0.7 }, earTuft: { color: look?.fluffc || '#fff4e6', roughness: 0.9 } } } })
   const hk = look?.hair, hg = hk && (W.hair?.[hk]?.[sex] || Object.values(W.hair?.[hk] || {})[0])   // a hairstyle: one key, tinted its own colour
   if (hg) out.push({ id: 'cw-hair', attachment: { skin: true }, model: { id: hg, forward: '+z', materials: { hair: { color: look?.hairc || '#6b4a35', roughness: 0.64 } } } })
   const mk = W.masks?.[l.hat]?.[sex]   // a Thrift Mode mask: skinned to her head bone, its own paint

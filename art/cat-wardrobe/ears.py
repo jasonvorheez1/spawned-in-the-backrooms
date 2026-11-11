@@ -155,7 +155,7 @@ def proof(sex, objs, H, meas):
             sc.camera = c; fn = f"{OUT}/proof/{sex}-{kind}-{i}.png"; sc.render.filepath = fn; bpy.ops.render.render(write_still=True)
             bpy.data.objects.remove(l); bpy.data.objects.remove(c); files.append(fn)
 
-for sex in (sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else ["f", "m"]):
+for sex in ([a for a in sys.argv[sys.argv.index("--") + 1:] if a in SRC] if "--" in sys.argv else ["f", "m"]) or ["f", "m"]:
     arm, H = load(sex); meas, S, bone = measure(H); print("EARS", sex, bone, {k: (round(v["hw"], 3), round(v["hd"], 3), round(v["tip"].z - v["C"].z, 3)) for k, v in meas.items()})
     objs = {k: build(sex, k, arm, H, meas, bone) for k in TYPES}
     for kind, o in objs.items():
