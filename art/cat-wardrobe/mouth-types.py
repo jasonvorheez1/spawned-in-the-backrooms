@@ -11,11 +11,11 @@ def layer(sx, kind):
     patch = base[p["cy"] - 70:p["cy"] + 70, p["cx"] - 160:p["cx"] + 160]
     m = (patch[..., 3] > 200) & (patch[..., :3].min(-1) > 150)
     cream = tuple(int(v) for v in np.median(patch[m][:, :3], 0)) + (255,)
-    img = Image.new("RGBA", (W * S, H * S), (0, 0, 0, 0)); d = ImageDraw.Draw(img)
+    img = Image.new("RGBA", (W * S, H * S), cream[:3] + (0,)); d = ImageDraw.Draw(img)  # cream under alpha 0: no dark fringe at the feather
     # the cover: an ellipse of the muzzle's cream over the old mouth, feathered later
     cov = Image.new("L", img.size, 0); ImageDraw.Draw(cov).ellipse([cx - w * .62, cy - 46 * S, cx + w * .62, cy + 58 * S], fill=255)
     cov = cov.filter(ImageFilter.GaussianBlur(9 * S))
-    img.paste(Image.new("RGBA", img.size, cream), (0, 0), cov)
+    img.putalpha(cov)
     ink = (22, 16, 14, 255); pink = (226, 112, 128, 255); dark = (92, 30, 36, 255); white = (252, 250, 246, 255)
     hw = w / 2
     def arc(x0, x1, y, depth, width=sw):
