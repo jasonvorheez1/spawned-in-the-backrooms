@@ -434,8 +434,8 @@ print("sculpt relief relaxed (chin :3, lash flaps)", len(_relax), "BOX z0", roun
 # the ':3' is FOLDED faces on the Head just under the muzzle decal: smoothing can't unfold them, so the band is
 # laid onto a least-squares surface y = f(x, z) fitted to the clean jaw around it (decal-pressed verts kept out)
 import numpy as _np
-_band = lambda v: abs(v.co.x) < 0.075 and BOX[2] + 0.02 < v.co.z < BOX[2] + 0.062 and v.co.y < -0.12
-_ring = [v for v in bm.verts if not _band(v) and abs(v.co.x) < 0.11 and BOX[2] - 0.01 < v.co.z < BOX[2] + 0.09 and v.co.y < -0.12]
+_band = lambda v: abs(v.co.x) < 0.085 and BOX[2] - 0.07 < v.co.z < BOX[2] + 0.062 and v.co.y < -0.04   # reaches under the jaw, where the :3 fold sits
+_ring = [v for v in bm.verts if not _band(v) and abs(v.co.x) < 0.12 and BOX[2] - 0.10 < v.co.z < BOX[2] + 0.09 and v.co.y < -0.02]
 _feat = lambda x, z: [1, x * x, z, z * z, x * x * z, x ** 4]
 if len(_ring) > 12:
     _A = _np.array([_feat(v.co.x, v.co.z) for v in _ring]); _k = _np.linalg.lstsq(_A, _np.array([v.co.y for v in _ring]), rcond=None)[0]
@@ -443,7 +443,7 @@ if len(_ring) > 12:
     for v in bm.verts:
         if _band(v):
             v.co.y = float(_np.dot(_feat(v.co.x, v.co.z), _k)); _ironed += 1
-    for _ in range(6): _bm.ops.smooth_vert(bm, verts=[v for v in bm.verts if _band(v) and not v.is_boundary], factor=0.5, use_axis_x=True, use_axis_y=False, use_axis_z=True)
+    for _ in range(12): _bm.ops.smooth_vert(bm, verts=[v for v in bm.verts if _band(v) and not v.is_boundary], factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
     print("chin :3 folds ironed", _ironed, "ring", len(_ring))
 else: print("chin iron SKIPPED ring", len(_ring))
 # the ':3' sculpt also sits on the Body's side of the neck seam (under the jaw): relaxed the same way, seam verts held so nothing opens
