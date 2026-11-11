@@ -110,6 +110,9 @@ export function wardrobe(ctx, player) {
     <div class="sec"><span>EARS</span><span>${CATN[l.ears] || 'random'}</span></div>${pick('ears', ['upright', 'tall', 'small', 'fold', 'wide'], l.ears)}
     <div class="sec"><span>EYE COLOUR</span></div>${sws('eye', C.eye)}
     <div class="sec"><span>RESTING FACE</span><span>${CATF[l.expr] || 'calm'}</span></div><div class="grid">${Object.keys(CATF).map((v) => tile('catface', v, (CATF[l.expr] ? l.expr : 'neutral') === v, CATF[v])).join('')}</div>
+    <div class="sec"><span>EYES</span><span>${l.etype || 'classic'}</span></div><div class="grid">${['classic', 'sparkle', 'sleepy', 'slit', 'sharp', 'bean'].map((v) => tile('cateye', v, (l.etype || 'classic') === v, v)).join('')}</div>
+    <div class="sec"><span>MOUTH</span><span>${l.mtype || 'classic'}</span></div><div class="grid">${['classic', 'fang', 'grin', 'smirk', 'open', 'line'].map((v) => tile('catmouth', v, (l.mtype || 'classic') === v, v)).join('')}</div>
+    <div class="hint">eye and mouth types show on the calm face; moods keep their own.</div>
     <div class="hint">your face reacts on its own: a hit, a knockout, fear and joy show up while you play.</div>`
   else if (tab === 'body') body = `
     <div class="sec"><span>BODY</span></div>${grid('sex', C.sex)}
