@@ -90,6 +90,17 @@ for v in J.data.vertices:
 bpy.ops.object.select_all(action='DESELECT'); J.select_set(True); bpy.context.view_layer.objects.active = J
 bpy.ops.object.vertex_group_normalize_all(lock_active=False)
 print("MOVED", moved)
+# 3) slivers from the cut collapse; the imported custom normals (still the OLD surface's) are dropped so the moved panels shade by
+# their own shape: stale normals were the shiny streaks on the inner leg in game
+bm = bmesh.new(); bm.from_mesh(J.data)
+lf = [f for f in bm.faces if (mw @ f.calc_center_median()).z < CROTCH + 0.04]
+bmesh.ops.dissolve_degenerate(bm, edges=list({e for f in lf for e in f.edges}), dist=0.0015)
+bm.to_mesh(J.data); bm.free()
+with bpy.context.temp_override(object=J, active_object=J, selected_objects=[J], selected_editable_objects=[J]):
+    try: bpy.ops.mesh.customdata_custom_splitnormals_clear()
+    except Exception as e: print("NOCLEAR", e)
+for poly in J.data.polygons: poly.use_smooth = True
+J.data.update()
 for o in new: bpy.data.objects.remove(o, do_unlink=True)
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.export_scene.gltf(filepath=out, export_apply=False, export_skins=True, export_morph=True, export_animations=False)
