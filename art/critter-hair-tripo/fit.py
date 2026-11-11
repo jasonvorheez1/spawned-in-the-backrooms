@@ -240,8 +240,8 @@ if not TUNE.get("noscalp"):
         if Z_ < eye_top + 0.08 * headH: continue              # never on the eyes
         if F_ > 0.25 * headF and Z_ < hairline + 0.01 * headH: continue   # forehead below the sculpt's hairline stays fur
         if F_ <= 0.25 * headF and Z_ < max(side_floor, eye_top) : continue
-        if kd.find(m)[2] < 1.3 * EAR_R: continue              # ears and a collar round each base stay clear
-        if any(kd.find(v.co)[2] < 1.15 * EAR_R for v in fa.verts): continue
+        if kd.find(m)[2] < 1.1 * EAR_R: continue              # ears and a collar round each base stay clear
+        if any(kd.find(v.co)[2] < 0.95 * EAR_R for v in fa.verts): continue
         if fa.normal.z < -0.35: continue                      # underside of the jaw/neck
         keep.append(fa.index)
     keepset = set(keep)
@@ -260,7 +260,7 @@ if not TUNE.get("noscalp"):
         m = fa.calc_center_median(); n = fa.normal
         hit = hbvh.ray_cast(m + n * 0.0002, n, 0.06 * Hb)
         near = hbvh.find_nearest(m)
-        if hit[0] is None and (near[0] is None or near[3] > 0.02 * Hb): bare.append(fa)
+        if hit[0] is None and (near[0] is None or near[3] > 0.035 * Hb): bare.append(fa)  # a gap is ringed by hair: keep scalp within reach of it
     bmesh.ops.delete(bb2, geom=bare, context="FACES")
     me2 = bpy.data.meshes.new("scalp"); bb2.to_mesh(me2); bb2.free(); bb.free()
     sc_o = bpy.data.objects.new("scalp", me2); bpy.context.collection.objects.link(sc_o)
