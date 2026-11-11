@@ -196,6 +196,26 @@ for fa in bm.faces:
 delete_faces(bm, cut); bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
 drop_islands(bm)
 bmesh.ops.holes_fill(bm, edges=bm.edges[:], sides=40)
+# crown slits: close every leftover hole whose rim is short and sits away from the ears and face (those openings stay)
+def _loops(bm):
+    bnd = {e for e in bm.edges if e.is_boundary}; out = []
+    while bnd:
+        e0 = bnd.pop(); loop = [e0]; v = e0.verts[1]; start = e0.verts[0]
+        while v is not start:
+            nxt = [e for e in v.link_edges if e in bnd]
+            if not nxt: break
+            e = nxt[0]; bnd.discard(e); loop.append(e); v = e.other_vert(v)
+        out.append(loop)
+    return out
+closed = 0
+for loop in _loops(bm):
+    per = sum(e.calc_length() for e in loop)
+    vs = {v for e in loop for v in e.verts}; cen = sum((v.co for v in vs), Vector()) / len(vs)
+    F_, L_, Z_ = FLZ(cen)
+    if per < 0.6 * headH and Z_ > eye_top + 0.1 * headH and kd.find(cen)[2] > 0.8 * EAR_R2:
+        try: bmesh.ops.holes_fill(bm, edges=loop, sides=0); closed += 1
+        except Exception: pass
+print("CLOSED", ID, closed)
 bm.to_mesh(raw.data); bm.free()
 
 # decimate
