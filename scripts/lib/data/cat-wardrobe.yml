@@ -50,7 +50,7 @@ masks:
 # fluff types (art/cat-wardrobe/fluff.py): soft clumps skinned to the cat, white base tinted with her fur. look.fluff: a list of these keys
 fluff:
   cheeks: { f: '/cdn/value.3642e9647ef4093ad7145420b2dd67b2430737e2f2cbbd0f73db310311a5d493.glb', m: '/cdn/value.f93433684f8928db463f90675663a4734127ee45d6a0398aa1be3e58439ef94b.glb' }
-  burns: { f: '/cdn/value.893469d1193886e31660130b711c01f05810199cac3cae0858c970b28c853446.glb', m: '/cdn/value.b6c76d598a72e88a0e7fbc629dae8aa5775eeee27ae40b0593739400884fd5cc.glb' }
+  burns: { f: '/cdn/value.a55f242162c98b5ec7f83ae204da342c9aec6d9b09c5c09627e95df83de0ce84.glb', m: '/cdn/value.fdf5ebdab38981ce716f87d750254c6b609058674c16f958e5ff3e05adb4d9dc.glb' }
   crest: { f: '/cdn/value.313a3e3ccbb6abe824b5c31fc09df0a865d0b59d18160d550848721c0747ec05.glb', m: '/cdn/value.a3dbf411e9948f95c24b3c8649d898506c9963d00ac91ff030f0703d0dedec96.glb' }
   lynx: { f: '/cdn/value.f8d0a6820ef8d164f0a5b8e2b9c219a1dcc2c8b02f8293b9ea9239a7f82a2e26.glb', m: '/cdn/value.766e25e68619e22247fc946c5c3699921b7261ec3365368c086818330e42cb18.glb' }
   ruff: { f: '/cdn/value.3f77ee09d706354a90ca62f43d65ec36497426860cae207bfae2b90d524b1d3d.glb', m: '/cdn/value.d9b97698f311bc2cddea38ccbebb76c3be800d0c75c5f761bcf408ab5b821d6f.glb' }
@@ -58,12 +58,12 @@ fluff:
 
 # hairstyles (art/cat-wardrobe/hair-register.py): the Tripo hair carried onto the current cat heads, skinned to the head, tinted by look.hairc. look.hair: one key
 hair:
-  afropuff: { f: '/cdn/value.b133bc5a9373054cd0ea825530c6cfcae8156e44a6f90c37f0536aa05eafc6c2.glb' }
+  afropuff: { f: '/cdn/value.e7958fced643bc581e0ffebd4a1b98a012f6d2f3b7ef4570a0f963c9cdc32608.glb' }
   crop: { m: '/cdn/value.898a9266559da42236bd45d6f613c58bcfdb5db9dcc47a8c0c2ac932a2f1cc26.glb' }
   halfup: { f: '/cdn/value.d35b15e5840b772d26408ae52bf12604e869f18a885c1ea97fa2ee4acc9f692b.glb' }
   long: { m: '/cdn/value.cc94515f95a5a97f08808a98afeb636f73a21d779b45a6ee7e5fbad2ba630e15.glb' }
   pixie: { f: '/cdn/value.abe241a2ef07d405f59c092a352e7eded6e2b5889d4030ee2c21d69dad84862a.glb' }
   shaggy: { m: '/cdn/value.dd56c3855d7f14009a31102ee07a5c9f478a72b8fe2b79ae4aa204c3681834d1.glb' }
   sidetail: { f: '/cdn/value.e3143e7e7eae434feb2f7a20981141bc5d4cd021f5fb88bdee91d5d8a860a466.glb' }
-  twintails: { f: '/cdn/value.18ea92da5b1fd4f56d251b359d7984fc4d24858b12d9ba9a5c8b5e5c22aa8673.glb' }
+  twintails: { f: '/cdn/value.6bc56270a414e1517c21a1cd9afb7bcc54b834b3274e060b5158525c40989bef.glb' }
   undercut: { m: '/cdn/value.8e3e52c6780f2a6536f0866fc209e0699ed0a4a4cf191d0334ba8b4d6a4b39fe.glb' }
