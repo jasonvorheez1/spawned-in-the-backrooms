@@ -17,7 +17,8 @@ new = [o for o in bpy.context.scene.objects if o not in before]
 g = next(o for o in new if o.type == 'MESH' and o.name.startswith('Ward_'))
 gm = g.matrix_world; ginv = gm.inverted()
 ws = [gm @ v.co for v in g.data.vertices]
-hinge = min(w.y for w in ws) + 0.025
+import os
+hinge = min(w.y for w in ws) + float(os.environ.get('HINGE', '0.025'))  # women's frames sit deeper: 0.045 keeps the lens rims where they are (0.025 pulled them off the eyes, Nov 11)
 moved = 0
 for v, w in zip(g.data.vertices, ws):
     if w.y < hinge or abs(w.x) < 0.04: continue
