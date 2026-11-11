@@ -5,8 +5,8 @@ import FACES from './data/critter-faces.yml'
 import { PRINTS } from '../mat-cloth.js'
 
 export const CAT_BODY = {
-  f: { glb: '/cdn/value.9e083ca65a7cef805e43f549e27e0752c0b23682fe0bf0ccec44ee2fc71fe5af.glb', fur: '/cdn/value.1c4f4402e22ebd41f1cca9b45fc42ef2bec051041b40c8a3c40b88028a23ca58.jpg' },
-  m: { glb: '/cdn/value.5e2f7613bbf5d9c28926f8ed3407788c7759d5b9f0308f776ba1b2da4a23edc2.glb', fur: '/cdn/value.58ce243610699df44f4552ccfdfc667580c63c99f28103ecf2d1dd72c94657fe.jpg' }
+  f: { glb: '/cdn/value.062eb251572f0cdb93f1276388aa9843e611c664a8e28c789f5ab52e9fa1c613.glb', fur: '/cdn/value.1c4f4402e22ebd41f1cca9b45fc42ef2bec051041b40c8a3c40b88028a23ca58.jpg' },
+  m: { glb: '/cdn/value.c0de6f5ce5cdf6974e9f7a487911d048f96360a07abf46a63dc410cfdc5dd1dc.glb', fur: '/cdn/value.58ce243610699df44f4552ccfdfc667580c63c99f28103ecf2d1dd72c94657fe.jpg' }
 }
 const rgb = (hex, lin = true) => { const n = parseInt(String(hex || '#ffffff').replace('#', '').slice(0, 6).padEnd(6, 'f'), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { const s = v / 255; return lin ? (s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4)) : s }) }
 const lerp = (a, b, t) => a + (b - a) * t
@@ -81,9 +81,10 @@ export function catModel(sex, look) {
 // the Chest slider 0..1 (look.chest), the body's Chest key; a top's cloth carries the same key so it swells with her
 export const chestOf = (look) => ({ Chest: Math.max(0, Math.min(1, +(look?.chest ?? 0.5))) })
 // snout and ear types (Shelly Nov 11): shape keys on the head (art/cat-wardrobe/head-keys.py). look.snout: button (default) | long | pointy | flat | puff; look.ears: upright (default) | tall | small | fold | wide
-export const SNOUTS = ['button', 'long', 'pointy', 'flat', 'puff'], EARS = ['upright', 'tall', 'small', 'fold', 'wide']
+export const SNOUTS = ['button', 'long', 'pointy', 'flat', 'puff'], EARS = ['upright', 'tall', 'small', 'fold', 'wide'], TAILS = ['classic', 'fluffy', 'bob', 'puff', 'whip', 'curl'] // look.tail (Shelly 'new tail types too'): Tail_* keys on the body
 const SNOUT_KEY = { long: 'Snout_Long', pointy: 'Snout_Pointy', flat: 'Snout_Flat', puff: 'Snout_Puff' }, EAR_KEY = { tall: 'Ear_Tall', small: 'Ear_Small', fold: 'Ear_Fold', wide: 'Ear_Wide' }
 // how far each snout key goes: pointy at full read as a beak (Shelly #218xxx 'too silly'), long reined in with it
+const TAIL_KEY = { fluffy: 'Tail_Fluffy', bob: 'Tail_Bob', puff: 'Tail_Puff', whip: 'Tail_Whip', curl: 'Tail_Curl' }
 const SNOUT_AMT = { pointy: 0.4, long: 0.6, flat: 1, puff: 1 }
 export function catMorph(look) {
   const m = chestOf(look)
@@ -91,6 +92,8 @@ export function catMorph(look) {
   for (const k of Object.values(EAR_KEY)) m[k] = 0
   if (SNOUT_KEY[look?.snout]) m[SNOUT_KEY[look.snout]] = SNOUT_AMT[look.snout] ?? 1
   if (EAR_KEY[look?.ears]) m[EAR_KEY[look.ears]] = 1
+  for (const k of Object.values(TAIL_KEY)) m[k] = 0
+  if (TAIL_KEY[look?.tail]) m[TAIL_KEY[look.tail]] = 1
   return m
 }
 // the Tripo garments a look wears, as skinned children of the cat
