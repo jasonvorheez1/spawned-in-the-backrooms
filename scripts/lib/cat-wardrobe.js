@@ -5,8 +5,8 @@ import FACES from './data/critter-faces.yml'
 import { PRINTS } from '../mat-cloth.js'
 
 export const CAT_BODY = {
-  f: { glb: '/cdn/value.f23144e9ec55639456a8f74aa4cbf135d8a6d3134d9fc2658ebe5c217ec4bbff.glb', fur: '/cdn/value.eb86c240c4daf27effe00523a7f1f216e7239f8eca99359e5a04fcf67c289a6f.jpg' },
-  m: { glb: '/cdn/value.7fb8a9753195cb161491d3fb60f277228ecbbc4a9026b918fa82ba1086117b3f.glb', fur: '/cdn/value.a400e6f824bf75d1c5dfafb1cadbe30c177543404d39b9c350d4feadc8dfd313.jpg' }
+  f: { glb: '/cdn/value.9e083ca65a7cef805e43f549e27e0752c0b23682fe0bf0ccec44ee2fc71fe5af.glb', fur: '/cdn/value.eb86c240c4daf27effe00523a7f1f216e7239f8eca99359e5a04fcf67c289a6f.jpg' },
+  m: { glb: '/cdn/value.5e2f7613bbf5d9c28926f8ed3407788c7759d5b9f0308f776ba1b2da4a23edc2.glb', fur: '/cdn/value.a400e6f824bf75d1c5dfafb1cadbe30c177543404d39b9c350d4feadc8dfd313.jpg' }
 }
 const rgb = (hex, lin = true) => { const n = parseInt(String(hex || '#ffffff').replace('#', '').slice(0, 6).padEnd(6, 'f'), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { const s = v / 255; return lin ? (s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4)) : s }) }
 const lerp = (a, b, t) => a + (b - a) * t
@@ -80,6 +80,17 @@ export function catModel(sex, look) {
 }
 // the Chest slider 0..1 (look.chest), the body's Chest key; a top's cloth carries the same key so it swells with her
 export const chestOf = (look) => ({ Chest: Math.max(0, Math.min(1, +(look?.chest ?? 0.5))) })
+// snout and ear types (Shelly Nov 11): shape keys on the head (art/cat-wardrobe/head-keys.py). look.snout: button (default) | long | pointy | flat | puff; look.ears: upright (default) | tall | small | fold | wide
+export const SNOUTS = ['button', 'long', 'pointy', 'flat', 'puff'], EARS = ['upright', 'tall', 'small', 'fold', 'wide']
+const SNOUT_KEY = { long: 'Snout_Long', pointy: 'Snout_Pointy', flat: 'Snout_Flat', puff: 'Snout_Puff' }, EAR_KEY = { tall: 'Ear_Tall', small: 'Ear_Small', fold: 'Ear_Fold', wide: 'Ear_Wide' }
+export function catMorph(look) {
+  const m = chestOf(look)
+  for (const k of Object.values(SNOUT_KEY)) m[k] = 0
+  for (const k of Object.values(EAR_KEY)) m[k] = 0
+  if (SNOUT_KEY[look?.snout]) m[SNOUT_KEY[look.snout]] = 1
+  if (EAR_KEY[look?.ears]) m[EAR_KEY[look.ears]] = 1
+  return m
+}
 // the Tripo garments a look wears, as skinned children of the cat
 export function catChildren(sex, look) {
   const l = { ...W.defaults[sex], ...(look || {}) }, out = []

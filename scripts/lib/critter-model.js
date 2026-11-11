@@ -11,7 +11,7 @@ import HAIR_SLOTS from './data/hair-slots.yml'
 import HAIR_TEX from './data/hair-tex.yml'
 import WARD_SLOTS from './data/ward-slots.yml'
 import CW from './data/cat-wardrobe.yml'
-import { CAT_BODY, catModel, catChildren, chestOf, EYE_COLORS } from './cat-wardrobe.js'
+import { CAT_BODY, catModel, catChildren, chestOf, catMorph, SNOUTS, EARS, EYE_COLORS } from './cat-wardrobe.js'
 // hair: its own GLB skinned whole to the Head bone (scripts/lib/data/hair.yml), tinted by the look's hairc; a mask hides it
 export const HAIR_ID = 'critter-hair'
 export const humanHairOf = (l) => {
@@ -751,7 +751,7 @@ export function critterSpec(l) {
       ...(l?.heightS || l?.buildS ? { scale: { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 } } : {})
     }
   }
-  if (isNewCat(l)) return { model: catModel(catSex(l), catLook(l)), morph: chestOf(catLook(l)), children: catChildren(catSex(l), catLook(l)), ...(l?.heightS || l?.buildS ? { scale: { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 } } : {}) }
+  if (isNewCat(l)) return { model: catModel(catSex(l), catLook(l)), morph: catMorph(catLook(l)), children: catChildren(catSex(l), catLook(l)), ...(l?.heightS || l?.buildS ? { scale: { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 } } : {}) }
   if (!MESH) return { primitive: { kind: 'scripted', script: 'scripts/critter2-geo.js', params: l }, material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.65, bounce: 0.72 } }
   const isF = l?.sex === 'f'
   return {
@@ -993,6 +993,8 @@ export function catLook(l) {
   const hairs = Object.keys(CW.hair || {}).filter((k) => CW.hair[k][sex])
   o.hair = CW.hair?.[l?.hair]?.[sex] ? l.hair : l?.hair === 'none' ? null : hashPick(`${l?.fur}|${l?.top}|${l?.fseed ?? ''}|hair`, hairs)
   if (!o.hairc && l?.hairc == null) o.hairc = hashPick(`${l?.fur}|hc`, ['#3a2a22', '#6b4a35', '#1e1a1c', '#a8683a', '#c9a066', '#7a2e2a'])
+  o.snout = SNOUTS.includes(l?.snout) ? l.snout : hashPick(`${l?.fur}|${l?.fseed ?? ''}|sn`, ['button', 'button', 'long', 'pointy', 'flat', 'puff'])
+  o.ears = EARS.includes(l?.ears) ? l.ears : hashPick(`${l?.top}|${l?.fseed ?? ''}|ear`, ['upright', 'upright', 'tall', 'small', 'fold', 'wide'])
   o.fluff = Array.isArray(l?.fluff) ? l.fluff : l?.fluff ? [l.fluff] : ['cheeks']
   if (l?.chest != null) o.chest = l.chest; else if (sex === 'f' && Number(l?.bustS)) o.chest = Math.max(0, Math.min(1, 0.5 * Number(l.bustS)))
   if (!o.hair) delete o.hair
@@ -1009,7 +1011,7 @@ export function seatCat(ctx, obj, l) {
     if (!cur) ctx.spawn(c.id, { parent: obj.id, ...c, ...(obj.audience === 'local' ? { audience: 'local' } : {}) })
     else { if (JSON.stringify(cur.model) !== JSON.stringify(c.model)) cur.model = c.model; if (c.morph) cur.morph = c.morph }
   }
-  obj.morph = chestOf(cl); obj.jiggle = null
+  obj.morph = catMorph(cl); obj.jiggle = null
   if (obj.material?.outline) obj.material = null
 }
 export const catBodyIds = () => [CAT_BODY.f.glb, CAT_BODY.m.glb]
