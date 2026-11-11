@@ -2,7 +2,7 @@
 # riding the body as a child (attachment: { skin: true }). Packed sources: m 782c6614…, f de9de999… (now legacyHuman m_sw30/f_sw30)
 m:
   inner: "/cdn/value.e932095bdd7f6d11ec17da5978271fdbad49a6c544f309fc0c1a562fdc073e99.glb"   # the plain tee worn under open-front tops, settled 2 mm off the skin (art/human-cloth/inner_tee.mjs)
-  body: "/cdn/value.fa40bdfd07ca1d7f0f4795d350d835f9710c23815a21daa606da4b11d3353934.glb"   # Nov 10 shoulder cap (art/human-body/shoulder_cap.py); before 9b3a3e2b
+  body: "/cdn/value.62fd48fd0a4ca9f4e9784e37dba818df3b807c6aba385cf63692e86f17b10989.glb"   # Nov 11 collar split (art/human-body/collar_split.py): neckline skin its own Skin_collar; before fa40bdfd   # Nov 10 shoulder cap (art/human-body/shoulder_cap.py); before 9b3a3e2b
   parts:
     Ward_abysshauberk: "/cdn/value.e19023ccde39d4730ff4c6abbecc47f9509176239f2cdaa3a8b8e7a5ecf3d402.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
     Ward_apron: "/cdn/value.ed168794a24b363f5f713badbd3c29e98c4e7829e4c782e676486f6ad57b9058.glb"
@@ -83,7 +83,7 @@ m:
     Ward_wirehood: "/cdn/value.1211430ab4895ec5090c51816074c9de6d70eab946ca7e17f22b3ea0ff26d276.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
 f:
   inner: "/cdn/value.c67010cfed8394921dd539c0003049942e28d4a67201c7e860761956160908d6.glb"   # the plain tee worn under open-front tops, settled 2 mm off the skin (art/human-cloth/inner_tee.mjs)
-  body: "/cdn/value.7afa2ad9d19dccfe5185934b2bb92fdfadae3be7399f8b60a1a3dd872db56bcd.glb"
+  body: "/cdn/value.b1696d5328e685bda81be34e91903a24506f79cce5092458ca84ab0d2c1a2d95.glb"   # Nov 11 collar split; before 7afa2ad9
   parts:
     Ward_abysshauberk: "/cdn/value.70a36d2b233500bbee45a34591267515e5a7a45dcca0af6feae1676f463cdfbc.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
     Ward_apron: "/cdn/value.9dc5135142a9fd419a5ef654b4f477ae07ea679385ef727a50fb37a51e9817a6.glb"
