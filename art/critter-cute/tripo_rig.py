@@ -232,8 +232,8 @@ camd = bpy.data.cameras.new("dc"); camd.type = "ORTHO"; camd.ortho_scale = HS; c
 camo.location = (0, -5, HZC); camo.rotation_euler = (math.radians(90), 0, 0); sc.camera = camo
 sc.render.engine = "BLENDER_WORKBENCH"; sc.display.shading.light = "FLAT"; sc.display.shading.color_type = "TEXTURE"
 sc.render.resolution_x = sc.render.resolution_y = R; sc.view_settings.view_transform = "Standard"; sc.render.film_transparent = True
-BODY.hide_render = True; sc.render.filepath = "/tmp/eyes.png"; bpy.ops.render.render(write_still=True); BODY.hide_render = False
-im = bpy.data.images.load("/tmp/eyes.png"); a = np.empty(R * R * 4, np.float32); im.pixels.foreach_get(a); a = a.reshape(R, R, 4); bpy.data.images.remove(im)
+BODY.hide_render = True; sc.render.filepath = f"/tmp/eyes-{WHO}.png"; bpy.ops.render.render(write_still=True); BODY.hide_render = False
+im = bpy.data.images.load(f"/tmp/eyes-{WHO}.png"); a = np.empty(R * R * 4, np.float32); im.pixels.foreach_get(a); a = a.reshape(R, R, 4); bpy.data.images.remove(im)
 dark = (a[..., :3].max(-1) < 0.13) & (a[..., 3] > 0.5)
 for _ in range(6):
     d2 = dark.copy(); d2[1:] &= dark[:-1]; d2[:-1] &= dark[1:]; d2[:, 1:] &= dark[:, :-1]; d2[:, :-1] &= dark[:, 1:]; dark = d2
