@@ -23,7 +23,7 @@ export function material(ctx) {
     const mo = ctx.params.mouth ? ctx.texture(String(ctx.params.mouth)).sample(vec2(u, v)) : null;
     let pic = mo ? vec4(mix(pic0.rgb, mo.rgb, mo.a), max(pic0.a, mo.a)) : pic0;
     // the sculpted head has its own nose (Shelly 'double noses'): the picture's painted nose is filled with the muzzle beside it
-    const nd = u.sub(0.5).div(0.07).pow(2).add(v.sub(0.36).div(0.055).pow(2)).sqrt();
+    const nd = u.sub(0.5).div(0.07).pow(2).add(v.sub(P("noseCutV", 0.36)).div(0.055).pow(2)).sqrt();
     const noseCut = smoothstep(1.0, 0.8, nd);
     const sL = ctx.texture(String(ctx.params.face)).sample(vec2(u.sub(0.11), v)), sR = ctx.texture(String(ctx.params.face)).sample(vec2(u.add(0.11), v));
     const fill = max(sL, sR);
@@ -34,7 +34,15 @@ export function material(ctx) {
     const grey = max(pic.r, pic.g), irisAmt = saturate(pic.b.sub(grey));
     const eye = vec3(P("eyeR", 0.85), P("eyeG", 0.6), P("eyeB", 0.15));
     const art = min(pic.rgb, vec3(grey, grey, grey)).add(eye.mul(irisAmt.mul(1.3)));
-    const col = mix(materialColor, art, pic.a.mul(inside).mul(front).mul(facing));
+    let col = mix(materialColor, art, pic.a.mul(inside).mul(front).mul(facing));
+    // one nose, on the sculpted snout tip itself (bind space): a soft rounded triangle, wider on top, with a small shine
+    const ns = P("noseS", 1), ny = q.y.sub(P("noseY", 0.797)).div(0.0125 * 1).div(ns);
+    const nx = q.x.div(float(0.017).mul(ns)).div(float(1).add(ny.mul(0.28)).max(0.3));
+    const nDist = nx.mul(nx).add(ny.mul(ny)).sqrt();
+    const onTip = smoothstep(-0.03, -0.012, q.z.sub(P("noseZ", 0.249)));
+    const noseM = smoothstep(1.0, 0.86, nDist).mul(onTip);
+    const shine = smoothstep(0.5, 0.15, nx.add(0.25).mul(nx.add(0.25)).add(ny.sub(0.45).mul(ny.sub(0.45))).sqrt());
+    col = mix(col, mix(vec3(0.045, 0.032, 0.03), vec3(0.42, 0.38, 0.38), shine.mul(0.6)), noseM);
     m.colorNode = col;
     m.emissiveNode = col.mul(0.06).add(eye.mul(irisAmt.mul(pic.a).mul(inside).mul(front).mul(0.35)));   // a little glow so the iris reads in the dim yellow light
     m.roughness = 0.68;
