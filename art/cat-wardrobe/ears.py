@@ -50,7 +50,7 @@ def measure(H):
 
 def ear(bm, E, T, sx, mats):
     C, tip = E["C"], E["tip"]; h = (tip.z - C.z) * T["h"]
-    W0 = E["hw"] * 1.18 * T["w"]; D0 = W0 * 0.4
+    W0 = E["hw"] * 1.18 * T["w"]; D0 = W0 * 0.55
     up = Vector((0, 0, 1)); f = Vector((0, -1, 0)); s = Vector((sx, 0, 0))
     lean = math.radians(T["lean"])
     N, R = 28, 22
@@ -135,6 +135,7 @@ def build(sex, kind, arm, H, meas, bone):
     o.parent = arm; o.modifiers.new("skin", "ARMATURE").object = arm
     return o
 
+HIDE = 2.4   # Ear_Small past 1 presses the head's own ear flat into the crown, under the new ear (cat-wardrobe.js catMorph sends the same)
 def proof(sex, objs, H, meas):
     sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = sc.render.resolution_y = 360
     w = bpy.data.worlds.new("w"); sc.world = w; w.color = (0.3, 0.3, 0.33)
@@ -144,7 +145,7 @@ def proof(sex, objs, H, meas):
     for kind, o in objs.items():
         for x in objs.values(): x.hide_render = x is not o
         for k in H.data.shape_keys.key_blocks:
-            if k.name.startswith("Ear_"): k.value = 1.0 if k.name == TYPES[kind]["key"] else 0
+            if k.name.startswith("Ear_"): k.slider_max = 3; k.value = HIDE if k.name == "Ear_Small" else 0
         for i, (p, r) in enumerate(cams):
             c = bpy.data.objects.new("c", bpy.data.cameras.new("c")); sc.collection.objects.link(c); c.location = p
             c.rotation_euler = [math.radians(a) for a in r]; c.data.type = "ORTHO"; c.data.ortho_scale = 0.6
