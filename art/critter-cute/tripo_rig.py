@@ -491,7 +491,7 @@ for _ in range(14):
     n_ = {}
     for (i, j), y in gy.items():
         nb = [(i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)]
-        n_[i, j] = y if not all(k in gy for k in nb) else 0.5 * y + 0.125 * sum(gy[k] for k in nb)
+        n_[i, j] = y if not all(k in gy for k in nb) else max(g0[i, j] - 0.002, 0.5 * y + 0.125 * sum(gy[k] for k in nb))   # may sink into a lump, never float off the curve (the side-view beak)
     gy = n_
 for k, (co, uv_) in list(grid.items()): grid[k] = (Vector((co.x, gy[k], co.z)), uv_)
 npress = 0
