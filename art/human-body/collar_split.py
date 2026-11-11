@@ -20,7 +20,7 @@ sel = 0
 for p in to.data.polygons:
     c = mw @ p.center; n = (mw.to_3x3() @ p.normal).normalized()
     hit = tree.ray_cast(c + n * 0.002, n, 0.08)[0] or tree.find_nearest(c, 0.012)[0]
-    p.select = (c.z > zlo and hit is None and max(abs((mw @ to.data.vertices[i].co).x) for i in p.vertices) < XW)  # whole face inside the neck: long flaps out to the shoulder were the teeth
+    p.select = (c.z > zlo and c.y < 0.02 and max(abs((mw @ to.data.vertices[i].co).x) for i in p.vertices) < XW)  # whole face inside the neck: long flaps out to the shoulder were the teeth
     sel += p.select
 KEEP = {p.index for p in to.data.polygons if p.select}
 for o in bpy.context.selected_objects: o.select_set(False)
