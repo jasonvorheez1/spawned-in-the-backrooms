@@ -97,7 +97,7 @@ human:
       free: /cdn/value.858989326533b57d34bef255b74b59a1e5a9da09b2b7f1763e7621d1e25108c0.glb
       hat: /cdn/value.28a4a227c8373b173d4b5bc49f387d23cb2623f68d38332186bd318b24093f85.glb
     7: &id008
-      free: /cdn/value.2a4e6b2b426a68031722a47e419074079e2bb24e3e08284cb0cc1df87c7dc17c.glb
+      free: /cdn/value.1ac160ce8f94be09c40e116e22d0ac702039438a4a12a7aed3189dcba185a8eb.glb   # Nov 11: faces pointed into the head, back shaded dark (art/hair-fix/pony_normals.py)
       hat: /cdn/value.79e19bc43776d93a75d8f689921c5d1ad12e9dd28eadeae07bd3b4d428352031.glb
     8: *id001
     9: *id002
