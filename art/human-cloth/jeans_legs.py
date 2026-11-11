@@ -84,11 +84,13 @@ for f in me.polygons:
     for i in (a,b): rep.setdefault((K(i),fside[f.index]),i)
 caps=0
 bm=bmesh.new(); bm.from_mesh(me); bm.verts.ensure_lookup_table(); dl=bm.verts.layers.deform.active
-for sd in ([] if True else 'LR'):  # caps off: their faces carried no UVs and triangulated across the leg (flat pale facets, Nov 11)
+for sd in 'LR':
+  # the slot left by the rip is a long thin loop (front chain + back chain at x=0): zip the two chains by height into a strip of
+  # triangles, so the inner leg is cloth that follows this leg alone. A fan across the slot (the old cap) made long pale slivers.
   od='R' if sd=='L' else 'L'
-  bnd=[tuple(e) for e,s_ in ek.items() if s_.count(sd)==1 and od in s_ and all(W(me.vertices[rep[(k,sd)]]).z<crotch for k in e if (k,sd) in rep) and all((k,sd) in rep for k in e)]
+  bnd=[tuple(e) for e,s_ in ek.items() if s_.count(sd)==1 and od in s_ and all((k,sd) in rep for k in e) and all(W(me.vertices[rep[(k,sd)]]).z<crotch for k in e)]
   adj=defaultdict(list)
-  for a,b in bnd: adj[a].append(b); adj[b].append(a)
+  for a_,b_ in bnd: adj[a_].append(b_); adj[b_].append(a_)
   seen=set()
   for start in list(adj):
     if start in seen: continue
@@ -97,17 +99,30 @@ for sd in ([] if True else 'LR'):  # caps off: their faces carried no UVs and tr
       nx=[n for n in adj[cur] if n not in seen]
       if not nx: break
       cur=nx[0]; loop.append(cur); seen.add(cur)
-    if len(loop)<3 or start not in adj[cur]: continue
-    cx=sum(W(me.vertices[rep[(k,sd)]]).x for k in loop)/len(loop)
-    push=0.003*(1 if (sd=='L')==(lsign>0) else -1)
-    nv=[]; bm.verts.ensure_lookup_table(); srcs=[bm.verts[rep[(k,sd)]] for k in loop]
-    for src_ in srcs:
-      c=bm.verts.new(src_.co.copy()); c.co.x+=push/ M.to_scale().x
-      for g,x in src_[dl].items(): c[dl][g]=x
-      nv.append(c)
-    try: f=bm.faces.new(nv)
-    except ValueError: continue
-    r=bmesh.ops.triangulate(bm,faces=[f]); caps+=1
+    if len(loop)<4 or start not in adj[cur]: continue
+    bm.verts.ensure_lookup_table()
+    src=[bm.verts[rep[(k,sd)]] for k in loop]; Z=[W(v).z for v in src]
+    lo=Z.index(min(Z)); src=src[lo:]+src[:lo]; Z=Z[lo:]+Z[:lo]; hi=Z.index(max(Z))
+    A=src[:hi+1]; B=[src[0]]+src[hi:][::-1]
+    push=0.003*(1 if (sd=='L')==(lsign>0) else -1)/M.to_scale().x
+    cp={}
+    def cv(v):
+      if v not in cp:
+        c=bm.verts.new(v.co.copy()); c.co.x+=push
+        for g,x in v[dl].items(): c[dl][g]=x
+        cp[v]=c
+      return cp[v]
+    i=j=0; tris=[]
+    while i<len(A)-1 or j<len(B)-1:
+      if j>=len(B)-1 or (i<len(A)-1 and W(A[i+1]).z<=W(B[j+1]).z): tris.append((A[i],A[i+1],B[j])); i+=1
+      else: tris.append((A[i],B[j+1],B[j])); j+=1
+    for t in tris:
+      if len(set(t))<3: continue
+      try: f=bm.faces.new([cv(v) for v in t])
+      except ValueError: continue
+      f.smooth=True; f.normal_update()
+      if (f.normal.x>0)==((sd=='L')==(lsign>0)): f.normal_flip()
+      caps+=1
 print("CAPS",caps)
 bm.normal_update(); bm.to_mesh(me); bm.free(); me.update()
 # the imported custom normals still pointed across the old shared seam: those faces lit pale mid-stride. Recompute them from the split mesh
