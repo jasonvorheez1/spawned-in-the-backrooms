@@ -350,7 +350,18 @@ for i in range(NX + 1):
         loc, nrm, fi, _ = bvh0.find_nearest(co); poly = hm.polygons[fi]
         ws = poly_3d_calc([hm.vertices[k].co for k in poly.vertices], loc)
         uv = sum((uvl[li].uv * wk for li, wk in zip(poly.loop_indices, ws)), Vector((0, 0)))
-        pid[i, j] = len(pv); pv.append(co); puv.append(uv); pmat.append(poly.material_index)
+        tj, ti_ = int(uv.y * TH) % TH, int(uv.x * TW) % TW
+        pid[i, j] = len(pv); pv.append(co); puv.append(uv); pmat.append(float(not fur_all[tj, ti_] and lum[tj, ti_] > 0.45))
+# flat fills: one clean fur texel and one clean cream texel; the cream mask is smoothed over the grid so the muzzle edge is soft, not texel noise
+def clean(mask):
+    m = mask.copy()
+    for _ in range(8): m[1:-1, 1:-1] &= m[:-2, 1:-1] & m[2:, 1:-1] & m[1:-1, :-2] & m[1:-1, 2:]
+    r, c = np.nonzero(m); k = len(r) // 2; return Vector(((c[k] + 0.5) / TW, (r[k] + 0.5) / TH))
+_, cream_all = classes(px); UVF, UVC = clean(fur_all), clean(cream_all & (lum > 0.6))
+cm = np.zeros((NX + 1, NZ + 1))
+for (i, j), n in pid.items(): cm[i, j] = pmat[n]
+for _ in range(4): cm = (cm + np.roll(cm, 1, 0) + np.roll(cm, -1, 0) + np.roll(cm, 1, 1) + np.roll(cm, -1, 1)) / 5
+for (i, j), n in pid.items(): pmat[n] = int(cm[i, j] > 0.45); puv[n] = UVC if pmat[n] else UVF
 pf = []
 for i in range(NX):
     for j in range(NZ):
@@ -369,8 +380,17 @@ for co in pv:
     v = bm.verts.new(co); v[dk][gi_] = 1.0; bv.append(v)
 for q in pf:
     f = bm.faces.new([bv[pid[k]] for k in q]); f.smooth = True
-    f.material_index = max(set(pmat[pid[k]] for k in q), key=[pmat[pid[k]] for k in q].count)
+    f.material_index = int(sum(pmat[pid[k]] for k in q) >= 2)
     for l, k in zip(f.loops, q): l[uvk].uv = puv[pid[k]]
+nlash = 0   # lash tips that poke past the patch rim turn fur-coloured (no holes cut)
+for f in bm.faces:
+    c = f.calc_center_median()
+    if c.y > -0.03 or not (BOX[0] - 0.04 < c.x < BOX[1] + 0.04 and BOX[2] - 0.02 < c.z < BOX[3] + 0.04) or f.verts[0] in bv: continue
+    u = sum((l[uvk].uv for l in f.loops), Vector((0, 0))) / len(f.loops)
+    if lum[int(u.y * TH) % TH, int(u.x * TW) % TW] < 0.2:
+        for l in f.loops: l[uvk].uv = UVF
+        f.material_index = 0; nlash += 1
+print("lash faces recoloured", nlash)
 bm.to_mesh(hm); bm.free(); lift = len(dead)
 bpy.context.view_layer.objects.active = HEAD
 if HEAD.data.has_custom_normals: bpy.ops.mesh.customdata_custom_splitnormals_clear()   # old normals kept the sockets' shading
