@@ -198,6 +198,23 @@ mat.node_tree.nodes["Principled BSDF"].inputs["Roughness"].default_value = 0.85
 me.materials.clear(); me.materials.append(mat)
 bpy.ops.object.shade_smooth()
 
+# the chest slider: the body's Chest key, carried onto the cloth by its nearest skin, so a fuller chest pushes the top out with it
+kb = body.data.shape_keys.key_blocks if body.data.shape_keys else None
+if kb and "Chest" in kb and KIND == "top":
+    from mathutils.kdtree import KDTree
+    bas = kb["Basis"].data; ch = kb["Chest"].data
+    kd = KDTree(len(bas))
+    for i, d in enumerate(bas): kd.insert(body.matrix_world @ d.co, i)
+    kd.balance()
+    g.shape_key_add(name="Basis"); sk = g.shape_key_add(name="Chest", from_mix=False); moved = 0
+    for i, v in enumerate(me.vertices):
+        acc = Vector((0, 0, 0)); wsum = 0.0
+        for co, j, dist in kd.find_n(v.co, 6):
+            w = 1.0 / (dist + 0.004); acc += (ch[j].co - bas[j].co) * w; wsum += w
+        dlt = acc / wsum
+        if dlt.length > 1e-5: moved += 1
+        sk.data[i].co = v.co + dlt * 1.08     # a hair past the skin's own push so the cloth stays outside at full chest
+    print("chest key verts", moved)
 # proof: the garment on its own body and rig, rest then a stride with one arm up, three sides each, lit from the camera
 import os
 if os.environ.get("PROOF"):
