@@ -1,4 +1,13 @@
 # spawn-scene v2 yaml x0z0
+bc-airhockey:
+  children: [{feetPosition: {x: 0, y: 2.2, z: 0.6}, id: glow, light: {color: "#ff3a3a", distance: 4, intensity: 0.9, kind: point}}]
+  feetPosition: {x: 16, y: 0.02, z: -15}
+  id: bc-airhockey
+  layout: {box: {max: {x: 1.1, y: 1.6, z: 0.625}, min: {x: -1.1, y: 0, z: -0.625}}}
+  model: {id: /cdn/value.1fd7a177c28c9f7355f8d7e1da63bc9d37f33035f4e373c31fca7c975ee78617.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 0}
+  tags: [bonus-arcade]
 bc-arcade:
   children: [{audio: {bus: Music, clip: /cdn/music-the-bonus-room-ost-zdv3pdaa.mp3, gain: 0.35, loop: true, maxDistance: 14, spatial: true}, feetPosition: {x: 0, y: 2.5, z: 0}, id: music}, {feetPosition: {x: -2, y: 4.2, z: -4}, id: glow-pink, light: {color: "#ff4fd8", distance: 11, intensity: 2.2, kind: point}}, {feetPosition: {x: 2, y: 4.2, z: 4}, id: glow-cyan, light: {color: "#38e8ff", distance: 11, intensity: 2, kind: point}}]
   feetPosition: {x: 17, y: 0, z: -15}
@@ -277,6 +286,15 @@ bc-claw-1:
   physics: {body: "static", collider: "box"}
   rotation: {yaw: -90}
   tags: ["bonus-arcade"]
+bc-dance:
+  children: [{feetPosition: {x: 0, y: 2.2, z: 0.6}, id: glow, light: {color: "#ff4fd8", distance: 4, intensity: 0.9, kind: point}}]
+  feetPosition: {x: 21.7, y: 0.02, z: -7.5}
+  id: bc-dance
+  layout: {box: {max: {x: 1.2, y: 2.4, z: 1}, min: {x: -1.2, y: 0, z: -1}}}
+  model: {id: /cdn/value.8a8d221178b6de1ed17722697aa9f425dfc3b4848f002940f3fd9e5f4126bd54.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 180}
+  tags: [bonus-arcade]
 bc-dest-1:
   feetPosition: {x: -15.5, y: 8, z: -27.9}
   id: bc-dest-1
@@ -573,6 +591,40 @@ bc-palm-6:
   model: {id: "/cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb"}
   rotation: {yaw: 305}
   tags: ["bonus-court"]
+bc-photobooth:
+  children: [{feetPosition: {x: 0, y: 2.2, z: 0.6}, id: glow, light: {color: "#c070ff", distance: 4, intensity: 0.9, kind: point}}]
+  feetPosition: {x: 11, y: 0.02, z: -22.9}
+  id: bc-photobooth
+  layout: {box: {max: {x: 0.65, y: 2.3, z: 0.5}, min: {x: -0.65, y: 0, z: -0.5}}}
+  model: {id: /cdn/value.76b322755f0554dc563d14fa5dba9d4bb9a7c12171a02452b83af15327a966ae.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 0}
+  tags: [bonus-arcade]
+bc-pinball-1:
+  children: [{feetPosition: {x: 0, y: 2.2, z: 0.6}, id: glow, light: {color: "#38f4ff", distance: 4, intensity: 0.9, kind: point}}]
+  feetPosition: {x: 10.85, y: 0.02, z: -11.1}
+  id: bc-pinball-1
+  layout: {box: {max: {x: 0.375, y: 1.95, z: 0.7}, min: {x: -0.375, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.a8849adad6b9618dde888c3e72c2eabe75391c4a2db0f24c0683f695d8320f3d.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 90}
+  tags: [bonus-arcade]
+bc-pinball-2:
+  feetPosition: {x: 10.85, y: 0.02, z: -10.2}
+  id: bc-pinball-2
+  layout: {box: {max: {x: 0.375, y: 1.95, z: 0.7}, min: {x: -0.375, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.a8849adad6b9618dde888c3e72c2eabe75391c4a2db0f24c0683f695d8320f3d.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 90}
+  tags: [bonus-arcade]
+bc-pinball-3:
+  feetPosition: {x: 10.85, y: 0.02, z: -9.3}
+  id: bc-pinball-3
+  layout: {box: {max: {x: 0.375, y: 1.95, z: 0.7}, min: {x: -0.375, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.a8849adad6b9618dde888c3e72c2eabe75391c4a2db0f24c0683f695d8320f3d.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 90}
+  tags: [bonus-arcade]
 bc-planter-1:
   feetPosition: {x: -4.5, y: 0, z: 22}
   id: "bc-planter-1"
@@ -699,6 +751,15 @@ bc-prize:
   physics: {body: "static", collider: "box"}
   rotation: {yaw: -90}
   tags: ["bonus-arcade"]
+bc-racer:
+  children: [{feetPosition: {x: 0, y: 2.2, z: 0.6}, id: glow, light: {color: "#3a7bff", distance: 4, intensity: 0.9, kind: point}}]
+  feetPosition: {x: 22.5, y: 0.02, z: -22.9}
+  id: bc-racer
+  layout: {box: {max: {x: 1, y: 2, z: 0.9}, min: {x: -1, y: 0, z: -0.9}}}
+  model: {id: /cdn/value.0439c38f1cbf0824145a551b841d030b2b80b4e34441a14f1599e073029fbb88.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 0}
+  tags: [bonus-arcade]
 bc-rope-1:
   castShadow: false
   feetPosition: {x: 22.7, y: 5.5, z: -20}
@@ -734,6 +795,23 @@ bc-sbench-3:
   model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
   physics: {body: "static", collider: "box"}
   rotation: {yaw: -90}
+bc-skee-1:
+  children: [{feetPosition: {x: 0, y: 2.2, z: 0.6}, id: glow, light: {color: "#ffcc33", distance: 4, intensity: 0.9, kind: point}}]
+  feetPosition: {x: 19.4, y: 0.02, z: -19.6}
+  id: bc-skee-1
+  layout: {box: {max: {x: 0.4, y: 2.4, z: 1.5}, min: {x: -0.4, y: 0, z: -1.5}}}
+  model: {id: /cdn/value.c6258d88654815b49b36790f427a7405b9efda1dc6e1578588a3a656dcdb9da2.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 0}
+  tags: [bonus-arcade]
+bc-skee-2:
+  feetPosition: {x: 20.3, y: 0.02, z: -19.6}
+  id: bc-skee-2
+  layout: {box: {max: {x: 0.4, y: 2.4, z: 1.5}, min: {x: -0.4, y: 0, z: -1.5}}}
+  model: {id: /cdn/value.c6258d88654815b49b36790f427a7405b9efda1dc6e1578588a3a656dcdb9da2.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 0}
+  tags: [bonus-arcade]
 bc-station-light:
   feetPosition: {x: -17, y: 9.6, z: -14}
   id: bc-station-light
@@ -750,6 +828,15 @@ bc-strash-1:
   layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
   model: /cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb
   physics: {body: static, collider: box}
+bc-tokens:
+  children: [{feetPosition: {x: 0, y: 2.2, z: 0.6}, id: glow, light: {color: "#ff6040", distance: 4, intensity: 0.9, kind: point}}]
+  feetPosition: {x: 10.4, y: 0.02, z: -12.45}
+  id: bc-tokens
+  layout: {box: {max: {x: 0.3, y: 1.75, z: 0.275}, min: {x: -0.3, y: 0, z: -0.275}}}
+  model: {id: /cdn/value.b8b69860644a1a2def1ee10848ff66616af30c9b1ed7cd3dda84bde263bf9a47.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 90}
+  tags: [bonus-arcade]
 bc-train:
   feetPosition: {x: -22.3, y: 5.15, z: -14}
   id: bc-train
