@@ -107,7 +107,7 @@ def build_head(name, sp, rig, F):
     _tripo_load()
     o = _build_head_proc(name, sp, rig, F)
     for m in o.data.materials:                                     # the procedural skin goes; the Tripo skin is the head
-        if m and m.name.endswith(("_fur",)):
+        if m and m.name.endswith(("_fur", "_mark")):   # the leftover marking pieces go with the procedural skin (Shelly: markings off)
             m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
             out = nt.nodes.new("ShaderNodeOutputMaterial"); tr = nt.nodes.new("ShaderNodeBsdfTransparent"); nt.links.new(tr.outputs[0], out.inputs[0])
             m.blend_method = "HASHED" if hasattr(m, "blend_method") else None
@@ -118,6 +118,9 @@ def build_head(name, sp, rig, F):
         log("TRIPO DBG in scene", t.name in bpy.context.scene.objects, "hide", t.hide_render, "faces", len(t.data.polygons), "z", round(min(p.z for p in bb), 3), round(max(p.z for p in bb), 3), "y", round(min(p.y for p in bb), 3), round(max(p.y for p in bb), 3), "mats", [m.name for m in t.data.materials if m], "HC", tuple(round(x, 3) for x in HC))
     except Exception as e: log("TRIPO DBG err", repr(e))
     if os.environ.get("DBGLUMP") == "1":
+        mi = [i for i, m in enumerate(o.data.materials) if m and m.name.endswith("_mark")]
+        cs = [o.matrix_world @ pg.center for pg in o.data.polygons if pg.material_index in mi]
+        if cs: log("MARK faces", len(cs), "x", round(min(c.x for c in cs), 3), round(max(c.x for c in cs), 3), "y", round(min(c.y for c in cs), 3), round(max(c.y for c in cs), 3), "z", round(min(c.z for c in cs), 3), round(max(c.z for c in cs), 3))
         bpy.context.view_layer.update()
         for ob in bpy.context.scene.objects:
             if ob.type != "MESH": continue
