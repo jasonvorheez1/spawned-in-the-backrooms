@@ -108,7 +108,7 @@ f:
     Ward_divehelm: "/cdn/value.5b9c836cec73932a9c9c379f28f80f5db3fb73fe860ba86ca9fac2483bfc8e5c.glb"
     Ward_dress: "/cdn/value.35a562107ea7c20e3797e2674f22058dcfd6fc7a49ca4df8d2ac17a7ff89b978.glb"
     Ward_flower: "/cdn/value.a65b66f31936f5186ff86e9d079dae511b16ac5f33e7e76eb137fa2029e1a119.glb"
-    Ward_glasses: "/cdn/value.fb961ffbdc4b4bb064b5fe06700b56b0525a9337866484c7d3b67e6b22660239.glb"
+    Ward_glasses: "/cdn/value.be4a56f88f6fec38d95f9ded88621b6f98aaad6b7de9d1684c7223b16b190f59.glb"  # Nov 11 head keys (eyewear_keys.py, matched across the older Head bone); before fb961ffb
     Ward_gmhoodie: "/cdn/value.e6239bb0b4acde163c856dceda8f02be18755a0a99d97882fc4601de6c9dca35.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
     Ward_gown: "/cdn/value.42f8478a7977ebd94de57e8acc01994066fae068836197edcec298a3e443f75d.glb"
     Ward_headphones: "/cdn/value.c9aae2ae918914989cd90c8d8b5f84d682752fc14cb2234e34de20d4d2a2291f.glb"
@@ -142,7 +142,7 @@ f:
     Ward_pphoodie: "/cdn/value.e4dd58c6c6f2476c39b86422bb2188f86afbb70691668bc8b4b4be19d9f13e75.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
     Ward_scarf: "/cdn/value.33c5ce6ae39bc312278a632ca2024db9204034ee2d51a39196765731a311ac8a.glb"
     Ward_seawatchsuit: "/cdn/value.1e81bea376a6594286652a3a23bf85c0003a556fcd01c10b6b7bafb92102cb88.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
-    Ward_shades: "/cdn/value.59cc4adc7ebf7f92c04adfc6b415a9e20d63e163803c7c4932cae9285bfd9d0e.glb"
+    Ward_shades: "/cdn/value.af9f7f21e9e7659522599c77670f434fe837993bfb6405ab1ba9086e65e31b7a.glb"  # Nov 11 head keys; before 59cc4adc
     Ward_shirt: "/cdn/value.3ff8e8bb167a8bd85bb2f344c67b310d0a4e83678f4dc55479b84963e7ba71ee.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
     Ward_shorts: "/cdn/value.8c9abb1ae7aadaec4b03ef97acbd0694c5932aff470810268f74dc9bd9ea9ae4.glb"
     Ward_silkcloak: "/cdn/value.31663a451eac95fbdc7cc246cbe284d19baf7d8ea6d242c63b9f27766441f741.glb"
