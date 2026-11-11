@@ -274,7 +274,7 @@ const humanBodyFull = (l) => {
   // clothes take the cel step too, so a person is one drawing and not a drawn head on a clay body; a slot that is already more than a plain colour keeps itself
   const cloth = {}
   for (const [k, v] of Object.entries(m.materials || {})) cloth[k] = v && typeof v === 'object' && !v.kind && typeof v.color === 'string' && !v.map && !v.texture && !v.transparent && !(v.metalness > 0.3) && !(v.emissiveIntensity > 0) ? anime('cloth', v.color) : v
-  return { id: HUMAN[l?.sex === 'f' ? 'f' : 'm'], forward: '+z', parts, materials: { ...cloth,
+  return { id: (HUMAN ?? M.human)[l?.sex === 'f' ? 'f' : 'm'], forward: '+z', parts, materials: { ...cloth,
     Body_Skin: skin, Head_Skin: skin, under: { color: '#2b2a30', roughness: 0.85, metalness: 0 },
     Iris: { color: eye, map: '/cdn/value.d2cf169d248898314e631eb26d71f42378a79c8a51a0b6097d73f09862c7c0ea.png', roughness: 0.4, metalness: 0 }, Eye: { color: '#ffffff', map: FACE_ATLAS, roughness: 0.5, metalness: 0 }, Brow: { color: hairc, map: FACE_ATLAS, roughness: 0.9, metalness: 0 }, Lash: { color: '#2a2024', map: FACE_ATLAS, roughness: 0.9, metalness: 0 }, Beard: { color: l?.beardc || hairc, roughness: 0.86, metalness: 0 }, Blush: BLUSH_MAT(typeof l?.blush === 'string' && l.blush.startsWith('#') ? l.blush : null), BlushSoft: BLUSH_SOFT_MAT(typeof l?.blush === 'string' && l.blush.startsWith('#') ? l.blush : null) } }
 }
@@ -915,7 +915,7 @@ export function restyle(ctx, o) {
   l.species ??= speciesFor(local); l.sex ??= 'm'; l.fseed ??= hashOf(local)
   if (o.state) o.state.wear = l
   if (want === 'h') { const s = critterSpec(l); o.model = s.model; o.material = null; seatHead(ctx, o, l) }
-  else { for (const k of wardKids()) ctx.destroy?.(k) ?? destroy(k); const hh = ctx.getObject(o.id + '/' + HAIR_ID); if (hh) (ctx.destroy ?? destroy)(hh.id ?? o.id + '/' + HAIR_ID); if (o.state) delete o.state.headBody; o.model = bodyModel(l); o.morph = bustMorph(l) ?? null; o.material = { outline: { color: '#1d1420', width: 2.4 } }; o.jiggle = { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.68, bounce: 0.72 }; seatHead(ctx, o, l) }
+  else { for (const k of wardKids()) ctx.destroy(k); if (ctx.getObject(o.id + '/' + HAIR_ID)) ctx.destroy(o.id + '/' + HAIR_ID); if (o.state) delete o.state.headBody; o.model = bodyModel(l); o.morph = bustMorph(l) ?? null; o.material = { outline: { color: '#1d1420', width: 2.4 } }; o.jiggle = { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.68, bounce: 0.72 }; seatHead(ctx, o, l) }
   return true
 }
 // one pass over a place: skips players and what only one machine sees; returns how many changed
