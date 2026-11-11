@@ -93,9 +93,13 @@ for v in me.vertices:
 print("re-pushed", inside)
 # weights from the body
 for vg in body.vertex_groups: g.vertex_groups.new(name=vg.name)
-dt = g.modifiers.new("dt", "DATA_TRANSFER"); dt.object = body; dt.use_vert_data = True; dt.data_types_verts = {"VGROUP_WEIGHTS"}
+src = body.copy(); src.data = body.data.copy(); bpy.context.scene.collection.objects.link(src)   # weights come from a body with no tail: it curls up beside the left arm and a sleeve would follow it
+tg = {vg.index for vg in src.vertex_groups if "Tail" in vg.name}
+bm = bmesh.new(); bm.from_mesh(src.data); dl = bm.verts.layers.deform.verify()
+bmesh.ops.delete(bm, geom=[v for v in bm.verts if sum(w for k, w in v[dl].items() if k in tg) > 0.3], context="VERTS"); bm.to_mesh(src.data); bm.free()
+dt = g.modifiers.new("dt", "DATA_TRANSFER"); dt.object = src; dt.use_vert_data = True; dt.data_types_verts = {"VGROUP_WEIGHTS"}
 dt.vert_mapping = "POLYINTERP_NEAREST"; dt.layers_vgroup_select_src = "ALL"; dt.layers_vgroup_select_dst = "NAME"
-bpy.ops.object.modifier_apply(modifier="dt")
+bpy.ops.object.modifier_apply(modifier="dt"); bpy.data.objects.remove(src)
 if KIND == "top":   # nothing on a top follows the tail or the legs
     for n in [vg.name for vg in g.vertex_groups if "Tail" in vg.name or "Leg" in vg.name or "Foot" in vg.name or "Toe" in vg.name]: g.vertex_groups.remove(g.vertex_groups[n])
 if KIND != "top":
