@@ -12,12 +12,12 @@ function start(ctx) {
     : [[-10, (zl + 10) / VH], [0, 0.001], [zl, -zl / VH]];
   const leg = (f) => pts.map(([z, d]) => ({ value: f(z), duration: d, easing: "linear" }));
   animate(ctx, ctx.self.id, { "feetPosition.z": leg((z) => z - D / 2), "feetPosition.y": leg(yAt) }, { loop: true, easing: "linear" });
-  ctx.self.session.running = true;
+  ctx.self.session.running = ctx.self.state?.dir ?? "up";
 }
 
 export function onSpawn(ctx) { start(ctx); }
 
 export function update(ctx) {
-  if (!ctx.self.session.running) start(ctx);
+  if (ctx.self.session.running !== (ctx.self.state?.dir ?? "up")) start(ctx);
   ctx.sleep();
 }
