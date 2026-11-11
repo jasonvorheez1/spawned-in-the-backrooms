@@ -75,7 +75,7 @@ def smooth_labels(o, lab, it=2):
                 if lab[j] == 1: continue
                 if not seen[j]: seen[j] = True; st.append(j)
         touches_hair = any(lab[j] == 1 for i in comp for j in nb[i])
-        if len(comp) < 0.015 * N and touches_hair: lab[comp] = 1  # a loose eyeball island stays an eye
+        if len(comp) < 0.015 * N and touches_hair: c_ = np.array(comp); lab[c_] = np.where(lab[c_] == 2, 2, 1)  # a loose eyeball island stays an eye
     return lab
 
 def landmarks(o, lab, top_frac=None):
