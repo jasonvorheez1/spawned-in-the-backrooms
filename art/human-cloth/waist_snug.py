@@ -28,5 +28,10 @@ for v in G.data.vertices:
   v.co=v.co+delta; moved+=1; far=max(far,s)
   for k in keys: k.data[v.index].co=k.data[v.index].co+delta
 print("MOVED",moved,"max gap was",round(far,4))
+for m in G.data.materials:  # the body file carries the same slot names; Blender suffixes ours .001 and the game's slot mapping misses it
+  if m and '.' in m.name:
+    base=m.name.split('.')[0]; old=bpy.data.materials.get(base)
+    if old and old!=m: old.name=base+'_body'
+    m.name=base
 for o in bpy.data.objects: o.select_set(o in (G,GR))
 bpy.ops.export_scene.gltf(filepath=a[2],use_selection=True,export_apply=False,export_animations=False,export_morph=True,export_skins=True)
