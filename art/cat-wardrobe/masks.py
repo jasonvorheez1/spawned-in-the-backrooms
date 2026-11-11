@@ -36,7 +36,7 @@ for sex in ("f", "m"):
         keep.vertex_groups.clear()
         bpy.context.view_layer.objects.active = keep; keep.select_set(True)
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-        for v in keep.data.vertices: v.co = Vector((-v.co.y, v.co.x, v.co.z))   # the shop's paint faces -X: turned +90 deg so the face looks out the cat's front (-Y)
+        for v in keep.data.vertices: v.co = Vector((-v.co.x, -v.co.y, v.co.z))   # the shop paint faces +Y: turned 180 deg so the face looks out the cat front (-Y)
         vs = [v.co.copy() for v in keep.data.vertices]
         a = Vector([min(v[i] for v in vs) for i in range(3)]); b = Vector([max(v[i] for v in vs) for i in range(3)])
         # target box: wraps the head with 1.5 cm clearance, from just under the chin up over the ear tips
