@@ -488,6 +488,38 @@ bc-kiosk:
   model: {id: "/cdn/value.d6357a4366e614e6f359aa4d10ad71194b958861b3dfaf19b581876f1f683afc.glb"}
   physics: {body: "static", collider: "box"}
   rotation: {yaw: 90}
+bc-neon-n:
+  castShadow: false
+  feetPosition: {x: 17, y: 4.3, z: -23.93}
+  id: bc-neon-n
+  material: {color: "#ff4fd8", emissive: "#ff4fd8", emissiveIntensity: 3}
+  primitive: {depth: 0.06, height: 0.06, kind: box, width: 13.6}
+  rotation: {yaw: 0}
+  tags: [bonus-arcade]
+bc-neon-n2:
+  castShadow: false
+  feetPosition: {x: 17, y: 0.25, z: -23.93}
+  id: bc-neon-n2
+  material: {color: "#ff4fd8", emissive: "#ff4fd8", emissiveIntensity: 2.5}
+  primitive: {depth: 0.04, height: 0.04, kind: box, width: 13.6}
+  rotation: {yaw: 0}
+  tags: [bonus-arcade]
+bc-neon-s:
+  castShadow: false
+  feetPosition: {x: 17, y: 4.3, z: -6.07}
+  id: bc-neon-s
+  material: {color: "#38f4ff", emissive: "#38f4ff", emissiveIntensity: 3}
+  primitive: {depth: 0.06, height: 0.06, kind: box, width: 13.6}
+  rotation: {yaw: 180}
+  tags: [bonus-arcade]
+bc-neon-s2:
+  castShadow: false
+  feetPosition: {x: 17, y: 0.25, z: -6.07}
+  id: bc-neon-s2
+  material: {color: "#38f4ff", emissive: "#38f4ff", emissiveIntensity: 2.5}
+  primitive: {depth: 0.04, height: 0.04, kind: box, width: 13.6}
+  rotation: {yaw: 180}
+  tags: [bonus-arcade]
 bc-northglow:
   feetPosition: {x: 0, y: 8.5, z: -30.4}
   id: bc-northglow
@@ -607,6 +639,30 @@ bc-plaque-4:
   id: bc-plaque-4
   rotation: {yaw: 360}
   vector: "<svg viewBox='0 0 120 60' width='0.3m'><rect x='1' y='1' width='118' height='58' rx='3' fill='#c9a24a' stroke='#7a5a1c' stroke-width='2'/><text x='60' y='26' text-anchor='middle' font-family='serif' font-size='11' fill='#2a1d08'>Untitled No. 4, 1999</text><text x='60' y='44' text-anchor='middle' font-family='serif' font-size='9' fill='#2a1d08'>Oil on canvas</text></svg>"
+bc-poster-1:
+  children: [{feetPosition: {x: 0, y: 0, z: 0}, id: frame, material: {color: oklch(0.2 0.02 280), metalness: 0.6, roughness: 0.35}, primitive: {depth: 0.03, height: 1.32, kind: box, width: 0.92}}, {feetPosition: {x: 0, y: 0.04, z: 0.017}, id: art, material: {roughness: 0.55, texture: /cdn/value.58e4f083025b0e3807fe53134cee9f91da913df0a9eac2f01ced62e3de3a45f3.png}, primitive: {height: 1.24, kind: plane, width: 0.84}}]
+  feetPosition: {x: 13.75, y: 2.35, z: -23.96}
+  id: bc-poster-1
+  rotation: {yaw: 0}
+  tags: [bonus-arcade]
+bc-poster-2:
+  children: [{feetPosition: {x: 0, y: 0, z: 0}, id: frame, material: {color: oklch(0.2 0.02 280), metalness: 0.6, roughness: 0.35}, primitive: {depth: 0.03, height: 1.32, kind: box, width: 0.92}}, {feetPosition: {x: 0, y: 0.04, z: 0.017}, id: art, material: {roughness: 0.55, texture: /cdn/value.c431fd6a768d040ff17468d2613afbe8f2753c0edd4a283189f09d5ca32621db.png}, primitive: {height: 1.24, kind: plane, width: 0.84}}]
+  feetPosition: {x: 17.85, y: 2.35, z: -23.96}
+  id: bc-poster-2
+  rotation: {yaw: 0}
+  tags: [bonus-arcade]
+bc-poster-3:
+  children: [{feetPosition: {x: 0, y: 0, z: 0}, id: frame, material: {color: oklch(0.2 0.02 280), metalness: 0.6, roughness: 0.35}, primitive: {depth: 0.03, height: 1.32, kind: box, width: 0.92}}, {feetPosition: {x: 0, y: 0.04, z: 0.017}, id: art, material: {roughness: 0.55, texture: /cdn/value.4303bf64fc127cd42276d92467265a4e875b2586b171996439120a36fe56f613.png}, primitive: {height: 1.24, kind: plane, width: 0.84}}]
+  feetPosition: {x: 13.75, y: 2.35, z: -6.04}
+  id: bc-poster-3
+  rotation: {yaw: 180}
+  tags: [bonus-arcade]
+bc-poster-4:
+  children: [{feetPosition: {x: 0, y: 0, z: 0}, id: frame, material: {color: oklch(0.2 0.02 280), metalness: 0.6, roughness: 0.35}, primitive: {depth: 0.03, height: 1.32, kind: box, width: 0.92}}, {feetPosition: {x: 0, y: 0.04, z: 0.017}, id: art, material: {roughness: 0.55, texture: /cdn/value.802d37d0dd2a91d0298395272c5c179aaffd4a3dc3ce3bfebf31428a7ba9f793.png}, primitive: {height: 1.24, kind: plane, width: 0.84}}]
+  feetPosition: {x: 17.85, y: 2.35, z: -6.04}
+  id: bc-poster-4
+  rotation: {yaw: 180}
+  tags: [bonus-arcade]
 bc-poster-w12:
   castShadow: false
   feetPosition: {x: -9.94, y: 7.1, z: 9.6}
