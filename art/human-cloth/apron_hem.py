@@ -19,13 +19,13 @@ ap = next(o for o in bpy.context.scene.objects if o.type=="MESH" and o.name.star
 mw, mi = ap.matrix_world, ap.matrix_world.inverted()
 keys = ap.data.shape_keys.key_blocks if ap.data.shape_keys else None
 moved = 0
-CLEAR = 0.015
+CLEAR = 0.02
 for v in ap.data.vertices:
     base = keys[0].data[v.index].co if keys else v.co
     p = mw @ base
     if p.z > 1.02 or p.y > 0.02: continue          # only the front panel below the waist
     zb, xb = int(math.floor(p.z/BZ)), int(math.floor(p.x/BX))
-    ys = [front[k] for k in ((zb+dz, xb+dx) for dz in (-1,0,1) for dx in (-1,0,1)) if k in front]
+    ys = [front[k] for k in ((zb+dz, xb+dx) for dz in (-2,-1,0,1,2) for dx in (-2,-1,0,1,2)) if k in front]
     if not ys: continue
     want = min(ys) - CLEAR
     if p.y <= want: continue
