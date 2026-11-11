@@ -117,6 +117,7 @@ print("TARGET front", tuple(round(x, 3) for x in T["f"]), "ears", T["aL"].round(
 
 # ---------- raw sculpt ----------
 raw = imp(RAW); raw.name = "hair"
+_b = bmesh.new(); _b.from_mesh(raw.data); bmesh.ops.remove_doubles(_b, verts=_b.verts, dist=1e-6); _b.to_mesh(raw.data); _b.free()  # glTF splits at UV seams: weld so islands are real
 rlab = smooth_labels(raw, classify(face_rgb(raw)))
 R = landmarks(raw, rlab)
 print("RAW hair faces", int((rlab == 1).sum()), "/", len(rlab), "front", tuple(round(x, 3) for x in R["f"]))
