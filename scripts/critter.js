@@ -5,7 +5,7 @@ import { plainLook, honest, wornTokens, parseCloth } from './lib/clothes.js'
 import C from './lib/data/critter.yml'
 import { standUp } from './lib/seat.js'
 const SCRIPT = 'scripts/critter2-geo.js'
-import { FURRY_HEAD, armSplay, bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, restyleQueue, restyleStep, STYLE_V, seatHead, clearAppearance, humanBodyMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard, speciesOf } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
+import { isNewCat, catLook, seatCat, FURRY_HEAD, armSplay, bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, restyleQueue, restyleStep, STYLE_V, seatHead, clearAppearance, humanBodyMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard, speciesOf } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
 const LID_SCALE = 1000 // the lids are modelled this many times too small (scripts/critter2-geo.js)
 const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 import { weaponBody, HOLD } from './lib/weapon-look.js'
@@ -29,9 +29,10 @@ function applyBones(ctx) {
   }
   else if (ses.lids) { b.LidL = { scale: LID_SCALE }; b.LidR = { scale: LID_SCALE } }
   if (ses.twitch) b[ses.twitch] = { rotate: [0, 0, ses.twitchDir * 24] }
-  if (!HUMAN && !ses.cachedWorn) b.Head = { scale: (ses.headS || 1) * FURRY_HEAD } // furry: the Dandy big head, times the player's own head slider
+  const newCat = isNewCat(ses.cachedParams) // the new Tripo cat is drawn at its own proportions: no Dandy head blow-up, no arm splay
+  if (!HUMAN && !ses.cachedWorn && !newCat) b.Head = { scale: (ses.headS || 1) * FURRY_HEAD } // furry: the Dandy big head, times the player's own head slider
   if (ses.tailS && ses.tailS !== 1) b.Tail = { scale: ses.tailS }
-  if (!HUMAN && !ses.cachedWorn) Object.assign(b, armSplay()) // arms clear the hips and skirts (critter-model ARM_SPLAY)
+  if (!HUMAN && !ses.cachedWorn && !newCat) Object.assign(b, armSplay()) // arms clear the hips and skirts (critter-model ARM_SPLAY)
   if (ses.pose) Object.assign(b, ses.pose) // the hands on a gun: IK reach points (scripts/lib/body3.js)
   ctx.self.bones = b
 }
@@ -274,6 +275,7 @@ export function update(ctx) {
   if(!worn && HUMAN && ses.cachedParams)humanFaceTick(ctx,face)
   if (worn && ctx.getObject(ctx.self.id + '/' + HEAD_ID)) dropHead(ctx, ctx.self) // a worn body never keeps the critter head, whoever put it back
   if (MESH && !HUMAN && !worn && ses.headFace !== face) { ses.headFace = face; applyBones(ctx) }
+  if (MESH && !HUMAN && !worn && isNewCat(ses.cachedParams) && ses.catFace !== face) { ses.catFace = face; ctx.self.model = bodyModel({ ...ses.cachedParams, expr: face }) } // the new cat's face is a picture in its skin: a mood swaps it
   const hs = Number(l.headS) || 1, ts = Number(l.tailS) || 1
   if (!worn && !HUMAN && (hs !== (ses.headS || 1) || ts !== (ses.tailS || 1))) { ses.headS = hs; ses.tailS = ts; applyBones(ctx) }
 
