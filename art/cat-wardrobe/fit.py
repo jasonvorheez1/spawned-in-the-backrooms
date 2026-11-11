@@ -75,7 +75,7 @@ import bmesh
 bm = bmesh.new(); bm.from_mesh(me); bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bm.to_mesh(me); bm.free()   # weld Tripo's UV-seam splits so a push never tears them
 # push out of the skin
 dg = bpy.context.evaluated_depsgraph_get(); bvh = BVHTree.FromObject(body, dg)
-M = 0.007 if KIND != "boots" else 0.004; moved = 0
+moved = 0; M = {"boots": 0.004, "top": 0.013}.get(KIND, 0.007)   # a top rides well clear: its cloth bends by position, the skin by its own weights, and the gap covers the difference
 for it in range(3):
     for v in me.vertices:
         hit = bvh.find_nearest(v.co)
@@ -155,7 +155,7 @@ if KIND == "top":   # weights by where the cloth sits, never by the nearest skin
             t[n] = t.get(n, 0) + ge.weight
         ts = sum(t.values())
         if ts > 0.5:
-            for k in set(t) | set(w): w[k] = 0.7 * t.get(k, 0) / ts + 0.3 * w.get(k, 0)
+            pass   # tried blending these in (0.7): his left back still drags with the tail side, so position weights alone stand
         setw(v, w)
 bpy.ops.object.vertex_group_normalize_all(lock_active=False); bpy.ops.object.vertex_group_limit_total(limit=4)
 g.parent = arm; am = g.modifiers.new("Armature", "ARMATURE"); am.object = arm
