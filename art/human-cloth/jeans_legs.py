@@ -107,6 +107,7 @@ for sd in 'LR':
     push=0.003*(1 if (sd=='L')==(lsign>0) else -1)/M.to_scale().x
     cp={}
     def cv(v):
+      return v  # sewn onto the slot's own edge verts: one closed skin per leg, nothing for a stride to open
       if v not in cp:
         c=bm.verts.new(v.co.copy()); c.co.x+=push
         for g,x in v[dl].items(): c[dl][g]=x
