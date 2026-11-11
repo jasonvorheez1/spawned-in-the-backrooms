@@ -548,7 +548,7 @@ for key, (co, uv_) in grid.items(): vid[key] = len(verts); verts.append(co[:]); 
 for j in range(NZ):
     for i in range(NX):
         q = [(i, j), (i + 1, j), (i + 1, j + 1), (i, j + 1)]
-        if all(kk in vid for kk in q) and max(grid[kk][0].y for kk in q) - min(grid[kk][0].y for kk in q) < 0.015 and all(hn.get(kk, Vector((0, -1, 0))).z > -0.45 for kk in q):   # no flap bridging chin to neck: the in-game beak tip
+        if all(kk in vid for kk in q) and max(grid[kk][0].y for kk in q) - min(grid[kk][0].y for kk in q) < 0.03:
             faces.append([vid[kk] for kk in q])
 fm = bpy.data.meshes.new("Face"); fm.from_pydata(verts, [], faces); fm.update()
 fuv = fm.uv_layers.new(name="UVMap")
