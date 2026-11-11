@@ -72,3 +72,14 @@ def _tripo_show(scene, *a):
     t = _TRI.get("obj")
     if t and t.name in bpy.data.objects: t.hide_render = False
 bpy.app.handlers.render_pre.append(_tripo_show)
+def _tripo_dbg(scene, *a):
+    t = _TRI.get("obj")
+    if not t or _TRI.get("dbg"): return
+    _TRI["dbg"] = 1
+    try:
+        bb = [t.matrix_world @ Vector(c) for c in t.bound_box]
+        log("TRIPO DBG hide", t.hide_render, t.hide_get(), "in scene", t.name in scene.objects, "verts", len(t.data.vertices), "faces", len(t.data.polygons),
+            "zmin", round(min(p.z for p in bb), 3), "zmax", round(max(p.z for p in bb), 3), "ymin", round(min(p.y for p in bb), 3), "ymax", round(max(p.y for p in bb), 3),
+            "mats", [(m.name, getattr(m, "blend_method", None)) for m in t.data.materials if m], "HC", tuple(round(x, 3) for x in HC))
+    except Exception as e: log("TRIPO DBG err", e)
+bpy.app.handlers.render_pre.append(_tripo_dbg)
