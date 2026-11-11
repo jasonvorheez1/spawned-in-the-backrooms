@@ -180,6 +180,11 @@ def fit_garment(body, garment, kind):
     tris = [tuple(t.vertices) for t in mesh.loop_triangles
             if all(sum(w for n,w in weights[i].items() if 'Tail' in n) < .2 for i in t.vertices)]
     skin = BVHTree.FromPolygons(points, tris, all_triangles=True)
+    feet = {}
+    if kind == "boots":
+        for side,sign in (("Left",1),("Right",-1)):
+            foot_tris = [t for t in tris if all(sign*points[i].x > .005 and points[i].z < .20 for i in t)]
+            feet[side] = (BVHTree.FromPolygons(points,foot_tris,all_triangles=True),foot_tris)
     inv = garment.matrix_world.inverted()
     clearance = {"hoodie": .018, "jacket": .018, "boots": .011, "skirt": .012}[kind]
     top = kind in ("hoodie", "jacket")
@@ -192,10 +197,19 @@ def fit_garment(body, garment, kind):
     samples = []
     for v in gm.vertices:
         world = garment.matrix_world @ v.co
-        p, n, face, distance = skin.find_nearest(world)
-        samples.append((world,p,n,face,distance))
+        old = {garment.vertex_groups[g.group].name:g.weight for g in v.groups}
+        side = None
+        tree, triangles = skin, tris
+        if kind == "boots":
+            # Use the foot assigned by the original boot rig, even where the inner
+            # sole is physically closer to the other foot. Otherwise it tears in a stride.
+            sides = ("Left","Right")
+            side = max(sides,key=lambda s:sum(w for name,w in old.items() if ":"+s in name))
+            tree, triangles = feet[side]
+        p, n, face, distance = tree.find_nearest(world)
+        samples.append((world,p,n,triangles[face] if face is not None else None,distance,old,side))
     adjusted = 0
-    for v, (world,p,n,face,distance) in zip(gm.vertices,samples):
+    for v, (world,p,n,ids,distance,old,boot_side) in zip(gm.vertices,samples):
         if kind == "skirt":
             # Give the pleats room to clear a forward knee without making the waistband baggy.
             flare = .032 * (1-smoothstep(.255,.43,world.z))
@@ -227,13 +241,11 @@ def fit_garment(body, garment, kind):
                 leg.add([v.index], t, "REPLACE")
                 hips.add([v.index], 1-t, "REPLACE")
             continue
-        ids = tris[face]
         factors = poly_3d_calc([points[i] for i in ids], p)
         target = {}
-        old = {garment.vertex_groups[g.group].name:g.weight for g in v.groups}
         for i,factor in zip(ids,factors):
             for name,w in weights[i].items():
-                if name in groups and "Tail" not in name:
+                if name in groups and "Tail" not in name and (not boot_side or ":"+boot_side in name):
                     target[name] = target.get(name,0) + max(0,factor)*w
         total = sum(target.values())
         if total < .4:

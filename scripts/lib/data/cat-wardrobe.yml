@@ -32,7 +32,7 @@ models:
   hoodie: { under: longsleeve, pat: weave, f: /cdn/value.fb44171ccb1af34ec58ddd789e24e0052ad7848bb370f5172bae2bc81a49fdb1.glb, m: /cdn/value.6cdb6401cc5c7c1ee06bd20b61ecbf7085566161f5734f09c763f2953c9b2439.glb }
   jacket: { under: longsleeve, pat: weave, f: /cdn/value.c8ddb6156015a2c580388bdd3931976ef22f46dae05186a0b0420ac785a3a2a4.glb, m: /cdn/value.3a3d33796214fdbfdf6336e8789eb77caa9f90fe65563970dbe5d3465cd9b23b.glb }
   skirt:  { under: briefs, pat: weave, f: /cdn/value.4c35fdb6dbc6b4cf9f4ea08910bb52efd671502894331171245ade6b9925c16b.glb, m: /cdn/value.53394702ea12ada72fc55f081ce28548c4bfa109de1be87b3b03f5692ef9c0cf.glb }
-  boots:  { under: socks, pat: weave, f: /cdn/value.67796aed215e26f07a3c3f527e8f9f1775658cefd9b293db7b6007cfbc8bb17d.glb, m: /cdn/value.7fa7e884e55b39c2bde1e34a1d509cf9a12c176ef3c8b894c4248584c1fc6c73.glb }
+  boots:  { under: socks, pat: weave, f: /cdn/value.c2db8d8db820966a6b0a93780027cfce9ce3a890f1da6ba20bfb0b56e4a86017.glb, m: /cdn/value.dcfebd4370d0c0aa932157cae6acd02db2afb18e59cc83e6ef34261ed69176f2.glb }
 defaults:
   f: { topw: crop, top: "#f3ead8", botw: shorts, bottom: "#5b7fb0" }
   m: { topw: tee, top: "#9b9da1", botw: shorts, bottom: "#2f3d5c" }

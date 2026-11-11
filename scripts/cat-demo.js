@@ -4,7 +4,10 @@ export function onSpawn(ctx) { dress(ctx) }
 export function update(ctx) {
   // A demo standing in an open debug room also picks up a new wardrobe build.
   const sex = ctx.self.state.sex === 'm' ? 'm' : 'f'
-  if (ctx.self.model?.id !== CAT_BODY[sex].glb) dress(ctx)
+  const changedBody = ctx.self.model?.id !== CAT_BODY[sex].glb
+  const changedClothes = catChildren(sex, ctx.self.state.look).some(child =>
+    ctx.getObject(ctx.self.id + '/' + child.id)?.model?.id !== child.model.id)
+  if (changedBody || changedClothes) dress(ctx)
   ctx.sleep(2)
 }
 export const ears = { redress: (ctx) => dress(ctx) }
