@@ -108,7 +108,7 @@ f:
     Ward_divehelm: "/cdn/value.5b9c836cec73932a9c9c379f28f80f5db3fb73fe860ba86ca9fac2483bfc8e5c.glb"
     Ward_dress: "/cdn/value.7b7dc1853c4404f1c5853c51a558efae6ab17bb9e0b37dc477fc4c17b12b256b.glb"
     Ward_flower: "/cdn/value.a65b66f31936f5186ff86e9d079dae511b16ac5f33e7e76eb137fa2029e1a119.glb"
-    Ward_glasses: "/cdn/value.ee32b8d02a60508c8e620611d21ce5653732acefe8cff4fcb32960f9356ee06b.glb"  # Nov 11 head keys (eyewear_keys.py, matched across the older Head bone); before fb961ffb
+    Ward_glasses: "/cdn/value.be4a56f88f6fec38d95f9ded88621b6f98aaad6b7de9d1684c7223b16b190f59.glb"  # Nov 11 head keys (eyewear_keys.py, matched across the older Head bone); before fb961ffb
     Ward_gmhoodie: "/cdn/value.8da9b2c1fbb984dd39a5952f2442de8b717273505ad71a68e74b6d92532f16f4.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
     Ward_gown: "/cdn/value.deed690aef8696a8ae1c5eec2768690106dcb83ec009e2f9dbb0ffef61f13b7f.glb"
     Ward_headphones: "/cdn/value.c9aae2ae918914989cd90c8d8b5f84d682752fc14cb2234e34de20d4d2a2291f.glb"
