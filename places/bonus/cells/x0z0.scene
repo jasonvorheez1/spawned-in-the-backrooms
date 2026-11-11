@@ -1788,7 +1788,7 @@ esc-down-step-00:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 0.17612076009901825, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 9.334400285247968, easing: linear, value: -0.09284814814814812}], z: [{duration: 0.17612076009901825, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 9.334400285247968, easing: linear, value: -0.37037037037037035}]}
+  state: {dir: down, y: [{duration: 0.17612076009901825, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 9.334400285247968, easing: linear, value: -0.09284814814814812}], z: [{duration: 0.17612076009901825, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 9.334400285247968, easing: linear, value: -0.37037037037037035}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-01:
   behavior: scripts/esc-step.js
@@ -1798,7 +1798,7 @@ esc-down-step-01:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 0.5283622802970548, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 8.982158765049931, easing: linear, value: 0.11085555555555557}], z: [{duration: 0.5283622802970548, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 8.982158765049931, easing: linear, value: -0.7407407407407407}]}
+  state: {dir: down, y: [{duration: 0.5283622802970548, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 8.982158765049931, easing: linear, value: 0.11085555555555557}], z: [{duration: 0.5283622802970548, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 8.982158765049931, easing: linear, value: -0.7407407407407407}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-02:
   behavior: scripts/esc-step.js
@@ -1808,7 +1808,7 @@ esc-down-step-02:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 0.8806038004950912, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 8.629917244851896, easing: linear, value: 0.3145592592592592}], z: [{duration: 0.8806038004950912, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 8.629917244851896, easing: linear, value: -1.111111111111111}]}
+  state: {dir: down, y: [{duration: 0.8806038004950912, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 8.629917244851896, easing: linear, value: 0.3145592592592592}], z: [{duration: 0.8806038004950912, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 8.629917244851896, easing: linear, value: -1.111111111111111}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-03:
   behavior: scripts/esc-step.js
@@ -1818,7 +1818,7 @@ esc-down-step-03:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 1.2328453206931278, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 8.277675724653859, easing: linear, value: 0.518262962962963}], z: [{duration: 1.2328453206931278, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 8.277675724653859, easing: linear, value: -1.4814814814814814}]}
+  state: {dir: down, y: [{duration: 1.2328453206931278, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 8.277675724653859, easing: linear, value: 0.518262962962963}], z: [{duration: 1.2328453206931278, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 8.277675724653859, easing: linear, value: -1.4814814814814814}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-04:
   behavior: scripts/esc-step.js
@@ -1828,7 +1828,7 @@ esc-down-step-04:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 1.5850868408911643, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 7.925434204455823, easing: linear, value: 0.7219666666666666}], z: [{duration: 1.5850868408911643, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 7.925434204455823, easing: linear, value: -1.8518518518518516}]}
+  state: {dir: down, y: [{duration: 1.5850868408911643, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 7.925434204455823, easing: linear, value: 0.7219666666666666}], z: [{duration: 1.5850868408911643, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 7.925434204455823, easing: linear, value: -1.8518518518518516}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-05:
   behavior: scripts/esc-step.js
@@ -1838,7 +1838,7 @@ esc-down-step-05:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 1.9373283610892007, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 7.573192684257786, easing: linear, value: 0.9256703703703703}], z: [{duration: 1.9373283610892007, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 7.573192684257786, easing: linear, value: -2.222222222222222}]}
+  state: {dir: down, y: [{duration: 1.9373283610892007, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 7.573192684257786, easing: linear, value: 0.9256703703703703}], z: [{duration: 1.9373283610892007, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 7.573192684257786, easing: linear, value: -2.222222222222222}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-06:
   behavior: scripts/esc-step.js
@@ -1848,7 +1848,7 @@ esc-down-step-06:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 2.2895698812872376, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 7.220951164059749, easing: linear, value: 1.1293740740740743}], z: [{duration: 2.2895698812872376, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 7.220951164059749, easing: linear, value: -2.5925925925925926}]}
+  state: {dir: down, y: [{duration: 2.2895698812872376, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 7.220951164059749, easing: linear, value: 1.1293740740740743}], z: [{duration: 2.2895698812872376, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 7.220951164059749, easing: linear, value: -2.5925925925925926}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-07:
   behavior: scripts/esc-step.js
@@ -1858,7 +1858,7 @@ esc-down-step-07:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 2.641811401485274, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 6.868709643861712, easing: linear, value: 1.333077777777778}], z: [{duration: 2.641811401485274, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 6.868709643861712, easing: linear, value: -2.962962962962963}]}
+  state: {dir: down, y: [{duration: 2.641811401485274, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 6.868709643861712, easing: linear, value: 1.333077777777778}], z: [{duration: 2.641811401485274, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 6.868709643861712, easing: linear, value: -2.962962962962963}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-08:
   behavior: scripts/esc-step.js
@@ -1868,7 +1868,7 @@ esc-down-step-08:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 2.9940529216833105, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 6.516468123663676, easing: linear, value: 1.5367814814814815}], z: [{duration: 2.9940529216833105, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 6.516468123663676, easing: linear, value: -3.333333333333333}]}
+  state: {dir: down, y: [{duration: 2.9940529216833105, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 6.516468123663676, easing: linear, value: 1.5367814814814815}], z: [{duration: 2.9940529216833105, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 6.516468123663676, easing: linear, value: -3.333333333333333}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-09:
   behavior: scripts/esc-step.js
@@ -1878,7 +1878,7 @@ esc-down-step-09:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 3.346294441881347, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 6.164226603465639, easing: linear, value: 1.7404851851851852}], z: [{duration: 3.346294441881347, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 6.164226603465639, easing: linear, value: -3.7037037037037033}]}
+  state: {dir: down, y: [{duration: 3.346294441881347, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 6.164226603465639, easing: linear, value: 1.7404851851851852}], z: [{duration: 3.346294441881347, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 6.164226603465639, easing: linear, value: -3.7037037037037033}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-10:
   behavior: scripts/esc-step.js
@@ -1888,7 +1888,7 @@ esc-down-step-10:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 3.6985359620793834, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 5.8119850832676025, easing: linear, value: 1.944188888888889}], z: [{duration: 3.6985359620793834, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 5.8119850832676025, easing: linear, value: -4.074074074074074}]}
+  state: {dir: down, y: [{duration: 3.6985359620793834, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 5.8119850832676025, easing: linear, value: 1.944188888888889}], z: [{duration: 3.6985359620793834, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 5.8119850832676025, easing: linear, value: -4.074074074074074}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-11:
   behavior: scripts/esc-step.js
@@ -1898,7 +1898,7 @@ esc-down-step-11:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 4.05077748227742, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 5.4597435630695665, easing: linear, value: 2.1478925925925925}], z: [{duration: 4.05077748227742, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 5.4597435630695665, easing: linear, value: -4.444444444444444}]}
+  state: {dir: down, y: [{duration: 4.05077748227742, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 5.4597435630695665, easing: linear, value: 2.1478925925925925}], z: [{duration: 4.05077748227742, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 5.4597435630695665, easing: linear, value: -4.444444444444444}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-12:
   behavior: scripts/esc-step.js
@@ -1908,7 +1908,7 @@ esc-down-step-12:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 4.403019002475457, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 5.10750204287153, easing: linear, value: 2.3515962962962966}], z: [{duration: 4.403019002475457, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 5.10750204287153, easing: linear, value: -4.814814814814815}]}
+  state: {dir: down, y: [{duration: 4.403019002475457, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 5.10750204287153, easing: linear, value: 2.3515962962962966}], z: [{duration: 4.403019002475457, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 5.10750204287153, easing: linear, value: -4.814814814814815}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-13:
   behavior: scripts/esc-step.js
@@ -1918,7 +1918,7 @@ esc-down-step-13:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 4.755260522673494, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 4.755260522673494, easing: linear, value: 2.5553}], z: [{duration: 4.755260522673494, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 4.755260522673494, easing: linear, value: -5.185185185185185}]}
+  state: {dir: down, y: [{duration: 4.755260522673494, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 4.755260522673494, easing: linear, value: 2.5553}], z: [{duration: 4.755260522673494, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 4.755260522673494, easing: linear, value: -5.185185185185185}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-14:
   behavior: scripts/esc-step.js
@@ -1928,7 +1928,7 @@ esc-down-step-14:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 5.10750204287153, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 4.403019002475457, easing: linear, value: 2.7590037037037036}], z: [{duration: 5.10750204287153, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 4.403019002475457, easing: linear, value: -5.555555555555555}]}
+  state: {dir: down, y: [{duration: 5.10750204287153, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 4.403019002475457, easing: linear, value: 2.7590037037037036}], z: [{duration: 5.10750204287153, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 4.403019002475457, easing: linear, value: -5.555555555555555}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-15:
   behavior: scripts/esc-step.js
@@ -1938,7 +1938,7 @@ esc-down-step-15:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 5.459743563069566, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 4.050777482277421, easing: linear, value: 2.9627074074074073}], z: [{duration: 5.459743563069566, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 4.050777482277421, easing: linear, value: -5.925925925925926}]}
+  state: {dir: down, y: [{duration: 5.459743563069566, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 4.050777482277421, easing: linear, value: 2.9627074074074073}], z: [{duration: 5.459743563069566, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 4.050777482277421, easing: linear, value: -5.925925925925926}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-16:
   behavior: scripts/esc-step.js
@@ -1948,7 +1948,7 @@ esc-down-step-16:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 5.8119850832676025, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 3.698535962079384, easing: linear, value: 3.166411111111111}], z: [{duration: 5.8119850832676025, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 3.698535962079384, easing: linear, value: -6.296296296296296}]}
+  state: {dir: down, y: [{duration: 5.8119850832676025, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 3.698535962079384, easing: linear, value: 3.166411111111111}], z: [{duration: 5.8119850832676025, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 3.698535962079384, easing: linear, value: -6.296296296296296}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-17:
   behavior: scripts/esc-step.js
@@ -1958,7 +1958,7 @@ esc-down-step-17:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 6.1642266034656386, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 3.3462944418813474, easing: linear, value: 3.370114814814815}], z: [{duration: 6.1642266034656386, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 3.3462944418813474, easing: linear, value: -6.666666666666666}]}
+  state: {dir: down, y: [{duration: 6.1642266034656386, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 3.3462944418813474, easing: linear, value: 3.370114814814815}], z: [{duration: 6.1642266034656386, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 3.3462944418813474, easing: linear, value: -6.666666666666666}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-18:
   behavior: scripts/esc-step.js
@@ -1968,7 +1968,7 @@ esc-down-step-18:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 6.5164681236636754, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 2.9940529216833114, easing: linear, value: 3.5738185185185185}], z: [{duration: 6.5164681236636754, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 2.9940529216833114, easing: linear, value: -7.037037037037036}]}
+  state: {dir: down, y: [{duration: 6.5164681236636754, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 2.9940529216833114, easing: linear, value: 3.5738185185185185}], z: [{duration: 6.5164681236636754, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 2.9940529216833114, easing: linear, value: -7.037037037037036}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-19:
   behavior: scripts/esc-step.js
@@ -1978,7 +1978,7 @@ esc-down-step-19:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 6.8687096438617115, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 2.641811401485275, easing: linear, value: 3.7775222222222222}], z: [{duration: 6.8687096438617115, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 2.641811401485275, easing: linear, value: -7.4074074074074066}]}
+  state: {dir: down, y: [{duration: 6.8687096438617115, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 2.641811401485275, easing: linear, value: 3.7775222222222222}], z: [{duration: 6.8687096438617115, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 2.641811401485275, easing: linear, value: -7.4074074074074066}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-20:
   behavior: scripts/esc-step.js
@@ -1988,7 +1988,7 @@ esc-down-step-20:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 7.220951164059749, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 2.2895698812872376, easing: linear, value: 3.9812259259259264}], z: [{duration: 7.220951164059749, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 2.2895698812872376, easing: linear, value: -7.777777777777778}]}
+  state: {dir: down, y: [{duration: 7.220951164059749, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 2.2895698812872376, easing: linear, value: 3.9812259259259264}], z: [{duration: 7.220951164059749, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 2.2895698812872376, easing: linear, value: -7.777777777777778}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-21:
   behavior: scripts/esc-step.js
@@ -1998,7 +1998,7 @@ esc-down-step-21:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 7.573192684257785, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 1.9373283610892011, easing: linear, value: 4.18492962962963}], z: [{duration: 7.573192684257785, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 1.9373283610892011, easing: linear, value: -8.148148148148149}]}
+  state: {dir: down, y: [{duration: 7.573192684257785, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 1.9373283610892011, easing: linear, value: 4.18492962962963}], z: [{duration: 7.573192684257785, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 1.9373283610892011, easing: linear, value: -8.148148148148149}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-22:
   behavior: scripts/esc-step.js
@@ -2008,7 +2008,7 @@ esc-down-step-22:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 7.925434204455821, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 1.5850868408911656, easing: linear, value: 4.388633333333333}], z: [{duration: 7.925434204455821, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 1.5850868408911656, easing: linear, value: -8.518518518518517}]}
+  state: {dir: down, y: [{duration: 7.925434204455821, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 1.5850868408911656, easing: linear, value: 4.388633333333333}], z: [{duration: 7.925434204455821, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 1.5850868408911656, easing: linear, value: -8.518518518518517}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-23:
   behavior: scripts/esc-step.js
@@ -2018,7 +2018,7 @@ esc-down-step-23:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 8.277675724653857, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 1.2328453206931291, easing: linear, value: 4.592337037037036}], z: [{duration: 8.277675724653857, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 1.2328453206931291, easing: linear, value: -8.888888888888888}]}
+  state: {dir: down, y: [{duration: 8.277675724653857, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 1.2328453206931291, easing: linear, value: 4.592337037037036}], z: [{duration: 8.277675724653857, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 1.2328453206931291, easing: linear, value: -8.888888888888888}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-24:
   behavior: scripts/esc-step.js
@@ -2028,7 +2028,7 @@ esc-down-step-24:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 8.629917244851896, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 0.880603800495091, easing: linear, value: 4.796040740740741}], z: [{duration: 8.629917244851896, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 0.880603800495091, easing: linear, value: -9.25925925925926}]}
+  state: {dir: down, y: [{duration: 8.629917244851896, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 0.880603800495091, easing: linear, value: 4.796040740740741}], z: [{duration: 8.629917244851896, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 0.880603800495091, easing: linear, value: -9.25925925925926}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-25:
   behavior: scripts/esc-step.js
@@ -2038,7 +2038,7 @@ esc-down-step-25:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 8.982158765049931, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 0.5283622802970546, easing: linear, value: 4.9997444444444445}], z: [{duration: 8.982158765049931, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 0.5283622802970546, easing: linear, value: -9.62962962962963}]}
+  state: {dir: down, y: [{duration: 8.982158765049931, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 0.5283622802970546, easing: linear, value: 4.9997444444444445}], z: [{duration: 8.982158765049931, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 0.5283622802970546, easing: linear, value: -9.62962962962963}]}
   tags: [bonus-mall, escalator-step]
 esc-down-step-26:
   behavior: scripts/esc-step.js
@@ -2048,7 +2048,7 @@ esc-down-step-26:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 9.334400285247968, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 0.1761207600990182, easing: linear, value: 5.203448148148149}], z: [{duration: 9.334400285247968, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 0.1761207600990182, easing: linear, value: -10}]}
+  state: {dir: down, y: [{duration: 9.334400285247968, easing: linear, value: -0.19469999999999998}, {duration: 0.001, easing: linear, value: 5.3053}, {duration: 0.1761207600990182, easing: linear, value: 5.203448148148149}], z: [{duration: 9.334400285247968, easing: linear, value: -0.18518518518518517}, {duration: 0.001, easing: linear, value: -10.185185185185185}, {duration: 0.1761207600990182, easing: linear, value: -10}]}
   tags: [bonus-mall, escalator-step]
 esc-up-hum:
   audio: {clip: /cdn/moodboard-realistic-gritty/sfx-mall-escalator-motor-hum-and-soft-step-clatter-loop.mp3, gain: 0.18, loop: true, maxDistance: 14, spatial: true}
@@ -2063,7 +2063,7 @@ esc-up-step-00:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 9.334400285247968, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 0.17612076009901825, easing: linear, value: -0.09284814814814812}], z: [{duration: 9.334400285247968, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 0.17612076009901825, easing: linear, value: -0.37037037037037035}]}
+  state: {dir: up, y: [{duration: 9.334400285247968, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 0.17612076009901825, easing: linear, value: -0.09284814814814812}], z: [{duration: 9.334400285247968, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 0.17612076009901825, easing: linear, value: -0.37037037037037035}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-01:
   behavior: scripts/esc-step.js
@@ -2073,7 +2073,7 @@ esc-up-step-01:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 8.982158765049931, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 0.5283622802970548, easing: linear, value: 0.11085555555555557}], z: [{duration: 8.982158765049931, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 0.5283622802970548, easing: linear, value: -0.7407407407407407}]}
+  state: {dir: up, y: [{duration: 8.982158765049931, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 0.5283622802970548, easing: linear, value: 0.11085555555555557}], z: [{duration: 8.982158765049931, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 0.5283622802970548, easing: linear, value: -0.7407407407407407}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-02:
   behavior: scripts/esc-step.js
@@ -2083,7 +2083,7 @@ esc-up-step-02:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 8.629917244851896, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 0.8806038004950912, easing: linear, value: 0.3145592592592592}], z: [{duration: 8.629917244851896, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 0.8806038004950912, easing: linear, value: -1.111111111111111}]}
+  state: {dir: up, y: [{duration: 8.629917244851896, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 0.8806038004950912, easing: linear, value: 0.3145592592592592}], z: [{duration: 8.629917244851896, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 0.8806038004950912, easing: linear, value: -1.111111111111111}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-03:
   behavior: scripts/esc-step.js
@@ -2093,7 +2093,7 @@ esc-up-step-03:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 8.277675724653859, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 1.2328453206931278, easing: linear, value: 0.518262962962963}], z: [{duration: 8.277675724653859, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 1.2328453206931278, easing: linear, value: -1.4814814814814814}]}
+  state: {dir: up, y: [{duration: 8.277675724653859, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 1.2328453206931278, easing: linear, value: 0.518262962962963}], z: [{duration: 8.277675724653859, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 1.2328453206931278, easing: linear, value: -1.4814814814814814}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-04:
   behavior: scripts/esc-step.js
@@ -2103,7 +2103,7 @@ esc-up-step-04:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 7.925434204455823, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 1.5850868408911643, easing: linear, value: 0.7219666666666666}], z: [{duration: 7.925434204455823, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 1.5850868408911643, easing: linear, value: -1.8518518518518516}]}
+  state: {dir: up, y: [{duration: 7.925434204455823, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 1.5850868408911643, easing: linear, value: 0.7219666666666666}], z: [{duration: 7.925434204455823, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 1.5850868408911643, easing: linear, value: -1.8518518518518516}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-05:
   behavior: scripts/esc-step.js
@@ -2113,7 +2113,7 @@ esc-up-step-05:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 7.573192684257786, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 1.9373283610892007, easing: linear, value: 0.9256703703703703}], z: [{duration: 7.573192684257786, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 1.9373283610892007, easing: linear, value: -2.222222222222222}]}
+  state: {dir: up, y: [{duration: 7.573192684257786, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 1.9373283610892007, easing: linear, value: 0.9256703703703703}], z: [{duration: 7.573192684257786, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 1.9373283610892007, easing: linear, value: -2.222222222222222}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-06:
   behavior: scripts/esc-step.js
@@ -2123,7 +2123,7 @@ esc-up-step-06:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 7.220951164059749, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 2.2895698812872376, easing: linear, value: 1.1293740740740743}], z: [{duration: 7.220951164059749, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 2.2895698812872376, easing: linear, value: -2.5925925925925926}]}
+  state: {dir: up, y: [{duration: 7.220951164059749, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 2.2895698812872376, easing: linear, value: 1.1293740740740743}], z: [{duration: 7.220951164059749, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 2.2895698812872376, easing: linear, value: -2.5925925925925926}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-07:
   behavior: scripts/esc-step.js
@@ -2133,7 +2133,7 @@ esc-up-step-07:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 6.868709643861712, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 2.641811401485274, easing: linear, value: 1.333077777777778}], z: [{duration: 6.868709643861712, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 2.641811401485274, easing: linear, value: -2.962962962962963}]}
+  state: {dir: up, y: [{duration: 6.868709643861712, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 2.641811401485274, easing: linear, value: 1.333077777777778}], z: [{duration: 6.868709643861712, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 2.641811401485274, easing: linear, value: -2.962962962962963}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-08:
   behavior: scripts/esc-step.js
@@ -2143,7 +2143,7 @@ esc-up-step-08:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 6.516468123663676, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 2.9940529216833105, easing: linear, value: 1.5367814814814815}], z: [{duration: 6.516468123663676, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 2.9940529216833105, easing: linear, value: -3.333333333333333}]}
+  state: {dir: up, y: [{duration: 6.516468123663676, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 2.9940529216833105, easing: linear, value: 1.5367814814814815}], z: [{duration: 6.516468123663676, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 2.9940529216833105, easing: linear, value: -3.333333333333333}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-09:
   behavior: scripts/esc-step.js
@@ -2153,7 +2153,7 @@ esc-up-step-09:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 6.164226603465639, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 3.346294441881347, easing: linear, value: 1.7404851851851852}], z: [{duration: 6.164226603465639, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 3.346294441881347, easing: linear, value: -3.7037037037037033}]}
+  state: {dir: up, y: [{duration: 6.164226603465639, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 3.346294441881347, easing: linear, value: 1.7404851851851852}], z: [{duration: 6.164226603465639, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 3.346294441881347, easing: linear, value: -3.7037037037037033}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-10:
   behavior: scripts/esc-step.js
@@ -2163,7 +2163,7 @@ esc-up-step-10:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 5.8119850832676025, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 3.6985359620793834, easing: linear, value: 1.944188888888889}], z: [{duration: 5.8119850832676025, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 3.6985359620793834, easing: linear, value: -4.074074074074074}]}
+  state: {dir: up, y: [{duration: 5.8119850832676025, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 3.6985359620793834, easing: linear, value: 1.944188888888889}], z: [{duration: 5.8119850832676025, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 3.6985359620793834, easing: linear, value: -4.074074074074074}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-11:
   behavior: scripts/esc-step.js
@@ -2173,7 +2173,7 @@ esc-up-step-11:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 5.4597435630695665, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 4.05077748227742, easing: linear, value: 2.1478925925925925}], z: [{duration: 5.4597435630695665, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 4.05077748227742, easing: linear, value: -4.444444444444444}]}
+  state: {dir: up, y: [{duration: 5.4597435630695665, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 4.05077748227742, easing: linear, value: 2.1478925925925925}], z: [{duration: 5.4597435630695665, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 4.05077748227742, easing: linear, value: -4.444444444444444}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-12:
   behavior: scripts/esc-step.js
@@ -2183,7 +2183,7 @@ esc-up-step-12:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 5.10750204287153, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 4.403019002475457, easing: linear, value: 2.3515962962962966}], z: [{duration: 5.10750204287153, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 4.403019002475457, easing: linear, value: -4.814814814814815}]}
+  state: {dir: up, y: [{duration: 5.10750204287153, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 4.403019002475457, easing: linear, value: 2.3515962962962966}], z: [{duration: 5.10750204287153, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 4.403019002475457, easing: linear, value: -4.814814814814815}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-13:
   behavior: scripts/esc-step.js
@@ -2193,7 +2193,7 @@ esc-up-step-13:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 4.755260522673494, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 4.755260522673494, easing: linear, value: 2.5553}], z: [{duration: 4.755260522673494, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 4.755260522673494, easing: linear, value: -5.185185185185185}]}
+  state: {dir: up, y: [{duration: 4.755260522673494, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 4.755260522673494, easing: linear, value: 2.5553}], z: [{duration: 4.755260522673494, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 4.755260522673494, easing: linear, value: -5.185185185185185}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-14:
   behavior: scripts/esc-step.js
@@ -2203,7 +2203,7 @@ esc-up-step-14:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 4.403019002475457, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 5.10750204287153, easing: linear, value: 2.7590037037037036}], z: [{duration: 4.403019002475457, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 5.10750204287153, easing: linear, value: -5.555555555555555}]}
+  state: {dir: up, y: [{duration: 4.403019002475457, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 5.10750204287153, easing: linear, value: 2.7590037037037036}], z: [{duration: 4.403019002475457, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 5.10750204287153, easing: linear, value: -5.555555555555555}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-15:
   behavior: scripts/esc-step.js
@@ -2213,7 +2213,7 @@ esc-up-step-15:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 4.050777482277421, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 5.459743563069566, easing: linear, value: 2.9627074074074073}], z: [{duration: 4.050777482277421, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 5.459743563069566, easing: linear, value: -5.925925925925926}]}
+  state: {dir: up, y: [{duration: 4.050777482277421, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 5.459743563069566, easing: linear, value: 2.9627074074074073}], z: [{duration: 4.050777482277421, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 5.459743563069566, easing: linear, value: -5.925925925925926}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-16:
   behavior: scripts/esc-step.js
@@ -2223,7 +2223,7 @@ esc-up-step-16:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 3.698535962079384, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 5.8119850832676025, easing: linear, value: 3.166411111111111}], z: [{duration: 3.698535962079384, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 5.8119850832676025, easing: linear, value: -6.296296296296296}]}
+  state: {dir: up, y: [{duration: 3.698535962079384, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 5.8119850832676025, easing: linear, value: 3.166411111111111}], z: [{duration: 3.698535962079384, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 5.8119850832676025, easing: linear, value: -6.296296296296296}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-17:
   behavior: scripts/esc-step.js
@@ -2233,7 +2233,7 @@ esc-up-step-17:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 3.3462944418813474, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 6.1642266034656386, easing: linear, value: 3.370114814814815}], z: [{duration: 3.3462944418813474, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 6.1642266034656386, easing: linear, value: -6.666666666666666}]}
+  state: {dir: up, y: [{duration: 3.3462944418813474, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 6.1642266034656386, easing: linear, value: 3.370114814814815}], z: [{duration: 3.3462944418813474, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 6.1642266034656386, easing: linear, value: -6.666666666666666}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-18:
   behavior: scripts/esc-step.js
@@ -2243,7 +2243,7 @@ esc-up-step-18:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 2.9940529216833114, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 6.5164681236636754, easing: linear, value: 3.5738185185185185}], z: [{duration: 2.9940529216833114, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 6.5164681236636754, easing: linear, value: -7.037037037037036}]}
+  state: {dir: up, y: [{duration: 2.9940529216833114, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 6.5164681236636754, easing: linear, value: 3.5738185185185185}], z: [{duration: 2.9940529216833114, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 6.5164681236636754, easing: linear, value: -7.037037037037036}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-19:
   behavior: scripts/esc-step.js
@@ -2253,7 +2253,7 @@ esc-up-step-19:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 2.641811401485275, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 6.8687096438617115, easing: linear, value: 3.7775222222222222}], z: [{duration: 2.641811401485275, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 6.8687096438617115, easing: linear, value: -7.4074074074074066}]}
+  state: {dir: up, y: [{duration: 2.641811401485275, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 6.8687096438617115, easing: linear, value: 3.7775222222222222}], z: [{duration: 2.641811401485275, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 6.8687096438617115, easing: linear, value: -7.4074074074074066}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-20:
   behavior: scripts/esc-step.js
@@ -2263,7 +2263,7 @@ esc-up-step-20:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 2.2895698812872376, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 7.220951164059749, easing: linear, value: 3.9812259259259264}], z: [{duration: 2.2895698812872376, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 7.220951164059749, easing: linear, value: -7.777777777777778}]}
+  state: {dir: up, y: [{duration: 2.2895698812872376, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 7.220951164059749, easing: linear, value: 3.9812259259259264}], z: [{duration: 2.2895698812872376, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 7.220951164059749, easing: linear, value: -7.777777777777778}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-21:
   behavior: scripts/esc-step.js
@@ -2273,7 +2273,7 @@ esc-up-step-21:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 1.9373283610892011, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 7.573192684257785, easing: linear, value: 4.18492962962963}], z: [{duration: 1.9373283610892011, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 7.573192684257785, easing: linear, value: -8.148148148148149}]}
+  state: {dir: up, y: [{duration: 1.9373283610892011, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 7.573192684257785, easing: linear, value: 4.18492962962963}], z: [{duration: 1.9373283610892011, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 7.573192684257785, easing: linear, value: -8.148148148148149}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-22:
   behavior: scripts/esc-step.js
@@ -2283,7 +2283,7 @@ esc-up-step-22:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 1.5850868408911656, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 7.925434204455821, easing: linear, value: 4.388633333333333}], z: [{duration: 1.5850868408911656, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 7.925434204455821, easing: linear, value: -8.518518518518517}]}
+  state: {dir: up, y: [{duration: 1.5850868408911656, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 7.925434204455821, easing: linear, value: 4.388633333333333}], z: [{duration: 1.5850868408911656, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 7.925434204455821, easing: linear, value: -8.518518518518517}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-23:
   behavior: scripts/esc-step.js
@@ -2293,7 +2293,7 @@ esc-up-step-23:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 1.2328453206931291, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 8.277675724653857, easing: linear, value: 4.592337037037036}], z: [{duration: 1.2328453206931291, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 8.277675724653857, easing: linear, value: -8.888888888888888}]}
+  state: {dir: up, y: [{duration: 1.2328453206931291, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 8.277675724653857, easing: linear, value: 4.592337037037036}], z: [{duration: 1.2328453206931291, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 8.277675724653857, easing: linear, value: -8.888888888888888}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-24:
   behavior: scripts/esc-step.js
@@ -2303,7 +2303,7 @@ esc-up-step-24:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 0.880603800495091, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 8.629917244851896, easing: linear, value: 4.796040740740741}], z: [{duration: 0.880603800495091, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 8.629917244851896, easing: linear, value: -9.25925925925926}]}
+  state: {dir: up, y: [{duration: 0.880603800495091, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 8.629917244851896, easing: linear, value: 4.796040740740741}], z: [{duration: 0.880603800495091, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 8.629917244851896, easing: linear, value: -9.25925925925926}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-25:
   behavior: scripts/esc-step.js
@@ -2313,7 +2313,7 @@ esc-up-step-25:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 0.5283622802970546, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 8.982158765049931, easing: linear, value: 4.9997444444444445}], z: [{duration: 0.5283622802970546, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 8.982158765049931, easing: linear, value: -9.62962962962963}]}
+  state: {dir: up, y: [{duration: 0.5283622802970546, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 8.982158765049931, easing: linear, value: 4.9997444444444445}], z: [{duration: 0.5283622802970546, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 8.982158765049931, easing: linear, value: -9.62962962962963}]}
   tags: [bonus-mall, escalator-step]
 esc-up-step-26:
   behavior: scripts/esc-step.js
@@ -2323,7 +2323,7 @@ esc-up-step-26:
   interpolation: {teleportThreshold: 1}
   model: {id: /cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb}
   receiveShadow: true
-  state: {y: [{duration: 0.1761207600990182, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 9.334400285247968, easing: linear, value: 5.203448148148149}], z: [{duration: 0.1761207600990182, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 9.334400285247968, easing: linear, value: -10}]}
+  state: {dir: up, y: [{duration: 0.1761207600990182, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 9.334400285247968, easing: linear, value: 5.203448148148149}], z: [{duration: 0.1761207600990182, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 9.334400285247968, easing: linear, value: -10}]}
   tags: [bonus-mall, escalator-step]
 paint-demo2:
   children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.90386ada1dac4bfe1b884d927ca5789ef8011ada51b903c99e8d9963699993f6.glb, parts: {beard: {color: "#5a3a26", depthWrite: false, opacity: 0, outline: false, transparent: true, visible: false}, belly: {color: "#ffffff", metalness: 0, outline: false, roughness: 0.88}, blush: {color: "#ff9f6a", metalness: 0, opacity: 0.82, outline: false, roughness: 0.88, transparent: true}, eyeink: {color: "#16101c", metalness: 0, outline: false, roughness: 0.95}, eyewhite: {color: "#fffdf8", metalness: 0, outline: false, roughness: 0.35}, fur: {color: "#9fd3ff", metalness: 0, roughness: 0.82}, inner: {color: "#eee8e2", metalness: 0, roughness: 0.9}, iris: {color: "#7ab8e8", metalness: 0.05, outline: false, roughness: 0.22}, mark: {color: "#2b2530", metalness: 0, outline: false, roughness: 0.82}, mouth: {color: "#44141e", outline: false, roughness: 0.82}, nose: {color: "#ff9fbd", metalness: 0.05, outline: false, roughness: 0.28}, pupil: {color: "#000000", metalness: 0, outline: false, roughness: 1}, tip: {color: "#2b2530", metalness: 0, roughness: 0.82}, tongue: {color: "#ff758c", outline: false, roughness: 0.45}}}, morph: {Blush: 0.38, FT_Broad: 0.3, FT_Chubby: 0.656, FT_Round: 0.54, Half: 0.18239999999999998, Smile: 0.13679999999999998}}]
