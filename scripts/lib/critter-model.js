@@ -908,6 +908,7 @@ export function restyle(ctx, o) {
   const stray = strayHeads(ctx, o)
   if (want === 'f' && isF && (M.bodyOld ?? []).includes(mid)) { const l0 = o.state?.wear; if (l0) { o.model = bodyModel(l0); o.morph = bustMorph(l0) ?? null; return true } } // Nov 11: the pre-Andy body swaps for the new one, worn look kept
   if (want === 'f' && isF && o.state?.wear && Object.entries(o.model?.parts ?? {}).some(([k, v]) => /^(Ward_|Top_|Bot_|Shoes_|Hat_|Neck_|Eyew_)/.test(k) && v?.visible)) { o.model = bodyModel(o.state.wear); o.morph = bustMorph(o.state.wear) ?? null; return true } // sw152: a body still wearing an outfit drawn before the wipe (CLOTHES_OFF) takes the bare body
+  if (want === 'f' && isF && o.state?.wear && Object.values(M.body).includes(mid)) { const nb = bodyModel(o.state.wear); if (!!nb.parts?.Body?.visible !== !!o.model?.parts?.Body?.visible) { o.model = nb; o.morph = bustMorph(o.state.wear) ?? null; return true } } // sw155: a bare body redraws as the one smooth shell
   if (want === 'f' && isF && Object.values(M.body).includes(mid)) { // a furry body whose species head went missing (a human pass dropped it) gets it back (Shelly, Nov 9: "npcs have no head sometimes")
     if (!wardKids().length && (ctx.getObject(o.id + '/' + HEAD_ID) || stray.length || !o.state?.wear || maskOf(o.state.wear))) return false
     seatHead(ctx, o, o.state.wear); return true
