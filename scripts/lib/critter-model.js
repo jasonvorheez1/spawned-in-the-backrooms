@@ -855,11 +855,14 @@ export function buildFor(id, sex) {
 // the resting pose every npc keeps under its other bone writes: its head size and an S-curve in the tail (up off the hips, tip curling back)
 // furry proportions (Shelly Nov 9: Dandy's World refs): a big head on a little body. The Head bone scales, so hats and masks on it grow with it
 export const FURRY_HEAD = 1.2
+// the chunky Andy body's arms hung inside its own hips and through skirts and pants (Shelly Nov 11: 'arm fitting is off'): the upper arms open out this many degrees at the shoulder, over every clip
+export const ARM_SPLAY = 20
+export const armSplay = () => ({ LeftArm: { roll: ARM_SPLAY }, RightArm: { roll: -ARM_SPLAY } })
 export function baseBones(b, l) {
   if (HUMAN) return { Head: { scale: 1 } } // the human rig: true head size, no tail or ears
   const k = b?.curl ?? 1, hs = (b?.head ?? l?.headS ?? 1) * FURRY_HEAD
   const es = b?.ear ?? l?.earS ?? 1
-  const bones = { Head: { scale: hs }, Tail: { rotate: [-28 * k, 0, 0] }, Tail1: { rotate: [34 * k, 0, 0] } }
+  const bones = { Head: { scale: hs }, Tail: { rotate: [-28 * k, 0, 0] }, Tail1: { rotate: [34 * k, 0, 0] }, ...armSplay() }
   if (es && Math.abs(es - 1) > 0.02) {
     bones.EarL = { scale: es }
     bones.EarR = { scale: es }

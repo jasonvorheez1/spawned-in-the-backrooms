@@ -31,6 +31,7 @@ function applyBones(ctx) {
   if (ses.twitch) b[ses.twitch] = { rotate: [0, 0, ses.twitchDir * 24] }
   if (!HUMAN && !ses.cachedWorn) b.Head = { scale: (ses.headS || 1) * FURRY_HEAD } // furry: the Dandy big head, times the player's own head slider
   if (ses.tailS && ses.tailS !== 1) b.Tail = { scale: ses.tailS }
+  if (!HUMAN && !ses.cachedWorn) Object.assign(b, armSplay()) // arms clear the hips and skirts (critter-model ARM_SPLAY)
   if (ses.pose) Object.assign(b, ses.pose) // the hands on a gun: IK reach points (scripts/lib/body3.js)
   ctx.self.bones = b
 }
@@ -322,7 +323,7 @@ export function update(ctx) {
     else { mirror.feetPosition = pos; mirror.rotation = rot; if (ses.mirrorKey !== key) { if (worn) { mirror.primitive = null; mirror.model = wornModel(worn); dropHead(ctx, mirror); mirror.morph=null; mirror.bones={}; mirror.material=null; mirror.anim.flair = null; mirror.anim.idle = { clip: GAIT_LIB.idle, loop: 'loop', weight: 1 } } else if (MESH) { mirror.primitive = null; mirror.model = bodyModel(params); if (HUMAN) { seatHead(ctx, mirror, params); mirror.anim.idle = { clip: GAIT_LIB.idle, loop: 'loop', weight: 1 } } else { mirror.morph = bustMorph(params) ?? null; wearHead(ctx, mirror, params); flair(mirror, face) } } else { mirror.model = null; mirror.primitive = { kind: 'scripted', script: SCRIPT, params }; flair(mirror, face) } }
       if (MESH && !worn) { const mh = ctx.getObject(mirror.id + '/' + HEAD_ID); if (mh) mh.morph = faceMorph(face, false, isF, params) }
       if (worn && ctx.getObject(mirror.id + '/' + HEAD_ID)) dropHead(ctx, mirror) // the mirror wears a plymodel bare too
-      mirror.bones = { ...(!HUMAN ? { Head: { scale: hs * FURRY_HEAD } } : {}), ...(ts !== 1 ? { Tail: { scale: ts } } : {}) } }
+      mirror.bones = { ...(!HUMAN ? { Head: { scale: hs * FURRY_HEAD }, ...armSplay() } : {}), ...(ts !== 1 ? { Tail: { scale: ts } } : {}) } }
     ses.mirrorKey = key
     if(HUMAN && MESH && !worn && ses.mirrorFaceKey!==ses.hFaceK){const m=ctx.getObject(ses.mirror);if(m){m.morph=ctx.self.morph;ses.mirrorFaceKey=ses.hFaceK}}
     if (ses.mirror) {
