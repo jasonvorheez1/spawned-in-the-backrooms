@@ -3,7 +3,8 @@
 import bpy, sys, math
 args = sys.argv[sys.argv.index("--") + 1:]
 src, out, mode = args[0], args[1], args[2]  # mode: render | export
-MAXLEG = 0.8
+MAXLEG = 0.95
+RAMP = 0.35  # fraction of hip-to-hem over which the leg takes over
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=src)
 arm = next(o for o in bpy.data.objects if o.type == "ARMATURE")
@@ -20,8 +21,8 @@ moved = 0
 for v in g.data.vertices:
     p = g.matrix_world @ v.co
     if p.z >= hipz: continue
-    t = min(1, (hipz - p.z) / max(1e-4, hipz - hem)); t = t * t * (3 - 2 * t)
-    u = max(-1, min(1, (p.x - cx) * lsign / (half * 1.6))); sl = 0.5 + 0.5 * math.sin(u * math.pi / 2)
+    t = min(1, (hipz - p.z) / max(1e-4, RAMP * (hipz - hem))); t = t * t * (3 - 2 * t)
+    u = max(-1, min(1, (p.x - cx) * lsign / (half * 1.2))); sl = 0.5 + 0.5 * math.sin(u * math.pi / 2)
     wl, wr = MAXLEG * t * sl, MAXLEG * t * (1 - sl)
     for gr in list(v.groups): g.vertex_groups[gr.group].remove([v.index])
     VG["Hips"].add([v.index], 1 - wl - wr, "REPLACE"); VG["LeftUpLeg"].add([v.index], wl, "REPLACE"); VG["RightUpLeg"].add([v.index], wr, "REPLACE")
