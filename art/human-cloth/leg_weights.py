@@ -25,7 +25,7 @@ while J.modifiers[0].name != 'wt': bpy.ops.object.modifier_move_up(modifier='wt'
 bpy.ops.object.modifier_apply(modifier='wt')
 J.vertex_groups.remove(J.vertex_groups['LEGSEL'])
 bpy.ops.object.select_all(action='DESELECT'); J.select_set(True); bpy.ops.object.vertex_group_normalize_all(lock_active=False)
-for o in new: bpy.data.objects.remove(o, do_unlink=True)
 print("TRANSFERRED", len(sel), "from", B.name, "groups", len(J.vertex_groups), "mods", [x.type for x in J.modifiers])
+for o in new: bpy.data.objects.remove(o, do_unlink=True)
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.export_scene.gltf(filepath=out, export_apply=False, export_skins=True, export_morph=True, export_animations=False)
