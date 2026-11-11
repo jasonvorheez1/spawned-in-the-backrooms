@@ -103,9 +103,45 @@ for v in [g for g in ext["geom"] if isinstance(g, bmesh.types.BMVert)]:
 b.normal_update(); b.to_mesh(BODY.data); b.free()
 print("neck collar ring edges", len(ring))
 
+r0, el, wr, tip = C["arm"][:4]
+# ---------- tail: measured (geodesic walk from the tip, stops where the section widens into the rump) ----------
+import heapq
+bmv = BODY.data.vertices; hp = Vector((0, C["spine_y"], C["hip_z"]))
+cand = [v for v in bmv if v.co.y > AY + 0.06 and C["hip_z"] - 0.05 < v.co.z < AZ + 0.02
+        and not (abs(v.co.x) > r0 - 0.03 and math.hypot(v.co.y - AY, v.co.z - AZ) < 0.07)]   # not an arm
+tipv = max(cand, key=lambda v: (v.co - hp).length).index
+adj = [[] for _ in bmv]
+for e in BODY.data.edges:
+    a_, b_ = e.vertices; L_ = (bmv[a_].co - bmv[b_].co).length; adj[a_].append((b_, L_)); adj[b_].append((a_, L_))
+gd = {tipv: 0.0}; hq = [(0.0, tipv)]
+while hq:
+    d_, i_ = heapq.heappop(hq)
+    if d_ > gd.get(i_, 9) or d_ > 0.7: continue
+    for j_, L_ in adj[i_]:
+        if d_ + L_ < gd.get(j_, 9): gd[j_] = d_ + L_; heapq.heappush(hq, (d_ + L_, j_))
+bins = {}
+for i_, d_ in gd.items(): bins.setdefault(int(d_ / 0.01), []).append(i_)
+cents, rads = [], []
+for bi in range(max(bins) + 1):
+    vs = bins.get(bi, [])
+    if not vs: break
+    cc = sum((bmv[i].co for i in vs), Vector()) / len(vs); cents.append(cc); rads.append(sum((bmv[i].co - cc).length for i in vs) / len(vs))
+ref = float(np.median(rads[2:max(4, len(rads) // 2)]))
+stop = next((bi for bi in range(4, len(rads)) if rads[bi] > 1.7 * ref), len(rads))
+TLEN = stop * 0.01; TAILV = {i for i, d_ in gd.items() if d_ < TLEN}
+chain = list(reversed(cents[:stop]))           # base -> tip
+acc_ = [0.0]
+for a_, b_ in zip(chain, chain[1:]): acc_.append(acc_[-1] + (b_ - a_).length)
+def at(f):
+    t = f * acc_[-1]; k_ = max(i for i in range(len(acc_)) if acc_[i] <= t + 1e-9); k_ = min(k_, len(chain) - 2)
+    u_ = (t - acc_[k_]) / max(1e-6, acc_[k_ + 1] - acc_[k_]); return tuple(chain[k_].lerp(chain[k_ + 1], u_))
+C["tail"] = (at(0), at(1 / 3), at(2 / 3), at(1))
+print("tail verts", len(TAILV), "length", round(TLEN, 3), "ref radius", round(ref, 4), "chain", [tuple(round(x, 3) for x in q) for q in C["tail"]])
+tkd = KDTree(len(bmv))
+for v in bmv: tkd.insert(v.co, v.index)
+tkd.balance()
 # ---------- armature ----------
 J = build_J(C)
-r0, el, wr, tip = C["arm"][:4]
 for sd, k in (("Left", 1), ("Right", -1)):
     J[sd + "Shoulder"] = ((C["sh_x"] * k, C["spine_y"] + 0.01, AZ - 0.012), (r0 * k, AY, AZ))
     J[sd + "Arm"] = ((r0 * k, AY, AZ), (el * k, AY, AZ)); J[sd + "ForeArm"] = ((el * k, AY, AZ), (wr * k, AY, AZ))
@@ -145,8 +181,7 @@ def tailinfo(p):
         d, t = segd(p, *J[nm]); best = min(best, (d, i, t))
     return best
 def is_tail(p):
-    d, i, t = tailinfo(p)
-    return d < 0.045 and not (i == 0 and t < 0.12) and (p.y > C["tail_y"] or p.x > 0.13)
+    return tkd.find(p)[1] in TAILV
 G = {g.name: g for g in BODY.vertex_groups}
 for nm in BONES:
     if nm not in G: G[nm] = BODY.vertex_groups.new(name=nm)
@@ -197,8 +232,8 @@ camd = bpy.data.cameras.new("dc"); camd.type = "ORTHO"; camd.ortho_scale = HS; c
 camo.location = (0, -5, HZC); camo.rotation_euler = (math.radians(90), 0, 0); sc.camera = camo
 sc.render.engine = "BLENDER_WORKBENCH"; sc.display.shading.light = "FLAT"; sc.display.shading.color_type = "TEXTURE"
 sc.render.resolution_x = sc.render.resolution_y = R; sc.view_settings.view_transform = "Standard"; sc.render.film_transparent = True
-BODY.hide_render = True; sc.render.filepath = "/tmp/eyes.png"; bpy.ops.render.render(write_still=True); BODY.hide_render = False
-im = bpy.data.images.load("/tmp/eyes.png"); a = np.empty(R * R * 4, np.float32); im.pixels.foreach_get(a); a = a.reshape(R, R, 4); bpy.data.images.remove(im)
+BODY.hide_render = True; sc.render.filepath = f"/tmp/eyes-{WHO}.png"; bpy.ops.render.render(write_still=True); BODY.hide_render = False
+im = bpy.data.images.load(f"/tmp/eyes-{WHO}.png"); a = np.empty(R * R * 4, np.float32); im.pixels.foreach_get(a); a = a.reshape(R, R, 4); bpy.data.images.remove(im)
 dark = (a[..., :3].max(-1) < 0.13) & (a[..., 3] > 0.5)
 for _ in range(6):
     d2 = dark.copy(); d2[1:] &= dark[:-1]; d2[:-1] &= dark[1:]; d2[:, 1:] &= dark[:, :-1]; d2[:, :-1] &= dark[:, 1:]; dark = d2
@@ -216,8 +251,10 @@ bpy.data.objects.remove(camo)
 # ---------- paint out eyes / nose / mouth under the decal ----------
 def classes(c):
     mx = c[..., :3].max(-1); mn = c[..., :3].min(-1); sat = (mx - mn) / np.maximum(mx, 1e-3)
-    fur = (c[..., 0] >= c[..., 1]) & (c[..., 1] >= c[..., 2] - 0.02) & (c[..., 0] - c[..., 2] > 0.2) & (sat > 0.38)
-    cream = ~fur & (mx > 0.55) & (sat < 0.38)
+    lum_ = 0.2126 * c[..., 0] + 0.7152 * c[..., 1] + 0.0722 * c[..., 2]
+    cream = (mx > 0.55) & (sat < 0.38)
+    pink = (c[..., 0] - c[..., 1] > 0.1) & (c[..., 1] - c[..., 2] < 0.08)
+    fur = ~cream & ~pink & (lum_ > 0.25)
     return fur, cream
 hm = HEAD.data; hm.calc_loop_triangles(); uvl = hm.uv_layers.active.data
 SX, SIJ = [], []
@@ -237,7 +274,7 @@ for t in hm.loop_triangles:
 SX = np.concatenate(SX); SIJ = np.concatenate(SIJ); col = px[SIJ[:, 0], SIJ[:, 1]]
 fur, cream = classes(col)
 ine = np.zeros(len(SX), bool)
-for ex, ez in EYE: ine |= ((SX[:, 0] - ex) / (0.47 * D)) ** 2 + ((SX[:, 2] - ez - 0.05 * D) / (0.5 * D)) ** 2 < 1
+for ex, ez in EYE: ine |= ((SX[:, 0] - ex) / (0.6 * D)) ** 2 + ((SX[:, 2] - ez - 0.05 * D) / (0.6 * D)) ** 2 < 1
 bad = (~fur & ~cream) | (ine & ~fur)
 good = ~bad & ~ine
 kd = KDTree(int(good.sum())); gi = np.nonzero(good)[0]
@@ -272,13 +309,45 @@ for o in (BODY, HEAD):
     uv = o.data.uv_layers.active.data; nf = 0
     for poly in o.data.polygons:
         pts = [uv[li].uv for li in poly.loop_indices]; pts.append(sum(pts, Vector((0, 0))) / len(pts))
-        anyfur = any(fur_all[int(p.y * TH) % TH, int(p.x * TW) % TW] for p in pts)
+        anyfur = sum(bool(fur_all[int(p.y * TH) % TH, int(p.x * TW) % TW]) for p in pts) * 2 > len(pts)
         poly.material_index = 0 if anyfur else 1; nf += anyfur
     print(o.name, "faces fur", nf, "fur2", len(o.data.polygons) - nf)
 
 # ---------- face decal mesh ----------
 bvh = BVHTree.FromObject(HEAD, bpy.context.evaluated_depsgraph_get())
 NX, NZ = 88, 80; grid = {}
+for j in range(NZ + 1):
+    for i in range(NX + 1):
+        u, v = i / NX, j / NZ; Xp = BOX[0] + u * (BOX[1] - BOX[0]); Zp = BOX[2] + v * (BOX[3] - BOX[2])
+        hit = bvh.ray_cast(Vector((Xp, -1, Zp)), Vector((0, 1, 0)))
+        if hit[0] is not None and hit[1].y < -0.15: grid[i, j] = (hit[0] + hit[1].normalized() * 0.0005, (u, v))
+hgt = np.full((NX + 1, NZ + 1), np.nan)
+for (i, j), (co, uv_) in grid.items(): hgt[i, j] = -co.y
+Wn = 13; pad = np.where(np.isnan(hgt), -9, hgt)
+def win(a, f):
+    out = a.copy()
+    for di in range(-Wn, Wn + 1):
+        for dj in range(-Wn, Wn + 1):
+            if di * di + dj * dj > Wn * Wn: continue
+            out = f(out, np.roll(np.roll(a, di, 0), dj, 1))
+    return out
+Wn = 3; opn = win(win(np.where(np.isnan(hgt), 9, hgt), np.minimum), np.maximum)
+Wn = 13; pad = np.where(np.isnan(hgt), -9, opn)
+dil = win(pad, np.maximum); clo = win(np.where(np.isnan(hgt), 9, dil), np.minimum)
+for _ in range(3): clo = (clo + np.roll(clo, 1, 0) + np.roll(clo, -1, 0) + np.roll(clo, 1, 1) + np.roll(clo, -1, 1)) / 5
+lift = 0
+for v in HEAD.data.vertices:
+    co = v.co; i = round((co.x - BOX[0]) / (BOX[1] - BOX[0]) * NX); j = round((co.z - BOX[2]) / (BOX[3] - BOX[2]) * NZ)
+    if not (0 <= i <= NX and 0 <= j <= NZ) or co.y > -0.1 or abs(clo[i, j]) > 5 or np.isnan(hgt[i, j]): continue
+    if -co.y < hgt[i, j] - 0.004: continue          # not the front skin (inner shell)
+    r = min(math.hypot((co.x - ex) / (0.75 * D), (co.z - ez - 0.05 * D) / (0.75 * D)) for ex, ez in EYE)
+    w = 1 if r < 0.75 else max(0, (1.0 - r) / 0.25); w = w * w * (3 - 2 * w)
+    if w > 0 and abs(-clo[i, j] - co.y) < 0.03: co.y = co.y + (-clo[i, j] - co.y) * w; lift += 1
+bpy.context.view_layer.objects.active = HEAD
+if HEAD.data.has_custom_normals: bpy.ops.mesh.customdata_custom_splitnormals_clear()   # old normals kept the sockets' shading
+for poly in HEAD.data.polygons: poly.use_smooth = True
+HEAD.data.update(); print("head verts flattened at the eyes", lift)
+bvh = BVHTree.FromObject(HEAD, bpy.context.evaluated_depsgraph_get()); grid = {}
 for j in range(NZ + 1):
     for i in range(NX + 1):
         u, v = i / NX, j / NZ; Xp = BOX[0] + u * (BOX[1] - BOX[0]); Zp = BOX[2] + v * (BOX[3] - BOX[2])
@@ -313,7 +382,7 @@ def grad_img(name, rows):
     hgt = 128; arr = np.ones((hgt, 4, 4), np.float32)
     for r in range(hgt):
         f = (r + 0.5) / hgt; hx = next(c for e, c in rows if f <= e)
-        arr[r, :, :3] = [(int(hx[i:i + 2], 16) / 255) ** 2.2 for i in (1, 3, 5)]
+        arr[r, :, :3] = [(int(hx[i:i + 2], 16) / 255) for i in (1, 3, 5)]
     return save_img(name, arr, f"{OUT}/{WHO}-{name}.png", "PNG")
 def cloth_mat(name, img, rough):
     m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree
@@ -321,6 +390,12 @@ def cloth_mat(name, img, rough):
     t.extension = "EXTEND"; nt.links.new(t.outputs["Color"], bs.inputs["Base Color"]); bs.inputs["Roughness"].default_value = rough
     return m
 body_bvh = BVHTree.FromObject(BODY, bpy.context.evaluated_depsgraph_get())
+TKD = KDTree(len(BODY.data.vertices)); TAILV = set()
+for v in BODY.data.vertices:
+    TKD.insert(v.co, v.index)
+    if sum(BODY.vertex_groups[gg.group].name.endswith(("Tail1", "Tail2", "Tail3")) * gg.weight for gg in v.groups) > 0.2: TAILV.add(v.index)
+TKD.balance()
+def tailish(c): return any(i in TAILV for _, i, _ in TKD.find_n(c, 4))
 bidx = {gg.index: gg.name for gg in BODY.vertex_groups}
 def make_cloth(name, keep, off, vfun, material, drape):
     o = BODY.copy(); o.data = BODY.data.copy(); o.name = o.data.name = name; sc.collection.objects.link(o)
@@ -352,7 +427,9 @@ def make_cloth(name, keep, off, vfun, material, drape):
                 if v.co.y < ymin: ymin, zat = v.co.y, v.co.z
                 v.co.y = min(v.co.y, ymin + 0.3 * (zat - v.co.z))
         b.normal_update()
-    for v in b.verts: v.co += v.normal * off
+    for v in b.verts:
+        loc, nrm, fi, dist = body_bvh.find_nearest(v.co); d_ = (v.co - loc).dot(nrm)
+        if d_ < off and off - d_ < 0.02: v.co += nrm * (off - d_)
     uv = b.loops.layers.uv.verify()
     for f in b.faces:
         f.smooth = True
@@ -377,12 +454,12 @@ def make_cloth(name, keep, off, vfun, material, drape):
     return o
 T, Bt = C["top"], C["bot"]
 def top_keep(c):
-    if is_tail(c) or not (T["lo"] < c.z < T["hi"]) or abs(c.x) > T["sleeve"]: return False
+    if is_tail(c) or tailish(c) or not (T["lo"] < c.z < T["hi"]) or abs(c.x) > T["sleeve"]: return False
     if c.z > T["nf"][0] and abs(c.x) < T["nf"][1] and c.y < C["spine_y"]: return False
     if c.z > T["nb"][0] and abs(c.x) < T["nb"][1]: return False
     return True
 def bot_keep(c):
-    if is_tail(c) or (c - Vector(J["Tail1"][0])).length < 0.032: return False
+    if is_tail(c) or tailish(c) or (c - Vector(J["Tail1"][0])).length < 0.032: return False
     return Bt["lo"] < c.z < Bt["hi"]
 TOP = make_cloth("ClothTop", top_keep, T["off"], lambda co: min(1, max(0, (co.z - T["lo"]) / 0.1)), cloth_mat("cloth_top", grad_img("cloth_top", T["rows"]), 0.8), T["drape"])
 BOT = make_cloth("ClothBottom", bot_keep, Bt["off"], lambda co: min(1, max(0, (Bt["hi"] - co.z) / 0.1)), cloth_mat("cloth_bottom", grad_img("cloth_bottom", Bt["rows"]), 0.85), False)
@@ -444,14 +521,14 @@ bpy.ops.wm.open_mainfile(filepath=SAVE)
 sc = bpy.context.scene; ARM = bpy.data.objects["Armature"]
 sc.render.engine = "CYCLES"; sc.cycles.samples = 20; sc.cycles.use_denoising = True; sc.render.film_transparent = False
 sc.render.resolution_x = sc.render.resolution_y = 656; sc.view_settings.view_transform = "Standard"
-wd = bpy.data.worlds.new("w"); sc.world = wd; wd.use_nodes = True; wd.node_tree.nodes["Background"].inputs[0].default_value = (0.55, 0.55, 0.55, 1)
+wd = bpy.data.worlds.new("w"); sc.world = wd; wd.use_nodes = True; wd.node_tree.nodes["Background"].inputs[0].default_value = (0.55, 0.55, 0.55, 1); wd.node_tree.nodes["Background"].inputs[1].default_value = 0.35
 camd = bpy.data.cameras.new("cam"); cam = bpy.data.objects.new("cam", camd); sc.collection.objects.link(cam); sc.camera = cam
 ld = bpy.data.lights.new("key", "AREA"); ld.size = 1.2; L = bpy.data.objects.new("key", ld); sc.collection.objects.link(L)
 def shoot(path, target, yaw, dist, lens):
     t = Vector(target); d = Vector((math.sin(math.radians(yaw)), -math.cos(math.radians(yaw)), 0.06)).normalized()
     cam.location = t + d * dist; camd.lens = lens; cam.rotation_euler = (t - cam.location).to_track_quat("-Z", "Y").to_euler()
     L.location = t + (d + Vector((0.25, 0, 0.35))).normalized() * dist * 0.9; L.rotation_euler = (t - L.location).to_track_quat("-Z", "Y").to_euler()
-    ld.energy = 110 * dist ** 2; sc.render.filepath = path; bpy.ops.render.render(write_still=True)
+    ld.energy = 14 * dist ** 2; sc.render.filepath = path; bpy.ops.render.render(write_still=True)
 for pb in ARM.pose.bones: pb.rotation_mode = "QUATERNION"
 def rest3(nm): return ARM.data.bones[P + nm].matrix_local.to_3x3()
 def wrot(nm, Rm): M = rest3(nm); ARM.pose.bones[P + nm].rotation_quaternion = (M.inverted() @ Rm @ M).to_quaternion()
