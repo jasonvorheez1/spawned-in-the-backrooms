@@ -142,7 +142,7 @@ if KIND == "top":   # weights by where the cloth sits, never by the nearest skin
     for v in me.vertices:
         S = "Left" if v.co.x > 0 else "Right"; ax = abs(v.co.x)
         xs, xe, xw = abs(bz(S + "Arm").x), abs(bz(S + "ForeArm").x), abs(bz(S + "Hand").x)
-        a = sm(xs - 0.035, xs + 0.03, ax) * sm(za - 0.09, za - 0.045, v.co.z)   # how much this vert is sleeve: past the shoulder joint and up at arm height
+        a = max(sm(xs - 0.035, xs + 0.03, ax) * sm(za - 0.09, za - 0.045, v.co.z), sm(xs + 0.03, xs + 0.075, ax))   # well past the shoulder it is sleeve all the way round: the underside left on the torso tore off when the arm swung down   # how much this vert is sleeve: past the shoulder joint and up at arm height
         e = sm(xe - 0.03, xe + 0.03, ax); h = sm(xw - 0.02, xw + 0.02, ax)
         w = {k: x * (1 - a) for k, x in spine(v.co.z).items()}
         w[S + "Arm"] = a * (1 - e); w[S + "ForeArm"] = a * e * (1 - h); w[S + "Hand"] = a * e * h
