@@ -3,7 +3,7 @@
 import M from './data/critter-models.yml'
 import FACES from './data/faces.yml'
 import CL from './data/clothes.yml'
-import { rowOf, patOk } from './clothes.js'
+import { rowOf, patOk, CLOTHES_OFF } from './clothes.js'
 import HAIR from './data/hair.yml'
 import WARDROBE from './data/wardrobe.yml'
 import SPLIT from './data/wardrobe-split.yml'
@@ -348,7 +348,7 @@ export function bodyModel(l) {
     const row = rowOf(slot, l[slot], l[CL.colourKey[slot]])
     const named = row && 'Ward_' + row.id
     if (named && WARDROBE.parts.includes(named)) parts[named] = { visible: true }
-    else { const k = MESH_SWAP[slot]?.[l[slot]] ?? l[slot]; if (k && k !== 'none' && parts[pre + '_' + k]) parts[pre + '_' + k].visible = true }
+    else if (!CLOTHES_OFF) { const k = MESH_SWAP[slot]?.[l[slot]] ?? l[slot]; if (k && k !== 'none' && parts[pre + '_' + k]) parts[pre + '_' + k].visible = true }
   }
   const sp = M.species[speciesOf(l)]
   const materials = {
