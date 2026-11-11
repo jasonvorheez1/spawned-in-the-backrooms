@@ -5,7 +5,7 @@ import { materialColor, positionGeometry, positionWorld, normalWorld, cameraPosi
 import { MeshStandardNodeMaterial } from "builtin/three";
 
 // the printed pieces: picture, centre on the torso (bind-pose metres, front = -z: the critter faces -z), square size; split = the other half's colour; x = sleeve marks
-const PRINTS = {
+export const PRINTS = {
   pgsmile: { tex: "/cdn/value.b7652a767b44728f013f67d62067f01ff29e190eebcbb6d97a0245474eecf35d.png", at: [0, 0.87], size: 0.34, x: true },
   pgcoat: { tex: "/cdn/value.b7652a767b44728f013f67d62067f01ff29e190eebcbb6d97a0245474eecf35d.png", at: [0.08, 0.93], size: 0.16, x: true },
   ppsad: { tex: "/cdn/value.f3ad0803396844a6d0d054965edeaadb21929d53b47a09dcd74d9592e476b3c1.png", at: [0, 0.88], size: 0.3 },
@@ -150,16 +150,21 @@ export function material(ctx) {
     col = base.mul(float(0.9).add(wv.mul(0.1)).add(fine.mul(0.04)));
     if (P.split) col = mix(col, vec3(...P.split).mul(float(0.9).add(wv.mul(0.1))), step(0.0, q.x)); // two-tone halves, split down the middle
     if (P.x) { // stitched red x's on the sleeves
-      for (const [ax, ay] of [[0.40, 0.98], [0.47, 0.94], [-0.40, 0.98], [-0.47, 0.94], [0.44, 0.86], [-0.44, 0.86]]) {
-        const dx = q.x.sub(ax), dy = q.y.sub(ay), r = 0.022;
+      const CM = ctx.params.pmx != null ? [+ctx.params.pmx, +ctx.params.pmy] : null; // the new cat: marks around her upper arm (cat-wardrobe.yml prints)
+      const MK = CM ? [[CM[0] - 0.025, CM[1] + 0.012], [CM[0] + 0.02, CM[1]], [CM[0], CM[1] - 0.022]].flatMap(([a, b]) => [[a, b], [-a, b]]) : [[0.40, 0.98], [0.47, 0.94], [-0.40, 0.98], [-0.47, 0.94], [0.44, 0.86], [-0.44, 0.86]];
+      for (const [ax, ay] of MK) {
+        const dx = q.x.sub(ax), dy = q.y.sub(ay), r = CM ? 0.012 : 0.022;
         const inBox = step(abs(dx), r).mul(step(abs(dy), r));
         const lineA = smoothstep(0.006, 0.003, abs(dx.sub(dy))), lineB = smoothstep(0.006, 0.003, abs(dx.add(dy)));
         col = mix(col, vec3(0.55, 0.06, 0.06), lineA.max(lineB).mul(inBox));
       }
     }
     const T = ctx.texture(P.tex);
-    const pu = float(P.at[0]).sub(q.x).div(P.size).add(0.5), pv = q.y.sub(P.at[1]).div(P.size).add(0.5);
-    const inside = step(0.0, pu).mul(step(pu, 1.0)).mul(step(0.0, pv)).mul(step(pv, 1.0)).mul(smoothstep(0.02, 0.06, q.z.negate()));
+    // the old critter faces -z; the new cat faces +z and passes her own chest centre and size (pfz 1, pax, pay, psz, pz0: the front split)
+    const fz = Number(ctx.params.pfz ?? -1), at = [Number(ctx.params.pax ?? P.at[0]), Number(ctx.params.pay ?? P.at[1])], sz = Number(ctx.params.psz ?? P.size), z0 = Number(ctx.params.pz0 ?? 0);
+    const pu = fz < 0 ? float(at[0]).sub(q.x).div(sz).add(0.5) : q.x.sub(at[0]).div(sz).add(0.5), pv = q.y.sub(at[1]).div(sz).add(0.5);
+    const front = fz < 0 ? smoothstep(0.02, 0.06, q.z.negate()) : smoothstep(z0, z0 + 0.02, q.z);
+    const inside = step(0.0, pu).mul(step(pu, 1.0)).mul(step(0.0, pv)).mul(step(pv, 1.0)).mul(front);
     const t = T.sample(vec2(pu, pv));
     col = mix(col, t.rgb.mul(float(0.88).add(fine.mul(0.12))), t.a.mul(inside));
   } else { // weave: a plain fabric

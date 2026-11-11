@@ -1,6 +1,7 @@
 // The new Tripo cat's wardrobe (data: ./data/cat-wardrobe.yml; shader: scripts/mat-catskin.js). Painted garments are numbers handed to her skin shader;
 // modelled garments (Tripo) ride as skinned children with their region painted underneath. Only the new cat bodies use this: the old critter is untouched.
 import W from './data/cat-wardrobe.yml'
+import { PRINTS } from '../mat-cloth.js'
 
 export const CAT_BODY = {
   f: { glb: '/cdn/value.5ba02799468db7d53fffc4a925d9db6bb83760ea689b7ece74ccd6fde2156fb8.glb', fur: '/cdn/value.3ce61cc31af3653d9deca9d9cefea396f4ac766d1537a49929f4cc4c2e0555e6.jpg' },
@@ -33,6 +34,7 @@ export function skinParams(sex, look) {
   if (p.bot) { const b = p.bot; o.bot = 1; o.bLo = legAt(B, b.leg); o.bHi = B.waist + b.rise; o.bpat = b.pat; put(o, 'bot', b.c) }
   { const l = { ...W.defaults[sex], ...(look || {}) }   // modelled garments tuck the skin under them
     o.tuckT = W.models[l.topw] ? 0.014 : 0; o.tuckB = W.models[l.botw] ? 0.01 : 0; o.tuckS = W.models[l.shoes] ? 0.006 : 0 }
+  { const pr = printOf(sex, { ...W.defaults[sex], ...(look || {}) }); if (pr && !W.models[(look || {}).topw ?? W.defaults[sex].topw] && PRINTS[pr.pat]) { o.tprint = PRINTS[pr.pat].tex; o.tpx = pr.pax; o.tpy = pr.pay; o.tps = pr.psz } }
   if (p.sock) { o.sock = 1; o.sHi = lerp(B.leg[2], B.leg[1], p.sock.top); put(o, 'sock', p.sock.c) }
   return o
 }
@@ -48,7 +50,13 @@ export function catChildren(sex, look) {
   const l = { ...W.defaults[sex], ...(look || {}) }, out = []
   for (const [slot, ck] of [['topw', 'top'], ['botw', 'bottom'], ['shoes', 'shoec'], ['hat', 'hatc']]) {
     const g = W.models[l[slot]]; if (!g?.[sex]) continue
-    out.push({ id: 'cw-' + slot, attachment: { skin: true }, model: { id: g[sex], forward: '+z', ...(g.tint === false ? {} : { materials: { cloth: { kind: 'scripted', script: 'scripts/mat-cloth.js', color: l[ck] || '#ffffff', params: { pat: g.pat || 'weave' } } } }) }, ...(slot === 'topw' ? { morph: chestOf(look) } : {}) })
+    out.push({ id: 'cw-' + slot, attachment: { skin: true }, model: { id: g[sex], forward: '+z', ...(g.tint === false ? {} : { materials: { cloth: { kind: 'scripted', script: 'scripts/mat-cloth.js', color: l[ck] || '#ffffff', params: (slot === 'topw' && printOf(sex, l)) || { pat: g.pat || 'weave' } } } }) }, ...(slot === 'topw' ? { morph: chestOf(look) } : {}) })
   }
   return out
+}
+// a Thrift Mode print on her top (look.topp): the cloth shader's params for this body, or null
+export function printOf(sex, look) {
+  const k = look?.topp; if (!k || !PRINTS[k]) return null
+  const R = W.prints[sex], b = W.prints.badge[k], c = R.chest
+  return { pat: k, pfz: 1, pz0: W.body[sex].front, pax: c[0] + (b ? b[0] : 0), pay: c[1] + (b ? b[1] : 0), psz: c[2] * (b ? b[2] : 1), pmx: R.arm[0], pmy: R.arm[1] }
 }

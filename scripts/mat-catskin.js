@@ -59,6 +59,12 @@ export function material(ctx) {
   layer(sockD, onSock, "rib", "sock", 3.1);
   layer(botD, onBot, String(ctx.params.bpat ?? "weave"), "bot", 7.7);
   layer(topD, onTop, String(ctx.params.tpat ?? "weave"), "top", 0);
+  if (ctx.params.tprint) { // a printed tee (Thrift Mode): the picture on her chest, front only, inside the top
+    const ps = P("tps", 0.17), pu = q.x.sub(P("tpx", 0)).div(ps).add(0.5), pv = q.y.sub(P("tpy", 0.54)).div(ps).add(0.5);
+    const inPic = step(0.0, pu).mul(step(pu, 1.0)).mul(step(0.0, pv)).mul(step(pv, 1.0)).mul(isFront).mul(inside(topD, 0)).mul(onTop);
+    const t = ctx.texture(String(ctx.params.tprint)).sample(vec2(pu, pv));
+    col = mix(col, t.rgb.mul(0.94), t.a.mul(inPic));
+  }
   if (ctx.params.tband) { // a contrast band along the low hem (the crop's trim)
     const bd = inside(topD, 0).mul(onTop).mul(smoothstep(0.016 + E, 0.016 - E, q.y.sub(tLo)));
     col = mix(col, C("trim"), bd.mul(0.9));
