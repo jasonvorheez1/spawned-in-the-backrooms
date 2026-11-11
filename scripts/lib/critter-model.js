@@ -263,7 +263,7 @@ const humanBodyFull = (l) => {
   const c = skinOf(l), skin = anime('skin', c) // the first-person arms wear this same material (player.js spreads it), so the body and the arms still read as one skin (Shelly, Nov 9)
   const m = l ? bodyModel({ ...l, _human: true }) : { materials: {}, parts: {} }
   const parts = { ...(m.parts || {}), Under_top: { visible: l?.sex === 'f' && m.parts?.Skin_torso?.visible !== false && !rowOf('topw', l?.topw, l?.top) } /* skin stays under a tank now; the bra must not (it poked through as a black patch, Nov 10) */, Under_bottom: { visible: m.parts?.Skin_hips?.visible !== false } }
-  parts.Skin_torso_upper_front = { visible: !['hoodie', 'sweater'].includes(rowOf('topw', l?.topw, l?.top)?.kind) } // scoop collars still expose chest skin; a closed neck hides it (it poked through Dawn's hoodie as spikes, Nov 11)
+  parts.Skin_torso_upper_front = { visible: !['hoodie', 'sweater'].includes(rowOf('topw', l?.topw, l?.top)?.kind) && !(l?.sex === 'm' && rowOf('topw', l?.topw, l?.top)?.kind === 'longsleeve') } // scoop collars still expose chest skin; a closed neck hides it (it poked through Dawn's hoodie as spikes, Nov 11)
   if (rowOf('botw', l?.botw, l?.bottom)) parts.Skin_hips = { visible: true } // keep the pelvis behind low waistbands; masking the whole region left an open body cut
   for (const name of ['stubble', 'mustache', 'goatee', 'handlebars', 'fullbeard', 'chinstrap', 'anchor']) parts['Beard_' + name] = { visible: !maskOf(l) && (l?.beard === 'moustache' ? 'mustache' : l?.beard) === name }
   const blush = l?.blush && l.blush !== 'none' && l.blush !== 'false' ? (['heart', 'star', 'hash'].includes(l.blush) ? l.blush : 'soft') : null
