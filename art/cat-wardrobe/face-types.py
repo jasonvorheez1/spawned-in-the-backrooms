@@ -18,7 +18,7 @@ def cls(a):
 yy, xx = np.mgrid[0:H, 0:W]
 nose = ((xx - 555) / 85.0) ** 2 + ((yy - 625) / 62.0) ** 2 < 1
 eyeZone = (yy >= 200) & (yy <= 660) & ~nose
-mouthBox = (yy >= 655) & (yy <= 830) & (xx >= 340) & (xx <= 760) & ~nose
+mouthBox = (yy >= 630) & (yy <= 835) & (xx >= 340) & (xx <= 760) & ~nose
 out = {"eyes": {}, "mouths": {}}
 for sex, key in (("f", "female"), ("m", "male")):
     src = f"{OUT}/{sex}-neutral.png"
@@ -32,23 +32,22 @@ for sex, key in (("f", "female"), ("m", "male")):
         for t in ("sparkle", "sleepy", "slit", "sharp", "bean") if kind == "eye" else ("fang", "grin", "smirk", "open", "line"):
             v = rgba(f"{SRC}/{sex}-{kind}-{t}.png"); vg, vart, vpink = cls(v)
             res = base.copy()
+            vv = v.copy(); vv[..., 1] = np.minimum(vv[..., 1], np.maximum(vv[..., 0], vv[..., 2]))   # despill the green the art was painted on
             if kind == "eye":
-                take = eyeZone & vart
-                clear = eyeZone & nd.binary_dilation(bart & eyeZone, iterations=5) & ~take
-                res[clear & muzzle, :3] = cc; res[clear & muzzle, 3] = 255
-                res[clear & ~muzzle, 3] = 0
-                res[take, :3] = v[take, :3]; res[take, 3] = 255
-                # a soft 1px edge on the new ink against the cleared fur
-                a = nd.gaussian_filter(res[..., 3].astype(float), 0.7); res[..., 3] = np.where(take | ba, a, res[..., 3])
+                take = eyeZone & vart & ~nose & ~(muzzle & ~nd.binary_dilation(bart, iterations=2) & (yy > 640))
+                # above the muzzle the old face is only eye ink on clear fur: clear it all; on the muzzle, old ink becomes cream
+                res[eyeZone & ~muzzle, 3] = 0
+                old = eyeZone & muzzle & nd.binary_dilation(bart, iterations=4) & ~nose
+                res[old, :3] = cc
+                res[take, :3] = vv[take, :3]; res[take, 3] = 255
             else:
-                art = vart | vpink
-                take = mouthBox & art
-                clear = mouthBox & nd.binary_dilation(bart & mouthBox, iterations=4) & ~take
-                res[clear, :3] = cc
-                res[take, :3] = v[take, :3]
-                fade = nd.gaussian_filter(mouthBox.astype(float), 6) * (muzzle | take)
-                res[..., 3] = np.clip(fade * 255 * 1.6, 0, 255) * mouthBox.astype(float) + 0
-                res[..., 3] = np.where(mouthBox, np.maximum(res[..., 3], take * 255), 0)
+                noseInk = nd.binary_dilation(bart & (yy > 520) & (yy < 720) & (xx > 430) & (xx < 680) & nd.binary_opening(bart, np.ones((15, 15))), iterations=5)
+                take = mouthBox & (vart | vpink) & ~noseInk
+                res[mouthBox & ~noseInk, :3] = cc
+                res[take, :3] = vv[take, :3]
+                edge = nd.gaussian_filter(mouthBox.astype(float), 8)
+                res[..., 3] = np.where(mouthBox & ~noseInk, np.clip(edge * 2 - 0.5, 0, 1) * 255, 0)
+                res[take, 3] = 255
             img = Image.fromarray(np.clip(res, 0, 255).astype(np.uint8), "RGBA").resize((550, 494), Image.LANCZOS)
             p = f"{OUT}/{sex}-{kind}-{t}.png"; img.save(p)
             url = subprocess.run(["spawn", "upload", p, "--name", f"cat-{kind}-{t}-{sex}"], capture_output=True, text=True).stdout
