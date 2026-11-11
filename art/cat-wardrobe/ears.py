@@ -99,14 +99,14 @@ def ear(bm, E, T, sx, mats):
     bot = bm.verts.new(sum((v.co for v in verts[0]), Vector()) / N)
     for i in range(N): bm.faces.new((verts[0][(i + 1) % N], verts[0][i], bot)).material_index = 0
     # the tuft: three soft cream locks rising out of the bowl
-    for k, (ox, L, ang) in enumerate(((-0.25, 0.5, 6), (0.12, 0.62, -4), (0.4, 0.42, -12))):
+    for k, (ox, L, ang) in enumerate(((-0.28, 0.26, 10), (0.08, 0.34, -2), (0.36, 0.22, -14))):
         root = Vector((ox * W0 * sx, D0 * 0.25, 0.08 * h))
-        dirv = Matrix.Rotation(math.radians(ang * sx), 3, "Y") @ Vector((0, 0.38, 1)).normalized()
+        dirv = Matrix.Rotation(math.radians(ang * sx), 3, "Y") @ Vector((0, 0.7, 1)).normalized()
         if T.get("tip"): pass
-        segs, ringn = 7, 8; prev = None; rr = W0 * 0.16
+        segs, ringn = 7, 8; prev = None; rr = W0 * 0.24
         rowsv = []
         for i in range(segs + 1):
-            u = i / segs; pc = root + dirv * (L * h * u) + Vector((0, 0.18 * h * u * u, 0))
+            u = i / segs; pc = root + dirv * (L * h * u) + Vector((0, 0.12 * h * u * u, -0.05 * h * u * u))
             rad = rr * (1 - u) ** 0.9 + 0.0008
             row = [bm.verts.new(C + E["ac"] * ((pc.x * sx + math.cos(2 * math.pi * q / ringn) * rad) ) + E["fr"] * ((pc.y + math.sin(2 * math.pi * q / ringn) * rad * 0.6)) + E["up"] * pc.z) for q in range(ringn)]
             rowsv.append(row)
@@ -135,7 +135,7 @@ def build(sex, kind, arm, H, meas, bone):
     o.parent = arm; o.modifiers.new("skin", "ARMATURE").object = arm
     return o
 
-HIDE = 2.4   # Ear_Small past 1 presses the head's own ear flat into the crown, under the new ear (cat-wardrobe.js catMorph sends the same)
+HIDE = 3.0   # Ear_Small past 1 presses the head's own ear flat into the crown, under the new ear (cat-wardrobe.js catMorph sends the same)
 def proof(sex, objs, H, meas):
     sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = sc.render.resolution_y = 360
     w = bpy.data.worlds.new("w"); sc.world = w; w.color = (0.3, 0.3, 0.33)
