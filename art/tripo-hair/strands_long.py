@@ -65,16 +65,16 @@ for f0 in bm.faces:
             if abs(d) < 1e-12: continue
             w1 = ((q[..., 0] - P[0, 0]) * (P[2, 1] - P[0, 1]) - (P[2, 0] - P[0, 0]) * (q[..., 1] - P[0, 1])) / d
             w2 = ((P[1, 0] - P[0, 0]) * (q[..., 1] - P[0, 1]) - (q[..., 0] - P[0, 0]) * (P[1, 1] - P[0, 1])) / d
-            w0 = 1 - w1 - w2; pad = -1.5 / RES * 20
+            w0 = 1 - w1 - w2; pad = -0.08   # bleed past each triangle so card edges never sample empty texels
             m = (w0 > pad) & (w1 > pad) & (w2 > pad)
             if not m.any(): continue
             z = w0 * zz[0] + w1 * zz[1] + w2 * zz[2]
             t = (z - zmin) / max(zmax - zmin, 1e-6)            # 0 at the card's low end, 1 at its root
             s = q @ side * freq * 6.283 + phase
             strand = 0.5 + 0.5 * np.cos(s) + 0.25 * np.cos(s * 2.7 + 1.3)
-            tipcut = np.clip(t * 6, 0, 1)                      # the low sixth of each card thins into comb tips
+            tipcut = np.clip(t * 10, 0, 1)                     # the low tenth of each card thins into comb tips
             alpha = np.clip(strand * 1.6 - (1 - tipcut) * 1.2 + 0.15, 0, 1)
-            alpha = np.where(t > 0.35, np.maximum(alpha, 0.85), alpha)   # roots stay dense: no scalp through the crown
+            alpha = np.where(t > 0.1, 1.0, alpha)   # Nov 11: solid above the tips; the strands read from the grey, not from holes (holes showed the scalp and back through)
             grey = (0.78 + 0.22 * (0.5 + 0.5 * np.cos(s * 0.37))) * shade
             Y, X = (RES - 1 - ys)[m], xs[m]
             img[Y, X, 3] = np.maximum(img[Y, X, 3], alpha[m]); img[Y, X, 0:3] = grey[m][:, None]
