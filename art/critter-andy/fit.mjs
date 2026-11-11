@@ -34,6 +34,13 @@ const hasBust = sk.some((s) => s[6] || s[7] || s[8]);
 // the trousers' waistband height, world metres (top of Ward_pants at the game pose)
 const wys = []; let WAIST = 0; for (const m of meshes) if (m.getName() === "Ward_pants") { const di = tIdx(m, "Dandy"); for (const p of m.listPrimitives()) { const P = p.getAttribute("POSITION"), D = p.listTargets()[di]?.getAttribute("POSITION"), v = [0,0,0], d = [0,0,0]; for (let i = 0; i < P.getCount(); i++) { P.getElement(i, v); if (D) D.getElement(i, d); wys.push((v[1]+d[1]) * S + OY) } } }
 wys.sort((a, b) => a - b); WAIST = Math.min(0.7, wys[Math.floor(wys.length * 0.97)] ?? 0.68) - 0.01; // pants top; a stray high vert never sets it console.log("waist", WAIST.toFixed(3));
+// the trousers' own surface at the game pose: a shirt hem below the waistband is tucked just inside it (Nov 11: the back hem hung outside the pants and tore through)
+const pc = []; for (const m of meshes) if (m.getName() === "Ward_pants") { const di = tIdx(m, "Dandy"); for (const p of m.listPrimitives()) { const P = p.getAttribute("POSITION"), D = p.listTargets()[di]?.getAttribute("POSITION"), v = [0,0,0], d = [0,0,0]; for (let i = 0; i < P.getCount(); i++) { P.getElement(i, v); if (D) D.getElement(i, d); pc.push([v[0]+d[0], v[1]+d[1], v[2]+d[2]]) } } }
+const pg = new Map(); pc.forEach((q, i) => { const k = key(q[0], q[1], q[2]); (pg.get(k) ?? pg.set(k, []).get(k)).push(i) });
+function nearPants(x, y, z) { const cx = Math.floor(x/C), cy = Math.floor(y/C), cz = Math.floor(z/C); let b = null, bd = 1e9;
+  for (let a = -2; a <= 2; a++) for (let e = -2; e <= 2; e++) for (let c = -2; c <= 2; c++) for (const i of pg.get(`${cx+a},${cy+e},${cz+c}`) ?? []) { const q = pc[i], dd = (q[0]-x)**2 + (q[1]-y)**2 + (q[2]-z)**2; if (dd < bd) { bd = dd; b = q } }
+  return b }
+const TUCK = W(0.02); let tucked = 0;
 let fitted = 0, pushed = 0, pulled = 0;
 for (const m of meshes) { const name = m.getName(); if (SKIP.test(name)) continue; if (!/^(Top_|Bot_|Ward_|Neck_)/.test(name)) continue;
   const lname = name.toLowerCase(), gap = BOTTOM.test(lname) ? GAP.bottom : OUTER.test(lname) ? GAP.outer : GAP.top;
@@ -66,10 +73,13 @@ for (const m of meshes) { const name = m.getName(); if (SKIP.test(name)) continu
           if (d1 < gap && d0 >= gap) { /* already clear */ }
         } else { bx *= 0.5; by *= 0.5; bz *= 0.5 } }
       else { bx = by = bz = 0 }
+      if (!BOTTOM.test(lname) && !OUTER.test(lname) && pc.length && wy < WAIST + 0.015 && Math.abs(x * S) < 0.2) { // tuck: inside the trousers, pulled toward the body's axis
+        const q = nearPants(x + dx - d[0], y + dy - d[1], z + dz - d[2]); if (q) { const r = Math.hypot(q[0], q[2]) || 1, f = Math.max(0, (r - TUCK) / r); const tx = q[0] * f, tz = q[2] * f, cy = Math.min(y + dy - d[1], q[1]);
+          const nowR = Math.hypot(x + dx - d[0], z + dz - d[2]); if (nowR > r - TUCK * 0.5) { dx = tx - v[0]; dz = tz - v[2]; dy = cy - v[1]; tucked++ } } }
       nd[i*3] = dx; nd[i*3+1] = dy; nd[i*3+2] = dz; nb[i*3] = bx * on; nb[i*3+1] = by * on; nb[i*3+2] = bz * on }
     T[di].setAttribute("POSITION", doc.createAccessor().setType("VEC3").setArray(nd).setBuffer(P.getBuffer()));
     if (B) T[bi].setAttribute("POSITION", doc.createAccessor().setType("VEC3").setArray(nb).setBuffer(P.getBuffer())) }
   fitted++ }
 for (const e of doc.getRoot().listExtensionsUsed()) if (e.extensionName === "EXT_meshopt_compression") e.dispose();
 await io.write(out, doc);
-console.log("fitted", fitted, "garments; pushed", pushed, "pulled", pulled, "verts; bust", hasBust);
+console.log("tucked", tucked, "fitted", fitted, "garments; pushed", pushed, "pulled", pulled, "verts; bust", hasBust);
