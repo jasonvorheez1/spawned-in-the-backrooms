@@ -24,6 +24,7 @@ export function material(ctx) {
   let rough = 0.85;
   const band = (x, w) => smoothstep(0.5 - w - 0.02, 0.5 - w, abs(fract(x).sub(0.5))).oneMinus(); // 1 inside a centred band of half-width w
   if (pat === "denim") {
+    rough = 0.98; // denim is matte: at 0.85 a fold mid-stride caught a hard glare that read as pale patches (Nov 11)
     const tw = fract(u.add(v).mul(140)); // diagonal twill
     const fade = mx_fractal_noise_float(p.mul(6)).mul(0.5).add(0.5);
     col = base.mul(float(0.78).add(smoothstep(0.35, 0.65, tw).mul(0.18))).mul(float(0.88).add(fade.mul(0.28)));
