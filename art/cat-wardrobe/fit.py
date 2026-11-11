@@ -154,8 +154,8 @@ if KIND == "top":   # weights by where the cloth sits, never by the nearest skin
             if n.startswith(O): continue
             t[n] = t.get(n, 0) + ge.weight
         ts = sum(t.values())
-        if ts > 0.5:
-            pass   # tried blending these in (0.7): his left back still drags with the tail side, so position weights alone stand
+        if ts > 0.5 and a > 0:   # the sleeve bends as the arm's own skin bends (the torso keeps position weights: there the tail side dragged his back)
+            for k in set(w) | set(t): w[k] = w.get(k, 0) * (1 - a) + t.get(k, 0) / ts * a
         setw(v, w)
 bpy.ops.object.vertex_group_normalize_all(lock_active=False); bpy.ops.object.vertex_group_limit_total(limit=4)
 g.parent = arm; am = g.modifiers.new("Armature", "ARMATURE"); am.object = arm
