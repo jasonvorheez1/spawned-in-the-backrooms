@@ -5,6 +5,8 @@ import { plainLook, honest, wornTokens, parseCloth } from './lib/clothes.js'
 import C from './lib/data/critter.yml'
 import { standUp } from './lib/seat.js'
 const SCRIPT = 'scripts/critter2-geo.js'
+import { SNOUTS, EARS, TAILS } from './lib/cat-wardrobe.js'
+import CW from './lib/data/cat-wardrobe.yml'
 import { isNewCat, catLook, seatCat, FURRY_HEAD, armSplay, bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, restyleQueue, restyleStep, STYLE_V, seatHead, clearAppearance, humanBodyMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard, speciesOf } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
 const LID_SCALE = 1000 // the lids are modelled this many times too small (scripts/critter2-geo.js)
 const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
@@ -159,6 +161,12 @@ export function onInput(ctx, input) {
     }
     if (d.k === 'model') { if (d.v && !C.models?.[d.v]) return; st.look = { ...lookOf(ctx), model: d.v || '', modelUrl: '' }; return }
     if (d.k === 'modelUrl') { const m = String(d.v || '').match(/\/cdn\/[\w.\-]+\.glb$/); st.look = { ...lookOf(ctx), modelUrl: m ? m[0] : '', model: '' }; return } // a player's own uploaded .plymodel
+    // the cat creator (Shelly: cats are the one species now): head shape, tail, tufts, cat hair and the bust slider
+    if (d.k === 'snout' || d.k === 'ears' || d.k === 'tail') { const list = { snout: SNOUTS, ears: EARS, tail: TAILS }[d.k]; if (!list.includes(d.v)) return; dress(st, lookOf(ctx), { ...lookOf(ctx), species: 'cat', [d.k]: d.v }); return }
+    if (d.k === 'cathair') { const cur = lookOf(ctx), sx = cur.sex === 'f' ? 'f' : 'm'; if (d.v !== 'none' && !CW.hair?.[d.v]?.[sx]) return; dress(st, cur, { ...cur, species: 'cat', hair: d.v }); return }
+    if (d.k === 'fluff') { if (!CW.fluff?.[d.v]) return; const cur = lookOf(ctx), have = Array.isArray(cur.fluff) ? cur.fluff : cur.fluff ? [cur.fluff] : ['cheeks']; const next = have.includes(d.v) ? have.filter((f) => f !== d.v) : [...have, d.v]; dress(st, cur, { ...cur, species: 'cat', fluff: next }); return }
+    if (d.k === 'chest') { const cur = lookOf(ctx); if (cur.sex !== 'f') return; const now = Number(cur.chest ?? 0.5); const v = d.v === '+' ? now + 0.1 : d.v === '-' ? now - 0.1 : Number(d.v); if (!Number.isFinite(v)) return; st.look = { ...cur, chest: Math.round(Math.max(0, Math.min(1, v)) * 100) / 100 }; return }
+    if (d.k === 'sex' && C.sex.includes(d.v) && isNewCat(lookOf(ctx))) { const cur = lookOf(ctx); dress(st, cur, { ...cur, sex: d.v, hair: CW.hair?.[cur.hair]?.[d.v] ? cur.hair : 'none', ...(d.v === 'f' ? {} : { chest: undefined }) }); return }
     if (d.k === 'hair' && d.v !== 'none' && !(lookOf(ctx).sex === 'f' ? C.hairF : C.hairM).includes(d.v)) return
     if (d.k === 'sex' && C.sex.includes(d.v)) { const cur = lookOf(ctx); const keep = typeof cur.hair==='string' && cur.hair.startsWith(d.v + '_') ? cur.hair : 'none'; dress(st, cur, { ...cur, sex: d.v, hair: keep }); return }
     if (d.k === 'species') { if (!['cat', 'dog', 'fox', 'bunny', 'wolf', 'mouse'].includes(d.v) || speciesOf({ species: d.v }) !== d.v) return; dress(st, lookOf(ctx), { ...lookOf(ctx), species: d.v }); return } // any species with a head (critter-models.yml), the salon's list

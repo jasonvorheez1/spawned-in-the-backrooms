@@ -1,5 +1,6 @@
 // The critter creator (C): tabs for body, face, clothes and saved outfits. Every button sends one 'dress' action.
 import C from './lib/data/critter.yml'
+import CW from './lib/data/cat-wardrobe.yml'
 const NAMES = { m: 'boy', f: 'girl', none: 'none', tee: 't-shirt', tank: 'tank top', longsleeve: 'long sleeve', hoodie: 'hoodie', sweater: 'sweater', jacket: 'jacket', pajamas: 'pyjama top', apron: 'apron', dress: 'dress', pants: 'pants', shorts: 'shorts', pjpants: 'pyjama pants', overalls: 'overalls', skirt: 'skirt', longskirt: 'long skirt', sneakers: 'sneakers', boots: 'boots', slippers: 'slippers', bow: 'bow', flower: 'flower', cap: 'cap', beanie: 'beanie', tophat: 'top hat', crown: 'crown', headphones: 'headphones', partyhat: 'party hat', tuft: 'hair tuft', glasses: 'glasses', shades: 'sunglasses', scarf: 'scarf', bowtie: 'bow tie', bell: 'bell collar', cape: 'cape', round: 'round', tall: 'tall', wide: 'wide', freckles: 'freckles', stripes: 'stripes', patch: 'eye patch', heart: 'heart', stubble: 'stubble', mustache: 'mustache', goatee: 'goatee', handlebars: 'handlebars', fullbeard: 'full beard', chinstrap: 'chin strap', anchor: 'anchor', burly: 'burly', rugged: 'rugged', diamond: 'diamond' }
 const TABS = [['body', 'BODY', '01'], ['face', 'FACE', '02'], ['clothes', 'CLOTHES', '03'], ['outfits', 'OUTFITS', '04']]
 const CSS = `<style>
@@ -88,8 +89,28 @@ export function wardrobe(ctx, player) {
   const sws = (k, list) => `<div class="sws">${list.map((v) => sw(k, v, l[k] === v)).join('')}</div>`
   const slot = (title, k, colourKey) => `<div class="slot"><div class="sec" style="margin-top:2px"><span>${title}</span><span>${NAMES[l[k]] || l[k]}</span></div>${grid(k, C[k])}${colourKey && l[k] !== 'none' ? sws(colourKey, C.cloth) : ''}</div>`
   let body = ''
-  if (tab === 'body') body = `
-    ${human ? '' : `<div class="sec"><span>ANIMAL</span><span>${l.species}</span></div>${grid('species', ['cat', 'dog', 'fox', 'bunny', 'wolf', 'mouse'])}`}
+  const cat = !human
+  const CATN = { button: 'button', long: 'long', pointy: 'pointy', flat: 'flat', puff: 'mochi', upright: 'upright', tall: 'tall', small: 'small', fold: 'fold', wide: 'airplane', classic: 'classic', fluffy: 'fluffy', bob: 'bobtail', whip: 'whip', curl: 'curl', cheeks: 'cheeks', burns: 'sideburns', crest: 'crest', lynx: 'lynx tips', nape: 'nape', cowlick: 'cowlick', afropuff: 'afro puff', crop: 'crop', halfup: 'half up', long_h: 'long', pixie: 'pixie', shaggy: 'shaggy', sidetail: 'side tail', twintails: 'twin tails', undercut: 'undercut' }
+  const pick = (k, list, cur) => `<div class="grid">${list.map((v) => tile(k, v, cur === v, CATN[v] || v)).join('')}</div>`
+  const fl = Array.isArray(l.fluff) ? l.fluff : l.fluff ? [l.fluff] : ['cheeks']
+  const sx = l.sex === 'f' ? 'f' : 'm', catHairs = Object.keys(CW.hair || {}).filter((k) => CW.hair[k][sx])
+  const chestV = Number(l.chest ?? 0.5), chestPct = Math.round(chestV * 100)
+  const chestRow = `<div class="sl"><span class="nm">bust</span><button onclick="${act('chest', '-')}">−</button><div class="bar" style="--mid:50%;cursor:pointer" onclick="(function(el,ev){const r=el.getBoundingClientRect(),p=Math.max(0,Math.min(1,(ev.clientX-r.left)/r.width));sendAction('dress',{k:'chest',v:p.toFixed(2)})})(this,event)"><i style="width:${chestPct}%"></i><b></b><span class="th" style="left:${chestPct}%"></span></div><button onclick="${act('chest', '+')}">+</button><span class="v">${chestPct}%</span></div>`
+  if (tab === 'body' && cat) body = `
+    <div class="sec"><span>BODY</span></div>${grid('sex', C.sex)}
+    <div class="sec"><span>STATURE</span><span>${Math.round(170 * (Number(l.heightS) || 1))} cm</span></div><div class="big">${sliderRows(C.sliders.filter((r) => ['heightS', 'buildS'].includes(r[0])))}${l.sex === 'f' ? chestRow : ''}</div>
+    <div class="sec"><span>FUR</span></div>${sws('fur', C.fur)}
+    <div class="sec"><span>TAIL</span><span>${CATN[l.tail] || 'random'}</span></div>${pick('tail', ['classic', 'fluffy', 'bob', 'puff', 'whip', 'curl'], l.tail)}
+    <div class="sec"><span>HAIR</span><span>${CATN[l.hair] || (l.hair === 'none' ? 'none' : 'random')}</span></div>${pick('cathair', ['none', ...catHairs], l.hair)}
+    ${l.hair !== 'none' ? `<div class="sec"><span>HAIR COLOUR</span></div>${sws('hairc', C.hairc)}` : ''}
+    <div class="sec"><span>TUFTS</span><span>${fl.length ? fl.map((f) => CATN[f] || f).join(', ') : 'none'}</span></div><div class="grid">${Object.keys(CW.fluff || {}).map((v) => tile('fluff', v, fl.includes(v), CATN[v] || v)).join('')}</div>`
+  else if (tab === 'face' && cat) body = `
+    <div class="sec"><span>SNOUT</span><span>${CATN[l.snout] || 'random'}</span></div>${pick('snout', ['button', 'long', 'pointy', 'flat', 'puff'], l.snout)}
+    <div class="sec"><span>EARS</span><span>${CATN[l.ears] || 'random'}</span></div>${pick('ears', ['upright', 'tall', 'small', 'fold', 'wide'], l.ears)}
+    <div class="sec"><span>EYE COLOUR</span></div>${sws('eye', C.eye)}
+    <div class="sec"><span>RESTING FACE</span><span>${l.expr}</span></div>${grid('expr', C.expr, {})}
+    <div class="hint">T cycles faces while you play. getting hit, low hp and low sanity show on your face on their own.</div>`
+  else if (tab === 'body') body = `
     <div class="sec"><span>BODY</span></div>${grid('sex', C.sex)}
     <div class="sec"><span>STATURE</span><span>${Math.round(170 * (Number(l.heightS) || 1))} cm</span></div><div class="big">${sliderRows(C.sliders.filter((r) => ['heightS', 'buildS'].includes(r[0])))}</div>
     ${human ? `<div class="sec"><span>SKIN</span></div>${sws('skin', C.skin)}` : `<div class="sec"><span>FUR</span></div>${sws('fur', C.fur)}`}
@@ -118,12 +139,12 @@ export function wardrobe(ctx, player) {
     const fits = st.outfits || []
     body = `<div class="sec"><span>SAVED OUTFITS</span></div>` + Array.from({ length: C.outfitSlots }, (_, i) => {
       const f = fits[i]
-      const nm = f ? `${human ? '' : f.species + ' · '}${NAMES[f.topw] || f.topw || '?'} · ${NAMES[f.botw] || f.botw || '?'}` : 'empty'
+      const nm = f ? `${NAMES[f.topw] || f.topw || '?'} · ${NAMES[f.botw] || f.botw || '?'}` : 'empty'
       return `<div class="fit slot"><span class="nm">${i + 1}. ${nm}</span>${f ? `<button class="on" onclick="${act('wear', i)}">wear</button>` : ''}<button onclick="${act('save', i)}">save here</button></div>`
-    }).join('') + `<div class="hint">saving keeps your whole look: ${human ? 'skin' : 'animal'}, colours, face and clothes. wear it again in one click.</div>`
+    }).join('') + `<div class="hint">saving keeps your whole look: ${human ? 'skin' : 'fur'}, colours, face and clothes. wear it again in one click.</div>`
   }
   return `${CSS}<div id="cc" data-modal>
-  <div class="hd"><div class="ttl"><h2>${human ? 'Character' : 'Character'}</h2><div class="sub">${human ? '' : l.species + ' · '}${NAMES[l.sex] || l.sex} · ${Math.round(170 * (Number(l.heightS) || 1))} cm</div></div><button class="x" onclick="${act('close')}">✕</button></div>
+  <div class="hd"><div class="ttl"><h2>${human ? 'Character' : 'Character'}</h2><div class="sub">${human ? '' : 'cat · '}${NAMES[l.sex] || l.sex} · ${Math.round(170 * (Number(l.heightS) || 1))} cm</div></div><button class="x" onclick="${act('close')}">✕</button></div>
   <div class="main"><div class="tabs">${tabs.map(([k, n, i]) => `<button class="${tab === k ? 'on' : ''}" onclick="${act('tab', k)}"><span class="n">${i}</span>${n}</button>`).join('')}</div>
   <div class="bd">${body}</div></div>
   <div class="ft"><button onclick="${act('spin', -45)}">◀ turn</button><button onclick="${act('spin', 45)}">turn ▶</button><button onclick="${act('random', 'all')}">randomize</button><button onclick="${act('reset')}">reset</button><button class="go" onclick="${act('close')}">done</button></div>
