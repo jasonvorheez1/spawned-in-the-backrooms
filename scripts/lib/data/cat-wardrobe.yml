@@ -14,7 +14,7 @@ body:
 # a painted bottom: leg 0..2 (0 crotch, 1 knee, 2 ankle), rise = waistband above the body's waist line (m)
 tops:
   tee:        { hem: 0.0,  sleeve: 0.42, scoop: 1.0, pat: weave }
-  crop:       { hem: 0.5, sleeve: 0.42, scoop: 1.15, pat: stripes, band: true }   # stripes per Shelly's crop ref (#219730): it read washed out as plain cream
+  crop:       { hem: 0.27, sleeve: 0.42, scoop: 1.15, pat: stripes, band: true }   # hem 0.27: under the bust, not across it (Shelly #221537). stripes per Shelly's crop ref (#219730): it read washed out as plain cream
   tank:       { hem: 0.0,  sleeve: 0.0,  scoop: 1.35, pat: rib }
   longsleeve: { hem: 0.0,  sleeve: 1.95, scoop: 0.8, pat: weave }
   pajamas:    { hem: 0.0,  sleeve: 1.95, scoop: 0.9, pat: gingham }
