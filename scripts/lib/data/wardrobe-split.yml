@@ -140,7 +140,7 @@ f:
     Ward_pjpants: "/cdn/value.601f67f9a3ccc3eb94805edbee4a80df0b252b555113ab90b1e665b873294735.glb"   # Nov 10 bottoms redo: body-grown, seam welded, crotch+seat bridged (art/human-cloth/crotch_fill.py)
     Ward_platevest: "/cdn/value.f4c52daec46ec19b3407723323c1568224d33741e8fc3e74ac503ae07e84914e.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
     Ward_pphoodie: "/cdn/value.5ff91e1c8b6d2c4a65c4ca2562e98870894d2cb7575049b8f6597c5d7aeae91f.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
-    Ward_scarf: "/cdn/value.bbf513a63af0221b1f2accce256bf86b4d013990284998569ac94fe9fb6dad2f.glb"
+    Ward_scarf: "/cdn/value.e6634c9dd8c42766d630e93d69f015ee63a5ec9ed0822ebe0915307174cb3176.glb"  # Nov 11 back band off the neck (art/human-cloth/scarf_backneck.py, was bbf513a6)
     Ward_seawatchsuit: "/cdn/value.0dd387da86b5aa11b3b046a5d9bee33bf61f3dfeac959fd472d81ccbadc95ab5.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
     Ward_shades: "/cdn/value.af9f7f21e9e7659522599c77670f434fe837993bfb6405ab1ba9086e65e31b7a.glb"  # Nov 11 head keys; before 59cc4adc
     Ward_shirt: "/cdn/value.7106f6802d8c4e4ebd4c3b488f4e815f31589f19c58045c008a8740ef7a6c6fe.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
