@@ -1,6 +1,12 @@
 // debug-studio stand for the new Tripo cat: dresses itself from state.sex + state.look through the cat wardrobe, plays state.clip (Idle | Walk)
-import { catModel, catChildren, chestOf } from './lib/cat-wardrobe.js'
+import { CAT_BODY, catModel, catChildren, chestOf } from './lib/cat-wardrobe.js'
 export function onSpawn(ctx) { dress(ctx) }
+export function update(ctx) {
+  // A demo standing in an open debug room also picks up a new wardrobe build.
+  const sex = ctx.self.state.sex === 'm' ? 'm' : 'f'
+  if (ctx.self.model?.id !== CAT_BODY[sex].glb) dress(ctx)
+  ctx.sleep(2)
+}
 export const ears = { redress: (ctx) => dress(ctx) }
 function dress(ctx) {
   const s = ctx.self.state, sex = s.sex === 'm' ? 'm' : 'f'
