@@ -71,10 +71,10 @@ def rebuild_head(head, sex):
 
     # Outline from inner root to tip and down the outer rim. The inner cup is recessed
     # within the rim and the curved back seats under the skull at the roots.
-    outline = ([(.075,.981),(.113,1.066),(.186,1.150),(.266,1.201),(.287,1.181),
-                (.281,1.106),(.260,1.004),(.227,.944),(.154,.940)] if female else
-               [(.061,1.015),(.090,1.100),(.147,1.168),(.220,1.200),(.246,1.179),
-                (.244,1.109),(.229,1.017),(.195,.966),(.126,.960)])
+    outline = [(.075,.981),(.113,1.066),(.186,1.150),(.266,1.201),(.287,1.181),
+               (.281,1.106),(.260,1.004),(.227,.944),(.154,.940)]
+    if not female:
+        outline = [(x*WIDE, z+DZ) for x,z in outline]
     edge=[spline(outline,i,j/5,True) for i in range(len(outline)) for j in range(5)]
     center=sum(edge,Vector((0,0)))/len(edge)
     count=len(edge)
@@ -83,7 +83,7 @@ def rebuild_head(head, sex):
         for r, yoff in ((.015,.028),(.38,.022),(.68,.004),(.88,-.018),(1,-.003),(.84,.049),(.51,.080),(.015,.094)):
             for p in edge:
                 x,z=center.lerp(p,r)
-                depth=(-.019 if female else -.085)+.11*(z-center.y)+yoff
+                depth=-.019+(0 if female else DY)+.11*(z-center.y)+yoff
                 verts.append((side*x,depth,z))
         face(tuple(start+i for i in range(count)),1)
         for j in range(7):
