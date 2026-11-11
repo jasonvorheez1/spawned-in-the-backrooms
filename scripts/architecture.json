@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 5409,
-  "updatedAt": "2026-11-11T14:44:33.249Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning an authored Level 0 maze, deeper levels and shared destinations. `templates/player.js` composes player behaviors; place simulations and shared scripts own environments, NPCs, combat, loot, crafting, UI and progression. Avatar appearance is shared between players and NPCs, with Blender/Tripo scripts building and fitting models.",
+  "basedOnSpecVersion": 5444,
+  "updatedAt": "2026-11-11T15:16:54.629Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning an authored Level 0 maze, deeper levels and shared destinations. `templates/player.js` composes player behaviors; place simulations and shared scripts own environments, NPCs, combat, loot, crafting, UI and progression. A separate Tripo cat body/wardrobe pipeline now builds a demo avatar, without replacing the existing critter appearance system.",
   "scriptPaths": [],
   "places": [
-    "places/bonus (3D) - vaporwave mall with authored shops/landmarks, simulated staff and shoppers, arcade and salon; `x0z0.scene` places the detailed escalator deco and moving steps with motor hum.",
+    "places/bonus (3D) - vaporwave mall with authored shops/landmarks, simulated staff and shoppers, arcade and salon; escalator deco and moving steps have motor hum.",
     "places/main (3D) - authored Level 0/Lobby maze; sim generates maze furniture/loot, safe rooms, shifting walls, creature ecology, route guidance, Kade and Zenith's sealed breach.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo ephemeral) - character creation/waking space and staged tutorial route with HALOGEN.",
     "places/level01 (3D) - Level 0.1 Zenith Station: station/gallery, doors, breakables, bots/hazards, climate rooms, recorder quest and drone-refilled posts.",
     "places/level1, level2, level21 (3D) - Habitable Zone garage maze and M.E.G. camp; Pipe Dreams industrial rooms/camp/fixtures; Level 2.1 Locked.",
-    "places/level3, gamma, level4, level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; Level 4 has office props/fixtures and Omega residents; Level 5 has Homely Hotel residents.",
+    "places/level3, gamma, level4, level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; Level 4/5 authored residents and fixtures.",
     "places/level6, level7, level10, level11, level12 (3D) - later levels including Level 7's drowned house and Level 11's generated city, canal/bridges, crawl and renovation office.",
     "places/level26, level27, debug, spamton (3D) - Level 26 quests, Level 27 Bunker Springs, debug studio and Spamton destination."
   ],
@@ -22,7 +22,7 @@
     "scripts/camera.js + scripts/view3.js + scripts/ui.js + scripts/loot-ui.js - camera, third-person toggle, HUD/panels and inventory/equipment/quick-slot UI.",
     "scripts/quest-marker.js + scripts/lib/quests.js + scripts/lib/quest-mark.js - per-player journal, tracking, objective resolution and markers; folds legacy quest state into shared records.",
     "scripts/lib/dina-quest.js + places/level1/cells/x0z0.scene - Dina camp/diary quest entry; Voss and Cabin 23/Phoebe/stow-nest interactions are in Level 26.",
-    "places/bonus/cells/x0z0.scene - authored mall placements; escalator shells/steps/audio use bonus assets, `scripts/esc-step.js`, and the offline `art/bonus-mall/escalator.py` builder."
+    "places/bonus/cells/x0z0.scene - authored mall placements; escalator shells/steps/audio use bonus assets, scripts/esc-step.js and art/bonus-mall/escalator.py builder."
   ],
   "shared": [
     "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings, LEVEL_NAMES used by hub-ui; LEVEL_NAMES still includes absent testlab.",
@@ -31,18 +31,18 @@
     "scripts/lib/level11-vaults.js + scripts/lib/level11-depths.js + scripts/l11-crawl-geo.js + Level 11 data - security gates, crawl geometry, rooms, foe roster and storeroom.",
     "scripts/l11-masonry.js + scripts/l11-reno.js + scripts/l11-mall.js - Level 11 canal/quay/renovation geometry and strip-mall shell/cloth awnings parameterized by kind and dimensions.",
     "scripts/lib/build-piece.js + scripts/lib/data/breakables.yml + scripts/lib/data/furniture.yml - canonical breakable/material/build specs and furniture models shared by B-mode, harvesting and reconstruction.",
-    "scripts/lib/critter-model.js + scripts/lib/data/critter-models.yml + wardrobe*.yml + scripts/lib/clothes.js - shared furry/optional-human avatar appearance, seating/restyle and clothing policy; assets feed players and NPCs.",
-    "scripts/lib/ui-theme.js + scripts/lib/hud-quickbar.js - shared field-panel/HUD styling and numbered quick-slot rendering, used by scripts/loot-ui.js, scripts/talk-ui.js and scripts/ui.js as applicable."
+    "scripts/lib/critter-model.js + critter-models.yml + wardrobe*.yml + scripts/lib/clothes.js - existing furry/optional-human player/NPC appearance system; art/critter-cute Tripo assets feed this pipeline but the new cat demo does not replace it.",
+    "scripts/lib/cat-wardrobe.js + scripts/lib/data/cat-wardrobe.yml + scripts/mat-catskin.js - separate new-cat body/painted clothing and skinned Tripo garment specs; cat-demo consumes it. scripts/lib/ui-theme.js + scripts/lib/hud-quickbar.js share UI styling/quick-slot rendering."
   ],
   "notableExports": [
     "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollLock, rollCash, rollItem, spawnCrate and Level 2 container/loot helpers; scripts/lib/weapons.js - baseOf, variantOf, rollVariant, rarityIdx, rarityCap, default.",
     "scripts/grab.js - setDown, onInput, update, looseSpent; scripts/kick.js - onInput, kickSnap, kickEnd, update; scripts/esc-step.js - onSpawn, update.",
-    "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, onInput, hitTarget, fishNibble, HOLO and holoEnd; throwable fuse/arm callbacks and blast hits.",
+    "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, onInput, hitTarget, fishNibble, HOLO/holoEnd; throwable fuse/arm callbacks and blast hits.",
     "scripts/lib/quick-items.js - quickItems, assignQuick; scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
-    "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - setStyle, HUMAN, STYLE_V, armSplay, appearance builders, restylePlace, restyleQueue, restyleStep and clearAppearanceCache.",
+    "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - setStyle, HUMAN, STYLE_V, armSplay, appearance builders, restylePlace/Queue/Step and clearAppearanceCache.",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, stagger3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
     "scripts/lib/craft.js - recipeStatus, maxMakes, craftOne, benchAvailable, stationOf, scrapCount, CRAFT_LIMIT, CATS; scripts/craft.js - onInput, update.",
-    "scripts/lib/clothes.js - SLOTS, CLOTHES_OFF, rowOf, patsOf, patOk, parseCloth, wornTokens, wornDR; scripts/lib/prop-interactions.js - propKind, interactiveSpec, upgradeProp, containerPose, toggleLamp and upgrades."
+    "scripts/lib/clothes.js - SLOTS, CLOTHES_OFF, rowOf, patsOf, patOk, parseCloth, wornTokens, wornDR; scripts/lib/prop-interactions.js - propKind, interactiveSpec, upgradeProp, containerPose, toggleLamp; scripts/cat-demo.js - onSpawn, ears (redress)."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo, needs, money, appearance, combat/rewards, level access, saved place/position, wakeAtSave restoration, heat/cold and carried tapes/playback.",
@@ -52,7 +52,7 @@
     "scripts/lib/knock.js + scripts/lib/stats.js - foe attributes/weight and shared down/stagger knock outcomes; enemy managers retain AI state and write player-targeting sneakTarget.",
     "places/level1/sim.js, places/level2/sim.js, places/level4/sim.js and places/level27/sim.js - place-state migration/version markers and one-time conversions (officeV, islandSplit in Level 4).",
     "scripts/lib/prop-interactions.js + scripts/prop-part.js - prop state owns interactiveV, propArt, containerOpen/lampOn and part motion goals; child sessions track native tween keys while prop parts animate from replicated state.",
-    "scripts/critter.js + scripts/main-menu.js - player.state.look and player.bodyStyle; look.species changes by validated dress actions; main-menu BODIES selection also writes world.state.bodyStyle for NPC appearance; scripts/esc-step.js owns …"
+    "scripts/critter.js + scripts/main-menu.js own existing player look/bodyStyle and world.state.bodyStyle; the separate scripts/lib/cat-wardrobe.js derives a demo cat's model/paint/garment children from sex and look, while cat-demo reads sex/look/clip from that demo object's state."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors for locomotion, player/foe steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest markers.",
@@ -60,28 +60,29 @@
     "scripts/routing.js accepts permitted requested rooms; otherwise scripts/lib/hub.js soloRoom selects the player's solo Backrooms room and bonus overflow IDs; toHub/toSolo perform crossings and track roomHop/save-place state.",
     "Fresh visit → scripts/main-menu.js; START enters intake for creation or bonus for completed characters; wardrobe close runs intro-cut then tutorial0 unless t0Done; menu UI renders on menuOpen and solo pause sets place.timeScale.",
     "Main-menu BODIES action → player.state.bodyStyle and world.state.bodyStyle; scripts/lib/critter-model.js setStyle reads world bodyStyle and selects humans only for 'human', otherwise furry; Bonus sim applies this before NPC updates/redress.",
-    "scripts/lib/hub.js destinations → hub-ui.js and hub.js crossings; Bonus sim lays NPCs/effects and mall counters write shop/food state consumed by handlers/UI; Bonus escalator step entities run scripts/esc-step.js loops from their feet posi…",
+    "scripts/lib/hub.js destinations → hub-ui.js and hub.js crossings; Bonus sim lays NPCs/effects and mall counters write shop/food state consumed by handlers/UI; Bonus escalator step entities run scripts/esc-step.js loops from their feet position.",
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; weapon variants roll through weapons.js.",
     "interact.js focus → player.state.focus and loot-ui.js prompt only on the play screen; ui-theme/screen hide prompts behind panels; interact.js clears focus outlines in menus/talk/cutscenes/build mode. Talk UI emits talk/talkdo/shop actions.",
     "interact.js openLoot/closeLoot → prop-interactions.containerPose → child part state.goal; scripts/prop-part.js samples cubic motion and builtin tween animates articulated storage fronts; toggleLamp flips light part goals.",
     "scripts/lib/prop-interactions.js interactiveSpec → generated furniture from scripts/lib/furniture.js and upgradeNearby nearby legacy props; preserves root collider/state and tags; prop-part children provide moving doors/drawers/lids.",
-    "Player craft action/UI → scripts/lib/craft.js stationOf + craft.yml; built pieces in breakables.yml carry bench=cook/ammo and state.station; craft.js/craft-ui.js filter station recipes while hand menu lists all recipes.",
-    "quickItems/assignQuick maintain player quick-slot bindings; scripts/ui.js renders `quickBar` only on the play HUD and buttons emit quickUse; inventory quick-slot controls emit inv actions."
+    "Player craft action/UI → scripts/lib/craft.js stationOf + craft.yml; built pieces in breakables.yml carry bench=cook/ammo and state.station; craft.js/craft-ui.js filter station recipes while hand menu lists all recipes. quickItems/assignQuick maintain bindings; scripts/ui.js renders quickBar and buttons emit quickUse.",
+    "scripts/cat-demo.js onSpawn/ears redress reads demo state.sex/look/clip → scripts/lib/cat-wardrobe.js selects body model, skin params and cw-* skinned children from cat-wardrobe.yml → scripts/mat-catskin.js paints garments in body bind-pose coordinates; this demo flow is separate from critter-model/clothes.js."
   ],
   "behaviorFamilies": [
-    "places/bonus/cells/x0z0.scene + objects.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + bonus-extra and mall shopper/salon scripts - authored mall, NPC attachments and simulation; the escalator deco has frozen steps removed and …",
-    "art/bonus-mall/escalator.py + world.assets bonus-mall-deco-moving-escalators/escalator-step + scripts/esc-step.js - offline Blender build strips frozen tread geometry and makes a reusable detailed step; scene placements vary `state.dir` an…",
+    "places/bonus/cells/x0z0.scene + objects.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + bonus-extra and mall shopper/salon scripts - authored mall, NPC attachments and simulation; escalator deco has frozen steps removed and independent moving steps/audio.",
+    "art/bonus-mall/escalator.py + world.assets bonus-mall-deco-moving-escalators/escalator-step + scripts/esc-step.js - offline Blender build strips frozen tread geometry and makes a reusable detailed step; scene placements vary state.dir and feet position.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + home reconstruction scripts - per-piece models/dimensions with common placement, persistence and rebuild path.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preservi…",
+    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preserving root state/colliders.",
     "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + Zenith door/bots/hatch/flicker/drones/use scripts - Zenith Station geometry, breach, hazards and interactive systems.",
     "places/level4 scenes + places/level4/sim.js + scripts/l4-office.js/l4-office-geo.js/l4-home.js + Level 4/5 resident data - authored office/hotel props, fixtures, NPC bodies and attached critter behavior.",
-    "scripts/lib/critter-model.js + critter-models.yml + wardrobe*.yml + clothes.js + art/critter-cute and art/critter-andy - shared avatar appearance; Tripo cat build rig and Andy body shaping/optimization feed runtime models; hair Tripo fitte…",
+    "scripts/lib/critter-model.js + critter-models.yml + wardrobe*.yml + clothes.js + art/critter-cute and art/critter-andy - existing shared avatar appearance; art/critter-cute/tripo_rig.py now rebuilds the face patch as smooth skin under the face decal and exports without ClothTop/ClothBottom meshes. New cat-only wardrobe is separate: art/cat-wardrobe/fit.py fits Tripo garments to the same rig, proof.py renders fit checks; cat-wardrobe.js/data and mat-catskin.js drive painted layers plus skinned garment children.",
     "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js + combat-anims.yml - retargeted first-person and DS third-person melee families select strikes by weapon type; combat poses are shared."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
     "scripts/hairtest-rig.js - header marks it as a temporary hair lane test rig; no tree/package references found.",
-    "art/critter-hair-tripo/fit.py.held - saved tune-aware fitter copy with no references found; active fit.py is the fitter used by its documented Blender command."
+    "art/critter-hair-tripo/fit.py.held - saved tune-aware fitter copy with no references found; active fit.py is the fitter used by its documented Blender command.",
+    "scripts/cat-demo.js - standalone demo behavior consumes the new cat wardrobe but no scene or other package file currently attaches/references it."
   ],
   "migrationNotes": [
     "Avatar STYLE_V is sw159. CLOTHES_OFF is true: clothes.js rowOf returns null (wear tokens and clothing DR vanish) and critter-model.js omits legacy mesh garments; switch deliberately if clothes return.",
@@ -89,6 +90,6 @@
     "Bare furry avatars show the whole Body shell and hide segmented Skin_* regions to avoid overlapping seams; STYLE_V is in the appearance cache key so existing avatars redraw after asset changes.",
     "NPC body-style changes are processed in batches of six per update via self.session.rq; preserve the queue lifecycle and exclude player/local-only objects rather than synchronously sweeping a place.",
     "Furry is default (sw146); human-born NPCs restyle to critters, while human bodies remain selectable. Critter arm splay is +20° LeftArm roll/-20° RightArm roll in runtime bones.",
-    "art/critter-cute/tripo_rig.py flattens head vertices beneath the face decal to the decal's smoothed hull using a depth raycast; depth behind the source surface is preserved, and the adjustment fades at decal edges. DBGFACE prints fit diagnostics and exits before export. Keep this fit/clearance …"
+    "New Tripo cat wardrobe is a separate system: painted skin regions use bind-pose metres (y up, front +z), and fitted garment GLBs are skinned children with the covered body region painted beneath; do not apply these assumptions to the existing critter model/clothes pipeline."
   ]
 }
