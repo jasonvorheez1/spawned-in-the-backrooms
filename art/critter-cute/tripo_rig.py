@@ -446,6 +446,10 @@ if len(_ring) > 12:
     for _ in range(12): _bm.ops.smooth_vert(bm, verts=[v for v in bm.verts if _band(v) and not v.is_boundary], factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
     print("chin :3 folds ironed", _ironed, "ring", len(_ring))
 else: print("chin iron SKIPPED ring", len(_ring))
+# the :3 fold's deepest creases sit on the jaw's underside (y near 0, just below the face box): a height fit can't reach a down-facing patch, so it is relaxed in place
+_under = [v for v in bm.verts if not v.is_boundary and abs(v.co.x) < 0.09 and BOX[2] - 0.045 < v.co.z < BOX[2] + 0.03 and -0.09 < v.co.y < 0.015]
+for _ in range(30): _bm.ops.smooth_vert(bm, verts=_under, factor=0.6, use_axis_x=True, use_axis_y=True, use_axis_z=True)
+print("jaw underside relaxed", len(_under))
 # the ':3' sculpt also sits on the Body's side of the neck seam (under the jaw): relaxed the same way, seam verts held so nothing opens
 _bb = _bm.new(); _bb.from_mesh(BODY.data)
 _rb = [v for v in _bb.verts if not v.is_boundary and v.co.y < -0.01 and BOX[0] - 0.03 < v.co.x < BOX[1] + 0.03 and BOX[2] - 0.16 < v.co.z < BOX[2] + 0.02]
