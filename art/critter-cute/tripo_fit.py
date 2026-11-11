@@ -126,3 +126,13 @@ def _tripo_show(scene, *a):
     t = _TRI.get("obj")
     if t and t.name in bpy.data.objects: t.hide_render = False
 bpy.app.handlers.render_pre.append(_tripo_show)
+def _lump_dbg(scene, *a):
+    if os.environ.get("DBGLUMP") != "1" or _TRI.get("dbg"): return
+    _TRI["dbg"] = 1
+    for o in scene.objects:
+        if o.type != "MESH" or o.hide_render: continue
+        bb = [o.matrix_world @ Vector(c) for c in o.bound_box]
+        x0 = min(p.x for p in bb); x1 = max(p.x for p in bb); y0 = min(p.y for p in bb); z0 = min(p.z for p in bb); z1 = max(p.z for p in bb)
+        if x1 > .05 and z0 < 1.25 and y0 < -.1:
+            log("LUMP", o.name, "parent", o.parent.name if o.parent else None, "x", round(x0, 3), round(x1, 3), "y", round(y0, 3), "z", round(z0, 3), round(z1, 3), "faces", len(o.data.polygons))
+bpy.app.handlers.render_pre.append(_lump_dbg)
