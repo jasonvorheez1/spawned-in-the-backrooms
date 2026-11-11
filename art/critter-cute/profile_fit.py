@@ -96,8 +96,8 @@ def rebuild_head(head, sex):
     mesh=bpy.data.meshes.new("Head profile")
     inv=head.matrix_world.inverted()
     mesh.from_pydata([inv@Vector(v) for v in verts],[],faces)
-    mesh.materials.append(bpy.data.materials.new("headFur"))
-    ear = bpy.data.materials.new("innerEar")
+    mesh.materials.append(bpy.data.materials.get("headFur") or bpy.data.materials.new("headFur"))
+    ear = bpy.data.materials.get("innerEar") or bpy.data.materials.new("innerEar")
     ear.diffuse_color = (.56,.18,.16,1)
     mesh.materials.append(ear)
     for poly,material in zip(mesh.polygons,mats):
