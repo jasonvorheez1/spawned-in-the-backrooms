@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 5527,
-  "updatedAt": "2026-11-11T17:58:07.620Z",
+  "basedOnSpecVersion": 5543,
+  "updatedAt": "2026-11-11T19:13:51.030Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning an authored Level 0 maze, deeper levels and shared destinations. `templates/player.js` composes player behaviors while place simulations and shared scripts own environments, NPCs, combat, loot, crafting, UI and progression; a separate Tripo cat pipeline feeds an unattached debug wardrobe demo.",
   "scriptPaths": [],
   "places": [
@@ -69,14 +69,14 @@
     "cat-demo onSpawn/ears redress reads state.sex/look/clip → cat-wardrobe selects body, painted skin and skinned garment/mask children; mat-catskin paints bind-pose regions with soft toon lighting; printOf uses mat-cloth PRINTS for chest/sleeves."
   ],
   "behaviorFamilies": [
-    "places/bonus/cells/x0z0.scene + objects.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + bonus-extra and mall shopper/salon scripts - authored mall, NPC attachments and simulation; escalator decoration has frozen steps removed and moving steps loop with audio.",
-    "art/bonus-mall/escalator.py + world.assets bonus-mall-deco-moving-escalators/escalator-step + scripts/esc-step.js - offline Blender build strips frozen tread geometry and makes reusable detailed steps; scene placements vary direction and position.",
+    "places/bonus/cells/x0z0.scene + objects.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + bonus-extra and mall shopper/salon scripts - authored mall, NPC attachments and simulation; escalator decoration has frozen steps removed and moving step loops.",
+    "art/bonus-mall/escalator.py + world.assets bonus-mall-deco-moving-escalators/escalator-step + scripts/esc-step.js - offline Blender build strips frozen tread geometry and makes reusable detailed steps; scene placements vary direction and pitch.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + home reconstruction scripts - per-piece models/dimensions with common placement, persistence and rebuild path.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preserving root state.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preserving existing roots.",
     "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + Zenith door/bots/hatch/flicker/drones/use scripts - Zenith Station geometry, breach, hazards and interactive systems.",
     "places/level4 scenes + places/level4/sim.js + scripts/l4-office.js/l4-office-geo.js/l4-home.js + Level 4/5 resident data - authored office/hotel props, fixtures, NPC bodies and attached critter behavior.",
-    "scripts/lib/critter-model.js + critter-models.yml + wardrobe*.yml + clothes.js + art/critter-cute and art/critter-andy - shared furry/optional-human avatars; art/critter-cute/tripo_rig.py builds Mixamo-rigged cat bodies with curved face decal and female jaw-fold cleanup.",
-    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + mat-catskin.js + mat-cloth.js + art/cat-wardrobe/masks.py - demo wardrobe varies painted layers/prints, per-sex skinned garments and head-bone masks; cat shader uses subdued toon direct/ambient lighting."
+    "scripts/lib/critter-model.js + critter-models.yml + wardrobe*.yml + clothes.js + art/critter-cute and art/critter-andy - shared furry/optional-human avatars; art/critter-cute/tripo_rig.py builds Mixamo-rigged cat bodies with fitted face decals.",
+    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + mat-catskin.js + mat-cloth.js + art/cat-wardrobe/masks.py - debug wardrobe selects female rigged-7 and male rigged-6 bodies; per-sex skinned garments and head-bone masks, painted layers/prints; tripo_rig.py repairs muzzle holes and chin/jaw surface before decal fitting."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
@@ -89,7 +89,7 @@
     "Current furry body GLBs in scripts/lib/data/critter-models.yml are thick, smoothed Andy variants with shortened arms (hands retained); female uses the soft-chest GLB and bodyOld holds prior furry assets for migration/compatibility.",
     "Bare furry avatars show the whole Body shell and hide segmented Skin_* regions to avoid overlapping seams; STYLE_V is in the appearance cache key so existing avatars redraw after asset changes.",
     "NPC body-style changes are processed in batches of six per update via self.session.rq; preserve the queue lifecycle and exclude player/local-only objects rather than synchronously sweeping a place.",
-    "Tripo cat wardrobe is separate from legacy critter clothing; garment GLBs are per-sex skinned children with painted under-layers, masks attach to the head bone, and look.chest maps to the Chest key on body and top. PRINTS now serves old -z-facing garments and the new +z cat.",
-    "Cat skin/print measurements are bind-pose metres, y-up, front +z; tripo_rig.py fits female jaw-fold vertices to a clean surrounding surface and the face decal follows the head curve. mat-catskin.js owns soft toon bands and scales ambient/environment light to preserve fur color."
+    "Tripo cat wardrobe is separate from legacy critter clothing; the demo now points to female cat-female-rigged-7 and male cat-male-rigged-6 GLBs, with earlier rigged revisions retained as assets; garments remain per-sex skinned children and masks attach to the head bone.",
+    "Cat skin/print measurements are bind-pose metres, y-up, front +z; tripo_rig.py fits the muzzle/decal to the face curve and now fills mouth gaps and relaxes/caps chin and jaw surfaces before pressing the decal; mat-catskin.js owns soft toon bands and ambient/environment response."
   ]
 }
