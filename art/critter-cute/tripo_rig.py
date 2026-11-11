@@ -539,7 +539,7 @@ for o_ in (HEAD, BODY):
     for v in o_.data.vertices:
         w_ = M @ v.co
         i = round((w_.x - BOXD[0]) / (BOXD[1] - BOXD[0]) * NX); j = round((w_.z - BOXD[2]) / (BOXD[3] - BOXD[2]) * NZ)
-        if (i, j) not in gy or w_.y < gy[i, j] - 0.03 or w_.y > gy[i, j] + 0.006: continue
+        if (i, j) not in gy or w_.y < gy[i, j] - 0.06 or w_.y > gy[i, j] + 0.006: continue   # 6 cm: the capped chin's old bulge sits up to 4 cm proud
         w_.y = max(w_.y, gy[i, j] + 0.006); v.co = Mi @ w_; npress += 1
     o_.data.update()
 print("decal relaxed, verts pressed behind it", npress)
