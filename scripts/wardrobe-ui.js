@@ -89,7 +89,7 @@ export function wardrobe(ctx, player) {
   const slot = (title, k, colourKey) => `<div class="slot"><div class="sec" style="margin-top:2px"><span>${title}</span><span>${NAMES[l[k]] || l[k]}</span></div>${grid(k, C[k])}${colourKey && l[k] !== 'none' ? sws(colourKey, C.cloth) : ''}</div>`
   let body = ''
   if (tab === 'body') body = `
-    ${human ? '' : `<div class="sec"><span>ANIMAL</span><span>${l.species}</span></div>${grid('species', C.species)}`}
+    ${human ? '' : `<div class="sec"><span>ANIMAL</span><span>${l.species}</span></div>${grid('species', ['cat', 'dog', 'fox', 'bunny', 'wolf', 'mouse'])}`}
     <div class="sec"><span>BODY</span></div>${grid('sex', C.sex)}
     <div class="sec"><span>STATURE</span><span>${Math.round(170 * (Number(l.heightS) || 1))} cm</span></div><div class="big">${sliderRows(C.sliders.filter((r) => ['heightS', 'buildS'].includes(r[0])))}</div>
     ${human ? `<div class="sec"><span>SKIN</span></div>${sws('skin', C.skin)}` : `<div class="sec"><span>FUR</span></div>${sws('fur', C.fur)}`}
