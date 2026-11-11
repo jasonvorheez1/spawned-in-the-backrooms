@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 5309,
-  "updatedAt": "2026-11-11T13:33:31.661Z",
+  "basedOnSpecVersion": 5311,
+  "updatedAt": "2026-11-11T13:34:26.471Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG across an authored Level 0 maze, deeper levels and shared destinations. `templates/player.js` composes player behaviors while place simulations and shared scripts own environments, NPCs, combat, loot, crafting, UI and progression. Furry/optional-human avatars use shared appearance assets; `art/critter-cute` contains procedural and Tripo-based avatar build lanes.",
   "scriptPaths": [],
   "places": [
@@ -71,11 +71,11 @@
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + objects.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + bonus-extra and mall shopper/salon scripts - authored mall, NPC attachments, simulated mall behavior and salon interactions.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + home reconstruction scripts - per-piece models/dimensions with common placement, persistence and rebuild path.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preserving root state/collider.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preservi…",
     "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + Zenith door/bots/hatch/flicker/drones/use scripts - Zenith Station geometry, breach, hazards and interactive systems.",
     "places/level4 scenes + places/level4/sim.js + scripts/l4-office.js/l4-office-geo.js/l4-home.js + Level 4/5 resident data - authored office/hotel props, fixtures, NPC bodies and attached critter behavior.",
-    "scripts/lib/critter-model.js + critter-models.yml + wardrobe*.yml + clothes.js + art/critter-cute and art/critter-andy - shared avatar appearance; art/critter-cute build.py/heads3.py and tripo_fit.py build the runtime-contract assets, while tripo_rig.py is a separate Tripo cat body rig/outfit/animation export lane.",
-    "art/critter-andy/andy-morph.mjs + thick.py + smooth_body.py + short_arms.py + soft_chest.py + strip_ward.mjs + pack.mjs + critter-models.yml - build-time Andy body shaping/optimization; soft_chest.py adjusts Basis and clothes follow the body changes.",
+    "scripts/lib/critter-model.js + critter-models.yml + wardrobe*.yml + clothes.js + art/critter-cute and art/critter-andy - shared avatar appearance; art/critter-cute build.py/heads3.py and tripo_fit.py build the runtime-contract assets, whil…; five uploaded m-slick-raw/f-long-raw/f-spacebuns-raw/f-curly-raw/f-ringlets-raw GLBs are hairstyle sculpt/fit sources, not yet referenced by runtime code.",
+    "art/critter-andy/andy-morph.mjs + thick.py + smooth_body.py + short_arms.py + soft_chest.py + strip_ward.mjs + pack.mjs + critter-models.yml - build-time Andy body shaping/optimization; soft_chest.py adjusts Basis and clothes follow the bo…",
     "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js + combat-anims.yml - retargeted first-person and DS third-person melee families select strikes by weapon type; combat poses are shared."
   ],
   "probableOrphans": [
@@ -88,6 +88,6 @@
     "Bare furry avatars show the whole Body shell and hide segmented Skin_* regions to avoid overlapping seams; STYLE_V is in the appearance cache key so existing avatars redraw after asset changes.",
     "NPC body-style changes are processed in batches of six per update via self.session.rq; preserve the queue lifecycle and exclude player/local-only objects rather than synchronously sweeping a place.",
     "Furry is default (sw146); human-born NPCs restyle to critters, while human bodies remain selectable. Critter arm splay is +20° LeftArm roll/-20° RightArm roll in runtime bones.",
-    "art/critter-cute/tripo_rig.py is a standalone Blender pipeline for /workspace/tripo-cat: it imports a Tripo cat, builds a Mixamo-named rig/weights, face decal and garments, authors Idle/Walk actions, then exports and audits cat-rigged.glb; it is separate from the critter-model.js runtime asset contract."
+    "art/critter-cute/tripo_rig.py is a standalone Blender pipeline for /workspace/tripo-cat: it imports a Tripo cat, builds a Mixamo-named rig/weights, face decal and garments, authors Idle/Walk actions, then exports and audits cat-rigged.glb;…"
   ]
 }
