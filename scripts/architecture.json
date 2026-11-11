@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 5405,
-  "updatedAt": "2026-11-11T14:39:21.748Z",
+  "basedOnSpecVersion": 5407,
+  "updatedAt": "2026-11-11T14:43:29.229Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning an authored Level 0 maze, deeper levels and shared destinations. `templates/player.js` composes player behaviors; place simulations and shared scripts own environments, NPCs, combat, loot, crafting, UI and progression. Avatar appearance is shared between players and NPCs, with Blender/Tripo scripts building and fitting models.",
   "scriptPaths": [],
   "places": [
@@ -52,7 +52,7 @@
     "scripts/lib/knock.js + scripts/lib/stats.js - foe attributes/weight and shared down/stagger knock outcomes; enemy managers retain AI state and write player-targeting sneakTarget.",
     "places/level1/sim.js, places/level2/sim.js, places/level4/sim.js and places/level27/sim.js - place-state migration/version markers and one-time conversions (officeV, islandSplit in Level 4).",
     "scripts/lib/prop-interactions.js + scripts/prop-part.js - prop state owns interactiveV, propArt, containerOpen/lampOn and part motion goals; child sessions track native tween keys while prop parts animate from replicated state.",
-    "scripts/critter.js + scripts/main-menu.js - player.state.look and player.bodyStyle; look.species changes by validated dress actions; main-menu BODIES selection also writes world.state.bodyStyle for NPC appearance; scripts/esc-step.js owns each step's session.running direction marker."
+    "scripts/critter.js + scripts/main-menu.js - player.state.look and player.bodyStyle; look.species changes by validated dress actions; main-menu BODIES selection also writes world.state.bodyStyle for NPC appearance; scripts/esc-step.js owns …"
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors for locomotion, player/foe steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest markers.",
@@ -60,7 +60,7 @@
     "scripts/routing.js accepts permitted requested rooms; otherwise scripts/lib/hub.js soloRoom selects the player's solo Backrooms room and bonus overflow IDs; toHub/toSolo perform crossings and track roomHop/save-place state.",
     "Fresh visit → scripts/main-menu.js; START enters intake for creation or bonus for completed characters; wardrobe close runs intro-cut then tutorial0 unless t0Done; menu UI renders on menuOpen and solo pause sets place.timeScale.",
     "Main-menu BODIES action → player.state.bodyStyle and world.state.bodyStyle; scripts/lib/critter-model.js setStyle reads world bodyStyle and selects humans only for 'human', otherwise furry; Bonus sim applies this before NPC updates/redress.",
-    "scripts/lib/hub.js destinations → hub-ui.js and hub.js crossings; Bonus sim lays NPCs/effects and mall counters write shop/food state consumed by handlers/UI; Bonus escalator step entities run scripts/esc-step.js loops from their feet position and state.dir, with hum audio placed in the scene.",
+    "scripts/lib/hub.js destinations → hub-ui.js and hub.js crossings; Bonus sim lays NPCs/effects and mall counters write shop/food state consumed by handlers/UI; Bonus escalator step entities run scripts/esc-step.js loops from their feet posi…",
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; weapon variants roll through weapons.js.",
     "interact.js focus → player.state.focus and loot-ui.js prompt only on the play screen; ui-theme/screen hide prompts behind panels; interact.js clears focus outlines in menus/talk/cutscenes/build mode. Talk UI emits talk/talkdo/shop actions.",
     "interact.js openLoot/closeLoot → prop-interactions.containerPose → child part state.goal; scripts/prop-part.js samples cubic motion and builtin tween animates articulated storage fronts; toggleLamp flips light part goals.",
@@ -69,13 +69,13 @@
     "quickItems/assignQuick maintain player quick-slot bindings; scripts/ui.js renders `quickBar` only on the play HUD and buttons emit quickUse; inventory quick-slot controls emit inv actions."
   ],
   "behaviorFamilies": [
-    "places/bonus/cells/x0z0.scene + objects.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + bonus-extra and mall shopper/salon scripts - authored mall, NPC attachments and simulation; the escalator deco has frozen steps removed and uses the detailed `escalator-step` model on animated step entities plus looped motor audio.",
-    "art/bonus-mall/escalator.py + world.assets bonus-mall-deco-moving-escalators/escalator-step + scripts/esc-step.js - offline Blender build strips frozen tread geometry and makes a reusable detailed step; scene placements vary `state.dir` and starting feet position for up/down loops.",
+    "places/bonus/cells/x0z0.scene + objects.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + bonus-extra and mall shopper/salon scripts - authored mall, NPC attachments and simulation; the escalator deco has frozen steps removed and …",
+    "art/bonus-mall/escalator.py + world.assets bonus-mall-deco-moving-escalators/escalator-step + scripts/esc-step.js - offline Blender build strips frozen tread geometry and makes a reusable detailed step; scene placements vary `state.dir` an…",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + home reconstruction scripts - per-piece models/dimensions with common placement, persistence and rebuild path.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preserving root identities.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preservi…",
     "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + Zenith door/bots/hatch/flicker/drones/use scripts - Zenith Station geometry, breach, hazards and interactive systems.",
     "places/level4 scenes + places/level4/sim.js + scripts/l4-office.js/l4-office-geo.js/l4-home.js + Level 4/5 resident data - authored office/hotel props, fixtures, NPC bodies and attached critter behavior.",
-    "scripts/lib/critter-model.js + critter-models.yml + wardrobe*.yml + clothes.js + art/critter-cute and art/critter-andy - shared avatar appearance; Tripo cat build rig and Andy body shaping/optimization feed runtime models; hair Tripo fitter seats per-style hair.",
+    "scripts/lib/critter-model.js + critter-models.yml + wardrobe*.yml + clothes.js + art/critter-cute and art/critter-andy - shared avatar appearance; Tripo cat build rig and Andy body shaping/optimization feed runtime models; hair Tripo fitte…",
     "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js + combat-anims.yml - retargeted first-person and DS third-person melee families select strikes by weapon type; combat poses are shared."
   ],
   "probableOrphans": [
@@ -89,6 +89,6 @@
     "Bare furry avatars show the whole Body shell and hide segmented Skin_* regions to avoid overlapping seams; STYLE_V is in the appearance cache key so existing avatars redraw after asset changes.",
     "NPC body-style changes are processed in batches of six per update via self.session.rq; preserve the queue lifecycle and exclude player/local-only objects rather than synchronously sweeping a place.",
     "Furry is default (sw146); human-born NPCs restyle to critters, while human bodies remain selectable. Critter arm splay is +20° LeftArm roll/-20° RightArm roll in runtime bones.",
-    "art/critter-cute/tripo_rig.py now fits a quadric to the skin ring around each eye and smooths the socket/bulge and inner-shell surface to it; retain the fitted eyelid/eye clearance when changing the rig."
+    "art/critter-cute/tripo_rig.py flattens head vertices beneath the face decal to the decal's smoothed hull using a depth raycast; depth behind the source surface is preserved, and the adjustment fades at decal edges. Keep this fit/clearance when changing the rig."
   ]
 }
