@@ -39,7 +39,7 @@ export function material(ctx) {
     const ns = P("noseS", 1), ny = q.y.sub(P("noseY", 0.797)).div(0.0125 * 1).div(ns);
     const nx = q.x.div(float(0.017).mul(ns)).div(float(1).add(ny.mul(0.28)).max(0.3));
     const nDist = nx.mul(nx).add(ny.mul(ny)).sqrt();
-    const onTip = smoothstep(-0.03, -0.012, q.z.sub(P("noseZ", 0.249)));
+    const onTip = smoothstep(-0.065, -0.048, q.z.sub(P("noseZ", 0.249)));   // wide enough for the flat snout key (tip 4 cm back)
     const noseM = smoothstep(1.0, 0.86, nDist).mul(onTip);
     const shine = smoothstep(0.5, 0.15, nx.add(0.25).mul(nx.add(0.25)).add(ny.sub(0.45).mul(ny.sub(0.45))).sqrt());
     col = mix(col, mix(vec3(0.045, 0.032, 0.03), vec3(0.42, 0.38, 0.38), shine.mul(0.6)), noseM);
