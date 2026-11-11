@@ -16,6 +16,7 @@ for o in sh:
 tree = BVHTree.FromBMesh(bm)
 for o in sh: bpy.data.objects.remove(o)
 bpy.ops.import_scene.gltf(filepath=bodyf)
+for o in [o for o in bpy.data.objects if o.name.startswith('Skin_collar')]: bpy.data.objects.remove(o)  # re-cut over an already split body
 to = bpy.data.objects['Skin_torso']; mw = to.matrix_world
 sel = 0
 for p in to.data.polygons:
