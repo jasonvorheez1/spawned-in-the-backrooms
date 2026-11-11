@@ -79,13 +79,13 @@ def ear(bm, E, T, sx, mats):
             p = Vector((wc, fc, z))
             # lean out at the tip, a slight back sweep
             p = Matrix.Rotation(-lean * sx * tt, 3, "Y") @ p
-            p.y += 0.12 * h * tt * tt
+            p.y -= 0.1 * h * tt * tt
             if T["fold"] and tt > T["foldAt"]:
                 piv = Vector((0, 0.0, T["foldAt"] * h)); k = (tt - T["foldAt"]) / (1 - T["foldAt"])
-                p = piv + Matrix.Rotation(math.radians(T["fold"]) * min(1, k * 1.6), 3, "X") @ (p - piv)
+                p = piv + Matrix.Rotation(-math.radians(T["fold"]) * min(1, k * 1.6), 3, "X") @ (p - piv)
             if T.get("tip"):
                 p = Matrix.Rotation(math.radians(T["tip"] * sx), 3, "Y") @ p
-            rv.append(bm.verts.new(C + E["ac"] * (p.x * sx * sx) + E["fr"] * (-p.y) + E["up"] * p.z))
+            rv.append(bm.verts.new(C + E["ac"] * (p.x * sx * sx) + E["fr"] * p.y + E["up"] * p.z))
         verts.append(rv)
     faces = []
     for j in range(R):
@@ -108,7 +108,7 @@ def ear(bm, E, T, sx, mats):
         for i in range(segs + 1):
             u = i / segs; pc = root + dirv * (L * h * u) + Vector((0, 0.18 * h * u * u, 0))
             rad = rr * (1 - u) ** 0.9 + 0.0008
-            row = [bm.verts.new(C + E["ac"] * ((pc.x * sx + math.cos(2 * math.pi * q / ringn) * rad) ) + E["fr"] * (-(pc.y + math.sin(2 * math.pi * q / ringn) * rad * 0.6)) + E["up"] * pc.z) for q in range(ringn)]
+            row = [bm.verts.new(C + E["ac"] * ((pc.x * sx + math.cos(2 * math.pi * q / ringn) * rad) ) + E["fr"] * ((pc.y + math.sin(2 * math.pi * q / ringn) * rad * 0.6)) + E["up"] * pc.z) for q in range(ringn)]
             rowsv.append(row)
         for i in range(segs):
             for q in range(ringn):
