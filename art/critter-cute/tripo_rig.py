@@ -658,6 +658,8 @@ ARM.animation_data.action = bpy.data.actions["Walk"]
 for i, f in enumerate((1, 7, 13, 19)): sc.frame_set(f); shoot(f"{PR}/w{i}.png", (0, 0, 0.6), 90, 3.4, 85)
 Bq = bpy.data.objects["Body"]
 if Bq.data.shape_keys:
+    for nm in ("ClothTop", "ClothBottom"):
+        if nm in bpy.data.objects: bpy.data.objects[nm].hide_render = True
     for val in (0, 1):
         Bq.data.shape_keys.key_blocks["Chest"].value = val
         shoot(f"{PR}/chest{val}s.png", (0, 0, 0.55), 70, 1.4, 70); shoot(f"{PR}/chest{val}f.png", (0, 0, 0.55), 20, 1.4, 70)
