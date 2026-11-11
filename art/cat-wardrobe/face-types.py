@@ -41,13 +41,14 @@ for sex, key in (("f", "female"), ("m", "male")):
                 res[old, :3] = cc
                 res[take, :3] = vv[take, :3]; res[take, 3] = 255
             else:
-                noseInk = nd.binary_dilation(bart & (yy > 520) & (yy < 720) & (xx > 430) & (xx < 680) & nd.binary_opening(bart, np.ones((15, 15))), iterations=5)
-                take = mouthBox & (vart | vpink) & ~noseInk
-                res[mouthBox & ~noseInk, :3] = cc
-                res[take, :3] = vv[take, :3]
-                edge = nd.gaussian_filter(mouthBox.astype(float), 8)
-                res[..., 3] = np.where(mouthBox & ~noseInk, np.clip(edge * 2 - 0.5, 0, 1) * 255, 0)
-                res[take, 3] = 255
+                # the mouth layer is the painted variant itself inside the mouth box: every antialiased line kept;
+                # the green it was painted on becomes the neutral's own cream, edges feathered into the face below
+                g = vg & mouthBox
+                res = vv.copy(); res[g, :3] = cc
+                inside = mouthBox & (muzzle | ~g)
+                edge = np.clip(nd.gaussian_filter(inside.astype(float), 5) * 2 - 0.4, 0, 1)
+                ink = mouthBox & ~vg & (vv[..., :3].max(-1) < 150) | (mouthBox & vpink)
+                res[..., 3] = np.where(ink, 255, edge * 255)
             img = Image.fromarray(np.clip(res, 0, 255).astype(np.uint8), "RGBA").resize((550, 494), Image.LANCZOS)
             p = f"{OUT}/{sex}-{kind}-{t}.png"; img.save(p)
             url = subprocess.run(["spawn", "upload", p, "--name", f"cat-{kind}-{t}-{sex}"], capture_output=True, text=True).stdout
