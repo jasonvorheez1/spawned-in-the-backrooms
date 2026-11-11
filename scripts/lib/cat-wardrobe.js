@@ -80,7 +80,7 @@ export function catChildren(sex, look) {
     out.push({ id: 'cw-' + slot, attachment: { skin: true }, model: { id: g[sex], forward: '+z', ...(g.tint === false ? {} : { materials: { cloth: { kind: 'scripted', script: 'scripts/mat-cloth.js', color: l[ck] || '#ffffff', params: (slot === 'topw' && printOf(sex, l)) || { pat: g.pat || 'weave' } } } }) }, ...(slot === 'topw' ? { morph: chestOf(look) } : {}) })
   }
   const fl = Array.isArray(look?.fluff) ? look.fluff : look?.fluff ? [look.fluff] : []   // fluff types: soft fur clumps in her own fur colour, a touch lighter
-  for (const k of fl) { const g = W.fluff?.[k]?.[sex]; if (g) out.push({ id: 'cw-fluff-' + k, attachment: { skin: true }, model: { id: g, forward: '+z', materials: { fluff: { color: l.fluffc || look?.fur || '#f3c98a', roughness: 0.9 } } } }) }
+  for (const k of fl) { const g = W.fluff?.[k]?.[sex]; if (g) out.push({ id: 'cw-fluff-' + k, attachment: { skin: true }, model: { id: g, forward: '+z', materials: { fluff: { kind: 'scripted', script: 'scripts/mat-catskin.js', color: l.fluffc || look?.fur || '#f3c98a', params: { ...skinParams(sex, look), top: 0, bot: 0, sock: 0 } } } } }) }
   const mk = W.masks?.[l.hat]?.[sex]   // a Thrift Mode mask: skinned to her head bone, its own paint
   if (mk) out.push({ id: 'cw-mask', attachment: { skin: true }, model: { id: mk, forward: '+z' } })
   return out
