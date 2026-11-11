@@ -66,8 +66,8 @@ hair:
   pixie: { f: '/cdn/value.74ca961f2fba2fc5d14f68917b69110436665cc2ebc286db4091f79fb7b072b1.glb' }
   shaggy: { m: '/cdn/value.c87fc7934578f39772ef56ec40e2c0d6eeda8ac6488dfab8ce8095e18337ee37.glb' }
   sidetail: { f: '/cdn/value.09eff817006e82df39b5dcb790ae14fe11182d891ae351a95f33ac23554686a1.glb' }
-  twintails: { f: '/cdn/value.b65d08fa7ea7d7942f0ac98b67c8a3ece344d298bdfd84bab1ce7e0002069490.glb' }   # Nov 11 Tripo remake (old one rejected #219816)
-  ponytail: { f: '/cdn/value.d5aa5392c80822f48b937fa533ba1cbdd44e0f44c3bd5d957a2f3f51bf59f880.glb' }
+  twintails: { f: '/cdn/value.4ae8a3a6fcc5bcc895f60a28c4b423c07c7adcf392aa53a763edab4c3de2399a.glb' }   # Nov 11 Tripo remake (old one rejected #219816)
+  ponytail: { f: '/cdn/value.5d15c24c412b0d76fccdfb492b0c1c9d02358b5bffb156f4e6d75d0e276335b0.glb' }
   bob: { f: '/cdn/value.8dc3f475755eb9e4eed76c5b33dcb47e4c25b783afcd159298be14920f38b51b.glb' }
   hime: { f: '/cdn/value.851231a2702b4914b322d1e9ed705e20b85f40a538e10eb4e1a2dcaf78147d31.glb' }
   braid: { f: '/cdn/value.6f45a7d83b4c2f9305aaa8c1ff344e3e4ad3ca74c0c95f9f9dc5d1c8a1b30fa0.glb' }
