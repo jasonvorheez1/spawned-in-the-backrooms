@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 5407,
-  "updatedAt": "2026-11-11T14:43:29.229Z",
+  "basedOnSpecVersion": 5409,
+  "updatedAt": "2026-11-11T14:44:33.249Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning an authored Level 0 maze, deeper levels and shared destinations. `templates/player.js` composes player behaviors; place simulations and shared scripts own environments, NPCs, combat, loot, crafting, UI and progression. Avatar appearance is shared between players and NPCs, with Blender/Tripo scripts building and fitting models.",
   "scriptPaths": [],
   "places": [
@@ -89,6 +89,6 @@
     "Bare furry avatars show the whole Body shell and hide segmented Skin_* regions to avoid overlapping seams; STYLE_V is in the appearance cache key so existing avatars redraw after asset changes.",
     "NPC body-style changes are processed in batches of six per update via self.session.rq; preserve the queue lifecycle and exclude player/local-only objects rather than synchronously sweeping a place.",
     "Furry is default (sw146); human-born NPCs restyle to critters, while human bodies remain selectable. Critter arm splay is +20° LeftArm roll/-20° RightArm roll in runtime bones.",
-    "art/critter-cute/tripo_rig.py flattens head vertices beneath the face decal to the decal's smoothed hull using a depth raycast; depth behind the source surface is preserved, and the adjustment fades at decal edges. Keep this fit/clearance when changing the rig."
+    "art/critter-cute/tripo_rig.py flattens head vertices beneath the face decal to the decal's smoothed hull using a depth raycast; depth behind the source surface is preserved, and the adjustment fades at decal edges. DBGFACE prints fit diagnostics and exits before export. Keep this fit/clearance …"
   ]
 }
