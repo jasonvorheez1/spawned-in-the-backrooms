@@ -30,7 +30,6 @@ for o in list(bpy.data.objects):
     if o.type == 'MESH' and o.name.startswith('Icosphere'): bpy.data.objects.remove(o)
 B = [o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith('Ward_')][0]
 arm = B.find_armature()
-AX.update(_AX0) if False else None
 ctr = {}
 for s, nm in ((1, 'Left'), (-1, 'Right')):
     b = arm.data.bones[nm + 'Leg']; f = arm.data.bones[nm + 'Foot']
@@ -40,6 +39,8 @@ def axis(s, z):
     zi = int(z / 0.02)
     for d in (0, -1, 1, -2, 2, -3, 3):
         if (s, zi + d) in AX: return AX[(s, zi + d)]
+    top = max((k for k in AX if k[0] == s), default=None, key=lambda k: k[1])
+    if top: return AX[top]
     h, f = ctr[s]; t = (z - f.z) / (h.z - f.z); return f.lerp(h, t)
 AX.update(_AX0); print('AX', {k: (round(v.x,3), round(v.y,3)) for k, v in sorted(_AX0.items())})
 bins = {}
@@ -70,10 +71,12 @@ for e in B.data.edges:
         if q.z < 0.12: continue
         s_, c, dx, dy, r, zi, ai = key(q)
         wall[(s_, zi, ai)] = max(wall.get((s_, zi, ai), 0), r)
-need = {}
+need = {}; DBG = {}
 for (s_, zi, ai), br in wall.items():
     if br < 0.03: continue
+    if (s_, zi) not in DBG: DBG[(s_, zi)] = []
     jr = max((bins.get((s_, zi + dz, (ai + da) % 24), 0) for dz in (-1, 0, 1) for da in (-1, 0, 1)), default=0)
+    DBG[(s_, zi)].append((round(br, 3), round(jr, 3)))
     if jr > 0: need[(s_, zi)] = max(need.get((s_, zi), 1.0), min(1.25, (jr + CLEAR) / br))
 fac = {}
 for (s, zi), v in need.items():
@@ -88,7 +91,7 @@ for i, p in enumerate(base):
     if k <= 1.0001: continue
     w = min(1, (p.z - 0.12) / 0.04); w = w * w * (3 - 2 * w); k = 1 + (k - 1) * w
     delta[i] = (dx * (k - 1), dy * (k - 1)); moved += 1
-print("FAC", {k: round(v, 3) for k, v in sorted(fac.items())})
+print("DBG", {k: (min(v), max(v)) for k, v in sorted(DBG.items()) if v and k[0] == 1}); print("FAC", {k: round(v, 3) for k, v in sorted(fac.items())})
 def apply(co_list):
     for i, (dx, dy) in delta.items():
         w = mw @ co_list[i].co; w.x += dx; w.y += dy; co_list[i].co = inv @ w
