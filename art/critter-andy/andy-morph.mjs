@@ -35,7 +35,7 @@ export function field(x, y, z, mesh = "") {
   return [X, Y, Z];
 }
 const doc = await io.read(src);
-await doc.transform(dequantize());
+// source accessors stay exactly as they are (no dequantize): only the Andy target is added, in float
 let n = 0;
 for (const mesh of doc.getRoot().listMeshes()) {
   const names = [...(mesh.getExtras()?.targetNames ?? [])];
@@ -57,7 +57,7 @@ for (const mesh of doc.getRoot().listMeshes()) {
   mesh.setExtras({ ...(mesh.getExtras() ?? {}), targetNames: [...names, "Andy"] });
   mesh.setWeights([...mesh.getWeights(), 0]); n++;
 }
-// Nov 11: no sparse() and no re-quantize: the served copy of the sparse/quantized pass tore every garment into spikes in game
-await doc.transform(meshopt({ encoder: MeshoptEncoder, level: "high" }));
+// Nov 11: no transform pass: dequantize/sparse/meshopt re-packed the base and pruned 126 skins, and the served file tore every garment into spikes; the file is written uncompressed
+for (const e of doc.getRoot().listExtensionsUsed()) if (e.extensionName === "EXT_meshopt_compression") e.dispose();
 await io.write(out, doc);
 console.log("Andy target on", n, "meshes");
