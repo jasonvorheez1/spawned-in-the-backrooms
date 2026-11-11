@@ -1,5 +1,5 @@
 # Thrift Mode masks refit for the new Tripo cats: the shop's own bag / shell mesh and paint, fitted around each cat's head (ears inside),
-# exported in the Head bone's frame (origin = the bone's head) so the game hangs it with attachment { bone: 'Head' }.
+# exported skinned to the cat's own armature, weight 1 on mixamorig:Head, so the game hangs it like every garment: attachment { skin: true }.
 import bpy, glob, os
 from mathutils import Vector
 SRC = {"bag": ("/tmp/mk/5f5897c1*.glb", "MaskBag"), "shell": ("/tmp/mk/4089c36c*.glb", "MaskShell")}
@@ -48,12 +48,22 @@ for sex in ("f", "m"):
         cen = Vector(((mn.x + mx.x) / 2, (mn.y + mx.y) / 2, tz0))
         for v in keep.data.vertices:
             c = v.co
-            v.co = Vector(((c.x - (a.x + b.x) / 2) * s.x + cen.x, (c.y - (a.y + b.y) / 2) * s.y + cen.y, (c.z - a.z) * s.z + cen.z)) - hp
+            v.co = Vector(((c.x - (a.x + b.x) / 2) * s.x + cen.x, (c.y - (a.y + b.y) / 2) * s.y + cen.y, (c.z - a.z) * s.z + cen.z))
         keep.data.update()
+        # her armature, bodies dropped: the mask rides the head bone alone
+        bpy.ops.import_scene.gltf(filepath=glob.glob(BODY[sex])[0])
+        arm = next(o for o in bpy.context.scene.objects if o.type == "ARMATURE")
+        for o in list(bpy.context.scene.objects):
+            if o.type == "MESH" and o != keep: bpy.data.objects.remove(o)
+        if arm.animation_data: arm.animation_data.action = None
+        for a_ in list(bpy.data.actions): bpy.data.actions.remove(a_)
+        g = keep.vertex_groups.new(name="mixamorig:Head"); g.add(list(range(len(keep.data.vertices))), 1.0, "REPLACE")
+        mw = keep.matrix_world.copy(); keep.parent = arm; keep.matrix_world = mw
+        keep.modifiers.new("skin", "ARMATURE").object = arm
         sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 8; sc.render.resolution_x = sc.render.resolution_y = 420
         w = bpy.data.worlds.new("w"); sc.world = w; w.color = (0.8, 0.8, 0.8)
         cam = bpy.data.objects.new("c", bpy.data.cameras.new("c")); sc.collection.objects.link(cam); cam.location = (0, -1.6, 0.25)
         e = bpy.data.objects.new("e", None); sc.collection.objects.link(e); e.location = (0, 0, 0.2); t = cam.constraints.new("TRACK_TO"); t.target = e
         sc.camera = cam; sc.render.filepath = f"/tmp/mk/proof/{kind}-{sex}.png"; bpy.ops.render.render(write_still=True)
-        bpy.ops.export_scene.gltf(filepath=f"{OUT}/{kind}-{sex}.glb", export_apply=True)
+        bpy.ops.export_scene.gltf(filepath=f"{OUT}/{kind}-{sex}.glb", export_skins=True, export_animations=False)
         print("MASK", kind, sex, [round(x, 3) for x in s])

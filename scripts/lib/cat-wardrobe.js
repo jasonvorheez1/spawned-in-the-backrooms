@@ -52,8 +52,8 @@ export function catChildren(sex, look) {
     const g = W.models[l[slot]]; if (!g?.[sex]) continue
     out.push({ id: 'cw-' + slot, attachment: { skin: true }, model: { id: g[sex], forward: '+z', ...(g.tint === false ? {} : { materials: { cloth: { kind: 'scripted', script: 'scripts/mat-cloth.js', color: l[ck] || '#ffffff', params: (slot === 'topw' && printOf(sex, l)) || { pat: g.pat || 'weave' } } } }) }, ...(slot === 'topw' ? { morph: chestOf(look) } : {}) })
   }
-  const mk = W.masks?.[l.hat]?.[sex]   // a Thrift Mode mask: rigid on her head bone, its own paint
-  if (mk) out.push({ id: 'cw-mask', attachment: { bone: 'mixamorig:Head' }, model: { id: mk, forward: '+z' } })
+  const mk = W.masks?.[l.hat]?.[sex]   // a Thrift Mode mask: skinned to her head bone, its own paint
+  if (mk) out.push({ id: 'cw-mask', attachment: { skin: true }, model: { id: mk, forward: '+z' } })
   return out
 }
 // a Thrift Mode print on her top (look.topp): the cloth shader's params for this body, or null
