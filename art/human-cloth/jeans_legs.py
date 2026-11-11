@@ -84,7 +84,7 @@ for f in me.polygons:
     for i in (a,b): rep.setdefault((K(i),fside[f.index]),i)
 caps=0
 bm=bmesh.new(); bm.from_mesh(me); bm.verts.ensure_lookup_table(); dl=bm.verts.layers.deform.active
-for sd in 'LR':
+for sd in ([] if True else 'LR'):  # caps off: their faces carried no UVs and triangulated across the leg (flat pale facets, Nov 11)
   od='R' if sd=='L' else 'L'
   bnd=[tuple(e) for e,s_ in ek.items() if s_.count(sd)==1 and od in s_ and all(W(me.vertices[rep[(k,sd)]]).z<crotch for k in e if (k,sd) in rep) and all((k,sd) in rep for k in e)]
   adj=defaultdict(list)
