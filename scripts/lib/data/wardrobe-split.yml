@@ -36,8 +36,8 @@ m:
     Ward_hotelrobe: "/cdn/value.482eee20319a290d8b8875dbdb3a3ec4d218f84f6bfd1eb39b43e10aabd66cfd.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
     Ward_hotelslip: "/cdn/value.7a172a6db5ad84fde4897e8b5deb0e2dc14293ca1d8b9477c289d68d317b3b71.glb"
     Ward_jacket: "/cdn/value.2b9836a23dcf8052b2833e707885546f89154d185b0469528493ac79088519c5.glb"   # Nov 10 male tops redo: longer hem, original collar, shoulder cap (art/human-body/shoulder_cap.py)
-    Ward_jeans: "/cdn/value.ae749c83832d833a23dbbffc6e6104ff75692c1feb1be26a5339074836ace715.glb"  # Nov 11: legs cut apart at the midline (59 faces bridged left leg to right below the crotch), inner panels rebuilt on the skin (art/human-cloth/inseam_split.py); before d386ff4a
-    Ward_jeans_tuck: "/cdn/value.9bb9d7b8e17078969c7341a92836565a287142398bea34eae19ef690d1fb3eee.glb"  # Nov 11 inseam split too; before a53b4ae0;   # Nov 11: the jeans legs pulled inside the boot shaft, worn only with boots (art/human-cloth/jeans_tuck.py)
+    Ward_jeans: "/cdn/value.0ed18593ab8df39a4de3621c89e04dc235274f6d52bac5600aaaffcc570787ee.glb"  # Nov 11: legs cut apart at the midline (59 faces bridged left leg to right below the crotch), inner panels rebuilt on the skin (art/human-cloth/inseam_split.py); before d386ff4a
+    Ward_jeans_tuck: "/cdn/value.a95ced5cfe1d852b6e6ec02d163e5694ad7dc01c0ce28a3331740d51da85d889.glb"  # Nov 11 inseam split too; before a53b4ae0;   # Nov 11: the jeans legs pulled inside the boot shaft, worn only with boots (art/human-cloth/jeans_tuck.py)
     Ward_jerrytee: "/cdn/value.6a1427c260444ca507c51a22b90b9f96991b7b6f4f579c0d5e3cdce04feef161.glb"
     Ward_lifemantle: "/cdn/value.6cee840a91ee7ec865240cc7ece61e54b33b228426bae8c95294110dc1cc2b7d.glb"
     Ward_longskirt: "/cdn/value.698ad9a9910b8d3ee0e657285b7767e815eb80595283d6db190d13bb4a14636d.glb"
