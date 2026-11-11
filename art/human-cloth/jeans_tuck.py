@@ -61,6 +61,13 @@ def apply(rows):
 if J.data.shape_keys:
     for kb in J.data.shape_keys.key_blocks: apply(kb.data)
 else: apply(J.data.vertices)
+# below the shaft's top the leg is hidden in the boot: its faces go, so a hem that rides the foot's weights cannot flick out through the leather
+import bmesh
+bmj = bmesh.new(); bmj.from_mesh(J.data); bmj.verts.ensure_lookup_table()
+cut = TOP - 0.035
+dead = [f for f in bmj.faces if all((mw @ v.co).z < cut for v in f.verts)]
+bmesh.ops.delete(bmj, geom=dead, context='FACES'); bmj.to_mesh(J.data); bmj.free()
+print("CUT", len(dead), "faces below", round(cut, 3))
 print("TUCKED", len(delta), "of", len(jp), "pulled in up to", round(worst, 3), "m")
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.export_scene.gltf(filepath=out, export_apply=False, export_skins=True, export_morph=True, export_animations=False)
