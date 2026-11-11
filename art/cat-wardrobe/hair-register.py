@@ -12,7 +12,7 @@ class cKDTree:
     def query(self, Q):
         r = [self.k.find(q) for q in np.asarray(Q)]
         return np.array([x[2] for x in r]), np.array([x[1] for x in r])
-SRC = {"f": "/tmp/fl/f.glb", "m": "/tmp/fl/m.glb"}; SCULPT = {"f": "/workspace/hair/tripo8/female.glb", "m": "/workspace/hair/tripo8/male.glb"}
+SRC = {"f": "/workspace/cathead/f-anime.glb", "m": "/workspace/cathead/m-anime.glb"}; SCULPT = {"f": "/workspace/hair/tripo8/female.glb", "m": "/workspace/hair/tripo8/male.glb"}
 os.makedirs("/workspace/cathair", exist_ok=True)
 def verts(o): M = np.array(o.matrix_world); v = np.array([tuple(x.co) for x in o.data.vertices]); return v @ M[:3, :3].T + M[:3, 3]
 def load_mesh(p, name=None):
@@ -74,6 +74,15 @@ for sex in ("f", "m"):
             V[far] = c2 + (V[far] - c2) * sh
         for v, c in zip(hair.data.vertices, V): v.co = c
         hair.data.update()
+        # anime hair reads as smooth ribbon locks, not facets: weld the Tripo shell, smooth it, one subdivision where the budget allows
+        import bmesh
+        bm = bmesh.new(); bm.from_mesh(hair.data); bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0006); bm.to_mesh(hair.data); bm.free()
+        for pl in hair.data.polygons: pl.use_smooth = True
+        bpy.context.view_layer.objects.active = hair
+        sm = hair.modifiers.new("sm", "SMOOTH"); sm.factor = 0.5; sm.iterations = 4; bpy.ops.object.modifier_apply(modifier="sm")
+        if len(hair.data.polygons) < 14000:
+            sub = hair.modifiers.new("s", "SUBSURF"); sub.levels = 1; bpy.ops.object.modifier_apply(modifier="s")
+        print("TRIS", st, len(hair.data.polygons))
         hair.name = "hair"; hair.vertex_groups.clear()
         g = hair.vertex_groups.new(name="mixamorig:Head"); g.add(list(range(len(hair.data.vertices))), 1.0, "REPLACE")
         hair.parent = arm; hair.modifiers.new("skin", "ARMATURE").object = arm
