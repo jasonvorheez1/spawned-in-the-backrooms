@@ -24,10 +24,11 @@ for e in bm.edges:
   if e.is_boundary:
     # a seam boundary has a twin by position; a true border (the neck hole, cuffs) does not move
     pass
-edgecount = {}
-for e in bm.edges:
-  k2 = tuple(sorted((rep[e.verts[0].index], rep[e.verts[1].index])))
-  edgecount[k2] = edgecount.get(k2, 0) + 1
+edgecount = {}  # faces per welded edge: 1 = a true open border (neck hole, cuffs)
+for f in bm.faces:
+  for e in f.edges:
+    k2 = tuple(sorted((rep[e.verts[0].index], rep[e.verts[1].index])))
+    edgecount[k2] = edgecount.get(k2, 0) + 1
 for (i, j), c in edgecount.items():
   if c == 1 and i != j: border.add(i); border.add(j)
 reps = sorted(set(rep.values()))
