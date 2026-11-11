@@ -66,8 +66,8 @@ sub('key.data.energy = 120; key.data.size = 2', 'key.data.energy = 140; key.data
 sub('EYE_U, EYE_V = .365, .048', 'EYE_U, EYE_V = .335, .018')
 sub('N = 32; ew, eh = .074, .090', 'N = 32; ew, eh = .066, .088')
 sub('inner = ellipse(ew, eh, N); outer = ellipse(ew + .0062, eh + .0062, N)',
-    'inner = ellipse(ew, eh, N); outer = [(x * (ew + .0050) / ew + (s * .010 * max(0.0, y / eh) ** 3 * max(0.0, s * x / ew)), y * (eh + .0030) / eh + (.0150 * (y / eh) ** 2 if y > 0 else 0)) for (x, y) in inner]')
-sub('pw, ph = .047, .059; pc = (-s * .004, -.010)', 'pw, ph = .055, .072; pc = (-s * .003, -.006)')
+    'inner = ellipse(ew, eh, N); outer = [(x * (ew + .0050) / ew + (s * .022 * max(0.0, y / eh) ** 2 * max(0.0, s * x / ew)), y * (eh + .0030) / eh + (.0260 * (y / eh) ** 2 if y > 0 else 0)) for (x, y) in inner]')
+sub('pw, ph = .047, .059; pc = (-s * .004, -.010)', 'pw, ph = .060, .079; pc = (-s * .002, -.002)')
 exec(compile(src, os.path.join(HERE, "build.py"), "exec"))
 # proofs show the head as the game draws it by default: no beard, no blush unless worn (the game hides those slots)
 _ht = head_turn
