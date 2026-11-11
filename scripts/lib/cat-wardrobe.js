@@ -5,7 +5,7 @@ import FACES from './data/critter-faces.yml'
 import { PRINTS } from '../mat-cloth.js'
 
 export const CAT_BODY = {
-  f: { glb: '/cdn/value.a11b48ade34f08664ff8f28adf4c10a24021488c022573524144a89bae171045.glb', fur: '/cdn/value.1c4f4402e22ebd41f1cca9b45fc42ef2bec051041b40c8a3c40b88028a23ca58.jpg' },
+  f: { glb: '/cdn/value.14654827057f9c93fc90318f681e9bc18623ec01df63e550f88ced89c4bf5543.glb', fur: '/cdn/value.1c4f4402e22ebd41f1cca9b45fc42ef2bec051041b40c8a3c40b88028a23ca58.jpg' },
   m: { glb: '/cdn/value.521f707dbab4819f3f5e2a5333887957188ea647c3af815d86979fc7f063218e.glb', fur: '/cdn/value.58ce243610699df44f4552ccfdfc667580c63c99f28103ecf2d1dd72c94657fe.jpg' }
 }
 const rgb = (hex, lin = true) => { const n = parseInt(String(hex || '#ffffff').replace('#', '').slice(0, 6).padEnd(6, 'f'), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { const s = v / 255; return lin ? (s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4)) : s }) }
@@ -79,8 +79,8 @@ export function catModel(sex, look) {
   }
 }
 // the Chest slider 0..1 (look.chest), the body's Chest key; a top's cloth carries the same key so it swells with her
-// the Chest key on the Tripo body moves ~1 cm at weight 1, too little to read (Shelly: 'i dont really have breasts anymore'): the slider drives it past 1, 0 → 0.4, 0.5 → 1.6, 1 → 2.8; garments carry the same key and follow
-export const chestOf = (look) => { const c = Math.max(0, Math.min(1, +(look?.chest ?? 0.5))); return { Chest: +(0.4 + c * 2.4).toFixed(3) } }
+// the Chest key is a sculpted bust (art/cat-wardrobe/bust.py, Shelly 'bust isnt there'): slider 0 → a hint, 1 → full; garments carry the same key and follow
+export const chestOf = (look) => { const c = Math.max(0, Math.min(1, +(look?.chest ?? 0.5))); return { Chest: +(0.15 + c * 0.85).toFixed(3) } }
 // snout and ear types (Shelly Nov 11): shape keys on the head (art/cat-wardrobe/head-keys.py and style_fit.py). look.snout: button (default) | long | pointy | flat | puff; look.ears: upright (default) | tall | small | fold | wide
 export const SNOUTS = ['button', 'long', 'pointy', 'flat', 'puff'], EARS = ['upright', 'tall', 'small', 'fold', 'wide'], TAILS = ['classic', 'fluffy', 'bob', 'puff', 'whip', 'curl'] // look.tail (Shelly 'new tail types too'): Tail_* keys on the body
 const SNOUT_KEY = { long: 'Snout_Long', pointy: 'Snout_Pointy', flat: 'Snout_Flat', puff: 'Snout_Puff' }, EAR_KEY = { tall: 'Ear_Tall', small: 'Ear_Small', fold: 'Ear_Fold', wide: 'Ear_Wide' }
