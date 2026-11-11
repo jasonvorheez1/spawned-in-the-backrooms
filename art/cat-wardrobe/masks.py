@@ -42,8 +42,8 @@ for sex in ("f", "m"):
         # target box: wraps the head with 1.5 cm clearance, from just under the chin up over the ear tips
         pad = 0.015
         # wide enough for the ear tips, deep enough for the muzzle: nothing of the cat shows through
-        tx = 2 * wide + 2 * pad; ty = (mx.y - mn.y) + 2 * pad + (0.07 if kind == "shell" else 0.03)
-        tz0 = mn.z - (0.05 if kind == "shell" else 0.02); tz1 = top + 0.02   # the shell's egg tapers, so it drops lower to close under the chin
+        tx = (2 * wide + 2 * pad) * (1.3 if kind == "shell" else 1.08); ty = (mx.y - mn.y) + 2 * pad + (0.07 if kind == "shell" else 0.03)
+        tz0 = mn.z - (0.05 if kind == "shell" else 0.02); tz1 = top + (0.12 if kind == "shell" else 0.08)   # the bag's slanted lip and the shell's round crown both clear the ear tips   # the shell's egg tapers, so it drops lower to close under the chin
         s = Vector((tx / (b.x - a.x), ty / (b.y - a.y), (tz1 - tz0) / (b.z - a.z)))
         cen = Vector(((mn.x + mx.x) / 2, (mn.y + mx.y) / 2, tz0))
         for v in keep.data.vertices:
