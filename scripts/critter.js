@@ -347,7 +347,7 @@ export function update(ctx) {
   }
 }
 
-function wornModel(w) { return w.name ? w.url : { id: w.url, forward: '-x' } } // a player's own .plymodel upload: once the humanoid clips retarget onto its skeleton it stands a quarter turn off (Nov 11 test: bare +Z, animated sideways), so -x faces it forward in play; catalog models already face -Z
+function wornModel(w) { return w.name ? w.url : { id: w.url, forward: '+x' } } // a player's own .plymodel upload faces +X once clips play on it (Nov 11 test: bare and +z stood sideways, -x backwards, +x forward); catalog models already face -Z
 function dropHead(ctx, o) { clearAppearance(ctx,o) }
 // the species head (face, ears, tail) rides the body's rig as a skinned child; restyled when the look changes
 function wearHead(ctx, o, l) { seatHead(ctx,o,{...l,vary:false}) }
