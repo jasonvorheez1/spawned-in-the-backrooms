@@ -424,6 +424,25 @@ for f in bm.faces:
     if inb or dark:
         for l in f.loops: l[uvk].uv = UVF
         f.material_index = 0; nlash += 1
+# the old ':3' and muzzle lumps sit under the chin, past the pressed box: depth only (y) is blurred there over 3 cm of
+# front-facing surface, fading to nothing at the region's edge, so bumps go and the silhouette and seams stay put
+from mathutils import kdtree as _kd
+bm.verts.ensure_lookup_table(); bm.normal_update()
+fr = [v for v in bm.verts if v.co.y < -0.03 and v.normal.y < -0.35 and BOX[0] - 0.08 < v.co.x < BOX[1] + 0.08 and BOX[2] - 0.14 < v.co.z < BOX[3]]
+kt = _kd.KDTree(len(fr))
+for k, v in enumerate(fr): kt.insert(Vector((v.co.x, 0, v.co.z)), k)
+kt.balance(); ny = {}
+for v in fr:
+    if v.is_boundary: continue
+    ex = min(v.co.x - (BOX[0] - 0.06), (BOX[1] + 0.06) - v.co.x); ez = min(v.co.z - (BOX[2] - 0.12), (BOX[2] + 0.03) - v.co.z)
+    e = min(ex, ez)
+    if e <= 0: continue
+    w = min(1.0, e / 0.025); w = w * w * (3 - 2 * w)
+    nb = kt.find_range(Vector((v.co.x, 0, v.co.z)), 0.03)
+    tw = sum(1 - d / 0.03 for _, _, d in nb) or 1
+    ny[v] = (1 - w) * v.co.y + w * sum(fr[k].co.y * (1 - d / 0.03) for _, k, d in nb) / tw
+for v, y in ny.items(): v.co.y = y
+print("chin depth blurred", len(ny))
 dead = []
 print("head front verts pressed", len(moved), "faces to fur", nlash)
 bm.to_mesh(hm); bm.free(); lift = len(dead)
