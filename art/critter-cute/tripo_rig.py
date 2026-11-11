@@ -354,6 +354,12 @@ for v in HEAD.data.vertices:
     w = min(1.0, h[1] / 6.0); w = w * w * (3 - 2 * w)
     moves.append((v.index, co.y + ((-h[0] + max(depth, 0) * 1.0 + (0.0015 if depth > 0.001 else 0)) - co.y) * w))
 for i, y in moves: HEAD.data.vertices[i].co.y = y
+if os.environ.get("DBGFACE"):
+    nb = sum(1 for v in HEAD.data.vertices if BOX[0] < v.co.x < BOX[1] and BOX[2] < v.co.z < BOX[3] and v.co.y < -0.03)
+    print("DBG inbox", nb, "moved", len(moves), "VAL frac", VAL.mean(), "clo range", np.nanmin(clo[VAL]), np.nanmax(clo[VAL]), "hgt range", np.nanmin(hgt), np.nanmax(hgt))
+    print("DBG mw", HEAD.matrix_world, HEAD.parent, [m.type for m in HEAD.modifiers])
+    sh = [abs(HEAD.data.vertices[i].co.y - y) for i, y in moves]; print("DBG", HEAD.data.vertices[moves[0][0]].co, moves[:3])
+    sys.exit(0)
 lift = len(moves)
 bpy.context.view_layer.objects.active = HEAD
 if HEAD.data.has_custom_normals: bpy.ops.mesh.customdata_custom_splitnormals_clear()   # old normals kept the sockets' shading
