@@ -406,10 +406,10 @@ for f in bm.faces:
 # and dark lash flicks just past it go fur too (no ghost rings, lashes or old mouth under or beside the new face)
 for f in bm.faces:
     c = f.calc_center_median()
-    if c.y > -0.03 or f.normal.y > 0.1: continue
-    inb = BOX[0] - 0.02 < c.x < BOX[1] + 0.02 and BOX[2] - 0.02 < c.z < BOX[3] + 0.02
-    near = BOX[0] - 0.05 < c.x < BOX[1] + 0.05 and BOX[2] - 0.03 < c.z < BOX[3] + 0.05
-    dark = near and min(lum[int(l[uvk].uv.y * TH) % TH, int(l[uvk].uv.x * TW) % TW] for l in f.loops) < 0.3
+    if c.y > -0.03: continue
+    inb = BOX[0] - 0.02 < c.x < BOX[1] + 0.02 and BOX[2] - 0.02 < c.z < BOX[3] + 0.02 and f.normal.y < 0.3
+    near = BOX[0] - 0.05 < c.x < BOX[1] + 0.05 and BOX[2] - 0.07 < c.z < BOX[3] + 0.05 and f.normal.y < 0.1
+    dark = near and min(lum[int(l[uvk].uv.y * TH) % TH, int(l[uvk].uv.x * TW) % TW] for l in f.loops) < 0.38
     if inb or dark:
         for l in f.loops: l[uvk].uv = UVF
         f.material_index = 0; nlash += 1
@@ -427,7 +427,7 @@ for j in range(NZ + 1):
     for i in range(NX + 1):
         u, v = i / NX, j / NZ; Xp = BOXD[0] + u * (BOXD[1] - BOXD[0]); Zp = BOXD[2] + v * (BOXD[3] - BOXD[2])
         hit = bvh.ray_cast(Vector((Xp, -1, Zp)), Vector((0, 1, 0)))
-        if hit[0] is not None and hit[1].y < -0.15: grid[i, j] = (hit[0], (u, v)); hn[i, j] = hit[1].normalized()
+        if hit[0] is not None and hit[0].y < -0.04: grid[i, j] = (hit[0], (u, v)); hn[i, j] = (hit[1] if hit[1].y < 0 else -hit[1]).normalized()
 for (i, j), (co, uv_) in list(grid.items()):   # smoothed normals: an even 3 mm stand-off, no faceted ripple
     nn = Vector((0, 0, 0))
     for di in range(-2, 3):
@@ -439,7 +439,7 @@ for key, (co, uv_) in grid.items(): vid[key] = len(verts); verts.append(co[:]); 
 for j in range(NZ):
     for i in range(NX):
         q = [(i, j), (i + 1, j), (i + 1, j + 1), (i, j + 1)]
-        if all(kk in vid for kk in q) and max(grid[kk][0].y for kk in q) - min(grid[kk][0].y for kk in q) < 0.015:
+        if all(kk in vid for kk in q) and max(grid[kk][0].y for kk in q) - min(grid[kk][0].y for kk in q) < 0.03:
             faces.append([vid[kk] for kk in q])
 fm = bpy.data.meshes.new("Face"); fm.from_pydata(verts, [], faces); fm.update()
 fuv = fm.uv_layers.new(name="UVMap")
@@ -450,7 +450,20 @@ FACE = bpy.data.objects.new("Face", fm); sc.collection.objects.link(FACE); skin_
 used = {fm.loops[li].vertex_index for p in fm.polygons for li in p.loop_indices}
 print("face decal verts", len(verts), "quads", len(faces))
 FACEIMG = {nm: bpy.data.images.load(f"{OUT}/faces/{nm}.png") for nm in C["faces"]}
-for im_ in FACEIMG.values(): im_.use_fake_user = True
+def fill_holes(im_):
+    w_, h_ = im_.size; a = np.array(im_.pixels[:]).reshape(h_, w_, 4); op = a[..., 3] >= 0.5
+    ext = np.zeros_like(op); st = [(y, x) for y in range(h_) for x in (0, w_ - 1)] + [(y, x) for x in range(w_) for y in (0, h_ - 1)]
+    while st:
+        y, x = st.pop()
+        if 0 <= y < h_ and 0 <= x < w_ and not op[y, x] and not ext[y, x]:
+            ext[y, x] = True; st += [(y + 1, x), (y - 1, x), (y, x + 1), (y, x - 1)]
+    hole = ~op & ~ext; ys, xs = np.nonzero(hole)
+    for y, x in zip(ys, xs):
+        win_ = a[max(0, y - 3):y + 4, max(0, x - 3):x + 4]; m_ = win_[..., 3] >= 0.5
+        if m_.any(): a[y, x, :3] = win_[m_][:, :3].mean(0)
+        a[y, x, 3] = 1.0
+    im_.pixels[:] = a.ravel(); im_.pack(); return len(ys)
+for nm_, im_ in FACEIMG.items(): im_.use_fake_user = True; print("FACE holes filled", nm_, fill_holes(im_))
 mf = bpy.data.materials.new("face"); mf.use_nodes = True; nt = mf.node_tree
 fb = next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"); FT = nt.nodes.new("ShaderNodeTexImage"); FT.image = FACEIMG[C["faces"][0]]
 FT.extension = "CLIP"; nt.links.new(FT.outputs["Color"], fb.inputs["Base Color"])
