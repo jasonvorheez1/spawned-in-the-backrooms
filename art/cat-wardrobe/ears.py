@@ -36,14 +36,21 @@ def measure(H):
     for sx in (1, -1):
         m = E & (np.sign(x) == sx); P = V[m]
         tip = Vector(P[np.argmax(P[:, 2])]); C = Vector((P[:, 0].mean(), P[:, 1].mean(), base_z))
-        band = P[P[:, 2] < base_z + 0.25 * (tip.z - base_z)]
-        out[sx] = dict(C=C, tip=tip, hw=(band[:, 0].max() - band[:, 0].min()) / 2, hd=(band[:, 1].max() - band[:, 1].min()) / 2)
+        # the old ear's own frame: up = base to tip, thin = its flattest direction (its face normal), across = the rest
+        up = (tip - C).normalized(); Q = P - P.mean(0); Q = Q - np.outer(Q @ np.array(up), np.array(up))
+        ev, evec = np.linalg.eigh(Q.T @ Q); thin = Vector(evec[:, 0]).normalized()
+        if thin.y > 0: thin = -thin                       # facing out of the front (-Y)
+        thin = (thin - up * thin.dot(up)).normalized(); across = up.cross(thin).normalized()
+        if across.x * sx < 0: across = -across
+        proj = Q @ np.array(across); band = P[P[:, 2] < base_z + 0.3 * (tip.z - base_z)]
+        bq = (band - P.mean(0)) @ np.array(across)
+        out[sx] = dict(C=C, tip=tip, up=up, fr=thin, ac=across, hw=(bq.max() - bq.min()) / 2, hd=0)
     head_bone = max(H.vertex_groups, key=lambda g: sum(1 for v in H.data.vertices for e in v.groups if e.group == g.index and e.weight > 0.5)).name
     return out, S, head_bone
 
 def ear(bm, E, T, sx, mats):
     C, tip = E["C"], E["tip"]; h = (tip.z - C.z) * T["h"]
-    W0 = E["hw"] * 1.22 * T["w"]; D0 = max(E["hd"] * 0.95, W0 * 0.42)
+    W0 = E["hw"] * 1.18 * T["w"]; D0 = W0 * 0.4
     up = Vector((0, 0, 1)); f = Vector((0, -1, 0)); s = Vector((sx, 0, 0))
     lean = math.radians(T["lean"])
     N, R = 28, 22
@@ -78,7 +85,7 @@ def ear(bm, E, T, sx, mats):
                 p = piv + Matrix.Rotation(math.radians(T["fold"]) * min(1, k * 1.6), 3, "X") @ (p - piv)
             if T.get("tip"):
                 p = Matrix.Rotation(math.radians(T["tip"] * sx), 3, "Y") @ p
-            rv.append(bm.verts.new(C + p.x * s + p.y * (-f) * -1 + Vector((0, 0, p.z)) if False else C + Vector((p.x * sx, p.y, p.z))))
+            rv.append(bm.verts.new(C + E["ac"] * (p.x * sx * sx) + E["fr"] * (-p.y) + E["up"] * p.z))
         verts.append(rv)
     faces = []
     for j in range(R):
@@ -93,15 +100,15 @@ def ear(bm, E, T, sx, mats):
     for i in range(N): bm.faces.new((verts[0][(i + 1) % N], verts[0][i], bot)).material_index = 0
     # the tuft: three soft cream locks rising out of the bowl
     for k, (ox, L, ang) in enumerate(((-0.25, 0.5, 6), (0.12, 0.62, -4), (0.4, 0.42, -12))):
-        root = Vector((ox * W0 * sx, -D0 * 0.25, 0.08 * h))
-        dirv = Matrix.Rotation(math.radians(ang * sx), 3, "Y") @ Vector((0, -0.38, 1)).normalized()
+        root = Vector((ox * W0 * sx, D0 * 0.25, 0.08 * h))
+        dirv = Matrix.Rotation(math.radians(ang * sx), 3, "Y") @ Vector((0, 0.38, 1)).normalized()
         if T.get("tip"): pass
         segs, ringn = 7, 8; prev = None; rr = W0 * 0.16
         rowsv = []
         for i in range(segs + 1):
-            u = i / segs; pc = root + dirv * (L * h * u) + Vector((0, -0.18 * h * u * u, 0))
+            u = i / segs; pc = root + dirv * (L * h * u) + Vector((0, 0.18 * h * u * u, 0))
             rad = rr * (1 - u) ** 0.9 + 0.0008
-            row = [bm.verts.new(C + pc + Vector((math.cos(2 * math.pi * q / ringn) * rad, math.sin(2 * math.pi * q / ringn) * rad * 0.6, 0))) for q in range(ringn)]
+            row = [bm.verts.new(C + E["ac"] * ((pc.x * sx + math.cos(2 * math.pi * q / ringn) * rad) ) + E["fr"] * (-(pc.y + math.sin(2 * math.pi * q / ringn) * rad * 0.6)) + E["up"] * pc.z) for q in range(ringn)]
             rowsv.append(row)
         for i in range(segs):
             for q in range(ringn):
@@ -132,7 +139,7 @@ def proof(sex, objs, H, meas):
     sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = sc.render.resolution_y = 360
     w = bpy.data.worlds.new("w"); sc.world = w; w.color = (0.3, 0.3, 0.33)
     Cz = meas[1]["C"].z
-    cams = [((0, -0.75, Cz + 0.02), (88, 0, 0)), ((0.75, -0.2, Cz + 0.03), (88, 0, 75)), ((0.45, 0.6, Cz + 0.25), (65, 0, 143))]
+    cams = [((0, -0.9, Cz + 0.1), (90, 0, 0)), ((0.9, -0.25, Cz + 0.1), (90, 0, 74)), ((0.55, 0.65, Cz + 0.35), (68, 0, 140))]
     files = []
     for kind, o in objs.items():
         for x in objs.values(): x.hide_render = x is not o
@@ -140,7 +147,7 @@ def proof(sex, objs, H, meas):
             if k.name.startswith("Ear_"): k.value = 1.0 if k.name == TYPES[kind]["key"] else 0
         for i, (p, r) in enumerate(cams):
             c = bpy.data.objects.new("c", bpy.data.cameras.new("c")); sc.collection.objects.link(c); c.location = p
-            c.rotation_euler = [math.radians(a) for a in r]; c.data.type = "ORTHO"; c.data.ortho_scale = 0.42
+            c.rotation_euler = [math.radians(a) for a in r]; c.data.type = "ORTHO"; c.data.ortho_scale = 0.6
             l = bpy.data.objects.new("l", bpy.data.lights.new("l", "SUN")); l.data.energy = 3.5; l.rotation_euler = c.rotation_euler; sc.collection.objects.link(l)
             sc.camera = c; fn = f"{OUT}/proof/{sex}-{kind}-{i}.png"; sc.render.filepath = fn; bpy.ops.render.render(write_still=True)
             bpy.data.objects.remove(l); bpy.data.objects.remove(c); files.append(fn)
