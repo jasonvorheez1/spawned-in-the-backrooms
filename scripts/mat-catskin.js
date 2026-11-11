@@ -80,3 +80,13 @@ export function material(ctx) {
   m.metalness = 0;
   return m;
 }
+
+// toon shading for the new cats: two soft bands, a lifted shadow tone, so Tripo's sculpt lumps stop catching light
+export function lighting(surface, lights, ctx) {
+  const direct = lights.each((light) => {
+    const ndl = clamp(dot(surface.normal, light.direction), 0, 1);
+    const band = mix(float(0.62), float(1.0), smoothstep(0.18, 0.32, ndl));
+    return surface.albedo.mul(light.color).mul(band).mul(light.shadow);
+  });
+  return direct.add(surface.albedo.mul(lights.ambient).add(lights.environment).mul(surface.occlusion));
+}
