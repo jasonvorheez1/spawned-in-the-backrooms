@@ -37,9 +37,9 @@ for v, w in zip(g.data.vertices, ws):
         if s * nx > ax: nx = w.x
     if abs(nx - w.x) < 1e-6 and abs(nz - w.z) < 1e-6: continue
     d = gi.to_3x3() @ Vector((nx - w.x, 0, nz - w.z))
-    v.co += d
     if g.data.shape_keys:
-        for kb in g.data.shape_keys.key_blocks[1:]: kb.data[v.index].co += d
+        for kb in g.data.shape_keys.key_blocks: kb.data[v.index].co += d  # the Basis key is what exports, v.co alone would not
+    else: v.co += d
     moved += 1
 print('NARROW', g.name, moved, 'hinge', round(hinge, 3), '->', round(comp(hinge), 3))
 for o in list(bpy.context.scene.objects):
