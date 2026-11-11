@@ -157,134 +157,126 @@ bc-bay-w4:
   tags: [bonus-court]
   vector: "<svg viewBox='0 0 600 110' width='5.4m'><rect x='4' y='4' width='592' height='102' rx='10' fill='#1a0f2e' stroke='#38f4ff' stroke-width='4' opacity='1'/><text x='300' y='74' text-anchor='middle' font-family='display' font-size='56' fill='#ff4fd8' opacity='1' filter='drop-shadow(0 0 10px #ff4fd8)'>SUNSET VIDEO</text></svg>"
 bc-bench-1:
-  feetPosition: {x: -4.5, y: 0, z: 24.05}
-  id: bc-bench-1
-  layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
-  model: {id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
-  physics: {body: static, collider: box}
-  rotation: {yaw: 0}
-  tags: [bonus-court]
+  feetPosition: {x: -4.5, y: 0, z: 23.85}
+  id: "bc-bench-1"
+  layout: {box: {min: {x: -0.97, y: -0.0075, z: -0.3203}, max: {x: 0.97, y: 0.9095, z: 0.3086}}}
+  model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
+  physics: {body: "static", collider: "box"}
+  rotation: {yaw: 90}
+  tags: ["bonus-court"]
 bc-bench-2:
-  feetPosition: {x: 4.5, y: 0, z: 24.05}
-  id: bc-bench-2
-  layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
-  model: {id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
-  physics: {body: static, collider: box}
-  rotation: {yaw: 0}
-  tags: [bonus-court]
-bc-bench-3:
-  feetPosition: {x: -4.5, y: 0, z: 6.05}
-  id: bc-bench-3
-  layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
-  model: {id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
-  physics: {body: static, collider: box}
-  rotation: {yaw: 0}
-  tags: [bonus-court]
-bc-bench-4:
-  feetPosition: {x: 4.5, y: 0, z: 6.05}
-  id: bc-bench-4
-  layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
-  model: {id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
-  physics: {body: static, collider: box}
-  rotation: {yaw: 0}
-  tags: [bonus-court]
-bc-bench-5:
-  feetPosition: {x: -4.5, y: 0, z: -21.95}
-  id: bc-bench-5
-  layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
-  model: {id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
-  physics: {body: static, collider: box}
-  rotation: {yaw: 0}
-  tags: [bonus-court]
-bc-bench-6:
-  feetPosition: {x: 4.5, y: 0, z: -21.95}
-  id: bc-bench-6
-  layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
-  model: {id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
-  physics: {body: static, collider: box}
-  rotation: {yaw: 0}
-  tags: [bonus-court]
-bc-cab-1:
-  children: [{feetPosition: {x: 0, y: 1.22, z: 0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: 12}}]
-  children.screen: null
-  feetPosition: {x: 13, y: 0.02, z: -22.9}
-  id: bc-cab-1
-  model: {id: /cdn/value.7aee2b3cebf61a7c912deba3eaaa6bab5615a0495e18bcb6bfdf93dd99f428b4.glb, parts: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png, roughness: 0.2, texture: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png}, shell: {color: oklch(0.93 0.02 90), roughness: 0.3}}}
-  physics: {body: static, collider: box}
-  rotation: {yaw: 0}
-  tags: [bonus-arcade]
-bc-cab-2:
-  children: [{feetPosition: {x: 0, y: 1.22, z: 0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: 12}}]
-  children.screen: null
-  feetPosition: {x: 13, y: 0.02, z: -7.1}
-  id: bc-cab-2
-  model: {id: /cdn/value.7aee2b3cebf61a7c912deba3eaaa6bab5615a0495e18bcb6bfdf93dd99f428b4.glb, parts: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.f8bb08a00d6117c32ac7f2f567e3c970cd40dc2906777904a69ed77728573cb0.png, roughness: 0.2, texture: /cdn/value.f8bb08a00d6117c32ac7f2f567e3c970cd40dc2906777904a69ed77728573cb0.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png}, shell: {color: oklch(0.32 0.06 260), roughness: 0.3}}}
-  physics: {body: static, collider: box}
-  rotation: {yaw: 180}
-  tags: [bonus-arcade]
-bc-cab-3:
-  children: [{feetPosition: {x: 0, y: 1.22, z: 0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: 12}}]
-  children.screen: null
-  feetPosition: {x: 15.2, y: 0.02, z: -22.9}
-  id: bc-cab-3
-  model: {id: /cdn/value.7aee2b3cebf61a7c912deba3eaaa6bab5615a0495e18bcb6bfdf93dd99f428b4.glb, materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.99f0d7b529b4c4851c7b76a1292d05665a7d392e786d57c519eb5cb0d3ece87b.png, roughness: 0.2, texture: /cdn/value.99f0d7b529b4c4851c7b76a1292d05665a7d392e786d57c519eb5cb0d3ece87b.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-racing-game-red-car-sunset-highway.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-racing-game-red-car-sunset-highway.png}, shell: {color: oklch(0.45 0.17 27), roughness: 0.3}}}
-  physics: {body: static, collider: box}
-  rotation: {yaw: 0}
-  tags: [bonus-arcade]
-bc-cab-4:
-  children: [{feetPosition: {x: 0, y: 1.22, z: 0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: 12}}]
-  children.screen: null
-  feetPosition: {x: 15.2, y: 0.02, z: -7.1}
-  id: bc-cab-4
-  model: {id: /cdn/value.7aee2b3cebf61a7c912deba3eaaa6bab5615a0495e18bcb6bfdf93dd99f428b4.glb, materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.d291bab7e080558ca2d4419bfcb74d56487b980de802de47caa165ca0d1e41f4.png, roughness: 0.2, texture: /cdn/value.d291bab7e080558ca2d4419bfcb74d56487b980de802de47caa165ca0d1e41f4.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-falling-block-puzzle-game.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-falling-block-puzzle-game.png}, shell: {color: oklch(0.22 0.03 270), roughness: 0.3}}}
-  physics: {body: static, collider: box}
-  rotation: {yaw: 180}
-  tags: [bonus-arcade]
-bc-cab-5:
-  children: [{feetPosition: {x: 0, y: 1.22, z: 0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: 12}}]
-  children.screen: null
-  feetPosition: {x: 17.4, y: 0.02, z: -22.9}
-  id: bc-cab-5
-  model: {id: /cdn/value.7aee2b3cebf61a7c912deba3eaaa6bab5615a0495e18bcb6bfdf93dd99f428b4.glb, materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.a7fabdca9daeeea0ab7cdd6ac32c00ec7a907e8ff56ff546c17ab6a1b9925463.png, roughness: 0.2, texture: /cdn/value.a7fabdca9daeeea0ab7cdd6ac32c00ec7a907e8ff56ff546c17ab6a1b9925463.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-ninja-beat-em-up-neon-street.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-ninja-beat-em-up-neon-street.png}, shell: {color: oklch(0.3 0.12 310), roughness: 0.3}}}
-  physics: {body: static, collider: box}
-  rotation: {yaw: 0}
-  tags: [bonus-arcade]
-bc-cab-6:
-  children: [{feetPosition: {x: 0, y: 1.22, z: 0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: 12}}]
-  children.screen: null
-  feetPosition: {x: 17.4, y: 0.02, z: -7.1}
-  id: bc-cab-6
-  model: {id: /cdn/value.7aee2b3cebf61a7c912deba3eaaa6bab5615a0495e18bcb6bfdf93dd99f428b4.glb, materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.a4dabee28ae8c248d1ff7349cd6eadeca73158029106e6df6eeb20dda5a7fbb3.png, roughness: 0.2, texture: /cdn/value.a4dabee28ae8c248d1ff7349cd6eadeca73158029106e6df6eeb20dda5a7fbb3.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-light-gun-zombie-shooter.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-light-gun-zombie-shooter.png}, shell: {color: oklch(0.25 0.04 150), roughness: 0.3}}}
-  physics: {body: static, collider: box}
-  rotation: {yaw: 180}
-  tags: [bonus-arcade]
-bc-cab-7:
-  children: [{feetPosition: {x: 0, y: 1.22, z: 0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: 12}}]
-  children.screen: null
-  feetPosition: {x: 19.6, y: 0.02, z: -22.9}
-  id: bc-cab-7
-  model: {id: /cdn/value.7aee2b3cebf61a7c912deba3eaaa6bab5615a0495e18bcb6bfdf93dd99f428b4.glb, materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.0255e145ce46f383d12929311f7f2264bbb7c01796330ceeae61232c8fc60764.png, roughness: 0.2, texture: /cdn/value.0255e145ce46f383d12929311f7f2264bbb7c01796330ceeae61232c8fc60764.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-blue-hedgehog-platformer-green-hills.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-blue-hedgehog-platformer-green-hills.png}, shell: {color: oklch(0.5 0.15 255), roughness: 0.3}}}
-  physics: {body: static, collider: box}
-  rotation: {yaw: 0}
-  tags: [bonus-arcade]
-bc-cab-8:
-  children: [{feetPosition: {x: 0, y: 1.22, z: 0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: 12}}]
-  children.screen: null
-  feetPosition: {x: 19.6, y: 0.02, z: -7.1}
-  id: bc-cab-8
-  model: {id: /cdn/value.7aee2b3cebf61a7c912deba3eaaa6bab5615a0495e18bcb6bfdf93dd99f428b4.glb, materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.c0082b35d5770fd078597184fb98fef5cb4729cdec1174c3a0905997a2016f17.png, roughness: 0.2, texture: /cdn/value.c0082b35d5770fd078597184fb98fef5cb4729cdec1174c3a0905997a2016f17.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-space-pinball-table.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-space-pinball-table.png}, shell: {color: oklch(0.15 0.02 260), roughness: 0.3}}}
-  physics: {body: static, collider: box}
-  rotation: {yaw: 180}
-  tags: [bonus-arcade]
-bc-claw-1:
-  children: [{feetPosition: {x: 0, y: 1.6, z: 0}, id: lamp, light: {color: "#ffd0f0", distance: 3, intensity: 0.8, kind: point}}]
-  feetPosition: {x: 22.6, y: 0.02, z: -9.2}
-  id: bc-claw-1
-  layout: {box: {max: {x: 0.65, y: 2, z: 0.65}, min: {x: -0.65, y: 0, z: -0.65}}}
-  model: {id: /cdn/value.343e20728fe5fff9520e8ab82ab8cbc4b5084303f1e1ef791742b74d05a94f12.glb}
-  physics: {body: static, collider: box}
+  feetPosition: {x: 4.5, y: 0, z: 23.85}
+  id: "bc-bench-2"
+  layout: {box: {min: {x: -0.97, y: -0.0075, z: -0.3203}, max: {x: 0.97, y: 0.9095, z: 0.3086}}}
+  model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
+  physics: {body: "static", collider: "box"}
   rotation: {yaw: -90}
-  tags: [bonus-arcade]
+  tags: ["bonus-court"]
+bc-bench-3:
+  feetPosition: {x: -4.5, y: 0, z: 5.85}
+  id: "bc-bench-3"
+  layout: {box: {min: {x: -0.97, y: -0.0075, z: -0.3203}, max: {x: 0.97, y: 0.9095, z: 0.3086}}}
+  model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
+  physics: {body: "static", collider: "box"}
+  rotation: {yaw: 90}
+  tags: ["bonus-court"]
+bc-bench-4:
+  feetPosition: {x: 4.5, y: 0, z: 5.85}
+  id: "bc-bench-4"
+  layout: {box: {min: {x: -0.97, y: -0.0075, z: -0.3203}, max: {x: 0.97, y: 0.9095, z: 0.3086}}}
+  model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
+  physics: {body: "static", collider: "box"}
+  rotation: {yaw: -90}
+  tags: ["bonus-court"]
+bc-bench-5:
+  feetPosition: {x: -4.5, y: 0, z: -22.15}
+  id: "bc-bench-5"
+  layout: {box: {min: {x: -0.97, y: -0.0075, z: -0.3203}, max: {x: 0.97, y: 0.9095, z: 0.3086}}}
+  model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
+  physics: {body: "static", collider: "box"}
+  rotation: {yaw: 90}
+  tags: ["bonus-court"]
+bc-bench-6:
+  feetPosition: {x: 4.5, y: 0, z: -22.15}
+  id: "bc-bench-6"
+  layout: {box: {min: {x: -0.97, y: -0.0075, z: -0.3203}, max: {x: 0.97, y: 0.9095, z: 0.3086}}}
+  model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
+  physics: {body: "static", collider: "box"}
+  rotation: {yaw: -90}
+  tags: ["bonus-court"]
+bc-cab-1:
+  feetPosition: {x: 13, y: 0.02, z: -23.25}
+  id: "bc-cab-1"
+  layout: {box: {min: {x: -0.38, y: 0.0, z: -0.3897}, max: {x: 0.38, y: 1.79, z: 0.5654}}}
+  model: {id: "/cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb", materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: "/cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png", roughness: 0.2, texture: "/cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png"}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: "cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png", roughness: 0.1, texture: "cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png"}, shell: {color: "oklch(0.93 0.02 90)", roughness: 0.3}}}
+  physics: {body: "static", collider: "box"}
+  rotation: {yaw: 0}
+  tags: ["bonus-arcade"]
+bc-cab-2:
+  feetPosition: {x: 13, y: 0.02, z: -6.75}
+  id: "bc-cab-2"
+  layout: {box: {min: {x: -0.38, y: 0.0, z: -0.3897}, max: {x: 0.38, y: 1.79, z: 0.5654}}}
+  model: {id: "/cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb", materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: "/cdn/value.f8bb08a00d6117c32ac7f2f567e3c970cd40dc2906777904a69ed77728573cb0.png", roughness: 0.2, texture: "/cdn/value.f8bb08a00d6117c32ac7f2f567e3c970cd40dc2906777904a69ed77728573cb0.png"}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: "cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png", roughness: 0.1, texture: "cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png"}, shell: {color: "oklch(0.32 0.06 260)", roughness: 0.3}}}
+  physics: {body: "static", collider: "box"}
+  rotation: {yaw: 180}
+  tags: ["bonus-arcade"]
+bc-cab-3:
+  feetPosition: {x: 14.5, y: 0.02, z: -23.25}
+  id: "bc-cab-3"
+  layout: {box: {min: {x: -0.38, y: 0.0, z: -0.3897}, max: {x: 0.38, y: 1.79, z: 0.5654}}}
+  model: {id: "/cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb", materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: "/cdn/value.99f0d7b529b4c4851c7b76a1292d05665a7d392e786d57c519eb5cb0d3ece87b.png", roughness: 0.2, texture: "/cdn/value.99f0d7b529b4c4851c7b76a1292d05665a7d392e786d57c519eb5cb0d3ece87b.png"}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: "cdn/texture-retro-arcade-crt-screen-pixel-racing-game-red-car-sunset-highway.png", roughness: 0.1, texture: "cdn/texture-retro-arcade-crt-screen-pixel-racing-game-red-car-sunset-highway.png"}, shell: {color: "oklch(0.45 0.17 27)", roughness: 0.3}}}
+  physics: {body: "static", collider: "box"}
+  rotation: {yaw: 0}
+  tags: ["bonus-arcade"]
+bc-cab-4:
+  feetPosition: {x: 14.5, y: 0.02, z: -6.75}
+  id: "bc-cab-4"
+  layout: {box: {min: {x: -0.38, y: 0.0, z: -0.3897}, max: {x: 0.38, y: 1.79, z: 0.5654}}}
+  model: {id: "/cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb", materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: "/cdn/value.d291bab7e080558ca2d4419bfcb74d56487b980de802de47caa165ca0d1e41f4.png", roughness: 0.2, texture: "/cdn/value.d291bab7e080558ca2d4419bfcb74d56487b980de802de47caa165ca0d1e41f4.png"}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: "cdn/texture-retro-arcade-crt-screen-pixel-falling-block-puzzle-game.png", roughness: 0.1, texture: "cdn/texture-retro-arcade-crt-screen-pixel-falling-block-puzzle-game.png"}, shell: {color: "oklch(0.22 0.03 270)", roughness: 0.3}}}
+  physics: {body: "static", collider: "box"}
+  rotation: {yaw: 180}
+  tags: ["bonus-arcade"]
+bc-cab-5:
+  feetPosition: {x: 17.1, y: 0.02, z: -23.25}
+  id: "bc-cab-5"
+  layout: {box: {min: {x: -0.38, y: 0.0, z: -0.3897}, max: {x: 0.38, y: 1.79, z: 0.5654}}}
+  model: {id: "/cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb", materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: "/cdn/value.a7fabdca9daeeea0ab7cdd6ac32c00ec7a907e8ff56ff546c17ab6a1b9925463.png", roughness: 0.2, texture: "/cdn/value.a7fabdca9daeeea0ab7cdd6ac32c00ec7a907e8ff56ff546c17ab6a1b9925463.png"}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: "cdn/texture-retro-arcade-crt-screen-pixel-ninja-beat-em-up-neon-street.png", roughness: 0.1, texture: "cdn/texture-retro-arcade-crt-screen-pixel-ninja-beat-em-up-neon-street.png"}, shell: {color: "oklch(0.3 0.12 310)", roughness: 0.3}}}
+  physics: {body: "static", collider: "box"}
+  rotation: {yaw: 0}
+  tags: ["bonus-arcade"]
+bc-cab-6:
+  feetPosition: {x: 17.1, y: 0.02, z: -6.75}
+  id: "bc-cab-6"
+  layout: {box: {min: {x: -0.38, y: 0.0, z: -0.3897}, max: {x: 0.38, y: 1.79, z: 0.5654}}}
+  model: {id: "/cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb", materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: "/cdn/value.a4dabee28ae8c248d1ff7349cd6eadeca73158029106e6df6eeb20dda5a7fbb3.png", roughness: 0.2, texture: "/cdn/value.a4dabee28ae8c248d1ff7349cd6eadeca73158029106e6df6eeb20dda5a7fbb3.png"}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: "cdn/texture-retro-arcade-crt-screen-pixel-light-gun-zombie-shooter.png", roughness: 0.1, texture: "cdn/texture-retro-arcade-crt-screen-pixel-light-gun-zombie-shooter.png"}, shell: {color: "oklch(0.25 0.04 150)", roughness: 0.3}}}
+  physics: {body: "static", collider: "box"}
+  rotation: {yaw: 180}
+  tags: ["bonus-arcade"]
+bc-cab-7:
+  feetPosition: {x: 18.6, y: 0.02, z: -23.25}
+  id: "bc-cab-7"
+  layout: {box: {min: {x: -0.38, y: 0.0, z: -0.3897}, max: {x: 0.38, y: 1.79, z: 0.5654}}}
+  model: {id: "/cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb", materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: "/cdn/value.0255e145ce46f383d12929311f7f2264bbb7c01796330ceeae61232c8fc60764.png", roughness: 0.2, texture: "/cdn/value.0255e145ce46f383d12929311f7f2264bbb7c01796330ceeae61232c8fc60764.png"}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: "cdn/texture-retro-arcade-crt-screen-pixel-blue-hedgehog-platformer-green-hills.png", roughness: 0.1, texture: "cdn/texture-retro-arcade-crt-screen-pixel-blue-hedgehog-platformer-green-hills.png"}, shell: {color: "oklch(0.5 0.15 255)", roughness: 0.3}}}
+  physics: {body: "static", collider: "box"}
+  rotation: {yaw: 0}
+  tags: ["bonus-arcade"]
+bc-cab-8:
+  feetPosition: {x: 18.6, y: 0.02, z: -6.75}
+  id: "bc-cab-8"
+  layout: {box: {min: {x: -0.38, y: 0.0, z: -0.3897}, max: {x: 0.38, y: 1.79, z: 0.5654}}}
+  model: {id: "/cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb", materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: "/cdn/value.c0082b35d5770fd078597184fb98fef5cb4729cdec1174c3a0905997a2016f17.png", roughness: 0.2, texture: "/cdn/value.c0082b35d5770fd078597184fb98fef5cb4729cdec1174c3a0905997a2016f17.png"}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: "cdn/texture-retro-arcade-crt-screen-pixel-space-pinball-table.png", roughness: 0.1, texture: "cdn/texture-retro-arcade-crt-screen-pixel-space-pinball-table.png"}, shell: {color: "oklch(0.15 0.02 260)", roughness: 0.3}}}
+  physics: {body: "static", collider: "box"}
+  rotation: {yaw: 180}
+  tags: ["bonus-arcade"]
+bc-claw-1:
+  children: [{feetPosition: {x: 0, y: 1.6, z: 0}, id: "lamp", light: {color: "#ffd0f0", distance: 3, intensity: 0.8, kind: "point"}}]
+  feetPosition: {x: 23.05, y: 0.02, z: -12.9}
+  id: "bc-claw-1"
+  layout: {box: {max: {x: 0.65, y: 2, z: 0.65}, min: {x: -0.65, y: 0, z: -0.65}}}
+  model: {id: "/cdn/value.343e20728fe5fff9520e8ab82ab8cbc4b5084303f1e1ef791742b74d05a94f12.glb"}
+  physics: {body: "static", collider: "box"}
+  rotation: {yaw: -90}
+  tags: ["bonus-arcade"]
 bc-dest-1:
   feetPosition: {x: -15.5, y: 8, z: -27.9}
   id: bc-dest-1
@@ -418,18 +410,18 @@ bc-gallery-sign:
   rotation: {yaw: -90}
   vector: "<svg viewBox='0 0 400 70' width='3.9m'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='#ff6ec7'/><stop offset='1' stop-color='#7df9ff'/></linearGradient></defs><rect x='4' y='4' width='392' height='62' rx='12' fill='#1a0f2e' stroke='url(#g)' stroke-width='4' filter='drop-shadow(0 0 6 #ff6ec7)'/><text x='200' y='44' text-anchor='middle' font-family='display' font-size='34' fill='#ff6ec7' filter='drop-shadow(0 0 8 #ff6ec7)'>ART GALLERY</text><text x='200' y='60' text-anchor='middle' font-family='sans-serif' font-size='10' fill='#7df9ff' letter-spacing='4'>FINE ART . SINCE 1987</text></svg>"
 bc-gbench-1:
-  feetPosition: {x: 18, y: 5.5, z: -20}
-  id: bc-gbench-1
-  layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
-  model: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb
-  physics: {body: static, collider: box}
+  feetPosition: {x: 19.5, y: 5.5, z: -20}
+  id: "bc-gbench-1"
+  layout: {box: {min: {x: -0.97, y: -0.0075, z: -0.3203}, max: {x: 0.97, y: 0.9095, z: 0.3086}}}
+  model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
+  physics: {body: "static", collider: "box"}
   rotation: {yaw: 90}
 bc-gbench-2:
-  feetPosition: {x: 18, y: 5.5, z: -8}
-  id: bc-gbench-2
-  layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
-  model: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb
-  physics: {body: static, collider: box}
+  feetPosition: {x: 19.5, y: 5.5, z: -8}
+  id: "bc-gbench-2"
+  layout: {box: {min: {x: -0.97, y: -0.0075, z: -0.3203}, max: {x: 0.97, y: 0.9095, z: 0.3086}}}
+  model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
+  physics: {body: "static", collider: "box"}
   rotation: {yaw: 90}
 bc-glight-1:
   feetPosition: {x: 22.15, y: 10.2, z: -20}
@@ -453,20 +445,20 @@ bc-glight-s:
   light: {aim: {x: 17, y: 7, z: -14}, angle: 22, color: "#fff1d6", distance: 9, intensity: 7, kind: spot, penumbra: 0.7}
 bc-gottoman-1:
   castShadow: false
-  feetPosition: {x: 13.9, y: 5.515, z: -14}
-  id: bc-gottoman-1
+  feetPosition: {x: 14, y: 5.515, z: -10}
+  id: "bc-gottoman-1"
   layout: {box: {max: {x: 0.75, y: 0.5, z: 0.75}, min: {x: -0.75, y: 0, z: -0.75}}}
-  model: {id: /cdn/value.a7167883a35e960ccbef91de680582184f81fed2a23eb978b21b11de007756d0.glb}
-  physics: {body: static, collider: box}
-  tags: [bonus-gallery]
+  model: {id: "/cdn/value.a7167883a35e960ccbef91de680582184f81fed2a23eb978b21b11de007756d0.glb"}
+  physics: {body: "static", collider: "box"}
+  tags: ["bonus-gallery"]
 bc-gottoman-2:
   castShadow: false
-  feetPosition: {x: 20.1, y: 5.515, z: -14}
-  id: bc-gottoman-2
+  feetPosition: {x: 20.4, y: 5.515, z: -14}
+  id: "bc-gottoman-2"
   layout: {box: {max: {x: 0.75, y: 0.5, z: 0.75}, min: {x: -0.75, y: 0, z: -0.75}}}
-  model: {id: /cdn/value.a7167883a35e960ccbef91de680582184f81fed2a23eb978b21b11de007756d0.glb}
-  physics: {body: static, collider: box}
-  tags: [bonus-gallery]
+  model: {id: "/cdn/value.a7167883a35e960ccbef91de680582184f81fed2a23eb978b21b11de007756d0.glb"}
+  physics: {body: "static", collider: "box"}
+  tags: ["bonus-gallery"]
 bc-gplaque-s:
   castShadow: false
   feetPosition: {x: 17, y: 6.3, z: -13.4}
@@ -491,11 +483,11 @@ bc-gsculpt:
   tags: [bonus-gallery]
 bc-kiosk:
   feetPosition: {x: -20.5, y: 5.5, z: -3}
-  id: bc-kiosk
-  layout: {box: {max: {x: 0.4, y: 1.7, z: 0.45}, min: {x: -0.4, y: 0, z: -0.45}}}
-  model: {forward: "+x", id: /cdn/value.1cad17ca4953c6401675ca097a46c7857f7e0098982fc3f9ce27583fb730580e.glb}
-  physics: {body: static, collider: box}
-  rotation: {yaw: -90}
+  id: "bc-kiosk"
+  layout: {box: {min: {x: -0.4626, y: 0.0, z: -0.3758}, max: {x: 0.4626, y: 1.5577, z: 0.3758}}}
+  model: {id: "/cdn/value.d6357a4366e614e6f359aa4d10ad71194b958861b3dfaf19b581876f1f683afc.glb"}
+  physics: {body: "static", collider: "box"}
+  rotation: {yaw: 90}
 bc-northglow:
   feetPosition: {x: 0, y: 8.5, z: -30.4}
   id: bc-northglow
@@ -508,95 +500,89 @@ bc-northneon:
   tags: [bonus-court]
   vector: "<svg viewBox='0 0 1100 500' width='11m'><defs><linearGradient id='sun' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#ffe66d'/><stop offset='0.55' stop-color='#ff6ec7'/><stop offset='1' stop-color='#b14cff'/></linearGradient></defs>\n<g filter='drop-shadow(0 0 14px #ff4fd8)'><circle cx='550' cy='305' r='118' fill='url(#sun)' opacity='0.92'/></g>\n<rect x='430' y='318' width='240' height='8' fill='#2a1240'/><rect x='430' y='342' width='240' height='11' fill='#2a1240'/><rect x='430' y='368' width='240' height='14' fill='#2a1240'/>\n<g stroke='#38f4ff' stroke-width='4' fill='none' filter='drop-shadow(0 0 8px #38f4ff)'><path d='M60 470 L1040 470'/><path d='M120 430 L980 430'/><path d='M550 380 L550 490'/><path d='M450 380 L300 490'/><path d='M650 380 L800 490'/><path d='M350 380 L60 490'/><path d='M750 380 L1040 490'/><path d='M250 395 L850 395'/></g>\n<g fill='#1a0f2e' stroke='#ff4fd8' stroke-width='3' filter='drop-shadow(0 0 6px #ff4fd8)'><path d='M215 470 C210 360 225 260 245 200 L252 202 C236 270 228 360 232 470 Z'/><path d='M248 200 C200 170 150 180 110 220 C160 200 200 198 246 206 Z M248 200 C230 150 190 120 150 120 C200 145 225 170 244 206 Z M250 200 C280 150 330 135 370 150 C320 160 285 180 254 206 Z M250 200 C300 190 350 210 380 250 C340 225 300 215 254 206 Z'/>\n<path d='M868 470 C872 380 862 300 846 240 L852 238 C870 300 880 380 884 470 Z'/><path d='M849 240 C810 210 770 215 740 250 C780 235 810 236 848 246 Z M849 240 C840 195 810 170 775 168 C815 190 832 212 846 246 Z M851 240 C880 200 920 190 955 205 C915 212 885 225 854 246 Z M851 240 C890 235 930 255 950 290 C915 268 885 255 854 246 Z'/></g>\n<text x='550' y='130' text-anchor='middle' font-family='display' font-style='italic' font-size='120' fill='none' stroke='#ff4fd8' stroke-width='8' filter='drop-shadow(0 0 16px #ff4fd8)'>BONUS ROOM</text>\n<text x='550' y='130' text-anchor='middle' font-family='display' font-style='italic' font-size='120' fill='#fff0fb' opacity='0.85'>BONUS ROOM</text>\n<text x='550' y='182' text-anchor='middle' font-family='sans-serif' font-size='30' letter-spacing='18' fill='#38f4ff' filter='drop-shadow(0 0 8px #38f4ff)'>SHOP . PLAY . STAY A WHILE</text></svg>"
 bc-palm-1:
-  feetPosition: {x: -4.5, y: 1, z: 22}
-  id: bc-palm-1
+  feetPosition: {x: -4.5, y: 0.65, z: 22}
+  id: "bc-palm-1"
   layout: {box: {max: {x: 2.5, y: 5.6, z: 2.5}, min: {x: -2.5, y: 0, z: -2.5}}}
-  model: {id: /cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb}
+  model: {id: "/cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb"}
   rotation: {yaw: 0}
-  tags: [bonus-court]
+  tags: ["bonus-court"]
 bc-palm-2:
-  feetPosition: {x: 4.5, y: 1, z: 22}
-  id: bc-palm-2
+  feetPosition: {x: 4.5, y: 0.65, z: 22}
+  id: "bc-palm-2"
   layout: {box: {max: {x: 2.5, y: 6.1, z: 2.5}, min: {x: -2.5, y: 0, z: -2.5}}}
-  model: {id: /cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb}
+  model: {id: "/cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb"}
   rotation: {yaw: 61}
-  tags: [bonus-court]
+  tags: ["bonus-court"]
 bc-palm-3:
-  feetPosition: {x: -4.5, y: 1, z: 4}
-  id: bc-palm-3
+  feetPosition: {x: -4.5, y: 0.65, z: 4}
+  id: "bc-palm-3"
   layout: {box: {max: {x: 2.5, y: 6.6, z: 2.5}, min: {x: -2.5, y: 0, z: -2.5}}}
-  model: {id: /cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb}
+  model: {id: "/cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb"}
   rotation: {yaw: 122}
-  tags: [bonus-court]
+  tags: ["bonus-court"]
 bc-palm-4:
-  feetPosition: {x: 4.5, y: 1, z: 4}
-  id: bc-palm-4
+  feetPosition: {x: 4.5, y: 0.65, z: 4}
+  id: "bc-palm-4"
   layout: {box: {max: {x: 2.5, y: 5.6, z: 2.5}, min: {x: -2.5, y: 0, z: -2.5}}}
-  model: {id: /cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb}
+  model: {id: "/cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb"}
   rotation: {yaw: 183}
-  tags: [bonus-court]
+  tags: ["bonus-court"]
 bc-palm-5:
-  feetPosition: {x: -4.5, y: 1, z: -24}
-  id: bc-palm-5
+  feetPosition: {x: -4.5, y: 0.65, z: -24}
+  id: "bc-palm-5"
   layout: {box: {max: {x: 2.5, y: 6.1, z: 2.5}, min: {x: -2.5, y: 0, z: -2.5}}}
-  model: {id: /cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb}
+  model: {id: "/cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb"}
   rotation: {yaw: 244}
-  tags: [bonus-court]
+  tags: ["bonus-court"]
 bc-palm-6:
-  feetPosition: {x: 4.5, y: 1, z: -24}
-  id: bc-palm-6
+  feetPosition: {x: 4.5, y: 0.65, z: -24}
+  id: "bc-palm-6"
   layout: {box: {max: {x: 2.5, y: 6.6, z: 2.5}, min: {x: -2.5, y: 0, z: -2.5}}}
-  model: {id: /cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb}
+  model: {id: "/cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb"}
   rotation: {yaw: 305}
-  tags: [bonus-court]
+  tags: ["bonus-court"]
 bc-planter-1:
   feetPosition: {x: -4.5, y: 0, z: 22}
-  id: bc-planter-1
-  layout: {box: {max: {x: 1.1, y: 1.5, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
-  model: {id: /cdn/value.1fba456c0c084012dfd0f08aacec2a411762878961abac4700f3755bfdbfd834.glb}
-  physics: {body: static, collider: box}
-  scale: {x: 1.5, y: 1, z: 1.5}
-  tags: [bonus-court]
+  id: "bc-planter-1"
+  layout: {box: {min: {x: -0.845, y: 0.0, z: -0.845}, max: {x: 0.845, y: 0.704, z: 0.845}}}
+  model: {id: "/cdn/value.f731c3c9207340a77df45bced223cc403147d9dad6f4ced228cd72b847679311.glb"}
+  physics: {body: "static", collider: "box"}
+  tags: ["bonus-court"]
 bc-planter-2:
   feetPosition: {x: 4.5, y: 0, z: 22}
-  id: bc-planter-2
-  layout: {box: {max: {x: 1.1, y: 1.5, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
-  model: {id: /cdn/value.1fba456c0c084012dfd0f08aacec2a411762878961abac4700f3755bfdbfd834.glb}
-  physics: {body: static, collider: box}
-  scale: {x: 1.5, y: 1, z: 1.5}
-  tags: [bonus-court]
+  id: "bc-planter-2"
+  layout: {box: {min: {x: -0.845, y: 0.0, z: -0.845}, max: {x: 0.845, y: 0.704, z: 0.845}}}
+  model: {id: "/cdn/value.f731c3c9207340a77df45bced223cc403147d9dad6f4ced228cd72b847679311.glb"}
+  physics: {body: "static", collider: "box"}
+  tags: ["bonus-court"]
 bc-planter-3:
   feetPosition: {x: -4.5, y: 0, z: 4}
-  id: bc-planter-3
-  layout: {box: {max: {x: 1.1, y: 1.5, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
-  model: {id: /cdn/value.1fba456c0c084012dfd0f08aacec2a411762878961abac4700f3755bfdbfd834.glb}
-  physics: {body: static, collider: box}
-  scale: {x: 1.5, y: 1, z: 1.5}
-  tags: [bonus-court]
+  id: "bc-planter-3"
+  layout: {box: {min: {x: -0.845, y: 0.0, z: -0.845}, max: {x: 0.845, y: 0.704, z: 0.845}}}
+  model: {id: "/cdn/value.f731c3c9207340a77df45bced223cc403147d9dad6f4ced228cd72b847679311.glb"}
+  physics: {body: "static", collider: "box"}
+  tags: ["bonus-court"]
 bc-planter-4:
   feetPosition: {x: 4.5, y: 0, z: 4}
-  id: bc-planter-4
-  layout: {box: {max: {x: 1.1, y: 1.5, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
-  model: {id: /cdn/value.1fba456c0c084012dfd0f08aacec2a411762878961abac4700f3755bfdbfd834.glb}
-  physics: {body: static, collider: box}
-  scale: {x: 1.5, y: 1, z: 1.5}
-  tags: [bonus-court]
+  id: "bc-planter-4"
+  layout: {box: {min: {x: -0.845, y: 0.0, z: -0.845}, max: {x: 0.845, y: 0.704, z: 0.845}}}
+  model: {id: "/cdn/value.f731c3c9207340a77df45bced223cc403147d9dad6f4ced228cd72b847679311.glb"}
+  physics: {body: "static", collider: "box"}
+  tags: ["bonus-court"]
 bc-planter-5:
   feetPosition: {x: -4.5, y: 0, z: -24}
-  id: bc-planter-5
-  layout: {box: {max: {x: 1.1, y: 1.5, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
-  model: {id: /cdn/value.1fba456c0c084012dfd0f08aacec2a411762878961abac4700f3755bfdbfd834.glb}
-  physics: {body: static, collider: box}
-  scale: {x: 1.5, y: 1, z: 1.5}
-  tags: [bonus-court]
+  id: "bc-planter-5"
+  layout: {box: {min: {x: -0.845, y: 0.0, z: -0.845}, max: {x: 0.845, y: 0.704, z: 0.845}}}
+  model: {id: "/cdn/value.f731c3c9207340a77df45bced223cc403147d9dad6f4ced228cd72b847679311.glb"}
+  physics: {body: "static", collider: "box"}
+  tags: ["bonus-court"]
 bc-planter-6:
   feetPosition: {x: 4.5, y: 0, z: -24}
-  id: bc-planter-6
-  layout: {box: {max: {x: 1.1, y: 1.5, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
-  model: {id: /cdn/value.1fba456c0c084012dfd0f08aacec2a411762878961abac4700f3755bfdbfd834.glb}
-  physics: {body: static, collider: box}
-  scale: {x: 1.5, y: 1, z: 1.5}
-  tags: [bonus-court]
+  id: "bc-planter-6"
+  layout: {box: {min: {x: -0.845, y: 0.0, z: -0.845}, max: {x: 0.845, y: 0.704, z: 0.845}}}
+  model: {id: "/cdn/value.f731c3c9207340a77df45bced223cc403147d9dad6f4ced228cd72b847679311.glb"}
+  physics: {body: "static", collider: "box"}
+  tags: ["bonus-court"]
 bc-plaque-1:
   castShadow: false
   feetPosition: {x: 23.93, y: 7, z: -18.85}
@@ -643,20 +629,20 @@ bc-poster-w4:
   tags: [bonus-court]
   vector: "<svg viewBox='0 0 200 260' width='0.9m'><rect x='0' y='0' width='200' height='260' fill='#fff6fb'/><rect x='10' y='10' width='180' height='240' fill='none' stroke='#ff6ec7' stroke-width='6'/><circle cx='100' cy='95' r='48' fill='#ff6ec7' opacity='0.85'/><path d='M40 150 L160 150' stroke='#1a0f2e' stroke-width='3'/><text x='100' y='188' text-anchor='middle' font-family='display' font-size='22' fill='#1a0f2e'>OPENING SOON</text><text x='100' y='214' text-anchor='middle' font-family='sans-serif' font-size='11' fill='#4a3a5a'>a new store is coming to the Bonus Room</text><rect x='70' y='-6' width='60' height='16' fill='#f3e9c8' opacity='0.8' transform='rotate(-6 100 2)'/></svg>"
 bc-pretzel-cart:
-  feetPosition: {x: -6.8, y: 0, z: 8}
-  id: bc-pretzel-cart
+  feetPosition: {x: -9.08, y: 0, z: 1.3}
+  id: "bc-pretzel-cart"
   layout: {box: {max: {x: 0.9, y: 2.3, z: 0.6}, min: {x: -0.9, y: 0, z: -0.6}}}
-  model: /cdn/value.4c82671aad7fbf51caa64c75d16334576369dfde1c0c9eb38df93215efb94bf1.glb
-  physics: static
+  model: "/cdn/value.4c82671aad7fbf51caa64c75d16334576369dfde1c0c9eb38df93215efb94bf1.glb"
+  physics: "static"
   rotation: {yaw: 90}
 bc-prize:
-  feetPosition: {x: 22.7, y: 0.02, z: -16}
-  id: bc-prize
-  layout: {box: {max: {x: 1.7, y: 1.5, z: 0.5}, min: {x: -1.7, y: 0, z: -0.5}}}
-  model: {id: /cdn/value.590b7ee20653562649fd66665a66ee0873e216afd8c121fc9d770f8388a5c577.glb}
-  physics: {body: static, collider: box}
+  feetPosition: {x: 23.45, y: 0.02, z: -15}
+  id: "bc-prize"
+  layout: {box: {min: {x: -0.91, y: 0.0, z: -0.33}, max: {x: 0.91, y: 1.77, z: 0.33}}}
+  model: {id: "/cdn/value.3eabbdb6511d61efe2afa80e919a05052b5ac3d270405a6ff70bcd9a8a41a684.glb"}
+  physics: {body: "static", collider: "box"}
   rotation: {yaw: -90}
-  tags: [bonus-arcade]
+  tags: ["bonus-arcade"]
 bc-rope-1:
   castShadow: false
   feetPosition: {x: 22.7, y: 5.5, z: -20}
@@ -673,24 +659,24 @@ bc-rope-2:
   physics: {body: static, collider: box}
 bc-sbench-1:
   feetPosition: {x: -15.5, y: 5.5, z: -24}
-  id: bc-sbench-1
-  layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
-  model: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb
-  physics: {body: static, collider: box}
+  id: "bc-sbench-1"
+  layout: {box: {min: {x: -0.97, y: -0.0075, z: -0.3203}, max: {x: 0.97, y: 0.9095, z: 0.3086}}}
+  model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
+  physics: {body: "static", collider: "box"}
   rotation: {yaw: -90}
 bc-sbench-2:
   feetPosition: {x: -15.5, y: 5.5, z: -19}
-  id: bc-sbench-2
-  layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
-  model: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb
-  physics: {body: static, collider: box}
+  id: "bc-sbench-2"
+  layout: {box: {min: {x: -0.97, y: -0.0075, z: -0.3203}, max: {x: 0.97, y: 0.9095, z: 0.3086}}}
+  model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
+  physics: {body: "static", collider: "box"}
   rotation: {yaw: -90}
 bc-sbench-3:
   feetPosition: {x: -15.5, y: 5.5, z: -8}
-  id: bc-sbench-3
-  layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
-  model: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb
-  physics: {body: static, collider: box}
+  id: "bc-sbench-3"
+  layout: {box: {min: {x: -0.97, y: -0.0075, z: -0.3203}, max: {x: 0.97, y: 0.9095, z: 0.3086}}}
+  model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
+  physics: {body: "static", collider: "box"}
   rotation: {yaw: -90}
 bc-station-light:
   feetPosition: {x: -17, y: 9.6, z: -14}
@@ -717,46 +703,46 @@ bc-train:
   rotation: {yaw: 90}
 bc-trash-1:
   castShadow: false
-  feetPosition: {x: -5.8, y: 0, z: 14}
-  id: bc-trash-1
+  feetPosition: {x: -4.5, y: 0, z: 25.02}
+  id: "bc-trash-1"
   layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
-  model: {id: /cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb}
-  physics: {body: static, collider: box}
+  model: {id: "/cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb"}
+  physics: {body: "static", collider: "box"}
   rotation: {yaw: 0}
-  tags: [bonus-court]
+  tags: ["bonus-court"]
 bc-trash-2:
   castShadow: false
-  feetPosition: {x: 5.8, y: 0, z: 14}
-  id: bc-trash-2
+  feetPosition: {x: 4.5, y: 0, z: 25.02}
+  id: "bc-trash-2"
   layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
-  model: {id: /cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb}
-  physics: {body: static, collider: box}
+  model: {id: "/cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb"}
+  physics: {body: "static", collider: "box"}
   rotation: {yaw: 0}
-  tags: [bonus-court]
+  tags: ["bonus-court"]
 bc-trash-3:
   castShadow: false
-  feetPosition: {x: -5.8, y: 0, z: -20}
-  id: bc-trash-3
+  feetPosition: {x: -4.5, y: 0, z: -21}
+  id: "bc-trash-3"
   layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
-  model: {id: /cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb}
-  physics: {body: static, collider: box}
+  model: {id: "/cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb"}
+  physics: {body: "static", collider: "box"}
   rotation: {yaw: 0}
-  tags: [bonus-court]
+  tags: ["bonus-court"]
 bc-trash-4:
   castShadow: false
-  feetPosition: {x: 5.8, y: 0, z: -20}
-  id: bc-trash-4
+  feetPosition: {x: 4.5, y: 0, z: -21}
+  id: "bc-trash-4"
   layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
-  model: {id: /cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb}
-  physics: {body: static, collider: box}
+  model: {id: "/cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb"}
+  physics: {body: "static", collider: "box"}
   rotation: {yaw: 0}
-  tags: [bonus-court]
+  tags: ["bonus-court"]
 bc-vending-1:
-  feetPosition: {x: 7.2, y: 0, z: 16}
-  id: bc-vending-1
+  feetPosition: {x: 9.17, y: 0, z: 23.75}
+  id: "bc-vending-1"
   layout: {box: {max: {x: 0.5, y: 1.9, z: 0.45}, min: {x: -0.5, y: 0, z: -0.45}}}
-  model: /cdn/value.8845cbb69caf895635cbffeb1dc69ce931ec9613083b0306a2f50ae671906d28.glb
-  physics: static
+  model: "/cdn/value.8845cbb69caf895635cbffeb1dc69ce931ec9613083b0306a2f50ae671906d28.glb"
+  physics: "static"
   rotation: {yaw: -90}
 bc-wordmark:
   feetPosition: {x: 0, y: 9, z: 30}
@@ -1174,52 +1160,52 @@ bd-soda:
   tags: [bonus-diner]
 bd-stool-1:
   castShadow: false
-  feetPosition: {x: -19.3, y: 0, z: -20.3}
-  id: bd-stool-1
-  model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
-  physics: {body: static, collider: box}
+  feetPosition: {x: -19.16, y: 0, z: -20.15}
+  id: "bd-stool-1"
+  model: {id: "/cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb"}
+  physics: {body: "static", collider: "box"}
   receiveShadow: true
-  tags: [bonus-diner]
+  tags: ["bonus-diner"]
 bd-stool-2:
   castShadow: false
-  feetPosition: {x: -19.3, y: 0, z: -18.6}
-  id: bd-stool-2
-  model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
-  physics: {body: static, collider: box}
+  feetPosition: {x: -19.16, y: 0, z: -18.55}
+  id: "bd-stool-2"
+  model: {id: "/cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb"}
+  physics: {body: "static", collider: "box"}
   receiveShadow: true
-  tags: [bonus-diner]
+  tags: ["bonus-diner"]
 bd-stool-3:
   castShadow: false
-  feetPosition: {x: -19.3, y: 0, z: -16.9}
-  id: bd-stool-3
-  model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
-  physics: {body: static, collider: box}
+  feetPosition: {x: -19.16, y: 0, z: -16.95}
+  id: "bd-stool-3"
+  model: {id: "/cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb"}
+  physics: {body: "static", collider: "box"}
   receiveShadow: true
-  tags: [bonus-diner]
+  tags: ["bonus-diner"]
 bd-stool-4:
   castShadow: false
-  feetPosition: {x: -19.3, y: 0, z: -13.1}
-  id: bd-stool-4
-  model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
-  physics: {body: static, collider: box}
+  feetPosition: {x: -19.16, y: 0, z: -13.05}
+  id: "bd-stool-4"
+  model: {id: "/cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb"}
+  physics: {body: "static", collider: "box"}
   receiveShadow: true
-  tags: [bonus-diner]
+  tags: ["bonus-diner"]
 bd-stool-5:
   castShadow: false
-  feetPosition: {x: -19.3, y: 0, z: -11.4}
-  id: bd-stool-5
-  model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
-  physics: {body: static, collider: box}
+  feetPosition: {x: -19.16, y: 0, z: -11.45}
+  id: "bd-stool-5"
+  model: {id: "/cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb"}
+  physics: {body: "static", collider: "box"}
   receiveShadow: true
-  tags: [bonus-diner]
+  tags: ["bonus-diner"]
 bd-stool-6:
   castShadow: false
-  feetPosition: {x: -19.3, y: 0, z: -9.7}
-  id: bd-stool-6
-  model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
-  physics: {body: static, collider: box}
+  feetPosition: {x: -19.16, y: 0, z: -9.85}
+  id: "bd-stool-6"
+  model: {id: "/cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb"}
+  physics: {body: "static", collider: "box"}
   receiveShadow: true
-  tags: [bonus-diner]
+  tags: ["bonus-diner"]
 bd-table-1:
   castShadow: false
   feetPosition: {x: -16.4, y: 0, z: -20}
@@ -1254,59 +1240,64 @@ bd-table-4:
   tags: [bonus-diner]
 bl-arm-1:
   castShadow: false
-  feetPosition: {x: -8, y: 5.5, z: 12.2}
-  id: bl-arm-1
+  feetPosition: {x: 20.03, y: 5.5, z: -2.18}
+  id: "bl-arm-1"
   layout: {box: {max: {x: 0.52, y: 1.05, z: 0.475}, min: {x: -0.52, y: 0, z: -0.475}}}
-  model: {forward: "+x", id: /cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb}
-  physics: static
-  rotation: {yaw: 180}
+  model: {forward: "+x", id: "/cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb"}
+  physics: "static"
+  rotation: {yaw: 145}
 bl-arm-2:
   castShadow: false
-  feetPosition: {x: -8, y: 5.5, z: 15.8}
-  id: bl-arm-2
+  feetPosition: {x: 20.03, y: 5.5, z: -4.6}
+  id: "bl-arm-2"
   layout: {box: {max: {x: 0.52, y: 1.05, z: 0.475}, min: {x: -0.52, y: 0, z: -0.475}}}
-  model: {forward: "+x", id: /cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb}
-  physics: static
-  rotation: {yaw: 0}
+  model: {forward: "+x", id: "/cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb"}
+  physics: "static"
+  rotation: {yaw: 35}
 bl-glow:
-  feetPosition: {x: -9.4, y: 7.6, z: 14}
-  id: bl-glow
-  light: {color: "#ff7ad9", distance: 6, intensity: 1.6, kind: point}
+  feetPosition: {x: 22.72, y: 7.2, z: -3.35}
+  id: "bl-glow"
+  light: {color: "#ff7ad9", distance: 6, intensity: 1.6, kind: "point"}
 bl-lamp:
-  feetPosition: {x: -9.5, y: 5.5, z: 12.3}
-  id: bl-lamp
+  feetPosition: {x: 22.95, y: 5.5, z: -1.57}
+  id: "bl-lamp"
   layout: {box: {max: {x: 0.255, y: 1.8, z: 0.255}, min: {x: -0.255, y: 0, z: -0.255}}}
-  model: {forward: "+x", id: /cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb}
-  physics: static
+  model: {forward: "+x", id: "/cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb"}
+  physics: "static"
   rotation: {yaw: 0}
 bl-lava:
   castShadow: false
-  feetPosition: {x: -9.5, y: 5.5, z: 15.7}
-  id: bl-lava
+  feetPosition: {x: 22.95, y: 6.06, z: -5.14}
+  id: "bl-lava"
   layout: {box: {max: {x: 0.22, y: 0.95, z: 0.22}, min: {x: -0.22, y: 0, z: -0.22}}}
-  model: {forward: "+x", id: /cdn/value.2f0eae283b6ebd13603b9891c607686c47f142b2e36b43e6148b098ac56a24af.glb}
-  physics: static
+  model: {forward: "+x", id: "/cdn/value.2f0eae283b6ebd13603b9891c607686c47f142b2e36b43e6148b098ac56a24af.glb"}
   rotation: {yaw: 0}
+bl-lava-stand:
+  feetPosition: {x: 22.95, y: 5.5, z: -5.14}
+  id: "bl-lava-stand"
+  layout: {box: {min: {x: -0.327, y: 0.0, z: -0.327}, max: {x: 0.327, y: 0.56, z: 0.327}}}
+  model: {id: "/cdn/value.1caf2ab06915ee453dbb634564e12b272af0111348ba54dd7ac86ac4ca9a46f8.glb"}
+  physics: {body: "static", collider: "box"}
 bl-rug:
   castShadow: false
-  feetPosition: {x: -8.4, y: 5.51, z: 14}
-  id: bl-rug
-  material: {color: oklch(0.62 0.16 330), roughness: 1}
-  primitive: {depth: 4.2, height: 0.01, kind: box, width: 2.6}
+  feetPosition: {x: 21.47, y: 5.51, z: -3.35}
+  id: "bl-rug"
+  material: {color: "oklch(0.62 0.16 330)", roughness: 1}
+  primitive: {depth: 4.25, height: 0.01, kind: "box", width: 4}
 bl-sofa:
-  feetPosition: {x: -9.4, y: 5.5, z: 14}
-  id: bl-sofa
+  feetPosition: {x: 22.75, y: 5.5, z: -3.35}
+  id: "bl-sofa"
   layout: {box: {max: {x: 1.05, y: 1.05, z: 0.505}, min: {x: -1.05, y: 0, z: -0.505}}}
-  model: {forward: "+x", id: /cdn/value.ff13bc205536a957826e2f7fed75554c07ffe7848198e50e1d65f257cabacdd9.glb}
-  physics: static
-  rotation: {yaw: 90}
+  model: {forward: "+x", id: "/cdn/value.ff13bc205536a957826e2f7fed75554c07ffe7848198e50e1d65f257cabacdd9.glb"}
+  physics: "static"
+  rotation: {yaw: -90}
 bl-table:
   castShadow: false
-  feetPosition: {x: -8.2, y: 5.5, z: 14}
-  id: bl-table
+  feetPosition: {x: 21.35, y: 5.5, z: -3.35}
+  id: "bl-table"
   layout: {box: {max: {x: 0.575, y: 0.46, z: 0.295}, min: {x: -0.575, y: 0, z: -0.295}}}
-  model: /cdn/value.b59b6a4d3115b48b5e3e42462530bbb5364e66607ba416592c80166a6cdd6483.glb
-  physics: static
+  model: "/cdn/value.b59b6a4d3115b48b5e3e42462530bbb5364e66607ba416592c80166a6cdd6483.glb"
+  physics: "static"
   rotation: {yaw: 90}
 bm-deco:
   castShadow: false
@@ -1609,10 +1600,10 @@ bs-clothes:
   id: bs-clothes
   tags: [bonus-shop]
 bs-furniture:
-  children: [{castShadow: true, feetPosition: {x: 3.3900000000000006, y: 0, z: 3.8299999999999983}, id: till0, layout: {box: {max: {x: 0.83, y: 1.73, z: 0.385}, min: {x: -0.83, y: 0, z: -0.385}}}, model: {forward: "+x", id: /cdn/value.a20fba3c434168b19952322685f3330d2008347dad1871a8f40568a2e132841e.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 90}, scale: {x: 1, y: 0.66, z: 1}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: 3.3900000000000006, y: 0, z: 5.5}, id: till1, layout: {box: {max: {x: 0.83, y: 1.73, z: 0.385}, min: {x: -0.83, y: 0, z: -0.385}}}, model: {forward: "+x", id: /cdn/value.a20fba3c434168b19952322685f3330d2008347dad1871a8f40568a2e132841e.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 90}, scale: {x: 1, y: 0.66, z: 1}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: 3.3900000000000006, y: 0, z: 7.170000000000002}, id: till2, layout: {box: {max: {x: 0.83, y: 1.73, z: 0.385}, min: {x: -0.83, y: 0, z: -0.385}}}, model: {forward: "+x", id: /cdn/value.a20fba3c434168b19952322685f3330d2008347dad1871a8f40568a2e132841e.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 90}, scale: {x: 1, y: 0.66, z: 1}, tags: [bonus-prop]}, {feetPosition: {x: -0.5, y: 0.003, z: -5.8}, id: rug-living, material: {pbr: true, roughness: 0.95, texture: cdn/texture-faded-red-and-beige-persian-rug.png}, primitive: {depth: 3.4, height: 0.012, kind: box, width: 4.4}, receiveShadow: true, rotation: {yaw: 0}}, {feetPosition: {x: -2.5, y: 0.003, z: 6.600000000000001}, id: rug-bed, material: {pbr: true, roughness: 0.95, texture: cdn/texture-worn-navy-and-cream-braided-rug.png}, primitive: {depth: 3.2, height: 0.012, kind: box, width: 3.4}, receiveShadow: true, rotation: {yaw: 0}}, {feetPosition: {x: 5, y: 0.003, z: -0.5}, id: rug-dining, material: {pbr: true, roughness: 0.95, texture: cdn/texture-sage-green-round-woven-jute-rug.png}, primitive: {height: 0.012, kind: cylinder, radialSegments: 48, radiusBottom: 1.5, radiusTop: 1.5}, receiveShadow: true, rotation: {yaw: 0}}, {castShadow: true, feetPosition: {x: -0.5, y: 0, z: -8}, id: sofa, layout: {box: {max: {x: 1.05, y: 1.05, z: 0.505}, min: {x: -1.05, y: 0, z: -0.505}}}, model: {forward: "+x", id: /cdn/value.ff13bc205536a957826e2f7fed75554c07ffe7848198e50e1d65f257cabacdd9.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 180}, tags: [bonus-prop]}, {feetPosition: {x: -0.5, y: 1.25, z: -7.697}, id: tag-sofa, rotation: {yaw: 180}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$60</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>Plaid sofa</text></svg>"}, {castShadow: true, feetPosition: {x: -0.5, y: 0, z: -5.9}, id: coffee_table, layout: {box: {max: {x: 0.575, y: 0.46, z: 0.295}, min: {x: -0.575, y: 0, z: -0.295}}}, model: {id: /cdn/value.b59b6a4d3115b48b5e3e42462530bbb5364e66607ba416592c80166a6cdd6483.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 0}, tags: [bonus-prop]}, {feetPosition: {x: -0.5, y: 0.66, z: -6.077}, id: tag-coffee_table, rotation: {yaw: 0}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$25</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>Coffee table</text></svg>"}, {castShadow: true, feetPosition: {x: -0.5, y: 0, z: -3.5999999999999996}, id: crt_tv, layout: {box: {max: {x: 0.61, y: 1.25, z: 0.335}, min: {x: -0.61, y: 0, z: -0.335}}}, model: {forward: "+x", id: /cdn/value.30ae8e4fd0c2e307d21943aa6fa38f3f816fcc7a10335f5a15ff865b00b84ce4.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 0}, tags: [bonus-prop]}, {feetPosition: {x: -0.5, y: 1.4, z: -3.801}, id: tag-crt_tv, rotation: {yaw: 0}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$55</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>CRT TV</text></svg>"}, {castShadow: true, feetPosition: {x: 2.6000000000000014, y: 0, z: -6}, id: armchair, layout: {box: {max: {x: 0.52, y: 1.05, z: 0.475}, min: {x: -0.52, y: 0, z: -0.475}}}, model: {forward: "+x", id: /cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 90}, tags: [bonus-prop]}, {feetPosition: {x: 2.3150000000000013, y: 1.25, z: -6}, id: tag-armchair, rotation: {yaw: 90}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$40</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>Recliner</text></svg>"}, {castShadow: true, feetPosition: {x: -3.0999999999999996, y: 0, z: -8}, id: floor_lamp, layout: {box: {max: {x: 0.255, y: 1.8, z: 0.255}, min: {x: -0.255, y: 0, z: -0.255}}}, model: {forward: "+x", id: /cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 180}, tags: [bonus-prop]}, {feetPosition: {x: -3.0999999999999996, y: 1.4, z: -7.847}, id: tag-floor_lamp, rotation: {yaw: 180}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$18</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>Torchiere</text></svg>"}, {castShadow: true, feetPosition: {x: 5.399999999999999, y: 0, z: -8.45}, id: bookshelf, layout: {box: {max: {x: 0.465, y: 1.85, z: 0.225}, min: {x: -0.465, y: 0, z: -0.225}}}, model: {forward: "+x", id: /cdn/value.918584eed8336eda888580753019763471fcce0adcaf2bc66def78f53ae3fad0.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 180}, tags: [bonus-prop]}, {feetPosition: {x: 5.399999999999999, y: 1.4, z: -8.315000000000001}, id: tag-bookshelf, rotation: {yaw: 180}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$35</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>Bookshelf</text></svg>"}, {castShadow: true, feetPosition: {x: -4, y: 0, z: -3.8000000000000007}, id: fiddle_plant, layout: {box: {max: {x: 0.435, y: 1.9, z: 0.415}, min: {x: -0.435, y: 0, z: -0.415}}}, model: {forward: "+x", id: /cdn/value.53fa6b1388302684d3e567ca755e213843bd4d5ac5ee17c0b54fa1d579c9a019.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 0}, tags: [bonus-prop]}, {feetPosition: {x: -4, y: 1.4, z: -4.049000000000001}, id: tag-fiddle_plant, rotation: {yaw: 0}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$15</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>Fiddle-leaf fig</text></svg>"}, {castShadow: true, feetPosition: {x: -2.5, y: 0, z: 7.800000000000001}, id: double_bed, layout: {box: {max: {x: 0.99, y: 1.03, z: 1}, min: {x: -0.99, y: 0, z: -1}}}, model: {forward: "+x", id: /cdn/value.b0a66618043549ab8c909dcd3ba2010c3e5134b8e1434a324b78d78a7a043411.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 0}, tags: [bonus-prop]}, {feetPosition: {x: -2.5, y: 1.23, z: 7.199999999999999}, id: tag-double_bed, rotation: {yaw: 0}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$90</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>Double bed</text></svg>"}, {castShadow: true, feetPosition: {x: -4.1, y: 0, z: 8.399999999999999}, id: lava_lamp, layout: {box: {max: {x: 0.22, y: 0.95, z: 0.22}, min: {x: -0.22, y: 0, z: -0.22}}}, model: {forward: "+x", id: /cdn/value.2f0eae283b6ebd13603b9891c607686c47f142b2e36b43e6148b098ac56a24af.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 0}, tags: [bonus-prop]}, {feetPosition: {x: -4.1, y: 1.15, z: 8.267999999999997}, id: tag-lava_lamp, rotation: {yaw: 0}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$22</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>Lava lamp</text></svg>"}, {castShadow: true, feetPosition: {x: 5, y: 0, z: -0.5}, id: dining_set, layout: {box: {max: {x: 0.875, y: 0.97, z: 0.58}, min: {x: -0.875, y: 0, z: -0.58}}}, model: {forward: "+x", id: /cdn/value.b43d69457f2c3ef6551772b02d406b27f4d66f37e2fbfc8c3d01629280227983.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 90}, tags: [bonus-prop]}, {feetPosition: {x: 4.652000000000001, y: 1.17, z: -0.5}, id: tag-dining_set, rotation: {yaw: 90}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$70</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>Dining set</text></svg>"}, {feetPosition: {x: 0, y: 4.55, z: -5}, id: light0, light: {color: oklch(0.9 0.07 70), distance: 13, intensity: 2.4, kind: point}}, {feetPosition: {x: -1, y: 4.55, z: 5}, id: light1, light: {color: oklch(0.9 0.07 70), distance: 13, intensity: 2.4, kind: point}}, {feetPosition: {x: -7.3, y: 4.1, z: 0}, id: sign, rotation: {yaw: -90}, vector: "<svg viewBox='0 0 640 110' width='3.9m'><rect x='4' y='4' width='632' height='102' rx='10' fill='#f7efe2' stroke='#7a4b2a' stroke-width='6'/><rect x='14' y='14' width='612' height='82' rx='6' fill='none' stroke='#e85d9c' stroke-width='3' filter='drop-shadow(0 0 6 #ff4fb2)'/><text x='320' y='72' font-family='serif' font-size='54' font-weight='700' fill='#5a3220' text-anchor='middle'>ANDREW&#39;S FURNITURE</text></svg>"}]
+  children: [{castShadow: true, feetPosition: {x: 3.3900000000000006, y: 0, z: 3.8299999999999983}, id: "till0", layout: {box: {max: {x: 0.83, y: 1.73, z: 0.385}, min: {x: -0.83, y: 0, z: -0.385}}}, model: {forward: "+x", id: "/cdn/value.a20fba3c434168b19952322685f3330d2008347dad1871a8f40568a2e132841e.glb"}, physics: {body: "static", collider: "box"}, receiveShadow: true, rotation: {yaw: 90}, scale: {x: 1, y: 0.66, z: 1}, tags: ["bonus-prop"]}, {castShadow: true, feetPosition: {x: 3.3900000000000006, y: 0, z: 5.5}, id: "till1", layout: {box: {max: {x: 0.83, y: 1.73, z: 0.385}, min: {x: -0.83, y: 0, z: -0.385}}}, model: {forward: "+x", id: "/cdn/value.a20fba3c434168b19952322685f3330d2008347dad1871a8f40568a2e132841e.glb"}, physics: {body: "static", collider: "box"}, receiveShadow: true, rotation: {yaw: 90}, scale: {x: 1, y: 0.66, z: 1}, tags: ["bonus-prop"]}, {castShadow: true, feetPosition: {x: 3.3900000000000006, y: 0, z: 7.170000000000002}, id: "till2", layout: {box: {max: {x: 0.83, y: 1.73, z: 0.385}, min: {x: -0.83, y: 0, z: -0.385}}}, model: {forward: "+x", id: "/cdn/value.a20fba3c434168b19952322685f3330d2008347dad1871a8f40568a2e132841e.glb"}, physics: {body: "static", collider: "box"}, receiveShadow: true, rotation: {yaw: 90}, scale: {x: 1, y: 0.66, z: 1}, tags: ["bonus-prop"]}, {feetPosition: {x: -0.5, y: 0.003, z: -5.8}, id: "rug-living", material: {pbr: true, roughness: 0.95, texture: "cdn/texture-faded-red-and-beige-persian-rug.png"}, primitive: {depth: 3.4, height: 0.012, kind: "box", width: 4.4}, receiveShadow: true, rotation: {yaw: 0}}, {feetPosition: {x: -2.5, y: 0.003, z: 6.600000000000001}, id: "rug-bed", material: {pbr: true, roughness: 0.95, texture: "cdn/texture-worn-navy-and-cream-braided-rug.png"}, primitive: {depth: 3.2, height: 0.012, kind: "box", width: 3.4}, receiveShadow: true, rotation: {yaw: 0}}, {feetPosition: {x: 5, y: 0.003, z: -0.5}, id: "rug-dining", material: {pbr: true, roughness: 0.95, texture: "cdn/texture-sage-green-round-woven-jute-rug.png"}, primitive: {height: 0.012, kind: "cylinder", radialSegments: 48, radiusBottom: 1.5, radiusTop: 1.5}, receiveShadow: true, rotation: {yaw: 0}}, {castShadow: true, feetPosition: {x: -0.5, y: 0, z: -8}, id: "sofa", layout: {box: {max: {x: 1.05, y: 1.05, z: 0.505}, min: {x: -1.05, y: 0, z: -0.505}}}, model: {forward: "+x", id: "/cdn/value.ff13bc205536a957826e2f7fed75554c07ffe7848198e50e1d65f257cabacdd9.glb"}, physics: {body: "static", collider: "box"}, receiveShadow: true, rotation: {yaw: 180}, tags: ["bonus-prop"]}, {feetPosition: {x: -0.5, y: 1.25, z: -7.697}, id: "tag-sofa", rotation: {yaw: 180}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$60</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>Plaid sofa</text></svg>"}, {castShadow: true, feetPosition: {x: -0.5, y: 0, z: -5.9}, id: "coffee_table", layout: {box: {max: {x: 0.575, y: 0.46, z: 0.295}, min: {x: -0.575, y: 0, z: -0.295}}}, model: {id: "/cdn/value.b59b6a4d3115b48b5e3e42462530bbb5364e66607ba416592c80166a6cdd6483.glb"}, physics: {body: "static", collider: "box"}, receiveShadow: true, rotation: {yaw: 0}, tags: ["bonus-prop"]}, {feetPosition: {x: -0.5, y: 0.66, z: -6.077}, id: "tag-coffee_table", rotation: {yaw: 0}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$25</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>Coffee table</text></svg>"}, {castShadow: true, feetPosition: {x: -0.5, y: 0, z: -3.5999999999999996}, id: "crt_tv", layout: {box: {max: {x: 0.61, y: 1.25, z: 0.335}, min: {x: -0.61, y: 0, z: -0.335}}}, model: {forward: "+x", id: "/cdn/value.30ae8e4fd0c2e307d21943aa6fa38f3f816fcc7a10335f5a15ff865b00b84ce4.glb"}, physics: {body: "static", collider: "box"}, receiveShadow: true, rotation: {yaw: 0}, tags: ["bonus-prop"]}, {feetPosition: {x: -0.5, y: 1.4, z: -3.801}, id: "tag-crt_tv", rotation: {yaw: 0}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$55</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>CRT TV</text></svg>"}, {castShadow: true, feetPosition: {x: 2.6000000000000014, y: 0, z: -6}, id: "armchair", layout: {box: {max: {x: 0.52, y: 1.05, z: 0.475}, min: {x: -0.52, y: 0, z: -0.475}}}, model: {forward: "+x", id: "/cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb"}, physics: {body: "static", collider: "box"}, receiveShadow: true, rotation: {yaw: 90}, tags: ["bonus-prop"]}, {feetPosition: {x: 2.3150000000000013, y: 1.25, z: -6}, id: "tag-armchair", rotation: {yaw: 90}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$40</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>Recliner</text></svg>"}, {castShadow: true, feetPosition: {x: -3.0999999999999996, y: 0, z: -8}, id: "floor_lamp", layout: {box: {max: {x: 0.255, y: 1.8, z: 0.255}, min: {x: -0.255, y: 0, z: -0.255}}}, model: {forward: "+x", id: "/cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb"}, physics: {body: "static", collider: "box"}, receiveShadow: true, rotation: {yaw: 180}, tags: ["bonus-prop"]}, {feetPosition: {x: -3.0999999999999996, y: 1.4, z: -7.847}, id: "tag-floor_lamp", rotation: {yaw: 180}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$18</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>Torchiere</text></svg>"}, {castShadow: true, feetPosition: {x: 5.399999999999999, y: 0, z: -8.45}, id: "bookshelf", layout: {box: {max: {x: 0.465, y: 1.85, z: 0.225}, min: {x: -0.465, y: 0, z: -0.225}}}, model: {forward: "+x", id: "/cdn/value.918584eed8336eda888580753019763471fcce0adcaf2bc66def78f53ae3fad0.glb"}, physics: {body: "static", collider: "box"}, receiveShadow: true, rotation: {yaw: 180}, tags: ["bonus-prop"]}, {feetPosition: {x: 5.399999999999999, y: 1.4, z: -8.315000000000001}, id: "tag-bookshelf", rotation: {yaw: 180}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$35</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>Bookshelf</text></svg>"}, {castShadow: true, feetPosition: {x: -4, y: 0, z: -3.8000000000000007}, id: "fiddle_plant", layout: {box: {max: {x: 0.435, y: 1.9, z: 0.415}, min: {x: -0.435, y: 0, z: -0.415}}}, model: {forward: "+x", id: "/cdn/value.53fa6b1388302684d3e567ca755e213843bd4d5ac5ee17c0b54fa1d579c9a019.glb"}, physics: {body: "static", collider: "box"}, receiveShadow: true, rotation: {yaw: 0}, tags: ["bonus-prop"]}, {feetPosition: {x: -4, y: 1.4, z: -4.049000000000001}, id: "tag-fiddle_plant", rotation: {yaw: 0}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$15</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>Fiddle-leaf fig</text></svg>"}, {castShadow: true, feetPosition: {x: -2.5, y: 0, z: 7.800000000000001}, id: "double_bed", layout: {box: {max: {x: 0.99, y: 1.03, z: 1}, min: {x: -0.99, y: 0, z: -1}}}, model: {forward: "+x", id: "/cdn/value.b0a66618043549ab8c909dcd3ba2010c3e5134b8e1434a324b78d78a7a043411.glb"}, physics: {body: "static", collider: "box"}, receiveShadow: true, rotation: {yaw: 0}, tags: ["bonus-prop"]}, {feetPosition: {x: -2.5, y: 1.23, z: 7.199999999999999}, id: "tag-double_bed", rotation: {yaw: 0}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$90</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>Double bed</text></svg>"}, {castShadow: true, feetPosition: {x: -4.1, y: 0.56, z: 8.22}, id: "lava_lamp", layout: {box: {max: {x: 0.22, y: 0.95, z: 0.22}, min: {x: -0.22, y: 0, z: -0.22}}}, model: {forward: "+x", id: "/cdn/value.2f0eae283b6ebd13603b9891c607686c47f142b2e36b43e6148b098ac56a24af.glb"}, receiveShadow: true, rotation: {yaw: 0}, tags: ["bonus-prop"]}, {feetPosition: {x: -4.1, y: 1.42, z: 8.12}, id: "tag-lava_lamp", rotation: {yaw: 0}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$22</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>Lava lamp</text></svg>"}, {castShadow: true, feetPosition: {x: 5, y: 0, z: -0.5}, id: "dining_set", layout: {box: {max: {x: 0.875, y: 0.97, z: 0.58}, min: {x: -0.875, y: 0, z: -0.58}}}, model: {forward: "+x", id: "/cdn/value.b43d69457f2c3ef6551772b02d406b27f4d66f37e2fbfc8c3d01629280227983.glb"}, physics: {body: "static", collider: "box"}, receiveShadow: true, rotation: {yaw: 90}, tags: ["bonus-prop"]}, {feetPosition: {x: 4.652000000000001, y: 1.17, z: -0.5}, id: "tag-dining_set", rotation: {yaw: 90}, vector: "<svg viewBox='0 0 200 120' width='0.34m' billboard='yaw'><rect x='4' y='4' width='192' height='112' rx='14' fill='#fdf6fb' stroke='#e85d9c' stroke-width='6'/><circle cx='26' cy='26' r='7' fill='#2b2b33'/><text x='108' y='70' font-family='display' font-size='54' fill='#c2307a' text-anchor='middle'>$70</text><text x='100' y='102' font-family='sans-serif' font-size='17' fill='#4a4458' text-anchor='middle'>Dining set</text></svg>"}, {feetPosition: {x: 0, y: 4.55, z: -5}, id: "light0", light: {color: "oklch(0.9 0.07 70)", distance: 13, intensity: 2.4, kind: "point"}}, {feetPosition: {x: -1, y: 4.55, z: 5}, id: "light1", light: {color: "oklch(0.9 0.07 70)", distance: 13, intensity: 2.4, kind: "point"}}, {feetPosition: {x: -7.3, y: 4.1, z: 0}, id: "sign", rotation: {yaw: -90}, vector: "<svg viewBox='0 0 640 110' width='3.9m'><rect x='4' y='4' width='632' height='102' rx='10' fill='#f7efe2' stroke='#7a4b2a' stroke-width='6'/><rect x='14' y='14' width='612' height='82' rx='6' fill='none' stroke='#e85d9c' stroke-width='3' filter='drop-shadow(0 0 6 #ff4fb2)'/><text x='320' y='72' font-family='serif' font-size='54' font-weight='700' fill='#5a3220' text-anchor='middle'>ANDREW&#39;S FURNITURE</text></svg>"}, {id: "bedside-stand", model: {id: "/cdn/value.1caf2ab06915ee453dbb634564e12b272af0111348ba54dd7ac86ac4ca9a46f8.glb"}, layout: {box: {min: {x: -0.327, y: 0.0, z: -0.327}, max: {x: 0.327, y: 0.56, z: 0.327}}}, physics: {body: "static", collider: "box"}, feetPosition: {x: -4.1, y: 0, z: 8.22}}]
   feetPosition: {x: 17, y: 0, z: 13}
-  id: bs-furniture
-  tags: [bonus-shop]
+  id: "bs-furniture"
+  tags: ["bonus-shop"]
 paint-demo2:
   children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.90386ada1dac4bfe1b884d927ca5789ef8011ada51b903c99e8d9963699993f6.glb, parts: {beard: {color: "#5a3a26", depthWrite: false, opacity: 0, outline: false, transparent: true, visible: false}, belly: {color: "#ffffff", metalness: 0, outline: false, roughness: 0.88}, blush: {color: "#ff9f6a", metalness: 0, opacity: 0.82, outline: false, roughness: 0.88, transparent: true}, eyeink: {color: "#16101c", metalness: 0, outline: false, roughness: 0.95}, eyewhite: {color: "#fffdf8", metalness: 0, outline: false, roughness: 0.35}, fur: {color: "#9fd3ff", metalness: 0, roughness: 0.82}, inner: {color: "#eee8e2", metalness: 0, roughness: 0.9}, iris: {color: "#7ab8e8", metalness: 0.05, outline: false, roughness: 0.22}, mark: {color: "#2b2530", metalness: 0, outline: false, roughness: 0.82}, mouth: {color: "#44141e", outline: false, roughness: 0.82}, nose: {color: "#ff9fbd", metalness: 0.05, outline: false, roughness: 0.28}, pupil: {color: "#000000", metalness: 0, outline: false, roughness: 1}, tip: {color: "#2b2530", metalness: 0, roughness: 0.82}, tongue: {color: "#ff758c", outline: false, roughness: 0.45}}}, morph: {Blush: 0.38, FT_Broad: 0.3, FT_Chubby: 0.656, FT_Round: 0.54, Half: 0.18239999999999998, Smile: 0.13679999999999998}}]
   feetPosition: {x: 3.2, y: 0, z: 17.5}
