@@ -126,7 +126,7 @@ def normals(C):
         for i in range(len(c)): fn += c[i].cross(c[(i + 1) % len(c)])
         for v in vs: n[v] += fn
     return {v: (x.normalized() if x.length > 1e-12 else Vector((0, 0, 1))) for v, x in n.items()}
-NOFILL = {v: (abs(W(v.co).x) > xpit * 0.55 and W(v.co).z > zpit - 0.06 * s) for v in bm.verts}
+NOFILL = {v: abs(W(v.co).x) > xpit * 0.55 for v in bm.verts}  # shoulder cap and armpit: the T-pose armpit web bunched up over the shoulder once the arm dropped
 def fill(C):  # bridge hollows (cleavage, spine groove) the way fabric does, outward only
     for it in range(6):
         N = normals(C); new = {}
