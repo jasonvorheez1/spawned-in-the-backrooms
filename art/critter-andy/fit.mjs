@@ -67,8 +67,7 @@ for (const m of meshes) { const name = m.getName(); if (SKIP.test(name)) continu
         if (!far) {
           // bust 0: push out to the gap
           const d0 = (x - sx) * nx + (y - sy) * ny + (z - sz) * nz;
-          const gv = OUTER.test(lname) && !BOTTOM.test(lname) && wy < WAIST + 0.05 && wy > WAIST - 0.14 ? W(0.036) : gap; // a jacket or hoodie hem rides well over any waistband (Nov 11: Dawn's hoodie and skirt tore at the waist, 6 mm apart)
-          if (d0 < gv) { const k = (gv - d0) * on; dx += nx * k; dy += ny * k; dz += nz * k; pushed++ }
+          if (d0 < gap) { const k = (gap - d0) * on; dx += nx * k; dy += ny * k; dz += nz * k; pushed++ }
           else if (!isBot && !OUTER.test(lname) && wy < WAIST && d0 > gap) { const k = -(d0 - gap * 0.5) * on; dx += nx * k; dy += ny * k; dz += nz * k; pulled++ }
           else if (!BOTTOM.test(lname) && !OUTER.test(lname)) { // a top floating off the chest is drawn in snug (Shelly: "breast area very loose")
             const chest = Math.max(0, Math.min(1, (wy - 0.7) / 0.05)) * Math.max(0, Math.min(1, (1.02 - wy) / 0.05)), slack = d0 - gap * 1.5;
