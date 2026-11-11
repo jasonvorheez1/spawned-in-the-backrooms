@@ -23,7 +23,7 @@ export function field(x, y, z, mesh = "") {
   const armZone = sm(0.13, 0.19, ax) * bump(0.8, 0.86, 1.08, 1.14, y);
   // torso: wider, deeper, belly forward (front is -Z)
   { const w = bump(0.56, 0.64, 0.93, 1.0, y) * (1 - armZone)
-    if (w > 0 && PART("torso")) { const kx = 1 + 0.2 * w, kz = 1 + 0.24 * w; X *= kx; Z *= kz
+    if (w > 0 && PART("torso")) { const kx = 1 + 0.1 * w, kz = 1 + 0.24 * w; X *= kx; Z *= kz
       const belly = Math.exp(-(((y - 0.72) / 0.1) ** 2)) * w; if (Z < 0) Z -= 0.03 * belly * sm(0, -0.05, z) } }
   // arms: thicker about the arm axis, paws a little more
   if (armZone > 0 && PART("arms")) { const k = 1 + armZone * (0.32 + 0.12 * sm(0.46, 0.56, ax)); Y = SHY + (Y - SHY) * k; Z = Z * k
@@ -32,7 +32,8 @@ export function field(x, y, z, mesh = "") {
   { const legW = 1 - sm(0.56, 0.66, y)
     if (legW > 0 && ax < 0.32 && PART("legs")) {
       const k = 1 + legW * (0.26 + 0.16 * sm(0.25, 0.5, y)) + 0.12 * sm(0.13, 0.05, y)
-      X = s * thick(ax, LX, k); Z = Z * k
+      const kx = 1 + (k - 1) * (1 - 0.6 * sm(0.4, 0.55, y)) // the hips stay narrow so hanging arms clear them (Shelly: arm fitting off)
+      X = s * thick(ax, LX, kx); Z = Z * k
       if (y < 0.1) Z += (Z < 0 ? -0.025 : 0.01) * sm(0.1, 0.03, y) } }
   return [X, Y, Z];
 }
