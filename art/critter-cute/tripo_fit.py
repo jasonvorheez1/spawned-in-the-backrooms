@@ -43,8 +43,13 @@ _head_r_proc = head_r
 def head_r(d):
     if not _TRI: return _head_r_proc(d)
     d = d.normalized()
-    hit = _TRI["bvh"].ray_cast(HC + d * 1.5, -d, 3.0)              # from outside in: the outermost skin along d
-    return (hit[0] - HC).length if hit[0] is not None else _head_r_proc(d)
+    # the sculpt's skin, averaged over a small cone so the face lies smooth over its bumps and fluff
+    t1 = d.orthogonal().normalized(); t2 = d.cross(t1); acc = []; R = float(os.environ.get("TRIPO_BLUR", ".09"))
+    for (a, b) in ((0, 0), (1, 0), (-1, 0), (0, 1), (0, -1), (.7, .7), (-.7, .7), (.7, -.7), (-.7, -.7)):
+        dd = (d + t1 * a * R + t2 * b * R).normalized()
+        hit = _TRI["bvh"].ray_cast(HC + dd * 1.5, -dd, 3.0)
+        if hit[0] is not None: acc.append((hit[0] - HC).length)
+    return sum(acc) / len(acc) if acc else _head_r_proc(d)
 _build_head_proc = build_head
 def build_head(name, sp, rig, F):
     global CUR_SP
@@ -60,3 +65,8 @@ def build_head(name, sp, rig, F):
     return o
 build_ear = lambda *a, **k: None                                   # Tripo's ears stand in
 build_tufts = lambda *a, **k: None
+
+def _tripo_show(scene, *a):
+    t = _TRI.get("obj")
+    if t and t.name in bpy.data.objects: t.hide_render = False
+bpy.app.handlers.render_pre.append(_tripo_show)
