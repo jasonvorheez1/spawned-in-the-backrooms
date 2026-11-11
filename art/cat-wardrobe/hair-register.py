@@ -77,7 +77,7 @@ for sex in ("f", "m"):
         # anime hair reads as smooth ribbon locks, not facets: weld the Tripo shell, smooth it, one subdivision where the budget allows
         import bmesh
         bm = bmesh.new(); bm.from_mesh(hair.data); bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0006); bm.to_mesh(hair.data); bm.free()
-        for pl in hair.data.polygons: pl.use_smooth = True
+        for fc in hair.data.polygons: fc.use_smooth = True
         bpy.context.view_layer.objects.active = hair
         sm = hair.modifiers.new("sm", "SMOOTH"); sm.factor = 0.5; sm.iterations = 4; bpy.ops.object.modifier_apply(modifier="sm")
         if len(hair.data.polygons) < 14000:
