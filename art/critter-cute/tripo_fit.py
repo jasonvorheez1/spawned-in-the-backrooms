@@ -33,6 +33,27 @@ def _tripo_load():
         c = v.co; v.co = Vector(((c.x - cx) * k, (c.y - cy) * k + float(os.environ.get("TRIPO_DY", "0")), (c.z - zmin) * k + pz))
     t.data.update(); bpy.context.view_layer.update()
     t.name = "TripoHead"
+    # Tripo baked its own nose and muzzle into the texture: below the ears the head wears one flat fur colour so only our face shows
+    try:
+        import numpy as np
+        m = t.data.materials[0]; nt = m.node_tree; N = nt.nodes
+        bsdf = next(n for n in N if n.type == "BSDF_PRINCIPLED")
+        img_n = next(n for n in N if n.type == "TEX_IMAGE")
+        px = np.empty(len(img_n.image.pixels), np.float32); img_n.image.pixels.foreach_get(px); px = px.reshape(-1, 4)[:, :3]
+        sat = px.max(1) - px.min(1); fur = np.median(px[sat > .25], axis=0)
+        lin = [c / 12.92 if c <= .04045 else ((c + .055) / 1.055) ** 2.4 for c in fur]
+        tc = N.new("ShaderNodeTexCoord"); sx = N.new("ShaderNodeSeparateXYZ"); nt.links.new(tc.outputs["Object"], sx.inputs[0])
+        mr = N.new("ShaderNodeMapRange"); mr.interpolation_type = "SMOOTHSTEP"; thr = float(os.environ.get("TRIPO_EARZ", "1.45"))
+        mr.inputs["From Min"].default_value = thr - .03; mr.inputs["From Max"].default_value = thr + .03
+        mr.inputs["To Min"].default_value = 1; mr.inputs["To Max"].default_value = 0
+        nt.links.new(sx.outputs["Z"], mr.inputs["Value"])
+        mx = N.new("ShaderNodeMix"); mx.data_type = "RGBA"
+        nt.links.new(mr.outputs["Result"], mx.inputs["Factor"])
+        nt.links.new(img_n.outputs["Color"], mx.inputs["A"] if "A" in mx.inputs else mx.inputs[6])
+        mx.inputs[7].default_value = (*lin, 1)
+        nt.links.new(mx.outputs[2], bsdf.inputs["Base Color"])
+        log("tripo fur", [round(float(c), 3) for c in fur])
+    except Exception as e: log("tripo fur err", repr(e))
     bm = bmesh.new(); bm.from_mesh(t.data); bm.transform(t.matrix_world)
     _TRI["bvh"] = BVHTree.FromBMesh(bm); bm.free(); _TRI["obj"] = t
     log("tripo head fitted: scale", round(k, 3), "height", round((zmax - zmin) * k, 3))
