@@ -26,14 +26,11 @@ fixed=0
 for v in o.data.vertices:
   if W(v).z>=crotch or v.index not in side: continue
   s='Left' if sum(side[v.index])>0 else 'Right'; other='Right' if s=='Left' else 'Left'
-  rem=0
-  for g in list(v.groups):
-    n=gi[g.group]
-    if n in legs(other): rem+=g.weight; G[n].remove([v.index])
-  if rem:
-    fixed+=1; own=[g for g in v.groups if gi[g.group] in legs(s)]
-    if own: max(own,key=lambda g:g.weight).weight+=rem
-    else: G[s+'UpLeg'].add([v.index],rem,'ADD')
+  # weight on the other leg's bone moves to this leg's SAME bone (LeftLeg -> RightLeg): sending a shin vertex to the thigh stretched pale facets at every knee bend
+  moves=[(gi[g.group],g.weight) for g in v.groups if gi[g.group] in legs(other)]
+  for n,w in moves:
+    G[n].remove([v.index]); G[s+n[len(other):]].add([v.index],w,'ADD')
+  if moves: fixed+=1
 print("FIX crotch",round(crotch,3),"seam edges",len(seam),"fixed",fixed)
 # tried: flipping inner-thigh faces outward and one-sided cloth; neither cleared the slivers in a stride test (Nov 11)
 # faces near the knees bridged one leg to the other (verts led by opposite legs): a stride stretched them into a web.
