@@ -4,7 +4,7 @@ import bpy, sys, math, bmesh
 from mathutils import Vector
 a = sys.argv[sys.argv.index('--') + 1:]
 src, out, proof = a
-ITERS, K = 14, 0.5
+ITERS, K = 30, 0.6
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=src)
 arm = next(o for o in bpy.data.objects if o.type == 'ARMATURE')
@@ -12,7 +12,7 @@ shx = abs((arm.matrix_world @ arm.data.bones['LeftArm'].head_local).x)
 shz = (arm.matrix_world @ arm.data.bones['LeftArm'].head_local).z
 print("shoulder x", round(shx, 3), "z", round(shz, 3))
 skins = [o for o in bpy.data.objects if o.type == 'MESH' and o.vertex_groups and o.name.startswith('Skin_')]
-def region(p): return shx - 0.07 < abs(p.x) < shx + 0.09 and shz - 0.17 < p.z < shz + 0.03
+def region(p): return shx - 0.07 < abs(p.x) < shx + 0.20 and shz - 0.17 < p.z < shz + 0.03
 GROUPS = lambda side: [side + n for n in ('Arm', 'Shoulder')] + ['Spine2', 'Spine1']
 tot = 0
 for o in skins:
@@ -37,7 +37,7 @@ for o in skins:
         for i in sel:
             side = 'Left' if P[i].x > 0 else 'Right'; gs = GROUPS(side)
             # falloff: full in the core, eased at the edge
-            edge = min(abs(P[i].x) - (shx - 0.07), (shx + 0.09) - abs(P[i].x), P[i].z - (shz - 0.17), (shz + 0.03) - P[i].z)
+            edge = min(abs(P[i].x) - (shx - 0.07), (shx + 0.20) - abs(P[i].x), P[i].z - (shz - 0.17), (shz + 0.03) - P[i].z)
             f = K * max(0, min(1, edge / 0.025))
             w = dict(cur[i]); lock = sum(v for k, v in w.items() if k not in gs)
             avg = {}
