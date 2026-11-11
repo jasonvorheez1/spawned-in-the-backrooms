@@ -13,13 +13,11 @@ def _tripo_load():
     sel(*meshes, active=meshes[0])
     if len(meshes) > 1: bpy.ops.object.join()
     t = bpy.context.view_layer.objects.active
-    t.parent = None
-    t.rotation_mode = "XYZ"
-    # Tripo faces +X (the picture's front); this build's face looks down +Y
     import mathutils
-    M = mathutils.Matrix.Rotation(math.radians(float(os.environ.get("TRIPO_YAW", "90"))), 4, "Z") @ t.matrix_world
-    t.matrix_world = M
-    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+    R = mathutils.Matrix.Rotation(math.radians(float(os.environ.get("TRIPO_YAW", "90"))), 4, "Z")
+    W = R @ t.matrix_world                                    # its import transform (Tripo ships at 0.213 scale) baked into the points by hand
+    for v in t.data.vertices: v.co = W @ v.co
+    t.parent = None; t.matrix_world = mathutils.Matrix.Identity(4)
     for o in new:
         if o is not t and o.name in bpy.data.objects: bpy.data.objects.remove(o, do_unlink=True)
     vs = [v.co.copy() for v in t.data.vertices]
@@ -33,7 +31,7 @@ def _tripo_load():
     k = pw / w * float(os.environ.get("TRIPO_K", "1.0"))
     for v in t.data.vertices:
         c = v.co; v.co = Vector(((c.x - cx) * k, (c.y - cy) * k + float(os.environ.get("TRIPO_DY", "0")), (c.z - zmin) * k + pz))
-    t.data.update()
+    t.data.update(); bpy.context.view_layer.update()
     t.name = "TripoHead"
     bm = bmesh.new(); bm.from_mesh(t.data); bm.transform(t.matrix_world)
     _TRI["bvh"] = BVHTree.FromBMesh(bm); bm.free(); _TRI["obj"] = t
