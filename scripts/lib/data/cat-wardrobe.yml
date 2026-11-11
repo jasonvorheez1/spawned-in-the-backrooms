@@ -4,12 +4,12 @@
 # PAINT: scripts/mat-catskin.js draws a garment into the skin itself from the body's bind-pose position (metres, y up, front +z), so it can never clip.
 # MODEL: a Tripo garment skinned to the same rig rides as a child; the skin under it is painted its colour (`under`), so nothing furry pokes through.
 # body: measurements of each rest body, mesh metres. top/bot: [low hem, high line]; arm: [shoulder x, elbow x, wrist x]; leg: [crotch y, knee y, ankle y];
-# neck: [half width, front depth, back depth] of the collar scoop under `top[1]`; front: the z that splits front from back; tail: its bone line + radius
+# neck: [half width, front depth, back depth] of the collar scoop under `top[1]`; front: the z that splits front from back; tail: a 4-point line + radius fitted (max-distance) to the verts the Tail bones own, from the rigged glb
 body:
   f: { top: [0.425, 0.626], arm: [0.095, 0.245, 0.36], leg: [0.36, 0.19, 0.065], waist: 0.435, neck: [0.066, 0.056, 0.034], front: 0.045,
-       tail: [[0.05, 0.34, -0.14], [0.16, 0.30, -0.125], [0.21, 0.39, -0.115], [0.285, 0.53, -0.105]], tailR: 0.036 }
+       tail: [[0.014, 0.412, -0.018], [0.053, 0.302, -0.179], [0.169, 0.359, -0.147], [0.385, 0.576, -0.111]], tailR: 0.068 }
   m: { top: [0.435, 0.705], arm: [0.11, 0.27, 0.405], leg: [0.40, 0.21, 0.075], waist: 0.47, neck: [0.074, 0.036, 0.018], front: 0.082,
-       tail: [[0.05, 0.38, -0.06], [0.11, 0.37, -0.16], [0.18, 0.45, -0.23], [0.25, 0.56, -0.28]], tailR: 0.04 }
+       tail: [[0.025, 0.433, -0.067], [0.096, 0.379, -0.166], [0.217, 0.434, -0.237], [0.274, 0.555, -0.313]], tailR: 0.048 }
 # a painted top: hem 0..1 (0 = the body's low hem, 1 = the collar line), sleeve 0..2 (0 shoulder, 1 elbow, 2 wrist), scoop = collar depth scale, pat = fabric
 # a painted bottom: leg 0..2 (0 crotch, 1 knee, 2 ankle), rise = waistband above the body's waist line (m)
 tops:
