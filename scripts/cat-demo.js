@@ -15,7 +15,7 @@ function dress(ctx) {
   const s = ctx.self.state, sex = s.sex === 'm' ? 'm' : 'f'
   ctx.self.model = catModel(sex, s.look)
   ctx.self.morph = chestOf(s.look)   // the body's Chest key; the top child carries its own
-  for (const k of ['topw', 'botw', 'shoes', 'hat', 'mask', 'fluff-cheeks', 'fluff-burns', 'fluff-crest', 'fluff-lynx', 'fluff-ruff', 'fluff-mane']) if (ctx.getObject(ctx.self.id + '/cw-' + k)) ctx.destroy(ctx.self.id + '/cw-' + k)
+  for (const k of ['topw', 'botw', 'shoes', 'hat', 'mask', 'hair', 'fluff-cheeks', 'fluff-burns', 'fluff-crest', 'fluff-lynx', 'fluff-ruff', 'fluff-mane']) if (ctx.getObject(ctx.self.id + '/cw-' + k)) ctx.destroy(ctx.self.id + '/cw-' + k)
   for (const c of catChildren(sex, s.look)) ctx.spawn(c.id, { parent: ctx.self.id, ...c })
   ctx.self.anim.base = { clip: s.clip || 'Idle', loop: true }
 }

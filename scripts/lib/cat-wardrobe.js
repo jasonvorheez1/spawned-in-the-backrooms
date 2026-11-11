@@ -81,6 +81,8 @@ export function catChildren(sex, look) {
   }
   const fl = Array.isArray(look?.fluff) ? look.fluff : look?.fluff ? [look.fluff] : []   // fluff types: soft fur clumps in her own fur colour, a touch lighter
   for (const k of fl) { const g = W.fluff?.[k]?.[sex]; if (g) out.push({ id: 'cw-fluff-' + k, attachment: { skin: true }, model: { id: g, forward: '+z', materials: { fluff: { kind: 'scripted', script: 'scripts/mat-catskin.js', color: l.fluffc || look?.fur || '#f3c98a', params: { ...skinParams(sex, look), top: 0, bot: 0, sock: 0 } } } } }) }
+  const hk = look?.hair, hg = hk && (W.hair?.[hk]?.[sex] || Object.values(W.hair?.[hk] || {})[0])   // a hairstyle: one key, tinted its own colour
+  if (hg) out.push({ id: 'cw-hair', attachment: { skin: true }, model: { id: hg, forward: '+z', materials: { hair: { color: look?.hairc || '#6b4a35', roughness: 0.75 } } } })
   const mk = W.masks?.[l.hat]?.[sex]   // a Thrift Mode mask: skinned to her head bone, its own paint
   if (mk) out.push({ id: 'cw-mask', attachment: { skin: true }, model: { id: mk, forward: '+z' } })
   return out
