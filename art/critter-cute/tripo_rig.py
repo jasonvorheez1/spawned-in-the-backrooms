@@ -424,25 +424,6 @@ for f in bm.faces:
     if inb or dark:
         for l in f.loops: l[uvk].uv = UVF
         f.material_index = 0; nlash += 1
-# the old ':3' and muzzle lumps sit under the chin, past the pressed box: depth only (y) is blurred there over 3 cm of
-# front-facing surface, fading to nothing at the region's edge, so bumps go and the silhouette and seams stay put
-from mathutils import kdtree as _kd
-bm.verts.ensure_lookup_table(); bm.normal_update()
-fr = [v for v in bm.verts if v.co.y < -0.03 and v.normal.y < -0.35 and BOX[0] - 0.08 < v.co.x < BOX[1] + 0.08 and BOX[2] - 0.14 < v.co.z < BOX[3]]
-kt = _kd.KDTree(len(fr))
-for k, v in enumerate(fr): kt.insert(Vector((v.co.x, 0, v.co.z)), k)
-kt.balance(); ny = {}
-for v in fr:
-    if v.is_boundary: continue
-    ex = min(v.co.x - (BOX[0] - 0.06), (BOX[1] + 0.06) - v.co.x); ez = min(v.co.z - (BOX[2] - 0.12), (BOX[2] + 0.03) - v.co.z)
-    e = min(ex, ez)
-    if e <= 0: continue
-    w = min(1.0, e / 0.025); w = w * w * (3 - 2 * w)
-    nb = kt.find_range(Vector((v.co.x, 0, v.co.z)), 0.03)
-    tw = sum(1 - d / 0.03 for _, _, d in nb) or 1
-    ny[v] = (1 - w) * v.co.y + w * sum(fr[k].co.y * (1 - d / 0.03) for _, k, d in nb) / tw
-for v, y in ny.items(): v.co.y = y
-print("chin depth blurred", len(ny))
 dead = []
 print("head front verts pressed", len(moved), "faces to fur", nlash)
 bm.to_mesh(hm); bm.free(); lift = len(dead)
@@ -467,6 +448,26 @@ for (i, j), (co, uv_) in list(grid.items()):   # smoothed normals: an even 3 mm 
         for dj in range(-2, 3):
             if (i + di, j + dj) in hn: nn += hn[i + di, j + dj]
     grid[i, j] = (co + nn.normalized() * 0.003, uv_)
+# the decal rode the old lumps (the body's chin and the old ':3' poke through under the muzzle): its depth is relaxed over the grid,
+# edge cells held, then any head or body vertex standing in front of it is pressed 2 mm behind it, so no bump shows through or around
+g0 = {k: co.y for k, (co, _) in grid.items()}; gy = dict(g0)
+for _ in range(14):
+    n_ = {}
+    for (i, j), y in gy.items():
+        nb = [(i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)]
+        n_[i, j] = y if not all(k in gy for k in nb) else 0.5 * y + 0.125 * sum(gy[k] for k in nb)
+    gy = n_
+for k, (co, uv_) in list(grid.items()): grid[k] = (Vector((co.x, gy[k], co.z)), uv_)
+npress = 0
+for o_ in (HEAD, BODY):
+    M = o_.matrix_world; Mi = M.inverted()
+    for v in o_.data.vertices:
+        w_ = M @ v.co
+        i = round((w_.x - BOXD[0]) / (BOXD[1] - BOXD[0]) * NX); j = round((w_.z - BOXD[2]) / (BOXD[3] - BOXD[2]) * NZ)
+        if (i, j) not in gy or w_.y < gy[i, j] - 0.03 or w_.y > gy[i, j] + 0.006: continue
+        w_.y = max(w_.y, gy[i, j] + 0.006); v.co = Mi @ w_; npress += 1
+    o_.data.update()
+print("decal relaxed, verts pressed behind it", npress)
 verts, uvs, faces, vid = [], [], [], {}
 for key, (co, uv_) in grid.items(): vid[key] = len(verts); verts.append(co[:]); uvs.append(uv_)
 for j in range(NZ):
