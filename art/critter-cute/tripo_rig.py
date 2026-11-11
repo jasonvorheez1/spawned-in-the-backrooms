@@ -250,8 +250,8 @@ bpy.data.objects.remove(camo)
 _bv = BVHTree.FromObject(HEAD, bpy.context.evaluated_depsgraph_get())
 _yc = sum(c.y for c in hb) / 8
 CROWN = _bv.ray_cast(Vector((0, _yc, 3)), Vector((0, 0, -1)))[0].z
-CHIN = EZ
-for zz in np.arange(EZ, HZ0, -0.002):
+CHIN = EZ - 0.1   # start under the nose, walk down the jaw to where it turns under
+for zz in np.arange(EZ - 0.1, HZ0, -0.002):
     h_ = _bv.ray_cast(Vector((0, -1, zz)), Vector((0, 1, 0)))
     if h_[0] is None or h_[1].z < -0.6: break
     CHIN = zz
@@ -352,7 +352,7 @@ for _ in range(3): clo = (clo + np.roll(clo, 1, 0) + np.roll(clo, -1, 0) + np.ro
 # grid skin (the face's closed hull in the middle, easing to the real surface at the rim) takes their place, textured from the head's own fur
 from mathutils.interpolate import poly_3d_calc
 import bmesh as _bm
-VAL = ~np.isnan(hgt); bvh0 = BVHTree.FromObject(HEAD, bpy.context.evaluated_depsgraph_get()); hm = HEAD.data; uvl = hm.uv_layers.active.data
+VAL = clo > -1; hgt = np.where(np.isnan(hgt), clo, hgt); bvh0 = BVHTree.FromObject(HEAD, bpy.context.evaluated_depsgraph_get()); hm = HEAD.data; uvl = hm.uv_layers.active.data
 pv, puv, pmat, pid = [], [], [], {}
 for i in range(NX + 1):
     for j in range(NZ + 1):
@@ -369,7 +369,8 @@ for i in range(NX + 1):
 def clean(mask):
     m = mask.copy()
     for _ in range(8): m[1:-1, 1:-1] &= m[:-2, 1:-1] & m[2:, 1:-1] & m[1:-1, :-2] & m[1:-1, 2:]
-    r, c = np.nonzero(m); kk = int(np.argmin(np.abs(lum[r, c] - np.median(lum[r, c])))); return Vector(((c[kk] + 0.5) / TW, (r[kk] + 0.5) / TH))
+    tgt = np.median(lum[SIJ[fur, 0], SIJ[fur, 1]])   # the fur tone around the face, not the atlas median
+    r, c = np.nonzero(m); kk = int(np.argmin(np.abs(lum[r, c] - tgt))); return Vector(((c[kk] + 0.5) / TW, (r[kk] + 0.5) / TH))
 _, cream_all = classes(px); UVF, UVC = clean(fur_all), clean(cream_all & (lum > 0.6))
 cm = np.zeros((NX + 1, NZ + 1))
 for (i, j), n in pid.items(): cm[i, j] = pmat[n]
