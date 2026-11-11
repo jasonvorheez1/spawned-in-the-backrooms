@@ -431,6 +431,20 @@ _relax = [v for v in bm.verts if (v.index not in moved or v.co.z < BOX[2] + 0.06
     ((BOX[0] - 0.09 < v.co.x < BOX[0] + 0.01 or BOX[1] - 0.01 < v.co.x < BOX[1] + 0.09) and BOX[2] < v.co.z < BOX[3] + 0.03))]
 for _ in range(45): _bm.ops.smooth_vert(bm, verts=_relax, factor=0.6, use_axis_x=True, use_axis_y=True, use_axis_z=True)
 print("sculpt relief relaxed (chin :3, lash flaps)", len(_relax), "BOX z0", round(BOX[2], 3))
+# the ':3' is FOLDED faces on the Head just under the muzzle decal: smoothing can't unfold them, so the band is
+# laid onto a least-squares surface y = f(x, z) fitted to the clean jaw around it (decal-pressed verts kept out)
+import numpy as _np
+_band = lambda v: abs(v.co.x) < 0.075 and BOX[2] + 0.02 < v.co.z < BOX[2] + 0.062 and v.co.y < -0.12
+_ring = [v for v in bm.verts if v.index not in moved and not _band(v) and abs(v.co.x) < 0.11 and BOX[2] - 0.01 < v.co.z < BOX[2] + 0.09 and v.co.y < -0.12]
+_feat = lambda x, z: [1, x * x, z, z * z, x * x * z, x ** 4]
+if len(_ring) > 12:
+    _A = _np.array([_feat(v.co.x, v.co.z) for v in _ring]); _k = _np.linalg.lstsq(_A, _np.array([v.co.y for v in _ring]), rcond=None)[0]
+    _ironed = 0
+    for v in bm.verts:
+        if _band(v) and (v.index not in moved or v.co.z < BOX[2] + 0.05):
+            v.co.y = float(_np.dot(_feat(v.co.x, v.co.z), _k)); _ironed += 1
+    for _ in range(6): _bm.ops.smooth_vert(bm, verts=[v for v in bm.verts if _band(v) and not v.is_boundary], factor=0.5, use_axis_x=True, use_axis_y=False, use_axis_z=True)
+    print("chin :3 folds ironed", _ironed, "ring", len(_ring))
 # the ':3' sculpt also sits on the Body's side of the neck seam (under the jaw): relaxed the same way, seam verts held so nothing opens
 _bb = _bm.new(); _bb.from_mesh(BODY.data)
 _rb = [v for v in _bb.verts if not v.is_boundary and v.co.y < -0.01 and BOX[0] - 0.03 < v.co.x < BOX[1] + 0.03 and BOX[2] - 0.16 < v.co.z < BOX[2] + 0.02]
@@ -464,7 +478,7 @@ for (i, j), (co, uv_) in list(grid.items()):   # smoothed normals: an even 3 mm 
 # the decal rode the old lumps (the body's chin and the old ':3' poke through under the muzzle): its depth is relaxed over the grid,
 # edge cells held, then any head or body vertex standing in front of it is pressed 2 mm behind it, so no bump shows through or around
 g0 = {k: co.y for k, (co, _) in grid.items()}; gy = dict(g0)
-for _ in range(2):   # was 14: a deep relax flattened the decal and pressed the head flat behind it, a plate from the side
+for _ in range(14):
     n_ = {}
     for (i, j), y in gy.items():
         nb = [(i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)]
@@ -477,8 +491,8 @@ for o_ in (HEAD, BODY):
     for v in o_.data.vertices:
         w_ = M @ v.co
         i = round((w_.x - BOXD[0]) / (BOXD[1] - BOXD[0]) * NX); j = round((w_.z - BOXD[2]) / (BOXD[3] - BOXD[2]) * NZ)
-        if (i, j) not in gy or w_.y < gy[i, j] - 0.008 or w_.y > gy[i, j] + 0.003: continue
-        w_.y = max(w_.y, gy[i, j] + 0.003); v.co = Mi @ w_; npress += 1
+        if (i, j) not in gy or w_.y < gy[i, j] - 0.03 or w_.y > gy[i, j] + 0.006: continue
+        w_.y = max(w_.y, gy[i, j] + 0.006); v.co = Mi @ w_; npress += 1
     o_.data.update()
 print("decal relaxed, verts pressed behind it", npress)
 verts, uvs, faces, vid = [], [], [], {}
