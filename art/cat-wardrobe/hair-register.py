@@ -34,15 +34,17 @@ T = {}
 for sex in ("f", "m"):
     tgt = load_mesh(SRC[sex], "Head"); tgt = tgt[np.random.default_rng(1).choice(len(tgt), min(4000, len(tgt)), replace=False)]; src = load_mesh(SCULPT[sex])
     rng = np.random.default_rng(0); src_s = src[rng.choice(len(src), min(1500, len(src)), replace=False)]
-    kd = cKDTree(tgt); best = None
-    lo, hi = tgt.min(0), tgt.max(0)
-    for R0 in rots():   # each axis turn: the sculpt's box stretched onto the head's box per axis, scored by two-way chamfer
-        p = src_s @ R0.T; pl, ph = p.min(0), p.max(0); k = (hi - lo) / (ph - pl); cur = (p - pl) * k + lo
-        d, _ = kd.query(cur); d2, _ = cKDTree(cur).query(tgt); e = float(np.mean(d) + np.mean(d2))
-        if best is None or e < best[0]: best = (e, R0, k, pl, lo)
-    e, R0, k, pl, lo2 = best
+    # the sculpt is a whole small cat facing +X; its head is everything above the neck (narrowest slice of the side-to-side width)
+    R0 = np.array([[0, 1, 0], [-1, 0, 0], [0, 0, 1.0]])   # +X front -> Blender front -Y
+    src = src @ R0.T; zs = np.linspace(src[:, 2].min(), src[:, 2].max(), 60)
+    wid = [np.ptp(src[(src[:, 2] > z0) & (src[:, 2] < z0 + 0.006), 0]) if ((src[:, 2] > z0) & (src[:, 2] < z0 + 0.006)).sum() > 5 else 9 for z0 in zs]
+    band = [(w, z) for w, z in zip(wid, zs) if -0.06 < z < 0.04]; zn = min(band)[1]
+    hd = src[src[:, 2] > zn]; tg = tgt[tgt[:, 2] > tgt[:, 2].min()]
+    sc = float(np.mean([np.ptp(tg, 0)[0] / np.ptp(hd, 0)[0], np.ptp(tg, 0)[2] / np.ptp(hd, 0)[2]]))
+    k = np.array([sc, sc, sc]); pl = np.array([(hd[:, 0].min() + hd[:, 0].max()) / 2, (hd[:, 1].min() + hd[:, 1].max()) / 2, hd[:, 2].min()])
+    lo2 = np.array([(tg[:, 0].min() + tg[:, 0].max()) / 2, (tg[:, 1].min() + tg[:, 1].max()) / 2, tg[:, 2].min()])
     T[sex] = (R0, k, pl, lo2, tgt)
-    print("REG", sex, "err_m", round(e, 4), "k", k.round(2))
+    print("REG", sex, "neck", round(float(zn), 3), "scale", round(sc, 3))
 for sex in ("f", "m"):
     R0, k, pl, lo2, tgt = T[sex]; kdh = cKDTree(tgt); ctr = (tgt.min(0) + tgt.max(0)) / 2
     for hp in sorted(glob.glob(f"/workspace/hair/cat/{sex}_*.glb")):
