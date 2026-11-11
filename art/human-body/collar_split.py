@@ -37,7 +37,7 @@ eb.select_flush_mode(); bmesh.update_edit_mesh(to.data)
 bpy.ops.mesh.duplicate(); bpy.ops.mesh.separate(type='SELECTED'); bpy.ops.object.mode_set(mode='OBJECT')
 new = [o for o in bpy.context.selected_objects if o is not to][0]; new.name = 'Skin_collar'; new.data.name = 'Skin_collar'
 if old:
-    oldf = {tuple(sorted((round(c,4) for c in (old.matrix_world @ v.co)) for v in [old.data.vertices[i] for i in p.vertices])) for p in old.data.polygons}
+    oldf = {tuple(sorted(tuple(round(c,4) for c in (old.matrix_world @ v.co)) for v in [old.data.vertices[i] for i in p.vertices])) for p in old.data.polygons}
     for o in bpy.context.selected_objects: o.select_set(False)
     new.select_set(True); bpy.context.view_layer.objects.active = new
     bpy.ops.object.mode_set(mode='EDIT'); eb = bmesh.from_edit_mesh(new.data)
