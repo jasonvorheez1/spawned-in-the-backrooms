@@ -131,7 +131,7 @@ export function catChildren(sex, look) {
     })
   }
   const ep = { ...skinParams(sex, look), fur: '', top: 0, bot: 0, sock: 0 }   // the fluff's own fur shader, plain: these ears carry no body UVs
-  const ears = (part) => ({ kind: 'scripted', script: 'scripts/mat-cloth.js', color: part === 'fur' ? (look?.fur || '#f3c98a') : part === 'inner' ? '#f2b3b0' : (l.fluffc || look?.fur || '#fff4e6'), params: { pat: 'plain' } })   // a plain tint (an unnamed pattern): a bare colour on a glb slot drew its own white, the fur shader painted them belly-pale
+  const ears = (part) => ({ color: part === 'fur' ? (look?.fur || '#f3c98a') : part === 'inner' ? '#f2b3b0' : (l.fluffc || look?.fur || '#fff4e6'), roughness: part === 'inner' ? 0.7 : 0.9 })   // plain tint on the white glb's named slots (every variant exports earFur/earInner/earTuft)
   const eg = W.ears?.[EARS.includes(look?.ears) ? look.ears : 'upright']?.[sex]   // sculpted ears (art/cat-wardrobe/ears.py): fur outside, pink bowl, cream tuft
   if (eg) out.push({ id: 'cw-ears', attachment: { skin: true }, model: { id: eg, forward: '+z', materials: {
     earFur: ears('fur'), earInner: ears('inner'), earTuft: ears('tuft') } } })
