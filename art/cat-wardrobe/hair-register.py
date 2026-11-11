@@ -40,9 +40,12 @@ for sex in ("f", "m"):
     wid = [np.ptp(src[(src[:, 2] > z0) & (src[:, 2] < z0 + 0.006), 0]) if ((src[:, 2] > z0) & (src[:, 2] < z0 + 0.006)).sum() > 5 else 9 for z0 in zs]
     band = [(w, z) for w, z in zip(wid, zs) if -0.06 < z < 0.04]; zn = min(band)[1]
     hd = src[src[:, 2] > zn]; tg = tgt[tgt[:, 2] > tgt[:, 2].min()]
-    sc = float(np.mean([np.ptp(tg, 0)[0] / np.ptp(hd, 0)[0], np.ptp(tg, 0)[2] / np.ptp(hd, 0)[2]]))
-    k = np.array([sc, sc, sc]); pl = np.array([(hd[:, 0].min() + hd[:, 0].max()) / 2, (hd[:, 1].min() + hd[:, 1].max()) / 2, hd[:, 2].min()])
-    lo2 = np.array([(tg[:, 0].min() + tg[:, 0].max()) / 2, (tg[:, 1].min() + tg[:, 1].max()) / 2, tg[:, 2].min()])
+    # cranium by width alone (ears differ between sculpt and cat), seated by the crown: the top of the skull between the ears
+    sc = float(np.ptp(tgt, 0)[0] / np.ptp(hd, 0)[0])
+    def crown(P): c = P[np.abs(P[:, 0] - P[:, 0].mean()) < 0.12 * np.ptp(P, 0)[0]]; c = c[np.abs(c[:, 1] - c[:, 1].mean()) < 0.25 * np.ptp(c, 0)[1]]; return c[:, 2].max()
+    k = np.array([sc, sc, sc])
+    pl = np.array([(hd[:, 0].min() + hd[:, 0].max()) / 2, (hd[:, 1].min() + hd[:, 1].max()) / 2, crown(hd)])
+    lo2 = np.array([(tgt[:, 0].min() + tgt[:, 0].max()) / 2, (tgt[:, 1].min() + tgt[:, 1].max()) / 2, crown(tgt)])
     T[sex] = (R0, k, pl, lo2, tgt)
     print("REG", sex, "neck", round(float(zn), 3), "scale", round(sc, 3))
 for sex in ("f", "m"):
