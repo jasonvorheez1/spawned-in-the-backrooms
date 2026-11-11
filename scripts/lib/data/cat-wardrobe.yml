@@ -47,15 +47,16 @@ masks:
   bagmask: { f: "/cdn/value.bc18246d4a4b2ba8ce84a1a92e6662b939f2fbe90cdc6fb9411dad9ae8167150.glb", m: "/cdn/value.8e5ac77aa50da1a896a947c90ee01816bc15f8483b822841bf66d4e3e71497aa.glb" }
   shellmask: { f: "/cdn/value.cc38d73c3aa334473337f765ebf45f20949ef21ef0547cdc513d53edd547e480.glb", m: "/cdn/value.45981231ad8af5dd54859ea8bc0d6a6b321f7f1906ebecaad555500f8ebb0c37.glb" }
 
+# fluff: art/cat-wardrobe/fluff.py v3 (Nov 11): slim 10-sided locks combed onto the skin, tips lift; was chunky and winged
 # Head tufts are sculpted on each cat rig in art/cat-wardrobe/style_fit.py (Nov 11: layered, pointed kemono locks).
 fluff:
-  bangs: { f: '/cdn/value.244c10c84f6b3b05d12828bf3ba99fb9c94476236f1de7e219b7d8bd248fdc31.glb', m: '/cdn/value.ebd2754e9df3219be0af45ebbe28fbfd7b06f538607f586cd3e7663fe799a83d.glb' }   # fur fringe over the brow (Shelly: "fur bangs on the head would be nice too")
-  burns: { f: '/cdn/value.303553aaded1f588e3131ae0fed0d90e75c14dbadc15506278762461767f018e.glb', m: '/cdn/value.310395d4d1ba31a043ebae075520338e4c0c629f6d2ac9fe18b4593a62b5824c.glb' }
-  cheeks: { f: '/cdn/value.c622647e029c4d9da0d479e399571f63f0f47b4a58fe795759ec29dd656bf3d6.glb', m: '/cdn/value.0cdf049099a9dd8e2f60ffe91472e1db6fb3e3449bb4cb10da722db0ee353d5e.glb' }
-  cowlick: { f: '/cdn/value.e4c3f6eca79f860d00ff385acad5f11c3eab7916dd9d5da5e95eafc29bd2a0cc.glb', m: '/cdn/value.7fb6c81a6acd943c9616c6e9a72ddab081bc20b8de0c4dec5f48054b5c30334e.glb' }
-  crest: { f: '/cdn/value.dc024776f375e1c1bb00f139ec87358a193e4017757aa7974b75828a6c0eac40.glb', m: '/cdn/value.c3240f6bd14000d556a254ec09c09f5d410c782a1f65eb965e8f095e0e20dc83.glb' }
-  lynx: { f: '/cdn/value.c5fb23528b3ebb23628f1b1d9ddfc50cbbd2720a2af208040c24581402fbab74.glb', m: '/cdn/value.0bbf9b5761c78889348806d54bd31af7eb05706462d5486b85ecdb1dd7af29c1.glb' }
-  nape: { f: '/cdn/value.7b96a42dded0df5984dd5e466f6f938589a7e8784f95edcf21fecd3304cf1836.glb', m: '/cdn/value.452f3b7bbdfb44d912aeb3aeeb20a6b7c34a50309957c535020a496957700813.glb' }
+  bangs: { f: '/cdn/value.6b9a5e1ccccdaf680220e740561e079f63f16bacd1b226ef452d36ac39f99bc4.glb', m: '/cdn/value.c5e23ef2e2704f545e785162beac27b65d6b309653436cda97f8dc533b9c29f9.glb' }   # fur fringe over the brow (Shelly: "fur bangs on the head would be nice too")
+  burns: { f: '/cdn/value.f4aad0d12a380ca53eea3f03aa387272de26c3e6975e0a71b99c7950f207e669.glb', m: '/cdn/value.b1c933e6faa348331cfa17b7e6ffef414bef1925b7a0afa93951c70b875f155f.glb' }
+  cheeks: { f: '/cdn/value.bb9e5311579b8365fb65f5366903be3c2d42341bb8b820e90f895bedde4f4075.glb', m: '/cdn/value.a194c483b83363414e15cd7c16f0b71fa74f25e8d0e8f1f830d9b19ff427a94a.glb' }
+  cowlick: { f: '/cdn/value.c520cd8bf5671decb30c96530dda5d069c4a072c69f2320bcf6def9c8eb7c9da.glb', m: '/cdn/value.b1eef825c6c138e4862a1e26f75daa1907f8dbee52d55b97e0edc3c6ff6f3cf9.glb' }
+  crest: { f: '/cdn/value.ac9827cf902572b6dd0f6ff6799d2ef177ac4f98383e75c2a2f3bc2ec9a69100.glb', m: '/cdn/value.c03ea920c4f7d8ea89f7a202baee5848a98e05882d90484399e4316aee3036be.glb' }
+  lynx: { f: '/cdn/value.bead68d68c6727e7fd5e728fd07c75f5448a759ec2f6063f56897442029d6078.glb', m: '/cdn/value.a2528ced416c61720328a3a0ca22a49e98a448bbb02f6ce5dbb2237865b5ebf0.glb' }
+  nape: { f: '/cdn/value.b229d3903dd6e4e56cec149df8ffe1c1b3db2f2717c80c84608ef49e217222d0.glb', m: '/cdn/value.54e76c85c8fcd79e73fa81d6ead39221f6547c8973cb12dca1330b07184b3327.glb' }
 
 # hairstyles (art/cat-wardrobe/hair-register.py); Nov 11 cleaned: strands smoothed away from the skull (seams kept as authored), a hair-coloured scalp cap only where hidden, double-sided: the Tripo hair carried onto the current cat heads, skinned to the head, tinted by look.hairc. look.hair: one key
 hair:
