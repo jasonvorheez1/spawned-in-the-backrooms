@@ -21,7 +21,13 @@ export function material(ctx) {
     const pic0 = ctx.texture(String(ctx.params.face)).sample(vec2(u, v));
     // a mouth type: its layer over the face picture, same projection (critter-faces.yml mouths)
     const mo = ctx.params.mouth ? ctx.texture(String(ctx.params.mouth)).sample(vec2(u, v)) : null;
-    const pic = mo ? vec4(mix(pic0.rgb, mo.rgb, mo.a), max(pic0.a, mo.a)) : pic0;
+    let pic = mo ? vec4(mix(pic0.rgb, mo.rgb, mo.a), max(pic0.a, mo.a)) : pic0;
+    // the sculpted head has its own nose (Shelly 'double noses'): the picture's painted nose is filled with the muzzle beside it
+    const nd = u.sub(0.5).div(0.07).pow(2).add(v.sub(0.36).div(0.055).pow(2)).sqrt();
+    const noseCut = smoothstep(1.0, 0.8, nd);
+    const sL = ctx.texture(String(ctx.params.face)).sample(vec2(u.sub(0.11), v)), sR = ctx.texture(String(ctx.params.face)).sample(vec2(u.add(0.11), v));
+    const fill = max(sL, sR);
+    pic = vec4(mix(pic.rgb, fill.rgb, noseCut), mix(pic.a, fill.a, noseCut));
     // on the snout the projection grazes its sides and the mouth smears: muzzle paint only lands where the surface faces the front
     const facing = mix(float(1), smoothstep(0.32, 0.62, normalLocal.z), muzzle);
     // iris: the picture's blue above max(r,g) is the iris shading (art/cat-wardrobe/iris.py); look.eyes colours it, the pupil stays black
