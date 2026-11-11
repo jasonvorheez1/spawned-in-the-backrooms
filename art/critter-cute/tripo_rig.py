@@ -1,5 +1,6 @@
 # Tripo cat: the ONE universal body set (female + male on one Mixamo rig).
 # run: blender -b --factory-startup --python-exit-code 1 --python art/critter-cute/tripo_rig.py -- female|male
+# For the in-game debug cats, pass this base rig and fitted clothes through profile_fit.py.
 # source -> scale (1.2 m, feet z=0, front -Y) -> split Body/Head -> rig + weights -> fur/fur2 slots (white fur, tintable)
 # -> face decal (picture faces, critter-faces.yml crop) -> outfit (cloth_top / cloth_bottom) -> Idle/Walk -> export -> audit -> proofs
 import bpy, bmesh, math, os, sys, json, struct, numpy as np

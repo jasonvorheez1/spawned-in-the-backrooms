@@ -1,11 +1,12 @@
 // The new Tripo cat's wardrobe (data: ./data/cat-wardrobe.yml; shader: scripts/mat-catskin.js). Painted garments are numbers handed to her skin shader;
 // modelled garments (Tripo) ride as skinned children with their region painted underneath. Only the new cat bodies use this: the old critter is untouched.
 import W from './data/cat-wardrobe.yml'
+import FACES from './data/critter-faces.yml'
 import { PRINTS } from '../mat-cloth.js'
 
 export const CAT_BODY = {
-  f: { glb: '/cdn/value.1c9d660a56da70413bf67f1c00a4194aa5f456fb27178f7e2729f94e60f7eb44.glb', fur: '/cdn/value.eb86c240c4daf27effe00523a7f1f216e7239f8eca99359e5a04fcf67c289a6f.jpg' },
-  m: { glb: '/cdn/value.b3b7f3f4c65dbde2bd3983d498035d4987f4f77d957d2cfbda109b394f44d612.glb', fur: '/cdn/value.a400e6f824bf75d1c5dfafb1cadbe30c177543404d39b9c350d4feadc8dfd313.jpg' }
+  f: { glb: '/cdn/value.e759597f7de3f7663f71c7d3b348c4fd993df70556ee7378d5bfb30b33753d14.glb', fur: '/cdn/value.eb86c240c4daf27effe00523a7f1f216e7239f8eca99359e5a04fcf67c289a6f.jpg' },
+  m: { glb: '/cdn/value.c78caefa2e222473e808a5a62ad54bd30dc3c43fe03258deafe2328e5c9df1e0.glb', fur: '/cdn/value.a400e6f824bf75d1c5dfafb1cadbe30c177543404d39b9c350d4feadc8dfd313.jpg' }
 }
 const rgb = (hex, lin = true) => { const n = parseInt(String(hex || '#ffffff').replace('#', '').slice(0, 6).padEnd(6, 'f'), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { const s = v / 255; return lin ? (s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4)) : s }) }
 const lerp = (a, b, t) => a + (b - a) * t
@@ -33,15 +34,38 @@ export function skinParams(sex, look) {
   if (p.top) { const t = p.top; o.top = 1; o.tLo = lerp(B.top[0], B.top[1], t.hem); o.tSl = armAt(B, t.sleeve); o.nF = B.neck[1] * t.scoop; o.nB = B.neck[2] * Math.min(t.scoop, 1.1); o.tpat = t.pat; put(o, 'top', t.c); if (t.band) { o.tband = 1; put(o, 'trim', t.trim || '#d98a9a') } }
   if (p.bot) { const b = p.bot; o.bot = 1; o.bLo = legAt(B, b.leg); o.bHi = B.waist + b.rise; o.bpat = b.pat; put(o, 'bot', b.c) }
   { const l = { ...W.defaults[sex], ...(look || {}) }   // modelled garments tuck the skin under them
-    o.tuckT = W.models[l.topw] ? 0.014 : 0; o.tuckB = W.models[l.botw] ? 0.01 : 0; o.tuckS = W.models[l.shoes] ? 0.006 : 0 }
+    if (W.models[l.topw]?.[sex]) {
+      o.tSl = B.arm[2] - 0.024
+      o.tHi += sex === 'm' ? 0.018 : 0.012
+      o.tuckT = 0.023
+    }
+    o.tuckB = W.models[l.botw]?.[sex] ? 0.014 : 0
+    o.tuckS = W.models[l.shoes]?.[sex] ? 0.011 : 0
+  }
   { const pr = printOf(sex, { ...W.defaults[sex], ...(look || {}) }); if (pr && !W.models[(look || {}).topw ?? W.defaults[sex].topw] && PRINTS[pr.pat]) { o.tprint = PRINTS[pr.pat].tex; o.tpx = pr.pax; o.tpy = pr.pay; o.tps = pr.psz } }
   if (p.sock) { o.sock = 1; o.sHi = lerp(B.leg[2], B.leg[1], p.sock.top); put(o, 'sock', p.sock.c) }
   return o
 }
 // the whole model spec: her body with the painted skin on both fur slots (fur takes the tint, fur2 is her pale belly/markings and stays as drawn)
 export function catModel(sex, look) {
-  const params = skinParams(sex, look), skin = (color) => ({ kind: 'scripted', script: 'scripts/mat-catskin.js', color, params })
-  return { id: CAT_BODY[sex].glb, forward: '+z', materials: { fur: skin(look?.fur || '#f3c98a'), fur2: skin('#ffffff') }, parts: { ClothTop: { visible: false }, ClothBottom: { visible: false } }}
+  const params = skinParams(sex, look)
+  const fur = look?.fur || '#f3c98a'
+  const faces = FACES.faces[sex === 'm' ? 'male' : 'female']
+  const expression = faces[look?.expression]
+  const face = typeof expression === 'string' ? expression : faces.neutral
+  const projection = sex === 'm' ? [2.9878, -2.2377, 0.105] : [2.9946, -2.0648, 0.055]
+  const skin = (color) => ({ kind: 'scripted', script: 'scripts/mat-catskin.js', color, params })
+  return {
+    id: CAT_BODY[sex].glb, forward: '+z',
+    materials: {
+      fur: skin(fur), fur2: skin('#ffffff'),
+      headFur: {
+        kind: 'scripted', script: 'scripts/mat-catskin.js', color: fur,
+        params: { face, faceVScale: projection[0], faceVBias: projection[1], faceNear: projection[2] }
+      },
+      innerEar: { color: look?.inner || '#d58e8a', roughness: 0.74 }
+    }
+  }
 }
 // the Chest slider 0..1 (look.chest), the body's Chest key; a top's cloth carries the same key so it swells with her
 export const chestOf = (look) => ({ Chest: Math.max(0, Math.min(1, +(look?.chest ?? 0.5))) })

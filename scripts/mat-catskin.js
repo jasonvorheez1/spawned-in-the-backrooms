@@ -11,6 +11,20 @@ export function material(ctx) {
   const P = (n, d = 0) => ctx.param(n, Number(ctx.params[n] ?? d));
   const C = (n) => vec3(P(n + "R", 1), P(n + "G", 1), P(n + "B", 1));
   const q = positionGeometry, ax = abs(q.x);
+  if (ctx.params.face) {
+    // Project the portrait in bind space so it follows the head through the full pose.
+    const v = q.y.mul(P("faceVScale")).add(P("faceVBias"));
+    const muzzle = smoothstep(0.30, 0.43, v).oneMinus();
+    const u = q.x.mul(float(2.75).mul(muzzle.mul(0.10).add(1))).add(0.5);
+    const inside = step(0, u).mul(step(u, 1)).mul(step(0, v)).mul(step(v, 1));
+    const front = smoothstep(0, 0.028, q.z.sub(P("faceNear")));
+    const pic = ctx.texture(String(ctx.params.face)).sample(vec2(u, v));
+    const col = mix(materialColor, pic.rgb, pic.a.mul(inside).mul(front));
+    m.colorNode = col;
+    m.emissiveNode = col.mul(0.06);
+    m.roughness = 0.68;
+    return m;
+  }
   const furT = ctx.params.fur ? ctx.texture(String(ctx.params.fur)).sample(vec2(uv().x, uv().y.oneMinus())).rgb : vec3(1, 1, 1);
   const fur = furT.mul(materialColor);
   // --- tail: a capsule line the garments leave a hole for
