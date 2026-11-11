@@ -39,17 +39,34 @@ def gap(tag, ang):
         if not (shx - 0.06 < abs(rest[i].x) < shx + 0.08 and rest[i].z > 1.25): continue
         p = T.matrix_world @ v.co; loc, nr, _, d = tr.find_nearest(p); s = (p - loc).dot(nr); band.append(d if s > 0 else -d)
     band.sort(); print(tag, ang, "shoulder band n", len(band), "min %.3f med %.3f p95 %.3f max %.3f" % (band[0], band[len(band)//2], band[int(len(band)*.95)], band[-1]))
+def swing(tag):
+    for ax in (0, 1, 2):
+      for sg in (40, -40):
+        for arm in (barm, tarm):
+            for sd in ('Left', 'Right'):
+                pb = arm.pose.bones[sd + 'Arm']; pb.rotation_mode = 'XYZ'; pb.rotation_euler = (0, 0, 0); pb.rotation_euler[2] = math.radians(70 if sd == 'Left' else -70)
+                pb.rotation_euler[ax if ax != 2 else 0] += math.radians(sg)
+        bpy.context.view_layer.update(); dg = bpy.context.evaluated_depsgraph_get(); bm = bmesh.new()
+        for o in skins:
+            t = bmesh.new(); t.from_object(o, dg); t.transform(o.matrix_world); me = bpy.data.meshes.new('t'); t.to_mesh(me); bm.from_mesh(me)
+        tr = BVHTree.FromBMesh(bm); me = T.evaluated_get(dg).to_mesh(); rest0 = [T.matrix_world @ v.co for v in T.data.vertices]; neg = 0; n = 0
+        for i, v in enumerate(me.vertices):
+            if abs(rest0[i].x) < shx + 0.02: continue
+            p = T.matrix_world @ v.co; loc, nr, _, d = tr.find_nearest(p); n += 1
+            if (p - loc).dot(nr) < -0.002: neg += 1
+        print(tag, "swing ax", ax, sg, "sleeve verts inside arm", neg, "of", n)
 for ang in (60, -60): gap('BEFORE', ang)
+swing('BEFORE')
 pose(0)
 rest = [T.matrix_world @ v.co for v in T.data.vertices]
-sel = [i for i, p in enumerate(rest) if shx - 0.08 < abs(p.x) < shx + 0.10 and p.z > 1.2]
+sel = [i for i, p in enumerate(rest) if abs(p.x) > shx - 0.08 and p.z > 1.15]   # whole sleeve + shoulder: sleeve rides the arm skin exactly
 # body weights at each band vertex: nearest skin face, barycentric blend, eased in over the band edges
 from mathutils.interpolate import poly_3d_calc
 Sm = S.data; SW = S.matrix_world
 sw = [{S.vertex_groups[g.group].name: g.weight for g in v.groups} for v in Sm.vertices]
 sbm = bmesh.new(); sbm.from_mesh(Sm); sbm.transform(SW); sbm.faces.ensure_lookup_table(); str_ = BVHTree.FromBMesh(sbm)
 for i in sel:
-    p = rest[i]; t = max(0, min(1, min(abs(p.x) - (shx - 0.08), (shx + 0.10) - abs(p.x), p.z - 1.2) / 0.03))
+    p = rest[i]; t = max(0, min(1, min(abs(p.x) - (shx - 0.08), p.z - 1.15) / 0.03))
     loc, nr, fi, d = str_.find_nearest(p)
     f = sbm.faces[fi]; vs = [v.co for v in f.verts]; bw = poly_3d_calc(vs, loc)
     new_w = {}
@@ -71,6 +88,7 @@ bpy.ops.object.mode_set(mode='OBJECT')
 for g in list(T.vertex_groups):
     if g.name not in tarm.data.bones: T.vertex_groups.remove(g)
 for ang in (60, -60): gap('AFTER', ang)
+swing('AFTER')
 pose(0)
 for o in bpy.data.objects: o.select_set(o in new)
 bpy.ops.export_scene.gltf(filepath=out, use_selection=True, export_apply=False, export_skins=True, export_morph=True, export_animations=False)
