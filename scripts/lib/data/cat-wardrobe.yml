@@ -47,23 +47,22 @@ masks:
   bagmask: { f: "/cdn/value.bc18246d4a4b2ba8ce84a1a92e6662b939f2fbe90cdc6fb9411dad9ae8167150.glb", m: "/cdn/value.8e5ac77aa50da1a896a947c90ee01816bc15f8483b822841bf66d4e3e71497aa.glb" }
   shellmask: { f: "/cdn/value.cc38d73c3aa334473337f765ebf45f20949ef21ef0547cdc513d53edd547e480.glb", m: "/cdn/value.45981231ad8af5dd54859ea8bc0d6a6b321f7f1906ebecaad555500f8ebb0c37.glb" }
 
-# fluff types (art/cat-wardrobe/fluff.py): head tufts skinned to the cat's head, white base tinted with her fur. look.fluff: a list of these keys
+# Head tufts and hairstyles are sculpted on each cat rig in art/cat-wardrobe/style_fit.py.
 fluff:
-  cheeks: { f: '/cdn/value.c3876d5c0acbb9c519d3fcd8a8c5d4a7e053b5100ac04f486327220c8bc2a0a1.glb', m: '/cdn/value.3f38dba0832eb1d8879708650e161609c91ce788d1f3b937dbf3a5d3a61ef976.glb' }
-  burns: { f: '/cdn/value.20de28aaac41151e9270efa124ab231df65c07ff8dbb8ef3b2ed4d453d8a1e6b.glb', m: '/cdn/value.9faf945cdb3b10a03f8590f248cb8dcc182f6b30a727a4b59bc0252594c6ffde.glb' }
-  crest: { f: '/cdn/value.4a2812de69892bd3f6c9e422c3b68b64d947864c1dd074665c6d6fa88b58ef8e.glb', m: '/cdn/value.afcf53efea3e6453721d3d4ded72bdcb7ce37446c05315ded8fec15aa909de6b.glb' }
-  lynx: { f: '/cdn/value.16067fdd5628e2c0c553eed7705b66a20b043a2611b6aead34165f88a1eeccac.glb', m: '/cdn/value.c11e73747df1c66decea2ceddb161c1fe7f814eec40d0e7d051c23a0d0d9dc59.glb' }
-  nape: { f: '/cdn/value.10179ccb4dd0c980e09040b18b29d63273cdeab07e2689eb20605fc015d56b85.glb', m: '/cdn/value.48d9eb5700cac55abdc5b2d3b034769d13965c49246029191f74b9f04f972e78.glb' }
-  cowlick: { f: '/cdn/value.698f2f00731d1752fe3a1656e088bb3978ca1d7bc9cc852d59a3da4ed78db5e3.glb', m: '/cdn/value.81b479affd812ec7ff7ac1be0092ecd6ebd76438ddf66b5d78dc3cf10a32ab9c.glb' }
+  burns: { f: '/cdn/value.2624373d429f12ddf8ea9c999a65bccb2b7120177c7b59102c44f37197c5c131.glb', m: '/cdn/value.fd18ce5da61083882f1ff16990032f71e5856035bf595f7aafe390f11fe1f645.glb' }
+  cheeks: { f: '/cdn/value.3b6f6bcd87b12f37ed6404d57eed66bcba49ca3993480c963208f06858d2897d.glb', m: '/cdn/value.b1a93c8ca124738979391d8ea6a318551152c40edf4696bc20b11ddf54ce2eca.glb' }
+  cowlick: { f: '/cdn/value.dbb5e9c3792ed7672905cc4d163c65bf5c15ebd71733931c16cfaf9b1f57e3c6.glb', m: '/cdn/value.3df13d2d73866c425fb819748de2a0130ab9cd58e8e6d462509b009cb478073e.glb' }
+  crest: { f: '/cdn/value.0d64dd5fea7c38d234c51ebd26cc405236ebf6ded9c0415a4c8057a65162d98e.glb', m: '/cdn/value.04b9d0b0e1755d309265d90db75a001dc26d4d007736f5dcacadddb2c9fe8486.glb' }
+  lynx: { f: '/cdn/value.8b49b5df71e6041972cca45d7d51c549ff549acb86157d7eb4b2f6ca5ed6db69.glb', m: '/cdn/value.6e498c17f72bfee6f9772cba4935f28fd6cfccf508fe3f9dbb8d744b5ab09fd4.glb' }
+  nape: { f: '/cdn/value.2547a28b55a76d1b7b4c75589828b9ca665607bb05f28a42367af77723ef0200.glb', m: '/cdn/value.c4fec0dbaec6194b22d10be9b48c2fd41d3abfbc1631fb565154a54de0f2b336.glb' }
 
-# hairstyles (art/cat-wardrobe/hair-register.py): the Tripo hair carried onto the current cat heads, skinned to the head, tinted by look.hairc. look.hair: one key
 hair:
-  afropuff: { f: '/cdn/value.dcc27484a90148205daabb02ef5ea1ecdbcae9b590571eef2730492e7021b3f2.glb' }
-  crop: { m: '/cdn/value.25bd58a740a6153e814fd02aa8aa32e150f0446b79d1a997e679e5443669aa2a.glb' }
-  halfup: { f: '/cdn/value.9369c4dd96617ea2d32f4658b9ac24f3a987650c0429a64ba50a41a3db5b4c85.glb' }
-  long: { m: '/cdn/value.c0759ed3e12f2a83edf7d43ae083ba423b8e675eca612a9e71d6dd5bbad42703.glb' }
-  pixie: { f: '/cdn/value.649c534dd0e4aa833d4700600609622ee9102159d61ba0aac1301358c1b66d51.glb' }
-  shaggy: { m: '/cdn/value.e33da16fe7c51e35ccc7e953e2d96edbc7236af7d19f2419453c056d777af094.glb' }
-  sidetail: { f: '/cdn/value.cb055c07a254d6c523707891790cc7b1d6e7fc89ecf9a10f26ef5db026737408.glb' }
-  twintails: { f: '/cdn/value.1df6dab4d1e0452d6258d60232764c51fb2d1030d6169d569a792e69ef1e9547.glb' }
-  undercut: { m: '/cdn/value.66e7e5dbed6c98fc262220da8a5ef42dc01cb53a3b050f7191f942c565b9bcd7.glb' }
+  afropuff: { f: '/cdn/value.f8511d525ae367674429160104cebdaf2767586418e7ac87fe8ca5083a86513d.glb', m: '/cdn/value.681676b9e5c4aee1087480862bbd4af731e65fb61d451ec2e2669659b2db3b1a.glb' }
+  crop: { f: '/cdn/value.818ed7952b816efa209f40fcb4c8fe00f9d9afd0fa4e4d51e3252f7334a1c99b.glb', m: '/cdn/value.2ad3e093370c0605ebcb5be2deb386e0173df6e2ba3d40ce0ec92a594ac4979c.glb' }
+  halfup: { f: '/cdn/value.14f9162ff1a6d219e9c09993fed1a1f4047dad8682ecd6af27f05073f5004f73.glb', m: '/cdn/value.d0be047308c73ab5ff4c1e7d54ccc3f107e609315002513710fe19d5d3d618d1.glb' }
+  long: { f: '/cdn/value.6c8211253255088534611d6e686c7cf813fe99fb6a227eabda65247866208deb.glb', m: '/cdn/value.28e76ccf49bba1bcd2dd93e30cd6e04f103c83ae4cbea3574f5d752eb1e15380.glb' }
+  pixie: { f: '/cdn/value.5128d3f06b55cbd5da6448033b10a577355ebf2f30d1b8ee07d5fc5772c95842.glb', m: '/cdn/value.f4eb60c24d62752405135018a2f177a054ddaff978d1325dee6a90749caf6f57.glb' }
+  shaggy: { f: '/cdn/value.73d1741b3c956d18b75e6e178b394736c0018d87015a9655769f00ecdc2367c7.glb', m: '/cdn/value.43e947bc95247b9aebcc2d08082232eedd8fbbb015cacdc5e82dbcbd00342798.glb' }
+  sidetail: { f: '/cdn/value.5d59d4a1f3032c1e78c12d64963df3e0a8f7acdb6ab6baf145432c8c20f89b87.glb', m: '/cdn/value.75816ff1120b569225bbd4968946249359d848edf7b11fac79ab2642abfb87a1.glb' }
+  twintails: { f: '/cdn/value.f5ff3368a42894877cbff766505d9c8655295a4826c199300b1f2106d6d36ccc.glb', m: '/cdn/value.2287d0528dff30b1e4af4891c7e836448ec32f8df32ee9b0175cbafc1fbb642e.glb' }
+  undercut: { f: '/cdn/value.c45acda84bcef9135fd232874a6f526c9173e5289d0c5281151491b8ad4f36d3.glb', m: '/cdn/value.431ae90a0cea75cb3a861e911981b3e3d40128f74ff210d0e77c4b8aa455c3fa.glb' }
