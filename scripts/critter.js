@@ -5,7 +5,7 @@ import { plainLook, honest, wornTokens, parseCloth } from './lib/clothes.js'
 import C from './lib/data/critter.yml'
 import { standUp } from './lib/seat.js'
 const SCRIPT = 'scripts/critter2-geo.js'
-import { FURRY_HEAD, bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, STYLE_V, seatHead, clearAppearance, humanBodyMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard, speciesOf } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
+import { FURRY_HEAD, armSplay, bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, STYLE_V, seatHead, clearAppearance, humanBodyMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard, speciesOf } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
 const LID_SCALE = 1000 // the lids are modelled this many times too small (scripts/critter2-geo.js)
 const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 import { weaponBody, HOLD } from './lib/weapon-look.js'
