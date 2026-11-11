@@ -2,7 +2,7 @@
 // from the body's bind-pose position (positionGeometry: metres, y up, front +z, arms out along x), so a hem is a clean line and nothing can clip or tear.
 // The material colour is the fur tint (white fur picture × colour). Every number and colour is a live param (ctx.param): one compiled program dresses every cat.
 // params: fur (picture), top/bot/sock = 0|1, pats, hems (see scripts/lib/cat-wardrobe.js catSkin), colours as r,g,b triples.
-import { uv, materialColor, positionGeometry, normalGeometry, positionLocal, normalLocal, positionWorld, normalWorld, cameraPosition, normalize, dot, pow, saturate, vec2, vec3, float, abs, fract, sin, mix, smoothstep, step, max, min, clamp, mx_noise_float, mx_fractal_noise_float } from "builtin/tsl";
+import { uv, materialColor, positionGeometry, positionLocal, normalLocal, positionWorld, normalWorld, cameraPosition, normalize, dot, pow, saturate, vec2, vec3, float, abs, fract, sin, mix, smoothstep, step, max, min, clamp, mx_noise_float, mx_fractal_noise_float } from "builtin/tsl";
 import { MeshStandardNodeMaterial } from "builtin/three";
 
 const E = 0.0025; // edge softness, metres
@@ -20,7 +20,7 @@ export function material(ctx) {
     const front = smoothstep(0, 0.028, q.z.sub(P("faceNear")));
     const pic = ctx.texture(String(ctx.params.face)).sample(vec2(u, v));
     // on the snout the projection grazes its sides and the mouth smears: muzzle paint only lands where the surface faces the front
-    const facing = mix(float(1), smoothstep(0.32, 0.62, normalGeometry.z), muzzle);
+    const facing = mix(float(1), smoothstep(0.32, 0.62, normalLocal.z), muzzle);
     const col = mix(materialColor, pic.rgb, pic.a.mul(inside).mul(front).mul(facing));
     m.colorNode = col;
     m.emissiveNode = col.mul(0.06);
