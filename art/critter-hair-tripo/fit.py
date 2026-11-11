@@ -273,7 +273,7 @@ if not TUNE.get("noscalp"):
     for i in keep:
         fa = bb.faces[i]; vs = []
         for v in fa.verts:
-            if v.index not in vmap: vmap[v.index] = bb2.verts.new(v.co + v.normal * (0.0012 * Hb))
+            if v.index not in vmap: vmap[v.index] = bb2.verts.new(v.co + v.normal * ((0.003 if TUNE.get("nape") else 0.0012) * Hb))
             vs.append(vmap[v.index])
         try: bb2.faces.new(vs)
         except ValueError: pass
