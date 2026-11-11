@@ -103,9 +103,9 @@ for sd in 'LR':
     if len(loop)<3 or start not in adj[cur]: continue
     cx=sum(W(me.vertices[rep[(k,sd)]]).x for k in loop)/len(loop)
     push=0.003*(1 if (sd=='L')==(lsign>0) else -1)
-    nv=[]
-    for k in loop:
-      src_=bm.verts[rep[(k,sd)]]; c=bm.verts.new(src_.co.copy()); c.co.x+=push/ M.to_scale().x
+    nv=[]; bm.verts.ensure_lookup_table(); srcs=[bm.verts[rep[(k,sd)]] for k in loop]
+    for src_ in srcs:
+      c=bm.verts.new(src_.co.copy()); c.co.x+=push/ M.to_scale().x
       for g,x in src_[dl].items(): c[dl][g]=x
       nv.append(c)
     try: f=bm.faces.new(nv)
