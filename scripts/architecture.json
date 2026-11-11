@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 5081,
-  "updatedAt": "2026-11-11T07:18:59.468Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning an authored Level 0 maze, deeper levels, and shared destinations. `templates/player.js` composes player behaviors; place simulations and shared scripts own environments, NPCs, combat, loot, crafting, UI, avatar presentation, and progression. Critters are the default avatar style; players can switch the world to human bodies from the menu.",
+  "basedOnSpecVersion": 5109,
+  "updatedAt": "2026-11-11T07:49:26.144Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning an authored Level 0 maze, deeper levels, and shared destinations. `templates/player.js` composes player behaviors; place simulations and shared scripts own environments, NPCs, combat, loot, crafting, UI, avatar presentation, and progression. Critters remain the default avatar style; humans are selectable, and the current furry body is the Dandy model.",
   "scriptPaths": [],
   "places": [
     "places/bonus (3D) - vaporwave mall with authored shops and landmarks, simulated staff/shoppers, arcade, salon, and lighting effects; people follow the world body-style setting.",
@@ -39,7 +39,7 @@
     "scripts/grab.js - setDown, onInput, update, looseSpent; scripts/kick.js - onInput, kickSnap, kickEnd, update.",
     "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, onInput, hitTarget, fishNibble, HOLO and holoEnd; throwable fuse/arm callbacks and blast hits.",
     "scripts/lib/quick-items.js - quickItems, assignQuick; scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
-    "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - setStyle, HUMAN, STYLE_V (sw146), body/face/head/spec, hair/wardrobe seating, restyle/clearAppearance, humanBodyMorph, speciesOf, anime, FURRY_HEAD.",
+    "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - setStyle, HUMAN, STYLE_V (sw149), body/face/head/spec, hair/wardrobe seating, restyle/clearAppearance, humanBodyMorph, speciesOf, anime, FURRY_HEAD and body/pose helpers.",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, stagger3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
     "scripts/lib/craft.js - recipeStatus, maxMakes, craftOne, benchAvailable, stationOf, scrapCount, CRAFT_LIMIT, CATS; scripts/craft.js - onInput, update.",
     "scripts/lib/prop-interactions.js - propKind, interactiveSpec, upgradeProp, containerPose, toggleLamp, upgradeNearby; scripts/lib/prop-easing.js - MOTION_MS, sampleMotion, propFrames; scripts/l11-masonry.js - geometry, collider."
@@ -59,7 +59,7 @@
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes aimPt and ranged aimPitch → player.js ballistics.",
     "scripts/routing.js accepts permitted requested rooms; otherwise scripts/lib/hub.js soloRoom selects the player's solo Backrooms room and bonus overflow IDs; toHub/toSolo perform crossings and track roomHop/save-place state.",
     "Fresh visit → scripts/main-menu.js; START enters intake for creation or bonus for completed characters; wardrobe close runs intro-cut then tutorial0 unless t0Done; menu UI renders on menuOpen and solo pause sets place.timeScale.",
-    "Main-menu BODIES action → player.state.bodyStyle and world.state.bodyStyle; scripts/lib/critter-model.js setStyle reads world bodyStyle and selects humans only for 'human', otherwise furry; Bonus sim applies this before NPC updates/re-dress.",
+    "Main-menu BODIES action → player.state.bodyStyle and world.state.bodyStyle; scripts/lib/critter-model.js setStyle reads world bodyStyle and selects humans only for 'human', otherwise furry; Bonus sim applies this before NPC updates/redress.",
     "scripts/lib/hub.js destinations → hub-ui.js and hub.js crossings; Bonus sim lays NPCs/effects and mall counters write shop/food state consumed by handlers/UI.",
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; weapon variants roll through weapons.js.",
     "interact.js focus → player.state.focus and loot-ui.js prompt only on the play screen; ui-theme/screen hide prompts behind panels; interact.js clears focus outlines in menus/talk/cutscenes/build mode.",
@@ -71,11 +71,11 @@
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/lib/bonus-extra.js + mall-shopper.js/salon-stylist.js/salon-ui.js - authored mall, simulated mall life, salon and one-time neon/fountain lighting effects.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + home reconstruction scripts - per-piece models/dimensions with common placement, persistence and rebuild path.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preserving root state.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preserving state.",
     "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + Zenith door/bots/hatch/flicker/drones/use scripts - Zenith Station geometry, breach, hazards and interactive systems.",
     "places/level4/cells/x0z0.scene + places/level4/sim.js + scripts/l4-office.js/l4-office-geo.js/l4-home.js + Level 4/5 people data - authored office/hotel, props, fixtures, residents and hazards.",
-    "scripts/lib/critter-model.js + scripts/lib/data/critter-models.yml + wardrobe-split.yml + ward-slots.yml + critter/faces/hair/model data + art/human-cloth/body/rig/transfer/body-shape and art/human-body - shared critter default and optional split-skinned human avatar families; runtime style set by world.bodyStyle, STYLE_V sw146.",
-    "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js + scripts/lib/data/combat-anims.yml - retargeted first-person and DS third-person melee families select strikes by weapon type; combat poses are shared across weapons.",
+    "scripts/lib/critter-model.js + scripts/lib/data/critter-models.yml + wardrobe-split.yml + ward-slots.yml + critter/faces/hair/model data + art/human-cloth/body/rig/transfer/body-shape and art/human-body - Dandy furry default and optional human body/face/hair/garment selection, shared by players and NPCs; Andy morph tooling is a prototype, not the selected runtime body.",
+    "art/nv-melee/retarget.py + smooth.py + scripts/lib/data/nv-swings.js + scripts/lib/vmpose.js + scripts/lib/data/combat-anims.yml - retargeted first-person and DS third-person melee families select strikes by weapon type; combat poses are shared.",
     "Level 11 geometry family: scripts/l11-mall.js, scripts/l11-masonry.js and scripts/l11-reno.js parameterize mall, canal bridge/quay/guard and renovation-office pieces; tests/level11-reference.test.js checks bridge clearance and rebuild fit."
   ],
   "probableOrphans": [
@@ -83,11 +83,11 @@
     "scripts/hairtest-rig.js - header marks it as a temporary hair lane test rig; no tree/package references found."
   ],
   "migrationNotes": [
-    "Human avatar STYLE_V is sw146: furry is the default again; human NPCs restyle to critters, while human bodies remain selectable. The male body was reshaped and all 77 male garments refit via art/body-shape/run3.sh.",
+    "Human avatar STYLE_V is sw146: furry is the default again; human-born NPCs restyle to critters, while human bodies remain selectable. The male body was reshaped and all 77 male garments refit via art/body-shape/run3.sh.",
     "The male human body and matching split body in scripts/lib/data/critter-models.yml and wardrobe-split.yml use /cdn/value.ffa88b12900006be2f285f876caccb1174e0519858a6ba51e529ac8a6d360180.glb; update both references when replacing it.",
-    "Human avatars use split skinned wardrobe children and a separate Skin_collar region for neckline skin; preserve body/garment material-slot and skin-coverage compatibility when rebuilding assets.",
-    "scripts/lib/data/critter-models.yml registers bodies; wardrobe-split.yml maps each sex's body and garment GLBs; ward-slots.yml assigns each GLB's material slots. Keep all three aligned when regenerating or replacing split assets.",
+    "Human avatars use split skinned wardrobe children and a separate Skin_collar region for neckline skin; preserve body/garment material-slot and skin-coverage compatibility when rebuilding assets. Keep critter-models.yml, wardrobe-split.yml and ward-slots.yml aligned.",
     "The plain inner tee is a separate skinned child for open-front tops; wardrobe-split.yml inner and ward-slots.yml must continue pointing to its cloth_top asset.",
-    "Male Ward_jeans and Ward_jeans_tuck remain split at the leg midline with separate rebuilt inner panels; boots select the tucked variant ending inside the shaft. Preserve cloth_bottom/button slot alignment in ward-slots.yml."
+    "Male Ward_jeans and Ward_jeans_tuck remain split at the leg midline with separate rebuilt inner panels; boots select the tucked variant ending inside the shaft. Preserve cloth_bottom/button slot alignment in ward-slots.yml.",
+    "Critters currently use the Dandy bodies (/cdn/value.06a60b4a5b3965c032abe1a55667ec1dc71e355f399abde039a355139ee388ec.glb and /cdn/value.8021d9842ea70817ecba60b5a0239345239251aa5cbfccf519d9b7e0e37737e8.glb) with Dandy morph; the Andy art/critter-andy pipeline is not active because its uploaded multi-mesh morph tore garments. bodyOld keeps the earlier furry IDs recognizable for restyle migration."
   ]
 }
