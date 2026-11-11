@@ -20,6 +20,11 @@ def slitverts():
 sv = slitverts(); print("slit verts before", len(sv))
 bmesh.ops.remove_doubles(bm, verts=sv, dist=dist)
 print("left", sorted((round((M@v.co).x,3),round((M@v.co).z,3)) for v in slitverts())); print("slit verts after", len(slitverts()), "boundary", sum(1 for e in bm.edges if e.is_boundary))
+# second pass: the armpit end of the slit (inboard of the cuff) closes over a wider gap
+rest = [v for v in slitverts() if abs((M @ v.co).x) < 0.275]
+print("armpit leftovers", len(rest))
+if rest: bmesh.ops.remove_doubles(bm, verts=rest, dist=0.03)
+print("after armpit pass", len(slitverts()))
 bm.to_mesh(T.data); bm.free()
 for o in bpy.data.objects: o.select_set(True)
 bpy.ops.export_scene.gltf(filepath=out, use_selection=True, export_apply=False, export_skins=True, export_morph=True, export_animations=False)
