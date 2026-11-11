@@ -18,7 +18,7 @@ for o in skins:
     for e in me.edges:
         k1, k2 = key(W[e.vertices[0]]), key(W[e.vertices[1]])
         nb.setdefault(k1, set()).add(k2); nb.setdefault(k2, set()).add(k1)
-band = [k for k, p in pos.items() if ZLO < p.z < ZHI and abs(p.x) < 0.24]
+band = [k for k, p in pos.items() if ZLO < p.z < ZHI and abs(p.x) < (0.24 if p.y < 0 else 0.16)]  # wide at the front; wide at the back opened a gap under the nape
 cur = {k: pos[k].copy() for k in pos}
 for _ in range(IT):
     nxt = {}
