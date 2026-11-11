@@ -151,7 +151,6 @@ def build(sex, kind, arm, H, meas, bone):
     o = bpy.data.objects.new(f"ears-{kind}", me); bpy.context.collection.objects.link(o)
     for n, col in (("earFur", (1, 1, 1, 1)), ("earInner", (1, 1, 1, 1)), ("earTuft", (1, 1, 1, 1))):   # white: the game tints each slot (fur colour, pink, fluff colour)
         old = bpy.data.materials.get(n)
-        if old: old.name = n + "_was"   # one slot name per file: the last variant's 'earFur' steps aside so this one exports as 'earFur', never 'earFur.001'
         mt = bpy.data.materials.new(n); mt.diffuse_color = col; mt.use_nodes = True
         mt.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = col; me.materials.append(mt)
     sub = o.modifiers.new("s", "SUBSURF"); sub.levels = 1
@@ -186,6 +185,9 @@ for sex in ([a for a in sys.argv[sys.argv.index("--") + 1:] if a in SRC] if "--"
     for kind, o in objs.items():
         for x in bpy.data.objects: x.select_set(False)
         o.select_set(True); arm.select_set(True)
+        for m in bpy.data.materials:   # the slot names the game tints: this file's own earFur/earInner/earTuft, every other variant's stepped aside
+            if m.name.split(".")[0].startswith("ear"): m.name = "x" + m.name
+        for m in o.data.materials: m.name = m.name.lstrip("x").split(".")[0].split("_")[0]
         bpy.ops.export_scene.gltf(filepath=f"{OUT}/{kind}-{sex}.glb", use_selection=True, export_skins=True, export_animations=False, export_apply=False)
     if "noproof" not in sys.argv: proof(sex, objs, H, meas)
     if "body" in sys.argv: hide_body(sex)
