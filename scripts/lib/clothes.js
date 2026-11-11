@@ -22,8 +22,10 @@ export function fullLook(look) {
   return l
 }
 // the table row for a garment: a strict row (M.E.G. lime) wins when its colour matches
+// Shelly Nov 11 (#202602): "just delete all the clothing were starting over". Every outfit is off players and NPCs until the new skin-grown clothes land; false brings the old rows back
+export const CLOTHES_OFF = true
 export function rowOf(slot, kind, colour) {
-  if (!kind || kind === 'none') return null
+  if (CLOTHES_OFF || !kind || kind === 'none') return null
   const c = hex(colour)
   return CL.rows.find((r) => r.slot === slot && r.id === kind && r.id !== r.kind)
     ?? CL.rows.find((r) => r.slot === slot && r.kind === kind && r.strict && r.colours.includes(c))
