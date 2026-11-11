@@ -642,7 +642,7 @@ pop mist rate=5 on=arc(1.4,6.283,.4) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0
       info: "1980s retro jukebox.",
       tint: "#ff3888",
     },
-    ui: `<div face="front" width="0.75m" style="font-family:Arial,sans-serif;font-weight:900;background:#0d0d18;color:#ffffff;padding:12px;border:2px solid #ff3888;text-align:center;line-height:1.15;box-shadow:inset 0 0 15px rgba(255,255,255,0.2)">
+    ui: `<div face="front" width="0.75m" style="font-family:Arial,sans-serif;font-weight:900;background:#0d0d18;color:#ffffff;padding:12px;border:2px solid #ff3888;text-align:center;box-shadow:inset 0 0 15px rgba(255,255,255,0.2)">
       <div style="font-size:22px;color:#ff6bb0;letter-spacing:1px;margin-bottom:4px">★ NOW PLAYING ★</div>
       <div style="font-size:42px;color:#ffffff;font-weight:900;border-bottom:1px solid #ff3888;padding-bottom:4px;margin-bottom:6px">A1 · SIDE A</div>
       <div style="font-size:24px;color:#ff6bb0;margin-bottom:6px">POP HITS &amp; NEW WAVE</div>

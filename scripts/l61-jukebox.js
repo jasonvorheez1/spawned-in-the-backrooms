@@ -41,7 +41,7 @@ function renderDisplay(station, playing) {
     </div>`;
   }
 
-  return `<div face="front" width="0.75m" style="font-family:Arial,sans-serif;font-weight:900;background:#0d0d18;color:#ffffff;padding:12px;border:2px solid ${station.color};text-align:center;line-height:1.15;box-shadow:inset 0 0 15px rgba(255,255,255,0.2)">
+  return `<div face="front" width="0.75m" style="font-family:Arial,sans-serif;font-weight:900;background:#0d0d18;color:#ffffff;padding:12px;border:2px solid ${station.color};text-align:center;box-shadow:inset 0 0 15px rgba(255,255,255,0.2)">
     <div style="font-size:22px;color:${station.badge};letter-spacing:1px;margin-bottom:4px">★ NOW PLAYING ★</div>
     <div style="font-size:42px;color:#ffffff;font-weight:900;border-bottom:1px solid ${station.color};padding-bottom:4px;margin-bottom:6px">${station.name.toUpperCase()}</div>
     <div style="font-size:24px;color:${station.badge};margin-bottom:6px">${station.genre.toUpperCase()}</div>

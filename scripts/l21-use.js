@@ -160,7 +160,7 @@ export const ears = {
       const have = need ? Object.entries(need).every(([k, n]) => (sc[k] ?? 0) >= n) : (w.l21Scouted ?? 0) >= 1;
       if (!have) {
         const list = need ? Object.entries(need).map(([k, n]) => `${sc[k] ?? 0}/${n} ${NAME[k]}`).join(", ") : "explore further east";
-        ctx.self.ui = `<div face="front" width="1.4m" style="font-family:Arial,sans-serif;font-weight:900;color:#e8e0c0;text-align:center;line-height:1.15;background:#181814;padding:8px;border:2px solid #8b7355"><div style="font-size:46px;color:#f2d870;border-bottom:1px solid #8b7355;margin-bottom:6px">ERRAND: ${q.name.toUpperCase()}</div><div style="font-size:32px;color:#ffffff;margin-bottom:4px">REQUIRED: ${list.toUpperCase()}</div><div style="font-size:24px;color:#a8d8c8">SEE NED IN REFRIGERATOR PARADISE</div></div>`;
+        ctx.self.ui = `<div face="front" width="1.4m" style="font-family:Arial,sans-serif;font-weight:900;color:#e8e0c0;text-align:center;background:#181814;padding:8px;border:2px solid #8b7355"><div style="font-size:46px;color:#f2d870;border-bottom:1px solid #8b7355;margin-bottom:6px">ERRAND: ${q.name.toUpperCase()}</div><div style="font-size:32px;color:#ffffff;margin-bottom:4px">REQUIRED: ${list.toUpperCase()}</div><div style="font-size:24px;color:#a8d8c8">SEE NED IN REFRIGERATOR PARADISE</div></div>`;
         snd("container-open-rustle", 0.5);
         ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: `ERRAND: ${q.name.toUpperCase()} (${list.toUpperCase()})`, color: "#f2d870", size: 1.15 }, { audience: { player: who.id } });
         return;
@@ -174,7 +174,7 @@ export const ears = {
       w.payout = { xp, items, text: `ERRAND DONE: ${q.name}${bonus ? " · Survivors bonus" : ""}${tier ? ` · ${tier}` : " · Survivors +2"}` };
       const line = "Good work on that salvage. That keeps the freezers running.";
       heard(ctx, { clip: vo("hollis", line), position: pos, volume: 0.9, maxDistance: 16 });
-      ctx.self.ui = `<div face="front" width="1.4m" style="font-family:Arial,sans-serif;font-weight:900;color:#e8e0c0;text-align:center;line-height:1.15;background:#181814;padding:8px;border:2px solid #3fa860"><div style="font-size:46px;color:#7aff9a;border-bottom:1px solid #3fa860;margin-bottom:6px">ERRAND COMPLETED!</div><div style="font-size:32px;color:#ffffff;margin-bottom:4px">${q.name.toUpperCase()} (+${xp} XP)</div><div style="font-size:24px;color:#a8d8c8">BOUNTY PAID IN CASH &amp; SUPPLIES</div></div>`;
+      ctx.self.ui = `<div face="front" width="1.4m" style="font-family:Arial,sans-serif;font-weight:900;color:#e8e0c0;text-align:center;background:#181814;padding:8px;border:2px solid #3fa860"><div style="font-size:46px;color:#7aff9a;border-bottom:1px solid #3fa860;margin-bottom:6px">ERRAND COMPLETED!</div><div style="font-size:32px;color:#ffffff;margin-bottom:4px">${q.name.toUpperCase()} (+${xp} XP)</div><div style="font-size:24px;color:#a8d8c8">BOUNTY PAID IN CASH &amp; SUPPLIES</div></div>`;
       ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.5, z: pos.z }, text: `+${xp} XP`, color: "#ffd700", size: 1.3 }, { audience: { player: who.id } });
       ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.1, z: pos.z }, text: `ERRAND DONE: ${q.name.toUpperCase()}`, color: "#80ffaa", size: 1.0 }, { audience: { player: who.id } });
       return;

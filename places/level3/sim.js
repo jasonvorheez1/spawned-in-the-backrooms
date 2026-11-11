@@ -101,7 +101,7 @@ function layGammaSignage(ctx) {
   const a = cellCenter(1, ARRIVE.cz);
   // Corridor outside Base Gamma heading into the station:
   ctx.spawn({ tags: ["l3sign"], feetPosition: { x: a.x + 10.5, y: 1.8, z: a.z }, rotation: { yaw: -90 }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 2.2, height: 0.55, depth: 0.02 }, material: { color: "oklch(0.24 0.03 140)", roughness: 0.85 },
-    ui: '<div face="left" width="2.2m" style="font-size:95px;font-weight:900;color:#d8e8b0;text-align:center;line-height:1.15">◄ M.E.G. BASE GAMMA<div style="font-size:55px;color:#a8c880">CHECKPOINT · WEAPONS HOLSTERED · REFUGE</div></div>' });
+    ui: '<div face="left" width="2.2m" style="font-size:95px;font-weight:900;color:#d8e8b0;text-align:center">◄ M.E.G. BASE GAMMA<div style="font-size:55px;color:#a8c880">CHECKPOINT · WEAPONS HOLSTERED · REFUGE</div></div>' });
   // Blood test directive stencil on wall:
   ctx.spawn({ tags: ["l3sign"], feetPosition: { x: a.x + 6.2, y: 0.9, z: a.z + 4.5 }, rotation: { yaw: 0 }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 2.0, height: 0.45, depth: 0.02 }, material: { color: "oklch(0.22 0.02 240)", roughness: 0.9 },
     ui: '<div face="front" width="2.0m" style="font-size:80px;font-weight:900;color:#e8f0c0;text-align:center;line-height:1.2">SECURITY DIRECTIVE<div style="font-size:50px;color:#c8d890">MANDATORY BLOOD TEST · ANTI-STEALER PROTOCOL</div></div>' });
@@ -116,7 +116,7 @@ function layGammaSignage(ctx) {
     const o0 = OOB[0];
     const e = o0.d === 0 ? { x: (o0.cx + 1) * S - HALF, z: o0.cz * S - HALF + S / 2 } : { x: o0.cx * S - HALF + S / 2, z: (o0.cz + 1) * S - HALF };
     ctx.spawn({ tags: ["l3sign"], feetPosition: { x: e.x, y: 0.9, z: e.z }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 0.8, height: 0.35, depth: 0.02 }, material: { color: "oklch(0.22 0.03 30)" },
-      ui: '<div face="front" width="0.8m" style="font-size:65px;font-weight:900;color:#ff7766;text-align:center;line-height:1.15">IMPERVIOUS<div style="font-size:42px;color:#ffa090">DO NOT APPROACH</div></div>' });
+      ui: '<div face="front" width="0.8m" style="font-size:65px;font-weight:900;color:#ff7766;text-align:center">IMPERVIOUS<div style="font-size:42px;color:#ffa090">DO NOT APPROACH</div></div>' });
   }
 }
 

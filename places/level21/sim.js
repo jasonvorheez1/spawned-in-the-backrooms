@@ -184,7 +184,7 @@ function lay(ctx) {
   spawnRemains(ctx, { x: exc.x + 1.4, z: exc.z + 3.6 }, ["firstaid", "battery", "battery", "page:12"], "Alef operative's remains");
   sp("l21-memo13", {
     feetPosition: { x: exc.x + 0.65, y: 0.88, z: exc.z - 0.6 }, rotation: { pitch: -15 },
-    ...sign(0.48, 0.62, `<div face="front" width="0.48m" style="font-family:Arial,sans-serif;color:#181818;background:#f5edd0;padding:8px;line-height:1.15;border:2px solid #8b7355"><div style="font-size:26px;font-weight:900;color:#a81010;border-bottom:2px solid #a81010;margin-bottom:4px;text-align:center">ADMIN MEMO #13</div><div style="font-size:16px;margin-bottom:4px"><b>SUBJECT:</b> Specimen #09</div><div style="font-size:15px;color:#333">Under NO circumstances are the crimson berries to be ingested. Severe hallucinogenic and mutational risks observed. Violators will forfeit ration quotas.</div></div>`, "oklch(0.85 0.08 85)"),
+    ...sign(0.48, 0.62, `<div face="front" width="0.48m" style="font-family:Arial,sans-serif;color:#181818;background:#f5edd0;padding:8px;border:2px solid #8b7355"><div style="font-size:26px;font-weight:900;color:#a81010;border-bottom:2px solid #a81010;margin-bottom:4px;text-align:center">ADMIN MEMO #13</div><div style="font-size:16px;margin-bottom:4px"><b>SUBJECT:</b> Specimen #09</div><div style="font-size:15px;color:#333">Under NO circumstances are the crimson berries to be ingested. Severe hallucinogenic and mutational risks observed. Violators will forfeit ration quotas.</div></div>`, "oklch(0.85 0.08 85)"),
   });
   sp("l21-berries", {
     feetPosition: { x: exc.x, y: 0.0, z: exc.z - 0.6 }, tags: ["usable"], physics: BOXC, behavior: "scripts/l21-use.js",
@@ -273,7 +273,7 @@ function lay(ctx) {
 
   // ---- The Edges: John Banks's last note, his interactive T-handle blasting plunger & dynamite crate, and the fallen survey operative
   const jbX = cellCenter(EDGE_X - 1, LANE.z0 + 1).x + 1.9, jbZ = cellCenter(0, LANE.z0 - 1).z + 0.2;
-  sp("l21-note-banks", { feetPosition: { x: jbX, y: 1.6, z: jbZ }, rotation: { yaw: 0 }, ...sign(0.7, 0.5, `<div face="front" width="0.7m" style="font-family:'Courier New',monospace;color:#2a2418;background:#e8dca0;font-size:34px;line-height:1.15;padding:10px;text-align:left">DEPTH ~5 m<br>6 STICKS<br>SOLID CONCRETE<br>"now or never"<br>— J.B.</div>`, "oklch(0.85 0.1 95)") });
+  sp("l21-note-banks", { feetPosition: { x: jbX, y: 1.6, z: jbZ }, rotation: { yaw: 0 }, ...sign(0.7, 0.5, `<div face="front" width="0.7m" style="font-family:'Courier New',monospace;color:#2a2418;background:#e8dca0;font-size:34px;padding:10px;text-align:left">DEPTH ~5 m<br>6 STICKS<br>SOLID CONCRETE<br>"now or never"<br>— J.B.</div>`, "oklch(0.85 0.1 95)") });
   sp("l21-blast-crater", {
     feetPosition: { x: jbX + 0.45, y: 3.2, z: jbZ + 0.55 },
     primitive: { kind: "cylinder", radiusTop: 1.15, radiusBottom: 1.25, height: 0.14 }, material: { color: "#141414", roughness: 0.96 },
@@ -400,7 +400,7 @@ function dress21(ctx) {
       const d = [0, 1, 2, 3].find((k) => k !== opens[0] && k === (opens[0] + 2) % 4), [nx, nz] = D4W[d], w = S / 2 - W - 0.06;
       if (hash(cx, cz, 731) < 0.55) ctx.spawn(`l21-danger-${cx}-${cz}`, { tags: ["l21-sign"], feetPosition: { x: c.x + nx * w, y: 1.35, z: c.z + nz * w }, rotation: { yaw: yawOf(-nx, -nz) }, visibleRange: { max: 30 }, castShadow: false,
         primitive: { kind: "box", width: 0.5, height: 0.34, depth: 0.012 }, material: { color: "oklch(0.95 0.01 90)", roughness: 0.6 },
-        ui: `<div face="front" width="0.5m" height="0.34m" class="w-full h-full flex flex-col" style="background:#f2efe6;border:10px solid #111"><div style="background:#c8102e;color:#fff;font:900 92px sans-serif;text-align:center;letter-spacing:6px;padding:8px 0">DANGER</div><div style="color:#111;font:800 44px sans-serif;text-align:center;padding-top:26px;line-height:1.15">AUTHORIZED<br>PERSONNEL ONLY</div></div>` });
+        ui: `<div face="front" width="0.5m" height="0.34m" class="w-full h-full flex flex-col" style="background:#f2efe6;border:10px solid #111"><div style="background:#c8102e;color:#fff;font:900 92px sans-serif;text-align:center;letter-spacing:6px;padding:8px 0">DANGER</div><div style="color:#111;font:800 44px sans-serif;text-align:center;padding-top:26px">AUTHORIZED<br>PERSONNEL ONLY</div></div>` });
     }
     if (hash(cx, cz, 733) > 0.17) continue;
     const walls = [0, 1, 2, 3].filter((d) => !isOpen(cx, cz, d)); if (!walls.length) continue;

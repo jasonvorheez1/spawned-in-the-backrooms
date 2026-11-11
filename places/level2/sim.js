@@ -347,7 +347,7 @@ function layGraffiti2(ctx) {
   const a = cellCenter(1, ARRIVE.cz);
   // over hallway heading east out of Survivor camp:
   ctx.spawn({ tags: ["l2sign"], feetPosition: { x: a.x + 8.5, y: 2.3, z: a.z }, rotation: { yaw: -90 }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 1.8, height: 0.5, depth: 0.02 }, material: { color: "oklch(0.24 0.02 120)", roughness: 0.85 },
-    ui: '<div face="left" width="1.8m" style="font-size:85px;font-weight:900;color:#d4f0b8;text-align:center;line-height:1.15">◄ OFFICE SPACE EL3A<div style="font-size:55px;color:#a8c880">SURVIVOR SANCTUARY · MEDIC & QUARTER</div></div>' });
+    ui: '<div face="left" width="1.8m" style="font-size:85px;font-weight:900;color:#d4f0b8;text-align:center">◄ OFFICE SPACE EL3A<div style="font-size:55px;color:#a8c880">SURVIVOR SANCTUARY · MEDIC & QUARTER</div></div>' });
   // directional sign along main hallway (cx=6, cz=12):
   const c6 = cellCenter(6, ARRIVE.cz);
   ctx.spawn({ tags: ["l2sign"], feetPosition: { x: c6.x, y: 1.7, z: c6.z - 2.45 }, rotation: { yaw: 0 }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 1.6, height: 0.35, depth: 0.02 }, material: { color: "oklch(0.22 0.01 240)", roughness: 0.9 },
@@ -359,10 +359,10 @@ function layGraffiti2(ctx) {
   // near Pipe Maze (cx=15, cz=15):
   const c15 = cellCenter(15, 15);
   ctx.spawn({ tags: ["l2sign"], feetPosition: { x: c15.x + 2.45, y: 1.7, z: c15.z }, rotation: { yaw: -90 }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 2.0, height: 0.45, depth: 0.02 }, material: { color: "oklch(0.25 0.03 20)", roughness: 0.9 },
-    ui: '<div face="left" width="2.0m" style="font-size:80px;font-weight:900;color:#ffaa55;text-align:center;line-height:1.15">PIPE MAZE<div style="font-size:52px;color:#eedd88">DO NOT DRINK BLACK RUNOFF · SCALD HAZARDS</div></div>' });
+    ui: '<div face="left" width="2.0m" style="font-size:80px;font-weight:900;color:#ffaa55;text-align:center">PIPE MAZE<div style="font-size:52px;color:#eedd88">DO NOT DRINK BLACK RUNOFF · SCALD HAZARDS</div></div>' });
   // stenciled caution on wall next to SEALED door:
   ctx.spawn({ tags: ["l2sign"], feetPosition: { x: SEALED.x - 0.6, y: 0.7, z: SEALED.z }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 0.02, height: 0.45, depth: 1.6 }, material: { color: "oklch(0.22 0.03 30)" },
-    ui: '<div face="left" width="1.6m" style="font-size:75px;font-weight:900;color:#ff6644;text-align:center;line-height:1.15">M.E.G. ADVISORY<div style="font-size:50px;color:#ffa088">LEVEL 3 CLASS 4 HAZARD · UNGROUNDED VOLTAGE</div></div>' });
+    ui: '<div face="left" width="1.6m" style="font-size:75px;font-weight:900;color:#ff6644;text-align:center">M.E.G. ADVISORY<div style="font-size:50px;color:#ffa088">LEVEL 3 CLASS 4 HAZARD · UNGROUNDED VOLTAGE</div></div>' });
 }
 
 // ---- Tripo props (scripts/lib/l2props.js): the camp's lanterns and stove, and the one-time re-dress of rooms laid before them
