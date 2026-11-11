@@ -43,19 +43,26 @@ for ang in (60, -60): gap('BEFORE', ang)
 pose(0)
 rest = [T.matrix_world @ v.co for v in T.data.vertices]
 sel = [i for i, p in enumerate(rest) if shx - 0.08 < abs(p.x) < shx + 0.10 and p.z > 1.2]
-# body weights at each band vertex (nearest face, interpolated), blended over the band edges
-dt = T.modifiers.new('dt', 'DATA_TRANSFER'); dt.object = S; dt.use_vert_data = True; dt.data_types_verts = {'VGROUP_WEIGHTS'}
-dt.vert_mapping = 'POLYINTERP_NEAREST'; dt.layers_vgroup_select_src = 'ALL'; dt.layers_vgroup_select_dst = 'NAME'
-for g in S.vertex_groups:
-    if g.name not in T.vertex_groups: T.vertex_groups.new(name=g.name)
-mask = T.vertex_groups.new(name='_band')
+# body weights at each band vertex: nearest skin face, barycentric blend, eased in over the band edges
+from mathutils.interpolate import poly_3d_calc
+Sm = S.data; SW = S.matrix_world
+sw = [{S.vertex_groups[g.group].name: g.weight for g in v.groups} for v in Sm.vertices]
+sbm = bmesh.new(); sbm.from_mesh(Sm); sbm.transform(SW); sbm.faces.ensure_lookup_table(); str_ = BVHTree.FromBMesh(sbm)
 for i in sel:
-    p = rest[i]; t = min(1, min(abs(p.x) - (shx - 0.08), (shx + 0.10) - abs(p.x), p.z - 1.2) / 0.03)
-    mask.add([i], max(0, t), 'REPLACE')
-dt.vertex_group = '_band'; dt.mix_mode = 'REPLACE'; dt.mix_factor = 1.0
+    p = rest[i]; t = max(0, min(1, min(abs(p.x) - (shx - 0.08), (shx + 0.10) - abs(p.x), p.z - 1.2) / 0.03))
+    loc, nr, fi, d = str_.find_nearest(p)
+    f = sbm.faces[fi]; vs = [v.co for v in f.verts]; bw = poly_3d_calc(vs, loc)
+    new_w = {}
+    for v, w in zip(f.verts, bw):
+        for k, x in sw[v.index].items(): new_w[k] = new_w.get(k, 0) + x * w
+    old = {T.vertex_groups[g.group].name: g.weight for g in T.data.vertices[i].groups}
+    mix = {k: old.get(k, 0) * (1 - t) + new_w.get(k, 0) * t for k in set(old) | set(new_w)}
+    for g in list(T.data.vertices[i].groups): T.vertex_groups[g.group].remove([i])
+    for k, x in mix.items():
+        if x < 0.01 or k not in tarm.data.bones: continue
+        if k not in T.vertex_groups: T.vertex_groups.new(name=k)
+        T.vertex_groups[k].add([i], x, 'REPLACE')
 bpy.context.view_layer.objects.active = T
-bpy.ops.object.modifier_move_to_index(modifier='dt', index=0); bpy.ops.object.modifier_apply(modifier='dt')
-T.vertex_groups.remove(mask)
 bpy.ops.object.mode_set(mode='WEIGHT_PAINT')
 bpy.ops.object.vertex_group_clean(group_select_mode='ALL', limit=0.01)
 bpy.ops.object.vertex_group_limit_total(group_select_mode='ALL', limit=4)
