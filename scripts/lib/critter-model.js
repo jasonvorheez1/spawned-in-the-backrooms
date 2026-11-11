@@ -11,7 +11,7 @@ import HAIR_SLOTS from './data/hair-slots.yml'
 import HAIR_TEX from './data/hair-tex.yml'
 import WARD_SLOTS from './data/ward-slots.yml'
 import CW from './data/cat-wardrobe.yml'
-import { CAT_BODY, catModel, catChildren, chestOf, catMorph, SNOUTS, EARS, EYE_COLORS } from './cat-wardrobe.js'
+import { CAT_BODY, catModel, catChildren, chestOf, catMorph, SNOUTS, EARS, TAILS, EYE_COLORS } from './cat-wardrobe.js'
 // hair: its own GLB skinned whole to the Head bone (scripts/lib/data/hair.yml), tinted by the look's hairc; a mask hides it
 export const HAIR_ID = 'critter-hair'
 export const humanHairOf = (l) => {
@@ -995,6 +995,7 @@ export function catLook(l) {
   if (!o.hairc && l?.hairc == null) o.hairc = hashPick(`${l?.fur}|hc`, ['#3a2a22', '#6b4a35', '#1e1a1c', '#a8683a', '#c9a066', '#7a2e2a'])
   o.snout = SNOUTS.includes(l?.snout) ? l.snout : hashPick(`${l?.fur}|${l?.fseed ?? ''}|sn`, ['button', 'button', 'long', 'pointy', 'flat', 'puff'])
   o.ears = EARS.includes(l?.ears) ? l.ears : hashPick(`${l?.top}|${l?.fseed ?? ''}|ear`, ['upright', 'upright', 'tall', 'small', 'fold', 'wide'])
+  o.tail = TAILS.includes(l?.tail) ? l.tail : hashPick(`${l?.fur}|${l?.fseed ?? ''}|tl`, ['classic', 'classic', 'fluffy', 'bob', 'puff', 'whip', 'curl'])
   o.fluff = Array.isArray(l?.fluff) ? l.fluff : l?.fluff ? [l.fluff] : ['cheeks']
   if (l?.chest != null) o.chest = l.chest; else if (sex === 'f' && Number(l?.bustS)) o.chest = Math.max(0, Math.min(1, 0.5 * Number(l.bustS)))
   if (!o.hair) delete o.hair
