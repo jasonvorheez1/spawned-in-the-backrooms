@@ -24,6 +24,17 @@ bpy.ops.object.datalayout_transfer(modifier='wt')
 while J.modifiers[0].name != 'wt': bpy.ops.object.modifier_move_up(modifier='wt')
 bpy.ops.object.modifier_apply(modifier='wt')
 J.vertex_groups.remove(J.vertex_groups['LEGSEL'])
+# nearest-face picks the other leg at the inseam: a leg vertex keeps only its own side's leg bones
+names = {g.index: g.name for g in J.vertex_groups}
+legs = ('UpLeg', 'Leg', 'Foot', 'ToeBase')
+cut = 0
+for i in sel:
+    v = J.data.vertices[i]; x = (mw @ v.co).x
+    wrong = 'Right' if x > 0 else 'Left'
+    for ge in list(v.groups):
+        n = names[ge.group]
+        if n.startswith(wrong) and n.endswith(legs): J.vertex_groups[n].remove([i]); cut += 1
+print("CUT", cut)
 bpy.ops.object.select_all(action='DESELECT'); J.select_set(True); bpy.ops.object.vertex_group_normalize_all(lock_active=False)
 print("TRANSFERRED", len(sel), "from", B.name, "groups", len(J.vertex_groups), "mods", [x.type for x in J.modifiers])
 for o in new: bpy.data.objects.remove(o, do_unlink=True)
