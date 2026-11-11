@@ -5,7 +5,7 @@
 import bpy, bmesh, sys
 from mathutils import Vector
 a = sys.argv[sys.argv.index('--')+1:]; src, dst = a[0], a[1]
-ZLO, ZHI, IT = 1.30, 1.47, 24
+ZLO, ZHI, IT = 1.30, 1.47, 30
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=src)
 skins = [o for o in bpy.data.objects if o.type == 'MESH' and (o.name.startswith('Skin_') or o.name in ('Body',))]
@@ -20,14 +20,15 @@ for o in skins:
         nb.setdefault(k1, set()).add(k2); nb.setdefault(k2, set()).add(k1)
 band = [k for k, p in pos.items() if ZLO < p.z < ZHI and abs(p.x) < (0.24 if p.y > 0 else 0.16)]  # +Y is the chest here: wide at the front clears the shoulder-corner flaps; wide at the back opened a gap under the nape
 cur = {k: pos[k].copy() for k in pos}
-for _ in range(IT):
+for it in range(IT):
+    lam = 0.5 if it % 2 == 0 else -0.53  # Taubin: smooths without shrinking the collar off the shirt
     nxt = {}
     for k in band:
         ns = [cur[n] for n in nb.get(k, ()) if n in cur]
         if not ns: continue
         avg = sum(ns, Vector()) / len(ns)
         t = min(1, (pos[k].z - ZLO) / 0.03, (ZHI - pos[k].z) / 0.03)  # fade at the band's ends
-        nxt[k] = cur[k].lerp(avg, 0.5 * max(0, t))
+        nxt[k] = cur[k].lerp(avg, lam * max(0, t))
     cur.update(nxt)
 moved = 0
 for o in skins:
