@@ -4,7 +4,7 @@ import W from './data/cat-wardrobe.yml'
 import { PRINTS } from '../mat-cloth.js'
 
 export const CAT_BODY = {
-  f: { glb: '/cdn/value.4789bfeea9fa2f4c214a4cc57ea5f7493db8ff1d170a353e0e9eb3a4efaf5e0b.glb', fur: '/cdn/value.eb86c240c4daf27effe00523a7f1f216e7239f8eca99359e5a04fcf67c289a6f.jpg' },
+  f: { glb: '/cdn/value.3c86d2b554c69d400eebc76079fc6e6b769b4444b2e33964fee844eae15460b3.glb', fur: '/cdn/value.eb86c240c4daf27effe00523a7f1f216e7239f8eca99359e5a04fcf67c289a6f.jpg' },
   m: { glb: '/cdn/value.9db3fe85fbcb458151c771ac12ab4981944f3d02fc7d8f5326e43ceb23bef2c5.glb', fur: '/cdn/value.a400e6f824bf75d1c5dfafb1cadbe30c177543404d39b9c350d4feadc8dfd313.jpg' }
 }
 const rgb = (hex, lin = true) => { const n = parseInt(String(hex || '#ffffff').replace('#', '').slice(0, 6).padEnd(6, 'f'), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { const s = v / 255; return lin ? (s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4)) : s }) }
