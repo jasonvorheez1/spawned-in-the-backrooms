@@ -149,7 +149,7 @@ def build(sex, kind, arm, H, meas, bone):
         pass
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces); bm.to_mesh(me); bm.free()
     o = bpy.data.objects.new(f"ears-{kind}", me); bpy.context.collection.objects.link(o)
-    for n, col in (("earFur", (0.95, 0.75, 0.5, 1)), ("earInner", (0.84, 0.55, 0.54, 1)), ("earTuft", (1, 0.96, 0.9, 1))):
+    for n, col in (("earFur", (1, 1, 1, 1)), ("earInner", (1, 1, 1, 1)), ("earTuft", (1, 1, 1, 1))):   # white: the game tints each slot (fur colour, pink, fluff colour)
         mt = bpy.data.materials.new(n); mt.diffuse_color = col; mt.use_nodes = True
         mt.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = col; me.materials.append(mt)
     sub = o.modifiers.new("s", "SUBSURF"); sub.levels = 1
