@@ -35,19 +35,16 @@ for sex in ("f", "m"):
     tgt = load_mesh(SRC[sex], "Head"); tgt = tgt[np.random.default_rng(1).choice(len(tgt), min(4000, len(tgt)), replace=False)]; src = load_mesh(SCULPT[sex])
     rng = np.random.default_rng(0); src_s = src[rng.choice(len(src), min(1500, len(src)), replace=False)]
     kd = cKDTree(tgt); best = None
-    for R0 in rots():
-        p = src_s @ R0.T; s0 = np.ptp(tgt, 0).max() / np.ptp(p, 0).max(); p = (p - p.mean(0)) * s0 + tgt.mean(0)
-        s, R, t = s0, R0, None; cur = p
-        for _ in range(12):
-            d, i = kd.query(cur); s2, R2, t2 = umeyama(cur, tgt[i]); cur = s2 * cur @ R2.T + t2
-        d, _ = kd.query(cur); e = np.median(d)
-        # also the reverse error (target covered), so a shrunken fit can't win
-        d2, _ = cKDTree(cur).query(tgt); e += np.median(d2)
-        if best is None or e < best[0]: best = (e, src_s, cur)
-    e, A, B = best; s, R, t = umeyama(A, B); T[sex] = (s, R, t)
-    print("REG", sex, "err_m", round(float(e), 4), "scale", round(float(s), 3))
+    lo, hi = tgt.min(0), tgt.max(0)
+    for R0 in rots():   # each axis turn: the sculpt's box stretched onto the head's box per axis, scored by two-way chamfer
+        p = src_s @ R0.T; pl, ph = p.min(0), p.max(0); k = (hi - lo) / (ph - pl); cur = (p - pl) * k + lo
+        d, _ = kd.query(cur); d2, _ = cKDTree(cur).query(tgt); e = float(np.mean(d) + np.mean(d2))
+        if best is None or e < best[0]: best = (e, R0, k, pl, lo)
+    e, R0, k, pl, lo2 = best
+    T[sex] = (R0, k, pl, lo2, tgt)
+    print("REG", sex, "err_m", round(e, 4), "k", k.round(2))
 for sex in ("f", "m"):
-    s, R, t = T[sex]
+    R0, k, pl, lo2, tgt = T[sex]; kdh = cKDTree(tgt); ctr = (tgt.min(0) + tgt.max(0)) / 2
     for hp in sorted(glob.glob(f"/workspace/hair/cat/{sex}_*.glb")):
         if hp.endswith("-raw.glb"): continue
         st = os.path.basename(hp)[2:-4]
@@ -61,7 +58,13 @@ for sex in ("f", "m"):
         hair = [o for o in bpy.data.objects if o not in before and o.type == "MESH"][0]
         for o in [o for o in bpy.data.objects if o not in before and o is not hair]: bpy.data.objects.remove(o)
         M = hair.matrix_world.copy(); hair.parent = None; hair.data.transform(M); hair.matrix_world.identity()
-        S = Matrix([list(s * R[i]) + [t[i]] for i in range(3)] + [[0, 0, 0, 1]]); hair.data.transform(S); hair.data.update()
+        V = np.array([tuple(v.co) for v in hair.data.vertices]); V = ((V @ R0.T) - pl) * k + lo2
+        # lift any strand the stretch sank into the skull: out along the centre ray until 6 mm clear
+        d, i = kdh.query(V); dirs = V - ctr; dirs /= np.linalg.norm(dirs, axis=1, keepdims=True) + 1e-9
+        inside = np.einsum("ij,ij->i", V - tgt[i], dirs) < 0.006
+        V[inside] = tgt[i][inside] + dirs[inside] * 0.006 + (V[inside] - tgt[i][inside]) * 0.15
+        for v, c in zip(hair.data.vertices, V): v.co = c
+        hair.data.update()
         hair.name = "hair"; hair.vertex_groups.clear()
         g = hair.vertex_groups.new(name="mixamorig:Head"); g.add(list(range(len(hair.data.vertices))), 1.0, "REPLACE")
         hair.parent = arm; hair.modifiers.new("skin", "ARMATURE").object = arm
