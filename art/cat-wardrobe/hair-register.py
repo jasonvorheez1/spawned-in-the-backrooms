@@ -68,7 +68,7 @@ for sex in ("f", "m"):
         d, i = kdh.query(V); dirs = V - ctr; dirs /= np.linalg.norm(dirs, axis=1, keepdims=True) + 1e-9
         inside = np.einsum("ij,ij->i", V - tgt[i], dirs) < 0.006
         V[inside] = tgt[i][inside] + dirs[inside] * 0.006 + (V[inside] - tgt[i][inside]) * 0.15
-        sh = {"twintails": 0.72, "afropuff": 0.9}.get(st)   # styles that read too big: what hangs below the crown pulls in toward the skull and up
+        sh = {"twintails": 0.6, "afropuff": 0.9}.get(st)   # styles that read too big: what hangs below the crown pulls in toward the skull and up
         if sh:
             top = crown_t; far = V[:, 2] < top - 0.12; c2 = np.array([ctr[0], ctr[1], top - 0.12])
             V[far] = c2 + (V[far] - c2) * sh

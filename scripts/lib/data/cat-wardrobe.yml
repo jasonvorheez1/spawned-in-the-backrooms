@@ -58,12 +58,12 @@ fluff:
 
 # hairstyles (art/cat-wardrobe/hair-register.py): the Tripo hair carried onto the current cat heads, skinned to the head, tinted by look.hairc. look.hair: one key
 hair:
-  afropuff: { f: '/cdn/value.e7958fced643bc581e0ffebd4a1b98a012f6d2f3b7ef4570a0f963c9cdc32608.glb' }
-  crop: { m: '/cdn/value.898a9266559da42236bd45d6f613c58bcfdb5db9dcc47a8c0c2ac932a2f1cc26.glb' }
-  halfup: { f: '/cdn/value.d35b15e5840b772d26408ae52bf12604e869f18a885c1ea97fa2ee4acc9f692b.glb' }
-  long: { m: '/cdn/value.cc94515f95a5a97f08808a98afeb636f73a21d779b45a6ee7e5fbad2ba630e15.glb' }
-  pixie: { f: '/cdn/value.abe241a2ef07d405f59c092a352e7eded6e2b5889d4030ee2c21d69dad84862a.glb' }
-  shaggy: { m: '/cdn/value.dd56c3855d7f14009a31102ee07a5c9f478a72b8fe2b79ae4aa204c3681834d1.glb' }
-  sidetail: { f: '/cdn/value.e3143e7e7eae434feb2f7a20981141bc5d4cd021f5fb88bdee91d5d8a860a466.glb' }
-  twintails: { f: '/cdn/value.6bc56270a414e1517c21a1cd9afb7bcc54b834b3274e060b5158525c40989bef.glb' }
-  undercut: { m: '/cdn/value.8e3e52c6780f2a6536f0866fc209e0699ed0a4a4cf191d0334ba8b4d6a4b39fe.glb' }
+  afropuff: { f: '/cdn/value.dcc27484a90148205daabb02ef5ea1ecdbcae9b590571eef2730492e7021b3f2.glb' }
+  crop: { m: '/cdn/value.25bd58a740a6153e814fd02aa8aa32e150f0446b79d1a997e679e5443669aa2a.glb' }
+  halfup: { f: '/cdn/value.9369c4dd96617ea2d32f4658b9ac24f3a987650c0429a64ba50a41a3db5b4c85.glb' }
+  long: { m: '/cdn/value.c0759ed3e12f2a83edf7d43ae083ba423b8e675eca612a9e71d6dd5bbad42703.glb' }
+  pixie: { f: '/cdn/value.649c534dd0e4aa833d4700600609622ee9102159d61ba0aac1301358c1b66d51.glb' }
+  shaggy: { m: '/cdn/value.e33da16fe7c51e35ccc7e953e2d96edbc7236af7d19f2419453c056d777af094.glb' }
+  sidetail: { f: '/cdn/value.cb055c07a254d6c523707891790cc7b1d6e7fc89ecf9a10f26ef5db026737408.glb' }
+  twintails: { f: '/cdn/value.1df6dab4d1e0452d6258d60232764c51fb2d1030d6169d569a792e69ef1e9547.glb' }
+  undercut: { m: '/cdn/value.66e7e5dbed6c98fc262220da8a5ef42dc01cb53a3b050f7191f942c565b9bcd7.glb' }
