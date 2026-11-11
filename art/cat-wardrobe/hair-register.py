@@ -38,7 +38,7 @@ for sex in ("f", "m"):
     R0 = np.array([[0, 1, 0], [-1, 0, 0], [0, 0, 1.0]])   # +X front -> Blender front -Y
     src = src @ R0.T; zs = np.linspace(src[:, 2].min(), src[:, 2].max(), 60)
     wid = [np.ptp(src[(src[:, 2] > z0) & (src[:, 2] < z0 + 0.006), 0]) if ((src[:, 2] > z0) & (src[:, 2] < z0 + 0.006)).sum() > 5 else 9 for z0 in zs]
-    z0_, z1_ = src[:, 2].min(), src[:, 2].max(); band = [(w, z) for w, z in zip(wid, zs) if z0_ + 0.5 * (z1_ - z0_) < z < z0_ + 0.8 * (z1_ - z0_)]   # the neck: narrowest slice between the shoulders' T and the cheeks; zn = min(band)[1]
+    z0_, z1_ = src[:, 2].min(), src[:, 2].max(); band = [(w, z) for w, z in zip(wid, zs) if z0_ + 0.5 * (z1_ - z0_) < z < z0_ + 0.8 * (z1_ - z0_)]; zn = min(band)[1]   # the neck: narrowest slice between the T-pose shoulders and the cheeks
     hd = src[src[:, 2] > zn]; tg = tgt[tgt[:, 2] > tgt[:, 2].min()]
     # cranium by width alone (ears differ between sculpt and cat), seated by the crown: the top of the skull between the ears
     sc = float(np.ptp(tgt, 0)[0] / np.ptp(hd, 0)[0])
