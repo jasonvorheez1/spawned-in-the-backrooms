@@ -258,7 +258,7 @@ const OPEN_TOPS = ['jacket', 'blazer', 'vest'], OPEN_IDS = ['apron', 'maidapron'
 const INNER_ID = 'critter-ward-inner'
 const INNER_TEE = '#e6e1d6'
 const DARK_UNDER = { megjacket: '#24262a', padjacket: '#26262a' } // uniform jackets close at the front: a pale tee showing through the seam read as a white stripe (Nov 11)
-const innerTee = (l) => DARK_UNDER[l?.topw] ?? INNER_TEE
+const innerTee = (l) => DARK_UNDER[l?.topw] ?? (/^#[0-9a-f]{6}$/i.test(l?.top || '') ? mix(l.top, '#101014', 0.55) : '#2a2a2e') // the jackets close nearly shut: a pale tee in the seam read as a jagged white stripe; a darker shade of the jacket reads as its lining (Nov 11)
 const humanBodyFull = (l) => {
   const c = skinOf(l), skin = anime('skin', c) // the first-person arms wear this same material (player.js spreads it), so the body and the arms still read as one skin (Shelly, Nov 9)
   const m = l ? bodyModel({ ...l, _human: true }) : { materials: {}, parts: {} }
