@@ -40,13 +40,26 @@ def key(p):
 base = [mw @ v.co for v in B.data.vertices]
 # the shaft opens as one ring per height: one factor per side and 2 cm band, from the boot's narrowest wall against the
 # widest trouser cloth there, smoothed up the leg; the whole ring scales so cuff folds, buttons and trim keep their shape
+# the boot wall sampled along its edges (its sides are long faces with few vertices), buttons left out
+bmat = [m.name for m in B.data.materials]
+shell_v = set()
+for f in B.data.polygons:
+    if bmat and bmat[f.material_index] == 'button': continue
+    shell_v.update(f.vertices)
+wall = {}
+for e in B.data.edges:
+    if e.vertices[0] not in shell_v or e.vertices[1] not in shell_v: continue
+    p0, p1 = base[e.vertices[0]], base[e.vertices[1]]; n = max(1, int((p1 - p0).length / 0.008))
+    for i in range(n + 1):
+        q = p0.lerp(p1, i / n)
+        if q.z < 0.12: continue
+        s_, c, dx, dy, r, zi, ai = key(q)
+        wall[(s_, zi, ai)] = max(wall.get((s_, zi, ai), 0), r)
 need = {}
-for p in base:
-    if p.z < 0.12: continue
-    s, c, dx, dy, r, zi, ai = key(p)
-    if r < 0.02: continue
-    jr = max((bins.get((s, zi + dz, (ai + da) % 24), 0) for dz in (-1, 0, 1) for da in (-1, 0, 1)), default=0)
-    if jr > 0: need[(s, zi)] = max(need.get((s, zi), 1.0), min(1.35, (jr + CLEAR) / r))
+for (s_, zi, ai), br in wall.items():
+    if br < 0.03: continue
+    jr = max((bins.get((s_, zi + dz, (ai + da) % 24), 0) for dz in (-1, 0, 1) for da in (-1, 0, 1)), default=0)
+    if jr > 0: need[(s_, zi)] = max(need.get((s_, zi), 1.0), min(1.25, (jr + CLEAR) / br))
 fac = {}
 for (s, zi), v in need.items():
     vs = [need.get((s, zi + d), 1.0) for d in (-2, -1, 0, 1, 2)]
