@@ -20,19 +20,32 @@ def bvh_of(o):
     me = o.data; M = o.matrix_world
     return BVHTree.FromPolygons([M @ v.co for v in me.vertices], [p.vertices[:] for p in me.polygons])
 
-def lock(bm, root, d, L, r, curl, side, rng, segs=9, ring=10):
-    # one tapered lock: root on the surface (sunk 6 mm), grows along d, bends toward `curl`
+def lock(bm, root, d, L, r, curl, side, rng, segs=9, ring=10, hug=None, flare=0.0):
+    # one tapered lock: root sunk into the surface, grows along d, bends toward `curl`.
+    # hug = the head's BVH: every point is kept just outside the skin, so the lock lies ON the head (fringe over the brow,
+    # cheek fur combed back) and only its tip lifts by `flare`; its flat side faces the skin (Nov 11: chunky locks read blocky / stuck out like wings)
     d = d.normalized(); up = Vector((0, 0, 1)) if abs(d.z) < 0.9 else Vector((1, 0, 0))
-    t1 = d.cross(up).normalized(); t2 = d.cross(t1).normalized()
-    pts = []; p = root - d * 0.012; dirv = d.copy()   # sunk 12 mm: the root disappears into the fur
+    t1 = d.cross(up).normalized()
+    pts = []; p = root - d * 0.012; dirv = d.copy(); prev = None
     for i in range(segs + 1):
-        pts.append((p.copy(), dirv.copy())); dirv = (dirv + curl * (1.0 / segs)).normalized(); p = p + dirv * (L / segs)
+        t = i / segs; nrm = None
+        if hug is not None and i > 0:
+            loc, n, _, _ = hug.find_nearest(p)
+            if loc is not None:
+                want = r * 0.45 + flare * t * t
+                if (p - loc).dot(n) < want: p = loc + n * want
+                nrm = n
+        if prev is not None and (p - prev).length > 1e-6: dirv = (p - prev).normalized()
+        pts.append((p.copy(), dirv.copy(), nrm)); prev = p.copy()
+        dirv = (dirv + curl * (1.0 / segs)).normalized(); p = p + dirv * (L / segs)
     rings = []
-    for i, (c, dv) in enumerate(pts):
-        a = dv.cross(up).normalized() if abs(dv.dot(up)) < 0.95 else t1
-        b = dv.cross(a).normalized(); t = i / segs; rad = r * (0.75 + 0.25 * math.sin(math.pi * min(1, t * 2.2) / 2)) * (1 - t) ** 0.85   # soft round root, long tapering point (Nov 11: the 6-sided chunky locks read blocky)
+    for i, (c, dv, nrm) in enumerate(pts):
+        if nrm is not None and abs(dv.dot(nrm)) < 0.95: a = dv.cross(nrm).normalized()
+        else: a = dv.cross(up).normalized() if abs(dv.dot(up)) < 0.95 else t1
+        b = dv.cross(a).normalized(); t = i / segs
+        rad = r * (0.75 + 0.25 * math.sin(math.pi * min(1, t * 2.2) / 2)) * (1 - t) ** 0.85   # soft round root, long tapering point
         if i == segs: rings.append([bm.verts.new(c)]); continue
-        rings.append([bm.verts.new(c + (a * math.cos(k * 2 * math.pi / ring) * 1.6 + b * math.sin(k * 2 * math.pi / ring) * 0.62) * rad) for k in range(ring)])
+        rings.append([bm.verts.new(c + (a * math.cos(k * 2 * math.pi / ring) * 1.7 + b * math.sin(k * 2 * math.pi / ring) * 0.55) * rad) for k in range(ring)])
     for i in range(segs - 1):
         A, B = rings[i], rings[i + 1]
         for k in range(ring): bm.faces.new((A[k], A[(k + 1) % ring], B[(k + 1) % ring], B[k]))
@@ -40,7 +53,7 @@ def lock(bm, root, d, L, r, curl, side, rng, segs=9, ring=10):
     for k in range(ring): bm.faces.new((A[k], A[(k + 1) % ring], tip))
     bm.faces.new(list(reversed(rings[0])))
 
-def grow(bm, bvh, centre, dirs, rng, L, r, n, spread, out_bias, curl_dir, lmul=None):
+def grow(bm, bvh, centre, dirs, rng, L, r, n, spread, out_bias, curl_dir, lmul=None, hug=False, flare=0.0):
     # a clump: n locks fanned around the surface point hit by each ray from `centre`
     for ray in dirs:
         hit, nrm, _, _ = bvh.ray_cast(centre + ray.normalized() * 0.6, -ray.normalized(), 1.2)
@@ -52,7 +65,7 @@ def grow(bm, bvh, centre, dirs, rng, L, r, n, spread, out_bias, curl_dir, lmul=N
             if h2 is None: continue
             d = (n2 * out_bias + curl_dir * (1 - out_bias) + Vector((rng.uniform(-.2, .2), rng.uniform(-.2, .2), rng.uniform(-.2, .2)))).normalized()
             m = (lmul(k, n) if lmul else 1) * rng.uniform(0.75, 1.15)
-            lock(bm, h2, d, L * m, r * rng.uniform(0.85, 1.15), curl_dir * 0.8, 0, rng)
+            lock(bm, h2, d, L * m, r * rng.uniform(0.85, 1.15), curl_dir * 0.8, 0, rng, hug=bvh if hug else None, flare=flare)
 
 def build(sex, kind, arm):
     H = bpy.data.objects["Head"]; B = bpy.data.objects["Body"]
@@ -67,8 +80,8 @@ def build(sex, kind, arm):
     # every type is a HEAD tuft (Shelly: "i wanted the tufts on the heads"): rays aimed from the skull's centre, roots on the skull
     sk = [v for v in hv if abs(v.x) < 0.2]; crown = max(v.z for v in sk); z0 = min(v.z for v in sk)
     C = Vector((0, sum(v.y for v in sk) / len(sk), (z0 + crown) / 2))
-    def tuft(dirs, L, r, n, spread, bias, curl):
-        grow(bm, hb, C, [Vector(d) for d in dirs], rng, L * S * 1.8, r * S * 1.2, n * 2, spread * S * 1.8 + 0.008 * S, bias, Vector(curl).normalized())   # Nov 11 rework: twice the locks, slimmer, fanned: soft clumps not chunks
+    def tuft(dirs, L, r, n, spread, bias, curl, hug=True, flare=0.012):
+        grow(bm, hb, C, [Vector(d) for d in dirs], rng, L * S * 1.8, r * S * 1.2, n * 2, spread * S * 1.8 + 0.008 * S, bias, Vector(curl).normalized(), hug=hug, flare=flare * S)   # Nov 11 rework: twice the locks, slimmer, fanned: soft clumps not chunks
     for sx in (-1, 1):
         if kind == "cheeks":    # anime cat cheek fluff: three points out of the widest part of the face, below the eyes
             tuft([(sx, -0.45, -0.35), (sx, -0.2, -0.3), (sx, 0.05, -0.2)], 0.085, 0.032, 1, 0.006, 0.55, (sx, 0.25, -0.35))
@@ -77,13 +90,13 @@ def build(sex, kind, arm):
         elif kind == "nape":    # tufts at the back of the skull, flicked out under the hairline
             tuft([(sx * 0.35, 1, -0.35), (sx * 0.7, 0.8, -0.2)], 0.09, 0.034, 2, 0.01, 0.45, (sx * 0.4, 0.6, -0.6))
     if kind == "crest":         # forelock: a flame of fur on the brow between the ears, curling up and forward
-        tuft([(0, -0.55, 1), (0.18, -0.45, 1), (-0.18, -0.45, 1)], 0.1, 0.034, 1, 0.006, 0.55, (0, -0.35, 0.8))
+        tuft([(0, -0.55, 1), (0.18, -0.45, 1), (-0.18, -0.45, 1)], 0.1, 0.034, 1, 0.006, 0.55, (0, -0.35, 0.8), hug=False)
     elif kind == "cowlick":     # one fat curl on the crown, an anime ahoge
-        tuft([(0, -0.15, 1)], 0.16, 0.03, 1, 0.0, 0.85, (0, -0.95, -0.2))
-        tuft([(0.12, 0.1, 1)], 0.09, 0.026, 1, 0.0, 0.7, (0.4, 0.6, 0.1))
+        tuft([(0, -0.15, 1)], 0.16, 0.03, 1, 0.0, 0.85, (0, -0.95, -0.2), hug=False)
+        tuft([(0.12, 0.1, 1)], 0.09, 0.026, 1, 0.0, 0.7, (0.4, 0.6, 0.1), hug=False)
     elif kind == "bangs":       # fur bangs (Shelly: "fur bangs on the head would be nice too"): a fringe of pointed locks off the hairline, falling over the brow, parted in chunky anime spikes
         for x, L in ((-0.52, 0.7), (-0.42, 0.82), (-0.31, 0.95), (-0.2, 1.08), (-0.09, 1.0), (0.02, 1.12), (0.13, 1.04), (0.24, 1.1), (0.35, 0.92), (0.45, 0.8), (0.54, 0.68)):
-            tuft([(x, -0.42, 1)], 0.15 * L, 0.024, 1, 0.0, 0.14, (x * 0.35, -0.55, -1))   # eleven slim overlapping points, a soft fringe
+            tuft([(x, -0.3, 1)], 0.17 * L, 0.03, 1, 0.0, 0.1, (x * 0.35, -0.6, -1), flare=0.01)   # eleven slim overlapping points, a soft fringe
     elif kind == "lynx":
         for sx in (-1, 1):
             ear = max((v for v in hv if v.x * sx > 0.05), key=lambda v: v.z)
