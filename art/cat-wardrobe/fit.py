@@ -48,6 +48,23 @@ if KIND == "top":
     sx = (B["arm"][2] - 0.025) / cuff; P[:, 0] *= sx
     gy0, gy1 = torso_y(P, B["arm"][0] * 0.8, z_hem, za - 0.02); by0, by1 = torso_y(bw, B["arm"][0] * 0.8, z_hem, za - 0.02)
     sy = ((by1 - by0) * 1.22 + 0.03) / (gy1 - gy0); P[:, 1] = (P[:, 1] - (gy0 + gy1) / 2) * sy + (by0 + by1) / 2
+    # sleeves onto the arms: Tripo's sleeve axis sits behind or ahead of her arm; each x slice past the shoulder slides to the arm's own centre
+    ax0 = B["arm"][0]
+    for x0 in np.arange(ax0, B["arm"][2] + 0.03, 0.02):
+        bsl = bw[(np.abs(bw[:, 0]) > x0) & (np.abs(bw[:, 0]) < x0 + 0.02) & (np.abs(bw[:, 2] - za) < 0.07)]
+        m = (np.abs(P[:, 0]) > x0) & (np.abs(P[:, 0]) < x0 + 0.02) & (np.abs(P[:, 2] - za) < 0.09)
+        if len(bsl) < 8 or m.sum() < 8: continue
+        k = min(1.0, (x0 - ax0) / 0.04 + 0.25)
+        P[m, 1] += k * ((bsl[:, 1].min() + bsl[:, 1].max()) / 2 - (P[m, 1].min() + P[m, 1].max()) / 2)
+        P[m, 2] += k * ((bsl[:, 2].min() + bsl[:, 2].max()) / 2 - (P[m, 2].min() + P[m, 2].max()) / 2)
+    # a hood lies down on the upper back: what rises past the collar folds flat behind the neck, never a flap out past the shoulder
+    zc = B["top"][1] - 0.04
+    nb = bw[(bw[:, 2] > zc - 0.05) & (bw[:, 2] < zc + 0.02) & (np.abs(bw[:, 0]) < 0.1)]; yb = nb[:, 1].max() + 0.015; nw = np.abs(nb[:, 0]).max()
+    hd = (P[:, 2] > zc) & (P[:, 1] > yb - 0.03)
+    P[hd, 1] = np.minimum(P[hd, 1], yb + (P[hd, 1] - yb).clip(0) * 0.35)
+    P[hd, 0] = np.sign(P[hd, 0]) * np.minimum(np.abs(P[hd, 0]), nw * 1.15 + (np.abs(P[hd, 0]) - nw * 1.15).clip(0) * 0.25)
+    P[hd, 2] = zc + (P[hd, 2] - zc) * 0.6
+    print("hood verts", int(hd.sum()))
     region = lambda q: q[:, 2] > z_hem - 0.05
 elif KIND == "skirt":
     z_top = B["waist"] + 0.012; z_bot = B["leg"][0] - (B["leg"][0] - B["leg"][1]) * 0.55
