@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 5455,
-  "updatedAt": "2026-11-11T15:32:18.755Z",
+  "basedOnSpecVersion": 5458,
+  "updatedAt": "2026-11-11T15:40:24.619Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning an authored Level 0 maze, deeper levels and shared destinations. `templates/player.js` composes player behaviors while place simulations and shared scripts own environments, NPCs, combat, loot, crafting, UI and progression; the Tripo avatar art pipeline builds assets for the existing appearance system.",
   "scriptPaths": [],
   "places": [
@@ -60,23 +60,23 @@
     "scripts/routing.js accepts permitted requested rooms; otherwise scripts/lib/hub.js soloRoom selects the player's solo Backrooms room and bonus overflow IDs; toHub/toSolo perform crossings and track roomHop/save-place state.",
     "Fresh visit → scripts/main-menu.js; START enters intake for creation or bonus for completed characters; wardrobe close runs intro-cut then tutorial0 unless t0Done; menu UI renders on menuOpen and solo pause sets place.timeScale.",
     "Main-menu BODIES action → player.state.bodyStyle and world.state.bodyStyle; scripts/lib/critter-model.js setStyle reads world bodyStyle and selects humans only for 'human', otherwise furry; Bonus sim applies this before NPC updates/redress.",
-    "scripts/lib/hub.js destinations → hub-ui.js and hub.js crossings; Bonus sim lays NPCs/effects and mall counters write shop/food state consumed by handlers/UI; Bonus escalator step entities run scripts/esc-step.js loops from their feet position.",
+    "scripts/lib/hub.js destinations → hub-ui.js and hub.js crossings; Bonus sim lays NPCs/effects and mall counters write shop/food state consumed by handlers/UI; Bonus escalator step entities run scripts/esc-step.js loops from their feet posi…",
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; weapon variants roll through weapons.js.",
     "interact.js focus → player.state.focus and loot-ui.js prompt only on the play screen; ui-theme/screen hide prompts behind panels; interact.js clears focus outlines in menus/talk/cutscenes/build mode. Talk UI emits talk/talkdo/shop actions.",
     "interact.js openLoot/closeLoot → prop-interactions.containerPose → child part state.goal; scripts/prop-part.js samples cubic motion and builtin tween animates articulated storage fronts; toggleLamp flips light part goals.",
     "scripts/lib/prop-interactions.js interactiveSpec → generated furniture from scripts/lib/furniture.js and upgradeNearby nearby legacy props; preserves root collider/state and tags; prop-part children provide moving doors/drawers/lids.",
-    "Player craft action/UI → scripts/lib/craft.js stationOf + craft.yml; built pieces in breakables.yml carry bench=cook/ammo and state.station; craft.js/craft-ui.js filter station recipes while hand menu lists all recipes. quickItems/assignQuick support quick slots.",
-    "scripts/cat-demo.js onSpawn/ears redress reads demo state.sex/look/clip → scripts/lib/cat-wardrobe.js selects body, skin params, tuck depths and cw-* skinned children from cat-wardrobe.yml → scripts/mat-catskin.js paints garments and sinks covered skin."
+    "Player craft action/UI → scripts/lib/craft.js stationOf + craft.yml; built pieces in breakables.yml carry bench=cook/ammo and state.station; craft.js/craft-ui.js filter station recipes while hand menu lists all recipes. quickItems/assignQu…",
+    "scripts/cat-demo.js onSpawn/ears redress reads demo state.sex/look/clip → scripts/lib/cat-wardrobe.js selects body, skin params, tuck depths and cw-* skinned children from cat-wardrobe.yml → scripts/mat-catskin.js paints garments and sinks…"
   ],
   "behaviorFamilies": [
-    "places/bonus/cells/x0z0.scene + objects.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + bonus-extra and mall shopper/salon scripts - authored mall, NPC attachments and simulation; escalator decoration has frozen steps removed and moving steps/audio run through shared assets and behavior.",
-    "art/bonus-mall/escalator.py + world.assets bonus-mall-deco-moving-escalators/escalator-step + scripts/esc-step.js - offline Blender build strips frozen tread geometry and makes reusable detailed steps; scene placements vary state.dir and position.",
+    "places/bonus/cells/x0z0.scene + objects.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + bonus-extra and mall shopper/salon scripts - authored mall, NPC attachments and simulation; escalator decoration has frozen steps removed an…",
+    "art/bonus-mall/escalator.py + world.assets bonus-mall-deco-moving-escalators/escalator-step + scripts/esc-step.js - offline Blender build strips frozen tread geometry and makes reusable detailed steps; scene placements vary state.dir and p…",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + home reconstruction scripts - per-piece models/dimensions with common placement, persistence and rebuild path.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preserving state.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preservi…",
     "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + Zenith door/bots/hatch/flicker/drones/use scripts - Zenith Station geometry, breach, hazards and interactive systems.",
     "places/level4 scenes + places/level4/sim.js + scripts/l4-office.js/l4-office-geo.js/l4-home.js + Level 4/5 resident data - authored office/hotel props, fixtures, NPC bodies and attached critter behavior.",
-    "scripts/lib/critter-model.js + critter-models.yml + wardrobe*.yml + clothes.js + art/critter-cute and art/critter-andy - shared furry/optional-human avatar appearance; art/critter-cute/tripo_rig.py builds the female/male rigged cat bodies, flattens the head face patch and nearby dark marks to fur beneath the face layer, and exports a default-off Chest shape key (female fuller, male subtle); runtime use of that key is not referenced.",
-    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + mat-catskin.js + art/cat-wardrobe/fit.py - demo cat's painted garment regions and skinned model garments; per-sex hoodie/jacket GLBs, underskin and tuck values vary by look; fit weights sleeves to the matching arm."
+    "scripts/lib/critter-model.js + critter-models.yml + wardrobe*.yml + clothes.js + art/critter-cute and art/critter-andy - shared furry/optional-human avatar appearance; art/critter-cute/tripo_rig.py builds female/male rigged cat bodies and hides cloth shells for Chest-morph proof renders,…",
+    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + mat-catskin.js + art/cat-wardrobe/fit.py - demo cat's painted garment regions and skinned model garments; per-sex hoodie/jacket GLBs, underskin and tuck values vary by look; fit weights slee…"
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
@@ -90,6 +90,6 @@
     "Bare furry avatars show the whole Body shell and hide segmented Skin_* regions to avoid overlapping seams; STYLE_V is in the appearance cache key so existing avatars redraw after asset changes.",
     "NPC body-style changes are processed in batches of six per update via self.session.rq; preserve the queue lifecycle and exclude player/local-only objects rather than synchronously sweeping a place.",
     "Furry is default (sw146); human-born NPCs restyle to critters, while human bodies remain selectable. Critter arm splay is +20° LeftArm roll/-20° RightArm roll in runtime bones.",
-    "Tripo cat art is an offline universal female/male Mixamo rig pipeline (1.2 m, feet z=0, front -Y); face decal sits over a flattened fur-textured head patch, and exported Body Chest morph defaults to 0. Its generated morph has no references in the current runtime/package search."
+    "Tripo cat art is an offline universal female/male Mixamo rig pipeline (1.2 m, feet z=0, front -Y); face decal sits over a flattened fur-textured head patch, and exported Body Chest morph defaults to 0. Its proof renders hide ClothTop/ClothBottom to show body shape changes; the generated morph has no runtime references…"
   ]
 }
