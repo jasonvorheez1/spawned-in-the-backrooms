@@ -61,7 +61,9 @@ def build_head(name, sp, rig, F):
             m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
             out = nt.nodes.new("ShaderNodeOutputMaterial"); tr = nt.nodes.new("ShaderNodeBsdfTransparent"); nt.links.new(tr.outputs[0], out.inputs[0])
             m.blend_method = "HASHED" if hasattr(m, "blend_method") else None
-    t = _TRI["obj"]; t.parent = o.parent; t.matrix_parent_inverse = o.matrix_world.inverted() if o.parent else t.matrix_parent_inverse
+    import mathutils
+    t = _TRI["obj"]; t.parent = o; t.matrix_parent_inverse = mathutils.Matrix.Identity(4); t.location = (0, 0, 0); t.rotation_euler = (0, 0, 0); t.scale = (1, 1, 1)
+    log("tripo parented to", o.name, "head at", tuple(round(x, 3) for x in o.matrix_world.translation))
     return o
 build_ear = lambda *a, **k: None                                   # Tripo's ears stand in
 build_tufts = lambda *a, **k: None
