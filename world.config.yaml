@@ -19,9 +19,7 @@ inputs:
         - p
       touch:
         button: false
-    qtrack:
-      keys:
-        - m
+    qtrack: {}
     quickUse: {}
     quick0:
       keys: ["0"]
@@ -85,9 +83,7 @@ inputs:
         - r
       touch:
         button: false
-    drink:
-      keys:
-        - j
+    drink: {}
     compass: {}
     throw:
       keys:
@@ -110,8 +106,7 @@ inputs:
       touch:
         button: false
     holster:
-      keys:
-        - u
+      keys: []
       touch:
         button: false
     interact:
