@@ -290,7 +290,7 @@ bc-dance:
   children: [{feetPosition: {x: 0, y: 2.2, z: 0.6}, id: glow, light: {color: "#ff4fd8", distance: 4, intensity: 0.9, kind: point}}]
   feetPosition: {x: 21.6, y: 0.02, z: -7.4}
   id: bc-dance
-  model: {forward: "+x", id: /cdn/value.8a8d221178b6de1ed17722697aa9f425dfc3b4848f002940f3fd9e5f4126bd54.glb}
+  model: {forward: "+x", id: /cdn/value.451b7c2ada05096536ea1bf207bfed0365bdd3ee06bf63168c608f1c324f1079.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: 0}
   scale: 1.3
