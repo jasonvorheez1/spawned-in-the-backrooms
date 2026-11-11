@@ -336,13 +336,17 @@ Wn = 13; pad = np.where(np.isnan(hgt), -9, opn)
 dil = win(pad, np.maximum); clo = win(np.where(np.isnan(hgt), 9, dil), np.minimum)
 for _ in range(3): clo = (clo + np.roll(clo, 1, 0) + np.roll(clo, -1, 0) + np.roll(clo, 1, 1) + np.roll(clo, -1, 1)) / 5
 lift = 0
-for v in HEAD.data.vertices:
-    co = v.co; i = round((co.x - BOX[0]) / (BOX[1] - BOX[0]) * NX); j = round((co.z - BOX[2]) / (BOX[3] - BOX[2]) * NZ)
-    if not (0 <= i <= NX and 0 <= j <= NZ) or co.y > -0.1 or abs(clo[i, j]) > 5 or np.isnan(hgt[i, j]): continue
-    if v.normal.y > 0.3: continue          # inner shell faces back
-    r = min(math.hypot((co.x - ex) / (0.75 * D), (co.z - ez - 0.05 * D) / (0.75 * D)) for ex, ez in EYE)
-    w = 1 if r < 0.75 else max(0, (1.0 - r) / 0.25); w = w * w * (3 - 2 * w)
-    if w > 0 and abs(-clo[i, j] - co.y) < 0.03: co.y = co.y + (-clo[i, j] - co.y) * w; lift += 1
+def rr(co, e): return math.hypot((co.x - e[0]) / (0.75 * D), (co.z - e[1] - 0.05 * D) / (0.75 * D))
+for e in EYE:   # each eye: the bulge, socket and lash ridges become a smooth quadric fitted to the skin ring around it
+    ring = [v.co for v in HEAD.data.vertices if 1.35 < rr(v.co, e) < 1.8 and v.normal.y < -0.3 and v.co.y < -0.1]
+    Am = np.array([[1, c.x, c.z, c.x * c.x, c.x * c.z, c.z * c.z] for c in ring]); cf = np.linalg.lstsq(Am, np.array([c.y for c in ring]), rcond=None)[0]
+    for v in HEAD.data.vertices:
+        co = v.co; r = rr(co, e)
+        if r >= 1.35 or co.y > -0.05: continue
+        tgt = float(np.dot(cf, [1, co.x, co.z, co.x * co.x, co.x * co.z, co.z * co.z]))
+        if v.normal.y < -0.3:
+            w = 1 if r < 1.05 else (1.35 - r) / 0.3; w = w * w * (3 - 2 * w); co.y += (tgt - co.y) * w; lift += 1
+        elif r < 1.1 and co.y < tgt + 0.004: co.y = tgt + 0.004; lift += 1
 bpy.context.view_layer.objects.active = HEAD
 if HEAD.data.has_custom_normals: bpy.ops.mesh.customdata_custom_splitnormals_clear()   # old normals kept the sockets' shading
 for poly in HEAD.data.polygons: poly.use_smooth = True
