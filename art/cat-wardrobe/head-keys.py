@@ -38,8 +38,8 @@ def snout(amount, sz, sx_, zoff=0.0):
     return [(0, -amount * S * w[i], 0) if w[i] > 1e-4 else None for i in range(len(V))]
 key("Snout_Long", lambda: snout(0.045, 0.05, 0.075))          # a fox-girl muzzle: the whole snout reaches forward
 key("Snout_Pointy", lambda: snout(0.04, 0.026, 0.04, 0.004))  # a sharp little point at the nose, sly
-key("Snout_Flat", lambda: snout(-0.022, 0.05, 0.09))          # a chibi flat face, the nose sits in the cheeks
-key("Snout_Puff", lambda: snout(0.02, 0.07, 0.15, -0.02))     # round mochi cheeks puffed out under the eyes
+key("Snout_Flat", lambda: snout(-0.04, 0.06, 0.1))          # a chibi flat face, the nose sits in the cheeks
+key("Snout_Puff", lambda: snout(0.03, 0.06, 0.16, -0.025))     # round mochi cheeks puffed out under the eyes
 def ears(fn):
     out = [None] * len(V)
     for i in np.nonzero(E)[0]:
@@ -48,8 +48,8 @@ def ears(fn):
     return out
 key("Ear_Tall", lambda: ears(lambda p, sx: Vector((p.x * 0.8, p.y * 0.85, p.z * 1.45))))                 # tall lynx-anime ears
 key("Ear_Small", lambda: ears(lambda p, sx: Vector((p.x * 0.85, p.y, p.z * 0.6))))                       # little round kitten ears
-key("Ear_Fold", lambda: ears(lambda p, sx: Matrix.Rotation(math.radians(-75) * min(1, max(0, p.z / (0.1 * S))), 3, "X") @ p))   # scottish fold: tips bent down to the front
-key("Ear_Wide", lambda: ears(lambda p, sx: Matrix.Rotation(math.radians(-38 * sx), 3, "Y") @ p))        # airplane ears, tipped out to the sides
+key("Ear_Fold", lambda: ears(lambda p, sx: Matrix.Rotation(math.radians(80) * min(1, max(0, p.z / (0.1 * S))), 3, "X") @ p))   # scottish fold: tips bent down to the front
+key("Ear_Wide", lambda: ears(lambda p, sx: Matrix.Rotation(math.radians(-58 * sx), 3, "Y") @ p))        # airplane ears, tipped out to the sides
 H.data.update()
 if PROOF:
     sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 10; sc.render.resolution_x = sc.render.resolution_y = 300
