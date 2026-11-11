@@ -80,6 +80,8 @@ legacyHuman:
   f_sw107: /cdn/value.b1696d5328e685bda81be34e91903a24506f79cce5092458ca84ab0d2c1a2d95.glb
   m_sw106: /cdn/value.fa40bdfd07ca1d7f0f4795d350d835f9710c23815a21daa606da4b11d3353934.glb   # before the Nov 11 collar split
   f_sw106: /cdn/value.7afa2ad9d19dccfe5185934b2bb92fdfadae3be7399f8b60a1a3dd872db56bcd.glb
+  m_sw114: /cdn/value.5ef3b89d3ccca82d8e00a007a00156b2f9e4fbd71ff5e0e9a8b7dcdf7d57a4f4.glb   # Nov 11 collar split, carried an idle second skeleton
+  f_sw114: /cdn/value.dfa4672a265b56bce8e42ba0e353772be5f834b79a4ba96a1f5ab2b14799ea7a.glb
   m_mall: /cdn/value.069d7657f5164132588d8b09446b6b15cb430ec242a79e9dda7c1b1cb7e668dd.glb   # bonus mall bodies that predated the redo (Nov 10)
   f_mall: /cdn/value.ed5db0e27548e200185ddae95d951a9f7e5a97aafa6059720b98cf51712a3ace.glb
   x_mall1: /cdn/value.5dec0e3c2fcfaede078334c85bb756119412143a36ed1f4c02ed39a959bad200.glb
