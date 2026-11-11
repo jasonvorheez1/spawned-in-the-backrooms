@@ -5,8 +5,8 @@ import FACES from './data/critter-faces.yml'
 import { PRINTS } from '../mat-cloth.js'
 
 export const CAT_BODY = {
-  f: { glb: '/cdn/value.253a42cb7ac71dc495aede2fa350efd97221b3706c82e8dbe37b3bba976f481b.glb', fur: '/cdn/value.1c4f4402e22ebd41f1cca9b45fc42ef2bec051041b40c8a3c40b88028a23ca58.jpg' },
-  m: { glb: '/cdn/value.521f707dbab4819f3f5e2a5333887957188ea647c3af815d86979fc7f063218e.glb', fur: '/cdn/value.58ce243610699df44f4552ccfdfc667580c63c99f28103ecf2d1dd72c94657fe.jpg' }
+  f: { glb: '/cdn/value.562ce0246eae9362d0d784854f5dff319bcc254c755c854e1be2c450ae9540c9.glb', fur: '/cdn/value.1c4f4402e22ebd41f1cca9b45fc42ef2bec051041b40c8a3c40b88028a23ca58.jpg' },
+  m: { glb: '/cdn/value.3208bf922d1aff4faeefffab9867f3d2363af1dab60a37cc50860602d207c545.glb', fur: '/cdn/value.58ce243610699df44f4552ccfdfc667580c63c99f28103ecf2d1dd72c94657fe.jpg' }
 }
 const rgb = (hex, lin = true) => { const n = parseInt(String(hex || '#ffffff').replace('#', '').slice(0, 6).padEnd(6, 'f'), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { const s = v / 255; return lin ? (s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4)) : s }) }
 const lerp = (a, b, t) => a + (b - a) * t
@@ -98,8 +98,9 @@ export function catMorph(look) {
   const m = chestOf(look)
   for (const k of Object.values(SNOUT_KEY)) m[k] = 0
   for (const k of Object.values(EAR_KEY)) m[k] = 0
+  m.Ear_Hide = 0
   if (SNOUT_KEY[look?.snout]) m[SNOUT_KEY[look.snout]] = SNOUT_AMT[look.snout] ?? 1
-  if (W.ears) m.Ear_Small = EAR_HIDE   // the sculpted ear (catChildren) stands over the head's own, pressed flat under it
+  if (W.ears) m.Ear_Hide = EAR_HIDE   // the sculpted ear (catChildren) stands over the head's own, pressed flat under it (Ear_Hide: art/cat-wardrobe/ears.py body)
   else if (EAR_KEY[look?.ears]) m[EAR_KEY[look.ears]] = 1
   for (const k of Object.values(TAIL_KEY)) m[k] = 0
   if (TAIL_KEY[look?.tail]) m[TAIL_KEY[look.tail]] = 1
@@ -116,7 +117,7 @@ export function catChildren(sex, look) {
   for (const k of fl) {
     const g = W.fluff?.[k]?.[sex]
     if (!g) continue
-    const morph = k === 'lynx' ? Object.fromEntries(Object.values(EAR_KEY).map(key => [key, W.ears ? (key === 'Ear_Small' ? EAR_HIDE : 0) : Number(EAR_KEY[look?.ears] === key)])) : null
+    const morph = k === 'lynx' ? Object.fromEntries(Object.values(EAR_KEY).map(key => [key, W.ears ? 0 : Number(EAR_KEY[look?.ears] === key)])) : null
     out.push({
       id: 'cw-fluff-' + k, attachment: { skin: true },
       ...(morph ? { morph } : {}),
@@ -129,9 +130,11 @@ export function catChildren(sex, look) {
       }
     })
   }
+  const ep = { ...skinParams(sex, look), fur: '', top: 0, bot: 0, sock: 0 }   // the fluff's own fur shader, plain: these ears carry no body UVs
+  const ears = (part) => ({ kind: 'scripted', script: 'scripts/mat-catskin.js', color: part === 'fur' ? (look?.fur || '#f3c98a') : part === 'inner' ? '#f2b3b0' : (l.fluffc || '#fff4e6'), params: ep })
   const eg = W.ears?.[EARS.includes(look?.ears) ? look.ears : 'upright']?.[sex]   // sculpted ears (art/cat-wardrobe/ears.py): fur outside, pink bowl, cream tuft
   if (eg) out.push({ id: 'cw-ears', attachment: { skin: true }, model: { id: eg, forward: '+z', materials: {
-    earFur: { color: look?.fur || '#f3c98a', roughness: 0.82 }, earInner: { color: '#f2b3b0', roughness: 0.7 }, earTuft: { color: look?.fluffc || '#fff4e6', roughness: 0.9 } } } })
+    earFur: ears('fur'), earInner: ears('inner'), earTuft: ears('tuft') } } })
   const hk = look?.hair, hg = hk && (W.hair?.[hk]?.[sex] || Object.values(W.hair?.[hk] || {})[0])   // a hairstyle: one key, tinted its own colour
   if (hg) out.push({ id: 'cw-hair', attachment: { skin: true }, model: { id: hg, forward: '+z', materials: { hair: { color: look?.hairc || '#6b4a35', roughness: 0.64 } } } })
   const mk = W.masks?.[l.hat]?.[sex]   // a Thrift Mode mask: skinned to her head bone, its own paint
