@@ -14,7 +14,7 @@ body:
 # a painted bottom: leg 0..2 (0 crotch, 1 knee, 2 ankle), rise = waistband above the body's waist line (m)
 tops:
   tee:        { hem: 0.0,  sleeve: 0.42, scoop: 1.0, pat: weave }
-  crop:       { hem: 0.5, sleeve: 0.42, scoop: 1.15, pat: weave, band: true }
+  crop:       { hem: 0.5, sleeve: 0.42, scoop: 1.15, pat: stripes, band: true }   # stripes per Shelly's crop ref (#219730): it read washed out as plain cream
   tank:       { hem: 0.0,  sleeve: 0.0,  scoop: 1.35, pat: rib }
   longsleeve: { hem: 0.0,  sleeve: 1.95, scoop: 0.8, pat: weave }
   pajamas:    { hem: 0.0,  sleeve: 1.95, scoop: 0.9, pat: gingham }
@@ -34,7 +34,7 @@ models:
   skirt:  { under: briefs, pat: weave, f: /cdn/value.b282d6badcb027f5466097b768c9df6bbc0dbd64b8d9e4b13d1be674c5c42a3c.glb, m: /cdn/value.8da93a9c31f245cf12374f56094596155615cf358394c0cda2ac6538b59c8535.glb }
   boots:  { under: socks, pat: weave, f: /cdn/value.3f9b0636806b0ebabcd12d5037ca8aecf54984a63ea3e5b5c979c1f61c9c9983.glb, m: /cdn/value.dcfebd4370d0c0aa932157cae6acd02db2afb18e59cc83e6ef34261ed69176f2.glb }
 defaults:
-  f: { topw: crop, top: "#f3ead8", botw: shorts, bottom: "#5b7fb0" }
+  f: { topw: crop, top: "#e0775a", botw: shorts, bottom: "#4f78ad" }
   m: { topw: tee, top: "#9b9da1", botw: shorts, bottom: "#2f3d5c" }
 # Thrift Mode's printed pieces (Level 11), on the new cats: look.topp names one of scripts/mat-cloth.js PRINTS.
 # chest: the picture's centre height and size on each body (bind pose, metres); arm: where the stitched x's sit (x, y). Savi's picks.
