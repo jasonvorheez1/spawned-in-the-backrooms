@@ -85,7 +85,9 @@ def rebuild_head(head, sex):
     inv=head.matrix_world.inverted()
     mesh.from_pydata([inv@Vector(v) for v in verts],[],faces)
     mesh.materials.append(bpy.data.materials.new("headFur"))
-    mesh.materials.append(bpy.data.materials.new("innerEar"))
+    ear = bpy.data.materials.new("innerEar")
+    ear.diffuse_color = (.56,.18,.16,1)
+    mesh.materials.append(ear)
     for poly,material in zip(mesh.polygons,mats):
         poly.material_index=material
         poly.use_smooth=True
@@ -273,7 +275,15 @@ def main():
             fit_garment(body, garment, kind)
             save(out / f"{kind}-{sex}.glb",clothes)
             for o in clothes:
-                bpy.data.objects.remove(o,do_unlink=True)
+                if o.type == "MESH":
+                    mesh = o.data
+                    bpy.data.objects.remove(o,do_unlink=True)
+                    bpy.data.meshes.remove(mesh)
+                else:
+                    bpy.data.objects.remove(o,do_unlink=True)
+            for material in list(bpy.data.materials):
+                if not material.users:
+                    bpy.data.materials.remove(material)
 
 if __name__=="__main__":
     main()
