@@ -97,7 +97,7 @@ def head_r(d):
     t1 = d.orthogonal().normalized(); t2 = d.cross(t1); acc = []; R = float(os.environ.get("TRIPO_BLUR", ".09"))
     for (a, b) in ((0, 0), (1, 0), (-1, 0), (0, 1), (0, -1), (.7, .7), (-.7, .7), (.7, -.7), (-.7, -.7)):
         dd = (d + t1 * a * R + t2 * b * R).normalized()
-        hit = _TRI["bvh"].ray_cast(HC + dd * 1.5, -dd, 3.0)
+        hit = _TRI["bvh"].ray_cast(HC + dd * .02, dd, 1.5)   # from inside out: the skull, not the cheek tufts or ears in front of it
         if hit[0] is not None: acc.append((hit[0] - HC).length)
     return sum(acc) / len(acc) if acc else _head_r_proc(d)
 _build_head_proc = build_head
