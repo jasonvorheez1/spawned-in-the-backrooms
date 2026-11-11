@@ -90,7 +90,7 @@ for sex in ("f", "m"):
             import bmesh as _bm
             b = _bm.new(); b.from_mesh(capme); b.normal_update()
             H = np.array([tuple(v.co) for v in b.verts]); hmin, hmax = H.min(0), H.max(0); hc = (hmin + hmax) / 2; hs = hmax - hmin
-            drop = [f for f in b.faces if not (f.calc_center_median().y > hc[1] + CAP[st] * hs[1] and f.calc_center_median().z > hc[2] - 0.05 * hs[2] and f.calc_center_median().z < crown_t - 0.01 and f.normal.z > -0.3 and abs(f.calc_center_median().x - hc[0]) < 0.42 * hs[0])]
+            drop = [f for f in b.faces if not (f.calc_center_median().y > hc[1] + CAP[st] * hs[1] and f.calc_center_median().z > hc[2] - 0.32 * hs[2] and f.calc_center_median().z < crown_t - 0.01 and f.normal.z > -0.55 and abs(f.calc_center_median().x - hc[0]) < 0.42 * hs[0])]
             _bm.ops.delete(b, geom=drop, context="FACES")
             for v in b.verts: v.co += v.normal * 0.004
             cm = bpy.data.meshes.new("cap"); b.to_mesh(cm); b.free()
