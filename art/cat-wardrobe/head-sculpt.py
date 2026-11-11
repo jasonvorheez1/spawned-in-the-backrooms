@@ -18,9 +18,9 @@ g = lambda d, s: np.exp(-(d / s) ** 2)
 x, y, z = V[:, 0], V[:, 1], V[:, 2]
 front = np.clip((-y - 0.04) / 0.06, 0, 1)                         # only the face side moves
 tip = g(z - (zp + 0.006 * S), 0.03 * S) * g(x, 0.055 * S)          # button tip: rounder, a touch further out
-chin = g(z - (zp - 0.075 * S), 0.045 * S) * g(x, 0.13 * S)         # the sag under the snout pulls back in
+chin = g(z - (zp - 0.085 * S), 0.045 * S) * g(x, 0.13 * S)         # the sag under the snout pulls back in
 bridge = g(z - (zp + 0.05 * S), 0.022 * S) * g(x, 0.045 * S)        # a soft bridge from snout to brow, no dent
-dy = front * (-0.011 * S * tip + 0.022 * S * chin - 0.006 * S * bridge)
+dy = front * (-0.011 * S * tip + 0.018 * S * chin - 0.006 * S * bridge)
 for i, v in enumerate(H.data.vertices):
     if dy[i]: v.co = Mi @ (M @ v.co + __import__("mathutils").Vector((0, dy[i], 0)))
 H.data.update()
