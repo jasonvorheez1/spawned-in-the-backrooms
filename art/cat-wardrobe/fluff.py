@@ -33,7 +33,7 @@ def lock(bm, root, d, L, r, curl, side, rng, segs=9, ring=10, hug=None, flare=0.
             loc, n, _, _ = hug.find_nearest(p)
             if loc is not None:
                 want = r * 0.45 + flare * t * t
-                if (p - loc).dot(n) < want: p = loc + n * want
+                p = loc + n * want   # held at that height both ways: combed flat onto the head, never flaring off as a wing
                 nrm = n
         if prev is not None and (p - prev).length > 1e-6: dirv = (p - prev).normalized()
         pts.append((p.copy(), dirv.copy(), nrm)); prev = p.copy()
@@ -103,7 +103,7 @@ def build(sex, kind, arm):
             for k in range(3):
                 d = Vector((sx * 0.25 + rng.uniform(-.15, .15), rng.uniform(-.1, .1), 1)).normalized()
                 lock(bm, ear + Vector((rng.uniform(-.006, .006), rng.uniform(-.006, .006), -0.012)), d, 0.085 * S * rng.uniform(.8, 1.1), 0.022 * S, Vector((sx * 0.4, 0.2, 0)), 0, rng)
-    me = bpy.data.meshes.new("fluff"); bm.to_mesh(me); bm.free()
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces); me = bpy.data.meshes.new("fluff"); bm.to_mesh(me); bm.free()
     o = bpy.data.objects.new("fluff", me); bpy.context.collection.objects.link(o)
     for p in me.polygons: p.use_smooth = True
     sub = o.modifiers.new("s", "SUBSURF"); sub.levels = 1; sub.render_levels = 1   # with 10-sided rings this already reads round
