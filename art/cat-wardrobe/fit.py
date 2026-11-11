@@ -146,6 +146,16 @@ if KIND == "top":   # weights by where the cloth sits, never by the nearest skin
         e = sm(xe - 0.03, xe + 0.03, ax); h = sm(xw - 0.02, xw + 0.02, ax)
         w = {k: x * (1 - a) for k, x in spine(v.co.z).items()}
         w[S + "Arm"] = a * (1 - e); w[S + "ForeArm"] = a * e * (1 - h); w[S + "Hand"] = a * e * h
+        # the body's own weights under this vert, cleaned: no head or neck (-> upper spine), nothing from the other side's arm; cloth then bends where the skin under it bends
+        O = "Right" if S == "Left" else "Left"; t = {}
+        for ge in v.groups:
+            n = g.vertex_groups[ge.group].name.replace("mixamorig:", "")
+            if n in ("Head", "Neck") or "Ear" in n or "Hair" in n: n = "Spine2"
+            if n.startswith(O): continue
+            t[n] = t.get(n, 0) + ge.weight
+        ts = sum(t.values())
+        if ts > 0.5:
+            for k in set(t) | set(w): w[k] = 0.7 * t.get(k, 0) / ts + 0.3 * w.get(k, 0)
         setw(v, w)
 bpy.ops.object.vertex_group_normalize_all(lock_active=False); bpy.ops.object.vertex_group_limit_total(limit=4)
 g.parent = arm; am = g.modifiers.new("Armature", "ARMATURE"); am.object = arm
