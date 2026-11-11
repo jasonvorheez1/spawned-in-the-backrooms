@@ -259,7 +259,8 @@ if not TUNE.get("noscalp"):
         _band = 0.75 * headH * 0.5
         if TUNE.get("fullscalp") and F_ < -0.1 * headF: _band = 0.95 * headH   # fullscalp: the back of the skull down to the nape
         if Z_ < crown - _band: continue          # below the skull band
-        if Z_ < eye_top + 0.08 * headH: continue              # never on the eyes
+        _rear = TUNE.get("fullscalp") and F_ < -0.1 * headF
+        if Z_ < eye_top + 0.08 * headH and not _rear: continue              # never on the eyes
         if F_ > 0.25 * headF and Z_ < hairline + 0.01 * headH: continue   # forehead below the sculpt's hairline stays fur
         if F_ <= 0.25 * headF and Z_ < max(side_floor, eye_top) and not (TUNE.get("fullscalp") and F_ < -0.1 * headF): continue
         if kd.find(m)[2] < 0.75 * EAR_R: continue              # ears and a collar round each base stay clear
