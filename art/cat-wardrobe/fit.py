@@ -130,16 +130,23 @@ if KIND == "boots":   # each boot is rigid on its own foot; the cuff follows the
     for v in me.vertices:
         S = isl[v.index]; t = min(1.0, max(0.0, (v.co.z - B["leg"][2] * 0.75) / 0.03))
         setw(v, {S + "Foot": 1 - t, S + "Leg": t})
-if KIND == "top":   # the hood and collar ride the upper spine, never an arm
-    sp = g.vertex_groups.get("mixamorig:Spine2"); allg = [vg for vg in g.vertex_groups]
+if KIND == "top":   # weights by where the cloth sits, never by the nearest skin: torso on the spine chain by height, each sleeve on its own arm chain by reach
+    bz = lambda n: (arm.matrix_world @ arm.data.bones["mixamorig:" + n].head_local)
+    ch = [("Hips", bz("Hips").z), ("Spine", bz("Spine").z), ("Spine1", bz("Spine1").z), ("Spine2", bz("Spine2").z)]
+    sm = lambda a, b, x: min(1.0, max(0.0, (x - a) / max(1e-5, b - a)))
+    def spine(z):
+        if z <= ch[0][1]: return {"Hips": 1.0}
+        for (n0, z0), (n1, z1) in zip(ch, ch[1:]):
+            if z <= z1: t = sm(z0, z1, z); return {n0: 1 - t, n1: t}
+        return {"Spine2": 1.0}
     for v in me.vertices:
-        t = min(1.0, max(0.0, (v.co.z - (za + 0.035)) / 0.03)) * min(1.0, max(0.0, (B["arm"][0] + 0.03 - abs(v.co.x)) / 0.03))
-        if t > 0 and sp:
-            for vg in allg:
-                try: w = vg.weight(v.index)
-                except RuntimeError: continue
-                vg.add([v.index], w * (1 - t), "REPLACE")
-            sp.add([v.index], t, "ADD")
+        S = "Left" if v.co.x > 0 else "Right"; ax = abs(v.co.x)
+        xs, xe, xw = abs(bz(S + "Arm").x), abs(bz(S + "ForeArm").x), abs(bz(S + "Hand").x)
+        a = sm(xs - 0.035, xs + 0.03, ax) * sm(za - 0.09, za - 0.045, v.co.z)   # how much this vert is sleeve: past the shoulder joint and up at arm height
+        e = sm(xe - 0.03, xe + 0.03, ax); h = sm(xw - 0.02, xw + 0.02, ax)
+        w = {k: x * (1 - a) for k, x in spine(v.co.z).items()}
+        w[S + "Arm"] = a * (1 - e); w[S + "ForeArm"] = a * e * (1 - h); w[S + "Hand"] = a * e * h
+        setw(v, w)
 bpy.ops.object.vertex_group_normalize_all(lock_active=False); bpy.ops.object.vertex_group_limit_total(limit=4)
 g.parent = arm; am = g.modifiers.new("Armature", "ARMATURE"); am.object = arm
 mat = bpy.data.materials.new("cloth"); mat.use_nodes = True
