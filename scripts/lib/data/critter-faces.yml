@@ -9,7 +9,7 @@ faces:
     shock: "/cdn/value.ed06214e0184b83ae3d5ac0795c958a58abfaa59aa048354df49a193c2829e91.png"
     blink: "/cdn/value.fbb8471bd862f7c84eb95ff3d12b8fa013bdefb1ba67a40a3e0e2d41cf04fcf1.png"
     blep: "/cdn/value.3164d204a5e54289bf1d0f6f88d343aebeb778a20032643828b1aaf3f5607d62.png"
-    hit: "/cdn/value.0f3c62a3f04ef241c9d4ae7178c39ae867c804bb93805cd80eb367e069046161.png"
+    hit: "/cdn/value.f6e21998b37ec2a0c36533a03031a58d4a404fb9f584c4e274d067bdeca780a8.png"
     ko: "/cdn/value.7e20d5d5c4c1b1e0f6c7366241f63ecf6520e2f486219a1610b48965167028fa.png"
   male:
     neutral: "/cdn/value.deb72856c67202cfc586709b46c97d4d01f8ff89b0c334fa3cf4aebb1116a6c1.png"
@@ -20,5 +20,5 @@ faces:
     shock: "/cdn/value.6e5decba5ad24c0fa4038b8dc71d36886406824cabc10de0e247ff0b0c940641.png"
     blink: "/cdn/value.ad575d5b20b8c4111f4ddca4bbc7b6c4eddd31bdb836f0418b6a0c91c6fe9a64.png"
     blep: "/cdn/value.9cfb39ae738b30e9a64d0cbae66732797abb09730d20d97b2e911364cd256fb6.png"
-    hit: "/cdn/value.6e3b0b8e3aaa2cc73ce0663d8646436385811e8e002477abcccb22a4f0bc0deb.png"
+    hit: "/cdn/value.ab58fedf1bc4258e9ab979d607b9862306cbf0faaf4b2628036b23a3f6b051b2.png"
     ko: "/cdn/value.376df851ed66e5d2fa5743264c5375ca89c6dd153188d6fd0dde8b8cf7bbecd4.png"
