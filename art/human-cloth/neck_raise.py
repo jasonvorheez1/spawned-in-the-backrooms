@@ -14,7 +14,8 @@ T=BVHTree.FromPolygons(vs,fs)
 for o in list(bpy.data.objects): bpy.data.objects.remove(o)
 for m in list(bpy.data.materials): m.name=m.name+'_body'
 bpy.ops.import_scene.gltf(filepath=in_p)
-G=next(o for o in bpy.data.objects if o.type=='MESH')
+G=next(o for o in bpy.data.objects if o.type=='MESH' and o.data.name.startswith('Ward_') or o.name.startswith('Ward_'))
+print('garment',G.name,[o.name for o in bpy.data.objects if o.type=='MESH'])
 for m in G.data.materials:
   if m and '.' in m.name: m.name=m.name.split('.')[0]
 mw=G.matrix_world; inv=mw.inverted()
@@ -49,5 +50,5 @@ for i,p in enumerate(P):
   G.data.vertices[i].co=inv@q; moved+=1
 print('MOVED',moved)
 G.data.update()
-for o in bpy.data.objects: o.select_set(True)
+for o in bpy.data.objects: o.select_set(o==G or o.type=='ARMATURE')
 bpy.ops.export_scene.gltf(filepath=out_p,export_format='GLB',export_skins=True,export_morph=True,export_apply=False,export_animations=False,export_yup=True,use_selection=True)
