@@ -109,7 +109,7 @@ import heapq
 bmv = BODY.data.vertices; hp = Vector((0, C["spine_y"], C["hip_z"]))
 cand = [v for v in bmv if v.co.y > AY + 0.06 and C["hip_z"] - 0.05 < v.co.z < AZ + 0.02
         and not (abs(v.co.x) > r0 - 0.03 and math.hypot(v.co.y - AY, v.co.z - AZ) < 0.07)]   # not an arm
-tipv = max(cand, key=lambda v: (v.co - hp).length).index
+tipv = min(bmv, key=lambda v: (v.co - Vector(C["tail"][3])).length).index   # seeded at the measured tail tip (a far-point pick found the arm)
 adj = [[] for _ in bmv]
 for e in BODY.data.edges:
     a_, b_ = e.vertices; L_ = (bmv[a_].co - bmv[b_].co).length; adj[a_].append((b_, L_)); adj[b_].append((a_, L_))
