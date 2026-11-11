@@ -76,24 +76,26 @@ export function geometry(ctx) {
   if (hi) { ctx.color("oklch(0.55 0.18 25)"); for (const [mx, mz] of [[5.7, -0.4], [6.1, -0.7], [5.9, -0.3]]) sphere(ctx, [mx, 0.85, mz], 0.015, 5); }
   ctx.color("oklch(0.85 0.01 250)"); tube(ctx, [[5.3, 0.84, -0.1], [5.3, 0.94, -0.1]], [0.04, 0.04], 8);
   }
-  // camp stools: crates round the table
-  crate(ctx, 6, 0, 0.6, 0.45); crate(ctx, 6.9, 0, -1.6, 0.45);
+  // camp stools: crates round the table (Tripo mode: crate models laid by the level 1 sim, Nov 11)
+  if (!T) { crate(ctx, 6, 0, 0.6, 0.45); crate(ctx, 6.9, 0, -1.6, 0.45); }
   if (!T) {
   // the stove: a steel drum with a grate and a pot (its fire is an fx on the camp root)
   ctx.color("oklch(0.35 0.02 40)"); ctx.metalness(0.5); tube(ctx, [[9.5, 0, -2.8], [9.5, 0.7, -2.8]], [0.3, 0.3], 12);
   ctx.color("oklch(0.2 0.01 40)"); for (let i = -2; i <= 2; i++) box(ctx, 9.2, 9.8, 0.7, 0.72, -2.8 + i * 0.1, -2.8 + i * 0.1 + 0.02);
   ctx.color("oklch(0.6 0.01 250)"); tube(ctx, [[9.5, 0.72, -2.8], [9.5, 0.92, -2.8]], [0.14, 0.14], 10); ctx.metalness(0);
   }
-  // supply stacks: crates stencilled RATIONS, almond water flats
+  // supply stacks and barricades: in Tripo mode the pallets, sandbag models and clustered crate models stand in (level 1 sim);
+  // the old unbroken walls of 60 box crates read as a brick wall (Shelly Nov 11: "less blocky, more sensible placements")
+  if (!T) {
   for (const [x, z, n] of [[14.5, 5.5, 3], [14.5, -5.5, 2], [11, -9, 2], [11, 9, 3]]) for (let k = 0; k < n; k++) crate(ctx, x + (k % 2) * 0.75, k > 1 ? 0.7 : 0, z + (k > 1 ? 0.35 : 0), 0.7);
-  // barricades: crate walls and sandbags round the north, south and east, gaps for the patrol paths
   for (const s of [-1, 1]) {
     for (let x = -4; x <= 14; x += 0.95) if (Math.abs(x - 5) > 1.4) crate(ctx, x, 0, s * 11.4, 0.8);
     for (let x = -3.5; x <= 13.5; x += 1.9) if (Math.abs(x - 5) > 2) crate(ctx, x, 0.8, s * 11.4, 0.7);
-    if (!T) sandbags(ctx, -4, s * 10.5, 3, s * 10.5, 2);
+    sandbags(ctx, -4, s * 10.5, 3, s * 10.5, 2);
   }
   for (let z = -10; z <= 10; z += 0.95) if (Math.abs(z) > 1.4) crate(ctx, 16.4, 0, z, 0.8);
-  if (!T) { sandbags(ctx, 15.4, -9, 15.4, -2, 3); sandbags(ctx, 15.4, 2, 15.4, 9, 3); }
+  sandbags(ctx, 15.4, -9, 15.4, -2, 3); sandbags(ctx, 15.4, 2, 15.4, 9, 3);
+  }
   // the banner: a scaffold pole and a lime cloth with the eagle, catching the light
   ctx.color("oklch(0.5 0.01 250)"); ctx.metalness(0.6);
   tube(ctx, [[2, 0, -2], [2, 3.7, -2]], [0.05, 0.04], 8); tube(ctx, [[2, 3.6, -2], [3.8, 3.6, -2]], [0.03, 0.03], 6);
@@ -117,6 +119,7 @@ export function collider(ctx) { // only what a body should bump: tents, barricad
   const C = (x0, x1, y1, z0, z1) => box(ctx, x0, x1, 0, y1, z0, z1);
   if (!ctx.params?.tripo) { C(6.9, 10.1, 2, 4.4, 8.6); C(6.9, 10.1, 2, -8.6, -4.4); C(10.9, 15.1, 2.6, -3, 3); } // the tent models carry their own mesh colliders, door open (Shelly: "i cant get in tents")
   C(5.2, 7.6, 0.84, -1, 0); C(9.2, 9.8, 0.7, -3.1, -2.5);
+  if (ctx.params?.tripo) return; // the crate, sandbag and pallet models carry their own colliders
   for (const s of [-1, 1]) { C(-4.4, 3.6, 1.5, s * 11.4 - 0.4, s * 11.4 + 0.4); C(6.4, 14.4, 1.5, s * 11.4 - 0.4, s * 11.4 + 0.4); C(-4.3, 3.3, 0.45, s * 10.5 - 0.3, s * 10.5 + 0.3); }
   C(16, 16.8, 0.8, -10.4, -1.4); C(16, 16.8, 0.8, 1.4, 10.4);
   for (const [x, z] of [[14.5, 5.5], [14.5, -5.5], [11, -9], [11, 9]]) C(x - 0.4, x + 1.15, 1.4, z - 0.4, z + 0.8);

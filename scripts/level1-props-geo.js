@@ -94,13 +94,15 @@ export function geometry(ctx) {
   ctx.color("oklch(0.85 0.17 95)"); ctx.roughness(0.7);
   for (let x = BACK.x + 1.6; x < a.x - 3; x += 1.6) box(ctx, x, 0.012, a.z, 0.5, 0.004, 0.09);
   for (const [x, dir] of [[BACK.x + 3.5, -1], [BACK.x + 7, -1]]) { box(ctx, x, 0.012, a.z, 0.25, 0.004, 0.09); for (const sd of [-1, 1]) box(ctx, x + dir * 0.18, 0.012, a.z + sd * 0.12, 0.2, 0.004, 0.05); }
-  // the camp: M.E.G. waypoint
+  // the camp: M.E.G. waypoint (real mode: the Tripo camp in places/level1/sim.js holds the tents, cots and table; these flat ones doubled it, Nov 11)
+  if (!real) {
   tent(ctx, a.x - 4.8, a.z - 5, 0.3, "oklch(0.5 0.08 135)");
   tent(ctx, a.x - 5.4, a.z + 5.2, -0.2, "oklch(0.62 0.09 70)");
   cot(ctx, a.x + 4.8, a.z + 5.5, 0); cot(ctx, a.x + 6, a.z + 5.5, 0); cot(ctx, a.x + 4.8, a.z - 5.5, 1.57);
   ctx.color("oklch(0.5 0.05 70)"); box(ctx, a.x + 3, 0.4, a.z + 3.4, 0.9, 0.04, 0.45); for (const [dx, dz] of [[-0.8, -0.35], [0.8, -0.35], [-0.8, 0.35], [0.8, 0.35]]) box(ctx, a.x + 3 + dx, 0.2, a.z + 3.4 + dz, 0.04, 0.2, 0.04);
   ctx.color("oklch(0.6 0.15 120)"); box(ctx, a.x + 2.7, 0.52, a.z + 3.4, 0.2, 0.08, 0.14); // a tin box
   ctx.color("oklch(0.4 0.02 250)"); box(ctx, a.x + 3.4, 0.5, a.z + 3.4, 0.08, 0.1, 0.08); // lantern body
+  }
   if (!real) { pallet(ctx, a.x - 2.5, a.z + 7.4, 0.2, 2); drum(ctx, a.x + 5.6, a.z - 1.4, 0.9, "oklch(0.5 0.1 145)"); }
   ctx.color(null); ctx.roughness(null);
 }

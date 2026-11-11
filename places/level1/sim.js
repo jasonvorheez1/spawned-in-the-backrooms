@@ -10,7 +10,7 @@ import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import L from "../../scripts/lib/data/level1.yml";
 import { RACK } from "../../scripts/lib/level1.js";
 import { rollItemL1 } from "../../scripts/lib/loot.js";
-import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, ONWARD, ARRIVE, hash, S, HALF, hasPillar, DECK, RAMPS, rampBox, rampCell } from "../../scripts/lib/level1.js";
+import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, ONWARD, ARRIVE, hash, S, HALF, hasPillar, DECK, RAMPS, rampBox, rampCell, inHole } from "../../scripts/lib/level1.js";
 import { spawnAlmond } from "../../scripts/lib/loot.js";
 import { spawnFurniture, pickKind, wallSpot1, sizeOf } from "../../scripts/lib/furniture.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
@@ -115,8 +115,27 @@ export function tick(ctx) {
     put("meg-t-table", "table", 6.4, -0.5, 1.6, 1.4, 0); put("meg-t-stove", "stove", 9.5, -2.8, 0.75, 1.0, 30)
     for (const [i, dx, dz] of [[0, 14.5, 5.5], [1, 14.5, -5.5], [2, 11, -9], [3, 11, 9]]) put("meg-t-pallet-" + i, "pallet", dx + 0.35, dz, 1.3, 1.4, i * 20)
     let n = 0
-    for (const sz of [-1, 1]) for (let x = -3; x <= 2; x += 1.6) put("meg-t-bags-" + n++, "bags", x, sz * 10.5, 1.6, 1.0, 90)
-    for (const sz of [-1, 1]) for (let z = 2.8; z <= 8.5; z += 1.6) put("meg-t-bags-" + n++, "bags", 15.4, sz * z, 1.6, 1.0, 0)
+    for (const sz of [-1, 1]) for (let x = -3; x <= 2; x += 1.6) put("meg-t-bags-" + n++, "bags", x, sz * 10.5, 1.6, 1.0, 0) // the model's wall runs along its own x
+    for (const sz of [-1, 1]) for (let z = 2.8; z <= 8.5; z += 1.6) put("meg-t-bags-" + n++, "bags", 15.4, sz * z, 1.6, 1.0, 90)
+  }
+  if (s.megCamp && s.megCrates !== 2) { s.megCrates = 2; // the camp's crates as Tripo models in loose stacks by the sandbags, not unbroken walls of boxes (Shelly Nov 11: less blocky, sensible placement)
+    const a = cellCenter(ARRIVE.cx, ARRIVE.cz), CRATE = "/cdn/value.96f48b56e826ebb5fd584d269b08f2272040ab5d50589b2e04101b00f31d82a2.glb"; // 0.63 x 0.6 x 0.77 m
+    for (const id of Object.keys(ctx.place.objects)) if (id.startsWith("meg-crate-")) delete ctx.place.objects[id];
+    let n = 0;
+    const crate = (dx, dz, y, yaw, k = 1) => { const j = hash(n, 3, 77) - 0.5;
+      ctx.spawn("meg-crate-" + n++, { tags: ["l1prop"], feetPosition: { x: a.x + dx + j * 0.06, y, z: a.z + dz - j * 0.05 }, rotation: { yaw: yaw + j * 14 }, model: { id: CRATE },
+        layout: { box: { min: { x: -0.315 * k, y: 0, z: -0.385 * k }, max: { x: 0.315 * k, y: 0.6 * k, z: 0.385 * k } } }, physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 45 }, state: { name: "Supply Crate", loose: "wood", mat: "wood" } }); };
+    // a stack: two crates side by side (long side along the line), one riding across the pair
+    const stack = (dx, dz, along, top = true) => { const ux = along === "x" ? 0.4 : 0, uz = along === "z" ? 0.4 : 0, yaw = along === "x" ? 90 : 0;
+      crate(dx - ux, dz - uz, 0, yaw); crate(dx + ux, dz + uz, 0, yaw); if (top) crate(dx + ux * 0.2, dz + uz * 0.2, 0.6, yaw + 90); };
+    for (const sz of [-1, 1]) { stack(-4.9, sz * 10.5, "x"); stack(3.4, sz * 10.6, "x", sz > 0); stack(10.6, sz * 11.2, "x"); crate(12.5, sz * 11.3, 0, 80); } // the sandbag lines' open ends and the tent row's back
+    for (const sz of [-1, 1]) stack(15.5, sz * 10.1, "z", sz < 0); // the east corners, past the sandbags; the gate between them stays 4 m wide
+    crate(6.1, 0.65, 0, 15, 0.75); crate(6.95, -1.65, 0, -20, 0.75); // stools at the radio table
+    for (const id of Object.keys(ctx.place.objects)) if (id.startsWith("meg-t-bags-")) { const o = ctx.place.objects[id], f = o.feetPosition; // the sandbag walls stood crossways, like fins: turned to run along their lines
+      if (f) o.rotation = { yaw: Math.abs(f.x - a.x - 15.4) < 0.3 ? 90 : 0 }; }
+    for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id], f = o?.feetPosition; // the two camp lanterns stood at 0.9 m on nothing: one hangs by the string-light pole, one sits on a crate stack
+      if (o?.primitive?.kind !== "sphere" || o.primitive.radius !== 0.07 || !f || Math.abs(f.y - 0.9) > 0.05 || Math.hypot(f.x - a.x, f.z - a.z) > 7) continue;
+      o.feetPosition = f.x > a.x ? { x: a.x + 4.15, y: 2.25, z: a.z + 4.2 } : { x: a.x - 4.85, y: 1.22, z: a.z + 10.5 }; }
   }
   if (s.l1Tripo !== 3) { s.l1Tripo = 3; // the halls' drums and box pallets as real models, each a loose thing you can hit, kick, grab and break (Shelly: less blocky)
     const DRUM = "/cdn/value.de68d3453156f6d0341dc0143da17f0a5f60f2da731a9b018363a51fcf233712.glb", PAL = "/cdn/value.52adc0a974c9920d51033154da8dae242fd9a7271b1190ad5a9d3a0f0b9f6c1f.glb";
@@ -158,6 +177,16 @@ export function tick(ctx) {
       if (zone === "halls" && hash(cx, cz, 351) < 0.08) for (let q = 0; q < 3; q++) ctx.spawn(`${k}-cone${q}`, { tags: ["l1kit"], feetPosition: { x: c.x + 1.2 + q * 0.9, y: 0, z: c.z - 2 + hash(q, cx, cz) * 0.6 }, rotation: { yaw: q * 40 }, model: { id: K.cone }, layout: fit(0.36, 0.5, 0.36), visibleRange: { max: 40 } });
     }
   }
+  if (s.l1Deck === 3 && s.l1DeckLamps !== 1) { s.l1DeckLamps = 1; // the upper deck's lights were bare glowing slabs: the same chain-hung twin-tube batten as downstairs (Shelly Nov 11: less blocky)
+    const TOP = DECK.y + DECK.h;
+    for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id];
+      if (!(id.startsWith("l1-dl-") || id.startsWith("l1-rl-")) || o?.primitive?.kind !== "box") continue;
+      const f = o.feetPosition, lit = !!o.light;
+      o.primitive = null; o.material = null; o.model = { id: "/cdn/value.e1d7e9d8285363fde672073e9fa6ea81325922de9f94306bc9ce454a7b0b53b7.glb" }; o.layout = { box: { min: { x: -1.2, y: 0, z: -0.15 }, max: { x: 1.2, y: 0.55, z: 0.15 } } }; o.feetPosition = { x: f.x, y: TOP - 0.55, z: f.z };
+      if (lit) ctx.spawn({ parent: id, feetPosition: { x: 0, y: 0.015, z: 0 }, primitive: { kind: "box", width: 2.2, height: 0.035, depth: 0.07 }, material: { color: "oklch(0.97 0.02 220)", emissive: "oklch(0.95 0.03 220)", emissiveIntensity: 2.4 }, castShadow: false, visibleRange: { max: 42 } });
+    }
+  }
+  if (s.l1Tripo === 3 && s.l1Kit === 1 && s.l1Nooks !== 1) s.l1Nooks = tuckClutter(ctx) || (s.l1NookTry = (s.l1NookTry | 0) + 1) > 3 ? 1 : 0;
   if (s.megCamp) { // a fallen agent is replaced after a while; the new one holds no grudge
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz), at = Object.fromEntries(AGENTS.map(([id, dx, dz]) => [id, [dx, dz]]));
     keepPeople(ctx, Object.keys(at), (ctx, id) => { ctx.spawn(id, agentSpec(a, id, ...at[id])); ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody("pistol") }); });
@@ -307,3 +336,27 @@ function layStock(ctx) {
   return n;
 }
 function seedFurniture(ctx, n) { for (let i = 0; i < n; i++) placeOne(ctx); }
+
+// the halls' clutter (drums, pallets of boxes, cement sacks, rebar) tucked into the corner beside one of the cell's pillars, square to the grid,
+// where a car park's leftovers end up; it used to stand anywhere within 2.5 m of the bay's middle, in the driving aisle (Shelly Nov 11: "more sensible placements")
+// storage cells keep theirs (between the racks), ramp cells and the camp's surroundings are skipped. Returns how many groups moved.
+function tuckClutter(ctx) {
+  const O = ctx.place.objects, ids = Object.keys(O); let moved = 0;
+  for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
+    if (zoneOf(cx, cz) !== "halls" || rampCell(cx, cz) || Math.abs(cx - ARRIVE.cx) + Math.abs(cz - ARRIVE.cz) < 3) continue;
+    const corners = [[cx, cz], [cx + 1, cz], [cx, cz + 1], [cx + 1, cz + 1]].filter(([i, j]) => hasPillar(i, j)).sort((p, q) => hash(p[0], p[1], 901) - hash(q[0], q[1], 901));
+    const groups = [`l1d-${cx}-${cz}-`, `l1p-${cx}-${cz}-`, `l1k-${cx}-${cz}`].map((pre) => ids.filter((id) => pre.endsWith("-") ? id.startsWith(pre) : id === pre).map((id) => O[id]).filter((o) => o?.feetPosition && o.feetPosition.y < 1.5)).filter((g) => g.length);
+    groups.forEach((g, gi) => {
+      const corner = corners[gi]; if (!corner) return; // more groups than pillars: it stays where it was
+      const [i, j] = corner, px = i * S - HALF, pz = j * S - HALF, sx = i === cx ? 1 : -1, sz = j === cz ? 1 : -1;
+      const rebar = g[0].id.startsWith("l1k-") && g[0].model?.id?.includes("629540d3"), drum = g[0].id.startsWith("l1d-"), pallet = g[0].id.startsWith("l1p-");
+      const off = drum ? 1.15 : pallet ? 1.3 : 0.95, tx = px + sx * (rebar ? 1.55 : off), tz = pz + sz * (rebar ? 0.75 : off);
+      if (inHole(tx, tz)) return;
+      const ax = g.reduce((a, o) => a + o.feetPosition.x, 0) / g.length, az = g.reduce((a, o) => a + o.feetPosition.z, 0) / g.length;
+      for (const o of g) { const f = o.feetPosition; o.feetPosition = { x: f.x - ax + tx, y: f.y, z: f.z - az + tz }; }
+      if (rebar) g[0].rotation = { yaw: (hash(i, j, 905) - 0.5) * 8 }; // the bundle lies along the pillar line, not across the aisle (a pallet keeps its turn: its boxes ride it)
+      moved++;
+    });
+  }
+  return moved;
+}

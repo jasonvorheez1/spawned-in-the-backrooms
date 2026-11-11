@@ -46,7 +46,12 @@ export function geometry(ctx) {
     ctx.metalness(0.2); ctx.roughness(0.6); ctx.color("oklch(0.62 0.16 48)");
     for (let i = 3; i < N; i += 6) { const x = i * S - HALF + 2.2; for (const [a, b] of runs("z", x, -HALF, HALF)) { box(ctx, x - 0.22, x + 0.22, H - 0.82, H - 0.78, a, b); box(ctx, x - 0.22, x - 0.19, H - 0.82, H - 0.66, a, b); box(ctx, x + 0.19, x + 0.22, H - 0.82, H - 0.66, a, b); } }
     ctx.metalness(0.4); ctx.color("oklch(0.82 0.005 250)");
-    for (let j = 5; j < N; j += 10) { const z = j * S - HALF + 3; for (const [a, b] of runs("x", z, -HALF, HALF)) box(ctx, a, b, H - 1.05, H - 0.78, z - 0.28, z + 0.28); }
+    // a round spiral duct (it was a square box, Shelly Nov 11: less blocky): galvanised, a joint ring and a hanger strap every 3 m
+    for (let j = 5; j < N; j += 10) { const z = j * S - HALF + 3, y = H - 1.0, r = 0.22; for (const [a, b] of runs("x", z, -HALF, HALF)) {
+      tube(ctx, [[a, y, z], [b, y, z]], [r, r], hi ? 16 : 8);
+      if (!hi) continue;
+      for (let x = a + 1.5; x < b - 0.5; x += 3) { tube(ctx, [[x - 0.03, y, z], [x + 0.03, y, z]], [r + 0.018, r + 0.018], 16); box(ctx, x - 0.02, x + 0.02, y + r, H, z - 0.012, z + 0.012); }
+    } }
     ctx.metalness(0);
   }
 
