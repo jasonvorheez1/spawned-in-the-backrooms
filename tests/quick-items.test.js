@@ -1,5 +1,6 @@
 import {test,expect} from 'bun:test'
 import {assignQuick,quickItems} from '../scripts/lib/quick-items.js'
+import {CLOTHES_OFF,clothToken} from '../scripts/lib/clothes.js'
 test('only carried usable items bind, and each item occupies one slot',()=>{
  const s={almonds:2}
  expect(assignQuick(s,0,'almond:grey')).toBe(true)
@@ -13,16 +14,20 @@ test('only carried usable items bind, and each item occupies one slot',()=>{
  expect(assignQuick(s,9,'')).toBe(true)
  expect(s.quickSlots).toEqual({})
 })
-import {wornTokens,fullLook} from '../scripts/lib/clothes.js'
-test('equipment binds and unavailable equipment retains its slot',()=>{
- const look=fullLook({}), armor=wornTokens(look)[0], s={weapons:'pistol,shotgun',look,clothes:''}
+test('weapons bind and unavailable weapons retain their slot',()=>{
+ const s={weapons:'pistol,shotgun'}
  expect(assignQuick(s,1,'weapon:pistol')).toBe(true)
- expect(assignQuick(s,2,armor)).toBe(true)
  expect(quickItems(s).find(x=>x.id==='weapon:pistol').action).toEqual({k:'equip',w:'pistol'})
- expect(quickItems(s).find(x=>x.id===armor).action).toEqual({k:'wear',w:armor})
  s.weapons='shotgun'
  expect(quickItems(s).find(x=>x.id==='weapon:pistol').count).toBe(0)
  expect(s.quickSlots[1]).toBe('weapon:pistol')
+})
+test('armor slots respect whether clothing is available',()=>{
+ const armor=clothToken('topw','tee','f4f1ea'), s={clothes:armor}
+ expect(assignQuick(s,2,armor)).toBe(!CLOTHES_OFF)
+ const item=quickItems(s).find(x=>x.id===armor)
+ if(CLOTHES_OFF) expect(item).toBeUndefined()
+ else expect(item.action).toEqual({k:'wear',w:armor})
 })
 test('malformed saved quick slots do not break the inventory',()=>{
  expect(()=>quickItems({quickSlots:{0:null,1:42}})).not.toThrow()
