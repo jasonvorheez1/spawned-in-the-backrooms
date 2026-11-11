@@ -40,6 +40,7 @@ def measure(H):
         up = (tip - C).normalized(); Q = P - P.mean(0); Q = Q - np.outer(Q @ np.array(up), np.array(up))
         ev, evec = np.linalg.eigh(Q.T @ Q); thin = Vector(evec[:, 0]).normalized()
         if thin.y > 0: thin = -thin                       # facing out of the front (-Y)
+        if abs(thin.y) < 0.8: thin = Vector((0.26 * sx, -1, 0)).normalized()   # a thick old ear (the male's) gives no clean face: the bowl looks forward, a touch out
         thin = (thin - up * thin.dot(up)).normalized(); across = up.cross(thin).normalized()
         if across.x * sx < 0: across = -across
         proj = Q @ np.array(across); band = P[P[:, 2] < base_z + 0.3 * (tip.z - base_z)]
