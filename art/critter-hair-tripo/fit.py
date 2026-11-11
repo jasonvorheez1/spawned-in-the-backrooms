@@ -100,8 +100,13 @@ def landmarks(o, lab, top_frac=None):
     eL, eR = V[eyes & (L > cL)].mean(0), V[eyes & (L < cL)].mean(0)
     skin = sel & ~vhair & (vlab != 2)
     def tip(m):
-        i = np.where(m)[0]; return V[i[np.argmax(V[i, 2])]]
+        i = np.where(m)[0]; return V[i[np.argmax(V[i, 2])]] if len(i) else None
     aL, aR = tip(skin & (L > cL + 0.1 * W)), tip(skin & (L < cL - 0.1 * W))
+    lv = np.array(l[:])
+    mirror = lambda a: a - 2 * ((a @ lv) - cL) * lv
+    if aL is None and aR is not None: aL = mirror(aR)
+    if aR is None and aL is not None: aR = mirror(aL)
+    if aL is None: aL, aR = tip(sel & (L > cL + 0.1 * W)), tip(sel & (L < cL - 0.1 * W))  # hair hides both ears
     return dict(V=V, sel=sel, c=c, f=f, l=l, W=W, eyes=eyes, eL=eL, eR=eR, aL=aL, aR=aR, F=F, L=L, cF=cF, cL=cL)
 
 def delete_faces(bm, faces):
