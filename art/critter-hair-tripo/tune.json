@@ -4,5 +4,29 @@
  },
  "m_undercut": {
   "eyem": 0.12
+ },
+ "f_twin2": {
+  "fullscalp": true
+ },
+ "f_pony2": {
+  "fullscalp": true
+ },
+ "f_bob2": {
+  "fullscalp": true
+ },
+ "f_hime2": {
+  "fullscalp": true
+ },
+ "f_braid": {
+  "fullscalp": true
+ },
+ "f_messybun": {
+  "fullscalp": true
+ },
+ "m_spiky": {
+  "fullscalp": true
+ },
+ "m_fluffy": {
+  "fullscalp": true
  }
 }

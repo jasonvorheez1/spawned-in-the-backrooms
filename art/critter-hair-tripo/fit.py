@@ -288,7 +288,7 @@ if not TUNE.get("noscalp"):
                 if _hits((d0 + t * a_).normalized()): opp[k] = True; break
         # a gap is hair on opposite sides (crown slit, ear-base notch); a bare forehead has hair on one side only
         if not ((opp[0] and opp[2]) or (opp[1] and opp[3])): bare.append(fa)
-    bmesh.ops.delete(bb2, geom=bare, context="FACES")
+    if not TUNE.get("fullscalp"): bmesh.ops.delete(bb2, geom=bare, context="FACES")  # fullscalp: a sculpt bald behind (twintails, ponytail) keeps the whole cap
     me2 = bpy.data.meshes.new("scalp"); bb2.to_mesh(me2); bb2.free(); bb.free()
     sc_o = bpy.data.objects.new("scalp", me2); bpy.context.collection.objects.link(sc_o)
     bpy.ops.object.select_all(action="DESELECT"); sc_o.select_set(True); raw.select_set(True)
