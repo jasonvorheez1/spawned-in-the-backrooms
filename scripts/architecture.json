@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 5687,
-  "updatedAt": "2026-11-11T22:58:05.604Z",
+  "basedOnSpecVersion": 5689,
+  "updatedAt": "2026-11-11T23:03:13.476Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning an authored Level 0 maze, deeper levels and shared destinations. `templates/player.js` composes player behaviors while place simulations and shared scripts own environments, NPCs, combat, loot, crafting, UI and progression; the debug studio hosts Tripo cat demos, and cat player/NPC avatars use the shared cat wardrobe pipeline.",
   "scriptPaths": [],
   "places": [
@@ -66,7 +66,7 @@
     "interact.js openLoot/closeLoot → prop-interactions.containerPose → child part state.goal; scripts/prop-part.js samples cubic motion and builtin tween animates articulated storage fronts; toggleLamp flips light part goals.",
     "scripts/lib/prop-interactions.js interactiveSpec → generated furniture from scripts/lib/furniture.js and upgradeNearby nearby legacy props; preserves root collider/state and tags; prop-part children provide moving doors/drawers/lids.",
     "Player craft action/UI → scripts/lib/craft.js stationOf + craft.yml; built pieces in breakables.yml carry bench=cook/ammo and state.station; craft.js/craft-ui.js filter station recipes while hand menu lists all recipes.",
-    "Wardrobe UI sends dress actions to scripts/critter.js, which updates saved look and seats player/NPC cat models via scripts/lib/critter-model.js → cat-wardrobe.js; etype/mtype select calm-face eye/mouth layers from critter-faces.yml, while mood faces replace those layers."
+    "Wardrobe UI sends dress actions to scripts/critter.js, which updates saved look and seats player/NPC cat models via scripts/lib/critter-model.js → cat-wardrobe.js; etype/mtype select calm-face eye/mouth layers from critter-faces.yml, while expression/mood faces carry their own painted features."
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + objects.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + bonus-extra and mall shopper/salon scripts - authored mall, NPC attachments and simulation; escalator deco has frozen steps removed and moving motorized steps/audio.",
@@ -75,8 +75,8 @@
     "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preserving root state/collider.",
     "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + Zenith door/bots/hatch/flicker/drones/use scripts - Zenith Station geometry, breach, hazards and interactive systems.",
     "places/level4 scenes + places/level4/sim.js + scripts/l4-office.js/l4-office-geo.js/l4-home.js + Level 4/5 resident data - authored office/hotel props, fixtures, NPC bodies and attached critter behavior.",
-    "scripts/lib/critter-model.js + critter-models.yml + wardrobe*.yml + scripts/lib/clothes.js + art/critter-cute and art/critter-andy - shared furry/optional-human avatars; Tripo cats use cat-wardrobe.js while other furry species retain legacy models.",
-    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + critter-faces.yml + mat-catskin.js + art/cat-wardrobe - Tripo cat skin paints faces and clothing; sex-specific face art supplies mood expressions, selectable calm eyes and layered mouths, while fitted skinned hair, tufts and garments vary by look."
+    "scripts/lib/critter-model.js + critter-models.yml + wardrobe*.yml + scripts/lib/clothes.js + art/critter-cute and art/critter-andy - shared furry/optional-human avatars; Tripo cats use cat-wardrobe.js while other furry species retain legacy paths.",
+    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + critter-faces.yml + mat-catskin.js + art/cat-wardrobe - Tripo cat skin paints faces/clothing and builds skinned hair/fluff accessories; fluff.py's six tuft styles and bangs use softer, slimmer rounded tapered locks, and twintails.py reuses its lock/grow helpers."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
@@ -88,7 +88,7 @@
     "Game Tripo cat selection is gated by !HUMAN, MESH and speciesOf(look) === 'cat'; cats use catModel/catMorph/catChildren, while human mode and other species do not use the cat wardrobe.",
     "Cat look.snout/ears/tail select named shape keys via catMorph, which first zeros all option keys; omitted choices are stable-hash defaults in critter-model.js. chest is 0..1 mapped to Chest 0.15..1 and matching tops carry the same Chest morph.",
     "Cat expressions and eye/mouth variations are painted in head fur via mat-catskin.js and critter-faces.yml, not face meshes: etype/mtype affect the calm face only; expression/mood faces carry their own features.",
-    "catChildren uses skinned avatar children for garments, masks, hair and fluff; preserve skin attachment and catskin/cloth material. Hairstyle assets are sex-gated in cat-wardrobe.yml and tinted by look.hairc; hairstyles and the crop/jacket defaults have updated fitted assets/colors.",
+    "catChildren uses skinned avatar children for garments, masks, hair and fluff; preserve skin attachment and catskin/cloth material. Hairstyle assets are sex-gated in cat-wardrobe.yml and tinted by look.hairc; fluff color uses look.fluffc or fur.",
     "Cat outfits fill missing or invalid top/bottom choices from W.defaults, including legacy outfit names; the sw167 migration and dressed() fallback keep clothing layers and modeled garment children consistent."
   ]
 }
