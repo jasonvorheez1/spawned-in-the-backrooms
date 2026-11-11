@@ -122,8 +122,8 @@ human:
       free: /cdn/value.0baf8f1c41fbde18b42b99d05a3148c2865fb85dff67c79b9f0bdd0cc49f1c4a.glb
       hat: /cdn/value.1581a874a124508240514640a91533e5f0b8c23891825fe31cbcfee8e9390d6c.glb
     28:
-      free: /cdn/value.79b3ec2a30f8fd098c6b75f241b4da1061ec46f82c880607e41f16c4595550f7.glb
-      hat: /cdn/value.df0f7c2fb68b90e236f3351c0300bf95ac0d09371608e33c63f5d73c52e26897.glb
+      free: /cdn/value.35f09ca2cc32affc3c1edc0cf733ba3d8d69a83931b13ee1168021fc1d4a9d8e.glb   # Nov 11 waist length + strand map (art/tripo-hair/strands_long.py); before 79b3ec2a
+      hat: /cdn/value.5171d7a31b13020b5d10743b4045b026202f3e571c688a1a56057b2bf1bf7dba.glb
     29:
       free: /cdn/value.b99855982632a4f40eea9e2d7ebd705d77103210d728531b5c478b37c77aa332.glb
       hat: /cdn/value.c72be94e03a22b1bf0c29a991d2438bb6af53b26f68210254bddab1cd14eeabb.glb
