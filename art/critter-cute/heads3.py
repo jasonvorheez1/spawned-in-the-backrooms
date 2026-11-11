@@ -68,6 +68,27 @@ sub('N = 32; ew, eh = .074, .090', 'N = 32; ew, eh = .066, .088')
 sub('inner = ellipse(ew, eh, N); outer = ellipse(ew + .0062, eh + .0062, N)',
     'inner = ellipse(ew, eh, N); outer = [(x * (ew + .0050) / ew + (s * .022 * max(0.0, y / eh) ** 2 * max(0.0, s * x / ew)), y * (eh + .0030) / eh + (.0260 * (y / eh) ** 2 if y > 0 else 0)) for (x, y) in inner]')
 sub('pw, ph = .047, .059; pc = (-s * .004, -.010)', 'pw, ph = .060, .079; pc = (-s * .002, -.002)')
+# ---- v3b (Shelly #205470 "do a bit better"): anime eye shape, softer fluff ----
+# the eye's top is flattened into a lid line that lifts at the outer corner (a soft cat-eye), the bottom stays round;
+# the black pupil is cut flat under that lid so it reads tucked under it, the way anime eyes do; lashes follow the new lid
+sub('FACE_KEYS = [', '''def _A(x, y, s, ew=.066):
+    if y > 0: y = y * .74
+    return (x, y + .012 * max(0.0, s * x / ew) ** 1.6)
+def _top(x, s, ew=.066, eh=.088):
+    t = max(0.0, 1 - (x / ew) ** 2) ** .5
+    return _A(x, eh * t, s)[1]
+FACE_KEYS = [''')
+sub('pts, ff = disc(ew, eh, N, 6)\n', 'pts, ff = disc(ew, eh, N, 6); pts = [_A(x, y, s) for x, y in pts]\n')
+sub("(.0260 * (y / eh) ** 2 if y > 0 else 0)) for (x, y) in inner]", "(.0260 * (y / eh) ** 2 if y > 0 else 0)) for (x, y) in inner]; inner = [_A(x, y, s) for x, y in inner]; outer = [_A(x, y, s) for x, y in outer]")
+sub('pts, ff = disc(pw, ph, N, 6, *pc)', 'pts, ff = disc(pw, ph, N, 6, *pc); pts = [(x, min(y, _top(x, s) - .004)) for x, y in pts]')
+sub('bx, by = r0[0] * math.cos(a), r0[1] * math.sin(a)', 'bx, by = _A(r0[0] * math.cos(a), r0[1] * math.sin(a) * 1.0, s)', 2)
+sub('for j, ang in enumerate((18, 40, 62)):', 'for j, ang in enumerate((8, 24, 42)):')
+# one small soft tuft on the crown instead of the three-spike crown
+sub('spike(H, b, n * .052 + f * .022, n * .040 + f * .035, .030, "fur")', 'spike(H, b, n * .030 + f * .022, n * .016 + f * .030, .022, "fur")')
+sub('spike(H, b2, n2 * .038 + f * .016 + V(s * .012, 0, 0), n2 * .028 + f * .024 + V(s * .018, 0, 0), .022, "fur")', 'pass')
+# cheek fluff: two short soft tufts a side, not three long spikes
+sub('for v_, ln, r0, dz in ((-.09, .064, .028, -.008), (-.21, .078, .032, -.018), (-.33, .060, .026, -.026)):',
+    'for v_, ln, r0, dz in ((-.14, .040, .026, -.008), (-.27, .046, .028, -.016)):')
 exec(compile(src, os.path.join(HERE, "build.py"), "exec"))
 # proofs show the head as the game draws it by default: no beard, no blush unless worn (the game hides those slots)
 _ht = head_turn
