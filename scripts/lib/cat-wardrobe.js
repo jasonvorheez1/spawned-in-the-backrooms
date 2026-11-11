@@ -70,7 +70,7 @@ export function catModel(sex, look) {
   // an eye type redraws the calm face; a mouth type lays its layer on it. a mood face keeps its own painted eyes and mouth
   const face = calm ? (FACES.eyes?.[sk]?.[look?.etype] ?? faces.neutral) : expression
   const mouth = calm ? FACES.mouths?.[sk]?.[look?.mtype] : undefined
-  const projection = sex === 'm' ? [2.9946, -2.163, -0.011] : [2.9946, -2.0648, 0.055]
+  const projection = sex === 'm' ? [2.9946, -2.118, -0.011] : [2.9946, -2.0198, 0.055]   // Nov 11 (Shelly 'fix eye placement and double noses'): picture 4.5% lower so its eyes sit in the sculpted sockets and its nose on the mesh nose
   const skin = (color) => ({ kind: 'scripted', script: 'scripts/mat-catskin.js', color, params })
   return {
     id: CAT_BODY[sex].glb, forward: '+z',
