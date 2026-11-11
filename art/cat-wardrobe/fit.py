@@ -112,8 +112,19 @@ if KIND == "skirt":   # cloth hung from the hips; the lower half leans a little 
 if KIND == "boots":   # each boot is rigid on its own foot; the cuff follows the shin
     bm = bmesh.new(); bm.from_mesh(me)
     bmesh.ops.delete(bm, geom=[f for f in bm.faces if min(v.co.x for v in f.verts) < -0.004 and max(v.co.x for v in f.verts) > 0.004], context="FACES"); bm.to_mesh(me); bm.free()
+    bm = bmesh.new(); bm.from_mesh(me); bm.verts.ensure_lookup_table(); isl = {}   # side by connected piece, never by a vertex's own x: an inner welt can cross the middle
+    for v0 in bm.verts:
+        if v0.index in isl: continue
+        st, grp = [v0], []
+        while st:
+            q = st.pop()
+            if q.index in isl: continue
+            isl[q.index] = None; grp.append(q); st.extend(e.other_vert(q) for e in q.link_edges)
+        sx = sum(q.co.x for q in grp) / len(grp)
+        for q in grp: isl[q.index] = "Left" if sx > 0 else "Right"
+    bm.free()
     for v in me.vertices:
-        S = "Left" if v.co.x > 0 else "Right"; t = min(1.0, max(0.0, (v.co.z - B["leg"][2] * 0.75) / 0.03))
+        S = isl[v.index]; t = min(1.0, max(0.0, (v.co.z - B["leg"][2] * 0.75) / 0.03))
         setw(v, {S + "Foot": 1 - t, S + "Leg": t})
 if KIND == "top":   # the hood and collar ride the upper spine, never an arm
     sp = g.vertex_groups.get("mixamorig:Spine2"); allg = [vg for vg in g.vertex_groups]
