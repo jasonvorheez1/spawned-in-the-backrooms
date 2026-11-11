@@ -100,7 +100,12 @@ def landmarks(o, lab, top_frac=None):
     F, L = V @ np.array(f[:]), V @ np.array(l[:]); cF, cL = c @ np.array(f[:]), c @ np.array(l[:])
     W = L[sel].max() - L[sel].min()
     eyes = blk & (F > cF) & (np.abs(L - cL) > 0.1 * W) & (np.abs(L - cL) < 0.45 * W)
-    eL, eR = V[eyes & (L > cL)].mean(0), V[eyes & (L < cL)].mean(0)
+    _l, _r = eyes & (L > cL), eyes & (L < cL)
+    if not _l.any() and not _r.any(): _l = _r = blk  # eyes hidden: one blob for both
+    eL = V[_l].mean(0) if _l.any() else None; eR = V[_r].mean(0) if _r.any() else None
+    _lv = np.array(l[:])
+    if eL is None: eL = eR - 2 * ((eR @ _lv) - cL) * _lv  # one eye hidden under hair: mirror the other
+    if eR is None: eR = eL - 2 * ((eL @ _lv) - cL) * _lv
     skin = sel & ~vhair & (vlab != 2)
     def tip(m):
         i = np.where(m)[0]; return V[i[np.argmax(V[i, 2])]] if len(i) else None
@@ -206,7 +211,7 @@ for v in bm.verts:
     off = random.uniform(*OFF); side = (v.co - loc).dot(n)
     edge = v.is_boundary
     if side < off: v.co = loc + n * off; pushed += 1
-    elif edge and d < 0.07 * headH: v.co = loc + n * off; snapped += 1
+    elif edge and (d < 0.07 * headH or kd.find(v.co)[2] < 2.6 * EAR_R): v.co = loc + n * off; snapped += 1  # ear openings skirt down to the skull: no gap into the shell
     elif edge: floating += 1
 for _ in range(2):  # relax the snapped hairline ring a touch
     for v in bm.verts:
