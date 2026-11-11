@@ -114,7 +114,7 @@ for r in range(1, 4):
     front = nxt
 feather = {0: 1.0, 1: 1.0, 2: 1.0}  # a tee's hem stands off like the rest (no taper back to the skin): the lip below closes it
 # Nov 10: the hem rides OVER the waistband (pants stand 8 mm off): below the navel the cloth eases out up to HEMOUT more, so pants never poke through an untucked top
-HEMOUT = float(os.environ.get('HEMOUT', '0.007'))
+HEMOUT = float(os.environ.get('HEMOUT', '0'))  # 7 mm pushed pants' waistband through the hem in game: off by default
 def _hz(z): t = max(0.0, min(1.0, (J['Spine'].z + 0.03 * s - z) / (0.08 * s))); return t * t * (3 - 2 * t)
 HO = {v: HEMOUT * _hz(W(v.co).z) for v in bm.verts}
 AT = {v: (0.0 if TANK else armt(W(v.co)) if abs(W(v.co).x) > xpit * 0.85 else 0.0) for v in bm.verts}
@@ -126,11 +126,13 @@ def normals(C):
         for i in range(len(c)): fn += c[i].cross(c[(i + 1) % len(c)])
         for v in vs: n[v] += fn
     return {v: (x.normalized() if x.length > 1e-12 else Vector((0, 0, 1))) for v, x in n.items()}
+NOFILL = {v: (abs(W(v.co).x) > xpit * 0.55 and W(v.co).z > zpit - 0.06 * s) for v in bm.verts}
 def fill(C):  # bridge hollows (cleavage, spine groove) the way fabric does, outward only
     for it in range(6):
         N = normals(C); new = {}
         for v in bm.verts:
             if ring.get(v, 9) < 1: continue
+            if NOFILL.get(v): continue  # Nov 10: no bridging over the shoulder cap: it filled the neck-to-arm dip into a flat box
             nb = [e.other_vert(v) for e in v.link_edges]
             avg = sum((C[w] for w in nb), Vector()) / len(nb)
             d = (avg - C[v]).dot(N[v])
