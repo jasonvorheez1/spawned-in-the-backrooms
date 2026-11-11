@@ -703,7 +703,7 @@ bc-train:
   rotation: {yaw: 90}
 bc-trash-1:
   castShadow: false
-  feetPosition: {x: -4.5, y: 0, z: 25.02}
+  feetPosition: {x: -5.7, y: 0, z: 25.02}
   id: "bc-trash-1"
   layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
   model: {id: "/cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb"}
@@ -712,7 +712,7 @@ bc-trash-1:
   tags: ["bonus-court"]
 bc-trash-2:
   castShadow: false
-  feetPosition: {x: 4.5, y: 0, z: 25.02}
+  feetPosition: {x: 5.7, y: 0, z: 25.02}
   id: "bc-trash-2"
   layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
   model: {id: "/cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb"}
@@ -721,7 +721,7 @@ bc-trash-2:
   tags: ["bonus-court"]
 bc-trash-3:
   castShadow: false
-  feetPosition: {x: -4.5, y: 0, z: -21}
+  feetPosition: {x: -5.7, y: 0, z: -21}
   id: "bc-trash-3"
   layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
   model: {id: "/cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb"}
@@ -730,7 +730,7 @@ bc-trash-3:
   tags: ["bonus-court"]
 bc-trash-4:
   castShadow: false
-  feetPosition: {x: 4.5, y: 0, z: -21}
+  feetPosition: {x: 5.7, y: 0, z: -21}
   id: "bc-trash-4"
   layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
   model: {id: "/cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb"}
