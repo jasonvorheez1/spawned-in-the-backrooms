@@ -1615,7 +1615,7 @@ omega-rhea:
 omega-rhea/critter-hair:
   attachment: {skin: true}
   id: omega-rhea/critter-hair
-  model: {id: /cdn/value.2a4e6b2b426a68031722a47e419074079e2bb24e3e08284cb0cc1df87c7dc17c.glb, materials: {hair: {color: "#2a1d16", kind: scripted, params: {kind: hair}, script: scripts/mat-anime.js}}}
+  model: {id: /cdn/value.1ac160ce8f94be09c40e116e22d0ac702039438a4a12a7aed3189dcba185a8eb.glb, materials: {hair: {color: "#2a1d16", kind: scripted, params: {kind: hair}, script: scripts/mat-anime.js}}}
   parent: omega-rhea
 omega-rhea/critter-ward-boots:
   attachment: {skin: true}
