@@ -1,0 +1,8 @@
+# spawn-scene v2 yaml objects
+omega-dace/critter-head:
+  attachment: {skin: true}
+  id: omega-dace/critter-head
+  jiggle: {amount: 0.58, bones: [EarL, EarR], bounce: 0.72}
+  model: {id: /cdn/value.706aca164b8df44d64b9f3df704efbc5b06ba94c87bd7d78564f8c59f24ec4fe.glb, materials: {beard: {color: "#5a3a26", depthWrite: false, opacity: 0, outline: false, transparent: true, visible: false}, belly: {color: "#ffffff", metalness: 0, outline: false, roughness: 0.88}, blush: {color: "#ff7b94", depthWrite: false, opacity: 0, outline: false, transparent: true, visible: false}, eyeink: {color: "#16101c", metalness: 0, outline: false, roughness: 0.95}, eyewhite: {color: "#fffdf8", metalness: 0, outline: false, roughness: 0.35}, fur: {color: "#f07a2e", metalness: 0, roughness: 0.82}, inner: {color: "#f8d2bd", metalness: 0, roughness: 0.9}, iris: {color: "#7209b7", metalness: 0.05, outline: false, roughness: 0.22}, mark: {color: "#2c1c18", metalness: 0, outline: false, roughness: 0.82}, mouth: {color: "#44141e", outline: false, roughness: 0.82}, nose: {color: "#e0a090", metalness: 0.05, outline: false, roughness: 0.28}, pupil: {color: "#000000", metalness: 0, outline: false, roughness: 1}, tip: {color: "#ffffff", metalness: 0, roughness: 0.82}, tongue: {color: "#ff758c", outline: false, roughness: 0.45}}}
+  morph: {EyeWide: 1, FT_Broad: 0.48150000000000004, FT_Heart: 0.3745, FT_Narrow: 0.2, FT_Round: 0.33865, FT_Snout: 0.54, FT_Square: 0.07490000000000001, Half: 0.0625, Smile: 0.16, Wide: 0.22499999999999998}
+  parent: omega-dace
