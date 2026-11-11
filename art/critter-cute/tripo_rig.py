@@ -360,13 +360,13 @@ def clean(mask):
 _, cream_all = classes(px); UVF, UVC = clean(fur_all), clean(cream_all & (lum > 0.6))
 cm = np.zeros((NX + 1, NZ + 1))
 for (i, j), n in pid.items(): cm[i, j] = pmat[n]
-for _ in range(4): cm = (cm + np.roll(cm, 1, 0) + np.roll(cm, -1, 0) + np.roll(cm, 1, 1) + np.roll(cm, -1, 1)) / 5
+for _ in range(12): cm = (cm + np.roll(cm, 1, 0) + np.roll(cm, -1, 0) + np.roll(cm, 1, 1) + np.roll(cm, -1, 1)) / 5
 for (i, j), n in pid.items(): pmat[n] = int(cm[i, j] > 0.45); puv[n] = UVC if pmat[n] else UVF
 pf = []
 for i in range(NX):
     for j in range(NZ):
         q = [(i, j), (i, j + 1), (i + 1, j + 1), (i + 1, j)]
-        if all(k in pid for k in q) and max(pv[pid[k]].y for k in q) - min(pv[pid[k]].y for k in q) < 0.015: pf.append(q)
+        if all(k in pid for k in q) and max(pv[pid[k]].y for k in q) - min(pv[pid[k]].y for k in q) < 0.05: pf.append(q)
 def inner(c, m):
     fi_ = (c.x - BOX[0]) / (BOX[1] - BOX[0]) * NX; fj_ = (c.z - BOX[2]) / (BOX[3] - BOX[2]) * NZ
     return min(fi_, NX - fi_, fj_, NZ - fj_) > m
