@@ -68,28 +68,28 @@ def build(sex, kind, arm):
         for sx in (-1, 1):
             if kind == "cheeks":
                 dirs = [Vector((sx, -0.55, -0.25)), Vector((sx, -0.2, -0.45))]
-                grow(bm, hb, C, dirs, rng, 0.07 * S, 0.034 * S, 5, 0.03 * S, 0.3, Vector((sx * 0.7, 0.15, -0.55)).normalized())
+                grow(bm, hb, C, dirs, rng, 0.085 * S, 0.055 * S, 2, 0.02 * S, 0.3, Vector((sx * 0.7, 0.15, -0.55)).normalized())
             else:
                 dirs = [Vector((sx, -0.3, -0.1)), Vector((sx, -0.1, -0.35)), Vector((sx, 0.15, -0.2))]
-                grow(bm, hb, C, dirs, rng, 0.1 * S, 0.036 * S, 5, 0.035 * S, 0.25, Vector((sx * 0.55, 0.45, -0.6)).normalized())
+                grow(bm, hb, C, dirs, rng, 0.115 * S, 0.055 * S, 2, 0.025 * S, 0.25, Vector((sx * 0.55, 0.45, -0.6)).normalized())
     elif kind == "crest":
         top = Vector((0, cy - 0.02, zmax + 0.5))
         dirs = [Vector((0, -0.45, 1)), Vector((0.25, -0.3, 1)), Vector((-0.25, -0.3, 1)), Vector((0, -0.15, 1))]
-        grow(bm, hb, C, dirs, rng, 0.1 * S, 0.032 * S, 3, 0.025 * S, 0.45, Vector((0, 0.55, 0.35)).normalized())
+        grow(bm, hb, C, dirs, rng, 0.11 * S, 0.05 * S, 1, 0.01 * S, 0.45, Vector((0, 0.55, 0.35)).normalized())
     elif kind == "lynx":
         for sx in (-1, 1):
             ear = max((v for v in hv if v.x * sx > 0.05), key=lambda v: v.z)
-            for k in range(5):
+            for k in range(3):
                 d = Vector((sx * 0.25 + rng.uniform(-.15, .15), rng.uniform(-.1, .1), 1)).normalized()
-                lock(bm, ear + Vector((rng.uniform(-.006, .006), rng.uniform(-.006, .006), -0.012)), d, 0.075 * S * rng.uniform(.7, 1.2), 0.014 * S, Vector((sx * 0.4, 0.2, 0)), 0, rng)
+                lock(bm, ear + Vector((rng.uniform(-.006, .006), rng.uniform(-.006, .006), -0.012)), d, 0.085 * S * rng.uniform(.8, 1.1), 0.022 * S, Vector((sx * 0.4, 0.2, 0)), 0, rng)
     elif kind == "ruff":
         bone = "mixamorig:Spine2"; nc = Vector((0, neck.y, neck.z - 0.03 * S))
         dirs = [Vector((math.sin(a), -math.cos(a), -0.15)) for a in [math.radians(x) for x in range(-80, 81, 32)]]
-        grow(bm, bb, nc, dirs, rng, 0.085 * S, 0.04 * S, 6, 0.035 * S, 0.25, Vector((0, -0.35, -0.9)).normalized())
+        grow(bm, bb, nc, dirs, rng, 0.1 * S, 0.065 * S, 2, 0.02 * S, 0.25, Vector((0, -0.35, -0.9)).normalized())
     elif kind == "mane":
         bone = "mixamorig:Neck"; nc = Vector((0, neck.y, neck.z + 0.02 * S))
         dirs = [Vector((math.sin(a), math.cos(a), 0.1)) for a in [math.radians(x) for x in range(-100, 101, 40)]]
-        grow(bm, bb, nc, dirs + [Vector((math.sin(a), -math.cos(a), 0.1)) for a in [math.radians(x) for x in (-60, -20, 20, 60)]], rng, 0.1 * S, 0.042 * S, 6, 0.04 * S, 0.3, Vector((0, 0.6, -0.75)).normalized())
+        grow(bm, bb, nc, dirs + [Vector((math.sin(a), -math.cos(a), 0.1)) for a in [math.radians(x) for x in (-60, -20, 20, 60)]], rng, 0.11 * S, 0.065 * S, 2, 0.025 * S, 0.3, Vector((0, 0.6, -0.75)).normalized())
     me = bpy.data.meshes.new("fluff"); bm.to_mesh(me); bm.free()
     o = bpy.data.objects.new("fluff", me); bpy.context.collection.objects.link(o)
     for p in me.polygons: p.use_smooth = True
