@@ -7,7 +7,7 @@ from mathutils.bvhtree import BVHTree
 from mathutils.kdtree import KDTree
 
 ID = sys.argv[sys.argv.index("--") + 1]
-ROOT = "/workspace/hair/tripo8"
+ROOT = os.environ.get("HAIR_ROOT", "/workspace/hair/tripo8")  # a second lane points this at its own folder
 BODY = f"{ROOT}/{'female' if ID.startswith('f_') else 'male'}.glb"
 RAW, OUT, PROOF = f"{ROOT}/{ID}-raw.glb", f"{ROOT}/{ID}.glb", f"{ROOT}/proof_{ID}"
 TRIS = 5900
