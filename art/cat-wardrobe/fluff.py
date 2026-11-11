@@ -68,7 +68,7 @@ def build(sex, kind, arm):
     sk = [v for v in hv if abs(v.x) < 0.2]; crown = max(v.z for v in sk); z0 = min(v.z for v in sk)
     C = Vector((0, sum(v.y for v in sk) / len(sk), (z0 + crown) / 2))
     def tuft(dirs, L, r, n, spread, bias, curl):
-        grow(bm, hb, C, [Vector(d) for d in dirs], rng, L * S, r * S, n, spread * S, bias, Vector(curl).normalized())
+        grow(bm, hb, C, [Vector(d) for d in dirs], rng, L * S * 1.9, r * S * 1.7, n, spread * S * 1.5, bias, Vector(curl).normalized())   # chunky, readable at play distance
     for sx in (-1, 1):
         if kind == "cheeks":    # anime cat cheek fluff: three points out of the widest part of the face, below the eyes
             tuft([(sx, -0.45, -0.35), (sx, -0.2, -0.3), (sx, 0.05, -0.2)], 0.085, 0.032, 1, 0.006, 0.55, (sx, 0.25, -0.35))
