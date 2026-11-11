@@ -235,6 +235,7 @@ for v in bm.verts:
     off = random.uniform(*OFF); side = (v.co - loc).dot(n)
     edge = v.is_boundary
     if side < off: v.co = loc + n * off; pushed += 1
+    elif TUNE.get("thin"): v.co = loc + n * off + (v.co - loc - n * off) * TUNE["thin"]   # hug the skull: volume pulled in, shape kept
     elif edge and (d < 0.07 * headH or kd.find(v.co)[2] < 2.6 * EAR_R): v.co = loc + n * off; snapped += 1  # ear openings skirt down to the skull: no gap into the shell
     elif edge: floating += 1
 for _ in range(2):  # relax the snapped hairline ring a touch
@@ -257,7 +258,7 @@ if not TUNE.get("noscalp"):
     for fa in bb.faces:
         m = fa.calc_center_median(); F_, L_, Z_ = FLZ(m)
         _band = 0.75 * headH * 0.5
-        if TUNE.get("fullscalp") and F_ < -0.1 * headF: _band = 0.95 * headH   # fullscalp: the back of the skull down to the nape
+        if TUNE.get("fullscalp") and F_ < -0.1 * headF: _band = (1.25 if TUNE.get("nape") else 0.95) * headH   # fullscalp: the back of the skull down to the nape
         if Z_ < crown - _band: continue          # below the skull band
         _rear = TUNE.get("fullscalp") and F_ < -0.1 * headF
         if Z_ < eye_top + 0.08 * headH and not _rear: continue              # never on the eyes
@@ -265,7 +266,7 @@ if not TUNE.get("noscalp"):
         if F_ <= 0.25 * headF and Z_ < max(side_floor, eye_top) and not (TUNE.get("fullscalp") and F_ < -0.1 * headF): continue
         if kd.find(m)[2] < 0.75 * EAR_R: continue              # ears and a collar round each base stay clear
         if any(kd.find(v.co)[2] < 0.6 * EAR_R for v in fa.verts): continue
-        if fa.normal.z < -0.35: continue                      # underside of the jaw/neck
+        if fa.normal.z < (-0.85 if _rear and TUNE.get("nape") else -0.35): continue   # underside of the jaw/neck; nape: the rear cap runs under the skull into the neck
         keep.append(fa.index)
     keepset = set(keep)
     bb2 = bmesh.new(); vmap = {}
@@ -292,6 +293,10 @@ if not TUNE.get("noscalp"):
         # a gap is hair on opposite sides (crown slit, ear-base notch); a bare forehead has hair on one side only
         if not ((opp[0] and opp[2]) or (opp[1] and opp[3])): bare.append(fa)
     if not TUNE.get("fullscalp"): bmesh.ops.delete(bb2, geom=bare, context="FACES")  # fullscalp: a sculpt bald behind (twintails, ponytail) keeps the whole cap
+    for _ in range(4):
+        for v in [v for v in bb2.verts if v.is_boundary]:
+            nb = [e.other_vert(v).co for e in v.link_edges if e.is_boundary]
+            if len(nb) == 2: v.co = v.co * 0.5 + (nb[0] + nb[1]) * 0.25
     me2 = bpy.data.meshes.new("scalp"); bb2.to_mesh(me2); bb2.free(); bb.free()
     sc_o = bpy.data.objects.new("scalp", me2); bpy.context.collection.objects.link(sc_o)
     bpy.ops.object.select_all(action="DESELECT"); sc_o.select_set(True); raw.select_set(True)

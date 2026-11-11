@@ -6,7 +6,8 @@
   "eyem": 0.12
  },
  "f_twin2": {
-  "fullscalp": true
+  "fullscalp": true,
+  "nape": true
  },
  "f_pony2": {
   "fullscalp": true
@@ -24,7 +25,9 @@
   "fullscalp": true
  },
  "m_spiky": {
-  "fullscalp": true
+  "fullscalp": true,
+  "nape": true,
+  "thin": 0.55
  },
  "m_fluffy": {
   "fullscalp": true
