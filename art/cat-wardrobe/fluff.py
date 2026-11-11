@@ -96,7 +96,7 @@ def build(sex, kind, arm):
     sub = o.modifiers.new("s", "SUBSURF"); sub.levels = 1; sub.render_levels = 1
     bpy.context.view_layer.objects.active = o; o.select_set(True); bpy.ops.object.modifier_apply(modifier="s")
     mat = bpy.data.materials.new("fluff"); mat.use_nodes = True
-    mat.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (1.0, 0.62, 0.22, 1)
+    mat.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (1.0, 1.0, 1.0, 1)
     mat.node_tree.nodes["Principled BSDF"].inputs["Roughness"].default_value = 0.85
     me.materials.append(mat)
     g = o.vertex_groups.new(name=bone); g.add(list(range(len(me.vertices))), 1.0, "REPLACE")

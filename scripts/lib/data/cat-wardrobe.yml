@@ -47,11 +47,11 @@ masks:
   bagmask: { f: "/cdn/value.bc18246d4a4b2ba8ce84a1a92e6662b939f2fbe90cdc6fb9411dad9ae8167150.glb", m: "/cdn/value.8e5ac77aa50da1a896a947c90ee01816bc15f8483b822841bf66d4e3e71497aa.glb" }
   shellmask: { f: "/cdn/value.cc38d73c3aa334473337f765ebf45f20949ef21ef0547cdc513d53edd547e480.glb", m: "/cdn/value.45981231ad8af5dd54859ea8bc0d6a6b321f7f1906ebecaad555500f8ebb0c37.glb" }
 
-# fluff types (art/cat-wardrobe/fluff.py): soft clumps skinned to the cat, tinted with her fur. look.fluff: a list of these keys
+# fluff types (art/cat-wardrobe/fluff.py): soft clumps skinned to the cat, white base tinted with her fur. look.fluff: a list of these keys
 fluff:
-  cheeks: { f: '/cdn/value.7c514736371541462c4f5edf322fd3f2c19b464e9fca4f364f046b75577bf68d.glb', m: '/cdn/value.fcd96bdf33ae76d6b3601d9059f8b7f625039784be837c384736ae00afc2c964.glb' }
-  burns: { f: '/cdn/value.f54074ba61986207e632cd83c26fd410b3df0154587672b6ee0fe7630edc81d1.glb', m: '/cdn/value.8bbacef814a798b885431af513141ef0f8309c48b318eaab4ecdec6ad3f04aad.glb' }
-  crest: { f: '/cdn/value.082bdd9852f6b88e94aef3a8ddeece5b2c7129353001e8b8b1ad554405d18928.glb', m: '/cdn/value.cd4d6c2e472b1ead4e64874007ad282e65b25d1a1b97f5a8fc590c9a393c64b4.glb' }
-  lynx: { f: '/cdn/value.f33de09a21654db0d5be5275ba88314e45f7e465a560c56687d93ee5ed9b59b0.glb', m: '/cdn/value.de5ead0d108f8434b5f2c085d79caa7ed3ce85021aded66c9e13558a5314972a.glb' }
-  ruff: { f: '/cdn/value.009d17db76e28b3219c57ea5b68e80fdbd363162802cb735b9740b7b6fb85054.glb', m: '/cdn/value.2bb93625f4c664ba315b00b7cf9139c2b68283b031f58522478122d2093c73f7.glb' }
-  mane: { f: '/cdn/value.20b4013645dbbb0e08533b0798f1d2b601c04f9e566e3a62fcd43e2866c87bda.glb', m: '/cdn/value.3923dbc8e46716e76567bf79e7dc56bd146366f8215b9864dbfa15d1583a41f9.glb' }
+  cheeks: { f: '/cdn/value.3642e9647ef4093ad7145420b2dd67b2430737e2f2cbbd0f73db310311a5d493.glb', m: '/cdn/value.f93433684f8928db463f90675663a4734127ee45d6a0398aa1be3e58439ef94b.glb' }
+  burns: { f: '/cdn/value.893469d1193886e31660130b711c01f05810199cac3cae0858c970b28c853446.glb', m: '/cdn/value.b6c76d598a72e88a0e7fbc629dae8aa5775eeee27ae40b0593739400884fd5cc.glb' }
+  crest: { f: '/cdn/value.313a3e3ccbb6abe824b5c31fc09df0a865d0b59d18160d550848721c0747ec05.glb', m: '/cdn/value.a3dbf411e9948f95c24b3c8649d898506c9963d00ac91ff030f0703d0dedec96.glb' }
+  lynx: { f: '/cdn/value.f8d0a6820ef8d164f0a5b8e2b9c219a1dcc2c8b02f8293b9ea9239a7f82a2e26.glb', m: '/cdn/value.766e25e68619e22247fc946c5c3699921b7261ec3365368c086818330e42cb18.glb' }
+  ruff: { f: '/cdn/value.3f77ee09d706354a90ca62f43d65ec36497426860cae207bfae2b90d524b1d3d.glb', m: '/cdn/value.d9b97698f311bc2cddea38ccbebb76c3be800d0c75c5f761bcf408ab5b821d6f.glb' }
+  mane: { f: '/cdn/value.e6ad5834040fd8a5b03411223220b36ecc1c7001c9efd8549d943f5e236578c2.glb', m: '/cdn/value.a664b098a27452546474f47af9f76f1a1790563adda19fd71aea6e5d7acb6633.glb' }
