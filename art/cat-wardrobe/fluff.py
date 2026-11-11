@@ -4,7 +4,7 @@
 import bpy, bmesh, math, os, random
 from mathutils import Vector, Matrix
 from mathutils.bvhtree import BVHTree
-SRC = {"f": "/tmp/fl/f.glb", "m": "/tmp/fl/m.glb"}
+SRC = {"f": "/workspace/cathead/f-anime.glb", "m": "/workspace/cathead/m-anime.glb"}   # the anime-pass heads (head-sculpt.py)
 OUT = "/workspace/catfluff"; os.makedirs(OUT + "/proof", exist_ok=True)
 
 def load(sex):
@@ -64,34 +64,29 @@ def build(sex, kind, arm):
     hh = max(v.z for v in core) - min(v.z for v in core); S = hh / 0.45      # head scale: 1 on the girl
     neck = arm.matrix_world @ arm.data.bones["mixamorig:Neck"].head_local
     bm = bmesh.new(); bone = "mixamorig:Head"
-    if kind in ("cheeks", "burns"):
-        for sx in (-1, 1):
-            if kind == "cheeks":
-                # cheek tufts sit on the side of the face and point out and back, like an anime cat's whisker fluff, never under the jaw
-                dirs = [Vector((sx, 0.05, -0.15)), Vector((sx, 0.3, -0.3))]
-                grow(bm, hb, C, dirs, rng, 0.075 * S, 0.05 * S, 2, 0.018 * S, 0.35, Vector((sx * 0.85, 0.4, -0.25)).normalized())
-            else:
-                # sideburns hang off the jaw like an anime cat's cheek tufts: low, short, swept back and down, never out like wings
-                dirs = [Vector((sx, -0.25, -0.55)), Vector((sx, 0.0, -0.6)), Vector((sx, 0.2, -0.45))]
-                grow(bm, hb, C, dirs, rng, 0.08 * S, 0.05 * S, 2, 0.02 * S, 0.12, Vector((sx * 0.3, 0.45, -0.85)).normalized())
-    elif kind == "crest":
-        top = Vector((0, cy - 0.02, zmax + 0.5))
-        dirs = [Vector((0, -0.45, 1)), Vector((0.25, -0.3, 1)), Vector((-0.25, -0.3, 1)), Vector((0, -0.15, 1))]
-        grow(bm, hb, C, dirs, rng, 0.11 * S, 0.05 * S, 1, 0.01 * S, 0.45, Vector((0, 0.55, 0.35)).normalized())
+    # every type is a HEAD tuft (Shelly: "i wanted the tufts on the heads"): rays aimed from the skull's centre, roots on the skull
+    sk = [v for v in hv if abs(v.x) < 0.2]; crown = max(v.z for v in sk); z0 = min(v.z for v in sk)
+    C = Vector((0, sum(v.y for v in sk) / len(sk), (z0 + crown) / 2))
+    def tuft(dirs, L, r, n, spread, bias, curl):
+        grow(bm, hb, C, [Vector(d) for d in dirs], rng, L * S, r * S, n, spread * S, bias, Vector(curl).normalized())
+    for sx in (-1, 1):
+        if kind == "cheeks":    # anime cat cheek fluff: three points out of the widest part of the face, below the eyes
+            tuft([(sx, -0.45, -0.35), (sx, -0.2, -0.3), (sx, 0.05, -0.2)], 0.085, 0.032, 1, 0.006, 0.55, (sx, 0.25, -0.35))
+        elif kind == "burns":   # big swept cheek fluff, a lion-cub ruff around the face, combed back
+            tuft([(sx, -0.25, -0.4), (sx, 0.0, -0.3), (sx, 0.2, -0.15), (sx, 0.1, 0.05)], 0.12, 0.036, 2, 0.012, 0.35, (sx * 0.6, 0.75, -0.3))
+        elif kind == "nape":    # tufts at the back of the skull, flicked out under the hairline
+            tuft([(sx * 0.35, 1, -0.35), (sx * 0.7, 0.8, -0.2)], 0.09, 0.034, 2, 0.01, 0.45, (sx * 0.4, 0.6, -0.6))
+    if kind == "crest":         # forelock: a flame of fur on the brow between the ears, curling up and forward
+        tuft([(0, -0.55, 1), (0.18, -0.45, 1), (-0.18, -0.45, 1)], 0.1, 0.034, 1, 0.006, 0.55, (0, -0.35, 0.8))
+    elif kind == "cowlick":     # one fat curl on the crown, an anime ahoge
+        tuft([(0, -0.15, 1)], 0.16, 0.03, 1, 0.0, 0.85, (0, -0.95, -0.2))
+        tuft([(0.12, 0.1, 1)], 0.09, 0.026, 1, 0.0, 0.7, (0.4, 0.6, 0.1))
     elif kind == "lynx":
         for sx in (-1, 1):
             ear = max((v for v in hv if v.x * sx > 0.05), key=lambda v: v.z)
             for k in range(3):
                 d = Vector((sx * 0.25 + rng.uniform(-.15, .15), rng.uniform(-.1, .1), 1)).normalized()
                 lock(bm, ear + Vector((rng.uniform(-.006, .006), rng.uniform(-.006, .006), -0.012)), d, 0.085 * S * rng.uniform(.8, 1.1), 0.022 * S, Vector((sx * 0.4, 0.2, 0)), 0, rng)
-    elif kind == "ruff":
-        bone = "mixamorig:Spine2"; nc = Vector((0, neck.y, neck.z - 0.03 * S))
-        dirs = [Vector((math.sin(a), -math.cos(a), -0.15)) for a in [math.radians(x) for x in range(-80, 81, 32)]]
-        grow(bm, bb, nc, dirs, rng, 0.1 * S, 0.065 * S, 2, 0.02 * S, 0.25, Vector((0, -0.35, -0.9)).normalized())
-    elif kind == "mane":
-        bone = "mixamorig:Neck"; nc = Vector((0, neck.y, neck.z + 0.02 * S))
-        dirs = [Vector((math.sin(a), math.cos(a), 0.1)) for a in [math.radians(x) for x in range(-100, 101, 40)]]
-        grow(bm, bb, nc, dirs + [Vector((math.sin(a), -math.cos(a), 0.1)) for a in [math.radians(x) for x in (-60, -20, 20, 60)]], rng, 0.11 * S, 0.065 * S, 2, 0.025 * S, 0.3, Vector((0, 0.6, -0.75)).normalized())
     me = bpy.data.meshes.new("fluff"); bm.to_mesh(me); bm.free()
     o = bpy.data.objects.new("fluff", me); bpy.context.collection.objects.link(o)
     for p in me.polygons: p.use_smooth = True
@@ -121,7 +116,7 @@ def proof(sex, objs, tag):
         cam.location = p; sc.render.filepath = f"{OUT}/proof/{tag}_{i}.png"; bpy.ops.render.render(write_still=True); out.append(sc.render.filepath)
     return out
 
-KINDS = ["cheeks", "burns", "crest", "lynx", "ruff", "mane"]
+KINDS = ["cheeks", "burns", "crest", "lynx", "nape", "cowlick"]
 import sys
 for sex in ("f", "m"):
     for kind in KINDS:
