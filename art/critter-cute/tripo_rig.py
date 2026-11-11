@@ -365,7 +365,7 @@ for (i, j), n in pid.items(): pmat[n] = int(cm[i, j] > 0.45); puv[n] = UVC if pm
 pf = []
 for i in range(NX):
     for j in range(NZ):
-        q = [(i, j), (i, j + 1), (i + 1, j + 1), (i + 1, j)]
+        q = [(i, j), (i + 1, j), (i + 1, j + 1), (i, j + 1)]   # outward (-Y) winding
         if all(k in pid for k in q) and max(pv[pid[k]].y for k in q) - min(pv[pid[k]].y for k in q) < 0.05: pf.append(q)
 def inner(c, m):
     fi_ = (c.x - BOX[0]) / (BOX[1] - BOX[0]) * NX; fj_ = (c.z - BOX[2]) / (BOX[3] - BOX[2]) * NZ
@@ -381,7 +381,7 @@ for co in pv:
 for q in pf:
     f = bm.faces.new([bv[pid[k]] for k in q]); f.smooth = True
     f.material_index = int(sum(pmat[pid[k]] for k in q) >= 2)
-    for l, k in zip(f.loops, q): l[uvk].uv = puv[pid[k]]
+    for l in f.loops: l[uvk].uv = UVC if f.material_index else UVF   # one flat texel per face: no UV smear across the atlas
 nlash = 0   # lash tips that poke past the patch rim turn fur-coloured (no holes cut)
 for f in bm.faces:
     c = f.calc_center_median()
