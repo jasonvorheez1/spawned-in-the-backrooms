@@ -18,7 +18,10 @@ export function material(ctx) {
     const u = q.x.mul(float(2.75).mul(muzzle.mul(0.10).add(1))).add(0.5);
     const inside = step(0, u).mul(step(u, 1)).mul(step(0, v)).mul(step(v, 1));
     const front = smoothstep(0, 0.028, q.z.sub(P("faceNear")));
-    const pic = ctx.texture(String(ctx.params.face)).sample(vec2(u, v));
+    const pic0 = ctx.texture(String(ctx.params.face)).sample(vec2(u, v));
+    // a mouth type: its layer over the face picture, same projection (critter-faces.yml mouths)
+    const mo = ctx.params.mouth ? ctx.texture(String(ctx.params.mouth)).sample(vec2(u, v)) : null;
+    const pic = mo ? vec4(mix(pic0.rgb, mo.rgb, mo.a), max(pic0.a, mo.a)) : pic0;
     // on the snout the projection grazes its sides and the mouth smears: muzzle paint only lands where the surface faces the front
     const facing = mix(float(1), smoothstep(0.32, 0.62, normalLocal.z), muzzle);
     // iris: the picture's blue above max(r,g) is the iris shading (art/cat-wardrobe/iris.py); look.eyes colours it, the pupil stays black

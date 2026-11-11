@@ -65,7 +65,11 @@ export function catModel(sex, look) {
   const fur = look?.fur || '#f3c98a'
   const faces = FACES.faces[sex === 'm' ? 'male' : 'female']
   const expression = faces[look?.expression] ?? faces[look?.expr] // a mood swap writes expression; the creator's resting pick is expr
-  const face = typeof expression === 'string' ? expression : faces.neutral
+  const calm = typeof expression !== 'string' || expression === faces.neutral
+  const sk = sex === 'm' ? 'male' : 'female'
+  // an eye type redraws the calm face; a mouth type lays its layer on it. a mood face keeps its own painted eyes and mouth
+  const face = calm ? (FACES.eyes?.[sk]?.[look?.etype] ?? faces.neutral) : expression
+  const mouth = calm ? FACES.mouths?.[sk]?.[look?.mtype] : undefined
   const projection = sex === 'm' ? [2.9946, -2.163, -0.011] : [2.9946, -2.0648, 0.055]
   const skin = (color) => ({ kind: 'scripted', script: 'scripts/mat-catskin.js', color, params })
   return {
@@ -74,7 +78,7 @@ export function catModel(sex, look) {
       fur: skin(fur), fur2: skin('#ffffff'),
       headFur: {
         kind: 'scripted', script: 'scripts/mat-catskin.js', color: fur,
-        params: { face, faceVScale: projection[0], faceVBias: projection[1], faceNear: projection[2], ...eyeRGB(look?.eyes) }
+        params: { face, ...(mouth ? { mouth } : {}), faceVScale: projection[0], faceVBias: projection[1], faceNear: projection[2], ...eyeRGB(look?.eyes) }
       },
       innerEar: { color: look?.inner || '#d58e8a', roughness: 0.74 }
     }

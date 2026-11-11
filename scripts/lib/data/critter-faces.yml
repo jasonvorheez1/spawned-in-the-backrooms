@@ -23,3 +23,31 @@ faces:
     blep: "/cdn/value.0b1338adc4041761ecdae44d7974b8cf951f668b48909b25d96184bd042e76c2.png"
     hit: "/cdn/value.ab58fedf1bc4258e9ab979d607b9862306cbf0faaf4b2628036b23a3f6b051b2.png"
     ko: "/cdn/value.376df851ed66e5d2fa5743264c5375ca89c6dd153188d6fd0dde8b8cf7bbecd4.png"
+# Eye types (Shelly #219897): whole face pictures, the neutral with its eyes redrawn (art/cat-wardrobe/face-types.py). Shown while the face rests calm.
+eyes:
+  female:
+    sparkle: "/cdn/value.05488a68c25bbdf7873412b61ccbcfe3a4256ff09c9cc2e0199a3c609d48567f.png"
+    sleepy: "/cdn/value.4319fcf1eec6089d112d82552d58d312005bf0e0b0e72bee7d9b9805d49b1b95.png"
+    slit: "/cdn/value.f6ce6e5809df0d18a6b089db319dd4a5f2e9dc95890f880825beb6459b3c1655.png"
+    sharp: "/cdn/value.93c42c4ee2e2a032710d8bbf7837596d034dce992bd1cf0383cd880d7dc57dd9.png"
+    bean: "/cdn/value.2677349e72bf875d75ae9c69407ce83b7558d5d430675210d66430beab805e1c.png"
+  male:
+    sparkle: "/cdn/value.15db592d19a1343c0015efe50a39948047c51b6ee2b7319b0f4c014c1dfe6bb1.png"
+    sleepy: "/cdn/value.c9e72edb2f989de3655562af8efd880da1de2867c067c9883261461cb40b604d.png"
+    slit: "/cdn/value.1607b4b6916ad702455f2c251690283a7589c6d3b272e13217e94977b9fe5596.png"
+    sharp: "/cdn/value.9d47f58f2c4b5920582e0fdda9e84b94ca9bf7a36c07a447d3f75de10daea43d.png"
+    bean: "/cdn/value.f73ff0503f0f9989318a348b0fa5c6044e31a705653a192f4824b4a6e1916cbc.png"
+# Mouth types: layers laid over the resting face's mouth (art/cat-wardrobe/mouth-types.py). Same projection as the face.
+mouths:
+  female:
+    fang: "/cdn/value.bb0d8f4f60a540183fe1d01814877b50e0e8ca71df4424e4f1339c99541bc913.png"
+    grin: "/cdn/value.1b64ca3b82fefea6aa2dbba2b26d5d7e59e180a91ad8f765728157c918f92b84.png"
+    smirk: "/cdn/value.fb65e40916f21d4fe83755424bf3e1e567c55cd09b0eaee07f7f0cd23ebd666d.png"
+    open: "/cdn/value.16d422e05612003c2202861b79234fac6e98deeed90c5dc7172f0009549b9f02.png"
+    line: "/cdn/value.02c798e926a0a1bb44064d681a43e3bca1f0cc5cc81ba5fc1f549c5cfac509fb.png"
+  male:
+    fang: "/cdn/value.898afa3b45dfa9627b76f3f279beb4f26c8a5e2c62e66ab24cbc38384e7993c0.png"
+    grin: "/cdn/value.05005c0d1f0a163639f59042d59a71b32c1c99213f020ba6bd97937d25944005.png"
+    smirk: "/cdn/value.5a4208141179a0eba3704d516a8668abc5ca25b1580dc0e5d214921fd8754298.png"
+    open: "/cdn/value.297da76ff6595c319a890d82bcc30122ec7e821fd73effa9cd4b7c74858953d1.png"
+    line: "/cdn/value.5867580625e3ec85f96845d69c55dd2c94709325effabfd3e91176c4de9d29d8.png"
