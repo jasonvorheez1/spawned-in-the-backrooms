@@ -1,7 +1,5 @@
 import {screen} from './lib/screen.js'
-// The looting HUD and the inventory, after Shelly's Fallout NV reference (#1134): amber CRT lines on dark,
-// balanced 2-column Pip-Boy 3000 terminal with CRT scanlines, animated vector wireframes, condition bracket meters,
-// direct one-click repair actions, multi-column sorting, and tactile audio feedback.
+// Looting and inventory layouts; the shared field theme supplies their current visual treatment.
 import AW from './lib/data/almond.yml'
 import { quickItems } from './lib/quick-items.js'
 import SNACKS from './lib/data/snacks.yml'
@@ -13,6 +11,7 @@ import { parseCloth, wornTokens, wornDR, fullLook, SLOTS, SLOT_NAME, rowOf, CLOT
 import { cndOf, armorCnd, band, bandColor, wMul, drMul, repairAmount, isBroken } from './lib/condition.js'
 import { penOf } from './lib/combat.js'
 
+const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
 const CSS = `<style>
 .pb {
   --a: #ffb642;
@@ -704,9 +703,9 @@ function inventory(s) {
   const selQ = qi.find((x) => (x.id === sel || x.id === 'weapon:' + sel) && x.count > 0) // the picked item, when it can ride a slot
   const slots = [1,2,3,4,5,6,7,8,9,0].map((slot) => {
     const id = s.quickSlots?.[slot], it = qi.find((x) => x.id === id), mine = selQ && id === selQ.id
-    return `<div class="hg-q${id ? ' set' : ''}${id && it && !it.count ? ' out' : ''}${selQ ? ' arm' : ''}${mine ? ' mine' : ''}" data-interactive role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" onclick="sendAction('inv',{k:'quickSlot',slot:${slot}})" title="${selQ ? (mine ? 'Take ' + selQ.name + ' off slot ' + slot : 'Put ' + selQ.name + ' on slot ' + slot) : 'Quick slot ' + slot}"><span class="k">${slot}</span><span class="v">${it ? it.name : id ? 'EMPTY' : selQ ? '+ ADD' : 'empty'}</span>${it?.count ? `<span class="c">×${it.count}</span>` : ''}${id ? `<button class="x" onclick="event.stopPropagation();sendAction('inv',{k:'quickAssign',slot:${slot},id:''})" title="Clear slot ${slot}">✕</button>` : ''}</div>`
+    return `<div class="hg-q${id ? ' set' : ''}${id && it && !it.count ? ' out' : ''}${selQ ? ' arm' : ''}${mine ? ' mine' : ''}" data-interactive role="button" tabindex="0" onkeydown="if(event.target===this&&(event.key==='Enter'||event.key===' ')){event.preventDefault();this.click()}" onclick="sendAction('inv',{k:'quickSlot',slot:${slot}})" title="${esc(selQ ? (mine ? 'Take ' + selQ.name + ' off slot ' + slot : 'Put ' + selQ.name + ' on slot ' + slot) : 'Quick slot ' + slot)}"><span class="k">${slot}</span><span class="v">${it ? esc(it.name) : id ? 'EMPTY' : selQ ? '+ ADD' : 'empty'}</span>${it?.count>1 ? `<span class="c">×${it.count}</span>` : ''}${id ? `<button class="x" onclick="event.stopPropagation();sendAction('inv',{k:'quickAssign',slot:${slot},id:''})" title="Clear slot ${slot}" aria-label="Clear slot ${slot}">✕</button>` : ''}</div>`
   }).join('')
-  const qHint = selQ ? `<b>${selQ.name}</b>: click a slot or press its number` : 'Pick an item below, then click a slot or press 0–9'
+  const qHint = selQ ? `<b>${esc(selQ.name)}</b>: click a slot or press its number` : 'Pick an item below, then click a slot or press 0–9'
 
   return `<div class="pbw pb"><div class="pbp inv hg" data-modal>
     <div class="hg-top">

@@ -10,23 +10,10 @@ import { skillsOf } from './lib/stats.js'
 const esc = (t) => String(t ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 const q = (t) => esc(String(t ?? '').replace(/\\/g, '\\\\').replace(/'/g, "\\'"))
 
-const MOOD = {
-  calm: '#e0c896',
-  happy: '#88f070',
-  annoyed: '#f2a844',
-  angry: '#ff5544',
-  scared: '#7cd2ff',
+function checkBanner(text){
+ const lower=String(text).toLowerCase(),kind=lower.includes('succeeded')||lower.includes('passed')?'pass':lower.includes('failed')?'fail':'info';
+ return `<div class="tc-chk-banner tc-chk-${kind}">${esc(text)}</div>`;
 }
-
-const FEEL_COLOR = {
-  'HOSTILE': '#ff4444',
-  'COLD': '#ff8844',
-  'WARY': '#ffd455',
-  'OKAY': '#d9c79a',
-  'FRIENDLY': '#88e060',
-  'TRUSTS YOU': '#40ff90',
-}
-
 const feel = (r) => (r <= -60 ? 'HOSTILE' : r <= -25 ? 'COLD' : r < 10 ? 'WARY' : r < 40 ? 'OKAY' : r < 70 ? 'FRIENDLY' : 'TRUSTS YOU')
 const SVC = { scout: 'Ask for tactical tips', medic: 'Medical triage & healing', quarter: 'Collect ration supplies', smith: 'Repair damaged gear' }
 
@@ -87,7 +74,7 @@ function shopUi(ctx, s, it) {
     list += `<h4>${title}</h4>` + here.map(({ t, n, p }) => {
       const d = describe(t)
       const no = tab === 'buy' && (n < 1 || p * 100 > cash)
-      return `<button class="${no ? 'no' : ''} ${tab === 'buy' ? 'buy-c' : 'sell-c'}" data-interactive onclick="sendAction('shop',{k:'${tab}',t:'${q(t)}'})" title="${esc(d.info ?? '')}"><span style="color:${d.color}">${esc(d.name)}</span><span style="opacity:.6;font-size:12px">${tab === 'buy' ? (n < 1 ? 'SOLD OUT' : n + ' left') : '×' + n}</span><span class="c">${tab === 'sell' ? '+' : ''}$${p}.00</span></button>`
+      return `<button class="${no ? 'no' : ''} ${tab === 'buy' ? 'buy-c' : 'sell-c'}" ${no?'disabled':''} data-interactive onclick="sendAction('shop',{k:'${tab}',t:'${q(t)}'})" title="${esc(d.info ?? '')}"><span style="color:${d.color}">${esc(d.name)}</span><span style="opacity:.6;font-size:12px">${tab === 'buy' ? (n < 1 ? 'SOLD OUT' : n + ' left') : '×' + n}</span><span class="c">${tab === 'sell' ? '+' : ''}$${p}.00</span></button>`
     }).join('')
   }
   if (tab === 'repair') {
@@ -95,13 +82,13 @@ function shopUi(ctx, s, it) {
       const d = describe(t)
       const p = repairPrice(base, c, barter)
       const no = p * 100 > cash
-      return `<button class="${no ? 'no' : ''}" data-interactive onclick="sendAction('shop',{k:'repair',t:'${q(t)}'})" title="Brings it back to 100%"><span style="color:${d.color}">${esc(d.name)}</span><span style="color:${bandColor(c)};font-size:12px">${Math.round(c)}% ${band(c)}</span><span class="c">$${p}.00</span></button>`
+      return `<button class="${no ? 'no' : ''}" ${no?'disabled':''} data-interactive onclick="sendAction('shop',{k:'repair',t:'${q(t)}'})" title="Brings it back to 100%"><span style="color:${d.color}">${esc(d.name)}</span><span style="color:${bandColor(c)};font-size:12px">${Math.round(c)}% ${band(c)}</span><span class="c">$${p}.00</span></button>`
     }).join('')
     if (!list) list = '<div class="em">Nothing in your inventory needs repairing.</div>'
   }
   if (!list) list = `<div class="em">${tab === 'buy' ? 'Shelves are currently bare. Check back later.' : 'They have no interest in your current items.'}</div>`
 
-  const tb = (k, l) => `<button data-interactive style="${tab === k ? 'background:#ffb642;color:#100b04;box-shadow:0 0 8px rgba(255,182,66,.5)' : ''}" onclick="sendAction('talkdo',{k:'stab',t:'${k}'})">${l}</button>`
+  const tb = (k, l) => `<button class="${tab===k?'is-active':''}" aria-pressed="${tab===k}" data-interactive onclick="sendAction('talkdo',{k:'stab',t:'${k}'})">${l}</button>`
 
   return `<div class="tkp">
     <div class="tkh">
@@ -133,10 +120,7 @@ export function talkUi(ctx, player) {
   const key = player.userId ?? player.id
   const r = it.state?.rapport?.[key] ?? 0
   const who = esc(nameOf(it))
-  const mood = s.talkMood ?? 'calm'
-  const col = MOOD[mood] ?? MOOD.calm
   const feelStatus = feel(r)
-  const feelCol = FEEL_COLOR[feelStatus] ?? col
 
   const isCompanion = isMine(it, player)
   const perk = isCompanion ? PERKS[perkOf(it)] : null
@@ -163,30 +147,24 @@ export function talkUi(ctx, player) {
     if (kind === 'p') {
       return `<div class="tc-hist-line p"><b>YOU:</b> ${esc(text)}</div>`
     }
-    if (kind === 'x') {
-      const isPass = text.includes('SUCCEEDED') || text.includes('passed')
-      const isFail = text.includes('FAILED') || text.includes('failed')
-      const cls = isPass ? 'tc-chk-pass' : isFail ? 'tc-chk-fail' : 'tc-chk-info'
-      return `<div class="tc-chk-banner ${cls}">${isPass ? '✓ ' : isFail ? '✕ ' : '★ '}${esc(text)}</div>`
-    }
+    if (kind === 'x') return checkBanner(text)
     return `<div class="tc-hist-line n"><b>${who}:</b> ${esc(text)}</div>`
   }).join('')
 
+  const lastPlayer=log.map(row=>row[0]).lastIndexOf('p');
+  const latestCheck=log.slice(lastPlayer+1).find(([kind])=>kind==='x');
   // Render current speaker response or busy state
   let nowHtml = ''
   if (s.talkBusy) {
-    nowHtml = `<div class="tc-active-line">
-      <div class="tc-now-spk" style="color:${col}">${who} is thinking</div>
-      <div class="tc-now-txt tc-dots" style="color:${col}"><span>·</span> <span>·</span> <span>·</span></div>
-    </div>`
+    nowHtml = `<div class="tc-active-line" role="status" aria-live="polite"><div class="tc-now-txt tc-waiting">Waiting for a response…</div></div>`
   } else if (activeLine) {
-    nowHtml = `<div class="tc-active-line">
+    nowHtml = `<div class="tc-active-line" aria-live="polite" aria-atomic="true">
       <div class="tc-now-txt">${esc(activeLine)}</div>
     </div>`
   } else {
     nowHtml = `<div class="tc-active-line" style="opacity:.6">
-      <div class="tc-now-spk" style="color:${col}">${who}</div>
-      <div class="tc-now-txt" style="color:${col}">...</div>
+      <div class="tc-now-spk">${who}</div>
+      <div class="tc-now-txt">...</div>
     </div>`
   }
 
@@ -230,7 +208,7 @@ export function talkUi(ctx, player) {
 
     const clickAction = `sendAction('talk',{id:'${q(it.id)}',text:'${q(txt)}'${ck ? `,check:{skill:'${q(ck.skill)}',difficulty:${Number(ck.difficulty) || 50}}` : ''}})`
 
-    return `<button class="tc-choice" data-interactive onclick="${clickAction}">
+    return `<button class="tc-choice" data-interactive ${s.talkBusy?'disabled':''} onclick="${clickAction}">
       <span class="tc-ch-num">${i + 1}.</span>
       ${tag && tag.toLowerCase() !== 'reply' ? `<span class="tc-ch-tag ${tagCls}">${esc(tag)}</span>` : ''}
       <span class="tc-ch-txt">${esc(txt)}</span>
@@ -266,14 +244,10 @@ export function talkUi(ctx, player) {
     }
   }
 
-  const socialActions = [
-    ['wave', 'Wave'], ['gift', 'Give a gift'], ['dance', 'Dance'], ['insult', 'Insult'],
-  ].map(([k, label]) => `<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'${k}'})">${label}</button>`).join('')
-
   const factionName = esc(it.state?.factionName ?? faction(it, ctx.self?.place ?? ''))
   const roleName = esc(it.state?.role ?? 'wanderer').toUpperCase()
 
-  const kd = `if(event.key==='Escape'){sendAction('talkdo',{k:'leave'})}else if(event.target.id!=='tkin'&&event.key>='1'&&event.key<='5'){const c=document.querySelectorAll('.tc-choice');const b=c[parseInt(event.key)-1];if(b)b.click()}`
+  const kd = `if(event.key==='Escape'){event.preventDefault();event.stopPropagation();sendAction('talkdo',{k:'leave'})}else if(event.target.tagName!=='INPUT'&&(event.key==='ArrowDown'||event.key==='ArrowUp')){const c=Array.from(this.querySelectorAll('.tc-choice:not(:disabled)'));const down=event.key==='ArrowDown';let i=c.indexOf(event.target.closest('.tc-choice'));i=i<0?(down?0:c.length-1):Math.max(0,Math.min(c.length-1,i+(down?1:-1)));if(c[i])c[i].focus();event.preventDefault();event.stopPropagation()}else if(event.target.id!=='tkin'&&event.key>='1'&&event.key<='5'){const c=this.querySelectorAll('.tc-choice');const b=c[parseInt(event.key)-1];if(b)b.click()}`
 
   return `${CSS}
   <div class="tkw" data-modal tabindex="0" onkeydown="${kd}">
@@ -290,9 +264,8 @@ export function talkUi(ctx, player) {
         </div>
 
         <div class="tc-rep-grp">
-          <div class="tc-rep-lbl" style="color:${feelCol}">
+          <div class="tc-rep-lbl" data-stance="${feelStatus}">
             <span>${feelStatus}</span>
-            <span>(${r > 0 ? '+' : ''}${Math.round(r)})</span>
           </div>
         </div>
 
@@ -300,10 +273,11 @@ export function talkUi(ctx, player) {
       </div>
 
       <!-- Transcript History -->
-      ${histHtml ? `<details class="tc-extra" data-interactive><summary>Conversation history</summary><div class="tc-stream">${histHtml}</div></details>` : ''}
+
 
       <!-- Live NPC Speech / Busy Indicator -->
       ${nowHtml}
+      ${latestCheck ? `<div class="tc-check-current" role="status">${checkBanner(latestCheck[1])}</div>` : ''}
 
       <!-- Interactive Choices -->
       <div class="tc-choices-hdr">
@@ -314,12 +288,18 @@ export function talkUi(ctx, player) {
       </div>
 
       <!-- Freeform Text Command Line -->
+      <div class="tc-optional">
+      ${histHtml ? `<details class="tc-extra" data-interactive><summary>Conversation history</summary><div class="tc-stream">${histHtml}</div></details>` : ''}
+      <details class="tc-inquiry tc-extra" ${choices.length?'':'open'} data-interactive><summary>Ask something else</summary>
       <div class="tc-prompt-bar" data-interactive>
-        <input id="tkin" class="tc-prompt-inp" data-interactive maxlength="${T.maxText}" autocomplete="off" aria-label="Say something" placeholder="Say something…" onkeydown="if(event.key==='Enter'&&this.value.trim()){event.stopPropagation();sendAction('talk',{id:'${q(it.id)}',text:this.value});this.value=''}else if(event.key==='Escape'){event.stopPropagation();this.blur()}else if(!this.value&&event.key>='1'&&event.key<='5'){event.preventDefault();event.stopPropagation();const b=document.querySelectorAll('.tc-choice')[parseInt(event.key)-1];if(b)b.click()}else{event.stopPropagation()}"/>
-        <button class="tc-send-btn" data-interactive onclick="const i=document.getElementById('tkin');if(i&&i.value.trim()){sendAction('talk',{id:'${q(it.id)}',text:i.value});i.value=''}">Send</button>
+        <input id="tkin" class="tc-prompt-inp" data-interactive ${s.talkBusy?'disabled':''} maxlength="${T.maxText}" autocomplete="off" aria-label="Say something" placeholder="Say something…" onkeydown="if(event.key==='Enter'&&this.value.trim()){event.stopPropagation();sendAction('talk',{id:'${q(it.id)}',text:this.value});this.value=''}else if(event.key==='Escape'){event.stopPropagation();this.blur()}else if(!this.value&&event.key>='1'&&event.key<='5'){event.preventDefault();event.stopPropagation();const b=document.querySelectorAll('.tc-choice')[parseInt(event.key)-1];if(b)b.click()}else{event.stopPropagation()}"/>
+        <button class="tc-send-btn" data-interactive ${s.talkBusy?'disabled':''} onclick="const i=document.getElementById('tkin');if(i&&i.value.trim()){sendAction('talk',{id:'${q(it.id)}',text:i.value});i.value=''}">Send</button>
       </div>
 
-      <!-- Actions & Gestures Deck -->
+      </details>
+      </div>
+
+      <!-- Contextual actions -->
       ${sysActions.length ? `<div class="tc-deck" data-interactive>${sysActions.join('')}</div>` : ''}
       
     </div>

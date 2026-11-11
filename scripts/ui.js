@@ -1,11 +1,10 @@
+import { quickBar } from './lib/hud-quickbar.js'
 import { UI_THEME } from './lib/ui-theme.js'
 import { screen } from './lib/screen.js'
 import { overlay as lagscopeOverlay } from '../mods/lagscope/panel.js'
 import * as modelingStudio from '../mods/modeling-studio/hud.js'
 export { m3dPvDown, m3dPvWheel, m3dPvReset, m3dPvTool, m3dPvDraft, m3dPvEdit, m3dPvClear, m3dTkMeasure, m3dTkDown, m3dTkWheel, m3dTkReset, m3dMpvMove, m3dMpvSize, m3dDraft, m3dPose, m3dPick, m3dPreview, m3dUpload, m3dAsk, m3dClearRefs, m3dGuide } from '../mods/modeling-studio/hud.js'
-// Level 0 "The Lobby" HUD
-// Clean, minimal, and atmospheric.
-// Designed with quiet restraint: unobstructed sightlines, crisp typography, and non-intrusive status readouts.
+// HUD and screen composition. Shared panel styling lives in lib/ui-theme.js.
 import L from './lib/data/level0.yml'
 import R12 from './lib/data/level12.yml'
 import W from './lib/weapons.js'
@@ -402,7 +401,7 @@ function renderHud(ctx, player) {
   return `${THEME}${LIVE}
 ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','journal'].includes(screen(s,player.place))}" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
   ${questTracker(s, player, ctx)}
-  ${!s.building && screen(s,player.place)==='play' && Object.keys(s.quickSlots??{}).length ? `<div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:4px;max-width:70vw;flex-wrap:wrap;justify-content:center;pointer-events:auto">${Object.entries(s.quickSlots).map(([slot,id])=>{const item=quick.find(x=>x.id===id);return item?`<button data-interactive title="${esc(item.name)}" onclick="sendAction('quickUse',{slot:${Number(slot)}})" style="background:rgba(20,15,7,.9);color:${item.count?'#ffe0a6':'#a89b83'};border:1px solid #927249;padding:5px 8px;font:inherit;font-size:11px"><b>${slot}</b> ${esc(item.name)} ×${item.count}</button>`:''}).join('')}</div>` : ''}
+  ${!s.building && screen(s,player.place)==='play' ? quickBar(s,quick) : ''}
   ${s.nvgOn ? `<div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,oklch(0.75 0.2 145 / .10) 35%,oklch(0.08 0.05 145 / .92) 78%);mix-blend-mode:normal"></div><div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,oklch(0.6 0.2 145 / .08) 0 1px,transparent 1px 3px)"></div><div style="position:absolute;top:18px;left:50%;transform:translateX(-50%);color:#7cf08a;font-size:12px;letter-spacing:.3em;opacity:.8">NV · ${Math.round(s.battery)}%</div>` : ''}${xferCard(s, now)}${tutUi(s, now)}${t0Fade(ctx, player)}${restUi(ctx, s)}${mahjongPanel(s, now)}
   ${chatBubbles(ctx, now, player)}
   ${sniperScope(s, wp)}
@@ -418,10 +417,8 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
 
   <!-- BOTTOM-LEFT: HP, sanity, compass, rank -->
   <div class="bl" style="position:absolute;left:28px;bottom:22px;width:min(300px,44vw)">
-    <div style="position:fixed;left:22px;bottom:236px;display:flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.22em;opacity:.62"><svg width="14" height="14" viewBox="0 0 14 14"><rect x="1" y="1" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M4 10V4h3.5a1.6 1.6 0 0 1 0 3.2H4M7.5 7.2 10 10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>BACKROOMS ROBOTICS · HALOGEN&trade; UNIT</div>
-    ${s.xfer && now - (s.xfer.at ?? 0) < 9000 ? `<style>@keyframes brboot{0%{opacity:0}8%,80%{opacity:.9}100%{opacity:0;visibility:hidden}}</style><div id="brb${s.xfer.at}" style="position:fixed;left:22px;bottom:256px;font-size:11px;letter-spacing:.08em;color:oklch(0.82 0.1 85);animation:brboot 6.5s 2.4s both">&gt; HALOGEN v4.1 · vitals linked · do not remove unit · <i>we're always with you.</i></div>` : ''}
     ${bar('HP', s.hp, mh, hpF < 0.3 ? 'oklch(0.68 0.2 35)' : 'var(--a)', `${Math.ceil(s.hp)}/${mh}`)}
-    ${bar(`SAN <span style="opacity:.7">· ${sanWord}</span>`, s.sanity, ms, sanF < 0.25 ? 'oklch(0.68 0.2 35)' : 'var(--a)', `${Math.ceil(s.sanity)}%`)}
+    ${bar(`SAN <span style="opacity:.7">· ${sanWord}</span>`, s.sanity, ms, sanF < 0.25 ? 'oklch(0.68 0.2 35)' : 'var(--a)', `${Math.round(Math.max(0,Math.min(1,sanF))*100)}%`)}
     ${(s.cold ?? 0) > 0 ? bar(`COLD <span style="opacity:.7">· ${s.cold >= 70 ? 'freezing' : s.cold >= 40 ? 'shivering' : 'chilly'}</span>`, s.cold, 100, s.cold >= 70 ? 'oklch(0.72 0.14 235)' : 'oklch(0.82 0.08 220)') : ''}
     ${(s.heat ?? 0) > 0 ? bar(`HEAT <span style="opacity:.7">· ${s.heat >= 70 ? 'scalding' : s.heat >= 40 ? 'sweltering' : 'warm'}</span>`, s.heat, 100, s.heat >= 70 ? 'oklch(0.66 0.22 30)' : s.heat >= 40 ? 'oklch(0.75 0.17 55)' : 'oklch(0.82 0.14 80)', `${Math.round(s.heat)}°`) : ''}
     ${compass(((player.camera?.rotation?.yaw ?? 0) % 360 + 360) % 360)}
@@ -474,7 +471,7 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
   </div>` : ''}
 
   ${s.xpPop && now - s.xpPop.at < 2600 ? `<div id="xp${s.xpPop.at}" style="position:absolute;left:22px;bottom:250px;font-size:15px;letter-spacing:.08em;color:oklch(0.86 0.13 85);text-shadow:0 0 8px rgba(255,190,80,.45);animation:hud-fade 2.6s forwards">+${s.xpPop.n} XP</div>` : ''}
-  ${s.lvlPrompt && !s.sheetOpen ? `<div style="position:absolute;left:22px;bottom:274px;font-size:13px;letter-spacing:.1em;color:oklch(0.86 0.13 85);animation:blink 1.4s ease-in-out infinite">LEVEL UP · press ${(lab('sheet', 'K') + '').toUpperCase()} to spend points</div>` : ''}
+  ${s.lvlPrompt && !s.sheetOpen ? `<div class="hud-level-prompt">Level up · press ${(lab('sheet', 'K') + '').toUpperCase()} to spend points</div>` : ''}
   <!-- Level Up Banner -->
   ${lvl ? `
   <div style="position:absolute;left:0;right:0;display:flex;justify-content:center;top:20%;animation:hud-fade 2.8s forwards">
