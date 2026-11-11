@@ -1,0 +1,24 @@
+# Painted 2D critter faces (Shelly, Nov 11): transparent decals over tintable fur. Crop box: cell px x55..330, y178..425 of a 384x512 face cell (eyes at y~290, muzzle bottom ~395).
+faces:
+  female:
+    neutral: "/cdn/value.aa1ae1fb02382007694ddddf5b8b695b25ce57fee5f5bdc2f0034044082bad07.png"
+    smile: "/cdn/value.9ead4687bc0f69724e99555cdbf3ff37920672296a35cbb0f61d110b93f38aa7.png"
+    joy: "/cdn/value.309579adc83ede5c43865c09b42a25eafb26c6c6ea2c94b1c4da38536d097987.png"
+    sad: "/cdn/value.6252435757113b33f820afbd9d24a6e2e18f319556f87d0132c07bab4c9e9384.png"
+    angry: "/cdn/value.951387f23775bbc3263c56172719a924eb3a1e132363d474c68efbeb9678f6a3.png"
+    shock: "/cdn/value.ed06214e0184b83ae3d5ac0795c958a58abfaa59aa048354df49a193c2829e91.png"
+    blink: "/cdn/value.fbb8471bd862f7c84eb95ff3d12b8fa013bdefb1ba67a40a3e0e2d41cf04fcf1.png"
+    blep: "/cdn/value.3164d204a5e54289bf1d0f6f88d343aebeb778a20032643828b1aaf3f5607d62.png"
+    hit: "/cdn/value.0f3c62a3f04ef241c9d4ae7178c39ae867c804bb93805cd80eb367e069046161.png"
+    ko: "/cdn/value.7e20d5d5c4c1b1e0f6c7366241f63ecf6520e2f486219a1610b48965167028fa.png"
+  male:
+    neutral: "/cdn/value.e3349507bdafe2a5a2202ee1390e90d0a659b53f5d3c2237c40edba0ef9d7674.png"
+    smile: "/cdn/value.6f241801e5de1f03f5214ce6b5499fad742880102560817afb580e2600b2d238.png"
+    joy: "/cdn/value.dcc06ef716dbc54caa8c1842c0e0b925448780a2684bf50468b2890479067b99.png"
+    sad: "/cdn/value.44a4f839d1578cc7d0d24d14692ba5044edd96cc9e447d9cc377df30197eec16.png"
+    angry: "/cdn/value.f93a9b320ba59462a6f1d7c1244b9d2552b0b6ea500697f540606a82eff7c915.png"
+    shock: "/cdn/value.8953be09f2effca0c16fc2c237bbba964dc351bdf012c2605a081af2838cc7e5.png"
+    blink: "/cdn/value.281d49d7835e8e957f7979ea2d2c61967d4429cefefeb4a7431b9bd9d2f79a04.png"
+    blep: "/cdn/value.2b4d9b70471d6b67a8c5088d3eb0f138ad72ea75b141b366066543be73571099.png"
+    hit: "/cdn/value.125027b843e4c96d56ef792b92a223b0c10bdcf674767c9e46d74d25b0b1ec0a.png"
+    ko: "/cdn/value.d5bdefc12647346a6035acb7c72a77aa789760540383e9b2e70d74013532ff71.png"
