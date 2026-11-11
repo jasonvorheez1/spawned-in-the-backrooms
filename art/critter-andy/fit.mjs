@@ -31,7 +31,7 @@ function near(x, y, z, K = 4) { const cx = Math.floor(x/C), cy = Math.floor(y/C)
     for (let a = -r; a <= r; a++) for (let b = -r; b <= r; b++) for (let c = -r; c <= r; c++) for (const i of grid.get(`${cx+a},${cy+b},${cz+c}`) ?? []) { const s = sk[i]; best.push([(s[0]-x)**2+(s[1]-y)**2+(s[2]-z)**2, i]) } }
   best.sort((p, q) => p[0] - q[0]); return best.slice(0, K) }
 const hasBust = sk.some((s) => s[6] || s[7] || s[8]);
-let fitted = 0, pushed = 0;
+let fitted = 0, pushed = 0, pulled = 0;
 for (const m of meshes) { const name = m.getName(); if (SKIP.test(name)) continue; if (!/^(Top_|Bot_|Ward_|Neck_)/.test(name)) continue;
   const lname = name.toLowerCase(), gap = BOTTOM.test(lname) ? GAP.bottom : OUTER.test(lname) ? GAP.outer : GAP.top;
   let names = [...(m.getExtras()?.targetNames ?? [])]; let di = names.indexOf("Dandy"), bi = names.indexOf("Bust");
@@ -54,6 +54,9 @@ for (const m of meshes) { const name = m.getName(); if (SKIP.test(name)) continu
           // bust 0: push out to the gap
           const d0 = (x - sx) * nx + (y - sy) * ny + (z - sz) * nz;
           if (d0 < gap) { const k = (gap - d0) * on; dx += nx * k; dy += ny * k; dz += nz * k; pushed++ }
+          else if (!BOTTOM.test(lname) && !OUTER.test(lname)) { // a top floating off the chest is drawn in snug (Shelly: "breast area very loose")
+            const chest = Math.max(0, Math.min(1, (wy - 0.7) / 0.05)) * Math.max(0, Math.min(1, (1.02 - wy) / 0.05)), slack = d0 - gap * 1.5;
+            if (slack > 0 && d0 < W(0.06)) { const k = -slack * 0.85 * chest * on; dx += nx * k; dy += ny * k; dz += nz * k; pulled++ } }
           // bust 1: the skin moved by (bx,by,bz); the garment follows it, then clears it too
           const d1 = (x + bx - (sx + bx)) * nx + (y + by - (sy + by)) * ny + (z + bz - (sz + bz)) * nz; // = d0 after the follow
           if (d1 < gap && d0 >= gap) { /* already clear */ }
@@ -65,4 +68,4 @@ for (const m of meshes) { const name = m.getName(); if (SKIP.test(name)) continu
   fitted++ }
 for (const e of doc.getRoot().listExtensionsUsed()) if (e.extensionName === "EXT_meshopt_compression") e.dispose();
 await io.write(out, doc);
-console.log("fitted", fitted, "garments; pushed", pushed, "verts; bust", hasBust);
+console.log("fitted", fitted, "garments; pushed", pushed, "pulled", pulled, "verts; bust", hasBust);
