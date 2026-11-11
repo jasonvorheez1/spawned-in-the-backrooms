@@ -335,37 +335,49 @@ Wn = 3; opn = win(win(np.where(np.isnan(hgt), 9, hgt), np.minimum), np.maximum)
 Wn = 13; pad = np.where(np.isnan(hgt), -9, opn)
 dil = win(pad, np.maximum); clo = win(np.where(np.isnan(hgt), 9, dil), np.minimum)
 for _ in range(3): clo = (clo + np.roll(clo, 1, 0) + np.roll(clo, -1, 0) + np.roll(clo, 1, 1) + np.roll(clo, -1, 1)) / 5
-lift = 0   # head under the decal becomes the decal's smooth hull (eyes, sockets, lashes, mouth folded flat); hidden shells keep their depth behind it
-VAL = ~np.isnan(hgt); bvh0 = BVHTree.FromObject(HEAD, bpy.context.evaluated_depsgraph_get())
-def hull(x, z):
-    fi = (x - BOX[0]) / (BOX[1] - BOX[0]) * NX; fj = (z - BOX[2]) / (BOX[3] - BOX[2]) * NZ
-    i0, j0 = int(math.floor(fi)), int(math.floor(fj))
-    if i0 < 0 or j0 < 0 or i0 >= NX or j0 >= NZ or not VAL[i0:i0 + 2, j0:j0 + 2].all(): return None
-    tx, tz = fi - i0, fj - j0; c = clo
-    return (c[i0, j0] * (1 - tx) + c[i0 + 1, j0] * tx) * (1 - tz) + (c[i0, j0 + 1] * (1 - tx) + c[i0 + 1, j0 + 1] * tx) * tz, min(fi, NX - fi, fj, NZ - fj)
-moves = []
-for v in HEAD.data.vertices:
-    co = v.co; h = hull(co.x, co.z)
-    if h is None or co.y > -0.03: continue
-    hit = bvh0.ray_cast(Vector((co.x, -1, co.z)), Vector((0, 1, 0)))
-    if hit[0] is None: continue
-    depth = co.y - hit[0].y
-    if depth > 0.03: continue
-    w = min(1.0, h[1] / 6.0); w = w * w * (3 - 2 * w)
-    moves.append((v.index, co.y + ((-h[0] + max(depth, 0) * 1.0 + (0.0015 if depth > 0.001 else 0)) - co.y) * w))
-SH = [abs(HEAD.data.vertices[i].co.y - y) for i, y in moves]
-for i, y in moves: HEAD.data.vertices[i].co.y = y
-if os.environ.get("DBGFACE"):
-    nb = sum(1 for v in HEAD.data.vertices if BOX[0] < v.co.x < BOX[1] and BOX[2] < v.co.z < BOX[3] and v.co.y < -0.03)
-    print("DBG inbox", nb, "moved", len(moves), "VAL frac", VAL.mean(), "clo range", np.nanmin(clo[VAL]), np.nanmax(clo[VAL]), "hgt range", np.nanmin(hgt), np.nanmax(hgt))
-    print("DBG mw", HEAD.matrix_world, HEAD.parent, [m.type for m in HEAD.modifiers])
-    sh = SH; print("DBG shift max", max(sh), "mean", sum(sh)/len(sh), "n>2mm", sum(x > 0.002 for x in sh))
-    sys.exit(0)
-lift = len(moves)
+# the head under the decal is rebuilt: front faces inside the patch box (eyes, sockets, lashes, nose, mouth) go, and a smooth
+# grid skin (the face's closed hull in the middle, easing to the real surface at the rim) takes their place, textured from the head's own fur
+from mathutils.interpolate import poly_3d_calc
+import bmesh as _bm
+VAL = ~np.isnan(hgt); bvh0 = BVHTree.FromObject(HEAD, bpy.context.evaluated_depsgraph_get()); hm = HEAD.data; uvl = hm.uv_layers.active.data
+pv, puv, pmat, pid = [], [], [], {}
+for i in range(NX + 1):
+    for j in range(NZ + 1):
+        if not VAL[i, j]: continue
+        e = min(i, NX - i, j, NZ - j); w = min(1.0, max(0.0, (e - 1) / 7.0)); w = w * w * (3 - 2 * w)
+        dpt = w * clo[i, j] + (1 - w) * hgt[i, j] - 0.0003
+        co = Vector((BOX[0] + i / NX * (BOX[1] - BOX[0]), -dpt, BOX[2] + j / NZ * (BOX[3] - BOX[2])))
+        loc, nrm, fi, _ = bvh0.find_nearest(co); poly = hm.polygons[fi]
+        ws = poly_3d_calc([hm.vertices[k].co for k in poly.vertices], loc)
+        uv = sum((uvl[li].uv * wk for li, wk in zip(poly.loop_indices, ws)), Vector((0, 0)))
+        pid[i, j] = len(pv); pv.append(co); puv.append(uv); pmat.append(poly.material_index)
+pf = []
+for i in range(NX):
+    for j in range(NZ):
+        q = [(i, j), (i, j + 1), (i + 1, j + 1), (i + 1, j)]
+        if all(k in pid for k in q) and max(pv[pid[k]].y for k in q) - min(pv[pid[k]].y for k in q) < 0.015: pf.append(q)
+def inner(c, m):
+    fi_ = (c.x - BOX[0]) / (BOX[1] - BOX[0]) * NX; fj_ = (c.z - BOX[2]) / (BOX[3] - BOX[2]) * NZ
+    return min(fi_, NX - fi_, fj_, NZ - fj_) > m
+bm = _bm.new(); bm.from_mesh(hm); bm.faces.ensure_lookup_table()
+dead = [f for f in bm.faces if f.calc_center_median().y < -0.03 and inner(f.calc_center_median(), 2.0)
+        and all(inner(v.co, 1.0) for v in f.verts)]
+_bm.ops.delete(bm, geom=dead, context="FACES")
+uvk = bm.loops.layers.uv.active; dk = bm.verts.layers.deform.verify(); gi_ = HEAD.vertex_groups[P + "Head"].index
+bv = []
+for co in pv:
+    v = bm.verts.new(co); v[dk][gi_] = 1.0; bv.append(v)
+for q in pf:
+    f = bm.faces.new([bv[pid[k]] for k in q]); f.smooth = True
+    f.material_index = max(set(pmat[pid[k]] for k in q), key=[pmat[pid[k]] for k in q].count)
+    for l, k in zip(f.loops, q): l[uvk].uv = puv[pid[k]]
+bm.to_mesh(hm); bm.free(); lift = len(dead)
 bpy.context.view_layer.objects.active = HEAD
 if HEAD.data.has_custom_normals: bpy.ops.mesh.customdata_custom_splitnormals_clear()   # old normals kept the sockets' shading
 for poly in HEAD.data.polygons: poly.use_smooth = True
-HEAD.data.update(); print("head verts flattened at the eyes", lift)
+HEAD.data.update()
+if os.environ.get("DBGFACE"): bpy.ops.wm.save_as_mainfile(filepath="/tmp/dbg.blend"); sys.exit(0)
+print("head front faces replaced by smooth skin", lift, "patch quads", len(pf))
 bvh = BVHTree.FromObject(HEAD, bpy.context.evaluated_depsgraph_get()); grid = {}
 for j in range(NZ + 1):
     for i in range(NX + 1):
