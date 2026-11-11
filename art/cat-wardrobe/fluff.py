@@ -20,19 +20,19 @@ def bvh_of(o):
     me = o.data; M = o.matrix_world
     return BVHTree.FromPolygons([M @ v.co for v in me.vertices], [p.vertices[:] for p in me.polygons])
 
-def lock(bm, root, d, L, r, curl, side, rng, segs=5, ring=6):
+def lock(bm, root, d, L, r, curl, side, rng, segs=9, ring=10):
     # one tapered lock: root on the surface (sunk 6 mm), grows along d, bends toward `curl`
     d = d.normalized(); up = Vector((0, 0, 1)) if abs(d.z) < 0.9 else Vector((1, 0, 0))
     t1 = d.cross(up).normalized(); t2 = d.cross(t1).normalized()
-    pts = []; p = root - d * 0.006; dirv = d.copy()
+    pts = []; p = root - d * 0.012; dirv = d.copy()   # sunk 12 mm: the root disappears into the fur
     for i in range(segs + 1):
         pts.append((p.copy(), dirv.copy())); dirv = (dirv + curl * (1.0 / segs)).normalized(); p = p + dirv * (L / segs)
     rings = []
     for i, (c, dv) in enumerate(pts):
         a = dv.cross(up).normalized() if abs(dv.dot(up)) < 0.95 else t1
-        b = dv.cross(a).normalized(); rad = r * math.sin(math.pi * (0.35 + 0.65 * i / segs)) ** 0.7 * (1 - 0.15 * i / segs)
+        b = dv.cross(a).normalized(); t = i / segs; rad = r * (0.75 + 0.25 * math.sin(math.pi * min(1, t * 2.2) / 2)) * (1 - t) ** 0.85   # soft round root, long tapering point (Nov 11: the 6-sided chunky locks read blocky)
         if i == segs: rings.append([bm.verts.new(c)]); continue
-        rings.append([bm.verts.new(c + (a * math.cos(k * 2 * math.pi / ring) * 2.1 + b * math.sin(k * 2 * math.pi / ring) * 0.55) * rad) for k in range(ring)])
+        rings.append([bm.verts.new(c + (a * math.cos(k * 2 * math.pi / ring) * 1.6 + b * math.sin(k * 2 * math.pi / ring) * 0.62) * rad) for k in range(ring)])
     for i in range(segs - 1):
         A, B = rings[i], rings[i + 1]
         for k in range(ring): bm.faces.new((A[k], A[(k + 1) % ring], B[(k + 1) % ring], B[k]))
@@ -68,7 +68,7 @@ def build(sex, kind, arm):
     sk = [v for v in hv if abs(v.x) < 0.2]; crown = max(v.z for v in sk); z0 = min(v.z for v in sk)
     C = Vector((0, sum(v.y for v in sk) / len(sk), (z0 + crown) / 2))
     def tuft(dirs, L, r, n, spread, bias, curl):
-        grow(bm, hb, C, [Vector(d) for d in dirs], rng, L * S * 1.9, r * S * 1.7, n, spread * S * 1.5, bias, Vector(curl).normalized())   # chunky, readable at play distance
+        grow(bm, hb, C, [Vector(d) for d in dirs], rng, L * S * 1.8, r * S * 1.2, n * 2, spread * S * 1.8 + 0.008 * S, bias, Vector(curl).normalized())   # Nov 11 rework: twice the locks, slimmer, fanned: soft clumps not chunks
     for sx in (-1, 1):
         if kind == "cheeks":    # anime cat cheek fluff: three points out of the widest part of the face, below the eyes
             tuft([(sx, -0.45, -0.35), (sx, -0.2, -0.3), (sx, 0.05, -0.2)], 0.085, 0.032, 1, 0.006, 0.55, (sx, 0.25, -0.35))
@@ -82,8 +82,8 @@ def build(sex, kind, arm):
         tuft([(0, -0.15, 1)], 0.16, 0.03, 1, 0.0, 0.85, (0, -0.95, -0.2))
         tuft([(0.12, 0.1, 1)], 0.09, 0.026, 1, 0.0, 0.7, (0.4, 0.6, 0.1))
     elif kind == "bangs":       # fur bangs (Shelly: "fur bangs on the head would be nice too"): a fringe of pointed locks off the hairline, falling over the brow, parted in chunky anime spikes
-        for x, L in ((-0.5, 0.75), (-0.33, 0.95), (-0.17, 1.1), (0.0, 1.0), (0.17, 1.15), (0.33, 0.95), (0.5, 0.72)):
-            tuft([(x, -0.42, 1)], 0.15 * L, 0.03, 1, 0.0, 0.12, (x * 0.25, -0.55, -1))
+        for x, L in ((-0.52, 0.7), (-0.42, 0.82), (-0.31, 0.95), (-0.2, 1.08), (-0.09, 1.0), (0.02, 1.12), (0.13, 1.04), (0.24, 1.1), (0.35, 0.92), (0.45, 0.8), (0.54, 0.68)):
+            tuft([(x, -0.42, 1)], 0.15 * L, 0.024, 1, 0.0, 0.14, (x * 0.35, -0.55, -1))   # eleven slim overlapping points, a soft fringe
     elif kind == "lynx":
         for sx in (-1, 1):
             ear = max((v for v in hv if v.x * sx > 0.05), key=lambda v: v.z)
@@ -93,7 +93,7 @@ def build(sex, kind, arm):
     me = bpy.data.meshes.new("fluff"); bm.to_mesh(me); bm.free()
     o = bpy.data.objects.new("fluff", me); bpy.context.collection.objects.link(o)
     for p in me.polygons: p.use_smooth = True
-    sub = o.modifiers.new("s", "SUBSURF"); sub.levels = 1; sub.render_levels = 1
+    sub = o.modifiers.new("s", "SUBSURF"); sub.levels = 1; sub.render_levels = 1   # with 10-sided rings this already reads round
     bpy.context.view_layer.objects.active = o; o.select_set(True); bpy.ops.object.modifier_apply(modifier="s")
     mat = bpy.data.materials.new("fluff"); mat.use_nodes = True
     mat.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (1.0, 1.0, 1.0, 1)
