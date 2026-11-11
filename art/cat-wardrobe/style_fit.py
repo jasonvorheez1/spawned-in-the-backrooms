@@ -177,34 +177,43 @@ class Sculpt:
                     self.faces.append((k,n,n+16,k+16))
 
 def fluff_art(s,kind,ears):
+    # Kemono tufts: layered, pointed locks that flare off the face, each row a
+    # touch longer than the one in front so the clump reads as fur, not a sausage.
     for side in (-1,1):
         if kind in ("cheeks","burns"):
-            for i in range(3 if kind=="cheeks" else 4):
-                root=s.surface((side,-.53+.15*i,-.31+.08*i),-.026)
-                d=Vector((side*(.086-.009*i),.018+.013*i,-.035-.009*i))
-                if kind=="burns":
-                    d.y+=.042
-                    d.z+=.008
-                s.lock((root,root+d*.25+Vector((0,0,.014)),root+d*.77,root+d),.029,.017,(side,-.5,.35))
+            rows=((5,1.0,0),(4,.72,.05)) if kind=="cheeks" else ((5,1.15,0),(3,.8,.06))
+            for row,(count,reach,back) in enumerate(rows):
+                for i in range(count):
+                    t=i/(count-1)
+                    root=s.surface((side,-.56+.26*t+back,-.34+.13*t),-.026)
+                    d=Vector((side*(.100-.020*t),.016+.026*t,-.070+.075*t))*reach
+                    if kind=="burns":
+                        d.y+=.040
+                        d.z-=.010
+                    tip=root+d+Vector((side*.010,-.004,.020*(1-t)))   # tips flick up and out
+                    s.lock((root,root+d*.3+Vector((0,0,.012)),root+d*.78,tip),
+                           .025-.004*row,.015,(side,-.5,.35))
         if kind=="nape":
-            for i in range(3):
-                root=s.surface((side*(.19+.19*i),1,-.34+.08*i),-.014)
-                d=Vector((side*(.022+.012*i),.043,-.058+.007*i))
-                s.lock((root,root+d*.27,root+d*.65+Vector((0,.012,0)),root+d),.033,.02,(side*.3,1,0))
+            for i in range(5):
+                t=i/4
+                root=s.surface((side*(.12+.42*t),1,-.36+.12*t),-.014)
+                d=Vector((side*(.018+.026*t),.050,-.080+.022*t))
+                s.lock((root,root+d*.27,root+d*.65+Vector((0,.014,0)),root+d),.030,.019,(side*.3,1,0))
         if kind=="lynx":
             pivot,tip,_=ears[side]
-            root=tip.lerp(pivot,.22)
-            d=tip-root+Vector((side*.018,-.008,.041))
-            s.lock((root,root+d*.24+Vector((0,0,.013)),root+d*.7,root+d),.014,.012,(0,-1,0))
+            for k,(lift,lean,w) in enumerate(((.058,.020,.013),(.036,.034,.010))):
+                root=tip.lerp(pivot,.20+.06*k)
+                d=tip-root+Vector((side*lean,-.006-.006*k,lift))
+                s.lock((root,root+d*.24+Vector((0,0,.014)),root+d*.7,root+d),w,.010,(0,-1,0))
     if kind=="crest":
-        for i in (-1,0,1):
-            root=s.surface((i*.21,-.63,1),-.013)
-            d=Vector((.045+.012*i,-.027,.067-.013*abs(i)))
-            s.lock((root,root+d*.2+Vector((0,0,.023)),root+d*.61,root+d),.040,.021,(0,-.65,.75))
+        for i in (-2,-1,0,1,2):
+            root=s.surface((i*.13,-.63,1),-.013)
+            d=Vector((.040+.016*i,-.030,.072-.010*abs(i)))
+            s.lock((root,root+d*.2+Vector((0,0,.024)),root+d*.61,root+d),.034,.019,(0,-.65,.75))
     if kind=="cowlick":
         root=s.surface((-.14,.05,1),-.012)
-        s.lock((root,root+Vector((-.027,-.02,.080)),root+Vector((.044,-.045,.126)),
-                root+Vector((.071,-.075,.069))),.024,.016,(0,-1,0))
+        s.lock((root,root+Vector((-.030,-.022,.090)),root+Vector((.050,-.050,.140)),
+                root+Vector((.080,-.082,.074))),.027,.017,(0,-1,0))
 
 def hair_art(s,style):
     lengths={"crop":-.10,"undercut":-.21,"pixie":-.01,"shaggy":.28,"long":.55,
@@ -292,9 +301,9 @@ def main():
         rig=next(o for o in bpy.data.objects if o.type=="ARMATURE")
         head=bpy.data.objects["Head"]
         tree,center,ears=ears_fit(head)
-        export(out/f"cat-{sex}.glb",{rig,head,bpy.data.objects["Body"]},True)
+        if "--bodies" in sys.argv: export(out/f"cat-{sex}.glb",{rig,head,bpy.data.objects["Body"]},True)
         rig.animation_data_clear()
-        for mat,styles,build in (("fluff",FLUFF,fluff_art),("hair",HAIR,hair_art)):
+        for mat,styles,build in (("fluff",FLUFF,fluff_art),):
             material=bpy.data.materials.new(mat)
             for kind in styles:
                 s=Sculpt(tree,center)

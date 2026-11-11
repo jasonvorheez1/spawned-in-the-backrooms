@@ -47,14 +47,14 @@ masks:
   bagmask: { f: "/cdn/value.bc18246d4a4b2ba8ce84a1a92e6662b939f2fbe90cdc6fb9411dad9ae8167150.glb", m: "/cdn/value.8e5ac77aa50da1a896a947c90ee01816bc15f8483b822841bf66d4e3e71497aa.glb" }
   shellmask: { f: "/cdn/value.cc38d73c3aa334473337f765ebf45f20949ef21ef0547cdc513d53edd547e480.glb", m: "/cdn/value.45981231ad8af5dd54859ea8bc0d6a6b321f7f1906ebecaad555500f8ebb0c37.glb" }
 
-# Head tufts and hairstyles are sculpted on each cat rig in art/cat-wardrobe/style_fit.py.
+# Head tufts are sculpted on each cat rig in art/cat-wardrobe/style_fit.py (Nov 11: layered, pointed kemono locks).
 fluff:
-  burns: { f: '/cdn/value.2624373d429f12ddf8ea9c999a65bccb2b7120177c7b59102c44f37197c5c131.glb', m: '/cdn/value.fd18ce5da61083882f1ff16990032f71e5856035bf595f7aafe390f11fe1f645.glb' }
-  cheeks: { f: '/cdn/value.3b6f6bcd87b12f37ed6404d57eed66bcba49ca3993480c963208f06858d2897d.glb', m: '/cdn/value.b1a93c8ca124738979391d8ea6a318551152c40edf4696bc20b11ddf54ce2eca.glb' }
-  cowlick: { f: '/cdn/value.dbb5e9c3792ed7672905cc4d163c65bf5c15ebd71733931c16cfaf9b1f57e3c6.glb', m: '/cdn/value.3df13d2d73866c425fb819748de2a0130ab9cd58e8e6d462509b009cb478073e.glb' }
-  crest: { f: '/cdn/value.0d64dd5fea7c38d234c51ebd26cc405236ebf6ded9c0415a4c8057a65162d98e.glb', m: '/cdn/value.04b9d0b0e1755d309265d90db75a001dc26d4d007736f5dcacadddb2c9fe8486.glb' }
-  lynx: { f: '/cdn/value.8b49b5df71e6041972cca45d7d51c549ff549acb86157d7eb4b2f6ca5ed6db69.glb', m: '/cdn/value.6e498c17f72bfee6f9772cba4935f28fd6cfccf508fe3f9dbb8d744b5ab09fd4.glb' }
-  nape: { f: '/cdn/value.2547a28b55a76d1b7b4c75589828b9ca665607bb05f28a42367af77723ef0200.glb', m: '/cdn/value.c4fec0dbaec6194b22d10be9b48c2fd41d3abfbc1631fb565154a54de0f2b336.glb' }
+  burns: { f: '/cdn/value.303553aaded1f588e3131ae0fed0d90e75c14dbadc15506278762461767f018e.glb', m: '/cdn/value.310395d4d1ba31a043ebae075520338e4c0c629f6d2ac9fe18b4593a62b5824c.glb' }
+  cheeks: { f: '/cdn/value.c622647e029c4d9da0d479e399571f63f0f47b4a58fe795759ec29dd656bf3d6.glb', m: '/cdn/value.0cdf049099a9dd8e2f60ffe91472e1db6fb3e3449bb4cb10da722db0ee353d5e.glb' }
+  cowlick: { f: '/cdn/value.e4c3f6eca79f860d00ff385acad5f11c3eab7916dd9d5da5e95eafc29bd2a0cc.glb', m: '/cdn/value.7fb6c81a6acd943c9616c6e9a72ddab081bc20b8de0c4dec5f48054b5c30334e.glb' }
+  crest: { f: '/cdn/value.dc024776f375e1c1bb00f139ec87358a193e4017757aa7974b75828a6c0eac40.glb', m: '/cdn/value.c3240f6bd14000d556a254ec09c09f5d410c782a1f65eb965e8f095e0e20dc83.glb' }
+  lynx: { f: '/cdn/value.c5fb23528b3ebb23628f1b1d9ddfc50cbbd2720a2af208040c24581402fbab74.glb', m: '/cdn/value.0bbf9b5761c78889348806d54bd31af7eb05706462d5486b85ecdb1dd7af29c1.glb' }
+  nape: { f: '/cdn/value.7b96a42dded0df5984dd5e466f6f938589a7e8784f95edcf21fecd3304cf1836.glb', m: '/cdn/value.452f3b7bbdfb44d912aeb3aeeb20a6b7c34a50309957c535020a496957700813.glb' }
 
 # hairstyles (art/cat-wardrobe/hair-register.py): the Tripo hair carried onto the current cat heads, skinned to the head, tinted by look.hairc. look.hair: one key
 hair:

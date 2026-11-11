@@ -106,7 +106,7 @@ f:
     Ward_chitinplate: "/cdn/value.778daff9eb362e116a451c9df96120c09bcaacae1fbadb016468df27e7fa26ce.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
     Ward_crown: "/cdn/value.023d72b0f13059dfc2172645c43ec93efb3c0e4447c63b3ac6192998ac441963.glb"
     Ward_divehelm: "/cdn/value.5b9c836cec73932a9c9c379f28f80f5db3fb73fe860ba86ca9fac2483bfc8e5c.glb"
-    Ward_dress: "/cdn/value.7b7dc1853c4404f1c5853c51a558efae6ab17bb9e0b37dc477fc4c17b12b256b.glb"
+    Ward_dress: "/cdn/value.3b29a63f3f1b17929aeeba77dade50c0f9ff3ecdf8d54da77ca51b96ec660ed2.glb"   # Nov 11 Bust key reaches full bust without cutting into the chest; before 7b7dc185
     Ward_flower: "/cdn/value.a65b66f31936f5186ff86e9d079dae511b16ac5f33e7e76eb137fa2029e1a119.glb"
     Ward_glasses: "/cdn/value.38219fdac78c423a64c5cfca28faee426eec6c01ccd018db69cc4df24a1c0e1f.glb"  # Nov 11 tapered to the face (art/human-cloth/eyewear_narrow5.py, was 95125c56); Nov 11 head keys (eyewear_keys.py, matched across the older Head bone); before fb961ffb
     Ward_gmhoodie: "/cdn/value.8da9b2c1fbb984dd39a5952f2442de8b717273505ad71a68e74b6d92532f16f4.glb"   # Nov 10 tops redo: longer hem + original collar/hood kept (tops_redo.sh)
