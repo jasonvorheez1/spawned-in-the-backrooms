@@ -339,7 +339,7 @@ lift = 0
 for v in HEAD.data.vertices:
     co = v.co; i = round((co.x - BOX[0]) / (BOX[1] - BOX[0]) * NX); j = round((co.z - BOX[2]) / (BOX[3] - BOX[2]) * NZ)
     if not (0 <= i <= NX and 0 <= j <= NZ) or co.y > -0.1 or abs(clo[i, j]) > 5 or np.isnan(hgt[i, j]): continue
-    if -co.y < hgt[i, j] - 0.004: continue          # not the front skin (inner shell)
+    if v.normal.y > 0.3: continue          # inner shell faces back
     r = min(math.hypot((co.x - ex) / (0.75 * D), (co.z - ez - 0.05 * D) / (0.75 * D)) for ex, ez in EYE)
     w = 1 if r < 0.75 else max(0, (1.0 - r) / 0.25); w = w * w * (3 - 2 * w)
     if w > 0 and abs(-clo[i, j] - co.y) < 0.03: co.y = co.y + (-clo[i, j] - co.y) * w; lift += 1
@@ -390,18 +390,21 @@ def cloth_mat(name, img, rough):
     t.extension = "EXTEND"; nt.links.new(t.outputs["Color"], bs.inputs["Base Color"]); bs.inputs["Roughness"].default_value = rough
     return m
 body_bvh = BVHTree.FromObject(BODY, bpy.context.evaluated_depsgraph_get())
-TKD = KDTree(len(BODY.data.vertices)); TAILV = set()
+TKD = KDTree(len(BODY.data.vertices)); TAILW = set()
 for v in BODY.data.vertices:
     TKD.insert(v.co, v.index)
-    if sum(BODY.vertex_groups[gg.group].name.endswith(("Tail1", "Tail2", "Tail3")) * gg.weight for gg in v.groups) > 0.2: TAILV.add(v.index)
+    if sum(BODY.vertex_groups[gg.group].name.endswith(("Tail1", "Tail2", "Tail3")) * gg.weight for gg in v.groups) > 0.05: TAILW.add(v.index)
 TKD.balance()
-def tailish(c): return any(i in TAILV for _, i, _ in TKD.find_n(c, 4))
+def tailish(c): return any(i in TAILW for _, i, _ in TKD.find_n(c, 4))
+print("tail-weighted body verts", len(TAILW))
 bidx = {gg.index: gg.name for gg in BODY.vertex_groups}
 def make_cloth(name, keep, off, vfun, material, drape):
     o = BODY.copy(); o.data = BODY.data.copy(); o.name = o.data.name = name; sc.collection.objects.link(o)
     o.vertex_groups.clear(); o.modifiers.clear(); o.parent = None
     b = bmesh.new(); b.from_mesh(o.data)
-    bmesh.ops.delete(b, geom=[f for f in b.faces if not keep(f.calc_center_median())], context="FACES")
+    drop = [f for f in b.faces if not keep(f.calc_center_median())]
+    print(name, "faces kept", len(b.faces) - len(drop), "tail faces kept", sum(tailish(f.calc_center_median()) for f in b.faces if f not in set(drop)))
+    bmesh.ops.delete(b, geom=drop, context="FACES")
     isl = []; seen = set()
     for f in b.faces:
         if f.index in seen: continue
@@ -437,7 +440,7 @@ def make_cloth(name, keep, off, vfun, material, drape):
     b.to_mesh(o.data); b.free()
     o.data.materials.clear(); o.data.materials.append(material)
     bpy.ops.object.select_all(action="DESELECT"); bpy.context.view_layer.objects.active = o; o.select_set(True)
-    sol = o.modifiers.new("solid", "SOLIDIFY"); sol.thickness = 0.003; sol.offset = 1; sol.use_rim = True; sol.use_even_offset = True
+    sol = o.modifiers.new("solid", "SOLIDIFY"); sol.thickness = 0.003; sol.offset = 1; sol.use_rim = True; sol.use_even_offset = False
     bpy.ops.object.modifier_apply(modifier="solid")
     sm = o.modifiers.new("sub", "SUBSURF"); sm.levels = 1; bpy.ops.object.modifier_apply(modifier="sub")
     bw = {nm: o.vertex_groups.new(name=nm) for nm in BONES}; bd = BODY.data
