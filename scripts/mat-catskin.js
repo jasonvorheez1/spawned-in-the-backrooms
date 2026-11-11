@@ -1,0 +1,72 @@
+// The new cat's skin, clothes painted in (Shelly Nov 11: "theyre painted in"): fur where she is bare, fabric where a garment covers her, decided per pixel
+// from the body's bind-pose position (positionGeometry: metres, y up, front +z, arms out along x), so a hem is a clean line and nothing can clip or tear.
+// The material colour is the fur tint (white fur picture × colour). Every number and colour is a live param (ctx.param): one compiled program dresses every cat.
+// params: fur (picture), top/bot/sock = 0|1, pats, hems (see scripts/lib/cat-wardrobe.js catSkin), colours as r,g,b triples.
+import { uv, materialColor, positionGeometry, positionWorld, normalWorld, cameraPosition, normalize, dot, pow, saturate, vec2, vec3, float, abs, fract, sin, mix, smoothstep, step, max, min, clamp, mx_noise_float, mx_fractal_noise_float } from "builtin/tsl";
+import { MeshStandardNodeMaterial } from "builtin/three";
+
+const E = 0.0025; // edge softness, metres
+export function material(ctx) {
+  const m = new MeshStandardNodeMaterial();
+  const P = (n, d = 0) => ctx.param(n, Number(ctx.params[n] ?? d));
+  const C = (n) => vec3(P(n + "R", 1), P(n + "G", 1), P(n + "B", 1));
+  const q = positionGeometry, ax = abs(q.x);
+  const furT = ctx.params.fur ? ctx.texture(String(ctx.params.fur)).sample(uv()).rgb : vec3(1, 1, 1);
+  const fur = furT.mul(materialColor);
+  // --- tail: a capsule line the garments leave a hole for
+  const tl = [0, 1, 2, 3].map((i) => vec3(P("t" + i + "x"), P("t" + i + "y"), P("t" + i + "z")));
+  const seg = (a, b) => { const pa = q.sub(a), ba = b.sub(a), h = clamp(dot(pa, ba).div(dot(ba, ba)), 0, 1); return pa.sub(ba.mul(h)).length(); };
+  const tailD = min(seg(tl[0], tl[1]), min(seg(tl[1], tl[2]), seg(tl[2], tl[3])));
+  const tailR = P("tailR", 0.036);
+  // a region is a signed "depth inside" in metres (positive = covered); masks are smoothsteps of it, so hems, trims and shadows share one edge
+  const inside = (d, grow) => smoothstep(-E, E, d.add(grow));
+  const notTail = tailD.sub(tailR);
+  // --- top: hem..collar band, sleeve end on the arm, a scoop collar front and back
+  const tLo = P("tLo"), tHi = P("tHi"), tSl = P("tSl"), nW = P("nW"), nF = P("nF"), nB = P("nB"), fz = P("frontZ");
+  const isFront = smoothstep(-0.01, 0.01, q.z.sub(fz));
+  const nD = mix(nB, nF, isFront);
+  const ex = q.x.div(nW), ey = q.y.sub(tHi.add(0.004)).div(nD.max(0.001));
+  const scoop = ex.mul(ex).add(ey.mul(ey)).sqrt().sub(1).mul(min(nW, nD.max(0.012))); // >0 outside the collar hole
+  const topD = min(min(q.y.sub(tLo), tHi.sub(q.y)), min(tSl.sub(ax), min(scoop, notTail)));
+  // --- bottom: waist..leg hem
+  const bLo = P("bLo"), bHi = P("bHi");
+  const botD = min(min(q.y.sub(bLo), bHi.sub(q.y)), min(notTail, float(0.2).sub(ax)));
+  // --- socks: ankle up
+  const sHi = P("sHi");
+  const sockD = sHi.sub(q.y);
+  const onTop = P("top"), onBot = P("bot"), onSock = P("sock");
+  const fab = (pat, base, s) => {
+    const u = q.x.add(q.z.mul(0.7)), v = q.y, fine = mx_noise_float(q.mul(300)).mul(0.5).add(0.5);
+    const band = (x, w) => smoothstep(0.5 - w - 0.03, 0.5 - w, abs(fract(x).sub(0.5))).oneMinus();
+    let c;
+    if (pat === "denim") { const tw = fract(u.add(v).mul(160)), fade = mx_fractal_noise_float(q.mul(7)).mul(0.5).add(0.5); c = base.mul(float(0.8).add(smoothstep(0.35, 0.65, tw).mul(0.16))).mul(float(0.9).add(fade.mul(0.22))); }
+    else if (pat === "stripes") c = mix(base, vec3(0.95, 0.94, 0.9), band(v.mul(22), 0.24).mul(0.9));
+    else if (pat === "gingham") { const a = step(0.5, fract(u.mul(30))), b = step(0.5, fract(v.mul(30))); c = mix(vec3(0.96, 0.95, 0.92), base, a.add(b).mul(0.5).add(a.mul(b).mul(0.5)).min(1).mul(0.8).add(0.15)); }
+    else if (pat === "rib") c = base.mul(float(0.84).add(abs(sin(u.mul(330))).mul(0.18)));
+    else if (pat === "knit") c = base.mul(float(0.76).add(abs(sin(u.mul(240))).mul(0.16)).add(smoothstep(0.1, 0.5, fract(v.mul(150))).mul(0.14)));
+    else { const wv = abs(sin(u.mul(320))).mul(0.5).add(abs(sin(v.mul(320))).mul(0.5)); c = base.mul(float(0.9).add(wv.mul(0.1))); }
+    const folds = mx_fractal_noise_float(q.mul(vec3(9, 4.5, 9)).add(s)).mul(0.5).add(0.5);
+    return c.mul(float(0.95).add(fine.mul(0.06))).mul(float(0.86).add(smoothstep(0.25, 0.75, folds).mul(0.17)));
+  };
+  // one layer: fabric inside, a stitched darker hem just inside the edge, a soft contact shadow on whatever lies just outside it
+  let col = fur, cloth = float(0);
+  const layer = (d, on, pat, name, s) => {
+    const mk = inside(d, 0).mul(on), hem = mk.mul(inside(d, -0.006).oneMinus()), sh = inside(d, 0.007).mul(on).mul(mk.oneMinus());
+    const f = fab(pat, C(name), s);
+    col = mix(col.mul(float(1).sub(sh.mul(0.3))), f.mul(float(1).sub(hem.mul(0.2))), mk);
+    cloth = max(cloth, mk);
+  };
+  layer(sockD, onSock, "rib", "sock", 3.1);
+  layer(botD, onBot, String(ctx.params.bpat ?? "weave"), "bot", 7.7);
+  layer(topD, onTop, String(ctx.params.tpat ?? "weave"), "top", 0);
+  if (ctx.params.tband) { // a contrast band along the low hem (the crop's trim)
+    const bd = inside(topD, 0).mul(onTop).mul(smoothstep(0.016 + E, 0.016 - E, q.y.sub(tLo)));
+    col = mix(col, C("trim"), bd.mul(0.9));
+  }
+  const N = normalize(normalWorld), V = normalize(cameraPosition.sub(positionWorld)), fres = pow(float(1).sub(saturate(abs(dot(N, V)))), 3.0);
+  m.colorNode = col;
+  m.emissiveNode = col.mul(0.06).add(col.mul(0.5).add(vec3(0.16, 0.15, 0.14)).mul(fres).mul(0.16).mul(cloth));
+  m.roughnessNode = mix(float(0.6), float(0.88), cloth);
+  m.metalness = 0;
+  return m;
+}
