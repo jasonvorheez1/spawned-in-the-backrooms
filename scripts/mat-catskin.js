@@ -23,7 +23,7 @@ export function material(ctx) {
     const mo = ctx.params.mouth ? ctx.texture(String(ctx.params.mouth)).sample(vec2(u, v)) : null;
     let pic = mo ? vec4(mix(pic0.rgb, mo.rgb, mo.a), max(pic0.a, mo.a)) : pic0;
     // the sculpted head has its own nose (Shelly 'double noses'): the picture's painted nose is filled with the muzzle beside it
-    const nd = u.sub(0.5).div(0.07).pow(2).add(v.sub(P("noseCutV", 0.36)).div(0.055).pow(2)).sqrt();
+    const nd = u.sub(0.5).div(0.075).pow(2).add(v.sub(P("noseCutV", 0.36)).div(0.07).pow(2)).sqrt();
     const noseCut = smoothstep(1.0, 0.8, nd);
     const sL = ctx.texture(String(ctx.params.face)).sample(vec2(u.sub(0.11), v)), sR = ctx.texture(String(ctx.params.face)).sample(vec2(u.add(0.11), v));
     const fill = max(sL, sR);
