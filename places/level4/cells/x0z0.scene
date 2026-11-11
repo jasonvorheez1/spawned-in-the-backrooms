@@ -1566,13 +1566,13 @@ omega-okafor/critter-hair:
 omega-okafor/critter-ward-cap:
   attachment: {skin: true}
   id: omega-okafor/critter-ward-cap
-  model: {forward: "+z", id: /cdn/value.55e24469e64912323fab30321ae2df7939d85faa8e300019779b03fc89734957.glb, materials: {cloth_bottom: {color: "#5a5040", kind: scripted, metalness: 0, params: {pat: canvas, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}, cloth_hat: {color: "#b6e04a", kind: scripted, metalness: 0, params: {pat: denim, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}, cloth_neck: {color: "#f3c64a", kind: scripted, metalness: 0, params: {pat: weave, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}, cloth_shoes: {color: "#3a3a30", kind: scripted, metalness: 0, params: {pat: leather, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}, cloth_top: {color: "#eef2f0", kind: scripted, metalness: 0, params: {pat: camo, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}}}
+  model: {forward: "+z", id: /cdn/value.2147ec62b88bb26d81dac07f8b9d04fdff4804f236cdbad1b48c6a1970413725.glb, materials: {cloth_bottom: {color: "#5a5040", kind: scripted, metalness: 0, params: {pat: canvas, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}, cloth_hat: {color: "#b6e04a", kind: scripted, metalness: 0, params: {pat: denim, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}, cloth_neck: {color: "#f3c64a", kind: scripted, metalness: 0, params: {pat: weave, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}, cloth_shoes: {color: "#3a3a30", kind: scripted, metalness: 0, params: {pat: leather, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}, cloth_top: {color: "#eef2f0", kind: scripted, metalness: 0, params: {pat: camo, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}}}
   morph: {BrowHeavy: 0.258, Bust: 0, CheekFull: 0.1, ChinLong: 0.14, FaceLong: 0.01, HT_Angular: 0, HT_Broad: 0.01, HT_Heart: 0.45, HT_Long: 0, HT_Round: 0, HT_Square: 0, HeadRound: 0.15, JawNarrow: 0, JawWide: 0.2108856731886044, M_Chin: 0.22, M_Jaw: 0.42, NoseBig: 0.17}
   parent: omega-okafor
 omega-okafor/critter-ward-cargo:
   attachment: {skin: true}
   id: omega-okafor/critter-ward-cargo
-  model: {forward: "+z", id: /cdn/value.025ceeab94b0bdefbb30f25e69cae2d655d39a7c374bccb5a4ce44e3e939ceb9.glb, materials: {cloth_bottom: {color: "#5a5040", kind: scripted, metalness: 0, params: {pat: canvas, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}}}
+  model: {forward: "+z", id: /cdn/value.9c3b43960deed73ef446ab93bfbcc3524bcf79fd4c0477a8c2ceee7e44b77bb1.glb, materials: {cloth_bottom: {color: "#5a5040", kind: scripted, metalness: 0, params: {pat: canvas, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}}}
   morph: {BrowHeavy: 0.258, Bust: 0, CheekFull: 0.1, ChinLong: 0.14, FaceLong: 0.01, HT_Angular: 0, HT_Broad: 0.01, HT_Heart: 0.45, HT_Long: 0, HT_Round: 0, HT_Square: 0, HeadRound: 0.15, JawNarrow: 0, JawWide: 0.2108856731886044, M_Chin: 0.22, M_Jaw: 0.42, NoseBig: 0.17}
   parent: omega-okafor
 omega-okafor/critter-ward-inner:
@@ -1590,7 +1590,7 @@ omega-okafor/critter-ward-jacket:
 omega-okafor/critter-ward-steeltoe:
   attachment: {skin: true}
   id: omega-okafor/critter-ward-steeltoe
-  model: {forward: "+z", id: /cdn/value.a627c109e5ac90aa455fb5c09b9b5ff42ec97a70389046f364a1e623a1b1226e.glb, materials: {cloth_shoes: {color: "#3a3a30", kind: scripted, metalness: 0, params: {pat: leather, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}}}
+  model: {forward: "+z", id: /cdn/value.b37b654e7c103f019328bb7f0521ef3a73800a06465cd760bf127d7a95b22ba4.glb, materials: {cloth_shoes: {color: "#3a3a30", kind: scripted, metalness: 0, params: {pat: leather, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}}}
   morph: {BrowHeavy: 0.258, Bust: 0, CheekFull: 0.1, ChinLong: 0.14, FaceLong: 0.01, HT_Angular: 0, HT_Broad: 0.01, HT_Heart: 0.45, HT_Long: 0, HT_Round: 0, HT_Square: 0, HeadRound: 0.15, JawNarrow: 0, JawWide: 0.2108856731886044, M_Chin: 0.22, M_Jaw: 0.42, NoseBig: 0.17}
   parent: omega-okafor
 omega-okafor/object/xad4c834675863151/106:
