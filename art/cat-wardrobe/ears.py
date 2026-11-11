@@ -49,6 +49,29 @@ def measure(H):
     head_bone = max(H.vertex_groups, key=lambda g: sum(1 for v in H.data.vertices for e in v.groups if e.group == g.index and e.weight > 0.5)).name
     return out, S, head_bone
 
+def hide_body(sex):
+    # the body again, whole, with an Ear_Hide key: the head's own ears pressed flat into the skull under the sculpted ones
+    # (run after art/cat-wardrobe/bust.py: its body is the input; this keeps every key and slot it has)
+    bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(filepath=SRC[sex])
+    arm = next(o for o in bpy.data.objects if o.type == "ARMATURE")
+    if arm.animation_data: arm.animation_data.action = None
+    H = bpy.data.objects["Head"]; M = H.matrix_world; Mi = M.inverted()
+    V = np.array([M @ v.co for v in H.data.vertices]); x, z = V[:, 0], V[:, 2]
+    mid = V[np.abs(x) < 0.015]; low = mid[mid[:, 2] < z.min() + 0.5 * (z.max() - z.min())]
+    zp = low[np.argmin(low[:, 1]), 2]; S = (zp - z.min()) / 0.17; crown = mid[:, 2].max()
+    w = np.clip((z - (crown - 0.07 * S)) / (0.06 * S), 0, 1) * np.clip((np.abs(x) - 0.11 * S) / (0.05 * S), 0, 1)
+    E = w > 0; base_z = np.percentile(z[E], 8)
+    k = H.shape_key_add(name="Ear_Hide", from_mix=False)
+    for i in np.nonzero(E)[0]:
+        sx = 1 if x[i] > 0 else -1; m = E & (np.sign(x) == sx); c = V[m].mean(0)
+        q = V[i].copy(); f = min(1, w[i] * 1.5)
+        q[2] = q[2] + (min(q[2], base_z - 0.004) - q[2]) * f
+        q[0] = q[0] + (c[0] - q[0]) * 0.55 * f; q[1] = q[1] + (c[1] - q[1]) * 0.55 * f
+        k.data[i].co = Mi @ Vector(q)
+    print("EARHIDE", sex, int(E.sum()))
+    for o in bpy.data.objects: o.select_set(True)
+    bpy.ops.export_scene.gltf(filepath=f"{OUT}/body-{sex}.glb", export_skins=True, export_morph=True, export_animations=False, export_apply=False)
+
 def ear(bm, E, T, sx, mats):
     C, tip = E["C"], E["tip"]; h = (tip.z - C.z) * T["h"]
     W0 = E["hw"] * 1.18 * T["w"]; D0 = W0 * 0.55
@@ -163,3 +186,4 @@ for sex in ([a for a in sys.argv[sys.argv.index("--") + 1:] if a in SRC] if "--"
         o.select_set(True); arm.select_set(True)
         bpy.ops.export_scene.gltf(filepath=f"{OUT}/{kind}-{sex}.glb", use_selection=True, export_skins=True, export_animations=False, export_apply=False)
     if "noproof" not in sys.argv: proof(sex, objs, H, meas)
+    if "body" in sys.argv: hide_body(sex)
