@@ -433,7 +433,10 @@ for poly in HEAD.data.polygons: poly.use_smooth = True
 HEAD.data.update()
 if os.environ.get("DBGFACE"): bpy.ops.wm.save_as_mainfile(filepath="/tmp/dbg.blend"); sys.exit(0)
 print("head front faces replaced by smooth skin", lift, "patch quads", len(pf))
-bvh = BVHTree.FromObject(HEAD, bpy.context.evaluated_depsgraph_get()); grid = {}; hn = {}
+_V, _P = [], []   # the decal lies on Head AND the Body's chin: the muzzle reaches below the neck seam
+for o_ in (HEAD, BODY):
+    off = len(_V); _V += [o_.matrix_world @ v.co for v in o_.data.vertices]; _P += [[off + k for k in p_.vertices] for p_ in o_.data.polygons]
+bvh = BVHTree.FromPolygons(_V, _P); grid = {}; hn = {}
 for j in range(NZ + 1):
     for i in range(NX + 1):
         u, v = i / NX, j / NZ; Xp = BOXD[0] + u * (BOXD[1] - BOXD[0]); Zp = BOXD[2] + v * (BOXD[3] - BOXD[2])
