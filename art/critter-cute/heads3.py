@@ -108,6 +108,18 @@ sub("""    basep = H.add_v(root - up * .035, bone)""", """    basep = H.add_v(ro
         for j, (dx, ln_) in enumerate(((-.016, .050), (0.0, .062), (.016, .046))):
             b_ = root + up * .010 + side_v * dx + fwd * (-.004)
             spike(H, b_, up * ln_ * .55 + fwd * .012 + side_v * dx * .6, up * ln_ * .45 + fwd * .016 + side_v * dx * .5, .010, inner_mat if inner_mat != "inner" else "belly", bone)""")
+# expressions (Shelly #205760 "then improve expressions"): sad, angry and pout read apart from neutral
+# sad: outer lid droops hard, pupils float up; angry: inner lid slams down, pupils sink; brows tilt twice as far
+sub('elif key == "Sad": out.append((x, y * (1 - .38 * xo(x)) if y > 0 else y))', 'elif key == "Sad": out.append((x, (y * (1 - .75 * xo(x)) - .010 * xo(x)) if y > 0 else y * .94))')
+sub('elif key == "Angry": out.append((x, y * (1 - .55 * xi(x)) if y > 0 else y))', 'elif key == "Angry": out.append((x, (y * (1 - .92 * xi(x)) - .006) if y > 0 else y * .9))')
+src_brow_fix = True
+src = src.replace('"Sad": [(x, y + .012) for x, y in pts]', '"Sad": [(x, min(y + .016, _top(x, s) - .004)) for x, y in pts]')
+src = src.replace('"Angry": [(x - s * .004, y - .006) for x, y in pts]}', '"Angry": [(x - s * .006, min(y - .012, _top(x, s) - .02)) for x, y in pts]}')
+src = src.replace('.024 * (0.35 - s * x / .096)', '.050 * (0.35 - s * x / .096)').replace('.028 * (0.35 - s * x / .096)', '.055 * (0.35 - s * x / .096)')
+src = src.replace('- .036 * (0.40 - s * x / .096)', '- .070 * (0.40 - s * x / .096)').replace('- .034 * (0.40 - s * x / .096)', '- .068 * (0.40 - s * x / .096)')
+# frown: a real downturned mouth, corners sinking (the pout's base too)
+src = src.replace('return (t * .040, .014 * (1 - t * t) - .005)', 'return (t * .034, .024 * (1 - t * t) - .010)')
+src = src.replace('("pout", {"Frown": .8, "Blush": .4})', '("pout", {"Frown": .7, "Blush": 1, "Sad": .35, "Half": .2})')
 exec(compile(src, os.path.join(HERE, "build.py"), "exec"))
 # proofs show the head as the game draws it by default: no beard, no blush unless worn (the game hides those slots)
 _ht = head_turn
