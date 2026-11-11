@@ -217,6 +217,20 @@ LOG["fit"] = dict(s_eyes=s0, s=S, k=SCALE_K, tx=TX, tz=TZ, resid_rel=best[0] / h
 co = place(co, S * SCALE_K, TX, TZ)
 
 brow = beye_top + 0.06 * esep
+if OPT.get("cut") == "1":   # muzzle/cheek faces the colour mask let through: cut what sits on the face below the brow
+    for i, v in enumerate(me.vertices): v.co = Vector(co[i])
+    cb = bmesh.new(); cb.from_mesh(me); cb.faces.ensure_lookup_table()
+    def onface(v):
+        rel = np.array(v.co[:]) - np.array(hc[:])
+        return rel @ F > 0.05 * hw and abs(rel @ np.array(side[:])) < eye_outer * 1.15 and v.co.z < brow
+    cut = [f for f in cb.faces if sum(onface(v) for v in f.verts) >= 2]
+    bmesh.ops.delete(cb, geom=cut, context="FACES")
+    nb3 = neighbors(cb); n3 = len(cb.faces)
+    bmesh.ops.delete(cb, geom=[cb.faces[i] for I in islands(np.ones(n3, bool), nb3) if len(I) < 0.02 * n3 for i in I], context="FACES")
+    bmesh.ops.delete(cb, geom=[v for v in cb.verts if not v.link_faces], context="VERTS")
+    cb.to_mesh(me); cb.free(); LOG["face_cut"] = len(cut)
+    co = np.array([v.co[:] for v in me.vertices])
+    b2 = bmesh.new(); b2.from_mesh(me); bidx = np.array([v.index for v in b2.verts if v.is_boundary], int); b2.free()
 lifted = 0
 for i, p in enumerate(co):
     rel = p - np.array(hc[:])
