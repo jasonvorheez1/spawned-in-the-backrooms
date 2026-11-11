@@ -6,8 +6,8 @@ import bpy, sys, math
 from mathutils import Vector
 a = sys.argv[sys.argv.index("--") + 1:]; SRC, OUT = a[0], a[1]; CLOTH = len(a) > 2
 bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(filepath=SRC)
-CX, CZ, SIG, AMP = 0.042, 0.492, 0.030, 0.030          # glb units: body 0.668 tall, chest line at Spine1/2
-if CLOTH: SIG, AMP = 0.034, 0.031                       # cloth spans the gap between the two forms
+CX, CZ, SIG, AMP = 0.040, 0.488, 0.031, 0.048          # glb units: body 0.668 tall, chest line at Spine1/2
+if CLOTH: SIG, AMP = 0.035, 0.050                       # cloth spans the gap between the two forms
 def field(p, n):
     if p.y > -0.055 or n.y > 0.15: return Vector((0, 0, 0))
     best = Vector((0, 0, 0)); bl = 0
