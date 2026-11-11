@@ -15,7 +15,9 @@ fixed=0
 for v in o.data.vertices:
   p=M@v.co
   if p.z>crotch: continue
-  side='Left' if p.x*lsign>0 else 'Right'; other='Right' if side=='Left' else 'Left'
+  lw=sum(g.weight for g in v.groups if gi[g.group] in legs('Left')); rw=sum(g.weight for g in v.groups if gi[g.group] in legs('Right'))
+  if lw==rw: continue
+  side='Left' if lw>rw else 'Right'; other='Right' if side=='Left' else 'Left'  # its own leg is the one leading it, never its x: the legs touch at x=0
   ow=[(n,v) for n in legs(other)]
   removed=0
   for g in list(v.groups):
