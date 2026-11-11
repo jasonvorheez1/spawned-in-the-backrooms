@@ -6,5 +6,5 @@ import os
 HERE = os.path.dirname(os.path.abspath(__file__))
 s3 = open(os.path.join(HERE, "heads3.py"), encoding="utf-8").read()
 hook = 'exec(compile(src, os.path.join(HERE, "build.py"), "exec"))'
-s3 = s3.replace(hook, hook + "\n" + open(os.path.join(HERE, "tripo_fit.py"), encoding="utf-8").read(), 1)
+s3 = s3.replace(hook, 'src = src.replace("o.hide_render = o not in", "o.hide_render = o.name != \'TripoHead\' and o not in").replace("o.hide_render = o is not head", "o.hide_render = o.name != \'TripoHead\' and o is not head")\n' + hook + "\n" + open(os.path.join(HERE, "tripo_fit.py"), encoding="utf-8").read(), 1)
 exec(compile(s3, os.path.join(HERE, "heads3.py"), "exec"))
