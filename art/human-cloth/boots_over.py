@@ -1,13 +1,22 @@
 """Boots over trousers (Nov 11): the jeans hem poked out through the boot shaft mid-stride. Each shaft vertex is pushed out
 from its leg's line to clear the widest trouser cloth at that angle and height by CLEAR, faded in above the ankle.
 Usage: boots_over.py boots.glb trousers.glb out.glb [clear]"""
-import bpy, sys, math
+import bpy, sys, math, mathutils
 a = sys.argv[sys.argv.index('--') + 1:]
 src, trou, out = a[:3]; CLEAR = float(a[3]) if len(a) > 3 else 0.007
 def load(p, keep):
     if not keep: bpy.ops.wm.read_factory_settings(use_empty=True)
     before = set(bpy.data.objects); bpy.ops.import_scene.gltf(filepath=p)
     return [o for o in bpy.data.objects if o not in before]
+bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(filepath=src)
+_b = [o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith('Ward_')][0]
+_bm = [m.name for m in _b.data.materials]; _pts = {}
+for f in _b.data.polygons:
+    if _bm and _bm[f.material_index] == 'button': continue
+    for vi in f.vertices:
+        q = _b.matrix_world @ _b.data.vertices[vi].co
+        if q.z > 0.12: _pts.setdefault((1 if q.x >= 0 else -1, int(q.z / 0.02)), []).append(q)
+_AX0 = {k: mathutils.Vector(((min(q.x for q in v) + max(q.x for q in v)) / 2, (min(q.y for q in v) + max(q.y for q in v)) / 2, k[1] * 0.02)) for k, v in _pts.items() if len(v) > 20}
 tro = load(trou, False); T = [o for o in tro if o.type == 'MESH' and o.name.startswith('Ward_')][0]
 tp = [T.matrix_world @ v.co for v in T.data.vertices]
 # sample the trouser surface densely along its edges (rings are sparse in height)
@@ -21,12 +30,18 @@ for o in list(bpy.data.objects):
     if o.type == 'MESH' and o.name.startswith('Icosphere'): bpy.data.objects.remove(o)
 B = [o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith('Ward_')][0]
 arm = B.find_armature()
+AX.update(_AX0) if False else None
 ctr = {}
 for s, nm in ((1, 'Left'), (-1, 'Right')):
     b = arm.data.bones[nm + 'Leg']; f = arm.data.bones[nm + 'Foot']
     ctr[s] = (arm.matrix_world @ b.head_local, arm.matrix_world @ f.head_local)
+AX = {}  # each leg's line through the boot's own centre per 2 cm band (the bones run along its back wall)
 def axis(s, z):
+    zi = int(z / 0.02)
+    for d in (0, -1, 1, -2, 2, -3, 3):
+        if (s, zi + d) in AX: return AX[(s, zi + d)]
     h, f = ctr[s]; t = (z - f.z) / (h.z - f.z); return f.lerp(h, t)
+AX.update(_AX0); print('AX', {k: (round(v.x,3), round(v.y,3)) for k, v in sorted(_AX0.items())})
 bins = {}
 for p in samp:
     if p.z > 0.4: continue
