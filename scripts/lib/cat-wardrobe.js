@@ -14,9 +14,11 @@ const put = (o, name, hex) => { const [r, g, b] = rgb(hex); o[name + 'R'] = +r.t
 const armAt = (B, s) => s <= 0 ? B.arm[0] + 0.012 : s <= 1 ? lerp(B.arm[0], B.arm[1], s) : lerp(B.arm[1], B.arm[2], s - 1)
 const legAt = (B, l) => l <= 1 ? lerp(B.leg[0], B.leg[1], l) : lerp(B.leg[1], B.leg[2], l - 1)
 
+// a look with the default outfit filled in wherever a top or bottom is unpicked or 'none' (Shelly: "wheres the default outfit when theyre not wearing any apparel")
+const dressed = (sex, look) => { const l = { ...W.defaults[sex], ...(look || {}) }; for (const [k, c] of [['topw', 'top'], ['botw', 'bottom']]) if (!l[k] || l[k] === 'none') { l[k] = W.defaults[sex][k]; l[c] = W.defaults[sex][c] } return l }
 // the painted layers a look asks for, modelled garments folded to the layer drawn under them
 export function paintOf(sex, look) {
-  const l = { ...W.defaults[sex], ...(look || {}) }, out = { top: null, bot: null, sock: null }
+  const l = dressed(sex, look), out = { top: null, bot: null, sock: null }
   const tm = W.models[l.topw], bm = W.models[l.botw], sm = W.models[l.shoes]
   const tk = tm ? tm.under : l.topw, bk = bm ? bm.under : l.botw
   if (tk && W.tops[tk]) out.top = { ...W.tops[tk], c: l.top, trim: l.trim }
@@ -33,7 +35,7 @@ export function skinParams(sex, look) {
   for (const n of ['top', 'bot', 'sock', 'trim']) put(o, n, '#ffffff')
   if (p.top) { const t = p.top; o.top = 1; o.tLo = lerp(B.top[0], B.top[1], t.hem); o.tSl = armAt(B, t.sleeve); o.nF = B.neck[1] * t.scoop; o.nB = B.neck[2] * Math.min(t.scoop, 1.1); o.tpat = t.pat; put(o, 'top', t.c); if (t.band) { o.tband = 1; put(o, 'trim', t.trim || '#d98a9a') } }
   if (p.bot) { const b = p.bot; o.bot = 1; o.bLo = legAt(B, b.leg); o.bHi = B.waist + b.rise; o.bpat = b.pat; put(o, 'bot', b.c) }
-  { const l = { ...W.defaults[sex], ...(look || {}) }   // modelled garments tuck the skin under them
+  { const l = dressed(sex, look)   // modelled garments tuck the skin under them
     if (W.models[l.topw]?.[sex]) {
       o.tSl = B.arm[2] - 0.024
       o.tHi += sex === 'm' ? 0.018 : 0.012
@@ -45,7 +47,7 @@ export function skinParams(sex, look) {
     if (l.botw === 'skirt' && W.models.skirt[sex]) o.bHi = B.waist + 0.012
     o.tuckS = W.models[l.shoes]?.[sex] ? 0.011 : 0
   }
-  { const pr = printOf(sex, { ...W.defaults[sex], ...(look || {}) }); if (pr && !W.models[(look || {}).topw ?? W.defaults[sex].topw] && PRINTS[pr.pat]) { o.tprint = PRINTS[pr.pat].tex; o.tpx = pr.pax; o.tpy = pr.pay; o.tps = pr.psz } }
+  { const pr = printOf(sex, dressed(sex, look)); if (pr && !W.models[(look || {}).topw ?? W.defaults[sex].topw] && PRINTS[pr.pat]) { o.tprint = PRINTS[pr.pat].tex; o.tpx = pr.pax; o.tpy = pr.pay; o.tps = pr.psz } }
   if (p.sock) { o.sock = 1; o.sHi = lerp(B.leg[2], B.leg[1], p.sock.top); put(o, 'sock', p.sock.c) }
   return o
 }
@@ -99,7 +101,7 @@ export function catMorph(look) {
 }
 // the Tripo garments a look wears, as skinned children of the cat
 export function catChildren(sex, look) {
-  const l = { ...W.defaults[sex], ...(look || {}) }, out = []
+  const l = dressed(sex, look), out = []
   for (const [slot, ck] of [['topw', 'top'], ['botw', 'bottom'], ['shoes', 'shoec'], ['hat', 'hatc']]) {
     const g = W.models[l[slot]]; if (!g?.[sex]) continue
     out.push({ id: 'cw-' + slot, attachment: { skin: true }, model: { id: g[sex], forward: '+z', ...(g.tint === false ? {} : { materials: { cloth: { kind: 'scripted', script: 'scripts/mat-cloth.js', color: l[ck] || '#ffffff', params: (slot === 'topw' && printOf(sex, l)) || { pat: g.pat || 'weave' } } } }) }, ...(slot === 'topw' ? { morph: chestOf(look) } : {}) })
