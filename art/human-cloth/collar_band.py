@@ -28,19 +28,22 @@ keys = list(bm.verts.layers.shape.values())
 bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0002)  # the glb split verts at every uv seam: weld so only the real neckline is open
 edges = [e for e in bm.edges if e.is_boundary and all((mw @ v.co).z > 1.28 and abs((mw @ v.co).x) < 0.2 for v in e.verts)]
 print('NECK EDGES', len(edges), 'neck centre', tuple(round(x, 3) for x in C))
-def onto(p, h):  # a point h up and toward the neck, laid 3 mm off the skin
-  d = Vector((p.x-C.x, p.y-C.y, 0)).normalized()
-  q = p + Vector((0, 0, h)) - d * 0.03
+ZC = 1.405  # the band's top: a crew neck just under the head's neck rim (scoop sat at 1.30 in front)
+def neck_at(p):  # the neck's outer skin at the band's height, straight out from the neck's centre toward p
+  d = Vector((p.x-C.x, p.y-C.y, 0)).normalized(); o = Vector((C.x, C.y, ZC))
+  hit = T.ray_cast(o + d*0.25, -d, 0.3)
+  return (hit[0] if hit[0] is not None else o + d*0.06) + d*0.004
+def off_skin(q, gap=0.004):
   loc, n, _, _ = T.find_nearest(q)
-  return loc + n * 0.003 if loc is not None else q
-rows = [(0.004, 0.5), (0.010, 1.0)]  # (rise, how far onto the neck)
+  return loc + n*gap if loc is not None and (q-loc).dot(n) < gap else q
+rows = [0.5, 1.0]  # how far up to the neck rim
 ring = edges; made = 0; new_faces = []
-for rise, f in rows:
+for f in rows:
   r = bmesh.ops.extrude_edge_only(bm, edges=ring)
   nv = [g for g in r['geom'] if isinstance(g, bmesh.types.BMVert)]
   new_faces += [g for g in r['geom'] if isinstance(g, bmesh.types.BMFace)]
   for v in nv:
-    p = mw @ v.co; t = onto(p, rise); w = p.lerp(t, f)
+    p = mw @ v.co; w = off_skin(p.lerp(neck_at(p), f))
     delta = inv @ w - v.co
     for k in keys: v[k] = v[k] + delta  # each key keeps its own offset
     v.co = v.co + delta; made += 1
