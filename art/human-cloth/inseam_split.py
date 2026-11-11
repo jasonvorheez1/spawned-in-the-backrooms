@@ -112,6 +112,16 @@ bmesh.ops.dissolve_degenerate(bm, edges=list({e for f in lf for e in f.edges}), 
 # weld every duplicate except the new midline cut, which must stay open
 keepcut = lambda v: abs((mw @ v.co).x) < 5e-4 and (mw @ v.co).z < CROTCH - 0.005
 bmesh.ops.remove_doubles(bm, verts=[v for v in bm.verts if not keepcut(v)], dist=1e-5)
+# the source carries whole panels twice on the same spot (0.0 mm apart): two coplanar copies z-fight into the pale flickering
+# facets seen walking in game. one face per vertex set survives
+seenf = set(); dupes = []
+for f in bm.faces:
+    key = frozenset(round(c, 5) for v in f.verts for c in (mw @ v.co))
+    key = tuple(sorted(tuple(round(c, 5) for c in (mw @ v.co)) for v in f.verts))
+    if key in seenf: dupes.append(f)
+    else: seenf.add(key)
+print("DUPES", len(dupes))
+bmesh.ops.delete(bm, geom=dupes, context="FACES_ONLY")
 bm.to_mesh(J.data); bm.free()
 with bpy.context.temp_override(object=J, active_object=J, selected_objects=[J], selected_editable_objects=[J]):
     try: bpy.ops.mesh.customdata_custom_splitnormals_clear()
