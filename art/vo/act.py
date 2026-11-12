@@ -43,19 +43,6 @@ for exchanges in yaml.safe_load(open('scripts/lib/data/chatter.yml', encoding='u
     for exchange in exchanges:
         for who, line in exchange:
             if cast_member(who): jobs.append((who, 'chatter', line))
-# npc-starters.js: greetings and the answers to the player's picks (Shelly Nov 12: rewritten, then revoiced)
-_st = open('scripts/lib/npc-starters.js', encoding='utf-8').read()
-for _m in re.finditer(r"^  '([\w-]+)': \{", _st, re.M):
-    _who = _m.group(1)
-    if not cast_member(_who): continue
-    _d, _j = 0, _st.index('{', _m.start())
-    for _n in range(_j, len(_st)):
-        if _st[_n] == '{': _d += 1
-        elif _st[_n] == '}':
-            _d -= 1
-            if not _d: break
-    for _k in re.finditer(r'(greeting|returning|friendly|cold|reply|failReply): "((?:[^"\\]|\\.)*)"', _st[_m.start():_n]):
-        jobs.append((_who, _k.group(1), _k.group(2).replace('\\"', '"')))
 real = lambda sl: any(len(w) >= 3 and re.search('[aeiouy]', w) and not re.match(r'^(hmm+|mmm*|uhh*|umm*|hm+|ahh*|ohh*|erm*)$', w) for w in sl.split('-'))
 todo, seen = [], set()
 for who, key, line in jobs:
