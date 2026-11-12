@@ -2324,3 +2324,63 @@ esc-up-step-26:
   receiveShadow: true
   state: {dir: up, y: [{duration: 0.1761207600990182, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 9.334400285247968, easing: linear, value: 5.203448148148149}], z: [{duration: 0.1761207600990182, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 9.334400285247968, easing: linear, value: -10}]}
   tags: [bonus-mall, escalator-step]
+plat-clock:
+  feetPosition: {x: -16, y: 8.3, z: -12}
+  id: plat-clock
+  layout: {box: {max: {x: 0.8, y: 0.8, z: 0.2}, min: {x: -0.8, y: 0, z: -0.2}}}
+  model: /cdn/value.eed845973f6885a5024ccc26e2008daef32ae1ac7c5957e6db73fa3ae1b73469.glb
+  rotation: {yaw: 90}
+  tags: [bonus-platform]
+plat-clock-rod:
+  feetPosition: {x: -16, y: 9.05, z: -12}
+  id: plat-clock-rod
+  material: {color: "#b8bcc4", metalness: 0.9, roughness: 0.3}
+  primitive: {height: 0.9, kind: cylinder, radiusBottom: 0.025, radiusTop: 0.025}
+  tags: [bonus-platform]
+plat-gate:
+  castShadow: true
+  feetPosition: {x: -10.9, y: 5.5, z: -16.5}
+  id: plat-gate
+  layout: {box: {max: {x: 1.3, y: 1.1, z: 0.35}, min: {x: -1.3, y: 0, z: -0.35}}}
+  model: /cdn/value.18d7ac8aca0812cd28dee6bb15e49852b5262fe428ed2a1512151fdbf6210f10.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: -90}
+  tags: [bonus-platform]
+plat-motes:
+  feetPosition: {x: -16, y: 5.6, z: -12}
+  fx: {script: "fx\npop motes n=?mobile:40|90 on=box(<4,3,9>) life=6..10 v=sdir()*.03 size=.012..0.025 acc=curl(.2)*.05 col=<1,.95,.85> a=0>.2:.5>.8:.5>0 sz=$size r=sprite(soft-disc,add)"}
+  id: plat-motes
+  tags: [bonus-platform]
+plat-steam:
+  audio: {clip: cdn/sfx-train-idle-air-brake-hiss-and-low-motor-hum-loop.mp3, gain: 0.18, loop: true, maxDistance: 18, spatial: true}
+  feetPosition: {x: -20.8, y: 5.2, z: -10}
+  fx: {script: "fx\npop steam rate=flick(.3,.5)*6 on=disc(.3) life=1.5..2.5 v=up(.4..0.8)+sdir()*.15 size=.25..0.4 acc=buoy(.4)+curl(.3)*.3+drag(1) col=<.92,.9,.95> a=0>.18:.15>.6:.1>0 sz=$size*(.6>2.2) rot=spin(.2) r=sprite(smoke-puff,alpha)"}
+  id: plat-steam
+  tags: [bonus-platform]
+plat-trolley:
+  castShadow: true
+  feetPosition: {x: -13.2, y: 5.5, z: -18.5}
+  id: plat-trolley
+  layout: {box: {max: {x: 0.6, y: 1.3, z: 0.4}, min: {x: -0.6, y: 0, z: -0.4}}}
+  model: /cdn/value.51ab600587f6eb76c39a13ac64e7961f6b1c05672f6430c5270079ddaeaa2516.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 25}
+  tags: [bonus-platform]
+plat-vend:
+  castShadow: true
+  feetPosition: {x: -10.6, y: 5.5, z: -9.2}
+  id: plat-vend
+  layout: {box: {max: {x: 0.45, y: 1.9, z: 0.4}, min: {x: -0.45, y: 0, z: -0.4}}}
+  model: /cdn/value.cf0ab25512cd62306039055e29a52f121a42540de00bf379375e817780850922.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: -90}
+  tags: [bonus-platform]
+plat-vend2:
+  castShadow: true
+  feetPosition: {x: -10.6, y: 5.5, z: -10.3}
+  id: plat-vend2
+  layout: {box: {max: {x: 0.45, y: 1.9, z: 0.4}, min: {x: -0.45, y: 0, z: -0.4}}}
+  model: /cdn/value.cf0ab25512cd62306039055e29a52f121a42540de00bf379375e817780850922.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: -90}
+  tags: [bonus-platform]
