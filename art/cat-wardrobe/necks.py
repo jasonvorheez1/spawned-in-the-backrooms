@@ -8,7 +8,7 @@ from mathutils.bvhtree import BVHTree
 SRC = "/workspace/necks"; OUT = "/workspace/necks/out"; os.makedirs(OUT, exist_ok=True)
 R = {
   "scarf":    dict(w=1.55, at="neck", dz=0.010, tall=None),
-  "necklace": dict(w=1.30, at="neck", dz=0.020, tall=None),
+  "necklace": dict(w=1.30, at="neck", dz=0.020, tall=None, tilt=-62),
   "bell":     dict(w=1.25, at="neck", dz=0.000, tall=None),
   "bowtie":   dict(w=0.75, at="neck", dz=0.012, dy=-0.035, front=True),
   "cape":     dict(w=1.10, at="shoulders", dz=-0.015, back=True),
@@ -61,6 +61,8 @@ for sex in ("f", "m"):
         if not os.path.exists(f"{SRC}/{kind}.glb"): print("MISSING", kind); continue
         clear(); arm, meshes, bvh, pts, neck = body(sex); r = R[kind]
         o = load(kind)
+        if r.get("tilt"):   # a hanging chain comes flat to the camera: tip its loop back round the neck so the pendant falls on the chest
+            o.data.transform(Matrix.Rotation(math.radians(r["tilt"]), 4, "X")); o.data.update()
         vs = [v.co for v in o.data.vertices]
         a = Vector([min(v[i] for v in vs) for i in range(3)]); b = Vector([max(v[i] for v in vs) for i in range(3)])
         if r["at"] == "neck":
