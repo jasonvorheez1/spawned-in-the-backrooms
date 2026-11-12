@@ -44,6 +44,7 @@ recipes:
   # outfits (Savi's picks): improvised armor from what the levels break into. Each lands as a garment you can wear (I menu).
   poncho:     { cat: armor, name: Carpet poncho,      in: { wire: 2, drywall: 1 },                          out: ["cloth:neck:cape:b39a4e"],      skill: [repair, 5],    desc: "Neck · DR 2 · cut from Level 0 carpet" }
   padbeanie:  { cat: armor, name: Padded beanie,      in: { wire: 1, drywall: 2 },                          out: ["cloth:hat:beanie:4a5a3a"],     skill: [repair, 10],   desc: "Hat · DR 2" }
+  almondspecs: { cat: armor, name: Almond-lens specs,  in: { crt_glass: 2, wire: 1, bolts: 1 },          out: ["cloth:eyew:almondspecs:000000"], skill: [repair, 15],   desc: "Eyes · DR 1 · lenses ground from CRT glass, rinsed in almond water"   }
   padjacket:  { cat: armor, name: Padded jacket,      in: { drywall: 3, wire: 2, nails: 2 },                out: ["cloth:topw:jacket:5a4a3a"],    skill: [repair, 25],   bench: true, desc: "Top · DR 5" }
   steeltoe:   { cat: armor, name: Steel-toe boots,    in: { sheet_steel: 1, scrap_metal: 2, bolts: 2 },     out: ["cloth:shoes:boots:3a3a30"],    skill: [repair, 30],   bench: true, desc: "Shoes · DR 4" }
   wirehood:   { cat: armor, name: Wire-mesh hoodie,   in: { copper_wire: 4, wire: 3, springs: 1 },          out: ["cloth:topw:hoodie:6e6e64"],    skill: [repair, 45],   bench: true, desc: "Top · DR 6 · Level 3 copper woven through" }

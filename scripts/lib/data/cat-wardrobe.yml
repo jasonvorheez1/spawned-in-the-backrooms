@@ -57,6 +57,12 @@ models:
   bowtie: { pat: weave, f: /cdn/value.2b6ad872db234cb8eaa65ccd5d84e8d99b7146d1fb4dcf48c89fb382b665c42d.glb, m: /cdn/value.9ce999218460551bb836e30db978b26940cac52e66641d70571529f2235462cd.glb }
   necklace: { tint: false, f: /cdn/value.203b820103baa8cead0da35eabd85555206a251bc4a443c95104fa83846af814.glb, m: /cdn/value.c65a74470f18053400296323247251a157d7538d07d2e26a6caada0b3ee9b389.glb }
   bell: { tint: false, f: /cdn/value.3c35e150870253a6b2508b244dc09497910d38e75f7528142a71733e85e66332.glb, m: /cdn/value.f61ec79a26c416e023c17ea6f1d050be3d04aae573992f11f22537d87e524cf2.glb }
+  # Tripo eyewear fitted to the cat heads (art/cat-wardrobe/eyewear.py; Shelly #252235): its own paint, skinned to the head bone
+  megoggles: { tint: false, f: /cdn/value.31249a7f052194fde6b3032983974da4e648bd6583b7a88682f0811f23e248f4.glb, m: /cdn/value.1bb96e0ab9fa8bad65d2c6f3e7e58ef9fa3430d7f32b0f2f197a80f43f846f5f.glb }
+  asyncvisor: { tint: false, f: /cdn/value.e839bd0548d36417532e270fa0d019a8554e8cadab8a12760885fd2b60e27c96.glb, m: /cdn/value.594367821dacc682628a32fb90b6bdabf7f32a7624816752810639e2aaefd3ca.glb }
+  crackedglasses: { tint: false, f: /cdn/value.8a036d4e4c38c2f039a06b7cf62a1a88409176f993e41dc6ed40bdcbc92f8a62.glb, m: /cdn/value.8cb1ae8b72496bb2992dcc5b82de408e1c1b1a87f4ed99eb237a8b2dbc88b032.glb }
+  lobbyshades: { tint: false, f: /cdn/value.ae52cbfae8a278ac67c1e2a13295c4b8d723dbfe1540c7395fd73800eb3f5fcd.glb, m: /cdn/value.0f7043094a48b450e47249cfc649bc8dbde750680cb367b6f585e0fa3fb81d75.glb }
+  almondspecs: { tint: false, f: /cdn/value.b0c9dae31ef34d9f9c71e492e596d195a355fe5deaedaea1943497ff7910c280.glb, m: /cdn/value.e29f15878bcdbdfae72a072cbc03f9cf78e85a1f68ca2346163faadc5d65ae75.glb }
 defaults:
   f: { topw: crop, top: "#e0775a", botw: shorts, bottom: "#4f78ad" }
   m: { topw: tee, top: "#9b9da1", botw: shorts, bottom: "#2f3d5c" }
@@ -125,6 +131,7 @@ from:
   shoes: { sneakers: socks, slippers: socks, boots: boots, steeltoe: boots, hotelslip: socks, ballastboots: boots, pitchboots: boots, heels: socks, socks: socks }
   hat: { cap: cap, beanie: beanie, tophat: tophat, bow: bow, flower: flower, partyhat: partyhat, crown: crown, padbeanie: beanie,
          opera: tophat, headphones: headphones, souwester: souwester, divehelm: divehelm, chitinhelm: chitinhelm, pgmask: bagmask, ppmask: shellmask, beret: beret }
+  eyew: { glasses: almondspecs, shades: lobbyshades, megoggles: megoggles, asyncvisor: asyncvisor, crackedglasses: crackedglasses, lobbyshades: lobbyshades, almondspecs: almondspecs }
   neck: { scarf: scarf, cape: cape, bowtie: bowtie, necklace: necklace, bell: bell }
   topp: { jerrytee: jerry, pphoodie: ppsad, pghoodie: pgsmile, gmhoodie: gmsplit, pgcoat: pgcoat }
 # hats that close over the ears: the sculpted ears stay off and the head's own fold flat under them
