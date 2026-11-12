@@ -13,6 +13,7 @@ pop fire burst=?mobile:16|30 life=.3..0.6 v=sdir()*(3..7)+up(1) size=.5..1 acc=d
 pop sparks burst=?mobile:24|50 life=.4..0.9 v=sdir()*(8..16) size=.02..0.05 acc=grav()*.8+drag(1) col=hdr(6,3.5,1)>hdr(1.5,.4,.1) a=1>0 floor=bounce(.3) r=sprite(ember,add,velocity,.03)
 pop smoke burst=?mobile:8|14 life=2..3.5 v=sdir()*(1..2.5)+up(1) size=1..1.8 acc=drag(1.2)+buoy(.5)+curl(.3) sz=$size*(.6>2.4) col=<.18,.16,.14> a=0>.7:.1>.6:.6>0 rot=spin(.1) r=sprite(smoke-puff,alpha)
 pop dirt burst=?mobile:10|20 life=.8..1.3 v=up(4..8)+sdir()*(2..4) size=.04..0.09 spin=-8..8 acc=grav() col=<.25,.2,.15> a=1 rot=$age*$spin floor=die r=sprite(stalk,alpha)
+pop ring burst=?mobile:14|28 on=disc(.6) life=.8..1.4 v=sdir()*<1,0,1>*(5..8)+up(.4) size=.4..0.8 acc=drag(2.5)+buoy(.2) sz=$size*(.6>2.2) col=<.42,.38,.3> a=0>.5:.15>.7:.4>0 rot=spin(.1) r=sprite(smoke-puff,alpha)
 pop glow burst=1 life=.3 r=light(<1,.6,.3>,80*(1>0),16)`;
 const FIRE = `fx
 pop bed n=?mobile:12|22 on=disc(%r|2.6) size=.25..0.5 tint=<2.6,1,.25>..<1.2,.35,.08> sz=$size*flick(.6,.15) col=$tint*flick(.9,.3) a=.75 r=sprite(soft-disc,add)
@@ -21,6 +22,13 @@ pop flame rate=?mobile:34|64 on=disc(%r|2.6) life=.45..0.85 v=up(1.6..2.6)+cone(
 pop embers rate=?mobile:6|12 on=disc(%r|2.6) life=.8..1.6 v=up(2.4)+cone(35)*(.4..1.4) size=.02..0.05 acc=curl(.8)+grav()*.4+drag(.5) sz=$size*(1>.7:.8>.3) col=hdr(5,2.8,.8)>.6:hdr(2.4,.8,.15)>hdr(1,.22,.04) a=(0>.08:1>.65:.9>0)*flick(11,.35) r=sprite(ember,add,velocity,.02)
 pop smoke on=@flame?.12 inh=p;v:$v*.4 life=2..3.4 size=.4..0.7 acc=buoy(1)+curl(.35)*.5+drag(.8) sz=$size*(.7>3.4) col=<.22,.2,.18>><.12,.12,.13> a=0>.3:.35>.7:.2>0 rot=spin(.15) r=sprite(smoke-puff,alpha)
 pop glow n=1 at=disc(.3).c(.6) glo=fire()*(#flame/45)~ r=light(<1,.55,.24>,$glo*45,11)`;
+const TINTS = [[2.6, .3, .25], [2.6, 1.8, .45], [.35, 2.2, .5], [.4, .9, 2.6]]; // red, gold, green, blue glass
+const FUSE = `fx
+pop smoke rate=?mobile:14|28 life=.4..0.8 v=sdir()*.2 size=.04..0.08 acc=buoy(.4)+drag(1.5) col=<.5,.48,.45> a=0>.35:.2>.7:.1>0 sz=$size*(.6>2.2) rot=spin(.2) r=sprite(smoke-puff,alpha)
+pop spark rate=?mobile:10|20 life=.15..0.3 v=sdir()*(.5..1.5) size=.01..0.02 col=hdr(5,2.6,.6) a=1>0 r=sprite(ember,add,velocity,.02)
+pop blink n=1 at=point() r=light(<1,.3,.15>,4*flick(4,.9),2)`;
+const GLINT = `fx
+pop glint rate=?mobile:12|24 life=.3..0.6 v=sdir()*.3 size=.02..0.04 col=<%tint|2.6,.3,.25>*flick(12,.6) a=1>0 sz=$size*(1>.2) r=sprite(mote,add)`;
 export const RAG = `fx
 pop rag rate=?mobile:12|24 at=point() life=.2..0.35 v=up(.6)+sdir()*.3 size=.05..0.09 sz=$size*(1>.3) col=hdr(4,2,.5)>hdr(1.5,.4,.1) a=1>0 r=sprite(flame-wisp,add)`;
 
@@ -28,6 +36,11 @@ export function update(ctx, dt) {
   const me = ctx.self, s = me.state;
   if (s.kind === "fire") return burn(ctx);
   if (s.done) return;
+  if (!s.trail && (s.kind === "frag" || s.kind === "bauble")) { // once per throw: the frag's fuse smokes and blinks, a bauble glints in its own colour
+    s.trail = true;
+    if (s.kind === "bauble" && !s.tint) s.tint = TINTS[Math.floor(ctx.random() * TINTS.length)];
+    me.fx = s.kind === "frag" ? { script: FUSE } : { script: GLINT, params: { tint: s.tint } };
+  }
   if (s.kind === "frag" && ctx.now() >= (s.fuseAt ?? 0)) return explode(ctx);
   if (s.rest) return ctx.sleep((s.fuseAt - ctx.now()) / 1000);
   const g = ctx.place.gravity?.y ?? -9.8, v = { ...(s.vel ?? { x: 0, y: 0, z: 0 }) };
@@ -81,7 +94,8 @@ function explode(ctx) {
   ctx.emit("decal", { position: c, normal: { x: 0, y: 1, z: 0 }, texture: "cdn/texture-scorch-mark-blast-decal.png", size: 2.6, lifetime: 60, fade: 5 });
   ctx.emit("shockwave", { position: { ...c, y: c.y + 0.3 }, speed: 30, thickness: 1.2, intensity: 0.6 });
   ctx.emit("playSound", { clip: SND + "sfx-frag-grenade-explosion.mp3", position: c, volume: 1, maxDistance: 120 });
-  for (const pl of ctx.place.players) { const f = pl.feetPosition, dd = Math.hypot(f.x - c.x, f.y - c.y, f.z - c.z); if (dd < 16) ctx.emit("screenShake", { intensity: 0.9 * (1 - dd / 16), duration: 0.5 }, { audience: { player: pl.id } }); }
+  ctx.emit("playSound", { clip: SND + "sfx-explosion-concussion-thump-with-debris-rattle-and-room-rumble-tail.mp3", position: c, volume: 0.8, maxDistance: 90 });
+  for (const pl of ctx.place.players) { const f = pl.feetPosition, dd = Math.hypot(f.x - c.x, f.y - c.y, f.z - c.z); if (dd < 16) ctx.emit("screenShake", { intensity: 0.9 * (1 - dd / 16), duration: 0.5 }, { audience: { player: pl.id } }); if (dd < 8) ctx.emit("screenFlash", { color: "oklch(0.95 0.08 70)", duration: 0.18, intensity: 0.14 * (1 - dd / 8) }, { audience: { player: pl.id } }); }
   ctx.emit("noise", { position: c, radius: 60, kind: "explosion" }, { audience: { nearby: c, radius: 60 } });
   ctx.destroy(me.id);
 }
@@ -116,9 +130,10 @@ function burn(ctx) { // every tick seconds: what stands in the fire takes dmg; t
 }
 
 const GLITTER = `fx
-pop glass burst=?mobile:24|40 life=.5..1 v=sdir()*(2..4.5)+up(1.2) size=.02..0.045 spin=-12..12 tint=<2.6,.3,.25>..<2.6,1.9,.5> acc=grav()+drag(.6) col=$tint a=1>.7:1>0 sz=$size rot=$age*$spin floor=bounce(.3) r=sprite(shard,add,velocity,.02)
+pop glass burst=?mobile:24|40 life=2..3.5 v=sdir()*(2..4.5)+up(1.2) size=.02..0.045 spin=-12..12 acc=grav()+drag(.6) col=<%tint|2.6,.3,.25>*(.7..1.3)*flick(5,.4) a=1>.8:1>0 sz=$size rot=$age*$spin floor=stick r=sprite(shard,add,velocity,.02)
+pop pop burst=1 life=.12 size=.7 col=<%tint|2.6,.3,.25> a=1>0 sz=$size*(.4>1.2) r=sprite(soft-disc,add)
 pop tinsel burst=?mobile:12|22 life=1..1.8 v=sdir()*(1..2.2)+up(1.4) size=.03..0.06 spin=-8..8 tint=<.3,2.2,.5>..<2.4,1.8,.4> acc=grav()*.35+drag(1.8) col=$tint*flick(6,.5) a=1>.6:1>0 sz=$size rot=$age*$spin r=sprite(stalk,add,velocity,.02)
-pop flash burst=1 life=.18 tint=<1,.8,.5> r=light($tint,6,4)`;
+pop flash burst=1 life=.18 r=light(<%tint|2.6,.3,.25>,8*(1>0),4)`;
 const FESTIVE = `fx
 pop flash burst=1 life=.14 size=1.6 col=<%tint|2.6,.3,.2>*2 a=1>0 sz=$size*(.4>1.2) r=sprite(soft-disc,add)
 pop ring burst=?mobile:30|60 life=.6..1.1 v=sdir()*(3..6)*<1,.35,1>+up(1.5) size=.03..0.06 spin=-10..10 tint=<2.6,.3,.25>..<.3,2.4,.5> acc=grav()*.4+drag(2.2) col=$tint*flick(8,.5) a=1>.6:1>0 sz=$size rot=$age*$spin floor=bounce(.3) r=sprite(stalk,add,velocity,.03)
@@ -130,8 +145,8 @@ function bauble(ctx, at) { // the Glass Bauble: shatters on contact into glitter
   s.done = true;
   const hits = reached(ctx, c, R, 0.3).map((h) => { const o = ctx.getObject(h.id); if (o) { o.state.stunUntil = Math.max(o.state.stunUntil ?? 0, until); o.state.dazeUntil = until; } return { id: h.id, d: s.big ? Math.round((s.dmg ?? B.damage) * (1 - 0.5 * h.flat / R)) : B.damage, dir: h.dir, heavy: s.big ? 0.7 : 0.3 }; });
   if (s.ownerId) ctx.emit("blast", { hits, self: 0, from: c }, { to: s.ownerId });
-  ctx.emit("fx", { position: c, script: GLITTER });
-  ctx.emit("playSound", { clip: "/cdn/moodboard-gothic-horror/sfx-glass-christmas-ornament-shatter-tinkle.mp3", position: c, volume: 0.8 });
+  ctx.emit("fx", { position: c, script: GLITTER, params: { tint: s.tint ?? TINTS[0] } });
+  ctx.emit("playSound", { clip: "/cdn/moodboard-gothic-horror/sfx-glass-christmas-ornament-shatter-tinkle.mp3", position: c, volume: 0.8, pitch: 0.9 + ctx.random() * 0.25 });
   if (s.big) { // the Carolynne's shell: a festive pop, a ring of tinsel and stars, a jingle on top of the glass
     ctx.emit("fx", { position: c, script: FESTIVE, params: { tint: s.tint ?? [2.6, .3, .2], r: R } });
     ctx.emit("shockwave", { position: { ...c, y: c.y + 0.3 }, speed: 14, thickness: 0.6, intensity: 0.25 });
