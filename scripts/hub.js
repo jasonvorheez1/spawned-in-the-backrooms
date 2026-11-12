@@ -84,7 +84,7 @@ export function onInput(ctx, input) {
     if (d.v === "testlab") return board(ctx, s, "testlab", false) // the Test Range (Shelly, Nov 10)
     if (d.v === "last") { const l = lastLevel(s); if (l) return board(ctx, s, l, true) }
     const h = HOMES.find((x) => x.key === d.v)
-    if (h && h.has(s)) return board(ctx, s, h.to, false)
+    if (h && h.has(s)) return board(ctx, s, typeof h.to === "function" ? h.to(s) : h.to, false)
     ding(ctx, NOPE); tell(ctx, s, "You haven't unlocked that home yet.")
   }
 }

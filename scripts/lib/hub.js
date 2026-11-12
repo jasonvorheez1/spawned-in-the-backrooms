@@ -10,7 +10,7 @@ export function soloRoom(userId) {
 // the homes the Teleport Station can drop you in, each with its own test and door
 export const HOMES = [
   { key: "home11", name: "Your house", where: "Infinite City", has: (s) => !!s.home11, to: "home11#home-from-l11" },
-  { key: "home5", name: "Your hotel room", where: "Level 5 · Terror Hotel", has: (s) => !!s.l5home, to: "level5#l5-lobby" }, // Shelly Nov 12: the booked Level 5 room is a home too; you arrive in the lobby, key in hand
+  { key: "home5", name: "Your hotel room", where: "Level 5 · Terror Hotel", has: (s) => !!s.l5home, to: (s) => "level5#l5-home-" + s.l5home }, // Shelly Nov 12: the booked Level 5 room is a home too; you arrive just inside its door
 ]
 // into the mall: s.roomHop tells the menu and the save-resume this was a walk, not a launch
 // the station's "last level" row: the level a player last stood in, by its place id

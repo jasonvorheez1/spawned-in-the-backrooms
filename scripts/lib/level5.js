@@ -80,6 +80,13 @@ export const ARRIVALS = {
   "l5-from-l6": { x: 43.6, z: 6, yaw: -90 },
   "l5-lobby": { x: -38, z: 0, yaw: 90 },
 };
+// one arrival just inside each bookable room's door: the Bonus Room kiosk drops a resident here (Shelly Nov 12)
+for (const o of OPENINGS) {
+  const r = o.room && ZONES.find((q) => q.id === o.room); if (!r || (r.kind !== "guest" && r.kind !== "suite")) continue;
+  const c = (o.a0 + o.a1) / 2, mx = (r.x0 + r.x1) / 2, mz = (r.z0 + r.z1) / 2;
+  if (o.ax === "z") { const s = Math.sign(mz - o.at) || 1; ARRIVALS["l5-home-" + r.id] = { x: c, z: o.at + s * 1.4, yaw: s > 0 ? 180 : 0 }; }
+  else { const s = Math.sign(mx - o.at) || 1; ARRIVALS["l5-home-" + r.id] = { x: o.at + s * 1.4, z: c, yaw: s > 0 ? -90 : 90 }; }
+}
 // guest elevators: floors 1-12 move you to another bank on this same floor; 13 and up you don't come back from
 export const ELEVATORS = [
   { id: "l5-elev-lobby-n", at: { x: -45.2, z: -7 }, yaw: -90, style: "copper", name: "Lobby (copper cage)" },
