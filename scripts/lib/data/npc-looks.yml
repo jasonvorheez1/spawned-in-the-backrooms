@@ -1,0 +1,15 @@
+# Shelly Nov 12: "disperge every customization option (eg hair, snout, bust size etc) to every single npc in a way that makes sense to their character"
+# per role (else faction): which body types they roll from, which hair, beard odds, grey odds, and slider ranges. Unlisted keys fall back to the open roll.
+# my picks, tune freely. bodyF/bodyM name kinds in scripts/lib/clothes.js BODY_F/BODY_M.
+guard:     { bodyF: [athletic, average, soft], bodyM: [stocky, big, athletic], hairF: [f_pixie, f_ponytail, f_bob], hairM: [m_crop, m_crop, none], beard: 45, beards: [stubble, goatee, chinstrap, fullbeard], tall: [1.0, 1.1], snout: [0.95, 1.2], bust: [0.85, 1.05] }
+captain:   { bodyF: [athletic, average], bodyM: [big, stocky, athletic], hairF: [f_bob, f_ponytail], hairM: [m_crop, m_curtains], beard: 60, beards: [fullbeard, anchor, handlebars, mustache], grey: 40, tall: [1.03, 1.12] }
+medic:     { bodyF: [slim, average, petite], bodyM: [slim, average, lanky], hairF: [f_bob, f_ponytail, f_pixie, f_curtainmid], hairM: [m_crop, m_curtains], beard: 15, beards: [stubble, mustache], snout: [0.85, 1.05] }
+trader:    { bodyF: [soft, curvy, average], bodyM: [stocky, average, big], hairF: [f_curly, f_long, f_wolfcut, f_curtainmid], hairM: [m_shaggy, m_curtains, m_ponytail], beard: 55, beards: [handlebars, goatee, mustache, fullbeard], hairBright: 25 }
+scout:     { bodyF: [athletic, slim, petite], bodyM: [athletic, lanky, slim], hairF: [f_ponytail, f_pixie, f_wolfcut], hairM: [m_crop, m_fluffy, m_shaggy], beard: 25, beards: [stubble], tall: [0.95, 1.06], ear: [1.0, 1.35] }
+scavenger: { bodyF: [slim, athletic, petite], bodyM: [lanky, slim, average], hairF: [f_wolfcut, f_curly, f_twintails, f_pixie], hairM: [m_shaggy, m_fluffy, m_long], beard: 50, beards: [stubble, stubble, goatee], hairBright: 20 }
+quarter:   { bodyF: [soft, average, curvy], bodyM: [stocky, big, average], hairF: [f_bob, f_ponytail, f_curly], hairM: [m_crop, m_curtains], beard: 40, beards: [mustache, fullbeard, stubble] }
+clerk:     { bodyF: [slim, average, petite], bodyM: [slim, average, lanky], hairF: [f_bob, f_curtainmid, f_long], hairM: [m_curtains, m_crop], beard: 10, beards: [mustache], tall: [0.94, 1.02] }
+keeper:    { bodyF: [soft, average], bodyM: [stocky, average], hairF: [f_long, f_bob, f_curly], hairM: [m_long, m_curtains, none], beard: 55, beards: [fullbeard, mustache], grey: 45 }
+psychic:   { bodyF: [slim, petite, curvy], bodyM: [lanky, slim], hairF: [f_long, f_curtainmid, f_twintails], hairM: [m_long, m_ponytail], beard: 15, beards: [goatee], hairBright: 60, ear: [1.05, 1.4] }
+pilgrim:   { bodyF: [slim, average], bodyM: [lanky, slim, average], hairF: [f_long, f_bob], hairM: [none, m_crop, m_long], beard: 75, beards: [fullbeard, fullbeard, chinstrap], grey: 30, snout: [0.9, 1.1] }
+survivor:  { bodyF: [slim, average, athletic, soft, curvy, petite], bodyM: [slim, average, athletic, lanky, stocky], beard: 35 }

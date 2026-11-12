@@ -4,6 +4,7 @@
 // scripts/lib/stats.js turns worn DR into less damage, scripts/critter.js keeps the wardrobe honest.
 import CL from './data/clothes.yml'
 import C from './data/critter.yml'
+import NL from './data/npc-looks.yml'
 import { drMul, armorCnd } from './condition.js'
 import { mitigated } from './combat.js'
 
@@ -205,17 +206,20 @@ export function npcLook(id, look, faction, level, role) {
     if (l.species === 'faceling') {
       l.hair = 'none'
     } else {
-      const hs = l.sex === 'f' ? C.hairF : C.hairM, r = hashOf(id + ':hair')
-      l.hair = r % 100 < (l.sex === 'f' ? 92 : 80) ? hs[(r >>> 7) % hs.length] : 'none'
-      l.hairc = C.hairc[(hashOf(id + ':hairc') >>> 3) % C.hairc.length]
+      const P = NL[l.role] ?? NL[l.faction], own = P && (l.sex === 'f' ? P.hairF : P.hairM)   // hair that fits the job (npc-looks.yml)
+      const hs = own?.length ? own : l.sex === 'f' ? C.hairF : C.hairM, r = hashOf(id + ':hair')
+      l.hair = own?.length || r % 100 < (l.sex === 'f' ? 92 : 80) ? hs[(r >>> 7) % hs.length] : 'none'
+      const hc = hashOf(id + ':hairc'), natural = C.hairc.slice(0, 7), bright = C.hairc.slice(11)
+      l.hairc = hc % 100 < (P?.grey ?? 8) ? (hc % 2 ? '#9a9aa2' : '#f4efe9') : hc % 100 > 99 - (P?.hairBright ?? 12) ? bright[(hc >>> 5) % bright.length] : (P ? natural : C.hairc)[(hc >>> 3) % (P ? natural.length : C.hairc.length)]
     }
   }
   if (!look?.beard && l.sex === 'm') {
     const br = hashOf(id + ':beard')
-    if (br % 100 < 38) {
-      const beards = ['stubble', 'stubble', 'mustache', 'goatee', 'handlebars', 'fullbeard', 'chinstrap', 'anchor']
+    const PB = NL[l.role] ?? NL[l.faction]
+    if (br % 100 < (PB?.beard ?? 38)) {
+      const beards = PB?.beards ?? ['stubble', 'stubble', 'mustache', 'goatee', 'handlebars', 'fullbeard', 'chinstrap', 'anchor']
       l.beard = beards[(br >>> 4) % beards.length]
-      if (br % 100 < 12) {
+      if (br % 100 < 12 || (hashOf(id + ':hairc') % 100) < (PB?.grey ?? 0)) {
         l.beardc = (br % 2 === 0) ? '#8a8a90' : '#4a3a30'
       }
     } else {
@@ -263,16 +267,19 @@ function bodyRoll(id, l, look) {
   const nat = NATURAL[l.species] ?? NATURAL.cat
   if (!look?.fur) l.fur = '#' + (!isHumanoid && u() < 0.12 ? pick(PASTEL) : u() < 0.75 ? pick(nat) : pick(isHumanoid ? nat : COMMON))
   if (!look?.marks) l.marks = isHumanoid ? 'none' : SPECIES_MARKS[l.species] ? pick(SPECIES_MARKS[l.species]) : pick(['none', 'none', 'none', 'none', 'freckles', 'stripes', 'patch', 'heart'])
-  const f = l.sex === 'f', [kind, build, waist, hip, bust, tall] = pick(f ? BODY_F : BODY_M)
+  const P = NL[l.role] ?? NL[l.faction] ?? null, f = l.sex === 'f', all = f ? BODY_F : BODY_M   // a body that fits the job (npc-looks.yml)
+  const prefer = P && (f ? P.bodyF : P.bodyM), pool = prefer ? all.filter((b) => prefer.includes(b[0])) : all
+  const [kind, build, waist, hip, bust, tall] = pick(pool.length ? pool : all)
+  const rr = (k, d) => P?.[k] ? r(P[k][0], P[k][1]) : d
   l.bodyType = kind
-  if (!look?.heightS) l.heightS = j(tall, 0.06)
+  if (!look?.heightS) l.heightS = P?.tall ? Math.round(tall * rr('tall', 1) * 100) / 100 : j(tall, 0.06)
   if (!look?.buildS) l.buildS = j(build)
   if (!look?.headS) l.headS = r(0.9, 1.12)
-  if (!look?.earS) l.earS = isHumanoid ? 1.0 : r(0.8, 1.3)
-  if (!look?.snoutS) l.snoutS = isHumanoid ? 1.0 : r(0.8, 1.2)
+  if (!look?.earS) l.earS = isHumanoid ? 1.0 : rr('ear', r(0.8, 1.3))
+  if (!look?.snoutS) l.snoutS = isHumanoid ? 1.0 : rr('snout', r(0.8, 1.2))
   if (!look?.tailS) l.tailS = isHumanoid ? 0.0 : r(0.75, 1.35)
   if (!look?.waistS) l.waistS = j(waist)
   if (!look?.hipS) l.hipS = j(hip)
-  if (f && !look?.bustS) l.bustS = j(bust, 0.15) // still random (Shelly), centred on the body type
+  if (f && !look?.bustS) l.bustS = P?.bust ? Math.round(bust * rr('bust', 1) * 100) / 100 : j(bust, 0.15) // still random (Shelly), centred on the body type
   return l
 }
