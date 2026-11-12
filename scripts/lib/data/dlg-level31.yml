@@ -30,3 +30,42 @@ l31-coach:
     close: ["Need a pair?"]
     hurt: ["Easy. Sit down a second. Falling is part of it."]
   gest: { wave: "Hey! There you go.", gift: "For me? You didn't have to. Thank you.", dance: "On the carpet? All right, one song.", nodance: "Somebody has to mind the counter. Next song, maybe.", insult: "Rough day, huh. It's okay. I've had those." }
+
+# "Side B" (Nov 12): the B.N.T.G. concession. Quest turns live in scripts/lib/level31-quest.js.
+l31-q-marlowe:
+  hi: "Marlowe, B.N.T.G. Rink Concession. Almond water, batteries, and opportunity. Mostly opportunity."
+  back: ["My favorite customer. Statistically.", "Back again. Good. I was getting lonely, and I hate that."]
+  warm: "Partner. Stand anywhere you like, it's your table too. Not legally."
+  cold: "Oh. You. Keep your hands where my inventory can see them."
+  bye: "Go make somebody rich. Ideally me."
+  walk: "Table's not going anywhere. Neither am I. Contractually."
+  ask:
+    - q: "What's B.N.T.G. doing at a roller rink?"
+      a: "Same thing we do everywhere. Selling people what they already want. In here everybody wants to be twelve again. I just haven't figured out how to bottle it. Yet."
+    - q: "Who's Dez?"
+      a: "My associate. Stands by the door, frowns at things. He's very good at it. Professionally trained frowner."
+  barks:
+    idle: ["Batteries, almond water, mild optimism.", "Everything on this table is legal somewhere.", "The music's free. For now."]
+    hi: ["Hey, {u}. Buying?", "{u}. Talk to me."]
+    close: ["Psst. Business."]
+    hostile: ["You picked the faces? Bad trade, pal.", "Dez! Get over here!"]
+l31-q-dez:
+  hi: "Dez. I watch the door. Door's fine. Thanks for asking."
+  back: ["Still here.", "Door's still a door."]
+  warm: "You did alright. Don't tell Marlowe I said that."
+  cold: "Keep walking."
+  bye: "Yep."
+  walk: "I'm not going anywhere. That's the job."
+  ask:
+    - q: "Why stand by the door?"
+      a: "Because when this goes bad, Marlowe wants somebody between him and the only way out. That's me. I'm the somebody."
+  barks:
+    idle: ["Same song. Again.", "I don't skate. Don't ask.", "Smells like pizza and bad decisions."]
+    hi: ["Yep.", "{u}."]
+    hostile: ["Should've taken the money.", "Marlowe says hi."]
+l31-q-face:
+  hi: "..."
+  bye: "..."
+  barks:
+    idle: ["...Again. ...Again.", "...The song is nice."]
+    hostile: ["...Give it back.", "...You took the song."]
