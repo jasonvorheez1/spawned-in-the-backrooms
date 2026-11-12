@@ -16,6 +16,6 @@ atmosphere:
   timeOfDay: 0
   wind: { direction: 0, speed: 0 }
   look: { script: scripts/look-utility.js, params: { bloomThreshold: 0.55, bloomStrength: 0.9 } }
-  ambient: { light: { color: oklch(0.8 0.06 40), intensity: 0.45 } }
-  hemisphere: { skyColor: oklch(0.7 0.08 30), groundColor: oklch(0.3 0.05 300), intensity: 0.35 }
+  ambient: { light: { color: oklch(0.82 0.06 40), intensity: 1.1 } }
+  hemisphere: { skyColor: oklch(0.7 0.08 30), groundColor: oklch(0.35 0.05 300), intensity: 0.8 }
 acoustics: { reverb: 0.55 }
