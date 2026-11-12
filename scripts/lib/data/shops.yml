@@ -224,6 +224,15 @@ shops:
     - [battery, 2, 4]
     - [weapon:pipe_scrap, 1, 5]
 # what the player can sell, base price by kind (weapons by rarity, garments by rarity)
+  l13p-oona:
+    - [almond, 10, 1]
+    - [ration, 6, 2]
+    - [beans, 5, 2]
+    - [bar, 6, 2]
+    - [bandage, 4, 3]
+    - [battery, 3, 3]
+    - [firstaid, 1, 9]
+    - [tape, 2, 3]
 sell:
   almond: 3          # a grey almond water: about $1 at the counter (Savi's pick)
   ammo: 4

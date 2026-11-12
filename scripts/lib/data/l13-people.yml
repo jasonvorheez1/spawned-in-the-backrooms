@@ -1,0 +1,59 @@
+# Level 13 Floor 283: who lives here and what stands in hall B (scripts/lib/level13-people.js). Positions are world metres.
+# look: clothes.js npcLook fields (species and fur roll per id). hp and nerve are each person's own. All numbers my picks.
+people:
+  l13p-oona:
+    name: "Oona Pell · B.N.T.G. Free Home Project"
+    role: trader
+    voice: mags
+    hp: 120
+    at: [1.85, 10.72]
+    look: { x: 0.6, z: 8.8 }
+    act: null
+    style: { sex: f, eye: "#d8a838", topw: jacket, top: "#7a2f3a", botw: pants, bottom: "#2e2a30", shoes: boots, shoec: "#241e1c", neck: scarf, neckc: "#e8dcc0", expr: smile }
+  l13p-gus:
+    name: "Gus · Flat resident"
+    role: scavenger
+    voice: hollis
+    hp: 80
+    at: [15.5, 5.6]
+    look: { x: 15.5, z: 8.6 }
+    act: "cdn/clip-sit-loop.glb"
+    style: { sex: m, eye: "#8a8a70", topw: longsleeve, top: "#b9b08f", botw: pants, bottom: "#6f6a5c", shoes: none }
+  l13p-noor:
+    name: "Noor · Leaving tonight"
+    role: scout
+    voice: mags
+    hp: 130
+    at: [7.0, 13.4]
+    look: { x: 4.0, z: 11.2 }
+    act: null
+    style: { sex: f, eye: "#4f9a7a", topw: hoodie, top: "#3f5a52", botw: pants, bottom: "#3a3430", shoes: boots, shoec: "#2a2420", hat: beanie, hatc: "#8a3a2a" }
+  l13p-hale:
+    name: "Hale · Unaligned, playing white"
+    role: guard
+    voice: reyes
+    hp: 100
+    at: [-14.75, 3.7]
+    look: { x: -14.0, z: 3.7 }
+    act: null
+    style: { sex: m, eye: "#7a8aa0", topw: longsleeve, top: "#5a4a3a", topp: gingham, botw: overalls, bottom: "#4a4a52", shoes: boots, shoec: "#2e2620" }
+  l13p-dot:
+    name: "Dot · Unaligned, playing black"
+    role: medic
+    voice: mags
+    hp: 95
+    at: [-13.25, 3.7]
+    look: { x: -14.0, z: 3.7 }
+    act: null
+    style: { sex: f, eye: "#b06a9a", topw: longsleeve, top: "#c8b060", botw: pants, bottom: "#5a3a2a", shoes: boots, shoec: "#3a2a22", neck: scarf, neckc: "#6a4a7a" }
+# hall B dressing and each person's one small prop. size = [w, h, d] the model is fitted into; wall things have no collider.
+props:
+  desk:  { model: null, at: [0.45, 0, 10.86], yaw: 0, size: [1.7, 1.05, 0.62], solid: true }
+  board: { model: null, at: [2.95, 1.05, 11.16], yaw: 0, size: [1.3, 1.0, 0.07] }
+  keys:  { model: null, at: [0.45, 1.3, 11.15], yaw: 0, size: [0.9, 0.5, 0.09] }
+  mat:   { model: null, at: [0, 0, 9.35], yaw: 0, size: [0.95, 0.03, 0.6] }
+  crate: { model: null, at: [-0.82, 0, 10.86], yaw: 8, size: [0.52, 0.42, 0.4], solid: true }
+  case:  { model: null, at: [7.7, 0, 13.9], yaw: 25, size: [0.75, 0.45, 0.5], solid: true }
+  chess: { model: null, at: [-14.0, 0, 3.7], yaw: 0, size: [0.62, 0.78, 0.62], solid: true }
+keepsake: [-19.1, 0.92, 5.75]
+pouf: [15.5, 5.6]
