@@ -703,7 +703,18 @@ export function vanish(ctx) { const s = ctx.self.state; if (!s.dead && (s.hp ?? 
 // hands = everyone else: frozen, hands raised, facing you. It lasts while the gun stays on them and 2.5 s after it drops. Savi's numbers.
 const HANDS_UP = { "mixamorig:LeftArm": { rotate: [0, 0, 150] }, "mixamorig:RightArm": { rotate: [0, 0, -150] }, "mixamorig:LeftForeArm": { rotate: [0, 0, 25] }, "mixamorig:RightForeArm": { rotate: [0, 0, -25] } };
 const COW = { range: 18, hold: 400, linger: 2500 };
-const COW_LINES = { hands: ["okay, okay! don't shoot!", "easy. easy. i'm not doing anything.", "hands are up, see? hands are up."], draw: ["you sure about that?", "point it somewhere else, friend.", "two can play that game."], flee: ["whoa, nope!", "not today!", "he's got a gun!"] };
+const COW_LINES = {
+  hands: ["okay, okay! don't shoot!", "easy. easy. i'm not doing anything.", "hands are up, see? hands are up.", "take whatever you want, just put it down.", "please. i've got almond water, you can have it.", "i'm not armed! well. not really."],
+  draw: ["you sure about that?", "point it somewhere else, friend.", "two can play that game.", "go on then. see who's faster.", "bad idea, wanderer. real bad idea.", "lower it. slowly."],
+  flee: ["whoa, nope!", "not today!", "gun! gun!", "i'm not dying in a cornfield!", "somebody help!", "nope, nope, i'm gone!"],
+  calm: ["...thank you.", "don't do that again.", "my heart can't take this place.", "okay. we're good. we're good."] };
+function cowSay(ctx, me, kind) {
+  const L = COW_LINES[kind], t = L[Math.floor(ctx.random() * L.length)], now = ctx.now(), st = me.state, id = String(me.id).split('/').pop();
+  const who = hasVoice(id) ? id : st.voice ?? VOICES[me.id] ?? `${id}#${(st.wear?.sex ?? st.look?.sex) === 'f' ? 'f' : 'm'}`;
+  st.line = { t, at: now, d: 1300 + t.length * 55 };
+  const p = me.feetPosition, clip = BVO(who, t);
+  if (clip) heard(ctx, { clip, position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 1, refDistance: 3, maxDistance: 18 }, { audience: { nearby: p, radius: 18 } });
+}
 function aimedBy(ctx, me) {
   const f = me.feetPosition;
   for (const p of ctx.place.players) {
@@ -727,7 +738,7 @@ function cowed(ctx, me, m, now, dt) {
     const grit = ({ brave: 0.6, steady: 0.3, coward: 0, frenzied: 1 })[nv] + (a.h + a.e - 10) * 0.04 + (a.l - 5) * 0.02;
     const kind = gun && grit >= 0.5 ? "draw" : (a.a >= 7 || (nv === "coward" && a.a >= 5)) ? "flee" : "hands";
     m.cow = { by: p.id, kind, at: now };
-    s.line = { t: COW_LINES[kind][Math.floor(ctx.random() * 3)], at: now, d: 2200 };
+    cowSay(ctx, me, kind);
     ctx.emit("damageNumber", { position: { x: me.feetPosition.x, y: me.feetPosition.y + 2.1, z: me.feetPosition.z }, text: kind === "hands" ? "SURRENDERS" : kind === "draw" ? "STANDS GROUND" : "PANICS", color: kind === "draw" ? "#ff8a5c" : "#ffd36a", size: 0.9 }, { audience: { player: p.id } });
     if (kind === "flee") { const dx = me.feetPosition.x - p.feetPosition.x, dz = me.feetPosition.z - p.feetPosition.z, l = Math.hypot(dx, dz) || 1; m.flee = { x: me.feetPosition.x + dx / l * 14, y: me.feetPosition.y, z: me.feetPosition.z + dz / l * 14, until: now + 5000 }; m.cow = null; m.cowFirst = now + 6000; m.fearAt = now; return true; }
     return cowed(ctx, me, m, now, dt);
@@ -735,6 +746,7 @@ function cowed(ctx, me, m, now, dt) {
   const p = ctx.place.players.find((q) => q.id === C.by);
   if (!p || (m.cowBy !== C.by && now - (m.cowSeen ?? 0) > COW.linger)) { // the gun went away: arms down, back to the day
     if (C.kind === "hands") me.bones = baseBones(s.build, s.look ?? s.wear); else { aim(me, m, null); holster(ctx, me, m, false); }
+    if (p && ctx.random() < 0.6) cowSay(ctx, me, "calm");
     m.cow = null; m.cowFirst = 0; return false;
   }
   stop(me, dt); gait(me, m, "idle"); face(me, p.feetPosition.x - me.feetPosition.x, p.feetPosition.z - me.feetPosition.z, dt);
