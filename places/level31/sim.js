@@ -6,7 +6,7 @@ import { layParts } from "../../scripts/lib/level31-parts.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 export const cadence = "1s";
-const V = 26;
+const V = 27;
 const PROPS = "scripts/l31-props-geo.js";
 const P = (params) => ({ primitive: { kind: "scripted", script: PROPS, params }, material: { pbr: true } });
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
@@ -145,9 +145,9 @@ function djBooth(ctx) {
     model: { id: "/cdn/value.dec346aec0305c54a42cad5514d456a7488f7d389a8801881a47082fb1e159dc.glb", forward: "-x" },
     layout: { box: { min: { x: -1.1, y: 0, z: -0.4 }, max: { x: 1.1, y: 0.95, z: 0.4 } } },
     children: [{ feetPosition: { x: 0, y: 0.6, z: -0.5 }, light: { kind: "point", color: "#ff3fa4", intensity: 0.5, distance: 2.5 } }] });
-  ctx.spawn("l31-dj", { feetPosition: { x: cx, y: 0.55, z: d.z0 + 1.45 }, rotation: { yaw: 0 }, physics: "character", tags: ["npc", "usable", "faceling", "l31-dj"],
+  ctx.spawn("l31-dj", { feetPosition: { x: cx, y: 0.55, z: d.z0 + 1.75 }, rotation: { yaw: 0 }, physics: "character", tags: ["npc", "usable", "faceling", "l31-dj"],
     ...critterSpec(npcLook("l31-dj", { species: "faceling", sex: "m", fur: "#c68652", botw: "pants", shoes: "sneakers", topw: "jacket", top: "#3a2a5a", bottom: "#1d1d26" }, "wanderer", 1)),
-    behavior: ["scripts/humanoid-locomotion.js"], state: { name: "Faceling DJ", role: "regular", faction: "wanderer", factionName: "Rink DJ", docile: true, hp: 60, home: { x: cx, z: d.z0 + 1.45 }, stay: true } });
+    behavior: ["scripts/humanoid-locomotion.js"], state: { name: "Faceling DJ", role: "regular", faction: "wanderer", factionName: "Rink DJ", docile: true, hp: 60, home: { x: cx, z: d.z0 + 1.75 }, stay: true } });
   ctx.spawn("l31-dj-light", { feetPosition: { x: cx, y: 3, z: cz }, light: { kind: "point", color: "#ff5fb0", intensity: 0.6, distance: 7 } });
   ctx.spawn("l31-music", { feetPosition: { x: cx, y: 2, z: cz }, audio: { clip: "/cdn/moodboard-toon-vibrant/music-muffled-80s-radio-pop-roller-rink-pa-speakers-loop.mp3", gain: 0.35, loop: true, spatial: true, maxDistance: 90, bus: "music" } });
   ctx.spawn("l31-skate-bed", { feetPosition: { x: 0, y: 1, z: 0 }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-roller-skates-on-wood-rink-distant-laughter-loop.mp3", gain: 0.12, loop: true, spatial: true, maxDistance: 40 } });
