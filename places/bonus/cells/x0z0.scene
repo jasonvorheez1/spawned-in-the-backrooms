@@ -607,13 +607,13 @@ bc-juicebar:
   state: {info: smoothies, name: Squeeze Play, verb: Order}
   tags: [bonus-court, usable]
 bc-juicebar/sign:
-  feetPosition: {x: 0, y: 2.3, z: 0}
+  feetPosition: {x: 0, y: 1.95, z: -0.22}
   id: bc-juicebar/sign
   material: {color: oklch(0.95 0.03 350)}
   parent: bc-juicebar
-  primitive: {depth: 0.06, height: 0.42, kind: box, width: 1.5}
-  rotation: {yaw: -90}
-  ui: "<div face=\"front\" width=\"1.5m\" style=\"font-size:150px;color:#e0457b;font-weight:800;text-align:center;line-height:1\">SMOOTHIES <span style=\"font-size:90px;color:#2a1b2a\">$4</span></div>"
+  primitive: {depth: 0.06, height: 0.72, kind: box, width: 1.9}
+  rotation: {yaw: 0}
+  ui: "<div face=\"front\" width=\"1.9m\" style=\"height:720px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff4f8;border:28px solid #e0457b;font-family:display\"><div style=\"font-size:230px;color:#e0457b;font-weight:900;line-height:1\">Squeeze Play</div><div style=\"font-size:110px;color:#2a1b2a;letter-spacing:.08em\">SMOOTHIES · $4</div></div>"
 bc-kiddieride:
   castShadow: true
   feetPosition: {x: -8.3, y: 0, z: 9.6}
