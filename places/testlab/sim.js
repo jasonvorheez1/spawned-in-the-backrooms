@@ -10,6 +10,7 @@ import { spawnProp, PROPS, fitBox } from "../../scripts/lib/l2props.js";
 import { LURKER_MODEL, LURKER_SCALE } from "../../scripts/lurkers.js";
 import { MODEL as SMILER_MODEL, SCALE as SMILER_SCALE } from "../../scripts/smilers.js";
 import { stepQuest } from "../../scripts/testlab-use.js";
+import { labBuild, labTick } from "../../scripts/lib/loot-lab.js";
 export const cadence = "250ms";
 const V = 2, REFILL = 4000; // ms before a taken thing comes back (my pick)
 const HX = 24, HZ0 = -26, HZ1 = 24, H = 6; // the hall: x -24..24, z -26..24, 6 m to the ceiling
@@ -116,7 +117,8 @@ function due(s, key, now) { if (!s[key]) { s[key] = now + REFILL; return false; 
 
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
-  if (s.builtV !== V) { build(ctx); s.builtV = V; s.seeded = false; }
+  if (s.builtV !== V) { build(ctx); s.builtV = V; s.seeded = false; s.labV = 0; }
+  if (s.labV !== 1) { labBuild(ctx, pad, sign); s.labV = 1; } // the Loot Lab lays itself beside the hall, never rebuilding the rest
   if (!ctx.place.players?.length) return;
   // refills: weapons, containers, physics on request, foes on request
   const R = (s.refill ??= {});
@@ -126,6 +128,7 @@ export function tick(ctx) {
   if (s.physRespawn && now > s.physRespawn) { s.physRespawn = 0; physSpawn(ctx); }
   if (s.want_smiler) { s.want_smiler = 0; if (ctx.query({ tags: ["smiler"] }).filter((m) => !m.state?.dead).length < 3) ctx.spawn({ tags: ["smiler"], feetPosition: { x: -4, y: 0.05, z: -22 }, model: SMILER_MODEL, scale: SMILER_SCALE, physics: { body: "character" }, state: { hp: L.smilerHp } }); }
   if (s.want_lurker) { s.want_lurker = 0; if (ctx.query({ tags: ["lurker"] }).filter((m) => !m.state?.dead).length < 3) ctx.spawn({ tags: ["lurker"], feetPosition: { x: 4, y: 0.05, z: -22 }, model: LURKER_MODEL, scale: LURKER_SCALE, physics: { body: "character" }, state: { hp: L.lurkerHp, kind: "lurker" } }); }
+  labTick(ctx);
   s.seeded = true;
   // Range Check: each step is read off the player's own save
   let moved = null;
