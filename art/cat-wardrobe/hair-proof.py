@@ -24,6 +24,14 @@ for job in jobs:
     hair = [o for o in bpy.context.scene.objects if o not in before and o.type == "MESH" and not o.name.startswith("Icosphere")]
     for o in bpy.context.scene.objects:
         if o not in before and o.type == "MESH" and o not in hair: o.hide_render = True
+    def flat(nm, col, rough=0.6):
+        m = bpy.data.materials.new(nm); m.use_nodes = True; b = m.node_tree.nodes["Principled BSDF"]; b.inputs["Base Color"].default_value = (*col, 1); b.inputs["Roughness"].default_value = rough; return m
+    hm = flat("proofhair", (0.16, 0.07, 0.035)); sm = flat("proofskin", (0.85, 0.62, 0.45))
+    for o in hair: o.data.materials.clear(); o.data.materials.append(hm)
+    for o in before:
+        if o.type == "MESH":
+            for i, m in enumerate(o.data.materials):
+                if m and m.name.startswith(("fur", "headFur")): o.data.materials[i] = sm
     info = []
     for o in hair:
         ks = [k.name for k in o.data.shape_keys.key_blocks] if o.data.shape_keys else []
@@ -41,7 +49,7 @@ for job in jobs:
         import random; random.seed(1)
         for i in range(600):
             d = Vector((random.uniform(-1, 1), random.uniform(-.3, 1), random.uniform(.25, 1))).normalized()
-            h = bvh.ray_cast(c + d * 1.0, -d)
+            h = bvh.ray_cast(c, d)
             if not h[0]: continue
             h2 = hbvh.ray_cast(h[0] + d * 0.0005 - d*0.02, d)   # first hair surface outward from just under the skull
             if h2[0]: gaps.append((h2[0] - h[0]).dot(d))
@@ -50,7 +58,7 @@ for job in jobs:
         g = lambda q: gaps[int(len(gaps) * q)] if gaps else -1
         info.append(f"{o.name} mats={[m.name for m in o.data.materials]} keys={ks} tris={tris} vg={[v.name for v in o.vertex_groups][:3]} inside={inside}/{len(P)} eyezone={eye} gap50={g(.5):.3f} gap90={g(.9):.3f} cover={len(gaps)}/600 x[{min(xs):.3f},{max(xs):.3f}] xmean={sum(xs)/len(xs):.3f} z[{min(p.z for p in P):.3f},{max(p.z for p in P):.3f}] y[{min(p.y for p in P):.3f},{max(p.y for p in P):.3f}]")
     print("INFO", name, sex, f"top={top:.3f} half={half:.3f}", " | ".join(info))
-    sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = sc.render.resolution_y = 500
+    sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = sc.render.resolution_y = 800; sc.render.use_border = True; sc.render.use_crop_to_border = True; sc.render.border_min_x = sc.render.border_min_y = 0.19; sc.render.border_max_x = sc.render.border_max_y = 0.81
     w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True; w.node_tree.nodes["Background"].inputs[0].default_value = (.55, .57, .62, 1); w.node_tree.nodes["Background"].inputs[1].default_value = 0.7
     aim = Vector((0, 0, top - 0.05))
     cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam")); sc.collection.objects.link(cam); cam.data.lens = 50; sc.camera = cam
