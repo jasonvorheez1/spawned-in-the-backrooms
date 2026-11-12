@@ -487,7 +487,8 @@ export function update(ctx, dt) {
       m.hitAt = now;
     }
   }
-  const talking = s.talkAt && now - s.talkAt < 2600;
+  const talkLen = s.line && typeof s.line === "object" && s.line.at >= (s.talkAt ?? 0) - 50 ? Math.max(2600, (s.line.d ?? 0) + 300) : 2600; // the gesture lasts the line, not a fixed beat
+  const talking = s.talkAt && now - s.talkAt < talkLen;
   if (talking !== !!m.talking) { m.talking = talking; me.anim.talk = talking ? { clip: (s.wear?.sex ?? s.look?.sex) === "f" ? "cdn/clip-talk-female-loop.glb" : "cdn/clip-talk-loop.glb", loop: "loop", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } } : null; }
   // one-shot clips end: cleared after their length, so a body never holds a wave's or a flinch's last frame
   if (me.anim.hit && now - (m.hitAt ?? 0) > 900) me.anim.hit = null;
@@ -507,7 +508,7 @@ export function update(ctx, dt) {
     let curExpr = baseExpr;
     if (now - (m.hitAt ?? 0) < 650 || now - (m.fearAt ?? 0) < 1600) curExpr = "scared";
     else if (now - (m.wavedAt ?? 0) < 2200) curExpr = "catmouth"; // :3 on hello
-    else if (talking) curExpr = s.mood === "angry" ? "angry" : s.mood === "scared" ? "scared" : s.mood === "annoyed" ? "unimpressed" : s.mood === "happy" ? "joy" : (baseExpr !== "neutral" ? baseExpr : "smile");
+    else if (talking) curExpr = s.mood === "angry" ? "angry" : s.mood === "scared" ? "scared" : s.mood === "annoyed" ? "unimpressed" : s.mood === "happy" ? "joy" : "neutral";
     else if (m.aimAt) curExpr = "cocky";
     if (curExpr !== m.lastExpr || isBlinking !== m.lastBlink || talking) {
       m.lastExpr = curExpr;
@@ -521,8 +522,10 @@ export function update(ctx, dt) {
       else if (headObj) {
         const lookData = { ...(s.look ?? s.wear) };
         if (talking) {
-          lookData.talking = true;
-          lookData.talkTime = now / 1000;
+          // the mouth follows the line's letters while it is said (as the human faces do), then rests closed
+          const lt = typeof s.line === "string" ? s.line : s.line?.t, la = typeof s.line === "string" ? (s.talkAt ?? 0) : (s.line?.at ?? 0);
+          const mouth = lt ? mouthAt(lt, now - la - 120) : null;
+          if (mouth) lookData.mouth = mouth; else if (!lt) { lookData.talking = true; lookData.talkTime = now / 1000; }
         }
         if (now - (m.hitAt ?? 0) < 650) lookData.hurt = true;
         headObj.morph = faceMorph(curExpr, isBlinking, isFem, lookData);

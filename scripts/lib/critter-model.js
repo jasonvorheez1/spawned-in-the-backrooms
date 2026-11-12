@@ -521,7 +521,13 @@ export function faceMorph(expr, blink, isFemale, look) {
   if (fty) for (const [k, v] of Object.entries(fty)) if (k !== 'w') f[k] = Math.min(1, v * fs)
 
   // --- Dynamic Speech Viseme Technology (phonetic mouth shapes during dialogue) ---
-  if (look?.talking || look?.speech || look?.talk || expr === 'talking') {
+  if (Array.isArray(look?.mouth)) { // the line's own letters (mouthAt): open, wide, round per syllable, shut on punctuation and after the last word
+    const [o, w, r] = look.mouth, gain = Number(look?.talkIntensity ?? 0.9)
+    f.Open = Math.min(0.85, (f.Open ?? 0) * 0.3 + o * gain)
+    f.O = Math.min(0.7, r * gain * 0.8)
+    if (f.Smile) f.Smile *= 0.7
+    f.Wide = Math.min(0.35, (f.Wide ?? 0) + w * 0.12)
+  } else if (look?.talking || look?.speech || look?.talk || expr === 'talking') {
     const t = Number(look?.talkTime ?? (Date.now() / 1000))
     // Enhanced multi-phonemic syllable oscillation (vowel opening + rounded labial variation)
     const ph = (t * 22) % (Math.PI * 4)
