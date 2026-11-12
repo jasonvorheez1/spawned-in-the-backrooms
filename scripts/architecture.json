@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 5856,
-  "updatedAt": "2026-11-12T02:16:59.810Z",
+  "basedOnSpecVersion": 5859,
+  "updatedAt": "2026-11-12T02:19:34.157Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning an authored Level 0 maze, deeper levels and shared destinations. `templates/player.js` composes player behaviors while place simulations and shared scripts own environments, NPCs, combat, loot, crafting, UI and progression; Tripo cats use a shared body, painted-skin and fitted skinned-wardrobe pipeline alongside separate human and legacy furry paths.",
   "scriptPaths": [],
   "places": [
@@ -69,14 +69,14 @@
     "Wardrobe UI look → scripts/critter.js saves it → scripts/lib/critter-model.js restyles player/NPC cats via cat-wardrobe.js; testlab-pad writes place.state.want_* with stepping player's level → places/testlab/sim.js labTick → loot-lab rolls."
   ],
   "behaviorFamilies": [
-    "places/bonus/cells/x0z0.scene + objects.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + bonus-extra and mall shopper/salon scripts - authored mall, NPC attachments and simulation; escalator deco has frozen steps removed and moving step entities carry the shared motor behavior.",
+    "places/bonus/cells/x0z0.scene + objects.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + bonus-extra and mall shopper/salon scripts - authored mall, NPC attachments and simulation; escalator deco has frozen steps removed and moving motorized steps.",
     "art/bonus-mall/escalator.py + world.assets bonus-mall-deco-moving-escalators/escalator-step + scripts/esc-step.js - offline Blender build makes reusable detailed steps; placements vary direction and phase while sharing motor behavior.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + home reconstruction scripts - per-piece models/dimensions with common placement, persistence and rebuild path.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preserving root collider/state.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preserving root state/collider.",
     "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + Zenith door/bots/hatch/flicker/drones/use scripts - Zenith Station geometry, breach, hazards and interactive systems.",
     "places/level4 scenes + places/level4/sim.js + scripts/l4-office.js/l4-office-geo.js/l4-home.js + Level 4/5 resident data - authored office/hotel props, fixtures, NPC bodies and attached critter behavior.",
     "scripts/lib/critter-model.js + critter-models.yml + wardrobe*.yml + scripts/lib/clothes.js + art/critter-cute and art/critter-andy - shared human and legacy furry avatar paths; new Tripo cats are separate.",
-    "scripts/lib/cat-wardrobe.js + scripts/lib/data/cat-wardrobe.yml + scripts/mat-catskin.js + art/cat-wardrobe builders - Tripo cat appearance: painted garments plus fitted skinned clothing, hats, neckwear, hair and sculpted ears; hair-rebuild.py fuses scalp cap and hair, cuts the eye/ear regions, rebuilds keys and skins to the head."
+    "scripts/lib/cat-wardrobe.js + scripts/lib/data/cat-wardrobe.yml + scripts/mat-catskin.js + art/cat-wardrobe builders - Tripo cat appearance: painted garments plus fitted skinned clothing, hats, neckwear, hair and sculpted ears; newly uploaded shag and lob hairstyle GLBs and JPEGs are registered in world.assets/01, /87, /72 and /fd."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
@@ -91,6 +91,6 @@
     "Cat look.snout/ears/tail drive named body shape keys; sculpted ear assets hide head ear keys and are skinned children. Fluff and hairstyles carry catMorph; hairs carry Hatted to flatten under hats, with some crown fluff omitted when hair is present.",
     "Cat chest slider is 0..1 mapped by chestOf to Chest 0.15..1; art/cat-wardrobe/bust.py sculpts that morph on female body and clothing GLBs, so fitted garments must preserve the same Chest key. Crop top hem is 0.27 under the bust.",
     "scripts/mat-catskin.js paints apparel in body bind-pose coordinates (metres, y up, front +z); preserve skin shader coverage/nose cut behavior and modeled garment regions painted underneath to prevent fur showing through.",
-    "catChildren attaches garments, masks, hair, fluff, ears and hats as skinned avatar children; preserve skin attachment/material slots. hair-rebuild.py cuts a ring around sculpted ears (twintails tune 0.03; fallback 0.035) and can cut the Tripo hair's own ear cones via sheath; the uploaded refit-v3 models are not yet named in cat-wardrobe.yml."
+    "catChildren attaches garments, masks, hair, fluff, ears and hats as skinned avatar children; preserve skin attachment/material slots. hair-rebuild.py cuts a ring around sculpted ears (twintails tune 0.03; fallback 0.035) and can cut the Tripo hair meshes."
   ]
 }
