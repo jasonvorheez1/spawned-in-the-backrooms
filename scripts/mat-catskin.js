@@ -37,6 +37,9 @@ export function material(ctx) {
     const ink = smoothstep(0.35, 0.15, max(pic.r, pic.g));
     const wide = smoothstep(1.0, 0.7, u.sub(0.5).div(P("muzW", 0.12).mul(1.9)).pow(2).add(v.sub(P("muzV", 0.32)).div(P("muzH", 0.085).mul(1.5)).pow(2)).sqrt());
     const lowFace = step(v, P("muzTop", 0.45));
+    // beside the nose, between the muzzle top and the eyes, no pale paint at all: the pictures' muzzle peaks read as white triangles there
+    const besideNose = step(abs(u.sub(0.5)), 0.17).mul(step(P("muzV", 0.32).sub(0.03), v)).mul(step(v, 0.47));
+    pic = vec4(pic.rgb, pic.a.mul(float(1).sub(besideNose.mul(smoothstep(0.45, 0.6, min(pic.r, pic.g))))));
     pic = vec4(pic.rgb, mix(pic.a, pic.a.mul(max(keep, ink.mul(wide))), lowFace));
     // on the snout the projection grazes its sides and the mouth smears: muzzle paint only lands where the surface faces the front
     const facing = mix(float(1), smoothstep(0.32, 0.62, normalLocal.z), muzzle);
@@ -55,13 +58,13 @@ export function material(ctx) {
       col = mix(col, mix(C("sh").mul(col.add(0.5)).min(vec3(1, 1, 1)), C("sh"), 0.4), wash);
     }
     // one nose, on the sculpted snout tip itself (bind space). Shelly Nov 12 "more cutesy anime than sonic": small, a soft rounded triangle wide on top, dusky rose, one tiny shine
-    const ns = P("noseS", 1), ny = q.y.sub(P("noseY", 0.797)).div(0.0085).div(ns);
-    const nx = q.x.div(float(0.0115).mul(ns)).div(float(1).add(ny.mul(0.55)).max(0.25));
+    const ns = P("noseS", 1), ny = q.y.sub(P("noseY", 0.797)).div(0.0115).div(ns);
+    const nx = q.x.div(float(0.0165).mul(ns)).div(float(1).add(ny.mul(0.55)).max(0.25));
     const nDist = nx.mul(nx).add(ny.mul(ny)).sqrt();
     const onTip = smoothstep(-0.065, -0.048, q.z.sub(P("noseZ", 0.249)));   // wide enough for the flat snout key (tip 4 cm back)
     const noseM = smoothstep(1.0, 0.82, nDist).mul(onTip);
-    const shine = smoothstep(0.28, 0.08, nx.add(0.3).mul(nx.add(0.3)).add(ny.sub(0.4).mul(ny.sub(0.4))).sqrt());
-    col = mix(col, mix(vec3(0.30, 0.13, 0.15), vec3(0.95, 0.85, 0.87), shine.mul(0.8)), noseM);
+    const shine = smoothstep(0.24, 0.07, nx.add(0.32).mul(nx.add(0.3)).add(ny.sub(0.4).mul(ny.sub(0.4))).sqrt());
+    col = mix(col, mix(vec3(0.07, 0.045, 0.045), vec3(0.75, 0.68, 0.68), shine.mul(0.7)), noseM);
     m.colorNode = col;
     m.emissiveNode = col.mul(0.06).add(eye.mul(irisAmt.mul(pic.a).mul(inside).mul(front).mul(0.35)));   // a little glow so the iris reads in the dim yellow light
     m.roughness = 0.68;
