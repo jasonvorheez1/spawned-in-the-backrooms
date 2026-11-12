@@ -13,8 +13,8 @@ import { S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, xOf } from "../../scripts/lib
 import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 import P from "../../scripts/lib/data/l02-props.yml";
 export const cadence = "250ms";
-const V = 19, STEP_MS = 3400, WARNING_MS = 1200;
-const CASE_COLUMN = 4, CASE_DESK = { x: 2.65, y: 0, z: 6.2 };
+const V = 20, STEP_MS = 3400, WARNING_MS = 1200;
+const CASE_COLUMN = 4, CASE_DESK = { x: 2.55, y: 0, z: 7.65 };
 const CASE_TOP = "l02-crew-case", CASE_FALL = "l02-crew-salvage";
 const CASE_IMPACT = "/cdn/sfx-metal-object-clunk-drop.mp3";
 const CREAK = "/cdn/moodboard-realistic-gritty/sfx-deep-structural-wood-creak-groan.mp3";
@@ -49,10 +49,17 @@ function plate(title, detail, color = "#e4b46b", width = 1.3) {
 const H = (key) => P[key]?.size?.[1] ?? 0.8;
 function sp(ctx, id, spec) { if (spec && !(id in ctx.place.objects)) ctx.spawn(id, spec); }
 const put = (ctx, id, spec) => { if (spec) ctx.spawn(id, spec); };
-// the clean floor's walls, per column: [z centre, length] on the column's west edge (gaps are doorways), and across its middle
-const STAIRWELL = -7.8; // the open band over the basement stairs
-const PART = { 1: [[-5.4, 4.8], [6, 8]], 2: [[-8, 4], [3, 6]], 3: [[-5, 10], [7.5, 5]], 4: [[0, 8]], 5: [[-7, 6], [6, 8]], 6: [[-2, 6], [8, 4]], 7: [[-7.5, 5], [5, 2]] };
-const CROSS = { 1: [[3, 2.6]], 2: [[-1, 2.4]], 5: [[2, 3]], 6: [[-4.5, 2.6]] };
+// The main hall runs through the middle; doors to the rooms open off it.
+const STAIRWELL = -7.8;
+const PART = {
+  1: [[-4.6, 6.4], [6.2, 7.6]], // leave the stair landing open along the north wall
+  2: [[-6.1, 7.8], [6.1, 7.8]],
+  3: [[-6.0, 8], [6.5, 7]],
+  4: [[-3.35, 3.3], [7.4, 5.2]], // bathroom wall closes the rest of the north side
+  5: [[-6.1, 7.8], [6.2, 7.6]],
+  6: [[-5.8, 8.4], [6.2, 7.6]],
+  7: [[-6.1, 7.8], [6.1, 7.8]],
+};
 // a finished wall: white paint, a red chair rail at 0.9 m and a baseboard both faces; outlets on the long ones
 function wallKids(len, along) {
   return [{ feetPosition: { x: 0, y: 0, z: 0 }, primitive: along ? box(len, 0.12, 0.17) : box(0.17, 0.12, len), material: BASEB },
@@ -84,17 +91,18 @@ function layShell(ctx) {
   sp(ctx, "l02-from-l0", { feetPosition: { x: X0 + 1.4, y: 0.05, z: 0 }, rotation: { yaw: -90 } });
   sp(ctx, "l02-exit-sign", { feetPosition: { x: X0 + 0.12, y: 2.45, z: 0 }, rotation: { yaw: 90 }, vector: "<svg viewBox='0 0 200 60' width='0.6m'><rect width='200' height='60' rx='6' fill='#a1201a'/><text x='100' y='42' text-anchor='middle' font-family='sans-serif' font-size='36' font-weight='bold' fill='#fff'>EXIT</text></svg>" });
   sp(ctx, "l02-exit-glow", { feetPosition: { x: X0 + 0.4, y: 2.4, z: 0 }, light: { kind: "point", color: "oklch(0.7 0.18 25)", intensity: 0.4, distance: 3 } });
-  sp(ctx, "l02-plaque", { feetPosition: { x: X0 + 2, y: 1.15, z: Z0 + 0.02 }, primitive: box(0.9, 0.9, 0.03), material: { texture: P.insignia, roughness: 0.5, metalness: 0.3 } });
-  sp(ctx, "l02-motto", { feetPosition: { x: X0 + 2, y: 0.6, z: Z0 + 0.05 }, vector: "<svg viewBox='0 0 600 60' width='1.4m'><text x='300' y='40' text-anchor='middle' font-family='serif' font-size='34' font-style='italic' fill='#5a1f1a'>True order comes through furniture.</text></svg>" });
-  sp(ctx, "l02-desk0", prop("office_desk", { x: X0 + 0.5, y: 0, z: Z0 + D - 2.2 }, -90, { physics: "static" }));
-  sp(ctx, "l02-chair0", prop("wchair", { x: X0 + 1.3, y: 0, z: Z0 + D - 2.4 }, -100, { physics: "static" }));
-  sp(ctx, "l02-plant0", prop("plant", { x: X0 + 0.55, y: 0, z: Z0 + D - 0.6 }, 30, { physics: "static" }));
-  sp(ctx, "l02-router", prop("router", { x: X0 + 0.4, y: H("office_desk"), z: Z0 + D - 2.6 }, -90, { tags: ["usable"], behavior: "scripts/l02-use.js",
+  const reception = { x: -14.05, y: 0, z: 7.45 };
+  sp(ctx, "l02-plaque", { feetPosition: { x: reception.x, y: 1.55, z: Z0 + D - 0.03 }, primitive: box(0.76, 0.76, 0.03), material: { texture: P.insignia, roughness: 0.5, metalness: 0.3 } });
+  sp(ctx, "l02-motto", { feetPosition: { x: reception.x, y: 1.23, z: Z0 + D - 0.05 }, rotation: { yaw: 180 }, vector: "<svg viewBox='0 0 600 60' width='1.4m'><text x='300' y='40' text-anchor='middle' font-family='serif' font-size='34' font-style='italic' fill='#5a1f1a'>True order comes through furniture.</text></svg>" });
+  sp(ctx, "l02-desk0", prop("office_desk", reception, 0, { physics: "static" }));
+  sp(ctx, "l02-chair0", prop("wchair", { x: reception.x, y: 0, z: 8.34 }, 0, { physics: "static" }));
+  sp(ctx, "l02-plant0", prop("plant", { x: -15.44, y: 0, z: 8.82 }, 35, { physics: "static" }));
+  sp(ctx, "l02-router", prop("router", { x: reception.x + 0.39, y: H("office_desk"), z: reception.z + 0.09 }, 0, { tags: ["usable"], behavior: "scripts/l02-use.js",
     state: { kind: "read", name: "Wireless router", verb: "Look", info: "Full bars.", text: "Four green lights, all steady. The network is called REMODELING_CO_GUEST and it has no password. It has never once dropped." } }));
   layLights(ctx, 0);
-  sp(ctx, "l02-checkin", { feetPosition: { x: -12.12, y: 1.4, z: -4.15 }, rotation: { yaw: -90 },
-    vector: plate("FINISH INSPECTION", "KEEP CLEAR OF THE EAST WING") });
-  sp(ctx, "l02-issue-board", { tags: ["usable"], feetPosition: { x: -12.13, y: 1.35, z: 3.6 }, rotation: { yaw: -90 },
+  sp(ctx, "l02-checkin", { feetPosition: { x: -12.09, y: 1.55, z: -2.42 }, rotation: { yaw: -90 },
+    vector: plate("FINISH INSPECTION", "KEEP CLEAR OF THE EAST WING", "#e4b46b", 1.12) });
+  sp(ctx, "l02-issue-board", { tags: ["usable"], feetPosition: { x: -12.09, y: 1.35, z: 3.35 }, rotation: { yaw: -90 },
     vector: plate("TOOL ISSUE", "LOCKED CASE · SOUTH OFFICE", "#e9c987"),
     behavior: "scripts/l02-use.js", state: { kind: "read", name: "Tool issue notice", verb: "Read",
       text: "Penelope: lock the tool case in the south office. If the floor goes again, check directly underneath. Bring back whatever didn't break." } });
@@ -114,32 +122,49 @@ function layShell(ctx) {
     light: { kind: "point", color: "oklch(0.85 0.1 148)", intensity: 1.05, distance: 7 } });
   sp(ctx, "l02-lift-guide", { feetPosition: { x: 1.7, y: BASE + 1.65, z: Z0 + 0.05 },
     vector: plate("FREIGHT →", "EAST WALL · COUNTERWEIGHT PAN") });
-  // work lights in the basement, each on its tripod with its own warm glow
-  for (const [i, x, z, yaw] of [[0, -4, 6.5, 200], [1, 4, -6.5, 20], [2, 10.5, 6.5, 160], [3, -9, -2, 270]]) {
+  // Work lights are aimed at the foreman's desk, the saw bench and the freight apron.
+  for (const [i, x, z, yaw] of [[0, -6.65, -4.78, 110], [1, -4.45, 6.9, 120], [2, 8.4, -5.95, 25], [3, 11.55, 2.8, 325]]) {
     sp(ctx, `l02-worklamp${i}`, prop("worklamp", { x, y: BASE, z }, yaw, { physics: "static" }));
-    sp(ctx, `l02-worklight${i}`, { feetPosition: { x, y: BASE + H("worklamp") - 0.1, z }, light: { kind: "point", color: "oklch(0.88 0.1 75)", intensity: 1.5, distance: 11 } });
+    sp(ctx, `l02-worklight${i}`, { feetPosition: { x, y: BASE + H("worklamp") - 0.1, z }, light: { kind: "point", color: "oklch(0.88 0.1 75)", intensity: 1.45, distance: 10 } });
   }
-  // an unfinished stud wall the crew never sheathed
-  const frame = []; for (let s = 0; s <= 8; s += 0.4) frame.push({ feetPosition: { x: 0, y: 0, z: -4 + s }, primitive: box(0.09, -BASE - 0.15, 0.04), material: STUD });
-  frame.push({ feetPosition: { x: 0, y: -BASE - 0.15, z: 0 }, primitive: box(0.09, 0.05, 8.04), material: STUD }, { feetPosition: { x: 0, y: -0.05, z: 0 }, primitive: box(0.09, 0.05, 8.04), material: STUD });
-  sp(ctx, "l02-frame", { feetPosition: { x: 6, y: BASE + 0.05, z: 5.5 }, children: frame });
-  sp(ctx, "l02-frame-col", { feetPosition: { x: 6, y: BASE, z: 5.5 }, primitive: box(0.12, -BASE, 8), visible: false, physics: "static" });
-  // the crew's mess: sawhorses with lumber, buckets and rollers, drop cloths, cement bags, drywall, a ladder, Toaster
+  // The unfinished bay has a framed opening between the saw bench and freight.
+  for (const [side, from, to] of [["n", 3.15, 5.95], ["s", 7.55, 9.98]]) {
+    const span = to - from, center = (from + to) / 2, studs = [];
+    for (let z = 0; z <= span; z += 0.4) studs.push({ feetPosition: { x: 0, y: 0, z: z - span / 2 }, primitive: box(0.09, -BASE - 0.15, 0.04), material: STUD });
+    studs.push({ feetPosition: { x: 0, y: 0, z: span / 2 }, primitive: box(0.09, -BASE - 0.15, 0.08), material: STUD });
+    for (const y of [0, -BASE - 0.1]) studs.push({ feetPosition: { x: 0, y, z: 0 }, primitive: box(0.09, 0.05, span), material: STUD });
+    sp(ctx, `l02-frame-${side}`, { feetPosition: { x: 6, y: BASE, z: center }, children: studs });
+    sp(ctx, `l02-frame-col-${side}`, { feetPosition: { x: 6, y: BASE, z: center }, primitive: box(0.12, -BASE, span), visible: false, physics: "static" });
+  }
+  sp(ctx, "l02-frame-header", { feetPosition: { x: 6, y: BASE + 2.2, z: 6.75 }, primitive: box(0.12, 0.12, 1.68), material: STUD });
   const B = (key, x, z, yaw, extra) => prop(key, { x, y: BASE, z }, yaw, { physics: "static", ...extra });
-  const SH = BASE + H("sawhorse");
-  sp(ctx, "l02-sawhorse0", B("sawhorse", -1, 2, 10)); sp(ctx, "l02-sawhorse1", B("sawhorse", 1.4, 2.3, 10)); sp(ctx, "l02-sawhorse2", B("sawhorse", 6.6, -4, 80));
-  sp(ctx, "l02-plank", prop("lumber", { x: 0.2, y: SH, z: 2.15 }, 100, { physics: "static" }));
-  sp(ctx, "l02-lumber0", B("lumber", -5, 8.6, 85)); sp(ctx, "l02-lumber1", B("lumber", 12.5, -8.6, 0));
-  for (const [i, x, z, yaw] of [[0, -2.6, 8.8, 30], [1, 8.2, -1.2, 200], [2, 3.2, -8.8, 120]]) sp(ctx, `l02-bucket${i}`, B("bucket", x, z, yaw));
-  for (const [i, x, z, yaw] of [[0, 2.2, 6.4, 40], [1, -7.5, 4.5, 170], [2, 9, 2.5, 300]]) sp(ctx, `l02-tarp${i}`, prop("tarp", { x, y: BASE, z }, yaw));
-  for (const [i, x, z, yaw] of [[0, -10.5, 8.2, 10], [1, -9.6, 8.6, 70], [2, -10, 8.4, 40]]) sp(ctx, `l02-cement${i}`, prop("cement", { x, y: BASE + (i === 2 ? H("cement") : 0), z }, yaw, { physics: "static" }));
-  sp(ctx, "l02-drywall", B("drywall_stack", 2, 8.6, 15)); sp(ctx, "l02-ladder", B("ladder", 7.2, 8.6, -30)); sp(ctx, "l02-toolbox", B("red_toolbox", 7.4, -3.4, 60));
-  sp(ctx, "l02-clipboard", prop("clipboard", { x: -1, y: SH, z: 1.85 }, 20, { tags: ["usable"], behavior: "scripts/l02-use.js",
-    state: { kind: "read", name: "Clipboard", verb: "Read", info: "Backrooms Remodelling Company", text: "\"True order comes through furniture.\" Target: Level 0. Sector A880-1. Class-A Remodeling Job. Task Force 102-CX. Supervisor: Major Took. \"You better be reading this, it may be the only chance you four have at saving your jobs. We wouldn't want your 'leader' Cap'n to get punished for all of your stupidity, now would we?\"" } }));
-  sp(ctx, "l02-letter", { tags: ["usable"], feetPosition: { x: 6.75, y: SH + 0.005, z: -3.75 }, rotation: { yaw: 70 }, primitive: box(0.21, 0.004, 0.25), material: { color: "oklch(0.95 0.015 90)", roughness: 0.95 }, behavior: "scripts/l02-use.js",
-    state: { kind: "read", name: "Torn letter", verb: "Read", info: "\"Dear Major Took\"", text: "\"Hi! It's me! Everything is a-ok over here! Nothing is going wrong, well, except for a few yep! nothing at all. Maybe you could talk to the higher-ups about giving us a few more chances? I should probab\" The rest of the page has been ripped off." } });
-  sp(ctx, "l02-toaster", prop("toaster", { x: 6.3, y: SH, z: -4.35 }, 40, { tags: ["usable"], behavior: "scripts/l02-use.js",
+  const deskY = BASE + H("office_desk");
+  // Cap'n's paperwork and the crew's kettle substitute share an actual tabletop near the stairs.
+  sp(ctx, "l02-foreman-desk", B("office_desk", -5.2, -5.37, 0));
+  sp(ctx, "l02-foreman-chair", B("wchair", -5.24, -6.28, 180));
+  sp(ctx, "l02-clipboard", prop("clipboard", { x: -5.54, y: deskY, z: -5.33 }, 12, { tags: ["usable"], behavior: "scripts/l02-use.js",
+    state: { kind: "read", name: "Clipboard", verb: "Read", info: "Backrooms Remodelling Company", text: ""True order comes through furniture." Target: Level 0. Sector A880-1. Class-A Remodeling Job. Task Force 102-CX. Supervisor: Major Took. "You better be reading this, it may be the only chance you four have at saving your jobs. We wouldn't want your 'leader' Cap'n to get punished for all of your stupidity, now would we?"" } }));
+  sp(ctx, "l02-letter", { tags: ["usable"], feetPosition: { x: -5.14, y: deskY + 0.004, z: -5.37 }, rotation: { yaw: -11 }, primitive: box(0.21, 0.004, 0.25), material: { color: "oklch(0.95 0.015 90)", roughness: 0.95 }, behavior: "scripts/l02-use.js",
+    state: { kind: "read", name: "Torn letter", verb: "Read", info: ""Dear Major Took"", text: ""Hi! It's me! Everything is a-ok over here! Nothing is going wrong, well, except for a few yep! nothing at all. Maybe you could talk to the higher-ups about giving us a few more chances? I should probab" The rest of the page has been ripped off." } });
+  sp(ctx, "l02-toaster", prop("toaster", { x: -4.74, y: deskY, z: -5.43 }, -12, { tags: ["usable"], behavior: "scripts/l02-use.js",
     state: { kind: "read", name: "Toaster", verb: "Look", info: "Unplugged. Part of the crew.", text: "An unplugged toaster. The crew calls it Toaster. It does not do anything. It might be listening." } }));
+  // Cut stock rests across two aligned horses, with bulk materials along the south wall.
+  sp(ctx, "l02-sawhorse0", B("sawhorse", -3.45, 7.02, 90));
+  sp(ctx, "l02-sawhorse1", B("sawhorse", -1.75, 7.02, 90));
+  sp(ctx, "l02-plank", prop("lumber", { x: -2.6, y: BASE + H("sawhorse"), z: 7.02 }, 0, { physics: "static" }));
+  sp(ctx, "l02-lumber0", B("lumber", -5.75, 9.3, 0));
+  sp(ctx, "l02-drywall", B("drywall_stack", 2.8, 9.25, 0));
+  sp(ctx, "l02-bucket0", B("bucket", -0.95, 7.75, 18));
+  sp(ctx, "l02-tarp0", prop("tarp", { x: -2.65, y: BASE, z: 5.22 }, 4));
+  for (const [i, x, y] of [[0, -8.1, BASE], [1, -7.63, BASE], [2, -7.86, BASE + H("cement")]]) {
+    sp(ctx, `l02-cement${i}`, prop("cement", { x, y, z: 9.22 }, 0, { physics: "static" }));
+  }
+  // The east wall is a service bench and the pan has a clear approach from the hall.
+  sp(ctx, "l02-service-desk", B("office_desk", 9.44, -5.83, 180));
+  sp(ctx, "l02-toolbox", prop("red_toolbox", { x: 9.1, y: deskY, z: -5.79 }, 180));
+  sp(ctx, "l02-bucket1", B("bucket", 10.32, -6.27, 0));
+  sp(ctx, "l02-ladder", B("ladder", 13.7, -9.56, 180));
+  sp(ctx, "l02-lumber1", B("lumber", 11.22, -9.36, 0));
   // the freight lift: a steel cage open only at the bottom, its deck stuck up at the clean floor, a freshener on it
   const { x: lx, z: lz } = LIFT;
   for (const [id, x, z, w, d, y0] of [["n", lx, lz - 1.6, 3.2, 0.1, BASE], ["s", lx, lz + 1.6, 3.2, 0.1, BASE], ["w", lx - 1.6, lz, 0.1, 3.2, -1.2]])
@@ -179,7 +204,7 @@ function layLift(ctx, down) {
   ctx.spawn("l02-lift", { feetPosition: { x: LIFT.x, y, z: LIFT.z }, primitive: box(3, 0.2, 3), material: { ...STEEL, metalness: 0.7, roughness: 0.45, texture: "cdn/texture-diamond-plate-steel-floor.png", wrap: "repeat", repeat: [1, 1] }, physics: "kinematic" });
   ctx.spawn("l02-fresh-lift", { tags: ["usable"], feetPosition: { x: LIFT.x + 0.3, y: y + 0.2, z: LIFT.z }, ...FRESH_BODY, behavior: "scripts/l02-use.js", state: { kind: "fresh", slot: "lift", name: "Reality Freshener", verb: "Take", info: "Remodeling Co. property. Cold to the touch." } });
 }
-const CANS = [[-2, 7.6], [3, -7.8], [8, 7.5], [9.5, -6.4], [9.4, -1.9]];
+const CANS = [[-5.15, 7.92], [-4.69, 7.92], [8.35, -3.58], [8.86, -3.58], [9.37, -3.58]];
 function layCans(ctx) {
   CANS.forEach(([x, z], i) => { const id = `l02-can${i}`; if (id in ctx.place.objects) ctx.destroy(id);
     const base = { tags: ["l02can", "grabbable"], physics: { body: "dynamic", collider: "cylinder", mass: 14, friction: 0.8 }, state: { name: "Paint can (14 kg)" } };
@@ -213,18 +238,21 @@ function layColumn(ctx, c) {
   if (c === 2) ctx.spawn(`l02-wellrail-col`, { tags: [tag], feetPosition: { x: x + S / 2 - 0.04, y: 0, z: (Z0 + z0) / 2 }, primitive: box(0.1, 1.2, z0 - Z0), visible: false, physics: "static" });
   if (well) ctx.spawn(`l02-wellrail-${c}`, { tags: [tag], feetPosition: { x, y: 0, z: z0 + 0.04 }, primitive: box(S, 1.2, 0.1), visible: false, physics: "static" });
   for (const [i, [z, len]] of (PART[c] ?? []).entries()) finishedWall(ctx, `l02-pw-${c}-${i}`, tag, x - S / 2, z, len, false, len >= 5);
-  for (const [i, [z, len]] of (CROSS[c] ?? []).entries()) finishedWall(ctx, `l02-cw-${c}-${i}`, tag, x, z, len, true, false);
   const F = (id, key, at, yaw) => put(ctx, id, prop(key, at, yaw, { tags: [tag], physics: "static" }));
-  if (c === 1) { F("l02-desk1", "office_desk", { x: x + 0.4, y: 0, z: 9.4 }, 0); F("l02-chair1", "wchair", { x: x + 0.4, y: 0, z: 8.5 }, 180); }
-  if (c === 2) F("l02-plant2", "plant", { x: x + 1.5, y: 0, z: 9.4 }, 120);
+  if (c === 1) {
+    F("l02-waiting-bench", "bench", { x: -10.25, y: 0, z: 9.45 }, 0);
+    F("l02-waiting-plant", "plant", { x: -8.75, y: 0, z: 9.43 }, 18);
+  }
   if (c === CASE_COLUMN) {
+    finishedWall(ctx, "l02-issue-front-w", tag, 0.75, 4.8, 1.5, true, false);
+    finishedWall(ctx, "l02-issue-front-e", tag, 3.43, 4.8, 1.14, true, false);
+    sp(ctx, "l02-issue-sign", { tags: [tag], feetPosition: { x: 3.42, y: 1.48, z: 4.71 }, rotation: { yaw: 180 },
+      vector: plate("TOOL ISSUE", "CREW ONLY", "#e3dcc9", 0.72) });
     F("l02-issue-desk", "office_desk", CASE_DESK, 180);
     sp(ctx, CASE_TOP, prop("red_toolbox", { ...CASE_DESK, y: H("office_desk") }, 180, {
       tags: [tag, "container"], state: { name: "Crew tool case", lock: "lockpick:25", items: "kit,akit,tape", scavved: true },
     }));
   }
-  if (c === 5) F("l02-bench5", "bench", { x: x + 0.6, y: 0, z: -9.6 }, 180);
-  if (c === 6) { F("l02-desk6", "office_desk", { x: x + 1.3, y: 0, z: 9.4 }, 0); F("l02-chair6", "wchair", { x: x + 1.2, y: 0, z: 8.6 }, 160); }
   if (c === 3) {
     sp(ctx, "l02-bath-sign", { tags: [tag], feetPosition: { x: x + 1.1, y: 1.65, z: Z0 + 5.09 },
       vector: plate("RESTROOM", "STAFF & VISITORS", "#e3dcc9", 0.68) });
@@ -294,8 +322,14 @@ function drop(ctx, c) {
   for (const r of ctx.query({ tags: [tag] })) if (r.id !== "l02-fresh-sink" && !r.id.includes("/") && r.id in ctx.place.objects) ctx.destroy(r.id);
   fallDeck(ctx, c);
   if (c === 3 && "l02-fresh-sink" in ctx.place.objects) animate(ctx, "l02-fresh-sink", { "feetPosition.y": BASE + 0.02 }, { duration: 0.7, easing: "easeInQuad" });
-  for (let i = 0; i < 5; i++) ctx.spawn({ tags: ["l02debris"], lifetime: 30, feetPosition: { x: x + (ctx.random() - 0.5) * 3, y: 2.4, z: Z0 + 1 + ctx.random() * (D - 2) }, rotation: { yaw: ctx.random() * 360, pitch: ctx.random() * 40 },
-    primitive: i % 2 ? box(0.6, 0.03, 1.2) : box(0.9 + ctx.random(), 0.06, 0.5), material: i % 2 ? TILE : PAINT, physics: { body: "dynamic", collider: "box", density: 300 } });
+  for (let i = 0; i < 4; i++) {
+    const side = i % 2 ? 1 : -1, z = side * (3.05 + (i > 1 ? 1.05 : 0));
+    ctx.spawn({ tags: ["l02debris"], lifetime: 30,
+      feetPosition: { x: x + (ctx.random() - 0.5) * 2.4, y: 2.4, z: z + (ctx.random() - 0.5) * 0.6 },
+      rotation: { yaw: ctx.random() * 360, pitch: ctx.random() * 40 },
+      primitive: i % 2 ? box(0.6, 0.03, 1.2) : box(0.9 + ctx.random(), 0.06, 0.5), material: i % 2 ? TILE : PAINT,
+      physics: { body: "dynamic", collider: "box", density: 300 } });
+  }
   const at = { x, y: 0.5, z: Z0 + D / 2 };
   ctx.emit("fx", { position: at, script: DUST });
   ctx.emit("playSound", { clip: CRASH, position: at, volume: 1, refDistance: 6, maxDistance: 40 });
