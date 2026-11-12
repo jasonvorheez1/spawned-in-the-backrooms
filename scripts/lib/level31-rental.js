@@ -13,7 +13,7 @@ const SK = { // heel size -> pair
 const BENCH = "/cdn/value.d7cea77050bf808057ebd11fcbcf51d41b6c5876d49ee091b623b4c4ce951057.glb";
 const DEVICE = "/cdn/value.a8ed16270cd315a528b70f02a700244e67b7223f81dde9a6789b7b34ac548b08.glb";
 const HAIR = "/cdn/value.fd23ca47268c42086b88d64676516533e9fcbeaeb13cb3d3dc12b4d4051b6151.glb"; // hair.yml styles.m_crop
-const BLUE = { texture: "cdn/texture-painted-cinder-block-wall-royal-blue.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.93 0.04 255)", roughness: 0.85 };
+const BLUE = { texture: "cdn/texture-painted-cinder-block-wall-royal-blue.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.93 0.04 255)", roughness: 0.85, emissive: "#2a55c8", emissiveIntensity: 0.32 };
 const LAM = { texture: "cdn/texture-cream-speckled-laminate-countertop.png", wrap: "repeat", repeat: [1, 1], color: "oklch(0.95 0.02 90)", roughness: 0.35 };
 const FRONT = { texture: "cdn/texture-wood-grain-laminate-panel-honey-oak.png", wrap: "repeat", repeat: [0.8, 0.8], color: "oklch(0.92 0.03 75)", roughness: 0.6 };
 const MEL = { color: "oklch(0.86 0.02 90)", roughness: 0.7 };
@@ -57,8 +57,8 @@ function counter(ctx) {
     // the flap, stood open on its hinge
     { feetPosition: { x: L / 2 + 0.06, y: 0.97, z: -0.03 }, rotation: { roll: -7 }, primitive: box(0.05, 0.98, 0.76), material: LAM },
     // US size chart, screwed to the front
-    { feetPosition: { x: -3.2, y: 0.14, z: -0.31 }, primitive: box(1.0, 0.66, 0.02), material: { color: "#f3efe2", roughness: 0.5 },
-      ui: `<div face="front" width="1m" style="height:660px;box-sizing:border-box;padding:26px 34px;background:#f3efe2;color:#1b2a55;font-family:sans-serif"><div style="font-size:58px;font-weight:900;letter-spacing:6px;border-bottom:8px solid #c7362b;padding-bottom:6px">US SIZES</div><table style="width:100%;margin-top:14px;font-size:38px;font-weight:700;border-collapse:collapse;text-align:center">${[["MEN", 5, 6, 7, 8, 9, 10, 11, 12], ["WOMEN", "6½", "7½", "8½", "9½", "10½", "11½", "", ""], ["CM", 23, 24, 25, 26, 27, 28, 29, 30]].map((row, i) => `<tr style="background:${i % 2 ? "#e3dcc6" : "transparent"}">${row.map((v, j) => `<td style="padding:14px 0;${j ? "" : "text-align:left;color:#c7362b"}">${v}</td>`).join("")}</tr>`).join("")}</table><div style="font-size:30px;margin-top:20px">Kids sizes, ask at the counter. Wheels run true.</div></div>` },
+    { feetPosition: { x: -3.2, y: 0.08, z: -0.31 }, primitive: box(1.25, 0.76, 0.02), material: { color: "#f3efe2", roughness: 0.5 },
+      ui: `<div face="front" width="1.25m" style="height:760px;box-sizing:border-box;padding:20px 30px;background:#f3efe2;color:#1b2a55;font-family:sans-serif"><div style="font-size:76px;font-weight:900;letter-spacing:6px;border-bottom:8px solid #c7362b;padding-bottom:6px">US SIZES</div><table style="width:100%;margin-top:10px;font-size:60px;font-weight:800;border-collapse:collapse;text-align:center">${[["MEN", 5, 6, 7, 8, 9, 10, 11, 12], ["WOMEN", "6½", "7½", "8½", "9½", "10½", "11½", "", ""], ["CM", 23, 24, 25, 26, 27, 28, 29, 30]].map((row, i) => `<tr style="background:${i % 2 ? "#e3dcc6" : "transparent"}">${row.map((v, j) => `<td style="padding:12px 0;${j ? "" : "text-align:left;color:#c7362b"}">${v}</td>`).join("")}</tr>`).join("")}</table><div style="font-size:40px;margin-top:14px">Kids sizes, ask at the counter. Wheels run true.</div></div>` },
     // a taped paper note, a little crooked
     { feetPosition: { x: 2.4, y: 0.38, z: -0.305 }, rotation: { roll: 3 }, primitive: box(0.3, 0.21, 0.004), material: { color: "#fbfaf2", roughness: 0.9 },
       ui: `<div face="front" width="0.3m" style="height:210px;box-sizing:border-box;padding:18px 16px;background:#fbfaf2;color:#22201c;font-family:cursive;font-size:30px;line-height:1.15;text-align:center;font-weight:700">socks on,<br>please!<div style="font-size:21px;font-weight:400;margin-top:10px">street shoes stay off the wood</div></div>`,
@@ -85,10 +85,11 @@ function floor(ctx) {
 }
 function coach(ctx) {
   const id = "l31-coach";
-  const look = npcLook(id, { species: "faceling", sex: "m", fur: "#f3cfad", hair: "none", topw: "tee", top: "#f4f1ea", topp: "stripes", botw: "pants", bot: "#1c1c22", shoes: "sneakers", shoe: "#22201e", clothesOwn: true, bodyOwn: true }, "wanderer", 10, "trader");
-  ctx.spawn(id, { tags: ["npc", "l31-rental", "docile"], feetPosition: { x: 13, y: 0, z: 25.7 }, rotation: { yaw: 0 }, physics: "character",
+  const look = npcLook(id, { species: "faceling", sex: "m", fur: "#f3cfad", hair: "none", topw: "breton", top: "#e9e4d8", botw: "pants", bot: "#1c1c22", shoes: "sneakers", shoe: "#22201e", clothesOwn: true, bodyOwn: true }, "wanderer", 10, "trader");
+  ctx.spawn("l31-rental-riser", { feetPosition: { x: 12.55, y: 0, z: 25.75 }, primitive: box(13.1, 0.32, 1.8), material: RUB, physics: "static", castShadow: false, tags: ["l31-rental"] });
+  ctx.spawn(id, { tags: ["npc", "l31-rental", "docile"], feetPosition: { x: 13, y: 0.33, z: 25.7 }, rotation: { yaw: 0 }, physics: "character",
     ...critterSpec(look), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
-    state: { name: "Coach", role: "trader", faction: "survivor", voice: "l31-coach", docile: true, essential: true, post: { x: 13, z: 25.7 }, home: { x: 13, y: 0, z: 25.7 }, ...npcState(ctx, "agent", 80) } });
+    state: { name: "Coach", role: "trader", faction: "survivor", voice: "l31-coach", docile: true, essential: true, post: { x: 13, z: 25.7 }, home: { x: 13, y: 0.33, z: 25.7 }, ...npcState(ctx, "agent", 80) } });
   // facelings come bald from the shared path; his brown crop rides the head as its own child
   ctx.spawn({ id: "coach-hair", parent: id, attachment: { skin: true }, model: { id: HAIR, materials: { hair: anime("hair", "#5a3a26"), scalp: { color: "#48301f", roughness: 0.9 }, scalp_cap: { color: "#48301f", roughness: 0.9 } } } });
   ctx.spawn({ id: "coach-tag", parent: id, attachment: { bone: "Spine2" }, feetPosition: { x: -0.08, y: 0.1, z: -0.14 }, primitive: box(0.085, 0.03, 0.004), material: { color: "#f7f5ee", roughness: 0.4 }, castShadow: false,
