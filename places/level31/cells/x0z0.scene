@@ -26,7 +26,7 @@ l31-coach:
   physics: character
   rotation: {yaw: 0}
   scale: 1.25
-  state: {attr: "4,7,7,6,8,6,8", docile: true, essential: true, faction: survivor, home: {x: 13, y: 0.46, z: 25.7}, hp: 94, maxHp: 94, name: Coach, post: {x: 13, z: 25.7}, role: trader, title: Lucky, voice: l31-coach}
+  state: {attr: "5,6,4,7,6,5,7", docile: true, essential: true, faction: survivor, home: {x: 13, y: 0.46, z: 25.7}, hp: 104, maxHp: 104, name: Coach, post: {x: 13, z: 25.7}, role: trader, title: "", voice: l31-coach}
   tags: [npc, l31-rental, docile]
 l31-coach/coach-hair:
   attachment: {skin: true}
@@ -36,12 +36,12 @@ l31-coach/coach-hair:
 l31-coach/coach-tag:
   attachment: {bone: Spine2}
   castShadow: false
-  feetPosition: {x: -0.08, y: 0.1, z: -0.14}
+  feetPosition: {x: 0.07, y: 0.02, z: 0.15}
   id: l31-coach/coach-tag
   material: {color: "#f7f5ee", roughness: 0.4}
   parent: l31-coach
   primitive: {depth: 0.004, height: 0.03, kind: box, width: 0.085}
-  ui: "<div face=\"front\" width=\"0.085m\" style=\"height:30px;display:flex;align-items:center;justify-content:center;background:#f7f5ee;color:#14213f;font-family:sans-serif;font-weight:900;font-size:20px;letter-spacing:2px;border-top:6px solid #c7362b\">COACH</div>"
+  ui: "<div face=\"back\" width=\"0.085m\" style=\"height:30px;display:flex;align-items:center;justify-content:center;background:#f7f5ee;color:#14213f;font-family:sans-serif;font-weight:900;font-size:20px;letter-spacing:2px;border-top:6px solid #c7362b\">COACH</div>"
 l31-food-bp:
   feetPosition: {x: 34, y: 0, z: 18}
   id: l31-food-bp
