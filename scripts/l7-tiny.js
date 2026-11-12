@@ -19,6 +19,8 @@ const wet = (q) => { const f = q?.feetPosition; if (!f || f.y >= 0.25) return fa
   if (Math.abs(f.x) < 3 && f.z <= -8 && f.z >= -35) return false;
   return !(Math.hypot(f.x, f.z) < 22 || Math.hypot(f.x - 46, f.z + 120) < 30 || Math.hypot(f.x + 95, f.z + 230) < 48); };
 const LINES = T.lines;
+const SHORES = [{ x: 0, z: 0, r: 22 }, { x: 46, z: -120, r: 30 }, { x: -95, z: -230, r: 48 }, { x: 0, z: -21, r: 14 }]; // the three rocks and the pier
+const nearestShore = (f) => { let best = null, bd = 1e9; for (const s of SHORES) { const d = Math.hypot(f.x - s.x, f.z - s.z) - s.r; if (d < bd) { bd = d; best = s; } } return { s: best, d: bd }; };
 const TAR = `fx
 pop tar burst=26..40 life=.6..1.2 v=sdir()*(2..4.5)+up(1..2) size=.06..0.16 acc=grav()*.9+drag(1.2) col=<.02,.02,.025> a=1>.7:1>0 sz=$size r=sprite(soft-disc,alpha)
 pop ink burst=6..9 life=1.2..2 v=sdir()*(.4..1) size=.5..0.9 acc=drag(1.5) col=<.03,.03,.04> a=0>.15:.7>.6:.5>0 sz=$size*(.6>2.2) rot=spin(.2) r=sprite(smoke-puff,alpha)`;
@@ -26,12 +28,17 @@ const WAKE = `fx
 pop bub rate=?mobile:10|22 on=sphere(.35) life=.8..1.6 v=up(.6..1.4)+sdir()*.3 size=.03..0.07 acc=buoy(1.2)+drag(1) col=<.7,.9,.95> a=0>.6:.5>0 sz=$size r=sprite(soft-disc,add)
 pop drip rate=?mobile:4|8 on=sphere(.4) life=.8..1.4 v=sdir()*.2 size=.04..0.08 acc=drag(2) col=<.02,.02,.03> a=.9>0 sz=$size r=sprite(soft-disc,alpha)`;
 
+// no line twice running: each pool is a shuffled deck; a quiet gap after every line, and a key's own cooldown so he doesn't narrate every loop
+const KEY_GAP = { notice: 45000, circle: 20000, hit: 14000, shore: 30000, noise: 15000, kill: 0 };
 function say(ctx, me, key, to) {
   const pool = LINES[key]; if (!pool?.length) return;
   const m = me.session, now = ctx.now();
   if (now < (m.quietUntil ?? 0)) return;
-  const text = pool[Math.floor(ctx.random() * pool.length)];
-  const d = 1600 + text.length * 70; m.quietUntil = now + d + 2500;
+  m.keyAt ??= {}; if (now - (m.keyAt[key] ?? -1e9) < (KEY_GAP[key] ?? 15000)) return;
+  m.deck ??= {}; let deck = m.deck[key];
+  if (!deck?.length) { deck = pool.map((_, i) => i); for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(ctx.random() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]]; } if (deck.length > 1 && pool[deck[deck.length - 1]] === m.lastText) deck.unshift(deck.pop()); m.deck[key] = deck; }
+  const text = pool[deck.pop()]; m.lastText = text; m.keyAt[key] = now;
+  const d = 1600 + text.length * 70; m.quietUntil = now + d + 7000;
   me.state.line = { t: text, at: now, d }; me.state.talkTo = to?.id ?? null;
   const clip = vo("l7-tiny", text);
   // telepathy: it sounds inside the head, not from the water, so it is not spatial and only the hunted hears it
@@ -83,10 +90,11 @@ export function update(ctx, dt) {
   }
 
   let goal, speed = T.cruise, depth = T.patrolY;
+  if (prey && wet(prey)) m.dryAt = null; else if (prey) m.dryAt ??= now;
   if (m.mode === "flee") {
     goal = s.home; speed = T.dash; depth = -14;
     if (now > m.until) m.mode = "patrol";
-  } else if (prey && !wet(prey) && m.mode !== "shore") {
+  } else if (prey && !wet(prey) && m.mode !== "shore" && now - (m.dryAt ??= now) > 1500) {
     m.mode = "shore"; m.until = now + 5000; say(ctx, me, "shore", prey);
   }
   if (m.mode === "shore") {
@@ -99,6 +107,9 @@ export function update(ctx, dt) {
     goal = { x: h.x + Math.cos(m.ang) * T.patrolR, z: h.z + Math.sin(m.ang) * T.patrolR };
   } else if (prey && m.mode === "stalk") {
     goal = prey.feetPosition; speed = T.dash; depth = -6;
+    // heading for land? he comes in on the shore side and cuts the swimmer off
+    const sh = nearestShore(prey.feetPosition);
+    if (sh.d < 35) { const q = prey.feetPosition, dx = sh.s.x - q.x, dz = sh.s.z - q.z, l = Math.hypot(dx, dz) || 1; goal = { x: q.x + (dx / l) * 3, z: q.z + (dz / l) * 3 }; }
     if (flat(prey.feetPosition, p) < T.circleR + 2) { m.mode = "circle"; m.until = now + T.circleSeconds * 1000; m.ang = Math.atan2(p.z - prey.feetPosition.z, p.x - prey.feetPosition.x); say(ctx, me, "circle", prey); }
   } else if (prey && m.mode === "circle") {
     m.ang += dt * (T.cruise / T.circleR); const q = prey.feetPosition;
@@ -115,7 +126,10 @@ export function update(ctx, dt) {
       ctx.emit("damageNumber", { position: at, value: T.damage, color: "#9ad6c8" });
       ctx.emit("screenFlash", { color: "#050506", duration: 0.9, intensity: 0.85 }, { audience: { player: prey.id } }); // tar in the eyes
       ctx.emit("cameraPunch", { direction: { x: (q.x - p.x) / d, y: 0, z: (q.z - p.z) / d }, intensity: 0.6 }, { audience: { player: prey.id } });
-      ctx.emit("impulse", { target: prey.id, impulse: { x: ((q.x - p.x) / d) * 260, y: -120, z: ((q.z - p.z) / d) * 260 } });
+      // he hooks the spear in and drags you away from the nearest land, down under the surface
+      const sh = nearestShore(q).s, ox = q.x - sh.x, oz = q.z - sh.z, ol = Math.hypot(ox, oz) || 1;
+      ctx.emit("impulse", { target: prey.id, impulse: { x: (ox / ol) * 420, y: -220, z: (oz / ol) * 420 } });
+      prey.state.tarUntil = now + T.tarSeconds * 1000; // tar in the eyes: the HUD blacks the edges while it lasts
       if (ctx.random() < 0.5) say(ctx, me, "hit", prey);
       m.mode = "circle"; m.until = now + T.recoverSeconds * 1000; m.ang = Math.atan2(p.z - q.z, p.x - q.x);
     } else if (now > m.until) { m.mode = "circle"; m.until = now + 1500; }

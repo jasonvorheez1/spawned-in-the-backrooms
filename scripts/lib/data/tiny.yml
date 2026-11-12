@@ -4,15 +4,16 @@ patrolR: 22
 patrolY: -7
 hear: 260                    # metres he hears a swimmer from (the wiki says 30 km: this is the whole bay)
 cruise: 5
-dash: 9                      # m/s; a player swims about 3.5, so you cannot outswim him, only out-climb him
-lunge: 15
+dash: 11                      # m/s; a player swims about 3.5, so you cannot outswim him, only out-climb him
+lunge: 18
 circleR: 7
-circleSeconds: 4.5
-recoverSeconds: 6
-reach: 2.2
+circleSeconds: 2.2
+recoverSeconds: 3
+reach: 2.6
 damage: 30                   # of 200 hp: about seven lunges, near a minute once he is on you
 noiseReach: 15
 fleeSeconds: 18
+tarSeconds: 3
 sounds:
   stab: /cdn/moodboard-realistic-gritty/sfx-bone-spear-tip-punching-through-wet-rubber-diving-suit-underwater-thud.mp3
 lines:
