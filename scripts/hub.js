@@ -101,8 +101,12 @@ const CALLS = ["All aboard! Arms in!", "Marigold's leaving, rider!", "Doors clos
 function ricoCall(ctx, on) {
   const r = ctx.getObject(RICO.id); if (!r) return
   const p = on ? RICO.door : RICO.post
-  r.feetPosition = { x: p.x, y: p.y, z: p.z }; r.rotation = { yaw: p.yaw }
-  r.anim.wave = on ? { clip: "cdn/clip-wave.glb", weight: 1, mask: { from: "Spine" } } : null
+  if (on) { // Rico walks from his post to the doors while you cross the platform (Shelly: cutscenes with Rico), then waves you in
+    r.feetPosition = { x: RICO.post.x, y: RICO.post.y, z: RICO.post.z }; r.rotation = { yaw: 0 }
+    r.anim.walk = { clip: "cdn/clip-walk-loop.glb", weight: 2, loop: true }
+    animate(ctx, r, { "feetPosition.x": p.x, "feetPosition.z": p.z }, { duration: RIDE.walk, easing: "linear" })
+    r.anim.wave = null
+  } else { r.feetPosition = { x: p.x, y: p.y, z: p.z }; r.rotation = { yaw: p.yaw }; r.anim.walk = null; r.anim.wave = null }
   if (!on || !CALLS.length) return
   const last = ctx.session.ricoCall, choices = CALLS.filter((clip) => clip !== last)
   const clip = choices[Math.floor(ctx.random() * choices.length)] ?? CALLS[0]
@@ -123,7 +127,7 @@ function board(ctx, s, to, keep) {
 function rideStep(ctx, s, ses) {
   const r = ses.ride, t = (ctx.now() - r.t0) / 1000, me = ctx.self
   if (t < RIDE.walk) { const k = t / RIDE.walk; me.velocity = { x: (TRAIN.door.x - TRAIN.start.x) / RIDE.walk, y: 0, z: 0 }; me.anim.walk = { clip: "cdn/clip-walk-loop.glb", weight: 1, loop: true }; void k; return }
-  if (r.phase < 1) { r.phase = 1; me.velocity = { x: 0, y: 0, z: 0 }; me.anim.walk = null; ctx.view.camera = { eye: { x: -18.2, y: 7.1, z: -9.8 }, aim: { x: -19.9, y: 6.9, z: -12.4 }, fov: 45 } } // Rico's close-up as he calls it
+  if (r.phase < 1) { r.phase = 1; me.velocity = { x: 0, y: 0, z: 0 }; me.anim.walk = null; { const rc = ctx.getObject(RICO.id); if (rc) { rc.anim.walk = null; rc.rotation = { yaw: RICO.door.yaw }; rc.anim.wave = { clip: "cdn/clip-wave.glb", weight: 1, mask: { from: "Spine" } } } } ctx.view.camera = { eye: { x: -18.2, y: 7.1, z: -9.8 }, aim: { x: -19.9, y: 6.9, z: -12.4 }, fov: 45 } } // Rico's close-up as he calls it
   if (t >= RIDE.board && r.phase < 2) { r.phase = 2; me.visible = false; s.trainHid = true
     ctx.emit("playSound", { clip: CHIME, position: { x: TRAIN.door.x, y: TRAIN.y + 1.5, z: TRAIN.door.z }, volume: 0.7 })
     ctx.view.camera = { eye: { x: -13, y: 7.8, z: -2 }, aim: { x: -22, y: 6.5, z: -16 }, fov: 55 } }
