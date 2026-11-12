@@ -25,6 +25,86 @@ l11-ladder-scaf:
   id: l11-ladder-scaf
   state: {ladder: {h: 4.78, mat: metal, yaw: 0}}
   tags: [ladder]
+l11-lot-held:
+  feetPosition: {x: 14.6, y: 0.14, z: 20}
+  id: l11-lot-held
+  model: {forward: "+x", id: /cdn/value.7b64aefa6629593ca0750e9cce606b15e70e31bfb9db56fd96b82432876ba685.glb, materials: {paint: {color: oklch(0.7 0.02 240), metalness: 0.3, roughness: 0.4}}}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 90}
+  scale: 1.15
+  state: {info: "ON HOLD · the buyer went to get cash in 1996", name: "'98 Sedan", verb: Look}
+  tags: [usable]
+l11-lot-pennants:
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l11-lot-pennants
+  spline: {kind: stringlight, points: [[10, 4.2, 16.2], [14, 3.4, 20], [18.6, 3.8, 16]], spacing: 0.6}
+l11-lot-pennants2:
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l11-lot-pennants2
+  spline: {kind: stringlight, points: [[10, 4.2, 16.2], [12, 3.6, 24], [10.2, 3.4, 32.5]], spacing: 0.6}
+l11-lot-pole:
+  feetPosition: {x: 10, y: 0.05, z: 16.2}
+  id: l11-lot-pole
+  material: {color: oklch(0.25 0.01 250), metalness: 0.7, roughness: 0.5}
+  physics: static
+  primitive: {height: 6.4, kind: cylinder, radiusBottom: 0.15, radiusTop: 0.12}
+l11-lot-sedan:
+  behavior: scripts/level11-porsche.js
+  children: [{feetPosition: {x: 0, y: 0.32, z: 0}, id: hull, physics: static, primitive: {depth: 5, height: 0.9, kind: box, width: 2}, visible: false}]
+  feetPosition: {x: 14.6, y: 0.35, z: 24}
+  id: l11-lot-sedan
+  layout: {box: {max: {x: 1.06, y: 1.67, z: 2.68}, min: {x: -1.06, y: 0, z: -2.68}}}
+  model: {forward: "+x", id: /cdn/value.7b64aefa6629593ca0750e9cce606b15e70e31bfb9db56fd96b82432876ba685.glb, materials: {paint: {color: oklch(0.42 0.09 25), metalness: 0.25, roughness: 0.35}}}
+  physics: {angularDamping: 0.4, body: dynamic, centerOfMass: [0, 0.45, 0], collider: none, mass: 300}
+  rotation: {yaw: 90}
+  state: {blurb: "turned up idling on 9th, nobody in it", info: "$2,500 Backdollars · as-is · turned up idling on 9th, nobody in it", kind: car, name: "'04 Sedan, found running", price: 250000, verb: "Buy · $2,500"}
+  tags: [usable, vehicle]
+  visibleRange: {max: 160}
+l11-lot-sign:
+  children: [{feetPosition: {x: 0, y: 2.1, z: -0.8}, light: {aim: {x: 10, y: 4.6, z: 16.2}, angle: 50, color: oklch(0.92 0.1 85), distance: 9, intensity: 6, kind: spot}}]
+  feetPosition: {x: 10, y: 4.6, z: 16.2}
+  id: l11-lot-sign
+  material: {color: oklch(0.95 0.02 90), roughness: 0.6}
+  primitive: {depth: 0.22, height: 1.9, kind: box, width: 4.2}
+  rotation: {yaw: 90}
+  ui: "<div face=\"front\" class=\"w-full h-full flex flex-col items-center justify-center\" style=\"background:#f2ead2;border:60px solid #b8201c;font-family:display;color:#1b1b1b\"><div style=\"font-size:420px;line-height:1;color:#b8201c;letter-spacing:.02em\">IDLE HANDS</div><div style=\"font-size:250px;line-height:1\">USED AUTO</div><div style=\"font-size:120px;margin-top:40px\">EVERY CAR FOUND RUNNING · KEYS IN · NOBODY IN IT</div></div>"
+l11-lot-sign-b:
+  feetPosition: {x: 10, y: 3.7, z: 16.2}
+  id: l11-lot-sign-b
+  material: {color: "#1b1b1b"}
+  primitive: {depth: 0.1, height: 0.55, kind: box, width: 3.2}
+  rotation: {yaw: 90}
+  ui: "<div face=\"front\" class=\"w-full h-full flex items-center justify-center\" style=\"background:#1b1b1b;color:#ffd24a;font-family:display;font-size:230px\">AS-IS · NO REFUNDS PAST THE THRESHOLD</div>"
+l11-lot-sold:
+  feetPosition: {x: 14.6, y: 0.14, z: 28}
+  id: l11-lot-sold
+  model: {forward: "+x", id: /cdn/value.7b64aefa6629593ca0750e9cce606b15e70e31bfb9db56fd96b82432876ba685.glb, materials: {paint: {color: oklch(0.55 0.08 150), metalness: 0.2, roughness: 0.4}}}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 90}
+  scale: 1.15
+  state: {info: "SOLD · came back the next day without its driver", name: "'01 Sedan", verb: Look}
+  tags: [usable]
+l11-lot-tag-held:
+  feetPosition: {x: 12.6, y: 1.25, z: 20}
+  id: l11-lot-tag-held
+  material: {color: "#f4efe0", roughness: 0.9}
+  primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.62}
+  rotation: {pitch: -30, yaw: 90}
+  ui: "<div face=\"front\" class=\"w-full h-full flex flex-col items-center justify-center\" style=\"background:#f4efe0;font-family:display;color:#1d4fa0\"><div style=\"font-size:150px;line-height:1;font-weight:900\">HOLD</div><div style=\"font-size:44px;color:#222\">DON'T ASK</div></div>"
+l11-lot-tag-sedan:
+  feetPosition: {x: 12.6, y: 1.25, z: 24}
+  id: l11-lot-tag-sedan
+  material: {color: "#f4efe0", roughness: 0.9}
+  primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.62}
+  rotation: {pitch: -30, yaw: 90}
+  ui: "<div face=\"front\" class=\"w-full h-full flex flex-col items-center justify-center\" style=\"background:#f4efe0;font-family:display;color:#c41e1e\"><div style=\"font-size:150px;line-height:1;font-weight:900\">$2,500</div><div style=\"font-size:44px;color:#222\">AS-IS · KEYS IN</div></div>"
+l11-lot-tag-sold:
+  feetPosition: {x: 12.6, y: 1.25, z: 28}
+  id: l11-lot-tag-sold
+  material: {color: "#f4efe0", roughness: 0.9}
+  primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.62}
+  rotation: {pitch: -30, yaw: 90}
+  ui: "<div face=\"front\" class=\"w-full h-full flex flex-col items-center justify-center\" style=\"background:#f4efe0;font-family:display;color:#2f7a3a\"><div style=\"font-size:150px;line-height:1;font-weight:900\">SOLD</div><div style=\"font-size:44px;color:#222\">NO REFUNDS</div></div>"
 l11-mall-sign-derma:
   feetPosition: {x: -15.67, y: 3.57, z: 29.5}
   id: l11-mall-sign-derma
