@@ -14,6 +14,10 @@ import { vo } from "./lib/voices.js";
 import T from "./lib/data/tiny.yml";
 
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
+// in the sea: the same test the level's freezing-brine hazard uses (below the waterline, off the pier and the three rocks)
+const wet = (q) => { const f = q?.feetPosition; if (!f || f.y >= 0.25) return false;
+  if (Math.abs(f.x) < 3 && f.z <= -8 && f.z >= -35) return false;
+  return !(Math.hypot(f.x, f.z) < 22 || Math.hypot(f.x - 46, f.z + 120) < 30 || Math.hypot(f.x + 95, f.z + 230) < 48); };
 const LINES = T.lines;
 const TAR = `fx
 pop tar burst=26..40 life=.6..1.2 v=sdir()*(2..4.5)+up(1..2) size=.06..0.16 acc=grav()*.9+drag(1.2) col=<.02,.02,.025> a=1>.7:1>0 sz=$size r=sprite(soft-disc,alpha)
@@ -53,7 +57,7 @@ export const ears = {
 export function update(ctx, dt) {
   const me = ctx.self, m = me.session, s = me.state, now = ctx.now(), p = me.feetPosition;
   m.mode ??= "patrol"; m.ang ??= 0; m.v ??= { x: 0, y: 0, z: 0 };
-  const swimmers = ctx.place.players.filter((q) => q.state?.swimming && !q.state?.dead && (q.state?.hp ?? 1) > 0);
+  const swimmers = ctx.place.players.filter((q) => wet(q) && !q.state?.dead && (q.state?.hp ?? 1) > 0);
   let prey = m.prey ? ctx.place.players.find((q) => q.id === m.prey) : null;
   if (prey && (prey.state?.dead || (prey.state?.hp ?? 1) <= 0)) { say(ctx, me, "kill", prey); m.prey = null; prey = null; m.mode = "patrol"; }
   if (!prey && m.mode !== "flee") {
@@ -73,14 +77,14 @@ export function update(ctx, dt) {
   if (m.mode === "flee") {
     goal = s.home; speed = T.dash; depth = -14;
     if (now > m.until) m.mode = "patrol";
-  } else if (prey && !prey.state?.swimming && m.mode !== "shore") {
+  } else if (prey && !wet(prey) && m.mode !== "shore") {
     m.mode = "shore"; m.until = now + 5000; say(ctx, me, "shore", prey);
   }
   if (m.mode === "shore") {
     // he cannot walk on land: he comes to the shallows below where you climbed out, head just out of the water, and watches
     const q = prey?.feetPosition ?? s.home, dx = q.x - p.x, dz = q.z - p.z, d = Math.hypot(dx, dz) || 1;
     goal = { x: q.x - (dx / d) * 6, z: q.z - (dz / d) * 6 }; depth = -1.6; speed = T.cruise;
-    if (now > m.until || (prey && prey.state?.swimming)) { m.mode = prey?.state?.swimming ? "stalk" : "patrol"; if (m.mode === "patrol") m.prey = null; }
+    if (now > m.until || (prey && wet(prey))) { m.mode = prey?.state?.swimming ? "stalk" : "patrol"; if (m.mode === "patrol") m.prey = null; }
   } else if (m.mode === "patrol") {
     m.ang += dt * 0.18; const h = s.home;
     goal = { x: h.x + Math.cos(m.ang) * T.patrolR, z: h.z + Math.sin(m.ang) * T.patrolR };
