@@ -982,11 +982,12 @@ const CAT_FACE = { neutral: 'neutral', smile: 'smile', happy: 'smile', catmouth:
 const CAT_KIDS = ['topw', 'botw', 'shoes', 'hat', 'mask', 'hair', ...Object.keys(CW.fluff || {}).map((k) => 'fluff-' + k), 'fluff-ruff', 'fluff-mane', 'ears'].map((k) => 'cw-' + k)
 const colourOk = (c) => typeof c === 'string' && (EYE_COLORS[c] || /^#[0-9a-f]{3}([0-9a-f]{3})?$/i.test(c))
 const hashPick = (str, arr) => arr[[...String(str)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % arr.length]
-export const isNewCat = (l) => !HUMAN && MESH && speciesOf(l) === 'cat'
+// one species now (Shelly Nov 12 'theres no multiple species anymore'): every furry look wears the new body, old dog/fox/bunny/wolf/mouse looks included; only humans and facelings keep their own
+export const isNewCat = (l) => !HUMAN && MESH && !['human', 'faceling'].includes(l?.species)
 export function catLook(l) {
   const sex = l?.sex === 'f' ? 'f' : 'm', o = {}
   for (const k of ['fur', 'topw', 'botw', 'shoes', 'hat', 'neck', 'top', 'bottom', 'shoec', 'hatc', 'neckc', 'topp', 'hairc', 'fluffc', 'inner']) if (l?.[k] != null && l[k] !== '') o[k] = l[k]
-  o.fur = o.fur || '#f2a65a'   // orange cat by default (Shelly: cat back orange, not cream)
+  o.fur = o.fur || M.species[l?.species]?.fur || '#f2a65a'   // an old species look keeps its fur colour on the new body   // orange cat by default (Shelly: cat back orange, not cream)
   o.expression = CAT_FACE[l?.expression ?? l?.expr] ?? 'neutral'
   if (typeof l?.shadow === 'string' && l.shadow && l.shadow !== 'none') o.shadow = l.shadow   // eyeshadow
   for (const k of ['etype', 'mtype']) if (typeof l?.[k] === 'string' && l[k] && l[k] !== 'classic') o[k] = l[k]   // eye and mouth type picks (critter-faces.yml eyes/mouths)
