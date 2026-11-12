@@ -5,12 +5,12 @@ import B from "../../scripts/lib/data/bonus.yml"
 import { critterSpec, seatHumanHair, STYLE_V, wardChildren, seatWardrobe, setStyle, HUMAN } from "../../scripts/lib/critter-model.js"
 import { npcLook } from "../../scripts/lib/clothes.js"
 import { layBonusExtra } from "../../scripts/lib/bonus-extra.js"
-export const cadence = "2s"
+export const cadence = "500ms" // was 2s: the diner music swap answers within half a second of the door
 const STAFF = {
   "bonus-tom":    { name: "Tom", info: "Tom's Diner", look: { species: "bear", sex: "m", topw: "tee", top: "#f4f1ea", botw: "pants", bottom: "#2b2b33", shoes: "sneakers", hat: "cap", hatc: "#e85d75" } },
   "bonus-andrew": { name: "Andrew", info: "Andrew's Furniture", look: { species: "dog", sex: "m", topw: "longsleeve", top: "#3d5a98", botw: "pants", bottom: "#4a3b2c", shoes: "sneakers", eyew: "glasses" } },
   "bonus-dawn":   { name: "Dawn", info: "Liminal Clothes", look: { species: "cat", sex: "f", topw: "hoodie", top: "#b967ff", botw: "skirt", bottom: "#2b2b33", shoes: "sneakers" } },
-  "bonus-rico":   { name: "Rico", info: "Teleport Station attendant", look: { species: "fox", sex: "m", topw: "tee", top: "#01cdfe", botw: "pants", bottom: "#1d2540", shoes: "sneakers", hat: "beanie", hatc: "#1d2540" } },
+  "bonus-rico":   { name: "Rico", info: "Teleport Station attendant", look: { species: "fox", sex: "m", topw: "tee", top: "#01cdfe", botw: "pants", bottom: "#1d2540", shoes: "sneakers", hat: "beanie", hatc: "#1d2540", hair: "none" } }, // Nov 12: no hair under the beanie, it bulged out around his head (Shelly)
 }
 const SHOPPERS = {
   "bonus-shop-1": { look: { species: "rabbit", sex: "f", topw: "tee", top: "#ff71ce", botw: "shorts", bottom: "#a9d6e5", shoes: "sneakers" } },
@@ -43,8 +43,22 @@ function people(ctx) {
       ...critterSpec(npcLook(id, p.look, "civilian", 5)), anim: { idle: { clip: "cdn/clip-idle-loop.glb", loop: true, weight: 1 } }, state: {} })
   }
 }
+// Shelly Nov 12: Tom's theme plays from his jukebox, and the mall music stops for whoever walks into the diner (floor x -24..-10, z -24..-6, ground level)
+let musicKey = null
+function dinerMusic(ctx) {
+  const inside = (p) => { const f = p.feetPosition; return f && f.x > -24 && f.x < -10 && f.z > -24 && f.z < -6 && f.y < 3 }
+  const inn = [], out = []
+  for (const p of ctx.place.players) (inside(p) ? inn : out).push(p.id)
+  const key = inn.join(',') + '|' + out.join(',')
+  if (key === musicKey) return
+  musicKey = key
+  const m = ctx.place.objects['bonus-music'], j = ctx.place.objects['bd-jukebox']
+  if (m?.audio) m.audio = { ...m.audio, listeners: out }
+  if (j?.audio) j.audio = { ...j.audio, listeners: inn }
+}
 export function tick(ctx) {
   const s = ctx.place.state
+  dinerMusic(ctx)
   if (s.peopleV !== 3) { for (const id of [...Object.keys(SHOPPERS), ...Object.keys(LOUNGERS)]) if (ctx.place.objects[id]) ctx.destroy(id); s.peopleV = 3 } // Nov 12, Shelly: no npcs in the mall but the special ones (staff + Gina); people() no longer runs
   if (s.shineV !== 1) { layBonusExtra(ctx); s.shineV = 1 }
   setStyle(ctx.world.state.bodyStyle) // Nov 11: furry is the default; the human re-dress pass below only in human mode
@@ -53,6 +67,7 @@ export function tick(ctx) {
     const rows = [...Object.entries(SHOPPERS).map(([id, p]) => [id, p.look, "civilian"]), ...Object.entries(LOUNGERS).map(([id, p]) => [id, p.look, "civilian"]), ...Object.entries(STAFF).map(([id, p]) => [id, p.look, "trader"])]
     for (const [id, look, role] of rows) { const o = ctx.place.objects[id]; if (!o) continue; const l = o.state?.wear ?? npcLook(id, look, role, 5); if (o.state && !o.state.wear) o.state.wear = l; seatHumanHair(ctx, o, l); if (l.sex && wardChildren(l).some((c) => { const g = ctx.place.objects[id + '/' + c.id]; return !g || (g.model?.id ?? g.model) !== c.model.id })) seatWardrobe(ctx, o, l) } // Nov 11: a remade garment file reaches the mall's people too (Andrew kept a pants file no list named)
   }
+  if (s.ricoHairV !== 1 && ctx.place.objects["bonus-rico"]) { const r = ctx.place.objects["bonus-rico"]; r.state.look = { ...(r.state.look || {}), hair: "none" }; if (r.state.wear) { const w = { ...r.state.wear }; delete w.hair; r.state.wear = w } if (ctx.place.objects["bonus-rico/cw-hair"]) ctx.destroy("bonus-rico/cw-hair"); s.ricoHairV = 1 }
   if (s.ricoBack !== 1) { s.ricoBack = 1; s.staffV = 0 } // Nov 12: Rico is back (Shelly)
   if (s.ricoV !== 1 && ctx.place.objects["bonus-rico"]) { const r = ctx.place.objects["bonus-rico"]; r.behavior = ["scripts/rico.js"]; s.ricoV = 1 } // Nov 12: Rico works the platform (scripts/rico.js)
   if (s.staffV === 1) return

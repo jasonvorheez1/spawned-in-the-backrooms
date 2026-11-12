@@ -142,7 +142,7 @@ export function handleDialogueQuest1(ctx, p, it, text) {
   // ---------------- Short Rations
   if (k === "rStart" && id === "meg-callum" && !r) {
     setStep1(ctx, p, "rations", 1, "Quest started: Short Rations");
-    return { reply: "Forty-one cans Monday. Thirty-four now. Nobody here eats seven cans in two days, and the crates don't have legs. Find out who it is. Quietly.", mood: "annoyed" };
+    return { reply: "I logged forty-one cans on Monday. There are thirty-four on the shelf. Ask around and see where the seven went. Keep my name out of it.", mood: "annoyed" };
   }
   if (k === "rTrack" && id === "meg-callum" && r === 1) {
     s.rTracked = true;
@@ -151,7 +151,7 @@ export function handleDialogueQuest1(ctx, p, it, text) {
   }
   if (k === "rOrtiz" && id === "meg-ortiz" && r === 1) {
     setStep1(ctx, p, "rations", 2, "Ortiz: Ale cut her hand on a tin lid. Fresh cut.");
-    return { reply: "Ale came in yesterday with a cut across her palm. Tin lid, clean edge. She told me it was a door. Doors don't do that.", mood: "calm" };
+    return { reply: "I dressed a cut on Ale's palm yesterday. She said she caught it on a door. Looked like she'd pulled the lid off a tin.", mood: "calm" };
   }
   if (id === "meg-ale" && r === 2 && k === "rAid") {
     if ((s.almonds ?? 0) < 2) return { reply: "You said two bottles. Come back when you have them.", mood: "annoyed" };

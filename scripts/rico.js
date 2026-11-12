@@ -14,7 +14,7 @@ const Y = 5.5, SPEED = 1.15 // m/s, an unhurried walk (my pick)
 const ROUND = [
   { at: { x: -11.5, z: -9.2 }, face: { x: -10.6, z: -9.2 }, act: "use", dwell: 5 },         // buys a soda
   { at: { x: -11.7, z: -13 }, face: { x: -9.7, z: -13 }, act: "hold", dwell: 10 },           // checks the station board
-  { at: { x: -12.4, z: -18.5 }, face: { x: -13.2, z: -18.5 }, act: "work", dwell: 9 },       // sorts the luggage trolley
+  { at: { x: -14.3, z: -11.4 }, face: { x: -15.3, z: -11.4 }, act: "work", dwell: 9 },       // sorts the luggage trolley (moved off the gate, Nov 12)
   { at: { x: -14.8, z: -21.5 }, face: { x: -15.5, z: -21.5 }, act: "pickup", dwell: 3.5 },   // empties the bin
   { at: { x: -16.4, z: -21.2 } },                                                            // around the bench end
   { at: { x: -16.3, z: -19 }, seat: { x: -15.75, z: -19 }, face: { x: -20, z: -19 }, dwell: 14 }, // break on the bench

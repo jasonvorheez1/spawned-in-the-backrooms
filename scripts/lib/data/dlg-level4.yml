@@ -99,7 +99,7 @@ omega-okafor:
   gest: { wave: "Ha. Hello.", gift: "For me? Thank you, my friend.", dance: "Ha! Watch this.", nodance: "On duty.", insult: "Say that at the checkpoint." }
 
 omega-rhea:
-  hi: "Hi, hi, sorry, one sec. Okay. Hi. Are you drinking from the fountains? Don't. Not without these. Tablet per bottle."
+  hi: "Have you filled that bottle yet? Take a tablet first. One per bottle, even if the fountain runs clear."
   back: ["Back! Using the tablets?", "Hi! Quick, let me see you."]
   warm: "Oh, you! Okay, sit, I've got five minutes. Four."
   cold: "Sit. Quick."
@@ -126,7 +126,7 @@ omega-rhea:
   gest: { wave: "Hi! Bye!", gift: "Ooh. Thank you!", dance: "Thirty seconds!", nodance: "No time!", insult: "Okay. Noted. Next!" }
 
 l4-moss:
-  hi: "Oh. Hello. You're new. You have a new face. Sit if you want. The phone might ring."
+  hi: "Pull up a chair. Leave the one by the phone free. I like to be close when it rings."
   back: ["You came back. I hoped you would.", "Hello again. It rang twice since you left."]
   warm: "Oh, good, you. Sit. I've got a new one."
   cold: "Oh. Hello."
@@ -277,7 +277,7 @@ tbd-quill:
   gest: { wave: "Mm.", gift: "Useful? Ugh. Fine. Thanks.", dance: "No purpose. I love it.", nodance: "No.", insult: "Useless insult. I'll keep it." }
 
 tbd-nib:
-  hi: "Hee. Hi. Shiny? You got shiny? I got shiny. Don't look in the bag."
+  hi: "If you brought something to trade, let me see it. The bag stays shut till we agree."
   back: ["Hee. You're back. Shiny?", "Hi hi."]
   warm: "Ooh, my friend! Wanna see the bag? No. You can't. Hee."
   cold: "Go away. Hee."

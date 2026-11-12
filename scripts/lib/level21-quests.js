@@ -160,7 +160,7 @@ export function handleDialogueQuest21(ctx, p, npc, text) {
           text: "Quest Completed: The Saltine Quota · Soldered the condenser bypass directly (+130 XP, +$55.00)",
         });
         return {
-          reply: "Look at that bead. Clean. You bypassed the weep valve and didn't lose a drop. Fifty-five, two sleeves of saltines, coil water, my spare toolkit. And thanks. Really.",
+          reply: "Let it run a minute. There, dry all the way around the bypass. Here's fifty-five, two sleeves, cold coil water and my spare toolkit.",
           mood: "happy",
         };
       }
@@ -191,7 +191,7 @@ export function handleDialogueQuest21(ctx, p, npc, text) {
           text: "Quest Completed: The Saltine Quota · +110 XP, +$50.00, 2 Saltine Cartons, 2 Cold Coil Waters",
         });
         return {
-          reply: "That's good copper. Twenty minutes with the iron and we're dry. Fifty, two sleeves, cold water. You've got credit here now. In saltines.",
+          reply: "Good copper. Give me twenty minutes with the iron and I can get the freezer back on. Here's fifty, two sleeves and cold water.",
           mood: "happy",
         };
       } else if (s.saltineQ >= 1 && s.saltineQ < 99 && totalWire < 3) {
@@ -233,7 +233,7 @@ export function handleDialogueQuest21(ctx, p, npc, text) {
         };
       } else if (s.edgesQ >= 1 && s.edgesQ < 99 && !s.l21Scouted) {
         return {
-          reply: "You haven't reached the dark past the blast site yet. Further down the Edges. Then come back. In one piece.",
+          reply: "The blast site is only halfway. Keep going until the lights cut out. That's the stretch I need checked.",
           mood: "calm",
         };
       }

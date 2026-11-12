@@ -2,8 +2,8 @@
 # list; a person always draws the same one (picked by their id), so two strangers rarely sound alike. Written by hand, Nov 11.
 
 "survivor:default":
-  hi: ["Stop there. Let me see your face. Okay. You're real.", "Don't come closer till I've had a look at you.", "Oh. A person. Sorry, I was about to throw this at you.", "You lost too? Course you are."]
-  back: ["You again. You're lucky.", "Still walking. Good for you.", "Oh, it's you. Hi."]
+  hi: ["Hold up. Stand under the light a second.", "Don't come closer till I've had a look at you.", "Sorry. Thought you were the thing from the next room.", "Which hall did you come through?"]
+  back: ["You found your way back.", "Anything following you?", "Oh, it's you. Hi."]
   warm: ["Hey. Sit. I've got half a can of something.", "Good to see a face I know."]
   cold: ["Keep your distance.", "I remember you."]
   follow: ["Behind you.", "I'm here. Go."]
@@ -14,24 +14,24 @@
       a: ["Lost count after the second notebook.", "Long enough to stop hoping for doors.", "A year? Three? The days don't add up right here."]
     - q: "Where should I go from here?"
       sk: survival 30
-      a: ["Wherever the air moves. Stale air is a dead end. Moving air is a way through.", "Follow the cleanest walls. Somebody's been keeping them clean, and somebody means people."]
+      a: ["Hold a scrap of paper up at the junction. Take the hall where it moves. The dead ends don't draw air.", "Look for a wall somebody's wiped down. The clean ones usually lead to a camp."]
       fail: ["Away from me, for a start.", "Don't know. If I knew, I wouldn't be here."]
     - q: "Have you seen anyone else?"
-      a: ["A woman in a yellow coat, two days back. She was walking fast. I didn't ask from what.", "Footprints. Not people. Not always."]
+      a: ["A woman in a yellow coat, two days back. She was walking fast. I didn't ask from what.", "Tracks in the dust. I followed them until they went up the wall."]
     - q: "Want to come with me?"
       sk: speech 40
       do: recruit
-      a: ["Alright. Two's better than one. Don't make me regret it.", "Sure. Why not. Nothing to lose but my legs."]
+      a: ["Give me a second to get my pack. You take point.", "Where are we headed? I'll walk with you."]
       fail: ["No. I've buried enough company.", "I go alone. Nothing personal."]
   barks:
-    idle: ["Quiet. Too quiet.", "Feet hurt.", "Was that a door?", "Don't think about it.", "One more room."]
+    idle: ["The lights have gone quiet.", "Feet hurt.", "Was that a door?", "Don't think about it.", "One more room."]
     hi: ["Hey.", "You.", "Oh. Hi."]
     drawn: ["Easy. Easy.", "Put that down."]
     hurt: ["You're bleeding.", "You look bad."]
     sneak: ["I hear you."]
     close: ["Back off a bit."]
     spot: ["Something's coming!", "There! Over there!"]
-    hostile: ["Big mistake.", "Alright, you want this?"]
+    hostile: ["Get back!", "Alright, you want this?"]
     hit: ["Agh!", "It got me!"]
     kill: ["Got it.", "Stay down."]
     clear: ["Is it gone?"]
@@ -48,8 +48,8 @@
       a: ["Something big two halls over. It stops when you stop. So I stopped for an hour.", "Hounds. Three. They circle. Don't let them circle you."]
     - q: "Any safe spots near here?"
       sk: survival 30
-      a: ["The room with the dead lamp. Nothing goes in there. I don't know why, I don't ask.", "Corners where the paint's fresh. Fresh paint means somebody's alive to paint."]
-      fail: ["Nowhere's safe. Some places are slower."]
+      a: ["The room with the dead lamp. Nothing goes in there. I don't know why, I don't ask.", "Look for fresh paint on the corners. The people keeping watch mark their routes that way."]
+      fail: ["I haven't found anywhere I'd sleep through both watches."]
   barks:
     idle: ["Shh.", "Listening.", "Something moved."]
     hi: ["Shh.", "Low."]
@@ -66,9 +66,9 @@
   ask:
     - q: "Can you patch me up?"
       do: heal
-      a: ["Hold still. Sting. There. Done. You'll live, which is the best I can promise.", "Mm. Seen worse. Here. Press. Good."]
+      a: ["Hold still while I rinse it. There. Change the dressing when it soaks through.", "Put your thumb here and keep the pressure on while I tie it."]
     - q: "How do you keep supplies?"
-      a: ["Boil everything. Reuse everything. Pray a bit."]
+      a: ["I boil the instruments and wash the wraps. When the wraps wear through, I cut up a clean shirt."]
   barks:
     idle: ["Bandages, bandages.", "Boil it."]
     hurt: ["Sit, you're bleeding."]
@@ -78,16 +78,16 @@
   gest: { wave: "Hi. Sit.", gift: "That'll help someone.", dance: "Gently.", nodance: "Busy.", insult: "Still patching you." }
 
 "survivor:trader":
-  hi: ["Buying? Selling? Both? Both's best.", "Everything's for sale except my boots.", "Got water? Got cash? Then we've got business."]
+  hi: ["Set what you're trading on the cloth. If you're buying, I've got batteries.", "Everything's for sale except my boots.", "I'll take cash or sealed water."]
   back: ["Back! Pockets full?", "My customer!"]
-  bye: ["Come back richer.", "Tell your friends. Not the dead ones."]
+  bye: ["Come back richer.", "Tell anyone who needs batteries where to find me."]
   ask:
     - q: "What've you got?"
       a: ["A bit of everything. Most of it works.", "Tape, batteries, a lighter with three flicks left. Fair prices."]
     - q: "Cut me a deal?"
       sk: barter 35
       do: discount
-      a: ["Alright, alright. A bit off. Don't spread it around.", "Fine. You drive a hard bargain."]
+      a: ["Alright, alright. A bit off. Don't spread it around.", "Fine. I'll take a little off this time."]
       fail: ["Nope.", "Price is the price."]
   barks:
     idle: ["Selling!", "Fair prices.", "Batteries!"]
@@ -99,18 +99,18 @@
   gest: { wave: "Hey!", gift: "A gift? I'll never understand you people. Thanks.", dance: "Ha! Okay!", nodance: "Shop's open.", insult: "Prices just doubled." }
 
 "meg:default":
-  hi: ["M.E.G. Stay calm, keep your hands where I can see them, and you'll be fine.", "You're in M.E.G. territory. Weapons low.", "Name? Doesn't matter. Welcome. Keep it quiet."]
+  hi: ["M.E.G. checkpoint. Let me see your hands before you come in.", "You're in M.E.G. territory. Weapons low.", "Come inside. Quietly, please. The watch is listening."]
   back: ["You again. Behaving?", "Welcome back."]
-  warm: ["Good to see you. Need anything?"]
+  warm: ["Good to see you. You looking for water or a bunk?"]
   cold: ["I'm watching you."]
-  bye: ["Stay safe out there.", "Weapons low."]
+  bye: ["Tell the next watch you came through here.", "Weapons low."]
   walk: ["Noted."]
   ask:
     - q: "What does M.E.G. do?"
-      a: ["Map the levels. Hold the safe spots. Keep people alive long enough to be useful.", "We write down what kills people so it kills fewer of them."]
+      a: ["Survey crews draw the maps. The rest of us keep the camps open so people have somewhere to come back to.", "We write down what kills people so it kills fewer of them."]
     - q: "What's the danger here?"
       sk: survival 30
-      a: ["Whatever's dangerous is in the incident board by the door. Read it. People who don't read it end up on it."]
+      a: ["Check the board by the door. The latest patrol report's at the top."]
       fail: ["Everything. Stay inside."]
     - q: "Come with me?"
       sk: speech 45

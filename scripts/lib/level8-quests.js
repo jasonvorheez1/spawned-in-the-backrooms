@@ -167,7 +167,7 @@ export function handleDialogueQuest8(ctx, p, npc, text) {
           text: "Quest Completed: Carla's Melody · +90 XP, +$30.00, +35 Sanity, Almond Water, Clean Bandage",
         });
         return {
-          reply: "A KAZOO. Listen. Listen! Mum, look! Here, the bandage, and the water's still cold, I kept it in the stream. You can't have the kazoo back.",
+          reply: "Mum, look what they found! Here, my good bandage. I kept the water cold in the stream. Do you want to hear me play?",
           mood: "happy",
         };
       }
@@ -201,7 +201,7 @@ export function handleDialogueQuest8(ctx, p, npc, text) {
           text: "Quest Completed: Plate for the Perimeter · +120 XP, +$60.00, Ammo Crate, First Aid Kit",
         });
         return {
-          reply: "Thick. No cracks. They'll lash to the fence fine. Sixty bucks and a box of rounds from the reserve. Carla, say thanks. She says thanks.",
+          reply: "These'll fit between the posts. Carla, bring me the wire, will you? Here's your sixty and the ammo from the reserve.",
           mood: "happy",
         };
       } else if (s.spiderQ >= 1 && s.spiderQ < 99 && plates < 3) {
@@ -242,7 +242,7 @@ export function handleDialogueQuest8(ctx, p, npc, text) {
           text: "Quest Completed: The Karst Survey · Calculated the loop vector for Ivo (+125 XP, +$50.00)",
         });
         return {
-          reply: "You... worked out the fold from the drift? Without going in? That's, that's exactly what Dell said. Here. Batteries, the toolkit, the stipend. She'd have liked you.",
+          reply: "You got the fold from the compass drift. Hang on. Dell wrote the same number in the margin. Here, take the batteries, the toolkit and the stipend.",
           mood: "happy",
         };
       }

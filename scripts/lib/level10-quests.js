@@ -186,7 +186,7 @@ export function handleDialogueQuest10(ctx, p, npc, text) {
           text: "Quest Completed: The Golden Bumper · +150 XP, +$75.00, Royal Ration, Farmstead Straw Hat",
         });
         return {
-          reply: "Smell that. That's bread. That's real bread. Seventy-five, a Royal Ration, and my spare straw hat. It's a good hat. Don't let the rain at it.",
+          reply: "You got a good crust on it. I'll wrap it for the caravan. Here's seventy-five, a Royal Ration, and my spare straw hat. Keep the hat dry.",
           mood: "happy",
         };
       }
@@ -210,7 +210,7 @@ export function handleDialogueQuest10(ctx, p, npc, text) {
           text: "Quest Completed: Cellar in the Shadows · +95 XP, +$35.00, Repair Kit, Almond Water",
         });
         return {
-          reply: "Just the draft? And the preserves are fine? Oh, thank the Lord. Thirty-five and a toolkit. I'd have gone myself, but I'm a coward about cellars.",
+          reply: "The jars are still sealed? Good. I'll wedge the door shut. Here's thirty-five and the repair kit. I haven't been down there since the last flood.",
           mood: "happy",
         };
       }
@@ -242,7 +242,7 @@ export function handleDialogueQuest10(ctx, p, npc, text) {
           text: "Quest Completed: The Still Watcher · +120 XP, +$50.00, 2x Almond Water, First Aid Kit",
         });
         return {
-          reply: "Document 24. 'The Watchers.' So they're holding the fields in place. Not guarding them. Pinning them. Here, your stipend and the med kit. And don't go back out there tonight.",
+          reply: "Document twenty-four. Look at this diagram. The scarecrows mark the points where the field is pinned. Here, your stipend and the med kit. Leave the east field alone tonight.",
           mood: "happy",
         };
       }

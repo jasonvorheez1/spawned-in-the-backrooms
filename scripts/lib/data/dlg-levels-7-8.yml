@@ -117,7 +117,7 @@ l7-ezra:
   gest: { wave: "Mm.", gift: "Thanks.", dance: "On watch.", nodance: "On watch.", insult: "Mm." }
 
 l8-hobb:
-  hi: "Get by the fire. Light off near the dens. Keep it on everywhere else. Two rules. I've got fewer fingers than rules, so listen."
+  hi: "Warm up by the fire. Keep your lamp on in the tunnels. When you get near a den, switch it off before they see you."
   back: ["Torch still burning? Good.", "You. Sit. Warm up."]
   warm: "Sit close. Carla's soup's on. Pay her, she's learning money."
   cold: "Fire's for the camp."
@@ -150,7 +150,7 @@ l8-hobb:
   gest: { wave: "Mm.", gift: "That's good of you.", dance: "Ha. No.", nodance: "No.", insult: "I've had worse from a winch." }
 
 l8-wen:
-  hi: "Silk, caps, tar-stone. Prices in Backbucks, not feelings. I laid half the lights on Hyperspace Lane, by the way. You're welcome."
+  hi: "Silk, caps, tar-stone. Backbucks only. If you came down Hyperspace Lane, I put up half those lamps myself."
   back: ["Back! Buying?", "My lights get you here alright?"]
   warm: "Hey, my best customer. Good stuff's under the tarp."
   cold: "Money, then words."
@@ -179,7 +179,7 @@ l8-wen:
   gest: { wave: "Hey.", gift: "Ooh. Thanks.", dance: "Ha! Fine.", nodance: "Busy.", insult: "Add it to your bill." }
 
 l8-ivo:
-  hi: "Oh. H-hello. Harmouth Speleological. Well. Just me now. Are you going down the road? Don't. Alone. Don't go alone."
+  hi: "Harmouth Speleological. I'm Ivo. If you're headed down the road, take somebody with you. I'll show you where our survey stopped."
   back: ["You came back! Good. That's good data.", "H-hello again."]
   warm: "Oh, good. Can I show you the map? I fixed the loop."
   cold: "Oh. Hello."
