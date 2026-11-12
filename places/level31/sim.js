@@ -8,7 +8,8 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 32;
+const V = 33;
+const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
 const P = (params) => ({ primitive: { kind: "scripted", script: PROPS, params }, material: { pbr: true } });
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
@@ -100,7 +101,15 @@ function shell(ctx) {
 // the room's edges: lockers, lacing benches and bins under the chase lights, where people actually sit and change
 function edges(ctx) {
   const WX = B.x0 + 0.26, NZ = B.z0 + 0.26, SZ = B.z1 - 0.26;
-  const put = (id, x, z, yaw, params, solid = true) => ctx.spawn(`l31-edge-${id}`, { feetPosition: { x, y: 0, z }, rotation: { yaw }, ...P(params), ...(solid ? { physics: "static" } : {}), tags: params.kind === "bench" ? ["seat"] : [], state: params.kind === "bench" ? { name: "Bench" } : undefined });
+  const put = (id, x, z, yaw, params, solid = true) => {
+    if (params.kind === "lockers") { // Tripo bank: 3 doors wide, 1.8 m tall, 0.5 m deep; a run of cols becomes ceil(cols/3) banks side by side
+      const n = Math.ceil(params.cols / 3), w = 1.5, r = (yaw * Math.PI) / 180, ax = Math.cos(r), az = -Math.sin(r);
+      for (let i = 0; i < n; i++) { const o = (i - (n - 1) / 2) * w; ctx.spawn(`l31-edge-${id}-${i}`, { feetPosition: { x: x + ax * o, y: 0, z: z + az * o }, rotation: { yaw }, model: { id: TRIPO.lockers, forward: "+x" }, layout: { box: { min: { x: -w / 2, y: 0, z: -0.3 }, max: { x: w / 2, y: 1.8, z: 0.3 } } }, physics: "static" }); }
+      return;
+    }
+    if (params.kind === "bench") return ctx.spawn(`l31-edge-${id}`, { feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: TRIPO.bench }, layout: { box: { min: { x: -params.len / 2, y: 0, z: -0.3 }, max: { x: params.len / 2, y: 0.5, z: 0.3 } } }, physics: "static", tags: ["seat"], state: { name: "Bench" } });
+    return ctx.spawn(`l31-edge-${id}`, { feetPosition: { x, y: 0, z }, rotation: { yaw }, ...P(params), ...(solid ? { physics: "static" } : {}), tags: params.kind === "bench" ? ["seat"] : [], state: params.kind === "bench" ? { name: "Bench" } : undefined });
+  };
   // west wall, round the white door
   put("lk-w1", WX, -15.5, -90, { kind: "lockers", cols: 6, hue: 200 }); put("lk-w2", WX, -28, -90, { kind: "lockers", cols: 4, hue: 25 });
   put("bn-w1", B.x0 + 1.4, -15.5, -90, { kind: "bench", len: 2.4 }); put("bin-w1", WX, -19.6, -90, { kind: "bin" });
