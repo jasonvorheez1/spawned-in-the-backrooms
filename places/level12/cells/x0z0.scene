@@ -1,4 +1,13 @@
 # spawn-scene v2 yaml x0z0
+l12-13-door:
+  children: [{feetPosition: {x: 0, y: 0, z: -0.105}, material: {color: oklch(0.84 0.04 88), roughness: 0.8}, primitive: {depth: 0.02, height: 2.06, kind: box, width: 0.94}}, {castShadow: false, feetPosition: {x: 0, y: 0.002, z: -0.5}, material: {color: oklch(0.9 0.07 88 / 0.5), emissive: oklch(0.88 0.07 88), emissiveIntensity: 0.6, transparent: true}, primitive: {height: 0.7, kind: plane, width: 0.9}, rotation: {pitch: -90}}, {castShadow: false, feetPosition: {x: 0, y: 0, z: -0.02}, material: {pbr: true, roughness: 0.6}, primitive: {kind: scripted, params: {d: 0.2, h: 2.06, part: frame, style: flat, w: 0.94}, script: scripts/door-geo.js}}, {castShadow: false, feetPosition: {x: 0, y: 1.52, z: -0.118}, material: {color: oklch(0.72 0.11 80), metalness: 1, roughness: 0.3}, pivot: center, primitive: {height: 0.012, kind: cylinder, radialSegments: 16, radiusBottom: 0.019, radiusTop: 0.016}, rotation: {pitch: 90}}, {castShadow: false, feetPosition: {x: 0, y: 0.006, z: -0.62}, material: {color: oklch(0.62 0.05 65), roughness: 1, texture: cdn/texture-worn-brown-coir-doormat.png}, primitive: {height: 0.5, kind: plane, width: 0.85}, receiveShadow: true, rotation: {pitch: -90}}]
+  feetPosition: {x: 9, y: 0, z: 14}
+  id: l12-13-door
+  material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 0.2, height: 2.2, kind: box, width: 1.24}
+  rotation: {yaw: 150}
+  state: {info: "No handle, no number. Beige light under it, and a television murmuring somewhere behind.", name: Door}
 l12-ceil:
   castShadow: false
   feetPosition: {x: 0, y: 3, z: 0}
@@ -30,7 +39,7 @@ l12-clock:
   rotation: {pitch: 90}
 l12-copy-0:
   behavior: scripts/level12-use.js
-  children: [{children: [{feetPosition: {x: -0.4, y: 1, z: 0.05}, id: knob, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {kind: sphere, radius: 0.032}}, {feetPosition: {x: -0.4, y: 1, z: -0.05}, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {kind: sphere, radius: 0.032}}, {feetPosition: {x: -0.4, y: 0.94, z: 0.03}, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {depth: 0.01, height: 0.12, kind: box, width: 0.05}}], feetPosition: {x: 0.47, y: 0, z: 0}, id: slab, material: {color: oklch(0.95 0.008 90), roughness: 0.7, texture: cdn/texture-white-painted-wood-door-panel-chipped-paint.png}, pivot: [1, 0, 0.5], primitive: {depth: 0.045, height: 2.06, kind: box, width: 0.94}}, {feetPosition: {x: -0.53, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.2, height: 2.14, kind: box, width: 0.07}}, {feetPosition: {x: 0.53, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.2, height: 2.14, kind: box, width: 0.07}}, {feetPosition: {x: 0, y: 2.08, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.2, height: 0.08, kind: box, width: 1.13}}, {feetPosition: {x: 0, y: 2.16, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 0.9, kind: box, width: 1.6}}, {feetPosition: {x: -0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}, {feetPosition: {x: 0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}]
+  children: [{castShadow: false, children: [{feetPosition: {x: 0, y: 0, z: 0}, layout: {box: {max: {x: 0.47, y: 2.06, z: 0.03}, min: {x: -0.47, y: 0, z: -0.03}}}, model: {id: /cdn/value.dc925b7a5795ebda057624359435d268429171852f342ccfa479eac83b721333.glb}}, {feetPosition: {x: -0.4, y: 1, z: 0.05}, id: knob, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {kind: sphere, radius: 0.001}}], feetPosition: {x: 0.47, y: 0, z: 0}, id: slab, material: {color: "#fff", opacity: 0, transparent: true}, pivot: [1, 0, 0.5], primitive: {depth: 0.045, height: 2.06, kind: box, width: 0.94}}, {feetPosition: {x: 0, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {bevelEnabled: true, bevelSegments: 3, bevelSize: 0.008, bevelThickness: 0.01, depth: 0.18, kind: extrude, shape: [[-0.565, 0], [-0.495, 0], [-0.495, 2.08], [0.495, 2.08], [0.495, 0], [0.565, 0], [0.565, 2.16], [-0.565, 2.16]]}}, {castShadow: false, feetPosition: {x: 0, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {bevelEnabled: true, bevelSegments: 4, bevelSize: 0.014, bevelThickness: 0.012, depth: 0.2, kind: extrude, shape: [[-0.62, 0], [-0.505, 0], [-0.505, 2.09], [0.505, 2.09], [0.505, 0], [0.62, 0], [0.62, 2.2], [-0.62, 2.2]]}}, {feetPosition: {x: 0, y: 2.16, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 0.9, kind: box, width: 1.6}}, {feetPosition: {x: -0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}, {feetPosition: {x: 0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}]
   feetPosition: {x: -34, y: 0, z: -22}
   id: l12-copy-0
   material: {color: "#fff", opacity: 0, transparent: true}
@@ -41,7 +50,7 @@ l12-copy-0:
   tags: [usable]
 l12-copy-1:
   behavior: scripts/level12-use.js
-  children: [{children: [{feetPosition: {x: -0.4, y: 1, z: 0.05}, id: knob, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {kind: sphere, radius: 0.032}}, {feetPosition: {x: -0.4, y: 1, z: -0.05}, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {kind: sphere, radius: 0.032}}, {feetPosition: {x: -0.4, y: 0.94, z: 0.03}, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {depth: 0.01, height: 0.12, kind: box, width: 0.05}}], feetPosition: {x: 0.47, y: 0, z: 0}, id: slab, material: {color: oklch(0.95 0.008 90), roughness: 0.7, texture: cdn/texture-white-painted-wood-door-panel-chipped-paint.png}, pivot: [1, 0, 0.5], primitive: {depth: 0.045, height: 2.06, kind: box, width: 0.94}}, {feetPosition: {x: -0.53, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.2, height: 2.14, kind: box, width: 0.07}}, {feetPosition: {x: 0.53, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.2, height: 2.14, kind: box, width: 0.07}}, {feetPosition: {x: 0, y: 2.08, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.2, height: 0.08, kind: box, width: 1.13}}, {feetPosition: {x: 0, y: 2.16, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 0.9, kind: box, width: 1.6}}, {feetPosition: {x: -0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}, {feetPosition: {x: 0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}]
+  children: [{castShadow: false, children: [{feetPosition: {x: 0, y: 0, z: 0}, layout: {box: {max: {x: 0.47, y: 2.06, z: 0.03}, min: {x: -0.47, y: 0, z: -0.03}}}, model: {id: /cdn/value.dc925b7a5795ebda057624359435d268429171852f342ccfa479eac83b721333.glb}}, {feetPosition: {x: -0.4, y: 1, z: 0.05}, id: knob, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {kind: sphere, radius: 0.001}}], feetPosition: {x: 0.47, y: 0, z: 0}, id: slab, material: {color: "#fff", opacity: 0, transparent: true}, pivot: [1, 0, 0.5], primitive: {depth: 0.045, height: 2.06, kind: box, width: 0.94}}, {feetPosition: {x: 0, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {bevelEnabled: true, bevelSegments: 3, bevelSize: 0.008, bevelThickness: 0.01, depth: 0.18, kind: extrude, shape: [[-0.565, 0], [-0.495, 0], [-0.495, 2.08], [0.495, 2.08], [0.495, 0], [0.565, 0], [0.565, 2.16], [-0.565, 2.16]]}}, {castShadow: false, feetPosition: {x: 0, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {bevelEnabled: true, bevelSegments: 4, bevelSize: 0.014, bevelThickness: 0.012, depth: 0.2, kind: extrude, shape: [[-0.62, 0], [-0.505, 0], [-0.505, 2.09], [0.505, 2.09], [0.505, 0], [0.62, 0], [0.62, 2.2], [-0.62, 2.2]]}}, {feetPosition: {x: 0, y: 2.16, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 0.9, kind: box, width: 1.6}}, {feetPosition: {x: -0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}, {feetPosition: {x: 0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}]
   feetPosition: {x: 41, y: 0, z: 9}
   id: l12-copy-1
   material: {color: "#fff", opacity: 0, transparent: true}
@@ -52,7 +61,7 @@ l12-copy-1:
   tags: [usable]
 l12-copy-2:
   behavior: scripts/level12-use.js
-  children: [{children: [{feetPosition: {x: -0.4, y: 1, z: 0.05}, id: knob, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {kind: sphere, radius: 0.032}}, {feetPosition: {x: -0.4, y: 1, z: -0.05}, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {kind: sphere, radius: 0.032}}, {feetPosition: {x: -0.4, y: 0.94, z: 0.03}, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {depth: 0.01, height: 0.12, kind: box, width: 0.05}}], feetPosition: {x: 0.47, y: 0, z: 0}, id: slab, material: {color: oklch(0.95 0.008 90), roughness: 0.7, texture: cdn/texture-white-painted-wood-door-panel-chipped-paint.png}, pivot: [1, 0, 0.5], primitive: {depth: 0.045, height: 2.06, kind: box, width: 0.94}}, {feetPosition: {x: -0.53, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.2, height: 2.14, kind: box, width: 0.07}}, {feetPosition: {x: 0.53, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.2, height: 2.14, kind: box, width: 0.07}}, {feetPosition: {x: 0, y: 2.08, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.2, height: 0.08, kind: box, width: 1.13}}, {feetPosition: {x: 0, y: 2.16, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 0.9, kind: box, width: 1.6}}, {feetPosition: {x: -0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}, {feetPosition: {x: 0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}]
+  children: [{castShadow: false, children: [{feetPosition: {x: 0, y: 0, z: 0}, layout: {box: {max: {x: 0.47, y: 2.06, z: 0.03}, min: {x: -0.47, y: 0, z: -0.03}}}, model: {id: /cdn/value.dc925b7a5795ebda057624359435d268429171852f342ccfa479eac83b721333.glb}}, {feetPosition: {x: -0.4, y: 1, z: 0.05}, id: knob, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {kind: sphere, radius: 0.001}}], feetPosition: {x: 0.47, y: 0, z: 0}, id: slab, material: {color: "#fff", opacity: 0, transparent: true}, pivot: [1, 0, 0.5], primitive: {depth: 0.045, height: 2.06, kind: box, width: 0.94}}, {feetPosition: {x: 0, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {bevelEnabled: true, bevelSegments: 3, bevelSize: 0.008, bevelThickness: 0.01, depth: 0.18, kind: extrude, shape: [[-0.565, 0], [-0.495, 0], [-0.495, 2.08], [0.495, 2.08], [0.495, 0], [0.565, 0], [0.565, 2.16], [-0.565, 2.16]]}}, {castShadow: false, feetPosition: {x: 0, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {bevelEnabled: true, bevelSegments: 4, bevelSize: 0.014, bevelThickness: 0.012, depth: 0.2, kind: extrude, shape: [[-0.62, 0], [-0.505, 0], [-0.505, 2.09], [0.505, 2.09], [0.505, 0], [0.62, 0], [0.62, 2.2], [-0.62, 2.2]]}}, {feetPosition: {x: 0, y: 2.16, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 0.9, kind: box, width: 1.6}}, {feetPosition: {x: -0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}, {feetPosition: {x: 0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}]
   feetPosition: {x: -12, y: 0, z: 58}
   id: l12-copy-2
   material: {color: "#fff", opacity: 0, transparent: true}
@@ -63,7 +72,7 @@ l12-copy-2:
   tags: [usable]
 l12-copy-3:
   behavior: scripts/level12-use.js
-  children: [{children: [{feetPosition: {x: -0.4, y: 1, z: 0.05}, id: knob, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {kind: sphere, radius: 0.032}}, {feetPosition: {x: -0.4, y: 1, z: -0.05}, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {kind: sphere, radius: 0.032}}, {feetPosition: {x: -0.4, y: 0.94, z: 0.03}, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {depth: 0.01, height: 0.12, kind: box, width: 0.05}}], feetPosition: {x: 0.47, y: 0, z: 0}, id: slab, material: {color: oklch(0.95 0.008 90), roughness: 0.7, texture: cdn/texture-white-painted-wood-door-panel-chipped-paint.png}, pivot: [1, 0, 0.5], primitive: {depth: 0.045, height: 2.06, kind: box, width: 0.94}}, {feetPosition: {x: -0.53, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.2, height: 2.14, kind: box, width: 0.07}}, {feetPosition: {x: 0.53, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.2, height: 2.14, kind: box, width: 0.07}}, {feetPosition: {x: 0, y: 2.08, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.2, height: 0.08, kind: box, width: 1.13}}, {feetPosition: {x: 0, y: 2.16, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 0.9, kind: box, width: 1.6}}, {feetPosition: {x: -0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}, {feetPosition: {x: 0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}]
+  children: [{castShadow: false, children: [{feetPosition: {x: 0, y: 0, z: 0}, layout: {box: {max: {x: 0.47, y: 2.06, z: 0.03}, min: {x: -0.47, y: 0, z: -0.03}}}, model: {id: /cdn/value.dc925b7a5795ebda057624359435d268429171852f342ccfa479eac83b721333.glb}}, {feetPosition: {x: -0.4, y: 1, z: 0.05}, id: knob, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {kind: sphere, radius: 0.001}}], feetPosition: {x: 0.47, y: 0, z: 0}, id: slab, material: {color: "#fff", opacity: 0, transparent: true}, pivot: [1, 0, 0.5], primitive: {depth: 0.045, height: 2.06, kind: box, width: 0.94}}, {feetPosition: {x: 0, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {bevelEnabled: true, bevelSegments: 3, bevelSize: 0.008, bevelThickness: 0.01, depth: 0.18, kind: extrude, shape: [[-0.565, 0], [-0.495, 0], [-0.495, 2.08], [0.495, 2.08], [0.495, 0], [0.565, 0], [0.565, 2.16], [-0.565, 2.16]]}}, {castShadow: false, feetPosition: {x: 0, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {bevelEnabled: true, bevelSegments: 4, bevelSize: 0.014, bevelThickness: 0.012, depth: 0.2, kind: extrude, shape: [[-0.62, 0], [-0.505, 0], [-0.505, 2.09], [0.505, 2.09], [0.505, 0], [0.62, 0], [0.62, 2.2], [-0.62, 2.2]]}}, {feetPosition: {x: 0, y: 2.16, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 0.9, kind: box, width: 1.6}}, {feetPosition: {x: -0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}, {feetPosition: {x: 0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}]
   feetPosition: {x: 27, y: 0, z: -51}
   id: l12-copy-3
   material: {color: "#fff", opacity: 0, transparent: true}
@@ -74,7 +83,7 @@ l12-copy-3:
   tags: [usable]
 l12-copy-4:
   behavior: scripts/level12-use.js
-  children: [{children: [{feetPosition: {x: -0.4, y: 1, z: 0.05}, id: knob, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {kind: sphere, radius: 0.032}}, {feetPosition: {x: -0.4, y: 1, z: -0.05}, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {kind: sphere, radius: 0.032}}, {feetPosition: {x: -0.4, y: 0.94, z: 0.03}, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {depth: 0.01, height: 0.12, kind: box, width: 0.05}}], feetPosition: {x: 0.47, y: 0, z: 0}, id: slab, material: {color: oklch(0.95 0.008 90), roughness: 0.7, texture: cdn/texture-white-painted-wood-door-panel-chipped-paint.png}, pivot: [1, 0, 0.5], primitive: {depth: 0.045, height: 2.06, kind: box, width: 0.94}}, {feetPosition: {x: -0.53, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.2, height: 2.14, kind: box, width: 0.07}}, {feetPosition: {x: 0.53, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.2, height: 2.14, kind: box, width: 0.07}}, {feetPosition: {x: 0, y: 2.08, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.2, height: 0.08, kind: box, width: 1.13}}, {feetPosition: {x: 0, y: 2.16, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 0.9, kind: box, width: 1.6}}, {feetPosition: {x: -0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}, {feetPosition: {x: 0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}]
+  children: [{castShadow: false, children: [{feetPosition: {x: 0, y: 0, z: 0}, layout: {box: {max: {x: 0.47, y: 2.06, z: 0.03}, min: {x: -0.47, y: 0, z: -0.03}}}, model: {id: /cdn/value.dc925b7a5795ebda057624359435d268429171852f342ccfa479eac83b721333.glb}}, {feetPosition: {x: -0.4, y: 1, z: 0.05}, id: knob, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {kind: sphere, radius: 0.001}}], feetPosition: {x: 0.47, y: 0, z: 0}, id: slab, material: {color: "#fff", opacity: 0, transparent: true}, pivot: [1, 0, 0.5], primitive: {depth: 0.045, height: 2.06, kind: box, width: 0.94}}, {feetPosition: {x: 0, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {bevelEnabled: true, bevelSegments: 3, bevelSize: 0.008, bevelThickness: 0.01, depth: 0.18, kind: extrude, shape: [[-0.565, 0], [-0.495, 0], [-0.495, 2.08], [0.495, 2.08], [0.495, 0], [0.565, 0], [0.565, 2.16], [-0.565, 2.16]]}}, {castShadow: false, feetPosition: {x: 0, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {bevelEnabled: true, bevelSegments: 4, bevelSize: 0.014, bevelThickness: 0.012, depth: 0.2, kind: extrude, shape: [[-0.62, 0], [-0.505, 0], [-0.505, 2.09], [0.505, 2.09], [0.505, 0], [0.62, 0], [0.62, 2.2], [-0.62, 2.2]]}}, {feetPosition: {x: 0, y: 2.16, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 0.9, kind: box, width: 1.6}}, {feetPosition: {x: -0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}, {feetPosition: {x: 0.9, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.12, height: 3.06, kind: box, width: 0.7}}]
   feetPosition: {x: -63, y: 0, z: 31}
   id: l12-copy-4
   material: {color: "#fff", opacity: 0, transparent: true}
@@ -85,7 +94,7 @@ l12-copy-4:
   tags: [usable]
 l12-door:
   behavior: scripts/level12-use.js
-  children: [{children: [{feetPosition: {x: -0.4, y: 1, z: 0.05}, id: knob, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {kind: sphere, radius: 0.032}}, {feetPosition: {x: -0.4, y: 1, z: -0.05}, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {kind: sphere, radius: 0.032}}, {feetPosition: {x: -0.4, y: 0.94, z: 0.03}, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {depth: 0.01, height: 0.12, kind: box, width: 0.05}}], feetPosition: {x: 0.47, y: 0, z: 0}, id: slab, material: {color: oklch(0.95 0.008 90), roughness: 0.7, texture: cdn/texture-white-painted-wood-door-panel-chipped-paint.png}, pivot: [1, 0, 0.5], primitive: {depth: 0.045, height: 2.06, kind: box, width: 0.94}}, {feetPosition: {x: -0.53, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.2, height: 2.14, kind: box, width: 0.07}}, {feetPosition: {x: 0.53, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.2, height: 2.14, kind: box, width: 0.07}}, {feetPosition: {x: 0, y: 2.08, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {depth: 0.2, height: 0.08, kind: box, width: 1.13}}]
+  children: [{castShadow: false, children: [{feetPosition: {x: 0, y: 0, z: 0}, layout: {box: {max: {x: 0.47, y: 2.06, z: 0.03}, min: {x: -0.47, y: 0, z: -0.03}}}, model: {id: /cdn/value.dc925b7a5795ebda057624359435d268429171852f342ccfa479eac83b721333.glb}}, {feetPosition: {x: -0.4, y: 1, z: 0.05}, id: knob, material: {color: oklch(0.72 0.09 85), metalness: 0.9, roughness: 0.35}, primitive: {kind: sphere, radius: 0.001}}], feetPosition: {x: 0.47, y: 0, z: 0}, id: slab, material: {color: "#fff", opacity: 0, transparent: true}, pivot: [1, 0, 0.5], primitive: {depth: 0.045, height: 2.06, kind: box, width: 0.94}}, {feetPosition: {x: 0, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {bevelEnabled: true, bevelSegments: 3, bevelSize: 0.008, bevelThickness: 0.01, depth: 0.18, kind: extrude, shape: [[-0.565, 0], [-0.495, 0], [-0.495, 2.08], [0.495, 2.08], [0.495, 0], [0.565, 0], [0.565, 2.16], [-0.565, 2.16]]}}, {castShadow: false, feetPosition: {x: 0, y: 0, z: 0}, material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}, primitive: {bevelEnabled: true, bevelSegments: 4, bevelSize: 0.014, bevelThickness: 0.012, depth: 0.25, kind: extrude, shape: [[-0.62, 0], [-0.505, 0], [-0.505, 2.09], [0.505, 2.09], [0.505, 0], [0.62, 0], [0.62, 2.2], [-0.62, 2.2]]}}]
   feetPosition: {x: 0, y: 0, z: -3}
   id: l12-door
   material: {color: "#fff", opacity: 0, transparent: true}
@@ -140,65 +149,65 @@ l12-junk-1:
   castShadow: true
   feetPosition: {x: -25.15052229597929, y: 0, z: -21.44226140039883}
   id: l12-junk-1
-  model: {id: /cdn/value.cf4b7e08e8b8ebeae461128c58b33779289448325288361133e27aa7f17a212d.glb}
+  model: {id: /cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb}
   physics: static
   rotation: {pitch: 0, roll: 0, yaw: 121.01897268556058}
 l12-junk-10:
   castShadow: true
   feetPosition: {x: 23.245733116260702, y: -0.202896075649187, z: 29.013683166224077}
   id: l12-junk-10
-  model: {id: /cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb}
+  model: {id: /cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb}
   rotation: {pitch: -5.078031115233898, roll: 1.5980373322963715, yaw: 182.07095763646066}
 l12-junk-11:
   castShadow: true
   feetPosition: {x: 10.650114866197171, y: -0.590062442747876, z: -10.361282590188557}
   id: l12-junk-11
-  model: {id: /cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb}
+  model: {id: /cdn/value.2f0eae283b6ebd13603b9891c607686c47f142b2e36b43e6148b098ac56a24af.glb}
   rotation: {pitch: 0.8535312190651894, roll: 6.457784604281187, yaw: 192.0057639386505}
 l12-junk-13:
   castShadow: true
   feetPosition: {x: -17.914153396461145, y: 0, z: 43.859784905324936}
   id: l12-junk-13
-  model: {id: /cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb}
+  model: {id: /cdn/value.918584eed8336eda888580753019763471fcce0adcaf2bc66def78f53ae3fad0.glb}
   physics: static
   rotation: {pitch: 0, roll: 0, yaw: 79.1770074237138}
 l12-junk-14:
   castShadow: true
   feetPosition: {x: -26.881214995981345, y: 0, z: 13.539583906850613}
   id: l12-junk-14
-  model: {id: /cdn/value.e02cceb0c66d902fced411a31f21de9e9584de3272263a09e20b85c9455411be.glb}
+  model: {id: /cdn/value.cf4b7e08e8b8ebeae461128c58b33779289448325288361133e27aa7f17a212d.glb}
   physics: static
   rotation: {pitch: 0, roll: 0, yaw: 155.52022766321898}
 l12-junk-15:
   castShadow: true
   feetPosition: {x: 23.029012973459004, y: -0.79024468944408, z: 14.354152653592829}
   id: l12-junk-15
-  model: {id: /cdn/value.b59b6a4d3115b48b5e3e42462530bbb5364e66607ba416592c80166a6cdd6483.glb}
+  model: {id: /cdn/value.bade31e208a4e7c80254ba63dd33cf9b682b2c8d8bbd2c049de016d4d293892f.glb}
   rotation: {pitch: 6.6679583340883255, roll: 14.166884548030794, yaw: 187.01220170594752}
 l12-junk-17:
   castShadow: true
   feetPosition: {x: -47.6569747670271, y: 0, z: 1.3143295242966178}
   id: l12-junk-17
-  model: {id: /cdn/value.cf4b7e08e8b8ebeae461128c58b33779289448325288361133e27aa7f17a212d.glb}
+  model: {id: /cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb}
   physics: static
   rotation: {pitch: 0, roll: 0, yaw: 327.4801212362945}
 l12-junk-18:
   castShadow: true
   feetPosition: {x: -13.583405852702729, y: -0.6884562557097524, z: -46.70969600939524}
   id: l12-junk-18
-  model: {id: /cdn/value.cf4b7e08e8b8ebeae461128c58b33779289448325288361133e27aa7f17a212d.glb}
+  model: {id: /cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb}
   rotation: {pitch: -3.3776157274842262, roll: 4.533802969381213, yaw: 5.635781390592456}
 l12-junk-19:
   castShadow: true
   feetPosition: {x: 13.965273060410494, y: -0.3908799277152866, z: -14.430343269664851}
   id: l12-junk-19
-  model: {id: /cdn/value.cf4b7e08e8b8ebeae461128c58b33779289448325288361133e27aa7f17a212d.glb}
+  model: {id: /cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb}
   rotation: {pitch: 3.3979030773043633, roll: 12.666053557768464, yaw: 58.56340485624969}
 l12-junk-21:
   castShadow: true
   feetPosition: {x: 50.05073933434628, y: -0.45030339448712764, z: 48.66993344144893}
   id: l12-junk-21
-  model: {id: /cdn/value.2f0eae283b6ebd13603b9891c607686c47f142b2e36b43e6148b098ac56a24af.glb}
+  model: {id: /cdn/value.24512fccad86dea3ef7e54796f0c9b8ccb32dc7ec2ff8798ee8f9d084708ccd8.glb}
   rotation: {pitch: -4.284451074898243, roll: 14.967473493888974, yaw: 190.79345676116645}
 l12-junk-22:
   castShadow: true
@@ -210,69 +219,69 @@ l12-junk-23:
   castShadow: true
   feetPosition: {x: -37.82444372813182, y: 0, z: 9.840738467352052}
   id: l12-junk-23
-  model: {id: /cdn/value.cf4b7e08e8b8ebeae461128c58b33779289448325288361133e27aa7f17a212d.glb}
+  model: {id: /cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb}
   physics: static
   rotation: {pitch: 0, roll: 0, yaw: 229.83850666321814}
 l12-junk-24:
   castShadow: true
   feetPosition: {x: 21.576380522118487, y: -0.2671172067523003, z: 10.193609424438902}
   id: l12-junk-24
-  model: {id: /cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb}
+  model: {id: /cdn/value.918584eed8336eda888580753019763471fcce0adcaf2bc66def78f53ae3fad0.glb}
   rotation: {pitch: 6.542368445545435, roll: -4.489492184948176, yaw: 1.234659869223833}
 l12-junk-26:
   castShadow: true
   feetPosition: {x: -22.815288886396228, y: -0.3719495333731174, z: -51.28768053774271}
   id: l12-junk-26
-  model: {id: /cdn/value.e02cceb0c66d902fced411a31f21de9e9584de3272263a09e20b85c9455411be.glb}
+  model: {id: /cdn/value.cf4b7e08e8b8ebeae461128c58b33779289448325288361133e27aa7f17a212d.glb}
   rotation: {pitch: -2.1945752166211605, roll: -13.06606639875099, yaw: 334.9158983118832}
 l12-junk-27:
   castShadow: true
   feetPosition: {x: 46.38325194515683, y: -0.47617823220789435, z: -31.93267469546932}
   id: l12-junk-27
-  model: {id: /cdn/value.cf4b7e08e8b8ebeae461128c58b33779289448325288361133e27aa7f17a212d.glb}
+  model: {id: /cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb}
   rotation: {pitch: -4.906730767339468, roll: -9.319668549578637, yaw: 249.4746216572821}
 l12-junk-28:
   castShadow: true
   feetPosition: {x: -2.5295736962752113, y: -0.5381618171930314, z: -25.334520621255844}
   id: l12-junk-28
-  model: {id: /cdn/value.918584eed8336eda888580753019763471fcce0adcaf2bc66def78f53ae3fad0.glb}
+  model: {id: /cdn/value.2f0eae283b6ebd13603b9891c607686c47f142b2e36b43e6148b098ac56a24af.glb}
   rotation: {pitch: 6.406589183956385, roll: 2.0202007074840367, yaw: 319.9759686179459}
 l12-junk-3:
   castShadow: true
   feetPosition: {x: 33.58031955990444, y: -0.46586282751522956, z: -7.0578388379649235}
   id: l12-junk-3
-  model: {id: /cdn/value.2f0eae283b6ebd13603b9891c607686c47f142b2e36b43e6148b098ac56a24af.glb}
+  model: {id: /cdn/value.58b51cca7f40157addada9eb9837b9beb764f7aed2c56d77270ea9dbd66bcf1b.glb}
   rotation: {pitch: 1.074694000184536, roll: -11.769471438601613, yaw: 151.62841002456844}
 l12-junk-31:
   castShadow: true
   feetPosition: {x: 14.622871473978908, y: 0, z: 7.530194331469584}
   id: l12-junk-31
-  model: {id: /cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb}
+  model: {id: /cdn/value.918584eed8336eda888580753019763471fcce0adcaf2bc66def78f53ae3fad0.glb}
   physics: static
   rotation: {pitch: 0, roll: 0, yaw: 59.41165320575237}
 l12-junk-34:
   castShadow: true
   feetPosition: {x: 29.776290930112218, y: -0.40881292140111325, z: -20.830176465393915}
   id: l12-junk-34
-  model: {id: /cdn/value.2f0eae283b6ebd13603b9891c607686c47f142b2e36b43e6148b098ac56a24af.glb}
+  model: {id: /cdn/value.58b51cca7f40157addada9eb9837b9beb764f7aed2c56d77270ea9dbd66bcf1b.glb}
   rotation: {pitch: 1.307298582047224, roll: 8.481798588763922, yaw: 94.53601744025946}
 l12-junk-36:
   castShadow: true
   feetPosition: {x: 3.3774307093355835, y: -0.3492737038992345, z: 43.71695334196684}
   id: l12-junk-36
-  model: {id: /cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb}
+  model: {id: /cdn/value.b59b6a4d3115b48b5e3e42462530bbb5364e66607ba416592c80166a6cdd6483.glb}
   rotation: {pitch: -4.473742503672838, roll: 2.681182853411883, yaw: 335.65337520092726}
 l12-junk-37:
   castShadow: true
   feetPosition: {x: -10.525550358588807, y: -0.2942760060541332, z: -57.144915019849115}
   id: l12-junk-37
-  model: {id: /cdn/value.918584eed8336eda888580753019763471fcce0adcaf2bc66def78f53ae3fad0.glb}
+  model: {id: /cdn/value.dc925b7a5795ebda057624359435d268429171852f342ccfa479eac83b721333.glb}
   rotation: {pitch: 4.627330791205168, roll: 0.5309019866399467, yaw: 140.53621251136065}
 l12-junk-40:
   castShadow: true
   feetPosition: {x: 45.62555906541023, y: -0.4979388739448041, z: -3.3937118958016637}
   id: l12-junk-40
-  model: {id: /cdn/value.e02cceb0c66d902fced411a31f21de9e9584de3272263a09e20b85c9455411be.glb}
+  model: {id: /cdn/value.cf4b7e08e8b8ebeae461128c58b33779289448325288361133e27aa7f17a212d.glb}
   rotation: {pitch: 3.647702135145664, roll: 7.2896879352629185, yaw: 358.709792336449}
 l12-junk-41:
   castShadow: true
@@ -285,20 +294,20 @@ l12-junk-42:
   castShadow: true
   feetPosition: {x: -39.57346665875916, y: 0, z: 19.502609860166274}
   id: l12-junk-42
-  model: {id: /cdn/value.30ae8e4fd0c2e307d21943aa6fa38f3f816fcc7a10335f5a15ff865b00b84ce4.glb}
+  model: {id: /cdn/value.24512fccad86dea3ef7e54796f0c9b8ccb32dc7ec2ff8798ee8f9d084708ccd8.glb}
   physics: static
   rotation: {pitch: 0, roll: 0, yaw: 26.123016960918903}
 l12-junk-43:
   castShadow: true
   feetPosition: {x: -8.110417000525976, y: -0.6002106914762407, z: -45.03676137456343}
   id: l12-junk-43
-  model: {id: /cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb}
+  model: {id: /cdn/value.b59b6a4d3115b48b5e3e42462530bbb5364e66607ba416592c80166a6cdd6483.glb}
   rotation: {pitch: -5.104851737618446, roll: -12.856486332602799, yaw: 110.03116213716567}
 l12-junk-44:
   castShadow: true
   feetPosition: {x: -39.27517974110813, y: -0.30912909121252596, z: -55.81432882691242}
   id: l12-junk-44
-  model: {id: /cdn/value.b59b6a4d3115b48b5e3e42462530bbb5364e66607ba416592c80166a6cdd6483.glb}
+  model: {id: /cdn/value.bade31e208a4e7c80254ba63dd33cf9b682b2c8d8bbd2c049de016d4d293892f.glb}
   rotation: {pitch: -4.915826663374901, roll: -12.890434325672686, yaw: 262.6331862900406}
 l12-junk-45:
   castShadow: true
@@ -311,22 +320,22 @@ l12-junk-6:
   castShadow: true
   feetPosition: {x: 10.003720335459775, y: -0.2091473032254726, z: -8.442622853897372}
   id: l12-junk-6
-  model: {id: /cdn/value.b59b6a4d3115b48b5e3e42462530bbb5364e66607ba416592c80166a6cdd6483.glb}
+  model: {id: /cdn/value.bade31e208a4e7c80254ba63dd33cf9b682b2c8d8bbd2c049de016d4d293892f.glb}
   rotation: {pitch: -0.08749553561210632, roll: 7.8271081717684865, yaw: 111.73982550390065}
 l12-junk-7:
   castShadow: true
   feetPosition: {x: -11.03894329414195, y: -0.7211881578434258, z: 20.255148382388207}
   id: l12-junk-7
-  model: {id: /cdn/value.2f0eae283b6ebd13603b9891c607686c47f142b2e36b43e6148b098ac56a24af.glb}
+  model: {id: /cdn/value.24512fccad86dea3ef7e54796f0c9b8ccb32dc7ec2ff8798ee8f9d084708ccd8.glb}
   rotation: {pitch: -0.36357980966567993, roll: 8.003755607642233, yaw: 160.618198486045}
 l12-light:
   audio: {clip: cdn/moodboard-realistic-gritty/sfx-single-fluorescent-tube-electrical-buzz-loop.mp3, gain: 0.18, loop: true, maxDistance: 14, spatial: true}
   castShadow: false
-  children: [{feetPosition: {x: 0, y: -0.3, z: 0}, light: {color: oklch(0.98 0.01 95), distance: 12, intensity: 2.2, kind: point, shadow: {enabled: true}}}]
-  feetPosition: {x: 0, y: 2.96, z: 0}
+  children: [{castShadow: false, feetPosition: {x: 0, y: -0.003, z: 0}, material: {color: "#ffffff", emissive: "#fffdf2", emissiveIntensity: 2.2}, primitive: {height: 0.5, kind: plane, width: 1.08}, rotation: {pitch: 90}}, {feetPosition: {x: 0, y: -0.3, z: 0}, light: {color: oklch(0.98 0.01 95), distance: 12, intensity: 2.2, kind: point, shadow: {enabled: true}}}]
+  feetPosition: {x: 0, y: 2.9, z: 0}
   id: l12-light
-  material: {color: "#ffffff", emissive: "#ffffff", emissiveIntensity: 2.2}
-  primitive: {depth: 0.6, height: 0.04, kind: box, width: 1.2}
+  layout: {box: {max: {x: 0.62, y: 0.1, z: 0.32}, min: {x: -0.62, y: 0, z: -0.32}}}
+  model: {id: /cdn/value.58b51cca7f40157addada9eb9837b9beb764f7aed2c56d77270ea9dbd66bcf1b.glb}
 l12-skirt:
   feetPosition: {x: 0, y: 0, z: -2.9}
   id: l12-skirt
@@ -422,6 +431,16 @@ l12-tick-9:
   material: {color: "#111"}
   primitive: {depth: 0.004, height: 0.045, kind: box, width: 0.012}
   rotation: {roll: -270}
+l12-to-l13:
+  behavior: scripts/level-door.js
+  feetPosition: {x: 8.775, y: 0, z: 14.389711431702997}
+  id: l12-to-l13
+  physics: {body: static, trigger: true}
+  primitive: {depth: 0.5, height: 2.1, kind: box, width: 1}
+  rotation: {yaw: 150}
+  state: {to: level13}
+  tags: [door]
+  visible: false
 l12-void:
   castShadow: false
   feetPosition: {x: 0, y: -0.2, z: 0}
@@ -490,3 +509,109 @@ l12-w-w:
   material: {color: oklch(0.97 0.006 95), repeat: [1, 1], roughness: 0.92, texture: cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png, wrap: repeat}
   physics: static
   primitive: {depth: 6.15, height: 3, kind: box, width: 0.15}
+l12d-mug:
+  castShadow: false
+  feetPosition: {x: 0.28, y: 0.775, z: -0.55}
+  id: l12d-mug
+  layout: {box: {max: {x: 0.06, y: 0.1, z: 0.045}, min: {x: -0.06, y: 0, z: -0.045}}}
+  model: {id: /cdn/value.bade31e208a4e7c80254ba63dd33cf9b682b2c8d8bbd2c049de016d4d293892f.glb}
+  rotation: {yaw: 140}
+l12d-notes:
+  castShadow: false
+  children: [{feetPosition: {x: 0.03, y: 0.004, z: 0.02}, material: {color: oklch(0.95 0.02 95), roughness: 0.95}, primitive: {depth: 0.29, height: 0.003, kind: box, width: 0.21}, rotation: {yaw: -20}}]
+  feetPosition: {x: -0.25, y: 0.775, z: -0.35}
+  id: l12d-notes
+  material: {color: oklch(0.95 0.02 95), roughness: 0.95}
+  primitive: {depth: 0.29, height: 0.004, kind: box, width: 0.21}
+  rotation: {yaw: 12}
+  state: {info: "Harris's handwriting. \"Chair, 15. Door. Out. 60 on the dot. Door. If the clock skips, you got up.\"", name: Notes}
+l12d-outlet:
+  castShadow: false
+  children: [{feetPosition: {x: 0.009, y: 0.015000000000000003, z: 0}, material: {color: "#222"}, primitive: {depth: 0.02, height: 0.012, kind: box, width: 0.004}}, {feetPosition: {x: 0.009, y: 0.05500000000000001, z: 0}, material: {color: "#222"}, primitive: {depth: 0.02, height: 0.012, kind: box, width: 0.004}}]
+  feetPosition: {x: 2.915, y: 0.3, z: 1.4}
+  id: l12d-outlet
+  material: {color: oklch(0.93 0.01 90)}
+  primitive: {depth: 0.07, height: 0.11, kind: box, width: 0.015}
+l12d-pencil:
+  castShadow: false
+  feetPosition: {x: -0.08, y: 0.78, z: -0.3}
+  id: l12d-pencil
+  material: {color: oklch(0.8 0.15 90)}
+  pivot: center
+  primitive: {height: 0.17, kind: cylinder, radiusBottom: 0.004, radiusTop: 0.004}
+  rotation: {roll: 90, yaw: 70}
+l12d-scrawl:
+  feetPosition: {x: -1.25, y: 1.15, z: -2.92}
+  id: l12d-scrawl
+  vector: "<svg viewBox='0 0 120 90' width='0.9m'><g stroke='#4a4a48' stroke-width='1.2' fill='none' opacity='.75'><g transform='translate(6 6)'><path d='M0 0v16M4 0v16M8 0v16M12 0v16M-2 13l16 -10'/></g><g transform='translate(28 6)'><path d='M0 0v16M4 0v16M8 0v16M12 0v16M-2 13l16 -10'/></g><g transform='translate(50 6)'><path d='M0 0v16M4 0v16M8 0v16M12 0v16M-2 13l16 -10'/></g><g transform='translate(72 6)'><path d='M0 0v16M4 0v16M8 0v16M12 0v16M-2 13l16 -10'/></g><path d='M94 6v16M98 6v16'/></g><g font-family='serif' font-size='8' fill='#4a4a48' opacity='.8'><text x='4' y='40'>sit 15  (don't stand)</text><text x='4' y='51'>door. locked. good</text><text x='4' y='62'>out a copy</text><text x='4' y='73'>60 EXACT  watch the clock</text><text x='4' y='84'>door</text></g></svg>"
+l12d-scuff-0:
+  castShadow: false
+  feetPosition: {x: -1.2, y: 0.1, z: -2.89}
+  id: l12d-scuff-0
+  material: {color: oklch(0.55 0.02 80 / 0.5), transparent: true}
+  primitive: {depth: 0.01, height: 0.05, kind: box, width: 0.5}
+l12d-scuff-1:
+  castShadow: false
+  feetPosition: {x: 1.6, y: 0.1, z: -2.89}
+  id: l12d-scuff-1
+  material: {color: oklch(0.55 0.02 80 / 0.5), transparent: true}
+  primitive: {depth: 0.01, height: 0.05, kind: box, width: 0.5}
+l12d-scuff-2:
+  castShadow: false
+  feetPosition: {x: 2.89, y: 0.1, z: 1.1}
+  id: l12d-scuff-2
+  material: {color: oklch(0.55 0.02 80 / 0.5), transparent: true}
+  primitive: {depth: 0.4, height: 0.05, kind: box, width: 0.01}
+l12d-skirt-e:
+  castShadow: false
+  feetPosition: {x: 2.91, y: 0, z: 0}
+  id: l12d-skirt-e
+  material: {color: oklch(0.86 0.008 90), roughness: 0.8}
+  primitive: {depth: 6, height: 0.1, kind: box, width: 0.03}
+l12d-skirt-s1:
+  castShadow: false
+  feetPosition: {x: -1.95, y: 0, z: 2.91}
+  id: l12d-skirt-s1
+  material: {color: oklch(0.86 0.008 90), roughness: 0.8}
+  primitive: {depth: 0.03, height: 0.1, kind: box, width: 1.6}
+l12d-skirt-s2:
+  castShadow: false
+  feetPosition: {x: 1.95, y: 0, z: 2.91}
+  id: l12d-skirt-s2
+  material: {color: oklch(0.86 0.008 90), roughness: 0.8}
+  primitive: {depth: 0.03, height: 0.1, kind: box, width: 1.6}
+l12d-skirt-w:
+  castShadow: false
+  feetPosition: {x: -2.91, y: 0, z: 0}
+  id: l12d-skirt-w
+  material: {color: oklch(0.86 0.008 90), roughness: 0.8}
+  primitive: {depth: 6, height: 0.1, kind: box, width: 0.03}
+l12d-stain:
+  castShadow: false
+  feetPosition: {x: -1.6, y: 2.944, z: 0.8}
+  id: l12d-stain
+  material: {color: oklch(0.78 0.05 80 / 0.35), roughness: 1, transparent: true}
+  primitive: {kind: circle, radius: 0.55}
+  rotation: {pitch: 90}
+l12d-stain-ring:
+  castShadow: false
+  feetPosition: {x: -1.6, y: 2.943, z: 0.8}
+  id: l12d-stain-ring
+  material: {color: oklch(0.62 0.06 70 / 0.45), transparent: true}
+  primitive: {innerRadius: 0.5, kind: ring, outerRadius: 0.56}
+  rotation: {pitch: 90}
+l12d-switch:
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: 0.04, z: 0.01}, material: {color: oklch(0.88 0.01 90)}, primitive: {depth: 0.012, height: 0.035, kind: box, width: 0.018}}]
+  feetPosition: {x: 0.85, y: 1.2, z: -2.915}
+  id: l12d-switch
+  material: {color: oklch(0.93 0.01 90)}
+  primitive: {depth: 0.015, height: 0.12, kind: box, width: 0.08}
+l12d-vent:
+  castShadow: false
+  feetPosition: {x: 1.9, y: 2.99, z: 1.9}
+  id: l12d-vent
+  layout: {box: {max: {x: 0.25, y: 0.2, z: 0.06}, min: {x: -0.25, y: -0.2, z: -0.06}}}
+  model: {id: /cdn/value.24512fccad86dea3ef7e54796f0c9b8ccb32dc7ec2ff8798ee8f9d084708ccd8.glb}
+  pivot: center
+  rotation: {pitch: -90}

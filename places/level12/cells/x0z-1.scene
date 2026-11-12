@@ -3,19 +3,19 @@ l12-junk-25:
   castShadow: true
   feetPosition: {x: -12.574883264316373, y: -0.22574465684592726, z: -82.30167729153176}
   id: l12-junk-25
-  model: {id: /cdn/value.e02cceb0c66d902fced411a31f21de9e9584de3272263a09e20b85c9455411be.glb}
+  model: {id: /cdn/value.cf4b7e08e8b8ebeae461128c58b33779289448325288361133e27aa7f17a212d.glb}
   rotation: {pitch: 7.971003834158182, roll: -6.671137462835759, yaw: 83.96054992452264}
 l12-junk-30:
   castShadow: true
   feetPosition: {x: 12.639972556881188, y: -0.29089749082922933, z: -67.32085624975356}
   id: l12-junk-30
-  model: {id: /cdn/value.cf4b7e08e8b8ebeae461128c58b33779289448325288361133e27aa7f17a212d.glb}
+  model: {id: /cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb}
   rotation: {pitch: 0.7074339129030704, roll: 9.37816533492878, yaw: 152.83393817022443}
 l12-junk-32:
   castShadow: true
   feetPosition: {x: -4.828162105518326, y: -0.6959581442642957, z: -93.27224335651493}
   id: l12-junk-32
-  model: {id: /cdn/value.918584eed8336eda888580753019763471fcce0adcaf2bc66def78f53ae3fad0.glb}
+  model: {id: /cdn/value.dc925b7a5795ebda057624359435d268429171852f342ccfa479eac83b721333.glb}
   rotation: {pitch: -5.030542016029358, roll: -1.4138844748958945, yaw: 192.3175571579486}
 l12-junk-35:
   castShadow: true
