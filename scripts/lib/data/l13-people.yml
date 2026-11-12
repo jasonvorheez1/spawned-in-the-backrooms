@@ -6,7 +6,7 @@ people:
     role: trader
     voice: mags
     hp: 120
-    at: [0.4, 12.88]
+    at: [0.4, 12.78]
     look: { x: 0.4, z: 9.9 }
     act: null
     style: { sex: f, eye: "#d8a838", topw: jacket, top: "#7a2f3a", botw: pants, bottom: "#2e2a30", shoes: boots, shoec: "#241e1c", neck: scarf, neckc: "#e8dcc0", expr: smile }
@@ -48,11 +48,11 @@ people:
     style: { sex: f, eye: "#b06a9a", topw: longsleeve, top: "#c8b060", botw: pants, bottom: "#5a3a2a", shoes: boots, shoec: "#3a2a22", neck: scarf, neckc: "#6a4a7a" }
 # hall B dressing and each person's one small prop. size = [w, h, d] the model is fitted into; wall things have no collider.
 props:
-  desk:  { model: "/cdn/value.5b6a81b0b5c3ff351fed398c495805ec293eb603941e494dc3249cabbc0f5528.glb", forward: "+x", at: [0.4, 0, 12.08], yaw: 0, size: [1.7, 1.05, 0.62], solid: true }
+  desk:  { model: "/cdn/value.5b6a81b0b5c3ff351fed398c495805ec293eb603941e494dc3249cabbc0f5528.glb", forward: "+x", at: [0.4, 0.012, 11.77], yaw: 0, size: [1.7, 1.05, 0.62], solid: true }
   board: { model: "/cdn/value.11af8b5100a8af83986249de7614d6a4d22735f6d3693801f2b24176ddca0c85.glb", at: [1.03, 1.02, 13.17], yaw: 0, size: [1.18, 1.0, 0.07] }
   keys:  { model: "/cdn/value.4488f8674afb84ccf38e37a31dadfdade5a0a1e471d42e0ed0acaebde361c0a4.glb", at: [-0.32, 1.22, 13.15], yaw: 0, size: [0.9, 0.5, 0.09] }
-  mat:   { model: "/cdn/value.a02ecb7fba699146a6ac7444a7edae7172bf1b811493e66e13d58d39e06575ae.glb", at: [0.4, 0.013, 11.46], yaw: 0, size: [0.95, 0.03, 0.6] }
+  mat:   { model: "/cdn/value.a02ecb7fba699146a6ac7444a7edae7172bf1b811493e66e13d58d39e06575ae.glb", at: [0.4, 0.013, 11.08], yaw: 0, size: [0.95, 0.03, 0.6] }
   crate: { model: "/cdn/value.96f48b56e826ebb5fd584d269b08f2272040ab5d50589b2e04101b00f31d82a2.glb", at: [-0.57, 0.012, 12.88], yaw: 0, size: [0.52, 0.42, 0.4], solid: true }
   chess: { model: "/cdn/value.94ac82b1865e4e8285c65c100d27ab60203c1964149d9b14aea021b1056e2e6b.glb", at: [-13.2, 0, 4.95], yaw: 0, size: [0.62, 0.78, 0.62], solid: true }
-keepsake: [-18.55, 0.937, 3.05]   # a8 counter worktop, beside the mug
+keepsake: [-18.55, 0.953, 3.05]   # a8 counter worktop, beside the mug
 pouf: [13.05, 5.1]

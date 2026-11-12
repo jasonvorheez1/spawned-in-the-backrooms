@@ -6,7 +6,7 @@
 import { APTS, DINING, UNIT } from "./level13.js";
 import L13 from "./data/level13.yml";
 import { rollFridge } from "../l13-fridge.js";
-const V = 5, M = L13.models, RANGE = { max: 42 };
+const V = 6, M = L13.models, RANGE = { max: 42 };
 const svg = (vb, w, body) => `<svg viewBox='${vb}' width='${w}m'>${body}</svg>`;
 const STAIN = svg("0 0 100 100", 1.9, `<defs><radialGradient id='g'><stop offset='0' stop-color='#2a2012' stop-opacity='.55'/><stop offset='.7' stop-color='#3a2c18' stop-opacity='.4'/><stop offset='1' stop-color='#3a2c18' stop-opacity='0'/></radialGradient></defs><ellipse cx='46' cy='52' rx='40' ry='31' fill='url(#g)'/><ellipse cx='66' cy='38' rx='22' ry='17' fill='url(#g)'/><ellipse cx='30' cy='68' rx='15' ry='11' fill='url(#g)'/>`);
 const DUST = svg("0 0 100 100", 3.4, `<defs><radialGradient id='d'><stop offset='0' stop-color='#d8d0bc' stop-opacity='.22'/><stop offset='1' stop-color='#d8d0bc' stop-opacity='0'/></radialGradient></defs><ellipse cx='30' cy='34' rx='26' ry='20' fill='url(#d)'/><ellipse cx='68' cy='58' rx='30' ry='24' fill='url(#d)'/><ellipse cx='40' cy='78' rx='22' ry='14' fill='url(#d)'/>`);
@@ -41,7 +41,7 @@ function layFlat(ctx, a) {
 
   // ---- kitchen: counter and fridge on the east wall, far from the doorway (lurk's flat is stripped)
   if (K !== "lurk") {
-    put("counter", "counter", 7.5, 1.65, -1, 0);
+    put("counter", "counter", 7.55, 1.59, -1, 0);
     const lp = at(7.05, 3.35);
     const lamp = ctx.spawn(pre + "fl", { feetPosition: { x: lp.x, y: 1.15, z: lp.z }, light: { kind: "point", color: "oklch(0.95 0.04 95)", intensity: 0, distance: 3 } });
     put("fridge", "fridge", 7.6, 3.35, -1, 0, { extra: { tags: ["container", "usable", "l13-fridge"], behavior: "scripts/l13-fridge.js", state: { name: "Fridge", verb: "Open", kind: "fridge13", items: rollFridge(ctx), lamp } } });
@@ -49,13 +49,9 @@ function layFlat(ctx, a) {
   const lived = K !== "lurk" && K !== "empty", tenant = K === "tenant";
   if (lived) {
     const tu = tenant ? 5.96 : DINING.u, tv = tenant ? 0.93 : DINING.v, top = L13.tops;
-    if (K !== "chess") {
-      put("table", "dining", tu, tv, 0, 1);
-      if (!tenant) {
-        put("chair1", "chair", tu, 0.48, 0, 1);
-        put("chair2", "chair", tu, story === "dinner" ? 3.0 : 2.68, story === "dinner" ? 0.25 : 0, -1);
-      }
-    }
+    // The dining mesh includes two chairs; the table itself sits off-centre.
+    if (K !== "chess") put("table", "dining", tu, tv, 0, 1);
+    const tabletop = tu + a.s * 0.22;
     // Keep the middle of the flat open from the entrance to the bedroom.
     if (a.id !== "b2") {
       const v = K === "chess" ? 1.55 : tenant ? 0.75 : 2.35;
@@ -65,19 +61,19 @@ function layFlat(ctx, a) {
       flat("rug", RUG, 1.85, tvV, 0);
     }
     if (tenant) {
-      put("dish1", "dishes", 7.48, 1.09, -1, 0, { y: top.counter, solid: false });
-      put("dish2", "dishes", tu - 0.23, tv, 1, 0.4, { y: top.table, solid: false });
-      put("can1", "can", 7.52, 2.44, 1, 0, { y: top.counter, solid: false });
-      put("can2", "can", tu + 0.3, tv - 0.15, 0, 1, { y: top.table, solid: false });
+      put("dish1", "dishes", 7.46, 1.08, -1, 0, { y: top.counter, solid: false });
+      put("dish2", "dishes", tabletop, tv + 0.23, 1, 0.4, { y: top.table, solid: false });
+      put("can1", "can", 7.54, 2.38, 1, 0, { y: top.counter, solid: false });
+      put("can2", "can", tu - a.s * 0.10, tv + 0.20, 0, 1, { y: top.table, solid: false });
     } else {
       if (story !== "latenight") put("plant", "plant", 0.5, 4.45, 1, 0);
       put("pic", "photos", 4.02, 0.14, 0, 1, { y: 1.34, solid: false });
     }
-    put("mug", "mug", 7.35, 2.18, -1, 0.3, { y: top.counter, solid: false });
+    put("mug", "mug", 7.45, 2.17, -1, 0.3, { y: top.counter, solid: false });
     put("coats", "coats", UNIT.doorX + 1.08, 0.26, 0, 1, { y: 0.94, solid: false });
     if (story === "dinner") {
-      put("st1", "dishes", tu + 0.2, tv - 0.25, 0, 1, { y: top.table, solid: false });
-      put("st2", "can", tu - 0.3, tv - 0.12, 0, 1, { y: top.table, solid: false });
+      put("st1", "dishes", tabletop, tv + 0.23, 0, 1, { y: top.table, solid: false });
+      put("st2", "can", tu - a.s * 0.10, tv + 0.20, 0, 1, { y: top.table, solid: false });
     }
     if (story === "suitcase") {
       put("st1", "suitcase", 0.64, 0.48, 0, 1);
@@ -88,16 +84,15 @@ function layFlat(ctx, a) {
       ctx.spawn(pre + "st1", { feetPosition: { x: p.x, y: 1.2, z: p.z }, rotation: { yaw: yw(-1, 0), roll: 4 }, vector: DRAWING, visibleRange: { max: 20 }, castShadow: false });
     }
     if (story === "mail") {
-      const p = at(tu, tv);
-      ctx.spawn(pre + "st1", { feetPosition: { ...p, y: top.table + 0.018 }, rotation: { pitch: -90, yaw: 14 }, vector: MAIL, visibleRange: RANGE, castShadow: false });
+      const p = at(tabletop, tv + 0.22);
+      ctx.spawn(pre + "st1", { feetPosition: { ...p, y: top.table + 0.018 }, rotation: { pitch: -90, yaw: 14 }, vector: MAIL.replace("0.85m", "0.53m"), visibleRange: RANGE, castShadow: false });
     }
     if (story === "bath") {
       put("st3", "towel", 5.43, 7.55, 1, 0.5, { solid: false });
       flat("st1", WATER, 6.2, 7.5, 0);
     }
     if (story === "latenight") {
-      put("st1", "can", tu - 0.33, tv + 0.2, 0, 1, { y: top.table, solid: false });
-      put("st3", "dishes", tu - 0.19, tv - 0.18, 1, 0, { y: top.table, solid: false });
+      put("st1", "can", tu - 0.04, tv + 0.2, 0, 1, { y: top.table, solid: false });
     }
   }
   if (K === "empty") { flat("stain", STAIN, 3.9, 2.4, 20); flat("dust", DUST, 5.2, 3.3, 70); }

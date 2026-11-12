@@ -9,7 +9,7 @@ import { layTape } from "../../scripts/lib/level13-tape.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 export const cadence = "1s";
-const V = 2;
+const V = 3;
 export const LETH = { startS: 45, fullS: 180, coolS: 20 }; // Savi's pick: lethargy starts after 45 s in one flat, full at 3 min, gone 20 s after you leave
 const WALL = { texture: "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.86 0.035 88)", roughness: 0.9 };
 const PROJECTWALL = { ...WALL, color: "oklch(0.84 0.04 133)" };
@@ -97,7 +97,7 @@ function lay(ctx) {
   let i = 0; for (let x = -38; x <= -2; x += 9) tube(i++, x, 0, 0); tube(i++, 0, 5, 90); for (let x = 4; x <= 40; x += 9) tube(i++, x, 10, 0);
   ctx.spawn("l13-reception-header", { feetPosition: { x: rx, y: 2.13, z: r.front + T / 2 }, primitive: box(r.x1 - r.x0, H - 2.13, T), material: PROJECTWALL, physics: "static", castShadow: false });
   // The floor number faces arrivals at the bend.
-  ctx.spawn("l13-283", { feetPosition: { x: 0.4, y: 2.19, z: r.front }, castShadow: false,
+  ctx.spawn("l13-283", { feetPosition: { x: rx, y: 2.36, z: r.front - 0.015 }, castShadow: false,
     vector: "<svg viewBox='0 0 360 120' width='1.2m'><rect x='2' y='2' width='356' height='116' rx='6' fill='#efe6cf' stroke='#b0572a' stroke-width='4'/><text x='180' y='50' text-anchor='middle' font-family='sans-serif' font-size='34' font-weight='bold' fill='#b0572a'>FLOOR 283</text><text x='180' y='90' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#4a3b2c'>FLATS 28301 – 28310 →</text></svg>" });
   // the ways through: the arrival from Level 12, and the bland door that isn't like the others (to Level 0)
   ctx.spawn("l13-from-l12", { feetPosition: { ...SPAWN }, rotation: { yaw: -90 } });

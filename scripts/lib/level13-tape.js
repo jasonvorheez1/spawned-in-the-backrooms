@@ -1,7 +1,7 @@
 // Level 13's B8 tenant: the tape, the door count on the wall, the box he keeps unpacking; cassette and tube-glass salvage in three flats.
 import { DINING, apt } from "./level13.js";
 import L13 from "./data/level13.yml";
-const TV = 2; // bump to re-lay every l13t- object
+const TV = 3; // bump to re-lay every l13t- object
 const RECORDER = "/cdn/value.2d037c484973cd0b26e6d4f42824e86c7ced0cb6de6365152abf1c2dceaea5e3.glb";
 const CARD = { texture: "cdn/texture-worn-brown-corrugated-cardboard-box-side.png", color: "oklch(0.7 0.06 70)", roughness: 0.95 };
 const TALLY = `<svg viewBox='0 0 200 120' width='0.9m'><g stroke='#3a3328' stroke-width='2.4' stroke-linecap='round' fill='none'>
@@ -40,7 +40,7 @@ export function layTape(ctx) {
   cardbox(ctx, "l13t-box1", { x: 18.57, y: 0.012, z: 15.55 }, 12, true, { tags: ["container"], state: { name: "Box marked B8, opened", items: itemsAt("l13t-box1", "magnetic_tape,magnetic_tape,crt_glass") } });
   cardbox(ctx, "l13t-box2", { x: 19.13, y: 0.012, z: 15.68 }, -8, true);
   cardbox(ctx, "l13t-box3", { x: 18.57, y: 0.352, z: 15.55 }, 31, false);
-  cardbox(ctx, "l13t-box4", { x: 22.78, y: 0.012, z: 15.77 }, 74, true, { tags: ["container"], state: { name: "Box marked B8, opened again", items: itemsAt("l13t-box4", "magnetic_tape,crt_glass") } });
+  cardbox(ctx, "l13t-box4", { x: 18.62, y: 0.012, z: 17.05 }, 74, true, { tags: ["container"], state: { name: "Box marked B8, opened again", items: itemsAt("l13t-box4", "magnetic_tape,crt_glass") } });
   // salvage elsewhere: a shoebox of unspooled cassettes and a kicked-in set's glass
   const salvage = [["a3", "magnetic_tape,magnetic_tape", "Shoebox of chewed cassettes"], ["a5", "crt_glass,crt_glass", "Bag of picture-tube glass"], ["b2", "magnetic_tape,crt_glass", "Box of dead tapes"]];
   for (const [id, items, name] of salvage) {
