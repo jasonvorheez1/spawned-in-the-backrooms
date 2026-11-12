@@ -91,7 +91,7 @@ export function layArcade(ctx) {
       strip("tube-a", -7.9, 0, 0.05, 35.6, "#ff3fae"), strip("tube-b", 2, 0, 0.05, 35.6, "#35d8ff"),
     ],
   });
-  [["a", 31, -24, "#ff8cc4", 7], ["b", 38, -15, "#8fd4ff", 7], ["c", 36, -3, "#ffc08a", 6.5], ["d", 30, -11, "#ffe0b0", 6]].forEach(([k, x, z, color, intensity]) =>
+  [["a", 47, -24, "#ff8cc4", 7], ["b", 54, -15, "#8fd4ff", 7], ["c", 52, -3, "#ffc08a", 6.5], ["d", 46, -11, "#ffe0b0", 6]].forEach(([k, x, z, color, intensity]) =>
     ctx.spawn("l31-arcade-light-" + k, { feetPosition: { x, y: 3.7, z }, light: { kind: "point", color, intensity, distance: 20 } }));
   // neon script over the entrance, hung on two rods, read from the aisle
   ctx.spawn("l31-arcade-neon", { feetPosition: { x: Z.x0 + 2.6, y: 3.6, z: -12 }, rotation: { yaw: 90 }, vector: NEON, castShadow: false,
@@ -102,26 +102,26 @@ export function layArcade(ctx) {
     behavior: SELF, tags: ["usable", "l31-arcade"], state: { kind: "attract", verb: "Play", info: "arcade machine, takes a card", ...state }, children });
   const W = 90, EA = -90, S = 180; // the way a machine's player side faces
 
-  M("dispenser", "dispenser", Z.x0 + 1, -12, W, { kind: "dispenser", name: "Card dispenser", verb: "Press", info: "Please press the button to get a card" },
+  M("dispenser", "dispenser", Z.x0 + 1, -9.4, W, { kind: "dispenser", name: "Card dispenser", verb: "Press", info: "Please press the button to get a card" },
     { metal: { texture: tex("brushed-stainless-steel"), metalness: 1, roughness: 0.38 }, button: lamp("#1f5cff", 1.2) },
     [{ id: "print", feetPosition: { x: 0, y: 1.03, z: -0.2155 }, vector: PRINT, castShadow: false }]);
 
   // sit-down racers: two rows of three, screens back to back, seats out to the aisles
   const RT = ["retro-arcade-crt-screen-desert-highway-racing-game", "retro-arcade-crt-screen-night-city-racing-game"], RC = ["#ffffff", "#ffd9c0", "#c8e4ff"];
   for (let r = 0; r < 2; r++) for (let i = 0; i < 3; i++)
-    M(`racer-${r}${i}`, "racer", r ? 34.05 : 31.45, -22 + i * 1.25, r ? EA : W, { name: "Dust Devil GP", res: "racer", pitch: 0.94 + i * 0.05 },
+    M(`racer-${r}${i}`, "racer", r ? 50.05 : 47.45, -22 + i * 1.25, r ? EA : W, { name: "Dust Devil GP", res: "racer", pitch: 0.94 + i * 0.05 },
       { screen: glow(RT[(r + i) % 2], RC[i]), marquee: lamp(r ? "#ffb23a" : "#ff5a3a", 1.4) });
   // ride-on bikes against the north wall
-  for (let i = 0; i < 2; i++) M("moto-" + i, "moto", 29.6 + i * 1.9, N + 1.22, S, { name: "Night Ride 500", res: "moto", pitch: 1.08 },
+  for (let i = 0; i < 2; i++) M("moto-" + i, "moto", 45.6 + i * 1.9, N + 1.22, S, { name: "Night Ride 500", res: "moto", pitch: 1.08 },
     { screen: glow("retro-arcade-crt-screen-motorbike-coast-road-racing-game", i ? "#d8ffe0" : "#ffffff"), marquee: lamp(i ? "#58c8ff" : "#ff4fb8", 1.4), tail: lamp("#ff2a1a", 2) });
   // pinball: three in a row, backs to the north wall
   const PB = [["Moon Diner", "#ffffff", "#ffd0f0"], ["High Tide", "#bfe6ff", "#9fe0ff"], ["Thunder Alley", "#ffe2a8", "#ffc070"]];
-  PB.forEach(([name, a, b], i) => M("pinball-" + i, "pinball", 36 + i * 1.05, N + 0.72, S, { name, res: "pinball", pitch: 1.15 },
+  PB.forEach(([name, a, b], i) => M("pinball-" + i, "pinball", 52 + i * 1.05, N + 0.72, S, { name, res: "pinball", pitch: 1.15 },
     { playfield: glow("pinball-machine-playfield-top-down-bumpers-lanes-art", a, 0.7), backglass: glow("pinball-backglass-art-1970s-painted-illustration", b, 1.2) }));
   // skee-ball: two lanes side by side, heads on the east wall
   for (let i = 0; i < 2; i++) M("skee-" + i, "skee", E - 1.6, -3.2 + i * 0.86, W, { name: "Skee-Ball lane " + (i + 1), verb: "Roll", res: "skee", pitch: 0.9 }, { lane: { texture: tex("grey-cork-lane-surface"), roughness: 0.7 } });
   M("wheel", "wheel", E - 0.52, -10.5, W, { name: "Big Prize Wheel", verb: "Spin", res: "wheel", pitch: 1.2 }, { screen: lamp("#ff3b30", 1.6), marquee: lamp("#ffd76a", 1.5), bulbs: lamp("#ffdf9a", 2.5) });
-  M("hockey", "hockey", 36, -8, 0, { name: "Air hockey", res: "hockey", pitch: 0.85 }, { screen: lamp("#ff4a2a", 1.5), lamp: lamp("#fff2dc", 2), goal: lamp("#ff3b30", 1.2) });
+  M("hockey", "hockey", 52, -8, 0, { name: "Air hockey", res: "hockey", pitch: 0.85 }, { screen: lamp("#ff4a2a", 1.5), lamp: lamp("#fff2dc", 2), goal: lamp("#ff3b30", 1.2) });
   // four old box uprights, far apart, each against a wall
   const U = (id, x, z, yaw, state, side, body, scr, svg, extra = []) => M(id, "upright", x, z, yaw, { res: "upright", ...state },
     { screen: scr, marquee: lamp("#fff4d0", 0.5), side, body_red: body, cpanel: { color: body.color } },
@@ -134,7 +134,7 @@ export function layArcade(ctx) {
     children: [{ id: "glow", feetPosition: { x: 0, y: 1.35, z: -0.6 }, light: { kind: "point", color: "#9fd4ff", intensity: 0.6, distance: 2.5 } }] });
   U("panic", E - 0.42, -24.5, W, { kind: "arcade", game: "blockpanic", name: "Block Panic", info: "arcade cabinet, takes a card" }, { color: "#2a1c5c", roughness: 0.4 }, { color: "#ff4fa3" },
     glow("retro-arcade-crt-screen-pixel-falling-block-puzzle-game", "#ffffff", 1.5), PANIC);
-  U("comet", 27.2, N + 0.42, S, { name: "Comet Cadets", pitch: 1.3 }, { color: "#0c2a66", roughness: 0.4 }, { color: "#ff8a2a" },
+  U("comet", 43.2, N + 0.42, S, { name: "Comet Cadets", pitch: 1.3 }, { color: "#0c2a66", roughness: 0.4 }, { color: "#ff8a2a" },
     glow("retro-arcade-crt-screen-pixel-space-shooter-starfield-game", "#d8e8ff"), COMET);
   U("pickle", E - 0.42, 3, W, { name: "Pickle Patrol", pitch: 0.8 }, { color: "#e9dfc2", roughness: 0.55 }, { color: "#5c9a2e" },
     glow("retro-arcade-crt-screen-pixel-maze-chase-green-game", "#e6ffd0"), PICKLE,
@@ -142,7 +142,7 @@ export function layArcade(ctx) {
 
   // three faceling customers, each stood at a machine (docile; lines in scripts/lib/data/dlg-generic.yml by id)
   [["face1", E - 1.5, -16.5, EA, "f", { topw: "jacket", top: "#7a3d52", bottom: "#27293a" }, "Faceling at the Felix machine"],
-   ["face2", 37.05, N + 2.05, 0, "m", { topw: "tee", top: "#3f6f8f", bottom: "#3a352e" }, "Faceling at the pinball"],
+   ["face2", 53.05, N + 2.05, 0, "m", { topw: "tee", top: "#3f6f8f", bottom: "#3a352e" }, "Faceling at the pinball"],
    ["face3", E - 3.75, -2.77, EA, "m", { topw: "hoodie", top: "#c9a23a", bottom: "#22232b" }, "Faceling at the Skee-Ball"]].forEach(([id, x, z, yaw, sex, wear, name]) =>
     ctx.spawn("l31-arcade-" + id, { feetPosition: { x, y: 0.05, z }, rotation: { yaw }, physics: "character", tags: ["npc", "usable", "faceling", "l31-arcade"],
       ...critterSpec(npcLook("l31-arcade-" + id, { species: "faceling", sex, botw: "pants", shoes: "sneakers", ...wear }, "wanderer", 1)),

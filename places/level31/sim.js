@@ -7,7 +7,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 29;
+const V = 30;
 const PROPS = "scripts/l31-props-geo.js";
 const P = (params) => ({ primitive: { kind: "scripted", script: PROPS, params }, material: { pbr: true } });
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
@@ -67,7 +67,18 @@ function shell(ctx) {
   ctx.spawn("l31-floor", { feetPosition: { x: 0, y: -0.3, z: 0 }, primitive: box(W, 0.3, D), material: CARPET, physics: "static", receiveShadow: true, castShadow: false });
   ctx.spawn("l31-ceil", { feetPosition: { x: 0, y: H, z: 0 }, primitive: box(W, 0.2, D), material: CEIL, physics: "static", castShadow: false });
   const w = (id, x, z, wd, dp, mat = WALL) => ctx.spawn(`l31-wall-${id}`, { feetPosition: { x, y: 0, z }, primitive: box(wd, H, dp), material: mat, physics: "static", castShadow: false });
-  w("n", 0, B.z0 - T / 2, W + T * 2, T); w("e", B.x1 + T / 2, 0, T, D); w("w", B.x0 - T / 2, 0, T, D);
+  w("n", 0, B.z0 - T / 2, W + T * 2, T);
+  // east wall, cut by the arcade doorway (a rounded arch of chrome round a 3 m opening)
+  const K = BACK, dz0 = K.doorZ - K.doorW / 2, dz1 = K.doorZ + K.doorW / 2;
+  w("e1", B.x1 + T / 2, (B.z0 + dz0) / 2, T, dz0 - B.z0); w("e2", B.x1 + T / 2, (dz1 + B.z1) / 2, T, B.z1 - dz1);
+  ctx.spawn("l31-wall-e-lintel", { feetPosition: { x: B.x1 + T / 2, y: K.doorH, z: K.doorZ }, primitive: box(T, H - K.doorH, K.doorW), material: WALL, physics: "static", castShadow: false });
+  ctx.spawn("l31-arch", { feetPosition: { x: B.x1 + T / 2, y: 0, z: K.doorZ }, rotation: { yaw: 90 }, primitive: { kind: "archway", width: K.doorW + 0.3, height: K.doorH + 0.15, depth: T + 0.14, thickness: 0.14, segments: 24 }, material: { color: "#d9dbe3", metalness: 0.9, roughness: 0.22 }, castShadow: false,
+    children: [{ feetPosition: { x: 0, y: K.doorH + 0.32, z: -0.2 }, vector: `<svg viewBox='0 0 300 60' width='2.6m'><text x='150' y='44' text-anchor='middle' font-family='display' font-size='40' fill='none' stroke='#49e6ff' stroke-width='2.4' filter='drop-shadow(0 0 6 #29d0ff)'>GAME ROOM</text></svg>`, castShadow: false }] });
+  // the back room: its own floor, ceiling and three walls
+  const KW = K.x1 - K.x0, KD = K.z1 - K.z0, kx = (K.x0 + K.x1) / 2 + T / 2, kz = (K.z0 + K.z1) / 2;
+  ctx.spawn("l31-back-floor", { feetPosition: { x: kx, y: -0.3, z: kz }, primitive: box(KW + T, 0.3, KD), material: CARPET, physics: "static", receiveShadow: true, castShadow: false });
+  ctx.spawn("l31-back-ceil", { feetPosition: { x: kx, y: H, z: kz }, primitive: box(KW + T, 0.2, KD), material: CEIL, physics: "static", castShadow: false });
+  w("bn", kx, K.z0 - T / 2, KW + T * 2, T); w("bs", kx, K.z1 + T / 2, KW + T * 2, T); w("be", K.x1 + T * 1.5, kz, T, KD + T * 2); w("w", B.x0 - T / 2, 0, T, D);
   w("s1", (B.x0 + DOOR.x - 0.6) / 2, B.z1 + T / 2, DOOR.x - 0.6 - B.x0, T); w("s2", (DOOR.x + 0.6 + B.x1) / 2, B.z1 + T / 2, B.x1 - DOOR.x - 0.6, T);
   ctx.spawn("l31-wall-s-lintel", { feetPosition: { x: DOOR.x, y: 2.3, z: B.z1 + T / 2 }, primitive: box(1.2, H - 2.3, T), material: WALL, physics: "static", castShadow: false });
   // inner partitions: arcade | food court, and the gift shop's two side walls
@@ -78,6 +89,7 @@ function shell(ctx) {
   const str = (id, x, z, len, along) => { const kids = []; for (let d = -len / 2 + 0.5; d < len / 2; d += 1) kids.push({ feetPosition: along === "x" ? { x: d, y: 0, z: 0 } : { x: 0, y: 0, z: d }, primitive: { kind: "sphere", radius: 0.05, widthSegments: 6, heightSegments: 4 }, material: glow(["#ff3b2e", "#3fe0ff", "#ffd23a", "#7dff5a", "#ff3fa4"][Math.abs(Math.round(d)) % 5], 4), castShadow: false });
     ctx.spawn(`l31-string-${id}`, { feetPosition: { x, y: 3.6, z }, primitive: along === "x" ? box(len, 0.015, 0.015) : box(0.015, 0.015, len), material: { color: "#111" }, castShadow: false, children: kids }); };
   str("n", 0, B.z0 + 0.08, W - 1, "x"); str("s", 0, B.z1 - 0.08, W - 1, "x"); str("w", B.x0 + 0.08, 0, D - 1, "z"); str("e", B.x1 - 0.08, 0, D - 1, "z");
+  str("bn", kx, K.z0 + 0.08, KW - 1, "x"); str("be", K.x1 + T - 0.08, kz, KD - 1, "z");
   // a few dim house cans over the carpet aisles so nobody walks blind
   [[-24, 20], [14, 17], [-24, -20], [24, -17], [-26, 0], [24, 0], [-36, -22], [-30, 24], [0, -24], [-8, -24], [8, -24], [-14, 24], [-38, 22], [-38, -27], [18, -26], [-14, -16], [14, -16]].forEach(([x, z], i) => ctx.spawn(`l31-can${i}`, { feetPosition: { x, y: H - 0.1, z }, primitive: { kind: "scripted", script: PROPS, params: { kind: "can" } }, material: { pbr: true }, castShadow: false,
     children: [{ feetPosition: { x: 0, y: -0.35, z: 0 }, light: { kind: "point", color: "#ffcf9a", intensity: 9, distance: 18 } }] }));
@@ -154,11 +166,29 @@ function djBooth(ctx) {
   ctx.spawn("l31-skate-bed", { feetPosition: { x: 0, y: 1, z: 0 }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-roller-skates-on-wood-rink-distant-laughter-loop.mp3", gain: 0.12, loop: true, spatial: true, maxDistance: 40 } });
 }
 
+// the floor the arcade left: a birthday party corner (tables, balloons, a banner), the rink's own thing
+function party(ctx) {
+  const P = ZONES.party;
+  const T6 = [[30, -24], [36, -24], [30, -17], [36, -17], [33, -4]];
+  T6.forEach(([x, z], i) => {
+    ctx.spawn(`l31-party-t${i}`, { feetPosition: { x, y: 0, z }, model: { id: FG.table, forward: "+z" }, physics: { body: "static", collider: "box" }, castShadow: false, tags: ["l31-party"] });
+    [[0, -0.75, 0], [0, 0.75, 180], [-0.75, 0, 90], [0.75, 0, -90]].forEach(([dx, dz, yaw], k) => ctx.spawn(`l31-party-c${i}-${k}`, { feetPosition: { x: x + dx * (1 + (i + k) % 3 * 0.08), y: 0, z: z + dz }, rotation: { yaw: yaw + ((i * 7 + k * 13) % 11) - 5 }, model: { id: FG.chair, forward: "+z" }, physics: { body: "static", collider: "box" }, castShadow: false, tags: ["seat", "l31-party"], state: { name: "Party chair" } }));
+    // a balloon bunch tied to every table's middle
+    const cols = ["#ff4fa8", "#49e6ff", "#ffd23a", "#7cff6a", "#b26bff"];
+    ctx.spawn(`l31-party-b${i}`, { feetPosition: { x, y: 0.76, z }, castShadow: false, tags: ["l31-party"], children: [0, 1, 2].map((k) => {
+      const a = (k * 2.1 + i), dx = Math.cos(a) * 0.12, dz = Math.sin(a) * 0.12, h = 1.25 + k * 0.12;
+      return { id: "bal" + k, feetPosition: { x: dx, y: h, z: dz }, primitive: { kind: "ellipsoid", radiusX: 0.15, radiusY: 0.19, radiusZ: 0.15, widthSegments: 18, heightSegments: 14 }, material: { color: cols[(i + k) % 5], roughness: 0.25, metalness: 0.05, clearcoat: 1 },
+        children: [{ id: "str", feetPosition: { x: -dx / 2, y: -h / 2 - 0.02, z: -dz / 2 }, rotation: { roll: dx * 40, pitch: -dz * 40 }, primitive: { kind: "cylinder", radiusTop: 0.002, radiusBottom: 0.002, height: h - 0.05 }, material: { color: "#eeeeee" } }] }; }) });
+  });
+  ctx.spawn("l31-party-banner", { feetPosition: { x: (P.x0 + P.x1) / 2, y: 3.1, z: P.z0 + 0.2 }, castShadow: false, vector: `<svg viewBox='0 0 600 90' width='7m'><path d='M10 10 Q300 60 590 10' fill='none' stroke='#eee' stroke-width='2'/>${"HAPPY BIRTHDAY".split("").map((c, i) => { const x = 30 + i * 41, y = 18 + Math.sin((i / 13) * Math.PI) * 24, f = ["#ff4fa8", "#49e6ff", "#ffd23a", "#7cff6a"][i % 4]; return c === " " ? "" : `<path d='M${x - 16} ${y} L${x + 16} ${y} L${x} ${y + 52} Z' fill='${f}'/><text x='${x}' y='${y + 26}' text-anchor='middle' font-family='display' font-size='22' fill='#1a0b20'>${c}</text>`; }).join("")}</svg>` });
+  ctx.spawn("l31-party-light", { feetPosition: { x: 33, y: 3.6, z: -18 }, light: { kind: "point", color: "#ffd0e8", intensity: 8, distance: 18 } });
+}
+
 export function tick(ctx) {
   const s = ctx.place.state;
   if (s.v31 === V) return;
   for (const id of Object.keys(ctx.place.objects)) if (id.startsWith("l31-") && !id.includes("/")) ctx.destroy(id);
-  shell(ctx); rink(ctx); starburst(ctx); doors(ctx); cinema(ctx); djBooth(ctx);
+  shell(ctx); rink(ctx); starburst(ctx); doors(ctx); cinema(ctx); djBooth(ctx); party(ctx);
   layParts(ctx);
   s.v31 = V;
 }
