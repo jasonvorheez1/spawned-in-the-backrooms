@@ -23,3 +23,7 @@ lumber:       { model: "/cdn/value.f0f72fab46477d4fec46489d766508527fa510944566f
 bucket:       { model: "/cdn/value.de837b025facd30bbc64219af3eff567b5ebc52a66434f60110fdc6b9260a8b1.glb", size: [0.55, 0.42, 0.45] }
 tarp:         { model: "/cdn/value.78cd2d67c6b09ca3eb8872f55fb7d8f49a4ff6730f9482e392e293085d5aed8f.glb", size: [1.6, 0.25, 1.3] }
 outlet:       { model: "/cdn/value.72198daf8936beb5df2ab14746ad4c04a48b4f480e6915400a59eb89ad2be295.glb", size: [0.08, 0.12, 0.02] }
+cooler:       { model: "/cdn/value.7ec5acf9cbcb795bc20157c6bc1477a992416bc33b89d8cdf92b89e586a3f75d.glb", size: [0.38, 0.42, 0.6] }
+thermos:      { model: "/cdn/value.b73eeb7ce660b6d10ce9e43df0bcd353f9bb5f654a8ef770082d8fc44ef7648b.glb", size: [0.12, 0.32, 0.11] }
+fchair:       { model: "/cdn/value.0dbf8e6d81eff6df8b04ffcbf22f49585c421eab5f2bfd561df451db201ffea4.glb", size: [0.47, 0.8, 0.45] }
+rtray:        { model: "/cdn/value.9ea24886dcacba1ae8944fa107d83e9846a60d1e90f4299f449d429daa4311c6.glb", size: [0.38, 0.09, 0.28] }
