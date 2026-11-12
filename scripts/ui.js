@@ -388,7 +388,13 @@ function ritual12(ctx, player) { // Level 12: Harris's ritual as a checklist tha
   ].join('')
   return `<div style="position:fixed;left:24px;top:96px;pointer-events:none;font-family:inherit;font-size:13px;color:#fffde8;background:rgba(22,20,14,.78);box-shadow:0 0 0 2px #5a503d;padding:10px 14px;display:flex;flex-direction:column;gap:6px;min-width:250px;text-shadow:1px 1px #16140e"><div style="font-size:11px;letter-spacing:.14em;color:#d4b96a">HARRIS'S RITUAL</div>${rows}</div>`
 }
-export default function render(ctx, player) { return renderHud(ctx, player) + unlock12(ctx, player) + ritual12(ctx, player) + lagscopeOverlay(ctx, player) + UI_THEME } // the 3D studio button is off the HUD (Shelly, Nov 9: bothersome)
+// Tiny's tar (scripts/l7-tiny.js writes player.state.tarUntil on a spear hit): a black oily edge that closes in, then drains away
+function tarVeil(ctx, player) {
+  const until = player.state?.tarUntil ?? 0; if (!until || ctx.now() > until) return "";
+  const k = Math.round(until);
+  return `<style>@keyframes tar${k}{0%{opacity:1}70%{opacity:.85}100%{opacity:0}}</style><div id="tar${k}" class="fixed inset-0 pointer-events-none" style="animation:tar${k} 3s ease-in forwards;background:radial-gradient(ellipse at 50% 45%,transparent 18%,rgba(4,6,8,.75) 46%,#020304 72%)"></div>`;
+}
+export default function render(ctx, player) { return tarVeil(ctx, player) + renderHud(ctx, player) + unlock12(ctx, player) + ritual12(ctx, player) + lagscopeOverlay(ctx, player) + UI_THEME } // the 3D studio button is off the HUD (Shelly, Nov 9: bothersome)
 function renderHud(ctx, player) {
   const s = player.state ?? {}
   const quick = !s.building && screen(s,player.place)==='play' && Object.keys(s.quickSlots??{}).length ? quickItems(s) : []
