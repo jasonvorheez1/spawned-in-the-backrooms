@@ -8,7 +8,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 import { S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, xOf } from "../../scripts/lib/level02.js";
-import { FRESH_BODY } from "../../scripts/lib/remodel-quest.js";
+import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 export const cadence = "250ms";
 const V = 1, STEP_MS = 2600;
 const W = 2 * S * 0 + NX * S, D = NZ * S; // 32 x 20 m
@@ -144,6 +144,7 @@ export function tick(ctx) {
   if (s.v !== V || !("l02-base" in ctx.place.objects)) { s.v = V; layShell(ctx); layClean(ctx); s.phase = "clean"; s.liftDown = false; return; }
   if (!ps.length) { s.emptyAt ??= now; if (s.phase !== "clean" && now - s.emptyAt > 15000) { layClean(ctx); layLift(ctx, false); layCans(ctx); for (const r of ctx.query({ tags: ["l02debris"] })) ctx.destroy(r.id); s.phase = "clean"; s.liftDown = false; } return; }
   s.emptyAt = null;
+  for (const p of ps) if (p.state?.remodQ === 1) setRemodStep(ctx, p, 2, "Fresh Paint · Find 3 Reality Fresheners: the bathroom, the stuck freight lift, and Cap'n");
   if (s.phase === "clean" && ps.some((p) => p.feetPosition.x > X0 + S + 1 && p.feetPosition.y > -1)) { s.phase = "falling"; s.col = NX - 1; s.nextAt = now + 1800; ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-deep-structural-wood-creak-groan.mp3", position: { x: xOf(NX - 1), y: 2, z: 0 }, volume: 0.9, maxDistance: 45 }); }
   if (s.phase === "falling" && now >= s.nextAt) {
     if (held(ctx, s.col)) { s.phase = "held"; for (const p of ps) if (p.state) p.state.notice = { text: "The freshener holds. The rest of the floor stays put.", at: now }; }
