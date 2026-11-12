@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 6417,
-  "updatedAt": "2026-11-12T15:15:14.592Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social hub, lore destinations and a solo tutorial. Shared player behaviors and place simulations compose authored and generated spaces, while NPC factions, creatures, loot and quests supply encounters and progression.",
+  "basedOnSpecVersion": 6440,
+  "updatedAt": "2026-11-12T15:36:17.670Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social hub, lore destinations and a solo tutorial. Shared player behaviors and place simulations compose authored and generated spaces; NPCs, creatures, loot and quests supply encounters and progression.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0/Lobby maze; sim lays ecology, routes and generated landmarks including Level 0.2, Zenith entry, north-rim Christmas Area, seeded Manila Room and stair anomalies.",
+    "places/main (3D) - Level 0/Lobby maze; sim lays ecology, routes and generated landmarks including Level 0.2, Zenith entry, Christmas Area, Manila Room and stair anomalies.",
     "places/bonus (3D) - vaporwave mall with authored shops/escalators and simulated staff; Rico's platform routine and Bonus Line boarding cooperate.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo ephemeral) - character creation/waking and staged tutorial route.",
     "places/level01 (3D) - Zenith Station: station, breach, doors, bots, hazards and recorder quest.",
     "places/level1, level2, level02, level21, level3, gamma (3D) - Habitable Zone/M.E.G. camp, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma; local sims own specialized environments and routes.",
-    "places/level4, level5, level6, level7, level10, level26, level27 (3D) - Office, Hotel, drowned house, sea/Fort Surrender and entities 20 and 720 (Tiny), Bumper Crop farm/outpost and lake, and deeper destinations.",
-    "places/level11, places/level12, places/level13 (3D) - Infinite City and Matrix-to-Boiling-Frogs destinations; Level 13 has Floor 283 reception, numbered halls, furnished/story-bearing flats, residents, foes and B8 tape.",
+    "places/level4, level5, level6, level7, level10, level26, level27 (3D) - Office, Hotel, drowned house, sea/Fort Surrender and Tiny, Bumper Crop farm/outpost and lake, and deeper destinations.",
+    "places/level11, places/level12, places/level13 (3D) - Infinite City includes generated street grid, subway stair entrance, Spamton's service alley and Idle Hands used-auto lot; Matrix-to-Boiling-Frogs destinations; Level 13 has Floor 283 reception, halls, flats, residents, foes and B8 tape.",
     "places/testlab + places/spamton (3D) - authored test and bonus spaces; places/level184 is another standalone simulated destination."
   ],
   "roots": [
@@ -25,10 +25,10 @@
     "mods/lagscope/mod.json + watch.js + panel.js - attach-to-player performance sampling and F3/god-rail inspector in any game with the mod installed."
   ],
   "shared": [
-    "scripts/lib/hub.js + scripts/lib/data/preload.yml + scripts/lib/preload-next.js - solo room IDs/names, destinations and door/model proximity-preload manifest; Level 11's street set is included for warm-up.",
+    "scripts/lib/hub.js + scripts/lib/data/preload.yml + scripts/lib/preload-next.js - solo room IDs/names, destinations and door/model proximity-preload manifest; Level 11 street set included for warm-up.",
     "scripts/lib/loot.js + scripts/lib/items.js + scripts/lib/weapons.js/data/weapons.yml - common loot, containers, item definitions, rarity and weapon variants.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/lib/level3-hatch.js - parametric door geometry/motion and deterministic Level 3 paired wall-hatch layout; scripts/lib/thresholds.js + threshold-geo.js + sign-style.js/sign-geo.js provide crossing clues and sign boards.",
-    "scripts/lib/quest-route.js + scripts/lib/quest-mark.js + scripts/lib/quests.js - crossing graph/objectives and common quest state; dialogue.js/dlg-*.yml author NPC conversations, npc-starters.js supplies quest/realty choices, voices.js serves acted dialogue.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/lib/level3-hatch.js - parametric door geometry/motion and deterministic Level 3 paired wall-hatch layout; thresholds/sign geometry is shared by participating places.",
+    "scripts/lib/quest-route.js + scripts/lib/quest-mark.js + scripts/lib/quests.js - crossing graph/objectives and common quest state; dialogue.js/dlg-*.yml author NPC conversations, npc-starters.js supplies quest/realty choices, voices.js serves voice assets.",
     "scripts/lib/data/l02-props.yml + scripts/lib/data/l02-remodel.yml + scripts/lib/l02-grid.js - Level 0.2 prop catalog, shifting partitions, lamp/paint configuration, crew dressing and reset.",
     "scripts/lib/breakables.js + scripts/lib/data/breakables.yml - shared prop/wall material, damage, drops, wrecking and regrowth; place sims opt in with sweepProps/tickWalls.",
     "scripts/lib/data/cow-lines.yml + art/vo/act.py + scripts/lib/data/voice-acted.yml/voices.js - per-cast-member gunpoint reaction lines and recorded takes consumed by scripts/meg-agent.js.",
@@ -40,19 +40,19 @@
     "scripts/lib/cat-wardrobe.js - CAT_BODY, CAT_OLD, CAT_BODY2, paintOf, skinParams, EYE_COLORS, SHADOWS, faceLife, catModel, chestOf, SNOUTS, catMorph; scripts/lib/critter-model.js - shared NPC appearance/refitting exports.",
     "scripts/lib/items.js - itemsOf, tokenOf, describe, MEAT, CASH and money; shared item tokens are consumed by interaction, loot UI and player inventory.",
     "scripts/door-geo.js - geometry, collider; scripts/lib/thresholds.js - dressThresholds; scripts/threshold-geo.js - threshold geometry/material builders.",
-    "scripts/lib/quest-route.js - nextQuestExit; scripts/lib/quest-mark.js - questMark; scripts/lib/quests.js - MAX_TRACK, TINT, PLACE_NAMES, qid, setQuest, endQuest, tracked, toggleTrack; scripts/lib/voices.js - voiceKey, actedVoice, vo, record helpers; scripts/meg-agent.js - nerveOf, onSpawn, bark, update, vanish.",
+    "scripts/lib/quest-route.js - nextQuestExit; scripts/lib/quest-mark.js - questMark; scripts/lib/quests.js - MAX_TRACK, TINT, PLACE_NAMES, qid, setQuest, endQuest, tracked, toggleTrack; scripts/lib/voices.js - voiceKey, actedVoice, vo, record helpers.",
     "scripts/lib/breakables.js - classOf, strFactor, wallProtected, wallKeyAt, brokenList, syncLevel0, gridWallAt, syncWalls, sweepProps, tickWalls, toolOf, rollDrops; scripts/lib/sign-style.js - restyleSigns.",
-    "places/level1/sim.js - cadence, agentSpec, tick; scripts/interact.js - openLoot, talk, ears, onInput, update; scripts/hounds.js and scripts/l11-crawlers.js - update."
+    "places/level1/sim.js - cadence, agentSpec, tick; places/level11/sim.js - cadence, L11_FAR, l11Lean, tick; scripts/level11-porsche.js - ears, ignite, control/input/collision hooks and update."
   ],
   "ownership": [
-    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved position and carried tapes; writes top-level throwable/material counts including baubles and stuffing.",
+    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved position, tapes and currency cents; car purchases are recorded as vehicle IDs in player.state.cars.",
     "scripts/lib/quests.js - player.state.quests, qtrack and qdone; quest handlers own quest-specific state; dina-quest.js owns dinaQ, dinaDiary, dcut and seeds the-way-back.",
     "scripts/lib/remodel-quest.js - player.state.remodQ, l02got, l02paint, fresh, capnAsk and capnFailed plus Fresh Paint quest/HUD/payout/reputation.",
     "scripts/kick.js + scripts/grab.js own kick cooldowns and carry/held target session; scripts/lib/loose.js + breakables.js own loose prop/wreck and breakable state, including place.state.gone and wall breakage/timestamps.",
     "Enemy managers own AI and sneakTarget; scripts/meg-agent.js keeps gunpoint reaction memory, dialogue and pose on NPCs; scripts/lib/critter-model.js refits appearance in state.wear; scripts/l7-tiny.js owns Tiny's hunt/movement/voice.",
     "places/level02/sim.js owns phase/caseLandAt and reset markers; scripts/lib/l02-grid.js writes place.state.l02grid.layout, while scripts/lib/l02-use.js writes its lamps map; places/level7/sim.js owns place.state.tinyV migration marker.",
     "places/main/sim.js owns momentsV/moments and stairsSeeded; scripts/lib/xmas-room.js owns place.state.xmasV and generated xmas-prefixed landmarks; xmas-still.js keeps behavior/combat fields on its objects.",
-    "places/level1/sim.js owns place.state deck build phase/l1Deck markers; scripts/l11-crawlers.js manages its foe roster and deadAt respawn timestamps, plus per-crawler corpse timing; mods/lagscope/lib/watch.js keeps local sampling state and lib/store.js owns shared config/reports."
+    "places/level1/sim.js owns place.state deck build phase/l1Deck markers; scripts/l11-crawlers.js manages foe roster and corpse timers; scripts/level11-porsche.js stores car ownerId/ownerName and driver/controller on the vehicle object."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors.",
@@ -65,8 +65,8 @@
     "places/main/sim.js → scripts/lib/level0-moments.js seeded Harris/Manila Room + sealed perimeter/stair door and return trigger → scripts/moments.js plays stair sound/flash and transfers the interacting player between outside and downstairs.",
     "scripts/player.js uses musicbox token → scripts/lib/musicbox.js places a wind-up box after rest cooldown, kneels and starts audio/effects → scripts/musicbox.js winds down and E pickup restores the token; musicNear queries within range.",
     "scripts/interact.js loot search → loot.gateItems → items/weapons roll; corpse container names are presented without Dead/Wrecked prefixes; focus → player.state.focus → loot/talk/shop UI.",
-    "scripts/meg-agent.js reads scripts/lib/data/cow-lines.yml and voiced takes from voices.js → a cast member reacts to aimed guns with hands/draw/flee/calm barks; art/vo/act.py records two selected takes per reaction kind and cast member.",
-    "places/level1/sim.js builds the upper deck over phased ticks via place.state.l1DeckPh → deck geometry, lamps, rails, guards, wheel stops and pallet props; scripts/lib/data/preload.yml maps doors to destinations/models → preload-next.js warms the Level 11 street models before crossing."
+    "scripts/meg-agent.js reads scripts/lib/data/cow-lines.yml and scripts/lib/data/voice-acted.yml via voices.js → cast member gunpoint hands/draw/flee/calm reactions and recorded takes.",
+    "places/level11/cells/x0z0.scene places l11-lot-sedan with scripts/level11-porsche.js → usable press checks price/owner, deducts player.state.cents and appends vehicle ID to player.state.cars; the purchase press returns, next E enters/drives through the same behavior."
   ],
   "behaviorFamilies": [
     "places/bonus scenes + bonus data/sim + mall shopper/salon scripts - authored mall and counter behavior; sim lays staff and Rico, whose platform schedule and Bonus Line boarding are separate cooperating routines.",
@@ -76,7 +76,7 @@
     "places/level01/sim.js + Zenith geometry, breach, hatch, bot and hazard scripts - Zenith Station environment and interactive systems; places/level02/sim.js + l02-grid.js vary basement partitions, lights, crew, knocks and reset.",
     "scripts/meg-agent.js - per-NPC nerve/stats/weapon-driven reactions, aim, cover and recorded gunpoint barks; scripts/lib/critter-model.js refits NPC bodies across Level 7, Bonus and Level 0.2; scripts/l7-tiny.js is a separate aquatic hunter.",
     "Level 13: level13-furnish.js + level13.yml vary flat furnishing/story; level13-dress.js + l13-dress.yml lay hall traces/doors; foe, people and tape layers define encounters/residents/salvage.",
-    "scripts/lib/breakables.js + participating place sims - explicit/tagged and ID-classified props share damage/material/drop/regrowth behavior; scripts/hounds.js shares pack pursuit/wall-steering across levels, while scripts/l11-crawlers.js manages Level 11 clumps, hounds and sentries."
+    "scripts/lib/breakables.js + participating place sims - explicit/tagged and ID-classified props share damage/material/drop/regrowth behavior; scripts/hounds.js shares pack pursuit/wall-steering across levels, while scripts/l11-crawlers.js handles Level 11 flesh-crawler roster/corpses."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -86,11 +86,11 @@
     "scripts/dbg-bodypad.js, scripts/debug-pad.js, scripts/lib/debug-layout.js - debug-room pads/layout after places/debug removal; no current references found."
   ],
   "migrationNotes": [
-    "Threshold dressing version is V=7 in scripts/lib/thresholds.js; preserve thrSeen/thrTry/thrDone/thrV and door transfers' local #-marked xferTo/carryId rules; Level 3 hatchV=3 rebuilds l3-hatch-* and hatchAt deterministically shares each wall's door across faces.",
+    "Threshold dressing version is V=7 in scripts/lib/thresholds.js; preserve thrSeen/thrTry/thrDone/thrV and door transfers' local #-marked xferTo/carryId rules; Level 3 hatchV=3 rebuilds l3-hatch-* and hatchAt deterministically shares each wall hatch.",
     "Level 0.2 sim V=25 rebuilds generated roots; preserve phase/caseLandAt and debris tags, plus the 15-second empty reset. Grid state remains place.state.l02grid={layout, lamps}; walls swap on six-second passes with view/near/lamp exclusions.",
     "Christmas Area scripts/lib/data/xmas.yml v=9 re-lays xmas-prefixed objects; keep maze.js XMAS_CELL and xmas.yml cell/bounds aligned (bounds suppress Level 0 hum); retain top-level player.state baubles/stuffing for craft recipes.",
-    "Breakables use scripts/lib/data/breakables.yml material tuning; sweepProps infers only eligible small, unparented, non-NPC/non-usable props by ID and skips structural IDs, while wall/prop wreck records and regrowth are shared across place-specific routines.",
-    "LAGSCOPE reports store an AI brief alongside raw data in lagscope_reports; configs are shared through lagscope_kv and host DB migration is scripts/db.js → mods/lagscope/db.js. Keep watch sampling local and the scan event lagscope:scan wired to its report flow.",
-    "Level 1 upper-deck construction is incremental: preserve l1DeckPh/l1DeckCx until l1Deck=3, then lamps finish; Level 11 flesh corpses become walk-through after 3 s, sink after 90 s and are removed at 100 s, while deadAt controls roster respawn."
+    "Breakables use scripts/lib/data/breakables.yml material tuning; sweepProps infers only eligible small, unparented, non-NPC/non-usable props by ID and skips structural IDs, while wall/prop wreck records and regrowth are shared across place sims.",
+    "LAGSCOPE reports store an AI brief alongside raw data in lagscope_reports; configs are shared through lagscope_kv and host DB migration is scripts/db.js → mods/lagscope/db.js. Keep watch sampling local and the scan event lagscope:scan wire intact.",
+    "Level 1 upper-deck construction is incremental: preserve l1DeckPh/l1DeckCx until l1Deck=3, then lamps finish. Level 11 crawler corpses become walk-through after 3 s, sink after 90 s and are removed at 100 s; deadAt controls roster respawn. Car prices are cents (250000 = $2,500); purchased IDs persist in player.state.cars, while ownerId/ownerName and driver are on the vehicle object."
   ]
 }
