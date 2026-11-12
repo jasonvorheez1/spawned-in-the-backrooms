@@ -8,6 +8,10 @@ import { lifeOf } from "./npc-life.js";
 import { temperOf } from "./personality.js";
 import { heard } from "./hear.js";
 import { vo } from "./voices.js";
+import C from "./data/chatter.yml";
+// a camp's own cast talks only in its own written exchanges (chatter.yml, run by chatter.js): never the stranger pool
+const CAST = new Set(Object.values(C).flatMap((v) => Array.isArray(v) ? v.flatMap((ex) => ex.map(([w]) => w)) : []));
+const own = (o) => CAST.has(String(o?.id ?? "").split("/").pop());
 
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
 const alive = (o) => !!o && !o.state?.dead && (o.state?.hp ?? 1) > 0;
@@ -26,14 +30,14 @@ const TALK = [
   [[0, "there's a stain on the wall that wasn't there."], [1, "which wall?"], [0, "never mind. it's gone."]],
   [[0, "you got a spare lighter?"], [1, "no. you owe me one."], [0, "i do not."], [1, "you do."]],
 ];
-const exchangeFor = (a, b) => {
-  const A = lifeOf(a.id), r = Math.random();
+const exchangeFor = (ctx, a, b) => {
+  const A = lifeOf(a.id), r = ctx.random();
   if (r < 0.17) return [[0, `i want ${A.want} so bad today.`], [1, "today? you said that last week too."], [0, "i say it most weeks."]];
   if (r < 0.3) return [[0, `i thought i saw ${A.fear} earlier.`], [1, "did you?"], [0, "no. probably not."], [1, "okay."]];
   if (r < 0.37 && temperOf(a) === "nervous") return [[0, "what if the lights don't come back?"], [1, "they always come back."], [0, "they did last time. that's all i know."]];
   if (r < 0.43 && temperOf(a) === "cocky") return [[0, "i could've taken that hound alone."], [1, "you were behind a pillar."], [0, "it was a good pillar."]];
   if (r < 0.48 && temperOf(a) === "gruff") return [[0, "you're in my spot."], [1, "your spot?"], [0, "i've stood there a month."], [1, "stand somewhere else."]];
-  return TALK[Math.floor(Math.random() * TALK.length)];
+  return TALK[Math.floor(ctx.random() * TALK.length)];
 };
 
 const voiceOf = (o) => voiceKey(o);
@@ -43,7 +47,7 @@ export function say(ctx, o, text, to) {
   heard(ctx, { clip: vo(voiceOf(o), text), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 0.8, refDistance: 3, maxDistance: 16 }, { audience: { nearby: p, radius: 18 } });
   return d;
 }
-const idleish = (o) => alive(o) && !o.state.follow && !o.state.mjguest && !(o.state.angry && Object.keys(o.state.angry).length) && !o.tags?.includes?.("l5staff") && !o.tags?.includes?.("faceling");
+const idleish = (o) => alive(o) && !own(o) && !o.state.follow && !o.state.mjguest && !(o.state.angry && Object.keys(o.state.angry).length) && !o.tags?.includes?.("l5staff") && !o.tags?.includes?.("faceling");
 
 // returns true while this call owns the body's movement (approaching, talking, milling)
 export function social(ctx, me, m, now, dt, io) {
@@ -88,7 +92,7 @@ export function social(ctx, me, m, now, dt, io) {
     .sort((a, b) => flat(a.feetPosition, p) - flat(b.feetPosition, p));
   if (peers.length && ctx.random() < 0.6) {
     const peer = peers[0];
-    m.convo = { peer: peer.id, lines: exchangeFor(me, peer), i: 0, giveUp: now + 20000, started: 0 }; peer.state.talkAt = now; peer.state.talkTo = me.id;
+    m.convo = { peer: peer.id, lines: exchangeFor(ctx, me, peer), i: 0, giveUp: now + 20000, started: 0 }; peer.state.talkAt = now; peer.state.talkTo = me.id;
     return false;
   }
   if (!s.rounds?.length && ctx.random() < 0.55) { // a person with no chores to walk: drift a little
