@@ -21,7 +21,7 @@ const FOREVER = 9e15 // a booked room is yours for good: your home (Shelly, Nov 
 function rent(ctx, p) {
   const R = P.rent, now = ctx.now(), uid = p.userId ?? p.id, book = { ...(ctx.place.state.l5rent ?? {}) };
   const mine = Object.keys(book).find((k) => book[k].uid === uid && book[k].until > now);
-  if (mine) { book[mine] = { uid, until: now + R.hours * 3600e3 }; ctx.place.state.l5rent = book; p.state.l5until = book[mine].until; return say(ctx, p, `You already hold the ${mine.slice(6).toUpperCase()} suite. I have extended your stay, with the hotel's compliments.`); }
+  if (mine) { book[mine] = { uid, until: FOREVER }; ctx.place.state.l5rent = book; p.state.l5until = book[mine].until; return say(ctx, p, `You already hold the ${mine.slice(6).toUpperCase()} suite. I have extended your stay, with the hotel's compliments.`); }
   if ((p.state.cash ?? 0) < R.price * 100) return say(ctx, p, `A suite is ${R.price} backdollars a night. Do come back when your purse agrees with you.`);
   const sid = Object.keys(P.suites).find((k) => !book[k] || book[k].until < now);
   if (!sid) return say(ctx, p, "Every suite is occupied tonight. How unusual. How very unusual.");
