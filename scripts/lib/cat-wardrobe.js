@@ -76,6 +76,16 @@ function shadowRGB(s) {
   return { shR: lin((n >> 16) & 255), shG: lin((n >> 8) & 255), shB: lin(n & 255), shA: 0.85 }
 }
 // the whole model spec: her body with the painted skin on both fur slots (fur takes the tint, fur2 is her pale belly/markings and stays as drawn)
+// a living face (Nov 12): which pictures the shader blinks and talks with. Closed-eye moods never blink; KO never talks.
+const SHUT = ['joy', 'blink', 'ko', 'hit']
+export function faceLife(sk, look, face, faces) {
+  const mood = look?.expression ?? look?.expr ?? 'neutral'
+  const seed = [...JSON.stringify([look?.fur, look?.hair, look?.eyes, look?.fseed])].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % 1000 / 1000
+  const out = { bSeed: seed, talk: look?.talk ? 1 : 0 }
+  if (!SHUT.includes(mood)) out.blinkFace = faces.blink
+  if (mood !== 'ko') out.talkFace = ['angry', 'shock', 'sad'].includes(mood) ? faces.shock : faces.joy
+  return out
+}
 export function catModel(sex, look) {
   const params = skinParams(sex, look)
   const fur = look?.fur || '#f3c98a'
@@ -94,7 +104,7 @@ export function catModel(sex, look) {
       fur: skin(fur), fur2: skin('#ffffff'),
       headFur: {
         kind: 'scripted', script: 'scripts/mat-catskin.js', color: fur,
-        params: { face, ...(mouth ? { mouth } : {}), faceVScale: projection[0], faceVBias: projection[1], faceNear: projection[2], ...(sex === 'm' ? { noseCutV: 0.40, noseY: 0.855, noseZ: 0.315, noseS: 1.2 } : { noseCutV: 0.39, noseY: 0.797, noseZ: 0.249, noseS: 1 }), ...eyeRGB(look?.eyes), ...shadowRGB(look?.shadow) }
+        params: { face, ...(mouth ? { mouth } : {}), ...faceLife(sk, look, face, faces), faceVScale: projection[0], faceVBias: projection[1], faceNear: projection[2], ...(sex === 'm' ? { noseCutV: 0.40, noseY: 0.855, noseZ: 0.315, noseS: 1.2 } : { noseCutV: 0.39, noseY: 0.797, noseZ: 0.249, noseS: 1 }), ...eyeRGB(look?.eyes), ...shadowRGB(look?.shadow) }
       },
       innerEar: { color: look?.inner || '#d58e8a', roughness: 0.74 }
     }

@@ -2,7 +2,7 @@
 // from the body's bind-pose position (positionGeometry: metres, y up, front +z, arms out along x), so a hem is a clean line and nothing can clip or tear.
 // The material colour is the fur tint (white fur picture × colour). Every number and colour is a live param (ctx.param): one compiled program dresses every cat.
 // params: fur (picture), top/bot/sock = 0|1, pats, hems (see scripts/lib/cat-wardrobe.js catSkin), colours as r,g,b triples.
-import { uv, materialColor, positionGeometry, positionLocal, normalLocal, positionWorld, normalWorld, cameraPosition, normalize, dot, pow, saturate, vec2, vec3, vec4, float, abs, fract, sin, mix, smoothstep, step, max, min, clamp, mx_noise_float, mx_fractal_noise_float } from "builtin/tsl";
+import { uv, materialColor, positionGeometry, positionLocal, normalLocal, positionWorld, normalWorld, cameraPosition, normalize, dot, pow, saturate, vec2, vec3, vec4, float, abs, fract, sin, mix, smoothstep, step, max, min, clamp, mx_noise_float, mx_fractal_noise_float, time } from "builtin/tsl";
 import { MeshStandardNodeMaterial } from "builtin/three";
 
 const E = 0.0025; // edge softness, metres
@@ -18,7 +18,28 @@ export function material(ctx) {
     const u = q.x.mul(float(2.75).mul(muzzle.mul(0.10).add(1))).add(0.5);
     const inside = step(0, u).mul(step(u, 1)).mul(step(0, v)).mul(step(v, 1));
     const front = smoothstep(0, 0.028, q.z.sub(P("faceNear")));
-    const pic0 = ctx.texture(String(ctx.params.face)).sample(vec2(u, v));
+    let pic0 = ctx.texture(String(ctx.params.face)).sample(vec2(u, v));
+    // Nov 12 (Shelly 'expressions, talking, and animated faces'): the face lives on its own. Every cat blinks on its own beat
+    // (bSeed staggers a crowd), and while talk is 1 the mouth flaps between its own and an open one at a speaking rhythm.
+    // Both run on each machine's clock in the shader: nothing is written per frame.
+    const seed = P("bSeed", 0);
+    const eyesUp = smoothstep(0.42, 0.46, v);   // the eyes sit above the muzzle top
+    if (ctx.params.blinkFace) {
+      const per = float(3.1).add(fract(seed.mul(7.13)).mul(2.2));
+      const ph = fract(time.div(per).add(seed));
+      const dbl = step(0.62, fract(seed.mul(3.7)));   // some cats blink twice now and then
+      const shut = max(step(ph, 0.032), step(abs(ph.sub(0.075)), 0.016).mul(dbl));
+      const bl = ctx.texture(String(ctx.params.blinkFace)).sample(vec2(u, v));
+      pic0 = mix(pic0, bl, shut.mul(eyesUp));
+    }
+    if (ctx.params.talkFace) {
+      const t = time.add(seed.mul(13));
+      const syl = sin(t.mul(14.0)).mul(0.6).add(sin(t.mul(9.3).add(1.7)).mul(0.5)).add(sin(t.mul(3.1)).mul(0.35));   // syllables and little pauses
+      const open = step(0.15, syl).mul(P("talk", 0));
+      const mouthZone = eyesUp.oneMinus().mul(smoothstep(0.2, 0.16, abs(u.sub(0.5))));
+      const tk = ctx.texture(String(ctx.params.talkFace)).sample(vec2(u, v));
+      pic0 = mix(pic0, tk, open.mul(mouthZone));
+    }
     // a mouth type: its layer over the face picture, same projection (critter-faces.yml mouths)
     const mo = ctx.params.mouth ? ctx.texture(String(ctx.params.mouth)).sample(vec2(u, v)) : null;
     let pic = mo ? vec4(mix(pic0.rgb, mo.rgb, mo.a), max(pic0.a, mo.a)) : pic0;
