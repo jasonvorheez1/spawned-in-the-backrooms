@@ -51,6 +51,7 @@ function stepOut(ctx, id) {
 export const ears = {
   press: (ctx, { by }) => {
     if (ctx.self.controller) return; // one driver
+    if (!sell(ctx, by)) return; // a car on the lot is bought before it's driven
     ctx.self.controller = by;
     ctx.self.state.driver = by;
     const pos = ctx.self.feetPosition;
@@ -59,6 +60,29 @@ export const ears = {
     const p = ctx.getObject(by); if (p?.state) p.state.notice = { text: HELP, at: ctx.now() };
   },
 };
+// Nov 12 (Shelly: buy the sedan at a dealer, then drive it). A car with state.price is for sale;
+// what a player bought lives in their own save (player.state.cars), so it stays theirs in every room.
+const CHACHING = "/cdn/moodboard-realistic-gritty/sfx-cash-register-cha-ching-bell-and-drawer.mp3";
+const dollars = (c) => "$" + Math.round(c / 100).toLocaleString("en-US");
+function sell(ctx, by) {
+  const st = ctx.self.state, price = st.price; if (!price) return true;
+  const p = ctx.getObject(by); if (!p?.state) return false;
+  const mine = (p.state.cars ?? []).includes(ctx.self.id);
+  if (!mine && st.ownerId && st.ownerId !== p.userId) { p.state.notice = { text: `Sold. This one belongs to ${st.ownerName ?? "someone else"}.`, at: ctx.now() }; return false; }
+  if (!mine) {
+    if ((p.state.cents ?? 0) < price) { p.state.notice = { text: `${dollars(price)} Backdollars, as-is. You're ${dollars(price - (p.state.cents ?? 0))} short.`, at: ctx.now() }; return false; }
+    p.state.cents -= price;
+    p.state.cars = [...(p.state.cars ?? []), ctx.self.id];
+    heard(ctx, { clip: CHACHING, position: ctx.self.feetPosition, volume: 0.9, maxDistance: 18 });
+    ctx.emit("damageNumber", { position: { ...ctx.self.feetPosition, y: ctx.self.feetPosition.y + 2 }, text: `-${dollars(price)}`, color: "#9fcf8a" });
+    p.state.notice = { text: `Bought. Keys were already in it. ${HELP}`, at: ctx.now() };
+  }
+  st.ownerId = p.userId; st.ownerName = p.displayName;
+  st.verb = "Get in"; st.info = `Yours · ${st.blurb ?? ""}`.replace(/ · $/, "");
+  if (!mine) return false; // the purchase is its own press: the next E climbs in
+  return true;
+}
+
 export function ignite(ctx) {
   if (!ctx.self.controller) return;
   heard(ctx, { clip: SFX.start, position: ctx.self.feetPosition, volume: 0.9, maxDistance: 35 });
