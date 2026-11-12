@@ -10,7 +10,7 @@ const STAFF = {
   "bonus-tom":    { name: "Tom", info: "Tom's Diner", look: { species: "bear", sex: "m", topw: "tee", top: "#f4f1ea", botw: "pants", bottom: "#2b2b33", shoes: "sneakers", hat: "cap", hatc: "#e85d75" } },
   "bonus-andrew": { name: "Andrew", info: "Andrew's Furniture", look: { species: "dog", sex: "m", topw: "longsleeve", top: "#3d5a98", botw: "pants", bottom: "#4a3b2c", shoes: "sneakers", eyew: "glasses" } },
   "bonus-dawn":   { name: "Dawn", info: "Liminal Clothes", look: { species: "cat", sex: "f", topw: "hoodie", top: "#b967ff", botw: "skirt", bottom: "#2b2b33", shoes: "sneakers" } },
-  "bonus-rico":   { name: "Rico", info: "Teleport Station attendant", look: { species: "fox", sex: "m", topw: "tee", top: "#01cdfe", botw: "pants", bottom: "#1d2540", shoes: "sneakers", hat: "beanie", hatc: "#1d2540" } },
+  // "bonus-rico" removed Nov 12 (Shelly: "remove this random person too"); the station counter answers on its own
 }
 const SHOPPERS = {
   "bonus-shop-1": { look: { species: "rabbit", sex: "f", topw: "tee", top: "#ff71ce", botw: "shorts", bottom: "#a9d6e5", shoes: "sneakers" } },
@@ -53,6 +53,7 @@ export function tick(ctx) {
     const rows = [...Object.entries(SHOPPERS).map(([id, p]) => [id, p.look, "civilian"]), ...Object.entries(LOUNGERS).map(([id, p]) => [id, p.look, "civilian"]), ...Object.entries(STAFF).map(([id, p]) => [id, p.look, "trader"])]
     for (const [id, look, role] of rows) { const o = ctx.place.objects[id]; if (!o) continue; const l = o.state?.wear ?? npcLook(id, look, role, 5); if (o.state && !o.state.wear) o.state.wear = l; seatHumanHair(ctx, o, l); if (l.sex && wardChildren(l).some((c) => { const g = ctx.place.objects[id + '/' + c.id]; return !g || (g.model?.id ?? g.model) !== c.model.id })) seatWardrobe(ctx, o, l) } // Nov 11: a remade garment file reaches the mall's people too (Andrew kept a pants file no list named)
   }
+  if (s.ricoGone !== 1) { if (ctx.place.objects['bonus-rico']) ctx.destroy('bonus-rico'); s.ricoGone = 1 }
   if (s.staffV === 1) return
   for (const [id, p] of Object.entries(B.people ?? {})) {
     const st = STAFF[id]; if (!st || ctx.place.objects[id]) continue
