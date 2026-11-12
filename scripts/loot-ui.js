@@ -527,7 +527,7 @@ function pane(s, sel, eqKey) {
     acts.push(btn(v.drink ? 'DRINK' : 'EAT', { k: 'snack', c: sel.slice(6) }), btn('DROP ONE', { k: 'dropItem', t: sel }))
   } else if ((sel === 'ammo' || sel === 'shells' || sel === 'cells') && s[sel] > 0) { card = detail(sel, s, true); acts.push(btn('DROP A BOX', { k: 'dropItem', t: sel })) }
   else if (sel === 'fresh' && s.fresh > 0) {
-    body = `<div class="card"><div class="ttl" style="color:#9fd8e6">Reality Freshener</div><div class="dsc">Remodeling Co. tech. Throw it and reality holds still where it lands: nothing collapses, sanity stops draining. Walk up and take it back.</div><div class="grid">${cell('RADIUS', '6 M') + cell('LASTS', 'UNTIL TAKEN') + cell('CARRIED', s.fresh) + cell('HOW', 'HOLD G, LET GO', true)}</div></div>`
+    card = `<div class="dt def"><div class="dt-header"><h4 style="color:#9fd8e6">Reality Freshener</h4><span class="dt-rarity">THROWABLE</span></div><div class="g">${cell('RADIUS', '6 M') + cell('LASTS', 'UNTIL TAKEN') + cell('CARRIED', s.fresh) + cell('HOW', 'HOLD G, LET GO', true)}</div></div>`
     acts.push(btn('READY FOR G', { k: 'nadePick', t: 'fresh' }))
   }
   else if ((sel === 'frag' && s.grenades > 0) || (sel === 'molotov' && s.molotovs > 0)) {

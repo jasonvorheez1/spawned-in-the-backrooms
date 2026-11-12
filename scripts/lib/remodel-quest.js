@@ -115,7 +115,7 @@ export function placeFreshener(ctx) {
   tell(ctx, ctx.self, "Reality Freshener set down · the room holds still around it", HISS);
 }
 const BUBBLE = `fx
-pop ring burst=1 life=1.1 size=1 col=<.6,.9,1> a=.8>0 sz=$size*(.2>12) r=sprite(soft-ring,add)
+pop ring burst=1 life=1.1 size=1 col=<.6,.9,1> a=.8>0 sz=$size*(.2>12) r=sprite(soft-disc,add)
 pop motes n=18 on=sphere(5.5) life=2..4 v=sdir()*.05 size=.03..0.06 col=<.7,.95,1> a=0>.6:.5>0 sz=$size r=sprite(soft-disc,add)`;
 export function freshenerAt(ctx, at) {
   ctx.spawn({ tags: ["usable", "freshener"], feetPosition: at, ...FRESH_BODY, fx: { script: BUBBLE }, behavior: "scripts/l02-use.js",
