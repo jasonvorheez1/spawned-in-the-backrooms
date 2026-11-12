@@ -1,4 +1,4 @@
-import { firstPersonGun } from './fp-gun.js'
+import { firstPersonGun, firstPersonTuning } from './fp-gun.js'
 // First-person weapon motion, posed from the camera rig (scripts/camera.js) every display frame.
 // scripts/player.js spawns the arm + held weapon (player.state.vmId) and owns the rules (ammo, reload
 // timers, damage); this file only moves that object. Guns: a per-gun recoil spring (muzzle climb, a shove
@@ -162,7 +162,7 @@ export function poseViewmodel(ctx, dt) {
   })
   if (m.id !== ps.vmId) { m.id = ps.vmId; if (!m.seeded) { m.lastEquip = ps.equipAt ?? 0; m.seeded = true } /* a draw rebuilds the viewmodel: keep the old equip stamp so the new one still rises */ m.lastSwing = ps.swingAt ?? 0; m.lastPump = ps.pumpAt ?? 0; m.lastReload = ps.reloadN ?? 0; m.lastDry = ps.dryAt ?? 0; m.lastJam = ps.jammedAt ?? 0; m.lastHit2 = ps.hitAt ?? 0; try { vm.interpolation = null } catch (e) { /* the engine keeps its default smoothing */ } }
 
-  const kind = ps.equipped ?? 'fists', wp = W[kind] ?? W.fists, gun = !!wp.ranged
+  const kind = ps.equipped ?? 'fists', wp = W[kind] ?? W.fists, gun = !!wp.ranged, tune = firstPersonTuning(ps)
   const rc = wp.recoil ?? {}, hd = handling(ps, wp), aimDamp = (1 - 0.55 * m.ads) * hd.recoil // a heavy gun in weak arms kicks harder
   const view = ctx.self.view
 
@@ -274,7 +274,7 @@ export function poseViewmodel(ctx, dt) {
 
   // ---- compose: position
   const fp = gun ? firstPersonGun(baseOf(kind), wp.look) : null
-  const ads = ps.vmTune?.ads ?? fp?.ads ?? wp.ads ?? REST, a = ease(m.ads), sway = 1 - 0.7 * m.ads
+  const ads = tune?.ads ?? fp?.ads ?? wp.ads ?? REST, a = ease(m.ads), sway = 1 - 0.7 * m.ads
   let x = REST[0] + (ads[0] - REST[0]) * a, y = REST[1] + (ads[1] - REST[1]) * a, d = REST[2] + (ads[2] - REST[2]) * a
   if (wp.scope) y -= 0.3 * a // through the scope the rifle drops out of the glass (it used to cover everything under the crosshair)
   if (!gun && kind !== 'fists') { x += wp.two ? 0.03 : 0.1; y -= 0.1; d += 0.3 } // a melee weapon rides out at the right edge, the fist low; two hands bring it to the middle
@@ -349,10 +349,10 @@ export function poseViewmodel(ctx, dt) {
   if (gun) { pitch -= lo * 35; roll += lo * 18; x += lo * 0.04 } else { roll += lo * 10 }
 
   // a weapon's own carry: weapons.yml hold: [x, y, depth, pitch, yaw, roll] added to the rest pose, eased out while aiming (vmTune.hold tunes it live)
-  const hold = ps.vmTune?.hold ?? fp?.hold ?? wp.hold
+  const hold = tune?.hold ?? fp?.hold ?? wp.hold
   if (hold) { const k = 1 - m.ads; x += hold[0] * k; y += hold[1] * k; d += hold[2] * k; pitch += hold[3] * k; yaw += hold[4] * k; roll += hold[5] * k }
   // a swing turns the arm about its shoulder, not about the fist: the rigid arm's far end stays put below the frame instead of sweeping across it
-  if (!gun && m.nv && m.swingT != null && m.swingT < 1) { const P = ps.vmTune?.piv ?? SHOULDER, k = P[3], a0 = turnPt(P, r0[0], r0[1], r0[2]), a1 = turnPt(P, pitch, yaw, roll); x += (a0[0] - a1[0]) * k; y += (a0[1] - a1[1]) * k; d -= (a0[2] - a1[2]) * k }
+  if (!gun && m.nv && m.swingT != null && m.swingT < 1) { const P = tune?.piv ?? SHOULDER, k = P[3], a0 = turnPt(P, r0[0], r0[1], r0[2]), a1 = turnPt(P, pitch, yaw, roll); x += (a0[0] - a1[0]) * k; y += (a0[1] - a1[1]) * k; d -= (a0[2] - a1[2]) * k }
   vm.feetPosition = { attach: 'camera', x, y, depth: d, fov: VM_FOV }
   partsPose(ctx, ps, kind, dt, m)
   vm.rotation = { yaw, pitch, roll }

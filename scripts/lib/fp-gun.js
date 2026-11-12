@@ -19,3 +19,9 @@ const SHORT_SHOTGUN = { ...FP_GUN.shotgun, at: [0, .082, -.13], left: [-.068, .0
 export function firstPersonGun(base, look) {
   return base === 'shotgun' && look === 'sawn' ? SHORT_SHOTGUN : FP_GUN[base]
 }
+
+// Old saved offsets were global and could separate a new weapon from its paws.
+export function firstPersonTuning(state) {
+  const tune = state.vmTune
+  return tune?.weapon === (state.equipped ?? 'fists') ? tune : null
+}
