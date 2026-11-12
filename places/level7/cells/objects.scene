@@ -1,0 +1,156 @@
+# spawn-scene v2 yaml objects
+l7-ezra/cw-fluff-cheeks:
+  attachment: {skin: true}
+  id: l7-ezra/cw-fluff-cheeks
+  model: {forward: "+z", id: /cdn/value.913cb228b13365372589e34cb2a9af64893e228fdc2d08987ae57a5e12a55257.glb, materials: {fluff: {color: "#8a6a4a", kind: scripted, params: {bHi: 0.47, bLo: 0.08579999999999999, bot: 0, botB: 0.0194, botG: 0.0232, botR: 0.0252, bpat: denim, frontZ: 0.082, fur: "", nB: 0.0144, nF: 0.0288, nW: 0.074, sHi: 0.14925, sock: 0, sockB: 0.007, sockG: 0.008, sockR: 0.0103, t0x: 0.025, t0y: 0.433, t0z: -0.067, t1x: 0.096, t1y: 0.379, t1z: -0.166, t2x: 0.217, t2y: 0.434, t2z: -0.237, t3x: 0.274, t3y: 0.555, t3z: -0.313, tHi: 0.723, tLo: 0.435, tShIn: 0.02, tShTop: 0.05, tShoulder: 1, tSl: 0.381, tailR: 0.048, top: 0, topB: 0.0423, topG: 0.0685, topR: 0.0452, tpat: weave, trimB: 1, trimG: 1, trimR: 1, tuckB: 0, tuckS: 0.011, tuckT: 0.04}, script: scripts/mat-catskin.js}}}
+  morph: {Chest: 0.575, Ear_Fold: 0, Ear_Hide: 1, Ear_Small: 0, Ear_Tall: 0, Ear_Wide: 0, Hatted: 1, Snout_Flat: 0, Snout_Long: 0.6, Snout_Pointy: 0, Snout_Puff: 0, Tail_Bob: 0, Tail_Curl: 0, Tail_Fluffy: 0, Tail_Puff: 0, Tail_Whip: 0}
+  parent: l7-ezra
+l7-ezra/cw-hair:
+  attachment: {skin: true}
+  id: l7-ezra/cw-hair
+  model: {forward: "+z", id: /cdn/value.417d03c1dddf3ef9c3e85ee0f2a55a205c19344dcf4b42af67111ac43a8e4b10.glb, materials: {hair: {color: "#3a2a22", kind: scripted, params: {crown: 1.62}, script: scripts/mat-hair.js}}}
+  morph: {Chest: 0.575, Ear_Fold: 0, Ear_Hide: 1, Ear_Small: 0, Ear_Tall: 0, Ear_Wide: 0, Hatted: 1, Snout_Flat: 0, Snout_Long: 0.6, Snout_Pointy: 0, Snout_Puff: 0, Tail_Bob: 0, Tail_Curl: 0, Tail_Fluffy: 0, Tail_Puff: 0, Tail_Whip: 0}
+  parent: l7-ezra
+l7-ezra/cw-hat:
+  attachment: {skin: true}
+  id: l7-ezra/cw-hat
+  model: {forward: "+z", id: /cdn/value.e04fb17d20b9598a37445316ae596c63c9d555886f4741f72b71e19385fc4d80.glb, materials: {cloth: {color: "#c8a030", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  parent: l7-ezra
+l7-ezra/cw-shoes:
+  attachment: {skin: true}
+  id: l7-ezra/cw-shoes
+  model: {forward: "+z", id: /cdn/value.dcfebd4370d0c0aa932157cae6acd02db2afb18e59cc83e6ef34261ed69176f2.glb, materials: {cloth: {color: "#1a1614", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  parent: l7-ezra
+l7-ezra/cw-topw:
+  attachment: {skin: true}
+  id: l7-ezra/cw-topw
+  model: {forward: "+z", id: /cdn/value.bf6f8e73c4d2c92861bc771102c4c493b39cd317f5f7329b4870ea52286bdf76.glb}
+  morph: {Chest: 0.575}
+  parent: l7-ezra
+l7-ines/cw-ears:
+  attachment: {skin: true}
+  id: l7-ines/cw-ears
+  model: {forward: "+z", id: /cdn/value.34f795b121a0bfde46805e04ec9e244c6e03c0d53e2e0245898263de139745d1.glb, materials: {earFur: {color: "#b07850", roughness: 0.9}, earInner: {color: "#f4a3c4", roughness: 0.7}, earTuft: {color: "#b07850", roughness: 0.9}}}
+  parent: l7-ines
+l7-ines/cw-fluff-cheeks:
+  attachment: {skin: true}
+  id: l7-ines/cw-fluff-cheeks
+  model: {forward: "+z", id: /cdn/value.080633ed1b21454104bdfc34df72e50f14b0ffe6f97967875a172219cc61dc27.glb, materials: {fluff: {color: "#b07850", kind: scripted, params: {bHi: 0.435, bLo: 0.07500000000000001, bot: 0, botB: 0.0176, botG: 0.0212, botR: 0.0252, bpat: denim, frontZ: 0.045, fur: "", nB: 0.027200000000000002, nF: 0.044800000000000006, nW: 0.066, sHi: 0.13375, sock: 0, sockB: 0.0052, sockG: 0.007, sockR: 0.0103, t0x: 0.014, t0y: 0.412, t0z: -0.018, t1x: 0.053, t1y: 0.302, t1z: -0.179, t2x: 0.169, t2y: 0.359, t2z: -0.147, t3x: 0.385, t3y: 0.576, t3z: -0.111, tHi: 0.638, tLo: 0.425, tShIn: 0.02, tShTop: 0.05, tShoulder: 1, tSl: 0.33599999999999997, tailR: 0.068, top: 0, topB: 0.0343, topG: 0.0578, topR: 0.0423, tpat: weave, trimB: 1, trimG: 1, trimR: 1, tuckB: 0, tuckS: 0.011, tuckT: 0.04}, script: scripts/mat-catskin.js}}}
+  morph: {Chest: 0.575, Ear_Fold: 0, Ear_Hide: 1, Ear_Small: 0, Ear_Tall: 0, Ear_Wide: 0, Hatted: 0, Snout_Flat: 0, Snout_Long: 0, Snout_Pointy: 0, Snout_Puff: 0, Tail_Bob: 0, Tail_Curl: 0, Tail_Fluffy: 1, Tail_Puff: 0, Tail_Whip: 0}
+  parent: l7-ines
+l7-ines/cw-hair:
+  attachment: {skin: true}
+  id: l7-ines/cw-hair
+  model: {forward: "+z", id: /cdn/value.4e00267efb6d9fe6183acbf7b6465caf41c33907c0d85105157dc1ba7f04553e.glb, materials: {hair: {color: "#a8683a", kind: scripted, params: {crown: 1.55}, script: scripts/mat-hair.js}}}
+  morph: {Chest: 0.575, Ear_Fold: 0, Ear_Hide: 1, Ear_Small: 0, Ear_Tall: 0, Ear_Wide: 0, Hatted: 0, Snout_Flat: 0, Snout_Long: 0, Snout_Pointy: 0, Snout_Puff: 0, Tail_Bob: 0, Tail_Curl: 0, Tail_Fluffy: 1, Tail_Puff: 0, Tail_Whip: 0}
+  parent: l7-ines
+l7-ines/cw-neck:
+  attachment: {skin: true}
+  id: l7-ines/cw-neck
+  model: {forward: "+z", id: /cdn/value.78d15d0c86811a41f46d04efb5c7d8aad3725f9b57195b77795d02314ce5b0ac.glb, materials: {cloth: {color: "#7a3020", kind: scripted, params: {pat: knit}, script: scripts/mat-cloth.js}}}
+  parent: l7-ines
+l7-ines/cw-shoes:
+  attachment: {skin: true}
+  id: l7-ines/cw-shoes
+  model: {forward: "+z", id: /cdn/value.3f9b0636806b0ebabcd12d5037ca8aecf54984a63ea3e5b5c979c1f61c9c9983.glb, materials: {cloth: {color: "#1a1410", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  parent: l7-ines
+l7-ines/cw-topw:
+  attachment: {skin: true}
+  id: l7-ines/cw-topw
+  model: {forward: "+z", id: /cdn/value.4e87324498d71228e8d75d3b7ed897041a84fd70daf40868dd13891d2766c406.glb}
+  morph: {Chest: 0.575}
+  parent: l7-ines
+l7-jude/cw-fluff-cheeks:
+  attachment: {skin: true}
+  id: l7-jude/cw-fluff-cheeks
+  model: {forward: "+z", id: /cdn/value.913cb228b13365372589e34cb2a9af64893e228fdc2d08987ae57a5e12a55257.glb, materials: {fluff: {color: "#d8c8b0", kind: scripted, params: {bHi: 0.47, bLo: 0.08579999999999999, bot: 0, botB: 0.0232, botG: 0.0296, botR: 0.0331, bpat: denim, frontZ: 0.082, fur: "", nB: 0.0144, nF: 0.0288, nW: 0.074, sHi: 0.14925, sock: 0, sockB: 0.0052, sockG: 0.006, sockR: 0.007, t0x: 0.025, t0y: 0.433, t0z: -0.067, t1x: 0.096, t1y: 0.379, t1z: -0.166, t2x: 0.217, t2y: 0.434, t2z: -0.237, t3x: 0.274, t3y: 0.555, t3z: -0.313, tHi: 0.723, tLo: 0.435, tShIn: 0.02, tShTop: 0.05, tShoulder: 1, tSl: 0.381, tailR: 0.048, top: 0, topB: 0.0194, topG: 0.0343, topR: 0.0685, tpat: weave, trimB: 1, trimG: 1, trimR: 1, tuckB: 0, tuckS: 0.011, tuckT: 0.04}, script: scripts/mat-catskin.js}}}
+  morph: {Chest: 0.575, Ear_Fold: 0, Ear_Hide: 1, Ear_Small: 0, Ear_Tall: 0, Ear_Wide: 0, Hatted: 1, Snout_Flat: 0, Snout_Long: 0, Snout_Pointy: 0, Snout_Puff: 0, Tail_Bob: 0, Tail_Curl: 1, Tail_Fluffy: 0, Tail_Puff: 0, Tail_Whip: 0}
+  parent: l7-jude
+l7-jude/cw-hair:
+  attachment: {skin: true}
+  id: l7-jude/cw-hair
+  model: {forward: "+z", id: /cdn/value.410725092726c8466cfdaeebcddd5d1ed4b5dbf2f62b6197cd259d18fed6aaad.glb, materials: {hair: {color: "#1e1a1c", kind: scripted, params: {crown: 1.62}, script: scripts/mat-hair.js}}}
+  morph: {Chest: 0.575, Ear_Fold: 0, Ear_Hide: 1, Ear_Small: 0, Ear_Tall: 0, Ear_Wide: 0, Hatted: 1, Snout_Flat: 0, Snout_Long: 0, Snout_Pointy: 0, Snout_Puff: 0, Tail_Bob: 0, Tail_Curl: 1, Tail_Fluffy: 0, Tail_Puff: 0, Tail_Whip: 0}
+  parent: l7-jude
+l7-jude/cw-hat:
+  attachment: {skin: true}
+  id: l7-jude/cw-hat
+  model: {forward: "+z", id: /cdn/value.e44ec4b86f0b9374b10361e8cc9c5c1951d5100e0491ee05f1f16bd4705ce91f.glb, materials: {cloth: {color: "#6a2a20", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  parent: l7-jude
+l7-jude/cw-neck:
+  attachment: {skin: true}
+  id: l7-jude/cw-neck
+  model: {forward: "+z", id: /cdn/value.370b50fd9f1e3704fe6b73bc0fe85fbb1719a5c1c1f3ecaa5e5587b3cf224ae2.glb, materials: {cloth: {color: "#8a7a5a", kind: scripted, params: {pat: knit}, script: scripts/mat-cloth.js}}}
+  parent: l7-jude
+l7-jude/cw-shoes:
+  attachment: {skin: true}
+  id: l7-jude/cw-shoes
+  model: {forward: "+z", id: /cdn/value.dcfebd4370d0c0aa932157cae6acd02db2afb18e59cc83e6ef34261ed69176f2.glb, materials: {cloth: {color: "#141210", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  parent: l7-jude
+l7-jude/cw-topw:
+  attachment: {skin: true}
+  id: l7-jude/cw-topw
+  model: {forward: "+z", id: /cdn/value.d20370b775298b67be9cce630eb96048b3c5f27845d45432f7808e371b8a327c.glb, materials: {cloth: {color: "#4a3426", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  morph: {Chest: 0.575}
+  parent: l7-jude
+l7-mara/cw-fluff-cheeks:
+  attachment: {skin: true}
+  id: l7-mara/cw-fluff-cheeks
+  model: {forward: "+z", id: /cdn/value.080633ed1b21454104bdfc34df72e50f14b0ffe6f97967875a172219cc61dc27.glb, materials: {fluff: {color: "#e8e0d4", kind: scripted, params: {bHi: 0.435, bLo: 0.2444, bot: 0, botB: 0.0296, botG: 0.0232, botR: 0.0232, bpat: denim, frontZ: 0.045, fur: "", nB: 0.027200000000000002, nF: 0.044800000000000006, nW: 0.066, sHi: 0.13375, sock: 0, sockB: 0.006, sockG: 0.007, sockR: 0.008, t0x: 0.014, t0y: 0.412, t0z: -0.018, t1x: 0.053, t1y: 0.302, t1z: -0.179, t2x: 0.169, t2y: 0.359, t2z: -0.147, t3x: 0.385, t3y: 0.576, t3z: -0.111, tHi: 0.638, tLo: 0.428, tShIn: 0.02, tShTop: 0.05, tShoulder: 1, tSl: 0.33599999999999997, tailR: 0.068, top: 0, topB: 0.0232, topG: 0.0423, topR: 0.1022, tpat: weave, trimB: 1, trimG: 1, trimR: 1, tuckB: 0, tuckS: 0.011, tuckT: 0.04}, script: scripts/mat-catskin.js}}}
+  morph: {Chest: 0.575, Ear_Fold: 0, Ear_Hide: 1, Ear_Small: 0, Ear_Tall: 0, Ear_Wide: 0, Hatted: 1, Snout_Flat: 0, Snout_Long: 0, Snout_Pointy: 0.4, Snout_Puff: 0, Tail_Bob: 0, Tail_Curl: 0, Tail_Fluffy: 0, Tail_Puff: 0, Tail_Whip: 0}
+  parent: l7-mara
+l7-mara/cw-hair:
+  attachment: {skin: true}
+  id: l7-mara/cw-hair
+  model: {forward: "+z", id: /cdn/value.bfc4493e41ec6e45318dc83559c4bf6214525caec56099dda0d6820f53c8b552.glb, materials: {hair: {color: "#7a2e2a", kind: scripted, params: {crown: 1.55}, script: scripts/mat-hair.js}}}
+  morph: {Chest: 0.575, Ear_Fold: 0, Ear_Hide: 1, Ear_Small: 0, Ear_Tall: 0, Ear_Wide: 0, Hatted: 1, Snout_Flat: 0, Snout_Long: 0, Snout_Pointy: 0.4, Snout_Puff: 0, Tail_Bob: 0, Tail_Curl: 0, Tail_Fluffy: 0, Tail_Puff: 0, Tail_Whip: 0}
+  parent: l7-mara
+l7-mara/cw-hat:
+  attachment: {skin: true}
+  id: l7-mara/cw-hat
+  model: {forward: "+z", id: /cdn/value.3a94635759b8f7b084bebfca6633e24194792055240896036903c273a70849fa.glb, materials: {cloth: {color: "#c8a030", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  parent: l7-mara
+l7-mara/cw-shoes:
+  attachment: {skin: true}
+  id: l7-mara/cw-shoes
+  model: {forward: "+z", id: /cdn/value.3f9b0636806b0ebabcd12d5037ca8aecf54984a63ea3e5b5c979c1f61c9c9983.glb, materials: {cloth: {color: "#161412", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  parent: l7-mara
+l7-mara/cw-topw:
+  attachment: {skin: true}
+  id: l7-mara/cw-topw
+  model: {forward: "+z", id: /cdn/value.0b113e4645658174d380c2e2b28729be710a8aa364f26ea1404d32c221c5629d.glb, materials: {cloth: {color: "#5a3a2a", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  morph: {Chest: 0.575}
+  parent: l7-mara
+l7-tobit/cw-ears:
+  attachment: {skin: true}
+  id: l7-tobit/cw-ears
+  model: {forward: "+z", id: /cdn/value.90d4adabbd753c6906e3ce70780af54b66da7528e99c67b639525537a684d4e5.glb, materials: {earFur: {color: "#4a4440", roughness: 0.9}, earInner: {color: "#f4a3c4", roughness: 0.7}, earTuft: {color: "#4a4440", roughness: 0.9}}}
+  parent: l7-tobit
+l7-tobit/cw-fluff-cheeks:
+  attachment: {skin: true}
+  id: l7-tobit/cw-fluff-cheeks
+  model: {forward: "+z", id: /cdn/value.913cb228b13365372589e34cb2a9af64893e228fdc2d08987ae57a5e12a55257.glb, materials: {fluff: {color: "#4a4440", kind: scripted, params: {bHi: 0.47, bLo: 0.08579999999999999, bot: 0, botB: 0.0395, botG: 0.0343, botR: 0.0232, bpat: denim, frontZ: 0.082, fur: "", nB: 0.018, nF: 0.036, nW: 0.074, sHi: 0.14925, sock: 0, sockB: 0.006, sockG: 0.007, sockR: 0.0091, t0x: 0.025, t0y: 0.433, t0z: -0.067, t1x: 0.096, t1y: 0.379, t1z: -0.166, t2x: 0.217, t2y: 0.434, t2z: -0.237, t3x: 0.274, t3y: 0.555, t3z: -0.313, tHi: 0.723, tLo: 0.435, tShIn: 0.02, tShTop: 0.05, tShoulder: 1, tSl: 0.381, tailR: 0.048, top: 0, topB: 0.0513, topG: 0.0802, topR: 0.1022, tpat: weave, trimB: 1, trimG: 1, trimR: 1, tuckB: 0, tuckS: 0.011, tuckT: 0.04}, script: scripts/mat-catskin.js}}}
+  morph: {Chest: 0.575, Ear_Fold: 0, Ear_Hide: 1, Ear_Small: 0, Ear_Tall: 0, Ear_Wide: 0, Hatted: 0, Snout_Flat: 0, Snout_Long: 0, Snout_Pointy: 0.4, Snout_Puff: 0, Tail_Bob: 0, Tail_Curl: 0, Tail_Fluffy: 0, Tail_Puff: 0, Tail_Whip: 0}
+  parent: l7-tobit
+l7-tobit/cw-hair:
+  attachment: {skin: true}
+  id: l7-tobit/cw-hair
+  model: {forward: "+z", id: /cdn/value.c8423eab91b5493db94a7795cefe919a300e98772c7c00fc5ba511c12bfb0ac3.glb, materials: {hair: {color: "#1e1a1c", kind: scripted, params: {crown: 1.62}, script: scripts/mat-hair.js}}}
+  morph: {Chest: 0.575, Ear_Fold: 0, Ear_Hide: 1, Ear_Small: 0, Ear_Tall: 0, Ear_Wide: 0, Hatted: 0, Snout_Flat: 0, Snout_Long: 0, Snout_Pointy: 0.4, Snout_Puff: 0, Tail_Bob: 0, Tail_Curl: 0, Tail_Fluffy: 0, Tail_Puff: 0, Tail_Whip: 0}
+  parent: l7-tobit
+l7-tobit/cw-neck:
+  attachment: {skin: true}
+  id: l7-tobit/cw-neck
+  model: {forward: "+z", id: /cdn/value.c65a74470f18053400296323247251a157d7538d07d2e26a6caada0b3ee9b389.glb}
+  parent: l7-tobit
+l7-tobit/cw-shoes:
+  attachment: {skin: true}
+  id: l7-tobit/cw-shoes
+  model: {forward: "+z", id: /cdn/value.dcfebd4370d0c0aa932157cae6acd02db2afb18e59cc83e6ef34261ed69176f2.glb, materials: {cloth: {color: "#181412", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  parent: l7-tobit
+l7-tobit/cw-topw:
+  attachment: {skin: true}
+  id: l7-tobit/cw-topw
+  model: {forward: "+z", id: /cdn/value.cba39ef574c5d30acec8e6ecf64895e58313cfd6cbe98a5a3a684018403e3026.glb}
+  morph: {Chest: 0.575}
+  parent: l7-tobit
