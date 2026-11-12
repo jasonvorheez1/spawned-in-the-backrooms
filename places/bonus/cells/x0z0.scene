@@ -206,13 +206,13 @@ bc-bench-5:
   rotation: {yaw: 90}
   tags: ["bonus-court"]
 bc-bench-6:
-  feetPosition: {x: 4.5, y: 0, z: -22.15}
-  id: "bc-bench-6"
-  layout: {box: {min: {x: -0.97, y: -0.0075, z: -0.3203}, max: {x: 0.97, y: 0.9095, z: 0.3086}}}
-  model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
-  physics: {body: "static", collider: "box"}
+  feetPosition: {x: 1.9, y: 0, z: -22.6}
+  id: bc-bench-6
+  layout: {box: {max: {x: 0.97, y: 0.9095, z: 0.3086}, min: {x: -0.97, y: -0.0075, z: -0.3203}}}
+  model: {id: /cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb}
+  physics: {body: static, collider: box}
   rotation: {yaw: -90}
-  tags: ["bonus-court"]
+  tags: [bonus-court]
 bc-cab-1:
   feetPosition: {x: 13, y: 0.02, z: -23.25}
   id: "bc-cab-1"
@@ -670,12 +670,12 @@ bc-palm-5:
   rotation: {yaw: 244}
   tags: ["bonus-court"]
 bc-palm-6:
-  feetPosition: {x: 4.5, y: 0.65, z: -24}
-  id: "bc-palm-6"
+  feetPosition: {x: 1.4, y: 0.65, z: -19.6}
+  id: bc-palm-6
   layout: {box: {max: {x: 2.5, y: 6.6, z: 2.5}, min: {x: -2.5, y: 0, z: -2.5}}}
-  model: {id: "/cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb"}
+  model: {id: /cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb}
   rotation: {yaw: 305}
-  tags: ["bonus-court"]
+  tags: [bonus-court]
 bc-payphone-1:
   castShadow: true
   feetPosition: {x: 9.35, y: 0.02, z: -21.6}
@@ -780,12 +780,12 @@ bc-planter-5:
   physics: {body: "static", collider: "box"}
   tags: ["bonus-court"]
 bc-planter-6:
-  feetPosition: {x: 4.5, y: 0, z: -24}
-  id: "bc-planter-6"
-  layout: {box: {min: {x: -0.845, y: 0.0, z: -0.845}, max: {x: 0.845, y: 0.704, z: 0.845}}}
-  model: {id: "/cdn/value.f731c3c9207340a77df45bced223cc403147d9dad6f4ced228cd72b847679311.glb"}
-  physics: {body: "static", collider: "box"}
-  tags: ["bonus-court"]
+  feetPosition: {x: 1.4, y: 0, z: -19.6}
+  id: bc-planter-6
+  layout: {box: {max: {x: 0.845, y: 0.704, z: 0.845}, min: {x: -0.845, y: 0, z: -0.845}}}
+  model: {id: /cdn/value.f731c3c9207340a77df45bced223cc403147d9dad6f4ced228cd72b847679311.glb}
+  physics: {body: static, collider: box}
+  tags: [bonus-court]
 bc-plaque-1:
   castShadow: false
   feetPosition: {x: 23.93, y: 7, z: -18.85}
