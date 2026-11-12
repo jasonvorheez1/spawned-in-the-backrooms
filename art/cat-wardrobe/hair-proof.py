@@ -19,6 +19,11 @@ for job in jobs:
     pts = [head.matrix_world @ v.co for v in head.data.vertices]
     top, bot, half = headinfo(pts)
     bm = bmesh.new(); bm.from_mesh(head.data); bm.transform(head.matrix_world); bvh = BVHTree.FromBMesh(bm)
+    for k in head.data.shape_keys.key_blocks: k.value = 0
+    head.data.shape_keys.key_blocks["Ear_Hide"].value = 1   # as the game shows it: own ears sunk, the sculpted pair on top
+    bpy.ops.import_scene.gltf(filepath=f"/workspace/hairfit2/ears/upright-{sex}.glb")
+    for o in list(bpy.context.scene.objects):
+        if o.name.startswith("Icosphere"): bpy.data.objects.remove(o, do_unlink=True)
     before = set(bpy.context.scene.objects)
     bpy.ops.import_scene.gltf(filepath=f"{SRC}/{name}.glb")
     hair = [o for o in bpy.context.scene.objects if o not in before and o.type == "MESH" and not o.name.startswith("Icosphere")]
@@ -31,7 +36,7 @@ for job in jobs:
     for o in before:
         if o.type == "MESH":
             for i, m in enumerate(o.data.materials):
-                if m and m.name.startswith(("fur", "headFur")): o.data.materials[i] = sm
+                if m: o.data.materials[i] = sm
     info = []
     for o in hair:
         ks = [k.name for k in o.data.shape_keys.key_blocks] if o.data.shape_keys else []
