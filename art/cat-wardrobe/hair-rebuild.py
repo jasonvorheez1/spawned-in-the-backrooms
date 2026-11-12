@@ -9,7 +9,7 @@ from mathutils.bvhtree import BVHTree
 from mathutils.kdtree import KDTree
 a = sys.argv[sys.argv.index("--")+1:]; SRC, OUT, jobs = a[0], a[1], a[2:]
 EARS = "/workspace/hairfit2/ears/upright-%s.glb"
-TUNE = {"twintails": dict(mirror=1), "hime": dict(mirror=1), "bob": dict(mirror=1)}
+TUNE = {"twintails": dict(mirror=1, ear=0.03), "hime": dict(mirror=1), "bob": dict(mirror=1)}
 TRIS = 6000
 def ss(a, b, x): t = max(0, min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t)
 def act(o):
@@ -63,7 +63,7 @@ for job in jobs:
         p = v.co; s, loc, n = sd(bvh, p)
         near = s < 0.003
         eye = p.z < brow + 0.004 and p.y < -0.10 and abs(p.x) < 0.14
-        ear = bvhS.find_nearest(p)[3] < 0.008
+        ear = bvhS.find_nearest(p)[3] < T.get("ear", 0.005)
         e2 = bvhE.find_nearest(p)
         ear = ear or (e2[3] < 0.007 and sd(bvh, e2[0])[0] > 0.012)     # wrapped round the head's own (now sunk) ear
         flag[v] = (near, eye or ear)
@@ -84,7 +84,9 @@ for job in jobs:
         p = v.co; t = ss(-0.10, 0.08, p.y)
         zl = (top - 0.15) * (1 - t) + (top - 0.36) * t
         if abs(p.x) > 0.17 and p.y < 0.0: zl = max(zl, top - 0.17)
-        ok = p.z > top - 0.09
+        tg = ss(-0.10, 0.08, p.y); zg = (top - 0.13) * (1 - tg) + (top - 0.30) * tg   # the whole scalp above a generic hairline wears the cap: no bald patch shows through a parting
+        if abs(p.x) > 0.17 and p.y < 0.0: zg = max(zg, top - 0.17)
+        ok = p.z > zg
         if not ok and p.z > zl:
             h = bvhHair.ray_cast(p + v.normal * 0.001, v.normal, 0.04)
             ok = h[0] is not None
