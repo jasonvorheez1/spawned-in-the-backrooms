@@ -54,6 +54,7 @@ export function tick(ctx) {
     for (const [id, look, role] of rows) { const o = ctx.place.objects[id]; if (!o) continue; const l = o.state?.wear ?? npcLook(id, look, role, 5); if (o.state && !o.state.wear) o.state.wear = l; seatHumanHair(ctx, o, l); if (l.sex && wardChildren(l).some((c) => { const g = ctx.place.objects[id + '/' + c.id]; return !g || (g.model?.id ?? g.model) !== c.model.id })) seatWardrobe(ctx, o, l) } // Nov 11: a remade garment file reaches the mall's people too (Andrew kept a pants file no list named)
   }
   if (s.ricoBack !== 1) { s.ricoBack = 1; s.staffV = 0 } // Nov 12: Rico is back (Shelly)
+  if (s.ricoV !== 1 && ctx.place.objects["bonus-rico"]) { const r = ctx.place.objects["bonus-rico"]; r.behavior = ["scripts/rico.js"]; s.ricoV = 1 } // Nov 12: Rico works the platform (scripts/rico.js)
   if (s.staffV === 1) return
   for (const [id, p] of Object.entries(B.people ?? {})) {
     const st = STAFF[id]; if (!st || ctx.place.objects[id]) continue
@@ -62,6 +63,7 @@ export function tick(ctx) {
       ...critterSpec(npcLook(id, st.look, "trader", 5)),
       anim: { idle: { clip: "cdn/clip-idle-loop.glb", loop: true, weight: 1 } },
       state: { name: st.name, info: st.info },
+      ...(id === "bonus-rico" ? { behavior: ["scripts/rico.js"] } : {}),
     })
   }
   s.staffV = 1
