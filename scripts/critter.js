@@ -7,7 +7,7 @@ import { standUp } from './lib/seat.js'
 const SCRIPT = 'scripts/critter2-geo.js'
 import { SNOUTS, EARS, TAILS } from './lib/cat-wardrobe.js'
 import CW from './lib/data/cat-wardrobe.yml'
-import { CAT_ARMS, isNewCat, catLook, seatCat, FURRY_HEAD, armSplay, bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, restyleQueue, restyleStep, STYLE_V, seatHead, clearAppearance, humanBodyMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard, speciesOf } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
+import { CAT_ARMS, CAT_CROUCH, isNewCat, catLook, seatCat, FURRY_HEAD, armSplay, bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, restyleQueue, restyleStep, STYLE_V, seatHead, clearAppearance, humanBodyMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard, speciesOf } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
 const LID_SCALE = 1000 // the lids are modelled this many times too small (scripts/critter2-geo.js)
 const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 import { weaponBody, HOLD } from './lib/weapon-look.js'
@@ -36,6 +36,7 @@ function applyBones(ctx) {
   b.Tail1 = { scale: (ses.tailS || 1) * 1.25 } // a fuller tail by default (Shelly 'cute as hell'); the salon's tail slider multiplies it
   if (!HUMAN && !ses.cachedWorn && !newCat) Object.assign(b, armSplay()) // arms clear the hips and skirts (critter-model ARM_SPLAY)
   if (!HUMAN && !ses.cachedWorn && newCat) Object.assign(b, CAT_ARMS) // the cat's arms 8 degrees forward: short hands in front of the chest (critter-model CAT_ARMS)
+  if (!HUMAN && !ses.cachedWorn && newCat && ctx.self.state?.crouch) Object.assign(b, CAT_CROUCH) // the crouch clip folds a cat double, head at the knees: back and neck lifted (critter-model CAT_CROUCH)
   if (ses.pose) Object.assign(b, ses.pose) // the hands on a gun: IK reach points (scripts/lib/body3.js)
   ctx.self.bones = b
 }
@@ -325,6 +326,7 @@ export function update(ctx) {
   if (MESH && !HUMAN && !worn && isNewCat(ses.cachedParams) && ses.catFace !== faceKey) { ses.catFace = faceKey; ctx.self.model = bodyModel({ ...ses.cachedParams, expr: face, talk }) } // the new cat's face is a picture in its skin: a mood swaps it
   const hs = Number(l.headS) || 1, ts = Number(l.tailS) || 1
   if (!worn && !HUMAN && (hs !== (ses.headS || 1) || ts !== (ses.tailS || 1))) { ses.headS = hs; ses.tailS = ts; applyBones(ctx) }
+  if (!!ctx.self.state?.crouch !== !!ses.crouchB) { ses.crouchB = !!ctx.self.state?.crouch; applyBones(ctx) } // crouching lifts the cat's back (applyBones)
 
   // held weapon in third person: attached to RightHand bone so other players and third-person camera see it
   const eq = ctx.self.state.equipped ?? 'fists'

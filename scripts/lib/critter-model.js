@@ -869,6 +869,9 @@ export const ARM_SPLAY = 20
 export const CAT_JIGGLE = { bones: ['mixamorig:Tail1', 'mixamorig:Tail2', 'mixamorig:Tail3'], amount: 0.55, bounce: 0.5, gravity: 0.6, limit: 50,
   colliders: [{ bone: 'mixamorig:Hips', radius: 0.13 }, { bone: 'mixamorig:LeftUpLeg', tail: [0, -0.3, 0], radius: 0.08 }, { bone: 'mixamorig:RightUpLeg', tail: [0, -0.3, 0], radius: 0.08 }] }
 export const CAT_ARMS = { 'mixamorig:LeftArm': { rotate: [-8, 0, 0] }, 'mixamorig:RightArm': { rotate: [-8, 0, 0] } }
+// crouched: the crouch clip (made for a human) folds the cat nearly double with its head at its knees and spikes a jacket hem; the back and
+// neck lift so it crouches head up (checked against -15, which leaned it back, and the clip as it was)
+export const CAT_CROUCH = { 'mixamorig:Spine1': { rotate: [-8, 0, 0] }, 'mixamorig:Spine2': { rotate: [-8, 0, 0] }, 'mixamorig:Neck': { rotate: [-4, 0, 0] } }
 export const armSplay = () => ({ LeftArm: { roll: ARM_SPLAY }, RightArm: { roll: -ARM_SPLAY } })
 export function baseBones(b, l) {
   if (HUMAN) return { Head: { scale: 1 } } // the human rig: true head size, no tail or ears
