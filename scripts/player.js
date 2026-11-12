@@ -1,5 +1,6 @@
 import { setQuest } from './lib/quests.js'
 import { offended, forgiveTick } from './lib/forgive.js'
+import { preloadTick } from './lib/preload-next.js'
 import { powerKnock } from './lib/knock.js'
 import SNK from "./lib/data/sneak.yml"
 import { yawOf } from "./lib/sneak.js"
@@ -1130,6 +1131,7 @@ function plyArm(ctx, w) {
 }
 
 export function update(ctx, dt) {
+  preloadTick(ctx) // a level door within reach starts its level's models downloading (lib/preload-next.js)
   forgiveTick(ctx) // the angry cool off an in-game hour after your last offence (lib/forgive.js)
   { const me = ctx.self, ses = me.session, hp = me.state.hp ?? 0, nowS = ctx.now(); tick3(me, nowS); if (ses.hpSeen != null && hp < ses.hpSeen - 2.5 && hp > 0 && nowS - (ses.stagAt ?? 0) > 450) { ses.stagAt = nowS; stagger3(ctx, me) } ses.hpSeen = hp } // a stagger take each real hit (Shelly Nov 10)
   { const st = ctx.self.state; if (st.reloading && (st.equipped !== st.reloading || !st.reloadAt || ctx.now() - st.reloadAt > 9000)) { st.reloading = ''; st.reloadTok = (st.reloadTok ?? 0) + 1 } } // a reload stranded by a swap, a page reload or a lost timer clears itself
