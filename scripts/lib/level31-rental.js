@@ -92,8 +92,8 @@ function coach(ctx) {
     state: { name: "Coach", role: "trader", faction: "survivor", voice: "l31-coach", docile: true, essential: true, post: { x: 13, z: 25.7 }, home: { x: 13, y: 0.46, z: 25.7 }, ...npcState(ctx, "agent", 80) } });
   // facelings come bald from the shared path; his brown crop rides the head as its own child
   ctx.spawn({ id: "coach-hair", parent: id, attachment: { skin: true }, model: { id: HAIR, materials: { hair: anime("hair", "#5a3a26"), scalp: { color: "#48301f", roughness: 0.9 }, scalp_cap: { color: "#48301f", roughness: 0.9 } } } });
-  ctx.spawn({ id: "coach-tag", parent: id, attachment: { bone: "Spine2" }, feetPosition: { x: -0.08, y: 0.1, z: -0.14 }, primitive: box(0.085, 0.03, 0.004), material: { color: "#f7f5ee", roughness: 0.4 }, castShadow: false,
-    ui: `<div face="front" width="0.085m" style="height:30px;display:flex;align-items:center;justify-content:center;background:#f7f5ee;color:#14213f;font-family:sans-serif;font-weight:900;font-size:20px;letter-spacing:2px;border-top:6px solid #c7362b">COACH</div>` });
+  ctx.spawn({ id: "coach-tag", parent: id, attachment: { bone: "Spine2" }, feetPosition: { x: 0.07, y: 0.02, z: 0.15 }, primitive: box(0.085, 0.03, 0.004), material: { color: "#f7f5ee", roughness: 0.4 }, castShadow: false,
+    ui: `<div face="back" width="0.085m" style="height:30px;display:flex;align-items:center;justify-content:center;background:#f7f5ee;color:#14213f;font-family:sans-serif;font-weight:900;font-size:20px;letter-spacing:2px;border-top:6px solid #c7362b">COACH</div>` });
 }
 export function layRental(ctx) {
   if (ctx.getObject("l31-rental-bp")) ctx.destroy("l31-rental-bp");
