@@ -34,6 +34,10 @@ export const UI_THEME = `<style id="field-ui">
 .pbp .acts .drop{background:transparent;color:var(--ui-muted);border:1px solid var(--ui-line)}
 .pbp .acts .drop:hover{background:#362a23;color:#f1d9c8;border-color:#8f6d58}
 #hud-quest>div{background:#141914e8!important;box-shadow:none!important;border-left-width:2px!important}
+#hud-quest .q-destination{margin-left:auto;font-size:10px;color:var(--ui-muted)}
+#hud-quest .q-next{display:block;margin-top:4px;color:var(--ui-text);font-size:11px;line-height:1.35}
+.quest-route{margin:12px 0 0;font-size:13px;color:var(--ui-muted);line-height:1.5}
+.quest-route b{color:var(--ui-accent);margin-right:6px}
 #hud-quest .qs{color:var(--ui-text)!important;line-height:1.45!important}
 .pbp .rep-box{background:none;border-color:var(--ui-line)}.pbp .rep-btn{background:none;border-color:var(--ui-line);padding:8px;color:var(--ui-text)}
 .hg-ft{padding:12px 22px;border-top:1px solid var(--ui-line);background:none;gap:14px}.hg-ft .c{display:none}.hg-ft button{margin-left:auto;border-color:var(--ui-line);color:var(--ui-text);padding:5px 12px}.hg-ft .hint{font-size:10px;letter-spacing:0}

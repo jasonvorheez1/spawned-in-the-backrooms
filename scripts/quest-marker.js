@@ -1,10 +1,10 @@
 // The tracked quests' markers in the world: a diamond over each goal with its distance, in the quest's own tint, drawn for this
 // player alone. Also keeps the journal (scripts/lib/quests.js): folds every older quest's player.state.quest into it, and P opens it.
 import { questMark } from "./lib/quest-mark.js";
-import { setQuest, endQuest, tracked, toggleTrack, qid, MAX_TRACK } from "./lib/quests.js";
+import { setQuest, endQuest, tracked, toggleTrack, qid, MAX_TRACK, PLACE_NAMES } from "./lib/quests.js";
 import { canOpen, openWrist } from "./lib/screen.js";
 export const updateSchedule = { every: { seconds: 0.25 } };
-const art = (c) => `<svg viewBox='0 0 60 80' width='0.55m' billboard='full'><g filter='drop-shadow(0 0 5px ${c})'><path d='M30 4 L46 26 L30 48 L14 26 Z' fill='${c}' stroke='#1a1004' stroke-width='3'/><path d='M30 14 L38 26 L30 38 L22 26 Z' fill='#fffbe8'/></g><text x='30' y='72' font-family='sans-serif' font-size='15' font-weight='bold' text-anchor='middle' fill='${c}' stroke='#1a1004' stroke-width='3' paint-order='stroke'>{{ state.d }} m</text></svg>`;
+const art = (c, exit) => `<svg viewBox='0 0 100 86' width='0.9m' billboard='full'><g stroke='#1a1004' stroke-width='3'>${exit ? `<rect x='34' y='8' width='32' height='40' rx='2' fill='${c}'/><path d='M43 28 H57 M52 22 L58 28 L52 34' stroke-width='3' fill='none'/>` : `<path d='M50 4 L66 26 L50 48 L34 26 Z' fill='${c}'/><path d='M50 14 L58 26 L50 38 L42 26 Z' fill='#fffbe8'/>`}</g><g fill='${c}' stroke='#1a1004' stroke-width='3' paint-order='stroke' font-family='sans-serif' font-weight='bold' text-anchor='middle'><text x='50' y='64' font-size='12'>${exit ? (PLACE_NAMES[exit] ?? exit) : ''}</text><text x='50' y='${exit ? 80 : 68}' font-size='15'>{{ state.d }} m</text></g></svg>`;
 const NVG_Q = {
   key: "nvgQ", name: "Ines's goggles",
   tips: { 1: "Find Ines's goggle case at the south end of the Boiler Room", 2: "Follow the drag marks east to the hound den", 3: "Bring the goggles and a battery to the M.E.G. drop box, northeast" },
@@ -55,13 +55,15 @@ export function update(ctx) {
   const s = me.state; if (s.level == null) return;
   fold(ctx, s, ctx.session);
   const list = tracked(s), p = me.feetPosition, base = "qmark-" + me.id.split(":").pop(), off = !!(s.cut || s.dcut || s.l26cut || s.menuOpen);
+  const exits = new Set();
   for (let i = 0; i < MAX_TRACK; i++) {
     const id = base + "-" + i, have = ctx.place.objects[id], q = list[i];
     const t = q && !off ? questMark(ctx, me, q) : null, d = t ? Math.hypot(t.x - p.x, t.z - p.z) : 0;
-    if (!t || d < 2.5) { if (have) ctx.destroy(id); continue; }
+    if (!t || (t.exit ? exits.has(t.exit) : d < 2.5)) { if (have) ctx.destroy(id); continue; }
+    if (t.exit) exits.add(t.exit);
     const at = { x: t.x, y: t.y + 2.5 + i * 0.01, z: t.z }, dd = Math.round(d);
-    if (have && have.state.c !== q.tint) { ctx.destroy(id); continue; }
-    if (!have) { ctx.spawn(id, { feetPosition: at, audience: "local", scope: "session", vector: art(q.tint), state: { d: dd, c: q.tint } }); continue; }
+    if (have && (have.state.c !== q.tint || have.state.via !== (t.via ?? ""))) { ctx.destroy(id); continue; }
+    if (!have) { ctx.spawn(id, { feetPosition: at, audience: "local", scope: "session", vector: art(q.tint, t.via), state: { d: dd, c: q.tint, via: t.via ?? "" } }); continue; }
     const f = have.feetPosition;
     if (Math.abs(f.x - at.x) + Math.abs(f.y - at.y) + Math.abs(f.z - at.z) > 0.2) have.feetPosition = at;
     if (have.state.d !== dd) have.state.d = dd;

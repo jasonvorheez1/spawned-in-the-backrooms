@@ -114,13 +114,15 @@ function questPip(ctx, player, yaw) {
   const p = player.feetPosition; if (!p) return ''
   let out = ''
   const side = { l: 0, r: 0 } // pinned arrows on one edge step outward so none hides another
+  const exits = new Set()
   for (const q of tracked(player.state)) { // one pip per tracked quest, in that quest's tint
-    const t = questMark(ctx, player, q); if (!t) continue
+    const t = questMark(ctx, player, q); if (!t || (t.exit && exits.has(t.exit))) continue
+    if (t.exit) exits.add(t.exit)
     const o = ((Math.round(yawTo(p, t)) - Math.round(yaw)) % 360 + 540) % 360 - 180, a = Math.abs(o)
     const edge = a >= 75, n = edge ? side[o < 0 ? 'l' : 'r']++ : 0
     const x = !edge ? 50 + o / 75 * 50 : (o < 0 ? -n * 4.5 : 100 + n * 4.5)
     const d = Math.round(Math.hypot(t.x - p.x, t.z - p.z))
-    out += `<div style="position:absolute;left:${x}%;top:-9px;transform:translateX(-50%);color:${q.tint};font-size:${edge ? 13 : 12}px;text-shadow:0 0 6px ${q.tint},0 1px 2px #000;text-align:center;line-height:1">${edge ? (o < 0 ? '◀' : '▶') : '◆'}<div style="font-size:9px;letter-spacing:.04em;margin-top:1px">${d}m</div></div>`
+    out += `<div style="position:absolute;left:${x}%;top:-9px;transform:translateX(-50%);color:${q.tint};font-size:${edge ? 13 : 12}px;text-shadow:0 0 6px ${q.tint},0 1px 2px #000;text-align:center;line-height:1">${edge ? (o < 0 ? '◀' : '▶') : t.exit ? '▣' : '◆'}<div style="font-size:9px;letter-spacing:.04em;margin-top:1px">${d}m</div></div>`
   }
   return out ? `<div style="position:absolute;left:28px;width:300px;bottom:6px;height:22px;pointer-events:none">${out}</div>` : ''
 }
@@ -285,22 +287,29 @@ function underwater(s) {
 
 const esc = (t) => String(t ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 const Q_CACHE = { key: '', html: '' }
+const exitLabel = (t) => (t.label ?? 'Exit') + ' → ' + (PLACE_NAMES[t.via] ?? t.via)
 function questTracker(s, player, ctx) {
   const list = tracked(s)
   if (!list.length || s.jrnOpen) return ''
   const here = player?.place ?? ctx?.place?.id ?? 'main'
-  const key = list.map((q) => `${q.id}|${q.step}|${q.mark?.place ?? ''}`).join('~') + `~${here}`
+  const rows = list.map((q) => {
+    const targetPlace = q.mark?.place
+    const off = targetPlace && targetPlace !== here
+    const exit = off ? questMark(ctx, player, q) : null
+    const destination = off ? (PLACE_NAMES[targetPlace] ?? targetPlace) : ''
+    const route = exit ? exitLabel(exit) : off ? 'Route unknown' : ''
+    return { q, destination, route }
+  })
+  const key = JSON.stringify(rows.map(({ q, destination, route }) => [q.id, q.name, q.step, q.tint, destination, route]))
   if (key === Q_CACHE.key) return Q_CACHE.html
   Q_CACHE.key = key
-  const row = (q) => {
-    const targetPlace = q.mark?.place
-    const isOff = targetPlace && targetPlace !== here
-    const placeBadge = isOff ? `<span style="font-size:9.5px;padding:1px 5px;background:rgba(255,255,255,0.14);border-radius:2px;letter-spacing:0.04em;margin-left:auto;opacity:0.9;color:#fff">${esc(PLACE_NAMES[targetPlace] ?? targetPlace).toUpperCase()}</span>` : ''
+  const row = ({ q, destination, route }) => {
+    const placeBadge = destination ? `<span class="q-destination">${esc(destination)}</span>` : ''
     return `<div style="border-left:3px solid ${q.tint};padding:5px 12px 6px;background:linear-gradient(rgba(18,12,3,0.92),rgba(10,6,1,0.96));box-shadow:0 0 10px rgba(0,0,0,0.8)">
       <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:${q.tint};letter-spacing:.05em"><span style="font-size:9px">◆</span><span>${esc(q.name)}</span>${placeBadge}</div>
-      <div class="qs" style="font-size:12px;color:#fff2d4;opacity:.92;text-transform:none;letter-spacing:.02em;line-height:1.3;margin-top:2px">${esc(q.step)}</div></div>`
+      <div class="qs" style="font-size:12px;color:#fff2d4;opacity:.92;text-transform:none;letter-spacing:.02em;line-height:1.3;margin-top:2px">${esc(q.step)}</div>${route ? `<span class="q-next">▣ ${esc(route)}</span>` : ''} </div>`
   }
-  return (Q_CACHE.html = `<style>@media (max-width:520px){#hud-quest{width:126px!important;font-size:10px}#hud-quest .qs{display:none}#hud-quest span{font-size:10px}}</style><div id="hud-quest" style="position:fixed;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);top:18px;width:min(340px,42vw);display:flex;flex-direction:column;gap:5px;font-family:inherit;text-shadow:0 1px 2px #000;pointer-events:auto;cursor:pointer;z-index:40;animation:hud-pop .3s ease-out" onclick="sendAction('journal')">${list.map(row).join('')}</div>`)
+  return (Q_CACHE.html = `<style>@media (max-width:520px){#hud-quest{width:126px!important;font-size:10px}#hud-quest .qs{display:none}#hud-quest span{font-size:10px}}</style><div id="hud-quest" style="position:fixed;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);top:18px;width:min(340px,42vw);display:flex;flex-direction:column;gap:5px;font-family:inherit;text-shadow:0 1px 2px #000;pointer-events:auto;cursor:pointer;z-index:40;animation:hud-pop .3s ease-out" onclick="sendAction('journal')">${rows.map(row).join('')}</div>`)
 }
 // Browsing the journal changes the detail pane independently of the HUD markers.
 function journalUi(s, player, ctx) {
@@ -327,7 +336,11 @@ function journalUi(s, player, ctx) {
     const feet = player?.feetPosition
     const dist = target && feet ? Math.round(Math.hypot(target.x - feet.x, target.z - feet.z)) : null
     const place = current ? mark?.place : selected.place
-    const location = [place && (PLACE_NAMES[place] ?? place), dist != null && `${dist} m`].filter(Boolean).join(' · ')
+    const location = [place && (PLACE_NAMES[place] ?? place), dist != null && !target.exit && `${dist} m`].filter(Boolean).join(' · ')
+    const off = current && place && place !== (player?.place ?? ctx?.place?.id)
+    const route = target?.exit
+      ? exitLabel(target) + (dist == null ? '' : ` · ${dist} m`)
+      : off ? 'Route unknown from this level' : ''
     const full = !pinned && tr.length >= MAX_TRACK
     detail = `<div class="quest-detail" id="quest-detail-${esc(id)}">
       <div class="quest-meta"><span>${current && main ? 'Main quest' : status === 'Current' ? 'In progress' : status}</span>${location ? `<span>${esc(location)}</span>` : ''}</div>
@@ -336,6 +349,7 @@ function journalUi(s, player, ctx) {
         <h3>${current ? 'Current objective' : 'Outcome'}</h3>
         <p>${esc(current ? step || 'No current objective.' : text || status)}</p>
       </div>
+      ${target?.exit ? `<p class="quest-route"><b>Next crossing</b> ${esc(route)}</p>` : route ? `<p class="quest-route">${esc(route)}</p>` : ''}
       ${current ? `<div class="quest-actions"><button aria-pressed="${pinned}" ${full ? 'disabled' : ''} onclick="sendAction('qtrack',{id:${esc(JSON.stringify(id))}})">${pinned ? 'Stop tracking' : 'Track quest'}</button>${full ? '<small>All tracking slots are in use.</small>' : ''}</div>` : ''}
       ${history?.length ? `<div class="quest-history"><h3>Previous objectives</h3><ul>${history.slice().reverse().map((line) => `<li>${esc(line)}</li>`).join('')}</ul></div>` : ''}
     </div>`
