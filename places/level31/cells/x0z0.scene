@@ -1,0 +1,8 @@
+# spawn-scene v2 yaml x0z0
+l31-arcade-bp:
+  feetPosition: {x: 34, y: 0, z: -12}
+  id: l31-arcade-bp
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 36, height: 4, kind: box, width: 16}
+  tags: [blueprint]
