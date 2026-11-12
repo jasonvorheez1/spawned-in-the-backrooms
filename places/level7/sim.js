@@ -129,6 +129,20 @@ const PAPER = { color: "oklch(0.72 0.06 150)", roughness: 0.95 }; // a 2000s sag
 const WAINSCOT = { color: "oklch(0.86 0.04 88)", roughness: 0.85 }; // cream lower walls under a chair rail
 const RUST = { color: "oklch(0.38 0.06 45)", metalness: 0.6, roughness: 0.8 };
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
+// Entity 720 "Tiny" (Shelly Nov 12 "massively overhaul Tiny"): a 2.44 m tar-coated amphibian, Tripo body from the painted concept; scripts/l7-tiny.js hunts
+const TINY = () => ({
+  tags: ["entity", "tiny"],
+  feetPosition: { x: -128, y: -7, z: 0 }, rotation: { yaw: -40, pitch: -80 }, pivot: "center",
+  visibleRange: { max: 80 }, castShadow: false, audience: "all",
+  model: { id: "/cdn/value.9881073785d9dc9fc9e92133f22dbcf3e3eb73af8d13ddce154b919b795b1329.glb", forward: "-z" },
+  layout: { box: { min: { x: -0.8, y: 0, z: -0.45 }, max: { x: 0.8, y: 2.44, z: 0.45 } } },
+  behavior: "scripts/l7-tiny.js",
+  state: { name: "Tiny", home: { x: -150, z: 0 } },
+  children: [
+    { id: "eyes", feetPosition: { x: 0, y: 2.2, z: -0.25 }, light: { kind: "point", color: "oklch(0.85 0.16 185)", intensity: 2.5, distance: 9, shadow: { enabled: false }, visibleRange: { max: 50 } } },
+  ],
+});
+
 const FY = 4.0; // The landing room floor elevation atop the basalt rock
 const PY = 1.1; // Pier deck elevation above sea level (y = 0)
 
@@ -830,18 +844,7 @@ function lay(ctx) {
   });
 
   // 2) "Tiny" (Entity 720): stays in the Daylight and Twilight zones, near its lair at the circular formation west of the entrance (wiki: ~150 m west)
-  ctx.spawn("l7-tiny", {
-    feetPosition: { x: -138, y: -8.2, z: 14 },
-    rotation: { yaw: -40 },
-    scale: { x: 5.8, y: 5.8, z: 5.8 },
-    visibleRange: { max: 70 },
-    model: { id: GLB.thing },
-    children: [
-      { feetPosition: { x: 0, y: 0.6, z: -1.2 }, light: { kind: "point", color: "oklch(0.78 0.24 295)", intensity: 4.8, distance: 20, shadow: { enabled: false }, visibleRange: { max: 50 } } },
-      { feetPosition: { x: 0.5, y: 0.7, z: -1.1 }, material: { color: "#ffffff", emissive: "oklch(0.78 0.24 295)", emissiveIntensity: 4.5 }, primitive: { kind: "sphere", radius: 0.09 } },
-      { feetPosition: { x: -0.5, y: 0.7, z: -1.1 }, material: { color: "#ffffff", emissive: "oklch(0.78 0.24 295)", emissiveIntensity: 4.5 }, primitive: { kind: "sphere", radius: 0.09 } },
-    ],
-  });
+  ctx.spawn("l7-tiny", TINY());
 
   // =========================================================================
   // 7. BREAKABLES, LIGHTING & NPC RESIDENTS
@@ -1166,15 +1169,8 @@ export function tick(ctx) {
     lev.rotation = { yaw: (-angle * 57.2958) + 90 };
   }
 
-  const tiny = ctx.getObject("l7-tiny");
-  if (tiny) {
-    const angle = -now * 0.00022 + 1.4;
-    const tx = -125 + Math.cos(angle) * 24;
-    const tz = -250 + Math.sin(angle) * 20;
-    const ty = -7.2 + Math.cos(now * 0.0006) * 0.8;
-    tiny.feetPosition = { x: tx, y: ty, z: tz };
-    tiny.rotation = { yaw: (angle * 57.2958) - 90 };
-  }
+  // Tiny swims himself now (scripts/l7-tiny.js)
+  if ((s.tinyV ?? 0) < 1 && ctx.place.objects["l7-tiny"]) { ctx.destroy("l7-tiny"); ctx.spawn("l7-tiny", TINY()); s.tinyV = 1; }
 
   // 3. PERIODIC DISTANT WHALE GROAN FROM THE DEEP
   if (ctx.place.playerCount && now > (s.groanAt ?? 0)) {
