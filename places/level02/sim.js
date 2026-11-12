@@ -15,7 +15,7 @@ import G from "../../scripts/lib/data/l02-remodel.yml";
 import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 import P from "../../scripts/lib/data/l02-props.yml";
 export const cadence = "250ms";
-const V = 24, STEP_MS = 3400, WARNING_MS = 1200;
+const V = 25, STEP_MS = 3400, WARNING_MS = 1200;
 const CASE_COLUMN = 4, CASE_DESK = { x: 2.55, y: 0, z: 7.65 };
 const CASE_TOP = "l02-crew-case", CASE_FALL = "l02-crew-salvage";
 const CASE_IMPACT = "/cdn/sfx-metal-object-clunk-drop.mp3";
@@ -158,9 +158,16 @@ function layShell(ctx) {
     tags: ["npc", "remodel", "essential"], feetPosition: { x: -4, y: BASE + 0.05, z: -6 }, rotation: { yaw: 120 }, physics: "character",
     ...critterSpec(CAPN_LOOK),
     behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
-    state: { name: "Cap'n · Remodeling Co.", role: "wanderer", voice: "l02-capn#m", faction: "remodel", factionName: "Backrooms Remodeling Co.", home: { x: -4, z: -6 }, line: "Sorry for the inconvenience. We are improving things.", ...npcState(ctx, "wanderer", 100) },
+    state: { name: "Cap'n · Remodeling Co.", role: "wanderer", voice: "l02-capn#m", faction: "remodel", factionName: "Backrooms Remodeling Co.", home: { x: -4, z: -6 }, rounds: CAPN_ROUNDS, line: "Sorry for the inconvenience. We are improving things.", ...npcState(ctx, "wanderer", 100) },
   });
 }
+// his day's work (scripts/meg-agent.js rounds, walked on navmesh paths): stair, bench, lumber, the moving rooms. Savi's picks
+const CAPN_ROUNDS = [
+  { x: -4, y: BASE + 0.05, z: -6, dwell: 14, act: null, look: { x: -6.2, y: BASE, z: -8.7 } },
+  { x: 9.4, y: BASE + 0.05, z: -4.9, dwell: 16, act: "cdn/clip-pickup.glb", look: { x: 9.44, y: BASE + 0.8, z: -5.83 } },
+  { x: 11.6, y: BASE + 0.05, z: -8.2, dwell: 12, act: "cdn/clip-nod-yes.glb", look: { x: 11.22, y: BASE, z: -9.36 } },
+  { x: -1.2, y: BASE + 0.05, z: 1.6, dwell: 18, act: null, look: { x: 2, y: BASE + 1.2, z: 1.6 } },
+];
 // Cap'n wears the shared body (same refit as Rico in places/bonus/sim.js): pitch-black, the crew face, the uniform colours
 const CAPN = { species: "fox", sex: "m", fur: "#0b0b0d", etype: "crew", blush: "none", nose: "none", topw: "remodcoat", top: "#9fb0bf", botw: "pants", bottom: "#6b4a2e", shoes: "boots", hat: "beret", hatc: "#4a4f57", hair: "none", neck: "none", shoec: "#141414" };
 const CAPN_LOOK = { ...refitLook("l02-capn", { ...npcLook("l02-capn", CAPN, "wanderer", 2), role: "wanderer", faction: "wanderer" }), ...CAPN, nl: NL_V };
