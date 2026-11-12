@@ -1,37 +1,39 @@
-# proof sheet: each fitted hat on its cat body, front 3/4 and back, Cycles
-import bpy, sys, os, math
+# Proof sheet for fitted cat hats: head + hat from FRONT (-Y), SIDE (+X), BACK (+Y) and 3/4, each lit from its own camera, Cycles 12 samples, 500 px,
+# camera 1.6 m away, lens 50, aimed 5 cm below the crown. Hats that close over the ears (COVERS) are shown with Ear_Hide on, as the game does.
+# run: cd /workspace && blender -b --factory-startup --python-exit-code 1 --python world/art/cat-wardrobe/hat-proof.py -- [--sex f|m] <kinds...|none>
+#      then: montage /workspace/hats/proof/<kind>-{f,m}-{front,side,back,q}.png -tile 4x2 -geometry +2+2 sheet.png && spawn see sheet.png
+import bpy, sys, os
 from mathutils import Vector
-OUT="/workspace/hats/out"; P="/tmp/hf/proof"; os.makedirs(P, exist_ok=True)
-kinds = sys.argv[sys.argv.index("--")+1:]
-def cam(name, loc, tgt):
-    c = bpy.data.objects.new(name, bpy.data.cameras.new(name)); bpy.context.scene.collection.objects.link(c)
-    c.location = loc; d = Vector(tgt) - Vector(loc); c.rotation_euler = d.to_track_quat("-Z", "Y").to_euler(); c.data.lens = 50
-    return c
-for sex in ("f","m"):
-  for k in kinds:
+OUT = "/workspace/hats/out"; P = "/workspace/hats/proof"; os.makedirs(P, exist_ok=True)
+COVERS = ("divehelm", "chitinhelm", "beanie", "souwester")
+args = sys.argv[sys.argv.index("--")+1:]
+sexes = ("f", "m")
+if "--sex" in args: i = args.index("--sex"); sexes = (args[i+1],); del args[i:i+2]
+for sex in sexes:
+  for k in args:
     f = f"{OUT}/{k}-{sex}.glb"
-    if not os.path.exists(f): continue
+    if k != "none" and not os.path.exists(f): print("MISSING", f); continue
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    bpy.ops.import_scene.gltf(filepath=f"/tmp/hf/body{sex}.glb")
+    bpy.ops.import_scene.gltf(filepath=f"/workspace/catrev/body{sex}.glb")
     for o in list(bpy.context.scene.objects):
-        if o.type=="MESH" and o.name not in ("Head","Body") and "Body" not in o.name and "Head" not in o.name: bpy.data.objects.remove(o)
-    for o in bpy.context.scene.objects:
-        if o.type=="MESH" and o.data.shape_keys and "Ear_Hide" in o.data.shape_keys.key_blocks: o.data.shape_keys.key_blocks["Ear_Hide"].value = 1
-    bpy.ops.import_scene.gltf(filepath=f"/tmp/hf/ears{sex}.glb")
-    for o in bpy.context.selected_objects:
-        if o.type=="MESH": o.name = "EarsX"
-    bpy.ops.import_scene.gltf(filepath=f)
-    hats=[o for o in bpy.context.selected_objects if o.type=="MESH"]
-    red = bpy.data.materials.new("r"); red.diffuse_color=(0.8,0.15,0.1,1); red.use_nodes=True
-    red.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value=(0.8,0.15,0.1,1)
-    for h in hats:
-        h.data.materials.clear(); h.data.materials.append(red)
-    hd=bpy.data.objects.get("Head"); hz=[(hd.matrix_world@Vector(b)).z for b in hd.bound_box]; zs=[(h.matrix_world@Vector(b)).z for h in hats for b in h.bound_box]; top=max(zs+hz); cz=max(hz)-0.12
-    sc=bpy.context.scene; sc.render.engine="CYCLES"; sc.cycles.samples=8; sc.render.resolution_x=sc.render.resolution_y=420
-    w=bpy.data.worlds.new("w"); sc.world=w; w.color=(0.5,0.5,0.5)
-    for n,(loc) in (("a",(0.55,-0.95,cz+0.12)),("b",(-0.6,0.9,cz+0.15)),("c",(1.1,0.0,cz))):
-        c=cam(n,loc,(0,0,cz)); sc.camera=c
-        L=bpy.data.objects.new("L"+n,bpy.data.lights.new("L"+n,"SUN")); sc.collection.objects.link(L); L.data.energy=3
-        L.rotation_euler=(Vector((0,0,cz))-Vector(loc)).to_track_quat("-Z","Y").to_euler()
-        sc.render.filepath=f"{P}/{k}-{sex}-{n}.png"; bpy.ops.render.render(write_still=True)
-        bpy.data.objects.remove(L)
+        if o.type == "MESH" and o.name not in ("Head", "Body"): bpy.data.objects.remove(o)
+        elif o.type == "ARMATURE": o.data.pose_position = "REST"
+    hd = bpy.data.objects["Head"]
+    if k in COVERS: hd.data.shape_keys.key_blocks["Ear_Hide"].value = 1
+    top = max((hd.matrix_world @ v.co).z for v in hd.data.vertices if abs(v.co.x) < 0.02)
+    if k != "none":
+        bpy.ops.import_scene.gltf(filepath=f)
+        tint = bpy.data.materials.new("tint"); tint.use_nodes = True
+        tint.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.75, 0.2, 0.15, 1)
+        for h in bpy.context.selected_objects:
+            if h.type == "MESH": h.data.materials.clear(); h.data.materials.append(tint)
+            elif h.type == "ARMATURE": h.data.pose_position = "REST"
+    sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = sc.render.resolution_y = 500
+    w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True; w.node_tree.nodes["Background"].inputs[0].default_value = (0.3, 0.32, 0.36, 1)
+    tgt = Vector((0, 0, top - 0.05))
+    cd = bpy.data.cameras.new("c"); cd.lens = 50; cam = bpy.data.objects.new("c", cd); sc.collection.objects.link(cam); sc.camera = cam
+    L = bpy.data.objects.new("L", bpy.data.lights.new("L", "SUN")); sc.collection.objects.link(L); L.data.energy = 3.5
+    for n, d in (("front", (0, -1, 0)), ("side", (1, 0, 0)), ("back", (0, 1, 0)), ("q", (0.62, -0.7, 0.35))):
+        d = Vector(d).normalized(); cam.location = tgt + d * 1.6
+        cam.rotation_euler = (-d).to_track_quat("-Z", "Y").to_euler(); L.rotation_euler = cam.rotation_euler
+        sc.render.filepath = f"{P}/{k}-{sex}-{n}.png"; bpy.ops.render.render(write_still=True)
