@@ -1,8 +1,10 @@
 // Glow Up Salon (Bonus Room, east ground floor): the in-world makeover menu. A salon service card, not the intake form.
 // Every button sends the same 'dress' action scripts/critter.js already handles; 'stab' picks the service tab.
 import C from './lib/data/critter.yml'
-import M from './lib/data/critter-models.yml'
-const PICKS = ['cat', 'dog', 'fox', 'bunny', 'wolf', 'mouse'].filter((s) => M.species?.[s]) // Shelly's six (Nov 11)
+import CW from './lib/data/cat-wardrobe.yml'
+// one body for everyone now (Shelly Nov 12: no species): the salon offers the new body's own options, the same 'dress' keys the creator sends
+const CN = { puff: 'mochi', wide: 'airplane', bob: 'bobtail', burns: 'sideburns', lynx: 'lynx tips', bangs: 'fur bangs', afropuff: 'afro puff', halfup: 'half up', sidetail: 'side tail', twintails: 'twin tails', long_h: 'long' }
+const CF = { neutral: 'calm', smile: 'smile', joy: 'happy', blep: 'blep', sad: 'sad', angry: 'angry', shock: 'shocked' }
 const SERVICES = [['hair', 'Hair', '✂'], ['face', 'Face', '✿'], ['body', 'Body', '◐'], ['wear', 'Clothes', '♡']]
 const NM = { m: 'boy', f: 'girl', none: 'none', longsleeve: 'long sleeve', pjpants: 'pj pants', pajamas: 'pj top', longskirt: 'long skirt', tophat: 'top hat', partyhat: 'party hat', bowtie: 'bow tie', fullbeard: 'full beard' }
 const nice = (v) => NM[v] ?? String(v ?? 'none').replace(/^[mf]_/, '').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ')
@@ -59,7 +61,34 @@ export function salon(ctx, player) {
     return `<div class="sl"><span>${nm}</span><button onclick="${act('sz', k + ':-')}">−</button><div class="bar" onclick="${click}"><i style="width:${pct}%"></i></div><button onclick="${act('sz', k + ':+')}">+</button><span class="v">${Math.round(v * 100)}%</span></div>`
   }).join('')
   let body = ''
-  if (tab === 'hair') {
+  const pk = (k, list, cur, names = CN) => `<div class="chips">${list.map((v) => `<button class="${cur === v ? 'on' : ''}" onclick="${act(k, v)}">${names[v] || nice(v)}</button>`).join('')}</div>`
+  const sx = l.sex === 'f' ? 'f' : 'm', fl = Array.isArray(l.fluff) ? l.fluff : l.fluff ? [l.fluff] : ['cheeks']
+  if (!human && tab === 'hair') {
+    const hairs = Object.keys(CW.hair || {}).filter((k) => CW.hair[k][sx])
+    body = row('The cut', l.hair === 'none' ? 'none' : CN[l.hair] || nice(l.hair)) + pk('cathair', ['none', ...hairs], l.hair || 'none')
+      + (l.hair && l.hair !== 'none' ? row('Colour', '') + dots('hairc', C.hairc) : '')
+      + row('Tufts', fl.map((f) => CN[f] || f).join(', ') || 'none') + `<div class="chips">${Object.keys(CW.fluff || {}).map((v) => `<button class="${fl.includes(v) ? 'on' : ''}" onclick="${act('fluff', v)}">${CN[v] || nice(v)}</button>`).join('')}</div>`
+  } else if (!human && tab === 'face') {
+    body = row('Snout', CN[l.snout] || nice(l.snout)) + pk('snout', ['button', 'long', 'pointy', 'flat', 'puff'], l.snout)
+      + row('Ears', CN[l.ears] || nice(l.ears)) + pk('ears', ['upright', 'tall', 'small', 'fold', 'wide'], l.ears)
+      + row('Eye colour', '') + dots('eye', C.eye)
+      + row('Eyes', l.etype || 'classic') + pk('cateye', ['classic', 'sparkle', 'sleepy', 'slit', 'sharp', 'bean'], l.etype || 'classic')
+      + row('Mouth', l.mtype || 'classic') + pk('catmouth', ['classic', 'fang', 'grin', 'smirk', 'open', 'line'], l.mtype || 'classic')
+      + row('Eyeshadow', l.shadow || 'none') + pk('catshadow', ['none', 'pink', 'plum', 'lilac', 'peach', 'gold', 'teal', 'smoky', 'red'], l.shadow || 'none')
+      + row('Resting face', CF[l.expr] || 'calm') + pk('catface', Object.keys(CF), CF[l.expr] ? l.expr : 'neutral', CF)
+  } else if (!human && tab === 'body') {
+    const cp = Math.round(Number(l.chest ?? 0.5) * 100)
+    const bust = `<div class="sl"><span>Bust</span><button onclick="${act('chest', '-')}">−</button><div class="bar" onclick="(function(el,ev){const r=el.getBoundingClientRect(),p=Math.max(0,Math.min(1,(ev.clientX-r.left)/r.width));sendAction('dress',{k:'chest',v:p.toFixed(2)})})(this,event)"><i style="width:${cp}%"></i></div><button onclick="${act('chest', '+')}">+</button><span class="v">${cp}%</span></div>`
+    body = row('Body', nice(l.sex)) + chips('sex', C.sex)
+      + row('Stature', `${Math.round(170 * (Number(l.heightS) || 1))} cm`) + `<div class="card">${sliders((k) => k === 'heightS' || k === 'buildS')}${l.sex === 'f' ? bust : ''}</div>`
+      + row('Fur', '') + dots('fur', C.fur)
+      + row('Tail', CN[l.tail] || nice(l.tail)) + pk('tail', ['classic', 'fluffy', 'bob', 'puff', 'whip', 'curl'], l.tail)
+  } else if (!human && tab === 'wear') {
+    const under = (grp) => Object.keys(CW.models || {}).filter((k) => CW.models[k].under && Object.keys(CW[grp] || {}).includes(CW.models[k].under))
+    const card = (t, k, list, ck) => `<div class="card">${row(t, nice(l[k] || 'none'))}${pk('cw-' + k, list, l[k] || 'none', {})}${ck && l[k] && l[k] !== 'none' ? `<div style="margin-top:7px">${dots(ck, C.cloth)}</div>` : ''}</div>`
+    body = card('Top', 'topw', ['none', ...Object.keys(CW.tops || {}), ...under('tops')], 'top') + card('Bottom', 'botw', ['none', ...Object.keys(CW.bottoms || {}), ...under('bottoms')], 'bottom')
+      + card('Shoes', 'shoes', ['none', ...Object.keys(CW.feet || {}), ...under('feet')], 'shoec') + card('Hat', 'hat', ['none', ...Object.keys(CW.models || {}).filter((k) => CW.models[k].hat), ...Object.keys(CW.masks || {})], CW.models?.[l.hat]?.hat ? 'hatc' : null)
+  } else if (tab === 'hair') {
     body = row('The cut', nice(l.hair)) + chips('hair', ['none', ...(l.sex === 'f' ? C.hairF : C.hairM)])
       + (l.hair && l.hair !== 'none' ? row('Colour', '') + dots('hairc', C.hairc) : '')
       + (l.sex !== 'f' || !human ? row('Beard', nice(l.beard)) + chips('beard', C.beard || ['none', 'stubble', 'mustache', 'goatee', 'fullbeard']) + (l.beard && l.beard !== 'none' ? row('Beard colour', '') + dots('beardc', C.hairc) : '') : '')
