@@ -90,11 +90,11 @@ export function layArcade(ctx) {
       strip("tube-a", -7.9, 0, 0.05, 35.6, "#ff3fae"), strip("tube-b", 2, 0, 0.05, 35.6, "#35d8ff"),
     ],
   });
-  [["a", 30, -24, "#ff5fb0", 2.2], ["b", 38, -14, "#58c8ff", 2.2], ["c", 35, -3, "#ffb070", 2.0], ["d", 29, -11, "#ffd9a0", 1.6]].forEach(([k, x, z, color, intensity]) =>
-    ctx.spawn("l31-arcade-light-" + k, { feetPosition: { x, y: 3.7, z }, light: { kind: "point", color, intensity, distance: 15 } }));
+  [["a", 31, -24, "#ff8cc4", 7], ["b", 38, -15, "#8fd4ff", 7], ["c", 36, -3, "#ffc08a", 6.5], ["d", 30, -11, "#ffe0b0", 6]].forEach(([k, x, z, color, intensity]) =>
+    ctx.spawn("l31-arcade-light-" + k, { feetPosition: { x, y: 3.7, z }, light: { kind: "point", color, intensity, distance: 20 } }));
   // neon script over the entrance, hung on two rods, read from the aisle
-  ctx.spawn("l31-arcade-neon", { feetPosition: { x: Z.x0 + 0.3, y: 3.75, z: -12 }, rotation: { yaw: 90 }, vector: NEON, castShadow: false,
-    children: [-1.2, 1.2].map((dx, i) => ({ id: "rod" + i, feetPosition: { x: dx, y: 0.45, z: 0.02 }, primitive: { kind: "cylinder", radiusTop: 0.012, radiusBottom: 0.012, height: H - 4.2 - 0.09 }, material: { color: "#888c96", metalness: 1, roughness: 0.3 } })) });
+  ctx.spawn("l31-arcade-neon", { feetPosition: { x: Z.x0 + 2.6, y: 3.6, z: -12 }, rotation: { yaw: 90 }, vector: NEON, castShadow: false,
+    children: [-1.2, 1.2].map((dx, i) => ({ id: "rod" + i, feetPosition: { x: dx, y: 0.45, z: 0.02 }, primitive: { kind: "cylinder", radiusTop: 0.012, radiusBottom: 0.012, height: H - 4.05 - 0.09 }, material: { color: "#888c96", metalness: 1, roughness: 0.3 } })) });
 
   const M = (id, key, x, z, yaw, state, materials, children) => ctx.spawn("l31-arcade-" + id, {
     feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: GLB[key], forward: "+z", materials }, physics: { body: "static", collider: "box" },

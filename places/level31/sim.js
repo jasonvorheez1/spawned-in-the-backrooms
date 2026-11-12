@@ -4,7 +4,7 @@ import { animate } from "builtin/tween";
 import { H, T, B, RINK, ZONES, ARRIVE, DOOR } from "../../scripts/lib/level31.js";
 import { layParts } from "../../scripts/lib/level31-parts.js";
 export const cadence = "1s";
-const V = 5;
+const V = 6;
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
 const WOOD = { texture: "cdn/texture-polished-maple-roller-rink-floor-planks.png", wrap: "repeat", repeat: [0.35, 0.35], color: "oklch(0.92 0.03 75)", roughness: 0.16, metalness: 0.05 };
 const CARPET = { texture: "cdn/texture-black-arcade-carpet-neon-confetti-squiggles.png", wrap: "repeat", repeat: [0.4, 0.4], color: "oklch(0.95 0.01 300)", roughness: 0.98 };
