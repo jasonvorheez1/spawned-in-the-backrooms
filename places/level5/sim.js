@@ -1,3 +1,4 @@
+import { sweepProps } from "../../scripts/lib/breakables.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 // Level 5 "Terror Hotel": lays the shell, every lamp, the radios, the ways in and out and the sound beds once
@@ -341,6 +342,7 @@ function retuneL5(ctx) {
 const hotelLeaf = (o, num) => ({ kind: "scripted", script: "scripts/door-geo.js", params: { style: "hotel", part: "leaf", w: Math.max(0.8, Math.min(1.2, Math.abs(o.a1 - o.a0) || 1.05)), h: 2.3, hingeSide: "left", swing: 1, seed: Number(num) || 0 } });
 const OLD_LEAVES = false; // the guest-room leaves are scripts/l5-hall-lay.js's (frame, plaque, swing); these stood inside the same doorways (shelly Nov 10: 'a door on top of the other door')
 export function tick(ctx) {
+  if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level5"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.session.l5Tuned) { retuneL5(ctx); ctx.session.l5Tuned = true; }

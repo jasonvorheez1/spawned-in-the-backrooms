@@ -1,3 +1,4 @@
+import { sweepProps } from "../../scripts/lib/breakables.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 // Level 184 "Field of Forgotten Forts": lays the countryside once per version.
@@ -56,6 +57,7 @@ function lay(ctx) {
   sp("l184-ambience", { feetPosition: T(0, 0), audience: "local", audio: { clip: AMB, gain: 0.2, loop: true, spatial: false, bus: "Ambience" } });
 }
 export function tick(ctx) {
+  if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level184"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   const s = ctx.place.state;

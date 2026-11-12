@@ -1,3 +1,4 @@
+import { sweepProps } from "../../scripts/lib/breakables.js";
 // Spamton's arena: lays the stage once, and stands him up fresh whenever someone is in here (scripts/spamton-boss.js fights).
 export const cadence = "250ms";
 const V = 3;
@@ -46,6 +47,7 @@ pop motes n=?mobile:60|140 on=box(<36,7,36>) life=6..12 v=sdir()*.05 size=.015..
 }
 
 export function tick(ctx) {
+  if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   const s = ctx.place.state;
   if (s.builtV !== V) { lay(ctx); s.builtV = V; }
   const here = ctx.place.players.length > 0, boss = ctx.place.objects["spam-boss"];

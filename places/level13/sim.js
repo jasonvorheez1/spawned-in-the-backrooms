@@ -1,3 +1,4 @@
+import { sweepProps } from "../../scripts/lib/breakables.js";
 // Level 13 "The Boiling Frogs": lays the apartment complex once (shell here; furniture, residents and creatures in their own
 // files), then keeps the lethargy: the longer you stay inside one flat, the heavier you get (player.state.leth13, 0..1).
 import { H, HALL, T, UNIT, HALLS, APTS, RECEPTION, SPAWN, EXIT0, aptAt } from "../../scripts/lib/level13.js";
@@ -107,6 +108,7 @@ function lay(ctx) {
   ctx.spawn("l13-hum", { feetPosition: { x: 0, y: 1.5, z: 5 }, audio: { clip: "/cdn/moodboard-realistic-gritty/ambience-quiet-apartment-hallway-distant-tv-murmur-and-pipe-tick-loop.mp3", loop: true, gain: 0.13, spatial: false } });
 }
 export function tick(ctx) {
+  if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   const st = ctx.place.state;
   if (st.v !== V || !("l13-floor" in ctx.place.objects)) { lay(ctx); delete st.dv; st.v = V; return; }
   restyleSigns(ctx, "level13"); dressThresholds(ctx);

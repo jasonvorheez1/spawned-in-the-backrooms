@@ -1,3 +1,4 @@
+import { sweepProps } from "../../scripts/lib/breakables.js";
 // Level 0.2 "Remodeled Mess" (lore: scripts/lib/data/lore/level-0-2.md): the Remodeling Co.'s clean copy of Level 0.
 // Dry red carpet, freshly painted white walls with a red chair rail, working outlets and Wi-Fi, the occasional bathroom.
 // Walk in past the door room and it falls apart, column by column from the far east wall back toward the door, dropping
@@ -326,6 +327,7 @@ function placeGridFresh(ctx) {
   ctx.spawn("l02-fresh-grid", { tags: ["usable"], feetPosition: { x: G.fresh[0], y: BASE + 0.16, z: G.fresh[1] }, ...FRESH_BODY, behavior: "scripts/l02-use.js", state: { kind: "fresh", slot: "lift", name: "Reality Freshener", verb: "Take", info: "Remodeling Co. property. Cold to the touch." } });
 }
 export function tick(ctx) {
+  if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   const s = ctx.place.state, now = ctx.now(), ps = ctx.place.players;
   if (s.v !== V || !("l02-base" in ctx.place.objects)) {
     layShell(ctx); dressCapn(ctx); layClean(ctx); layGrid(ctx, true); placeGridFresh(ctx); joists(ctx, false);

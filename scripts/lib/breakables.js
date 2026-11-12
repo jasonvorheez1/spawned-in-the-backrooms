@@ -111,8 +111,23 @@ export function sweepProps(ctx) {
     if (!h.tags.includes('breakable')) h.tags = [...h.tags, 'breakable']
     h.state.mat = mat; if (st.hp == null || st.mat !== mat) { h.state.hp = hp; h.state.maxHp = hp }
   }
+  sweepIds(ctx)
 }
 
+// Shelly Nov 12 "add breakables in levels that dont have any": props laid with no tag break by what their id says they are
+const ID_MAT = [[/clock|lamp|bulb|lantern|fan|radio|tv|monitor|phone/, 'fixture'], [/locker|toolbox|-tb$|-tb-|bunk|ladder|bucket|barrel|vend|fridge|stove|cabinet/, 'sheet_steel'],
+  [/drywall/, 'drywall'], [/chair|table|tbl|desk|bench|crate|box|stool|shelf|dresser|bed|pallet|plank|lumber|junk|salv|cart|sawhorse|cot|couch|sofa/, 'wood']]
+const ID_SKIP = /floor|wall|ceil|door|gate|stair|step|ramp|col$|-col-|collider|sign|ground|road|terrain|track|rail|pier|deck|dock|bridge|spawn|exit|from-|to-|portal|hatch|elevator|lift|skirt|scuff|nose/
+const matOfId = (id) => { if (ID_SKIP.test(id)) return null; for (const [re, m] of ID_MAT) if (re.test(id)) return m; return null }
+function sweepIds(ctx) {
+  for (const [id, h] of Object.entries(ctx.place.objects)) {
+    if (!h || h.parent || !(h.model || h.primitive) || h.tags?.includes('breakable') || h.tags?.includes('npc') || h.tags?.includes('usable') || h.tags?.includes('player')) continue
+    const mat = matOfId(id); if (!mat) continue
+    const b = h.bounds; if (b && Math.max(b.size.x, b.size.y, b.size.z) > 3.5) continue // big structure, not a prop
+    const hp = Math.round((B.materials[mat]?.hp ?? 80) * 0.5)
+    h.tags = [...(h.tags ?? []), 'breakable']; h.state.mat = mat; if (h.state.hp == null) { h.state.hp = hp; h.state.maxHp = hp }
+  }
+}
 export function tickWalls(ctx, gname) {
   sweepProps(ctx)
   regrowWrecks(ctx)

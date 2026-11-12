@@ -1,3 +1,4 @@
+import { sweepProps } from "../../scripts/lib/breakables.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import { setZen, migrateZen } from "../../scripts/lib/zenith-quest.js";
@@ -186,6 +187,7 @@ function furnish(ctx) {
   }
 }
 export function tick(ctx) {
+  if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level01"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   const s = ctx.place.state;
