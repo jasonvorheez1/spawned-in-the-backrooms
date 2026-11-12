@@ -25,7 +25,7 @@ import MODELS from "../../scripts/lib/data/level11-models.yml";
 export const cadence = "1s";
 const RENO_FLOOR = 0.32;
 const mallTrash = (i) => ({ x: -15.15 + i * 0.2, y: 0.33, z: 28.1 + i * 0.65 });
-const V = 146; // the market court and the central pedestrian route
+const V = 147; // the market court and the central pedestrian route
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1102,7 +1102,7 @@ pop steam rate=?mobile:6|12 on=disc(.2) life=1.6..2.6 v=up(.7..1.1)+sdir()*.15 s
       sp(`l11-alley-wet-${k}`, { feetPosition: { x, y: 0.083, z }, primitive: { kind: "cylinder", radiusTop: r, radiusBottom: r, height: 0.004 }, scale: { x: 1.6, y: 1, z: 1 }, material: { color: "oklch(0.18 0.01 240)", roughness: 0.05, metalness: 0.3, transparent: true, opacity: 0.7 } });
     sp("l11-alley-drip", { feetPosition: { x: AX, y: 0.1, z: Z0 + 7 }, audio: { clip: "cdn/moodboard-realistic-gritty/sfx-slow-water-drips-into-alley-puddle-echo-loop.mp3", loop: true, gain: 0.14, spatial: true, maxDistance: 10 } });
     // street furniture (Tripo, Nov 12): a payphone by the newsstand, trash cans at the curb and the subway mouth; sized by layout boxes so none read toy-small
-    const PAYPHONE = "/cdn/value.6f254276e9716432f337f3b95d9499f5dbf6bfa3010908f7a4e3e834084a0a87.glb", CAN = "/cdn/value.0d61ba9af6fbdd0bc85508d76b8a1fdc800c2b81a5ef504ae6552c799b947173.glb";
+    const PAYPHONE = "/cdn/value.125de887bf446e85e5ad9937c3393ed678e5d6a4056236fcd8421acb0be020b5.glb", CAN = "/cdn/value.2fd4f5bbbdefc1ee246c6997a72e618a280265bf1b483bba1ac3071363841a41.glb";
     sp("l11-payphone-ave", { feetPosition: { x: 12.3, y: 0.336, z: 43.2 }, rotation: { yaw: 90 }, model: { id: PAYPHONE }, layout: { box: { min: { x: -0.6, y: 0, z: -0.6 }, max: { x: 0.6, y: 1.9, z: 0.6 } } }, physics: { body: "static", collider: "box" }, state: { name: "Payphone", info: "The dial tone loops back on itself. Someone is breathing on the line." } });
     for (const [k, x, z, yaw] of [[0, 9.2, 41.2, 15], [1, 9.2, 49.6, -40], [2, 11.9, 57.8, 70]])
       sp(`l11-trashcan-${k}`, { feetPosition: { x, y: 0.336, z }, rotation: { yaw }, model: { id: CAN }, layout: { box: { min: { x: -0.3, y: 0, z: -0.3 }, max: { x: 0.3, y: 0.92, z: 0.3 } } }, physics: { body: "static", collider: "cylinder" } });

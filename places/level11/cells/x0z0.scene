@@ -154,21 +154,21 @@ l11-meter-0:
   feetPosition: {x: 8.75, y: 0.336, z: 35.5}
   id: l11-meter-0
   layout: {box: {max: {x: 0.15, y: 1.35, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
-  model: {id: /cdn/value.fd18021446817c51871c18c03338f8e6caa7688614993eafa73132cb5792d098.glb}
+  model: {id: /cdn/value.aad37f00bc846e8e06884ca0f5663407d95b59b874e68a81a7f474f9dccd29f2.glb}
   physics: {body: static, collider: cylinder}
   rotation: {yaw: -90}
 l11-meter-1:
   feetPosition: {x: 8.75, y: 0.336, z: 38.5}
   id: l11-meter-1
   layout: {box: {max: {x: 0.15, y: 1.35, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
-  model: {id: /cdn/value.fd18021446817c51871c18c03338f8e6caa7688614993eafa73132cb5792d098.glb}
+  model: {id: /cdn/value.aad37f00bc846e8e06884ca0f5663407d95b59b874e68a81a7f474f9dccd29f2.glb}
   physics: {body: static, collider: cylinder}
   rotation: {yaw: -90}
 l11-meter-2:
   feetPosition: {x: 8.75, y: 0.336, z: 46.5}
   id: l11-meter-2
   layout: {box: {max: {x: 0.15, y: 1.35, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
-  model: {id: /cdn/value.fd18021446817c51871c18c03338f8e6caa7688614993eafa73132cb5792d098.glb}
+  model: {id: /cdn/value.aad37f00bc846e8e06884ca0f5663407d95b59b874e68a81a7f474f9dccd29f2.glb}
   physics: {body: static, collider: cylinder}
   rotation: {yaw: -90}
 l11-newsstand:
