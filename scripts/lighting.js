@@ -3,10 +3,14 @@
 // shadow, the sky's ambient — and takes back a color. This file is the standard model (Cook-Torrance
 // GGX + Lambert, the math a PBR engine runs). Edit a line and every surface follows; delete one and
 // see what it did. Toon, flat, hatching: the "looks" skill shows each as a few edits of this file.
-import { dot, max, mix, normalize, pow, clamp, float, vec3, oneMinus, PI } from "builtin/tsl";
+import { dot, max, mix, normalize, pow, clamp, float, vec3, oneMinus, PI, mx_noise_float } from "builtin/tsl";
 
 export function lighting(surface, lights) {
-  const { albedo, normal: N, view: V, roughness, metalness } = surface;
+  const { normal: N, view: V, roughness, metalness, position: P } = surface;
+  // wear (Shelly Nov 12 "feel realistic"): two octaves of world-space noise shade every surface a few percent lighter or darker,
+  // so a tiled texture never repeats the same patch twice and broad walls read as aged, not printed
+  const wear = mx_noise_float(P.mul(0.35)).mul(0.6).add(mx_noise_float(P.mul(1.7)).mul(0.4));
+  const albedo = surface.albedo.mul(wear.mul(0.13).add(0.985));
   // f0: how much a surface reflects head-on — 4% for anything that is not metal, its own color for metal.
   const f0 = mix(vec3(0.04), albedo, metalness);
 
