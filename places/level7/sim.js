@@ -941,6 +941,7 @@ function lay(ctx) {
   });
 }
 
+let lastFortLift = 0;
 export function tick(ctx) {
   restyleSigns(ctx, "level7"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
@@ -1063,6 +1064,11 @@ export function tick(ctx) {
     }
     s.fortPlacementV = 1;
   }
+  // Shelly Nov 12 "npcs in fort surrender are under the fort": a resident who drops through to the rock (10.9) under the floor (FORT_FLOOR) is set back on the floor, every 3 s
+  if (ctx.now() >= (lastFortLift ?? 0)) { lastFortLift = ctx.now() + 3000;
+    for (const id of Object.keys(L7_NPCS)) { const o = ctx.place.objects[id];
+      if (!isFortResident(o) || o.state.dead || o.state.follow) continue;
+      const p = o.feetPosition; if (Math.hypot(p.x + 70, p.z + 93) < 14 && p.y < FORT_FLOOR - 0.3) { o.feetPosition = { x: p.x, y: FORT_FLOOR + 0.05, z: p.z }; o.velocity = { x: 0, y: 0, z: 0 }; } } }
   if ((s.catV ?? 0) < 1 && !s.catBusy) { // Shelly Nov 12 "level 7 is still using the old npcs": the fort's people stood before the cat bodies; refit them in place (same path as Cap'n and Rico), state and weapons kept
     s.catBusy = 1;
     Promise.all([import("../../scripts/lib/critter-model.js"), import("../../scripts/lib/clothes.js")]).then(([{ bodyModel, seatCat }, { npcLook }]) => {
