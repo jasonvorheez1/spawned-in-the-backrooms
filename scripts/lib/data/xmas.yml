@@ -1,0 +1,13 @@
+# The Christmas Area (Kane Pixels): a pocket off Level 0's north edge. Savi's picks.
+v: 1
+cell: { cx: 44 }            # the maze cell on the north rim whose outer wall opens (maze.js XMAS_CELL)
+bounds: { x0: 51.8, x1: 80.2, z0: 112.1, z1: 160.2 }   # inside here: no yellow hum
+treeLight: 2.5
+treeLightRange: 14
+wreathLight: 1.3
+floorLight: 1.1
+clockLight: 0.7
+windowLight: 3.2
+carol: { gain: 0.15, maxDistance: 18 }
+sitter: { wake: 8, sleep: 12, lampMax: 4.5, ramp: 1.6, turn: 40 }   # m, m, intensity, per second, deg/s
+stray: { hp: 70, speed: 1.6, aggro: 13, reach: 1.35, damage: 9, every: 1.7, fearRange: 7, fearCone: 0.9, backoff: 1.1, knocks: 3, knockGap: 1.1, groan: [5, 9] }
