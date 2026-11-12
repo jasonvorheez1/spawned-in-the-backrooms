@@ -13,7 +13,7 @@ import { S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, xOf } from "../../scripts/lib
 import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 import P from "../../scripts/lib/data/l02-props.yml";
 export const cadence = "250ms";
-const V = 10, STEP_MS = 2600;
+const V = 11, STEP_MS = 2600;
 const W = NX * S, D = NZ * S; // 32 x 20 m
 const CARPET = { color: "oklch(0.4 0.11 25)", roughness: 0.97, texture: "cdn/texture-dry-red-office-carpet-low-pile.png", wrap: "repeat", repeat: [0.5, 0.5] };
 const PAINT = { color: "oklch(0.95 0.008 90)", roughness: 0.88 };
@@ -181,8 +181,8 @@ function layColumn(ctx, c) {
     finishedWall(ctx, "l02-bath-n1", tag, x - 1.4, Z0 + 5, 1.2, true, false);
     finishedWall(ctx, "l02-bath-n2", tag, x + 1.1, Z0 + 5, 1.8, true, false);
     ctx.spawn("l02-bath-floor", { tags: [tag], feetPosition: { x, y: 0.002, z: Z0 + 2.5 }, primitive: box(S - 0.15, 0.022, 4.85), material: BATHTILE });
-    F("l02-stall", "stall", { x: x + 1.2, y: 0, z: Z0 + 0.8 }, 180);
-    F("l02-toilet", "toilet", { x: x + 1.2, y: 0, z: Z0 + 0.45 }, 180);
+    F("l02-stall", "stall", { x: x + 0.9, y: 0, z: Z0 + 0.56 }, 180);
+    F("l02-toilet", "toilet", { x: x + 1.25, y: 0, z: Z0 + 0.42 }, 180);
     F("l02-sink", "sink", { x: x - 1.1, y: 0, z: Z0 + 0.3 }, 180);
     ctx.spawn("l02-mirror", { tags: [tag], feetPosition: { x: x - 1.1, y: 1.05, z: Z0 + 0.02 }, primitive: box(0.7, 0.8, 0.02), material: { color: "oklch(0.85 0.01 230)", metalness: 1, roughness: 0.05 } });
     ctx.spawn("l02-fresh-sink", { tags: ["usable", tag], feetPosition: { x: x - 0.6, y: H("sink") + 0.01, z: Z0 + 0.25 }, ...FRESH_BODY, behavior: "scripts/l02-use.js", state: { kind: "fresh", slot: "sink", name: "Reality Freshener", verb: "Take", info: "Left beside the bathroom tap." } });

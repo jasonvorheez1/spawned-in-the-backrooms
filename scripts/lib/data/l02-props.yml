@@ -12,8 +12,8 @@ drywall_stack: { model: "/cdn/value.dd3c11a087dce509414d840925e8477ce72ec546947a
 ladder:       { model: "/cdn/value.e3a9e57fa4cd0ebbfe56c6389249e5bf1d94d625c3faef7ff16a17500bca3534.glb", size: [0.5, 1.9, 0.6] }
 plant:        { model: "/cdn/value.53fa6b1388302684d3e567ca755e213843bd4d5ac5ee17c0b54fa1d579c9a019.glb", forward: "+x", size: [0.87, 1.9, 0.83] }
 router:       { model: "/cdn/value.2ee6d65e80f6bdb605e09f0ddf35522299c2c9aca1c14b28e52653eb02a03d3a.glb", size: [0.24, 0.2, 0.16] }
-toilet:       { model: "/cdn/value.bc22d60c3ae65dcf548fd86db3ba06454557ddc463f4f35fed396553a5a42e13.glb", size: [0.42, 0.8, 0.7] }
-stall:        { model: "/cdn/value.7e5561ee48de85e59cd6fb64b7961827a0bbcd6b65aa40daf13e419786814f8f.glb", size: [1.0, 1.9, 1.5] }
+toilet:       { model: "/cdn/value.bc22d60c3ae65dcf548fd86db3ba06454557ddc463f4f35fed396553a5a42e13.glb", forward: "+x", size: [0.42, 0.8, 0.7] }
+stall:        { model: "/cdn/value.7e5561ee48de85e59cd6fb64b7961827a0bbcd6b65aa40daf13e419786814f8f.glb", forward: "+x", size: [2.0, 1.9, 1.0] }
 sawhorse:     { model: "/cdn/value.afec3110e2d081b48de5f78e3510691bffc67e913360c067c5b6113e039fd27e.glb", size: [1.0, 0.8, 0.55] }
 paintcan:     { model: "/cdn/value.b449b85f85205cb304877c06d38ade4d63319c9a782c0287e74a0c97f695f46c.glb", size: [0.3, 0.36, 0.3] }
 worklamp:     { model: "/cdn/value.421681346224db28afacd3bb88c4f5fa1e66521a7076ef84666ed0f219ea37f7.glb", size: [0.6, 1.7, 0.6] }
