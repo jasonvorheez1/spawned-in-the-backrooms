@@ -116,7 +116,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
     tags: ["usable"],
     feetPosition: T(-17.3, -51.6),
     rotation: { yaw: 180 },
-    primitive: { kind: "scripted", script: "scripts/props10.js", params: { kind: "oven" } }, physics: "static",
+    model: { id: "/cdn/value.ae96850bb4b70e7545b3dfd206b6998a199b1d508ad96ca6599ea14f25b3fcd6.glb" }, layout: { box: { min: { x: -0.85, y: 0, z: -0.85 }, max: { x: 0.85, y: 1.7, z: 0.85 } } }, physics: { body: "static", collider: "box" }, // Tripo brick oven (Shelly: use tripo)
     light: { kind: "point", color: "oklch(0.88 0.18 55)", intensity: 2.2, distance: 6 },
     behavior: "scripts/level10-use.js",
     state: { kind: "hearth-oven", name: "Outpost Hearth Oven", verb: "Bake Homestead Bread" },
@@ -326,8 +326,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
     "Sully · Outpost Radio Operator", "reyes", "Bountiful to Alpha, still green out here. Over.", ROUNDS_SULLY);
   // the cookfire the outpost eats around: a stone ring, split logs, stumps to sit on
   const fire = T(-12.2, -50.7);
-  for (let i = 0; i < 9; i++) { const a = i * 0.698; sp(`l10-fire-stone-${i}`, { feetPosition: T(fire.x + Math.cos(a) * 0.75, fire.z + Math.sin(a) * 0.75), rotation: { yaw: i * 47 }, scale: { x: 1, y: 0.6, z: 0.8 }, primitive: { kind: "sphere", radius: 0.2, widthSegments: 7, heightSegments: 5 }, material: { color: "oklch(0.5 0.01 80)", roughness: 0.95 }, castShadow: false, visibleRange: { max: 60 } }); }
-  for (let i = 0; i < 3; i++) sp(`l10-fire-log-${i}`, { feetPosition: T(fire.x, fire.z, -0.34), rotation: { yaw: i * 60, roll: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.08, height: 0.9, radialSegments: 7 }, material: { color: "oklch(0.25 0.03 50)", roughness: 1 }, castShadow: false });
+  sp("l10-firepit", { feetPosition: T(fire.x, fire.z), model: { id: "/cdn/value.75612d7c3340148377c006bc20318da6eb31ab37fafe9a70b189ac413d1fa87e.glb" }, layout: { box: { min: { x: -0.95, y: 0, z: -0.95 }, max: { x: 0.95, y: 0.5, z: 0.95 } } }, physics: { body: "static", collider: "cylinder" } }); // Tripo stone ring with logs
   [[1.9, 0.4], [-1.6, 1.1], [0.3, -2]].forEach(([dx, dz], i) => sp(`l10-fire-stump-${i}`, { tags: ["seat"], feetPosition: T(fire.x + dx, fire.z + dz), rotation: { yaw: i * 110 }, model: { id: "/cdn/value.faf38ade6590b20ecc867e6aab0a951600de1e16f38674f972858a1c6cf44b62.glb" }, layout: { box: { min: { x: -0.38, y: 0, z: -0.38 }, max: { x: 0.38, y: 0.42, z: 0.38 } } }, physics: { body: "static", collider: "box" }, visibleRange: { max: 80 } }));
   sp("l10-fire", { feetPosition: T(fire.x, fire.z, 0.08), fx: { script: `fx
 pop flame rate=flick(.45,.2)*50 on=disc(.25) life=.5..0.9 v=up(1.4)+cone(22)*(.3..0.8) size=.2..0.38 acc=curl(.5)*1.2+buoy(2.2)+drag(1.5) sz=$size*(.5>.25:1>.7:.7>.14) col=hdr(4.6,3.4,1.4)>.3:hdr(3.2,1.4,.3)>.65:hdr(1.8,.5,.1)>hdr(.6,.12,.03) a=0>.12:1>.75:.85>0 rot=spin(.2) r=sprite(flame-wisp,add)
