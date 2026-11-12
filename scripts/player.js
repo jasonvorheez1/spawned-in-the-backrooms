@@ -1224,7 +1224,7 @@ export function update(ctx, dt) {
   w.stamina = Math.max(0, Math.min(dv.staMax, w.stamina + (sprinting ? -L.staminaDrain * (green ? AW.green.staminaMul : 1) * (l2Hot ? 1.25 : 1) : L.staminaRegen * dv.staRegen * (tired ? 0.3 : 1) * (w.winded ? (L.windedRegen ?? 0.6) : 1) * (l2Hot ? 0.68 : 1) * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
   const inArch = fz === 'arches' && (ctx.self.place === 'main' || ctx.self.place === 'tutorial0') // the flooded arches are Level 0's alone: other places without their own zones fall through to Level 0's map
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
-  const speed = (w.walkMode && !sprinting ? 0.5 : 1) * (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * (s.carryMul ?? 1) * (crouched ? L.crouchSpeed ?? 0.45 : 1) * dv.speed * (w.bur ??= burden(s))
+  const speed = (w.walkMode && !sprinting ? 0.5 : 1) * (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * (s.carryMul ?? 1) * (1 - 0.55 * (s.leth13 ?? 0)) * (crouched ? L.crouchSpeed ?? 0.45 : 1) * dv.speed * (w.bur ??= burden(s))
   const drunk = Math.max(0, (s.drunk ?? 0) - (nowS - (s.drunkAt ?? nowS)) * 0.4) // sobers 0.4 a second
   if (s.drunk && drunk <= 0) s.drunk = 0
   const sway = drunk > 15 && moving ? Math.sin(nowS * 1.3) * Math.min(0.5, drunk / 160) : 0 // past a couple of drinks the walk drifts
