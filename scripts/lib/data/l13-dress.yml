@@ -1,7 +1,7 @@
 # Level 13's hall dressing: what the people who lived here left at their doors. Tripo models, fitted into size [w, h, d].
 # Savi's picks: each shut door tells one story; the lurker's flat (a5) has the drag marks.
 models:
-  door:     { model: "/cdn/value.d881012e396884baff8281b8df4e473a981750577540f4b511c8da5280350a69.glb", size: [1.24, 2.22, 0.14] }
+  door:     { model: "/cdn/value.d881012e396884baff8281b8df4e473a981750577540f4b511c8da5280350a69.glb", forward: "+x", size: [1.24, 2.22, 0.14] }
   sconce:   { model: "/cdn/value.0041350e7b490fb0214223fdc4d9e42fa2c78e3af0f0b0749ce83cc8e6324093.glb", size: [0.3, 0.28, 0.18] }
   radiator: { model: "/cdn/value.bb331b096a77e506aba9e27eaf65607aa7c0a5c86c4ac96049dc5c48222e159e.glb", size: [1.0, 0.7, 0.2] }
   trash:    { model: "/cdn/value.5deb45082a504f6e2c8ad5204f6f445bb53694bec26e326054d5ec6b29e118fd.glb", size: [0.8, 0.6, 0.55] }

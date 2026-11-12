@@ -2,8 +2,8 @@
 // The hall as people left it: wall lamps between doors, radiators, what was left at each door, notes, and the drag marks into the lurker's flat. Ids l13d-*.
 import { APTS, H, HALL, T, UNIT } from "./level13.js";
 import D from "./data/l13-dress.yml";
-const DV = 2;
-const fit = (k) => { const m = D.models[k]; if (!m?.model) return null; const [w, h, d] = m.size; return { model: { id: m.model }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } } }; };
+const DV = 3;
+const fit = (k) => { const m = D.models[k]; if (!m?.model) return null; const [w, h, d] = m.size; return { model: m.forward ? { id: m.model, forward: m.forward } : { id: m.model }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } } }; };
 const svg = (w, [vw, vh], body) => `<svg viewBox='0 0 ${vw} ${vh}' width='${w}m'>${body}</svg>`;
 export function layDress(ctx) {
   const st = ctx.place.state, ready = Object.values(D.models).filter((m) => m.model).length;
