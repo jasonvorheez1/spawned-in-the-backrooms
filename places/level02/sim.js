@@ -6,7 +6,7 @@
 // nothing happened. Below, once the floor is down, fallen joists shut the old stair: the way up is through the shifting
 // rooms (scripts/lib/l02-grid.js), whose walls the crew rebuilds while nobody watches, to the CREW EXIT. Cap'n stands by the stairs. Props are Tripo meshes (scripts/lib/data/l02-props.yml).
 import { animate } from "builtin/tween";
-import { bodyModel, seatCat, critterSpec } from "../../scripts/lib/critter-model.js";
+import { refitBody, bodyModel, seatCat, critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook, refitLook, NL_V } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 import { S, NX, NZ, X0, Z0, BASE, CEIL, xOf } from "../../scripts/lib/level02.js";
@@ -173,9 +173,7 @@ const CAPN = { species: "fox", sex: "m", fur: "#0b0b0d", etype: "crew", blush: "
 const CAPN_LOOK = { ...refitLook("l02-capn", { ...npcLook("l02-capn", CAPN, "wanderer", 2), role: "wanderer", faction: "wanderer" }), ...CAPN, nl: NL_V };
 function dressCapn(ctx) {
   const r = ctx.place.objects["l02-capn"]; if (!r) return;
-  for (const k of Object.keys(ctx.place.objects)) if (k.startsWith("l02-capn/")) ctx.destroy(k);
-  r.state.wear = CAPN_LOOK; delete r.state.headBody; r.state.arm = "fists"; // the crew carry clipboards, not weapons
-  r.model = bodyModel(CAPN_LOOK); seatCat(ctx, r, CAPN_LOOK);
+  refitBody(ctx, r, CAPN_LOOK, { clearKids: true }); r.state.arm = "fists"; // the crew carry clipboards, not weapons
 }
 function layLights(ctx, c) {
   const x = xOf(c), tags = c ? [`l02c${c}`] : [];

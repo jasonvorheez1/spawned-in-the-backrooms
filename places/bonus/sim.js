@@ -2,7 +2,7 @@
 // They're staff, not traders: E at the counter in front of each opens its menu (scripts/bonus-counter.js, scripts/hub-ui.js).
 import { shopperFeet } from "../../scripts/mall-shopper.js"
 import B from "../../scripts/lib/data/bonus.yml"
-import { bodyModel, seatCat, critterSpec, seatHumanHair, STYLE_V, wardChildren, seatWardrobe, setStyle, HUMAN } from "../../scripts/lib/critter-model.js"
+import { refitBody, bodyModel, seatCat, critterSpec, seatHumanHair, STYLE_V, wardChildren, seatWardrobe, setStyle, HUMAN } from "../../scripts/lib/critter-model.js"
 import { npcLook, refitLook, NL_V } from "../../scripts/lib/clothes.js"
 import { layBonusExtra } from "../../scripts/lib/bonus-extra.js"
 export const cadence = "500ms" // was 2s: the diner music swap answers within half a second of the door
@@ -70,11 +70,8 @@ export function tick(ctx) {
   if (s.ricoHairV !== 1 && ctx.place.objects["bonus-rico"]) { const r = ctx.place.objects["bonus-rico"]; r.state.look = { ...(r.state.look || {}), hair: "none" }; if (r.state.wear) { const w = { ...r.state.wear }; delete w.hair; r.state.wear = w } if (ctx.place.objects["bonus-rico/cw-hair"]) ctx.destroy("bonus-rico/cw-hair"); s.ricoHairV = 1 }
   if (s.ricoBodyV !== 1 && ctx.place.objects["bonus-rico"]) { // Nov 12 (Shelly): Rico still wore the old critter build, no wear row so the refit skipped him; dress him like Tom and Dawn
     const r = ctx.place.objects["bonus-rico"], st = STAFF["bonus-rico"]
-    for (const k of Object.keys(ctx.place.objects)) if (k.startsWith("bonus-rico/")) ctx.destroy(k)
     const l = { ...refitLook("bonus-rico", { ...npcLook("bonus-rico", st.look, "trader", 5), role: "trader", faction: "trader" }), ...st.look, nl: NL_V }
-    r.state.wear = l; delete r.state.headBody
-    r.model = bodyModel(l); seatCat(ctx, r, l)
-    if (l.heightS || l.buildS) r.scale = { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 }
+    refitBody(ctx, r, l, { clearKids: true })
     s.ricoBodyV = 1
   }
   if (s.ricoBack !== 1) { s.ricoBack = 1; s.staffV = 0 } // Nov 12: Rico is back (Shelly)

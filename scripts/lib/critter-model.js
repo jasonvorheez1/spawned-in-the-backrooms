@@ -1041,3 +1041,13 @@ export function seatCat(ctx, obj, l) {
   if (obj.material?.outline) obj.material = null
 }
 export const catBodyIds = () => [CAT_BODY.f.glb, CAT_BODY.m.glb, CAT_BODY2.f, CAT_BODY2.m]
+
+// One body swap for every refit (Shelly Nov 12 "refactor"): a look onto the current body, its head and clothes seated, its height and build applied; the old copies in the sims and meg-agent call this
+export function refitBody(ctx, o, l, { clearKids = false } = {}) {
+  if (!o || !l) return false
+  if (clearKids) for (const k of Object.keys(ctx.place?.objects ?? {})) if (k.startsWith(o.id + '/')) ctx.destroy(k)
+  o.state.wear = l; delete o.state.headBody
+  o.model = bodyModel(l); seatCat(ctx, o, l)
+  if (l.heightS || l.buildS) o.scale = { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 }
+  return true
+}
