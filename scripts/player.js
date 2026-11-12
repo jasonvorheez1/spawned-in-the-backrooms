@@ -54,6 +54,7 @@ import { RAG } from './nade.js'
 import { stepTick } from './lib/footsteps.js'
 import { useCompass, COMPASS } from './lib/compass.js'
 import { placeFreshener, nearFresh, FRESH_BODY } from './lib/remodel-quest.js'
+import { placeMusicBox, musicNear } from './lib/musicbox.js'
 import L3I from './lib/data/l3items.yml'
 import CR from './lib/data/craft.yml'
 import AW from './lib/data/almond.yml'
@@ -310,6 +311,7 @@ function takeToken0(ctx, token) {
 export function useSnack(ctx, token) { // consume one from the bag
   const s = ctx.self.state, now = ctx.now(), n = s.snacks?.[token] ?? 0
   if (n <= 0 || !SNACKS[token]) return
+  if (token === 'musicbox') { s.invOpen = false; placeMusicBox(ctx); return } // set down, not eaten (scripts/lib/musicbox.js)
   if (SNACKS[token].keep) { // a keepsake: used, not eaten, once per cooldown
     const v = SNACKS[token], left = ((s.keepAt?.[token] ?? -1e12) + v.cooldown * 1000 - now) / 1000
     if (left > 0) { s.notice = { text: `${v.name}: the spring needs ${Math.ceil(left / 60)} min`, at: now }; return }
@@ -1317,7 +1319,8 @@ function tickStats(ctx, t, moving) {
   // sanity: the halls eat it, the dark eats it faster, the safe room gives it back
   let drain = (ctx.self.place === 'level61' || ctx.self.place === 'level11' || ctx.self.place === 'level10' ? 0 : ctx.self.place === 'level7' ? (zone === 'l7_sea' || zone === 'l7_ocean' ? 0.75 : 0.22) : ctx.self.place === 'level6' ? (w.nvg ? 0.32 : 1.15) : ctx.self.place === 'level4' ? DRAIN4[zone.slice(3)] : ctx.self.place === 'level5' ? (DRAIN5[zone.slice(3)] ?? 0.8) / 60 * 4 : ctx.self.place === 'level2' ? L2.sanityDrain[zone.slice(3)] : (ctx.self.place === 'level3' || ctx.self.place === 'gamma') ? L3.sanityDrain[zone.slice(3)] : ctx.self.place === 'level8' ? 0.14 : ctx.self.place === 'level21' ? L21.sanityDrain[zone.slice(4)] : L.sanityDrain[zone]) ?? 0.12
   if (w.light && (zone === 'dark' || zone === 'red' || zone === 'l3_dark')) drain *= 0.4
-  if (drain > 0 && nearFresh(ctx)) drain = 0 // a set-down Reality Freshener holds the room still (scripts/lib/remodel-quest.js)
+  if (drain > 0 && nearFresh(ctx)) drain = 0
+  { const mb = musicNear(ctx); if (mb) drain = Math.min(drain, 0) - mb } // a playing music box steadies whoever stays near it // a set-down Reality Freshener holds the room still (scripts/lib/remodel-quest.js)
   if (ctx.self.place === 'level5' && s.l5room && zone.slice(3) === s.l5room && ctx.now() < (s.l5until ?? 0)) drain = -0.6 // a rented Homely Hotel suite: your own room, the hotel can't reach you (scripts/l5-resident.js)
   if (drain > 0 && ctx.now() < (s.blueUntil ?? 0)) drain = 0 // blue almond water: the halls can't get in
   s.sanity -= drain * (drain > 0 ? derived(s).drain : 1) * t

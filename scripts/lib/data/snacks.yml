@@ -42,4 +42,4 @@ humloop: { name: "Hum loop", verb: "PLAY", info: "A cassette ring, puttied shut.
 
 # The Christmas Area (only there)
 eggnog:   { name: "Eggnog Thermos", info: "Warm, sweet, nutmeg. Somebody poured it for you", hunger: 10, thirst: 20, sanity: 25, hp: 12, color: "#f2e2b0", drink: true, aid: true }
-musicbox: { name: "Wind-up Music Box", verb: "WIND UP", info: "Plays the same four bars. You know the next note before it comes", hunger: 0, thirst: 0, sanity: 20, hp: 0, color: "#c8a050", keep: true, cooldown: 300, clip: "/cdn/moodboard-gothic-horror/sfx-short-wind-up-music-box-carol-melody.mp3" }
+musicbox: { name: "Wind-up Music Box", verb: "SET DOWN", info: "Set it down and it plays the same four bars until the spring gives out. Stay close", hunger: 0, thirst: 0, sanity: 20, hp: 0, color: "#c8a050", keep: true, cooldown: 180, clip: "/cdn/moodboard-gothic-horror/sfx-short-wind-up-music-box-carol-melody.mp3" }
