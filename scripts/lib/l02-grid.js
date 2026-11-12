@@ -2,6 +2,7 @@
 // A partition swaps its doorway only when no work lamp lights it, no camera looks at it and no body stands at it.
 // place.state.l02grid = { layout: { wallId: openIndex }, lamps: { lampId: on } }. Numbers: scripts/lib/data/l02-remodel.yml.
 import G from "./data/l02-remodel.yml";
+import { raycast } from "builtin/physics";
 import P from "./data/l02-props.yml";
 import { BASE } from "./level02.js";
 const C = G.cell, X = G.x0, Z = G.z0, HT = G.height;
@@ -108,7 +109,12 @@ export function gridTick(ctx) {
   for (const [w, row] of Object.entries(G.walls)) {
     if (lit[w] || ctx.random() > G.swapChance) continue;
     const P3 = pts(wallLine(w));
-    if (ps.some((p) => P3.some((q) => cone(p.feetPosition, yawOf(p.camera?.rotation), q, G.viewHalf)))) continue; // watched
+    const wid = `l02-gw-${w}`;
+    const sees = (p, q) => { if (!cone(p.feetPosition, yawOf(p.camera?.rotation), q, G.viewHalf)) return false; // in the view cone...
+      const e = { x: p.feetPosition.x, y: p.feetPosition.y + 1.6, z: p.feetPosition.z }, t = { x: q.x, y: BASE + 1.4, z: q.z };
+      const dx = t.x - e.x, dy = t.y - e.y, dz = t.z - e.z, d = Math.hypot(dx, dy, dz); if (d < 0.5) return true;
+      return !raycast(ctx, e, { x: dx / d, y: dy / d, z: dz / d }, { distance: d - 0.25, ignoreEntities: [p.id, wid], physicsOnly: true }); }; // ...and no other wall between
+    if (ps.some((p) => P3.some((q) => sees(p, q)))) continue; // watched
     const l = wallLine(w); if (ps.some((p) => { const f = p.feetPosition; return l.along === "z" ? Math.abs(f.x - l.x) < G.nearSkip && Math.abs(f.z - l.z) < C / 2 + 0.5 : Math.abs(f.z - l.z) < G.nearSkip && Math.abs(f.x - l.x) < C / 2 + 0.5; })) continue;
     const cur = g.layout[w] ?? 0, n = row.opts.length, pick = (cur + 1 + Math.floor(ctx.random() * (n - 1))) % n;
     const wo = o[`l02-gw-${w}`]; if (!wo) continue;
