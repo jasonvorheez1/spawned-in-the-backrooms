@@ -557,7 +557,7 @@ function swing(ctx, power = 0) {
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
   if (wp.ranged) { // real bullets: spread, drop and drag down each pellet's path (scripts/lib/ballistics.js)
     const pc = s.aimPitch ?? 0
-    const ch = ctx.getObject(ctx.self.id + '/critter-head') ? (CAM.critterEye ?? 1.2) * (ctx.self.effectiveScale?.y ?? 1) : null, eye = { x: p.x, y: p.y + (ch ? ch * (s.crouch ? 0.62 : 1) : (s.crouch ? 1.0 : 1.45)), z: p.z } // a cat shoots from its own eye (camera.yml critterEye), the height the camera sits at, crit = ctx.random() < derived(s).crit + (wp.critBonus ?? 0) // the R-55 crits far more often and far harder
+    const ch = ctx.getObject(ctx.self.id + '/critter-head') ? (CAM.critterEye ?? 1.2) * (ctx.self.effectiveScale?.y ?? 1) : null, eye = { x: p.x, y: p.y + (ch ? ch * (s.crouch ? 0.62 : 1) : (s.crouch ? 1.0 : 1.45)), z: p.z }, crit = ctx.random() < derived(s).crit + (wp.critBonus ?? 0) // the R-55 crits far more often and far harder; a cat shoots from its own eye (camera.yml critterEye), where the camera sits
     const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * (crit ? (wp.critMul ?? D.crit) : 1)
     let fv = f, pv = pc // in third person the shot goes from your eye to the point under the crosshair (scripts/camera.js keeps it in state.aimPt)
     if (s.tp && s.aimPt) { const dx = s.aimPt.x - eye.x, dy = s.aimPt.y - eye.y, dz = s.aimPt.z - eye.z, hh = Math.hypot(dx, dz); if (hh > 1.2) { fv = { x: dx / hh, z: dz / hh }; pv = Math.atan2(dy, hh) } }
