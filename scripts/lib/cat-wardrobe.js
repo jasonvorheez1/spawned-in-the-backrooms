@@ -140,7 +140,8 @@ export function catChildren(sex, look) {
   const l = dressed(sex, look), out = []
   for (const [slot, ck] of [['topw', 'top'], ['botw', 'bottom'], ['shoes', 'shoec'], ['hat', 'hatc'], ['neck', 'neckc']]) {
     const g = W.models[l[slot]]; if (!g?.[sex]) continue
-    out.push({ id: 'cw-' + slot, attachment: { skin: true }, model: { id: g[sex], forward: '+z', ...(g.tint === false ? {} : { materials: { cloth: { kind: 'scripted', script: 'scripts/mat-cloth.js', color: l[ck] || '#ffffff', params: (slot === 'topw' && printOf(sex, l)) || { pat: g.pat || 'weave' } } } }) }, ...(slot === 'topw' ? { morph: chestOf(look) } : {}) })
+    const gv = g.vars?.length ? [g, ...g.vars][(l[slot + 'Var'] ?? [...String(l[ck] ?? l.fseed ?? '')].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7)) % (g.vars.length + 1)] : g   // Nov 12: a Tripo piece with baked colour wears one of its recoloured variants, picked by its colour pick (or <slot>Var)
+    out.push({ id: 'cw-' + slot, attachment: { skin: true }, model: { id: gv[sex] ?? g[sex], forward: '+z', ...(g.tint === false ? {} : { materials: { cloth: { kind: 'scripted', script: 'scripts/mat-cloth.js', color: l[ck] || '#ffffff', params: (slot === 'topw' && printOf(sex, l)) || { pat: g.pat || 'weave' } } } }) }, ...(slot === 'topw' ? { morph: chestOf(look) } : {}) })
   }
   const fl = Array.isArray(look?.fluff) ? look.fluff : look?.fluff ? [look.fluff] : []
   const hairOn = !!(look?.hair && W.hair?.[look.hair])
