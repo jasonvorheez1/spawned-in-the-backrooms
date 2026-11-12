@@ -27,9 +27,10 @@ const clip = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
 // your own home: the house in Infinite City, or the Level 5 room or suite you booked, while the key lasts (Shelly, Nov 12)
 const L5R = { suite: 5.5, room: 4 } // m from the room's trunk that count as inside it (Savi's picks)
 function inL5Room(ctx, s) {
-  if (ctx.self.place !== 'level5' || !s.l5room || (s.l5until ?? 0) < ctx.now()) return false
-  const t = (L5P.suites?.[s.l5room] ?? L5P.rooms?.[s.l5room])?.trunk; if (!t) return false
-  const f = ctx.self.feetPosition, r = s.l5room.startsWith('suite') ? L5R.suite : L5R.room
+  const rid = s.l5home ?? ((s.l5until ?? 0) > ctx.now() ? s.l5room : null) // the room you booked is yours for good (Shelly, Nov 12: "a permanent player home")
+  if (ctx.self.place !== 'level5' || !rid) return false
+  const t = (L5P.suites?.[rid] ?? L5P.rooms?.[rid])?.trunk; if (!t) return false
+  const f = ctx.self.feetPosition, r = rid.startsWith('suite') ? L5R.suite : L5R.room
   return Math.hypot(f.x - t[0], f.z - t[1]) < r
 }
 const atHome = (ctx, s) => (ctx.self.place === 'home11' && !!s.home11) || inL5Room(ctx, s)
@@ -108,15 +109,17 @@ pop chips burst=6..10 on=disc(.5) life=.4..0.8 v=up(1.5..2.5)+sdir()*1.2 size=.0
 function thunk(ctx, mat, at, v = 0.7) { heard(ctx, { clip: clip(SND[mat] ?? SND.wood), position: { x: at.x, y: at.y + 1, z: at.z }, volume: v, maxDistance: 22 }) }
 
 // home bookkeeping: what you built in your own house rides your save
-function keepSet(s, id, row) { const k = { ...(s.homeKeep ?? {}) }, b = { ...(k.built ?? {}) }; if (row) b[id] = row; else delete b[id]; k.built = b; s.homeKeep = k }
+// the house keeps homeKeep.built, the Level 5 room homeKeep.l5built (places/level5/sim.js puts them back)
+const bucket = (ctx) => (ctx.self.place === 'level5' ? 'l5built' : 'built')
+function keepSet(ctx, s, id, row) { const key = bucket(ctx), k = { ...(s.homeKeep ?? {}) }, b = { ...(k[key] ?? {}) }; if (row) b[id] = row; else delete b[id]; k[key] = b; s.homeKeep = k }
 const newId = (ctx) => 'hb-' + Math.round(ctx.now()).toString(36) + Math.floor(ctx.random() * 1296).toString(36)
 
 function spawnPiece(ctx, s, kind, at) {
   if (atHome(ctx, s)) {
-    if (Object.keys(s.homeKeep?.built ?? {}).length >= 120) { say(ctx, s, 'Your house holds 120 built pieces'); return null }
+    if (Object.keys(s.homeKeep?.[bucket(ctx)] ?? {}).length >= 120) { say(ctx, s, 'Your home holds 120 built pieces'); return null }
     const id = newId(ctx)
     ctx.spawn(id, builtSpec(kind, at, ctx.self.id, { byUser: ctx.self.userId, id, owner: s }))
-    keepSet(s, id, { kind, x: at.x, y: at.y, z: at.z, rot: at.rot })
+    keepSet(ctx, s, id, { kind, x: at.x, y: at.y, z: at.z, rot: at.rot })
     return id
   }
   return ctx.spawn(builtSpec(kind, at, ctx.self.id, { byUser: ctx.self.userId }))
@@ -158,7 +161,7 @@ function useTool(ctx, s) {
     if (!mine(ctx, s, o)) { say(ctx, s, 'Not yours to rebuild'); return }
     if (!canPay(s, up.cost)) { say(ctx, s, `${up.name} needs ` + needText(up.cost)); return }
     const home = atHome(ctx, s) && String(o.id).startsWith('hb-')
-    if (home) keepSet(s, o.id, null)
+    if (home) keepSet(ctx, s, o.id, null)
     ctx.destroy(o.id)
     if (!spawnPiece(ctx, s, pc.up, at)) return
     pay(s, up.cost)
@@ -167,10 +170,10 @@ function useTool(ctx, s) {
   } else if (s.building === 'tool_demolish') {
     if (!mine(ctx, s, o)) { say(ctx, s, 'Not yours to take down'); return }
     if (o.tags?.includes('storage') && String(o.state.items ?? '')) { say(ctx, s, 'Empty the locker first'); return }
-    if (pc.furn) { s.furn = { ...(s.furn ?? {}), [pc.furn]: (s.furn?.[pc.furn] ?? 0) + 1 }; if (atHome(ctx, s) && String(o.id).startsWith('hb-')) keepSet(s, o.id, null); ctx.destroy(o.id); say(ctx, s, pc.name + ' picked up'); dust(ctx, at, false); return }
+    if (pc.furn) { s.furn = { ...(s.furn ?? {}), [pc.furn]: (s.furn?.[pc.furn] ?? 0) + 1 }; if (atHome(ctx, s) && String(o.id).startsWith('hb-')) keepSet(ctx, s, o.id, null); ctx.destroy(o.id); say(ctx, s, pc.name + ' picked up'); dust(ctx, at, false); return }
     const back = Object.fromEntries(Object.entries(pc.cost).map(([k, n]) => [k, Math.floor(n * 0.5)]).filter(([, n]) => n > 0))
     pay(s, back, +1)
-    if (atHome(ctx, s) && String(o.id).startsWith('hb-')) keepSet(s, o.id, null)
+    if (atHome(ctx, s) && String(o.id).startsWith('hb-')) keepSet(ctx, s, o.id, null)
     ctx.destroy(o.id)
     say(ctx, s, `${pc.name} taken down · got back ` + (Object.keys(back).length ? needText(back) : 'nothing'))
     heard(ctx, { clip: clip('wooden-planks-pried-apart-creak-crash'), position: { x: at.x, y: at.y + 1, z: at.z }, volume: 0.7, maxDistance: 22 }); dust(ctx, at, true)

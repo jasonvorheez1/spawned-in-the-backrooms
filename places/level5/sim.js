@@ -11,6 +11,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import MEG from "../../scripts/lib/data/meg.yml";
 import { npcState } from "../../scripts/lib/stats.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
+import { builtSpec } from "../../scripts/lib/build-piece.js";
 
 export const cadence = "1s";
 const V = 3;
@@ -341,12 +342,27 @@ function retuneL5(ctx) {
 // a guest-room leaf: origin its bottom hinge corner, running +X (scripts/door-geo.js PIVOT CONVENTION); the opening's own width, the old 2.36 m height
 const hotelLeaf = (o, num) => ({ kind: "scripted", script: "scripts/door-geo.js", params: { style: "hotel", part: "leaf", w: Math.max(0.8, Math.min(1.2, Math.abs(o.a1 - o.a0) || 1.05)), h: 2.3, hingeSide: "left", swing: 1, seed: Number(num) || 0 } });
 const OLD_LEAVES = false; // the guest-room leaves are scripts/l5-hall-lay.js's (frame, plaque, swing); these stood inside the same doorways (shelly Nov 10: 'a door on top of the other door')
+// a booked room is the guest's home for good: their key stays on the ledger and what they built there (homeKeep.l5built, scripts/build.js) stands where they left it
+function homesBack(ctx) {
+  let bk = null;
+  for (const p of ctx.place.players) {
+    const rid = p.state?.l5home; if (!rid) continue;
+    const uid = p.userId ?? p.id, led = (bk ?? ctx.place.state.l5rent ?? {})[rid];
+    if (!led || led.uid !== uid || led.until < 9e15) { bk = { ...(bk ?? ctx.place.state.l5rent ?? {}), [rid]: { uid, until: 9e15 } }; }
+    for (const [id, b] of Object.entries(p.state.homeKeep?.l5built ?? {})) {
+      if (ctx.place.objects[id]) continue;
+      const spec = builtSpec(b.kind, b, p.id, { byUser: p.userId, id, owner: p.state }); if (spec) ctx.spawn(id, spec);
+    }
+  }
+  if (bk) ctx.place.state.l5rent = bk;
+}
 export function tick(ctx) {
   if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level5"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.session.l5Tuned) { retuneL5(ctx); ctx.session.l5Tuned = true; }
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
+  homesBack(ctx);
   breakablesOnce(ctx);
   const s = ctx.place.state;
   if (!s.salonPlacementV) {
