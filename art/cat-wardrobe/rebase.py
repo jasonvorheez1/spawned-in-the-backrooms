@@ -14,7 +14,7 @@ sm = lambda t: 0 if t <= 0 else 1 if t >= 1 else t * t * (3 - 2 * t)
 band = lambda v, a0, a1, b0, b1: sm((v - a0) / (a1 - a0)) * (1 - sm((v - b0) / (b1 - b0)))
 def male(p):
     x, y, z = p; ax = abs(x); sx = 1 if x >= 0 else -1; d = Vector((0, 0, 0))
-    torso = 1 - sm((ax - 0.15) / 0.05)
+    torso = (1 - sm((ax - 0.15) / 0.05)) * (1 - sm((y - 0.02) / 0.03))     # the tail (behind y 0.02) is left alone
     # belly in: the front of the torso pulled toward the spine line, most at the navel
     wb = band(z, 0.33, 0.44, 0.47, 0.60) * torso
     if y < -0.085: d.y += (-0.085 - y) * 0.30 * wb
@@ -30,12 +30,12 @@ def male(p):
     # flat chest plate: a broad low forward push, no lobes
     if y < -0.10: d.y += -0.008 * band(z, 0.57, 0.62, 0.65, 0.69) * (1 - sm((ax - 0.07) / 0.06))
     # upper arm and forearm thicker round the arm line (y -0.082, z 0.672); hands kept
-    wa = band(ax, 0.12, 0.17, 0.36, 0.41)
+    wa = band(ax, 0.12, 0.17, 0.36, 0.41) * sm((z - 0.58) / 0.03) * (1 - sm((abs(y + 0.082) - 0.07) / 0.03))
     if wa > 0: d.y += (y + 0.082) * 0.20 * wa; d.z += (z - 0.672) * 0.20 * wa
     # trapezius slope neck to shoulder
     d.z += 0.009 * sm((z - 0.685) / 0.03) * band(ax, 0.025, 0.05, 0.07, 0.11) * (1 - sm((z - 0.745) / 0.02))
     # neck thicker (the neck is the Head mesh's lower stalk), fading into the skull
-    wn = band(z, 0.672, 0.69, 0.722, 0.75) * (1 - sm((ax - 0.07) / 0.03))
+    wn = band(z, 0.672, 0.69, 0.722, 0.75) * (1 - sm((math.hypot(x, y + 0.078) - 0.075) / 0.03))     # the stalk only: chin and snout stay
     if wn > 0: d.x += x * 0.34 * wn; d.y += (y + 0.078) * 0.26 * wn
     return d
 CX, CZ, AMP, SXW, SUP, SDN = 0.046, 0.520, 0.050, 0.035, 0.050, 0.027
