@@ -45,6 +45,12 @@ models:
   divehelm: { hat: true, pat: weave, f: /cdn/value.0fc48cbf12ab5a20191a35254a38469c3df68056fb26cc62bd279abf878a4e98.glb, m: /cdn/value.1609b1d9c024d4da110b6020277949c6b92de61d88e6b8cd217c9672a21bcbdf.glb }   # Tripo hat fitted to the cat head (art/cat-wardrobe/hats.py), Nov 12
   chitinhelm: { hat: true, pat: weave, f: /cdn/value.74a80e95e031c869bbf46e8e8f5a6c14e089a228c37622198fd1401f9efcc96d.glb, m: /cdn/value.375cdba70d2c92dc4076db4c8a1d12a0d07a51a179719c3e169712939ccc82de.glb }   # Tripo hat fitted to the cat head (art/cat-wardrobe/hats.py), Nov 12
   headphones: { hat: true, pat: weave, f: /cdn/value.a7b64518dbb335b3403789d9b4098eaa89242dfb707f21824e51b885f6731a30.glb, m: /cdn/value.00a0155d72ed43ef0b25837d97bb063540eba0c32ef9757ecae5dfc18a4f970d.glb }
+  # Tripo neckwear fitted and skinned to both bodies (art/cat-wardrobe/necks.py; Shelly #224434 + "use tripo"). tint false = its own Tripo paint
+  scarf: { pat: knit, f: /cdn/value.b7e24dfeedf63dd2cd0334b8e6762af0503ea78bcb89665b6b964e2616cc780e.glb, m: /cdn/value.265dc8aa1aa9add9315469e420cafe738fdfc932ef1b29810467bd1d7a23db8b.glb }
+  cape: { pat: weave, f: /cdn/value.7c0c05071d095f4719b3ae129e9182ecddb194e7d22a3f7ad4b713fd9f0964c3.glb, m: /cdn/value.2a572b50bfdd95f61d150313ff8bbc6ffb9f5e4343eaa16ac5750d7b066c1b77.glb }
+  bowtie: { pat: weave, f: /cdn/value.89ade38b07309560910815a70b16800ad418e5cb1674495cc198ca73594f6c43.glb, m: /cdn/value.3b2ffaad6fbde95dc6373cd0eff90d205d5ee033c1aefde5b3de64d6bab15417.glb }
+  necklace: { tint: false, f: /cdn/value.4380c68a08f64bce56e48f14e0e8fda1de5f06dd9aaa605e795a8aaa12061613.glb, m: /cdn/value.3c47ea6adf1234b9bd7ed30c2d605be5b1be8022b0ac1754bd884cfc422e0120.glb }
+  bell: { tint: false, f: /cdn/value.b049062c2a887c0fd4c17b29697ce3bdb8545d2d6e945db7b9ecab692080e6f4.glb, m: /cdn/value.7136b61853b0209ab6847307cfe0a104e73dace88e8393c0c8b6af224f268aa5.glb }
 defaults:
   f: { topw: crop, top: "#e0775a", botw: shorts, bottom: "#4f78ad" }
   m: { topw: tee, top: "#9b9da1", botw: shorts, bottom: "#2f3d5c" }
@@ -111,6 +117,7 @@ from:
   shoes: { sneakers: socks, slippers: socks, boots: boots, steeltoe: boots, hotelslip: socks, ballastboots: boots, pitchboots: boots, heels: socks, socks: socks }
   hat: { cap: cap, beanie: beanie, tophat: tophat, bow: bow, flower: flower, partyhat: partyhat, crown: crown, padbeanie: beanie,
          opera: tophat, headphones: headphones, souwester: souwester, divehelm: divehelm, chitinhelm: chitinhelm, pgmask: bagmask, ppmask: shellmask, beret: beret }
+  neck: { scarf: scarf, cape: cape, bowtie: bowtie, necklace: necklace, bell: bell }
   topp: { jerrytee: jerry, pphoodie: ppsad, pghoodie: pgsmile, gmhoodie: gmsplit, pgcoat: pgcoat }
 # hats that close over the ears: the sculpted ears stay off and the head's own fold flat under them
 covers: [divehelm, chitinhelm, beanie, souwester]
