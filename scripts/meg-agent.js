@@ -165,7 +165,7 @@ function pickTarget(ctx, me, m) {
       bd = d; best = f;
     }
   }
-  if (me.state.nerve === "frenzied" && !me.state.mjguest) { // anyone close enough: npc or player
+  if (me.state.nerve === "frenzied" && !me.state.mjguest && !me.state.docile) { // a docile local never starts it // anyone close enough: npc or player
     for (const n of ctx.query({ tags: ["npc"], radius: 12 })) {
       if (n.state?.dead || (n.state?.hp ?? 1) <= 0 || (me.state.faction && n.state?.faction === me.state.faction)) continue;
       const d = flat(n.feetPosition, p);
