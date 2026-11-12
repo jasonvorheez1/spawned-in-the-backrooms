@@ -85,11 +85,11 @@ rows:
   - { id: crown,      slot: hat,  kind: crown,      name: Paper crown,      dr: 0, kg: 0.1, rarity: rare,     colours: [ffd93d] }
   - { id: glasses,    slot: eyew, kind: glasses,    name: Glasses,          dr: 0, kg: 0.05,rarity: common,   colours: ["000000"] }
   - { id: shades,     slot: eyew, kind: shades,     name: Safety shades,    dr: 1, kg: 0.1, rarity: uncommon, colours: ["000000"] }
-  - { id: lobbyshades,    slot: eyew, kind: shades,  name: Lobby-light shades,  dr: 0, kg: 0.1,  rarity: uncommon, colours: ["000000"] }   # tinted against the Level 0 fluorescents
-  - { id: crackedglasses, slot: eyew, kind: glasses, name: Cracked glasses,     dr: 0, kg: 0.05, rarity: common,   colours: ["000000"] }   # taped at the bridge; somebody's who didn't make it
-  - { id: megoggles,      slot: eyew, kind: shades,  name: M.E.G. goggles,      dr: 2, kg: 0.3,  rarity: rare,     colours: ["000000"] }
-  - { id: asyncvisor,     slot: eyew, kind: shades,  name: Async face visor,    dr: 3, kg: 0.5,  rarity: elite,    colours: ["000000"] }
-  - { id: almondspecs,    slot: eyew, kind: glasses, name: Almond-lens specs,   dr: 1, kg: 0.1,  rarity: uncommon, colours: ["000000"] }   # craft only
+  - { id: lobbyshades,    slot: eyew, kind: lobbyshades,  name: Lobby-light shades,  dr: 0, kg: 0.1,  rarity: uncommon, colours: ["000000"] }   # tinted against the Level 0 fluorescents
+  - { id: crackedglasses, slot: eyew, kind: crackedglasses, name: Cracked glasses,     dr: 0, kg: 0.05, rarity: common,   colours: ["000000"] }   # taped at the bridge; somebody's who didn't make it
+  - { id: megoggles,      slot: eyew, kind: megoggles,  name: M.E.G. goggles,      dr: 2, kg: 0.3,  rarity: rare,     colours: ["000000"] }
+  - { id: asyncvisor,     slot: eyew, kind: asyncvisor,  name: Async face visor,    dr: 3, kg: 0.5,  rarity: elite,    colours: ["000000"] }
+  - { id: almondspecs,    slot: eyew, kind: almondspecs, name: Almond-lens specs,   dr: 1, kg: 0.1,  rarity: uncommon, colours: ["000000"] }   # craft only
   - { id: scarf,      slot: neck, kind: scarf,      name: Scarf,            dr: 1, kg: 0.2, rarity: common,   colours: [c0392b, b6e04a, f3c64a, 3d5a98], pats: [knit, tartan, fairisle, stripes, plaid, houndstooth] }
   - { id: bowtie,     slot: neck, kind: bowtie,     name: Bow tie,          dr: 0, kg: 0.05,rarity: uncommon, colours: [c0392b, 2b2b33], pats: [weave, polka, plaid, velvet] }
   - { id: bell,       slot: neck, kind: bell,       name: Bell collar,      dr: 0, kg: 0.1, rarity: uncommon, colours: [f3c64a] }
