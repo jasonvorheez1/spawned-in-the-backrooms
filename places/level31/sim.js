@@ -8,7 +8,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 66;
+const V = 67;
 const RAIL_GLB = "/cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb";
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
@@ -268,7 +268,7 @@ function mezzanine(ctx) {
   // stair sides: teal stringer and rail on the open east side, landing rail on the north
   const sl = Math.hypot(run, Y);
   ctx.spawn("l31-mz-stringer", { feetPosition: { x: S.x1 + 0.05, y: Y / 2 + 0.1, z: (S.zBottom + S.zTop) / 2 }, pivot: "center", rotation: { pitch: ang * -dir }, primitive: rbox(0.1, 0.45, sl, 0.03), material: { color: "#1d7b80", roughness: 0.5 }, physics: "static", castShadow: false,
-    children: Array.from({ length: Math.max(1, Math.round(sl / 2.3)) }, (_, i, arr) => { const seg = sl / arr.length; // Tripo brass rail panels riding the stringer's slope
+    children: Array.from({ length: Math.max(1, Math.round(sl / 2.3)) }, (_, i) => { const seg = sl / Math.max(1, Math.round(sl / 2.3)); // Tripo brass rail panels riding the stringer's slope
       return { id: "p" + i, feetPosition: { x: 0, y: 0.225, z: -sl / 2 + (i + 0.5) * seg }, model: PANEL, scale: { x: 1, y: 1.17, z: seg / 2.35 }, castShadow: false }; }) });
   rail("land-e", S.x1 + 0.05, S.zTop, S.landZ); rail("land-n", S.landZ - 0.05, S.x0 - 0.1, S.x1 + 0.1, true);
   // upstairs lighting along the walkway; downlights under the slab
