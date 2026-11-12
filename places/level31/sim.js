@@ -8,7 +8,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 64;
+const V = 65;
 const RAIL_GLB = "/cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb";
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
@@ -253,7 +253,7 @@ function mezzanine(ctx) {
     children: [{ id: "art", model: COL, layout: { box: { min: { x: -0.3, y: 0, z: -0.3 }, max: { x: 0.3, y: Y - 0.3, z: 0.3 } } }, castShadow: false }] });
   // rail: Tripo brass-and-glass panels with memphis kick plates, tiled along each run; one hidden box is the barrier; a gap where the stair lands
   const rail = (id, x, z0, z1, alongX = false) => { const L = Math.abs(z1 - z0), c = (z0 + z1) / 2, n = Math.max(1, Math.round(L / 2.4)), seg = L / n, kids = [];
-    for (let i = 0; i < n; i++) kids.push({ id: "p" + i, feetPosition: { x: 0, y: 0, z: -L / 2 + (i + 0.5) * seg }, rotation: { yaw: 90 }, model: PANEL, layout: { box: { min: { x: -seg / 2, y: 0, z: -0.08 }, max: { x: seg / 2, y: 1.05, z: 0.08 } } }, castShadow: false });
+    for (let i = 0; i < n; i++) kids.push({ id: "p" + i, feetPosition: { x: 0, y: 0, z: -L / 2 + (i + 0.5) * seg }, model: PANEL, scale: { x: 1, y: 1.17, z: seg / 2.35 }, castShadow: false }); // native 0.17 x 0.9 x 2.35 m, long axis z
     ctx.spawn(`l31-mz-rail-${id}`, { feetPosition: alongX ? { x: c, y: Y, z: x } : { x, y: Y, z: c }, rotation: { yaw: alongX ? 90 : 0 }, primitive: box(0.06, 1.05, L), render: false, physics: "static", castShadow: false, children: kids }); };
   rail("a", M.x1 - 0.1, M.z0, S.landZ); rail("b", M.x1 - 0.1, S.zTop, M.z1);
   // the stair: carpeted treads with chrome nosing over one smooth ramp the body walks
