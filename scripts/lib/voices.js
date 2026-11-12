@@ -1,7 +1,7 @@
 import V from './data/npc-voices.yml'
 import CAST from './data/voice-cast.yml'
 import TIMING from './data/voice-timing.yml'
-import ACTED from './data/voice-acted.yml' // recorded performances (art/vo/act.py, the tape method): key: hash('<id>|<slug>') base36, value: the clip's sha
+let ACTED = {} // recorded performances (art/vo/act.py, the tape method): key: hash('<id>|<slug>') base36, value: the clip's sha
 // One throat per character: the voice file's name is its prompt, so each character's words below ARE their voice.
 // Every speaking helper builds its clip through vo(who, line); a new who falls back to a throat picked from its name.
 const T = {
@@ -61,7 +61,9 @@ const B64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'
 // voice-acted.yml packs each sha as 43 base64url chars (a quarter smaller on every level's load); a 64-char hex sha still reads as is
 const unpack = (s) => { s = String(s); if (s.length === 64) return s; let bits = 0, n = 0, hex = ''; for (const c of s) { bits = (bits << 6) | B64.indexOf(c); n += 6; while (n >= 4) { n -= 4; hex += ((bits >> n) & 15).toString(16) } bits &= (1 << n) - 1 } return hex.slice(0, 64) }
 const asset = (sha) => `/cdn/value.${unpack(sha)}.mp3`
-const recorded = new Map(Object.entries(ACTED).map(([key, sha]) => [asset(sha), (TIMING[key] ?? 0) * 100]))
+let recorded = new Map(Object.entries(ACTED).map(([key, sha]) => [asset(sha), (TIMING[key] ?? 0) * 100]))
+// the table (214 KB) is read after the player stands, not before: every level's boot is that much lighter
+import('./data/voice-acted.yml').then((m) => { ACTED = m?.default ?? m ?? {}; recorded = new Map(Object.entries(ACTED).map(([key, sha]) => [asset(sha), (TIMING[key] ?? 0) * 100])) }).catch(() => {})
 export const isVoiceClip = (clip) => recorded.has(clip) || String(clip).includes('/voice-')
 export const recordedDuration = (clip) => recorded.get(clip) || 0
 export const hasCast = (who) => Object.hasOwn(CAST, actorId(who))
