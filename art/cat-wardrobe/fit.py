@@ -89,6 +89,16 @@ elif KIND in ("vest", "poncho"):
         P[hd, 0] = np.sign(P[hd, 0]) * np.minimum(np.abs(P[hd, 0]), nw * 1.2 + (np.abs(P[hd, 0]) - nw * 1.2).clip(0) * 0.25)
         P[hd, 2] = zc - 0.02 + (P[hd, 2] - zc + 0.02) * 0.45
         print("hood verts", int(hd.sum()))
+    # Nov 12 refit pass: Tripo's open loops and loose flaps stood off the back as a ring or a wing; each height band's cloth
+    # is held to the torso's own back and chest depth, the overhang squashed to a sliver of itself
+    tor = bw[np.abs(bw[:, 0]) < 0.12]
+    for z0 in np.arange(z_hem - 0.04, z_top + 0.06, 0.02):
+        bt = tor[np.abs(tor[:, 2] - z0) < 0.02]
+        if len(bt) < 8: continue
+        yb, yf = np.quantile(bt[:, 1], 0.9) + 0.045, np.quantile(bt[:, 1], 0.05) - (0.07 if SL == "vest" else 0.05)
+        sl = np.abs(P[:, 2] - z0) < 0.01
+        P[sl, 1] = np.where(P[sl, 1] > yb, yb + (P[sl, 1] - yb) * 0.12, P[sl, 1])
+        P[sl, 1] = np.where(P[sl, 1] < yf, yf + (P[sl, 1] - yf) * 0.2, P[sl, 1])
     half = tx; KIND = "top"
     region = lambda q: q[:, 2] > z_hem - 0.05
 elif KIND == "skirt":
