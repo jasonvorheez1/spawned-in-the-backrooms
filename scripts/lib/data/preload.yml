@@ -1,6 +1,8 @@
 # Next-level warm-up (scripts/lib/preload-next.js): door id -> the place it leads to, and each place's most-used models.
 # Generated from scripts/level-door.js PAIR, thresholds DOORS and each place's cells + sim.js. Her pick: 16 models a place.
 doors:
+  l12-to-l13: level13
+  l13-to-l0: main
   h-door: level11
   l0-exit: level1
   l0-zenith: level01
