@@ -403,7 +403,7 @@ export function update(ctx, dt) {
   if (!ctx.self.state.temperV && ctx.self.state.attr) shapeTemper(ctx.self);
   const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0, shots: 0 }), now = ctx.now();
   m.nowT = now; tick3(me, now); // release finished combat takes
-  if (m.dressed !== 4) { m.dressed = 4; if (!s.dead) dress(ctx, me); }
+  if (m.dressed !== 5) { m.dressed = 5; if (!s.dead) dress(ctx, me); }
   // empty level or far-off NPC: sleep to save CPU (perf)
   if (!ctx.place.players.length) { ctx.sleep(2); return; }
   if (knocked(ctx, me, now, dt)) return; // kicked flat: down a beat, then back up
