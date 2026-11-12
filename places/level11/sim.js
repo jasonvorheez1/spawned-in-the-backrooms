@@ -24,7 +24,7 @@ import MODELS from "../../scripts/lib/data/level11-models.yml";
 export const cadence = "1s";
 const RENO_FLOOR = 0.32;
 const mallTrash = (i) => ({ x: -15.15 + i * 0.2, y: 0.33, z: 28.1 + i * 0.65 });
-const V = 137; // the market court and the central pedestrian route
+const V = 138; // the market court and the central pedestrian route
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -97,7 +97,7 @@ function lay(ctx) {
   const st = ctx.place.state;
   // the rows themselves stay on the machine laying them (ctx.session): only the cursor rides place.state, which every player downloads
   const q = ctx.session.l11q = { rows: [], keep: {}, v: V };
-  if (!st.lq) st.lq = { i: 0 };
+  if (st.lq?.v !== V) st.lq = { i: 0, v: V };
   const sp = (id, spec) => { q.rows.push([id, l11Lean(id, spec)]); q.keep[id] = true; return id; }; // every row gets a draw distance, small clutter casts no shadow
   const md = (id, kind, x, y, z, materials, collider = "box", extra = {}) =>
     sp(id, { feetPosition: { x, y, z }, model: { id: MODELS[kind], forward: "-z", materials }, physics: { body: "static", collider }, ...extra });
@@ -111,7 +111,7 @@ function lay(ctx) {
   // ==========================================
   sp("l11-from-l61", {
     feetPosition: { x: -28, y: 0.25, z: 12 },
-    rotation: { yaw: 90 },
+    rotation: { yaw: -90 },
   });
 
   // Back road to Level 10 (wiki: "certain streets have a back road that leads to Level 10"): the south street runs out into a dirt lane
