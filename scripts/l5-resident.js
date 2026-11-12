@@ -51,7 +51,6 @@ export const ears = {
     const s = ctx.self.state, k = d.k, now = ctx.now();
     if (k === "rent") return rent(ctx, p);
     if (k === "room") return book(ctx, p);
-    if (k === "checkout") { if (!p.state.l5room) return say(ctx, p, "You hold no key of ours. Yet."); const b = { ...(ctx.place.state.l5rent ?? {}) }; if (b[p.state.l5room]?.uid === (p.userId ?? p.id)) b[p.state.l5room].until = 0; ctx.place.state.l5rent = b; p.state.l5room = null; p.state.l5key = null; p.state.l5home = null; return say(ctx, p, "Thank you for staying at the Homely Hotel. Your trunk will wait for you. It is very patient."); }
     if (k === "escort") { s.rounds = [{ x: 16.2, y: 0, z: 18, dwell: 30, act: null, look: { x: 19, z: 18 } }]; s.ri = 0; s.escortUntil = now + 45000; return say(ctx, p, "Stay on my shoulder. Boiler door's at the east end. Once you're through it's hot and it's loud and I'm not coming in."); }
     if (k === "job") {
       const RJ = P.ratJob, j = p.state.l5job, got = (p.state.l5rats ?? 0) - (j?.base ?? 0);
