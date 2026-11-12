@@ -1,4 +1,5 @@
 // Level 3's finer detail, one static mesh, from the wiki's photographs of the Electrical Station: glazed tan tile
+const TILE = "cdn/texture-photoreal-glazed-tan-brown-ceramic-wall-tile-grimy-grout-institutional.png";
 // wainscot on some brick walls, black "OUT OF BOUNDS" plates by the bars and gates, rusty white hasps and padlocks,
 // brick ribs along the crawl halls, long electrical boxes with wire fans on the wall, black sludge pipes feeding
 // glossy pools, canvas art with a scribbled-out angel, notebook pages, piles of almond water bottles by the lines and
@@ -28,7 +29,13 @@ export function geometry(ctx) {
       const wb = (a0, a1, o0, o1, y0, y1) => { const p = [wx + tx * a0 - nx * o0, wz + tz * a0 - nz * o0], q = [wx + tx * a1 - nx * o1, wz + tz * a1 - nz * o1]; box(ctx, Math.min(p[0], q[0]), Math.max(p[0], q[0]), y0, y1, Math.min(p[1], q[1]), Math.max(p[1], q[1])); };
       const r = hash(cx * 4 + d, cz, 401);
       // glazed tile wainscot: a tan ceramic band low on the wall with a darker cap rail
-      if (zone !== "tight" && r < 0.22) { ctx.roughness(0.3); ctx.color("oklch(0.74 0.07 75)"); wb(-S / 2 + T, S / 2 - T, -0.004, 0.012, 0, 1.25); ctx.color("oklch(0.5 0.07 55)"); wb(-S / 2 + T, S / 2 - T, -0.004, 0.03, 1.25, 1.31); ctx.roughness(0.9); }
+      if (zone !== "tight" && r < 0.22) { // Shelly Nov 12: the flat orange band read as a plain panel; glazed tile now, chipped, with a round cap rail and a skirting
+        const a0 = -S / 2 + T, a1 = S / 2 - T, tint = ["oklch(0.86 0.05 80)", "oklch(0.8 0.045 150)", "oklch(0.88 0.03 95)"][Math.floor(hash(cx, cz, 411) * 3)];
+        ctx.albedo(TILE); ctx.roughness(0.25); ctx.color(tint); wb(a0, a1, -0.004, 0.014, 0.16, 1.22);
+        ctx.albedo(null); ctx.color("oklch(0.3 0.02 50)"); ctx.roughness(0.7); wb(a0, a1, -0.004, 0.03, 0, 0.16); // skirting
+        ctx.color("oklch(0.45 0.05 55)"); ctx.roughness(0.35); { const P = (aa, y) => [wx + tx * aa - nx * 0.025, y, wz + tz * aa - nz * 0.025]; tube(ctx, [P(a0, 1.245), P(a1, 1.245)], [0.028, 0.028], 8, [1, 1], 0, 1, 1); } // bullnose cap
+        ctx.color("oklch(0.55 0.03 60)"); ctx.roughness(0.9); for (let k = 0; k < 3; k++) { const ca = a0 + 0.3 + hash(cx * 7 + k, cz, 413) * (a1 - a0 - 0.6), cy = 0.25 + hash(cx, cz * 7 + k, 415) * 0.85, cs = 0.03 + hash(k, cx + cz, 417) * 0.04; wb(ca - cs, ca + cs, 0.012, 0.0145, cy - cs * 0.7, cy + cs * 0.7); } // chips knocked out to the bed
+        ctx.roughness(0.9); }
       // a canvas sheet hung on the brick with the angel drawn on and the face scribbled out
       else if (hi && r > 0.97) {
         ctx.roughness(0.95); ctx.color("oklch(0.93 0.01 95)"); wb(-0.9, 0.9, -0.004, 0.03, 0.6, 2.3);
