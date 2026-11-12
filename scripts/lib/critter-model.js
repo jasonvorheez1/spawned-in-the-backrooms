@@ -908,7 +908,7 @@ export function restyle(ctx, o, wardSet) {
   if (o.tags?.includes('samantha') || o.state?.role === 'psychic') return false // Samantha is a real small cat, never a body to dress (Shelly: "samantha is a regular npc again")
   let isH = HUMAN_IDS().includes(mid), isF = FURRY_IDS().includes(mid)
   if (o.state?.wear && o.state.wear.nl !== NL_V && !o.tags?.includes('player') && isNewCat(o.state.wear) && catBodyIds().includes(mid)) { // Nov 12: looks fit the job (npc-looks.yml)
-    const l = refitLook(String(o.id).split('/').pop(), o.state.wear); o.state.wear = l
+    const l = refitLook(String(o.id).split('/').pop(), { ...o.state.wear, role: o.state.wear.role ?? o.state.role ?? o.state.job, faction: o.state.wear.faction ?? o.state.faction }); o.state.wear = l
     o.model = bodyModel(l); seatCat(ctx, o, l)
     if (l.heightS || l.buildS) o.scale = { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 }
     return true
