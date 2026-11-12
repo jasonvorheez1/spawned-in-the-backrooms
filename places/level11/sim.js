@@ -21,6 +21,8 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
+const RENO_FLOOR = 0.32;
+const mallTrash = (i) => ({ x: -15.15 + i * 0.2, y: 0.33, z: 28.1 + i * 0.65 });
 const V = 136; // supplied Level 11 references: skyline variation and modern canal bridges
 
 // Photorealistic PBR textures from CDN
@@ -700,7 +702,7 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
   md("l11-pizza-chair1", "bistro_chair", MALL_X + 0.5, 0.38, MALL_Z + 3.6, undefined, "box", { rotation: { yaw: 180 }, layout: { box: { min: { x: -0.25, y: 0, z: -0.26 }, max: { x: 0.25, y: 0.88, z: 0.26 } } } });
   md("l11-pizza-chair2", "bistro_chair", MALL_X + 0.5, 0.38, MALL_Z + 5.4, undefined, "box", { rotation: { yaw: 0 }, layout: { box: { min: { x: -0.25, y: 0, z: -0.26 }, max: { x: 0.25, y: 0.88, z: 0.26 } } } });
   sp("l11-pizza-soda", { feetPosition: { x: MALL_X + 0.65, y: 1.13, z: MALL_Z + 4.4 }, model: { id: MODELS.soda_can, forward: "-z" }, layout: { box: { min: { x: -0.033, y: 0, z: -0.033 }, max: { x: 0.033, y: 0.122, z: 0.033 } } } }); // someone's half-drunk can
-  [[MALL_X + 4.6, MALL_Z - 1.0], [MALL_X + 4.9, MALL_Z - 0.4], [MALL_X + 4.5, MALL_Z + 0.2]].forEach(([x, z], i) => sp(`l11-trashbag-${i}`, { feetPosition: { x, y: 0.1, z }, rotation: { yaw: i * 70 }, model: { id: MODELS.trash_bag, forward: "-z" }, layout: { box: { min: { x: -0.3, y: 0, z: -0.3 }, max: { x: 0.3, y: 0.75, z: 0.3 } } }, physics: { body: "static", collider: "box" } })); // bags set out on the curb for a pickup that never comes
+  [0, 1, 2].forEach((i) => sp(`l11-trashbag-${i}`, { feetPosition: mallTrash(i), rotation: { yaw: i * 70 }, model: { id: MODELS.trash_bag, forward: "-z" }, layout: { box: { min: { x: -0.3, y: 0, z: -0.3 }, max: { x: 0.3, y: 0.75, z: 0.3 } } }, physics: { body: "static", collider: "box" } })); // bags set out on the curb for a pickup that never comes
 
   // --- ROOFTOP COMMUNICATIONS RIG (Wikidot Image 3) ---
   md("l11-mall-dish", "sat_dish", MALL_X + 2.0, MALL_H + 0.3, MALL_Z - 5.0, undefined, "box", { rotation: { yaw: -45 }, layout: { box: { min: { x: -1.1, y: 0, z: -1.1 }, max: { x: 1.1, y: 2.3, z: 1.1 } } } });
@@ -775,8 +777,8 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
 
   // Unfinished Drywall Partition Boards
   md("l11-drywall-stack", "drywall_stack", -28.5, 0.22, -4.5, undefined, "box", { layout: { box: { min: { x: -0.625, y: 0, z: -0.3 }, max: { x: 0.625, y: 1.25, z: 0.3 } } } });
-  md("l11-reno-toolbox", "red_toolbox", -27.2, 0.22, -3.6, undefined, "box", { rotation: { yaw: 20 }, layout: { box: { min: { x: -0.25, y: 0, z: -0.15 }, max: { x: 0.25, y: 0.4, z: 0.15 } } } });
-  sp("l11-reno-jackhammer", { feetPosition: { x: -26.4, y: 0.22, z: -5.6 }, rotation: { yaw: -60 }, model: { id: MODELS.jackhammer, forward: "-z" }, layout: { box: { min: { x: -0.45, y: 0, z: -0.45 }, max: { x: 0.45, y: 0.9, z: 0.45 } } }, physics: { body: "static", collider: "box" } }); // left mid-job
+  md("l11-reno-toolbox", "red_toolbox", -27.2, RENO_FLOOR, -3.6, undefined, "box", { rotation: { yaw: 20 }, layout: { box: { min: { x: -0.25, y: 0, z: -0.15 }, max: { x: 0.25, y: 0.4, z: 0.15 } } } });
+  sp("l11-reno-jackhammer", { feetPosition: { x: -26.4, y: RENO_FLOOR, z: -5.6 }, rotation: { yaw: -60 }, model: { id: MODELS.jackhammer, forward: "-z" }, layout: { box: { min: { x: -0.45, y: 0, z: -0.45 }, max: { x: 0.45, y: 0.9, z: 0.45 } } }, physics: { body: "static", collider: "box" } }); // left mid-job
   bx("l11-drywall-wall-w", -25, 0.22, -6.8, 6.5, 4.2, 0.15, DRYWALL_MAT);
   bx("l11-reno-int-glass", -23, 0.22, 1.5, 0.04, 4.2, 6.0, GLASS_TINT);
 
@@ -863,7 +865,7 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
   // Contractor Heavy Tool Chest
   sp("l11-reno-chest", {
     tags: ["usable"],
-    feetPosition: { x: -28.5, y: 0.2, z: 3 },
+    feetPosition: { x: -28.5, y: RENO_FLOOR, z: 3 },
     primitive: { kind: "box", width: 0.9, height: 0.55, depth: 0.5 },
     material: { color: "oklch(0.45 0.15 25)", metalness: 0.8, roughness: 0.35 },
     behavior: "scripts/level11-use.js",
@@ -1787,6 +1789,17 @@ export function tick(ctx) {
       if (n <= 120) { delete st.lq; delete ctx.session.l11q; st.builtV = V; st.walkV = 0; }
     }
     return;
+  }
+  if (!st.propPlacementV) {
+    for (const id of ["l11-reno-toolbox", "l11-reno-jackhammer", "l11-reno-chest"]) {
+      const o = ctx.place.objects[id];
+      if (o && !o.tags?.includes("wreck") && o.feetPosition.y < RENO_FLOOR) o.feetPosition = { ...o.feetPosition, y: RENO_FLOOR };
+    }
+    for (let i = 0; i < 3; i++) {
+      const o = ctx.place.objects[`l11-trashbag-${i}`];
+      if (o?.feetPosition.y < 0.3) o.feetPosition = mallTrash(i);
+    }
+    st.propPlacementV = 1;
   }
   if ((st.walkV ?? 0) < WALK_V) { st.walkV = WALK_V; layWalkers(ctx); }
   if (!mem.ringAt) mem.ringAt = now + 35000;

@@ -21,7 +21,9 @@ const byNo = (n) => ROOMS.find((r) => r.no === n);
 function inside(r, along, depth) { const d = r.door.at - r.inward * depth; return r.door.ax === "z" ? { x: along, y: 0, z: d } : { x: d, y: 0, z: along }; }
 function spots(r) {
   const a0 = r.door.ax === "z" ? r.x0 : r.z0, a1 = a0 + 8, left = r.door.c < r.mid;
-  return { cot: inside(r, left ? a1 - 2.4 : a0 + 2.4, 4.6), desk: inside(r, left ? a0 + 1.6 : a1 - 1.6, 4.1), mid: inside(r, r.mid, 3), door: inside(r, r.door.c, -1.3), sill: inside(r, r.mid, 5.3), yaw: facing(r.door.ax === "x" ? r.inward : 0, r.door.ax === "z" ? r.inward : 0) + 180 };
+  const desk = inside(r, left ? a0 + 1.6 : a1 - 1.6, 4.1);
+  const deskSide = inside(r, left ? a0 + 1.6 : a1 - 1.6, 5.25);
+  return { cot: inside(r, left ? a1 - 2.4 : a0 + 2.4, 4.6), desk, deskSide, mid: inside(r, r.mid, 3), door: inside(r, r.door.c, -1.3), sill: inside(r, r.mid, 5.3), yaw: facing(r.door.ax === "x" ? r.inward : 0, r.door.ax === "z" ? r.inward : 0) + 180 };
 }
 const stop = (p, dwell, act, look) => ({ x: p.x, y: 0, z: p.z, dwell, act, ...(look ? { look: { x: look.x, z: look.z } } : {}) });
 const FOUNT = FOUNTAINS.map(([x, z, yaw]) => { const dx = yaw === -90 ? 0.55 : yaw === 90 ? -0.55 : 0, dz = yaw === 0 ? -0.55 : yaw === 180 ? 0.55 : 0; return { at: { x: x + dx * 2.6, z: z + dz * 2.6 }, look: { x, z } }; });
@@ -41,14 +43,14 @@ export function roundsFor(ctx, id, phase) {
   }
   if (!h) return [stop({ x: 0, z: 0 }, 20, IDLE)];
   if (phase === "night") return [stop(h.cot, 999, SLEEP)];
-  if (g.faction === "amor") return [stop(h.sill, 40, CROUCH, inside(r, r.mid, 6)), stop(h.mid, 20, "cdn/clip-magic-spell-casting-loop.glb"), stop(h.door, 15, IDLE, { x: 0, z: 0 }), ...(id === "amor-hask" ? [stop(SEATS[(id.length) % SEATS.length].at, 25, TALK, { x: 0, z: 0 })] : [])];
+  if (g.faction === "amor") return [stop(inside(r, r.mid + (id === "amor-hask" ? 1.25 : -1.25), 3), 40, CROUCH, h.sill), stop(inside(r, r.mid + (id === "amor-hask" ? 1.25 : -1.25), 3.55), 20, "cdn/clip-magic-spell-casting-loop.glb"), stop(h.door, 15, IDLE, { x: 0, z: 0 }), ...(id === "amor-hask" ? [stop(SEATS[(id.length) % SEATS.length].at, 25, TALK, { x: 0, z: 0 })] : [])];
   if (g.faction === "tbd") {
-    if (g.role === "trader") return [stop(h.desk, 50, IDLE, h.door), stop(h.door, 20, IDLE, { x: 0, z: 0 })];
+    if (g.role === "trader") return [stop(h.deskSide, 50, IDLE, h.desk), stop(h.door, 20, IDLE, { x: 0, z: 0 })];
     const others = ROOMS.filter((q) => q.kind === "office" && q.id !== r.id); const o1 = spots(others[(id.length * 5) % others.length]), o2 = spots(others[(id.length * 11) % others.length]);
-    return [stop(o1.mid, 12, "cdn/clip-pickup.glb"), stop(o2.mid, 12, "cdn/clip-pickup.glb"), stop(VEND[1].at, 8, "cdn/clip-pickup.glb", VEND[1].look), stop(h.desk, 25, CROUCH)];
+    return [stop(o1.mid, 12, "cdn/clip-pickup.glb"), stop(o2.mid, 12, "cdn/clip-pickup.glb"), stop(VEND[1].at, 8, "cdn/clip-pickup.glb", VEND[1].look), stop(h.deskSide, 25, CROUCH, h.desk)];
   }
   const seat = SEATS[([...id].reduce((a, c) => a + c.charCodeAt(0), 0) * 3) % SEATS.length], v = VEND[id.length % 3];
-  return [stop(h.desk, 30, SIT), stop(f.at, 7, "cdn/clip-pickup.glb", f.look), stop(seat.at, 30, SIT, seat.look), stop(v.at, 8, "cdn/clip-pickup.glb", v.look), stop(h.door, 12, IDLE, { x: 0, z: 0 })];
+  return [stop(h.deskSide, 30, IDLE, h.desk), stop(f.at, 7, "cdn/clip-pickup.glb", f.look), stop(seat.at, 30, SIT, seat.look), stop(v.at, 8, "cdn/clip-pickup.glb", v.look), stop(h.door, 12, IDLE, { x: 0, z: 0 })];
 }
 export function speak(ctx, o, t) {
   const now = ctx.now(), d = 1400 + t.length * 60; o.state.line = { t, at: now, d }; o.state.talkAt = now;
@@ -84,7 +86,19 @@ export function settle(ctx, spawnAgent) {
   s.l4homes = homes;
   for (const [id, g] of Object.entries(P.people)) if (!ctx.place.objects[id] && g.look && (!s.l4seen?.[id] || mayReturn(ctx, id))) spawnAgent(id, g, roundsFor(ctx, id, s.l4clock?.phase ?? "day"));
   { const seen = { ...(s.l4seen ?? {}) }; let n = 0; for (const id of Object.keys(P.people)) if (ctx.place.objects[id] && !seen[id]) { seen[id] = 1; n++; } if (n) s.l4seen = seen; }
-  for (const id of Object.keys(P.people)) { const o = ctx.place.objects[id]; if (o) { o.state.rounds = roundsFor(ctx, id, s.l4clock?.phase ?? "day"); o.state.ri = 0; o.state.faction4 = P.people[id].faction; } }
+  for (const id of Object.keys(P.people)) {
+    const o = ctx.place.objects[id]; if (!o) continue;
+    const room = homeOf(ctx, id), phase = s.l4clock?.phase ?? "day";
+    const rounds = roundsFor(ctx, id, phase);
+    if (room && alive(o) && !o.state.follow) {
+      const h = spots(room), f = o.feetPosition;
+      if (flat(f, h.desk) < 0.72) o.feetPosition = h.deskSide;
+      else if (P.people[id].faction === "amor" && phase === "day" && flat(f, h.sill) < 0.65) {
+        const { x, y, z } = rounds[0]; o.feetPosition = { x, y, z };
+      }
+    }
+    o.state.rounds = rounds; o.state.ri = 0; o.state.faction4 = P.people[id].faction;
+  }
 }
 function errand(ctx, o, stops, ms) { o.state.rounds = stops; o.state.ri = 0; (ctx.place.state.l4err ??= {})[o.id] = ctx.now() + ms; }
 export function tickPeople(ctx) {

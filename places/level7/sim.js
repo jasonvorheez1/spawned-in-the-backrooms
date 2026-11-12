@@ -43,6 +43,29 @@ const GLB = {
 const fit = (w, h, d) => ({ box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } });
 const brk = (mat, hp) => ({ mat, hp, maxHp: hp });
 
+const FORT_FLOOR = 11.65;
+const FORT_YAW = 38.7;
+const fortAngle = FORT_YAW * Math.PI / 180;
+function fortPoint(p) {
+  const x = p.x + 70, z = p.z + 93;
+  return { ...p, x: -70 + x * Math.cos(fortAngle) + z * Math.sin(fortAngle), z: -93 - x * Math.sin(fortAngle) + z * Math.cos(fortAngle) };
+}
+const isFortResident = (o) => o?.state?.faction === "surrender" && o.tags?.includes("l7-npc");
+function fortResident(g) {
+  const [x, , z] = g.at, home = fortPoint({ x, y: FORT_FLOOR + 0.03, z });
+  return { home, rounds: g.rounds.map((r) => ({ ...fortPoint(r), y: home.y, look: fortPoint(r.look) })) };
+}
+const fortProps = ["l7-cult-chest", "l7-fort-dresser", "l7-fort-crate"];
+function fortBreakables(floor, pier) {
+  const specs = breakables(floor, pier);
+  for (const id of fortProps) {
+    const spec = specs[id];
+    spec.feetPosition = fortPoint({ ...spec.feetPosition, y: FORT_FLOOR });
+    spec.rotation.yaw += FORT_YAW;
+  }
+  return specs;
+}
+
 // Every breakable here, by id: laid with the level, re-laid 15 min after it is smashed (nobody within 8 m)
 export function breakables(FY, PY) {
   const R = {
@@ -201,7 +224,7 @@ const L7_NPCS = {
     nerve: "frenzied",
     rounds: [
       { x: -64.0, y: 11.0, z: -98.0, dwell: 22, act: null, look: { x: -70.0, z: -93.0 } },
-      { x: -67.0, y: 11.0, z: -102.0, dwell: 16, act: null, look: { x: -70.0, z: -93.0 } },
+      { x: -67.0, y: 11.0, z: -99.0, dwell: 16, act: null, look: { x: -70.0, z: -93.0 } },
     ],
     look: { species: "bear", sex: "m", eye: "#d84a4a", belly: "#d8cbb8", nose: "#1e1816", topw: "jacket", top: "#6e5c44", topp: "canvas", botw: "pants", bottom: "#3e4a44", botp: "weave", shoes: "boots", shoec: "#241e1a", hat: "beanie", hatc: "#6a3a2a", neck: "none" },
   },
@@ -231,10 +254,12 @@ function spawnL7People(ctx) {
   ]).then(([{ critterSpec }, { npcLook }, { npcState }, { weaponBody }]) => {
     for (const [id, g] of Object.entries(L7_NPCS)) {
       if (ctx.place.objects[id]) continue;
+      const fort = g.faction === "surrender";
+      const { home, rounds } = fort ? fortResident(g) : { home: { x: g.at[0], y: g.at[1], z: g.at[2] }, rounds: g.rounds };
       ctx.spawn(id, {
         tags: ["npc", "l7-npc"],
-        feetPosition: { x: g.at[0], y: g.at[1], z: g.at[2] },
-        rotation: { yaw: g.yaw },
+        feetPosition: home,
+        rotation: { yaw: g.yaw + (fort ? FORT_YAW : 0) },
         physics: "character",
         ...critterSpec(npcLook(id, g.look, "l7", 15)),
         behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
@@ -244,10 +269,10 @@ function spawnL7People(ctx) {
           voice: g.voice,
           faction: g.faction,
           factionName: g.factionName,
-          rounds: g.rounds,
+          rounds,
           ...(g.nerve ? { nerve: g.nerve } : {}), // the fort's watch are hostile to outsiders (scripts/meg-agent.js)
           ri: 0,
-          home: { x: g.at[0], z: g.at[2] },
+          home,
           ...npcState(ctx, "agent", 140),
         },
       });
@@ -924,6 +949,7 @@ export function tick(ctx) {
     // rooms built before the fort moved still hold its old pieces (and the worshippers, standing where it was): clear them so the new ones are laid and the people come back
     for (const id of Object.keys(ctx.place.objects)) if (/^(l7x-|l7h-|l7-(from-l8$|wall-|wainscot-|step-|back$|shaft-|ceil$|hearth$|pedestal$|wirerack$|cloth-drape$|painting$|vase|dresser-top$|fort|ft-step|palisade|brazier-fort|still$|shrine$|diving-bell$|cult-chest|boat-from-fort|boulder-1[23]$|jude$|mara$|ezra$|ines$|tobit$))/.test(id)) ctx.destroy(id);
     s.npcGone = {};
+    s.fortPlacementV = 0;
     // lag pass (LAGSCOPE #137, #138): clutter gets a draw distance, and nothing under 1.2 m casts a shadow
     const real = ctx.spawn, KEEP = /ocean|sea|island|isle|sky|fort$|lighthouse|seawatch$|sonar|vance|fauna|from-|spawn$/;
     const small = (sp) => { const b = sp.layout?.box, pr = sp.primitive; if (b) return Math.max(b.max.x - b.min.x, b.max.y - b.min.y, b.max.z - b.min.z) < 1.2;
@@ -952,10 +978,10 @@ export function tick(ctx) {
     ctx.spawn("l7-ft-ramp", { feetPosition: { x: (A.x + B.x) / 2, y: (A.y + B.y) / 2 - 0.17, z: (A.z + B.z) / 2 }, pivot: "center",
       rotation: rotationFromDirection(f), primitive: { kind: "box", width: 2.6, height: 0.3, depth: len }, physics: "static", visible: false, material: { color: "oklch(0.4 0.03 60)" } });
     // 2) the fort turns 38.7 degrees about its centre so the gate gap faces where the stair meets the palisade
-    const th = 38.7 * Math.PI / 180, cx = -70, cz = -93, qy = { x: 0, y: Math.sin(th / 2), z: 0, w: Math.cos(th / 2) };
+    const th = fortAngle, cx = -70, cz = -93, qy = { x: 0, y: Math.sin(th / 2), z: 0, w: Math.cos(th / 2) };
     const mul = (a, b) => ({ w: a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z, x: a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y, y: a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x, z: a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w });
     for (const id of Object.keys(ctx.place.objects)) {
-      if (id.startsWith("l7-ft-") || id.startsWith("l7w-")) continue;
+      if (id.startsWith("l7-ft-") || id.startsWith("l7w-") || isFortResident(ctx.place.objects[id])) continue;
       const o = ctx.place.objects[id]; if (!o || o.parent || o.tags?.includes?.("player")) continue;
       const p = o.feetPosition; if (!p || p.y < 8.5 || Math.hypot(p.x - cx, p.z - cz) > 13) continue;
       const dx = p.x - cx, dz = p.z - cz;
@@ -1001,6 +1027,32 @@ export function tick(ctx) {
       primitive: { kind: "box", width: 2.8, height: 0.3, depth: Math.hypot(L1.x - L0.x, L1.z - L0.z) }, physics: "static", visible: false });
     s.fortPathV = 4;
   }
+  if (!s.fortPlacementV) {
+    // The mesh courtyard was supported only by terrain 0.7 m below the plank surface.
+    ctx.spawn("l7-fort-walk-floor", { feetPosition: { x: -70, y: FORT_FLOOR - 0.22, z: -93 }, primitive: { kind: "cylinder", radiusTop: 8.5, radiusBottom: 8.5, height: 0.22 }, physics: "static", visible: false });
+    const fixed = fortBreakables(FY, PY);
+    for (const id of fortProps) {
+      const o = ctx.place.objects[id]; if (!o) continue;
+      o.feetPosition = fixed[id].feetPosition;
+      o.rotation = fixed[id].rotation;
+    }
+    for (const id of ["l7-brazier-fort", "l7-still", "l7-shrine", "l7-fort-spawn"]) {
+      const o = ctx.place.objects[id]; if (!o) continue;
+      const p = o.feetPosition;
+      const safe = id === "l7-fort-spawn" ? fortPoint({ x: -70.7, z: -87.5 }) : p;
+      o.feetPosition = { ...safe, y: FORT_FLOOR + (id === "l7-fort-spawn" ? 0.08 : 0) };
+    }
+    for (const [id, g] of Object.entries(L7_NPCS)) {
+      const o = ctx.place.objects[id];
+      if (!isFortResident(o) || o.state.dead || o.state.follow) continue;
+      const { home, rounds } = fortResident(g);
+      if (Math.hypot(o.feetPosition.x + 70, o.feetPosition.z + 93) < 13) o.feetPosition = home;
+      o.state.home = home;
+      o.state.rounds = rounds;
+      o.state.ri = 0;
+    }
+    s.fortPlacementV = 1;
+  }
   if (!ctx.getObject("l7-fauna")) ctx.spawn("l7-fauna", { behavior: "scripts/l7-fauna.js" }); // tidecrawlers on the shores, the Deep in open water
   // Ensure NPCs come back home after respawn window via level-kit
   if (every(ctx, "people", 5000)) {
@@ -1014,11 +1066,11 @@ export function tick(ctx) {
     const KEEP = /ocean|sea|island|isle|sky|fort$|lighthouse|seawatch$|sonar|vance|fauna|from-|spawn$|dory|boat/;
     for (const [id, o] of Object.entries(ctx.place.objects)) { if (!/^l7/.test(id) || KEEP.test(id)) continue;
       try { o.visibleRange = { max: 90 }; if (/stain|bone|skeleton|crate|bottle|can|mound|shell|rope|net/.test(id)) o.castShadow = false; } catch (e) {} } }
-  if (!s.lag138) { s.lag138 = 1; s.smashed = {}; for (const [id, spec] of Object.entries(breakables(FY, PY))) if (!ctx.place.objects[id]) ctx.spawn(id, spec); } // re-lay what the failed build pass left out
+  if (!s.lag138) { s.lag138 = 1; s.smashed = {}; for (const [id, spec] of Object.entries(fortBreakables(FY, PY))) if (!ctx.place.objects[id]) ctx.spawn(id, spec); } // re-lay what the failed build pass left out
   // Smashed props grow back after 60 min, never in someone's face
   if (every(ctx, "regrow", 5000)) {
     s.smashed ??= {};
-    for (const [id, spec] of Object.entries(breakables(FY, PY))) {
+    for (const [id, spec] of Object.entries(fortBreakables(FY, PY))) {
       if (ctx.place.objects[id]) {
         if (s.smashed[id]) delete s.smashed[id];
         continue;

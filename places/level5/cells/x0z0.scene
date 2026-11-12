@@ -4542,7 +4542,7 @@ l5-vanderholt:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
   children: [{attachment: {skin: true}, castShadow: true, id: critter-head, model: {id: /cdn/value.912806c11c0383f0abee4647d5fd0f29d67c59af03b26f81f114c47260339e75.glb, materials: {belly: {color: "#e9bf95"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#d8822e"}, mark: {color: "#e9bf95"}, nose: {color: "#ff8fa3"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#e9bf95"}}}, morph: {Half: 0.5, Smile: 0.7}, visibleRange: {max: 80}}]
   children.critter-head: null
-  feetPosition: {x: 3, y: 0.02, z: -20}
+  feetPosition: {x: 5, y: 0.02, z: -22.2}
   id: l5-vanderholt
   jiggle: {amount: 0.68, bones: [Tail, Tail1, EarL, EarR], bounce: 0.72}
   material: {outline: {color: "#1d1420", width: 2.4}}

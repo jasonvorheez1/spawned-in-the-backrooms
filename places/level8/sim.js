@@ -29,6 +29,7 @@ function P(s, side = 0, up = 0) {
 const at = (p, extra = {}) => ({ feetPosition: { x: p.x, y: p.y, z: p.z }, rotation: { yaw: p.yaw }, ...extra });
 const ROCK = { color: "oklch(0.46 0.025 65)", roughness: 0.94 };
 const WET_ROCK = { color: "oklch(0.32 0.03 220)", roughness: 0.25, metalness: 0.15 };
+const ASPHALT_TOP = P(492).y + 0.1;
 const FLOW_MAT = { color: "oklch(0.74 0.045 82)", roughness: 0.58, metalness: 0.05 };
 const ROAD_MAT = { color: "oklch(0.55 0.03 75)", roughness: 0.88 };
 const BIOLUM_MAT = { color: "oklch(0.72 0.14 190)", emissive: "oklch(0.78 0.16 185)", emissiveIntensity: 2.6, roughness: 0.35 };
@@ -107,7 +108,7 @@ FUNG.forEach((f, k) => {
 [54, 66, 80, 94, 164, 188, 206, 224, 240, 256, 268, 286, 304, 322, 340, 352, 372, 392, 410, 430, 452, 470, 484].forEach((s, k) => {
   const sd = (k % 2 ? 1 : -1) * rxAt(s) * (0.3 + (k % 3) * 0.08), p = P(s, sd), h = 1.15 + (k % 4) * 0.35;
   def(`l8-flow-${k}`, 420, {
-    feetPosition: { x: p.x, y: P(s).y - 0.1, z: p.z }, rotation: { yaw: k * 37 }, tags: ["breakable"], physics: "static",
+    feetPosition: { x: p.x, y: k === 22 ? ASPHALT_TOP - 0.01 : P(s).y - 0.1, z: p.z }, rotation: { yaw: k * 37 }, tags: ["breakable"], physics: "static",
     model: { id: GLB.flow }, layout: BOX(1.2 + (k % 3) * 0.25, h * 1.25, 1.1 + (k % 3) * 0.2), state: brk("flowstone", 150, "Flowstone"),
     visibleRange: { max: 45 }, castShadow: false,
   });
@@ -138,7 +139,7 @@ function lay(ctx) {
 
   // caver work lamps strung along the road: warm pools between the cold dark, so the rock's grain reads (Shelly: "graphics could be much better")
   for (let k = 0, sd = 1; k * 15 + 20 < 500; k++, sd = -sd) {
-    const at0 = 20 + k * 15, q = P(at0, sd * rxAt(at0) * 0.62), y = P(at0).y;
+    const at0 = 20 + k * 15, q = P(at0, sd * rxAt(at0) * 0.62), y = k === 31 ? ASPHALT_TOP + 0.02 : P(at0).y;
     sp(`l8-worklamp-${k}`, { feetPosition: { x: q.x, y, z: q.z }, rotation: { yaw: q.yaw }, physics: "static",
       visibleRange: { max: 45 }, castShadow: false,
       primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.05, height: 1.7 }, material: RUST,
@@ -450,7 +451,7 @@ function lay(ctx) {
     ...at({ ...asp, y: P(492).y - 0.04 }), primitive: { kind: "box", width: 8.5, height: 0.14, depth: 26 }, material: { color: "oklch(0.18 0.005 260)", roughness: 0.92 }, physics: "static",
     visibleRange: { max: 55 }, castShadow: false,
     children: [-10, -5, 0, 5, 10].map((dz) => ({
-      feetPosition: { x: 0, y: 0.08, z: dz }, primitive: { kind: "box", width: 0.2, height: 0.02, depth: 2.8 }, material: { color: "oklch(0.8 0.18 85)", roughness: 0.65 },
+      feetPosition: { x: 0, y: 0.141, z: dz }, primitive: { kind: "box", width: 0.2, height: 0.02, depth: 2.8 }, material: { color: "oklch(0.8 0.18 85)", roughness: 0.65 },
     })),
   });
 
@@ -565,6 +566,16 @@ export function tick(ctx) {
   const s = ctx.place.state;
   if (s.lakeDoorV !== 2) { const d = ctx.place.objects["l8-lake-back"]; if (d) { s.lakeDoorV = 2; d.primitive = { kind: "box", width: 6, height: 0.7, depth: 6 }; d.feetPosition = { ...d.feetPosition, y: -2.65 }; } } // the lake swims; only its bed's middle leads down to 7
   if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); }
+  if (!s.roadPlacementV) {
+    for (const [id, y] of [["l8-flow-22", ASPHALT_TOP - 0.01], ["l8-worklamp-31", ASPHALT_TOP + 0.02]]) {
+      const o = ctx.place.objects[id]; if (o) o.feetPosition = { ...o.feetPosition, y };
+    }
+    for (const line of ctx.place.objects["l8-asphalt"]?.children ?? []) {
+      const o = line.id ? ctx.getObject(line.id) : line;
+      if (o?.feetPosition) o.feetPosition = { ...o.feetPosition, y: 0.141 };
+    }
+    s.roadPlacementV = 1;
+  }
   if (!ctx.getObject("l8-life")) ctx.spawn("l8-life", { behavior: "scripts/l8-life.js" });
   if (!s.campV || s.campV < 2) {
     s.campV = 2;
