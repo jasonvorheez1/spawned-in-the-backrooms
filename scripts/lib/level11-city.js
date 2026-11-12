@@ -22,7 +22,7 @@ const WIN = (u) => ({
   glassBlue: { color: `oklch(${0.5 + u * 0.1} 0.06 ${215 + u * 25})`, metalness: 0.95, roughness: 0.04 },
   glassLit: { color: "oklch(0.86 0.025 85)", emissive: "oklch(0.9 0.04 85)", emissiveIntensity: 0.18, roughness: 0.2, metalness: 0.1 },
 });
-function dress(kind, u) { return { ...WIN(u), ...dress0(kind, u) }; }
+export function dress(kind, u) { return { ...WIN(u), ...dress0(kind, u) }; }
 function dress0(kind, u) {
   const ld = 0.55 + u * 0.3;
   if (kind === "brick_a" || kind === "brick_b") return { brick: { ...TEX.brick, color: `oklch(${0.72 + u * 0.14} ${0.07 + u * 0.05} ${30 + u * 14})` }, concrete: { ...TEX.concrete, color: "oklch(0.88 0.01 80)" }, ...KIT };

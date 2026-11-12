@@ -15,7 +15,7 @@ import { heard } from "../../scripts/lib/hear.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
-import { layCity, layStreet, tickCity } from "../../scripts/lib/level11-city.js";
+import { layCity, layStreet, tickCity, dress } from "../../scripts/lib/level11-city.js";
 import { terminalSpec } from "../../scripts/lib/terminal.js";
 import { layVaults } from "../../scripts/lib/level11-vaults.js";
 import { layShop } from "../../scripts/lib/level11-shop.js";
