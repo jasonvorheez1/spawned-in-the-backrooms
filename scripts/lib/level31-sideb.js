@@ -27,6 +27,7 @@ export function laySideB(ctx) {
 
   // the B.N.T.G. concession: a folding table of almond water and batteries on the south carpet, a lamp hung off a mic stand
   M("stall", "stall", -12, 27.4, 0, { tags: ["l31-q"] });
+  sp("mixtape", { feetPosition: { x: -11.6, y: 0.8, z: 27.2 }, rotation: { yaw: 20 }, model: { id: "/cdn/value.5f6375aaade75cc0cc437a90b39c1bcc03d463457628278d2f5c6255ac62b522.glb", forward: "-z" }, layout: { box: { min: { x: -0.05, y: 0, z: -0.032 }, max: { x: 0.05, y: 0.065, z: 0.032 } } } }); // the reward on display: a cassette in its case, ~10 x 6.4 cm
   sp("stall-sign", { feetPosition: { x: -12, y: 2.05, z: 29.82 }, castShadow: false,
     vector: `<svg viewBox='0 0 240 70' width='1.9m'><rect x='4' y='6' width='232' height='58' fill='#e9e2cc' transform='rotate(-1.5 120 35)'/><text x='120' y='34' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='22' fill='#1e3b2a'>B.N.T.G. RINK CONCESSION</text><text x='120' y='54' text-anchor='middle' font-family='serif' font-style='italic' font-size='14' fill='#5a2a1a'>we buy · we sell · we don't ask</text></svg>` });
   sp("stall-lamp", { feetPosition: { x: -12, y: 2.3, z: 27.6 }, light: { kind: "point", color: "#ffd59a", intensity: 1.6, distance: 7 } });
