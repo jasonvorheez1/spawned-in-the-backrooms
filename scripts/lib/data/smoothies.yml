@@ -1,0 +1,19 @@
+# Squeeze Play smoothie bar (Bonus Room). Shelly, Nov 12: order a mix, find combos, slight to moderate buffs for hours of playtime.
+# Every number here is Savi's pick: tune freely. regen = points per 10 s of play; minutes = playtime the buff lasts.
+price: 4
+fruits:
+  almond: { name: "Almond Water", color: "#e9e4d4" }
+  berry:  { name: "Wild Berry",   color: "#b4386b" }
+  mango:  { name: "Mango",        color: "#f2a33a" }
+  lemon:  { name: "Lemon",        color: "#f0de4a" }
+  kiwi:   { name: "Kiwi",         color: "#7cb342" }
+  banana: { name: "Banana",       color: "#f5e08a" }
+combos:
+  berry+mango:        { name: "Sunrise",     desc: "Slowly heals",                 minutes: 120, hp: 1 }
+  almond+lemon:       { name: "Clear Head",  desc: "Slowly steadies sanity",       minutes: 120, san: 1 }
+  kiwi+lemon:         { name: "Zest",        desc: "Heals a bit faster",           minutes: 60,  hp: 2 }
+  banana+mango:       { name: "Full Belly",  desc: "Keeps food and water up",      minutes: 180, food: 1 }
+  almond+berry+kiwi:  { name: "Night Shift", desc: "Heals and steadies sanity",    minutes: 90,  hp: 1, san: 1 }
+  almond+banana+mango: { name: "Lobby Legs", desc: "Heals and keeps you fed",      minutes: 120, hp: 1, food: 1 }
+  berry+kiwi+lemon:   { name: "Sour Patch",  desc: "Steadies sanity, a lot",       minutes: 60,  san: 3 }
+house: { name: "House Mix", desc: "A little healing", minutes: 45, hp: 1, every: 2 }

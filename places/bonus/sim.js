@@ -10,6 +10,7 @@ const STAFF = {
   "bonus-tom":    { name: "Tom", info: "Tom's Diner", look: { species: "bear", sex: "m", topw: "tee", top: "#f4f1ea", botw: "pants", bottom: "#2b2b33", shoes: "sneakers", hat: "cap", hatc: "#e85d75" } },
   "bonus-andrew": { name: "Andrew", info: "Andrew's Furniture", look: { species: "dog", sex: "m", topw: "longsleeve", top: "#3d5a98", botw: "pants", bottom: "#4a3b2c", shoes: "sneakers", eyew: "glasses" } },
   "bonus-dawn":   { name: "Dawn", info: "Liminal Clothes", look: { species: "cat", sex: "f", topw: "hoodie", top: "#b967ff", botw: "skirt", bottom: "#2b2b33", shoes: "sneakers" } },
+  "bonus-sal":    { name: "Sal", info: "Squeeze Play smoothies", look: { species: "dog", sex: "m", topw: "tee", top: "#ff77b7", botw: "pants", bottom: "#2b2b33", shoes: "sneakers", hat: "cap", hatc: "#f4f1ea" } },
   "bonus-rico":   { name: "Rico", info: "Teleport Station attendant", look: { species: "fox", sex: "m", topw: "tee", top: "#01cdfe", botw: "pants", bottom: "#1d2540", shoes: "sneakers", hat: "beanie", hatc: "#1d2540", hair: "none" } }, // Nov 12: no hair under the beanie, it bulged out around his head (Shelly)
 }
 const SHOPPERS = {
@@ -76,6 +77,7 @@ export function tick(ctx) {
   }
   if (s.ricoBack !== 1) { s.ricoBack = 1; s.staffV = 0 } // Nov 12: Rico is back (Shelly)
   if (s.ricoV !== 1 && ctx.place.objects["bonus-rico"]) { const r = ctx.place.objects["bonus-rico"]; r.behavior = ["scripts/rico.js"]; s.ricoV = 1 } // Nov 12: Rico works the platform (scripts/rico.js)
+  if (s.salV !== 1) { s.salV = 1; s.staffV = 0 } // Nov 12 (Shelly): a guy selling smoothies at the moved juice bar
   if (s.staffV === 1) return
   for (const [id, p] of Object.entries(B.people ?? {})) {
     const st = STAFF[id]; if (!st || ctx.place.objects[id]) continue

@@ -85,6 +85,7 @@ inputs:
       touch:
         button: false
     drink: {}
+    smoothie: {}
     compass: {}
     throw:
       keys:

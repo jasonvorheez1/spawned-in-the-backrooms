@@ -29,6 +29,7 @@ import { statsUi } from './stats-ui.js'
 import { craftUi } from './craft-ui.js'
 import { osUi } from './os-ui.js'
 import { arcadeUi } from './arcade-ui.js'
+import { smoothieUi } from './smoothie-ui.js'
 import { hordeUi } from './horde-ui.js'
 import { derived, carried as _kg } from './lib/stats.js'
 import { noclipUi, clipCard } from './noclip-ui.js'
@@ -517,5 +518,5 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
     <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('emote', 'T')}</kbd> face
   </div>
 
-</div>${journalUi(s, player, ctx)}${feedUi(ctx, player)}${lootUi(ctx, player)}${pickUi(ctx, player)}${spamUi(ctx, player)}${spamArenaUi(ctx, player)}${talkUi(ctx, player)}${hubUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${arcadeUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
+</div>${journalUi(s, player, ctx)}${feedUi(ctx, player)}${lootUi(ctx, player)}${pickUi(ctx, player)}${spamUi(ctx, player)}${spamArenaUi(ctx, player)}${talkUi(ctx, player)}${hubUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${arcadeUi(ctx, player)}${smoothieUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
 }

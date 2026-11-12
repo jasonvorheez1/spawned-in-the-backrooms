@@ -23,6 +23,7 @@ people:
   bonus-tom:    { x: -21.6, z: -15,  yaw: -90, shop: diner }      # behind the diner counter (counter front edge x -20, z -21..-9)
   bonus-andrew: { x: 21.6,  z: 18.5, yaw: 90,  shop: furniture }  # behind the furniture counter (front edge x 20, z 16..21)
   bonus-dawn:   { x: -21.6, z: 18.5, yaw: -90, shop: clothes }    # behind the clothes counter (front edge x -20, z 16..21)
+  bonus-sal:    { x: 7.5, z: 12, yaw: 90, shop: juice }        # behind Squeeze Play, by the fountain
   bonus-rico:   { x: -19.5, y: 5.5, z: -3.5, yaw: 180, shop: station }  # beside the teleport kiosk
 # the teleport kiosk (scripts/bonus-teleport.js): its interactive plate stands here, facing +x into the station
 kiosk: { x: -20.5, y: 5.5, z: -3, yaw: -90 }
