@@ -55,7 +55,7 @@ export function update(ctx) {
   if (place === "level26" && !st.menuOpen && (st.l26cut || !st.l26seen)) { if (l26Tick(ctx, ses, st)) return ctx.sleep(0) }
   if ((place === "level1" || st.dcut || (place === "level26" && st.dinaQ === 2) || (st.dinaQ === 2 && st.quests?.["the-undelivered"]?.mark == null) || (st.dinaQ && !st.quests?.["the-undelivered"])) && dinaTick(ctx, ses, st)) return ctx.sleep(0) // Dina's camp and her diary (scripts/lib/dina-quest.js)
   if (st.tut) tutTick(ctx, st)
-  const playing = music(ctx, (st.menuOpen && st.menuKind === "title") || (place === "intake" && !st.cut))
+  const playing = music(ctx, place !== "bonus" && ((st.menuOpen && st.menuKind === "title") || (place === "intake" && !st.cut))) // the mall has its own track: the title theme never plays over it (shelly, Nov 12)
   // behind the title the camera slowly looks around the halls from head height; gone the moment it closes
   if (st.menuOpen) {
     const p = ctx.self.feetPosition, t = ctx.now() / 1000
