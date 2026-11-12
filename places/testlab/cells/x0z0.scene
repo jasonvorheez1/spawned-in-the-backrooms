@@ -6,6 +6,20 @@ tl-catdemo-f1:
   rotation: {yaw: 90}
   state: {clip: Walk, look: {bottom: "#3b4f7a", botw: jeans, chest: 1, ears: tall, etype: sparkle, expression: neutral, eyes: blue, fluff: [bangs], fseed: 0, fur: "#f3c98a", hair: ponytail, hairc: "#c0563a", hat: divehelm, hatc: "#c0392b", mtype: fang, rv: 1, shoec: "#5a3a2a", shoes: steeltoe, snout: pointy, top: "#c4a46a", topw: pghoodie}, sex: f}
   tags: [catdemo]
+tl-catdemo-f2:
+  behavior: scripts/cat-demo.js
+  feetPosition: {x: -19, y: 0.05, z: 9.5}
+  id: tl-catdemo-f2
+  rotation: {yaw: 90}
+  state: {clip: Walk, look: {bottom: "#2f3d5c", botw: shorts, chest: 1, ears: fold, etype: sharp, expression: neutral, eyes: green, fluff: [burns], fur: "#8fb3e8", hair: twintails, hairc: "#8fa6c2", hat: beret, hatc: "#2d4a7a", mtype: open, rv: 1, shadow: plum, shoec: "#222226", shoes: boots, snout: puff, top: "#e0775a", topp: null, topw: crop}, sex: f}
+  tags: [catdemo]
+tl-catdemo-m1:
+  behavior: scripts/cat-demo.js
+  feetPosition: {x: -19, y: 0.05, z: 12}
+  id: tl-catdemo-m1
+  rotation: {yaw: 90}
+  state: {clip: Walk, look: {bottom: "#2f3d5c", botw: pants, chest: 1, ears: wide, etype: slit, expression: neutral, eyes: amber, fluff: [nape], fur: "#b98a5e", hair: spiky, hairc: "#5a3b2a", hat: tophat, hatc: "#222222", mtype: smirk, rv: 1, shoec: "#5a3a2a", shoes: boots, snout: long, top: "#b8975c", topp: pgcoat, topw: jacket}, sex: m}
+  tags: [catdemo]
 tl-catdemo-m2:
   behavior: scripts/cat-demo.js
   feetPosition: {x: -19, y: 0.05, z: 7}
@@ -33,6 +47,14 @@ tl-cats-spot-1:
   feetPosition: {x: -17.8, y: 3.4, z: 7}
   id: tl-cats-spot-1
   light: {aim: {x: -19, y: 0.9, z: 7}, angle: 38, color: "#fff3dc", distance: 6, intensity: 6, kind: spot, penumbra: 0.6}
+tl-cats-spot-2:
+  feetPosition: {x: -17.8, y: 3.4, z: 9.5}
+  id: tl-cats-spot-2
+  light: {aim: {x: -19, y: 0.9, z: 9.5}, angle: 38, color: "#fff3dc", distance: 6, intensity: 6, kind: spot, penumbra: 0.6}
+tl-cats-spot-3:
+  feetPosition: {x: -17.8, y: 3.4, z: 12}
+  id: tl-cats-spot-3
+  light: {aim: {x: -19, y: 0.9, z: 12}, angle: 38, color: "#fff3dc", distance: 6, intensity: 6, kind: spot, penumbra: 0.6}
 tl-cats-stripe:
   feetPosition: {x: -15.45, y: 0.041, z: 8.25}
   id: tl-cats-stripe
