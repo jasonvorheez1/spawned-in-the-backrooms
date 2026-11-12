@@ -11,10 +11,11 @@ export function update(ctx, dt) {
   if (!me.session.posedV2) { // a rig with no clip stands in T: every Still Life gets its pose the moment it wakes
     me.session.posedV2 = true;
     if (s.role === "sitter") { const b = ctx.getObject(me.id + "/body"); if (b) b.anim.base = { clip: "cdn/clip-sit-loop.glb", loop: true, speed: 0.2, weight: 1 }; }
+    else if (s.role === "watcher") me.anim.base = { clip: "cdn/clip-idle-loop.glb", loop: true, speed: 0, weight: 1 }; // a mannequin, held mid-breath
     else if (s.role === "sunk") me.anim.base = { clip: "cdn/clip-swim-idle-loop.glb", loop: true, speed: 0.12, weight: 1 }; // arms out, reaching for the tree
     else if (s.role === "stray") { me.session.walking = false; me.anim.base = { clip: "cdn/clip-idle-loop.glb", loop: true, speed: 0.15, weight: 1 }; }
   }
-  if (s.role === "sunk") return ctx.sleep();
+  if (s.role === "sunk" || s.role === "watcher") return creep(ctx, me, s, f, now);
   if (s.role === "sitter") return sitter(ctx, dt, me, s, f);
   if (s.role === "stray") return stray(ctx, dt, me, s, f, now);
 }
@@ -66,4 +67,21 @@ function stray(ctx, dt, me, s, f, now) {
   if (moving !== !!sess.walking) { sess.walking = moving; me.anim.base = moving ? { clip: "cdn/clip-walk-loop.glb", loop: true, speed: 0.55, weight: 1 } : { clip: "cdn/clip-idle-loop.glb", loop: true, speed: 0.15, weight: 1 }; }
   me.velocity = { x: vx, y: me.grounded ? -0.5 : v.y + g * dt, z: vz };
   if (!t && !moving) ctx.sleep(0.4);
+}
+
+// Still Lifes only move unseen: each step a player is near and none of them is looking, it jerks closer.
+// Look back and it holds; it has moved, and the creak tells you so. Numbers: data/xmas.yml creep
+const looking = (p, f) => { const yw = p.camera?.rotation?.yaw; if (yw == null) return true; const r = (yw * Math.PI) / 180, dx = f.x - p.feetPosition.x, dz = f.z - p.feetPosition.z, d = Math.hypot(dx, dz) || 1; return (dx * -Math.sin(r) + dz * -Math.cos(r)) / d > 0.55; };
+function creep(ctx, me, s, f, now) {
+  const C = X.creep[s.role], t = near(ctx, f, C.wake), sess = me.session;
+  if (!t || (s.hp ?? 1) <= 0) return ctx.sleep(1);
+  const home = s.home ?? f, seen = ctx.place.players.some((p) => looking(p, f));
+  if (seen) { if (sess.moved) { sess.moved = false; ctx.emit("playSound", { clip: SND + GROANS[1], position: f, volume: 0.55, pitch: 0.7 + ctx.random() * 0.2, maxDistance: 14 }); } return ctx.sleep(0.25); }
+  const tp = t.p.feetPosition, dx = tp.x - f.x, dz = tp.z - f.z, d = Math.hypot(dx, dz) || 1;
+  if (d > C.stop && Math.hypot(f.x + (dx / d) * C.step - home.x, f.z + (dz / d) * C.step - home.z) < C.leash) {
+    me.feetPosition = { x: f.x + (dx / d) * C.step, y: f.y, z: f.z + (dz / d) * C.step }; sess.moved = true;
+  }
+  const r = me.rotation; me.rotation = { yaw: yawTo(f, tp), pitch: typeof r === "object" ? (r.pitch ?? 0) : 0 };
+  if (d < C.stop + 0.4 && now > (sess.chillAt ?? 0)) { sess.chillAt = now + 4000; t.p.state.sanity = Math.max(0, (t.p.state.sanity ?? 100) - C.sanity); ctx.emit("damageNumber", { position: { ...tp, y: tp.y + 1.7 }, text: "-" + C.sanity + " SANITY", color: "#d8d0c8" }, { audience: { player: t.p.id } }); }
+  ctx.sleep(C.every);
 }

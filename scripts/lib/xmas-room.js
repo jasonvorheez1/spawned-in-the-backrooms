@@ -54,7 +54,7 @@ export function layXmas(ctx) {
   // (a) two Still Lifes half-sunk in the carpet, face down, reaching for the tree
   [["xmas-still-a", -3.1, -1.2, 70, "f", "#ebe4d8"], ["xmas-still-b", 2.9, 1.6, -115, "m", "#d9d2c6"]].forEach(([id, ox, oz, yw, sex, fur]) => {
     const sp = stillLook(sex, fur);
-    ctx.spawn(id, { ...sp, tags: ["xmas", "still-life", "container"], feetPosition: { x: tx + ox, y: -0.95, z: tz + oz }, rotation: { yaw: yw, pitch: -55 }, physics: { body: "static", collider: "box" }, children: [...(sp.children ?? []), seam(1.05, -0.1)], behavior: "scripts/xmas-still.js", state: { role: "sunk", name: "Still Life", verb: "Search", items: "stuffing,stuffing" } });
+    ctx.spawn(id, { ...sp, tags: ["xmas", "still-life", "container"], feetPosition: { x: tx + ox, y: -0.12, z: tz + oz }, rotation: { yaw: yw, pitch: -82 }, physics: { body: "static", collider: "box" }, children: [...(sp.children ?? []), seam(1.05, -0.1)], behavior: "scripts/xmas-still.js", state: { role: "sunk", home: { x: tx + ox, z: tz + oz }, name: "Still Life", verb: "Search", items: "stuffing,stuffing" } });
   });
   // (b) the Lamp Sitter: grown into a wheelchair, its lamp wakes when someone comes close
   const ls = { x: E.x0 + 3.2, z: E.z1 - 4 }, sp = stillLook("m", "#e6dfd2");
@@ -83,6 +83,10 @@ export function layXmas(ctx) {
   ctx.spawn("xmas-table", { tags: ["xmas"], feetPosition: { x: R.x0 + 1, y: 0, z: R.z0 + 1.2 }, primitive: geo("table"), physics: { body: "static", collider: "cylinder" } });
   ctx.spawn("xmas-thermos", { tags: ["xmas", "container"], feetPosition: { x: R.x0 + 1.05, y: 0.69, z: R.z0 + 1.15 }, primitive: geo("thermos"), physics: { body: "static", collider: "box" }, state: { name: "Thermos, still warm", verb: "Take", items: "eggnog" } });
   ctx.spawn("xmas-house", { tags: ["xmas", "container"], feetPosition: { x: dx - 2.2, y: 0, z: R.z1 - 0.8 }, rotation: { yaw: 10 }, primitive: geo("house"), physics: { body: "static", collider: "box" }, state: { name: "Miniature house", verb: "Open", items: "musicbox" } });
+  // (d) the Watcher: faces the corner of the red room. turn away and it is closer, and facing you
+  const wt = { x: R.x1 - 1.1, z: R.z0 + 0.9 }, ws = stillLook("f", "#e9e2d6");
+  ctx.spawn("xmas-watcher", { ...ws, tags: ["xmas", "still-life", "container"], feetPosition: { x: wt.x, y: 0, z: wt.z }, rotation: { yaw: 20 }, physics: { body: "static", collider: "box" }, behavior: "scripts/xmas-still.js", children: [...(ws.children ?? []), seam(1.1, 0.1), seam(0.7, -0.12)],
+    state: { role: "watcher", home: wt, name: "Still Life", verb: "Search", items: "stuffing,bauble" } });
   // the far door, shut; the closet behind it holds (c) the Red Stray
   ctx.spawn("xmas-exit-door", { tags: ["xmas", "xmas-shut"], feetPosition: { x: dx, y: 0, z: R.z1 }, pivot: [0, 0.5, 0.5], physics: "kinematic", primitive: { kind: "box", width: 1.15, height: 2.12, depth: 0.06 }, material: { texture: "cdn/texture-worn-hardwood-grain.png", color: "oklch(0.45 0.06 40)", roughness: 0.6 }, state: { open: false } });
   const rs = stillLook("m", "#a8322c");
