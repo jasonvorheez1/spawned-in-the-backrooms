@@ -157,7 +157,7 @@ export function layStreet(ctx, h) {
     if (i % 2 === 0) sp(`l11-st-lamp-light-${i}-${s}`, { feetPosition: { x: s * 6.9, y: 6.93, z: z + (s > 0 ? 3 : 0) }, light: { kind: "point", color: "oklch(0.93 0.14 80)", intensity: 5, distance: 17, shadow: { enabled: false } } });
   }));
   [-64, -48, -8, 26, 38, 52, 66].forEach((z, i) => [-1, 1].forEach((s) => {
-    const x = s * 13.4, zz = z + (s > 0 ? 4 : 0), u = hs(i, s, 1);
+    const x = s * 13.4, zz = z + (s > 0 ? 4 : z === 52 ? 5.2 : 0), u = hs(i, s, 1);
     if (Math.hypot(x - 13.6, zz - 60.5) < 6) return; // the subway stairs stand here (SUB)
     sp(`l11-st-tree-${i}-${s}`, { feetPosition: { x, y: 0.1, z: zz }, rotation: { yaw: u * 360 }, physics: { body: "static" }, primitive: { kind: "scripted", script: "scripts/tree10.js", params: { kind: u > 0.5 ? "ash" : "oak", h: 6.5 + u * 2.5 }, seed: i * 7 + (s > 0 ? 3 : 0) }, material: { alphaTest: 0.5, side: "double" }, visibleRange: { max: 220 } }); // a branching street tree, not a blob (#74739)
     bx(`l11-st-grate-${i}-${s}`, x, 0.332, zz, 1.7, 0.01, 1.7, { texture: "cdn/texture-square-cast-iron-tree-grate-radial-slots-top-down-rusted.png", color: "oklch(0.8 0.03 60)", metalness: 0.7, roughness: 0.55 }, { physics: undefined, state: { floor: "grate" } });

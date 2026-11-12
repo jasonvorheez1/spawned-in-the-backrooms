@@ -24,7 +24,7 @@ import MODELS from "../../scripts/lib/data/level11-models.yml";
 export const cadence = "1s";
 const RENO_FLOOR = 0.32;
 const mallTrash = (i) => ({ x: -15.15 + i * 0.2, y: 0.33, z: 28.1 + i * 0.65 });
-const V = 138; // the market court and the central pedestrian route
+const V = 139; // the market court and the central pedestrian route
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1514,7 +1514,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   // "The Capital is the main residential hub for the entirety of Level 11."
   const MKT_X = -18.1, MKT_Z = 50.8, MKT_FLOOR = 0.33, COUNTER = -16.47;
   bx("l11-market-court", -18.75, 0.08, MKT_Z, 5.9, 0.25, 8.2, SIDEWALK);
-  // The model is a canopy; its full bounding box used to block the stall and half the pavement.
+  // Keep the produce display clear of the walkable counter apron.
   md("l11-market-stall", "market_stall", MKT_X, MKT_FLOOR, MKT_Z, undefined, "box", { physics: undefined,
     rotation: { yaw: 0 }, layout: { box: { min: { x: -6, y: 0, z: -6 }, max: { x: 6, y: 3.3, z: 6 } } } });
   sp("l11-market-counter", { feetPosition: { x: COUNTER, y: MKT_FLOOR + 0.77, z: MKT_Z }, primitive: { kind: "box", width: 0.68, height: 0.08, depth: 3.25, bevel: 0.025 }, material: WOOD, physics: "static",
@@ -1545,7 +1545,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   // B.N.T.G. Merchant NPC: Trader Kael
   sp("l11-trader-kael", {
     tags: ["npc", "bntg"],
-    feetPosition: { x: MKT_X + 0.42, y: MKT_FLOOR + 0.02, z: MKT_Z + 0.14 },
+    feetPosition: { x: MKT_X + 1.04, y: MKT_FLOOR + 0.02, z: MKT_Z + 2.93 },
     rotation: { yaw: -90 },
     physics: "character",
     ...critterSpec(npcLook("l11-kael", { species: "fox", sex: "m", topw: "vest", top: "#8e44ad", botw: "pants", bottom: "#2c3e50", shoes: "boots" }, "trader", 11)),
@@ -1556,7 +1556,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
       voice: "reyes",
       faction: "bntg",
       factionName: "Backrooms Non-Commercial Traders Guild",
-      home: { x: MKT_X + 0.42, z: MKT_Z + 0.14 },
+      home: { x: MKT_X + 1.04, z: MKT_Z + 2.93 },
       line: "Greetings, citizen! Fresh bread and apples just noclipped into our crates this morning. The Capital always keeps its people fed.",
       ...npcState(ctx, "trader", 100),
     },
