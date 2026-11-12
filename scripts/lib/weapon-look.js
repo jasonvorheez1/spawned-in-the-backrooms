@@ -48,6 +48,17 @@ const MESH = { // kind: [model, offset y, scale, the mesh's material slot]
   laser_pistol: ["/cdn/value.afc92601e16196774888d48d52c9190c30da80702539c50ed1b91b9ecc55ce69.glb", -0.064, 0, "tripo_material_f3f04c5a-c731-4a15-be64-91e2d56cb4f6", null, -0.034], // Tripo ZL-2 re-baked into the pistol's frame (art/zl2/build.py): grip where the pistol's grip is, 26 cm long
   raygun: ["/cdn/value.f78423b01c71d65f4b04e41bf27a0b3c5f3b06820933ae52d304cad136a54db5.glb", -0.064, 0, "tripo_material_8bf6ffb4-cb81-461e-b4da-146b73330a4d", null, -0.034], // Tripo R-55 re-baked into the ZL-2 frame (art/r55/build.py)
   shotgun:    ["/cdn/value.104163217085585686f5b41208ef60d422b0c1836d7ef20078f129b016e8fdaf.glb", -0.18, 0, "tripo_material_7b83893e-ced9-4331-b685-1a4a787052e6"],
+  cleaver: ["/cdn/value.f0c1dc5c8e605bc7ede97003855e4bb4cd0b01ccdf0f0f529f1564e709fd16e3.glb", 0.025, 0, "tripo_material_5a45f7d0-e903-4c02-844d-3d88d7b8bf9b"], // Tripo remake, fitted by art/weapons/build.py
+  coach_gun: ["/cdn/value.2b91df14f52f129e448ddcd7b3374ccaed5152234a2d83b7408c692e752530f0.glb", -0.02, 0, "tripo_material_d372804d-21f6-4276-bfc0-8e41efe499ee"], // Tripo remake, fitted by art/weapons/build.py
+  hunting_rifle: ["/cdn/value.97657752011ab7664f7865f122968e0c266841627187f4a6039900005ba95cf4.glb", -0.027, 0, "tripo_material_fe89de78-56f1-4294-bafe-cb90967640a2"], // Tripo remake, fitted by art/weapons/build.py
+  knife: ["/cdn/value.d3ceae8b13d2230c37d25b11416839251358716ab7090a68ae8479c1c0272b2a.glb", 0.026, 0, "tripo_material_403b10b6-6542-44ed-9dfe-8e21adde4316"], // Tripo remake, fitted by art/weapons/build.py
+  laser_rifle: ["/cdn/value.e8c8a1244131da46708f766983742ffb13760b300cef632176a9da4b2ca404b6.glb", -0.052, 0, "tripo_material_344de087-5dc4-481d-99b7-1efaae4434c9"], // Tripo remake, fitted by art/weapons/build.py
+  lineman_machete: ["/cdn/value.85fd8395acd018dc2347d60200d473a33486e8160a6df9f332d3eba27750595f.glb", 0.022, 0, "tripo_material_3271d8c5-f092-440d-8dc8-fc02f2f41b72"], // Tripo remake, fitted by art/weapons/build.py
+  pickaxe: ["/cdn/value.ad9506cffeedcc33dc6d5352089968cbf9932fa4a15e301a5b4b7913f2972407.glb", 0.012, 0, "tripo_material_a2819caa-acc5-415e-80c7-46f021283172"], // Tripo remake, fitted by art/weapons/build.py
+  revolver: ["/cdn/value.df7232bf1e310f5b96b0f7479daad03310d40c914c243a6ca82c918d7d12e7ba.glb", -0.057, 0, "tripo_material_b5be0151-d577-463e-b553-92f40dfdb809"], // Tripo remake, fitted by art/weapons/build.py
+  screwdriver: ["/cdn/value.6204c5be1e422e3d5547054301386a5efec3bf51e4d02e4b38769563fc8541ad.glb", 0.02, 0, "tripo_material_f9e3059d-8b3b-4fdf-b3da-dcb466a61983"], // Tripo remake, fitted by art/weapons/build.py
+  stun_baton: ["/cdn/value.2a5234080ee9216480cbdaafa7aa0589d00bbf08c3b3e964151c98b4e929d608.glb", 0.015, 0, "tripo_material_c231497c-1587-4cb1-bec3-151ea766af13"], // Tripo remake, fitted by art/weapons/build.py
+  wrench: ["/cdn/value.ec0be310ee2a279074961d777a41ee95af9a2c8bbc6768d6a06e250e15ba1c9e.glb", 0.014, 0, "tripo_material_588e0f62-de58-4273-8d0e-d358e50e51cf"], // Tripo remake, fitted by art/weapons/build.py
 };
 // each mesh's box centre in the scripted frame (x, z), from art/weapons/fit.json
 const CENTER = { table_leg: [0, 0.3325], pipe_scrap: [0, 0.415], crowbar: [0, 0.4425], bat: [0, 0.4895], hatchet: [0.07, 0.417], fire_axe: [0.0175, 0.5395], pistol: [0, 0.114], shotgun: [0.002, 0.452] }
