@@ -6,7 +6,6 @@ import { heard } from "./hear.js";
 import { addRep } from "./rep.js";
 import { setQuest, endQuest } from "./quests.js";
 import { apt, aptAt } from "./level13.js";
-import { raycast } from "builtin/physics";
 export const QID = "l13-still-home", QNAME = "Still Home";
 export const NOOR = "l13p-noor", CLERK = "l13p-oona", KEEP = "l13p-keepsake", KEEP_BODY = "l13p-keepsake-body";
 const A8 = apt("a8");
@@ -83,7 +82,7 @@ export function handleDialogueQuest13(ctx, p, npc, text) {
   }
   return null;
 }
-// every sim second: arriving at a8 moves 1 to 2; a Tenant put down in a8 leaves the locket on the body; the counter locket settles onto whatever stands under it
+// every sim second: arriving at a8 moves 1 to 2; a Tenant put down in a8 leaves the locket on the body
 export function questTick(ctx) {
   let want = false;
   for (const p of ctx.place.players) {
@@ -91,11 +90,6 @@ export function questTick(ctx) {
     const f = posOf(p); if (!f || !A8) continue;
     if (q === 1 && (aptAt(f.x, f.z)?.id === "a8" || Math.hypot(f.x - A8.door.x, f.z - A8.door.z) < 1.6)) setL13(ctx, p, 2, "This isn't Bea anymore · Noor will want proof");
     want = true;
-  }
-  const keep = ctx.place.objects[KEEP];
-  if (keep && !keep.state.snapped) {
-    const f = keep.feetPosition, hit = raycast(ctx, { x: f.x, y: 1.5, z: f.z }, { x: 0, y: -1, z: 0 }, { distance: 1.45, ignoreEntities: [KEEP], physicsOnly: true });
-    if (hit && hit.position.y > 0.3) { keep.feetPosition = { x: f.x, y: hit.position.y + 0.005, z: f.z }; keep.state.snapped = true; }
   }
   if (!want || ctx.place.objects[KEEP_BODY] || !A8) return;
   const ids = new Set(ctx.place.players.map((p) => p.id));

@@ -5,6 +5,8 @@
 export const H = 2.6, HALL = 1.2, T = 0.12; // ceiling height, hall half-width, wall thickness
 export const UNIT = { w: 8, main: 5, back: 4, bedW: 4.6, doorX: 2, bedDoorX: 2.3, bathDoorX: 6.3, doorW: 1, doorH: 2.1 };
 export const HALLS = { A: { z: 0, x0: -42, x1: 1.2, ux: -42 }, B: { z: 10, x0: -1.2, x1: 42, ux: 2 } };
+export const DINING = { u: 5.7, v: 1.58 };
+export const RECEPTION = { x0: -0.95, x1: 1.75, front: HALLS.B.z + HALL, back: 13.3 };
 export const SPAWN = { x: -40.4, y: 0.05, z: 0 }, EXIT0 = { x: 41.9, z: 10 }; // in from Level 12 at hall A's west end; the bland door to Level 0 caps hall B
 // kind: shut (a closed door, nothing built inside) | empty | tenant (a thrower's flat) | lurk (the drag-in flat) | resident | chess | bntg (Free Home flats)
 const KIND = { a1: "shut", a2: "empty", a3: "tenant", a4: "shut", a5: "lurk", a6: "resident", a7: "shut", a8: "tenant", a9: "chess", a10: "shut",

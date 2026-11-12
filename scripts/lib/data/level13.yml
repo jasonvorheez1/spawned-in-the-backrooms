@@ -67,7 +67,6 @@ models:
   bed:     { id: "/cdn/value.f0783df6cd52cf3b9095d3668baf356978f411628a2563292751f717375783ef.glb", forward: "+x", size: [1.28, 0.96, 2.0] }
   dining:  { id: "/cdn/value.0a76741ca9f6a8c9f0d49d3eeeada193ee533ad28bbf237159283325ea29c201.glb", forward: "+x", size: [1.46, 1.02, 1.43] }
   dishes:  { id: "/cdn/value.0cf409d09f55a61ef44229f4134b02239480a532862a7daad6ce168aefdc746c.glb", forward: "+x", size: [0.46, 0.24, 0.48] }
-  chess:   { id: "/cdn/value.cde2b6f8496b75de0f264f4f9c6917b90021096f88f3b735c77469edab5a5f2d.glb", forward: "+x", size: [0.4, 0.4, 0.1] }
   tub:     { id: "/cdn/value.41d0f172f22f0963c0cdb6b958c4a3e95e6b3aa065b3c91c096683efc4c87a4b.glb", size: [0.9, 1.08, 1.6] }
   toilet:  { id: "/cdn/value.28601a408e0ea5cc0d4ad5e63b60d0044db81cc693682addc38ae0e75b28cea5.glb", forward: "+x", size: [0.42, 0.75, 0.74] }
   lamp:    { id: "/cdn/value.0871d1626b929961d73cb28c05f82070ad822c5cc2e6b8deec5046248fb4086d.glb", size: [0.42, 1.0, 0.72] }
@@ -81,4 +80,4 @@ models:
   chair:   { id: "/cdn/value.8c161eb878826996b4d3329c94a7a2022e544020baa04cdf6f7bf2f4efb05789.glb", forward: "+x", size: [0.5, 0.82, 0.5] }
 tops: { counter: 0.92, table: 0.75 }   # where clutter sits
 # what each flat's life was doing when it stopped (scripts/lib/level13-furnish.js STORY)
-stories: { a6: dinner, a9: chess, b1: suitcase, b2: drawing, b4: mail, b6: bath, b8: latenight }
+stories: { a6: dinner, b1: suitcase, b2: drawing, b4: mail, b6: bath, b8: latenight }

@@ -1,10 +1,10 @@
 // Level 13: people. places/level13/sim.js calls layPeople(ctx) every 1 s tick; it lays its pieces once (own version key in ctx.place.state) and returns fast after.
 // Floor 283: the B.N.T.G. Free Home Project desk in hall B, the five people who talk, and the "Still Home" quest's locket. Ids l13p-*.
-import { APTS, apt } from "./level13.js";
+import { APTS, RECEPTION, apt } from "./level13.js";
 import { keepPeople } from "./level-kit.js";
 import { questTick, keepsakeSpec, KEEP } from "./level13-quest.js";
 import D from "./data/l13-people.yml";
-const PV = 3;
+const PV = 4;
 const BNTG = ["bntg", "B.N.T.G. (the Backrooms Nonaligned Trade Group; runs the Free Home Project on Floor 283)"];
 const HOMED = ["bntg", "Free Home Project resident, Floor 283"];
 const UNALIGNED = ["wanderer", "Unaligned residents of Level 13's first hall"];
@@ -63,13 +63,13 @@ function layProps(ctx) {
   }
   const b = D.props.board.at, kx = D.props.keys.at, m = D.props.mat.at;
   ctx.spawn("l13p-board-text", { tags: ["l13p"], feetPosition: { x: b[0], y: b[1] + 0.5, z: b[2] - 0.05 }, castShadow: false, vector: boardSvg() });
-  ctx.spawn("l13p-sign", { tags: ["l13p"], feetPosition: { x: kx[0], y: 2.15, z: 11.185 }, castShadow: false,
+  ctx.spawn("l13p-sign", { tags: ["l13p"], feetPosition: { x: D.props.desk.at[0], y: 2.16, z: RECEPTION.back - 0.075 }, castShadow: false,
     vector: svg(1.7, [170, 34], `<rect x='1' y='1' width='168' height='32' rx='4' fill='#7a2f3a' stroke='#d9c58a' stroke-width='1.2'/><text x='85' y='15' text-anchor='middle' font-size='11' font-family='display' fill='#f1e6c0'>B.N.T.G. FREE HOME PROJECT</text><text x='85' y='27' text-anchor='middle' font-size='7' font-family='serif' fill='#d9c58a'>Floor 283 · Reception · Keys while you wait</text>`) });
-  ctx.spawn("l13p-keys-text", { tags: ["l13p"], feetPosition: { x: kx[0], y: kx[1] + 0.56, z: 11.185 }, castShadow: false,
+  ctx.spawn("l13p-keys-text", { tags: ["l13p"], feetPosition: { x: kx[0], y: kx[1] + 0.45, z: kx[2] - 0.06 }, castShadow: false,
     vector: svg(0.9, [90, 8], hallB().slice(0, 8).map((a, i) => `<rect x='${1 + i * 11.2}' y='1' width='9.6' height='6' rx='1' fill='#f1ead2' stroke='#6a5a40' stroke-width='0.3'/><text x='${5.8 + i * 11.2}' y='5.4' text-anchor='middle' font-size='3.6' font-family='sans-serif' fill='${a.open ? "#2a2620" : "#8a2018"}'>${a.num}</text>`).join("")) });
-  if (D.props.mat.model) ctx.spawn("l13p-mat-text", { tags: ["l13p"], feetPosition: { x: m[0], y: 0.036, z: m[2] }, rotation: { pitch: -90 }, castShadow: false,
+  if (D.props.mat.model) ctx.spawn("l13p-mat-text", { tags: ["l13p"], feetPosition: { x: m[0], y: m[1] + 0.031, z: m[2] }, rotation: { pitch: -90 }, castShadow: false,
     vector: svg(0.8, [80, 44], `<text x='40' y='20' text-anchor='middle' font-size='11' font-family='display' fill='#2a2018'>WELCOME</text><text x='40' y='34' text-anchor='middle' font-size='11' font-family='display' fill='#2a2018'>HOME</text>`) });
-  ctx.spawn("l13p-crate-tag", { tags: ["l13p"], feetPosition: { x: D.props.crate.at[0], y: 0.75, z: 11.185 }, castShadow: false,
+  ctx.spawn("l13p-crate-tag", { tags: ["l13p"], feetPosition: { x: D.props.crate.at[0], y: 0.61, z: RECEPTION.back - 0.075 }, castShadow: false,
     vector: svg(0.5, [50, 16], `<rect x='0.5' y='0.5' width='49' height='15' fill='#f1ead2' stroke='#6a5a40' stroke-width='0.4'/><text x='25' y='7' text-anchor='middle' font-size='4.6' font-family='sans-serif' fill='#2a2620'>ALMOND WATER</text><text x='25' y='13' text-anchor='middle' font-size='3.4' font-family='sans-serif' fill='#7a2f3a'>Residents free. You: ask.</text>`) });
   // Gus's seat: a round pouf he has worn a dent into
   ctx.spawn("l13p-pouf", { tags: ["l13p"], feetPosition: { x: D.pouf[0], y: 0, z: D.pouf[1] }, primitive: { kind: "sphere", radius: 0.5, widthSegments: 28, heightSegments: 16 }, scale: { x: 0.74, y: 0.44, z: 0.74 },
