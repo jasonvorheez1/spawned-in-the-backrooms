@@ -13,7 +13,7 @@ import { S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, xOf } from "../../scripts/lib
 import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 import P from "../../scripts/lib/data/l02-props.yml";
 export const cadence = "250ms";
-const V = 12, STEP_MS = 2600;
+const V = 13, STEP_MS = 2600;
 const W = NX * S, D = NZ * S; // 32 x 20 m
 const CARPET = { color: "oklch(0.4 0.11 25)", roughness: 0.97, texture: "cdn/texture-dry-red-office-carpet-low-pile.png", wrap: "repeat", repeat: [0.5, 0.5] };
 const PAINT = { color: "oklch(0.97 0.008 90)", roughness: 0.88, texture: "cdn/texture-freshly-painted-white-drywall-eggshell-roller-stipple.png", wrap: "repeat", repeat: [0.5, 0.5] };
@@ -40,7 +40,8 @@ const H = (key) => P[key]?.size?.[1] ?? 0.8;
 function sp(ctx, id, spec) { if (spec && !(id in ctx.place.objects)) ctx.spawn(id, spec); }
 const put = (ctx, id, spec) => { if (spec) ctx.spawn(id, spec); };
 // the clean floor's walls, per column: [z centre, length] on the column's west edge (gaps are doorways), and across its middle
-const PART = { 1: [[-6.5, 7], [6, 8]], 2: [[-8, 4], [3, 6]], 3: [[-5, 10], [7.5, 5]], 4: [[0, 8]], 5: [[-7, 6], [6, 8]], 6: [[-2, 6], [8, 4]], 7: [[-7.5, 5], [5, 2]] };
+const STAIRWELL = -7.8; // the open band over the basement stairs
+const PART = { 1: [[-5.4, 4.8], [6, 8]], 2: [[-8, 4], [3, 6]], 3: [[-5, 10], [7.5, 5]], 4: [[0, 8]], 5: [[-7, 6], [6, 8]], 6: [[-2, 6], [8, 4]], 7: [[-7.5, 5], [5, 2]] };
 const CROSS = { 1: [[3, 2.6]], 2: [[-1, 2.4]], 5: [[2, 3]], 6: [[-4.5, 2.6]] };
 // a finished wall: white paint, a red chair rail at 0.9 m and a baseboard both faces; outlets on the long ones
 function wallKids(len, along) {
@@ -167,8 +168,15 @@ function layCans(ctx) {
 function layColumn(ctx, c) {
   const x = xOf(c), tag = `l02c${c}`;
   const joists = []; for (let j = -1.5; j <= 1.5; j += 0.6) joists.push({ feetPosition: { x: j, y: -0.24, z: 0 }, primitive: box(0.05, 0.24, D), material: STUD });
-  ctx.spawn(`l02-fl-${c}`, { tags: [tag], feetPosition: { x, y: -0.22, z: Z0 + D / 2 }, primitive: box(S, 0.2, D), material: PLY, physics: "static",
-    children: [{ feetPosition: { x: 0, y: 0.2, z: 0 }, primitive: box(S, 0.02, D), material: CARPET }, ...joists] });
+  // Shelly Nov 12 "i get trapped inside after the floor caves in": columns 1-2 leave a stairwell open over the basement stairs (z -10..-7.8), railed, so the way up never sits under a standing floor
+  const well = c === 1 || c === 2, z0 = well ? STAIRWELL : Z0, len = Z0 + D - z0;
+  if (well) for (const j of joists) j.primitive = box(0.05, 0.24, len);
+  const rail = !well ? [] : [{ feetPosition: { x: 0, y: 1.1, z: -len / 2 + 0.04 }, primitive: box(S, 0.06, 0.08), material: TRIM }, ...[-1.9, -0.95, 0, 0.95, 1.9].map((rx) => ({ feetPosition: { x: rx, y: 0.2, z: -len / 2 + 0.04 }, primitive: box(0.06, 0.92, 0.06), material: BASEB }))];
+  if (c === 2) rail.push({ feetPosition: { x: S / 2 - 0.04, y: 1.1, z: -len / 2 - (z0 - Z0) / 2 }, primitive: box(0.08, 0.06, z0 - Z0), material: TRIM }, { feetPosition: { x: S / 2 - 0.04, y: 0.2, z: -len / 2 - (z0 - Z0) / 2 }, primitive: box(0.06, 0.92, 0.06), material: BASEB });
+  ctx.spawn(`l02-fl-${c}`, { tags: [tag], feetPosition: { x, y: -0.22, z: z0 + len / 2 }, primitive: box(S, 0.2, len), material: PLY, physics: "static",
+    children: [{ feetPosition: { x: 0, y: 0.2, z: 0 }, primitive: box(S, 0.02, len), material: CARPET }, ...joists, ...rail] });
+  if (c === 2) ctx.spawn(`l02-wellrail-col`, { tags: [tag], feetPosition: { x: x + S / 2 - 0.04, y: 0, z: (Z0 + z0) / 2 }, primitive: box(0.1, 1.2, z0 - Z0), visible: false, physics: "static" });
+  if (well) ctx.spawn(`l02-wellrail-${c}`, { tags: [tag], feetPosition: { x, y: 0, z: z0 + 0.04 }, primitive: box(S, 1.2, 0.1), visible: false, physics: "static" });
   for (const [i, [z, len]] of (PART[c] ?? []).entries()) finishedWall(ctx, `l02-pw-${c}-${i}`, tag, x - S / 2, z, len, false, len >= 5);
   for (const [i, [z, len]] of (CROSS[c] ?? []).entries()) finishedWall(ctx, `l02-cw-${c}-${i}`, tag, x, z, len, true, false);
   const F = (id, key, at, yaw) => put(ctx, id, prop(key, at, yaw, { tags: [tag], physics: "static" }));
