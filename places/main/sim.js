@@ -173,13 +173,13 @@ export function tick(ctx) {
       n++;
     }
   }
-  if (s.momentsV !== 12) {
+  if (s.momentsV !== 13) {
     if (s.momentsV) {
       for (const m of ctx.query({ tags: ["moment"] })) ctx.destroy(m.id);
       const at = s.moments?.manilaAt; // the old desk almonds lost their "moment" tag and stacked, one per re-lay
       if (at) for (const m of ctx.query({ tags: ["almond"], center: { x: at.x, y: 0.8, z: at.z }, radius: 2 })) ctx.destroy(m.id);
     }
-    s.momentsV = 12;
+    s.momentsV = 13;
     s.moments = layMoments(ctx);
   }
   shift(ctx, s, now);
