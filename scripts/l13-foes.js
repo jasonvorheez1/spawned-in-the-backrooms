@@ -191,7 +191,7 @@ function release(ctx, o, m, a, now, hurt) {
 }
 function lurker(ctx, mem, o, m, a, players, now, dt) {
   const pos = o.feetPosition, st = o.state, home = (m.home ??= homeOf({ kind: "lurker", flat: a.id }));
-  const door = { x: a.door.x, z: a.zf };
+  const door = { x: a.door.x, z: a.zf }, peer = { x: a.door.x, z: a.zf + a.s * 1.6 }; // peer: a point inside the doorway: watching means facing into the flat
   const hitNow = m.hp != null && (st.hp ?? 0) < m.hp;
   m.mode ??= "wait";
   if (m.grab) { // lunge out, then haul the victim back along the same line; the victim's own lock expires by itself
@@ -209,7 +209,7 @@ function lurker(ctx, mem, o, m, a, players, now, dt) {
   if (m.tell) { // the lamp is out and the carpet is moving: half a second to turn and look, or to hit it
     stand(o, dt);
     const p = players.find((q) => q.id === m.tell.id);
-    if (!p || hitNow || looking(p, door)) { m.tell = null; m.coolUntil = now + LK.coolMs; lamp(ctx, a, true); say(ctx, S.hiss, { x: door.x, y: 1, z: door.z }, 1, 22); return; }
+    if (!p || hitNow || looking(p, peer)) { m.tell = null; m.coolUntil = now + LK.coolMs; lamp(ctx, a, true); say(ctx, S.hiss, { x: door.x, y: 1, z: door.z }, 1, 22); return; }
     if (now - m.tell.at >= LK.tellMs) {
       m.tell = null;
       if (flat(p.feetPosition, door) > LK.trigger + 1.2 || !inHall(p.feetPosition.x, p.feetPosition.z)) { m.coolUntil = now + 1500; lamp(ctx, a, true); return; }
@@ -255,7 +255,7 @@ function lurker(ctx, mem, o, m, a, players, now, dt) {
   for (const p of players) {
     const f = p.feetPosition;
     if (!inHall(f.x, f.z) || flat(f, door) > LK.trigger * sn(p)) continue;
-    if (looking(p, door)) { m.coolUntil = now + LK.coolMs; say(ctx, S.hiss, { x: door.x, y: 1, z: door.z }, 1, 22); return; } // watched: it stays in the dark
+    if (looking(p, peer)) { m.coolUntil = now + LK.coolMs; say(ctx, S.hiss, { x: door.x, y: 1, z: door.z }, 1, 22); return; } // watched: it stays in the dark
     m.tell = { id: p.id, at: now }; lamp(ctx, a, false);
     say(ctx, S.lamp, { x: a.main.cx, y: 2.3, z: a.main.cz }, 0.8, 18); say(ctx, S.drag, home, 0.7, 20);
     return;

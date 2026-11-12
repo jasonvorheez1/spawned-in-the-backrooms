@@ -30,7 +30,7 @@ foes:
     hp: 60              # Savi's pick
     height: 2.05        # Savi's pick: standing; it moves crouched
     trigger: 2.5        # Savi's pick: metres from the doorway
-    lookDeg: 70         # Savi's pick: looking further off than this = not watching
+    lookDeg: 35         # Savi's pick: looking further off than this = not watching (70 counted a side glance as watching)
     tellMs: 500         # Savi's pick
     lungeMs: 300        # Savi's pick: out to the victim
     dragMs: 1600        # Savi's pick: the whole grab, lunge included
