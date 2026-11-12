@@ -14,7 +14,8 @@ import { N, S, H, HALF, zoneOf, inHub, hasPit, hasPillar, cellCenter, cellAt, wa
 const PAPER = { texture: "/cdn/value.00a4e744acf9ab763779bbb0cc7f26fb1dd20aeafc69448c536939cd7212caeb.png", color: "oklch(0.98 0.01 90)", repeat: [1, 1] };
 import B from "../../scripts/lib/data/breakables.yml";
 import { syncLevel0 } from "../../scripts/lib/breakables.js";
-import { layMoments } from "../../scripts/lib/level0-moments.js";
+import { layMoments, wallPose } from "../../scripts/lib/level0-moments.js";
+import DR from "../../scripts/lib/data/l0-dress.yml";
 import { layZenithEntry } from "../../scripts/lib/zenith-quest.js";
 import { layL02Door } from "../../scripts/lib/level02.js";
 import { layXmas } from "../../scripts/lib/xmas-room.js";
@@ -34,6 +35,27 @@ function deskItems(ctx) {
     out.push(k === "cash" ? rollCash(ctx) : k === "weapon" ? "weapon:" + rollWeapon(ctx) : k === "book" ? "book:lockpick" : k);
   }
   return out.join(",");
+}
+// Level 0 dressing (scripts/lib/data/l0-dress.yml): Tripo pieces put where an office would have left them
+const fitBox = ([w, h, d]) => ({ box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } });
+const sideWall = (cx, cz) => [0, 1, 2, 3].filter((d) => d === 0 ? wallX(cx, cz) : d === 1 ? wallZ(cx, cz) : d === 2 ? wallX(cx - 1, cz) : wallZ(cx, cz - 1));
+function dress(ctx) {
+  for (const o of ctx.query({ tags: ["l0dress"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id);
+  const M = DR.models, put = (kind, pos, yaw, extra = {}) => M[kind] && ctx.spawn({ tags: ["l0dress", "furniture", kind], feetPosition: pos, rotation: yaw, visibleRange: { max: 46 }, layout: fitBox(DR.sizes[kind]), model: { id: M[kind], forward: "-z" }, physics: { body: "static", collider: "box" }, ...extra });
+  const used = new Set(), cells = (zones, n, ok) => { const out = []; for (let k = 0; k < 4000 && out.length < n; k++) { const cx = 1 + Math.floor(ctx.random() * (N - 2)), cz = 1 + Math.floor(ctx.random() * (N - 2)), key = cx + "," + cz; if (used.has(key) || inHub(cx, cz) || hasPit(cx, cz) || hasPillar(cx, cz) || !zones.includes(zoneOf(cx, cz))) continue; const w = sideWall(cx, cz); if (!w.length || (ok && !ok(cx, cz))) continue; used.add(key); out.push([cx, cz, w[Math.floor(ctx.random() * w.length)]]); } return out; };
+  // cubicles: a desk on the wall, a chair pulled out, a fabric panel boxing it in on one side
+  for (const [cx, cz, d] of cells(["offices"], DR.counts.cubicles)) {
+    const side = ctx.random() < 0.5 ? -1 : 1, desk = wallPose(cx, cz, d, side * 0.4, 0.42), yaw = desk.yaw + 180;
+    ctx.spawn({ tags: ["l0dress", "breakable", "furniture", "desk", "container"], feetPosition: { x: desk.x, y: 0, z: desk.z }, rotation: yaw, visibleRange: { max: 46 }, castShadow: true, physics: { body: "static", collider: "box" }, model: fmodel("desk"), state: { mat: "wood", hp: 80, items: deskItems(ctx), name: "Desk drawers" } });
+    const ch = wallPose(cx, cz, d, side * 0.4 + (ctx.random() - 0.5) * 0.4, 1.25);
+    ctx.spawn({ tags: ["l0dress", "breakable", "furniture", "chair"], feetPosition: { x: ch.x, y: 0, z: ch.z }, rotation: desk.yaw + (ctx.random() - 0.5) * 70, visibleRange: { max: 46 }, physics: { body: "static", collider: "box" }, model: fmodel("chair"), state: { mat: "metal", hp: 45 } });
+    const pn = wallPose(cx, cz, d, side * 0.4 - side * 0.95, 0.75); // the panel stands square off the wall, beside the desk
+    put("partition", { x: pn.x, y: 0, z: pn.z }, desk.yaw + 90 + (ctx.random() - 0.5) * 6, { state: { mat: "wood", hp: 60 }, tags: ["l0dress", "breakable", "furniture", "partition"] });
+  }
+  // water coolers: against a hall wall, never two in one cell
+  for (const [cx, cz, d] of cells(["halls", "expanse", "offices"], DR.counts.coolers)) { const w = wallPose(cx, cz, d, (ctx.random() - 0.5) * 2.2, 0.22); put("cooler", { x: w.x, y: 0, z: w.z }, w.yaw + 180 + (ctx.random() - 0.5) * 10, { state: { mat: "metal", hp: 50 }, tags: ["l0dress", "breakable", "furniture", "cooler"] }); }
+  // wet-floor signs: someone tried, once, at the edge of the soaked arch rooms
+  for (const [cx, cz] of cells(["arches", "halls"], DR.counts.wetsigns, (cx, cz) => [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => zoneOf(cx + a, cz + b) === "arches"))) { const c = cellCenter(cx, cz); put("wetsign", { x: c.x + (ctx.random() - 0.5) * 2, y: 0, z: c.z + (ctx.random() - 0.5) * 2 }, ctx.random() * 360, { physics: { body: "static", collider: "box" }, tags: ["l0dress", "furniture", "wetsign"] }); }
 }
 function furnish(ctx) {
   let n = 0;
@@ -185,6 +207,7 @@ export function tick(ctx) {
     s.deskV = 1;
   }
   if (s.sunkV !== 1) { s.sunkV = 1; sink(ctx); }
+  if (s.dressV !== DR.v && DR.models.partition) { s.dressV = DR.v; dress(ctx); } // Tripo cubicles, coolers, wet-floor signs (l0-dress.yml)
   regrow(ctx, s, now);
   syncLevel0(ctx);
   const weapons = ctx.query({ tags: ["weapon"] }).length;
