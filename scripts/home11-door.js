@@ -62,7 +62,7 @@ export const ears = {
     if (k === "door") {
       const hinge = ctx.getObject(ctx.self.state.hinge); if (!hinge) return;
       const open = !hinge.state.open; hinge.state.open = open;
-      animate(ctx, hinge, { "rotation.yaw": open ? hinge.state.openYaw : 0 }, { duration: 0.6, easing: "easeOutCubic" }); // fast start, soft stop
+      animate(ctx, hinge, { "rotation.yaw": open ? hinge.state.openYaw : (hinge.state.closedYaw ?? 0) }, { duration: 0.6, easing: "easeOutCubic" }); // fast start, soft stop
       ctx.self.state.verb = open ? "Close" : "Open";
       ctx.emit("playSound", { clip: open ? "/cdn/moodboard-realistic-gritty/sfx-old-wooden-hotel-door-creak-open.mp3" : "/cdn/moodboard-realistic-gritty/sfx-wooden-door-close-latch-click.mp3", position: hinge.worldFeetPosition ?? ctx.self.worldFeetPosition, volume: 0.5 });
       return;

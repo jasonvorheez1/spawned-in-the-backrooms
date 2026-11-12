@@ -1074,14 +1074,14 @@ export function tick(ctx) {
     ctx.spawn("l7-fort-walk-floor", { feetPosition: { x: -70, y: FORT_FLOOR - 0.22, z: -93 }, primitive: { kind: "cylinder", radiusTop: 9.4, radiusBottom: 9.4, height: 0.22, radialSegments: 48 }, physics: "static", visible: false });
     s.fortPathV = 7;
   }
-  if ((s.fortGateV ?? 0) < 1) { // Shelly Nov 12 "an actual doorway thats animated and interactable": two tarred wooden leaves on hinges, E swings them (home11-door.js)
-    const leaf = { primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { d: 0.14, h: 3.1, hingeSide: "left", part: "leaf", seed: 10, style: "wood", swing: 1, w: 2.45 } }, physics: "static", material: { pbr: true, color: "#8a5a3a" } };
-    const gates = [["l7f-gate-0", { x: -66.53, y: 11.66, z: -84.75 }, 0, 38.68, 133.68], ["l7f-gate-1", { x: -62.71, y: 11.66, z: -87.82 }, -141.36, 218.68, 123.68]];
+  if ((s.fortGateV ?? 0) < 2) { // Shelly Nov 12 "an actual doorway thats animated and interactable": two tarred wooden leaves on hinges, E swings them (home11-door.js)
+    const leaf = { primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { d: 0.14, h: 3.1, hingeSide: "left", part: "leaf", seed: 10, style: "wood", swing: 1, w: 2.3 } }, physics: "static", material: { pbr: true, color: "#8a5a3a" } };
+    const gates = [["l7f-gate-0", { x: -66.65, y: 11.66, z: -84.66 }, 0, 38.68, 133.68], ["l7f-gate-1", { x: -62.59, y: 11.66, z: -87.91 }, -141.36, 218.68, 123.68]];
     for (const [id, at, yaw, closedYaw, openYaw] of gates) {
-      if (ctx.place.objects[id]) continue;
-      ctx.spawn(id, { feetPosition: at, rotation: { yaw }, physics: "kinematic", behavior: ["scripts/home11-door.js"], state: { closedYaw, openYaw, hinge: id, kind: "door", name: "Fort Surrender Gate", open: false, verb: "Open" }, children: [{ id: "leaf", ...leaf }] });
+      if (ctx.place.objects[id]) ctx.destroy(id); // v2: hung closed on the wall line, leaves sized to the gap
+      ctx.spawn(id, { feetPosition: at, rotation: { yaw: closedYaw }, physics: "kinematic", behavior: ["scripts/home11-door.js"], state: { closedYaw, openYaw, hinge: id, kind: "door", name: "Fort Surrender Gate", open: false, verb: "Open" }, children: [{ id: "leaf", ...leaf }] });
     }
-    s.fortGateV = 1;
+    s.fortGateV = 2;
   }
   if ((s.catV ?? 0) < 1 && !s.catBusy) { // Shelly Nov 12 "level 7 is still using the old npcs": the fort's people stood before the cat bodies; refit them in place (same path as Cap'n and Rico), state and weapons kept
     s.catBusy = 1;
