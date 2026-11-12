@@ -36,14 +36,14 @@ export function layShop(ctx) {
   // the L counter: one case facing the aisle, one turned south, goods on the glass
   prop("case-a", "case", -38.5, 0, 0, E); prop("case-b", "case", -39.1, 0, 1.2, S);
   prop("till", "till", -38.5, 1.0, -0.45, W, false); prop("goods", "goods", -39.1, 1.0, 1.2, S, false);
-  prop("spinner", "spinner", -34.3, 0, 4.6, 20); prop("fridge", "fridge", -39.2, 0, SZ - 0.34, N);
+  prop("spinner", "spinner", -34.3, 0, 4.6, 20); prop("spinner-2", "spinner", -34.3, 0, -4.6, -25); prop("fridge", "fridge", -39.2, 0, SZ - 0.34, N);
   // by the entrance, on the aisle side of the south stub
   prop("stickers", "stickers", -27.79, 0, 9.3, E); prop("gumball", "gumball", -27.78, 0, 8.3, E);
   // a taped note by the fridge
   sp("note", { feetPosition: { x: -38.4, y: 1.5, z: SZ - 0.006 }, rotation: { yaw: N, roll: -3 }, vector: "<svg viewBox='0 0 100 70' width='0.3m'><rect x='2' y='4' width='96' height='64' fill='#f6f1dc'/><rect x='36' y='0' width='28' height='9' fill='#e8d9a0' opacity='0.8'/><text x='50' y='30' text-anchor='middle' font-family='serif' font-style='italic' font-size='15' fill='#223a8a'>door sticks</text><text x='50' y='52' text-anchor='middle' font-family='serif' font-style='italic' font-size='15' fill='#223a8a'>pull hard</text></svg>" });
   // light: warm over the counter, pink north, cyan south, a pink wash under the sign
   const lamp = (id, x, y, z, color, intensity, distance) => sp(id, { feetPosition: { x, y, z }, light: { kind: "point", color, intensity, distance } });
-  lamp("light-counter", -37, 3.4, 0, "oklch(0.92 0.07 80)", 3, 13); lamp("light-n", -36, 3.2, -8, "oklch(0.8 0.13 350)", 2.2, 11);
+  lamp("light-counter", -37, 3.4, 0, "oklch(0.92 0.07 80)", 4.5, 14); lamp("light-mid", -33, 3.4, 0, "oklch(0.9 0.06 80)", 2.5, 12); lamp("light-n", -36, 3.2, -8, "oklch(0.8 0.13 350)", 2.2, 11);
   lamp("light-s", -36, 3.2, 8, "oklch(0.85 0.1 210)", 2.2, 11); lamp("light-sign", -26.6, 3.6, 0, "oklch(0.75 0.2 350)", 1.6, 8);
   // Dottie, a faceling, behind the counter
   sp("keeper", {
