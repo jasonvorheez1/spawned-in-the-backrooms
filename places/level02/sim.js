@@ -158,7 +158,7 @@ function layShell(ctx) {
     tags: ["npc", "remodel", "essential"], feetPosition: { x: -4, y: BASE + 0.05, z: -6 }, rotation: { yaw: 120 }, physics: "character",
     ...critterSpec(CAPN_LOOK),
     behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
-    state: { name: "Cap'n · Remodeling Co.", role: "wanderer", voice: "l02-capn#m", faction: "remodel", factionName: "Backrooms Remodeling Co.", home: { x: -4, z: -6 }, rounds: CAPN_ROUNDS, line: "Sorry for the inconvenience. We are improving things.", ...npcState(ctx, "wanderer", 100) },
+    state: { name: "Cap'n · Remodeling Co.", role: "wanderer", voice: "l02-capn#m", faction: "remodel", factionName: "Backrooms Remodeling Co.", home: { x: -4, z: -6 }, rounds: CAPN_ROUNDS, ...npcState(ctx, "wanderer", 100) },
   });
 }
 // his day's work (scripts/meg-agent.js rounds, walked on navmesh paths): stair, bench, lumber, the moving rooms. Savi's picks
@@ -335,6 +335,7 @@ export function tick(ctx) {
     return;
   }
   if (s.puttyV !== 1) { for (const id of [CASE_TOP, CASE_FALL]) { const o = ctx.place.objects[id]; if (o && !String(o.state.items ?? "").includes("crew_putty")) o.state.items = (o.state.items ? o.state.items + "," : "") + "crew_putty,crew_putty"; } s.puttyV = 1; } // the crew's putty, for the hum loop
+  { const c = ctx.place.objects["l02-capn"]; if (c && typeof c.state.line === "string") c.state.line = null; } // a bare string here drew an empty "Cap'n:" caption
   if (s.capnV !== 2) { dressCapn(ctx); s.capnV = 2; } // the crew coat (remodcoat) refits Cap'n in place, no level rebuild
   if (!ps.length) {
     s.emptyAt ??= now;
