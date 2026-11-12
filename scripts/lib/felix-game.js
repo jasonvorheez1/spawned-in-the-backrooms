@@ -58,7 +58,7 @@ export function felixInput(ctx, input) {
 
 function die(ctx, s, m) {
   if (ctx.now() < (m.inv ?? 0) || m.ph !== 'play') return
-  play(ctx, 'die', 0.6); setPhase(ctx, s, m, 'dead')
+  play(ctx, 'die', 0.9); setPhase(ctx, s, m, 'dead')
 }
 
 function step(ctx, s, m, dt) {
@@ -159,9 +159,9 @@ export function felixUpdate(ctx, dt) {
     else { placeFelix(m); m.inv = now + 1500; setPhase(ctx, s, m, 'play') }
   } else if (m.ph === 'clear' && age > T.clearMs) {
     m.screen++
-    if (m.screen >= T.screens) { m.score += T.roofBonus; play(ctx, 'roof', 0.55); setPhase(ctx, s, m, 'roof') }
+    if (m.screen >= T.screens) { m.score += T.roofBonus; play(ctx, 'roof', 1); setPhase(ctx, s, m, 'roof') }
     else { layScreen(ctx, m); setPhase(ctx, s, m, 'play') }
-  } else if (m.ph === 'roof' && age > T.roofMs) { m.round++; m.screen = 0; layScreen(ctx, m); setPhase(ctx, s, m, 'intro'); play(ctx, 'intro', 0.5) }
+  } else if (m.ph === 'roof' && age > T.roofMs) { m.round++; m.screen = 0; layScreen(ctx, m); setPhase(ctx, s, m, 'intro'); play(ctx, 'intro', 0.85) }
   else if (m.ph === 'over' && k.ham && age > 1200) { k.ham = false; play(ctx, 'coin', 0.6); m = felixNew(ctx, s) }
   if (m.ph !== 'play') { k.ham = false; m.dirty = true }
   if (!m.dirty) return
