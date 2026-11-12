@@ -57,7 +57,7 @@ function swing(ctx, me, t, A) {
   if (!clearSight(ctx, { x: o.x, y: o.y + 1.2, z: o.z }, q, [me.id, t.id])) return; // Shelly: no hits through walls
   const isPlayer = !!ctx.place.players.find((p) => p.id === t.id), base = isPlayer ? G.playerShot : G.shot;
   const dmg = dmgAfterArmor(isPlayer ? t.state.look : lookOfNpc(t), Math.round(base * Math.min(2.2, Math.max(0.5, (A.damage ?? 20) / 26)) * npcMul(me.state).dmg));
-  t.state.hp -= dmg;
+  t.state.hp -= dmg; t.state.hitBy = { id: me.id, at: ctx.now() }; // who struck it: it and its friends answer (below)
   heard(ctx, { clip: THUD, position: q, volume: 0.7, maxDistance: 18 });
   ctx.emit("damageNumber", { position: { x: q.x, y: q.y + 0.4, z: q.z }, value: dmg, color: isPlayer ? "#ff5040" : "#c6f060" });
   ctx.emit("fx", { position: q, script: HIT, params: {} });
@@ -165,6 +165,18 @@ function pickTarget(ctx, me, m) {
       bd = d; best = f;
     }
   }
+  // struck by an npc, or a crewmate or a player near me was: go for the striker (Shelly Nov 12: Dez never swung at the faceling)
+  if (!me.state.mjguest && (me.state.hp ?? 1) > 0) {
+    const nowH = ctx.now(), pids = new Set(ctx.place.players.map((q) => q.id));
+    const near = [me, ...ctx.query({ tags: ["npc"], radius: 14 }), ...ctx.place.players.filter((q) => flat(q.feetPosition, p) < 14)];
+    for (const n of near) {
+      const h = n.state?.hitBy; if (!h || nowH - h.at > 15000 || h.id === me.id || pids.has(h.id)) continue;
+      if (!(n === me || pids.has(n.id) || (me.state.faction && n.state?.faction === me.state.faction))) continue;
+      const f = ctx.getObject(h.id); if (!f || DEAD(f) || (f.state?.hp ?? 1) <= 0) continue;
+      if (n !== me && me.state.faction && f.state?.faction === me.state.faction) continue; // a crew squabble is not mine to join
+      const d = flat(f.feetPosition, p); if (d < bd) { bd = d; best = f; }
+    }
+  }
   if (me.state.nerve === "frenzied" && !me.state.mjguest && !me.state.docile) { // a docile local never starts it // anyone close enough: npc or player
     for (const n of ctx.query({ tags: ["npc"], radius: 12 })) {
       if (n.state?.dead || (n.state?.hp ?? 1) <= 0 || (me.state.faction && n.state?.faction === me.state.faction)) continue;
@@ -225,7 +237,7 @@ function shoot(ctx, me, t, A = WP.pistol) {
   fire3(ctx, me, me.state.arm); // the player's own fire take and kick (scripts/lib/body3.js)
   if (ctx.random() > G.hitChance) return;
   const isPlayer = !!ctx.place.players.find((p) => p.id === t.id), dmg = dmgAfterArmor(isPlayer ? t.state.look : lookOfNpc(t), Math.round((isPlayer ? G.playerShot : G.shot) * Math.min(1.9, Math.max(0.35, (A.damage ?? 34) / 34)) * npcMul(me.state).dmg)); // the target's clothes soak it
-  t.state.hp -= dmg;
+  t.state.hp -= dmg; t.state.hitBy = { id: me.id, at: ctx.now() }; // who struck it: it and its friends answer (below)
   ctx.emit("damageNumber", { position: { x: q.x, y: q.y + 0.4, z: q.z }, value: dmg, color: isPlayer ? "#ff5040" : "#c6f060" });
   ctx.emit("fx", { position: q, script: HIT, params: {} });
   ctx.emit("flash", { target: t.id, color: "#ffffff", duration: 0.08 });

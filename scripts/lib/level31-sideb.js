@@ -45,9 +45,16 @@ export function laySideB(ctx) {
   else sp("crate", { feetPosition: { x: -6.1, y: 0, z: -29.3 }, primitive: { kind: "box", width: 0.95, height: 0.6, depth: 0.55 }, material: { color: "#4a5236", roughness: 0.7, metalness: 0.4 }, physics: "static", tags: ["usable", "l31-q"], behavior: "scripts/l31-crate.js", state: { name: "Steel crate", verb: "Open", info: "Padlocked. A card slot under the lock." } });
   sp("crate-glow", { feetPosition: { x: -6.1, y: 0.9, z: -28.9 }, light: { kind: "point", color: "#9ab6ff", intensity: 0.25, distance: 2.5 } });
 
+  // their beat round the carpet aisle outside the rail: a few stops each, watching the skaters (Savi's picks)
+  const st = (x, z, dwell) => ({ x, y: 0, z, dwell, look: { x: 0, z: 0 } });
+  const LAPS = {
+    face1: [st(-3.2, -22.6, 9), st(6, -16, 7), st(-8, -15.5, 8), st(-14, -19, 6)],
+    face2: [st(16, -14.5, 8), st(22, -8, 6), st(24, 4, 9), st(18, -16, 7)],
+    face3: [st(-20, 14.5, 8), st(-24, 4, 7), st(-24, -6, 9), st(-14, 15, 6)],
+  };
   // three rink facelings: blank faces, regulars who belong to the place. Docile until you sell their song.
   const F = (id, x, z, yaw, sex, top) => person(id, x, z, yaw, { species: "faceling", sex, topw: sex === "f" ? "jacket" : "tee", top, botw: "pants", bottom: "#22232b", shoes: "sneakers" },
-    "rink", "the Roller Rink", "Rink Regular", "regular", { docile: true });
+    "rink", "the Roller Rink", "Rink Regular", "regular", { docile: true, rounds: LAPS[id] });
   F("face1", -3.2, -22.6, 180, "f", "#8a3f6a"); F("face2", 16, -14.5, 200, "m", "#2f6a7a"); F("face3", -20, 14.5, 120, "m", "#a8743a");
 
   // Tripo arcade cabinets: two more old uprights along the aisle wall of the arcade
