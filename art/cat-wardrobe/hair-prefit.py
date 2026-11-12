@@ -45,23 +45,19 @@ mv = np.zeros(len(P), bool); hv = np.zeros(len(P), bool)
 for f in bm.faces:
     for v in f.verts: (hv if lab[f.index] else mv)[v.index] = True
 M, Hr = P[mv & ~hv], P[hv]
-# which way does the face look: bare mannequin sits in front of the hair's centre
-d = M[M[:, 2] > np.median(M[:, 2])].mean(0) - Hr.mean(0)
+# the wig hugs the skull: measure the skull from the hair's crown band with human head ratios (depth 1.27 w, height 1.5 w)
+ztop = Hr[:, 2].max(); E = min(np.percentile(Hr[:, 0], 99) - np.percentile(Hr[:, 0], 1), np.percentile(Hr[:, 1], 99) - np.percentile(Hr[:, 1], 1)) / 2
+hb = Hr[Hr[:, 2] > ztop - 0.7 * E]; c0 = np.array([np.median(hb[:, 0]), np.median(hb[:, 1])])
+F = M[(M[:, 2] > ztop - 2.4 * E) & (M[:, 2] < ztop - 0.6 * E)]; d = F[:, :2].mean(0) - c0   # the bare face looks out of the hair
 ax = 0 if abs(d[0]) > abs(d[1]) else 1; ang = {(0, 1): -1.5708, (0, -1): 1.5708, (1, 1): 3.14159, (1, -1): 0}[(ax, 1 if d[ax] > 0 else -1)]
-R = np.array(Matrix.Rotation(ang, 3, "Z")); P = P @ R.T; M, Hr = P[mv & ~hv], P[hv]
-cx = (np.percentile(Hr[:, 0], 50)); ztop = Hr[:, 2].max()
-A = P[mv]; cx = np.median(A[A[:, 2] > ztop - 0.25 * (ztop - P[:, 2].min())][:, 0])
-crown = A[np.abs(A[:, 0] - cx) < 0.03][:, 2].max()
-w = None
-for g in (0.5, 0.4):   # head band below the crown, iterated from a width guess
-    w0 = w or g * (Hr[:, 0].max() - Hr[:, 0].min()) / 2 / 0.5 * 0.5
-    b = A[A[:, 2] > crown - 2.2 * w0]; w = np.percentile(np.abs(b[:, 0] - cx), 97)
-b = A[A[:, 2] > crown - 1.3 * w]; my0, my1 = np.percentile(b[:, 1], 2), b[:, 1].max()
-sx = hw / w * 1.04; sz = (top - bot) / (3.0 * w) * 1.0; sy = (cy1 - cy0) / (my1 - my0) * 1.04
-print("PREFIT", raw, "manW", round(w, 3), "scale", round(sx, 3), round(sy, 3), round(sz, 3), "hairfaces", int(lab.sum()), "/", len(lab))
+R = np.array(Matrix.Rotation(ang, 3, "Z")); P = P @ R.T; Hr = P[hv]
+hb = Hr[Hr[:, 2] > ztop - 0.7 * E]; cx = np.median(hb[:, 0]); w = 0.88 * np.percentile(np.abs(hb[:, 0] - cx), 97)
+my0, my1 = np.percentile(hb[:, 1], 1), np.percentile(hb[:, 1], 99); crown = ztop - 0.10 * w
+sx = hw / w; sy = (cy1 - cy0) / (2.55 * w); sz = (top - bot) / (3.0 * w)
+print("PREFIT", raw, "ang", ang, "manW", round(w, 3), "scale", round(sx, 3), round(sy, 3), round(sz, 3), "hairfaces", int(lab.sum()), "/", len(lab))
 bmesh.ops.delete(bm, geom=[f for f in bm.faces if not lab[f.index]], context="FACES")
 for v in bm.verts:
     p = R @ np.array(v.co[:])
-    v.co = Vector(((p[0] - cx) * sx, (p[1] - (my0 + my1) / 2) * sy + (cy0 + cy1) / 2, (p[2] - crown) * sz + top + 0.004))
+    v.co = Vector(((p[0] - cx) * sx, (p[1] - (my0 + my1) / 2) * sy + (cy0 + cy1) / 2, (p[2] - crown) * sz + top))
 bm.to_mesh(me); me.shape_keys and o.shape_key_clear()
 bpy.ops.export_scene.gltf(filepath=out, export_apply=True)

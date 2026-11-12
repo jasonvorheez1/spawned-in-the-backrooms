@@ -9,7 +9,7 @@ from mathutils.bvhtree import BVHTree
 from mathutils.kdtree import KDTree
 a = sys.argv[sys.argv.index("--")+1:]; SRC, OUT, jobs = a[0], a[1], a[2:]
 EARS = "/workspace/hairfit2/ears/upright-%s.glb"
-TUNE = {"twintails": dict(mirror=1, ear=0.03), "hime": dict(mirror=1), "bob": dict(mirror=1)}
+TUNE = {"twintails": dict(mirror=1, ear=0.03), "hime": dict(mirror=1), "bob": dict(mirror=1), "lob": dict(eyeok=1)}   # lob: the creator's ref has the long bang over one eye
 TRIS = 6000
 def ss(a, b, x): t = max(0, min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t)
 def act(o):
@@ -62,7 +62,7 @@ for job in jobs:
     for v in bm.verts:
         p = v.co; s, loc, n = sd(bvh, p)
         near = s < 0.003
-        eye = p.z < brow + 0.004 and p.y < -0.10 and abs(p.x) < 0.14
+        eye = p.z < brow + 0.004 and p.y < -0.10 and abs(p.x) < 0.14 and not (T.get("eyeok") and p.x > 0)
         ear = bvhS.find_nearest(p)[3] < T.get("ear", 0.035)   # a clean ring round each sculpted ear: the cap shows there, the ear comes through it
         e2 = bvhE.find_nearest(p)
         ear = ear or (e2[3] < 0.007 and sd(bvh, e2[0])[0] > 0.012)     # wrapped round the head's own (now sunk) ear
@@ -113,7 +113,7 @@ for job in jobs:
     bmesh.ops.delete(bm, geom=small, context="VERTS")
     for v in bm.verts:
         p = v.co
-        if p.z < brow and p.y < -0.10 and abs(p.x) < 0.14: p.z = brow + (p.z - brow) * 0.15
+        if p.z < brow and p.y < -0.10 and abs(p.x) < 0.14 and not (T.get("eyeok") and p.x > 0): p.z = brow + (p.z - brow) * 0.15
     bm.to_mesh(hair.data); bm.free()
     for i in range(6):
         mod(hair, "SMOOTH", factor=0.5, iterations=1); mod(hair, "SMOOTH", factor=-0.53, iterations=1)
