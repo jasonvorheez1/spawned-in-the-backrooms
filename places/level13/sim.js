@@ -20,6 +20,7 @@ const DOORMAT = { texture: "cdn/texture-brown-laminate-flat-apartment-door-venee
 const TROFFER = "/cdn/value.58b51cca7f40157addada9eb9837b9beb764f7aed2c56d77270ea9dbd66bcf1b.glb";
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
 let n = 0; // only counts wall ids inside one lay()
+const STAY = new Map(); // player id -> { apt, s }: the sim's own working memory of who has sat where, how long
 // a wall along x (at z) or along z (at x), from a to b, with doorways cut at `gaps` (centres); a lintel closes each doorway's top
 function wall(ctx, along, at, a, b, gaps = [], mat = WALL) {
   const cuts = gaps.slice().sort((p, q) => p - q), segs = []; let from = a;
@@ -88,7 +89,7 @@ export function tick(ctx) {
   layFurnish(ctx); layFoes(ctx); layPeople(ctx);
   // the lethargy: seconds spent inside one flat, written only when its step (a tenth) changes
   for (const p of ctx.place.players) {
-    const m = (p.session.l13 ??= { apt: null, s: 0 }), a = aptAt(p.feetPosition.x, p.feetPosition.z);
+    let m = STAY.get(p.id); if (!m) STAY.set(p.id, m = { apt: null, s: 0 }); const a = aptAt(p.feetPosition.x, p.feetPosition.z);
     if (a && a.id === m.apt) m.s += 1; else if (a) { m.apt = a.id; m.s = Math.max(0, m.s - 5); } else { m.apt = null; m.s = Math.max(0, m.s - (LETH.fullS / LETH.coolS)); }
     const v = Math.round(Math.max(0, Math.min(1, (m.s - LETH.startS) / (LETH.fullS - LETH.startS))) * 10) / 10;
     if ((p.state.leth13 ?? 0) !== v) p.state.leth13 = v;
