@@ -46,11 +46,11 @@ models:
   chitinhelm: { hat: true, pat: weave, f: /cdn/value.74a80e95e031c869bbf46e8e8f5a6c14e089a228c37622198fd1401f9efcc96d.glb, m: /cdn/value.375cdba70d2c92dc4076db4c8a1d12a0d07a51a179719c3e169712939ccc82de.glb }   # Tripo hat fitted to the cat head (art/cat-wardrobe/hats.py), Nov 12
   headphones: { hat: true, pat: weave, f: /cdn/value.a7b64518dbb335b3403789d9b4098eaa89242dfb707f21824e51b885f6731a30.glb, m: /cdn/value.00a0155d72ed43ef0b25837d97bb063540eba0c32ef9757ecae5dfc18a4f970d.glb }
   # Tripo neckwear fitted and skinned to both bodies (art/cat-wardrobe/necks.py; Shelly #224434 + "use tripo"). tint false = its own Tripo paint
-  scarf: { pat: knit, f: /cdn/value.b7e24dfeedf63dd2cd0334b8e6762af0503ea78bcb89665b6b964e2616cc780e.glb, m: /cdn/value.265dc8aa1aa9add9315469e420cafe738fdfc932ef1b29810467bd1d7a23db8b.glb }
+  scarf: { pat: knit, f: /cdn/value.78d15d0c86811a41f46d04efb5c7d8aad3725f9b57195b77795d02314ce5b0ac.glb, m: /cdn/value.370b50fd9f1e3704fe6b73bc0fe85fbb1719a5c1c1f3ecaa5e5587b3cf224ae2.glb }
   cape: { pat: weave, f: /cdn/value.7c0c05071d095f4719b3ae129e9182ecddb194e7d22a3f7ad4b713fd9f0964c3.glb, m: /cdn/value.2a572b50bfdd95f61d150313ff8bbc6ffb9f5e4343eaa16ac5750d7b066c1b77.glb }
-  bowtie: { pat: weave, f: /cdn/value.89ade38b07309560910815a70b16800ad418e5cb1674495cc198ca73594f6c43.glb, m: /cdn/value.3b2ffaad6fbde95dc6373cd0eff90d205d5ee033c1aefde5b3de64d6bab15417.glb }
-  necklace: { tint: false, f: /cdn/value.4380c68a08f64bce56e48f14e0e8fda1de5f06dd9aaa605e795a8aaa12061613.glb, m: /cdn/value.3c47ea6adf1234b9bd7ed30c2d605be5b1be8022b0ac1754bd884cfc422e0120.glb }
-  bell: { tint: false, f: /cdn/value.b049062c2a887c0fd4c17b29697ce3bdb8545d2d6e945db7b9ecab692080e6f4.glb, m: /cdn/value.7136b61853b0209ab6847307cfe0a104e73dace88e8393c0c8b6af224f268aa5.glb }
+  bowtie: { pat: weave, f: /cdn/value.2b6ad872db234cb8eaa65ccd5d84e8d99b7146d1fb4dcf48c89fb382b665c42d.glb, m: /cdn/value.9ce999218460551bb836e30db978b26940cac52e66641d70571529f2235462cd.glb }
+  necklace: { tint: false, f: /cdn/value.220a2d402f30d32cea2a0ca1f4ea42ba2ca885e775fd3ef19a39f0ef6782d305.glb, m: /cdn/value.33cad06d432c7cd1e85d3528bc4d4a0f92332f230e781a03b1502598be416bf2.glb }
+  bell: { tint: false, f: /cdn/value.3c35e150870253a6b2508b244dc09497910d38e75f7528142a71733e85e66332.glb, m: /cdn/value.f61ec79a26c416e023c17ea6f1d050be3d04aae573992f11f22537d87e524cf2.glb }
 defaults:
   f: { topw: crop, top: "#e0775a", botw: shorts, bottom: "#4f78ad" }
   m: { topw: tee, top: "#9b9da1", botw: shorts, bottom: "#2f3d5c" }
@@ -117,7 +117,7 @@ from:
   shoes: { sneakers: socks, slippers: socks, boots: boots, steeltoe: boots, hotelslip: socks, ballastboots: boots, pitchboots: boots, heels: socks, socks: socks }
   hat: { cap: cap, beanie: beanie, tophat: tophat, bow: bow, flower: flower, partyhat: partyhat, crown: crown, padbeanie: beanie,
          opera: tophat, headphones: headphones, souwester: souwester, divehelm: divehelm, chitinhelm: chitinhelm, pgmask: bagmask, ppmask: shellmask, beret: beret }
-  neck: { cape: cape }   # scarf, necklace, bowtie, bell: Nov 12 fits came out wrong in game (scarf sheets to the floor, bow tie chest-sized, necklace hip-wide): off until refit
+  neck: { scarf: scarf, cape: cape, bowtie: bowtie, necklace: necklace, bell: bell }
   topp: { jerrytee: jerry, pphoodie: ppsad, pghoodie: pgsmile, gmhoodie: gmsplit, pgcoat: pgcoat }
 # hats that close over the ears: the sculpted ears stay off and the head's own fold flat under them
 covers: [divehelm, chitinhelm, beanie, souwester]
