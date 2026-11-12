@@ -10,6 +10,15 @@ l7-ladder-tower:
   id: l7-ladder-tower
   state: {ladder: {h: 5.42, mat: wood, yaw: 0}}
   tags: [ladder]
+l7f-gate-0:
+  behavior: scripts/home11-door.js
+  children: [{behavior: scripts/home11-door.js, feetPosition: {x: 0, y: 0, z: 0}, id: leaf, material: {pbr: true}, physics: static, primitive: {kind: scripted, params: {d: 0.14, h: 3.1, hingeSide: left, part: leaf, seed: 10, style: wood, swing: 1, w: 2.450293252692858}, script: scripts/door-geo.js}, state: {hinge: l7f-gate-0, kind: door, name: Fort Surrender Gate, verb: Open}, tags: [usable]}]
+  feetPosition: {x: -66.53289782328027, y: 11.66, z: -84.75373942717714}
+  id: l7f-gate-0
+  physics: kinematic
+  rotation: {yaw: 38.67701419336658}
+  state: {closedYaw: 38.67701419336658, hinge: l7f-gate-0, kind: door, name: Fort Surrender Gate, open: false, openYaw: 133.67701419336657, verb: Open}
+  tags: [usable]
 l7f-gate-ramp:
   feetPosition: {x: -70, y: 10.92, z: -82.85}
   id: l7f-gate-ramp

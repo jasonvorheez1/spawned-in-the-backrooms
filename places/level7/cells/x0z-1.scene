@@ -19,6 +19,15 @@ l7-boat-to-pier:
   rotation: {roll: -2, yaw: -12}
   state: {boat: true, home: {x: 35.6, yaw: -12, z: -91.5}, name: Seawatch dory, seat: {d: 0.35, y: 0.3}, verb: Get in}
   tags: [seat, boat]
+l7f-gate-1:
+  behavior: scripts/home11-door.js
+  children: [{behavior: scripts/home11-door.js, feetPosition: {x: 0, y: 0, z: 0}, id: leaf, material: {pbr: true}, physics: static, primitive: {kind: scripted, params: {d: 0.14, h: 3.1, hingeSide: left, part: leaf, seed: 10, style: wood, swing: 1, w: 2.450293252692858}, script: scripts/door-geo.js}, state: {hinge: l7f-gate-1, kind: door, name: Fort Surrender Gate, verb: Open}, tags: [usable]}]
+  feetPosition: {x: -62.70710217671975, y: 11.66, z: -87.81626057282286}
+  id: l7f-gate-1
+  physics: kinematic
+  rotation: {yaw: 218.67701419336657}
+  state: {closedYaw: 218.67701419336657, hinge: l7f-gate-1, kind: door, name: Fort Surrender Gate, open: false, openYaw: 123.67701419336657, verb: Open}
+  tags: [usable]
 l7sw-beacon:
   feetPosition: {x: 47.6, y: {terrain: 7.05}, z: -122.8}
   id: l7sw-beacon
