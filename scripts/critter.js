@@ -33,7 +33,7 @@ function applyBones(ctx) {
   if (ses.twitch) b[ses.twitch] = { rotate: [0, 0, ses.twitchDir * 24] }
   const newCat = isNewCat(ses.cachedParams) // the new Tripo cat is drawn at its own proportions: no Dandy head blow-up, no arm splay
   if (!HUMAN && !ses.cachedWorn && !newCat) b.Head = { scale: (ses.headS || 1) * FURRY_HEAD } // furry: the Dandy big head, times the player's own head slider
-  if (ses.tailS && ses.tailS !== 1) b.Tail = { scale: ses.tailS }
+  b.Tail1 = { scale: (ses.tailS || 1) * 1.25 } // a fuller tail by default (Shelly 'cute as hell'); the salon's tail slider multiplies it
   if (!HUMAN && !ses.cachedWorn && !newCat) Object.assign(b, armSplay()) // arms clear the hips and skirts (critter-model ARM_SPLAY)
   if (ses.pose) Object.assign(b, ses.pose) // the hands on a gun: IK reach points (scripts/lib/body3.js)
   ctx.self.bones = b
@@ -81,10 +81,10 @@ const FLAIR = {
 const MOOD = { grin: 'happy', joy: 'happy', love: 'happy', wink: 'happy', smug: 'calm', smile: 'calm', sleepy: 'sad', sad: 'sad', scared: 'scared', surprised: 'scared', angry: 'angry' }
 // Shelly Nov 12 "animate the tails too and make them cute as hell": the mesh body's tail is three bones (Tail1..Tail3), so the swish is a
 // travelling wave down them, each joint a beat behind the one before, the tip curling up and flicking widest. Tail is the scripted body's root joint.
-const TAIL_SEG = [['Tail', 0.7, 0], ['Tail1', 0.75, 0], ['Tail2', 1.0, 0.6], ['Tail3', 1.3, 1.2]], TAIL_N = 13, TAIL_LAG = 0.75
+const TAIL_SEG = [['Tail', 0.8, 0], ['Tail1', 1.0, 0], ['Tail2', 1.35, 0.6], ['Tail3', 1.8, 1.2]], TAIL_N = 13, TAIL_LAG = 0.85, TAIL_MIN = 22 // Shelly 'sure' to a bigger swish: calm never swings under 22 deg a joint
 const TAIL_CURL = { happy: 16, calm: 12, sad: -4, scared: -2, angry: 4 } // how far each joint toward the tip lifts: a question-mark hook when happy
 function flairClip(face) {
-  const mood = MOOD[face] || 'calm', f = FLAIR[mood], amp = Math.max(...f.tail.yaw.map(Math.abs)), pit = f.tail.pitch.reduce((a, b) => a + b, 0) / f.tail.pitch.length
+  const mood = MOOD[face] || 'calm', f = FLAIR[mood], amp = Math.max(TAIL_MIN, ...f.tail.yaw.map(Math.abs)), pit = f.tail.pitch.reduce((a, b) => a + b, 0) / f.tail.pitch.length
   const tracks = {}
   TAIL_SEG.forEach(([bone, w, c], i) => {
     const yaw = [], pitch = []
@@ -98,7 +98,7 @@ function flairClip(face) {
   tracks.EarL = { roll: f.ear.roll.map((v) => -v) }; tracks.EarR = { roll: f.ear.roll }
   return { duration: f.d, tracks }
 }
-const FLAIR_V = 'w2'
+const FLAIR_V = 'w3'
 function flair(obj, face) { obj.anim.flair = { clip: flairClip(face), loop: 'loop', weight: 1, blendIn: 0.3 } }
 
 // an old look (one outfit + one accessory) reads into the clothing slots
