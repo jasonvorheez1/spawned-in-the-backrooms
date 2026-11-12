@@ -123,12 +123,12 @@ l11-lot-tag-sold:
   rotation: {pitch: -30, yaw: 90}
   ui: "<div face=\"front\" class=\"w-full h-full flex flex-col items-center justify-center\" style=\"background:#f4efe0;font-family:display;color:#2f7a3a\"><div style=\"font-size:150px;line-height:1;font-weight:900\">SOLD</div><div style=\"font-size:44px;color:#222\">NO REFUNDS</div></div>"
 l11-mailbox:
-  feetPosition: {x: 11.5, y: 0.336, z: 50.5}
+  feetPosition: {x: 9.3, y: 0.336, z: 52}
   id: l11-mailbox
   layout: {box: {max: {x: 0.3, y: 1.2, z: 0.25}, min: {x: -0.3, y: 0, z: -0.25}}}
   model: {id: /cdn/value.109b5a040ca2be6c75a0b7d66b8d6961e76e06c0e3f7c5f7fd336f295a6f921f.glb}
   physics: {body: static, collider: box}
-  rotation: {yaw: 90}
+  rotation: {yaw: -90}
 l11-mall-sign-derma:
   feetPosition: {x: -15.67, y: 3.57, z: 29.5}
   id: l11-mall-sign-derma
@@ -151,26 +151,26 @@ l11-mall-sign-pizza:
   rotation: {yaw: 90}
   tags: [l11]
 l11-meter-0:
-  feetPosition: {x: 11.2, y: 0.336, z: 36}
+  feetPosition: {x: 8.75, y: 0.336, z: 35.5}
   id: l11-meter-0
   layout: {box: {max: {x: 0.15, y: 1.35, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
   model: {id: /cdn/value.fd18021446817c51871c18c03338f8e6caa7688614993eafa73132cb5792d098.glb}
   physics: {body: static, collider: cylinder}
-  rotation: {yaw: 90}
+  rotation: {yaw: -90}
 l11-meter-1:
-  feetPosition: {x: 11.2, y: 0.336, z: 39.5}
+  feetPosition: {x: 8.75, y: 0.336, z: 38.5}
   id: l11-meter-1
   layout: {box: {max: {x: 0.15, y: 1.35, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
   model: {id: /cdn/value.fd18021446817c51871c18c03338f8e6caa7688614993eafa73132cb5792d098.glb}
   physics: {body: static, collider: cylinder}
-  rotation: {yaw: 90}
+  rotation: {yaw: -90}
 l11-meter-2:
-  feetPosition: {x: 11.2, y: 0.336, z: 43}
+  feetPosition: {x: 8.75, y: 0.336, z: 46.5}
   id: l11-meter-2
   layout: {box: {max: {x: 0.15, y: 1.35, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
   model: {id: /cdn/value.fd18021446817c51871c18c03338f8e6caa7688614993eafa73132cb5792d098.glb}
   physics: {body: static, collider: cylinder}
-  rotation: {yaw: 90}
+  rotation: {yaw: -90}
 l11-newsstand:
   feetPosition: {x: 15.6, y: 0.336, z: 46}
   id: l11-newsstand
