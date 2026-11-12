@@ -4,7 +4,7 @@ import { animate } from "builtin/tween";
 import { H, T, B, RINK, ZONES, ARRIVE, DOOR } from "../../scripts/lib/level31.js";
 import { layParts } from "../../scripts/lib/level31-parts.js";
 export const cadence = "1s";
-const V = 12;
+const V = 13;
 const PROPS = "scripts/l31-props-geo.js";
 const P = (params) => ({ primitive: { kind: "scripted", script: PROPS, params }, material: { pbr: true } });
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
