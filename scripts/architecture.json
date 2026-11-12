@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 5963,
-  "updatedAt": "2026-11-12T04:00:37.222Z",
+  "basedOnSpecVersion": 5968,
+  "updatedAt": "2026-11-12T04:04:53.096Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, lore-based destinations, a social mall and solo tutorial spaces. `templates/player.js` composes shared behaviors; `scripts/player.js` owns player progression and combat, while place simulations and shared libraries build/tick environments, NPCs, quests, crossings and visual dressing.",
   "scriptPaths": [],
   "places": [
@@ -48,7 +48,7 @@
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved position and carried tapes; lib/forgive.js records NPC grudges in player.state.grudges.",
     "scripts/lib/quests.js - player.state.quests, qtrack and qdone; quest handlers own quest-specific state; dina-quest.js owns dinaQ, dinaDiary, dcut and seeds the-way-back.",
     "scripts/kick.js + scripts/grab.js - kick cooldowns and carry/held target session; held objects own heldBy/down/stagger state and player.state.carryMul is reset when the carry ends.",
-    "scripts/lib/loose.js + breakables.js - loose prop state and wrecks; permanently smashed root IDs live in place.state.gone.",
+    "scripts/lib/loose.js + breakables.js - loose prop state and wrecks; permanently smashed root IDs live in place.state.gone; breakable wall hp and broken-cell/whole-wall timestamps live in place.state.wallHp/broken.",
     "scripts/lib/knock.js + stats.js - foe weight/attributes and down/stagger outcomes; enemy managers own AI and sneakTarget.",
     "Place sims - local generated scene and migration markers, including Level 1 back-door rebuild, Level 3 hatchV, and Level 4 office/island conversions.",
     "scripts/lib/prop-interactions.js + scripts/prop-part.js - prop open/lamp state and child part animation goals; prop-interactions preserves detailed models when searched.",
@@ -83,14 +83,15 @@
     "scripts/hairtest-rig.js - marked temporary hair lane rig; no current references found.",
     "art/critter-hair-tripo/fit.py.held - saved fitter copy; active fit.py is the documented build fitter.",
     "scripts/dbg-pose.js - debug-room mannequin gallery after places/debug removal; no current placement found.",
-    "scripts/dbg-bodypad.js, scripts/debug-pad.js, scripts/lib/debug-layout.js - debug-room pads/layout after places/debug removal; no current references found."
+    "scripts/dbg-bodypad.js, scripts/debug-pad.js, scripts/lib/debug-layout.js - debug-room pads/layout after places/debug removal; no current references found.",
+    "scripts/l3-line.js - exports onSpawn for an animated Level 3 belt and cabinet lamps, but no current attachment/reference found; the newly uploaded l3-assembly-line-2 model is likewise not referenced by the active tree."
   ],
   "migrationNotes": [
     "Threshold dressing version is V=7 in scripts/lib/thresholds.js; upgrades clean/rebuild thr-tagged objects and remain delayed/incremental until place colliders stand. Preserve thrSeen/thrTry/thrDone/thrV protocol.",
-    "Door transfers: carryAcross records xferTo only for local place links with a # marker and crosses carryId/nearby heldBy objects, rejecting room/world and Bonus destinations; Level 1 BACK moves via backV destroy-and-respawn because moving a static trigger leaves its collider behind.",
+    "Door transfers: carryAcross records xferTo only for local place links with a # marker and crosses carryId/nearby heldBy objects, rejecting room/world and Bonus destinations; Level 1 BACK moves via backV destroy-and-respawn because moving a…",
     "scripts/lib/sign-style.js only restyles eligible shallow box signs with UI, leaves emissive/light signs alone, and is throttled/idempotent; preserve source IDs, dimensions, text, colour and placement while signs.yml selects style.",
-    "Level 3 hatchV=3 rebuild destroys old l3-hatch-* objects; hatchAt deterministically shares each wall's door across its two faces. Keep detail-wall generation and paired passage triggers in sync; current bottle piles use a scaled collision box (±0.65 x, 0.34 high, ±0.45 z).",
-    "scripts/player.js first-person tracer origin is derived from the held viewmodel transform plus weapon muzzle metadata; keep it distinct from ballistics' eye/aim direction. Third-person tracers retain the eye-based origin.",
-    "preload-next uses a 30 m door reach, per-player-session preDone by destination, and the data preload.yml door/model manifest; player.grudges uses game time (one in-game hour) for NPCs already angry with that player."
+    "Level 3 hatchV=3 rebuild destroys old l3-hatch-* objects; hatchAt deterministically shares each wall's door across its two faces. Keep detail-wall generation and paired passage triggers in sync; current bottle piles use a scaled collision …",
+    "scripts/player.js first-person tracer origin is derived from the held viewmodel transform plus weapon muzzle metadata; keep it distinct from ballistics' eye/aim direction. Third-person tracers retain the eye-based origin. preload-next uses a 30 m door reach and session preDone; player.grudges expiry uses one in-game hour.",
+    "Level 3 crawl-hall liner hits are mapped by wallgrid.liner() to the underlying cell-edge wall; keep its protected-wall test and level3-geo.js CUT omission aligned with breakables place.state.broken and syncWalls patches."
   ]
 }
