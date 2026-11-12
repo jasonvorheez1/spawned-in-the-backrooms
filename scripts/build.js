@@ -8,6 +8,7 @@ import { heard } from './lib/hear.js'
 import B from './lib/data/breakables.yml'
 import { raycast, overlapPoint, getInputRay } from 'builtin/physics'
 import { builtSpec, pieceOf, furnModel, tabsFor, doorPrim } from './lib/build-piece.js'
+import L5P from './lib/data/level5-people.yml'
 
 const BASE = B.tabs, REACH = B.buildReach ?? 7, CAP = B.buildCap ?? 250
 const isTool = (k) => !!B.tools?.[k]
@@ -23,7 +24,15 @@ const snapYaw = (f) => (((Math.round(Math.atan2(-f.x, -f.z) / D / 90) * 90) % 36
 const turn = (ox, oz, rot) => { const c = Math.cos(rot * D), s = Math.sin(rot * D); return { x: ox * c + oz * s, z: -ox * s + oz * c } }
 const SND = { wood: 'hammer-nail-wood-build', metal: 'metal-sheet-bolted-ratchet-clank', concrete: 'trowel-mortar-brick-set-scrape', brick: 'trowel-mortar-brick-set-scrape', pipe: 'metal-sheet-bolted-ratchet-clank' }
 const clip = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
-const atHome = (ctx, s) => ctx.self.place === 'home11' && !!s.home11
+// your own home: the house in Infinite City, or the Level 5 room or suite you booked, while the key lasts (Shelly, Nov 12)
+const L5R = { suite: 5.5, room: 4 } // m from the room's trunk that count as inside it (Savi's picks)
+function inL5Room(ctx, s) {
+  if (ctx.self.place !== 'level5' || !s.l5room || (s.l5until ?? 0) < ctx.now()) return false
+  const t = (L5P.suites?.[s.l5room] ?? L5P.rooms?.[s.l5room])?.trunk; if (!t) return false
+  const f = ctx.self.feetPosition, r = s.l5room.startsWith('suite') ? L5R.suite : L5R.room
+  return Math.hypot(f.x - t[0], f.z - t[1]) < r
+}
+const atHome = (ctx, s) => (ctx.self.place === 'home11' && !!s.home11) || inL5Room(ctx, s)
 
 function look(ctx) {
   const r = ctx.self.session.bray, me = ctx.self.feetPosition
@@ -180,7 +189,7 @@ export function onInput(ctx, input) {
   if (sin != null && cos != null) ctx.self.session.bfwd = { x: -sin, z: -cos }
   const ray = getInputRay(ctx, input); if (ray) ctx.self.session.bray = ray
   if (!atHome(ctx, s)) { // building only in your own home (Shelly, Nov 12: "only base build in player homes"); the Bonus Room was already off (Nov 10)
-    if (input.pressed.build) ctx.emit('uiEvent', { name: 'toast', payload: { text: s.home11 ? 'You can only build in your house' : 'You can only build in a home of your own' } }, { audience: { player: ctx.self.id } })
+    if (input.pressed.build) ctx.emit('uiEvent', { name: 'toast', payload: { text: ctx.self.place === 'level5' && s.l5room ? 'Build inside your booked room' : 'You can only build in your home: your house or a booked Level 5 room' } }, { audience: { player: ctx.self.id } })
     if (valid(s.building)) { s.building = null; dropGhost(ctx); clearHl(ctx) }
     return
   }
