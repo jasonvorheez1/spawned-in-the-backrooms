@@ -193,6 +193,8 @@ export function update(ctx) {
     else if (isTray(o)) { const f = ctx.self.feetPosition, d = ses.dir ?? { x: 0, y: 0, z: -1 }, hl = Math.hypot(d.x, d.z) || 1; o.feetPosition = { x: f.x + (d.x / hl) * 0.5, y: f.y + 0.85, z: f.z + (d.z / hl) * 0.5 }; o.rotation = { yaw: Math.atan2(-d.x, -d.z) * 57.2958 }; } // held level in both hands at the belly
     else { const f = ctx.self.feetPosition, d = ses.dir ?? { x: 0, y: 0, z: -1 }; o.feetPosition = { x: f.x + d.x * 1.1, y: f.y + 0.7 + d.y * 0.6, z: f.z + d.z * 1.1 }; o.rotation = { yaw: Math.atan2(-d.x, -d.z) * 57.2958 }; }
   }
+  { const s = ctx.self.state; // nothing in the hands (a reload or a crossing emptied the session): the carry slowdown goes with it
+    if (!ses.held && !ses.heave && !ses.heldFoe && !ses.drag && (s.carryId || (s.carryMul ?? 1) !== 1)) { s.carry = null; s.carryId = null; s.carryMul = 1; } }
   stepFlights(ctx);
   const fl = ses.flying; if (!fl) return;
   const o = ctx.getObject(fl.id), age = ctx.now() - fl.at;
