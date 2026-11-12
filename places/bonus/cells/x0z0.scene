@@ -600,14 +600,14 @@ bc-palm-6:
   rotation: {yaw: 305}
   tags: ["bonus-court"]
 bc-photobooth:
-  children: [{feetPosition: {x: 0, y: 2.2, z: 0.6}, id: glow, light: {color: "#c070ff", distance: 4, intensity: 0.9, kind: point}}]
-  feetPosition: {x: 11.1, y: 0.02, z: -22.9}
+  castShadow: true
+  feetPosition: {x: -3.6, y: 0, z: -31.15}
   id: bc-photobooth
-  model: {forward: "+x", id: /cdn/value.76b322755f0554dc563d14fa5dba9d4bb9a7c12171a02452b83af15327a966ae.glb}
+  layout: {box: {max: {x: 0.65, y: 1.95, z: 0.45}, min: {x: -0.65, y: 0, z: -0.45}}}
+  model: {forward: "+x", id: /cdn/value.3e8eb7f64b279d23a7def50434b39c85693df804db60157edc190e5f6bedb9ac.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: 180}
-  scale: 1.1
-  tags: [bonus-arcade]
+  tags: [bonus-court]
 bc-pinball-1:
   children: [{feetPosition: {x: 0, y: 2.2, z: 0.6}, id: glow, light: {color: "#38f4ff", distance: 4, intensity: 0.9, kind: point}}]
   feetPosition: {x: 10.9, y: 0.02, z: -11.4}
