@@ -147,7 +147,7 @@ function layDress(ctx) {
   B("l02-gd-cooler", "cooler", cx(2, -1), cz(0, -0.6), 25); put(ctx, "l02-gd-thermos", prop("thermos", { x: cx(2, -1.05), y: BASE + H("cooler"), z: cz(0, -0.65) }, 0, { physics: "static" }));
   // a lunch table: a ply offcut over two upturned buckets, crumbs and a crossword (Savi's pick)
   B("l02-gd-tb0", "bucket", cx(2, -0.1), cz(0, -1.45), 10); B("l02-gd-tb1", "bucket", cx(2, 1.05), cz(0, -1.4), -15);
-  put(ctx, "l02-gd-tbl", { feetPosition: { x: cx(2, 0.48), y: BASE + 0.42, z: cz(0, -1.42) }, rotation: { yaw: 3 }, primitive: box(1.75, 0.025, 0.72), material: { ...STUD, texture: "cdn/texture-osb-oriented-strand-board.png", wrap: "repeat", repeat: [1, 1] }, physics: "static" });
+  put(ctx, "l02-gd-tbl", { feetPosition: { x: cx(2, 0.48), y: BASE + 0.42, z: cz(0, -1.42) }, rotation: { yaw: 3 }, primitive: box(1.75, 0.025, 0.72), material: { ...STUD, texture: "cdn/texture-osb-plywood-subfloor-sheet.png", wrap: "repeat", repeat: [1, 1] }, physics: "static" });
   put(ctx, "l02-gd-paper", { feetPosition: { x: cx(2, 0.7), y: BASE + 0.446, z: cz(0, -1.35) }, rotation: { yaw: -12 }, primitive: box(0.3, 0.004, 0.42), material: { color: "oklch(0.93 0.01 90)", roughness: 0.9 } });
   B("l02-gd-fchair", "fchair", cx(2, -0.1), cz(0, 1.1), 200); B("l02-gd-box", "red_toolbox", cx(2, 1.2), cz(0, -1.3), 75);
   put(ctx, "l02-gd-bread", { feetPosition: { x: cx(2, -0.95), y: BASE + H("cooler"), z: cz(0, -0.45) }, rotation: { yaw: 30 }, primitive: box(0.16, 0.035, 0.12), material: { color: "oklch(0.88 0.04 85)", roughness: 1 } });
