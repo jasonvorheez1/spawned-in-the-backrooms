@@ -528,7 +528,9 @@ export function update(ctx, dt) {
           if (mouth) lookData.mouth = mouth; else if (!lt) { lookData.talking = true; lookData.talkTime = now / 1000; }
         }
         if (now - (m.hitAt ?? 0) < 650) lookData.hurt = true;
-        headObj.morph = faceMorph(curExpr, isBlinking, isFem, lookData);
+        // perf (Nov 12): a talking face rewrote its morph every tick; now only when expression, blink or the mouth's shape (to a tenth) moved
+        const fk = curExpr + (isBlinking ? 1 : 0) + (lookData.hurt ? "h" : "") + (lookData.mouth ? lookData.mouth.map((v) => v.toFixed(1)).join() : lookData.talking ? "t" + Math.floor(now / 66) : "");
+        if (fk !== m.faceK) { m.faceK = fk; headObj.morph = faceMorph(curExpr, isBlinking, isFem, lookData); }
       }
       else m.headChk = now + 30000; // no head on this body: stop asking for 30 s
     }
