@@ -396,7 +396,7 @@ function life(ctx, me, m, now) {
     }
   }
   if (now - (m.wantSaid ?? 0) > 90000 && now - (me.state.line?.at ?? 0) > 20000 && ctx.random() < 0.08 && ctx.place.players.some((q) => Math.hypot(q.feetPosition.x - p.x, q.feetPosition.z - p.z) < 6)) {
-    m.wantSaid = now; const W = WANT_LINES(L.want); me.state.line = { t: W[Math.floor(ctx.random() * W.length)], at: now, d: 3000 }
+    m.wantSaid = now; if (barkOf(me, BARK_AS.idle ?? "idle", () => ctx.random(), me.place) || me.state.barks?.idle) { bark(ctx, me, "idle", true); } else { const W = WANT_LINES(L.want); me.state.line = { t: W[Math.floor(ctx.random() * W.length)], at: now, d: 3000 }; } // a written character mutters their own voiced line, never a rolled backstory (Cap'n said "revenge on whatever took their crew")
   }
 }
 export function update(ctx, dt) {
