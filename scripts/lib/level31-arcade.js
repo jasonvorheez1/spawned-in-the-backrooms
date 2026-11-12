@@ -12,7 +12,7 @@ const GLB = {
   dispenser: "/cdn/value.f759116da56aba87735b8064a9fe7b00f9a373dadf68a856453d2f01173eca10.glb",
   upright: "/cdn/value.f025413cd07f33ee4e744a88cdbe78e81a6057ba2b9fa1e5b77a9543ea556977.glb",
   pinball: "/cdn/value.38ea1184b8c82b3771c13c050fd5e3c5e090a504e7b95c21a22663994d233826.glb",
-  racer: "/cdn/value.f0f596ab803f45c33fff72bc7af943d49554cb2202b56fe32cbf0221dc9b7fbf.glb",
+  racer: "/cdn/value.160211cff42e88d8c41192dd027adbf3b873452c60959a4720c0fd5f379e908c.glb",
   moto: "/cdn/value.6d01fa4197dd7ab1344f4b4c529f35fe1febcd398b4556458da3c1f82ae113ba.glb",
   skee: "/cdn/value.7a94f356fc67ae940eb2187fa0f88b7b0b581b47728d0216d83c06d661d7cdfd.glb",
   hockey: "/cdn/value.55832259098e2ee269ab1da4d702bd920b4274e1514d2a1206e0829727f9c39e.glb",
@@ -108,9 +108,11 @@ export function layArcade(ctx) {
 
   // sit-down racers: two rows of three, screens back to back, seats out to the aisles
   const RT = ["retro-arcade-crt-screen-desert-highway-racing-game", "retro-arcade-crt-screen-night-city-racing-game"], RC = ["#ffffff", "#ffd9c0", "#c8e4ff"];
-  for (let r = 0; r < 2; r++) for (let i = 0; i < 3; i++)
-    M(`racer-${r}${i}`, "racer", r ? 50.05 : 47.45, -22 + i * 1.25, r ? EA : W, { name: "Dust Devil GP", res: "racer", pitch: 0.94 + i * 0.05 },
-      { screen: glow(RT[(r + i) % 2], RC[i]), marquee: lamp(r ? "#ffb23a" : "#ff5a3a", 1.4) });
+  // Tripo twin-seat cabinet (Nov 12): 1.6 m wide, 1.8 m tall, seats out to the aisle; two per row, backs to each other
+  for (let r = 0; r < 2; r++) for (let i = 0; i < 2; i++)
+    ctx.spawn(`l31-arcade-racer-${r}${i}`, { feetPosition: { x: r ? 50.05 : 47.45, y: 0, z: -22 + i * 1.75 }, rotation: { yaw: r ? EA : W },
+      model: { id: GLB.racer, forward: "+z" }, layout: { box: { min: { x: -0.8, y: 0, z: -0.63 }, max: { x: 0.8, y: 1.8, z: 0.63 } } }, physics: { body: "static", collider: "box" },
+      behavior: SELF, tags: ["usable", "l31-arcade"], state: { kind: "attract", verb: "Play", info: "arcade machine, takes a card", name: "Dust Devil GP", res: "racer", pitch: 0.94 + (r * 2 + i) * 0.05 } });
   // ride-on bikes against the north wall
   for (let i = 0; i < 2; i++) M("moto-" + i, "moto", 45.6 + i * 1.9, N + 1.22, S, { name: "Night Ride 500", res: "moto", pitch: 1.08 },
     { screen: glow("retro-arcade-crt-screen-motorbike-coast-road-racing-game", i ? "#d8ffe0" : "#ffffff"), marquee: lamp(i ? "#58c8ff" : "#ff4fb8", 1.4), tail: lamp("#ff2a1a", 2) });
