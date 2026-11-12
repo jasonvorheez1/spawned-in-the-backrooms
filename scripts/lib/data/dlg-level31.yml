@@ -1,10 +1,10 @@
 # Level 31, the Roller Rink: the people who work the carpet. Written by hand, Nov 12.
 
 l31-coach:
-  hi: "Hey there, {u}. Welcome in. Take a breath, nobody's in a hurry here. You skating today or just looking?"
-  back: ["{u}! Good to see you back. How are the legs?", "There you are, {u}. I kept a pair warm for you."]
-  warm: "{u}, my favorite regular. Floor's all yours."
-  cold: "Counter's open, {u}. Whenever you're ready."
+  hi: "Hey there. Welcome in. Take a breath, nobody's in a hurry here. You skating today or just looking?"
+  back: ["Hey, good to see you back. How are the legs?", "There you are. I kept a pair warm for you."]
+  warm: "My favorite regular. Floor's all yours."
+  cold: "Counter's open. Whenever you're ready."
   bye: "Go easy out there. And hey, don't stay too long."
   walk: "No rush. I'll be here."
   ask:
