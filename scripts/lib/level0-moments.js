@@ -50,8 +50,8 @@ const plainZone = (cx, cz) => ["halls", "expanse", "offices"].includes(zoneOf(cx
 const INK = "#3a2416", CHALK = "#2b2b2e";
 // hand lettering (Shelly Nov 12 "de-ai slop signs"): every letter its own wobble, size and lean, so no line reads as a typed font
 const HJ = (t, i, k) => { const v = Math.sin((t.charCodeAt(i % t.length) + 1) * 12.9898 + i * 78.233 + k * 37.719) * 43758.5453; return v - Math.floor(v); };
-const hand = (text, cx, y, size, fill, { family = "sans-serif", weight = 700, track = 0.62, lean = 0, wob = 1, op = 0.9, k = 0 } = {}) => {
-  const cs = [...text], w = cs.length * size * track, x0 = cx - w / 2;
+const hand = (text, cx, y, size0, fill, { family = "sans-serif", weight = 700, track = 0.56, lean = 0, wob = 1, op = 0.9, k = 0, maxW = 270 } = {}) => {
+  const cs = [...text], size = Math.min(size0, maxW / (cs.length * track)), w = cs.length * size * track, x0 = cx - w / 2; // shrinks to fit its board
   return `<g fill='${fill}' fill-opacity='${op}' font-family='${family}' font-weight='${weight}' transform='rotate(${lean} ${cx} ${y})'>` + cs.map((c, i) => {
     if (c === " ") return "";
     const x = x0 + (i + 0.5) * size * track + (HJ(text, i, k) - 0.5) * size * 0.12 * wob, yy = y + (HJ(text, i, k + 1) - 0.5) * size * 0.16 * wob + i * 0.25 * wob;
