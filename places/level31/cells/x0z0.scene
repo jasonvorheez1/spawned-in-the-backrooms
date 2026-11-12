@@ -26,7 +26,7 @@ l31-coach:
   physics: character
   rotation: {yaw: 0}
   scale: 1.25
-  state: {attr: "5,6,4,7,6,5,7", docile: true, essential: true, faction: survivor, home: {x: 13, y: 0.46, z: 25.7}, hp: 104, maxHp: 104, name: Coach, post: {x: 13, z: 25.7}, role: trader, title: "", voice: l31-coach}
+  state: {attr: "8,7,2,5,7,7,6", docile: true, essential: true, faction: survivor, home: {x: 13, y: 0.46, z: 25.7}, hp: 135, maxHp: 135, name: Coach, post: {x: 13, z: 25.7}, role: trader, title: Brute, voice: l31-coach}
   tags: [npc, l31-rental, docile]
 l31-coach/coach-hair:
   attachment: {skin: true}
