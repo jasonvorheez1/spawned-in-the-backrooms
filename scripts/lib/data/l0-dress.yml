@@ -2,9 +2,9 @@
 # Tripo pieces, each placed where it belongs: cubicles in the Abandoned Offices, coolers on hall walls, wet-floor signs by the soaked arch rooms. Counts are Savi's picks.
 v: 1
 models:
-  partition: ""   # fabric cubicle panel, 1.4 m wide, 1.5 m tall
-  cooler: ""      # beige water cooler, 1.25 m
-  wetsign: ""     # yellow folding caution sign, 0.62 m
+  partition: /cdn/value.d591f5cb3377610f5d5845dfb1a3c32e6e7dbe3d839654e08d35730a88f341d1.glb   # fabric cubicle panel, 1.4 m wide, 1.5 m tall
+  cooler: /cdn/value.07799be5e46bec639736b31a87f3ea8cd4fb506cca67c1718e40b2fb2594574e.glb      # beige water cooler, 1.25 m
+  wetsign: /cdn/value.742c7982fd6cd877888746f4dc24cb56395f26e7d33b01a46d4455a0cdc6a39c.glb     # yellow folding caution sign, 0.62 m
 sizes:            # w h d metres the model is fitted into
   partition: [1.4, 1.5, 0.35]
   cooler: [0.34, 1.25, 0.34]
