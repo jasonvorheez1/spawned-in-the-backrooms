@@ -1,0 +1,21 @@
+# Level 31 "The Roller Rink" (backrooms-wiki.wikidot.com/level-31): a looping roller rink that feels like the one from home.
+# Dim, warm, a starburst of bulbs over polished wood, muffled radio pop, pizza on the air. Survival difficulty 0.
+mode: 3d
+terrain:
+  kind: "off"
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: -30, y: 0.1, z: 27 }
+defaultSpawnRotation: { yaw: 0 }
+worldBounds: { bottom: -20 }
+atmosphere:
+  sky: { kind: color, color: oklch(0.04 0.01 300) }
+  fog: { kind: linear, near: 30, far: 120, color: oklch(0.1 0.03 320) }
+  clouds: { enabled: false }
+  stars: { enabled: false }
+  moon: { enabled: false, intensity: 0 }
+  timeOfDay: 0
+  wind: { direction: 0, speed: 0 }
+  look: { script: scripts/look-utility.js, params: { bloomThreshold: 0.55, bloomStrength: 0.9 } }
+  ambient: { light: { color: oklch(0.8 0.06 40), intensity: 0.22 } }
+  hemisphere: { skyColor: oklch(0.7 0.08 30), groundColor: oklch(0.3 0.05 300), intensity: 0.18 }
+acoustics: { reverb: 0.55 }

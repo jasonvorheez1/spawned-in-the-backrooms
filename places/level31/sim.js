@@ -1,0 +1,123 @@
+// Level 31 "The Roller Rink": lays the shell once (floor, walls, rink, barrier, starburst, cinema, DJ booth, doors).
+// The arcade, food court, skate rental and gift shop dress their own zones (scripts/lib/level31-*.js), map in scripts/lib/level31.js.
+import { animate } from "builtin/tween";
+import { H, T, B, RINK, ZONES, ARRIVE, DOOR } from "../../scripts/lib/level31.js";
+import { layParts } from "../../scripts/lib/level31-parts.js";
+export const cadence = "1s";
+const V = 1;
+const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
+const WOOD = { texture: "cdn/texture-polished-maple-roller-rink-floor-planks.png", wrap: "repeat", repeat: [0.35, 0.35], color: "oklch(0.92 0.03 75)", roughness: 0.16, metalness: 0.05 };
+const CARPET = { texture: "cdn/texture-black-arcade-carpet-neon-confetti-squiggles.png", wrap: "repeat", repeat: [0.4, 0.4], color: "oklch(0.95 0.01 300)", roughness: 0.98 };
+const WALL = { texture: "cdn/texture-painted-cinder-block-wall-dark-purple.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.9 0.03 310)", roughness: 0.9 };
+const CEIL = { texture: "cdn/texture-black-painted-acoustic-drop-ceiling-tile-grid.png", wrap: "repeat", repeat: [0.8, 0.8], color: "oklch(0.9 0 0)", roughness: 1 };
+const RAIL = { texture: "cdn/texture-varnished-oak-plank-rink-barrier.png", wrap: "repeat", repeat: [0.6, 0.6], color: "oklch(0.9 0.04 70)", roughness: 0.5 };
+const RAILCAP = { color: "oklch(0.55 0.2 25)", roughness: 0.4 };
+const PLY = { texture: "cdn/texture-raw-plywood-sheet-knots-and-grain.png", color: "oklch(0.95 0.03 80)", roughness: 0.85 };
+const glow = (c, e = 3) => ({ color: c, emissive: c, emissiveIntensity: e, roughness: 0.4 });
+const BULBS = ["#ff3b2e", "#ff8a1e", "#ffd23a", "#ff3b2e", "#ff5a1e", "#ffe27a"];
+
+function starburst(ctx) {
+  // the fixture from the wiki photo: long red bars fanning from the centre, a bulb every 60 cm, the mirror ball under the hub
+  const kids = [];
+  for (let i = 0; i < 20; i++) {
+    const a = (i / 20) * 360, long = i % 2 === 0, len = long ? 9.5 : 6.2, rad = (a * Math.PI) / 180;
+    const sx = Math.abs(Math.cos(rad)) * 0.55 + 0.45; // squashed toward the rink's short side so it sits over the oval
+    const L = len * sx, cx = Math.cos(rad) * (0.5 + L / 2), cz = -Math.sin(rad) * (0.5 + L / 2);
+    kids.push({ feetPosition: { x: cx, y: -0.06, z: cz }, rotation: { yaw: a }, primitive: box(L, 0.07, 0.11), material: glow("#d81f1a", 1.6), castShadow: false });
+    for (let d = 0.9; d < L + 0.3; d += 0.62) kids.push({ feetPosition: { x: Math.cos(rad) * (0.5 + d), y: -0.16, z: -Math.sin(rad) * (0.5 + d) }, primitive: { kind: "sphere", radius: 0.055, widthSegments: 8, heightSegments: 6 }, material: glow(BULBS[(i + Math.round(d * 3)) % BULBS.length], 5), castShadow: false });
+  }
+  kids.push({ feetPosition: { x: 0, y: -0.2, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.6, radiusBottom: 0.45, height: 0.2 }, material: glow("#ffd9a0", 3) });
+  kids.push({ feetPosition: { x: 0, y: -0.55, z: 0 }, primitive: box(0.03, 0.4, 0.03), material: { color: "#222" } });
+  ctx.spawn("l31-starburst", { feetPosition: { x: 0, y: H - 0.02, z: 0 }, primitive: box(0.2, 0.02, 0.2), material: { color: "#111" }, castShadow: false, children: kids });
+  ctx.spawn("l31-starlight", { feetPosition: { x: 0, y: H - 0.6, z: 0 }, light: { kind: "point", color: "#ff6a3a", intensity: 2.4, distance: 34 } });
+  ctx.spawn("l31-ball", { feetPosition: { x: 0, y: H - 1.25, z: 0 }, primitive: { kind: "sphere", radius: 0.42, widthSegments: 18, heightSegments: 12 }, material: { texture: "cdn/texture-mirror-disco-ball-tiny-square-facets.png", color: "#ffffff", metalness: 1, roughness: 0.12 } });
+  animate(ctx, "l31-ball", { "rotation.yaw": "+=360" }, { duration: 14, loop: true, easing: "linear" });
+  // the sweep: four coloured spots on one slow arm, so pools of colour slide across the wood
+  ctx.spawn("l31-sweep", { feetPosition: { x: 0, y: H - 0.5, z: 0 }, children: [["#ff3fa4", 7, 3], ["#3fe0ff", -8, -4], ["#7dff5a", 3, -7], ["#ffb23a", -5, 6]].map(([c, x, z]) => (
+    { feetPosition: { x, y: 0, z }, light: { kind: "spot", color: c, intensity: 6, distance: 12, angle: 28, penumbra: 0.6, aim: { x: x * 0.4, y: -1, z: z * 0.4 } } })) });
+  animate(ctx, "l31-sweep", { "rotation.yaw": "+=360" }, { duration: 22, loop: true, easing: "linear" });
+}
+
+function rink(ctx) {
+  const { half, r, rail } = RINK;
+  ctx.spawn("l31-rink", { feetPosition: { x: 0, y: 0, z: 0 }, primitive: box(half * 2, 0.04, r * 2), material: WOOD, receiveShadow: true, castShadow: false, tags: ["l31-wood"] });
+  for (const s of [-1, 1]) ctx.spawn(`l31-rink-end${s}`, { feetPosition: { x: s * half, y: 0, z: 0 }, primitive: { kind: "cylinder", radiusTop: r, radiusBottom: r, height: 0.04, radialSegments: 48 }, material: WOOD, receiveShadow: true, castShadow: false, tags: ["l31-wood"] });
+  let n = 0;
+  const seg = (x, z, len, yaw) => ctx.spawn(`l31-rail${n++}`, { feetPosition: { x, y: 0, z }, rotation: { yaw }, primitive: box(len, 1.0, 0.14), material: RAIL, physics: "static",
+    children: [{ feetPosition: { x: 0, y: 1.0, z: 0 }, primitive: box(len + 0.02, 0.06, 0.2), material: RAILCAP }, { feetPosition: { x: 0, y: 0, z: 0 }, primitive: box(len + 0.02, 0.1, 0.17), material: { color: "#1a1418" } }] });
+  // straights, each with one 1.8 m gateway (the flaps hang in them)
+  for (const s of [-1, 1]) for (const [a, b] of [[-half, -0.9], [0.9, half]]) seg((a + b) / 2, s * rail, b - a, 0);
+  for (const s of [-1, 1]) for (const k of [-1, 1]) ctx.spawn(`l31-flap${s}${k}`, { feetPosition: { x: k * 0.9, y: 0.25, z: s * rail }, rotation: { yaw: k * s * 18 }, pivot: [k < 0 ? 0 : 1, 0, 0.5], primitive: box(0.86, 0.7, 0.05), material: RAIL, castShadow: false });
+  // the two curved ends, 12 flat panels each
+  for (const s of [-1, 1]) for (let i = 0; i < 12; i++) {
+    const a = (-90 + (i + 0.5) * 15) * Math.PI / 180, len = 2 * rail * Math.sin((7.5 * Math.PI) / 180) + 0.04, rr = rail * Math.cos((7.5 * Math.PI) / 180);
+    seg(s * (half + rr * Math.cos(a)), rr * Math.sin(a), len, s * (90 - (a * 180) / Math.PI));
+  }
+  // painted lane line round the inside, like every rink has
+  ctx.spawn("l31-line", { feetPosition: { x: 0, y: 0.043, z: 0 }, castShadow: false, vector: `<svg viewBox='0 0 440 240' width='44m'><rect x='40' y='40' width='360' height='160' rx='80' fill='none' stroke='#d8322a' stroke-width='1.2' opacity='.8'/><rect x='70' y='70' width='300' height='100' rx='50' fill='none' stroke='#2a6fd8' stroke-width='1' opacity='.7'/></svg>`, rotation: { pitch: -90 } });
+}
+
+function shell(ctx) {
+  const W = B.x1 - B.x0, D = B.z1 - B.z0;
+  ctx.spawn("l31-floor", { feetPosition: { x: 0, y: -0.3, z: 0 }, primitive: box(W, 0.3, D), material: CARPET, physics: "static", receiveShadow: true, castShadow: false });
+  ctx.spawn("l31-ceil", { feetPosition: { x: 0, y: H, z: 0 }, primitive: box(W, 0.2, D), material: CEIL, physics: "static", castShadow: false });
+  const w = (id, x, z, wd, dp, mat = WALL) => ctx.spawn(`l31-wall-${id}`, { feetPosition: { x, y: 0, z }, primitive: box(wd, H, dp), material: mat, physics: "static", castShadow: false });
+  w("n", 0, B.z0 - T / 2, W + T * 2, T); w("e", B.x1 + T / 2, 0, T, D); w("w", B.x0 - T / 2, 0, T, D);
+  w("s1", (B.x0 + DOOR.x - 0.6) / 2, B.z1 + T / 2, DOOR.x - 0.6 - B.x0, T); w("s2", (DOOR.x + 0.6 + B.x1) / 2, B.z1 + T / 2, B.x1 - DOOR.x - 0.6, T);
+  ctx.spawn("l31-wall-s-lintel", { feetPosition: { x: DOOR.x, y: 2.3, z: B.z1 + T / 2 }, primitive: box(1.2, H - 2.3, T), material: WALL, physics: "static", castShadow: false });
+  // inner partitions: arcade | food court, and the gift shop's two side walls
+  const A = ZONES.arcade, S = ZONES.shop;
+  w("af", (A.x0 + 6 + A.x1) / 2, A.z1, A.x1 - A.x0 - 6, T);
+  w("shn", (S.x0 + S.x1) / 2, S.z0, S.x1 - S.x0, T); w("shs", (S.x0 + S.x1) / 2, S.z1, S.x1 - S.x0, T);
+  // chase lights: a string of bulbs along every outer wall at 3.6 m, like the photo
+  const str = (id, x, z, len, along) => { const kids = []; for (let d = -len / 2 + 0.5; d < len / 2; d += 1) kids.push({ feetPosition: along === "x" ? { x: d, y: 0, z: 0 } : { x: 0, y: 0, z: d }, primitive: { kind: "sphere", radius: 0.05, widthSegments: 6, heightSegments: 4 }, material: glow(["#ff3b2e", "#3fe0ff", "#ffd23a", "#7dff5a", "#ff3fa4"][Math.abs(Math.round(d)) % 5], 4), castShadow: false });
+    ctx.spawn(`l31-string-${id}`, { feetPosition: { x, y: 3.6, z }, primitive: along === "x" ? box(len, 0.015, 0.015) : box(0.015, 0.015, len), material: { color: "#111" }, castShadow: false, children: kids }); };
+  str("n", 0, B.z0 + 0.08, W - 1, "x"); str("s", 0, B.z1 - 0.08, W - 1, "x"); str("w", B.x0 + 0.08, 0, D - 1, "z"); str("e", B.x1 - 0.08, 0, D - 1, "z");
+  // a few dim house cans over the carpet aisles so nobody walks blind
+  [[-24, 20], [14, 17], [-24, -20], [24, -17], [-26, 0], [24, 0]].forEach(([x, z], i) => ctx.spawn(`l31-can${i}`, { feetPosition: { x, y: H - 0.3, z }, light: { kind: "point", color: "#ffb070", intensity: 1.1, distance: 13 } }));
+}
+
+function doors(ctx) {
+  // the way back: the plywood door you came through, music side
+  ctx.spawn("l31-door-leaf", { feetPosition: { x: DOOR.x, y: 0, z: B.z1 + 0.05 }, primitive: box(1.16, 2.28, 0.05), material: PLY, castShadow: false,
+    children: [{ feetPosition: { x: 0.42, y: 1.02, z: -0.05 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.03, height: 0.1 }, rotation: { pitch: 90 }, material: { color: "#8a7a55", metalness: 0.9, roughness: 0.4 } },
+      { feetPosition: { x: 0, y: 1.1, z: -0.035 }, primitive: box(1.16, 0.09, 0.03), material: PLY }, { feetPosition: { x: 0, y: 0.25, z: -0.035 }, primitive: box(1.16, 0.09, 0.03), material: PLY }] });
+  ctx.spawn("l31-from-l2", { feetPosition: ARRIVE, rotation: { yaw: 0 } });
+  ctx.spawn("l31-back", { feetPosition: { x: DOOR.x, y: 0, z: B.z1 - 0.25 }, physics: { body: "static", trigger: true }, primitive: box(1.2, 2.3, 0.4), visible: false, behavior: "scripts/level-door.js", state: { to: "level2#l2-from-l31" } });
+  ctx.spawn("l31-exit-sign", { feetPosition: { x: DOOR.x, y: 2.45, z: B.z1 - 0.06 }, rotation: { yaw: 0 }, castShadow: false, vector: `<svg viewBox='0 0 100 40' width='0.7m'><rect width='100' height='40' rx='3' fill='#0d1a0f'/><text x='50' y='29' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='26' fill='#5dff7a' filter='drop-shadow(0 0 3 #5dff7a)'>EXIT</text></svg>` });
+  // the white door marked 70, north-west corner. It does not open. (Level 70 is not built.)
+  ctx.spawn("l31-door-70", { feetPosition: { x: B.x0 + 0.04, y: 0, z: -22 }, rotation: { yaw: 90 }, primitive: box(1.1, 2.2, 0.06), material: { color: "oklch(0.95 0.005 90)", roughness: 0.5 }, castShadow: false, tags: ["usable"], state: { name: "White door", info: "A 70 is engraved in the paint. Locked. Cold air under it." },
+    children: [{ feetPosition: { x: 0, y: 1.5, z: -0.04 }, vector: `<svg viewBox='0 0 60 40' width='0.3m'><text x='30' y='32' text-anchor='middle' font-family='serif' font-size='34' fill='#b9b9b2'>70</text></svg>` }, { feetPosition: { x: 0.42, y: 1.0, z: -0.06 }, primitive: { kind: "sphere", radius: 0.035 }, material: { color: "#c9c2a8", metalness: 0.9, roughness: 0.3 } }] });
+}
+
+function cinema(ctx) {
+  // north alcove: the big television and three stepped metal benches. It is the darkest, quietest corner.
+  const C = ZONES.cinema, cx = (C.x0 + C.x1) / 2;
+  ctx.spawn("l31-tv", { feetPosition: { x: cx, y: 1.3, z: C.z0 + 0.12 }, primitive: box(4.8, 2.8, 0.14), material: { color: "#0a0a0c", roughness: 0.3 }, castShadow: false,
+    children: [{ feetPosition: { x: 0, y: 0.1, z: 0.075 }, primitive: box(4.6, 2.6, 0.01), material: { texture: "cdn/texture-old-animated-movie-still-dog-on-clouds-crt-scanlines.png", color: "#ffffff", emissive: "#9ab6ff", emissiveIntensity: 0.9 } }] });
+  ctx.spawn("l31-tv-light", { feetPosition: { x: cx, y: 2.6, z: C.z0 + 2 }, light: { kind: "point", color: "#8fb0ff", intensity: 1.6, distance: 11 } });
+  const STEEL = { texture: "cdn/texture-brushed-steel-bench-scuffed.png", wrap: "repeat", repeat: [1, 1], color: "oklch(0.85 0.01 250)", metalness: 0.8, roughness: 0.4 };
+  for (let i = 0; i < 3; i++) { const z = C.z0 + 4.2 + i * 1.6, y = i * 0.3;
+    if (i) ctx.spawn(`l31-step${i}`, { feetPosition: { x: cx, y: 0, z: z + 0.5 }, primitive: box(9, y, 1.6), material: CARPET, physics: "static", castShadow: false });
+    ctx.spawn(`l31-bench${i}`, { feetPosition: { x: cx, y, z }, primitive: box(8, 0.45, 0.45), material: STEEL, physics: "static", tags: ["seat"], state: { name: "Bench" } }); }
+  ctx.spawn("l31-cinema-sign", { feetPosition: { x: cx, y: 3.9, z: C.z1 }, castShadow: false, vector: `<svg viewBox='0 0 220 50' width='3.2m'><rect width='220' height='50' rx='6' fill='#17090f' stroke='#ffd23a' stroke-width='2'/><text x='110' y='36' text-anchor='middle' font-family='display' font-size='32' fill='#ffd23a' filter='drop-shadow(0 0 4 #ff8a1e)'>NOW SHOWING</text></svg>` });
+}
+
+function djBooth(ctx) {
+  const d = ZONES.dj, cx = (d.x0 + d.x1) / 2, cz = (d.z0 + d.z1) / 2;
+  ctx.spawn("l31-dj-riser", { feetPosition: { x: cx, y: 0, z: cz }, primitive: box(6, 0.5, 3.5), material: { texture: "cdn/texture-black-rubber-stage-riser-diamond-tread.png", wrap: "repeat", repeat: [1, 1], color: "#fff", roughness: 0.8 }, physics: "static" });
+  ctx.spawn("l31-dj-front", { feetPosition: { x: cx, y: 0.5, z: d.z0 + 0.2 }, primitive: box(5.6, 1.1, 0.25), material: RAIL, physics: "static",
+    children: [{ feetPosition: { x: 0, y: 0.55, z: -0.135 }, vector: `<svg viewBox='0 0 300 60' width='4.6m'><text x='150' y='44' text-anchor='middle' font-family='display' font-size='40' fill='#ff3fa4' filter='drop-shadow(0 0 5 #ff3fa4)'>REQUEST LINE</text></svg>` }] });
+  ctx.spawn("l31-dj-light", { feetPosition: { x: cx, y: 3, z: cz }, light: { kind: "point", color: "#ff5fb0", intensity: 1.2, distance: 7 } });
+  ctx.spawn("l31-music", { feetPosition: { x: cx, y: 2, z: cz }, audio: { clip: "/cdn/moodboard-toon-vibrant/music-muffled-80s-radio-pop-roller-rink-pa-speakers-loop.mp3", gain: 0.35, loop: true, spatial: true, maxDistance: 90, bus: "music" } });
+  ctx.spawn("l31-skate-bed", { feetPosition: { x: 0, y: 1, z: 0 }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-roller-skates-on-wood-rink-distant-laughter-loop.mp3", gain: 0.12, loop: true, spatial: true, maxDistance: 40 } });
+}
+
+export function tick(ctx) {
+  const s = ctx.place.state;
+  if (s.v31 === V) return;
+  for (const id of Object.keys(ctx.place.objects)) if (id.startsWith("l31-") && !id.includes("/")) ctx.destroy(id);
+  shell(ctx); rink(ctx); starburst(ctx); doors(ctx); cinema(ctx); djBooth(ctx);
+  layParts(ctx);
+  s.v31 = V;
+}

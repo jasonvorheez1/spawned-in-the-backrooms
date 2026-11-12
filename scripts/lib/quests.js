@@ -5,7 +5,7 @@
 export const MAX_TRACK = 3; // her number
 export const TINT = ["#ffc44d", "#8fd8ff", "#a6f08e"]; // slot 1 amber, 2 pale blue, 3 pale green (my picks)
 export const PLACE_NAMES = {
-  main: "Level 0", level01: "Zenith Station", level02: "Level 0.2", level1: "Level 1", level2: "Level 2", level21: "Level 2.1",
+  main: "Level 0", level01: "Zenith Station", level02: "Level 0.2", level1: "Level 1", level2: "Level 2", level21: "Level 2.1", level31: "Level 31",
   level3: "Level 3", gamma: "Base Gamma", level4: "Level 4", level5: "Level 5", level6: "Level 6",
   level61: "Level 6.1", level7: "Level 7", level8: "Level 8", level10: "Level 10", level11: "Level 11", level13: "Level 13", level26: "SS Fun", testlab: "Test Range",
 };
