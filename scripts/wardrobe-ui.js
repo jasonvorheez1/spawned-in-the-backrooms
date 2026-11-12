@@ -140,9 +140,9 @@ export function wardrobe(ctx, player) {
     const cwTops = ['none', ...Object.keys(CW.tops || {}), ...Object.keys(CW.models || {}).filter((k) => CW.models[k].under && Object.keys(CW.tops || {}).includes(CW.models[k].under))]
     const cwBots = ['none', ...Object.keys(CW.bottoms || {}), ...Object.keys(CW.models || {}).filter((k) => CW.models[k].under && Object.keys(CW.bottoms || {}).includes(CW.models[k].under))]
     const cwShoes = ['none', ...Object.keys(CW.feet || {}), ...Object.keys(CW.models || {}).filter((k) => CW.models[k].under && Object.keys(CW.feet || {}).includes(CW.models[k].under))]
-    const cwHats = ['none', ...Object.keys(CW.masks || {})]
+    const cwHats = ['none', ...Object.keys(CW.models || {}).filter((k) => CW.models[k].hat), ...Object.keys(CW.masks || {})]   // Tripo hats fitted to the cat heads (art/cat-wardrobe/hats.py), then masks
     const row = (title, k, list, cur, ck) => `<div class="slot"><div class="sec" style="margin-top:2px"><span>${title}</span><span>${NAMES[cur] || cur || 'none'}</span></div><div class="grid">${list.map((v) => tile('cw-' + k, v, (cur || 'none') === v, NAMES[v] || v)).join('')}</div>${ck && cur && cur !== 'none' ? sws(ck, C.cloth) : ''}</div>`
-    body = `${row('TOP', 'topw', cwTops, l.topw, 'top')}${row('BOTTOM', 'botw', cwBots, l.botw, 'bottom')}${row('FEET', 'shoes', cwShoes, l.shoes, 'shoec')}${row('MASK', 'hat', cwHats, l.hat)}
+    body = `${row('TOP', 'topw', cwTops, l.topw, 'top')}${row('BOTTOM', 'botw', cwBots, l.botw, 'bottom')}${row('FEET', 'shoes', cwShoes, l.shoes, 'shoec')}${row('HAT', 'hat', cwHats, l.hat, CW.models?.[l.hat]?.hat ? 'hatc' : null)}
     <div class="ft" style="padding:10px 0 0;border:0"><button onclick="${act('strip')}">clear clothes</button></div>`
   }
   else if (tab === 'clothes') body = `
