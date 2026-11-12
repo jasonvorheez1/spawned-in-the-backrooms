@@ -4,6 +4,31 @@
 export function geometry(ctx) {
   const h = ctx.params.h ?? 0.95, n = ctx.params.n ?? 7, head = ctx.params.head ?? 0.13, R = () => ctx.random(), lod = ctx.lod ?? 1;
   const both = (a, b, c, d) => { ctx.quad(...a, ...b, ...c, ...d); ctx.quad(...b, ...a, ...d, ...c); };
+  // one ear: rings along a nodding curve, swollen in the middle, kernels bulged on alternate rings; head = 0 draws none (stubble)
+  const ear = (top, ax, az, rings, sides, awns) => {
+    if (head <= 0) return;
+    const L = head * 1.35, W = 0.016 + head * 0.06, curve = (t) => [top[0] + ax * L * 0.45 * t * t, top[1] + L * t * (1 - 0.2 * t), top[2] + az * L * 0.45 * t * t];
+    const tone = 0.7 + R() * 0.1, hue = 76 + R() * 10, ring = [];
+    for (let k = 0; k <= rings; k++) {
+      const t = k / rings, c = curve(t), r = W * Math.pow(Math.sin(Math.PI * (0.12 + 0.88 * t)), 0.7) * (k % 2 ? 1.12 : 0.92) * (k === rings ? 0.15 : 1), off = (k % 2) * Math.PI / sides, pts = [];
+      for (let s = 0; s < sides; s++) { const a = off + (s / sides) * 6.283, ca = Math.cos(a), sa = Math.sin(a); pts.push([c[0] + ca * r * (-az) * 1 + sa * r * ax * 0.6, c[1] + sa * r * 0.15, c[2] + ca * r * ax + sa * r * az * 0.6]); }
+      ring.push(pts);
+    }
+    for (let k = 0; k < rings; k++) {
+      ctx.color(`oklch(${tone + (k % 2) * 0.05} 0.12 ${hue})`);
+      const A = ring[k], B = ring[k + 1];
+      for (let s = 0; s < sides; s++) { const s1 = (s + 1) % sides; ctx.quad(...A[s], ...A[s1], ...B[s1], ...B[s]); ctx.quad(...A[s], ...B[s], ...B[s1], ...A[s1]); }
+    }
+    const tip = curve(1.08); ctx.color(`oklch(${tone + 0.04} 0.12 ${hue})`);
+    for (let s = 0; s < sides; s++) { const P = ring[rings][s], Q = ring[rings][(s + 1) % sides]; ctx.tri(...P, ...Q, ...tip); ctx.tri(...Q, ...P, ...tip); }
+    if (!awns) return;
+    ctx.color(`oklch(${tone + 0.08} 0.09 ${hue + 4})`);
+    for (let k = Math.floor(rings / 3); k <= rings; k++) for (let s = 0; s < sides; s += 2) {
+      const P = ring[k][s], c = curve(k / rings), dx = P[0] - c[0], dz = P[2] - c[2], len = 0.05 + R() * 0.04, aw = 0.0012;
+      const end = [P[0] + dx * 3 + ax * 0.01, P[1] + len, P[2] + dz * 3 + az * 0.01];
+      ctx.tri(P[0] - aw, P[1], P[2], P[0] + aw, P[1], P[2], ...end); ctx.tri(P[0] + aw, P[1], P[2], P[0] - aw, P[1], P[2], ...end);
+    }
+  };
   for (let i = 0; i < n; i++) {
     const a = R() * 6.283, r = R() * 0.12, x = Math.cos(a) * r, z = Math.sin(a) * r, hh = h * (0.8 + R() * 0.3);
     const lean = R() * 6.283, lx = Math.cos(lean) * 0.08 * R(), lz = Math.sin(lean) * 0.08 * R();
@@ -16,12 +41,7 @@ export function geometry(ctx) {
       both([p0[0] - cx, p0[1], p0[2] - cz], [p0[0] + cx, p0[1], p0[2] + cz], [p1[0] + cx, p1[1], p1[2] + cz], [p1[0] - cx, p1[1], p1[2] - cz]);
     }
     const top = pt(1), ax = Math.cos(lean), az = Math.sin(lean); // the way it nods
-    if (lod >= 3) {
-      const ew = 0.028, dx = ax * head * 0.4, dz = az * head * 0.4;
-      ctx.color(`oklch(${0.74 + R() * 0.06} 0.11 ${78 + R() * 6})`);
-      for (const [ux, uz] of [[ew, 0], [0, ew]]) both([top[0] - ux, top[1], top[2] - uz], [top[0] + ux, top[1], top[2] + uz], [top[0] + dx + ux * 0.4, top[1] + head, top[2] + dz + uz * 0.4], [top[0] + dx - ux * 0.4, top[1] + head, top[2] + dz - uz * 0.4]);
-      continue;
-    }
+    if (lod >= 3) { ear(top, ax, az, 4, 3, false); continue; } // far: a slim four-sided spindle, no flat card
     // a leaf blade off the lower stem, arching out and down
     if (R() < 0.7) {
       const ly = hh * (0.3 + R() * 0.25), la = R() * 6.283, ox = Math.cos(la), oz = Math.sin(la), L = 0.18 + R() * 0.12, bw = 0.012;
@@ -31,20 +51,7 @@ export function geometry(ctx) {
       both([b0[0] - px, b0[1], b0[2] - pz], [b0[0] + px, b0[1], b0[2] + pz], [b1[0] + px, b1[1], b1[2] + pz], [b1[0] - px, b1[1], b1[2] - pz]);
       ctx.tri(b1[0] - px, b1[1], b1[2] - pz, b1[0] + px, b1[1], b1[2] + pz, ...b2); ctx.tri(b1[0] + px, b1[1], b1[2] + pz, b1[0] - px, b1[1], b1[2] - pz, ...b2);
     }
-    // the ear: kernels in two alternating rows along a nodding curve, awns off the upper ones
-    const K = lod >= 2 ? 5 : 8, ep = (t) => [top[0] + ax * head * 0.5 * t * t, top[1] + head * t * (1 - 0.25 * t), top[2] + az * head * 0.5 * t * t];
-    ctx.color(`oklch(${0.76 + R() * 0.06} 0.11 ${78 + R() * 6})`);
-    for (let k = 0; k < K; k++) {
-      const t0 = k / K, t1 = (k + 1.4) / K, c0 = ep(Math.min(1, t0)), c1 = ep(Math.min(1, t1)), side = k % 2 ? 1 : -1;
-      const kw = 0.011 * (1 - 0.35 * t0), sx = -az * kw * side, sz = ax * kw * side, mid = [(c0[0] + c1[0]) / 2 + sx, (c0[1] + c1[1]) / 2, (c0[2] + c1[2]) / 2 + sz];
-      ctx.tri(...c0, ...mid, ...c1); ctx.tri(...c0, ...c1, ...mid);
-      // the same kernel seen from the side, so the ear has thickness
-      const mid2 = [(c0[0] + c1[0]) / 2 + ax * kw * 0.6, (c0[1] + c1[1]) / 2, (c0[2] + c1[2]) / 2 + az * kw * 0.6];
-      ctx.tri(...c0, ...mid2, ...c1); ctx.tri(...c0, ...c1, ...mid2);
-      if (lod <= 1 && k >= K / 3) { // a whisker-thin awn
-        const tip = [mid[0] + sx * 3 + ax * 0.02, mid[1] + 0.06, mid[2] + sz * 3 + az * 0.02], aw = 0.0015;
-        ctx.tri(mid[0] - aw, mid[1], mid[2], mid[0] + aw, mid[1], mid[2], ...tip); ctx.tri(mid[0] + aw, mid[1], mid[2], mid[0] - aw, mid[1], mid[2], ...tip);
-      }
-    }
+    // the ear: a plump spindle of kernel rings that nods over, awns off its upper half (Shelly: "improve the crops")
+    ear(top, ax, az, lod >= 2 ? 5 : 7, lod >= 2 ? 4 : 6, lod <= 1);
   }
 }
