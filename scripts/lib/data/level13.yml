@@ -76,3 +76,5 @@ models:
   photos:  { id: "/cdn/value.572ad0fe124cdd180aec4d28d259719e1057e02d8cc6c54b996c7b22ada303e7.glb", forward: "+x", size: [0.55, 0.6, 0.16] }
   can:     { id: "/cdn/value.8dbfe9caef376c3d74354e97aa627d7a842fdc981ef4f60ddfd2c24d34aea0fd.glb", size: [0.07, 0.125, 0.07] }
 tops: { counter: 0.92, table: 0.75 }   # where clutter sits
+# what each flat's life was doing when it stopped (scripts/lib/level13-furnish.js STORY)
+stories: { a6: dinner, a9: chess, b1: suitcase, b2: drawing, b4: mail, b6: bath, b8: latenight }
