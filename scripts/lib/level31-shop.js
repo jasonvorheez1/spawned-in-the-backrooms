@@ -11,6 +11,7 @@ const M = {
   tees: C("9b6b13b71bbffdf8cd0ced1035a3dff0d8e4f1b32840180d74251faad3c40166"), cds: C("6b3a28ca3cb58efe606cf0ffe79bdd5aaa1a72a65d5552c16ab832e2b9ce4cf6"),
   till: C("f2663b8e02cbce4a46bcfac7649bc914ec716a82c522683d3afa35ae62387855"), goods: C("853325a6c5a79f84ff8856bdec753180a3d7bd7e5b51e26f672b7c91003fa264"),
   slatA: C("1e06f865e3bab819652a7465866afc2c45f18e4e921be428e2aa3ee858166281"), slatB: C("e7314085a43f0e52bed0ee5bdf56f3a8cd3effa57fc716faa8c431493d8eb3c0"),
+  counter: C("aaddade70e65d95cf0f42bc5fff2d5405f8249413bf41f180cea81b979b48bf0"), gondola: C("4a04f4607b01ff67aa72590bb7d9442f9e8b7274f1ba0421c9607bbf270b3fb0"), skatewall: C("c16242187a987b783d4ec41253eb5b35d380f85024c333a06a5792ddff6c09fa"), // Tripo v3, Nov 12
   neon: C("8eeb18c99bfd4d8d7eeab25ae7d204179f7de76980db3dfea83cda5bdff30c03"),
 };
 const E = -90, W = 90, N = 0, S = 180; // yaw that turns a prop's front to face east / west / north / south
@@ -39,9 +40,14 @@ export function layShop(ctx) {
   prop("plush", "plush", WX + 0.21, 0, 5.2, E); prop("plush-2", "plush", WX + 0.21, 0, 6.9, E);
   prop("cds-a", "cds", WX + 0.13, 0, 8.3, E); prop("cds-b", "cds", WX + 0.13, 0, 8.72, E);
   // the L counter: one case facing the aisle, one turned south, goods on the glass
-  prop("case-a", "case", -38.5, 0, 0, E); prop("case-b", "case", -39.1, 0, 1.2, S);
-  prop("till", "till", -38.5, 1.0, -0.45, W, false); prop("goods", "goods", -39.1, 1.0, 1.2, S, false);
-  prop("spinner", "spinner", -34.3, 0, 4.6, 20); prop("spinner-2", "spinner", -34.3, 0, -4.6, -25); prop("fridge", "fridge", -39.2, 0, SZ - 0.34, N);
+  // the checkout: one Tripo memphis counter (file 0.70 x 0.80 x 0.99 m, long side along z) at x1.35 = 1.08 m tall, 1.33 m long
+  const tr = (id, m, x, y, z, yaw, sc, solid = true) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: M[m], scale: sc, ...(solid ? { physics: { body: "static", collider: "box" } } : {}) });
+  tr("counter", "counter", -38.3, 0, -0.1, 0, 1.35); tr("case-side", "case", -39.3, 0, 1.25, S, 1);
+  // two stocked gift gondolas down the middle (file 0.91 x 1.0 x 0.94 m) at x1.55 = 1.55 m tall, eye level for a 1.7 m player
+  tr("gondola-n", "gondola", -34.2, 0, -4.2, E, 1.55); tr("gondola-s", "gondola", -34.2, 0, 4.2, E, 1.55);
+  // skate walls on the south wall (file 0.24 x 0.97 x 1.0 m, faces along x) at x1.9 = 1.83 m tall, hung 0.35 m up
+  tr("skates-a", "skatewall", -35.6, 0.35, SZ - 0.25, 90, 1.9, false); tr("skates-b", "skatewall", -33.3, 0.35, SZ - 0.25, 90, 1.9, false);
+  prop("spinner", "spinner", -30.6, 0, 6.2, 20); prop("spinner-2", "spinner", -30.6, 0, -6.2, -25); prop("fridge", "fridge", -39.2, 0, SZ - 0.34, N);
   // by the entrance, on the aisle side of the south stub
   prop("stickers", "stickers", -27.79, 0, 9.3, E); prop("gumball", "gumball", -27.78, 0, 8.3, E);
   // a taped note by the fridge
