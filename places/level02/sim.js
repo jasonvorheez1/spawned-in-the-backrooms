@@ -13,12 +13,12 @@ import { S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, xOf } from "../../scripts/lib
 import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 import P from "../../scripts/lib/data/l02-props.yml";
 export const cadence = "250ms";
-const V = 11, STEP_MS = 2600;
+const V = 12, STEP_MS = 2600;
 const W = NX * S, D = NZ * S; // 32 x 20 m
 const CARPET = { color: "oklch(0.4 0.11 25)", roughness: 0.97, texture: "cdn/texture-dry-red-office-carpet-low-pile.png", wrap: "repeat", repeat: [0.5, 0.5] };
-const PAINT = { color: "oklch(0.95 0.008 90)", roughness: 0.88 };
-const TRIM = { color: "oklch(0.36 0.1 25)", roughness: 0.55 };
-const BASEB = { color: "oklch(0.92 0.006 90)", roughness: 0.5 };
+const PAINT = { color: "oklch(0.97 0.008 90)", roughness: 0.88, texture: "cdn/texture-freshly-painted-white-drywall-eggshell-roller-stipple.png", wrap: "repeat", repeat: [0.5, 0.5] };
+const TRIM = { color: "oklch(0.5 0.12 25)", roughness: 0.45, texture: "cdn/texture-glossy-red-painted-wood-chair-rail-molding-grain.png", wrap: "repeat", repeat: [1, 1] };
+const BASEB = { color: "oklch(0.96 0.006 90)", roughness: 0.4, texture: "cdn/texture-white-semi-gloss-painted-mdf-baseboard.png", wrap: "repeat", repeat: [1, 1] };
 const PLY = { color: "oklch(0.74 0.07 72)", roughness: 0.9, texture: "cdn/texture-osb-plywood-subfloor-sheet.png", wrap: "repeat", repeat: [0.4, 0.4] };
 const SHEATH = { color: "oklch(0.66 0.06 70)", roughness: 0.92, texture: "cdn/texture-osb-plywood-subfloor-sheet.png", wrap: "repeat", repeat: [0.5, 0.5] };
 const STUD = { color: "oklch(0.8 0.07 80)", roughness: 0.85, texture: "cdn/texture-planed-pine-2x4-lumber-grain.png", wrap: "repeat", repeat: [1, 1] };
