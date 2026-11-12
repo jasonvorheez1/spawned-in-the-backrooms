@@ -1,5 +1,6 @@
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
+import { hatches, face } from "../../scripts/lib/level3-hatch.js";
 import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { heard } from "../../scripts/lib/hear.js";
 import { tickWalls } from "../../scripts/lib/breakables.js";
@@ -126,6 +127,23 @@ export function tick(ctx) {
   restyleSigns(ctx, "level3"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
+  if (ctx.place.state.hatchV !== 1) { ctx.place.state.hatchV = 1; // the steel doors through the brick, both faces of each wall (lib/level3-hatch.js)
+    const D = ["0", "1", "2", "3"];
+    for (const h of hatches()) {
+      const [nx, nz] = [[1, 0], [0, 1], [-1, 0], [0, -1]][h.d], sides = [[h.cx, h.cz, h.d], [h.cx + nx, h.cz + nz, (h.d + 2) % 4]];
+      sides.forEach(([cx, cz, d], k) => {
+        const f = face(cx, cz, d), o = face(...sides[1 - k]), yaw = Math.atan2(-f.tz, f.tx) * 180 / Math.PI, id = `l3-hatch-${h.i}-${k}`;
+        const at = (a, b, y = 0) => ({ x: f.x - f.nx * a + f.tx * b, y, z: f.z - f.nz * a + f.tz * b });
+        ctx.spawn(`${id}-frame`, { feetPosition: at(0.02, 0), rotation: { yaw }, physics: "none", visibleRange: { max: 45 }, castShadow: false, material: { pbr: true },
+          primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: "metal", part: "frame", w: 1.05, h: 2.15, hingeSide: "left", seed: h.i * 2 + k } } });
+        ctx.spawn(id, { tags: ["door", "l3hatch"], feetPosition: at(0.06, -0.5), rotation: { yaw }, physics: { body: "kinematic", collider: "box" }, visibleRange: { max: 45 }, castShadow: false, material: { pbr: true },
+          primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: "metal", part: "leaf", w: 1.05, h: 2.15, hingeSide: "left", seed: h.i * 2 + k } },
+          behavior: "scripts/l3-hatch.js", state: { name: "Steel door", lock: "", open: false, yaw0: yaw, swing: 95, c: at(0.1, 0, 1.1) } });
+        ctx.spawn(`${id}-pass`, { feetPosition: at(-0.05, 0, 0), rotation: { yaw }, visible: false, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.8, height: 2, depth: 0.25 },
+          behavior: "scripts/l3-hatch-pass.js", state: { door: id, twin: `l3-hatch-${h.i}-${1 - k}`, to: { x: o.x - o.nx * 0.9, z: o.z - o.nz * 0.9 } } });
+      });
+    }
+  }
   if (ctx.place.state.liftV !== 1) { ctx.place.state.liftV = 1; // the freight lift has power again: up to Level 4
     ctx.spawn("l3-lift", { tags: ["door"], feetPosition: { x: LIFT.x - 0.6, y: 0, z: LIFT.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 2.2 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level4#l4-lift-arrive" } });
     ctx.spawn("l3-lift-arrive", { feetPosition: { x: LIFT.x - 3, y: 0.1, z: LIFT.z }, rotation: { yaw: 90 } });

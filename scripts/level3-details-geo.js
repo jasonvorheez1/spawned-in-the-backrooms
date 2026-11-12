@@ -7,6 +7,7 @@ const TILE = "cdn/texture-photoreal-glazed-tan-brown-ceramic-wall-tile-grimy-gro
 // theatre mask in its vault, and the violet glow of purpified bricks. Placed from the seeded layout.
 import { N, S, H, TH, HALF, isOpen, isBars, isGate, openings, zoneOf, hash, cellCenter, ceilingAt, BLOCKS, SLUDGE, SPARKS, inGamma, TW, TSP, OOB, tightSpans } from "./lib/level3.js";
 import { vault } from "./lib/level3-arch.js";
+import { hatchAt } from "./lib/level3-hatch.js";
 import { slab, tube, sphere, prism } from "./lib/shapes.js";
 
 const T = 0.3;
@@ -23,7 +24,7 @@ export function geometry(ctx) {
     const zone = zoneOf(cx, cz); if (zone === "vault") continue;
     const c = cellCenter(cx, cz), top = ceilingAt(cx, cz);
     for (const d of [0, 1, 2, 3]) {
-      if (!solid(cx, cz, d) || zone === "tight") continue;
+      if (!solid(cx, cz, d) || zone === "tight" || hatchAt(cx, cz, d)) continue; // a steel door stands there (lib/level3-hatch.js, laid by the sim)
       const [nx, nz] = D4[d], tx = -nz, tz = nx, w = S / 2 - T - (zone === "tight" ? 0.75 : 0), wx = c.x + nx * w, wz = c.z + nz * w;
       // a box in (along the wall, out from the wall, height) space
       const wb = (a0, a1, o0, o1, y0, y1) => { const p = [wx + tx * a0 - nx * o0, wz + tz * a0 - nz * o0], q = [wx + tx * a1 - nx * o1, wz + tz * a1 - nz * o1]; box(ctx, Math.min(p[0], q[0]), Math.max(p[0], q[0]), y0, y1, Math.min(p[1], q[1]), Math.max(p[1], q[1])); };
@@ -53,7 +54,7 @@ export function geometry(ctx) {
         if (hi) { ctx.color("oklch(0.15 0.008 250)"); ctx.roughness(0.9); for (let k = 0; k < 3; k++) { const sx = a - 0.5 + k * 0.5; const P = (aa, o, y) => [wx + tx * aa - nx * o, y, wz + tz * aa - nz * o]; tube(ctx, [P(sx, 0.1, 1.55), P(sx + (k - 2) * 0.12, 0.12, 2.0), P(sx + (k - 2) * 0.3, 0.2, top - 0.2)], [0.014, 0.014, 0.014], 4, [1, 1], 0, 1, 1); } }
       }
       // a hasp and padlock on the occasional wall hatch (a steel door with a lock, as in the doors photograph)
-      if (hash(cx * 4 + d, cz, 409) < 0.04) { ctx.color("oklch(0.88 0.012 90)"); wb(-0.5, 0.5, -0.004, 0.06, 0, 2.15); ctx.color("oklch(0.4 0.02 60)"); wb(0.35, 0.45, 0.06, 0.1, 1.0, 1.25); wb(0.38, 0.42, 0.1, 0.12, 0.85, 1.0); wb(-0.52, -0.5, 0.06, 0.1, 0.3, 0.45); wb(-0.52, -0.5, 0.06, 0.1, 1.6, 1.75); }
+      if (false) { ctx.color("oklch(0.88 0.012 90)"); wb(-0.5, 0.5, -0.004, 0.06, 0, 2.15); ctx.color("oklch(0.4 0.02 60)"); wb(0.35, 0.45, 0.06, 0.1, 1.0, 1.25); wb(0.38, 0.42, 0.1, 0.12, 0.85, 1.0); wb(-0.52, -0.5, 0.06, 0.1, 0.3, 0.45); wb(-0.52, -0.5, 0.06, 0.1, 1.6, 1.75); }
     }
     // soot-dark brick ribs every metre down a crawl hall, like the round brick culvert: flush bands on the walls, a ring under the vault
     if (zone === "tight" && hi) {
