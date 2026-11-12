@@ -13,7 +13,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 54;
+const V = 55;
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -300,31 +300,18 @@ function lay(ctx) {
   });
 
   // Central fluted pedestal & upper overflow spill basin with weeping fig tree
+  // Tripo tiered marble fountain (AAA pass): stands in the pool, 3.6 m across
   sp("l61-fountain-pedestal", {
-    feetPosition: { x: 0, y: 0, z: 0 },
+    feetPosition: { x: 0, y: 0.04, z: 0 },
     physics: { body: "static", collider: "cylinder" },
-    primitive: { kind: "cylinder", radiusTop: 1.5, radiusBottom: 1.65, height: 0.95 },
-    material: { ...TERRAZZO, color: "oklch(0.94 0.02 85)", roughness: 0.25 },
-    children: [
-      { feetPosition: { x: 0, y: 0.45, z: 0 }, primitive: { kind: "torus", radius: 1.58, tube: 0.035 }, rotation: { pitch: 90 }, material: BRASS },
-    ],
-  });
-  sp("l61-fountain-bowl", {
-    feetPosition: { x: 0, y: 0.95, z: 0 },
-    primitive: { kind: "cylinder", radiusTop: 1.85, radiusBottom: 1.45, height: 0.38 },
-    material: BRASS,
-    children: [
-      { feetPosition: { x: 0, y: 0.38, z: 0 }, primitive: { kind: "torus", radius: 1.86, tube: 0.04 }, rotation: { pitch: 90 }, material: BRASS },
-      { feetPosition: { x: 0, y: 0.34, z: 0 }, primitive: { kind: "cylinder", radiusTop: 1.78, radiusBottom: 1.78, height: 0.02 }, material: { kind: "water", color: "oklch(0.85 0.09 200)", opacity: 0.8, waveIntensity: 0.08 } },
-      { feetPosition: { x: 0, y: 0.36, z: 0 }, primitive: { kind: "cylinder", radiusTop: 1.3, radiusBottom: 1.3, height: 0.08 }, material: { ...T("dark-potting-soil-with-bark-mulch", 1), color: "oklch(0.38 0.04 50)", roughness: 1 } },
-      { feetPosition: { x: 0, y: 0.42, z: 0 }, primitive: { kind: "scripted", script: "scripts/tree61.js", params: { h: 4.8 }, seed: 61 }, material: { alphaTest: 0.5, side: "double", roughness: 0.55 } },
-    ],
+    layout: { box: { min: { x: -1.8, y: 0, z: -1.8 }, max: { x: 1.8, y: 2.7, z: 1.8 } } },
+    model: { id: "/cdn/value.542739d35f5380fd81f3efd2de1fbb28dae68774d83969f0760f658de21033cd.glb" },
   });
   const FOUNTAIN_FX = `fx
-pop spray rate=12 on=arc(1.5,6.283,.4) life=.7..1.2 v=up(.7..1.2)+sdir()*.18 size=.03..0.06 acc=grav() floor=die col=<.75,.9,1> a=0>.6:1>.8:.8>0 sz=$size r=sprite(soft-disc,alpha)
-pop mist rate=5 on=arc(1.4,6.283,.4) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0.22 col=<.85,.95,1> a=0>.4:.2>.4:.8>0 sz=$size*(.8>1.8) r=sprite(smoke-puff,alpha)`;
+pop spray rate=12 on=arc(.55,6.283,.1) life=.7..1.2 v=up(.7..1.2)+sdir()*.18 size=.03..0.06 acc=grav() floor=die col=<.75,.9,1> a=0>.6:1>.8:.8>0 sz=$size r=sprite(soft-disc,alpha)
+pop mist rate=5 on=arc(.6,6.283,.2) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0.22 col=<.85,.95,1> a=0>.4:.2>.4:.8>0 sz=$size*(.8>1.8) r=sprite(smoke-puff,alpha)`;
   sp("l61-fountain-spray", {
-    feetPosition: { x: 0, y: 1.32, z: 0 },
+    feetPosition: { x: 0, y: 2.35, z: 0 },
     fx: { script: FOUNTAIN_FX },
     audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-calm-sea-water-lapping-against-small-wooden-boat-hull-loop.mp3", loop: true, gain: 0.18, spatial: true, maxDistance: 18 },
   });
@@ -461,32 +448,11 @@ pop mist rate=5 on=arc(1.4,6.283,.4) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0
     feetPosition: { x: 0, y: 0, z: 8.5 },
     rotation: { yaw: 0 },
     physics: { body: "static", collider: "cylinder" },
-    primitive: { kind: "cylinder", radiusTop: 0.85, radiusBottom: 0.9, height: 2.4 },
-    material: { color: "oklch(0.25 0.01 250)", metalness: 0.7, roughness: 0.35 },
+    layout: { box: { min: { x: -0.8, y: 0, z: -0.8 }, max: { x: 0.8, y: 2.3, z: 0.8 } } },
+    model: { id: "/cdn/value.040b126ce265489b8c749408579cfa89f5003af8edb9c74602d30e396d149f37.glb", forward: "+x" },
     tags: ["usable"],
     behavior: "scripts/l61-use.js",
     state: { kind: "directory", name: "Mall Directory & Map", verb: "Inspect directory", info: "Illuminated 3-sided directory kiosk.", tint: "#ffd84a" },
-    ui: `<div face="front" width="1.4m" style="width:1400px;height:2200px;box-sizing:border-box;padding:40px 30px;background:#0d1217;color:#f0f4f8;font-family:Arial,sans-serif;border:16px solid #d4af37;border-radius:12px;text-align:center;display:flex;flex-direction:column;justify-content:space-between">
-      <div style="background:#162432;border:4px solid #5ad8e0;padding:24px 16px;border-radius:8px">
-        <div style="font-size:74px;font-weight:900;letter-spacing:4px;color:#ff7ab8">LEVEL 6.1 DIRECTORY</div>
-        <div style="font-size:36px;color:#5ad8e0;margin-top:6px;letter-spacing:2px">THE SNACKROOMS · SANCTUARY</div>
-      </div>
-      <div style="margin:20px 0;padding:20px;background:#141a20;border:2px dashed #445566;border-radius:6px;text-align:left">
-        <div style="font-size:42px;font-weight:bold;color:#ffd84a;margin-bottom:14px">DINING &amp; LIBATIONS [NORTH]</div>
-        <div style="font-size:32px;color:#ffe0d0;margin-bottom:8px">✦ CLIPPERS · Red 50s Bar &amp; Live 80s Jukebox</div>
-        <div style="font-size:32px;color:#f2d98a;margin-bottom:8px">✦ LIQUORETTE · Tavern, Stained Glass &amp; Almond Water</div>
-        <div style="font-size:32px;color:#ff8a7a;margin-bottom:8px">✦ SLICE PALACE · Pizza Warming Case &amp; Oven</div>
-        <div style="font-size:32px;color:#ff9ad0;margin-bottom:8px">✦ BURGER BOP · Griddle, Shakes &amp; Chef Sal</div>
-        <div style="font-size:42px;font-weight:bold;color:#7affb0;margin:18px 0 10px">SANCTUARY AMENITIES</div>
-        <div style="font-size:32px;color:#e8f4f8;margin-bottom:8px">✦ RESTROOMS &amp; VENDING · South Hall Wing</div>
-        <div style="font-size:32px;color:#88e0ff;margin-bottom:8px">✦ LEVEL 11 RESTAURANT · Automatic Glass Doors [East]</div>
-        <div style="font-size:32px;color:#ffaa50;margin-bottom:8px">✦ M.E.G. CHECKPOINT · Level 6 Access Outpost [West]</div>
-      </div>
-      <div style="background:#281618;border:3px solid #ff4a4a;padding:16px;border-radius:6px">
-        <div style="font-size:34px;font-weight:900;color:#ff6b6b">★ YOU ARE HERE · ALL FOOD &amp; DRINK FREE ★</div>
-        <div style="font-size:26px;color:#cccccc;margin-top:4px">Rest safely. Entity 9 Faceling staff are non-hostile.</div>
-      </div>
-    </div>`,
     children: [
       { feetPosition: { x: 0, y: 2.4, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.95, radiusBottom: 0.95, height: 0.08 }, material: BRASS },
       { feetPosition: { x: 0, y: 2.2, z: 0.8 }, light: { kind: "point", color: "oklch(0.95 0.05 85)", intensity: 2.4, distance: 5 } },
@@ -497,32 +463,13 @@ pop mist rate=5 on=arc(1.4,6.283,.4) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0
   for (const [side, sx] of [[-1, -8.8], [1, 8.8]]) {
     sp(`l61-waste-condiment-${side}`, {
       feetPosition: { x: sx, y: 0, z: -1.0 },
-      rotation: { yaw: side > 0 ? -90 : 90 },
+      rotation: { yaw: side > 0 ? 90 : -90 },
       physics: { body: "static", collider: "box" },
-      primitive: { kind: "box", width: 1.4, height: 1.05, depth: 0.75 },
-      material: DARKWOOD,
+      layout: { box: { min: { x: -0.7, y: 0, z: -0.38 }, max: { x: 0.7, y: 1.45, z: 0.38 } } },
+      model: { id: "/cdn/value.7693b029bbd89b812461c06342dcc4c68571861c243473ea51d79eda192ba589.glb", forward: "+x" },
       tags: ["usable"],
       behavior: "scripts/l61-use.js",
       state: { kind: "condiment", name: "Condiment & Waste Station", verb: "Pump ketchup or mustard", line: "PUMP SQUIRT! (Extra Heinz & French's on your napkin)", tint: "#ff4a3a" },
-      children: [
-        { feetPosition: { x: 0, y: 1.05, z: 0 }, primitive: { kind: "box", width: 1.42, height: 0.04, depth: 0.77 }, material: STEEL },
-        { feetPosition: { x: 0, y: 1.09, z: -0.32 }, primitive: { kind: "box", width: 1.42, height: 0.45, depth: 0.12 }, material: DARKWOOD },
-        { feetPosition: { x: -0.35, y: 0.5, z: 0.38 }, primitive: { kind: "box", width: 0.52, height: 0.42, depth: 0.02 }, material: { color: "oklch(0.35 0.08 40)", roughness: 0.6 } },
-        { feetPosition: { x: 0.35, y: 0.5, z: 0.38 }, primitive: { kind: "box", width: 0.52, height: 0.42, depth: 0.02 }, material: { color: "oklch(0.35 0.08 40)", roughness: 0.6 } },
-        { feetPosition: { x: -0.42, y: 1.09, z: 0.05 }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 0.18 }, material: STEEL, children: [
-          { feetPosition: { x: 0, y: 0.18, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.02, height: 0.08 }, material: { color: "#c82020", roughness: 0.3 } },
-        ] },
-        { feetPosition: { x: -0.22, y: 1.09, z: 0.05 }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 0.18 }, material: STEEL, children: [
-          { feetPosition: { x: 0, y: 0.18, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.02, height: 0.08 }, material: { color: "#d8a810", roughness: 0.3 } },
-        ] },
-        { feetPosition: { x: -0.02, y: 1.09, z: 0.05 }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 0.18 }, material: STEEL, children: [
-          { feetPosition: { x: 0, y: 0.18, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.02, height: 0.08 }, material: { color: "#288830", roughness: 0.3 } },
-        ] },
-        { feetPosition: { x: 0.28, y: 1.09, z: 0.05 }, primitive: { kind: "box", width: 0.16, height: 0.22, depth: 0.14 }, material: STEEL, children: [
-          { feetPosition: { x: 0, y: 0.04, z: 0.072 }, primitive: { kind: "box", width: 0.12, height: 0.06, depth: 0.01 }, material: { color: "#f8f8f8", roughness: 0.9 } },
-        ] },
-        { feetPosition: { x: 0, y: 1.54, z: -0.32 }, primitive: { kind: "box", width: 0.5, height: 0.08, depth: 0.35 }, material: { color: "#8a2020", roughness: 0.5 } },
-      ],
     });
   }
 
