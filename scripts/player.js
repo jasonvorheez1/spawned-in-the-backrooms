@@ -67,7 +67,7 @@ const L_PER = () => L.perLevel.damage
 const BAUBLE_TINTS = [[2.6, .25, .2], [.3, 2.2, .45], [2.6, 1.9, .5], [.5, .9, 2.6], [2.2, .5, 2]] // red, green, gold, blue, pink glass
 const BAUBLE_TRAIL = `fx
 pop glit rate=?mobile:40|80 at=point() life=.35..0.7 v=sdir()*(.2..0.6) size=.015..0.035 acc=grav()*.15+drag(2) col=<%tint|2.6,.3,.2>*flick(9,.6) a=1>0 sz=$size*(1>.3) r=sprite(ember,add)
-pop star rate=?mobile:6|12 at=point() life=.4..0.6 size=.05..0.09 col=hdr(3,2.6,1.6) a=1>0 sz=$size*(.4>1>0) rot=spin(1.5) r=sprite(sparkle-star,add)`
+pop star rate=?mobile:6|12 at=point() life=.4..0.6 size=.05..0.09 col=hdr(3,2.6,1.6) a=1>0 sz=$size*(.4>1>0) rot=spin(1.5) r=sprite(mote,add)`
 const BAUBLE_PUFF = `fx
 pop smoke burst=?mobile:5|9 life=.4..0.8 v=sdir()*(.4..1)+up(.4) size=.12..0.22 acc=drag(3)+buoy(.4) col=<.92,.9,.88> a=.5>0 sz=$size*(.6>1.8) r=sprite(smoke-puff,alpha)
 pop confetti burst=?mobile:10|18 life=.5..0.9 v=sdir()*(1.5..3) size=.015..0.03 spin=-10..10 tint=<2.4,.3,.25>..<.3,2.2,.5> acc=grav()*.5+drag(2) col=$tint a=1>0 sz=$size rot=$age*$spin r=sprite(stalk,add,velocity,.02)

@@ -119,12 +119,25 @@ const GLITTER = `fx
 pop glass burst=?mobile:24|40 life=.5..1 v=sdir()*(2..4.5)+up(1.2) size=.02..0.045 spin=-12..12 tint=<2.6,.3,.25>..<2.6,1.9,.5> acc=grav()+drag(.6) col=$tint a=1>.7:1>0 sz=$size rot=$age*$spin floor=bounce(.3) r=sprite(shard,add,velocity,.02)
 pop tinsel burst=?mobile:12|22 life=1..1.8 v=sdir()*(1..2.2)+up(1.4) size=.03..0.06 spin=-8..8 tint=<.3,2.2,.5>..<2.4,1.8,.4> acc=grav()*.35+drag(1.8) col=$tint*flick(6,.5) a=1>.6:1>0 sz=$size rot=$age*$spin r=sprite(stalk,add,velocity,.02)
 pop flash burst=1 life=.18 tint=<1,.8,.5> r=light($tint,6,4)`;
+const FESTIVE = `fx
+pop flash burst=1 life=.14 size=1.6 col=<%tint|2.6,.3,.2>*2 a=1>0 sz=$size*(.4>1.2) r=sprite(soft-disc,add)
+pop ring burst=?mobile:30|60 life=.6..1.1 v=sdir()*(3..6)*<1,.35,1>+up(1.5) size=.03..0.06 spin=-10..10 tint=<2.6,.3,.25>..<.3,2.4,.5> acc=grav()*.4+drag(2.2) col=$tint*flick(8,.5) a=1>.6:1>0 sz=$size rot=$age*$spin floor=bounce(.3) r=sprite(stalk,add,velocity,.03)
+pop stars burst=?mobile:10|20 life=.5..0.9 v=sdir()*(1.5..3)+up(1) size=.06..0.12 acc=drag(2.5) col=hdr(3.2,2.7,1.5)*flick(10,.6) a=1>0 sz=$size*(.3>1>0) rot=spin(2) r=sprite(mote,add)
+pop snow burst=?mobile:12|24 life=1.2..2 v=sdir()*(.8..1.8)+up(1.6) size=.03..0.05 acc=grav()*.12+drag(1.5)+curl(.4) col=<1,1,1> a=1>.7:1>0 sz=$size r=sprite(snowflake,alpha)
+pop glow burst=1 life=.35 r=light(<%tint|2.6,.3,.2>,40*(1>0),%r|3.2*2.5)`;
 function bauble(ctx, at) { // the Glass Bauble: shatters on contact into glitter and tinsel; a little damage and a daze on foes close by
-  const me = ctx.self, s = me.state, B = T.bauble, c = { x: at.x, y: at.y + 0.05, z: at.z }, until = ctx.now() + B.daze * 1000;
+  const me = ctx.self, s = me.state, B = T.bauble, c = { x: at.x, y: at.y + 0.05, z: at.z }, R = s.radius ?? B.radius, until = ctx.now() + (s.daze ?? B.daze) * 1000;
   s.done = true;
-  const hits = reached(ctx, c, B.radius, 0.3).map((h) => { const o = ctx.getObject(h.id); if (o) { o.state.stunUntil = Math.max(o.state.stunUntil ?? 0, until); o.state.dazeUntil = until; } return { id: h.id, d: B.damage, dir: h.dir, heavy: 0.3 }; });
+  const hits = reached(ctx, c, R, 0.3).map((h) => { const o = ctx.getObject(h.id); if (o) { o.state.stunUntil = Math.max(o.state.stunUntil ?? 0, until); o.state.dazeUntil = until; } return { id: h.id, d: s.big ? Math.round((s.dmg ?? B.damage) * (1 - 0.5 * h.flat / R)) : B.damage, dir: h.dir, heavy: s.big ? 0.7 : 0.3 }; });
   if (s.ownerId) ctx.emit("blast", { hits, self: 0, from: c }, { to: s.ownerId });
   ctx.emit("fx", { position: c, script: GLITTER });
   ctx.emit("playSound", { clip: "/cdn/moodboard-gothic-horror/sfx-glass-christmas-ornament-shatter-tinkle.mp3", position: c, volume: 0.8 });
+  if (s.big) { // the Carolynne's shell: a festive pop, a ring of tinsel and stars, a jingle on top of the glass
+    ctx.emit("fx", { position: c, script: FESTIVE, params: { tint: s.tint ?? [2.6, .3, .2], r: R } });
+    ctx.emit("shockwave", { position: { ...c, y: c.y + 0.3 }, speed: 14, thickness: 0.6, intensity: 0.25 });
+    ctx.emit("playSound", { clip: "/cdn/moodboard-toon-vibrant/sfx-festive-ornament-burst-pop-with-sleigh-bell-jingle-and-glass-sparkle.mp3", position: c, volume: 0.9, maxDistance: 50 });
+    for (const pl of ctx.place.players) { const f = pl.feetPosition, dd = Math.hypot(f.x - c.x, f.y - c.y, f.z - c.z); if (dd < 8) ctx.emit("screenShake", { intensity: 0.25 * (1 - dd / 8), duration: 0.25 }, { audience: { player: pl.id } }); }
+    ctx.emit("noise", { position: c, radius: 25, kind: "explosion" }, { audience: { nearby: c, radius: 25 } });
+  }
   ctx.destroy(me.id);
 }
