@@ -57,7 +57,7 @@ export function gotFresh(ctx, p, slot) {
   if (g[slot]) { s.notice = { text: "You already took the freshener from here.", at: ctx.now() }; return; }
   g[slot] = true; s.l02got = g; s.fresh = (s.fresh ?? 0) + 1;
   const n = gotCount(s);
-  tell(ctx, p, `Reality Freshener (${n}/3) · set one down from the inventory to hold a room still`, HISS);
+  tell(ctx, p, s.remodQ >= 1 && s.remodQ < 99 ? `Reality Freshener (${n}/3) · set one down from the inventory to hold a room still` : "Reality Freshener · set it down from the inventory to hold a room still", HISS);
   if (n >= 3 && (s.remodQ === 2 || s.remodQ === 1)) setRemodStep(ctx, p, 3, "Fresh Paint · Bring the fresheners to Mara in Level 11, or back to Cap'n");
   else if (s.remodQ === 2) syncHUD(s, p.place, ctx.place.state);
 }
@@ -80,6 +80,9 @@ export function remodelChoices(id, s) {
     if (!q) out.push({ text: "Got any work for me?", tag: "Quest Start" });
     if (q === 3) out.push({ text: "I've got your three fresheners.", tag: "Quest Turn-In" });
   } else if (id === "l02-capn") {
+    const cans = s?.l02paint?.length ?? 0;
+    if (!q && !s?.capnJob && !g.capn) out.push({ text: "What happened down here?" });
+    if (!g.capn && (q < 1 || q >= 99) && cans >= 3) out.push({ text: "I got your paint cans out of the shifting rooms.", tag: "Job" });
     if (!g.capn && q >= 1 && q < 99) {
       if (!s.capnAsk) out.push({ text: "Mara sent me for the Reality Fresheners.", tag: "Quest" });
       else if (!s.capnFailed) out.push({ text: "Come on. Spare the one on your belt.", tag: "Speech 40" });
@@ -109,6 +112,7 @@ export function handleDialogueQuest02(ctx, p, npc, text) {
   if (id === "l02-capn") {
     const g = { ...(s.l02got ?? {}) };
     const give = (reply) => { gotFresh(ctx, p, "capn"); return { reply, mood: "happy" }; };
+    if (t.includes("what happened down here")) { s.capnJob = 1; return { reply: "Remodeling. It is going great. Mostly. The rooms back there keep rearranging themselves when nobody looks, and my crew left three cans of the good paint somewhere inside. Keep a work lamp on a wall and it stays put. Bring the paint out and I will make it worth your while.", mood: "calm" }; }
     if (t.includes("mara sent me")) { s.capnAsk = 1; return { reply: "Company property. Each one is signed out to me personally. Major Took counts them every week.", mood: "calm" }; }
     if (t.includes("spare the one on your belt") && !g.capn) {
       const c = rollCheck(ctx, s, { skill: "speech", difficulty: 40 });
@@ -156,8 +160,9 @@ export function gotPaint(ctx, p, id) {
   const s = p.state, have = [...(s.l02paint ?? [])];
   if (!have.includes(id)) have.push(id);
   s.l02paint = have; ctx.destroy(id);
-  if (have.length >= 3 && !(s.l02got ?? {}).capn) { tell(ctx, p, "Fresh Paint (3/3) · Cap'n radios: \"That's the good paint. My Freshener's yours.\""); gotFresh(ctx, p, "capn"); return; }
-  tell(ctx, p, `Fresh Paint (${have.length}/3) · Get the paint cans out of the shifting rooms`);
+  const asked = s.capnJob || s.capnFailed || (s.remodQ >= 1 && s.remodQ < 99);
+  if (have.length >= 3) tell(ctx, p, asked ? "Fresh Paint (3/3) · Bring them to Cap'n by the basement stairs" : "Fresh Paint (3/3) · Someone down here will want these");
+  else tell(ctx, p, asked ? `Fresh Paint (${have.length}/3)` : "A can of Fresh Paint · Remodeling Co. stencil on the lid");
   if (s.remodQ === 2) syncHUD(s, p.place, ctx.place.state);
 }
 export function pickPlaced(ctx, p, id) { p.state.fresh = (p.state.fresh ?? 0) + 1; ctx.destroy(id); tell(ctx, p, `Reality Freshener picked up (${p.state.fresh} carried)`, HISS); }
