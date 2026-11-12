@@ -111,7 +111,7 @@ export function layArcade(ctx) {
     M(`racer-${r}${i}`, "racer", r ? 34.05 : 31.45, -22 + i * 1.25, r ? EA : W, { name: "Dust Devil GP", res: "racer", pitch: 0.94 + i * 0.05 },
       { screen: glow(RT[(r + i) % 2], RC[i]), marquee: lamp(r ? "#ffb23a" : "#ff5a3a", 1.4) });
   // ride-on bikes against the north wall
-  for (let i = 0; i < 2; i++) M("moto-" + i, "moto", 29.6 + i * 1.9, N + 1.2, S, { name: "Night Ride 500", res: "moto", pitch: 1.08 },
+  for (let i = 0; i < 2; i++) M("moto-" + i, "moto", 29.6 + i * 1.9, N + 1.22, S, { name: "Night Ride 500", res: "moto", pitch: 1.08 },
     { screen: glow("retro-arcade-crt-screen-motorbike-coast-road-racing-game", i ? "#d8ffe0" : "#ffffff"), marquee: lamp(i ? "#58c8ff" : "#ff4fb8", 1.4), tail: lamp("#ff2a1a", 2) });
   // pinball: three in a row, backs to the north wall
   const PB = [["Moon Diner", "#ffffff", "#ffd0f0"], ["High Tide", "#bfe6ff", "#9fe0ff"], ["Thunder Alley", "#ffe2a8", "#ffc070"]];
@@ -141,5 +141,5 @@ export function layArcade(ctx) {
    ["face3", E - 3.75, -2.77, EA, "m", { topw: "hoodie", top: "#c9a23a", bottom: "#22232b" }, "Faceling at the Skee-Ball"]].forEach(([id, x, z, yaw, sex, wear, name]) =>
     ctx.spawn("l31-arcade-" + id, { feetPosition: { x, y: 0.05, z }, rotation: { yaw }, physics: "character", tags: ["npc", "usable", "faceling", "l31-arcade"],
       ...critterSpec(npcLook("l31-arcade-" + id, { species: "faceling", sex, botw: "pants", shoes: "sneakers", ...wear }, "wanderer", 1)),
-      behavior: ["scripts/humanoid-locomotion.js"], state: { name, role: "survivor", faction: "wanderer", docile: true, hp: 60, home: { x, z }, stay: true } }));
+      behavior: ["scripts/humanoid-locomotion.js"], state: { name, role: "regular", faction: "wanderer", factionName: "Rink regular", docile: true, hp: 60, home: { x, z }, stay: true } }));
 }
