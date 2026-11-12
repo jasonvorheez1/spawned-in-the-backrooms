@@ -677,7 +677,7 @@ function lay(ctx) {
   // Fort Surrender Summit Checkpoint & Lashed-Furniture Palisades (x: -70, y: 11.0, z: -95)
   ctx.spawn("l7-fort-spawn", { feetPosition: { x: -68.0, y: 11.1, z: -89.0 }, rotation: { yaw: 180 } });
   // the fort itself: two rows of wardrobes, dressers, beds and doors stacked and tarred, lean-to shanties inside, a watchtower of lashed wardrobes; the gate faces the wharf (south)
-  ctx.spawn("l7-fort", { feetPosition: { x: -70.0, y: 10.95, z: -93.0 }, rotation: { yaw: 0 }, physics: { body: "static", collider: "mesh" }, model: { id: GLB.fort, materials: FORT_MATS }, receiveShadow: true, visibleRange: { max: 70 } });
+  ctx.spawn("l7-fort", { feetPosition: { x: -70.0, y: 10.95, z: -93.0 }, rotation: { yaw: 0 }, model: { id: GLB.fort, materials: FORT_MATS }, receiveShadow: true, visibleRange: { max: 70 } });
   // the Thing's worshippers keep tar lamps along the wall: the only light here, low and red-black
   [[-6, -7], [6, -7], [-8, 1], [8, 1], [0, -9]].forEach(([dx, dz], i) => ctx.spawn(`l7-fort-lamp-${i}`, { feetPosition: { x: -70 + dx, y: 12.4, z: -93 + dz }, light: { kind: "point", color: "oklch(0.7 0.16 45)", intensity: 1.6, distance: 11, shadow: { enabled: false }, visibleRange: { max: 35 } } }));
 
@@ -1026,6 +1026,10 @@ export function tick(ctx) {
     ctx.spawn("l7-ft-landing", { feetPosition: { x: (L0.x + L1.x) / 2, y: 11.63 - 0.3, z: (L0.z + L1.z) / 2 }, rotation: { yaw },
       primitive: { kind: "box", width: 2.8, height: 0.3, depth: Math.hypot(L1.x - L0.x, L1.z - L0.z) }, physics: "static", visible: false });
     s.fortPathV = 4;
+  }
+  if ((s.fortPathV ?? 0) < 5) { // Shelly Nov 12 "cant enter or exit fort surrender": the fort shell's mesh collider sealed the gate and roofed the yard; its walls, posts, tower and floor already stand as their own blocks (level7-fort2.js, l7-fort-walk-floor)
+    const f = ctx.place.objects["l7-fort"]; if (f) f.physics = "none";
+    s.fortPathV = 5;
   }
   if (!s.fortPlacementV) {
     // The mesh courtyard was supported only by terrain 0.7 m below the plank surface.
