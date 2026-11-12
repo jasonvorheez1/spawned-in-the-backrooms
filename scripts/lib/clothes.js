@@ -208,12 +208,15 @@ export function npcLook(id, look, faction, level, role) {
     } else {
       const P = NL[l.role] ?? NL[l.faction], own = P && (l.sex === 'f' ? P.hairF : P.hairM)   // hair that fits the job (npc-looks.yml)
       const hs = own?.length ? own : l.sex === 'f' ? C.hairF : C.hairM, r = hashOf(id + ':hair')
-      const bald = (l.sex === 'f' ? P?.baldF : P?.baldM) ?? 25   // not everyone has hair, girls too (Shelly)
+      const bald = P?.bald ?? 25   // not everyone has hair, girls as often as guys (Shelly)
       l.hair = r % 100 >= bald ? hs[(r >>> 7) % hs.length] : 'none'
       const hc = hashOf(id + ':hairc'), natural = C.hairc.slice(0, 7), bright = C.hairc.slice(11)
       l.hairc = hc % 100 < (P?.grey ?? 8) ? (hc % 2 ? '#9a9aa2' : '#f4efe9') : hc % 100 > 99 - (P?.hairBright ?? 12) ? bright[(hc >>> 5) % bright.length] : (P ? natural : C.hairc)[(hc >>> 3) % (P ? natural.length : C.hairc.length)]
     }
   }
+  { const PS = NL[l.role] ?? NL[l.faction], sr = hashOf(id + ':shape') // snout and ear shapes that fit the job
+    if (PS?.snouts && !look?.snout) l.snout = PS.snouts[sr % PS.snouts.length]
+    if (PS?.ears && !look?.ears) l.ears = PS.ears[(sr >>> 9) % PS.ears.length] }
   if (!look?.beard && l.sex === 'm') {
     const br = hashOf(id + ':beard')
     const PB = NL[l.role] ?? NL[l.faction]
@@ -282,5 +285,16 @@ function bodyRoll(id, l, look) {
   if (!look?.waistS) l.waistS = j(waist)
   if (!look?.hipS) l.hipS = j(hip)
   if (f && !look?.bustS) l.bustS = P?.bust ? Math.round(bust * rr('bust', 1) * 100) / 100 : j(bust, 0.15) // still random (Shelly), centred on the body type
+  return l
+}
+
+// Nov 12: a standing NPC's body, hair, beard, snout and ears re-rolled to fit its job; clothes, fur, sex, face kept
+export const NL_V = 'nl1'
+const REFIT_KEYS = ['hair', 'hairc', 'beard', 'beardc', 'bodyType', 'heightS', 'buildS', 'headS', 'earS', 'snoutS', 'tailS', 'waistS', 'hipS', 'bustS', 'snout', 'ears', 'chest']
+export function refitLook(id, wear) {
+  const base = { ...wear }; for (const k of REFIT_KEYS) delete base[k]
+  const l = npcLook(id, { ...base, clothesOwn: true }, wear.faction, 18, wear.role)
+  for (const k of Object.keys(wear)) if (!REFIT_KEYS.includes(k)) l[k] = wear[k]
+  delete l.clothesOwn; l.nl = NL_V
   return l
 }
