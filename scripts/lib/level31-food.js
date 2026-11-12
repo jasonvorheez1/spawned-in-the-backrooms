@@ -71,7 +71,6 @@ export function layFood(ctx) {
   // the zone's root, where the blueprint stood: its lights
   const L = (x, y, z, color, intensity) => ({ feetPosition: { x, y, z }, light: { kind: "point", color, intensity, distance: 15 } });
   P("bp", { feetPosition: { x: 34, y: 0, z: 18 }, children: [L(3.2, 2.9, -4, "#fff0d9", 4), L(3.2, 2.9, 3, "#fff0d9", 4), L(-3, 3.8, 0.5, "#ffdfb7", 5), L(-2, 3.4, -8.5, "#fff0d9", 3)] });
-  // serving counter along the east wall: carcass, kick, stainless top, tray rail
   // serving counter along the east wall: four Tripo diner counter modules (red vinyl, chrome band, cream top), 3.5 x 0.82 x 0.84 m each, one box collider under them
   P("counter", { feetPosition: { x: 38, y: 0.1, z: 17 }, primitive: box(0.84, 0.82, 14), render: false, physics: "static" });
   for (let i = 0; i < 4; i++) P(`counter-m${i}`, { feetPosition: { x: 38, y: 0.1, z: 10.75 + i * 3.5 }, rotation: { yaw: 90 }, model: { id: G.counter }, layout: { box: { min: { x: -1.75, y: 0, z: -0.42 }, max: { x: 1.75, y: 0.82, z: 0.42 } } }, receiveShadow: true });
