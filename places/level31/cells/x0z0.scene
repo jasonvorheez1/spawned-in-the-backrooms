@@ -834,7 +834,7 @@ l31-shop-bp:
 l31-shop-light-mid:
   feetPosition: {x: -33, y: 3.4, z: 0}
   id: l31-shop-light-mid
-  light: {color: oklch(0.9 0.06 80), distance: 12, intensity: 2.5, kind: point}
+  light: {color: oklch(0.9 0.06 80), distance: 10, intensity: 0.9, kind: point}
 l31-shop-spinner-2:
   feetPosition: {x: -34.3, y: 0, z: -4.6}
   id: l31-shop-spinner-2
