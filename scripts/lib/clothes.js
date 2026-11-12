@@ -5,6 +5,7 @@
 import CL from './data/clothes.yml'
 import C from './data/critter.yml'
 import NL from './data/npc-looks.yml'
+import CWD from './data/cat-wardrobe.yml'
 import { drMul, armorCnd } from './condition.js'
 import { mitigated } from './combat.js'
 
@@ -207,7 +208,8 @@ export function npcLook(id, look, faction, level, role) {
       l.hair = 'none'
     } else {
       const P = NL[l.role] ?? NL[l.faction], own = P && (l.sex === 'f' ? P.hairF : P.hairM)   // hair that fits the job (npc-looks.yml)
-      const hs = own?.length ? own : l.sex === 'f' ? C.hairF : C.hairM, r = hashOf(id + ':hair')
+      const sx = l.sex === 'f' ? 'f' : 'm', catHair = Object.keys(CWD.hair ?? {}).filter((k) => CWD.hair[k][sx]), mine = (own ?? []).filter((k) => catHair.includes(k))   // the cat hairstyles that exist for this body
+      const hs = mine.length ? mine : catHair.length ? catHair : l.sex === 'f' ? C.hairF : C.hairM, r = hashOf(id + ':hair')
       const bald = P?.bald ?? 25   // not everyone has hair, girls as often as guys (Shelly)
       l.hair = r % 100 >= bald ? hs[(r >>> 7) % hs.length] : 'none'
       const hc = hashOf(id + ':hairc'), natural = C.hairc.slice(0, 7), bright = C.hairc.slice(11)
@@ -289,7 +291,7 @@ function bodyRoll(id, l, look) {
 }
 
 // Nov 12: a standing NPC's body, hair, beard, snout and ears re-rolled to fit its job; clothes, fur, sex, face kept
-export const NL_V = 'nl1'
+export const NL_V = 'nl2'
 const REFIT_KEYS = ['hair', 'hairc', 'beard', 'beardc', 'bodyType', 'heightS', 'buildS', 'headS', 'earS', 'snoutS', 'tailS', 'waistS', 'hipS', 'bustS', 'snout', 'ears', 'chest']
 export function refitLook(id, wear) {
   const base = { ...wear }; for (const k of REFIT_KEYS) delete base[k]
