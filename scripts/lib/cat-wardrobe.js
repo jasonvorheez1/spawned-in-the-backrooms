@@ -83,7 +83,7 @@ export function faceLife(sk, look, face, faces) {
   const seed = [...JSON.stringify([look?.fur, look?.hair, look?.eyes, look?.fseed])].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % 1000 / 1000
   const out = { bSeed: seed, talk: look?.talk ? 1 : 0 }
   if (!SHUT.includes(mood)) out.blinkFace = faces.blink
-  if (mood !== 'ko') out.talkFace = ['angry', 'shock', 'sad'].includes(mood) ? faces.shock : faces.joy
+  if (mood !== 'ko') { out.talkFace = faces.joy; out.talkFace2 = faces.shock }
   return out
 }
 export function catModel(sex, look) {
@@ -197,7 +197,7 @@ export function liveFace(ctx) {
   let mood = 'rest'
   if (s.dead || s.down || hp <= 0) mood = 'ko'
   else if (now < (ses.lfHurt ?? 0)) mood = 'hit'
-  else if (s.angry || s.hostile) mood = 'angry'
+  else if (s.hostile || s.angry === true || (s.angry && typeof s.angry === 'object' && Object.keys(s.angry).length)) mood = 'angry'   // angry is a book of who they're mad at: an empty one is calm
   else if (hp < 30) mood = 'sad'
   else {
     if (now > (ses.lfQNext ?? 0)) { const r = ctx.random(); ses.lfQ = r < 0.55 ? 'smile' : r < 0.8 ? 'blep' : 'joy'; ses.lfQUntil = now + 1500 + r * 1500; ses.lfQNext = ses.lfQUntil + 14000 + ctx.random() * 22000 }

@@ -33,12 +33,18 @@ export function material(ctx) {
       pic0 = mix(pic0, bl, shut.mul(eyesUp));
     }
     if (ctx.params.talkFace) {
-      const t = time.add(seed.mul(13));
-      const syl = sin(t.mul(14.0)).mul(0.6).add(sin(t.mul(9.3).add(1.7)).mul(0.5)).add(sin(t.mul(3.1)).mul(0.35));   // syllables and little pauses
-      const open = step(0.15, syl).mul(P("talk", 0));
-      const mouthZone = eyesUp.oneMinus().mul(smoothstep(0.2, 0.16, abs(u.sub(0.5))));
-      const tk = ctx.texture(String(ctx.params.talkFace)).sample(vec2(u, v));
-      pic0 = mix(pic0, tk, open.mul(mouthZone));
+      // talking: about 7 syllables a second, each one an open mouth or a round "o", with short closed gaps and a breath every couple of seconds
+      const t = time.add(seed.mul(13)), syl = t.mul(7.0), k = syl.floor(), ph = fract(syl)
+      const pick = fract(sin(k.mul(12.9898).add(seed.mul(78.233))).mul(43758.5453))
+      const breath = step(0.82, fract(t.mul(0.45)))
+      const talkOn = P("talk", 0).mul(breath.oneMinus())
+      const shut = step(0.72, ph)
+      const openA = step(pick, 0.62).mul(shut.oneMinus()).mul(talkOn), openO = step(0.62, pick).mul(shut.oneMinus()).mul(talkOn)
+      const mouthZone = eyesUp.oneMinus().mul(smoothstep(0.22, 0.17, abs(u.sub(0.5))))
+      const tk = ctx.texture(String(ctx.params.talkFace)).sample(vec2(u, v))
+      const tk2 = ctx.params.talkFace2 ? ctx.texture(String(ctx.params.talkFace2)).sample(vec2(u, v)) : tk
+      pic0 = mix(pic0, tk, openA.mul(mouthZone))
+      pic0 = mix(pic0, tk2, openO.mul(mouthZone))
     }
     // a mouth type: its layer over the face picture, same projection (critter-faces.yml mouths)
     const mo = ctx.params.mouth ? ctx.texture(String(ctx.params.mouth)).sample(vec2(u, v)) : null;

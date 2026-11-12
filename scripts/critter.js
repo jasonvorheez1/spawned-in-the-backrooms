@@ -194,7 +194,7 @@ function moodFace(ctx, l) {
   ses.hp = hp
   if (s.dead || s.down || hp <= 0) return 'ko'
   if (now < (ses.hurtUntil || 0)) return 'hit'   // the painted hit face (Shelly liked it, stars off)
-  if (s.angry) return 'angry'
+  if (s.hostile || s.angry === true || (s.angry && typeof s.angry === 'object' && Object.keys(s.angry).length)) return 'angry'
   if (hp < 30) return 'sad'
   if ((s.san ?? 100) < 25) return 'scared'
   // a resting face lives a little (Nov 12 'animated faces'): now and then a smile or a blep, on each cat's own beat
