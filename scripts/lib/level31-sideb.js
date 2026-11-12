@@ -33,7 +33,7 @@ export function laySideB(ctx) {
   const SHIFT = {
     marlowe: [beat(-12, 28.8, 14, -12, 20), beat(-13.4, 29.1, 6, -13.4, 31), beat(-10.6, 28.9, 8, -12, 20)],
     guard1: [beat(-14.7, 27.9, 10), beat(-18, 25, 7), beat(-22, 21, 9), beat(-16, 24, 6)],
-    guard2: [beat(-9.3, 27.9, 9), beat(-5, 24.5, 8), beat(1, 22, 7), beat(-6, 25, 6)],
+    guard2: [beat(-9.3, 27.9, 9), beat(-5, 24.5, 8), beat(-1.5, 25.5, 7), beat(-6, 25, 6)],
     dez: [beat(-27.4, 28.6, 12, -12, 28), beat(-31, 26, 8, -24, 4), beat(-27, 23, 9), beat(-24, 27, 7, -12, 28)],
   };
   person("marlowe", -12, 28.8, 0, { species: "human", sex: "m", topw: "jacket", top: "#4a5a3a", botw: "pants", bottom: "#2c2a26", shoes: "boots" },
