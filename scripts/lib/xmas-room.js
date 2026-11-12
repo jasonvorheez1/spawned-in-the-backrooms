@@ -49,12 +49,12 @@ export function layXmas(ctx) {
   ctx.spawn("xmas-tree", { tags: ["xmas"], feetPosition: { x: tx, y: 0.02, z: tz }, primitive: geo("tree"), physics: { body: "static", collider: "cylinder" }, fx: { script: TW },
     audio: { clip: "/cdn/moodboard-gothic-horror/ambience-distant-detuned-music-box-carol-in-empty-dark-room-loop.mp3", gain: X.carol.gain, loop: true, spatial: true, maxDistance: X.carol.maxDistance } });
   ctx.spawn("xmas-tree-light", { tags: ["xmas"], feetPosition: { x: tx, y: 1.5, z: tz }, light: { kind: "point", color: "#ffa255", intensity: X.treeLight, distance: X.treeLightRange, shadow: { enabled: true } } });
-  ctx.spawn("xmas-present-tag", { tags: ["xmas", "container"], feetPosition: { x: tx + 0.75, y: 0.02, z: tz - 0.55 }, rotation: { yaw: 20 }, primitive: geo("present", { w: 0.42, h: 0.28, d: 0.36, col: "#1f6a3a", rib: "#d8b040" }), physics: { body: "static", collider: "box" }, state: { name: "Present, your name on the tag", items: "bauble,bauble,bauble" } });
+  ctx.spawn("xmas-present-tag", { tags: ["xmas", "container"], feetPosition: { x: tx + 0.75, y: 0.02, z: tz - 0.55 }, rotation: { yaw: 20 }, primitive: geo("present", { w: 0.42, h: 0.28, d: 0.36, col: "#1f6a3a", rib: "#d8b040" }), physics: { body: "static", collider: "box" }, state: { name: "Present, your name on the tag", items: "bauble,bauble,bauble,ornament,ornament,ornament" } });
   [[-0.7, 0.5, 25, "#b01c22", 0.34, 0.22], [0.2, 0.8, -15, "#2a4aa8", 0.3, 0.4], [-0.4, -0.75, 40, "#d8d0c8", 0.26, 0.2]].forEach(([ox, oz, yw, col, w, h], i) => ctx.spawn(`xmas-gift-${i}`, { tags: ["xmas"], feetPosition: { x: tx + ox, y: 0.02, z: tz + oz }, rotation: { yaw: yw }, primitive: geo("present", { w, h, d: w * 0.9, col }) }));
   // (a) two Still Lifes half-sunk in the carpet, face down, reaching for the tree
   [["xmas-still-a", -3.1, -1.2, 70, "f", "#ebe4d8"], ["xmas-still-b", 2.9, 1.6, -115, "m", "#d9d2c6"]].forEach(([id, ox, oz, yw, sex, fur]) => {
     const sp = stillLook(sex, fur);
-    ctx.spawn(id, { ...sp, tags: ["xmas", "still-life", "container"], feetPosition: { x: tx + ox, y: -0.12, z: tz + oz }, rotation: { yaw: yw, pitch: -82 }, physics: { body: "static", collider: "box" }, children: [...(sp.children ?? []), seam(1.05, -0.1)], behavior: "scripts/xmas-still.js", state: { role: "sunk", home: { x: tx + ox, z: tz + oz }, name: "Still Life", verb: "Search", items: "stuffing,stuffing" } });
+    ctx.spawn(id, { ...sp, tags: ["xmas", "still-life", "container"], feetPosition: { x: tx + ox, y: -0.12, z: tz + oz }, rotation: { yaw: yw, pitch: -82 }, physics: { body: "static", collider: "box" }, children: [...(sp.children ?? []), seam(1.05, -0.1)], behavior: "scripts/xmas-still.js", state: { role: "sunk", home: { x: tx + ox, z: tz + oz }, name: "Still Life", verb: "Search", items: "stuffing,stuffing,ornament,ornament" } });
   });
   // (b) the Lamp Sitter: grown into a wheelchair, its lamp wakes when someone comes close
   const ls = { x: E.x0 + 3.2, z: E.z1 - 4 }, sp = stillLook("m", "#e6dfd2");
@@ -86,7 +86,7 @@ export function layXmas(ctx) {
   // (d) the Watcher: faces the corner of the red room. turn away and it is closer, and facing you
   const wt = { x: R.x1 - 1.1, z: R.z0 + 0.9 }, ws = stillLook("f", "#e9e2d6");
   ctx.spawn("xmas-watcher", { ...ws, tags: ["xmas", "still-life", "container"], feetPosition: { x: wt.x, y: 0, z: wt.z }, rotation: { yaw: 20 }, physics: { body: "static", collider: "box" }, behavior: "scripts/xmas-still.js", children: [...(ws.children ?? []), seam(1.1, 0.1), seam(0.7, -0.12)],
-    state: { role: "watcher", home: wt, name: "Still Life", verb: "Search", items: "stuffing,bauble" } });
+    state: { role: "watcher", home: wt, name: "Still Life", verb: "Search", items: "stuffing,bauble,ornament" } });
   // the far door, shut; the closet behind it holds (c) the Red Stray
   ctx.spawn("xmas-exit-door", { tags: ["xmas", "xmas-shut"], feetPosition: { x: dx, y: 0, z: R.z1 }, pivot: [0, 0.5, 0.5], physics: "kinematic", primitive: { kind: "box", width: 1.15, height: 2.12, depth: 0.06 }, material: { texture: "cdn/texture-worn-hardwood-grain.png", color: "oklch(0.45 0.06 40)", roughness: 0.6 }, state: { open: false } });
   const rs = stillLook("m", "#a8322c");

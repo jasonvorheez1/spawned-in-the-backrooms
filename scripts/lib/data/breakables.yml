@@ -34,6 +34,7 @@ breakSound: debris-collapse-crumble
 buildSound: hammer-nail-wood-build
 # scrap tokens: name, kg each, colour in the amber lists
 scrap:
+  ornament:    { name: Christmas ornament, kg: 0.05, color: "#d8323c" }   # Christmas Area only: presents and Still Lifes (crafts the Bobette and Carolynne)
   stuffing:    { name: Stuffing, kg: 0.1, color: "#f2efe6" }   # Christmas Area only: out of the Still Lifes and presents (crafts the Bobette and Carolynne)
   scrap_wood:  { name: Scrap wood,  kg: 0.6, color: "#d9a35a" }
   scrap_metal: { name: Scrap metal, kg: 0.8, color: "#b9c2c8" }
