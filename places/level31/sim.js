@@ -8,7 +8,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 65;
+const V = 66;
 const RAIL_GLB = "/cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb";
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
@@ -268,8 +268,8 @@ function mezzanine(ctx) {
   // stair sides: teal stringer and rail on the open east side, landing rail on the north
   const sl = Math.hypot(run, Y);
   ctx.spawn("l31-mz-stringer", { feetPosition: { x: S.x1 + 0.05, y: Y / 2 + 0.1, z: (S.zBottom + S.zTop) / 2 }, pivot: "center", rotation: { pitch: ang * -dir }, primitive: rbox(0.1, 0.45, sl, 0.03), material: { color: "#1d7b80", roughness: 0.5 }, physics: "static", castShadow: false,
-    children: [{ id: "glass", feetPosition: { x: 0, y: 0.2, z: 0 }, primitive: box(0.03, 0.95, sl), material: { color: "#bfe6ea", opacity: 0.28, transparent: true, roughness: 0.05 }, castShadow: false },
-      { id: "hand", feetPosition: { x: 0, y: 1.15, z: 0 }, primitive: rbox(0.07, 0.06, sl, 0.025), material: { color: "#e6e9ee", metalness: 0.95, roughness: 0.15 }, castShadow: false }] });
+    children: Array.from({ length: Math.max(1, Math.round(sl / 2.3)) }, (_, i, arr) => { const seg = sl / arr.length; // Tripo brass rail panels riding the stringer's slope
+      return { id: "p" + i, feetPosition: { x: 0, y: 0.225, z: -sl / 2 + (i + 0.5) * seg }, model: PANEL, scale: { x: 1, y: 1.17, z: seg / 2.35 }, castShadow: false }; }) });
   rail("land-e", S.x1 + 0.05, S.zTop, S.landZ); rail("land-n", S.landZ - 0.05, S.x0 - 0.1, S.x1 + 0.1, true);
   // upstairs lighting along the walkway; downlights under the slab
   for (const z of [-24, -15, 15, 24]) ctx.spawn(`l31-mz-up${z}`, { feetPosition: { x: -31, y: H - 0.1, z }, ...P({ kind: "can" }), castShadow: false, children: [{ feetPosition: { x: 0, y: -0.35, z: 0 }, light: { kind: "point", color: "#ffe1bd", intensity: 3.5, distance: 9 } }] });
