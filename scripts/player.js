@@ -63,6 +63,15 @@ import SNACKS from './lib/data/snacks.yml'
 import { carryAcross } from "./lib/carry.js";
 const sndTurn = {}
 const SND = (n) => { const takes = SOUNDS[n]; if (!takes?.length) return `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`; sndTurn[n] = ((sndTurn[n] ?? -1) + 1 + (takes.length > 2 ? Math.floor(takes.length / 2) : 0)) % takes.length; return takes[sndTurn[n]] }
+const L_PER = () => L.perLevel.damage
+const BAUBLE_TINTS = [[2.6, .25, .2], [.3, 2.2, .45], [2.6, 1.9, .5], [.5, .9, 2.6], [2.2, .5, 2]] // red, green, gold, blue, pink glass
+const BAUBLE_TRAIL = `fx
+pop glit rate=?mobile:40|80 at=point() life=.35..0.7 v=sdir()*(.2..0.6) size=.015..0.035 acc=grav()*.15+drag(2) col=<%tint|2.6,.3,.2>*flick(9,.6) a=1>0 sz=$size*(1>.3) r=sprite(ember,add)
+pop star rate=?mobile:6|12 at=point() life=.4..0.6 size=.05..0.09 col=hdr(3,2.6,1.6) a=1>0 sz=$size*(.4>1>0) rot=spin(1.5) r=sprite(sparkle-star,add)`
+const BAUBLE_PUFF = `fx
+pop smoke burst=?mobile:5|9 life=.4..0.8 v=sdir()*(.4..1)+up(.4) size=.12..0.22 acc=drag(3)+buoy(.4) col=<.92,.9,.88> a=.5>0 sz=$size*(.6>1.8) r=sprite(smoke-puff,alpha)
+pop confetti burst=?mobile:10|18 life=.5..0.9 v=sdir()*(1.5..3) size=.015..0.03 spin=-10..10 tint=<2.4,.3,.25>..<.3,2.2,.5> acc=grav()*.5+drag(2) col=$tint a=1>0 sz=$size rot=$age*$spin r=sprite(stalk,add,velocity,.02)
+pop flash burst=1 life=.08 r=light(<%tint|2.6,.3,.2>,10,4)`
 const GS = (wp, key, fb) => wp?.sfx?.[key] ?? fb // a gun's own handling sound (weapons.yml sfx: open, eject, insert, shell, done, dry), else the stock one
 const perRound = (wp) => !!(wp.pellets || wp.tube || wp.wheel) // loaded one round at a time, and a shot can interrupt it
 const ZAP = `fx
@@ -589,6 +598,19 @@ function swing(ctx, power = 0) {
   { const st = (w.combo3 ??= { n: 0, at: 0 }); st.n = now - st.at > 1100 ? 0 : st.n + 1; st.at = now; if (wp.ranged) fire3(ctx); else swing3(ctx, s.equipped, power, st.n) } // the body's own swing, for the third-person camera and everyone else
   if (s.equipped !== 'fists') s['cnd_' + s.equipped] = Math.max(0, (s['cnd_' + s.equipped] ?? 100) - useWear(wp) * derived(s).wear) // weapons wear with use; Repair slows it
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
+  if (wp.ranged && wp.lob) { // the Carolynne: a festive grenade launcher, each shot one of the Glass Baubles you throw, arcing out and shattering where it lands (scripts/nade.js bauble)
+    const { eye, fwd: fv, pitch: pv } = weaponAim(ctx), L = wp.lob, cp = Math.cos(pv), sp = Math.sin(pv)
+    const dmg = Math.round((wp.damage + (s.level - 1) * L_PER(s) * wp.levelScale) * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)))
+    const from = { x: eye.x + fv.x * cp * 0.9, y: eye.y + sp * 0.9 - 0.12, z: eye.z + fv.z * cp * 0.9 }
+    const vel = { x: fv.x * cp * L.speed, y: sp * L.speed + L.lift, z: fv.z * cp * L.speed }
+    const tint = BAUBLE_TINTS[Math.floor(ctx.random() * BAUBLE_TINTS.length)]
+    ctx.spawn({ tags: ['thrown'], lifetime: 8, feetPosition: from, model: THROW.bauble.model, layout: { box: { min: { x: -0.07, y: 0, z: -0.07 }, max: { x: 0.07, y: 0.14, z: 0.07 } } },
+      fx: { script: BAUBLE_TRAIL, params: { tint } }, castShadow: false,
+      behavior: 'scripts/nade.js', state: { kind: 'bauble', vel, ownerId: ctx.self.id, big: true, dmg, radius: L.radius, daze: L.daze, tint } })
+    ctx.emit('fx', { position: from, script: BAUBLE_PUFF, params: { tint } })
+    s.kick = Hd.recoil
+    return
+  }
   if (wp.ranged) { // real bullets: spread, drop and drag down each pellet's path (scripts/lib/ballistics.js)
     const { eye, fwd: fv, pitch: pv } = weaponAim(ctx)
     const crit = ctx.random() < derived(s).crit + (wp.critBonus ?? 0)
