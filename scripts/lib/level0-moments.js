@@ -48,14 +48,31 @@ const plainZone = (cx, cz) => ["halls", "expanse", "offices"].includes(zoneOf(cx
 
 // scribbles: one SVG per message, drawn like marker and chalk on wallpaper
 const INK = "#3a2416", CHALK = "#2b2b2e";
-const SCRIBBLE = {
-  notsafe: `<svg viewBox='0 0 300 120' width='1.5m'><g transform='rotate(-4 150 60)'><text x='150' y='72' text-anchor='middle' font-family='display' font-size='58' fill='${INK}' stroke='${INK}' stroke-width='2'>IT'S NOT SAFE</text><path d='M30 92 L270 86' stroke='${INK}' stroke-width='5' fill='none'/></g></svg>`,
-  lights: `<svg viewBox='0 0 300 120' width='1.3m'><g transform='rotate(3 150 60)'><text x='150' y='50' text-anchor='middle' font-family='serif' font-style='italic' font-size='36' fill='${INK}'>don't trust</text><text x='150' y='96' text-anchor='middle' font-family='serif' font-style='italic' font-size='36' fill='${INK}'>the lights</text></g></svg>`,
-  tally: `<svg viewBox='0 0 300 120' width='1.1m'><g stroke='${CHALK}' stroke-width='5' stroke-linecap='round' fill='none'>${[0, 1, 2, 3, 4].map((g) => [0, 1, 2, 3].map((k) => `<path d='M${14 + g * 58 + k * 10} ${22 + (k % 2) * 3} L${16 + g * 58 + k * 10} ${92 - (k % 3) * 2}'/>`).join("") + `<path d='M${6 + g * 58} 80 L${54 + g * 58} 34'/>`).join("")}<path d='M${14 + 5 * 58} 24 L${15 + 5 * 58} 92'/><path d='M${24 + 5 * 58} 22 L${26 + 5 * 58} 90'/></g><text x='150' y='116' text-anchor='middle' font-family='sans-serif' font-size='16' fill='${CHALK}'>days?</text></svg>`,
-  arrow: `<svg viewBox='0 0 200 100' width='0.9m'><g stroke='${CHALK}' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'><path d='M18 54 C60 46 110 56 170 50'/><path d='M138 22 L176 50 L136 80'/></g></svg>`,
-  exit: `<svg viewBox='0 0 200 100' width='0.9m'><g stroke='${CHALK}' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'><path d='M18 58 C60 50 110 60 170 54'/><path d='M138 26 L176 54 L136 84'/></g><text x='96' y='34' text-anchor='middle' font-family='sans-serif' font-size='22' fill='${CHALK}'>EXIT</text></svg>`,
+// hand lettering (Shelly Nov 12 "de-ai slop signs"): every letter its own wobble, size and lean, so no line reads as a typed font
+const HJ = (t, i, k) => { const v = Math.sin((t.charCodeAt(i % t.length) + 1) * 12.9898 + i * 78.233 + k * 37.719) * 43758.5453; return v - Math.floor(v); };
+const hand = (text, cx, y, size, fill, { family = "sans-serif", weight = 700, track = 0.62, lean = 0, wob = 1, op = 0.9, k = 0 } = {}) => {
+  const cs = [...text], w = cs.length * size * track, x0 = cx - w / 2;
+  return `<g fill='${fill}' fill-opacity='${op}' font-family='${family}' font-weight='${weight}' transform='rotate(${lean} ${cx} ${y})'>` + cs.map((c, i) => {
+    if (c === " ") return "";
+    const x = x0 + (i + 0.5) * size * track + (HJ(text, i, k) - 0.5) * size * 0.12 * wob, yy = y + (HJ(text, i, k + 1) - 0.5) * size * 0.16 * wob + i * 0.25 * wob;
+    const r = (HJ(text, i, k + 2) - 0.5) * 14 * wob, sz = size * (0.9 + HJ(text, i, k + 3) * 0.2);
+    return `<text x='${x.toFixed(1)}' y='${yy.toFixed(1)}' font-size='${sz.toFixed(1)}' text-anchor='middle' transform='rotate(${r.toFixed(1)} ${x.toFixed(1)} ${yy.toFixed(1)})'>${c.replace(/&/g, "&amp;").replace(/'/g, "&#39;")}</text>`;
+  }).join("") + `</g>`;
 };
-const EXIT_LEFT = `<svg viewBox='0 0 200 100' width='0.9m'><g stroke='${CHALK}' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'><path d='M182 58 C140 50 90 60 30 54'/><path d='M62 26 L24 54 L64 84'/></g><text x='104' y='34' text-anchor='middle' font-family='sans-serif' font-size='22' fill='${CHALK}'>EXIT</text></svg>`; // the word stays readable when the arrow points left
+const drip = (x, y, len, fill) => `<path d='M${x} ${y} L${x + 0.6} ${y + len}' stroke='${fill}' stroke-opacity='.55' stroke-width='2' stroke-linecap='round'/>`;
+const SCRIBBLE = {
+  notsafe: `<svg viewBox='0 0 300 120' width='1.5m'>${hand("IT'S NOT SAFE", 150, 70, 46, INK, { weight: 900, lean: -4, wob: 1.4, k: 1 })}<path d='M28 92 C90 88 180 90 268 84' stroke='${INK}' stroke-opacity='.8' stroke-width='5' fill='none' stroke-linecap='round'/>${drip(64, 76, 22, INK)}${drip(196, 74, 14, INK)}</svg>`,
+  lights: `<svg viewBox='0 0 300 120' width='1.3m'>${hand("don't trust", 150, 50, 32, INK, { family: 'serif', weight: 400, track: 0.5, lean: 3, k: 2 })}${hand('the lights', 156, 96, 32, INK, { family: 'serif', weight: 400, track: 0.5, lean: 2, k: 3 })}</svg>`,
+  tally: `<svg viewBox='0 0 300 120' width='1.1m'><g stroke='${CHALK}' stroke-width='5' stroke-linecap='round' fill='none'>${[0, 1, 2, 3, 4].map((g) => [0, 1, 2, 3].map((k) => `<path d='M${14 + g * 58 + k * 10} ${22 + (k % 2) * 3} L${16 + g * 58 + k * 10} ${92 - (k % 3) * 2}'/>`).join("") + `<path d='M${6 + g * 58} 80 L${54 + g * 58} 34'/>`).join("")}<path d='M${14 + 5 * 58} 24 L${15 + 5 * 58} 92'/><path d='M${24 + 5 * 58} 22 L${26 + 5 * 58} 90'/></g>${hand('days?', 150, 114, 16, CHALK, { weight: 400, op: 0.8, k: 6 })}</svg>`,
+  arrow: `<svg viewBox='0 0 200 100' width='0.9m'><g stroke='${CHALK}' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'><path d='M18 54 C60 46 110 56 170 50'/><path d='M138 22 L176 50 L136 80'/></g></svg>`,
+  noclip: `<svg viewBox='0 0 300 120' width='1.2m'>${hand('i noclipped', 150, 48, 30, INK, { weight: 400, lean: -6, k: 9 })}${hand('at 4:12am', 146, 90, 24, INK, { weight: 400, lean: -4, k: 10 })}</svg>`,
+  steps: `<svg viewBox='0 0 300 120' width='1.2m'>${hand('COUNT YOUR STEPS', 150, 56, 26, CHALK, { weight: 800, track: 0.58, lean: 2, k: 11 })}${hand('2,114 ... 2,115 ...', 150, 94, 16, CHALK, { weight: 400, op: 0.7, k: 12 })}</svg>`,
+  wasHere: `<svg viewBox='0 0 300 120' width='1m'>${hand('DANNY K', 140, 54, 34, '#2f56a8', { weight: 900, lean: -8, k: 13 })}${hand('WAS HERE', 150, 94, 22, '#2f56a8', { weight: 700, lean: -5, k: 14 })}</svg>`,
+  hum: `<svg viewBox='0 0 300 120' width='1.3m'>${hand('the hum is', 150, 46, 26, INK, { family: 'serif', weight: 400, lean: 1, k: 15 })}${hand('louder by the walls', 150, 84, 22, INK, { family: 'serif', weight: 400, lean: 1, k: 16 })}</svg>`,
+  phone: `<svg viewBox='0 0 300 120' width='1m'>${hand('CALL', 150, 44, 26, INK, { weight: 800, k: 17 })}${hand('555-0148', 150, 84, 24, INK, { weight: 600, k: 18 })}<path d='M70 76 C120 70 180 80 232 72' stroke='${INK}' stroke-width='4' stroke-linecap='round' fill='none'/>${hand('dont', 214, 112, 14, INK, { weight: 400, op: 0.75, k: 19 })}</svg>`,
+  exit: `<svg viewBox='0 0 200 100' width='0.9m'><g stroke='${CHALK}' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'><path d='M18 58 C60 50 110 60 170 54'/><path d='M138 26 L176 54 L136 84'/></g>${hand('EXIT', 96, 34, 22, CHALK, { track: 0.7, op: 0.75, k: 4 })}</svg>`,
+};
+const EXIT_LEFT = `<svg viewBox='0 0 200 100' width='0.9m'><g stroke='${CHALK}' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'><path d='M182 58 C140 50 90 60 30 54'/><path d='M62 26 L24 54 L64 84'/></g>${hand('EXIT', 104, 34, 22, CHALK, { track: 0.7, op: 0.75, k: 5 })}</svg>`; // the word stays readable when the arrow points left
 const mirror = (svg) => svg.replace(/<svg ([^>]*)>/, "<svg $1><g transform='translate(200 0) scale(-1 1)'>").replace(/<\/svg>$/, "</g></svg>");
 
 export function layMoments(ctx) {
@@ -144,7 +161,7 @@ pop buzz n=1 at=point().c(2.92) size=.9 col=hdr(1.6,1.4,.9) a=.35+.4*flick(.9,.5
   for (const seed of [506, 507]) { const p = pick(seed, (cx, cz) => plainZone(cx, cz)); if (p) { const c = cellCenter(p.cx, p.cz); put("holetile", { feetPosition: { x: c.x + 0.6, y: 0, z: c.z - 0.6 }, primitive: geo("holetile") }); } }
   const st = pick(508, (cx, cz) => plainZone(cx, cz)); if (st) { const c = cellCenter(st.cx, st.cz); put("stain", { feetPosition: { x: c.x - 0.5, y: 0, z: c.z + 0.4 }, primitive: geo("stain", { seed: 8 }) }); }
   // scribbles on walls
-  const msg = [["notsafe", 1.55], ["lights", 1.5], ["tally", 1.3], ["notsafe", 1.7], ["lights", 1.45], ["tally", 1.4]];
+  const msg = [["notsafe", 1.55], ["lights", 1.5], ["tally", 1.3], ["noclip", 1.4], ["steps", 1.5], ["wasHere", 1.2], ["hum", 1.45], ["phone", 1.35], ["notsafe", 1.7], ["lights", 1.45]]; // more voices on the walls (Shelly Nov 12 "more variety")
   msg.forEach(([k, y], i) => { const p = one(520 + i, any, (cx, cz, d) => { scrib(k, cx, cz, d, (hash(cx, cz, 9) - 0.5) * 1.6, y); if (!out.msgAt) out.msgAt = { ...cellCenter(cx, cz), d }; }, 3, 15); });
   // 6 · the old wanderer's camp, with its note
   const cp = pick(601, (cx, cz) => corner(cx, cz) && plainZone(cx, cz) && hasLight(cx, cz), 4, 13);
@@ -179,7 +196,7 @@ pop buzz n=1 at=point().c(2.92) size=.9 col=hdr(1.6,1.4,.9) a=.35+.4*flick(.9,.5
       behavior: "scripts/moments.js",
       state: { kind: "meg-board", name: "M.E.G. Waypoint Alpha-0 Notice", verb: "Read Survey Bulletin" },
     });
-    scrib("meg", meg.cx, meg.cz, a, 0.8, 1.45, `<svg viewBox='0 0 300 120' width='1.4m'><g transform='rotate(-2 150 60)'><rect x='10' y='14' width='280' height='92' fill='none' stroke='${INK}' stroke-width='4'/><text x='150' y='58' text-anchor='middle' font-family='sans-serif' font-weight='900' font-size='34' fill='${INK}'>M.E.G. ALPHA-0</text><text x='150' y='88' text-anchor='middle' font-family='sans-serif' font-size='18' fill='${INK}'>WAYPOINT · DO NOT REMOVE</text></g></svg>`);
+    scrib("meg", meg.cx, meg.cz, a, 0.8, 1.45, `<svg viewBox='0 0 300 120' width='1.4m'><path d='M12 16 L288 13 L290 104 L10 107 Z' fill='none' stroke='${INK}' stroke-opacity='.85' stroke-width='3.5' stroke-linejoin='round'/>${hand('M.E.G. ALPHA-0', 150, 58, 30, INK, { weight: 900, track: 0.6, lean: -2, wob: 0.6, k: 7 })}${hand('WAYPOINT - DO NOT REMOVE', 150, 88, 14, INK, { track: 0.56, lean: -1, wob: 0.5, k: 8 })}</svg>`);
     out.megAt = cellCenter(meg.cx, meg.cz);
   }
   // 7 · the chalk route: arrows on side walls along the way from the safe room to the exit
