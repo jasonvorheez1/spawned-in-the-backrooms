@@ -1,4 +1,5 @@
 import { plain } from './lib/plain.js'
+import { actedVoice, hasCast, recordedDuration } from './lib/voices.js'
 // Talk with NPCs, on the player. E on a person opens the card (interact.js sets state.talkWith). Everything they say and
 // every choice you get is written by hand (scripts/lib/dialogue.js, data/dlg-*.yml): pick a line, they answer it; checks are rolled here.
 // Traders open a shop from the card. Numbers: lib/data/talk.yml, lib/data/shops.yml.
@@ -83,15 +84,20 @@ function logLine(ctx, it, w, t) {
 }
 // the reply: a voice at the npc everyone near hears, their speech bubble, your subtitle
 function say(ctx, it, line, mood) {
-  line = plain(line) // every spoken line, written or generated: no dashes, no *actions*
-  const now = ctx.now(), p = it.feetPosition, d = 1600 + line.length * 60
+  const who = voiceOf(it), direct = ctx.self.state.talkWith === it.id
+  const take = actedVoice(who, line)
+  // The written line is the transcript for an existing take. Plain speech cleanup applies to fallbacks.
+  if (!take) line = plain(line)
+  const clip = take ?? (direct && hasCast(who) ? null : VO(who, line))
+  const now = ctx.now(), p = it.feetPosition, length = recordedDuration(clip)
+  const d = length ? Math.max(length + 450, 1200 + line.length * 35) : 1600 + line.length * 60
   ctx.self.state.sub = { who: nameOf(it), t: line, at: now, d }
   it.state.line = { t: line, at: now, d }; it.state.talkAt = now; it.state.talkTo = ctx.self.id
   if (mood) {
     ctx.self.state.talkMood = mood
     it.state.mood = mood
   }
-  hearAt(ctx, { clip: VO(voiceOf(it), line), position: { x: p.x, y: p.y + 1.6, z: p.z }, volume: 0.9, maxDistance: 14 }, { audience: { nearby: p, radius: 16 } })
+  hearAt(ctx, { clip, position: { x: p.x, y: p.y + 1.6, z: p.z }, volume: 0.9, maxDistance: 14 }, { audience: { nearby: p, radius: 16 } }, { listener: direct ? ctx.self.id : null, duration: d })
 }
 function close(ctx) { const s = ctx.self.state; ctx.self.session.tkHp = null; ctx.self.session.tkIhp = null; s.talkWith = null; s.shopOpen = null; s.talkBusy = 0; s.talkChoices = null; ctx.self.session.talkingTo = null }
 

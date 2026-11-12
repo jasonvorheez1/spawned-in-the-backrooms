@@ -2,6 +2,7 @@
 // sound to their head over static colliders; each wall between costs volume (0.32 a wall, two walls and it's a murmur,
 // three and it's culled), and the reach shrinks so a sound through a wall dies sooner. Clear line: full volume.
 import { raycast } from "builtin/physics";
+import { isVoiceClip, recordedDuration } from "./voices.js";
 const PER_WALL = 0.32, MAX_WALLS = 3, REACH_PER_WALL = 0.6; // Savi's picks
 function walls(ctx, a, b) {
   let o = { ...a }, n = 0;
@@ -17,13 +18,12 @@ function walls(ctx, a, b) {
   }
   return n;
 }
-// voice gate: a tab coming back from the background replays a backlog of NPC lines at once. Each listener hears one
-// voice line at a time (a gap of VOICE_GAP ms), and the same line twice inside VOICE_REPEAT ms is dropped. Savi's picks.
+// One voice per listener. A new dialogue choice can interrupt a line already playing.
 const VOICE_GAP = 1800, VOICE_REPEAT = 20000, lastVoice = new Map();
 const SFX_GAP = 600, GUN_GAP = 40, lastSfx = new Map(); // the same one-shot to the same listener within SFX_GAP ms is one sound (a holster flapping, a backlog)
-function voiceOk(ctx, pid, clip) {
+function soundOk(ctx, pid, clip, voice, foreground) {
   if (!clip) return true;
-  if (!String(clip).includes("/voice-")) {
+  if (!voice) {
     const k = pid + "|" + clip, t = lastSfx.get(k), now = ctx.now();
     const gap = /gun|shot|shell|pump|magazine|reload|rifle|carbine|smg|slide-rack|dry-fire/.test(String(clip)) ? GUN_GAP : SFX_GAP; // a gun's own beats (a bullet every 90 ms, a shell every 550) each sound
     if (t && now - t < gap) return false;
@@ -31,13 +31,26 @@ function voiceOk(ctx, pid, clip) {
     return true;
   }
   const now = ctx.now(), v = lastVoice.get(pid);
-  if (v && (now - v.at < VOICE_GAP || (v.clip === clip && now - v.at < VOICE_REPEAT))) return false;
-  lastVoice.set(pid, { at: now, clip });
-  if (lastVoice.size > 200) lastVoice.clear();
+  if (!v) return true;
+  if (!foreground) return now >= v.until && (v.clip !== clip || now - v.at >= VOICE_REPEAT);
+  if (v.clip === clip && now < v.until) return false;
+  stopVoice(ctx, pid);
   return true;
 }
-export function heard(ctx, p, opts) {
-  if (p && 'clip' in p && !p.clip) return null; // a voice line with no words: the subtitle carries it
+function stopVoice(ctx, pid) {
+  const v = lastVoice.get(pid);
+  if (v?.id != null && ctx.now() < v.until) {
+    ctx.emit("stopSound", { soundId: v.id }, { audience: { player: pid } });
+  }
+  lastVoice.delete(pid);
+}
+export function heard(ctx, p, opts, speech) {
+  if (p && 'clip' in p && !p.clip) {
+    if (speech?.listener) stopVoice(ctx, speech.listener);
+    return null;
+  }
+  const voice = p?.bus === "Voice" || isVoiceClip(p?.clip);
+  if (voice && !p.bus) p = { ...p, bus: "Voice" };
   const pos = p?.position;
   if (!pos || !ctx.place?.players) return ctx.emit("playSound", p, opts);
   const max = p.maxDistance ?? 30, aud = opts?.audience, only = aud?.player ?? null;
@@ -53,8 +66,15 @@ export function heard(ctx, p, opts) {
     if (w >= MAX_WALLS) continue;
     const k = Math.pow(PER_WALL, w), reach = max * Math.pow(REACH_PER_WALL, w);
     if (d > reach) continue;
-    if (!voiceOk(ctx, pl.id, p.clip)) continue;
+    const foreground = speech?.listener === pl.id;
+    if (speech?.ambient && pl.state?.talkWith) continue;
+    if (!soundOk(ctx, pl.id, p.clip, voice, foreground)) continue;
     id = ctx.emit("playSound", w ? { ...p, volume: (p.volume ?? 1) * k, maxDistance: reach, refDistance: Math.min(p.refDistance ?? reach / 6, reach / 3) } : p, { ...(opts ?? {}), audience: { player: pl.id } });
+    if (voice) {
+      const now = ctx.now(), ms = recordedDuration(p.clip) || speech?.duration || VOICE_GAP;
+      if (lastVoice.size >= 200) lastVoice.delete(lastVoice.keys().next().value);
+      lastVoice.set(pl.id, { id, at: now, until: now + ms + 100, clip: p.clip });
+    }
   }
   return id;
 }
