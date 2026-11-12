@@ -1,0 +1,1 @@
+<tool-error code="tripo_in_flight" fault="planned" retriable="true" execution="in_flight" retry_in_ms="2000">spawn tripo generate: Tripo is working on it: task ffea1624-ec49-45b7-ba6d-3839e2c47c49, queued. `spawn tripo status ffea1624-ec49-45b7-ba6d-3839e2c47c49` picks it up.</tool-error>
