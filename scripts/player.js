@@ -11,6 +11,7 @@ import { quickItems, assignQuick } from './lib/quick-items.js'
 import { heard } from "./lib/hear.js";
 import PLAYER from './lib/data/player.yml'
 import L from './lib/data/level0.yml'
+import CAM from './lib/data/camera.yml'
 import W, { baseOf } from './lib/weapons.js'
 import { raycast } from 'builtin/physics'
 import { animate } from 'builtin/tween'
@@ -30,7 +31,7 @@ import { derived, canCarry, burden, npcMul, START, dmgMul, handling, skillsOf, s
 import { parseCloth, wear, takeOff, wornRows, fullLook } from './lib/clothes.js'
 import { wMul, jamChance, isBroken, useWear, armorWearFor, cndOf, repairAmount, armorCnd, band } from './lib/condition.js'
 import { weaponBody, HOLD, MESHGRIP } from './lib/weapon-look.js'
-import { HUMAN, humanBody } from './lib/critter-model.js'
+import { HUMAN, humanBody, critterSpec, isNewCat } from './lib/critter-model.js'
 import { zoneAt, cellAt, cellCenter, N, HALF, EXIT } from './lib/maze.js'
 import { zoneAt as zoneAt1 } from './lib/level1.js'
 import L1 from './lib/data/level1.yml'
@@ -556,7 +557,7 @@ function swing(ctx, power = 0) {
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
   if (wp.ranged) { // real bullets: spread, drop and drag down each pellet's path (scripts/lib/ballistics.js)
     const pc = s.aimPitch ?? 0
-    const eye = { x: p.x, y: p.y + (s.crouch ? 1.0 : 1.45), z: p.z }, crit = ctx.random() < derived(s).crit + (wp.critBonus ?? 0) // the R-55 crits far more often and far harder
+    const ch = ctx.getObject(ctx.self.id + '/critter-head') ? (CAM.critterEye ?? 1.2) * (ctx.self.effectiveScale?.y ?? 1) : null, eye = { x: p.x, y: p.y + (ch ? ch * (s.crouch ? 0.62 : 1) : (s.crouch ? 1.0 : 1.45)), z: p.z }, crit = ctx.random() < derived(s).crit + (wp.critBonus ?? 0) // the R-55 crits far more often and far harder; a cat shoots from its own eye (camera.yml critterEye), where the camera sits
     const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * (crit ? (wp.critMul ?? D.crit) : 1)
     let fv = f, pv = pc // in third person the shot goes from your eye to the point under the crosshair (scripts/camera.js keeps it in state.aimPt)
     if (s.tp && s.aimPt) { const dx = s.aimPt.x - eye.x, dy = s.aimPt.y - eye.y, dz = s.aimPt.z - eye.z, hh = Math.hypot(dx, dz); if (hh > 1.2) { fv = { x: dx / hh, z: dz / hh }; pv = Math.atan2(dy, hh) } }
@@ -771,7 +772,7 @@ function invAction(ctx, d) {
   }
   if (d.k === 'nadePick') { s.nadePick = d.t === 'molotov' ? 'molotov' : 'frag'; s.notice = { text: `G throws: ${THROW[s.nadePick].name}`, at: ctx.now() }; return }
   if (d.k === 'sel') { s.invSel = String(d.t || '').slice(0, 80); return }
-  if (d.k === 'tab') { s.invTab = ['all', 'weapons', 'repair', 'aid', 'apparel', 'ammo', 'misc', 'tapes', 'key'].includes(d.t) ? d.t : 'all'; return }
+  if (d.k === 'tab') { s.invTab = ['all', 'weapons', 'repair', 'aid', 'apparel', 'ammo', 'misc', 'tapes', 'key', 'throw'].includes(d.t) ? d.t : 'all'; return }
   if (d.k === 'sort') { s.invSort = ['name', 'dam', 'wg', 'cnd'].includes(d.s) ? d.s : 'name'; return }
   if (d.k === 'sheet') { s.invOpen = false; s.sheetOpen = true; return }
   if (d.k === 'quests') { s.invOpen = false; s.jrnOpen = true; return } // HALOGEN's QUESTS tab: the journal (scripts/quest-marker.js)
@@ -1040,16 +1041,18 @@ function viewmodel(ctx, moving, sprinting) {
   if (!ctx.self.isLocal) return
   const w = walkOf(ctx), s = ctx.self.state, kind = s.equipped ?? 'fists', l = s.look ?? {}
   if (s.sheathed && w.vm && ctx.now() - (s.sheathAt ?? 0) < 400) return // still lowering out of view
-  if (s.sheathed || s.climbing || s.mj?.seats || s.tp || s.menuOpen || s.arrive || s.arrivePending || ctx.self.place === 'intake') { if (w.vm) { ctx.destroy(w.vm); w.vm = null; w.vmKind = null; w.vmEq = null; w.plyRig = null } if (s.vmId) s.vmId = null; return } // holstered: the hands are down, out of view
+  if (s.sheathed || s.climbing || s.mj?.seats || s.tp || s.menuOpen || s.arrive || s.arrivePending || ctx.self.place === 'intake') { if (w.plyObj) { ctx.destroy(w.plyObj); w.plyObj = null } if (w.vm) { ctx.destroy(w.vm); w.vm = null; w.vmKind = null; w.vmEq = null; w.plyRig = null } if (s.vmId) s.vmId = null; return } // holstered: the hands are down, out of view
   // the look and tune only change by a press: the full key is rebuilt when the weapon changes or on the 4 Hz stats beat
   if (w.vm && w.vmEq === kind && !w.vmCheck) { if (w.plyWant && !w.plyRig && ctx.now() >= (w.plyNext ?? 0)) { w.plyNext = ctx.now() + 500; plyArm(ctx, w) } return }
   w.vmEq = kind; w.vmCheck = false
   const hb = !l.modelUrl && HUMAN ? humanBody(l) : null // human bodies: Shelly's own model's arm holds the weapon (her rule: first-person arms come from her model or a PLYMODEL)
-  const ply = l.modelUrl || (hb ? hb.id + '#' + (hb.materials.Body_Skin.color ?? '') : '')
+  const cs = !hb && !l.modelUrl && !HUMAN && isNewCat(l) ? critterSpec(l) : null // cats (Shelly Nov 12: 'you didnt have to make an entirely new model'): the first-person arm IS her own cat body, its sleeve on it
+  const ply = l.modelUrl || (hb ? hb.id + '#' + (hb.materials.Body_Skin.color ?? '') : '') || (cs ? 'cat:' + JSON.stringify([l.sex, l.fur, l.topw, l.top, l.skin, l.pattern, l.heightS, l.buildS]) : '')
   // cats (Shelly Nov 12 "make the first person arms match the cat charcters"): her fur colour, a round paw with pink beans, her sleeve
-  const arm = hb ? { hidden: true } : ply ? { hidden: true } : !HUMAN ? { species: 'cat', fur: l.fur || '#f3c98a', topw: l.topw, top: l.top } : { human: true, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v30' + JSON.stringify(s.vmTune ?? null)
+  const arm = hb || ply ? { hidden: true } : { human: true, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v31' + JSON.stringify(s.vmTune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
+    if (w.plyObj) { ctx.destroy(w.plyObj); w.plyObj = null }
     w.plyRig = null
     const bk = baseOf(kind), g = HOLD[bk], wp = W[kind] ?? {}, gun = !!wp.ranged
     const child = g == null ? [] : [gun
@@ -1069,6 +1072,7 @@ function viewmodel(ctx, moving, sprinting) {
     // the worn model rides the viewmodel: shoulder just behind and below the eye, its right hand reaching the grip
     // human: the body turned to face the look, its right shoulder just right of and below the eye (female shoulder 1.19 m, male scaled by height)
     if (fpa) child.push({ id: 'fparm-r', feetPosition: s.vmTune?.aat ?? FP_AT(l.sex === 'f' ? 'f' : 'm'), rotation: s.vmTune?.arot ?? FP_ROT, model: { id: fpa.R, materials: skinM }, castShadow: false, visibleInFirstPerson: true, audience: 'local' }) // her own right arm (art/fp-arm), its fist closed on the grip at the viewmodel's origin
+    else if (cs) child.push({ id: 'plyarm', model: { ...cs.model, id: CAT_FPARM[l.sex === 'f' ? 'f' : 'm'].glb }, morph: cs.morph, ...(cs.scale ? { scale: cs.scale } : {}), children: [], feetPosition: s.vmTune?.cat ?? CAT_FPARM[l.sex === 'f' ? 'f' : 'm'].at, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'cdn/clip-idle-loop.glb', loop: 'loop', weight: 1 } } })
     else if (ply) child.push({ id: 'plyarm', model: ply, feetPosition: { x: 0.02, y: -1.62, z: 0.62 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
     w.vm = ctx.spawn({
       feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42, fov: 55 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
@@ -1084,7 +1088,7 @@ function viewmodel(ctx, moving, sprinting) {
 // once the worn model's skeleton is in: keep only its right arm (head, left arm and legs shrink to their joints)
 // and put its right hand on the viewmodel's grip, so it follows every sway, recoil and reload pose
 const RH = /(^|[^a-z])(r|right)[_. ]?hand$|hand[_. ]?(r|right)$/i
-const CUT = [/head$|neck/i, /(^|[^a-z])(l|left)[_. ]?(clavicle|shoulder|upperarm|arm)$|(clavicle|shoulder|upperarm)[_. ]?(l|left)$/i, /thigh|upleg|(^|[^a-z])(l|r|left|right)[_. ]?leg$|calf/i]
+const CUT = [/head$|neck/i, /(^|[^a-z])(l|left)[_. ]?(clavicle|shoulder|upperarm|arm)$|(clavicle|shoulder|upperarm)[_. ]?(l|left)$/i, /thigh|upleg|(^|[^a-z])(l|r|left|right)[_. ]?leg$|calf/i, /tail/i]
 // the human body's rest-pose right arm (art/human-base: RightArm -> RightHand) laid along the line from below-right of the eye up to the wrist of the grip hand; the torso sits beside and behind the eye, out of view. Computed from the GLB joints, no IK, so it never pops
 const HUMAN_ARM = { f: { q: { x: -0.4041, y: 0.3447, z: 0.8277, w: 0.1811 }, at: { x: 0.939, y: 0.538, z: -0.014 } }, m: { q: { x: -0.4026, y: 0.3501, z: 0.8263, w: 0.1806 }, at: { x: 1.038, y: 0.577, z: -0.001 } } }
 // first-person arms cut from Shelly's human bodies (art/fp-arm/build.py): forearm, hand closed in a fist, the fist's centre at the origin
@@ -1096,14 +1100,18 @@ const FP_TWO_Q = { x: -0.2804, y: -0.5107, z: 0.4678, w: 0.6646 } // the left fi
 const FP_BC = { f: { x: 0.0304, y: -0.2624, z: 0.1128 }, m: { x: 0.0375, y: -0.2836, z: 0.1145 } }
 const FP_SEAT = { x: 0, y: 0.039, z: 0.096 } // the pistol grip's centre in viewmodel space, measured off the mesh (art/weapon-split/fitview.py): the fist's hollow lands on it
 const FP_AT = (sx) => ({ x: FP_BC[sx].x + FP_SEAT.x, y: FP_BC[sx].y + FP_SEAT.y, z: FP_BC[sx].z + FP_SEAT.z }), FP_ROT = { yaw: 0, pitch: 0, roll: 0 }
+// first-person arms cut from her own body GLBs (art/cat-fparm/build.py): same mesh, rig, slots and bind pose, only arm/forearm/hand kept, so no torso or sleeve lump fills the view.
+// at: the model's bounds bottom-centre placed so its right shoulder sits below-right of and a little ahead of the eye, an arm's reach behind the grip (viewmodel origin); the hand reaches the grip by IK (plyArm)
+const CAT_FPARM = { f: { glb: '/cdn/value.1a50c4f098271ae5981ef730799d0a2e9913570abeb76d1475ab61869585a26a.glb', at: { x: -0.035, y: -0.16, z: 0.28 } }, m: { glb: '/cdn/value.0ac8ed9fa781f9f7a002a249ccb98c55be6cd8f29698bb508e008517c604cc25.glb', at: { x: -0.05, y: -0.185, z: 0.28 } } }
 function wp_two(kind) { return W[kind]?.two ? { y: W[kind].two[0], z: W[kind].two[1] } : null }
+export function plyBounds(ctx, p) { const b = ctx.getObject(p.id), v = ctx.getObject(p.id.split('/plyarm')[0]); ctx.log('[plyarm] bounds', JSON.stringify(b?.bounds ?? null), 'vm', JSON.stringify(v?.bounds ?? null), 'wfp', JSON.stringify(b?.worldFeetPosition ?? null), 'me', JSON.stringify(ctx.self.feetPosition), 'vis', b?.visible, b?.visibleInFirstPerson) }
 function plyArm(ctx, w) {
-  const body = ctx.getObject(w.vm + '/plyarm') ?? ctx.getObject('plyarm') ?? (ctx.getObject(w.vm)?.children ?? []).map((c) => (typeof c === 'string' ? ctx.getObject(c) : c)).find((c) => c?.model)
+  const body = ((w.plyObj && ctx.getObject(w.plyObj)) || ctx.getObject(w.vm + '/plyarm')) ?? ctx.getObject('plyarm') ?? (ctx.getObject(w.vm)?.children ?? []).map((c) => (typeof c === 'string' ? ctx.getObject(c) : c)).find((c) => c?.model)
   if (!w.plyLogged) { w.plyLogged = true; ctx.log('[plyarm] vm', w.vm, 'body', body?.id ?? null, 'pos', JSON.stringify(body?.worldFeetPosition ?? null), 'skel', body?.skeleton ? Object.keys(body.skeleton).length : 'none') }
   const names = body?.skeleton ? (Array.isArray(body.skeleton) ? body.skeleton : Object.keys(body.skeleton)).map((b) => (typeof b === 'string' ? b : b.name)) : null
   if (!names?.length) return
   const bones = {}
-  const cut = w.plyTwo && !w.plyHuman ? [CUT[0], CUT[2]] : CUT
+  const cut = w.plyTwo && !w.plyHuman ? CUT.filter((_, i) => i !== 1) : CUT
   for (const n of names) if (cut.some((r) => r.test(n.replace(/^mixamorig:/, '')))) {
     const par = names.find((m) => m !== n && cut.some((r) => r.test(m.replace(/^mixamorig:/, ''))) && n.startsWith(m)) // a parent already cut covers it
     if (!par) bones[n] = { scale: 0 }
@@ -1115,6 +1123,7 @@ function plyArm(ctx, w) {
   if (lh && !w.plyHuman) bones[lh] = { ...(w.plyHuman ? { scale: 0 } : {}), reach: { to: { object: w.vm, offset: { x: -0.06, y: w.plyTwo.y - 0.08, z: w.plyTwo.z + 0.1 } }, pole: { object: w.vm, offset: { x: -0.7, y: -0.6, z: 0.4 } } } }
   body.bones = bones
   w.plyRig = true
+  ctx.after?.(1, 'plyBounds', { id: body.id })
   ctx.log('[plyarm] rigged', hand ?? 'no right hand', 'cut', Object.keys(bones).join(','), 'all', names.join(','))
 }
 

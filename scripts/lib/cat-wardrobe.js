@@ -157,7 +157,7 @@ export function catChildren(sex, look) {
   if (eg) out.push({ id: 'cw-ears', attachment: { skin: true }, model: { id: eg, forward: '+z', materials: {
     earFur: ears('fur'), earInner: ears('inner'), earTuft: ears('tuft') } } })
   const hk = look?.hair, hg = hk && (W.hair?.[hk]?.[sex] || Object.values(W.hair?.[hk] || {})[0])   // a hairstyle: one key, tinted its own colour
-  if (hg) out.push({ id: 'cw-hair', attachment: { skin: true }, model: { id: hg, forward: '+z', materials: { hair: { color: look?.hairc || '#6b4a35', roughness: 0.64 } } }, morph: catMorph(look) })   // hair carries the body's snout/ear keys (fluff-keys.py) so the face never pokes through
+  if (hg) out.push({ id: 'cw-hair', attachment: { skin: true }, model: { id: hg, forward: '+z', materials: { hair: { kind: 'scripted', script: 'scripts/mat-hair.js', color: look?.hairc || '#6b4a35', params: { crown: sex === 'm' ? 1.62 : 1.55 } } } }, morph: catMorph(look) })   // hair carries the body's snout/ear keys (fluff-keys.py) so the face never pokes through
   const mk = W.masks?.[l.hat]?.[sex]   // a Thrift Mode mask: skinned to her head bone, its own paint
   if (mk) out.push({ id: 'cw-mask', attachment: { skin: true }, model: { id: mk, forward: '+z' } })
   return out

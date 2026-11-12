@@ -1,5 +1,5 @@
 eyeHeight: 1.6
-critterEye: 1.39   # a critter's pupils above its feet (critter2-geo.js EY)
+critterEye: 1.2   # first-person eye on a cat, above its feet. was 1.39 (the pupils); Shelly Nov 12 "lower the first person view camera"
 fov: 60
 fovAdsDefault: 50
 adsSpeed: 12   # how fast the zoom eases in and out

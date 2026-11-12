@@ -5,6 +5,7 @@
 import bpy, sys, math, numpy as np
 from mathutils import Vector, Matrix
 from mathutils.bvhtree import BVHTree
+SL = None   # a sleeveless kind (vest, poncho) once its branch ran
 A = sys.argv[sys.argv.index("--") + 1:]; GARM, SEX, KIND, OUT = A[:4]
 BODYF = A[4] if len(A) > 4 else f"/workspace/tripo-cat/cat-{'female' if SEX == 'f' else 'male'}-rigged.glb"
 B = {"f": dict(top=(0.425, 0.626), arm=(0.095, 0.245, 0.36), leg=(0.36, 0.19, 0.065), waist=0.435),
@@ -66,6 +67,30 @@ if KIND == "top":
     P[hd, 2] = zc + (P[hd, 2] - zc) * 0.6
     print("hood verts", int(hd.sum()))
     region = lambda q: q[:, 2] > z_hem - 0.05
+elif KIND in ("vest", "poncho"):
+    SL = KIND   # sleeveless (Nov 12 lore pieces): torso width from the body, never stretched to the cuffs
+    ba = bw[(np.abs(bw[:, 0]) > B["arm"][1] - 0.03) & (np.abs(bw[:, 0]) < B["arm"][1] + 0.03) & (bw[:, 2] > B["waist"] + 0.04) & (bw[:, 1] < 0.07)]; za = float(np.median(ba[:, 2]))
+    if KIND == "vest": z_hem, z_top, wide = B["top"][0] - 0.05, za + 0.045, None
+    else: z_hem, z_top, wide = B["top"][0] - 0.07, B["top"][1] + 0.09, B["arm"][1] + 0.06
+    P[:, 2] = z_hem + P[:, 2] / H * (z_top - z_hem)
+    zm = z_hem + (za - z_hem) * 0.45
+    bb = bw[(np.abs(bw[:, 2] - zm) < 0.025) & (np.abs(bw[:, 0]) < 0.2)]
+    gb = P[np.abs(P[:, 2] - zm) < 0.025]
+    tx = wide if wide else np.abs(bb[:, 0]).max() + 0.028
+    ref = np.abs(P[:, 0]).max() if wide else np.abs(gb[:, 0]).max()
+    P[:, 0] *= tx / ref
+    gy0, gy1 = gb[:, 1].min(), gb[:, 1].max(); by0, by1 = bb[:, 1].min(), bb[:, 1].max()
+    sy = ((by1 - by0) * (1.3 if KIND == "vest" else 1.6) + 0.04) / (gy1 - gy0); P[:, 1] = (P[:, 1] - (gy0 + gy1) / 2) * sy + (by0 + by1) / 2
+    if KIND == "poncho":   # the hood lies flat on the upper back, as on a top
+        zc = B["top"][1] - 0.04
+        nb = bw[(bw[:, 2] > zc - 0.05) & (bw[:, 2] < zc + 0.02) & (np.abs(bw[:, 0]) < 0.1)]; yb = nb[:, 1].max() + 0.015; nw = np.abs(nb[:, 0]).max()
+        hd = (P[:, 2] > zc - 0.02)
+        P[hd, 1] = np.maximum(P[hd, 1], yb - 0.02 + (P[hd, 1] - yb).clip(0) * 0.35) if False else P[hd, 1]
+        P[hd, 0] = np.sign(P[hd, 0]) * np.minimum(np.abs(P[hd, 0]), nw * 1.2 + (np.abs(P[hd, 0]) - nw * 1.2).clip(0) * 0.25)
+        P[hd, 2] = zc - 0.02 + (P[hd, 2] - zc + 0.02) * 0.45
+        print("hood verts", int(hd.sum()))
+    half = tx; KIND = "top"
+    region = lambda q: q[:, 2] > z_hem - 0.05
 elif KIND == "skirt":
     z_top = B["waist"] + 0.012; z_bot = B["leg"][0] - (B["leg"][0] - B["leg"][1]) * 0.55
     P[:, 2] = z_bot + P[:, 2] / H * (z_top - z_bot)
@@ -90,7 +115,7 @@ if kill.any():
     bmesh.ops.delete(bm, geom=[bm.verts[i] for i in np.nonzero(kill)[0]], context="VERTS"); bm.to_mesh(me); bm.free()
 import bmesh
 bm = bmesh.new(); bm.from_mesh(me); bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bm.to_mesh(me); bm.free()   # weld Tripo's UV-seam splits so a push never tears them
-if KIND == "top":   # a hem is one even line: the open edge round the waist levels to its median height, the loop above eased toward it
+if KIND == "top" and not SL:   # a hem is one even line: the open edge round the waist levels to its median height, the loop above eased toward it
     bm = bmesh.new(); bm.from_mesh(me); bm.verts.ensure_lookup_table()
     lo = min(v.co.z for v in bm.verts)
     hem = [v for v in bm.verts if v.is_boundary and v.co.z < lo + 0.06 and abs(v.co.x) < half * 0.5]
@@ -103,7 +128,7 @@ if KIND == "top":   # a hem is one even line: the open edge round the waist leve
     bm.to_mesh(me); bm.free()
 # push out of the skin
 dg = bpy.context.evaluated_depsgraph_get(); bvh = BVHTree.FromObject(body, dg)
-moved = 0; M = {"boots": 0.004, "top": 0.013}.get(KIND, 0.007)   # a top rides well clear: its cloth bends by position, the skin by its own weights, and the gap covers the difference
+moved = 0; M = 0.022 if SL else {"boots": 0.004, "top": 0.013}.get(KIND, 0.007)   # a top rides well clear: its cloth bends by position, the skin by its own weights, and the gap covers the difference
 for it in range(3):
     for v in me.vertices:
         hit = bvh.find_nearest(v.co)

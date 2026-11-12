@@ -1,3 +1,4 @@
+import { wristNav } from './lib/wrist-nav.js'
 import {screen} from './lib/screen.js'
 // Looting and inventory layouts; the shared field theme supplies their current visual treatment.
 import AW from './lib/data/almond.yml'
@@ -472,7 +473,7 @@ function detail(t, s, def) {
     </div>`
   }
   if (t === 'ammo' || t === 'shells' || t === 'cells') {
-    const a = W[t], nm = t === 'ammo' ? 'Pistol rounds' : 'Shotgun shells'
+    const a = W[t], nm = AMMO_NAMES[t]
     return `<div class="${cls}">
       <div class="dt-header"><h4>${nm}</h4><span class="dt-rarity">AMMO</span></div>
 
@@ -500,9 +501,11 @@ function detail(t, s, def) {
 
 
 // the inventory's right pane: the picked item (click a row), else what you hold; its verbs are buttons here, a double-click on a row does the first
+const AMMO_NAMES = { ammo: 'Pistol rounds (9mm)', shells: 'Shotgun shells (12ga)', cells: 'Energy cells' }
+
 function pane(s, sel, eqKey) {
   const own = owned(s), bag = s.clothes ? s.clothes.split(',').filter(Boolean) : [], on = wornTokens(s.look)
-  const btn = (lab, d, key) => `<button class="act" onclick="sendAction('inv',${JSON.stringify(d).replace(/"/g, "'")})">${key ? `<kbd>${key}</kbd>` : ''}${lab}</button>`
+  const btn = (lab, d, key) => `<button class="act${d.k === 'drop' || d.k === 'dropItem' ? ' drop' : ''}" onclick="sendAction('inv',${JSON.stringify(d).replace(/"/g, "'")})">${key ? `<kbd>${key}</kbd>` : ''}${lab}</button>`
   let card = '', acts = []
   if (W[sel]?.damage != null && own.includes(sel)) {
     card = detail(sel, s, true)
@@ -619,12 +622,15 @@ function inventory(s) {
 
   // Apparel list
   const on = wornTokens(s.look), bag = (s.clothes ? s.clothes.split(',').filter(Boolean) : [])
-  let allClothTokens = [...on, ...[...new Set(bag)]]
-  if (sortMode === 'dam') allClothTokens.sort((a, b) => (parseCloth(b)?.row.dr ?? 0) - (parseCloth(a)?.row.dr ?? 0))
-  else if (sortMode === 'wg') allClothTokens.sort((a, b) => (parseCloth(b)?.row.kg ?? 0) - (parseCloth(a)?.row.kg ?? 0))
-  else if (sortMode === 'cnd') allClothTokens.sort((a, b) => armorCnd(s.look, a) - armorCnd(s.look, b))
+  const clothOrder = (a, b) => {
+    const x = parseCloth(a)?.row, y = parseCloth(b)?.row
+    if (sortMode === 'dam') return (y?.dr ?? 0) - (x?.dr ?? 0)
+    if (sortMode === 'wg') return (y?.kg ?? 0) - (x?.kg ?? 0)
+    if (sortMode === 'cnd') return armorCnd(s.look, a) - armorCnd(s.look, b)
+    return (x?.name ?? '').localeCompare(y?.name ?? '')
+  }
 
-  const app = on.map((t) => {
+  const app = on.sort(clothOrder).map((t) => {
     const p = parseCloth(t); if (!p) return ''
     const c = armorCnd(s.look, t)
     return `<button class="it on${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})" ondblclick="sendAction('inv',{k:'unwear',w:'${p.slot}'})">
@@ -633,7 +639,7 @@ function inventory(s) {
       <span class="stat-r"><span>DR ${p.row.dr}</span>${cndMini(c)}</span>
 
     </button>`
-  }).join('') + [...new Set(bag)].map((t) => {
+  }).join('') + [...new Set(bag)].sort(clothOrder).map((t) => {
     const p = parseCloth(t); if (!p) return ''
     const n = bag.filter((x) => x === t).length, c = armorCnd(s.look, t)
     return `<button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})" ondblclick="sendAction('inv',{k:'wear',w:'${t}'})">
@@ -647,7 +653,7 @@ function inventory(s) {
   const ammo = ['ammo', 'shells', 'cells'].filter((t) => s[t]).map((t) => `
     <button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})">
       <span class="cur">&gt;</span>
-      <span class="nm">${t === 'ammo' ? 'Pistol rounds (9mm)' : 'Shotgun shells (12ga)'}</span>
+      <span class="nm">${AMMO_NAMES[t]}</span>
       <span class="stat-r"><span>×${s[t]}</span></span>
     </button>`).join('') || '<div class="em">Out of ammunition.</div>'
 
@@ -661,7 +667,7 @@ function inventory(s) {
   // Misc list
   const misc = `${s.compass > 0 ? `<button class="it" onclick="sendAction('inv',{k:'compass'})"><span class="cur">&gt;</span><span class="nm" style="color:#d8b56a">Old compass</span><span class="stat-r">${s.compass} reads</span></button>` : ''}
     ${s.firesalt > 0 ? `<button class="it" onclick="sendAction('inv',{k:'firesalt'})"><span class="cur">&gt;</span><span class="nm" style="color:#ff8a3a">Firesalt</span><span class="stat-r">${s.firesalt} pinches</span></button>` : ''}
-    ${s.bobbypins ? `<div class="it${sel === 'bobbypin' ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'bobbypin'})"><span class="cur">&gt;</span><span class="nm">Bobby pins</span><span class="stat-r">${s.bobbypins}</span></div>` : ''}
+    ${s.bobbypins ? `<button class="it${sel === 'bobbypin' ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'bobbypin'})"><span class="cur">&gt;</span><span class="nm">Bobby pins</span><span class="stat-r">${s.bobbypins}</span></button>` : ''}
     ${s.pages ? String(s.pages).split(',').filter(Boolean).sort((x, y) => x - y).map((n) => `<button class="it" onclick="sendAction('inv',{k:'read',n:${+n}})"><span class="cur">&gt;</span><span class="nm" style="color:#e8dcc0">${+n === 24 ? 'Field doc 24' : +n >= 21 && +n <= 23 ? 'Field doc ' + (+n - 20) : +n >= 11 && +n <= 17 ? 'Alef papers ' + (+n - 10) : 'Torn page ' + +n}</span><span class="stat-r">READ</span></button>`).join('') : ''}` || '<div class="em">No miscellaneous items.</div>'
 
   // tapes get their own tab, each by its own title (Shelly, Nov 10: "the tape for the 50s ad is nowhere to be seen")
@@ -710,11 +716,6 @@ function inventory(s) {
   return `<div class="pbw pb"><div class="pbp inv hg" data-modal>
     <div class="hg-top">
       <div class="hg-brand"><h2>Inventory</h2></div>
-      <div class="hg-modes">
-        <button onclick="sendAction('inv',{k:'sheet'})"><kbd>K</kbd>Character</button>
-        <button class="on">Inventory</button>
-        <button onclick="sendAction('inv',{k:'quests'})">Journal</button>
-      </div>
       <div class="hg-vit">
         <div class="hg-gauge"><span>HP</span><b>${hp}<i>/${hpMax}</i></b><div class="bar"><em style="width:${hpPct.toFixed(0)}%"></em></div></div>
         <div class="hg-gauge${isOver ? ' warn' : ''}"><span>LOAD</span><b>${kg.toFixed(1)}<i>kg</i></b><div class="bar"><em style="width:${pct.toFixed(0)}%"></em></div></div>
@@ -723,21 +724,22 @@ function inventory(s) {
       </div>
     </div>
 
+    ${wristNav('inventory')}
     <div class="hg-qrow"><div class="hg-qt">QUICK SLOTS<small>${qHint}</small></div><div class="hg-qs">${slots}</div></div>
 
     <div class="hg-bd">
       <nav class="hg-rail">${rail}</nav>
       <div class="hg-mid">
         <div class="hg-sort"><span>${tab === 'all' ? 'All items' : SECS[tab][0].toUpperCase()}</span><span class="sp"></span>
-          ${[['name', 'A–Z'], ['dam', 'Damage'], ['wg', 'Weight'], ['cnd', 'Condition']].map(([k, l]) => `<button class="${sortMode === k ? 'on' : ''}" onclick="sendAction('inv',{k:'sort',s:'${k}'})">${l}</button>`).join('')}
+          ${[['name', 'A–Z'], ['dam', tab === 'apparel' ? 'Protection' : tab === 'all' ? 'Damage / DR' : 'Damage'], ['wg', 'Weight'], ['cnd', 'Condition']].map(([k, l]) => `<button class="${sortMode === k ? 'on' : ''}" onclick="sendAction('inv',{k:'sort',s:'${k}'})">${l}</button>`).join('')}
         </div>
-        <div class="ls">${list}</div>
+        <div class="ls" onkeydown="if(event.key==='ArrowDown'||event.key==='ArrowUp'){const rows=Array.from(this.querySelectorAll('button.it:not(:disabled)'));const i=rows.indexOf(event.target);if(i>=0){event.preventDefault();event.stopPropagation();rows[i+(event.key==='ArrowDown'?1:-1)]?.focus()}}">${list}</div>
       </div>
       <div class="hg-card" id="hgc-${String(sel).replace(/[^a-z0-9]/gi, '_')}">${pane(s, sel, eqKey)}</div>
     </div>
 
     <div class="hg-ft">
-      <span class="hint"><kbd>CLICK</kbd>inspect</span><span class="hint"><kbd>2×CLICK</kbd>use / equip</span><span class="hint"><kbd>0–9</kbd>put picked item on a slot</span>
+      <span class="hint"><kbd>↑ ↓</kbd>browse</span><span class="hint"><kbd>Enter</kbd>inspect</span><span class="hint"><kbd>0–9</kbd>assign quick slot</span>
       <span class="c">${s.kills ?? 0} kills · LV ${lv} · holding ${eq.name}</span>
       <button onclick="sendAction('inv',{k:'close'})"><kbd>I</kbd>CLOSE</button>
     </div>

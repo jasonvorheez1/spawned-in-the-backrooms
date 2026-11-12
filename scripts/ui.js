@@ -1,3 +1,4 @@
+import { wristNav } from './lib/wrist-nav.js'
 import { quickBar } from './lib/hud-quickbar.js'
 import { UI_THEME } from './lib/ui-theme.js'
 import { screen } from './lib/screen.js'
@@ -113,13 +114,15 @@ function questPip(ctx, player, yaw) {
   const p = player.feetPosition; if (!p) return ''
   let out = ''
   const side = { l: 0, r: 0 } // pinned arrows on one edge step outward so none hides another
+  const exits = new Set()
   for (const q of tracked(player.state)) { // one pip per tracked quest, in that quest's tint
-    const t = questMark(ctx, player, q); if (!t) continue
+    const t = questMark(ctx, player, q); if (!t || (t.exit && exits.has(t.exit))) continue
+    if (t.exit) exits.add(t.exit)
     const o = ((Math.round(yawTo(p, t)) - Math.round(yaw)) % 360 + 540) % 360 - 180, a = Math.abs(o)
     const edge = a >= 75, n = edge ? side[o < 0 ? 'l' : 'r']++ : 0
     const x = !edge ? 50 + o / 75 * 50 : (o < 0 ? -n * 4.5 : 100 + n * 4.5)
     const d = Math.round(Math.hypot(t.x - p.x, t.z - p.z))
-    out += `<div style="position:absolute;left:${x}%;top:-9px;transform:translateX(-50%);color:${q.tint};font-size:${edge ? 13 : 12}px;text-shadow:0 0 6px ${q.tint},0 1px 2px #000;text-align:center;line-height:1">${edge ? (o < 0 ? '◀' : '▶') : '◆'}<div style="font-size:9px;letter-spacing:.04em;margin-top:1px">${d}m</div></div>`
+    out += `<div style="position:absolute;left:${x}%;top:-9px;transform:translateX(-50%);color:${q.tint};font-size:${edge ? 13 : 12}px;text-shadow:0 0 6px ${q.tint},0 1px 2px #000;text-align:center;line-height:1">${edge ? (o < 0 ? '◀' : '▶') : t.exit ? '▣' : '◆'}<div style="font-size:9px;letter-spacing:.04em;margin-top:1px">${d}m</div></div>`
   }
   return out ? `<div style="position:absolute;left:28px;width:300px;bottom:6px;height:22px;pointer-events:none">${out}</div>` : ''
 }
@@ -258,14 +261,16 @@ function compassRead(s, yaw, now) {
 function restUi(ctx, s) {
   let out = ''
   if (s.restFx && ctx.now() - s.restFx.at < 3500) out += `<style>@keyframes restF{0%{opacity:0}20%,70%{opacity:1}100%{opacity:0;visibility:hidden}}</style><div id="rest${s.restFx.at}" style="position:absolute;inset:0;background:#050403;display:flex;align-items:center;justify-content:center;animation:restF 3.4s forwards;color:#f2c14e;font-size:24px;letter-spacing:.12em;text-shadow:2px 2px #000">${s.restFx.text}</div>`
-  if (s.elevPanel) { // the elevator plate's buttons, clickable on screen
-    const B = 'margin:5px;width:58px;height:50px;border-radius:50%;font-size:20px;background:oklch(0.78 0.13 85);color:oklch(0.18 0.03 70);border:2px solid oklch(0.45 0.08 70)'
+  if (s.elevPanel) {
     const body = s.elevAsk
-      ? `<div style="font-size:15px;margin:6px 0 12px">Floor ${s.elevAsk}. The hotel does not go there. Are you sure?</div><button onclick="sendAction('elevdo',{f:'yes'})" style="${B};border-radius:4px;width:90px">Ride</button><button onclick="sendAction('elevdo',{f:'no'})" style="${B};border-radius:4px;width:90px">No</button>`
-      : `<div style="display:grid;grid-template-columns:repeat(4,auto);justify-content:center">${['1','2','3','4','5','6','7','8','9','10','11','12','13','66','382','B'].map((f) => `<button onclick="sendAction('elevdo',{f:'${f}'})" style="${B}">${f}</button>`).join('')}</div><button onclick="sendAction('elevdo',{f:''})" style="margin-top:10px;padding:6px 16px;background:none;color:oklch(0.9 0.1 85);border:1px solid oklch(0.8 0.13 85)">Close</button>`
-    out += `<div data-modal style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:auto"><div style="background:oklch(0.14 0.02 75 / .94);border:2px solid oklch(0.8 0.13 85);padding:16px 20px;color:oklch(0.9 0.1 85);text-align:center"><div style="font-size:13px;letter-spacing:.2em;opacity:.7;margin-bottom:8px">ELEVATOR</div>${body}</div></div>`
+      ? `<p>The hotel does not go to floor ${esc(s.elevAsk)}. Ride anyway?</p><div class="field-controls"><button class="primary" onclick="sendAction('elevdo',{f:'yes'})">Ride</button><button onclick="sendAction('elevdo',{f:'no'})">Back</button></div>`
+      : `<div class="field-controls floors">${['1','2','3','4','5','6','7','8','9','10','11','12','13','66','382','B'].map((f) => `<button aria-label="Floor ${f}" onclick="sendAction('elevdo',{f:'${f}'})">${f}</button>`).join('')}</div><button class="field-cancel" onclick="sendAction('elevdo',{f:''})">Close</button>`
+    out += `<div class="field-shade" data-modal><section class="field-dialog" aria-labelledby="elevator-title"><h2 id="elevator-title">Hotel elevator</h2>${body}</section></div>`
   }
-  if (s.waitOpen) out += `<div data-modal style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:auto"><div style="background:oklch(0.14 0.02 75 / .94);border:2px solid oklch(0.8 0.13 85);padding:18px 24px;color:oklch(0.9 0.1 85);text-align:center;min-width:300px;max-width:calc(100vw - 148px)"><div style="font-size:13px;letter-spacing:.2em;opacity:.7">HALOGEN · ${s.waitBed ? 'REST CYCLE' : 'WAIT'} · ${s.waitClock ?? ''}</div><div style="font-size:15px;margin:6px 0 12px">How many hours?</div><div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">${[1, 2, 4, 8, 12, 24].map((h) => `<button onclick="sendAction('waitdo',{h:${h}})" style="min-width:52px;padding:8px 10px;background:oklch(0.8 0.13 85);color:oklch(0.18 0.03 70);font-size:18px;border:none">${h}</button>`).join('')}</div><button onclick="sendAction('waitdo',{h:0})" style="margin-top:12px;background:none;border:1px solid oklch(0.8 0.13 85 / .5);color:inherit;padding:4px 14px">cancel ✕</button></div></div>`
+  if (s.waitOpen) {
+    const durations = [1, 2, 4, 8, 12, 24].map((h) => `<button onclick="sendAction('waitdo',{h:${h}})">${h} ${h === 1 ? 'hour' : 'hours'}</button>`).join('')
+    out += `<div class="field-shade" data-modal><section class="field-dialog" aria-labelledby="wait-title"><header><h2 id="wait-title">${s.waitBed ? 'Rest' : 'Wait'}</h2><span>${esc(s.waitClock ?? '')}</span></header><div class="field-controls durations">${durations}</div><button class="field-cancel" onclick="sendAction('waitdo',{h:0})">Cancel</button></section></div>`
+  }
   return out
 }
 const LIVE = `<style>@keyframes hudBreath{0%,100%{opacity:.92}50%{opacity:1}}@keyframes hudIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}#hud .bl,#hud .br{animation:hudIn .5s ease-out both,hudBreath 3.2s ease-in-out .5s infinite;filter:drop-shadow(0 0 4px rgba(255,170,40,.35))}</style>`
@@ -282,73 +287,83 @@ function underwater(s) {
 
 const esc = (t) => String(t ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 const Q_CACHE = { key: '', html: '' }
+const exitLabel = (t) => (t.label ?? 'Exit') + ' → ' + (PLACE_NAMES[t.via] ?? t.via)
 function questTracker(s, player, ctx) {
   const list = tracked(s)
   if (!list.length || s.jrnOpen) return ''
   const here = player?.place ?? ctx?.place?.id ?? 'main'
-  const key = list.map((q) => `${q.id}|${q.step}|${q.mark?.place ?? ''}`).join('~') + `~${here}`
+  const rows = list.map((q) => {
+    const targetPlace = q.mark?.place
+    const off = targetPlace && targetPlace !== here
+    const exit = off ? questMark(ctx, player, q) : null
+    const destination = off ? (PLACE_NAMES[targetPlace] ?? targetPlace) : ''
+    const route = exit ? exitLabel(exit) : off ? 'Route unknown' : ''
+    return { q, destination, route }
+  })
+  const key = JSON.stringify(rows.map(({ q, destination, route }) => [q.id, q.name, q.step, q.tint, destination, route]))
   if (key === Q_CACHE.key) return Q_CACHE.html
   Q_CACHE.key = key
-  const row = (q) => {
-    const targetPlace = q.mark?.place
-    const isOff = targetPlace && targetPlace !== here
-    const placeBadge = isOff ? `<span style="font-size:9.5px;padding:1px 5px;background:rgba(255,255,255,0.14);border-radius:2px;letter-spacing:0.04em;margin-left:auto;opacity:0.9;color:#fff">${esc(PLACE_NAMES[targetPlace] ?? targetPlace).toUpperCase()}</span>` : ''
+  const row = ({ q, destination, route }) => {
+    const placeBadge = destination ? `<span class="q-destination">${esc(destination)}</span>` : ''
     return `<div style="border-left:3px solid ${q.tint};padding:5px 12px 6px;background:linear-gradient(rgba(18,12,3,0.92),rgba(10,6,1,0.96));box-shadow:0 0 10px rgba(0,0,0,0.8)">
       <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:${q.tint};letter-spacing:.05em"><span style="font-size:9px">◆</span><span>${esc(q.name)}</span>${placeBadge}</div>
-      <div class="qs" style="font-size:12px;color:#fff2d4;opacity:.92;text-transform:none;letter-spacing:.02em;line-height:1.3;margin-top:2px">${esc(q.step)}</div></div>`
+      <div class="qs" style="font-size:12px;color:#fff2d4;opacity:.92;text-transform:none;letter-spacing:.02em;line-height:1.3;margin-top:2px">${esc(q.step)}</div>${route ? `<span class="q-next">▣ ${esc(route)}</span>` : ''} </div>`
   }
-  return (Q_CACHE.html = `<style>@media (max-width:520px){#hud-quest{width:126px!important;font-size:10px}#hud-quest .qs{display:none}#hud-quest span{font-size:10px}}</style><div id="hud-quest" style="position:fixed;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);top:18px;width:min(340px,42vw);display:flex;flex-direction:column;gap:5px;font-family:inherit;text-shadow:0 1px 2px #000;pointer-events:auto;cursor:pointer;z-index:40;animation:hud-pop .3s ease-out" onclick="sendAction('journal')">${list.map(row).join('')}</div>`)
+  return (Q_CACHE.html = `<style>@media (max-width:520px){#hud-quest{width:126px!important;font-size:10px}#hud-quest .qs{display:none}#hud-quest span{font-size:10px}}</style><div id="hud-quest" style="position:fixed;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);top:18px;width:min(340px,42vw);display:flex;flex-direction:column;gap:5px;font-family:inherit;text-shadow:0 1px 2px #000;pointer-events:auto;cursor:pointer;z-index:40;animation:hud-pop .3s ease-out" onclick="sendAction('journal')">${rows.map(row).join('')}</div>`)
 }
-// the journal (P): every quest you hold; a press on a row tracks or untracks it, three at most
+// Browsing the journal changes the detail pane independently of the HUD markers.
 function journalUi(s, player, ctx) {
   if (!s.jrnOpen) return ''
-  const all = Object.entries(s.quests ?? {}).map(([id, q]) => ({ id, ...q })).sort((a, b) => (b.main ? 1 : 0) - (a.main ? 1 : 0) || (b.at ?? 0) - (a.at ?? 0))
-  const finished = Object.entries(s.qdone ?? {}).map(([id, q]) => ({ id, ...q })).sort((a, b) => (b.at ?? 0) - (a.at ?? 0))
-  const failed = finished.filter((q) => q.outcome === 'failed' || (!q.outcome && /\bfailed\b/i.test(q.text ?? '')))
-  const done = finished.filter((q) => !failed.includes(q))
-  const tr = tracked(s)
-  const here = player?.place ?? ctx?.place?.id ?? 'main'
+  const recent = (a, b) => (b.at ?? 0) - (a.at ?? 0)
+  const open = Object.entries(s.quests ?? {}).map(([id, q]) => ({ ...q, id, status: 'Current' }))
+    .sort((a, b) => Number(!!b.main) - Number(!!a.main) || recent(a, b))
+  const archive = Object.entries(s.qdone ?? {}).filter(([id]) => !Object.hasOwn(s.quests ?? {}, id))
+    .map(([id, q]) => ({ ...q, id, status: q.outcome === 'failed' || (!q.outcome && /\bfailed\b/i.test(q.text ?? '')) ? 'Failed' : 'Completed' })).sort(recent)
+  const list = [...open, ...archive], tr = tracked(s)
+  const selected = list.find((q) => q.id === s.qview) ?? list.find((q) => q.id === tr[0]?.id) ?? list[0]
   const row = (q) => {
-    const t = tr.find((x) => x.id === q.id), c = t?.tint ?? 'rgba(255,182,66,0.55)'
-    const targetPlace = q.mark?.place
-    const isOff = targetPlace && targetPlace !== here
-    const target = !isOff ? questMark(ctx, player, q) : null
-    const dist = target && player?.feetPosition ? Math.round(Math.hypot(target.x - player.feetPosition.x, target.z - player.feetPosition.z)) : null
-    const badgeText = targetPlace ? (PLACE_NAMES[targetPlace] ?? targetPlace) : null
-    const locTag = isOff && badgeText
-      ? `<span style="font-size:9.5px;padding:1px 5px;background:rgba(255,182,66,0.15);border:1px solid rgba(255,182,66,0.3);border-radius:2px;letter-spacing:.05em;color:#ffdf99">${esc(badgeText).toUpperCase()}</span>`
-      : (badgeText || dist != null
-        ? `<span style="font-size:10px;letter-spacing:.06em;color:rgba(255,182,66,0.7)">${esc(badgeText ? badgeText.toUpperCase() : '')}${badgeText && dist != null ? ' · ' : ''}${dist != null ? `${dist}m` : ''}</span>`
-        : '')
-    return `<button data-tracked="${t?'true':'false'}" onclick="sendAction('qtrack',{id:'${q.id}'})" style="display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:${t ? 'rgba(255,182,66,0.07)' : 'transparent'};border:0;border-left:3px solid ${c};padding:8px 10px;margin:0 0 6px;font:inherit;color:inherit;cursor:pointer">
-      <span style="color:${c};font-size:13px;line-height:1.3">${t ? '◆' : '◇'}</span>
-      <span style="flex:1">
-        <span style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
-          <span class="q-name" style="font-size:13.5px;color:${t ? c : '#ffb642'};letter-spacing:.05em">${esc(q.name)}${q.main ? ' <span style="font-size:9px;letter-spacing:.2em;opacity:.7">· MAIN</span>' : ''}</span>
-          ${locTag}
-        </span>
-        <span class="q-step" style="display:block;font-size:12px;color:#fff2d4;opacity:.85;text-transform:none;line-height:1.35;margin-top:2px">${esc(q.step)}</span>
-      </span></button>`
+    const marker = tr.find((t) => t.id === q.id)
+    return `<button class="quest-entry" data-quest="${esc(q.id)}" data-status="${q.status}" ${q === selected ? 'aria-current="true"' : ''} onclick="sendAction('qselect',{id:${esc(JSON.stringify(q.id))}})">
+      <i class="quest-box" aria-hidden="true" ${marker ? `style="--quest-marker:${marker.tint}"` : ''}></i>
+      <span>${esc(q.name)}</span><span class="quest-sr">${marker ? ', tracked' : q.status !== 'Current' ? ', ' + q.status : ''}</span>
+    </button>`
   }
-  const doneRow = (q) => {
-    const pl = q.place ? `<span style="font-size:9.5px;letter-spacing:.06em;opacity:.75;color:#b2e2a8">${esc(PLACE_NAMES[q.place] ?? q.place).toUpperCase()}</span>` : ''
-    return `<div style="display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:rgba(133,196,120,0.06);border-left:3px solid #85c478;padding:7px 10px;margin:0 0 6px">
-      <span style="color:#85c478;font-size:12px;line-height:1.3">✓</span>
-      <span style="flex:1">
-        <span style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
-          <span style="font-size:12.5px;color:#b2e2a8;letter-spacing:.04em">${esc(q.name)}</span>
-          ${pl}
-        </span>
-        <span style="display:block;font-size:11.5px;color:#d8eed0;opacity:.8;text-transform:none;line-height:1.3;margin-top:2px">${esc(q.text ?? 'Completed')}</span>
-      </span>
+  let detail = '<p class="quest-empty">Your Journal is empty. Quests appear here as you find them.</p>'
+  if (selected) {
+    const { id, status, name, step, text, mark, main, history } = selected
+    const current = status === 'Current', pinned = tr.some((q) => q.id === id)
+    const target = current ? questMark(ctx, player, selected) : null
+    const feet = player?.feetPosition
+    const dist = target && feet ? Math.round(Math.hypot(target.x - feet.x, target.z - feet.z)) : null
+    const place = current ? mark?.place : selected.place
+    const location = [place && (PLACE_NAMES[place] ?? place), dist != null && !target.exit && `${dist} m`].filter(Boolean).join(' · ')
+    const off = current && place && place !== (player?.place ?? ctx?.place?.id)
+    const route = target?.exit
+      ? exitLabel(target) + (dist == null ? '' : ` · ${dist} m`)
+      : off ? 'Route unknown from this level' : ''
+    const full = !pinned && tr.length >= MAX_TRACK
+    detail = `<div class="quest-detail" id="quest-detail-${esc(id)}">
+      <div class="quest-meta"><span>${current && main ? 'Main quest' : status === 'Current' ? 'In progress' : status}</span>${location ? `<span>${esc(location)}</span>` : ''}</div>
+      <h2>${esc(name)}</h2>
+      <div class="quest-objective">
+        <h3>${current ? 'Current objective' : 'Outcome'}</h3>
+        <p>${esc(current ? step || 'No current objective.' : text || status)}</p>
+      </div>
+      ${target?.exit ? `<p class="quest-route"><b>Next crossing</b> ${esc(route)}</p>` : route ? `<p class="quest-route">${esc(route)}</p>` : ''}
+      ${current ? `<div class="quest-actions"><button aria-pressed="${pinned}" ${full ? 'disabled' : ''} onclick="sendAction('qtrack',{id:${esc(JSON.stringify(id))}})">${pinned ? 'Stop tracking' : 'Track quest'}</button>${full ? '<small>All tracking slots are in use.</small>' : ''}</div>` : ''}
+      ${history?.length ? `<div class="quest-history"><h3>Previous objectives</h3><ul>${history.slice().reverse().map((line) => `<li>${esc(line)}</li>`).join('')}</ul></div>` : ''}
     </div>`
   }
-  return `<div id="journal" data-modal style="font-family:'Monofonto','Share Tech Mono','Geist Pixel',ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:#ffb642;position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;pointer-events:auto;z-index:60"><div class="journal-panel" style="width:min(520px,92vw);max-height:80vh;overflow:auto;background:oklch(0.14 0.02 75 / .96);border:1px solid rgba(255,182,66,0.55);box-shadow:0 0 30px #000;padding:16px 18px;text-shadow:0 1px 2px #000">
-    <div class="journal-header" style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px"><span class="journal-title">Journal</span><span style="font-size:10px;letter-spacing:.18em;color:rgba(255,182,66,0.55)">Tracking ${tr.length}/${MAX_TRACK}</span><button class="journal-close" onclick="sendAction('journal')">Close · P</button></div>
-    ${all.length ? all.map(row).join('') : '<div style="font-size:12px;color:rgba(255,182,66,0.55);text-transform:none;padding:10px 0">No active quests. Press P or Esc to close.</div>'}
-    ${done.length ? `<div style="display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 8px;border-top:1px solid rgba(255,182,66,0.22);padding-top:10px"><span style="font-size:12px;letter-spacing:.2em;color:#85c478">COMPLETED (${done.length})</span></div>${done.map(doneRow).join('')}` : ''}
-    ${failed.length ? `<div style="margin:16px 0 8px;border-top:1px solid rgba(255,182,66,0.22);padding-top:10px;font-size:12px;letter-spacing:.2em;color:#e8a49a">FAILED (${failed.length})</div>${failed.map((q) => `<div style="border-left:3px solid #d78176;padding:7px 10px;margin-bottom:6px;text-transform:none;color:#e8c3b7;font-size:12px"><b>${esc(q.name)}</b><div>${esc(q.text ?? 'Failed')}</div></div>`).join('')}` : ''}
-  </div></div>`
+  return `<div id="journal" data-modal><section class="journal-panel" aria-labelledby="journal-title">
+    <header class="journal-header"><h1 id="journal-title">Quests</h1><span>${tr.length} of ${MAX_TRACK} tracked</span><button class="journal-close" onclick="sendAction('journal')">Close <kbd>P</kbd></button></header>
+    ${wristNav('journal')}
+    <div class="quest-layout">
+      <div class="quest-list" role="group" aria-label="Quest list" onkeydown="if(event.key==='ArrowUp'||event.key==='ArrowDown'){const next=event.target[event.key==='ArrowDown'?'nextElementSibling':'previousElementSibling'];if(event.target.matches('.quest-entry')&&next?.matches('.quest-entry')){event.preventDefault();event.stopPropagation();next.focus();next.click()}}">
+        ${list.map(row).join('') || '<p class="quest-empty">No quests yet.</p>'}
+      </div>
+      <div class="quest-reading" aria-live="polite">${detail}</div>
+    </div>
+  </section></div>`
 }
 
 // F3: the LAGSCOPE lag panel floats over whatever the HUD draws (builders only; players never see it)

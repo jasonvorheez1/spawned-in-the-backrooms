@@ -20,6 +20,7 @@ inputs:
       touch:
         button: false
     qtrack: {}
+    qselect: {}
     quickUse: {}
     quick0:
       keys: ["0"]
