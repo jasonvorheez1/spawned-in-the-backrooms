@@ -6,7 +6,7 @@ import { layParts } from "../../scripts/lib/level31-parts.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 export const cadence = "1s";
-const V = 16;
+const V = 17;
 const PROPS = "scripts/l31-props-geo.js";
 const P = (params) => ({ primitive: { kind: "scripted", script: PROPS, params }, material: { pbr: true } });
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
@@ -143,7 +143,7 @@ function djBooth(ctx) {
   ctx.spawn("l31-dj-deck", { feetPosition: { x: cx, y: 0.5, z: d.z0 + 0.75 }, primitive: box(2.2, 0.95, 0.7), material: { color: "#15131a", roughness: 0.6 }, physics: "static",
     children: [-0.55, 0.55].map((dx) => ({ feetPosition: { x: dx, y: 0.95, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.2, radiusBottom: 0.2, height: 0.03 }, material: { color: "#222", roughness: 0.3, metalness: 0.4 } }))
       .concat([{ feetPosition: { x: 0, y: 0.95, z: 0.05 }, primitive: box(0.35, 0.04, 0.3), material: { color: "#2a2a33", emissive: "#ff3fa4", emissiveIntensity: 0.4 } }]) });
-  ctx.spawn("l31-dj", { feetPosition: { x: cx, y: 0.55, z: d.z0 + 1.45 }, rotation: { yaw: 180 }, physics: "character", tags: ["npc", "usable", "faceling", "l31-dj"],
+  ctx.spawn("l31-dj", { feetPosition: { x: cx, y: 0.55, z: d.z0 + 1.45 }, rotation: { yaw: 0 }, physics: "character", tags: ["npc", "usable", "faceling", "l31-dj"],
     ...critterSpec(npcLook("l31-dj", { species: "faceling", sex: "m", fur: "#c68652", botw: "pants", shoes: "sneakers", topw: "jacket", top: "#3a2a5a", bottom: "#1d1d26" }, "wanderer", 1)),
     behavior: ["scripts/humanoid-locomotion.js"], state: { name: "Faceling DJ", role: "regular", faction: "wanderer", factionName: "Rink DJ", docile: true, hp: 60, home: { x: cx, z: d.z0 + 1.45 }, stay: true } });
   ctx.spawn("l31-dj-light", { feetPosition: { x: cx, y: 3, z: cz }, light: { kind: "point", color: "#ff5fb0", intensity: 1.2, distance: 7 } });
