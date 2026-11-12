@@ -508,4 +508,5 @@ bonus-rico:
     death: ["Tell her I..."]
     sneak: ["I see you, rider."]
     close: ["Personal space. Like the yellow line."]
+    board: ["All aboard! Arms in!", "Marigold's leaving, rider!", "Doors closing. Eyes front!", "Next stop, wherever you left off!"]
   gest: { wave: "Yo! Rider!", gift: "Ha, a tip! Thanks!", dance: "Platform party! Ha!", nodance: "Train's due. Rain check.", insult: "I'll put you on the slow one." }

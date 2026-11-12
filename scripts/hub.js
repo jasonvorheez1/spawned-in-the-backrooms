@@ -3,6 +3,7 @@
 // and answers their buttons. Food here is just for fun and never leaves the mall.
 import { toHub, toSolo, HOMES, HUB_PLACE, lastLevel } from "./lib/hub.js"
 import { animate } from "builtin/tween"
+import { vo } from "./lib/voices.js"
 import B from "./lib/data/bonus.yml"
 import FOODM from "./lib/data/bonus-food-models.yml"
 import FURN from "./lib/data/furniture.yml"
@@ -93,8 +94,19 @@ const TRAIN = { id: "bc-train", x: -22.3, y: 5.15, z: -14, door: { x: -21.1, z: 
 const RIDE = { walk: 1.9, board: 2.4, depart: 3.0, pull: 6.0, leave: 6.6, slide: 45 } // seconds into the scene; metres the car slides out
 const CHIME = "cdn/sfx-subway-train-door-closing-two-tone-chime-and-pneumatic-hiss.mp3"
 const DEPART = "cdn/sfx-subway-train-electric-motor-whine-accelerating-away-rails-clatter.mp3"
+// Rico, the Bonus Line attendant, sees each rider off (Shelly Nov 12: "put rico there in cutscenes")
+const RICO = { id: "bonus-rico", post: { x: -19.5, y: 5.5, z: -3.5, yaw: 180 }, door: { x: -19.9, y: 5.5, z: -12.4, yaw: 200 } }
+const CALLS = ["All aboard! Arms in!", "Marigold's leaving, rider!", "Doors closing. Eyes front!", "Next stop, wherever you left off!"]
+function ricoCall(ctx, on) {
+  const r = ctx.getObject(RICO.id); if (!r) return
+  const p = on ? RICO.door : RICO.post
+  r.feetPosition = { x: p.x, y: p.y, z: p.z }; r.rotation = { yaw: p.yaw }
+  r.anim.wave = on ? { clip: "cdn/clip-wave.glb", weight: 1, mask: { from: "Spine" } } : null
+  if (on) { const line = CALLS[Math.floor(ctx.random() * CALLS.length)], clip = vo("bonus-rico", line); if (clip) ctx.emit("playSound", { clip, position: { x: p.x, y: p.y + 1.6, z: p.z }, volume: 0.95, bus: "Voice", maxDistance: 20 }) }
+}
 function board(ctx, s, to, keep) {
   const me = ctx.self, now = ctx.now()
+  ricoCall(ctx, true)
   ctx.session.ride = { to, keep, t0: now, phase: 0 }
   s.stungUntil = now + RIDE.leave * 1000 + 500 // the scene holds your feet
   me.feetPosition = { x: TRAIN.start.x, y: TRAIN.y + 0.35, z: TRAIN.start.z }; me.rotation = { yaw: 90 } // facing the car (-x)
@@ -106,7 +118,7 @@ function board(ctx, s, to, keep) {
 function rideStep(ctx, s, ses) {
   const r = ses.ride, t = (ctx.now() - r.t0) / 1000, me = ctx.self
   if (t < RIDE.walk) { const k = t / RIDE.walk; me.velocity = { x: (TRAIN.door.x - TRAIN.start.x) / RIDE.walk, y: 0, z: 0 }; me.anim.walk = { clip: "cdn/clip-walk-loop.glb", weight: 1, loop: true }; void k; return }
-  if (r.phase < 1) { r.phase = 1; me.velocity = { x: 0, y: 0, z: 0 }; me.anim.walk = null }
+  if (r.phase < 1) { r.phase = 1; me.velocity = { x: 0, y: 0, z: 0 }; me.anim.walk = null; ctx.view.camera = { eye: { x: -18.2, y: 7.1, z: -9.8 }, aim: { x: -19.9, y: 6.9, z: -12.4 }, fov: 45 } } // Rico's close-up as he calls it
   if (t >= RIDE.board && r.phase < 2) { r.phase = 2; me.visible = false; s.trainHid = true
     ctx.emit("playSound", { clip: CHIME, position: { x: TRAIN.door.x, y: TRAIN.y + 1.5, z: TRAIN.door.z }, volume: 0.7 })
     ctx.view.camera = { eye: { x: -13, y: 7.8, z: -2 }, aim: { x: -22, y: 6.5, z: -16 }, fov: 55 } }
@@ -118,6 +130,7 @@ function rideStep(ctx, s, ses) {
     const tr = ses.rideTrain; if (tr && ctx.getObject(tr)) ctx.destroy(tr)
     me.hidden = (me.hidden ?? []).filter((h) => h !== TRAIN.id)
     ses.ride = null; ses.rideTrain = null; s.stungUntil = 0
+    ricoCall(ctx, false)
     if (r.keep) s.wakeAtSave = true
     toSolo(ctx, r.to, me, r.keep)
   }
