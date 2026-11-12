@@ -30,7 +30,7 @@ function board(level, pool, rolls) {
 export function labBuild(ctx, pad, sign) {
   const s = ctx.place.state; s.lootPool ??= "l0";
   ctx.spawn("tl-lab-stripe", { feetPosition: { x: X0, y: 0.003, z: Z0 + 1 }, primitive: { kind: "box", width: 8.6, height: 0.004, depth: 9 }, material: { color: "oklch(0.3 0.03 80)", roughness: 0.9 }, castShadow: false });
-  ctx.spawn("tl-lab-sign", { feetPosition: { x: X0, y: 4.2, z: Z0 - 6.4 }, vector: sign("LOOT LAB", 3.2) });
+  ctx.spawn("tl-lab-sign", { feetPosition: { x: X0, y: 5.1, z: Z0 - 6.2 }, vector: sign("LOOT LAB", 3.2) });
   pad(ctx, "tl-pad-lab-lv1", "lv1", "LEVEL 1", 1.5, -3, "oklch(0.7 0.14 250)");
   pad(ctx, "tl-pad-lab-lv3", "lv3", "LEVEL 3", 3.5, -3, "oklch(0.7 0.14 250)");
   pad(ctx, "tl-pad-lab-lv6", "lv6", "LEVEL 6", 5.5, -3, "oklch(0.7 0.14 250)");
@@ -41,7 +41,7 @@ export function labBuild(ctx, pad, sign) {
   pad(ctx, "tl-pad-lab-corpse", "corpse", "3 CORPSES", 7.5, 0.5, "oklch(0.6 0.2 25)");
   labBoard(ctx, 1, s.lootPool, []);
 }
-const labBoard = (ctx, level, pool, rolls) => ctx.spawn("tl-lab-board", { feetPosition: { x: X0, y: 1.1, z: Z0 - 6 }, vector: board(level, pool, rolls), castShadow: false });
+const labBoard = (ctx, level, pool, rolls) => ctx.spawn("tl-lab-board", { feetPosition: { x: X0, y: 3.0, z: Z0 - 6 }, vector: board(level, pool, rolls), castShadow: false });
 
 // wants are written by the pads (scripts/debug-pad.js) as the stepping player's level
 export function labTick(ctx) {

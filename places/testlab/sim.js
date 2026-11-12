@@ -118,7 +118,7 @@ function due(s, key, now) { if (!s[key]) { s[key] = now + REFILL; return false; 
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
   if (s.builtV !== V) { build(ctx); s.builtV = V; s.seeded = false; s.labV = 0; }
-  if (s.labV !== 1) { labBuild(ctx, pad, sign); s.labV = 1; } // the Loot Lab lays itself beside the hall, never rebuilding the rest
+  if (s.labV !== 2) { labBuild(ctx, pad, sign); s.labV = 2; } // the Loot Lab lays itself beside the hall, never rebuilding the rest
   if (!ctx.place.players?.length) return;
   // refills: weapons, containers, physics on request, foes on request
   const R = (s.refill ??= {});
