@@ -13,13 +13,6 @@ l31-food-bp:
   physics: none
   primitive: {depth: 24, height: 4, kind: box, width: 16}
   tags: [blueprint]
-l31-rental-bp:
-  feetPosition: {x: 13, y: 0, z: 25.5}
-  id: l31-rental-bp
-  material: {kind: scripted, script: engine/blueprint}
-  physics: none
-  primitive: {depth: 9, height: 4, kind: box, width: 22}
-  tags: [blueprint]
 l31-shop-bp:
   feetPosition: {x: -35, y: 0, z: 0}
   id: l31-shop-bp
