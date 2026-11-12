@@ -151,9 +151,9 @@ export function geometry(ctx) {
   }
   // BASEBOARDS (near detail)
   if (lod <= 2) {
-    ctx.albedo(null);
-    ctx.color("oklch(0.72 0.05 85)");
-    ctx.roughness(0.6);
+    ctx.albedo("cdn/texture-scuffed-grimy-cream-painted-wood-baseboard-with-mop-marks.png"); // Nov 12 realism pass: scuffed, mop-stained, not a flat strip
+    ctx.color("oklch(0.66 0.05 80)");
+    ctx.roughness(0.7);
     for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
       const xw = (cx + 1) * S - HALF, zw = (cz + 1) * S - HALF;
       if (wallX(cx, cz) && !isArchWall(cx, cz, "x")) box(ctx, xw - T - 0.02, 0, cz * S - HALF, xw + T + 0.02, 0.1, (cz + 1) * S - HALF);
