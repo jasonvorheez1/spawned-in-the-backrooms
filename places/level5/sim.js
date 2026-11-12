@@ -386,6 +386,9 @@ export function tick(ctx) {
   if (s.homeMarkV !== 1) { s.homeMarkV = 1; for (const [id, m] of Object.entries(ARRIVALS)) if (id.startsWith("l5-home-") && !ctx.getObject(id)) ctx.spawn(id, { feetPosition: { x: m.x, y: 0.1, z: m.z }, rotation: { yaw: m.yaw } }); } // the kiosk's drop points, one inside each room
   { const book = s.l5rent ?? {}; for (const p of ctx.place.players) { if (p.state.l5home) continue; const rid = Object.keys(book).find((r) => book[r]?.uid === p.userId); if (!rid) continue; // the ledger says it's theirs: their save forgot, so it gets the key back
     book[rid] = { uid: p.userId, until: 9e15 }; s.l5rent = { ...book }; p.state.l5room = rid; p.state.l5home = rid; p.state.l5key = rid; p.state.l5until = 9e15; } }
+  for (const p of ctx.place.players) { const rid = p.state.l5home, uid = p.userId ?? p.id; if (!rid || s.l5rent?.[rid]?.uid !== uid) continue; // your booked room's trunk answers to you
+    const tr = ctx.getObject(`l5-people-trunk-${rid}`); if (!tr || tr.state.renter === uid) continue;
+    const st = { ...(tr.state.stash ?? {}) }; if (tr.state.renter) st[tr.state.renter] = tr.state.items ?? ""; tr.state.items = st[uid] ?? ""; delete st[uid]; tr.state.stash = st; tr.state.renter = uid; }
   if (!s.salonPlacementV) {
     const o = ctx.place.objects["l5-vanderholt"];
     if (o) {
