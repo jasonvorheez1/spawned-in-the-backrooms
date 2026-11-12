@@ -27,9 +27,9 @@ export function onInput(ctx, input) {
   if (d.k === "add" && S.fruits[d.f] && mix.length < 3 && !mix.includes(d.f)) { s.smix = [...mix, d.f]; ctx.emit("playSound", { clip: "cdn/sfx-plastic-cup-ice-cube-drop-clink.mp3", volume: 0.5 }) }
   if (d.k === "clear") s.smix = []
   if (d.k === "order" && mix.length >= 2) {
-    if ((s.cents ?? 0) < S.price * 100) { s.smoothieMsg = "Not enough cash"; say(ctx, "broke"); return }
-    s.cents = (s.cents ?? 0) - S.price * 100
-    const k = key(mix), c = S.combos[k], b = c ?? S.house
+    const k = key(mix), c = S.combos[k], b = c ?? S.house, cost = Math.round((b.price ?? S.price) * 100)
+    if ((s.cents ?? 0) < cost) { s.smoothieMsg = "Not enough cash"; say(ctx, "broke"); return }
+    s.cents = (s.cents ?? 0) - cost
     const book = s.smoothieBook ?? []
     const isNew = !!c && !book.includes(k)
     if (isNew) s.smoothieBook = [...book, k]

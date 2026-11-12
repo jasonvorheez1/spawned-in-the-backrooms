@@ -1,6 +1,6 @@
 # Squeeze Play smoothie bar (Bonus Room). Shelly, Nov 12: order a mix, find combos, slight to moderate buffs for hours of playtime.
 # Every number here is Savi's pick: tune freely. regen = points per 10 s of play; minutes = playtime the buff lasts.
-price: 4
+price: 3 # house mix; each recipe carries its own price
 fruits:
   almond: { name: "Almond Water", color: "#e9e4d4" }
   berry:  { name: "Wild Berry",   color: "#b4386b" }
@@ -10,17 +10,18 @@ fruits:
   banana: { name: "Banana",       color: "#f5e08a" }
   luckyo: { name: "Lucky O Milk", color: "#f7d7ef" }
 combos:
-  berry+mango:        { name: "Sunrise",     desc: "Slowly heals",                 minutes: 120, hp: 1 }
-  almond+lemon:       { name: "Clear Head",  desc: "Slowly steadies sanity",       minutes: 120, san: 1 }
-  kiwi+lemon:         { name: "Zest",        desc: "Heals a bit faster",           minutes: 60,  hp: 2 }
-  banana+mango:       { name: "Full Belly",  desc: "Keeps food and water up",      minutes: 180, food: 1 }
-  almond+berry+kiwi:  { name: "Night Shift", desc: "Heals and steadies sanity",    minutes: 90,  hp: 1, san: 1 }
-  almond+banana+mango: { name: "Lobby Legs", desc: "Heals and keeps you fed",      minutes: 120, hp: 1, food: 1 }
-  berry+kiwi+lemon:   { name: "Sour Patch",  desc: "Steadies sanity, a lot",       minutes: 60,  san: 3 }
-  banana+luckyo:      { name: "Cereal Bowl", desc: "Keeps food and water up",      minutes: 150, food: 1 }
-  berry+luckyo:       { name: "Lucky Charm", desc: "Steadies sanity",              minutes: 120, san: 2 }
-  almond+kiwi+luckyo: { name: "Pot o' Gold", desc: "Heals and steadies sanity",    minutes: 120, hp: 2, san: 1 }
-house: { name: "House Mix", desc: "A little healing", minutes: 45, hp: 1, every: 2 }
+  # tiers (Savi's picks): gentle = 1 stat at 1 per 10 s for 2-3 h; strong = 2 per 10 s for 45 min; double = two stats at 1 for 75-90 min
+  berry+mango:        { name: "Sunrise",     desc: "Slowly heals",                 minutes: 120, hp: 1,         price: 6 }
+  almond+lemon:       { name: "Clear Head",  desc: "Slowly steadies sanity",       minutes: 120, san: 1,        price: 6 }
+  kiwi+lemon:         { name: "Zest",        desc: "Heals faster, short",          minutes: 45,  hp: 2,         price: 9 }
+  banana+mango:       { name: "Full Belly",  desc: "Keeps food and water up",      minutes: 180, food: 1,       price: 6 }
+  almond+berry+kiwi:  { name: "Night Shift", desc: "Heals and steadies sanity",    minutes: 90,  hp: 1, san: 1, price: 12 }
+  almond+banana+mango: { name: "Lobby Legs", desc: "Heals and keeps you fed",      minutes: 90,  hp: 1, food: 1, price: 12 }
+  berry+kiwi+lemon:   { name: "Sour Patch",  desc: "Steadies sanity fast, short",  minutes: 45,  san: 2,        price: 9 }
+  banana+luckyo:      { name: "Cereal Bowl", desc: "Keeps food and water up",      minutes: 150, food: 1,       price: 7 }
+  berry+luckyo:       { name: "Lucky Charm", desc: "Slowly steadies sanity",       minutes: 150, san: 1,        price: 7 }
+  almond+kiwi+luckyo: { name: "Pot o' Gold", desc: "Heals and steadies sanity",    minutes: 75,  hp: 1, san: 1, price: 14 }
+house: { name: "House Mix", desc: "A little healing", minutes: 45, hp: 1, every: 2, price: 3 }
 # Sal's recorded lines (Callum, husky trickster)
 lines:
   hello: /cdn/value.7c874f1055011d262d4c8124329de15b8709a3c333249b3f72f44cd335ea1d2a.mp3
