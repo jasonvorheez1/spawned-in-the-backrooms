@@ -6,3 +6,10 @@ l31-arcade-bp:
   physics: none
   primitive: {depth: 36, height: 4, kind: box, width: 16}
   tags: [blueprint]
+l31-food-bp:
+  feetPosition: {x: 34, y: 0, z: 18}
+  id: l31-food-bp
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 24, height: 4, kind: box, width: 16}
+  tags: [blueprint]
