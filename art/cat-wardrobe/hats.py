@@ -12,12 +12,12 @@ from mathutils import Vector, Matrix
 from mathutils.bvhtree import BVHTree
 SRC = "/workspace/hats"; OUT = "/workspace/hats/out"; BODY = "/workspace/catrev/body%s.glb"; os.makedirs(OUT, exist_ok=True)
 R = {
-  "cap":        dict(fit="wrap", band=0.30, ease=1.03, tilt=-8),
-  "beanie":     dict(fit="wrap", band=0.36, ease=1.03, tilt=-10, orient=dict(roll=13)),
-  "souwester":  dict(fit="wrap", band=0.34, ease=1.04, tilt=-8),
+  "cap":        dict(fit="wrap", band=0.30, ease=1.03, tilt=-8, at=0.5, rim="back"),
+  "beanie":     dict(fit="wrap", band=0.36, ease=1.03, tilt=-10, at=0.12, squash=1.15, orient=dict(roll=13)),
+  "souwester":  dict(fit="wrap", band=0.34, ease=1.04, tilt=-8, at=0.7, rim="wide", cut="auto"),
   "chitinhelm": dict(fit="wrap", band=0.40, ease=1.05, tilt=-4, orient=dict(yaw=-90)),
-  "beret":      dict(fit="wrap", band=0.20, ease=1.02, tilt=-10, roll=10, dx=0.015),
-  "divehelm":   dict(fit="enclose", ease=1.22, orient=dict(yaw=-90)),
+  "beret":      dict(fit="wrap", band=0.20, ease=1.02, tilt=-10, roll=10, dx=0.015, at=0.05),
+  "divehelm":   dict(fit="enclose", ease=1.12, lift=0.03, orient=dict(yaw=-90)),
   "tophat":     dict(fit="perch", w=0.70, seat=0.6, sink=0.012, tilt=-7),
   "crown":      dict(fit="perch", w=0.65, seat=0.5, sink=0.012, tilt=-6),
   "partyhat":   dict(fit="perch", w=0.40, seat=0.6, sink=0.012, tilt=-8, dx=0.07, roll=14),
@@ -61,7 +61,14 @@ def load_hat(kind, r):
     orr = r.get("orient", {})
     bm.transform(Matrix.Rotation(rad(orr.get("roll", 0)), 4, "Y") @ Matrix.Rotation(rad(orr.get("yaw", 0)), 4, "Z"))
     if r.get("cut"):   # drop what hangs under the hat (a chin cord)
-        z0 = min(v.co.z for v in bm.verts); z1 = max(v.co.z for v in bm.verts); zc = z0 + (z1 - z0) * r["cut"]
+        zs = [v.co.z for v in bm.verts]; z0 = min(zs); z1 = max(zs)
+        if r["cut"] == "auto":   # the thin slices under the hat hold few verts: cut below the first full one
+            NB = 40; cnt = [0] * NB
+            for z in zs: cnt[min(NB - 1, int((z - z0) / (z1 - z0) * NB))] += 1
+            nz = sorted(c for c in cnt if c); med = nz[len(nz) // 2]
+            i = next((i for i in range(NB - 1) if cnt[i] >= med * 0.3 and cnt[i + 1] >= med * 0.3), 0)
+            zc = z0 + (z1 - z0) * i / NB; print("CUT", kind, round(i / NB, 3))
+        else: zc = z0 + (z1 - z0) * r["cut"]
         res = bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=Vector((0, 0, zc)), plane_no=Vector((0, 0, -1)), clear_outer=True)
     bm.to_mesh(o.data); bm.free()
     d = o.modifiers.new("d", "DECIMATE"); d.ratio = min(1.0, 9000 / max(1, len(o.data.polygons)))
@@ -128,18 +135,35 @@ for sex in ("f", "m"):
             return hw, min(ys), max(ys)
         ycen = (H["ymin"] + H["ymax"]) / 2; S = (1, 1, 1)
         if fit == "wrap":
-            cx, cy, z0, W, D, dep, hgt = cavity(hat); xf(hat, Matrix.Translation(Vector((-cx, -cy, -z0))))
+            if r.get("at") is not None:   # the shell's own width at a set height, less its thickness; the rim plane by `rim`
+                a, b = bbox(hat); hgt = b.z - a.z; vs = [v.co for v in hat.data.vertices]
+                sl = [v for v in vs if abs(v.z - (a.z + hgt * r["at"])) < hgt * 0.04]
+                x0, x1 = min(v.x for v in sl), max(v.x for v in sl); yy0, yy1 = min(v.y for v in sl), max(v.y for v in sl)
+                cx, cy, W, D, dep = (x0 + x1) / 2, (yy0 + yy1) / 2, (x1 - x0) * 0.92, None, 0
+                if r.get("rim") == "back": z0 = min(v.z for v in vs if v.y > cy + (yy1 - cy) * 0.3)
+                elif r.get("rim") == "wide":
+                    best = (0, a.z)
+                    for i in range(30):
+                        zz = a.z + hgt * (i + 0.5) / 30; bx = [v.x for v in vs if abs(v.z - zz) < hgt / 60]
+                        if bx and max(bx) - min(bx) > best[0]: best = (max(bx) - min(bx), zz)
+                    z0 = best[1]
+                else: z0 = a.z
+                hgt = b.z - z0
+            else: cx, cy, z0, W, D, dep, hgt = cavity(hat)
+            xf(hat, Matrix.Translation(Vector((-cx, -cy, -z0))))
             zb = H["top"] - H["h"] * r["band"]; zr = zb; e = r.get("ease", 1.03)
             for _ in range(4):
                 hw, y0, y1 = oval(zr) or oval(zb)
-                sx, sy = 2 * hw * e / W, (y1 - y0) * e / D
-                hi = max(sx, sy); lo = max(min(sx, sy), hi / 1.15); sx, sy = (hi, lo) if sx >= sy else (lo, hi); sz = (hi * lo) ** 0.5
+                if D is None: sx = sy = 2 * hw * e / W; sz = sx / r.get("squash", 1)
+                else:
+                    sx, sy = 2 * hw * e / W, (y1 - y0) * e / D
+                    hi = max(sx, sy); lo = max(min(sx, sy), hi / 1.15); sx, sy = (hi, lo) if sx >= sy else (lo, hi); sz = (hi * lo) ** 0.5
                 zr = max(zb, H["top"] + 0.01 - sz * dep) if dep else max(zb, H["top"] + 0.025 - sz * hgt)
             S = (sx, sy, sz)
             M = Matrix.Translation(Vector((r.get("dx", 0), (y0 + y1) / 2 + r.get("dy", 0), zr))) @ Matrix.Rotation(rad(r.get("roll", 0)), 4, "Y") @ Matrix.Rotation(rad(r.get("tilt", 0)), 4, "X") @ Matrix.Diagonal(Vector((sx, sy, sz, 1)))
             xf(hat, M)
         elif fit == "enclose":
-            a, b = bbox(hat); s = max(2 * H["half"] * r["ease"] / (b.x - a.x), H["h"] * 1.1 / (b.z - a.z)); S = (s, s, s)
+            a, b = bbox(hat); s = 2 * H["half"] * r["ease"] / (b.x - a.x); S = (s, s, s)
             xf(hat, Matrix.Translation(Vector((0, ycen + r.get("dy", 0), H["top"] + r.get("lift", 0.04)))) @ Matrix.Scale(s, 4) @ Matrix.Translation(Vector((-(a.x + b.x) / 2, -(a.y + b.y) / 2, -b.z))))
         elif fit == "perch":
             a, b = bbox(hat); s = 2 * H["half"] * r["w"] / (b.x - a.x); S = (s, s, s)
@@ -155,14 +179,14 @@ for sex in ("f", "m"):
         else:   # band
             a, b = bbox(hat); xf(hat, Matrix.Translation(Vector((-(a.x + b.x) / 2, -(a.y + b.y) / 2, -a.z)))); hgt = b.z - a.z
             hb = BVHTree.FromObject(hat, bpy.context.evaluated_depsgraph_get())
-            up = hb.ray_cast(Vector((0, 0, hgt * 0.3)), Vector((0, 0, 1)))[0]; zt = up.z if up is not None else hgt * 0.92
+            up = hb.ray_cast(Vector((0, 0, hgt * 0.3)), Vector((0, 0, 1)))[0]; zt = up.z if up is not None and up.z > hgt * 0.6 else hgt * 0.93
             zq = hgt * 0.22; hx = [hb.ray_cast(Vector((0, 0, zq)), Vector(d))[0] for d in ((1, 0, 0), (-1, 0, 0))]
-            g = (hx[0].x - hx[1].x) if all(x is not None for x in hx) else (b.x - a.x) * 0.75
+            g = (b.x - a.x) * 0.72   # the gap between the cups: the outside width less two cups
             s = 2 * H["half"] / g
             for _ in range(4):
-                zc = H["top"] + 0.006 - s * (zt - zq); ov = oval(zc, 0.02) or (H["half"], 0, 0); s = 2 * ov[0] * r.get("ease", 1) / g
-            S = (s, s, s)
-            xf(hat, Matrix.Translation(Vector((0, ycen + r.get("dy", 0), H["top"] + 0.006 - s * zt))) @ Matrix.Rotation(rad(r.get("tilt", 0)), 4, "X") @ Matrix.Scale(s, 4))
+                zc = H["top"] + 0.006 - s / 1.15 * (zt - zq); ov = oval(zc, 0.02) or (H["half"], 0, 0); s = 2 * ov[0] * r.get("ease", 1) / g
+            S = (s, s, s / 1.15); print("CUPS z", round(H["top"] + 0.006 - s / 1.15 * (zt - zq), 3), "head", round(H["bot"], 3), round(H["top"], 3))
+            xf(hat, Matrix.Translation(Vector((0, ycen + r.get("dy", 0), H["top"] + 0.006 - s / 1.15 * zt))) @ Matrix.Rotation(rad(r.get("tilt", 0)), 4, "X") @ Matrix.Diagonal(Vector((s, s, s / 1.15, 1))))
         pushed = push_out(hat, bvh, CLEARS[fit]) if CLEARS[fit] else 0
         for o in list(bpy.context.scene.objects):
             if o.type == "MESH" and o != hat: bpy.data.objects.remove(o)
