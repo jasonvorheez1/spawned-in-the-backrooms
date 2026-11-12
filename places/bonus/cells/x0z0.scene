@@ -701,7 +701,7 @@ bc-palm-5:
   rotation: {yaw: 244}
   tags: ["bonus-court"]
 bc-palm-6:
-  feetPosition: {x: 1.4, y: 0.65, z: -19.6}
+  feetPosition: {x: 1.8, y: 6.15, z: -11.3}
   id: bc-palm-6
   layout: {box: {max: {x: 2.5, y: 6.6, z: 2.5}, min: {x: -2.5, y: 0, z: -2.5}}}
   model: {id: /cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb}
@@ -803,7 +803,7 @@ bc-planter-5:
   physics: {body: "static", collider: "box"}
   tags: ["bonus-court"]
 bc-planter-6:
-  feetPosition: {x: 1.4, y: 0, z: -19.6}
+  feetPosition: {x: 1.8, y: 5.5, z: -11.3}
   id: bc-planter-6
   layout: {box: {max: {x: 0.845, y: 0.704, z: 0.845}, min: {x: -0.845, y: 0, z: -0.845}}}
   model: {id: /cdn/value.f731c3c9207340a77df45bced223cc403147d9dad6f4ced228cd72b847679311.glb}
