@@ -939,7 +939,7 @@ export function restylePlace(ctx, place) {
   const P = place ?? ctx.place, skip = new Set((P.players ?? []).map((p) => p.id)); let n = 0
   const ids = Object.keys(P.objects ?? {}), ward = new Set()
   for (const k of ids) { const i = k.indexOf('/critter-ward-'); if (i > 0) ward.add(k.slice(0, i)) }
-  for (const id of ids) { if (skip.has(id) || id.startsWith('player/') || id.includes('/')) continue; const o = P.objects[id]; if (!o || o.audience === 'local' || !o.model) continue; if (restyle(ctx, o, ward)) n++ }
+  for (const id of ids) { if (skip.has(id) || id.startsWith('player/')) continue; const o = P.objects[id]; if (!o || o.audience === 'local' || !o.model) continue; if (restyle(ctx, o, ward)) n++ }
   return n
 }
 
