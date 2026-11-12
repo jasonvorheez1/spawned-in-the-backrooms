@@ -9,13 +9,13 @@ const SELF = "scripts/lib/level31-arcade.js";
 const SFX = "/cdn/moodboard-realistic-gritty/";
 const GLB = {
   felix: "/cdn/value.a34bd774d1847e4ea13da73b3aaa23d2520c224c6ce7056cd98851c0bbcdd205.glb",
-  dispenser: "/cdn/value.f759116da56aba87735b8064a9fe7b00f9a373dadf68a856453d2f01173eca10.glb",
+  dispenser: "/cdn/value.a4c92f947d202fb0b1f82ad3d86598b26d9ce26d3b3fb63785580f74adc6f637.glb",
   upright: "/cdn/value.f025413cd07f33ee4e744a88cdbe78e81a6057ba2b9fa1e5b77a9543ea556977.glb",
   pinball: "/cdn/value.38ea1184b8c82b3771c13c050fd5e3c5e090a504e7b95c21a22663994d233826.glb",
   racer: "/cdn/value.160211cff42e88d8c41192dd027adbf3b873452c60959a4720c0fd5f379e908c.glb",
   moto: "/cdn/value.6d01fa4197dd7ab1344f4b4c529f35fe1febcd398b4556458da3c1f82ae113ba.glb",
   skee: "/cdn/value.7a94f356fc67ae940eb2187fa0f88b7b0b581b47728d0216d83c06d661d7cdfd.glb",
-  hockey: "/cdn/value.55832259098e2ee269ab1da4d702bd920b4274e1514d2a1206e0829727f9c39e.glb",
+  hockey: "/cdn/value.9583a13eabd8e1a68545131bed634f5d56d4d59faf48fffbcf4ba4f3fc2f4fee.glb",
   wheel: "/cdn/value.6da59a17c8bac39b2f40451296a8523c7202ea4113356d1f9c098e00be025180.glb",
 };
 // what a machine tells you after its two seconds of noise, by state.res
@@ -102,9 +102,10 @@ export function layArcade(ctx) {
     behavior: SELF, tags: ["usable", "l31-arcade"], state: { kind: "attract", verb: "Play", info: "arcade machine, takes a card", ...state }, children });
   const W = 90, EA = -90, S = 180; // the way a machine's player side faces
 
-  M("dispenser", "dispenser", Z.x0 + 1, -9.4, W, { kind: "dispenser", name: "Card dispenser", verb: "Press", info: "Please press the button to get a card" },
-    { metal: { texture: tex("brushed-stainless-steel"), metalness: 1, roughness: 0.38 }, button: lamp("#1f5cff", 1.2) },
-    [{ id: "print", feetPosition: { x: 0, y: 1.03, z: -0.2155 }, vector: PRINT, castShadow: false }]);
+  const T = (id, key, x, z, yaw, state, box) => ctx.spawn("l31-arcade-" + id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: GLB[key], forward: "+x" }, layout: { box },
+    physics: { body: "static", collider: "box" }, behavior: SELF, tags: ["usable", "l31-arcade"], state: { kind: "attract", verb: "Play", info: "arcade machine, takes a card", ...state } });
+  // Tripo v3.1 (Nov 12): dispenser 0.7 x 1.7 x 0.5 m, air hockey 2.1 x 0.85 x 1.15 m
+  T("dispenser", "dispenser", Z.x0 + 1, -9.4, W, { kind: "dispenser", name: "Card dispenser", verb: "Press", info: "Please press the button to get a card" }, { min: { x: -0.35, y: 0, z: -0.25 }, max: { x: 0.35, y: 1.7, z: 0.25 } });
 
   // sit-down racers: two rows of three, screens back to back, seats out to the aisles
   const RT = ["retro-arcade-crt-screen-desert-highway-racing-game", "retro-arcade-crt-screen-night-city-racing-game"], RC = ["#ffffff", "#ffd9c0", "#c8e4ff"];
@@ -123,7 +124,7 @@ export function layArcade(ctx) {
   // skee-ball: two lanes side by side, heads on the east wall
   for (let i = 0; i < 2; i++) M("skee-" + i, "skee", E - 1.6, -3.2 + i * 0.86, W, { name: "Skee-Ball lane " + (i + 1), verb: "Roll", res: "skee", pitch: 0.9 }, { lane: { texture: tex("grey-cork-lane-surface"), roughness: 0.7 } });
   M("wheel", "wheel", E - 0.52, -10.5, W, { name: "Big Prize Wheel", verb: "Spin", res: "wheel", pitch: 1.2 }, { screen: lamp("#ff3b30", 1.6), marquee: lamp("#ffd76a", 1.5), bulbs: lamp("#ffdf9a", 2.5) });
-  M("hockey", "hockey", 52, -8, 0, { name: "Air hockey", res: "hockey", pitch: 0.85 }, { screen: lamp("#ff4a2a", 1.5), lamp: lamp("#fff2dc", 2), goal: lamp("#ff3b30", 1.2) });
+  T("hockey", "hockey", 52, -8, 0, { name: "Air hockey", res: "hockey", pitch: 0.85 }, { min: { x: -0.575, y: 0, z: -1.05 }, max: { x: 0.575, y: 0.85, z: 1.05 } });
   // four old box uprights, far apart, each against a wall
   const U = (id, x, z, yaw, state, side, body, scr, svg, extra = []) => M(id, "upright", x, z, yaw, { res: "upright", ...state },
     { screen: scr, marquee: lamp("#fff4d0", 0.5), side, body_red: body, cpanel: { color: body.color } },
