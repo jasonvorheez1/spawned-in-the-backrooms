@@ -287,3 +287,90 @@
     hit: ["Ow!"]
     flee: ["Excuse me!"]
   gest: { wave: "Hello!", gift: "How kind!", dance: "In the street? Alright!", nodance: "I'll be late.", insult: "Well, have a nice day anyway." }
+
+# Level 31 "The Roller Rink" snack bar. The clerk's orders run through do: l31:<key> (scripts/lib/level31-food.js).
+l31-food-clerk:
+  hi: "Welcome. Everything is free. Clear your tray when you're done."
+  back: ["Welcome back. Still free.", "What can I get you."]
+  bye: "Trash cans are by the opening."
+  walk: "Tray goes in the trash."
+  ask:
+    - q: "A slice of pizza."
+      tag: "Order"
+      a: "Cheese or pepperoni."
+      then:
+        - q: "Cheese."
+          tag: "Order"
+          a: "One cheese slice. No charge."
+          do: "l31:cheese"
+        - q: "Pepperoni."
+          tag: "Order"
+          a: "One pepperoni slice. No charge."
+          do: "l31:pepperoni"
+    - q: "Chicken wings."
+      tag: "Order"
+      a: "Mild, hot, or too hot."
+      then:
+        - q: "Mild."
+          tag: "Order"
+          a: "Mild wings. No charge."
+          do: "l31:mild"
+        - q: "Hot."
+          tag: "Order"
+          a: "Hot wings. No charge."
+          do: "l31:hot"
+        - q: "Too hot."
+          tag: "Order"
+          a: "Too hot wings. The sign did tell you."
+          do: "l31:toohot"
+    - q: "A foot-long hot dog."
+      tag: "Order"
+      a: "One foot-long. No charge."
+      do: "l31:hotdog"
+    - q: "Something to drink."
+      tag: "Order"
+      a: "Cola, orange, lime, or almond water."
+      then:
+        - q: "Cola."
+          tag: "Order"
+          a: "One cola. No charge."
+          do: "l31:cola"
+        - q: "Orange."
+          tag: "Order"
+          a: "One orange soda. No charge."
+          do: "l31:orange"
+        - q: "Lime."
+          tag: "Order"
+          a: "One lime soda. No charge."
+          do: "l31:lime"
+        - q: "Almond water."
+          tag: "Order"
+          a: "One almond water. No charge."
+          do: "l31:almond"
+    - q: "What is this place? How do I get out of the Backrooms?"
+      a: "I work the counter."
+  barks:
+    idle: ["Order up.", "Slices are fresh."]
+    hi: ["Welcome.", "It's all free."]
+    close: ["Staff only back here."]
+  gest: { wave: "Hello.", gift: "We don't take tips.", dance: "Not on shift.", nodance: "Not on shift.", insult: "Next, please." }
+l31-food-cust1:
+  hi: "We're on the couples skate after this. He says his knees can take it."
+  back: ["The pepperoni's better than the cheese. Don't tell the counter."]
+  bye: "Mind your tray."
+  ask:
+    - q: "How long have you been here?"
+      a: "Since the last song. Or the one before. It's a long song."
+    - q: "Is the food any good?"
+      a: "It's hot and nobody asks you to pay. I've stopped being picky."
+  gest: { wave: "Hi there.", gift: "Oh, for me?", dance: "Save it for the rink.", nodance: "After I finish this.", insult: "That's not very nice." }
+l31-food-cust2:
+  hi: "Sit anywhere. Nobody's saving a seat."
+  back: ["Still here. Still on the same slice."]
+  bye: "See you on the floor."
+  ask:
+    - q: "Do you skate?"
+      a: "Badly. She does the turning for both of us."
+    - q: "Why does everyone clear their trays?"
+      a: "Somebody didn't once. The counter wouldn't look at him after."
+  gest: { wave: "Evening.", gift: "Thanks, pal.", dance: "My knees say no.", nodance: "My knees say no.", insult: "Alright, alright." }

@@ -1,3 +1,4 @@
+import { l31Order } from './lib/level31-food.js'
 import { plain } from './lib/plain.js'
 import { actedVoice, hasCast, recordedDuration } from './lib/voices.js'
 // Talk with NPCs, on the player. E on a person opens the card (interact.js sets state.talkWith). Everything they say and
@@ -229,7 +230,8 @@ function send(ctx, d) {
     hearAt(ctx, { clip: passed ? 'cdn/sfx-soft-bright-two-note-success-chime.mp3' : 'cdn/sfx-dull-low-wooden-thunk-fail-buzz.mp3', volume: 0.5 })
   }
   const seed = Math.floor(ctx.random() * 1e9), pk = (v) => Array.isArray(v) ? v[seed % v.length] : v
-  const reply = passed ? pk(n.a) : (pk(n.fail) ?? 'No.')
+  const l31 = passed && typeof n.do === 'string' && n.do.startsWith('l31:') ? l31Order(ctx, n.do.slice(4)) : null // Level 31 snack bar: the order feeds you, or the clerk refuses
+  const reply = l31?.say ?? (passed ? pk(n.a) : (pk(n.fail) ?? 'No.'))
   say(ctx, it, reply, passed ? (n.mood ?? (n.do ? 'happy' : 'calm')) : 'annoyed'); logLine(ctx, it, 'n', reply)
   setRapport(ctx, it, clamp(rapportOf(ctx, it) + (passed ? (pc ? 6 : 2) : -4), -100, 100))
   if (passed && n.do === 'heal') {
