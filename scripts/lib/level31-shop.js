@@ -11,7 +11,7 @@ const M = {
   tees: C("9b6b13b71bbffdf8cd0ced1035a3dff0d8e4f1b32840180d74251faad3c40166"), cds: C("6b3a28ca3cb58efe606cf0ffe79bdd5aaa1a72a65d5552c16ab832e2b9ce4cf6"),
   till: C("f2663b8e02cbce4a46bcfac7649bc914ec716a82c522683d3afa35ae62387855"), goods: C("853325a6c5a79f84ff8856bdec753180a3d7bd7e5b51e26f672b7c91003fa264"),
   slatA: C("1e06f865e3bab819652a7465866afc2c45f18e4e921be428e2aa3ee858166281"), slatB: C("e7314085a43f0e52bed0ee5bdf56f3a8cd3effa57fc716faa8c431493d8eb3c0"),
-  counter: C("aaddade70e65d95cf0f42bc5fff2d5405f8249413bf41f180cea81b979b48bf0"), gondola: C("4a04f4607b01ff67aa72590bb7d9442f9e8b7274f1ba0421c9607bbf270b3fb0"), skatewall: C("c16242187a987b783d4ec41253eb5b35d380f85024c333a06a5792ddff6c09fa"), // Tripo v3, Nov 12
+  counter: C("aaddade70e65d95cf0f42bc5fff2d5405f8249413bf41f180cea81b979b48bf0"), gondola: C("4a04f4607b01ff67aa72590bb7d9442f9e8b7274f1ba0421c9607bbf270b3fb0"), skatewall: C("c16242187a987b783d4ec41253eb5b35d380f85024c333a06a5792ddff6c09fa"), prizeA: C("6821235152b886261fff99fe01905e40e7f513cdf87f57fb257fbb47d67a565b"), prizeB: C("1db3369ae5651b0713ea11b828a365bd4efac29c4315df2ff6be34723cdea778"), // Tripo v3, Nov 12
   neon: C("8eeb18c99bfd4d8d7eeab25ae7d204179f7de76980db3dfea83cda5bdff30c03"),
 };
 const E = -90, W = 90, N = 0, S = 180; // yaw that turns a prop's front to face east / west / north / south
@@ -35,13 +35,14 @@ export function layShop(ctx) {
   } wall("header", -28.125, 2.8, 0, 0.25, 1.2, 24, "oklch(0.3 0.05 200)");
   prop("neon", "neon", -27.96, 2.9, 0, E, false);
   // west wall: slatwall behind the counter, tees to the north, plush and CDs to the south
-  prop("slat-a", "slatA", WX + 0.094, 0, -1.55, E, false); prop("slat-b", "slatB", WX + 0.094, 0, 1.55, E, false);
   prop("tees-w", "tees", WX + 0.049, 0.85, -7, E, false); prop("tees-n", "tees", -36, 0.85, NZ + 0.049, S, false);
   prop("plush", "plush", WX + 0.21, 0, 5.2, E); prop("plush-2", "plush", WX + 0.21, 0, 6.9, E);
   prop("cds-a", "cds", WX + 0.13, 0, 8.3, E); prop("cds-b", "cds", WX + 0.13, 0, 8.72, E);
   // the L counter: one case facing the aisle, one turned south, goods on the glass
   // the checkout: one Tripo memphis counter (file 0.70 x 0.80 x 0.99 m, long side along z) at x1.35 = 1.08 m tall, 1.33 m long
   const tr = (id, m, x, y, z, yaw, sc, solid = true) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: M[m], scale: sc, ...(solid ? { physics: { body: "static", collider: "box" } } : {}) });
+  // ticket prize walls (Tripo, from Shelly's prize-wall photo): file ~0.25 x 0.75 x 1.0 m, long side along z, x3.2 = 2.4 m tall, 3.2 m long
+  tr("prize-a", "prizeA", WX + 0.45, 0, -1.65, 0, 3.2, false); tr("prize-b", "prizeB", WX + 0.42, 0, 1.65, 0, 3.1, false);
   tr("counter", "counter", -38.3, 0, -0.1, 0, 1.35); tr("case-side", "case", -39.3, 0, 1.25, S, 1);
   // two stocked gift gondolas down the middle (file 0.91 x 1.0 x 0.94 m) at x1.55 = 1.55 m tall, eye level for a 1.7 m player
   tr("gondola-n", "gondola", -34.2, 0, -4.2, E, 1.55); tr("gondola-s", "gondola", -34.2, 0, 4.2, E, 1.55);
