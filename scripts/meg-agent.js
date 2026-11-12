@@ -358,7 +358,7 @@ function aim(me, m, t) {
 const VOICES = { "meg-ale": "ale", "meg-ortiz": "ortiz", "meg-callum": "callum", "surv-wren": "wren", "surv-hollis": "hollis", "surv-mags": "mags" };
 const BVO = (who, line) => vo(who, line)
 // a few bark kinds are written under a person's plainer word for them
-const BARK_AS = { ambientIdle: 'idle', brandish: 'drawn', lowHealth: 'hurt', move: 'idle' };
+const BARK_AS = { ambientIdle: 'idle', lowHealth: 'hurt', move: 'idle' };
 export function bark(ctx, o, kind, force) {
   const own = barkOf(o, BARK_AS[kind] ?? kind, () => ctx.random(), o?.place); // their own written line first (scripts/lib/dialogue.js)
   const pool = own ? [own] : o?.state?.barks?.[kind] ?? CHAT.barks?.[kind], now = ctx.now(), st = o?.state;
@@ -641,28 +641,10 @@ export function update(ctx, dt) {
   }
   face(me, close.feetPosition.x - me.feetPosition.x, close.feetPosition.z - me.feetPosition.z, dt);
 
-  // Dynamic player reactions (bump, brandishing warning & holstered relief, low health / sanity empathy)
+  // The player dialogue behavior handles weapon warnings and contact.
   const eq = close.state?.equipped;
-  const isBrandishing = eq && eq !== "fists" && (WP[eq]?.ranged || (WP[eq]?.damage ?? 0) >= 20);
   if (!s.angry?.[close.id]) {
-    // 1. Player sprint / fast collision bump
-    const plSpd = Math.hypot(close.velocity?.x ?? 0, close.velocity?.z ?? 0);
-    if (best < 0.85 && (plSpd > 3.2 || close.state?.sprint) && now - (m.bumpAt ?? 0) > 8000) {
-      m.bumpAt = now;
-      bark(ctx, me, "bump", true);
-      me.anim.hit = { clip: "cdn/clip-hit-react.glb", loop: "once", weight: 0.75, blendIn: 0.05, blendOut: 0.3, timeAt: now };
-      m.hitAt = now;
-    }
-    // 2. Weapon brandishing warning in safe camp
-    if (isBrandishing && best < 6.5) {
-      if (now - (m.brandishAt ?? 0) > 18000) {
-        m.brandishAt = now;
-        m.brandishPl = close.id;
-        bark(ctx, me, "brandish", true);
-        me.anim.gest = { clip: "cdn/clip-shake-no.glb", loop: "once", weight: 0.9, blendIn: 0.2, blendOut: 0.35, mask: { from: "Spine" } };
-        m.gestEnd = now + 1500;
-      }
-    } else if (m.brandishPl === close.id && (!eq || eq === "fists") && now - (m.brandishAt ?? 0) < 7000) {
+    if (m.brandishPl === close.id && (close.state?.sheathed || eq === "fists") && now - m.brandishAt < 7000) {
       m.brandishPl = null;
       bark(ctx, me, "holstered", true);
       me.anim.gest = { clip: "cdn/clip-nod-yes.glb", loop: "once", weight: 0.85, blendIn: 0.2, blendOut: 0.35, mask: { from: "Spine" } };
@@ -685,7 +667,7 @@ export function update(ctx, dt) {
     }
   }
 
-  if (!m.waved[close.id] && best < 5 && !s.angry?.[close.id] && !isBrandishing && now - (m.bumpAt ?? 0) > 3000) {
+  if (!m.waved[close.id] && best < 5 && !s.angry?.[close.id] && !close.state?.ads && now - (m.bumpAt ?? 0) > 3000) {
     m.waved[close.id] = true;
     m.wavedAt = now;
     me.anim.wave = { clip: "cdn/clip-wave-loop.glb", loop: "once", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } };

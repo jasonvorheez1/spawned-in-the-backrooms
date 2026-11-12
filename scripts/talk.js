@@ -6,7 +6,8 @@ import { actedVoice, hasCast, recordedDuration } from './lib/voices.js'
 import { heard as hearAt } from "./lib/hear.js";
 import T from './lib/data/talk.yml'
 import { nameOf, keyOf, isTrader, voiceOf, VO, rollCheck, freshStock, buyPrice, sellPrice, sellables, removeOne, SHOPS, repairables, repairPrice } from './lib/npc-talk.js'
-import { takeToken } from './player.js'
+import { takeToken, weaponAim } from './player.js'
+import W from './lib/weapons.js'
 import { talk as service } from './interact.js'
 import { skillsOf, SKILLS } from './lib/stats.js'
 import { describe } from './lib/items.js'
@@ -45,7 +46,11 @@ function social(ctx, ses) {
     if (mem && quiet && sees && dd < 3.5 && now - (hi[o.id] ?? -1e9) > 180000) {
       hi[o.id] = now; const r = o.state.rapport?.[k] ?? 0
       o.state.talkTo = me.id; o.state.talkAt = now; say(ctx, o, r < -20 ? HI(addressFor(o, me, mem), r)[0] : (barkOf(o, 'hi', () => ctx.random(), me.place) ?? lineFor(o, 'hi', addressFor(o, me, mem))), r < -20 ? 'annoyed' : 'happy')
-    } else if (quiet && sees) react(ctx, ses, o, me, mem, dd, now)
+    } else if (sees) {
+      const st = me.state, hp = st.hp ?? 100
+      if (hp < (st.maxHp ?? 100) * 0.35 && dd < 4.5) react(ctx, ses, o, 'hurt', now)
+      else if (st.crouch && dd < 3) react(ctx, ses, o, 'sneak', now)
+    }
     if (mem?.notes?.length && ctx.random() < 0.02) for (const r2 of near) { // gossip: one thing they know about you, passed on as hearsay
       if (r2.id === o.id || flat(r2.feetPosition, o.feetPosition) > 4) continue
       const b = ctx.getObject(r2.id); if (!b || b.state?.dead) continue
@@ -61,16 +66,66 @@ function canSee(ctx, o, me) {
   const dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z, l = Math.hypot(dx, dy, dz) || 1
   return !raycast(ctx, a, { x: dx / l, y: dy / l, z: dz / l }, { distance: l, physicsOnly: true, bodies: 'all', excludeTags: ['npc', 'player', 'weapon', 'almond'], ignoreEntities: [o.id, me.id] })
 }
-// what they notice about you, each in their own temperament: a drawn weapon, your wounds, you creeping, you crowding them; once a minute per kind per person
-function react(ctx, ses, o, me, mem, dd, now) {
-  const st = me.state, ra = (ses.react ??= {}), hpF = (st.hp ?? 100) / (st.maxHp ?? 100)
-  const kind = !st.sheathed && st.equipped && st.equipped !== 'fists' && dd < 4.5 ? 'drawn' : hpF < 0.35 && dd < 4.5 ? 'hurt' : st.crouch && dd < 3 ? 'sneak' : dd < 1.1 ? 'close' : null
-  if (!kind) return
-  const key = o.id + ':' + kind; if (now - (ra[key] ?? -1e9) < 60000) return
-  if (now - (ses.reactAny ?? -1e9) < 6000) return // one voice at a time near you
+function canReact(ctx, o) {
+  const s = ctx.self.state, n = o?.state
+  return !!n && !s.dead && !s.talkWith && !s.shopOpen && !n.dead && !n.down && (n.hp ?? 1) > 0
+    && !n.hostile && !n.fleeing && !n.target && !n.angry?.[ctx.self.id]
+    && !ctx.place.players.some((p) => p.state?.talkWith === o.id || p.state?.shopOpen === o.id)
+}
+function react(ctx, ses, o, kind, now) {
+  const ra = (ses.react ??= {}), key = o.id + ':' + kind
+  const cooldown = kind === 'close' ? 12000 : kind === 'drawn' ? 20000 : 60000
+  if (now - (ra[key] ?? -Infinity) < cooldown) return false
+  if (now - (ses.reactAny ?? -Infinity) < 6000 || !canReact(ctx, o)) return false
   ra[key] = now; ses.reactAny = now
-  o.state.talkTo = me.id; o.state.talkAt = now
-  say(ctx, o, (barkOf(o, kind, () => ctx.random(), me.place) ?? lineFor(o, kind, addressFor(o, me, mem))).replaceAll('{u}', addressFor(o, me, mem)), kind === 'drawn' ? 'scared' : kind === 'hurt' ? 'calm' : 'annoyed')
+  const me = ctx.self, name = addressFor(o, me, o.state.mem?.[keyOf(me)])
+  const line = barkOf(o, kind, () => ctx.random(), me.place) ?? lineFor(o, kind, name)
+  say(ctx, o, line.replaceAll('{u}', name), kind === 'drawn' ? 'scared' : kind === 'hurt' ? 'calm' : 'annoyed')
+  return true
+}
+
+function aimReaction(ctx, ses, s, now) {
+  if (!s.ads || s.sheathed || s.reloading || !W[s.equipped]?.ranged || s.dead || s.downAt || s.talkWith || s.shopOpen || s.invOpen || s.lootOpen) {
+    ses.aimReaction = null
+    return
+  }
+  if (now < (ses.aimCheckAt ?? 0)) return
+  ses.aimCheckAt = now + 100
+  const { eye, fwd, pitch } = weaponAim(ctx), cp = Math.cos(pitch)
+  const hit = raycast(ctx, eye, { x: fwd.x * cp, y: Math.sin(pitch), z: fwd.z * cp }, {
+    distance: 6.5, physicsOnly: true, ignoreEntities: [ctx.self.id],
+  })
+  let o = hit?.id && ctx.getObject(hit.id)
+  for (let i = 0; o?.parent?.id && i < 6; i++) {
+    const parent = ctx.getObject(o.parent.id)
+    if (!parent) break
+    o = parent
+  }
+  if (!o?.tags?.includes('npc')) { ses.aimReaction = null; return }
+  const aim = ses.aimReaction
+  if (aim?.id !== o.id) { ses.aimReaction = { id: o.id, at: now }; return }
+  if (aim.spoke || now - aim.at < 250 || !react(ctx, ses, o, 'drawn', now)) return
+  aim.spoke = true
+  const m = o.session?.m
+  if (m) {
+    m.brandishAt = now; m.brandishPl = ctx.self.id
+    o.anim.gest = { clip: 'cdn/clip-shake-no.glb', loop: 'once', weight: 0.9, blendIn: 0.2, blendOut: 0.35, mask: { from: 'Spine' } }
+    m.gestEnd = now + 1500
+  }
+}
+
+export function onCollide(ctx, other, contact) {
+  if (!other.tags?.includes('npc') || Math.abs(contact.normal?.y ?? 0) > 0.65) return
+  const me = ctx.self, ses = me.session, dir = ses['player.js']?.dir, p = me.feetPosition, q = other.feetPosition
+  if (!dir || !q || dir.x * (q.x - p.x) + dir.z * (q.z - p.z) <= 0.05) return
+  const o = ctx.getObject(other.id), now = ctx.now()
+  if (!react(ctx, ses, o, 'close', now)) return
+  const m = o.session?.m
+  if (m) {
+    m.bumpAt = now
+    o.anim.hit = { clip: 'cdn/clip-hit-react.glb', loop: 'once', weight: 0.75, blendIn: 0.05, blendOut: 0.3, timeAt: now }
+    m.hitAt = now
+  }
 }
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v))
 const note = (ctx, text) => { ctx.self.state.notice = { text, at: ctx.now() } }
@@ -331,6 +386,7 @@ export function update(ctx, dt) {
     ses.talkingTo = null
     s.talkChoices = null
   }
+  aimReaction(ctx, ses, s, ctx.now())
   social(ctx, ses)
   if (!s.talkWith && !s.shopOpen) return
   m.acc += dt; if (m.acc < 0.3) return; m.acc = 0

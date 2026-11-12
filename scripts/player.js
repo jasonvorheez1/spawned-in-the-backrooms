@@ -389,6 +389,23 @@ function takeToken1(ctx, token) {
   return { ok: false, msg: '' }
 }
 
+// Shared by firing and NPC reactions so both use the same eye and crosshair.
+export function weaponAim(ctx) {
+  const me = ctx.self, s = me.state, p = me.feetPosition
+  const ch = ctx.getObject(me.id + '/critter-head') ? (CAM.critterEye ?? 1.2) * (me.effectiveScale?.y ?? 1) : null
+  const eye = { x: p.x, y: p.y + (ch ? ch * (s.crouch ? 0.62 : 1) : (s.crouch ? 1.0 : 1.45)), z: p.z }
+  let fwd = walkOf(ctx).fwd ?? { x: 0, z: -1 }, pitch = s.aimPitch ?? 0
+  if (s.tp && s.aimPt) {
+    const dx = s.aimPt.x - eye.x, dy = s.aimPt.y - eye.y, dz = s.aimPt.z - eye.z
+    const horizontal = Math.hypot(dx, dz)
+    if (horizontal > 1.2) {
+      fwd = { x: dx / horizontal, z: dz / horizontal }
+      pitch = Math.atan2(dy, horizontal)
+    }
+  }
+  return { eye, fwd, pitch }
+}
+
 export function onInput(ctx, input) {
   const w = walkOf(ctx)
   const sin = input.axes.aimYawSin ?? 0, cos = input.axes.aimYawCos ?? 1
@@ -561,11 +578,9 @@ function swing(ctx, power = 0) {
   if (s.equipped !== 'fists') s['cnd_' + s.equipped] = Math.max(0, (s['cnd_' + s.equipped] ?? 100) - useWear(wp) * derived(s).wear) // weapons wear with use; Repair slows it
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
   if (wp.ranged) { // real bullets: spread, drop and drag down each pellet's path (scripts/lib/ballistics.js)
-    const pc = s.aimPitch ?? 0
-    const ch = ctx.getObject(ctx.self.id + '/critter-head') ? (CAM.critterEye ?? 1.2) * (ctx.self.effectiveScale?.y ?? 1) : null, eye = { x: p.x, y: p.y + (ch ? ch * (s.crouch ? 0.62 : 1) : (s.crouch ? 1.0 : 1.45)), z: p.z }, crit = ctx.random() < derived(s).crit + (wp.critBonus ?? 0) // the R-55 crits far more often and far harder; a cat shoots from its own eye (camera.yml critterEye), where the camera sits
+    const { eye, fwd: fv, pitch: pv } = weaponAim(ctx)
+    const crit = ctx.random() < derived(s).crit + (wp.critBonus ?? 0)
     const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * (crit ? (wp.critMul ?? D.crit) : 1)
-    let fv = f, pv = pc // in third person the shot goes from your eye to the point under the crosshair (scripts/camera.js keeps it in state.aimPt)
-    if (s.tp && s.aimPt) { const dx = s.aimPt.x - eye.x, dy = s.aimPt.y - eye.y, dz = s.aimPt.z - eye.z, hh = Math.hypot(dx, dz); if (hh > 1.2) { fv = { x: dx / hh, z: dz / hh }; pv = Math.atan2(dy, hh) } }
     const res = fireBullets(ctx, s, wp, w, eye, fv, pv, base)
     const cp = Math.cos(pv), sp = Math.sin(pv); let mz = { x: eye.x + fv.x * cp * 0.8 - fv.z * 0.12, y: eye.y + sp * 0.8 - 0.14, z: eye.z + fv.z * cp * 0.8 + fv.x * 0.12 }
     if (!s.tp) { // first person: the streak leaves the gun's own muzzle, where the viewmodel holds it on the camera (Shelly: "bullets shoot from above them")
