@@ -59,7 +59,7 @@ const EXIT_LEFT = `<svg viewBox='0 0 200 100' width='0.9m'><g stroke='${CHALK}' 
 const mirror = (svg) => svg.replace(/<svg ([^>]*)>/, "<svg $1><g transform='translate(200 0) scale(-1 1)'>").replace(/<\/svg>$/, "</g></svg>");
 
 export function layMoments(ctx) {
-  const used = new Set(), pick = picker(used), out = {}, put = (kind, spec) => { out[kind] = (out[kind] ?? 0) + 1; return ctx.spawn({ tags: ["moment", "m-" + kind], ...spec }); };
+  const used = new Set(), pick = picker(used), out = {}, put = (kind, spec) => { out[kind] = (out[kind] ?? 0) + 1; return ctx.spawn({ ...spec, tags: [...new Set(["moment", "m-" + kind, ...(spec.tags ?? [])])] }); }; // every piece keeps "moment", so a re-lay clears it (the almond used to drop it and stack up)
   const geo = (kind, params = {}) => ({ kind: "scripted", script: GEO, params: { kind, ...params } });
   const onWall = (kind, cx, cz, d, along, extra = {}) => { const w = wallPose(cx, cz, d, along); return put(kind, { feetPosition: { x: w.x, y: 0, z: w.z }, rotation: w.yaw, primitive: geo(kind), ...extra }); };
   const scrib = (key, cx, cz, d, along, y, svg = SCRIBBLE[key]) => { const w = wallPose(cx, cz, d, along, 0.012); return put("message", { feetPosition: { x: w.x, y, z: w.z }, rotation: w.yaw + 180, vector: svg, state: { msg: key } }); };
