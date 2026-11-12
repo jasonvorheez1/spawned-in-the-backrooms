@@ -1,7 +1,7 @@
 import A from './data/interactive-props.yml'
 import P from './data/l2props.yml'
 import F from './data/furniture.yml'
-const VERSION=2,PART='prop-motion-',SHELL='prop-shell'
+const VERSION=3,PART='prop-motion-',SHELL='prop-shell'
 const models=new Map(Object.entries(P.containers).map(([kind,id])=>[id,kind]))
 models.set('/cdn/value.c6241c9ef9004df7d80aae0e234ed284e1f3e9ea13a77cc4183bbf4f92977eca.glb','locker')
 for(const kind of ['fuse','bench','chair','stackchair','lantern'])if(P.kinds[kind])models.set(P.kinds[kind].id,kind)
@@ -35,6 +35,8 @@ export function interactiveSpec(o){
  const size=sizeOf(o,kind),ratio=size.map((n,i)=>n/row.size[i]),scaled=(v)=>vector(v.map((n,i)=>n*ratio[i])),goal=state.containerOpen?1:0
  out.tags=[...new Set([...tags,'container'])];state.propArt=kind;state.items??='';out.model=null;out.primitive=null
  out.layout={box:{min:{x:-size[0]/2,y:0,z:-size[2]/2},max:{x:size[0]/2,y:size[1],z:size[2]/2}}}
+ const orig=P.containers?.[kind]??(typeof o.model==='string'?o.model:o.model?.id) // Shelly Nov 12: the split code body read blocky; the detailed model stays whole, nothing swaps on a search
+ if(orig){children.push({id:SHELL,physics:'none',model:orig,layout:{box:{min:{x:-size[0]/2,y:0,z:-size[2]/2},max:{x:size[0]/2,y:size[1],z:size[2]/2}}},castShadow:true});return out}
  children.push({id:SHELL,physics:'none',model:row.body,scale:vector(ratio),feetPosition:scaled([row.center[0],row.center[1]-row.height/2,row.center[2]]),castShadow:true})
  for(const part of row.parts){const pivot=scaled(part.pivot),travel=part.axis==='slide'?part.travel*ratio[2]:part.travel
   children.push({id:PART+part.id,physics:'none',feetPosition:{...pivot,...(part.axis==='slide'?{z:pivot.z+travel*goal}:{})},rotation:part.axis==='slide'?0:{[part.axis]:travel*goal},behavior:'scripts/prop-part.js',state:{axis:part.axis,travel,rest:pivot,goal,value:goal},children:[{id:'mesh',physics:'none',model:part.file,feetPosition:scaled([part.offset[0],part.offset[1]-part.height/2,part.offset[2]]),scale:vector(ratio),castShadow:true}]})
@@ -45,6 +47,7 @@ export function upgradeProp(ctx,o){
  const spec=interactiveSpec({id:o.id,tags:o.tags,state:o.state,model:o.model,primitive:o.primitive,layout:o.layout,light:o.light})
  if(spec.state===o.state)return false
  // Keep the existing collider, transform, behavior, lock, ownership and inventory.
+ if(o.state.interactiveV!==VERSION){const row=A[spec.state?.propArt];for(const part of row?.parts??[]){const id=o.id+'/'+PART+part.id;if(ctx.getObject(id)&&!spec.children.some(c=>c.id===PART+part.id))ctx.destroy(id)}}
  for(const child of spec.children){const id=o.id+'/'+child.id;const old=ctx.getObject(id);if(old&&o.state.interactiveV!==VERSION)ctx.destroy(id);if(!ctx.getObject(id))ctx.spawn(child.id,{...child,parent:o.id})}
  for(const k of ['tags','model','primitive','layout','light'])if(Object.hasOwn(spec,k)&&spec[k]!==o[k])o[k]=spec[k]
  for(const[k,v]of Object.entries(spec.state))if(o.state[k]!==v)o.state[k]=v
