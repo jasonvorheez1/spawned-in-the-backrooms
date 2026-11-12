@@ -1,0 +1,25 @@
+# Level 0.2's props: every one a Tripo mesh. size = [w, h, d] metres the model is fitted into (after forward).
+# An entry with no model yet is skipped by places/level02/sim.js until its Tripo job lands.
+insignia: "/cdn/value.e378dfa6502f37054a2afafde66e66b1805689af84fe2c9875e43e03bd501de5.png"
+troffer:      { model: "/cdn/value.58b51cca7f40157addada9eb9837b9beb764f7aed2c56d77270ea9dbd66bcf1b.glb", size: [1.2, 0.12, 0.6] }
+sink:         { model: "/cdn/value.18a480ae5d52befed00dc4387541120951cbceea53c08a0f8783f3c54bb55b06.glb", size: [0.6, 0.86, 0.48] }
+cement:       { model: "/cdn/value.6f370e387809e6002bc4ee4ad843ad10de7dd44da5962e3aee65b7b8ecf5c221.glb", size: [0.6, 0.22, 0.42] }
+office_desk:  { model: "/cdn/value.5b6a81b0b5c3ff351fed398c495805ec293eb603941e494dc3249cabbc0f5528.glb", size: [1.4, 0.76, 0.7] }
+wchair:       { model: "/cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb", size: [0.6, 0.95, 0.6] }
+bench:        { model: "/cdn/value.d38530fe8881dbb3291b160c5f1fdd94d2e468130a063e0e7797ff41048561d1.glb", size: [1.6, 0.85, 0.55] }
+red_toolbox:  { model: "/cdn/value.9d8c68159e95179d0e7e42aa72a680c2c66ff482b0faffd34bd4477c591226f6.glb", size: [0.55, 0.3, 0.25] }
+drywall_stack: { model: "/cdn/value.dd3c11a087dce509414d840925e8477ce72ec546947a8628f600be9ebd25f27c.glb", size: [1.4, 0.5, 0.7] }
+ladder:       { model: "/cdn/value.e3a9e57fa4cd0ebbfe56c6389249e5bf1d94d625c3faef7ff16a17500bca3534.glb", size: [0.5, 1.9, 0.6] }
+plant:        { model: "/cdn/value.53fa6b1388302684d3e567ca755e213843bd4d5ac5ee17c0b54fa1d579c9a019.glb", forward: "+x", size: [0.87, 1.9, 0.83] }
+router:       { model: "/cdn/value.2ee6d65e80f6bdb605e09f0ddf35522299c2c9aca1c14b28e52653eb02a03d3a.glb", size: [0.24, 0.2, 0.16] }
+toilet:       { size: [0.42, 0.8, 0.7] }
+stall:        { size: [1.0, 1.9, 1.5] }
+sawhorse:     { size: [1.0, 0.8, 0.55] }
+paintcan:     { size: [0.3, 0.36, 0.3] }
+worklamp:     { size: [0.6, 1.7, 0.6] }
+toaster:      { size: [0.28, 0.2, 0.17] }
+clipboard:    { size: [0.24, 0.03, 0.33] }
+lumber:       { size: [2.4, 0.3, 0.5] }
+bucket:       { size: [0.55, 0.42, 0.45] }
+tarp:         { size: [1.6, 0.25, 1.3] }
+outlet:       { size: [0.08, 0.12, 0.02] }
