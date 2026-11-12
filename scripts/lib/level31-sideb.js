@@ -1,20 +1,18 @@
 // Level 31 "Side B" set (Shelly Nov 12: Tripo + AAA pass, a B.N.T.G. vs facelings quest). Laid by places/level31/sim.js through layParts.
 // Marlowe's B.N.T.G. concession on the south carpet, Dez by the plywood door, the DJ's crate behind the cinema screen,
 // three rink facelings (faction "rink") and two concession guards (faction "concession"): whoever you cross goes Vilified and swings (fists only, no weapons on Level 31).
-// Tripo models: the stall, the crate, extra arcade cabinets and food-court table sets. Origins are floor centres; fronts face -Z at yaw 0.
+// Tripo models: the stall and the crate. Origins are floor centres; fronts face -Z at yaw 0.
 import { critterSpec } from "./critter-model.js";
 import { npcLook } from "./clothes.js";
 import { npcState } from "./stats.js";
 export const GLB = {
   stall: "/cdn/value.f7e6008506e6d256bf36d1f08245b4133e7dd14034aaa56def75706efb87180d.glb",
-  cabinet: "/cdn/value.d75ae9bc77f161906cecfccf99fe925485c060e50d6cf18b26de36704a7122cf.glb",
-  tables: "/cdn/value.ba18fd1befb4a4e07b0e56659d24b45c722dcb2b89b4bc3ed4c98f4f6f370f53.glb",
   crate: "/cdn/value.edc3dbc2625d0cd95fa6298f7feec879b0363ba630c437dd962f7ea561952bd1.glb",
 };
 // target sizes in metres (my picks): width x height x depth the model is fitted into
-const FIT = { stall: [2.0, 1.35, 1.0], cabinet: [0.7, 1.85, 0.85], tables: [1.9, 0.95, 1.9], crate: [0.95, 0.6, 0.55] };
+const FIT = { stall: [2.0, 1.35, 1.0], crate: [0.95, 0.6, 0.55] };
 const box = (k) => { const [w, h, d] = FIT[k]; return { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } }; };
-export const FWD = { stall: "+x", cabinet: "+z", tables: "+z", crate: "+z" };
+export const FWD = { stall: "+x", crate: "+z" };
 export function laySideB(ctx) {
   for (const id of Object.keys(ctx.place.objects)) if (id.startsWith("l31-q-") && !id.includes("/")) ctx.destroy(id);
   const sp = (id, spec) => ctx.spawn("l31-q-" + id, spec);
@@ -27,7 +25,6 @@ export function laySideB(ctx) {
 
   // the B.N.T.G. concession: a folding table of almond water and batteries on the south carpet, a lamp hung off a mic stand
   M("stall", "stall", -12, 27.4, 0, { tags: ["l31-q"] });
-  sp("mixtape", { feetPosition: { x: -11.6, y: 0.8, z: 27.2 }, rotation: { yaw: 20 }, model: { id: "/cdn/value.5f6375aaade75cc0cc437a90b39c1bcc03d463457628278d2f5c6255ac62b522.glb", forward: "-x" }, layout: { box: { min: { x: -0.05, y: 0, z: -0.032 }, max: { x: 0.05, y: 0.065, z: 0.032 } } } }); // the reward on display: a cassette in its case, ~10 x 6.4 cm
   sp("stall-sign", { feetPosition: { x: -12, y: 2.05, z: 29.82 }, castShadow: false,
     vector: `<svg viewBox='0 0 240 70' width='1.9m'><rect x='4' y='6' width='232' height='58' fill='#e9e2cc' transform='rotate(-1.5 120 35)'/><text x='120' y='34' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='22' fill='#1e3b2a'>B.N.T.G. RINK CONCESSION</text><text x='120' y='54' text-anchor='middle' font-family='serif' font-style='italic' font-size='14' fill='#5a2a1a'>we buy · we sell · we don't ask</text></svg>` });
   sp("stall-lamp", { feetPosition: { x: -12, y: 2.3, z: 27.6 }, light: { kind: "point", color: "#ffd59a", intensity: 1.6, distance: 7 } });
@@ -48,17 +45,12 @@ export function laySideB(ctx) {
   // their beat round the carpet aisle outside the rail: a few stops each, watching the skaters (Savi's picks)
   const st = (x, z, dwell) => ({ x, y: 0, z, dwell, look: { x: 0, z: 0 } });
   const LAPS = {
-    face1: [st(-3.2, -22.6, 9), st(6, -16, 7), st(-8, -15.5, 8), st(-14, -19, 6)],
-    face2: [st(16, -14.5, 8), st(22, -8, 6), st(24, 4, 9), st(18, -16, 7)],
-    face3: [st(-20, 14.5, 8), st(-24, 4, 7), st(-24, -6, 9), st(-14, 15, 6)],
+    face1: [st(-11, -16.8, 9), st(-5, -16.8, 7), st(5.5, -16.8, 8), st(11, -16.8, 6)],
+    face2: [st(16, -15, 8), st(24, -9, 6), st(24, 3, 9), st(24, -9, 7)],
+    face3: [st(-24, 12, 8), st(-24, 4, 7), st(-24, -6, 9), st(-24, 4, 6)],
   };
   // three rink facelings: blank faces, regulars who belong to the place. Docile until you sell their song.
   const F = (id, x, z, yaw, sex, top) => person(id, x, z, yaw, { species: "faceling", sex, topw: sex === "f" ? "jacket" : "tee", top, botw: "pants", bottom: "#22232b", shoes: "sneakers" },
     "rink", "the Roller Rink", "Rink Regular", "regular", { docile: true, rounds: LAPS[id] });
-  F("face1", -3.2, -22.6, 180, "f", "#8a3f6a"); F("face2", 16, -14.5, 200, "m", "#2f6a7a"); F("face3", -20, 14.5, 120, "m", "#a8743a");
-
-  // Tripo arcade cabinets: two more old uprights along the aisle wall of the arcade
-  M("cab1", "cabinet", 29.2, -27.6, 180, { tags: ["l31-arcade"] }); M("cab2", "cabinet", 30.2, -27.6, 180, { tags: ["l31-arcade"] });
-  // Tripo table sets: two more four-tops on the carpet by the rink rail, where skaters rest
-  M("tables1", "tables", -24.5, -16, 12, { tags: ["seat"] }); M("tables2", "tables", 24.5, 16.5, -20, { tags: ["seat"] });
+  F("face1", -11, -16.8, 180, "f", "#8a3f6a"); F("face2", 16, -15, 200, "m", "#2f6a7a"); F("face3", -24, 12, 120, "m", "#a8743a");
 }
