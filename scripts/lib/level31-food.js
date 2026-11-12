@@ -46,7 +46,7 @@ export function layFood(ctx) {
   const L = (x, y, z, color, intensity) => ({ feetPosition: { x, y, z }, light: { kind: "point", color, intensity, distance: 15 } });
   P("bp", { feetPosition: { x: 34, y: 0, z: 18 }, children: [L(3.2, 2.9, -4, "#ffd9a0", 7), L(3.2, 2.9, 3, "#ffd9a0", 7), L(-3, 3.8, 0.5, "#ffb060", 22), L(-1, 3.4, -9.5, "#ff9ac8", 12)] });
   // serving counter along the east wall: carcass, kick, stainless top, tray rail
-  P("counter", { feetPosition: { x: 38, y: 0.1, z: 17 }, primitive: box(0.8, 0.78, 14), material: { color: "#8e1f18", roughness: 0.45 }, physics: "static" });
+  P("counter", { feetPosition: { x: 38, y: 0.1, z: 17 }, primitive: box(0.8, 0.78, 14), material: { color: "#2c3446", roughness: 0.45 }, physics: "static" });
   P("counter-kick", { feetPosition: { x: 38.03, y: 0, z: 17 }, primitive: box(0.7, 0.1, 13.96), material: { color: "#141416", roughness: 0.6 } });
   P("counter-stripe", { feetPosition: { x: 37.595, y: 0.52, z: 17 }, primitive: box(0.012, 0.09, 14), material: { color: "#f2c33a", roughness: 0.5 } });
   P("counter-top", { feetPosition: { x: 38, y: 0.88, z: 17 }, primitive: box(0.92, 0.04, 14.06), material: { color: "#d4d7db", metalness: 0.35, roughness: 0.35 } });

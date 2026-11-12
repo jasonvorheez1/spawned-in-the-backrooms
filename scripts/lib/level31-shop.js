@@ -21,7 +21,7 @@ export function layShop(ctx) {
   const wall = (id, x, y, z, w, h, d, color) => sp(id, { feetPosition: { x, y, z }, primitive: { kind: "box", width: w, height: h, depth: d }, material: { color, roughness: 0.85 }, physics: "static" });
   const prop = (id, m, x, y, z, yaw, solid = true, extra = {}) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: { id: M[m], forward: "+z" }, ...(solid ? { physics: { body: "static", collider: "box" } } : {}), ...extra });
   // the blueprint's spot becomes the shop's vinyl floor
-  sp("bp", { feetPosition: { x: -35, y: 0, z: 0 }, primitive: { kind: "box", width: 13.7, height: 0.012, depth: 23.7 }, material: { texture: "cdn/texture-checkered-vinyl-floor-teal-cream.png", repeat: [7, 12], roughness: 0.5 } });
+  sp("bp", { feetPosition: { x: -35, y: 0, z: 0 }, primitive: { kind: "box", width: 13.7, height: 0.012, depth: 23.7 }, material: { texture: "cdn/texture-speckled-vct-vinyl-floor-tile-warm-grey.png", wrap: "repeat", repeat: [0.5, 0.5], roughness: 0.55 } });
   // linings on the three walls, teal wainscot under cream
   wall("wall-w", -41.9, 0, 0, 0.2, 5, 24, CREAM); wall("wall-n", -35, 0, -11.9, 13.6, 5, 0.2, CREAM); wall("wall-s", -35, 0, 11.9, 13.6, 5, 0.2, CREAM);
   wall("base-n", -35, 0, -11.79, 13.6, 0.9, 0.03, TEAL); wall("base-s", -35, 0, 11.79, 13.6, 0.9, 0.03, TEAL);
@@ -44,7 +44,7 @@ export function layShop(ctx) {
   // light: warm over the counter, pink north, cyan south, a pink wash under the sign
   const lamp = (id, x, y, z, color, intensity, distance) => sp(id, { feetPosition: { x, y, z }, light: { kind: "point", color, intensity, distance } });
   lamp("light-counter", -37, 3.4, 0, "oklch(0.92 0.07 80)", 4.5, 14); lamp("light-mid", -33, 3.4, 0, "oklch(0.9 0.06 80)", 2.5, 12); lamp("light-n", -36, 3.2, -8, "oklch(0.8 0.13 350)", 2.2, 11);
-  lamp("light-s", -36, 3.2, 8, "oklch(0.85 0.1 210)", 2.2, 11); lamp("light-sign", -26.6, 3.6, 0, "oklch(0.75 0.2 350)", 1.6, 8);
+  lamp("light-s", -36, 3.2, 8, "oklch(0.85 0.1 210)", 2.2, 11); lamp("light-sign", -26.6, 3.6, 0, "oklch(0.75 0.2 350)", 0.7, 7);
   // Dottie, a faceling, behind the counter
   sp("keeper", {
     tags: ["npc", "faceling"], feetPosition: { x: -39.5, y: 0, z: -0.1 }, rotation: { yaw: E }, physics: "character",

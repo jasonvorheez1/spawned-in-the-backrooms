@@ -4,12 +4,14 @@ import { animate } from "builtin/tween";
 import { H, T, B, RINK, ZONES, ARRIVE, DOOR } from "../../scripts/lib/level31.js";
 import { layParts } from "../../scripts/lib/level31-parts.js";
 export const cadence = "1s";
-const V = 11;
+const V = 12;
+const PROPS = "scripts/l31-props-geo.js";
+const P = (params) => ({ primitive: { kind: "scripted", script: PROPS, params }, material: { pbr: true } });
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
 const WOOD = { texture: "cdn/texture-polished-maple-roller-rink-floor-planks.png", wrap: "repeat", repeat: [0.35, 0.35], color: "oklch(0.92 0.03 75)", roughness: 0.16, metalness: 0.05 };
 const CARPET = { texture: "cdn/texture-black-arcade-carpet-neon-confetti-squiggles.png", wrap: "repeat", repeat: [0.4, 0.4], color: "oklch(0.95 0.01 300)", roughness: 0.98 };
 const WALL = { texture: "cdn/texture-painted-cinder-block-wall-muted-plum-mauve-scuffed.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.95 0.02 320)", roughness: 0.9 };
-const CEIL = { texture: "cdn/texture-black-painted-acoustic-drop-ceiling-tile-grid.png", wrap: "repeat", repeat: [0.8, 0.8], color: "oklch(0.9 0 0)", roughness: 1 };
+const CEIL = { texture: "cdn/texture-charcoal-grey-acoustic-drop-ceiling-tile-grid-aged.png", wrap: "repeat", repeat: [0.8, 0.8], color: "oklch(0.95 0.01 60)", roughness: 1 };
 const RAIL = { texture: "cdn/texture-varnished-oak-plank-rink-barrier.png", wrap: "repeat", repeat: [0.6, 0.6], color: "oklch(0.9 0.04 70)", roughness: 0.5 };
 const RAILCAP = { color: "oklch(0.55 0.2 25)", roughness: 0.4 };
 const PLY = { texture: "cdn/texture-raw-plywood-sheet-knots-and-grain.png", color: "oklch(0.95 0.03 80)", roughness: 0.85 };
@@ -23,13 +25,13 @@ function starburst(ctx) {
     const a = (i / 20) * 360, long = i % 2 === 0, len = long ? 9.5 : 6.2, rad = (a * Math.PI) / 180;
     const sx = Math.abs(Math.cos(rad)) * 0.55 + 0.45; // squashed toward the rink's short side so it sits over the oval
     const L = len * sx, cx = Math.cos(rad) * (0.5 + L / 2), cz = -Math.sin(rad) * (0.5 + L / 2);
-    kids.push({ feetPosition: { x: cx, y: -0.06, z: cz }, rotation: { yaw: a }, primitive: box(L, 0.07, 0.11), material: glow("#d81f1a", 1.6), castShadow: false });
-    for (let d = 0.9; d < L + 0.3; d += 0.62) kids.push({ feetPosition: { x: Math.cos(rad) * (0.5 + d), y: -0.16, z: -Math.sin(rad) * (0.5 + d) }, primitive: { kind: "sphere", radius: 0.055, widthSegments: 8, heightSegments: 6 }, material: glow(BULBS[(i + Math.round(d * 3)) % BULBS.length], 5), castShadow: false });
+    kids.push({ feetPosition: { x: cx, y: -0.06, z: cz }, rotation: { yaw: a }, primitive: box(L, 0.07, 0.11), material: glow("#d81f1a", 0.7), castShadow: false });
+    for (let d = 0.9; d < L + 0.3; d += 0.62) kids.push({ feetPosition: { x: Math.cos(rad) * (0.5 + d), y: -0.16, z: -Math.sin(rad) * (0.5 + d) }, primitive: { kind: "sphere", radius: 0.055, widthSegments: 8, heightSegments: 6 }, material: glow(BULBS[(i + Math.round(d * 3)) % BULBS.length], 1.6), castShadow: false });
   }
-  kids.push({ feetPosition: { x: 0, y: -0.2, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.6, radiusBottom: 0.45, height: 0.2 }, material: glow("#ffd9a0", 3) });
+  kids.push({ feetPosition: { x: 0, y: -0.2, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.6, radiusBottom: 0.45, height: 0.2 }, material: glow("#ffd9a0", 0.8) });
   kids.push({ feetPosition: { x: 0, y: -0.55, z: 0 }, primitive: box(0.03, 0.4, 0.03), material: { color: "#222" } });
   ctx.spawn("l31-starburst", { feetPosition: { x: 0, y: H - 0.02, z: 0 }, primitive: box(0.2, 0.02, 0.2), material: { color: "#111" }, castShadow: false, children: kids });
-  ctx.spawn("l31-starlight", { feetPosition: { x: 0, y: H - 0.6, z: 0 }, light: { kind: "point", color: "#ff6a3a", intensity: 2.4, distance: 34 } });
+  ctx.spawn("l31-starlight", { feetPosition: { x: 0, y: H - 0.6, z: 0 }, light: { kind: "point", color: "#ffc59a", intensity: 7, distance: 30 } });
   ctx.spawn("l31-ball", { feetPosition: { x: 0, y: H - 1.25, z: 0 }, primitive: { kind: "sphere", radius: 0.42, widthSegments: 18, heightSegments: 12 }, material: { texture: "cdn/texture-mirror-disco-ball-tiny-square-facets.png", color: "#ffffff", metalness: 1, roughness: 0.12 } });
   animate(ctx, "l31-ball", { "rotation.yaw": "+=360" }, { duration: 14, loop: true, easing: "linear" });
   // the sweep: four coloured spots on one slow arm, so pools of colour slide across the wood
@@ -74,7 +76,29 @@ function shell(ctx) {
     ctx.spawn(`l31-string-${id}`, { feetPosition: { x, y: 3.6, z }, primitive: along === "x" ? box(len, 0.015, 0.015) : box(0.015, 0.015, len), material: { color: "#111" }, castShadow: false, children: kids }); };
   str("n", 0, B.z0 + 0.08, W - 1, "x"); str("s", 0, B.z1 - 0.08, W - 1, "x"); str("w", B.x0 + 0.08, 0, D - 1, "z"); str("e", B.x1 - 0.08, 0, D - 1, "z");
   // a few dim house cans over the carpet aisles so nobody walks blind
-  [[-24, 20], [14, 17], [-24, -20], [24, -17], [-26, 0], [24, 0], [-36, -22], [-30, 24]].forEach(([x, z], i) => ctx.spawn(`l31-can${i}`, { feetPosition: { x, y: H - 0.3, z }, light: { kind: "point", color: "#ffb070", intensity: 9, distance: 18 } }));
+  [[-24, 20], [14, 17], [-24, -20], [24, -17], [-26, 0], [24, 0], [-36, -22], [-30, 24], [0, -24], [-8, -24], [8, -24], [-14, 24], [-38, 22], [-38, -27], [18, -26], [-14, -16], [14, -16]].forEach(([x, z], i) => ctx.spawn(`l31-can${i}`, { feetPosition: { x, y: H - 0.1, z }, primitive: { kind: "scripted", script: PROPS, params: { kind: "can" } }, material: { pbr: true }, castShadow: false,
+    children: [{ feetPosition: { x: 0, y: -0.35, z: 0 }, light: { kind: "point", color: "#ffcf9a", intensity: 9, distance: 18 } }] }));
+  edges(ctx);
+}
+
+// the room's edges: lockers, lacing benches and bins under the chase lights, where people actually sit and change
+function edges(ctx) {
+  const WX = B.x0 + 0.26, NZ = B.z0 + 0.26, SZ = B.z1 - 0.26;
+  const put = (id, x, z, yaw, params, solid = true) => ctx.spawn(`l31-edge-${id}`, { feetPosition: { x, y: 0, z }, rotation: { yaw }, ...P(params), ...(solid ? { physics: "static" } : {}), tags: params.kind === "bench" ? ["seat"] : [], state: params.kind === "bench" ? { name: "Bench" } : undefined });
+  // west wall, round the white door
+  put("lk-w1", WX, -15.5, -90, { kind: "lockers", cols: 6, hue: 200 }); put("lk-w2", WX, -28, -90, { kind: "lockers", cols: 4, hue: 25 });
+  put("bn-w1", B.x0 + 1.4, -15.5, -90, { kind: "bench", len: 2.4 }); put("bin-w1", WX, -19.6, -90, { kind: "bin" });
+  put("lk-w3", WX, 17.5, -90, { kind: "lockers", cols: 6, hue: 145 }); put("bn-w3", B.x0 + 1.4, 17.5, -90, { kind: "bench", len: 2.4 });
+  // north wall, both sides of the cinema
+  put("lk-n1", -22, NZ, 180, { kind: "lockers", cols: 8, hue: 200 }); put("bn-n1", -22, B.z0 + 1.4, 180, { kind: "bench", len: 3.2 });
+  put("bn-n2", -32, B.z0 + 0.5, 180, { kind: "bench", len: 2.4 }); put("bin-n1", -15, NZ, 180, { kind: "bin" }); put("bin-n2", 14, NZ, 180, { kind: "bin" });
+  put("bn-n3", 19, B.z0 + 0.5, 180, { kind: "bench", len: 2.4 }); put("bin-nw", B.x0 + 0.5, B.z0 + 0.5, 0, { kind: "bin" });
+  // south wall between the plywood door and the rental counter
+  put("bn-s1", -20, B.z1 - 0.5, 0, { kind: "bench", len: 3.2 }); put("bn-s2", -10, B.z1 - 0.5, 0, { kind: "bench", len: 3.2 });
+  put("bin-s1", -15, SZ, 0, { kind: "bin" }); put("bin-s2", -27.6, SZ, 0, { kind: "bin" }); put("bin-sw", B.x0 + 0.5, B.z1 - 0.5, 0, { kind: "bin" });
+  put("lk-s1", -38, SZ, 0, { kind: "lockers", cols: 5, hue: 25 });
+  // rink-side benches on the carpet aisle
+  for (const [i, x] of [-6, 6].entries()) { put(`bn-r${i}n`, x, -RINK.rail - 1.1, 180, { kind: "bench", len: 2.8 }); put(`bn-r${i}s`, x, RINK.rail + 1.1, 0, { kind: "bench", len: 2.8 }); }
 }
 
 function doors(ctx) {
@@ -86,6 +110,8 @@ function doors(ctx) {
   ctx.spawn("l31-back", { feetPosition: { x: DOOR.x, y: 0, z: B.z1 - 0.25 }, physics: { body: "static", trigger: true }, primitive: box(1.2, 2.3, 0.4), visible: false, behavior: "scripts/level-door.js", state: { to: "level2#l2-from-l31" } });
   ctx.spawn("l31-exit-sign", { feetPosition: { x: DOOR.x, y: 2.45, z: B.z1 - 0.06 }, rotation: { yaw: 0 }, castShadow: false, vector: `<svg viewBox='0 0 100 40' width='0.7m'><rect width='100' height='40' rx='3' fill='#0d1a0f'/><text x='50' y='29' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='26' fill='#5dff7a' filter='drop-shadow(0 0 3 #5dff7a)'>EXIT</text></svg>` });
   // the white door marked 70, north-west corner. It does not open. (Level 70 is not built.)
+  ctx.spawn("l31-door-70-casing", { feetPosition: { x: B.x0 + 0.02, y: 0, z: -22 }, rotation: { yaw: -90 }, ...P({ kind: "casing", w: 1.1, h: 2.2 }), castShadow: false });
+  ctx.spawn("l31-door-70-plaque", { feetPosition: { x: B.x0 + 0.03, y: 2.62, z: -22 }, rotation: { yaw: -90 }, castShadow: false, vector: `<svg viewBox='0 0 160 40' width='0.6m'><rect width='160' height='40' rx='3' fill='#e9e4d6' stroke='#77705f' stroke-width='2'/><text x='80' y='27' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='17' fill='#3a352c'>EMPLOYEES ONLY</text></svg>` });
   ctx.spawn("l31-door-70", { feetPosition: { x: B.x0 + 0.04, y: 0, z: -22 }, rotation: { yaw: -90 }, primitive: box(1.1, 2.2, 0.06), material: { color: "oklch(0.95 0.005 90)", roughness: 0.5 }, castShadow: false, tags: ["usable"], state: { name: "White door", info: "A 70 is engraved in the paint. Locked. Cold air under it." },
     children: [{ feetPosition: { x: 0, y: 1.5, z: -0.04 }, vector: `<svg viewBox='0 0 60 40' width='0.3m'><text x='30' y='32' text-anchor='middle' font-family='serif' font-size='34' fill='#b9b9b2'>70</text></svg>` }, { feetPosition: { x: 0.42, y: 1.0, z: -0.06 }, primitive: { kind: "sphere", radius: 0.035 }, material: { color: "#c9c2a8", metalness: 0.9, roughness: 0.3 } }] });
 }
@@ -96,10 +122,12 @@ function cinema(ctx) {
   ctx.spawn("l31-tv", { feetPosition: { x: cx, y: 1.3, z: C.z0 + 0.12 }, primitive: box(4.8, 2.8, 0.14), material: { color: "#0a0a0c", roughness: 0.3 }, castShadow: false,
     children: [{ feetPosition: { x: 0, y: 0.1, z: 0.075 }, primitive: box(4.6, 2.6, 0.01), material: { texture: "cdn/texture-old-animated-movie-still-dog-on-clouds-crt-scanlines.png", color: "#ffffff", emissive: "#9ab6ff", emissiveIntensity: 0.3 } }] });
   ctx.spawn("l31-tv-light", { feetPosition: { x: cx, y: 2.6, z: C.z0 + 2 }, light: { kind: "point", color: "#8fb0ff", intensity: 1.6, distance: 11 } });
-  const STEEL = { texture: "cdn/texture-brushed-steel-bench-scuffed.png", wrap: "repeat", repeat: [1, 1], color: "oklch(0.85 0.01 250)", metalness: 0.8, roughness: 0.4 };
   for (let i = 0; i < 3; i++) { const z = C.z0 + 4.2 + i * 1.6, y = i * 0.3;
     if (i) ctx.spawn(`l31-step${i}`, { feetPosition: { x: cx, y: 0, z: z + 0.5 }, primitive: box(9, y, 1.6), material: CARPET, physics: "static", castShadow: false });
-    ctx.spawn(`l31-bench${i}`, { feetPosition: { x: cx, y, z }, primitive: box(8, 0.45, 0.45), material: STEEL, physics: "static", tags: ["seat"], state: { name: "Bench" } }); }
+    ctx.spawn(`l31-bench${i}`, { feetPosition: { x: cx, y, z: z + 0.1 }, ...P({ kind: "seats", n: 14 - i }), physics: "static", tags: ["seat"], state: { name: "Cinema seat" } }); }
+  for (const s of [-1, 1]) ctx.spawn(`l31-curtain${s}`, { feetPosition: { x: cx + s * 3.75, y: 0, z: C.z0 + 0.3 }, rotation: { yaw: 180 }, ...P({ kind: "curtain", w: 2.6, h: 4.6 }), castShadow: false });
+  ctx.spawn("l31-valance", { feetPosition: { x: cx, y: 4.35, z: C.z0 + 0.35 }, primitive: { kind: "box", width: 10.2, height: 0.5, depth: 0.12 }, material: { texture: "cdn/texture-burgundy-velvet-cinema-seat-upholstery.png", wrap: "repeat", repeat: [1, 1], color: "oklch(0.75 0.06 20)", roughness: 0.95 }, castShadow: false });
+  ctx.spawn("l31-cinema-wash", { feetPosition: { x: cx, y: 4.2, z: C.z0 + 7 }, light: { kind: "point", color: "#ffcf9a", intensity: 5, distance: 14 } });
   ctx.spawn("l31-cinema-sign", { feetPosition: { x: cx, y: 3.9, z: C.z1 }, castShadow: false, vector: `<svg viewBox='0 0 220 50' width='3.2m'><rect width='220' height='50' rx='6' fill='#17090f' stroke='#ffd23a' stroke-width='2'/><text x='110' y='36' text-anchor='middle' font-family='display' font-size='32' fill='#ffd23a' filter='drop-shadow(0 0 4 #ff8a1e)'>NOW SHOWING</text></svg>`,
     children: [-1.4, 1.4].map((x) => ({ feetPosition: { x, y: 0.36, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.006, radiusBottom: 0.006, height: H - 4.26 }, material: { color: "#222" }, castShadow: false })) }); // hung on two wires, not floating
 }

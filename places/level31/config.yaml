@@ -15,7 +15,7 @@ atmosphere:
   moon: { enabled: false, intensity: 0 }
   timeOfDay: 0
   wind: { direction: 0, speed: 0 }
-  look: { script: scripts/look-utility.js, params: { bloomThreshold: 0.55, bloomStrength: 0.9 } }
-  ambient: { light: { color: oklch(0.82 0.06 40), intensity: 3.2 } }
-  hemisphere: { skyColor: oklch(0.7 0.08 30), groundColor: oklch(0.4 0.05 300), intensity: 2 }
+  look: { script: scripts/look-utility.js, params: { bloomThreshold: 0.9, bloomStrength: 0.4, exposure: 1.75, vignette: 0.25 } }
+  ambient: { light: { color: oklch(0.82 0.06 40), intensity: 4.5 } }
+  hemisphere: { skyColor: oklch(0.7 0.08 30), groundColor: oklch(0.45 0.05 300), intensity: 2.6 }
 acoustics: { reverb: 0.55 }

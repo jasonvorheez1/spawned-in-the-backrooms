@@ -13,7 +13,8 @@ const SK = { // heel size -> pair
 const BENCH = "/cdn/value.d7cea77050bf808057ebd11fcbcf51d41b6c5876d49ee091b623b4c4ce951057.glb";
 const DEVICE = "/cdn/value.a8ed16270cd315a528b70f02a700244e67b7223f81dde9a6789b7b34ac548b08.glb";
 const HAIR = "/cdn/value.fd23ca47268c42086b88d64676516533e9fcbeaeb13cb3d3dc12b4d4051b6151.glb"; // hair.yml styles.m_crop
-const BLUE = { texture: "cdn/texture-painted-cinder-block-wall-royal-blue.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.93 0.04 255)", roughness: 0.85, emissive: "#2a55c8", emissiveIntensity: 0.32 };
+const BLUE = { texture: "cdn/texture-painted-cinder-block-wall-royal-blue.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.86 0.03 255)", roughness: 0.85 };
+const TRIM = { texture: "cdn/texture-varnished-oak-plank-rink-barrier.png", wrap: "repeat", repeat: [0.6, 0.6], color: "oklch(0.8 0.04 60)", roughness: 0.5 };
 const LAM = { texture: "cdn/texture-cream-speckled-laminate-countertop.png", wrap: "repeat", repeat: [1, 1], color: "oklch(0.95 0.02 90)", roughness: 0.35 };
 const FRONT = { texture: "cdn/texture-wood-grain-laminate-panel-honey-oak.png", wrap: "repeat", repeat: [0.8, 0.8], color: "oklch(0.92 0.03 75)", roughness: 0.6 };
 const MEL = { color: "oklch(0.86 0.02 90)", roughness: 0.7 };
@@ -36,6 +37,8 @@ function booth(ctx) {
   for (let r = 0; r <= S.rows; r++) kids.push({ feetPosition: { x: cx - 13, y: S.base + r * S.rh - 0.02, z: S.z - 29.97 }, primitive: box(W + 0.04, 0.02, S.d), material: MEL, castShadow: false });
   for (let c = 0; c <= S.cols; c++) kids.push({ feetPosition: { x: S.x0 + c * S.cw - 13, y: S.base, z: S.z - 29.97 }, primitive: box(0.02, S.rows * S.rh, S.d), material: MEL, castShadow: false });
   kids.push({ feetPosition: { x: cx - 13, y: top, z: S.z - 29.97 }, primitive: box(W + 0.1, 0.06, S.d + 0.04), material: FRONT, castShadow: false });
+  // trim on the painted wall: oak chair rail, base and crown, so the blue reads as paint, not a box
+  for (const [y, h] of [[0, 0.16], [1.05, 0.08], [4.82, 0.18]]) kids.push({ feetPosition: { x: 0, y, z: -0.04 }, primitive: box(22, h, 0.05), material: TRIM, castShadow: false });
   // the paint: thin blue panels over the purple, the whole zone wide
   ctx.spawn("l31-rental-bp", { feetPosition: { x: 13, y: 0, z: 29.97 }, primitive: box(22, 5, 0.04), material: BLUE, castShadow: false, tags: ["l31-rental"], children: kids });
   ctx.spawn("l31-rental-shelfstop", { feetPosition: { x: cx, y: S.base, z: S.z }, primitive: box(W, S.rows * S.rh, S.d), visible: false, physics: "static" });
