@@ -1544,7 +1544,7 @@ export const STARTERS = {
 
   // ---- Level 7 (Thalassophobia: M.E.G. Seawatch & Fort Surrender) ----
   'l7-vance': {
-    greeting: "Easy on the jetty planks, they're slick with sea spray. Welcome to M.E.G. Outpost Seawatch. If you swam here instead of taking the skiff, you're luckier than the last three runners.",
+    greeting: "Watch the planks, they're greasy. Seawatch. M.E.G. If you swam here, you're either brave or you didn't see the fins.",
     mood: 'calm',
     returning: "Back already? Stay off the north edge. Something big did a lap of the trench about an hour ago.",
     friendly: "Still breathing. Good. Brazier's lit if your hands are numb, bench is open if your gear's crusted.",
@@ -1553,14 +1553,14 @@ export const STARTERS = {
       {
         text: "What are the ocean depth zones and what's lurking down there?",
         tag: "Lore",
-        reply: "Sunlight Zone is clear water down to 200 meters. Twilight Zone gets freezing and pitch black. Midnight Zone is where the water pressure crushes bone and Entity 20 hunts in the abyss.",
+        reply: "Top two hundred meters, you can see your hands. Below that it's black and cold. Below that, your ears pop and stuff looks back at you. Stay up top.",
         mood: 'calm',
       },
       {
         text: "How do I read the sonar pings for Entity 20 and 'Tiny'?",
         tag: "Survival 35",
         check: { skill: 'survival', difficulty: 35 },
-        reply: "Single long-period return at forty hertz means Entity 20 is surfacing. Rapid double ping with heavy displacement means Tiny is gliding through the shelf. If you hear clicks through the hull, cut your motor immediately.",
+        reply: "One slow ping means the big one's coming up. Two fast ones means Tiny's going by. Tiny's fine. The slow one, get out of the water.",
         failReply: "If the needle jumps hard left, get out of the water and pray the jetty pilings hold.",
         mood: 'calm',
       },
@@ -1577,7 +1577,7 @@ export const STARTERS = {
         text: "Who are the people living out on the far island at Fort Surrender?",
         tag: "Speech 35",
         check: { skill: 'speech', difficulty: 35 },
-        reply: "Brother Jude and his followers. The Society of the Pushing. They gave up fighting the ocean and worship the entity beneath the waves. Eccentric, but they keep the water still running and they do not draw blades.",
+        reply: "Brother Jude's people. They stopped fighting the sea and started praying to it. Weird, but they've never shot at me. Low bar out here.",
         failReply: "Cult on a rock. Nice enough. Don't let Jude start talking or you'll lose an afternoon.",
         mood: 'calm',
       },
@@ -1593,21 +1593,21 @@ export const STARTERS = {
       {
         text: "Why does the Society of the Pushing worship the Thing on Level 7?",
         tag: "Lore",
-        reply: "In an infinite sea of crushing cold, fighting the deep only invites madness. When you surrender your fear to the Leviathan, the waters cease to be a prison and become an eternal womb.",
+        reply: "Because fighting it never worked. People swam till they drowned. We stopped swimming. Now it lets us be. Call it worship, call it a truce.",
         mood: 'calm',
       },
       {
         text: "What lies below the Midnight Zone in the underwater tar caves?",
         tag: "Survival 40",
         check: { skill: 'survival', difficulty: 40 },
-        reply: "The ocean floor turns to thick tarry sludge riddled with flooded lava tubes. The pressure should crush any mortal flesh, yet anomalous pockets of breathable air exist within the basalt rifts.",
+        reply: "Tar. Tunnels full of it. Some have air pockets that shouldn't be there. Tobit went down once. He doesn't talk about it.",
         failReply: "Dark. Cold. Heavy. You'd hate it.",
         mood: 'calm',
       },
       {
         text: "There's a second gargantuan creature out there, what is 'Tiny'?",
         tag: "Lore",
-        reply: "An ancient, gentle titan that glides through the upper thermoclines. It feeds on the strange bioluminescent plankton and ignores swimmers unless cornered.",
+        reply: "Tiny's the nice one. Big as a ferry, eats the glowing stuff. Leave it alone and it leaves you alone.",
         mood: 'calm',
       },
       {
@@ -1641,14 +1641,14 @@ export const STARTERS = {
         text: "How does your copper still turn Level 7 seawater into Almond Water?",
         tag: "Survival 35",
         check: { skill: 'survival', difficulty: 35 },
-        reply: "Multi-stage condensation through charcoal beds and copper coils. We boil off the salt and let the anomalous minerals re-crystallize into pure almond extract. It takes patience, but it keeps thirty people alive.",
+        reply: "Copper coil, charcoal, a lot of boiling. Salt stays in the pot, the sweet stuff comes off the top. Don't ask me why it turns to almond. It just does.",
         failReply: "Boil it. If it smells sweet, drink it. If it smells like feet, boil it again.",
         mood: 'calm',
       },
       {
         text: "What's down inside that rusted Diving Bell on the north cliff?",
         tag: "Lore",
-        reply: "Old deep-sea apparatus hauled up from the bottom two months ago. The cable snapped decades ago, but the interior was bone dry when we cracked the hatch. Still has handwritten logs inside.",
+        reply: "Diving bell. Came up on a snapped cable two months back. Dry inside. Dry. Jude wanted to pray to it, I wanted the brass. We compromised. Nobody touches it.",
         mood: 'calm',
       },
       {
