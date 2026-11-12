@@ -5,7 +5,7 @@ import CW from './lib/data/cat-wardrobe.yml'
 // one body for everyone now (Shelly Nov 12: no species): the salon offers the new body's own options, the same 'dress' keys the creator sends
 const CN = { puff: 'mochi', wide: 'airplane', bob: 'bobtail', burns: 'sideburns', lynx: 'lynx tips', bangs: 'fur bangs', afropuff: 'afro puff', halfup: 'half up', sidetail: 'side tail', twintails: 'twin tails', long_h: 'long' }
 const CF = { neutral: 'calm', smile: 'smile', joy: 'happy', blep: 'blep', sad: 'sad', angry: 'angry', shock: 'shocked' }
-const SERVICES = [['hair', 'Hair', '✂'], ['face', 'Face', '✿'], ['body', 'Body', '◐'], ['wear', 'Clothes', '♡']]
+const SERVICES = [['hair', 'Hair', '✂'], ['face', 'Face', '✿'], ['body', 'Body', '◐']]
 const NM = { m: 'boy', f: 'girl', none: 'none', longsleeve: 'long sleeve', pjpants: 'pj pants', pajamas: 'pj top', longskirt: 'long skirt', tophat: 'top hat', partyhat: 'party hat', bowtie: 'bow tie', fullbeard: 'full beard' }
 const nice = (v) => NM[v] ?? String(v ?? 'none').replace(/^[mf]_/, '').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ')
 const act = (k, v = '') => `sendAction('dress',{k:'${k}',v:'${v}'})`
