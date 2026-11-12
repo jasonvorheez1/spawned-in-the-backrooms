@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 5795,
-  "updatedAt": "2026-11-12T01:00:36.207Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning an authored Level 0 maze, deeper levels and shared destinations. `templates/player.js` composes player behaviors while place simulations and shared scripts own environments, NPCs, combat, loot, crafting, UI and progression; player and NPC cats share a Tripo appearance pipeline with morph-driven faces, skinned wardrobe, hair and fur details.",
+  "basedOnSpecVersion": 5804,
+  "updatedAt": "2026-11-12T01:21:01.715Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning an authored Level 0 maze, deeper levels and shared destinations. `templates/player.js` composes player behaviors while place simulations and shared scripts own environments, NPCs, combat, loot, crafting, UI and progression; player and NPC cats use a Tripo appearance pipeline with morph-driven faces, skinned wardrobe and hair, including an optional rebased body look for test comparison.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - authored Level 0/Lobby maze; sim generates maze furniture/loot, safe rooms, shifting walls, creature ecology, route guidance, Kade and Zenith's sealed breach.",
@@ -12,7 +12,7 @@
     "places/level1, places/level2, places/level21 (3D) - Habitable Zone garage maze and M.E.G. camp; Pipe Dreams industrial rooms/camp/fixtures; Level 2.1 Locked.",
     "places/level3, places/gamma, places/level4, places/level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; authored residents and fixtures.",
     "places/level6, places/level7, places/level10, places/level11, places/level12 (3D) - later levels including Level 7 drowned house, Level 11 generated city/canal/bridges/crawl and renovation office.",
-    "places/level26, places/level27, places/spamton, places/testlab (3D) - Level 26 quests, Level 27 Bunker Springs, Spamton destination and Test Range; testlab has a generated test hall and four authored cat-demo stands."
+    "places/level26, places/level27, places/spamton, places/testlab (3D) - Level 26 quests, Level 27 Bunker Springs, Spamton destination and Test Range; testlab's four authored cat-demo stands include female and male base2 comparisons."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, player/camera setup, ordered behavior composition and keyboard/touch action mappings.",
@@ -32,7 +32,7 @@
     "scripts/l11-masonry.js + scripts/l11-reno.js + scripts/l11-mall.js - Level 11 canal/quay/renovation geometry and strip-mall shell/cloth awnings parameterized by kind and dimensions.",
     "scripts/lib/build-piece.js + scripts/lib/data/breakables.yml + scripts/lib/data/furniture.yml - canonical breakable/material/build specs and furniture models shared by B-mode, harvesting and reconstruction.",
     "scripts/lib/critter-model.js + critter-models.yml + wardrobe*.yml + scripts/lib/clothes.js - shared player/NPC appearance; humans and legacy furry species retain their paths, while new cats use cat-wardrobe.js.",
-    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + critter-faces.yml + mat-catskin.js + mat-cloth.js - Tripo cat body/face materials, morphs, skinned game clothes/hats/neckwear, hair, fluff and sculpted ears; shared by game avatars and testlab."
+    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + critter-faces.yml + mat-catskin.js + mat-cloth.js - Tripo cat body/face materials, morphs, skinned game garments/hats/neckwear, hair, fluff and sculpted ears; shared by avatars and testlab demos."
   ],
   "notableExports": [
     "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollLock, rollCash, rollItem, spawnCrate and Level 2 container/loot helpers; scripts/lib/weapons.js - baseOf, variantOf, rollVariant, rarityIdx, rarityCap, default.",
@@ -42,7 +42,7 @@
     "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - setStyle, HUMAN, STYLE_V, isNewCat, catLook, seatCat, restylePlace/Queue/Step and appearance builders.",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, stagger3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
     "scripts/lib/craft.js - recipeStatus, maxMakes, craftOne, benchAvailable, stationOf, scrapCount, CRAFT_LIMIT, CATS; scripts/craft.js - onInput, update.",
-    "scripts/lib/cat-wardrobe.js - CAT_BODY, EYE_COLORS, SHADOWS, SNOUTS, EARS, TAILS, paintOf, skinParams, catModel, catMorph, catChildren, chestOf, printOf; scripts/mat-cloth.js - PRINTS."
+    "scripts/lib/cat-wardrobe.js - CAT_BODY, CAT_BODY2, paintOf, skinParams, EYE_COLORS, SHADOWS, catModel, chestOf, SNOUTS, catMorph, catChildren, printOf; scripts/mat-cloth.js - PRINTS."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo, needs, money, appearance, combat/rewards, level access, saved place/position, wakeAtSave restoration, heat/cold and carried tapes/playback.",
@@ -52,7 +52,7 @@
     "scripts/lib/knock.js + scripts/lib/stats.js - foe attributes/weight and shared down/stagger knock outcomes; enemy managers retain AI state and write player-targeting sneakTarget.",
     "places/level1/sim.js, places/level2/sim.js, places/level4/sim.js and places/level27/sim.js - place-state migration/version markers and one-time conversions (officeV, islandSplit in Level 4).",
     "scripts/lib/prop-interactions.js + scripts/prop-part.js - prop state owns interactiveV, propArt, containerOpen/lampOn and part motion goals; child sessions track native tween keys while prop parts animate from replicated state.",
-    "scripts/critter.js owns creator/player look and applies it; scripts/lib/cat-wardrobe.js maps game clothes.yml garment IDs into fitted cat pieces and derives body/face/morph/wardrobe children; scripts/wardrobe-ui.js edits cat choices and saves them."
+    "scripts/critter.js owns creator/player look and applies it; scripts/lib/cat-wardrobe.js maps clothes.yml IDs and look fields to cat body, face and wardrobe children, including look.base2 body/garment selection; scripts/wardrobe-ui.js edits cat choices."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors for locomotion, player/foe steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest markers.",
@@ -66,17 +66,17 @@
     "interact.js openLoot/closeLoot → prop-interactions.containerPose → child part state.goal; scripts/prop-part.js samples cubic motion and builtin tween animates articulated storage fronts; toggleLamp flips light part goals.",
     "scripts/lib/prop-interactions.js interactiveSpec → generated furniture from scripts/lib/furniture.js and upgradeNearby nearby legacy props; preserves root collider/state and tags; prop-part children provide moving doors/drawers/lids.",
     "Player craft action/UI → scripts/lib/craft.js stationOf + craft.yml; built pieces in breakables.yml carry bench=cook/ammo and state.station; craft.js/craft-ui.js filter station recipes while hand menu lists all recipes.",
-    "Wardrobe UI edits cat look (including fitted hats, hair and neckwear) → scripts/critter.js validates/saves it → scripts/lib/critter-model.js seats/restyles cats using cat-wardrobe.js; cat wardrobe maps clothes.yml IDs and colors/prints to fitted assets."
+    "Wardrobe UI edits cat look → scripts/critter.js validates/saves it → scripts/lib/critter-model.js seats/restyles cats using cat-wardrobe.js; look.base2 selects the rebased body and mapped garments, and places/testlab cat-demo displays female/male base2 variants alongside original-body examples."
   ],
   "behaviorFamilies": [
-    "places/bonus/cells/x0z0.scene + objects.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + bonus-extra and mall shopper/salon scripts - authored mall, NPC attachments and simulation; escalator deco has frozen steps removed and moving steps/audio remain active.",
+    "places/bonus/cells/x0z0.scene + objects.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + bonus-extra and mall shopper/salon scripts - authored mall, NPC attachments and simulation; escalator deco has frozen steps removed and moving steps/audio use shared motor behavior.",
     "art/bonus-mall/escalator.py + world.assets bonus-mall-deco-moving-escalators/escalator-step + scripts/esc-step.js - offline Blender build makes reusable detailed steps; placements vary direction and phase while sharing motor behavior.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + home reconstruction scripts - per-piece models/dimensions with common placement, persistence and rebuild path.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preserving root collider/state.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js and scripts/lib/prop-interactions.js + interactive-props.yml + prop-part.js - parametric/eased doors and authored animated storage parts, fitted to supported kinds and migrated while preserving root identity/state.",
     "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + Zenith door/bots/hatch/flicker/drones/use scripts - Zenith Station geometry, breach, hazards and interactive systems.",
     "places/level4 scenes + places/level4/sim.js + scripts/l4-office.js/l4-office-geo.js/l4-home.js + Level 4/5 resident data - authored office/hotel props, fixtures, NPC bodies and attached critter behavior.",
     "scripts/lib/critter-model.js + critter-models.yml + wardrobe*.yml + scripts/lib/clothes.js + art/critter-cute and art/critter-andy - shared human and legacy furry avatar paths; new Tripo cats are handled separately by cat-wardrobe.js.",
-    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + clothes.yml + mat-catskin.js + mat-cloth.js + art/cat-wardrobe builders - new Tripo cats map game loot/NPC clothing and creator choices onto fitted pieces; hats.py fits 12 hat types using wrap/enclose/perch/band recipes and exports skinned assets; hair Hatted morph presses hair under hats."
+    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + clothes.yml + mat-catskin.js + mat-cloth.js + art/cat-wardrobe builders - Tripo cat looks map game garments and creator choices to fitted pieces; rebase.py creates optional base2 bodies and mapped garments selected by look.base2, compared by cat-demo in testlab."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
@@ -88,9 +88,9 @@
   "migrationNotes": [
     "Avatar STYLE_V is sw172; style migration restyles existing avatars. Keep separate human and legacy non-cat furry paths in critter-model.js; only new cat bodies use cat-wardrobe.js.",
     "Game Tripo cat selection is gated by !HUMAN, MESH and speciesOf(look) === 'cat'; cats use catModel/catMorph/catChildren, while human mode and other species do not use the cat wardrobe.",
-    "Cat look.snout/ears/tail drive named body shape keys; sculpted ear assets hide head ear keys and are skinned children. Fluff and hairstyles carry catMorph so matching snout/ear/chest shape keys follow the body; hair meshes carry Hatted to flatten under hats.",
+    "Cat look.snout/ears/tail drive named body shape keys; sculpted ear assets hide head ear keys and are skinned children. Fluff and hairstyles carry catMorph so matching snout/ear/chest shape keys follow the body; hair meshes carry Hatted to hide under hats.",
     "Cat chest slider is 0..1 mapped by chestOf to Chest 0.15..1; art/cat-wardrobe/bust.py sculpts that morph on female body and clothing GLBs, so fitted garments must preserve the same Chest key. Crop top hem is 0.27 under the bust.",
-    "Cat expressions/eyes/mouth and eyeshadow are painted in mat-catskin.js; look.shadow selects SHADOWS and shades lids. The shader suppresses the painted nose under the sculpted tip and shapes the projected muzzle; preserve sex-specific face materials.",
-    "catChildren uses skinned avatar children for garments, masks, hair, fluff, ears and hats; preserve skin attachment and material slots. clothes.yml IDs map through cat-wardrobe.yml (including neck/neckc and topp); hat assets from art/cat-wardrobe/hats.py use head-weighted skinning and a fit-specific head-space placement, while Hatted flattens hair."
+    "Cat expressions/eyes/mouth and eyeshadow are painted in mat-catskin.js; look.shadow selects SHADOWS and shades lids. The shader suppresses the painted nose under the sculpted tip and shapes the projected muzzle; preserve sex-specific face projection/material slots.",
+    "catChildren uses skinned avatar children for garments, masks, hair, fluff, ears and hats; preserve skin attachment and material slots. clothes.yml IDs map through cat-wardrobe.yml (including neck/neckc and topp); base2 maps only the rebased garment GLBs in GARMENT2 and uses CAT_BODY2 when look.base2 is true."
   ]
 }
