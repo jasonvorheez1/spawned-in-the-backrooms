@@ -19,6 +19,90 @@ l7-boat-to-pier:
   rotation: {roll: -2, yaw: -12}
   state: {boat: true, home: {x: 35.6, yaw: -12, z: -91.5}, name: Seawatch dory, seat: {d: 0.35, y: 0.3}, verb: Get in}
   tags: [seat, boat]
+l7sw-beacon:
+  feetPosition: {x: 47.6, y: {terrain: 7.05}, z: -122.8}
+  id: l7sw-beacon
+  light: {color: "#ff3a22", distance: 9, intensity: 1.2, kind: point}
+  material: {color: "#ff3020", emissive: "#ff2010", emissiveIntensity: 6}
+  primitive: {kind: sphere, radius: 0.09}
+l7sw-bench:
+  feetPosition: {x: 45.2, y: {terrain: 0}, z: -122.2}
+  id: l7sw-bench
+  material: {color: "#8a8274", roughness: 0.95, texture: cdn/texture-weathered-grey-driftwood-planks.png}
+  physics: static
+  primitive: {depth: 0.45, height: 0.45, kind: box, width: 2.4}
+  tags: [seat]
+l7sw-lamp-0:
+  feetPosition: {x: 42.6, y: {terrain: 2.12}, z: -119.60000000000001}
+  id: l7sw-lamp-0
+  light: {color: oklch(0.85 0.14 70), distance: 11, intensity: 2.4, kind: point}
+  material: {color: "#ffcc77", emissive: "#ffaa44", emissiveIntensity: 4}
+  primitive: {height: 0.28, kind: cylinder, radialSegments: 8, radiusBottom: 0.12, radiusTop: 0.09}
+l7sw-lamp-1:
+  feetPosition: {x: 48, y: {terrain: 2.12}, z: -119}
+  id: l7sw-lamp-1
+  light: {color: oklch(0.85 0.14 70), distance: 11, intensity: 2.4, kind: point}
+  material: {color: "#ffcc77", emissive: "#ffaa44", emissiveIntensity: 4}
+  primitive: {height: 0.28, kind: cylinder, radialSegments: 8, radiusBottom: 0.12, radiusTop: 0.09}
+l7sw-lamppost-0:
+  feetPosition: {x: 42.6, y: {terrain: 0}, z: -119.60000000000001}
+  id: l7sw-lamppost-0
+  material: {color: "#8a8274", roughness: 0.95, texture: cdn/texture-weathered-grey-driftwood-planks.png}
+  physics: static
+  primitive: {height: 2.1, kind: cylinder, radialSegments: 7, radiusBottom: 0.08, radiusTop: 0.06}
+l7sw-lamppost-1:
+  feetPosition: {x: 48, y: {terrain: 0}, z: -119}
+  id: l7sw-lamppost-1
+  material: {color: "#8a8274", roughness: 0.95, texture: cdn/texture-weathered-grey-driftwood-planks.png}
+  physics: static
+  primitive: {height: 2.1, kind: cylinder, radialSegments: 7, radiusBottom: 0.08, radiusTop: 0.06}
+l7sw-mast:
+  feetPosition: {x: 47.6, y: {terrain: 0}, z: -122.8}
+  id: l7sw-mast
+  material: {color: "#5c6066", metalness: 0.8, roughness: 0.45}
+  physics: static
+  primitive: {height: 7, kind: cylinder, radialSegments: 8, radiusBottom: 0.06, radiusTop: 0.03}
+l7sw-net:
+  feetPosition: {x: 47.2, y: {terrain: 0.4}, z: -122.65}
+  id: l7sw-net
+  material: {alphaTest: 0.4, color: "#9a9070", side: double, texture: cdn/texture-knotted-fishing-net-transparent.png}
+  primitive: {height: 1.6, kind: plane, width: 1.4}
+l7sw-radio-snd:
+  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-shortwave-radio-static-with-faint-morse-code-loop.mp3, gain: 0.18, loop: true, maxDistance: 12, spatial: true}
+  feetPosition: {x: 45.2, y: {terrain: 1}, z: -122.2}
+  id: l7sw-radio-snd
+l7sw-roof:
+  feetPosition: {x: 45.2, y: {terrain: 2.35}, z: -121.5}
+  id: l7sw-roof
+  material: {color: "#7d6a58", metalness: 0.5, roughness: 0.7, texture: cdn/texture-rusted-corrugated-tin-sheet.png}
+  physics: static
+  primitive: {depth: 2.8, height: 0.06, kind: box, width: 3.6}
+  rotation: {pitch: -12}
+l7sw-rope:
+  castShadow: true
+  feetPosition: {x: 44.2, y: {terrain: 0.05}, z: -120.4}
+  id: l7sw-rope
+  material: {color: "#8a7550", roughness: 1}
+  primitive: {kind: torus, radialSegments: 6, radius: 0.28, tube: 0.06, tubularSegments: 16}
+  rotation: {pitch: 90}
+l7sw-wall-back:
+  feetPosition: {x: 45.2, y: {terrain: 0}, z: -122.60000000000001}
+  id: l7sw-wall-back
+  material: {color: "#8a8274", roughness: 0.95, texture: cdn/texture-weathered-grey-driftwood-planks.png}
+  physics: static
+  primitive: {depth: 0.12, height: 2.4, kind: box, width: 3.2}
+l7sw-wall-l:
+  feetPosition: {x: 43.650000000000006, y: {terrain: 0}, z: -121.5}
+  id: l7sw-wall-l
+  material: {color: "#8a8274", roughness: 0.95, texture: cdn/texture-weathered-grey-driftwood-planks.png}
+  physics: static
+  primitive: {depth: 2.2, height: 2.2, kind: box, width: 0.12}
+l7sw-wall-r:
+  feetPosition: {x: 46.75, y: {terrain: 0}, z: -121.5}
+  id: l7sw-wall-r
+  material: {color: "#8a8274", roughness: 0.95, texture: cdn/texture-weathered-grey-driftwood-planks.png}
+  physics: static
+  primitive: {depth: 2.2, height: 2.2, kind: box, width: 0.12}
 l7w-lantern-1:
   castShadow: false
   children: [{feetPosition: {x: 0, y: 0.22, z: 0}, light: {color: oklch(0.86 0.15 70), distance: 12, intensity: 2.2, kind: point, shadow: {enabled: false}, visibleRange: {max: 35}}}]
