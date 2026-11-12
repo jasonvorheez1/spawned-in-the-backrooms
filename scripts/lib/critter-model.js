@@ -905,6 +905,7 @@ export function furrySpec(l) { const h = HUMAN; HUMAN = null; try { return critt
 export function restyle(ctx, o, wardSet) {
   const mid = o?.model?.id ?? o?.model
   if (!mid || typeof mid !== 'string') return false
+  if (o.tags?.includes('samantha') || o.state?.role === 'psychic') return false // Samantha is a real small cat, never a body to dress (Shelly: "samantha is a regular npc again")
   let isH = HUMAN_IDS().includes(mid), isF = FURRY_IDS().includes(mid)
   const wardKids = () => Object.keys(ctx.place?.objects ?? {}).filter((k) => k.startsWith(o.id + '/critter-ward-'))
   if (!isH && !isF && (o.state?.headBody || (wardSet ? wardSet.has(o.id) : wardKids().length))) isH = true // wardSet: the place pass names ward parents once (a per-object scan of every key hitched the room once a second) // Nov 11: a read can name the served copy of the body file, not its listed id; split garments or a seated human head still say human
