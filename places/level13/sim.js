@@ -5,6 +5,7 @@ import { layFurnish } from "../../scripts/lib/level13-furnish.js";
 import { layFoes } from "../../scripts/lib/level13-foes.js";
 import { layPeople } from "../../scripts/lib/level13-people.js";
 import { layDress } from "../../scripts/lib/level13-dress.js";
+import { layTape } from "../../scripts/lib/level13-tape.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 export const cadence = "1s";
@@ -87,7 +88,7 @@ export function tick(ctx) {
   const st = ctx.place.state;
   if (st.v !== V || !("l13-floor" in ctx.place.objects)) { lay(ctx); st.v = V; return; }
   restyleSigns(ctx, "level13"); dressThresholds(ctx);
-  layFurnish(ctx); layFoes(ctx); layPeople(ctx); layDress(ctx);
+  layFurnish(ctx); layFoes(ctx); layPeople(ctx); layDress(ctx); layTape(ctx);
   // the lethargy: seconds spent inside one flat, written only when its step (a tenth) changes
   for (const p of ctx.place.players) {
     let m = STAY.get(p.id); if (!m) STAY.set(p.id, m = { apt: null, s: 0 }); const a = aptAt(p.feetPosition.x, p.feetPosition.z);
