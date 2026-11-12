@@ -130,10 +130,10 @@ function layColumn(ctx, c) {
     ctx.spawn("l02-fresh-sink", { tags: ["usable", tag], feetPosition: { x: x + 1.65, y: 0.82, z: Z0 + 0.3 }, ...FRESH_BODY, behavior: "scripts/l02-use.js", state: { kind: "fresh", slot: "sink", name: "Reality Freshener", verb: "Take", info: "Behind the bathroom mirror." } });
   }
 }
-function layClean(ctx) { for (let c = 1; c < NX; c++) { for (const r of ctx.query({ tags: [`l02c${c}`] })) ctx.destroy(r.id); layColumn(ctx, c); } }
+function layClean(ctx) { for (let c = 1; c < NX; c++) { for (const r of ctx.query({ tags: [`l02c${c}`] })) if (!r.id.includes("/") && r.id in ctx.place.objects) ctx.destroy(r.id); layColumn(ctx, c); } }
 function drop(ctx, c) {
   const x = xOf(c), tag = `l02c${c}`;
-  for (const r of ctx.query({ tags: [tag] })) if (r.id !== "l02-fresh-sink") ctx.destroy(r.id);
+  for (const r of ctx.query({ tags: [tag] })) if (r.id !== "l02-fresh-sink" && !r.id.includes("/") && r.id in ctx.place.objects) ctx.destroy(r.id);
   if (c === 3 && "l02-fresh-sink" in ctx.place.objects) animate(ctx, ctx.place.objects["l02-fresh-sink"], { "feetPosition.y": BASE + 0.02 }, { duration: 0.7, easing: "easeInQuad" });
   for (let i = 0; i < 7; i++) ctx.spawn({ tags: ["l02debris"], lifetime: 40, feetPosition: { x: x + (ctx.random() - 0.5) * 3, y: 2.4, z: Z0 + 1 + ctx.random() * (D - 2) }, rotation: { yaw: ctx.random() * 360, pitch: ctx.random() * 40 },
     primitive: i % 2 ? box(0.6, 0.04, 1.2) : box(0.9 + ctx.random(), 0.08, 0.5), material: i % 2 ? TILE : PAINT, physics: { body: "dynamic", collider: "box", density: 300 } });
