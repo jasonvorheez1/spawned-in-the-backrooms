@@ -45,6 +45,7 @@ models:
   divehelm: { hat: true, pat: weave, f: /cdn/value.49dddfada01c026006bf6592ae2c881e420cc4d1f1e63a299a0862d0adcf63e3.glb, m: /cdn/value.d21ce95dc68a8888568eccb3816fbe5ace1821274ac859e8177376d0f36cc3a3.glb }   # Tripo hat fitted to the cat head (art/cat-wardrobe/hats.py), Nov 12
   chitinhelm: { hat: true, pat: weave, f: /cdn/value.50f01a4b5d5bf1756f7cb33470bbc27a8e7423b0d288ed604929324f7cd048be.glb, m: /cdn/value.cfb5a7fa7cfcc44c045cc3c1552c034dc9b7884265c193ebc1c45e6fca648d89.glb }   # Tripo hat fitted to the cat head (art/cat-wardrobe/hats.py), Nov 12
   headphones: { hat: true, pat: weave, f: /cdn/value.a3862d7d7f872b1c3b8033080a35011f6d8babf62bfa67ab1a86dd3a8c81cd13.glb, m: /cdn/value.2015c85824df2aa3ff22981d830a0fe85dd2114bf154192757964e709b11421a.glb }
+  hazmat: { under: longsleeve, tint: false, f: /cdn/value.7f7b9dfcdd726580ef876c9008ccfa6db5d1d320dfe10007e87b001c4c772380.glb, m: /cdn/value.e746c8a876fc89e81df56d8568360f876fba54a68531f2a95ff55e9580f3772e.glb }   # Nov 12 lore: M.E.G. hazmat jacket, Tripo, art/cat-wardrobe/fit.py top; its own yellow rubber and grey tape
   # Tripo neckwear fitted and skinned to both bodies (art/cat-wardrobe/necks.py; Shelly #224434 + "use tripo"). tint false = its own Tripo paint
   scarf: { pat: knit, f: /cdn/value.78d15d0c86811a41f46d04efb5c7d8aad3725f9b57195b77795d02314ce5b0ac.glb, m: /cdn/value.370b50fd9f1e3704fe6b73bc0fe85fbb1719a5c1c1f3ecaa5e5587b3cf224ae2.glb }
   cape: { pat: weave, f: /cdn/value.7c0c05071d095f4719b3ae129e9182ecddb194e7d22a3f7ad4b713fd9f0964c3.glb, m: /cdn/value.2a572b50bfdd95f61d150313ff8bbc6ffb9f5e4343eaa16ac5750d7b066c1b77.glb }
@@ -113,7 +114,7 @@ from:
           jacket: jacket, megjacket: jacket, officeshirt: longsleeve, padjacket: jacket, wirehood: hoodie, platevest: tank, bellhop: jacket,
           tailcoat: jacket, gown: longsleeve, maidapron: tee, hotelrobe: pajamas, seawatchsuit: jacket, oilskin: hoodie, abysshauberk: longsleeve,
           chitinplate: tank, pgcoat: jacket, jerrytee: tee, pphoodie: hoodie, pghoodie: hoodie, gmhoodie: hoodie, vest: tank, blazer: jacket,
-          shirt: breton, crop: crop, breton: breton, hazmat: jacket, bntgvest: tank, tarpponcho: hoodie }   # lore pieces: their own Tripo models replace these stand-ins once fitted
+          shirt: breton, crop: crop, breton: breton, hazmat: hazmat, bntgvest: tank, tarpponcho: hoodie }   # lore pieces: their own Tripo models replace these stand-ins once fitted
   botw: { pants: pants, shorts: shorts, pjpants: pjpants, skirt: skirt, longskirt: skirt, overalls: pants, slacks: pants, cargo: pants,
           canvasskirt: skirt, pinstripe: pants, velvetskirt: skirt, tarwaders: pants, jeans: pants, briefs: briefs, leggings: leggings }
   shoes: { sneakers: socks, slippers: socks, boots: boots, steeltoe: boots, hotelslip: socks, ballastboots: boots, pitchboots: boots, heels: socks, socks: socks }
