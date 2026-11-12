@@ -33,8 +33,7 @@ const anim = (o, m, clip, loop = true) => { if (m.clip === clip) return; m.clip 
 const say = (ctx, clip, position, volume = 0.9, maxDistance = 26) => heard(ctx, { clip: SND(clip), position, volume, maxDistance, refDistance: 3 });
 const head = (o, y = 1.45) => ({ x: o.feetPosition.x, y: o.feetPosition.y + y, z: o.feetPosition.z });
 function hurtPlayer(ctx, p, dmg, dir, punch = 0.6) {
-  const dd = dmgAfterArmor(p.state.look, dmg); ctx.log("l13hit", dmg, dd, p.state.hp);
-  p.state.hp -= dd; // worn clothes soak it, as with the hounds
+  p.state.hp -= dmgAfterArmor(p.state.look, dmg); // worn clothes soak it, as with the hounds
   const at = head(p, 1);
   ctx.emit("damageNumber", { position: at, value: dmg, color: "#ff5040" });
   ctx.emit("cameraPunch", { direction: { x: dir.x, y: 0.25, z: dir.z }, intensity: punch }, { audience: { player: p.id } });

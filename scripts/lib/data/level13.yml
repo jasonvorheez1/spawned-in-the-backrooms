@@ -11,10 +11,10 @@ foes:
     kitchenDx: 2.6      # Savi's pick: where it stands, metres from the room's middle along the hall
     hallRange: 9        # Savi's pick: hall sight through its doorway
     windMs: 700         # Savi's pick: arm back before the throw
-    everyMs: 2200       # Savi's pick: one throw per
+    everyMs: 2800       # Savi's pick: one throw per (two tenants face each other across the hall)
     speed: 14           # Savi's pick: m/s off the hand
     gravity: 9.8        # Savi's pick
-    dmg: 8              # Savi's pick
+    dmg: 5              # Savi's pick: lands as ~6 after the armor curve
     throws: 6           # Savi's pick: then it restocks
     restockMs: 4000     # Savi's pick: the opening
     walk: 0.9           # Savi's pick: shuffle m/s
