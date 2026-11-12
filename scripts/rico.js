@@ -4,11 +4,11 @@
 // opened a talk with him gets his face. During the boarding scene (scripts/hub.js sets state.sceneUntil) he is the scene's.
 // Every move is a rig-pack clip (Shelly: "keep using the animations provided").
 import { animate } from "builtin/tween"
-const CL = {
-  walk: "cdn/clip-rig-walking-a-aadc5ff6-loop.glb", idle: "cdn/clip-rig-idle-a-09a9fec3-loop.glb", idle2: "cdn/clip-rig-idle-b-201d4da9-loop.glb",
-  hold: "cdn/clip-rig-holding-a-ad457997-loop.glb", work: "cdn/clip-rig-working-a-13f5043b-loop.glb", use: "cdn/clip-rig-use-item-b9e64fa1-loop.glb",
-  pickup: "cdn/clip-rig-pickup-005103f0-loop.glb", sitDown: "cdn/clip-rig-sit-chair-down-ea7a343c.glb", sitIdle: "cdn/clip-rig-sit-chair-idle-ddb4171e-loop.glb",
-  sitUp: "cdn/clip-rig-sit-chair-standup-ead7634f.glb",
+const CL = { // the rig pack's clips turn none of a critter's mixamo bones (the engine refuses them), so his chores ride the clips this body takes
+  walk: "cdn/clip-walk-loop.glb", idle: "cdn/clip-idle-loop.glb", idle2: "cdn/clip-ual-idle-rail-call-22ae92c1-loop.glb",
+  hold: "cdn/clip-ual-idle-foldarms-257968ed-loop.glb", work: "cdn/clip-ual-idle-rail-98ea5bb3-loop.glb", use: "cdn/clip-ual-yes-3eda7eee-loop.glb",
+  pickup: "cdn/clip-ual-idle-lantern-9df42332-loop.glb", sitDown: "cdn/clip-sit-loop.glb", sitIdle: "cdn/clip-ual-idle-talkingphone-5737f83c-loop.glb",
+  sitUp: "cdn/clip-idle-loop.glb", sit: "cdn/clip-sit-loop.glb",
 }
 const Y = 5.5, SPEED = 1.15 // m/s, an unhurried walk (my pick)
 const ROUND = [
@@ -24,7 +24,7 @@ const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z)
 const play = (me, clip, loop = true) => { me.anim.rico = { clip: CL[clip], weight: 3, loop } }
 const face = (me, p) => { me.rotation = { lookAt: { x: p.x, y: Y, z: p.z } } }
 export const updateSchedule = { every: { seconds: 0.25 } }
-export function onSpawn(ctx) { const me = ctx.self; me.anim.idle = null; me.anim.walk = null; play(me, "idle") }
+export function onSpawn(ctx) { const me = ctx.self; me.anim.idle = { clip: CL.idle, weight: 1, loop: true }; me.anim.walk = null; play(me, "idle") }
 function walkTo(ctx, me, s, p, now) {
   const d = flat(me.feetPosition, p)
   if (d < 0.05) { s.until = now; return }
@@ -50,7 +50,7 @@ export function update(ctx) {
     if (st.seat) { me.feetPosition = { x: st.seat.x, y: Y, z: st.seat.z }; face(me, st.face); play(me, "sitDown", false); s.phase = "sitting"; s.until = now + 1200; return }
     face(me, st.face); play(me, st.act); s.phase = "act"; s.until = now + st.dwell * 1000; return
   }
-  if (s.phase === "sitting") { play(me, "sitIdle"); s.phase = "seated"; s.until = now + st.dwell * 1000; return }
+  if (s.phase === "sitting") { play(me, "sit"); s.phase = "seated"; s.until = now + st.dwell * 1000; return }
   if (s.phase === "seated") { play(me, "sitUp", false); s.phase = "rising"; s.until = now + 1300; return }
   if (s.phase === "rising") me.feetPosition = { x: st.at.x, y: Y, z: st.at.z }
   s.i = (s.i + 1) % ROUND.length; s.phase = "walk"; walkTo(ctx, me, s, ROUND[s.i].at, now)
