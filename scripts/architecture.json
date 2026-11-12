@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 5971,
-  "updatedAt": "2026-11-12T04:07:45.634Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, lore-based destinations, a social mall and solo tutorial spaces. `templates/player.js` composes shared behaviors; `scripts/player.js` owns player progression and combat, while place simulations and shared libraries build/tick environments, NPCs, quests, crossings and visual dressing.",
+  "basedOnSpecVersion": 5985,
+  "updatedAt": "2026-11-12T04:29:49.924Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, lore-based destinations, a social mall and solo tutorial spaces. `templates/player.js` composes shared behaviors; `scripts/player.js` owns player progression and combat, while place simulations and shared libraries build/tick environments, NPCs, crossings and visual dressing. Cat NPC/player looks use distinct legacy and Tripo wardrobe paths, with live facial animation driven by behavior and speech state.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0/Lobby maze; sim lays ecology, generated moments, safe rooms and routes to exits.",
@@ -10,7 +10,7 @@
     "places/intake + places/tutorial0 (3D; tutorial0 solo ephemeral) - character creation/waking and staged tutorial route.",
     "places/level01 (3D) - Zenith Station: station, breach, doors, bots, hazards and recorder quest.",
     "places/level1, level2, level21, level3, gamma (3D) - Habitable Zone/M.E.G. camp, Pipe Dreams, Locked, Electrical Station and Base Gamma; Level 3 sim generates paired hatches, industrial details, almond-bottle piles and running assembly lines.",
-    "places/level4, level5, level6, level7, level8 (3D) - Abandoned Office, Terror Hotel, drowned house, sea/Fort Surrender and Cave Systems.",
+    "places/level4, level5, level6, level7 (3D) - Abandoned Office, Terror Hotel, drowned house and sea/Fort Surrender; Level 7 sim lays islands, outpost/fort NPCs and loot, with authored cat wardrobe children in cells/objects.scene.",
     "places/level10, level11, level12 (3D) - lake, generated city/canal and renovation office; Level 11 connects to player home11.",
     "places/level26, level27, level184, level61, spamton, testlab and other special places (3D) - SS Fun, Bunker Springs, forts, Snackrooms, arena and Test Range."
   ],
@@ -32,7 +32,7 @@
     "scripts/lib/quest-route.js + scripts/lib/quest-mark.js - crossing graph and objective resolver for tracked quests.",
     "scripts/lib/data/preload.yml + scripts/lib/preload-next.js - door-to-destination/model manifest used by player proximity preloading.",
     "scripts/lib/sign-style.js + scripts/sign-geo.js + scripts/lib/data/signs.yml - per-place/id visual styles and generated sign boards; participating place sims call restyleSigns.",
-    "scripts/lib/build-piece.js + furniture/breakable data, and scripts/lib/critter-model.js + cat wardrobe/clothes data - shared build/reconstruction and player/NPC appearance systems."
+    "scripts/lib/build-piece.js + furniture/breakable data and scripts/lib/critter-model.js + cat wardrobe data - shared build/reconstruction and player/NPC appearance systems."
   ],
   "notableExports": [
     "scripts/lib/carry.js - carryAcross.",
@@ -40,9 +40,9 @@
     "scripts/lib/quest-route.js - nextQuestExit; scripts/lib/quest-mark.js - questMark; scripts/lib/quests.js - MAX_TRACK, TINT, PLACE_NAMES, qid, setQuest, endQuest, tracked, toggleTrack.",
     "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollLock, rollCash, rollItem, spawnCrate and Level 2 helpers; scripts/lib/weapons.js - baseOf, variantOf, rollVariant, rarityIdx, rarityCap, default.",
     "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, onInput, hitTarget, fish callbacks, HOLO/holoEnd and throwable callbacks.",
-    "scripts/lib/critter-model.js - setStyle, HUMAN, STYLE_V, cat and human appearance builders, restylePlace/Queue/Step; scripts/lib/cat-wardrobe.js - CAT_BODY, CAT_OLD, CAT_BODY2 and cat appearance builders.",
+    "scripts/lib/critter-model.js - setStyle, HUMAN, STYLE_V, cat and human appearance builders, restylePlace/Queue/Step; scripts/lib/cat-wardrobe.js - CAT_BODY, CAT_OLD, CAT_BODY2, faceLife, liveFace and cat appearance builders.",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, stagger3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
-    "places/level1/sim.js - cadence, agentSpec, tick; places/level5/sim.js - cadence, lay."
+    "places/level1/sim.js - cadence, agentSpec, tick; places/level5/sim.js - cadence, lay; places/level7/sim.js - cadence, breakables, tick."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved position and carried tapes; lib/forgive.js records NPC grudges in player.state.grudges.",
@@ -52,7 +52,7 @@
     "scripts/lib/knock.js + stats.js - foe weight/attributes and down/stagger outcomes; enemy managers own AI and sneakTarget.",
     "Place sims - local generated scene and migration markers, including Level 1 back-door rebuild, Level 3 hatchV/lineV and Level 4 office/island conversions.",
     "scripts/lib/prop-interactions.js + scripts/prop-part.js - prop open/lamp state and child part animation goals; prop-interactions preserves detailed models when searched.",
-    "scripts/lib/thresholds.js - place.state.thrSeen/thrTry/thrDone/thrV placement protocol; testlab sim owns lootPool/labV and consumes pad requests."
+    "scripts/lib/cat-wardrobe.js liveFace + scripts/critter.js - transient facial timers/cache; face mood derives from NPC hp/down/hostility/anger and speech line, not separately persisted face state."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors.",
@@ -66,7 +66,7 @@
     "Tracked quest → quest-marker.js → questMark/nextQuestExit gated crossing graph → local objective or remote exit marker and journal.",
     "Place sims → restyleSigns (signs.yml/sign-geo.js) and dressThresholds; doorway handlers call carryAcross before ctx.cross for local links, record xferTo, and player.js consumes it for arrival marker.",
     "scripts/player.js update → preloadTick reads nearby door IDs and preload.yml → player-audience preload event for destination models; forgiveTick reads NPC angry state/player.grudges and clears the grudge after an in-game hour.",
-    "Level 3 sim spawns industrial models and paired hatches; lineV replaces old line models with three Tripo stations per line plus scripts/l3-line.js belt boxes and cabinet lamps; l3-visits.js manages rare Samantha/Death Rat guests, with rat gait keyed to Tripo rig tracks."
+    "Cat looks: scripts/critter.js derives mood/talking from NPC state and state.line; humanoid-locomotion.js calls cat-wardrobe.liveFace for cats not running critter.js; mat-catskin.js animates blink/talk textures in shader."
   ],
   "behaviorFamilies": [
     "places/bonus scenes + bonus data/sim + mall shopper/salon scripts - authored mall, NPCs and counter behavior; escalator steps share motor behavior with placement-specific direction/phase.",
@@ -76,7 +76,7 @@
     "places/level01/sim.js + zenith geometry, breach, hatch, bot and hazard scripts - Zenith Station environment and interactive systems.",
     "places/level3/sim.js + level3-details-geo.js + lib/level3-hatch.js + l3-hatch*.js + scripts/l3-line.js - tiled Electrical Station detail, paired steel hatches and animated belt boxes varied by line layout/state.",
     "places/level4 scenes/sim + l4-office, l4-office-geo, l4-home and resident data - office/hotel fixtures and attached residents.",
-    "scripts/lib/critter-model.js + cat wardrobe/clothes data + material and art builders - reusable human/furry/Tripo cat rigs with varied looks and fitted attachments."
+    "scripts/lib/critter-model.js + cat-wardrobe.yml + mat-catskin.js + art/cat-wardrobe/fit.py - reusable cat body looks with painted clothing and fitted skinned garment children; refits propagate through wardrobe seating."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -88,10 +88,10 @@
   ],
   "migrationNotes": [
     "Threshold dressing version is V=7 in scripts/lib/thresholds.js; upgrades clean/rebuild thr-tagged objects and remain delayed/incremental until place colliders stand. Preserve thrSeen/thrTry/thrDone/thrV protocol.",
-    "Door transfers: carryAcross records xferTo only for local place links with a # marker and crosses carryId/nearby heldBy objects, rejecting room/world and Bonus destinations; Level 1 BACK moves via backV destroy-and-respawn because moving a laid-out door's pieces is handled specially.",
+    "Door transfers: carryAcross records xferTo only for local place links with a # marker and crosses carryId/nearby heldBy objects, rejecting room/world and Bonus destinations; Level 1 BACK uses backV destroy-and-respawn migration.",
     "scripts/lib/sign-style.js only restyles eligible shallow box signs with UI, leaves emissive/light signs alone, and is throttled/idempotent; preserve source IDs, dimensions, text, colour and placement while signs.yml selects style.",
-    "Level 3 hatchV=3 rebuild destroys old l3-hatch-* objects; hatchAt deterministically shares each wall's door across its two faces. Level 3 lineV=2 destroys legacy line-model instances and lays three Tripo stations plus one animated belt controller per LINES entry; keep migration marker and controller parameters (len, beltY, box, n) aligned.",
-    "scripts/player.js first-person tracer origin is derived from the held viewmodel transform plus weapon muzzle metadata; keep it distinct from ballistics' eye/aim direction. Third-person tracers retain the eye-based origin; preload-next uses the nearby-door manifest.",
-    "Level 3 crawl-hall liner hits are mapped by wallgrid.liner() to the underlying cell-edge wall; keep its protected-wall test and level3-geo.js CUT omission aligned with breakables place.state.broken and syncWalls patches."
+    "Level 3 hatchV=3 rebuild destroys old l3-hatch-* objects; hatchAt deterministically shares each wall's door across its two faces. Level 3 lineV=2 destroys legacy line-model instances and lays three Tripo stations with animated belt boxes and cabinet lamps.",
+    "New Tripo cat wardrobe data applies only to CAT_BODY/CAT_BODY2: painted regions use cat-wardrobe.yml body measurements (metres, y-up, front +z); modeled clothes are skinned children and use under-paint to hide fur. Legacy critter clothing remains separate.",
+    "Cat facial animation is derived, not saved: NPC state.line drives talking; hp/down/hostility/angry choose face moods; mat-catskin blink/talk runs on shader time and seeded phase."
   ]
 }
