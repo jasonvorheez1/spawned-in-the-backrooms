@@ -13,7 +13,7 @@ import { S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, xOf } from "../../scripts/lib
 import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 import P from "../../scripts/lib/data/l02-props.yml";
 export const cadence = "250ms";
-const V = 13, STEP_MS = 2600;
+const V = 14, STEP_MS = 2600;
 const W = NX * S, D = NZ * S; // 32 x 20 m
 const CARPET = { color: "oklch(0.4 0.11 25)", roughness: 0.97, texture: "cdn/texture-dry-red-office-carpet-low-pile.png", wrap: "repeat", repeat: [0.5, 0.5] };
 const PAINT = { color: "oklch(0.97 0.008 90)", roughness: 0.88, texture: "cdn/texture-freshly-painted-white-drywall-eggshell-roller-stipple.png", wrap: "repeat", repeat: [0.5, 0.5] };
@@ -96,6 +96,10 @@ function layShell(ctx) {
     const top = (i + 1) * (-BASE / 12);
     sp(ctx, `l02-step${i}`, { feetPosition: { x: -6.25 - i * 0.5, y: BASE, z: Z0 + 1.1 }, primitive: box(0.5, top, 1.8), material: PLY, physics: "static",
       children: [{ feetPosition: { x: 0, y: top, z: 0.9 }, primitive: box(0.06, 0.9, 0.06), material: STUD }, { feetPosition: { x: 0, y: top + 0.9, z: 0.9 }, primitive: box(0.52, 0.05, 0.09), material: STUD }] });
+  }
+  { // one smooth ramp collider under the treads: (-6.0, BASE) up to (-12.0, 0), so the climb never hangs on a riser
+    const run = 6, rise = -BASE, len = Math.hypot(run, rise), ang = Math.atan2(rise, run) * 180 / Math.PI;
+    sp(ctx, "l02-stair-ramp", { feetPosition: { x: -9, y: BASE / 2 - 0.1, z: Z0 + 1.1 }, pivot: "center", rotation: { yaw: 0, pitch: 0, roll: -ang }, primitive: box(len, 0.2, 1.8), visible: false, physics: "static" });
   }
   // work lights in the basement, each on its tripod with its own warm glow
   for (const [i, x, z, yaw] of [[0, -4, 6.5, 200], [1, 4, -6.5, 20], [2, 10.5, 6.5, 160], [3, -9, -2, 270]]) {
