@@ -8,7 +8,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 46;
+const V = 47;
 const RAIL_GLB = "/cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb";
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
@@ -57,8 +57,8 @@ function rink(ctx) {
   for (const side of [-1, 1]) {
     for (const [a, b] of [[-half, -1.35], [1.35, half]]) seg((a + b) / 2, side * rail, b - a, 0);
     for (const x of [-1.4, 1.4]) ctx.spawn(`l31-gatepost-${side}-${x}`, {
-      feetPosition: { x, y: 0, z: side * rail }, primitive: { kind: "cylinder", radiusTop: 0.105, radiusBottom: 0.12, height: 1.07, radialSegments: 12 },
-      material: { color: "#caaa81", roughness: 0.5 }, physics: "static", castShadow: false,
+      feetPosition: { x, y: 0, z: side * rail }, // Tripo padded post with chrome cap: draws 0.24 x 1.0 m at file size
+      model: "/cdn/value.1029b6db02f325db84b1c97ba55ef6e19c795aa8091b2b54963e50768b89178d.glb", scale: 1.07, physics: { body: "static", collider: "cylinder" }, castShadow: false,
     });
   }
   // the two curved ends, 12 flat panels each
@@ -166,8 +166,10 @@ function cinema(ctx) {
 
 function djBooth(ctx) {
   const d = ZONES.dj, cx = (d.x0 + d.x1) / 2, cz = (d.z0 + d.z1) / 2;
-  ctx.spawn("l31-dj-riser", { feetPosition: { x: cx, y: 0, z: cz }, primitive: rbox(6, 0.5, 3.5), material: { texture: "cdn/texture-black-rubber-stage-riser-diamond-tread.png", wrap: "repeat", repeat: [1, 1], color: "#fff", roughness: 0.8 }, physics: "static" });
-  ctx.spawn("l31-dj-front", { feetPosition: { x: cx, y: 0.5, z: d.z0 + 0.2 }, primitive: rbox(5.6, 0.75, 0.25), material: RAIL, physics: "static",
+  // Tripo neon DJ stage: draws 2.08 x 0.5 x 3.27 m (long on z), turned and stretched to the 6 x 3.5 riser; a hidden box carries the floor
+  ctx.spawn("l31-dj-riser", { feetPosition: { x: cx, y: 0, z: cz }, primitive: rbox(6, 0.5, 3.5), render: false, physics: "static",
+    children: [{ id: "m", rotation: { yaw: 90 }, model: "/cdn/value.37fda2c85ed6065a5657dd95525ee642f4c1c6c73f451c47de704eb692c6038e.glb", scale: { x: 1.68, y: 1, z: 1.83 }, receiveShadow: true }] });
+  ctx.spawn("l31-dj-front", { feetPosition: { x: cx, y: 0.5, z: d.z0 + 0.2 }, primitive: rbox(5.6, 0.75, 0.25), render: false, physics: "static",
     children: [{ feetPosition: { x: 0, y: 0.375, z: -0.135 }, vector: `<svg viewBox='0 0 300 60' width='4.6m'><text x='150' y='44' text-anchor='middle' font-family='display' font-size='40' fill='#ff3fa4' filter='drop-shadow(0 0 5 #ff3fa4)'>REQUEST LINE</text></svg>` }] });
   // the Faceling DJ (wiki: "a docile Faceling sitting inside selecting songs"): stands behind the rail at a deck, facing the rink
   // the DJ's console: a Tripo model fitted into the old deck's 2.2 x 0.75 x 0.8 footprint, its face toward the rink (-Z)

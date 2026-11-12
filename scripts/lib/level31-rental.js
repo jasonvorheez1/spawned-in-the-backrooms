@@ -54,10 +54,9 @@ function skates(ctx) {
 }
 function counter(ctx) {
   const L = 13.1, cx = 6 + L / 2; // x 6..19.1, the flip-up gap from there to the east wing
-  ctx.spawn("l31-rental-counter", { feetPosition: { x: cx, y: 0.1, z: 24.5 }, primitive: rbox(L, 0.92, 0.6), material: FRONT, physics: "static", tags: ["l31-rental"], children: [
-    { feetPosition: { x: 0, y: -0.1, z: 0.03 }, primitive: rbox(L, 0.1, 0.5), material: DARK },
-    { feetPosition: { x: 0.02, y: 0.92, z: -0.03 }, primitive: rbox(L + 0.06, 0.05, 0.76), material: LAM },
-    { feetPosition: { x: 0, y: 0.86, z: -0.385 }, primitive: rbox(L + 0.06, 0.05, 0.05), material: { color: "#b9b4a8", metalness: 0.8, roughness: 0.35 } },
+  ctx.spawn("l31-rental-counter", { feetPosition: { x: cx, y: 0.1, z: 24.5 }, primitive: rbox(L, 0.92, 0.6), render: false, physics: "static", tags: ["l31-rental"], children: [
+    // five Tripo teal memphis-band counter modules: 2.53 x 0.9 x 0.78 m at file size, fitted to 2.62 x 0.92 x 0.6
+    ...[0, 1, 2, 3, 4].map((i) => ({ feetPosition: { x: (i - 2) * L / 5, y: 0, z: 0 }, model: "/cdn/value.f96fd098cbb272a4e467e84d7d0f212ba4c80b2bcfb458d448b434e1e5159b4c.glb", scale: { x: L / 5 / 2.53, y: 1.02, z: 0.77 }, receiveShadow: true })),
     // the flap, stood open on its hinge
     { feetPosition: { x: L / 2 + 0.06, y: 0.97, z: -0.03 }, rotation: { roll: -7 }, primitive: rbox(0.05, 0.98, 0.76), material: LAM },
     // US size chart, screwed to the front
