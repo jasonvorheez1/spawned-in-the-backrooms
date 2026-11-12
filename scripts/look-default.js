@@ -13,7 +13,7 @@ export function look(ctx) {
   // - Controlled contrast with clean shadow depth.
   c = grade(c, {
     exposure: 1.02,
-    saturation: 1.0,
+    saturation: 0.9,
     contrast: 1.06,
     temperature: 0.04,
     lift: 0.008,

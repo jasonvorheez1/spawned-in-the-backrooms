@@ -11,10 +11,10 @@ export function photoFinish(ctx, c, o = {}) {
   // bloom authored (AAA kit numbers): the seeded 0.15 trio resolves to none, so the sun and lit faces never lifted
   ctx.param('bloomStrength', 0.28); ctx.param('bloomRadius', 0.7); ctx.param('bloomThreshold', 0.92);
   // jpeg tone: mids pushed, blacks murky but readable (they were crushing half the ground to pure black), colour punchy like a 2006 compact's vivid mode
-  c = grade(c, { exposure: 1.18, contrast: 1.08, lift: 0.045, saturation: 1.3, gamma: 0.92 });
+  c = grade(c, { exposure: 1.06, contrast: 1.07, lift: 0.012, saturation: 1.0, gamma: 0.97 }); // Shelly Nov 12 "feel realistic": natural colour, no vivid-mode push, blacks clean
   // CCD clip: past ~80% the highlight runs flat warm-white instead of rolling off
   const l = dot(c, vec3(0.2126, 0.7152, 0.0722));
-  c = mix(c, vec3(1.0, 0.99, 0.95), smoothstep(0.6, 0.95, l).mul(o.clip ?? 0.75));
+  c = mix(c, vec3(1.0, 0.99, 0.95), smoothstep(0.85, 1.0, l).mul(o.clip ?? 0.3)); // only true highlights roll to warm white
   c = vignette(c, ctx.param('photoVignette', 0.3), { color: [0.02, 0.015, 0.01], roundness: 1.6, feather: 0.7 });
-  return grain(c, o.grain ?? 0.04);
+  return grain(c, o.grain ?? 0.025);
 }
