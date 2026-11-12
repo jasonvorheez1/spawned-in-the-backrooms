@@ -1,7 +1,7 @@
 // Hair for every hairstyle (Shelly Nov 12: "improve its textures and material + uv"). Drawn from the hair's own bind-pose position, not its UVs,
 // so Tripo's broken UV islands can't seam it: fine strands running down the fall, clumps, a darker root at the scalp, lighter tips,
 // and an anime shine band that slides with the view (a Kajiya highlight along the strand direction). Colour = the material colour.
-import { materialColor, positionGeometry, positionWorld, normalWorld, cameraPosition, normalize, dot, pow, saturate, vec3, float, abs, mix, smoothstep, clamp, sqrt, mx_noise_float, mx_fractal_noise_float } from "builtin/three";
+import { materialColor, positionGeometry, positionWorld, normalWorld, cameraPosition, normalize, dot, pow, saturate, vec3, float, abs, mix, smoothstep, clamp, sqrt, mx_noise_float, mx_fractal_noise_float } from "builtin/tsl";
 import { MeshStandardNodeMaterial } from "builtin/three";
 
 export function material(ctx) {
