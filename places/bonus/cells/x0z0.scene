@@ -507,6 +507,24 @@ bc-gumball-rack:
   physics: {body: static, collider: box}
   rotation: {yaw: -90}
   tags: [bonus-arcade]
+bc-juicebar:
+  castShadow: true
+  feetPosition: {x: 8.2, y: 0, z: -2}
+  id: bc-juicebar
+  layout: {box: {max: {x: 0.95, y: 2.5, z: 0.55}, min: {x: -0.95, y: 0, z: -0.55}}}
+  model: {forward: "+x", id: /cdn/value.8d0a51b41db0eacfde90f6a8e04db1d153536613ef6d53c33387d502f9792205.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: -90}
+  tags: [bonus-court]
+bc-kiddieride:
+  castShadow: true
+  feetPosition: {x: -8.3, y: 0, z: 9.6}
+  id: bc-kiddieride
+  layout: {box: {max: {x: 0.5, y: 1.1, z: 0.85}, min: {x: -0.5, y: 0, z: -0.85}}}
+  model: {id: /cdn/value.74e048233e378e7161258076745c57cd6948fa4310e4014bb99ffdcaf8953221.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 0}
+  tags: [bonus-court]
 bc-kiosk:
   feetPosition: {x: -20.5, y: 5.5, z: -3}
   id: "bc-kiosk"
