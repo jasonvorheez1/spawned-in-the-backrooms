@@ -5,10 +5,10 @@ z0: -5         # grid north edge, m
 cell: 4        # room size, m
 cols: 4
 rows: 3
-height: 3.3    # stud height from the basement slab
+height: 3.15   # stud height from the basement slab (stops under the clean floor deck)
 swapEvery: 6   # seconds between crew passes
 swapChance: 0.6 # odds an unwatched, unlit wall changes on a pass
-viewHalf: 35   # half the 70 degree view cone a player's camera holds walls still in
+viewHalf: 55   # half the view cone a camera holds walls still in (70 asked; widened so a 16:9 screen edge never sees a swap)
 nearSkip: 0.9  # a wall within this of any body never changes (no one gets framed in)
 lampRange: 5   # an ON lamp freezes walls this close...
 lampHalf: 45   # ...inside this half-angle of where it points
