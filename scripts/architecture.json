@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 6538,
-  "updatedAt": "2026-11-12T17:17:19.647Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social hub, lore destinations and a solo tutorial. Shared player behaviors and place simulations compose authored and generated spaces; encounters, data-driven gear and player-specific quests build progression. Home building persists separately for the Infinite City house and booked Level 5 rooms.",
+  "basedOnSpecVersion": 6557,
+  "updatedAt": "2026-11-12T17:30:58.131Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social hub, lore destinations and a solo tutorial. Shared player behaviors and place simulations compose authored and generated spaces; encounters, data-driven gear and player-specific quests build progression. Home building persists separately for the Infinite City house and permanently booked Level 5 rooms.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0/Lobby maze; sim lays ecology, routes, landmarks, Christmas Area and stair anomalies.",
-    "places/bonus (3D) - shared vaporwave mall with authored shops, simulated staff, directory, arcade and Rico's platform/Bonus Line.",
+    "places/bonus (3D) - shared vaporwave mall with authored shops, simulated staff, directory, arcade island and payphones; Rico's platform/Bonus Line is separate.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo ephemeral) - character creation/waking and staged tutorial route; HALOGEN handoff seeds Dina's lead.",
     "places/level01 (3D) - Zenith Station: station, breach, doors, bots, hazards and recorder quest.",
-    "places/level1, level2, level02, level21, level3, gamma (3D) - Habitable Zone/M.E.G. camp, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma; Dina's freight/handoff/return records are at Level 1, 3 and Gamma.",
-    "places/level4, level5, level6, level7, level10, level26, level27 (3D) - Office, Hotel, drowned house, sea/Fort Surrender and deeper destinations; Level 5 guest rooms/suites can become persistent player homes, and Level 26 hosts the SS Fun clue trail.",
+    "places/level1, level2, level02, level21, level3, gamma (3D) - Habitable Zone/M.E.G. camp, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma; Dina's freight/handoff/return records are here.",
+    "places/level4, level5, level6, level7, level10, level26, level27 (3D) - Office, Hotel, drowned house, sea/Fort Surrender and deeper destinations; Level 5 guest rooms/suites are permanent player homes and Level 26 hosts SS Fun.",
     "places/level11 (3D) - Infinite City with generated street grid/subway and authored street furniture; sim adds Spamton's alley, city cast and destinations.",
     "places/level12, places/level13, places/testlab, places/spamton (3D) - Matrix-to-Boiling-Frogs destinations, Floor 283, and authored test/bonus spaces; places/level184 is another standalone simulated destination."
   ],
@@ -31,7 +31,7 @@
     "scripts/lib/quest-route.js + scripts/lib/quest-mark.js + scripts/lib/quests.js - crossing graph/objectives and common quest state; dialogue.js/dlg-*.yml author NPC conversations and npc-starters.js supplies quest/realty choices.",
     "scripts/lib/data/l02-props.yml + scripts/lib/data/l02-remodel.yml + scripts/lib/l02-grid.js - Level 0.2 prop catalog, shifting partitions, lamp/paint configuration, crew dressing and reset.",
     "scripts/lib/breakables.js + scripts/lib/data/breakables.yml - shared prop/wall material, damage, drops, wrecking and regrowth; place sims opt in with sweepProps/tickWalls.",
-    "scripts/lib/data/cow-lines.yml + art/vo/act.py + scripts/lib/data/voice-acted.yml/voices.js - per-cast gunpoint reaction lines and recorded takes consumed by scripts/lib/meg-agent.js.",
+    "scripts/lib/data/cow-lines.yml + art/vo/act.py + scripts/lib/data/voice-cast.yml/voice-acted.yml + voices.js - named performers and recorded takes for NPC bark/dialogue consumers; dlg-quest-main.yml records main-quest source lines.",
     "scripts/lighting.js - world.config.yaml's shared surface shader; applies PBR lighting plus world-space soft wear noise to lit surfaces."
   ],
   "notableExports": [
@@ -42,14 +42,14 @@
     "scripts/door-geo.js - geometry, collider; scripts/lib/thresholds.js - dressThresholds; scripts/threshold-geo.js - threshold geometry/material builders; scripts/lib/level0-moments.js - wallPose, layMoments.",
     "scripts/lib/quest-route.js - nextQuestExit; scripts/lib/quest-mark.js - questMark; scripts/lib/quests.js - MAX_TRACK, TINT, PLACE_NAMES, qid, setQuest, endQuest, tracked, toggleTrack; scripts/lib/voices.js - voiceKey, actedVoice, vo.",
     "scripts/lib/breakables.js - shared breakable/wall helpers; scripts/lib/sign-style.js - restyleSigns; scripts/lib/stats.js - weapon class/damage/handling/requirement helpers.",
-    "scripts/lib/dina-quest.js - HOME, CAMP, dinaLead, setDinaStep, dinaTick; scripts/dina-diary.js, scripts/dina-record.js and Level 26 clue scripts expose ears handlers."
+    "scripts/lib/dina-quest.js - questVoice, HOME, CAMP, dinaLead, setDinaStep, dinaTick; scripts/dina-diary.js, scripts/dina-record.js and Level 26 clue scripts expose ears handlers."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved position, tapes, currency and homeKeep build buckets; car IDs in player.state.cars.",
     "scripts/lib/quests.js - player.state.quests, qtrack and qdone; scripts/lib/dina-quest.js advances dinaQ and owns dinaDiary/dcut/dinaLead plus migration from the-undelivered to the-way-back.",
     "scripts/lib/remodel-quest.js - player.state.remodQ, l02got, l02paint, fresh, capnAsk and capnFailed plus Fresh Paint quest/HUD/payout/reputation.",
     "scripts/build.js - player homeKeep.built or homeKeep.l5built; home11 owns house persistence while places/level5/sim.js reconstructs the booked-room bucket from each player's save.",
-    "scripts/l5-resident.js + places/level5/sim.js - player l5room/l5home/l5until/l5key booking identity and place.state.l5rent ledger; room checkout clears the home claim.",
+    "scripts/l5-resident.js + places/level5/sim.js - player l5room/l5home/l5until/l5key booking identity and place.state.l5rent permanent exclusive-room ledger; there is no checkout path.",
     "scripts/kick.js + scripts/grab.js own kick cooldowns and carry/held target session; scripts/lib/loose.js + breakables.js own loose prop/wreck and breakable state.",
     "Enemy managers own AI and sneakTarget; scripts/lib/meg-agent.js keeps gunpoint reaction memory/dialogue/pose on NPCs; scripts/lib/critter-model.js refits appearances; scripts/lib/l7-tiny.js owns Tiny hunt state.",
     "places/main/sim.js owns momentsV/moments, stairsSeeded and dressing version; xmas-room.js owns xmasV/generated landmarks; places/level02/sim.js owns phase/caseLandAt/reset markers and l02-grid.js writes place.state.l02grid."
@@ -61,20 +61,20 @@
     "scripts/routing.js requested room → scripts/lib/hub.js solo room selection; toHub/toSolo cross to hub/home and maintain roomHop/save-place state; Bonus Line boarding is separate.",
     "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close to intro/tutorial0; menuOpen drives menu UI and solo pause scales place time.",
     "tutorial0 HALOGEN cut completion → scripts/lib/tut0-cut.js dinaLead → player notice and scripts/lib/dina-quest.js quest sync; main-menu.js calls dinaTick to maintain The Way Back.",
+    "scripts/lib/dina-quest.js questVoice → scripts/lib/voices.js recorded q-dina clips → reader-only playSound; tutorial HALOGEN and scripts/dina-diary.js diary read voice Dina's recorded messages.",
     "Dina diary/cutscene → dinaQ 2 → SS Fun/Cabin 23 in Level 26; cabin23 and Phoebe update steps 4–5, stow-nest advances to Level 1 freight slip/Voss at step 6.",
-    "Level 1 freight slip → dina-record.js advances to Level 3 handoff; handoff record advances to Base Gamma archive; archive record ends chapter 1 at dinaQ 9 while noting crossing unverified/drive missing.",
-    "scripts/build.js permits building only inside player's home11 house or booked Level 5 room; placement/removal writes homeKeep.built or homeKeep.l5built, and Level 5 sim restores saved pieces and keeps NPCs/creatures outside permanently booked rooms.",
-    "scripts/l5-resident.js booking → player l5home/l5room and place.state.l5rent ledger; l5-resident handles booking/checkout and trunk ownership, Level 5 sim reconciles permanent ledger/home pieces.",
-    "scripts/player.js reload inputs → session.later queue → laterTick on player update clock → reloadStep/reloadMagIn/reloadDone/pumpRack; reloadTok/equipped checks reject stale scheduled steps.",
-    "scripts/lib/data/craft.yml + scripts/lib/craft.js → Bobette and Carolynne recipes; weapons.yml variants + weapons.js, weapon-look.js, fp-gun.js and vmpose.js define and present weapon variants."
+    "Level 1 freight slip → scripts/dina-record.js advances to Level 3 handoff; handoff record advances to Base Gamma archive; archive record ends chapter 1 at dinaQ 9; record readers hear Voss/clerk recordings.",
+    "scripts/build.js permits building only inside player's home11 house or permanently booked Level 5 room; placement/removal writes homeKeep.built or homeKeep.l5built, and Level 5 sim restores saved pieces and keeps NPCs/creatures outside permanent homes.",
+    "scripts/l5-resident.js booking → player l5home/l5room and place.state.l5rent permanent ledger; resident booking assigns room/trunk ownership, Level 5 sim reconciles ledger/home pieces; no checkout action is offered.",
+    "scripts/player.js reload inputs → session.later queue → laterTick on player update clock → reloadStep/reloadMagIn/reloadDone/pumpRack; reloadTok/equipped checks reject stale scheduled steps."
   ],
   "behaviorFamilies": [
-    "places/bonus/cells/x0z0.scene + mall sims/shopper/salon scripts - authored mall shops/props plus simulated staff; Rico's platform schedule and Bonus Line boarding remain separate routines.",
+    "places/bonus/cells/x0z0.scene + mall sims/shopper/salon scripts - authored mall shops/props plus simulated staff; arcade cabinet island and paired payphones are static scene dressing, Rico's platform schedule and Bonus Line boarding remain separate routines.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction scripts - furniture-specific models/dimensions through common placement, persistence and rebuild flow; home11 and Level 5 use separate saved buckets.",
     "scripts/door-geo.js + scripts/lib/door-swing.js and prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage parts with eased motion and legacy prop migration; Fort Surrender uses tagged paired leaves.",
     "scripts/lib/thresholds.js + scripts/threshold-geo.js + participating place sims, alongside sign-style.js/sign-geo.js - shared crossing clues and per-place/per-id sign-board styles.",
     "places/level01/sim.js + Zenith geometry, breach, hatch, bot and hazard scripts - Zenith Station; places/level02/sim.js + l02-grid.js vary partitions/lights/crew/knocks/reset.",
-    "scripts/lib/meg-agent.js - per-NPC nerve/stats/weapon-driven reactions, aim, cover and recorded gunpoint barks; scripts/lib/critter-model.js refits NPC bodies across Level 7, Bonus and Level 0.2.",
+    "scripts/lib/meg-agent.js - per-NPC nerve/stats/weapon-driven reactions, aim, cover and recorded gunpoint barks; scripts/lib/critter-model.js refits NPC bodies across Level 7, Bonus and Level 0.2; Bonus/Level 5 scenes no longer overlay old critter-head/hair attachments on new NPC bodies.",
     "Level 13: level13-furnish.js + level13.yml vary flat furnishing/story; level13-dress.js + l13-dress.yml lay hall traces/doors; foe, people and tape layers define encounters/residents/salvage.",
     "Weapon family: weapons.yml + throwables.yml vary requirements/stats/loot; stats.js maps class/skill shortfall to handling, while weapon-look.js/fp-gun.js/vmpose.js provide visual and first-person variants."
   ],
@@ -90,7 +90,7 @@
     "Level 0.2 sim V=25 rebuilds generated roots; preserve phase/caseLandAt and debris tags, plus the 15-second empty reset. Grid state remains place.state.l02grid={layout, lamps}; walls swap on six-second passes with view/near/lamp exclusions.",
     "Christmas Area scripts/lib/data/xmas.yml v=9 re-lays xmas-prefixed objects; keep maze.js XMAS_CELL and xmas.yml cell/bounds aligned (bounds suppress Level 0 hum); retain player.state baubles/stuffing for craft recipes.",
     "Breakables use scripts/lib/data/breakables.yml material tuning; sweepProps infers only eligible small, unparented, non-NPC/non-usable props by ID and skips structural IDs; wreck records/regrowth are shared across place sims.",
-    "Dina quest stages remain in player.state.dinaQ for saves; keep legacy the-undelivered migration, the-way-back quest ID, and record min-stage gates aligned with each clue's setDinaStep stage.",
-    "Level 5 building uses homeKeep.l5built keyed by persistent placed IDs; l5home and l5rent's 9e15 ledger mark a permanent exclusive room, and homesBack rebuilds missing pieces—do not conflate this with homeKeep.built. Reload timing is session-local and must continue ticking from player.update, not ctx.after."
+    "Dina quest stages remain in player.state.dinaQ for saves; keep legacy the-undelivered migration, the-way-back quest ID, and record min-stage gates aligned with clue setDinaStep stages and exact recorded q-dina/q-clerk lines.",
+    "Level 5 building uses homeKeep.l5built keyed by persistent placed IDs; l5home and l5rent's 9e15 ledger mark a permanent exclusive room, and homesBack rebuilds missing pieces—do not conflate this with homeKeep.built."
   ]
 }
