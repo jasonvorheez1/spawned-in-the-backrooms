@@ -8,6 +8,13 @@ const yawTo = (a, b) => Math.atan2(-(b.x - a.x), -(b.z - a.z)) * 180 / Math.PI; 
 const lampLit = (p) => !!(p.state?.flashOn ?? p.state?.flashlight ?? p.state?.flash);
 export function update(ctx, dt) {
   const me = ctx.self, s = me.state, now = ctx.now(), f = me.feetPosition;
+  if (!me.session.posed) { // a rig with no clip stands in T: every Still Life gets its pose the moment it wakes
+    me.session.posed = true;
+    if (s.role === "sitter") { const b = ctx.getObject(me.id + "/body"); if (b) b.anim = { base: { clip: "cdn/clip-sit-loop.glb", loop: true, speed: 0.2, weight: 1 } }; }
+    else if (s.role === "sunk") me.anim.base = { clip: "cdn/clip-swim-idle-loop.glb", loop: true, speed: 0.12, weight: 1 }; // arms out, reaching for the tree
+    else if (s.role === "stray") { me.session.walking = false; me.anim.base = { clip: "cdn/clip-idle-loop.glb", loop: true, speed: 0.15, weight: 1 }; }
+  }
+  if (s.role === "sunk") return ctx.sleep();
   if (s.role === "sitter") return sitter(ctx, dt, me, s, f);
   if (s.role === "stray") return stray(ctx, dt, me, s, f, now);
 }

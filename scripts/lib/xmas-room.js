@@ -54,7 +54,7 @@ export function layXmas(ctx) {
   // (a) two Still Lifes half-sunk in the carpet, face down, reaching for the tree
   [["xmas-still-a", -3.1, -1.2, 70, "f", "#ebe4d8"], ["xmas-still-b", 2.9, 1.6, -115, "m", "#d9d2c6"]].forEach(([id, ox, oz, yw, sex, fur]) => {
     const sp = stillLook(sex, fur);
-    ctx.spawn(id, { ...sp, tags: ["xmas", "still-life", "container"], feetPosition: { x: tx + ox, y: -0.95, z: tz + oz }, rotation: { yaw: yw, pitch: -55 }, physics: { body: "static", collider: "box" }, children: [...(sp.children ?? []), seam(1.05, -0.1)], state: { name: "Still Life", verb: "Search", items: "stuffing,stuffing" } });
+    ctx.spawn(id, { ...sp, tags: ["xmas", "still-life", "container"], feetPosition: { x: tx + ox, y: -0.95, z: tz + oz }, rotation: { yaw: yw, pitch: -55 }, physics: { body: "static", collider: "box" }, children: [...(sp.children ?? []), seam(1.05, -0.1)], behavior: "scripts/xmas-still.js", state: { role: "sunk", name: "Still Life", verb: "Search", items: "stuffing,stuffing" } });
   });
   // (b) the Lamp Sitter: grown into a wheelchair, its lamp wakes when someone comes close
   const ls = { x: E.x0 + 3.2, z: E.z1 - 4 }, sp = stillLook("m", "#e6dfd2");
