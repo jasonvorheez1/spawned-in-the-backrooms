@@ -76,7 +76,9 @@ function hands(ctx, ch, t, flurry) {
 }
 function letGo(ctx) { const me = ctx.self; me.bones.RightHand = null; me.bones.LeftHand = null; me.bones.Head = null; if (me.anim.cut) me.anim.cut = null }
 
+export function endFlourish(ctx) { if (ctx.self.anim.flourish) ctx.self.anim.flourish = null } // the flourish plays once, then she settles back to idle (it held its last pose at weight 4 forever)
 export function onSpawn(ctx) {
+  if (ctx.self.anim.flourish) ctx.self.anim.flourish = null
   ctx.self.anim.idle = { clip: "cdn/clip-idle-female-loop.glb", loop: true, weight: 1 }
 }
 export function update(ctx, dt) {
@@ -85,7 +87,7 @@ export function update(ctx, dt) {
     if (ses.on) { // a cut just ended: a goodbye and a little flourish
       ses.on = null; letGo(ctx)
       if (ses.sat) ctx.emit("playSound", { clip: say(pick(ctx, BYE)), position: { ...me.feetPosition, y: me.feetPosition.y + 1.6 }, bus: "Voice", volume: 0.9, maxDistance: 14, mode: "restart" })
-      me.anim.flourish = { clip: FLOURISH, weight: 4, mask: { from: "Spine" } }
+      me.anim.flourish = { clip: FLOURISH, weight: 4, mask: { from: "Spine" } }; ctx.after(1.3, "endFlourish")
     }
     ses.sat = false; if (me.state.with) me.state.with = null
     if (walkTo(ctx, HOME.x, HOME.z, HOME.yaw, dt)) ctx.sleep(0.5)
