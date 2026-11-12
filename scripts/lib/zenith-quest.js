@@ -48,12 +48,12 @@ export function handleDialogueQuestZ(ctx, p, npc, text) {
   if (!s.zenQ && /job|work|zenith|station|keycard|hire|money|need/.test(t)) {
     if (repOf(s, "bntg") <= -35) return { reply: "We know your face at the Guild. Walk away before I call security.", mood: "angry" };
     setZen(ctx, p, 1, "Quest Started: The Zenith Survey");
-    return { reply: "There's a station grown into this level. Metal and glass, calls itself Zenith. We sealed the only way in. Far east, outer wall, where the lights give up. Go find it first. Come back in one piece and you get the card.", mood: "neutral" };
+    return { reply: "Zenith's a station built into the east wall. We sealed the entrance. Follow the wall out past the lights, find our seal, then come back for the access card.", mood: "neutral" };
   }
   if (s.zenQ === 1 && /where|how|east|seal|way|station|zenith/.test(t)) return { reply: "Due east till you hit the outer wall. It goes dark long before that. Look for our tape and a red lamp.", mood: "neutral" };
   if (s.zenQ === 2 && /seal|found|saw|back|breach|door|east|there/.test(t)) {
     s.zenKey = true; setZen(ctx, p, 3, "B.N.T.G. Keycard added");
-    return { reply: "You came back. That's more than the last two did. Here's the card. The black box is at the far end, in the gallery over the hollow. Sixty Backdollars when it's in my hand. Don't touch the bots.", mood: "happy" };
+    return { reply: "Here's your card. Go to the far gallery over the hollow. The black box is up there. Sixty Backdollars when you hand it over. Leave the drones alone.", mood: "happy" };
   }
   if (s.zenQ === 5 && s.zenDrive && /drive|recorder|box|got|found|here/.test(t)) {
     const rep = repOf(s, "bntg"), bonus = rep >= 35 ? 0.25 : rep >= 12 ? 0.1 : 0;
@@ -67,7 +67,7 @@ export function handleDialogueQuestZ(ctx, p, npc, text) {
     parts.push(tier || "B.N.T.G. +12");
     s.payout = { xp: 150, items: ["almond"], text: parts.join(" · ") };
     s.notice = { text: s.payout.text, at: ctx.now() }; pushFeed(s, s.payout.text, ctx.now(), "good");
-    return { reply: "Still warm. You'd think a dead station would stop recording. Sixty, as promised, and keep the card. We'll want more out of there.", mood: "happy" };
+    return { reply: "It's warm through the case. Set it down here. Here's your sixty. Keep the card. I've got more work in there if you want it.", mood: "happy" };
   }
   if ((s.zenQ === 3 || s.zenQ === 4 || s.zenQ === 5) && /zenith|station|where|how|drive|seal/.test(t)) return { reply: "Far east wall, through our seal. The recorder's at the very end, by the big window.", mood: "neutral" };
   return null;
