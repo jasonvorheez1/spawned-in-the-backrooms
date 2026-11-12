@@ -4,7 +4,7 @@ import { APTS, apt } from "./level13.js";
 import { keepPeople } from "./level-kit.js";
 import { questTick, keepsakeSpec, KEEP } from "./level13-quest.js";
 import D from "./data/l13-people.yml";
-const PV = 2;
+const PV = 3;
 const BNTG = ["bntg", "B.N.T.G. (the Backrooms Nonaligned Trade Group; runs the Free Home Project on Floor 283)"];
 const HOMED = ["bntg", "Free Home Project resident, Floor 283"];
 const UNALIGNED = ["wanderer", "Unaligned residents of Level 13's first hall"];

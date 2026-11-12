@@ -55,5 +55,5 @@ props:
   crate: { model: "/cdn/value.96f48b56e826ebb5fd584d269b08f2272040ab5d50589b2e04101b00f31d82a2.glb", at: [-0.82, 0, 10.86], yaw: 8, size: [0.52, 0.42, 0.4], solid: true }
   case:  { model: "/cdn/value.e2bf0d24ea3120accff304851dd23e5ff5d49d62709242a1e4d056bc19d9461d.glb", at: [7.7, 0, 13.9], yaw: 25, size: [0.75, 0.45, 0.5], solid: true }
   chess: { model: "/cdn/value.94ac82b1865e4e8285c65c100d27ab60203c1964149d9b14aea021b1056e2e6b.glb", at: [-14.0, 0, 3.7], yaw: 0, size: [0.62, 0.78, 0.62], solid: true }
-keepsake: [-19.1, 0.92, 5.75]
+keepsake: [-18.55, 0.925, 3.05]   # on l13f-a8-counter (x -18.98..-18.02, z 1.65..4.05, top 0.92), between the dish rack and the mug
 pouf: [15.5, 5.6]
