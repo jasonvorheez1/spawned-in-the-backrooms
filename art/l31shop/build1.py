@@ -1,4 +1,4 @@
-import sys, math; sys.path.insert(0, "art/l31shop")
+import sys, math; import os; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib import *
 PI = math.pi
 def gumball():
