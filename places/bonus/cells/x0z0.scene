@@ -683,13 +683,6 @@ bc-payphone-1:
   physics: {body: static, collider: box}
   rotation: {yaw: -90}
   tags: [bonus-props]
-bc-payphone-1/plate:
-  feetPosition: {x: 0, y: 1.6, z: -0.12}
-  id: bc-payphone-1/plate
-  material: {color: oklch(0.42 0.16 260), metalness: 0.3, roughness: 0.4}
-  parent: bc-payphone-1
-  primitive: {depth: 0.02, height: 0.17, kind: box, width: 0.36}
-  ui: "<div face=\"front\" class=\"w-full h-full flex items-center justify-center\" style=\"width:360px;height:170px;font-family:sans-serif;font-weight:800;font-size:58px;color:#f4f6ff;letter-spacing:4px\">PHONE</div>"
 bc-payphone-2:
   castShadow: true
   feetPosition: {x: 9.35, y: 0.02, z: -22.5}
@@ -699,13 +692,6 @@ bc-payphone-2:
   physics: {body: static, collider: box}
   rotation: {yaw: -90}
   tags: [bonus-props]
-bc-payphone-2/plate:
-  feetPosition: {x: 0, y: 1.6, z: -0.12}
-  id: bc-payphone-2/plate
-  material: {color: oklch(0.42 0.16 260), metalness: 0.3, roughness: 0.4}
-  parent: bc-payphone-2
-  primitive: {depth: 0.02, height: 0.17, kind: box, width: 0.36}
-  ui: "<div face=\"front\" class=\"w-full h-full flex items-center justify-center\" style=\"width:360px;height:170px;font-family:sans-serif;font-weight:800;font-size:58px;color:#f4f6ff;letter-spacing:4px\">PHONE</div>"
 bc-photobooth:
   castShadow: true
   feetPosition: {x: -3.6, y: 0, z: -31.15}
