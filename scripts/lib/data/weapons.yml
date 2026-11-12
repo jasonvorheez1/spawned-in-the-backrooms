@@ -1,6 +1,6 @@
 # Melee weapons. Fists are what you start with: weak on purpose. Found weapons need a level to wield.
 # damage: base hit. levelScale: share of the per-level damage bonus it gets. cooldown: seconds. reach: metres. stamina: cost per swing.
-order: [fists, table_leg, pipe_scrap, crowbar, bat, hatchet, fire_axe, pistol, shotgun, rebar, wrench, screwdriver, sledgehammer, stun_baton, lineman_machete, knife, smg, golf_club, tire_iron, pickaxe, baton, cleaver, revolver, coach_gun, lever_rifle, hunting_rifle, carbine, fishing_rod, soup_bowl, laser_pistol, laser_rifle, raygun, crook]
+order: [fists, bobette, carolynne, table_leg, pipe_scrap, crowbar, bat, hatchet, fire_axe, pistol, shotgun, rebar, wrench, screwdriver, sledgehammer, stun_baton, lineman_machete, knife, smg, golf_club, tire_iron, pickaxe, baton, cleaver, revolver, coach_gun, lever_rifle, hunting_rifle, carbine, fishing_rod, soup_bowl, laser_pistol, laser_rifle, raygun, crook]
 # rarity: common < uncommon < rare. weight: how often it is rolled for floor spawns and smiler drops. xp: reward for picking one up.
 rarities:
   common:   { label: COMMON,   color: '#c9c2a0' }
@@ -70,7 +70,7 @@ fishing_rod: { name: "Salvaged fishing rod", damage: 12, levelScale: 0.8, cooldo
 # Each number multiplies the base stat; rarity steps the rarity up or down; cnd: the condition it is found at.
 # look: what scripts/weapon-geo.js draws over the weapon (rust, tape, nails, edge, meg, mag, sawn).
 variantPlain: 46
-blunt: [table_leg, pipe_scrap, crowbar, bat, wrench, sledgehammer, stun_baton, golf_club, tire_iron, baton, crook]
+blunt: [bobette, table_leg, pipe_scrap, crowbar, bat, wrench, sledgehammer, stun_baton, golf_club, tire_iron, baton, crook]
 blade: [hatchet, fire_axe, screwdriver, rebar, lineman_machete, pickaxe, cleaver]
 variants:
   rusty:    { name: Rusty,        for: [melee, ranged], chance: 20, damage: 0.82, cooldown: 1.06, rarity: -1, xp: 0.6, cnd: 55, look: rust, tint: "oklch(0.62 0.08 50)" }
@@ -96,3 +96,5 @@ laser_rifle:  { name: "Zenith ZR-7 laser rifle", energy: true, sfx: { eject: ene
 
 # Christmas Area only (pools: camp = never rolled). Heavy attack hooks: pull is the yank toward you (N·s scale like the heavy shove), pullRange metres
 crook:      { name: Candy Cane Crook, damage: 26, levelScale: 1, cooldown: 0.75, reach: 2.9, stamina: 12, minLevel: 1, rarity: rare, weight: 3, xp: 12, color: "oklch(0.55 0.2 25)", length: 1.0, req: { h: 3 }, pools: [camp], pull: 300, pullRange: 4 }
+bobette:    { name: Bobette, damage: 18, levelScale: 1, cooldown: 0.4, reach: 1.6, stamina: 6, minLevel: 1, rarity: rare, weight: 1, xp: 10, color: "oklch(0.6 0.17 45)", length: 0.15, req: { h: 2 } }   # Shelly: "an unarmed weapon made of ornaments" · glass ornament knuckles, fast and light (my pick numbers)
+carolynne:  { name: Carolynne, damage: 34, levelScale: 1, cooldown: 1.2, reach: 2, range: 16, cone: 0.9, adsCone: 0.95, pellets: 4, ammoType: baubles, ranged: true, magSize: 3, reloadTime: 2.2, fovAds: 55, ads: [0, -0.1, 0.7, 0], muzzle: [0, 0.08, -0.95], recoil: { up: 380, back: 3, lift: 0.5, side: 50, twist: 60 }, stamina: 6, minLevel: 1, rarity: rare, weight: 1, xp: 40, color: "oklch(0.75 0.14 85)", length: 0.95, mv: 120, drag: 0.03, acc: [4.5, 3.0], zero: 15, req: { h: 4 }, two: [0, -0.42, 0.03, 0.18] }   # Shelly: "a ornament launcher" · loads Glass Baubles, 3 per tube (my pick numbers)

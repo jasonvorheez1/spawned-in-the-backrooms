@@ -63,6 +63,8 @@ recipes:
   # more weapons (Savi's picks, 2026-11-08): each one's model already lies in scripts/weapon-geo.js
   nailbat:    { cat: weapons, name: Nail bat,          in: { scrap_wood: 3, nails: 4, wire: 1 },            out: ["weapon:bat~nailed"],   skill: [repair, 10],   desc: "A turned club, nails driven through the barrel" }
   shiv:       { cat: weapons, name: Screwdriver shiv,  in: { scrap_metal: 1, wire: 1, drywall: 1 },         out: ["weapon:screwdriver"],  skill: [repair, 5],    desc: "A long flathead ground to a point" }
+  bobette:    { cat: weapons, name: Bobette,            in: { wire: 2, scrap_metal: 1, nails: 2 },        out: ["weapon:bobette"],      skill: [repair, 10],   desc: "Glass ornaments wired over your knuckles · hits fast" }
+  carolynne:  { cat: weapons, name: Carolynne,          in: { steel_pipe: 2, springs: 2, wire: 2, scrap_wood: 1 }, out: ["weapon:carolynne"], skill: [guns, 20], bench: ammo, desc: "A pipe that fires Glass Baubles · 3 to a tube" }
   tireiron:   { cat: weapons, name: Tire iron,         in: { steel_pipe: 1, bolts: 2, scrap_metal: 1 },     out: ["weapon:tire_iron"],    skill: [repair, 20],   bench: true, desc: "A lug wrench bent to an L, socket on one end" }
   pbaton:     { cat: weapons, name: Side-handle baton, in: { steel_pipe: 1, scrap_metal: 1, wire: 2, bolts: 1 }, out: ["weapon:baton"],   skill: [repair, 25],   bench: true, desc: "A pipe with a cross handle, rubber-wrapped" }
   cleaver:    { cat: weapons, name: Meat cleaver,      in: { sheet_steel: 1, scrap_wood: 1, bolts: 2 },     out: ["weapon:cleaver"],      skill: [repair, 30],   bench: true, desc: "A broad blade riveted to a wood handle" }
