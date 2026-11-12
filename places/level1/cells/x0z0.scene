@@ -14,7 +14,7 @@ bntg-voss:
 bntg-voss/cw-ears:
   attachment: {skin: true}
   id: bntg-voss/cw-ears
-  model: {forward: "+z", id: /cdn/value.d7fc8fc1c975f0c9667150b99e0faf58493995f641b43a474dba932d8846bf91.glb, materials: {earFur: {color: "#c9783f", roughness: 0.9}, earInner: {color: "#f4a3c4", roughness: 0.7}, earTuft: {color: "#c9783f", roughness: 0.9}}}
+  model: {forward: "+z", id: /cdn/value.85e4c77a7217e93fabb4646bf4c9f76f4d832cf0deac24e4a0a6b7cf1aaa88b1.glb, materials: {earFur: {color: "#c9783f", roughness: 0.9}, earInner: {color: "#f4a3c4", roughness: 0.7}, earTuft: {color: "#c9783f", roughness: 0.9}}}
   parent: bntg-voss
 bntg-voss/cw-fluff-cheeks:
   attachment: {skin: true}
@@ -80,7 +80,7 @@ meg-ale:
 meg-ale/cw-ears:
   attachment: {skin: true}
   id: meg-ale/cw-ears
-  model: {forward: "+z", id: /cdn/value.0719aa2d5320de1b9a58522b4c48f597db3b30573677f2b6cf72aeeb5a63c8c2.glb, materials: {earFur: {color: "#c87040", roughness: 0.9}, earInner: {color: "#f4a3c4", roughness: 0.7}, earTuft: {color: "#c87040", roughness: 0.9}}}
+  model: {forward: "+z", id: /cdn/value.dc63bca0cf4eab9d6666b5cd9a4d157a456e22e0b14771e4abff48521e8c03f3.glb, materials: {earFur: {color: "#c87040", roughness: 0.9}, earInner: {color: "#f4a3c4", roughness: 0.7}, earTuft: {color: "#c87040", roughness: 0.9}}}
   parent: meg-ale
 meg-ale/cw-fluff-nape:
   attachment: {skin: true}
@@ -108,7 +108,7 @@ meg-callum:
 meg-callum/cw-ears:
   attachment: {skin: true}
   id: meg-callum/cw-ears
-  model: {forward: "+z", id: /cdn/value.90d4adabbd753c6906e3ce70780af54b66da7528e99c67b639525537a684d4e5.glb, materials: {earFur: {color: "#b8e986", roughness: 0.9}, earInner: {color: "#f4a3c4", roughness: 0.7}, earTuft: {color: "#b8e986", roughness: 0.9}}}
+  model: {forward: "+z", id: /cdn/value.95b6236635993274e951971f3cf4f16e04be6cad47fba4b59aeb60177e98aeca.glb, materials: {earFur: {color: "#b8e986", roughness: 0.9}, earInner: {color: "#f4a3c4", roughness: 0.7}, earTuft: {color: "#b8e986", roughness: 0.9}}}
   parent: meg-callum
 meg-callum/cw-fluff-cheeks:
   attachment: {skin: true}
@@ -136,7 +136,7 @@ meg-ortiz:
 meg-ortiz/cw-ears:
   attachment: {skin: true}
   id: meg-ortiz/cw-ears
-  model: {forward: "+z", id: /cdn/value.3d8c8dc98ea6762c1ae9351972c76dc7fe02c1bc98b629f21bd0979038ae2859.glb, materials: {earFur: {color: "#f4efe9", roughness: 0.9}, earInner: {color: "#f4a3c4", roughness: 0.7}, earTuft: {color: "#f4efe9", roughness: 0.9}}}
+  model: {forward: "+z", id: /cdn/value.4a1a1772f9fac90af6efe7cc4ef589310b0a419d78221b3b66404aa2c3c5cddd.glb, materials: {earFur: {color: "#f4efe9", roughness: 0.9}, earInner: {color: "#f4a3c4", roughness: 0.7}, earTuft: {color: "#f4efe9", roughness: 0.9}}}
   parent: meg-ortiz
 meg-ortiz/object/xba5b309b4f070466/1:
   attachment: {bone: RightHand}

@@ -30,7 +30,7 @@ l7-ezra/cw-topw:
 l7-ines/cw-ears:
   attachment: {skin: true}
   id: l7-ines/cw-ears
-  model: {forward: "+z", id: /cdn/value.34f795b121a0bfde46805e04ec9e244c6e03c0d53e2e0245898263de139745d1.glb, materials: {earFur: {color: "#b07850", roughness: 0.9}, earInner: {color: "#f4a3c4", roughness: 0.7}, earTuft: {color: "#b07850", roughness: 0.9}}}
+  model: {forward: "+z", id: /cdn/value.14142ad9b5a0d5f3912988ad54f8efd72ca650321e4e08e3e0e5ee007cf38028.glb, materials: {earFur: {color: "#b07850", roughness: 0.9}, earInner: {color: "#f4a3c4", roughness: 0.7}, earTuft: {color: "#b07850", roughness: 0.9}}}
   parent: l7-ines
 l7-ines/cw-fluff-cheeks:
   attachment: {skin: true}
@@ -124,7 +124,7 @@ l7-mara/cw-topw:
 l7-tobit/cw-ears:
   attachment: {skin: true}
   id: l7-tobit/cw-ears
-  model: {forward: "+z", id: /cdn/value.90d4adabbd753c6906e3ce70780af54b66da7528e99c67b639525537a684d4e5.glb, materials: {earFur: {color: "#4a4440", roughness: 0.9}, earInner: {color: "#f4a3c4", roughness: 0.7}, earTuft: {color: "#4a4440", roughness: 0.9}}}
+  model: {forward: "+z", id: /cdn/value.95b6236635993274e951971f3cf4f16e04be6cad47fba4b59aeb60177e98aeca.glb, materials: {earFur: {color: "#4a4440", roughness: 0.9}, earInner: {color: "#f4a3c4", roughness: 0.7}, earTuft: {color: "#4a4440", roughness: 0.9}}}
   parent: l7-tobit
 l7-tobit/cw-fluff-cheeks:
   attachment: {skin: true}
