@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 6326,
-  "updatedAt": "2026-11-12T14:04:24.233Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social hub, lore destinations and a solo tutorial. Shared player behaviors and place sims compose the world; Level 0 has generated story moments including the sealed, stair-accessed Manila Rooms, and a seasonal Christmas Area whose finds feed its own crafted weapons.",
+  "basedOnSpecVersion": 6346,
+  "updatedAt": "2026-11-12T14:19:16.927Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social hub, lore destinations and a solo tutorial. Shared player behaviors and place sims compose its authored and generated spaces; Level 0 includes the seasonal Christmas pocket, while Level 10 and Level 7's Seawatch outpost continue to gain bespoke scenery and behavior.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0/Lobby maze; sim lays ecology, routes and generated landmarks including Level 0.2, Zenith entry, north-rim Christmas Area, seeded Manila Room, and stair anomalies.",
@@ -10,7 +10,7 @@
     "places/intake + places/tutorial0 (3D; tutorial0 solo ephemeral) - character creation/waking and staged tutorial route.",
     "places/level01 (3D) - Zenith Station: station, breach, doors, bots, hazards and recorder quest.",
     "places/level1, level2, level02, level21, level3, gamma (3D) - Habitable Zone/M.E.G. camp, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma; local sims own specialized environments and routes.",
-    "places/level4, level5, level6, level7, level10, level26, level27 (3D) - Office, Hotel, drowned house, sea/Fort Surrender, Bumper Crop farm/outpost and lake, and deeper destinations; local sims own specialized environments and routes.",
+    "places/level4, level5, level6, level7, level10, level26, level27 (3D) - Office, Hotel, drowned house, sea/Fort Surrender, Bumper Crop farm/outpost and lake, and deeper destinations; Level 7 includes authored Seawatch shelter/mast/yard dressing, while Level 10 sim lays its fields and outpost.",
     "places/level11, places/level12, places/level13 (3D) - Infinite City and Matrix-to-Boiling-Frogs destinations; Level 13 has Floor 283 reception, numbered halls, furnished/story-bearing flats, residents, foes and B8 tape.",
     "places/testlab + places/spamton (3D) - authored test and bonus spaces."
   ],
@@ -48,8 +48,8 @@
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved position and carried tapes; writes top-level throwable/material counts including baubles and stuffing.",
     "scripts/lib/quests.js - player.state.quests, qtrack and qdone; quest handlers own quest-specific state; dina-quest.js owns dinaQ, dinaDiary, dcut and seeds the-way-back.",
     "scripts/lib/remodel-quest.js - player.state.remodQ, l02got, l02paint, fresh, capnAsk and capnFailed plus Fresh Paint quest/HUD/payout/reputation.",
-    "scripts/kick.js + scripts/grab.js own kick cooldowns and carry/held target session; scripts/lib/loose.js + breakables.js own loose prop/wreck and breakable state, including place.state.gone and wall breakage/timestamps.",
-    "scripts/lib/knock.js + stats.js - foe weight/attributes and down/stagger outcomes; enemy managers own AI and sneakTarget.",
+    "scripts/kick.js + scripts/grab.js own kick cooldowns and carry/held target session; scripts/lib/loose.js + breakables.js own loose prop/wreck and breakable state, including place.state.gone and wall breakage/timestamps; scripts/lib/knock.js + stats.js own foe weight/attributes and down/stagger outcomes.",
+    "Enemy managers own AI and sneakTarget; scripts/meg-agent.js keeps gunpoint reaction memory on each NPC and writes its dialogue line/bones/pose state.",
     "places/level02/sim.js owns phase/caseLandAt and reset markers; scripts/lib/l02-grid.js writes place.state.l02grid.layout, while scripts/lib/l02-use.js writes its lamps map.",
     "places/main/sim.js owns momentsV/moments and stairsSeeded; scripts/lib/xmas-room.js owns place.state.xmasV and generated xmas-prefixed landmarks; xmas-still.js keeps behavior/combat fields on its objects.",
     "Level 13 sim/layers own separate placement/version markers; retain player.state.leth13 and its per-player dwell timing, place.state.v, tape container contents and foe memory/dead-slot timestamps."
@@ -59,13 +59,13 @@
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera; camera writes aimPt/aimPitch → player.js ballistics and weaponAim; player.js zoneHere → scripts/lib/maze.js zone names.",
     "scripts/routing.js requested room → scripts/lib/hub.js solo room selection; toHub/toSolo cross to hub/home and maintain roomHop/save-place state; Bonus Line boarding is separate.",
     "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close to intro/tutorial0; menuOpen drives menu UI and solo pause scales place time; hub UI routes Bonus/home destinations.",
-    "places/main/sim.js cadence → layXmas(ctx) → scripts/lib/data/xmas.yml + scripts/xmas-geo.js populate the north-rim Christmas pocket; xmas.yml bounds also let player.js suppress Level 0 hum there.",
-    "xmas-room.js attaches scripts/xmas-still.js to Still Lifes, Lamp Sitter, Watcher and Red Stray → role-specific movement/combat and searchable container state; Christmas presents/Still Lifes contain bauble and stuffing item tokens.",
-    "Christmas Area containers → scripts/interact.js loot/item handling → scripts/player.js inventory; baubles are throwable via scripts/nade.js and also Carolynne ammo, while stuffing/baubles feed scripts/lib/craft.js recipes.",
-    "scripts/lib/data/craft.yml + scripts/lib/craft.js → Bobette (hand-crafted, baubles/stuffing/wire) and Carolynne (ammo-bench recipe, baubles/stuffing/pipe/springs); weapons.yml, weapon-look.js, vmpose.js and art/weapons/fit.json define combat stats, model fit and poses.",
-    "places/main/sim.js → scripts/lib/level0-moments.js seeded Harris/Manila Room + sealed perimeter/stair door and return trigger → scripts/moments.js plays stair sound/flash and transfers the interacting player between outside and downstairs positions.",
+    "places/main/sim.js cadence → layXmas(ctx) → scripts/lib/data/xmas.yml + scripts/xmas-geo.js populate the north-rim Christmas pocket; xmas.yml bounds also let player.js suppress Level 0 hum.",
+    "xmas-room.js attaches scripts/xmas-still.js to Still Lifes, Lamp Sitter, Watcher and Red Stray → role-specific movement/combat and searchable container state; Christmas presents/Still Lifes hold baubles and stuffing, which flow through interaction into inventory, throwing, and seasonal craft recipes.",
+    "scripts/lib/data/craft.yml + scripts/lib/craft.js → Bobette (hand-crafted, baubles/stuffing/wire) and Carolynne (ammo-bench recipe, baubles/stuffing/pipe/springs); weapons.yml, weapon-look.js, vmpose.js and art/weapons/fit.json define combat presentation.",
+    "places/main/sim.js → scripts/lib/level0-moments.js seeded Harris/Manila Room + sealed perimeter/stair door and return trigger → scripts/moments.js plays stair sound/flash and transfers the interacting player between outside and downstairs.",
     "scripts/player.js uses musicbox token → scripts/lib/musicbox.js places a wind-up box after rest cooldown, kneels and starts audio/effects → scripts/musicbox.js winds down and E pickup restores the token; musicNear queries within range.",
     "scripts/interact.js loot search → loot.gateItems → items/weapons roll; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; focus → player.state.focus → loot/talk/shop UI.",
+    "An equipped, unsheathed ranged weapon aimed within scripts/meg-agent.js range/cone for 0.4 s → NPC nerve/stats/weapon choose hands-up, draw, or flee; NPC reaction emits dialogue/audio and holds pose until aim ends or lingers out.",
     "places/level13/sim.js calls layFurnish/layPeople/layTape and maintains lethargy; each subsystem uses its own placement data/version, with measured furnishing dimensions and resident/story data shared from its catalogs."
   ],
   "behaviorFamilies": [
@@ -73,8 +73,8 @@
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction scripts - furniture-specific models/dimensions through common placement, persistence and rebuild flow.",
     "scripts/door-geo.js + scripts/lib/door-swing.js and prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage parts with eased motion and legacy prop migration; styles include flat veneer and plain yellow.",
     "scripts/lib/thresholds.js + scripts/threshold-geo.js + participating place sims, alongside sign-style.js/sign-geo.js - shared crossing clues and per-place/per-id sign-board styles.",
-    "places/level01/sim.js + Zenith geometry, breach, hatch, bot and hazard scripts - Zenith Station environment and interactive systems.",
-    "places/level02/sim.js + scripts/lib/l02-grid.js + l02-remodel.yml + l02-wall-geo.js - data-varied basement partitions rebuilt when out of view, lamp-lit locks, crew dressing, knocks, and reset.",
+    "places/level01/sim.js + Zenith geometry, breach, hatch, bot and hazard scripts - Zenith Station environment and interactive systems; places/level02/sim.js + l02-grid.js + l02-remodel.yml vary basement partitions, lights, crew, knocks and reset.",
+    "scripts/meg-agent.js - per-NPC nerve/stats/weapon-driven reactions to a player's aimed gun: surrender pose, armed response, or flee with spoken lines; player.js and climb.js use the cat model for local first-person arms.",
     "Level 13: level13-furnish.js + level13.yml vary flat furnishing/story; level13-dress.js + l13-dress.yml lay hall traces/doors; foe, people and tape layers define encounters/residents/salvage.",
     "Level 0 Christmas Area: xmas-room.js + xmas.yml lays a versioned pocket; xmas-geo.js builds parameterized props and xmas-still.js supplies multiple Still Life behavior roles; craft.yml/weapons.yml extend its loot into seasonal weapons."
   ],
@@ -86,11 +86,11 @@
     "scripts/dbg-bodypad.js, scripts/debug-pad.js, scripts/lib/debug-layout.js - debug-room pads/layout after places/debug removal; no current references found."
   ],
   "migrationNotes": [
-    "Threshold dressing version is V=7 in scripts/lib/thresholds.js; preserve thrSeen/thrTry/thrDone/thrV; sign-style only restyles eligible shallow UI boxes.",
-    "Door transfers: carryAcross records xferTo only for local place links with a # marker and crosses carryId/nearby heldBy objects, rejecting room/world and Bonus destinations; Level 1 BACK uses backV destroy-and-respawn migration.",
+    "Threshold dressing version is V=7 in scripts/lib/thresholds.js; preserve thrSeen/thrTry/thrDone/thrV and door transfers' local #-marked xferTo/carryId rules; Bonus and room/world destinations do not carry held objects.",
     "Level 3 hatchV=3 rebuild destroys old l3-hatch-* objects; hatchAt deterministically shares each wall's door across its two faces. Level 3 lineV=2 replaces legacy line-model instances with three Tripo stations and animated belt boxes.",
     "Level 0.2 sim V=25 rebuilds generated roots; preserve phase/caseLandAt and debris tags, plus the 15-second empty reset. Grid state remains place.state.l02grid={layout, lamps}; walls swap on six-second passes with view/near/lamp exclusions.",
-    "Christmas Area xmas.yml v=7 re-lays the pocket; a version change destroys xmas-prefixed objects and rebuilds them. Keep maze.js XMAS_CELL, xmas.yml cell/bounds and main sim entry aligned; the bounds also suppress Level 0 hum.",
-    "Level 0 moments now use momentsV=11, which clears/re-lays moment-tagged objects; Manila Room access is a generated stairwell door plus an invisible return trigger, both handled by moments.js. Keep baubles top-level in player.state (craft.scrapCount treats them as loose inventory) and preserve alignment with throwable/ammo data."
+    "Christmas Area scripts/lib/data/xmas.yml v=9 re-lays the pocket; a version change destroys xmas-prefixed objects and rebuilds them. Keep maze.js XMAS_CELL, xmas.yml cell/bounds and main sim entry aligned; bounds suppress Level 0 hum.",
+    "Level 0 moments now use momentsV=11, which clears/re-lays moment-tagged objects; Manila Room access is a generated stairwell door plus an invisible return trigger, both handled by moments.js. Keep baubles top-level in player.state for craft/throw use.",
+    "places/level10/sim.js uses V=20 for generated scenery; the Tripo oven and firepit need explicit layout boxes and static colliders, and l10-fire remains a separate FX object."
   ]
 }
