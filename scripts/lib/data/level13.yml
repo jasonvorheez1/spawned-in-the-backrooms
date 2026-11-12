@@ -74,6 +74,11 @@ models:
   plant:   { id: "/cdn/value.5c55541c98397f0fd38ea7e850e3e15e4fd78fd4a5951439cde327b41abe9e09.glb", size: [0.6, 0.85, 0.6] }
   photos:  { id: "/cdn/value.572ad0fe124cdd180aec4d28d259719e1057e02d8cc6c54b996c7b22ada303e7.glb", forward: "+x", size: [0.55, 0.6, 0.16] }
   can:     { id: "/cdn/value.8dbfe9caef376c3d74354e97aa627d7a842fdc981ef4f60ddfd2c24d34aea0fd.glb", size: [0.07, 0.125, 0.07] }
+  suitcase: { id: "/cdn/value.0fa61c32488b588310669cb3c42fa2997d63816d9ff1b5167b380f4365ca01c4.glb", forward: "+x", size: [0.66, 0.48, 0.25] }
+  mug:     { id: "/cdn/value.a8191147ec5be85781fc606c76e8e0cb3228e25cdd46e90258c850c6dc79f0fc.glb", forward: "+x", size: [0.12, 0.1, 0.1] }
+  coats:   { id: "/cdn/value.75ffbaffca45fef57a1568a6bdeac44be2df4fd4bb16bbb960a5db95c0204719.glb", forward: "+x", size: [0.95, 1.0, 0.25] }
+  towel:   { id: "/cdn/value.4a9a76808edc294c5a3cf193ce92638380d6b4c6cad108fba7fdcb92d833be1f.glb", size: [0.75, 0.24, 0.75] }
+  chair:   { id: "/cdn/value.8c161eb878826996b4d3329c94a7a2022e544020baa04cdf6f7bf2f4efb05789.glb", forward: "+x", size: [0.5, 0.82, 0.5] }
 tops: { counter: 0.92, table: 0.75 }   # where clutter sits
 # what each flat's life was doing when it stopped (scripts/lib/level13-furnish.js STORY)
 stories: { a6: dinner, a9: chess, b1: suitcase, b2: drawing, b4: mail, b6: bath, b8: latenight }

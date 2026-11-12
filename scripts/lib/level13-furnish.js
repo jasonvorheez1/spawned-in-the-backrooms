@@ -6,7 +6,7 @@
 import { APTS } from "./level13.js";
 import L13 from "./data/level13.yml";
 import { rollFridge } from "../l13-fridge.js";
-const V = 2, M = L13.models, RANGE = { max: 42 };
+const V = 3, M = L13.models, RANGE = { max: 42 };
 const svg = (vb, w, body) => `<svg viewBox='${vb}' width='${w}m'>${body}</svg>`;
 const STAIN = svg("0 0 100 100", 1.9, `<defs><radialGradient id='g'><stop offset='0' stop-color='#2a2012' stop-opacity='.55'/><stop offset='.7' stop-color='#3a2c18' stop-opacity='.4'/><stop offset='1' stop-color='#3a2c18' stop-opacity='0'/></radialGradient></defs><ellipse cx='46' cy='52' rx='40' ry='31' fill='url(#g)'/><ellipse cx='66' cy='38' rx='22' ry='17' fill='url(#g)'/><ellipse cx='30' cy='68' rx='15' ry='11' fill='url(#g)'/>`);
 const DUST = svg("0 0 100 100", 3.4, `<defs><radialGradient id='d'><stop offset='0' stop-color='#d8d0bc' stop-opacity='.22'/><stop offset='1' stop-color='#d8d0bc' stop-opacity='0'/></radialGradient></defs><ellipse cx='30' cy='34' rx='26' ry='20' fill='url(#d)'/><ellipse cx='68' cy='58' rx='30' ry='24' fill='url(#d)'/><ellipse cx='40' cy='78' rx='22' ry='14' fill='url(#d)'/>`);
@@ -60,12 +60,14 @@ function layFlat(ctx, a) {
       put("pic", "photos", 5.0, 0.15, 0, 1, { y: 1.3, solid: false });
     }
     // ---- the story: what this flat was in the middle of
-    if (story === "dinner") { put("st1", "dishes", tu, tv, 0, 1, { y: top.table, solid: false }); put("st2", "can", tu - 0.3, tv + 0.1, 0, 1, { y: top.table, solid: false }); put("st3", "can", 7.5, 2.4, 0, 1, { y: top.counter, solid: false }); }
+    put("mug", "mug", 7.3, 0.75, -1, 0.3, { y: top.counter, solid: false }); // a mug left on the counter
+    { const ud = a.door.x - a.x0, cu = ud > 3 ? ud - 1.15 : ud + 1.15; put("coats", "coats", cu, 0.14, 0, 1, { y: 0.82, solid: false }); } // coats still on their hooks by the door
+    if (story === "dinner") { put("st4", "chair", tu - 1.15, tv + 0.55, -1, 0.3, { y: 0.26, pitch: 90, solid: false }); put("st1", "dishes", tu, tv, 0, 1, { y: top.table, solid: false }); put("st2", "can", tu - 0.3, tv + 0.1, 0, 1, { y: top.table, solid: false }); put("st3", "can", 7.5, 2.4, 0, 1, { y: top.counter, solid: false }); }
     if (story === "chess") put("st1", "chess", tu, tv, 0, 1, { y: top.table - 0.15, pitch: 90, pivot: "center", solid: false });
-    if (story === "suitcase") { put("st1", "suitcase", 1.6, 6.5, 1, -0.4, { solid: false }); flat("st2", MAIL, 2.0, 0.6, 10); }
+    if (story === "suitcase") { put("st1", "suitcase", 1.25, 6.1, 1, -0.3); flat("st2", MAIL, 2.0, 0.6, 10); }
     if (story === "drawing") { const p = at(7.6 - M.fridge.size[2] / 2 - 0.012, 3.35); ctx.spawn(pre + "st1", { feetPosition: { x: p.x, y: 1.2, z: p.z }, rotation: { yaw: yw(-1, 0), roll: 4 }, vector: DRAWING, visibleRange: { max: 20 }, castShadow: false }); put("st2", "can", 7.5, 2.4, 0, 1, { y: top.counter, solid: false }); }
     if (story === "mail") { flat("st1", MAIL, 2.0, 0.6, 0); flat("st2", MAIL, 2.25, 1.0, 140); }
-    if (story === "bath") { flat("st1", WATER, 6.2, 7.5, 0); flat("st2", WATER, 6.3, 5.6, 60); }
+    if (story === "bath") { put("st3", "towel", 5.35, 6.9, 1, 0.5, { solid: false }); flat("st1", WATER, 6.2, 7.5, 0); flat("st2", WATER, 6.3, 5.6, 60); }
     if (story === "latenight") { put("st1", "can", 3.2, 3.3, 0, 1, { solid: false }); put("st2", "can", 3.05, 3.45, 0, 1, { solid: false, y: 0.035, pitch: 90 }); put("st3", "dishes", 3.2, 1.7, 1, 0, { solid: false }); }
   }
   if (K === "empty") { flat("stain", STAIN, 3.9, 2.4, 20); flat("dust", DUST, 5.2, 3.3, 70); }
