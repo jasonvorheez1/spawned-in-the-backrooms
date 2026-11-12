@@ -9,7 +9,7 @@ from mathutils.bvhtree import BVHTree
 from mathutils.kdtree import KDTree
 a = sys.argv[sys.argv.index("--")+1:]; SRC, OUT, jobs = a[0], a[1], a[2:]
 EARS = "/workspace/hairfit2/ears/upright-%s.glb"
-TUNE = {"twintails": dict(mirror=1, ear=0.03), "hime": dict(mirror=1), "bob": dict(mirror=1)}
+TUNE = {"twintails": dict(mirror=1, sheath=1), "hime": dict(mirror=1), "bob": dict(mirror=1)}
 TRIS = 6000
 def ss(a, b, x): t = max(0, min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t)
 def act(o):
@@ -63,9 +63,10 @@ for job in jobs:
         p = v.co; s, loc, n = sd(bvh, p)
         near = s < 0.003
         eye = p.z < brow + 0.004 and p.y < -0.10 and abs(p.x) < 0.14
-        ear = bvhS.find_nearest(p)[3] < T.get("ear", 0.005)
+        ear = bvhS.find_nearest(p)[3] < T.get("ear", 0.035)   # a clean ring round each sculpted ear: the cap shows there, the ear comes through it
         e2 = bvhE.find_nearest(p)
         ear = ear or (e2[3] < 0.007 and sd(bvh, e2[0])[0] > 0.012)     # wrapped round the head's own (now sunk) ear
+        if T.get("sheath") and p.z > top - 0.02 and 0.07 < abs(p.x) < 0.27: ear = True   # the Tripo hair's own cat-ear cones
         flag[v] = (near, eye or ear)
     kill = [f for f in bm.faces if all(flag[v][0] for v in f.verts) or any(flag[v][1] for v in f.verts)]
     bmesh.ops.delete(bm, geom=kill, context="FACES")
