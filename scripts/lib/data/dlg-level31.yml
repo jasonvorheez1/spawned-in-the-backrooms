@@ -1,0 +1,32 @@
+# Level 31, the Roller Rink: the people who work the carpet. Written by hand, Nov 12.
+
+l31-coach:
+  hi: "Hey there, {u}. Welcome in. Take a breath, nobody's in a hurry here. You skating today or just looking?"
+  back: ["{u}! Good to see you back. How are the legs?", "There you are, {u}. I kept a pair warm for you."]
+  warm: "{u}, my favorite regular. Floor's all yours."
+  cold: "Counter's open, {u}. Whenever you're ready."
+  bye: "Go easy out there. And hey, don't stay too long."
+  walk: "No rush. I'll be here."
+  ask:
+    - q: "Rent skates."
+      a: "Five bucks a pair, and they're yours as long as you're in the building. Tell me your size and I'll pull them off the wall."
+    - q: "Free lesson?"
+      a: "Always free. Takes one minute and saves you a bruise. Want it?"
+      then:
+        - q: "Okay, teach me."
+          a: "Good. On the wood in shoes you slip, so lace up first. On skates, W pushes off. Then quit pushing and just glide. Steer wide, the floor likes big lazy turns. S is your brake. The gates are the gaps in the rail. You'll wobble. Everybody wobbles. Go wobble."
+        - q: "Maybe later."
+          a: "Hahh. That's all right. Come by if you change your mind."
+    - q: "Tell me about this place."
+      a: "It loops. Skate out one side and the rink hands you right back. Same songs, same lights. If it gets loud in your head, the cinema up north is the quiet dark corner. Nobody bothers you there."
+      then:
+        - q: "How long have you been here?"
+          a: "Long enough to know better. A place this comfortable will keep you if you let it. Skate a while, feel good, then go be somewhere that needs you. That's not me kicking you out. That's me liking you."
+    - q: "How do I leave?"
+      a: "Plywood door, south-west corner. Looks like somebody forgot to finish it. Push through and you're out. You're always welcome back."
+  barks:
+    idle: ["Bend your knees. Always the knees.", "Size nines are all out. Figures.", "Same song again. I don't mind it."]
+    hi: ["Hey, {u}.", "Good to see you, {u}."]
+    close: ["Need a pair?"]
+    hurt: ["Easy. Sit down a second. Falling is part of it."]
+  gest: { wave: "Hey! There you go.", gift: "For me? You didn't have to. Thank you.", dance: "On the carpet? All right, one song.", nodance: "Somebody has to mind the counter. Next song, maybe.", insult: "Rough day, huh. It's okay. I've had those." }
