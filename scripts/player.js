@@ -570,6 +570,8 @@ function swing(ctx, power = 0) {
       const vf = (w.vm && ctx.getObject(w.vm)?.feetPosition) || {}, at = { x: Number.isFinite(vf.x) ? vf.x : 0.2, y: Number.isFinite(vf.y) ? vf.y : -0.2, d: Number.isFinite(vf.depth) ? vf.depth : 0.42 }
       const m = wp.muzzle ?? [0, 0.08, -0.4], r = at.x + m[0], u = at.y + m[1], fd = at.d - m[2]
       mz = { x: eye.x + fv.x * cp * fd - fv.z * r - fv.x * sp * u, y: eye.y + sp * fd + cp * u, z: eye.z + fv.z * cp * fd + fv.x * r - fv.z * sp * u }
+      const sock = s.vmId && ctx.getObjectSocket?.(s.vmId, 'muzzle') // the drawn gun's own muzzle, where the flash already sits: the streak leaves the barrel, not the eye
+      if (sock?.position && Math.hypot(sock.position.x - eye.x, sock.position.y - eye.y, sock.position.z - eye.z) < 2) mz = sock.position
     }
     showBullets(ctx, res, wp, mz)
     s.kick = Hd.recoil; s.spreadNow = Math.round(res.spread * 10) / 10 // vmpose scales the kick; the HUD can show the cone
