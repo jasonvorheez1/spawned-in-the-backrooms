@@ -10,6 +10,7 @@
 //   flee    a loud noise: he dives away to the lair
 // Numbers are Savi's picks, tuned to a first swim: the fort's pier to the seawatch rock (~140 m) is about three lunges from him.
 import { heard } from "./lib/hear.js";
+import { raycast } from "builtin/physics";
 import { vo } from "./lib/voices.js";
 import T from "./lib/data/tiny.yml";
 
@@ -26,6 +27,17 @@ function pose(me, m, kind) {
   me.anim.body = { clip: CLIP[kind], loop: kind !== "stab", weight: 1, blend: 0.25 };
 }
 const SHORES = [{ x: 0, z: 0, r: 22 }, { x: 46, z: -120, r: 30 }, { x: -95, z: -230, r: 48 }, { x: 0, z: -21, r: 14 }]; // the three rocks and the pier
+// is this column deep water? terrain height where it is known, else a ray down (streamed terrain far from the player reads null): his body needs 3 m under it
+const DRY = new Map();
+function dryAt(ctx, x, z) {
+  const k = `${Math.round(x / 2)},${Math.round(z / 2)}`; if (DRY.has(k)) return DRY.get(k);
+  let floor = ctx.place.terrain?.heightAt?.(x, z);
+  if (floor == null) { const h = raycast(ctx, { x, y: 60, z }, { x: 0, y: -1, z: 0 }, { distance: 90, bodies: "static", ignoreEntities: [ctx.self.id] }); floor = h ? h.position.y : null; if (floor == null) return false; }
+  const dry = floor > -3 || SHORES.some((s) => Math.hypot(x - s.x, z - s.z) < s.r + 1.5);
+  DRY.set(k, dry); return dry;
+}
+// his body lies along the swim, so the water must hold his head as well as his feet
+const blocked = (ctx, p, v) => { const l = Math.hypot(v.x, v.z) || 1; return dryAt(ctx, p.x, p.z) || dryAt(ctx, p.x + (v.x / l) * 3, p.z + (v.z / l) * 3); };
 const nearestShore = (f) => { let best = null, bd = 1e9; for (const s of SHORES) { const d = Math.hypot(f.x - s.x, f.z - s.z) - s.r; if (d < bd) { bd = d; best = s; } } return { s: best, d: bd }; };
 const TAR = `fx
 pop tar burst=26..40 life=.6..1.2 v=sdir()*(2..4.5)+up(1..2) size=.06..0.16 acc=grav()*.9+drag(1.2) col=<.02,.02,.025> a=1>.7:1>0 sz=$size r=sprite(soft-disc,alpha)
@@ -92,7 +104,7 @@ export function update(ctx, dt) {
     m.ang += dt * 0.12; const h = s.home;
     const lp = { x: h.x + Math.cos(m.ang) * T.patrolR, y: T.patrolY, z: h.z + Math.sin(m.ang) * T.patrolR };
     const lf = ctx.place.terrain?.heightAt?.(lp.x, lp.z);
-    if ((lf == null || lf < -2.4) && !SHORES.some((s) => Math.hypot(lp.x - s.x, lp.z - s.z) < s.r + 1.5)) me.feetPosition = { ...lp, y: lf == null ? lp.y : Math.max(lp.y, lf + 0.6) };
+    if (!blocked(ctx, lp, { x: -Math.sin(m.ang), z: Math.cos(m.ang) })) me.feetPosition = { ...lp, y: lf == null ? lp.y : Math.max(lp.y, lf + 0.6) };
     pose(me, m, "swim");
     me.rotation = { yaw: -m.ang * 57.3, pitch: -80 };
     return;
@@ -152,7 +164,7 @@ export function update(ctx, dt) {
   const np = { x: p.x + m.v.x * dt, y: Math.min(-0.9, p.y + m.v.y * dt), z: p.z + m.v.z * dt };
   // water only: never into a rock's footprint or over ground shallower than his body; he turns back along the shore instead
   const floor = ctx.place.terrain?.heightAt?.(np.x, np.z);
-  const ashore = (floor != null && floor > -2.4) || SHORES.some((s) => Math.hypot(np.x - s.x, np.z - s.z) < s.r + 1.5);
+  const ashore = blocked(ctx, np, m.v);
   if (ashore) { np.x = p.x; np.z = p.z; m.v = { x: -m.v.x * 0.3, y: m.v.y, z: -m.v.z * 0.3 }; }
   else if (floor != null && np.y < floor + 0.6) np.y = floor + 0.6;
   me.feetPosition = np;
