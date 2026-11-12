@@ -1,0 +1,12 @@
+# The Way Back: every line the main quest shows, recorded with the tape method (art/vo/act.py q-)
+q-dina:
+  halogen: "If this unit still boots, find my radio on Level One. I heard a station from home. They read out tomorrow's weather. River made a copy."
+  diary: "River copied the return test. Cabin 23, SS Fun. If I miss the handoff, look there."
+bntg-voss:
+  slip: "C-23. One waterproof case from the Adventure. Pickup at the Electrical Station checkpoint. Paid in batteries."
+q-clerk:
+  slip-early: "Freight slips from the Habitable Zone. Each delivery has a ticket number."
+  handoff: "C-23 canceled. The stowaway never turned up. River filed a copy of the test results before the drive went missing. Look up Return Test 04 at Base Gamma."
+  handoff-early: "A handoff log. The page is indexed by freight ticket. Somebody tore out the carbon paper."
+  archive: "RETURN TEST 04. A phone rang on the other side. The operator gave the date. We called again and a second operator gave the same date. When we sent a runner through, she came back on Level 1. Voice contact confirmed. Crossing unverified."
+  archive-early: "The public index lists return experiments by number. Most files are marked UNVERIFIED."
