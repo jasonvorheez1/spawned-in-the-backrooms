@@ -2,7 +2,20 @@ import S from "./lib/data/smoothies.yml"
 const hm = (sec) => { const m = Math.ceil(sec / 60); return m >= 60 ? `${Math.floor(m / 60)}h ${m % 60}m` : `${m}m` }
 export function smoothieUi(ctx, player) {
   const s = player.state, b = s.smoothieBuff
-  const chip = b ? `<div class="fixed" style="left:24px;top:46%;background:#1c1610cc;border:1px solid #d4b96a55;padding:4px 8px;font-size:12px;color:#f4e3b5">${b.name} · ${hm(b.left)}</div>` : ""
+  const chip = b ? (() => { const col = b.col || "#ff77b7", pct = Math.max(0, Math.min(100, 100 * b.left / (b.total || b.left || 1))), fx = [b.hp ? `+${b.hp} HP` : "", b.san ? `+${b.san} SAN` : "", b.food ? "fed" : ""].filter(Boolean).join(" · "), low = b.left < 600
+    return `<style>@keyframes sbIn{0%{transform:translateX(-30px);opacity:0}100%{transform:none;opacity:1}}@keyframes sbSlosh{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}@keyframes sbLow{50%{opacity:.45}}</style>
+<div id="sbuff-${b.k}" class="fixed pointer-events-none" style="left:24px;top:46%;width:230px;display:flex;gap:10px;align-items:center;background:#1c1610e6;border:2px solid #d4b96a;box-shadow:4px 4px 0 #0008;padding:8px 10px;color:#f4e3b5;animation:sbIn .35s ease-out">
+<div style="position:relative;width:30px;height:40px;flex:none;animation:sbSlosh 2.4s ease-in-out infinite">
+<div style="position:absolute;left:12px;top:-6px;width:3px;height:16px;background:#ff77b7;transform:rotate(14deg)"></div>
+<div style="position:absolute;inset:4px 2px 0 2px;border:2px solid #f4e3b5;border-top:none;border-radius:0 0 7px 7px;overflow:hidden;background:#0006"><div style="position:absolute;left:0;right:0;bottom:0;height:${Math.max(8, pct)}%;background:linear-gradient(${col},${col}cc);box-shadow:inset 0 3px 0 #fff5"></div></div>
+<div style="position:absolute;left:0;right:0;top:2px;height:3px;background:#f4e3b5;border-radius:2px"></div></div>
+<div style="flex:1;min-width:0">
+<div style="font-size:10px;letter-spacing:.14em;color:#d4b96a">SMOOTHIE</div>
+<div style="font-size:15px;font-weight:700;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fffde8">${b.name}</div>
+<div style="font-size:11px;opacity:.85">${fx || b.desc || ""}</div>
+<div style="margin-top:4px;height:5px;background:#0008;border:1px solid #d4b96a66"><div style="height:100%;width:${pct}%;background:${col};transition:width 1s linear"></div></div>
+<div style="font-size:11px;text-align:right;margin-top:2px;${low ? "color:#ff9a7a;animation:sbLow 1s steps(2) infinite" : "opacity:.8"}">${hm(b.left)} left</div>
+</div></div>` })() : ""
   const c = s.sCut
   if (c) { const t = ctx.now() - c.at; if (t < 2000) return `<div class="fixed inset-0 pointer-events-none" style="box-shadow:inset 0 90px 0 #000,inset 0 -90px 0 #000"></div>`
     const id = Math.round(c.at)

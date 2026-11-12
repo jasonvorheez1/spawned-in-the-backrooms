@@ -25,7 +25,7 @@ export function onInput(ctx, input) {
     const book = s.smoothieBook ?? []
     const isNew = !!c && !book.includes(k)
     if (isNew) s.smoothieBook = [...book, k]
-    s.smoothieBuff = { k: c ? k : "house", name: b.name, desc: b.desc, left: b.minutes * 60, hp: b.hp ?? 0, san: b.san ?? 0, food: b.food ?? 0, every: b.every ?? 1 }
+    s.smoothieBuff = { k: c ? k : "house", name: b.name, desc: b.desc, col: S.fruits[mix[0]]?.color ?? "#ff77b7", total: b.minutes * 60, left: b.minutes * 60, hp: b.hp ?? 0, san: b.san ?? 0, food: b.food ?? 0, every: b.every ?? 1 }
     s.smix = []
     s.smoothieMsg = isNew ? `New recipe: ${b.name}!` : c ? `${b.name}` : "House Mix. No new recipe."
     const col = S.fruits[mix[0]]?.color ?? "#ff77b7"
