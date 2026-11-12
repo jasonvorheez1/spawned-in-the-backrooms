@@ -166,11 +166,11 @@ export function handleDialogueQuest31(ctx, p, npc, text) {
   if (id === "l31-dj") {
     if (t.includes("master tape") && q === 1) {
       hint(ctx, p, "dj");
-      return { reply: "...Side B. ...Back of the room. ...Where it's dark.", mood: "calm" };
+      return { reply: "You mean Side B. I hide it in the cinema, behind the screen, where it's dark. If it's in here with me, I just keep playing it. Please don't take it far.", mood: "calm" };
     }
     if (t.includes("giving it back") && q === 3) {
       side(ctx, p, "rink"); setStep(ctx, p, 4, "You gave Side B back · Marlowe's crew is hostile now");
-      return { reply: "...Thank you. ...Thank you. ...Thank you.", mood: "happy" };
+      return { reply: "Oh. Oh, you brought it back. Listen, it sounds right again. I don't have anything for you. The Coach will. I'll tell him.", mood: "happy" };
     }
     return null;
   }

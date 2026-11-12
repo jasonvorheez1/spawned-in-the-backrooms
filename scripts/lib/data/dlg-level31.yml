@@ -63,9 +63,128 @@ l31-q-dez:
     idle: ["Same song. Again.", "I don't skate. Don't ask.", "Smells like pizza and bad decisions."]
     hi: ["Yep.", "{u}."]
     hostile: ["Should've taken the money.", "Marlowe says hi."]
-l31-q-face:
-  hi: "..."
-  bye: "..."
+l31-q-guard1:
+  hi: "Table's that way. Marlowe does the talking. I do the other thing."
+  back: ["You again. Hands visible, thanks.", "Still not for sale. I mean me. The batteries are."]
+  warm: "You're alright. Marlowe's never said that about anyone, so take mine."
+  cold: "Walk around. Wide."
+  bye: "Mm."
+  walk: "Good talk."
+  ask:
+    - q: "What's the bat for?"
+      a: "Softball. B.N.T.G. company league. We were undefeated until we noticed nobody else was playing."
+    - q: "You like working for Marlowe?"
+      a: "He pays on time and he talks enough for both of us. Best job I've had since the hotel."
   barks:
-    idle: ["...Again. ...Again.", "...The song is nice."]
-    hostile: ["...Give it back.", "...You took the song."]
+    idle: ["My feet hate carpet.", "Twenty minutes of this song. I timed it.", "Nobody skates past the table. I've noticed."]
+    hi: ["Hey.", "{u}."]
+    close: ["That's close enough."]
+    spot: ["Got one!", "Faces coming!"]
+    hostile: ["Wrong side, {u}.", "Should've sold it to us."]
+    hit: ["Ow. Okay.", "That's gonna bruise."]
+    kill: ["Down."]
+    clear: ["Clear. Somebody tell Marlowe."]
+    flee: ["Nope, regrouping!"]
+  gest: { wave: "Mm. Hi.", gift: "Is this a bribe? It's working.", dance: "I'm on shift. Fine, one spin.", nodance: "I'm on shift.", insult: "Say it slower. I want to remember it." }
+l31-q-guard2:
+  hi: "Hey. Don't mind me. I'm the friendly one, which isn't saying much."
+  back: ["Back for more almond water? It's the same almond water.", "Hey, it's you. I said that like I'm happy. I am, a bit."]
+  warm: "If this goes sideways, stand behind me. I'm wide."
+  cold: "Marlowe says you're bad for business. I agree with Marlowe a lot lately."
+  bye: "See ya."
+  walk: "Okay then."
+  ask:
+    - q: "Can you skate?"
+      a: "I can stand on skates. Then the floor and me have a disagreement. The floor wins every time."
+    - q: "Do the facelings bother you?"
+      a: "They just watch the table. Not like customers. Like it's in their house. Which, I guess it is."
+  barks:
+    idle: ["I could go for a hot dog.", "Is it me or is this song longer?", "Nobody ever buys the batteries."]
+    hi: ["Hey, {u}.", "Oh hey."]
+    close: ["Personal space, buddy."]
+    spot: ["Uh, one coming!", "Heads up!"]
+    hostile: ["Sorry, {u}. It's the job.", "This didn't have to happen!"]
+    hit: ["Hey!", "Ow, my good arm."]
+    kill: ["Oh. Oh, okay."]
+    clear: ["We good? We good."]
+    flee: ["I'm out, I'm out!"]
+  gest: { wave: "Hey hey.", gift: "Aw, for me? Thanks.", dance: "Okay, but don't film it.", nodance: "Marlowe's watching.", insult: "Wow. Okay. Rude." }
+l31-dj:
+  hi: "Oh. Hi. You can stand there. Most people don't come up here."
+  back: ["Hi again. I saved this one for you.", "You came back. That's nice."]
+  warm: "You can pick the next song. Any song. It'll be the same one, but you can pick it."
+  cold: "I'm working."
+  bye: "Okay. Skate good."
+  walk: "The music's still on. It's always on."
+  ask:
+    - q: "Can you play something else?"
+      a: "I try. Every time I put a new record on, it plays this. I've stopped minding. It's a good song."
+    - q: "How long have you been the DJ?"
+      a: "Since the lights came on. Somebody had to. Nobody else wanted to sit still."
+  barks:
+    idle: ["This one's for the couples.", "Everybody clear the floor. Just kidding.", "Okay. Same song. Again."]
+    hi: ["Hi.", "Hi, {u}."]
+    close: ["Careful, the cords."]
+    hostile: ["You sold it. You sold the song.", "Give it back."]
+    hit: ["Ow. Ow."]
+  gest: { wave: "Hi.", gift: "For me? I'll keep it by the deck.", dance: "Not up here. Down there. You go.", nodance: "If I stand up, the music stops.", insult: "Okay." }
+l31-q-face1:
+  hi: "Hi. Are you skating? I'm waiting for the couples skate. I don't have a couple. I go anyway."
+  back: ["Hi. Still waiting for it.", "You're back. I'm glad. Nobody comes back."]
+  warm: "You're nice. If they call the couples skate, you can be my couple. Just for one song."
+  cold: "Go away. I mean it. Go away."
+  bye: "Bye. Have a good skate."
+  walk: "Oh. Okay."
+  ask:
+    - q: "What's your name?"
+      a: "I don't remember. I remember my skate size. Seven. That feels more useful."
+    - q: "Do you like the music?"
+      a: "I love it. It's the song from my first time here. It's the song from every time here."
+  barks:
+    idle: ["When's the couples skate?", "I like this part.", "Lights are pretty tonight."]
+    hi: ["Hi.", "Oh, hi."]
+    close: ["You're close. That's okay."]
+    hostile: ["You took the song. You took it!", "Give it back. It's ours."]
+    hit: ["Ow!"]
+    flee: ["Stop it, stop it!"]
+  gest: { wave: "Hi! Hi.", gift: "For me? Nobody gives me things.", dance: "Yes! Finally.", nodance: "Not now.", insult: "That's mean. Why are you mean?" }
+l31-q-face2:
+  hi: "Yo. You see me do the backwards thing? No? I'll do it again. I'm always doing it."
+  back: ["Watch. Backwards. Okay, I fell. Watch again.", "You again. Cool. I'm practicing."]
+  warm: "You're alright. You don't stare at my face. There isn't one, but people still stare."
+  cold: "Don't talk to me. I'm skating."
+  bye: "Later."
+  walk: "Rude. Cool though."
+  ask:
+    - q: "How long have you been practicing?"
+      a: "Since I got here. I've gotten pretty good at falling. Like, really good."
+    - q: "Who runs this place?"
+      a: "Coach, kind of. And the DJ. And the song. Mostly the song."
+  barks:
+    idle: ["Backwards. Backwards.", "Okay, that one counted.", "Who put a rail there?"]
+    hi: ["Yo.", "Hey, {u}."]
+    close: ["Gimme room, I'm turning."]
+    hostile: ["You sold us out, man!", "That tape was ours!"]
+    hit: ["Ow, man!"]
+    flee: ["Nope!"]
+  gest: { wave: "Yo!", gift: "Sick. Thanks.", dance: "Oh, it's on.", nodance: "I'm busy falling.", insult: "Yeah? Your skates are rentals." }
+l31-q-face3:
+  hi: "Shh. They're about to play the slow one. You can tell from the lights."
+  back: ["Not yet. Soon.", "Hi. Stand here. Best spot for the slow one."]
+  warm: "You can have my spot when it's the slow one. I've heard it."
+  cold: "No."
+  bye: "Okay. Watch the lights."
+  walk: "Fine."
+  ask:
+    - q: "What happens at the slow one?"
+      a: "The lights go blue and everyone holds hands. Well. Everyone who's here. Which is me."
+    - q: "Have you ever left?"
+      a: "I tried the plywood door once. The music got quieter. I didn't like that, so I came back in."
+  barks:
+    idle: ["Blue next. I think it's blue next.", "Hm. Pink again.", "Sh. Listen."]
+    hi: ["Hi.", "Shh. Hi."]
+    close: ["You're in my light."]
+    hostile: ["You took it. It's quiet now. It's too quiet.", "Thief."]
+    hit: ["Ah!"]
+    flee: ["No no no."]
+  gest: { wave: "Hi.", gift: "Thank you. I'll keep it.", dance: "When it's the slow one.", nodance: "Wait for the slow one.", insult: "Okay." }
