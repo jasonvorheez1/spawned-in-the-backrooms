@@ -74,7 +74,7 @@ function shell(ctx) {
     ctx.spawn(`l31-string-${id}`, { feetPosition: { x, y: 3.6, z }, primitive: along === "x" ? box(len, 0.015, 0.015) : box(0.015, 0.015, len), material: { color: "#111" }, castShadow: false, children: kids }); };
   str("n", 0, B.z0 + 0.08, W - 1, "x"); str("s", 0, B.z1 - 0.08, W - 1, "x"); str("w", B.x0 + 0.08, 0, D - 1, "z"); str("e", B.x1 - 0.08, 0, D - 1, "z");
   // a few dim house cans over the carpet aisles so nobody walks blind
-  [[-24, 20], [14, 17], [-24, -20], [24, -17], [-26, 0], [24, 0], [-36, -22], [-30, 24]].forEach(([x, z], i) => ctx.spawn(`l31-can${i}`, { feetPosition: { x, y: H - 0.3, z }, light: { kind: "point", color: "#ffb070", intensity: 2.6, distance: 16 } }));
+  [[-24, 20], [14, 17], [-24, -20], [24, -17], [-26, 0], [24, 0], [-36, -22], [-30, 24]].forEach(([x, z], i) => ctx.spawn(`l31-can${i}`, { feetPosition: { x, y: H - 0.3, z }, light: { kind: "point", color: "#ffb070", intensity: 9, distance: 18 } }));
 }
 
 function doors(ctx) {
@@ -86,7 +86,7 @@ function doors(ctx) {
   ctx.spawn("l31-back", { feetPosition: { x: DOOR.x, y: 0, z: B.z1 - 0.25 }, physics: { body: "static", trigger: true }, primitive: box(1.2, 2.3, 0.4), visible: false, behavior: "scripts/level-door.js", state: { to: "level2#l2-from-l31" } });
   ctx.spawn("l31-exit-sign", { feetPosition: { x: DOOR.x, y: 2.45, z: B.z1 - 0.06 }, rotation: { yaw: 0 }, castShadow: false, vector: `<svg viewBox='0 0 100 40' width='0.7m'><rect width='100' height='40' rx='3' fill='#0d1a0f'/><text x='50' y='29' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='26' fill='#5dff7a' filter='drop-shadow(0 0 3 #5dff7a)'>EXIT</text></svg>` });
   // the white door marked 70, north-west corner. It does not open. (Level 70 is not built.)
-  ctx.spawn("l31-door-70", { feetPosition: { x: B.x0 + 0.04, y: 0, z: -22 }, rotation: { yaw: 90 }, primitive: box(1.1, 2.2, 0.06), material: { color: "oklch(0.95 0.005 90)", roughness: 0.5 }, castShadow: false, tags: ["usable"], state: { name: "White door", info: "A 70 is engraved in the paint. Locked. Cold air under it." },
+  ctx.spawn("l31-door-70", { feetPosition: { x: B.x0 + 0.04, y: 0, z: -22 }, rotation: { yaw: -90 }, primitive: box(1.1, 2.2, 0.06), material: { color: "oklch(0.95 0.005 90)", roughness: 0.5 }, castShadow: false, tags: ["usable"], state: { name: "White door", info: "A 70 is engraved in the paint. Locked. Cold air under it." },
     children: [{ feetPosition: { x: 0, y: 1.5, z: -0.04 }, vector: `<svg viewBox='0 0 60 40' width='0.3m'><text x='30' y='32' text-anchor='middle' font-family='serif' font-size='34' fill='#b9b9b2'>70</text></svg>` }, { feetPosition: { x: 0.42, y: 1.0, z: -0.06 }, primitive: { kind: "sphere", radius: 0.035 }, material: { color: "#c9c2a8", metalness: 0.9, roughness: 0.3 } }] });
 }
 
