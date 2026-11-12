@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 5958,
-  "updatedAt": "2026-11-12T03:53:31.438Z",
+  "basedOnSpecVersion": 5963,
+  "updatedAt": "2026-11-12T04:00:37.222Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, lore-based destinations, a social mall and solo tutorial spaces. `templates/player.js` composes shared behaviors; `scripts/player.js` owns player progression and combat, while place simulations and shared libraries build/tick environments, NPCs, quests, crossings and visual dressing.",
   "scriptPaths": [],
   "places": [
@@ -9,7 +9,7 @@
     "places/bonus (3D) - vaporwave mall with authored shops, escalators and simulated staff/shoppers; shared hub destination.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo ephemeral) - character creation/waking and staged tutorial route.",
     "places/level01 (3D) - Zenith Station: station, breach, doors, bots, hazards and recorder quest.",
-    "places/level1, level2, level21, level3, gamma (3D) - Habitable Zone/M.E.G. camp, Pipe Dreams, Locked, Electrical Station and Base Gamma; Level 3 sim generates steel through-wall hatches.",
+    "places/level1, level2, level21, level3, gamma (3D) - Habitable Zone/M.E.G. camp, Pipe Dreams, Locked, Electrical Station and Base Gamma; Level 3 sim generates hatches, detailed industrial models and almond-bottle piles.",
     "places/level4, level5, level6, level7, level8 (3D) - Abandoned Office, Terror Hotel, drowned house, sea/Fort Surrender and Cave Systems.",
     "places/level10, level11, level12 (3D) - lake, generated city/canal and renovation office; Level 11 connects to player home11.",
     "places/level26, level27, level184, level61, spamton, testlab and other special places (3D) - SS Fun, Bunker Springs, forts, Snackrooms, arena and Test Range."
@@ -66,7 +66,7 @@
     "Tracked quest → quest-marker.js → questMark/nextQuestExit gated crossing graph → local objective or remote exit marker and journal.",
     "Place sims → restyleSigns (signs.yml/sign-geo.js) and dressThresholds; doorway handlers call carryAcross before ctx.cross for local links, record xferTo, and player.js consumes it for arrival marker.",
     "scripts/player.js update → preloadTick reads nearby door IDs and preload.yml → player-audience preload event for destination models; forgiveTick reads NPC angry state/player.grudges and clears the grudge after an in-game hour.",
-    "places/level3/sim.js hatches() + hatchAt() → paired steel leaves and doorway triggers; interact.js opens scripts/l3-hatch.js leaves, l3-hatch-pass.js moves player through wall to twin and opens it."
+    "Level 3 sim spawns Blender-built industrial models and hatch pairs; l3-visits.js manages rare Samantha/Death Rat guests, with the rat gait animation keyed to tripo rig tracks."
   ],
   "behaviorFamilies": [
     "places/bonus scenes + bonus data/sim + mall shopper/salon scripts - authored mall, NPCs and counter behavior; escalator steps share motor behavior with placement-specific direction/phase.",
@@ -86,11 +86,11 @@
     "scripts/dbg-bodypad.js, scripts/debug-pad.js, scripts/lib/debug-layout.js - debug-room pads/layout after places/debug removal; no current references found."
   ],
   "migrationNotes": [
-    "Threshold dressing version is now V=7 in scripts/lib/thresholds.js; upgrades clean/rebuild thr-tagged objects and remain delayed/incremental until place colliders stand. Preserve thrSeen/thrTry/thrDone/thrV protocol.",
-    "carryAcross records xferTo only for local place links with a # marker; it crosses carryId and nearby heldBy objects, but rejects room/world and Bonus destinations. Keep it immediately before ctx.cross at doorway handlers.",
-    "Level 1 BACK moved well away from camp: sim's backV rebuild destroys and respawns the door, lamp, wall and arrival because moving a static trigger's transform leaves its collider behind.",
+    "Threshold dressing version is V=7 in scripts/lib/thresholds.js; upgrades clean/rebuild thr-tagged objects and remain delayed/incremental until place colliders stand. Preserve thrSeen/thrTry/thrDone/thrV protocol.",
+    "Door transfers: carryAcross records xferTo only for local place links with a # marker and crosses carryId/nearby heldBy objects, rejecting room/world and Bonus destinations; Level 1 BACK moves via backV destroy-and-respawn because moving a static trigger leaves its collider behind.",
     "scripts/lib/sign-style.js only restyles eligible shallow box signs with UI, leaves emissive/light signs alone, and is throttled/idempotent; preserve source IDs, dimensions, text, colour and placement while signs.yml selects style.",
-    "Level 3 hatchV=3 rebuild destroys old l3-hatch-* objects; hatchAt deterministically shares each wall's door across its two faces. Keep Level 3 detail-wall generation and the paired passage triggers in sync with that layout.",
+    "Level 3 hatchV=3 rebuild destroys old l3-hatch-* objects; hatchAt deterministically shares each wall's door across its two faces. Keep detail-wall generation and paired passage triggers in sync; current bottle piles use a scaled collision box (±0.65 x, 0.34 high, ±0.45 z).",
+    "scripts/player.js first-person tracer origin is derived from the held viewmodel transform plus weapon muzzle metadata; keep it distinct from ballistics' eye/aim direction. Third-person tracers retain the eye-based origin.",
     "preload-next uses a 30 m door reach, per-player-session preDone by destination, and the data preload.yml door/model manifest; player.grudges uses game time (one in-game hour) for NPCs already angry with that player."
   ]
 }
