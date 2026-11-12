@@ -41,6 +41,7 @@ function humanClips(ctx) {
   return ss.humClips
 }
 import { stepAngle } from 'builtin/math'
+import { liveFace } from './lib/cat-wardrobe.js'
 
 // The body's own word, else the world's default.
 function turnTo(ctx) {
@@ -250,6 +251,7 @@ export function onInput(ctx, input) {
 
 export function update(ctx, dt) {
   if (ctx.self.sprite) return // sprites animate via the 2D mixer, never these GLB clips
+  { const b = ctx.self.behavior; if (!(Array.isArray(b) ? b : [b]).some((x) => String(x).includes('critter.js'))) liveFace(ctx) } // a living cat face (critter.js runs its own)
   if (ctx.self.state?.dead || (ctx.self.tags?.includes?.('npc') && (ctx.self.state?.hp ?? 1) <= 0)) { if (ctx.self.anim.idle || ctx.self.anim.walk || ctx.self.anim.run) { ctx.self.anim.idle = null; ctx.self.anim.walk = null; ctx.self.anim.run = null } return } // a corpse holds no gait
 
   const human = humanClips(ctx)

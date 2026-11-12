@@ -178,3 +178,40 @@ export function printOf(sex, look) {
   const R = W.prints[sex], b = W.prints.badge[k], c = R.chest
   return { pat: k, pfz: 1, pz0: W.body[sex].front, pax: c[0] + (b ? b[0] : 0), pay: c[1] + (b ? b[1] : 0), psz: c[2] * (b ? b[2] : 1), pmx: R.arm[0], pmy: R.arm[1] }
 }
+
+// a living face for every cat that isn't run by critter.js (Fort residents, M.E.G. agents, shopkeepers…): Nov 12 'expressions, talking, and animated faces'.
+// Reads the body's own state four times a second and rewrites the head's face picture only when the mood or talking changes.
+export function liveFace(ctx) {
+  const o = ctx.self, ses = o.session, now = ctx.now()
+  if (now < (ses.lfNext ?? 0)) return
+  ses.lfNext = now + 250
+  const m = o.model, hf = m?.materials?.headFur
+  if (!hf?.params?.face) return
+  if (!ses.lfRest) {   // the face it was dressed with is its resting face
+    ses.lfRest = hf.params.face
+    ses.lfSex = Object.values(FACES.faces.male).includes(hf.params.face) || Object.values(FACES.eyes?.male ?? {}).includes(hf.params.face) ? 'male' : 'female'
+  }
+  const faces = FACES.faces[ses.lfSex], s = o.state ?? {}, hp = s.hp ?? 100
+  if (ses.lfHp != null && hp < ses.lfHp - 0.5) ses.lfHurt = now + 1600
+  ses.lfHp = hp
+  let mood = 'rest'
+  if (s.dead || s.down || hp <= 0) mood = 'ko'
+  else if (now < (ses.lfHurt ?? 0)) mood = 'hit'
+  else if (s.angry || s.hostile) mood = 'angry'
+  else if (hp < 30) mood = 'sad'
+  else {
+    if (now > (ses.lfQNext ?? 0)) { const r = ctx.random(); ses.lfQ = r < 0.55 ? 'smile' : r < 0.8 ? 'blep' : 'joy'; ses.lfQUntil = now + 1500 + r * 1500; ses.lfQNext = ses.lfQUntil + 14000 + ctx.random() * 22000 }
+    if (now < (ses.lfQUntil ?? 0)) mood = ses.lfQ
+  }
+  const ln = s.line, talk = !!(ln && ln.t && now < (ln.at ?? 0) + (ln.d ?? 1400 + String(ln.t).length * 60)) && mood !== 'ko'
+  const key = mood + (talk ? ':t' : '')
+  if (ses.lfKey === key && hf.params.blinkFace !== undefined || (ses.lfKey === key && mood === 'ko')) return
+  ses.lfKey = key
+  const face = mood === 'rest' ? ses.lfRest : faces[mood]
+  const life = faceLife(ses.lfSex, { expression: mood === 'rest' ? 'neutral' : mood, talk, fur: m.materials.fur?.color, fseed: o.id }, face, faces)
+  const params = { ...hf.params, face, ...life }
+  if (mood !== 'rest') delete params.mouth
+  else if (ses.lfMouth === undefined) ses.lfMouth = hf.params.mouth ?? null
+  if (mood === 'rest' && ses.lfMouth) params.mouth = ses.lfMouth
+  o.model = { ...m, materials: { ...m.materials, headFur: { ...hf, params } } }
+}
