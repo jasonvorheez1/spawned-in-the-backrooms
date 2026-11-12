@@ -1,5 +1,8 @@
 import { raycast } from 'builtin/physics'
-import { humanBody } from './lib/critter-model.js'
+import { humanBody, HUMAN, critterSpec, isNewCat } from './lib/critter-model.js'
+// the cat's first-person arms: the same cut of her own cat body scripts/player.js holds weapons with (CAT_FPARM there); at = feet from the eye
+const CAT_FPARM = { f: '/cdn/value.1a50c4f098271ae5981ef730799d0a2e9913570abeb76d1475ab61869585a26a.glb', m: '/cdn/value.0ac8ed9fa781f9f7a002a249ccb98c55be6cd8f29698bb508e008517c604cc25.glb' }
+const CAT_AT = { f: { y: -0.36, z: 0.28 }, m: { y: -0.385, z: 0.28 } }
 function vmSkin(hex) { const n = parseInt(String(hex ?? '#efcfb4').slice(1), 16), k = 0.72; return '#' + [16, 8, 0].map((b) => Math.round(((n >> b) & 255) * k).toString(16).padStart(2, '0')).join('') } // as scripts/player.js's viewmodel arm
 // Ladder climbing, every level. A ladder is any object tagged "ladder" with state.ladder = { h, yaw, mat }:
 // its feet at the foot of the rungs, yaw = the way a climber faces it (forward = into the ladder), h = rise to the top step-off.
@@ -137,7 +140,20 @@ function hands(ctx, m, dir) {
   const me = ctx.self, s = me.state
   if (s.tp) { if (m.fp) { ctx.destroy(m.fp); m.fp = null } return }
   const sx = s.look?.sex === 'f' || s.look?.sex == null ? 'f' : 'm'
+  const cat = !HUMAN && !s.look?.modelUrl && isNewCat(s.look ?? {})
+  if (m.fp && m.fpCat !== cat) { ctx.destroy(m.fp); m.fp = null }
+  if (!m.fp && cat) { // her own cat arms, one paw per copy, each reaching on its rung (Shelly: "i still use the human hands when i climb")
+    let cs = null; try { cs = critterSpec(s.look ?? {}) } catch (e) {}
+    const at = CAT_AT[sx], base = { model: { ...(cs?.model ?? {}), id: CAT_FPARM[sx] }, ...(cs?.morph ? { morph: cs.morph } : {}), ...(cs?.scale ? { scale: cs.scale } : {}), castShadow: false, visibleInFirstPerson: true, audience: 'local' }
+    m.fp = ctx.spawn({ parent: me.id, feetPosition: { x: 0, y: 1.6, z: -0.42 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
+      children: [
+        { ...base, id: 'r', feetPosition: { x: 0, y: at.y, z: at.z }, bones: { 'mixamorig:LeftArm': { scale: 0 } } },
+        { ...base, id: 'l', feetPosition: { x: 0, y: at.y, z: at.z }, bones: { 'mixamorig:RightArm': { scale: 0 } } },
+      ] })
+    m.fpR = m.fp + '/r'; m.fpL = m.fp + '/l'; m.fpCat = true; m.fpAt = at
+  }
   if (!m.fp) {
+    m.fpCat = false; m.fpAt = null
     let skinM = null; try { const hb = humanBody(s.look ?? {}); if (hb?.materials?.Body_Skin) skinM = { Body_Skin: { ...hb.materials.Body_Skin, color: vmSkin(hb.materials.Body_Skin.color), roughness: 0.78, metalness: 0, emissive: '#000000' } } } catch (e) {}
     const arm = skinM ? { id: FP_ARM[sx].R, materials: skinM } : FP_ARM[sx].R
     m.fp = ctx.spawn({ parent: me.id, feetPosition: { x: 0, y: 1.6, z: -0.42 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
@@ -150,6 +166,10 @@ function hands(ctx, m, dir) {
   // a hand reaches up a rung while the other pulls down, swapping every rung; at rest both hold where they are
   const a = Math.sin(m.ph * Math.PI * 2), lift = 0.11
   const R = ctx.getObject(m.fpR), Lh = ctx.getObject(m.fpL)
+  if (m.fpCat) { const at = m.fpAt
+    if (R) R.feetPosition = { x: 0, y: at.y + a * lift, z: at.z - Math.max(0, a) * 0.04 }
+    if (Lh) Lh.feetPosition = { x: 0, y: at.y - a * lift, z: at.z - Math.max(0, -a) * 0.04 }
+    return }
   if (R) R.feetPosition = { x: 0.2, y: -0.24 + a * lift, z: -Math.max(0, a) * 0.04 }
   if (Lh) Lh.feetPosition = { x: -0.2, y: -0.24 - a * lift, z: -Math.max(0, -a) * 0.04 }
 }
