@@ -111,9 +111,17 @@ export function placeFreshener(ctx) {
   const s = ctx.self.state; if (!(s.fresh > 0)) return;
   const f = ctx.self.feetPosition, yaw = ((ctx.self.camera?.rotation?.yaw ?? 0) * Math.PI) / 180;
   s.fresh -= 1;
-  ctx.spawn({ tags: ["usable", "freshener"], feetPosition: { x: f.x - Math.sin(yaw) * 0.7, y: f.y + 0.02, z: f.z - Math.cos(yaw) * 0.7 }, ...FRESH_BODY,
-    behavior: "scripts/l02-use.js", state: { kind: "placed", name: "Reality Freshener", verb: "Pick up", info: "Holds the room still. Sanity won't drain near it." } });
+  freshenerAt(ctx, { x: f.x - Math.sin(yaw) * 0.7, y: f.y + 0.02, z: f.z - Math.cos(yaw) * 0.7 });
   tell(ctx, ctx.self, "Reality Freshener set down · the room holds still around it", HISS);
+}
+const BUBBLE = `fx
+pop ring burst=1 life=1.1 size=1 col=<.6,.9,1> a=.8>0 sz=$size*(.2>12) r=sprite(soft-ring,add)
+pop motes n=18 on=sphere(5.5) life=2..4 v=sdir()*.05 size=.03..0.06 col=<.7,.95,1> a=0>.6:.5>0 sz=$size r=sprite(soft-disc,add)`;
+export function freshenerAt(ctx, at) {
+  ctx.spawn({ tags: ["usable", "freshener"], feetPosition: at, ...FRESH_BODY, fx: { script: BUBBLE }, behavior: "scripts/l02-use.js",
+    state: { kind: "placed", name: "Reality Freshener", verb: "Pick up", info: "Reality holds still for 6 m. No sanity drain, nothing falls." },
+    children: [...FRESH_BODY.children, { feetPosition: { x: 0, y: 0.01, z: 0 }, rotation: { pitch: -90 }, primitive: { kind: "ring", innerRadius: 5.85, outerRadius: 6, thetaSegments: 64 }, material: { color: "oklch(0.85 0.1 210 / 0.35)", transparent: true, emissive: "oklch(0.8 0.12 210)", emissiveIntensity: 0.8, side: "double" } }] });
+  ctx.emit("playSound", { clip: HISS, position: at, volume: 0.8, maxDistance: 20 });
 }
 export const FRESH_BODY = {
   primitive: { kind: "cylinder", radiusTop: 0.045, radiusBottom: 0.05, height: 0.2, radialSegments: 20 }, material: { color: "oklch(0.95 0.01 230)", roughness: 0.35, metalness: 0.1 },

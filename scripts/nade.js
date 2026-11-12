@@ -1,4 +1,5 @@
 // Thrown frag grenades and molotovs (borrowed from FPS Grudge's flight, bounce and blast, rewired to this game's foes).
+import { freshenerAt } from "./lib/remodel-quest.js";
 // state: { kind: "frag" | "molotov" | "fire", vel, ownerId, fuseAt }. The blast doesn't judge kills itself: it sends the
 // thrower a "blast" with every foe it reached, and the thrower's scripts/player.js lands each through hitTarget (XP, loot, ragdoll).
 import { raycast } from "builtin/physics";
@@ -33,10 +34,11 @@ export function update(ctx, dt) {
   v.y += g * dt;
   const p = me.feetPosition, speed = Math.hypot(v.x, v.y, v.z);
   let next = { x: p.x + v.x * dt, y: p.y + v.y * dt, z: p.z + v.z * dt };
-  if ((s.age = (s.age ?? 0) + dt) > 6 || p.y < -60) return s.kind === "molotov" ? shatter(ctx, p, { x: 0, y: 1, z: 0 }) : explode(ctx);
+  if ((s.age = (s.age ?? 0) + dt) > 6 || p.y < -60) return s.kind === "fresh" ? settle(ctx, p) : s.kind === "molotov" ? shatter(ctx, p, { x: 0, y: 1, z: 0 }) : explode(ctx);
   if (speed > 1e-4) {
     const dir = { x: v.x / speed, y: v.y / speed, z: v.z / speed };
     const hit = raycast(ctx, p, dir, { distance: speed * dt + 0.06, bodies: "static", physicsOnly: true, ignoreEntities: [me.id, s.ownerId].filter(Boolean) });
+    if (hit && s.kind === "fresh") return settle(ctx, hit.position);
     if (hit && s.kind === "molotov") return shatter(ctx, hit.position, hit.normal ?? { x: 0, y: 1, z: 0 });
     if (hit) { // the frag bounces and rolls (Grudge: restitution .35, ground friction .45)
       const n = hit.normal ?? { x: 0, y: 1, z: 0 }, vn = dot(v, n);
@@ -83,6 +85,9 @@ function explode(ctx) {
   ctx.destroy(me.id);
 }
 
+function settle(ctx, at) { // a Reality Freshener: lands upright, hisses, the room holds still around it
+  const me = ctx.self; freshenerAt(ctx, { x: at.x, y: at.y + 0.01, z: at.z }); ctx.destroy(me.id);
+}
 function shatter(ctx, at, n) {
   const me = ctx.self, s = me.state, M = T.molotov;
   s.done = true;

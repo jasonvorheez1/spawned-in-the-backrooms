@@ -526,6 +526,10 @@ function pane(s, sel, eqKey) {
     card = `<div class="dt def"><div class="dt-header"><h4>${v.name}</h4><span class="dt-rarity">${v.drink ? 'DRINK' : 'FOOD'}</span></div><div class="g">${v.drink ? cell('THIRST', '+' + v.thirst) : cell('HUNGER', '+' + v.hunger)}${cell('CARRIED', s.snacks[sel.slice(6)], true)}</div></div>`
     acts.push(btn(v.drink ? 'DRINK' : 'EAT', { k: 'snack', c: sel.slice(6) }), btn('DROP ONE', { k: 'dropItem', t: sel }))
   } else if ((sel === 'ammo' || sel === 'shells' || sel === 'cells') && s[sel] > 0) { card = detail(sel, s, true); acts.push(btn('DROP A BOX', { k: 'dropItem', t: sel })) }
+  else if (sel === 'fresh' && s.fresh > 0) {
+    body = `<div class="card"><div class="ttl" style="color:#9fd8e6">Reality Freshener</div><div class="dsc">Remodeling Co. tech. Throw it and reality holds still where it lands: nothing collapses, sanity stops draining. Walk up and take it back.</div><div class="grid">${cell('RADIUS', '6 M') + cell('LASTS', 'UNTIL TAKEN') + cell('CARRIED', s.fresh) + cell('HOW', 'HOLD G, LET GO', true)}</div></div>`
+    acts.push(btn('READY FOR G', { k: 'nadePick', t: 'fresh' }))
+  }
   else if ((sel === 'frag' && s.grenades > 0) || (sel === 'molotov' && s.molotovs > 0)) {
     const fr = sel === 'frag'
     card = `<div class="dt def"><div class="dt-header"><h4>${fr ? 'Frag grenade' : 'Molotov cocktail'}</h4><span class="dt-rarity">THROWABLE</span></div><div class="g">${fr
@@ -658,14 +662,14 @@ function inventory(s) {
     </button>`).join('') || '<div class="em">Out of ammunition.</div>'
 
   // Throwables: listed with the ammo, a THROW button and a card each
-  const THROWN = { grenades: ['frag', 'Frag grenade'], molotovs: ['molotov', 'Molotov cocktail'] }
+  const THROWN = { grenades: ['frag', 'Frag grenade'], molotovs: ['molotov', 'Molotov cocktail'], fresh: ['fresh', 'Reality Freshener'] }
   const throwRows = Object.entries(THROWN).filter(([k]) => s[k] > 0).map(([k, [t, nm]]) => `
     <button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})">
-      <span class="cur">&gt;</span><span class="nm" style="color:${t === 'frag' ? '#b8c49a' : '#f0a050'}">${nm}</span>
+      <span class="cur">&gt;</span><span class="nm" style="color:${t === 'frag' ? '#b8c49a' : t === 'fresh' ? '#9fd8e6' : '#f0a050'}">${nm}</span>
       <span class="stat-r"><span>×${s[k]}</span></span>
     </button>`).join('')
   // Misc list
-  const misc = `${s.fresh > 0 ? `<button class="it" onclick="sendAction('inv',{k:'fresh'})"><span class="cur">&gt;</span><span class="nm" style="color:#9fd8e6">Reality Freshener · set down</span><span class="stat-r">${s.fresh}</span></button>` : ''}${s.compass > 0 ? `<button class="it" onclick="sendAction('inv',{k:'compass'})"><span class="cur">&gt;</span><span class="nm" style="color:#d8b56a">Old compass</span><span class="stat-r">${s.compass} reads</span></button>` : ''}
+  const misc = `${s.compass > 0 ? `<button class="it" onclick="sendAction('inv',{k:'compass'})"><span class="cur">&gt;</span><span class="nm" style="color:#d8b56a">Old compass</span><span class="stat-r">${s.compass} reads</span></button>` : ''}
     ${s.firesalt > 0 ? `<button class="it" onclick="sendAction('inv',{k:'firesalt'})"><span class="cur">&gt;</span><span class="nm" style="color:#ff8a3a">Firesalt</span><span class="stat-r">${s.firesalt} pinches</span></button>` : ''}
     ${s.bobbypins ? `<button class="it${sel === 'bobbypin' ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'bobbypin'})"><span class="cur">&gt;</span><span class="nm">Bobby pins</span><span class="stat-r">${s.bobbypins}</span></button>` : ''}
     ${s.pages ? String(s.pages).split(',').filter(Boolean).sort((x, y) => x - y).map((n) => `<button class="it" onclick="sendAction('inv',{k:'read',n:${+n}})"><span class="cur">&gt;</span><span class="nm" style="color:#e8dcc0">${+n === 24 ? 'Field doc 24' : +n >= 21 && +n <= 23 ? 'Field doc ' + (+n - 20) : +n >= 11 && +n <= 17 ? 'Alef papers ' + (+n - 10) : 'Torn page ' + +n}</span><span class="stat-r">READ</span></button>`).join('') : ''}` || '<div class="em">No miscellaneous items.</div>'

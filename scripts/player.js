@@ -53,7 +53,7 @@ import THROW from './lib/data/throwables.yml'
 import { RAG } from './nade.js'
 import { stepTick } from './lib/footsteps.js'
 import { useCompass, COMPASS } from './lib/compass.js'
-import { placeFreshener, nearFresh } from './lib/remodel-quest.js'
+import { placeFreshener, nearFresh, FRESH_BODY } from './lib/remodel-quest.js'
 import L3I from './lib/data/l3items.yml'
 import CR from './lib/data/craft.yml'
 import AW from './lib/data/almond.yml'
@@ -782,7 +782,7 @@ function invAction(ctx, d) {
     else spawnRemains(ctx, at, [tok], 'Dropped bag')
     sound(ctx, 'gun-raise-cloth-rustle', 0.5, true); return
   }
-  if (d.k === 'nadePick') { s.nadePick = d.t === 'molotov' ? 'molotov' : 'frag'; s.notice = { text: `G throws: ${THROW[s.nadePick].name}`, at: ctx.now() }; return }
+  if (d.k === 'nadePick') { s.nadePick = d.t === 'molotov' ? 'molotov' : d.t === 'fresh' ? 'fresh' : 'frag'; s.notice = { text: `G throws: ${THROW[s.nadePick].name}`, at: ctx.now() }; return }
   if (d.k === 'sel') { s.invSel = String(d.t || '').slice(0, 80); return }
   if (d.k === 'tab') { s.invTab = ['all', 'weapons', 'repair', 'aid', 'apparel', 'ammo', 'misc', 'tapes', 'key', 'throw'].includes(d.t) ? d.t : 'all'; return }
   if (d.k === 'sort') { s.invSort = ['name', 'dam', 'wg', 'cnd'].includes(d.s) ? d.s : 'name'; return }
@@ -1466,17 +1466,16 @@ function pullPin(ctx) {
   const s = ctx.self.state, now = ctx.now(), w = walkOf(ctx)
   if (s.dead || w.nade || now < (w.throwAt ?? 0)) return
   const pick = s.nadePick && (s[THROW[s.nadePick].key] ?? 0) > 0 ? s.nadePick : null
-  const kind = pick ?? ((s.grenades ?? 0) > 0 ? 'frag' : (s.molotovs ?? 0) > 0 ? 'molotov' : null)
+  const kind = pick ?? ((s.grenades ?? 0) > 0 ? 'frag' : (s.molotovs ?? 0) > 0 ? 'molotov' : (s.fresh ?? 0) > 0 ? 'fresh' : null)
   if (!kind) { s.notice = { text: 'Nothing to throw', at: now }; return }
   const T = THROW[kind]
   w.nade = { kind, at: now, fuseAt: now + (T.fuse ?? 0) }
   // the arm draws back and holds there (the clip's wind-up, slowed) until you let go
   ctx.self.anim.nade = { clip: OVERHAND.clip, weight: OVERHAND.weight, loop: 'once', speed: 0.55, time: 0, mask: OVERHAND.mask, blendIn: OVERHAND.blendIn, blendOut: OVERHAND.blendOut, clampWhenFinished: true }
   // in first person: the grenade or bottle comes up in your free left hand, the gun stays up in the right
-  w.nadeVm = ctx.spawn({ audience: 'local', scope: 'session', feetPosition: { attach: 'camera', x: -0.26, y: -0.3, depth: 0.55 }, rotation: { yaw: -20, pitch: kind === 'frag' ? 0 : -20 }, model: T.model,
-    layout: { box: { min: { x: -T.size / 2, y: 0, z: -T.size / 2 }, max: { x: T.size / 2, y: T.size, z: T.size / 2 } } }, visibleInFirstPerson: true, castShadow: false })
+  w.nadeVm = ctx.spawn({ audience: 'local', scope: 'session', feetPosition: { attach: 'camera', x: -0.26, y: -0.3, depth: 0.55 }, rotation: { yaw: -20, pitch: kind === 'frag' ? 0 : -20 }, ...(T.model ? { model: T.model, layout: { box: { min: { x: -T.size / 2, y: 0, z: -T.size / 2 }, max: { x: T.size / 2, y: T.size, z: T.size / 2 } } } } : { ...FRESH_BODY, children: FRESH_BODY.children.filter((c) => !c.light) }), visibleInFirstPerson: true, castShadow: false })
   animate(ctx, w.nadeVm, { 'feetPosition.y': [-0.5, -0.22], 'feetPosition.x': [-0.3, -0.32] }, { duration: 0.25, easing: 'easeOutCubic' })
-  ctx.emit('playSound', { clip: kind === 'frag' ? '/cdn/moodboard-realistic-gritty/sfx-grenade-pin-pull-metal-ring-click.mp3' : '/cdn/moodboard-realistic-gritty/sfx-lighter-flick-cloth-rag-catches-fire.mp3', volume: 0.75 })
+  ctx.emit('playSound', { clip: kind === 'fresh' ? 'cdn/sfx-aerosol-can-short-hiss-click-plastic-cap.mp3' : kind === 'frag' ? '/cdn/moodboard-realistic-gritty/sfx-grenade-pin-pull-metal-ring-click.mp3' : '/cdn/moodboard-realistic-gritty/sfx-lighter-flick-cloth-rag-catches-fire.mp3', volume: 0.75 })
   if (kind === 'frag') w.nadeCook = ctx.after(T.fuse / 1000, 'cookedOff', { at: w.nade.at })
 }
 export function cookedOff(ctx, p) { // held too long: it goes off where you stand
@@ -1507,7 +1506,7 @@ function letFly(ctx) {
   const pc = Math.max(-0.6, Math.min(1.1, s.aimPitch ?? 0)), cp = Math.cos(pc), sp = T.speed * power
   const vel = { x: f.x * cp * sp, y: Math.sin(pc) * sp + T.lift * power, z: f.z * cp * sp }
   const half = T.size / 2
-  ctx.spawn({ tags: ['thrown'], lifetime: 12, feetPosition: eye, model: T.model, layout: { box: { min: { x: -half, y: 0, z: -half }, max: { x: half, y: T.size, z: half } } },
+  ctx.spawn({ tags: ['thrown'], lifetime: 12, feetPosition: eye, ...(T.model ? { model: T.model, layout: { box: { min: { x: -half, y: 0, z: -half }, max: { x: half, y: T.size, z: half } } } } : FRESH_BODY),
     fx: n.kind === 'molotov' ? { script: RAG } : null,
     behavior: 'scripts/nade.js', state: { kind: n.kind, vel, ownerId: ctx.self.id, fuseAt: n.fuseAt } })
   ctx.emit('playSound', { clip: '/cdn/moodboard-realistic-gritty/sfx-throw-whoosh-arm-swing.mp3', position: eye, volume: 0.6 })
