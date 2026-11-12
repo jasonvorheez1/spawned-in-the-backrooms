@@ -28,3 +28,13 @@ l31-shop-bp:
   physics: none
   primitive: {depth: 24, height: 4, kind: box, width: 14}
   tags: [blueprint]
+l31-shop-light-mid:
+  feetPosition: {x: -33, y: 3.4, z: 0}
+  id: l31-shop-light-mid
+  light: {color: oklch(0.9 0.06 80), distance: 12, intensity: 2.5, kind: point}
+l31-shop-spinner-2:
+  feetPosition: {x: -34.3, y: 0, z: -4.6}
+  id: l31-shop-spinner-2
+  model: {forward: "+z", id: /cdn/value.be7eb6c9bc6772c442cbd253702e165b10228b7f25c091d9b7fe1a9fee5eef61.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: -25}
