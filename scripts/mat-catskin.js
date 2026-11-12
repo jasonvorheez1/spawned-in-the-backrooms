@@ -51,10 +51,10 @@ export function material(ctx) {
     // eyeshadow (look.shadow): a soft wash on the lid above each painted eye, found by sampling the picture just below: where the eye's white or iris sits under bare fur
     if (Number(ctx.params.shA ?? 0) > 0) {
       const eyeAt = (du, dv) => { const s = ctx.texture(String(ctx.params.face)).sample(vec2(u.add(du), v.sub(dv))); return s.a.mul(smoothstep(0.55, 0.85, max(max(s.r, s.g), s.b))); };
-      let acc = float(0); const taps = []; for (const du of [-.05, -.025, 0, .025, .05]) for (const dv of [.035, .055, .075, .095]) taps.push([du, dv]);   // a wide even grid: one lash stroke no longer swings the sum, so the band reads smooth (Shelly Nov 12: scratchy streaks)
+      let acc = float(0); const taps = []; for (const du of [-.06, -.04, -.02, 0, .02, .04, .06]) for (const dv of [.03, .05, .07, .09, .11]) taps.push([du, dv]);   // a wide even grid: one lash stroke no longer swings the sum, so the band reads smooth (Shelly Nov 12: scratchy streaks)
       for (const [du, dv] of taps) acc = acc.add(eyeAt(du, dv));   // averaged, not maxed: lashes and outlines blur out, the wash fades evenly up the lid
-      const lid = smoothstep(0.06, 0.3, acc.div(taps.length)).mul(smoothstep(0.47, 0.52, v)).mul(smoothstep(0.08, 0.13, abs(u.sub(0.5))));   // above the muzzle, never across the bridge of the nose
-      const wash = lid.mul(smoothstep(0.3, 0.04, pic.a)).mul(inside).mul(front).mul(P("shA", 0.7));
+      const lid = smoothstep(0.04, 0.2, acc.div(taps.length)).mul(smoothstep(0.47, 0.52, v)).mul(smoothstep(0.08, 0.13, abs(u.sub(0.5))));   // above the muzzle, never across the bridge of the nose
+      const wash = lid.mul(smoothstep(0.8, 0.4, pic.a)).mul(inside).mul(front).mul(P("shA", 0.7));
       col = mix(col, mix(C("sh").mul(col.add(0.5)).min(vec3(1, 1, 1)), C("sh"), 0.4), wash);
     }
     // one nose, on the sculpted snout tip itself (bind space). Shelly Nov 12 "more cutesy anime than sonic": small, a soft rounded triangle wide on top, dusky rose, one tiny shine
