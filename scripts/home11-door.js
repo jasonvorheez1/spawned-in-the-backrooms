@@ -64,6 +64,8 @@ export const ears = {
       const open = !hinge.state.open; hinge.state.open = open;
       animate(ctx, hinge, { "rotation.yaw": open ? hinge.state.openYaw : (hinge.state.closedYaw ?? 0) }, { duration: 0.6, easing: "easeOutCubic" }); // fast start, soft stop
       ctx.self.state.verb = open ? "Close" : "Open";
+      const mate = ctx.self.state.pair && ctx.getObject(ctx.self.state.pair); // a double gate: its other leaf swings with it
+      if (mate && mate.state.open !== open) { mate.state.open = open; mate.state.verb = ctx.self.state.verb; animate(ctx, mate, { "rotation.yaw": open ? mate.state.openYaw : (mate.state.closedYaw ?? 0) }, { duration: 0.6, easing: "easeOutCubic" }); }
       ctx.emit("playSound", { clip: open ? "/cdn/moodboard-realistic-gritty/sfx-old-wooden-hotel-door-creak-open.mp3" : "/cdn/moodboard-realistic-gritty/sfx-wooden-door-close-latch-click.mp3", position: hinge.worldFeetPosition ?? ctx.self.worldFeetPosition, volume: 0.5 });
       return;
     }

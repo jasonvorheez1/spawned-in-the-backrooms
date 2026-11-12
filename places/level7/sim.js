@@ -1086,6 +1086,10 @@ export function tick(ctx) {
     }
     s.fortGateV = 2;
   }
+  if ((s.fortGateV ?? 0) < 3) { // the two leaves are one gate: E on either swings both
+    const a = ctx.place.objects["l7f-gate-0"], b = ctx.place.objects["l7f-gate-1"];
+    if (a && b) { a.state.pair = "l7f-gate-1"; b.state.pair = "l7f-gate-0"; s.fortGateV = 3; }
+  }
   if ((s.catV ?? 0) < 1 && !s.catBusy) { // Shelly Nov 12 "level 7 is still using the old npcs": the fort's people stood before the cat bodies; refit them in place (same path as Cap'n and Rico), state and weapons kept
     s.catBusy = 1;
     Promise.all([import("../../scripts/lib/critter-model.js"), import("../../scripts/lib/clothes.js")]).then(([{ refitBody }, { npcLook }]) => {
