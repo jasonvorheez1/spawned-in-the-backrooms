@@ -1,3 +1,4 @@
+import { felixUi } from './lib/felix-ui.js'
 // Block Panic's screen: a CRT in its cabinet, drawn from player.state.arcade (scripts/arcade-play.js).
 const COL = { I: '#36e0ff', O: '#ffe14a', T: '#c35bff', S: '#4cff6a', Z: '#ff4a6a', J: '#4a7bff', L: '#ff9b2e' }
 const SHAPES = { I: [[0,1],[1,1],[2,1],[3,1]], O: [[0,0],[1,0],[0,1],[1,1]], T: [[1,0],[0,1],[1,1],[2,1]], S: [[1,0],[2,0],[0,1],[1,1]], Z: [[0,0],[1,0],[1,1],[2,1]], J: [[0,0],[0,1],[1,1],[2,1]], L: [[2,0],[0,1],[1,1],[2,1]] }
@@ -22,6 +23,7 @@ const CSS = `<style>#arc{position:fixed;inset:0;z-index:70;display:flex;align-it
 export function arcadeUi(ctx, player) {
   const a = player.state?.arcade
   if (!a) return ''
+  if (a.game === 'felix') return felixUi(ctx, player)
   const v = a.view ?? '.'.repeat(200)
   const well = [...v].map((c) => cell(c, 22)).join('')
   const nx = a.next && SHAPES[a.next] ? (() => { const g = new Array(8).fill('.'); for (const [x, y] of SHAPES[a.next]) g[y * 4 + x] = a.next; return g.map((c) => cell(c, 16)).join('') })() : ''

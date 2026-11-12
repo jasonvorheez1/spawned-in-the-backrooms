@@ -124,7 +124,7 @@ export function layArcade(ctx) {
   ctx.spawn("l31-arcade-felix", { feetPosition: { x: E - 0.65, y: 0, z: -14.6 }, rotation: { yaw: W },
     model: { id: GLB.felix, forward: "+x" }, layout: { box: { min: { x: -0.7, y: 0, z: -0.7 }, max: { x: 0.7, y: 1.82, z: 0.7 } } },
     physics: { body: "static", collider: "box" }, behavior: SELF, tags: ["usable", "l31-arcade"],
-    state: { kind: "attract", verb: "Play", info: "Fix-It Felix Jr. Takes a card.", name: "Fix-It Felix Jr.", res: "upright" },
+    state: { kind: "arcade", game: "felix", verb: "Play", info: "Fix-It Felix Jr. Takes a card.", name: "Fix-It Felix Jr.", res: "upright" },
     children: [{ id: "glow", feetPosition: { x: 0, y: 1.35, z: -0.6 }, light: { kind: "point", color: "#9fd4ff", intensity: 0.6, distance: 2.5 } }] });
   U("panic", E - 0.6, -19.25, W, { kind: "arcade", game: "blockpanic", name: "Block Panic", info: "arcade cabinet, takes a card" }, { color: "#2a1c5c", roughness: 0.4 }, { color: "#ff4fa3" },
     glow("retro-arcade-crt-screen-pixel-falling-block-puzzle-game", "#ffffff", 1.5), PANIC);

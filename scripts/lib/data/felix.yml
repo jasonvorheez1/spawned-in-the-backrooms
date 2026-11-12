@@ -1,0 +1,34 @@
+# Fix-It Felix Jr. (Level 31 arcade cabinet). Every number is Savi's pick, 2026-11-12; tune here.
+lives: 3
+screens: 3            # floors-of-three Ralph climbs per round, then the roof
+cols: 5
+rows: 3
+stepMs: 170           # Felix sliding one window over
+jumpMs: 320           # Felix hopping a floor
+hammerMs: 230         # one hammer swing; a pie makes it 110
+fixScore: 100         # per pane hit
+windowBonus: 400      # a window made whole
+screenBonus: 1500
+roofBonus: 5000
+brickSpeed: 135       # px/s at round 1
+brickSpeedPerRound: 22
+bricksPerSmash: [1, 1, 2, 2, 3]   # by round, last value holds
+ralphSpeed: 60        # px/s
+ralphSpeedPerRound: 10
+ralphPauseMs: 900
+rebreakChance: [0, 0.15, 0.3, 0.45, 0.6]  # a smash re-breaks a fixed top-row window
+brokenPerScreen: [6, 8, 10, 11, 12]
+duckFromRound: 2
+duckEveryMs: [0, 9000, 7000, 5500, 4500]
+duckSpeed: 80
+bedsFromRound: 2      # flowerbeds: block hopping up or down at one column
+bedsPerScreen: [0, 1, 2, 3, 4]
+shuttersFromRound: 3  # open shutters: block sliding between two windows
+shuttersPerScreen: [0, 0, 1, 2, 3]
+pieIdleMs: 9000       # no fixing this long and a Nicelander leaves a pie
+pieStayMs: 6000
+pieTimeMs: 7000       # invincible, double-speed hammer
+deadMs: 1700
+introMs: 2600
+clearMs: 2000
+roofMs: 6000

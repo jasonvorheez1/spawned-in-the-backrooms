@@ -1,5 +1,6 @@
 // Block Panic, the player's side: a falling-block game stepped here, drawn by scripts/arcade-ui.js from player.state.arcade.
 // A/D move, W rotate, S soft drop, Space hard drop, E leaves. Space on the attract screen inserts a coin.
+import { felixInput, felixUpdate } from './lib/felix-game.js'
 const W = 10, H = 20
 const SHAPES = { I: [[0,1],[1,1],[2,1],[3,1]], O: [[0,0],[1,0],[0,1],[1,1]], T: [[1,0],[0,1],[1,1],[2,1]], S: [[1,0],[2,0],[0,1],[1,1]], Z: [[0,0],[1,0],[1,1],[2,1]], J: [[0,0],[0,1],[1,1],[2,1]], L: [[2,0],[0,1],[1,1],[2,1]] }
 const SIZE = { I: 4, O: 2, T: 3, S: 3, Z: 3, J: 3, L: 3 }
@@ -51,7 +52,8 @@ export function onInput(ctx, input) {
   const s = ctx.self.state
   if (!s.arcade) return
   const k = ctx.self.session.ak ??= {}
-  if (input.pressed?.interact && ctx.now() - (s.arcade.at ?? 0) > 400) { s.arcade = null; s.arcadeClosedAt = ctx.now(); ctx.self.session.ap = null; return }
+  if (input.pressed?.interact && ctx.now() - (s.arcade.at ?? 0) > 400) { s.arcade = null; s.arcadeClosedAt = ctx.now(); ctx.self.session.ap = null; ctx.self.session.ff = null; ctx.session.ffv = null; return }
+  if (s.arcade.game === 'felix') return felixInput(ctx, input)
   k.x = input.axes?.moveX ?? 0; k.z = input.axes?.moveZ ?? 0
   if (input.pressed?.jump) k.drop = true
 }
@@ -63,6 +65,7 @@ export function update(ctx, dt) {
   const cab = ctx.getObject(a.id), me = ctx.self.feetPosition
   if (cab) ctx.self.rotation = { yaw: Math.atan2(-(cab.feetPosition.x - me.x), -(cab.feetPosition.z - me.z)) * 180 / Math.PI }
   const v = ctx.self.velocity; ctx.self.velocity = { x: 0, y: v.y, z: 0 }
+  if (a.game === 'felix') return felixUpdate(ctx, dt)
   const k = ctx.self.session.ak ??= {}, now = ctx.now()
   let m = ctx.self.session.ap
   if (a.phase !== 'play' || !m) {
