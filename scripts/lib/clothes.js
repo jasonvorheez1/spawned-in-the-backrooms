@@ -293,7 +293,7 @@ function bodyRoll(id, l, look) {
 }
 
 // Nov 12: a standing NPC's body, hair, beard, snout and ears re-rolled to fit its job; clothes, fur, sex, face kept
-export const NL_V = 'nl3'
+export const NL_V = 'nl4'
 const REFIT_KEYS = ['hair', 'hairc', 'beard', 'beardc', 'bodyType', 'heightS', 'buildS', 'headS', 'earS', 'snoutS', 'tailS', 'waistS', 'hipS', 'bustS', 'snout', 'ears', 'chest']
 export function refitLook(id, wear) {
   const base = { ...wear }; for (const k of REFIT_KEYS) delete base[k]
