@@ -28,8 +28,14 @@ def body(sex):
     nb = arm.pose.bones.get("mixamorig:Neck"); neck = arm.matrix_world @ nb.head
     return arm, meshes, bvh, pts, neck
 def ring(pts, z, band=0.012):
-    r = [p for p in pts if abs(p.z - z) < band]
-    xs = sorted(abs(p.x) for p in r); return xs[int(len(xs) * 0.95)] if xs else 0.06
+    # the torso's half width at z: the T-posed arms sit at neck height, so walk out from the midline and stop at the first gap (they made the scarf 1.3 m wide)
+    xs = sorted(abs(p.x) for p in pts if abs(p.z - z) < band)
+    if not xs: return 0.06
+    w = xs[0]
+    for x in xs[1:]:
+        if x - w > 0.012: break
+        w = x
+    return w
 def load(kind):
     bpy.ops.import_scene.gltf(filepath=f"{SRC}/{kind}.glb")
     ms = [o for o in bpy.context.selected_objects if o.type == "MESH"]
