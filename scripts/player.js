@@ -1,4 +1,5 @@
 import { setQuest } from './lib/quests.js'
+import { offended, forgiveTick } from './lib/forgive.js'
 import { powerKnock } from './lib/knock.js'
 import SNK from "./lib/data/sneak.yml"
 import { yawOf } from "./lib/sneak.js"
@@ -456,7 +457,7 @@ export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pe
   if (!npc && !m.tags?.includes('l61fc')) { const sp0 = ctx.self.feetPosition, v0 = ctx.self.velocity ?? {}; m.state.shot = { x: sp0.x, z: sp0.z, vx: v0.x ?? 0, vz: v0.z ?? 0, at: ctx.now() } } // a creature that is hit knows where from, however far: smilers, lurkers and hounds go to the spot (hunt.js shotAt)
   m.state.hitDir = { x: Math.round(f.x * 100) / 100, z: Math.round(f.z * 100) / 100, p: Math.round(heavy * 100) / 100 } // the killing blow's push for a ragdoll death
   if (heavy && !W[s.equipped]?.ranged && powerKnock(ctx, m, f, heavy, attrsOfS(s)) > 0) { ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2.2, z: m.feetPosition.z }, text: 'KNOCKDOWN', color: '#ff9a3c', size: 1.2 }); sound(ctx, 'brutal-kick-body-flies-and-crashes', 1) }
-  if (npc || m.tags?.includes('l61fc')) { m.state.angry = { ...(m.state.angry ?? {}), [ctx.self.id]: true }; m.state.fresh = { ...(m.state.fresh ?? {}), [ctx.self.id]: true } } // the camp remembers who shot first; a fresh shot spreads even after a pardon
+  if (npc || m.tags?.includes('l61fc')) { m.state.angry = { ...(m.state.angry ?? {}), [ctx.self.id]: true }; m.state.fresh = { ...(m.state.fresh ?? {}), [ctx.self.id]: true }; offended(ctx, m.id) } // the camp remembers who shot first; a fresh shot spreads even after a pardon
   const hit = { x: m.feetPosition.x, y: m.feetPosition.y + 1.5, z: m.feetPosition.z }
   if (loud) sound(ctx, 'heavy-pipe-hit-flesh-thud', 0.95)
   ctx.emit('damageNumber', { position: hit, value: dmg, color: '#f7d98b' })
@@ -1129,6 +1130,7 @@ function plyArm(ctx, w) {
 }
 
 export function update(ctx, dt) {
+  forgiveTick(ctx) // the angry cool off an in-game hour after your last offence (lib/forgive.js)
   { const me = ctx.self, ses = me.session, hp = me.state.hp ?? 0, nowS = ctx.now(); tick3(me, nowS); if (ses.hpSeen != null && hp < ses.hpSeen - 2.5 && hp > 0 && nowS - (ses.stagAt ?? 0) > 450) { ses.stagAt = nowS; stagger3(ctx, me) } ses.hpSeen = hp } // a stagger take each real hit (Shelly Nov 10)
   { const st = ctx.self.state; if (st.reloading && (st.equipped !== st.reloading || !st.reloadAt || ctx.now() - st.reloadAt > 9000)) { st.reloading = ''; st.reloadTok = (st.reloadTok ?? 0) + 1 } } // a reload stranded by a swap, a page reload or a lost timer clears itself
   const fp = ctx.self.feetPosition, fz = zoneHere(ctx, fp.x, fp.z)
