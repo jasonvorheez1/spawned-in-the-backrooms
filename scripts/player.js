@@ -1071,13 +1071,12 @@ function viewmodel(ctx, moving, sprinting) {
     // the worn model rides the viewmodel: shoulder just behind and below the eye, its right hand reaching the grip
     // human: the body turned to face the look, its right shoulder just right of and below the eye (female shoulder 1.19 m, male scaled by height)
     if (fpa) child.push({ id: 'fparm-r', feetPosition: s.vmTune?.aat ?? FP_AT(l.sex === 'f' ? 'f' : 'm'), rotation: s.vmTune?.arot ?? FP_ROT, model: { id: fpa.R, materials: skinM }, castShadow: false, visibleInFirstPerson: true, audience: 'local' }) // her own right arm (art/fp-arm), its fist closed on the grip at the viewmodel's origin
-    else if (cs) { /* her cat body rides the camera, not the swinging viewmodel: spawned beside it below */ }
+    else if (cs) child.push({ id: 'plyarm', model: cs.model, morph: cs.morph, ...(cs.scale ? { scale: cs.scale } : {}), children: (cs.children ?? []).filter((c) => /topw/.test(c.id ?? '')), feetPosition: s.vmTune?.cat ?? { x: 0.02, y: (l.sex === 'f' ? -1.24 : -1.3) * (Number(l.heightS) || 1), z: 0.42 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'cdn/clip-idle-loop.glb', loop: 'loop', weight: 1 } } })
     else if (ply) child.push({ id: 'plyarm', model: ply, feetPosition: { x: 0.02, y: -1.62, z: 0.62 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
     w.vm = ctx.spawn({
       feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42, fov: 55 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
       primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: arm, ...(wp.muzzle ? { sockets: { muzzle: wp.muzzle } } : {}) }, children: child
     })
-    if (cs) w.plyObj = ctx.spawn({ id: 'plyarm', model: cs.model, morph: cs.morph, ...(cs.scale ? { scale: cs.scale } : {}), children: (cs.children ?? []).filter((c) => /topw/.test(c.id ?? '')), feetPosition: { attach: 'camera', x: s.vmTune?.cat?.x ?? 0.22, y: s.vmTune?.cat?.y ?? (-0.2 + (l.sex === 'f' ? -1.24 : -1.3) * (Number(l.heightS) || 1)), depth: s.vmTune?.cat?.depth ?? 0.06, fov: 55 }, scope: 'session', castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'cdn/clip-idle-loop.glb', loop: 'loop', weight: 1 } } }) // the shoulder holds still at the eye while the weapon sways and swings; the paw reaches it by IK
     w.vmKind = armKey
   }
   w.plyWant = !!ply && !hb; w.plyHuman = !!hb; w.plyTwo = wp_two(kind) // a two-handed weapon keeps the left arm: its hand reaches the fore-end
