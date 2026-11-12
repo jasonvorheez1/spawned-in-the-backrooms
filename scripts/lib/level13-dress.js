@@ -27,7 +27,7 @@ export function layDress(ctx) {
   }
   // the drag: two dark scuffed streaks from mid-hall into flat a5's doorway, and one shoe left behind (in doors.a5)
   const l = APTS.find((x) => x.id === "a5");
-  if (l) for (const [i, dx] of [[0, -0.18], [1, 0.16]].entries ? [[0, -0.18], [1, 0.16]] : []) {
+  if (l) for (const [i, dx] of [[0, -0.18], [1, 0.16]]) {
     const z0 = l.zf - l.s * (HALL + 0.6), z1 = l.zf + l.s * 1.6;
     ctx.spawn(`l13d-drag-${i}`, { feetPosition: { x: l.door.x + dx + i * 0.05, y: 0.006, z: (z0 + z1) / 2 }, rotation: { pitch: -90, yaw: (i ? 3 : -4) }, castShadow: false, receiveShadow: true,
       primitive: { kind: "plane", width: 0.09, height: Math.abs(z1 - z0) }, material: { color: "oklch(0.24 0.03 50 / 0.55)", transparent: true, roughness: 1, depthWrite: false } });
