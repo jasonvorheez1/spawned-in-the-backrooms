@@ -8,22 +8,23 @@ o = next(x for x in bpy.context.scene.objects if x.type == 'MESH')
 C = Vector((-64.65 + 70, -(-86.3 + 93)))          # midway between the gateposts
 along = Vector((4.1, 3.2)).normalized()             # gatepost to gatepost: (-66.7,-84.7) to (-62.6,-87.9) in the world, Blender y = -world z
 across = Vector((-along.y, along.x))
-HALF, DEPTH, ZLO, ZHI = 1.75, 0.45, 0.70, 4.6      # metres; the posts sit 2.05 m out and stay
-bm = bmesh.new(); bm.from_mesh(o.data)
+HALF, DEPTH, ZLO, ZHI = 1.6, 0.45, 0.72, 3.3      # metres; the posts sit 2.05 m out and stay
 M = o.matrix_world
-def inside(v):
-    w = M @ v.co; d = Vector((w.x, w.y)) - C
-    return abs(d.dot(along)) < HALF and abs(d.dot(across)) < DEPTH and ZLO < w.z < ZHI
-def zin(v):
-    return (M @ v.co).z > ZLO
-kill = [f for f in bm.faces if (M @ f.calc_center_median()).z > ZLO + 0.03 and inside(type('P',(object,),{'co':f.calc_center_median()})) and max((M@v.co).z for v in f.verts) < ZHI + 0.6]
-print("KILL", len(kill), "of", len(bm.faces))
-bmesh.ops.delete(bm, geom=kill, context='FACES'); bm.to_mesh(o.data); bm.free()
-left=[(M@p.center) for p in o.data.polygons if (Vector(((M@p.center).x,(M@p.center).y))-C).length<0.6 and (M@p.center).z>ZLO]
-print('LEFT', len(left), sorted(set(round(w.z,1) for w in left))[:30])
+bpy.ops.mesh.primitive_cube_add(size=1)
+cut = bpy.context.active_object
+ang = math.atan2(along.y, along.x)
+cut.scale = (HALF * 2, 1.6, ZHI - ZLO); cut.rotation_euler = (0, 0, ang)
+cut.location = (C.x, C.y, (ZLO + ZHI) / 2)
+bpy.context.view_layer.update()
+mod = o.modifiers.new("gate", "BOOLEAN"); mod.operation = "DIFFERENCE"; mod.object = cut; mod.solver = "EXACT"
+bpy.context.view_layer.objects.active = o; o.select_set(True)
+n0 = len(o.data.polygons); bpy.ops.object.modifier_apply(modifier="gate")
+bpy.data.objects.remove(cut)
+left=[(M@p.center) for p in o.data.polygons if (Vector(((M@p.center).x,(M@p.center).y))-C).length<0.6 and ZLO+0.05<(M@p.center).z<ZHI-0.05]
+print("KILL", n0, "->", len(o.data.polygons), "LEFT", len(left))
 sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = sc.render.resolution_y = 700
 cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam")); sc.collection.objects.link(cam); sc.camera = cam
-cam.location = (C.x + across.x * -4.5, C.y + across.y * -4.5, 4.5)
+cam.location = (C.x + across.x * 4.5, C.y + across.y * 4.5, 4.5)
 look = Vector((C.x, C.y, 1.0)) - cam.location; cam.rotation_euler = look.to_track_quat('-Z', 'Y').to_euler()
 sun = bpy.data.objects.new("sun", bpy.data.lights.new("sun", "SUN")); sun.data.energy = 4; sun.location = cam.location; sun.rotation_euler = cam.rotation_euler; sc.collection.objects.link(sun)
 w = bpy.data.worlds.new("w"); sc.world = w; w.color = (0.4, 0.4, 0.45)
