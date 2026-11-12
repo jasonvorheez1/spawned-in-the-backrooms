@@ -1087,7 +1087,7 @@ function viewmodel(ctx, moving, sprinting) {
 // once the worn model's skeleton is in: keep only its right arm (head, left arm and legs shrink to their joints)
 // and put its right hand on the viewmodel's grip, so it follows every sway, recoil and reload pose
 const RH = /(^|[^a-z])(r|right)[_. ]?hand$|hand[_. ]?(r|right)$/i
-const CUT = [/head$|neck/i, /(^|[^a-z])(l|left)[_. ]?(clavicle|shoulder|upperarm|arm)$|(clavicle|shoulder|upperarm)[_. ]?(l|left)$/i, /thigh|upleg|(^|[^a-z])(l|r|left|right)[_. ]?leg$|calf/i]
+const CUT = [/head$|neck/i, /(^|[^a-z])(l|left)[_. ]?(clavicle|shoulder|upperarm|arm)$|(clavicle|shoulder|upperarm)[_. ]?(l|left)$/i, /thigh|upleg|(^|[^a-z])(l|r|left|right)[_. ]?leg$|calf/i, /tail/i]
 // the human body's rest-pose right arm (art/human-base: RightArm -> RightHand) laid along the line from below-right of the eye up to the wrist of the grip hand; the torso sits beside and behind the eye, out of view. Computed from the GLB joints, no IK, so it never pops
 const HUMAN_ARM = { f: { q: { x: -0.4041, y: 0.3447, z: 0.8277, w: 0.1811 }, at: { x: 0.939, y: 0.538, z: -0.014 } }, m: { q: { x: -0.4026, y: 0.3501, z: 0.8263, w: 0.1806 }, at: { x: 1.038, y: 0.577, z: -0.001 } } }
 // first-person arms cut from Shelly's human bodies (art/fp-arm/build.py): forearm, hand closed in a fist, the fist's centre at the origin
