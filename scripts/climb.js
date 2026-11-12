@@ -20,6 +20,7 @@ const FP_ARM = { // first-person forearms cut from Shelly's human bodies (same m
   f: { R: '/cdn/value.2d938d9446aaeb01c15e41213e80f5a4d2c7e1507bc655714fb04eac001794fa.glb', L: '/cdn/value.7f8d66209a679e498e2b417b0accaf0b9ce819769be93f697762794ff5dc409b.glb' },
   m: { R: '/cdn/value.7217b9235387299104686cdd782ec11f1801444037bd8eceefe445e11001b020.glb', L: '/cdn/value.70fede1b834eff766531f0b51f4772832f8ac989f9f48cffe988120bba1970cb.glb' } }
 
+const VAULT = 450 // ms: the pull-up from the top rung onto the deck
 const fwd = (yaw) => { const r = (yaw * Math.PI) / 180; return { x: -Math.sin(r), z: -Math.cos(r) } }
 const wrap = (a) => ((((a + 180) % 360) + 360) % 360) - 180
 const mem = (ctx) => (ctx.self.session.climb ??= { z: 0, jump: false, on: null, scanAt: 0, near: [], travel: 0, ph: 0 })
@@ -43,6 +44,15 @@ export function update(ctx, dt) {
   const me = ctx.self, s = me.state, m = mem(ctx), p = me.feetPosition
   if (s.level == null || s.dead || (s.hp ?? 1) <= 0 || s.sit || s.menuOpen) { if (m.on) letGo(ctx, m); m.jump = false; return }
   const now = ctx.now()
+  // the pull-up over the top: up first, then forward onto the deck, over VAULT ms, instead of a jump cut
+  if (m.vault) {
+    const v = m.vault, k = Math.min(1, (now - v.t0) / VAULT), up = Math.min(1, k * 1.8), fw = Math.max(0, (k - 0.35) / 0.65)
+    const e = (x) => 1 - (1 - x) * (1 - x)
+    me.feetPosition = { x: v.from.x + (v.to.x - v.from.x) * e(fw), y: v.from.y + (v.to.y - v.from.y) * e(up), z: v.from.z + (v.to.z - v.from.z) * e(fw) }
+    me.velocity = { x: 0, y: 0, z: 0 }
+    if (k >= 1) { m.vault = null; me.velocity = { x: v.f.x * 1.5, y: 0, z: v.f.z * 1.5 } }
+    return
+  }
 
   if (!m.on) {
     if (s.climbing) s.climbing = false // a climb cut by a reload or a crossing leaves no hold behind: hands and weapon come back
@@ -87,8 +97,7 @@ export function update(ctx, dt) {
     }
     land ??= { x: L.base.x + L.f.x * 0.9, y: L.base.y + L.h + 0.1, z: L.base.z + L.f.z * 0.9 }
     letGo(ctx, m); m.stall = 0
-    me.feetPosition = land
-    me.velocity = { x: L.f.x * 1.5, y: 0, z: L.f.z * 1.5 }
+    m.vault = { from: { x: p.x, y: p.y, z: p.z }, to: land, f: L.f, t0: ctx.now() }
     sound(ctx, L, p, 0.5)
     return
   }
