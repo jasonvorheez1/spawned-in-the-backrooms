@@ -70,7 +70,7 @@ fishing_rod: { name: "Salvaged fishing rod", damage: 12, levelScale: 0.8, cooldo
 # Each number multiplies the base stat; rarity steps the rarity up or down; cnd: the condition it is found at.
 # look: what scripts/weapon-geo.js draws over the weapon (rust, tape, nails, edge, meg, mag, sawn).
 variantPlain: 46
-blunt: [table_leg, pipe_scrap, crowbar, bat, wrench, sledgehammer, stun_baton, golf_club, tire_iron, baton]
+blunt: [table_leg, pipe_scrap, crowbar, bat, wrench, sledgehammer, stun_baton, golf_club, tire_iron, baton, crook]
 blade: [hatchet, fire_axe, screwdriver, rebar, lineman_machete, pickaxe, cleaver]
 variants:
   rusty:    { name: Rusty,        for: [melee, ranged], chance: 20, damage: 0.82, cooldown: 1.06, rarity: -1, xp: 0.6, cnd: 55, look: rust, tint: "oklch(0.62 0.08 50)" }
