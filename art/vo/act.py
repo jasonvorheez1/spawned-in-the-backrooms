@@ -7,6 +7,8 @@ CAST = yaml.safe_load(open('scripts/lib/data/voice-cast.yml'))
 OUT = 'scripts/lib/data/voice-acted.yml'
 done = yaml.safe_load(open(OUT)) if os.path.exists(OUT) else {}
 done = done or {}
+import base64
+PACK = lambda h: base64.urlsafe_b64encode(bytes.fromhex(h)).decode().rstrip('=') if re.fullmatch(r'[0-9a-f]{64}', h) else h  # voices.js decodes; keeps every level's load small
 NUM = ['zero','one','two','three','four','five','six','seven','eight','nine']
 def jhash(s):
     h = 7
@@ -72,7 +74,7 @@ def rec(j):
 n = 0
 with ThreadPoolExecutor(8) as ex:
     for k, url in ex.map(rec, todo):
-        if url: done[k] = url
+        if url: done[k] = PACK(url)
         n += 1
         if n % 50 == 0:
             yaml.safe_dump(done, open(OUT, 'w'), width=400, sort_keys=True); print(n, flush=True)

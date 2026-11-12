@@ -57,7 +57,10 @@ const slug = (line, n = 180) => String(line ?? '').slice(0, n).replace(/\d/g, (d
 // a line with no real word in it (empty, "hmm", "...", a stray symbol) makes the voice maker fill in its own test words: those stay silent, the subtitle still shows
 const real = (sl) => sl.split('-').some((w) => w.length >= 3 && /[aeiouy]/.test(w) && !/^(hmm+|mmm*|uhh*|umm*|hm+|ahh*|ohh*|erm*)$/.test(w))
 const actorId = (who) => String(who).split('#')[0]
-const asset = (sha) => `/cdn/value.${sha}.mp3`
+const B64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'
+// voice-acted.yml packs each sha as 43 base64url chars (a quarter smaller on every level's load); a 64-char hex sha still reads as is
+const unpack = (s) => { s = String(s); if (s.length === 64) return s; let bits = 0, n = 0, hex = ''; for (const c of s) { bits = (bits << 6) | B64.indexOf(c); n += 6; while (n >= 4) { n -= 4; hex += ((bits >> n) & 15).toString(16) } bits &= (1 << n) - 1 } return hex.slice(0, 64) }
+const asset = (sha) => `/cdn/value.${unpack(sha)}.mp3`
 const recorded = new Map(Object.entries(ACTED).map(([key, sha]) => [asset(sha), (TIMING[key] ?? 0) * 100]))
 export const isVoiceClip = (clip) => recorded.has(clip) || String(clip).includes('/voice-')
 export const recordedDuration = (clip) => recorded.get(clip) || 0
