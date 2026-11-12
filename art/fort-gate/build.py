@@ -16,14 +16,14 @@ def inside(v):
     return abs(d.dot(along)) < HALF and abs(d.dot(across)) < DEPTH and ZLO < w.z < ZHI
 def zin(v):
     return (M @ v.co).z > ZLO
-kill = [f for f in bm.faces if all(zin(v) for v in f.verts) and inside(type('P',(object,),{'co':f.calc_center_median()})) and max((M@v.co).z for v in f.verts) < ZHI + 0.6]
+kill = [f for f in bm.faces if (M @ f.calc_center_median()).z > ZLO + 0.03 and inside(type('P',(object,),{'co':f.calc_center_median()})) and max((M@v.co).z for v in f.verts) < ZHI + 0.6]
 print("KILL", len(kill), "of", len(bm.faces))
 bmesh.ops.delete(bm, geom=kill, context='FACES'); bm.to_mesh(o.data); bm.free()
 left=[(M@p.center) for p in o.data.polygons if (Vector(((M@p.center).x,(M@p.center).y))-C).length<0.6 and (M@p.center).z>ZLO]
 print('LEFT', len(left), sorted(set(round(w.z,1) for w in left))[:30])
 sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = sc.render.resolution_y = 700
 cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam")); sc.collection.objects.link(cam); sc.camera = cam
-cam.location = (C.x + across.x * 4.5, C.y + across.y * 4.5, 4.5)
+cam.location = (C.x + across.x * -4.5, C.y + across.y * -4.5, 4.5)
 look = Vector((C.x, C.y, 1.0)) - cam.location; cam.rotation_euler = look.to_track_quat('-Z', 'Y').to_euler()
 sun = bpy.data.objects.new("sun", bpy.data.lights.new("sun", "SUN")); sun.data.energy = 4; sun.location = cam.location; sun.rotation_euler = cam.rotation_euler; sc.collection.objects.link(sun)
 w = bpy.data.worlds.new("w"); sc.world = w; w.color = (0.4, 0.4, 0.45)
