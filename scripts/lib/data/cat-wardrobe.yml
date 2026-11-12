@@ -84,11 +84,11 @@ fluff:
 
 # ears: art/cat-wardrobe/ears.py (Nov 11, Shelly "massively improve ears"): sculpted anime ears skinned to the head, slots earFur/earInner/earTuft; the head's own ear sinks under them (Ear_Small 3)
 ears:
-  upright: { f: '/cdn/value.0719aa2d5320de1b9a58522b4c48f597db3b30573677f2b6cf72aeeb5a63c8c2.glb', m: '/cdn/value.90d4adabbd753c6906e3ce70780af54b66da7528e99c67b639525537a684d4e5.glb' }
-  tall: { f: '/cdn/value.75a29635cc0345947ef4388c7bf477609c923e36cbc84d148b8766e3de30e805.glb', m: '/cdn/value.9293f23c1b60319d3d950f29a7ef31acf69f319fe00af3ec9e8083a3c89a9ba4.glb' }
-  small: { f: '/cdn/value.725e5d11097eca16e468a6a41cbe4ba48e242529133e686771b37cf5500040b2.glb', m: '/cdn/value.5da0daa4459b182f9c6408f0fd869baaceb8a1437585d0917501d150fafd702a.glb' }
-  fold: { f: '/cdn/value.3d8c8dc98ea6762c1ae9351972c76dc7fe02c1bc98b629f21bd0979038ae2859.glb', m: '/cdn/value.d7fc8fc1c975f0c9667150b99e0faf58493995f641b43a474dba932d8846bf91.glb' }
-  wide: { f: '/cdn/value.34f795b121a0bfde46805e04ec9e244c6e03c0d53e2e0245898263de139745d1.glb', m: '/cdn/value.82a044813384a47fc3fe4b11833ee035e14581a890e33353b137e8674ad9b33f.glb' }
+  upright: { f: '/cdn/value.dc63bca0cf4eab9d6666b5cd9a4d157a456e22e0b14771e4abff48521e8c03f3.glb', m: '/cdn/value.95b6236635993274e951971f3cf4f16e04be6cad47fba4b59aeb60177e98aeca.glb' }
+  tall: { f: '/cdn/value.6344375050c19868c85dc427c96c6505f231a51b76952cbfa2cb1aacf9b381d6.glb', m: '/cdn/value.2aeee8e4a1ac0914d40679754be8a694bba7f0382e34aa4fc01a94e8443ff36e.glb' }
+  small: { f: '/cdn/value.2ce4891ebb5aed56f7b22fa7503c03cac539e63d8e7b0ec8a792bad9a922895b.glb', m: '/cdn/value.14ac9d211476f2eb4466ea7b0843023fb02afbe026240d9d370415cf93b4e751.glb' }
+  fold: { f: '/cdn/value.4a1a1772f9fac90af6efe7cc4ef589310b0a419d78221b3b66404aa2c3c5cddd.glb', m: '/cdn/value.85e4c77a7217e93fabb4646bf4c9f76f4d832cf0deac24e4a0a6b7cf1aaa88b1.glb' }
+  wide: { f: '/cdn/value.14142ad9b5a0d5f3912988ad54f8efd72ca650321e4e08e3e0e5ee007cf38028.glb', m: '/cdn/value.a8b7d99008a5f8887525c4b2a7387180809dfbc4d3f018ac20866634a5bc97cb.glb' }
 
 # hairstyles (art/cat-wardrobe/hair-register.py); Nov 11 refit: each style uniformly scaled toward the head centre to sit on the skull (afropuff/twintails .85, undercut .88, pixie .87, sidetail .90, long .92, halfup .93, shaggy .98, crop 1); cleaned: strands smoothed away from the skull (seams kept as authored), a hair-coloured scalp cap under the strands (textured from the strand right above it), double-sided as authored: the Tripo hair carried onto the current cat heads, skinned to the head, tinted by look.hairc. look.hair: one key
 hair:   # each carries a Hatted key (art/cat-wardrobe/hair-hatted.py): flat to the skull under a hat
