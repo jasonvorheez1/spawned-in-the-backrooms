@@ -8,7 +8,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 39;
+const V = 40;
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
 const P = (params) => ({ primitive: { kind: "scripted", script: PROPS, params }, material: { pbr: true } });
@@ -183,9 +183,16 @@ function djBooth(ctx) {
 function party(ctx) {
   const p = ZONES.party, mat = { ...CARPET, color: "#426c68" };
   ctx.spawn("l31-party-floor", { feetPosition: { x: 34, y: 0.004, z: -24 }, primitive: box(15.7, 0.018, 11.7), material: mat, receiveShadow: true, castShadow: false });
-  const divider = (id, x, z, len, yaw) => ctx.spawn("l31-party-divider-" + id, {
-    feetPosition: { x, y: 0, z }, rotation: { yaw }, primitive: rbox(len, 1.06, 0.18), physics: "static", material: { color: "#435960", roughness: 0.82 },
-  });
+  // Tripo half-wall (confetti laminate, chrome cap), tiled in ~3 m panels so the print never stretches; one box collider per wall
+  const HALF = "/cdn/value.97da340e2f190a4775e572f96bf2084a02f2669b6ea5814a0c6d2fc46895723b.glb";
+  const divider = (id, x, z, len, yaw) => {
+    const n = Math.max(1, Math.round(len / 3)), seg = len / n;
+    ctx.spawn("l31-party-divider-" + id, {
+      feetPosition: { x, y: 0, z }, rotation: { yaw }, primitive: { kind: "box", width: len, height: 1.06, depth: 0.2 }, visible: false, physics: "static",
+      children: Array.from({ length: n }, (_, i) => ({ feetPosition: { x: -len / 2 + seg * (i + 0.5), y: 0, z: 0 },
+        model: { id: HALF, forward: "+x" }, layout: { box: { min: { x: -seg / 2, y: 0, z: -0.1 }, max: { x: seg / 2, y: 1.06, z: 0.1 } } } })),
+    });
+  };
   divider("west", p.x0, -24, 11.8, 90);
   divider("left", 28.8, -18, 5.5, 0);
   divider("right", 38.6, -18, 6.8, 0);
