@@ -1083,7 +1083,7 @@ function viewmodel(ctx, moving, sprinting) {
   w.vmEq = kind; w.vmCheck = false
   const hb = !l.modelUrl && HUMAN ? humanBody(l) : null // human bodies: Shelly's own model's arm holds the weapon (her rule: first-person arms come from her model or a PLYMODEL)
   const cs = !hb && !l.modelUrl && !HUMAN && isNewCat(l) ? critterSpec(l) : null // cats (Shelly Nov 12: 'you didnt have to make an entirely new model'): the first-person arm IS her own cat body, its sleeve on it
-  const ply = l.modelUrl || (hb ? hb.id + '#' + (hb.materials.Body_Skin.color ?? '') : '') || (cs ? 'cat:' + JSON.stringify([l.sex, l.fur, l.topw, l.top, l.skin, l.pattern, l.heightS, l.buildS]) : '')
+  const ply = l.modelUrl || (hb ? hb.id + '#' + (hb.materials.Body_Skin.color ?? '') : '') || (cs ? 'cat2:' + JSON.stringify([l.sex, l.fur, l.topw, l.top, l.skin, l.pattern, l.heightS, l.buildS]) : '')
   // cats (Shelly Nov 12 "make the first person arms match the cat charcters"): her fur colour, a round paw with pink beans, her sleeve
   const arm = hb || ply ? { hidden: true } : { species: l.species ?? 'cat', fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v33' + JSON.stringify(s.vmTune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
