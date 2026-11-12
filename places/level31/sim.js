@@ -1,13 +1,14 @@
 // Level 31 "The Roller Rink": lays the shell once (floor, walls, rink, barrier, starburst, cinema, DJ booth, doors).
 // The arcade, food court, skate rental and gift shop dress their own zones (scripts/lib/level31-*.js), map in scripts/lib/level31.js.
 import { animate } from "builtin/tween";
-import { H, T, B, RINK, ZONES, ARRIVE, DOOR } from "../../scripts/lib/level31.js";
+import { H, T, B, RINK, ZONES, ARRIVE, DOOR, BACK } from "../../scripts/lib/level31.js";
+import { G as FG } from "../../scripts/lib/level31-food.js";
 import { layParts } from "../../scripts/lib/level31-parts.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 30;
+const V = 31;
 const PROPS = "scripts/l31-props-geo.js";
 const P = (params) => ({ primitive: { kind: "scripted", script: PROPS, params }, material: { pbr: true } });
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
