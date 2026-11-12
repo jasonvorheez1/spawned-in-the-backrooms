@@ -1,0 +1,113 @@
+# spawn-scene v2 yaml x0z0
+l02-gd-bench:
+  feetPosition: {x: 5.5, y: -3.4, z: 6.4}
+  id: l02-gd-bench
+  layout: {box: {max: {x: 0.8, y: 0.85, z: 0.41}, min: {x: -0.8, y: 0, z: -0.41}}}
+  model: {forward: "+x", id: /cdn/value.d38530fe8881dbb3291b160c5f1fdd94d2e468130a063e0e7797ff41048561d1.glb}
+  physics: static
+  rotation: {yaw: 0}
+l02-gd-chair0:
+  feetPosition: {x: 5.15, y: -3.4, z: -4.2}
+  id: l02-gd-chair0
+  layout: {box: {max: {x: 0.33, y: 0.9, z: 0.31}, min: {x: -0.33, y: 0, z: -0.31}}}
+  model: {id: /cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb}
+  physics: static
+  rotation: {yaw: 180}
+l02-gd-chair1:
+  feetPosition: {x: 6, y: -3.4, z: -4.2}
+  id: l02-gd-chair1
+  layout: {box: {max: {x: 0.33, y: 0.9, z: 0.31}, min: {x: -0.33, y: 0, z: -0.31}}}
+  model: {id: /cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb}
+  physics: static
+  rotation: {yaw: 180}
+l02-gd-chair2:
+  feetPosition: {x: 6.85, y: -3.4, z: -4.2}
+  id: l02-gd-chair2
+  layout: {box: {max: {x: 0.33, y: 0.9, z: 0.31}, min: {x: -0.33, y: 0, z: -0.31}}}
+  model: {id: /cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb}
+  physics: static
+  rotation: {yaw: 180}
+l02-gd-chair3:
+  feetPosition: {x: 5.15, y: -3.4, z: -3.4}
+  id: l02-gd-chair3
+  layout: {box: {max: {x: 0.33, y: 0.9, z: 0.31}, min: {x: -0.33, y: 0, z: -0.31}}}
+  model: {id: /cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb}
+  physics: static
+  rotation: {yaw: 180}
+l02-gd-chair4:
+  feetPosition: {x: 6, y: -3.4, z: -3.4}
+  id: l02-gd-chair4
+  layout: {box: {max: {x: 0.33, y: 0.9, z: 0.31}, min: {x: -0.33, y: 0, z: -0.31}}}
+  model: {id: /cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb}
+  physics: static
+  rotation: {yaw: 180}
+l02-gd-chair5:
+  feetPosition: {x: 6.85, y: -3.4, z: -3.4}
+  id: l02-gd-chair5
+  layout: {box: {max: {x: 0.33, y: 0.9, z: 0.31}, min: {x: -0.33, y: 0, z: -0.31}}}
+  model: {id: /cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb}
+  physics: static
+  rotation: {yaw: 180}
+l02-gd-chair6:
+  feetPosition: {x: 5.15, y: -3.4, z: -2.5999999999999996}
+  id: l02-gd-chair6
+  layout: {box: {max: {x: 0.33, y: 0.9, z: 0.31}, min: {x: -0.33, y: 0, z: -0.31}}}
+  model: {id: /cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb}
+  physics: static
+  rotation: {yaw: 180}
+l02-gd-chair7:
+  feetPosition: {x: 6, y: -3.4, z: -2.5999999999999996}
+  id: l02-gd-chair7
+  layout: {box: {max: {x: 0.33, y: 0.9, z: 0.31}, min: {x: -0.33, y: 0, z: -0.31}}}
+  model: {id: /cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb}
+  physics: static
+  rotation: {yaw: 180}
+l02-gd-chair8:
+  feetPosition: {x: 6.85, y: -3.4, z: -2.5999999999999996}
+  id: l02-gd-chair8
+  layout: {box: {max: {x: 0.33, y: 0.9, z: 0.31}, min: {x: -0.33, y: 0, z: -0.31}}}
+  model: {id: /cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb}
+  physics: static
+  rotation: {yaw: 180}
+l02-gd-drywall:
+  feetPosition: {x: 6, y: -3.4, z: 1}
+  id: l02-gd-drywall
+  layout: {box: {max: {x: 0.7, y: 0.5, z: 0.35}, min: {x: -0.7, y: 0, z: -0.35}}}
+  model: {id: /cdn/value.dd3c11a087dce509414d840925e8477ce72ec546947a8628f600be9ebd25f27c.glb}
+  physics: static
+  rotation: {yaw: 0}
+l02-gd-ladder:
+  feetPosition: {x: 6.1, y: -3.4, z: 1.65}
+  id: l02-gd-ladder
+  layout: {box: {max: {x: 0.525, y: 1.65, z: 0.3}, min: {x: -0.525, y: 0, z: -0.3}}}
+  model: {id: /cdn/value.e3a9e57fa4cd0ebbfe56c6389249e5bf1d94d625c3faef7ff16a17500bca3534.glb}
+  physics: static
+  rotation: {yaw: 4}
+l02-gd-lumber0:
+  feetPosition: {x: 2.3, y: -2.6399999999999997, z: 1.05}
+  id: l02-gd-lumber0
+  layout: {box: {max: {x: 1.2, y: 0.55, z: 0.4}, min: {x: -1.2, y: 0, z: -0.4}}}
+  model: {id: /cdn/value.f0f72fab46477d4fec46489d766508527fa510944566f6cc89997d14ea85b69c.glb}
+  physics: static
+  rotation: {yaw: 3}
+l02-gd-mud:
+  feetPosition: {x: 6.95, y: -3.4, z: 0.9}
+  id: l02-gd-mud
+  layout: {box: {max: {x: 0.275, y: 0.42, z: 0.225}, min: {x: -0.275, y: 0, z: -0.225}}}
+  model: {id: /cdn/value.de837b025facd30bbc64219af3eff567b5ebc52a66434f60110fdc6b9260a8b1.glb}
+  physics: static
+  rotation: {yaw: 0}
+l02-gd-plant:
+  feetPosition: {x: 6.6, y: -3.4, z: 6.35}
+  id: l02-gd-plant
+  layout: {box: {max: {x: 0.435, y: 1.9, z: 0.415}, min: {x: -0.435, y: 0, z: -0.415}}}
+  model: {forward: "+x", id: /cdn/value.53fa6b1388302684d3e567ca755e213843bd4d5ac5ee17c0b54fa1d579c9a019.glb}
+  physics: static
+  rotation: {yaw: 20}
+l02-gd-saw0:
+  feetPosition: {x: 2.3, y: -3.4, z: 1}
+  id: l02-gd-saw0
+  layout: {box: {max: {x: 0.68, y: 0.78, z: 0.35}, min: {x: -0.68, y: 0, z: -0.35}}}
+  model: {id: /cdn/value.afec3110e2d081b48de5f78e3510691bffc67e913360c067c5b6113e039fd27e.glb}
+  physics: static
+  rotation: {yaw: 0}
