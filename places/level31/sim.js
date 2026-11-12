@@ -6,7 +6,7 @@ import { layParts } from "../../scripts/lib/level31-parts.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 export const cadence = "1s";
-const V = 21;
+const V = 22;
 const PROPS = "scripts/l31-props-geo.js";
 const P = (params) => ({ primitive: { kind: "scripted", script: PROPS, params }, material: { pbr: true } });
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
@@ -142,7 +142,7 @@ function djBooth(ctx) {
   // the Faceling DJ (wiki: "a docile Faceling sitting inside selecting songs"): stands behind the rail at a deck, facing the rink
   // the DJ's console: a Tripo model fitted into the old deck's 2.2 x 0.75 x 0.8 footprint, its face toward the rink (-Z)
   ctx.spawn("l31-dj-deck", { feetPosition: { x: cx, y: 0.5, z: d.z0 + 0.75 }, physics: "static",
-    model: { id: "/cdn/value.dec346aec0305c54a42cad5514d456a7488f7d389a8801881a47082fb1e159dc.glb", forward: "-z" },
+    model: { id: "/cdn/value.dec346aec0305c54a42cad5514d456a7488f7d389a8801881a47082fb1e159dc.glb", forward: "-x" },
     layout: { box: { min: { x: -1.1, y: 0, z: -0.4 }, max: { x: 1.1, y: 0.95, z: 0.4 } } },
     children: [{ feetPosition: { x: 0, y: 1.0, z: 0.1 }, light: { kind: "point", color: "#ff3fa4", intensity: 0.8, distance: 3 } }] });
   ctx.spawn("l31-dj", { feetPosition: { x: cx, y: 0.55, z: d.z0 + 1.45 }, rotation: { yaw: 0 }, physics: "character", tags: ["npc", "usable", "faceling", "l31-dj"],
