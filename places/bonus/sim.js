@@ -45,7 +45,7 @@ function people(ctx) {
 }
 export function tick(ctx) {
   const s = ctx.place.state
-  if (s.peopleV !== 2) { people(ctx); s.peopleV = 2 }
+  if (s.peopleV !== 3) { for (const id of [...Object.keys(SHOPPERS), ...Object.keys(LOUNGERS)]) if (ctx.place.objects[id]) ctx.destroy(id); s.peopleV = 3 } // Nov 12, Shelly: no npcs in the mall but the special ones (staff + Gina); people() no longer runs
   if (s.shineV !== 1) { layBonusExtra(ctx); s.shineV = 1 }
   setStyle(ctx.world.state.bodyStyle) // Nov 11: furry is the default; the human re-dress pass below only in human mode
   if (HUMAN && s.hairV !== STYLE_V) { // the mall's people keep their look on state.wear so a hair rebuild re-seats on them too
