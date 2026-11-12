@@ -2,7 +2,7 @@
 // The hall as people left it: wall lamps between doors, radiators, what was left at each door, notes, and the drag marks into the lurker's flat. Ids l13d-*.
 import { APTS, H, HALL, T, UNIT, EXIT0 } from "./level13.js";
 import D from "./data/l13-dress.yml";
-const DV = 7;
+const DV = 8;
 const DOOR = (part, style, o = {}) => ({ kind: "scripted", script: "scripts/door-geo.js", params: { style, part, w: UNIT.doorW, h: UNIT.doorH, hingeSide: "left", ...o } });
 const fit = (k) => { const m = D.models[k]; if (!m?.model) return null; const [w, h, d] = m.size; return { model: m.forward ? { id: m.model, forward: m.forward } : { id: m.model }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } } }; };
 const svg = (w, [vw, vh], body) => `<svg viewBox='0 0 ${vw} ${vh}' width='${w}m'>${body}</svg>`;
@@ -49,8 +49,8 @@ export function layDress(ctx) {
   ctx.spawn("l13d-exit", { feetPosition: { x: EXIT0.x - 0.02, y: 0, z: EXIT0.z }, rotation: { yaw: 90 }, castShadow: false, receiveShadow: true, primitive: DOOR("set", "plain", { swing: 1, d: 0.14 }), material: { pbr: true, roughness: 0.7 } });
   ctx.spawn("l13d-exit-lamp", { feetPosition: { x: EXIT0.x - 0.4, y: 2.42, z: EXIT0.z }, light: { kind: "point", color: "oklch(0.92 0.12 98)", intensity: 0.55, distance: 4.5 } });
   ctx.spawn("l13d-exit-tube", { feetPosition: { x: EXIT0.x - 0.12, y: 2.3, z: EXIT0.z }, rotation: { pitch: 90 }, pivot: "center", castShadow: false, primitive: { kind: "capsule", radius: 0.022, halfHeight: 0.3 }, material: { color: "oklch(0.97 0.05 98)", emissive: "oklch(0.95 0.1 98)", emissiveIntensity: 1.6 } });
-  ctx.spawn("l13d-exit-leak", { feetPosition: { x: EXIT0.x - 0.3, y: 0.004, z: EXIT0.z }, rotation: { pitch: -90 }, castShadow: false, primitive: { kind: "plane", width: 0.45, height: 0.95 },
-    material: { color: "oklch(0.9 0.12 95 / 0.35)", transparent: true, depthWrite: false, emissive: "oklch(0.88 0.12 95)", emissiveIntensity: 0.5 } });
+  ctx.spawn("l13d-exit-leak", { feetPosition: { x: EXIT0.x - 0.3, y: 0.004, z: EXIT0.z }, rotation: { pitch: -90 }, castShadow: false, primitive: { kind: "plane", width: 0.3, height: 0.9 },
+    material: { color: "oklch(0.9 0.12 95 / 0.16)", transparent: true, depthWrite: false, emissive: "oklch(0.88 0.12 95)", emissiveIntensity: 0.5 } });
   ctx.spawn("l13d-exit-hum", { feetPosition: { x: EXIT0.x - 0.3, y: 1.2, z: EXIT0.z }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-fluorescent-light-hum-muffled-behind-a-door-loop.mp3", loop: true, gain: 0.22, spatial: true, maxDistance: 9 } });
   // the floors don't add up, and someone noticed: Floor 1 at the start, a pencilled note under the bend's FLOOR 283
   ctx.spawn("l13d-floor1", { feetPosition: { x: -37.6, y: 1.48, z: -HALL + 0.068 }, castShadow: false,

@@ -15,8 +15,8 @@ const TEX = {
   hotel: ["cdn/texture-dark-mahogany-wood-grain.png", "oklch(0.92 0.02 50)", "cdn/texture-dark-mahogany-wood-grain.png", "oklch(0.9 0.02 50)"],
   wood: ["cdn/texture-painted-wood-door.png", "oklch(0.96 0.01 90)", "cdn/texture-painted-wood-door.png", "oklch(0.97 0.005 90)"],
   metal: ["cdn/texture-brushed-steel.png", "oklch(0.9 0.01 230)", "cdn/texture-brushed-steel.png", "oklch(0.85 0.01 230)"],
-  flat: ["cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "oklch(0.72 0.05 60)", "cdn/texture-painted-wood-door.png", "oklch(0.86 0.03 80)"], // Level 13's flat doors: veneer, peephole, number plate
-  plain: ["cdn/texture-painted-wood-door.png", "oklch(0.86 0.1 95)", "cdn/texture-painted-wood-door.png", "oklch(0.8 0.07 92)"], // Level 13's way to Level 0: yellower than the others
+  flat: ["cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "oklch(0.72 0.05 60)", null, "oklch(0.8 0.03 78)"], // Level 13's flat doors: veneer, peephole, number plate
+  plain: [null, "oklch(0.8 0.1 95)", null, "oklch(0.74 0.07 90)"], // Level 13's way to Level 0: yellower than the others
   fire: ["cdn/texture-red-painted-steel.png", "oklch(0.92 0.02 30)", "cdn/texture-brushed-steel.png", "oklch(0.85 0.01 230)"],
 };
 let C, L;
