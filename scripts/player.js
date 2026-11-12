@@ -565,7 +565,12 @@ function swing(ctx, power = 0) {
     let fv = f, pv = pc // in third person the shot goes from your eye to the point under the crosshair (scripts/camera.js keeps it in state.aimPt)
     if (s.tp && s.aimPt) { const dx = s.aimPt.x - eye.x, dy = s.aimPt.y - eye.y, dz = s.aimPt.z - eye.z, hh = Math.hypot(dx, dz); if (hh > 1.2) { fv = { x: dx / hh, z: dz / hh }; pv = Math.atan2(dy, hh) } }
     const res = fireBullets(ctx, s, wp, w, eye, fv, pv, base)
-    const cp = Math.cos(pv), mz = { x: eye.x + fv.x * cp * 0.8 - fv.z * 0.12, y: eye.y + Math.sin(pv) * 0.8 - 0.14, z: eye.z + fv.z * cp * 0.8 + fv.x * 0.12 }
+    const cp = Math.cos(pv), sp = Math.sin(pv); let mz = { x: eye.x + fv.x * cp * 0.8 - fv.z * 0.12, y: eye.y + sp * 0.8 - 0.14, z: eye.z + fv.z * cp * 0.8 + fv.x * 0.12 }
+    if (!s.tp) { // first person: the streak leaves the gun's own muzzle, where the viewmodel holds it on the camera (Shelly: "bullets shoot from above them")
+      const vf = (w.vm && ctx.getObject(w.vm)?.feetPosition) || {}, at = { x: Number.isFinite(vf.x) ? vf.x : 0.2, y: Number.isFinite(vf.y) ? vf.y : -0.2, d: Number.isFinite(vf.depth) ? vf.depth : 0.42 }
+      const m = wp.muzzle ?? [0, 0.08, -0.4], r = at.x + m[0], u = at.y + m[1], fd = at.d - m[2]
+      mz = { x: eye.x + fv.x * cp * fd - fv.z * r - fv.x * sp * u, y: eye.y + sp * fd + cp * u, z: eye.z + fv.z * cp * fd + fv.x * r - fv.z * sp * u }
+    }
     showBullets(ctx, res, wp, mz)
     s.kick = Hd.recoil; s.spreadNow = Math.round(res.spread * 10) / 10 // vmpose scales the kick; the HUD can show the cone
     for (const t of res.targets) {
