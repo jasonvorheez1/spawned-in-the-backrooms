@@ -988,15 +988,18 @@ export function tick(ctx) {
       rotation: rotationFromDirection(f), primitive: { kind: "box", width: 2.8, height: 0.3, depth: len }, physics: "static", visible: false });
     s.fortPathV = 3;
   }
-  if ((s.fortPathV ?? 0) < 3) { // the ramp's top end stood up past the gate lip (a 70 degree edge): stop it flush with the fort floor just outside the gate
-    ctx.destroy("l7-ft-ramp");
+  if ((s.fortPathV ?? 0) < 4) { // Shelly Nov 12 "i can no longer climb": the ramp's end met the gate as an edge; it now stops just short and a flat landing at the fort floor (11.63) runs through the gate
+    ctx.destroy("l7-ft-ramp"); ctx.destroy("l7-ft-landing");
     const xz = (k) => ({ x: -48.5 - 1.35 * k, z: -66.5 - 1.65 * k });
-    const A = { ...xz(-1.55), y: 1.2 }, B = { ...xz(11.95), y: 11.62 };
+    const A = { ...xz(-1.8), y: 1.0 }, B = { ...xz(11.7), y: 11.6 };
     const d = { x: B.x - A.x, y: B.y - A.y, z: B.z - A.z }, len = Math.hypot(d.x, d.y, d.z), hz = Math.hypot(d.x, d.z);
     const f = { x: d.x / len, y: d.y / len, z: d.z / len }, drop = 0.15 * hz / len;
     ctx.spawn("l7-ft-ramp", { feetPosition: { x: (A.x + B.x) / 2, y: (A.y + B.y) / 2 - drop, z: (A.z + B.z) / 2 }, pivot: "center",
       rotation: rotationFromDirection(f), primitive: { kind: "box", width: 2.8, height: 0.3, depth: len }, physics: "static", visible: false });
-    s.fortPathV = 3;
+    const L0 = xz(11.4), L1 = xz(13.6), yaw = Math.atan2(-(L1.x - L0.x), -(L1.z - L0.z)) * 180 / Math.PI;
+    ctx.spawn("l7-ft-landing", { feetPosition: { x: (L0.x + L1.x) / 2, y: 11.63 - 0.3, z: (L0.z + L1.z) / 2 }, rotation: { yaw },
+      primitive: { kind: "box", width: 2.8, height: 0.3, depth: Math.hypot(L1.x - L0.x, L1.z - L0.z) }, physics: "static", visible: false });
+    s.fortPathV = 4;
   }
   if (!ctx.getObject("l7-fauna")) ctx.spawn("l7-fauna", { behavior: "scripts/l7-fauna.js" }); // tidecrawlers on the shores, the Deep in open water
   // Ensure NPCs come back home after respawn window via level-kit
