@@ -15,7 +15,7 @@ export function layDesign(ctx) {
 
   // 1. the pillar ring: six mirror-wrapped columns round the aisle, a neon collar each, so the hall has a rhythm and a scale
   const HUES = ["#ff3fa4", "#3fe0ff", "#ffd23a", "#7dff5a", "#ff8a1e", "#b06bff", "#ff5a5a", "#5affc8"];
-  [[-18, -16.5], [18, -16.5], [-18, 16.5], [18, 16.5], [-24, -9.5], [-24, 9.5], [24, -9.5], [24, 9.5]]  // the end pairs flank the shop and arcade/food fronts, never in a doorway.forEach(([x, z], i) => sp(`pillar${i}`, {
+  [[-18, -16.5], [18, -16.5], [-18, 16.5], [18, 16.5], [-24, -9.5], [-24, 9.5], [24, -9.5], [24, 9.5]] /* the end pairs flank the shop and arcade/food fronts, never in a doorway */.forEach(([x, z], i) => sp(`pillar${i}`, {
     feetPosition: { x, y: 0, z }, primitive: { kind: "cylinder", radiusTop: 0.38, radiusBottom: 0.38, height: H, radialSegments: 28 }, material: { color: "#d4d8e2", metalness: 0.65, roughness: 0.22 }, physics: "static",
     children: [
       { feetPosition: { x: 0, y: 0, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.46, radiusBottom: 0.5, height: 1.1, radialSegments: 28 }, material: CARPET },
