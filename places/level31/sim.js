@@ -3,8 +3,10 @@
 import { animate } from "builtin/tween";
 import { H, T, B, RINK, ZONES, ARRIVE, DOOR } from "../../scripts/lib/level31.js";
 import { layParts } from "../../scripts/lib/level31-parts.js";
+import { critterSpec } from "../../scripts/lib/critter-model.js";
+import { npcLook } from "../../scripts/lib/clothes.js";
 export const cadence = "1s";
-const V = 13;
+const V = 14;
 const PROPS = "scripts/l31-props-geo.js";
 const P = (params) => ({ primitive: { kind: "scripted", script: PROPS, params }, material: { pbr: true } });
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
@@ -137,6 +139,13 @@ function djBooth(ctx) {
   ctx.spawn("l31-dj-riser", { feetPosition: { x: cx, y: 0, z: cz }, primitive: box(6, 0.5, 3.5), material: { texture: "cdn/texture-black-rubber-stage-riser-diamond-tread.png", wrap: "repeat", repeat: [1, 1], color: "#fff", roughness: 0.8 }, physics: "static" });
   ctx.spawn("l31-dj-front", { feetPosition: { x: cx, y: 0.5, z: d.z0 + 0.2 }, primitive: box(5.6, 1.1, 0.25), material: RAIL, physics: "static",
     children: [{ feetPosition: { x: 0, y: 0.55, z: -0.135 }, vector: `<svg viewBox='0 0 300 60' width='4.6m'><text x='150' y='44' text-anchor='middle' font-family='display' font-size='40' fill='#ff3fa4' filter='drop-shadow(0 0 5 #ff3fa4)'>REQUEST LINE</text></svg>` }] });
+  // the Faceling DJ (wiki: "a docile Faceling sitting inside selecting songs"): stands behind the rail at a deck, facing the rink
+  ctx.spawn("l31-dj-deck", { feetPosition: { x: cx, y: 0.5, z: d.z0 + 0.75 }, primitive: box(2.2, 0.95, 0.7), material: { color: "#15131a", roughness: 0.6 }, physics: "static",
+    children: [-0.55, 0.55].map((dx) => ({ feetPosition: { x: dx, y: 0.95, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.2, radiusBottom: 0.2, height: 0.03 }, material: { color: "#222", roughness: 0.3, metalness: 0.4 } }))
+      .concat([{ feetPosition: { x: 0, y: 0.95, z: 0.05 }, primitive: box(0.35, 0.04, 0.3), material: { color: "#2a2a33", emissive: "#ff3fa4", emissiveIntensity: 0.4 } }]) });
+  ctx.spawn("l31-dj", { feetPosition: { x: cx, y: 0.55, z: d.z0 + 1.45 }, rotation: { yaw: 180 }, physics: "character", tags: ["npc", "usable", "faceling", "l31-dj"],
+    ...critterSpec(npcLook("l31-dj", { species: "faceling", sex: "m", botw: "pants", shoes: "sneakers", topw: "jacket", top: "#3a2a5a", bottom: "#1d1d26" }, "wanderer", 1)),
+    behavior: ["scripts/humanoid-locomotion.js"], state: { name: "Faceling DJ", role: "regular", faction: "wanderer", factionName: "Rink DJ", docile: true, hp: 60, home: { x: cx, z: d.z0 + 1.45 }, stay: true } });
   ctx.spawn("l31-dj-light", { feetPosition: { x: cx, y: 3, z: cz }, light: { kind: "point", color: "#ff5fb0", intensity: 1.2, distance: 7 } });
   ctx.spawn("l31-music", { feetPosition: { x: cx, y: 2, z: cz }, audio: { clip: "/cdn/moodboard-toon-vibrant/music-muffled-80s-radio-pop-roller-rink-pa-speakers-loop.mp3", gain: 0.35, loop: true, spatial: true, maxDistance: 90, bus: "music" } });
   ctx.spawn("l31-skate-bed", { feetPosition: { x: 0, y: 1, z: 0 }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-roller-skates-on-wood-rink-distant-laughter-loop.mp3", gain: 0.12, loop: true, spatial: true, maxDistance: 40 } });
