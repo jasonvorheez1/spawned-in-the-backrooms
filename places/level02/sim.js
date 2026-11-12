@@ -165,7 +165,7 @@ function layShell(ctx) {
   });
 }
 // Cap'n wears the shared body (same refit as Rico in places/bonus/sim.js): pitch-black, the crew face, the uniform colours
-const CAPN = { species: "fox", sex: "m", fur: "#0b0b0d", etype: "crew", blush: "none", nose: "none", topw: "longsleeve", top: "#9fb0bf", botw: "pants", bottom: "#6b4a2e", shoes: "boots", hat: "beret", hatc: "#4a4f57", hair: "none", neck: "none", shoec: "#141414" };
+const CAPN = { species: "fox", sex: "m", fur: "#0b0b0d", etype: "crew", blush: "none", nose: "none", topw: "remodcoat", top: "#9fb0bf", botw: "pants", bottom: "#6b4a2e", shoes: "boots", hat: "beret", hatc: "#4a4f57", hair: "none", neck: "none", shoec: "#141414" };
 const CAPN_LOOK = { ...refitLook("l02-capn", { ...npcLook("l02-capn", CAPN, "wanderer", 2), role: "wanderer", faction: "wanderer" }), ...CAPN, nl: NL_V };
 function dressCapn(ctx) {
   const r = ctx.place.objects["l02-capn"]; if (!r) return;
