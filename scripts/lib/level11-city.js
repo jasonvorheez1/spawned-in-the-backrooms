@@ -153,8 +153,8 @@ export function layStreet(ctx, h) {
   const { sp, bx, cyl } = h, put = (id, kind, x, z, yaw, extra = {}, y = (FURN.has(kind) && Math.abs(x) >= 8.2 && Math.abs(x) <= 15.8 ? 0.33 : 0)) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, physics: extra.nophys ? undefined : { body: "static", collider: extra.collider ?? "box" }, model: { id: MODELS[kind], forward: TRIPO[kind]?.forward ?? "-z", materials: extra.materials }, ...(TRIPO[kind] ? { scale: TRIPO[kind].scale } : {}), ...(extra.spec ?? {}) });
   const LEN = [-66, -52, -9, 24, 40, 56, 72];
   LEN.forEach((z, i) => [-1, 1].forEach((s) => {
-    sp(`l11-st-lamp-${i}-${s}`, { feetPosition: { x: s * 8.9, y: 0, z: z + (s > 0 ? 3 : 0) }, rotation: { yaw: s > 0 ? 90 : -90 }, primitive: { kind: "scripted", script: "scripts/l11-streetlamp.js", seed: 1 }, material: { roughness: 0.5 }, physics: { body: "static" }, castShadow: true }); // Nov 10: scripted cast-iron lamp; the tripo lamp had holes ("street lamp is missing faces")
-    if (i % 2 === 0) sp(`l11-st-lamp-light-${i}-${s}`, { feetPosition: { x: s * 6.9, y: 6.6, z: z + (s > 0 ? 3 : 0) }, light: { kind: "point", color: "oklch(0.93 0.14 80)", intensity: 5, distance: 17, shadow: { enabled: false } } });
+    sp(`l11-st-lamp-${i}-${s}`, { feetPosition: { x: s * 8.9, y: 0.33, z: z + (s > 0 ? 3 : 0) }, rotation: { yaw: s > 0 ? 90 : -90 }, primitive: { kind: "scripted", script: "scripts/l11-streetlamp.js", seed: 1 }, material: { roughness: 0.5 }, physics: { body: "static" }, castShadow: true }); // Nov 10: scripted cast-iron lamp; the tripo lamp had holes ("street lamp is missing faces")
+    if (i % 2 === 0) sp(`l11-st-lamp-light-${i}-${s}`, { feetPosition: { x: s * 6.9, y: 6.93, z: z + (s > 0 ? 3 : 0) }, light: { kind: "point", color: "oklch(0.93 0.14 80)", intensity: 5, distance: 17, shadow: { enabled: false } } });
   }));
   [-64, -48, -8, 26, 38, 52, 66].forEach((z, i) => [-1, 1].forEach((s) => {
     const x = s * 13.4, zz = z + (s > 0 ? 4 : 0), u = hs(i, s, 1);
@@ -164,14 +164,14 @@ export function layStreet(ctx, h) {
   }));
   for (const [i, [x, z]] of [[-8.6, 3], [8.6, 11], [-8.6, 62], [8.6, -12], [8.6, 48]].entries()) put(`l11-st-hyd-${i}`, "hydrant", x, z, x < 0 ? -90 : 90, { collider: "cylinder" });
   for (const [i, [x, z]] of [[-8.7, -10], [8.7, 26], [-8.7, 21], [8.7, -64], [-8.7, 70]].entries()) put(`l11-st-bin-${i}`, "trashcan", x, z, 0, { collider: "cylinder" });
-  for (const [i, [x, z]] of [[-15, 33.2], [-15, 46], [15, -67.5], [15, 18.5]].entries()) put(`l11-st-bench-${i}`, "bench", x, z, x < 0 ? -90 : 90);
-  put("l11-st-shelter", "shelter", 14.4, 48, 90); put("l11-st-shelter2", "shelter", -14.4, -8, -90);
-  for (const [i, [x, z]] of [[-9.2, 33], [9.2, 15.5], [9.2, 47], [-9.2, 5]].entries()) put(`l11-st-nbox-${i}`, "newsbox", x, z, x < 0 ? -90 : 90, { collider: "box", materials: { nbox: { color: ["#1d4fa0", "#c8231e", "#e7e2d2", "#2f7a3a"][i] } } });
+  for (const [i, [x, z]] of [[-14.5, 32.4], [-20.1, 53.4], [14.7, -68], [14.6, 36.2]].entries()) put(`l11-st-bench-${i}`, "bench", x, z, x < 0 ? -90 : 90, {}, 0.33);
+  put("l11-st-shelter", "shelter", 14.4, 51.5, 90); put("l11-st-shelter2", "shelter", -14.4, -10.8, -90);
+  for (const [i, [x, z]] of [[-9.2, 31.2], [9.2, 14.6], [9.2, 49.7], [-9.2, 3.9]].entries()) put(`l11-st-nbox-${i}`, "newsbox", x, z, x < 0 ? -90 : 90, { collider: "box", materials: { nbox: { color: ["#1d4fa0", "#c8231e", "#e7e2d2", "#2f7a3a"][i] } } });
   // parked cars along the kerbs, tinted at random; a few vans
   const SLOTS = []; for (let z = -76; z <= 76; z += 7.5) { if ((z > -48 && z < -14) || (z > 4 && z < 20)) continue; if (!(Math.abs(z - 52) < 5 || Math.abs(z + 8.5) < 4)) SLOTS.push([-6.95, z]); SLOTS.push([6.95, z]); } // the west kerb leaves room for the roadworks (z 52) and the taxi (z -8.5)
   const cars = [];
   SLOTS.forEach(([x, z], i) => {
-    if (hs(i, 4, 9) < 0.5) return;
+    if ((z >= 47 && z <= 56) || hs(i, 4, 9) < 0.5) return; // keep the bus stop and market frontage clear
     const kind = hs(i, 5, 2) < 0.22 ? "van" : "sedan", yaw = x < 0 ? (hs(i, 6, 3) < 0.5 ? 0 : 180) : (hs(i, 6, 3) < 0.5 ? 0 : 180), col = PAINT[Math.floor(hs(i, 7, 4) * PAINT.length)];
     put(`l11-car-${i}`, kind, x, z + (hs(i, 8, 5) - 0.5) * 1.6, yaw, {
       materials: { paint: { color: col, roughness: 0.35, metalness: 0.2 } },

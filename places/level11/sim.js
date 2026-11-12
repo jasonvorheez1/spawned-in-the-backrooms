@@ -24,7 +24,7 @@ import MODELS from "../../scripts/lib/data/level11-models.yml";
 export const cadence = "1s";
 const RENO_FLOOR = 0.32;
 const mallTrash = (i) => ({ x: -15.15 + i * 0.2, y: 0.33, z: 28.1 + i * 0.65 });
-const V = 136; // supplied Level 11 references: skyline variation and modern canal bridges
+const V = 137; // the market court and the central pedestrian route
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -137,11 +137,8 @@ function lay(ctx) {
     state: { to: "level61#l61-from-l11" },
   });
 
-  // Default plaza spawn point
-  sp("l11-spawn", {
-    feetPosition: { x: 0, y: 0.25, z: 12 },
-    rotation: { yaw: 0 },
-  });
+  // Keep the plaza arrival on the sidewalk with a view down the boulevard.
+  sp("l11-spawn", { feetPosition: { x: -11.05, y: 0.37, z: 16.55 }, rotation: { yaw: -90 } });
 
   // ==========================================
   // 2. SCENE 1: THE GRAND BOULEVARD & DOWNTOWN CANYON (Wikidot Image 1)
@@ -196,6 +193,16 @@ function lay(ctx) {
   for (const s of [-1, 1]) {
     sp(`l11-sw-cnr-${s}`, { feetPosition: { x: s * 12, y: 0.08, z: 13 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 14, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
     bx(`l11-curb-cnr-${s}`, s * 8.1, 0.08, 13, 0.2, 0.28, 14, CURB_MAT);
+  }
+
+  // Small curbside signs serve the arrival, the two marked crossings and the storefronts.
+  for (const [id, x, z, rows] of [
+    ["west", -14.25, 16.35, ["← CANAL", "→ THRIFT MODE", "→ CENTRAL MARKET"]],
+    ["east", 14.1, 20.75, ["← SEDCO", "← M.E.G. BASE BETA", "→ METRO"]],
+  ]) {
+    cyl(`l11-dir-post-${id}`, x, 0.33, z, 0.055, 0.075, 2.06, IRON_RAIL);
+    sp(`l11-dir-${id}`, { feetPosition: { x: x - 0.07, y: 1.9, z }, rotation: { yaw: -90 },
+      vector: `<svg viewBox="0 0 420 160" width="1.25m"><rect x="2" y="2" width="416" height="156" rx="8" fill="#233e43" stroke="#cbd5cb" stroke-width="4"/><g fill="#fff9e5" font-family="sans-serif" font-size="31" font-weight="bold">${rows.map((row, i) => `<text x="22" y="${44 + i * 44}">${row}</text>`).join("")}</g></svg>` });
   }
 
   // Storm Drain Gutter Grates
@@ -507,12 +514,16 @@ function lay(ctx) {
   });
 
   // Interactive Sedco Closed-Circuit Security Terminal (BackOS)
-  md("l11-sedco-desk", "office_desk", SEDCO_X - SEDCO_W / 2 - 1.2, 0.1, SEDCO_Z - 2.8, undefined, "box", { rotation: { yaw: 90 }, layout: { box: { min: { x: -0.75, y: 0, z: -0.375 }, max: { x: 0.75, y: 0.78, z: 0.375 } } } });
+  bx("l11-sedco-apron", 16.36, 0.08, SEDCO_Z, 1.12, 0.25, 7.8, SIDEWALK);
+  md("l11-sedco-desk", "office_desk", 16.19, 0.33, SEDCO_Z - 2.58, undefined, "box", {
+    model: { id: MODELS.office_desk, forward: "+x" }, rotation: { yaw: 90 },
+    layout: { box: { min: { x: -0.735, y: 0, z: -0.4 }, max: { x: 0.735, y: 0.76, z: 0.4 } } },
+  });
   sp("l11-sedco-terminal", terminalSpec({
     host: "SEDCO-SEC-01",
     lock: "science:10",
     name: "Sedco Closed-Circuit Security Terminal",
-    at: { x: SEDCO_X - SEDCO_W / 2 - 1.2, y: 0.86, z: SEDCO_Z - 2.8 },
+    at: { x: 16.19, y: 1.09, z: SEDCO_Z - 2.58 },
     yaw: 90,
     tint: "#00d2d3",
     note: "pw: spotlight",
@@ -1172,18 +1183,21 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
   // ==========================================
   const OUTPOST_X = 22;
   const OUTPOST_Z = -14;
-
-  md("l11-meg-sandbag1", "sandbags", OUTPOST_X - 6, 0.1, OUTPOST_Z - 3, { burlap: { ...T("burlap-sack-weave", 2), color: "oklch(0.8 0.05 75)" } }, "box", { rotation: { yaw: 180 } });
-  md("l11-meg-sandbag2", "sandbags", OUTPOST_X - 6, 0.1, OUTPOST_Z + 3, { burlap: { ...T("burlap-sack-weave", 2), color: "oklch(0.8 0.05 75)" } }, "box", { rotation: { yaw: 180 } });
-  md("l11-meg-table", "meg_table", OUTPOST_X, 0.1, OUTPOST_Z, { metal: STEEL_BRUSHED });
+  bx("l11-meg-apron", 20.55, 0.08, OUTPOST_Z, 9.5, 0.25, 9.3, SIDEWALK);
+  cyl("l11-meg-entry-post", 16.75, 0.33, -15.95, 0.055, 0.08, 2.18, IRON_RAIL);
+  sp("l11-meg-entry-sign", { feetPosition: { x: 16.69, y: 2.03, z: -15.95 }, rotation: { yaw: -90 },
+    vector: '<svg viewBox="0 0 320 105" width="1.25m"><rect x="2" y="2" width="316" height="101" rx="5" fill="#334635" stroke="#dbd7a9" stroke-width="4"/><g fill="#f5edd4" font-family="sans-serif" text-anchor="middle"><text x="160" y="44" font-size="36" font-weight="bold">BASE BETA</text><text x="160" y="82" font-size="22">M.E.G. DISPATCH</text></g></svg>' });
+  md("l11-meg-sandbag1", "sandbags", OUTPOST_X - 4.3, 0.33, OUTPOST_Z - 3, { burlap: { ...T("burlap-sack-weave", 2), color: "oklch(0.8 0.05 75)" } }, "box", { rotation: { yaw: 180 } });
+  md("l11-meg-sandbag2", "sandbags", OUTPOST_X - 4.3, 0.33, OUTPOST_Z + 3, { burlap: { ...T("burlap-sack-weave", 2), color: "oklch(0.8 0.05 75)" } }, "box", { rotation: { yaw: 180 } });
+  md("l11-meg-table", "meg_table", OUTPOST_X, 0.33, OUTPOST_Z, { metal: STEEL_BRUSHED });
 
   // M.E.G. Base Beta Tactical BackOS Terminal
   sp("l11-meg-terminal", terminalSpec({
     host: "BETA-DISPATCH-01",
     lock: "",
     name: "M.E.G. Base Beta Tactical Terminal",
-    at: { x: OUTPOST_X, y: 0.95, z: OUTPOST_Z },
-    yaw: 180,
+    at: { x: OUTPOST_X - 0.18, y: 1.18, z: OUTPOST_Z },
+    yaw: 90,
     tint: "#45b649",
     note: "pw: pegasus11",
   }));
@@ -1191,7 +1205,7 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
   // Cmdr. Harris's expedition log "Matrix": the only way to learn the Level 12 ritual (scripts/level12-use.js)
   sp("l11-harris-log", {
     tags: ["usable"],
-    feetPosition: { x: OUTPOST_X + 0.35, y: 0.86, z: OUTPOST_Z + 0.1 }, rotation: { yaw: 200 },
+    feetPosition: { x: OUTPOST_X + 0.48, y: 1.18, z: OUTPOST_Z + 0.16 }, rotation: { yaw: 100 },
     primitive: { kind: "box", width: 0.24, height: 0.07, depth: 0.15 },
     material: { color: "oklch(0.25 0.01 250)", roughness: 0.6 },
     behavior: "scripts/level12-use.js",
@@ -1204,7 +1218,7 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
   });
   sp("l11-meg-cache", {
     tags: ["usable"],
-    feetPosition: { x: OUTPOST_X + 2.5, y: 0.1, z: OUTPOST_Z - 2 },
+    feetPosition: { x: OUTPOST_X + 2.5, y: 0.33, z: OUTPOST_Z - 2 },
     model: { id: MODELS.meg_cache, forward: "-z", materials: { metal: STEEL } },
     physics: { body: "static", collider: "box" },
     behavior: "scripts/level11-use.js",
@@ -1213,7 +1227,7 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
 
   sp("l11-meg-agent-vance", {
     tags: ["npc", "meg"],
-    feetPosition: { x: OUTPOST_X - 4.5, y: 0.1, z: OUTPOST_Z },
+    feetPosition: { x: OUTPOST_X - 2.65, y: 0.35, z: OUTPOST_Z + 0.85 },
     rotation: { yaw: -90 },
     physics: "character",
     ...critterSpec(npcLook("l11-vance", { species: "human", sex: "m", topw: "megjacket", top: "#4a5a3a", botw: "cargo", bottom: "#3a3a30", shoes: "boots" }, "guard", 11)),
@@ -1224,7 +1238,7 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
       voice: "reyes",
       faction: "meg",
       factionName: "M.E.G. Base Beta Command",
-      home: { x: OUTPOST_X - 4.5, z: OUTPOST_Z },
+      home: { x: OUTPOST_X - 2.65, z: OUTPOST_Z + 0.85 },
       line: "Welcome to Level 11, wanderer. You made it to the City. Keep your wits about you, but breathe easy.",
       ...npcState(ctx, "agent", 120),
     },
@@ -1498,29 +1512,19 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   // ==========================================
   // "A high density city street jam packed with people and stalls for various foodstuffs."
   // "The Capital is the main residential hub for the entirety of Level 11."
-  const MKT_X = -13.8;
-  const MKT_Z = 50.5; // moved off the mall front (Shelly: "move that fruit stand somewhere else")
-
-  // Timber market stall frame
-  md("l11-market-stall", "market_stall", MKT_X - 0.8, 0.1, MKT_Z, undefined, "box", { rotation: { yaw: 0 }, layout: { box: { min: { x: -6, y: 0, z: -6 }, max: { x: 6, y: 3.3, z: 6 } } } });
-
-  // Sign: B.N.T.G. Provisions Stall
-  sp("l11-market-sign", {
-    feetPosition: { x: MKT_X + 0.1, y: 2.5, z: MKT_Z },
-    rotation: { yaw: -90 },
-    primitive: { kind: "box", width: 3.6, height: 0.65, depth: 0.04 },
-    material: { color: "#111" },
-    ui: `<div face="front" width="3.6m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1a252f;border:2px solid #f39c12;box-sizing:border-box;color:#ffffff;font-family:Georgia,serif;text-align:center">
-      <div style="font-size:52px;font-weight:bold;color:#f39c12">B.N.T.G. PROVISIONS & RATIONS</div>
-      <div style="font-size:24px;letter-spacing:3px;color:#ecf0f1">CAPITAL CENTRAL MARKET · POST #11</div>
-    </div>`,
-  });
-
-  // Produce Crate: Free Citizen Food Rations (Noclipping Goods)
+  const MKT_X = -18.1, MKT_Z = 50.8, MKT_FLOOR = 0.33, COUNTER = -16.47;
+  bx("l11-market-court", -18.75, 0.08, MKT_Z, 5.9, 0.25, 8.2, SIDEWALK);
+  // The model is a canopy; its full bounding box used to block the stall and half the pavement.
+  md("l11-market-stall", "market_stall", MKT_X, MKT_FLOOR, MKT_Z, undefined, "box", { physics: undefined,
+    rotation: { yaw: 0 }, layout: { box: { min: { x: -6, y: 0, z: -6 }, max: { x: 6, y: 3.3, z: 6 } } } });
+  sp("l11-market-counter", { feetPosition: { x: COUNTER, y: MKT_FLOOR + 0.77, z: MKT_Z }, primitive: { kind: "box", width: 0.68, height: 0.08, depth: 3.25, bevel: 0.025 }, material: WOOD, physics: "static",
+    children: [-1.37, 1.37].flatMap((z) => [-0.23, 0.23].map((x) => ({ feetPosition: { x, y: -0.77, z }, primitive: { kind: "box", width: 0.085, height: 0.77, depth: 0.085 }, material: IRON_RAIL, physics: "static" }))) });
+  sp("l11-market-sign", { feetPosition: { x: MKT_X + 0.95, y: 2.63, z: MKT_Z }, rotation: { yaw: 90 },
+    vector: '<svg viewBox="0 0 510 122" width="3.2m"><rect x="3" y="3" width="504" height="116" rx="7" fill="#243c37" stroke="#e8c786" stroke-width="6"/><g fill="#f4e7c2" font-family="serif" text-anchor="middle"><text x="255" y="54" font-size="43" font-weight="bold">CENTRAL MARKET</text><text x="255" y="95" font-family="sans-serif" font-size="23" letter-spacing="2">B.N.T.G. PROVISIONS</text></g></svg>' });
   sp("l11-market-produce-crate", {
     tags: ["usable"],
-    feetPosition: { x: MKT_X - 0.2, y: 1.05, z: MKT_Z - 1.1 },
-    model: { id: MODELS.produce_crate, forward: "-z" }, layout: { box: { min: { x: -0.35, y: 0, z: -0.45 }, max: { x: 0.35, y: 0.42, z: 0.45 } } },
+    feetPosition: { x: COUNTER, y: MKT_FLOOR + 0.85, z: MKT_Z - 0.9 },
+    model: { id: MODELS.produce_crate, forward: "-z" }, layout: { box: { min: { x: -0.31, y: 0, z: -0.44 }, max: { x: 0.31, y: 0.42, z: 0.44 } } },
     behavior: "scripts/level11-use.js",
     state: { kind: "market-produce", name: "Crate of Capital Apples & Fresh Bread", verb: "Take Free Citizen Ration" },
   });
@@ -1528,7 +1532,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   // Pamphlet Display Stand: "A Different Kind of Urban" (Wikidot Lore)
   sp("l11-market-guide", {
     tags: ["usable"],
-    feetPosition: { x: MKT_X - 0.2, y: 1.05, z: MKT_Z + 1.1 },
+    feetPosition: { x: COUNTER, y: MKT_FLOOR + 0.85, z: MKT_Z + 1.03 },
     primitive: { kind: "box", width: 0.35, height: 0.05, depth: 0.45 },
     material: { color: "#2980b9" },
     behavior: "scripts/level11-use.js",
@@ -1541,8 +1545,8 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   // B.N.T.G. Merchant NPC: Trader Kael
   sp("l11-trader-kael", {
     tags: ["npc", "bntg"],
-    feetPosition: { x: MKT_X - 1.1, y: 0.1, z: MKT_Z },
-    rotation: { yaw: 90 },
+    feetPosition: { x: MKT_X + 0.42, y: MKT_FLOOR + 0.02, z: MKT_Z + 0.14 },
+    rotation: { yaw: -90 },
     physics: "character",
     ...critterSpec(npcLook("l11-kael", { species: "fox", sex: "m", topw: "vest", top: "#8e44ad", botw: "pants", bottom: "#2c3e50", shoes: "boots" }, "trader", 11)),
     behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
@@ -1552,7 +1556,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
       voice: "reyes",
       faction: "bntg",
       factionName: "Backrooms Non-Commercial Traders Guild",
-      home: { x: MKT_X - 1.1, z: MKT_Z },
+      home: { x: MKT_X + 0.42, z: MKT_Z + 0.14 },
       line: "Greetings, citizen! Fresh bread and apples just noclipped into our crates this morning. The Capital always keeps its people fed.",
       ...npcState(ctx, "trader", 100),
     },
@@ -1724,15 +1728,16 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
 // SIDEWALK WALKERS: commuters on routes; each leg is a findPath over the city's colliders (scripts/l61-staff.js waypoint()),
 // so they go round hydrants, benches and cars. Laid on their own version so a new walker never rebuilds the city.
 // ==========================================
-const WALK_V = 2; // 2: NPC looks rerolled (clothes.js NPC_GEN g2)
-const W_LOOP = [{ x: -10, z: 24, dwell: 1 }, { x: -10, z: 62, dwell: 1 }, { x: -14, z: 70, dwell: 4, act: "wave" }, { x: -14, z: 30, dwell: 1 }, { x: -10, z: 19 }, { x: -10, z: -12, dwell: 3 }, { x: -14, z: 10 }];
-const E_LOOP = [{ x: 10, z: -10, dwell: 1 }, { x: 10, z: 14 }, { x: 10, z: 19 }, { x: 10, z: 55, dwell: 3 }, { x: 14, z: 66, dwell: 2 }, { x: 14, z: 22 }, { x: 14, z: -12, dwell: 2 }];
-const CROSS = [{ x: -10, z: -4, dwell: 1 }, { x: -10, z: -21 }, { x: -6, z: -24 }, { x: 6, z: -24 }, { x: 10, z: -20 }, { x: 10, z: 6, dwell: 4 }, { x: 10, z: -21 }, { x: 6, z: -24 }, { x: -6, z: -24 }, { x: -10, z: -20 }];
+const WALK_V = 3;
+const W_LOOP = [{ x: -11.05, z: 24 }, { x: -11.05, z: 48 }, { x: -12.2, z: 51, dwell: 4, act: "wave" }, { x: -11.05, z: 64, dwell: 2 }, { x: -11.05, z: 24 }, { x: -11.05, z: 6 }, { x: -11.05, z: -10, dwell: 2 }];
+const E_LOOP = [{ x: 11.25, z: 34 }, { x: 11.25, z: 51 }, { x: 12.25, z: 53.5, dwell: 4 }, { x: 10.9, z: 57 }, { x: 10.9, z: 64, dwell: 2 }, { x: 10.9, z: 55 }, { x: 11.25, z: 34 }];
+const CROSS = [{ x: 14.65, z: 15.1, dwell: 6 }, { x: 10.85, z: 18.8 }, { x: -10.85, z: 18.8 }, { x: -17.55, z: 17.95, dwell: 4 }, { x: -10.85, z: 18.8 }, { x: 10.85, z: 18.8 }];
+const MAINT = [{ x: -11.2, z: 53.4, dwell: 5 }, { x: -11.2, z: 43.4 }, { x: -11.2, z: 37.4, dwell: 4 }, { x: -11.2, z: 50.2 }, { x: -10.7, z: 57.3, dwell: 2 }];
 const WALKERS = [
-  { id: "l11-commuter-faceling", seed: "l11-faceling1", look: { species: "faceling", sex: "f", trait: "gentle", topw: "jacket", top: "#2a2a35", botw: "pants", bottom: "#202028", shoes: "boots" }, at: { x: -11.5, z: 24 }, route: W_LOOP, name: "Commuter Faceling", voice: "wren", line: "Pardon me, heading to the commercial plaza before the streetlights turn." },
-  { id: "l11-walker-1", seed: "l11-walker-1", look: { species: "human", sex: "m", trait: "perky", topw: "hoodie", top: "#5a3a2a", botw: "jeans", bottom: "#2a3550", shoes: "sneakers" }, at: { x: -10, z: -4 }, route: CROSS, name: "Courier", voice: "reyes", line: "Can't stop, kid. Package for the twelfth floor and the elevator's moody." },
-  { id: "l11-walker-2", seed: "l11-walker-2", look: { species: "human", sex: "f", trait: "dreamy", topw: "sweater", top: "#d8c8a8", botw: "pants", bottom: "#3a2a40", shoes: "sneakers" }, at: { x: 10, z: -10 }, route: E_LOOP, name: "Office Temp", voice: "wren", line: "Third week in the city. The coffee cart guy knows my order already. Is that bad?" },
-  { id: "l11-walker-3", seed: "l11-walker-3", look: { species: "human", sex: "m", trait: "cynical", topw: "jacket", top: "#3a3a2a", botw: "pants", bottom: "#25252a", shoes: "boots" }, at: { x: 14, z: 40 }, route: [...E_LOOP.slice(3), ...E_LOOP.slice(0, 3)], name: "Night Shift Janitor", voice: "reyes", line: "Every block looks like the last one if you walk it long enough. Keep your map close, wanderer." },
+  { id: "l11-commuter-faceling", seed: "l11-faceling1", look: { species: "faceling", sex: "f", trait: "gentle", topw: "jacket", top: "#2a2a35", botw: "pants", bottom: "#202028", shoes: "boots" }, at: { x: -11.05, z: 24 }, route: W_LOOP, name: "Commuter Faceling", voice: "wren", line: "Pardon me, heading to the commercial plaza before the streetlights turn." },
+  { id: "l11-walker-1", seed: "l11-walker-1", look: { species: "human", sex: "m", trait: "perky", topw: "hoodie", top: "#5a3a2a", botw: "jeans", bottom: "#2a3550", shoes: "sneakers" }, at: { x: 14.65, z: 15.1 }, route: CROSS, name: "Courier", voice: "reyes", line: "Can't stop, kid. Package for the twelfth floor and the elevator's moody." },
+  { id: "l11-walker-2", seed: "l11-walker-2", look: { species: "human", sex: "f", trait: "dreamy", topw: "sweater", top: "#d8c8a8", botw: "pants", bottom: "#3a2a40", shoes: "sneakers" }, at: { x: 11.25, z: 34 }, route: E_LOOP, name: "Office Temp", voice: "wren", line: "Third week in the city. The coffee cart guy knows my order already. Is that bad?" },
+  { id: "l11-walker-3", seed: "l11-walker-3", look: { species: "human", sex: "m", trait: "cynical", topw: "jacket", top: "#3a3a2a", botw: "pants", bottom: "#25252a", shoes: "boots" }, at: { x: -11.2, z: 53.4 }, route: MAINT, name: "Night Shift Janitor", voice: "reyes", line: "Every block looks like the last one if you walk it long enough. Keep your map close, wanderer." },
 ];
 function layWalkers(ctx) {
   for (const w of WALKERS) {
@@ -1781,6 +1786,7 @@ export function tick(ctx) {
       if (old && (!!old.model !== !!spec.model || (old.model && spec.model?.id && (old.model.id ?? old.model) !== spec.model.id) || !!old.primitive !== !!spec.primitive || (old.primitive && spec.primitive && (old.primitive.kind !== spec.primitive.kind || old.primitive.script !== spec.primitive.script)) || (!spec.children && ctx.place.objects[id + "/child-0"]) || (spec.tags && !old.tags?.includes("wreck") && spec.tags.join() !== (old.tags ?? []).join()) || (spec.physics?.collider && old.physics?.collider && spec.physics.collider !== old.physics.collider) || (spec.feetPosition && old.feetPosition && !old.tags?.includes("wreck") && old.physics?.body !== "dynamic" && !old.behavior?.length && Math.hypot((spec.feetPosition.x ?? 0) - old.feetPosition.x, (spec.feetPosition.z ?? 0) - old.feetPosition.z) > 0.3))) { ctx.destroy(id); break; } // a box row turned model: clear it, lay it fresh next tick
       ctx.spawn(id, spec);
       const now2 = old && ctx.place.objects[id]; // a piece that already stood takes its new place, turn and size too
+      if (now2 && (id === "l11-trader-kael" || id === "l11-meg-agent-vance")) now2.state.home = spec.state.home;
       if (now2) { if (spec.layout && JSON.stringify(spec.layout) !== JSON.stringify(now2.layout)) now2.layout = spec.layout; if (spec.primitive && JSON.stringify(spec.primitive) !== JSON.stringify(now2.primitive)) now2.primitive = spec.primitive; if (spec.feetPosition) now2.feetPosition = spec.feetPosition; if (spec.rotation !== undefined) now2.rotation = spec.rotation; if (spec.scale !== undefined) now2.scale = spec.scale; if (spec.material !== undefined) now2.material = spec.material; if (spec.model?.materials && JSON.stringify(spec.model.materials) !== JSON.stringify(now2.model?.materials)) now2.model = spec.model; if (spec.visibleRange !== undefined) now2.visibleRange = spec.visibleRange; if (spec.state) for (const k in spec.state) if (now2.state[k] === undefined) now2.state[k] = spec.state[k]; } // Nov 10: a rebuild used to keep an old piece's paint, draw distance and tags (the 70 m ground, the buried grates)
     }
     lq.i = i;
