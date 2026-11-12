@@ -1033,6 +1033,10 @@ export function tick(ctx) {
     const f = ctx.place.objects["l7-fort"]; if (f) f.physics = "none";
     s.fortPathV = 5;
   }
+  if ((s.fortPathV ?? 0) < 6) { // Shelly Nov 12 "i still cant get in its entrance": the ramp's top end stood 0.01 m proud of the landing, a 70-degree lip at the gate; it now tucks 0.12 m under the landing
+    const r = ctx.place.objects["l7-ft-ramp"]; if (r) r.feetPosition = { ...r.feetPosition, y: r.feetPosition.y - 0.12 };
+    s.fortPathV = 6;
+  }
   if (!s.fortPlacementV) {
     // The mesh courtyard was supported only by terrain 0.7 m below the plank surface.
     ctx.spawn("l7-fort-walk-floor", { feetPosition: { x: -70, y: FORT_FLOOR - 0.22, z: -93 }, primitive: { kind: "cylinder", radiusTop: 8.5, radiusBottom: 8.5, height: 0.22 }, physics: "static", visible: false });
