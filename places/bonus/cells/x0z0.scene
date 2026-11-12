@@ -277,6 +277,42 @@ bc-cab-8:
   physics: {body: "static", collider: "box"}
   rotation: {yaw: 180}
   tags: ["bonus-arcade"]
+bc-cab-isl-1:
+  castShadow: true
+  feetPosition: {x: 13, y: 0.02, z: -18.6}
+  id: bc-cab-isl-1
+  layout: {box: {max: {x: 0.38, y: 1.79, z: 0.5654}, min: {x: -0.38, y: 0, z: -0.3897}}}
+  model: {id: /cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb, parts: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png, roughness: 0.2, texture: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png}, shell: {color: oklch(0.35 0.12 300), roughness: 0.3}}}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 0}
+  tags: [bonus-arcade]
+bc-cab-isl-2:
+  castShadow: true
+  feetPosition: {x: 13.8, y: 0.02, z: -18.6}
+  id: bc-cab-isl-2
+  layout: {box: {max: {x: 0.38, y: 1.79, z: 0.5654}, min: {x: -0.38, y: 0, z: -0.3897}}}
+  model: {id: /cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb, parts: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png, roughness: 0.2, texture: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-maze-chase-game.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-maze-chase-game.png}, shell: {color: oklch(0.45 0.16 25), roughness: 0.3}}}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 0}
+  tags: [bonus-arcade]
+bc-cab-isl-3:
+  castShadow: true
+  feetPosition: {x: 13, y: 0.02, z: -19.4}
+  id: bc-cab-isl-3
+  layout: {box: {max: {x: 0.38, y: 1.79, z: 0.5654}, min: {x: -0.38, y: 0, z: -0.3897}}}
+  model: {id: /cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb, parts: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png, roughness: 0.2, texture: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-racing-game.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-racing-game.png}, shell: {color: oklch(0.3 0.08 250), roughness: 0.3}}}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 180}
+  tags: [bonus-arcade]
+bc-cab-isl-4:
+  castShadow: true
+  feetPosition: {x: 13.8, y: 0.02, z: -19.4}
+  id: bc-cab-isl-4
+  layout: {box: {max: {x: 0.38, y: 1.79, z: 0.5654}, min: {x: -0.38, y: 0, z: -0.3897}}}
+  model: {id: /cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb, parts: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png, roughness: 0.2, texture: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-puzzle-blocks-game.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-puzzle-blocks-game.png}, shell: {color: oklch(0.25 0.02 260), roughness: 0.3}}}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 180}
+  tags: [bonus-arcade]
 bc-claw-1:
   children: [{feetPosition: {x: 0, y: 1.6, z: 0}, id: "lamp", light: {color: "#ffd0f0", distance: 3, intensity: 0.8, kind: "point"}}]
   feetPosition: {x: 23.05, y: 0.02, z: -12.9}
@@ -638,6 +674,24 @@ bc-palm-6:
   model: {id: "/cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb"}
   rotation: {yaw: 305}
   tags: ["bonus-court"]
+bc-payphone-1:
+  castShadow: true
+  feetPosition: {x: 9.35, y: 0.02, z: -21.6}
+  id: bc-payphone-1
+  layout: {box: {max: {x: 0.3, y: 1.8, z: 0.2}, min: {x: -0.3, y: 0, z: -0.2}}}
+  model: {id: /cdn/value.3f1d4bfdace9e0a5bab2fd07823e1022063a15ec0ffc77e118074a8f2df30836.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: -90}
+  tags: [bonus-props]
+bc-payphone-2:
+  castShadow: true
+  feetPosition: {x: 9.35, y: 0.02, z: -22.5}
+  id: bc-payphone-2
+  layout: {box: {max: {x: 0.3, y: 1.8, z: 0.2}, min: {x: -0.3, y: 0, z: -0.2}}}
+  model: {id: /cdn/value.3f1d4bfdace9e0a5bab2fd07823e1022063a15ec0ffc77e118074a8f2df30836.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: -90}
+  tags: [bonus-props]
 bc-photobooth:
   castShadow: true
   feetPosition: {x: -3.6, y: 0, z: -31.15}
