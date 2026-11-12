@@ -1049,7 +1049,7 @@ function viewmodel(ctx, moving, sprinting) {
   const cs = !hb && !l.modelUrl && !HUMAN && isNewCat(l) ? critterSpec(l) : null // cats (Shelly Nov 12: 'you didnt have to make an entirely new model'): the first-person arm IS her own cat body, its sleeve on it
   const ply = l.modelUrl || (hb ? hb.id + '#' + (hb.materials.Body_Skin.color ?? '') : '') || (cs ? 'cat:' + JSON.stringify([l.sex, l.fur, l.topw, l.top, l.skin, l.pattern, l.heightS, l.buildS]) : '')
   // cats (Shelly Nov 12 "make the first person arms match the cat charcters"): her fur colour, a round paw with pink beans, her sleeve
-  const arm = hb || ply ? { hidden: true } : { human: true, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v30' + JSON.stringify(s.vmTune ?? null)
+  const arm = hb || ply ? { hidden: true } : { human: true, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v31' + JSON.stringify(s.vmTune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     if (w.plyObj) { ctx.destroy(w.plyObj); w.plyObj = null }
@@ -1072,7 +1072,7 @@ function viewmodel(ctx, moving, sprinting) {
     // the worn model rides the viewmodel: shoulder just behind and below the eye, its right hand reaching the grip
     // human: the body turned to face the look, its right shoulder just right of and below the eye (female shoulder 1.19 m, male scaled by height)
     if (fpa) child.push({ id: 'fparm-r', feetPosition: s.vmTune?.aat ?? FP_AT(l.sex === 'f' ? 'f' : 'm'), rotation: s.vmTune?.arot ?? FP_ROT, model: { id: fpa.R, materials: skinM }, castShadow: false, visibleInFirstPerson: true, audience: 'local' }) // her own right arm (art/fp-arm), its fist closed on the grip at the viewmodel's origin
-    else if (cs) child.push({ id: 'plyarm', model: cs.model, morph: cs.morph, ...(cs.scale ? { scale: cs.scale } : {}), children: (cs.children ?? []).filter((c) => /topw/.test(c.id ?? '')), feetPosition: s.vmTune?.cat ?? { x: 0.05, y: -0.7 - ((Number(l.heightS) || 1) - 1) * 1.2, z: -0.9 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'cdn/clip-idle-loop.glb', loop: 'loop', weight: 1 } } })
+    else if (cs) child.push({ id: 'plyarm', model: { ...cs.model, id: CAT_FPARM[l.sex === 'f' ? 'f' : 'm'].glb }, morph: cs.morph, ...(cs.scale ? { scale: cs.scale } : {}), children: [], feetPosition: s.vmTune?.cat ?? CAT_FPARM[l.sex === 'f' ? 'f' : 'm'].at, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'cdn/clip-idle-loop.glb', loop: 'loop', weight: 1 } } })
     else if (ply) child.push({ id: 'plyarm', model: ply, feetPosition: { x: 0.02, y: -1.62, z: 0.62 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
     w.vm = ctx.spawn({
       feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42, fov: 55 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
@@ -1100,6 +1100,9 @@ const FP_TWO_Q = { x: -0.2804, y: -0.5107, z: 0.4678, w: 0.6646 } // the left fi
 const FP_BC = { f: { x: 0.0304, y: -0.2624, z: 0.1128 }, m: { x: 0.0375, y: -0.2836, z: 0.1145 } }
 const FP_SEAT = { x: 0, y: 0.039, z: 0.096 } // the pistol grip's centre in viewmodel space, measured off the mesh (art/weapon-split/fitview.py): the fist's hollow lands on it
 const FP_AT = (sx) => ({ x: FP_BC[sx].x + FP_SEAT.x, y: FP_BC[sx].y + FP_SEAT.y, z: FP_BC[sx].z + FP_SEAT.z }), FP_ROT = { yaw: 0, pitch: 0, roll: 0 }
+// first-person arms cut from her own body GLBs (art/cat-fparm/build.py): same mesh, rig, slots and bind pose, only arm/forearm/hand kept, so no torso or sleeve lump fills the view.
+// at: the model's bounds bottom-centre placed so its right shoulder sits below-right of and a little ahead of the eye, an arm's reach behind the grip (viewmodel origin); the hand reaches the grip by IK (plyArm)
+const CAT_FPARM = { f: { glb: '/cdn/value.1a50c4f098271ae5981ef730799d0a2e9913570abeb76d1475ab61869585a26a.glb', at: { x: -0.035, y: -0.16, z: 0.28 } }, m: { glb: '/cdn/value.0ac8ed9fa781f9f7a002a249ccb98c55be6cd8f29698bb508e008517c604cc25.glb', at: { x: -0.05, y: -0.185, z: 0.28 } } }
 function wp_two(kind) { return W[kind]?.two ? { y: W[kind].two[0], z: W[kind].two[1] } : null }
 export function plyBounds(ctx, p) { const b = ctx.getObject(p.id), v = ctx.getObject(p.id.split('/plyarm')[0]); ctx.log('[plyarm] bounds', JSON.stringify(b?.bounds ?? null), 'vm', JSON.stringify(v?.bounds ?? null), 'wfp', JSON.stringify(b?.worldFeetPosition ?? null), 'me', JSON.stringify(ctx.self.feetPosition), 'vis', b?.visible, b?.visibleInFirstPerson) }
 function plyArm(ctx, w) {
