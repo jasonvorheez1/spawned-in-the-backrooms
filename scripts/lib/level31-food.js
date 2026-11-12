@@ -73,7 +73,7 @@ export function layFood(ctx) {
   P("bp", { feetPosition: { x: 34, y: 0, z: 18 }, children: [L(3.2, 2.9, -4, "#fff0d9", 4), L(3.2, 2.9, 3, "#fff0d9", 4), L(-3, 3.8, 0.5, "#ffdfb7", 5), L(-2, 3.4, -8.5, "#fff0d9", 3)] });
   // serving counter along the east wall: four Tripo diner counter modules (red vinyl, chrome band, cream top), 3.5 x 0.82 x 0.84 m each, one box collider under them
   P("counter", { feetPosition: { x: 38, y: 0.1, z: 17 }, primitive: box(0.84, 0.82, 14), render: false, physics: "static" });
-  for (let i = 0; i < 4; i++) P(`counter-m${i}`, { feetPosition: { x: 38, y: 0.1, z: 10.75 + i * 3.5 }, rotation: { yaw: 90 }, model: { id: G.counter }, layout: { box: { min: { x: -1.75, y: 0, z: -0.42 }, max: { x: 1.75, y: 0.82, z: 0.42 } } }, receiveShadow: true });
+  for (let i = 0; i < 4; i++) P(`counter-m${i}`, { feetPosition: { x: 38, y: 0.1, z: 10.75 + i * 3.5 }, rotation: { yaw: 90 }, model: { id: G.counter }, scale: { x: 1.15, y: 0.91, z: 0.48 }, receiveShadow: true });
   M("pizza", "pizza", 38.05, 12, 90, { physics: "none" }, 0.92); M("grill", "grill", 38.05, 14.7, 90, { physics: "none" }, 0.92);
   M("wings", "wings", 38.05, 19.4, 90, { physics: "none" }, 0.92); M("soda", "soda", 38.05, 22, 90, { physics: "none" }, 0.92);
   // real Frontrooms drinks (Tripo): a row of Sprite and Capri Sun by the soda fountain, strays on the tables
