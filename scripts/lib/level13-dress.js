@@ -17,6 +17,10 @@ export function layDress(ctx) {
     const sc = fit("sconce"), sx = a.door.x + 3.6;
     if (sc) ctx.spawn(`l13d-sc-${a.id}`, { feetPosition: { x: sx, y: 1.7, z: face - s * 0.09 }, rotation: { yaw: yawIn }, castShadow: false, ...sc });
     if (a.k % 2 === 0) ctx.spawn(`l13d-scl-${a.id}`, { feetPosition: { x: sx, y: 1.85, z: face - s * 0.3 }, light: { kind: "point", color: "oklch(0.85 0.09 70)", intensity: a.id === "a5" ? 0.15 : 0.45, distance: 4.5 } });
+    // a shut flat: the Tripo door and frame over the plain slab (the slab stays, unseen, for its name and its collider)
+    const dm = !a.open && fit("door");
+    if (dm) { const slab = ctx.getObject(`l13-shut-${a.id}`); if (slab) slab.visible = false;
+      ctx.spawn(`l13d-door-${a.id}`, { feetPosition: { x: a.door.x, y: 0, z: face - s * 0.01 }, rotation: { yaw: yawIn }, castShadow: false, receiveShadow: true, ...dm }); }
     // what was left outside
     for (const it of D.doors[a.id] ?? []) { const f = fit(it.m); if (!f) continue;
       ctx.spawn(`l13d-${a.id}-${n++}`, { feetPosition: { x: a.door.x + it.dx, y: 0, z: a.zf - s * (T / 2 + it.out) }, rotation: { yaw: (it.yaw ?? 0) + yawIn }, castShadow: true, receiveShadow: true, ...f,
