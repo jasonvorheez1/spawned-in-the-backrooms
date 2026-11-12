@@ -227,7 +227,7 @@ function lurker(ctx, mem, o, m, a, players, now, dt) {
   let prey = null, best = 1e9;
   for (const p of players) { if (!inFlat(a, p.feetPosition)) continue; const d = flat(pos, p.feetPosition); if (d < best) { best = d; prey = p; } }
   if (m.mode === "bath") { // after a drag it goes to ground in the bathroom
-    if (now >= m.bathUntil || hitNow || (prey && best < 2.2)) m.mode = prey ? "fight" : "wait";
+    if (now >= m.bathUntil || hitNow) { m.mode = prey ? "fight" : "wait"; if (!hitNow) m.angryUntil = 0; } // a dragged victim gets the whole bathMs to get up and run
     else { const to = route(a, pos, { x: a.bath.cx, z: a.bath.cz }); anim(o, m, walk(o, to, LK.speed * 1.6, dt) < 0.3 ? CLIP.low : CLIP.crawl); return; }
   }
   if (hitNow || shotAt(st, now)) m.angryUntil = now + 8000;
