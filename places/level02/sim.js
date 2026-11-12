@@ -4,11 +4,13 @@
 // Empty for 15 s, the whole thing is put back as if nothing happened. Puzzle: the freight lift (east) is stuck up top
 // with a freshener on it; three paint cans (14 kg) on the counterweight pan bring it down. Cap'n stands by the stairs.
 import { animate } from "builtin/tween";
+import { bodyModel, seatCat, critterSpec } from "../../scripts/lib/critter-model.js";
+import { npcLook, refitLook, NL_V } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 import { S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, xOf } from "../../scripts/lib/level02.js";
 import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 export const cadence = "250ms";
-const V = 2, STEP_MS = 2600;
+const V = 3, STEP_MS = 2600;
 const W = 2 * S * 0 + NX * S, D = NZ * S; // 32 x 20 m
 const CARPET = { color: "oklch(0.42 0.12 25)", roughness: 0.95, texture: "cdn/texture-dry-red-office-carpet-low-pile.png", wrap: "repeat", repeat: [0.5, 0.5] };
 const PAINT = { color: "oklch(0.95 0.006 90)", roughness: 0.85 };
@@ -81,10 +83,18 @@ function layShell(ctx) {
   // Cap'n, by the stairs, clipboard in hand: grey trench coat, white apron, brown wool trousers, rain boots (wiki look)
   sp(ctx, "l02-capn", {
     tags: ["npc", "remodel", "essential"], feetPosition: { x: -4, y: BASE + 0.05, z: -6 }, rotation: { yaw: 120 }, physics: "character",
-    primitive: { kind: "scripted", script: "scripts/remodel-crew-geo.js", params: { badge: "silver" } }, // pitch-black, faceless, white circle eyes (remodeling-co.md)
+    ...critterSpec(CAPN_LOOK),
     behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
     state: { name: "Cap'n · Remodeling Co.", role: "wanderer", voice: "l02-capn#m", faction: "remodel", factionName: "Backrooms Remodeling Co.", home: { x: -4, z: -6 }, line: "Sorry for the inconvenience. We are improving things.", ...npcState(ctx, "wanderer", 100) },
   });
+}
+// Cap'n wears the new cat body (same refit as Rico in places/bonus/sim.js): dark fur, the crew uniform colours
+const CAPN = { species: "fox", sex: "m", fur: "#26221f", topw: "jacket", top: "#9fb0bf", botw: "pants", bottom: "#6b4a2e", shoes: "boots", hat: "beret", hatc: "#4a4f57", hair: "none" };
+const CAPN_LOOK = { ...refitLook("l02-capn", { ...npcLook("l02-capn", CAPN, "wanderer", 2), role: "wanderer", faction: "wanderer" }), ...CAPN, nl: NL_V };
+function dressCapn(ctx) {
+  const r = ctx.place.objects["l02-capn"]; if (!r) return;
+  r.state.wear = CAPN_LOOK; delete r.state.headBody;
+  r.model = bodyModel(CAPN_LOOK); seatCat(ctx, r, CAPN_LOOK);
 }
 function layLift(ctx, down) {
   const y = down ? BASE - 0.2 : -0.2;
@@ -139,7 +149,7 @@ function drop(ctx, c) {
 const held = (ctx, c) => ctx.query({ tags: ["freshener"] }).some((f) => f.feetPosition.y > -1 && Math.abs(f.feetPosition.x - xOf(c)) <= S / 2);
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now(), ps = ctx.place.players;
-  if (s.v !== V || !("l02-base" in ctx.place.objects)) { s.v = V; layShell(ctx); layClean(ctx); s.phase = "clean"; s.liftDown = false; return; }
+  if (s.v !== V || !("l02-base" in ctx.place.objects)) { s.v = V; layShell(ctx); dressCapn(ctx); layClean(ctx); s.phase = "clean"; s.liftDown = false; return; }
   if (!ps.length) { s.emptyAt ??= now; if (s.phase !== "clean" && now - s.emptyAt > 15000) { layClean(ctx); layLift(ctx, false); layCans(ctx); for (const r of ctx.query({ tags: ["l02debris"] })) ctx.destroy(r.id); s.phase = "clean"; s.liftDown = false; } return; }
   s.emptyAt = null;
   for (const p of ps) if (p.state?.remodQ === 1) setRemodStep(ctx, p, 2, "Fresh Paint · Find 3 Reality Fresheners: the bathroom, the stuck freight lift, and Cap'n");
