@@ -601,17 +601,17 @@ bc-juicebar:
   feetPosition: {x: 6.6, y: 0, z: 12}
   id: bc-juicebar
   layout: {box: {max: {x: 0.95, y: 2.5, z: 0.55}, min: {x: -0.95, y: 0, z: -0.55}}}
-  model: {forward: "+x", id: /cdn/value.8d0a51b41db0eacfde90f6a8e04db1d153536613ef6d53c33387d502f9792205.glb}
+  model: {forward: "+x", id: /cdn/value.032eaa159a83186e26cbf498059d39bcf7b7c04151dfb3565991f3646992a08d.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: 90}
   state: {info: smoothies, name: Squeeze Play, verb: Order}
   tags: [bonus-court, usable]
 bc-juicebar-sign:
   castShadow: true
-  feetPosition: {x: 6.12, y: 1.7, z: 12}
+  feetPosition: {x: 6.6, y: 1.86, z: 12}
   id: bc-juicebar-sign
   material: {roughness: 0.7, texture: /cdn/value.6a5f5c5ffb034f2ab700535dd41bbb7a5aac403e67333c4ad5554f37715007bd.png}
-  primitive: {depth: 0.04, height: 0.6, kind: box, width: 1.6}
+  primitive: {depth: 0.05, height: 0.66, kind: box, width: 1.75}
   rotation: {yaw: 90}
   tags: [bonus-court]
 bc-kiddieride:
