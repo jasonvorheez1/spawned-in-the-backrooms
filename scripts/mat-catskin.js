@@ -75,6 +75,22 @@ export function material(ctx) {
     const eye = vec3(P("eyeR", 0.85), P("eyeG", 0.6), P("eyeB", 0.15));
     const art = min(pic.rgb, vec3(grey, grey, grey)).add(eye.mul(irisAmt.mul(1.3)));
     let col = mix(materialColor, art, pic.a.mul(inside).mul(front).mul(facing));
+    // Nov 12 (Shelly 'the mouth doesnt actually move'): a drawn talking mouth, a dark opening under the nose that opens and closes per syllable
+    // (an "a" wide oval or a round "o"), with a pink tongue at its floor. Drawn last so no face picture or mouth layer can cover it.
+    if (ctx.params.talkFace) {
+      const t2 = time.add(seed.mul(13)), syl2 = t2.mul(6.5), k2 = syl2.floor(), ph2 = fract(syl2)
+      const pick2 = fract(sin(k2.mul(12.9898).add(seed.mul(78.233))).mul(43758.5453))
+      const breath2 = step(0.84, fract(t2.mul(0.4)))
+      const open = sin(ph2.mul(3.14159)).mul(P("talk", 0)).mul(breath2.oneMinus()).mul(pick2.mul(0.5).add(0.5))
+      const isO = step(0.6, pick2)
+      const mv = P("noseCutV", 0.36).sub(P("mouthDrop", 0.085))
+      const mw = mix(float(0.05), float(0.03), isO), mh = open.mul(mix(float(0.05), float(0.045), isO)).add(0.0001)
+      const dm = u.sub(0.5).div(mw).pow(2).add(v.sub(mv).div(mh).pow(2)).sqrt()
+      const hole = smoothstep(1.0, 0.85, dm).mul(step(0.08, open)).mul(inside).mul(front)
+      const tongue = smoothstep(1.0, 0.6, u.sub(0.5).div(mw.mul(0.7)).pow(2).add(v.sub(mv.sub(mh.mul(0.7))).div(mh.mul(0.5)).pow(2)).sqrt())
+      const inner = mix(vec3(0.16, 0.04, 0.05), vec3(0.85, 0.38, 0.42), tongue)
+      col = mix(col, inner, hole)
+    }
     // eyeshadow (look.shadow): a soft wash on the lid above each painted eye, found by sampling the picture just below: where the eye's white or iris sits under bare fur
     if (Number(ctx.params.shA ?? 0) > 0) {
       const eyeAt = (du, dv) => { const s = ctx.texture(String(ctx.params.face)).sample(vec2(u.add(du), v.sub(dv))); return s.a.mul(smoothstep(0.55, 0.85, max(max(s.r, s.g), s.b))); };
