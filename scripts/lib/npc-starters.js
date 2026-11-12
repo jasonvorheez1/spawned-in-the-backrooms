@@ -2458,70 +2458,8 @@ export const STARTERS = {
 }
 
 // Fallback starters for generic / unlisted NPCs by faction & role
-export const GENERIC_STARTERS = {
-  'surrender:trader': { greeting: "Fort Surrender salvage post. Everything here drifted in on the tide. Looking to trade?", mood: 'calm' },
-  'surrender:default': { greeting: "Stop fighting the current, wanderer. The Deep holds us all.", mood: 'calm' },
-  'meg:scout': { greeting: "M.E.G. scout on patrol. Halls are hot today. Keep your light down and watch your rear.", mood: 'calm' },
-  'meg:medic': { greeting: "M.E.G. medical station. You bleeding, infected, or just exhausted? Take a seat.", mood: 'calm' },
-  'meg:quarter': { greeting: "M.E.G. requisition post. All trades logged by weight. What supplies are you after?", mood: 'calm' },
-  'meg:default': { greeting: "Status report, wanderer. Keep your weapon lowered while in M.E.G. territory.", mood: 'calm' },
-  'survivor:trader': { greeting: "Almond water talks, everything else walks. What are you looking to buy or sell?", mood: 'happy' },
-  'survivor:scout': { greeting: "Stay alert. The pipes groaned five minutes ago, which means something big is moving.", mood: 'calm' },
-  'survivor:medic': { greeting: "Rest your legs. We've got clean bandages and boiled water. How are you feeling?", mood: 'calm' },
-  'survivor:default': { greeting: "Hey... wanderer. Keep your distance until I know you're not an entity.", mood: 'calm' },
-  'tbd:trader': { greeting: "T.B.D. deals exclusively in the useless and inexplicable. What oddities did you bring?", mood: 'calm' },
-  'tbd:default': { greeting: "Everything has value if you don't know what it does. Looking to trade oddities?", mood: 'calm' },
-  'amor:default': { greeting: "Walk gently among the bloom. The spores nourish those who respect the growth.", mood: 'calm' },
-  'hotel:default': { greeting: "Welcome to the Homely Hotel. The service is eternal, and the doors are always unlocked.", mood: 'calm' },
-  'hk:default': { greeting: "Housekeeping outpost. Watch the boiler thresholds and keep your flashlight charged.", mood: 'calm' },
-  'orig:default': { greeting: "Another modern soul washed ashore. Have you no sense of etiquette in our salon?", mood: 'annoyed' },
-  'default': { greeting: "Watch your step out there. The corridors play tricks on your eyes when you're tired.", mood: 'calm' },
-}
-
 const short = (it) => String(it?.id ?? '').split('/').pop()
 
-export function getStarter(ctx, it, s) {
-  if (!it) return null
-  const id = short(it), key = keyOf(ctx.self), r = it.state?.rapport?.[key] ?? 0
-  const following = it.state?.follow === ctx.self.id
-  const hist = s.talks?.[id] ?? []
-  const entry = STARTERS[id]
-
-  if (following) {
-    return { text: "Right behind you. Lead the way through the corridors.", mood: 'happy' }
-  }
-
-  if (entry) {
-    if (hist.length > 0) {
-      if (r >= 35 && entry.friendly) return { text: entry.friendly, mood: 'happy' }
-      if (r <= -25 && entry.cold) return { text: entry.cold, mood: 'annoyed' }
-      if (entry.returning) return { text: entry.returning, mood: entry.mood ?? 'calm' }
-    }
-    return { text: entry.greeting, mood: entry.mood ?? 'calm' }
-  }
-
-  // Generic fallback based on faction & role
-  const fac = String(it.state?.faction5 ?? it.state?.faction4 ?? it.state?.faction ?? faction(it, ctx.self?.place ?? '')).toLowerCase()
-  const role = String(it.state?.role ?? 'default').toLowerCase()
-  const fkey = fac.includes('meg') || fac.includes('gamma') || fac.includes('omega') ? 'meg'
-    : fac.includes('surv') ? 'survivor'
-    : fac.includes('tbd') ? 'tbd'
-    : fac.includes('amor') ? 'amor'
-    : fac.includes('hotel') ? 'hotel'
-    : fac.includes('hk') ? 'hk'
-    : fac.includes('orig') ? 'orig'
-    : 'default'
-
-  const gen = GENERIC_STARTERS[`${fkey}:${role}`] ?? GENERIC_STARTERS[fkey] ?? GENERIC_STARTERS.default
-  return { text: gen.greeting, mood: gen.mood ?? 'calm' }
-}
-
-export function getChoices(ctx, it, s, lastNpcReply, replyObj) {
-  const list = withChecks(ctx, it, fitPlace(ctx, it, rawChoices(ctx, it, s, lastNpcReply, replyObj)))
-  return l1Choice(ctx, it, s, zenithChoice(ctx, it, s, realtyChoice(ctx, it, s, list)))
-}
-
-// Mara at B.N.T.G. Realty always has the house on the table (scripts/lib/level11-quests.js answers it)
 export function realtyChoice(ctx, it, s, list) {
   if (String(it?.id ?? '').split('/').pop() !== 'l11-realty-agent' || !Array.isArray(list) || s?.home11) return list
   const asked = s?.homeAsk && ctx.now() - s.homeAsk < 120000
