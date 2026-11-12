@@ -43,6 +43,15 @@ for exchanges in yaml.safe_load(open('scripts/lib/data/chatter.yml', encoding='u
     for exchange in exchanges:
         for who, line in exchange:
             if cast_member(who): jobs.append((who, 'chatter', line))
+# quest replies written in the level quest handlers: the speaker is the nearest id === "<npc>" above the reply (Nov 12, Shelly: level 1 voice acted)
+for f in sorted(glob.glob('scripts/lib/level*-quests.js')):
+    cur = None
+    for ln in open(f, encoding='utf-8'):
+        m = re.findall(r'id === "([a-z0-9-]+)"', ln)
+        if m: cur = m[-1]
+        if not cur or not cast_member(cur): continue
+        for q in re.findall(r'(?:reply: |\? |: )"((?:[^"\\]|\\.)+)"', ln):
+            if 'reply' in ln and len(q.split()) > 2: jobs.append((cur, 'quest', q.replace('\\"', '"')))
 real = lambda sl: any(len(w) >= 3 and re.search('[aeiouy]', w) and not re.match(r'^(hmm+|mmm*|uhh*|umm*|hm+|ahh*|ohh*|erm*)$', w) for w in sl.split('-'))
 todo, seen = [], set()
 for who, key, line in jobs:
