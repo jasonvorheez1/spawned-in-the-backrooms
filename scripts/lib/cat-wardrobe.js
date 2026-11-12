@@ -86,9 +86,20 @@ export function faceLife(sk, look, face, faces) {
   if (mood !== 'ko') { out.talkFace = faces.joy; out.talkFace2 = faces.shock }
   return out
 }
+// Shelly Nov 12 "fix her face": near-black fur swallowed the face under warm light. fur darker than DARK_FLOOR is mixed up toward its own hue until it reaches it
+const DARK_FLOOR = 0.11
+function liftFur(hex) {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex || ''); if (!m) return hex
+  const n = parseInt(m[1], 16), c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => v / 255)
+  const lin = (v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)
+  const Y = 0.2126 * lin(c[0]) + 0.7152 * lin(c[1]) + 0.0722 * lin(c[2])
+  if (Y >= DARK_FLOOR) return hex
+  const k = Math.min(1, (DARK_FLOOR - Y) / DARK_FLOOR) * 0.55, tint = [0.55, 0.46, 0.4] // toward a warm mid brown, keeping the fur's own cast
+  return '#' + c.map((v, i) => Math.round(255 * (v + (tint[i] - v) * k)).toString(16).padStart(2, '0')).join('')
+}
 export function catModel(sex, look) {
   const params = skinParams(sex, look)
-  const fur = look?.fur || '#f3c98a'
+  const fur = liftFur(look?.fur || '#f3c98a')
   const faces = FACES.faces[sex === 'm' ? 'male' : 'female']
   const expression = faces[look?.expression] // a mood swap writes expression for a beat; the resting face is always the calm, mouthless one (Shelly #244301 'they shouldnt have mouths', Nov 12 'fix her face')
   const calm = typeof expression !== 'string' || expression === faces.neutral
