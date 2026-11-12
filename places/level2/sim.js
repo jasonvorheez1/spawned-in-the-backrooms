@@ -55,7 +55,7 @@ export function tick(ctx) {
     s.kitV = 1; spawnKit(ctx);
     for (const id of ["l2-geo", "l2-details"]) { const o = ctx.getObject(id); if (o?.primitive && !o.primitive.params?.kit) o.primitive = { ...o.primitive, params: { ...(o.primitive.params || {}), kit: true } }; }
   }
-  if (s.seeded && s.l31V !== 1) { s.l31V = 1; plyDoor(ctx); } // the plywood door to Level 31 (Shelly Nov 12)
+  if (s.seeded && s.l31V !== 2) { s.l31V = 2; plyDoor(ctx); } // the plywood door to Level 31 (Shelly Nov 12)
   if (!s.seeded) {
     s.seeded = true; s.kitV = 1; s.propsV = 2;
     ctx.spawn("l2-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level2-geo.js", params: { kit: true } }, material: { roughness: 0.9 } });
@@ -471,7 +471,7 @@ export function fixtures(ctx) {
 function plyDoor(ctx) {
   const x = BACK.x, z = cellCenter(0, ARRIVE.cz + 6).z, PLY = { texture: "cdn/texture-plywood-sheet-knots-raw.png", color: "oklch(0.78 0.07 80)", roughness: 0.9 };
   for (const id of ["l2-ply", "l2-ply-glow", "l2-ply-music", "l2-to-l31", "l2-from-l31"]) if (ctx.getObject(id)) ctx.destroy(id);
-  ctx.spawn("l2-ply", { feetPosition: { x: x + 0.09, y: 0, z }, visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "box", width: 0.05, height: 2.28, depth: 1.16 }, material: PLY, physics: "static", tags: ["l2sign"],
+  ctx.spawn("l2-ply", { feetPosition: { x: x + 0.45, y: 0, z }, visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "box", width: 0.05, height: 2.28, depth: 1.16 }, material: PLY, physics: "static", tags: ["l2sign"],
     children: [
       { feetPosition: { x: -0.03, y: 0, z: 0 }, primitive: { kind: "box", width: 0.1, height: 2.4, depth: 1.36 }, material: { color: "oklch(0.3 0.02 60)", roughness: 0.95 } }, // rough timber frame let into the concrete
       { feetPosition: { x: 0.035, y: 1.55, z: 0 }, primitive: { kind: "box", width: 0.03, height: 0.09, depth: 1.16 }, material: PLY },
@@ -480,8 +480,8 @@ function plyDoor(ctx) {
       { feetPosition: { x: 0.07, y: 1.0, z: 0.44 }, rotation: { roll: 90 }, primitive: { kind: "cylinder", radiusTop: 0.028, radiusBottom: 0.028, height: 0.09 }, material: { color: "#8a7a55", metalness: 0.9, roughness: 0.4 } },
       { feetPosition: { x: 0.04, y: 0.005, z: 0 }, primitive: { kind: "box", width: 0.02, height: 0.02, depth: 1.1 }, material: { color: "#ff7a4a", emissive: "#ff7a4a", emissiveIntensity: 3 } }, // disco light under the door
     ] });
-  ctx.spawn("l2-ply-glow", { feetPosition: { x: x + 0.7, y: 0.25, z }, light: { kind: "point", color: "#ff6a8a", intensity: 1.4, distance: 5, shadow: { enabled: false }, visibleRange: { max: 35 } } });
+  ctx.spawn("l2-ply-glow", { feetPosition: { x: x + 1.0, y: 0.25, z }, light: { kind: "point", color: "#ff6a8a", intensity: 1.4, distance: 5, shadow: { enabled: false }, visibleRange: { max: 35 } } });
   ctx.spawn("l2-ply-music", { feetPosition: { x: x + 0.3, y: 1.2, z }, audio: { clip: "/cdn/moodboard-toon-vibrant/music-muffled-80s-radio-pop-roller-rink-pa-speakers-loop.mp3", gain: 0.3, loop: true, spatial: true, maxDistance: 16, bus: "SFX" } });
-  ctx.spawn("l2-from-l31", { feetPosition: { x: x + 2.6, y: 0.1, z }, rotation: { yaw: -90 } });
-  ctx.spawn("l2-to-l31", { feetPosition: { x: x + 0.75, y: 0, z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 1.3 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level31#l31-from-l2" } });
+  ctx.spawn("l2-from-l31", { feetPosition: { x: x + 2.9, y: 0.1, z }, rotation: { yaw: -90 } });
+  ctx.spawn("l2-to-l31", { feetPosition: { x: x + 1.05, y: 0, z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 1.3 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level31#l31-from-l2" } });
 }
