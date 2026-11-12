@@ -202,6 +202,7 @@ export function takeToken(ctx, token) {
 }
 function takeToken0(ctx, token) {
   const s = ctx.self.state, now = ctx.now()
+  if (token.startsWith('furn:')) { const k = token.slice(5); s.furn = { ...(s.furn ?? {}), [k]: (s.furn?.[k] ?? 0) + 1 }; sound(ctx, 'loot-take-all-rustle', 0.35, true); return { ok: true } } // furniture back into your build menu
   if (token.startsWith('cash:')) { s.cents = (s.cents ?? 0) + (+token.slice(5) || 1); sound(ctx, 'loot-take-all-rustle', 0.35, true); return { ok: true } } // Backdollars: a wallet, no weight
   const cw = canCarry(s, token); if (!cw.ok) return cw
   if (SNACKS[token] && !token.startsWith('cloth:')) { // food and aid are carried, never used on pickup: I > Aid eats or uses one
@@ -810,6 +811,7 @@ export function pumpRack(ctx) {
 export function pullToken(ctx, t) { // one carried thing out of the bag as its pickup token (drop, fridge), null if you have none
   const s = ctx.self.state; let tok = null
     if (t.startsWith('cloth:')) { const bag = s.clothes ? s.clothes.split(',').filter(Boolean) : [], i = bag.indexOf(t); if (i >= 0) { bag.splice(i, 1); s.clothes = bag.join(','); tok = t } }
+    else if (t.startsWith('furn:')) { const k = t.slice(5); if ((s.furn?.[k] ?? 0) > 0) { s.furn = { ...s.furn, [k]: s.furn[k] - 1 }; tok = t } }
     else if (t.startsWith('almond:')) { const k = AW_KEY[t.slice(7)]; if (k && s[k] > 0) { s[k] -= 1; tok = t } }
     else if (t.startsWith('meat:')) { const c = t.slice(5); if ((s.meat?.[c] ?? 0) > 0) { s.meat = { ...s.meat, [c]: s.meat[c] - 1 }; tok = t } }
     else if (t.startsWith('snack:')) { const c = t.slice(6); if ((s.snacks?.[c] ?? 0) > 0) { s.snacks = { ...s.snacks, [c]: s.snacks[c] - 1 }; tok = c } }

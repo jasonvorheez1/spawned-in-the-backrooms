@@ -2,6 +2,7 @@ import { wristNav } from './lib/wrist-nav.js'
 import {screen} from './lib/screen.js'
 // Looting and inventory layouts; the shared field theme supplies their current visual treatment.
 import AW from './lib/data/almond.yml'
+import FURN from './lib/data/furniture.yml'
 import { quickItems } from './lib/quick-items.js'
 import SNACKS from './lib/data/snacks.yml'
 import { describe, itemsOf, MEAT } from './lib/items.js'
@@ -765,14 +766,15 @@ function bagRows(s) { // what you carry that a fridge holds: [token, name, count
   for (const [c, k] of Object.entries(AWK)) if ((s[k] ?? 0) > 0) out.push([`almond:${c}`, AW[c]?.name ?? 'Almond Water', s[k]])
   for (const [k, n] of Object.entries(s.snacks ?? {})) if (n > 0 && SNACKS[k]) out.push([`snack:${k}`, SNACKS[k].name, n])
   for (const [k, n] of Object.entries(s.meat ?? {})) if (n > 0 && MEAT[k]) out.push([`meat:${k}`, MEAT[k].name, n])
+  if (s.lootName === 'Steamer trunk') for (const [k, n] of Object.entries(s.furn ?? {})) if (n > 0 && FURN.pieces?.[k]) out.push([`furn:${k}`, FURN.pieces[k].name, n]) // your trunk keeps furniture too
   return out
 }
 function storage(s, key) { // your fridge: two sides, one press moves one thing
-  const items = itemsOf(s.lootList), nameOf = (t) => t.startsWith('almond:') && AW[t.slice(7)]?.name ? AW[t.slice(7)].name : describe(t).name
+  const items = itemsOf(s.lootList), nameOf = (t) => t.startsWith('furn:') ? (FURN.pieces?.[t.slice(5)]?.name ?? 'Furniture') : t.startsWith('almond:') && AW[t.slice(7)]?.name ? AW[t.slice(7)].name : describe(t).name
   const groups = {}; items.forEach((t, i) => { (groups[t] ??= { t, i, n: 0 }).n++ })
   const row = (label, n, act, btn) => `<div style="display:flex;align-items:center;gap:10px;padding:5px 2px;border-bottom:1px solid rgba(255,190,90,.12)"><span style="flex:1">${label}</span><span style="opacity:.6;min-width:34px;text-align:right">x${n}</span><button onclick="sendAction('loot',${act})" style="padding:3px 10px;border:1px solid rgba(255,190,90,.6);background:rgba(255,190,90,.08);color:inherit;font:inherit;cursor:pointer">${btn}</button></div>`
   const left = Object.values(groups).map((g) => row(nameOf(g.t), g.n, `{k:'take',i:${g.i}}`, 'TAKE')).join('') || '<div class="em">Empty.</div>'
-  const right = bagRows(s).map(([t, nm, n]) => row(nm, n, `{k:'store',t:'${t}'}`, 'PUT IN')).join('') || '<div class="em">No food or drinks on you.</div>'
+  const right = bagRows(s).map(([t, nm, n]) => row(nm, n, `{k:'store',t:'${t}'}`, 'PUT IN')).join('') || (s.lootName === 'Steamer trunk' ? '<div class="em">Nothing to stow.</div>' : '<div class="em">No food or drinks on you.</div>')
   const col = (title, body) => `<div style="flex:1;min-width:0"><div style="opacity:.7;letter-spacing:.15em;margin-bottom:6px">${title}</div><div style="max-height:46vh;overflow:auto">${body}</div></div>`
   return `<div class="pbw pb"><div class="pbp" data-modal>
     <div class="nv-top"><div class="nv-top-left"><h2>${(s.lootName || 'STORAGE').toUpperCase()}</h2></div><div class="nv-vitals"><span><b>SPACE</b>${items.length}/30</span></div></div>
