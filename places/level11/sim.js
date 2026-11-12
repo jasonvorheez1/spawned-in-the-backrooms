@@ -1788,6 +1788,21 @@ const L11_VOICES = {
 // Master tick simulation loop
 const mem = { ringAt: 0, adAt: 0, lightAt: 0, lightPhase: 0 };
 export function tick(ctx) {
+  { const s = ctx.place.state; // Shelly Nov 12 "go through the npcs in level 11 and update them to standards": the cast stood in bare bodies with no wardrobe; refit each in place (same path as Level 7), Mara and the faceling keep their own look
+    if ((s.l11CastV ?? 0) < 1 && !s.l11CastBusy) {
+      s.l11CastBusy = 1;
+      const CAST = { "l11-meg-agent-vance": ["meg", "agent"], "l11-trader-kael": ["tbd", "trader"], "l11-th-guard-0": ["survivor", "guard"], "l11-th-guard-1": ["survivor", "guard"], "l11-tm-clerk": ["office", "clerk"], "l11-walker-1": ["wanderer", "scout"], "l11-walker-2": ["office", null], "l11-walker-3": ["survivor", "keeper"] };
+      const NERVE = { "l11-walker-1": "steady", "l11-walker-2": "coward", "l11-walker-3": "coward" }; // her pick: the courier stands firm, the temp and the janitor run
+      Promise.all([import("../../scripts/lib/critter-model.js"), import("../../scripts/lib/clothes.js")]).then(([{ refitBody }, { npcLook }]) => {
+        for (const [id, [fac, role]] of Object.entries(CAST)) {
+          const o = ctx.place.objects[id]; if (!o) continue;
+          refitBody(ctx, o, npcLook(id, null, fac, 11, role ?? undefined));
+          if (NERVE[id] && !o.state.nerve) o.state.nerve = NERVE[id];
+        }
+        s.l11CastV = 1; delete s.l11CastBusy;
+      }).catch((e) => { ctx.log("l11 cast refit", String(e)); delete s.l11CastBusy; });
+    }
+  }
   if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level11"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
