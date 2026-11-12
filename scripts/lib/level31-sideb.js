@@ -28,14 +28,22 @@ export function laySideB(ctx) {
   sp("stall-sign", { feetPosition: { x: -12, y: 2.05, z: 29.82 }, castShadow: false,
     vector: `<svg viewBox='0 0 240 70' width='1.9m'><rect x='4' y='6' width='232' height='58' fill='#e9e2cc' transform='rotate(-1.5 120 35)'/><text x='120' y='34' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='22' fill='#1e3b2a'>B.N.T.G. RINK CONCESSION</text><text x='120' y='54' text-anchor='middle' font-family='serif' font-style='italic' font-size='14' fill='#5a2a1a'>we buy · we sell · we don't ask</text></svg>` });
   sp("stall-lamp", { feetPosition: { x: -12, y: 2.3, z: 27.6 }, light: { kind: "point", color: "#ffd59a", intensity: 1.6, distance: 7 } });
+  // the crew's shifts (Savi's picks): muscle walks a beat round the stall and the rink's north aisle, Dez paces the dark back corner, Marlowe minds the counter
+  const beat = (x, z, dwell, lx = 0, lz = 0) => ({ x, y: 0, z, dwell, look: { x: lx, z: lz } });
+  const SHIFT = {
+    marlowe: [beat(-12, 28.8, 14, -12, 20), beat(-13.4, 29.1, 6, -13.4, 31), beat(-10.6, 28.9, 8, -12, 20)],
+    guard1: [beat(-14.7, 27.9, 10), beat(-18, 25, 7), beat(-22, 21, 9), beat(-16, 24, 6)],
+    guard2: [beat(-9.3, 27.9, 9), beat(-5, 24.5, 8), beat(1, 22, 7), beat(-6, 25, 6)],
+    dez: [beat(-27.4, 28.6, 12, -12, 28), beat(-31, 26, 8, -24, 4), beat(-27, 23, 9), beat(-24, 27, 7, -12, 28)],
+  };
   person("marlowe", -12, 28.8, 0, { species: "human", sex: "m", topw: "jacket", top: "#4a5a3a", botw: "pants", bottom: "#2c2a26", shoes: "boots" },
-    "concession", "B.N.T.G. Rink Concession", "Marlowe · B.N.T.G.", "trader", { voice: "l31-q-marlowe", essential: true, line: "Batteries, almond water, mild optimism." });
+    "concession", "B.N.T.G. Rink Concession", "Marlowe · B.N.T.G.", "trader", { voice: "l31-q-marlowe", essential: true, line: "Batteries, almond water, mild optimism.", rounds: SHIFT.marlowe });
   person("guard1", -14.7, 27.9, 15, { species: "human", sex: "f", topw: "hoodie", top: "#3b4a36", botw: "pants", bottom: "#24241f", shoes: "boots" },
-    "concession", "B.N.T.G. Rink Concession", "B.N.T.G. Muscle", "agent");
+    "concession", "B.N.T.G. Rink Concession", "B.N.T.G. Muscle", "agent", { rounds: SHIFT.guard1 });
   person("guard2", -9.3, 27.9, -15, { species: "human", sex: "m", topw: "tee", top: "#56603f", botw: "pants", bottom: "#2a2622", shoes: "boots" },
-    "concession", "B.N.T.G. Rink Concession", "B.N.T.G. Muscle", "agent");
+    "concession", "B.N.T.G. Rink Concession", "B.N.T.G. Muscle", "agent", { rounds: SHIFT.guard2 });
   person("dez", -27.4, 28.6, -20, { species: "human", sex: "m", topw: "jacket", top: "#2e2f2a", botw: "pants", bottom: "#1f1f22", shoes: "boots" },
-    "concession", "B.N.T.G. Rink Concession", "Dez · B.N.T.G.", "agent", { voice: "l31-q-dez", essential: true });
+    "concession", "B.N.T.G. Rink Concession", "Dez · B.N.T.G.", "agent", { voice: "l31-q-dez", essential: true, rounds: SHIFT.dez });
 
   // the DJ's crate, back corner behind the left curtain, where it's dark
   if (GLB.crate) M("crate", "crate", -6.1, -29.3, 0, { tags: ["usable", "l31-q"], behavior: "scripts/l31-crate.js", state: { name: "Steel crate", verb: "Open", info: "Padlocked. A card slot under the lock." } });
