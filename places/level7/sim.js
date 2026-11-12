@@ -978,6 +978,16 @@ export function tick(ctx) {
       rotation: rotationFromDirection(f), primitive: { kind: "box", width: 2.8, height: 0.3, depth: len + 0.4 }, physics: "static", visible: false });
     s.fortPathV = 2;
   }
+  if ((s.fortPathV ?? 0) < 3) { // Shelly Nov 12 "cant enter or exit fort surrender": the ramp's top end stood 0.2 m proud of the fort floor (11.65) with a steep end face; it now ends flush at the gate, its spare length only at the wharf end
+    ctx.destroy("l7-ft-ramp");
+    const xz = (k) => ({ x: -48.5 - 1.35 * k, z: -66.5 - 1.65 * k });
+    const a = xz(-1.55), b = xz(12.3), B = { ...b, y: 11.62 }, A0 = { ...a, y: 1.2 };
+    const d0 = { x: B.x - A0.x, y: B.y - A0.y, z: B.z - A0.z }, l0 = Math.hypot(d0.x, d0.y, d0.z), f = { x: d0.x / l0, y: d0.y / l0, z: d0.z / l0 };
+    const A = { x: A0.x - f.x * 0.6, y: A0.y - f.y * 0.6, z: A0.z - f.z * 0.6 }, len = l0 + 0.6, hz = Math.hypot(f.x, f.z), drop = 0.15 * hz;
+    ctx.spawn("l7-ft-ramp", { feetPosition: { x: (A.x + B.x) / 2, y: (A.y + B.y) / 2 - drop, z: (A.z + B.z) / 2 }, pivot: "center",
+      rotation: rotationFromDirection(f), primitive: { kind: "box", width: 2.8, height: 0.3, depth: len }, physics: "static", visible: false });
+    s.fortPathV = 3;
+  }
   if (!ctx.getObject("l7-fauna")) ctx.spawn("l7-fauna", { behavior: "scripts/l7-fauna.js" }); // tidecrawlers on the shores, the Deep in open water
   // Ensure NPCs come back home after respawn window via level-kit
   if (every(ctx, "people", 5000)) {
