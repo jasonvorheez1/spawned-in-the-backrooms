@@ -174,7 +174,7 @@ const L7_NPCS = {
     at: [-70.0, 11.0, -97.5],
     yaw: 0,
     rounds: [
-      { x: -70.0, y: 11.0, z: -97.5, dwell: 24, act: null, look: { x: -70.0, z: -101.0 } },
+      { x: -70.0, y: 11.0, z: -97.5, dwell: 24, act: null, look: { x: -70.0, z: -101.0 } , topw: "jacket", botw: "pants", hat: "beanie", neck: "scarf", neckc: "#8a7a5a" },
       { x: -67.5, y: 11.0, z: -92.5, dwell: 15, act: null, look: { x: -60.0, z: -80.0 } },
       { x: -72.5, y: 11.0, z: -95.0, dwell: 18, act: null, look: { x: -83.0, z: -115.0 } },
     ],
@@ -191,7 +191,7 @@ const L7_NPCS = {
     yaw: 0,
     nerve: "frenzied",
     rounds: [
-      { x: -66.0, y: 11.0, z: -86.0, dwell: 20, act: null, look: { x: -70.0, z: -93.0 } },
+      { x: -66.0, y: 11.0, z: -86.0, dwell: 20, act: null, look: { x: -70.0, z: -93.0 } , topw: "tarpponcho", botw: "overalls", hat: "souwester", hatc: "#c8a030" },
       { x: -72.0, y: 11.0, z: -86.0, dwell: 20, act: null, look: { x: -70.0, z: -93.0 } },
       { x: -70.0, y: 11.0, z: -84.0, dwell: 14, act: null, look: { x: -70.0, z: -93.0 } },
     ],
@@ -208,7 +208,7 @@ const L7_NPCS = {
     yaw: 0,
     nerve: "steady",
     rounds: [
-      { x: -75.0, y: 11.0, z: -97.0, dwell: 25, act: null, look: { x: -70.0, z: -93.0 } },
+      { x: -75.0, y: 11.0, z: -97.0, dwell: 25, act: null, look: { x: -70.0, z: -93.0 } , topw: "tarpponcho", botw: "pants", neck: "scarf", neckc: "#7a3020" },
       { x: -73.0, y: 11.0, z: -92.0, dwell: 18, act: null, look: { x: -70.0, z: -93.0 } },
     ],
     look: { species: "sheep", sex: "f", eye: "#e0d048", belly: "#d8cbb8", nose: "#1e1816", topw: "longsleeve", top: "#a8987a", topp: "gingham", botw: "overalls", bottom: "#5a4a36", shoes: "boots", shoec: "#2e2620", neck: "scarf", neckc: "#3e6a6a" },
@@ -224,7 +224,7 @@ const L7_NPCS = {
     yaw: 0,
     nerve: "frenzied",
     rounds: [
-      { x: -64.0, y: 11.0, z: -98.0, dwell: 22, act: null, look: { x: -70.0, z: -93.0 } },
+      { x: -64.0, y: 11.0, z: -98.0, dwell: 22, act: null, look: { x: -70.0, z: -93.0 } , topw: "bntgvest", botw: "overalls", neck: "necklace" },
       { x: -67.0, y: 11.0, z: -99.0, dwell: 16, act: null, look: { x: -70.0, z: -93.0 } },
     ],
     look: { species: "bear", sex: "m", eye: "#d84a4a", belly: "#d8cbb8", nose: "#1e1816", topw: "jacket", top: "#6e5c44", topp: "canvas", botw: "pants", bottom: "#3e4a44", botp: "weave", shoes: "boots", shoec: "#241e1a", hat: "beanie", hatc: "#6a3a2a", neck: "none" },
@@ -239,7 +239,7 @@ const L7_NPCS = {
     at: [-67.0, 11.0, -92.0],
     yaw: -45,
     rounds: [
-      { x: -67.0, y: 11.0, z: -92.0, dwell: 28, act: null, look: { x: -70.0, z: -94.0 } },
+      { x: -67.0, y: 11.0, z: -92.0, dwell: 28, act: null, look: { x: -70.0, z: -94.0 } , topw: "hoodie", botw: "shorts", hat: "souwester", hatc: "#c8a030" },
       { x: -71.5, y: 11.0, z: -92.5, dwell: 16, act: null, look: { x: -73.0, z: -91.5 } },
     ],
     look: { species: "raccoon", sex: "f", eye: "#e0a838", belly: "#dcd8d0", nose: "#1c1816", topw: "hoodie", top: "#4e6a5e", botw: "pants", bottom: "#6a5a42", botp: "weave", shoes: "boots", shoec: "#1c1e22", hat: "beanie", hatc: "#8a5a2a", expr: "smirk" },
