@@ -233,6 +233,21 @@ shops:
     - [battery, 3, 3]
     - [firstaid, 1, 9]
     - [tape, 2, 3]
+  l31-shop-keeper:   # Dottie, Level 31 gift counter: ordinary things from home, nothing that hurts
+    - [gumball, 30, 0.2]
+    - [cola_can, 12, 1.4]
+    - [nachos, 6, 2.8]
+    - [glow_necklace, 10, 2]
+    - [slap_bracelet, 8, 1.4]
+    - [disposable_camera, 4, 6]
+    - [walkman, 2, 14]
+    - ["cloth:topw:tee:e8232e", 3, 5.5]
+    - ["cloth:topw:tee:1c1c20", 3, 5.5]
+    - [vault, 6, 1.4]
+    - [doritos, 6, 1.4]
+    - [pepsi, 6, 1.4]
+  l31-coach:         # skate rental: $5 a pair
+    - [skates, 99, 3.45]
 sell:
   almond: 3          # a grey almond water: about $1 at the counter (Savi's pick)
   ammo: 4

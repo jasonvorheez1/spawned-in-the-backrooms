@@ -43,3 +43,11 @@ humloop: { name: "Hum loop", verb: "PLAY", info: "A cassette ring, puttied shut.
 # The Christmas Area (only there)
 eggnog:   { name: "Eggnog Thermos", info: "Warm, sweet, nutmeg. Somebody poured it for you", hunger: 10, thirst: 20, sanity: 25, hp: 12, color: "#f2e2b0", drink: true, aid: true }
 musicbox: { name: "Wind-up Music Box", verb: "SET DOWN", info: "Set it down and it plays the same four bars until the spring gives out. Stay close", hunger: 0, thirst: 0, sanity: 20, hp: 0, color: "#c8a050", keep: true, cooldown: 180, clip: "/cdn/moodboard-gothic-horror/sfx-short-wind-up-music-box-carol-melody.mp3" }
+# Level 31 "Dottie's" gift counter (scripts/lib/level31-shop.js). A row with `use:` is a gadget, run by scripts/lib/rink-items.js.
+gumball: { name: "Gumball", info: "From the red machine. Loses its flavour in a minute", hunger: 1, thirst: 0, sanity: 2, hp: 0, color: "#ff3fa4" }
+cola_can: { name: "Can of cola", info: "Cold from the mini fridge", hunger: 2, thirst: 24, sanity: 4, hp: 1, color: "#e01a22", drink: true }
+nachos: { name: "Nachos", info: "A paper tray, pump cheese, four jalapenos", hunger: 28, thirst: -4, sanity: 6, hp: 3, color: "#ffb020" }
+glow_necklace: { name: "Glow necklace", info: "Crack it and wear it. Glows for 10 min", hunger: 0, thirst: 0, sanity: 0, hp: 0, color: "#7dff5a", use: glow, secs: 600 }
+disposable_camera: { name: "Disposable camera", info: "27 exposures, built-in flash", hunger: 0, thirst: 0, sanity: 0, hp: 0, color: "#f2b90f", use: camera, shots: 27 }
+slap_bracelet: { name: "Slap bracelet", info: "Max sanity +5 while you carry it", hunger: 0, thirst: 0, sanity: 0, hp: 0, color: "#3fd0ff", use: slap, maxSan: 5 }
+walkman: { name: "Walkman", info: "The rink's tape, quietly, for 5 min. Use again to stop", hunger: 0, thirst: 0, sanity: 0, hp: 0, color: "#8a8a92", use: walkman, secs: 300 }

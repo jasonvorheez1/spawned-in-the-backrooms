@@ -34,6 +34,19 @@ doors:
   lv10-backroad: level10
 models:
   level31:
+    - "/cdn/value.4e4232d504243753b8093ecbded15cf7a15d83caa454d9a7267753de18ec803b.glb"
+    - "/cdn/value.771b5071459bb3232354e8687c5907232ca21fd30fa6bf4ce677fe1f892ca307.glb"
+    - "/cdn/value.8a56aca6ef6b1538521554450fdbbcb8ab9938be6cd66a2acd5673970b5e5966.glb"
+    - "/cdn/value.be7eb6c9bc6772c442cbd253702e165b10228b7f25c091d9b7fe1a9fee5eef61.glb"
+    - "/cdn/value.ac26ad98d9c72af404cfccb160ac08446c310e266a0a9934600985c9350931ba.glb"
+    - "/cdn/value.9a00dc6793f313bcdee2cc9d0d5a3dc265139fdc0dd27f40d6f60f8edffdd70f.glb"
+    - "/cdn/value.9b6b13b71bbffdf8cd0ced1035a3dff0d8e4f1b32840180d74251faad3c40166.glb"
+    - "/cdn/value.6b3a28ca3cb58efe606cf0ffe79bdd5aaa1a72a65d5552c16ab832e2b9ce4cf6.glb"
+    - "/cdn/value.f2663b8e02cbce4a46bcfac7649bc914ec716a82c522683d3afa35ae62387855.glb"
+    - "/cdn/value.853325a6c5a79f84ff8856bdec753180a3d7bd7e5b51e26f672b7c91003fa264.glb"
+    - "/cdn/value.1e06f865e3bab819652a7465866afc2c45f18e4e921be428e2aa3ee858166281.glb"
+    - "/cdn/value.e7314085a43f0e52bed0ee5bdf56f3a8cd3effa57fc716faa8c431493d8eb3c0.glb"
+    - "/cdn/value.8eeb18c99bfd4d8d7eeab25ae7d204179f7de76980db3dfea83cda5bdff30c03.glb"
     - "/cdn/value.f759116da56aba87735b8064a9fe7b00f9a373dadf68a856453d2f01173eca10.glb"
     - "/cdn/value.f025413cd07f33ee4e744a88cdbe78e81a6057ba2b9fa1e5b77a9543ea556977.glb"
     - "/cdn/value.38ea1184b8c82b3771c13c050fd5e3c5e090a504e7b95c21a22663994d233826.glb"

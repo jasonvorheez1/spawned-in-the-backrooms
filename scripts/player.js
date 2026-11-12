@@ -60,6 +60,7 @@ import CR from './lib/data/craft.yml'
 import AW from './lib/data/almond.yml'
 import { MEAT } from './lib/items.js'
 import SNACKS from './lib/data/snacks.yml'
+import { useGadget } from './lib/rink-items.js'
 import { carryAcross } from "./lib/carry.js";
 import { onRink, SKATE, skateStep } from './lib/level31.js'
 const sndTurn = {}
@@ -88,7 +89,7 @@ pop ichor burst=18..26 life=.5..0.9 v=sdir()*(1.5..3.2)+up(1) size=.04..0.09 acc
 pop smoke burst=4..6 life=.6..1 v=sdir()*(.3..0.7) size=.25..0.4 acc=buoy(.4)+drag(1.5) col=<.06,.05,.07> a=0>.15:.5>0 sz=$size*(.6>1.6) r=sprite(smoke-puff,alpha)`
 
 export const maxHp = (lv, s) => L.hp + (lv - 1) * L.perLevel.hp + (s?.attr ? derived(s).hpBonus : 0)
-export const maxSan = (lv, s) => L.sanity + (lv - 1) * L.perLevel.sanity + (s?.attr ? derived(s).sanBonus : 0)
+export const maxSan = (lv, s) => L.sanity + (lv - 1) * L.perLevel.sanity + ((s?.snacks?.slap_bracelet ?? 0) > 0 ? 5 : 0) + (s?.attr ? derived(s).sanBonus : 0)
 export const xpNeed = (lv) => L.xpBase * lv
 
 const owned = (s) => ['fists', ...(s.weapons ? s.weapons.split(',') : [])]
@@ -321,6 +322,7 @@ function takeToken0(ctx, token) {
 export function useSnack(ctx, token) { // consume one from the bag
   const s = ctx.self.state, now = ctx.now(), n = s.snacks?.[token] ?? 0
   if (n <= 0 || !SNACKS[token]) return
+  if (SNACKS[token].use) { useGadget(ctx, token, SNACKS[token], n); return } // Level 31 gadgets (scripts/lib/rink-items.js)
   if (token === 'musicbox') { s.invOpen = false; placeMusicBox(ctx); return } // set down, not eaten (scripts/lib/musicbox.js)
   if (SNACKS[token].keep) { // a keepsake: used, not eaten, once per cooldown
     const v = SNACKS[token], left = ((s.keepAt?.[token] ?? -1e12) + v.cooldown * 1000 - now) / 1000

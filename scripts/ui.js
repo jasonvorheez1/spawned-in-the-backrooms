@@ -90,7 +90,7 @@ kbd { display:inline-block; padding:0 4px; font-family:inherit; font-size:10px; 
 </style>`
 
 const maxHp = (lv, s) => L.hp + (lv - 1) * L.perLevel.hp + (s?.attr ? derived(s).hpBonus : 0)
-const maxSan = (lv, s) => L.sanity + (lv - 1) * L.perLevel.sanity + (s?.attr ? derived(s).sanBonus : 0)
+const maxSan = (lv, s) => L.sanity + (lv - 1) * L.perLevel.sanity + ((s?.snacks?.slap_bracelet ?? 0) > 0 ? 5 : 0) + (s?.attr ? derived(s).sanBonus : 0)
 
 function bar(label, cur, max, color, valText = '', left = false) {
   const pct = Math.round(Math.max(0, Math.min(100, (cur / max) * 100))) // whole percents: a drifting stat restyles the bar only when it moves a step

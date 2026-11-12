@@ -540,3 +540,21 @@ l02-capn:
     gift: "For me? I will log it as company property."
     dance: "Not on the new floor."
     insult: "That will go in my report. Which nobody reads."
+
+l31-shop-keeper:
+  hi: "Hi hon. Everything in the case is from home. Take your time, nobody's closing."
+  back: ["Back again. Good.", "Hi hon. Need a gumball?"]
+  warm: "There's my regular. I set a camera aside for you."
+  cold: "Look all you like."
+  bye: "Skate safe."
+  walk: "Okay hon."
+  ask:
+    - q: "Where does the stock come from?"
+      a: "The shelves are full when I turn the lights on. Same shirts since I got here. I just dust them."
+    - q: "Is there a way out of here?"
+      a: "People skate a few laps and then they're not here anymore. I never asked where. I like the music."
+    - q: "Better deal?"
+      sk: barter 30
+      do: discount
+      a: "Oh, alright. You remind me of somebody. I can't think who."
+      fail: "Prices are on the stickers, hon."
