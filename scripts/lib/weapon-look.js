@@ -95,5 +95,17 @@ export function weaponBody(kind) {
     // a mesh with no overlay wears its variant as a tint on its own texture (a rusty crowbar browns, an M.E.G. one greens)
     const t = w.tint ?? (!ch.length ? MESHTINT[look] : null); if (t) body.model.materials = { [m[3]]: { color: t } }
   }
+  if (base === 'carolynne') body.children = [...(body.children ?? []), ...CAROL_FESTIVE] // fairy lights blink along the tube, snow puffs off the hopper
   return body
 }
+
+// the Carolynne's festive riders, in the mesh's own frame (barrel toward +z, hopper on top behind the middle)
+const CAROL_FESTIVE = [
+  { id: 'twinkle', feetPosition: { x: 0, y: 0.15, z: 0.5 }, castShadow: false, fx: { script: `fx
+local
+pop bulbs n=16 on=box(.09,.03,.78) size=.011..0.018 tint=<2.6,.3,.25>..<.3,2.4,.5> col=$tint*flick(1.4,.85) a=1 sz=$size r=sprite(soft-disc,add)
+pop gold n=6 on=box(.09,.03,.78) size=.01..0.015 col=hdr(2.8,2,.6)*flick(2.2,.9) a=1 sz=$size r=sprite(mote,add)` } },
+  { id: 'hopsnow', feetPosition: { x: 0, y: 0.24, z: 0.36 }, castShadow: false, fx: { script: `fx
+local
+pop snow rate=4 on=box(.08,.02,.08) life=1..1.6 v=up(.04..0.1)+sdir()*.02 size=.005..0.01 acc=curl(.3)*.08 col=<1,1,1> a=0>.8:.3>.7:.6>0 sz=$size r=sprite(snowflake,alpha)` } },
+]

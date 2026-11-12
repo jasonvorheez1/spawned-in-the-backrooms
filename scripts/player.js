@@ -608,6 +608,7 @@ function swing(ctx, power = 0) {
       fx: { script: BAUBLE_TRAIL, params: { tint } }, castShadow: false,
       behavior: 'scripts/nade.js', state: { kind: 'bauble', vel, ownerId: ctx.self.id, big: true, dmg, radius: L.radius, daze: L.daze, tint } })
     ctx.emit('fx', { position: from, script: BAUBLE_PUFF, params: { tint } })
+    ctx.emit('playSound', { clip: '/cdn/moodboard-toon-vibrant/sfx-sleigh-bells-quick-shake-jingle-short.mp3', volume: 0.45, pitch: 0.95 + ctx.random() * 0.12 }) // the bells on the gun ring with each kick
     s.kick = Hd.recoil
     return
   }
