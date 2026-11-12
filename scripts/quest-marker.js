@@ -40,6 +40,10 @@ export function onInput(ctx, input) {
     if (s.jrnOpen) s.jrnOpen = false; else if (canOpen(s, ctx.self.place, "journal")) openWrist(s, "journal");
     ctx.emit("playSound", { clip: "cdn/moodboard-realistic-gritty/sfx-paper-notebook-page-flip.mp3", volume: 0.5 }, { audience: { player: ctx.self.id } });
   }
+  if (input.pressed?.qselect && s.jrnOpen) {
+    const id = input.actionData?.qselect?.id;
+    if (typeof id === "string" && (Object.hasOwn(s.quests ?? {}, id) || Object.hasOwn(s.qdone ?? {}, id))) s.qview = id;
+  }
   if (input.pressed?.qtrack) {
     const id = input.actionData?.qtrack?.id, r = toggleTrack(s, String(id ?? ""));
     if (r === null) s.notice = { text: `Tracking ${MAX_TRACK} quests already. Untrack one first.`, at: ctx.now() };

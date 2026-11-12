@@ -302,57 +302,54 @@ function questTracker(s, player, ctx) {
   }
   return (Q_CACHE.html = `<style>@media (max-width:520px){#hud-quest{width:126px!important;font-size:10px}#hud-quest .qs{display:none}#hud-quest span{font-size:10px}}</style><div id="hud-quest" style="position:fixed;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);top:18px;width:min(340px,42vw);display:flex;flex-direction:column;gap:5px;font-family:inherit;text-shadow:0 1px 2px #000;pointer-events:auto;cursor:pointer;z-index:40;animation:hud-pop .3s ease-out" onclick="sendAction('journal')">${list.map(row).join('')}</div>`)
 }
-// the journal (P): every quest you hold; a press on a row tracks or untracks it, three at most
+// Browsing the journal changes the detail pane independently of the HUD markers.
 function journalUi(s, player, ctx) {
   if (!s.jrnOpen) return ''
-  const all = Object.entries(s.quests ?? {}).map(([id, q]) => ({ id, ...q })).sort((a, b) => (b.main ? 1 : 0) - (a.main ? 1 : 0) || (b.at ?? 0) - (a.at ?? 0))
-  const finished = Object.entries(s.qdone ?? {}).map(([id, q]) => ({ id, ...q })).sort((a, b) => (b.at ?? 0) - (a.at ?? 0))
-  const failed = finished.filter((q) => q.outcome === 'failed' || (!q.outcome && /\bfailed\b/i.test(q.text ?? '')))
-  const done = finished.filter((q) => !failed.includes(q))
-  const tr = tracked(s)
-  const here = player?.place ?? ctx?.place?.id ?? 'main'
+  const recent = (a, b) => (b.at ?? 0) - (a.at ?? 0)
+  const open = Object.entries(s.quests ?? {}).map(([id, q]) => ({ ...q, id, status: 'Current' }))
+    .sort((a, b) => Number(!!b.main) - Number(!!a.main) || recent(a, b))
+  const archive = Object.entries(s.qdone ?? {}).filter(([id]) => !Object.hasOwn(s.quests ?? {}, id))
+    .map(([id, q]) => ({ ...q, id, status: q.outcome === 'failed' || (!q.outcome && /\bfailed\b/i.test(q.text ?? '')) ? 'Failed' : 'Completed' })).sort(recent)
+  const list = [...open, ...archive], tr = tracked(s)
+  const selected = list.find((q) => q.id === s.qview) ?? list.find((q) => q.id === tr[0]?.id) ?? list[0]
   const row = (q) => {
-    const t = tr.find((x) => x.id === q.id), c = t?.tint ?? 'rgba(255,182,66,0.55)'
-    const targetPlace = q.mark?.place
-    const isOff = targetPlace && targetPlace !== here
-    const target = !isOff ? questMark(ctx, player, q) : null
-    const dist = target && player?.feetPosition ? Math.round(Math.hypot(target.x - player.feetPosition.x, target.z - player.feetPosition.z)) : null
-    const badgeText = targetPlace ? (PLACE_NAMES[targetPlace] ?? targetPlace) : null
-    const locTag = isOff && badgeText
-      ? `<span style="font-size:9.5px;padding:1px 5px;background:rgba(255,182,66,0.15);border:1px solid rgba(255,182,66,0.3);border-radius:2px;letter-spacing:.05em;color:#ffdf99">${esc(badgeText).toUpperCase()}</span>`
-      : (badgeText || dist != null
-        ? `<span style="font-size:10px;letter-spacing:.06em;color:rgba(255,182,66,0.7)">${esc(badgeText ? badgeText.toUpperCase() : '')}${badgeText && dist != null ? ' · ' : ''}${dist != null ? `${dist}m` : ''}</span>`
-        : '')
-    return `<button data-tracked="${!!t}" aria-pressed="${!!t}" onclick="sendAction('qtrack',{id:${esc(JSON.stringify(q.id))}})" style="display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:${t ? 'rgba(255,182,66,0.07)' : 'transparent'};border:0;border-left:3px solid ${c};padding:8px 10px;margin:0 0 6px;font:inherit;color:inherit;cursor:pointer">
-      <span style="color:${c};font-size:13px;line-height:1.3">${t ? '◆' : '◇'}</span>
-      <span style="flex:1">
-        <span style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
-          <span class="q-name" style="font-size:13.5px;color:${t ? c : '#ffb642'};letter-spacing:.05em">${esc(q.name)}${q.main ? ' <span style="font-size:9px;letter-spacing:.2em;opacity:.7">· MAIN</span>' : ''}</span>
-          ${locTag}
-        </span>
-        <span class="q-step" style="display:block;font-size:12px;color:#fff2d4;opacity:.85;text-transform:none;line-height:1.35;margin-top:2px">${esc(q.step)}</span>
-      </span><span class="q-track">${t ? 'Tracked' : 'Track'}</span></button>`
+    const marker = tr.find((t) => t.id === q.id)
+    return `<button class="quest-entry" data-quest="${esc(q.id)}" data-status="${q.status}" ${q === selected ? 'aria-current="true"' : ''} onclick="sendAction('qselect',{id:${esc(JSON.stringify(q.id))}})">
+      <i class="quest-box" aria-hidden="true" ${marker ? `style="--quest-marker:${marker.tint}"` : ''}></i>
+      <span>${esc(q.name)}</span><span class="quest-sr">${marker ? ', tracked' : q.status !== 'Current' ? ', ' + q.status : ''}</span>
+    </button>`
   }
-  const doneRow = (q) => {
-    const pl = q.place ? `<span style="font-size:9.5px;letter-spacing:.06em;opacity:.75;color:#b2e2a8">${esc(PLACE_NAMES[q.place] ?? q.place).toUpperCase()}</span>` : ''
-    return `<div style="display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:rgba(133,196,120,0.06);border-left:3px solid #85c478;padding:7px 10px;margin:0 0 6px">
-      <span style="color:#85c478;font-size:12px;line-height:1.3">✓</span>
-      <span style="flex:1">
-        <span style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
-          <span style="font-size:12.5px;color:#b2e2a8;letter-spacing:.04em">${esc(q.name)}</span>
-          ${pl}
-        </span>
-        <span style="display:block;font-size:11.5px;color:#d8eed0;opacity:.8;text-transform:none;line-height:1.3;margin-top:2px">${esc(q.text ?? 'Completed')}</span>
-      </span>
+  let detail = '<p class="quest-empty">Your Journal is empty. Quests appear here as you find them.</p>'
+  if (selected) {
+    const { id, status, name, step, text, mark, main, history } = selected
+    const current = status === 'Current', pinned = tr.some((q) => q.id === id)
+    const target = current ? questMark(ctx, player, selected) : null
+    const feet = player?.feetPosition
+    const dist = target && feet ? Math.round(Math.hypot(target.x - feet.x, target.z - feet.z)) : null
+    const place = current ? mark?.place : selected.place
+    const location = [place && (PLACE_NAMES[place] ?? place), dist != null && `${dist} m`].filter(Boolean).join(' · ')
+    const full = !pinned && tr.length >= MAX_TRACK
+    detail = `<div class="quest-detail" id="quest-detail-${esc(id)}">
+      <div class="quest-meta"><span>${current && main ? 'Main quest' : status === 'Current' ? 'In progress' : status}</span>${location ? `<span>${esc(location)}</span>` : ''}</div>
+      <h2>${esc(name)}</h2>
+      <div class="quest-objective">
+        <h3>${current ? 'Current objective' : 'Outcome'}</h3>
+        <p>${esc(current ? step || 'No current objective.' : text || status)}</p>
+      </div>
+      ${current ? `<div class="quest-actions"><button aria-pressed="${pinned}" ${full ? 'disabled' : ''} onclick="sendAction('qtrack',{id:${esc(JSON.stringify(id))}})">${pinned ? 'Stop tracking' : 'Track quest'}</button>${full ? '<small>All tracking slots are in use.</small>' : ''}</div>` : ''}
+      ${history?.length ? `<div class="quest-history"><h3>Previous objectives</h3><ul>${history.slice().reverse().map((line) => `<li>${esc(line)}</li>`).join('')}</ul></div>` : ''}
     </div>`
   }
-  return `<div id="journal" data-modal style="font-family:'Monofonto','Share Tech Mono','Geist Pixel',ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:#ffb642;position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;pointer-events:auto;z-index:60"><div class="journal-panel" style="width:min(520px,92vw);max-height:80vh;overflow:auto;background:oklch(0.14 0.02 75 / .96);border:1px solid rgba(255,182,66,0.55);box-shadow:0 0 30px #000;padding:16px 18px;text-shadow:0 1px 2px #000">
-    <div class="journal-header" style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px"><span class="journal-title">Journal</span><span style="font-size:10px;letter-spacing:.18em;color:rgba(255,182,66,0.55)">Tracking ${tr.length}/${MAX_TRACK}</span><button class="journal-close" onclick="sendAction('journal')">Close · P</button></div>
+  return `<div id="journal" data-modal><section class="journal-panel" aria-labelledby="journal-title">
+    <header class="journal-header"><h1 id="journal-title">Quests</h1><span>${tr.length} of ${MAX_TRACK} tracked</span><button class="journal-close" onclick="sendAction('journal')">Close <kbd>P</kbd></button></header>
     ${wristNav('journal')}
-    ${all.length ? all.map(row).join('') : '<div style="font-size:12px;color:rgba(255,182,66,0.55);text-transform:none;padding:10px 0">No active quests. Press P or Esc to close.</div>'}
-    ${done.length ? `<details class="journal-archive"><summary>Completed (${done.length})</summary>${done.map(doneRow).join('')}</details>` : ''}
-    ${failed.length ? `<details class="journal-archive"><summary>Failed (${failed.length})</summary>${failed.map((q) => `<div style="border-left:3px solid #d78176;padding:7px 10px;margin-bottom:6px;text-transform:none;color:#e8c3b7;font-size:12px"><b>${esc(q.name)}</b><div>${esc(q.text ?? 'Failed')}</div></div>`).join('')}</details>` : ''}
-  </div></div>`
+    <div class="quest-layout">
+      <div class="quest-list" role="group" aria-label="Quest list" onkeydown="if(event.key==='ArrowUp'||event.key==='ArrowDown'){const next=event.target[event.key==='ArrowDown'?'nextElementSibling':'previousElementSibling'];if(event.target.matches('.quest-entry')&&next?.matches('.quest-entry')){event.preventDefault();event.stopPropagation();next.focus();next.click()}}">
+        ${list.map(row).join('') || '<p class="quest-empty">No quests yet.</p>'}
+      </div>
+      <div class="quest-reading" aria-live="polite">${detail}</div>
+    </div>
+  </section></div>`
 }
 
 // F3: the LAGSCOPE lag panel floats over whatever the HUD draws (builders only; players never see it)
