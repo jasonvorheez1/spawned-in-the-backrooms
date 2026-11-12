@@ -13,7 +13,7 @@ import { S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, xOf } from "../../scripts/lib
 import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 import P from "../../scripts/lib/data/l02-props.yml";
 export const cadence = "250ms";
-const V = 15, STEP_MS = 3400, WARNING_MS = 1200;
+const V = 16, STEP_MS = 3400, WARNING_MS = 1200;
 const CREAK = "/cdn/moodboard-realistic-gritty/sfx-deep-structural-wood-creak-groan.mp3";
 const OFFICE_LIGHT = { kind: "point", color: "oklch(0.96 0.025 95)", intensity: 1.35, distance: 11 };
 const WARN_LIGHT = { ...OFFICE_LIGHT, color: "oklch(0.76 0.16 54)", intensity: 0.95, distance: 8 };
@@ -94,11 +94,9 @@ function layShell(ctx) {
   sp(ctx, "l02-hum", { feetPosition: { x: cx, y: 2, z: cz }, audio: { clip: HUM, loop: true, gain: 0.12, spatial: false } });
   sp(ctx, "l02-haze", { feetPosition: { x: cx, y: BASE + 0.3, z: cz }, fx: { script: HAZE } });
   // stairs from the basement up to the door room's edge, a 2x4 baluster per step and a rail
-  for (let i = 0; i < 12; i++) {
-    const top = (i + 1) * (-BASE / 12);
-    sp(ctx, `l02-step${i}`, { feetPosition: { x: -6.25 - i * 0.5, y: BASE, z: Z0 + 1.1 }, primitive: box(0.5, top, 1.8), material: PLY, physics: "static",
-      children: [{ feetPosition: { x: 0, y: top, z: 0.9 }, primitive: box(0.06, 0.9, 0.06), material: STUD }, { feetPosition: { x: 0, y: top + 0.9, z: 0.9 }, primitive: box(0.52, 0.05, 0.09), material: STUD }] });
-  }
+  // Shelly Nov 12 "make this not blocky using tripo": one Tripo pine staircase (open treads on notched stringers, baluster rail on the room side) over the ramp collider below
+  sp(ctx, "l02-stairs", { feetPosition: { x: -9, y: BASE, z: Z0 + 1.1 }, model: { id: "/cdn/value.c2b6803633d0f2ad5b1a5fbac7422a4e036ecdd90d575f615b0879689e40035e.glb" },
+    layout: { box: { min: { x: -3.05, y: 0, z: -0.9 }, max: { x: 3.05, y: -BASE + 0.95, z: 0.9 } } }, castShadow: true, receiveShadow: true });
   { // one smooth ramp collider under the treads: (-6.0, BASE) up to (-12.0, 0), so the climb never hangs on a riser
     const run = 6, rise = -BASE, len = Math.hypot(run, rise), ang = Math.atan2(rise, run) * 180 / Math.PI;
     sp(ctx, "l02-stair-ramp", { feetPosition: { x: -9, y: BASE / 2 - 0.1, z: Z0 + 1.1 }, pivot: "center", rotation: { yaw: 0, pitch: 0, roll: -ang }, primitive: box(len, 0.2, 1.8), visible: false, physics: "static" });
