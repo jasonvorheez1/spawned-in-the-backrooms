@@ -72,9 +72,11 @@ def hide_body(sex):
     for o in bpy.data.objects: o.select_set(True)
     bpy.ops.export_scene.gltf(filepath=f"{OUT}/body-{sex}.glb", export_skins=True, export_morph=True, export_animations=False, export_apply=False)
 
+INSET, RISE = 0.74, 0.012   # Shelly #241636 "spread too much apart": the pair stands nearer the crown (x toward the midline, a touch up the dome)
 def ear(bm, E, T, sx, mats):
     C, tip = E["C"], E["tip"]; h = (tip.z - C.z) * T["h"]
-    W0 = E["hw"] * 1.18 * T["w"]; D0 = W0 * 0.55
+    C = Vector((C.x * INSET, C.y, C.z + RISE))
+    W0 = E["hw"] * 1.24 * T["w"]; D0 = W0 * 0.78   # thicker shell (was 1.18 / 0.55)
     up = Vector((0, 0, 1)); f = Vector((0, -1, 0)); s = Vector((sx, 0, 0))
     lean = math.radians(T["lean"])
     N, R = 28, 22
