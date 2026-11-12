@@ -54,7 +54,7 @@ export function update(ctx, dt) {
       if (side > 0.9) continue
       // from below: in front of it, facing it, pushing forward
       // Shelly Nov 12 "ii still cant climb": facing and velocity tests refused real approaches; now W (or E) anywhere at the foot takes hold unless you're walking away from it
-      if ((m.z > 0.3 || m.use) && along > -1.3 && along < 0.4 && dy > -0.6 && dy < L.h - 0.4 && (toward == null || toward > -0.3)) { grab(ctx, m, L, Math.max(dy, 0.05)); break }
+      if ((m.z > 0.3 || m.use) && along > -1.3 && along < 0.4 && dy > -1.4 && /* Shelly Nov 12: the fort ladder's foot sits ~0.7 m above the sand, so the ground under it read as 'below the ladder' */ dy < L.h - 0.4 && (toward == null || toward > -0.3)) { grab(ctx, m, L, Math.max(dy, 0.05)); break }
       // from the top: standing on the deck behind it, facing away, walking back over the edge
       if (L.top && along > -0.2 && along < 1.4 && dy > L.h - 0.4 && dy < L.h + 0.9 && (toward == null ? ((m.z > 0.3 && Math.abs(wrap(look - L.yaw - 180)) < 70) || (m.z < -0.3 && Math.abs(wrap(look - L.yaw)) < 70)) : (Math.abs(m.z) > 0.3 && toward < -0.4))) { grab(ctx, m, L, L.h - 1.05); break }
     }
