@@ -49,7 +49,7 @@ models:
   scarf: { pat: knit, f: /cdn/value.78d15d0c86811a41f46d04efb5c7d8aad3725f9b57195b77795d02314ce5b0ac.glb, m: /cdn/value.370b50fd9f1e3704fe6b73bc0fe85fbb1719a5c1c1f3ecaa5e5587b3cf224ae2.glb }
   cape: { pat: weave, f: /cdn/value.7c0c05071d095f4719b3ae129e9182ecddb194e7d22a3f7ad4b713fd9f0964c3.glb, m: /cdn/value.2a572b50bfdd95f61d150313ff8bbc6ffb9f5e4343eaa16ac5750d7b066c1b77.glb }
   bowtie: { pat: weave, f: /cdn/value.2b6ad872db234cb8eaa65ccd5d84e8d99b7146d1fb4dcf48c89fb382b665c42d.glb, m: /cdn/value.9ce999218460551bb836e30db978b26940cac52e66641d70571529f2235462cd.glb }
-  necklace: { tint: false, f: /cdn/value.220a2d402f30d32cea2a0ca1f4ea42ba2ca885e775fd3ef19a39f0ef6782d305.glb, m: /cdn/value.33cad06d432c7cd1e85d3528bc4d4a0f92332f230e781a03b1502598be416bf2.glb }
+  necklace: { tint: false, f: /cdn/value.203b820103baa8cead0da35eabd85555206a251bc4a443c95104fa83846af814.glb, m: /cdn/value.c65a74470f18053400296323247251a157d7538d07d2e26a6caada0b3ee9b389.glb }
   bell: { tint: false, f: /cdn/value.3c35e150870253a6b2508b244dc09497910d38e75f7528142a71733e85e66332.glb, m: /cdn/value.f61ec79a26c416e023c17ea6f1d050be3d04aae573992f11f22537d87e524cf2.glb }
 defaults:
   f: { topw: crop, top: "#e0775a", botw: shorts, bottom: "#4f78ad" }
