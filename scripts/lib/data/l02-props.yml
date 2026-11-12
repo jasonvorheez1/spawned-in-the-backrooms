@@ -12,14 +12,14 @@ drywall_stack: { model: "/cdn/value.dd3c11a087dce509414d840925e8477ce72ec546947a
 ladder:       { model: "/cdn/value.e3a9e57fa4cd0ebbfe56c6389249e5bf1d94d625c3faef7ff16a17500bca3534.glb", size: [0.5, 1.9, 0.6] }
 plant:        { model: "/cdn/value.53fa6b1388302684d3e567ca755e213843bd4d5ac5ee17c0b54fa1d579c9a019.glb", forward: "+x", size: [0.87, 1.9, 0.83] }
 router:       { model: "/cdn/value.2ee6d65e80f6bdb605e09f0ddf35522299c2c9aca1c14b28e52653eb02a03d3a.glb", size: [0.24, 0.2, 0.16] }
-toilet:       { size: [0.42, 0.8, 0.7] }
-stall:        { size: [1.0, 1.9, 1.5] }
-sawhorse:     { size: [1.0, 0.8, 0.55] }
-paintcan:     { size: [0.3, 0.36, 0.3] }
-worklamp:     { size: [0.6, 1.7, 0.6] }
-toaster:      { size: [0.28, 0.2, 0.17] }
-clipboard:    { size: [0.24, 0.03, 0.33] }
-lumber:       { size: [2.4, 0.3, 0.5] }
-bucket:       { size: [0.55, 0.42, 0.45] }
-tarp:         { size: [1.6, 0.25, 1.3] }
-outlet:       { size: [0.08, 0.12, 0.02] }
+toilet:       { model: "/cdn/value.bc22d60c3ae65dcf548fd86db3ba06454557ddc463f4f35fed396553a5a42e13.glb", size: [0.42, 0.8, 0.7] }
+stall:        { model: "/cdn/value.7e5561ee48de85e59cd6fb64b7961827a0bbcd6b65aa40daf13e419786814f8f.glb", size: [1.0, 1.9, 1.5] }
+sawhorse:     { model: "/cdn/value.afec3110e2d081b48de5f78e3510691bffc67e913360c067c5b6113e039fd27e.glb", size: [1.0, 0.8, 0.55] }
+paintcan:     { model: "/cdn/value.b449b85f85205cb304877c06d38ade4d63319c9a782c0287e74a0c97f695f46c.glb", size: [0.3, 0.36, 0.3] }
+worklamp:     { model: "/cdn/value.421681346224db28afacd3bb88c4f5fa1e66521a7076ef84666ed0f219ea37f7.glb", size: [0.6, 1.7, 0.6] }
+toaster:      { model: "/cdn/value.2ec47efb06975f92a7aa25c6f19d55f58ac7635c0aa9f32ea68ecce0758d15da.glb", size: [0.28, 0.2, 0.17] }
+clipboard:    { model: "/cdn/value.fcbdcbbd29ddd42aaa4dee079768d862d88a75a268986eff455feb50bf5964aa.glb", size: [0.24, 0.03, 0.33] }
+lumber:       { model: "/cdn/value.f0f72fab46477d4fec46489d766508527fa510944566f6cc89997d14ea85b69c.glb", size: [2.4, 0.3, 0.5] }
+bucket:       { model: "/cdn/value.de837b025facd30bbc64219af3eff567b5ebc52a66434f60110fdc6b9260a8b1.glb", size: [0.55, 0.42, 0.45] }
+tarp:         { model: "/cdn/value.78cd2d67c6b09ca3eb8872f55fb7d8f49a4ff6730f9482e392e293085d5aed8f.glb", size: [1.6, 0.25, 1.3] }
+outlet:       { model: "/cdn/value.72198daf8936beb5df2ab14746ad4c04a48b4f480e6915400a59eb89ad2be295.glb", size: [0.08, 0.12, 0.02] }
