@@ -15,6 +15,7 @@ const BUZZ = G + "sfx-exposed-live-wire-electrical-buzz-and-crackle.mp3";
 const SPARK = `fx
 pop spark burst=10..16 life=.2..0.5 v=sdir()*(1..2.5)+up(.5) size=.01..0.02 acc=grav() col=hdr(5,3.4,1.2) a=1>0 sz=$size r=sprite(ember,add,velocity,.02)`;
 export { DRIP, STATIC };
+const HARRIS = "/cdn/value.97df64b7780b0cbcc47337bf9f05244c32ddb5950724036e10f29076a92f253c.mp3", HARRIS_MS = 45500;
 
 export const ears = {
   press: (ctx, { by }) => {
@@ -31,13 +32,16 @@ export const ears = {
       who.state.notice = { text: s.text, at: now };
     } else if (s.kind === "cassette" && who) {
       heard(ctx, { clip: PICKUP, position: pos, volume: 0.8, maxDistance: 12 });
-      heard(ctx, { clip: STATIC, position: pos, volume: 0.65, maxDistance: 10 });
+      heard(ctx, { clip: STATIC, position: pos, volume: 0.4, maxDistance: 10 });
+      if (now < (s.playingUntil ?? 0)) return; // one playback at a time
+      s.playingUntil = now + HARRIS_MS;
+      heard(ctx, { clip: HARRIS, position: pos, volume: 1, maxDistance: 9, bus: "Voice" }); // Investigator Harris, voiced (Shelly: "actual voice acting")
       who.state.sanity = Math.min(100, (who.state.sanity ?? 80) + 20);
       who.state.sub = {
-        who: "MANILA CASSETTE RECORDING",
-        t: "“Day 19... If you're listening to this, you made it into the Manila Room. Breathe easy for a minute. The hum doesn't drill into your skull in here, and the carpet is dry. Don't touch the stagnant floor water outside, and follow the chalk arrows west. The wall that flickers is the only way out to Level 1. — Investigator Harris”",
+        who: "INVESTIGATOR HARRIS · CASSETTE",
+        t: "Day nineteen. If you're hearing this, you found the Manila Room. Sit down. Breathe. The hum can't get in here. Don't touch the standing water out there, and don't follow anything that sounds like a voice you know. Chalk arrows run west. The wall that flickers is the way out. Level One. I tried it once and came back. I'm going to try again. Harris. Investigator Harris.",
         at: now,
-        d: 8500,
+        d: HARRIS_MS,
       };
       ctx.emit("damageNumber", {
         position: { x: pos.x, y: pos.y + 0.8, z: pos.z },
