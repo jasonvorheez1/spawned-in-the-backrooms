@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 6214,
-  "updatedAt": "2026-11-12T12:26:35.590Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, lore-based destinations, a social mall and solo tutorial spaces. `templates/player.js` composes shared player behaviors; place sims generate and tick local worlds, with Level 13 combining story-varied flats, hall residents and hostiles, and a shared cat-bodied NPC appearance system.",
+  "basedOnSpecVersion": 6221,
+  "updatedAt": "2026-11-12T12:30:42.065Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning the Level 0 maze, lore-based destinations, a social mall and solo tutorial spaces. `templates/player.js` composes shared player behaviors while place sims lay and tick local worlds; Level 13's dressing now uses shared parametric doors for apartment flats and its Level 0 exit.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0/Lobby maze; sim lays ecology, generated moments, safe rooms and routes including the Level 0.2 door.",
+    "places/main (3D) - Level 0/Lobby maze; sim lays ecology, generated moments, safe rooms and routes including Level 0.2.",
     "places/bonus (3D) - vaporwave mall with authored shops/escalators and simulated staff; Rico's platform routine and Bonus Line boarding cooperate.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo ephemeral) - character creation/waking and staged tutorial route.",
     "places/level01 (3D) - Zenith Station: station, breach, doors, bots, hazards and recorder quest.",
-    "places/level1, level2, level21, level3, gamma (3D) - Habitable Zone/M.E.G. camp, Pipe Dreams, Locked, Electrical Station and Base Gamma; place sims add specialized layout, residents and crossings.",
+    "places/level1, level2, level02 (3D; 'Remodeled Mess'), level21, level3, gamma - Habitable Zone/M.E.G. camp, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma; local sims add layouts, residents and crossings.",
     "places/level4, level5, level6, level7, level10 (3D) - Office, Hotel, drowned house, sea/Fort Surrender and lake destinations; local sims own specialized environments and routes.",
-    "places/level11 (3D) - Infinite City; generated city blocks, connected market/shop/transit streets, residents and crossings, with incremental scene build and city tick.",
-    "places/level12, places/level13 (3D) - Matrix leads to The Boiling Frogs; Level 13 has furnished flats, Floor 283 Free Home Project residents/quest, hostile tenants and lurker, and Level 12/main crossings."
+    "places/level11 (3D) - Infinite City; generated blocks, market/shop/transit streets, residents and crossings, with incremental scene build and city tick.",
+    "places/level12 + places/level13 (3D) - Matrix to The Boiling Frogs; Level 13 has furnished flats, Floor 283 residents/quest, hostiles and lurker, plus Level 12/main crossings."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input mappings.",
@@ -21,33 +21,33 @@
     "scripts/player.js + scripts/camera.js + scripts/view3.js - player state/actions, aiming camera and third-person toggle.",
     "places/main/sim.js + scripts/lib/level0-moments.js; places/level1/sim.js + scripts/lib/level1.js - seeded maze moments and Level 1 layout/camp/doors.",
     "places/level02/sim.js + scripts/lib/level02.js + scripts/lib/remodel-quest.js - Level 0.2 shell, office/basement, collapse, lift, stairway and Fresh Paint connection.",
-    "places/level11/sim.js + scripts/lib/level11-city.js - Level 11 city/street generation and city activity; sim also lays shops/vaults and runs shared threshold/sign dressing.",
-    "places/level13/sim.js + scripts/lib/level13.js + level13-furnish.js/level13-dress.js/level13-foes.js/level13-people.js - apartment shell, furnishings, hall traces, enemy slots and Floor 283 residents/quest tick."
+    "places/level11/sim.js + scripts/lib/level11-city.js - Level 11 city/street generation, activity, shops/vaults and threshold/sign dressing.",
+    "places/level13/sim.js + scripts/lib/level13.js + level13-furnish.js/level13-dress.js/level13-foes.js/level13-people.js - apartment shell, furnishings, hall dressing, enemy slots and resident/quest tick."
   ],
   "shared": [
-    "scripts/lib/hub.js + scripts/lib/data/preload.yml + scripts/lib/preload-next.js - solo room IDs/names and destinations, plus door/model manifest for player proximity preloading; includes l12-to-l13 and l13-to-l0.",
+    "scripts/lib/hub.js + scripts/lib/data/preload.yml + scripts/lib/preload-next.js - solo room IDs/names and destinations, plus door/model proximity-preload manifest; includes l12-to-l13 and l13-to-l0.",
     "scripts/lib/loot.js + scripts/lib/items.js + scripts/lib/weapons.js/data/weapons.yml - common loot, containers, item definitions, rarity and weapon variants.",
     "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/lib/level3-hatch.js - parametric door geometry/motion and deterministic Level 3 paired wall-hatch layout.",
     "scripts/lib/thresholds.js + scripts/threshold-geo.js and scripts/lib/sign-style.js + scripts/sign-geo.js - shared crossing clues and per-place/id generated sign boards.",
     "scripts/lib/quest-route.js + scripts/lib/quest-mark.js + scripts/lib/quests.js - crossing graph/objectives and common quest state; Level 12→13 and Level 13→main are explicit exits.",
     "scripts/lib/data/l02-props.yml - dimensioned Tripo prop catalog for Level 0.2; scripts/lib/data/cat-wardrobe.yml - shared Tripo garments used by clothes.js/critter-model.js.",
     "scripts/lib/level13.js - Level 13 floor-plan dimensions, APTS and flat/hall lookup shared by sim and furnishing, dress, foes, people and quest systems.",
-    "scripts/lib/dialogue.js + dlg-*.yml + scripts/lib/npc-starters.js - authored conversation trees/context choices; dlg-level13.yml supplies Floor 283 resident lines; shops.yml/npc-voices.yml key trade stock and voice types."
+    "scripts/lib/dialogue.js + dlg-*.yml + scripts/lib/npc-starters.js - authored conversation trees/context choices; dialogue data also keys shops and NPC voices."
   ],
   "notableExports": [
-    "scripts/lib/carry.js - carryAcross.",
+    "scripts/door-geo.js - geometry, collider.",
     "scripts/lib/thresholds.js - dressThresholds; scripts/threshold-geo.js - threshold geometry/material builders.",
     "scripts/lib/quest-route.js - nextQuestExit; scripts/lib/quest-mark.js - questMark; scripts/lib/quests.js - MAX_TRACK, TINT, PLACE_NAMES, qid, setQuest, endQuest, tracked, toggleTrack.",
     "scripts/lib/remodel-quest.js - QUESTS02, setRemodStep, gotFresh, remodelChoices, handleDialogueQuest02, placeFreshener, freshenerAt, FRESH_BODY, pickPlaced, nearFresh.",
     "scripts/lib/level02.js - Level 0.2 geometry/door helpers; scripts/climb.js - onInput, update.",
-    "scripts/lib/level13.js - H, HALL, T, UNIT, HALLS, SPAWN, EXIT0, APTS, apt, aptAt, roomAt, inHall; level13-people.js - SEATS, layPeople; level13-dress.js - layDress; level13-foes.js - SLOTS, homeOf, foeSpec, layFoes; level13-furnish.js - layFurnish.",
+    "scripts/lib/level13.js - H, HALL, T, UNIT, HALLS, SPAWN, EXIT0, APTS, apt, aptAt, roomAt, inHall; level13-people.js - SEATS, layPeople; level13-dress.js - layDress; level13-foes.js - SLOTS, homeOf, foeSpec, layFoes; level13-furnish.js - layout helpers.",
     "scripts/l13-foes.js - update; scripts/l13-fridge.js - updateSchedule, rollFridge; places/level13/sim.js - cadence, LETH, tick.",
     "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, weaponAim, onInput, hitTarget, HOLO/holoEnd and throwable callbacks."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment (including fresh), needs, combat, access, appearance, saved position and carried tapes; scripts/lib/forgive.js owns NPC grudge entries in player state.",
     "scripts/lib/quests.js - player.state.quests, qtrack and qdone; quest handlers own quest-specific state; dina-quest.js owns dinaQ, dinaDiary, dcut and seeds the-way-back.",
-    "scripts/lib/remodel-quest.js - player.state.remodQ, l02got, fresh, capnAsk and capnFailed plus Fresh Paint quest/HUD/payout/reputation; player.js reads the nearby-freshener sanity effect.",
+    "scripts/lib/remodel-quest.js - player.state.remodQ, l02got, fresh, capnAsk and capnFailed plus Fresh Paint quest/HUD/payout/reputation; player.js reads nearby-freshener sanity effect.",
     "scripts/kick.js + scripts/grab.js own kick cooldowns and carry/held target session; scripts/lib/loose.js + breakables.js own loose prop/wreck and breakable state, including place.state.gone and wall breakage/timestamps.",
     "scripts/lib/knock.js + stats.js - foe weight/attributes and down/stagger outcomes; enemy managers own AI and sneakTarget.",
     "Place sims own generated-scene and migration markers, including Level 0.2 phase/lift/caseLandAt and Level 7 fortPathV/catV; Bonus sim owns staff/Rico migration; Level 13 sim writes player.state.leth13 from per-player dwell timing.",
@@ -57,26 +57,26 @@
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera; camera writes aimPt/aimPitch → player.js ballistics and weaponAim.",
-    "scripts/routing.js requested room → scripts/lib/hub.js solo room selection; toHub/toSolo cross to hub/home and maintain roomHop/save-place state; Bonus Line boarding is a separate crossing routine.",
+    "scripts/routing.js requested room → scripts/lib/hub.js solo room selection; toHub/toSolo cross to hub/home and maintain roomHop/save-place state; Bonus Line boarding is separate.",
     "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close to intro/tutorial0; menuOpen drives menu UI and solo pause scales place time; hub UI routes Bonus/home destinations.",
     "places/bonus/sim.js attaches scripts/rico.js to bonus-rico; Rico walks platform stops, yields while directly talked to and pauses while hub owns sceneUntil for boarding; boarding clears sceneUntil at end.",
-    "scripts/interact.js opens scripts/talk.js → dialogue.js selects dlg-*.yml including dlg-level13.yml; npc-starters.js adds contextual/quest choices, talk validates checks and dispatches quest handlers, then voices.js/hear.js gate speech per actor.",
-    "scripts/talk.js aimed ranged weapon or forward contact → authored drawn/close reaction bark and NPC state.socialReaction; scripts/meg-agent.js reads the signal, plays gesture/hit response and re-dresses stale bodies, swapping legacy human NPC bodies to cat bodies.",
-    "scripts/climb.js scans tagged ladder objects and grabs from movement toward the rungs (or E at the foot); it owns the local climb session and moves/releases the player along the ladder.",
+    "scripts/interact.js opens scripts/talk.js → dialogue.js selects dlg-*.yml; npc-starters.js adds contextual/quest choices, talk validates checks and dispatches quest handlers, then voices.js/hear.js gate speech per listener.",
+    "scripts/talk.js aimed ranged weapon or forward contact → authored drawn/close reaction bark and NPC state.socialReaction; scripts/meg-agent.js reads signal, plays gesture/hit response and re-dresses stale bodies.",
+    "scripts/climb.js scans tagged ladder objects and grabs from movement toward rungs (or E at the foot); it owns local climb session and moves/releases the player along the ladder.",
     "interact.js loot search → loot.gateItems → items/weapons roll; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; focus → player.state.focus → loot/talk/shop UI.",
-    "places/main/sim.js + scripts/lib/level02.js lay the Level 0 door → scripts/level-door.js crosses to level02#l02-from-l0 or main#main-from-l02; l02-back stamps place.state.emptyAt for Level 0.2 sim reset and salvage flow.",
-    "places/level12/sim.js lays l12-to-l13 → scripts/level-door.js crosses to level13#l13-from-l12; Level 13 sim lays arrival and l13-to-l0 to main; quest-route.js exposes both crossings to quest-mark.js/nextQuestExit.",
-    "Level 13 sim calls layFurnish/layFoes/layPeople/layDress; furnishing reads level13.yml model sizes and story positions for flats, TV/static and clutter; people reads l13-people.yml, lays residents/quest keepsake and ticks quest state; generic container UI and l13-fridge.js handle fridge stock/restock."
+    "places/main/sim.js + scripts/lib/level02.js lay Level 0 door → scripts/level-door.js crosses to level02#l02-from-l0 or main#main-from-l02; l02-back stamps place.state.emptyAt for Level 0.2 reset/salvage flow.",
+    "places/level12/sim.js lays l12-to-l13 → scripts/level-door.js crosses to level13#l13-from-l12; Level 13 sim lays l13-to-l0 to main; quest-route.js exposes both exits to quest-mark.js/nextQuestExit.",
+    "Level 13 sim calls layFurnish/layFoes/layPeople/layDress; layDress versions and lays hall/flat dressing, hides base exit/door slabs, and uses scripts/door-geo.js for open flat leaves/frames and the Level 0 exit styling."
   ],
   "behaviorFamilies": [
     "places/bonus scenes + bonus data/sim + mall shopper/salon scripts - authored mall and counter behavior; sim lays staff and Rico, whose platform schedule and Bonus Line boarding are separate cooperating routines.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction scripts - furniture-specific models/dimensions through common placement, persistence and rebuild flow.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js and prop-interactions.js + interactive-props data + prop-part.js - parametrically generated doors/storage parts with eased motion and legacy prop migration.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js and prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage parts with eased motion and legacy prop migration; styles now include flat veneer and plain yellow doors.",
     "scripts/lib/thresholds.js + scripts/threshold-geo.js + participating place sims, alongside sign-style.js/sign-geo.js - shared threshold dressing and per-place/per-id sign-board styles.",
     "places/level01/sim.js + Zenith geometry, breach, hatch, bot and hazard scripts - Zenith Station environment and interactive systems.",
     "places/level3/sim.js + level3-details-geo.js + lib/level3-hatch.js + l3-hatch*.js + scripts/l3-line.js - tiled Electrical Station detail, paired steel hatches and animated belt boxes varied by line layout/state.",
-    "Level 13: level13-furnish.js + level13.yml place story-varied flats and authored clutter through shared model placement; level13-dress.js + l13-dress.yml fit hall traces/notes/doors; level13-foes.js and l13-foes.js manage configured foe slots/AI; level13-people.js lays Floor 283 residents/quest props.",
-    "scripts/lib/clothes.js + npc-looks.yml + critter-model.js + cat-wardrobe.yml + mat-catskin.js + scripts/critter.js + meg-agent.js - deterministic species/look and clothing tokens, Tripo wardrobe attachments and NPC dressing; written or rolled human NPC appearances now use cat bodies."
+    "Level 13: level13-furnish.js + level13.yml story-varied flats/clutter; level13-dress.js + l13-dress.yml hall traces and now framed, open flat doors/exit; level13-foes.js and l13-foes.js manage foe slots/behavior.",
+    "scripts/lib/clothes.js + npc-looks.yml + critter-model.js + cat-wardrobe.yml + mat-catskin.js + scripts/critter.js + meg-agent.js - deterministic species/look and clothing tokens, Tripo wardrobe attachments and NPC dressing."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -84,14 +84,14 @@
     "art/critter-hair-tripo/fit.py.held - saved fitter copy; active fit.py is the documented build fitter.",
     "scripts/dbg-pose.js - debug-room mannequin gallery after places/debug removal; no current placement found.",
     "scripts/dbg-bodypad.js, scripts/debug-pad.js, scripts/lib/debug-layout.js - debug-room pads/layout after places/debug removal; no current references found.",
-    "scripts/l3-line.js is attached by places/level3/sim.js; the older uploaded l3-assembly-line-2 model remains unreferenced by active line placements."
+    "scripts/lib/data/l02-remodel.yml - added 4×3 shifting-room layout has no importing consumer in the active tree; its header names scripts/lib/l02-grid.js, which is not present."
   ],
   "migrationNotes": [
     "Threshold dressing version is V=7 in scripts/lib/thresholds.js; upgrades clean/rebuild thr-tagged objects delayed until colliders stand. Preserve thrSeen/thrTry/thrDone/thrV; sign-style only restyles eligible shallow UI boxes.",
     "Door transfers: carryAcross records xferTo only for local place links with a # marker and crosses carryId/nearby heldBy objects, rejecting room/world and Bonus destinations; Level 1 BACK uses backV destroy-and-respawn migration.",
     "Level 3 hatchV=3 rebuild destroys old l3-hatch-* objects; hatchAt deterministically shares each wall's door across its two faces. Level 3 lineV=2 replaces legacy line-model instances with three Tripo stations and animated belt boxes.",
     "Level 0.2 sim is V=21 and rebuilds l02-* generated roots; preserve phase/lift and caseLandAt state, column/debris tags, 15-second empty reset and delayed collapse. Reception and rebuilt crew stations place desk-top notes/tools at dimensioned positions.",
-    "Level 7 fortPathV=6 lowers l7-ft-ramp by 0.12 m; catV=1 refits existing L7_NPCS in place. Level 13 shell V=1 and 1s sim use per-player in-memory STAY time: 45 s to onset, 180 s full, cools over 20 s outside; preserve player.state.leth13 accumulation.",
-    "Level 13 helper layouts version independently: furnishing V=4 rebuilds l13f-* from model sizes/story positions (including counter clutter); people PV=3 relocates l13p-keepsake onto the a8 counter; preserve each subsystem's place-state markers. Hall Lurker's bath mode gives a dragged victim the full bathMs to escape; tenant throw cadence/damage come from level13.yml."
+    "Level 7 fortPathV=6 lowers l7-ft-ramp by 0.12 m; catV=1 refits existing L7_NPCS in place. Level 13 shell V=1 and 1s sim use per-player in-memory STAY time: 45 s to onset, 180 s full, cools over 20 s outside; preserve player.state.leth13 across visits.",
+    "Level 13 helper layouts version independently: furnishing V=4, people PV=3 and dressing DV=8 each rebuild their own tagged layout; dressing hides the base exit/flat door slabs before adding decorative geometry, so preserve the distinct door triggers/colliders."
   ]
 }
