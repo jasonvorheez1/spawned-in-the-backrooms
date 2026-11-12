@@ -17,7 +17,7 @@ export const zoneAt = (x, z) => { if (onRink(x, z)) return "rink"; for (const [k
 
 // Skating on the wood (Shelly Nov 12: slip and slide in shoes, travel fine on bought skates with roller physics). All numbers Savi's picks.
 export const SKATE = {
-  shoe: { push: 1.5, top: 4.2, drag: 0.45, slipSpeed: 2.6, slipTurn: 0.25, slipFor: 0.7, slipKick: 2.2, slipEvery: 1.6 },
+  shoe: { push: 1.3, top: 3.4, drag: 0.4, slipSpeed: 2.0, slipTurn: 0.7, slipFor: 0.8, slipKick: 2.0, slipEvery: 1.2 },
   roll: { push: 3.6, sprintPush: 5.2, top: 7.5, sprintTop: 10.5, drag: 0.7, brake: 8.5, turn: 150, turnFast: 60 },
 };
 // one step of the rink: where the body's flat velocity goes next. w is the mover's scratch, rnd a 0..1 roll.
