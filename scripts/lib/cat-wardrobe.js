@@ -105,6 +105,7 @@ export function catModel(sex, look) {
   const calm = typeof expression !== 'string' || expression === faces.neutral
   const sk = sex === 'm' ? 'male' : 'female'
   // an eye type redraws the calm face; a mouth type lays its layer on it. a mood face keeps its own painted eyes and mouth
+  const blank = look?.etype === 'faceling' // a faceling (Shelly Nov 12): no eyes, no nose, no mouth, the skin runs smooth over the face
   const crew = look?.etype === 'crew' // Remodeling Co. (Shelly #243870): faceless, the two white eyes in every mood
   const face = crew ? FACES.eyes[sk].crew : calm ? (FACES.eyes?.[sk]?.[look?.etype] ?? faces.neutral) : expression
   const mouth = calm && !crew ? FACES.mouths?.[sk]?.[look?.mtype] : undefined
@@ -116,7 +117,7 @@ export function catModel(sex, look) {
       fur: skin(fur), fur2: skin('#ffffff'),
       headFur: {
         kind: 'scripted', script: 'scripts/mat-catskin.js', color: fur,
-        params: { face, ...(mouth ? { mouth } : {}), ...faceLife(sk, look, face, faces), ...(crew ? { faceless: 1 } : {}), faceVScale: projection[0], faceVBias: projection[1], faceNear: projection[2], ...(sex === 'm' ? { noseCutV: 0.40, noseY: 0.855, noseZ: 0.315, noseS: 1.2 } : { noseCutV: 0.39, noseY: 0.797, noseZ: 0.249, noseS: 1 }), ...eyeRGB(look?.eyes), ...shadowRGB(look?.shadow) }
+        params: { ...(blank ? { faceless: 1 } : { face }), ...(mouth && !blank ? { mouth } : {}), ...faceLife(sk, look, face, faces), ...(crew ? { faceless: 1 } : {}), faceVScale: projection[0], faceVBias: projection[1], faceNear: projection[2], ...(sex === 'm' ? { noseCutV: 0.40, noseY: 0.855, noseZ: 0.315, noseS: 1.2 } : { noseCutV: 0.39, noseY: 0.797, noseZ: 0.249, noseS: 1 }), ...eyeRGB(look?.eyes), ...shadowRGB(look?.shadow) }
       },
       innerEar: { color: look?.inner || '#d58e8a', roughness: 0.74 }
     }

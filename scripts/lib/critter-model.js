@@ -1008,7 +1008,7 @@ const CAT_KIDS = ['topw', 'botw', 'shoes', 'hat', 'neck', 'eyew', 'mask', 'hair'
 const colourOk = (c) => typeof c === 'string' && (EYE_COLORS[c] || /^#[0-9a-f]{3}([0-9a-f]{3})?$/i.test(c))
 const hashPick = (str, arr) => arr[[...String(str)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % arr.length]
 // one species now (Shelly Nov 12 'theres no multiple species anymore'): every furry look wears the new body, old dog/fox/bunny/wolf/mouse looks included; only humans and facelings keep their own
-export const isNewCat = (l) => !HUMAN && MESH && !['human', 'faceling'].includes(l?.species)
+export const isNewCat = (l) => !HUMAN && MESH && l?.species !== 'human' // Nov 12 (Shelly: 'facelings are just regular looking npcs without faces'): a faceling wears the regular body, its face left blank (catLook etype 'faceling')
 export function catLook(l) {
   const sex = l?.sex === 'f' ? 'f' : 'm', o = {}
   for (const k of ['fur', 'topw', 'botw', 'shoes', 'hat', 'neck', 'eyew', 'top', 'bottom', 'shoec', 'hatc', 'neckc', 'eyewc', 'topp', 'hairc', 'fluffc', 'inner']) if (l?.[k] != null && l[k] !== '') o[k] = l[k]
@@ -1027,6 +1027,7 @@ export function catLook(l) {
   o.tail = TAILS.includes(l?.tail) ? l.tail : hashPick(`${l?.fur}|${l?.fseed ?? ''}|tl`, ['classic', 'classic', 'fluffy', 'bob', 'puff', 'whip', 'curl'])
   o.fluff = Array.isArray(l?.fluff) ? l.fluff : l?.fluff ? [l.fluff] : ['cheeks']
   if (l?.chest != null) o.chest = l.chest; else if (sex === 'f' && Number(l?.bustS)) o.chest = Math.max(0, Math.min(1, 0.5 * Number(l.bustS)))
+  if (l?.species === 'faceling') o.etype = 'faceling'
   if (!o.hair) delete o.hair
   return o
 }
