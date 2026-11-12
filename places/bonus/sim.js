@@ -78,6 +78,7 @@ export function tick(ctx) {
   if (s.ricoBack !== 1) { s.ricoBack = 1; s.staffV = 0 } // Nov 12: Rico is back (Shelly)
   if (s.ricoV !== 1 && ctx.place.objects["bonus-rico"]) { const r = ctx.place.objects["bonus-rico"]; r.behavior = ["scripts/rico.js"]; s.ricoV = 1 } // Nov 12: Rico works the platform (scripts/rico.js)
   if (s.salV !== 1) { s.salV = 1; s.staffV = 0 } // Nov 12 (Shelly): a guy selling smoothies at the moved juice bar
+  if (s.salLookV !== 1 && ctx.place.objects["bonus-sal"] && STAFF["bonus-sal"]) { s.salLookV = 1; ctx.place.objects["bonus-sal"].state.look = npcLook("bonus-sal", STAFF["bonus-sal"].look, "trader", 5) }
   if (s.staffV === 1) return
   for (const [id, p] of Object.entries(B.people ?? {})) {
     const st = STAFF[id]; if (!st || ctx.place.objects[id]) continue
@@ -85,7 +86,7 @@ export function tick(ctx) {
       tags: ["bonus-staff"], feetPosition: { x: p.x, y: p.y ?? 0.05, z: p.z }, rotation: { yaw: p.yaw ?? 0 }, physics: { body: "static", collider: "capsule" },
       ...critterSpec(npcLook(id, st.look, "trader", 5)),
       anim: { idle: { clip: "cdn/clip-idle-loop.glb", loop: true, weight: 1 } },
-      state: { name: st.name, info: st.info },
+      state: { name: st.name, info: st.info, ...(id === "bonus-sal" ? { look: npcLook(id, st.look, "trader", 5) } : {}) },
       ...(id === "bonus-rico" ? { behavior: ["scripts/rico.js"] } : {}),
     })
   }

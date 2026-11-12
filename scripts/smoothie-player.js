@@ -1,5 +1,12 @@
 import S from "./lib/data/smoothies.yml"
 import { maxHp, maxSan } from "./player.js"
+import { critterSpec } from "./lib/critter-model.js"
+const CLIP = { talk: "cdn/clip-talk-loop.glb", point: "cdn/clip-point.glb", cheer: "cdn/clip-cheer-loop.glb", clap: "cdn/clip-clap-loop.glb", wave: "cdn/clip-wave-loop.glb" }
+function salBeat(ctx, clip, expr) { // Sal acts each beat: a clip over his idle and a face
+  const sal = ctx.place.objects["bonus-sal"]; if (!sal) return
+  sal.anim = { ...(sal.anim || {}), idle: { clip: "cdn/clip-idle-loop.glb", loop: true, weight: clip ? 0 : 1 }, act: clip ? { clip: CLIP[clip], loop: clip !== "point", weight: 1 } : null }
+  const look = sal.state.look; if (look) { const m = critterSpec({ ...look, expr: expr || "neutral" }).model; if (m) sal.model = m }
+}
 export const updateSchedule = { every: { seconds: 1 } }
 const key = (mix) => [...mix].sort().join("+")
 const K = { x: 6.6, y: 0, z: 12 }, SAL = { x: 7.5, y: 1.6, z: 12 }
@@ -33,6 +40,7 @@ export function onInput(ctx, input) {
     s.sCut = { at: ctx.now(), name: b.name, desc: b.desc, isNew, house: !c, col, mins: b.minutes }
     ctx.view.camera = { eye: { x: K.x - 2.6, y: 1.55, z: K.z + 0.9 }, aim: { x: K.x, y: 1.1, z: K.z }, fov: 50 }
     say(ctx, "blend")
+    salBeat(ctx, "talk", "joy")
     ctx.emit("playSound", { clip: "cdn/sfx-countertop-blender-whirring-ice-then-stop.mp3", position: { x: K.x, y: 1.2, z: K.z }, volume: 0.9 })
     ctx.emit("shake", { target: "bc-juicebar", intensity: 0.25, duration: 1.8 })
     ctx.after(0.9, "sCutPour", { col })
@@ -43,11 +51,13 @@ export function onInput(ctx, input) {
 export function sCutPour(ctx, p) {
   ctx.view.camera = { eye: { x: K.x - 1.15, y: 1.4, z: K.z - 0.35 }, aim: { x: K.x, y: 1.15, z: K.z }, fov: 42 }
   const hex = p.col.replace("#", ""), v = [0, 2, 4].map((i) => (parseInt(hex.slice(i, i + 2), 16) / 255).toFixed(2))
+  salBeat(ctx, "point", "smile")
   ctx.emit("fx", { position: { x: K.x - 0.2, y: 1.25, z: K.z }, script: SPLASH(`<${v.join(",")}>`) })
 }
 export function sCutReveal(ctx, p) {
   ctx.view.camera = { eye: { x: K.x - 1.9, y: 1.75, z: K.z + 0.5 }, aim: { x: SAL.x, y: 1.35, z: SAL.z }, fov: 48 }
   say(ctx, p.isNew ? "newRecipe" : p.house ? "house" : "known")
+  salBeat(ctx, p.isNew ? "cheer" : p.house ? "talk" : "clap", p.isNew ? "joy" : "smile")
   if (p.isNew) {
     ctx.emit("fx", { position: { x: K.x, y: 1.6, z: K.z }, script: CONFETTI })
     ctx.emit("playSound", { clip: "cdn/sfx-bright-retro-arcade-jingle-discovery-chime.mp3", volume: 0.7 })
@@ -55,7 +65,7 @@ export function sCutReveal(ctx, p) {
   }
   ctx.emit("squash", { target: "bonus-sal", axis: "y", intensity: 0.12, duration: 0.5 })
 }
-export function sCutEnd(ctx) { ctx.view.camera = null; ctx.self.state.sCut = null; ctx.self.state.smoothieOpen = true }
+export function sCutEnd(ctx) { salBeat(ctx, null, null); ctx.view.camera = null; ctx.self.state.sCut = null; ctx.self.state.smoothieOpen = true }
 export function update(ctx) {
   const s = ctx.self.state, ses = ctx.self.session
   if (s.smoothieOpen) {
@@ -63,7 +73,7 @@ export function update(ctx) {
     const p = ctx.self.feetPosition, q = k?.feetPosition
     if (!q || Math.hypot(p.x - q.x, p.z - q.z) > 4.5) { s.smoothieOpen = false; s.smix = [] }
   }
-  if (s.sCut && ctx.now() - s.sCut.at > 8000) { s.sCut = null; ctx.view.camera = null }
+  if (s.sCut && ctx.now() - s.sCut.at > 8000) { s.sCut = null; ctx.view.camera = null; salBeat(ctx, null, null) }
   const b = s.smoothieBuff
   if (!b || s.menuOpen || s.dead) return
   ses.sTick = (ses.sTick ?? 0) + 1
