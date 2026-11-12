@@ -25,7 +25,7 @@ import MODELS from "../../scripts/lib/data/level11-models.yml";
 export const cadence = "1s";
 const RENO_FLOOR = 0.32;
 const mallTrash = (i) => ({ x: -15.15 + i * 0.2, y: 0.33, z: 28.1 + i * 0.65 });
-const V = 151; // 148 laid a cut list (a throw mid-lay): 149 lays it whole again // the market court and the central pedestrian route
+const V = 152; // 148 laid a cut list (a throw mid-lay): 149 lays it whole again // the market court and the central pedestrian route
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1836,6 +1836,7 @@ export function tick(ctx) {
       ctx.spawn(id, spec);
       const now2 = old && ctx.place.objects[id]; // a piece that already stood takes its new place, turn and size too
       if (now2 && (id === "l11-trader-kael" || id === "l11-meg-agent-vance")) now2.state.home = spec.state.home;
+      if (now2 && spec.tags?.includes('faceling') && spec.model && JSON.stringify(spec.model) !== JSON.stringify(now2.model)) now2.model = spec.model; // Shelly Nov 12: a faceling standing in an older room takes the regular faceless body too
       if (now2) { if (spec.layout && JSON.stringify(spec.layout) !== JSON.stringify(now2.layout)) now2.layout = spec.layout; if (spec.primitive && JSON.stringify(spec.primitive) !== JSON.stringify(now2.primitive)) now2.primitive = spec.primitive; if (spec.feetPosition) now2.feetPosition = spec.feetPosition; if (spec.rotation !== undefined) now2.rotation = spec.rotation; if (spec.scale !== undefined) now2.scale = spec.scale; if (spec.material !== undefined) now2.material = spec.material; if (spec.model?.materials && JSON.stringify(spec.model.materials) !== JSON.stringify(now2.model?.materials)) now2.model = spec.model; if (spec.visibleRange !== undefined) now2.visibleRange = spec.visibleRange; if (spec.state) for (const k in spec.state) if (now2.state[k] === undefined) now2.state[k] = spec.state[k]; } // Nov 10: a rebuild used to keep an old piece's paint, draw distance and tags (the 70 m ground, the buried grates)
     }
     lq.i = i;
