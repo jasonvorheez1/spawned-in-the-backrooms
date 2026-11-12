@@ -2325,14 +2325,14 @@ esc-up-step-26:
   state: {dir: up, y: [{duration: 0.1761207600990182, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 9.334400285247968, easing: linear, value: 5.203448148148149}], z: [{duration: 0.1761207600990182, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 9.334400285247968, easing: linear, value: -10}]}
   tags: [bonus-mall, escalator-step]
 plat-clock:
-  feetPosition: {x: -16, y: 8.3, z: -12}
+  feetPosition: {x: -16, y: 8.3, z: -6.5}
   id: plat-clock
   layout: {box: {max: {x: 0.8, y: 0.8, z: 0.2}, min: {x: -0.8, y: 0, z: -0.2}}}
   model: /cdn/value.eed845973f6885a5024ccc26e2008daef32ae1ac7c5957e6db73fa3ae1b73469.glb
   rotation: {yaw: 90}
   tags: [bonus-platform]
 plat-clock-rod:
-  feetPosition: {x: -16, y: 9.05, z: -12}
+  feetPosition: {x: -16, y: 9.05, z: -6.5}
   id: plat-clock-rod
   material: {color: "#b8bcc4", metalness: 0.9, roughness: 0.3}
   primitive: {height: 0.9, kind: cylinder, radiusBottom: 0.025, radiusTop: 0.025}
@@ -2341,7 +2341,7 @@ plat-gate:
   castShadow: true
   feetPosition: {x: -10.9, y: 5.5, z: -16.5}
   id: plat-gate
-  layout: {box: {max: {x: 1.3, y: 1.1, z: 0.35}, min: {x: -1.3, y: 0, z: -0.35}}}
+  layout: {box: {max: {x: 1.6, y: 1.35, z: 0.45}, min: {x: -1.6, y: 0, z: -0.45}}}
   model: /cdn/value.18d7ac8aca0812cd28dee6bb15e49852b5262fe428ed2a1512151fdbf6210f10.glb
   physics: {body: static, collider: box}
   rotation: {yaw: -90}
