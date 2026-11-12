@@ -144,9 +144,9 @@ function layDress(ctx) {
   // (1,0) the chairs: nine identical chairs in rows, all facing the bare north wall
   for (let i = 0; i < 9; i++) B(`l02-gd-chair${i}`, "wchair", cx(1, (i % 3 - 1) * 1.05), cz(1, -0.4 + Math.floor(i / 3) * 1.0), 180);
   // (2,0) crew lunch: cooler, thermos, folding chair, toolbox
-  B("l02-gd-cooler", "cooler", cx(2, -1), cz(2 - 2, 0.8), 25); put(ctx, "l02-gd-thermos", prop("thermos", { x: cx(2, -1.05), y: BASE + H("cooler"), z: cz(0, 0.75) }, 0, { physics: "static" }));
+  B("l02-gd-cooler", "cooler", cx(2, -1), cz(0, -0.6), 25); put(ctx, "l02-gd-thermos", prop("thermos", { x: cx(2, -1.05), y: BASE + H("cooler"), z: cz(0, -0.65) }, 0, { physics: "static" }));
   B("l02-gd-fchair", "fchair", cx(2, -0.1), cz(0, 1.1), 200); B("l02-gd-box", "red_toolbox", cx(2, 1.2), cz(0, -1.3), 75);
-  put(ctx, "l02-gd-bread", { feetPosition: { x: cx(2, -0.95), y: BASE + H("cooler"), z: cz(0, 0.95) }, rotation: { yaw: 30 }, primitive: box(0.16, 0.035, 0.12), material: { color: "oklch(0.88 0.04 85)", roughness: 1 } });
+  put(ctx, "l02-gd-bread", { feetPosition: { x: cx(2, -0.95), y: BASE + H("cooler"), z: cz(0, -0.45) }, rotation: { yaw: 30 }, primitive: box(0.16, 0.035, 0.12), material: { color: "oklch(0.88 0.04 85)", roughness: 1 } });
   // (3,0) half-tiled bathroom: tile run that stops mid-floor, toilet, sink, a box of tiles
   put(ctx, "l02-gd-tiles", { feetPosition: { x: cx(3, 0.5), y: BASE, z: cz(0, -0.6) }, primitive: box(2.9, 0.02, 2.6), material: BATHTILE, physics: "static" });
   B("l02-gd-toilet", "toilet", cx(3, 1.5), cz(0, -1.55), 0, {}); B("l02-gd-sink", "sink", cx(3, -0.6), cz(0, -1.55), 0);
