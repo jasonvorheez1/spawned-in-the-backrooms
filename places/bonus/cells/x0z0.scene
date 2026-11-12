@@ -693,21 +693,21 @@ bc-payphone-2:
   scale: 1
   tags: [bonus-props]
 bc-phone-plate-1:
-  feetPosition: {x: 9.6, y: 1.47, z: -21.6}
+  feetPosition: {x: 9.3, y: 1.84, z: -21.6}
   id: bc-phone-plate-1
   material: {color: oklch(0.42 0.16 260), metalness: 0.3, roughness: 0.4}
-  primitive: {depth: 0.012, height: 0.3, kind: box, width: 0.44}
+  primitive: {depth: 0.03, height: 0.22, kind: box, width: 0.5}
   rotation: {yaw: -90}
   tags: [bonus-props]
-  ui: "<div face=\"front\" style=\"width:400px;height:280px;display:flex;align-items:center;justify-content:center;font-family:sans-serif;font-weight:800;font-size:84px;color:#f4f6ff;letter-spacing:3px\">PHONE</div>"
+  ui: "<div face=\"front\" style=\"width:500px;height:220px;display:flex;align-items:center;justify-content:center;font-family:sans-serif;font-weight:800;font-size:110px;color:#f4f6ff;letter-spacing:3px\">PHONE</div>"
 bc-phone-plate-2:
-  feetPosition: {x: 9.6, y: 1.47, z: -22.5}
+  feetPosition: {x: 9.3, y: 1.84, z: -22.5}
   id: bc-phone-plate-2
   material: {color: oklch(0.42 0.16 260), metalness: 0.3, roughness: 0.4}
-  primitive: {depth: 0.012, height: 0.3, kind: box, width: 0.44}
+  primitive: {depth: 0.03, height: 0.22, kind: box, width: 0.5}
   rotation: {yaw: -90}
   tags: [bonus-props]
-  ui: "<div face=\"front\" style=\"width:400px;height:280px;display:flex;align-items:center;justify-content:center;font-family:sans-serif;font-weight:800;font-size:84px;color:#f4f6ff;letter-spacing:3px\">PHONE</div>"
+  ui: "<div face=\"front\" style=\"width:500px;height:220px;display:flex;align-items:center;justify-content:center;font-family:sans-serif;font-weight:800;font-size:110px;color:#f4f6ff;letter-spacing:3px\">PHONE</div>"
 bc-photobooth:
   castShadow: true
   feetPosition: {x: -3.6, y: 0, z: -31.15}
