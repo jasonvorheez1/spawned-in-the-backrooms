@@ -619,7 +619,7 @@ function swing(ctx, power = 0) {
   let cone = wp.cone || 0.4
   const radius = wp.ranged ? wp.range : wp.reach + 0.6 + power * P.reach
   const found = []
-  for (const m of [...ctx.query({ tags: ['smiler'], radius }), ...ctx.query({ tags: ['lurker'], radius }), ...ctx.query({ tags: ['hound'], radius }), ...ctx.query({ tags: ['stealer'], radius }), ...ctx.query({ tags: ['moths'], radius }), ...ctx.query({ tags: ['l8spider'], radius }), ...ctx.query({ tags: ['npc'], radius }), ...ctx.query({ tags: ['l61fc'], radius }), ...ctx.query({ tags: ['spamboss'], radius }), ...ctx.query({ tags: ['zdrone'], radius }), ...ctx.query({ tags: ['l8-hostile'], radius, excludeTags: ['l8spider'] })]) {
+  for (const m of ctx.query({ anyTags: SWING_TAGS, radius })) {
     if (m.state?.dead) continue
     const dx = m.feetPosition.x - p.x, dz = m.feetPosition.z - p.z, d = Math.hypot(dx, dz)
     if (d > 0.3 && (dx * f.x + dz * f.z) / d < cone) continue
@@ -1267,6 +1267,7 @@ const HOSTILE = ['smiler', 'lurker', 'hound', 'stealer', 'deathmoth', 'moth']
 const HOSTILE_AND_NPC = [...HOSTILE, 'npc']
 const _rayEye = { x: 0, y: 0, z: 0 }
 const _rayDir = { x: 0, y: 0, z: 0 }
+const SWING_TAGS = ["smiler", "lurker", "hound", "stealer", "moths", "l8spider", "npc", "l61fc", "spamboss", "zdrone", "l8-hostile"] // one query for every swing target, each thing once, not one query per tag (perf, Nov 12)
 const _rayOpt = { distance: 10, physicsOnly: true, bodies: 'static', ignoreEntities: [] }
 // sneaking, FNV-style: every watcher with a clear look fills an awareness meter (w.aware 0..1) at a rate set by distance,
 // how squarely it faces you, light, dark and whether you move; nobody looking, it drains. [CAUTION] while it fills, [DETECTED] or [DANGER] once full.
