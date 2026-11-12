@@ -1,6 +1,6 @@
 import { clearSight } from './lib/sight.js';
 import { knocked } from "./lib/knock.js";
-import { vo, hasVoice } from "./lib/voices.js";
+import { vo, hasVoice, actedVoice } from "./lib/voices.js";
 import { social } from "./lib/npc-social.js";
 import { barkOf } from "./lib/dialogue.js";
 import { isVilified } from "./lib/rep.js";
@@ -708,14 +708,11 @@ export function vanish(ctx) { const s = ctx.self.state; if (!s.dead && (s.hp ?? 
 // hands = everyone else: frozen, hands raised, facing you. It lasts while the gun stays on them and 2.5 s after it drops. Savi's numbers.
 const HANDS_UP = { "mixamorig:LeftArm": { rotate: [0, 0, 150] }, "mixamorig:RightArm": { rotate: [0, 0, -150] }, "mixamorig:LeftForeArm": { rotate: [0, 0, 25] }, "mixamorig:RightForeArm": { rotate: [0, 0, -25] } };
 const COW = { range: 18, hold: 400, linger: 2500 };
-const COW_LINES = {
-  hands: ["okay, okay! don't shoot!", "easy. easy. i'm not doing anything.", "hands are up, see? hands are up.", "take whatever you want, just put it down.", "please. i've got almond water, you can have it.", "i'm not armed! well. not really."],
-  draw: ["you sure about that?", "point it somewhere else, friend.", "two can play that game.", "go on then. see who's faster.", "bad idea, wanderer. real bad idea.", "lower it. slowly."],
-  flee: ["whoa, nope!", "not today!", "gun! gun!", "i'm not dying down here!", "somebody help!", "nope, nope, i'm gone!"],
-  calm: ["...thank you.", "don't do that again.", "my heart can't take this place.", "okay. we're good. we're good."] };
+import COW_LINES from "./lib/data/cow-lines.yml";
 function cowSay(ctx, me, kind) {
-  const L = COW_LINES[kind], t = L[Math.floor(ctx.random() * L.length)], now = ctx.now(), st = me.state, id = String(me.id).split('/').pop();
+  const now = ctx.now(), st = me.state, id = String(me.id).split('/').pop();
   const who = hasVoice(id) ? id : st.voice ?? VOICES[me.id] ?? `${id}#${(st.wear?.sex ?? st.look?.sex) === 'f' ? 'f' : 'm'}`;
+  const all = COW_LINES[kind], acted = all.filter((l) => actedVoice(who, l)), L = acted.length ? acted : all, t = L[Math.floor(ctx.random() * L.length)]; // their recorded takes first
   st.line = { t, at: now, d: 1300 + t.length * 55 };
   const p = me.feetPosition, clip = BVO(who, t);
   if (clip) heard(ctx, { clip, position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 1, refDistance: 3, maxDistance: 18 }, { audience: { nearby: p, radius: 18 } });

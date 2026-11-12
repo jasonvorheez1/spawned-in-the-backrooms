@@ -54,6 +54,13 @@ for f in sorted(glob.glob('scripts/lib/level*-quests.js')):
         if not cur or not cast_member(cur): continue
         for q in re.findall(r'(?:reply: |\? |: )"((?:[^"\\]|\\.)+)"', ln):
             if 'reply' in ln and len(q.split()) > 2: jobs.append((cur, 'quest', q.replace('\\"', '"')))
+# gunpoint reactions (scripts/lib/data/cow-lines.yml): two lines of each kind per cast member, picked by name so the cast varies
+COW = yaml.safe_load(open('scripts/lib/data/cow-lines.yml', encoding='utf-8'))
+for who in CAST:
+    if not cast_member(who): continue
+    for kind, lines in COW.items():
+        order = sorted(lines, key=lambda l: jhash(who + '|' + kind + '|' + l))
+        for l in order[:2]: jobs.append((who, {'hands': 'drawn', 'draw': 'drawn'}.get(kind, kind), l))
 real = lambda sl: any(len(w) >= 3 and re.search('[aeiouy]', w) and not re.match(r'^(hmm+|mmm*|uhh*|umm*|hm+|ahh*|ohh*|erm*)$', w) for w in sl.split('-'))
 todo, seen = [], set()
 for who, key, line in jobs:
