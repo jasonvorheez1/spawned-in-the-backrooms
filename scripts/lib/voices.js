@@ -1,4 +1,5 @@
 import V from './data/npc-voices.yml'
+import ACTED from './data/voice-acted.yml' // recorded performances (art/vo/act.py, the tape method): '<id>|<slug>' -> /cdn/ clip
 // One throat per character: the voice file's name is its prompt, so each character's words below ARE their voice.
 // Every speaking helper builds its clip through vo(who, line); a new who falls back to a throat picked from its name.
 const T = {
@@ -53,4 +54,4 @@ const NUM = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eig
 const slug = (line, n = 180) => String(line ?? '').slice(0, n).replace(/\d/g, (d) => ' ' + NUM[d] + ' ').replace(/[^a-z ]/gi, ' ').trim().toLowerCase().replace(/ +/g, '-')
 // a line with no real word in it (empty, "hmm", "...", a stray symbol) makes the voice maker fill in its own test words: those stay silent, the subtitle still shows
 const real = (sl) => sl.split('-').some((w) => w.length >= 3 && /[aeiouy]/.test(w) && !/^(hmm+|mmm*|uhh*|umm*|hm+|ahh*|ohh*|erm*)$/.test(w))
-export const vo = (who, line, n) => { const sl = slug(line, n); return real(sl) ? `/cdn/voice-${throatOf(who)}-saying-${sl}.mp3` : null }
+export const vo = (who, line, n) => { const sl = slug(line, n); if (!real(sl)) return null; const acted = ACTED?.[String(who).split('#')[0] + '|' + slug(line)]; return acted ?? `/cdn/voice-${throatOf(who)}-saying-${sl}.mp3` }
