@@ -2,7 +2,8 @@
 // that door swung open behind you. Runs on the walker's machine (onTriggerEnter), so the move is theirs and instant.
 export function onTriggerEnter(ctx, other) {
   const st = ctx.self.state, door = ctx.getObject(st.door);
-  if (!door?.state?.open || !other?.tags?.includes?.("player") && !ctx.place.players?.some((p) => p.id === other?.id)) return;
+  if (!door?.state?.open) return;
+  if (!ctx.place.players?.some((p) => p.id === other?.id)) return;
   const now = ctx.now(); if (now - (other.state?.hatchAt ?? 0) < 1200) return; // just came through: no ping-pong
   other.state.hatchAt = now;
   const twin = ctx.getObject(st.twin); if (twin) twin.state.open = true;

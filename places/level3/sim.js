@@ -127,7 +127,7 @@ export function tick(ctx) {
   restyleSigns(ctx, "level3"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
-  if (ctx.place.state.hatchV !== 1) { ctx.place.state.hatchV = 1; // the steel doors through the brick, both faces of each wall (lib/level3-hatch.js)
+  if (ctx.place.state.hatchV !== 2) { ctx.place.state.hatchV = 2; for (const k of Object.keys(ctx.place.objects)) if (k.startsWith("l3-hatch-")) ctx.destroy(k); // v2: a dark passage behind the leaf, a deeper doorway trigger // the steel doors through the brick, both faces of each wall (lib/level3-hatch.js)
     const D = ["0", "1", "2", "3"];
     for (const h of hatches()) {
       const [nx, nz] = [[1, 0], [0, 1], [-1, 0], [0, -1]][h.d], sides = [[h.cx, h.cz, h.d], [h.cx + nx, h.cz + nz, (h.d + 2) % 4]];
@@ -139,7 +139,8 @@ export function tick(ctx) {
         ctx.spawn(id, { tags: ["door", "l3hatch"], feetPosition: at(0.06, -0.5), rotation: { yaw }, physics: { body: "kinematic", collider: "box" }, visibleRange: { max: 45 }, castShadow: false, material: { pbr: true },
           primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: "metal", part: "leaf", w: 1.05, h: 2.15, hingeSide: "left", seed: h.i * 2 + k } },
           behavior: "scripts/l3-hatch.js", state: { name: "Steel door", lock: "", open: false, yaw0: yaw, swing: 95, c: at(0.1, 0, 1.1) } });
-        ctx.spawn(`${id}-pass`, { feetPosition: at(-0.05, 0, 0), rotation: { yaw }, visible: false, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.8, height: 2, depth: 0.25 },
+        ctx.spawn(`${id}-void`, { feetPosition: at(-0.005, 0, 0.02), rotation: { yaw }, physics: "none", castShadow: false, receiveShadow: false, visibleRange: { max: 45 }, primitive: { kind: "box", width: 0.98, height: 2.1, depth: 0.02 }, material: { color: "oklch(0.06 0.005 60)", roughness: 1 } }); // the passage through the brick, black beyond the leaf
+        ctx.spawn(`${id}-pass`, { feetPosition: at(0.2, 0, 0), rotation: { yaw }, visible: false, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.8, height: 2, depth: 0.45 },
           behavior: "scripts/l3-hatch-pass.js", state: { door: id, twin: `l3-hatch-${h.i}-${1 - k}`, to: { x: o.x - o.nx * 0.9, z: o.z - o.nz * 0.9 } } });
       });
     }
