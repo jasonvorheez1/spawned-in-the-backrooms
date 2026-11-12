@@ -5,10 +5,10 @@
 // Every move is a rig-pack clip (Shelly: "keep using the animations provided").
 import { animate } from "builtin/tween"
 const CL = {
-  walk: "/cdn/clip-rig-walking-a-aadc5ff6-loop.glb", idle: "/cdn/clip-rig-idle-a-09a9fec3-loop.glb", idle2: "/cdn/clip-rig-idle-b-201d4da9-loop.glb",
-  hold: "/cdn/clip-rig-holding-a-ad457997-loop.glb", work: "/cdn/clip-rig-work-b-88958b9a-loop.glb", use: "/cdn/clip-rig-use-item-b9e64fa1-loop.glb",
-  pickup: "/cdn/clip-rig-pickup-005103f0-loop.glb", sitDown: "/cdn/clip-rig-sit-chair-down-ea7a343c.glb", sitIdle: "/cdn/clip-rig-sit-chair-idle-ddb4171e-loop.glb",
-  sitUp: "/cdn/clip-rig-sit-chair-standup-ead7634f.glb",
+  walk: "cdn/clip-rig-walking-a-aadc5ff6-loop.glb", idle: "cdn/clip-rig-idle-a-09a9fec3-loop.glb", idle2: "cdn/clip-rig-idle-b-201d4da9-loop.glb",
+  hold: "cdn/clip-rig-holding-a-ad457997-loop.glb", work: "cdn/clip-rig-working-a-13f5043b-loop.glb", use: "cdn/clip-rig-use-item-b9e64fa1-loop.glb",
+  pickup: "cdn/clip-rig-pickup-005103f0-loop.glb", sitDown: "cdn/clip-rig-sit-chair-down-ea7a343c.glb", sitIdle: "cdn/clip-rig-sit-chair-idle-ddb4171e-loop.glb",
+  sitUp: "cdn/clip-rig-sit-chair-standup-ead7634f.glb",
 }
 const Y = 5.5, SPEED = 1.15 // m/s, an unhurried walk (my pick)
 const ROUND = [
