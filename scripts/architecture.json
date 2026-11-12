@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 5985,
-  "updatedAt": "2026-11-12T04:29:49.924Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, lore-based destinations, a social mall and solo tutorial spaces. `templates/player.js` composes shared behaviors; `scripts/player.js` owns player progression and combat, while place simulations and shared libraries build/tick environments, NPCs, crossings and visual dressing. Cat NPC/player looks use distinct legacy and Tripo wardrobe paths, with live facial animation driven by behavior and speech state.",
+  "basedOnSpecVersion": 6017,
+  "updatedAt": "2026-11-12T05:07:01.756Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, lore-based destinations, a social mall and solo tutorial spaces. `templates/player.js` composes shared behaviors; `scripts/player.js` owns player progression and combat, while place simulations and shared libraries build/tick environments, NPCs, crossings and visual dressing. Cat NPC/player looks use Tripo wardrobes, now with role- and faction-specific NPC appearance profiles, and live facial animation driven by behavior and speech state.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0/Lobby maze; sim lays ecology, generated moments, safe rooms and routes to exits.",
     "places/bonus (3D) - vaporwave mall with authored shops, escalators and simulated staff/shoppers; shared hub destination.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo ephemeral) - character creation/waking and staged tutorial route.",
     "places/level01 (3D) - Zenith Station: station, breach, doors, bots, hazards and recorder quest.",
-    "places/level1, level2, level21, level3, gamma (3D) - Habitable Zone/M.E.G. camp, Pipe Dreams, Locked, Electrical Station and Base Gamma; Level 3 sim generates paired hatches, industrial details, almond-bottle piles and running assembly lines.",
-    "places/level4, level5, level6, level7 (3D) - Abandoned Office, Terror Hotel, drowned house and sea/Fort Surrender; Level 7 sim lays islands, outpost/fort NPCs and loot, with authored cat wardrobe children in cells/objects.scene.",
+    "places/level1, level2, level21, level3, gamma (3D) - Habitable Zone/M.E.G. camp, Pipe Dreams, Locked, Electrical Station and Base Gamma; Level 3 sim generates paired hatches and industrial details; Level 1 cells include job-styled B.N.T.G./M.E.G. NPCs.",
+    "places/level4, level5, level6, level7 (3D) - Abandoned Office, Terror Hotel, drowned house and sea/Fort Surrender; Level 5 cells and level5-people.yml define hotel, Housekeeping and Originals residents, including Brother Wat's pilgrim outfit.",
     "places/level10, level11, level12 (3D) - lake, generated city/canal and renovation office; Level 11 connects to player home11.",
     "places/level26, level27, level184, level61, spamton, testlab and other special places (3D) - SS Fun, Bunker Springs, forts, Snackrooms, arena and Test Range."
   ],
@@ -32,7 +32,7 @@
     "scripts/lib/quest-route.js + scripts/lib/quest-mark.js - crossing graph and objective resolver for tracked quests.",
     "scripts/lib/data/preload.yml + scripts/lib/preload-next.js - door-to-destination/model manifest used by player proximity preloading.",
     "scripts/lib/sign-style.js + scripts/sign-geo.js + scripts/lib/data/signs.yml - per-place/id visual styles and generated sign boards; participating place sims call restyleSigns.",
-    "scripts/lib/build-piece.js + furniture/breakable data and scripts/lib/critter-model.js + cat wardrobe data - shared build/reconstruction and player/NPC appearance systems."
+    "scripts/lib/clothes.js + data/clothes.yml + data/npc-looks.yml + scripts/lib/critter-model.js + cat-wardrobe data - NPC job/faction fits and reusable player/NPC cat body, facial and garment construction."
   ],
   "notableExports": [
     "scripts/lib/carry.js - carryAcross.",
@@ -40,7 +40,7 @@
     "scripts/lib/quest-route.js - nextQuestExit; scripts/lib/quest-mark.js - questMark; scripts/lib/quests.js - MAX_TRACK, TINT, PLACE_NAMES, qid, setQuest, endQuest, tracked, toggleTrack.",
     "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollLock, rollCash, rollItem, spawnCrate and Level 2 helpers; scripts/lib/weapons.js - baseOf, variantOf, rollVariant, rarityIdx, rarityCap, default.",
     "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, onInput, hitTarget, fish callbacks, HOLO/holoEnd and throwable callbacks.",
-    "scripts/lib/critter-model.js - setStyle, HUMAN, STYLE_V, cat and human appearance builders, restylePlace/Queue/Step; scripts/lib/cat-wardrobe.js - CAT_BODY, CAT_OLD, CAT_BODY2, faceLife, liveFace and cat appearance builders.",
+    "scripts/lib/critter-model.js - STYLE_V (sw190), setStyle, HUMAN, appearance builders and restyle queue/steps; scripts/lib/clothes.js - NL_V (nl7), refitLook; scripts/lib/cat-wardrobe.js - CAT_BODY/CAT_OLD/CAT_BODY2, faceLife, liveFace and cat appearance builders.",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, stagger3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
     "places/level1/sim.js - cadence, agentSpec, tick; places/level5/sim.js - cadence, lay; places/level7/sim.js - cadence, breakables, tick."
   ],
@@ -51,8 +51,8 @@
     "scripts/lib/loose.js + breakables.js - loose prop state and wrecks; permanently smashed root IDs live in place.state.gone; breakable wall hp and broken-cell/whole-wall timestamps live in place.state.wallHp/broken.",
     "scripts/lib/knock.js + stats.js - foe weight/attributes and down/stagger outcomes; enemy managers own AI and sneakTarget.",
     "Place sims - local generated scene and migration markers, including Level 1 back-door rebuild, Level 3 hatchV/lineV and Level 4 office/island conversions.",
-    "scripts/lib/prop-interactions.js + scripts/prop-part.js - prop open/lamp state and child part animation goals; prop-interactions preserves detailed models when searched.",
-    "scripts/lib/cat-wardrobe.js liveFace + scripts/critter.js - transient facial timers/cache; face mood derives from NPC hp/down/hostility/anger and speech line, not separately persisted face state."
+    "scripts/lib/critter-model.js - NPC model/body/attachment rebuilds and persisted state.wear restyle marker `nl`; clothes.js generates stable seeded role/faction appearance, while existing explicit wear fields remain authoritative.",
+    "scripts/lib/prop-interactions.js + scripts/prop-part.js own prop open/lamp state and child part animation goals; scripts/critter.js/cat-wardrobe liveFace own transient facial timers/cache derived from NPC state and speech line."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors.",
@@ -60,23 +60,23 @@
     "scripts/routing.js requested room → scripts/lib/hub.js solo room selection; toHub/toSolo cross to hub/home and maintain roomHop/save-place state.",
     "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close to intro/tutorial0; menuOpen drives menu UI and solo pause scales place time; hub UI routes Bonus/home destinations.",
     "Bonus sim lays NPCs/effects and mall handlers consume shop/food state; escalator steps use esc-step.js.",
-    "interact.js loot search → loot.gateItems → items/weapons roll; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; focus → player.state.focus → loot-ui/talk/shop UI.",
+    "interact.js loot search → loot.gateItems → items/weapons roll; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; focus → player.state.focus → loot/talk/shop UI.",
     "interact open/closeLoot → prop-interactions.containerPose → child part state.goal → prop-part.js animation; toggleLamp changes light-part goals.",
     "Player craft action/UI → craft.js + craft.yml; breakables/build pieces define station; craft UI filters station recipes while hand menu lists all.",
     "Tracked quest → quest-marker.js → questMark/nextQuestExit gated crossing graph → local objective or remote exit marker and journal.",
-    "Place sims → restyleSigns (signs.yml/sign-geo.js) and dressThresholds; doorway handlers call carryAcross before ctx.cross for local links, record xferTo, and player.js consumes it for arrival marker.",
-    "scripts/player.js update → preloadTick reads nearby door IDs and preload.yml → player-audience preload event for destination models; forgiveTick reads NPC angry state/player.grudges and clears the grudge after an in-game hour.",
-    "Cat looks: scripts/critter.js derives mood/talking from NPC state and state.line; humanoid-locomotion.js calls cat-wardrobe.liveFace for cats not running critter.js; mat-catskin.js animates blink/talk textures in shader."
+    "Place sims → restyleSigns and dressThresholds; doorway handlers call carryAcross before local ctx.cross and record xferTo, which player.js consumes for arrival markers.",
+    "scripts/player.js update → preloadTick reads nearby door IDs and preload.yml → preload event for destination models; forgiveTick reads NPC anger/player.grudges and clears grudge after an in-game hour.",
+    "NPC role/faction + stable ID + wear → clothes.js and npc-looks.yml seeded job/faction look → critter-model restyle saves nl marker and rebuilds cat body/attachments; talk state/line → cat face params → mat-catskin.js animated mouth and face."
   ],
   "behaviorFamilies": [
     "places/bonus scenes + bonus data/sim + mall shopper/salon scripts - authored mall, NPCs and counter behavior; escalator steps share motor behavior with placement-specific direction/phase.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction scripts - furniture-specific models/dimensions through common placement, persistence and rebuild flow.",
     "scripts/door-geo.js + door-swing.js and prop-interactions.js + interactive-props data + prop-part.js - parametrically generated doors/storage parts with eased motion and legacy prop migration.",
     "scripts/lib/thresholds.js + threshold-geo.js + participating place sims, alongside sign-style.js/sign-geo.js - shared threshold dressing and per-place/per-ID sign-board styles across place sims.",
-    "places/level01/sim.js + zenith geometry, breach, hatch, bot and hazard scripts - Zenith Station environment and interactive systems.",
+    "places/level01/sim.js + Zenith geometry, breach, hatch, bot and hazard scripts - Zenith Station environment and interactive systems.",
     "places/level3/sim.js + level3-details-geo.js + lib/level3-hatch.js + l3-hatch*.js + scripts/l3-line.js - tiled Electrical Station detail, paired steel hatches and animated belt boxes varied by line layout/state.",
     "places/level4 scenes/sim + l4-office, l4-office-geo, l4-home and resident data - office/hotel fixtures and attached residents.",
-    "scripts/lib/critter-model.js + cat-wardrobe.yml + mat-catskin.js + art/cat-wardrobe/fit.py - reusable cat body looks with painted clothing and fitted skinned garment children; refits propagate through wardrobe seating."
+    "scripts/lib/clothes.js + npc-looks.yml + critter-model.js + cat-wardrobe.yml + mat-catskin.js - deterministic NPC job/faction body, hair, face, tail/fluff and fur variety; player/NPC-specific cat wardrobes and shared live face shader."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -84,14 +84,14 @@
     "art/critter-hair-tripo/fit.py.held - saved fitter copy; active fit.py is the documented build fitter.",
     "scripts/dbg-pose.js - debug-room mannequin gallery after places/debug removal; no current placement found.",
     "scripts/dbg-bodypad.js, scripts/debug-pad.js, scripts/lib/debug-layout.js - debug-room pads/layout after places/debug removal; no current references found.",
-    "scripts/l3-line.js is now attached by places/level3/sim.js; the older uploaded l3-assembly-line-2 model remains unreferenced by active line placements."
+    "scripts/l3-line.js is attached by places/level3/sim.js; the older uploaded l3-assembly-line-2 model remains unreferenced by active line placements."
   ],
   "migrationNotes": [
     "Threshold dressing version is V=7 in scripts/lib/thresholds.js; upgrades clean/rebuild thr-tagged objects and remain delayed/incremental until place colliders stand. Preserve thrSeen/thrTry/thrDone/thrV protocol.",
     "Door transfers: carryAcross records xferTo only for local place links with a # marker and crosses carryId/nearby heldBy objects, rejecting room/world and Bonus destinations; Level 1 BACK uses backV destroy-and-respawn migration.",
     "scripts/lib/sign-style.js only restyles eligible shallow box signs with UI, leaves emissive/light signs alone, and is throttled/idempotent; preserve source IDs, dimensions, text, colour and placement while signs.yml selects style.",
-    "Level 3 hatchV=3 rebuild destroys old l3-hatch-* objects; hatchAt deterministically shares each wall's door across its two faces. Level 3 lineV=2 destroys legacy line-model instances and lays three Tripo stations with animated belt boxes and cabinet lamps.",
-    "New Tripo cat wardrobe data applies only to CAT_BODY/CAT_BODY2: painted regions use cat-wardrobe.yml body measurements (metres, y-up, front +z); modeled clothes are skinned children and use under-paint to hide fur. Legacy critter clothing remains separate.",
-    "Cat facial animation is derived, not saved: NPC state.line drives talking; hp/down/hostility/angry choose face moods; mat-catskin blink/talk runs on shader time and seeded phase."
+    "Level 3 hatchV=3 rebuild destroys old l3-hatch-* objects; hatchAt deterministically shares each wall's door across its two faces. Level 3 lineV=2 replaces legacy line-model instances with three Tripo stations and animated belt boxes.",
+    "Cat appearance migration is critter-model STYLE_V=sw190 plus clothes NL_V=nl7: only non-player new-cat NPCs with stale/missing nl are job/faction refit; explicit wear choices survive. Keep cat-wardrobe dimensions in metres, y-up, front +z; variant garments select baked-color model by slot Var or stable color/seed hash.",
+    "Cat face state is derived, not saved: NPC state.line/talk drives the shader mouth; hp/down/hostility/angry choose moods, while mat-catskin blink/talk animation uses shader time and seeded phase."
   ]
 }
