@@ -94,7 +94,7 @@ people:
       night: [[10, -23, 999, sleep, 8, -19]] }
   l5-wat:
     { faction: orig, role: pilgrim, voice: wat, name: "Brother Wat · Pilgrim (1348)", build: { h: 0.84, w: 1.06 },
-      look: { species: hamster, sex: m, eye: "#241e26", belly: "#fff5e2", nose: "#ff92a6", topw: sweater, top: "#6a5236", botw: longskirt, bottom: "#5a4430", shoes: slippers, shoec: "#4a3826", neck: cape, neckc: "#4a3a2a", expr: dizzy, fur: "#d9a466" },
+      look: { species: hamster, sex: m, eye: "#241e26", belly: "#fff5e2", nose: "#ff92a6", topw: pilgrimrobe, top: "#6a5236", botw: longskirt, bottom: "#5a4430", shoes: slippers, shoec: "#4a3826", hat: pilgrimhat, hatc: "#6a5236", expr: dizzy, fur: "#d9a466" },
       rounds: [[13, -16, 30, crouch, 14, -16], [-1, -22.8, 25, idle, -2, -22.8], [6.5, -13.4, 12, idle, 6, -8], [8, -16.5, 20, sit, 5, -19]],
       night: [[13, -16, 999, crouch, 14, -16]] }
 # Conversations between residents: who stands in, and the lines they trade (a / b). Picked when both are free.

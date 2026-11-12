@@ -52,7 +52,7 @@ leveled:
     keeper:    { rows: [sweater, apron, longskirt, pants, slippers, boots, scarf, glasses], pats: [knit, cable, floral], extra: { hat: 0.1, eyew: 0.5, neck: 0.5 } }
     clerk:     { rows: [officeshirt, longsleeve, slacks, longskirt, sneakers, glasses, bowtie], pats: [pinstripe, weave], extra: { hat: 0, eyew: 0.6, neck: 0.5 } }
     psychic:   { rows: [sweater, dress, longskirt, cape, scarf, slippers, flower, bow, glasses], pats: [velvet, floral, knit], extra: { hat: 0.5, eyew: 0.2, neck: 0.7 } }
-    pilgrim:   { rows: [hoodie, pants, longskirt, boots, beanie, carpetponcho, cape, scarf, tarpponcho], pats: [knit, canvas], extra: { hat: 0.5, eyew: 0, neck: 0.8 } }
+    pilgrim:   { rows: [hoodie, pants, longskirt, boots, beanie, carpetponcho, cape, scarf, tarpponcho, pilgrimrobe, pilgrimhat], pats: [knit, canvas], extra: { hat: 0.5, eyew: 0, neck: 0.8 } }
     scavenger: { rows: [hoodie, wirehood, padjacket, cargo, overalls, boots, padbeanie, beanie, shades, hazmat, tarpponcho], pats: [camo, denim, canvas], extra: { hat: 0.6, eyew: 0.4, neck: 0.2 } }
 rows:
   # slot   kind         name                  dr  kg    rarity    colours                                         (dr, kg, rarity: Savi's picks)
@@ -100,6 +100,8 @@ rows:
   - { id: hazmat,      slot: topw, kind: jacket,     name: M.E.G. hazmat jacket,  dr: 6, kg: 2.2, rarity: rare,     strict: true, level: 8,  colours: [e8c21a], pats: [weave] }   # Level 2/3 heat, smoke and fumes: M.E.G. issue
   - { id: bntgvest,    slot: topw, kind: tank,       name: B.N.T.G. trader vest,  dr: 3, kg: 1.0, rarity: uncommon, strict: true, level: 4,  colours: [8a7a55, 5a6040], pats: [canvas] }   # the trading group's pocket vest, almond water bottles in the loops
   - { id: tarpponcho,  slot: topw, kind: hoodie,     name: Wanderer's tarp poncho, dr: 2, kg: 0.6, rarity: common,  strict: true, level: 1,  colours: [4d7fb8, 6a8a5a], pats: [weave] }   # a cut tarp and rope, what a fresh wanderer stitches together
+  - { id: pilgrimrobe, slot: topw, kind: hoodie,     name: Pilgrim's hooded robe, dr: 2, kg: 1.4, rarity: uncommon, strict: true, level: 3,  colours: [6a5236, 5a4a3a], pats: [knit] }   # coarse wool with a rope belt and scrip, the Originals' Brother Wat wears one
+  - { id: pilgrimhat,  slot: hat,  kind: beanie,     name: Pilgrim's shell hat,   dr: 1, kg: 0.3, rarity: uncommon, strict: true, level: 3,  colours: [6a5236], pats: [knit] }   # broad felt brim, a scallop shell pinned on the front
   - { id: canvasskirt, slot: botw, kind: longskirt,  name: Canvas long skirt,  dr: 2, kg: 0.9, rarity: uncommon, strict: true, level: 5,  colours: [6a5a3a], pats: [canvas] }
   - { id: padjacket,   slot: topw, kind: jacket,     name: Padded jacket,      dr: 5, kg: 2.0, rarity: uncommon, strict: true, level: 8,  colours: [5a4a3a, 3a4048], crafted: true, pats: [quilted, canvas, camo, leather] }
   - { id: wirehood,    slot: topw, kind: hoodie,     name: Wire-mesh hoodie,   dr: 6, kg: 2.4, rarity: rare,     strict: true, level: 12, colours: [6e6e64], crafted: true, pats: [canvas, camo] }
