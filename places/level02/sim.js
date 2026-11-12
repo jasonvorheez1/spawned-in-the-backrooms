@@ -13,7 +13,7 @@ import { S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, xOf } from "../../scripts/lib
 import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 import P from "../../scripts/lib/data/l02-props.yml";
 export const cadence = "250ms";
-const V = 17, STEP_MS = 3400, WARNING_MS = 1200;
+const V = 18, STEP_MS = 3400, WARNING_MS = 1200;
 const CREAK = "/cdn/moodboard-realistic-gritty/sfx-deep-structural-wood-creak-groan.mp3";
 const OFFICE_LIGHT = { kind: "point", color: "oklch(0.96 0.025 95)", intensity: 1.35, distance: 11 };
 const WARN_LIGHT = { ...OFFICE_LIGHT, color: "oklch(0.76 0.16 54)", intensity: 0.95, distance: 8 };
@@ -143,9 +143,9 @@ function layShell(ctx) {
     children: [[0, -0.7, 1.4, 0.1], [0, 0.7, 1.4, 0.1], [-0.7, 0, 0.1, 1.4], [0.7, 0, 0.1, 1.4]].map(([x, z, w, d]) => ({ feetPosition: { x, y: 0.08, z }, primitive: box(w, 0.18, d), material: STEEL, physics: "static" })) });
   sp(ctx, "l02-pan-read", { feetPosition: { x: BIN.x, y: BASE + 1.3, z: BIN.z - 0.75 }, state: { kg: 0 }, vector: "<svg viewBox='0 0 220 70' width='0.9m' billboard='yaw'><rect width='220' height='70' rx='6' fill='#1b1b1b'/><text x='110' y='46' text-anchor='middle' font-family='display' font-size='34' fill='#f1c40f'>{{ state.kg }} / 42 KG</text></svg>" });
   sp(ctx, "l02-cable", { feetPosition: { x: BIN.x - 0.6, y: BASE + 0.25, z: BIN.z - 0.6 }, primitive: { kind: "cylinder", radiusTop: 0.012, radiusBottom: 0.012, height: CEIL - BASE - 0.3, radialSegments: 6 }, material: { color: "oklch(0.22 0 0)", metalness: 0.7, roughness: 0.4 } });
-  sp(ctx, "l02-lift-release", { tags: ["usable"], feetPosition: { x: 12.4, y: BASE + 1.15, z: -1.63 }, rotation: { yaw: 90 },
+  sp(ctx, "l02-lift-release", { tags: ["usable"], feetPosition: { x: 12.4, y: BASE + 1.15, z: -1.63 }, rotation: { yaw: -90 },
     primitive: box(0.28, 0.31, 0.13), material: { color: "oklch(0.42 0.08 27)", metalness: 0.35, roughness: 0.65 },
-    children: [{ feetPosition: { x: 0, y: 0.08, z: 0.08 }, primitive: box(0.075, 0.18, 0.08), material: STEEL }],
+    children: [{ feetPosition: { x: 0, y: 0.08, z: 0.08 }, primitive: box(0.075, 0.18, 0.08), material: { ...STEEL, color: "oklch(0.78 0.12 83)" } }],
     behavior: "scripts/l02-use.js", state: { kind: "release", name: "Manual brake release", verb: "Service", info: "Repair 35 · Lower the freight lift by hand." } });
   layLift(ctx, false);
   layCans(ctx);
