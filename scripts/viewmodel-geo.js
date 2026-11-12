@@ -5,7 +5,7 @@
 import { tube, sphere } from "./lib/shapes.js";
 import { SPECIES } from "./critter2-geo.js";
 // params (from the wearer's critter look): species, fur, topw, top. A long-sleeved top dresses the forearm; otherwise it is bare fur.
-const LONG = new Set(["longsleeve", "hoodie", "sweater", "jacket", "pajamas"]);
+const LONG = new Set(["longsleeve", "hoodie", "sweater", "jacket", "pajamas", "megjacket", "padjacket", "officeshirt", "wirehood", "bellhop", "tailcoat", "gown", "hotelrobe", "seawatchsuit", "oilskin", "abysshauberk", "pgcoat", "pphoodie", "pghoodie", "gmhoodie", "blazer", "dress"]); // every top the cat wardrobe draws with a sleeve (cat-wardrobe.yml from.topw)
 
 const S = 0.9 // the whole arm, a little smaller than the first version so it never crowds the weapon
 const P = (p) => [p[0] * S, p[1] * S, p[2] * S]
