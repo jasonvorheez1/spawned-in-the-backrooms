@@ -116,6 +116,68 @@ l7-ezra:
     death: ["Lights..."]
   gest: { wave: "Mm.", gift: "Thanks.", dance: "On watch.", nodance: "On watch.", insult: "Mm." }
 
+l7-ines:
+  hi: "Careful where you step. That black isn't shadow, it's tar, and it doesn't let go of boots. I'm Ines. I keep the pit."
+  back: ["Boots clean? Good.", "Back from the water. It let you go, then."]
+  warm: "Come stand by the pit with me. It's warm. Only warm thing on this rock."
+  cold: "Mind the pit. Mind your hands."
+  bye: "Watch your feet."
+  walk: "Fine. Slowly."
+  ask:
+    - q: "What's the tar for?"
+      a: "Everything. Walls, roof, boats, cuts. We pull the furniture out of the sea, it comes up rotten, and the tar holds it together. The whole fort is wardrobes and tar."
+      then:
+        - q: "Where does it come from?"
+          a: "The pit. It rises a little every night. Jude says the sea gives it to us. I say it's coming up from somewhere, and I'd like to know where before it stops."
+    - q: "You don't sound like a believer."
+      a: "I believe the pit's hot and the wall needs patching. Jude can do the singing. Somebody has to do the work."
+    - q: "Can you patch me up?"
+      sk: medicine 30
+      do: heal
+      a: "Hold still. Little tar on the cut, cloth over it. Stings for a minute, then it seals. Don't pick at it."
+      fail: "Tar's for walls when you don't know how to use it. Ask Jude."
+  barks:
+    idle: ["Skim it.", "Hot again.", "More rope."]
+    hi: ["Watch your feet.", "Mm. Hello."]
+    drawn: ["Put that down near the pit."]
+    hurt: ["Tar it and keep going."]
+    spot: ["Something's on the wall!"]
+    hostile: ["You'll go in the pit."]
+    hit: ["Hah! Burns!"]
+    kill: ["Stay down."]
+    flee: ["Behind the barrels!"]
+    death: ["Warm..."]
+  gest: { wave: "Mm.", gift: "That's kind. Don't get tar on it.", dance: "Slowly. Floor's sticky.", nodance: "Not near the pit.", insult: "I've heard Tobit swear at a plank for an hour." }
+
+l7-tobit:
+  hi: "Stop. Right there. Who sent you across? Nobody sends anyone. So you came on your own. That's worse."
+  back: ["You. I counted you leaving. Now I count you back.", "Back. Hands where I can see them."]
+  warm: "Alright. You're alright. Stand by me, two pairs of eyes on the water is better than one."
+  cold: "One more step and I ring the bell."
+  bye: "Don't turn your back on the sea."
+  walk: "Stay close. Closer."
+  ask:
+    - q: "Why are you so jumpy?"
+      a: "Because I've seen the lights come right up under the pier. Ezra watches. I listen. You can hear them, you know. Like something knocking on the bottom of a boat."
+    - q: "What's the wrench for?"
+      a: "Fixing things. And hitting things that climb the wall at night. It's done more of the second one lately."
+    - q: "Can I pass through the fort?"
+      sk: speech 40
+      a: "Fine. You don't smell like the deep yet. Keep to the boards, don't touch the brazier, don't talk to Jude for long."
+      fail: "No. Maybe. Ask Mara. She decides who's trouble."
+  barks:
+    idle: ["Knocking. Hear it?", "Count them. Count them again.", "Not tonight. Not tonight."]
+    hi: ["Stop. Oh. You.", "Hands."]
+    drawn: ["Put it away! Put it away!"]
+    hurt: ["It's fine, it's fine, it's fine."]
+    spot: ["There! On the rocks!", "Ring the bell!"]
+    hostile: ["I knew it. I knew it!"]
+    hit: ["Agh! My arm!"]
+    kill: ["Stay down! Stay down!"]
+    flee: ["Bell! Ring the bell!"]
+    death: ["Knocking..."]
+  gest: { wave: "Don't wave. Hands down.", gift: "For me? Why? ...Thanks.", dance: "Are you insane? Out here?", nodance: "Not with the water watching.", insult: "Yeah. I know." }
+
 l8-hobb:
   hi: "Warm up by the fire. Keep your lamp on in the tunnels. When you get near a den, switch it off before they see you."
   back: ["Torch still burning? Good.", "You. Sit. Warm up."]
