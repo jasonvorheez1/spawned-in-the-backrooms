@@ -34,9 +34,7 @@ export function layExtras(ctx, GLB, fit) {
     sp(`bone-${k}`, { feetPosition: { x, y: FC.y + 0.05, z }, rotation: { yaw: k * 33 }, primitive: { kind: "box", width: 0.55, height: 0.07, depth: 0.08 }, material: BONE });
   }
   [[-1.4, -8.2], [1.4, -8.2], [0, -9.3]].forEach(([dx, dz], i) => sp(`candle-${i}`, { feetPosition: { x: FC.x + dx, y: FC.y, z: FC.z + dz }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.05, height: 0.3 }, material: BONE, children: [{ feetPosition: { x: 0, y: 0.4, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.14 78)", intensity: 0.8, distance: 5 } }] }));
-  // chalk on the tarred boards: what they tell each other
-  [[-3.2, 3.5, 160, "IT HEARS", "so do not shout"], [3.3, 5.6, 200, "WE SURRENDER", "and we are kept"], [-6.5, -4.0, 90, "NO SWIMMING", ""], [6.4, -3.3, -80, "HUSH", "tiny is listening"]].forEach(([dx, dz, yaw, t, s], i) =>
-    sp(`chalk-${i}`, { feetPosition: { x: FC.x + dx, y: FC.y + 1.3, z: FC.z + dz }, rotation: { yaw }, primitive: { kind: "box", width: 1.5, height: 0.9, depth: 0.05 }, material: { color: "oklch(0.2 0.02 60)", roughness: 0.95 }, ui: CHALK(t, s) }));
+  // (the chalk boards were removed: Shelly, Nov 12)
   // drying nets and a rack of grey fish nobody has ever caught (they say), under the tower
   sp("rack", { feetPosition: { x: FC.x + 3.4, y: FC.y + 1.0, z: FC.z - 7.3 }, primitive: { kind: "box", width: 2.2, height: 0.08, depth: 0.08 }, material: WOOD });
   for (let k = 0; k < 6; k++) sp(`fish-${k}`, { feetPosition: { x: FC.x + 2.5 + k * 0.35, y: FC.y + 0.55, z: FC.z - 7.3 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 0.07, height: 0.55, depth: 0.04 }, material: { color: "oklch(0.55 0.015 230)", roughness: 0.7 } });
