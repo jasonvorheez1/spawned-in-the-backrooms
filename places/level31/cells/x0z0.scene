@@ -13,6 +13,14 @@ l31-food-bp:
   physics: none
   primitive: {depth: 24, height: 4, kind: box, width: 16}
   tags: [blueprint]
+l31-food-duckboard:
+  castShadow: false
+  feetPosition: {x: 40.1, y: 0, z: 17}
+  id: l31-food-duckboard
+  material: {color: "#1b1b1d", roughness: 0.9}
+  physics: static
+  primitive: {depth: 13.4, height: 0.32, kind: box, width: 3.2}
+  receiveShadow: true
 l31-shop-bp:
   feetPosition: {x: -35, y: 0, z: 0}
   id: l31-shop-bp
