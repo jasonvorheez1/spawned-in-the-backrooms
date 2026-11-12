@@ -1,37 +1,53 @@
-// The main quest's first part (Shelly, Nov 9): a nobody walks into Level 1, hears a radio nobody is answering, and finds the
-// camp of Dina A., a courier who lay down with a delivery nobody was left to sign for. Reading her diary plays a cutscene:
-// the camp, her pages, the last one (CABIN 23 · SS Fun), and a voice on her radio saying someone is at the courier's camp.
-// state.dinaQ: 1 = follow the static, 2 = find cabin 23. state.dcut = { at } while the cutscene plays (scripts/cutscene-ui.js dUi).
-import { setQuest } from "./quests.js";
+// The Way Back follows Dina's courier trail. Keep dinaQ stages for saved games.
+import { setQuest, endQuest } from "./quests.js";
 import { pushFeed } from "./feed.js";
-export const DINA = { id: "the-undelivered", name: "The Undelivered" }; // my name for it
+const LEGACY = "the-undelivered";
+export const HOME = { id: "the-way-back", name: "The Way Back" };
 export const CAMP = { x: 22.3, y: 0, z: 38.4 };
 export const DCUT_LEN = 31;
 export const PAGE1 = "/cdn/value.c34ec656c4a1cff78a3e39fc4180767562f4900c7e7c22db887da96de4027188.png";
 export const PAGE2 = "/cdn/value.3dff2011e2fa82e3cd6426f6aa4cc9ca4a5306ed13cac0a14ade3168408563db.png";
 export const PAGES = [[9, 16.2], [16, 23]]; // each page's seconds on screen
 const STEP = {
-  1: { step: "Follow the radio static along the south wall of Level 1", mark: { place: "level1", id: "dina-radio", x: CAMP.x, y: 0, z: CAMP.z } },
-  2: { step: "Get aboard the SS Fun. Survivors swear the Time 4 Fun posters on Level 4 lead there", mark: { place: "level4", id: "l4-fun-poster" } },
-  3: { step: "Find Cabin 23 on the SS Fun's cabin deck", mark: { place: "level26", id: "l26-cabin23" } },
-  4: { step: "Someone took River's drive before you. The wet prints lead below decks, to the party", mark: { place: "level26", id: "l26d-phoebe-room" } },
-  5: { step: "Phoebe says the thief never left the ship. The wet prints go on past the party, to the end of the hall", mark: { place: "level26", id: "l26d-stow-nest" } },
-  6: { step: "The bedroll had a B.N.T.G. chit stuffed in it, the kind Voss hands out in the Habitable Zone. Ask him who he sold it to", mark: { place: "level1", id: "bntg-voss" } },
-  7: { step: "Voss says the kid in the wet coat had a buyer waiting at the Electrical Station", mark: null }, // Savi's pick; Level 3's meeting isn't built yet // Savi's pick; never the Bonus Room (Shelly: it's a hub, no quests go there) // the story past here is unwritten
+  0: { step: "Find a way out of the yellow rooms. Look for someone who knows a route home.", mark: { place: "level1", id: "dina-diary" } },
+  1: { step: "Follow the radio static along Level 1's south wall. Read Dina's diary at the camp.", mark: { place: "level1", id: "dina-diary", ...CAMP } },
+  2: { step: "Dina picked up a broadcast from home. Get aboard the SS Fun and find River's backup in Cabin 23.", mark: { place: "level26", id: "l26-cabin23" } },
+  3: { step: "Search Cabin 23 on the SS Fun for River's backup drive.", mark: { place: "level26", id: "l26-cabin23" } },
+  4: { step: "The drive case is empty. Follow the wet prints below decks and ask who passed through.", mark: { place: "level26", id: "l26d-phoebe-room" } },
+  5: { step: "Follow the wet prints past the party to the bedroll at the end of the hall.", mark: { place: "level26", id: "l26d-stow-nest" } },
+  6: { step: "Trace the stowaway's chit to Voss on Level 1. Ask him or check the freight slips by his stall.", mark: { place: "level1", id: "dina-freight-slip" } },
+  7: { step: "Find the buyer's handoff record at the Electrical Station checkpoint on Level 3.", mark: { place: "level3", id: "dina-handoff" } },
+  8: { step: "Check River's test number against the public records inside Base Gamma.", mark: { place: "gamma", id: "dina-return-record" } },
+  9: { step: "Chapter 1 complete. River made contact with the Frontrooms. The crossing is unverified and the backup drive is still missing.", mark: null },
 };
-export { setStep as setDinaStep };
-// The spine (Shelly, Nov 10): like finding who shot the courier, the nobody's own question runs under every lead: where the hell am i, and how do i get home.
-export const HOME = { id: "the-way-back", name: "The Way Back" }; // my name for it
-const HOME_STEP = [ // the first whose test passes is the step shown
-  [(st) => (st.dinaQ ?? 0) >= 2, "River's backup drive maps every way in and out of the Backrooms. Whoever has it has your way home. Find it", null],
-  [(st, place) => place && place !== "main" && place !== "intake" && place !== "tutorial0", "You're not in your bedroom anymore. Ask around on Level 1: somebody here has to know a way out", { place: "level1", id: "dina-radio", x: CAMP.x, y: 0, z: CAMP.z }],
-  [() => true, "Where the hell is this? Find a way out of the yellow rooms. Then figure out how to get home", null],
-];
-function homeTick(ctx, st, place) {
-  if (st.menuOpen || st.cut || place === "intake" || place === "tutorial0") return;
-  const row = HOME_STEP.find(([ok]) => ok(st, place)); if (!row) return;
-  const fresh = setQuest(st, HOME.id, { name: HOME.name, step: row[1], mark: row[2], main: true });
-  if (fresh) { const n = "Quest Started: The Way Back"; st.notice = { text: n, at: ctx.now() }; pushFeed(st, n, ctx.now(), "info"); }
+export function dinaLead(ctx, st) {
+  if (st.dinaLead || (st.dinaQ ?? 0) >= 2) return;
+  st.dinaLead = true;
+  st.sub = { who: "HALOGEN · UNSENT MESSAGE", t: "If this unit still boots, find my radio on Level One. I heard a station from home. They read out tomorrow's weather. River made a copy. — Dina", at: ctx.now(), d: 12500 };
+  syncHome(ctx, st, "tutorial0");
+}
+function syncHome(ctx, st, place) {
+  const n = st.dinaQ ?? 0;
+  if (st.quests?.[LEGACY]) {
+    const old = st.quests[LEGACY], current = st.quests[HOME.id], qtrack = st.qtrack ?? [];
+    st.quests = { ...st.quests, [HOME.id]: { ...(current ?? old), name: HOME.name, history: [...new Set([...(current?.history ?? []), ...(old.history ?? []), old.step].filter(Boolean))].slice(-12) } };
+    endQuest(st, LEGACY, false);
+    if (qtrack.includes(LEGACY) && !qtrack.includes(HOME.id)) st.qtrack = qtrack.map((id) => id === LEGACY ? HOME.id : id);
+  }
+  if (n === 9) {
+    if (st.quests?.[HOME.id]) endQuest(st, HOME.id, STEP[9].step);
+    return;
+  }
+  const row = n === 0 && place === "tutorial0"
+    ? { step: st.dinaLead ? "Find Dina's radio on Level 1. Follow the drawings to a way out of the yellow rooms." : "Find a way out of the yellow rooms and look for a route home.", mark: null }
+    : STEP[n];
+  if (!row) return;
+  const cur = st.quests?.[HOME.id];
+  if (cur?.name === HOME.name && cur.step === row.step && cur.main && cur.mark?.place === row.mark?.place && cur.mark?.id === row.mark?.id) return;
+  if (setQuest(st, HOME.id, { name: HOME.name, ...row, main: true })) {
+    const note = "Quest Started: The Way Back";
+    st.notice = { text: note, at: ctx.now() }; pushFeed(st, note, ctx.now(), "info");
+  }
 }
 const RADIO = "Patrol to base. There's a light on at the courier's camp. Say again, someone is at Dina's camp. Moving to check.";
 const VO = `/cdn/voice-gruff-tired-man-field-operative-over-crackly-two-way-radio-saying-${encodeURIComponent(RADIO)}.mp3`;
@@ -43,20 +59,20 @@ const ss = (a, b, t) => { const u = Math.min(1, Math.max(0, (t - a) / (b - a)));
 const L = (a, b, u) => ({ x: a.x + (b.x - a.x) * u, y: a.y + (b.y - a.y) * u, z: a.z + (b.z - a.z) * u });
 const me1 = (ctx) => ({ audience: { player: ctx.self.id } });
 const snd = (ctx, clip, v, at) => ctx.emit("playSound", { clip, position: at ?? ctx.self.feetPosition, volume: v, maxDistance: 80 }, me1(ctx));
-function setStep(ctx, st, n, note) {
+export function setDinaStep(ctx, st, n, note) {
+  if (n <= (st.dinaQ ?? 0) || !STEP[n]) return false;
   st.dinaQ = n;
-  setQuest(st, DINA.id, { name: DINA.name, step: STEP[n].step, mark: STEP[n].mark, main: true });
+  syncHome(ctx, st, ctx.self.place);
   if (note) { st.notice = { text: note, at: ctx.now() }; pushFeed(st, note, ctx.now(), "info"); }
+  return true;
 }
-// called every tick from scripts/main-menu.js on the player's own machine; true while the cutscene owns the player
-export function dinaTick(ctx, ses, st) {
-  const me = ctx.self, place = me.place;
-  if (!st.dcut) homeTick(ctx, st, place);
+export function dinaTick(ctx, ses, st, place = ctx.self.place) {
+  const me = ctx.self;
   if (!st.dcut) {
-    if (place === "level1" && !st.dinaQ && !st.menuOpen && !st.cut) setStep(ctx, st, 1, "Quest Started: The Undelivered");
-    else if (place === "level26" && st.dinaQ === 2 && !st.l26cut) setStep(ctx, st, 3, "Quest Updated: The Undelivered"); // aboard: now the cabin
-    else if (st.dinaQ && !st.quests?.[DINA.id] && STEP[st.dinaQ]) setStep(ctx, st, st.dinaQ); // a save from before the journal
-    else if (st.dinaQ === 2 && st.quests?.[DINA.id]?.step !== STEP[2].step) setStep(ctx, st, 2); // older saves: the old step had no way there
+    if (st.menuOpen || st.cut || st.arrive || st.arrivePending || place === "intake" || st.level == null) return false;
+    if (place === "level1" && !st.dinaQ) setDinaStep(ctx, st, 1);
+    else if (place === "level26" && st.dinaQ === 2 && !st.l26cut) setDinaStep(ctx, st, 3);
+    else if (place !== "bonus" || st.dinaQ || st.quests?.[HOME.id]) syncHome(ctx, st, place);
     return false;
   }
   const t = (ctx.now() - st.dcut.at) / 1000;
@@ -68,7 +84,7 @@ export function dinaTick(ctx, ses, st) {
     ctx.view.camera = null; st.dcut = null; ses.dcut = null; ses.dskip = null;
     if (skip && c.score) ctx.emit("stopSound", { soundId: c.score }, me1(ctx));
     st.dinaDiary = true;
-    if ((st.dinaQ ?? 0) < 2) setStep(ctx, st, 2, "Dina's diary added");
+    if ((st.dinaQ ?? 0) < 2) setDinaStep(ctx, st, 2, "Dina's diary added");
     return false;
   }
   const O = ctx.place.objects, dp = O["dina-diary"]?.feetPosition ?? { x: CAMP.x, y: 0.3, z: CAMP.z }, rp = O["dina-radio"]?.feetPosition ?? { x: CAMP.x + 1, y: 0.4, z: CAMP.z - 1.4 };

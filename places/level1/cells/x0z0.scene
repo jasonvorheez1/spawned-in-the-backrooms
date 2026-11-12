@@ -143,3 +143,21 @@ meg-ortiz/object/xba5b309b4f070466/1:
   id: meg-ortiz/object/xba5b309b4f070466/1
   model: {id: /cdn/value.bd1a0ff99d2e34491523ee49853ebddcbe4ec10b685abfb66bab58f6db1cbb00.glb, offset: [0, -0.064, 0]}
   parent: meg-ortiz
+dina-freight-slip:
+  behavior: scripts/dina-record.js
+  feetPosition: {x: 14.14, y: 0.76, z: 3.65}
+  rotation: {yaw: 180}
+  castShadow: false
+  primitive: {kind: box, width: 0.43, height: 0.31, depth: 0.025}
+  material: {color: "#524439", roughness: 0.85}
+  state: {kind: freight, name: "Voss's freight slips", verb: "Check slips"}
+  tags: [usable]
+  children:
+    - feetPosition: {x: 0, y: -0.76, z: 0.05}
+      primitive: {kind: box, width: 0.065, height: 0.76, depth: 0.065}
+      material: {color: "#51483f", roughness: 0.88}
+    - feetPosition: {x: 0, y: -0.76, z: 0.05}
+      primitive: {kind: cylinder, radiusTop: 0.15, radiusBottom: 0.18, height: 0.045, radialSegments: 12}
+      material: {color: "#51483f", roughness: 0.88}
+    - feetPosition: {x: 0, y: 0.15, z: -0.017}
+      vector: "<svg viewBox='0 0 220 150' width='0.40m'><rect width='220' height='150' rx='3' fill='#dbcca8'/><text x='110' y='32' text-anchor='middle' font-family='sans-serif' font-size='17' fill='#3c3128'>B.N.T.G. FREIGHT</text><path d='M23 53h174m-174 21h165m-165 21h174m-174 21h123' stroke='#766650' stroke-width='3'/></svg>"

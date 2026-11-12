@@ -55,7 +55,7 @@ const C = {
   rVossTip: "Callum's cans are walking. You see everything that moves here. Who?",
   dVossAsk: "Found this chit in a bedroll on the SS Fun. Yours. Who'd you give it to?",
   dVossPay: "Fifty Backdollars says you remember the face.",
-  dVossLean: "That drive starts a war, Voss. You want your name on it when it does?",
+  dVossLean: "The chit has your stamp. I can ask the M.E.G. who signed the other copy.",
   rVossSell: "Ale's skimming Callum's crates for a family in the east halls. What's that worth to you?",
   wStart: "You look worried, doc. What's going on?",
   wAsk: "Ortiz needs purification tablets. She says you've got a tin.",
@@ -208,17 +208,17 @@ export function handleDialogueQuest1(ctx, p, it, text) {
 
   // ---------------- The Undelivered, step 6: the stowaway's chit
   if (id === "bntg-voss" && s.dinaQ === 6 && (k === "dVossAsk" || k === "dVossPay" || k === "dVossLean")) {
-    if (k === "dVossAsk") return { reply: "I hand out a lot of chits. Memory's a service, friend. Services cost.", mood: "calm" };
+    if (k === "dVossAsk") return { reply: "Look at the number, not the name. Every chit has a freight slip. I keep the copies by the stall. Fifty if you want me to find yours.", mood: "calm" };
     if (k === "dVossPay") {
       if ((s.cents ?? 0) < 5000) return { reply: "That's not fifty.", mood: "annoyed" };
       s.cents -= 5000; addRep(s, "bntg", 3);
-      setDinaStep(ctx, s, 7, "Quest Updated: The Undelivered");
-      return { reply: "Fifty. Lovely. Skinny kid, wet coat, wanted passage below the ship's waterline. Paid me in batteries. Said he had a buyer at the Electrical Station. That's all you bought.", mood: "happy" };
+      setDinaStep(ctx, s, 7, "Found the handoff location on Level 3.");
+      return { reply: "Fifty. Lovely. Skinny kid, wet coat, wanted passage below the ship's waterline. Paid me in batteries. The buyer left a drop record at the Electrical Station checkpoint. Ticket C-23. That's all you bought.", mood: "happy" };
     }
     if (!roll(ctx, p, it, k)) { addRep(s, "bntg", -2); return { reply: "Threats from a nobody. Cute. Walk away before that gets expensive.", mood: "angry" }; }
     addRep(s, "bntg", -4);
-    setDinaStep(ctx, s, 7, "Quest Updated: The Undelivered");
-    return { reply: "...Fine. Keep my name out of it. Skinny kid, wet coat. Said his buyer waits at the Electrical Station. I never saw what he was carrying.", mood: "annoyed" };
+    setDinaStep(ctx, s, 7, "Found the handoff location on Level 3.");
+    return { reply: "...Fine. Keep my name out of it. Skinny kid, wet coat. The buyer left a drop record at the Electrical Station checkpoint. Ticket C-23. I never saw what he was carrying.", mood: "annoyed" };
   }
 
   // ---------------- Bad Water

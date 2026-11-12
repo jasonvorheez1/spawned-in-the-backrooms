@@ -173,3 +173,15 @@ object/x5263d12a9cbb9719/9:
   light: {color: oklch(0.9 0.08 75), distance: 12, intensity: 4, kind: point, shadow: {enabled: false}}
   tags: [gamma-light]
   visibleRange: {max: 45}
+dina-return-record:
+  behavior: scripts/dina-record.js
+  feetPosition: {x: -5.55, y: 1.03, z: 35.4}
+  rotation: {yaw: -90}
+  castShadow: false
+  primitive: {kind: box, width: 0.43, height: 0.31, depth: 0.025}
+  material: {color: "#524439", roughness: 0.85}
+  state: {kind: archive, name: "Base Gamma public records", verb: "Read records"}
+  tags: [usable]
+  children:
+    - feetPosition: {x: 0, y: 0.15, z: -0.017}
+      vector: "<svg viewBox='0 0 220 150' width='0.40m'><rect width='220' height='150' rx='3' fill='#dbcca8'/><text x='110' y='32' text-anchor='middle' font-family='sans-serif' font-size='17' fill='#3c3128'>RETURN TESTS</text><path d='M23 53h174m-174 21h165m-165 21h174m-174 21h123' stroke='#766650' stroke-width='3'/></svg>"

@@ -3,6 +3,7 @@
 // state.t0n = beats passed, state.t0cut = { id, at } while one plays; the frame and captions are scripts/cutscene-ui.js t0Ui.
 import { animate } from "builtin/tween"
 import { BEATS, SOFT, ENC, HALO, DRAWINGS, PACE } from "./tut0.js"
+import { dinaLead } from "./dina-quest.js"
 import { spawnPhoebe, dropPhoebe } from "./phoebe.js"
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
 const SMILER_MODEL = { id: "/cdn/value.fb443f6a23bcd4977c437db42b3f9abe2510fcb6cf2076ee4956fb235d581b26.glb", forward: "+x" } // scripts/smilers.js
@@ -53,7 +54,7 @@ export function t0Tick(ctx, ses, st) {
   handheld(ctx, t)
   if (!done) return true
   if (id === "halogen") me.bones.RightHand.reach = null
-  if (id === "halogen") { st.creating = false; st.sheetOpen = false }
+  if (id === "halogen") { st.creating = false; st.sheetOpen = false; dinaLead(ctx, st) }
   for (const k of ["smiler", "glint", "dust", "leg", "ent"]) if (c[k]) ctx.destroy(c[k]) // the knocked-down entity (c.ent) stays where it fell
   me.anim.cut = null; ctx.view.camera = null; me.hidden = (me.hidden || []).filter((i) => i !== me.id)
   st.t0n = (st.t0n ?? 0) + 1; st.t0cut = null; ses.t0 = null

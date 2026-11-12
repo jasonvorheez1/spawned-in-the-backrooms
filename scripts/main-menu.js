@@ -43,6 +43,7 @@ export function update(ctx) {
   const l0 = place === "main" || place === "tutorial0"
   if (l0 && st.arrivePending && !st.menuOpen) { st.arrivePending = false; st.arrive = ctx.now(); ses.arr = null; if (place === "tutorial0") { st.t0n = 0; st.t0cut = null } }
   if (st.arrive) { if (!l0) { st.arrive = null; ses.arr = null; ctx.view.camera = null; return } if (arriveTick(ctx, ses, st)) tutStart(ctx, st); return }
+  if (place === "tutorial0" && !st.t0cut) dinaTick(ctx, ses, st, place)
   // the tutorial Level 0's beats (scripts/lib/tut0-cut.js): a fresh visit there without the drop starts the route over
   if (ses.t0Last !== ctx.self.place) { if (place === "tutorial0" && !st.arrive) { st.t0n = 0; st.t0cut = null; ses.t0 = null; ses.inT0 = true } ses.t0Last = ctx.self.place } // every walk into the tutorial starts at the first beat, whatever a past run left
   if (place === "tutorial0" && !st.menuOpen) {
@@ -53,7 +54,7 @@ export function update(ctx) {
   } else ses.inT0 = false
   // Level 26: the first time aboard, the ship in the fog and Phoebe at the rail (scripts/lib/l26-cut.js)
   if (place === "level26" && !st.menuOpen && (st.l26cut || !st.l26seen)) { if (l26Tick(ctx, ses, st)) return ctx.sleep(0) }
-  if ((place === "level1" || st.dcut || (place === "level26" && st.dinaQ === 2) || (st.dinaQ === 2 && st.quests?.["the-undelivered"]?.mark == null) || (st.dinaQ && !st.quests?.["the-undelivered"])) && dinaTick(ctx, ses, st)) return ctx.sleep(0) // Dina's camp and her diary (scripts/lib/dina-quest.js)
+  if (place !== "tutorial0" && dinaTick(ctx, ses, st, place)) return ctx.sleep(0)
   if (st.tut) tutTick(ctx, st)
   const playing = music(ctx, place !== "bonus" && ((st.menuOpen && st.menuKind === "title") || (place === "intake" && !st.cut))) // the mall has its own track: the title theme never plays over it (shelly, Nov 12)
   // behind the title the camera slowly looks around the halls from head height; gone the moment it closes

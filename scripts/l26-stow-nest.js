@@ -13,6 +13,6 @@ export const ears = {
     ctx.emit("playSound", { clip: G("low-dread-sting-single-cello-note-swell"), position: at, volume: 0.5, maxDistance: 10 }, me);
     ctx.emit("playSound", { clip: G("old-ship-hull-deep-metal-groan-creak"), position: at, volume: 0.6, maxDistance: 20 }, me);
     if ((s.dinaQ ?? 0) < 5) s.dinaQ = 5; // sequence break: found the bed before Phoebe found you
-    setDinaStep(ctx, s, 6, "Quest Updated: The Undelivered");
+    setDinaStep(ctx, s, 6, "The chit bears Voss’s stamp.");
   },
 };

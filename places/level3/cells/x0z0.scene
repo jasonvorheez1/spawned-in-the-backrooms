@@ -313,3 +313,21 @@ object/xe9f03c6a0081f261/22:
   fx: {script: "fx\npop chunk burst=12..18 on=box(<.5,.4,.5>) life=1.4..2.2 v=sdir()*(1.5..3.5)+up(1..2.5) size=.06..0.2 spin=-8..8 acc=grav()+drag(.4) col=<0.44000000000000006,0.45599999999999996,0.46399999999999997> a=1>.8:1>0 sz=$size rot=$age*$spin floor=bounce(.3) r=mesh(box,1,.6,.8)\npop dust burst=7 on=box(<.5,.4,.5>) life=1.6..2.6 v=sdir()*(.4..1)+up(.2..0.6) size=.5..0.9 acc=buoy(.2)+drag(1.2) col=<0.55,0.57,0.58> a=0>.45:.2>.7:.25>0 sz=$size*(.6>2.2) rot=spin(.2) r=sprite(smoke-puff,alpha)\npop spark burst=18..26 life=.2..0.5 v=sdir()*(3..6)+up(1..2) size=.015..0.03 acc=grav()*.6 col=hdr(5,3,1)>hdr(2,.7,.1) a=1>0 sz=$size r=sprite(ember,add,velocity,.03)\npop arc n=1 life=.3 r=light(<.6,.75,1>,12,6)"}
   id: object/xe9f03c6a0081f261/22
   tags: [fx]
+dina-handoff:
+  behavior: scripts/dina-record.js
+  feetPosition: {x: -47.0, y: 1.03, z: -4.25}
+  rotation: {yaw: 180}
+  castShadow: false
+  primitive: {kind: box, width: 0.43, height: 0.31, depth: 0.025}
+  material: {color: "#524439", roughness: 0.85}
+  state: {kind: handoff, name: "Checkpoint handoff log", verb: "Look up C-23"}
+  tags: [usable]
+  children:
+    - feetPosition: {x: 0, y: -1.03, z: 0.05}
+      primitive: {kind: box, width: 0.065, height: 1.03, depth: 0.065}
+      material: {color: "#51483f", roughness: 0.88}
+    - feetPosition: {x: 0, y: -1.03, z: 0.05}
+      primitive: {kind: cylinder, radiusTop: 0.15, radiusBottom: 0.18, height: 0.045, radialSegments: 12}
+      material: {color: "#51483f", roughness: 0.88}
+    - feetPosition: {x: 0, y: 0.15, z: -0.017}
+      vector: "<svg viewBox='0 0 220 150' width='0.40m'><rect width='220' height='150' rx='3' fill='#dbcca8'/><text x='110' y='32' text-anchor='middle' font-family='sans-serif' font-size='17' fill='#3c3128'>M.E.G. DISPATCH</text><path d='M23 53h174m-174 21h165m-165 21h174m-174 21h123' stroke='#766650' stroke-width='3'/></svg>"

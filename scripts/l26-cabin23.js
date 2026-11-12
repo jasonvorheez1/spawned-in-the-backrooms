@@ -14,6 +14,6 @@ export const ears = {
     ctx.emit("playSound", { clip: G("low-dread-sting-single-cello-note-swell"), position: at, volume: 0.55, maxDistance: 10 }, me);
     ctx.emit("screenShake", { intensity: 0.12, duration: 0.4 }, me);
     if (!s.dinaQ || s.dinaQ < 3) s.dinaQ = 3; // came the long way round, never read the diary: the cabin still counts
-    setDinaStep(ctx, s, 4, "Quest Updated: The Undelivered");
+    setDinaStep(ctx, s, 4, "River’s drive is gone. The case is still wet.");
   },
 };

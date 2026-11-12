@@ -43,7 +43,7 @@ export function onTriggerEnter(ctx, other) {
   ctx.after(12.6, "gone", {})
   pl.state.l26seen = true; pl.state.l26below = false
   { const cy = pl.camera?.rotation?.yaw, py = pl.rotation?.yaw ?? 0; pl.state.freeze = { until: ctx.now() + 13600, yaw: typeof cy === 'number' ? cy : py, pitch: 0 } } // Shelly: you freeze at "don't turn around" and stay frozen until she's gone
-  if (quest) setDinaStep(ctx, pl.state, 5, "Quest Updated: The Undelivered")
+  if (quest) setDinaStep(ctx, pl.state, 5, "Follow the prints past the party.")
 }
 export function lightsBack(ctx) {
   const s = ctx.self.state

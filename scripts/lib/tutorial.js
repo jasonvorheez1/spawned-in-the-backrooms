@@ -9,7 +9,7 @@ export const STEPS = [
   { id: "tp", key: "MIDDLE MOUSE", text: "hold to see yourself. drag to look around.", input: "thirdPerson" },
   { id: "inv", key: "I", text: "your HALOGEN unit. gear, stats, notes.", input: "inventory" },
   { id: "use", key: "E", text: "pick things up, open doors, talk to people.", input: "interact", skip: 14 },
-  { id: "go", key: "", text: "that's all you get. find a way out, and don't trust anything that smiles.", skip: 8 },
+  { id: "go", key: "", text: "Find a way out of these rooms. Look for signs that someone else made it through.", skip: 8 },
 ]
 const TICK = "/cdn/moodboard-realistic-gritty/sfx-soft-pda-beep-confirm.mp3"
 function advance(ctx, st) {
