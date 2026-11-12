@@ -98,15 +98,16 @@ export function geometry(ctx) {
     case "bin": return bin(ctx);
     case "can": return can(ctx);
     case "casing": return casing(ctx, p.w ?? 1.1, p.h ?? 2.2);
+    default: return bench(ctx, p.len ?? 2.4); // no kind named: the lacing bench
   }
 }
 export function collider(ctx) {
   const p = ctx.params || {};
   switch (p.kind) {
     case "seats": return { kind: "box", width: (p.n ?? 12) * 0.56, height: 1.0, depth: 0.62, center: [0, 0.5, 0.08] };
-    case "bench": return { kind: "box", width: p.len ?? 2.4, height: 0.5, depth: 0.42, center: [0, 0.25, 0] };
+    case "bench": default: return { kind: "box", width: p.len ?? 2.4, height: 0.5, depth: 0.42, center: [0, 0.25, 0] };
     case "lockers": return { kind: "box", width: (p.cols ?? 5) * 0.4, height: 2.0, depth: 0.46, center: [0, 1.0, 0] };
     case "bin": return { kind: "cylinder", radiusTop: 0.26, radiusBottom: 0.23, height: 0.95, center: [0, 0.475, 0] };
-    default: return null;
+    case "curtain": case "can": case "casing": return null;
   }
 }
