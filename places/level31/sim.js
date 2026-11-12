@@ -8,7 +8,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 43;
+const V = 44;
 const RAIL_GLB = "/cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb";
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
@@ -115,6 +115,8 @@ function edges(ctx) {
       for (let i = 0; i < n; i++) { const o = (i - (n - 1) / 2) * w; ctx.spawn(`l31-edge-${id}-${i}`, { feetPosition: { x: x + ax * o, y: 0, z: z + az * o }, rotation: { yaw }, model: { id: TRIPO.lockers, forward: "+x" }, layout: { box: { min: { x: -w / 2, y: 0, z: -0.3 }, max: { x: w / 2, y: 1.8, z: 0.3 } } }, physics: "static" }); }
       return;
     }
+    // Tripo teal swing-lid can: draws 0.34 x 0.6 x 0.34 m at file size, so x1.5 = 0.9 m tall
+    if (params.kind === "bin") return ctx.spawn(`l31-edge-${id}`, { feetPosition: { x, y: 0, z }, rotation: { yaw }, model: "/cdn/value.2c45917a31f2025dfd332e385512e02089853ee6c91979b1b0aa6a7940c89209.glb", scale: 1.5, physics: { body: "static", collider: "cylinder" }, state: { name: "Trash can" } });
     if (params.kind === "bench") return ctx.spawn(`l31-edge-${id}`, { feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: TRIPO.bench }, layout: { box: { min: { x: -params.len / 2, y: 0, z: -0.3 }, max: { x: params.len / 2, y: 0.5, z: 0.3 } } }, physics: "static", tags: ["seat"], state: { name: "Bench" } });
     return ctx.spawn(`l31-edge-${id}`, { feetPosition: { x, y: 0, z }, rotation: { yaw }, ...P(params), ...(solid ? { physics: "static" } : {}), tags: params.kind === "bench" ? ["seat"] : [], state: params.kind === "bench" ? { name: "Bench" } : undefined });
   };
