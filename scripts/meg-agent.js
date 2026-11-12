@@ -470,6 +470,19 @@ export function update(ctx, dt) {
     me.bones = baseBones(s.build, s.look ?? s.wear);
   }
   // talking: interact.js stamps state.talkAt and talkTo when a player presses E on them
+  const reaction = s.socialReaction;
+  if (reaction && now - reaction.at < 1000 && reaction.at !== m.socialReactionAt) {
+    m.socialReactionAt = reaction.at;
+    if (reaction.kind === "drawn") {
+      m.brandishAt = reaction.at; m.brandishPl = reaction.by;
+      me.anim.gest = { clip: "cdn/clip-shake-no.glb", loop: "once", weight: 0.9, blendIn: 0.2, blendOut: 0.35, mask: { from: "Spine" } };
+      m.gestEnd = now + 1500;
+    } else if (reaction.kind === "close") {
+      m.bumpAt = reaction.at;
+      me.anim.hit = { clip: "cdn/clip-hit-react.glb", loop: "once", weight: 0.75, blendIn: 0.05, blendOut: 0.3, timeAt: now };
+      m.hitAt = now;
+    }
+  }
   const talking = s.talkAt && now - s.talkAt < 2600;
   if (talking !== !!m.talking) { m.talking = talking; me.anim.talk = talking ? { clip: (s.wear?.sex ?? s.look?.sex) === "f" ? "cdn/clip-talk-female-loop.glb" : "cdn/clip-talk-loop.glb", loop: "loop", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } } : null; }
   // one-shot clips end: cleared after their length, so a body never holds a wave's or a flinch's last frame
