@@ -87,7 +87,7 @@ function coach(ctx) {
   const id = "l31-coach";
   const look = npcLook(id, { species: "faceling", sex: "m", fur: "#f3cfad", hair: "none", topw: "breton", top: "#e9e4d8", botw: "pants", bot: "#1c1c22", shoes: "sneakers", shoe: "#22201e", clothesOwn: true, bodyOwn: true }, "wanderer", 10, "trader");
   ctx.spawn("l31-rental-riser", { feetPosition: { x: 12.55, y: 0, z: 25.75 }, primitive: box(13.1, 0.45, 1.8), material: RUB, physics: "static", castShadow: false, tags: ["l31-rental"] });
-  ctx.spawn(id, { tags: ["npc", "l31-rental", "docile"], feetPosition: { x: 13, y: 0.46, z: 25.7 }, rotation: { yaw: 0 }, physics: "character",
+  ctx.spawn(id, { tags: ["npc", "l31-rental", "docile"], feetPosition: { x: 13, y: 0.46, z: 25.7 }, rotation: { yaw: 180 }, physics: "character",
     ...critterSpec(look), scale: 1.25, behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
     state: { name: "Coach", role: "trader", faction: "survivor", voice: "l31-coach", docile: true, essential: true, post: { x: 13, z: 25.7 }, home: { x: 13, y: 0.46, z: 25.7 }, ...npcState(ctx, "agent", 80) } });
   // facelings come bald from the shared path; his brown crop rides the head as its own child
