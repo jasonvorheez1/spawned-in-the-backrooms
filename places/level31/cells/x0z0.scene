@@ -9,11 +9,11 @@ l31-arcade-bp:
 l31-can6:
   feetPosition: {x: -36, y: 4.7, z: -22}
   id: l31-can6
-  light: {color: "#ffb070", distance: 16, intensity: 2.6, kind: point}
+  light: {color: "#ffb070", distance: 18, intensity: 9, kind: point}
 l31-can7:
   feetPosition: {x: -30, y: 4.7, z: 24}
   id: l31-can7
-  light: {color: "#ffb070", distance: 16, intensity: 2.6, kind: point}
+  light: {color: "#ffb070", distance: 18, intensity: 9, kind: point}
 l31-coach:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js]
   bones: {"mixamorig:LeftArm": {rotate: [-8, 0, 0]}, "mixamorig:RightArm": {rotate: [-8, 0, 0]}}
