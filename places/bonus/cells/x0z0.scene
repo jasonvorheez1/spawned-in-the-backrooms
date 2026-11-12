@@ -86,7 +86,7 @@ bc-banner-1:
   children: [{feetPosition: {x: 0, y: 4.55, z: 0}, material: {color: "#f4f0f8", metalness: 0.8, roughness: 0.3}, primitive: {height: 1.7, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.03}, rotation: {roll: 90}}, {feetPosition: {x: -0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}, {feetPosition: {x: 0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}]
   feetPosition: {x: -5.2, y: 7, z: -14}
   id: bc-banner-1
-  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.3619103595e1e0d79fe4d13014252ce3e24714cf9dbb5a1f60b7f609f2ddbe1f.png, roughness: 0.95, side: double, texture: /cdn/value.3619103595e1e0d79fe4d13014252ce3e24714cf9dbb5a1f60b7f609f2ddbe1f.png}
+  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.4fb991d4d883f84e289a74f05e5948d133459ec215e4ac2b56975af3d54d7082.png, map: /cdn/value.4fb991d4d883f84e289a74f05e5948d133459ec215e4ac2b56975af3d54d7082.png, roughness: 0.95, side: double}
   pivot: feet
   primitive: {height: 4.5, kind: plane, width: 1.5}
 bc-banner-2:
@@ -94,7 +94,7 @@ bc-banner-2:
   children: [{feetPosition: {x: 0, y: 4.55, z: 0}, material: {color: "#f4f0f8", metalness: 0.8, roughness: 0.3}, primitive: {height: 1.7, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.03}, rotation: {roll: 90}}, {feetPosition: {x: -0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}, {feetPosition: {x: 0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}]
   feetPosition: {x: -5.2, y: 7, z: -2}
   id: bc-banner-2
-  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.3619103595e1e0d79fe4d13014252ce3e24714cf9dbb5a1f60b7f609f2ddbe1f.png, roughness: 0.95, side: double, texture: /cdn/value.3619103595e1e0d79fe4d13014252ce3e24714cf9dbb5a1f60b7f609f2ddbe1f.png}
+  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.e87b84b1b91bb64de0849de93f2e15c48b371b6e23fee118e1955dc6c40eb6d4.png, map: /cdn/value.e87b84b1b91bb64de0849de93f2e15c48b371b6e23fee118e1955dc6c40eb6d4.png, roughness: 0.95, side: double}
   pivot: feet
   primitive: {height: 4.5, kind: plane, width: 1.5}
 bc-banner-3:
@@ -102,7 +102,7 @@ bc-banner-3:
   children: [{feetPosition: {x: 0, y: 4.55, z: 0}, material: {color: "#f4f0f8", metalness: 0.8, roughness: 0.3}, primitive: {height: 1.7, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.03}, rotation: {roll: 90}}, {feetPosition: {x: -0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}, {feetPosition: {x: 0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}]
   feetPosition: {x: -5.2, y: 7, z: 10}
   id: bc-banner-3
-  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.3619103595e1e0d79fe4d13014252ce3e24714cf9dbb5a1f60b7f609f2ddbe1f.png, roughness: 0.95, side: double, texture: /cdn/value.3619103595e1e0d79fe4d13014252ce3e24714cf9dbb5a1f60b7f609f2ddbe1f.png}
+  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.7b10110737ab7e87df1a545c2459d1f437f85fb58eadd46d7b54c6cb62bc0533.png, map: /cdn/value.7b10110737ab7e87df1a545c2459d1f437f85fb58eadd46d7b54c6cb62bc0533.png, roughness: 0.95, side: double}
   pivot: feet
   primitive: {height: 4.5, kind: plane, width: 1.5}
 bc-banner-4:
@@ -110,7 +110,7 @@ bc-banner-4:
   children: [{feetPosition: {x: 0, y: 4.55, z: 0}, material: {color: "#f4f0f8", metalness: 0.8, roughness: 0.3}, primitive: {height: 1.7, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.03}, rotation: {roll: 90}}, {feetPosition: {x: -0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}, {feetPosition: {x: 0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}]
   feetPosition: {x: 5.2, y: 7, z: -14}
   id: bc-banner-4
-  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.3619103595e1e0d79fe4d13014252ce3e24714cf9dbb5a1f60b7f609f2ddbe1f.png, roughness: 0.95, side: double, texture: /cdn/value.3619103595e1e0d79fe4d13014252ce3e24714cf9dbb5a1f60b7f609f2ddbe1f.png}
+  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.4ce22d488b32954e955dbdf9e5c01b83060587b4dc83057daa60301a2dfffc35.png, map: /cdn/value.4ce22d488b32954e955dbdf9e5c01b83060587b4dc83057daa60301a2dfffc35.png, roughness: 0.95, side: double}
   pivot: feet
   primitive: {height: 4.5, kind: plane, width: 1.5}
 bc-banner-5:
@@ -118,7 +118,7 @@ bc-banner-5:
   children: [{feetPosition: {x: 0, y: 4.55, z: 0}, material: {color: "#f4f0f8", metalness: 0.8, roughness: 0.3}, primitive: {height: 1.7, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.03}, rotation: {roll: 90}}, {feetPosition: {x: -0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}, {feetPosition: {x: 0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}]
   feetPosition: {x: 5.2, y: 7, z: -2}
   id: bc-banner-5
-  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.3619103595e1e0d79fe4d13014252ce3e24714cf9dbb5a1f60b7f609f2ddbe1f.png, roughness: 0.95, side: double, texture: /cdn/value.3619103595e1e0d79fe4d13014252ce3e24714cf9dbb5a1f60b7f609f2ddbe1f.png}
+  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.187531b69a1e3a51e66875ed716d3a7eb1fb1a49f344f790afd55752000e6f0a.png, map: /cdn/value.187531b69a1e3a51e66875ed716d3a7eb1fb1a49f344f790afd55752000e6f0a.png, roughness: 0.95, side: double}
   pivot: feet
   primitive: {height: 4.5, kind: plane, width: 1.5}
 bc-banner-6:
@@ -126,7 +126,7 @@ bc-banner-6:
   children: [{feetPosition: {x: 0, y: 4.55, z: 0}, material: {color: "#f4f0f8", metalness: 0.8, roughness: 0.3}, primitive: {height: 1.7, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.03}, rotation: {roll: 90}}, {feetPosition: {x: -0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}, {feetPosition: {x: 0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}]
   feetPosition: {x: 5.2, y: 7, z: 10}
   id: bc-banner-6
-  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.3619103595e1e0d79fe4d13014252ce3e24714cf9dbb5a1f60b7f609f2ddbe1f.png, roughness: 0.95, side: double, texture: /cdn/value.3619103595e1e0d79fe4d13014252ce3e24714cf9dbb5a1f60b7f609f2ddbe1f.png}
+  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.89764e308d871613c0c209fe09e91c2cab3744f70eeccfed20d710278c429e9a.png, map: /cdn/value.89764e308d871613c0c209fe09e91c2cab3744f70eeccfed20d710278c429e9a.png, roughness: 0.95, side: double}
   pivot: feet
   primitive: {height: 4.5, kind: plane, width: 1.5}
 bc-bay-e12:
