@@ -9,8 +9,7 @@ export function onTriggerEnter(ctx, other) {
   heard(ctx, { maxDistance: 18, refDistance: 3, clip: "/cdn/moodboard-realistic-gritty/sfx-eerie-low-chime-level-up.mp3", position: other.feetPosition, volume: 0.6 }, { audience: { player: other.id } });
   if (act === "smiler" || act === "lurker") { ctx.place.state["want_" + act] = true; return; }
   if (act === "exit") { ctx.cross(other, "main"); return; }
-  if (["pool", "roll", "crate", "corpse"].includes(act)) { ctx.place.state["want_" + act] = s.level ?? 1; return; } // the Loot Lab (scripts/lib/loot-lab.js)
-  if (/^lv\d+$/.test(act)) { s.level = +act.slice(2); s.xp = 0; s.leveledAt = ctx.now(); }
+  if (act === "lv10" || act === "lv1") { s.level = act === "lv10" ? 10 : 1; s.xp = 0; s.leveledAt = ctx.now(); }
   s.hp = maxHp(s.level); s.sanity = maxSan(s.level); s.stamina = L.stamina; s.battery = L.battery;
   if (act === "heal") s.almonds = Math.max(s.almonds ?? 0, L.almondRefill);
 }
