@@ -3,8 +3,8 @@
 // Walk in past the door room and it falls apart, column by column from the far east wall back toward the door, dropping
 // everything into the unfinished house below: studs, joists, sheathing, the crew's tools. It stops at the door room.
 // A Reality Freshener set down on the clean floor holds the collapse where it is. Empty for 15 s, it is put back as if
-// nothing happened. Puzzle: the freight lift (east) is stuck up top with a freshener on it; three paint cans (14 kg) on
-// the counterweight pan bring it down. Cap'n stands by the stairs. Props are Tripo meshes (scripts/lib/data/l02-props.yml).
+// nothing happened. Below, once the floor is down, fallen joists shut the old stair: the way up is through the shifting
+// rooms (scripts/lib/l02-grid.js), whose walls the crew rebuilds while nobody watches, to the CREW EXIT. Cap'n stands by the stairs. Props are Tripo meshes (scripts/lib/data/l02-props.yml).
 import { animate } from "builtin/tween";
 import { bodyModel, seatCat, critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook, refitLook, NL_V } from "../../scripts/lib/clothes.js";
