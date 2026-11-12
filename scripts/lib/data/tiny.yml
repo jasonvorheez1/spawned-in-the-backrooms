@@ -8,9 +8,9 @@ dash: 9                      # m/s; a player swims about 3.5, so you cannot outs
 lunge: 15
 circleR: 7
 circleSeconds: 4.5
-recoverSeconds: 3.5
+recoverSeconds: 6
 reach: 2.2
-damage: 40                   # of 200 hp: five lunges, about 40 s in the water once he's on you
+damage: 30                   # of 200 hp: about seven lunges, near a minute once he is on you
 noiseReach: 15
 fleeSeconds: 18
 sounds:
