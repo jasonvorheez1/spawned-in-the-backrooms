@@ -12,12 +12,12 @@ from mathutils import Vector, Matrix
 from mathutils.bvhtree import BVHTree
 SRC = "/workspace/hats"; OUT = "/workspace/hats/out"; BODY = "/workspace/catrev/body%s.glb"; os.makedirs(OUT, exist_ok=True)
 R = {
-  "cap":        dict(fit="wrap", band=0.21, ease=1.03, tilt=-14, at=0.5, rim="back"),
+  "cap":        dict(fit="wrap", band=0.30, ease=0.96, tilt=-14, at=0.5, rim="back"),
   "beanie":     dict(fit="wrap", band=0.36, ease=1.03, tilt=-10, at=0.12, squash=1.15, orient=dict(roll=13)),
-  "souwester":  dict(fit="wrap", band=0.27, ease=1.04, tilt=-12, at=0.6, rim="wide", cut=0.44),   # cut: the chin cord under the brim
+  "souwester":  dict(fit="wrap", band=0.40, ease=1.04, tilt=-12, at=0.6, rim="wide", cut="auto"),   # cut: the chin cord under the brim
   "chitinhelm": dict(fit="wrap", band=0.40, ease=1.05, tilt=-4, orient=dict(yaw=-90)),
-  "beret":      dict(fit="perch", w=0.92, seat=0.8, sink=0.02, tilt=-10, roll=10, dx=0.02),   # soft and wider than its band: sized whole, set down on the dome, rolled to one side
-  "divehelm":   dict(fit="enclose", ease=1.12, lift=0.05, orient=dict(yaw=-90)),
+  "beret":      dict(fit="perch", w=1.12, seat=1.0, sink=0.045, tilt=-10, roll=10, dx=0.02),   # soft and wider than its band: sized whole, set down on the dome, rolled to one side
+  "divehelm":   dict(fit="enclose", ease=1.26, lift=0.07, orient=dict(yaw=-90)),
   "tophat":     dict(fit="perch", w=0.70, seat=0.6, sink=0.012, tilt=-7),
   "crown":      dict(fit="perch", w=0.65, seat=0.5, sink=0.012, tilt=-6),
   "partyhat":   dict(fit="perch", w=0.40, seat=0.6, sink=0.012, tilt=-8, dx=0.07, roll=14),
