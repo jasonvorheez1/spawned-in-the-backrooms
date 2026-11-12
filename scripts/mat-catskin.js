@@ -70,8 +70,13 @@ export function material(ctx) {
     m.roughness = 0.68;
     return m;
   }
+  // fur drawn in bind space (Shelly Nov 12 "improve its textures and material + uv"): soft strands down the body and clumps, no UV seams.
+  // The old fur picture stays as a faint undertone only where the body has UVs.
   const furT = ctx.params.fur ? ctx.texture(String(ctx.params.fur)).sample(vec2(uv().x, uv().y.oneMinus())).rgb : vec3(1, 1, 1);
-  const fur = furT.mul(materialColor);
+  const fStr = mx_noise_float(q.mul(vec3(700, 90, 700))).mul(0.5).add(0.5), fStr2 = mx_noise_float(q.mul(vec3(210, 30, 210))).mul(0.5).add(0.5);
+  const fClump = mx_fractal_noise_float(q.mul(vec3(26, 12, 26))).mul(0.5).add(0.5);
+  const furP = float(0.86).add(fStr.mul(0.08)).add(fStr2.mul(0.07)).mul(float(0.94).add(fClump.mul(0.1)));
+  const fur = mix(vec3(1, 1, 1), furT, 0.25).mul(furP).mul(materialColor);
   // --- tail: a capsule line the garments leave a hole for
   const tl = [0, 1, 2, 3].map((i) => vec3(P("t" + i + "x"), P("t" + i + "y"), P("t" + i + "z")));
   const seg = (a, b) => { const pa = q.sub(a), ba = b.sub(a), h = clamp(dot(pa, ba).div(dot(ba, ba)), 0, 1); return pa.sub(ba.mul(h)).length(); };
@@ -138,8 +143,9 @@ export function material(ctx) {
   m.positionNode = positionLocal.sub(normalLocal.mul(sink));
   const N = normalize(normalWorld), V = normalize(cameraPosition.sub(positionWorld)), fres = pow(float(1).sub(saturate(abs(dot(N, V)))), 3.0);
   m.colorNode = col;
-  m.emissiveNode = col.mul(0.06).add(col.mul(0.5).add(vec3(0.16, 0.15, 0.14)).mul(fres).mul(0.16).mul(cloth));
-  m.roughnessNode = mix(float(0.6), float(0.88), cloth);
+  const fuzz = pow(float(1).sub(saturate(abs(dot(N, V)))), 2.2).mul(cloth.oneMinus()).mul(float(0.7).add(fStr.mul(0.6)));   // fur's soft lit rim: the edge of a furry silhouette glows, cloth doesn't
+  m.emissiveNode = col.mul(0.06).add(col.mul(0.5).add(vec3(0.16, 0.15, 0.14)).mul(fres).mul(0.16).mul(cloth)).add(col.mul(0.6).add(vec3(0.08, 0.075, 0.07)).mul(fuzz).mul(0.22));
+  m.roughnessNode = mix(mix(float(0.72), float(0.6), fStr), float(0.88), cloth);
   m.metalness = 0;
   return m;
 }
