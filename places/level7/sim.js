@@ -1068,7 +1068,12 @@ export function tick(ctx) {
   if (ctx.now() >= (lastFortLift ?? 0)) { lastFortLift = ctx.now() + 3000;
     for (const id of Object.keys(L7_NPCS)) { const o = ctx.place.objects[id];
       if (!isFortResident(o) || o.state.dead || o.state.follow) continue;
-      const p = o.feetPosition; if (Math.hypot(p.x + 70, p.z + 93) < 14 && p.y < FORT_FLOOR - 0.3) { o.feetPosition = { x: p.x, y: FORT_FLOOR + 0.05, z: p.z }; o.velocity = { x: 0, y: 0, z: 0 }; } } }
+      const p = o.feetPosition; if (Math.hypot(p.x + 70, p.z + 93) < 14 && p.y < FORT_FLOOR - 0.3) { o.feetPosition = o.state.home?.x != null ? { ...o.state.home, y: FORT_FLOOR + 0.05 } : { x: p.x, y: FORT_FLOOR + 0.05, z: p.z }; o.velocity = { x: 0, y: 0, z: 0 }; } } }
+  if ((s.fortPathV ?? 0) < 7) { // the walk floor (r 8.5) stopped short of the palisade (r ~9) and Ezra's round (r 9): people walked off its rim into the rock under the deck
+    ctx.destroy("l7-fort-walk-floor");
+    ctx.spawn("l7-fort-walk-floor", { feetPosition: { x: -70, y: FORT_FLOOR - 0.22, z: -93 }, primitive: { kind: "cylinder", radiusTop: 9.4, radiusBottom: 9.4, height: 0.22, radialSegments: 48 }, physics: "static", visible: false });
+    s.fortPathV = 7;
+  }
   if ((s.catV ?? 0) < 1 && !s.catBusy) { // Shelly Nov 12 "level 7 is still using the old npcs": the fort's people stood before the cat bodies; refit them in place (same path as Cap'n and Rico), state and weapons kept
     s.catBusy = 1;
     Promise.all([import("../../scripts/lib/critter-model.js"), import("../../scripts/lib/clothes.js")]).then(([{ bodyModel, seatCat }, { npcLook }]) => {
