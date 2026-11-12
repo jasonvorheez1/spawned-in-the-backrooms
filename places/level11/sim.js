@@ -25,7 +25,7 @@ import MODELS from "../../scripts/lib/data/level11-models.yml";
 export const cadence = "1s";
 const RENO_FLOOR = 0.32;
 const mallTrash = (i) => ({ x: -15.15 + i * 0.2, y: 0.33, z: 28.1 + i * 0.65 });
-const V = 142; // the market court and the central pedestrian route
+const V = 143; // the market court and the central pedestrian route
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1082,7 +1082,7 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
       sp(`l11-alley-pipe-${sd}`, { feetPosition: { x: AX + sd * (W / 2 - 0.2), y: 0.08, z: Z0 + (sd < 0 ? 3.2 : 9.6) }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 6.2 }, material: { color: "oklch(0.35 0.03 140)", metalness: 0.6, roughness: 0.5 } });
       sp(`l11-alley-pipe-shoe-${sd}`, { feetPosition: { x: AX + sd * (W / 2 - 0.3), y: 0.1, z: Z0 + (sd < 0 ? 3.2 : 9.6) }, rotation: { roll: sd * 60 }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.09, height: 0.28 }, material: { color: "oklch(0.33 0.03 140)", metalness: 0.6, roughness: 0.5 } });
     }
-    sp("l11-alley-door", { feetPosition: { x: AX + W / 2 - 0.04, y: 0.08, z: Z0 + 5.2 }, rotation: { yaw: -90 }, primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: "metal", w: 0.92, h: 2.05, part: "set", hingeSide: "left", seed: 11 } }, material: { pbr: true, color: "oklch(0.62 0.05 245)" }, physics: { body: "static", collider: "mesh" } }); // Shelly Nov 12: no blocky slabs: a framed steel back door, sealed
+    sp("l11-alley-door", { feetPosition: { x: AX + W / 2 - 0.11, y: 0.08, z: Z0 + 5.2 }, rotation: { yaw: -90 }, primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: "metal", w: 0.92, h: 2.05, part: "set", hingeSide: "left", seed: 11 } }, material: { pbr: true, color: "oklch(0.62 0.05 245)" }, physics: { body: "static", collider: "mesh" } }); // Shelly Nov 12: no blocky slabs: a framed steel back door, sealed
     sp("l11-alley-door-step", { feetPosition: { x: AX + W / 2 - 0.35, y: 0.08, z: Z0 + 5.2 }, primitive: { kind: "box", width: 0.5, height: 0.14, depth: 1.3 }, material: { ...T("stained-concrete-floor", 1), color: "oklch(0.6 0.01 80)" }, physics: "static" });
     sp("l11-alley-cage-lamp", { feetPosition: { x: AX + W / 2 - 0.22, y: 2.45, z: Z0 + 5.2 }, primitive: { kind: "cylinder", radiusTop: 0.09, radiusBottom: 0.12, height: 0.22 }, material: { color: "#ffe2a0", emissive: "#ffc860", emissiveIntensity: 2.4 }, light: { kind: "point", color: "#ffcf8a", intensity: 1.6, distance: 7 }, audio: { clip: "cdn/moodboard-realistic-gritty/sfx-faint-buzzing-caged-bulb-hum-loop.mp3", loop: true, gain: 0.12, spatial: true, maxDistance: 6 } });
     sp("l11-alley-vent", { feetPosition: { x: AX - W / 2 + 0.3, y: 0.08, z: Z0 + 8.6 }, primitive: { kind: "box", width: 0.5, height: 0.04, depth: 0.7 }, material: { ...T("grimy-scratched-steel-plate", 1), color: "oklch(0.4 0.01 80)", metalness: 0.7 },
@@ -1103,7 +1103,7 @@ pop steam rate=?mobile:6|12 on=disc(.2) life=1.6..2.6 v=up(.7..1.1)+sdir()*.15 s
     sp("l11-alley-drip", { feetPosition: { x: AX, y: 0.1, z: Z0 + 7 }, audio: { clip: "cdn/moodboard-realistic-gritty/sfx-slow-water-drips-into-alley-puddle-echo-loop.mp3", loop: true, gain: 0.14, spatial: true, maxDistance: 10 } });
     // street furniture (Tripo, Nov 12): a payphone by the newsstand, trash cans at the curb and the subway mouth; sized by layout boxes so none read toy-small
     const PAYPHONE = "/cdn/value.6f254276e9716432f337f3b95d9499f5dbf6bfa3010908f7a4e3e834084a0a87.glb", CAN = "/cdn/value.0d61ba9af6fbdd0bc85508d76b8a1fdc800c2b81a5ef504ae6552c799b947173.glb";
-    sp("l11-payphone", { feetPosition: { x: 12.3, y: 0.336, z: 43.2 }, rotation: { yaw: 90 }, model: { id: PAYPHONE }, layout: { box: { min: { x: -0.35, y: 0, z: -0.25 }, max: { x: 0.35, y: 1.95, z: 0.25 } } }, physics: { body: "static", collider: "box" }, state: { name: "Payphone", info: "The dial tone loops back on itself. Someone is breathing on the line." } });
+    sp("l11-payphone-ave", { feetPosition: { x: 12.3, y: 0.336, z: 43.2 }, rotation: { yaw: 90 }, model: { id: PAYPHONE }, layout: { box: { min: { x: -0.35, y: 0, z: -0.25 }, max: { x: 0.35, y: 1.95, z: 0.25 } } }, physics: { body: "static", collider: "box" }, state: { name: "Payphone", info: "The dial tone loops back on itself. Someone is breathing on the line." } });
     for (const [k, x, z, yaw] of [[0, 9.2, 41.2, 15], [1, 9.2, 49.6, -40], [2, 11.9, 57.8, 70]])
       sp(`l11-trashcan-${k}`, { feetPosition: { x, y: 0.336, z }, rotation: { yaw }, model: { id: CAN }, layout: { box: { min: { x: -0.3, y: 0, z: -0.3 }, max: { x: 0.3, y: 0.92, z: 0.3 } } }, physics: { body: "static", collider: "cylinder" } });
   }
