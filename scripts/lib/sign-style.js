@@ -3,12 +3,15 @@
 // panel is touched, so a sign the sim lays again later is dressed on the next pass. Lightboxes (deep or glowing) are left alone.
 import S from "./data/signs.yml";
 const last = {}; // place -> ms of the last pass (module memory, this machine)
+const seen = {} // place -> object count at the last full walk
 const isSign = (id, o) => /sign/i.test(id) || (o.tags ?? []).some((t) => /sign/i.test(t));
 const SKIP = /post|glow|pole|bracket|mall-sign|liftsign|light|lamp/i;
 
 export function restyleSigns(ctx, place) {
   const now = ctx.now(); if (now - (last[place] ?? -1e9) < 5000) return; last[place] = now;
-  for (const [id, o] of Object.entries(ctx.place.objects)) {
+  // perf (Shelly Nov 12 "optimize scripts"): a full walk of the place only when its object count moved since the last walk
+  const ids = Object.keys(ctx.place.objects); if (ids.length === seen[place]) return; seen[place] = ids.length;
+  for (const id of ids) { const o = ctx.place.objects[id]; if (!o) continue;
     if (!isSign(id, o) || SKIP.test(id)) continue;
     const pr = o.primitive; if (pr?.kind !== "box" || !o.ui || (pr.depth ?? 0) > 0.2 || (pr.width ?? 0) < 0.15) continue;
     if (o.material?.emissive && (o.material.emissiveIntensity ?? 1) > 0.3) continue;
