@@ -1099,6 +1099,7 @@ const FP_BC = { f: { x: 0.0304, y: -0.2624, z: 0.1128 }, m: { x: 0.0375, y: -0.2
 const FP_SEAT = { x: 0, y: 0.039, z: 0.096 } // the pistol grip's centre in viewmodel space, measured off the mesh (art/weapon-split/fitview.py): the fist's hollow lands on it
 const FP_AT = (sx) => ({ x: FP_BC[sx].x + FP_SEAT.x, y: FP_BC[sx].y + FP_SEAT.y, z: FP_BC[sx].z + FP_SEAT.z }), FP_ROT = { yaw: 0, pitch: 0, roll: 0 }
 function wp_two(kind) { return W[kind]?.two ? { y: W[kind].two[0], z: W[kind].two[1] } : null }
+export function plyBounds(ctx, p) { const b = ctx.getObject(p.id), v = ctx.getObject(p.id.split('/plyarm')[0]); ctx.log('[plyarm] bounds', JSON.stringify(b?.bounds ?? null), 'vm', JSON.stringify(v?.bounds ?? null), 'wfp', JSON.stringify(b?.worldFeetPosition ?? null), 'me', JSON.stringify(ctx.self.feetPosition), 'vis', b?.visible, b?.visibleInFirstPerson) }
 function plyArm(ctx, w) {
   const body = ctx.getObject(w.vm + '/plyarm') ?? ctx.getObject('plyarm') ?? (ctx.getObject(w.vm)?.children ?? []).map((c) => (typeof c === 'string' ? ctx.getObject(c) : c)).find((c) => c?.model)
   if (!w.plyLogged) { w.plyLogged = true; ctx.log('[plyarm] vm', w.vm, 'body', body?.id ?? null, 'pos', JSON.stringify(body?.worldFeetPosition ?? null), 'skel', body?.skeleton ? Object.keys(body.skeleton).length : 'none') }
@@ -1117,6 +1118,7 @@ function plyArm(ctx, w) {
   if (lh && !w.plyHuman) bones[lh] = { ...(w.plyHuman ? { scale: 0 } : {}), reach: { to: { object: w.vm, offset: { x: -0.06, y: w.plyTwo.y - 0.08, z: w.plyTwo.z + 0.1 } }, pole: { object: w.vm, offset: { x: -0.7, y: -0.6, z: 0.4 } } } }
   body.bones = bones
   w.plyRig = true
+  ctx.after?.(1, 'plyBounds', { id: body.id })
   ctx.log('[plyarm] rigged', hand ?? 'no right hand', 'cut', Object.keys(bones).join(','), 'all', names.join(','))
 }
 
