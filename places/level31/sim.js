@@ -8,7 +8,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 54;
+const V = 55;
 const RAIL_GLB = "/cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb";
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
@@ -102,7 +102,7 @@ function shell(ctx) {
   // House lighting follows the aisle. The cinema and arcade have their own fixtures.
   [[-29, 25], [-18, 23], [-2, 22], [14, 18], [23, 17], [-24, 0], [24, 0], [-26, -19], [23, -18], [-14, -16], [14, -16]].forEach(([x, z], i) => ctx.spawn(`l31-can${i}`, {
     feetPosition: { x, y: H - 0.1, z }, ...P({ kind: "can" }), castShadow: false,
-    children: [{ feetPosition: { x: 0, y: -0.35, z: 0 }, light: { kind: "point", color: "#ffe1bd", intensity: 4.2, distance: 11 } }],
+    children: [{ feetPosition: { x: 0, y: -0.35, z: 0 }, light: { kind: "point", color: "#ffe1bd", intensity: 7, distance: 14 } }],
   }));
   edges(ctx);
 }
@@ -240,11 +240,51 @@ function party(ctx) {
   });
 }
 
+// the mezzanine (Shelly Nov 12: a second floor): a slab along the west wall at ZONES.mezz.y, glass rail, one stair by the cinema, a skate lounge under it
+function mezzanine(ctx) {
+  const M = ZONES.mezz, S = ZONES.stair, Y = M.y, mw = M.x1 - M.x0, md = M.z1 - M.z0, mx = (M.x0 + M.x1) / 2;
+  ctx.spawn("l31-mz-slab", { feetPosition: { x: mx, y: Y - 0.3, z: 0 }, primitive: box(mw, 0.3, md), material: CARPET, physics: "static", receiveShadow: true, castShadow: false,
+    children: [{ id: "under", feetPosition: { x: 0, y: -0.01, z: 0 }, primitive: box(mw - 0.05, 0.01, md - 0.05), material: CEIL, castShadow: false }] });
+  ctx.spawn("l31-mz-fascia", { feetPosition: { x: M.x1 - 0.05, y: Y - 0.55, z: 0 }, primitive: rbox(0.14, 0.6, md, 0.03), material: { color: "#1d7b80", roughness: 0.5 }, castShadow: false,
+    children: [{ id: "stripe", feetPosition: { x: 0.075, y: 0.22, z: 0 }, primitive: box(0.01, 0.07, md), material: glow("#ff5fae", 1.4), castShadow: false }] });
+  // columns: chrome tubes on the slab's edge
+  for (const z of [-26, -10, 6, 22]) ctx.spawn(`l31-mz-col${z}`, { feetPosition: { x: M.x1 - 0.4, y: 0, z }, primitive: { kind: "cylinder", radiusTop: 0.16, radiusBottom: 0.16, height: Y - 0.3, radialSegments: 24 }, material: { color: "#d7dbe2", metalness: 0.9, roughness: 0.2 }, physics: { body: "static", collider: "cylinder" } });
+  // glass rail: tempered panels under a chrome handrail; a gap where the stair lands
+  const rail = (id, x, z0, z1, alongX = false) => { const L = Math.abs(z1 - z0), c = (z0 + z1) / 2;
+    ctx.spawn(`l31-mz-rail-${id}`, { feetPosition: alongX ? { x: c, y: Y, z: x } : { x, y: Y, z: c }, rotation: { yaw: alongX ? 90 : 0 }, primitive: box(0.04, 1.0, L), material: { color: "#bfe6ea", opacity: 0.28, transparent: true, roughness: 0.05, metalness: 0.1 }, physics: "static", castShadow: false,
+      children: [{ id: "top", feetPosition: { x: 0, y: 1.0, z: 0 }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.035, radiusBottom: 0.035, height: L, radialSegments: 12 }, material: { color: "#e6e9ee", metalness: 0.95, roughness: 0.15 }, castShadow: false }] }); };
+  rail("a", M.x1 - 0.1, M.z0, S.landZ); rail("b", M.x1 - 0.1, S.zTop, M.z1);
+  // the stair: carpeted treads with chrome nosing over one smooth ramp the body walks
+  const run = Math.abs(S.zTop - S.zBottom), n = 16, rise = Y / n, tread = run / n, sx = (S.x0 + S.x1) / 2, sw = S.x1 - S.x0, dir = Math.sign(S.zTop - S.zBottom);
+  const steps = [];
+  for (let i = 0; i < n; i++) steps.push({ id: "t" + i, feetPosition: { x: 0, y: i * rise, z: dir * (i + 0.5) * tread }, primitive: box(sw, rise, tread + 0.01), material: CARPET, castShadow: false },
+    { id: "n" + i, feetPosition: { x: 0, y: (i + 1) * rise - 0.03, z: dir * ((i + 1) * tread - 0.02) }, primitive: rbox(sw, 0.03, 0.05, 0.012), material: { color: "#d7dbe2", metalness: 0.9, roughness: 0.25 }, castShadow: false });
+  ctx.spawn("l31-mz-stair", { feetPosition: { x: sx, y: 0, z: S.zBottom }, children: steps });
+  const len = Math.hypot(run, Y), ang = Math.atan2(Y, run) * 180 / Math.PI;
+  ctx.spawn("l31-mz-ramp", { feetPosition: { x: sx, y: Y / 2 - 0.06, z: (S.zBottom + S.zTop) / 2 }, pivot: "center", rotation: { pitch: ang * -dir, yaw: 0 }, primitive: box(sw, 0.1, len), render: false, physics: "static" });
+  ctx.spawn("l31-mz-landing", { feetPosition: { x: sx, y: Y - 0.3, z: (S.zTop + S.landZ) / 2 }, primitive: box(sw, 0.3, Math.abs(S.landZ - S.zTop)), material: CARPET, physics: "static", castShadow: false });
+  // stair sides: teal stringer and rail on the open east side, landing rail on the north
+  const sl = Math.hypot(run, Y);
+  ctx.spawn("l31-mz-stringer", { feetPosition: { x: S.x1 + 0.05, y: Y / 2 + 0.1, z: (S.zBottom + S.zTop) / 2 }, pivot: "center", rotation: { pitch: ang * -dir }, primitive: rbox(0.1, 0.45, sl, 0.03), material: { color: "#1d7b80", roughness: 0.5 }, physics: "static", castShadow: false,
+    children: [{ id: "glass", feetPosition: { x: 0, y: 0.2, z: 0 }, primitive: box(0.03, 0.95, sl), material: { color: "#bfe6ea", opacity: 0.28, transparent: true, roughness: 0.05 }, castShadow: false },
+      { id: "hand", feetPosition: { x: 0, y: 1.15, z: 0 }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.035, radiusBottom: 0.035, height: sl, radialSegments: 12 }, material: { color: "#e6e9ee", metalness: 0.95, roughness: 0.15 }, castShadow: false }] });
+  rail("land-e", S.x1 + 0.05, S.zTop, S.landZ); rail("land-n", S.landZ - 0.05, S.x0 - 0.1, S.x1 + 0.1, true);
+  // upstairs lighting along the walkway; downlights under the slab
+  for (const z of [-24, -15, 15, 24]) ctx.spawn(`l31-mz-up${z}`, { feetPosition: { x: -31, y: H - 0.1, z }, ...P({ kind: "can" }), castShadow: false, children: [{ feetPosition: { x: 0, y: -0.35, z: 0 }, light: { kind: "point", color: "#ffe1bd", intensity: 3.5, distance: 9 } }] });
+  for (const [x, z] of [[-34, -22], [-34, -6], [-34, 6], [-34, 20], [-28, -22], [-28, 0], [-28, 20]]) ctx.spawn(`l31-mz-dl${x}${z}`, { feetPosition: { x, y: Y - 0.33, z }, primitive: { kind: "cylinder", radiusTop: 0.2, radiusBottom: 0.2, height: 0.02, radialSegments: 20 }, material: glow("#ffe7c4", 1.2), castShadow: false,
+    children: [{ feetPosition: { x: 0, y: -0.3, z: 0 }, light: { kind: "point", color: "#ffdcb0", intensity: 2.6, distance: 8 } }] });
+  // the lounge under the slab, where Dottie's used to stand: lacing benches back to back, a rug, a sign pointing upstairs
+  ctx.spawn("l31-mz-rug", { feetPosition: { x: -34.5, y: 0.012, z: 0 }, primitive: box(9, 0.012, 16), material: { texture: "cdn/texture-black-arcade-carpet-neon-confetti-squiggles.png", wrap: "repeat", repeat: [0.5, 0.5], color: "#b8b0c8", roughness: 0.95 }, castShadow: false });
+  for (const [i, [x, z, yaw]] of [[-37, -5, 90], [-37, 5, 90], [-32, -5, -90], [-32, 5, -90]].entries()) ctx.spawn(`l31-mz-bench${i}`, { feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: TRIPO.bench }, layout: { box: { min: { x: -1.6, y: 0, z: -0.3 }, max: { x: 1.6, y: 0.5, z: 0.3 } } }, physics: "static", tags: ["seat"], state: { name: "Lacing bench" } });
+  ctx.spawn("l31-mz-sign", { feetPosition: { x: -24.85, y: 2.6, z: -10.6 }, rotation: { yaw: -90 }, castShadow: false,
+    vector: `<svg viewBox='0 0 260 70' width='1.6m'><rect width='260' height='70' rx='10' fill='#14070c' stroke='#ff5fae' stroke-width='3'/><text x='112' y='45' text-anchor='middle' font-family='display' font-size='26' fill='#ffd23a' filter='drop-shadow(0 0 3 #ff8a1e)'>DOTTIE'S UP</text><path d='M214 50 L232 22 L250 50 Z' fill='#5ff0ff' filter='drop-shadow(0 0 3 #5ff0ff)'/></svg>` });
+}
+
 export function tick(ctx) {
   const s = ctx.place.state;
   if (s.v31 === V) return;
   for (const id of Object.keys(ctx.place.objects)) if (id.startsWith("l31-") && !id.includes("/")) ctx.destroy(id);
-  shell(ctx); rink(ctx); starburst(ctx); doors(ctx); cinema(ctx); djBooth(ctx); party(ctx);
+  shell(ctx); rink(ctx); starburst(ctx); doors(ctx); cinema(ctx); djBooth(ctx); party(ctx); mezzanine(ctx);
   layParts(ctx);
   s.v31 = V;
 }

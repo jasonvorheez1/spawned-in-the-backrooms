@@ -1,5 +1,5 @@
 // Level 31 "The Roller Rink": the one map every file builds to. Metres; +x east, +z south; floor y = 0; ceiling H.
-export const H = 5, T = 0.3;
+export const H = 8, T = 0.3; // Shelly Nov 12: a second floor; ceiling raised from 5 to 8 for the mezzanine
 export const B = { x0: -42, x1: 42, z0: -30, z1: 30 }; // the building
 export const RINK = { cx: 0, cz: 0, half: 10, r: 12, rail: 12.3 }; // a stadium: a 20 m straight with a 12 m radius end each side
 export const ZONES = { // dressed by their own files; each is open to the carpet aisle round the rink
@@ -9,6 +9,8 @@ export const ZONES = { // dressed by their own files; each is open to the carpet
   rental: { x0: 2, x1: 24, z0: 21, z1: 30 },
   shop: { x0: -42, x1: -28, z0: -12, z1: 12 },
   cinema: { x0: -12, x1: 12, z0: -30, z1: -19 },
+  mezz: { x0: -42, x1: -25, z0: -30, z1: 30, y: 4 }, // the upper floor along the west wall; Dottie's sits on it
+  stair: { x0: -24.9, x1: -22.9, zBottom: -11, zTop: -17.7, landZ: -19.7 },
   dj: { x0: -9, x1: -3, z0: 14.5, z1: 18 },
 };
 export const ARRIVE = { x: -30, y: 0.1, z: 27 }; // just inside the plywood door (south wall, west end)

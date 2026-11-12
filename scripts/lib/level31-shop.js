@@ -17,21 +17,22 @@ const E = -90, W = 90, N = 0, S = 180; // yaw that turns a prop's front to face 
 const WX = -41.8, NZ = -11.8, SZ = 11.8; // inner faces of the shop's wall linings
 const CREAM = "oklch(0.8 0.05 75)", TEAL = "oklch(0.52 0.09 200)";
 export function layShop(ctx) {
-  const sp = (id, spec) => ctx.spawn("l31-shop-" + id, spec);
+  const UP = 4; // the shop stands on the mezzanine (ZONES.mezz.y)
+  const sp = (id, spec) => ctx.spawn("l31-shop-" + id, { ...spec, feetPosition: { ...spec.feetPosition, y: (spec.feetPosition?.y ?? 0) + UP } });
   const wall = (id, x, y, z, w, h, d, color) => sp(id, { feetPosition: { x, y, z }, primitive: { kind: "box", width: w, height: h, depth: d }, material: color === CREAM ? { texture: "cdn/texture-painted-cinder-block-wall-cream.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.9 0.03 75)", roughness: 0.9 } : { color, roughness: 0.85 }, physics: "static" });
   const prop = (id, m, x, y, z, yaw, solid = true, extra = {}) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: { id: M[m], forward: "+z" }, ...(solid ? { physics: { body: "static", collider: "box" } } : {}), ...extra });
   // the blueprint's spot becomes the shop's vinyl floor
   sp("bp", { feetPosition: { x: -35, y: 0, z: 0 }, primitive: { kind: "box", width: 13.7, height: 0.012, depth: 23.7 }, material: { texture: "cdn/texture-speckled-vct-vinyl-floor-tile-warm-grey.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.86 0.02 60)", roughness: 0.55 } });
   // linings on the three walls, teal wainscot under cream
-  wall("wall-w", -41.9, 0, 0, 0.2, 5, 24, CREAM); wall("wall-n", -35, 0, -11.9, 13.6, 5, 0.2, CREAM); wall("wall-s", -35, 0, 11.9, 13.6, 5, 0.2, CREAM);
+  wall("wall-w", -41.9, 0, 0, 0.2, 4, 24, CREAM); wall("wall-n", -35, 0, -11.9, 13.6, 4, 0.2, CREAM); wall("wall-s", -35, 0, 11.9, 13.6, 4, 0.2, CREAM);
   wall("base-n", -35, 0, -11.79, 13.6, 0.9, 0.03, TEAL); wall("base-s", -35, 0, 11.79, 13.6, 0.9, 0.03, TEAL);
   // shopfront: two stubs and a header over a 14 m opening
   // shopfront stubs: four Tripo teal-and-chrome memphis pilasters each (file 0.29 x 1 x 0.48 m), a hidden box per stub for collision
   for (const [k, z0] of [["n", -9.5], ["s", 9.5]]) {
-    sp("front-" + k, { feetPosition: { x: -28.125, y: 0, z: z0 }, primitive: { kind: "box", width: 0.25, height: 3.2, depth: 5 }, render: false, physics: "static",
-      children: [0, 1, 2, 3].map((i) => ({ id: "p" + i, feetPosition: { x: 0, y: 0, z: (i - 1.5) * 1.25 }, model: "/cdn/value.8faca840ae55cd7013f7d9933f73bf8da283dabe7217ff98753b8c4752aeb954.glb", scale: { x: 1.05, y: 3.2, z: 2.6 } })) });
-  } wall("header", -28.125, 3.2, 0, 0.25, 1.8, 24, "oklch(0.3 0.05 200)");
-  prop("neon", "neon", -27.96, 3.35, 0, E, false);
+    sp("front-" + k, { feetPosition: { x: -28.125, y: 0, z: z0 }, primitive: { kind: "box", width: 0.25, height: 2.8, depth: 5 }, render: false, physics: "static",
+      children: [0, 1, 2, 3].map((i) => ({ id: "p" + i, feetPosition: { x: 0, y: 0, z: (i - 1.5) * 1.25 }, model: "/cdn/value.8faca840ae55cd7013f7d9933f73bf8da283dabe7217ff98753b8c4752aeb954.glb", scale: { x: 1.05, y: 2.8, z: 2.6 } })) });
+  } wall("header", -28.125, 2.8, 0, 0.25, 1.2, 24, "oklch(0.3 0.05 200)");
+  prop("neon", "neon", -27.96, 2.9, 0, E, false);
   // west wall: slatwall behind the counter, tees to the north, plush and CDs to the south
   prop("slat-a", "slatA", WX + 0.094, 0, -1.55, E, false); prop("slat-b", "slatB", WX + 0.094, 0, 1.55, E, false);
   prop("tees-w", "tees", WX + 0.049, 0.85, -7, E, false); prop("tees-n", "tees", -36, 0.85, NZ + 0.049, S, false);
@@ -48,7 +49,7 @@ export function layShop(ctx) {
   // light: warm over the counter, pink north, cyan south, a pink wash under the sign
   const lamp = (id, x, y, z, color, intensity, distance) => sp(id, { feetPosition: { x, y, z }, light: { kind: "point", color, intensity, distance } });
   lamp("light-counter", -37, 3.4, 0, "oklch(0.92 0.07 80)", 1.4, 12); lamp("light-mid", -33, 3.4, 0, "oklch(0.9 0.06 80)", 0.9, 10); lamp("light-n", -36, 3.2, -8, "oklch(0.8 0.13 350)", 1, 10);
-  lamp("light-s", -36, 3.2, 8, "oklch(0.85 0.1 210)", 1, 10); lamp("light-sign", -26.6, 3.6, 0, "oklch(0.75 0.2 350)", 0.7, 7);
+  lamp("light-s", -36, 3.2, 8, "oklch(0.85 0.1 210)", 1, 10); lamp("light-sign", -26.6, 3.4, 0, "oklch(0.75 0.2 350)", 0.7, 7);
   // Dottie, a faceling, behind the counter
   sp("keeper", {
     tags: ["npc", "faceling"], feetPosition: { x: -39.5, y: 0, z: -0.1 }, rotation: { yaw: E }, physics: "character",
