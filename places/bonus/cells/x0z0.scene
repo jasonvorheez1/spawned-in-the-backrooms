@@ -1550,7 +1550,7 @@ bm-shell:
   castShadow: false
   feetPosition: {x: 0, y: -0.4, z: 0}
   id: bm-shell
-  model: {id: /cdn/value.3aa893f298b84baeb2f37a68486d08c12bb05ec9bd9c96958e7f46128a726d7f.glb}
+  model: {id: /cdn/value.3aa893f298b84baeb2f37a68486d08c12bb05ec9bd9c96958e7f46128a726d7f.glb, materials: {ceiling: {color: "#f4eef4", roughness: 0.95, texture: cdn/texture-white-acoustic-ceiling-tile-fissured-mineral-fiber.png}, chrome: {color: "#dfe3ec", metalness: 1, roughness: 0.12}, fascia: {color: "#ecc9ec", roughness: 0.5, texture: cdn/texture-smooth-off-white-painted-drywall-faint-roller-stipple.png}, plaster: {color: "#f6f0f2", roughness: 0.82, texture: cdn/texture-smooth-off-white-painted-drywall-faint-roller-stipple.png}, steel: {color: "#8a90a0", metalness: 0.85, roughness: 0.32}}}
   physics: {body: static, collider: mesh}
   receiveShadow: true
   state: {floor: terrazzo polished mall floor}
@@ -2369,6 +2369,7 @@ plat-clock:
   layout: {box: {max: {x: 0.8, y: 0.8, z: 0.2}, min: {x: -0.8, y: 0, z: -0.2}}}
   model: /cdn/value.eed845973f6885a5024ccc26e2008daef32ae1ac7c5957e6db73fa3ae1b73469.glb
   rotation: {yaw: 90}
+  scale: 1.8
   tags: [bonus-platform]
 plat-clock-rod:
   feetPosition: {x: -16, y: 9.05, z: -6.5}
