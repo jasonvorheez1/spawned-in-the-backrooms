@@ -525,14 +525,14 @@ bc-juicebar:
   rotation: {yaw: 90}
   tags: [bonus-court]
 bc-juicebar/signboard:
-  feetPosition: {x: 0, y: 1.93, z: 0.14}
+  feetPosition: {x: 0, y: 1.93, z: -0.16}
   id: bc-juicebar/signboard
   material: {color: oklch(0.97 0.02 350), roughness: 0.5}
   parent: bc-juicebar
   primitive: {depth: 0.08, height: 0.58, kind: box, width: 1.56}
 bc-juicebar/signface:
   castShadow: false
-  feetPosition: {x: 0, y: 2.22, z: 0.19}
+  feetPosition: {x: 0, y: 2.22, z: -0.21}
   id: bc-juicebar/signface
   parent: bc-juicebar
   rotation: {yaw: 180}
