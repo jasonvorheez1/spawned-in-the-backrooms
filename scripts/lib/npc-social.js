@@ -1,3 +1,4 @@
+import { voiceKey } from './voices.js'
 // General NPC life, for every scripts/meg-agent.js body in every level: when nothing is happening, people are not statues.
 //   milling   a person with no rounds drifts a few steps from their post now and then, looks round, comes back
 //   small talk two idle neighbours walk up to each other and have a short real exchange (their own temper, want, fear and quirk from lib/npc-life.js, or an ordinary
@@ -35,7 +36,7 @@ const exchangeFor = (a, b) => {
   return TALK[Math.floor(Math.random() * TALK.length)];
 };
 
-const voiceOf = (o) => o.state.voice ?? `${String(o.id).split("/").pop()}#${(o.state?.wear?.sex ?? o.state?.look?.sex) === "f" ? "f" : "m"}`;
+const voiceOf = (o) => voiceKey(o);
 export function say(ctx, o, text, to) {
   const now = ctx.now(), st = o.state, p = o.feetPosition, d = 1500 + text.length * 62;
   st.line = { t: text, at: now, d }; st.talkAt = now; st.talkTo = to ?? null;

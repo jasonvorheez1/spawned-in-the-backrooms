@@ -1,0 +1,349 @@
+# Level 7 (Outpost Seawatch, Fort Surrender) and Level 8 (the 9th Road camp, the Lightless). Written by hand, Nov 11.
+
+l7-vance:
+  hi: "Mind the wet boards. Vance, Seawatch. That screen's the sonar. That big smudge is why nobody swims."
+  back: ["Back on the rock. Good.", "Dry feet? Keep them that way."]
+  warm: "There you are. Kettle's on. Sit, watch the screen with me."
+  cold: "Don't touch the sonar."
+  bye: "Stay out of the water."
+  walk: "Aye."
+  ask:
+    - q: "What's the big smudge?"
+      a: "The Thing. Twenty, if you're M.E.G. It turns under the island every few hours. The little smudge next to it we call Tiny. Tiny is about the size of a bus."
+    - q: "Is it safe to swim?"
+      sk: survival 35
+      a: "Top ten metres, in daylight, if you're quick and you don't splash. Below that the water goes black and cold and you stop being able to tell which way is up."
+      fail: "No."
+    - q: "Sell me some gear?"
+      sk: barter 35
+      do: discount
+      a: "You've got sense. Here, cheaper. Bring me back anything you pull off a wreck."
+      fail: "Diving gear isn't cheap. Neither is drowning."
+    - q: "Ever hear the singing?"
+      a: "From Fort Surrender, across the water? Every night. Don't listen too long. Brother Jude started out listening."
+  barks:
+    idle: ["Ping. Ping. Big one.", "Tiny's restless.", "Kettle."]
+    hi: ["Aye.", "Mind the boards."]
+    drawn: ["Save it for the water."]
+    hurt: ["Medkit's under the bench."]
+    spot: ["Something's on the rocks!", "Contact! Up from the water!"]
+    hostile: ["Wrong rock, friend."]
+    hit: ["Ach! Salt in it!"]
+    kill: ["Back in the sea with you."]
+    clear: ["Quiet. Check the screen."]
+    flee: ["To the hut!"]
+    death: ["Tiny..."]
+  gest: { wave: "Aye, hello.", gift: "That's good of you.", dance: "On wet boards? Go on then.", nodance: "I'll slip.", insult: "I've been cursed at by gulls." }
+
+l7-jude:
+  hi: "Peace. You came across the water. You fought it the whole way, I expect. Rest. Here, we stop fighting."
+  back: ["The water brought you back.", "Peace. You return."]
+  warm: "Sit with me at the edge. Listen. Isn't it beautiful?"
+  cold: "The deep sees your anger."
+  bye: "The tide comes for us all. Gently, I hope."
+  walk: "The water will wait."
+  ask:
+    - q: "What do you believe?"
+      a: "That the sea is a door, and fear is the only thing that keeps it shut. The Daylight zone, the Twilight, the Midnight. We descend. We are welcomed."
+      then:
+        - q: "Welcomed by what?"
+          a: "By it. It turns beneath us. It has never hurt one of us who went to it willingly."
+        - q: "That sounds like drowning."
+          a: "Everything sounds like drowning, at first."
+    - q: "I need rest. Can you help?"
+      do: heal
+      a: "Lie here. Listen to the swell. Breathe when it breathes. There. You were holding your breath for weeks."
+  barks:
+    idle: ["Listen.", "It turns.", "Daylight, Twilight, Midnight."]
+    hi: ["Peace.", "Welcome."]
+    drawn: ["Steel will rust, child."]
+    hurt: ["Pain is a tide. It goes out."]
+    spot: ["Something rises."]
+    hostile: ["The deep will have you."]
+    hit: ["The tide gives, the tide takes."]
+    kill: ["Go down, gently."]
+    flee: ["To the water's edge."]
+    death: ["Down... at last..."]
+  gest: { wave: "Peace.", gift: "An offering. It sees.", dance: "We sway like kelp.", nodance: "Stillness, today.", insult: "The sea has heard worse." }
+
+l7-mara:
+  hi: "Don't mind the preaching, it's mostly Jude. I'm Mara. I keep the still running and the walls tarred. Trading?"
+  back: ["Back. Water's fresh.", "You again. Good."]
+  warm: "Hey. Sit. I'll pour you the clean stuff."
+  cold: "Trade or go."
+  bye: "Don't fall in."
+  walk: "Okay."
+  ask:
+    - q: "You don't believe what Jude believes?"
+      a: "I believe in walls, tar and fresh water. If the Thing wanted us it'd have us. Doesn't mean I go jumping in."
+    - q: "What's for trade?"
+      sk: barter 35
+      do: discount
+      a: "Fair. You're not a believer and you're not a fool. Good price."
+      fail: "Price is the price. Copper's hard to find out here."
+    - q: "How does the still work?"
+      a: "Seawater in, fire under, copper coil, clean drops out the end. Takes all day for a bucket. Every drop's earned."
+  barks:
+    idle: ["More tar.", "Drip, drip.", "Jude, you're blocking the light."]
+    hi: ["Hey.", "Trading?"]
+    drawn: ["Don't scratch the still."]
+    spot: ["Something's climbing the wall!"]
+    hostile: ["You'll swim for that."]
+    hit: ["Ow! Damn it!"]
+    kill: ["Off my wall."]
+    flee: ["Behind the still!"]
+    death: ["The still..."]
+  gest: { wave: "Hey.", gift: "Huh. Thanks.", dance: "One. Then work.", nodance: "Tar's setting.", insult: "Sure." }
+
+l7-ezra:
+  hi: "Who goes. Oh. Just you. I keep the watch. Nothing comes. Something always comes."
+  back: ["You.", "Still nothing. Still something."]
+  warm: "Stand watch with me. It's lonely."
+  cold: "Keep moving."
+  bye: "Eyes on the water."
+  walk: "Mm."
+  ask:
+    - q: "What are you watching for?"
+      a: "Lights under the water. When they come up close to the fort, we light the brazier and sing. Jude says it's welcome. I say it's warning."
+  barks:
+    idle: ["Nothing.", "Something.", "Lights."]
+    hi: ["Who goes.", "Oh. You."]
+    spot: ["Lights! Lights!"]
+    hostile: ["Traitor!"]
+    hit: ["Ah!"]
+    kill: ["Back down."]
+    flee: ["Brazier!"]
+    death: ["Lights..."]
+  gest: { wave: "Mm.", gift: "Thanks.", dance: "On watch.", nodance: "On watch.", insult: "Mm." }
+
+l8-hobb:
+  hi: "Get by the fire. Light off near the dens. Keep it on everywhere else. Two rules. I've got fewer fingers than rules, so listen."
+  back: ["Torch still burning? Good.", "You. Sit. Warm up."]
+  warm: "Sit close. Carla's soup's on. Pay her, she's learning money."
+  cold: "Fire's for the camp."
+  bye: "Torch on. Not near the dens."
+  walk: "Hm."
+  ask:
+    - q: "What are the dens?"
+      a: "Where the Lightless live. People who stayed in the dark too long and decided they liked it. They hate light. They'll sing to you. Don't sing back."
+    - q: "What happened to your fingers?"
+      a: "Tar winch. M.E.G. sapper, ten years. You learn what a cable does when it snaps. You learn it once."
+    - q: "Need help with the camp?"
+      a: "Spiders are getting bold. Talk to me again if you'll gather chitin for the barricade."
+    - q: "Sell me supplies?"
+      sk: barter 30
+      do: discount
+      a: "Fine. You've been decent to the girl. Bit off."
+      fail: "Price is torches and time. No."
+  barks:
+    idle: ["Fire's low.", "Carla, stir the pot.", "One torch is four hours."]
+    hi: ["Sit.", "Get warm."]
+    drawn: ["Not by the fire."]
+    hurt: ["Marit. Now."]
+    spot: ["Spiders! Up!", "Something from the dark!"]
+    hostile: ["Get away from the girl."]
+    hit: ["Hngh! Keep going!"]
+    kill: ["Down."]
+    clear: ["Carla? Carla, you alright?"]
+    flee: ["Protect the girl!"]
+    death: ["Carla..."]
+  gest: { wave: "Mm.", gift: "That's good of you.", dance: "Ha. No.", nodance: "No.", insult: "I've had worse from a winch." }
+
+l8-wen:
+  hi: "Silk, caps, tar-stone. Prices in Backbucks, not feelings. I laid half the lights on Hyperspace Lane, by the way. You're welcome."
+  back: ["Back! Buying?", "My lights get you here alright?"]
+  warm: "Hey, my best customer. Good stuff's under the tarp."
+  cold: "Money, then words."
+  bye: "Follow the blue ones."
+  walk: "Rude."
+  ask:
+    - q: "What's for sale?"
+      a: "Spider silk, strong as wire. Cave caps, glow for a week. Tar-stone, burns slow. All fair. Mostly fair."
+    - q: "Cheaper?"
+      sk: barter 40
+      do: discount
+      a: "Fine. You haggle like you mean it. I respect that. Bit off."
+      fail: "Nope. Not today."
+    - q: "Is the broodmother getting bigger?"
+      a: "The silk's getting thicker and the webs are higher up the walls. Either it's getting bigger or it's getting ideas. Either's bad."
+  barks:
+    idle: ["Silk, caps, stone.", "Who moved my lights?", "Backbucks only."]
+    hi: ["Buying?", "Hey."]
+    drawn: ["Don't scare the customers."]
+    spot: ["Spiders! On the wall!"]
+    hostile: ["Thief!"]
+    hit: ["Ow! Watch the stock!"]
+    kill: ["Good riddance."]
+    flee: ["Grab the silk!"]
+    death: ["My... lights..."]
+  gest: { wave: "Hey.", gift: "Ooh. Thanks.", dance: "Ha! Fine.", nodance: "Busy.", insult: "Add it to your bill." }
+
+l8-ivo:
+  hi: "Oh. H-hello. Harmouth Speleological. Well. Just me now. Are you going down the road? Don't. Alone. Don't go alone."
+  back: ["You came back! Good. That's good data.", "H-hello again."]
+  warm: "Oh, good. Can I show you the map? I fixed the loop."
+  cold: "Oh. Hello."
+  follow: "R-right behind you. Taking notes."
+  bye: "Mark your turns!"
+  walk: "Oh."
+  ask:
+    - q: "Where's the rest of your team?"
+      a: "Dell drowned in the flooding cavern. I have her notebook. The others went on down the road and didn't write back. I'm still writing to them."
+    - q: "Where did the road come from?"
+      a: "That's the thing! Asphalt. Painted lines. Underground. Somebody built it, or something remembers building it. I want to know which. I can't walk it alone."
+    - q: "Come with me. We'll map it together."
+      sk: speech 35
+      do: recruit
+      a: "R-really? Okay. Okay! I'll bring the notebook. Both notebooks."
+      fail: "I. No. Not yet. Sorry."
+  barks:
+    idle: ["Loop at mile four. Hm.", "Dell would know.", "Writing it down."]
+    hi: ["H-hello.", "Oh! Hi."]
+    drawn: ["P-please no."]
+    spot: ["Something! Something on the road!"]
+    hostile: ["Why?"]
+    hit: ["Ah! My notes!"]
+    kill: ["I- did I?"]
+    flee: ["Back to camp!"]
+    death: ["Dell..."]
+  gest: { wave: "Oh! H-hi.", gift: "Thank you. Really.", dance: "I don't, but okay.", nodance: "I'm mapping.", insult: "...Fair." }
+
+l8-marit:
+  hi: "Sit. Let me see the bites. They're always bites. Spider, mostly. Sometimes not."
+  back: ["Bites?", "Hm. Sit."]
+  warm: "You. Good. Sit, I'll do the arm."
+  cold: "Sit. Quick."
+  bye: "Keep the light on."
+  walk: "Hm."
+  ask:
+    - q: "Patch me up?"
+      do: heal
+      a: "Spider. Hold still. Burns. Good, it's supposed to. There. Don't scratch."
+    - q: "Do you know any of the Lightless?"
+      a: "Sister Lull. She was a medic with me. Good hands. She went into the dark to fetch a kid, and came back singing. Now she wants me to put my light out."
+    - q: "How do you sleep down here?"
+      a: "Sitting up. Lamp on. One eye. You get used to it. You don't."
+  barks:
+    idle: ["Bites.", "Lamp's on.", "Lull? No. Nothing."]
+    hi: ["Sit.", "Hm."]
+    hurt: ["Sit. Now."]
+    spot: ["Contact. Behind the fire."]
+    hostile: ["Shouldn't have."]
+    hit: ["Tch."]
+    kill: ["Down."]
+    flee: ["To the light!"]
+    death: ["Lull..."]
+  gest: { wave: "Hm. Hi.", gift: "Thanks.", dance: "No.", nodance: "No.", insult: "Okay." }
+
+l8-carla-kid:
+  hi: "Soup's three Backbucks. Hobb says I have to learn money. I'm not scared of the spiders. Are you?"
+  back: ["You came back! Soup?", "Hi! Three Backbucks."]
+  warm: "You! I saved you the bit with the most bits in it."
+  cold: "Soup's four Backbucks. For you."
+  bye: "Bye! Don't let the singers sing at you!"
+  walk: "Oh. Bye!"
+  ask:
+    - q: "Can I have some soup? I'm worn out."
+      do: heal
+      a: "Here. Blow on it. It's hot. Is it good? It's good. Hobb says it's good. That's three Backbucks, but you can pay later. Hobb says don't say that."
+    - q: "You're not scared of spiders?"
+      a: "No. They're just big bugs. The singing's scary. The singing knows my name. Hobb says it doesn't. It does."
+    - q: "Where's your mum?"
+      a: "Mum's down the road. She's coming back. Hobb says that too."
+  barks:
+    idle: ["Soup! Three Backbucks!", "Stir, stir.", "Not scared."]
+    hi: ["Hi!", "Soup?"]
+    drawn: ["Hobb! Hobb!"]
+    hurt: ["You're bleeding! Marit!"]
+    spot: ["Hobb! Something's coming!"]
+    hostile: ["You're mean!"]
+    hit: ["Ow!"]
+    flee: ["Hobb!"]
+    death: ["Mum?"]
+  gest: { wave: "Hi hi!", gift: "For me? Thank you! I'll keep it forever!", dance: "Yay!", nodance: "I'm stirring!", insult: "That's a bad word." }
+
+# ---- the Lightless (hostile; they don't talk with you, they sing at you)
+l8x-choir-1:
+  hi: "Light! Light in the house of the dark! Put it out, put it out, and sing."
+  bye: "Go and come back without it."
+  ask: []
+  barks:
+    idle: ["Out, out, brief candle...", "Hold no light, hold no light...", "Mmmmmm."]
+    hi: ["Light-bearer...", "Put it out."]
+    spot: ["Light! There is a light!", "Sing it out!"]
+    hostile: ["Put it OUT!"]
+    hit: ["The light burns!"]
+    kill: ["Dark again. Dark."]
+    flee: ["Into the deep dark!"]
+    death: ["Finally... dark..."]
+  gest: { wave: "Wave in the dark, and nobody sees.", gift: "Is it a light? Break it.", dance: "Dance blind!", nodance: "No.", insult: "Sing louder." }
+l8x-choir-2:
+  hi: "Oh. Hello, little one. That light must be heavy. Wouldn't it be easier to put it down? Stay. Stay with us."
+  bye: "Come back without the light, little one."
+  ask: []
+  barks:
+    idle: ["Hush now...", "Stay, little one...", "Marit? Is that you?"]
+    hi: ["Hello, little one.", "Put it down."]
+    spot: ["There's a little light. Shh."]
+    hostile: ["Shh, shh. It won't hurt. For long."]
+    hit: ["Ow. Naughty."]
+    kill: ["Sleep now."]
+    flee: ["Back to the hush."]
+    death: ["Marit... the light..."]
+  gest: { wave: "Hello, little one.", gift: "For me? Put out the light instead.", dance: "Sway with me.", nodance: "Shh.", insult: "Hush." }
+l8x-choir-3:
+  hi: "...Light."
+  bye: "...Go."
+  ask: []
+  barks:
+    idle: ["...", "...Dark.", "...Hm."]
+    hi: ["...Light."]
+    spot: ["...There."]
+    hostile: ["...Out."]
+    hit: ["..."]
+    kill: ["...Dark."]
+    flee: ["..."]
+    death: ["..."]
+  gest: { wave: "...", gift: "...", dance: "...", nodance: "...", insult: "..." }
+l8x-tar-1:
+  hi: "Eyes. You still use eyes. Look at mine. Black. Don't need 'em. Drink from the pit and you won't either."
+  bye: "Come back thirsty."
+  ask: []
+  barks:
+    idle: ["Drink.", "Black teeth, clear mind.", "Hah."]
+    hi: ["Eyes.", "Thirsty?"]
+    spot: ["Fresh one!"]
+    hostile: ["I'll drown you in it!"]
+    hit: ["Ha! More!"]
+    kill: ["In the pit."]
+    flee: ["Into the tar!"]
+    death: ["Black..."]
+  gest: { wave: "Hah.", gift: "Pour it in the pit.", dance: "Hah. Swim.", nodance: "No.", insult: "Say it closer." }
+l8x-tar-2:
+  hi: "Shh! Don't step there! That's my sister! In the tar! You see her hand? You see it? Don't touch her!"
+  bye: "Don't tell them I talked to you!"
+  ask: []
+  barks:
+    idle: ["Sister? Sister?", "Hee hee hee.", "They're watching. They're always watching."]
+    hi: ["Who's that? WHO'S THAT?", "Hee."]
+    spot: ["Intruder! On the hands!"]
+    hostile: ["Get off my family!"]
+    hit: ["They'll get you for that!"]
+    kill: ["Hee hee. Join them."]
+    flee: ["The hands! The hands!"]
+    death: ["Coming... sister..."]
+  gest: { wave: "Don't wave! They see!", gift: "Is it for my sister?", dance: "Hee hee!", nodance: "No!", insult: "Hee. They heard." }
+l8x-tar-3:
+  hi: "Ha! Look at it. Look at its little light. Blackjaw, look. Can I? Can I?"
+  bye: "Run along."
+  ask: []
+  barks:
+    idle: ["Can I? Can I?", "Ha.", "Blackjaw says."]
+    hi: ["Ha! Look!", "Little light."]
+    spot: ["Ooh! Mine!"]
+    hostile: ["Gonna get you!"]
+    hit: ["Ow! Blackjaw!"]
+    kill: ["Ha! Mine!"]
+    flee: ["Blackjaw!"]
+    death: ["Blackjaw..."]
+  gest: { wave: "Ha.", gift: "Mine!", dance: "Ha ha!", nodance: "No.", insult: "Ha! You!" }

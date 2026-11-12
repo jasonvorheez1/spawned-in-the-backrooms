@@ -1,3 +1,4 @@
+import { vo } from "./lib/voices.js";
 // Level 6.1 "The Snackrooms" - Diner & Food Court interactions
 import { heard } from "./lib/hear.js";
 import {
@@ -12,12 +13,12 @@ import {
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const VO = (who, line) => `/cdn/voice-${who}-saying-${encodeURIComponent(line)}.mp3`;
 
-const SAL_LINES = [
-  "Welcome to The Snackrooms, friend! Grab a stool and rest your feet.",
-  "Help yourself to whatever's in the coolers or under the domes. It restocks every morning.",
-  "If you came from Level 6, take a minute to breathe. The dark can't reach you in here.",
-  "Jukebox in the corner still works. Hit it if you want a different record.",
-  "Watch that steel service door by the west wall. That's a one-way ticket right back into the dark.",
+const SAL_LINES = [ // Sal's own (scripts/lib/data/dlg-levels-10-11.yml has the rest of him)
+  "Hey hey! Grab a stool. Grill's hot.",
+  "Coolers, domes, help yourself. It all comes back by morning. Don't ask me how.",
+  "Came up out of Six? Sit down. Breathe. Nothing in the dark gets past that door.",
+  "Jukebox works. Kick it if it skips. Everybody kicks it.",
+  "That steel door by the west wall? Don't. That's the dark, and it's one way.",
 ];
 
 export const ears = {
@@ -91,7 +92,7 @@ export const ears = {
     if (s.kind === "sal") {
       s.lineIdx = ((s.lineIdx ?? -1) + 1) % SAL_LINES.length;
       const line = SAL_LINES[s.lineIdx];
-      heard(ctx, { clip: VO("reyes", line), position: { x: pos.x, y: pos.y + 1.6, z: pos.z }, volume: 0.9, maxDistance: 16 });
+      heard(ctx, { clip: vo("l61-sal", line), position: { x: pos.x, y: pos.y + 1.6, z: pos.z }, volume: 0.9, maxDistance: 16 });
 
       // Sal welcomes with plate presentation or 80s head bob
       ctx.self.anim.gest = {

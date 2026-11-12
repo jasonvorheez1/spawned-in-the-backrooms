@@ -1,4 +1,4 @@
-import { vo } from "./voices.js";
+import { vo, hasVoice } from "./voices.js";
 // Camp chatter director: called from a place's sim tick. When a player stands near the camp, two or three
 // NPCs run one exchange from chatter.yml, a line at a time: the speaker's state.line carries the words
 // (ui.js floats them over its head), state.talkAt/talkTo start the talk gesture and turn them to the listener.
@@ -38,6 +38,6 @@ function say(ctx, o, ex, i, voices) {
   o.state.line = { t: line, at: now, d: dur(line) };
   o.state.talkAt = now; o.state.talkTo = to;
   const p = o.feetPosition;
-  heard(ctx, { clip: VO(voices[who], line), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 0.8, refDistance: 3, maxDistance: 18 }, { audience: { nearby: p, radius: 20 } });
+  heard(ctx, { clip: VO(hasVoice(who) ? who : voices[who], line), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 0.8, refDistance: 3, maxDistance: 18 }, { audience: { nearby: p, radius: 20 } });
 }
 export const CHATTER = C;

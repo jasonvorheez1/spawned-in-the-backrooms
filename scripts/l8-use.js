@@ -1,3 +1,4 @@
+import { voiceKey } from "./lib/voices.js";
 // Level 8 "Cave Systems": what you press and walk into (places/level8/sim.js). state.kind:
 //   pool (almond water, drink), soup and fire (the camp), kazoo (a stone kazoo in a niche on Hyperspace Lane), altar (acoustic stone pipes on Hyperspace Lane),
 //   dredge (B.N.T.G. tar dredge winch over the boiling tar pool), radio (Harmouth field transceiver at camp), carla (a girl at the camp: give her the kazoo),
@@ -9,9 +10,9 @@ import { addRep, repOf } from "./lib/rep.js";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const say = (who, text, ctx) => { if (who?.state) who.state.notice = { text, at: ctx.now() }; };
 const CARLA = [
-  "Hey! You're new here. What's your name?",
-  "Mum says the lights down the Road are the friendly ones. The red ones aren't.",
-  "Do you like soup? It's always soup."
+  "Hi! You're new. Soup's three Backbucks.",
+  "Mum says the blue lights down the Road are friendly. Not the red ones.",
+  "It's always soup. I don't mind. Do you mind?"
 ];
 const RADIO_LOGS = [
   "HARMOUTH LOG #14: \"Do not trust the crawl past Marker #78 on your first pass. The karst loops back on itself until you've seen the Face Rock twice.\"",
@@ -35,7 +36,7 @@ export const ears = {
     if (s.kind === "soup") { // the cook's pot: a bowl is bought, $3 (her pick), and handed over to eat (E) or throw (Z)
       const PRICE = 300, cook = ctx.query({ tags: ["npc"], center: pos, radius: 7 }).find((o) => !o.state?.dead && (o.state?.hp ?? 1) > 0);
       const cn = cook?.state?.name ?? cook?.state?.displayName ?? "The cook";
-      const cv = cook?.state?.voice ?? "dolores";
+      const cv = cook ? voiceKey(cook) : "l8-carla-kid";
       if (!cook) return say(who, "Nobody is minding the pot.", ctx);
       if (now - (cool[uid] ?? -1e9) < 20000) {
         const line = "One at a time. Eat what you've got.";
@@ -188,13 +189,13 @@ export const ears = {
           rep: [["survivors", 8], ["karma", 4]],
           text: "Quest Completed: Carla's Melody · +90 XP, +$30.00, +35 Sanity, Almond Water, Clean Bandage",
         });
-        const line = "A kazoo! Listen to this! Thank you! Mum, look what I got!";
-        heard(ctx, { clip: vo("penny", line), position: pos, volume: 1.0, maxDistance: 14 });
+        const line = "A KAZOO. Listen! Mum, look!";
+        heard(ctx, { clip: vo("l8-carla-kid", line), position: pos, volume: 1.0, maxDistance: 14 });
         return;
       }
       const n = (s.said ??= {})[uid] = ((s.said ?? {})[uid] ?? -1) + 1;
       const line = CARLA[n % CARLA.length];
-      heard(ctx, { clip: vo("penny", line), position: pos, volume: 1.0, maxDistance: 14 });
+      heard(ctx, { clip: vo("l8-carla-kid", line), position: pos, volume: 1.0, maxDistance: 14 });
       return say(who, `Carla: "${line}"${w.kazooGiven ? " (She hums into the stone kazoo.)" : ""}`, ctx);
     }
   },

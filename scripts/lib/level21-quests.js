@@ -132,12 +132,12 @@ export function handleDialogueQuest21(ctx, p, npc, text) {
     // 1a. Start Saltine Quota / Condenser Repair quest
     if (t.includes("condenser") || t.includes("copper wire") || t.includes("errand board") || t.includes("help with supplies")) {
       if (!s.saltineQ) {
-        if (repOf(s, "survivors") <= -35) return { reply: "We have strict rules in Refrigerator Paradise. Enemies of the camp do not get near our food stores.", mood: "angry" };
+        if (repOf(s, "survivors") <= -35) return { reply: "Rules. Enemies of the camp don't go near the food.", mood: "angry" };
         const items = String(s.items ?? "").split(",").filter(Boolean);
         const wireCount = items.filter((x) => x === "wire" || x === "copper").length + (s.scrap?.wire ?? 0);
         setSaltineStep(ctx, p, wireCount >= 3 ? 3 : 2, "Quest Started: The Saltine Quota · Search the Exploration Wing for 3 Copper Wire coils");
         return {
-          reply: "The copper coil on our third freezer bank is weeping refrigerant. If the coil freezes over, we lose forty sleeves of crackers to damp rot. Search the toolboxes and supply lockers down in the Exploration Wing for three coils of clean copper wire. Bring them to my workbench and I'll pay you from our emergency scrip reserve.",
+          reply: "Third freezer bank's weeping coolant. Coil freezes over, we lose forty sleeves to damp. Three coils of clean copper wire, from the toolboxes in the Exploration Wing. Bring them to my bench.",
           mood: "calm",
         };
       }
@@ -149,7 +149,7 @@ export function handleDialogueQuest21(ctx, p, npc, text) {
         if (pos) heard(ctx, { clip: c.ok ? CHIME : FAIL, position: pos, volume: 0.5, maxDistance: 16 }, { audience: { player: p.id } });
         if (!c.ok) {
           s.nedRepFailed = true;
-          return { reply: "Careful with that torch! You almost nicked the pressure seal. Better bring me the three copper wire coils instead.", mood: "annoyed" };
+          return { reply: "Whoa, easy with the torch, you nearly cracked the seal. Just bring me the wire.", mood: "annoyed" };
         }
         finishQuest21(ctx, p, "saltine", {
           xp: 130,
@@ -160,7 +160,7 @@ export function handleDialogueQuest21(ctx, p, npc, text) {
           text: "Quest Completed: The Saltine Quota · Soldered the condenser bypass directly (+130 XP, +$55.00)",
         });
         return {
-          reply: "Look at that clean bead! You flared the tubing and bypassed the weep valve without wasting a single ounce of freon. That saved us hours of scrounging. Take fifty-five Backdollars, two sleeves of Saltines, coil water, and a spare toolkit with my personal thanks!",
+          reply: "Look at that bead. Clean. You bypassed the weep valve and didn't lose a drop. Fifty-five, two sleeves of saltines, coil water, my spare toolkit. And thanks. Really.",
           mood: "happy",
         };
       }
@@ -191,7 +191,7 @@ export function handleDialogueQuest21(ctx, p, npc, text) {
           text: "Quest Completed: The Saltine Quota · +110 XP, +$50.00, 2 Saltine Cartons, 2 Cold Coil Waters",
         });
         return {
-          reply: "That is clean electrical grade copper. I will have this soldered to the bypass line in twenty minutes. Here is fifty Backdollars, two full sleeves of crisp Saltines, and fresh cold water from the condenser jug. You have got a standing credit in Refrigerator Paradise, wanderer.",
+          reply: "That's good copper. Twenty minutes with the iron and we're dry. Fifty, two sleeves, cold water. You've got credit here now. In saltines.",
           mood: "happy",
         };
       } else if (s.saltineQ >= 1 && s.saltineQ < 99 && totalWire < 3) {
@@ -208,10 +208,10 @@ export function handleDialogueQuest21(ctx, p, npc, text) {
     // 2a. Start Edges Sentry quest
     if (t.includes("edges sentry") || t.includes("the edges perimeter") || t.includes("secure the dark corridor") || t.includes("patrol the hallway")) {
       if (!s.edgesQ) {
-        if (repOf(s, "meg") <= -35) return { reply: "M.E.G. protocol forbids cooperating with hostiles. Back away from the doorway.", mood: "angry" };
+        if (repOf(s, "meg") <= -35) return { reply: "I don't work with hostiles. Back off the door.", mood: "angry" };
         setEdgesStep(ctx, p, s.l21Scouted ? 3 : 2, "Quest Started: The Edges Sentry · Scout the perimeter toward The Edges");
         return {
-          reply: "The fluorescent tubes in the corridor leading toward The Edges blew out yesterday. We logged three Smilers lingering past the perimeter line. Patrol down to the sign for The Edges, confirm the breaker voltage is holding, and make sure nothing is crawling toward our door. Keep your weapon ready and your light focused.",
+          reply: "Tubes blew out in the corridor to the Edges yesterday. Three Smilers hanging past the line. Walk down to the Edges sign, check the breaker's holding, make sure nothing's crawling this way. Light steady.",
           mood: "calm",
         };
       }
@@ -228,12 +228,12 @@ export function handleDialogueQuest21(ctx, p, npc, text) {
           text: "Quest Completed: The Edges Sentry · +140 XP, +$70.00, Ammo Crate, First Aid Kit",
         });
         return {
-          reply: "Good shooting and sharp eyes. With that corridor secured, Ned and I can keep the freezers humming without watching our backs every five seconds. Here is seventy Backdollars and reserve ammo from Base Alef stock. Keep that barrel clean, agent.",
+          reply: "Good. With that corridor quiet, Ned and I can sleep in shifts again. Seventy and a box of rounds from Alef stock.",
           mood: "happy",
         };
       } else if (s.edgesQ >= 1 && s.edgesQ < 99 && !s.l21Scouted) {
         return {
-          reply: "You haven't reached the dark threshold past John Banks's blast site yet. Push deeper down The Edges, confirm the perimeter, and come back in one piece.",
+          reply: "You haven't reached the dark past the blast site yet. Further down the Edges. Then come back. In one piece.",
           mood: "calm",
         };
       }

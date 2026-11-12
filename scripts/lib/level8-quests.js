@@ -149,7 +149,7 @@ export function handleDialogueQuest8(ctx, p, npc, text) {
       if (!s.carlaQ) {
         setCarlaStep(ctx, p, s.kazoo ? 3 : 2, "Quest Started: Carla's Melody · Search for the Stone Kazoo on Hyperspace Lane");
         return {
-          reply: "I used to have a tin whistle before the water flooded our camp. Mum says there is an old carved stone kazoo tucked into a flowstone niche on Hyperspace Lane. If you find it, can I have it? I'll trade you my clean bandage and cold water!",
+          reply: "I had a tin whistle before the water came. Mum says there's a stone kazoo in a flowstone niche on Hyperspace Lane. Somebody carved it. If you find it, can I have it? I'll give you my good bandage. And cold water.",
           mood: "happy",
         };
       }
@@ -167,7 +167,7 @@ export function handleDialogueQuest8(ctx, p, npc, text) {
           text: "Quest Completed: Carla's Melody · +90 XP, +$30.00, +35 Sanity, Almond Water, Clean Bandage",
         });
         return {
-          reply: "A kazoo! Listen to this! Thank you so much! Mum, look what the runner brought me! Here, take my spare bottle of water and this clean bandage. You're the best!",
+          reply: "A KAZOO. Listen. Listen! Mum, look! Here, the bandage, and the water's still cold, I kept it in the stream. You can't have the kazoo back.",
           mood: "happy",
         };
       }
@@ -178,11 +178,11 @@ export function handleDialogueQuest8(ctx, p, npc, text) {
   if (npcId === "l8-hobb") {
     if (t.includes("plate for the perimeter") || t.includes("spider chitin") || t.includes("help defend the camp")) {
       if (!s.spiderQ) {
-        if (repOf(s, "survivors") <= -35) return { reply: "We know what you've done to camp folks. Keep your hands off our perimeter.", mood: "angry" };
+        if (repOf(s, "survivors") <= -35) return { reply: "I know what you did to camp folk. Hands off my fence.", mood: "angry" };
         const plates = s.scrap?.chitin ?? 0;
         setSpiderStep(ctx, p, plates >= 3 ? 3 : 2, "Quest Started: Plate for the Perimeter · Slay cave spiders and gather 3 Chitin Plates");
         return {
-          reply: "Glad you offered. The cave spiders past the red glyph have been testing our perimeter wire. Small rounds bounce right off their thorax, but that tough chitin makes unbeatable barricade plating. Bring me three plates and the camp will pay you proper.",
+          reply: "Spiders past the red glyph are testing the wire. Bullets bounce off their backs, but that shell makes good plating. Three plates. Bring 'em and the camp pays.",
           mood: "calm",
         };
       }
@@ -201,7 +201,7 @@ export function handleDialogueQuest8(ctx, p, npc, text) {
           text: "Quest Completed: Plate for the Perimeter · +120 XP, +$60.00, Ammo Crate, First Aid Kit",
         });
         return {
-          reply: "These will do nicely. Dense, uncracked, and light enough to lash to the fence timber. Here is sixty Backdollars and fresh rounds from our reserve. You did the 9th Road a real service today.",
+          reply: "Thick. No cracks. They'll lash to the fence fine. Sixty bucks and a box of rounds from the reserve. Carla, say thanks. She says thanks.",
           mood: "happy",
         };
       } else if (s.spiderQ >= 1 && s.spiderQ < 99 && plates < 3) {
@@ -217,10 +217,10 @@ export function handleDialogueQuest8(ctx, p, npc, text) {
   if (npcId === "l8-ivo") {
     if (t.includes("looping karst") || t.includes("face rock") || t.includes("survey the crawl")) {
       if (!s.karstQ) {
-        if (repOf(s, "survivors") <= -35) return { reply: "The Harmouth Society doesn't work with killers. Leave my desk.", mood: "angry" };
+        if (repOf(s, "survivors") <= -35) return { reply: "The Society doesn't work with killers. Leave my desk alone.", mood: "angry" };
         setKarstStep(ctx, p, (s.l8Loops ?? 0) >= 1 ? 3 : 2, "Quest Started: The Karst Survey · Crawl through the loop tube past Marker 78");
         return {
-          reply: "The Harmouth Society has lost two compass logs in that karst crevice past Marker 78. Spatial curvature loops back on itself until you pass the Face Rock formation twice. Crawl through, confirm the loop discharge, and bring me the readings so I can finish the chart.",
+          reply: "The crevice past Marker 78 eats compasses. It loops. You pass the Face Rock, then you pass it again, and you never turned round. Crawl it, feel the loop, bring me the readings. Dell got this far.",
           mood: "calm",
         };
       }
@@ -231,7 +231,7 @@ export function handleDialogueQuest8(ctx, p, npc, text) {
         if (pos) heard(ctx, { clip: c.ok ? CHIME : FAIL, position: pos, volume: 0.5, maxDistance: 16 }, { audience: { player: p.id } });
         if (!c.ok) {
           s.karstSciFailed = true;
-          return { reply: "Your declination math is off by twelve degrees. We cannot guess at spatial folds. You will need to crawl the tube past Marker 78 in person.", mood: "annoyed" };
+          return { reply: "Your numbers are twelve degrees off. You can't do this one on paper. You have to crawl it.", mood: "annoyed" };
         }
         s.l8Loops = Math.max(1, s.l8Loops ?? 0);
         finishQuest8(ctx, p, "karst", {
@@ -242,7 +242,7 @@ export function handleDialogueQuest8(ctx, p, npc, text) {
           text: "Quest Completed: The Karst Survey · Calculated the loop vector for Ivo (+125 XP, +$50.00)",
         });
         return {
-          reply: "Wait... you derived the second-order phase inversion directly from the transceiver drift! That matches the Face Rock fold to the millimeter without setting foot in the crevice. Brilliant work! Take these batteries, this toolkit, and your survey stipend.",
+          reply: "You... worked out the fold from the drift? Without going in? That's, that's exactly what Dell said. Here. Batteries, the toolkit, the stipend. She'd have liked you.",
           mood: "happy",
         };
       }
@@ -257,12 +257,12 @@ export function handleDialogueQuest8(ctx, p, npc, text) {
           text: "Quest Completed: The Karst Survey · +110 XP, +$50.00, 2 Caver Batteries, Repair Kit",
         });
         return {
-          reply: "Remarkable! The orientation vector in your notes matches the second fold exactly. That proves Dell's anomaly hypothesis. Take these fresh batteries and this toolkit from our survey trunk. The Society is in your debt.",
+          reply: "That's it. That's the second fold, exactly where Dell said it would be. Take the batteries and the toolkit from the trunk. I'm going to write her name on this map.",
           mood: "happy",
         };
       } else if (s.karstQ >= 1 && s.karstQ < 99 && (s.l8Loops ?? 0) < 1) {
         return {
-          reply: "You need to crawl through the narrow tube past Marker 78 until you experience the loop threshold and spot the Face Rock twice. Be careful in there.",
+          reply: "You haven't hit the loop yet. Past Marker 78, the tight tube. You'll know it when you see the Face Rock twice.",
           mood: "calm",
         };
       }

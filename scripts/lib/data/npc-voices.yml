@@ -1,0 +1,128 @@
+# Every person's voice (Nov 11). The game reads this file (scripts/lib/voices.js), and so should any agent writing a line
+# for someone: the voice is the person. Key = the npc's id (the last part of its object id). Value = the voice type, in the
+# words the voice maker reads: sex, age, timbre, accent, manner. A clip is /cdn/voice-<voice>-saying-<line>.mp3, so changing
+# a voice here re-voices every line that person says. Keep each one distinct; two people should never share a voice.
+# The archetypes at the bottom (faction:role) are for people with no id of their own: each unnamed person still gets a
+# voice from the pool in voices.js, picked by their id and sex.
+
+# ---- Level 1, M.E.G. Waypoint Alpha-1
+meg-ale: young-woman-quick-dry-sarcastic-low-voice-slight-rasp
+meg-ortiz: tired-middle-aged-woman-doctor-calm-dry-spanish-accent
+meg-callum: big-older-man-gruff-slow-deep-scottish-accent
+# ---- Level 2, the Survivor camp
+surv-wren: teenage-girl-jumpy-breathless-stubborn
+surv-hollis: older-man-slow-gentle-warm-southern-drawl
+surv-mags: woman-forties-smoky-teasing-new-york-accent
+# ---- Level 3, Base Gamma
+gamma-reyes: man-forties-clipped-steady-army-sergeant-mexican-accent
+gamma-pell: woman-brisk-fussy-precise-english-accent
+gamma-ito: soft-spoken-woman-fifties-blunt-japanese-accent
+gamma-hask: bored-big-man-deep-flat-midwest-drawl
+gamma-vale: young-woman-cheerful-sharp-quick-irish-accent
+gamma-duke: young-man-cocky-loud-texan-accent
+gamma-marlo: man-gleeful-gravelly-fast-talker-cockney
+gamma-june: woman-warm-bright-bartender-easy-laugh
+gamma-tess: woman-languid-low-artsy-french-accent
+gamma-bo: young-man-friendly-hoarse-tired-cheerful
+gamma-nell: young-woman-gentle-energetic-welsh-accent
+gamma-pip: teenage-boy-excited-quick-curious
+gamma-otto: middle-aged-man-calm-plain-low-dutch-accent
+gamma-ivy: quiet-young-woman-soft-flat-watchful
+gamma-moss: older-man-dignified-tired-deep-commander-west-african-accent
+# ---- Level 4, M.E.G. Base Omega, the wanderers, T.B.D., Amor Incrementum
+omega-dace: slow-heavy-man-patient-deep-mumbling
+omega-lin: woman-clipped-terse-deadpan-canadian-accent
+omega-okafor: man-stern-booming-nigerian-accent
+omega-rhea: woman-thirties-busy-kind-fast-australian-accent
+l4-moss: soft-woman-sleepy-curious-gentle-low
+l4-gus: man-loud-friendly-chatty-boston-accent
+l4-penny: young-woman-sleepy-sweet-small-voice
+l4-bram: older-man-terse-gravel-irish-lilt
+tbd-quill: man-nasal-distracted-hoarder-mutter
+tbd-nib: young-woman-scratchy-giggly-skittish-whisper
+amor-vell: woman-serene-whispery-sweet-unsettling
+amor-hask: young-man-earnest-preacher-wounded-eager
+# ---- Level 5, the Homely Hotel staff
+l5-ambrose: thin-older-man-silky-polite-british-concierge-slow
+l5-dolores: stout-woman-loud-warm-italian-cook
+l5-pip: young-man-nervous-high-tenor-fast-bellhop
+l5-odette: woman-dry-tired-gossip-french-maid-low
+homely-barnaby: man-formal-1930s-butler-precise-mid-atlantic-accent
+homely-auguste: big-man-jovial-chef-booming-french-accent
+# ---- Level 5, Outpost Housekeeping (M.E.G.)
+l5-harlan: huge-man-gravel-slow-quartermaster-low
+l5-vesna: woman-cool-low-dark-humor-serbian-accent
+l5-tobias: young-man-nasal-anxious-rambling-clerk
+l5-imani: woman-calm-wry-firm-alto-kenyan-accent
+hk-constance: woman-elegant-calm-velvet-parisian-accent
+hk-vance: man-rough-sooty-protective-gravel-northern-english
+# ---- Level 5, the Originals' salon and the Beverly Room
+l5-millie: woman-brash-1930s-aviatrix-transatlantic-accent
+l5-whitlock: old-man-stiff-edwardian-sea-captain-british
+l5-vanderholt: portly-old-man-pompous-booming-gilded-age-new-york
+l5-zelda: young-woman-bubbly-1920s-flapper-fast-slang
+l5-wat: small-old-man-frightened-humble-medieval-english-monk
+l5-samantha: small-woman-voice-velvet-amused-unhurried-faintly-menacing
+# ---- Level 7, Outpost Seawatch and Fort Surrender
+l7-vance: man-weathered-calm-salty-low-cornish-accent
+l7-jude: man-soft-hypnotic-solemn-whisper-deep
+l7-mara: woman-practical-flinty-quick-maine-accent
+# ---- Level 8, the 9th Road camp and the Lightless
+l8-hobb: big-old-man-slow-gruff-protective-welsh-accent
+l8-wen: woman-sharp-tongued-fast-haggler-dry
+l8-ivo: man-nervous-quiet-academic-stammer-german-accent
+l8-marit: woman-calm-dry-tired-scandinavian-accent
+l8-carla-kid: little-girl-chatty-blunt-bright
+l8x-choir-1: man-cracked-singsong-hymn-mad
+l8x-choir-2: woman-singsong-soft-lullaby-lost
+l8x-choir-3: whispering-man-single-words-dry
+l8x-tar-1: big-man-snarling-wet-gravel-proud
+l8x-tar-2: old-woman-cackling-paranoid-shrill
+l8x-tar-3: young-man-twitchy-mean-sneer
+# ---- Level 2.1, Base Alef
+l21-ned: man-grounded-plain-thrifty-low-maine-accent
+l21-goknar: man-alert-clipped-gruff-turkish-accent
+# ---- Level 10, Outpost Bountiful
+l10-meg-cooper: man-warm-hearty-farmer-booming-kansas-accent
+l10-meg-hale: man-meticulous-dry-measured-bookkeeper-low
+l10-meg-wren: young-woman-energetic-farmhand-bright-quick
+l10-meg-sully: man-patient-mellow-radio-voice-soft
+l10-meg-maeve: woman-sharp-observant-scientist-scottish-accent
+# ---- Level 11, the city
+l11-meg-agent-vance: man-disciplined-crisp-officer-flat
+l11-trader-kael: man-affable-witty-merchant-smooth
+l11-commuter-faceling: woman-uncanny-polite-even-flat-pleasant
+l11-walker-1: young-man-fast-talker-courier-street-smart
+l11-walker-2: young-woman-chipper-office-temp-upbeat
+l11-walker-3: old-man-gruff-janitor-tired-brooklyn-accent
+l11-realty-agent: woman-professional-sharp-smooth-saleswoman
+l11-tm-clerk: woman-witty-deadpan-shop-clerk-fast
+
+# ---- archetypes: the unnamed (voices.js picks a pool voice per person; these notes say what fits)
+meg:scout: clipped, alert, any accent
+meg:medic: calm, tired, kind
+meg:trader: dry, counting
+survivor:default: tired, guarded, plain
+survivor:trader: wheedling, quick
+bntg:trader: smooth, salesy
+lightless:default: hushed, singsong, wrong
+surrender:default: soft, devout, slow
+city:default: pleasant, flat, polite
+hotel:default: polite, old-fashioned
+
+# ---- found later (Nov 11): the rest of the named
+bntg-voss: man-smooth-wheedling-merchant-eastern-european-accent
+l0-bntg-kade: man-cool-flat-businesslike-low-london-accent
+l61-sal: man-cheerful-loud-diner-cook-new-jersey-accent
+l61-guard-a: man-flat-tired-guard-low
+l61-guard-b: woman-flat-tired-guard-low-clipped
+l61-amber-a: young-woman-kind-eager-volunteer-bright
+l61-amber-b: young-man-kind-earnest-volunteer-soft
+l61-guild-a: woman-calm-pilgrim-measured-warm
+l61-guild-b: man-calm-pilgrim-deep-measured
+l61-guild-c: young-woman-quiet-pilgrim-gentle
+bonus-tom: big-man-friendly-diner-owner-warm
+bonus-andrew: man-nerdy-friendly-salesman-quick
+bonus-dawn: young-woman-cool-deadpan-shopkeeper
+bonus-rico: young-man-upbeat-attendant-fast
+l7-ezra: man-quiet-watchful-hoarse-low

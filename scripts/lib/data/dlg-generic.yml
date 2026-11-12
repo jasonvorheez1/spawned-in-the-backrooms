@@ -1,0 +1,289 @@
+# The unnamed: everyone without their own entry speaks as their faction and role ("faction:role"). Each line slot can be a
+# list; a person always draws the same one (picked by their id), so two strangers rarely sound alike. Written by hand, Nov 11.
+
+"survivor:default":
+  hi: ["Stop there. Let me see your face. Okay. You're real.", "Don't come closer till I've had a look at you.", "Oh. A person. Sorry, I was about to throw this at you.", "You lost too? Course you are."]
+  back: ["You again. You're lucky.", "Still walking. Good for you.", "Oh, it's you. Hi."]
+  warm: ["Hey. Sit. I've got half a can of something.", "Good to see a face I know."]
+  cold: ["Keep your distance.", "I remember you."]
+  follow: ["Behind you.", "I'm here. Go."]
+  bye: ["Watch yourself.", "Don't follow the voices.", "Yeah. See you. Maybe."]
+  walk: ["Okay then.", "Fine."]
+  ask:
+    - q: "How long have you been down here?"
+      a: ["Lost count after the second notebook.", "Long enough to stop hoping for doors.", "A year? Three? The days don't add up right here."]
+    - q: "Where should I go from here?"
+      sk: survival 30
+      a: ["Wherever the air moves. Stale air is a dead end. Moving air is a way through.", "Follow the cleanest walls. Somebody's been keeping them clean, and somebody means people."]
+      fail: ["Away from me, for a start.", "Don't know. If I knew, I wouldn't be here."]
+    - q: "Have you seen anyone else?"
+      a: ["A woman in a yellow coat, two days back. She was walking fast. I didn't ask from what.", "Footprints. Not people. Not always."]
+    - q: "Want to come with me?"
+      sk: speech 40
+      do: recruit
+      a: ["Alright. Two's better than one. Don't make me regret it.", "Sure. Why not. Nothing to lose but my legs."]
+      fail: ["No. I've buried enough company.", "I go alone. Nothing personal."]
+  barks:
+    idle: ["Quiet. Too quiet.", "Feet hurt.", "Was that a door?", "Don't think about it.", "One more room."]
+    hi: ["Hey.", "You.", "Oh. Hi."]
+    drawn: ["Easy. Easy.", "Put that down."]
+    hurt: ["You're bleeding.", "You look bad."]
+    sneak: ["I hear you."]
+    close: ["Back off a bit."]
+    spot: ["Something's coming!", "There! Over there!"]
+    hostile: ["Big mistake.", "Alright, you want this?"]
+    hit: ["Agh!", "It got me!"]
+    kill: ["Got it.", "Stay down."]
+    clear: ["Is it gone?"]
+    flee: ["I'm out!", "Not dying here!"]
+    death: ["Oh.", "No..."]
+  gest: { wave: "Uh. Hi.", gift: "For me? Thanks. Really.", dance: "Here? Sure, why not.", nodance: "No. Not in the mood.", insult: "Nice. Real nice." }
+
+"survivor:scout":
+  hi: ["Down. Quiet. Okay, it moved on. Who are you?", "Stay low. Something's been walking the next hall."]
+  back: ["You. Still quiet. Good.", "Back. Any trouble?"]
+  bye: ["Keep low.", "Quiet feet."]
+  ask:
+    - q: "What's moving out there?"
+      a: ["Something big two halls over. It stops when you stop. So I stopped for an hour.", "Hounds. Three. They circle. Don't let them circle you."]
+    - q: "Any safe spots near here?"
+      sk: survival 30
+      a: ["The room with the dead lamp. Nothing goes in there. I don't know why, I don't ask.", "Corners where the paint's fresh. Fresh paint means somebody's alive to paint."]
+      fail: ["Nowhere's safe. Some places are slower."]
+  barks:
+    idle: ["Shh.", "Listening.", "Something moved."]
+    hi: ["Shh.", "Low."]
+    spot: ["Contact!", "There!"]
+    hit: ["Ngh!"]
+    kill: ["Down."]
+    flee: ["Pulling back!"]
+  gest: { wave: "Shh. Hi.", gift: "Thanks.", dance: "Too loud.", nodance: "Too loud.", insult: "Quietly, please." }
+
+"survivor:medic":
+  hi: ["Sit down. You're grey. Let me look.", "Hurt? Course you're hurt. Sit."]
+  back: ["Let me see that again.", "Healing up? Show me."]
+  bye: ["Keep it clean.", "Don't pick at it."]
+  ask:
+    - q: "Can you patch me up?"
+      do: heal
+      a: ["Hold still. Sting. There. Done. You'll live, which is the best I can promise.", "Mm. Seen worse. Here. Press. Good."]
+    - q: "How do you keep supplies?"
+      a: ["Boil everything. Reuse everything. Pray a bit."]
+  barks:
+    idle: ["Bandages, bandages.", "Boil it."]
+    hurt: ["Sit, you're bleeding."]
+    spot: ["Wounded, behind me!"]
+    hit: ["Ah! Fine."]
+    flee: ["Grab the kit!"]
+  gest: { wave: "Hi. Sit.", gift: "That'll help someone.", dance: "Gently.", nodance: "Busy.", insult: "Still patching you." }
+
+"survivor:trader":
+  hi: ["Buying? Selling? Both? Both's best.", "Everything's for sale except my boots.", "Got water? Got cash? Then we've got business."]
+  back: ["Back! Pockets full?", "My customer!"]
+  bye: ["Come back richer.", "Tell your friends. Not the dead ones."]
+  ask:
+    - q: "What've you got?"
+      a: ["A bit of everything. Most of it works.", "Tape, batteries, a lighter with three flicks left. Fair prices."]
+    - q: "Cut me a deal?"
+      sk: barter 35
+      do: discount
+      a: ["Alright, alright. A bit off. Don't spread it around.", "Fine. You drive a hard bargain."]
+      fail: ["Nope.", "Price is the price."]
+  barks:
+    idle: ["Selling!", "Fair prices.", "Batteries!"]
+    hi: ["Buying?", "Hey!"]
+    spot: ["Guard the stock!"]
+    hostile: ["Thief!"]
+    hit: ["My stock!"]
+    flee: ["Grab the good stuff!"]
+  gest: { wave: "Hey!", gift: "A gift? I'll never understand you people. Thanks.", dance: "Ha! Okay!", nodance: "Shop's open.", insult: "Prices just doubled." }
+
+"meg:default":
+  hi: ["M.E.G. Stay calm, keep your hands where I can see them, and you'll be fine.", "You're in M.E.G. territory. Weapons low.", "Name? Doesn't matter. Welcome. Keep it quiet."]
+  back: ["You again. Behaving?", "Welcome back."]
+  warm: ["Good to see you. Need anything?"]
+  cold: ["I'm watching you."]
+  bye: ["Stay safe out there.", "Weapons low."]
+  walk: ["Noted."]
+  ask:
+    - q: "What does M.E.G. do?"
+      a: ["Map the levels. Hold the safe spots. Keep people alive long enough to be useful.", "We write down what kills people so it kills fewer of them."]
+    - q: "What's the danger here?"
+      sk: survival 30
+      a: ["Whatever's dangerous is in the incident board by the door. Read it. People who don't read it end up on it."]
+      fail: ["Everything. Stay inside."]
+    - q: "Come with me?"
+      sk: speech 45
+      do: recruit
+      a: ["Alright. I'll log it as a patrol."]
+      fail: ["My post is here."]
+  barks:
+    idle: ["Post's quiet.", "Radio check.", "Weapons low in camp."]
+    hi: ["Wanderer.", "Hello."]
+    drawn: ["Weapon down."]
+    hurt: ["Medic's inside."]
+    spot: ["Contact!", "Movement!"]
+    hostile: ["Stand down!"]
+    hit: ["Hit! Still up!"]
+    kill: ["Target down."]
+    clear: ["Area clear."]
+    flee: ["Falling back!"]
+    death: ["Report... it..."]
+    reload: ["Reloading!"]
+  gest: { wave: "Hello.", gift: "Appreciated.", dance: "On duty.", nodance: "On duty.", insult: "Logged." }
+
+"meg:scout":
+  hi: ["Scout. Don't block the hall. What's behind you?", "Patrol. Seen anything moving?"]
+  back: ["Anything new out there?", "You. Report."]
+  bye: ["Watch your six."]
+  ask:
+    - q: "What's out there?"
+      sk: survival 30
+      a: ["Two hounds working the east halls. A dead light at the junction. Go west.", "Quiet sector. Too quiet. I'd wait a while."]
+      fail: ["Things you'll meet soon enough."]
+    - q: "Can I patrol with you?"
+      sk: speech 40
+      do: recruit
+      a: ["Fine. Keep up, keep quiet."]
+      fail: ["Not with that footwork."]
+  barks:
+    idle: ["Sweep's clear.", "Next sector."]
+    spot: ["Contact! Hounds!", "Movement!"]
+    hit: ["I'm hit!"]
+    kill: ["Down."]
+    flee: ["Falling back!"]
+  gest: { wave: "Hm.", gift: "Thanks.", dance: "On patrol.", nodance: "On patrol.", insult: "Noted." }
+
+"meg:medic":
+  hi: ["Medical. Bleeding? Infected? Hearing things? Sit.", "Sit. Let me check you over."]
+  bye: ["Drink water.", "Rest when you can."]
+  ask:
+    - q: "Can you patch me up?"
+      do: heal
+      a: ["Hold still. There. Fluids, rest, and stop getting bitten."]
+  barks:
+    idle: ["Next.", "Boil the water."]
+    hurt: ["Sit. Now."]
+    spot: ["Wounded to the back!"]
+  gest: { wave: "Hello.", gift: "Thank you.", dance: "Briefly.", nodance: "Patients.", insult: "Still treating you." }
+
+"meg:trader":
+  hi: ["Requisitions. What do you need, what can you pay.", "Supplies. Everything logged."]
+  bye: ["Signed out."]
+  ask:
+    - q: "What's in stock?"
+      a: ["Water, filters, bandages, rounds. Logged, counted, fair."]
+    - q: "Any discount?"
+      sk: barter 40
+      do: discount
+      a: ["For a friend of M.E.G., a little."]
+      fail: ["Prices are set."]
+  barks: { idle: ["Count's off.", "Sign here."], spot: ["Secure the stores!"] }
+  gest: { wave: "Hello.", gift: "Logged as a donation.", dance: "No.", nodance: "No.", insult: "Logged." }
+
+"bntg:default":
+  hi: ["B.N.T.G. We move goods, not feelings. Buying?", "Trade route's open. What've you got?"]
+  bye: ["Good trading."]
+  ask:
+    - q: "What's B.N.T.G.?"
+      a: ["Traders. Routes between levels. Chits for credit. If it's moving, we're moving it."]
+    - q: "Any deals?"
+      sk: barter 35
+      do: discount
+      a: ["For a good customer, sure."]
+      fail: ["Not today."]
+  barks: { idle: ["Trade's open.", "Chits accepted."], spot: ["Protect the goods!"], hostile: ["Contract void!"] }
+  gest: { wave: "Hello.", gift: "Noted on your account.", dance: "Ha.", nodance: "Working.", insult: "Priced in." }
+"bntg:trader":
+  hi: ["Goods for sale, goods for trade, honest weights. Mostly.", "B.N.T.G. stall. Look all you like, buy what you can."]
+  bye: ["Come back with coin."]
+  ask:
+    - q: "What've you got?"
+      a: ["Batteries, rations, tools. Prices on the tags."]
+    - q: "Cheaper?"
+      sk: barter 35
+      do: discount
+      a: ["Fine. A little."]
+      fail: ["Tags don't lie."]
+  barks: { idle: ["Fresh stock!", "Honest weights."], spot: ["Guard the stall!"] }
+  gest: { wave: "Hey!", gift: "Thanks, friend.", dance: "Ha!", nodance: "Customers.", insult: "Prices up." }
+
+"tbd:default":
+  hi: ["T.B.D. Show me something that does nothing.", "Got anything strange? Strange is currency."]
+  bye: ["Bring me nothing."]
+  ask:
+    - q: "What do you want?"
+      a: ["Objects with no purpose. A key to nothing. A map of nowhere."]
+  barks: { idle: ["Useless. Good.", "Hm. Strange."] }
+  gest: { wave: "Mm.", gift: "Useful? Pity. Thanks.", dance: "Pointless. Yes.", nodance: "No.", insult: "Useless. I'll keep it." }
+
+"amor:default":
+  hi: ["Softly. The bloom is listening.", "Welcome, child. Breathe."]
+  bye: ["Go gently."]
+  ask:
+    - q: "What is this?"
+      a: ["A garden. A home. It holds us. It will hold you, if you let it."]
+  barks: { idle: ["It grows.", "Breathe."], hostile: ["Then you'll feed it."] }
+  gest: { wave: "Peace.", gift: "An offering. It's grateful.", dance: "We sway.", nodance: "Stillness.", insult: "It heard you." }
+
+"hotel:default":
+  hi: ["Good evening, guest. Welcome to the Homely.", "Welcome. May I help you find your room?"]
+  bye: ["Enjoy your stay."]
+  ask:
+    - q: "How long have you worked here?"
+      a: ["Always, guest. Always."]
+  barks: { idle: ["Good evening.", "Your room is ready."], drawn: ["Not in the hotel, please."] }
+  gest: { wave: "Good evening.", gift: "How kind.", dance: "The ballroom is open.", nodance: "On duty.", insult: "Of course, guest." }
+
+"hk:default":
+  hi: ["Housekeeping. Watch the boiler doors.", "M.E.G. Housekeeping. Need supplies?"]
+  bye: ["Mind the heat."]
+  ask:
+    - q: "What should I avoid here?"
+      a: ["The boiler room, the waltz, and anything on a floor above twelve."]
+  barks: { idle: ["Pressure's up.", "Linen."], spot: ["Rats!"] }
+  gest: { wave: "Hello.", gift: "Thanks.", dance: "Not the waltz.", nodance: "Working.", insult: "Hm." }
+
+"orig:default":
+  hi: ["Modern, aren't you. How unfortunate.", "Members only, I'm afraid. You may stand."]
+  bye: ["Good day."]
+  ask:
+    - q: "Who are you people?"
+      a: ["The ones who arrived first. Long before you, dear. Long before."]
+  barks: { idle: ["Whist, anyone?", "Insufferable."], drawn: ["How vulgar."] }
+  gest: { wave: "Hm.", gift: "How quaint.", dance: "A proper waltz, if you know one.", nodance: "Certainly not.", insult: "How modern." }
+
+"surrender:default":
+  hi: ["Peace. Stop fighting the water.", "You came across the sea. Rest. Here, we stop."]
+  bye: ["The tide is patient."]
+  ask:
+    - q: "What do you believe?"
+      a: ["That the deep is a door, and fear keeps it shut."]
+  barks: { idle: ["Listen.", "It turns below."], hostile: ["The deep will take you."], death: ["Down..."] }
+  gest: { wave: "Peace.", gift: "An offering.", dance: "We sway.", nodance: "Stillness.", insult: "The sea forgives." }
+
+"lightless:default":
+  hi: ["Light... put it out...", "Shh. Too bright. Too bright."]
+  bye: ["Come back dark."]
+  ask: []
+  barks: { idle: ["Hush...", "Out, out..."], spot: ["Light!"], hostile: ["Put it OUT!"], death: ["Dark..."] }
+  gest: { wave: "...", gift: "Is it a light? Break it.", dance: "Sway in the dark.", nodance: "No.", insult: "Sing louder." }
+
+"city:default":
+  hi: ["Good afternoon. Lovely day.", "Hello. Are you lost? Most people are, at first.", "Oh, hello. New in town?"]
+  back: ["Hello again.", "Good afternoon."]
+  bye: ["Have a nice day.", "Mind the crosswalk."]
+  ask:
+    - q: "What's this city?"
+      a: ["The Capital, people call it. It goes on. It's nice. Nothing bad happens. Almost nothing."]
+    - q: "Anything strange around here?"
+      a: ["The roadworks move at night. The apples turn up in crates. My neighbour's door has a different number every morning. Otherwise, normal."]
+  barks:
+    idle: ["Lovely day.", "Same train.", "Coffee's good today."]
+    hi: ["Hello.", "Afternoon."]
+    drawn: ["Oh. That's not polite."]
+    spot: ["Oh dear!"]
+    hostile: ["How rude!"]
+    hit: ["Ow!"]
+    flee: ["Excuse me!"]
+  gest: { wave: "Hello!", gift: "How kind!", dance: "In the street? Alright!", nodance: "I'll be late.", insult: "Well, have a nice day anyway." }

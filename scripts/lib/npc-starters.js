@@ -2520,7 +2520,7 @@ export function getChoices(ctx, it, s, lastNpcReply, replyObj) {
 }
 
 // Mara at B.N.T.G. Realty always has the house on the table (scripts/lib/level11-quests.js answers it)
-function realtyChoice(ctx, it, s, list) {
+export function realtyChoice(ctx, it, s, list) {
   if (String(it?.id ?? '').split('/').pop() !== 'l11-realty-agent' || !Array.isArray(list) || s?.home11) return list
   const asked = s?.homeAsk && ctx.now() - s.homeAsk < 120000
   const pick = asked ? { text: "Deal. I'll take the house.", tag: 'Buy $2,500' } : { text: "I want to buy the green house.", tag: 'House' }
@@ -2553,96 +2553,103 @@ function withChecks(ctx, it, list) {
   return out
 }
 
+// the quest lines a person has for you right now (their handlers answer them: scripts/lib/level*-quests.js)
+export function questChoices(ctx, it, s) {
+  if (!it) return []
+  const id = short(it)
+  const qChoices = []
+  if (id === 'l11-walker-1') {
+    if (!s?.sedcoQ && repOf(s, "survivors") > -35) {
+      qChoices.push({ text: "That's a lot of parcels. Need a hand with a Sedco manifest?", tag: "Quest Start" })
+    } else if (s?.sedcoQ === 5) {
+      qChoices.push({ text: "Got it. The master security drive, out of the vault.", tag: "Quest Turn-In" })
+    }
+  } else if (id === 'l11-meg-agent-vance') {
+    if (s?.sedcoQ === 5) {
+      qChoices.push({ text: "I pulled the master security drive out of Sedco's vault. Want it?", tag: "Quest Turn-In" })
+    }
+  } else if (id === 'l11-trader-kael') {
+    if (!s?.craneQ && repOf(s, "bntg") > -35) {
+      qChoices.push({ text: "Docks are dead quiet. Something wrong with the canal?", tag: "Quest Start" })
+    } else if (s?.craneQ === 4) {
+      qChoices.push({ text: "Valve's free. I cleared the canal lock myself.", tag: "Quest Turn-In" })
+    }
+  } else if (id === 'l11-walker-3') {
+    if (!s?.maintQ && repOf(s, "survivors") > -35) {
+      qChoices.push({ text: "Rough night on the maintenance rounds?", tag: "Quest Start" })
+    } else if (s?.maintQ === 4) {
+      qChoices.push({ text: "Pressure's bled, and apartment 11-B has hot water again.", tag: "Quest Turn-In" })
+    }
+  } else if (id === 'l10-meg-cooper') {
+    if (!s?.wheatQ && repOf(s, "meg") > -35) {
+      qChoices.push({ text: "Need another pair of hands for the harvest?", tag: "Quest Start" })
+    } else if ((s?.wheatQ >= 1 && s?.wheatQ < 99) && (s?.bread ?? 0) >= 1) {
+      qChoices.push({ text: "Here. A fresh loaf, straight out of the hearth.", tag: "Quest Turn-In" })
+    }
+    if (!s?.cellarQ && repOf(s, "meg") > -35) {
+      qChoices.push({ text: "Something's rattling in the storm cellar. Want me to look?", tag: "Quest Start" })
+    } else if (s?.cellarQ === 2) {
+      qChoices.push({ text: "Storm cellar's fine. Just the draft, and your preserves.", tag: "Quest Turn-In" })
+    }
+  } else if (id === 'l10-meg-maeve') {
+    if (!s?.watcherQ && repOf(s, "meg") > -35) {
+      qChoices.push({ text: "I'll go look at that scarecrow for you.", tag: "Quest Start" })
+    } else if (s?.watcherQ === 3) {
+      qChoices.push({ text: "Found document 24 sewn into its coat.", tag: "Quest Turn-In" })
+    }
+  } else if (id === 'l8-carla-kid') {
+    if (!s?.carlaQ) {
+      qChoices.push({ text: "You look fed up, Carla. What would cheer you up?", tag: "Quest Start" })
+    } else if ((s?.carlaQ >= 1 && s?.carlaQ < 99 && s?.kazoo) && !s?.kazooGiven) {
+      qChoices.push({ text: "Close your eyes. I brought the kazoo.", tag: "Quest Turn-In" })
+    }
+  } else if (id === 'l8-hobb') {
+    if (!s?.spiderQ && repOf(s, "survivors") > -35) {
+      qChoices.push({ text: "Your sentries look jumpy. Need plate for the perimeter?", tag: "Quest Start" })
+    } else if (s?.spiderQ >= 1 && s?.spiderQ < 99 && (s?.scrap?.chitin ?? 0) >= 3) {
+      qChoices.push({ text: "Brought 3 chitin plates. Still sticky.", tag: "Quest Turn-In" })
+    }
+  } else if (id === 'l8-ivo') {
+    if (!s?.karstQ && repOf(s, "survivors") > -35) {
+      qChoices.push({ text: "I'll go crawl that looping karst crevice for you.", tag: "Quest Start" })
+    } else {
+      if ((s?.karstQ === 1 || s?.karstQ === 2) && !s?.karstSciFailed) {
+        qChoices.push({ text: "Give me your Harmouth telemetry. I think I can do it on paper.", tag: "Science 45", check: { skill: "science", difficulty: 45 } })
+      }
+      if (s?.karstQ >= 1 && s?.karstQ < 99 && (s?.l8Loops ?? 0) >= 1) {
+        qChoices.push({ text: "Passed the Face Rock twice. Here are the Face Rock readings.", tag: "Quest Turn-In" })
+      }
+    }
+  } else if (id === 'l21-ned') {
+    if (!s?.saltineQ && repOf(s, "survivors") > -35) {
+      qChoices.push({ text: "That condenser's hissing. Need copper wire?", tag: "Quest Start" })
+    } else {
+      if ((s?.saltineQ === 1 || s?.saltineQ === 2) && !s?.nedRepFailed) {
+        qChoices.push({ text: "Let me at it. I can solder the bypass line myself.", tag: "Repair 35", check: { skill: "repair", difficulty: 35 } })
+      }
+      const wireCount = String(s?.items ?? '').split(',').filter(x => x === 'wire' || x === 'copper').length + (s?.scrap?.wire ?? 0);
+      if (s?.saltineQ >= 1 && s?.saltineQ < 99 && wireCount >= 3) {
+        qChoices.push({ text: "Brought 3 copper wire coils. Clean ones.", tag: "Quest Turn-In" })
+      }
+    }
+  } else if (id === 'l21-goknar') {
+    if (!s?.edgesQ && repOf(s, "meg") > -35) {
+      qChoices.push({ text: "I'll patrol the hallway down to the Edges.", tag: "Quest Start" })
+    } else if (s?.edgesQ >= 1 && s?.edgesQ < 99 && s?.l21Scouted) {
+      qChoices.push({ text: "Walked the Edges perimeter and secured the dark corridor. Breaker's holding.", tag: "Quest Turn-In" })
+    }
+  }
+
+  return qChoices
+}
+
 function rawChoices(ctx, it, s, lastNpcReply, replyObj) {
   if (!it) return []
   const id = short(it)
   const sk = skillsOf(s ?? {})
   const entry = STARTERS[id]
 
-  // Quest dialogue hooks for Level 11, 10, 8, 21
-  const qChoices = []
-  if (id === 'l11-walker-1') {
-    if (!s?.sedcoQ && repOf(s, "survivors") > -35) {
-      qChoices.push({ text: "You look overwhelmed with those parcels. Need a hand with a Sedco manifest?", tag: "Quest Start" })
-    } else if (s?.sedcoQ === 5) {
-      qChoices.push({ text: "I've retrieved the Sedco Master Security Drive from the vault.", tag: "Quest Turn-In" })
-    }
-  } else if (id === 'l11-meg-agent-vance') {
-    if (s?.sedcoQ === 5) {
-      qChoices.push({ text: "I've recovered the Sedco Master Security Drive from the 14th St vault for M.E.G.", tag: "Quest Turn-In" })
-    }
-  } else if (id === 'l11-trader-kael') {
-    if (!s?.craneQ && repOf(s, "bntg") > -35) {
-      qChoices.push({ text: "Is something wrong with the canal trade route? The docks seem quiet.", tag: "Quest Start" })
-    } else if (s?.craneQ === 4) {
-      qChoices.push({ text: "I cleared the canal lock spillway and brought pure Almond Water.", tag: "Quest Turn-In" })
-    }
-  } else if (id === 'l11-walker-3') {
-    if (!s?.maintQ && repOf(s, "survivors") > -35) {
-      qChoices.push({ text: "How are the maintenance rounds? Need assistance with the infrastructure?", tag: "Quest Start" })
-    } else if (s?.maintQ === 4) {
-      qChoices.push({ text: "The compressor is bypassed and the apartment 11-B utilities are running smooth.", tag: "Quest Turn-In" })
-    }
-  } else if (id === 'l10-meg-cooper') {
-    if (!s?.wheatQ && repOf(s, "meg") > -35) {
-      qChoices.push({ text: "I'd like to help Outpost Bountiful with the harvest. Need another hand?", tag: "Quest Start" })
-    } else if ((s?.wheatQ >= 1 && s?.wheatQ < 99) && (s?.bread ?? 0) >= 1) {
-      qChoices.push({ text: "I've baked a fresh Homestead Loaf for the caravan at the hearth oven!", tag: "Quest Turn-In" })
-    }
-    if (!s?.cellarQ && repOf(s, "meg") > -35) {
-      qChoices.push({ text: "Heard strange noises from the storm cellar. Want me to check it out?", tag: "Quest Start" })
-    } else if (s?.cellarQ === 2) {
-      qChoices.push({ text: "I inspected the storm cellar. The subterranean pantry is intact and secure.", tag: "Quest Turn-In" })
-    }
-  } else if (id === 'l10-meg-maeve') {
-    if (!s?.watcherQ && repOf(s, "meg") > -35) {
-      qChoices.push({ text: "I can investigate the strange scarecrows in the eastern barley for your research.", tag: "Quest Start" })
-    } else if (s?.watcherQ === 3) {
-      qChoices.push({ text: "I found Document 24 in the scarecrow's coat: 'The Watchers of Level 10'.", tag: "Quest Turn-In" })
-    }
-  } else if (id === 'l8-carla-kid') {
-    if (!s?.carlaQ) {
-      qChoices.push({ text: "You look cold and tired, Carla. Is there anything that could cheer you up?", tag: "Quest Start" })
-    } else if ((s?.carlaQ >= 1 && s?.carlaQ < 99 && s?.kazoo) && !s?.kazooGiven) {
-      qChoices.push({ text: "Here Carla, I found this stone kazoo on Hyperspace Lane for you.", tag: "Quest Turn-In" })
-    }
-  } else if (id === 'l8-hobb') {
-    if (!s?.spiderQ && repOf(s, "survivors") > -35) {
-      qChoices.push({ text: "The camp sentries look nervous. Need help gathering plate for the perimeter?", tag: "Quest Start" })
-    } else if (s?.spiderQ >= 1 && s?.spiderQ < 99 && (s?.scrap?.chitin ?? 0) >= 3) {
-      qChoices.push({ text: "I've brought the 3 spider chitin plates for the sentry barriers.", tag: "Quest Turn-In" })
-    }
-  } else if (id === 'l8-ivo') {
-    if (!s?.karstQ && repOf(s, "survivors") > -35) {
-      qChoices.push({ text: "Your survey looks incomplete. Want me to survey the looping karst crevice?", tag: "Quest Start" })
-    } else {
-      if ((s?.karstQ === 1 || s?.karstQ === 2) && !s?.karstSciFailed) {
-        qChoices.push({ text: "I can deduce the loop vector from your Harmouth telemetry directly.", tag: "Science 45", check: { skill: "science", difficulty: 45 } })
-      }
-      if (s?.karstQ >= 1 && s?.karstQ < 99 && (s?.l8Loops ?? 0) >= 1) {
-        qChoices.push({ text: "I mapped the looping crawl tunnel and logged the Face Rock readings.", tag: "Quest Turn-In" })
-      }
-    }
-  } else if (id === 'l21-ned') {
-    if (!s?.saltineQ && repOf(s, "survivors") > -35) {
-      qChoices.push({ text: "Heard that compressor hissing. Need help with copper wire for the condenser?", tag: "Quest Start" })
-    } else {
-      if ((s?.saltineQ === 1 || s?.saltineQ === 2) && !s?.nedRepFailed) {
-        qChoices.push({ text: "Let me inspect the condenser manifold. I can solder the bypass line directly.", tag: "Repair 35", check: { skill: "repair", difficulty: 35 } })
-      }
-      const wireCount = String(s?.items ?? '').split(',').filter(x => x === 'wire' || x === 'copper').length + (s?.scrap?.wire ?? 0);
-      if (s?.saltineQ >= 1 && s?.saltineQ < 99 && wireCount >= 3) {
-        qChoices.push({ text: "I brought 3 copper wire coils to fix the condenser water tubes.", tag: "Quest Turn-In" })
-      }
-    }
-  } else if (id === 'l21-goknar') {
-    if (!s?.edgesQ && repOf(s, "meg") > -35) {
-      qChoices.push({ text: "Smilers scratching near the doorway? I can patrol the corridor to The Edges.", tag: "Quest Start" })
-    } else if (s?.edgesQ >= 1 && s?.edgesQ < 99 && s?.l21Scouted) {
-      qChoices.push({ text: "I surveyed The Edges perimeter and secured the dark corridor.", tag: "Quest Turn-In" })
-    }
-  }
-
+  const qChoices = questChoices(ctx, it, s)
   let baseChoices = []
   // If the model provided choices in JSON, validate and prioritize them
   if (Array.isArray(replyObj?.choices) && replyObj.choices.length >= 2) {

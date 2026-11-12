@@ -1,12 +1,10 @@
 import { plain } from './lib/plain.js'
-import CANNED from './lib/data/canned-talk.yml'
-// Free talk with NPCs, on the player. E on an M.E.G. agent or Survivor opens the card (interact.js sets
-// state.talkWith); what you type goes to the built-in model as 'talk', its JSON comes back to heard().
-// The model only ever picks words, a mood, a rapport nudge and one whitelisted intent; every check is rolled here.
+// Talk with NPCs, on the player. E on a person opens the card (interact.js sets state.talkWith). Everything they say and
+// every choice you get is written by hand (scripts/lib/dialogue.js, data/dlg-*.yml): pick a line, they answer it; checks are rolled here.
 // Traders open a shop from the card. Numbers: lib/data/talk.yml, lib/data/shops.yml.
 import { heard as hearAt } from "./lib/hear.js";
 import T from './lib/data/talk.yml'
-import { nameOf, keyOf, isTrader, voiceOf, VO, systemPrompt, userMessage, parseReply, rollCheck, freshStock, buyPrice, sellPrice, sellables, removeOne, SHOPS, repairables, repairPrice } from './lib/npc-talk.js'
+import { nameOf, keyOf, isTrader, voiceOf, VO, rollCheck, freshStock, buyPrice, sellPrice, sellables, removeOne, SHOPS, repairables, repairPrice } from './lib/npc-talk.js'
 import { takeToken } from './player.js'
 import { talk as service } from './interact.js'
 import { skillsOf, SKILLS } from './lib/stats.js'
@@ -23,7 +21,10 @@ import { handleDialogueQuest21 } from './lib/level21-quests.js'
 import { handleDialogueQuestZ } from './lib/zenith-quest.js'
 import { handleDialogueQuest1 } from './lib/level1-quests.js'
 
-const getStartersLib = (ctx) => ((ctx.session ??= {}).startersP ??= import('./lib/npc-starters.js'))
+import { greetingOf, rootChoices, childChoices, nodeOf, lineOf, barkOf, gestOf, BYE_CHOICE } from './lib/dialogue.js'
+import { questChoices, realtyChoice } from './lib/npc-starters.js'
+import { zenithChoice } from './lib/zenith-quest.js'
+import { l1Choice } from './lib/level1-quests.js'
 
 const short = (it) => String(it.id).split('/').pop()
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z)
@@ -41,7 +42,7 @@ function social(ctx, ses) {
     const sees = (quiet && dd < 5) && canSee(ctx, o, me)
     if (mem && quiet && sees && dd < 3.5 && now - (hi[o.id] ?? -1e9) > 180000) {
       hi[o.id] = now; const r = o.state.rapport?.[k] ?? 0
-      o.state.talkTo = me.id; o.state.talkAt = now; say(ctx, o, r < -20 ? HI(addressFor(o, me, mem), r)[0] : lineFor(o, 'hi', addressFor(o, me, mem)), r < -20 ? 'annoyed' : 'happy')
+      o.state.talkTo = me.id; o.state.talkAt = now; say(ctx, o, r < -20 ? HI(addressFor(o, me, mem), r)[0] : (barkOf(o, 'hi', () => ctx.random(), me.place) ?? lineFor(o, 'hi', addressFor(o, me, mem))), r < -20 ? 'annoyed' : 'happy')
     } else if (quiet && sees) react(ctx, ses, o, me, mem, dd, now)
     if (mem?.notes?.length && ctx.random() < 0.02) for (const r2 of near) { // gossip: one thing they know about you, passed on as hearsay
       if (r2.id === o.id || flat(r2.feetPosition, o.feetPosition) > 4) continue
@@ -67,7 +68,7 @@ function react(ctx, ses, o, me, mem, dd, now) {
   if (now - (ses.reactAny ?? -1e9) < 6000) return // one voice at a time near you
   ra[key] = now; ses.reactAny = now
   o.state.talkTo = me.id; o.state.talkAt = now
-  say(ctx, o, lineFor(o, kind, addressFor(o, me, mem)), kind === 'drawn' ? 'scared' : kind === 'hurt' ? 'calm' : 'annoyed')
+  say(ctx, o, (barkOf(o, kind, () => ctx.random(), me.place) ?? lineFor(o, kind, addressFor(o, me, mem))).replaceAll('{u}', addressFor(o, me, mem)), kind === 'drawn' ? 'scared' : kind === 'hurt' ? 'calm' : 'annoyed')
 }
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v))
 const note = (ctx, text) => { ctx.self.state.notice = { text, at: ctx.now() } }
@@ -100,186 +101,85 @@ export function openDialogue(ctx, it) {
   s.talkWith = it.id
   s.shopOpen = null
   ses.talkingTo = it.id
+  ses.askedNow = []
   it.state.talkAt = now
   it.state.talkTo = ctx.self.id
-
-  const hist = s.talks?.[short(it)] ?? []
-  const lastLine = hist[hist.length - 1]
-  const recent = lastLine && now - (ses.lastGreetAt ?? -1e9) < 60000
-
-  getStartersLib(ctx).then(({ getStarter, getChoices }) => {
-    if (!live(ctx, s.talkWith)) return
-    const starter = getStarter(ctx, it, s)
-    if (starter && (!hist.length || !recent)) {
-      ses.lastGreetAt = now
-      say(ctx, it, starter.text, starter.mood)
-      logLine(ctx, it, 'n', starter.text)
-    }
-    s.talkChoices = getChoices(ctx, it, s, starter?.text)
-  })
+  const hist = s.talks?.[short(it)] ?? [], key = keyOf(ctx.self)
+  const recent = hist.length && now - (ses.lastGreetAt ?? -1e9) < 60000
+  const g = greetingOf(it, ctx.self.place, { met: hist.length > 0 || !!it.state?.mem?.[key], rapport: rapportOf(ctx, it), following: it.state?.follow === ctx.self.id, seed: Math.floor(ctx.random() * 1e9) })
+  if (g && !recent) { ses.lastGreetAt = now; say(ctx, it, g.text, g.mood); logLine(ctx, it, 'n', g.text) }
+  s.talkChoices = offer(ctx, it, s, null)
+}
+// what you can say now: the quests this person has for you, then the written choices (a reply's follow-ups, else the
+// questions you haven't asked this visit), and always a way out. Nothing typed, nothing generated.
+function offer(ctx, it, s, next) {
+  const place = ctx.self.place, ses = ctx.self.session, asked = new Set(ses.askedNow ?? [])
+  let list = next?.length ? [...next, { text: 'Back to something else.', tag: 'Back', node: 'root' }] : rootChoices(it, place, asked).filter((c) => c.node !== 'bye')
+  list = [...questChoices(ctx, it, s), ...list]
+  list = l1Choice(ctx, it, s, zenithChoice(ctx, it, s, realtyChoice(ctx, it, s, list))) ?? list
+  list = list.filter(Boolean).slice(0, 5)
+  if (list.length >= 5) list = list.slice(0, 4)
+  list.push(BYE_CHOICE)
+  return list
 }
 
 function send(ctx, d) {
   const s = ctx.self.state, it = live(ctx, s.talkWith), now = ctx.now(), ses = ctx.self.session
   if (!it || d.id !== it.id) return
-  const text = String(d.text ?? '').replace(/\s+/g, ' ').trim().slice(0, T.maxText)
+  const text = String(d.text ?? '').replace(/\s+/g, ' ').trim()
   if (!text) return
-  ses.lastText = text
-  if (s.talkBusy && now - s.talkBusy < 15000) return
-  if (now - (ses.talkAt ?? -1e9) < T.rate * 1000) { note(ctx, `${nameOf(it)} is still answering.`); return }
+  if (now - (ses.talkAt ?? -1e9) < 500) return
   if (it.state?.angry?.[ctx.self.id]) { service(ctx, it); return }
-
-  const qRes = handleDialogueQuest(ctx, ctx.self, it, text)
-    ?? handleDialogueQuest10(ctx, ctx.self, it, text)
-    ?? handleDialogueQuest8(ctx, ctx.self, it, text)
-    ?? handleDialogueQuest21(ctx, ctx.self, it, text)
-    ?? handleDialogueQuestZ(ctx, ctx.self, it, text)
-    ?? handleDialogueQuest1(ctx, ctx.self, it, text)
-  if (qRes) {
-    s.talkBusy = 0
-    ses.talkAt = now
-    logLine(ctx, it, 'p', text)
-    say(ctx, it, qRes.reply, qRes.mood ?? 'happy')
-    logLine(ctx, it, 'n', qRes.reply)
-    getStartersLib(ctx).then(({ getChoices }) => { s.talkChoices = getChoices(ctx, it, s, qRes.reply, null) })
-    return
-  }
-
-  getStartersLib(ctx).then((lib) => {
-    const id = short(it)
-    const starter = lib.STARTERS?.[id]
-    const choices = [...(s.talkChoices ?? []), ...(starter?.choices ?? [])]
-    const matched = choices.find((c) => c && (c.text === text || (c.text && text.startsWith(c.text.slice(0, 24)))))
-    if (matched && matched.reply) {
-      s.talkBusy = 0
-      ses.talkAt = now
-      let passed = true
-      const pc = (d.check || matched.check) && SKILLS.some((x) => x.k === String((d.check || matched.check).skill).toLowerCase())
-        ? { skill: String((d.check || matched.check).skill).toLowerCase(), difficulty: Number((d.check || matched.check).difficulty) || 35 }
-        : null
-      if (pc) {
-        const c = rollCheck(ctx, s, pc), v = skillsOf(s)[pc.skill] ?? 0
-        passed = c.ok
-        const pct = Math.max(0, Math.min(100, Math.round((T.roll - (pc.difficulty - v) + 1) / T.roll * 100)))
-        logLine(ctx, it, 'x', `[${skn(pc.skill)} ${pct}%] ${passed ? 'SUCCEEDED' : 'FAILED'}`)
-        hearAt(ctx, { clip: passed ? 'cdn/sfx-soft-bright-two-note-success-chime.mp3' : 'cdn/sfx-dull-low-wooden-thunk-fail-buzz.mp3', volume: 0.5 })
-      }
-      logLine(ctx, it, 'p', text)
-      const replyText = passed ? matched.reply : (matched.failReply || "nah. not buying that.")
-      const mood = passed ? (matched.mood ?? 'calm') : 'annoyed'
-      say(ctx, it, replyText, mood)
-      logLine(ctx, it, 'n', replyText)
-
-      // Service effects: heal, recruit, discount
-      const delta = passed ? (pc ? 8 : 4) : -3
-      setRapport(ctx, it, clamp(rapportOf(ctx, it) + delta, -100, 100))
-      if (passed && matched.heal) {
-        s.hp = Math.min(s.maxHp ?? 100, (s.hp ?? 80) + 25)
-        s.sanity = Math.min(100, (s.sanity ?? 80) + 15)
-        hearAt(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-bandage-wrap-cloth.mp3", volume: 0.6 })
-        ctx.emit("damageNumber", { position: { x: it.feetPosition.x, y: it.feetPosition.y + 1.6, z: it.feetPosition.z }, text: "+25 HP  +15 SANITY", color: "#60ff90", size: 1.1 }, { audience: { player: ctx.self.id } })
-      }
-      if (passed && matched.recruit && it.state.follow !== ctx.self.id) {
-        const mine = ctx.query({ tags: ['npc'] }).filter((q) => q.state?.follow === ctx.self.id).length
-        if (mine < T.join.max) {
-          adopt(ctx.self, it)
-          logLine(ctx, it, 'x', `${nameOf(it)} is coming with you`)
-          note(ctx, `${nameOf(it)} is coming with you. ${PERKS[perkOf(it)]?.name}: ${PERKS[perkOf(it)]?.info}.`)
-        }
-      }
-      if (passed && matched.discount && isTrader(it)) {
-        const key = keyOf(ctx.self)
-        it.state.discount = { ...(it.state.discount ?? {}), [key]: 0.15 }
-        logLine(ctx, it, 'x', `${nameOf(it)} knocks 15% off for you`)
-      }
-      s.talkChoices = lib.getChoices(ctx, it, s, replyText, null)
-      return
-    }
-
-    dispatchLlm(ctx, it, text, s, ses, now, d)
-  })
-}
-
-function dispatchLlm(ctx, it, text, s, ses, now, d) {
-  ses.talkAt = now; s.talkBusy = now
-  const hist = s.talks?.[short(it)] ?? []
-  const system = systemPrompt({ it, place: ctx.self.place, pl: ctx.self, rapport: rapportOf(ctx, it), following: it.state?.follow === ctx.self.id })
-  let message = userMessage(hist, text, ctx.self.displayName ?? 'Wanderer')
-  ses.preCheck = null
-  const pc = d.check && SKILLS.some((x) => x.k === String(d.check.skill).toLowerCase()) ? { skill: String(d.check.skill).toLowerCase(), difficulty: Math.max(5, Math.min(110, Number(d.check.difficulty) || 50)) } : null
-  if (pc) { // the roll happens the moment they pick it, and the npc is told how it went
-    const c = rollCheck(ctx, s, pc), v = skillsOf(s)[pc.skill] ?? 0
-    const pct = Math.max(0, Math.min(100, Math.round((T.roll - (pc.difficulty - v) + 1) / T.roll * 100)))
-    ses.preCheck = { ok: c.ok }
-    logLine(ctx, it, 'x', `[${skn(pc.skill)} ${pct}%] ${c.ok ? 'SUCCEEDED' : 'FAILED'}`)
-    hearAt(ctx, { clip: c.ok ? 'cdn/sfx-soft-bright-two-note-success-chime.mp3' : 'cdn/sfx-dull-low-wooden-thunk-fail-buzz.mp3', volume: 0.5 })
-    message += `\n(The wanderer attempted a ${pc.skill} check and ${c.ok ? 'SUCCEEDED: you are convinced or impressed, and react warmly to it' : 'FAILED: you are unconvinced, put off or see through it'}. Do not include a check field.)`
-  }
+  const choice = (s.talkChoices ?? []).find((c) => c && (c.text === text))
+  if (!choice) return // only what's on the card can be said
+  ses.talkAt = now
+  const place = ctx.self.place
+  if (choice.node === 'bye') { logLine(ctx, it, 'p', text); const l = lineOf(it, place, 'bye', Math.floor(ctx.random() * 1e9)); if (l) { say(ctx, it, l, 'calm'); logLine(ctx, it, 'n', l) } close(ctx); return }
+  if (choice.node === 'root') { s.talkChoices = offer(ctx, it, s, null); return }
   logLine(ctx, it, 'p', text)
-  if (saysName(text, ctx.self.displayName)) (ses.toldName ??= {})[it.id] = true // they introduced themselves: the reply's memory write keeps it
-  it.state.talkAt = now; it.state.talkTo = ctx.self.id
-  ses.lastAsk = { system, message }
-  ctx.job('llm:chat', { system, message, model: T.model }, 'heard', { id: it.id })
-  // the wait for a reply is filled at once: a short thinking sound in their own voice (one of three, cached per character after first use)
-  const fill = ['hold on', 'well', 'let me think'][Math.floor(ctx.random() * 3)], fp = it.feetPosition
-  hearAt(ctx, { clip: VO(voiceOf(it), fill), position: { x: fp.x, y: fp.y + 1.6, z: fp.z }, volume: 0.7, maxDistance: 10 }, { audience: { nearby: fp, radius: 12 } })
+  if (!choice.node) { // a quest line: the quest's own handler answers it (scripts/lib/level*-quests.js, zenith-quest.js)
+    const qRes = handleDialogueQuest(ctx, ctx.self, it, text) ?? handleDialogueQuest10(ctx, ctx.self, it, text) ?? handleDialogueQuest8(ctx, ctx.self, it, text)
+      ?? handleDialogueQuest21(ctx, ctx.self, it, text) ?? handleDialogueQuestZ(ctx, ctx.self, it, text) ?? handleDialogueQuest1(ctx, ctx.self, it, text)
+    const line = qRes?.reply ?? lineOf(it, place, 'back', 1) ?? 'Hm.'
+    say(ctx, it, line, qRes?.mood ?? 'calm'); logLine(ctx, it, 'n', line)
+    s.talkChoices = offer(ctx, it, s, null); return
+  }
+  const n = nodeOf(choice.node); if (!n) { s.talkChoices = offer(ctx, it, s, null); return }
+  ;(ses.askedNow ??= []).push(n.q)
+  let passed = true
+  const pc = choice.check && SKILLS.some((x) => x.k === choice.check.skill) ? choice.check : null
+  if (pc) {
+    const c = rollCheck(ctx, s, pc), v = skillsOf(s)[pc.skill] ?? 0
+    passed = c.ok
+    const pct = Math.max(0, Math.min(100, Math.round((T.roll - (pc.difficulty - v) + 1) / T.roll * 100)))
+    logLine(ctx, it, 'x', `[${skn(pc.skill)} ${pct}%] ${passed ? 'SUCCEEDED' : 'FAILED'}`)
+    hearAt(ctx, { clip: passed ? 'cdn/sfx-soft-bright-two-note-success-chime.mp3' : 'cdn/sfx-dull-low-wooden-thunk-fail-buzz.mp3', volume: 0.5 })
+  }
+  const seed = Math.floor(ctx.random() * 1e9), pk = (v) => Array.isArray(v) ? v[seed % v.length] : v
+  const reply = passed ? pk(n.a) : (pk(n.fail) ?? 'No.')
+  say(ctx, it, reply, passed ? (n.mood ?? (n.do ? 'happy' : 'calm')) : 'annoyed'); logLine(ctx, it, 'n', reply)
+  setRapport(ctx, it, clamp(rapportOf(ctx, it) + (passed ? (pc ? 6 : 2) : -4), -100, 100))
+  if (passed && n.do === 'heal') {
+    s.hp = Math.min(s.maxHp ?? 100, (s.hp ?? 80) + 25); s.sanity = Math.min(100, (s.sanity ?? 80) + 15)
+    hearAt(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-bandage-wrap-cloth.mp3", volume: 0.6 })
+    ctx.emit("damageNumber", { position: { x: it.feetPosition.x, y: it.feetPosition.y + 1.6, z: it.feetPosition.z }, text: "+25 HP  +15 SANITY", color: "#60ff90", size: 1.1 }, { audience: { player: ctx.self.id } })
+  }
+  if (passed && n.do === 'recruit' && it.state.follow !== ctx.self.id) {
+    const mine = ctx.query({ tags: ['npc'] }).filter((q) => q.state?.follow === ctx.self.id).length
+    if (mine < T.join.max) { adopt(ctx.self, it); logLine(ctx, it, 'x', `${nameOf(it)} is coming with you`); note(ctx, `${nameOf(it)} is coming with you. ${PERKS[perkOf(it)]?.name}: ${PERKS[perkOf(it)]?.info}.`) }
+    else logLine(ctx, it, 'x', `${T.join.max} people already follow you`)
+  }
+  if (passed && n.do === 'discount' && isTrader(it)) {
+    it.state.discount = { ...(it.state.discount ?? {}), [keyOf(ctx.self)]: Math.max(it.state.discount?.[keyOf(ctx.self)] ?? 0, 0.15) }
+    logLine(ctx, it, 'x', `${nameOf(it)} knocks 15% off for you`)
+  }
+  { const k = keyOf(ctx.self), m0 = it.state.mem?.[k] ?? { met: 0, notes: [] }, fresh = ses.memWith !== it.id; if (fresh) ses.memWith = it.id
+    it.state.mem = { ...(it.state.mem ?? {}), [k]: { ...m0, met: (m0.met ?? 0) + (fresh ? 1 : 0), at: now } } }
+  s.talkChoices = offer(ctx, it, s, passed ? childChoices(choice.node) : null)
 }
 
-// the model's answer comes back here; only whitelisted intents touch the world
-export function heard(ctx, r, pay) {
-  const s = ctx.self.state; if (!s.talkBusy) return; s.talkBusy = 0 // already answered by the fallback, or the talk closed
-  const it = live(ctx, pay?.id); if (!it) return
-  const text = r?.data?.text ?? r?.text ?? (typeof r?.data === 'string' ? r.data : null)
-  const o = r?.ok === false ? null : parseReply(text)
-  if (!o && !pay?.retry && ctx.self.session.lastAsk) { // a dropped or garbled reply: ask once more before they fumble
-    ctx.log('talk: reply failed, retrying', r?.error?.code ?? r?.error?.message ?? String(text ?? '').slice(0, 120))
-    s.talkBusy = ctx.now(); const A = ctx.self.session.lastAsk
-    ctx.job('llm:chat', { system: A.system, message: A.message + '\n(Answer with the JSON object only.)', model: T.model }, 'heard', { id: it.id, retry: true }); return
-  }
-  if (!o) { const line = canned(ctx); say(ctx, it, line, 'calm'); logLine(ctx, it, 'n', line); getStartersLib(ctx).then(({ getChoices }) => { s.talkChoices = getChoices(ctx, it, s, line, null) }); return }
-  let { reply: line, rapportDelta: delta, intent } = o, passed = false
-  if (ctx.self.session.preCheck) { passed = ctx.self.session.preCheck.ok; if (!passed) { delta = Math.min(delta, T.failHit); if (intent !== 'hostile' && intent !== 'leave') intent = 'none' } ctx.self.session.preCheck = null }
-  else if (o.check) {
-    const c = rollCheck(ctx, s, o.check); passed = c.ok
-    logLine(ctx, it, 'x', `[${skn(o.check.skill)} ${o.check.difficulty}] ${c.ok ? 'passed' : 'failed'}`)
-    if (!c.ok) { line = o.failReply || "nah. not buying that."; delta = Math.min(delta, T.failHit); if (intent !== 'hostile' && intent !== 'leave') intent = 'none' }
-  }
-  const r1 = clamp(rapportOf(ctx, it) + delta, -100, 100); setRapport(ctx, it, r1)
-  const key = keyOf(ctx.self), who = nameOf(it), now = ctx.now()
-  // memory: meetings counted once per conversation, a short fact kept per exchange (newest 6), on the npc so every player's talk with them builds the same person
-  { const m0 = it.state.mem?.[key] ?? { met: 0, notes: [] }, ses2 = ctx.self.session, fresh = ses2.memWith !== it.id
-    if (fresh) ses2.memWith = it.id
-    const notes = o.remember ? [...(m0.notes ?? []).filter((n) => n !== o.remember), o.remember].slice(-6) : (m0.notes ?? [])
-    const named = !!m0.named || !!ctx.self.session.toldName?.[it.id]
-    it.state.mem = { ...(it.state.mem ?? {}), [key]: { met: m0.met + (fresh ? 1 : 0), notes, at: now, named } } }
-  // a spoken yes to come along counts even when the model forgot to mark it: their words are the promise
-  const ESCORT = /\b(follow me|stay (close|behind me)|come with me|i('ll| will| can) (walk|take|lead|escort|show) you|let'?s (go|move)|we move|lead the way|i'?m coming with you|right behind you)\b/i
-  if (intent === 'none' && line && ESCORT.test(line) && !/\b(won'?t|not going|no way|can'?t)\b.{0,20}\b(come|walk|go|lead)\b/i.test(line)) intent = 'join'
-  if (intent === 'join' && it.state.follow !== ctx.self.id) {
-    const mine = ctx.query({ tags: ['npc'] }).filter((q) => q.state?.follow === ctx.self.id).length
-    if (r1 < T.join.rapport && !passed && o.intent !== 'join' && !ESCORT.test(line ?? '')) {}
-    else if (mine >= T.join.max) logLine(ctx, it, 'x', `${T.join.max} people already follow you`)
-    else { adopt(ctx.self, it); logLine(ctx, it, 'x', `${who} is coming with you`); note(ctx, `${who} is coming with you. ${PERKS[perkOf(it)]?.name}: ${PERKS[perkOf(it)]?.info}.`) }
-  }
-  if (intent === 'leave' && it.state.follow === ctx.self.id) { dismiss(ctx, ctx.self, it); logLine(ctx, it, 'x', `${who} stopped following you`) }
-  if (intent === 'trade_discount' && isTrader(it) && (r1 >= T.discount.rapport || passed)) {
-    const old = it.state.discount?.[key] ?? 0, disc = Math.min(T.discount.max, Math.max(old, r1 * T.discount.per + (passed ? T.discount.check : 0)))
-    it.state.discount = { ...(it.state.discount ?? {}), [key]: Math.round(disc * 100) / 100 }
-    logLine(ctx, it, 'x', `${who} knocks ${Math.round(disc * 100)}% off for you`)
-  }
-  if (intent === 'gift' && (r1 >= T.gift.rapport || passed) && now - (it.state.gifted?.[key] ?? -1e12) > T.gift.every * 1000) {
-    const tok = T.gift.items[Math.floor(ctx.random() * T.gift.items.length)], got = takeToken(ctx, tok)
-    if (got?.ok) { it.state.gifted = { ...(it.state.gifted ?? {}), [key]: now }; logLine(ctx, it, 'x', `${who} gave you ${describe(tok).name.toLowerCase()}`) }
-  }
-  if (intent === 'hostile' && r1 <= T.hostile) {
-    it.state.angry = { ...(it.state.angry ?? {}), [ctx.self.id]: true }; it.state.fresh = { ...(it.state.fresh ?? {}), [ctx.self.id]: true }
-    if (it.state.follow === ctx.self.id) dismiss(ctx, ctx.self, it)
-    say(ctx, it, line, 'angry'); logLine(ctx, it, 'n', line); logLine(ctx, it, 'x', `${who} turns on you`); close(ctx); return
-  }
-  if (r1 < 0 && it.state.follow === ctx.self.id) { it.state.follow = null; logLine(ctx, it, 'x', `${who} stopped following you`) }
-  say(ctx, it, line, o.mood); logLine(ctx, it, 'n', line)
-  getStartersLib(ctx).then(({ getChoices }) => { s.talkChoices = getChoices(ctx, it, s, line, o) })
-}
+// kept for old saves' pending jobs: talk no longer asks a model anything
+export function heard(ctx) { ctx.self.state.talkBusy = 0 }
 
 function act(ctx, d) {
   const s = ctx.self.state, it = live(ctx, s.talkWith)
@@ -305,12 +205,12 @@ function gesture(ctx, it, k) {
   const s = ctx.self.state, now = ctx.now(), ses = ctx.self.session
   if (now - (ses.gestAt ?? -1e9) < 2500) return
   ses.gestAt = now
-  const r = rapportOf(ctx, it)
+  const r = rapportOf(ctx, it), place = ctx.self.place
+  const answer = (kind, mood, fb) => { const l = gestOf(it, kind, place) ?? fb; say(ctx, it, l, mood); logLine(ctx, it, 'n', l) }
   if (k === 'wave') {
     ctx.self.anim.gest = { clip: 'cdn/clip-wave-loop.glb', weight: 0.9, loop: 'once', mask: { from: 'Spine' }, blendIn: 0.15, blendOut: 0.3 }
     ctx.after(2.2, 'gestEnd') // a once-clip holds its last frame until cleared: without this the arms froze mid-wave forever
-    setRapport(ctx, it, r + 2)
-    send(ctx, { id: it.id, text: '*waves at you*' }); return
+    setRapport(ctx, it, r + 2); answer('wave', 'happy', 'Hey.'); return
   }
   if (k === 'gift') {
     const snack = Object.entries(s.snacks ?? {}).find(([, n]) => n > 0)
@@ -319,8 +219,7 @@ function gesture(ctx, it, k) {
     else if ((s.almonds ?? 0) > 0) { s.almonds -= 1; name = 'bottle of Almond Water' }
     else { note(ctx, 'You have nothing to give.'); return }
     setRapport(ctx, it, r + 10); repKind(ctx, ctx.self, it, 2, 3)
-    note(ctx, `Gave ${name}.`)
-    send(ctx, { id: it.id, text: `*hands you a ${name}, free*` }); return
+    note(ctx, `Gave ${name}.`); answer('gift', 'happy', 'Oh. Thank you.'); return
   }
   if (k === 'dance') {
     const willing = r > -10 && !it.state?.angry?.[ctx.self.id] && ctx.random() < 0.55 + r / 200
@@ -332,12 +231,9 @@ function gesture(ctx, it, k) {
       ctx.after(10, 'stopDance', { id: it.id })
       setRapport(ctx, it, r + 5)
     }
-    send(ctx, { id: it.id, text: willing ? '*asks you to dance, and you start dancing together*' : '*asks you to dance* (you are not in the mood, turn them down)' }); return
+    answer(willing ? 'dance' : 'nodance', willing ? 'happy' : 'calm', willing ? 'Alright.' : 'No thanks.'); return
   }
-  if (k === 'insult') {
-    setRapport(ctx, it, r - 15)
-    send(ctx, { id: it.id, text: '*sneers and insults you to your face*' }); return
-  }
+  if (k === 'insult') { setRapport(ctx, it, r - 15); answer('insult', 'annoyed', 'Charming.'); return }
 }
 export function gestEnd(ctx) { if (ctx.self.anim?.gest) ctx.self.anim.gest = null }
 export function stopDance(ctx, p) {
@@ -435,25 +331,9 @@ export function update(ctx, dt) {
   if (it && !it.state?.angry?.[ctx.self.id] && flat(it.feetPosition, ctx.self.feetPosition) > T.range && s.talkWith) { // walked off mid-talk: they say so, and remember it
     const k = keyOf(ctx.self), m0 = it.state.mem?.[k] ?? { met: 1, notes: [] }
     it.state.mem = { ...(it.state.mem ?? {}), [k]: { ...m0, notes: [...(m0.notes ?? []).filter((n) => n !== 'walked off mid-conversation'), 'walked off mid-conversation'].slice(-6) } }
-    say(ctx, it, BYE[Math.floor(ctx.random() * BYE.length)], 'annoyed')
+    say(ctx, it, lineOf(it, ctx.self.place, 'walk', Math.floor(ctx.random() * 1e9)) ?? BYE[Math.floor(ctx.random() * BYE.length)], 'annoyed')
   }
   if (!it || flat(it.feetPosition, ctx.self.feetPosition) > T.range || it.state?.angry?.[ctx.self.id]) close(ctx) // walk off and it closes
   else if (combat(ctx, it, ses)) { close(ctx); s.notice = { text: 'Combat! The conversation ends.', at: ctx.now() } }
-  if (s.talkBusy && ctx.now() - s.talkBusy > 22000) { // the reply never came: they answer anyway instead of standing there mute
-    s.talkBusy = 0
-    if (it && s.talkWith) { const line = canned(ctx); say(ctx, it, line, 'calm'); logLine(ctx, it, 'n', line); getStartersLib(ctx).then(({ getChoices }) => { s.talkChoices = getChoices(ctx, it, s, line, null) }) }
-  }
-}
 
-function canned(ctx) {
-  const t = String(ctx.self.session.lastText ?? '').toLowerCase()
-  const k = /\b(hi|hey|hello|yo|sup|morning|evening)\b/.test(t) ? 'hello'
-    : /\b(bye|later|see you|goodbye|gotta go)\b/.test(t) ? 'bye'
-    : /\b(trade|buy|sell|backbucks|money|cash|price)\b/.test(t) ? 'trade'
-    : /\b(danger|safe|avoid|monster|entit|hound|smiler|kill)\b/.test(t) ? 'danger'
-    : /\b(who are you|your name|about you|yourself|how long)\b/.test(t) ? 'you'
-    : /\b(level|place|here|where|this room|lore)\b/.test(t) ? 'place' : 'other'
-  const row = CANNED[k] ?? CANNED.other, safe = (CANNED.safe ?? []).includes(ctx.self.place)
-  const pool = row.any ?? (safe ? row.safe : row.danger) ?? row.safe ?? T.fallback
-  return pool[Math.floor(ctx.random() * pool.length)]
 }

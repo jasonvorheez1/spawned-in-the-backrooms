@@ -1,3 +1,4 @@
+import { voiceKey } from './voices.js'
 import { mayReturn } from "./npc-respawn.js";
 // Level 5's residents (Homely Hotel staff, Housekeeping, the Originals), run by scripts/l5-people.js once a second.
 // Each is an M.E.G.-style agent (scripts/meg-agent.js walks state.rounds); this director gives them day/night rounds,
@@ -27,7 +28,7 @@ const ORIG = [["o:member", "Ask to join the salon"], ["o:lore", "Ask about the h
 export const roundsOf = (rows) => (rows ?? []).map(([x, z, dwell, act, lx, lz]) => ({ x, y: 0, z, dwell, act: ACT[act] ?? null, look: { x: lx, z: lz } }));
 export function speak(ctx, o, t) {
   const now = ctx.now(), d = 1400 + t.length * 60; o.state.line = { t, at: now, d }; o.state.talkAt = now;
-  const p = o.feetPosition; heard(ctx, { clip: VO(o.state.voice ?? "ale", t), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 0.85, refDistance: 2.5, maxDistance: 14 }, { audience: { nearby: p, radius: 14 } });
+  const p = o.feetPosition; heard(ctx, { clip: VO(voiceKey(o), t), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 0.85, refDistance: 2.5, maxDistance: 14 }, { audience: { nearby: p, radius: 14 } });
 }
 export function spawnResident(ctx, id) {
   const g = P.people[id], r0 = g.rounds[0];

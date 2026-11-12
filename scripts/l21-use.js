@@ -16,14 +16,14 @@ const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const H = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
 
 const GOKNAR = [
-  "Stay alert. The hounds keep testing the perimeter doors.",
-  "Don't wander into The Edges without a heavy weapon and fresh batteries.",
-  "Whatever you do, don't look a Smiler in the teeth. Freeze, keep your light on it, and back away slow."
+  "Stop at the line. Hands. Okay.",
+  "Edges are past the dead tubes. Fresh batteries or don't bother.",
+  "Teeth in the dark and nothing else? Don't run. Light on it. Back up slow."
 ];
 const NED = [
-  "Help yourself to the Saltines on the table. We've got enough cartons to survive the apocalypse.",
-  "Freezer coils keep sweating clean water. Drink as much as you need.",
-  "Check the errand board if you want Backdollars and gear. We always need copper wire and relays."
+  "Saltines on the table. Take some. Take more. Please.",
+  "Freezer coils sweat clean water. Cup's on the hook.",
+  "Errand board's by the door. Copper wire, mostly. Always copper wire."
 ];
 
 const ALEF_LOGS = [
@@ -172,8 +172,8 @@ export const ears = {
       const items = q.items.map((it) => (bonus && String(it).startsWith("cash:") ? `cash:${Math.round(Number(String(it).slice(5)) * (1 + bonus))}` : it));
       const tier = addRep(w, "survivors", 2);
       w.payout = { xp, items, text: `ERRAND DONE: ${q.name}${bonus ? " · Survivors bonus" : ""}${tier ? ` · ${tier}` : " · Survivors +2"}` };
-      const line = "Good work on that salvage. That keeps the freezers running.";
-      heard(ctx, { clip: vo("hollis", line), position: pos, volume: 0.9, maxDistance: 16 });
+      const line = "That'll do it. Freezers stay cold another week.";
+      heard(ctx, { clip: vo("l21-ned", line), position: pos, volume: 0.9, maxDistance: 16 });
       ctx.self.ui = `<div face="front" width="1.4m" style="font-family:Arial,sans-serif;font-weight:900;color:#e8e0c0;text-align:center;background:#181814;padding:8px;border:2px solid #3fa860"><div style="font-size:46px;color:#7aff9a;border-bottom:1px solid #3fa860;margin-bottom:6px">ERRAND COMPLETED!</div><div style="font-size:32px;color:#ffffff;margin-bottom:4px">${q.name.toUpperCase()} (+${xp} XP)</div><div style="font-size:24px;color:#a8d8c8">BOUNTY PAID IN CASH &amp; SUPPLIES</div></div>`;
       ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.5, z: pos.z }, text: `+${xp} XP`, color: "#ffd700", size: 1.3 }, { audience: { player: who.id } });
       ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.1, z: pos.z }, text: `ERRAND DONE: ${q.name.toUpperCase()}`, color: "#80ffaa", size: 1.0 }, { audience: { player: who.id } });
@@ -183,7 +183,7 @@ export const ears = {
     if (s.kind === "goknar") {
       const n = (s.said ??= {})[uid] = ((s.said ?? {})[uid] ?? -1) + 1;
       const line = GOKNAR[n % GOKNAR.length];
-      heard(ctx, { clip: vo("reyes", line), position: pos, volume: 1.0, maxDistance: 14 });
+      heard(ctx, { clip: vo("l21-goknar", line), position: pos, volume: 1.0, maxDistance: 14 });
       ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.9, z: pos.z }, text: `"${line}"`, color: "#7aff9a", size: 1.05 });
       return;
     }
@@ -191,7 +191,7 @@ export const ears = {
     if (s.kind === "ned") {
       const n = (s.said ??= {})[uid] = ((s.said ?? {})[uid] ?? -1) + 1;
       const line = NED[n % NED.length];
-      heard(ctx, { clip: vo("hollis", line), position: pos, volume: 1.0, maxDistance: 14 });
+      heard(ctx, { clip: vo("l21-ned", line), position: pos, volume: 1.0, maxDistance: 14 });
       ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.9, z: pos.z }, text: `"${line}"`, color: "#ffd460", size: 1.05 });
       return;
     }

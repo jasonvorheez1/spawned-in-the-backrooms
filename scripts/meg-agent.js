@@ -1,7 +1,8 @@
 import { clearSight } from './lib/sight.js';
 import { knocked } from "./lib/knock.js";
-import { vo } from "./lib/voices.js";
+import { vo, hasVoice } from "./lib/voices.js";
 import { social } from "./lib/npc-social.js";
+import { barkOf } from "./lib/dialogue.js";
 import { isVilified } from "./lib/rep.js";
 import { heard } from "./lib/hear.js";
 import { seatFor } from "./lib/seat.js";
@@ -355,12 +356,15 @@ function aim(me, m, t) {
 // combat barks: a shout over the head (ui.js bubble + subtitle) and the speaker's voice; a short gap so they never talk over themselves
 const VOICES = { "meg-ale": "ale", "meg-ortiz": "ortiz", "meg-callum": "callum", "surv-wren": "wren", "surv-hollis": "hollis", "surv-mags": "mags" };
 const BVO = (who, line) => vo(who, line)
+// a few bark kinds are written under a person's plainer word for them
+const BARK_AS = { ambientIdle: 'idle', brandish: 'drawn', lowHealth: 'hurt', move: 'idle' };
 export function bark(ctx, o, kind, force) {
-  const pool = o?.state?.barks?.[kind] ?? CHAT.barks?.[kind], now = ctx.now(), st = o?.state;
+  const own = barkOf(o, BARK_AS[kind] ?? kind, () => ctx.random(), o?.place); // their own written line first (scripts/lib/dialogue.js)
+  const pool = own ? [own] : o?.state?.barks?.[kind] ?? CHAT.barks?.[kind], now = ctx.now(), st = o?.state;
   if (!pool?.length || !st) return;
   if (st.dead || st.down || (st.hp ?? 1) <= 0) return; // KO'd or dead: silent (Shelly, Nov 9)
   if (!force && now - (st.line?.at ?? -1e9) < 3500) return;
-  const t = pool[Math.floor(ctx.random() * pool.length)], d = 1300 + t.length * 55, who = st.voice ?? VOICES[o.id] ?? `${String(o.id).split('/').pop()}#${(o.state?.wear?.sex ?? o.state?.look?.sex) === 'f' ? 'f' : 'm'}`;
+  const t = pool[Math.floor(ctx.random() * pool.length)], d = 1300 + t.length * 55, who = hasVoice(String(o.id).split('/').pop()) ? String(o.id).split('/').pop() : st.voice ?? VOICES[o.id] ?? `${String(o.id).split('/').pop()}#${(o.state?.wear?.sex ?? o.state?.look?.sex) === 'f' ? 'f' : 'm'}`;
   st.line = { t, at: now, d };
   const p = o.feetPosition;
   heard(ctx, { clip: BVO(who, t), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 1, refDistance: 3, maxDistance: 18 }, { audience: { nearby: p, radius: 18 } });
@@ -569,7 +573,7 @@ export function update(ctx, dt) {
       holster(ctx, me, m, false); aim(me, m, null); gait(me, m, "run");
       const dx = me.feetPosition.x - t.feetPosition.x, dz = me.feetPosition.z - t.feetPosition.z, l = Math.hypot(dx, dz) || 1;
       moveAlong(ctx, me, m, { x: me.feetPosition.x + dx / l * 6, y: me.feetPosition.y, z: me.feetPosition.z + dz / l * 6 }, (G.sprint ?? 7) * (nv === "coward" ? 1.05 : 1), dt); // a broken nerve sprints
-      if (now - (m.fleeSaid ?? 0) > 9000) { m.fleeSaid = now; s.line = { t: FLEE[nv][Math.floor(ctx.random() * FLEE[nv].length)], at: now, d: 2000 }; }
+      if (now - (m.fleeSaid ?? 0) > 9000) { m.fleeSaid = now; s.line = { t: barkOf(me, 'flee', () => ctx.random(), me.place) ?? FLEE[nv][Math.floor(ctx.random() * FLEE[nv].length)], at: now, d: 2000 }; }
       m.fearAt = now; return;
     }
     const d = flat(t.feetPosition, me.feetPosition), see = seesIt(ctx, me, t), reloading = now < (m.reloadUntil ?? 0);

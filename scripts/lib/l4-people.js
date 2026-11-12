@@ -1,3 +1,4 @@
+import { voiceKey } from './voices.js'
 import { mayReturn } from "./npc-respawn.js";
 import { vo } from "./voices.js";
 // Level 4's people, run from places/level4/sim.js once a second. Every resident is an M.E.G.-style agent (scripts/meg-agent.js
@@ -54,7 +55,7 @@ export function roundsFor(ctx, id, phase) {
 }
 export function speak(ctx, o, t) {
   const now = ctx.now(), d = 1400 + t.length * 60; o.state.line = { t, at: now, d }; o.state.talkAt = now;
-  const p = o.feetPosition; heard(ctx, { clip: VO(o.state.voice ?? `${String(o.id).split('/').pop()}#${(o.state?.wear?.sex ?? o.state?.look?.sex) === 'f' ? 'f' : 'm'}`, t), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 0.85, refDistance: 3, maxDistance: 18 }, { audience: { nearby: p, radius: 20 } });
+  const p = o.feetPosition; heard(ctx, { clip: VO(voiceKey(o), t), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 0.85, refDistance: 3, maxDistance: 18 }, { audience: { nearby: p, radius: 20 } });
 }
 // homes: a vacant office per resident (a player's home is never taken), its plate named, a cot and desk inside
 export function settle(ctx, spawnAgent) {

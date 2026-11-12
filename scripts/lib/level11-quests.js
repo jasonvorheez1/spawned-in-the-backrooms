@@ -170,7 +170,7 @@ export function handleDialogueQuest(ctx, p, npc, text) {
   // B.N.T.G. Realty: Mara sells the green house; the price is said, then a yes buys it
   if (npcId === "l11-realty-agent") {
     const price = 250000, usd = "$2,500";
-    if (s.home11 && /house|home|buy|key/.test(t)) return { reply: "It's yours already. Rest at the front door whenever. And move the keys out from under the mat.", mood: "happy" };
+    if (s.home11 && /house|home|buy|key/.test(t)) return { reply: "It's yours already. Go rest. And move the keys out from under the mat.", mood: "happy" };
     const asked = s.homeAsk && ctx.now() - s.homeAsk < 120000;
     if (asked && /\b(yes|yeah|yep|deal|sure|ok|okay)\b|buy it|i'll take|sign/.test(t)) {
       s.homeAsk = 0;
@@ -178,7 +178,7 @@ export function handleDialogueQuest(ctx, p, npc, text) {
       s.cents -= price; s.home11 = true;
       s.notice = { text: `You bought the green house for ${usd}. Rest at its front door any time.`, at: ctx.now() };
       ctx.emit("playSound", { clip: "cdn/sfx-cash-register-ka-ching-bell.mp3", volume: 0.8 }, { audience: { player: p.id } });
-      return { reply: "Sold. Keys are under the mat, which is a terrible place for keys, so move them. The front door's yours now, go rest whenever.", mood: "happy" };
+      return { reply: "Sold. Keys are under the mat. Terrible place for keys. Move them. Welcome home.", mood: "happy" };
     }
     if (/house|home|buy|property|place|green/.test(t)) {
       s.homeAsk = ctx.now();
@@ -189,10 +189,10 @@ export function handleDialogueQuest(ctx, p, npc, text) {
   // 1. Sedco Quest Start (from Courier)
   if (npcId === "l11-walker-1" && (t.includes("sedco manifest") || t.includes("need a hand"))) {
     if (!s.sedcoQ) {
-      if (repOf(s, "survivors") <= -35) return { reply: "Word on the avenue is you're bad news. Find your own work.", mood: "angry" };
+      if (repOf(s, "survivors") <= -35) return { reply: "Word on the avenue says you're trouble. Find your own work.", mood: "angry" };
       setSedcoStep(ctx, p, 1, "Quest Started: Spotlight on Sedco · Breach terminal SEDCO-SEC-01");
       return {
-        reply: "You're a lifesaver, kid! The Sedco storefront alarm tripped on Cam 04 and locked the doors and the subway vault. If you can override terminal SEDCO-SEC-01 outside the store, grab the CCTV backup logs, and pull the deposit drive from the underground vault, we split the salvage fifty-fifty!",
+        reply: "Oh thank god. Sedco's alarm went off on camera four and locked the store and the vault. Override the terminal out front, grab the camera backup, pull the drive from the vault downstairs. We split whatever's in it, half and half.",
         mood: "happy",
       };
     }
@@ -211,7 +211,7 @@ export function handleDialogueQuest(ctx, p, npc, text) {
           text: "Quest Completed: Spotlight on Sedco · Split the vault salvage with Courier (+120 XP, +$75.00)",
         });
         return {
-          reply: "Holy smokes, you actually got the Sedco Master Drive out of the vault! Management won't believe this. Here's your fifty-fifty cut: seventy-five Backdollars, field medical supplies, and a weapon repair kit. You're an ace, wanderer!",
+          reply: "You actually got it. The actual drive. Okay. Half and half, like I said. Seventy-five, a med kit, a repair kit. Don't tell management I said you could.",
           mood: "happy",
         };
       } else {
@@ -224,7 +224,7 @@ export function handleDialogueQuest(ctx, p, npc, text) {
           text: "Quest Completed: Spotlight on Sedco · Turned the Sedco drive over to M.E.G. Base Beta (+135 XP, +$60.00)",
         });
         return {
-          reply: "Excellent work, wanderer. M.E.G. Base Beta intelligence has been trying to access Sedco's archived feeds for weeks. Your requisition bounty has been approved: sixty Backdollars, medical supplies, toolkits, and ammunition. Stay sharp out there.",
+          reply: "Beta's been trying to get into Sedco's archive for weeks. Bounty's approved. Sixty, meds, tools, ammo. Good work.",
           mood: "happy",
         };
       }
@@ -234,10 +234,10 @@ export function handleDialogueQuest(ctx, p, npc, text) {
   // 2. Crane Quest Start (from Trader Kael)
   if (npcId === "l11-trader-kael" && (t.includes("canal shipments") || t.includes("wrong with the canal") || t.includes("canal trade route"))) {
     if (!s.craneQ) {
-      if (repOf(s, "bntg") <= -35) return { reply: "The Guild has blacklisted your name, wanderer. Step away from my stall.", mood: "angry" };
+      if (repOf(s, "bntg") <= -35) return { reply: "The Guild's got your name on a list. Step away from my stall.", mood: "angry" };
       setCraneStep(ctx, p, 1, "Quest Started: The Paper Bird's Blessing · Visit Entity 14 on the canal coping");
       return {
-        reply: "It's the canal locks upstream, citizen. The spillway pressure valve jammed, and the B.N.T.G. freight barge from Level 6.1 can't dock! Even the Lucky Cranes along the promenade stopped chirping. Seek out the origami crane on the canal wall, its blessing will guide you to the spillway pump.",
+        reply: "The canal locks. The spillway valve's jammed and the barge from 6.1 can't dock. Even the cranes on the promenade went quiet. Find the paper crane on the canal wall. Follow where it points.",
         mood: "calm",
       };
     }
@@ -255,7 +255,7 @@ export function handleDialogueQuest(ctx, p, npc, text) {
         text: "Quest Completed: The Paper Bird's Blessing · +95 XP, +$40.00, Fresh Provisions",
       });
       return {
-        reply: "You did it! I can hear the canal locks opening right now, the B.N.T.G. coffee caravan is sailing in! As promised, forty Backdollars, fresh rations, and two bottles of pure Almond Water. The Guild won't forget your help, citizen!",
+        reply: "Hear that? The locks. The coffee barge is coming in. Forty, rations, two bottles of the pure stuff. Come by for coffee. On me. Forever.",
         mood: "happy",
       };
     }
@@ -264,10 +264,10 @@ export function handleDialogueQuest(ctx, p, npc, text) {
   // 3. Maintenance Quest Start (from Night Shift Janitor)
   if (npcId === "l11-walker-3" && (t.includes("maintenance rounds") || t.includes("need assistance") || t.includes("help with the maintenance"))) {
     if (!s.maintQ) {
-      if (repOf(s, "survivors") <= -35) return { reply: "I don't trust you near the city's steam lines. Move along.", mood: "angry" };
+      if (repOf(s, "survivors") <= -35) return { reply: "I don't want you near my steam lines. Move along.", mood: "angry" };
       setMaintStep(ctx, p, 1, "Quest Started: Capital Infrastructure · Bleed the B.R.C. Diesel Compressor on the west lane");
       return {
-        reply: "Much obliged, wanderer. The city spawned spontaneous simulated roadworks on the west lane overnight, but the compressor's relief valve is whistling like a tea kettle. Bleed the pressure on the compressor, check the cast iron radiator in Apartment 11-B, test the tap, and report back.",
+        reply: "City threw a roadworks across the west lane overnight and the compressor's whistling like a kettle. Bleed the pressure, check the radiator in 11-B, run the tap. Tell me if it comes out brown.",
         mood: "calm",
       };
     }
@@ -285,7 +285,7 @@ export function handleDialogueQuest(ctx, p, npc, text) {
         text: "Quest Completed: Capital Infrastructure · +90 XP, +$35.00, Repair Kit, Battery",
       });
       return {
-        reply: "Good work, kid. The steam gauge on 11th Avenue settled right back into the green, and the apartment lines are humming quiet. Here's thirty-five Backdollars, a spare tool kit, and a fresh battery for your trouble. Keep your eyes sharp when the lights cycle down.",
+        reply: "Gauge on Eleventh is back in the green. Quiet lines. Thirty-five, a toolkit, a battery. And when the streetlights cycle down, get indoors.",
         mood: "happy",
       };
     }

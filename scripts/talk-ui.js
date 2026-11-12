@@ -284,19 +284,12 @@ export function talkUi(ctx, player) {
         <span>Choose a response${choices.length ? ` · 1–${choices.length}` : ''}</span>
       </div>
       <div class="tc-choices-list" data-interactive>
-        ${choiceItems || '<div style="font-size:13px;opacity:.6;padding:8px 10px">Ask a question below to continue.</div>'}
+        ${choiceItems || '<div style="font-size:13px;opacity:.6;padding:8px 10px">...</div>'}
       </div>
 
-      <!-- Freeform Text Command Line -->
+      <!-- Conversation history (choices are the only way to speak: scripts/lib/dialogue.js) -->
       <div class="tc-optional">
       ${histHtml ? `<details class="tc-extra" data-interactive><summary>Conversation history</summary><div class="tc-stream">${histHtml}</div></details>` : ''}
-      <details class="tc-inquiry tc-extra" ${choices.length?'':'open'} data-interactive><summary>Ask something else</summary>
-      <div class="tc-prompt-bar" data-interactive>
-        <input id="tkin" class="tc-prompt-inp" data-interactive ${s.talkBusy?'disabled':''} maxlength="${T.maxText}" autocomplete="off" aria-label="Say something" placeholder="Say something…" onkeydown="if(event.key==='Enter'&&this.value.trim()){event.stopPropagation();sendAction('talk',{id:'${q(it.id)}',text:this.value});this.value=''}else if(event.key==='Escape'){event.stopPropagation();this.blur()}else if(!this.value&&event.key>='1'&&event.key<='5'){event.preventDefault();event.stopPropagation();const b=document.querySelectorAll('.tc-choice')[parseInt(event.key)-1];if(b)b.click()}else{event.stopPropagation()}"/>
-        <button class="tc-send-btn" data-interactive ${s.talkBusy?'disabled':''} onclick="const i=document.getElementById('tkin');if(i&&i.value.trim()){sendAction('talk',{id:'${q(it.id)}',text:i.value});i.value=''}">Send</button>
-      </div>
-
-      </details>
       </div>
 
       <!-- Contextual actions -->

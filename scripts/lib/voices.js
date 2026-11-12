@@ -1,3 +1,4 @@
+import V from './data/npc-voices.yml'
 // One throat per character: the voice file's name is its prompt, so each character's words below ARE their voice.
 // Every speaking helper builds its clip through vo(who, line); a new who falls back to a throat picked from its name.
 const T = {
@@ -32,6 +33,11 @@ const T = {
   bram: 'cheery-raspy-old-man-wanderer-irish-lilt',
   ale: 'plain-tired-man-survivor-flat',
 }
+// every named person's own voice (scripts/lib/data/npc-voices.yml), keyed by their id: it wins over the old cast keys above
+for (const [k, v] of Object.entries(V ?? {})) if (!k.includes(':') && typeof v === 'string') T[k] = v
+export const hasVoice = (id) => !!(V && typeof V[id] === 'string' && !String(id).includes(':'))
+// the voice to speak an npc's line in: their own (npc-voices.yml) by id, else a cast key they carry, else one from the pool by id and sex
+export const voiceKey = (o) => { const id = String(o?.id ?? 'x').split('/').pop(); return hasVoice(id) ? id : o?.state?.voice ?? `${id}#${(o?.state?.wear?.sex ?? o?.state?.look?.sex) === 'f' ? 'f' : 'm'}` }
 const POOL = [
   'raspy-middle-aged-man-weary', 'bright-young-woman-curious', 'deep-slow-old-man-calm', 'quick-anxious-young-man',
   'husky-woman-dry-humor', 'soft-elderly-woman-kind', 'gruff-man-scottish-accent', 'crisp-woman-australian-accent',

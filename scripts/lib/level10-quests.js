@@ -165,11 +165,11 @@ export function handleDialogueQuest10(ctx, p, npc, text) {
     // 1a. Start "The Golden Bumper"
     if (t.includes("harvest") || t.includes("golden bumper") || t.includes("help outpost bountiful")) {
       if (!s.wheatQ) {
-        if (repOf(s, "meg") <= -35) return { reply: "Outpost Bountiful doesn't hire enemies of the M.E.G. Get off my porch.", mood: "angry" };
+        if (repOf(s, "meg") <= -35) return { reply: "Bountiful doesn't hire enemies of M.E.G. Off my porch.", mood: "angry" };
         const nextStep = (s.bread ?? 0) >= 1 ? 5 : (s.flour ?? 0) >= 1 ? 4 : (s.wheat ?? 0) >= 3 ? 3 : 2;
         setWheatStep(ctx, p, nextStep, "Quest Started: The Golden Bumper · Reap 3 Golden Wheat Sheaves");
         return {
-          reply: "That's the spirit, wanderer! The Backrooms won't feed itself. Grab at least 3 golden wheat sheaves from the fields, take them to the Windmill Quern to grind into flour, and bake a warm loaf at the hearth oven. Bring it back to me for our caravan to Level 11!",
+          reply: "Ha! Good. Three sheaves of the gold wheat, through the quern at the windmill, then into the hearth oven. Bring me the loaf. It's going to the city with the caravan.",
           mood: "happy",
         };
       }
@@ -186,7 +186,7 @@ export function handleDialogueQuest10(ctx, p, npc, text) {
           text: "Quest Completed: The Golden Bumper · +150 XP, +$75.00, Royal Ration, Farmstead Straw Hat",
         });
         return {
-          reply: "Mmm-mmm! Smell that golden crust! That's the finest loaf this side of Level 11. Here's your cut from M.E.G. agrarian requisitions: seventy-five Backdollars, a Royal Ration, and my spare woven straw hat. You're always welcome at Outpost Bountiful!",
+          reply: "Smell that. That's bread. That's real bread. Seventy-five, a Royal Ration, and my spare straw hat. It's a good hat. Don't let the rain at it.",
           mood: "happy",
         };
       }
@@ -194,10 +194,10 @@ export function handleDialogueQuest10(ctx, p, npc, text) {
     // 1c. Start or Turn-in "Cellar in the Shadows"
     if (t.includes("storm cellar") || t.includes("cellar in the shadows") || t.includes("subterranean pantry")) {
       if (!s.cellarQ) {
-        if (repOf(s, "meg") <= -35) return { reply: "Stay away from our root cellars.", mood: "angry" };
+        if (repOf(s, "meg") <= -35) return { reply: "Stay out of our cellars.", mood: "angry" };
         setCellarStep(ctx, p, 1, "Quest Started: Cellar in the Shadows · Inspect the Storm Cellar near the farmhouse");
         return {
-          reply: "That old storm cellar behind the farmhouse has been rattling since yesterday's fog. Unlatch the bulkhead doors, check that the root pantry is intact, and let me know what's down there.",
+          reply: "Storm cellar behind the farmhouse has been rattling since the fog came in. Unlatch it, look in the pantry, tell me what's down there. If it's something, just tell me. Don't fight it.",
           mood: "calm",
         };
       }
@@ -210,7 +210,7 @@ export function handleDialogueQuest10(ctx, p, npc, text) {
           text: "Quest Completed: Cellar in the Shadows · +95 XP, +$35.00, Repair Kit, Almond Water",
         });
         return {
-          reply: "Just the draft rattling the storm latch and a dry cellar full of preserves! That's a weight off my mind. Take thirty-five Backdollars and a spare toolkit for checking it out.",
+          reply: "Just the draft? And the preserves are fine? Oh, thank the Lord. Thirty-five and a toolkit. I'd have gone myself, but I'm a coward about cellars.",
           mood: "happy",
         };
       }
@@ -222,11 +222,11 @@ export function handleDialogueQuest10(ctx, p, npc, text) {
     // 2a. Start "The Still Watcher"
     if (t.includes("scarecrow") || t.includes("still watcher") || t.includes("investigate the eastern")) {
       if (!s.watcherQ) {
-        if (repOf(s, "meg") <= -35) return { reply: "M.E.G. Research does not share field assignments with hostiles.", mood: "angry" };
+        if (repOf(s, "meg") <= -35) return { reply: "I don't share field work with hostiles.", mood: "angry" };
         const has24 = String(s.pages ?? "").split(",").includes("24");
         setWatcherStep(ctx, p, has24 ? 3 : 2, "Quest Started: The Still Watcher · Locate the Eastern Scarecrow in the barley field");
         return {
-          reply: "Fascinating timing. I've been monitoring the scarecrow stationed in the eastern barley field. Local compass readings show anomalous micro-gravitational pulses whenever it turns. Head out into the eastern barley, inspect its coat, and see if there are any field notes or physical anomalies left behind.",
+          reply: "Good timing. The scarecrow in the east barley turns, and when it turns my compass jumps. Go look at it. The coat, the pockets, anything. Don't watch it while you do. Seriously.",
           mood: "calm",
         };
       }
@@ -242,7 +242,7 @@ export function handleDialogueQuest10(ctx, p, npc, text) {
           text: "Quest Completed: The Still Watcher · +120 XP, +$50.00, 2x Almond Water, First Aid Kit",
         });
         return {
-          reply: "Astounding! These notes confirm my hypothesis, Entity 17 acts as passive spatial stabilizers across the wheat plains. Excellent fieldwork, wanderer. Here is your research stipend and emergency medical supplies from M.E.G. Research Wing.",
+          reply: "Document 24. 'The Watchers.' So they're holding the fields in place. Not guarding them. Pinning them. Here, your stipend and the med kit. And don't go back out there tonight.",
           mood: "happy",
         };
       }
