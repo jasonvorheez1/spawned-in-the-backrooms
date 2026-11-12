@@ -17,7 +17,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 
 export const cadence = "1s";
-const V = 19;
+const V = 20;
 const DOCK_Y = 0.2; // deck starts at the measured west-bank landing
 const CEDAR = { texture: "cdn/texture-worn-hardwood-grain.png", color: "#776049", roughness: 0.92 };
 const spot = ({ x, y, z }) => ({ x, y, z });
