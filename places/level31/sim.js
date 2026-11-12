@@ -8,7 +8,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 42;
+const V = 43;
 const RAIL_GLB = "/cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb";
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
@@ -52,8 +52,8 @@ function rink(ctx) {
   ctx.spawn("l31-rink", { feetPosition: { x: 0, y: 0.018, z: 0 }, primitive: { kind: "scripted", script: "scripts/l31-floor-geo.js", params: { half, r } }, material: WOOD, receiveShadow: true, castShadow: false, tags: ["l31-wood"] });
   let n = 0;
   const seg = (x, z, len, yaw) => ctx.spawn(`l31-rail${n++}`, { feetPosition: { x, y: 0, z }, rotation: { yaw }, primitive: rbox(len, 1.07, 0.24), material: RAIL, physics: "static", render: false,
-    // Tripo padded rink rail: file is 1.0 x 0.263 x 0.063 (long on x); stretched to the panel length, 1.07 m tall
-    children: [{ id: "m", model: RAIL_GLB, scale: { x: len + 0.04, y: 4.07, z: 4.07 }, castShadow: false }] });
+    // Tripo padded rink rail: node matrix x3.8, so it draws 3.8 x 1.0 x 0.24 m (long on x); stretched to the panel, 1.07 m tall
+    children: [{ id: "m", model: RAIL_GLB, scale: { x: (len + 0.04) / 3.8, y: 1.07, z: 1 }, castShadow: false }] });
   for (const side of [-1, 1]) {
     for (const [a, b] of [[-half, -1.35], [1.35, half]]) seg((a + b) / 2, side * rail, b - a, 0);
     for (const x of [-1.4, 1.4]) ctx.spawn(`l31-gatepost-${side}-${x}`, {
