@@ -29,7 +29,7 @@ export const ATTRS = [
 export const SKILLS = [
   { k: 'barter', name: 'Barter', attr: 'g', info: 'The quartermaster gives you more' },
   { k: 'energy', name: 'Energy Weapons', attr: 'o', info: 'Laser weapons: damage, a steadier beam' },
-  { k: 'explosives', name: 'Explosives', attr: 'o', info: 'No explosives exist yet' },
+  { k: 'explosives', name: 'Explosives', attr: 'o', info: 'Steadier throws and better launcher handling' },
   { k: 'guns', name: 'Guns', attr: 'a', info: 'Gun damage, a tighter spread, a little faster reloads' },
   { k: 'lockpick', name: 'Lockpick', attr: 'o', info: 'Opens locked crates up to its level' },
   { k: 'medicine', name: 'Medicine', attr: 'n', info: 'Bandages and the medic heal more' },
@@ -63,37 +63,49 @@ export function skillsOf(s) {
   SKILLS.forEach((k, i) => { o[k.k] = Math.min(SKILL_MAX, baseSkill(at, k) + sp[i] + (tg.includes(k.k) ? TAG_BONUS : 0)) })
   return o
 }
-// a weapon's class: fists are Unarmed, guns are Guns, everything else Melee Weapons
-export const wclass = (w) => (w?.energy ? 'energy' : w?.ranged ? 'guns' : w && w.name !== 'Fists' ? 'melee' : 'unarmed')
+export const wclass = (w) => {
+  if (w?.throwable || w?.lob) return 'explosives'
+  if (w?.energy) return 'energy'
+  if (w?.ranged) return 'guns'
+  return !w || w.unarmed || w.name === 'Fists' ? 'unarmed' : 'melee'
+}
 const skillMul = (v) => 0.94 + v / 250 // 15 is about the old balance, 100 is +30%
 // the damage multiplier for a weapon: its skill and the attribute behind it
 export function dmgMul(s, w) {
   const a = attrsOf(s), k = skillsOf(s), c = wclass(w), hd = handling(s, w).dmg
-  return hd * (c === 'energy' ? (1 + (a.o - 5) * 0.04) * skillMul(k.energy ?? 15) : c === 'guns' ? (1 + (a.o - 5) * 0.04) * skillMul(k.guns) : c === 'melee' ? (1 + (a.h - 5) * 0.06) * skillMul(k.melee) : (1 + (a.h - 5) * 0.05) * skillMul(k.unarmed))
+  return hd * ((w?.ranged || w?.throwable) ? (1 + (a.o - 5) * 0.04) * skillMul(k[c]) : c === 'melee' ? (1 + (a.h - 5) * 0.06) * skillMul(k.melee) : (1 + (a.h - 5) * 0.05) * skillMul(k.unarmed))
 }
-// What a weapon asks of the one holding it (weapons.yml req: { h: Hardiness, guns | melee: skill }) and what falling short costs; being
-// stronger than it asks steadies it a little. A heavy gun in weak arms: a wider spread, more kick, a wandering aim, slower to bring up;
-// a heavy melee weapon: less damage, more stamina, a slower swing. { str, skill } are the points you are short (negative: to spare).
+const REQ_SKILL = { guns: 'Guns', melee: 'Melee', energy: 'Energy Weapons', explosives: 'Explosives', unarmed: 'Unarmed' }
+
+// Requirements affect handling. Negative shortfalls mean the player exceeds the target.
 export function handling(s, w) {
-  const o = { str: 0, skill: 0, spread: 1, recoil: 1, sway: 0, dmg: 1, stam: 1, swing: 1, raise: 1, hold: 0, notes: [] }
+  const o = { str: 0, skill: 0, spread: 1, recoil: 1, sway: 0, dmg: 1, stam: 1, swing: 1, raise: 1, hold: 0, throwPower: 1, notes: [] }
   const r = w?.req; if (!r) return o
-  const a = attrsOf(s), k = skillsOf(s), cls = w.energy ? 'energy' : w.ranged ? 'guns' : 'melee'
-  const ds = (r.h ?? 0) - a.h, dk = r[cls] ? r[cls] - (k[cls] ?? 0) : 0
+  const a = attrsOf(s), k = skillsOf(s), cls = wclass(w)
+  const ds = r.h ? r.h - a.h : 0, dk = r[cls] ? r[cls] - (k[cls] ?? 0) : 0
   o.str = ds; o.skill = dk
   const sh = Math.max(0, ds), sp = Math.max(0, -ds), kh = Math.max(0, dk), kp = Math.max(0, -dk)
   o.hold = Math.min(1, sh / 4) // how badly it sags in your arms (scripts/lib/vmpose.js)
   o.dmg = Math.max(0.4, 1 - 0.04 * sh - 0.003 * kh)
   o.raise = Math.max(0.4, 1 - 0.08 * sh)
-  if (w.ranged) {
+  if (w.throwable) {
+    o.throwPower = Math.max(0.68, 1 - 0.045 * sh - 0.009 * kh)
+    o.swing = 1 + Math.min(0.45, 0.06 * sh + 0.01 * kh)
+  } else if (w.ranged) {
     o.spread = (1 + 0.17 * sh) * (1 - 0.03 * Math.min(sp, 4)) * (1 + 0.012 * kh) * (1 - 0.002 * Math.min(kp, 40))
     o.recoil = (1 + 0.14 * sh) * (1 - 0.04 * Math.min(sp, 4))
     o.sway = 0.25 * sh + 0.01 * kh // degrees the aim wanders
-  } else { o.stam = 1 + 0.09 * sh; o.swing = 1 + 0.06 * sh }
+  } else { o.stam = 1 + 0.09 * sh; o.swing = 1 + 0.06 * sh + Math.min(0.15, 0.003 * kh) }
   if (sh > 0) o.notes.push(`Too heavy: needs HAR ${r.h} (you have ${a.h})`)
-  if (kh > 0) o.notes.push(`Needs ${cls === 'guns' ? 'Guns' : 'Melee'} ${r[cls]} (you have ${k[cls]})`)
+  if (kh > 0) o.notes.push(`Needs ${REQ_SKILL[cls]} ${r[cls]} (you have ${k[cls]})`)
   return o
 }
-export const reqText = (w) => (w?.req ? [w.req.h ? `HAR ${w.req.h}` : '', w.req.guns ? `GUNS ${w.req.guns}` : '', w.req.melee ? `MELEE ${w.req.melee}` : ''].filter(Boolean).join(' · ') : '')
+export function reqText(w) {
+  const r = w?.req
+  if (!r) return ''
+  const skill = wclass(w)
+  return [r.h && 'HAR ' + r.h, r[skill] && REQ_SKILL[skill] + ' ' + r[skill]].filter(Boolean).join(' · ')
+}
 
 // what the attributes and skills do, as plain numbers (5 in everything and no points is about the old balance)
 // a broken mind: at 0 sanity every attribute but Luck reads 2 lower (min 1) until sanity comes back (Savi's pick)

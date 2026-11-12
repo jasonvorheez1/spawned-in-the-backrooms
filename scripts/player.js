@@ -1530,7 +1530,8 @@ const OVERHAND = { clip: '/cdn/clip-overhand-throw-left-b23ba93b.glb', // mirror
 function pullPin(ctx) {
   const s = ctx.self.state, now = ctx.now(), w = walkOf(ctx)
   if (s.dead || w.nade || now < (w.throwAt ?? 0)) return
-  const pick = s.nadePick && (s[THROW[s.nadePick].key] ?? 0) > 0 ? s.nadePick : null
+  const selected = THROW[s.nadePick]
+  const pick = selected?.key && (s[selected.key] ?? 0) > 0 ? s.nadePick : null
   const kind = pick ?? ((s.grenades ?? 0) > 0 ? 'frag' : (s.molotovs ?? 0) > 0 ? 'molotov' : (s.baubles ?? 0) > 0 ? 'bauble' : (s.fresh ?? 0) > 0 ? 'fresh' : null)
   if (!kind) { s.notice = { text: 'Nothing to throw', at: now }; return }
   const T = THROW[kind]
@@ -1551,7 +1552,7 @@ function letFly(ctx) {
   const s = ctx.self.state, now = ctx.now(), w = walkOf(ctx), n = w.nade
   if (!n) return
   w.nade = null; if (w.nadeCook) { ctx.cancel(w.nadeCook); w.nadeCook = null }
-  const T = THROW[n.kind]; w.throwAt = now + THROW.cooldown * 1000
+  const T = THROW[n.kind], hd = handling(s, T); w.throwAt = now + THROW.cooldown * hd.swing * 1000
   if ((s[T.key] ?? 0) <= 0) { if (w.nadeVm) { ctx.destroy(w.nadeVm); w.nadeVm = null } ctx.self.anim.nade = null; return }
   s[T.key] -= 1
   // the arm whips through: the rest of the clip at full speed from the wind-up
@@ -1567,7 +1568,7 @@ function letFly(ctx) {
     return
   }
   // a longer wind-up throws harder: a flick at 60%, full strength after 0.6 s held
-  const power = 0.6 + 0.4 * Math.min(1, (now - n.at) / 600)
+  const power = (0.6 + 0.4 * Math.min(1, (now - n.at) / 600)) * hd.throwPower
   const pc = Math.max(-0.6, Math.min(1.1, s.aimPitch ?? 0)), cp = Math.cos(pc), sp = T.speed * power
   const vel = { x: f.x * cp * sp, y: Math.sin(pc) * sp + T.lift * power, z: f.z * cp * sp }
   const half = T.size / 2

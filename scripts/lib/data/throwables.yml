@@ -1,7 +1,7 @@
 # Throwables (borrowed from FPS Grudge, tuned to this game's HP). G throws a frag if you carry one, else a molotov; quick slots pick one.
 # Savi's picks: frag 120 at the centre, falling to ~18 at the edge (a smiler has ~60, robots ~140); molotov 9 every half second for 7 s.
-frag:    { name: Frag grenade, key: grenades, model: /cdn/model-grenade-hand-classic-grey-fgy1xkgw.glb, size: 0.1, fuse: 2200, radius: 6, damage: 120, speed: 14, lift: 3, kg: 0.4 }
-molotov: { name: Molotov cocktail, key: molotovs, model: /cdn/model-molotov-cocktail-bottle-brown-vgvuciq6.glb, size: 0.3, speed: 13, lift: 3, radius: 2.6, burn: 7, damage: 9, tick: 0.5, height: 2, kg: 0.8 }
+frag:    { name: Frag grenade, key: grenades, model: /cdn/model-grenade-hand-classic-grey-fgy1xkgw.glb, size: 0.1, fuse: 2200, radius: 6, damage: 120, speed: 14, lift: 3, kg: 0.4, throwable: true, req: { h: 3, explosives: 25 } }
+molotov: { name: Molotov cocktail, key: molotovs, model: /cdn/model-molotov-cocktail-bottle-brown-vgvuciq6.glb, size: 0.3, speed: 13, lift: 3, radius: 2.6, burn: 7, damage: 9, tick: 0.5, height: 2, kg: 0.8, throwable: true, req: { h: 3, explosives: 20 } }
 fresh:   { name: Reality Freshener, key: fresh, size: 0.22, speed: 12, lift: 3, radius: 6, kg: 0.3 }   # lands and locks reality: no collapse, no sanity drain within radius (scripts/lib/remodel-quest.js)
 cooldown: 0.9   # s between throws
-bauble:  { name: Glass Bauble, key: baubles, model: /cdn/model-red-glass-christmas-bauble-ornament-small.glb, size: 0.1, speed: 13, lift: 3, radius: 2.5, damage: 12, daze: 3, kg: 0.15 }   # Christmas Area only: shatters on contact, dazes foes in radius for daze s
+bauble:  { name: Glass Bauble, key: baubles, model: /cdn/model-red-glass-christmas-bauble-ornament-small.glb, size: 0.1, speed: 13, lift: 3, radius: 2.5, damage: 12, daze: 3, kg: 0.15, throwable: true, req: { h: 2, explosives: 15 } }   # Christmas Area only: shatters on contact, dazes foes in radius for daze s

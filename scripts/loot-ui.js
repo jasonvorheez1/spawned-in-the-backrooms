@@ -7,7 +7,8 @@ import SNACKS from './lib/data/snacks.yml'
 import { describe, itemsOf, MEAT } from './lib/items.js'
 import L from './lib/data/level0.yml'
 import W from './lib/weapons.js'
-import { derived, carried, handling } from './lib/stats.js'
+import THROW from './lib/data/throwables.yml'
+import { derived, carried, handling, reqText } from './lib/stats.js'
 import { parseCloth, wornTokens, wornDR, fullLook, SLOTS, SLOT_NAME, rowOf, rowData, CLOTHES } from './lib/clothes.js'
 import { cndOf, armorCnd, band, bandColor, wMul, drMul, repairAmount, isBroken } from './lib/condition.js'
 import { penOf } from './lib/combat.js'
@@ -357,6 +358,10 @@ function itemVal(t) {
 }
 
 // Animated Vector Artwork SVGs
+function handlingRows(item, hd) {
+  const req = cell('FULL HANDLING', reqText(item) || 'NONE', true)
+  return hd.notes.length ? req + cell('BELOW TARGET', hd.notes.map(esc).join('<br>'), true, 'req-fail') : req
+}
 // The right-hand details pane for an item token
 function detail(t, s, def) {
   const cls = `dt${def ? ' def' : ''}`
@@ -369,9 +374,6 @@ function detail(t, s, def) {
     const r = W.rarities?.[w.rarity], cur = W[s.equipped] ?? W.fists, d = w.damage - cur.damage
     const cmp = k !== (s.equipped ?? 'fists') && d ? ` <i class="${d > 0 ? 'up' : 'dn'}" style="font-style:normal">${d > 0 ? '▲+' : '▼'}${d}</i>` : ''
     const c = cndOf(s, k), dps = Math.round(w.damage / w.cooldown)
-    const hd = handling(s, w)
-    const reqHarm = hd.str > 0 || hd.skill > 0
-    const reqStr = w.req ? (w.req.h ? `HAR ${w.req.h}${hd.str > 0 ? ` (!)` : ''}` : '') + (w.req.guns ? ` · GUNS ${w.req.guns}${hd.skill > 0 ? ` (!)` : ''}` : '') : 'NONE'
     const val = itemVal(k)
 
     // Direct contextual repair options
@@ -396,7 +398,7 @@ function detail(t, s, def) {
         ${cell('DAM', `${w.damage}${cmp}`)}
         ${cell('DPS', `${dps}`)}
         ${cell('CND', cndMeter(c), true)}
-        ${cell('REQ', reqStr, true, reqHarm ? 'req-fail' : '')}
+        ${handlingRows(w, handling(s, w))}
         ${cell('SPD', `${(1 / w.cooldown).toFixed(1)}/S`)}
         ${cell('AP', `${w.stamina}`)}
         ${cell('PEN', `${Math.round(penOf(w, k) * 100)}% ARMOR`)}
@@ -408,6 +410,20 @@ function detail(t, s, def) {
       ${passivesOf(w).length ? `<div class="rep-box"><div class="rep-box-title"><span>PASSIVES</span></div>${passivesOf(w).map(([n, d]) => `<div style="display:flex;justify-content:space-between;gap:8px;padding:2px 0"><span>${n}</span><b style="font-weight:normal;opacity:.8">${d}</b></div>`).join('')}</div>` : ''}
       ${repHtml}
     </div>`
+  }
+
+  const thrown = THROW[t]
+  if (thrown?.key) {
+    const hd = handling(s, thrown)
+    const effect = thrown.burn ? cell('FIRE', thrown.burn + ' S') :
+      thrown.fuse ? cell('FUSE', thrown.fuse / 1000 + ' S FROM THE PIN') :
+      thrown.daze ? cell('DAZE', thrown.daze + ' S') : cell('LASTS', 'UNTIL TAKEN')
+    return `<div class="${cls}"><div class="dt-header"><h4>${thrown.name}</h4><span class="dt-rarity">THROWABLE</span></div>
+      <div class="g">${cell('RADIUS', thrown.radius + ' M')}${effect}
+      ${thrown.damage ? cell('DAMAGE', thrown.damage + (thrown.tick ? ' EVERY ' + thrown.tick + ' S' : ' AT CENTRE')) : ''}
+      ${cell('CARRIED', s[thrown.key] ?? 0)}${handlingRows(thrown, hd)}
+      ${thrown.req ? cell('THROW POWER', Math.round(hd.throwPower * 100) + '%') + cell('RECOVERY', (THROW.cooldown * hd.swing).toFixed(2) + ' S') : ''}
+      ${cell('HOW', thrown.fuse ? 'HOLD G TO COOK, LET GO' : 'HOLD G, LET GO', true)}</div></div>`
   }
 
   if (t.startsWith('cloth:')) {
@@ -527,16 +543,10 @@ function pane(s, sel, eqKey) {
     card = `<div class="dt def"><div class="dt-header"><h4>${v.name}</h4><span class="dt-rarity">${v.drink ? 'DRINK' : trinket ? (v.keep ? 'KEEPSAKE' : 'AID') : 'FOOD'}</span></div>${v.info ? `<div style="opacity:.75;font-size:12px;margin:4px 0 6px">${v.info}</div>` : ''}<div class="g">${v.drink ? cell('THIRST', '+' + v.thirst) : trinket ? cell('SANITY', '+' + (v.sanity ?? 0)) + (v.keep ? cell('USES', 'NEVER RUNS OUT') : '') : cell('HUNGER', '+' + v.hunger)}${cell('CARRIED', s.snacks[sel.slice(6)], true)}</div></div>`
     acts.push(btn(v.verb ?? (v.drink ? 'DRINK' : trinket ? 'USE' : 'EAT'), { k: 'snack', c: sel.slice(6) }), btn('DROP ONE', { k: 'dropItem', t: sel }))
   } else if ((sel === 'ammo' || sel === 'shells' || sel === 'cells') && s[sel] > 0) { card = detail(sel, s, true); acts.push(btn('DROP A BOX', { k: 'dropItem', t: sel })) }
-  else if (sel === 'fresh' && s.fresh > 0) {
-    card = `<div class="dt def"><div class="dt-header"><h4 style="color:#9fd8e6">Reality Freshener</h4><span class="dt-rarity">THROWABLE</span></div><div class="g">${cell('RADIUS', '6 M') + cell('LASTS', 'UNTIL TAKEN') + cell('CARRIED', s.fresh) + cell('HOW', 'HOLD G, LET GO', true)}</div></div>`
-    acts.push(btn('READY FOR G', { k: 'nadePick', t: 'fresh' }))
-  }
-  else if ((sel === 'frag' && s.grenades > 0) || (sel === 'molotov' && s.molotovs > 0)) {
-    const fr = sel === 'frag'
-    card = `<div class="dt def"><div class="dt-header"><h4>${fr ? 'Frag grenade' : 'Molotov cocktail'}</h4><span class="dt-rarity">THROWABLE</span></div><div class="g">${fr
-      ? cell('DAMAGE', '120 AT CENTRE') + cell('RADIUS', '6 M') + cell('FUSE', '2.2 S FROM THE PIN') + cell('CARRIED', s.grenades) + cell('HOW', 'HOLD G TO COOK, LET GO', true)
-      : cell('DAMAGE', '9 EVERY 0.5 S') + cell('FIRE', '7 S, 2.6 M') + cell('ON HIT', 'SHATTERS') + cell('CARRIED', s.molotovs) + cell('HOW', 'HOLD G, LET GO', true)}</div></div>`
-    acts.push(btn('READY FOR G', { k: 'nadePick', t: sel }), btn('DROP ONE', { k: 'dropItem', t: sel }))
+  else if (THROW[sel]?.key && s[THROW[sel].key] > 0) {
+    card = detail(sel, s, true)
+    acts.push(btn('READY FOR G', { k: 'nadePick', t: sel }))
+    if (sel !== 'fresh') acts.push(btn('DROP ONE', { k: 'dropItem', t: sel }))
   }
   else if (sel === 'bobbypin' && s.bobbypins > 0) { card = detail(sel, s, true); acts.push(btn('DROP ONE', { k: 'dropItem', t: sel })) }
   if (!card) { card = detail(eqKey, s, true); acts = eqKey !== 'fists' ? [btn('DROP ONE', { k: 'drop', w: eqKey })] : [] }
@@ -663,8 +673,7 @@ function inventory(s) {
     </button>`).join('') || '<div class="em">Out of ammunition.</div>'
 
   // Throwables: listed with the ammo, a THROW button and a card each
-  const THROWN = { grenades: ['frag', 'Frag grenade'], molotovs: ['molotov', 'Molotov cocktail'], fresh: ['fresh', 'Reality Freshener'], baubles: ['bauble', 'Glass Bauble'] }
-  const throwRows = Object.entries(THROWN).filter(([k]) => s[k] > 0).map(([k, [t, nm]]) => `
+  const throwRows = Object.entries(THROW).filter(([, row]) => row?.key && s[row.key] > 0).map(([t, { key: k, name: nm }]) => `
     <button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})">
       <span class="cur">&gt;</span><span class="nm" style="color:${t === 'frag' ? '#b8c49a' : t === 'fresh' ? '#9fd8e6' : '#f0a050'}">${nm}</span>
       <span class="stat-r"><span>×${s[k]}</span></span>

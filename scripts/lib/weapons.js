@@ -15,8 +15,11 @@ for (const k of Y.order.slice(1)) {
     if (!fits(k, w, v)) continue
     const m = (f) => (v[f] != null && w[f] != null ? w[f] * v[f] : w[f])
     const ri = Math.max(0, Math.min(RAR.length - 1, RAR.indexOf(w.rarity) + (v.rarity ?? 0)))
+    const req = v.reqDelta && w.req
+      ? Object.fromEntries(Object.entries(w.req).map(([key, target]) => [key, Math.max(1, target + (v.reqDelta[key] ?? 0))]))
+      : w.req
     W[k + '~' + vk] = {
-      ...w, base: k, variant: vk, name: `${v.name} ${w.name.toLowerCase()}`,
+      ...w, req, base: k, variant: vk, name: `${v.name} ${w.name.toLowerCase()}`,
       damage: Math.round(m('damage')), cooldown: +(m('cooldown')).toFixed(2), stamina: Math.round(m('stamina')), xp: Math.round(m('xp')),
       rarity: RAR[ri], cnd: v.cnd ?? null, look: v.look, tint: v.tint ?? null,
       ...(w.ranged ? {
