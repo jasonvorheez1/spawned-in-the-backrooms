@@ -6,7 +6,7 @@ import { layParts } from "../../scripts/lib/level31-parts.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 export const cadence = "1s";
-const V = 25;
+const V = 26;
 const PROPS = "scripts/l31-props-geo.js";
 const P = (params) => ({ primitive: { kind: "scripted", script: PROPS, params }, material: { pbr: true } });
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
