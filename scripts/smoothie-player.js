@@ -5,8 +5,7 @@ const key = (mix) => [...mix].sort().join("+")
 const K = { x: 6.6, y: 0, z: 12 }, SAL = { x: 7.5, y: 1.6, z: 12 }
 const say = (ctx, line) => { const c = S.lines?.[line]; if (c) ctx.emit("playSound", { clip: c, position: SAL, bus: "Voice", refDistance: 4, maxDistance: 18, mode: "restart" }) }
 const SPLASH = (col) => `fx
-pop juice burst=40 life=.5..0.9 v=up(2.2..3.4)+sdir()*(.6..1.4) size=.04..0.09 acc=grav()+drag(.6) col=${col} a=1>.8:1>0 sz=$size floor=die r=sprite(soft-disc,alpha)
-pop chunks burst=10 life=.6..1 v=up(2.5..3.5)+sdir()*1.2 size=.06..0.1 spin=-8..8 acc=grav() col=${col}*.8 a=1 sz=$size rot=$age*$spin floor=die r=mesh(box)`
+pop juice burst=40 life=.5..0.9 v=up(2.2..3.4)+sdir()*(.6..1.4) size=.04..0.09 acc=grav()+drag(.6) col=${col} a=1>.8:1>0 sz=$size floor=die r=sprite(soft-disc,alpha)`
 const CONFETTI = `fx
 pop conf burst=90 life=1.4..2.4 v=up(4..6)+sdir()*(1.5..3) size=.05..0.09 spin=-10..10 acc=grav()*.35+drag(1.2) col=<1,.4,.72>..<.3,.95,1> a=1>.8:1>0 sz=$size rot=$age*$spin r=sprite(soft-disc,alpha)
 pop sparkle burst=30 life=.6..1.2 v=sdir()*(1..2.5) size=.06..0.12 acc=drag(2) col=hdr(4,3,1.6) a=1>0 sz=$size r=sprite(soft-disc,add)
