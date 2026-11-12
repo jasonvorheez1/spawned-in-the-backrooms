@@ -156,7 +156,8 @@ export function gotPaint(ctx, p, id) {
   const s = p.state, have = [...(s.l02paint ?? [])];
   if (!have.includes(id)) have.push(id);
   s.l02paint = have; ctx.destroy(id);
-  tell(ctx, p, have.length >= 3 ? "Fresh Paint (3/3) · Bring the cans to Cap'n" : `Fresh Paint (${have.length}/3) · Get the paint cans out of the shifting rooms`);
+  if (have.length >= 3 && !(s.l02got ?? {}).capn) { tell(ctx, p, "Fresh Paint (3/3) · Cap'n radios: \"That's the good paint. My Freshener's yours.\""); gotFresh(ctx, p, "capn"); return; }
+  tell(ctx, p, `Fresh Paint (${have.length}/3) · Get the paint cans out of the shifting rooms`);
   if (s.remodQ === 2) syncHUD(s, p.place, ctx.place.state);
 }
 export function pickPlaced(ctx, p, id) { p.state.fresh = (p.state.fresh ?? 0) + 1; ctx.destroy(id); tell(ctx, p, `Reality Freshener picked up (${p.state.fresh} carried)`, HISS); }

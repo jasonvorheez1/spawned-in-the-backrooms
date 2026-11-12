@@ -9,11 +9,13 @@ import { animate } from "builtin/tween";
 import { bodyModel, seatCat, critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook, refitLook, NL_V } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
-import { S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, xOf } from "../../scripts/lib/level02.js";
+import { S, NX, NZ, X0, Z0, BASE, CEIL, xOf } from "../../scripts/lib/level02.js";
+import { layGrid, resetGrid, gridTick, joists } from "../../scripts/lib/l02-grid.js";
+import G from "../../scripts/lib/data/l02-remodel.yml";
 import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 import P from "../../scripts/lib/data/l02-props.yml";
 export const cadence = "250ms";
-const V = 21, STEP_MS = 3400, WARNING_MS = 1200;
+const V = 22, STEP_MS = 3400, WARNING_MS = 1200;
 const CASE_COLUMN = 4, CASE_DESK = { x: 2.55, y: 0, z: 7.65 };
 const CASE_TOP = "l02-crew-case", CASE_FALL = "l02-crew-salvage";
 const CASE_IMPACT = "/cdn/sfx-metal-object-clunk-drop.mp3";
@@ -120,23 +122,6 @@ function layShell(ctx) {
     vector: plate("← STAIRS UP", "LEVEL 0 EXIT", "#b9dab3") });
   sp(ctx, "l02-stair-beacon", { feetPosition: { x: -7.2, y: BASE + 1.95, z: -8.4 },
     light: { kind: "point", color: "oklch(0.85 0.1 148)", intensity: 1.05, distance: 7 } });
-  sp(ctx, "l02-lift-guide", { feetPosition: { x: 1.7, y: BASE + 1.65, z: Z0 + 0.05 },
-    vector: plate("FREIGHT →", "EAST WALL · COUNTERWEIGHT PAN") });
-  // Work lights are aimed at the foreman's desk, the saw bench and the freight apron.
-  for (const [i, x, z, yaw] of [[0, -4.1, -4.91, 115], [1, -2.65, 8.38, 180], [2, 8.4, -5.95, 25], [3, 11.55, 2.8, 325]]) {
-    sp(ctx, `l02-worklamp${i}`, prop("worklamp", { x, y: BASE, z }, yaw, { physics: "static" }));
-    sp(ctx, `l02-worklight${i}`, { feetPosition: { x, y: BASE + H("worklamp") - 0.1, z }, light: { kind: "point", color: "oklch(0.88 0.1 75)", intensity: 1.45, distance: 10 } });
-  }
-  // The unfinished bay has a framed opening between the saw bench and freight.
-  for (const [side, from, to] of [["n", 3.15, 5.95], ["s", 7.55, 9.98]]) {
-    const span = to - from, center = (from + to) / 2, studs = [];
-    for (let z = 0; z <= span; z += 0.4) studs.push({ feetPosition: { x: 0, y: 0, z: z - span / 2 }, primitive: box(0.09, -BASE - 0.15, 0.04), material: STUD });
-    studs.push({ feetPosition: { x: 0, y: 0, z: span / 2 }, primitive: box(0.09, -BASE - 0.15, 0.08), material: STUD });
-    for (const y of [0, -BASE - 0.1]) studs.push({ feetPosition: { x: 0, y, z: 0 }, primitive: box(0.09, 0.05, span), material: STUD });
-    sp(ctx, `l02-frame-${side}`, { feetPosition: { x: 6, y: BASE, z: center }, children: studs });
-    sp(ctx, `l02-frame-col-${side}`, { feetPosition: { x: 6, y: BASE, z: center }, primitive: box(0.12, -BASE, span), visible: false, physics: "static" });
-  }
-  sp(ctx, "l02-frame-header", { feetPosition: { x: 6, y: BASE + 2.2, z: 6.75 }, primitive: box(0.12, 0.12, 1.68), material: STUD });
   const B = (key, x, z, yaw, extra) => prop(key, { x, y: BASE, z }, yaw, { physics: "static", ...extra });
   const deskY = BASE + H("office_desk");
   // Cap'n's paperwork and the crew's kettle substitute share an actual tabletop near the stairs.
@@ -168,22 +153,6 @@ function layShell(ctx) {
   sp(ctx, "l02-bucket1", B("bucket", 10.32, -6.27, 0));
   sp(ctx, "l02-ladder", B("ladder", 13.7, -9.56, 180));
   sp(ctx, "l02-lumber1", B("lumber", 11.22, -9.36, 0));
-  // the freight lift: a steel cage open only at the bottom, its deck stuck up at the clean floor, a freshener on it
-  const { x: lx, z: lz } = LIFT;
-  for (const [id, x, z, w, d, y0] of [["n", lx, lz - 1.6, 3.2, 0.1, BASE], ["s", lx, lz + 1.6, 3.2, 0.1, BASE], ["w", lx - 1.6, lz, 0.1, 3.2, -1.2]])
-    sp(ctx, `l02-shaft-${id}`, { feetPosition: { x, y: y0, z }, primitive: box(w, CEIL - y0, d), material: STEEL, physics: "static",
-      children: [-1, 1].map((s) => ({ feetPosition: { x: w > d ? s * 1.55 : 0, y: 0, z: w > d ? 0 : s * 1.55 }, primitive: box(0.14, CEIL - y0, 0.14), material: { color: "oklch(0.75 0.15 85)", metalness: 0.4, roughness: 0.5 } })) });
-  sp(ctx, "l02-shaft-sign", { feetPosition: { x: lx - 1.66, y: -1.0, z: lz }, rotation: { yaw: -90 }, vector: "<svg viewBox='0 0 300 80' width='1.2m'><rect width='300' height='80' fill='#f1c40f'/><text x='150' y='34' text-anchor='middle' font-family='sans-serif' font-size='26' font-weight='bold' fill='#111'>FREIGHT LIFT</text><text x='150' y='66' text-anchor='middle' font-family='sans-serif' font-size='18' fill='#111'>COUNTERWEIGHT 42 KG ON PAN</text></svg>" });
-  sp(ctx, "l02-pan", { feetPosition: { x: BIN.x, y: BASE, z: BIN.z }, primitive: box(1.4, 0.08, 1.4), material: { ...STEEL, texture: "cdn/texture-diamond-plate-steel-floor.png", wrap: "repeat", repeat: [1, 1] }, physics: "static", state: { kg: 0 },
-    children: [[0, -0.7, 1.4, 0.1], [0, 0.7, 1.4, 0.1], [-0.7, 0, 0.1, 1.4], [0.7, 0, 0.1, 1.4]].map(([x, z, w, d]) => ({ feetPosition: { x, y: 0.08, z }, primitive: box(w, 0.18, d), material: STEEL, physics: "static" })) });
-  sp(ctx, "l02-pan-read", { feetPosition: { x: BIN.x, y: BASE + 1.3, z: BIN.z - 0.75 }, state: { kg: 0 }, vector: "<svg viewBox='0 0 220 70' width='0.9m' billboard='yaw'><rect width='220' height='70' rx='6' fill='#1b1b1b'/><text x='110' y='46' text-anchor='middle' font-family='display' font-size='34' fill='#f1c40f'>{{ state.kg }} / 42 KG</text></svg>" });
-  sp(ctx, "l02-cable", { feetPosition: { x: BIN.x - 0.6, y: BASE + 0.25, z: BIN.z - 0.6 }, primitive: { kind: "cylinder", radiusTop: 0.012, radiusBottom: 0.012, height: CEIL - BASE - 0.3, radialSegments: 6 }, material: { color: "oklch(0.22 0 0)", metalness: 0.7, roughness: 0.4 } });
-  sp(ctx, "l02-lift-release", { tags: ["usable"], feetPosition: { x: 12.4, y: BASE + 1.15, z: -1.63 }, rotation: { yaw: -90 },
-    primitive: box(0.28, 0.31, 0.13), material: { color: "oklch(0.42 0.08 27)", metalness: 0.35, roughness: 0.65 },
-    children: [{ feetPosition: { x: 0, y: 0.08, z: 0.08 }, primitive: box(0.075, 0.18, 0.08), material: { ...STEEL, color: "oklch(0.78 0.12 83)" } }],
-    behavior: "scripts/l02-use.js", state: { kind: "release", name: "Manual brake release", verb: "Service", info: "Repair 35 · Lower the freight lift by hand." } });
-  layLift(ctx, false);
-  layCans(ctx);
   // Cap'n, by the stairs: faceless, two white eyes, the crew uniform (wiki look)
   sp(ctx, "l02-capn", {
     tags: ["npc", "remodel", "essential"], feetPosition: { x: -4, y: BASE + 0.05, z: -6 }, rotation: { yaw: 120 }, physics: "character",
@@ -200,18 +169,6 @@ function dressCapn(ctx) {
   for (const k of Object.keys(ctx.place.objects)) if (k.startsWith("l02-capn/")) ctx.destroy(k);
   r.state.wear = CAPN_LOOK; delete r.state.headBody; r.state.arm = "fists"; // the crew carry clipboards, not weapons
   r.model = bodyModel(CAPN_LOOK); seatCat(ctx, r, CAPN_LOOK);
-}
-function layLift(ctx, down) {
-  const y = down ? BASE - 0.2 : -0.2;
-  for (const id of ["l02-lift", "l02-fresh-lift"]) if (id in ctx.place.objects) ctx.destroy(id);
-  ctx.spawn("l02-lift", { feetPosition: { x: LIFT.x, y, z: LIFT.z }, primitive: box(3, 0.2, 3), material: { ...STEEL, metalness: 0.7, roughness: 0.45, texture: "cdn/texture-diamond-plate-steel-floor.png", wrap: "repeat", repeat: [1, 1] }, physics: "kinematic" });
-  ctx.spawn("l02-fresh-lift", { tags: ["usable"], feetPosition: { x: LIFT.x + 0.3, y: y + 0.2, z: LIFT.z }, ...FRESH_BODY, behavior: "scripts/l02-use.js", state: { kind: "fresh", slot: "lift", name: "Reality Freshener", verb: "Take", info: "Remodeling Co. property. Cold to the touch." } });
-}
-const CANS = [[-5.15, 7.92], [-4.69, 7.92], [8.35, -4.7], [8.86, -4.7], [9.37, -4.7]];
-function layCans(ctx) {
-  CANS.forEach(([x, z], i) => { const id = `l02-can${i}`; if (id in ctx.place.objects) ctx.destroy(id);
-    const base = { tags: ["l02can", "grabbable"], physics: { body: "dynamic", collider: "cylinder", mass: 14, friction: 0.8 }, state: { name: "Paint can (14 kg)" } };
-    ctx.spawn(id, prop("paintcan", { x, y: BASE + 0.02, z }, i * 70, base) ?? { ...base, feetPosition: { x, y: BASE + 0.02, z }, primitive: { kind: "cylinder", radiusTop: 0.15, radiusBottom: 0.15, height: 0.36, radialSegments: 18 }, material: { color: "oklch(0.8 0.01 90)", metalness: 0.6, roughness: 0.35 } }); });
 }
 function layLights(ctx, c) {
   const x = xOf(c), tags = c ? [`l02c${c}`] : [];
@@ -354,29 +311,31 @@ function beginWarning(ctx, s) {
 }
 function reset(ctx, s) {
   layClean(ctx);
-  layLift(ctx, false);
-  layCans(ctx);
+  resetGrid(ctx); placeGridFresh(ctx); joists(ctx, false);
   for (const r of ctx.query({ tags: ["l02debris"] })) if (r.id in ctx.place.objects) ctx.destroy(r.id);
   s.phase = "clean"; s.liftDown = false; s.liftRelease = false; s.warned = false; s.caseLandAt = null;
-  const release = ctx.place.objects["l02-lift-release"];
-  if (release) release.state.info = "Repair 35 · Lower the freight lift by hand.";
+}
+// the Reality Freshener on the old lift deck, middle of the shifting rooms (quest slot "lift")
+function placeGridFresh(ctx) {
+  if ("l02-fresh-grid" in ctx.place.objects) ctx.destroy("l02-fresh-grid");
+  ctx.spawn("l02-fresh-grid", { tags: ["usable"], feetPosition: { x: G.fresh[0], y: BASE + 0.16, z: G.fresh[1] }, ...FRESH_BODY, behavior: "scripts/l02-use.js", state: { kind: "fresh", slot: "lift", name: "Reality Freshener", verb: "Take", info: "Remodeling Co. property. Cold to the touch." } });
 }
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now(), ps = ctx.place.players;
   if (s.v !== V || !("l02-base" in ctx.place.objects)) {
-    layShell(ctx); dressCapn(ctx); layClean(ctx);
+    layShell(ctx); dressCapn(ctx); layClean(ctx); layGrid(ctx, true); placeGridFresh(ctx); joists(ctx, false);
     s.v = V; s.phase = "clean"; s.liftDown = false; s.liftRelease = false; s.warned = false; s.caseLandAt = null;
     return;
   }
   if (s.capnV !== 2) { dressCapn(ctx); s.capnV = 2; } // the crew coat (remodcoat) refits Cap'n in place, no level rebuild
   if (!ps.length) {
     s.emptyAt ??= now;
-    if ((s.phase !== "clean" || s.liftDown) && now - s.emptyAt > 15000) reset(ctx, s);
+    if (s.phase !== "clean" && now - s.emptyAt > 15000) reset(ctx, s);
     return;
   }
-  if (s.emptyAt != null && now - s.emptyAt > 15000 && (s.phase !== "clean" || s.liftDown)) reset(ctx, s);
+  if (s.emptyAt != null && now - s.emptyAt > 15000 && s.phase !== "clean") reset(ctx, s);
   s.emptyAt = null;
-  for (const p of ps) if (p.state?.remodQ === 1) setRemodStep(ctx, p, 2, "Fresh Paint · Find the bathroom freshener, the freight lift and Cap'n");
+  for (const p of ps) if (p.state?.remodQ === 1) setRemodStep(ctx, p, 2, "Fresh Paint · Get the paint cans out of the shifting rooms");
   if (s.phase === "clean" && ps.some((p) => p.feetPosition.x > X0 + S + 1 && p.feetPosition.y > -1)) {
     s.phase = "falling"; s.col = NX - 1; s.nextAt = now + 2800; s.warned = false;
     beginWarning(ctx, s);
@@ -397,20 +356,6 @@ export function tick(ctx) {
     }
   }
   landCase(ctx, s, now);
-  if (s.liftDown) return;
-  const kg = ctx.query({ tags: ["l02can"], center: { x: BIN.x, y: BASE + 0.35, z: BIN.z }, radius: 1.1 }).filter((r) => {
-    const p = r.feetPosition;
-    return !r.state?.heldBy && Math.abs(p.x - BIN.x) < 0.67 && Math.abs(p.z - BIN.z) < 0.67 && p.y >= BASE && p.y < BASE + 0.8;
-  }).length * 14;
-  const rd = ctx.place.objects["l02-pan-read"]; if (rd && rd.state.kg !== kg) rd.state.kg = kg;
-  if (s.liftRelease || kg >= LIFT.kg) {
-    s.liftDown = true;
-    const release = ctx.place.objects["l02-lift-release"];
-    if (release) release.state.info = "The freight lift is down.";
-    for (const id of ["l02-lift", "l02-fresh-lift"]) {
-      const o = ctx.place.objects[id];
-      if (o) animate(ctx, id, { "feetPosition.y": id === "l02-lift" ? BASE - 0.2 : BASE }, { duration: 4, easing: "easeInOutSine" });
-    }
-    ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-freight-elevator-chain-rattle-descending-clunk.mp3", position: { x: LIFT.x, y: BASE + 1, z: LIFT.z }, volume: 1, maxDistance: 30 });
-  }
+  joists(ctx, s.phase !== "clean");
+  gridTick(ctx);
 }
