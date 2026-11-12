@@ -9,13 +9,13 @@ defaultSpawnRotation: { yaw: -45 }
 worldBounds: { bottom: -20 }
 atmosphere:
   sky: { kind: color, color: oklch(0.04 0.01 300) }
-  fog: { kind: linear, near: 30, far: 120, color: oklch(0.1 0.03 320) }
+  fog: { kind: linear, near: 40, far: 160, color: oklch(0.2 0.04 320) }
   clouds: { enabled: false }
   stars: { enabled: false }
   moon: { enabled: false, intensity: 0 }
   timeOfDay: 0
   wind: { direction: 0, speed: 0 }
   look: { script: scripts/look-utility.js, params: { bloomThreshold: 0.55, bloomStrength: 0.9 } }
-  ambient: { light: { color: oklch(0.82 0.06 40), intensity: 1.1 } }
-  hemisphere: { skyColor: oklch(0.7 0.08 30), groundColor: oklch(0.35 0.05 300), intensity: 0.8 }
+  ambient: { light: { color: oklch(0.82 0.06 40), intensity: 3.2 } }
+  hemisphere: { skyColor: oklch(0.7 0.08 30), groundColor: oklch(0.4 0.05 300), intensity: 2 }
 acoustics: { reverb: 0.55 }
