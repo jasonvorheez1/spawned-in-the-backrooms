@@ -988,6 +988,16 @@ export function tick(ctx) {
       rotation: rotationFromDirection(f), primitive: { kind: "box", width: 2.8, height: 0.3, depth: len }, physics: "static", visible: false });
     s.fortPathV = 3;
   }
+  if ((s.fortPathV ?? 0) < 3) { // the ramp's top end stood up past the gate lip (a 70 degree edge): stop it flush with the fort floor just outside the gate
+    ctx.destroy("l7-ft-ramp");
+    const xz = (k) => ({ x: -48.5 - 1.35 * k, z: -66.5 - 1.65 * k });
+    const A = { ...xz(-1.55), y: 1.2 }, B = { ...xz(11.95), y: 11.62 };
+    const d = { x: B.x - A.x, y: B.y - A.y, z: B.z - A.z }, len = Math.hypot(d.x, d.y, d.z), hz = Math.hypot(d.x, d.z);
+    const f = { x: d.x / len, y: d.y / len, z: d.z / len }, drop = 0.15 * hz / len;
+    ctx.spawn("l7-ft-ramp", { feetPosition: { x: (A.x + B.x) / 2, y: (A.y + B.y) / 2 - drop, z: (A.z + B.z) / 2 }, pivot: "center",
+      rotation: rotationFromDirection(f), primitive: { kind: "box", width: 2.8, height: 0.3, depth: len }, physics: "static", visible: false });
+    s.fortPathV = 3;
+  }
   if (!ctx.getObject("l7-fauna")) ctx.spawn("l7-fauna", { behavior: "scripts/l7-fauna.js" }); // tidecrawlers on the shores, the Deep in open water
   // Ensure NPCs come back home after respawn window via level-kit
   if (every(ctx, "people", 5000)) {
