@@ -217,7 +217,7 @@ function layColumn(ctx, c) {
       vector: plate("TOOL ISSUE", "CREW ONLY", "#e3dcc9", 0.72) });
     F("l02-issue-desk", "office_desk", CASE_DESK, 180);
     sp(ctx, CASE_TOP, prop("red_toolbox", { ...CASE_DESK, y: H("office_desk") }, 180, {
-      tags: [tag, "container"], state: { name: "Crew tool case", lock: "lockpick:25", items: "kit,akit,tape", scavved: true },
+      tags: [tag, "container"], state: { name: "Crew tool case", lock: "lockpick:25", items: "kit,akit,tape,crew_putty,crew_putty", scavved: true },
     }));
   }
   if (c === 3) {
@@ -334,6 +334,7 @@ export function tick(ctx) {
     s.v = V; s.phase = "clean"; s.liftDown = false; s.liftRelease = false; s.warned = false; s.caseLandAt = null;
     return;
   }
+  if (s.puttyV !== 1) { for (const id of [CASE_TOP, CASE_FALL]) { const o = ctx.place.objects[id]; if (o && !String(o.state.items ?? "").includes("crew_putty")) o.state.items = (o.state.items ? o.state.items + "," : "") + "crew_putty,crew_putty"; } s.puttyV = 1; } // the crew's putty, for the hum loop
   if (s.capnV !== 2) { dressCapn(ctx); s.capnV = 2; } // the crew coat (remodcoat) refits Cap'n in place, no level rebuild
   if (!ps.length) {
     s.emptyAt ??= now;

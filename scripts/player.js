@@ -171,7 +171,7 @@ export function gain(ctx, n) {
 // Nothing is picked up by walking over it: scripts/interact.js calls this when you press E on what you are looking at.
 // eaten food also feeds hunger (scripts/craft.js drains it)
 // tapes HALOGEN can play: id → the reel and its length in seconds
-export const HOLO = { r55: { clip: '/cdn/value.b7bbbfcb923978bb4ac8ae234d44454562debf569936a5f20c378f0e28110e01.mp3', len: 35, name: 'Atomic Age Defender' }, walt41: { clip: '/cdn/value.13b431f3dead226e2ffab8155644c00c326ef6767b9b57df23b71353cbd1a50e.mp3', len: 28, name: 'Field Test 41' }, matrix: { clip: '/cdn/value.a39bb477f8132dc691b97e44f8176bb55b7faf1e7cf241e1e54b2e0a8c0e013b.mp3', len: 24, name: 'Expedition Log: Matrix' } }
+export const HOLO = { b8: { clip: '/cdn/value.08ccdd2071a61c196217f8ad7fa7b0a1773fbe9bcef00b87df3b58018e00a788.mp3', len: 24, name: 'B8, Night Forty' }, r55: { clip: '/cdn/value.b7bbbfcb923978bb4ac8ae234d44454562debf569936a5f20c378f0e28110e01.mp3', len: 35, name: 'Atomic Age Defender' }, walt41: { clip: '/cdn/value.13b431f3dead226e2ffab8155644c00c326ef6767b9b57df23b71353cbd1a50e.mp3', len: 28, name: 'Field Test 41' }, matrix: { clip: '/cdn/value.a39bb477f8132dc691b97e44f8176bb55b7faf1e7cf241e1e54b2e0a8c0e013b.mp3', len: 24, name: 'Expedition Log: Matrix' } }
 export function holoEnd(ctx, p) {
   const s = ctx.self.state
   if (s.holoPlay?.at !== p?.at) return

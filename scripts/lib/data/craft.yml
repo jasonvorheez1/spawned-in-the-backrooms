@@ -33,6 +33,7 @@ recipes:
   bandage:    { cat: aid, name: Bandage,         in: { drywall: 2, wire: 1 },                          out: [bandage],          skill: [medicine, 15], desc: "Heals on the spot" }
   firstaid:   { cat: aid, name: First aid kit,   in: { drywall: 3, wire: 2, copper_coil: 1 },          out: [firstaid],         skill: [medicine, 40], bench: true, desc: "A proper kit: a big heal" }
   kit2:       { cat: aid, name: Field repair set, in: { scrap_metal: 4, gears: 1, springs: 1, bolts: 3 }, out: [kit, kit, akit], skill: [repair, 50],   bench: true, desc: "Two weapon kits and an armor kit" }
+  humloop:    { cat: aid, name: Hum loop,        in: { magnetic_tape: 2, crt_glass: 1, crew_putty: 1, wire: 1 }, out: [humloop], skill: [science, 15], desc: "A tape spliced into a ring that plays the Lobby's hum back to you: sanity +40 (I > Aid)" }
   # food and water (Shelly: "no cooking or water recipes"): scrap from the caves and springs becomes something to eat and drink
   stew:       { cat: food, name: Glow-cap stew,       in: { glow_cap: 3, spring_salt: 1 },                out: [stew],            skill: [survival, 10], bench: cook, desc: "Hunger +28 · cooked at a fire, eaten from I > Aid" }
   stillwater: { cat: food, name: Pipe-still water,    in: { steel_pipe: 1, scrap_metal: 1, wire: 1 },     out: [stillwater, stillwater], skill: [survival, 15], bench: cook, desc: "Condensed off hot pipe: two safe drinks" }

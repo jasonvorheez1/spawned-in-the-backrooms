@@ -37,3 +37,5 @@ beans:   { name: "Can of beans", info: "Cold, filling", hunger: 25, thirst: -2, 
 bar:     { name: "Energy bar", info: "Chalky and sweet · stamina", hunger: 12, thirst: -2, sanity: 0, hp: 9, color: "#c8a03a", stamina: 40 }
 firstaid: { name: "First aid kit", info: "Patches you up properly. Medicine helps", hunger: 0, thirst: 0, sanity: 0, hp: 52, color: "#e83a3a", aid: true }
 royal_ration: { name: "Royal ration", info: "Level 3's rare tin. Full health, a clear head", hunger: 60, thirst: 0, sanity: 60, hp: 999, color: "#e8c83a" }
+# crafted (craft.yml humloop): Level 13 tape and glass, Level 0.2 putty. Savi's picks
+humloop: { name: "Hum loop", info: "A cassette ring, puttied shut. It plays the Lobby's hum, and the hum is somehow a comfort", hunger: 0, thirst: 0, sanity: 40, hp: 0, color: "#d4b96a", aid: true }

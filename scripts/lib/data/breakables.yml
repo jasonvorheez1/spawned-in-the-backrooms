@@ -57,6 +57,10 @@ scrap:
   mortar_dust: { name: Mortar dust, kg: 0.2, color: "#cfc8b8" }
   copper_wire: { name: Copper wire, kg: 0.1, color: "#e8904a" }
   tile_shard:  { name: Tile shard,  kg: 0.2, color: "#d8b878" }
+  # Level 13 (unspooled cassettes, cracked sets) and Level 0.2 (the crew's own putty): Savi's picks
+  magnetic_tape: { name: Magnetic tape, kg: 0.05, color: "#5a4a3a" }
+  crt_glass:   { name: Picture-tube glass, kg: 0.4, color: "#9ab8b4" }
+  crew_putty:  { name: Crew patch putty, kg: 0.2, color: "#f2efe4" }
   # Level 8, Cave Systems: what the 9th Road gives (flowstone and ironstone from the rock, glow caps from the Lane, silk and chitin from the nest, pitch from the tar)
   flowstone:   { name: Flowstone shard, kg: 1.0, color: "#e0d6b8" }
   ironstone:   { name: Ironstone ore,   kg: 1.5, color: "#9a5a44" }
