@@ -44,7 +44,7 @@ export function layFood(ctx) {
   const M = (id, key, x, z, yaw, extra = {}, y = 0) => P(id, { model: { id: G[key], forward: "+z" }, feetPosition: { x, y, z }, rotation: { yaw }, physics: { body: "static", collider: "box" }, ...extra });
   // the zone's root, where the blueprint stood: its lights
   const L = (x, y, z, color, intensity) => ({ feetPosition: { x, y, z }, light: { kind: "point", color, intensity, distance: 15 } });
-  P("bp", { feetPosition: { x: 34, y: 0, z: 18 }, children: [L(5.6, 2.9, -4, "#ffd9a0", 22), L(5.6, 2.9, 3, "#ffd9a0", 22), L(-3, 3.8, 0.5, "#ffb060", 22), L(-1, 3.4, -9.5, "#ff9ac8", 12)] });
+  P("bp", { feetPosition: { x: 34, y: 0, z: 18 }, children: [L(3.2, 2.9, -4, "#ffd9a0", 7), L(3.2, 2.9, 3, "#ffd9a0", 7), L(-3, 3.8, 0.5, "#ffb060", 22), L(-1, 3.4, -9.5, "#ff9ac8", 12)] });
   // serving counter along the east wall: carcass, kick, stainless top, tray rail
   P("counter", { feetPosition: { x: 38, y: 0.1, z: 17 }, primitive: box(0.8, 0.78, 14), material: { color: "#8e1f18", roughness: 0.45 }, physics: "static" });
   P("counter-kick", { feetPosition: { x: 38.03, y: 0, z: 17 }, primitive: box(0.7, 0.1, 13.96), material: { color: "#141416", roughness: 0.6 } });
@@ -58,7 +58,7 @@ export function layFood(ctx) {
   // backlit menu board on the east wall
   P("menu-box", { feetPosition: { x: 41.9, y: 2.4, z: 17 }, primitive: box(0.16, 2.0, 6.6), material: { color: "#1a1412", roughness: 0.6 } });
   P("menu-glow", { feetPosition: { x: 41.81, y: 2.45, z: 17 }, primitive: box(0.02, 1.9, 6.4), material: { color: "#fff1cf", emissive: "#ffe2a8", emissiveIntensity: 0.07 } });
-  P("staff-light", { feetPosition: { x: 36.2, y: 2.6, z: 28.6 }, light: { kind: "point", color: "#ffd2a0", intensity: 2.5, distance: 7 } });
+  P("staff-light", { feetPosition: { x: 36.2, y: 2.6, z: 28.6 }, light: { kind: "point", color: "#ffd2a0", intensity: 7, distance: 7 } });
   P("menu", { feetPosition: { x: 41.79, y: 3.4, z: 17 }, rotation: { yaw: 90 }, vector: MENU });
   // neon on the partition, the paper note over the trash cans
   P("neon", { feetPosition: { x: 37.5, y: 3.3, z: 6.17 }, rotation: { yaw: 180 }, vector: NEON });
@@ -79,10 +79,12 @@ export function layFood(ctx) {
     M(`table${t}`, "table", x, z, 0);
     side.forEach(([dx, dz, yaw], c) => { const p = pulled[`${t}-${c}`]; M(`chair${t}-${c}`, "chair", x + dx + (p?.[0] ?? 0), z + dz + (p?.[1] ?? 0), yaw + (p?.[2] ?? 0)); });
   }
+  // raised rubber mat behind the counter: the clerk stands on it so he reads at full height over the top
+  P("duckboard", { feetPosition: { x: 40.1, y: 0, z: 17 }, primitive: box(3.2, 0.32, 13.4), material: { color: "#1b1b1d", roughness: 0.9 }, physics: "static", castShadow: false, receiveShadow: true });
   // people: the clerk behind the counter, two customers at table 3
-  const person = (id, look, x, z, yaw, state, sit) => P(id, { tags: ["npc", "faceling"], feetPosition: { x, y: 0, z }, rotation: { yaw }, physics: sit ? "none" : "character", ...critterSpec(npcLook(`l31-food-${id}`, { species: "faceling", ...look }, "wanderer", 1)),
+  const person = (id, look, x, z, yaw, state, sit, y = 0) => P(id, { tags: ["npc", "faceling"], feetPosition: { x, y, z }, rotation: { yaw }, physics: sit ? "none" : "character", ...critterSpec(npcLook(`l31-food-${id}`, { species: "faceling", ...look }, "wanderer", 1)),
     behavior: sit ? ["scripts/l31-food.js"] : ["scripts/humanoid-locomotion.js", "scripts/l31-food.js"], state: { faction: "faceling", hp: 60, docile: true, essential: true, sex: look.sex, ...state } });
-  person("clerk", { sex: "m", topw: "apron", top: "#c8201c", botw: "pants", bottom: "#1c1c22", shoes: "sneakers", hat: "cap" }, 39.5, 17, 90, { name: "Counter clerk", role: "clerk", kind: "clerk", home: { x: 39.5, z: 17 } });
+  person("clerk", { sex: "m", topw: "apron", top: "#c8201c", botw: "pants", bottom: "#1c1c22", shoes: "sneakers", hat: "cap" }, 39.5, 17, 90, { name: "Counter clerk", role: "clerk", kind: "clerk", home: { x: 39.5, z: 17 } }, false, 0.32);
   ctx.spawn("l31-food-tag", { parent: "l31-food-clerk", attachment: { bone: "Spine2" }, feetPosition: { x: 0.09, y: 0.1, z: 0.125 }, primitive: box(0.075, 0.028, 0.006), material: { color: "#f4f2ea", roughness: 0.4 }, castShadow: false });
   person("cust1", { sex: "f", topw: "sweater", top: "#6a86a8", botw: "pants", bottom: "#3a3a44", shoes: "sneakers" }, 29.5 - 0.55, 23, -90, { name: "Faceling", role: "customer", kind: "sitter" }, true);
   person("cust2", { sex: "m", topw: "jacket", top: "#5a4a32", botw: "pants", bottom: "#26262c", shoes: "boots" }, 29.5 + 0.55, 23, 90, { name: "Faceling", role: "customer", kind: "sitter" }, true);
