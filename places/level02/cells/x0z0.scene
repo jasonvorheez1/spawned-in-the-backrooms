@@ -97,6 +97,12 @@ l02-gd-mud:
   model: {id: /cdn/value.de837b025facd30bbc64219af3eff567b5ebc52a66434f60110fdc6b9260a8b1.glb}
   physics: static
   rotation: {yaw: 0}
+l02-gd-paper:
+  feetPosition: {x: 10.7, y: -2.9539999999999997, z: -4.35}
+  id: l02-gd-paper
+  material: {color: oklch(0.93 0.01 90), roughness: 0.9}
+  primitive: {depth: 0.42, height: 0.004, kind: box, width: 0.3}
+  rotation: {yaw: -12}
 l02-gd-plant:
   feetPosition: {x: 6.6, y: -3.4, z: 6.35}
   id: l02-gd-plant
@@ -111,3 +117,24 @@ l02-gd-saw0:
   model: {id: /cdn/value.afec3110e2d081b48de5f78e3510691bffc67e913360c067c5b6113e039fd27e.glb}
   physics: static
   rotation: {yaw: 0}
+l02-gd-tb0:
+  feetPosition: {x: 9.9, y: -3.4, z: -4.45}
+  id: l02-gd-tb0
+  layout: {box: {max: {x: 0.275, y: 0.42, z: 0.225}, min: {x: -0.275, y: 0, z: -0.225}}}
+  model: {id: /cdn/value.de837b025facd30bbc64219af3eff567b5ebc52a66434f60110fdc6b9260a8b1.glb}
+  physics: static
+  rotation: {yaw: 10}
+l02-gd-tb1:
+  feetPosition: {x: 11.05, y: -3.4, z: -4.4}
+  id: l02-gd-tb1
+  layout: {box: {max: {x: 0.275, y: 0.42, z: 0.225}, min: {x: -0.275, y: 0, z: -0.225}}}
+  model: {id: /cdn/value.de837b025facd30bbc64219af3eff567b5ebc52a66434f60110fdc6b9260a8b1.glb}
+  physics: static
+  rotation: {yaw: -15}
+l02-gd-tbl:
+  feetPosition: {x: 10.48, y: -2.98, z: -4.42}
+  id: l02-gd-tbl
+  material: {color: oklch(0.8 0.07 80), repeat: [1, 1], roughness: 0.85, texture: cdn/texture-osb-plywood-subfloor-sheet.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 0.72, height: 0.025, kind: box, width: 1.75}
+  rotation: {yaw: 3}
