@@ -90,7 +90,7 @@ export function catModel(sex, look) {
   const params = skinParams(sex, look)
   const fur = look?.fur || '#f3c98a'
   const faces = FACES.faces[sex === 'm' ? 'male' : 'female']
-  const expression = faces[look?.expression] ?? faces[look?.expr] // a mood swap writes expression; the creator's resting pick is expr
+  const expression = faces[look?.expression] // a mood swap writes expression for a beat; the resting face is always the calm, mouthless one (Shelly #244301 'they shouldnt have mouths', Nov 12 'fix her face')
   const calm = typeof expression !== 'string' || expression === faces.neutral
   const sk = sex === 'm' ? 'male' : 'female'
   // an eye type redraws the calm face; a mouth type lays its layer on it. a mood face keeps its own painted eyes and mouth

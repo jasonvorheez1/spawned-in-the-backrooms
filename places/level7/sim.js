@@ -176,7 +176,7 @@ const L7_NPCS = {
       { x: 47.2, y: 7.0, z: -123.5, dwell: 14, act: null, look: { x: 30.0, z: -140.0 } },
       { x: 44.5, y: 7.0, z: -117.5, dwell: 16, act: null, look: { x: 43.0, z: -118.0 } },
     ],
-    look: { species: "otter", sex: "m", eye: "#38a89d", belly: "#e6d2b5", nose: "#221814", topw: "jacket", top: "#1e3b4b", botw: "overalls", bottom: "#28322c", shoes: "boots", shoec: "#141618", hat: "cap", hatc: "#b88838", eyew: "none", neck: "cape", neckc: "#c85a28", expr: "calm" }, // Seawatch dive coat, tar-caulked waders, lead-ballast boots, brass-rimmed dive hood, cork lifebelt mantle
+    look: { species: "otter", sex: "m", eye: "#38a89d", belly: "#e6d2b5", nose: "#221814", topw: "jacket", top: "#1e3b4b", botw: "overalls", bottom: "#28322c", shoes: "boots", shoec: "#141618", hat: "cap", hatc: "#b88838", eyew: "none", neck: "scarf", neckc: "#c85a28", expr: "calm" }, // Seawatch dive coat, tar-caulked waders, lead-ballast boots, brass-rimmed dive hood, cork lifebelt mantle
   },
   "l7-jude": {
     name: "Brother Jude · Fort Surrender",
@@ -192,7 +192,7 @@ const L7_NPCS = {
       { x: -67.5, y: 11.0, z: -92.5, dwell: 15, act: null, look: { x: -60.0, z: -80.0 } },
       { x: -72.5, y: 11.0, z: -95.0, dwell: 18, act: null, look: { x: -83.0, z: -115.0 } },
     ],
-    look: { species: "deer", sex: "m", eye: "#5ae0d0", belly: "#d8cbb8", nose: "#1e1816", topw: "longsleeve", top: "#b8a888", topp: "weave", botw: "longskirt", bottom: "#4a3e30", botp: "weave", shoes: "boots", shoec: "#3a2c22", neck: "cape", neckc: "#7a2e24", expr: "calm" },
+    look: { species: "deer", sex: "m", eye: "#5ae0d0", belly: "#d8cbb8", nose: "#1e1816", topw: "longsleeve", top: "#b8a888", topp: "weave", botw: "longskirt", bottom: "#4a3e30", botp: "weave", shoes: "boots", shoec: "#3a2c22", neck: "scarf", neckc: "#7a2e24", expr: "calm" },
   },
   "l7-ezra": {
     name: "Ezra · Fort Surrender Watch",
