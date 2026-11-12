@@ -5,31 +5,42 @@
 //  - feeds the panel (ctx.session.lsRow, 4 a second) while it is open, and runs the builders' panel asks.
 // Nothing is written to the player's state or the world's: a game with LAGSCOPE installed plays exactly as before.
 import { analyze, causes, reportText } from "./core.js";
-import { sample, sceneStep, sceneSnap, stalls, tagGc, heapNow, env, addStall, noteStalls } from "./scene.js";
+import { brief, briefText } from "./brief.js";
+import { sample, sceneStep, sceneSnap, sceneFresh, stalls, tagGc, heapNow, env, addStall, noteStalls } from "./scene.js";
 import { startProbe, threadSnap } from "./probe.js";
 import { cfg, cfgNow, insert, handle, drain, clean, publishCfg } from "./store.js";
 
 const clock = typeof performance !== "undefined" && performance.now ? () => performance.now() : () => Date.now();
-const W = { ents: [], entAt: 0, tagBase: null, rows: [], heap: [], start: 0, at: 0, judged: 0, streak: { bad: 0, warn: 0, calm: 0 }, sentSig: null, sentAt: -1e9, pending: null, bot: null };
+const W = { ents: [], entAt: 0, tagBase: null, rows: [], heap: [], start: 0, at: 0, judged: 0, streak: { bad: 0, warn: 0, calm: 0 }, sentSig: null, sentAt: -1e9, pending: null, bot: null, calls: 0, callAt: 0, gap: 0, fc: [], fg: [] };
+const p99 = (v) => { if (v.length < 5) return NaN; const s = v.slice().sort((a, b) => a - b); return s[Math.min(s.length - 1, Math.floor(s.length * 0.99))]; };
 
-function input(ctx, now) {
-  const rows = W.rows.filter((r) => now - r.t < 60000), mins = rows.length ? Math.max(0.1, (now - rows[0].t) / 60000) : 0.05;
+// since (2.0): a scan on demand reads only what happened after the previous scan (4 s at least, 60 s at most), so a fix's
+// "after" reading never carries the "before": fps samples, stalls, thread beats and frame costs older than it are not its own.
+function input(ctx, now, since = 0) {
+  const win = Math.max(4000, Math.min(60000, now - since));
+  const rows = W.rows.filter((r) => now - r.t < win), mins = rows.length ? Math.max(0.1, (now - rows[0].t) / 60000) : 0.05;
   const fpsAvg = rows.reduce((a, r) => a + (r.fps || 0), 0) / Math.max(1, rows.length) || 60;
   tagGc(W.heap);
-  const st = stalls().filter((s) => now - s.t < 60000);
+  const st = stalls().filter((s) => now - s.t < win);
   const ft = []; for (const r of rows) if (r.fps > 0) for (let k = 0; k < Math.round(r.fps / 2); k++) ft.push(1000 / r.fps);
   for (const s of st) { ft.push(s.ms); ft.splice(0, Math.round(s.ms / 16.7)); }
   return { fps: rows.map((r) => r.fps), ft, ftReal: false, worst: [], cpu: rows.map((r) => r.cpu), gpu: rows.map((r) => r.gpu), draw: rows.map((r) => r.draw), tri: rows.map((r) => r.tri),
-    heap: W.heap.filter((q) => now - q[0] < 180000), stalls: st, minutes: mins, js: 0, top: null, sys: [], scene: sceneSnap(), ping: ctx.self?.latencyMs, pingSer: rows.map((r) => r.ping), sim: null, fpsAvg, thread: threadSnap(60000), ents: entTrend(ctx), view: (() => { const l = rows[rows.length - 1] || {}; return { gpuMemoryMB: l.gmem, renderScale: l.rs, netInBytes: l.net }; })() };
+    heap: W.heap.filter((q) => now - q[0] < 180000), stalls: st, minutes: mins, js: 0, top: null, sys: [], scene: sceneSnap(), ping: ctx.self?.latencyMs, pingSer: rows.map((r) => r.ping), sim: null, fpsAvg, thread: threadSnap(win), windowMs: Math.round(win), ents: entTrend(ctx), view: (() => { const l = rows[rows.length - 1] || {}; return { gpuMemoryMB: l.gmem, renderScale: l.rs, netInBytes: l.net, netOutBytes: l.nout, netInMessages: l.nmsg }; })(),
+    tick: (() => { const r = rows.filter((q) => q.hz > 0).slice(-20); return r.length ? { hz: +(r.reduce((a, q) => a + q.hz, 0) / r.length).toFixed(1), worst: Math.round(Math.max(...r.map((q) => q.gap || 0))) } : null; })(), // how often this body's update() really ran (30 = on time) and its longest gap
+    cost: { cpuP99: p99(W.fc), gpuP99: p99(W.fg) } }; // per-frame render cost from ctx.view.frames, last ~600 frames
 }
 // the place's object count over ~3 min: a count that only climbs is something spawning without ever leaving
 function entTrend(ctx) {
   const e = W.ents; if (e.length < 12) return null;
-  const a = e[0], b = e[e.length - 1], mins = (b[0] - a[0]) / 60000; if (mins < 1.5) return null;
+  const a = e[0], b = e[e.length - 1], mins = (b[0] - a[0]) / 60000; if (mins < 0.5) return null; // 2.0: read from 30 s on, so one jump is told as a jump (steady false); a leak still needs 1.5 min
   let lo = Infinity; for (let i = Math.floor(e.length / 2); i < e.length; i++) lo = Math.min(lo, e[i][1]); // still high in the second half, not a passing wave
   const gain = Math.min(lo, b[1]) - a[1], perMin = gain / mins;
   let grower = null; const sc = sceneSnap(); if (sc && W.tagBase) { let best = 0; for (const [t, n] of sc.tags || []) { const d = n - (W.tagBase[t] || 0); if (d > best && t !== "player") { best = d; grower = t; } } if (best < 30) grower = null; }
-  return { n: b[1], gain, perMin, place: ctx.place?.id || "?", grower };
+  // steady (2.0): a leak climbs sample after sample; one spawn lands in a single step. rises = 2 s steps that grew,
+  // jump = the biggest growth inside any 10 s (a batch streams in over a few samples). steady only when the growth is spread.
+  let rises = 0, jump = 0; for (let i = 1; i < e.length; i++) { const d = e[i][1] - e[i - 1][1]; if (d > 0) rises++; const d2 = e[i][1] - e[Math.max(0, i - 5)][1]; if (d2 > jump) jump = d2; }
+  const steady = gain > 0 && mins >= 1.5 && rises >= 3 && jump <= gain * 0.5;
+  return { n: b[1], gain, perMin, steady, rises, jump, place: ctx.place?.id || "?", grower };
 }
 // a frame dip: fps fell to under half the running median while the game thread kept time (so the drawing side, not scripts)
 function dips(now) {
@@ -48,12 +59,18 @@ function judge(I) {
 }
 export function analyzeNow(ctx) { return judge(input(ctx, clock())); }
 
-async function report(ctx, lv, trigger, sig) {
-  const p = ctx.self, now = clock(), I = input(ctx, now), a = judge(I), f = p.feetPosition || {}, start = Date.now() - now;
+async function report(ctx, lv, trigger, sig, since = 0) {
+  const p = ctx.self, now = clock(), I = input(ctx, now, since), a = judge(I), f = p.feetPosition || {}, start = Date.now() - now;
   const game = ctx.world?.name || ctx.world?.address || "";
-  const text = reportText(I, a, { game, place: ctx.place?.id, server: ctx.world?.mode ?? "", who: p.displayName, trigger: `${trigger} at ${Math.round(f.x ?? 0)}, ${Math.round(f.z ?? 0)}`, env: env(ctx), clock: (t) => new Date(start + t).toISOString().slice(11, 19) + " " });
+  // 2.0: measured ms per script on this machine, when the engine hands its timers to a behavior (brief.js reads I.sim.scripts)
+  if (W.simScripts && now - W.simAt < 30000) I.sim = { scripts: W.simScripts }; // asked when the scan began (scan()); the report never waits on it
+  if (W.phys && now - W.physAt < 30000) I.phys = W.phys; // the engine's physics/step row, ms a step (p50/p95/max)
+  const ai = brief(I, a);
+  const text = briefText(ai) + "\n---- raw reading ----\n" + reportText(I, a, { game, place: ctx.place?.id, server: ctx.world?.mode ?? "", who: p.displayName, trigger: `${trigger} at ${Math.round(f.x ?? 0)}, ${Math.round(f.z ?? 0)}`, env: env(ctx), clock: (t) => new Date(start + t).toISOString().slice(11, 19) + " " });
   const s = a.stats || {}, sum = { fps: Number.isFinite(s.fps) ? Math.round(s.fps) : null, low1: Number.isFinite(s.P?.low1) ? Math.round(s.P.low1) : null, gpu: +(s.gpu || 0).toFixed(1), cpu: +(s.cpu || 0).toFixed(1), draw: Math.round(s.draw || 0), tri: +((s.tri || 0) / 1e6).toFixed(2), heap: Math.round(s.M?.now || 0), stalls: I.stalls.length, ping: Number.isFinite(p.latencyMs) ? Math.round(p.latencyMs) : null };
-  const data = { game: String(game).slice(0, 60), why: a.verdict.filter((v) => v[0] !== "ok").map((v) => v[1]).slice(0, 5), fix: a.fixes.slice(0, 3).map((x) => `${x[1]}: ${x[2]}`), sum, pos: [Math.round(f.x ?? 0), Math.round(f.z ?? 0)], players: ctx.place?.playerCount ?? null, keys: causes(a), where: whereOf(I.scene) };
+  const data = { game: String(game).slice(0, 60), why: a.verdict.filter((v) => v[0] !== "ok").map((v) => v[1]).slice(0, 5), fix: a.fixes.slice(0, 3).map((x) => `${x[1]}: ${x[2]}`), sum, pos: [Math.round(f.x ?? 0), Math.round(f.z ?? 0)], players: ctx.place?.playerCount ?? null, keys: causes(a), where: whereOf(I.scene), ai };
+  ctx.session.lsBrief = { at: Date.now(), ai, text: briefText(ai), windowMs: I.windowMs, timed: !!I.sim, ents: I.ents };
+  if (since || lv === "manual") { W.scanAt = now; W.fc.length = 0; W.fg.length = 0; } // the next scan's window opens here
   try { return await insert(ctx, { auto: lv !== "manual", uid: p.userId || p.id, name: p.displayName || "player", lv, trigger, score: a.score, place: ctx.place?.id || "", room: String(ctx.world?.mode || ""), sig: sig ?? causes(a).join("|"), data, text }); }
   catch (e) { ctx.log("lagscope report not saved", { e: String(e?.message || e).slice(0, 120) }); return null; }
 }
@@ -69,6 +86,8 @@ export function onSpawn(ctx) { if (ctx.self?.isLocal) startProbe(addStall); if (
 export function update(ctx) {
   const p = ctx.self; if (!p?.isLocal) return;
   const now = clock();
+  if (W.callAt) { const g = now - W.callAt; if (g > W.gap && g < 5000) W.gap = g; } /* past 5 s: a hidden tab or the boot, not the game */ W.callAt = now; W.calls++;
+  if (W.pending) { try { sceneStep(ctx, 120); } catch {} }
   startProbe(addStall);
   if (ctx.session.lsOpen) { const row = sample(ctx); if (row) { row.thread = threadSnap(15000); row.ents = entTrend(ctx); row.entN = W.ents.at(-1)?.[1] ?? null; ctx.session.lsRow = row; } }
   if (now - W.entAt > 2000) { W.entAt = now; let n = 0; try { for (const _ in ctx.place.objects || {}) n++; } catch {}
@@ -77,17 +96,20 @@ export function update(ctx) {
     const sc = sceneSnap(); if (sc && !W.tagBase && W.ents.length > 3) W.tagBase = Object.fromEntries(sc.tags || []); }
   if (p.isEditor) { drain(ctx).catch(() => null); clean(ctx).catch(() => null); }
   if (W.bot == null) W.bot = typeof navigator !== "undefined" && !!navigator.webdriver;
-  if (W.bot || (typeof document !== "undefined" && document.hidden)) { W.start = 0; return; } // test browsers are not players
+  if (typeof document !== "undefined" && document.hidden && !W.pending) { W.start = 0; return; }
   if (!W.start) { W.start = now; W.rows = []; cfg(ctx).catch(() => null); }
-  if (now - W.at < 500) return; W.at = now;
+  if (now - W.at < 500) return; const hz = W.at ? (W.calls * 1000) / (now - W.at) : NaN, gap = W.gap; W.calls = 0; W.gap = 0; W.at = now;
+  try { for (const fr of v0(ctx).frames || []) { if (fr.cpuMs >= 0) W.fc.push(fr.cpuMs); if (fr.gpuMs >= 0) W.fg.push(fr.gpuMs); } if (W.fc.length > 600) W.fc.splice(0, W.fc.length - 600); if (W.fg.length > 600) W.fg.splice(0, W.fg.length - 600); } catch {}
   const v = ctx.view || {};
   if (v.fps > 0 && v.fps < 40 && v.gpuMs > 0 && v.gpuMs < 0.5) W.soft = (W.soft || 0) + 1; else if (v.gpuMs >= 0.5) W.soft = 0;
+  if (W.pending) { try { sceneStep(ctx, 40); } catch {} }
+  if (W.pending && (sceneSnap() || now - W.pending.at > 6000)) { const q = W.pending; W.pending = null; report(ctx, q.lv, q.trigger, q.sig, q.since).then((id) => { if (q.lv === "manual") ctx.log("lagscope scan saved", { id, brief: ctx.session.lsBrief?.ai?.headline }); }); return; } // a scan asked for is answered on any renderer, a software one too (2.0)
   if (W.soft > 20) return; // software renderer: its numbers say nothing about the game
-  W.rows.push({ t: now, ping: Number.isFinite(p.latencyMs) ? p.latencyMs : NaN, fps: v.fps, cpu: v.cpuMs, gpu: v.gpuMs, draw: v.drawCalls, tri: v.triangles, gmem: v.gpuMemoryMB, rs: v.renderScale, net: v.netInBytes }); if (W.rows.length > 130) W.rows.shift();
+  W.rows.push({ t: now, ping: Number.isFinite(p.latencyMs) ? p.latencyMs : NaN, fps: v.fps, cpu: v.cpuMs, gpu: v.gpuMs, draw: v.drawCalls, tri: v.triangles, gmem: v.gpuMemoryMB, rs: v.renderScale, net: v.netInBytes, nout: v.netOutBytes, nmsg: v.netInMessages, hz, gap }); if (W.rows.length > 130) W.rows.shift();
   dips(now);
   const h = heapNow(); if (Number.isFinite(h)) { W.heap.push([now, h]); if (W.heap.length > 400) W.heap.shift(); }
   if (W.pending || W.streak.bad || W.streak.warn) { try { sceneStep(ctx, 40); } catch {} }
-  if (W.pending && (sceneSnap() || now - W.pending.at > 4000)) { const q = W.pending; W.pending = null; report(ctx, q.lv, q.trigger, q.sig); return; }
+  if (W.bot) return; // test browsers are not players: they never report on their own, only when a scan asks (2.0)
   if (now - W.start < 30000 || now - W.judged < 3000) return; // arrival and streaming spikes are not lag
   W.judged = now;
   const c = cfgNow(); if (!c.auto) return;
@@ -106,6 +128,16 @@ export function update(ctx) {
   if (W.sentSig && a.level !== "bad" && W.streak.calm >= 4) { W.sentSig = null; W.pending = { lv: "ok", at: now, sig: "recovered", trigger: "auto · smooth again" }; }
 }
 
+const v0 = (ctx) => ctx.view || {};
+// 2.0: a reading on demand. ctx.emit("lagscope:scan", { why }) from run_script (or any script) makes every machine in the
+// room take a fresh scene pass and save one report (lv 'manual') with its AI brief: the before/after of a fix, no panel needed.
+export function scan(ctx, p) {
+  if (!ctx.self?.isLocal) return;
+  sceneFresh(); if (!W.start) W.start = clock();
+  // measured ms per script, when the engine hands its timers to a behavior: asked now, read by report() if it has landed
+  try { if (typeof ctx.getPerformanceSnapshot === "function") Promise.resolve(ctx.getPerformanceSnapshot()).then((ps) => { const sr = (ps?.server?.top || []).filter((r) => r.kind === "script" && Number.isFinite(r.p50Ms)); if (sr.length) { W.simScripts = sr.map((r) => ({ path: r.name, ms: r.p50Ms, p95: r.p95Ms, max: r.maxMs })); W.simAt = clock(); } const ph = (ps?.server?.top || []).find((r) => r.name === "physics/step" && Number.isFinite(r.p95Ms)); if (ph) { W.phys = { p50: +ph.p50Ms.toFixed(2), p95: +ph.p95Ms.toFixed(2), max: +(ph.maxMs ?? ph.p95Ms).toFixed(1) }; W.physAt = clock(); } }).catch(() => null); } catch {}
+  W.pending = { lv: "manual", at: clock(), sig: undefined, since: W.scanAt || 0, trigger: "scan" + (p?.why ? ": " + String(p.why).slice(0, 40) : "") };
+}
 // the panel's buttons (overlay mode: the game's ui.js draws the panel, presses arrive here as lagscope:act)
 export function onInput(ctx, input) {
   const p = ctx.self; if (!p?.isLocal) return;

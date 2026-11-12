@@ -3,6 +3,7 @@
 //   lagscope_reports  one row per report; posted 0 new · 2 posting · 1 posted; savi_at = when it went to Savi
 // Reports always save here. Discord is a switch on top (off by default). Sent-to-Savi reports clear themselves after
 // keepSentH hours (default 24), every report after keepDays (default 7), so the list only holds what is still new.
+import { mergeBriefs, briefShort } from "./brief.js";
 export const DEF = { discord: false, auto: true, yellow: true, red: 30, warn: 50, cap: 40, keepSentH: 24, keepDays: 7 };
 const LIM = { red: [5, 120], warn: [5, 144], cap: [1, 200], keepSentH: [1, 168], keepDays: [1, 30] };
 const LOGO = "https://spawn.co/cdn/value.ccb01738701e8e3bfd23ff30ff54855d321bc310a442d0e370e84960685d8dcd.png";
@@ -12,8 +13,10 @@ const clip = (t, n) => { t = String(t ?? ""); return t.length > n ? t.slice(0, n
 export const me = (ctx) => (ctx.self?.displayName != null && "isEditor" in ctx.self ? ctx.self : (ctx.world?.players || []).find((q) => q.isLocal) || ctx.self);
 let schemaP = null, CFG = null, cfgAt = 0, cleanAt = 0, drainAt = 0, draining = false;
 
+// 2.0: created straight away. The old probe (SELECT first, CREATE on the throw) worked but left a `no such table` fault
+// in every fresh game's log; IF NOT EXISTS says the same with no fault.
 export function schema(ctx) {
-  return (schemaP ??= ctx.sql`SELECT 1 FROM lagscope_kv LIMIT 1; SELECT 1 FROM lagscope_reports LIMIT 1`.catch(() => ctx.sql`CREATE TABLE IF NOT EXISTS lagscope_kv (k TEXT PRIMARY KEY, v TEXT); CREATE TABLE IF NOT EXISTS lagscope_reports (id INTEGER PRIMARY KEY AUTOINCREMENT, at INTEGER, uid TEXT, name TEXT, lv TEXT, trigger TEXT, score INTEGER, place TEXT, room TEXT, sig TEXT, data TEXT, text TEXT, posted INTEGER DEFAULT 0, savi_at INTEGER)`)
+  return (schemaP ??= ctx.sql`CREATE TABLE IF NOT EXISTS lagscope_kv (k TEXT PRIMARY KEY, v TEXT); CREATE TABLE IF NOT EXISTS lagscope_reports (id INTEGER PRIMARY KEY AUTOINCREMENT, at INTEGER, uid TEXT, name TEXT, lv TEXT, trigger TEXT, score INTEGER, place TEXT, room TEXT, sig TEXT, data TEXT, text TEXT, posted INTEGER DEFAULT 0, savi_at INTEGER)`
     .catch((e) => { schemaP = null; throw e; }));
 }
 export function sane(c) {
@@ -47,7 +50,7 @@ export async function insert(ctx, x) {
     const seen = (await ctx.sql`SELECT 1 FROM lagscope_reports WHERE uid = ${x.uid} AND sig = ${x.sig} AND at > ${now - 6 * 3600000} LIMIT 1`).rows?.length;
     if (seen) return null;
   }
-  const r = await ctx.sql`INSERT INTO lagscope_reports (at, uid, name, lv, trigger, score, place, room, sig, data, text, posted) VALUES (${now}, ${x.uid}, ${x.name}, ${x.lv}, ${x.trigger}, ${x.score}, ${x.place}, ${x.room}, ${x.sig}, ${JSON.stringify(x.data)}, ${clip(x.text, 6000)}, 0); SELECT last_insert_rowid() AS id`;
+  const r = await ctx.sql`INSERT INTO lagscope_reports (at, uid, name, lv, trigger, score, place, room, sig, data, text, posted) VALUES (${now}, ${x.uid}, ${x.name}, ${x.lv}, ${x.trigger}, ${x.score}, ${x.place}, ${x.room}, ${x.sig}, ${JSON.stringify(x.data)}, ${clip(x.text, 14000)}, 0); SELECT last_insert_rowid() AS id`;
   const id = r.rows?.[r.rows.length - 1]?.id ?? null;
   if (me(ctx)?.isEditor) drain(ctx, true).catch(() => null);
   return id;
@@ -138,7 +141,7 @@ export async function handle(ctx, a) {
         return { id: r.id, at: r.at, name: clip(r.name, 24), lv: r.lv, score: r.score, place: r.place, fps: d.sum?.fps ?? null, low1: d.sum?.low1 ?? null, why: (d.why || []).slice(0, 3).map((w) => clip(w, 140)), fix: (d.fix || []).slice(0, 2).map((w) => clip(w, 110)), posted: r.posted === 1, savi: r.savi_at || null }; }) };
       return;
     }
-    if (op === "one") { const r = (await ctx.sql`SELECT id, text FROM lagscope_reports WHERE id = ${Number(a.id) || 0}`).rows?.[0]; ctx.session.lsReport = r ? { id: r.id, text: clip(r.text, 6000) } : null; return; }
+    if (op === "one") { const r = (await ctx.sql`SELECT id, text FROM lagscope_reports WHERE id = ${Number(a.id) || 0}`).rows?.[0]; ctx.session.lsReport = r ? { id: r.id, text: clip(r.text, 14000) } : null; return; }
     if (op === "wipe") { await ctx.sql`DELETE FROM lagscope_reports`; ctx.session.lsReports = { at: Date.now(), rows: [], day: {}, unsent: 0 }; return say(ctx, "reports cleared"); }
     if (op === "savi") return toSavi(ctx, LV(a.level));
   } catch (e) { say(ctx, "database error: " + String(e?.message || e).slice(0, 80)); ctx.log("lagscope error", { op: a.op, e: String(e?.message || e) }); }
@@ -151,16 +154,17 @@ async function toSavi(ctx, lv) {
   const rows = (lv && lv !== "new" ? await ctx.sql`SELECT id, at, name, lv, place, data FROM lagscope_reports WHERE savi_at IS NULL AND lv = ${lv} ORDER BY id DESC LIMIT 40`
     : await ctx.sql`SELECT id, at, name, lv, place, data FROM lagscope_reports WHERE savi_at IS NULL AND lv != 'ok' ORDER BY id DESC LIMIT 40`).rows || [];
   if (!rows.length) return say(ctx, "nothing new to send. savi has every report");
-  const tally = new Map(), fixes = new Map(), who = new Set(), places = new Map(), doers = new Map(), keys = new Map(); let fpsSum = 0, fpsN = 0, game = "";
+  const tally = new Map(), fixes = new Map(), who = new Set(), places = new Map(), doers = new Map(), keys = new Map(), ais = []; let fpsSum = 0, fpsN = 0, game = "";
   for (const r of rows) { let d = {}; try { d = JSON.parse(r.data || "{}"); } catch {} who.add(r.name); places.set(r.place, (places.get(r.place) || 0) + 1); game ||= d.game || "";
     if (Number.isFinite(d.sum?.fps)) { fpsSum += d.sum.fps; fpsN++; }
     for (const w of d.why || []) { const k = String(w).replace(/[\d.]+/g, "#"); const t = tally.get(k) || { n: 0, ex: w }; t.n++; tally.set(k, t); }
     for (const w of d.fix || []) { const k = String(w).replace(/[\d.]+/g, "#"); const t = fixes.get(k) || { n: 0, ex: w }; t.n++; fixes.set(k, t); }
     for (const k of d.keys || []) keys.set(k, (keys.get(k) || 0) + 1);
+    if (d.ai) ais.push(d.ai);
     for (const [k, v] of Object.entries(d.where || {})) if (!doers.has(k)) doers.set(k, v); }
   const top = [...tally.values()].sort((a, b) => b.n - a.n).slice(0, 8), fx = [...fixes.values()].sort((a, b) => b.n - a.n).slice(0, 6);
   const lo = rows[rows.length - 1].id, hi = rows[0].id;
-  const msg = `LAGSCOPE${game ? " · " + game : ""}: ${p.displayName} sent ${rows.length} new lag report${rows.length > 1 ? "s" : ""} (#${lo}–#${hi}) from ${who.size} player${who.size > 1 ? "s" : ""}, avg ${fpsN ? Math.round(fpsSum / fpsN) : "?"} fps, places ${[...places].map(([k, n]) => k + "×" + n).join(", ")}.\nWhere the lag is (times seen):\n${top.map((t) => `${t.n}× ${clip(t.ex, 160)}`).join("\n")}\nFixes suggested:\n${fx.map((t) => `${t.n}× ${clip(t.ex, 140)}`).join("\n")}\nCause keys: ${[...keys].sort((a, b) => b[1] - a[1]).map(([k, n]) => k + "×" + n).join(", ") || "none"}\nWho does it: ${[...doers].map(([k, v]) => k + ": " + clip(v, 120)).join(" · ") || "n/a"}\nFull rows: lagscope_reports in the game database (ids ${lo}–${hi}); they clear themselves ${c.keepSentH} h from now.\nFIX ALL LAG: find each cause in this game's files and fix every one, the most frequent first; then play where it lagged and say what changed and which report ids it answers. (/lagscope has the playbook.)`;
+  const msg = `LAGSCOPE${game ? " · " + game : ""}: ${p.displayName} sent ${rows.length} new lag report${rows.length > 1 ? "s" : ""} (#${lo}–#${hi}) from ${who.size} player${who.size > 1 ? "s" : ""}, avg ${fpsN ? Math.round(fpsSum / fpsN) : "?"} fps, places ${[...places].map(([k, n]) => k + "×" + n).join(", ")}.\nRANKED CULPRITS (impact summed over the reports; each row of lagscope_reports has data.ai with who, files, fix, code and check):\n${ais.length ? briefShort(mergeBriefs(ais), 5) : "none in these rows (saved before 2.0)"}\nWhere the lag is (times seen):\n${top.map((t) => `${t.n}× ${clip(t.ex, 160)}`).join("\n")}\nFixes suggested:\n${fx.map((t) => `${t.n}× ${clip(t.ex, 140)}`).join("\n")}\nCause keys: ${[...keys].sort((a, b) => b[1] - a[1]).map(([k, n]) => k + "×" + n).join(", ") || "none"}\nWho does it: ${[...doers].map(([k, v]) => k + ": " + clip(v, 120)).join(" · ") || "n/a"}\nFull rows: lagscope_reports in the game database (ids ${lo}–${hi}); they clear themselves ${c.keepSentH} h from now.\nFIX ALL LAG: find each cause in this game's files and fix every one, the most frequent first; then play where it lagged and say what changed and which report ids it answers. (/lagscope has the playbook.)`;
   try { ctx.notifyDm(clip(msg, 1990), { wake: true, savi: p.userId || p }); }
   catch (e) { return say(ctx, "couldn't reach savi: " + String(e?.message || e).slice(0, 60)); }
   const t = Date.now();

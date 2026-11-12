@@ -13,6 +13,7 @@ export function startProbe(addStall) {
   R.on = true; R.last = clock();
   setInterval(() => {
     const t = clock(), late = Math.max(0, t - R.last - BEAT); R.last = t;
+    if (late > 5000) return; // a hidden tab or the boot paused the timer: not a freeze of the game
     R.lag.push([t, late]); if (R.lag.length > 1300) R.lag.splice(0, 100); // ~60 s of beats
     if (late >= FREEZE && R.add) R.add({ t: t - late - BEAT, ms: late + BEAT, kind: "thread", cause: `game thread froze ${Math.round(late + BEAT)} ms (scripts, physics or a sweep in the game worker)` });
   }, BEAT);

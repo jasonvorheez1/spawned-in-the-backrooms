@@ -68,10 +68,11 @@ function facts(ctx, id, t) {
   let small = false; if (cast) { const z = o.bounds?.size; small = !!z && Math.max(z.x, z.y, z.z) < 1.2; }
   f = { at: t, tags: tags.slice ? tags.slice() : [], x: fp?.x, z: fp?.z, spr: !!o.sprite, beh: o.behavior ? (Array.isArray(o.behavior) ? o.behavior.length : 1) : 0, light: !!o.light, shL: !!o.light?.shadow?.enabled, fx: !!o.fx, ref: ref || null,
     cast, small, nr: drawn && !!(ref || o.primitive) && !o.visibleRange, tpl: o.template ? String(o.template) : "" };
-  f.key = keyOf(o, id, tags);
+  f.key = keyOf(o, id, tags); f.id = id;
+  f.scr = [].concat(o.behavior || []).map((b) => (typeof b === "string" ? b : b?.script || "")).filter(Boolean).slice(0, 3);
   let scx = o.scatter; if (!scx && o.primitive == null && o.model == null) { try { scx = ctx.getObject(id)?.scatter; } catch {} } // place.objects' handle carries no scatter; getObject does
   if (scx) f.scat = [f.key, Math.round(+scx.count || 0), Number.isFinite(+scx.maxDistance) ? +scx.maxDistance : null];
-  const ph = o.physics, body = typeof ph === "string" ? ph : ph?.body; f.dyn = body === "dynamic"; f.chr = body === "character";
+  const ph = o.physics, body = typeof ph === "string" ? ph : ph?.body; f.dyn = body === "dynamic"; f.chr = body === "character"; f.mesh = !!ph && typeof ph === "object" && ph.collider === "mesh";
   const au = o.audio; f.aud = !!(au && au.loop); f.audAll = !!(au && au.loop && au.spatial === false);
   if (f.fx) { try { f.fxp = ctx.getFxState?.(id)?.totalExpectedAlive || 0; } catch { f.fxp = 0; } }
   try { const br = o.behaviorHealth?.broken; f.brk = br && br.length ? br.map((h) => `${String(h.script || h.file || "").split("/").pop()} ${h.hook || ""}`.trim()).slice(0, 2) : null; } catch { f.brk = null; }
@@ -92,7 +93,7 @@ function keyOf(o, id, tags) {
 function scStart(ctx) {
   const me = ctx.self?.feetPosition; let rows = []; try { rows = ctx.query({ radius: 250, select: "ids" }) || []; } catch {}
   if (FACT.size > 6000) FACT.clear();
-  return { rows, i: 0, me: me ? { x: me.x, z: me.z } : null, A: ctx.world?.assets || {}, models: {}, tags: {}, total: rows.length, shadows: 0, smallShadows: 0, lights: 0, shLights: 0, lightsNR: 0, fx: 0, noRange: 0, near50: 0, sprites: 0, scripted: 0, particles: 0, dynamic: 0, chars: 0, loops: 0, loopsAll: 0, skinned: 0, broken: 0, veg: [], refs: {} };
+  return { rows, i: 0, me: me ? { x: me.x, z: me.z } : null, A: ctx.world?.assets || {}, models: {}, tags: {}, total: rows.length, shadows: 0, smallShadows: 0, lights: 0, shLights: 0, lightsNR: 0, fx: 0, noRange: 0, near50: 0, sprites: 0, scripted: 0, particles: 0, dynamic: 0, chars: 0, loops: 0, loopsAll: 0, skinned: 0, broken: 0, veg: [], refs: {}, who: {}, scr: {}, meshCol: 0 };
 }
 export function sceneStep(ctx, budget = 120) {
   const t = clock();
@@ -106,6 +107,18 @@ export function sceneStep(ctx, budget = 120) {
       if (S.me && f.x != null && Math.hypot(f.x - S.me.x, f.z - S.me.z) < 50) S.near50++;
       if (f.light) { S.lights++; if (f.shL) S.shLights++; if (f.nr) S.lightsNR++; }
       const key = f.key || "?";
+      note(S, "all", key, f, 1);
+      if (f.light) { note(S, "lights", key, f, 1); if (f.shL) note(S, "shLights", key, f, 1); }
+      if (f.fx && f.fxp) note(S, "particles", key, f, f.fxp);
+      if (f.dyn) note(S, "dynamic", key, f, 1);
+      if (f.chr) note(S, "chars", key, f, 1);
+      if (f.mesh) { S.meshCol++; note(S, "meshCol", key, f, 1); }
+      if (f.aud) note(S, "loops", key, f, 1);
+      if (f.brk) note(S, "broken", key, f, 1);
+      if (f.ref && S.A[f.ref]?.skinned) note(S, "skinned", key, f, 1);
+      if (f.cast) { note(S, "shadows", key, f, 1); if (f.small) note(S, "smallShadows", key, f, 1); }
+      if (f.nr) note(S, "noRange", key, f, 1);
+      for (const p of f.scr) { const r = S.scr[p] || (S.scr[p] = { path: p, n: 0, ids: [], sx: 0, sz: 0, m: 0, tpl: f.tpl || null, names: [] }); r.n++; if (r.ids.length < 3) r.ids.push(f.id); if (f.x != null) { r.sx += f.x; r.sz += f.z; r.m++; } if (r.names.length < 3 && !r.names.includes(key)) r.names.push(key); }
       if (f.fx) { S.fx++; if (f.fxp) { S.particles += f.fxp; (S.fp ||= {})[key] = (S.fp[key] || 0) + f.fxp; } }
       if (f.dyn) { S.dynamic++; (S.dy ||= {})[key] = (S.dy[key] || 0) + 1; }
       if (f.chr) S.chars++;
@@ -125,9 +138,22 @@ export function sceneStep(ctx, budget = 120) {
   SC = null; scAt = t;
   const list = Object.values(S.models).sort((x, y) => y[2] * y[1] - x[2] * x[1]).slice(0, 40), top = Object.entries(S.tags).sort((x, y) => y[1] - x[1]).slice(0, 16);
   return (scRow = { total: S.total, kinds: Object.keys(S.models).length, models: list, tags: top, err: S.err, shadows: S.shadows, smallShadows: S.smallShadows, lights: S.lights, shLights: S.shLights, lightsNR: S.lightsNR, fx: S.fx, noRange: S.noRange, noRangeTop: Object.entries(S.nr || {}).sort((a, b) => b[1] - a[1]).slice(0, 4), near50: S.near50, sprites: S.sprites, scripted: S.scripted, scriptedTop: Object.entries(S.sb || {}).sort((a, b) => b[1] - a[1]).slice(0, 4),
-    particles: Math.round(S.particles), particlesTop: top4(S.fp), dynamic: S.dynamic, dynamicTop: top4(S.dy), chars: S.chars, loops: S.loops, loopsAll: S.loopsAll, loopsTop: top4(S.au), skinned: S.skinned, skinnedTop: top4(S.skn), broken: S.broken, brokenTop: top4(S.bk), vegBeds: S.veg.sort((a, b) => b[1] - a[1]).slice(0, 4), assetMB: +(Object.values(S.refs).reduce((a, b) => a + b, 0) / 1048576).toFixed(1), mode: ctx.place?.mode || "3d" });
+    particles: Math.round(S.particles), particlesTop: top4(S.fp), dynamic: S.dynamic, dynamicTop: top4(S.dy), chars: S.chars, loops: S.loops, loopsAll: S.loopsAll, loopsTop: top4(S.au), skinned: S.skinned, skinnedTop: top4(S.skn), broken: S.broken, brokenTop: top4(S.bk), vegBeds: S.veg.sort((a, b) => b[1] - a[1]).slice(0, 4), meshCol: S.meshCol, who: whoOut(S), scripts: Object.values(S.scr).sort((a, b) => b.n - a.n).slice(0, 12).map((r) => ({ path: r.path, n: r.n, ids: r.ids, tpl: r.tpl, names: r.names, at: r.m ? [Math.round(r.sx / r.m), Math.round(r.sz / r.m)] : null })), assetMB: +(Object.values(S.refs).reduce((a, b) => a + b, 0) / 1048576).toFixed(1), mode: ctx.place?.mode || "3d" });
 }
 export const sceneSnap = () => scRow;
+export function sceneFresh() { scRow = null; scAt = 0; SC = null; FACT.clear(); } // the next sceneStep starts a new pass: a scan asked for now reads now
+// who does it (2.0): per category, the kinds behind the count with their template, scripts, three example ids and where they stand
+function note(S, cat, key, f, w) {
+  if (String(f.id).startsWith("player/")) return; // a player's own body and what it wears is never the fix's address
+  const m = S.who[cat] || (S.who[cat] = {}), r = m[key] || (m[key] = { name: key, n: 0, tpl: f.tpl || null, scr: f.scr, ids: [], sx: 0, sz: 0, m: 0 });
+  r.n += w; r.c = (r.c || 0) + 1; if (r.ids.length < 3) r.ids.push(f.id); if (f.x != null) { r.sx += f.x; r.sz += f.z; r.m++; }
+}
+function whoOut(S) {
+  const out = {};
+  for (const cat in S.who) out[cat] = Object.values(S.who[cat]).sort((a, b) => b.n - a.n).slice(0, 5).map((r) => ({ name: r.name, n: r.c && r.c !== r.n ? r.c : Math.round(r.n), ...(r.c && r.c !== r.n ? { amt: Math.round(r.n) } : {}), ...(r.tpl ? { tpl: r.tpl } : {}), ...(r.scr?.length ? { scr: r.scr } : {}), ids: r.ids, ...(r.m ? { at: [Math.round(r.sx / r.m), Math.round(r.sz / r.m)] } : {}) }));
+  out.models = Object.values(S.models).sort((x, y) => y[2] * y[1] - x[2] * x[1]).slice(0, 5).map((r) => ({ name: r[5] || String(r[0]).split("/").pop().slice(0, 18), n: r[1], model: r[0] }));
+  return out;
+}
 function top4(m) { return Object.entries(m || {}).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([k, n]) => [k, Math.round(n)]); }
 
 export function env(ctx) {

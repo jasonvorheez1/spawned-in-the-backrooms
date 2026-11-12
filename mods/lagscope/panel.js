@@ -5,6 +5,7 @@
 // Builders only (player.isEditor): players never see it, their machines only save reports.
 // Only what the mod samples is drawn; a field it cannot read says n/a, never a guess.
 import { analyze, pacing, memory, reportText } from "./lib/core.js";
+import { brief, briefText } from "./lib/brief.js";
 import { C, COLS, LOGO, STYLE, esc, DIM, glow, CARD, ROW, bar, TD, TABLE, SEC, BTN, line } from "./lib/look.js";
 
 const JOIN = "https://spawn.co/@yuidev/corrode-beta";
@@ -189,7 +190,7 @@ globalThis.lsPanel = (a) => {
   else if (u === "min") S.min = !S.min;
   else if (u === "dock") { S.dock = S.dock === "top" ? "bottom" : "top"; S.x = S.y = null; try { localStorage.removeItem("lagscope.pos"); } catch {} }
   else if (u === "adv") { S.adv = !S.adv; try { localStorage.setItem("lagscope.adv", S.adv ? "1" : "0"); } catch {} if (S.adv) { S.tab = "advanced"; S.details = true; S.min = false; } else if (S.tab === "advanced") S.tab = "scene"; }
-  else if (u === "copy") { const an = A(); S.copyFail = null; copyText(reportText(INPUT, an, { place: CTX?.place?.id, server: CTX?.world?.mode, who: "panel", trigger: "copied from the panel" })); S.copiedAt = Date.now(); }
+  else if (u === "copy") { const an = A(); S.copyFail = null; copyText(briefText(brief(INPUT, an)) + "\n---- raw reading ----\n" + reportText(INPUT, an, { place: CTX?.place?.id, server: CTX?.world?.mode, who: "panel", trigger: "copied from the panel" })); S.copiedAt = Date.now(); }
   else if (u === "copyclose") S.copyFail = null;
   else if (u === "tog") { S.cfg[a.k] = !S.cfg[a.k]; if (a.k === "discord") { send({ op: "cfg", cfg: S.cfg }); S.dirty = false; } else S.dirty = true; }
   else if (u === "step") { S.cfg[a.k] = (+S.cfg[a.k] || 0) + a.d; S.dirty = true; }
