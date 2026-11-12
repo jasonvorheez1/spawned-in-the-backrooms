@@ -144,7 +144,7 @@ function hands(ctx, m, dir) {
   if (m.fp && m.fpCat !== cat) { ctx.destroy(m.fp); m.fp = null }
   if (!m.fp && cat) { // her own cat arms, one paw per copy, each reaching on its rung (Shelly: "i still use the human hands when i climb")
     let cs = null; try { cs = critterSpec(s.look ?? {}) } catch (e) {}
-    const at = CAT_AT[sx], base = { model: { ...(cs?.model ?? {}), id: CAT_FPARM[sx] }, ...(cs?.morph ? { morph: cs.morph } : {}), ...(cs?.scale ? { scale: cs.scale } : {}), castShadow: false, visibleInFirstPerson: true, audience: 'local' }
+    const at = CAT_AT[sx], base = { model: { ...(cs?.model ?? {}), id: CAT_FPARM[sx] }, ...(cs?.scale ? { scale: cs.scale } : {}), castShadow: false, visibleInFirstPerson: true, audience: 'local' }
     m.fp = ctx.spawn({ parent: me.id, feetPosition: { x: 0, y: 1.6, z: -0.42 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
       children: [
         { ...base, id: 'r', feetPosition: { x: 0, y: at.y, z: at.z }, bones: { 'mixamorig:LeftArm': { scale: 0 } } },

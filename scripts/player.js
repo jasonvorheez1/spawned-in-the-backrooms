@@ -1111,7 +1111,7 @@ function viewmodel(ctx, moving, sprinting) {
     if (fpa) child.push({ id: 'fparm-r', feetPosition: s.vmTune?.aat ?? FP_AT(l.sex === 'f' ? 'f' : 'm'), rotation: s.vmTune?.arot ?? FP_ROT, model: { id: fpa.R, materials: skinM }, castShadow: false, visibleInFirstPerson: true, audience: 'local' }) // her own right arm (art/fp-arm), its fist closed on the grip at the viewmodel's origin
     else if (cs) {
       const cat = CAT_FPARM[l.sex === 'f' ? 'f' : 'm']
-      const arms = { model: { ...cs.model, id: cat.glb }, morph: cs.morph, ...(cs.scale ? { scale: cs.scale } : {}),
+      const arms = { model: { ...cs.model, id: cat.glb }, /* no body morph: its shape keys are the whole body's and thin the cut arm to sticks (Shelly: 'why do my arms look like sticks') */ ...(cs.scale ? { scale: cs.scale } : {}),
         castShadow: false, visibleInFirstPerson: true, audience: 'local' }
       child.push({ ...arms, id: 'plyarm', bones: { 'mixamorig:LeftArm': { scale: 0 } }, feetPosition: s.vmTune?.cat ?? cat.at })
       // The cut cat has short arms. Seat the left shoulder behind the fore-end so the paw can reach it.
