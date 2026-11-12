@@ -10,7 +10,7 @@ export const ears = {
     const tr = s.kind === "trunk" ? me : ctx.getObject(`l5-people-trunk-${s.suite}`);
     const book = ctx.place.state.l5rent?.[s.suite];
     if (!tr || tr.state.renter !== uid || !book || book.uid !== uid || book.until < now) { p.state.notice = { text: "Locked. This isn't your suite's trunk.", at: now }; heard(ctx, { maxDistance: 8, refDistance: 1.5, clip: "/cdn/moodboard-realistic-gritty/sfx-locked-trunk-latch-rattle.mp3", position: me.feetPosition, volume: 0.6 }, { audience: { nearby: me.feetPosition, radius: 12 } }); return; }
-    if (s.kind === "trunk") { p.state.lootOpen = me.id; p.state.lootName = "Steamer trunk"; p.state.lootList = s.items ?? ""; p.state.focus = null; p.state.lootStore = true; if (!me.tags.includes("storage")) me.tags = [...me.tags, "storage"]; // yours: put things in too heard(ctx, { maxDistance: 8, refDistance: 1.5, clip: "/cdn/moodboard-realistic-gritty/sfx-old-steamer-trunk-lid-creak-open.mp3", position: me.feetPosition, volume: 0.6 }, { audience: { nearby: me.feetPosition, radius: 12 } }); return; }
+    if (s.kind === "trunk") { p.state.lootOpen = me.id; p.state.lootName = "Steamer trunk"; p.state.lootList = s.items ?? ""; p.state.focus = null; p.state.lootStore = true; if (!me.tags.includes("storage")) me.tags = [...me.tags, "storage"]; heard(ctx, { maxDistance: 8, refDistance: 1.5, clip: "/cdn/moodboard-realistic-gritty/sfx-old-steamer-trunk-lid-creak-open.mp3", position: me.feetPosition, volume: 0.6 }, { audience: { nearby: me.feetPosition, radius: 12 } }); return; }
     const add = [], ps = p.state;
     for (let i = 0; i < (ps.almonds ?? 0); i++) add.push("almond:grey"); ps.almonds = 0;
     for (let i = 0; i < (ps.bobbypins ?? 0); i++) add.push("bobbypin"); ps.bobbypins = 0;
