@@ -24,7 +24,7 @@ pop tips n=2 at=box(.035,.01,.01).c(.24) size=.05 col=hdr(3,.25,.1)*flick(1.3,.3
 const BLOOD = `fx
 pop drip burst=6 life=.4..0.7 v=sdir()*(.5..1.2)+up(.3) size=.03..0.05 acc=grav()*.8 col=<.35,.02,.03> a=1>0 floor=die r=sprite(soft-disc,alpha)`;
 const LEG = (ph, a) => ({ pitch: ph ? [a, -a, a] : [-a, a, -a] });
-const gait = (dur, a) => ({ clip: { duration: dur, tracks: { "0_Left_Limb_1": LEG(0, a), "0_Right_Limb_1": LEG(1, a), "1_Left_Limb_2": LEG(1, a), "1_Right_Limb_2": LEG(0, a), Tail_1: { yaw: [-a * 0.6, a * 0.6, -a * 0.6] } } }, loop: true });
+const gait = (dur, a) => ({ clip: { duration: dur, tracks: { "tripo::0_Left_Limb_1": LEG(0, a), "tripo::0_Right_Limb_1": LEG(1, a), "tripo::1_Left_Limb_2": LEG(1, a), "tripo::1_Right_Limb_2": LEG(0, a), "tripo::Tail_1": { yaw: [-a * 0.6, a * 0.6, -a * 0.6] } } }, loop: true });
 function setGait(r, m, g) { if (m.g === g) return; m.g = g; r.anim.move = g === "still" ? null : g === "walk" ? gait(0.34, 28) : gait(0.18, 38); }
 const prey = (ctx, now) => ctx.place.players.filter((p) => !downed(p, now) && zoneAt(p.feetPosition.x, p.feetPosition.z) !== "gamma");
 
