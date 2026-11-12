@@ -13,7 +13,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 55;
+const V = 56;
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -454,7 +454,6 @@ pop mist rate=5 on=arc(.6,6.283,.2) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0.
     behavior: "scripts/l61-use.js",
     state: { kind: "directory", name: "Mall Directory & Map", verb: "Inspect directory", info: "Illuminated 3-sided directory kiosk.", tint: "#ffd84a" },
     children: [
-      { feetPosition: { x: 0, y: 2.4, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.95, radiusBottom: 0.95, height: 0.08 }, material: BRASS },
       { feetPosition: { x: 0, y: 2.2, z: 0.8 }, light: { kind: "point", color: "oklch(0.95 0.05 85)", intensity: 2.4, distance: 5 } },
     ],
   });
