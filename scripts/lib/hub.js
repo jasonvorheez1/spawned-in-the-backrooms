@@ -14,7 +14,7 @@ export const HOMES = [
 // into the mall: s.roomHop tells the menu and the save-resume this was a walk, not a launch
 // the station's "last level" row: the level a player last stood in, by its place id
 export const LEVEL_NAMES = { testlab: "Test Range", main: "Level 0 · The Lobby", tutorial0: "Level 0 · The Lobby", level1: "Level 1 · Habitable Zone", level2: "Level 2 · Pipe Dreams", level3: "Level 3 · Electrical Station", gamma: "Base Gamma", level4: "Level 4 · Abandoned Office", level5: "Level 5 · Terror Hotel", level6: "Level 6 · Lights Out", level7: "Level 7 · Thalassophobia", level8: "Level 8 · Cave System", level10: "Level 10 · Bumper Crop", level11: "Level 11 · The Infinite City", level12: "Level 12 · Matrix", level21: "Level 2.1 · Locked", level26: "Level 26 · SS Fun =)", level27: "Level 27 · The Bunker Springs", level01: "Level 0.1 · Zenith Station", level61: "Level 6.1 · The Snackrooms", level184: "Level 184 · Field of Forgotten Forts", home11: "Your house" }
-export const lastLevel = (s) => (s.savePlace && s.savePlace !== HUB_PLACE && s.savePlace !== "intake" && s.savePlace !== "debug" ? (s.savePlace === "tutorial0" ? "main" : s.savePlace) : null)
+export const lastLevel = (s) => (s.savePlace && s.savePlace !== HUB_PLACE && s.savePlace !== "intake" ? (s.savePlace === "tutorial0" ? "main" : s.savePlace) : null)
 export function toHub(ctx, who = ctx.self) {
   const s = who.state
   if (isHubRoom(ctx.getRoomId?.())) return ctx.cross(who, HUB_PLACE)

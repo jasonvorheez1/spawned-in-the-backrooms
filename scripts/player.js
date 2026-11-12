@@ -115,7 +115,7 @@ const STEPS = {
   checker: { walk: 'footstep-boot-on-worn-checkered-linoleum-locker-room-single-step', run: 'footstep-boot-running-on-worn-linoleum-tile-single-step', v: 0.23 },
   metal: { walk: 'footstep-boot-on-steel-diamond-plate-floor-clank-single-step', run: 'footstep-boot-running-on-steel-diamond-plate-floor-single-step', v: 0.24 },
 }
-const CONCRETE = new Set(['level1', 'level2', 'level3', 'gamma', 'level6', 'level11', 'debug'])
+const CONCRETE = new Set(['level1', 'level2', 'level3', 'gamma', 'level6', 'level11'])
 function floorOf(ctx) {
   const pl = ctx.self.place
   if (pl === 'level8') return 'gravel'
