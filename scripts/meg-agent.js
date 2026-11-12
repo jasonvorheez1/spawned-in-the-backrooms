@@ -711,7 +711,7 @@ const COW = { range: 18, hold: 400, linger: 2500 };
 const COW_LINES = {
   hands: ["okay, okay! don't shoot!", "easy. easy. i'm not doing anything.", "hands are up, see? hands are up.", "take whatever you want, just put it down.", "please. i've got almond water, you can have it.", "i'm not armed! well. not really."],
   draw: ["you sure about that?", "point it somewhere else, friend.", "two can play that game.", "go on then. see who's faster.", "bad idea, wanderer. real bad idea.", "lower it. slowly."],
-  flee: ["whoa, nope!", "not today!", "gun! gun!", "i'm not dying in a cornfield!", "somebody help!", "nope, nope, i'm gone!"],
+  flee: ["whoa, nope!", "not today!", "gun! gun!", "i'm not dying down here!", "somebody help!", "nope, nope, i'm gone!"],
   calm: ["...thank you.", "don't do that again.", "my heart can't take this place.", "okay. we're good. we're good."] };
 function cowSay(ctx, me, kind) {
   const L = COW_LINES[kind], t = L[Math.floor(ctx.random() * L.length)], now = ctx.now(), st = me.state, id = String(me.id).split('/').pop();
