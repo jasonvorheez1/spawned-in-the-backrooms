@@ -179,8 +179,8 @@ export function onInput(ctx, input) {
   const sin = input.axes.aimYawSin, cos = input.axes.aimYawCos
   if (sin != null && cos != null) ctx.self.session.bfwd = { x: -sin, z: -cos }
   const ray = getInputRay(ctx, input); if (ray) ctx.self.session.bray = ray
-  if (inBonus(ctx)) { // the Bonus Room mall is shared: no building there (Shelly, Nov 10)
-    if (input.pressed.build) ctx.emit('uiEvent', { name: 'toast', payload: { text: 'No building in the Bonus Room' } }, { audience: { player: ctx.self.id } })
+  if (!atHome(ctx, s)) { // building only in your own home (Shelly, Nov 12: "only base build in player homes"); the Bonus Room was already off (Nov 10)
+    if (input.pressed.build) ctx.emit('uiEvent', { name: 'toast', payload: { text: s.home11 ? 'You can only build in your house' : 'You can only build in a home of your own' } }, { audience: { player: ctx.self.id } })
     if (valid(s.building)) { s.building = null; dropGhost(ctx); clearHl(ctx) }
     return
   }
