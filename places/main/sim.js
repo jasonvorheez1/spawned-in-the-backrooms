@@ -53,7 +53,7 @@ function dress(ctx) {
     put("partition", { x: pn.x, y: 0, z: pn.z }, desk.yaw + 90 + (ctx.random() - 0.5) * 6, { state: { mat: "wood", hp: 60 }, tags: ["l0dress", "breakable", "furniture", "partition"] });
   }
   // water coolers: against a hall wall, never two in one cell
-  for (const [cx, cz, d] of cells(["halls", "expanse", "offices"], DR.counts.coolers)) { const w = wallPose(cx, cz, d, (ctx.random() - 0.5) * 2.2, 0.22); put("cooler", { x: w.x, y: 0, z: w.z }, w.yaw + 180 + (ctx.random() - 0.5) * 10, { state: { mat: "metal", hp: 50 }, tags: ["l0dress", "breakable", "furniture", "cooler"] }); }
+  for (const [cx, cz, d] of cells(["halls", "expanse", "offices"], DR.counts.coolers)) { const w = wallPose(cx, cz, d, (ctx.random() - 0.5) * 2.2, 0.22); put("cooler", { x: w.x, y: 0, z: w.z }, w.yaw + (ctx.random() - 0.5) * 10, { state: { mat: "metal", hp: 50 }, tags: ["l0dress", "breakable", "furniture", "cooler"] }); }
   // wet-floor signs: someone tried, once, at the edge of the soaked arch rooms
   for (const [cx, cz] of cells(["arches", "halls"], DR.counts.wetsigns, (cx, cz) => [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => zoneOf(cx + a, cz + b) === "arches"))) { const c = cellCenter(cx, cz); put("wetsign", { x: c.x + (ctx.random() - 0.5) * 2, y: 0, z: c.z + (ctx.random() - 0.5) * 2 }, ctx.random() * 360, { physics: { body: "static", collider: "box" }, tags: ["l0dress", "furniture", "wetsign"] }); }
 }
