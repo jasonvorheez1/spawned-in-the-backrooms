@@ -37,11 +37,16 @@ def load(kind):
         if s.material: s.material.name = "eyew"
     vs = [v.co for v in o.data.vertices]
     a = Vector([min(v[i] for v in vs) for i in range(3)]); b = Vector([max(v[i] for v in vs) for i in range(3)])
-    # the front is the depth end whose slice stands taller (lenses), temples/strap trail behind
-    def tall(sel): z = [v.z for v in vs if sel(v)]; return (max(z) - min(z)) if z else 0
-    d = b.y - a.y
-    if tall(lambda v: v.y > b.y - d * 0.15) > tall(lambda v: v.y < a.y + d * 0.15):
-        o.data.transform(Matrix.Rotation(math.pi, 4, "Z"))   # glTF's +Z front imports as -Y already; flip only when the lenses face +Y
+    # the front is the horizontal end whose slice stands tallest across (the lens frame); temples and straps trail thin behind it
+    def area(axis, sign):
+        lo, hi = a[axis], b[axis]; d = hi - lo
+        sl = [v for v in vs if (v[axis] > hi - d * 0.12 if sign > 0 else v[axis] < lo + d * 0.12)]
+        if len(sl) < 8: return 0
+        o2 = 1 - axis; return (max(v.z for v in sl) - min(v.z for v in sl)) * (max(v[o2] for v in sl) - min(v[o2] for v in sl))
+    best = max(((ax, sg) for ax in (0, 1) for sg in (1, -1)), key=lambda k: area(*k))
+    yaw = {(1, -1): 0, (1, 1): math.pi, (0, 1): -math.pi / 2, (0, -1): math.pi / 2}[best]   # turn that end to -Y
+    if yaw: o.data.transform(Matrix.Rotation(yaw, 4, "Z"))
+    print("FRONT", kind, best)
     o.name = "Eyew_" + kind; o.data.update(); return o
 def bbox(o):
     vs = [v.co for v in o.data.vertices]
