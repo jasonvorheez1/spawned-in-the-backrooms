@@ -29,9 +29,9 @@ feet:
   socks: { top: 0.55 }      # share of the shin, ankle up
 # Tripo garments: glb per body (f/m), under = the painted layer hidden beneath it
 models:
-  hoodie: { under: longsleeve, pat: weave, f: /cdn/value.5b6eb19ef5d7bf62e5dd56c192ff3190df615a5e944168a078b3baafc048a3aa.glb, m: /cdn/value.4df45d98acbabac5094b7c6e13b0875a985d2d0ae7fade74a202d50248a0f85d.glb }
-  jacket: { under: longsleeve, pat: weave, f: /cdn/value.8350c434bfd017ef3d8568a07e785da67ca80a4aa772f058591930e9b10df655.glb, m: /cdn/value.8c7576e191ed79ae090fdeb59a22827b62a9ec1ea95a40b12ecc46f6f645640a.glb }   # Nov 11 Taubin-smoothed: the Tripo crumple ironed out, 4 mm off the body; skin and Chest key kept
-  skirt:  { under: briefs, pat: weave, f: /cdn/value.b282d6badcb027f5466097b768c9df6bbc0dbd64b8d9e4b13d1be674c5c42a3c.glb, m: /cdn/value.8da93a9c31f245cf12374f56094596155615cf358394c0cda2ac6538b59c8535.glb }
+  hoodie: { under: longsleeve, pat: weave, f: /cdn/value.2743cd96d20863333d2273247bcd0de15437ed8d26e07e38d20cd2f41b517c59.glb, m: /cdn/value.3ebfa5567d2f0b6fb3bfecc33fe98c590c9122f8e42a2509b8661de07056bb55.glb }
+  jacket: { under: longsleeve, pat: weave, f: /cdn/value.d1f198c7a3ec72f6551bdb6c5ddf3be0513f8d9f349f33f1d7295b729b226c16.glb, m: /cdn/value.7080db407858421dc9635495f846a1a948761612ae23323d309b9b761df34fbd.glb }   # Nov 11 Taubin-smoothed: the Tripo crumple ironed out, 4 mm off the body; skin and Chest key kept
+  skirt:  { under: briefs, pat: weave, f: /cdn/value.b282d6badcb027f5466097b768c9df6bbc0dbd64b8d9e4b13d1be674c5c42a3c.glb, m: /cdn/value.9cf68c98187bf9d85763b733d8ae9529f02f0049c3f7a42f0774492fd2076001.glb }
   boots:  { under: socks, pat: weave, f: /cdn/value.3f9b0636806b0ebabcd12d5037ca8aecf54984a63ea3e5b5c979c1f61c9c9983.glb, m: /cdn/value.dcfebd4370d0c0aa932157cae6acd02db2afb18e59cc83e6ef34261ed69176f2.glb }
   cap: { hat: true, pat: weave, f: /cdn/value.163a3560b0b1af2faf2fb5d269e74c221a0a29b22c2f4dab6b667e48c77b6723.glb, m: /cdn/value.df79407b3de5b06738c04b49af3608edff055f96a52f01204bed38d9342f1203.glb }   # Tripo hat fitted to the cat head (art/cat-wardrobe/hats.py), Nov 12
   beanie: { hat: true, pat: weave, f: /cdn/value.b9ceece1b85b75677fd5e737005122718debfa2eb9ec260ee6c681ac66a42030.glb, m: /cdn/value.968dd3214169d75a7c0bd5adaa268fb7985cea1f5c5fad32e657d6a87b1d0461.glb }   # Tripo hat fitted to the cat head (art/cat-wardrobe/hats.py), Nov 12

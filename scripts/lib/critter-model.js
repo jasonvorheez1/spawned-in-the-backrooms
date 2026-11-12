@@ -11,7 +11,7 @@ import HAIR_SLOTS from './data/hair-slots.yml'
 import HAIR_TEX from './data/hair-tex.yml'
 import WARD_SLOTS from './data/ward-slots.yml'
 import CW from './data/cat-wardrobe.yml'
-import { CAT_BODY, CAT_BODY2, catModel, catChildren, chestOf, catMorph, SNOUTS, EARS, TAILS, EYE_COLORS } from './cat-wardrobe.js'
+import { CAT_BODY, CAT_BODY2, CAT_OLD, catModel, catChildren, chestOf, catMorph, SNOUTS, EARS, TAILS, EYE_COLORS } from './cat-wardrobe.js'
 // hair: its own GLB skinned whole to the Head bone (scripts/lib/data/hair.yml), tinted by the look's hairc; a mask hides it
 export const HAIR_ID = 'critter-hair'
 export const humanHairOf = (l) => {
@@ -773,7 +773,7 @@ export function critterSpec(l) {
 }
 // a mesh critter's look read back off its own model (the bodies laid before state.wear existed): parts shown = garments, cloth_* = their colours, head GLB = species and sex
 const CLOTH_KEY = { topw: 'top', botw: 'bottom', shoes: 'shoec', hat: 'hatc', neck: 'neckc' }
-const femaleBody = (id) => [M.body.f, M.human?.f, CAT_BODY.f.glb, CAT_BODY2.f, '/cdn/value.b7e9e975757bd462383a34e82b2214aa10a8a589b2625ab820e71f5385a8dd7d.glb', '/cdn/value.c40b56b5d34276ea7dd8f0e9b75dd40b5ee9da6c238fc93803e78cf6eedccf08.glb', '/cdn/value.371afb217c343ae5aaf7ec3daa8dded862e4221ae0ec32239baf1813c0bf6c25.glb'].includes(id) || [WARDROBE.legacyHuman, WARDROBE.legacyFur].some((rows) => Object.entries(rows ?? {}).some(([sex, ref]) => sex.startsWith('f') && ref === id))
+const femaleBody = (id) => [M.body.f, M.human?.f, CAT_BODY.f.glb, CAT_OLD.f, '/cdn/value.b7e9e975757bd462383a34e82b2214aa10a8a589b2625ab820e71f5385a8dd7d.glb', '/cdn/value.c40b56b5d34276ea7dd8f0e9b75dd40b5ee9da6c238fc93803e78cf6eedccf08.glb', '/cdn/value.371afb217c343ae5aaf7ec3daa8dded862e4221ae0ec32239baf1813c0bf6c25.glb'].includes(id) || [WARDROBE.legacyHuman, WARDROBE.legacyFur].some((rows) => Object.entries(rows ?? {}).some(([sex, ref]) => sex.startsWith('f') && ref === id))
 export function lookFromModel(model, headId) {
   if (!model || typeof model !== 'object') return null
   const vis = (n) => model.parts?.[n]?.visible

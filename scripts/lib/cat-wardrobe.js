@@ -5,21 +5,12 @@ import FACES from './data/critter-faces.yml'
 import { PRINTS } from '../mat-cloth.js'
 
 export const CAT_BODY = {
-  f: { glb: '/cdn/value.562ce0246eae9362d0d784854f5dff319bcc254c755c854e1be2c450ae9540c9.glb', fur: '/cdn/value.1c4f4402e22ebd41f1cca9b45fc42ef2bec051041b40c8a3c40b88028a23ca58.jpg' },
-  m: { glb: '/cdn/value.3208bf922d1aff4faeefffab9867f3d2363af1dab60a37cc50860602d207c545.glb', fur: '/cdn/value.58ce243610699df44f4552ccfdfc667580c63c99f28103ecf2d1dd72c94657fe.jpg' }
+  f: { glb: '/cdn/value.e8e63dfafb7285f7362bb87c7e685d38fda0180e9f00f711ec56436ff43fa0c4.glb', fur: '/cdn/value.1c4f4402e22ebd41f1cca9b45fc42ef2bec051041b40c8a3c40b88028a23ca58.jpg' },
+  m: { glb: '/cdn/value.a935fee298a38e28d69d6472997a747507062f2507ac308f0db98fa42efa1dd3.glb', fur: '/cdn/value.58ce243610699df44f4552ccfdfc667580c63c99f28103ecf2d1dd72c94657fe.jpg' }
 }
-// Nov 12 lock-in: the reshaped bases (art/cat-wardrobe/rebase.py): female fuller PG chest, male wider shoulders and thicker neck. look.base2 wears them (test cats first; Shelly's check before everyone)
-export const CAT_BODY2 = {
-  f: '/cdn/value.e8e63dfafb7285f7362bb87c7e685d38fda0180e9f00f711ec56436ff43fa0c4.glb',
-  m: '/cdn/value.a935fee298a38e28d69d6472997a747507062f2507ac308f0db98fa42efa1dd3.glb'
-}
-const GARMENT2 = {   // the same garments run through rebase.py (cloth) so they follow the new bases
-  '/cdn/value.5b6eb19ef5d7bf62e5dd56c192ff3190df615a5e944168a078b3baafc048a3aa.glb': '/cdn/value.2743cd96d20863333d2273247bcd0de15437ed8d26e07e38d20cd2f41b517c59.glb',
-  '/cdn/value.4df45d98acbabac5094b7c6e13b0875a985d2d0ae7fade74a202d50248a0f85d.glb': '/cdn/value.3ebfa5567d2f0b6fb3bfecc33fe98c590c9122f8e42a2509b8661de07056bb55.glb',
-  '/cdn/value.8350c434bfd017ef3d8568a07e785da67ca80a4aa772f058591930e9b10df655.glb': '/cdn/value.d1f198c7a3ec72f6551bdb6c5ddf3be0513f8d9f349f33f1d7295b729b226c16.glb',
-  '/cdn/value.8c7576e191ed79ae090fdeb59a22827b62a9ec1ea95a40b12ecc46f6f645640a.glb': '/cdn/value.7080db407858421dc9635495f846a1a948761612ae23323d309b9b761df34fbd.glb',
-  '/cdn/value.8da93a9c31f245cf12374f56094596155615cf358394c0cda2ac6538b59c8535.glb': '/cdn/value.9cf68c98187bf9d85763b733d8ae9529f02f0049c3f7a42f0774492fd2076001.glb'
-}
+// Nov 12 lock-in (Shelly 'yea thats good'): CAT_BODY is the reshaped base (art/cat-wardrobe/rebase.py): female fuller PG chest, male wider shoulders and thicker neck. CAT_OLD: the bases before it
+export const CAT_OLD = { f: '/cdn/value.562ce0246eae9362d0d784854f5dff319bcc254c755c854e1be2c450ae9540c9.glb', m: '/cdn/value.3208bf922d1aff4faeefffab9867f3d2363af1dab60a37cc50860602d207c545.glb' }
+export const CAT_BODY2 = { f: CAT_BODY.f.glb, m: CAT_BODY.m.glb }
 const rgb = (hex, lin = true) => { const n = parseInt(String(hex || '#ffffff').replace('#', '').slice(0, 6).padEnd(6, 'f'), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { const s = v / 255; return lin ? (s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4)) : s }) }
 const lerp = (a, b, t) => a + (b - a) * t
 const put = (o, name, hex) => { const [r, g, b] = rgb(hex); o[name + 'R'] = +r.toFixed(4); o[name + 'G'] = +g.toFixed(4); o[name + 'B'] = +b.toFixed(4) }
@@ -98,7 +89,7 @@ export function catModel(sex, look) {
   const projection = sex === 'm' ? [2.9946, -2.118, -0.011] : [2.9946, -2.0198, 0.055]   // Nov 11 (Shelly 'fix eye placement and double noses'): picture 4.5% lower so its eyes sit in the sculpted sockets and its nose on the mesh nose
   const skin = (color) => ({ kind: 'scripted', script: 'scripts/mat-catskin.js', color, params })
   return {
-    id: look?.base2 ? CAT_BODY2[sex] : CAT_BODY[sex].glb, forward: '+z',
+    id: CAT_BODY[sex].glb, forward: '+z',
     materials: {
       fur: skin(fur), fur2: skin('#ffffff'),
       headFur: {
@@ -139,7 +130,7 @@ export function catChildren(sex, look) {
   const l = dressed(sex, look), out = []
   for (const [slot, ck] of [['topw', 'top'], ['botw', 'bottom'], ['shoes', 'shoec'], ['hat', 'hatc'], ['neck', 'neckc']]) {
     const g = W.models[l[slot]]; if (!g?.[sex]) continue
-    out.push({ id: 'cw-' + slot, attachment: { skin: true }, model: { id: (look?.base2 && GARMENT2[g[sex]]) || g[sex], forward: '+z', ...(g.tint === false ? {} : { materials: { cloth: { kind: 'scripted', script: 'scripts/mat-cloth.js', color: l[ck] || '#ffffff', params: (slot === 'topw' && printOf(sex, l)) || { pat: g.pat || 'weave' } } } }) }, ...(slot === 'topw' ? { morph: chestOf(look) } : {}) })
+    out.push({ id: 'cw-' + slot, attachment: { skin: true }, model: { id: g[sex], forward: '+z', ...(g.tint === false ? {} : { materials: { cloth: { kind: 'scripted', script: 'scripts/mat-cloth.js', color: l[ck] || '#ffffff', params: (slot === 'topw' && printOf(sex, l)) || { pat: g.pat || 'weave' } } } }) }, ...(slot === 'topw' ? { morph: chestOf(look) } : {}) })
   }
   const fl = Array.isArray(look?.fluff) ? look.fluff : look?.fluff ? [look.fluff] : []
   const hairOn = !!(look?.hair && W.hair?.[look.hair])
