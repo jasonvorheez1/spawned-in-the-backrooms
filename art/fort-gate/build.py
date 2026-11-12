@@ -21,7 +21,7 @@ bpy.context.view_layer.objects.active = o; o.select_set(True)
 n0 = len(o.data.polygons); bpy.ops.object.modifier_apply(modifier="gate")
 bpy.data.objects.remove(cut)
 left=[(M@p.center) for p in o.data.polygons if (Vector(((M@p.center).x,(M@p.center).y))-C).length<0.6 and ZLO+0.05<(M@p.center).z<ZHI-0.05]
-print("KILL", n0, "->", len(o.data.polygons), "LEFT", len(left))
+print("KILL", n0, "->", len(o.data.polygons), "LEFT", len(left), sorted(set((round(w.x-C.x,1),round(w.y-C.y,1),round(w.z,1)) for w in left))[:44])
 sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = sc.render.resolution_y = 700
 cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam")); sc.collection.objects.link(cam); sc.camera = cam
 cam.location = (C.x + across.x * 4.5, C.y + across.y * 4.5, 4.5)
