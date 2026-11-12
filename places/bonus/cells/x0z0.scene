@@ -86,49 +86,91 @@ bc-banner-1:
   children: [{feetPosition: {x: 0, y: 4.55, z: 0}, material: {color: "#f4f0f8", metalness: 0.8, roughness: 0.3}, primitive: {height: 1.7, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.03}, rotation: {roll: 90}}, {feetPosition: {x: -0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}, {feetPosition: {x: 0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}]
   feetPosition: {x: -5.2, y: 7, z: -14}
   id: bc-banner-1
-  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.4fb991d4d883f84e289a74f05e5948d133459ec215e4ac2b56975af3d54d7082.png, map: /cdn/value.4fb991d4d883f84e289a74f05e5948d133459ec215e4ac2b56975af3d54d7082.png, roughness: 0.95, side: double}
+  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.4fb991d4d883f84e289a74f05e5948d133459ec215e4ac2b56975af3d54d7082.png, map: /cdn/value.4fb991d4d883f84e289a74f05e5948d133459ec215e4ac2b56975af3d54d7082.png, roughness: 0.95, side: front}
   pivot: feet
   primitive: {height: 4.5, kind: plane, width: 1.5}
+bc-banner-1/back:
+  feetPosition: {x: 0, y: 0, z: -0.01}
+  id: bc-banner-1/back
+  material: {emissive: 16777215, emissiveIntensity: 0.15, emissiveMap: /cdn/value.4fb991d4d883f84e289a74f05e5948d133459ec215e4ac2b56975af3d54d7082.png, key: Std/PBR, map: /cdn/value.4fb991d4d883f84e289a74f05e5948d133459ec215e4ac2b56975af3d54d7082.png, roughness: 0.95, side: front}
+  parent: bc-banner-1
+  primitive: {height: 4.5, kind: plane, width: 1.5}
+  rotation: {yaw: 180}
 bc-banner-2:
   castShadow: false
   children: [{feetPosition: {x: 0, y: 4.55, z: 0}, material: {color: "#f4f0f8", metalness: 0.8, roughness: 0.3}, primitive: {height: 1.7, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.03}, rotation: {roll: 90}}, {feetPosition: {x: -0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}, {feetPosition: {x: 0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}]
   feetPosition: {x: -5.2, y: 7, z: -2}
   id: bc-banner-2
-  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.e87b84b1b91bb64de0849de93f2e15c48b371b6e23fee118e1955dc6c40eb6d4.png, map: /cdn/value.e87b84b1b91bb64de0849de93f2e15c48b371b6e23fee118e1955dc6c40eb6d4.png, roughness: 0.95, side: double}
+  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.e87b84b1b91bb64de0849de93f2e15c48b371b6e23fee118e1955dc6c40eb6d4.png, map: /cdn/value.e87b84b1b91bb64de0849de93f2e15c48b371b6e23fee118e1955dc6c40eb6d4.png, roughness: 0.95, side: front}
   pivot: feet
   primitive: {height: 4.5, kind: plane, width: 1.5}
+bc-banner-2/back:
+  feetPosition: {x: 0, y: 0, z: -0.01}
+  id: bc-banner-2/back
+  material: {emissive: 16777215, emissiveIntensity: 0.15, emissiveMap: /cdn/value.e87b84b1b91bb64de0849de93f2e15c48b371b6e23fee118e1955dc6c40eb6d4.png, key: Std/PBR, map: /cdn/value.e87b84b1b91bb64de0849de93f2e15c48b371b6e23fee118e1955dc6c40eb6d4.png, roughness: 0.95, side: front}
+  parent: bc-banner-2
+  primitive: {height: 4.5, kind: plane, width: 1.5}
+  rotation: {yaw: 180}
 bc-banner-3:
   castShadow: false
   children: [{feetPosition: {x: 0, y: 4.55, z: 0}, material: {color: "#f4f0f8", metalness: 0.8, roughness: 0.3}, primitive: {height: 1.7, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.03}, rotation: {roll: 90}}, {feetPosition: {x: -0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}, {feetPosition: {x: 0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}]
   feetPosition: {x: -5.2, y: 7, z: 10}
   id: bc-banner-3
-  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.7b10110737ab7e87df1a545c2459d1f437f85fb58eadd46d7b54c6cb62bc0533.png, map: /cdn/value.7b10110737ab7e87df1a545c2459d1f437f85fb58eadd46d7b54c6cb62bc0533.png, roughness: 0.95, side: double}
+  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.7b10110737ab7e87df1a545c2459d1f437f85fb58eadd46d7b54c6cb62bc0533.png, map: /cdn/value.7b10110737ab7e87df1a545c2459d1f437f85fb58eadd46d7b54c6cb62bc0533.png, roughness: 0.95, side: front}
   pivot: feet
   primitive: {height: 4.5, kind: plane, width: 1.5}
+bc-banner-3/back:
+  feetPosition: {x: 0, y: 0, z: -0.01}
+  id: bc-banner-3/back
+  material: {emissive: 16777215, emissiveIntensity: 0.15, emissiveMap: /cdn/value.7b10110737ab7e87df1a545c2459d1f437f85fb58eadd46d7b54c6cb62bc0533.png, key: Std/PBR, map: /cdn/value.7b10110737ab7e87df1a545c2459d1f437f85fb58eadd46d7b54c6cb62bc0533.png, roughness: 0.95, side: front}
+  parent: bc-banner-3
+  primitive: {height: 4.5, kind: plane, width: 1.5}
+  rotation: {yaw: 180}
 bc-banner-4:
   castShadow: false
   children: [{feetPosition: {x: 0, y: 4.55, z: 0}, material: {color: "#f4f0f8", metalness: 0.8, roughness: 0.3}, primitive: {height: 1.7, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.03}, rotation: {roll: 90}}, {feetPosition: {x: -0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}, {feetPosition: {x: 0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}]
   feetPosition: {x: 5.2, y: 7, z: -14}
   id: bc-banner-4
-  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.4ce22d488b32954e955dbdf9e5c01b83060587b4dc83057daa60301a2dfffc35.png, map: /cdn/value.4ce22d488b32954e955dbdf9e5c01b83060587b4dc83057daa60301a2dfffc35.png, roughness: 0.95, side: double}
+  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.4ce22d488b32954e955dbdf9e5c01b83060587b4dc83057daa60301a2dfffc35.png, map: /cdn/value.4ce22d488b32954e955dbdf9e5c01b83060587b4dc83057daa60301a2dfffc35.png, roughness: 0.95, side: front}
   pivot: feet
   primitive: {height: 4.5, kind: plane, width: 1.5}
+bc-banner-4/back:
+  feetPosition: {x: 0, y: 0, z: -0.01}
+  id: bc-banner-4/back
+  material: {emissive: 16777215, emissiveIntensity: 0.15, emissiveMap: /cdn/value.4ce22d488b32954e955dbdf9e5c01b83060587b4dc83057daa60301a2dfffc35.png, key: Std/PBR, map: /cdn/value.4ce22d488b32954e955dbdf9e5c01b83060587b4dc83057daa60301a2dfffc35.png, roughness: 0.95, side: front}
+  parent: bc-banner-4
+  primitive: {height: 4.5, kind: plane, width: 1.5}
+  rotation: {yaw: 180}
 bc-banner-5:
   castShadow: false
   children: [{feetPosition: {x: 0, y: 4.55, z: 0}, material: {color: "#f4f0f8", metalness: 0.8, roughness: 0.3}, primitive: {height: 1.7, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.03}, rotation: {roll: 90}}, {feetPosition: {x: -0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}, {feetPosition: {x: 0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}]
   feetPosition: {x: 5.2, y: 7, z: -2}
   id: bc-banner-5
-  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.187531b69a1e3a51e66875ed716d3a7eb1fb1a49f344f790afd55752000e6f0a.png, map: /cdn/value.187531b69a1e3a51e66875ed716d3a7eb1fb1a49f344f790afd55752000e6f0a.png, roughness: 0.95, side: double}
+  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.187531b69a1e3a51e66875ed716d3a7eb1fb1a49f344f790afd55752000e6f0a.png, map: /cdn/value.187531b69a1e3a51e66875ed716d3a7eb1fb1a49f344f790afd55752000e6f0a.png, roughness: 0.95, side: front}
   pivot: feet
   primitive: {height: 4.5, kind: plane, width: 1.5}
+bc-banner-5/back:
+  feetPosition: {x: 0, y: 0, z: -0.01}
+  id: bc-banner-5/back
+  material: {emissive: 16777215, emissiveIntensity: 0.15, emissiveMap: /cdn/value.187531b69a1e3a51e66875ed716d3a7eb1fb1a49f344f790afd55752000e6f0a.png, key: Std/PBR, map: /cdn/value.187531b69a1e3a51e66875ed716d3a7eb1fb1a49f344f790afd55752000e6f0a.png, roughness: 0.95, side: front}
+  parent: bc-banner-5
+  primitive: {height: 4.5, kind: plane, width: 1.5}
+  rotation: {yaw: 180}
 bc-banner-6:
   castShadow: false
   children: [{feetPosition: {x: 0, y: 4.55, z: 0}, material: {color: "#f4f0f8", metalness: 0.8, roughness: 0.3}, primitive: {height: 1.7, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.03}, rotation: {roll: 90}}, {feetPosition: {x: -0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}, {feetPosition: {x: 0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}]
   feetPosition: {x: 5.2, y: 7, z: 10}
   id: bc-banner-6
-  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.89764e308d871613c0c209fe09e91c2cab3744f70eeccfed20d710278c429e9a.png, map: /cdn/value.89764e308d871613c0c209fe09e91c2cab3744f70eeccfed20d710278c429e9a.png, roughness: 0.95, side: double}
+  material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.89764e308d871613c0c209fe09e91c2cab3744f70eeccfed20d710278c429e9a.png, map: /cdn/value.89764e308d871613c0c209fe09e91c2cab3744f70eeccfed20d710278c429e9a.png, roughness: 0.95, side: front}
   pivot: feet
   primitive: {height: 4.5, kind: plane, width: 1.5}
+bc-banner-6/back:
+  feetPosition: {x: 0, y: 0, z: -0.01}
+  id: bc-banner-6/back
+  material: {emissive: 16777215, emissiveIntensity: 0.15, emissiveMap: /cdn/value.89764e308d871613c0c209fe09e91c2cab3744f70eeccfed20d710278c429e9a.png, key: Std/PBR, map: /cdn/value.89764e308d871613c0c209fe09e91c2cab3744f70eeccfed20d710278c429e9a.png, roughness: 0.95, side: front}
+  parent: bc-banner-6
+  primitive: {height: 4.5, kind: plane, width: 1.5}
+  rotation: {yaw: 180}
 bc-bay-e12:
   feetPosition: {x: 9.82, y: 9.6, z: 12}
   id: bc-bay-e12
