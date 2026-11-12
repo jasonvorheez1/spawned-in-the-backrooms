@@ -1,0 +1,41 @@
+# Entity 720 "Tiny" (scripts/l7-tiny.js). Every number is Savi's pick, Nov 12.
+lair: { x: -150, z: 0 }      # the stone circle west of the entrance, door in its floor
+patrolR: 22
+patrolY: -7
+hear: 260                    # metres he hears a swimmer from (the wiki says 30 km: this is the whole bay)
+cruise: 5
+dash: 9                      # m/s; a player swims about 3.5, so you cannot outswim him, only out-climb him
+lunge: 15
+circleR: 7
+circleSeconds: 4.5
+recoverSeconds: 3.5
+reach: 2.2
+damage: 40                   # of 200 hp: five lunges, about 40 s in the water once he's on you
+noiseReach: 15
+fleeSeconds: 18
+sounds:
+  stab: /cdn/moodboard-realistic-gritty/sfx-bone-spear-tip-punching-through-wet-rubber-diving-suit-underwater-thud.mp3
+lines:
+  notice:
+    - "Something fell in my water."
+    - "I felt that. Every kick."
+    - "Oh, a visitor."
+  circle:
+    - "Soft. Pink. Still kicking."
+    - "No teeth. No claws. Just you."
+    - "Do you know what you are, in here?"
+    - "Swim faster. Go on."
+  hit:
+    - "There."
+    - "That's what you are."
+    - "Again?"
+  shore:
+    - "Stay up there, then. The water keeps."
+    - "Clever. Legs. Enjoy them."
+    - "You'll get thirsty."
+  noise:
+    - "Stop that. Stop that!"
+    - "Loud little thing."
+  kill:
+    - "Research won't help you swim."
+    - "Take that back to your people."
