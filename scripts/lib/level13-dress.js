@@ -2,7 +2,7 @@
 // The hall as people left it: wall lamps between doors, radiators, what was left at each door, notes, and the drag marks into the lurker's flat. Ids l13d-*.
 import { APTS, H, HALL, T, UNIT } from "./level13.js";
 import D from "./data/l13-dress.yml";
-const DV = 3;
+const DV = 4;
 const fit = (k) => { const m = D.models[k]; if (!m?.model) return null; const [w, h, d] = m.size; return { model: m.forward ? { id: m.model, forward: m.forward } : { id: m.model }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } } }; };
 const svg = (w, [vw, vh], body) => `<svg viewBox='0 0 ${vw} ${vh}' width='${w}m'>${body}</svg>`;
 export function layDress(ctx) {
@@ -20,7 +20,7 @@ export function layDress(ctx) {
     // a shut flat: the Tripo door and frame over the plain slab (the slab stays, unseen, for its name and its collider)
     const dm = !a.open && fit("door");
     if (dm) { const slab = ctx.getObject(`l13-shut-${a.id}`); if (slab) slab.visible = false;
-      ctx.spawn(`l13d-door-${a.id}`, { feetPosition: { x: a.door.x, y: 0, z: face - s * 0.01 }, rotation: { yaw: yawIn }, castShadow: false, receiveShadow: true, ...dm }); }
+      ctx.spawn(`l13d-door-${a.id}`, { feetPosition: { x: a.door.x, y: 0, z: face - s * 0.01 }, rotation: { yaw: yawIn + 90 }, castShadow: false, receiveShadow: true, ...dm }); }
     // what was left outside
     for (const it of D.doors[a.id] ?? []) { const f = fit(it.m); if (!f) continue;
       ctx.spawn(`l13d-${a.id}-${n++}`, { feetPosition: { x: a.door.x + it.dx, y: 0, z: a.zf - s * (T / 2 + it.out) }, rotation: { yaw: (it.yaw ?? 0) + yawIn }, castShadow: true, receiveShadow: true, ...f,
