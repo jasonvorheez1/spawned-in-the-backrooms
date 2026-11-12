@@ -331,6 +331,7 @@ export function tick(ctx) {
     s.v = V; s.phase = "clean"; s.liftDown = false; s.liftRelease = false; s.warned = false; s.caseLandAt = null;
     return;
   }
+  if (s.capnV !== 2) { dressCapn(ctx); s.capnV = 2; } // the crew coat (remodcoat) refits Cap'n in place, no level rebuild
   if (!ps.length) {
     s.emptyAt ??= now;
     if ((s.phase !== "clean" || s.liftDown) && now - s.emptyAt > 15000) reset(ctx, s);
