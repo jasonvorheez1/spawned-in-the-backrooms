@@ -1107,7 +1107,7 @@ function plyArm(ctx, w) {
   const names = body?.skeleton ? (Array.isArray(body.skeleton) ? body.skeleton : Object.keys(body.skeleton)).map((b) => (typeof b === 'string' ? b : b.name)) : null
   if (!names?.length) return
   const bones = {}
-  const cut = w.plyTwo && !w.plyHuman ? [CUT[0], CUT[2]] : CUT
+  const cut = w.plyTwo && !w.plyHuman ? CUT.filter((_, i) => i !== 1) : CUT
   for (const n of names) if (cut.some((r) => r.test(n.replace(/^mixamorig:/, '')))) {
     const par = names.find((m) => m !== n && cut.some((r) => r.test(m.replace(/^mixamorig:/, ''))) && n.startsWith(m)) // a parent already cut covers it
     if (!par) bones[n] = { scale: 0 }
