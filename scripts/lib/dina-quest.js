@@ -23,6 +23,7 @@ const STEP = {
 export function dinaLead(ctx, st) {
   if (st.dinaLead || (st.dinaQ ?? 0) >= 2) return;
   st.dinaLead = true;
+  ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-soft-pda-beep-confirm.mp3", volume: 0.55 }, { audience: { player: ctx.self.id } });
   st.sub = { who: "HALOGEN · UNSENT MESSAGE", t: "If this unit still boots, find my radio on Level One. I heard a station from home. They read out tomorrow's weather. River made a copy. — Dina", at: ctx.now(), d: 12500 };
   syncHome(ctx, st, "tutorial0");
 }

@@ -11,7 +11,7 @@ const RECORDS = {
   handoff: {
     stage: 8,
     min: 4,
-    text: "C-23 collected. Case empty on arrival. River's carbon copy was folded into the foam. Filed under Return Test 04 at Base Gamma. Keep the copy. The original is still out there.",
+    text: "C-23 canceled. The stowaway never turned up. River filed a copy of the test results before the drive went missing. Look up Return Test 04 at Base Gamma.",
     early: "A handoff log. The page is indexed by freight ticket. Somebody tore out the carbon paper.",
     notice: "Found River's test number. Check the public records at Base Gamma.",
   },
