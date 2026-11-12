@@ -42,8 +42,8 @@ export function layShop(ctx) {
   // the checkout: one Tripo memphis counter (file 0.70 x 0.80 x 0.99 m, long side along z) at x1.35 = 1.08 m tall, 1.33 m long
   const tr = (id, m, x, y, z, yaw, sc, solid = true) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: M[m], scale: sc, ...(solid ? { physics: { body: "static", collider: "box" } } : {}) });
   // ticket prize walls (Tripo, from Shelly's prize-wall photo): file ~0.25 x 0.75 x 1.0 m, long side along z, x3.2 = 2.4 m tall, 3.2 m long
-  tr("prize-a", "prizeA", WX + 0.45, 0, -1.65, 180, 3.2, false);
-  sp("prize-back", { feetPosition: { x: WX + 0.03, y: 0, z: 0 }, primitive: { kind: "box", width: 0.04, height: 2.7, depth: 6.8 }, material: { texture: "cdn/texture-black-retail-slatwall-panel-horizontal-grooves.png", wrap: "repeat", repeat: [1, 1], color: "#2a2a2e", roughness: 0.6 } }); tr("prize-b", "prizeB", WX + 0.42, 0, 1.65, 0, 3.1, false);
+  const prize = (id, m, z) => sp(id, { feetPosition: { x: WX + 0.36, y: 0, z }, rotation: { yaw: 0 }, model: M[m], layout: { box: { min: { x: -0.32, y: 0, z: -1.66 }, max: { x: 0.32, y: 2.55, z: 1.66 } } } });
+  prize("prize-a", "prizeA", -1.7); prize("prize-b", "prizeB", 1.7);
   tr("counter", "counter", -38.3, 0, -0.1, 0, 1.35); tr("case-side", "case", -39.3, 0, 1.25, S, 1);
   // two stocked gift gondolas down the middle (file 0.91 x 1.0 x 0.94 m) at x1.55 = 1.55 m tall, eye level for a 1.7 m player
   tr("gondola-n", "gondola", -34.2, 0, -4.2, E, 1.55); tr("gondola-s", "gondola", -34.2, 0, 4.2, E, 1.55);
