@@ -3,7 +3,7 @@
 import bpy, sys, math
 from mathutils import Vector
 from mathutils.bvhtree import BVHTree
-a = sys.argv[sys.argv.index("--") + 1:]; BODY, GAR, OUT = a[:3]; GAP = float(a[3]) if len(a) > 3 else 0.022; KEEP = float(a[4]) if len(a) > 4 else 0.3
+a = sys.argv[sys.argv.index("--") + 1:]; BODY, GAR, OUT = a[:3]; GAP = float(a[3]) if len(a) > 3 else 0.022; KEEP = float(a[4]) if len(a) > 4 else 0.3; ALL = len(a) > 5 and a[5] == 'all'   # all: the front too (a jacket front that sagged to a belly, so the bust read low)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=BODY)
 body = max((o for o in bpy.context.scene.objects if o.type == "MESH"), key=lambda o: len(o.data.vertices) if "ody" in o.name else 0)
@@ -33,7 +33,7 @@ for o in bpy.context.scene.objects:
         if not hit or hit[0] is None: continue
         p = MWb @ hit[0]; d = (w - p).length
         if d <= GAP: continue
-        wt = sm((w.y + 0.05) / 0.05) * (1 - sm((abs(w.x) - 0.13) / 0.04))   # back and sides of the torso: front drape, bust and sleeves stay
+        wt = (1 if ALL else sm((w.y + 0.05) / 0.05)) * (1 - sm((abs(w.x) - 0.13) / 0.04))   # back and sides of the torso: front drape, bust and sleeves stay
         if wt <= 0: continue
         nd = GAP + (d - GAP) * KEEP
         D[cid[i]] = MI.to_3x3() @ ((p - w) * ((d - nd) / d) * wt)
