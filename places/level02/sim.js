@@ -13,7 +13,7 @@ import { S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, xOf } from "../../scripts/lib
 import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 import P from "../../scripts/lib/data/l02-props.yml";
 export const cadence = "250ms";
-const V = 20, STEP_MS = 3400, WARNING_MS = 1200;
+const V = 21, STEP_MS = 3400, WARNING_MS = 1200;
 const CASE_COLUMN = 4, CASE_DESK = { x: 2.55, y: 0, z: 7.65 };
 const CASE_TOP = "l02-crew-case", CASE_FALL = "l02-crew-salvage";
 const CASE_IMPACT = "/cdn/sfx-metal-object-clunk-drop.mp3";
@@ -123,7 +123,7 @@ function layShell(ctx) {
   sp(ctx, "l02-lift-guide", { feetPosition: { x: 1.7, y: BASE + 1.65, z: Z0 + 0.05 },
     vector: plate("FREIGHT →", "EAST WALL · COUNTERWEIGHT PAN") });
   // Work lights are aimed at the foreman's desk, the saw bench and the freight apron.
-  for (const [i, x, z, yaw] of [[0, -6.65, -4.78, 110], [1, -4.45, 6.9, 120], [2, 8.4, -5.95, 25], [3, 11.55, 2.8, 325]]) {
+  for (const [i, x, z, yaw] of [[0, -4.1, -4.91, 115], [1, -2.65, 8.38, 180], [2, 8.4, -5.95, 25], [3, 11.55, 2.8, 325]]) {
     sp(ctx, `l02-worklamp${i}`, prop("worklamp", { x, y: BASE, z }, yaw, { physics: "static" }));
     sp(ctx, `l02-worklight${i}`, { feetPosition: { x, y: BASE + H("worklamp") - 0.1, z }, light: { kind: "point", color: "oklch(0.88 0.1 75)", intensity: 1.45, distance: 10 } });
   }
@@ -151,12 +151,15 @@ function layShell(ctx) {
   // Cut stock rests across two aligned horses, with bulk materials along the south wall.
   sp(ctx, "l02-sawhorse0", B("sawhorse", -3.45, 7.02, 90));
   sp(ctx, "l02-sawhorse1", B("sawhorse", -1.75, 7.02, 90));
-  sp(ctx, "l02-plank", prop("lumber", { x: -2.6, y: BASE + H("sawhorse"), z: 7.02 }, 0, { physics: "static" }));
+  for (const [i, length, z] of [[0, 2.5, 6.89], [1, 2.35, 7.13]]) {
+    sp(ctx, `l02-cut-board-${i}`, { feetPosition: { x: -2.6, y: BASE + H("sawhorse"), z },
+      primitive: box(length, 0.055, 0.18), material: STUD, physics: "static" });
+  }
   sp(ctx, "l02-lumber0", B("lumber", -5.75, 9.3, 0));
   sp(ctx, "l02-drywall", B("drywall_stack", 2.8, 9.25, 0));
   sp(ctx, "l02-bucket0", B("bucket", -0.95, 7.75, 18));
   sp(ctx, "l02-tarp0", prop("tarp", { x: -2.65, y: BASE, z: 5.22 }, 4));
-  for (const [i, x, y] of [[0, -8.1, BASE], [1, -7.63, BASE], [2, -7.86, BASE + H("cement")]]) {
+  for (const [i, x, y] of [[0, -8.15, BASE], [1, -7.86, BASE], [2, -8.005, BASE + H("cement")]]) {
     sp(ctx, `l02-cement${i}`, prop("cement", { x, y, z: 9.22 }, 0, { physics: "static" }));
   }
   // The east wall is a service bench and the pan has a clear approach from the hall.
@@ -204,7 +207,7 @@ function layLift(ctx, down) {
   ctx.spawn("l02-lift", { feetPosition: { x: LIFT.x, y, z: LIFT.z }, primitive: box(3, 0.2, 3), material: { ...STEEL, metalness: 0.7, roughness: 0.45, texture: "cdn/texture-diamond-plate-steel-floor.png", wrap: "repeat", repeat: [1, 1] }, physics: "kinematic" });
   ctx.spawn("l02-fresh-lift", { tags: ["usable"], feetPosition: { x: LIFT.x + 0.3, y: y + 0.2, z: LIFT.z }, ...FRESH_BODY, behavior: "scripts/l02-use.js", state: { kind: "fresh", slot: "lift", name: "Reality Freshener", verb: "Take", info: "Remodeling Co. property. Cold to the touch." } });
 }
-const CANS = [[-5.15, 7.92], [-4.69, 7.92], [8.35, -3.58], [8.86, -3.58], [9.37, -3.58]];
+const CANS = [[-5.15, 7.92], [-4.69, 7.92], [8.35, -4.7], [8.86, -4.7], [9.37, -4.7]];
 function layCans(ctx) {
   CANS.forEach(([x, z], i) => { const id = `l02-can${i}`; if (id in ctx.place.objects) ctx.destroy(id);
     const base = { tags: ["l02can", "grabbable"], physics: { body: "dynamic", collider: "cylinder", mass: 14, friction: 0.8 }, state: { name: "Paint can (14 kg)" } };
@@ -264,9 +267,9 @@ function layColumn(ctx, c) {
     ctx.spawn("l02-bath-floor", { tags: [tag], feetPosition: { x, y: 0.002, z: Z0 + 2.5 }, primitive: box(S - 0.15, 0.022, 4.85), material: BATHTILE });
     F("l02-stall", "stall", { x: x + 0.9, y: 0, z: Z0 + 0.56 }, 180);
     F("l02-toilet", "toilet", { x: x + 1.25, y: 0, z: Z0 + 0.42 }, 180);
-    F("l02-sink", "sink", { x: x - 1.1, y: 0, z: Z0 + 0.3 }, 180);
+    F("l02-sink", "sink", { x: x - 1.1, y: 0, z: Z0 + 0.43 }, 180);
     ctx.spawn("l02-mirror", { tags: [tag], feetPosition: { x: x - 1.1, y: 1.05, z: Z0 + 0.02 }, primitive: box(0.7, 0.8, 0.02), material: { color: "oklch(0.85 0.01 230)", metalness: 1, roughness: 0.05 } });
-    ctx.spawn("l02-fresh-sink", { tags: ["usable", tag], feetPosition: { x: x - 0.6, y: H("sink") + 0.01, z: Z0 + 0.25 }, ...FRESH_BODY, behavior: "scripts/l02-use.js", state: { kind: "fresh", slot: "sink", name: "Reality Freshener", verb: "Take", info: "Left beside the bathroom tap." } });
+    ctx.spawn("l02-fresh-sink", { tags: ["usable", tag], feetPosition: { x: x - 0.86, y: H("sink") + 0.008, z: Z0 + 0.43 }, ...FRESH_BODY, behavior: "scripts/l02-use.js", state: { kind: "fresh", slot: "sink", name: "Reality Freshener", verb: "Take", info: "Left beside the bathroom tap." } });
   }
 }
 function layClean(ctx) { for (let c = 1; c < NX; c++) { for (const r of ctx.query({ tags: [`l02c${c}`] })) if (!r.id.includes("/") && r.id in ctx.place.objects) ctx.destroy(r.id); layColumn(ctx, c); } }
