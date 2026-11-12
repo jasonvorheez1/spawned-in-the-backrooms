@@ -84,7 +84,7 @@ export function update(ctx, dt) {
     // he cannot walk on land: he comes to the shallows below where you climbed out, head just out of the water, and watches
     const q = prey?.feetPosition ?? s.home, dx = q.x - p.x, dz = q.z - p.z, d = Math.hypot(dx, dz) || 1;
     goal = { x: q.x - (dx / d) * 6, z: q.z - (dz / d) * 6 }; depth = -1.6; speed = T.cruise;
-    if (now > m.until || (prey && wet(prey))) { m.mode = prey?.state?.swimming ? "stalk" : "patrol"; if (m.mode === "patrol") m.prey = null; }
+    if (now > m.until || (prey && wet(prey))) { m.mode = prey && wet(prey) ? "stalk" : "patrol"; if (m.mode === "patrol") m.prey = null; }
   } else if (m.mode === "patrol") {
     m.ang += dt * 0.18; const h = s.home;
     goal = { x: h.x + Math.cos(m.ang) * T.patrolR, z: h.z + Math.sin(m.ang) * T.patrolR };
