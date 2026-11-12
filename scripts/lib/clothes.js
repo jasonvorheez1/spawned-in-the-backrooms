@@ -208,7 +208,8 @@ export function npcLook(id, look, faction, level, role) {
     } else {
       const P = NL[l.role] ?? NL[l.faction], own = P && (l.sex === 'f' ? P.hairF : P.hairM)   // hair that fits the job (npc-looks.yml)
       const hs = own?.length ? own : l.sex === 'f' ? C.hairF : C.hairM, r = hashOf(id + ':hair')
-      l.hair = own?.length || r % 100 < (l.sex === 'f' ? 92 : 80) ? hs[(r >>> 7) % hs.length] : 'none'
+      const bald = (l.sex === 'f' ? P?.baldF : P?.baldM) ?? (l.sex === 'f' ? 8 : 20)   // not everyone has hair (Shelly)
+      l.hair = r % 100 >= bald ? hs[(r >>> 7) % hs.length] : 'none'
       const hc = hashOf(id + ':hairc'), natural = C.hairc.slice(0, 7), bright = C.hairc.slice(11)
       l.hairc = hc % 100 < (P?.grey ?? 8) ? (hc % 2 ? '#9a9aa2' : '#f4efe9') : hc % 100 > 99 - (P?.hairBright ?? 12) ? bright[(hc >>> 5) % bright.length] : (P ? natural : C.hairc)[(hc >>> 3) % (P ? natural.length : C.hairc.length)]
     }
