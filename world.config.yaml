@@ -84,12 +84,8 @@ inputs:
         - r
       touch:
         button: false
-    drink:
-      keys:
-        - q
-    compass:
-      keys:
-        - m
+    drink: {}
+    compass: {}
     throw:
       keys:
         - g
