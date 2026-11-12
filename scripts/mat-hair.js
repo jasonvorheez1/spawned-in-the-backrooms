@@ -23,9 +23,9 @@ export function material(ctx) {
   const N = normalize(normalWorld), V = normalize(cameraPosition.sub(positionWorld));
   const down = vec3(0, -1, 0), T = normalize(down.sub(N.mul(dot(N, down))));
   const H = normalize(V.add(vec3(0.25, 1, 0.15)));
-  const th = dot(T, H).add(strand.sub(0.5).mul(0.35)).add(clump.sub(0.5).mul(0.25));   // the strands break the band so it reads as hair, not plastic
-  const spec = pow(saturate(sqrt(saturate(float(1).sub(th.mul(th))))), P("shineSharp", 70));
-  const band = spec.mul(smoothstep(0.35, 0.7, strand)).mul(P("shine", 0.55));
+  const th = dot(T, H).add(coarse.sub(0.5).mul(0.3)).add(clump.sub(0.5).mul(0.25));   // the strands break the band so it reads as hair, not plastic
+  const spec = pow(saturate(sqrt(saturate(float(1).sub(th.mul(th))))), P("shineSharp", 40));
+  const band = spec.mul(smoothstep(0.25, 0.75, coarse)).mul(P("shine", 0.35));
   const fres = pow(float(1).sub(saturate(abs(dot(N, V)))), 3.0);
   m.colorNode = col;
   m.emissiveNode = col.mul(0.05).add(materialColor.mul(0.6).add(vec3(0.35, 0.33, 0.3)).mul(band)).add(col.mul(fres).mul(0.18));
