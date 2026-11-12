@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 6787,
-  "updatedAt": "2026-11-12T21:58:54.084Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG across Level 0, a social hub and authored lore destinations; player saves hold progression, gear, quests and homes, while tutorial0 is solo and ephemeral. Shared player behaviors, place simulations and reusable builders join authored scenes to generated spaces. Level 31 is a versioned roller-rink venue, now using Awakening's lighting and frame look; the Awakening mod also provides opt-in terrain, vegetation and water tools.",
+  "basedOnSpecVersion": 6792,
+  "updatedAt": "2026-11-12T22:01:51.383Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG across Level 0, a social hub and authored lore destinations; player saves hold progression, gear, quests and homes, while tutorial0 is solo and ephemeral. Shared player behaviors, place simulations and reusable builders join authored scenes to generated spaces. Level 31 is a versioned roller-rink venue using Awakening's lighting and frame look; the Awakening mod also provides opt-in terrain, vegetation and water tools.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0's yellow maze, ecology, routes, landmarks, Christmas Area and stair anomalies.",
@@ -10,7 +10,7 @@
     "places/intake + places/tutorial0 (3D; tutorial0 solo, ephemeral) - character creation/waking, staged tutorial and HALOGEN handoff to Dina's lead.",
     "places/level01 (3D) - Zenith Station, breach, bots, hazards and recorder quest.",
     "places/level1, level2, level02, level21, level3, gamma (3D) - Habitable Zone camp, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma; Level 2 links to Level 31.",
-    "places/level31 (3D) - Roller Rink, cinema/DJ booth, separate east arcade, party room, food court, rental, gift shop and Side B faction quest; Awakening lighting/look are configured here.",
+    "places/level31 (3D) - Roller Rink, cinema/DJ booth, separate east arcade, party room, food court, rental, gift shop and Side B faction quest; Awakening lighting/look configured here.",
     "places/level4, level5, level6, level7, level10, level11, level12, level13 (3D) - resident hubs, rentals, malls, stories, hazards and deeper authored destinations.",
     "places/level26, level27, spamton, testlab and remaining configured places - additional lore, special/test destinations and deeper levels; place scenes supply their own objects."
   ],
@@ -52,10 +52,10 @@
     "scripts/build.js + places/level5/sim.js - player homeKeep.built or homeKeep.l5built; home11 and booked Level 5 rooms reconstruct from separate saved buckets.",
     "scripts/l5-resident.js + places/level5/sim.js - player booking keys/room identity and place.state.l5rent exclusive-room ledger; sim reconciles keys and trunks.",
     "scripts/arcade-play.js + scripts/lib/felix-game.js - player.state.arcade/arcadeBest/felixBest; active game frames and input progression are in session state, consumed by arcade UI.",
-    "Enemy managers own AI/sneakTarget; scripts/lib/meg-agent.js keeps NPC combat memory and pose; places/level31/sim.js owns place.state.v31=41 and generated l31-* venue roots; mods/awakening/input.js mirrors switches to world.state.awakening and handbook UI state to player."
+    "Enemy managers own AI/sneakTarget; scripts/lib/meg-agent.js keeps NPC combat memory and pose; places/level31/sim.js owns place.state.v31=43 and generated l31-* venue roots; mods/awakening/input.js mirrors switches to world.state.awakening."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific input/update.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific behaviors.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera; camera writes aimPt/aimPitch → player.js ballistics/weaponAim; player.js zoneHere → scripts/lib/maze.js zone names.",
     "world.config.yaml input actions bind kick H/L and reload R → handlers in player/combat behaviors.",
     "scripts/routing.js requested room → scripts/lib/hub.js solo selection; toHub/toSolo cross to hub/home and maintain roomHop/save-place; kiosk resolves booked Level 5 home IDs.",
@@ -63,9 +63,9 @@
     "tutorial0 HALOGEN cut → scripts/lib/tut0-cut.js + scripts/lib/dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ and play recorded voices.",
     "scripts/build.js placement/removal → homeKeep.built or homeKeep.l5built; Level 5 sim restores separately; l5-resident booking → player l5home/l5room and place.state.l5rent, hub kiosk routes per room.",
     "Level 2 sim l2-to-l31 → scripts/level-door.js to level31#l31-from-l2; Level 31 l31-back → level2#l2-from-l31; quest-route.js maps both directed crossings.",
-    "Level 31 sim reads H/B/RINK/ZONES/DOOR/BACK, rebuilds l31-* roots at place.state.v31=41 and dispatches layParts; arcade remains in the east back room, party occupies the former arcade footprint.",
+    "Level 31 sim reads H/B/RINK/ZONES/DOOR/BACK, rebuilds l31-* roots at place.state.v31=43 and dispatches layParts; arcade remains in the east back room, party occupies the former arcade footprint.",
     "scripts/talk.js assembles authored dialogue and recorded voice takes; unhandled quest text → handleDialogueQuest31; Marlowe/Coach/DJ/clerk dialogue advances l31q; l31-crate.js → openCrate and l31-deck.js → useDeck.",
-    "Level 31 arcade usable press → scripts/lib/level31-arcade.js initializes player.state.arcade; arcade-play.js dispatches Block Panic or felix-game input/ticks and arcade-ui.js dispatches to Felix UI; felix-game session frame → felix-ui.js display.",
+    "Level 31 arcade usable press → scripts/lib/level31-arcade.js initializes player.state.arcade; arcade-play.js dispatches Block Panic or felix-game input/ticks and arcade-ui.js dispatches to Felix UI; felix-game session frame → felix-ui.js draws it.",
     "Awakening config selects mods/awakening/lighting.js and look.js at Level 31; mod input opens panel.js and commits optional switches, mirroring switches to world.state.awakening."
   ],
   "behaviorFamilies": [
@@ -76,7 +76,7 @@
     "places/level01/sim.js + Zenith geometry/breach/hatch/bot/hazard scripts; places/level02/sim.js + l02-grid.js vary partitions, lights, crew, knocks and reset.",
     "scripts/lib/meg-agent.js - per-NPC nerve/stats/weapon reactions, cover and authored/voiced barks; scripts/lib/critter-model.js refits appearances across Level 7, Bonus and Level 0.2, with global sim.js propagation.",
     "Level 13 furnishing/dressing data and foe/people/tape layers vary rooms, story, encounters and residents; weapon data vary requirements/stats/loot while stats.js and weapon-look/fp-gun/vmpose supply handling and visuals.",
-    "Level 31 modular venue builders vary arcade, food, rental, shop, Side B and design around scripts/lib/level31.js geometry; the arcade handler/UI switch between Block Panic and Fix-It Felix Jr.; Awakening rendering is currently configured on Level 31."
+    "Level 31 modular venue builders vary arcade, food, rental, shop, Side B and design around scripts/lib/level31.js geometry; the rink's padded rails use a Tripo GLB with separate static box collision; arcade handler/UI switch between Block Panic and Fix-It Felix Jr.; Awakening rendering is configured on the place."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -88,9 +88,9 @@
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. Keep this bounded sweep.",
     "Global body-style restyling skips player IDs and player/ roots and ignores local-audience or model-less objects; wardrobe membership is derived from critter-ward object IDs and passed to restyle.",
-    "Level 31 sim uses place.state.v31=41 and removes/rebuilds l31-* roots; keep generated IDs prefixed l31- and align shell, zone coordinates, arrivals and door IDs with scripts/lib/level31.js.",
+    "Level 31 sim uses place.state.v31=43 and removes/rebuilds l31-* roots; keep generated IDs prefixed l31- and align shell, zone coordinates, arrivals and door IDs with scripts/lib/level31.js.",
+    "Level 31 padded rail visuals are world.assets/68/~2fcdn~2fvalue.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb.yaml, referenced by /cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb; render is disabled on the root and its static rbox(len, 1.07, 0.24) is the collision proxy. Preserve the GLB's 3.8 m x-axis basis when scaling segments.",
     "Level 31 arcade is the BACK room east of the hall; party occupies the previous arcade footprint. Update BACK, ZONES and sim shell/builders together when moving either room.",
-    "Level 31 side-set IDs use l31-q-* while design IDs use l31-ld-*; builders clear only their own prefix. Quest/reputation is per player, spawned crew shared; NPC hitBy records enable crew retaliation without making anger persistent.",
-    "Awakening's water/terrain utilities are opt-in scripts; current place integration is the Level 31 look and lighting config. Felix arcade frames are session-local while best scores/game phase live in player.state; don't conflate their owners."
+    "Level 31 side-set IDs use l31-q-* while design IDs use l31-ld-*; builders clear only their own prefix. Quest/reputation is per player, spawned crew shared; NPC hitBy records enable retaliation without persistent anger. Awakening terrain/water utilities remain opt-in; Felix frames are session-local, best scores/game phase are in player.state."
   ]
 }
