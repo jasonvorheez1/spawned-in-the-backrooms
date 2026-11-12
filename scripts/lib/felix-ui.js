@@ -24,6 +24,7 @@ const CSS = `<style>#ffj{position:fixed;inset:0;z-index:70;display:flex;align-it
 #ffj .msg em{display:block;font-style:normal;color:#ffd43a;font-size:16px;margin-bottom:6px}
 #ffj .blink{animation:ffb 1s steps(2) infinite}@keyframes ffb{50%{opacity:0}}
 #ffj .inv{animation:ffi .16s steps(2) infinite}@keyframes ffi{50%{opacity:.35}}
+@media (max-height:900px){#ffj .bez{zoom:.85}}@media (max-height:760px){#ffj .bez{zoom:.7}}@media (max-height:620px){#ffj .bez{zoom:.58}}@media (max-height:480px){#ffj .bez{zoom:.45}}
 #ffj .keys{position:absolute;left:0;right:0;bottom:6px;text-align:center;color:#9fb3c8;font-size:8px;letter-spacing:.1em;text-shadow:1px 1px #000}</style>`
 
 function attract(best) {
