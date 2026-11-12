@@ -30,7 +30,7 @@ const CSS = `<style>#ffj{position:fixed;inset:0;z-index:70;display:flex;align-it
 function attract(best) {
   return `<div class="sky" style="height:400px"></div>${sp('logo', 160, 120)}${sp('r_angry', 90, 300)}${sp('f_wave', 220, 300)}
 <div class="msg" style="top:200px"><div class="blink">PRESS SPACE</div><div style="margin-top:8px;color:#9fb3c8">INSERT COIN · HI ${pad(best)}</div></div>
-<div class="keys">A D  SLIDE · W S  HOP · SPACE  FIX · E  LEAVE</div>`
+<div class="keys">A D  SLIDE · W S  HOP · SPACE  FIX</div><div style="position:fixed;top:24px;left:24px;padding:10px 18px;background:#ffd23f;color:#111;font:700 26px monospace;box-shadow:0 0 0 3px #111,4px 4px 0 3px #111;letter-spacing:.06em">[E] LEAVE</div>`
 }
 
 export function felixUi(ctx, player) {
