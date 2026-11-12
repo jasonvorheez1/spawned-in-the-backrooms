@@ -13,7 +13,10 @@ import { S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, xOf } from "../../scripts/lib
 import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 import P from "../../scripts/lib/data/l02-props.yml";
 export const cadence = "250ms";
-const V = 18, STEP_MS = 3400, WARNING_MS = 1200;
+const V = 19, STEP_MS = 3400, WARNING_MS = 1200;
+const CASE_COLUMN = 4, CASE_DESK = { x: 2.65, y: 0, z: 6.2 };
+const CASE_TOP = "l02-crew-case", CASE_FALL = "l02-crew-salvage";
+const CASE_IMPACT = "/cdn/sfx-metal-object-clunk-drop.mp3";
 const CREAK = "/cdn/moodboard-realistic-gritty/sfx-deep-structural-wood-creak-groan.mp3";
 const OFFICE_LIGHT = { kind: "point", color: "oklch(0.96 0.025 95)", intensity: 1.35, distance: 11 };
 const WARN_LIGHT = { ...OFFICE_LIGHT, color: "oklch(0.76 0.16 54)", intensity: 0.95, distance: 8 };
@@ -90,7 +93,11 @@ function layShell(ctx) {
     state: { kind: "read", name: "Wireless router", verb: "Look", info: "Full bars.", text: "Four green lights, all steady. The network is called REMODELING_CO_GUEST and it has no password. It has never once dropped." } }));
   layLights(ctx, 0);
   sp(ctx, "l02-checkin", { feetPosition: { x: -12.12, y: 1.4, z: -4.15 }, rotation: { yaw: -90 },
-    vector: plate("FINISH INSPECTION", "VISITORS · KEEP CLEAR OF THE EAST WING") });
+    vector: plate("FINISH INSPECTION", "KEEP CLEAR OF THE EAST WING") });
+  sp(ctx, "l02-issue-board", { tags: ["usable"], feetPosition: { x: -12.13, y: 1.35, z: 3.6 }, rotation: { yaw: -90 },
+    vector: plate("TOOL ISSUE", "LOCKED CASE · SOUTH OFFICE", "#e9c987"),
+    behavior: "scripts/l02-use.js", state: { kind: "read", name: "Tool issue notice", verb: "Read",
+      text: "Penelope: lock the tool case in the south office. If the floor goes again, check directly underneath. Bring back whatever didn't break." } });
   sp(ctx, "l02-hum", { feetPosition: { x: cx, y: 2, z: cz }, audio: { clip: HUM, loop: true, gain: 0.12, spatial: false } });
   sp(ctx, "l02-haze", { feetPosition: { x: cx, y: BASE + 0.3, z: cz }, fx: { script: HAZE } });
   // stairs from the basement up to the door room's edge, a 2x4 baluster per step and a rail
@@ -210,6 +217,12 @@ function layColumn(ctx, c) {
   const F = (id, key, at, yaw) => put(ctx, id, prop(key, at, yaw, { tags: [tag], physics: "static" }));
   if (c === 1) { F("l02-desk1", "office_desk", { x: x + 0.4, y: 0, z: 9.4 }, 0); F("l02-chair1", "wchair", { x: x + 0.4, y: 0, z: 8.5 }, 180); }
   if (c === 2) F("l02-plant2", "plant", { x: x + 1.5, y: 0, z: 9.4 }, 120);
+  if (c === CASE_COLUMN) {
+    F("l02-issue-desk", "office_desk", CASE_DESK, 180);
+    sp(ctx, CASE_TOP, prop("red_toolbox", { ...CASE_DESK, y: H("office_desk") }, 180, {
+      tags: [tag, "container"], state: { name: "Crew tool case", lock: "lockpick:25", items: "kit,akit,tape", scavved: true },
+    }));
+  }
   if (c === 5) F("l02-bench5", "bench", { x: x + 0.6, y: 0, z: -9.6 }, 180);
   if (c === 6) { F("l02-desk6", "office_desk", { x: x + 1.3, y: 0, z: 9.4 }, 0); F("l02-chair6", "wchair", { x: x + 1.2, y: 0, z: 8.6 }, 160); }
   if (c === 3) {
@@ -229,9 +242,57 @@ function layColumn(ctx, c) {
   }
 }
 function layClean(ctx) { for (let c = 1; c < NX; c++) { for (const r of ctx.query({ tags: [`l02c${c}`] })) if (!r.id.includes("/") && r.id in ctx.place.objects) ctx.destroy(r.id); layColumn(ctx, c); } }
+function fallCase(ctx) {
+  const top = ctx.place.objects[CASE_TOP];
+  if (!top) return;
+  const items = String(top.state.items ?? "").split(",").filter((item) => item && item !== "akit").join(",");
+  const at = { ...CASE_DESK, y: H("office_desk") };
+  put(ctx, CASE_FALL, prop("red_toolbox", at, 180, {
+    tags: ["l02debris"], state: { name: "Split crew tool case", items, scavved: true },
+  }));
+  if (!P.red_toolbox?.model) return;
+  ctx.place.state.caseLandAt = ctx.now() + 880;
+  animate(ctx, CASE_FALL, {
+    "feetPosition.x": at.x - 0.28, "feetPosition.y": BASE + 0.025, "feetPosition.z": at.z - 0.65,
+    "rotation.yaw": 215, "rotation.pitch": [0, -18, 0], "rotation.roll": [0, 31, 7],
+  }, { duration: 0.8, easing: "easeInQuad" });
+}
+function landCase(ctx, s, now) {
+  if (!s.caseLandAt || now < s.caseLandAt) return;
+  s.caseLandAt = null;
+  const o = ctx.place.objects[CASE_FALL];
+  if (!o) return;
+  o.tags = ["l02debris", "container"];
+  const at = o.feetPosition;
+  ctx.emit("playSound", { clip: CASE_IMPACT, position: at, volume: 0.9, refDistance: 3, maxDistance: 17 });
+}
+
+function fallDeck(ctx, c) {
+  // Visual pieces follow the floor down while the original collision clears for the player.
+  for (const side of [-1, 1]) {
+    const x = xOf(c) + side * 0.85, z = side * (c === CASE_COLUMN ? 2.8 : 3.8);
+    const id = `l02-deck-${c}-${side}`;
+    ctx.spawn(id, {
+      tags: ["l02debris"], lifetime: 24, feetPosition: { x, y: -0.22, z },
+      primitive: box(1.45, 0.14, 2.8), material: PLY,
+      children: [
+        { feetPosition: { x: 0, y: 0.14, z: 0 }, primitive: box(1.45, 0.02, 2.8), material: CARPET },
+        { feetPosition: { x: -0.52, y: -0.13, z: 0 }, primitive: box(0.09, 0.13, 2.8), material: STUD },
+        { feetPosition: { x: 0.52, y: -0.13, z: 0 }, primitive: box(0.09, 0.13, 2.8), material: STUD },
+      ],
+    });
+    animate(ctx, id, {
+      "feetPosition.x": x + side * 0.3, "feetPosition.y": BASE + 0.16, "feetPosition.z": z + side * 0.38,
+      "rotation.yaw": side * 15, "rotation.pitch": [0, side * 24, side * 2], "rotation.roll": [0, side * 34, side * 4],
+    }, { duration: side === 1 ? 0.78 : 0.66, easing: "easeInQuad" });
+  }
+}
+
 function drop(ctx, c) {
   const x = xOf(c), tag = `l02c${c}`;
+  if (c === CASE_COLUMN) fallCase(ctx);
   for (const r of ctx.query({ tags: [tag] })) if (r.id !== "l02-fresh-sink" && !r.id.includes("/") && r.id in ctx.place.objects) ctx.destroy(r.id);
+  fallDeck(ctx, c);
   if (c === 3 && "l02-fresh-sink" in ctx.place.objects) animate(ctx, "l02-fresh-sink", { "feetPosition.y": BASE + 0.02 }, { duration: 0.7, easing: "easeInQuad" });
   for (let i = 0; i < 5; i++) ctx.spawn({ tags: ["l02debris"], lifetime: 30, feetPosition: { x: x + (ctx.random() - 0.5) * 3, y: 2.4, z: Z0 + 1 + ctx.random() * (D - 2) }, rotation: { yaw: ctx.random() * 360, pitch: ctx.random() * 40 },
     primitive: i % 2 ? box(0.6, 0.03, 1.2) : box(0.9 + ctx.random(), 0.06, 0.5), material: i % 2 ? TILE : PAINT, physics: { body: "dynamic", collider: "box", density: 300 } });
@@ -259,7 +320,7 @@ function reset(ctx, s) {
   layLift(ctx, false);
   layCans(ctx);
   for (const r of ctx.query({ tags: ["l02debris"] })) if (r.id in ctx.place.objects) ctx.destroy(r.id);
-  s.phase = "clean"; s.liftDown = false; s.liftRelease = false; s.warned = false;
+  s.phase = "clean"; s.liftDown = false; s.liftRelease = false; s.warned = false; s.caseLandAt = null;
   const release = ctx.place.objects["l02-lift-release"];
   if (release) release.state.info = "Repair 35 · Lower the freight lift by hand.";
 }
@@ -267,7 +328,7 @@ export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now(), ps = ctx.place.players;
   if (s.v !== V || !("l02-base" in ctx.place.objects)) {
     layShell(ctx); dressCapn(ctx); layClean(ctx);
-    s.v = V; s.phase = "clean"; s.liftDown = false; s.liftRelease = false; s.warned = false;
+    s.v = V; s.phase = "clean"; s.liftDown = false; s.liftRelease = false; s.warned = false; s.caseLandAt = null;
     return;
   }
   if (!ps.length) {
@@ -297,6 +358,7 @@ export function tick(ctx) {
       if (s.col < 1) s.phase = "fallen";
     }
   }
+  landCase(ctx, s, now);
   if (s.liftDown) return;
   const kg = ctx.query({ tags: ["l02can"], center: { x: BIN.x, y: BASE + 0.35, z: BIN.z }, radius: 1.1 }).filter((r) => {
     const p = r.feetPosition;
