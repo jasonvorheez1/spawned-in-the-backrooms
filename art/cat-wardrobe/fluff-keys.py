@@ -6,7 +6,7 @@ import bpy, os, glob
 from mathutils import Vector
 from mathutils.kdtree import KDTree
 BODY = {"f": "/tmp/ears/f.glb", "m": "/tmp/ears/m.glb"}   # live CAT_BODY glbs, fetched ?raw
-SRC = "/workspace/catfluff"; OUT = "/workspace/catfluff-keys"; os.makedirs(OUT, exist_ok=True)
+SRC = os.environ.get("SRC", "/workspace/catfluff"); OUT = os.environ.get("OUT", "/workspace/catfluff-keys")   # hair: SRC=/workspace/cathair-src OUT=/workspace/cathair-keys; os.makedirs(OUT, exist_ok=True)
 def run(path, sex):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=path)
@@ -29,6 +29,7 @@ def run(path, sex):
         M = o.matrix_world; Mi = M.inverted().to_3x3()
         if not o.data.shape_keys: o.shape_key_add(name="Basis")
         for n in names:
+            if o.data.shape_keys.key_blocks.get(n): o.shape_key_remove(o.data.shape_keys.key_blocks[n])
             sk = o.shape_key_add(name=n, from_mix=False)
             for i, v in enumerate(o.data.vertices):
                 hits = kd.find_n(M @ v.co, 6); wsum = 0; d = Vector()
