@@ -122,9 +122,11 @@ export function catChildren(sex, look) {
     out.push({ id: 'cw-' + slot, attachment: { skin: true }, model: { id: g[sex], forward: '+z', ...(g.tint === false ? {} : { materials: { cloth: { kind: 'scripted', script: 'scripts/mat-cloth.js', color: l[ck] || '#ffffff', params: (slot === 'topw' && printOf(sex, l)) || { pat: g.pat || 'weave' } } } }) }, ...(slot === 'topw' ? { morph: chestOf(look) } : {}) })
   }
   const fl = Array.isArray(look?.fluff) ? look.fluff : look?.fluff ? [look.fluff] : []
+  const hairOn = !!(look?.hair && W.hair?.[look.hair])
   for (const k of fl) {
     const g = W.fluff?.[k]?.[sex]
     if (!g) continue
+    if (hairOn && (k === 'bangs' || k === 'crest' || k === 'cowlick')) continue   // crown/fringe fur sits where a hairstyle sits: it pierced the hair and hung over the eyes (Shelly Nov 11 'faces forming into the other model')
     const morph = catMorph(look)   // the locks carry the body's keys (fluff-keys.py), so they ride the snout and ears instead of being pierced
     out.push({
       id: 'cw-fluff-' + k, attachment: { skin: true },
