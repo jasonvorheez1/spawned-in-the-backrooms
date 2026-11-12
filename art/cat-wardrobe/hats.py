@@ -21,7 +21,7 @@ R = {
   "tophat":     dict(fit="perch", w=0.70, seat=0.6, sink=0.012, tilt=-7),
   "crown":      dict(fit="perch", w=0.65, seat=0.5, sink=0.012, tilt=-6),
   "partyhat":   dict(fit="perch", w=0.40, seat=0.6, sink=0.012, tilt=-8, dx=0.07, roll=14),
-  "bow":        dict(fit="perch", w=0.45, seat=0.3, sink=0.015, tilt=-18, dy=0.04, orient=dict(yaw=-90)),
+  "bow":        dict(fit="perch", w=0.45, seat=1.0, sink=0.035, tilt=-58, dy=0.07, orient=dict(yaw=-90)),   # Shelly Nov 12 "doesnt fit her head": it stood upright on its knot over the hair; now laid back on the crown, knot sunk in the hair
   "flower":     dict(fit="perch", w=0.30, seat=0.3, sink=0.012, tilt=-8, dx=0.14, roll=32, orient=dict(yaw=-90)),
   "headphones": dict(fit="band", ease=1.0, orient=dict(yaw=90)),
   "pilgrimhat": dict(fit="perch", w=1.75, seat=0.85, sink=0.07, tilt=-8),   # Nov 12 Brother Wat: felt pilgrim hat, scallop shell on the front; wrap sank the brim over the eyes
