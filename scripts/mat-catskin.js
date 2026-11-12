@@ -27,12 +27,17 @@ export function material(ctx) {
     const noseCut = smoothstep(1.0, 0.8, nd);
     const sL = ctx.texture(String(ctx.params.face)).sample(vec2(u.sub(0.11), v)), sR = ctx.texture(String(ctx.params.face)).sample(vec2(u.add(0.11), v));
     const fill = max(sL, sR);
-    pic = vec4(mix(pic.rgb, fill.rgb, noseCut), mix(pic.a, fill.a, noseCut));
+    pic = vec4(pic.rgb, pic.a.mul(noseCut.oneMinus()));   // the cut shows bare fur: a side-sampled fill left pale wedges beside the nose
     // the painted cream mask read too Sonic (Shelly Nov 12): the light muzzle paint keeps only a small soft oval round the nose and mouth, fading into fur
     const cream = smoothstep(0.5, 0.68, min(pic.r, pic.g)).mul(max(step(v, P("muzTop", 0.45)), step(v, 0.52).mul(step(abs(u.sub(0.5)), 0.085))));   // and the bridge wedge between the eyes (orange cat)
     const ell = u.sub(0.5).div(P("muzW", 0.12)).pow(2).add(v.sub(P("muzV", 0.32)).div(P("muzH", 0.085)).pow(2)).sqrt();
     const keep = smoothstep(1.0, 0.55, ell);
     pic = vec4(pic.rgb, mix(pic.a, pic.a.mul(keep), cream));
+    // below the eyes, outside the soft oval, only the mouth's ink stays: the picture's old muzzle outline drew a ghost line across the cheeks
+    const ink = smoothstep(0.35, 0.15, max(pic.r, pic.g));
+    const wide = smoothstep(1.0, 0.7, u.sub(0.5).div(P("muzW", 0.12).mul(1.9)).pow(2).add(v.sub(P("muzV", 0.32)).div(P("muzH", 0.085).mul(1.5)).pow(2)).sqrt());
+    const lowFace = step(v, P("muzTop", 0.45));
+    pic = vec4(pic.rgb, mix(pic.a, pic.a.mul(max(keep, ink.mul(wide))), lowFace));
     // on the snout the projection grazes its sides and the mouth smears: muzzle paint only lands where the surface faces the front
     const facing = mix(float(1), smoothstep(0.32, 0.62, normalLocal.z), muzzle);
     // iris: the picture's blue above max(r,g) is the iris shading (art/cat-wardrobe/iris.py); look.eyes colours it, the pupil stays black
