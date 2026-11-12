@@ -84,8 +84,12 @@ inputs:
         - r
       touch:
         button: false
-    drink: {}
-    compass: {}
+    drink:
+      keys:
+        - q
+    compass:
+      keys:
+        - m
     throw:
       keys:
         - g
@@ -102,12 +106,12 @@ inputs:
         button: false
     kick:
       keys:
-        - h
         - l
       touch:
         button: false
     holster:
-      keys: []
+      keys:
+        - h
       touch:
         button: false
     interact:
