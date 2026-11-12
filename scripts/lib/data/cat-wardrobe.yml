@@ -113,7 +113,7 @@ from:
           jacket: jacket, megjacket: jacket, officeshirt: longsleeve, padjacket: jacket, wirehood: hoodie, platevest: tank, bellhop: jacket,
           tailcoat: jacket, gown: longsleeve, maidapron: tee, hotelrobe: pajamas, seawatchsuit: jacket, oilskin: hoodie, abysshauberk: longsleeve,
           chitinplate: tank, pgcoat: jacket, jerrytee: tee, pphoodie: hoodie, pghoodie: hoodie, gmhoodie: hoodie, vest: tank, blazer: jacket,
-          shirt: breton, crop: crop, breton: breton }
+          shirt: breton, crop: crop, breton: breton, hazmat: jacket, bntgvest: tank, tarpponcho: hoodie }   # lore pieces: their own Tripo models replace these stand-ins once fitted
   botw: { pants: pants, shorts: shorts, pjpants: pjpants, skirt: skirt, longskirt: skirt, overalls: pants, slacks: pants, cargo: pants,
           canvasskirt: skirt, pinstripe: pants, velvetskirt: skirt, tarwaders: pants, jeans: pants, briefs: briefs, leggings: leggings }
   shoes: { sneakers: socks, slippers: socks, boots: boots, steeltoe: boots, hotelslip: socks, ballastboots: boots, pitchboots: boots, heels: socks, socks: socks }

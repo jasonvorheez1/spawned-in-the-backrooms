@@ -29,9 +29,9 @@ leveled:
   lift: 0.04          # per level past a row's own: rarer rows get this much heavier (a level 20 finder sees more rare cloth)
   # NPC wardrobes by faction: the rows a faction dresses from (ids below), and how often each optional slot is filled
   factions:
-    meg:      { rows: [megjacket, longsleeve, cargo, pants, boots, steeltoe, cap, beanie, padbeanie, shades, scarf, padjacket], extra: { hat: 0.45, eyew: 0.3, neck: 0.25 } }
-    survivor: { rows: [hoodie, sweater, jacket, padjacket, wirehood, pants, cargo, overalls, canvasskirt, boots, sneakers, beanie, padbeanie, cap, scarf, cape, necklace, carpetponcho, glasses], extra: { hat: 0.4, eyew: 0.2, neck: 0.35 } }
-    wanderer: { rows: [tee, hoodie, sweater, officeshirt, pajamas, pants, shorts, skirt, slacks, sneakers, slippers, beanie, bow, headphones, glasses, scarf, necklace, bowtie, bell, carpetponcho], extra: { hat: 0.35, eyew: 0.25, neck: 0.25 } }
+    meg:      { rows: [megjacket, longsleeve, cargo, pants, boots, steeltoe, cap, beanie, padbeanie, shades, scarf, padjacket, hazmat], extra: { hat: 0.45, eyew: 0.3, neck: 0.25 } }
+    survivor: { rows: [hoodie, sweater, jacket, padjacket, wirehood, pants, cargo, overalls, canvasskirt, boots, sneakers, beanie, padbeanie, cap, scarf, cape, necklace, carpetponcho, glasses, bntgvest, tarpponcho], extra: { hat: 0.4, eyew: 0.2, neck: 0.35 } }
+    wanderer: { rows: [tee, hoodie, sweater, officeshirt, pajamas, pants, shorts, skirt, slacks, sneakers, slippers, beanie, bow, headphones, glasses, scarf, necklace, bowtie, bell, carpetponcho, tarpponcho], extra: { hat: 0.35, eyew: 0.25, neck: 0.25 } }
     office:   { rows: [officeshirt, longsleeve, dress, slacks, longskirt, sneakers, boots, glasses, bowtie], extra: { hat: 0.05, eyew: 0.5, neck: 0.4 } }
     tbd:      { rows: [hoodie, wirehood, jacket, cargo, pants, boots, headphones, tophat, crown, partyhat, shades, bell, cape], extra: { hat: 0.7, eyew: 0.4, neck: 0.4 } }
     l5:       { rows: [] }   # Level 5's hand-cast residents keep their own clothes (scripts/lib/l5-people.js)
@@ -42,18 +42,18 @@ leveled:
   # what a job wears (Shelly, Nov 7: "disperse clothes/armors to existing npcs and make sure they make sense"): a role's rows replace its
   # faction's for the slots they cover; pats: fabrics it leans to (60%). Savi's picks.
   roles:
-    scout:     { rows: [jacket, padjacket, cargo, pants, boots, steeltoe, beanie, padbeanie, cap, shades, scarf], pats: [camo, canvas], extra: { hat: 0.65, eyew: 0.35, neck: 0.3 } }
-    guard:     { rows: [megjacket, padjacket, wirehood, cargo, steeltoe, boots, cap, padbeanie, shades], pats: [camo, canvas, leather], extra: { hat: 0.85, eyew: 0.5, neck: 0.05 } }
-    agent:     { rows: [megjacket, padjacket, cargo, pants, boots, steeltoe, cap, shades, scarf], pats: [camo, canvas], extra: { hat: 0.6, eyew: 0.45, neck: 0.15 } }
+    scout:     { rows: [jacket, padjacket, cargo, pants, boots, steeltoe, beanie, padbeanie, cap, shades, scarf, bntgvest], pats: [camo, canvas], extra: { hat: 0.65, eyew: 0.35, neck: 0.3 } }
+    guard:     { rows: [megjacket, padjacket, wirehood, cargo, steeltoe, boots, cap, padbeanie, shades, hazmat], pats: [camo, canvas, leather], extra: { hat: 0.85, eyew: 0.5, neck: 0.05 } }
+    agent:     { rows: [megjacket, padjacket, cargo, pants, boots, steeltoe, cap, shades, scarf, hazmat], pats: [camo, canvas], extra: { hat: 0.6, eyew: 0.45, neck: 0.15 } }
     captain:   { rows: [padjacket, jacket, cargo, slacks, steeltoe, boots, cap, shades, scarf], pats: [leather, canvas], extra: { hat: 0.9, eyew: 0.3, neck: 0.4 } }
     medic:     { rows: [longsleeve, apron, slacks, pants, sneakers, boots, glasses, cap], pats: [weave, canvas], extra: { hat: 0.15, eyew: 0.6, neck: 0.05 } }
-    trader:    { rows: [apron, sweater, jacket, overalls, pants, cargo, boots, sneakers, beanie, cap, scarf, glasses], pats: [plaid, denim, knit, canvas], extra: { hat: 0.5, eyew: 0.3, neck: 0.4 } }
+    trader:    { rows: [apron, sweater, jacket, overalls, pants, cargo, boots, sneakers, beanie, cap, scarf, glasses, bntgvest], pats: [plaid, denim, knit, canvas], extra: { hat: 0.5, eyew: 0.3, neck: 0.4 } }
     quarter:   { rows: [apron, padjacket, jacket, cargo, overalls, steeltoe, boots, cap, glasses], pats: [canvas, denim, leather], extra: { hat: 0.5, eyew: 0.4, neck: 0.1 } }
     keeper:    { rows: [sweater, apron, longskirt, pants, slippers, boots, scarf, glasses], pats: [knit, cable, floral], extra: { hat: 0.1, eyew: 0.5, neck: 0.5 } }
     clerk:     { rows: [officeshirt, longsleeve, slacks, longskirt, sneakers, glasses, bowtie], pats: [pinstripe, weave], extra: { hat: 0, eyew: 0.6, neck: 0.5 } }
     psychic:   { rows: [sweater, dress, longskirt, cape, scarf, slippers, flower, bow, glasses], pats: [velvet, floral, knit], extra: { hat: 0.5, eyew: 0.2, neck: 0.7 } }
-    pilgrim:   { rows: [hoodie, pants, longskirt, boots, beanie, carpetponcho, cape, scarf], pats: [knit, canvas], extra: { hat: 0.5, eyew: 0, neck: 0.8 } }
-    scavenger: { rows: [hoodie, wirehood, padjacket, cargo, overalls, boots, padbeanie, beanie, shades], pats: [camo, denim, canvas], extra: { hat: 0.6, eyew: 0.4, neck: 0.2 } }
+    pilgrim:   { rows: [hoodie, pants, longskirt, boots, beanie, carpetponcho, cape, scarf, tarpponcho], pats: [knit, canvas], extra: { hat: 0.5, eyew: 0, neck: 0.8 } }
+    scavenger: { rows: [hoodie, wirehood, padjacket, cargo, overalls, boots, padbeanie, beanie, shades, hazmat, tarpponcho], pats: [camo, denim, canvas], extra: { hat: 0.6, eyew: 0.4, neck: 0.2 } }
 rows:
   # slot   kind         name                  dr  kg    rarity    colours                                         (dr, kg, rarity: Savi's picks)
   - { id: tee,        slot: topw, kind: tee,        name: T-shirt,          dr: 0, kg: 0.2, rarity: common,   regular: true, colours: [e85d75, ffd93d, 4d96ff, 6bcb77, f4f1ea, 2b2b33], pats: [weave, stripes, breton, polka, camo, floral, ditsy] }
@@ -96,6 +96,10 @@ rows:
   - { id: cargo,       slot: botw, kind: pants,      name: Cargo pants,        dr: 2, kg: 0.8, rarity: common,   strict: true, level: 3,  colours: [6a6a4a, 5a5040], pats: [canvas, camo] }
   - { id: carpetponcho,slot: neck, kind: cape,       name: Carpet poncho,      dr: 2, kg: 1.2, rarity: uncommon, strict: true, level: 2,  colours: [b39a4e], crafted: true, pats: [canvas] }
   - { id: padbeanie,   slot: hat,  kind: beanie,     name: Padded beanie,      dr: 2, kg: 0.4, rarity: uncommon, strict: true, level: 5,  colours: [4a5a3a, 3a3a30], crafted: true, pats: [knit, camo] }
+  # Nov 12 lore pieces (Shelly: "with backrooms lore accuracy (wikidot) make new clothing using tripo and add to leveled lists"); Tripo models on the cats (cat-wardrobe.yml models). dr/kg/level: Savi's picks
+  - { id: hazmat,      slot: topw, kind: jacket,     name: M.E.G. hazmat jacket,  dr: 6, kg: 2.2, rarity: rare,     strict: true, level: 8,  colours: [e8c21a], pats: [weave] }   # Level 2/3 heat, smoke and fumes: M.E.G. issue
+  - { id: bntgvest,    slot: topw, kind: tank,       name: B.N.T.G. trader vest,  dr: 3, kg: 1.0, rarity: uncommon, strict: true, level: 4,  colours: [8a7a55, 5a6040], pats: [canvas] }   # the trading group's pocket vest, almond water bottles in the loops
+  - { id: tarpponcho,  slot: topw, kind: hoodie,     name: Wanderer's tarp poncho, dr: 2, kg: 0.6, rarity: common,  strict: true, level: 1,  colours: [4d7fb8, 6a8a5a], pats: [weave] }   # a cut tarp and rope, what a fresh wanderer stitches together
   - { id: canvasskirt, slot: botw, kind: longskirt,  name: Canvas long skirt,  dr: 2, kg: 0.9, rarity: uncommon, strict: true, level: 5,  colours: [6a5a3a], pats: [canvas] }
   - { id: padjacket,   slot: topw, kind: jacket,     name: Padded jacket,      dr: 5, kg: 2.0, rarity: uncommon, strict: true, level: 8,  colours: [5a4a3a, 3a4048], crafted: true, pats: [quilted, canvas, camo, leather] }
   - { id: wirehood,    slot: topw, kind: hoodie,     name: Wire-mesh hoodie,   dr: 6, kg: 2.4, rarity: rare,     strict: true, level: 12, colours: [6e6e64], crafted: true, pats: [canvas, camo] }
