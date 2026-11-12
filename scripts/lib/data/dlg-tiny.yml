@@ -1,0 +1,25 @@
+# Tiny's telepathic lines, mirrored from tiny.yml so art/vo/act.py records them. The game reads tiny.yml.
+l7-tiny:
+  circle:
+  - Soft. Pink. Still kicking.
+  - No teeth. No claws. Just you.
+  - Do you know what you are, in here?
+  - Swim faster. Go on.
+  gloat:
+  - Research won't help you swim.
+  - Take that back to your people.
+  noise:
+  - Stop that. Stop that!
+  - Loud little thing.
+  notice:
+  - Something fell in my water.
+  - I felt that. Every kick.
+  - Oh, a visitor.
+  shore:
+  - Stay up there, then. The water keeps.
+  - Clever. Legs. Enjoy them.
+  - You'll get thirsty.
+  strike:
+  - There.
+  - That's what you are.
+  - Again?
