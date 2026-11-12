@@ -96,3 +96,20 @@ hair:   # each carries a Hatted key (art/cat-wardrobe/hair-hatted.py): flat to t
   spiky: { m: '/cdn/value.c8423eab91b5493db94a7795cefe919a300e98772c7c00fc5ba511c12bfb0ac3.glb' }
   fluffy: { m: '/cdn/value.7cbebb6a07c5f7f53a90810e0251ec05f751eb355dba4f8e342e2d4be4bcc44b.glb' }
   undercut: { m: '/cdn/value.d3b64fac62bfe51787c44da9088326d791fdcfaaf51f9d307dd833444cd706ec.glb' }
+# the game's garments (scripts/lib/data/clothes.yml rows: loot, NPC outfits, what a player puts on) drawn on the new cats.
+# Shelly #224234: "the clothing all actually should be in the game world via npcs, loot like normal". A row id here reads as
+# the cat piece beside it; topp: a print the piece carries. Savi's picks where the cat set has no twin (a dress reads as a long tee).
+from:
+  topw: { tee: tee, tank: tank, longsleeve: longsleeve, pajamas: pajamas, dress: longsleeve, sweater: longsleeve, hoodie: hoodie, apron: tee,
+          jacket: jacket, megjacket: jacket, officeshirt: longsleeve, padjacket: jacket, wirehood: hoodie, platevest: tank, bellhop: jacket,
+          tailcoat: jacket, gown: longsleeve, maidapron: tee, hotelrobe: pajamas, seawatchsuit: jacket, oilskin: hoodie, abysshauberk: longsleeve,
+          chitinplate: tank, pgcoat: jacket, jerrytee: tee, pphoodie: hoodie, pghoodie: hoodie, gmhoodie: hoodie, vest: tank, blazer: jacket,
+          shirt: breton, crop: crop, breton: breton }
+  botw: { pants: pants, shorts: shorts, pjpants: pjpants, skirt: skirt, longskirt: skirt, overalls: pants, slacks: pants, cargo: pants,
+          canvasskirt: skirt, pinstripe: pants, velvetskirt: skirt, tarwaders: pants, jeans: pants, briefs: briefs, leggings: leggings }
+  shoes: { sneakers: socks, slippers: socks, boots: boots, steeltoe: boots, hotelslip: socks, ballastboots: boots, pitchboots: boots, heels: socks, socks: socks }
+  hat: { cap: cap, beanie: beanie, tophat: tophat, bow: bow, flower: flower, partyhat: partyhat, crown: crown, padbeanie: beanie,
+         opera: tophat, souwester: souwester, divehelm: divehelm, chitinhelm: chitinhelm, pgmask: bagmask, ppmask: shellmask, beret: beret }
+  topp: { jerrytee: jerry, pphoodie: ppsad, pghoodie: pgsmile, gmhoodie: gmsplit, pgcoat: pgcoat }
+# hats that close over the ears: the sculpted ears stay off and the head's own fold flat under them
+covers: [divehelm, chitinhelm, beanie, souwester]

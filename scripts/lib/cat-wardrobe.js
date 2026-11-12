@@ -15,7 +15,12 @@ const armAt = (B, s) => s <= 0 ? B.arm[0] + 0.012 : s <= 1 ? lerp(B.arm[0], B.ar
 const legAt = (B, l) => l <= 1 ? lerp(B.leg[0], B.leg[1], l) : lerp(B.leg[1], B.leg[2], l - 1)
 
 // a look with the default outfit filled in wherever a top or bottom is unpicked or 'none' (Shelly: "wheres the default outfit when theyre not wearing any apparel")
-const dressed = (sex, look) => { const l = { ...W.defaults[sex], ...(look || {}) }; for (const [k, c] of [['topw', 'top'], ['botw', 'bottom']]) if (!l[k] || l[k] === 'none' || !(W.models[l[k]] || (k === 'topw' ? W.tops : W.bottoms)[l[k]])) { l[k] = W.defaults[sex][k]; l[c] = W.defaults[sex][c] } return l }
+// a game garment (clothes.yml row id, from loot or an NPC roll) read as its cat piece (cat-wardrobe.yml from:)
+const fromGame = (look) => { if (!look || !W.from) return look; const l = { ...look }
+  for (const slot of ['topw', 'botw', 'shoes', 'hat']) { const k = l[slot], m = W.from[slot]; if (k && k !== 'none' && m?.[k] && m[k] !== k) l[slot] = m[k] }
+  if (!l.topp && W.from.topp?.[look.topw]) l.topp = W.from.topp[look.topw]
+  return l }
+const dressed = (sex, look) => { const l = { ...W.defaults[sex], ...(fromGame(look) || {}) }; for (const [k, c] of [['topw', 'top'], ['botw', 'bottom']]) if (!l[k] || l[k] === 'none' || !(W.models[l[k]] || (k === 'topw' ? W.tops : W.bottoms)[l[k]])) { l[k] = W.defaults[sex][k]; l[c] = W.defaults[sex][c] } return l }
 // the painted layers a look asks for, modelled garments folded to the layer drawn under them
 export function paintOf(sex, look) {
   const l = dressed(sex, look), out = { top: null, bot: null, sock: null }
@@ -112,7 +117,9 @@ export function catMorph(look) {
   else if (EAR_KEY[look?.ears]) m[EAR_KEY[look.ears]] = 1
   for (const k of Object.values(TAIL_KEY)) m[k] = 0
   if (TAIL_KEY[look?.tail]) m[TAIL_KEY[look.tail]] = 1
-  m.Hatted = W.models?.[look?.hat]?.hat ? 1 : 0   // hair presses flat to the skull under a fitted hat (art/cat-wardrobe/hair-hatted.py; Shelly's ruling: hair close, flat under hats)
+  const hk = fromGame(look)?.hat
+  m.Hatted = W.models?.[hk]?.hat ? 1 : 0
+  if (W.covers?.includes(hk)) m.Ear_Hide = 1   // a helmet or beanie closes over the ears: the head's own fold flat (the sculpted pair stays off, catChildren)   // hair presses flat to the skull under a fitted hat (art/cat-wardrobe/hair-hatted.py; Shelly's ruling: hair close, flat under hats)
   return m
 }
 // the Tripo garments a look wears, as skinned children of the cat
@@ -143,7 +150,7 @@ export function catChildren(sex, look) {
   }
   const ep = { ...skinParams(sex, look), fur: '', top: 0, bot: 0, sock: 0 }   // the fluff's own fur shader, plain: these ears carry no body UVs
   const ears = (part) => ({ color: part === 'fur' ? (look?.fur || '#f3c98a') : part === 'inner' ? '#f4a3c4' : (l.fluffc || look?.fur || '#fff4e6'), roughness: part === 'inner' ? 0.7 : 0.9 })   // plain tint on the white glb's named slots (every variant exports earFur/earInner/earTuft)
-  const eg = W.ears?.[EARS.includes(look?.ears) ? look.ears : 'upright']?.[sex]   // sculpted ears (art/cat-wardrobe/ears.py): fur outside, pink bowl, cream tuft
+  const eg = W.covers?.includes(fromGame(look)?.hat) ? null : W.ears?.[EARS.includes(look?.ears) ? look.ears : 'upright']?.[sex]   // sculpted ears (art/cat-wardrobe/ears.py): fur outside, pink bowl, cream tuft
   if (eg) out.push({ id: 'cw-ears', attachment: { skin: true }, model: { id: eg, forward: '+z', materials: {
     earFur: ears('fur'), earInner: ears('inner'), earTuft: ears('tuft') } } })
   const hk = look?.hair, hg = hk && (W.hair?.[hk]?.[sex] || Object.values(W.hair?.[hk] || {})[0])   // a hairstyle: one key, tinted its own colour
