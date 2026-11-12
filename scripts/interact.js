@@ -122,7 +122,7 @@ function refocus(ctx, force = false) {
       } else if (f.tag === 'container') {
         refill(ctx, it)
         const n = itemsOf(it.state?.items).length
-        info = { id: f.id, name: it.state?.name ?? 'Container', info: n ? `${n} item${n > 1 ? 's' : ''}` : 'empty', verb: 'Search', color: '#d9d3b8' }
+        info = { id: f.id, name: it.state?.name ?? 'Container', info: n ? `${n} item${n > 1 ? 's' : ''}` : 'empty', verb: it.state?.verb ?? 'Search', color: '#d9d3b8' }
         if (it.state?.lock) { const [sk, lv] = it.state.lock.split(':'), ok = (skillsOf(ctx.self.state)[sk] ?? 0) >= Number(lv); info.info = `Locked · ${SKN[sk]} ${lv}`; info.verb = sk === 'lockpick' ? 'Pick Lock' : (ok ? 'Unlock' : 'Locked:'); info.color = ok ? '#f2c14e' : '#e0644f' }
       } else {
         const dsc = describe(tokenOf(f.tag, it))

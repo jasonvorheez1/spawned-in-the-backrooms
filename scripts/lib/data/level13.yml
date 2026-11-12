@@ -45,3 +45,34 @@ foes:
     swipeMs: 1500       # Savi's pick
     swipeWindMs: 450    # Savi's pick
     lampOn: 0.35        # Savi's pick: a5's lamp as the shell lays it
+# ---- furnishing
+fridgeRestockS: 120        # a fridge emptied by hand is full again this many seconds later (Savi's pick)
+fridgeItems: [2, 4]        # how many things a stocked fridge holds
+# item tokens (scripts/lib/items.js, snacks.yml) and their weights
+fridgeLoot: { almond: 30, stillwater: 8, coke: 6, pepsi: 5, sprite: 4, drpepper: 4, snapple: 4, cherrycoke: 3, millerlite: 4, budweiser: 3, beans: 8, bread: 5, pizza: 5, lobby_wafer: 5, "meat:chicken": 4, "meat:spam": 5, "meat:sardines": 4 }
+tv: { light: 0.7, lightDistance: 4, gain: 0.12, maxDistance: 6, screen: [0.44, 0.34], screenAt: [0.12, 0.6, -0.315] }  # screenAt: x right of centre, y up, z out of the front
+tvLines:
+  empty: "Nobody lives here. The set is warm anyway, and the fridge is full."
+  tenant: "A game show with no contestants. Somebody left this on for company."
+  lurk: "Only snow. Something behind you is breathing in time with the hiss."
+  resident: "An old sitcom, the laugh track a little too slow. It would be easy to sit down."
+  chess: "A weather report for a town that is not on any map. Clear skies, forever."
+  bntg: "A B.N.T.G. notice card: free homes, hot water, friendly neighbours. Stay as long as you like."
+# models: id, forward (the axis the mesh was built facing), size = layout box [width, height, depth] with the front on -z
+models:
+  fridge:  { id: "/cdn/value.4d40a8ed7ce762a06f0fb88ddd88134751db31930524c9da8508b5e96562d755.glb", forward: "+x", size: [0.72, 1.7, 0.78] }
+  tv:      { id: "/cdn/value.e2bd79c11d09c667fa85d4156092e5ddcdf0e8f64e9a7672e7bffb7e2589ccd9.glb", forward: "+x", size: [0.92, 0.9, 0.63] }
+  sofa:    { id: "/cdn/value.e3bac760d95e24352729b7a778d467544edbbd0230f98be75c9166052dacd78d.glb", forward: "+x", size: [2.0, 0.84, 0.95] }
+  counter: { id: "/cdn/value.27f51ec179acf93205ad0223f36a6659b11450bc4f8c6a6be5c78d804de1324c.glb", forward: "+x", size: [2.4, 1.7, 0.95] }
+  bed:     { id: "/cdn/value.f0783df6cd52cf3b9095d3668baf356978f411628a2563292751f717375783ef.glb", forward: "+x", size: [1.28, 0.96, 2.0] }
+  dining:  { id: "/cdn/value.0a76741ca9f6a8c9f0d49d3eeeada193ee533ad28bbf237159283325ea29c201.glb", forward: "+x", size: [1.46, 1.02, 1.43] }
+  dishes:  { id: "/cdn/value.0cf409d09f55a61ef44229f4134b02239480a532862a7daad6ce168aefdc746c.glb", forward: "+x", size: [0.46, 0.24, 0.48] }
+  chess:   { id: "/cdn/value.cde2b6f8496b75de0f264f4f9c6917b90021096f88f3b735c77469edab5a5f2d.glb", forward: "+x", size: [0.4, 0.4, 0.1] }
+  tub:     { id: "/cdn/value.41d0f172f22f0963c0cdb6b958c4a3e95e6b3aa065b3c91c096683efc4c87a4b.glb", size: [0.9, 1.08, 1.6] }
+  toilet:  { id: "/cdn/value.28601a408e0ea5cc0d4ad5e63b60d0044db81cc693682addc38ae0e75b28cea5.glb", forward: "+x", size: [0.42, 0.75, 0.74] }
+  lamp:    { id: "/cdn/value.0871d1626b929961d73cb28c05f82070ad822c5cc2e6b8deec5046248fb4086d.glb", size: [0.42, 1.0, 0.72] }
+  rug:     { id: "/cdn/value.455dde0ca22a985f649dee005f80bad45966342485d248a0fa95d86fb0a2d2c3.glb", size: [2.4, 0.03, 1.52] }
+  plant:   { id: "/cdn/value.5c55541c98397f0fd38ea7e850e3e15e4fd78fd4a5951439cde327b41abe9e09.glb", size: [0.6, 0.85, 0.6] }
+  photos:  { id: "/cdn/value.572ad0fe124cdd180aec4d28d259719e1057e02d8cc6c54b996c7b22ada303e7.glb", forward: "+x", size: [0.55, 0.6, 0.16] }
+  can:     { id: "/cdn/value.8dbfe9caef376c3d74354e97aa627d7a842fdc981ef4f60ddfd2c24d34aea0fd.glb", size: [0.07, 0.125, 0.07] }
+tops: { counter: 0.92, table: 0.75 }   # where clutter sits
