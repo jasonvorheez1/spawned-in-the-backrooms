@@ -985,7 +985,7 @@ const hashPick = (str, arr) => arr[[...String(str)].reduce((h, c) => (h * 31 + c
 export const isNewCat = (l) => !HUMAN && MESH && speciesOf(l) === 'cat'
 export function catLook(l) {
   const sex = l?.sex === 'f' ? 'f' : 'm', o = {}
-  for (const k of ['fur', 'topw', 'botw', 'shoes', 'hat', 'top', 'bottom', 'shoec', 'hatc', 'topp', 'hairc', 'fluffc', 'inner']) if (l?.[k] != null && l[k] !== '') o[k] = l[k]
+  for (const k of ['fur', 'topw', 'botw', 'shoes', 'hat', 'neck', 'top', 'bottom', 'shoec', 'hatc', 'neckc', 'topp', 'hairc', 'fluffc', 'inner']) if (l?.[k] != null && l[k] !== '') o[k] = l[k]
   o.fur = o.fur || '#f2a65a'   // orange cat by default (Shelly: cat back orange, not cream)
   o.expression = CAT_FACE[l?.expression ?? l?.expr] ?? 'neutral'
   if (typeof l?.shadow === 'string' && l.shadow && l.shadow !== 'none') o.shadow = l.shadow   // eyeshadow

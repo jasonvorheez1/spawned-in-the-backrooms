@@ -30,8 +30,8 @@ leveled:
   # NPC wardrobes by faction: the rows a faction dresses from (ids below), and how often each optional slot is filled
   factions:
     meg:      { rows: [megjacket, longsleeve, cargo, pants, boots, steeltoe, cap, beanie, padbeanie, shades, scarf, padjacket], extra: { hat: 0.45, eyew: 0.3, neck: 0.25 } }
-    survivor: { rows: [hoodie, sweater, jacket, padjacket, wirehood, pants, cargo, overalls, canvasskirt, boots, sneakers, beanie, padbeanie, cap, scarf, carpetponcho, glasses], extra: { hat: 0.4, eyew: 0.2, neck: 0.35 } }
-    wanderer: { rows: [tee, hoodie, sweater, officeshirt, pajamas, pants, shorts, skirt, slacks, sneakers, slippers, beanie, bow, headphones, glasses, scarf, carpetponcho], extra: { hat: 0.35, eyew: 0.25, neck: 0.25 } }
+    survivor: { rows: [hoodie, sweater, jacket, padjacket, wirehood, pants, cargo, overalls, canvasskirt, boots, sneakers, beanie, padbeanie, cap, scarf, cape, necklace, carpetponcho, glasses], extra: { hat: 0.4, eyew: 0.2, neck: 0.35 } }
+    wanderer: { rows: [tee, hoodie, sweater, officeshirt, pajamas, pants, shorts, skirt, slacks, sneakers, slippers, beanie, bow, headphones, glasses, scarf, necklace, bowtie, bell, carpetponcho], extra: { hat: 0.35, eyew: 0.25, neck: 0.25 } }
     office:   { rows: [officeshirt, longsleeve, dress, slacks, longskirt, sneakers, boots, glasses, bowtie], extra: { hat: 0.05, eyew: 0.5, neck: 0.4 } }
     tbd:      { rows: [hoodie, wirehood, jacket, cargo, pants, boots, headphones, tophat, crown, partyhat, shades, bell, cape], extra: { hat: 0.7, eyew: 0.4, neck: 0.4 } }
     l5:       { rows: [] }   # Level 5's hand-cast residents keep their own clothes (scripts/lib/l5-people.js)
@@ -88,6 +88,7 @@ rows:
   - { id: scarf,      slot: neck, kind: scarf,      name: Scarf,            dr: 1, kg: 0.2, rarity: common,   colours: [c0392b, b6e04a, f3c64a, 3d5a98], pats: [knit, tartan, fairisle, stripes, plaid, houndstooth] }
   - { id: bowtie,     slot: neck, kind: bowtie,     name: Bow tie,          dr: 0, kg: 0.05,rarity: uncommon, colours: [c0392b, 2b2b33], pats: [weave, polka, plaid, velvet] }
   - { id: bell,       slot: neck, kind: bell,       name: Bell collar,      dr: 0, kg: 0.1, rarity: uncommon, colours: [f3c64a] }
+  - { id: necklace,   slot: neck, kind: necklace,   name: Heart necklace,   dr: 0, kg: 0.05,rarity: uncommon, colours: [f3c64a, d8d8e0, e86a92] }   # Shelly #224234: neckwear in loot and on npcs
   - { id: cape,       slot: neck, kind: cape,       name: Cape,             dr: 1, kg: 0.6, rarity: rare,     colours: [c0392b, 2b2b33], pats: [velvet, weave, plaid] }
   # --- new: scavenged and crafted outfits (strict colours make each its own garment; level = its leveled-list floor) ---
   - { id: officeshirt, slot: topw, kind: longsleeve, name: Office shirt,       dr: 1, kg: 0.3, rarity: common,   strict: true, level: 1,  colours: [eef0f5, dfe8f2], pats: [weave, pinstripe, stripes, gingham] }

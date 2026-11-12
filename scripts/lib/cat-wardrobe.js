@@ -17,7 +17,7 @@ const legAt = (B, l) => l <= 1 ? lerp(B.leg[0], B.leg[1], l) : lerp(B.leg[1], B.
 // a look with the default outfit filled in wherever a top or bottom is unpicked or 'none' (Shelly: "wheres the default outfit when theyre not wearing any apparel")
 // a game garment (clothes.yml row id, from loot or an NPC roll) read as its cat piece (cat-wardrobe.yml from:)
 const fromGame = (look) => { if (!look || !W.from) return look; const l = { ...look }
-  for (const slot of ['topw', 'botw', 'shoes', 'hat']) { const k = l[slot], m = W.from[slot]; if (k && k !== 'none' && m?.[k] && m[k] !== k) l[slot] = m[k] }
+  for (const slot of ['topw', 'botw', 'shoes', 'hat', 'neck']) { const k = l[slot], m = W.from[slot]; if (k && k !== 'none' && m?.[k] && m[k] !== k) l[slot] = m[k] }
   if (!l.topp && W.from.topp?.[look.topw]) l.topp = W.from.topp[look.topw]
   return l }
 const dressed = (sex, look) => { const l = { ...W.defaults[sex], ...(fromGame(look) || {}) }; for (const [k, c] of [['topw', 'top'], ['botw', 'bottom']]) if (!l[k] || l[k] === 'none' || !(W.models[l[k]] || (k === 'topw' ? W.tops : W.bottoms)[l[k]])) { l[k] = W.defaults[sex][k]; l[c] = W.defaults[sex][c] } return l }
@@ -125,7 +125,7 @@ export function catMorph(look) {
 // the Tripo garments a look wears, as skinned children of the cat
 export function catChildren(sex, look) {
   const l = dressed(sex, look), out = []
-  for (const [slot, ck] of [['topw', 'top'], ['botw', 'bottom'], ['shoes', 'shoec'], ['hat', 'hatc']]) {
+  for (const [slot, ck] of [['topw', 'top'], ['botw', 'bottom'], ['shoes', 'shoec'], ['hat', 'hatc'], ['neck', 'neckc']]) {
     const g = W.models[l[slot]]; if (!g?.[sex]) continue
     out.push({ id: 'cw-' + slot, attachment: { skin: true }, model: { id: g[sex], forward: '+z', ...(g.tint === false ? {} : { materials: { cloth: { kind: 'scripted', script: 'scripts/mat-cloth.js', color: l[ck] || '#ffffff', params: (slot === 'topw' && printOf(sex, l)) || { pat: g.pat || 'weave' } } } }) }, ...(slot === 'topw' ? { morph: chestOf(look) } : {}) })
   }
