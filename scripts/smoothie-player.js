@@ -4,7 +4,8 @@ import { critterSpec } from "./lib/critter-model.js"
 const CLIP = { talk: "cdn/clip-talk-loop.glb", point: "cdn/clip-point.glb", cheer: "cdn/clip-cheer-loop.glb", clap: "cdn/clip-clap-loop.glb", wave: "cdn/clip-wave-loop.glb" }
 function salBeat(ctx, clip, expr) { // Sal acts each beat: a clip over his idle and a face
   const sal = ctx.place.objects["bonus-sal"]; if (!sal) return
-  sal.anim = { ...(sal.anim || {}), idle: { clip: "cdn/clip-idle-loop.glb", loop: true, weight: clip ? 0 : 1 }, act: clip ? { clip: CLIP[clip], loop: clip !== "point", weight: 1 } : null }
+  sal.anim.idle = { clip: "cdn/clip-idle-loop.glb", loop: true, weight: clip ? 0 : 1 }
+  sal.anim.act = clip ? { clip: CLIP[clip], loop: clip !== "point", weight: 1 } : null
   const look = sal.state.look; if (look) { const m = critterSpec({ ...look, expr: expr || look.expr }).model; if (m) sal.model = m }
 }
 export const updateSchedule = { every: { seconds: 1 } }
