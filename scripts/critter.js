@@ -270,6 +270,7 @@ export function update(ctx) {
     ses.lookVer = 'human7' + STYLE_V // a STYLE_V bump re-dresses standing bodies too; refresh the body after the overalls layering fix
     const params = { species: l.species, sex: l.sex, ftype: l.ftype || 'oval', trait: l.trait || 'placid', blush: l.blush, nose: l.nose || undefined, eye: l.eye, topw: l.topw, botw: l.botw, shoes: l.shoes, hat: l.hat, eyew: l.eyew, neck: l.neck, top: l.top, bottom: l.bottom, shoec: l.shoec, hatc: l.hatc, neckc: l.neckc, expr: face, eyes: l.eyes, etype: l.etype, mtype: l.mtype, marks: l.marks, hair: l.hair, hairc: l.hairc, skin: l.skin || undefined, beard: l.beard, beardc: l.beardc } // skin rides the body key: without it a salon skin pick never rebuilt the body (Shelly, Nov 9)
     if (l.fur) params.fur = l.fur
+    for (const k of ['snout', 'ears', 'tail', 'shadow', 'inner', 'fluffc', 'fluff', 'chest', 'topp', 'botp', 'shoep', 'hatp', 'neckp']) if (l[k] != null && l[k] !== '') params[k] = l[k] // Nov 12 (Shelly: 'eyeshadow doesnt work, snout doesnt work'): these salon picks never reached the body or its rebuild key
     const worn = l.modelUrl ? { url: l.modelUrl } : l.model && C.models?.[l.model] // an imported model worn instead of the critter
     for (const [k] of C.sliders) if (k !== 'headS' && k !== 'tailS' && (l.sex === 'f' || (k !== 'hipS' && k !== 'bustS')) && Number(l[k]) && Number(l[k]) !== 1) params[k] = Number(l[k])
     ses.cachedParams = params
