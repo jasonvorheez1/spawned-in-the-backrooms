@@ -560,19 +560,6 @@ bc-juicebar:
   physics: {body: static, collider: box}
   rotation: {yaw: 90}
   tags: [bonus-court]
-bc-juicebar/signboard:
-  feetPosition: {x: 0, y: 1.73, z: -0.16}
-  id: bc-juicebar/signboard
-  material: {color: oklch(0.97 0.02 350), roughness: 0.5}
-  parent: bc-juicebar
-  primitive: {depth: 0.08, height: 0.58, kind: box, width: 1.56}
-bc-juicebar/signface:
-  castShadow: false
-  feetPosition: {x: 0, y: 2.02, z: -0.21}
-  id: bc-juicebar/signface
-  parent: bc-juicebar
-  rotation: {yaw: 180}
-  vector: "<svg viewBox='0 0 300 100' width='1.42m'><rect x='3' y='3' width='294' height='94' rx='10' fill='#fff4f8' stroke='#e2558f' stroke-width='5'/><text x='150' y='52' text-anchor='middle' font-family='display' font-size='40' fill='#e2558f'>Squeeze Play</text><text x='150' y='82' text-anchor='middle' font-family='sans-serif' font-size='17' fill='#2f8f9d'>FRESH JUICE · SMOOTHIES · $2.50</text></svg>"
 bc-kiddieride:
   castShadow: true
   feetPosition: {x: -8.3, y: 0, z: 9.6}
