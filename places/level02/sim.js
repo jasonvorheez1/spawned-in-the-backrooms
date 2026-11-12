@@ -364,6 +364,7 @@ export function tick(ctx) {
       if (s.col < 1) s.phase = "fallen";
     }
   }
+  if (!("l02-gw-v1-0" in ctx.place.objects) || !("l02-gd-cloth0" in ctx.place.objects)) layGrid(ctx); // Nov 12: the basement's shifting walls and crew dressing went missing in Shelly's room; lay back whatever is gone, the current layout kept
   landCase(ctx, s, now);
   joists(ctx, s.phase !== "clean");
   gridTick(ctx);
