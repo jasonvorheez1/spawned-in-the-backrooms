@@ -42,6 +42,7 @@ const MESH = { // kind: [model, offset y, scale, the mesh's material slot]
   pipe_scrap: ["/cdn/value.c2acc9e5cc7bdb121a5f3b529386a19df1bf55cd5184137d85ddb57d1978f7d9.glb", -0.006, 0, "tripo_material_38b8e37f-c1cb-4f2c-995d-80f28638caf6"],
   crowbar:    ["/cdn/value.26a60582c956ed9c19efc83291207f82a25034b07e680abcc16ab6d45a6c39de.glb", 0.025, 0, "tripo_material_6333f5c1-aa76-413a-8dd2-d7483635f47f"],
   bat:        ["/cdn/value.b9230b65f07cc34951b4d05d221181af8b81a9c9ff633c17ee867660dc01d4a1.glb", 0.0, 0, "tripo_material_ed96b284-b120-41ec-a6e8-b5a6c27428df"],
+  crook:      ["/cdn/value.e1c8a7a67bb1f12a8209b6c5232dcc822b30ee56bb39bd1f1247bd0fc2dad60d.glb", 0.0, 0, ""], // Tripo candy cane crook (Shelly: "improve the candy cane crook model"), fitted by art/weapons/build.py
   hatchet:    ["/cdn/value.d5b03aa12f7ca58bef143468cf20432b163cb8a0b43a9d4d72190c9228502761.glb", 0.012, 0, "tripo_material_be6f1bf1-a677-4411-ad71-24b6df60e92c"],
   fire_axe:   ["/cdn/value.4cfc50ea098875687d7a11fbd93a6b8adc191957807e0b002f30007a8eead02e.glb", 0.008, 0.62, "tripo_material_3cfa6f0b-ba20-4b5f-9185-3a08bf3967ed"],
   pistol:     ["/cdn/value.bd1a0ff99d2e34491523ee49853ebddcbe4ec10b685abfb66bab58f6db1cbb00.glb", -0.064, 0, "tripo_material_b831ab79-8033-43a9-83a4-7a26d07345fd"],

@@ -70,7 +70,7 @@ export function layXmas(ctx) {
   const ck = { x: R.x1 - 1.4, z: R.z0 + 4 };
   ctx.spawn("xmas-clock", { tags: ["xmas"], feetPosition: { x: ck.x, y: 0, z: ck.z }, rotation: { yaw: 90, roll: -9 }, primitive: geo("clock"), physics: { body: "static", collider: "box" } });
   lit("xmas-clock-light", ck.x - 0.6, 1.9, ck.z, "#ffbe70", X.clockLight, 4);
-  ctx.spawn("xmas-crook", { tags: ["xmas", "container"], feetPosition: { x: ck.x - 0.15, y: 0, z: ck.z + 0.45 }, rotation: { yaw: 90, roll: 14 }, primitive: geo("crook"), physics: { body: "static", collider: "box" }, state: { name: "Candy cane, oddly heavy", verb: "Take", items: "weapon:crook" } });
+  ctx.spawn("xmas-crook", { tags: ["xmas", "container"], feetPosition: { x: ck.x - 0.15, y: 0, z: ck.z + 0.45 }, rotation: { yaw: 90, roll: 14 }, model: { id: "/cdn/value.e1c8a7a67bb1f12a8209b6c5232dcc822b30ee56bb39bd1f1247bd0fc2dad60d.glb" }, physics: { body: "static", collider: "box" }, state: { name: "Candy cane, oddly heavy", verb: "Take", items: "weapon:crook" } });
   [[R.x0 + 2, R.z0 + 2.5, 2.1, true], [R.x0 + 3.2, R.z1 - 2, 1.7, false], [R.x1 - 2.4, R.z1 - 2.5, 2.3, true], [dx - 3, R.z0 + 8, 1.5, true], [dx + 3.4, R.z0 + 2.2, 1.9, false], [R.x0 + 1.2, R.z0 + 9, 2.0, false]].forEach(([x, z, h, hk], i) =>
     ctx.spawn(`xmas-cane-${i}`, { tags: ["xmas"], feetPosition: { x, y: 0, z }, rotation: { yaw: i * 67, roll: i % 2 ? 3 : -2 }, primitive: geo("cane", { h, hook: hk, r: 0.045 }), physics: { body: "static", collider: "cylinder" } }));
   [[dx - 2, R.z0 + 6, "#b01c22"], [dx - 1.4, R.z0 + 6.6, "#1f6a3a"], [dx + 2.5, R.z0 + 9, "#d4a02a"], [R.x1 - 2.2, R.z0 + 5.3, "#2a4aa8"], [R.x0 + 1.5, R.z0 + 6, "#d8d0c8"], [dx + 0.8, R.z1 - 3, "#b01c22"]].forEach(([x, z, col], i) =>
