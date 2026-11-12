@@ -15,7 +15,7 @@ const BUZZ = G + "sfx-exposed-live-wire-electrical-buzz-and-crackle.mp3";
 const SPARK = `fx
 pop spark burst=10..16 life=.2..0.5 v=sdir()*(1..2.5)+up(.5) size=.01..0.02 acc=grav() col=hdr(5,3.4,1.2) a=1>0 sz=$size r=sprite(ember,add,velocity,.02)`;
 export { DRIP, STATIC };
-const HARRIS = "/cdn/value.97df64b7780b0cbcc47337bf9f05244c32ddb5950724036e10f29076a92f253c.mp3", HARRIS_MS = 45500;
+const HARRIS = "/cdn/value.e08d2269e43a27187b456f25c25415a8282a384820411cdd5870a796a5bf6f6c.mp3", HARRIS_MS = 34000; // trimmed: the take repeated "if my wife ever… never mind" three times (Shelly: "talks about his wife on loop")
 
 export const ears = {
   press: (ctx, { by }) => {
