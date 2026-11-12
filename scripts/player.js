@@ -1040,7 +1040,7 @@ function viewmodel(ctx, moving, sprinting) {
   if (!ctx.self.isLocal) return
   const w = walkOf(ctx), s = ctx.self.state, kind = s.equipped ?? 'fists', l = s.look ?? {}
   if (s.sheathed && w.vm && ctx.now() - (s.sheathAt ?? 0) < 400) return // still lowering out of view
-  if (s.sheathed || s.climbing || s.mj?.seats || s.tp || s.menuOpen || s.arrive || s.arrivePending || ctx.self.place === 'intake') { if (w.vm) { ctx.destroy(w.vm); w.vm = null; w.vmKind = null; w.vmEq = null; w.plyRig = null } if (s.vmId) s.vmId = null; return } // holstered: the hands are down, out of view
+  if (s.sheathed || s.climbing || s.mj?.seats || s.tp || s.menuOpen || s.arrive || s.arrivePending || ctx.self.place === 'intake') { if (w.plyObj) { ctx.destroy(w.plyObj); w.plyObj = null } if (w.vm) { ctx.destroy(w.vm); w.vm = null; w.vmKind = null; w.vmEq = null; w.plyRig = null } if (s.vmId) s.vmId = null; return } // holstered: the hands are down, out of view
   // the look and tune only change by a press: the full key is rebuilt when the weapon changes or on the 4 Hz stats beat
   if (w.vm && w.vmEq === kind && !w.vmCheck) { if (w.plyWant && !w.plyRig && ctx.now() >= (w.plyNext ?? 0)) { w.plyNext = ctx.now() + 500; plyArm(ctx, w) } return }
   w.vmEq = kind; w.vmCheck = false
@@ -1051,6 +1051,7 @@ function viewmodel(ctx, moving, sprinting) {
   const arm = hb || ply ? { hidden: true } : { human: true, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v30' + JSON.stringify(s.vmTune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
+    if (w.plyObj) { ctx.destroy(w.plyObj); w.plyObj = null }
     w.plyRig = null
     const bk = baseOf(kind), g = HOLD[bk], wp = W[kind] ?? {}, gun = !!wp.ranged
     const child = g == null ? [] : [gun
@@ -1070,12 +1071,13 @@ function viewmodel(ctx, moving, sprinting) {
     // the worn model rides the viewmodel: shoulder just behind and below the eye, its right hand reaching the grip
     // human: the body turned to face the look, its right shoulder just right of and below the eye (female shoulder 1.19 m, male scaled by height)
     if (fpa) child.push({ id: 'fparm-r', feetPosition: s.vmTune?.aat ?? FP_AT(l.sex === 'f' ? 'f' : 'm'), rotation: s.vmTune?.arot ?? FP_ROT, model: { id: fpa.R, materials: skinM }, castShadow: false, visibleInFirstPerson: true, audience: 'local' }) // her own right arm (art/fp-arm), its fist closed on the grip at the viewmodel's origin
-    else if (cs) child.push({ id: 'plyarm', model: cs.model, morph: cs.morph, ...(cs.scale ? { scale: cs.scale } : {}), children: (cs.children ?? []).filter((c) => /topw/.test(c.id ?? '')), feetPosition: s.vmTune?.cat ?? { x: 0.02, y: (l.sex === 'f' ? -1.24 : -1.3) * (Number(l.heightS) || 1), z: 0.42 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'cdn/clip-idle-loop.glb', loop: 'loop', weight: 1 } } }) // her cat body behind the view, head and left arm folded away by plyArm, the right paw reaching the grip
+    else if (cs) { /* her cat body rides the camera, not the swinging viewmodel: spawned beside it below */ }
     else if (ply) child.push({ id: 'plyarm', model: ply, feetPosition: { x: 0.02, y: -1.62, z: 0.62 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
     w.vm = ctx.spawn({
       feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42, fov: 55 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
       primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: arm, ...(wp.muzzle ? { sockets: { muzzle: wp.muzzle } } : {}) }, children: child
     })
+    if (cs) w.plyObj = ctx.spawn({ id: 'plyarm', model: cs.model, morph: cs.morph, ...(cs.scale ? { scale: cs.scale } : {}), children: (cs.children ?? []).filter((c) => /topw/.test(c.id ?? '')), feetPosition: { attach: 'camera', x: s.vmTune?.cat?.x ?? 0.22, y: s.vmTune?.cat?.y ?? (-0.2 + (l.sex === 'f' ? -1.24 : -1.3) * (Number(l.heightS) || 1)), depth: s.vmTune?.cat?.depth ?? 0, fov: 55 }, scope: 'session', castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'cdn/clip-idle-loop.glb', loop: 'loop', weight: 1 } } }) // the shoulder holds still at the eye while the weapon sways and swings; the paw reaches it by IK
     w.vmKind = armKey
   }
   w.plyWant = !!ply && !hb; w.plyHuman = !!hb; w.plyTwo = wp_two(kind) // a two-handed weapon keeps the left arm: its hand reaches the fore-end
@@ -1101,7 +1103,7 @@ const FP_AT = (sx) => ({ x: FP_BC[sx].x + FP_SEAT.x, y: FP_BC[sx].y + FP_SEAT.y,
 function wp_two(kind) { return W[kind]?.two ? { y: W[kind].two[0], z: W[kind].two[1] } : null }
 export function plyBounds(ctx, p) { const b = ctx.getObject(p.id), v = ctx.getObject(p.id.split('/plyarm')[0]); ctx.log('[plyarm] bounds', JSON.stringify(b?.bounds ?? null), 'vm', JSON.stringify(v?.bounds ?? null), 'wfp', JSON.stringify(b?.worldFeetPosition ?? null), 'me', JSON.stringify(ctx.self.feetPosition), 'vis', b?.visible, b?.visibleInFirstPerson) }
 function plyArm(ctx, w) {
-  const body = ctx.getObject(w.vm + '/plyarm') ?? ctx.getObject('plyarm') ?? (ctx.getObject(w.vm)?.children ?? []).map((c) => (typeof c === 'string' ? ctx.getObject(c) : c)).find((c) => c?.model)
+  const body = (w.plyObj && ctx.getObject(w.plyObj)) || ctx.getObject(w.vm + '/plyarm') ?? ctx.getObject('plyarm') ?? (ctx.getObject(w.vm)?.children ?? []).map((c) => (typeof c === 'string' ? ctx.getObject(c) : c)).find((c) => c?.model)
   if (!w.plyLogged) { w.plyLogged = true; ctx.log('[plyarm] vm', w.vm, 'body', body?.id ?? null, 'pos', JSON.stringify(body?.worldFeetPosition ?? null), 'skel', body?.skeleton ? Object.keys(body.skeleton).length : 'none') }
   const names = body?.skeleton ? (Array.isArray(body.skeleton) ? body.skeleton : Object.keys(body.skeleton)).map((b) => (typeof b === 'string' ? b : b.name)) : null
   if (!names?.length) return
