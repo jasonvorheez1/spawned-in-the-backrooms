@@ -38,5 +38,7 @@ export function onTriggerEnter(ctx, other) {
   if (ctx.self.state.to === "level26" && !other.state.l26seen) other.state.l26via = "poster"; // early route: lands below deck (scripts/lib/l26-cut.js)
   bring(ctx, other, PAIR[key] ?? ctx.self.state.to); // the people walking with you come through too (scripts/lib/companion.js)
   carryAcross(ctx, other, PAIR[key] ?? ctx.self.state.to); // and what you hold (scripts/lib/carry.js)
+  // The remodel sim can go idle before it gets a tick with no players.
+  if (key === "l02-back" && !ctx.place.players.some((p) => p.id !== other.id)) ctx.place.state.emptyAt = ctx.now();
   ctx.cross(other, PAIR[key] ?? ctx.self.state.to);
 }
