@@ -10,6 +10,7 @@ import { vo, hasVoice } from './voices.js';
 // Numbers live in data/talk.yml and data/shops.yml.
 import T from './data/talk.yml'
 import SH from './data/shops.yml'
+import SNACKS from './data/snacks.yml'
 import W from './weapons.js'
 import { parseCloth, wornTokens } from './clothes.js'
 import { cndOf, armorCnd, vendorCost } from './condition.js'
@@ -104,6 +105,7 @@ export function sectionOf(t) {
   if (t.startsWith('cloth:')) return 'cloth'
   if (t === 'ammo' || t === 'shells') return 'ammo'
   if (['bandage', 'firstaid', 'kit', 'tape'].includes(t)) return 'aid'
+  if (SNACKS[t] && (SNACKS[t].hunger || SNACKS[t].thirst)) return 'food' // any snack or drink, rink treats included
   if (t.startsWith('meat:') || t === 'almond' || ['ration', 'royal_ration', 'beans', 'bar', 'lobby_wafer'].includes(t)) return 'food'
   return 'gear'
 }
