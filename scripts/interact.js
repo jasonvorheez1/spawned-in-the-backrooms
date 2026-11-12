@@ -22,6 +22,8 @@ import { takeToken, maxHp, maxSan, pullToken } from './player.js'
 import { derived, skillsOf, SKILLS } from './lib/stats.js'
 const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
 import { rollItem, rollItemL1, rollItemL2, spotCloth, poolOf, gateItems } from './lib/loot.js'
+// a corpse is named by what it was (Shelly Nov 12: "search (thing) not search body or search dead (thing)"): the shown name drops Dead/Wrecked and 's body; the stored name keeps them for the scripts that read it
+const plainName = (n) => String(n ?? 'Container').replace(/^(Dead|Wrecked) /i, '').replace(/'s (body|remains|corpse)$/i, '')
 
 const KINDS = ['almond', 'weapon', 'ammo', 'shells', 'container', 'npc', 'door', 'bench', 'usable', 'seat'] // usable: anything with its own press ear (state.name/verb/info) // what can be looked at and used
 const BIG_KINDS = new Set(['container', 'npc', 'door', 'bench', 'usable', 'seat'])
@@ -122,7 +124,7 @@ function refocus(ctx, force = false) {
       } else if (f.tag === 'container') {
         refill(ctx, it)
         const n = itemsOf(it.state?.items).length
-        info = { id: f.id, name: it.state?.name ?? 'Container', info: n ? `${n} item${n > 1 ? 's' : ''}` : 'empty', verb: it.state?.verb ?? 'Search', color: '#d9d3b8' }
+        info = { id: f.id, name: plainName(it.state?.name), info: n ? `${n} item${n > 1 ? 's' : ''}` : 'empty', verb: it.state?.verb ?? 'Search', color: '#d9d3b8' }
         if (it.state?.lock) { const [sk, lv] = it.state.lock.split(':'), ok = (skillsOf(ctx.self.state)[sk] ?? 0) >= Number(lv); info.info = `Locked · ${SKN[sk]} ${lv}`; info.verb = sk === 'lockpick' ? 'Pick Lock' : (ok ? 'Unlock' : 'Locked:'); info.color = ok ? '#f2c14e' : '#e0644f' }
       } else {
         const dsc = describe(tokenOf(f.tag, it))
@@ -180,7 +182,7 @@ export function openLoot(ctx, c) {
     const g = gateItems(ctx, c.state.items, s.level ?? 1, poolOf(ctx.self.place)); if (g !== c.state.items) c.state.items = g
   }
   const own = ownerOf(ctx, c)
-  s.lootOpen = c.id; s.lootName = (own ? `${c.state.ownerName ?? 'Someone'}'s · ` : '') + (c.state?.name ?? 'Container'); s.lootList = c.state?.items ?? ''; s.focus = null; s.lootStore = !!c.tags?.includes('storage') // storage (your fridge): you put things in too
+  s.lootOpen = c.id; s.lootName = (own ? `${c.state.ownerName ?? 'Someone'}'s · ` : '') + plainName(c.state?.name); s.lootList = c.state?.items ?? ''; s.focus = null; s.lootStore = !!c.tags?.includes('storage') // storage (your fridge): you put things in too
   containerPose(ctx,c,true)
   snd(ctx, 'container-open-rustle', 0.5)
 }
