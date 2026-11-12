@@ -66,6 +66,29 @@ if KIND == "top":
     P[hd, 2] = zc + (P[hd, 2] - zc) * 0.6
     print("hood verts", int(hd.sum()))
     region = lambda q: q[:, 2] > z_hem - 0.05
+elif KIND in ("vest", "poncho"):   # sleeveless (Nov 12 lore pieces): torso width from the body, never stretched to the cuffs
+    ba = bw[(np.abs(bw[:, 0]) > B["arm"][1] - 0.03) & (np.abs(bw[:, 0]) < B["arm"][1] + 0.03) & (bw[:, 2] > B["waist"] + 0.04) & (bw[:, 1] < 0.07)]; za = float(np.median(ba[:, 2]))
+    if KIND == "vest": z_hem, z_top, wide = B["top"][0] - 0.05, za + 0.045, None
+    else: z_hem, z_top, wide = B["top"][0] - 0.07, B["top"][1] + 0.09, B["arm"][1] + 0.01
+    P[:, 2] = z_hem + P[:, 2] / H * (z_top - z_hem)
+    zm = z_hem + (za - z_hem) * 0.45
+    bb = bw[(np.abs(bw[:, 2] - zm) < 0.025) & (np.abs(bw[:, 0]) < 0.2)]
+    gb = P[np.abs(P[:, 2] - zm) < 0.025]
+    tx = wide if wide else np.abs(bb[:, 0]).max() + 0.028
+    ref = np.abs(P[:, 0]).max() if wide else np.abs(gb[:, 0]).max()
+    P[:, 0] *= tx / ref
+    gy0, gy1 = gb[:, 1].min(), gb[:, 1].max(); by0, by1 = bb[:, 1].min(), bb[:, 1].max()
+    sy = ((by1 - by0) * 1.18 + 0.03) / (gy1 - gy0); P[:, 1] = (P[:, 1] - (gy0 + gy1) / 2) * sy + (by0 + by1) / 2
+    if KIND == "poncho":   # the hood lies flat on the upper back, as on a top
+        zc = B["top"][1] - 0.04
+        nb = bw[(bw[:, 2] > zc - 0.05) & (bw[:, 2] < zc + 0.02) & (np.abs(bw[:, 0]) < 0.1)]; yb = nb[:, 1].max() + 0.015; nw = np.abs(nb[:, 0]).max()
+        hd = (P[:, 2] > zc - 0.02)
+        P[hd, 1] = np.maximum(P[hd, 1], yb - 0.02 + (P[hd, 1] - yb).clip(0) * 0.35) if False else P[hd, 1]
+        P[hd, 0] = np.sign(P[hd, 0]) * np.minimum(np.abs(P[hd, 0]), nw * 1.2 + (np.abs(P[hd, 0]) - nw * 1.2).clip(0) * 0.25)
+        P[hd, 2] = zc - 0.02 + (P[hd, 2] - zc + 0.02) * 0.45
+        print("hood verts", int(hd.sum()))
+    half = tx; KIND = "top"
+    region = lambda q: q[:, 2] > z_hem - 0.05
 elif KIND == "skirt":
     z_top = B["waist"] + 0.012; z_bot = B["leg"][0] - (B["leg"][0] - B["leg"][1]) * 0.55
     P[:, 2] = z_bot + P[:, 2] / H * (z_top - z_bot)
