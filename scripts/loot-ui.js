@@ -7,7 +7,7 @@ import { describe, itemsOf, MEAT } from './lib/items.js'
 import L from './lib/data/level0.yml'
 import W from './lib/weapons.js'
 import { derived, carried, handling } from './lib/stats.js'
-import { parseCloth, wornTokens, wornDR, fullLook, SLOTS, SLOT_NAME, rowOf, CLOTHES } from './lib/clothes.js'
+import { parseCloth, wornTokens, wornDR, fullLook, SLOTS, SLOT_NAME, rowOf, rowData, CLOTHES } from './lib/clothes.js'
 import { cndOf, armorCnd, band, bandColor, wMul, drMul, repairAmount, isBroken } from './lib/condition.js'
 import { penOf } from './lib/combat.js'
 
@@ -327,7 +327,7 @@ const CSS = `<style>
 </style>`
 
 const owned = (s) => ['fists', ...(s.weapons ? s.weapons.split(',').filter(Boolean) : [])]
-const worn = (s, slot) => { const l = fullLook(s.look), c = CLOTHES.colourKey[slot]; return rowOf(slot, l[slot], c ? l[c] : '') }
+const worn = (s, slot) => { const l = fullLook(s.look), c = CLOTHES.colourKey[slot]; return rowData(slot, l[slot], c ? l[c] : '') }
 const maxHp = (lv, s) => L.hp + (lv - 1) * L.perLevel.hp + (s?.attr ? derived(s).hpBonus : 0)
 const cell = (k, v, wide, cls = '') => `<div class="${wide ? 'w' : ''} ${cls}"><span>${k}</span>${v}</div>`
 
