@@ -10,7 +10,7 @@ import { layTape } from "../../scripts/lib/level13-tape.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 export const cadence = "1s";
-const V = 3;
+const V = 4; // 4: breakable flat walls
 export const LETH = { startS: 45, fullS: 180, coolS: 20 }; // Savi's pick: lethargy starts after 45 s in one flat, full at 3 min, gone 20 s after you leave
 const WALL = { texture: "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.86 0.035 88)", roughness: 0.9 };
 const PROJECTWALL = { ...WALL, color: "oklch(0.84 0.04 133)" };
@@ -26,12 +26,13 @@ const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
 let n = 0; // only counts wall ids inside one lay()
 const STAY = new Map(); // player id -> { apt, s }: the sim's own working memory of who has sat where, how long
 // a wall along x (at z) or along z (at x), from a to b, with doorways cut at `gaps` (centres); a lintel closes each doorway's top
-function wall(ctx, along, at, a, b, gaps = [], mat = WALL, trimFace = 0) {
+function wall(ctx, along, at, a, b, gaps = [], mat = WALL, trimFace = 0, brk = false) {
   const cuts = gaps.slice().sort((p, q) => p - q), segs = []; let from = a;
   for (const g of cuts) { segs.push([from, g - UNIT.doorW / 2, 0, H]); segs.push([g - UNIT.doorW / 2, g + UNIT.doorW / 2, UNIT.doorH, H - UNIT.doorH]); from = g + UNIT.doorW / 2; }
   segs.push([from, b, 0, H]);
   for (const [p, q, y, h] of segs) { const len = q - p; if (len < 0.02) continue; const mid = (p + q) / 2;
-    ctx.spawn(`l13-w${n++}`, { feetPosition: along === "x" ? { x: mid, y, z: at } : { x: at, y, z: mid }, primitive: along === "x" ? box(len, h, T) : box(T, h, len), material: mat, physics: "static", castShadow: false });
+    ctx.spawn(`l13-w${n++}`, { feetPosition: along === "x" ? { x: mid, y, z: at } : { x: at, y, z: mid }, primitive: along === "x" ? box(len, h, T) : box(T, h, len), material: mat, physics: "static", castShadow: false,
+      ...(brk && y === 0 ? { tags: ["breakable"], state: { mat: "drywall", hp: 150, maxHp: 150 } } : {}) }); // Shelly Nov 12: walls break here too (scripts/lib/breakables.js wrecks them, they stand again in an hour)
     if (trimFace && y === 0) ctx.spawn(`l13-skirt-${n}`, {
       feetPosition: along === "x" ? { x: mid, y: 0, z: at + trimFace * T / 2 } : { x: at + trimFace * T / 2, y: 0, z: mid },
       primitive: along === "x" ? box(len, 0.12, 0.035) : box(0.035, 0.12, len),
@@ -47,9 +48,9 @@ function lay(ctx) {
   ctx.spawn("l13-ceil", { feetPosition: { x: 0, y: H, z: 5 }, primitive: box(90, 0.2, 36), material: CEIL, physics: "static", castShadow: false });
   const A = HALLS.A, B = HALLS.B, doors = (hall, s) => APTS.filter((a) => a.hall === hall && a.s === s && a.open).map((a) => a.door.x);
   // hall fronts (the flats' doorways cut through), back walls, end caps and the connector
-  wall(ctx, "x", -HALL, A.x0, A.x1, doors("A", -1), WALL, 1);
-  wall(ctx, "x", HALL, A.x0, -HALL, doors("A", 1), WALL, -1);
-  wall(ctx, "x", B.z - HALL, HALL, B.x1, doors("B", -1), PROJECTWALL, 1);
+  wall(ctx, "x", -HALL, A.x0, A.x1, doors("A", -1), WALL, 1, true);
+  wall(ctx, "x", HALL, A.x0, -HALL, doors("A", 1), WALL, -1, true);
+  wall(ctx, "x", B.z - HALL, HALL, B.x1, doors("B", -1), PROJECTWALL, 1, true);
   const r = RECEPTION;
   wall(ctx, "x", r.front, B.x0, r.x0, [], PROJECTWALL, -1);
   wall(ctx, "x", r.front, r.x1, B.x1, doors("B", 1), PROJECTWALL, -1);
@@ -63,7 +64,7 @@ function lay(ctx) {
   for (const [hall, s] of [["A", -1], ["A", 1], ["B", -1], ["B", 1]]) {
     const h = HALLS[hall], zf = h.z + s * HALL, zb = zf + s * (UNIT.main + UNIT.back), z0 = Math.min(zf, zb), z1 = Math.max(zf, zb);
     wall(ctx, "x", zb, h.ux, h.ux + 40, [], APTWALL);
-    for (let k = 0; k <= 5; k++) wall(ctx, "z", h.ux + k * UNIT.w, z0, z1, [], APTWALL);
+    for (let k = 0; k <= 5; k++) wall(ctx, "z", h.ux + k * UNIT.w, z0, z1, [], APTWALL, 0, k > 0 && k < 5);
   }
   for (const a of APTS) {
     const hx = a.door.x, face = a.zf - a.s * (T / 2 + 0.012); // the hall face of the front wall
@@ -74,8 +75,8 @@ function lay(ctx) {
       children: [{ feetPosition: { x: 0.4, y: 1, z: -a.s * 0.04 }, primitive: { kind: "sphere", radius: 0.03 }, material: { color: "oklch(0.7 0.08 85)", metalness: 0.9, roughness: 0.35 } },
         { feetPosition: { x: 0, y: UNIT.doorH, z: 0 }, primitive: box(UNIT.doorW + 0.16, 0.08, 0.07), material: TRIM }, { feetPosition: { x: -UNIT.doorW / 2 - 0.04, y: 0, z: 0 }, primitive: box(0.08, UNIT.doorH, 0.07), material: TRIM }, { feetPosition: { x: UNIT.doorW / 2 + 0.04, y: 0, z: 0 }, primitive: box(0.08, UNIT.doorH, 0.07), material: TRIM }] }); continue; }
     // an open flat: its inner walls, floors, a door left ajar, and its two lamps
-    wall(ctx, "x", a.zm, a.x0, a.x1, [a.x0 + UNIT.bedDoorX, a.x0 + UNIT.bathDoorX], APTWALL);
-    wall(ctx, "z", a.x0 + UNIT.bedW, Math.min(a.zm, a.zb), Math.max(a.zm, a.zb), [], APTWALL);
+    wall(ctx, "x", a.zm, a.x0, a.x1, [a.x0 + UNIT.bedDoorX, a.x0 + UNIT.bathDoorX], APTWALL, 0, true);
+    wall(ctx, "z", a.x0 + UNIT.bedW, Math.min(a.zm, a.zb), Math.max(a.zm, a.zb), [], APTWALL, 0, true);
     const fl = (id, r, mat) => ctx.spawn(`l13-fl-${a.id}-${id}`, { feetPosition: { x: r.cx, y: 0, z: r.cz }, primitive: box(r.x1 - r.x0 - T, 0.012, r.z1 - r.z0 - T), material: mat, receiveShadow: true, castShadow: false });
     const kitchenX = a.kind === "lurk" ? a.x1 : a.x0 + 4.62;
     const strip = (x0, x1) => ({ ...a.main, x0, x1, cx: (x0 + x1) / 2 });
