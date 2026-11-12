@@ -112,6 +112,7 @@ export function catMorph(look) {
   else if (EAR_KEY[look?.ears]) m[EAR_KEY[look.ears]] = 1
   for (const k of Object.values(TAIL_KEY)) m[k] = 0
   if (TAIL_KEY[look?.tail]) m[TAIL_KEY[look.tail]] = 1
+  m.Hatted = W.models?.[look?.hat]?.hat ? 1 : 0   // hair presses flat to the skull under a fitted hat (art/cat-wardrobe/hair-hatted.py; Shelly's ruling: hair close, flat under hats)
   return m
 }
 // the Tripo garments a look wears, as skinned children of the cat
