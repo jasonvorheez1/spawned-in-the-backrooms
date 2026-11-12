@@ -383,6 +383,9 @@ export function tick(ctx) {
   homesBack(ctx);
   breakablesOnce(ctx);
   const s = ctx.place.state;
+  if (s.homeMarkV !== 1) { s.homeMarkV = 1; for (const [id, m] of Object.entries(ARRIVALS)) if (id.startsWith("l5-home-") && !ctx.getObject(id)) ctx.spawn(id, { feetPosition: { x: m.x, y: 0.1, z: m.z }, rotation: { yaw: m.yaw } }); } // the kiosk's drop points, one inside each room
+  { const book = s.l5rent ?? {}; for (const p of ctx.place.players) { if (p.state.l5home) continue; const rid = Object.keys(book).find((r) => book[r]?.uid === p.userId); if (!rid) continue; // the ledger says it's theirs: their save forgot, so it gets the key back
+    book[rid] = { uid: p.userId, until: 9e15 }; s.l5rent = { ...book }; p.state.l5room = rid; p.state.l5home = rid; p.state.l5key = rid; p.state.l5until = 9e15; } }
   if (!s.salonPlacementV) {
     const o = ctx.place.objects["l5-vanderholt"];
     if (o) {
