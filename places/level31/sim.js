@@ -8,7 +8,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 50;
+const V = 51;
 const RAIL_GLB = "/cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb";
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
@@ -81,8 +81,8 @@ function shell(ctx) {
   w("e1", B.x1 + T / 2, (B.z0 + dz0) / 2, T, dz0 - B.z0); w("e2", B.x1 + T / 2, (dz1 + B.z1) / 2, T, B.z1 - dz1);
   ctx.spawn("l31-wall-e-lintel", { feetPosition: { x: B.x1 + T / 2, y: K.doorH, z: K.doorZ }, primitive: box(T, H - K.doorH, K.doorW), material: WALL, physics: "static", castShadow: false });
   ctx.spawn("l31-arch", { feetPosition: { x: B.x1 + T / 2, y: 0, z: K.doorZ }, // Tripo chrome-and-teal neon arch (drawn 0.31 x 1.8 x 1.42 m, opening along z) stretched to the doorway
-    model: "/cdn/value.bb1c9a9a967c29f467ae23a80e6b5ff9f2dc4d7362c94ba43ce18ee444957e25.glb", scale: { x: 1.6, y: 1.92, z: 2.8 }, castShadow: false,
-    children: [{ feetPosition: { x: -0.3, y: K.doorH + 0.32 }, rotation: { yaw: 90 }, vector: `<svg viewBox='0 0 300 60' width='2.6m'><text x='150' y='44' text-anchor='middle' font-family='display' font-size='40' font-weight='bold' letter-spacing='4' fill='#ecdaba'>ARCADE</text></svg>`, castShadow: false }] });
+    castShadow: false,
+    children: [{ id: "m", model: "/cdn/value.bb1c9a9a967c29f467ae23a80e6b5ff9f2dc4d7362c94ba43ce18ee444957e25.glb", scale: { x: 1.6, y: 1.92, z: 2.8 } }, { feetPosition: { x: -0.32, y: K.doorH + 0.45, z: 0 }, rotation: { yaw: 90 }, vector: `<svg viewBox='0 0 300 60' width='2.6m'><text x='150' y='44' text-anchor='middle' font-family='display' font-size='40' font-weight='bold' letter-spacing='4' fill='#ecdaba'>ARCADE</text></svg>`, castShadow: false }] });
   // the back room: its own floor, ceiling and three walls
   const KW = K.x1 - K.x0, KD = K.z1 - K.z0, kx = (K.x0 + K.x1) / 2 + T / 2, kz = (K.z0 + K.z1) / 2;
   ctx.spawn("l31-back-floor", { feetPosition: { x: kx, y: -0.3, z: kz }, primitive: box(KW + T, 0.3, KD), material: ARCADE_CARPET, physics: "static", receiveShadow: true, castShadow: false });
