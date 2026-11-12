@@ -82,7 +82,7 @@ export function layArcade(ctx) {
   for (const [id, x, z, color] of [
     ["racing", 46.5, -22, "#c4dceb"], ["pinball", 53.7, -25.8, "#ffe0bd"],
     ["entry", 47, -12, "#fff0d5"], ["uprights", 55, -16.8, "#c4e4dc"],
-    ["lanes", 54, -4, "#e8d9ff"], ["hockey", 50.6, 1.5, "#e5eafa"],
+    ["lanes", 54, -4, "#e8d9ff"], ["hockey", 49.8, -3.6, "#e5eafa"],
   ]) ctx.spawn("l31-arcade-light-" + id, {
     feetPosition: { x, y: H - 0.14, z },
     primitive: { kind: "box", width: 0.45, height: 0.08, depth: 1.3 },
@@ -115,7 +115,7 @@ export function layArcade(ctx) {
   // skee-ball: two lanes side by side, heads on the east wall
   for (let i = 0; i < 2; i++) M("skee-" + i, "skee", E - 1.7, -6.1 + i * 2.3, W, { name: "Skee-Ball lane " + (i + 1), verb: "Roll", res: "skee", pitch: 0.9 }, { lane: { texture: tex("grey-cork-lane-surface"), roughness: 0.7 } });
   M("wheel", "wheel", E - 0.55, -9.4, W, { name: "Big Prize Wheel", verb: "Spin", res: "wheel", pitch: 1.2 }, { screen: lamp("#ff3b30", 1.6), marquee: lamp("#ffd76a", 1.5), bulbs: lamp("#ffdf9a", 2.5) });
-  T("hockey", "hockey", 50.6, 1.5, 0, { name: "Air hockey", res: "hockey", pitch: 0.85 }, { min: { x: -0.575, y: 0, z: -1.05 }, max: { x: 0.575, y: 0.85, z: 1.05 } });
+  T("hockey", "hockey", 49.8, -3.6, 0, { name: "Air hockey", res: "hockey", pitch: 0.85 }, { min: { x: -0.575, y: 0, z: -1.05 }, max: { x: 0.575, y: 0.85, z: 1.05 } });
   // a row of upright games against the east wall
   const U = (id, x, z, yaw, state, side, body, scr, svg, extra = []) => M(id, "upright", x, z, yaw, { res: "upright", ...state },
     { screen: scr, marquee: lamp("#fff4d0", 0.5), side, body_red: body, cpanel: { color: body.color } },

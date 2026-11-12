@@ -8,7 +8,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 37;
+const V = 38;
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
 const P = (params) => ({ primitive: { kind: "scripted", script: PROPS, params }, material: { pbr: true } });
@@ -40,7 +40,7 @@ function starburst(ctx) {
   ctx.spawn("l31-starlight", { feetPosition: { x: 0, y: H - 0.6, z: 0 }, light: { kind: "point", color: "#ffc59a", intensity: 5, distance: 26 } });
   ctx.spawn("l31-ball", { feetPosition: { x: 0, y: H - 1.25, z: 0 }, primitive: { kind: "sphere", radius: 0.42, widthSegments: 18, heightSegments: 12 }, material: { texture: "cdn/texture-mirror-disco-ball-tiny-square-facets.png", color: "#ffffff", metalness: 1, roughness: 0.12 } });
   animate(ctx, "l31-ball", { "rotation.yaw": "+=360" }, { duration: 14, loop: true, easing: "linear" });
-  // the sweep: four coloured spots on one slow arm, so pools of colour slide across the wood
+  // The sweep: three coloured spots on one slow arm, so pools of colour slide across the wood
   ctx.spawn("l31-sweep", { feetPosition: { x: 0, y: H - 0.5, z: 0 }, children: [["#eaa383", 7, 3], ["#839cd3", -8, -4], ["#f3bc70", 3, -7]].map(([c, x, z]) => (
     { feetPosition: { x, y: 0, z }, light: { kind: "spot", color: c, intensity: 3.5, distance: 12, angle: 28, penumbra: 0.6, aim: { x: x * 0.4, y: -1, z: z * 0.4 } } })) });
   animate(ctx, "l31-sweep", { "rotation.yaw": "+=360" }, { duration: 22, loop: true, easing: "linear" });
@@ -89,6 +89,10 @@ function shell(ctx) {
   ctx.spawn("l31-wall-s-lintel", { feetPosition: { x: DOOR.x, y: 2.3, z: B.z1 + T / 2 }, primitive: box(1.2, H - 2.3, T), material: WALL, physics: "static", castShadow: false });
   // The party room and the snack bar share a service wall. Both face the public aisle.
   w("party-food", 34, 6, 16, T, { ...WALL, color: "#a9a69f" });
+  ctx.spawn("l31-snack-wall-rail", {
+    feetPosition: { x: 34, y: 0.95, z: 6.16 }, primitive: rbox(15.95, 0.095, 0.035),
+    material: { color: "#744d3e", roughness: 0.58 }, castShadow: false,
+  });
   w("cinema-left", -11.9, -24.7, T, 10.6, { ...WALL, color: "#66565d" });
   w("cinema-right", 11.9, -24.7, T, 10.6, { ...WALL, color: "#66565d" });
   for (const [x, width] of [[0, 10], [-10.6, 2.6], [10.6, 2.6]]) w("cinema-rear-" + x, x, -19.4, width, T, { ...WALL, color: "#68545b" });
@@ -117,6 +121,8 @@ function edges(ctx) {
   put("lk-s1", -37, SZ, 0, { kind: "lockers", cols: 5, hue: 200 });
   put("bn-s1", -23.8, B.z1 - 0.55, 0, { kind: "bench", len: 3.2 });
   put("bin-s2", -26.6, SZ, 0, { kind: "bin" });
+  put("arcade-wait1", 48, BACK.z1 - 0.55, 0, { kind: "bench", len: 2.8 });
+  put("arcade-wait2", 53, BACK.z1 - 0.55, 0, { kind: "bench", len: 2.8 });
   put("bn-n1", -22, B.z0 + 0.55, 180, { kind: "bench", len: 3.2 });
   put("bin-n1", -15, NZ, 180, { kind: "bin" });
   put("bn-n3", 19, B.z0 + 0.55, 180, { kind: "bench", len: 2.4 });
@@ -190,10 +196,21 @@ function party(ctx) {
       feetPosition: { x: x + dx, y: .022, z: z + dz }, rotation: { yaw }, model: { id: FG.chair, forward: "+z" }, physics: { body: "static", collider: "box" }, castShadow: false, tags: ["seat"], state: { name: "Party chair" },
     });
   });
+  ctx.spawn("l31-party-serving", {
+    feetPosition: { x: 34, y: 0.018, z: -29.24 }, primitive: rbox(3.6, 0.86, 0.85, 0.045),
+    material: { color: "#75483a", roughness: 0.78 }, physics: "static",
+    children: [{
+      feetPosition: { x: 0, y: 0.86, z: 0 }, primitive: rbox(3.69, 0.055, 0.91, 0.024),
+      material: { color: "#e8d8b1", roughness: 0.63 },
+    }],
+  });
   ctx.spawn("l31-party-banner", { feetPosition: { x: 34, y: 2.4, z: p.z0 + .03 }, rotation: { yaw: 180 }, castShadow: false,
     vector: "<svg viewBox='0 0 400 92' width='4m'><rect width='400' height='92' rx='4' fill='#702f42'/><path d='M14 12h372v68H14z' fill='none' stroke='#dfb883' stroke-width='2'/><text x='200' y='55' text-anchor='middle' fill='#f6e5c8' font-family='serif' font-size='29'>HAPPY BIRTHDAY</text></svg>" });
-  ctx.spawn("l31-party-light", { feetPosition: { x: 34, y: 4.1, z: -24 }, light: { kind: "point", color: "#ffe1bb", intensity: 5, distance: 12 } });
-
+  for (const [i, x] of [30.4, 36.8].entries()) ctx.spawn("l31-party-light" + i, {
+    feetPosition: { x, y: H - 0.12, z: -24 },
+    primitive: rbox(0.72, 0.08, 1.28, 0.04), material: glow("#ffe2ba", 0.95), castShadow: false,
+    children: [{ feetPosition: { x: 0, y: -0.2, z: 0 }, light: { kind: "point", color: "#ffe1bb", intensity: 4.5, distance: 10 } }],
+  });
 }
 
 export function tick(ctx) {

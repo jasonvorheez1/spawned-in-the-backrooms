@@ -54,7 +54,7 @@ const PAPER = `<svg viewBox='0 0 60 30' width='0.6m'><rect width='60' height='30
   <g fill='#374640' font-family='sans-serif' text-anchor='middle' font-weight='bold'>
     <text x='30' y='11' font-size='5'>TRAY RETURN</text><text x='30' y='21' font-size='4'>Clear your tray here</text>
   </g></svg>`;
-const DOORTXT = `<svg viewBox='0 0 600 90' width='0.6m'><text x='300' y='64' text-anchor='middle' font-size='62' font-family='sans-serif' font-weight='bold' fill='#f2f2ee'>Employees only!</text></svg>`;
+const DOORTXT = `<svg viewBox='0 0 600 90' width='0.6m'><text x='300' y='64' text-anchor='middle' font-size='62' font-family='sans-serif' font-weight='bold' fill='#f2f2ee'>STAFF ONLY</text></svg>`;
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
 
 export function layFood(ctx) {
@@ -90,7 +90,7 @@ export function layFood(ctx) {
   // backlit menu board on the east wall
   P("menu-box", { feetPosition: { x: 41.9, y: 2.4, z: 17 }, primitive: rbox(0.16, 2.0, 6.6), material: { color: "#1a1412", roughness: 0.6 } });
   P("menu-glow", { feetPosition: { x: 41.81, y: 2.45, z: 17 }, primitive: box(0.02, 1.9, 6.4), material: { color: "#8a7a5c", emissive: "#ffe2a8", emissiveIntensity: 0.02 } });
-  P("staff-light", { feetPosition: { x: 36.2, y: 2.6, z: 28.6 }, light: { kind: "point", color: "#ffd2a0", intensity: 7, distance: 7 } });
+  P("staff-light", { feetPosition: { x: 40.05, y: 2.6, z: 28.6 }, light: { kind: "point", color: "#ffd2a0", intensity: 7, distance: 7 } });
   P("menu", { feetPosition: { x: 41.79, y: 3.4, z: 17 }, rotation: { yaw: 90 }, vector: MENU });
   // Clear trays on the way back to the rink aisle.
   P("note", { feetPosition: { x: 29.05, y: 1.72, z: 6.16 }, rotation: { yaw: 180 }, vector: PAPER });
@@ -98,9 +98,9 @@ export function layFood(ctx) {
   M("bench-n1", "benchO", 35.6, 6.5, 180); M("bench-n2", "benchG", 39.4, 6.5, 180);
   M("condi", "condi", 40.85, 8.15, 90, {}, floorY);
   // the staff door on the south wall
-  P("door", { feetPosition: { x: 36.2, y: 0, z: 29.96 }, primitive: box(1.0, 2.1, 0.06), material: { color: "#7d8085", roughness: 0.55, metalness: 0.3 }, tags: ["usable"], state: { name: "Employees only", verb: "Open", info: "Locked. Nothing moves on the other side.", kind: "door" }, behavior: "scripts/l31-food.js",
+  P("door", { feetPosition: { x: 40.05, y: 0.018, z: 29.96 }, primitive: box(1.0, 2.1, 0.06), material: { color: "#7d8085", roughness: 0.55, metalness: 0.3 }, tags: ["usable"], state: { name: "Employees only", verb: "Open", info: "Locked from the other side.", kind: "door" }, behavior: "scripts/l31-food.js",
     children: [{ feetPosition: { x: 0, y: 0, z: 0.02 }, primitive: box(1.16, 2.18, 0.05), material: { color: "#3c3e42", roughness: 0.6 } }, { feetPosition: { x: -0.38, y: 1.0, z: -0.07 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.03, height: 0.06 }, rotation: { pitch: 90 }, material: { color: "#c9ccd0", metalness: 0.9, roughness: 0.3 } }, { feetPosition: { x: 0, y: 0.1, z: -0.035 }, primitive: box(0.9, 0.25, 0.01), material: { color: "#b9bcc0", metalness: 0.8, roughness: 0.4 } }] });
-  P("door-label", { feetPosition: { x: 36.2, y: 1.68, z: 29.925 }, rotation: { yaw: 0 }, vector: DOORTXT });
+  P("door-label", { feetPosition: { x: 40.05, y: 1.698, z: 29.925 }, rotation: { yaw: 0 }, vector: DOORTXT });
   // Tables sit west of the ordering lane. The two occupied seats face each other.
   const seats = [[0, -0.89, 180], [0, 0.89, 0], [-0.89, 0, -90], [0.89, 0, 90]];
   const tables = [[29.3, 14.1], [29.3, 22.4], [33.1, 14.1], [33.1, 22.4]];
