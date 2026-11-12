@@ -3,4 +3,5 @@ import { layArcade } from "./level31-arcade.js";
 import { layFood } from "./level31-food.js";
 import { layRental } from "./level31-rental.js";
 import { layShop } from "./level31-shop.js";
-export function layParts(ctx) { layArcade(ctx); layFood(ctx); layRental(ctx); layShop(ctx); }
+import { laySideB } from "./level31-sideb.js";
+export function layParts(ctx) { layArcade(ctx); layFood(ctx); layRental(ctx); layShop(ctx); laySideB(ctx); }

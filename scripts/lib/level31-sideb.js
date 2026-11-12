@@ -9,7 +9,7 @@ export const GLB = {
   stall: "/cdn/value.f7e6008506e6d256bf36d1f08245b4133e7dd14034aaa56def75706efb87180d.glb",
   cabinet: "/cdn/value.d75ae9bc77f161906cecfccf99fe925485c060e50d6cf18b26de36704a7122cf.glb",
   tables: "/cdn/value.ba18fd1befb4a4e07b0e56659d24b45c722dcb2b89b4bc3ed4c98f4f6f370f53.glb",
-  crate: null,
+  crate: "/cdn/value.edc3dbc2625d0cd95fa6298f7feec879b0363ba630c437dd962f7ea561952bd1.glb",
 };
 // target sizes in metres (my picks): width x height x depth the model is fitted into
 const FIT = { stall: [2.0, 1.35, 1.0], cabinet: [0.7, 1.85, 0.85], tables: [1.9, 0.95, 1.9], crate: [0.95, 0.6, 0.55] };
