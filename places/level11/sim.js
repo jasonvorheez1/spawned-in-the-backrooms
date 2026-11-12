@@ -30,7 +30,7 @@ const V = 139; // the market court and the central pedestrian route
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
 
-const ASPHALT = { ...T("weathered-grey-asphalt-road-with-fine-gravel", 4), color: "oklch(0.92 0.005 250)", roughness: 0.85 }; // lifted: the old tint read as a black void
+const ASPHALT = { ...T("weathered-grey-asphalt-road-with-fine-gravel", 0.25), color: "oklch(0.78 0.006 250)", roughness: 0.85 }; // lifted: the old tint read as a black void
 const SIDEWALK = { ...T("weathered-city-sidewalk-concrete-squares-scored-joints-gum-stains", 0.6), color: "oklch(0.95 0.006 80)", roughness: 0.88 }; // 0.6 tiles a metre: each square reads ~1.6 m, the joints show
 const CURB_MAT = { ...T("smooth-cold-poured-concrete-wall", 1), color: "oklch(0.72 0.02 85)", roughness: 0.65 };
 const STONE_TOWER = { ...T("large-grey-brick-wall-dusty-mortar", 3), color: "oklch(0.82 0.025 80)", roughness: 0.75 };
@@ -156,21 +156,21 @@ function lay(ctx) {
   for (let z = -78; z <= 72; z += 6) {
     if (z > -36 && z < -24) continue;
     if (z > 6 && z < 18) continue;
-    bx(`l11-line-y1-${z}`, -0.08, 0.06, z, 0.1, 0.01, 5.4, YELLOW_PAINT, { physics: undefined });
-    bx(`l11-line-y2-${z}`, 0.08, 0.06, z, 0.1, 0.01, 5.4, YELLOW_PAINT, { physics: undefined });
+    bx(`l11-line-y1-${z}`, -0.08, 0.152, z, 0.1, 0.01, 5.4, YELLOW_PAINT, { physics: undefined });
+    bx(`l11-line-y2-${z}`, 0.08, 0.152, z, 0.1, 0.01, 5.4, YELLOW_PAINT, { physics: undefined });
   }
 
   // White Dashed Lane Lines
   for (let z = -76; z <= 70; z += 6) {
     if ((z > -36 && z < -24) || (z > 6 && z < 18)) continue;
-    bx(`l11-dash-w-l-${z}`, -4.0, 0.06, z, 0.12, 0.01, 3.0, WHITE_PAINT, { physics: undefined });
-    bx(`l11-dash-w-r-${z}`, 4.0, 0.06, z, 0.12, 0.01, 3.0, WHITE_PAINT, { physics: undefined });
+    bx(`l11-dash-w-l-${z}`, -4.0, 0.152, z, 0.12, 0.01, 3.0, WHITE_PAINT, { physics: undefined });
+    bx(`l11-dash-w-r-${z}`, 4.0, 0.152, z, 0.12, 0.01, 3.0, WHITE_PAINT, { physics: undefined });
   }
 
   // Zebra Pedestrian Crosswalks at Intersection Z: 12
   for (const crossZ of [5.2, 18.8]) {
     for (let x = -7.0; x <= 7.0; x += 1.4) {
-      bx(`l11-crosswalk-${crossZ}-${Math.round(x * 10)}`, x, 0.06, crossZ, 0.8, 0.01, 3.2, WHITE_PAINT, { physics: undefined });
+      bx(`l11-crosswalk-${crossZ}-${Math.round(x * 10)}`, x, 0.152, crossZ, 0.8, 0.01, 3.2, WHITE_PAINT, { physics: undefined });
     }
   }
 
