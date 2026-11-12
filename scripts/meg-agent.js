@@ -542,6 +542,7 @@ export function update(ctx, dt) {
   const home = lead ? lead.feetPosition : (waiting ? s.waitAt : (stop0 ?? s.home ?? me.feetPosition));
   const t = s.follow && s.cstance === "hold" ? null : pickTarget(ctx, me, m); // hold fire: a companion that is told so starts nothing
   const tid = t && flat(t.feetPosition, home) < G.leash ? t.id : null;
+  if (!t && !s.follow && cowed(ctx, me, m, now, dt)) return; // a gun pointed at them (Shelly Nov 12): hands up, draw back, or run, by nerve and SPECIAL
   if (tid !== (m.barkT ?? null)) {
     const prev = m.barkT ? ctx.getObject(m.barkT) : null, prevDead = prev && (prev.state?.dead || (prev.state?.hp ?? 1) <= 0);
     if (prevDead && corpseOf(prev) && !VERMIN(prev) && !m.inspect && !s.follow) { m.inspect = { id: prev.id, x: prev.feetPosition.x, z: prev.feetPosition.z, at: now, phase: "walk", hostile: true }; prev.state.inspectUntil = now + 16000; } // what they killed: go and see it's dead
@@ -695,3 +696,49 @@ function work(me, m, clip) {
   me.anim.work = clip ? { clip, loop: /loop/.test(clip) ? "loop" : "once", weight: 1, blendIn: 0.4, blendOut: 0.4 } : null;
 }
 export function vanish(ctx) { const s = ctx.self.state; if (!s.dead && (s.hp ?? 1) > 0) return; ctx.destroy(ctx.self.id); } // a body that got back up stays
+
+// ---- a gun pointed at them (Shelly Nov 12: "depending on the bravery of the npc + stats/special stats they should either raise their hand up, pull their gun out or flee")
+// a player holding a ranged weapon out, within 18 m, the crosshair's heading on this body (a cone that narrows with distance) for 0.4 s, makes them choose once:
+// draw = brave or tough and armed with a gun: weapon up on you, held, never the first shot; flee = quick on their feet (AGI) or a coward with room to run;
+// hands = everyone else: frozen, hands raised, facing you. It lasts while the gun stays on them and 2.5 s after it drops. Savi's numbers.
+const HANDS_UP = { "mixamorig:LeftArm": { rotate: [0, 0, 150] }, "mixamorig:RightArm": { rotate: [0, 0, -150] }, "mixamorig:LeftForeArm": { rotate: [0, 0, 25] }, "mixamorig:RightForeArm": { rotate: [0, 0, -25] } };
+const COW = { range: 18, hold: 400, linger: 2500 };
+const COW_LINES = { hands: ["okay, okay! don't shoot!", "easy. easy. i'm not doing anything.", "hands are up, see? hands are up."], draw: ["you sure about that?", "point it somewhere else, friend.", "two can play that game."], flee: ["whoa, nope!", "not today!", "he's got a gun!"] };
+function aimedBy(ctx, me) {
+  const f = me.feetPosition;
+  for (const p of ctx.place.players) {
+    const ps = p.state ?? {}, eq = String(ps.equipped ?? "fists").split("~")[0];
+    if (ps.sheathed || eq === "fists" || !WP[eq]?.ranged || (ps.hp ?? 1) <= 0) continue;
+    const dx = f.x - p.feetPosition.x, dz = f.z - p.feetPosition.z, d = Math.hypot(dx, dz);
+    if (d > COW.range || d < 0.5) continue;
+    const yaw = (p.camera?.rotation?.yaw ?? (typeof p.rotation === "number" ? p.rotation : p.rotation?.yaw) ?? 0) * Math.PI / 180;
+    const off = Math.abs(((Math.atan2(-dx, -dz) - yaw) * 57.2958 + 540) % 360 - 180);
+    if (off < Math.max(4, Math.atan2(0.45, d) * 57.2958)) return p;
+  }
+  return null;
+}
+function cowed(ctx, me, m, now, dt) {
+  const s = me.state, C = m.cow;
+  if (now >= (m.cowScan ?? 0)) { m.cowScan = now + 150; const p = aimedBy(ctx, me); m.cowBy = p?.id ?? null; if (p) m.cowSeen = now; if (!p) m.cowFirst = 0; else m.cowFirst ||= now; }
+  if (!C) {
+    if (!m.cowBy || now - m.cowFirst < COW.hold) return false;
+    const p = ctx.place.players.find((q) => q.id === m.cowBy); if (!p) return false;
+    const a = attrsOf(s), nv = s.nerve ?? "steady", gun = !!WP[s.arm]?.ranged;
+    const grit = ({ brave: 0.6, steady: 0.3, coward: 0, frenzied: 1 })[nv] + (a.h + a.e - 10) * 0.04 + (a.l - 5) * 0.02;
+    const kind = gun && grit >= 0.5 ? "draw" : (a.a >= 7 || (nv === "coward" && a.a >= 5)) ? "flee" : "hands";
+    m.cow = { by: p.id, kind, at: now };
+    s.line = { t: COW_LINES[kind][Math.floor(ctx.random() * 3)], at: now, d: 2200 };
+    ctx.emit("damageNumber", { position: { x: me.feetPosition.x, y: me.feetPosition.y + 2.1, z: me.feetPosition.z }, text: kind === "hands" ? "SURRENDERS" : kind === "draw" ? "STANDS GROUND" : "PANICS", color: kind === "draw" ? "#ff8a5c" : "#ffd36a", size: 0.9 }, { audience: { player: p.id } });
+    if (kind === "flee") { const dx = me.feetPosition.x - p.feetPosition.x, dz = me.feetPosition.z - p.feetPosition.z, l = Math.hypot(dx, dz) || 1; m.flee = { x: me.feetPosition.x + dx / l * 14, y: me.feetPosition.y, z: me.feetPosition.z + dz / l * 14, until: now + 5000 }; m.cow = null; m.cowFirst = now + 6000; m.fearAt = now; return true; }
+    return cowed(ctx, me, m, now, dt);
+  }
+  const p = ctx.place.players.find((q) => q.id === C.by);
+  if (!p || (m.cowBy !== C.by && now - (m.cowSeen ?? 0) > COW.linger)) { // the gun went away: arms down, back to the day
+    if (C.kind === "hands") me.bones = baseBones(s.build, s.look ?? s.wear); else { aim(me, m, null); holster(ctx, me, m, false); }
+    m.cow = null; m.cowFirst = 0; return false;
+  }
+  stop(me, dt); gait(me, m, "idle"); face(me, p.feetPosition.x - me.feetPosition.x, p.feetPosition.z - me.feetPosition.z, dt);
+  if (C.kind === "hands") { if (!C.posed) { C.posed = true; aim(me, m, null); holster(ctx, me, m, false); me.bones = { ...baseBones(s.build, s.look ?? s.wear), ...HANDS_UP }; } }
+  else { holster(ctx, me, m, true); aim(me, m, p); }
+  return true;
+}
