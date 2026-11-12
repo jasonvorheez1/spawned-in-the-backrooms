@@ -80,8 +80,8 @@ test('workbench visibility uses a solid-body ray to the bench',()=>{
  expect(live(benchAvailable,()=>({distance:1}))(ctx,{craftBench:'bench'})).toBe(false)
 })
 test('craft menu explains exact outputs, shortages, and supports narrow screens',()=>{
- const s={...player({wire:0,nails:1}),hunger:100,thirst:100,l4task:{text:'<bad>',have:0,need:1}},html=craftUi({}, {state:s})
- expect(html).toContain('Makes 12 pistol rounds');expect(html).toContain('1 short');expect(html).toContain('CRAFT 1');expect(html).toContain('@media(max-width:650px)');expect(html).toContain('&lt;bad&gt;')
+ const s={...player({scrap_metal:1,springs:1}),craftStation:'ammo',hunger:100,thirst:100,l4task:{text:'<bad>',have:0,need:1}},html=craftUi({}, {state:s})
+ expect(html).toContain('Makes 12 pistol rounds');expect(html).toContain('Scrap metal 1/2 · 1 short');expect(html).toContain('>Craft</button>');expect(html).toContain('Materials on hand');expect(html).toContain('@media(max-width:650px)');expect(html).toContain('&lt;bad&gt;')
 })
 
 test('crafted weapons retain the maker skill-based condition',()=>{

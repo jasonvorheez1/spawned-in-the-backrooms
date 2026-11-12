@@ -1,3 +1,4 @@
+import { wristNav } from './lib/wrist-nav.js'
 // The character sheet (K), the carry-weight chip and the creature read-out. All from player.state
 // (written by scripts/stats.js): attr, skl, apts, spts, sheetOpen, target. Buttons send the 'stat' action.
 import { GROUPS, tierOf, tierColor, repOf, karmaOf, karmaTitle, karmaColor } from './lib/rep.js'
@@ -70,6 +71,7 @@ export function statsUi(ctx, player) {
   const dam = (w) => Math.round((w.damage + (s.level - 1) * L.perLevel.damage * (w.levelScale ?? 1)) * dmgMul(s, w))
   out += `<div id="sh" data-modal>
     <div class="hd"><h2>${s.creating ? 'Create character' : `Character · Level ${s.level}`}</h2>${s.creating ? `<div class="pt" style="color:#ffe2a8">LOWER ONE TO RAISE ANOTHER · TAG ${s.tagsLeft ?? 0} SKILLS</div>` : (apts > 0 || spts > 0) ? `<div class="pt" style="color:#ffe2a8;">Points available</div><style>@keyframes halBlink{50%{opacity:.3}}</style>` : ""}<div class="pt">ATTRIBUTE POINTS <b>${apts}</b></div><div class="pt">SKILL POINTS <b>${spts}</b></div>${tl > 0 ? `<div class="pt">TAG <b>${tl}</b> MORE</div>` : ''}</div>
+    ${s.creating ? '' : wristNav('sheet')}
     <div class="cols"><div class="col"><div class="sec">ATTRIBUTES</div>${attrRows}</div><div class="col"><div class="sec">SKILLS</div>${skillRows}</div></div>
     <div class="dv">
       <span>Max HP <b>${L.hp + (s.level - 1) * L.perLevel.hp + d.hpBonus}</b></span><span>Max sanity <b>${L.sanity + (s.level - 1) * L.perLevel.sanity + d.sanBonus}</b></span>

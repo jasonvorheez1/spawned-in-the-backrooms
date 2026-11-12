@@ -1,3 +1,4 @@
+import { wristNav } from './lib/wrist-nav.js'
 import { quickBar } from './lib/hud-quickbar.js'
 import { UI_THEME } from './lib/ui-theme.js'
 import { screen } from './lib/screen.js'
@@ -258,14 +259,16 @@ function compassRead(s, yaw, now) {
 function restUi(ctx, s) {
   let out = ''
   if (s.restFx && ctx.now() - s.restFx.at < 3500) out += `<style>@keyframes restF{0%{opacity:0}20%,70%{opacity:1}100%{opacity:0;visibility:hidden}}</style><div id="rest${s.restFx.at}" style="position:absolute;inset:0;background:#050403;display:flex;align-items:center;justify-content:center;animation:restF 3.4s forwards;color:#f2c14e;font-size:24px;letter-spacing:.12em;text-shadow:2px 2px #000">${s.restFx.text}</div>`
-  if (s.elevPanel) { // the elevator plate's buttons, clickable on screen
-    const B = 'margin:5px;width:58px;height:50px;border-radius:50%;font-size:20px;background:oklch(0.78 0.13 85);color:oklch(0.18 0.03 70);border:2px solid oklch(0.45 0.08 70)'
+  if (s.elevPanel) {
     const body = s.elevAsk
-      ? `<div style="font-size:15px;margin:6px 0 12px">Floor ${s.elevAsk}. The hotel does not go there. Are you sure?</div><button onclick="sendAction('elevdo',{f:'yes'})" style="${B};border-radius:4px;width:90px">Ride</button><button onclick="sendAction('elevdo',{f:'no'})" style="${B};border-radius:4px;width:90px">No</button>`
-      : `<div style="display:grid;grid-template-columns:repeat(4,auto);justify-content:center">${['1','2','3','4','5','6','7','8','9','10','11','12','13','66','382','B'].map((f) => `<button onclick="sendAction('elevdo',{f:'${f}'})" style="${B}">${f}</button>`).join('')}</div><button onclick="sendAction('elevdo',{f:''})" style="margin-top:10px;padding:6px 16px;background:none;color:oklch(0.9 0.1 85);border:1px solid oklch(0.8 0.13 85)">Close</button>`
-    out += `<div data-modal style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:auto"><div style="background:oklch(0.14 0.02 75 / .94);border:2px solid oklch(0.8 0.13 85);padding:16px 20px;color:oklch(0.9 0.1 85);text-align:center"><div style="font-size:13px;letter-spacing:.2em;opacity:.7;margin-bottom:8px">ELEVATOR</div>${body}</div></div>`
+      ? `<p>The hotel does not go to floor ${esc(s.elevAsk)}. Ride anyway?</p><div class="field-controls"><button class="primary" onclick="sendAction('elevdo',{f:'yes'})">Ride</button><button onclick="sendAction('elevdo',{f:'no'})">Back</button></div>`
+      : `<div class="field-controls floors">${['1','2','3','4','5','6','7','8','9','10','11','12','13','66','382','B'].map((f) => `<button aria-label="Floor ${f}" onclick="sendAction('elevdo',{f:'${f}'})">${f}</button>`).join('')}</div><button class="field-cancel" onclick="sendAction('elevdo',{f:''})">Close</button>`
+    out += `<div class="field-shade" data-modal><section class="field-dialog" aria-labelledby="elevator-title"><h2 id="elevator-title">Hotel elevator</h2>${body}</section></div>`
   }
-  if (s.waitOpen) out += `<div data-modal style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:auto"><div style="background:oklch(0.14 0.02 75 / .94);border:2px solid oklch(0.8 0.13 85);padding:18px 24px;color:oklch(0.9 0.1 85);text-align:center;min-width:300px;max-width:calc(100vw - 148px)"><div style="font-size:13px;letter-spacing:.2em;opacity:.7">HALOGEN · ${s.waitBed ? 'REST CYCLE' : 'WAIT'} · ${s.waitClock ?? ''}</div><div style="font-size:15px;margin:6px 0 12px">How many hours?</div><div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">${[1, 2, 4, 8, 12, 24].map((h) => `<button onclick="sendAction('waitdo',{h:${h}})" style="min-width:52px;padding:8px 10px;background:oklch(0.8 0.13 85);color:oklch(0.18 0.03 70);font-size:18px;border:none">${h}</button>`).join('')}</div><button onclick="sendAction('waitdo',{h:0})" style="margin-top:12px;background:none;border:1px solid oklch(0.8 0.13 85 / .5);color:inherit;padding:4px 14px">cancel ✕</button></div></div>`
+  if (s.waitOpen) {
+    const durations = [1, 2, 4, 8, 12, 24].map((h) => `<button onclick="sendAction('waitdo',{h:${h}})">${h} ${h === 1 ? 'hour' : 'hours'}</button>`).join('')
+    out += `<div class="field-shade" data-modal><section class="field-dialog" aria-labelledby="wait-title"><header><h2 id="wait-title">${s.waitBed ? 'Rest' : 'Wait'}</h2><span>${esc(s.waitClock ?? '')}</span></header><div class="field-controls durations">${durations}</div><button class="field-cancel" onclick="sendAction('waitdo',{h:0})">Cancel</button></section></div>`
+  }
   return out
 }
 const LIVE = `<style>@keyframes hudBreath{0%,100%{opacity:.92}50%{opacity:1}}@keyframes hudIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}#hud .bl,#hud .br{animation:hudIn .5s ease-out both,hudBreath 3.2s ease-in-out .5s infinite;filter:drop-shadow(0 0 4px rgba(255,170,40,.35))}</style>`
@@ -320,7 +323,7 @@ function journalUi(s, player, ctx) {
       : (badgeText || dist != null
         ? `<span style="font-size:10px;letter-spacing:.06em;color:rgba(255,182,66,0.7)">${esc(badgeText ? badgeText.toUpperCase() : '')}${badgeText && dist != null ? ' · ' : ''}${dist != null ? `${dist}m` : ''}</span>`
         : '')
-    return `<button data-tracked="${t?'true':'false'}" onclick="sendAction('qtrack',{id:'${q.id}'})" style="display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:${t ? 'rgba(255,182,66,0.07)' : 'transparent'};border:0;border-left:3px solid ${c};padding:8px 10px;margin:0 0 6px;font:inherit;color:inherit;cursor:pointer">
+    return `<button data-tracked="${!!t}" aria-pressed="${!!t}" onclick="sendAction('qtrack',{id:${esc(JSON.stringify(q.id))}})" style="display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:${t ? 'rgba(255,182,66,0.07)' : 'transparent'};border:0;border-left:3px solid ${c};padding:8px 10px;margin:0 0 6px;font:inherit;color:inherit;cursor:pointer">
       <span style="color:${c};font-size:13px;line-height:1.3">${t ? '◆' : '◇'}</span>
       <span style="flex:1">
         <span style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
@@ -328,7 +331,7 @@ function journalUi(s, player, ctx) {
           ${locTag}
         </span>
         <span class="q-step" style="display:block;font-size:12px;color:#fff2d4;opacity:.85;text-transform:none;line-height:1.35;margin-top:2px">${esc(q.step)}</span>
-      </span></button>`
+      </span><span class="q-track">${t ? 'Tracked' : 'Track'}</span></button>`
   }
   const doneRow = (q) => {
     const pl = q.place ? `<span style="font-size:9.5px;letter-spacing:.06em;opacity:.75;color:#b2e2a8">${esc(PLACE_NAMES[q.place] ?? q.place).toUpperCase()}</span>` : ''
@@ -345,9 +348,10 @@ function journalUi(s, player, ctx) {
   }
   return `<div id="journal" data-modal style="font-family:'Monofonto','Share Tech Mono','Geist Pixel',ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:#ffb642;position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;pointer-events:auto;z-index:60"><div class="journal-panel" style="width:min(520px,92vw);max-height:80vh;overflow:auto;background:oklch(0.14 0.02 75 / .96);border:1px solid rgba(255,182,66,0.55);box-shadow:0 0 30px #000;padding:16px 18px;text-shadow:0 1px 2px #000">
     <div class="journal-header" style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px"><span class="journal-title">Journal</span><span style="font-size:10px;letter-spacing:.18em;color:rgba(255,182,66,0.55)">Tracking ${tr.length}/${MAX_TRACK}</span><button class="journal-close" onclick="sendAction('journal')">Close · P</button></div>
+    ${wristNav('journal')}
     ${all.length ? all.map(row).join('') : '<div style="font-size:12px;color:rgba(255,182,66,0.55);text-transform:none;padding:10px 0">No active quests. Press P or Esc to close.</div>'}
-    ${done.length ? `<div style="display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 8px;border-top:1px solid rgba(255,182,66,0.22);padding-top:10px"><span style="font-size:12px;letter-spacing:.2em;color:#85c478">COMPLETED (${done.length})</span></div>${done.map(doneRow).join('')}` : ''}
-    ${failed.length ? `<div style="margin:16px 0 8px;border-top:1px solid rgba(255,182,66,0.22);padding-top:10px;font-size:12px;letter-spacing:.2em;color:#e8a49a">FAILED (${failed.length})</div>${failed.map((q) => `<div style="border-left:3px solid #d78176;padding:7px 10px;margin-bottom:6px;text-transform:none;color:#e8c3b7;font-size:12px"><b>${esc(q.name)}</b><div>${esc(q.text ?? 'Failed')}</div></div>`).join('')}` : ''}
+    ${done.length ? `<details class="journal-archive"><summary>Completed (${done.length})</summary>${done.map(doneRow).join('')}</details>` : ''}
+    ${failed.length ? `<details class="journal-archive"><summary>Failed (${failed.length})</summary>${failed.map((q) => `<div style="border-left:3px solid #d78176;padding:7px 10px;margin-bottom:6px;text-transform:none;color:#e8c3b7;font-size:12px"><b>${esc(q.name)}</b><div>${esc(q.text ?? 'Failed')}</div></div>`).join('')}</details>` : ''}
   </div></div>`
 }
 

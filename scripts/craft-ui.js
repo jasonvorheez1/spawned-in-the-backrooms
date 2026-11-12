@@ -1,3 +1,4 @@
+import { wristNav } from './lib/wrist-nav.js'
 // The needs bars (hunger, thirst) and the crafting menu. All from player.state (written by scripts/craft.js): hunger, thirst, craftOpen, craftTab, scrap.
 // Buttons send the 'make' action: {k:'make', id, n: 1 | 5 | 'max'}, {k:'tab', c}, {k:'close'}.
 // Layout: tabs across the top, the scrap you carry as chips, then recipes, the ones you can make first.
@@ -93,10 +94,10 @@ export function craftUi(ctx, player) {
     const per = st.bonusChance>0 ? `<em>${Math.round(st.bonusChance*100)}% bonus chance</em>` : ''
     const cls = st.ok ? '' : st.skillOk && st.benchOk ? 'no' : 'lk'
     rows += `<div class="row ${cls}"><div class="n">${esc(r.name)}${per}<small>${esc(r.desc)}</small><div class="result">Makes ${outputs(r)}</div>${makes(s,r)?`<small class="mk">${esc(makes(s,r))}</small>`:''}<div class="in">${ins}</div>${req ? `<div class="rq">${req}</div>` : ''}${!st.roomOk?'<div class="rq"><span class="bad">No room for the complete output</span></div>':''}</div>
-      <div class="bt"><button ${st.ok ? '' : 'disabled'} onclick="sendAction('make',{k:'make',id:'${id}',n:1})">CRAFT 1</button>${st.ok && mx >= 5 ? `<button class="s" onclick="sendAction('make',{k:'make',id:'${id}',n:5})">×5</button>` : ''}${st.ok && mx >= 2 ? `<button class="s" onclick="sendAction('make',{k:'make',id:'${id}',n:'max'})">MAX ${mx}</button>` : ''}</div></div>`
+      <div class="bt"><button ${st.ok ? '' : 'disabled'} onclick="sendAction('make',{k:'make',id:'${id}',n:1})">Craft</button>${st.ok && mx > 5 ? `<button class="s" onclick="sendAction('make',{k:'make',id:'${id}',n:5})">Make 5</button>` : ''}${st.ok && mx >= 2 ? `<button class="s" onclick="sendAction('make',{k:'make',id:'${id}',n:'max'})">Make ${mx}</button>` : ''}</div></div>`
   }
-  if (!rows) rows = `<div class="em">${tab === 'ready' ? 'Nothing you can make yet. The red parts are what you are short of.' : 'Nothing here.'}</div>`
+  if (!rows) rows = `<div class="em">${tab === 'ready' ? 'Nothing you can make yet. Check All for recipe requirements.' : 'Nothing here.'}</div>`
   return out + `<div id="cr" data-modal><div class="hd"><h2>${bench ? ({ cook: 'Cooking fire', ammo: 'Reloading bench' }[station] ?? 'Workbench') : 'Crafting'}</h2><span class="md">${bench ? 'This station only' : 'Everything · stations (B) unlock the rest'}</span></div>
-    <div class="tb">${tabs}</div><div class="sc">${stock}</div><div class="ls">${rows}</div>
-    <div class="ft"><span>${ready} READY OF ${all.length} · Batch limit ${CRAFT_LIMIT}</span><button onclick="sendAction('make',{k:'close'})">CLOSE (Y)</button></div></div>`
+    ${wristNav('craft')}<div class="tb">${tabs}</div><details class="craft-stock"><summary>Materials on hand</summary><div class="sc">${stock}</div></details><div class="ls">${rows}</div>
+    <div class="ft"><span>${ready} of ${all.length} recipes ready · Batch limit ${CRAFT_LIMIT}</span><button onclick="sendAction('make',{k:'close'})">Close · Y</button></div></div>`
 }
