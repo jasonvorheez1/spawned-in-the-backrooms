@@ -62,6 +62,14 @@ pop glow n=1 r=light(<.55,.7,1>,flick(7,.9)*12,8)`;
 
 // lamps: caged bulbs on porcelain sockets (scripts/l3-lamp-geo.js), warm sodium, a cold one here and there; a hard white light
 // at the end of a dead-end hall (the wiki's "darker hallways" photo); the blind halls keep their dead bulbs, unlit
+const LINE_M = "/cdn/value.d1efeae605a2c9023a53d3d0a0f1645c8391ee252fdb49045652bcee464fa736.glb", BELT_BOX = "/cdn/value.fdaeabdd9c65458d51cceffd4b35e3febc698b541f45788512e9ae4858ca7cdf.glb";
+function layLines(ctx) { // three 4 m Tripo stations end to end, belt along +X, and the runner that moves boxes on them
+  for (const l of LINES) {
+    const mid = (l.x0 + l.x1) / 2;
+    for (const dx of [-4, 0, 4]) ctx.spawn({ tags: ["l3line"], feetPosition: { x: mid + dx, y: 0, z: l.z }, rotation: { yaw: 90 }, model: LINE_M, layout: { box: { min: { x: -0.85, y: 0, z: -2 }, max: { x: 0.85, y: 1.8, z: 2 } } }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, castShadow: false });
+    ctx.spawn({ tags: ["l3line"], feetPosition: { x: mid, y: 0, z: l.z }, behavior: "scripts/l3-line.js", state: { len: 12, beltY: 0.8, box: BELT_BOX, n: 6 } });
+  }
+}
 function layLamps(ctx) {
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     const z = zoneOf(cx, cz), c = cellCenter(cx, cz), r = hash(cx, cz, 201), top = ceilingAt(cx, cz);
@@ -194,6 +202,12 @@ export function tick(ctx) {
     }
     s.layoutV = 2;
   }
+  if (s.seeded && s.lineV !== 2) { // Shelly "found a blocky": the Blender line becomes three Tripo stations with a running belt (scripts/l3-line.js)
+    s.lineV = 2;
+    const OLD = "/cdn/value.1bc56a08754ad99605d9605af31ac68640ddc6126fd6cea17b05fd46cc96bc52.glb";
+    for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id]; const m = o?.model; if ((typeof m === "string" ? m : m?.id) === OLD) ctx.destroy(id); }
+    layLines(ctx);
+  }
   if (!s.arrive2 && s.seeded) { s.arrive2 = true; ctx.spawn("l3-from-l2", { feetPosition: { x: BACK.x + 2.4, y: 0.1, z: BACK.z }, rotation: { yaw: -90 } }); } // where the Level 2 door lets you out
   if (!s.seeded) {
     s.seeded = true;
@@ -224,7 +238,7 @@ export function tick(ctx) {
     const SOLID = { physics: { body: "static", collider: "mesh" } };
     const BOTTLE_BOX = { box: { min: { x: -0.65, y: 0, z: -0.45 }, max: { x: 0.65, y: 0.34, z: 0.45 } } }; // the Tripo pile at real bottle size (Shelly: "found a blocky")
     for (const g of GENS) M3("generator", g.x, 0, g.z, { layout: { box: { min: { x: -1.5, y: 0, z: -0.9 }, max: { x: 1.5, y: 2.1, z: 0.9 } } }, ...SOLID });
-    for (const l of LINES) { M3("line", (l.x0 + l.x1) / 2, 0, l.z, SOLID); M3("bottles", l.x1 - 0.2, 0, l.z + 1.4, { rotation: { yaw: 40 }, layout: BOTTLE_BOX }); }
+    for (const l of LINES) { M3("bottles", l.x1 - 0.2, 0, l.z + 1.4, { rotation: { yaw: 40 }, layout: BOTTLE_BOX }); }
     for (const g of GENS) M3("bottles", g.x - 3.2, 0, g.z + 1.9, { rotation: { yaw: 110 }, layout: BOTTLE_BOX });
     for (const b of BLOCKS) if (b.type === "vault" && b.content === "statue") { const c0 = cellCenter(b.x0, b.z0); M3("statue", c0.x + S / 2, 0, c0.z + S / 2, { rotation: { yaw: 90 }, ...SOLID }); }
     for (const sp of SPARKS) { const [nx, nz] = D4[sp.d]; M3("wallbox", sp.wx + nx * 0.09, 0, sp.wz + nz * 0.09, { rotation: { yaw: Math.atan2(nx, nz) * 57.2958 } }); }
