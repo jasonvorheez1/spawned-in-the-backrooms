@@ -141,8 +141,8 @@ function layDress(ctx) {
   B("l02-gd-tray0", "rtray", cx(0, -0.9), cz(0, 0.9), 30); B("l02-gd-tray1", "rtray", cx(0, 0.6), cz(0, 0.4), -60);
   B("l02-gd-bucket0", "bucket", cx(0, 1.3), cz(0, 1.2), 0); B("l02-gd-pc0", "paintcan", cx(0, -1.5), cz(0, -1.4), 0); B("l02-gd-pc1", "paintcan", cx(0, -1.15), cz(0, -1.45), 40);
   put(ctx, "l02-gd-pc2", prop("paintcan", { x: cx(0, -1.32), y: BASE + H("paintcan"), z: cz(0, -1.42) }, 15, { physics: "static" }));
-  // (1,0) the chairs: nine identical chairs in rows, all facing the bare north wall
-  for (let i = 0; i < 9; i++) B(`l02-gd-chair${i}`, "wchair", cx(1, (i % 3 - 1) * 1.05), cz(1, -0.4 + Math.floor(i / 3) * 1.0), 180);
+  // (1,0) the chairs: nine identical chairs in rows, all facing the shut north wall (rows kept off the south doorways)
+  for (let i = 0; i < 9; i++) B(`l02-gd-chair${i}`, "wchair", cx(1, (i % 3 - 1) * 0.85), cz(0, -1.2 + Math.floor(i / 3) * 0.8), 180);
   // (2,0) crew lunch: cooler, thermos, folding chair, toolbox
   B("l02-gd-cooler", "cooler", cx(2, -1), cz(0, -0.6), 25); put(ctx, "l02-gd-thermos", prop("thermos", { x: cx(2, -1.05), y: BASE + H("cooler"), z: cz(0, -0.65) }, 0, { physics: "static" }));
   B("l02-gd-fchair", "fchair", cx(2, -0.1), cz(0, 1.1), 200); B("l02-gd-box", "red_toolbox", cx(2, 1.2), cz(0, -1.3), 75);
@@ -153,9 +153,9 @@ function layDress(ctx) {
   put(ctx, "l02-gd-tilebox", { feetPosition: { x: cx(3, -1.2), y: BASE, z: cz(0, 1.2) }, rotation: { yaw: 20 }, primitive: box(0.42, 0.22, 0.32), material: { color: "oklch(0.72 0.05 70)", roughness: 0.95 } });
   for (let i = 0; i < 6; i++) put(ctx, `l02-gd-tile${i}`, { feetPosition: { x: cx(3, -0.9 + (i % 3) * 0.31), y: BASE, z: cz(0, 0.75 + Math.floor(i / 3) * 0.31) }, rotation: { yaw: i * 7 }, primitive: box(0.3, 0.012, 0.3), material: BATHTILE });
   // (0,1) the first room: sawhorses and cut stock
-  B("l02-gd-saw0", "sawhorse", cx(0, 0.4), cz(1, -1.3), 0); B("l02-gd-lumber0", "lumber", cx(0, 0.3), cz(1, 1.4), 90 + 3);
+  B("l02-gd-saw0", "sawhorse", cx(0, 0.3), cz(1, 0), 0); put(ctx, "l02-gd-lumber0", prop("lumber", { x: cx(0, 0.3), y: BASE + 0.76, z: cz(1, 0.05) }, 3, { physics: "static" }));
   // (1,1) drywall going up: stack, ladder, bucket of mud
-  B("l02-gd-drywall", "drywall_stack", cx(1, 1.1), cz(1, 1.2), 90); B("l02-gd-ladder", "ladder", cx(1, -1.2), cz(1, -0.9), 30); B("l02-gd-mud", "bucket", cx(1, -0.3), cz(1, -1.4), 0);
+  B("l02-gd-drywall", "drywall_stack", cx(1, 0), cz(1, 0), 0); B("l02-gd-ladder", "ladder", cx(1, 0.1), cz(1, 0.65), 4); B("l02-gd-mud", "bucket", cx(1, 0.95), cz(1, -0.1), 0);
   // (2,1) the old lift deck in the middle room, the Reality Freshener on it
   const [fx, fz] = G.fresh;
   put(ctx, "l02-gd-deck", { feetPosition: { x: fx, y: BASE, z: fz }, primitive: box(2.2, 0.16, 2.2), material: { ...STEEL, metalness: 0.7, roughness: 0.45, texture: "cdn/texture-diamond-plate-steel-floor.png", wrap: "repeat", repeat: [1, 1] }, physics: "static" });
@@ -171,7 +171,7 @@ function layDress2(ctx, B, tarp) {
   put(ctx, "l02-gd-plans", { tags: ["usable"], feetPosition: { x: cx(0, 0.5), y: BASE + H("office_desk") + 0.003, z: cz(2, 1.15) }, rotation: { yaw: 4 }, primitive: box(0.6, 0.004, 0.42), material: { color: "oklch(0.62 0.09 250)", roughness: 0.9 },
     behavior: "scripts/l02-use.js", state: { kind: "read", name: "Floor plans", verb: "Read", text: "Twelve rooms on the plan. Every doorway drawn in pencil, rubbed out and drawn again. A note in the margin: \"Lamps stay ON. If they can see it, we don't touch it.\"" } });
   // (1,2) staged show home: a plant, a bench, nothing else, lit like a brochure
-  B("l02-gd-plant", "plant", cx(1, 1.3), cz(2, 1.3), 20); B("l02-gd-bench", "bench", cx(1, -0.2), cz(2, 1.3), 0);
+  B("l02-gd-plant", "plant", cx(1, 0.6), cz(2, 1.35), 20); B("l02-gd-bench", "bench", cx(1, -0.5), cz(2, 1.4), 0);
   // (2,2) lumber drop and a tarp
   B("l02-gd-lumber1", "lumber", cx(2, 0), cz(2, 1.2), 0); tarp("l02-gd-cloth2", cx(2, 0.4), cz(2, -0.6), 20, 2, 1.6);
   // (3,2) the crew exit: a door in the east wall, rough steps up to it, its sign
