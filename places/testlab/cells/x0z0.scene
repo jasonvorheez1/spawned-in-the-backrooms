@@ -18,7 +18,7 @@ tl-catdemo-m1:
   feetPosition: {x: -19, y: 0.05, z: 12}
   id: tl-catdemo-m1
   rotation: {yaw: -90}
-  state: {clip: Walk, look: {base2: true, bottom: "#2f3d5c", botw: pants, chest: 1, ears: wide, etype: slit, expression: neutral, eyes: amber, fluff: [nape], fur: "#b98a5e", hair: spiky, hairc: "#5a3b2a", hat: tophat, hatc: "#222222", mtype: smirk, neck: cape, neckc: "#2c3e8f", rv: 1, shoec: "#5a3a2a", shoes: boots, snout: long, top: "#b8975c", topp: pgcoat, topw: jacket}, sex: m}
+  state: {clip: Walk, look: {base2: true, bottom: "#2f3d5c", botw: pants, chest: 1, ears: wide, etype: slit, expression: neutral, eyes: amber, fluff: [nape], fur: "#b98a5e", hair: spiky, hairc: "#5a3b2a", hat: tophat, hatc: "#222222", mtype: smirk, neck: bell, neckc: "#ffffff", rv: 1, shoec: "#5a3a2a", shoes: boots, snout: long, top: "#b8975c", topp: pgcoat, topw: jacket}, sex: m}
   tags: [catdemo]
 tl-catdemo-m2:
   behavior: scripts/cat-demo.js
