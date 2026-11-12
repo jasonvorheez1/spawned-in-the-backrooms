@@ -17,7 +17,7 @@ R = {
   "souwester":  dict(fit="wrap", band=0.40, ease=1.04, tilt=-12, at=0.6, rim="wide", cut="auto"),   # cut: the chin cord under the brim
   "chitinhelm": dict(fit="wrap", band=0.40, ease=1.05, tilt=-4, orient=dict(yaw=-90)),
   "beret":      dict(fit="perch", w=1.12, seat=1.0, sink=0.045, tilt=-10, roll=10, dx=0.02),   # soft and wider than its band: sized whole, set down on the dome, rolled to one side
-  "divehelm":   dict(fit="enclose", ease=1.26, lift=0.07, orient=dict(yaw=-90)),
+  "divehelm":   dict(fit="enclose", ease=1.2, lift=0.05, tilt=-16, orient=dict(yaw=-90)),
   "tophat":     dict(fit="perch", w=0.70, seat=0.6, sink=0.012, tilt=-7),
   "crown":      dict(fit="perch", w=0.65, seat=0.5, sink=0.012, tilt=-6),
   "partyhat":   dict(fit="perch", w=0.40, seat=0.6, sink=0.012, tilt=-8, dx=0.07, roll=14),
@@ -164,7 +164,7 @@ for sex in ("f", "m"):
             xf(hat, M)
         elif fit == "enclose":
             a, b = bbox(hat); s = 2 * H["half"] * r["ease"] / (b.x - a.x); S = (s, s, s)
-            xf(hat, Matrix.Translation(Vector((0, ycen + r.get("dy", 0), H["top"] + r.get("lift", 0.04)))) @ Matrix.Scale(s, 4) @ Matrix.Translation(Vector((-(a.x + b.x) / 2, -(a.y + b.y) / 2, -b.z))))
+            xf(hat, Matrix.Translation(Vector((0, ycen + r.get("dy", 0), H["top"] + r.get("lift", 0.04)))) @ Matrix.Rotation(rad(r.get("tilt", 0)), 4, "X") @ Matrix.Scale(s, 4) @ Matrix.Translation(Vector((-(a.x + b.x) / 2, -(a.y + b.y) / 2, -b.z))))
         elif fit == "perch":
             a, b = bbox(hat); s = 2 * H["half"] * r["w"] / (b.x - a.x); S = (s, s, s)
             base = [v.index for v in hat.data.vertices if v.co.z < a.z + (b.z - a.z) * 0.08]
