@@ -9,7 +9,7 @@ SRC = "/workspace/hats"; OUT = "/workspace/hats/out"; BODY = "/workspace/catrev/
 EYE = {"f": 0.86, "m": 0.915}   # world z of the painted eye line on each body
 R = {
   "megoggles":      dict(w=1.06, gap=0.010, strap=True),
-  "asyncvisor":     dict(w=1.10, gap=0.030, dz=-0.03, strap=True, front=(1, -1)),
+  "asyncvisor":     dict(w=1.10, gap=0.030, dz=-0.03, strap=True, front=(0, 1)),
   "crackedglasses": dict(w=0.92, gap=0.012),
   "lobbyshades":    dict(w=0.94, gap=0.012),
   "almondspecs":    dict(w=0.86, gap=0.012),
