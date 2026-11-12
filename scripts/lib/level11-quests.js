@@ -211,7 +211,7 @@ export function handleDialogueQuest(ctx, p, npc, text) {
           text: "Quest Completed: Spotlight on Sedco · Split the vault salvage with Courier (+120 XP, +$75.00)",
         });
         return {
-          reply: "You actually got it. The actual drive. Okay. Half and half, like I said. Seventy-five, a med kit, a repair kit. Don't tell management I said you could.",
+          reply: "Put the drive under the parcels. Here's your half, seventy-five, and the two kits. If management asks, I ran the route myself.",
           mood: "happy",
         };
       } else {
@@ -255,7 +255,7 @@ export function handleDialogueQuest(ctx, p, npc, text) {
         text: "Quest Completed: The Paper Bird's Blessing · +95 XP, +$40.00, Fresh Provisions",
       });
       return {
-        reply: "Hear that? The locks. The coffee barge is coming in. Forty, rations, two bottles of the pure stuff. Come by for coffee. On me. Forever.",
+        reply: "Hear the lock filling? That's our barge coming in. Here's forty, the rations and two sealed bottles. First pot of coffee's on me.",
         mood: "happy",
       };
     }
@@ -285,7 +285,7 @@ export function handleDialogueQuest(ctx, p, npc, text) {
         text: "Quest Completed: Capital Infrastructure · +90 XP, +$35.00, Repair Kit, Battery",
       });
       return {
-        reply: "Gauge on Eleventh is back in the green. Quiet lines. Thirty-five, a toolkit, a battery. And when the streetlights cycle down, get indoors.",
+        reply: "Eleventh's back in the green. I'll take 11-B off the call sheet. Here's thirty-five, the repair kit and a battery. Get inside before the streetlights go down.",
         mood: "happy",
       };
     }

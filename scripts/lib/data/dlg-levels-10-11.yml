@@ -60,7 +60,7 @@ l10-meg-hale:
   gest: { wave: "Hello.", gift: "Logged. Thank you.", dance: "No.", nodance: "No.", insult: "Logged." }
 
 l10-meg-wren:
-  hi: "Hi! Mind the scythe. Don't dig deep, don't go near the scarecrows after dark, don't eat the purple wheat. Okay, hi!"
+  hi: "Scythe at your feet. If you're helping out, dig shallow and don't eat the purple wheat. We'll be inside before dark. The scarecrows stay out."
   back: ["Hey! Didn't dig deep, right?", "Hi hi!"]
   warm: "You! Come help me with the east rows. Kidding. Unless."
   cold: "Hi. Busy."
@@ -218,7 +218,7 @@ l11-commuter-faceling:
   gest: { wave: "Good morning.", gift: "For me? How kind.", dance: "In the street? Alright.", nodance: "I'll miss the train.", insult: "Good morning anyway." }
 
 l11-walker-1:
-  hi: "Yo, outta the way, outta the way, sorry! Oh hey. You need a runner? I know every shortcut. Every one. Some of 'em even go places."
+  hi: "Sorry, coming through. Need a parcel across town? Give me the address. I can usually beat the lights."
   back: ["Yo! Quick, I'm late!", "Hey hey, still alive!"]
   warm: "My guy! Okay, two minutes, go."
   cold: "Can't stop."
@@ -290,7 +290,7 @@ l11-walker-3:
   gest: { wave: "Yeah.", gift: "Huh. Thanks.", dance: "Ha. No.", nodance: "No.", insult: "Yeah yeah." }
 
 l11-realty-agent:
-  hi: "Mara, B.N.T.G. Realty. Every property in the Capital, every title, every key. Are you looking to buy? You look like you're looking to buy."
+  hi: "Mara, B.N.T.G. Realty. Looking for a place? I've got the keys with me if you want to see one."
   back: ["Back! Ready to sign?", "Hello again, future homeowner."]
   warm: "My favourite client. Sit. The green house is still available. It's always available. For you."
   cold: "Buying or browsing?"
@@ -339,7 +339,7 @@ l11-tm-clerk:
   gest: { wave: "Hey.", gift: "Is it a sandwich? Close enough.", dance: "In the aisle? Sure.", nodance: "Customers.", insult: "Banned. Kidding. Mostly." }
 
 l0-bntg-kade:
-  hi: "B.N.T.G. Acquisitions. Kade. I don't sell, I buy, and I hire. You look like you can hold a torch and not drop it. Maybe."
+  hi: "Kade. B.N.T.G. Acquisitions. I'm paying for a runner who can work in the dark. You looking for a job?"
   back: ["You. Still breathing. Useful.", "Back for work?"]
   warm: "Good, my reliable one. Sit, we'll talk numbers."
   cold: "Talk money or go."
@@ -363,7 +363,7 @@ l0-bntg-kade:
   gest: { wave: "Hm.", gift: "A gift? I'll invoice you for my gratitude.", dance: "No.", nodance: "No.", insult: "Priced in." }
 
 l61-sal:
-  hi: "Hey hey! Welcome to the Snackrooms! You hungry? You're hungry. Everyone who walks in here is hungry. Grill's hot."
+  hi: "Grab a stool. I've got burgers on the grill, and the fryer just came up to heat."
   back: ["My regular! The usual?", "Back for more? Good, good."]
   warm: "Ah! My favourite. Extra cheese, on the house."
   cold: "Order's up there. Pay at the counter."
@@ -371,7 +371,7 @@ l61-sal:
   walk: "Your burger's getting cold!"
   ask:
     - q: "Is the food really free?"
-      a: "Free? Pal, everything here's free. Burgers, fries, shakes. That's the problem. Nobody ever leaves hungry, and nobody ever leaves."
+      a: "Yeah. Burgers, fries, shakes. Never charged anybody for a thing. You ever see somebody finish eating and make it back out the door?"
     - q: "Who runs this place?"
       a: "The staff with no faces. They don't talk. They don't need to. They know your order before you do."
   barks:
@@ -451,7 +451,7 @@ bonus-tom:
   barks: { idle: ["Pie's up!", "Coffee, hot!", "Booth four's free."], hi: ["Welcome!", "Hey!"] }
   gest: { wave: "Hey hey!", gift: "On the house next time.", dance: "Jukebox! Go!", nodance: "Orders up!", insult: "No pie for you." }
 bonus-andrew:
-  hi: "Andrew's Furniture. Every couch I sell, I sat on first. That's a promise, not a warning."
+  hi: "Andrew's Furniture. Go on, sit on it. The one by the door sags a bit on the left."
   back: ["Back for a chair?", "Hello again!"]
   bye: "Sit on something nice!"
   ask:

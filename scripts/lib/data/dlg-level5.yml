@@ -45,7 +45,7 @@ l5-dolores:
   ask:
     - q: "I'm hurt. Can you feed me up?"
       do: heal
-      a: "Sit. Eat. All of it. You see? Colour in your cheeks. Food fixes. Nobody believes me. Food fixes."
+      a: "Start with the broth. Small sips. If you can keep that down, I'll bring you the rest."
     - q: "What's the feud with the maid?"
       a: "She took my ladle. The big one. She says she didn't. The ladle says otherwise. I find it in her cart, I cook her."
     - q: "Where does the food come from?"
@@ -64,7 +64,7 @@ l5-dolores:
   gest: { wave: "Hi! Eat!", gift: "For me? Sit. I feed you double.", dance: "Ha! Come here, I lead!", nodance: "The pot!", insult: "No dessert for you." }
 
 l5-pip:
-  hi: "Oh! Hello! Bags? No bags? That's fine, that's fine. Welcome to the Homely. Don't take the lift past twelve. Sorry. Welcome!"
+  hi: "Can I take your bag? Oh, you're keeping it. If you're using the lift, get out at twelve. Promise me you will."
   back: ["Oh, you're back! That's good. That's really good.", "Hi! You came back down!"]
   warm: "Oh, it's you! Okay, okay, I can relax a bit now."
   cold: "Oh. H-hi."
@@ -122,7 +122,7 @@ l5-odette:
   gest: { wave: "Mm. Bonjour.", gift: "Mm. Merci.", dance: "Not in the ballroom.", nodance: "Non.", insult: "I've cleaned worse." }
 
 homely-barnaby:
-  hi: "Good evening, sir or madam. Barnaby, at your service. May I take your coat? You have no coat. Then may I take your worries?"
+  hi: "Barnaby, at your service. If you're waiting for someone, I'll put a chair by the door."
   back: ["Welcome back. Your usual chair is free.", "Delighted to see you again."]
   warm: "A distinguished returning guest. The good chair, I insist."
   cold: "Good evening. How may I assist you. Briefly."
@@ -229,7 +229,7 @@ l5-vesna:
   gest: { wave: "Hm. Hello.", gift: "Thank you. I'll keep it for the ones who come back.", dance: "Ha. A short one.", nodance: "Not today.", insult: "Funny. Come to the boiler, say it there." }
 
 l5-tobias:
-  hi: "Hi! Job board's there, rats by the boiler, five rats, paid in water. Do you think the hotel can hear us? Sorry. Hi."
+  hi: "The boiler crew needs five rats gone. Pay's in water. The job's on the board. Let's talk about it away from the vents."
   back: ["Oh, you! Rats! I mean, hi!", "Back for a job? Or. Just talking. Talking's fine."]
   warm: "Okay, good, a friend. I need to tell you a theory."
   cold: "Job board's there."

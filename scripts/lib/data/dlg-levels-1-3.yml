@@ -14,7 +14,7 @@ meg-ale:
     - q: "How do I get across this level without dying?"
       sk: survival 25
       a: "Walls on your shoulder, not your back. Count the lights. When one starts ticking, you've got about a minute before the block goes dark, and the dark is when they hunt."
-      fail: "You're asking that out loud, in the open. That's how. That's how you die."
+      fail: "Get out of the middle of the hall. Then ask me again, quieter."
     - q: "There's someone calling hello down the halls."
       a: "There's always someone calling hello. Mine sounded like my brother for a week. My brother's in Ohio."
       then:
@@ -59,7 +59,7 @@ meg-ortiz:
   ask:
     - q: "Can you patch me up?"
       do: heal
-      a: "Hold still. This will sting, and then it will sting more, and then you'll thank me. There. Don't pick at it."
+      a: "Hold the lamp closer. I'm rinsing the cut first. Tell me if your fingers go numb."
     - q: "What do I do about the voices in my head?"
       sk: medicine 30
       a: "Sleep with your back to a wall, drink before you're thirsty, and say your name out loud when the hum gets in. Sounds stupid. Works."
@@ -506,7 +506,7 @@ gamma-duke:
   gest: { wave: "Waving at a sniper. Bold.", gift: "Ooh. I'll put it on my shelf of trophies.", dance: "Catwalk shuffle!", nodance: "Can't, I'm watching.", insult: "Missed. Like you'd miss." }
 
 gamma-marlo:
-  hi: "Ah! Ah! Someone with hands. Come here, look at this. Pipe barrel, spring from a sofa. It shouldn't work. It works."
+  hi: "Come hold this pipe level. The spring's out of a sofa, and it keeps jumping the catch."
   back: ["You're back! Brought me anything that goes bang?", "Customer! My favourite kind of person."]
   warm: "For you I'll uncover the good bench."
   cold: "Buy something or let the light in."
@@ -587,7 +587,7 @@ gamma-tess:
   gest: { wave: "Mm. Bonjour.", gift: "Fabric? No? Still. Merci.", dance: "Slowly. Elegantly.", nodance: "Non.", insult: "Your jacket said worse." }
 
 gamma-bo:
-  hi: "Hey hey! New face. I'm Bo. I was lost in the tunnels two weeks once. Ask me anything. Not about the tunnels."
+  hi: "I'm Bo. If you came through the tunnels, tell me where you turned. Took me two weeks to find that way out."
   back: ["Bo's back! I mean, you're back. Hi!", "Hey friend!"]
   warm: "Best friend! Well. Top five."
   cold: "Oh. Hi."
