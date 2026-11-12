@@ -3,6 +3,7 @@
 // place.state.l02grid = { layout: { wallId: openIndex }, lamps: { lampId: on } }. Numbers: scripts/lib/data/l02-remodel.yml.
 import G from "./data/l02-remodel.yml";
 import { raycast } from "builtin/physics";
+import { animate } from "builtin/tween";
 import P from "./data/l02-props.yml";
 import { BASE } from "./level02.js";
 const C = G.cell, X = G.x0, Z = G.z0, HT = G.height;
@@ -16,6 +17,13 @@ pop dust burst=26..36 on=box(1.6,1.2,.08).c(1.4) life=1.2..2.2 v=sdir()*(.3..0.9
 pop chips burst=14..20 on=box(1.4,1,.06).c(1.2) life=.7..1.2 v=sdir()*(.6..1.4) size=.02..0.045 spin=-8..8 acc=grav() col=<.9,.78,.55> a=1 sz=$size rot=$age*$spin floor=stick r=sprite(chip,alpha)`;
 const MOTES = `fx
 pop motes n=?mobile:30|70 on=box(8,1.4,6) life=6..10 v=sdir()*.04 size=.012..0.025 acc=curl(.2)*.06 col=<1,.9,.7> a=0>.55:.5>.5:.5>0 r=sprite(soft-disc,add)`;
+const DRIP = `fx
+pop drop rate=.7 on=point() life=.9 v=<0,-.2,0> size=.018 acc=grav() col=<.95,.93,.88> a=1 floor=die r=sprite(soft-disc,alpha)
+pop splat on=@drop.lives(1) life=1.4 size=.05 col=<.95,.93,.88> a=.7>0 sz=$size*(.6>1.6) r=sprite(soft-disc,alpha)`;
+const KNOCK = ["/cdn/moodboard-realistic-gritty/sfx-three-heavy-knocks-from-inside-hollow-stud-wall.mp3", "/cdn/moodboard-realistic-gritty/sfx-something-heavy-shoved-against-plywood-wall-other-side.mp3", "/cdn/moodboard-realistic-gritty/sfx-muffled-mallet-tap-tap-on-drywall-from-behind.mp3"];
+const SETTLE = "/cdn/moodboard-realistic-gritty/sfx-plywood-wall-panel-settles-with-soft-wooden-thunk.mp3";
+const TRICKLE = `fx
+pop dust burst=14..20 on=box(1.8,.05,.06) life=1.2..2 v=up(-.3..-0.1)+sdir()*.08 size=.06..0.14 acc=grav()*.15+drag(1.2) col=<.86,.78,.62> a=0>.5:.3>.7:.2>0 sz=$size*(.6>1.6) r=sprite(smoke-puff,alpha)`;
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
 const prop = (key, at, yaw = 0, extra = {}) => { const p = P[key]; if (!p?.model) return null; const [w, h, d] = p.size;
   return { feetPosition: at, rotation: { yaw }, model: { id: p.model, ...(p.forward ? { forward: p.forward } : {}) }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, ...extra }; };
@@ -38,7 +46,7 @@ const EDGE = { color: "oklch(0.85 0.13 75)", emissive: "oklch(0.85 0.13 75)", em
 const lampLight = (on) => ({ ...G.lampLight, aim: "forward", intensity: on ? G.lampLight.intensity : 0 });
 function lampSpec(id, [x, z, yaw], on) {
   const lp = prop("worklamp", { x, y: BASE, z }, yaw, { tags: ["usable", "l02lamp", "breakable"], physics: { body: "dynamic", collider: "box", mass: 6, friction: 0.9 },
-    behavior: "scripts/l02-use.js", state: { kind: "lamp", name: "Halogen work lamp", verb: "Switch", info: "Z to carry · a lit lamp holds the walls it shines on", mat: "metal", hp: 999, maxHp: 999 } });
+    behavior: "scripts/l02-use.js", state: { kind: "lamp", name: "Halogen work lamp", verb: "Switch", info: "Z to carry", mat: "metal", hp: 999, maxHp: 999 } });
   lp.children = [{ id: "beam", feetPosition: { x: 0, y: 1.5, z: -0.12 }, light: lampLight(on) }];
   return lp;
 }
@@ -81,9 +89,10 @@ export function joists(ctx, on) {
   kids.push({ feetPosition: { x: 0.3, y: 0, z: 0.9 }, rotation: { yaw: 10 }, primitive: box(1.2, 0.03, 0.8), material: { color: "oklch(0.97 0.004 90)", roughness: 0.9, texture: "cdn/texture-acoustic-drop-ceiling-tile-grid.png" } });
   kids.push({ feetPosition: { x: -1.6, y: 0, z: -0.2 }, rotation: { yaw: -30, roll: 70 }, primitive: box(0.05, 0.24, 2.4), material: STUD });
   ctx.spawn("l02-joists", { tags: ["l02debris-keep"], feetPosition: { x: -6.2, y: BASE, z: -8.7 }, primitive: box(3.6, 2.6, 2.8), visible: false, physics: "static", children: kids });
-  ctx.spawn("l02-joists-note", { feetPosition: { x: -4.3, y: BASE + 1.5, z: -7.2 }, rotation: { yaw: 120 }, vector: "<svg viewBox='0 0 360 90' width='1.1m'><rect width='360' height='90' rx='4' fill='#211b17' stroke='#e4b46b' stroke-width='3'/><g font-family='sans-serif' fill='#e4b46b' text-anchor='middle'><text x='180' y='40' font-size='28' font-weight='bold'>STAIR CLOSED</text><text x='180' y='72' font-size='18'>USE CREW EXIT · THROUGH THE ROOMS →</text></g></svg>" });
+  ctx.spawn("l02-joists-note", { feetPosition: { x: -4.3, y: BASE + 1.3, z: -7.2 }, rotation: { yaw: 120 }, vector: "<svg viewBox='0 0 200 80' width='0.9m'><path d='M14 44 Q70 30 128 40 L124 22 L186 46 L120 66 L126 52 Q70 46 16 58 Z' fill='#e8641c' opacity='0.88'/><circle cx='30' cy='70' r='3' fill='#e8641c' opacity='0.6'/><circle cx='52' cy='66' r='2' fill='#e8641c' opacity='0.5'/></svg>" }); // crew spray paint: this way
 }
 
+let knockAt = 0; // the next knock behind an unlit wall (this machine)
 let next = 0; // the crew's next pass (this machine's clock; a new machine starts a fresh pass)
 const lockedNow = {};
 export function gridTick(ctx) {
@@ -101,7 +110,16 @@ export function gridTick(ctx) {
   for (const w of Object.keys(G.walls)) {
     const P3 = pts(wallLine(w));
     lit[w] = lamps.some((l) => { const f = l.feetPosition, y = yawOf(l.rotation) + G.lampAim; return P3.some((p) => cone(f, y, p, G.lampHalf, G.lampRange)); });
-    if (lockedNow[w] !== lit[w]) { lockedNow[w] = lit[w]; const e = o[`l02-ge-${w}`]; if (e) e.visible = lit[w]; }
+    if (lockedNow[w] !== lit[w]) { const was = lockedNow[w]; lockedNow[w] = lit[w]; const e = o[`l02-ge-${w}`]; if (e) e.visible = lit[w];
+      if (lit[w] && was === false) { const l = wallLine(w); ctx.emit("playSound", { clip: SETTLE, position: { x: l.x, y: BASE + 1.2, z: l.z }, volume: 0.5, refDistance: 2, maxDistance: 14 }); ctx.emit("squash", { target: `l02-gw-${w}`, axis: "y", intensity: 0.03, duration: 0.25 }); } }
+  }
+  if (now > knockAt && ps.length) { // the crew behind an unlit wall near someone: knocks, a shudder, dust off the top plate
+    knockAt = now + (2600 + ctx.random() * 3200);
+    const near = Object.keys(G.walls).filter((w) => !lit[w] && ps.some((p) => { const l = wallLine(w); return Math.hypot(p.feetPosition.x - l.x, p.feetPosition.z - l.z) < 7; }));
+    if (near.length) { const w = near[Math.floor(ctx.random() * near.length)], l = wallLine(w);
+      ctx.emit("playSound", { clip: KNOCK[Math.floor(ctx.random() * KNOCK.length)], position: { x: l.x, y: BASE + 1.3, z: l.z }, volume: 0.6, refDistance: 2.5, maxDistance: 16 });
+      ctx.emit("shake", { target: `l02-gw-${w}`, intensity: 0.035, duration: 0.45 });
+      ctx.emit("fx", { position: { x: l.x, y: BASE + HT - 0.05, z: l.z }, script: TRICKLE }); }
   }
   if (now < next) return; next = now + G.swapEvery * 1000;
   if (!ps.length) return;
@@ -131,14 +149,21 @@ export function gridTick(ctx) {
 // every room a story (cells: col c x = X + C*c.., row r z = Z + C*r..)
 const cx = (c, dx = 0) => X + C * (c + 0.5) + dx, cz = (r, dz = 0) => Z + C * (r + 0.5) + dz;
 function bulb(ctx, id, x, z, lit, drop = 0.9) {
-  const top = -0.25, y = top - drop;
-  put(ctx, id, { feetPosition: { x, y, z }, children: [
-    { feetPosition: { x: 0, y: 0.06, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.006, radiusBottom: 0.006, height: drop - 0.06, radialSegments: 5 }, material: { color: "oklch(0.15 0.01 60)", roughness: 0.8 } },
-    { feetPosition: { x: 0, y: 0.04, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.022, radiusBottom: 0.022, height: 0.05, radialSegments: 8 }, material: { color: "oklch(0.2 0.01 60)" } },
-    { feetPosition: { x: 0, y: -0.04, z: 0 }, primitive: { kind: "sphere", radius: 0.045 }, material: { color: "oklch(0.97 0.06 85)", emissive: "oklch(0.92 0.12 80)", emissiveIntensity: lit ? 4 : 0.4 } },
-    ...(lit ? [{ feetPosition: { x: 0, y: -0.1, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.11 72)", intensity: 0.9, distance: 7.5 } }] : []),
+  const top = -0.25; // the cord top, under the deck; everything hangs below it so the bulb swings like a pendulum
+  if (id in ctx.place.objects) return;
+  ctx.spawn(id, { feetPosition: { x, y: top, z }, children: [
+    { feetPosition: { x: 0, y: -drop + 0.06, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.006, radiusBottom: 0.006, height: drop - 0.06, radialSegments: 5 }, material: { color: "oklch(0.15 0.01 60)", roughness: 0.8 } },
+    { feetPosition: { x: 0, y: -drop + 0.04, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.022, radiusBottom: 0.022, height: 0.05, radialSegments: 8 }, material: { color: "oklch(0.2 0.01 60)" } },
+    { feetPosition: { x: 0, y: -drop - 0.04, z: 0 }, primitive: { kind: "sphere", radius: 0.045 }, material: { color: "oklch(0.97 0.06 85)", emissive: "oklch(0.92 0.12 80)", emissiveIntensity: lit ? 4 : 0.4 } },
+    ...(lit ? [{ feetPosition: { x: 0, y: -drop - 0.1, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.11 72)", intensity: 0.9, distance: 7.5 } }] : []),
   ] });
+  sway(ctx, id, 2 + drop * 1.4, 3 + (x * 7 % 3));
 }
+// a slow pendulum on the room clock: a bulb, the hanging tile, the plastic sheet
+function sway(ctx, id, period, deg, axis = "roll") {
+  animate(ctx, id, { [`rotation.${axis}`]: [-deg, deg] }, { duration: period / 2, easing: "easeInOutSine", direction: "alternate", loop: true });
+}
+
 function layDress(ctx) {
   const B = (id, key, x, z, yaw = 0, extra = {}) => put(ctx, id, prop(key, { x, y: BASE, z }, yaw, { physics: "static", ...extra }));
   const tarp = (id, x, z, yaw, w = 2.4, d = 1.8) => put(ctx, id, { feetPosition: { x, y: BASE + 0.005, z }, rotation: { yaw }, primitive: box(w, 0.012, d), material: { color: "oklch(0.9 0.015 85)", roughness: 1, texture: "cdn/texture-paint-splattered-canvas-drop-cloth.png", wrap: "repeat", repeat: [0.6, 0.6] } });
@@ -191,9 +216,22 @@ function layDress2(ctx, B, tarp) {
   put(ctx, "l02-crew-exit", { tags: ["door"], feetPosition: { x: e.x - 0.05, y: BASE + 0.5, z: e.z }, physics: { body: "static", trigger: true }, primitive: box(0.35, 2.1, 1.0), visible: false, behavior: "scripts/l02-crew-exit.js" });
   put(ctx, "l02-gd-exitsign", { feetPosition: { x: e.x + 0.1, y: BASE + 2.85, z: e.z }, rotation: { yaw: -90 }, vector: "<svg viewBox='0 0 300 80' width='0.95m'><rect width='300' height='80' rx='5' fill='#1d6b2a' stroke='#e9f2d0' stroke-width='4'/><text x='150' y='54' text-anchor='middle' font-family='sans-serif' font-size='38' font-weight='bold' fill='#f4f7e8'>CREW EXIT ↑</text></svg>" });
   put(ctx, "l02-gd-exitglow", { feetPosition: { x: e.x - 0.4, y: BASE + 2.7, z: e.z }, light: { kind: "point", color: "oklch(0.8 0.14 145)", intensity: 0.5, distance: 4 } });
-  put(ctx, "l02-gd-sign", { feetPosition: { x: X - 0.06, y: BASE + 2.2, z: cz(1, 1.6) }, rotation: { yaw: -90 }, vector: "<svg viewBox='0 0 360 100' width='1.15m'><rect width='360' height='100' rx='4' fill='#f1c40f'/><g font-family='sans-serif' fill='#1b1b1b' text-anchor='middle'><text x='180' y='42' font-size='28' font-weight='bold'>ROOMS IN PROGRESS</text><text x='180' y='78' font-size='19'>LEAVE A LIGHT ON · CREW EXIT AT BACK</text></g></svg>" });
+  // (no rule sign: unlit walls knock and shudder, lit ones hold still with a glowing edge)
   // work bulbs on cords: four lit, three dark spares
   for (const [i, c, r, lit] of [[0, 0, 1, 1], [1, 1, 0, 1], [2, 2, 1, 1], [3, 3, 2, 1], [4, 3, 0, 0], [5, 1, 2, 0], [6, 2, 2, 0]]) bulb(ctx, `l02-gd-bulb${i}`, cx(c, 0.3), cz(r, -0.2), !!lit, 0.7 + (i % 3) * 0.2);
+  if (!("l02-gd-sheet" in ctx.place.objects)) { // a plastic drop sheet over the way in, stirring in the draft
+    ctx.spawn("l02-gd-sheet", { feetPosition: { x: X + 0.18, y: BASE + 2.45, z: Z + C * 1.5 + G.fixed.w1.door }, rotation: { yaw: 90 }, children: [
+      { feetPosition: { x: 0, y: -2.3, z: 0 }, primitive: { kind: "plane", width: 1.05, height: 2.3 }, material: { color: "oklch(0.95 0.01 90 / 0.32)", transparent: true, roughness: 0.25, side: "double", depthWrite: false } },
+      { feetPosition: { x: 0, y: -0.02, z: 0 }, primitive: box(1.15, 0.04, 0.05), material: STUD }] });
+    sway(ctx, "l02-gd-sheet", 3.4, 7, "pitch");
+  }
+  if (!("l02-gd-looset" in ctx.place.objects)) { // one ceiling tile fell out of a stack and hangs by its wire
+    ctx.spawn("l02-gd-looset", { feetPosition: { x: cx(3, -0.6), y: BASE + HT - 0.05, z: cz(1, -0.9) }, children: [
+      { feetPosition: { x: 0, y: -0.55, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.003, radiusBottom: 0.003, height: 0.55, radialSegments: 4 }, material: STEEL },
+      { feetPosition: { x: 0.28, y: -0.78, z: 0 }, rotation: { roll: 62 }, primitive: box(0.6, 0.016, 0.6), material: { color: "oklch(0.93 0.01 90)", roughness: 0.95, texture: "cdn/texture-acoustic-drop-ceiling-tile-grid.png" } }] });
+    sway(ctx, "l02-gd-looset", 4.2, 9, "pitch");
+  }
+  put(ctx, "l02-gd-drip", { feetPosition: { x: cx(0, -1.32), y: BASE + H("paintcan") * 2 - 0.02, z: cz(0, -1.42) }, fx: { script: DRIP } });
   put(ctx, "l02-gd-motes", { feetPosition: { x: X + C * 2, y: BASE + 0.4, z: Z + C * 1.5 }, fx: { script: MOTES } });
   put(ctx, "l02-gd-radio", { feetPosition: { x: 16.6, y: BASE + 1.2, z: -2 }, audio: { clip: RADIO, loop: true, gain: 0.16, spatial: true, refDistance: 4, maxDistance: 24 } });
 }

@@ -15,7 +15,7 @@ import G from "../../scripts/lib/data/l02-remodel.yml";
 import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 import P from "../../scripts/lib/data/l02-props.yml";
 export const cadence = "250ms";
-const V = 23, STEP_MS = 3400, WARNING_MS = 1200;
+const V = 24, STEP_MS = 3400, WARNING_MS = 1200;
 const CASE_COLUMN = 4, CASE_DESK = { x: 2.55, y: 0, z: 7.65 };
 const CASE_TOP = "l02-crew-case", CASE_FALL = "l02-crew-salvage";
 const CASE_IMPACT = "/cdn/sfx-metal-object-clunk-drop.mp3";

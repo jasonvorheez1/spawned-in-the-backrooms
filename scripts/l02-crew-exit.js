@@ -7,5 +7,4 @@ export function onTriggerEnter(ctx, other) {
   ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-boots-climbing-rough-plywood-stairs-fast.mp3", position: { x, y: 0.5, z }, volume: 0.7 }, { audience: { player: other.id } });
   other.velocity = { x: 0, y: 0, z: 0 };
   other.feetPosition = { x, y: 0.1, z };
-  other.state.notice = { text: "Up the crew stair. The door room.", at: ctx.now() };
 }
