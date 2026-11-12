@@ -13,7 +13,7 @@ import { S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, xOf } from "../../scripts/lib
 import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 import P from "../../scripts/lib/data/l02-props.yml";
 export const cadence = "250ms";
-const V = 9, STEP_MS = 2600;
+const V = 10, STEP_MS = 2600;
 const W = NX * S, D = NZ * S; // 32 x 20 m
 const CARPET = { color: "oklch(0.4 0.11 25)", roughness: 0.97, texture: "cdn/texture-dry-red-office-carpet-low-pile.png", wrap: "repeat", repeat: [0.5, 0.5] };
 const PAINT = { color: "oklch(0.95 0.008 90)", roughness: 0.88 };
