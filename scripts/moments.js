@@ -71,7 +71,7 @@ export const ears = {
       heard(ctx, { clip: STATIC, position: pos, volume: 0.8, maxDistance: 10 });
       who.state.sub = {
         who: "WARPED WALLPAPER",
-        t: "Cold under your palm, and it gives a little, like something on the other side is leaning back. The static is coming from inside the wall. Wanderers say Level 0 lets go of you where it's thinnest. Walk into it, and don't stop walking.",
+        t: "Cold. It gives a little under your palm. The hiss is coming from inside.",
         at: now,
         d: 6000,
       };

@@ -9,6 +9,7 @@
 // - Stacked Bureau Drawers & Drowned Antique Armoire (wood drawer slide, door creak, antique loot popups)
 import { heard } from "./lib/hear.js";
 import { skillsOf } from "./lib/stats.js";
+import { carryAcross } from "./lib/carry.js";
 
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const snd = (ctx, pos, clip, v = 0.65, maxDistance = 16) =>
@@ -216,7 +217,7 @@ export const ears = {
       snd(ctx, pos, "heavy-waves-slapping-wet-rocks-and-pier-posts-loop", 0.9, 20);
       ctx.emit("screenFlash", { color: "#020a10", duration: 1.6, intensity: 1 }, { audience: { player: by } });
       ctx.emit("screenShake", { intensity: 0.4, duration: 1.4 }, { audience: { player: by } });
-      ctx.cross(who, "level8#l8-from-l7");
+      carryAcross(ctx, who, "level8#l8-from-l7"); ctx.cross(who, "level8#l8-from-l7");
       return;
     }
 

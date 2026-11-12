@@ -4,6 +4,7 @@ import R from "./lib/data/level12.yml";
 import { heard } from "./lib/hear.js";
 import { animate } from "builtin/tween";
 import { setQuest } from "./lib/quests.js";
+import { carryAcross } from "./lib/carry.js";
 const G = "cdn/moodboard-realistic-gritty/";
 const RATTLE = G + "sfx-locked-door-handle-rattle-and-jiggle.mp3";
 const CREAK = G + "sfx-old-interior-wooden-door-creak-open.mp3";
@@ -38,7 +39,7 @@ export const ears = {
         ctx.emit("screenFlash", { color: "#ffffff", duration: 1.4, intensity: 1 }, me);
         who.state.r12 = null; who.state.l12out = (who.state.l12out ?? 0) + 1;
         const to = R.exits[Math.floor(ctx.random() * R.exits.length)];
-        ctx.after(1.0, "shut", {}); ctx.cross(who, to);
+        ctx.after(1.0, "shut", {}); carryAcross(ctx, who, to); ctx.cross(who, to);
         return;
       }
       heard(ctx, { clip: RATTLE, position: pos, volume: 0.85, maxDistance: 10 });

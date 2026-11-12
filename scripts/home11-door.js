@@ -2,6 +2,7 @@ import { animate } from "builtin/tween";
 import TV from "./lib/data/tv-channels.yml";
 import SNACKS from "./lib/data/snacks.yml";
 import { MEAT } from "./lib/items.js";
+import { carryAcross } from "./lib/carry.js";
 // Inside the green house: the front door goes back to the porch, the bed rests you.
 const RADIO = [
   { name: "pop punk on 98.7", clip: "cdn/music-early-2000s-pop-punk-fast-guitars-drums-anthem-loop.mp3" },
@@ -25,14 +26,14 @@ export const ears = {
     if (k === "exit") {
       ctx.emit("playSound", { clip: "cdn/sfx-wooden-front-door-opens-and-closes.mp3", position: ctx.self.feetPosition, volume: 0.8 });
       ctx.emit("screenFlash", { color: "#000000", duration: 0.6, intensity: 0.9 }, { audience: { player: who.id } });
-      ctx.cross(who, "level11#l11-from-home");
+      carryAcross(ctx, who, "level11#l11-from-home"); ctx.cross(who, "level11#l11-from-home");
       return;
     }
     if (k === "tub") { // Level 27 lore: turn a bath to its hottest and close your eyes; you come back out here
       ctx.emit("playSound", { clip: "cdn/sfx-bathtub-faucet-turned-on-full-hot-water-gushing.mp3", position: ctx.self.feetPosition, volume: 0.8 });
       ctx.emit("screenFlash", { color: "#ffffff", duration: 1.2, intensity: 0.9 }, { audience: { player: who.id } });
       w.l27from = "home11#h-from-l27"; w.notice = { text: "Hot as it goes. You close your eyes in the steam...", at: now };
-      ctx.cross(who, "level27#l27-from-tub");
+      carryAcross(ctx, who, "level27#l27-from-tub"); ctx.cross(who, "level27#l27-from-tub");
       return;
     }
     if (k === "tote") { // carrying something (Z): E drops it in. Empty hands: E takes the newest thing out, a step ahead

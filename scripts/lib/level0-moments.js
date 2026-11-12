@@ -175,7 +175,7 @@ pop buzz n=1 at=point().c(2.92) size=.9 col=hdr(1.6,1.4,.9) a=.35+.4*flick(.9,.5
       put("papers", { feetPosition: { ...cellCenter(x, z), y: 0 }, primitive: geo("papers", { seed: 11 }) });
       const c = cellCenter(x, z);
       put("note", { feetPosition: { x: c.x + 0.6, y: 0, z: c.z - 0.4 }, tags: ["moment", "m-note", "usable"], primitive: { kind: "box", width: 0.21, height: 0.004, depth: 0.27 }, material: { color: "oklch(0.93 0.025 90)", roughness: 0.95 }, behavior: "scripts/moments.js",
-        state: { kind: "note", name: "Chalk-dusted note", verb: "Read", info: "the chalk stub beside it is worn to nothing", text: "Out of chalk. The way out is still WEST, I'm sure of it, past where the carpet gets wet. You'll hear it before you see it: a wall that hisses like a dead channel. Don't look for a door. There isn't one." } });
+        state: { kind: "note", name: "Chalk-dusted note", verb: "Read", info: "a chalk stub beside it, worn to nothing", text: "out of chalk\nwest. past the wet carpet\nlisten for the hiss" } });
       break;
     }
     const turn = i > 0 && (path[i + 1][0] - x !== x - path[i - 1][0] || path[i + 1][1] - z !== z - path[i - 1][1]);

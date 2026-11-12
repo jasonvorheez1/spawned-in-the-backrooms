@@ -5,6 +5,7 @@
 
 import { heard } from "./lib/hear.js";
 import { setSedcoStep, setCraneStep, setMaintStep } from "./lib/level11-quests.js";
+import { carryAcross } from "./lib/carry.js";
 
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 
@@ -60,7 +61,7 @@ export const ears = {
       if (!w.home11) { w.notice = { text: "Locked. Mara at B.N.T.G. Realty has the keys.", at: now }; return; }
       heard(ctx, { clip: "cdn/sfx-wooden-front-door-opens-and-closes.mp3", position: pos, volume: 0.8, maxDistance: 12 });
       ctx.emit("screenFlash", { color: "#000000", duration: 0.6, intensity: 0.9 }, { audience: { player: who.id } });
-      ctx.cross(who, "home11#home-from-l11");
+      carryAcross(ctx, who, "home11#home-from-l11"); ctx.cross(who, "home11#home-from-l11");
       return;
     }
 
