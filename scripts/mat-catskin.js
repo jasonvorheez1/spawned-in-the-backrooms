@@ -31,7 +31,7 @@ export function material(ctx) {
     // the painted cream mask read too Sonic (Shelly Nov 12): the light muzzle paint keeps only a small soft oval round the nose and mouth, fading into fur
     const cream = smoothstep(0.5, 0.68, min(pic.r, pic.g)).mul(max(step(v, P("muzTop", 0.45)), step(v, 0.52).mul(step(abs(u.sub(0.5)), 0.085))));   // and the bridge wedge between the eyes (orange cat)
     const ell = u.sub(0.5).div(P("muzW", 0.12)).pow(2).add(v.sub(P("muzV", 0.32)).div(P("muzH", 0.085)).pow(2)).sqrt();
-    const keep = smoothstep(1.0, 0.55, ell).mul(smoothstep(P("muzV", 0.32).add(0.06), P("muzV", 0.32).add(0.025), v));   // nothing pale beside the nose: the picture's muzzle corners read as triangles there
+    const keep = smoothstep(1.0, 0.55, ell).mul(smoothstep(P("muzV", 0.32).add(0.01), P("muzV", 0.32).sub(0.02), v));   // nothing pale beside the nose: the picture's muzzle corners read as triangles there
     pic = vec4(pic.rgb, mix(pic.a, pic.a.mul(keep), cream));
     // below the eyes, outside the soft oval, only the mouth's ink stays: the picture's old muzzle outline drew a ghost line across the cheeks
     const ink = smoothstep(0.35, 0.15, max(pic.r, pic.g));
