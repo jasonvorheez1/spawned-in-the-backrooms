@@ -470,7 +470,7 @@ export function update(ctx, dt) {
   if (isTwitching && !s.dead && !me.bones) {
     const dir = m.twitchEar === "EarL" ? -1 : 1;
     me.bones = { ...baseBones(s.build, s.look ?? s.wear), [m.twitchEar]: { rotate: [0, 0, dir * 24] } };
-  } else if (!isTwitching && (!me.bones || me.bones.EarL || me.bones.EarR || !me.bones.Head) && !m.aimAt) {
+  } else if (!isTwitching && (!me.bones || me.bones.EarL || me.bones.EarR || !me.bones.Head) && !m.aimAt && !m.cow) {
     me.bones = baseBones(s.build, s.look ?? s.wear);
   }
   // talking: interact.js stamps state.talkAt and talkTo when a player presses E on them
