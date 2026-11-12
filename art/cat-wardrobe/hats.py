@@ -138,7 +138,9 @@ for sex in ("f", "m"):
         if fit == "wrap":
             if r.get("at") is not None:   # the shell's own width at a set height, less its thickness; the rim plane by `rim`
                 a, b = bbox(hat); hgt = b.z - a.z; vs = [v.co for v in hat.data.vertices]
-                sl = [v for v in vs if abs(v.z - (a.z + hgt * r["at"])) < hgt * 0.04]
+                tol = 0.04; sl = []
+                while len(sl) < 8 and tol < 0.3:   # a low-poly crown wall has few verts at one height: widen the band till it holds a ring
+                    sl = [v for v in vs if abs(v.z - (a.z + hgt * r["at"])) < hgt * tol]; tol *= 1.6
                 x0, x1 = min(v.x for v in sl), max(v.x for v in sl); yy0, yy1 = min(v.y for v in sl), max(v.y for v in sl)
                 cx, cy, W, D, dep = (x0 + x1) / 2, (yy0 + yy1) / 2, (x1 - x0) * 0.92, None, 0
                 if r.get("rim") == "back": z0 = min(v.z for v in vs if v.y > cy + (yy1 - cy) * 0.3)
