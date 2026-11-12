@@ -44,6 +44,7 @@ models:
   souwester: { hat: true, pat: weave, f: /cdn/value.2365361df0a96f6f8bbfa04a63744e66643774f3562974a1a3cd27cf8c3d60db.glb, m: /cdn/value.19465017625e6d877e6bd16859638a0af08012623cbbd6d268046ff714a5c548.glb }   # Tripo hat fitted to the cat head (art/cat-wardrobe/hats.py), Nov 12
   divehelm: { hat: true, pat: weave, f: /cdn/value.0fc48cbf12ab5a20191a35254a38469c3df68056fb26cc62bd279abf878a4e98.glb, m: /cdn/value.1609b1d9c024d4da110b6020277949c6b92de61d88e6b8cd217c9672a21bcbdf.glb }   # Tripo hat fitted to the cat head (art/cat-wardrobe/hats.py), Nov 12
   chitinhelm: { hat: true, pat: weave, f: /cdn/value.74a80e95e031c869bbf46e8e8f5a6c14e089a228c37622198fd1401f9efcc96d.glb, m: /cdn/value.375cdba70d2c92dc4076db4c8a1d12a0d07a51a179719c3e169712939ccc82de.glb }   # Tripo hat fitted to the cat head (art/cat-wardrobe/hats.py), Nov 12
+  headphones: { hat: true, pat: weave, f: /cdn/value.a7b64518dbb335b3403789d9b4098eaa89242dfb707f21824e51b885f6731a30.glb, m: /cdn/value.00a0155d72ed43ef0b25837d97bb063540eba0c32ef9757ecae5dfc18a4f970d.glb }
 defaults:
   f: { topw: crop, top: "#e0775a", botw: shorts, bottom: "#4f78ad" }
   m: { topw: tee, top: "#9b9da1", botw: shorts, bottom: "#2f3d5c" }
@@ -109,7 +110,7 @@ from:
           canvasskirt: skirt, pinstripe: pants, velvetskirt: skirt, tarwaders: pants, jeans: pants, briefs: briefs, leggings: leggings }
   shoes: { sneakers: socks, slippers: socks, boots: boots, steeltoe: boots, hotelslip: socks, ballastboots: boots, pitchboots: boots, heels: socks, socks: socks }
   hat: { cap: cap, beanie: beanie, tophat: tophat, bow: bow, flower: flower, partyhat: partyhat, crown: crown, padbeanie: beanie,
-         opera: tophat, souwester: souwester, divehelm: divehelm, chitinhelm: chitinhelm, pgmask: bagmask, ppmask: shellmask, beret: beret }
+         opera: tophat, headphones: headphones, souwester: souwester, divehelm: divehelm, chitinhelm: chitinhelm, pgmask: bagmask, ppmask: shellmask, beret: beret }
   topp: { jerrytee: jerry, pphoodie: ppsad, pghoodie: pgsmile, gmhoodie: gmsplit, pgcoat: pgcoat }
 # hats that close over the ears: the sculpted ears stay off and the head's own fold flat under them
 covers: [divehelm, chitinhelm, beanie, souwester]
