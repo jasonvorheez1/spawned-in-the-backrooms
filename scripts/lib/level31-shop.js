@@ -43,8 +43,8 @@ export function layShop(ctx) {
   sp("note", { feetPosition: { x: -38.4, y: 1.5, z: SZ - 0.006 }, rotation: { yaw: N, roll: -3 }, vector: "<svg viewBox='0 0 100 70' width='0.3m'><rect x='2' y='4' width='96' height='64' fill='#f6f1dc'/><rect x='36' y='0' width='28' height='9' fill='#e8d9a0' opacity='0.8'/><text x='50' y='30' text-anchor='middle' font-family='serif' font-style='italic' font-size='15' fill='#223a8a'>door sticks</text><text x='50' y='52' text-anchor='middle' font-family='serif' font-style='italic' font-size='15' fill='#223a8a'>pull hard</text></svg>" });
   // light: warm over the counter, pink north, cyan south, a pink wash under the sign
   const lamp = (id, x, y, z, color, intensity, distance) => sp(id, { feetPosition: { x, y, z }, light: { kind: "point", color, intensity, distance } });
-  lamp("light-counter", -37, 3.4, 0, "oklch(0.92 0.07 80)", 4.5, 14); lamp("light-mid", -33, 3.4, 0, "oklch(0.9 0.06 80)", 2.5, 12); lamp("light-n", -36, 3.2, -8, "oklch(0.8 0.13 350)", 2.2, 11);
-  lamp("light-s", -36, 3.2, 8, "oklch(0.85 0.1 210)", 2.2, 11); lamp("light-sign", -26.6, 3.6, 0, "oklch(0.75 0.2 350)", 0.7, 7);
+  lamp("light-counter", -37, 3.4, 0, "oklch(0.92 0.07 80)", 1.4, 12); lamp("light-mid", -33, 3.4, 0, "oklch(0.9 0.06 80)", 0.9, 10); lamp("light-n", -36, 3.2, -8, "oklch(0.8 0.13 350)", 1, 10);
+  lamp("light-s", -36, 3.2, 8, "oklch(0.85 0.1 210)", 1, 10); lamp("light-sign", -26.6, 3.6, 0, "oklch(0.75 0.2 350)", 0.7, 7);
   // Dottie, a faceling, behind the counter
   sp("keeper", {
     tags: ["npc", "faceling"], feetPosition: { x: -39.5, y: 0, z: -0.1 }, rotation: { yaw: E }, physics: "character",
