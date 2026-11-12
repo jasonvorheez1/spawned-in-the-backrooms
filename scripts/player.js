@@ -54,7 +54,7 @@ import { RAG } from './nade.js'
 import { stepTick } from './lib/footsteps.js'
 import { useCompass, COMPASS } from './lib/compass.js'
 import { placeFreshener, nearFresh, FRESH_BODY } from './lib/remodel-quest.js'
-import { placeMusicBox, musicNear } from './lib/musicbox.js'
+import { placeMusicBox, musicNear, kneel } from './lib/musicbox.js'
 import L3I from './lib/data/l3items.yml'
 import CR from './lib/data/craft.yml'
 import AW from './lib/data/almond.yml'
@@ -842,7 +842,7 @@ function invAction(ctx, d) {
   if (d.k === 'read') { s.reading = parseInt(d.n) || null; s.invOpen = false; return }
   if (d.k === 'repair') { repairAction(ctx, d); return }
   if (d.k === 'compass') { s.invOpen = false; useCompass(ctx); return }
-  if (d.k === 'fresh') { s.invOpen = false; placeFreshener(ctx); return }
+  if (d.k === 'fresh') { s.invOpen = false; if (s.fresh > 0) kneel(ctx); placeFreshener(ctx); return }
   const k = String(d.w || '')
   if (d.k === 'wear' || d.k === 'unwear') { // clothes: wearing one swaps out what was in that slot (back into the bag); unwear strips it
     const bag = s.clothes ? s.clothes.split(',').filter(Boolean) : []

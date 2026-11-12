@@ -20,6 +20,8 @@ export const MB_BODY = {
     ...[[-0.085, -0.055], [0.085, -0.055], [-0.085, 0.055], [0.085, 0.055]].map(([x, z], i) => ({ id: "foot" + i, feetPosition: { x, y: -0.008, z }, primitive: { kind: "sphere", radius: 0.012 }, material: BRASS })),
   ],
 }
+// the kneel-and-place: a pick-up clip on the upper body, once (Shelly: "using it does an animation where you set it down")
+export function kneel(ctx) { ctx.self.anim.place = { clip: "cdn/clip-pick-up.glb", loop: "once", weight: 1, blendIn: 0.15, blendOut: 0.3 } }
 export function placeMusicBox(ctx) {
   const s = ctx.self.state, now = ctx.now(), n = s.snacks?.musicbox ?? 0
   if (n <= 0) return
@@ -27,6 +29,7 @@ export function placeMusicBox(ctx) {
   if (left > 0) { s.notice = { text: `Wind-up Music Box: the spring needs ${Math.ceil(left)} s more`, at: now }; return }
   const f = ctx.self.feetPosition, yaw = ((ctx.self.camera?.rotation?.yaw ?? 0) * Math.PI) / 180
   const at = { x: f.x - Math.sin(yaw) * 0.8, y: f.y + 0.01, z: f.z - Math.cos(yaw) * 0.8 }
+  kneel(ctx)
   s.snacks = { ...s.snacks, musicbox: n - 1 }; s.keepAt = { ...s.keepAt, musicbox: now }
   ctx.spawn({ tags: ["usable", "musicbox"], feetPosition: at, rotation: { yaw: (ctx.self.camera?.rotation?.yaw ?? 0) + 180 }, ...MB_BODY,
     behavior: "scripts/musicbox.js", fx: { script: NOTES },
