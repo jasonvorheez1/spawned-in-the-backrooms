@@ -59,6 +59,29 @@ export function geometry(ctx) {
     ctx.metalness?.(0);
     return;
   }
+  if (kind === "dock") {
+    ctx.albedo(WOOD); ctx.roughness(0.92);
+    const n = lod <= 2 ? 34 : 17, step = 10.2 / n;
+    for (let i = 0; i < n; i++) {
+      const x = -5.1 + i * step;
+      ctx.color(`oklch(${0.48 + R() * 0.12} 0.05 65)`);
+      box(ctx, x + 0.005, 0, -1.28, x + step - 0.005, 0.14, 1.28);
+    }
+    ctx.color("oklch(0.39 0.035 59)");
+    for (const z of [-0.96, 0.96]) box(ctx, -5.07, -0.19, z - 0.08, 5.07, 0.012, z + 0.08);
+    for (const [x, base] of [[-3.7, -1.3], [0, -2.0], [3.8, -2.5]]) {
+      for (const z of [-1.17, 1.17]) lathe(ctx, [[base, 0.115], [0.38, 0.088], [0.41, 0.075]], 9, x, z);
+      box(ctx, x - 0.08, -0.3, -1.28, x + 0.08, -0.14, 1.28);
+    }
+    return;
+  }
+  if (kind === "radio-desk") {
+    ctx.albedo(WOOD); ctx.roughness(0.87); ctx.color("oklch(0.52 0.05 63)");
+    box(ctx, -0.68, 0.71, -0.28, 0.68, 0.78, 0.28);
+    for (const x of [-0.58, 0.58]) for (const z of [-0.2, 0.2]) box(ctx, x - 0.045, 0, z - 0.045, x + 0.045, 0.71, z + 0.045);
+    box(ctx, -0.62, 0.59, -0.24, 0.62, 0.71, -0.19);
+    return;
+  }
   if (kind === "radio") { // a field shortwave set: rounded steel case, dials, a whip antenna
     ctx.albedo(null); ctx.roughness(0.6); ctx.color("oklch(0.4 0.03 140)");
     box(ctx, -0.22, 0, -0.14, 0.22, 0.24, 0.14);
@@ -81,9 +104,11 @@ export function geometry(ctx) {
 }
 export function collider(ctx) {
   const k = ctx.params?.kind ?? "crate";
+  if (k === "dock") return [{ kind: "box", width: 10.2, height: 0.14, depth: 2.56, center: [0, 0.07, 0] }];
   if (k === "oven") return [{ kind: "box", width: 1.9, height: 1.5, depth: 1.6, center: [0, 0.75, 0] }];
   if (k === "hopper") return [{ kind: "box", width: 1.1, height: 1.6, depth: 1.1, center: [0, 0.8, 0] }];
   if (k === "sheaves") return [{ kind: "cylinder", radiusTop: 0.45, radiusBottom: 0.5, height: 1.3, center: [0, 0.65, 0] }];
+  if (k === "radio-desk") return [{ kind: "box", width: 1.36, height: 0.78, depth: 0.56, center: [0, 0.39, 0] }];
   if (k === "radio") return [{ kind: "box", width: 0.45, height: 0.25, depth: 0.3, center: [0, 0.12, 0] }];
   return [{ kind: "box", width: 0.92, height: 0.66, depth: 0.72, center: [0, 0.33, 0] }];
 }

@@ -17,7 +17,10 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 
 export const cadence = "1s";
-const V = 17;
+const V = 18;
+const DOCK_Y = 0.2; // deck starts at the measured west-bank landing
+const CEDAR = { texture: "cdn/texture-worn-hardwood-grain.png", color: "#776049", roughness: 0.92 };
+const spot = ({ x, y, z }) => ({ x, y, z });
 const BRK = (mat, hp) => ({ mat, hp, maxHp: hp });
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BARN = (w, d, h, ridge, wall, door) => ({ primitive: { kind: "scripted", script: "scripts/barn10.js", params: { w, d, h, ridge, wall, door } }, physics: "static" });
@@ -30,7 +33,18 @@ function lay(ctx) {
   const BIG = /farmhouse|barn|stable|shed|silo$|windmill|tree|hedge|scarecrow|fence|flagpole|sign-city|outpost-sign/;
   const SMALL = /stone|log|stump|lamp|radio|hopper|crate|flag$|patch|oven|well|bin|fire$|sign-post|cellar/;
   const sp = (id, spec) => {
-    if (ctx.getObject(id)) ctx.destroy(id);
+    const old = ctx.getObject(id);
+    if (old && spec.tags?.includes("npc")) {
+      old.state.home = spec.state.home;
+      old.state.rounds = spec.state.rounds;
+      old.state.ri = 0;
+      if (!old.state.dead && !old.state.follow) old.feetPosition = spec.feetPosition;
+      return;
+    }
+    if (old && spec.tags?.includes("container")) {
+      for (const key of ["items", "hp", "scavved", "refillAt"]) if (old.state[key] !== undefined) spec.state[key] = old.state[key];
+    }
+    if (old) ctx.destroy(id);
     const drawn = spec.primitive || spec.model;
     if (drawn && !spec.scatter && !spec.visibleRange && !/npc/.test(String(spec.tags))) spec.visibleRange = { max: BIG.test(id) ? 320 : 110 };
     if (drawn && SMALL.test(id) && spec.castShadow === undefined) spec.castShadow = false;
@@ -55,18 +69,17 @@ function lay(ctx) {
 pop bub rate=?mobile:8|16 on=disc(2.6) life=1.6..2.6 v=up(.8..1.4) size=.02..0.06 acc=curl(.4)*.3 col=<.8,.9,1> a=.7>.5:.7>0 sz=$size r=sprite(soft-disc,add)
 pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2 col=<.2,.22,.2> a=0>.25:.2>0 sz=$size*(.6>1.6) r=sprite(smoke-puff,alpha)` } });
   sp("l10-lake-hum", { feetPosition: { x: 70, y: -3, z: -95 }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-deep-underwater-low-drone-with-faint-bubbles-loop.mp3", gain: 0.35, loop: true, spatial: true, maxDistance: 14, bus: "Ambience" } });
-  // the road out: a leaning farm sign where the track leaves, and the city's glow felt in the fog at the far end
-  sp("l10-sign-city", { feetPosition: T(4, -270, 0), rotation: { yaw: 15 }, primitive: { kind: "box", width: 1.4, height: 0.5, depth: 0.05 }, material: { color: "oklch(0.75 0.02 90)", roughness: 0.9 },
-    ui: '<div face="front" width="1.4m" style="font-family:Arial,sans-serif;font-weight:800;color:#2b2b2b;text-align:center;font-size:120px;line-height:1">CITY →</div>' });
-  sp("l10-sign-post", { feetPosition: T(4, -270, -0.3), primitive: { kind: "cylinder", radiusTop: 0.05, radiusBottom: 0.06, height: 2.3 }, material: { color: "oklch(0.4 0.03 60)", roughness: 0.9 } });
-
-  // Outpost Welcome Marker
-  sp("l10-outpost-sign", {
-    feetPosition: T(-5, -34, 0), rotation: { yaw: 90 },
-    primitive: { kind: "box", width: 2.2, height: 0.8, depth: 0.06 },
-    material: { color: "oklch(0.82 0.03 80)", roughness: 0.9 },
-    ui: '<div face="front" width="2.2m" style="font-family:serif;font-weight:700;color:#2c1810;text-align:center;padding:12px;box-sizing:border-box;border:3px double #5a3825;background:#eedcbe"><div style="font-size:42px;letter-spacing:2px">M.E.G. OUTPOST BOUNTIFUL</div><div style="font-size:20px;color:#6b4423;margin-top:4px">LEVEL 10 AGRARIAN SETTLEMENT · WANDERERS WELCOME</div></div>',
-  });
+  const board = (id, x, z, yaw, title, line, width = 1.65) => {
+    sp(id, { feetPosition: T(x, z, 1.47), rotation: { yaw }, castShadow: false,
+      visibleRange: { max: 100 }, vector: `<svg viewBox='0 0 240 84' width='${width}m'><rect x='2' y='2' width='236' height='80' rx='3' fill='#594531' stroke='#aa9270' stroke-width='4'/><rect x='9' y='9' width='222' height='66' rx='2' fill='#dfd4ae'/><g fill='#352e23' font-family='serif' text-anchor='middle'><text x='120' y='37' font-size='21' font-weight='bold'>${title}</text><text x='120' y='60' font-size='15'>${line}</text></g></svg>`,
+      children: [{ feetPosition: { x: 0, y: -1.57, z: 0.045 }, primitive: { kind: "box", width: 0.12, height: 1.75, depth: 0.13 }, material: CEDAR }] });
+  };
+  board("l10-sign-city", 4.3, -271, 180, "CITY ROAD", "LEVEL 11 · STRAIGHT ON");
+  board("l10-sign-city-south", -3.6, 64, 0, "CITY ROAD", "LEVEL 11 · STRAIGHT ON");
+  board("l10-outpost-sign", -3.5, -36.7, 180, "OUTPOST BOUNTIFUL", "← FARMYARD     EAST FIELDS →", 2.5);
+  board("l10-sign-lake-fork", 3.65, -74.3, 180, "WEST BANK", "FISHING LANDING →");
+  board("l10-sign-mill-yard", -39.2, -44.0, -90, "GRAIN YARD", "BARN ←     MILL →");
+  board("l10-sign-shore", 39.0, -96.9, 90, "FISHING LANDING", "DEEP WATER BEYOND THE PILES");
 
   // ==========================================
   // 2. M.E.G. OUTPOST BOUNTIFUL FARMHOUSE
@@ -80,15 +93,18 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
 
   // Farmhouse Porch Lantern
   sp("l10-porch-lamp", {
-    feetPosition: T(-24, -42, 2.8),
+    feetPosition: T(-24, -44.65, 2.89),
     model: { id: "/cdn/value.e35d991141e696f8e60fa7772fc3debae53a38c2a91f75de29e919f908388284.glb" }, layout: { box: { min: { x: -0.13, y: 0, z: -0.13 }, max: { x: 0.13, y: 0.36, z: 0.13 } } },
     light: { kind: "point", color: "oklch(0.9 0.16 75)", intensity: 3.2, distance: 9 },
+    children: [{ feetPosition: { x: 0, y: 0.35, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.015, radiusBottom: 0.015, height: 0.12 }, material: { color: "#514a3c", metalness: 0.7 } }],
   });
 
-  // Outpost Shortwave Radio on Porch
+  // The radio faces the walkway from a worktable tucked against the house.
+  sp("l10-radio-desk", { feetPosition: T(-28.65, -42.87, 0.45),
+    primitive: { kind: "scripted", script: "scripts/props10.js", params: { kind: "radio-desk" } }, physics: "static" });
   sp("l10-outpost-radio", {
     tags: ["usable"],
-    feetPosition: T(-28, -43.4, 0.45),
+    feetPosition: T(-28.65, -42.87, 1.23),
     rotation: { yaw: 180 },
     primitive: { kind: "scripted", script: "scripts/props10.js", params: { kind: "radio" } },
     behavior: "scripts/level10-use.js",
@@ -98,8 +114,8 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   // Outpost Hearth Baking Oven
   sp("l10-hearth-oven", {
     tags: ["usable"],
-    feetPosition: T(-16, -38, 0),
-    rotation: { yaw: -90 },
+    feetPosition: T(-17.3, -51.6),
+    rotation: { yaw: 180 },
     primitive: { kind: "scripted", script: "scripts/props10.js", params: { kind: "oven" } }, physics: "static",
     light: { kind: "point", color: "oklch(0.88 0.18 55)", intensity: 2.2, distance: 6 },
     behavior: "scripts/level10-use.js",
@@ -109,7 +125,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   // Stone Water Well (Aquifer Pump)
   sp("l10-farm-well", {
     tags: ["usable"],
-    feetPosition: T(-12, -32, 0),
+    feetPosition: T(-11.7, -36.2),
     rotation: { yaw: 45 },
     primitive: { kind: "scripted", script: "scripts/well10.js" },
     physics: "static",
@@ -141,7 +157,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
 
   sp("l10-windmill-quern", {
     tags: ["usable"],
-    feetPosition: T(-55, -33.2, 0),
+    feetPosition: T(-52.8, -39.7, 0),
     model: { id: "/cdn/value.b694bae83206a1a1d3452d6de15bf2c65e839432920cda393a3c8357e473a908.glb" }, layout: { box: { min: { x: -0.75, y: 0, z: -0.75 }, max: { x: 0.75, y: 0.8, z: 0.75 } } },
     behavior: "scripts/level10-use.js",
     state: { kind: "windmill-quern", name: "Windmill Stone Rotary Quern", verb: "Grind Flour" },
@@ -159,7 +175,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
 
   sp("l10-silo-hopper", {
     tags: ["usable"],
-    feetPosition: T(-42, -18.5, 0),
+    feetPosition: T(-42, -17.9),
     primitive: { kind: "scripted", script: "scripts/props10.js", params: { kind: "hopper" } }, physics: "static",
     behavior: "scripts/level10-use.js",
     state: { kind: "silo-hopper", name: "Grain Discharge Chute", verb: "Inspect Grain Reserves" },
@@ -168,24 +184,13 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   // ==========================================
   // 5. SPLIT-RAIL WOODEN FENCES
   // ==========================================
-  sp("l10-fence-road-1", {
-    feetPosition: T(-5, -20, 0),
-    rotation: { yaw: 90 },
-    primitive: { kind: "scripted", script: "scripts/fence10.js", params: { len: 14, rails: 2 } },
-    physics: "static",
+  const fence = (id, x, z, yaw, len) => sp(id, {
+    feetPosition: T(x, z, -0.08), rotation: { yaw },
+    primitive: { kind: "scripted", script: "scripts/fence10.js", params: { len, rails: 2 } }, physics: "static",
   });
-  sp("l10-fence-road-2", {
-    feetPosition: T(-5, -38, 0),
-    rotation: { yaw: 90 },
-    primitive: { kind: "scripted", script: "scripts/fence10.js", params: { len: 16, rails: 2 } },
-    physics: "static",
-  });
-  sp("l10-fence-yard-west", {
-    feetPosition: T(-62, -45, 0),
-    rotation: { yaw: 0 },
-    primitive: { kind: "scripted", script: "scripts/fence10.js", params: { len: 18, rails: 2 } },
-    physics: "static",
-  });
+  fence("l10-fence-road-1", -6, -20, 90, 15);
+  fence("l10-fence-road-2", -6, -45, 90, 13);
+  fence("l10-fence-yard-west", -61, -36, 90, 22);
 
   // ==========================================
   // 6. HARVESTABLE GOLDEN WHEAT PATCHES
@@ -197,8 +202,8 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
     behavior: "scripts/level10-use.js",
     state: { kind: "wheat-patch", name: "Ripe Golden Wheat Patch", verb: "Reap Wheat Sheaf" },
   });
-  wheatPatch("l10-wheat-patch-1", -8, -25);
-  wheatPatch("l10-wheat-patch-2", 15, -42);
+  wheatPatch("l10-wheat-patch-1", -9.0, -25.5);
+  wheatPatch("l10-wheat-patch-2", 15.5, -46.5);
   wheatPatch("l10-wheat-patch-3", 10, -110);
 
   // ==========================================
@@ -207,7 +212,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   // Eastern barley plot (carries Document #24)
   sp("l10-scarecrow-east", {
     tags: ["usable", "scarecrow"],
-    feetPosition: T(65, -40, 0),
+    feetPosition: T(66, -52.1),
     rotation: { yaw: -70 },
     primitive: { kind: "scripted", script: "scripts/scarecrow10.js" },
     physics: "static",
@@ -241,37 +246,34 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   // 8. M.E.G. OUTPOST BOUNTIFUL NPCS
   // ==========================================
   const ROUNDS_COOPER = [
-    { ...T(-21.8, -43.2, 0.45), dwell: 18, act: "cdn/clip-nod-yes.glb", look: T(-21, -44.5, 0.45) },
-    { ...T(-23.5, -40.5, 0.5), dwell: 16, act: null, look: T(-10, -40, 0) },
-    { ...T(-20.5, -40.9, 0.5), dwell: 14, act: "cdn/clip-pickup.glb", look: T(-20, -42, 0.45) },
-    { ...T(-13, -47.2, 0), dwell: 22, act: null, look: T(-13, -49, 0) },
+    { ...T(-22.5, -47.2), dwell: 35, look: T(-8, -41) },
+    { ...T(-24.0, -44.35, 0.45), dwell: 22, look: T(-24, -46.4) },
+    { ...T(-16.4, -49.6), dwell: 24, look: T(-17.3, -51.6) },
   ];
   const ROUNDS_MAEVE = [
-    { ...T(-26, -43.2, 0.45), dwell: 20, act: "cdn/clip-pickup.glb", look: T(-26, -44, 0.45) },
-    { ...T(-28.2, -40.8, 0.5), dwell: 15, act: "cdn/clip-point.glb", look: T(-32, -40, 0.45) },
-    { ...T(-25, -38, 0.1), dwell: 18, act: "cdn/clip-crouch-idle-loop.glb", look: T(-25, -35, 0) },
+    { ...T(-9.9, -28.0), dwell: 28, act: "cdn/clip-crouch-idle-loop.glb", look: T(-9, -25.5) },
+    { ...T(-12.65, -37.5), dwell: 18, look: T(-11.7, -36.2) },
+    { ...T(-26, -44.2, 0.45), dwell: 25, look: T(-24, -46.4) },
   ];
   const ROUNDS_HALE = [
-    { ...T(-14.2, -36.5, 0), dwell: 22, act: "cdn/clip-pickup.glb", look: T(-15.5, -36.5, 0) },
-    { ...T(-13.0, -39.0, 0), dwell: 18, act: null, look: T(-13, -45, 0) },
-    { ...T(-16.0, -34.5, 0), dwell: 20, act: "cdn/clip-nod-yes.glb", look: T(-17, -34, 0) },
+    { ...T(-41.4, -45.0), dwell: 24, look: T(-48, -48.2) },
+    { ...T(-48.2, -48.7), dwell: 20, look: T(-53.5, -48.5) },
+    { ...T(-37.8, -48.9), dwell: 22, look: T(-34, -54) },
   ];
   const ROUNDS_WREN = [
-    { ...T(-6, -40, 0), dwell: 22, act: "cdn/clip-crouch-idle-loop.glb", look: T(-3, -40, 0) },
-    { ...T(-10, -44, 0), dwell: 18, act: "cdn/clip-point.glb", look: T(-14, -58, 0) },
-    { ...T(-11.1, -48.6, 0), dwell: 24, act: null, look: T(-13, -49, 0) },
-    { ...T(-24, -48, 0.1), dwell: 16, act: "cdn/clip-nod-yes.glb", look: T(-32, -52, 0) },
+    { ...T(-8.0, -38.0), dwell: 25, look: T(2, -40) },
+    { ...T(-9.95, -24.1), dwell: 20, act: "cdn/clip-crouch-idle-loop.glb", look: T(-9, -25.5) },
+    { ...T(-15.0, -34.2), dwell: 20, look: T(-11.7, -36.2) },
   ];
   const ROUNDS_SULLY = [
-    { ...T(-29, -43, 0.45), dwell: 25, act: null, look: T(-29, -44.5, 0.45) },
-    { ...T(-31.5, -41.5, 0.2), dwell: 18, act: "cdn/clip-point.glb", look: T(-35, -41.5, 0.2) },
-    { ...T(-27.5, -40.5, 0.5), dwell: 16, act: null, look: T(-27.5, -35, 0.45) },
+    { ...T(-28.65, -43.77, 0.45), dwell: 42, look: T(-28.65, -42.87, 1.23) },
+    { ...T(-27.3, -44.2, 0.45), dwell: 20, look: T(-24, -46.4) },
   ];
 
   // Homesteader Cooper (Head Agrarian Coordinator)
   sp("l10-meg-cooper", {
     tags: ["npc", "meg"],
-    feetPosition: T(-22, -43.2, 0.45),
+    feetPosition: spot(ROUNDS_COOPER[0]),
     rotation: { yaw: 180 },
     physics: "character",
     ...critterSpec(npcLook("l10-cooper", { species: "dog", sex: "m", topw: "vest", top: "#8a5a3a", botw: "pants", bottom: "#3a3a30", shoes: "boots", hat: "beret" }, "guard", 12)),
@@ -282,7 +284,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
       voice: "reyes",
       faction: "meg",
       factionName: "M.E.G. Outpost Bountiful",
-      home: { x: -22, z: -43.2 },
+      home: { x: ROUNDS_COOPER[0].x, z: ROUNDS_COOPER[0].z },
       rounds: ROUNDS_COOPER,
       ri: 0,
       line: "Welcome to Outpost Bountiful, wanderer! Fresh bread is in the oven and the wheat is ripe.",
@@ -293,7 +295,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   // Dr. Maeve (M.E.G. Research Wing / Agronomist)
   sp("l10-meg-maeve", {
     tags: ["npc", "meg"],
-    feetPosition: T(-26, -43.2, 0.45),
+    feetPosition: spot(ROUNDS_MAEVE[0]),
     rotation: { yaw: 180 },
     physics: "character",
     ...critterSpec(npcLook("l10-maeve", { species: "cat", sex: "f", topw: "jacket", top: "#4a6a5a", botw: "pants", bottom: "#2c3e50", shoes: "boots" }, "medic", 11)),
@@ -304,7 +306,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
       voice: "elena",
       faction: "meg",
       factionName: "M.E.G. Outpost Bountiful",
-      home: { x: -26, z: -43.2 },
+      home: { x: ROUNDS_MAEVE[0].x, z: ROUNDS_MAEVE[0].z },
       rounds: ROUNDS_MAEVE,
       ri: 0,
       line: "Keep your compass steady in the fields. The scarecrows aren't hostile, but they certainly aren't ordinary.",
@@ -313,21 +315,21 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   });
 
   // the rest of the outpost's people: who keeps the stores, who works the rows, who keeps the radio
-  const MEG = (id, at, yaw, look, role, hp, name, voice, line, rounds) => sp(id, { tags: ["npc", "meg"], feetPosition: at, rotation: { yaw }, physics: "character",
+  const MEG = (id, at, yaw, look, role, hp, name, voice, line, rounds) => sp(id, { tags: ["npc", "meg"], feetPosition: spot(at), rotation: { yaw }, physics: "character",
     ...critterSpec(npcLook(id.replace("l10-meg-", "l10-"), look, role, hp)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
     state: { name, role, voice, faction: "meg", factionName: "M.E.G. Outpost Bountiful", home: { x: at.x, z: at.z }, ...(rounds ? { rounds, ri: 0 } : {}), line, ...npcState(ctx, "agent", hp * 10) } });
-  MEG("l10-meg-hale", T(-14.2, -36.5, 0), -90, { species: "bear", sex: "m", topw: "shirt", top: "#6b6a4a", botw: "pants", bottom: "#3b3226", shoes: "boots" }, "quarter", 12,
+  MEG("l10-meg-hale", ROUNDS_HALE[0], 65, { species: "bear", sex: "m", topw: "shirt", top: "#6b6a4a", botw: "pants", bottom: "#3b3226", shoes: "boots" }, "quarter", 12,
     "Quartermaster Hale · M.E.G. Outpost Bountiful", "hollis", "Everything that leaves this farm gets weighed. Everything.", ROUNDS_HALE);
-  MEG("l10-meg-wren", T(-6, -40, 0), 120, { species: "rabbit", sex: "f", topw: "tank", top: "#c9a86a", botw: "overalls", bottom: "#41587a", shoes: "boots", hat: "cap" }, "scout", 9,
+  MEG("l10-meg-wren", ROUNDS_WREN[0], -90, { species: "rabbit", sex: "f", topw: "tank", top: "#c9a86a", botw: "overalls", bottom: "#41587a", shoes: "boots", hat: "cap" }, "scout", 9,
     "Wren · Outpost Farmhand", "mags", "Mind your boots in the rows. And don't dig past your ankles.", ROUNDS_WREN);
-  MEG("l10-meg-sully", T(-29, -43, 0.45), 200, { species: "raccoon", sex: "m", topw: "jacket", top: "#4a5240", botw: "pants", bottom: "#2a2a26", shoes: "boots", hat: "beanie" }, "default", 10,
+  MEG("l10-meg-sully", ROUNDS_SULLY[0], 180, { species: "raccoon", sex: "m", topw: "jacket", top: "#4a5240", botw: "pants", bottom: "#2a2a26", shoes: "boots", hat: "beanie" }, "default", 10,
     "Sully · Outpost Radio Operator", "reyes", "Bountiful to Alpha, still green out here. Over.", ROUNDS_SULLY);
   // the cookfire the outpost eats around: a stone ring, split logs, stumps to sit on
-  const fire = T(-13, -49, 0);
-  for (let i = 0; i < 9; i++) { const a = i * 0.698; sp(`l10-fire-stone-${i}`, { feetPosition: { x: fire.x + Math.cos(a) * 0.75, y: fire.y, z: fire.z + Math.sin(a) * 0.75 }, rotation: { yaw: i * 47 }, scale: { x: 1, y: 0.6, z: 0.8 }, primitive: { kind: "sphere", radius: 0.2, widthSegments: 7, heightSegments: 5 }, material: { color: "oklch(0.5 0.01 80)", roughness: 0.95 }, castShadow: false, visibleRange: { max: 60 } }); }
-  for (let i = 0; i < 3; i++) sp(`l10-fire-log-${i}`, { feetPosition: { x: fire.x, y: fire.y + 0.08, z: fire.z }, rotation: { yaw: i * 60, roll: 90, pitch: 18 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.08, height: 0.9, radialSegments: 7 }, material: { color: "oklch(0.25 0.03 50)", roughness: 1 }, castShadow: false });
-  [[1.9, 0.4], [-1.6, 1.1], [0.3, -2]].forEach(([dx, dz], i) => sp(`l10-fire-stump-${i}`, { tags: ["seat"], feetPosition: { x: fire.x + dx, y: fire.y, z: fire.z + dz }, rotation: { yaw: i * 110 }, model: { id: "/cdn/value.faf38ade6590b20ecc867e6aab0a951600de1e16f38674f972858a1c6cf44b62.glb" }, layout: { box: { min: { x: -0.38, y: 0, z: -0.38 }, max: { x: 0.38, y: 0.42, z: 0.38 } } }, physics: { body: "static", collider: "box" }, visibleRange: { max: 80 } }));
-  sp("l10-fire", { feetPosition: { x: fire.x, y: fire.y + 0.05, z: fire.z }, fx: { script: `fx
+  const fire = T(-12.2, -50.7);
+  for (let i = 0; i < 9; i++) { const a = i * 0.698; sp(`l10-fire-stone-${i}`, { feetPosition: T(fire.x + Math.cos(a) * 0.75, fire.z + Math.sin(a) * 0.75), rotation: { yaw: i * 47 }, scale: { x: 1, y: 0.6, z: 0.8 }, primitive: { kind: "sphere", radius: 0.2, widthSegments: 7, heightSegments: 5 }, material: { color: "oklch(0.5 0.01 80)", roughness: 0.95 }, castShadow: false, visibleRange: { max: 60 } }); }
+  for (let i = 0; i < 3; i++) sp(`l10-fire-log-${i}`, { feetPosition: T(fire.x, fire.z, -0.34), rotation: { yaw: i * 60, roll: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.08, height: 0.9, radialSegments: 7 }, material: { color: "oklch(0.25 0.03 50)", roughness: 1 }, castShadow: false });
+  [[1.9, 0.4], [-1.6, 1.1], [0.3, -2]].forEach(([dx, dz], i) => sp(`l10-fire-stump-${i}`, { tags: ["seat"], feetPosition: T(fire.x + dx, fire.z + dz), rotation: { yaw: i * 110 }, model: { id: "/cdn/value.faf38ade6590b20ecc867e6aab0a951600de1e16f38674f972858a1c6cf44b62.glb" }, layout: { box: { min: { x: -0.38, y: 0, z: -0.38 }, max: { x: 0.38, y: 0.42, z: 0.38 } } }, physics: { body: "static", collider: "box" }, visibleRange: { max: 80 } }));
+  sp("l10-fire", { feetPosition: T(fire.x, fire.z, 0.08), fx: { script: `fx
 pop flame rate=flick(.45,.2)*50 on=disc(.25) life=.5..0.9 v=up(1.4)+cone(22)*(.3..0.8) size=.2..0.38 acc=curl(.5)*1.2+buoy(2.2)+drag(1.5) sz=$size*(.5>.25:1>.7:.7>.14) col=hdr(4.6,3.4,1.4)>.3:hdr(3.2,1.4,.3)>.65:hdr(1.8,.5,.1)>hdr(.6,.12,.03) a=0>.12:1>.75:.85>0 rot=spin(.2) r=sprite(flame-wisp,add)
 pop embers rate=4 on=disc(.25) life=.7..1.4 v=up(2.2)+cone(30)*(.4..1.2) size=.02..0.05 acc=curl(.8)+grav()*.45+drag(.5) col=hdr(5,2.8,.8)>hdr(1,.22,.04) a=(0>.08:1>.65:.9>0)*flick(11,.35) r=sprite(ember,add,velocity,.02)
 pop smoke on=@flame?.2 inh=p;v:$v*.4 life=2..3.2 size=.18..0.3 acc=buoy(.9)+curl(.35)*.5+drag(.8) sz=$size*(.7>3.2) col=<.3,.28,.26>><.15,.15,.16> a=0>.25:.3>.7:.2>0 r=sprite(smoke-puff,alpha)
@@ -336,7 +338,7 @@ pop glow n=1 at=disc(.2).c(.45) glo=fire()*(#flame/35)~ r=light(<1,.55,.24>,$glo
   // the M.E.G. flag over the yard
   const fl = T(-20, -33, 0);
   sp("l10-flagpole", { feetPosition: fl, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.06, height: 7, radialSegments: 8 }, material: { color: "oklch(0.7 0.01 250)", metalness: 0.7, roughness: 0.4 }, physics: "static" });
-  sp("l10-flag", { feetPosition: { x: fl.x + 0.8, y: fl.y + 6.0, z: fl.z }, primitive: { kind: "plane", width: 1.6, height: 0.95, widthSegments: 8 }, material: { color: "oklch(0.32 0.06 250)", side: "double", roughness: 0.9 }, castShadow: false,
+  sp("l10-flag", { feetPosition: T(fl.x + 0.8, fl.z, 6.27), primitive: { kind: "plane", width: 1.6, height: 0.95, widthSegments: 8 }, material: { color: "oklch(0.32 0.06 250)", side: "double", roughness: 0.9 }, castShadow: false,
     vector: "<svg viewBox='0 0 160 95' width='1.6m'><rect width='160' height='95' fill='#1f2c45'/><circle cx='80' cy='44' r='26' fill='none' stroke='#e8dcb0' stroke-width='4'/><text x='80' y='53' font-family='sans-serif' font-size='24' font-weight='700' text-anchor='middle' fill='#e8dcb0'>MEG</text><text x='80' y='88' font-family='sans-serif' font-size='10' text-anchor='middle' fill='#e8dcb0'>OUTPOST BOUNTIFUL</text></svg>" });
 
   // ==========================================
@@ -348,8 +350,8 @@ pop glow n=1 at=disc(.2).c(.45) glo=fire()*(#flame/35)~ r=light(<1,.55,.24>,$glo
   sp("l10-shed-b", { ...BARN(4.5, 3.6, 2.5, 3.6, "plank", 1.6), feetPosition: T(95, -60, 0), rotation: { yaw: 200 } });
 
   // Supply crates & Tool chests
-  const crate = (id, x, z, name, items, yaw = 0) => sp(id, {
-    tags: ["container", "breakable"], feetPosition: T(x, z, 0.06), rotation: { yaw },
+  const crate = (id, x, z, name, items, yaw = 0, position = T(x, z, 0.012)) => sp(id, {
+    tags: ["container", "breakable"], feetPosition: position, rotation: { yaw },
     primitive: { kind: "scripted", script: "scripts/props10.js", params: { kind: "crate" }, seed: x * 31 + z },
     physics: "static",
     state: { name, items, ...BRK("wood", 40) },
@@ -358,27 +360,14 @@ pop glow n=1 at=disc(.2).c(.45) glo=fire()*(#flame/35)~ r=light(<1,.55,.24>,$glo
   crate("l10-barn-chest", -42, -52, "Agrarian tool chest", "weapon:crowbar,tape,battery,bobbypin", -8);
   crate("l10-stable-bin", -58, -103, "Tack box", "bandage,ration,cloth:topw:jacket:5a4630", 90);
   crate("l10-shed-a-box", 36, -150, "Nail box", "wire,tape,bobbypin", 0);
-  crate("l10-cellar-chest", -34, -56, "Cellar reserve cache", "ration,ration,battery,almond", 0);
-  crate("l10-lake-tackle", 43.5, -95.6, "Weathered Lakeside Tackle Box", "weapon:fishing_rod,wire,bobbypin,almond", 0);
+  crate("l10-cellar-chest", -31.7, -55.5, "Cellar reserve cache", "ration,ration,battery,almond", 0);
+  crate("l10-lake-tackle", 42.5, -94.23, "Weathered Lakeside Tackle Box", "weapon:fishing_rod,wire,bobbypin,almond", 0, { x: 42.5, y: DOCK_Y + 0.14, z: -94.23 });
 
-  // Lakeside Fishing Dock (Extending from west bank into the lake)
   sp("l10-dock-planks", {
-    feetPosition: T(45.5, -95, 0.08),
-    rotation: { yaw: 90 },
-    primitive: { kind: "box", width: 2.8, height: 0.14, depth: 6.2 },
-    material: { color: "oklch(0.48 0.06 65)", roughness: 0.9 },
-    physics: "static",
+    feetPosition: { x: 45.35, y: DOCK_Y, z: -95 },
+    primitive: { kind: "scripted", script: "scripts/props10.js", params: { kind: "dock" } },
+    physics: "static", visibleRange: { max: 140 },
   });
-  for (const px of [43.5, 47.5]) {
-    for (const pz of [-93.8, -96.2]) {
-      sp(`l10-dock-post-${px}-${pz}`, {
-        feetPosition: { x: px, y: -1.2, z: pz },
-        primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.1, height: 2.4 },
-        material: { color: "oklch(0.36 0.04 60)", roughness: 0.9 },
-        physics: "static",
-      });
-    }
-  }
 
   // Lurking entity inside the distant abandoned Shed B
   sp("l10-shed-stealer", {
@@ -396,18 +385,32 @@ pop glow n=1 at=disc(.2).c(.45) glo=fire()*(#flame/35)~ r=light(<1,.55,.24>,$glo
     physics: { body: "static", collider: "box" },
     state: { name: "Hay bale", ...BRK("cloth", 30) },
   });
-  bale("l10-bale-0", -40, 0, -63, 0);
-  bale("l10-bale-1", -38.4, 0, -63.3, 10);
-  bale("l10-bale-2", -56, 0, -65, 70);
+  bale("l10-bale-0", -53.6, 0, -48.6, 14);
+  bale("l10-bale-1", -55.1, 0, -48.5, 24);
+  bale("l10-bale-2", -44.5, 0, -49.25, -12);
 
   // ==========================================
   // 10. HEDGEROWS, REEDS & CANOLA
   // ==========================================
+  // Leave the tracks, farmyard and water open between field boundaries.
   const rows = [];
-  // the farmyard (x -72..-4, z -76..-4) is kept clear: the rows that cross it are split around it
-  const span = (a0, a1, cut0, cut1) => (a1 < cut0 || a0 > cut1) ? [[a0, a1]] : [[a0, cut0], [cut1, a1]].filter(([u, v]) => v - u > 6);
-  for (const x of [-120, -40, 40, 120]) for (const [z0, z1] of (x === -40 ? span(-290, 70, -76, -4) : [[-290, 70]])) rows.push({ cx: x, cz: (z0 + z1) / 2, w: 5, d: z1 - z0 });
-  for (const z of [-270, -210, -150, -90, -30, 30]) for (const [x0, x1] of (z === -30 ? span(-160, 160, -72, -4) : [[-160, 160]])) rows.push({ cx: (x0 + x1) / 2, cz: z, w: x1 - x0, d: 5 });
+  const spans = (from, to, cuts) => {
+    const out = [];
+    for (const [lo, hi] of cuts) {
+      if (lo - from > 6) out.push([from, lo]);
+      from = hi;
+    }
+    if (to - from > 6) out.push([from, to]);
+    return out;
+  };
+  for (const [x, cuts] of [
+    [-120, [[-128, -112]]], [-40, [[-126, -110], [-66, -14]]],
+    [40, [[-159, -141], [-105, -85], [-50, -34]]], [120, [[-49, -31]]],
+  ]) for (const [z0, z1] of spans(-290, 70, cuts)) rows.push({ cx: x, cz: (z0 + z1) / 2, w: 4, d: z1 - z0 });
+  for (const [z, cuts] of [
+    [-270, [[-9, 9]]], [-210, [[-7, 12]]], [-150, [[-13, 8], [27, 45]]],
+    [-90, [[-12, 7], [25, 104]]], [-30, [[-72, 10]]], [30, [[-9, 9]]],
+  ]) for (const [x0, x1] of spans(-160, 160, cuts)) rows.push({ cx: (x0 + x1) / 2, cz: z, w: x1 - x0, d: 4 });
   rows.forEach((r, i) => sp(`l10-hedge-${i}`, {
     feetPosition: T(r.cx, r.cz),
     scatter: {
@@ -419,17 +422,17 @@ pop glow n=1 at=disc(.2).c(.45) glo=fire()*(#flame/35)~ r=light(<1,.55,.24>,$glo
     },
   }));
 
-  // Lake reeds
-  sp("l10-reeds", {
-    feetPosition: T(70, -95),
-    scatter: {
-      bounds: { shape: "ring", innerRadius: 24, outerRadius: 29 },
-      count: 220,
-      seed: 9,
-      variation: { scale: [1.2, 1.9], yaw: [0, 360] },
-      templates: [{ primitive: { kind: "scripted", script: "scripts/wheat10.js", params: { h: 1.2, n: 9, head: 0.18 }, seed: 5 }, material: { color: "oklch(0.86 0.03 85)" }, visibleRange: { max: 70 }, castShadow: false }],
-    },
-  });
+  // Reeds collect in patches around the bank; the fishing landing stays open.
+  if (ctx.getObject("l10-reeds")) ctx.destroy("l10-reeds");
+  [[44.6, -104.4], [48.5, -112], [62, -120.4], [81, -119], [94, -104], [96, -89], [84, -73], [67, -69], [53, -76], [45.6, -84.5]]
+    .forEach(([x, z], i) => sp("l10-reeds-" + i, {
+      feetPosition: T(x, z),
+      scatter: {
+        bounds: { shape: "circle", radius: 3.2 }, count: 16, seed: 9 + i,
+        variation: { scale: [1.1, 1.8], yaw: [0, 360] },
+        templates: [{ primitive: { kind: "scripted", script: "scripts/wheat10.js", params: { h: 1.2, n: 9, head: 0.18 }, seed: 5 }, material: { color: "oklch(0.86 0.03 85)" }, visibleRange: { max: 70 }, castShadow: false }],
+      },
+    }));
 
   // Canola patch (Level 184 transition)
   sp("l10-canola", {
@@ -456,24 +459,11 @@ export function tick(ctx) {
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   const s = ctx.place.state;
   if ((s.builtV ?? 0) < V) {
-    s.builtV = V;
-    lay(ctx);
-  }
-  if (ctx.place.players?.length && !s.porchPlacementV) {
-    const radio = ctx.place.objects["l10-outpost-radio"];
-    if (radio) {
-      const legacy = Math.abs(radio.feetPosition.z + 42.2) < 0.4;
-      const deck = radio.feetPosition.y - (legacy ? 0.03 : 0);
-      if (legacy) radio.feetPosition = { x: -28, y: deck, z: -43.4 };
-      for (const id of ["l10-meg-cooper", "l10-meg-maeve"]) {
-        const o = ctx.place.objects[id];
-        if (!o || o.state.dead || o.state.follow) continue;
-        if (Math.abs(o.feetPosition.z + 42.4) < 0.5) o.feetPosition = { x: o.state.home?.x ?? o.feetPosition.x, y: deck, z: -43.2 };
-        if (o.state.home) o.state.home = { ...o.state.home, z: -43.2 };
-        if (o.state.rounds?.[0]?.z === -42.4) o.state.rounds = [{ ...o.state.rounds[0], z: -43.2 }, ...o.state.rounds.slice(1)];
-      }
-      s.porchPlacementV = 1;
+    for (const id of Object.keys(ctx.place.objects)) {
+      if (/^l10-(hedge-\d+|dock-post-[-\d.]+|sign-post)$/.test(id)) ctx.destroy(id);
     }
+    lay(ctx);
+    s.builtV = V;
   }
   if (ctx.place.players?.length) tickChatter(ctx, CHATTER.level10 ?? [], { "l10-meg-cooper": "reyes", "l10-meg-maeve": "elena", "l10-meg-hale": "hollis", "l10-meg-wren": "mags", "l10-meg-sully": "reyes" }); // the outpost talks among itself
 }
