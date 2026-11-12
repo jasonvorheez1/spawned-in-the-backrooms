@@ -1063,6 +1063,18 @@ export function tick(ctx) {
     }
     s.fortPlacementV = 1;
   }
+  if ((s.catV ?? 0) < 1 && !s.catBusy) { // Shelly Nov 12 "level 7 is still using the old npcs": the fort's people stood before the cat bodies; refit them in place (same path as Cap'n and Rico), state and weapons kept
+    s.catBusy = 1;
+    Promise.all([import("../../scripts/lib/critter-model.js"), import("../../scripts/lib/clothes.js")]).then(([{ bodyModel, seatCat }, { npcLook }]) => {
+      for (const [id, g] of Object.entries(L7_NPCS)) {
+        const o = ctx.place.objects[id]; if (!o) continue;
+        const l = npcLook(id, g.look, "l7", 15);
+        o.state.wear = l; delete o.state.headBody;
+        o.model = bodyModel(l); seatCat(ctx, o, l);
+      }
+      s.catV = 1; delete s.catBusy;
+    }).catch((e) => { ctx.log("l7 cat refit", String(e)); delete s.catBusy; });
+  }
   if (!ctx.getObject("l7-fauna")) ctx.spawn("l7-fauna", { behavior: "scripts/l7-fauna.js" }); // tidecrawlers on the shores, the Deep in open water
   // Ensure NPCs come back home after respawn window via level-kit
   if (every(ctx, "people", 5000)) {
