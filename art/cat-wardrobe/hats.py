@@ -54,6 +54,8 @@ def load_hat(kind):
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     # weld + smooth shade, a light Laplacian to take the Tripo crumple out
     bm = bmesh.new(); bm.from_mesh(o.data); bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bm.to_mesh(o.data); bm.free()
+    d = o.modifiers.new("d", "DECIMATE"); d.ratio = min(1.0, 9000 / max(1, len(o.data.polygons)))   # ~9k tris: a hat rides every cat's head, NPCs too
+    bpy.ops.object.modifier_apply(modifier="d")
     m = o.modifiers.new("s", "CORRECTIVE_SMOOTH"); m.iterations = 4; m.smooth_type = "LENGTH_WEIGHTED"
     bpy.ops.object.modifier_apply(modifier="s")
     for p in o.data.polygons: p.use_smooth = True

@@ -15,6 +15,11 @@ for sex in ("f","m"):
     bpy.ops.import_scene.gltf(filepath=f"/tmp/hf/body{sex}.glb")
     for o in list(bpy.context.scene.objects):
         if o.type=="MESH" and o.name not in ("Head","Body") and "Body" not in o.name and "Head" not in o.name: bpy.data.objects.remove(o)
+    for o in bpy.context.scene.objects:
+        if o.type=="MESH" and o.data.shape_keys and "Ear_Hide" in o.data.shape_keys.key_blocks: o.data.shape_keys.key_blocks["Ear_Hide"].value = 1
+    bpy.ops.import_scene.gltf(filepath=f"/tmp/hf/ears{sex}.glb")
+    for o in bpy.context.selected_objects:
+        if o.type=="MESH": o.name = "EarsX"
     bpy.ops.import_scene.gltf(filepath=f)
     hats=[o for o in bpy.context.selected_objects if o.type=="MESH"]
     red = bpy.data.materials.new("r"); red.diffuse_color=(0.8,0.15,0.1,1); red.use_nodes=True
