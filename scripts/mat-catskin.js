@@ -54,14 +54,14 @@ export function material(ctx) {
       const wash = lid.mul(pic.a.oneMinus().mul(0.7).add(0.3).mul(smoothstep(0.6, 0.95, pic.a).oneMinus())).mul(inside).mul(front).mul(P("shA", 0.7));
       col = mix(col, mix(C("sh").mul(col.add(0.5)).min(vec3(1, 1, 1)), C("sh"), 0.4), wash);
     }
-    // one nose, on the sculpted snout tip itself (bind space): a soft rounded triangle, wider on top, with a small shine
-    const ns = P("noseS", 1), ny = q.y.sub(P("noseY", 0.797)).div(0.0125 * 1).div(ns);
-    const nx = q.x.div(float(0.017).mul(ns)).div(float(1).add(ny.mul(0.28)).max(0.3));
+    // one nose, on the sculpted snout tip itself (bind space). Shelly Nov 12 "more cutesy anime than sonic": small, a soft rounded triangle wide on top, dusky rose, one tiny shine
+    const ns = P("noseS", 1), ny = q.y.sub(P("noseY", 0.797)).div(0.0085).div(ns);
+    const nx = q.x.div(float(0.0115).mul(ns)).div(float(1).add(ny.mul(0.55)).max(0.25));
     const nDist = nx.mul(nx).add(ny.mul(ny)).sqrt();
     const onTip = smoothstep(-0.065, -0.048, q.z.sub(P("noseZ", 0.249)));   // wide enough for the flat snout key (tip 4 cm back)
-    const noseM = smoothstep(1.0, 0.86, nDist).mul(onTip);
-    const shine = smoothstep(0.5, 0.15, nx.add(0.25).mul(nx.add(0.25)).add(ny.sub(0.45).mul(ny.sub(0.45))).sqrt());
-    col = mix(col, mix(vec3(0.045, 0.032, 0.03), vec3(0.42, 0.38, 0.38), shine.mul(0.6)), noseM);
+    const noseM = smoothstep(1.0, 0.82, nDist).mul(onTip);
+    const shine = smoothstep(0.28, 0.08, nx.add(0.3).mul(nx.add(0.3)).add(ny.sub(0.4).mul(ny.sub(0.4))).sqrt());
+    col = mix(col, mix(vec3(0.30, 0.13, 0.15), vec3(0.95, 0.85, 0.87), shine.mul(0.8)), noseM);
     m.colorNode = col;
     m.emissiveNode = col.mul(0.06).add(eye.mul(irisAmt.mul(pic.a).mul(inside).mul(front).mul(0.35)));   // a little glow so the iris reads in the dim yellow light
     m.roughness = 0.68;
