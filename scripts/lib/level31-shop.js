@@ -47,7 +47,7 @@ export function layShop(ctx) {
   prize("prize-a", "prizeA", -1.75, 1.32); prize("prize-b", "prizeB", 1.75, 1.13);
   tr("counter", "counter", -38.3, 0, -0.1, 0, 1.35); tr("case-side", "case", -39.3, 0, 1.25, S, 1);
   // two stocked gift gondolas down the middle (file 0.91 x 1.0 x 0.94 m) at x1.55 = 1.55 m tall, eye level for a 1.7 m player
-  const gon = (id, z) => sp(id, { feetPosition: { x: -34.2, y: 0, z }, rotation: { yaw: E }, model: M.gondola2, scale: 2.25, // file 0.90 x 0.71 x 0.43 m read live -> 2.0 x 1.6 x 0.97 m physics: { body: "static", collider: "box" } });
+  const gon = (id, z) => sp(id, { feetPosition: { x: -34.2, y: 0, z }, rotation: { yaw: E }, model: M.gondola2, scale: 2.25, /* file 0.90 x 0.71 x 0.43 m read live -> 2.0 x 1.6 x 0.97 m */ physics: { body: "static", collider: "box" } });
   gon("gondola-n", -4.2); gon("gondola-s", 4.2);
   // skate walls on the south wall (file 0.24 x 0.97 x 1.0 m, faces along x) at x1.9 = 1.83 m tall, hung 0.35 m up
   tr("skates-a", "skatewall", -35.6, 0.35, SZ - 0.25, 90, 1.9, false); tr("skates-b", "skatewall", -33.3, 0.35, SZ - 0.25, 90, 1.9, false);
