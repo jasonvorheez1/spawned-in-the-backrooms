@@ -43,7 +43,7 @@ export function laySideB(ctx) {
   person("guard2", -9.3, 27.9, -15, { species: "human", sex: "m", topw: "tee", top: "#56603f", botw: "pants", bottom: "#2a2622", shoes: "boots" },
     "concession", "B.N.T.G. Rink Concession", "B.N.T.G. Muscle", "agent", { rounds: SHIFT.guard2 });
   person("dez", -27.4, 28.6, -20, { species: "human", sex: "m", topw: "jacket", top: "#2e2f2a", botw: "pants", bottom: "#1f1f22", shoes: "boots" },
-    "concession", "B.N.T.G. Rink Concession", "Dez · B.N.T.G.", "agent", { voice: "l31-q-dez", essential: true, rounds: SHIFT.dez });
+    "concession", "B.N.T.G. Rink Concession", "Dez · B.N.T.G.", "agent", { voice: "l31-q-dez", essential: true, rounds: SHIFT.dez, nerve: "brave" });
 
   // the DJ's crate, back corner behind the left curtain, where it's dark
   if (GLB.crate) M("crate", "crate", -6.1, -29.3, 0, { tags: ["usable", "l31-q"], behavior: "scripts/l31-crate.js", state: { name: "Steel crate", verb: "Open", info: "Padlocked. A card slot under the lock." } });
