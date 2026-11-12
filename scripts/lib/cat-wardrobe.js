@@ -94,8 +94,9 @@ export function catModel(sex, look) {
   const calm = typeof expression !== 'string' || expression === faces.neutral
   const sk = sex === 'm' ? 'male' : 'female'
   // an eye type redraws the calm face; a mouth type lays its layer on it. a mood face keeps its own painted eyes and mouth
-  const face = calm ? (FACES.eyes?.[sk]?.[look?.etype] ?? faces.neutral) : expression
-  const mouth = calm ? FACES.mouths?.[sk]?.[look?.mtype] : undefined
+  const crew = look?.etype === 'crew' // Remodeling Co. (Shelly #243870): faceless, the two white eyes in every mood
+  const face = crew ? FACES.eyes[sk].crew : calm ? (FACES.eyes?.[sk]?.[look?.etype] ?? faces.neutral) : expression
+  const mouth = calm && !crew ? FACES.mouths?.[sk]?.[look?.mtype] : undefined
   const projection = sex === 'm' ? [2.9946, -2.118, -0.011] : [2.9946, -2.0198, 0.055]   // Nov 11 (Shelly 'fix eye placement and double noses'): picture 4.5% lower so its eyes sit in the sculpted sockets and its nose on the mesh nose
   const skin = (color) => ({ kind: 'scripted', script: 'scripts/mat-catskin.js', color, params })
   return {
