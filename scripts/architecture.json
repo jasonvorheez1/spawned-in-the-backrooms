@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 5968,
-  "updatedAt": "2026-11-12T04:04:53.096Z",
+  "basedOnSpecVersion": 5971,
+  "updatedAt": "2026-11-12T04:07:45.634Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, lore-based destinations, a social mall and solo tutorial spaces. `templates/player.js` composes shared behaviors; `scripts/player.js` owns player progression and combat, while place simulations and shared libraries build/tick environments, NPCs, quests, crossings and visual dressing.",
   "scriptPaths": [],
   "places": [
@@ -9,7 +9,7 @@
     "places/bonus (3D) - vaporwave mall with authored shops, escalators and simulated staff/shoppers; shared hub destination.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo ephemeral) - character creation/waking and staged tutorial route.",
     "places/level01 (3D) - Zenith Station: station, breach, doors, bots, hazards and recorder quest.",
-    "places/level1, level2, level21, level3, gamma (3D) - Habitable Zone/M.E.G. camp, Pipe Dreams, Locked, Electrical Station and Base Gamma; Level 3 sim generates hatches, detailed industrial models and almond-bottle piles.",
+    "places/level1, level2, level21, level3, gamma (3D) - Habitable Zone/M.E.G. camp, Pipe Dreams, Locked, Electrical Station and Base Gamma; Level 3 sim generates paired hatches, industrial details, almond-bottle piles and running assembly lines.",
     "places/level4, level5, level6, level7, level8 (3D) - Abandoned Office, Terror Hotel, drowned house, sea/Fort Surrender and Cave Systems.",
     "places/level10, level11, level12 (3D) - lake, generated city/canal and renovation office; Level 11 connects to player home11.",
     "places/level26, level27, level184, level61, spamton, testlab and other special places (3D) - SS Fun, Bunker Springs, forts, Snackrooms, arena and Test Range."
@@ -50,7 +50,7 @@
     "scripts/kick.js + scripts/grab.js - kick cooldowns and carry/held target session; held objects own heldBy/down/stagger state and player.state.carryMul is reset when the carry ends.",
     "scripts/lib/loose.js + breakables.js - loose prop state and wrecks; permanently smashed root IDs live in place.state.gone; breakable wall hp and broken-cell/whole-wall timestamps live in place.state.wallHp/broken.",
     "scripts/lib/knock.js + stats.js - foe weight/attributes and down/stagger outcomes; enemy managers own AI and sneakTarget.",
-    "Place sims - local generated scene and migration markers, including Level 1 back-door rebuild, Level 3 hatchV, and Level 4 office/island conversions.",
+    "Place sims - local generated scene and migration markers, including Level 1 back-door rebuild, Level 3 hatchV/lineV and Level 4 office/island conversions.",
     "scripts/lib/prop-interactions.js + scripts/prop-part.js - prop open/lamp state and child part animation goals; prop-interactions preserves detailed models when searched.",
     "scripts/lib/thresholds.js - place.state.thrSeen/thrTry/thrDone/thrV placement protocol; testlab sim owns lootPool/labV and consumes pad requests."
   ],
@@ -66,7 +66,7 @@
     "Tracked quest → quest-marker.js → questMark/nextQuestExit gated crossing graph → local objective or remote exit marker and journal.",
     "Place sims → restyleSigns (signs.yml/sign-geo.js) and dressThresholds; doorway handlers call carryAcross before ctx.cross for local links, record xferTo, and player.js consumes it for arrival marker.",
     "scripts/player.js update → preloadTick reads nearby door IDs and preload.yml → player-audience preload event for destination models; forgiveTick reads NPC angry state/player.grudges and clears the grudge after an in-game hour.",
-    "Level 3 sim spawns Blender-built industrial models and hatch pairs; l3-visits.js manages rare Samantha/Death Rat guests, with the rat gait animation keyed to tripo rig tracks."
+    "Level 3 sim spawns industrial models and paired hatches; lineV replaces old line models with three Tripo stations per line plus scripts/l3-line.js belt boxes and cabinet lamps; l3-visits.js manages rare Samantha/Death Rat guests, with rat gait keyed to Tripo rig tracks."
   ],
   "behaviorFamilies": [
     "places/bonus scenes + bonus data/sim + mall shopper/salon scripts - authored mall, NPCs and counter behavior; escalator steps share motor behavior with placement-specific direction/phase.",
@@ -74,7 +74,7 @@
     "scripts/door-geo.js + door-swing.js and prop-interactions.js + interactive-props data + prop-part.js - parametrically generated doors/storage parts with eased motion and legacy prop migration.",
     "scripts/lib/thresholds.js + threshold-geo.js + participating place sims, alongside sign-style.js/sign-geo.js - shared threshold dressing and per-place/per-ID sign-board styles across place sims.",
     "places/level01/sim.js + zenith geometry, breach, hatch, bot and hazard scripts - Zenith Station environment and interactive systems.",
-    "places/level3/sim.js + level3-details-geo.js + lib/level3-hatch.js + l3-hatch*.js - tiled Electrical Station detail and paired steel doors through selected walls.",
+    "places/level3/sim.js + level3-details-geo.js + lib/level3-hatch.js + l3-hatch*.js + scripts/l3-line.js - tiled Electrical Station detail, paired steel hatches and animated belt boxes varied by line layout/state.",
     "places/level4 scenes/sim + l4-office, l4-office-geo, l4-home and resident data - office/hotel fixtures and attached residents.",
     "scripts/lib/critter-model.js + cat wardrobe/clothes data + material and art builders - reusable human/furry/Tripo cat rigs with varied looks and fitted attachments."
   ],
@@ -84,14 +84,14 @@
     "art/critter-hair-tripo/fit.py.held - saved fitter copy; active fit.py is the documented build fitter.",
     "scripts/dbg-pose.js - debug-room mannequin gallery after places/debug removal; no current placement found.",
     "scripts/dbg-bodypad.js, scripts/debug-pad.js, scripts/lib/debug-layout.js - debug-room pads/layout after places/debug removal; no current references found.",
-    "scripts/l3-line.js - exports onSpawn for an animated Level 3 belt and cabinet lamps, but no current attachment/reference found; the newly uploaded l3-assembly-line-2 model is likewise not referenced by the active tree."
+    "scripts/l3-line.js is now attached by places/level3/sim.js; the older uploaded l3-assembly-line-2 model remains unreferenced by active line placements."
   ],
   "migrationNotes": [
     "Threshold dressing version is V=7 in scripts/lib/thresholds.js; upgrades clean/rebuild thr-tagged objects and remain delayed/incremental until place colliders stand. Preserve thrSeen/thrTry/thrDone/thrV protocol.",
-    "Door transfers: carryAcross records xferTo only for local place links with a # marker and crosses carryId/nearby heldBy objects, rejecting room/world and Bonus destinations; Level 1 BACK moves via backV destroy-and-respawn because moving a…",
+    "Door transfers: carryAcross records xferTo only for local place links with a # marker and crosses carryId/nearby heldBy objects, rejecting room/world and Bonus destinations; Level 1 BACK moves via backV destroy-and-respawn because moving a laid-out door's pieces is handled specially.",
     "scripts/lib/sign-style.js only restyles eligible shallow box signs with UI, leaves emissive/light signs alone, and is throttled/idempotent; preserve source IDs, dimensions, text, colour and placement while signs.yml selects style.",
-    "Level 3 hatchV=3 rebuild destroys old l3-hatch-* objects; hatchAt deterministically shares each wall's door across its two faces. Keep detail-wall generation and paired passage triggers in sync; current bottle piles use a scaled collision …",
-    "scripts/player.js first-person tracer origin is derived from the held viewmodel transform plus weapon muzzle metadata; keep it distinct from ballistics' eye/aim direction. Third-person tracers retain the eye-based origin. preload-next uses a 30 m door reach and session preDone; player.grudges expiry uses one in-game hour.",
+    "Level 3 hatchV=3 rebuild destroys old l3-hatch-* objects; hatchAt deterministically shares each wall's door across its two faces. Level 3 lineV=2 destroys legacy line-model instances and lays three Tripo stations plus one animated belt controller per LINES entry; keep migration marker and controller parameters (len, beltY, box, n) aligned.",
+    "scripts/player.js first-person tracer origin is derived from the held viewmodel transform plus weapon muzzle metadata; keep it distinct from ballistics' eye/aim direction. Third-person tracers retain the eye-based origin; preload-next uses the nearby-door manifest.",
     "Level 3 crawl-hall liner hits are mapped by wallgrid.liner() to the underlying cell-edge wall; keep its protected-wall test and level3-geo.js CUT omission aligned with breakables place.state.broken and syncWalls patches."
   ]
 }
