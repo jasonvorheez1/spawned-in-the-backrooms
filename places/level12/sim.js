@@ -119,6 +119,12 @@ export function tick(ctx) {
   const st = ctx.place.state;
   if (st.v !== V) { st.v = V; lay(ctx); }
   if (st.d !== 2) { st.d = 2; layDetail(ctx); }
+  if (st.d13 !== 1) { st.d13 = 1; // a featureless door standing in the white: it opens on Level 13 (wiki: "random, featureless doors in Level 12 go to Level 13")
+    for (const id of ["l12-13-door", "l12-to-l13"]) if (id in ctx.place.objects) ctx.destroy(id);
+    ctx.spawn("l12-13-door", { feetPosition: { x: 9, y: 0, z: 14 }, rotation: { yaw: 150 }, primitive: { kind: "box", width: 1.24, height: 2.2, depth: 0.2 }, material: PAINT, physics: "static", state: { name: "Door", info: "No handle, no number. Beige light under it." },
+      children: [{ feetPosition: { x: 0, y: 0, z: -0.105 }, primitive: { kind: "box", width: 0.94, height: 2.06, depth: 0.02 }, material: { color: "oklch(0.84 0.04 88)", roughness: 0.8 } }, { feetPosition: { x: 0, y: 0.002, z: -0.5 }, rotation: { pitch: -90 }, primitive: { kind: "plane", width: 0.9, height: 0.7 }, material: { color: "oklch(0.9 0.07 88 / 0.5)", transparent: true, emissive: "oklch(0.88 0.07 88)", emissiveIntensity: 0.6 }, castShadow: false }] });
+    ctx.spawn("l12-to-l13", { tags: ["door"], feetPosition: { x: 9 - Math.sin(150 * Math.PI / 180) * 0.45, y: 0, z: 14 - Math.cos(150 * Math.PI / 180) * 0.45 }, rotation: { yaw: 150 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1, height: 2.1, depth: 0.5 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level13" } });
+  }
   // the clock's minute hand: one turn per clock hour, on the room's clock so every machine agrees
   if (!ctx.session.clock12) { const h = ctx.place.objects["l12-hand-m"]; if (h) { ctx.session.clock12 = true; animate(ctx, h, { "rotation.roll": [0, -360] }, { duration: R.hour, loop: true, easing: "linear" }); } }
   for (const p of ctx.place.players) {

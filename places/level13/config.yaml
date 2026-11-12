@@ -1,0 +1,21 @@
+# Level 13 "The Boiling Frogs" (backrooms-wiki.wikidot.com/level-13): a 20th century apartment complex. Bland beige
+# halls that S-curve, flats that restock themselves, and a lethargy that keeps people in their rooms until they vanish.
+# Hall A is unaligned residences; hall B past the bend is Floor 283, the B.N.T.G. Free Home Project.
+mode: 3d
+terrain:
+  kind: "off"
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: -40.4, y: 0.05, z: 0 }
+defaultSpawnRotation: { yaw: -90 }
+worldBounds: { bottom: -20 }
+atmosphere:
+  sky: { kind: color, color: oklch(0.12 0.01 80) }
+  fog: { kind: linear, near: 10, far: 55, color: oklch(0.55 0.03 85) }
+  clouds: { enabled: false }
+  stars: { enabled: false }
+  moon: { enabled: false, intensity: 0 }
+  timeOfDay: 0
+  wind: { direction: 0, speed: 0 }
+  ambient: { light: { color: oklch(0.9 0.03 85), intensity: 0.3 } }
+  hemisphere: { skyColor: oklch(0.9 0.03 85), groundColor: oklch(0.42 0.03 70), intensity: 0.25 }
+acoustics: { reverb: 0.3 }
