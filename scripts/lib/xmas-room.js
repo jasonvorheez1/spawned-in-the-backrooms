@@ -4,11 +4,11 @@ import { cellCenter, N } from "./maze.js";
 import X from "./data/xmas.yml";
 import { critterSpec } from "./critter-model.js";
 const GEO = "scripts/xmas-geo.js";
-const CARPET = { texture: "cdn/texture-dark-worn-brown-office-carpet-stained.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.42 0.04 55)", roughness: 1 };
-const WALLY = { texture: "cdn/texture-faded-yellowed-office-wallpaper-dark-stained.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.5 0.05 75)", roughness: 0.95 };
-const WALLR = { texture: "cdn/texture-dark-red-damask-wallpaper-faded.png", wrap: "repeat", repeat: [0.6, 0.6], color: "oklch(0.45 0.12 25)", roughness: 0.9 };
-const CEIL = { texture: "cdn/texture-acoustic-drop-ceiling-tiles-grid-stained.png", wrap: "repeat", repeat: [0.42, 0.42], color: "oklch(0.55 0.02 80)", roughness: 1 };
-const TROF = { color: "oklch(0.38 0.01 90)", roughness: 0.5, metalness: 0.3 };
+const CARPET = { texture: "cdn/texture-dark-worn-brown-office-carpet-stained.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.2 0.03 40)", roughness: 1 };
+const WALLY = { texture: "cdn/texture-faded-yellowed-office-wallpaper-dark-stained.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.2 0.04 60)", roughness: 0.95 };
+const WALLR = { texture: "cdn/texture-dark-red-damask-wallpaper-faded.png", wrap: "repeat", repeat: [0.6, 0.6], color: "oklch(0.2 0.08 25)", roughness: 0.9 };
+const CEIL = { texture: "cdn/texture-acoustic-drop-ceiling-tiles-grid-stained.png", wrap: "repeat", repeat: [0.42, 0.42], color: "oklch(0.16 0.02 60)", roughness: 1 };
+const TROF = { color: "oklch(0.15 0.01 90)", roughness: 0.5, metalness: 0.3 };
 const STILL_FACE = "/cdn/value.8f23419441b7dc3c4dbbbbae28daf9a8f16965a76f0bbb6fa4acc620f4829593.png";
 const geo = (kind, p = {}) => ({ kind: "scripted", script: GEO, params: { kind, ...p } });
 // a wall slab between two corners (axis-aligned), y0..y1

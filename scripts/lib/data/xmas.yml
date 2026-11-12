@@ -1,8 +1,8 @@
 # The Christmas Area (Kane Pixels): a pocket off Level 0's north edge. Savi's picks.
-v: 1
+v: 2   # bump to re-lay
 cell: { cx: 44 }            # the maze cell on the north rim whose outer wall opens (maze.js XMAS_CELL)
 bounds: { x0: 51.8, x1: 80.2, z0: 112.1, z1: 160.2 }   # inside here: no yellow hum
-treeLight: 2.5
+treeLight: 4
 treeLightRange: 14
 wreathLight: 1.3
 floorLight: 1.1
