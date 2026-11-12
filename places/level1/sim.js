@@ -50,7 +50,7 @@ export function tick(ctx) {
   if (!(Math.abs(now - (ctx.session.wallTick ?? -1e9)) < 2000)) { ctx.session.wallTick = now; tickWalls(ctx); } // broken interior walls: holes drawn, regrown after a while (lib/breakables.js)
   if (!s.almondTidy) { s.almondTidy = 1; for (const o of ctx.query({ tags: ["almond"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const p = o.feetPosition ?? { x: 0, y: 0, z: 0 }; if (p.y < 0.15 && !(Math.hypot(p.x - cellCenter(ARRIVE.cx, ARRIVE.cz).x - 2.4, p.z - cellCenter(ARRIVE.cx, ARRIVE.cz).z + 2.4) < 3)) ctx.destroy(o.id); } } // loose floor bottles cleared once: almond water lives in containers and drops now
   tickChatter(ctx, CHATTER.level1, {"meg-ale": "ale", "meg-ortiz": "ortiz", "meg-callum": "callum"}); // the camp talks among itself while someone's near
-  if (!s.seeded) {
+  if (!s.seeded) { s.backV = 2; // a fresh room lays its wall home where it belongs: nothing to move
     s.seeded = true;
     ctx.spawn("l1-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level1-geo.js" }, material: { roughness: 0.85, emissiveIntensity: 2 } });
     for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
@@ -99,10 +99,18 @@ export function tick(ctx) {
   if ((s.envV ?? 0) < 2) { s.envV = 2; const a = cellCenter(ARRIVE.cx, ARRIVE.cz);
     for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id], f = o.feetPosition; if (o.light && o.primitive?.kind === "sphere" && f && Math.abs(f.x - a.x - 1) < 0.1 && Math.abs(f.z - a.z - 8.2) < 0.1) ctx.destroy(id); } // the old map lamp sat inside the board
   }
-  if ((s.backV ?? 0) < 1 && s.seeded && s.arrive2) { s.backV = 1; // Nov 11: the flickering wall home stands in the far west halls now (scripts/lib/level1.js BACK); a room laid before moves its pieces
-    const mv = (id, x, y, z) => { const o = ctx.place.objects[id]; if (o) o.feetPosition = { x, y, z }; };
-    mv("l1-back", BACK.x + 0.5, 0, BACK.z); mv("l1-from-main", BACK.x + 2.4, 0.1, BACK.z); mv("l1-backwall", BACK.x - 0.2 + L1M.wallDx, 0, BACK.z);
-    for (const o of Object.values(ctx.place.objects)) { const f = o.feetPosition; if (o.light && !o.primitive && !o.model && f && Math.abs(f.x - BACK_OLD.x - 0.4) < 0.15 && Math.abs(f.z - BACK_OLD.z) < 0.15) o.feetPosition = { x: BACK.x + 0.4, y: f.y, z: BACK.z }; }
+  // Nov 11: the flickering wall home stands in the far west halls (scripts/lib/level1.js BACK). A room laid before had its door
+  // moved by a position write, which leaves a static trigger's collider where it was spawned: the way back to Level 0 stayed
+  // invisible beside the camp. So the door, its wall, its lamp and the arrival are taken down, then laid fresh a tick later.
+  if ((s.backV ?? 0) < 2 && s.seeded && s.arrive2) {
+    for (const id of ["l1-back", "l1-backwall", "l1-from-main", "l1-back-lamp"]) if (ctx.place.objects[id]) ctx.destroy(id);
+    for (const [id, o] of Object.entries(ctx.place.objects)) { const f = o.feetPosition; if (o.light && !o.primitive && !o.model && f && f.y < 0.5 && [BACK_OLD, BACK].some((b) => Math.abs(f.x - b.x - 0.4) < 0.15 && Math.abs(f.z - b.z) < 0.15)) ctx.destroy(id); }
+    s.backV = 2; s.backLay = true;
+  } else if (s.backLay) { s.backLay = false;
+    ctx.spawn("l1-back", { feetPosition: { x: BACK.x + 0.5, y: 0, z: BACK.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.8, height: 2.4, depth: 2.2 }, visible: false, behavior: "scripts/level-door.js", state: { to: "main" } });
+    ctx.spawn("l1-back-lamp", { feetPosition: { x: BACK.x + 0.4, y: 0, z: BACK.z }, visibleRange: { max: 35 }, light: { kind: "point", color: "oklch(0.85 0.12 92)", intensity: 3, distance: 6, shadow: { enabled: false } } });
+    ctx.spawn("l1-from-main", { feetPosition: { x: BACK.x + 2.4, y: 0.1, z: BACK.z }, rotation: { yaw: -90 } });
+    ctx.spawn("l1-backwall", { feetPosition: { x: BACK.x - 0.2 + L1M.wallDx, y: 0, z: BACK.z }, physics: "static", model: { id: L1M.wall }, receiveShadow: true, castShadow: false });
   }
   if (!s.megCamp) { s.megCamp = true; // the M.E.G. waypoint: the camp, its fire, its lamps, and three agents
     if (ctx.place.objects["meg-cloth"]) ctx.destroy("meg-cloth");

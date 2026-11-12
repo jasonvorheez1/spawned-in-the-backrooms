@@ -3,6 +3,7 @@
 // Each door's partner: the arrival marker its sim lays just inside the door you come through.
 import { heard } from "./lib/hear.js";
 import { bring } from "./lib/companion.js";
+import { carryAcross } from "./lib/carry.js";
 const PAIR = {
   "l1-back": "main#main-from-l1", "l1-onward": "level2#l2-from-l1",
   "l2-back": "level1#l1-from-l2", "l2-to-l3": "level3#l3-from-l2",
@@ -36,5 +37,6 @@ export function onTriggerEnter(ctx, other) {
   other.state.clipKind = KIND[key] ?? "glitch";
   if (ctx.self.state.to === "level26" && !other.state.l26seen) other.state.l26via = "poster"; // early route: lands below deck (scripts/lib/l26-cut.js)
   bring(ctx, other, PAIR[key] ?? ctx.self.state.to); // the people walking with you come through too (scripts/lib/companion.js)
+  carryAcross(ctx, other, PAIR[key] ?? ctx.self.state.to); // and what you hold (scripts/lib/carry.js)
   ctx.cross(other, PAIR[key] ?? ctx.self.state.to);
 }

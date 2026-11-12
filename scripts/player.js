@@ -55,6 +55,7 @@ import CR from './lib/data/craft.yml'
 import AW from './lib/data/almond.yml'
 import { MEAT } from './lib/items.js'
 import SNACKS from './lib/data/snacks.yml'
+import { carryAcross } from "./lib/carry.js";
 const sndTurn = {}
 const SND = (n) => { const takes = SOUNDS[n]; if (!takes?.length) return `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`; sndTurn[n] = ((sndTurn[n] ?? -1) + 1 + (takes.length > 2 ? Math.floor(takes.length / 2) : 0)) % takes.length; return takes[sndTurn[n]] }
 const GS = (wp, key, fb) => wp?.sfx?.[key] ?? fb // a gun's own handling sound (weapons.yml sfx: open, eject, insert, shell, done, dry), else the stock one
@@ -1368,6 +1369,26 @@ function tickStats(ctx, t, moving) {
     else if (sp && s.savePlace && s.savePlace !== 'bonus' && s.savePlace !== ctx.self.place) { ctx.cross(ctx.self, s.savePlace); return }
     if (sp && s.savePlace === ctx.self.place) { ctx.self.feetPosition = { x: sp.x, y: sp.y + 0.1, z: sp.z }; return }
   }
+  // a threshold aims at an arrival marker the far level lays only once someone stands in it (its sim): the first crossing into a
+  // level drops you at its default spawn instead, far from the door you came through. When the marker turns up, step onto it,
+  // still under the noclip frame (scripts/lib/carry.js notes the aim as state.xferTo).
+  if (s.xferTo) {
+    const [pl, mk] = String(s.xferTo.link ?? '').split('#')
+    if (!mk || now - (s.xferTo.at ?? 0) > 8000) s.xferTo = null
+    else if (ctx.self.place === pl) {
+      const m = ctx.getObject(mk), raw = ctx.place.objects?.[mk]
+      if (m) {
+        s.xferTo = null
+        const mp = m.worldFeetPosition ?? m.feetPosition
+        if (mp && Math.hypot(mp.x - p.x, mp.z - p.z) > 1.5) {
+          ctx.self.feetPosition = { x: mp.x, y: mp.y + 0.1, z: mp.z }; ctx.self.velocity = { x: 0, y: 0, z: 0 }
+          const yw = typeof raw?.rotation === 'number' ? raw.rotation : raw?.rotation?.yaw
+          if (typeof yw === 'number') ctx.self.rotation = { yaw: yw }
+          return
+        }
+      }
+    }
+  }
   if (ctx.self.place !== 'bonus' && now - (w.savedAt ?? 0) > 4000) { w.savedAt = now; s.savePos = { x: Math.round(p.x * 10) / 10, y: Math.round(p.y * 10) / 10, z: Math.round(p.z * 10) / 10 }; s.savePlace = ctx.self.place }
   // exploring: every new cell is xp
   const { cx, cz } = cellAt(p.x, p.z)
@@ -1383,6 +1404,7 @@ function tickStats(ctx, t, moving) {
     gain(ctx, L.xpExit)
     sound(ctx, 'static-burst-glitch', 0.95, true)
     ctx.emit('screenFlash', { color: '#000000', duration: 0.9, intensity: 1 }, { audience: { player: ctx.self.id } })
+    carryAcross(ctx, ctx.self, 'level1#l1-from-main') // what you hold comes too (scripts/lib/carry.js)
     ctx.cross(ctx.self, 'level1#l1-from-main') // through the flickering wall: out of Level 1's door home
     return
   }

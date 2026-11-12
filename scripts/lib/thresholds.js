@@ -4,10 +4,9 @@
 // scripts), works out which way is "into the level" (the arrival marker just inside it, else the most open side),
 // and puts a kit, a readable note, a marker and footprints around it. Every piece is walk-through and probed: a
 // floor ray under it and a clear line from the doorway, so nothing stands in a wall or hangs over a drop.
-// The words are lore for where each door goes; LEVEL_NAMES keeps the names the same as the Teleport Station's.
+// The words are things people left, not instructions: a slip, a tag, a list.
 import { raycast } from "builtin/physics";
-import { LEVEL_NAMES } from "./hub.js";
-const V = 6;
+const V = 7;
 const GEO = "scripts/threshold-geo.js";
 const DOOR_SCRIPTS = /level-door|zenith-hatch|l27-use|level12-use|home11-door/;
 const CHALK = "#d9d4c4", INK = "#2b2b2e";
@@ -15,64 +14,64 @@ const CHALK = "#d9d4c4", INK = "#2b2b2e";
 // kits: cache (bag + bottles), cones (tape across), shrine (candles), lantern, litter; road: a roadside sign instead
 const DOORS = {
   // Level 0
-  "l0-zenith": { to: "level01", k: "litter", who: "bntg", mark: "B.N.T.G. · CARD HOLDERS ONLY", note: ["Torn B.N.T.G. chit", "Bulkhead to Zenith opens for a keycard and nothing else. Kade sells them. Don't haggle, he remembers faces. -- stamped, initialled, no name"] },
-  "l0-exit": { to: "level1", k: "shrine", who: "wanderer", info: "found at the foot of a wall", mark: "it's thinner here", prints: "in", note: ["Pencil on a receipt", "I watched Dale walk into this wall. Didn't open a door. Didn't fall. He just kept walking and the paper took him like water. The prints stop at the skirting board. If you're brave enough, keep your eyes open. If you're not, I don't blame you."] },
+  "l0-zenith": { to: "level01", k: "litter", who: "bntg", mark: "B.N.T.G. · CARD", note: ["Torn chit", "ZENITH ACCESS · 1 PERSON · NON-TRANSFERABLE\nPaid: 6 almond, 1 battery\nIssued by: K.", "half a stamp, the rest torn off"] },
+  "l0-exit": { to: "level1", k: "shrine", who: "wanderer", mark: "it's thinner here", prints: "in", note: ["Receipt", "Dale, 4th.\nhe didn't open anything\nhe just kept walking", "pencil, pressed hard enough to tear"] },
   // Level 1
-  "l1-back": { k: "cache", who: "meg", mark: "← LEVEL 0 · ONE WAY, MOSTLY", plate: "M.E.G. WAYPOINT ALPHA-1|≈ 130 m EAST · FOLLOW THE GREEN EXIT SIGNS", note: ["M.E.G. arrival card", "WELCOME TO LEVEL 1. You came through the wall like the rest of us. The camp (Waypoint Alpha-1) is far to the EAST, past the corridor blocks. Corridors behind green EXIT signs keep the hounds out: use them. Don't run in the open halls, they hear running. When the lights go out, stop and wait. -- Ale, M.E.G. Scout"], almond: 1 },
-  "l1-drop": { k: "carpet", who: "meg", info: "left where the newcomers land", plate: "NEW ARRIVALS|WAYPOINT ALPHA-1 · NORTH-EAST", note: ["M.E.G. arrival card", "You fell through the floor. Everyone does. The wet carpet you landed on came down with you; it dries out in a day. Waypoint Alpha-1 is north-east of here, about a hundred metres as the hound runs. Walk, don't run. Corridors with green EXIT signs are safe. -- M.E.G."] },
-  "l1-onward": { k: "cones", who: "meg", mark: "LEVEL 2 ▶ HEAT", plate: "LEVEL 2 · PIPE DREAMS|FILL EVERY BOTTLE FIRST", note: ["Survey tag, zip-tied to a cone", "LEVEL 2 behind this door. The pipes sweat and the air gets hotter the deeper you go. Fill every bottle at camp. This door stays put on the far side: the way back is the same green door, west wall. -- Callum, Quartermaster"] },
+  "l1-back": { k: "cache", who: "meg", mark: "← 0", plate: "WAYPOINT ALPHA-1|130 m E", note: ["Arrival card", "M.E.G. · LEVEL 1\nCamp: east, past the corridor blocks.\nGreen EXIT signs: no hounds.\nLights out: stop.\n\nunderneath, in biro: they hear you run", "laminated, one corner chewed"], almond: 1 },
+  "l1-drop": { k: "carpet", who: "meg", plate: "ARRIVALS|ALPHA-1 NE", note: ["Arrival card", "M.E.G. · LEVEL 1\nThe carpet came down with you. Leave it.\nCamp: north-east.", "taped to the concrete, damp at the edges"] },
+  "l1-onward": { k: "cones", who: "meg", mark: "2 ▶", plate: "LEVEL 2|HEAT · WATER", note: ["Tag on a cone", "TEMP AT DOOR 31°C\nTEMP 200 m IN 44°C\n3 L per person, minimum\nC.", "zip-tied, the marker gone brown"] },
   // Level 2
-  "l2-back": { k: "litter", who: "wanderer", mark: "UP TO 1 ← cool air", prints: "out", note: ["Scrap of a cigarette carton", "The cold coming under this one is Level 1. Car park, concrete, people. If the heat's got you, go up and drink."] },
-  "l2-to-l3": { k: "cones", who: "meg", mark: "LEVEL 3 ▶ LIVE WIRES", plate: "LEVEL 3 · ELECTRICAL STATION|DON'T TOUCH THE CABLES", note: ["M.E.G. hazard tag", "Electrical Station past this seal. Every cable is live. Rubber soles, nothing metal in your hands, and stay out of the standing water. The things in there follow the hum."] },
-  "l2-to-l21": { k: "lantern", who: "wanderer", mark: "2.1 ↑ locked rooms", note: ["Note pushed under a pipe clamp", "Climbed up here and found a door that opens onto clean white halls, Level 2.1. Everything's locked but the halls. Saltines in the lockers if you've got a pick."] },
+  "l2-back": { k: "litter", who: "wanderer", mark: "1 ← cold", prints: "out", note: ["Cigarette carton", "cold under this one. car park smell.", "torn along the fold"] },
+  "l2-to-l3": { k: "cones", who: "meg", mark: "3 ▶", plate: "LEVEL 3|LIVE · DO NOT TOUCH", note: ["Hazard tag", "SEAL 2-3\nAll cable live. Standing water live.\nRubber soles.", "a scorch mark across the bottom"] },
+  "l2-to-l21": { k: "lantern", who: "wanderer", mark: "2.1 ↑", note: ["Note under a pipe clamp", "white halls up here. dry. every door locked.\nsaltines in the lockers. bring a pin", "dry, the only dry thing for a mile"] },
   // Level 2.1
-  "l21-down": { k: "litter", who: "wanderer", mark: "BACK DOWN TO 2", prints: "out", note: ["Graffiti on a sandwich bag", "Pipes down there. Hot. You know the way."] },
-  "l21-cave": { k: "lantern", who: "meg", mark: "CAVES ▶ LEVEL 8", plate: "LEVEL 8 · CAVE SYSTEM|ROPE · LIGHT · DON'T SHOUT", note: ["M.E.G. route card", "The hall runs out into raw rock: Level 8. Take a light you trust and a spare. Don't shout to find each other, things up in the dark answer. Mark your turns."] },
+  "l21-down": { k: "litter", who: "wanderer", mark: "↓ 2", prints: "out", note: ["Sandwich bag", "hot down there", "grease-smeared"] },
+  "l21-cave": { k: "lantern", who: "meg", mark: "8 ▶", plate: "LEVEL 8|ROPE · 2 LIGHTS · QUIET", note: ["Route card", "Hall ends in rock.\nTeam 4 shouted at the first fork.\nTeam 4 did not report back.", "laminated, grit in the crease"] },
   // Level 3
-  "l3-back": { k: "litter", who: "wanderer", mark: "← 2 · pipes", prints: "out", note: ["Burned matchbook", "Back to the pipes. Hotter, quieter. Nothing in there wants to electrocute you, at least."] },
-  "l3-gamma-door": { k: "cones", who: "meg", mark: "BASE GAMMA", note: ["Posted notice, rain-stained", "M.E.G. BASE GAMMA. Knock, wait for the plate to light. Weapons stay holstered inside the wall. No entities, no exceptions, no arguments with the guard."] },
-  "l3-lift": { k: "cache", who: "wanderer", mark: "LIFT ↑ 4 · offices", note: ["Post-it on the call button", "Going UP takes you to the empty offices (4). Water cooler on the left still works. Don't stay past the third flicker."] },
-  "l3-lift5": { k: "shrine", who: "wanderer", mark: "LIFT ↓ 5 · the hotel", note: ["Hotel stationery, folded", "This one goes down to the hotel. You'll hear music. Don't take any elevator above twelve, and if the Beast's in the boiler room, don't go looking. -- K."] },
+  "l3-back": { k: "litter", who: "wanderer", mark: "← 2", prints: "out", note: ["Matchbook", "pipes. hot. nothing in there that sparks", "three matches left"] },
+  "l3-gamma-door": { k: "cones", who: "meg", mark: "GAMMA", note: ["Posted notice", "M.E.G. BASE GAMMA\nKnock once. Wait for the plate.\nWeapons holstered past the wall.", "nailed up, the nail rusted through"] },
+  "l3-lift": { k: "cache", who: "wanderer", mark: "↑ 4", note: ["Post-it", "UP = offices\ncooler on the left works\nleave before the 3rd flicker", "stuck to the call button"] },
+  "l3-lift5": { k: "shrine", who: "wanderer", mark: "↓ 5", note: ["Hotel stationery", "Room 1123 never came down.\nNot past 12. K.", "folded small, an embossed crest"] },
   // Base Gamma
-  "gamma-out": { k: "cones", who: "meg", mark: "EXIT · LEVEL 3", note: ["Gate log, clipboard", "Signing out means you're on your own. Live wires, the hum, the Electrical Station. Tell the guard when you'll be back so somebody knows to look."] },
+  "gamma-out": { k: "cones", who: "meg", mark: "EXIT", note: ["Sign-out sheet", "OUT 06:10 Reyes, back 09:00\nOUT 06:40 Holt, back 08:00\nOUT 07:15 Okafor, back", "on a clipboard, the pen still on its string"] },
   // Level 4
-  "l4-fun-poster/child-0": { to: "level26", k: "shrine", who: "wanderer", mark: "DON'T", note: ["Biro on the back of a flyer", "If the poster smiles at you, it's already too late to stop wanting to touch it. Marcy touched it. Somebody saw her later on a ship in the fog, waving. She didn't look happy. =)"] },
-  "l4-lift-door": { k: "litter", who: "wanderer", mark: "LIFT ↓ 3", note: ["Post-it, curled", "Down is the Electrical Station. Rubber soles."] },
-  "l4-stairs-down": { k: "cache", who: "wanderer", mark: "STAIRS ↓ 5 · hotel", note: ["Business card, Hotel letterhead", "The stair goes down into the Terror Hotel. It's nicer than it sounds until you hear the boiler. Ring the front bell. Somebody always answers."] },
+  "l4-fun-poster/child-0": { to: "level26", k: "shrine", who: "wanderer", mark: "DON'T", note: ["Flyer", "Marcy touched it.\nSomeone saw her on a ship after. Waving.\nShe was smiling. =)", "the smile is in a different pen"] },
+  "l4-lift-door": { k: "litter", who: "wanderer", mark: "↓ 3", note: ["Post-it", "rubber soles", "curled"] },
+  "l4-stairs-down": { k: "cache", who: "wanderer", mark: "↓ 5", note: ["Business card", "THE HOTEL · RING FOR SERVICE\n\non the back: not the boiler", "cream card, gold edge"] },
   // Level 5
-  "l5-lift3": { k: "litter", who: "wanderer", mark: "↓ 3", note: ["Room service slip", "Lift down to the Electrical Station. It hums in there louder than the Beast."] },
-  "l5-stairs-up": { k: "litter", who: "wanderer", mark: "↑ 4 · offices", note: ["Room service slip", "Up the old stair: empty offices, Level 4. Water cooler, one working phone, no people."] },
-  "l5-to-l6": { k: "shrine", who: "wanderer", mark: "6 · NO LIGHTS", plate: "LEVEL 6 · LIGHTS OUT|BRING TWO LIGHTS. THEN A THIRD.", note: ["Guest card, hand-printed", "Past here there is no light at all. Not dim. None. Your flashlight is the only thing in there that isn't hunting. Night vision if you have it. Keep one hand on the wall. -- for Bea, who didn't"] },
+  "l5-lift3": { k: "litter", who: "wanderer", mark: "↓ 3", note: ["Room service slip", "ORDER: water ×4\nDELIVER TO: lift\nNOTE: it hums louder down there", "the hotel's own pad"] },
+  "l5-stairs-up": { k: "litter", who: "wanderer", mark: "↑ 4", note: ["Room service slip", "ORDER: nothing\nNOTE: offices up there. empty. phone works.", "the hotel's own pad"] },
+  "l5-to-l6": { k: "shrine", who: "wanderer", mark: "no light", plate: "LEVEL 6|NO LIGHT", note: ["Guest card", "for Bea\none torch\none battery", "hand-printed, propped against a candle"] },
   // Level 6
-  "l6-back": { k: "lantern", who: "wanderer", mark: "UP · BOILER ROOM · 5", note: ["Note in a sandwich bag", "This door is warm. That's the hotel's boiler room on the other side, Level 5. Warm means alive."] },
-  "l6-to-l7": { k: "litter", who: "wanderer", mark: "THE FLOOR GIVES", note: ["Wet note, ink run", "Floor's soft here. I heard water under it. Waves. I didn't jump."] },
-  "l6-to-l61": { k: "litter", who: "wanderer", mark: "smells like fries", note: ["Grease-spotted napkin", "Floor here caves into somewhere that smells like a burger joint. The snacks down there move. Don't eat anything that's warm."] },
+  "l6-back": { k: "lantern", who: "wanderer", mark: "↑ warm", note: ["Sandwich bag", "this door's warm", "a fingerprint in soot"] },
+  "l6-to-l7": { k: "litter", who: "wanderer", mark: "soft", note: ["Wet note", "floor gives here\nwaves under it\ndidn't jump", "the ink has run"] },
+  "l6-to-l61": { k: "litter", who: "wanderer", mark: "fries?", note: ["Napkin", "smells like a burger place under the floor\nwhy", "grease spots"] },
   // Level 6.1
-  "l61-to-l6": { k: "litter", who: "wanderer", mark: "← DARK · 6", note: ["Ketchup sachet, writing on it", "Back into the dark. Bring a light."] },
-  "l61-to-l11": { k: "cache", who: "wanderer", mark: "CITY →", note: ["Receipt, PAID IN FULL", "Through the back wall: a city, Level 11, open sky that isn't sky. People there. Shops. Felt like home until I counted the streets."] },
-  "l61-vent-in": { k: "litter", who: "wanderer", mark: "vent · hums", note: ["Napkin", "This vent drops you out by the pipes into Level 3. The hum in there sounds like the fryers."] },
+  "l61-to-l6": { k: "litter", who: "wanderer", mark: "← dark", note: ["Ketchup sachet", "BRING A LIGHT", "written on in ketchup"] },
+  "l61-to-l11": { k: "cache", who: "wanderer", mark: "city →", note: ["Receipt", "1 × coffee 1 × pie\nPAID IN FULL\n\nstreet out the back. counted 40 before they started repeating", "from a diner that isn't here"] },
+  "l61-vent-in": { k: "litter", who: "wanderer", mark: "vent", note: ["Napkin", "it pulls. came out by pipes, all humming", "sucked flat against the grille"] },
   // Level 7
-  "l7-back": { k: "lantern", who: "wanderer", mark: "BACK INTO THE DARK", note: ["Water-stained postcard", "The door at the top of the stairs goes back to Level 6. Pitch black. Still better than the water."] },
+  "l7-back": { k: "lantern", who: "wanderer", mark: "↑ dark", note: ["Postcard", "Wish you were here.\n\nscratched out. under it: top of the stairs. still better than the water", "a beach, water-stained"] },
   // Level 8
-  "l8-lake-back": { k: "lantern", who: "meg", mark: "LAKE ▶ 7", plate: "LEVEL 7 · THALASSOPHOBIA|DON'T SWIM. DON'T LOOK DOWN.", note: ["M.E.G. route card, laminated", "The lake runs into Level 7: one house, all ocean. If you go under, go under fast. Whatever's out there can see your light."] },
-  "l8-to-l21": { k: "litter", who: "meg", mark: "← 2.1 · locked halls", note: ["M.E.G. route card", "This concrete mouth goes back into Level 2.1. White halls, dry, locked doors. A good place to sleep."] },
+  "l8-lake-back": { k: "lantern", who: "meg", mark: "7 ▶", plate: "LEVEL 7|NO SWIMMING", note: ["Route card", "Lake connects to 7.\nDepth: not measured.\nDiver's line found cut at 30 m.", "laminated, still wet"] },
+  "l8-to-l21": { k: "litter", who: "meg", mark: "← 2.1", note: ["Route card", "Tunnel to 2.1. Dry. Rated: SLEEP.", "a coffee ring on it"] },
   // Level 10
-  "l10-fun-poster/child-0": { to: "level26", k: "shrine", who: "wanderer", mark: "DON'T", note: ["Feed-bag paper", "Same poster as on Level 4. Out here in the wheat. Somebody keeps putting it back up."] },
-  "l10-road-north": { k: "road", who: "meg", plate: "INFINITE CITY|LEVEL 11 · KEEP WALKING", note: ["Road atlas page", "Follow the road and the wheat gives up to concrete: Level 11. Streetlights, an empty city, other wanderers. Mind the road at night."] },
-  "l10-road-south": { k: "road", who: "meg", plate: "INFINITE CITY|LEVEL 11 · KEEP WALKING", note: ["Road atlas page", "This way the road loops round to the city too. Every road out of the corn ends up there."] },
+  "l10-fun-poster/child-0": { to: "level26", k: "shrine", who: "wanderer", mark: "DON'T", note: ["Feed-bag paper", "took it down tuesday\nit's back", "rain-soft"] },
+  "l10-road-north": { k: "road", who: "meg", plate: "LEVEL 11|CITY", note: ["Atlas page", "Route 10-11. Corn ends, concrete starts.\npencilled in: lights on, nobody home", "torn from a road atlas of nowhere"] },
+  "l10-road-south": { k: "road", who: "meg", plate: "LEVEL 11|CITY", note: ["Atlas page", "Route 10-11, south loop.\nAll roads: city.", "torn from a road atlas of nowhere"] },
   // Level 11
-  "l11-to-l61": { k: "litter", who: "wanderer", mark: "SNACKS ↘ don't", note: ["Receipt", "Back door of the diner drops you into the Snackrooms (6.1). Don't eat the moving ones."] },
-  "lv10-backroad": { k: "road", who: "meg", plate: "BUMPER CROP|LEVEL 10 · BARN HAS WATER", note: ["Road atlas page", "End of the city, start of the corn: Level 10. The barn has water. The rain never stops. Don't go in the deep part of the lake."] },
+  "l11-to-l61": { k: "litter", who: "wanderer", mark: "snacks ↘", note: ["Receipt", "1 × fries\nthey moved", "diner paper, grease through"] },
+  "lv10-backroad": { k: "road", who: "meg", plate: "LEVEL 10|BARN · WATER", note: ["Atlas page", "Route 11-10. Corn. Rain.\nBarn: water.\nLake: shallow end only.", "torn from a road atlas of nowhere"] },
   // Level 184
-  "l184-back": { k: "lantern", who: "wanderer", mark: "BACK TO THE CORN", note: ["Child's drawing, a fort", "This tunnel goes back to the cornfields."] },
+  "l184-back": { k: "lantern", who: "wanderer", mark: "corn →", note: ["Child's drawing", "a fort, a sun, a door\nan arrow from the door to some corn", "crayon"] },
   // Level 26
-  "l26-exit": { k: "litter", who: "wanderer", mark: "OFF THE SHIP", note: ["Party invitation, crossed out", "Gangway down. You'll come out in an office (Level 4). Don't look back at the deck."] },
+  "l26-exit": { k: "litter", who: "wanderer", mark: "OFF", note: ["Party invitation", "YOU'RE INVITED! =)", "the =) scratched out so hard the card tore"] },
   // Level 27
-  "l27-exit": { k: "lantern", who: "wanderer", mark: "the way you came", note: ["Soggy note", "The tunnel only goes back to where you came in. Drink first."] },
+  "l27-exit": { k: "lantern", who: "wanderer", mark: "back", note: ["Soggy note", "drink first", "barely holding together"] },
   // home, Level 0.1, Level 12
-  "h-door": { to: "level11", k: "litter", who: "wanderer", mark: "", note: ["Your own handwriting", "Keys, water, light. Lock the door."] },
-  "l01-back": { k: "cones", who: "bntg", mark: "← LEVEL 0", note: ["B.N.T.G. exit slip", "Through the bulkhead: back to the Lobby, Level 0. Mind the step. Card stays valid."] },
-  "l12-door": { k: "candles", who: "wanderer", mark: "", note: ["Note under the chair", "Sit. Try it. Go out a copy door. Wait an hour. Try again. Harris was right about everything else."] },
+  "h-door": { to: "level11", k: "litter", who: "wanderer", note: ["Shopping list", "keys\nwater\nbatteries\nLOCK IT", "your own handwriting"] },
+  "l01-back": { k: "cones", who: "bntg", mark: "← 0", note: ["Exit slip", "ZENITH · OUT\nCard stays valid.", "B.N.T.G. carbon copy"] },
+  "l12-door": { k: "candles", who: "wanderer", note: ["Note under the chair", "sat. tried. copy door. waited.\n59 min: locked\n61 min: locked\n60", "the last line stops"] },
 };
 const KIT = { cache: "bag", cones: "cones", shrine: "candles", lantern: "lantern", litter: "litter", carpet: "carpet", candles: "candles" };
 const KEY = (id) => "thr-" + String(id).replace(/[^a-z0-9-]/gi, "_");
@@ -153,8 +152,8 @@ function dress1(ctx, id, row, at, f, n0) {
   if (row.prints) { const p = spot(ctx, O, W(0.35 * side, 0), 0.2, skip), q = spot(ctx, O, W(0.35 * side, 3.2), 0.2, skip); if (p && q) put("prints", { feetPosition: p, rotation: { yaw: yawF + (row.prints === "in" ? 0 : 180) }, primitive: { kind: "scripted", script: GEO, params: { kind: "prints", z0: row.prints === "in" ? -0.9 : -3.2, z1: row.prints === "in" ? 3.2 : 0.9 } } }); }
   if (row.k !== "road") { const p = try3(0.85, 1.6, 0.4); if (p) put("litter", { feetPosition: p, rotation: { yaw: yawF + 140 * side }, primitive: { kind: "scripted", script: GEO, params: { kind: "litter", seed: (n0 % 7) + 2 } } }); }
   if (row.note) { const p = try3(0.7, 1.1, 0.25); if (p) {
-    const [name, text] = row.note;
-    put("note", { feetPosition: { x: p.x, y: p.y + 0.004, z: p.z }, rotation: { yaw: yawF + 17 * side }, tags: ["thr", "usable"], primitive: { kind: "box", width: 0.21, height: 0.004, depth: 0.27 }, material: { color: "oklch(0.93 0.025 90)", roughness: 0.95 }, behavior: "scripts/moments.js", state: { kind: "note", name, verb: "Read", info: row.info ?? `by the way to ${LEVEL_NAMES[destOf(id, ctx.place.objects[id] ?? {})] ?? "somewhere else"}`, text } });
+    const [name, text, look] = row.note;
+    put("note", { feetPosition: { x: p.x, y: p.y + 0.004, z: p.z }, rotation: { yaw: yawF + 17 * side }, tags: ["thr", "usable"], primitive: { kind: "box", width: 0.21, height: 0.004, depth: 0.27 }, material: { color: "oklch(0.93 0.025 90)", roughness: 0.95 }, behavior: "scripts/moments.js", state: { kind: "note", name, verb: "Read", info: look ?? "", text } });
   } }
   if (row.almond) { const p = try3(1.15, 0.7, 0.45); if (p) ctx.spawn(base + "-almond", { tags: ["almond"], feetPosition: { x: p.x + f.x * 0.25, y: p.y, z: p.z + f.z * 0.25 }, castShadow: false, model: "/cdn/value.d74570d765a2d43f965fc8756878f7bf22f833db5feaf4c335d84d8dc4ba5b62.glb", layout: { box: { min: { x: -0.07, y: 0, z: -0.07 }, max: { x: 0.07, y: 0.32, z: 0.07 } } } }); }
   return n0;
