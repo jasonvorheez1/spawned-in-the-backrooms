@@ -42,11 +42,12 @@ export function layShop(ctx) {
   // the checkout: one Tripo memphis counter (file 0.70 x 0.80 x 0.99 m, long side along z) at x1.35 = 1.08 m tall, 1.33 m long
   const tr = (id, m, x, y, z, yaw, sc, solid = true) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: M[m], scale: sc, ...(solid ? { physics: { body: "static", collider: "box" } } : {}) });
   // ticket prize walls (Tripo, from Shelly's prize-wall photo): file ~0.25 x 0.75 x 1.0 m, long side along z, x3.2 = 2.4 m tall, 3.2 m long
-  const prize = (id, m, z) => sp(id, { feetPosition: { x: WX + 0.36, y: 0, z }, rotation: { yaw: 0 }, model: M[m], layout: { box: { min: { x: -0.32, y: 0, z: -1.66 }, max: { x: 0.32, y: 2.55, z: 1.66 } } } });
-  prize("prize-a", "prizeA", -1.7); prize("prize-b", "prizeB", 1.7);
+  const prize = (id, m, z, sc) => sp(id, { feetPosition: { x: WX + 0.42, y: 0, z }, rotation: { yaw: 0 }, model: M[m], scale: sc });
+  // live bounds at x1: A 1.82 m tall x 2.48 long, B 2.13 x 2.75 -> both ~2.4 m tall
+  prize("prize-a", "prizeA", -1.75, 1.32); prize("prize-b", "prizeB", 1.75, 1.13);
   tr("counter", "counter", -38.3, 0, -0.1, 0, 1.35); tr("case-side", "case", -39.3, 0, 1.25, S, 1);
   // two stocked gift gondolas down the middle (file 0.91 x 1.0 x 0.94 m) at x1.55 = 1.55 m tall, eye level for a 1.7 m player
-  const gon = (id, z) => sp(id, { feetPosition: { x: -34.2, y: 0, z }, rotation: { yaw: E }, model: M.gondola2, layout: { box: { min: { x: -1.05, y: 0, z: -0.45 }, max: { x: 1.05, y: 1.6, z: 0.45 } } }, physics: { body: "static", collider: "box" } });
+  const gon = (id, z) => sp(id, { feetPosition: { x: -34.2, y: 0, z }, rotation: { yaw: E }, model: M.gondola2, scale: 2.25, // file 0.90 x 0.71 x 0.43 m read live -> 2.0 x 1.6 x 0.97 m physics: { body: "static", collider: "box" } });
   gon("gondola-n", -4.2); gon("gondola-s", 4.2);
   // skate walls on the south wall (file 0.24 x 0.97 x 1.0 m, faces along x) at x1.9 = 1.83 m tall, hung 0.35 m up
   tr("skates-a", "skatewall", -35.6, 0.35, SZ - 0.25, 90, 1.9, false); tr("skates-b", "skatewall", -33.3, 0.35, SZ - 0.25, 90, 1.9, false);
