@@ -30,7 +30,7 @@ feet:
 # Tripo garments: glb per body (f/m), under = the painted layer hidden beneath it
 models:
   hoodie: { under: longsleeve, pat: weave, f: /cdn/value.2743cd96d20863333d2273247bcd0de15437ed8d26e07e38d20cd2f41b517c59.glb, m: /cdn/value.3ebfa5567d2f0b6fb3bfecc33fe98c590c9122f8e42a2509b8661de07056bb55.glb }
-  jacket: { under: longsleeve, pat: weave, f: /cdn/value.3ed2cbc80f9cf32ed3d0824a5e516818d10d323caa39c713518fa1260925b08b.glb, m: /cdn/value.7ddf8b17fef490dcb134e3b620d643162c8b65de50bbd4124b8ee73ae2ddbf16.glb }   # Nov 11 Taubin-smoothed: the Tripo crumple ironed out, 4 mm off the body; skin and Chest key kept
+  jacket: { under: longsleeve, pat: weave, f: /cdn/value.05df6e2a3fc003bd6c8e4159e6bbb31fb8b5890d1f7e0d094daff9402ac2c7b5.glb, m: /cdn/value.7ddf8b17fef490dcb134e3b620d643162c8b65de50bbd4124b8ee73ae2ddbf16.glb }   # Nov 11 Taubin-smoothed: the Tripo crumple ironed out, 4 mm off the body; skin and Chest key kept
   skirt:  { under: briefs, pat: weave, f: /cdn/value.b282d6badcb027f5466097b768c9df6bbc0dbd64b8d9e4b13d1be674c5c42a3c.glb, m: /cdn/value.9cf68c98187bf9d85763b733d8ae9529f02f0049c3f7a42f0774492fd2076001.glb }
   boots:  { under: socks, pat: weave, f: /cdn/value.3f9b0636806b0ebabcd12d5037ca8aecf54984a63ea3e5b5c979c1f61c9c9983.glb, m: /cdn/value.dcfebd4370d0c0aa932157cae6acd02db2afb18e59cc83e6ef34261ed69176f2.glb }
   cap: { hat: true, pat: weave, f: /cdn/value.163a3560b0b1af2faf2fb5d269e74c221a0a29b22c2f4dab6b667e48c77b6723.glb, m: /cdn/value.df79407b3de5b06738c04b49af3608edff055f96a52f01204bed38d9342f1203.glb }   # Tripo hat fitted to the cat head (art/cat-wardrobe/hats.py), Nov 12
