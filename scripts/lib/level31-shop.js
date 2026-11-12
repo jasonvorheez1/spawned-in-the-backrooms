@@ -47,9 +47,9 @@ export function layShop(ctx) {
   lamp("light-s", -36, 3.2, 8, "oklch(0.85 0.1 210)", 2.2, 11); lamp("light-sign", -26.6, 3.6, 0, "oklch(0.75 0.2 350)", 1.6, 8);
   // Dottie, a faceling, behind the counter
   sp("keeper", {
-    tags: ["npc", "faceling"], feetPosition: { x: -40.2, y: 0, z: 0 }, rotation: { yaw: E }, physics: "character",
+    tags: ["npc", "faceling"], feetPosition: { x: -39.5, y: 0, z: -0.1 }, rotation: { yaw: E }, physics: "character",
     ...critterSpec(npcLook("l31-shop-keeper", { species: "faceling", sex: "f", topw: "tee", top: "#f06aa8", botw: "pants", bottom: "#2b2b33", shoes: "sneakers" }, "trader", 31)),
     behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
-    state: { name: "Dottie · Gift Counter", role: "trader", voice: "l31-shop-keeper#f", faction: "rink", factionName: "the gift counter at the Roller Rink", docile: true, home: { x: -40.2, z: 0 }, line: "Everything in the case is from home.", ...npcState(ctx, "trader", 100) },
+    state: { name: "Dottie · Gift Counter", role: "trader", voice: "l31-shop-keeper#f", faction: "rink", factionName: "the gift counter at the Roller Rink", docile: true, home: { x: -39.5, z: -0.1 }, line: "Everything in the case is from home.", ...npcState(ctx, "trader", 100) },
   });
 }
