@@ -4,14 +4,14 @@ tl-catdemo-f1:
   feetPosition: {x: -19, y: 0.05, z: 4.5}
   id: tl-catdemo-f1
   rotation: {yaw: -90}
-  state: {clip: Walk, look: {bottom: "#3b4f7a", botw: jeans, chest: 1, ears: tall, etype: sparkle, expression: neutral, eyes: blue, fluff: [bangs], fseed: 0, fur: "#f3c98a", hair: ponytail, hairc: "#c0563a", hat: divehelm, hatc: "#c0392b", mtype: fang, neck: scarf, neckc: "#c0392b", rv: 1, shoec: "#5a3a2a", shoes: steeltoe, snout: pointy, top: "#c4a46a", topw: pghoodie}, sex: f}
+  state: {clip: Walk, look: {bottom: "#3b4f7a", botw: jeans, chest: 1, ears: tall, etype: sparkle, expression: neutral, eyes: blue, fluff: [bangs], fseed: 0, fur: "#f3c98a", hair: ponytail, hairc: "#c0563a", hat: divehelm, hatc: "#c0392b", mtype: fang, rv: 1, shoec: "#5a3a2a", shoes: steeltoe, snout: pointy, top: "#c4a46a", topw: pghoodie}, sex: f}
   tags: [catdemo]
 tl-catdemo-f2:
   behavior: scripts/cat-demo.js
   feetPosition: {x: -19, y: 0.05, z: 9.5}
   id: tl-catdemo-f2
   rotation: {yaw: -90}
-  state: {clip: Walk, line: {at: 521441926, t: "hey, you made it out of the lobby? nobody makes it out of the lobby. nobody. ever."}, look: {base2: true, bottom: "#2f3d5c", botw: shorts, chest: 1, ears: fold, etype: sharp, expression: neutral, eyes: green, fluff: [burns], fur: "#8fb3e8", hair: twintails, hairc: "#8fa6c2", hat: beret, hatc: "#2d4a7a", mtype: open, neck: necklace, neckc: "#ffffff", rv: 1, shadow: plum, shoec: "#222226", shoes: boots, snout: puff, top: "#e0775a", topp: null, topw: crop}, sex: f}
+  state: {clip: Walk, line: {at: 521441926, t: "hey, you made it out of the lobby? nobody makes it out of the lobby. nobody. ever."}, look: {base2: true, bottom: "#2f3d5c", botw: shorts, chest: 1, ears: fold, etype: sharp, expression: neutral, eyes: green, fluff: [burns], fur: "#8fb3e8", hair: twintails, hairc: "#8fa6c2", hat: beret, hatc: "#2d4a7a", mtype: open, rv: 1, shadow: plum, shoec: "#222226", shoes: boots, snout: puff, top: "#e0775a", topp: null, topw: crop}, sex: f}
   tags: [catdemo]
 tl-catdemo-m1:
   behavior: scripts/cat-demo.js
@@ -25,7 +25,7 @@ tl-catdemo-m2:
   feetPosition: {x: -19, y: 0.05, z: 7}
   id: tl-catdemo-m2
   rotation: {yaw: -90}
-  state: {clip: Walk, look: {bottom: "#444", botw: cargo, chest: 1, ears: small, etype: sleepy, expression: neutral, eyes: violet, fluff: [crest], fur: "#d9d9de", hair: fluffy, hairc: "#2e2a33", hat: padbeanie, hatc: "#e8c14a", mtype: grin, neck: bowtie, neckc: "#8a1c2b", rv: 1, shoec: "#222226", shoes: sneakers, snout: flat, top: "#c8a878", topp: gmsplit, topw: blazer}, sex: m}
+  state: {clip: Walk, look: {bottom: "#444", botw: cargo, chest: 1, ears: small, etype: sleepy, expression: neutral, eyes: violet, fluff: [crest], fur: "#d9d9de", hair: fluffy, hairc: "#2e2a33", hat: padbeanie, hatc: "#e8c14a", mtype: grin, rv: 1, shoec: "#222226", shoes: sneakers, snout: flat, top: "#c8a878", topp: gmsplit, topw: blazer}, sex: m}
   tags: [catdemo]
 tl-cats-floor:
   feetPosition: {x: -18.5, y: 0, z: 8.25}
