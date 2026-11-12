@@ -1,6 +1,7 @@
 // Level 7's fleshing out (backrooms-wiki.wikidot.com/level-7): the inside of Fort Surrender, the sea floor, the seamount under the entrance and the Level 9 door.
 // Laid by places/level7/sim.js lay(). Ids start l7x- so a rebuild can clear them.
-const FC = { x: -70, y: 11.0, z: -93 }; // the fort's centre (its model is at this point; Blender (x, y) lands at world (x, -y))
+const FC = { x: -70, y: 11.0, z: -93 };
+const DECK = 11.65; // the fort's plank floor (l7-fort-walk-floor top): everything inside the fort stands on it, not on FC.y below the boards // the fort's centre (its model is at this point; Blender (x, y) lands at world (x, -y))
 const TAR = { color: "oklch(0.1 0.01 280)", roughness: 0.15, metalness: 0.15 };
 const BONE = { color: "oklch(0.78 0.03 90)", roughness: 0.85 };
 const WOOD = { color: "oklch(0.3 0.04 55)", roughness: 0.9 };
@@ -14,30 +15,30 @@ export function layExtras(ctx, GLB, fit) {
   const sp = (id, spec) => ctx.spawn(`l7x-${id}`, spec);
   // ---- inside the fort
   // the tar pit: a round pool in the courtyard that bubbles, faintly lit from below with the colour of the deep
-  sp("tarpit", { feetPosition: { x: FC.x - 5.2, y: FC.y + 0.06, z: FC.z + 1.5 }, primitive: { kind: "cylinder", radiusTop: 1.5, radiusBottom: 1.5, height: 0.08 }, material: TAR, fx: { script: BUBBLE, params: { r: 6 } }, children: [{ feetPosition: { x: 0, y: 0.6, z: 0 }, light: { kind: "point", color: "oklch(0.62 0.1 195)", intensity: 1.1, distance: 9 } }] });
-  sp("tarpit-rim", { feetPosition: { x: FC.x - 5.2, y: FC.y + 0.02, z: FC.z + 1.5 }, primitive: { kind: "cylinder", radiusTop: 1.75, radiusBottom: 1.85, height: 0.14 }, material: { color: "oklch(0.22 0.01 250)", roughness: 0.95 } });
+  sp("tarpit", { feetPosition: { x: FC.x - 5.2, y: DECK + 0.06, z: FC.z + 1.5 }, primitive: { kind: "cylinder", radiusTop: 1.5, radiusBottom: 1.5, height: 0.08 }, material: TAR, fx: { script: BUBBLE, params: { r: 6 } }, children: [{ feetPosition: { x: 0, y: 0.6, z: 0 }, light: { kind: "point", color: "oklch(0.62 0.1 195)", intensity: 1.1, distance: 9 } }] });
+  sp("tarpit-rim", { feetPosition: { x: FC.x - 5.2, y: DECK + 0.02, z: FC.z + 1.5 }, primitive: { kind: "cylinder", radiusTop: 1.75, radiusBottom: 1.85, height: 0.14 }, material: { color: "oklch(0.22 0.01 250)", roughness: 0.95 } });
   // tar pots on the wall tops and by the tower, each with a low red-orange flame
   [[0.2, 7.2], [1.0, 7.4], [2.2, 7.2], [3.7, 7.3], [4.9, 7.2], [5.6, 7.4]].forEach(([a, r], i) => {
     const p = W(a, r);
-    sp(`pot-${i}`, { feetPosition: { x: p.x, y: FC.y, z: p.z }, primitive: { kind: "cylinder", radiusTop: 0.28, radiusBottom: 0.2, height: 0.5 }, material: { color: "oklch(0.2 0.03 40)", roughness: 0.6, metalness: 0.5 }, children: [{ feetPosition: { x: 0, y: 0.62, z: 0 }, light: { kind: "point", color: "oklch(0.72 0.17 48)", intensity: 1.5, distance: 9 } }] });
+    sp(`pot-${i}`, { feetPosition: { x: p.x, y: DECK, z: p.z }, primitive: { kind: "cylinder", radiusTop: 0.28, radiusBottom: 0.2, height: 0.5 }, material: { color: "oklch(0.2 0.03 40)", roughness: 0.6, metalness: 0.5 }, children: [{ feetPosition: { x: 0, y: 0.62, z: 0 }, light: { kind: "point", color: "oklch(0.72 0.17 48)", intensity: 1.5, distance: 9 } }] });
   });
   // the bunks: a rag pallet, a crate and a hurricane lamp in each lean-to (the shanties stand at radius 6 in the model)
   [0.5, 1.2, 1.9, 2.6, 3.4, 4.1, 5.9].forEach((a, i) => {
     const p = W(a, 5.4);
-    sp(`bunk-${i}`, { feetPosition: { x: p.x, y: FC.y + 0.1, z: p.z }, rotation: { yaw: (a * 57.3 + 90) % 360 }, primitive: { kind: "box", width: 1.7, height: 0.2, depth: 0.8 }, material: CLOTH });
-    sp(`bunkbox-${i}`, { feetPosition: { x: p.x + 0.5, y: FC.y + 0.25, z: p.z - 0.5 }, tags: ["container", "breakable"], model: GLB.crate, layout: fit(0.6, 0.6, 0.6), physics: { body: "static", collider: "box" }, state: { mat: "wood", hp: 40, maxHp: 40, name: "Worshipper's crate", items: i % 2 ? "almond,bandage" : "ration,tape" } });
-    sp(`bunklamp-${i}`, { feetPosition: { x: p.x - 0.4, y: FC.y + 0.5, z: p.z + 0.4 }, light: { kind: "point", color: "oklch(0.78 0.14 70)", intensity: 0.9, distance: 6 } });
+    sp(`bunk-${i}`, { feetPosition: { x: p.x, y: DECK + 0.1, z: p.z }, rotation: { yaw: (a * 57.3 + 90) % 360 }, primitive: { kind: "box", width: 1.7, height: 0.2, depth: 0.8 }, material: CLOTH });
+    sp(`bunkbox-${i}`, { feetPosition: { x: p.x + 0.5, y: DECK + 0.25, z: p.z - 0.5 }, tags: ["container", "breakable"], model: GLB.crate, layout: fit(0.6, 0.6, 0.6), physics: { body: "static", collider: "box" }, state: { mat: "wood", hp: 40, maxHp: 40, name: "Worshipper's crate", items: i % 2 ? "almond,bandage" : "ration,tape" } });
+    sp(`bunklamp-${i}`, { feetPosition: { x: p.x - 0.4, y: DECK + 0.5, z: p.z + 0.4 }, light: { kind: "point", color: "oklch(0.78 0.14 70)", intensity: 0.9, distance: 6 } });
   });
   // offerings round the altar: bones laid in a ring, tins and bottles, candles
   for (let k = 0; k < 11; k++) {
     const a = (k / 11) * Math.PI * 2, x = FC.x + Math.cos(a) * 2.6, z = FC.z - 8 + Math.sin(a) * 1.6;
-    sp(`bone-${k}`, { feetPosition: { x, y: FC.y + 0.05, z }, rotation: { yaw: k * 33 }, primitive: { kind: "box", width: 0.55, height: 0.07, depth: 0.08 }, material: BONE });
+    sp(`bone-${k}`, { feetPosition: { x, y: DECK + 0.05, z }, rotation: { yaw: k * 33 }, primitive: { kind: "box", width: 0.55, height: 0.07, depth: 0.08 }, material: BONE });
   }
-  [[-1.4, -8.2], [1.4, -8.2], [0, -9.3]].forEach(([dx, dz], i) => sp(`candle-${i}`, { feetPosition: { x: FC.x + dx, y: FC.y, z: FC.z + dz }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.05, height: 0.3 }, material: BONE, children: [{ feetPosition: { x: 0, y: 0.4, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.14 78)", intensity: 0.8, distance: 5 } }] }));
+  [[-1.4, -8.2], [1.4, -8.2], [0, -9.3]].forEach(([dx, dz], i) => sp(`candle-${i}`, { feetPosition: { x: FC.x + dx, y: DECK, z: FC.z + dz }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.05, height: 0.3 }, material: BONE, children: [{ feetPosition: { x: 0, y: 0.4, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.14 78)", intensity: 0.8, distance: 5 } }] }));
   // (the chalk boards were removed: Shelly, Nov 12)
   // drying nets and a rack of grey fish nobody has ever caught (they say), under the tower
-  sp("rack", { feetPosition: { x: FC.x + 3.4, y: FC.y + 1.0, z: FC.z - 7.3 }, primitive: { kind: "box", width: 2.2, height: 0.08, depth: 0.08 }, material: WOOD });
-  for (let k = 0; k < 6; k++) sp(`fish-${k}`, { feetPosition: { x: FC.x + 2.5 + k * 0.35, y: FC.y + 0.55, z: FC.z - 7.3 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 0.07, height: 0.55, depth: 0.04 }, material: { color: "oklch(0.55 0.015 230)", roughness: 0.7 } });
+  sp("rack", { feetPosition: { x: FC.x + 3.4, y: DECK + 1.0, z: FC.z - 7.3 }, primitive: { kind: "box", width: 2.2, height: 0.08, depth: 0.08 }, material: WOOD });
+  for (let k = 0; k < 6; k++) sp(`fish-${k}`, { feetPosition: { x: FC.x + 2.5 + k * 0.35, y: DECK + 0.55, z: FC.z - 7.3 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 0.07, height: 0.55, depth: 0.04 }, material: { color: "oklch(0.55 0.015 230)", roughness: 0.7 } });
 
   // ---- the sea floor: tar mounds that bubble, pipe stubs and old bones, the first ones near the shore (the Twilight zone is where they thicken)
   [[18, 30], [-40, 25], [60, 5], [-20, -70], [35, -40], [-100, 60], [10, 90], [-60, -20]].forEach(([x, z], i) => {
