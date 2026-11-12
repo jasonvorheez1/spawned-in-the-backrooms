@@ -2,6 +2,7 @@
 // West: the armory, every weapon in weapons.yml on tables + the ammo locker. North: the firing lane with smiler/lurker pads.
 // East: the physics bay (loose props, reset pad). South-east: workbench + parts bin. South-west: the break fridge with every consumable.
 // Centre-south: interactables (hinged door, light switch, seat, cabinet) and the range terminal that runs the Range Check quest.
+import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import W from "../../scripts/lib/weapons.js";
 import SNACKS from "../../scripts/lib/data/snacks.yml";
 import L from "../../scripts/lib/data/level0.yml";
@@ -116,6 +117,7 @@ const physMoved = (ctx) => { for (const [id] of PHYS) { const o = ctx.place.obje
 function due(s, key, now) { if (!s[key]) { s[key] = now + REFILL; return false; } if (now < s[key]) return false; delete s[key]; return true; }
 
 export function tick(ctx) {
+  restyleSigns(ctx, "testlab"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   const s = ctx.place.state, now = ctx.now();
   if (s.builtV !== V) { build(ctx); s.builtV = V; s.seeded = false; s.labV = 0; }
   if (s.labV !== 2) { labBuild(ctx, pad, sign); s.labV = 2; } // the Loot Lab lays itself beside the hall, never rebuilding the rest

@@ -1,3 +1,4 @@
+import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 // Level 6.1 "The Snackrooms" (backrooms-wiki.wikidot.com/level-6-1)
 // An endless 1980s mall food court and retro diner sanctuary.
@@ -924,6 +925,7 @@ function slim(ctx, st) {
 }
 
 export function tick(ctx) {
+  restyleSigns(ctx, "level61"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const st = ctx.place.state;

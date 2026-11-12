@@ -1,3 +1,4 @@
+import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import { rotationFromDirection } from "builtin/vec3";
 // Level 7 "Thalassophobia" Simulation:
@@ -941,6 +942,7 @@ function lay(ctx) {
 }
 
 export function tick(ctx) {
+  restyleSigns(ctx, "level7"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state;

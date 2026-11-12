@@ -1,3 +1,4 @@
+import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 // Level 10 "Bumper Crop": Historic Backrooms farmland and M.E.G. Outpost Bountiful.
 // Canonical Wikidot features:
@@ -451,6 +452,7 @@ pop glow n=1 at=disc(.2).c(.45) glo=fire()*(#flame/35)~ r=light(<1,.55,.24>,$glo
 }
 
 export function tick(ctx) {
+  restyleSigns(ctx, "level10"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   const s = ctx.place.state;
   if ((s.builtV ?? 0) < V) {

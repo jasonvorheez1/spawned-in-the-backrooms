@@ -1,3 +1,4 @@
+import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { heard } from "../../scripts/lib/hear.js";
@@ -122,6 +123,7 @@ function layGammaSignage(ctx) {
 }
 
 export function tick(ctx) {
+  restyleSigns(ctx, "level3"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   if (ctx.place.state.liftV !== 1) { ctx.place.state.liftV = 1; // the freight lift has power again: up to Level 4

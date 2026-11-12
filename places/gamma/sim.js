@@ -1,3 +1,4 @@
+import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import { keepPeople, every } from "../../scripts/lib/level-kit.js";
 // Base Gamma's inside: the M.E.G.'s fortress at the end of Level 3. Lays the shell, the dressing, lights, signs, doors,
@@ -94,6 +95,7 @@ function layComputers(ctx) { // the Administration's Database terminal (scripts/
     state: { kind: "computer", host: "GAMMA-DB-01", lock: "science:50", name: "The Database", verb: "Log in", info: "Locked · Science 50 or a password", tint: "#f2c200" } });
 }
 export function tick(ctx) {
+  restyleSigns(ctx, "gamma"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state;

@@ -1,3 +1,4 @@
+import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 // Level 4 "Abandoned Office": lays the floor, lights, door plates, coolers, fountains, vending, the lift and the stairwell,
 // M.E.G. Base Omega's two agents and the sound beds once (place.state.builtV); each second it watches the bare windows.
@@ -114,6 +115,7 @@ function layOffice(ctx) {
   ctx.spawn("l4-office-mgr", { feetPosition: { x: 0, y: 0, z: 0 }, behavior: "scripts/l4-office.js", state: { kind: "manager" } });
 }
 export function tick(ctx) {
+  restyleSigns(ctx, "level4"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   if (ctx.place.state.posterV !== 1 && ctx.place.players?.length) { const o = ctx.place.objects["l4-fun-poster"]; if (o) { ctx.place.state.posterV = 1; o.feetPosition = { x: 30.4, y: 0.02, z: 25.8 }; } } // Nov 11: the =) poster lay outside the lift's outer wall where nobody could reach it; now it's on the break room floor (cells/x0z0.scene)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)

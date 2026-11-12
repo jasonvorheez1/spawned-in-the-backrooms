@@ -1,3 +1,4 @@
+import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import { overlapPoint } from "builtin/physics";
 import { npcState } from "../../scripts/lib/stats.js";
@@ -127,6 +128,7 @@ function shift(ctx, s, now) {
 // the flickering wall out to Level 1 isn't a door object (scripts/player.js crosses at it): the dresser gets it by hand
 const l0Ways = () => [{ id: "l0-exit", at: { x: -HALF + 0.15, y: 0, z: cellCenter(EXIT.cx, EXIT.cz).z }, fwd: { x: 1, z: 0 } }];
 export function tick(ctx) {
+  restyleSigns(ctx, "main"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx, l0Ways()); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state, now = ctx.now();

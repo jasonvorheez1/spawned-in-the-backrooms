@@ -1,3 +1,4 @@
+import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 // Level 6 "Lights Out": lays the halls once (place.state.builtV); then the dark talks to whoever is in it.
 // No light works here (scripts/player.js kills the flashlight on this place). Plan: scripts/lib/level6.js.
@@ -224,6 +225,7 @@ function laySnack(ctx) {
   ctx.spawn("l6-wire-note", { feetPosition: { x: x + e.dx * (C / 2 - 0.02), y: 1.45, z: z + e.dz * (C / 2 - 0.02) }, rotation: { lookAt: { x: x - e.dx * C, y: 1.45, z: z - e.dz * C } }, vector: chalk("i smell fries. why do i smell fries") });
 }
 export function tick(ctx) {
+  restyleSigns(ctx, "level6"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const st = ctx.place.state;

@@ -1,3 +1,4 @@
+import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 // Level 12 "Matrix": lays the white room and the abyss once, then keeps the ritual's chair clock and the memory fog.
 // The ritual (Harris's log, Level 11): sit a quarter hour, try the locked door, go out through a copycat door,
@@ -113,6 +114,7 @@ function doorAt(ctx, id, x, z, yaw, state, inWall) {
 }
 
 export function tick(ctx) {
+  restyleSigns(ctx, "level12"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   const st = ctx.place.state;
   if (st.v !== V) { st.v = V; lay(ctx); }

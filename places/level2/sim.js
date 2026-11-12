@@ -1,3 +1,4 @@
+import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import { spawnKit } from "../../scripts/lib/l2kit.js";
 import { keepPeople } from "../../scripts/lib/level-kit.js";
@@ -33,6 +34,7 @@ const lit = (cx, cz) => zoneOf(cx, cz) !== "dark";
 
 const slAt = {}; // per-player sludge hiss clock, this machine's
 export function tick(ctx) {
+  restyleSigns(ctx, "level2"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state, now = ctx.now();

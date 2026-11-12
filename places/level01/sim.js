@@ -1,3 +1,4 @@
+import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import { setZen, migrateZen } from "../../scripts/lib/zenith-quest.js";
 // Level 0.1 "Zenith Station": a fragment of a spherical research megastructure grown into Level 0. One kit (scripts/zenith-geo.js), one layout:
@@ -185,6 +186,7 @@ function furnish(ctx) {
   }
 }
 export function tick(ctx) {
+  restyleSigns(ctx, "level01"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   const s = ctx.place.state;
   if (s.furnV !== FURNV && s.layV === LAYV && ctx.place.players?.length) { s.furnV = FURNV; furnish(ctx); }
