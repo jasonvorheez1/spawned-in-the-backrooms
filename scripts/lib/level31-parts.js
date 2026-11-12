@@ -4,4 +4,5 @@ import { layFood } from "./level31-food.js";
 import { layRental } from "./level31-rental.js";
 import { layShop } from "./level31-shop.js";
 import { laySideB } from "./level31-sideb.js";
-export function layParts(ctx) { layArcade(ctx); layFood(ctx); layRental(ctx); layShop(ctx); laySideB(ctx); }
+import { layDesign } from "./level31-design.js";
+export function layParts(ctx) { layArcade(ctx); layFood(ctx); layRental(ctx); layShop(ctx); laySideB(ctx); layDesign(ctx); }
