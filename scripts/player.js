@@ -1122,7 +1122,9 @@ function viewmodel(ctx, moving, sprinting) {
     if (fpa) child.push({ id: 'fparm-r', feetPosition: tune?.aat ?? FP_AT(l.sex === 'f' ? 'f' : 'm'), rotation: tune?.arot ?? FP_ROT, model: { id: fpa.R, materials: skinM }, castShadow: false, visibleInFirstPerson: true, audience: 'local' }) // her own right arm (art/fp-arm), its fist closed on the grip at the viewmodel's origin
     else if (cs) {
       const cat = CAT_FPARM[l.sex === 'f' ? 'f' : 'm']
-      const arms = { model: { ...cs.model, id: cat.glb }, /* no body morph: its shape keys are the whole body's and thin the cut arm to sticks (Shelly: 'why do my arms look like sticks') */ ...(cs.scale ? { scale: cs.scale } : {}),
+      // no tuck: on the body the skin sinks 4 cm under a modelled top's sleeve, but no sleeve rides the first-person arm, so it drew stick-thin (Shelly Nov 12 'why are my arms thin when i have clothing on')
+      const mats = Object.fromEntries(Object.entries(cs.model.materials ?? {}).map(([k, m]) => [k, m?.params ? { ...m, params: { ...m.params, tuckT: 0, tuckB: 0, tuckS: 0 } } : m]))
+      const arms = { model: { ...cs.model, id: cat.glb, materials: mats }, /* no body morph: its shape keys are the whole body's and thin the cut arm to sticks (Shelly: 'why do my arms look like sticks') */ ...(cs.scale ? { scale: cs.scale } : {}),
         castShadow: false, visibleInFirstPerson: true, audience: 'local' }
       child.push({ ...arms, id: 'plyarm', bones: { 'mixamorig:LeftArm': { scale: 0 } }, feetPosition: tune?.cat ?? cat.at })
       // The cut cat has short arms. Seat the left shoulder behind the fore-end so the paw can reach it.
