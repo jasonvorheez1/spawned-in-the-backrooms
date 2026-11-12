@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 6260,
-  "updatedAt": "2026-11-12T13:22:14.651Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning the Level 0 maze, lore-based destinations, a social mall and solo tutorial spaces. `templates/player.js` composes shared player behaviors while place sims lay and tick local worlds; Level 0.2's shifting-room crew and Level 13's lived-in apartments now carry linked salvage and tape content.",
+  "basedOnSpecVersion": 6262,
+  "updatedAt": "2026-11-12T13:23:34.811Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning the Level 0 maze, lore-based destinations, a social mall and solo tutorial spaces. `templates/player.js` composes shared player behaviors while place sims lay and tick local worlds; Level 0.2's shifting-room crew and Level 13's lived-in apartments carry linked salvage and tape content.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0/Lobby maze; sim lays ecology, generated moments, safe rooms and routes including Level 0.2.",
     "places/bonus (3D) - vaporwave mall with authored shops/escalators and simulated staff; Rico's platform routine and Bonus Line boarding cooperate.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo ephemeral) - character creation/waking and staged tutorial route.",
     "places/level01 (3D) - Zenith Station: station, breach, doors, bots, hazards and recorder quest.",
-    "places/level1, level2, level02 (3D; 'Remodeled Mess'), level21, level3, gamma - Habitable Zone/M.E.G. camp, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma; Level 0.2's x0z0 cell holds basement dressing and its sim ticks the crew's shifting rooms.",
+    "places/level1, level2, level02 (3D; 'Remodeled Mess'), level21, level3, gamma - Habitable Zone/M.E.G. camp, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma; Level 0.2's x0z0 cell holds basement dressing and its sim ticks local systems.",
     "places/level4, level5, level6, level7, level10, level26, level27 (3D) - Office, Hotel, drowned house, sea/Fort Surrender, lake and deeper destinations; local sims own specialized environments and routes.",
     "places/level11, level12, level13 (3D) - Infinite City and Matrix-to-Boiling-Frogs destinations; Level 13 has the Floor 283 reception, numbered hallways, furnished/story-bearing flats, residents, foes and B8 tape.",
     "places/testlab + places/spamton (3D) - authored test and bonus spaces."
@@ -41,7 +41,7 @@
     "scripts/lib/remodel-quest.js - QUESTS02, setRemodStep, gotFresh, gotPaint, remodelChoices, handleDialogueQuest02, placeFreshener, freshenerAt, FRESH_BODY, pickPlaced, nearFresh.",
     "scripts/lib/level02.js - Level 0.2 geometry/door helpers; scripts/l02-use.js - ears; scripts/l02-crew-exit.js - onTriggerEnter; scripts/climb.js - onInput, update.",
     "scripts/lib/l02-grid.js - wallLine, yawOf, layGrid, layPaint, resetGrid, joists, gridTick; scripts/lib/l02-wall-geo.js - geometry, collider.",
-    "scripts/lib/level13.js - H, HALL, T, UNIT, HALLS, SPAWN, EXIT0, RECEPTION, DINING, APTS, apt, aptAt, roomAt, inHall; level13-people.js - SEATS, layPeople; level13-dress.js - layDress; level13-foes.js - SLOTS, homeOf, foeSpec, layFoes; level13-tape.js - layTape.",
+    "scripts/lib/level13.js - H, HALL, T, UNIT, HALLS, SPAWN, EXIT0, RECEPTION, DINING, APTS, apt, aptAt, roomAt, inHall; level13-people.js - SEATS, layPeople; level13-dress.js - layDress; level13-foes.js - SLOTS, homeOf, foeSpec, layFoes; level13-tape.js - tape helpers.",
     "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, weaponAim, onInput, hitTarget, HOLO/holoEnd and throwable callbacks."
   ],
   "ownership": [
@@ -52,7 +52,7 @@
     "scripts/lib/knock.js + stats.js - foe weight/attributes and down/stagger outcomes; enemy managers own AI and sneakTarget.",
     "places/level02/sim.js owns phase/caseLandAt and reset markers; scripts/lib/l02-grid.js writes place.state.l02grid.layout, while scripts/lib/l02-use.js writes its lamps map; the grid sim also owns local knock cadence.",
     "Place sims own generated-scene and migration markers, including Level 7 fortPathV/catV; Bonus sim owns staff/Rico migration; Level 13 sim writes player.state.leth13 from per-player dwell timing and place.state.v.",
-    "Level 13 furnish/dress/people/foe/tape layers keep separate version markers; level13-tape.js owns place.state.tapeV and preserves container item contents across relays; scripts/l13-foes.js owns foe memory/dead-slot timestamps and scripts/l13-fridge.js owns fridge inventory/refill timestamps."
+    "Level 13 furnish/dress/people/foe/tape layers keep separate version markers; level13-tape.js owns place.state.tapeV and preserves container item contents across relays; scripts/l13-foes.js owns foe memory/dead-slot timestamps and scripts/lib/forgive.js owns grudge state."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors.",
@@ -65,7 +65,8 @@
     "scripts/climb.js scans tagged ladder objects and grabs from movement toward rungs (or E at the foot); it owns local climb session and moves/releases the player along the ladder.",
     "interact.js loot search → loot.gateItems → items/weapons roll; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; focus → player.state.focus → loot/talk/shop UI.",
     "places/main/sim.js + scripts/lib/level02.js lay Level 0 door → scripts/level-door.js crosses to level02#l02-from-l0 or main#main-from-l02; l02-back stamps place.state.emptyAt for Level 0.2 reset/salvage flow.",
-    "places/level02/sim.js calls layGrid/gridTick → scripts/lib/l02-grid.js rebuilds unlit, unwatched partitions and knocks/shudders near players; lamps hold walls, paint/freshener pressables route to remodel-quest.js, and crew_putty from the case/salvage plus tape/glass from Level 13 feed Hum Loop in craft.yml.",
+    "places/level02/sim.js calls layGrid/gridTick → scripts/lib/l02-grid.js rebuilds unlit, unwatched partitions and knocks/shudders near players; lamps hold walls, paint/freshener pressables route to remodel-quest.js, and crew_putty is stocked in the crew cases.",
+    "places/level02/sim.js also clears a legacy bare-string l02-capn state.line so it cannot render as an empty 'Cap'n:' caption.",
     "places/level13/sim.js lays shell, then furnishing/foes/people/dress/tape layers; layTape creates B8 recorder and recoverable tapes/glass → inventory holo:b8 → player.js HOLO playback; Level 12 arrival and Level 0 exit remain the crossing endpoints."
   ],
   "behaviorFamilies": [
@@ -89,8 +90,8 @@
     "Threshold dressing version is V=7 in scripts/lib/thresholds.js; upgrades clean/rebuild thr-tagged objects delayed until colliders stand. Preserve thrSeen/thrTry/thrDone/thrV; sign-style only restyles eligible shallow UI boxes.",
     "Door transfers: carryAcross records xferTo only for local place links with a # marker and crosses carryId/nearby heldBy objects, rejecting room/world and Bonus destinations; Level 1 BACK uses backV destroy-and-respawn migration.",
     "Level 3 hatchV=3 rebuild destroys old l3-hatch-* objects; hatchAt deterministically shares each wall's door across its two faces. Level 3 lineV=2 replaces legacy line-model instances with three Tripo stations and animated belt boxes.",
-    "Level 0.2 sim V=25 rebuilds generated roots; preserve phase/caseLandAt and debris tags, plus the 15-second empty reset. Grid state remains place.state.l02grid={layout, lamps}; walls swap on six-second passes with view/near/lamp exclusions, and resetGrid restores initial layouts/lamps.",
-    "Level 7 fortPathV=6 lowers l7-ft-ramp by 0.12 m; catV=1 refits existing L7_NPCS in place. Level 13 shell V=2 rebuilds reception/flat shell and clears dv; preserve player.state.leth13 and per-player in-memory STAY timing (45 s onset, 180 s full, 20 s cool-off).",
-    "Level 13 furnishing V=5, dress DV=9, people PV=4, and tape TV=2 are independent layers; tape relays preserve container inventories, while Level 13 shell rebuild and subtree handling must retain/migrate their owned markers and contents."
+    "Level 0.2 sim V=25 rebuilds generated roots; preserve phase/caseLandAt and debris tags, plus the 15-second empty reset. Grid state remains place.state.l02grid={layout, lamps}; walls swap on six-second passes with view/near/lamp exclusions.",
+    "Level 7 fortPathV=6 lowers l7-ft-ramp by 0.12 m; catV=1 refits existing L7_NPCS in place. Level 13 shell V=2 rebuilds reception/flat shell and clears dv; preserve player.state.leth13 and per-player in-memory STAY timing (45 s onset, 180 s dwell).",
+    "Level 0.2 sim clears a cached bare-string l02-capn state.line; do not restore that raw form, which renders an empty Cap'n caption."
   ]
 }
