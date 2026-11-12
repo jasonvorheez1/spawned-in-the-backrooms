@@ -1,0 +1,84 @@
+# spawn-scene v2 yaml x0z0
+l13t-box1:
+  children: [{feetPosition: {x: 0, y: 0.34, z: -0.19}, material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}, primitive: {depth: 0.19, height: 0.006, kind: box, width: 0.5}, rotation: {pitch: -62}}, {feetPosition: {x: 0, y: 0.34, z: 0.19}, material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}, primitive: {depth: 0.19, height: 0.006, kind: box, width: 0.5}, rotation: {pitch: 58}}]
+  feetPosition: {x: 19.4, y: 0, z: 15.4}
+  id: l13t-box1
+  material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}
+  physics: {body: static, collider: box}
+  primitive: {depth: 0.38, height: 0.34, kind: box, width: 0.5}
+  rotation: {yaw: 12}
+  state: {items: "magnetic_tape,magnetic_tape,crt_glass", name: "Box marked B8, opened"}
+  tags: [l13t, container]
+l13t-box2:
+  children: [{feetPosition: {x: 0, y: 0.34, z: -0.19}, material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}, primitive: {depth: 0.19, height: 0.006, kind: box, width: 0.5}, rotation: {pitch: -62}}, {feetPosition: {x: 0, y: 0.34, z: 0.19}, material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}, primitive: {depth: 0.19, height: 0.006, kind: box, width: 0.5}, rotation: {pitch: 58}}]
+  feetPosition: {x: 19.95, y: 0, z: 15.55}
+  id: l13t-box2
+  material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}
+  physics: {body: static, collider: box}
+  primitive: {depth: 0.38, height: 0.34, kind: box, width: 0.5}
+  rotation: {yaw: -8}
+  tags: [l13t]
+l13t-box3:
+  children: []
+  feetPosition: {x: 19.6, y: 0.34, z: 15.45}
+  id: l13t-box3
+  material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}
+  physics: {body: static, collider: box}
+  primitive: {depth: 0.38, height: 0.34, kind: box, width: 0.5}
+  rotation: {yaw: 31}
+  tags: [l13t]
+l13t-box4:
+  children: [{feetPosition: {x: 0, y: 0.34, z: -0.19}, material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}, primitive: {depth: 0.19, height: 0.006, kind: box, width: 0.5}, rotation: {pitch: -62}}, {feetPosition: {x: 0, y: 0.34, z: 0.19}, material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}, primitive: {depth: 0.19, height: 0.006, kind: box, width: 0.5}, rotation: {pitch: 58}}]
+  feetPosition: {x: 24.6, y: 0, z: 15.6}
+  id: l13t-box4
+  material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}
+  physics: {body: static, collider: box}
+  primitive: {depth: 0.38, height: 0.34, kind: box, width: 0.5}
+  rotation: {yaw: 74}
+  state: {items: "magnetic_tape,crt_glass", name: "Box marked B8, opened again"}
+  tags: [l13t, container]
+l13t-recorder:
+  feetPosition: {x: 23.45, y: 0.75, z: 12.6}
+  id: l13t-recorder
+  layout: {box: {max: {x: 0.22, y: 0.2, z: 0.15}, min: {x: -0.22, y: 0, z: -0.15}}}
+  model: {forward: "-z", id: /cdn/value.2d037c484973cd0b26e6d4f42824e86c7ced0cb6de6365152abf1c2dceaea5e3.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 200}
+  state: {items: "holo:b8", name: "Cassette recorder, still loaded", verb: Take tape}
+  tags: [l13t, container]
+l13t-salv-a3:
+  children: [{feetPosition: {x: 0, y: 0.34, z: -0.19}, material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}, primitive: {depth: 0.19, height: 0.006, kind: box, width: 0.5}, rotation: {pitch: -62}}, {feetPosition: {x: 0, y: 0.34, z: 0.19}, material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}, primitive: {depth: 0.19, height: 0.006, kind: box, width: 0.5}, rotation: {pitch: 58}}]
+  feetPosition: {x: -18.45, y: 0, z: -1.7}
+  id: l13t-salv-a3
+  material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}
+  physics: {body: static, collider: box}
+  primitive: {depth: 0.38, height: 0.34, kind: box, width: 0.5}
+  rotation: {yaw: 15}
+  state: {items: "magnetic_tape,magnetic_tape", name: Shoebox of chewed cassettes}
+  tags: [l13t, container]
+l13t-salv-a5:
+  children: [{feetPosition: {x: 0, y: 0.34, z: -0.19}, material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}, primitive: {depth: 0.19, height: 0.006, kind: box, width: 0.5}, rotation: {pitch: -62}}, {feetPosition: {x: 0, y: 0.34, z: 0.19}, material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}, primitive: {depth: 0.19, height: 0.006, kind: box, width: 0.5}, rotation: {pitch: 58}}]
+  feetPosition: {x: -2.45, y: 0, z: -1.7}
+  id: l13t-salv-a5
+  material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}
+  physics: {body: static, collider: box}
+  primitive: {depth: 0.38, height: 0.34, kind: box, width: 0.5}
+  rotation: {yaw: 15}
+  state: {items: "crt_glass,crt_glass", name: Bag of picture-tube glass}
+  tags: [l13t, container]
+l13t-salv-b2:
+  children: [{feetPosition: {x: 0, y: 0.34, z: -0.19}, material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}, primitive: {depth: 0.19, height: 0.006, kind: box, width: 0.5}, rotation: {pitch: -62}}, {feetPosition: {x: 0, y: 0.34, z: 0.19}, material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}, primitive: {depth: 0.19, height: 0.006, kind: box, width: 0.5}, rotation: {pitch: 58}}]
+  feetPosition: {x: 17.55, y: 0, z: 8.3}
+  id: l13t-salv-b2
+  material: {color: oklch(0.7 0.06 70), roughness: 0.95, texture: cdn/texture-worn-brown-corrugated-cardboard-box-side.png}
+  physics: {body: static, collider: box}
+  primitive: {depth: 0.38, height: 0.34, kind: box, width: 0.5}
+  rotation: {yaw: 15}
+  state: {items: "magnetic_tape,crt_glass", name: Box of dead tapes}
+  tags: [l13t, container]
+l13t-tally:
+  feetPosition: {x: 23.6, y: 1.35, z: 16.08}
+  id: l13t-tally
+  rotation: {yaw: 180}
+  tags: [l13t]
+  vector: "<svg viewBox='0 0 200 120' width='0.9m'><g stroke='#3a3328' stroke-width='2.4' stroke-linecap='round' fill='none'>\n<path d='M14 20 v26 M22 20 v26 M30 20 v26 M38 20 v26 M8 40 L46 26'/><path d='M60 20 v26 M68 20 v26 M76 20 v26 M84 20 v26'/>\n<text x='100' y='42' font-family='sans-serif' font-size='16' fill='#3a3328' stroke='none'>9</text>\n<path d='M14 70 v26 M22 70 v26 M30 70 v26 M38 70 v26 M8 90 L46 76 M60 70 v26 M68 70 v26 M76 70 v26 M84 70 v26 M54 90 L92 76 M106 70 v26 M114 70 v26 M122 70 v26 M130 70 v26'/>\n<text x='146' y='92' font-family='sans-serif' font-size='16' fill='#3a3328' stroke='none'>14?</text>\n<path d='M140 44 Q170 30 186 52' stroke='#7a2a22' stroke-width='1.6'/></g></svg>"
