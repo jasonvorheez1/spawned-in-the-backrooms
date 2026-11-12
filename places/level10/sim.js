@@ -17,7 +17,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 
 export const cadence = "1s";
-const V = 18;
+const V = 19;
 const DOCK_Y = 0.2; // deck starts at the measured west-bank landing
 const CEDAR = { texture: "cdn/texture-worn-hardwood-grain.png", color: "#776049", roughness: 0.92 };
 const spot = ({ x, y, z }) => ({ x, y, z });
@@ -72,7 +72,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   const board = (id, x, z, yaw, title, line, width = 1.65) => {
     sp(id, { feetPosition: T(x, z, 1.47), rotation: { yaw }, castShadow: false,
       visibleRange: { max: 100 }, vector: `<svg viewBox='0 0 240 84' width='${width}m'><rect x='2' y='2' width='236' height='80' rx='3' fill='#594531' stroke='#aa9270' stroke-width='4'/><rect x='9' y='9' width='222' height='66' rx='2' fill='#dfd4ae'/><g fill='#352e23' font-family='serif' text-anchor='middle'><text x='120' y='37' font-size='21' font-weight='bold'>${title}</text><text x='120' y='60' font-size='15'>${line}</text></g></svg>`,
-      children: [{ feetPosition: { x: 0, y: -1.57, z: 0.045 }, primitive: { kind: "box", width: 0.12, height: 1.75, depth: 0.13 }, material: CEDAR }] });
+      children: [{ feetPosition: { x: 0, y: -1.57, z: 0.045 }, primitive: { kind: "box", width: 0.12, height: 1.39, depth: 0.13 }, material: CEDAR }] });
   };
   board("l10-sign-city", 4.3, -271, 180, "CITY ROAD", "LEVEL 11 · STRAIGHT ON");
   board("l10-sign-city-south", -3.6, 64, 0, "CITY ROAD", "LEVEL 11 · STRAIGHT ON");

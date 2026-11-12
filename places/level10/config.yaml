@@ -20,7 +20,7 @@ terrain:
     track-yard: { kind: path, points: [[2, -40], [-8, -41], [-17, -45], [-26, -47.5], [-43, -46], [-48, -47.4]], width: 3.4, material: dirt, edgeMaterial: grass, noise: 0.25 }
     track-silo: { kind: path, points: [[-22, -30], [-30, -23], [-37, -18.5], [-42, -17.5]], width: 2.5, material: dirt, edgeMaterial: grass, noise: 0.25 }
     track-lake: { kind: path, points: [[-0.7, -76], [12, -79], [26, -86], [36, -93], [40.5, -95]], width: 2.6, material: dirt, edgeMaterial: grass, noise: 0.25 }
-    track-stable: { kind: path, points: [[-53, -118.2], [-54, -112], [-63.6, -105]], width: 2.5, material: dirt, edgeMaterial: grass, noise: 0.25 }
+    track-stable: { kind: path, points: [[-53, -118.2], [-62, -115.7], [-64.6, -111.7], [-64.6, -105], [-63.6, -105]], width: 2.5, material: dirt, edgeMaterial: grass, noise: 0.25 }
     track-shed: { kind: path, points: [[95, -39], [96.3, -46], [96.6, -55.5]], width: 2.2, material: dirt, edgeMaterial: grass, noise: 0.3 }
     track-watcher: { kind: path, points: [[65, -39.5], [64.5, -46], [66, -51.4]], width: 1.6, material: dirt, edgeMaterial: grass, noise: 0.2 }
     stable-pad: { kind: flatten, center: { x: -58, z: -105 }, height: { terrain: 0 }, shape: { kind: rectangle, width: 13, depth: 15 }, falloff: 3, material: dirt, clearScatter: true }
