@@ -101,7 +101,7 @@ function plaque(w, h, d, base, accent) {
 
 export function geometry(ctx) {
   C = ctx; R = ctx.random; const p = ctx.params ?? {};
-  const w = p.w ?? 1, h = p.h ?? 0.5, d = Math.max(0.01, p.d ?? 0.05), base = p.base ?? "oklch(0.3 0.02 70)", st = p.style ?? "plywood";
+  const w = p.w ?? 1, h = p.h ?? 0.5, d = Math.max(0.01, p.d ?? 0.05), base = typeof p.base === "number" ? "#" + p.base.toString(16).padStart(6, "0") : (p.base ?? "oklch(0.3 0.02 70)"), st = p.style ?? "plywood";
   if ((ctx.lod ?? 1) >= 4) { C.color(base); box(-w / 2, 0, -d / 2, w / 2, h, d / 2); return; }
   if (st === "plank") plank(w, h, d, base); else if (st === "tin") tin(w, h, d, base, p.accent); else if (st === "enamel") enamel(w, h, d, base, p.accent);
   else if (st === "cardboard") cardboard(w, h, d, base); else if (st === "street") street(w, h, d, base, p.accent); else if (st === "plaque") plaque(w, h, d, base, p.accent);

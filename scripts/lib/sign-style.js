@@ -14,7 +14,7 @@ export function restyleSigns(ctx, place) {
     if (o.material?.emissive && (o.material.emissiveIntensity ?? 1) > 0.3) continue;
     const style = S.ids?.[id] ?? S.places?.[place] ?? "plywood";
     let seed = 0; for (const ch of id) seed = (seed * 31 + ch.charCodeAt(0)) % 100000;
-    const base = o.material?.color ?? "oklch(0.3 0.02 70)";
+    const c0 = o.material?.color, base = typeof c0 === "number" ? "#" + c0.toString(16).padStart(6, "0") : (c0 ?? "oklch(0.3 0.02 70)");
     try {
       o.primitive = { kind: "scripted", script: "scripts/sign-geo.js", seed, params: { style, w: pr.width ?? 1, h: pr.height ?? 0.5, d: pr.depth ?? 0.05, base } };
       o.material = { ...(o.material ?? {}), texture: S.textures?.[style], color: base };
