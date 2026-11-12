@@ -225,7 +225,7 @@ export function npcLook(id, look, faction, level, role) {
     const tails = PT?.tails ?? NL.defaults.tails, fl = PT?.fluff ?? NL.defaults.fluff, ey = PT?.eyes ?? NL.defaults.eyes, fu = PT?.fur ?? NL.defaults.fur
     if (!look?.tail) l.tail = tails[tr % tails.length]
     if (!look?.fluff) l.fluff = fl[(tr >>> 5) % fl.length]
-    if (!look?.eyes && !look?.eye) l.eyes = ey[(tr >>> 11) % ey.length]
+    if (!look?.eye) l.eye = ey[(tr >>> 11) % ey.length]   // .eyes is the eye shape on these rows; .eye is the colour
     if (!look?.fur) l.fur = fu[(tr >>> 17) % fu.length] }
   if (!look?.beard && l.sex === 'm') {
     const br = hashOf(id + ':beard')
@@ -299,8 +299,8 @@ function bodyRoll(id, l, look) {
 }
 
 // Nov 12: a standing NPC's body, hair, beard, snout and ears re-rolled to fit its job; clothes, fur, sex, face kept
-export const NL_V = 'nl6'
-const REFIT_KEYS = ['hair', 'hairc', 'beard', 'beardc', 'bodyType', 'heightS', 'buildS', 'headS', 'earS', 'snoutS', 'tailS', 'waistS', 'hipS', 'bustS', 'snout', 'ears', 'chest', 'tail', 'fluff', 'eyes']
+export const NL_V = 'nl7'
+const REFIT_KEYS = ['hair', 'hairc', 'beard', 'beardc', 'bodyType', 'heightS', 'buildS', 'headS', 'earS', 'snoutS', 'tailS', 'waistS', 'hipS', 'bustS', 'snout', 'ears', 'chest', 'tail', 'fluff', 'eye']
 export function refitLook(id, wear) {
   const base = { ...wear }; for (const k of REFIT_KEYS) delete base[k]
   const l = npcLook(id, { ...base, clothesOwn: true }, wear.faction, 18, wear.role)
