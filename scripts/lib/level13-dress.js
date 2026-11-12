@@ -1,8 +1,9 @@
 // Level 13: dressing. places/level13/sim.js calls layDress(ctx) every 1 s tick; it lays its pieces once (own version key) and returns fast after.
 // The hall as people left it: wall lamps between doors, radiators, what was left at each door, notes, and the drag marks into the lurker's flat. Ids l13d-*.
-import { APTS, H, HALL, T, UNIT } from "./level13.js";
+import { APTS, H, HALL, T, UNIT, EXIT0 } from "./level13.js";
 import D from "./data/l13-dress.yml";
-const DV = 6;
+const DV = 7;
+const DOOR = (part, style, o = {}) => ({ kind: "scripted", script: "scripts/door-geo.js", params: { style, part, w: UNIT.doorW, h: UNIT.doorH, hingeSide: "left", ...o } });
 const fit = (k) => { const m = D.models[k]; if (!m?.model) return null; const [w, h, d] = m.size; return { model: m.forward ? { id: m.model, forward: m.forward } : { id: m.model }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } } }; };
 const svg = (w, [vw, vh], body) => `<svg viewBox='0 0 ${vw} ${vh}' width='${w}m'>${body}</svg>`;
 export function layDress(ctx) {
@@ -36,6 +37,26 @@ export function layDress(ctx) {
     ctx.spawn(`l13d-drag-${i}`, { feetPosition: { x: l.door.x + dx + i * 0.05, y: 0.006, z: (z0 + z1) / 2 }, rotation: { pitch: -90, yaw: (i ? 3 : -4) }, castShadow: false, receiveShadow: true,
       primitive: { kind: "plane", width: 0.09, height: Math.abs(z1 - z0) }, material: { color: "oklch(0.24 0.03 50 / 0.55)", transparent: true, roughness: 1, depthWrite: false } });
   }
+  // every open flat's doorway: a cased frame, and a real veneer leaf standing open on its hinge at the jamb (the plain slab stays hidden for its collider)
+  for (const a of APTS) { if (!a.open) continue;
+    ctx.spawn(`l13d-fr-${a.id}`, { feetPosition: { x: a.door.x, y: 0, z: a.zf }, rotation: { yaw: a.s < 0 ? 180 : 0 }, castShadow: false, receiveShadow: true, primitive: DOOR("frame", "flat", { d: T + 0.01 }), material: { pbr: true, roughness: 0.6 } });
+    const slab = ctx.getObject(`l13-door-${a.id}`); if (slab) slab.visible = false;
+    ctx.spawn(`l13d-leaf-${a.id}`, { feetPosition: { x: a.door.x - UNIT.doorW / 2 + 0.03, y: 0.004, z: a.zf + a.s * (T / 2 + 0.03) }, rotation: { yaw: a.s < 0 ? 78 : -78 }, castShadow: true, receiveShadow: true,
+      primitive: DOOR("leaf", "flat", { swing: a.s }), material: { pbr: true, roughness: 0.55 }, physics: { body: "static", collider: "box" } });
+  }
+  // the way to Level 0 capping hall B: a framed door a shade too yellow, a lamp over it, its light under it, and the hum you know
+  const ex = ctx.getObject("l13-exit-door"); if (ex) ex.visible = false;
+  ctx.spawn("l13d-exit", { feetPosition: { x: EXIT0.x - 0.02, y: 0, z: EXIT0.z }, rotation: { yaw: 90 }, castShadow: false, receiveShadow: true, primitive: DOOR("set", "plain", { swing: 1, d: 0.14 }), material: { pbr: true, roughness: 0.7 } });
+  ctx.spawn("l13d-exit-lamp", { feetPosition: { x: EXIT0.x - 0.4, y: 2.42, z: EXIT0.z }, light: { kind: "point", color: "oklch(0.92 0.12 98)", intensity: 0.55, distance: 4.5 } });
+  ctx.spawn("l13d-exit-tube", { feetPosition: { x: EXIT0.x - 0.12, y: 2.3, z: EXIT0.z }, rotation: { pitch: 90 }, pivot: "center", castShadow: false, primitive: { kind: "capsule", radius: 0.022, halfHeight: 0.3 }, material: { color: "oklch(0.97 0.05 98)", emissive: "oklch(0.95 0.1 98)", emissiveIntensity: 1.6 } });
+  ctx.spawn("l13d-exit-leak", { feetPosition: { x: EXIT0.x - 0.3, y: 0.004, z: EXIT0.z }, rotation: { pitch: -90 }, castShadow: false, primitive: { kind: "plane", width: 0.45, height: 0.95 },
+    material: { color: "oklch(0.9 0.12 95 / 0.35)", transparent: true, depthWrite: false, emissive: "oklch(0.88 0.12 95)", emissiveIntensity: 0.5 } });
+  ctx.spawn("l13d-exit-hum", { feetPosition: { x: EXIT0.x - 0.3, y: 1.2, z: EXIT0.z }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-fluorescent-light-hum-muffled-behind-a-door-loop.mp3", loop: true, gain: 0.22, spatial: true, maxDistance: 9 } });
+  // the floors don't add up, and someone noticed: Floor 1 at the start, a pencilled note under the bend's FLOOR 283
+  ctx.spawn("l13d-floor1", { feetPosition: { x: -37.6, y: 1.48, z: -HALL + 0.068 }, castShadow: false,
+    vector: svg(0.6, [300, 100], `<rect x='2' y='2' width='296' height='96' rx='6' fill='#efe6cf' stroke='#8a6a3a' stroke-width='4'/><text x='150' y='48' text-anchor='middle' font-family='sans-serif' font-size='34' font-weight='bold' fill='#5a4430'>FLOOR 1</text><text x='150' y='82' text-anchor='middle' font-family='sans-serif' font-size='20' fill='#4a3b2c'>FLATS 101 – 110 →</text>`) });
+  ctx.spawn("l13d-283-note", { feetPosition: { x: HALL - 0.07, y: 1.18, z: 9.3 }, rotation: { yaw: 90, roll: -3 }, castShadow: false,
+    vector: svg(0.3, [150, 70], `<rect width='150' height='70' fill='#f4efd8'/><rect x='62' y='-4' width='26' height='10' fill='#d8d2b0' opacity='0.8'/><text x='75' y='30' text-anchor='middle' font-family='serif' font-size='13' fill='#2a2a3a'>Floor 1 was 20 steps ago.</text><text x='75' y='52' text-anchor='middle' font-family='serif' font-size='13' fill='#2a2a3a'>There are no stairs.</text>`) });
   const rad = fit("radiator");
   if (rad) D.radiators.forEach(([x, z, yaw], i) => ctx.spawn(`l13d-rad-${i}`, { feetPosition: { x, y: 0.08, z }, rotation: { yaw }, castShadow: true, physics: { body: "static", collider: "box" }, ...rad }));
 }

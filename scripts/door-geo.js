@@ -15,6 +15,8 @@ const TEX = {
   hotel: ["cdn/texture-dark-mahogany-wood-grain.png", "oklch(0.92 0.02 50)", "cdn/texture-dark-mahogany-wood-grain.png", "oklch(0.9 0.02 50)"],
   wood: ["cdn/texture-painted-wood-door.png", "oklch(0.96 0.01 90)", "cdn/texture-painted-wood-door.png", "oklch(0.97 0.005 90)"],
   metal: ["cdn/texture-brushed-steel.png", "oklch(0.9 0.01 230)", "cdn/texture-brushed-steel.png", "oklch(0.85 0.01 230)"],
+  flat: ["cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "oklch(0.72 0.05 60)", "cdn/texture-painted-wood-door.png", "oklch(0.86 0.03 80)"], // Level 13's flat doors: veneer, peephole, number plate
+  plain: ["cdn/texture-painted-wood-door.png", "oklch(0.86 0.1 95)", "cdn/texture-painted-wood-door.png", "oklch(0.8 0.07 92)"], // Level 13's way to Level 0: yellower than the others
   fire: ["cdn/texture-red-painted-steel.png", "oklch(0.92 0.02 30)", "cdn/texture-brushed-steel.png", "oklch(0.85 0.01 230)"],
 };
 let C, L;
@@ -110,7 +112,7 @@ function knob(x, y, s, brass) {
   lathe(x, y, s * T / 2, s, [[0.03, 0], [0.03, 0.005], [0.011, 0.01], [0.01, 0.035], [0.026, 0.045], [0.029, 0.058], [0.022, 0.068], [0, 0.071]]);
 }
 function leaf(p, X, W, H) {
-  const st = p.style, hw = st === "hotel", lx = W - 0.07, hy = 0.95, k = 0.003;
+  const st = p.style, hw = st === "hotel" || st === "flat", lx = W - 0.07, hy = 0.95, k = 0.003;
   paint(p, 0);
   if (L >= 5) return bev(X(0), 0, -T / 2, X(W), H, T / 2, 0);
   if (st === "hotel" || st === "wood") {
