@@ -9,7 +9,7 @@ from mathutils.bvhtree import BVHTree
 from mathutils.kdtree import KDTree
 a = sys.argv[sys.argv.index("--")+1:]; SRC, OUT, jobs = a[0], a[1], a[2:]
 EARS = "/workspace/hairfit2/ears/upright-%s.glb"
-TUNE = {"twintails": dict(mirror=1, sheath=1), "hime": dict(mirror=1), "bob": dict(mirror=1)}
+TUNE = {"twintails": dict(mirror=1, ear=0.03), "hime": dict(mirror=1), "bob": dict(mirror=1)}
 TRIS = 6000
 def ss(a, b, x): t = max(0, min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t)
 def act(o):
