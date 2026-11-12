@@ -422,8 +422,9 @@ export function update(ctx, dt) {
   let nearPlayerDist = 1e9; const f = me.feetPosition;
   for (const p of ctx.place.players) { const d = Math.hypot(p.feetPosition.x - f.x, p.feetPosition.z - f.z); if (d < nearPlayerDist) nearPlayerDist = d; }
   if (!s.follow && !s.target && !m.down && !m.talking) {
-    if (nearPlayerDist > 45) { ctx.sleep(2); return; }
-    if (nearPlayerDist > 28 && !m.aimAt && !m.inspect && !m.flee) { ctx.sleep(0.2); dt += 0.2; }
+    if (nearPlayerDist > 70) { ctx.sleep(2); return; } // past sight: frozen. 45 m froze Level 31's crew in plain view across the hall (Shelly: "all of them were just standing")
+    if (nearPlayerDist > 45 && !m.aimAt && !m.inspect && !m.flee) { ctx.sleep(0.4); dt += 0.4; }
+    else if (nearPlayerDist > 28 && !m.aimAt && !m.inspect && !m.flee) { ctx.sleep(0.2); dt += 0.2; }
     else if (nearPlayerDist > 18 && !m.aimAt && !m.inspect && !m.flee) { ctx.sleep(0.1); dt += 0.1; }
   }
   if (!m.armed && !s.dead && now - (m.bornAt ??= now) > 1500) arm(ctx, me, m); // after the spawner has handed over its weapon
