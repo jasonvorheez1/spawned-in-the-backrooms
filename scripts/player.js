@@ -1103,7 +1103,7 @@ const FP_AT = (sx) => ({ x: FP_BC[sx].x + FP_SEAT.x, y: FP_BC[sx].y + FP_SEAT.y,
 function wp_two(kind) { return W[kind]?.two ? { y: W[kind].two[0], z: W[kind].two[1] } : null }
 export function plyBounds(ctx, p) { const b = ctx.getObject(p.id), v = ctx.getObject(p.id.split('/plyarm')[0]); ctx.log('[plyarm] bounds', JSON.stringify(b?.bounds ?? null), 'vm', JSON.stringify(v?.bounds ?? null), 'wfp', JSON.stringify(b?.worldFeetPosition ?? null), 'me', JSON.stringify(ctx.self.feetPosition), 'vis', b?.visible, b?.visibleInFirstPerson) }
 function plyArm(ctx, w) {
-  const body = (w.plyObj && ctx.getObject(w.plyObj)) || ctx.getObject(w.vm + '/plyarm') ?? ctx.getObject('plyarm') ?? (ctx.getObject(w.vm)?.children ?? []).map((c) => (typeof c === 'string' ? ctx.getObject(c) : c)).find((c) => c?.model)
+  const body = ((w.plyObj && ctx.getObject(w.plyObj)) || ctx.getObject(w.vm + '/plyarm')) ?? ctx.getObject('plyarm') ?? (ctx.getObject(w.vm)?.children ?? []).map((c) => (typeof c === 'string' ? ctx.getObject(c) : c)).find((c) => c?.model)
   if (!w.plyLogged) { w.plyLogged = true; ctx.log('[plyarm] vm', w.vm, 'body', body?.id ?? null, 'pos', JSON.stringify(body?.worldFeetPosition ?? null), 'skel', body?.skeleton ? Object.keys(body.skeleton).length : 'none') }
   const names = body?.skeleton ? (Array.isArray(body.skeleton) ? body.skeleton : Object.keys(body.skeleton)).map((b) => (typeof b === 'string' ? b : b.name)) : null
   if (!names?.length) return
