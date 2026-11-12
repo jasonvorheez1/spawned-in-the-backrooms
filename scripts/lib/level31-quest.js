@@ -90,7 +90,7 @@ export function useDeck(ctx, p) {
 }
 export function l31Choices(id, s) {
   const q = s?.l31q ?? 0, h = s?.l31qh ?? {}, r = s?.l31route, out = [];
-  if (id === MARLOWE) {
+  if (id === "l31-q-marlowe") {
     if (!q) out.push({ text: "Nice table. Buying or selling?", tag: "Quest Start" });
     if (q === 1 || q === 2) out.push({ text: "Remind me what I'm stealing.", tag: "Quest" });
     if (q === 3) {
@@ -100,17 +100,17 @@ export function l31Choices(id, s) {
     }
     if (q === 4 && r === "dub" && s.l31dub) out.push({ text: "One dub, as promised.", tag: "Quest Turn-In" });
   }
-  if (id === COACH) {
+  if (id === "l31-coach") {
     if (q === 1 && !h.coach) out.push({ text: "What do you know about the DJ's master tape?", tag: "Quest" });
     if (q === 4 && r === "rink") out.push({ text: "The tape's back where it belongs.", tag: "Quest Turn-In" });
     if (q === 99 && !s.l31coachAfter) out.push({ text: "About the tape...", tag: "Quest" });
   }
-  if (id === DJ) {
+  if (id === "l31-dj") {
     if (q === 1 && !h.dj) out.push({ text: "Is there a master tape?", tag: "Quest" });
     if (q === 3) out.push({ text: "This is yours. I'm giving it back.", tag: "Quest Turn-In" });
   }
-  if (id === CLERK && q === 1 && !h.dj) out.push({ text: "Where does the DJ go on break?", tag: "Quest" });
-  if (id === DEZ && q === 4 && r === "bntg") out.push({ text: "Marlowe said you've got the rest of my money.", tag: "Quest Turn-In" });
+  if (id === "l31-food-clerk" && q === 1 && !h.dj) out.push({ text: "Where does the DJ go on break?", tag: "Quest" });
+  if (id === "l31-q-dez" && q === 4 && r === "bntg") out.push({ text: "Marlowe said you've got the rest of my money.", tag: "Quest Turn-In" });
   return out;
 }
 export function handleDialogueQuest31(ctx, p, npc, text) {
@@ -118,7 +118,7 @@ export function handleDialogueQuest31(ctx, p, npc, text) {
   if (!s || !npc) return null;
   const id = String(npc.id ?? "").split("/").pop(), q = s.l31q ?? 0, pos = posOf(p);
   const roll = (skill, difficulty) => { const c = rollCheck(ctx, s, { skill, difficulty }); if (pos) heard(ctx, { clip: c.ok ? CHIME : FAIL, position: pos, volume: 0.5, maxDistance: 16 }, { audience: { player: p.id } }); return c.ok; };
-  if (id === MARLOWE) {
+  if (id === "l31-q-marlowe") {
     if (t.includes("buying or selling") && !q) {
       setStep(ctx, p, 1, `Quest Started: ${QNAME} · Ask the Coach and the DJ about the master tape`);
       return { reply: "Both. Always both. Here's the pitch. The faceling in the booth has a tape. One tape. It's why this place feels like your first birthday party. I dub that, I sell comfort by the cassette from here to Level 11. Three hundred backdollars to whoever brings it. Ask the coach where it lives. He'll lie nicely.", mood: "happy" };
@@ -148,7 +148,7 @@ export function handleDialogueQuest31(ctx, p, npc, text) {
     }
     return null;
   }
-  if (id === COACH) {
+  if (id === "l31-coach") {
     if (t.includes("master tape") && q === 1) {
       hint(ctx, p, "coach");
       return { reply: "So Marlowe found you. Yeah, there's a tape. Every song you hear in here is on it. I don't know if the tape makes the rink or the rink makes the tape, and I've decided I'd rather not find out. If you take it, take it because you mean it. Not for three hundred bucks.", mood: "sad" };
@@ -163,7 +163,7 @@ export function handleDialogueQuest31(ctx, p, npc, text) {
     }
     return null;
   }
-  if (id === DJ) {
+  if (id === "l31-dj") {
     if (t.includes("master tape") && q === 1) {
       hint(ctx, p, "dj");
       return { reply: "...Side B. ...Back of the room. ...Where it's dark.", mood: "calm" };
@@ -174,11 +174,11 @@ export function handleDialogueQuest31(ctx, p, npc, text) {
     }
     return null;
   }
-  if (id === CLERK && t.includes("dj go on break") && q === 1) {
+  if (id === "l31-food-clerk" && t.includes("dj go on break") && q === 1) {
     hint(ctx, p, "dj");
     return { reply: "The cinema. Back corner. He carries something small and he walks like it's heavy. I don't ask. I make pizza.", mood: "calm" };
   }
-  if (id === DEZ && t.includes("rest of my money") && q === 4 && s.l31route === "bntg") {
+  if (id === "l31-q-dez" && t.includes("rest of my money") && q === 4 && s.l31route === "bntg") {
     finish(ctx, p, s.l31hi ? "bntgHi" : "bntg", "Sold Side B to the B.N.T.G.");
     return { reply: "You made it across. Marlowe had odds on that. Here's your money, and a dub, he says it's a thank you, I say it's advertising. Don't come back here for a while.", mood: "calm" };
   }
