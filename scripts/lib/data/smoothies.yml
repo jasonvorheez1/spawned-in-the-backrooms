@@ -8,6 +8,7 @@ fruits:
   lemon:  { name: "Lemon",        color: "#f0de4a" }
   kiwi:   { name: "Kiwi",         color: "#7cb342" }
   banana: { name: "Banana",       color: "#f5e08a" }
+  luckyo: { name: "Lucky O Milk", color: "#f7d7ef" }
 combos:
   berry+mango:        { name: "Sunrise",     desc: "Slowly heals",                 minutes: 120, hp: 1 }
   almond+lemon:       { name: "Clear Head",  desc: "Slowly steadies sanity",       minutes: 120, san: 1 }
@@ -16,6 +17,9 @@ combos:
   almond+berry+kiwi:  { name: "Night Shift", desc: "Heals and steadies sanity",    minutes: 90,  hp: 1, san: 1 }
   almond+banana+mango: { name: "Lobby Legs", desc: "Heals and keeps you fed",      minutes: 120, hp: 1, food: 1 }
   berry+kiwi+lemon:   { name: "Sour Patch",  desc: "Steadies sanity, a lot",       minutes: 60,  san: 3 }
+  banana+luckyo:      { name: "Cereal Bowl", desc: "Keeps food and water up",      minutes: 150, food: 1 }
+  berry+luckyo:       { name: "Lucky Charm", desc: "Steadies sanity",              minutes: 120, san: 2 }
+  almond+kiwi+luckyo: { name: "Pot o' Gold", desc: "Heals and steadies sanity",    minutes: 120, hp: 2, san: 1 }
 house: { name: "House Mix", desc: "A little healing", minutes: 45, hp: 1, every: 2 }
 # Sal's recorded lines (Callum, husky trickster)
 lines:
