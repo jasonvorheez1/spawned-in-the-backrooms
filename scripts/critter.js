@@ -198,7 +198,8 @@ function moodFace(ctx, l) {
   if (hp < 30) return 'sad'
   if ((s.san ?? 100) < 25) return 'scared'
   // a resting face lives a little (Nov 12 'animated faces'): now and then a smile or a blep, on each cat's own beat
-  if (!l.expr || l.expr === 'neutral' || l.expr === 'resting') {
+  const picked = (l.etype && l.etype !== 'classic') || (l.mtype && l.mtype !== 'classic') // Nov 12 (Shelly: salon eyes/mouth 'either work or dont'): a picked eye or mouth only shows on the calm face, so the resting quirks (smile, blep) skip that face
+  if (!picked && (!l.expr || l.expr === 'neutral' || l.expr === 'resting')) {
     if (now > (ses.quirkNext ?? 0)) { const r = ctx.random(); ses.quirk = r < 0.55 ? 'smile' : r < 0.8 ? 'blep' : 'joy'; ses.quirkUntil = now + 1500 + r * 1500; ses.quirkNext = ses.quirkUntil + 14000 + ctx.random() * 22000 }
     if (now < (ses.quirkUntil ?? 0)) return ses.quirk
   }
