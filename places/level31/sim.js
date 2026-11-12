@@ -8,7 +8,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 51;
+const V = 52;
 const RAIL_GLB = "/cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb";
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
@@ -162,7 +162,20 @@ function cinema(ctx) {
   for (const s of [-1, 1]) ctx.spawn(`l31-curtain${s}`, { feetPosition: { x: cx + s * 3.75, y: 0, z: C.z0 + 0.3 }, rotation: { yaw: 180 }, ...P({ kind: "curtain", w: 2.6, h: 4.6 }), castShadow: false });
   ctx.spawn("l31-valance", { feetPosition: { x: cx, y: 4.35, z: C.z0 + 0.35 }, primitive: { kind: "box", width: 10.2, height: 0.5, depth: 0.12 }, material: { texture: "cdn/texture-burgundy-velvet-cinema-seat-upholstery.png", wrap: "repeat", repeat: [1, 1], color: "oklch(0.75 0.06 20)", roughness: 0.95 }, castShadow: false });
   ctx.spawn("l31-cinema-wash", { feetPosition: { x: cx, y: 4.2, z: C.z0 + 7 }, light: { kind: "point", color: "#ffcf9a", intensity: 1.0, distance: 8 } });
-  ctx.spawn("l31-cinema-sign", { feetPosition: { x: cx, y: 3.22, z: -19.22 }, rotation: { yaw: 180 }, castShadow: false, vector: `<svg viewBox='0 0 220 50' width='3.2m'><rect width='220' height='50' rx='6' fill='#17090f' stroke='#ffd23a' stroke-width='2'/><text x='110' y='36' text-anchor='middle' font-family='display' font-size='32' fill='#ffd23a' filter='drop-shadow(0 0 4 #ff8a1e)'>NOW SHOWING</text></svg>` });
+  // the marquee: bulb-ringed letterboard over the cinema mouth; the posters below are painted one-sheets in chrome lightboxes
+  const bulbs = Array.from({ length: 30 }, (_, k) => `<circle cx='${10 + k * 20}' cy='8' r='4' fill='#fff1b8' filter='drop-shadow(0 0 3 #ffb42e)'/><circle cx='${10 + k * 20}' cy='132' r='4' fill='#fff1b8' filter='drop-shadow(0 0 3 #ffb42e)'/>`).join("");
+  ctx.spawn("l31-cinema-sign", { feetPosition: { x: cx, y: 3.6, z: -19.2 }, rotation: { yaw: 180 }, castShadow: false, vector: `<svg viewBox='0 0 600 140' width='6m'><rect width='600' height='140' rx='10' fill='#14070c' stroke='#ffd23a' stroke-width='3'/>${bulbs}<rect x='20' y='20' width='560' height='34' fill='#2a0f18'/><text x='300' y='47' text-anchor='middle' font-family='display' font-size='28' letter-spacing='8' fill='#ffd23a' filter='drop-shadow(0 0 4 #ff8a1e)'>NOW SHOWING</text><rect x='20' y='60' width='560' height='62' fill='#f3ead2'/><text x='300' y='90' text-anchor='middle' font-family='sans-serif' font-weight='900' font-size='30' fill='#d4204b'>DANDY'S WORLD</text><text x='300' y='114' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='15' letter-spacing='2' fill='#1a1a1a'>PARTY TIME =) · FACE TO FACELESS · SMILE WIDE · NO-CLIP · HOUND &amp; HOME</text></svg>` });
+  const POSTERS = [
+    ["dandy", 0, -19.2, 180, 1.3, "/cdn/value.b49bc3b23c69703d59f07ffadb76297b76ba36f52c72fb20c65d70057e0353e1.png"],
+    ["party", -2.7, -19.2, 180, 1.1, "/cdn/value.8d800fd6a81b3a0846cdcec35414c823e2e8f6053a854e26fcae3d5cd365a252.png"],
+    ["faceless", 2.7, -19.2, 180, 1.1, "/cdn/value.6826e5aa592e65514c1082e980dd51ec10dbf00709ace54c7bf6bd0d5fb3f1e1.png"],
+    ["smiler", -10.6, -19.2, 180, 1.1, "/cdn/value.87df9bfe7b64f900eed97ffd4be59ea7a7387345c05f943e628b210dcc6480d6.png"],
+    ["noclip", 10.6, -19.2, 180, 1.1, "/cdn/value.0a131871a81206986cb553ab5aff49238910eb04096465a3fb420cd3e1c43991.png"],
+    ["hound", -11.72, -23.5, 90, 1.1, "/cdn/value.1bd2973cb3100d260ee703f4c73cab4262debab2150579dcd995eb580f51d963.png"]];
+  for (const [k, x, z, yaw, w, tex] of POSTERS) { const h = w * 1.5, y = 1.55 - h / 2 + (k === "dandy" ? 0.1 : 0);
+    ctx.spawn("l31-poster-" + k, { feetPosition: { x, y, z }, rotation: { yaw }, castShadow: false, primitive: rbox(w + 0.12, h + 0.12, 0.05), material: { color: "#c9ccd4", metalness: 0.85, roughness: 0.25 },
+      children: [{ id: "art", feetPosition: { x: 0, y: 0.06, z: -0.03 }, primitive: { kind: "box", width: w, height: h, depth: 0.012 }, material: { texture: tex, color: "#ffffff", roughness: 0.35, emissive: "#ffffff", emissiveIntensity: 0.04 } },
+        { id: "glow", feetPosition: { x: 0, y: h + 0.3, z: -0.5 }, light: { kind: "point", color: "#ffe2b0", intensity: 0.6, distance: 3 } }] }); }
 }
 
 function djBooth(ctx) {
