@@ -2,6 +2,8 @@
 // to the Boiler Room, the clerk posts the rat job, staff gossip, the Originals turn moderns away and tell old stories.
 import { PEOPLE5 as P, speak } from "./lib/l5-people.js";
 import { skillsOf } from "./lib/stats.js";
+import { PLACARDS } from "./lib/level5.js";
+const NUM = (id) => PLACARDS[id] ?? id.split("-")[1].toUpperCase(); // the number on the door, never the internal id
 const KEY_SPEECH = 25; // Savi's pick: Speech to talk Harlan out of the boiler key (lockpick on the door is the other way, scripts/interact.js)
 const pick = (ctx, a) => a[Math.floor(ctx.random() * a.length)];
 const GOSSIP = {
@@ -21,29 +23,29 @@ const FOREVER = 9e15 // a booked room is yours for good: your home (Shelly, Nov 
 function rent(ctx, p) {
   const R = P.rent, now = ctx.now(), uid = p.userId ?? p.id, book = { ...(ctx.place.state.l5rent ?? {}) };
   const mine = Object.keys(book).find((k) => book[k].uid === uid && book[k].until > now);
-  if (mine) { book[mine] = { uid, until: FOREVER }; ctx.place.state.l5rent = book; p.state.l5until = book[mine].until; return say(ctx, p, `You already hold the ${mine.slice(6).toUpperCase()} suite. I have extended your stay, with the hotel's compliments.`); }
+  if (mine) { book[mine] = { uid, until: FOREVER }; ctx.place.state.l5rent = book; p.state.l5until = book[mine].until; return say(ctx, p, `You already hold Suite ${NUM(mine)}. I have extended your stay, with the hotel's compliments.`); }
   if ((p.state.cash ?? 0) < R.price * 100) return say(ctx, p, `A suite is ${R.price} backdollars a night. Do come back when your purse agrees with you.`);
   const sid = Object.keys(P.suites).find((k) => !book[k] || book[k].until < now);
   if (!sid) return say(ctx, p, "Every suite is occupied tonight. How unusual. How very unusual.");
   p.state.cash = (p.state.cash ?? 0) - R.price * 100; p.state.notice2 = { text: `-$${R.price}.00`, at: now }; book[sid] = { uid, until: FOREVER }; ctx.place.state.l5rent = book;
-  p.state.l5room = sid; p.state.l5home = sid; p.state.l5until = book[sid].until; p.state.l5key = sid; p.state.notice = { text: `Key: Suite ${sid.slice(6).toUpperCase()}`, at: now };
+  p.state.l5room = sid; p.state.l5home = sid; p.state.l5until = book[sid].until; p.state.l5key = sid; p.state.notice = { text: `Key: Suite ${NUM(sid)}`, at: now };
   const tr = ctx.getObject(`l5-people-trunk-${sid}`);
   if (tr && tr.state.renter !== uid) { const st = { ...(tr.state.stash ?? {}) }; if (tr.state.renter) st[tr.state.renter] = tr.state.items ?? ""; tr.state.items = st[uid] ?? ""; delete st[uid]; tr.state.stash = st; tr.state.renter = uid; }
-  say(ctx, p, `Suite ${sid.slice(6).toUpperCase()}, down the gallery. The trunk is yours alone. We do hope you'll stay. Everyone does.`);
+  say(ctx, p, `Suite ${NUM(sid)}, down the gallery. The trunk is yours alone. We do hope you'll stay. Everyone does.`);
 }
 // a plain guest room (n5 or s4) for less: same key, same trunk rules as a suite
 function book(ctx, p) {
   const R = P.room, now = ctx.now(), uid = p.userId ?? p.id, bk = { ...(ctx.place.state.l5rent ?? {}) };
   const mine = Object.keys(bk).find((k) => bk[k].uid === uid && bk[k].until > now);
-  if (mine) return say(ctx, p, `You already hold ${mine.startsWith("suite") ? "the " + mine.slice(6).toUpperCase() + " suite" : "Room " + mine.slice(5).toUpperCase()}. One key per guest.`);
+  if (mine) return say(ctx, p, `You already hold ${mine.startsWith("suite") ? "Suite " + NUM(mine) : "Room " + NUM(mine)}. One key per guest.`);
   if ((p.state.cash ?? 0) < R.price * 100) return say(ctx, p, `A room is ${R.price} backdollars. Modest, but the walls mostly stay put.`);
   const rid = Object.keys(P.rooms).find((k) => !bk[k] || bk[k].until < now);
   if (!rid) return say(ctx, p, "No rooms free. Perhaps a suite? They are... roomier.");
   p.state.cash = (p.state.cash ?? 0) - R.price * 100; p.state.notice2 = { text: `-$${R.price}.00`, at: now }; bk[rid] = { uid, until: FOREVER }; ctx.place.state.l5rent = bk;
-  p.state.l5room = rid; p.state.l5home = rid; p.state.l5until = bk[rid].until; p.state.l5key = rid; p.state.notice = { text: `Key: Room ${rid.slice(5).toUpperCase()}`, at: now };
+  p.state.l5room = rid; p.state.l5home = rid; p.state.l5until = bk[rid].until; p.state.l5key = rid; p.state.notice = { text: `Key: Room ${NUM(rid)}`, at: now };
   const tr = ctx.getObject(`l5-people-trunk-${rid}`);
   if (tr && tr.state.renter !== uid) { const st = { ...(tr.state.stash ?? {}) }; if (tr.state.renter) st[tr.state.renter] = tr.state.items ?? ""; tr.state.items = st[uid] ?? ""; delete st[uid]; tr.state.stash = st; tr.state.renter = uid; }
-  say(ctx, p, `Room ${rid.slice(5).toUpperCase()}. Nobody else has a key. Nobody living, anyway.`);
+  say(ctx, p, `Room ${NUM(rid)}. Nobody else has a key. Nobody living, anyway.`);
 }
 export const ears = {
   talkopt: (ctx, d) => {
