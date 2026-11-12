@@ -20,11 +20,11 @@ def fin(o, m, smooth=False):
     if smooth:
         for p in o.data.polygons: p.use_smooth = True
     return o
-def box(m, size, loc, rot=(0, 0, 0), bevel=0, smooth=False):
+def box(m, size, loc, rot=(0, 0, 0), bevel=0, smooth=False, seg=1):
     bpy.ops.mesh.primitive_cube_add(size=1, location=loc, rotation=rot); o = bpy.context.object; o.scale = size
     bpy.ops.object.transform_apply(scale=True)
     if bevel:
-        md = o.modifiers.new("b", "BEVEL"); md.width = bevel; md.segments = 3; bpy.ops.object.modifier_apply(modifier="b"); smooth = True
+        md = o.modifiers.new("b", "BEVEL"); md.width = bevel; md.segments = seg; bpy.ops.object.modifier_apply(modifier="b"); smooth = True
     return fin(o, m, smooth)
 def cyl(m, r, depth, loc, rot=(0, 0, 0), seg=12, r2=None):
     bpy.ops.mesh.primitive_cone_add(vertices=seg, radius1=r, radius2=r if r2 is None else r2, depth=depth, location=loc, rotation=rot)
@@ -40,7 +40,7 @@ def join(name, objs):
 # rings: z above the sole, centre y (heel is +Y), half length, half width
 RINGS = [(0, 0, .140, .046), (.03, 0, .142, .049), (.058, .012, .129, .047), (.083, .05, .089, .043), (.108, .075, .063, .041), (.155, .082, .056, .040), (.20, .086, .056, .043)]
 def boot(z0):
-    bm = bmesh.new(); N = 24; loops = []
+    bm = bmesh.new(); N = 20; loops = []
     def ring(z, cy, a, b):
         vs = []
         for i in range(N):
@@ -66,7 +66,7 @@ def boot(z0):
     bm.to_mesh(me); bm.free(); o = bpy.data.objects.new("boot", me); S.collection.objects.link(o); return o
 def digits(txt, loc):
     bpy.ops.object.text_add(location=loc, rotation=(math.radians(90), 0, math.radians(180))); t = bpy.context.object
-    t.data.body = txt; t.data.size = .046; t.data.align_x = "CENTER"; t.data.align_y = "CENTER"; t.data.extrude = .0008; t.data.resolution_u = 2
+    t.data.body = txt; t.data.size = .04; t.data.align_x = "CENTER"; t.data.align_y = "CENTER"; t.data.extrude = .0008; t.data.resolution_u = 2
     bpy.ops.object.convert(target="MESH"); return fin(bpy.context.object, "ink")
 def skate(size, x, yaw):
     P = []; z0 = .066; H = math.pi / 2
@@ -79,7 +79,7 @@ def skate(size, x, yaw):
         P.append(box("metal", (.03, .034, .022), (0, y, .037)))
         for sx in (-1, 1):
             P.append(cyl("wheel", .029, .031, (sx * .052, y, .029), (0, H, 0), 14))
-            P.append(cyl("metal", .011, .033, (sx * .052, y, .029), (0, H, 0), 8))
+            P.append(cyl("metal", .011, .033, (sx * .052, y, .029), (0, H, 0), 6))
     P.append(cyl("wheel", .019, .026, (0, -.128, .026), (math.radians(-28), 0, 0), 12, .015))   # toe stop
     for i in range(7):                                                                         # laces up the front
         t = i / 6; z = z0 + .07 + t * .12
@@ -87,7 +87,7 @@ def skate(size, x, yaw):
         for (za, ca, aa, _), (zb, cb, ab, _) in zip(RINGS, RINGS[1:]):
             if za <= z - z0 <= zb: k = (z - z0 - za) / (zb - za); yf = (ca - aa) + k * ((cb - ab) - (ca - aa))
         P.append(box("lace", (.042, .005, .005), (0, yf - .001, z), (0, math.radians(12 if i % 2 else -12), 0)))
-    P.append(box("label", (.058, .003, .056), (0, .1375, z0 + .118), bevel=.001))
+    P.append(box("label", (.05, .003, .048), (0, .1375, z0 + .118), bevel=.001))
     P.append(digits(str(size), (0, .1396, z0 + .118)))
     o = join("sk", P); o.rotation_euler = (0, 0, yaw); o.location = (x, 0, 0)
     return o
@@ -96,7 +96,7 @@ def pair(size):
     bpy.ops.object.select_all(action="DESELECT"); o.select_set(True); bpy.context.view_layer.objects.active = o
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True); return o
 def bench():
-    P = [box("carpet", (1.8, .46, .37), (0, 0, .285), bevel=.035), box("kick", (1.68, .36, .1), (0, 0, .05))]
+    P = [box("carpet", (1.8, .46, .37), (0, 0, .285), bevel=.035, seg=3), box("kick", (1.68, .36, .1), (0, 0, .05))]
     o = join("bench", P)
     bpy.ops.object.select_all(action="DESELECT"); o.select_set(True); bpy.context.view_layer.objects.active = o
     bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT"); bpy.ops.uv.cube_project(cube_size=0.5); bpy.ops.object.mode_set(mode="OBJECT")
