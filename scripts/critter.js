@@ -212,7 +212,7 @@ const talkingNow = (ctx) => { const ln = ctx.self.state.line; return !!(ln && ln
 const WARRIOR = { walk: 'cdn/clip-warrior-walk-cycle-589b8756-loop.glb', run: 'cdn/clip-warrior-run-cycle-9a42782f-loop.glb' } // Shelly's warrior gait, refit to the human rig
 const GAIT_HUM = { ...GAIT_LIB, sprint: GAIT_LIB.run } // Shelly: the library sprint swings the arms out behind; humans sprint on the run cycle
 const GAIT_FEM = { ...GAIT_HUM, idle: 'cdn/clip-idle-female-loop.glb', walk: 'cdn/clip-walk-female-loop.glb' }
-const RIG_VAR = { idle: [GAIT_LIB.idle, '/cdn/clip-rig-idle-a-09a9fec3-loop.glb', '/cdn/clip-rig-idle-b-201d4da9-loop.glb'], walk: [GAIT_LIB.walk, '/cdn/clip-rig-walking-a-aadc5ff6-loop.glb', '/cdn/clip-rig-walking-b-4272514c-loop.glb', '/cdn/clip-rig-walking-c-d71f0015-loop.glb'], run: [GAIT_LIB.run, '/cdn/clip-rig-running-a-303e9fa5-loop.glb', '/cdn/clip-rig-running-b-415c31f7-loop.glb'] }
+const RIG_VAR = { idle: [GAIT_LIB.idle], walk: [GAIT_LIB.walk], run: [GAIT_LIB.run] } // Nov 12: the rig pack's raw clips turn none of the critter's mixamo bones (refused, the body froze in rest pose); variants return once the pack is retargeted to this rig
 const NPC_IDLES = ['cdn/clip-idle-loop.glb', 'cdn/clip-idle-loop.glb', 'cdn/clip-ual-idle-talkingphone-5737f83c-loop.glb'] // no folded arms: they pass through a human chest
 function gaitFor(ctx) {
   const ss = ctx.self.session
