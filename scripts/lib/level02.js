@@ -19,14 +19,14 @@ pop drop rate=.6 on=point() life=.5 v=<0,-.3,0> size=.016 acc=grav() col=<.95,.9
 const SIGN = (t, s) => `<svg viewBox='0 0 400 110' width='1.5m'><rect x='3' y='3' width='394' height='104' rx='4' fill='#f2efe6' stroke='#8a2a22' stroke-width='6'/><text x='200' y='48' text-anchor='middle' font-family='sans-serif' font-size='34' font-weight='bold' fill='#8a2a22'>${t}</text><text x='200' y='86' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#3a3530'>${s}</text></svg>`;
 export function layL02Door(ctx) {
   const o = ctx.place.objects, ps = ctx.place.state;
-  if (ps.l02DoorV === 2 && "l0-to-l02" in o) return;
+  if (ps.l02DoorV === 3 && "l0-to-l02" in o) return;
   let cell = null; const m = Math.round(MID);
   for (let d = 4; d < 14 && !cell; d++) for (const [cx, cz] of [[m + d, m], [m, m + d], [m - d, m], [m, m - d]]) {
     if (inHub(cx, cz) || hasPit(cx, cz) || hasPillar(cx, cz) || zoneOf(cx, cz) === "dark" || zoneOf(cx, cz) === "red") continue;
     cell = { cx, cz }; break;
   }
   if (!cell) return;
-  ps.l02DoorV = 2;
+  ps.l02DoorV = 3;
   const c = cellCenter(cell.cx, cell.cz), x = c.x, z = c.z;
   for (const id of Object.keys(o)) if (id.startsWith("l0-l02-")) ctx.destroy(id);
   for (const id of ["l0-to-l02", "main-from-l02"]) if (id in o) ctx.destroy(id);
@@ -54,10 +54,11 @@ export function layL02Door(ctx) {
     children: [{ feetPosition: { x: 0, y: 0.02, z: 0.0075 }, primitive: { kind: "plane", width: 0.16, height: 0.16 }, material: { texture: P.insignia, transparent: true, alphaTest: 0.3, roughness: 0.4 } }] });
   // a tongue of their dry red carpet laid out over the yellow, its far end still rolled
   ctx.spawn("l0-l02-carpet", { feetPosition: { x, y: 0.012, z: z + 1.55 }, rotation: { pitch: -90 }, primitive: { kind: "plane", width: 1.5, height: 3.0 }, material: { ...CARPET, repeat: [0.7, 0.7] }, receiveShadow: true });
-  ctx.spawn("l0-l02-roll", { feetPosition: { x: x - 0.05, y: 0.16, z: z + 3.2 }, rotation: { roll: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.16, radiusBottom: 0.16, height: 1.55, radialSegments: 20 }, material: CARPET, physics: "static" });
+  ctx.spawn("l0-l02-roll", { feetPosition: { x: x - 1.25, y: 0.16, z: z + 2.6 }, rotation: { yaw: 90, roll: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.16, radiusBottom: 0.16, height: 1.55, radialSegments: 20 }, material: CARPET, physics: "static" });
   // wet white footprints walked out of the door and fading into Level 0
-  for (let i = 0; i < 9; i++) { const zz = z + 0.45 + i * 0.42, sd = i % 2 ? 0.12 : -0.12;
-    ctx.spawn(`l0-l02-step${i}`, { feetPosition: { x: x + sd + i * 0.05, y: 0.016, z: zz }, rotation: { pitch: -90, roll: -6 + i * 2 }, primitive: { kind: "plane", width: 0.11, height: 0.27 }, material: { color: `oklch(0.97 0.01 90 / ${(0.9 - i * 0.09).toFixed(2)})`, transparent: true, roughness: 0.3, depthWrite: false } }); }
+  for (let i = 0; i < 8; i++) { const zz = z + 0.5 + i * 0.38, sd = i % 2 ? 0.1 : -0.1, a = (0.55 - i * 0.065).toFixed(2), px = x + 0.9 + sd + i * 0.04;
+    ctx.spawn(`l0-l02-step${i}`, { feetPosition: { x: px, y: 0.016, z: zz }, rotation: { pitch: -90, roll: -8 + i * 3 }, primitive: { kind: "circle", radius: 0.045, segments: 12 }, scale: { x: 1, y: 2.2, z: 1 }, material: { color: `oklch(0.97 0.01 90 / ${a})`, transparent: true, roughness: 0.3, depthWrite: false } });
+    ctx.spawn(`l0-l02-heel${i}`, { feetPosition: { x: px, y: 0.016, z: zz + 0.15 }, rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 0.038, segments: 10 }, material: { color: `oklch(0.97 0.01 90 / ${a})`, transparent: true, roughness: 0.3, depthWrite: false } }); }
   // the work they left: drop cloth, cans, a roller tray dripping, the ladder up against fresh paint, lumber on a sawhorse, a lamp still lit
   const put = (id, key, dx, dz, yaw = 0, extra = {}) => { const q = P[key]; if (!q?.model) return; const [w, h, d] = q.size;
     ctx.spawn(id, { feetPosition: { x: x + dx, y: extra.y ?? 0, z: z + dz }, rotation: { yaw }, model: { id: q.model, ...(q.forward ? { forward: q.forward } : {}) }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, physics: extra.physics ?? "static" }); };
