@@ -21,7 +21,7 @@ l7-boat-to-pier:
   tags: [seat, boat]
 l7f-gate-1:
   behavior: scripts/home11-door.js
-  children: [{behavior: scripts/home11-door.js, feetPosition: {x: 0, y: 0, z: 0}, id: leaf, material: {pbr: true}, physics: static, primitive: {kind: scripted, params: {d: 0.14, h: 3.1, hingeSide: left, part: leaf, seed: 10, style: wood, swing: 1, w: 2.450293252692858}, script: scripts/door-geo.js}, state: {hinge: l7f-gate-1, kind: door, name: Fort Surrender Gate, verb: Open}, tags: [usable]}]
+  children: [{behavior: scripts/home11-door.js, feetPosition: {x: 0, y: 0, z: 0}, id: leaf, material: {color: "#8a5a3a", pbr: true}, physics: static, primitive: {kind: scripted, params: {d: 0.14, h: 3.1, hingeSide: left, part: leaf, seed: 10, style: wood, swing: 1, w: 2.450293252692858}, script: scripts/door-geo.js}, state: {hinge: l7f-gate-1, kind: door, name: Fort Surrender Gate, verb: Open}, tags: [usable]}]
   feetPosition: {x: -62.70710217671975, y: 11.66, z: -87.81626057282286}
   id: l7f-gate-1
   physics: kinematic
