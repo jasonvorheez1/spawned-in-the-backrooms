@@ -1,4 +1,10 @@
 # spawn-scene v2 yaml x-1z-1
+l7-fort-walk-floor:
+  feetPosition: {x: -70, y: 11.43, z: -93}
+  id: l7-fort-walk-floor
+  physics: static
+  primitive: {height: 0.22, kind: cylinder, radiusBottom: 8.5, radiusTop: 8.5}
+  visible: false
 l7-ladder-tower:
   feetPosition: {x: -70, y: 11.6, z: -99.45}
   id: l7-ladder-tower
