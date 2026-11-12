@@ -11,6 +11,7 @@ import { quickItems, assignQuick } from './lib/quick-items.js'
 import { heard } from "./lib/hear.js";
 import PLAYER from './lib/data/player.yml'
 import L from './lib/data/level0.yml'
+import CAM from './lib/data/camera.yml'
 import W, { baseOf } from './lib/weapons.js'
 import { raycast } from 'builtin/physics'
 import { animate } from 'builtin/tween'
