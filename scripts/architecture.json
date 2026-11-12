@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 6110,
-  "updatedAt": "2026-11-12T07:02:21.256Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG across Level 0, lore-based destinations, a social mall and solo tutorial spaces. `templates/player.js` composes shared behaviors; player and place scripts own progression and environments, while libraries handle dialogue, quests, crossings, NPC presentation and sound. Level 0.2 is the Remodeling Co.'s collapsing sub-level: Cap'n now uses the shared cat/clothing model system, and its Reality Freshener is both a carried quest item and throwable that settles into a reusable stillness/sanity bubble.",
+  "basedOnSpecVersion": 6129,
+  "updatedAt": "2026-11-12T07:25:54.921Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, lore-based destinations, a social mall and solo tutorial spaces. `templates/player.js` composes shared player behaviors while place sims own generated environments and local state; libraries handle progression, crossings, dialogue, NPC presentation and sound. Level 0.2 retains its collapsing-floor/Fresh Paint puzzle but now dresses its finished office and unfinished house with dimensioned Tripo props; Fort Surrender's ladder entry, gate ramp and NPC presentation also use updated shared behaviors.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0/Lobby maze; sim lays ecology, generated moments, safe rooms and routes including the half-built Level 0.2 door.",
+    "places/main (3D) - Level 0/Lobby maze; sim lays ecology, generated moments, safe rooms and routes including the Level 0.2 door.",
     "places/bonus (3D) - vaporwave mall with authored shops/escalators and simulated staff; Rico's platform routine and Bonus Line boarding are cooperating behaviors.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo ephemeral) - character creation/waking and staged tutorial route.",
     "places/level01 (3D) - Zenith Station: station, breach, doors, bots, hazards and recorder quest.",
     "places/level1, level2, level21, level3, gamma (3D) - Habitable Zone/M.E.G. camp, Pipe Dreams, Locked, Electrical Station and Base Gamma; place sims add specialized layout, residents and crossings.",
-    "places/level4, level5, level6, level7 (3D) - Abandoned Office, Terror Hotel, drowned house and sea/Fort Surrender; Level 5 cells and people data define hotel residents and factions.",
+    "places/level4, level5, level6, level7 (3D) - Abandoned Office, Terror Hotel, drowned house and sea/Fort Surrender; Level 7 sim owns fort paths and NPCs, including the cat-bodied Ines and Tobit.",
     "places/level10, level11, level12 (3D) - lake, generated city/canal and renovation office; Level 11 hosts Mara's Fresh Paint turn-in and player home11.",
-    "places/level02 (3D) - Level 0.2 Remodeled Mess: clean rooms collapse into an unfinished house; freight-lift puzzle and Fresh Paint fresheners, with Cap'n as a cat-bodied Remodeling Co. foreman. Other destinations include level26, level27, bonus, spamton and testlab."
+    "places/level02 (3D) - Level 0.2 Remodeled Mess: collapsing clean office over an unfinished house, now dressed with dimension-fitted Tripo props from l02-props.yml; freight lift and Fresh Paint fresheners remain central."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input mappings.",
@@ -20,7 +20,7 @@
     "scripts/main-menu.js + main-menu-ui.js + intake/tutorial scripts - title, creation, arrival and tutorial routing.",
     "scripts/player.js + scripts/camera.js + scripts/view3.js - player state/actions, aiming camera and third-person toggle.",
     "places/main/sim.js + scripts/lib/level0-moments.js; places/level1/sim.js + scripts/lib/level1.js - seeded maze moments and Level 1 layout/camp/doors.",
-    "places/level02/sim.js + scripts/lib/level02.js - collapsing sub-level and lift/door entry; sim refits Cap'n through shared critter/clothes helpers; scripts/lib/remodel-quest.js connects Fresh Paint to Level 11.",
+    "places/level02/sim.js + scripts/lib/level02.js - Level 0.2 shell, collapsing columns, furnishings and lift; scripts/lib/remodel-quest.js connects Fresh Paint to Level 11.",
     "scripts/talk.js + scripts/talk-ui.js, entered by scripts/interact.js - NPC conversation choices, replies, gestures, proximity/aim reactions and talk card.",
     "scripts/lib/quests.js + quest-marker.js + quest-mark.js + quest-route.js - quest state, objective resolution and local/remote markers."
   ],
@@ -28,10 +28,10 @@
     "scripts/lib/hub.js - solo room IDs, Bonus Room/home destinations and LEVEL_NAMES used by hub UI and player routing, including Level 0.2.",
     "scripts/lib/loot.js + scripts/lib/items.js + scripts/lib/weapons.js/data/weapons.yml - common loot, containers, item definitions, rarity and weapon variants.",
     "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/lib/level3-hatch.js - parametric door geometry/motion and deterministic Level 3 paired wall-hatch layout.",
-    "scripts/lib/thresholds.js + scripts/threshold-geo.js - versioned crossing clues shared by participating place simulations.",
+    "scripts/lib/thresholds.js + scripts/threshold-geo.js and scripts/lib/sign-style.js + scripts/sign-geo.js - shared crossing clues and per-place/id generated sign boards.",
     "scripts/lib/quest-route.js + scripts/lib/quest-mark.js + scripts/lib/remodel-quest.js - crossing graph/objectives and Fresh Paint quest definitions, dialogue and freshener utilities.",
     "scripts/lib/data/preload.yml + scripts/lib/preload-next.js - door-to-destination/model manifest used by player proximity preloading.",
-    "scripts/lib/sign-style.js + scripts/sign-geo.js + scripts/lib/data/signs.yml - per-place/id sign styles and generated boards; participating place sims call restyleSigns.",
+    "scripts/lib/data/l02-props.yml - Level 0.2's dimensioned Tripo model/forward-axis catalog, fitted and placed by places/level02/sim.js.",
     "scripts/lib/dialogue.js + dlg-*.yml; scripts/lib/voices.js + voice data + scripts/lib/hear.js - authored dialogue/barks, recorded/fallback clips, durations and per-listener sound gating."
   ],
   "notableExports": [
@@ -39,20 +39,20 @@
     "scripts/lib/thresholds.js - dressThresholds; scripts/threshold-geo.js - threshold geometry/material builders.",
     "scripts/lib/quest-route.js - nextQuestExit; scripts/lib/quest-mark.js - questMark; scripts/lib/quests.js - MAX_TRACK, TINT, PLACE_NAMES, qid, setQuest, endQuest, tracked, toggleTrack.",
     "scripts/lib/remodel-quest.js - QUESTS02, setRemodStep, gotFresh, remodelChoices, handleDialogueQuest02, placeFreshener, freshenerAt, FRESH_BODY, pickPlaced, nearFresh.",
-    "scripts/lib/level02.js - S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, cxOf, xOf, zOf, layL02Door.",
+    "scripts/lib/level02.js - S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, cxOf, xOf, zOf, layL02Door; scripts/climb.js - onInput, update.",
     "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollLock, rollCash, rollItem, spawnCrate and Level 2 helpers; scripts/lib/weapons.js - baseOf, variantOf, rollVariant, rarityIdx, rarityCap, default.",
     "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, weaponAim, onInput, hitTarget, fish callbacks, HOLO/holoEnd and throwable callbacks.",
     "scripts/lib/dialogue.js - DLG, archOf, entryOf, rootChoices, childChoices, nodeOf, greetingOf, lineOf, barkOf, gestOf, BYE_CHOICE; scripts/lib/voices.js - voiceKey, hasVoice, throatOf, vo, isVoiceClip, recordedDuration, hasCast, actedVoice."
   ],
   "ownership": [
-    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment (including fresh), needs, combat, access, appearance, saved position and carried tapes; lib/forgive.js owns NPC grudge entries in player.state.grud…",
+    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment (including fresh), needs, combat, access, appearance, saved position and carried tapes; lib/forgive.js owns NPC grudge entries in player.state.grudges.",
     "scripts/lib/quests.js - player.state.quests, qtrack and qdone; quest handlers own quest-specific state; dina-quest.js owns dinaQ, dinaDiary, dcut and seeds the-way-back.",
     "scripts/lib/remodel-quest.js - player.state.remodQ, l02got, fresh, capnAsk and capnFailed plus Fresh Paint quest/HUD/payout/reputation; player.js reads the nearby-freshener sanity effect.",
     "scripts/kick.js + scripts/grab.js - kick cooldowns and carry/held target session; held objects own heldBy/down/stagger state and player.state.carryMul resets when carry ends.",
-    "scripts/lib/loose.js + breakables.js - loose prop state and wrecks; permanently smashed root IDs live in place.state.gone; breakable wall hp and broken-cell/whole-wall timestamps live in place.state.wallHp/broken.",
+    "scripts/lib/loose.js + breakables.js own loose prop/wreck and breakable state; place.state.gone and wallHp/broken retain smashed roots and wall breakage/timestamps.",
     "scripts/lib/knock.js + stats.js - foe weight/attributes and down/stagger outcomes; enemy managers own AI and sneakTarget.",
-    "Place sims - local generated scene and migration markers, including Level 1 back-door rebuild, Level 3 hatchV/lineV, Level 4 conversions and Level 0.2 phase/lift state; Bonus sim owns staff and Rico attachment migration.",
-    "scripts/lib/critter-model.js + scripts/lib/clothes.js - NPC cat body/appearance/refit construction used by Cap'n as well as other cats; scripts/critter.js builds local player/NPC body, gait, face and tail animation."
+    "Place sims own generated-scene and migration markers, including Level 0.2 phase/lift state and Level 7 fortPathV/catV; Bonus sim owns staff and Rico attachment migration.",
+    "scripts/talk.js writes short-lived NPC state.socialReaction for drawn/close encounters; scripts/meg-agent.js consumes it for NPC reaction animation. scripts/lib/critter-model.js + clothes.js own NPC appearance/refits; scripts/critter.js builds body and animation."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors.",
@@ -63,10 +63,10 @@
     "scripts/lib/voices.js maps stable actor ID + normalized line to voice-acted.yml hash/clip and voice-timing.yml duration, otherwise generates cast/fallback voice; art/vo/act.py records dialogue and chatter takes.",
     "scripts/interact.js opens scripts/talk.js → dialogue.js selects authored greeting/choice tree from dlg-*.yml; talk validates choices/checks and updates player history/NPC rapport and line/mood.",
     "scripts/talk.js + scripts/lib/chatter.js emit speech through scripts/lib/hear.js; direct replies may interrupt a listener, ambient chatter yields to active talk, and hear tracks playback per listener by clip/speech duration.",
-    "scripts/talk.js weaponAim → raycast of the aimed ranged weapon selects NPC; talk's onCollide handles forward player/NPC bumps; eligible NPCs speak authored drawn/close/hurt/sneak reactions, while meg-agent owns NPC gesture/hit response and holster relief.",
+    "scripts/talk.js aimed ranged weapon or forward contact → authored drawn/close reaction bark and NPC state.socialReaction; scripts/meg-agent.js reads the signal and plays gesture/hit response. dlg-levels-7-8.yml now supplies Ines and Tobit's talk/barks; voice-cast.yml assigns their cast voices.",
+    "scripts/climb.js scans nearby ladder-tagged objects and grabs from movement toward the rungs (or camera yaw while stationary); it owns the local climb session and moves/releases the player along the ladder.",
     "interact.js loot search → loot.gateItems → items/weapons roll; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; focus → player.state.focus → loot/talk/shop UI.",
-    "Player craft action/UI → craft.js + craft.yml; breakables/build pieces define station; craft UI filters station recipes while hand menu lists all. Tracked quest → quest-marker.js → questMark/nextQuestExit → local objective or remote exit marker.",
-    "places/main/sim.js + scripts/lib/level02.js lay Level 0 door → scripts/level-door.js crosses to level02#l02-from-l0 or main#main-from-l02; transfer carries eligible objects and places arrival markers. Fresh Paint dialogue in npc-starters.js → handleDialogueQuest02; three Level 0.2 pickups → player.state.fresh, then player.js throwable → scripts/nade.js → freshenerAt usable ring."
+    "places/main/sim.js + scripts/lib/level02.js lay Level 0 door → scripts/level-door.js crosses to level02#l02-from-l0 or main#main-from-l02; Level 0.2 sim builds model props from l02-props.yml and controls collapse/lift; Fresh Paint dialogue/handlers manage freshener pickup and turn-in."
   ],
   "behaviorFamilies": [
     "places/bonus scenes + bonus data/sim + mall shopper/salon scripts - authored mall and counter behavior; sim lays staff and Rico, whose platform schedule and Bonus Line boarding are separate cooperating routines.",
@@ -75,8 +75,8 @@
     "scripts/lib/thresholds.js + scripts/threshold-geo.js + participating place sims, alongside sign-style.js/sign-geo.js - shared threshold dressing and per-place/per-ID sign-board styles.",
     "places/level01/sim.js + Zenith geometry, breach, hatch, bot and hazard scripts - Zenith Station environment and interactive systems.",
     "places/level3/sim.js + level3-details-geo.js + lib/level3-hatch.js + l3-hatch*.js + scripts/l3-line.js - tiled Electrical Station detail, paired steel hatches and animated belt boxes varied by line layout/state.",
-    "places/level02/sim.js + scripts/lib/level02.js + scripts/lib/remodel-quest.js + critter-model.js/clothes.js - collapsing shell/lift and Fresh Paint; Cap'n's crew look/refit uses the same cat construction as other NPCs; room behavior varies by collapse/lift state.",
-    "scripts/lib/clothes.js + npc-looks.yml + critter-model.js + cat-wardrobe.yml + mat-catskin.js + scripts/critter.js - deterministic human/cat appearance, salon picks, wardrobe attachments, gait/flair and mood-driven multi-bone tails; etype=crew forces the white-eye face without mouth or nose."
+    "places/level02/sim.js + scripts/lib/level02.js + scripts/lib/remodel-quest.js + l02-props.yml - collapsing shell/lift and Fresh Paint, with office/bathroom/crew furnishings placed from Tripo size/forward metadata; Cap'n uses shared cat/clothing construction.",
+    "scripts/lib/clothes.js + npc-looks.yml + critter-model.js + cat-wardrobe.yml + mat-catskin.js + scripts/critter.js - deterministic human/cat appearance, salon picks, wardrobe attachments, gait/flair and mood-driven multi-bone tails; etype selects look family."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -91,7 +91,7 @@
     "Door transfers: carryAcross records xferTo only for local place links with a # marker and crosses carryId/nearby heldBy objects, rejecting room/world and Bonus destinations; Level 1 BACK uses backV destroy-and-respawn migration.",
     "scripts/lib/sign-style.js only restyles eligible shallow box signs with UI, leaves emissive/light signs alone, and is throttled/idempotent; preserve source IDs, dimensions, text, colour and placement while signs.yml selects style.",
     "Level 3 hatchV=3 rebuild destroys old l3-hatch-* objects; hatchAt deterministically shares each wall's door across its two faces. Level 3 lineV=2 replaces legacy line-model instances with three Tripo stations and animated belt boxes.",
-    "Level 0.2 sim V=8 refits the essential l02-capn root through critter-model/clothes, clearing old child build parts; retain that root ID/state, crew wear etype=crew and fists arm. layClean/drop destroy only root objects, not child IDs. Collapse phase/index/nextAt and lift state remain place-owned.",
-    "Reality Freshener has no throwable model: player.js uses FRESH_BODY for its hand/projectile; scripts/nade.js settles it into freshenerAt's usable ring object. Preserve key fresh, 6 m radius, pickup behavior, and per-player inventory vs place effect."
+    "Level 0.2 sim V=11 rebuilds its l02-* top-level generated roots while retaining child IDs; prop placement depends on l02-props.yml dimensions/forward axes and skips missing models. Preserve root/state protocols, column tags, collapse/lift phases, 14 kg paint cans, clean-door-room stop and 15 s empty reset; Freshener remains the per-column hold.",
+    "Level 7 fortPathV=6 lowers l7-ft-ramp by 0.12 m; catV=1 asynchronously refits existing L7_NPCS in place via npcLook/bodyModel/seatCat, preserving NPC state and weapons. Ladder acquisition uses movement direction when velocity is available and yaw as the stationary fallback."
   ]
 }
