@@ -37,6 +37,7 @@ eyes:
     slit: "/cdn/value.1607b4b6916ad702455f2c251690283a7589c6d3b272e13217e94977b9fe5596.png"
     sharp: "/cdn/value.9d47f58f2c4b5920582e0fdda9e84b94ca9bf7a36c07a447d3f75de10daea43d.png"
     bean: "/cdn/value.f73ff0503f0f9989318a348b0fa5c6044e31a705653a192f4824b4a6e1916cbc.png"
+    crew: "/cdn/value.cc74cdb44d519e63295d0dbdc7e0d06d9e2cb9059f313bb02637b96f4d5952c9.png"   # Remodeling Co. crew (Shelly #243670, lore accurate): faceless, two white circle eyes
 # Mouth types: layers laid over the resting face's mouth (art/cat-wardrobe/mouth-types.py). Same projection as the face.
 mouths:
   female:

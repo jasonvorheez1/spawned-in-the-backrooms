@@ -10,7 +10,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, xOf } from "../../scripts/lib/level02.js";
 import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 export const cadence = "250ms";
-const V = 5, STEP_MS = 2600;
+const V = 6, STEP_MS = 2600;
 const W = 2 * S * 0 + NX * S, D = NZ * S; // 32 x 20 m
 const CARPET = { color: "oklch(0.42 0.12 25)", roughness: 0.95, texture: "cdn/texture-dry-red-office-carpet-low-pile.png", wrap: "repeat", repeat: [0.5, 0.5] };
 const PAINT = { color: "oklch(0.95 0.006 90)", roughness: 0.85 };
@@ -89,7 +89,7 @@ function layShell(ctx) {
   });
 }
 // Cap'n wears the new cat body (same refit as Rico in places/bonus/sim.js): dark fur, the crew uniform colours
-const CAPN = { species: "fox", sex: "m", fur: "#6e6660", topw: "longsleeve", top: "#9fb0bf", botw: "pants", bottom: "#6b4a2e", shoes: "boots", hat: "beret", hatc: "#4a4f57", hair: "none" };
+const CAPN = { species: "fox", sex: "m", fur: "#0b0b0d", etype: "crew", blush: "none", nose: "none", topw: "longsleeve", top: "#9fb0bf", botw: "pants", bottom: "#6b4a2e", shoes: "boots", hat: "beret", hatc: "#4a4f57", hair: "none" };
 const CAPN_LOOK = { ...refitLook("l02-capn", { ...npcLook("l02-capn", CAPN, "wanderer", 2), role: "wanderer", faction: "wanderer" }), ...CAPN, nl: NL_V };
 function dressCapn(ctx) {
   const r = ctx.place.objects["l02-capn"]; if (!r) return;
