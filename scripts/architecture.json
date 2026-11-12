@@ -1,81 +1,82 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 6744,
-  "updatedAt": "2026-11-12T20:59:08.970Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social hub and lore destinations, with a solo ephemeral tutorial. Shared player behaviors and place simulations combine authored scenes with generated spaces; player saves hold progression, gear, quests and homes. Global sim.js applies body style incrementally, and Level 31's versioned rink includes a multi-route Side B faction quest alongside its modular venue.",
+  "basedOnSpecVersion": 6769,
+  "updatedAt": "2026-11-12T21:26:36.614Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG across Level 0, a social hub, and authored lore destinations, with player saves holding progression, gear, quests and homes; tutorial0 is solo and ephemeral. Shared player behaviors, place simulations and reusable builders join authored scenes to generated spaces; NPC dialogue and combat barks are authored and voiced through shared data, while Level 31's versioned roller-rink venue now includes a separate arcade room and party corner.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0/Lobby maze; sim lays ecology, routes, landmarks, Christmas Area and stair anomalies.",
+    "places/main (3D) - Level 0's yellow maze, ecology, routes, landmarks, Christmas Area and stair anomalies.",
     "places/bonus (3D) - shared vaporwave mall with simulated staff, shops, directory, arcade, payphones and player-home kiosk.",
-    "places/intake + places/tutorial0 (3D; tutorial0 solo ephemeral) - character creation/waking and staged tutorial route; HALOGEN handoff seeds Dina's lead.",
-    "places/level01 (3D) - Zenith Station: station, breach, doors, bots, hazards and recorder quest.",
-    "places/level1, places/level2, places/level02, places/level21, places/level3, places/gamma (3D) - Habitable Zone/M.E.G. camp, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma; Level 2's rink door crosses to Level 31.",
-    "places/level31 (3D; The Roller Rink) - cinema, rink/DJ booth, arcade, food court, rental, gift shop and Side B B.N.T.G./faceling conflict; versioned sim rebuilds its shell and zone sets.",
-    "places/level61 (3D) - Level 6.1 Snackrooms sanctuary; simulated mall/food amenities include Tripo fountain, directory kiosk and condiment stations.",
-    "places/level4, places/level5, places/level6, places/level7, places/level10, places/level11, places/level12, places/level13, places/level26, places/level27, places/testlab, places/spamton and remaining configured places - deeper destinations and specialized rooms."
+    "places/intake + places/tutorial0 (3D; tutorial0 solo, ephemeral) - character creation/waking, staged tutorial and HALOGEN handoff to Dina's lead.",
+    "places/level01 (3D) - Zenith Station, breach, bots, hazards and recorder quest.",
+    "places/level1, level2, level02, level21, level3, gamma (3D) - Habitable Zone camp, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma; Level 2 links to Level 31.",
+    "places/level31 (3D) - Roller Rink, cinema/DJ booth, arcade back room, party corner, food court, rental, gift shop and Side B faction quest.",
+    "places/level4, level5, level6, level7, level10, level11, level12, level13 (3D) - resident hubs, rentals, malls, stories, hazards and deeper authored destinations.",
+    "places/level26, level27, spamton, testlab and remaining configured places - additional lore, special/test destinations and deeper levels; place scenes supply their own objects."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input mappings; config selects shared lighting.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - local configuration, authored placements and generated/ticked simulation.",
-    "sim.js - global world tick for body-style propagation and bounded incremental restyling of objects in occupied places.",
-    "scripts/main-menu.js + main-menu-ui.js + intake/tutorial scripts - title, creation, arrival, tutorial and Dina quest ticking/routing.",
-    "scripts/player.js + scripts/camera.js + scripts/view3.js - player state/actions, aiming camera and third-person toggle.",
-    "scripts/ui.js + scripts/stats-ui.js - composed player HUD/menus and character status; UI displays derived sanity cap including slap-bracelet bonus.",
+    "sim.js - global tick for body-style propagation and bounded incremental restyling of objects in occupied places.",
+    "scripts/main-menu.js + main-menu-ui.js + intake/tutorial scripts - title, character creation, arrival, tutorial and Dina quest routing/tick.",
+    "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, aiming camera and third-person toggle.",
+    "scripts/ui.js + scripts/stats-ui.js - composed player HUD/menus and character status, including derived sanity cap.",
     "places/main/sim.js + scripts/lib/maze.js + scripts/lib/xmas-room.js - Level 0 layout, Christmas Area and stair-anomaly seeding.",
-    "places/level31/sim.js + scripts/lib/level31.js + scripts/lib/level31-parts.js - generated rink shell, crossings and modular zone dressing; scripts/lib/level31-quest.js owns Side B quest interactions."
+    "places/level31/sim.js + scripts/lib/level31.js + scripts/lib/level31-parts.js - versioned rink shell/doorways, geometry and modular venue builders."
   ],
   "shared": [
-    "scripts/lib/hub.js + scripts/lib/data/preload.yml + scripts/lib/preload-next.js - solo room IDs/names, destinations, home destinations and model proximity-preload manifest; Level 5 display labels use level5.js placards.",
-    "scripts/lib/loot.js + scripts/lib/items.js + scripts/lib/weapons.js/data/weapons.yml - common loot, containers, item definitions, rarity and weapon variants; items include roller skates.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/lib/level3-hatch.js - parametric door geometry/motion and deterministic Level 3 paired wall-hatch layout; thresholds/sign geometry shared by participating places.",
-    "scripts/lib/quest-route.js + scripts/lib/quest-mark.js + scripts/lib/quests.js - crossing graph/objectives and common quest state; dialogue data, npc-starters and npc-talk support conversations and choices.",
-    "scripts/lib/data/l02-props.yml + scripts/lib/data/l02-remodel.yml + scripts/lib/l02-grid.js - Level 0.2 prop catalog, shifting partitions, lamp/paint configuration, crew dressing and reset.",
-    "scripts/lib/breakables.js + scripts/lib/data/breakables.yml - shared prop/wall material, damage, drops, wrecking and regrowth; place sims opt in with sweepProps/tickWalls.",
-    "scripts/lib/data/cow-lines.yml + scripts/lib/data/voice-cast.yml/voice-acted.yml + scripts/lib/voices.js - named performers and recorded takes for NPC bark/dialogue consumers; Level 31 cast and takes are keyed in the shared voice data.",
-    "scripts/lib/critter-model.js + scripts/lib/rep.js - character model/spec/restyle helpers and faction reputation/group mapping; sims and NPC behaviors reuse them."
+    "scripts/lib/hub.js + scripts/lib/data/preload.yml + scripts/lib/preload-next.js - solo room IDs/destinations, home destinations and proximity-preload manifest; Level 5 labels use level5.js placards.",
+    "scripts/lib/loot.js + scripts/lib/items.js + scripts/lib/weapons.js/data/weapons.yml - common loot, containers, item definitions, rarity and weapon variants.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/lib/level3-hatch.js - parametric doors/motion and deterministic Level 3 paired hatch layout; threshold/sign geometry is shared by participating places.",
+    "scripts/lib/quest-route.js + scripts/lib/quest-mark.js + scripts/lib/quests.js - crossing graph/objectives and common quest state; dialogue data, npc-starters and npc-talk support conversations/checks.",
+    "scripts/lib/data/l02-props.yml + scripts/lib/data/l02-remodel.yml + scripts/lib/l02-grid.js - Level 0.2 prop catalog, partitions, lamp/paint configuration, crew dressing and reset.",
+    "scripts/lib/breakables.js + scripts/lib/data/breakables.yml - shared prop/wall damage, material, drops and regrowth; place sims opt in with sweepProps/tickWalls.",
+    "scripts/lib/data/dlg-*.yml + scripts/lib/dialogue.js + scripts/lib/data/voice-cast.yml, voice-acted.yml + scripts/lib/voices.js - authored NPC talk/barks, performer assignments and recorded takes; scripts/meg-agent.js prefers per-NPC barks.",
+    "scripts/lib/critter-model.js + scripts/lib/rep.js + scripts/lib/rbox.js - shared appearance/faction helpers and rounded primitive geometry; sims/NPC behaviors use the first two, Level 31 design uses rbox."
   ],
   "notableExports": [
-    "sim.js - cadence, tick, onOutOfBounds; global tick sets body style and incrementally restyles objects in occupied places.",
-    "scripts/lib/critter-model.js - STYLE_V, furrySpec, restyle, restyleQueue, restyleStep, restylePlace; character construction and wardrobe/body refitting.",
-    "scripts/lib/level31.js - H, B, RINK, ZONES, ARRIVE, DOOR, onRink, zoneAt, SKATE, skateStep; shared Level 31 geometry and skating step.",
+    "sim.js - cadence, tick, onOutOfBounds; body-style propagation and bounded incremental object restyling.",
+    "scripts/lib/critter-model.js - STYLE_V, furrySpec, restyle, restyleQueue, restyleStep, restylePlace; character construction and refitting.",
+    "scripts/lib/level31.js - H, B, RINK, ZONES, ARRIVE, DOOR, BACK, onRink, zoneAt, SKATE, skateStep; venue geometry and rink movement.",
     "scripts/lib/level31-parts.js - layParts; dispatches arcade, food, rental, shop, Side B and design zone builders.",
-    "scripts/lib/level31-quest.js - QID, QNAME, MARLOWE, DEZ, CRATE, DECK, openCrate, useDeck, l31Choices, handleDialogueQuest31; Side B quest flow.",
-    "scripts/lib/level31-sideb.js + scripts/lib/level31-design.js - GLB/FWD, laySideB and layDesign; quest-side crew/props and rink dressing.",
-    "scripts/lib/hub.js - HUB_ROOM, HUB_PLACE, isHubRoom, soloRoom, HOMES, LEVEL_NAMES, lastLevel, toHub, toSolo; hotel destination is per booked room."
+    "scripts/lib/level31-quest.js - QID/QNAME, NPC/object IDs, openCrate, useDeck, l31Choices, handleDialogueQuest31; Side B quest state and interactions.",
+    "scripts/lib/level31-arcade.js + level31-food.js - arcade ears/cardSlide/result/layArcade; food catalog/order/zone and layFood.",
+    "scripts/lib/level31-sideb.js + level31-design.js + level31-rental.js - GLB/FWD/laySideB, layDesign, layRental; venue subarea builders.",
+    "scripts/lib/hub.js + scripts/lib/rbox.js + scripts/meg-agent.js - hub routing API; rbox(w,h,d,r); NPC nerveOf/onSpawn/bark/update/vanish."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved position, tapes, currency and homeKeep; also owns furniture counts, skates, snacks and food effects.",
-    "scripts/lib/quests.js - player.state.quests, qtrack and qdone; scripts/lib/dina-quest.js advances dinaQ and owns dinaDiary/dcut/dinaLead plus legacy quest migration.",
-    "scripts/lib/level31-quest.js - player.state.l31q/l31route/l31qh and quest-specific tape/card/check/ending fields; updates l31-side-b quest tracking, faction rep, cents, payout and mixtape reward.",
-    "scripts/lib/remodel-quest.js - player.state.remodQ, l02got, l02paint, fresh, capnAsk and capnFailed plus Fresh Paint quest/HUD/payout/reputation.",
-    "scripts/build.js + places/level5/sim.js - player homeKeep.built or homeKeep.l5built; home11 and booked Level 5 room buckets reconstruct separately.",
-    "scripts/l5-resident.js + places/level5/sim.js - player l5room/l5home/l5until/l5key booking identity and place.state.l5rent permanent exclusive-room ledger; sim repairs keys and restores trunk ownership.",
-    "scripts/arcade-play.js owns arcade session/score and arcadeBest; smoothie-player.js owns smoothieOpen/smix/smoothieBook/smoothieBuff/sCut; UI overlays consume these states.",
-    "Enemy managers own AI and sneakTarget; scripts/lib/meg-agent.js keeps gunpoint reaction memory/dialogue/pose on NPCs; places/level31/sim.js owns place.state.v31 (27) and generated l31-* venue roots."
+    "scripts/lib/quests.js + scripts/lib/dina-quest.js - quests/qtrack/qdone; Dina quest/diary/cut/lead fields and legacy quest migration.",
+    "scripts/lib/level31-quest.js - player.state.l31q/l31route/l31qh and quest tape/card/check/ending fields; route consequences, faction rep, cents, payout and mixtape reward.",
+    "scripts/lib/remodel-quest.js - remodQ, l02got/l02paint, fresh, capnAsk/capnFailed and Fresh Paint quest/HUD/payout/reputation.",
+    "scripts/build.js + places/level5/sim.js - player homeKeep.built or homeKeep.l5built; home11 and booked Level 5 rooms reconstruct from separate saved buckets.",
+    "scripts/l5-resident.js + places/level5/sim.js - player booking keys/room identity and place.state.l5rent exclusive-room ledger; sim reconciles keys and trunks.",
+    "scripts/arcade-play.js + scripts/smoothie-player.js - arcade session/score/best and smoothie open/book/buff state; UI overlays consume them.",
+    "Enemy managers own AI/sneakTarget; scripts/lib/meg-agent.js keeps NPC combat memory and pose; places/level31/sim.js owns place.state.v31=36 and generated l31-* venue roots."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide their game-specific behavior.",
-    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera; camera writes aimPt/aimPitch → player.js ballistics and weaponAim; player.js zoneHere → scripts/lib/maze.js zone names.",
-    "world.config.yaml input actions bind kick H/L and reload R; handlers in player/combat behaviors consume action names.",
-    "scripts/routing.js requested room → scripts/lib/hub.js solo room selection; toHub/toSolo cross to hub/home and maintain roomHop/save-place state; kiosk's Level 5 home destination resolves l5-home-<internal room id>.",
-    "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close to intro/tutorial0; menuOpen drives menu UI and solo pause scales place time.",
-    "tutorial0 HALOGEN cut completion → scripts/lib/tut0-cut.js and scripts/lib/dina-quest.js; diary/cutscene and clue records across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ and play recorded voices.",
-    "scripts/build.js permits building only inside home11 or permanently booked Level 5 room; placement/removal writes homeKeep.built or homeKeep.l5built, and Level 5 sim restores saved pieces.",
-    "scripts/l5-resident.js booking → player l5home/l5room and place.state.l5rent; Level 5 sim reconciles player keys/trunks; hub kiosk resolves per-room arrival and level5.js PLACARDS supplies human-facing room number.",
-    "Level 2 sim spawns l2-to-l31 → scripts/level-door.js transfers to level31#l31-from-l2; Level 31 l31-back → level2#l2-from-l31; quest-route.js maps both directed crossings.",
-    "Level 31 sim reads H/B/RINK/ZONES/DOOR, rebuilds shell at place.state.v31=27 and dispatches layParts; level31-parts adds arcade/food/rental/shop/Side B/design builders, while the sim spawns its docile Faceling DJ at z=d.z0+1.75, clear of the console.",
-    "scripts/talk.js assembles dialogue choices and routes unhandled quest text to handleDialogueQuest31; Marlowe/Coach/DJ/clerk/Dez dialog advances l31q, while scripts/l31-crate.js → openCrate and scripts/l31-deck.js → useDeck handle press actions.",
-    "Side B quest → lockpick check or arcade green card opens crate; player chooses B.N.T.G. (facelings hostile), rink (concession crew hostile), or speech-check dub; level31-quest updates rep, pays route-specific reward and adds snacks.mixtape."
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific behavior.",
+    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera; camera writes aimPt/aimPitch → player.js ballistics/weaponAim; player.js zoneHere → scripts/lib/maze.js zone names.",
+    "world.config.yaml input actions bind kick H/L and reload R → handlers in player/combat behaviors.",
+    "scripts/routing.js requested room → scripts/lib/hub.js solo selection; toHub/toSolo cross to hub/home and maintain roomHop/save-place; kiosk resolves booked Level 5 home IDs.",
+    "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close to intro/tutorial0; menuOpen drives menu UI and solo pause scaling.",
+    "tutorial0 HALOGEN cut → scripts/lib/tut0-cut.js + scripts/lib/dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ and play recorded voices.",
+    "scripts/build.js placement/removal → homeKeep.built or homeKeep.l5built; Level 5 sim restores separately; l5-resident booking → player l5home/l5room and place.state.l5rent, hub kiosk routes per room.",
+    "Level 2 sim l2-to-l31 → scripts/level-door.js to level31#l31-from-l2; Level 31 l31-back → level2#l2-from-l31; quest-route.js maps both directed crossings.",
+    "Level 31 sim reads H/B/RINK/ZONES/DOOR/BACK, rebuilds shell at place.state.v31=36 and dispatches layParts; arcade zone is in its own east back room, and party dressing occupies its former footprint.",
+    "scripts/talk.js assembles authored dialogue and recorded voice takes; unhandled quest text → handleDialogueQuest31; Marlowe/Coach/DJ/clerk dialogue advances l31q; l31-crate.js → openCrate and l31-deck.js → useDeck.",
+    "Side B quest: lockpick check or arcade green card opens crate; player chooses B.N.T.G., rink, or speech-check dub route; level31-quest updates per-player rep, hostility/reward and snacks.mixtape.",
+    "scripts/meg-agent.js hit handling writes NPC state.hitBy; nearby NPCs and same-faction crew read recent attacker records and retaliate; docile Level 31 locals do not initiate frenzy combat."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored mall shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
-    "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction scripts - furniture-specific models/dimensions through common placement, persistence and rebuild flow; home11 and Level 5 use separate saved buckets.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js and prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage parts with eased motion and legacy prop migration; Fort Surrender uses tagged paired leaves.",
+    "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; home11 and Level 5 have separate buckets.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js and prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage motion and legacy migration; Fort Surrender uses tagged paired leaves.",
     "scripts/lib/thresholds.js + scripts/threshold-geo.js + participating place sims, alongside sign-style.js/sign-geo.js - shared crossing clues and per-place/per-id sign-board styles.",
-    "places/level01/sim.js + Zenith geometry, breach, hatch, bot and hazard scripts; places/level02/sim.js + l02-grid.js vary partitions/lights/crew/knocks/reset.",
-    "scripts/lib/meg-agent.js - per-NPC nerve/stats/weapon-driven reactions, aim, cover and recorded gunpoint barks; scripts/lib/critter-model.js refits appearances across Level 7, Bonus and Level 0.2, with global sim.js propagation.",
+    "places/level01/sim.js + Zenith geometry/breach/hatch/bot/hazard scripts; places/level02/sim.js + l02-grid.js vary partitions, lights, crew, knocks and reset.",
+    "scripts/lib/meg-agent.js - per-NPC nerve/stats/weapon reactions, cover and authored/voiced barks; scripts/lib/critter-model.js refits appearances across Level 7, Bonus and Level 0.2, with global sim.js propagation.",
     "Level 13 furnishing/dressing data and foe/people/tape layers vary rooms, story, encounters and residents; weapon data vary requirements/stats/loot while stats.js and weapon-look/fp-gun/vmpose supply handling and visuals.",
-    "Level 31 modular venue: sim owns versioned shell, uses shared l31-props-geo furniture and dispatches six builders; Side B uses Tripo props, faction-tagged crew and per-player hostility/reputation routes."
+    "Level 31 modular venue builders vary arcade machines, food menu, rentals, Side B and design around shared scripts/lib/level31.js geometry; Tripo fitted props, party set dressing and per-player hostility/reputation coexist."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -87,9 +88,9 @@
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. Keep this bounded sweep.",
     "Global body-style restyling skips player IDs and player/ roots and ignores local-audience or model-less objects; wardrobe membership is derived from critter-ward object IDs and passed to restyle.",
-    "Level 31 sim uses place.state.v31=27 and removes/rebuilds l31-* roots; keep generated IDs prefixed l31- and align zone coordinates, arrivals and door IDs with scripts/lib/level31.js. The docile DJ's feet/home are at z=d.z0+1.75 to stand clear of the console; level31-design lays eight chrome pillars, with end pairs…",
-    "Level 31 side-set IDs use l31-q-* while design IDs use l31-ld-*; builders clear only their own prefix. Quest state/reputation is per-player, while the spawned quest crew is shared; avoid treating temporary NPC anger as persistent player ownership.",
-    "Level 31 props use fitted Tripo models with explicit layout boxes and model forward axes; preserve collider extents/orientation when changing models. Level 6.1's swapped Tripo models likewise require their adjusted layout boxes and fountain dimensions.",
-    "Level 31 ambient/hemisphere light, fog, wall material and house-can intensities jointly set the rink mood; skating checks place level31, floor height and rink bounds. SKATE.shoe and SKATE.roll tune distinct shoe-slip versus owned-skate handling."
+    "Level 31 sim uses place.state.v31=36 and removes/rebuilds l31-* roots; keep generated IDs prefixed l31- and align shell, zone coordinates, arrivals and door IDs with scripts/lib/level31.js.",
+    "Level 31 arcade is now the BACK room east of the hall, with an east-wall opening; party occupies the previous arcade footprint. Update BACK, ZONES and sim shell/builders together when moving either room.",
+    "Level 31 side-set IDs use l31-q-* while design IDs use l31-ld-*; builders clear only their own prefix. Quest/reputation is per player, spawned crew shared; NPC hitBy records enable crew retaliation without making anger persistent.",
+    "Level 31 fitted Tripo models need explicit layout boxes and correct model forward axes; retain collider extents/orientation when replacing models. SKATE.shoe and SKATE.roll tune distinct shoe-slip versus owned-skate handling."
   ]
 }
