@@ -524,7 +524,7 @@ l02-capn:
     - q: "Who else is on your crew?"
       a: "Penelope runs errands. Grunt lifts things. Toaster is a toaster. We are a very good team on paper."
   barks:
-    idle: ["Sorry for the inconvenience.", "True order comes through furniture.", "Measure twice.", "Leave a light on in there. Crew don't build where they're seen."]
+    idle: ["Sorry for the inconvenience.", "True order comes through furniture.", "Measure twice.", "Please leave a light on in there. The crew do not like to be watched while they work."]
     hi: ["Ah. Hello.", "Mind the carpet."]
     drawn: ["Please put that away. It scuffs the paint."]
     hurt: ["Ow. That is a workplace incident."]
