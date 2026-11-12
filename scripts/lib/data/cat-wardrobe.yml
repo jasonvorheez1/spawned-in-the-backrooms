@@ -103,6 +103,8 @@ hair:   # each carries a Hatted key (art/cat-wardrobe/hair-hatted.py): flat to t
   spiky: { m: '/cdn/value.c8423eab91b5493db94a7795cefe919a300e98772c7c00fc5ba511c12bfb0ac3.glb' }
   fluffy: { m: '/cdn/value.7cbebb6a07c5f7f53a90810e0251ec05f751eb355dba4f8e342e2d4be4bcc44b.glb' }
   undercut: { m: '/cdn/value.d3b64fac62bfe51787c44da9088326d791fdcfaaf51f9d307dd833444cd706ec.glb' }
+  lob: { f: '/cdn/value.4e26aea5d9dc307af90a6ed03ddcd30cffcd1cf8b2a4e7e3999b6840d39e5ea0.glb' }   # Nov 12 Tripo, Shelly's ref /cdn/image-u965cr5rc.webp; fitted by hair-newfit.py (no remesh)
+  shag: { m: '/cdn/value.aaa27e7dda5e516e9584d148d854edf692e6dc945fa42059a18c349f0cc8691d.glb' }   # Nov 12 Tripo, Shelly's ref /cdn/image-u5nlnvj4p.webp
 # the game's garments (scripts/lib/data/clothes.yml rows: loot, NPC outfits, what a player puts on) drawn on the new cats.
 # Shelly #224234: "the clothing all actually should be in the game world via npcs, loot like normal". A row id here reads as
 # the cat piece beside it; topp: a print the piece carries. Savi's picks where the cat set has no twin (a dress reads as a long tee).
