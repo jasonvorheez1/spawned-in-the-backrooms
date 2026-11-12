@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 5944,
-  "updatedAt": "2026-11-12T03:37:08.033Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning an authored Level 0 maze, deeper lore-based destinations, a social mall and solo tutorial spaces. `templates/player.js` composes shared player behavior; `scripts/player.js` owns player progression and combat, while place simulations and shared libraries build/tick environments, NPCs, quests and crossings.",
+  "basedOnSpecVersion": 5958,
+  "updatedAt": "2026-11-12T03:53:31.438Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, lore-based destinations, a social mall and solo tutorial spaces. `templates/player.js` composes shared behaviors; `scripts/player.js` owns player progression and combat, while place simulations and shared libraries build/tick environments, NPCs, quests, crossings and visual dressing.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0/Lobby maze; sim lays ecology, generated moments, safe rooms and routes to its exits.",
+    "places/main (3D) - Level 0/Lobby maze; sim lays ecology, generated moments, safe rooms and routes to exits.",
     "places/bonus (3D) - vaporwave mall with authored shops, escalators and simulated staff/shoppers; shared hub destination.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo ephemeral) - character creation/waking and staged tutorial route.",
     "places/level01 (3D) - Zenith Station: station, breach, doors, bots, hazards and recorder quest.",
-    "places/level1, level2, level21, level3, gamma (3D) - Habitable Zone/M.E.G. camp, Pipe Dreams, Locked, Electrical Station and Base Gamma.",
+    "places/level1, level2, level21, level3, gamma (3D) - Habitable Zone/M.E.G. camp, Pipe Dreams, Locked, Electrical Station and Base Gamma; Level 3 sim generates steel through-wall hatches.",
     "places/level4, level5, level6, level7, level8 (3D) - Abandoned Office, Terror Hotel, drowned house, sea/Fort Surrender and Cave Systems.",
     "places/level10, level11, level12 (3D) - lake, generated city/canal and renovation office; Level 11 connects to player home11.",
     "places/level26, level27, level184, level61, spamton, testlab and other special places (3D) - SS Fun, Bunker Springs, forts, Snackrooms, arena and Test Range."
@@ -27,12 +27,12 @@
   "shared": [
     "scripts/lib/hub.js - solo room IDs, Bonus Room/home destinations and LEVEL_NAMES used by hub UI.",
     "scripts/lib/loot.js + scripts/lib/items.js + scripts/lib/weapons.js/scripts/lib/data/weapons.yml - common loot, containers, item definitions, rarity and weapon variants.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js - parametric door geometry and hinge motion reused by doors.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/lib/level3-hatch.js - parametric door geometry/motion and deterministic Level 3 paired wall-hatch layout.",
     "scripts/lib/thresholds.js + scripts/threshold-geo.js - versioned crossing clues shared by participating place simulations.",
     "scripts/lib/quest-route.js + scripts/lib/quest-mark.js - crossing graph and objective resolver for tracked quests.",
-    "scripts/lib/level11-vaults.js + level11-depths.js + l11-crawl-geo.js - Level 11 vault, crawl geometry and place systems.",
-    "scripts/lib/build-piece.js + scripts/lib/data/breakables.yml + scripts/lib/data/furniture.yml - shared build, harvest, breakable and reconstruction specs.",
-    "scripts/lib/critter-model.js + cat-wardrobe.js + wardrobe/clothes data + appearance materials - player/NPC human, furry and Tripo cat paths."
+    "scripts/lib/data/preload.yml + scripts/lib/preload-next.js - door-to-destination/model manifest used by player proximity preloading.",
+    "scripts/lib/sign-style.js + scripts/sign-geo.js + scripts/lib/data/signs.yml - per-place/id visual styles and generated sign boards; participating place sims call restyleSigns.",
+    "scripts/lib/build-piece.js + furniture/breakable data, and scripts/lib/critter-model.js + cat wardrobe/clothes data - shared build/reconstruction and player/NPC appearance systems."
   ],
   "notableExports": [
     "scripts/lib/carry.js - carryAcross.",
@@ -45,38 +45,38 @@
     "places/level1/sim.js - cadence, agentSpec, tick; places/level5/sim.js - cadence, lay."
   ],
   "ownership": [
-    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved position and carried tapes.",
+    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved position and carried tapes; lib/forgive.js records NPC grudges in player.state.grudges.",
     "scripts/lib/quests.js - player.state.quests, qtrack and qdone; quest handlers own quest-specific state; dina-quest.js owns dinaQ, dinaDiary, dcut and seeds the-way-back.",
-    "scripts/kick.js + scripts/grab.js - kick cooldowns and carry/held target session; held objects own heldBy/down/stagger state.",
+    "scripts/kick.js + scripts/grab.js - kick cooldowns and carry/held target session; held objects own heldBy/down/stagger state and player.state.carryMul is reset when the carry ends.",
     "scripts/lib/loose.js + breakables.js - loose prop state and wrecks; permanently smashed root IDs live in place.state.gone.",
     "scripts/lib/knock.js + stats.js - foe weight/attributes and down/stagger outcomes; enemy managers own AI and sneakTarget.",
-    "Place sims - local generated scene and migration markers, including Level 1 back-door rebuild and Level 4 office/island conversions.",
-    "scripts/lib/prop-interactions.js + scripts/prop-part.js - prop open/lamp state and child part animation goals.",
-    "scripts/lib/thresholds.js - place.state.thrSeen/thrTry/thrDone/thrV placement protocol; testlab sim owns its lootPool/labV and consumes pad requests."
+    "Place sims - local generated scene and migration markers, including Level 1 back-door rebuild, Level 3 hatchV, and Level 4 office/island conversions.",
+    "scripts/lib/prop-interactions.js + scripts/prop-part.js - prop open/lamp state and child part animation goals; prop-interactions preserves detailed models when searched.",
+    "scripts/lib/thresholds.js - place.state.thrSeen/thrTry/thrDone/thrV placement protocol; testlab sim owns lootPool/labV and consumes pad requests."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera; camera writes aimPt/aimPitch → player.js ballistics.",
     "scripts/routing.js requested room → scripts/lib/hub.js solo room selection; toHub/toSolo cross to hub/home and maintain roomHop/save-place state.",
-    "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close to intro/tutorial0; menuOpen drives menu UI and solo pause scales place time.",
-    "Hub destinations → hub-ui.js/hub.js crossings; Bonus sim lays NPCs/effects and mall handlers consume shop/food state; escalator steps use esc-step.js.",
-    "interact.js loot search → loot.gateItems → items/weapons roll; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite.",
-    "interact.js focus → player.state.focus → loot-ui prompt; talk UI emits talk/talkdo/shop actions; screen/theme hide prompts behind panels.",
+    "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close to intro/tutorial0; menuOpen drives menu UI and solo pause scales place time; hub UI routes Bonus/home destinations.",
+    "Bonus sim lays NPCs/effects and mall handlers consume shop/food state; escalator steps use esc-step.js.",
+    "interact.js loot search → loot.gateItems → items/weapons roll; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; focus → player.state.focus → loot-ui/talk/shop UI.",
     "interact open/closeLoot → prop-interactions.containerPose → child part state.goal → prop-part.js animation; toggleLamp changes light-part goals.",
     "Player craft action/UI → craft.js + craft.yml; breakables/build pieces define station; craft UI filters station recipes while hand menu lists all.",
     "Tracked quest → quest-marker.js → questMark/nextQuestExit gated crossing graph → local objective or remote exit marker and journal.",
-    "Place sims → dressThresholds → threshold-geo dressing; door/use triggers call carryAcross before ctx.cross, bringing held props/creatures (not into Bonus/room links) and recording xferTo for an arrival marker; player.js consumes xferTo to land on it.",
-    "critter-model restylePlace → gathers wardrobe-parent IDs once per pass → restyle bodies; sims call restyle queue/step so human/furry changes cover NPCs without per-body full-object rescans."
+    "Place sims → restyleSigns (signs.yml/sign-geo.js) and dressThresholds; doorway handlers call carryAcross before ctx.cross for local links, record xferTo, and player.js consumes it for arrival marker.",
+    "scripts/player.js update → preloadTick reads nearby door IDs and preload.yml → player-audience preload event for destination models; forgiveTick reads NPC angry state/player.grudges and clears the grudge after an in-game hour.",
+    "places/level3/sim.js hatches() + hatchAt() → paired steel leaves and doorway triggers; interact.js opens scripts/l3-hatch.js leaves, l3-hatch-pass.js moves player through wall to twin and opens it."
   ],
   "behaviorFamilies": [
     "places/bonus scenes + bonus data/sim + mall shopper/salon scripts - authored mall, NPCs and counter behavior; escalator steps share motor behavior with placement-specific direction/phase.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction scripts - furniture-specific models/dimensions through common placement, persistence and rebuild flow.",
     "scripts/door-geo.js + door-swing.js and prop-interactions.js + interactive-props data + prop-part.js - parametrically generated doors/storage parts with eased motion and legacy prop migration.",
-    "scripts/lib/thresholds.js + threshold-geo.js + participating place sims - threshold dressing varies by destination, clue kind and inward direction.",
+    "scripts/lib/thresholds.js + threshold-geo.js + participating place sims, alongside sign-style.js/sign-geo.js - shared threshold dressing and per-place/per-ID sign-board styles across place sims.",
     "places/level01/sim.js + zenith geometry, breach, hatch, bot and hazard scripts - Zenith Station environment and interactive systems.",
+    "places/level3/sim.js + level3-details-geo.js + lib/level3-hatch.js + l3-hatch*.js - tiled Electrical Station detail and paired steel doors through selected walls.",
     "places/level4 scenes/sim + l4-office, l4-office-geo, l4-home and resident data - office/hotel fixtures and attached residents.",
-    "scripts/lib/critter-model.js + cat wardrobe/clothes data + material and art builders - reusable human/furry/Tripo cat rigs with varied looks and fitted attachments.",
-    "places/level7/sim.js + art/fort-gate/build.py + Fort Surrender GLB - open palisade gateway and separate solid wall blocks, with ramp/floor placement fitted to the gate."
+    "scripts/lib/critter-model.js + cat wardrobe/clothes data + material and art builders - reusable human/furry/Tripo cat rigs with varied looks and fitted attachments."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -89,8 +89,8 @@
     "Threshold dressing version is now V=7 in scripts/lib/thresholds.js; upgrades clean/rebuild thr-tagged objects and remain delayed/incremental until place colliders stand. Preserve thrSeen/thrTry/thrDone/thrV protocol.",
     "carryAcross records xferTo only for local place links with a # marker; it crosses carryId and nearby heldBy objects, but rejects room/world and Bonus destinations. Keep it immediately before ctx.cross at doorway handlers.",
     "Level 1 BACK moved well away from camp: sim's backV rebuild destroys and respawns the door, lamp, wall and arrival because moving a static trigger's transform leaves its collider behind.",
-    "critter-model STYLE_V is sw185; restylePlace builds a wardrobe-parent set once and passes it to each restyle call. Avoid reinstating per-NPC full object-key scans; parented bodies still need detection.",
-    "Cat appearance path requires !HUMAN, MESH and speciesOf(look)==='cat'; human/other furry paths stay separate. Cat body shape keys must continue through fitted hair/fluff and clothes.",
-    "Fort Surrender gateway uses a cut/open gate asset while its remaining shell walls are independently solid; the ramp must meet the fort floor flush and remain walkable."
+    "scripts/lib/sign-style.js only restyles eligible shallow box signs with UI, leaves emissive/light signs alone, and is throttled/idempotent; preserve source IDs, dimensions, text, colour and placement while signs.yml selects style.",
+    "Level 3 hatchV=3 rebuild destroys old l3-hatch-* objects; hatchAt deterministically shares each wall's door across its two faces. Keep Level 3 detail-wall generation and the paired passage triggers in sync with that layout.",
+    "preload-next uses a 30 m door reach, per-player-session preDone by destination, and the data preload.yml door/model manifest; player.grudges uses game time (one in-game hour) for NPCs already angry with that player."
   ]
 }
