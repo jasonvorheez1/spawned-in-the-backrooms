@@ -510,3 +510,24 @@ bonus-rico:
     close: ["Personal space. Like the yellow line."]
     board: ["All aboard! Arms in!", "Marigold's leaving, rider!", "Doors closing. Eyes front!", "Next stop, wherever you left off!"]
   gest: { wave: "Yo! Rider!", gift: "Ha, a tip! Thanks!", dance: "Platform party! Ha!", nodance: "Train's due. Rain check.", insult: "I'll put you on the slow one." }
+
+l02-capn:
+  hi: "Ah. A visitor. Mind the carpet, it is new. Everything is new. Sorry for the inconvenience."
+  back: ["You came back. Nobody comes back.", "The floor is fine now. It is always fine at first."]
+  warm: "My favourite wanderer. Do not tell Major Took I have a favourite."
+  cold: "We are very busy improving things. Please improve somewhere else."
+  bye: "Sorry for the inconvenience."
+  walk: "I will wait here. Waiting is part of the job."
+  ask:
+    - q: "What happened up there?"
+      a: "A Class-A remodel. Red carpet, white walls, outlets that work. Then somebody touched it. Possibly me."
+    - q: "Who else is on your crew?"
+      a: "Penelope runs errands. Grunt lifts things. Toaster is a toaster. We are a very good team on paper."
+  barks:
+    idle: ["Sorry for the inconvenience.", "True order comes through furniture.", "Measure twice."]
+    hi: ["Ah. Hello.", "Mind the carpet."]
+  gest:
+    wave: "Ah. Yes. Hello."
+    gift: "For me? I will log it as company property."
+    dance: "Not on the new floor."
+    insult: "That will go in my report. Which nobody reads."

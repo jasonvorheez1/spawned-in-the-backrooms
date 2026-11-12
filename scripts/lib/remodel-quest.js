@@ -6,6 +6,7 @@ import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
 import { addRep, addKarma } from "./rep.js";
 import { rollCheck } from "./npc-talk.js";
+import { setQuest, endQuest, qid } from "./quests.js";
 const CHIME = "cdn/sfx-soft-bright-two-note-success-chime.mp3";
 const FANFARE = "/cdn/moodboard-realistic-gritty/sfx-level-up-jingle-retro-terminal-chime-rising-three-notes.mp3";
 const HISS = "cdn/sfx-aerosol-can-short-hiss-click-plastic-cap.mp3";
@@ -25,7 +26,12 @@ function tell(ctx, p, text, clip = CHIME) {
   const s = p.state, now = ctx.now(); s.notice = { text, at: now }; pushFeed(s, text, now, "good");
   const pos = posOf(p); if (pos) heard(ctx, { clip, position: pos, volume: 0.7, maxDistance: 16 }, { audience: { player: p.id } });
 }
-export function setRemodStep(ctx, p, step, text) { p.state.remodQ = step; tell(ctx, p, text); }
+function syncHUD(s, step, done) {
+  const q = QUESTS02.remodel, tip = q.tips[step], id = qid(q.name);
+  if (tip) { s.quest = { name: q.name, step: tip, mark: q.marks[step] ?? null, at: Date.now() }; setQuest(s, id, { name: q.name, step: tip, mark: q.marks[step] ?? null }); }
+  else { if (s.quest?.name === q.name) s.quest = null; endQuest(s, id, done); }
+}
+export function setRemodStep(ctx, p, step, text) { p.state.remodQ = step; syncHUD(p.state, step); tell(ctx, p, text); }
 const gotCount = (s) => Object.values(s.l02got ?? {}).filter(Boolean).length;
 export function gotFresh(ctx, p, slot) {
   const s = p.state, g = { ...(s.l02got ?? {}) };
@@ -36,7 +42,7 @@ export function gotFresh(ctx, p, slot) {
   if (n >= 3 && (s.remodQ === 2 || s.remodQ === 1)) setRemodStep(ctx, p, 3, "Fresh Paint · Bring the fresheners to Mara in Level 11, or back to Cap'n");
 }
 function finish(ctx, p, { xp, cents, rep, text }) {
-  const s = p.state; s.remodQ = 99; s.cents = (s.cents ?? 0) + cents;
+  const s = p.state; s.remodQ = 99; syncHUD(s, 99, text); s.cents = (s.cents ?? 0) + cents;
   const msgs = [];
   for (const [g, d] of rep) { const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d); msgs.push(tier || `${g === "karma" ? "Karma" : g === "bntg" ? "B.N.T.G." : g} +${d}`); }
   const summary = [text, ...msgs].join(" · ");

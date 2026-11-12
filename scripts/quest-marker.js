@@ -13,8 +13,8 @@ const NVG_Q = {
 const REG_STATE = { list: null, asked: false }; // the older quests' own tables: { key, name, tips, marks } rows, read once
 function registry() {
   if (REG_STATE.asked) return; REG_STATE.asked = true;
-  Promise.all([import("./lib/level10-quests.js"), import("./lib/level11-quests.js"), import("./lib/level21-quests.js"), import("./lib/level8-quests.js"), import("./lib/zenith-quest.js")])
-    .then(([a, b, c, d, z]) => { REG_STATE.list = [...Object.values(a.QUESTS10 ?? {}), ...Object.values(b.QUESTS ?? {}), ...Object.values(c.QUESTS21 ?? {}), ...Object.values(d.QUESTS8 ?? {}), { key: "zenQ", name: "The Zenith Survey", tips: z.TIPS ?? {}, marks: z.MARKS ?? {} }, NVG_Q].filter((q) => q?.key && q?.name && q?.tips); })
+  Promise.all([import("./lib/level10-quests.js"), import("./lib/level11-quests.js"), import("./lib/level21-quests.js"), import("./lib/level8-quests.js"), import("./lib/zenith-quest.js"), import("./lib/remodel-quest.js")])
+    .then(([a, b, c, d, z, r]) => { REG_STATE.list = [...Object.values(r.QUESTS02 ?? {}), ...Object.values(a.QUESTS10 ?? {}), ...Object.values(b.QUESTS ?? {}), ...Object.values(c.QUESTS21 ?? {}), ...Object.values(d.QUESTS8 ?? {}), { key: "zenQ", name: "The Zenith Survey", tips: z.TIPS ?? {}, marks: z.MARKS ?? {} }, NVG_Q].filter((q) => q?.key && q?.name && q?.tips); })
     .catch(() => { REG_STATE.list = []; });
 }
 function fold(ctx, s, ses) {

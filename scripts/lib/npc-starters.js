@@ -2,6 +2,7 @@
 import { zenithChoice } from './zenith-quest.js'
 import { l1Choice } from './level1-quests.js'
 import { repOf } from './rep.js'
+import { remodelChoices } from './remodel-quest.js'
 import ASKS from "./data/talk-asks.yml";
 // Starters are delivered when dialogue opens; choices give the player contextual,
 // clickable RPG dialogue prompts (with Speech, Barter, Survival, Medicine checks).
@@ -2557,7 +2558,7 @@ function withChecks(ctx, it, list) {
 export function questChoices(ctx, it, s) {
   if (!it) return []
   const id = short(it)
-  const qChoices = []
+  const qChoices = [...remodelChoices(id, s)]
   if (id === 'l11-walker-1') {
     if (!s?.sedcoQ && repOf(s, "survivors") > -35) {
       qChoices.push({ text: "That's a lot of parcels. Need a hand with a Sedco manifest?", tag: "Quest Start" })
