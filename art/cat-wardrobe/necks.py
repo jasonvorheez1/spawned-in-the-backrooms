@@ -19,7 +19,7 @@ def clear(): bpy.ops.wm.read_factory_settings(use_empty=True)
 def body(sex):
     bpy.ops.import_scene.gltf(filepath=f"/tmp/hf/body{sex}.glb")
     arm = next(o for o in bpy.context.scene.objects if o.type == "ARMATURE")
-    meshes = [o for o in bpy.context.scene.objects if o.type == "MESH"]
+    meshes = [o for o in bpy.context.scene.objects if o.type == "MESH" and o.name in ("Body", "Head")]   # the import carries a helper Cube and Icosphere 2 m wide: they wrecked the neck ring and the push-out
     dg = bpy.context.evaluated_depsgraph_get(); bm = bmesh.new()
     for o in meshes:
         me = o.evaluated_get(dg).to_mesh(); t = bmesh.new(); t.from_mesh(me); t.transform(o.matrix_world)
@@ -86,6 +86,7 @@ for sex in ("f", "m"):
             if not any(vg.index in [g.group for g in v.groups if g.weight > 0] for v in o.data.vertices[:]): o.vertex_groups.remove(vg)
         for x in list(bpy.context.scene.objects):
             if x.type == "MESH" and x != o: bpy.data.objects.remove(x)
+        print("SEAT", kind, sex, "neck", tuple(round(c, 3) for c in neck))
         if arm.animation_data: arm.animation_data.action = None
         for ac in list(bpy.data.actions): bpy.data.actions.remove(ac)
         o.parent = arm; o.modifiers.new("skin", "ARMATURE").object = arm
