@@ -128,7 +128,7 @@ export function layArcade(ctx) {
     [{ id: "title", feetPosition: { x: 0, y: 1.6, z: -0.352 }, vector: svg, castShadow: false }, ...extra]);
   // the real Fix-It Felix Jr. upright (Tripo, from Shelly's photo), sky-blue cab, true size 0.66 x 1.82 x 0.78 m
   ctx.spawn("l31-arcade-felix", { feetPosition: { x: E - 0.45, y: 0, z: -16.5 }, rotation: { yaw: W },
-    model: { id: GLB.felix, forward: "+x" }, layout: { box: { min: { x: -0.39, y: 0, z: -0.33 }, max: { x: 0.39, y: 1.82, z: 0.33 } } },
+    model: { id: GLB.felix, forward: "+x" }, layout: { box: { min: { x: -0.7, y: 0, z: -0.7 }, max: { x: 0.7, y: 1.82, z: 0.7 } } },
     physics: { body: "static", collider: "box" }, behavior: SELF, tags: ["usable", "l31-arcade"],
     state: { kind: "attract", verb: "Play", info: "Fix-It Felix Jr. Takes a card.", name: "Fix-It Felix Jr.", res: "upright" },
     children: [{ id: "glow", feetPosition: { x: 0, y: 1.35, z: -0.6 }, light: { kind: "point", color: "#9fd4ff", intensity: 0.6, distance: 2.5 } }] });

@@ -59,7 +59,7 @@ export function layFood(ctx) {
   M("wings", "wings", 38.05, 19.4, 90, { physics: "none" }, 0.92); M("soda", "soda", 38.05, 22, 90, { physics: "none" }, 0.92);
   // real Frontrooms drinks (Tripo): a row of Sprite and Capri Sun by the soda fountain, strays on the tables
   const D = (id, key, x, y, z, yaw) => P(id, { model: { id: G[key], forward: "+x" }, feetPosition: { x, y, z }, rotation: { yaw },
-    layout: { box: key === "sprite" ? { min: { x: -0.033, y: 0, z: -0.033 }, max: { x: 0.033, y: 0.22, z: 0.033 } } : { min: { x: -0.016, y: 0, z: -0.055 }, max: { x: 0.016, y: 0.16, z: 0.055 } } } });
+    layout: { box: key === "sprite" ? { min: { x: -0.033, y: 0, z: -0.033 }, max: { x: 0.033, y: 0.22, z: 0.033 } } : { min: { x: -0.1, y: 0, z: -0.1 }, max: { x: 0.1, y: 0.16, z: 0.1 } } } });
   [23.3, 23.45, 23.6].forEach((z, i) => D(`sprite${i}`, "sprite", 37.8, 0.9, z, 90 + i * 7));
   [23.85, 23.97, 24.09, 24.21].forEach((z, i) => D(`capri${i}`, "capri", 37.8, 0.9, z, 90 - i * 5));
   D("sprite-t1", "sprite", 33.2, 0.74, 12.2, 40); D("capri-t3", "capri", 29.3, 0.74, 23.15, 120); D("capri-t5", "capri", 33.15, 0.74, 17.3, 200);
