@@ -74,7 +74,7 @@ function shell(ctx) {
     ctx.spawn(`l31-string-${id}`, { feetPosition: { x, y: 3.6, z }, primitive: along === "x" ? box(len, 0.015, 0.015) : box(0.015, 0.015, len), material: { color: "#111" }, castShadow: false, children: kids }); };
   str("n", 0, B.z0 + 0.08, W - 1, "x"); str("s", 0, B.z1 - 0.08, W - 1, "x"); str("w", B.x0 + 0.08, 0, D - 1, "z"); str("e", B.x1 - 0.08, 0, D - 1, "z");
   // a few dim house cans over the carpet aisles so nobody walks blind
-  [[-24, 20], [14, 17], [-24, -20], [24, -17], [-26, 0], [24, 0]].forEach(([x, z], i) => ctx.spawn(`l31-can${i}`, { feetPosition: { x, y: H - 0.3, z }, light: { kind: "point", color: "#ffb070", intensity: 1.1, distance: 13 } }));
+  [[-24, 20], [14, 17], [-24, -20], [24, -17], [-26, 0], [24, 0], [-36, -22], [-30, 24]].forEach(([x, z], i) => ctx.spawn(`l31-can${i}`, { feetPosition: { x, y: H - 0.3, z }, light: { kind: "point", color: "#ffb070", intensity: 2.6, distance: 16 } }));
 }
 
 function doors(ctx) {
@@ -82,7 +82,7 @@ function doors(ctx) {
   ctx.spawn("l31-door-leaf", { feetPosition: { x: DOOR.x, y: 0, z: B.z1 + 0.05 }, primitive: box(1.16, 2.28, 0.05), material: PLY, castShadow: false,
     children: [{ feetPosition: { x: 0.42, y: 1.02, z: -0.05 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.03, height: 0.1 }, rotation: { pitch: 90 }, material: { color: "#8a7a55", metalness: 0.9, roughness: 0.4 } },
       { feetPosition: { x: 0, y: 1.1, z: -0.035 }, primitive: box(1.16, 0.09, 0.03), material: PLY }, { feetPosition: { x: 0, y: 0.25, z: -0.035 }, primitive: box(1.16, 0.09, 0.03), material: PLY }] });
-  ctx.spawn("l31-from-l2", { feetPosition: ARRIVE, rotation: { yaw: 0 } });
+  ctx.spawn("l31-from-l2", { feetPosition: ARRIVE, rotation: { yaw: -45 } }); // facing the rink, not the gift shop's back wall
   ctx.spawn("l31-back", { feetPosition: { x: DOOR.x, y: 0, z: B.z1 - 0.25 }, physics: { body: "static", trigger: true }, primitive: box(1.2, 2.3, 0.4), visible: false, behavior: "scripts/level-door.js", state: { to: "level2#l2-from-l31" } });
   ctx.spawn("l31-exit-sign", { feetPosition: { x: DOOR.x, y: 2.45, z: B.z1 - 0.06 }, rotation: { yaw: 0 }, castShadow: false, vector: `<svg viewBox='0 0 100 40' width='0.7m'><rect width='100' height='40' rx='3' fill='#0d1a0f'/><text x='50' y='29' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='26' fill='#5dff7a' filter='drop-shadow(0 0 3 #5dff7a)'>EXIT</text></svg>` });
   // the white door marked 70, north-west corner. It does not open. (Level 70 is not built.)
@@ -94,13 +94,14 @@ function cinema(ctx) {
   // north alcove: the big television and three stepped metal benches. It is the darkest, quietest corner.
   const C = ZONES.cinema, cx = (C.x0 + C.x1) / 2;
   ctx.spawn("l31-tv", { feetPosition: { x: cx, y: 1.3, z: C.z0 + 0.12 }, primitive: box(4.8, 2.8, 0.14), material: { color: "#0a0a0c", roughness: 0.3 }, castShadow: false,
-    children: [{ feetPosition: { x: 0, y: 0.1, z: 0.075 }, primitive: box(4.6, 2.6, 0.01), material: { texture: "cdn/texture-old-animated-movie-still-dog-on-clouds-crt-scanlines.png", color: "#ffffff", emissive: "#9ab6ff", emissiveIntensity: 0.9 } }] });
+    children: [{ feetPosition: { x: 0, y: 0.1, z: 0.075 }, primitive: box(4.6, 2.6, 0.01), material: { texture: "cdn/texture-old-animated-movie-still-dog-on-clouds-crt-scanlines.png", color: "#ffffff", emissive: "#9ab6ff", emissiveIntensity: 0.3 } }] });
   ctx.spawn("l31-tv-light", { feetPosition: { x: cx, y: 2.6, z: C.z0 + 2 }, light: { kind: "point", color: "#8fb0ff", intensity: 1.6, distance: 11 } });
   const STEEL = { texture: "cdn/texture-brushed-steel-bench-scuffed.png", wrap: "repeat", repeat: [1, 1], color: "oklch(0.85 0.01 250)", metalness: 0.8, roughness: 0.4 };
   for (let i = 0; i < 3; i++) { const z = C.z0 + 4.2 + i * 1.6, y = i * 0.3;
     if (i) ctx.spawn(`l31-step${i}`, { feetPosition: { x: cx, y: 0, z: z + 0.5 }, primitive: box(9, y, 1.6), material: CARPET, physics: "static", castShadow: false });
     ctx.spawn(`l31-bench${i}`, { feetPosition: { x: cx, y, z }, primitive: box(8, 0.45, 0.45), material: STEEL, physics: "static", tags: ["seat"], state: { name: "Bench" } }); }
-  ctx.spawn("l31-cinema-sign", { feetPosition: { x: cx, y: 3.9, z: C.z1 }, castShadow: false, vector: `<svg viewBox='0 0 220 50' width='3.2m'><rect width='220' height='50' rx='6' fill='#17090f' stroke='#ffd23a' stroke-width='2'/><text x='110' y='36' text-anchor='middle' font-family='display' font-size='32' fill='#ffd23a' filter='drop-shadow(0 0 4 #ff8a1e)'>NOW SHOWING</text></svg>` });
+  ctx.spawn("l31-cinema-sign", { feetPosition: { x: cx, y: 3.9, z: C.z1 }, castShadow: false, vector: `<svg viewBox='0 0 220 50' width='3.2m'><rect width='220' height='50' rx='6' fill='#17090f' stroke='#ffd23a' stroke-width='2'/><text x='110' y='36' text-anchor='middle' font-family='display' font-size='32' fill='#ffd23a' filter='drop-shadow(0 0 4 #ff8a1e)'>NOW SHOWING</text></svg>`,
+    children: [-1.4, 1.4].map((x) => ({ feetPosition: { x, y: 0.36, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.006, radiusBottom: 0.006, height: H - 4.26 }, material: { color: "#222" }, castShadow: false })) }); // hung on two wires, not floating
 }
 
 function djBooth(ctx) {

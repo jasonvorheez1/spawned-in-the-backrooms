@@ -5,7 +5,7 @@ terrain:
   kind: "off"
 gravity: { x: 0, y: -24, z: 0 }
 defaultSpawnPoint: { x: -30, y: 0.1, z: 27 }
-defaultSpawnRotation: { yaw: 0 }
+defaultSpawnRotation: { yaw: -45 }
 worldBounds: { bottom: -20 }
 atmosphere:
   sky: { kind: color, color: oklch(0.04 0.01 300) }
@@ -16,6 +16,6 @@ atmosphere:
   timeOfDay: 0
   wind: { direction: 0, speed: 0 }
   look: { script: scripts/look-utility.js, params: { bloomThreshold: 0.55, bloomStrength: 0.9 } }
-  ambient: { light: { color: oklch(0.8 0.06 40), intensity: 0.22 } }
-  hemisphere: { skyColor: oklch(0.7 0.08 30), groundColor: oklch(0.3 0.05 300), intensity: 0.18 }
+  ambient: { light: { color: oklch(0.8 0.06 40), intensity: 0.45 } }
+  hemisphere: { skyColor: oklch(0.7 0.08 30), groundColor: oklch(0.3 0.05 300), intensity: 0.35 }
 acoustics: { reverb: 0.55 }
