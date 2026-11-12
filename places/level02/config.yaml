@@ -1,0 +1,21 @@
+# Level 0.2 "Remodeled Mess" (backrooms-wiki.wikidot.com/level-0-2; lore: scripts/lib/data/lore/level-0-2.md).
+# Backrooms Remodeling Co.'s attempt at Level 0: dry red carpet, fresh white walls, a bathroom. Step in and it falls
+# apart toward the door, dropping you into the unfinished house underneath. Empty it and it is whole again.
+mode: 3d
+terrain:
+  kind: "off"
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: -14.6, y: 0.05, z: 0 }
+defaultSpawnRotation: { yaw: -90 }
+worldBounds: { bottom: -30 }
+atmosphere:
+  sky: { kind: color, color: oklch(0.86 0.01 90) }
+  fog: { kind: linear, near: 10, far: 55, color: oklch(0.86 0.01 90) }
+  clouds: { enabled: false }
+  stars: { enabled: false }
+  moon: { enabled: false }
+  cycle: { frozen: 12 }
+  sun: { light: { intensity: 0.25, color: oklch(0.98 0.01 95), shadow: { enabled: true } } }
+  ambient: { light: { color: oklch(0.97 0.005 95), intensity: 0.75 } }
+  hemisphere: { skyColor: oklch(0.99 0 0), groundColor: oklch(0.6 0.06 30), intensity: 0.55 }
+acoustics: { reverb: 0.35 }
