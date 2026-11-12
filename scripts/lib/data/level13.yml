@@ -50,7 +50,7 @@ fridgeRestockS: 120        # a fridge emptied by hand is full again this many se
 fridgeItems: [2, 4]        # how many things a stocked fridge holds
 # item tokens (scripts/lib/items.js, snacks.yml) and their weights
 fridgeLoot: { almond: 30, stillwater: 8, coke: 6, pepsi: 5, sprite: 4, drpepper: 4, snapple: 4, cherrycoke: 3, millerlite: 4, budweiser: 3, beans: 8, bread: 5, pizza: 5, lobby_wafer: 5, "meat:chicken": 4, "meat:spam": 5, "meat:sardines": 4 }
-tv: { light: 0.7, lightDistance: 4, gain: 0.12, maxDistance: 6, screen: [0.44, 0.34], screenAt: [0.12, 0.6, -0.315] }  # screenAt: x right of centre, y up, z out of the front
+tv: { light: 0.7, lightDistance: 4, gain: 0.12, maxDistance: 6, screen: [0.44, 0.34], screenAt: [0.12, 0.6, -0.25] }  # screenAt: x right of centre, y up, z out of the front
 tvLines:
   empty: "Nobody lives here. The set is warm anyway, and the fridge is full."
   tenant: "A game show with no contestants. Somebody left this on for company."
