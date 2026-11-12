@@ -438,7 +438,7 @@ xmas-tree:
 xmas-tree-light:
   feetPosition: {x: 66, y: 1.5, z: 125.65}
   id: xmas-tree-light
-  light: {color: "#ffa255", distance: 14, intensity: 2.5, kind: point, shadow: {enabled: true}}
+  light: {color: "#ffa255", distance: 14, intensity: 4, kind: point, shadow: {enabled: true}}
   tags: [xmas]
 xmas-window:
   feetPosition: {x: 73.88, y: 0.95, z: 151.35}
