@@ -89,7 +89,7 @@ function coach(ctx) {
   ctx.spawn("l31-rental-riser", { feetPosition: { x: 12.55, y: 0, z: 25.75 }, primitive: box(13.1, 0.45, 1.8), material: RUB, physics: "static", castShadow: false, tags: ["l31-rental"] });
   ctx.spawn(id, { tags: ["npc", "l31-rental", "docile"], feetPosition: { x: 13, y: 0.46, z: 25.7 }, rotation: { yaw: 0 }, physics: "character",
     ...critterSpec(look), scale: 1.25, behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
-    state: { name: "Coach", role: "trader", faction: "survivor", voice: "l31-coach", docile: true, essential: true, post: { x: 13, z: 25.7 }, home: { x: 13, y: 0.46, z: 25.7 }, ...npcState(ctx, "agent", 80) } });
+    state: { ...npcState(ctx, "agent", 80), name: "Coach", role: "trader", faction: "survivor", voice: "l31-coach", docile: true, essential: true, post: { x: 13, z: 25.7 }, home: { x: 13, y: 0.46, z: 25.7 } } });
   // facelings come bald from the shared path; his brown crop rides the head as its own child
   ctx.spawn({ id: "coach-hair", parent: id, attachment: { skin: true }, model: { id: HAIR, materials: { hair: anime("hair", "#5a3a26"), scalp: { color: "#48301f", roughness: 0.9 }, scalp_cap: { color: "#48301f", roughness: 0.9 } } } });
   ctx.spawn({ id: "coach-tag", parent: id, attachment: { bone: "Spine2" }, feetPosition: { x: 0.07, y: 0.02, z: 0.15 }, primitive: box(0.085, 0.03, 0.004), material: { color: "#f7f5ee", roughness: 0.4 }, castShadow: false,
