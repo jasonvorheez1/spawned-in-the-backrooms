@@ -116,7 +116,7 @@ function dress(ctx, me) {
   }
   if (staleBody(me.model)) { // an older Blender pass: re-dress on the current body and head, keeping its clothes and colours
     const local = String(me.id).split("/").pop(), old = { ...(lookFromModel(me.model, null) ?? {}), ...(me.state.wear ?? {}) }
-    const l = { ...old, species: old.species && old.species !== "cat" ? old.species : speciesFor(local), sex: old.sex ?? "m" }
+    const l = { ...old, species: HUMAN ? (old.species ?? speciesFor(local)) : "cat", sex: old.sex ?? "m" }
     const spec = critterSpec(l); me.model = spec.model; me.material = spec.material; me.jiggle = spec.jiggle; me.state.wear = l; seatHead(ctx, me, l);
   }
   const sc = me.scale, plain = !sc || (typeof sc === "number" ? sc === 1 : sc.x === 1 && sc.y === 1);
