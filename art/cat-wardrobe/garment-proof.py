@@ -10,6 +10,12 @@ for o in bpy.data.objects:
 gm = bpy.data.materials.new("cl"); gm.diffuse_color = (0.25, 0.45, 0.8, 1)
 gm.use_nodes = True; gm.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.2, 0.4, 0.85, 1)
 body = bpy.data.objects.get("Body")
+rig = body.find_armature()   # the garment rides the body's own rig as posed, the way the game skins it
+for o in bpy.data.objects:
+    if o.type == "MESH" and o is not body:
+        for m in o.modifiers:
+            if m.type == "ARMATURE": m.object = rig
+for o in [o for o in bpy.data.objects if o.type == "ARMATURE" and o is not rig]: o.hide_render = True
 for o in bpy.data.objects:
     if o.type == "MESH" and o is not body:
         for s in o.material_slots:
