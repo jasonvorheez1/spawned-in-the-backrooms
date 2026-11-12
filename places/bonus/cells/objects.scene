@@ -1,23 +1,4 @@
 # spawn-scene v2 yaml objects
-bonus-andrew/critter-head:
-  attachment: {skin: true}
-  id: bonus-andrew/critter-head
-  jiggle: {amount: 0.58, bones: [EarL, EarR], bounce: 0.72}
-  model: {id: /cdn/value.dd193f26364e93181ec105948b1afbad8649236be8917211e4ddedd3fe2e01b5.glb, materials: {beard: {color: "#1c1614", depthWrite: false, opacity: 0, outline: false, transparent: true, visible: false}, belly: {color: "#f6dec5", metalness: 0, outline: false, roughness: 0.88}, blush: {color: "#ff7b94", metalness: 0, opacity: 0.82, outline: false, roughness: 0.88, transparent: true}, eyeink: {color: "#16101c", metalness: 0, outline: false, roughness: 0.95}, eyewhite: {color: "#fffdf8", metalness: 0, outline: false, roughness: 0.35}, fur: {color: "#d89060", metalness: 0, roughness: 0.82}, inner: {color: "#f6d4be", metalness: 0, roughness: 0.9}, iris: {color: "#b5838d", metalness: 0.05, outline: false, roughness: 0.22}, mark: {color: "#946548", metalness: 0, outline: false, roughness: 0.82}, mouth: {color: "#44141e", outline: false, roughness: 0.82}, nose: {color: "#3a2a28", metalness: 0.05, outline: false, roughness: 0.28}, pupil: {color: "#000000", metalness: 0, outline: false, roughness: 1}, tip: {color: "#f6dec5", metalness: 0, roughness: 0.82}, tongue: {color: "#ff758c", outline: false, roughness: 0.45}}}
-  morph: {Blush: 0.38, EyeTall: 0.8, FT_Broad: 0.16, FT_Chubby: 0.22799999999999998, FT_Round: 0.515, FT_Snout: 0.487125, FT_Snub: 0.084375, Half: 0.124, Happy: 0.2, Open: 0.35, Smile: 1}
-  parent: bonus-andrew
-bonus-dawn/critter-hair:
-  attachment: {skin: true}
-  id: bonus-dawn/critter-hair
-  model: {id: /cdn/value.60faa48a7193d39f51f37ffffc9e83e2f6328abbcd714cd1bd4c3e78193ba135.glb, materials: {hair: {color: "#5a3a26", kind: scripted, params: {kind: hair}, script: scripts/mat-anime.js}, hairtie: {color: "#e85d75", metalness: 0.05, roughness: 0.45}}}
-  parent: bonus-dawn
-bonus-dawn/critter-head:
-  attachment: {skin: true}
-  id: bonus-dawn/critter-head
-  jiggle: {amount: 0.58, bones: [EarL, EarR], bounce: 0.72}
-  model: {id: /cdn/value.007adf4e2206273f9d69c6581a41c56831b0ec713b30b729c3db972ca430a529.glb, materials: {beard: {color: "#5a3a26", depthWrite: false, opacity: 0, outline: false, transparent: true, visible: false}, belly: {color: "#dee0dc", metalness: 0, outline: false, roughness: 0.88}, blush: {color: "#ff8a9a", metalness: 0, opacity: 0.82, outline: false, roughness: 0.88, transparent: true}, eyeink: {color: "#16101c", metalness: 0, outline: false, roughness: 0.95}, eyewhite: {color: "#fffdf8", metalness: 0, outline: false, roughness: 0.35}, fur: {color: "#9fd3ff", metalness: 0, roughness: 0.82}, inner: {color: "#ffb8c6", metalness: 0, roughness: 0.9}, iris: {color: "#d03a3a", metalness: 0.05, outline: false, roughness: 0.22}, mark: {color: "#9fd3ff", metalness: 0, outline: false, roughness: 0.82}, mouth: {color: "#44141e", outline: false, roughness: 0.82}, nose: {color: "#ff9fbd", metalness: 0.05, outline: false, roughness: 0.28}, pupil: {color: "#000000", metalness: 0, outline: false, roughness: 1}, tip: {color: "#5d616b", metalness: 0, roughness: 0.82}, tongue: {color: "#ff758c", outline: false, roughness: 0.45}}}
-  morph: {Blush: 0.38, FT_Chubby: 0.796, FT_Round: 0.615, FT_Snout: 0.09850000000000005, FT_Snub: 0.15399999999999994, Half: 0.10560000000000001, Happy: 0.2, Open: 0.35, Smile: 1}
-  parent: bonus-dawn
 bonus-rail-1/critter-beard:
   attachment: {bone: Head}
   id: bonus-rail-1/critter-beard
@@ -43,18 +24,6 @@ bonus-rail-2/critter-head:
   model: {id: /cdn/value.007adf4e2206273f9d69c6581a41c56831b0ec713b30b729c3db972ca430a529.glb, materials: {beard: {color: "#5a3a26", depthWrite: false, opacity: 0, outline: false, transparent: true, visible: false}, belly: {color: "#b69a88", metalness: 0, outline: false, roughness: 0.88}, blush: {color: "#ff6588", depthWrite: false, opacity: 0, outline: false, transparent: true, visible: false}, eyeink: {color: "#16101c", metalness: 0, outline: false, roughness: 0.95}, eyewhite: {color: "#fffdf8", metalness: 0, outline: false, roughness: 0.35}, fur: {color: "#7a4a30", metalness: 0, roughness: 0.82}, inner: {color: "#ffb8c6", metalness: 0, roughness: 0.9}, iris: {color: "#7209b7", metalness: 0.05, outline: false, roughness: 0.22}, mark: {color: "#b0927f", metalness: 0, outline: false, roughness: 0.82}, mouth: {color: "#44141e", outline: false, roughness: 0.82}, nose: {color: "#d4726a", metalness: 0.05, outline: false, roughness: 0.28}, pupil: {color: "#000000", metalness: 0, outline: false, roughness: 1}, tip: {color: "#b69a88", metalness: 0, roughness: 0.82}, tongue: {color: "#ff758c", outline: false, roughness: 0.45}}}
   morph: {EyeWide: 0.8, FT_Broad: 0.47250000000000003, FT_Chubby: 0.48000000000000004, FT_Heart: 0.3675, FT_Round: 0.7100000000000001, FT_Snout: 0.049, FT_Snub: 0.270625, FT_Square: 0.0735, Happy: 0.2, Open: 0.35, Smile: 1, Wide: 0.19360000000000002}
   parent: bonus-rail-2
-bonus-rico/critter-hair:
-  attachment: {skin: true}
-  id: bonus-rico/critter-hair
-  model: {id: /cdn/value.4cf37e597a1561f4b9d846713cbebf76147e625b993ebe14a3379a81fa4a623e.glb, materials: {hair: {color: "#e07a3a", kind: scripted, params: {kind: hair}, script: scripts/mat-anime.js}}}
-  parent: bonus-rico
-bonus-rico/critter-head:
-  attachment: {skin: true}
-  id: bonus-rico/critter-head
-  jiggle: {amount: 0.58, bones: [EarL, EarR], bounce: 0.72}
-  model: {id: /cdn/value.706aca164b8df44d64b9f3df704efbc5b06ba94c87bd7d78564f8c59f24ec4fe.glb, materials: {beard: {color: "#e07a3a", depthWrite: false, opacity: 0, outline: false, transparent: true, visible: false}, belly: {color: "#d9d3d5", metalness: 0, outline: false, roughness: 0.88}, blush: {color: "#ff7b94", depthWrite: false, opacity: 0, outline: false, transparent: true, visible: false}, eyeink: {color: "#16101c", metalness: 0, outline: false, roughness: 0.95}, eyewhite: {color: "#fffdf8", metalness: 0, outline: false, roughness: 0.35}, fur: {color: "#b9b3c2", metalness: 0, roughness: 0.82}, inner: {color: "#f8d2bd", metalness: 0, roughness: 0.9}, iris: {color: "#e0b838", metalness: 0.05, outline: false, roughness: 0.22}, mark: {color: "#b9b3c2", metalness: 0, outline: false, roughness: 0.82}, mouth: {color: "#44141e", outline: false, roughness: 0.82}, nose: {color: "#e0a090", metalness: 0.05, outline: false, roughness: 0.28}, pupil: {color: "#000000", metalness: 0, outline: false, roughness: 1}, tip: {color: "#7e777f", metalness: 0, roughness: 0.82}, tongue: {color: "#ff758c", outline: false, roughness: 0.45}}}
-  morph: {EyeTall: 0.8, FT_Chubby: 0.8245, FT_Heart: 0.3, FT_Narrow: 0.1685, FT_Round: 0.39499999999999996, FT_Snout: 0.4999, FT_Snub: 0.355, Happy: 0.2, Open: 0.35, Smile: 1}
-  parent: bonus-rico
 bonus-shop-1/critter-hair:
   attachment: {skin: true}
   id: bonus-shop-1/critter-hair
@@ -112,15 +81,3 @@ bonus-shop-5/critter-head:
   model: {id: /cdn/value.a841409295e6f8c8c442ebacd622de90149c8a1839cb7b828791f2d421f90d75.glb, materials: {beard: {color: "#1c1614", depthWrite: false, opacity: 0, outline: false, transparent: true, visible: false}, belly: {color: "#f1e9e1", metalness: 0, outline: false, roughness: 0.88}, blush: {color: "#ff6588", depthWrite: false, opacity: 0, outline: false, transparent: true, visible: false}, eyeink: {color: "#16101c", metalness: 0, outline: false, roughness: 0.95}, eyewhite: {color: "#fffdf8", metalness: 0, outline: false, roughness: 0.35}, fur: {color: "#f4efe9", metalness: 0, roughness: 0.82}, inner: {color: "#ffc2d1", metalness: 0, roughness: 0.9}, iris: {color: "#15121a", metalness: 0.05, outline: false, roughness: 0.22}, mark: {color: "#f1e9e1", metalness: 0, outline: false, roughness: 0.82}, mouth: {color: "#44141e", outline: false, roughness: 0.82}, nose: {color: "#4a3028", metalness: 0.05, outline: false, roughness: 0.28}, pupil: {color: "#000000", metalness: 0, outline: false, roughness: 1}, tip: {color: "#877c75", metalness: 0, roughness: 0.82}, tongue: {color: "#ff758c", outline: false, roughness: 0.45}}}
   morph: {FT_Chubby: 0.56, FT_Round: 0.5910000000000001, FT_Snout: 0.5692720000000001, FT_Snub: 0.45599999999999996, Happy: 0.3284, Open: 0.35, Smile: 1, Wide: 0.12935016}
   parent: bonus-shop-5
-bonus-tom/critter-hair:
-  attachment: {skin: true}
-  id: bonus-tom/critter-hair
-  model: {id: /cdn/value.c23151f8a4368dbad723eb2efba0a74bbf48a0e2ee30dcd44244ec0cbde89cb8.glb, materials: {hair: {color: "#8a5a34", kind: scripted, params: {kind: hair}, script: scripts/mat-anime.js}}}
-  parent: bonus-tom
-bonus-tom/critter-head:
-  attachment: {skin: true}
-  id: bonus-tom/critter-head
-  jiggle: {amount: 0.58, bones: [EarL, EarR], bounce: 0.72}
-  model: {id: /cdn/value.8d95778f529d1717a7fb711522cf38a1abac5b36f25a94f1db87807e39306863.glb, materials: {beard: {color: "#8a5a34", depthWrite: false, opacity: 0, outline: false, transparent: true, visible: false}, belly: {color: "#ccbdb0", metalness: 0, outline: false, roughness: 0.88}, blush: {color: "#ff7b94", depthWrite: false, opacity: 0, outline: false, transparent: true, visible: false}, eyeink: {color: "#16101c", metalness: 0, outline: false, roughness: 0.95}, eyewhite: {color: "#fffdf8", metalness: 0, outline: false, roughness: 0.35}, fur: {color: "#6a4630", metalness: 0, roughness: 0.82}, inner: {color: "#d8a682", metalness: 0, roughness: 0.9}, iris: {color: "#d4902a", metalness: 0.05, outline: false, roughness: 0.22}, mark: {color: "#4c3528", metalness: 0, outline: false, roughness: 0.82}, mouth: {color: "#44141e", outline: false, roughness: 0.82}, nose: {color: "#2a1c18", metalness: 0.05, outline: false, roughness: 0.28}, pupil: {color: "#000000", metalness: 0, outline: false, roughness: 1}, tip: {color: "#392a23", metalness: 0, roughness: 0.82}, tongue: {color: "#ff758c", outline: false, roughness: 0.45}}}
-  morph: {Angry: 0.03744, FT_Broad: 0.52, FT_Chubby: 0.4455, FT_Round: 0.7775, FT_Snout: 0.4544000000000001, FT_Square: 0.18, Half: 0.06240000000000001, Happy: 0.2, Open: 0.35, Smile: 1}
-  parent: bonus-tom
