@@ -345,6 +345,16 @@ export function tick(ctx) {
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   breakablesOnce(ctx);
   const s = ctx.place.state;
+  if (!s.salonPlacementV) {
+    const o = ctx.place.objects["l5-vanderholt"];
+    if (o) {
+      s.salonPlacementV = 1;
+      if (!o.state.dead && !o.state.follow && Math.hypot(o.feetPosition.x - 3, o.feetPosition.z + 20) < 0.8) {
+        o.feetPosition = { x: 5, y: 0.02, z: -22.2 };
+        o.state.home = { x: 5, z: -22.2 };
+      }
+    }
+  }
   if (s.builtV !== V) {
     s.builtV = V;
     lay(ctx);

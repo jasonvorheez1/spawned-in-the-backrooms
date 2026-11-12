@@ -1,5 +1,6 @@
 // The Bonus Room's referee: lays the four counter people once (Tom, Andrew, Dawn, Rico) at their bonus.yml spots.
 // They're staff, not traders: E at the counter in front of each opens its menu (scripts/bonus-counter.js, scripts/hub-ui.js).
+import { shopperFeet } from "../../scripts/mall-shopper.js"
 import B from "../../scripts/lib/data/bonus.yml"
 import { critterSpec, seatHumanHair, STYLE_V, wardChildren, seatWardrobe, setStyle, HUMAN } from "../../scripts/lib/critter-model.js"
 import { npcLook } from "../../scripts/lib/clothes.js"
@@ -24,10 +25,17 @@ const LOUNGERS = {
   "bonus-rail-2": { x: 7.2, y: 5.55, z: 2.2, yaw: 180, look: { species: "cat", sex: "f", topw: "longsleeve", top: "#ff9a8b", botw: "skirt", bottom: "#3d5a98", shoes: "sneakers" } },
 }
 function people(ctx) {
-  for (const [id, p] of Object.entries(SHOPPERS)) {
-    if (ctx.place.objects[id]) continue
-    ctx.spawn(id, { tags: ["bonus-shopper"], feetPosition: { x: 7.5, y: 0.05, z: 28 }, ...critterSpec(npcLook(id, p.look, "civilian", 5)),
-      behavior: "scripts/mall-shopper.js", anim: { idle: { clip: "cdn/clip-idle-loop.glb", loop: true, weight: 1 } }, state: {} })
+  const starts = [0, 2, 4, 7, 10]
+  for (const [i, [id, p]] of Object.entries(SHOPPERS).entries()) {
+    const at = starts[i]
+    const existing = ctx.place.objects[id]
+    if (existing) {
+      existing.state.at = at
+      existing.feetPosition = shopperFeet(at)
+      continue
+    }
+    ctx.spawn(id, { tags: ["bonus-shopper"], feetPosition: shopperFeet(at), ...critterSpec(npcLook(id, p.look, "civilian", 5)),
+      behavior: "scripts/mall-shopper.js", anim: { idle: { clip: "cdn/clip-idle-loop.glb", loop: true, weight: 1 } }, state: { at } })
   }
   for (const [id, p] of Object.entries(LOUNGERS)) {
     if (ctx.place.objects[id]) continue
@@ -37,7 +45,7 @@ function people(ctx) {
 }
 export function tick(ctx) {
   const s = ctx.place.state
-  if (s.peopleV !== 1) { people(ctx); s.peopleV = 1 }
+  if (s.peopleV !== 2) { people(ctx); s.peopleV = 2 }
   if (s.shineV !== 1) { layBonusExtra(ctx); s.shineV = 1 }
   setStyle(ctx.world.state.bodyStyle) // Nov 11: furry is the default; the human re-dress pass below only in human mode
   if (HUMAN && s.hairV !== STYLE_V) { // the mall's people keep their look on state.wear so a hair rebuild re-seats on them too

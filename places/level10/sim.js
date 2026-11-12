@@ -87,7 +87,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   // Outpost Shortwave Radio on Porch
   sp("l10-outpost-radio", {
     tags: ["usable"],
-    feetPosition: T(-28, -42.2, 0.48),
+    feetPosition: T(-28, -43.4, 0.45),
     rotation: { yaw: 180 },
     primitive: { kind: "scripted", script: "scripts/props10.js", params: { kind: "radio" } },
     behavior: "scripts/level10-use.js",
@@ -241,13 +241,13 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   // ==========================================
   const ROUNDS_COOPER = [
     { ...T(-21.8, -43.2, 0.45), dwell: 18, act: "cdn/clip-nod-yes.glb", look: T(-21, -44.5, 0.45) },
-    { ...T(-23.5, -40.5, 0.45), dwell: 16, act: null, look: T(-10, -40, 0) },
-    { ...T(-20.5, -41.2, 0.45), dwell: 14, act: "cdn/clip-pickup.glb", look: T(-20, -42, 0.45) },
+    { ...T(-23.5, -40.5, 0.5), dwell: 16, act: null, look: T(-10, -40, 0) },
+    { ...T(-20.5, -40.9, 0.5), dwell: 14, act: "cdn/clip-pickup.glb", look: T(-20, -42, 0.45) },
     { ...T(-13, -47.2, 0), dwell: 22, act: null, look: T(-13, -49, 0) },
   ];
   const ROUNDS_MAEVE = [
-    { ...T(-26, -42.4, 0.45), dwell: 20, act: "cdn/clip-pickup.glb", look: T(-26, -44, 0.45) },
-    { ...T(-28.2, -41, 0.45), dwell: 15, act: "cdn/clip-point.glb", look: T(-32, -40, 0.45) },
+    { ...T(-26, -43.2, 0.45), dwell: 20, act: "cdn/clip-pickup.glb", look: T(-26, -44, 0.45) },
+    { ...T(-28.2, -40.8, 0.5), dwell: 15, act: "cdn/clip-point.glb", look: T(-32, -40, 0.45) },
     { ...T(-25, -38, 0.1), dwell: 18, act: "cdn/clip-crouch-idle-loop.glb", look: T(-25, -35, 0) },
   ];
   const ROUNDS_HALE = [
@@ -264,13 +264,13 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   const ROUNDS_SULLY = [
     { ...T(-29, -43, 0.45), dwell: 25, act: null, look: T(-29, -44.5, 0.45) },
     { ...T(-31.5, -41.5, 0.2), dwell: 18, act: "cdn/clip-point.glb", look: T(-35, -41.5, 0.2) },
-    { ...T(-27.5, -40.5, 0.45), dwell: 16, act: null, look: T(-27.5, -35, 0.45) },
+    { ...T(-27.5, -40.5, 0.5), dwell: 16, act: null, look: T(-27.5, -35, 0.45) },
   ];
 
   // Homesteader Cooper (Head Agrarian Coordinator)
   sp("l10-meg-cooper", {
     tags: ["npc", "meg"],
-    feetPosition: T(-22, -42.4, 0.45),
+    feetPosition: T(-22, -43.2, 0.45),
     rotation: { yaw: 180 },
     physics: "character",
     ...critterSpec(npcLook("l10-cooper", { species: "dog", sex: "m", topw: "vest", top: "#8a5a3a", botw: "pants", bottom: "#3a3a30", shoes: "boots", hat: "beret" }, "guard", 12)),
@@ -281,7 +281,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
       voice: "reyes",
       faction: "meg",
       factionName: "M.E.G. Outpost Bountiful",
-      home: { x: -22, z: -42.4 },
+      home: { x: -22, z: -43.2 },
       rounds: ROUNDS_COOPER,
       ri: 0,
       line: "Welcome to Outpost Bountiful, wanderer! Fresh bread is in the oven and the wheat is ripe.",
@@ -292,7 +292,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   // Dr. Maeve (M.E.G. Research Wing / Agronomist)
   sp("l10-meg-maeve", {
     tags: ["npc", "meg"],
-    feetPosition: T(-26, -42.4, 0.45),
+    feetPosition: T(-26, -43.2, 0.45),
     rotation: { yaw: 180 },
     physics: "character",
     ...critterSpec(npcLook("l10-maeve", { species: "cat", sex: "f", topw: "jacket", top: "#4a6a5a", botw: "pants", bottom: "#2c3e50", shoes: "boots" }, "medic", 11)),
@@ -303,7 +303,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
       voice: "elena",
       faction: "meg",
       factionName: "M.E.G. Outpost Bountiful",
-      home: { x: -26, z: -42.4 },
+      home: { x: -26, z: -43.2 },
       rounds: ROUNDS_MAEVE,
       ri: 0,
       line: "Keep your compass steady in the fields. The scarecrows aren't hostile, but they certainly aren't ordinary.",
@@ -456,6 +456,22 @@ export function tick(ctx) {
   if ((s.builtV ?? 0) < V) {
     s.builtV = V;
     lay(ctx);
+  }
+  if (ctx.place.players?.length && !s.porchPlacementV) {
+    const radio = ctx.place.objects["l10-outpost-radio"];
+    if (radio) {
+      const legacy = Math.abs(radio.feetPosition.z + 42.2) < 0.4;
+      const deck = radio.feetPosition.y - (legacy ? 0.03 : 0);
+      if (legacy) radio.feetPosition = { x: -28, y: deck, z: -43.4 };
+      for (const id of ["l10-meg-cooper", "l10-meg-maeve"]) {
+        const o = ctx.place.objects[id];
+        if (!o || o.state.dead || o.state.follow) continue;
+        if (Math.abs(o.feetPosition.z + 42.4) < 0.5) o.feetPosition = { x: o.state.home?.x ?? o.feetPosition.x, y: deck, z: -43.2 };
+        if (o.state.home) o.state.home = { ...o.state.home, z: -43.2 };
+        if (o.state.rounds?.[0]?.z === -42.4) o.state.rounds = [{ ...o.state.rounds[0], z: -43.2 }, ...o.state.rounds.slice(1)];
+      }
+      s.porchPlacementV = 1;
+    }
   }
   if (ctx.place.players?.length) tickChatter(ctx, CHATTER.level10 ?? [], { "l10-meg-cooper": "reyes", "l10-meg-maeve": "elena", "l10-meg-hale": "hollis", "l10-meg-wren": "mags", "l10-meg-sully": "reyes" }); // the outpost talks among itself
 }

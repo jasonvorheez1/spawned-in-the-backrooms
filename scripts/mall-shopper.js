@@ -10,10 +10,15 @@ const LINKS = { 0: [1, 12], 1: [0, 2], 2: [1, 3], 3: [2, 4, 14], 4: [3, 5, 16], 
   12: [0, 13], 13: [12, 6], 14: [3, 15], 15: [14, 9], 16: [4, 17], 17: [16, 10] }
 const SPEED = 1.15 // m/s, her pick: an unhurried mall stroll
 
+export function shopperFeet(at) {
+  const [x, z] = PTS[at]
+  return { x, y: 0.05, z }
+}
+
 export function onSpawn(ctx) {
   const st = ctx.self.state
   if (st.at == null) st.at = Math.floor(ctx.random() * PTS.length)
-  const p = PTS[st.at]; ctx.self.feetPosition = { x: p[0], y: 0.05, z: p[1] }
+  ctx.self.feetPosition = shopperFeet(st.at)
   ctx.self.session.pause = ctx.now() + ctx.random() * 4000
 }
 
