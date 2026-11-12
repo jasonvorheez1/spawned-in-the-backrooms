@@ -49,11 +49,11 @@ people:
 # hall B dressing and each person's one small prop. size = [w, h, d] the model is fitted into; wall things have no collider.
 props:
   desk:  { model: "/cdn/value.5b6a81b0b5c3ff351fed398c495805ec293eb603941e494dc3249cabbc0f5528.glb", forward: "+x", at: [0.45, 0, 10.86], yaw: 0, size: [1.7, 1.05, 0.62], solid: true }
-  board: { model: null, at: [2.95, 1.05, 11.16], yaw: 0, size: [1.3, 1.0, 0.07] }
-  keys:  { model: null, at: [0.45, 1.3, 11.15], yaw: 0, size: [0.9, 0.5, 0.09] }
-  mat:   { model: null, at: [0, 0, 9.35], yaw: 0, size: [0.95, 0.03, 0.6] }
+  board: { model: "/cdn/value.11af8b5100a8af83986249de7614d6a4d22735f6d3693801f2b24176ddca0c85.glb", at: [2.95, 1.05, 11.16], yaw: 0, size: [1.3, 1.0, 0.07] }
+  keys:  { model: "/cdn/value.4488f8674afb84ccf38e37a31dadfdade5a0a1e471d42e0ed0acaebde361c0a4.glb", at: [0.45, 1.3, 11.15], yaw: 0, size: [0.9, 0.5, 0.09] }
+  mat:   { model: "/cdn/value.a02ecb7fba699146a6ac7444a7edae7172bf1b811493e66e13d58d39e06575ae.glb", at: [0, 0, 9.35], yaw: 0, size: [0.95, 0.03, 0.6] }
   crate: { model: "/cdn/value.96f48b56e826ebb5fd584d269b08f2272040ab5d50589b2e04101b00f31d82a2.glb", at: [-0.82, 0, 10.86], yaw: 8, size: [0.52, 0.42, 0.4], solid: true }
-  case:  { model: null, at: [7.7, 0, 13.9], yaw: 25, size: [0.75, 0.45, 0.5], solid: true }
-  chess: { model: null, at: [-14.0, 0, 3.7], yaw: 0, size: [0.62, 0.78, 0.62], solid: true }
+  case:  { model: "/cdn/value.e2bf0d24ea3120accff304851dd23e5ff5d49d62709242a1e4d056bc19d9461d.glb", at: [7.7, 0, 13.9], yaw: 25, size: [0.75, 0.45, 0.5], solid: true }
+  chess: { model: "/cdn/value.94ac82b1865e4e8285c65c100d27ab60203c1964149d9b14aea021b1056e2e6b.glb", at: [-14.0, 0, 3.7], yaw: 0, size: [0.62, 0.78, 0.62], solid: true }
 keepsake: [-19.1, 0.92, 5.75]
 pouf: [15.5, 5.6]
