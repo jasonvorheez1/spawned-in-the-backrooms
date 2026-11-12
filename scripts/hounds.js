@@ -146,7 +146,7 @@ export function update(ctx, dt) {
     else if (L3 && m.lurkAt) goal = m.lurkAt;
     else if (m.lastSeen && now - (m.lastSeen.at ?? now) < 5000 && Math.hypot(m.lastSeen.x - pos.x, m.lastSeen.z - pos.z) > 1) goal = m.lastSeen; // sniff where it last saw them
     else { m.lastSeen = null; if (!m.roam || now > m.until) { const a = ctx.random() * 6.283; m.roam = { x: pos.x + Math.cos(a) * 14, z: pos.z + Math.sin(a) * 14 }; m.until = now + 4000; } goal = m.roam; }
-    const directSight = prey && hasClearSight(ctx, pos, prey.feetPosition, h.id, prey.id);
+    const directSight = prey && now >= (m.pathUntil ?? 0) && Math.abs(prey.feetPosition.y - pos.y) < 1.5 && hasClearSight(ctx, pos, prey.feetPosition, h.id, prey.id); // a prey on another floor, or a straight line that got it stuck: it walks the maze instead
     let way = null;
     if (!directSight) {
       if (L6) way = stepToward6(pos.x, pos.z, goal.x, goal.z, 30);
@@ -168,7 +168,7 @@ export function update(ctx, dt) {
     m.sk ??= { x: pos.x, z: pos.z, at: now };
     if (now - m.sk.at > 800) {
       const moved = Math.hypot(pos.x - m.sk.x, pos.z - m.sk.z);
-      if (sp > 1 && moved < 0.25) { m.side = { s: ctx.random() < 0.5 ? -1 : 1, until: now + 500 }; m.roam = null; }
+      if (sp > 1 && moved < 0.25) { m.side = { s: ctx.random() < 0.5 ? -1 : 1, until: now + 500 }; m.roam = null; if (prey) m.pathUntil = now + 2500; }
       if (wedged(m, moved, sp > 0.5) && Math.hypot(dx, dz) > 0.01) { h.feetPosition = { x: pos.x - (dx / d) * 0.7, y: pos.y + 0.05, z: pos.z - (dz / d) * 0.7 }; h.velocity = { x: 0, y: 0, z: 0 }; m.roam = null } // stuck against a wall for seconds: backed off it
       m.sk = { x: pos.x, z: pos.z, at: now };
     }
@@ -195,7 +195,8 @@ export function update(ctx, dt) {
       continue;
     }
     const mauling = now < (m.maulUntil ?? 0);
-    anim(h, m, mauling ? "maul" : sp <= 0.1 ? "idle" : sp > 3.5 ? "sprint" : "prowl", true);
+    const gait = d > near ? sp : 0; // the legs follow the speed it is actually given, never a run on the spot
+    anim(h, m, mauling ? "maul" : gait <= 0.1 ? "idle" : gait > 3.5 ? "sprint" : "prowl", true);
     if (mauling) h.velocity = { x: 0, y: h.velocity.y, z: 0 };
     if (prey && !m.hunting) { m.hunting = true; heard(ctx, { clip: SND("hound-snarl-growl"), position: pos, volume: 0.9, maxDistance: 35 }); }
     if (!prey && m.hunting) { m.hunting = false; m.howled = false; }
