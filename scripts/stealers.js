@@ -104,8 +104,9 @@ const POOF = `fx
 pop gore burst=24 on=box(.4,1.2,.4).c(.7) life=.6..1.2 v=sdir()*(.6..1.6)+up(.6) size=.04..0.09 acc=grav()+drag(.8) col=oklch(.88 .04 25) a=.45 floor=stick r=sprite(soft-disc,alpha)
 pop mist burst=12 on=box(.4,1,.4).c(.7) life=.8..1.4 v=sdir()*(.3..0.8) size=.3..0.5 acc=drag(1.4)+buoy(.2) col=<.8,.75,.72> a=0>.25:.5>0 sz=$size*(.6>1.8) r=sprite(smoke-puff,alpha)`;
 
-const FUR = (c) => `fx
-pop fur burst=30..40 on=box(.25,.6,.12).c(1.1) life=.6..1.1 v=sdir()*(1.2..2.6)+up(1.2) size=.05..0.11 spin=-8..8 acc=grav()*.8+drag(1.2) col=${c} a=1 sz=$size rot=$age*$spin floor=stick r=sprite(soft-disc,alpha)`;
+const fxCol = (c) => { const m = /^#?([0-9a-f]{6})$/i.exec(String(c).trim()); if (!m) return String(c).replace(/\s+/g, " "); const n = parseInt(m[1], 16); return `<${(((n >> 16) & 255) / 255).toFixed(2)},${(((n >> 8) & 255) / 255).toFixed(2)},${((n & 255) / 255).toFixed(2)}>`; }; // the fx grammar reads <r,g,b> or oklch(), never #hex
+const FUR = (c0) => { const c = fxCol(c0); return `fx
+pop fur burst=30..40 on=box(.25,.6,.12).c(1.1) life=.6..1.1 v=sdir()*(1.2..2.6)+up(1.2) size=.05..0.11 spin=-8..8 acc=grav()*.8+drag(1.2) col=${c} a=1 sz=$size rot=$age*$spin floor=stick r=sprite(soft-disc,alpha)`; };
 
 function play(e, m, ch, clip, opt = {}) {
   const k = clip ? clip + (opt.tag ?? "") : null;
