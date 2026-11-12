@@ -596,14 +596,24 @@ bc-gumball-rack:
   rotation: {yaw: -90}
   tags: [bonus-arcade]
 bc-juicebar:
+  behavior: [scripts/smoothie.js]
   castShadow: true
-  feetPosition: {x: 8.2, y: 0, z: -2}
+  feetPosition: {x: 6.6, y: 0, z: 12}
   id: bc-juicebar
   layout: {box: {max: {x: 0.95, y: 2.5, z: 0.55}, min: {x: -0.95, y: 0, z: -0.55}}}
   model: {forward: "+x", id: /cdn/value.8d0a51b41db0eacfde90f6a8e04db1d153536613ef6d53c33387d502f9792205.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: 90}
-  tags: [bonus-court]
+  state: {info: smoothies, name: Squeeze Play, verb: Order}
+  tags: [bonus-court, usable]
+bc-juicebar/sign:
+  feetPosition: {x: 0, y: 2.3, z: 0}
+  id: bc-juicebar/sign
+  material: {color: oklch(0.95 0.03 350)}
+  parent: bc-juicebar
+  primitive: {depth: 0.06, height: 0.42, kind: box, width: 1.5}
+  rotation: {yaw: -90}
+  ui: "<div face=\"front\" width=\"1.5m\" style=\"font-size:150px;color:#e0457b;font-weight:800;text-align:center;line-height:1\">SMOOTHIES <span style=\"font-size:90px;color:#2a1b2a\">$4</span></div>"
 bc-kiddieride:
   castShadow: true
   feetPosition: {x: -8.3, y: 0, z: 9.6}
