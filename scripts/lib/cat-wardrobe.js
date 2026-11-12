@@ -47,7 +47,7 @@ export function skinParams(sex, look) {
     if (W.models[l.topw]?.[sex]) {
       o.tSl = B.arm[2] - 0.024
       o.tHi += sex === 'm' ? 0.018 : 0.012
-      o.tuckT = 0.023
+      o.tuckT = 0.04   // Nov 12 Shelly "see through thing on the sleeves": the arm fur poked through the modelled sleeve mid-stride
       o.tShoulder = 1
       if (l.topw === 'hoodie') o.tLo = sex === 'm' ? 0.462 : 0.428
     }
