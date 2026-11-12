@@ -42,19 +42,19 @@ tl-cats-sign:
 tl-cats-spot-0:
   feetPosition: {x: -17.8, y: 3.4, z: 4.5}
   id: tl-cats-spot-0
-  light: {aim: {x: -19, y: 0.9, z: 4.5}, angle: 38, color: "#fff3dc", distance: 6, intensity: 6, kind: spot, penumbra: 0.6}
+  light: {aim: {x: -19, y: 0.9, z: 4.5}, angle: 38, color: "#fff3dc", distance: 6, intensity: 2, kind: spot, penumbra: 0.6}
 tl-cats-spot-1:
   feetPosition: {x: -17.8, y: 3.4, z: 7}
   id: tl-cats-spot-1
-  light: {aim: {x: -19, y: 0.9, z: 7}, angle: 38, color: "#fff3dc", distance: 6, intensity: 6, kind: spot, penumbra: 0.6}
+  light: {aim: {x: -19, y: 0.9, z: 7}, angle: 38, color: "#fff3dc", distance: 6, intensity: 2, kind: spot, penumbra: 0.6}
 tl-cats-spot-2:
   feetPosition: {x: -17.8, y: 3.4, z: 9.5}
   id: tl-cats-spot-2
-  light: {aim: {x: -19, y: 0.9, z: 9.5}, angle: 38, color: "#fff3dc", distance: 6, intensity: 6, kind: spot, penumbra: 0.6}
+  light: {aim: {x: -19, y: 0.9, z: 9.5}, angle: 38, color: "#fff3dc", distance: 6, intensity: 2, kind: spot, penumbra: 0.6}
 tl-cats-spot-3:
   feetPosition: {x: -17.8, y: 3.4, z: 12}
   id: tl-cats-spot-3
-  light: {aim: {x: -19, y: 0.9, z: 12}, angle: 38, color: "#fff3dc", distance: 6, intensity: 6, kind: spot, penumbra: 0.6}
+  light: {aim: {x: -19, y: 0.9, z: 12}, angle: 38, color: "#fff3dc", distance: 6, intensity: 2, kind: spot, penumbra: 0.6}
 tl-cats-stripe:
   feetPosition: {x: -15.45, y: 0.041, z: 8.25}
   id: tl-cats-stripe
