@@ -374,3 +374,50 @@ l31-food-cust2:
     - q: "Why does everyone clear their trays?"
       a: "Somebody didn't once. The counter wouldn't look at him after."
   gest: { wave: "Evening.", gift: "Thanks, pal.", dance: "My knees say no.", nodance: "My knees say no.", insult: "Alright, alright." }
+
+# Level 31 arcade customers (Facelings, docile). Keys are their object ids.
+"l31-arcade-face1":
+  hi: ["Hang on. Third floor. Okay, hi.", "Oh. Hi. Is it your turn? It isn't a line, I'm just here."]
+  back: ["Still on Marty.", "You again. Good."]
+  bye: ["See you round the rink.", "Okay. Bye now."]
+  ask:
+    - q: "How do I play these?"
+      a: ["Green card. The metal box by the way in, big blue button. It's free. Everything's free, it just wants the card."]
+    - q: "Any good?"
+      a: ["I fix the windows, the big guy breaks them, I fix them again. I've been on this building a while. I like it."]
+  barks:
+    idle: ["Come on, Marty.", "Left. Left. Up.", "Nearly."]
+    hi: ["Hi.", "Hey there."]
+    hit: ["Hey! Ow."]
+    flee: ["I'm going, I'm going."]
+  gest: { wave: "Hi! One sec.", gift: "For me? Thank you.", dance: "After this screen.", nodance: "I'm mid-game.", insult: "That's not very nice." }
+"l31-arcade-face2":
+  hi: ["Don't bump the table.", "Hey. Watch this ball."]
+  back: ["Same ball. I think.", "Back for a turn?"]
+  bye: ["Take it easy.", "Mind the cord."]
+  ask:
+    - q: "What's your high score?"
+      a: ["Board says SAL. It always says SAL. Never met a Sal."]
+    - q: "Is anyone working here?"
+      a: ["Somebody restocks the cards. I never see them do it."]
+  barks:
+    idle: ["Stay up, stay up.", "Not the middle.", "Ha."]
+    hi: ["Hey.", "Yep."]
+    hit: ["Ow. Tilt."]
+    flee: ["Okay, okay!"]
+  gest: { wave: "Hands are busy. Hi.", gift: "Oh, nice. Thanks.", dance: "Can't. Flippers.", nodance: "Nope.", insult: "Sure, pal." }
+"l31-arcade-face3":
+  hi: ["Lane two's open if you want it.", "Hi. You roll?"]
+  back: ["Lane two. Still open.", "Hey again."]
+  bye: ["Good luck out there.", "Roll well."]
+  ask:
+    - q: "Where do the tickets go?"
+      a: ["Nowhere. It counts them up and that's all. I'm at four hundred something."]
+    - q: "How long have you been here?"
+      a: ["Since the song started. It's a long song."]
+  barks:
+    idle: ["Forty.", "Come on, hundred.", "Short. Too short."]
+    hi: ["Hi.", "Hello."]
+    hit: ["Ow!"]
+    flee: ["Leaving!"]
+  gest: { wave: "Hi there.", gift: "Thanks. Really.", dance: "Sure, why not.", nodance: "Not right now.", insult: "Okay." }

@@ -33,6 +33,15 @@ doors:
   l8-to-l21: level21
   lv10-backroad: level10
 models:
+  level31:
+    - "/cdn/value.f759116da56aba87735b8064a9fe7b00f9a373dadf68a856453d2f01173eca10.glb"
+    - "/cdn/value.f025413cd07f33ee4e744a88cdbe78e81a6057ba2b9fa1e5b77a9543ea556977.glb"
+    - "/cdn/value.38ea1184b8c82b3771c13c050fd5e3c5e090a504e7b95c21a22663994d233826.glb"
+    - "/cdn/value.f0f596ab803f45c33fff72bc7af943d49554cb2202b56fe32cbf0221dc9b7fbf.glb"
+    - "/cdn/value.6d01fa4197dd7ab1344f4b4c529f35fe1febcd398b4556458da3c1f82ae113ba.glb"
+    - "/cdn/value.7a94f356fc67ae940eb2187fa0f88b7b0b581b47728d0216d83c06d661d7cdfd.glb"
+    - "/cdn/value.55832259098e2ee269ab1da4d702bd920b4274e1514d2a1206e0829727f9c39e.glb"
+    - "/cdn/value.6da59a17c8bac39b2f40451296a8523c7202ea4113356d1f9c098e00be025180.glb"
   bonus:
     - "/cdn/value.c82caf0dcd0171caebe92d29596a7911c12d8c8186a40154c35645af5393f007.glb"
     - "/cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb"
