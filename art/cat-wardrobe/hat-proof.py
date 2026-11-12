@@ -5,7 +5,7 @@
 import bpy, sys, os
 from mathutils import Vector
 OUT = "/workspace/hats/out"; P = "/workspace/hats/proof"; os.makedirs(P, exist_ok=True)
-COVERS = ("divehelm", "chitinhelm", "beanie", "souwester")
+COVERS = ("divehelm", "chitinhelm", "beanie", "souwester", "pilgrimhat")
 args = sys.argv[sys.argv.index("--")+1:]
 sexes = ("f", "m")
 if "--sex" in args: i = args.index("--sex"); sexes = (args[i+1],); del args[i:i+2]

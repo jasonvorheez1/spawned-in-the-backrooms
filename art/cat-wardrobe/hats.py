@@ -24,7 +24,7 @@ R = {
   "bow":        dict(fit="perch", w=0.45, seat=0.3, sink=0.015, tilt=-18, dy=0.04, orient=dict(yaw=-90)),
   "flower":     dict(fit="perch", w=0.30, seat=0.3, sink=0.012, tilt=-8, dx=0.14, roll=32, orient=dict(yaw=-90)),
   "headphones": dict(fit="band", ease=1.0, orient=dict(yaw=90)),
-  "pilgrimhat": dict(fit="perch", w=1.35, seat=0.6, sink=0.03, tilt=-8),   # Nov 12 Brother Wat: felt pilgrim hat, scallop shell on the front; wrap sank the brim over the eyes
+  "pilgrimhat": dict(fit="perch", w=1.75, seat=0.85, sink=0.07, tilt=-8),   # Nov 12 Brother Wat: felt pilgrim hat, scallop shell on the front; wrap sank the brim over the eyes
 }
 CLEARS = dict(wrap=0.014, perch=0.004, band=0.006, enclose=0.0)   # wrap leaves room for the pressed-flat hair
 SHELL = 0.04    # only verts this deep inside the skull are slid out; deeper ones are hidden in the head and stay put
