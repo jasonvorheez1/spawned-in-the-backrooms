@@ -6,7 +6,7 @@
 import { APTS } from "./level13.js";
 import L13 from "./data/level13.yml";
 import { rollFridge } from "../l13-fridge.js";
-const V = 1, M = L13.models, RANGE = { max: 42 };
+const V = 2, M = L13.models, RANGE = { max: 42 };
 const svg = (vb, w, body) => `<svg viewBox='${vb}' width='${w}m'>${body}</svg>`;
 const STAIN = svg("0 0 100 100", 1.9, `<defs><radialGradient id='g'><stop offset='0' stop-color='#2a2012' stop-opacity='.55'/><stop offset='.7' stop-color='#3a2c18' stop-opacity='.4'/><stop offset='1' stop-color='#3a2c18' stop-opacity='0'/></radialGradient></defs><ellipse cx='46' cy='52' rx='40' ry='31' fill='url(#g)'/><ellipse cx='66' cy='38' rx='22' ry='17' fill='url(#g)'/><ellipse cx='30' cy='68' rx='15' ry='11' fill='url(#g)'/>`);
 const DUST = svg("0 0 100 100", 3.4, `<defs><radialGradient id='d'><stop offset='0' stop-color='#d8d0bc' stop-opacity='.22'/><stop offset='1' stop-color='#d8d0bc' stop-opacity='0'/></radialGradient></defs><ellipse cx='30' cy='34' rx='26' ry='20' fill='url(#d)'/><ellipse cx='68' cy='58' rx='30' ry='24' fill='url(#d)'/><ellipse cx='40' cy='78' rx='22' ry='14' fill='url(#d)'/>`);
@@ -15,6 +15,7 @@ const WATER = svg("0 0 100 100", 1.7, `<defs><radialGradient id='w'><stop offset
 const MAIL = svg("0 0 120 90", 0.85, `<g stroke='#8c8674' stroke-width='.6'><g transform='rotate(-14 40 40)'><rect x='14' y='26' width='46' height='28' fill='#e9e3cf'/><path d='M14 26 L37 42 L60 26' fill='none'/></g><g transform='rotate(22 80 40)'><rect x='56' y='22' width='46' height='28' fill='#d9d0b4'/><rect x='62' y='34' width='18' height='8' fill='#f4f1e6'/></g><g transform='rotate(-4 60 62)'><rect x='36' y='46' width='50' height='30' fill='#efe9d8'/><path d='M36 46 L61 63 L86 46' fill='none'/><rect x='74' y='49' width='8' height='9' fill='#a85a4a'/></g><g transform='rotate(38 30 66)'><rect x='8' y='54' width='44' height='26' fill='#cfd6d8'/></g><g transform='rotate(-30 92 68)'><rect x='70' y='56' width='44' height='26' fill='#e4dcc0'/><rect x='76' y='66' width='20' height='7' fill='#f4f1e6'/></g></g>`);
 const DRAWING = svg("0 0 80 100", 0.21, `<rect x='2' y='2' width='76' height='96' fill='#f3efe2' stroke='#b9b29c' stroke-width='.8'/><rect x='30' y='0' width='20' height='7' fill='#d9d2b0' fill-opacity='.85'/><g fill='none' stroke-linecap='round' stroke-width='2.4'><circle cx='62' cy='22' r='8' stroke='#e2a52a'/><path d='M62 8 V4 M74 22 H78 M52 12 L49 9 M72 12 L75 9' stroke='#e2a52a'/><path d='M14 62 H44 V88 H14 Z M12 62 L29 46 L46 62' stroke='#b0503c'/><path d='M26 88 V74 H33 V88' stroke='#6b4a2e'/><path d='M4 90 H76' stroke='#5a8a46'/><circle cx='56' cy='62' r='4' stroke='#3a4f8a'/><path d='M56 66 V80 M50 71 H62 M56 80 L51 89 M56 80 L61 89' stroke='#3a4f8a'/><circle cx='68' cy='68' r='3' stroke='#8a3a6a'/><path d='M68 71 V81 M64 75 H72 M68 81 L65 88 M68 81 L71 88' stroke='#8a3a6a'/></g>`);
 
+const RUG = svg("0 0 240 160", 2.4, `<ellipse cx='120' cy='80' rx='116' ry='76' fill='#6f6a4c'/><g fill='none' stroke-width='5'><ellipse cx='120' cy='80' rx='108' ry='68' stroke='#8a8361'/><ellipse cx='120' cy='80' rx='94' ry='56' stroke='#5c5a44'/><ellipse cx='120' cy='80' rx='80' ry='45' stroke='#a39a76'/><ellipse cx='120' cy='80' rx='66' ry='34' stroke='#6a6850'/><ellipse cx='120' cy='80' rx='52' ry='24' stroke='#8a8361'/><ellipse cx='120' cy='80' rx='38' ry='15' stroke='#5c5a44'/></g><ellipse cx='120' cy='80' rx='26' ry='8' fill='#a39a76'/>`);
 const yawOf = (fx, fz) => (Math.atan2(-fx, -fz) * 180) / Math.PI;
 function layFlat(ctx, a) {
   const K = a.kind, pre = `l13f-${a.id}-`, story = L13.stories?.[a.id];
@@ -54,7 +55,7 @@ function layFlat(ctx, a) {
       put("can1", "can", 7.5, 2.3, 1, 0, { y: top.counter, solid: false }); put("can2", "can", tu + 0.3, tv - 0.15, 0, 1, { y: top.table, solid: false });
     } else {
       put("sofa", "sofa", 3.95, 2.6, -1, 0);
-      put("rug", "rug", 2.3, 2.6, 1, 0, { solid: false, y: 0.005 });
+      flat("rug", RUG, 2.3, 2.6, 90); // a braided oval in olive and tan: nothing red on any carpet here
       put("plant", "plant", 0.5, 4.45, 1, 0);
       put("pic", "photos", 5.0, 0.15, 0, 1, { y: 1.3, solid: false });
     }

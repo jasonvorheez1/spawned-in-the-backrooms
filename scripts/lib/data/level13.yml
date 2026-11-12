@@ -71,7 +71,6 @@ models:
   tub:     { id: "/cdn/value.41d0f172f22f0963c0cdb6b958c4a3e95e6b3aa065b3c91c096683efc4c87a4b.glb", size: [0.9, 1.08, 1.6] }
   toilet:  { id: "/cdn/value.28601a408e0ea5cc0d4ad5e63b60d0044db81cc693682addc38ae0e75b28cea5.glb", forward: "+x", size: [0.42, 0.75, 0.74] }
   lamp:    { id: "/cdn/value.0871d1626b929961d73cb28c05f82070ad822c5cc2e6b8deec5046248fb4086d.glb", size: [0.42, 1.0, 0.72] }
-  rug:     { id: "/cdn/value.455dde0ca22a985f649dee005f80bad45966342485d248a0fa95d86fb0a2d2c3.glb", size: [2.4, 0.03, 1.52] }
   plant:   { id: "/cdn/value.5c55541c98397f0fd38ea7e850e3e15e4fd78fd4a5951439cde327b41abe9e09.glb", size: [0.6, 0.85, 0.6] }
   photos:  { id: "/cdn/value.572ad0fe124cdd180aec4d28d259719e1057e02d8cc6c54b996c7b22ada303e7.glb", forward: "+x", size: [0.55, 0.6, 0.16] }
   can:     { id: "/cdn/value.8dbfe9caef376c3d74354e97aa627d7a842fdc981ef4f60ddfd2c24d34aea0fd.glb", size: [0.07, 0.125, 0.07] }
