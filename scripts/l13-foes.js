@@ -160,9 +160,11 @@ function tenant(ctx, mem, o, m, a, players, now, dt) {
 
 // ---------- the Hall Lurker ----------
 const lamp = (ctx, a, on) => { const l = ctx.getObject(`l13-lamp-${a.id}`); if (l) l.light = { kind: "point", color: "oklch(0.9 0.06 80)", intensity: on ? LK.lampOn : 0, distance: 8 }; };
+const camYaw = (p) => { const r = p.camera?.rotation; if (!r) return 0; if (typeof r.yaw === "number") return r.yaw; // camera.rotation reads as a quaternion
+  if (typeof r.w === "number") return (Math.atan2(2 * (r.w * r.y + r.x * r.z), 1 - 2 * (r.x * r.x + r.y * r.y)) * 180) / Math.PI; return 0; };
 const looking = (p, to) => { // is the player's camera within lookDeg of this point?
   const f = p.feetPosition, dx = to.x - f.x, dz = to.z - f.z, d = Math.hypot(dx, dz);
-  const yaw = (p.camera?.rotation?.yaw ?? 0) / 57.2958;
+  const yaw = camYaw(p) / 57.2958;
   return d < 0.2 || (-Math.sin(yaw) * dx - Math.cos(yaw) * dz) / d > Math.cos(LK.lookDeg / 57.2958);
 };
 function along(pts, u) { // a point u (0..1) of the way along a polyline
@@ -215,7 +217,7 @@ function lurker(ctx, mem, o, m, a, players, now, dt) {
       if (flat(p.feetPosition, door) > LK.trigger + 1.2 || !inHall(p.feetPosition.x, p.feetPosition.z)) { m.coolUntil = now + 1500; lamp(ctx, a, true); return; }
       const f = p.feetPosition, bx = a.x0 + 2.3;
       m.grab = { id: p.id, at: now, path: [{ x: f.x, z: f.z }, { x: door.x, z: a.zf + a.s * 0.2 }, { x: bx, z: a.zm - a.s * 0.5 }, { x: bx, z: a.zm + a.s * 0.6 }, { x: a.bed.cx, z: a.bed.cz }, { x: a.bed.cx, z: a.bed.cz + a.s * 0.9 }] };
-      p.state.freeze = { until: now + Math.min(3000, LK.lockMaxMs), yaw: p.camera?.rotation?.yaw ?? 0, pitch: 0, by: "l13e" }; // the same self-expiring hold Phoebe uses: nothing here has to run for it to end
+      p.state.freeze = { until: now + Math.min(3000, LK.lockMaxMs), yaw: camYaw(p), pitch: 0, by: "l13e" }; // the same self-expiring hold Phoebe uses: nothing here has to run for it to end
       ctx.emit("screenShake", { intensity: 0.7, duration: 0.5 }, { audience: { player: p.id } });
       say(ctx, S.drag, f, 1, 26);
     }
