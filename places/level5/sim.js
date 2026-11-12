@@ -374,15 +374,14 @@ function keepOut(ctx) {
     else o.feetPosition = out;
   }
 }
-export function tick(ctx) { const T0 = globalThis.performance?.now?.() ?? 0, M = {}; const tm = (k, f) => { const a = globalThis.performance?.now?.() ?? 0; f(); M[k] = ((globalThis.performance?.now?.() ?? 0) - a).toFixed(1); }; try { tick0(ctx, tm); } finally { const all = (globalThis.performance?.now?.() ?? 0) - T0; if (all > 15) ctx.log('[l5perf]', all.toFixed(1), JSON.stringify(M)); } }
-function tick0(ctx, tm) {
-  if (ctx.place.players?.length) tm('sweepProps', () => sweepProps(ctx)); // props become breakable (scripts/lib/breakables.js)
-  tm('restyleSigns', () => restyleSigns(ctx, "level5")); // every sign dressed as its own board (scripts/lib/sign-style.js)
-  tm('dressThresholds', () => dressThresholds(ctx)); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
+export function tick(ctx) {
+  if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
+  restyleSigns(ctx, "level5"); // every sign dressed as its own board (scripts/lib/sign-style.js)
+  dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.session.l5Tuned) { retuneL5(ctx); ctx.session.l5Tuned = true; }
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
-  tm('homesBack', () => homesBack(ctx));
-  tm('breakablesOnce', () => breakablesOnce(ctx));
+  homesBack(ctx);
+  breakablesOnce(ctx);
   const s = ctx.place.state;
   if (s.homeMarkV !== 1) { s.homeMarkV = 1; for (const [id, m] of Object.entries(ARRIVALS)) if (id.startsWith("l5-home-") && !ctx.getObject(id)) ctx.spawn(id, { feetPosition: { x: m.x, y: 0.1, z: m.z }, rotation: { yaw: m.yaw } }); } // the kiosk's drop points, one inside each room
   { const book = s.l5rent ?? {}; for (const p of ctx.place.players) { if (p.state.l5home) continue; const rid = Object.keys(book).find((r) => book[r]?.uid === p.userId); if (!rid) continue; // the ledger says it's theirs: their save forgot, so it gets the key back
