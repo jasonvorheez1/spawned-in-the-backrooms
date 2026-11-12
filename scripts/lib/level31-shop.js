@@ -15,13 +15,13 @@ const M = {
 };
 const E = -90, W = 90, N = 0, S = 180; // yaw that turns a prop's front to face east / west / north / south
 const WX = -41.8, NZ = -11.8, SZ = 11.8; // inner faces of the shop's wall linings
-const CREAM = "oklch(0.86 0.04 85)", TEAL = "oklch(0.52 0.09 200)";
+const CREAM = "oklch(0.8 0.05 75)", TEAL = "oklch(0.52 0.09 200)";
 export function layShop(ctx) {
   const sp = (id, spec) => ctx.spawn("l31-shop-" + id, spec);
-  const wall = (id, x, y, z, w, h, d, color) => sp(id, { feetPosition: { x, y, z }, primitive: { kind: "box", width: w, height: h, depth: d }, material: { color, roughness: 0.85 }, physics: "static" });
+  const wall = (id, x, y, z, w, h, d, color) => sp(id, { feetPosition: { x, y, z }, primitive: { kind: "box", width: w, height: h, depth: d }, material: color === CREAM ? { texture: "cdn/texture-painted-cinder-block-wall-cream.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.9 0.03 75)", roughness: 0.9 } : { color, roughness: 0.85 }, physics: "static" });
   const prop = (id, m, x, y, z, yaw, solid = true, extra = {}) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: { id: M[m], forward: "+z" }, ...(solid ? { physics: { body: "static", collider: "box" } } : {}), ...extra });
   // the blueprint's spot becomes the shop's vinyl floor
-  sp("bp", { feetPosition: { x: -35, y: 0, z: 0 }, primitive: { kind: "box", width: 13.7, height: 0.012, depth: 23.7 }, material: { texture: "cdn/texture-speckled-vct-vinyl-floor-tile-warm-grey.png", wrap: "repeat", repeat: [0.5, 0.5], roughness: 0.55 } });
+  sp("bp", { feetPosition: { x: -35, y: 0, z: 0 }, primitive: { kind: "box", width: 13.7, height: 0.012, depth: 23.7 }, material: { texture: "cdn/texture-speckled-vct-vinyl-floor-tile-warm-grey.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.86 0.02 60)", roughness: 0.55 } });
   // linings on the three walls, teal wainscot under cream
   wall("wall-w", -41.9, 0, 0, 0.2, 5, 24, CREAM); wall("wall-n", -35, 0, -11.9, 13.6, 5, 0.2, CREAM); wall("wall-s", -35, 0, 11.9, 13.6, 5, 0.2, CREAM);
   wall("base-n", -35, 0, -11.79, 13.6, 0.9, 0.03, TEAL); wall("base-s", -35, 0, 11.79, 13.6, 0.9, 0.03, TEAL);
