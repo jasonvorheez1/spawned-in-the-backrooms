@@ -1,6 +1,9 @@
 // Level 13 "The Boiling Frogs": lays the apartment complex once (shell here; furniture, residents and creatures in their own
 // files), then keeps the lethargy: the longer you stay inside one flat, the heavier you get (player.state.leth13, 0..1).
 import { H, HALL, T, UNIT, HALLS, APTS, SPAWN, EXIT0, aptAt } from "../../scripts/lib/level13.js";
+import { layFurnish } from "../../scripts/lib/level13-furnish.js";
+import { layFoes } from "../../scripts/lib/level13-foes.js";
+import { layPeople } from "../../scripts/lib/level13-people.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 export const cadence = "1s";
@@ -16,7 +19,7 @@ const TRIM = { color: "oklch(0.72 0.04 75)", roughness: 0.7 };
 const DOORMAT = { texture: "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", color: "oklch(0.55 0.06 60)", roughness: 0.6 };
 const TROFFER = "/cdn/value.58b51cca7f40157addada9eb9837b9beb764f7aed2c56d77270ea9dbd66bcf1b.glb";
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
-let n = 0;
+let n = 0; // only counts wall ids inside one lay()
 // a wall along x (at z) or along z (at x), from a to b, with doorways cut at `gaps` (centres); a lintel closes each doorway's top
 function wall(ctx, along, at, a, b, gaps = [], mat = WALL) {
   const cuts = gaps.slice().sort((p, q) => p - q), segs = []; let from = a;
@@ -82,6 +85,7 @@ export function tick(ctx) {
   const st = ctx.place.state;
   if (st.v !== V || !("l13-floor" in ctx.place.objects)) { lay(ctx); st.v = V; return; }
   restyleSigns(ctx, "level13"); dressThresholds(ctx);
+  layFurnish(ctx); layFoes(ctx); layPeople(ctx);
   // the lethargy: seconds spent inside one flat, written only when its step (a tenth) changes
   for (const p of ctx.place.players) {
     const m = (p.session.l13 ??= { apt: null, s: 0 }), a = aptAt(p.feetPosition.x, p.feetPosition.z);
