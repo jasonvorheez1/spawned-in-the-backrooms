@@ -32,7 +32,7 @@ export function material(ctx) {
       const bl = ctx.texture(String(ctx.params.blinkFace)).sample(vec2(u, v));
       pic0 = mix(pic0, bl, shut.mul(eyesUp));
     }
-    if (ctx.params.talkFace) {
+    if (ctx.params.talkFace && !ctx.params.faceless) {   // the Remodeling Co. crew have no mouth (Shelly #243880)
       // talking: about 7 syllables a second, each one an open mouth or a round "o", with short closed gaps and a breath every couple of seconds
       const t = time.add(seed.mul(13)), syl = t.mul(7.0), k = syl.floor(), ph = fract(syl)
       const pick = fract(sin(k.mul(12.9898).add(seed.mul(78.233))).mul(43758.5453))
@@ -107,7 +107,7 @@ export function material(ctx) {
     const onTip = smoothstep(-0.065, -0.048, q.z.sub(P("noseZ", 0.249)));   // wide enough for the flat snout key (tip 4 cm back)
     const noseM = smoothstep(1.0, 0.82, nDist).mul(onTip);
     const shine = smoothstep(0.24, 0.07, nx.add(0.32).mul(nx.add(0.3)).add(ny.sub(0.4).mul(ny.sub(0.4))).sqrt());
-    col = mix(col, vec3(0.07, 0.045, 0.045), noseM);   // matte, no shine (Shelly Nov 12)
+    if (!ctx.params.faceless) col = mix(col, vec3(0.07, 0.045, 0.045), noseM);   // the crew: no nose   // matte, no shine (Shelly Nov 12)
     m.colorNode = col;
     m.emissiveNode = col.mul(0.06).add(eye.mul(irisAmt.mul(pic.a).mul(inside).mul(front).mul(0.35)));   // a little glow so the iris reads in the dim yellow light
     m.roughness = 0.68;
