@@ -7,7 +7,7 @@ import { rbox } from "./rbox.js";
 export const G = {
   table: "/cdn/value.85f5e243770f31969de327bdc34870693134536eb58b94392e7715d4fd3bc8f2.glb", chair: "/cdn/value.2d974b903f651908da4ab7d3423171988b715420cf07c9f7f15bb854bfd1b4bc.glb",
   benchO: "/cdn/value.a2c6ff61773dad10900e1d9438fd7d531ff3d50a5777942c46eb6fae0f3455cc.glb", benchG: "/cdn/value.e5b68318e51038b74580baf037ebfe2f2c615afd5454d31f109b00ef05588593.glb",
-  trash: "/cdn/value.b2b4a6b6432a1fa06b5b7221dc44910a04ad25f47bbb97a8c70c17c00913c568.glb", condi: "/cdn/value.5c5a4885c63007e6e9641d674001f1b672315abd05804698f6856ee020d726a0.glb",
+  counter: "/cdn/value.90fa2612ba24dffdd42be4104469cae5297d1d5e1c0b69f622494d64a542aa0c.glb", trash: "/cdn/value.b2b4a6b6432a1fa06b5b7221dc44910a04ad25f47bbb97a8c70c17c00913c568.glb", condi: "/cdn/value.5c5a4885c63007e6e9641d674001f1b672315abd05804698f6856ee020d726a0.glb",
   pizza: "/cdn/value.94489c95bccefcf999e9167007fdc37c595c0870ac5c55f21b53e8c977e86224.glb", grill: "/cdn/value.2f6588063f2a79088a29a82f37fd985c1b9c35479895c1e58b37177a75badbdf.glb",
   sprite: "/cdn/value.a8fa78fe97d7a4433a1f5ce5cacb2e5ae69aabe51e91ae21e867c39aaff669b7.glb", capri: "/cdn/value.edf5f857dd939618098f90a7946280471677192360f1e654e31b18e0ee79d1fc.glb",
   wings: "/cdn/value.2a86cc1225956d7affdefab951435412e8d1eff6a49fce68c60c5588dda68d47.glb", soda: "/cdn/value.dccac7a9af42b8a71ffcd628fd16438030ddc40387223fc7e2bc9cf3ac857c84.glb",
@@ -72,12 +72,9 @@ export function layFood(ctx) {
   const L = (x, y, z, color, intensity) => ({ feetPosition: { x, y, z }, light: { kind: "point", color, intensity, distance: 15 } });
   P("bp", { feetPosition: { x: 34, y: 0, z: 18 }, children: [L(3.2, 2.9, -4, "#fff0d9", 4), L(3.2, 2.9, 3, "#fff0d9", 4), L(-3, 3.8, 0.5, "#ffdfb7", 5), L(-2, 3.4, -8.5, "#fff0d9", 3)] });
   // serving counter along the east wall: carcass, kick, stainless top, tray rail
-  P("counter", { feetPosition: { x: 38, y: 0.1, z: 17 }, primitive: rbox(0.8, 0.78, 14), material: { color: "#2c3446", roughness: 0.45 }, physics: "static" });
-  P("counter-kick", { feetPosition: { x: 38.03, y: 0, z: 17 }, primitive: rbox(0.7, 0.1, 13.96), material: { color: "#141416", roughness: 0.6 } });
-  P("counter-stripe", { feetPosition: { x: 37.595, y: 0.52, z: 17 }, primitive: box(0.012, 0.09, 14), material: { color: "#f2c33a", roughness: 0.5 } });
-  P("counter-top", { feetPosition: { x: 38, y: 0.88, z: 17 }, primitive: rbox(0.92, 0.04, 14.06), material: { color: "#d4d7db", metalness: 0.35, roughness: 0.35 } });
-  P("counter-rail", { feetPosition: { x: 37.36, y: 0.8, z: 17 }, primitive: rbox(0.3, 0.025, 13.6), material: { color: "#d4d7db", metalness: 0.35, roughness: 0.35 } });
-  for (const [i, z] of [10.6, 14, 17.4, 20.6, 23.4].entries()) P(`counter-brk${i}`, { feetPosition: { x: 37.45, y: 0.72, z }, primitive: box(0.3, 0.08, 0.03), material: { color: "#8a8d92", metalness: 0.8, roughness: 0.4 } });
+  // serving counter along the east wall: four Tripo diner counter modules (red vinyl, chrome band, cream top), 3.5 x 0.82 x 0.84 m each, one box collider under them
+  P("counter", { feetPosition: { x: 38, y: 0.1, z: 17 }, primitive: box(0.84, 0.82, 14), render: false, physics: "static" });
+  for (let i = 0; i < 4; i++) P(`counter-m${i}`, { feetPosition: { x: 38, y: 0.1, z: 10.75 + i * 3.5 }, rotation: { yaw: 90 }, model: { id: G.counter }, layout: { box: { min: { x: -1.75, y: 0, z: -0.42 }, max: { x: 1.75, y: 0.82, z: 0.42 } } }, receiveShadow: true });
   M("pizza", "pizza", 38.05, 12, 90, { physics: "none" }, 0.92); M("grill", "grill", 38.05, 14.7, 90, { physics: "none" }, 0.92);
   M("wings", "wings", 38.05, 19.4, 90, { physics: "none" }, 0.92); M("soda", "soda", 38.05, 22, 90, { physics: "none" }, 0.92);
   // real Frontrooms drinks (Tripo): a row of Sprite and Capri Sun by the soda fountain, strays on the tables
