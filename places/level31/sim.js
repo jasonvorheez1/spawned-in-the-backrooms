@@ -8,7 +8,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 63;
+const V = 64;
 const RAIL_GLB = "/cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb";
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
@@ -247,12 +247,14 @@ function mezzanine(ctx) {
     children: [{ id: "under", feetPosition: { x: 0, y: -0.01, z: 0 }, primitive: box(mw - 0.05, 0.01, md - 0.05), material: CEIL, castShadow: false }] });
   ctx.spawn("l31-mz-fascia", { feetPosition: { x: M.x1 - 0.05, y: Y - 0.55, z: 0 }, primitive: rbox(0.14, 0.6, md, 0.03), material: { color: "#1d7b80", roughness: 0.5 }, castShadow: false,
     children: [{ id: "stripe", feetPosition: { x: 0.075, y: 0.22, z: 0 }, primitive: box(0.01, 0.07, md), material: glow("#ff5fae", 1.4), castShadow: false }] });
-  // columns: chrome tubes on the slab's edge
-  for (const z of [-26, -10, 6, 22]) ctx.spawn(`l31-mz-col${z}`, { feetPosition: { x: M.x1 - 0.4, y: 0, z }, primitive: { kind: "cylinder", radiusTop: 0.16, radiusBottom: 0.16, height: Y - 0.3, radialSegments: 24 }, material: { color: "#d7dbe2", metalness: 0.9, roughness: 0.2 }, physics: { body: "static", collider: "cylinder" } });
-  // glass rail: tempered panels under a chrome handrail; a gap where the stair lands
-  const rail = (id, x, z0, z1, alongX = false) => { const L = Math.abs(z1 - z0), c = (z0 + z1) / 2;
-    ctx.spawn(`l31-mz-rail-${id}`, { feetPosition: alongX ? { x: c, y: Y, z: x } : { x, y: Y, z: c }, rotation: { yaw: alongX ? 90 : 0 }, primitive: box(0.04, 1.0, L), material: { color: "#bfe6ea", opacity: 0.28, transparent: true, roughness: 0.05, metalness: 0.1 }, physics: "static", castShadow: false,
-      children: [{ id: "top", feetPosition: { x: 0, y: 1.0, z: 0 }, primitive: rbox(0.07, 0.06, L, 0.025), material: { color: "#e6e9ee", metalness: 0.95, roughness: 0.15 }, castShadow: false }] }); };
+  // columns: Tripo teal pillars with chrome bands and a pink neon ring (Shelly: nothing blocky), a hidden cylinder carries the body
+  const COL = "/cdn/value.b8ef5221f9de05d9cd75dde73a739c2d998a6a22d7bc03964a288707e448d2d5.glb", PANEL = "/cdn/value.dc9a414de6de2b288dee03dc1226eebd45f86fe29f83212739e8747ba8c992e4.glb";
+  for (const z of [-26, -10, 6, 22]) ctx.spawn(`l31-mz-col${z}`, { feetPosition: { x: M.x1 - 0.4, y: 0, z }, primitive: { kind: "cylinder", radiusTop: 0.18, radiusBottom: 0.18, height: Y - 0.3, radialSegments: 12 }, render: false, physics: { body: "static", collider: "cylinder" },
+    children: [{ id: "art", model: COL, layout: { box: { min: { x: -0.3, y: 0, z: -0.3 }, max: { x: 0.3, y: Y - 0.3, z: 0.3 } } }, castShadow: false }] });
+  // rail: Tripo brass-and-glass panels with memphis kick plates, tiled along each run; one hidden box is the barrier; a gap where the stair lands
+  const rail = (id, x, z0, z1, alongX = false) => { const L = Math.abs(z1 - z0), c = (z0 + z1) / 2, n = Math.max(1, Math.round(L / 2.4)), seg = L / n, kids = [];
+    for (let i = 0; i < n; i++) kids.push({ id: "p" + i, feetPosition: { x: 0, y: 0, z: -L / 2 + (i + 0.5) * seg }, rotation: { yaw: 90 }, model: PANEL, layout: { box: { min: { x: -seg / 2, y: 0, z: -0.08 }, max: { x: seg / 2, y: 1.05, z: 0.08 } } }, castShadow: false });
+    ctx.spawn(`l31-mz-rail-${id}`, { feetPosition: alongX ? { x: c, y: Y, z: x } : { x, y: Y, z: c }, rotation: { yaw: alongX ? 90 : 0 }, primitive: box(0.06, 1.05, L), render: false, physics: "static", castShadow: false, children: kids }); };
   rail("a", M.x1 - 0.1, M.z0, S.landZ); rail("b", M.x1 - 0.1, S.zTop, M.z1);
   // the stair: carpeted treads with chrome nosing over one smooth ramp the body walks
   const run = Math.abs(S.zTop - S.zBottom), n = 16, rise = Y / n, tread = run / n, sx = (S.x0 + S.x1) / 2, sw = S.x1 - S.x0, dir = Math.sign(S.zTop - S.zBottom);
