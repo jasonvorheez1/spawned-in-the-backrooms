@@ -7,7 +7,7 @@ import { standUp } from './lib/seat.js'
 const SCRIPT = 'scripts/critter2-geo.js'
 import { SNOUTS, EARS, TAILS } from './lib/cat-wardrobe.js'
 import CW from './lib/data/cat-wardrobe.yml'
-import { isNewCat, catLook, seatCat, FURRY_HEAD, armSplay, bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, restyleQueue, restyleStep, STYLE_V, seatHead, clearAppearance, humanBodyMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard, speciesOf } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
+import { CAT_ARMS, isNewCat, catLook, seatCat, FURRY_HEAD, armSplay, bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, restyleQueue, restyleStep, STYLE_V, seatHead, clearAppearance, humanBodyMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard, speciesOf } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
 const LID_SCALE = 1000 // the lids are modelled this many times too small (scripts/critter2-geo.js)
 const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 import { weaponBody, HOLD } from './lib/weapon-look.js'
@@ -35,6 +35,7 @@ function applyBones(ctx) {
   if (!HUMAN && !ses.cachedWorn && !newCat) b.Head = { scale: (ses.headS || 1) * FURRY_HEAD } // furry: the Dandy big head, times the player's own head slider
   b.Tail1 = { scale: (ses.tailS || 1) * 1.25 } // a fuller tail by default (Shelly 'cute as hell'); the salon's tail slider multiplies it
   if (!HUMAN && !ses.cachedWorn && !newCat) Object.assign(b, armSplay()) // arms clear the hips and skirts (critter-model ARM_SPLAY)
+  if (!HUMAN && !ses.cachedWorn && newCat) Object.assign(b, CAT_ARMS) // the cat's arms 8 degrees forward: short hands in front of the chest (critter-model CAT_ARMS)
   if (ses.pose) Object.assign(b, ses.pose) // the hands on a gun: IK reach points (scripts/lib/body3.js)
   ctx.self.bones = b
 }

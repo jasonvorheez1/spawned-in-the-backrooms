@@ -9,7 +9,7 @@ import { seatFor } from "./lib/seat.js";
 import { rollLoot, garmentsOf } from "./lib/loot.js";
 import { stripTo, SLOTS } from "./lib/clothes.js";
 import { lifeOf, FEAR_TAGS, FEAR_LINES, WANT_LINES } from "./lib/npc-life.js";
-import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor, buildFor, critterSpec, faceMorph, baseBones, HUMAN, humanFace, mouthAt, setStyle } from "./lib/critter-model.js";
+import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, isNewCat, CAT_JIGGLE, speciesFor, buildFor, critterSpec, faceMorph, baseBones, HUMAN, humanFace, mouthAt, setStyle } from "./lib/critter-model.js";
 // An M.E.G. agent: holds its post, greets players, and fights. It paths (builtin/nav) to the nearest creature
 // (hound, stealer) or a player who attacked the camp, shoots from range with line of sight, and goes home after.
 // Hostility is per player: scripts/player.js marks state.angry when a player hits an agent; every agent nearby adopts it.
@@ -120,7 +120,8 @@ function dress(ctx, me) {
   const sc2 = me.scale, plain2 = !sc2 || (typeof sc2 === "number" ? sc2 === 1 : sc2.x === 1 && sc2.y === 1);
   if (!me.state.build && !plain2) { const b = buildFor(String(me.id).split("/").pop(), me.state.wear?.sex); me.state.build = { ...b, h: typeof sc2 === "number" ? sc2 : sc2.y, w: typeof sc2 === "number" ? sc2 : sc2.x }; if (HUMAN && typeof sc2 === "object") { const y = sc2.y ?? 1, r = b.w / b.h; me.scale = { x: y * r, y, z: y * r }; me.state.build.w = y * r; } } // a hand-cast height stays; bust, head and tail still roll
   if (!me.state.build && plain2) { const b = buildFor(String(me.id).split("/").pop(), me.state.wear?.sex); me.state.build = b; me.scale = { x: b.w, y: b.h, z: b.w }; } // its own height and build
-  if (me.model && (me.state.wear?.sex ?? me.state.look?.sex) === 'f' && (me.morph?.Bust == null || me.session.bustV !== 2)) { me.session.bustV = 2; me.bones = baseBones(me.state.build); const b = me.state.build?.bust != null ? me.state.build : buildFor(String(me.id).split("/").pop(), 'f'); me.morph = { ...(me.morph ?? {}), Bust: b.bust }; } // her own bust
+  if (me.model && (me.state.wear?.sex ?? me.state.look?.sex) === 'f' && (me.morph?.Bust == null || me.session.bustV !== 2)) { me.session.bustV = 2; me.bones = baseBones(me.state.build, me.state.look ?? me.state.wear); const b = me.state.build?.bust != null ? me.state.build : buildFor(String(me.id).split("/").pop(), 'f'); me.morph = { ...(me.morph ?? {}), Bust: b.bust }; } // her own bust
+  if (me.model && me.session.catRigV !== 3 && isNewCat(me.state.look ?? me.state.wear)) { me.session.catRigV = 3; me.jiggle = CAT_JIGGLE; me.bones = baseBones(me.state.build, me.state.look ?? me.state.wear); } // the cat rig fixes: tail spring, arms forward (critter-model CAT_JIGGLE, CAT_ARMS)
 }
 
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
@@ -344,12 +345,12 @@ function aim(me, m, t) {
   const id = t?.id ?? null, now = m.nowT ?? 0, A = WP[me.state.arm];
   if (m.aimAt === id && (!id || now < (m.aimNext ?? 0))) return;
   const fresh = m.aimAt !== id; m.aimAt = id; m.aimNext = now + 300;
-  if (!id || !A?.ranged) { aimPose(me, null, null); if (fresh) me.bones = baseBones(me.state.build); return; }
+  if (!id || !A?.ranged) { aimPose(me, null, null); if (fresh) me.bones = baseBones(me.state.build, me.state.look ?? me.state.wear); return; }
   const o = chest(me.feetPosition), q = chest(t.feetPosition), dx = q.x - o.x, dz = q.z - o.z, hh = Math.hypot(dx, dz) || 1;
   const fam = famOf(me.state.arm), pitch = Math.atan2(q.y - o.y, hh), yaw = Math.atan2(-dx, -dz);
   aimPose(me, fam, aimMode(me, true, false), pitch);
   // long guns too: clips alone, no hand IK (see body3.js stance)
-  if (fresh) me.bones = baseBones(me.state.build);
+  if (fresh) me.bones = baseBones(me.state.build, me.state.look ?? me.state.wear);
 }
 
 
@@ -430,7 +431,7 @@ export function update(ctx, dt) {
     if (!m.down) {
       m.down = true; bark(ctx, me, "death", true);
       for (const id of Object.keys(VOICES)) { const o = ctx.place.objects[id]; if (o && id !== me.id && !o.state?.dead && (o.state?.hp ?? 1) > 0 && Math.hypot(o.feetPosition.x - me.feetPosition.x, o.feetPosition.z - me.feetPosition.z) < 30) { bark(ctx, o, "allyDown", true); break; } } // the nearest friend sees it
-      stop(me, dt); aim(me, m, null); me.anim.talk = null; me.anim.hit = null; me.anim.wave = null; me.bones = baseBones(me.state.build);
+      stop(me, dt); aim(me, m, null); me.anim.talk = null; me.anim.hit = null; me.anim.wave = null; me.bones = baseBones(me.state.build, me.state.look ?? me.state.wear);
       // a ragdoll: the body drops where it was hit, in its own fur and jacket, knocked back off its feet
       const yaw = ((typeof me.rotation === "number" ? me.rotation : me.rotation?.yaw) ?? 0) * Math.PI / 180;
       me.ragdoll = { impulse: { x: Math.sin(yaw) * 60, y: 25, z: Math.cos(yaw) * 60 }, settleSeconds: 2 };
@@ -464,9 +465,9 @@ export function update(ctx, dt) {
   const isTwitching = now < (m.twitchUntil ?? 0);
   if (isTwitching && !s.dead && !me.bones) {
     const dir = m.twitchEar === "EarL" ? -1 : 1;
-    me.bones = { ...baseBones(s.build), [m.twitchEar]: { rotate: [0, 0, dir * 24] } };
+    me.bones = { ...baseBones(s.build, s.look ?? s.wear), [m.twitchEar]: { rotate: [0, 0, dir * 24] } };
   } else if (!isTwitching && (!me.bones || me.bones.EarL || me.bones.EarR || !me.bones.Head) && !m.aimAt) {
-    me.bones = baseBones(s.build);
+    me.bones = baseBones(s.build, s.look ?? s.wear);
   }
   // talking: interact.js stamps state.talkAt and talkTo when a player presses E on them
   const talking = s.talkAt && now - s.talkAt < 2600;
@@ -501,7 +502,7 @@ export function update(ctx, dt) {
         if (key !== m.hFaceK) { m.hFaceK = key; const base = {}; for (const [k, v] of Object.entries(me.morph ?? {})) if (!k.startsWith("X_")) base[k] = v; me.morph = { ...base, ...humanFace(curExpr, isBlinking, mouth) }; }
       }
       else if (headObj) {
-        const lookData = { ...(s.wear ?? s.look) };
+        const lookData = { ...(s.look ?? s.wear) };
         if (talking) {
           lookData.talking = true;
           lookData.talkTime = now / 1000;
