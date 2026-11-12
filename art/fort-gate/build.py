@@ -5,10 +5,10 @@ from mathutils import Vector
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath="/workspace/fortgate/fort.glb")
 o = next(x for x in bpy.context.scene.objects if x.type == 'MESH')
-C = Vector((-64.6 + 70, -(-86.4 + 93)))            # gate centre in Blender x/y (glTF z flips to -y)
-along = Vector((0.6, 0.9)).normalized()             # the gate line, from the collider probes (-64.8,-86.05) to (-64.2,-86.95), in Blender x/y
+C = Vector((-64.65 + 70, -(-86.3 + 93)))          # midway between the gateposts
+along = Vector((4.1, 3.2)).normalized()             # gatepost to gatepost: (-66.7,-84.7) to (-62.6,-87.9) in the world, Blender y = -world z
 across = Vector((-along.y, along.x))
-HALF, DEPTH, ZLO, ZHI = 1.35, 0.32, 0.74, 2.05      # metres
+HALF, DEPTH, ZLO, ZHI = 1.75, 0.45, 0.74, 2.05      # metres; the posts sit 2.05 m out and stay
 bm = bmesh.new(); bm.from_mesh(o.data)
 M = o.matrix_world
 def inside(v):
