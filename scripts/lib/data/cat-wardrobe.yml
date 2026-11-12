@@ -79,20 +79,20 @@ ears:
   wide: { f: '/cdn/value.34f795b121a0bfde46805e04ec9e244c6e03c0d53e2e0245898263de139745d1.glb', m: '/cdn/value.82a044813384a47fc3fe4b11833ee035e14581a890e33353b137e8674ad9b33f.glb' }
 
 # hairstyles (art/cat-wardrobe/hair-register.py); Nov 11 refit: each style uniformly scaled toward the head centre to sit on the skull (afropuff/twintails .85, undercut .88, pixie .87, sidetail .90, long .92, halfup .93, shaggy .98, crop 1); cleaned: strands smoothed away from the skull (seams kept as authored), a hair-coloured scalp cap under the strands (textured from the strand right above it), double-sided as authored: the Tripo hair carried onto the current cat heads, skinned to the head, tinted by look.hairc. look.hair: one key
-hair:
-  afropuff: { f: '/cdn/value.af7ad51ded8ddea65db65d1d6ca1af296c9060153534db603ff74ff9f3511c9d.glb' }
-  crop: { m: '/cdn/value.d05e7252fb73f1020f8d7df8d95a8cc4efca0c6ce21f81fc799aab4cad86b3e3.glb' }
-  halfup: { f: '/cdn/value.6dea94e28e7a4d03967d2ac8b984f2628096c2748969224da9f08bb2c16c16d7.glb' }
-  long: { m: '/cdn/value.6000378263a1d1693846ef571299029ad459e5079832d0475fb8d27769f63d69.glb' }
-  pixie: { f: '/cdn/value.1c5925f797b03bafaabdff87f9f86e5886c9bdb221d7760ee1ad90520bd76b0a.glb' }
-  shaggy: { m: '/cdn/value.f80597989781adeb4b1173e8596a6560460dd3031c537afcaa58458d7f68e964.glb' }
-  sidetail: { f: '/cdn/value.5c080b9d1d92b69df60757c9d4cda05ea4ad0068cd8b22566baf1ceee0d10042.glb' }
-  twintails: { f: '/cdn/value.aec49f7e47d3cc6d7ec5aba4ba309666b717219fc1be935414e7d92d89f128d4.glb' }   # Nov 11 Tripo remake (old one rejected #219816)
-  ponytail: { f: '/cdn/value.a9ac3138c640ffb2de3fb3056e343c7400fffa792c02f32a7faab8fc04032b00.glb' }
-  bob: { f: '/cdn/value.362d1c85c34a0adf66e71e039db3841cbe4efd1f4adfff6ee670d294214d9237.glb' }
-  hime: { f: '/cdn/value.caa9f7c549ae017132184840a2a185ca30c3c12021d4217a447f866ee57c56c2.glb' }
-  braid: { f: '/cdn/value.8a528c5569e4dd2467f360afb78c39d1054dfa76240d076c43c41864eb88f0ca.glb' }
-  messybun: { f: '/cdn/value.bd8db8bb0d5e4415698092ca54f2581ee29178116dc65ba4a8ffc46dbe97357b.glb' }
-  spiky: { m: '/cdn/value.a3b3f99fc0b080ad15d8e5795c3a4a00805cf927be1c8f0bae5f0add62c06f12.glb' }
-  fluffy: { m: '/cdn/value.91d59d212940587eed56971215564383d42d10430c40b9ff6421ebcf369af544.glb' }
+hair:   # each carries a Hatted key (art/cat-wardrobe/hair-hatted.py): flat to the skull under a hat
+  afropuff: { f: '/cdn/value.414f48145d4fa158d5c23c8992fbe378a939dff77ac649a6f80422eec3df2873.glb' }
+  crop: { m: '/cdn/value.410725092726c8466cfdaeebcddd5d1ed4b5dbf2f62b6197cd259d18fed6aaad.glb' }
+  halfup: { f: '/cdn/value.9215d38c49c8d2ff9f198ed9d54dfe5e27eb26628f9d55b12d3e284e0bfe3edd.glb' }
+  long: { m: '/cdn/value.417d03c1dddf3ef9c3e85ee0f2a55a205c19344dcf4b42af67111ac43a8e4b10.glb' }
+  pixie: { f: '/cdn/value.3dfb3ebff3285cea4aa0d1aa2a2994ea63a634853c1de4524f1a2aff36168cb4.glb' }
+  shaggy: { m: '/cdn/value.6be6920ce5aee2f2aa5fe2a0f7dc213ae6d0aa755c514f09a64fb0cb492629ba.glb' }
+  sidetail: { f: '/cdn/value.8370ca026f597a90421e9ea4f49d79a51ceeea2b573669422bcadb521e81ae7e.glb' }
+  twintails: { f: '/cdn/value.40a22c971ed4e3f1c46695d58f41d4feb6ca1220c852961e5d1ecee1c92b216c.glb' }   # Nov 11 Tripo remake (old one rejected #219816)
+  ponytail: { f: '/cdn/value.024f6f0f18d3e33bf0cd5f1b62d7b8ba43c747ec17a14e0da73b67ae65ba668e.glb' }
+  bob: { f: '/cdn/value.3e02a0c4e637591b8402d749e3a43fa4c37cd0ee7efc54400f905fcfdfc88292.glb' }
+  hime: { f: '/cdn/value.4e00267efb6d9fe6183acbf7b6465caf41c33907c0d85105157dc1ba7f04553e.glb' }
+  braid: { f: '/cdn/value.f5c7ef8c17b36611f6a68edece7f408f40d87328b818fb92ebd397bcd7d91c90.glb' }
+  messybun: { f: '/cdn/value.bfc4493e41ec6e45318dc83559c4bf6214525caec56099dda0d6820f53c8b552.glb' }
+  spiky: { m: '/cdn/value.c8423eab91b5493db94a7795cefe919a300e98772c7c00fc5ba511c12bfb0ac3.glb' }
+  fluffy: { m: '/cdn/value.7cbebb6a07c5f7f53a90810e0251ec05f751eb355dba4f8e342e2d4be4bcc44b.glb' }
   undercut: { m: '/cdn/value.d3b64fac62bfe51787c44da9088326d791fdcfaaf51f9d307dd833444cd706ec.glb' }
