@@ -1,11 +1,4 @@
 # spawn-scene v2 yaml x0z0
-l31-arcade-bp:
-  feetPosition: {x: 34, y: 0, z: -12}
-  id: l31-arcade-bp
-  material: {kind: scripted, script: engine/blueprint}
-  physics: none
-  primitive: {depth: 36, height: 4, kind: box, width: 16}
-  tags: [blueprint]
 l31-can6:
   feetPosition: {x: -36, y: 4.7, z: -22}
   id: l31-can6
@@ -42,13 +35,6 @@ l31-coach/coach-tag:
   parent: l31-coach
   primitive: {depth: 0.004, height: 0.03, kind: box, width: 0.085}
   ui: "<div face=\"back\" width=\"0.085m\" style=\"height:30px;display:flex;align-items:center;justify-content:center;background:#f7f5ee;color:#14213f;font-family:sans-serif;font-weight:900;font-size:20px;letter-spacing:2px;border-top:6px solid #c7362b\">COACH</div>"
-l31-food-bp:
-  feetPosition: {x: 34, y: 0, z: 18}
-  id: l31-food-bp
-  material: {kind: scripted, script: engine/blueprint}
-  physics: none
-  primitive: {depth: 24, height: 4, kind: box, width: 16}
-  tags: [blueprint]
 l31-rental-bench0:
   feetPosition: {x: 9.4, y: 0, z: 22.3}
   id: l31-rental-bench0
@@ -824,13 +810,6 @@ l31-rental-sk-4-9:
   rotation: {yaw: -11}
   tags: [l31-rental]
   visibleRange: {max: 48}
-l31-shop-bp:
-  feetPosition: {x: -35, y: 0, z: 0}
-  id: l31-shop-bp
-  material: {kind: scripted, script: engine/blueprint}
-  physics: none
-  primitive: {depth: 24, height: 4, kind: box, width: 14}
-  tags: [blueprint]
 l31-shop-light-mid:
   feetPosition: {x: -33, y: 3.4, z: 0}
   id: l31-shop-light-mid
