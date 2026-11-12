@@ -8,7 +8,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 47;
+const V = 48;
 const RAIL_GLB = "/cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb";
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
@@ -170,7 +170,7 @@ function djBooth(ctx) {
   ctx.spawn("l31-dj-riser", { feetPosition: { x: cx, y: 0, z: cz }, primitive: rbox(6, 0.5, 3.5), render: false, physics: "static",
     children: [{ id: "m", rotation: { yaw: 90 }, model: "/cdn/value.37fda2c85ed6065a5657dd95525ee642f4c1c6c73f451c47de704eb692c6038e.glb", scale: { x: 1.68, y: 1, z: 1.83 }, receiveShadow: true }] });
   ctx.spawn("l31-dj-front", { feetPosition: { x: cx, y: 0.5, z: d.z0 + 0.2 }, primitive: rbox(5.6, 0.75, 0.25), render: false, physics: "static",
-    children: [{ feetPosition: { x: 0, y: 0.375, z: -0.135 }, vector: `<svg viewBox='0 0 300 60' width='4.6m'><text x='150' y='44' text-anchor='middle' font-family='display' font-size='40' fill='#ff3fa4' filter='drop-shadow(0 0 5 #ff3fa4)'>REQUEST LINE</text></svg>` }] });
+    children: [{ feetPosition: { x: 0, y: 0.48, z: 0.12 }, vector: `<svg viewBox='0 0 300 60' width='2m'><text x='150' y='44' text-anchor='middle' font-family='display' font-size='40' fill='#ff3fa4' filter='drop-shadow(0 0 5 #ff3fa4)'>REQUEST LINE</text></svg>` }] });
   // the Faceling DJ (wiki: "a docile Faceling sitting inside selecting songs"): stands behind the rail at a deck, facing the rink
   // the DJ's console: a Tripo model fitted into the old deck's 2.2 x 0.75 x 0.8 footprint, its face toward the rink (-Z)
   ctx.spawn("l31-dj-deck", { feetPosition: { x: cx, y: 0.5, z: d.z0 + 0.75 }, physics: "static",
