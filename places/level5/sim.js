@@ -355,6 +355,24 @@ function homesBack(ctx) {
     }
   }
   if (bk) ctx.place.state.l5rent = bk;
+  keepOut(ctx);
+}
+// a guest's home is theirs alone (Shelly, Nov 12: "keep npcs out of my player home"): residents drop it from their rounds,
+// and any npc or creature found inside is walked (or set) back out past the door
+function keepOut(ctx) {
+  const led = ctx.place.state.l5rent ?? {}, homes = ZONES.filter((z) => (led[z.id]?.until ?? 0) >= 9e15);
+  if (!homes.length) return;
+  const inside = (f) => f && homes.find((z) => f.x > z.x0 - 0.3 && f.x < z.x1 + 0.3 && f.z > z.z0 - 0.3 && f.z < z.z1 + 0.3);
+  const door = (z) => { const n = z.z1 <= 0, room = z.kind !== "suite"; return { x: (z.x0 + z.x1) / 2, y: 0, z: n ? (room ? z.z1 + 1.2 : z.z0 - 1.5) : (room ? z.z0 - 1.2 : z.z1 + 1.5) }; };
+  for (const o of ctx.query({ anyTags: ["npc", "l5res", "enemy", "creature", "rat", "hound"], radius: 1e4, center: { x: 0, y: 0, z: 0 } })) {
+    if (o.tags.includes("player")) continue;
+    const st = o.state ?? {}, r = st.rounds;
+    if (Array.isArray(r) && r.some((w) => inside(w))) { const k = r.filter((w) => !inside(w)); o.state.rounds = k.length ? k : [{ ...door(inside(r[0]) ?? homes[0]), dwell: 6, act: null }]; o.state.ri = 0; }
+    const z = inside(o.feetPosition); if (!z) continue;
+    const out = door(z);
+    if (Array.isArray(r)) { o.state.rounds = [{ ...out, dwell: 6, act: null }]; o.state.ri = 0; o.state.mode = ""; }
+    else o.feetPosition = out;
+  }
 }
 export function tick(ctx) {
   if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
