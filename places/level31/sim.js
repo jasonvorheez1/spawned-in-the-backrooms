@@ -8,7 +8,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 40;
+const V = 41;
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
 const P = (params) => ({ primitive: { kind: "scripted", script: PROPS, params }, material: { pbr: true } });
@@ -188,7 +188,7 @@ function party(ctx) {
   const divider = (id, x, z, len, yaw) => {
     const n = Math.max(1, Math.round(len / 3)), seg = len / n;
     ctx.spawn("l31-party-divider-" + id, {
-      feetPosition: { x, y: 0, z }, rotation: { yaw }, primitive: { kind: "box", width: len, height: 1.06, depth: 0.2 }, visible: false, physics: "static",
+      feetPosition: { x, y: 0, z }, rotation: { yaw }, primitive: { kind: "box", width: len, height: 1.06, depth: 0.2 }, render: false, physics: "static",
       children: Array.from({ length: n }, (_, i) => ({ feetPosition: { x: -len / 2 + seg * (i + 0.5), y: 0, z: 0 },
         model: { id: HALF, forward: "+x" }, layout: { box: { min: { x: -seg / 2, y: 0, z: -0.1 }, max: { x: seg / 2, y: 1.06, z: 0.1 } } } })),
     });
