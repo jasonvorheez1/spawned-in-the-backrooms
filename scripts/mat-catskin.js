@@ -23,7 +23,7 @@ export function material(ctx) {
     const mo = ctx.params.mouth ? ctx.texture(String(ctx.params.mouth)).sample(vec2(u, v)) : null;
     let pic = mo ? vec4(mix(pic0.rgb, mo.rgb, mo.a), max(pic0.a, mo.a)) : pic0;
     // the sculpted head has its own nose (Shelly 'double noses'): the picture's painted nose is filled with the muzzle beside it
-    const nd = u.sub(0.5).div(0.075).pow(2).add(v.sub(P("noseCutV", 0.36)).div(0.07).pow(2)).sqrt();
+    const nd = u.sub(0.5).div(0.085).pow(2).add(v.sub(P("noseCutV", 0.36).add(0.01)).div(0.09).pow(2)).sqrt();   // tall enough that no rim of the painted nose peeks above the sculpted one
     const noseCut = smoothstep(1.0, 0.8, nd);
     const sL = ctx.texture(String(ctx.params.face)).sample(vec2(u.sub(0.11), v)), sR = ctx.texture(String(ctx.params.face)).sample(vec2(u.add(0.11), v));
     const fill = max(sL, sR);
@@ -31,7 +31,7 @@ export function material(ctx) {
     // the painted cream mask read too Sonic (Shelly Nov 12): the light muzzle paint keeps only a small soft oval round the nose and mouth, fading into fur
     const cream = smoothstep(0.5, 0.68, min(pic.r, pic.g)).mul(max(step(v, P("muzTop", 0.45)), step(v, 0.52).mul(step(abs(u.sub(0.5)), 0.085))));   // and the bridge wedge between the eyes (orange cat)
     const ell = u.sub(0.5).div(P("muzW", 0.12)).pow(2).add(v.sub(P("muzV", 0.32)).div(P("muzH", 0.085)).pow(2)).sqrt();
-    const keep = smoothstep(1.0, 0.55, ell).mul(smoothstep(P("muzV", 0.32).add(0.01), P("muzV", 0.32).sub(0.02), v));   // nothing pale beside the nose: the picture's muzzle corners read as triangles there
+    const keep = smoothstep(1.0, 0.55, ell).mul(smoothstep(P("muzV", 0.32).sub(0.03), P("muzV", 0.32).sub(0.06), v));   // nothing pale beside the nose: the picture's muzzle corners read as triangles there
     pic = vec4(pic.rgb, mix(pic.a, pic.a.mul(keep), cream));
     // below the eyes, outside the soft oval, only the mouth's ink stays: the picture's old muzzle outline drew a ghost line across the cheeks
     const ink = smoothstep(0.35, 0.15, max(pic.r, pic.g));
