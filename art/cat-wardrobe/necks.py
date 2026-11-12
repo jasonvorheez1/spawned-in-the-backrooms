@@ -15,6 +15,7 @@ R = {
 }
 only = sys.argv[sys.argv.index("--")+1:] if "--" in sys.argv else list(R)
 CLEAR = 0.008
+NECKW = {"f": 0.066, "m": 0.074}
 def clear(): bpy.ops.wm.read_factory_settings(use_empty=True)
 def body(sex):
     bpy.ops.import_scene.gltf(filepath=f"/tmp/hf/body{sex}.glb")
@@ -63,7 +64,7 @@ for sex in ("f", "m"):
         vs = [v.co for v in o.data.vertices]
         a = Vector([min(v[i] for v in vs) for i in range(3)]); b = Vector([max(v[i] for v in vs) for i in range(3)])
         if r["at"] == "neck":
-            half = ring(pts, neck.z - r["dz"]); target = 2 * half * r["w"]
+            half = NECKW[sex]; target = 2 * half * r["w"]   # the collar half width from cat-wardrobe.yml body.<sex>.neck[0]: a ring cut at the neck bone hits the shoulders on these chibi bodies
         else:
             sh = neck.z - 0.03; half = ring(pts, sh, 0.02); target = 2 * half * r["w"]
         s = target / max(b.x - a.x, 1e-6)
