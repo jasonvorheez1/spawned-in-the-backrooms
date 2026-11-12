@@ -5,8 +5,10 @@ const EXITS = {
   main: [
     { to: "level1", id: "main-from-l1", label: "Flickering wall", point: { x: -HALF + 1.1, y: 0, z: cellCenter(EXIT.cx, EXIT.cz).z } },
     { to: "level01", id: "l0-zenith", label: "Keycard hatch", needs: "zenKey" },
+    { to: "level02", id: "l0-to-l02", label: "Remodeling Co. door" },
   ],
   level01: [{ to: "main", id: "l01-back", label: "Return hatch" }],
+  level02: [{ to: "main", id: "l02-back", label: "Remodeling Co. exit" }],
   level1: [{ to: "main", id: "l1-back" }, { to: "level2", id: "l1-onward" }],
   level2: [{ to: "level1", id: "l2-back" }, { to: "level3", id: "l2-to-l3" }, { to: "level21", id: "l2-to-l21", label: "Upper stairwell" }],
   level21: [{ to: "level2", id: "l21-down" }, { to: "level8", id: "l21-cave", label: "Cave entrance" }],

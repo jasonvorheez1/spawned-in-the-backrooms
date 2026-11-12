@@ -18,31 +18,47 @@ export const QUESTS02 = {
       2: "Collect 3 Reality Fresheners in Level 0.2: the bathroom, the stuck freight lift, and Cap'n",
       3: "Sell the fresheners to Mara in Level 11, or give them back to Cap'n",
     },
-    marks: { 1: { place: "main", id: "l0-to-l02" }, 2: { place: "level02", id: "l02-capn" }, 3: { place: "level11", id: "l11-realty-agent" } },
+    marks: { 1: { place: "main", id: "l0-to-l02" }, 3: { place: "level11", id: "l11-realty-agent" } },
+    progress(s, place) {
+      const step = s.remodQ;
+      if (step === 2) {
+        const missing = LOCATIONS.find(([slot]) => !s.l02got?.[slot]);
+        if (missing) return { step: `Recover the Reality Fresheners (${gotCount(s)}/3) · ${missing[2]}`, mark: { place: "level02", id: missing[1] } };
+      }
+      if (step === 3 && place === "level02") return { step: this.tips[step], mark: { place, id: "l02-capn" } };
+      return { step: this.tips[step], mark: this.marks[step] ?? null };
+    },
   },
 };
+const LOCATIONS = [
+  ["sink", "l02-fresh-sink", "Check the bathroom sink"],
+  ["lift", "l02-pan", "Lower the freight lift"],
+  ["capn", "l02-capn", "Speak to Cap'n by the basement stairs"],
+];
 const posOf = (p) => p.worldFeetPosition ?? p.feetPosition;
 function tell(ctx, p, text, clip = CHIME) {
   const s = p.state, now = ctx.now(); s.notice = { text, at: now }; pushFeed(s, text, now, "good");
   const pos = posOf(p); if (pos) heard(ctx, { clip, position: pos, volume: 0.7, maxDistance: 16 }, { audience: { player: p.id } });
 }
-function syncHUD(s, step, done) {
-  const q = QUESTS02.remodel, tip = q.tips[step], id = qid(q.name);
-  if (tip) { s.quest = { name: q.name, step: tip, mark: q.marks[step] ?? null, at: Date.now() }; setQuest(s, id, { name: q.name, step: tip, mark: q.marks[step] ?? null }); }
+function syncHUD(s, place, done) {
+  const q = QUESTS02.remodel, progress = q.progress(s, place), id = qid(q.name);
+  if (progress.step) { s.quest = { name: q.name, ...progress, at: Date.now() }; setQuest(s, id, { name: q.name, ...progress }); }
   else { if (s.quest?.name === q.name) s.quest = null; endQuest(s, id, done); }
 }
-export function setRemodStep(ctx, p, step, text) { p.state.remodQ = step; syncHUD(p.state, step); tell(ctx, p, text); }
-const gotCount = (s) => Object.values(s.l02got ?? {}).filter(Boolean).length;
+export function setRemodStep(ctx, p, step, text) { p.state.remodQ = step; syncHUD(p.state, p.place); tell(ctx, p, text); }
+const gotCount = (s) => LOCATIONS.filter(([slot]) => s.l02got?.[slot]).length;
 export function gotFresh(ctx, p, slot) {
   const s = p.state, g = { ...(s.l02got ?? {}) };
+  if (!LOCATIONS.some(([key]) => key === slot)) return;
   if (g[slot]) { s.notice = { text: "You already took the freshener from here.", at: ctx.now() }; return; }
   g[slot] = true; s.l02got = g; s.fresh = (s.fresh ?? 0) + 1;
   const n = gotCount(s);
   tell(ctx, p, `Reality Freshener (${n}/3) · set one down from the inventory to hold a room still`, HISS);
   if (n >= 3 && (s.remodQ === 2 || s.remodQ === 1)) setRemodStep(ctx, p, 3, "Fresh Paint · Bring the fresheners to Mara in Level 11, or back to Cap'n");
+  else if (s.remodQ === 2) syncHUD(s, p.place);
 }
 function finish(ctx, p, { xp, cents, rep, text }) {
-  const s = p.state; s.remodQ = 99; syncHUD(s, 99, text); s.cents = (s.cents ?? 0) + cents;
+  const s = p.state; s.remodQ = 99; syncHUD(s, p.place, text); s.cents = (s.cents ?? 0) + cents;
   const msgs = [];
   for (const [g, d] of rep) { const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d); msgs.push(tier || `${g === "karma" ? "Karma" : g === "bntg" ? "B.N.T.G." : g} +${d}`); }
   const summary = [text, ...msgs].join(" · ");

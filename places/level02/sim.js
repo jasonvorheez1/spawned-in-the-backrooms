@@ -13,7 +13,11 @@ import { S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, xOf } from "../../scripts/lib
 import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 import P from "../../scripts/lib/data/l02-props.yml";
 export const cadence = "250ms";
-const V = 14, STEP_MS = 2600;
+const V = 15, STEP_MS = 3400, WARNING_MS = 1200;
+const CREAK = "/cdn/moodboard-realistic-gritty/sfx-deep-structural-wood-creak-groan.mp3";
+const OFFICE_LIGHT = { kind: "point", color: "oklch(0.96 0.025 95)", intensity: 1.35, distance: 11 };
+const WARN_LIGHT = { ...OFFICE_LIGHT, color: "oklch(0.76 0.16 54)", intensity: 0.95, distance: 8 };
+const LANDING_LIGHT = { ...OFFICE_LIGHT, color: "oklch(0.88 0.09 75)", intensity: 0.8, distance: 9 };
 const W = NX * S, D = NZ * S; // 32 x 20 m
 const CARPET = { color: "oklch(0.4 0.11 25)", roughness: 0.97, texture: "cdn/texture-dry-red-office-carpet-low-pile.png", wrap: "repeat", repeat: [0.5, 0.5] };
 const PAINT = { color: "oklch(0.97 0.008 90)", roughness: 0.88, texture: "cdn/texture-freshly-painted-white-drywall-eggshell-roller-stipple.png", wrap: "repeat", repeat: [0.5, 0.5] };
@@ -36,6 +40,9 @@ const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
 // a Tripo prop from the table fitted to its size [w, h, d]; null while its model hasn't landed (the spawn is skipped)
 const prop = (key, at, yaw = 0, extra = {}) => { const p = P[key]; if (!p?.model) return null; const [w, h, d] = p.size;
   return { feetPosition: at, rotation: { yaw }, model: { id: p.model, ...(p.forward ? { forward: p.forward } : {}) }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, ...extra }; };
+function plate(title, detail, color = "#e4b46b", width = 1.3) {
+  return `<svg viewBox="0 0 360 105" width="${width}m"><rect x="2" y="2" width="356" height="101" rx="5" fill="#211b17" stroke="${color}" stroke-width="3"/><path d="M15 60h330" stroke="${color}" opacity=".5"/><g font-family="sans-serif" fill="${color}" text-anchor="middle"><text x="180" y="46" font-size="31" font-weight="bold">${title}</text><text x="180" y="83" font-size="18">${detail}</text></g></svg>`;
+}
 const H = (key) => P[key]?.size?.[1] ?? 0.8;
 function sp(ctx, id, spec) { if (spec && !(id in ctx.place.objects)) ctx.spawn(id, spec); }
 const put = (ctx, id, spec) => { if (spec) ctx.spawn(id, spec); };
@@ -70,7 +77,7 @@ function layShell(ctx) {
   sp(ctx, "l02-door-room", { feetPosition: { x: xOf(0), y: -0.22, z: cz }, primitive: box(S, 0.2, D), material: PLY, physics: "static",
     children: [{ feetPosition: { x: 0, y: 0.2, z: 0 }, primitive: box(S, 0.02, D), material: CARPET }] });
   sp(ctx, "l02-door", { feetPosition: { x: X0 + 0.05, y: 0, z: 0 }, rotation: { yaw: 90 }, primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: "wood", w: 1.0, h: 2.1, part: "set", seed: 5 } } });
-  sp(ctx, "l02-back", { tags: ["door"], feetPosition: { x: X0 + 0.2, y: 0, z: 0 }, physics: { body: "static", trigger: true }, primitive: box(0.4, 2.2, 0.9), visible: false, behavior: "scripts/level-door.js", state: { to: "main" } });
+  sp(ctx, "l02-back", { tags: ["door"], feetPosition: { x: X0 + 0.38, y: 0, z: 0 }, physics: { body: "static", trigger: true }, primitive: box(0.45, 2.2, 1.2), visible: false, behavior: "scripts/level-door.js", state: { to: "main" } });
   sp(ctx, "l02-from-l0", { feetPosition: { x: X0 + 1.4, y: 0.05, z: 0 }, rotation: { yaw: -90 } });
   sp(ctx, "l02-exit-sign", { feetPosition: { x: X0 + 0.12, y: 2.45, z: 0 }, rotation: { yaw: 90 }, vector: "<svg viewBox='0 0 200 60' width='0.6m'><rect width='200' height='60' rx='6' fill='#a1201a'/><text x='100' y='42' text-anchor='middle' font-family='sans-serif' font-size='36' font-weight='bold' fill='#fff'>EXIT</text></svg>" });
   sp(ctx, "l02-exit-glow", { feetPosition: { x: X0 + 0.4, y: 2.4, z: 0 }, light: { kind: "point", color: "oklch(0.7 0.18 25)", intensity: 0.4, distance: 3 } });
@@ -81,14 +88,9 @@ function layShell(ctx) {
   sp(ctx, "l02-plant0", prop("plant", { x: X0 + 0.55, y: 0, z: Z0 + D - 0.6 }, 30, { physics: "static" }));
   sp(ctx, "l02-router", prop("router", { x: X0 + 0.4, y: H("office_desk"), z: Z0 + D - 2.6 }, -90, { tags: ["usable"], behavior: "scripts/l02-use.js",
     state: { kind: "read", name: "Wireless router", verb: "Look", info: "Full bars.", text: "Four green lights, all steady. The network is called REMODELING_CO_GUEST and it has no password. It has never once dropped." } }));
-  // the drop ceiling's troffers, a lit pair per column, and their light
-  for (let c = 0; c < NX; c++) {
-    for (const z of [-5, 5]) {
-      sp(ctx, `l02-trof-${c}-${z}`, prop("troffer", { x: xOf(c), y: CEIL - H("troffer"), z }, 0));
-      sp(ctx, `l02-lens-${c}-${z}`, { feetPosition: { x: xOf(c), y: CEIL - H("troffer") - 0.008, z }, primitive: box(1.02, 0.008, 0.48), material: { color: "oklch(0.99 0.01 95)", emissive: "oklch(0.98 0.02 95)", emissiveIntensity: 2.2 } });
-    }
-    sp(ctx, `l02-light-${c}`, { feetPosition: { x: xOf(c), y: CEIL - 0.3, z: 0 }, light: { kind: "point", color: "oklch(0.98 0.02 95)", intensity: 1.6, distance: 14 } });
-  }
+  layLights(ctx, 0);
+  sp(ctx, "l02-checkin", { feetPosition: { x: -12.12, y: 1.4, z: -4.15 }, rotation: { yaw: -90 },
+    vector: plate("FINISH INSPECTION", "VISITORS · KEEP CLEAR OF THE EAST WING") });
   sp(ctx, "l02-hum", { feetPosition: { x: cx, y: 2, z: cz }, audio: { clip: HUM, loop: true, gain: 0.12, spatial: false } });
   sp(ctx, "l02-haze", { feetPosition: { x: cx, y: BASE + 0.3, z: cz }, fx: { script: HAZE } });
   // stairs from the basement up to the door room's edge, a 2x4 baluster per step and a rail
@@ -101,6 +103,12 @@ function layShell(ctx) {
     const run = 6, rise = -BASE, len = Math.hypot(run, rise), ang = Math.atan2(rise, run) * 180 / Math.PI;
     sp(ctx, "l02-stair-ramp", { feetPosition: { x: -9, y: BASE / 2 - 0.1, z: Z0 + 1.1 }, pivot: "center", rotation: { yaw: 0, pitch: 0, roll: -ang }, primitive: box(len, 0.2, 1.8), visible: false, physics: "static" });
   }
+  sp(ctx, "l02-stair-guide", { feetPosition: { x: -6.6, y: BASE + 1.65, z: Z0 + 0.05 },
+    vector: plate("← STAIRS UP", "LEVEL 0 EXIT", "#b9dab3") });
+  sp(ctx, "l02-stair-beacon", { feetPosition: { x: -7.2, y: BASE + 1.95, z: -8.4 },
+    light: { kind: "point", color: "oklch(0.85 0.1 148)", intensity: 1.05, distance: 7 } });
+  sp(ctx, "l02-lift-guide", { feetPosition: { x: 1.7, y: BASE + 1.65, z: Z0 + 0.05 },
+    vector: plate("FREIGHT →", "EAST WALL · COUNTERWEIGHT PAN") });
   // work lights in the basement, each on its tripod with its own warm glow
   for (const [i, x, z, yaw] of [[0, -4, 6.5, 200], [1, 4, -6.5, 20], [2, 10.5, 6.5, 160], [3, -9, -2, 270]]) {
     sp(ctx, `l02-worklamp${i}`, prop("worklamp", { x, y: BASE, z }, yaw, { physics: "static" }));
@@ -137,6 +145,10 @@ function layShell(ctx) {
     children: [[0, -0.7, 1.4, 0.1], [0, 0.7, 1.4, 0.1], [-0.7, 0, 0.1, 1.4], [0.7, 0, 0.1, 1.4]].map(([x, z, w, d]) => ({ feetPosition: { x, y: 0.08, z }, primitive: box(w, 0.18, d), material: STEEL, physics: "static" })) });
   sp(ctx, "l02-pan-read", { feetPosition: { x: BIN.x, y: BASE + 1.3, z: BIN.z - 0.75 }, state: { kg: 0 }, vector: "<svg viewBox='0 0 220 70' width='0.9m' billboard='yaw'><rect width='220' height='70' rx='6' fill='#1b1b1b'/><text x='110' y='46' text-anchor='middle' font-family='display' font-size='34' fill='#f1c40f'>{{ state.kg }} / 42 KG</text></svg>" });
   sp(ctx, "l02-cable", { feetPosition: { x: BIN.x - 0.6, y: BASE + 0.25, z: BIN.z - 0.6 }, primitive: { kind: "cylinder", radiusTop: 0.012, radiusBottom: 0.012, height: CEIL - BASE - 0.3, radialSegments: 6 }, material: { color: "oklch(0.22 0 0)", metalness: 0.7, roughness: 0.4 } });
+  sp(ctx, "l02-lift-release", { tags: ["usable"], feetPosition: { x: 12.4, y: BASE + 1.15, z: -1.63 }, rotation: { yaw: 90 },
+    primitive: box(0.28, 0.31, 0.13), material: { color: "oklch(0.42 0.08 27)", metalness: 0.35, roughness: 0.65 },
+    children: [{ feetPosition: { x: 0, y: 0.08, z: 0.08 }, primitive: box(0.075, 0.18, 0.08), material: STEEL }],
+    behavior: "scripts/l02-use.js", state: { kind: "release", name: "Manual brake release", verb: "Service", info: "Repair 35 · Lower the freight lift by hand." } });
   layLift(ctx, false);
   layCans(ctx);
   // Cap'n, by the stairs: faceless, two white eyes, the crew uniform (wiki look)
@@ -162,15 +174,29 @@ function layLift(ctx, down) {
   ctx.spawn("l02-lift", { feetPosition: { x: LIFT.x, y, z: LIFT.z }, primitive: box(3, 0.2, 3), material: { ...STEEL, metalness: 0.7, roughness: 0.45, texture: "cdn/texture-diamond-plate-steel-floor.png", wrap: "repeat", repeat: [1, 1] }, physics: "kinematic" });
   ctx.spawn("l02-fresh-lift", { tags: ["usable"], feetPosition: { x: LIFT.x + 0.3, y: y + 0.2, z: LIFT.z }, ...FRESH_BODY, behavior: "scripts/l02-use.js", state: { kind: "fresh", slot: "lift", name: "Reality Freshener", verb: "Take", info: "Remodeling Co. property. Cold to the touch." } });
 }
-const CANS = [[-2, 7.6], [3, -7.8], [8, 7.5], [9.5, -7], [-6, 5]];
+const CANS = [[-2, 7.6], [3, -7.8], [8, 7.5], [9.5, -6.4], [9.4, -1.9]];
 function layCans(ctx) {
   CANS.forEach(([x, z], i) => { const id = `l02-can${i}`; if (id in ctx.place.objects) ctx.destroy(id);
     const base = { tags: ["l02can", "grabbable"], physics: { body: "dynamic", collider: "cylinder", mass: 14, friction: 0.8 }, state: { name: "Paint can (14 kg)" } };
     ctx.spawn(id, prop("paintcan", { x, y: BASE + 0.02, z }, i * 70, base) ?? { ...base, feetPosition: { x, y: BASE + 0.02, z }, primitive: { kind: "cylinder", radiusTop: 0.15, radiusBottom: 0.15, height: 0.36, radialSegments: 18 }, material: { color: "oklch(0.8 0.01 90)", metalness: 0.6, roughness: 0.35 } }); });
 }
+function layLights(ctx, c) {
+  const x = xOf(c), tags = c ? [`l02c${c}`] : [];
+  for (const z of [-5, 5]) {
+    sp(ctx, `l02-trof-${c}-${z}`, prop("troffer", { x, y: CEIL - H("troffer"), z }, 0, { tags }));
+    sp(ctx, `l02-lens-${c}-${z}`, { tags, feetPosition: { x, y: CEIL - H("troffer") - 0.008, z }, primitive: box(1.02, 0.008, 0.48),
+      material: { color: "oklch(0.99 0.01 95)", emissive: "oklch(0.98 0.02 95)", emissiveIntensity: 2.2 } });
+  }
+  sp(ctx, `l02-light-${c}`, { tags, feetPosition: { x, y: CEIL - 0.3, z: 0 }, light: c ? OFFICE_LIGHT : LANDING_LIGHT });
+}
+function lightColumn(ctx, c, light) {
+  const lamp = ctx.place.objects[`l02-light-${c}`];
+  if (lamp) lamp.light = light;
+}
 // what falls away when a column drops; laid again on a reset
 function layColumn(ctx, c) {
   const x = xOf(c), tag = `l02c${c}`;
+  layLights(ctx, c);
   const joists = []; for (let j = -1.5; j <= 1.5; j += 0.6) joists.push({ feetPosition: { x: j, y: -0.24, z: 0 }, primitive: box(0.05, 0.24, D), material: STUD });
   // Shelly Nov 12 "i get trapped inside after the floor caves in": columns 1-2 leave a stairwell open over the basement stairs (z -10..-7.8), railed, so the way up never sits under a standing floor
   const well = c === 1 || c === 2, z0 = well ? STAIRWELL : Z0, len = Z0 + D - z0;
@@ -188,6 +214,10 @@ function layColumn(ctx, c) {
   if (c === 2) F("l02-plant2", "plant", { x: x + 1.5, y: 0, z: 9.4 }, 120);
   if (c === 5) F("l02-bench5", "bench", { x: x + 0.6, y: 0, z: -9.6 }, 180);
   if (c === 6) { F("l02-desk6", "office_desk", { x: x + 1.3, y: 0, z: 9.4 }, 0); F("l02-chair6", "wchair", { x: x + 1.2, y: 0, z: 8.6 }, 160); }
+  if (c === 3) {
+    sp(ctx, "l02-bath-sign", { tags: [tag], feetPosition: { x: x + 1.1, y: 1.65, z: Z0 + 5.09 },
+      vector: plate("RESTROOM", "STAFF & VISITORS", "#e3dcc9", 0.68) });
+  }
   if (c === 3) { // the occasional bathroom (x -4..0, z -10..-5): tiled floor, a stall and its toilet, a sink and mirror, a freshener by the tap
     finishedWall(ctx, "l02-bath-e", tag, x + S / 2, Z0 + 2.5, 5, false, false);
     finishedWall(ctx, "l02-bath-n1", tag, x - 1.4, Z0 + 5, 1.2, true, false);
@@ -204,8 +234,8 @@ function layClean(ctx) { for (let c = 1; c < NX; c++) { for (const r of ctx.quer
 function drop(ctx, c) {
   const x = xOf(c), tag = `l02c${c}`;
   for (const r of ctx.query({ tags: [tag] })) if (r.id !== "l02-fresh-sink" && !r.id.includes("/") && r.id in ctx.place.objects) ctx.destroy(r.id);
-  if (c === 3 && "l02-fresh-sink" in ctx.place.objects) animate(ctx, ctx.place.objects["l02-fresh-sink"], { "feetPosition.y": BASE + 0.02 }, { duration: 0.7, easing: "easeInQuad" });
-  for (let i = 0; i < 7; i++) ctx.spawn({ tags: ["l02debris"], lifetime: 40, feetPosition: { x: x + (ctx.random() - 0.5) * 3, y: 2.4, z: Z0 + 1 + ctx.random() * (D - 2) }, rotation: { yaw: ctx.random() * 360, pitch: ctx.random() * 40 },
+  if (c === 3 && "l02-fresh-sink" in ctx.place.objects) animate(ctx, "l02-fresh-sink", { "feetPosition.y": BASE + 0.02 }, { duration: 0.7, easing: "easeInQuad" });
+  for (let i = 0; i < 5; i++) ctx.spawn({ tags: ["l02debris"], lifetime: 30, feetPosition: { x: x + (ctx.random() - 0.5) * 3, y: 2.4, z: Z0 + 1 + ctx.random() * (D - 2) }, rotation: { yaw: ctx.random() * 360, pitch: ctx.random() * 40 },
     primitive: i % 2 ? box(0.6, 0.03, 1.2) : box(0.9 + ctx.random(), 0.06, 0.5), material: i % 2 ? TILE : PAINT, physics: { body: "dynamic", collider: "box", density: 300 } });
   const at = { x, y: 0.5, z: Z0 + D / 2 };
   ctx.emit("fx", { position: at, script: DUST });
@@ -216,25 +246,73 @@ function drop(ctx, c) {
     if (d < 2 && p.feetPosition.y > -1 && p.state) { p.state.hp = (p.state.hp ?? 100) - 6; ctx.emit("damageNumber", { position: { ...p.feetPosition, y: p.feetPosition.y + 1.8 }, value: 6, color: "#e8d9b0" }); }
   }
 }
-// a freshener set down on the clean floor of this column holds it (and everything behind it)
-const held = (ctx, c) => ctx.query({ tags: ["freshener"] }).some((f) => f.feetPosition.y > -1 && Math.abs(f.feetPosition.x - xOf(c)) <= S / 2);
+// The front is a strip across the floor, so a freshener can brace it from an adjacent room.
+const held = (ctx, c) => ctx.query({ tags: ["freshener"] }).some((f) => {
+  const p = f.feetPosition;
+  return p.y > -1 && Math.abs(p.x - xOf(c)) <= S / 2 + 6;
+});
+function beginWarning(ctx, s) {
+  s.warned = true;
+  lightColumn(ctx, s.col, WARN_LIGHT);
+  ctx.emit("playSound", { clip: CREAK, position: { x: xOf(s.col), y: 2, z: 0 }, volume: 0.85, refDistance: 4, maxDistance: 34 });
+}
+function reset(ctx, s) {
+  layClean(ctx);
+  layLift(ctx, false);
+  layCans(ctx);
+  for (const r of ctx.query({ tags: ["l02debris"] })) if (r.id in ctx.place.objects) ctx.destroy(r.id);
+  s.phase = "clean"; s.liftDown = false; s.liftRelease = false; s.warned = false;
+  const release = ctx.place.objects["l02-lift-release"];
+  if (release) release.state.info = "Repair 35 · Lower the freight lift by hand.";
+}
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now(), ps = ctx.place.players;
-  if (s.v !== V || !("l02-base" in ctx.place.objects)) { s.v = V; layShell(ctx); dressCapn(ctx); layClean(ctx); s.phase = "clean"; s.liftDown = false; return; }
-  if (!ps.length) { s.emptyAt ??= now; if (s.phase !== "clean" && now - s.emptyAt > 15000) { layClean(ctx); layLift(ctx, false); layCans(ctx); for (const r of ctx.query({ tags: ["l02debris"] })) ctx.destroy(r.id); s.phase = "clean"; s.liftDown = false; } return; }
-  s.emptyAt = null;
-  for (const p of ps) if (p.state?.remodQ === 1) setRemodStep(ctx, p, 2, "Fresh Paint · Find 3 Reality Fresheners: the bathroom, the stuck freight lift, and Cap'n");
-  if (s.phase === "clean" && ps.some((p) => p.feetPosition.x > X0 + S + 1 && p.feetPosition.y > -1)) { s.phase = "falling"; s.col = NX - 1; s.nextAt = now + 1800; ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-deep-structural-wood-creak-groan.mp3", position: { x: xOf(NX - 1), y: 2, z: 0 }, volume: 0.9, maxDistance: 45 }); }
-  if (s.phase === "falling" && now >= s.nextAt) {
-    if (held(ctx, s.col)) { s.phase = "held"; for (const p of ps) if (p.state) p.state.notice = { text: "The freshener holds. The rest of the floor stays put.", at: now }; }
-    else { drop(ctx, s.col); s.col -= 1; s.nextAt = now + STEP_MS; if (s.col < 1) s.phase = "fallen"; }
+  if (s.v !== V || !("l02-base" in ctx.place.objects)) {
+    layShell(ctx); dressCapn(ctx); layClean(ctx);
+    s.v = V; s.phase = "clean"; s.liftDown = false; s.liftRelease = false; s.warned = false;
+    return;
   }
-  // the lift puzzle: cans on the pan
-  const kg = ctx.query({ tags: ["l02can"], center: { x: BIN.x, y: BASE, z: BIN.z }, radius: 0.95 }).filter((r) => Math.abs(r.feetPosition.x - BIN.x) < 0.7 && Math.abs(r.feetPosition.z - BIN.z) < 0.7 && r.feetPosition.y < BASE + 1).length * 14;
+  if (!ps.length) {
+    s.emptyAt ??= now;
+    if ((s.phase !== "clean" || s.liftDown) && now - s.emptyAt > 15000) reset(ctx, s);
+    return;
+  }
+  if (s.emptyAt != null && now - s.emptyAt > 15000 && (s.phase !== "clean" || s.liftDown)) reset(ctx, s);
+  s.emptyAt = null;
+  for (const p of ps) if (p.state?.remodQ === 1) setRemodStep(ctx, p, 2, "Fresh Paint · Find the bathroom freshener, the freight lift and Cap'n");
+  if (s.phase === "clean" && ps.some((p) => p.feetPosition.x > X0 + S + 1 && p.feetPosition.y > -1)) {
+    s.phase = "falling"; s.col = NX - 1; s.nextAt = now + 2800; s.warned = false;
+    beginWarning(ctx, s);
+  }
+  if (s.phase === "held" && !held(ctx, s.col)) {
+    s.phase = "falling"; s.nextAt = now + WARNING_MS; s.warned = false;
+  }
+  if (s.phase === "falling" && !s.warned && now >= s.nextAt - WARNING_MS) beginWarning(ctx, s);
+  if (s.phase === "falling" && now >= s.nextAt) {
+    if (held(ctx, s.col)) {
+      s.phase = "held";
+      lightColumn(ctx, s.col, OFFICE_LIGHT);
+      for (const p of ps) if (p.state && p.feetPosition.y > -1) p.state.notice = { text: "The Freshener is holding the floor.", at: now };
+    } else {
+      drop(ctx, s.col);
+      s.col -= 1; s.nextAt = now + STEP_MS; s.warned = false;
+      if (s.col < 1) s.phase = "fallen";
+    }
+  }
+  if (s.liftDown) return;
+  const kg = ctx.query({ tags: ["l02can"], center: { x: BIN.x, y: BASE + 0.35, z: BIN.z }, radius: 1.1 }).filter((r) => {
+    const p = r.feetPosition;
+    return !r.state?.heldBy && Math.abs(p.x - BIN.x) < 0.67 && Math.abs(p.z - BIN.z) < 0.67 && p.y >= BASE && p.y < BASE + 0.8;
+  }).length * 14;
   const rd = ctx.place.objects["l02-pan-read"]; if (rd && rd.state.kg !== kg) rd.state.kg = kg;
-  if (!s.liftDown && kg >= LIFT.kg) {
+  if (s.liftRelease || kg >= LIFT.kg) {
     s.liftDown = true;
-    for (const id of ["l02-lift", "l02-fresh-lift"]) { const o = ctx.place.objects[id]; if (o) animate(ctx, o, { "feetPosition.y": `-=${-BASE}` }, { duration: 4, easing: "easeInOutSine" }); }
+    const release = ctx.place.objects["l02-lift-release"];
+    if (release) release.state.info = "The freight lift is down.";
+    for (const id of ["l02-lift", "l02-fresh-lift"]) {
+      const o = ctx.place.objects[id];
+      if (o) animate(ctx, id, { "feetPosition.y": id === "l02-lift" ? BASE - 0.2 : BASE }, { duration: 4, easing: "easeInOutSine" });
+    }
     ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-freight-elevator-chain-rattle-descending-clunk.mp3", position: { x: LIFT.x, y: BASE + 1, z: LIFT.z }, volume: 1, maxDistance: 30 });
   }
 }

@@ -16,6 +16,6 @@ atmosphere:
   moon: { enabled: false }
   cycle: { frozen: 12 }
   sun: { light: { intensity: 0.25, color: oklch(0.98 0.01 95), shadow: { enabled: true } } }
-  ambient: { light: { color: oklch(0.97 0.005 95), intensity: 0.75 } }
-  hemisphere: { skyColor: oklch(0.99 0 0), groundColor: oklch(0.6 0.06 30), intensity: 0.55 }
+  ambient: { light: { color: oklch(0.97 0.005 95), intensity: 0.44 } }
+  hemisphere: { skyColor: oklch(0.99 0 0), groundColor: oklch(0.6 0.06 30), intensity: 0.32 }
 acoustics: { reverb: 0.35 }
