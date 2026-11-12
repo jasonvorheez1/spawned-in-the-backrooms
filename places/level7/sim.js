@@ -134,7 +134,7 @@ const TINY = () => ({
   tags: ["entity", "tiny"],
   feetPosition: { x: -128, y: -7, z: 0 }, rotation: { yaw: -40, pitch: -80 }, pivot: "center",
   visibleRange: { max: 80 }, castShadow: false, audience: "all",
-  model: { id: "/cdn/value.9881073785d9dc9fc9e92133f22dbcf3e3eb73af8d13ddce154b919b795b1329.glb", forward: "-z" },
+  model: { id: "/cdn/value.271c43e9768ffdc53d8343eeff9dc8afb77f782c5f60fcb12a28998b8cb320ca.glb", forward: "+x" }, // Tripo-rigged (mixamo bones): the library swim and attack clips play on him
   layout: { box: { min: { x: -0.8, y: 0, z: -0.45 }, max: { x: 0.8, y: 2.44, z: 0.45 } } },
   behavior: "scripts/l7-tiny.js",
   state: { name: "Tiny", home: { x: -150, z: 0 } },
@@ -1170,7 +1170,7 @@ export function tick(ctx) {
   }
 
   // Tiny swims himself now (scripts/l7-tiny.js)
-  if ((s.tinyV ?? 0) < 1 && ctx.place.objects["l7-tiny"]) { ctx.destroy("l7-tiny"); ctx.spawn("l7-tiny", TINY()); s.tinyV = 1; }
+  if ((s.tinyV ?? 0) < 2 && ctx.place.objects["l7-tiny"]) { ctx.destroy("l7-tiny"); ctx.spawn("l7-tiny", TINY()); s.tinyV = 2; }
 
   // 3. PERIODIC DISTANT WHALE GROAN FROM THE DEEP
   if (ctx.place.playerCount && now > (s.groanAt ?? 0)) {

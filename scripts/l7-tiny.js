@@ -19,6 +19,12 @@ const wet = (q) => { const f = q?.feetPosition; if (!f || f.y >= 0.25) return fa
   if (Math.abs(f.x) < 3 && f.z <= -8 && f.z >= -35) return false;
   return !(Math.hypot(f.x, f.z) < 22 || Math.hypot(f.x - 46, f.z + 120) < 30 || Math.hypot(f.x + 95, f.z + 230) < 48); };
 const LINES = T.lines;
+const CLIP = { swim: "cdn/clip-swim-loop.glb", tread: "cdn/clip-swim-idle-loop.glb", stab: "cdn/clip-attack.glb" };
+// one body channel, written only when the motion changes: strokes while he moves, treading at the shore, the spear thrust on a lunge
+function pose(me, m, kind) {
+  if (m.pose === kind) return; m.pose = kind;
+  me.anim.body = { clip: CLIP[kind], loop: kind !== "stab", weight: 1, blend: 0.25 };
+}
 const SHORES = [{ x: 0, z: 0, r: 22 }, { x: 46, z: -120, r: 30 }, { x: -95, z: -230, r: 48 }, { x: 0, z: -21, r: 14 }]; // the three rocks and the pier
 const nearestShore = (f) => { let best = null, bd = 1e9; for (const s of SHORES) { const d = Math.hypot(f.x - s.x, f.z - s.z) - s.r; if (d < bd) { bd = d; best = s; } } return { s: best, d: bd }; };
 const TAR = `fx
@@ -84,7 +90,10 @@ export function update(ctx, dt) {
   if (!prey && !swimmers.length && m.mode === "patrol" && !ctx.place.players.some((q) => flat(q.feetPosition, p) < 90)) {
     // nobody near: a cheap loop, slept between steps
     m.ang += dt * 0.12; const h = s.home;
-    me.feetPosition = { x: h.x + Math.cos(m.ang) * T.patrolR, y: T.patrolY, z: h.z + Math.sin(m.ang) * T.patrolR };
+    const lp = { x: h.x + Math.cos(m.ang) * T.patrolR, y: T.patrolY, z: h.z + Math.sin(m.ang) * T.patrolR };
+    const lf = ctx.place.terrain?.heightAt?.(lp.x, lp.z);
+    if ((lf == null || lf < -2.4) && !SHORES.some((s) => Math.hypot(lp.x - s.x, lp.z - s.z) < s.r + 1.5)) me.feetPosition = { ...lp, y: lf == null ? lp.y : Math.max(lp.y, lf + 0.6) };
+    pose(me, m, "swim");
     me.rotation = { yaw: -m.ang * 57.3, pitch: -80 };
     return;
   }
@@ -141,8 +150,13 @@ export function update(ctx, dt) {
   const want = { x: (dx / d) * speed, y: (dy / d) * speed * 0.7, z: (dz / d) * speed }, k = Math.min(1, dt * 3);
   m.v = { x: m.v.x + (want.x - m.v.x) * k, y: m.v.y + (want.y - m.v.y) * k, z: m.v.z + (want.z - m.v.z) * k };
   const np = { x: p.x + m.v.x * dt, y: Math.min(-0.9, p.y + m.v.y * dt), z: p.z + m.v.z * dt };
-  const floor = ctx.place.terrain?.heightAt?.(np.x, np.z); if (floor != null && np.y < floor + 0.4) np.y = floor + 0.4;
+  // water only: never into a rock's footprint or over ground shallower than his body; he turns back along the shore instead
+  const floor = ctx.place.terrain?.heightAt?.(np.x, np.z);
+  const ashore = (floor != null && floor > -2.4) || SHORES.some((s) => Math.hypot(np.x - s.x, np.z - s.z) < s.r + 1.5);
+  if (ashore) { np.x = p.x; np.z = p.z; m.v = { x: -m.v.x * 0.3, y: m.v.y, z: -m.v.z * 0.3 }; }
+  else if (floor != null && np.y < floor + 0.6) np.y = floor + 0.6;
   me.feetPosition = np;
+  pose(me, m, m.mode === "lunge" ? "stab" : m.mode === "shore" || Math.hypot(m.v.x, m.v.z) < 0.8 ? "tread" : "swim");
   const v = Math.hypot(m.v.x, m.v.z);
   if (v > 0.3) {
     const yaw = Math.atan2(-m.v.x, -m.v.z) * 57.3, t = now * 0.004 * (1 + v * 0.15);
