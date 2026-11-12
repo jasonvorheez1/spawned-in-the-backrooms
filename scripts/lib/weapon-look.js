@@ -70,6 +70,12 @@ const CENTER = { table_leg: [0, 0.3325], pipe_scrap: [0, 0.415], crowbar: [0, 0.
 // the butt, head-side offset turned forward): the child's local position and rotation that put the grip at the fist's
 // origin with the handle running up +Y and the blade facing -Z. The engine stands a model centred on its box (x, z).
 export const MESHGRIP = {"table_leg": {"at": [-0.205, 0.3532, 0.0032], "q": [0.5202, 0.3007, -0.5034, 0.6209]}, "pipe_scrap": {"at": [-0.0056, 0.3459, 0.1018], "q": [-0.7142, 0.0025, -0.0025, 0.6999]}, "crowbar": {"at": [0.0002, 0.4031, 0.0438], "q": [-0.0281, 0.794, -0.6055, 0.0456]}, "bat": {"at": [0.0111, 0.4275, 0.0859], "q": [-0.0571, -0.703, 0.7089, -0.0051]}, "hatchet": {"at": [0.0619, 0.3438, 0.0075], "q": [-0.5163, 0.4987, 0.4812, 0.5032]}, "fire_axe": {"at": [0.0216, 0.6145, -0.271], "q": [0.3232, 0.4489, 0.809, 0.1988]}}
+// the Carolynne cut into three meshes on one origin (art/carolynne-split/build.py), so the pump racks and the hopper rattles on their own
+export const CAROL_SPLIT = [
+  ["body", "/cdn/value.7df3bd185b4c6e03427dbc9c3558b03309220aee491ec0714dff7274ab4ea359.glb"],
+  ["hopper", "/cdn/value.a6087d78565895861b0428aad02c40e05db1fbac6f3ab284ebceb30384a7315f.glb"],
+  ["pump", "/cdn/value.c2dc4dd617c8967ac075c64ec8a1c51cfbff4f4733084a9d77d0ebf5d16df8fc.glb"],
+]
 export const SPLIT = { pistol: [
   ["frame", "/cdn/value.339fa3189b24b09cd4c4333f21c90f49e5ecb5ba0050a12203a9518c9203f34f.glb", [-0.0049, -0.0533, 0.0299]],
   ["slide", "/cdn/value.de102cb046cad8bf072449b2258194dc2e8a3d97ef2216add66e3be21e1b8720.glb", [0.0114, 0.0846, -0.0047]],
@@ -81,6 +87,7 @@ export const HOLD = {
 export function weaponBody(kind) {
   const base = baseOf(kind), w = W[kind] ?? {}, m = MESH[base], look = w.look, short = look === 'sawn' ? 0.72 : 1
   // the pistol in three parts (art/weapon-split/pistol.py): frame, slide, magazine, each standing where it sat in the whole mesh, so the reload moves real parts
+  if (base === 'carolynne' && !look && !w.tint) return { children: [...CAROL_SPLIT.map(([id, url]) => ({ id, model: { id: url, forward: '+z' }, feetPosition: { x: 0, y: 0, z: 0 }, castShadow: false })), ...CAROL_FESTIVE] }
   if (base === 'pistol' && !look && !w.tint) return { children: SPLIT.pistol.map(([id, url, at]) => ({ id, model: { id: url }, feetPosition: { x: at[0], y: at[1], z: at[2] }, castShadow: false })) }
   const body = m
     ? { model: { id: m[0], offset: [0, m[1], m[5] ?? 0], ...(m[4] ? { forward: m[4] } : {}) } }

@@ -372,6 +372,7 @@ function turnPt(p, pitch, yaw, roll) { // YXZ: yaw over pitch over roll, as the 
 // the split pistol's own parts: the slide blows back on a shot and racks in the reload, the magazine drops out and slides home
 const PARTS = { pistol: Object.fromEntries(SPLIT.pistol.map(([id, , at]) => [id, at])) }
 function partsPose(ctx, ps, kind, dt, m) {
+  if (kind === 'carolynne') return carolPose(ctx, ps, dt, m)
   const base = PARTS[kind]; if (!base) return
   const gun = ctx.getObject(ps.vmId + '/gun'); if (!gun) return
   const kids = (gun.children ?? []).map((c) => (typeof c === 'string' ? ctx.getObject(c) : c)).filter(Boolean)
@@ -395,6 +396,26 @@ function partsPose(ctx, ps, kind, dt, m) {
     if (Math.abs((m.magY ?? mb[1]) - y) > 1e-4) { m.magY = y; mg.feetPosition = { x: mb[0], y, z } }
     if (mg.visible !== !magHide) mg.visible = !magHide
   }
+}
+
+// the Carolynne: the pump snaps back and forward after each shot, the hopper jumps and rattles its ornaments, and at rest it sways a little
+function carolPose(ctx, ps, dt, m) {
+  const gun = ctx.getObject(ps.vmId + '/gun'); if (!gun) return
+  const kids = (gun.children ?? []).map((c) => (typeof c === 'string' ? ctx.getObject(c) : c)).filter(Boolean)
+  const part = (n) => kids.find((c) => c.id === n || c.id?.endsWith('/' + n))
+  m.shotT = (m.shotT ?? 9) + dt; m.carT = (m.carT ?? 0) + dt
+  const t = m.shotT
+  const pump = t < 0.12 ? 0 : t < 0.24 ? (t - 0.12) / 0.12 : t < 0.38 ? 1 - (t - 0.24) / 0.14 : 0 // a beat after the kick: rack back, slam home
+  const jolt = t < 0.6 ? Math.exp(-t * 7) : 0
+  const pu = part('pump'), hp = part('hopper')
+  if (pu) { const z = pump * 0.09; if (Math.abs((m.pumpZ ?? 0) - z) > 1e-4) { m.pumpZ = z; pu.feetPosition = { x: 0, y: 0, z } } }
+  if (hp) {
+    const y = jolt * 0.035 * Math.abs(Math.cos(t * 38)) + Math.sin(m.carT * 2.2) * 0.003
+    const roll = jolt * 9 * Math.sin(t * 46) + Math.sin(m.carT * 1.7) * 1.2
+    if (Math.abs((m.hopY ?? 0) - y) > 2e-4 || Math.abs((m.hopR ?? 0) - roll) > 0.1) { m.hopY = y; m.hopR = roll; hp.feetPosition = { x: 0, y, z: 0 }; hp.rotation = { yaw: 0, pitch: 0, roll } }
+  }
+  if (pump > 0 && !m.carRack) { m.carRack = true; ctx.emit('playSound', { clip: '/cdn/moodboard-toon-vibrant/sfx-pump-action-rack-with-jingle-bell-rattle.mp3', volume: 0.5 }) }
+  if (pump === 0 && t > 0.4) m.carRack = false
 }
 
 // a spent case thrown out to the right (brass for the pistol, a red hull from the shotgun's pump)
