@@ -7,6 +7,29 @@ import W from './lib/weapons.js'
 import { ATTRS, SKILLS, ATTR_MAX, SKILL_MAX, attrsOf, skillsOf, spentOf, tagsOf, dmgMul, derived, carried, burden, handling, reqText } from './lib/stats.js'
 
 const escT = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+const FIG = `<svg viewBox="0 0 120 180" fill="none" stroke="#ffb347" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+<path d="M38 30 L34 8 L50 22 M82 30 L86 8 L70 22"/><circle cx="60" cy="42" r="24"/>
+<path d="M50 40 q3 -4 6 0 M64 40 q3 -4 6 0"/><path d="M55 52 q5 5 10 0"/><path d="M57 47 h6"/>
+<path d="M46 66 q14 8 28 0 L80 110 q-20 6 -40 0 Z"/>
+<path d="M46 74 L22 92 L14 82 M74 74 L96 54 L104 60"/><circle cx="14" cy="80" r="4"/><circle cx="105" cy="58" r="4"/>
+<path d="M50 112 L46 160 L36 166 M70 112 L74 160 L84 166"/>
+<path d="M80 104 q22 6 18 -18 q-2 -8 6 -10"/></svg>`
+const pct = (v, m) => Math.max(0, Math.min(100, Math.round(100 * (v ?? m) / (m || 1))))
+const hmL = (sec) => { const m = Math.ceil(sec / 60); return m >= 60 ? `${Math.floor(m / 60)}h ${m % 60}m` : `${m}m` }
+function statusPanel(s, maxHp, maxSan) {
+  const bar = (lbl, v, pos) => `<div class="cb${v < 30 ? ' lo' : ''}" style="${pos}">${lbl}<i><u style="width:${v}%"></u></i></div>`
+  const ef = []
+  const b = s.smoothieBuff
+  if (b) ef.push(`<div class="e"><span class="sw" style="background:${b.col || '#ff77b7'};color:${b.col || '#ff77b7'}"></span><div><b>${escT(b.name)}</b><div style="opacity:.8">${[b.hp ? `+${b.hp} HP` : '', b.san ? `+${b.san} SAN` : '', b.food ? 'keeps you fed' : ''].filter(Boolean).join(' · ') || escT(b.desc)}</div></div><span class="t">${hmL(b.left)}</span></div>`)
+  if ((s.hunger ?? 100) < 25) ef.push(`<div class="e"><span class="sw" style="background:#ff8a5a;color:#ff8a5a"></span><div><b>Hungry</b><div style="opacity:.8">eat something</div></div></div>`)
+  if ((s.thirst ?? 100) < 25) ef.push(`<div class="e"><span class="sw" style="background:#ff8a5a;color:#ff8a5a"></span><div><b>Thirsty</b><div style="opacity:.8">drink something</div></div></div>`)
+  return `<div class="st"><div class="fig">${FIG}
+${bar('HP', pct(s.hp, maxHp), 'left:0;top:14px')}${bar('SAN', pct(s.sanity, maxSan), 'right:0;top:14px')}
+${bar('FOOD', pct(s.hunger, 100), 'left:0;top:120px')}${bar('WATER', pct(s.thirst, 100), 'right:0;top:120px')}
+<div style="position:absolute;left:0;right:0;bottom:-4px;text-align:center;font-size:11px;letter-spacing:.14em;color:#ffcf87">· LEVEL ${s.level ?? 1} ·</div></div>
+<div class="ef"><div class="sec" style="padding:0 0 4px">EFFECTS</div>${ef.join('') || '<div style="opacity:.6;padding:6px 0">Nothing active. Squeeze Play in the Bonus Room sells smoothies.</div>'}</div></div>`
+}
 const CSS = `<style>
 #wt{position:fixed;left:22px;bottom:128px;font-size:11px;letter-spacing:.14em;color:#ffcf87;text-shadow:0 1px 3px #000;pointer-events:none;opacity:.85}
 #wt.hv{color:#ff9a6a;opacity:1}
@@ -48,6 +71,21 @@ const CSS = `<style>
 #sh .dv span b{color:#ffe2a8;float:right}
 #sh .ft{display:flex;justify-content:flex-end;padding:8px 16px;border-top:1px solid #ffb34755}
 #sh .ft button{width:auto;padding:0 14px;height:30px;letter-spacing:.1em}
+#sh .st{display:grid;grid-template-columns:260px 1fr;gap:14px;padding:10px 16px;border-bottom:1px solid #ffb34744}
+#sh .fig{position:relative;height:190px}
+#sh .fig svg{position:absolute;left:50%;top:6px;width:120px;height:180px;margin-left:-60px;filter:drop-shadow(0 0 4px #ffb34788)}
+#sh .cb{position:absolute;width:62px;font-size:9px;letter-spacing:.12em;color:#ffcf87}
+#sh .cb i{display:block;height:6px;margin-top:2px;background:#ffb34733;box-shadow:inset 0 0 0 1px #ffb34799}
+#sh .cb i u{display:block;height:100%;background:#ffb347;box-shadow:0 0 6px #ffb347}
+#sh .cb.lo i u{background:#ff8a5a}
+#sh .ef{font-size:12px}
+#sh .ef .e{display:flex;gap:8px;align-items:center;padding:5px 0;border-bottom:1px dashed #ffb34733}
+#sh .ef .e b{color:#ffe2a8}
+#sh .ef .e .t{margin-left:auto;opacity:.75;font-size:11px}
+#sh .ef .sw{width:10px;height:10px;flex:none;box-shadow:0 0 6px currentColor}
+@keyframes figBob{50%{transform:translateY(-2px)}}
+#sh .fig svg{animation:figBob 2.6s ease-in-out infinite}
+@media (max-width:640px){#sh .st{grid-template-columns:1fr}}
 @media (max-width:640px){#sh .cols{grid-template-columns:1fr}#sh .col+.col{border-left:0;border-top:1px solid #ffb34744}}
 </style>`
 
@@ -72,6 +110,7 @@ export function statsUi(ctx, player) {
   out += `<div id="sh" data-modal>
     <div class="hd"><h2>${s.creating ? 'Create character' : `Character · Level ${s.level}`}</h2>${s.creating ? `<div class="pt" style="color:#ffe2a8">LOWER ONE TO RAISE ANOTHER · TAG ${s.tagsLeft ?? 0} SKILLS</div>` : (apts > 0 || spts > 0) ? `<div class="pt" style="color:#ffe2a8;">Points available</div><style>@keyframes halBlink{50%{opacity:.3}}</style>` : ""}<div class="pt">ATTRIBUTE POINTS <b>${apts}</b></div><div class="pt">SKILL POINTS <b>${spts}</b></div>${tl > 0 ? `<div class="pt">TAG <b>${tl}</b> MORE</div>` : ''}</div>
     ${s.creating ? '' : wristNav('sheet')}
+    ${s.creating ? '' : statusPanel(s, L.hp + (s.level - 1) * L.perLevel.hp + d.hpBonus, L.sanity + (s.level - 1) * L.perLevel.sanity + d.sanBonus)}
     <div class="cols"><div class="col"><div class="sec">ATTRIBUTES</div>${attrRows}</div><div class="col"><div class="sec">SKILLS</div>${skillRows}</div></div>
     <div class="dv">
       <span>Max HP <b>${L.hp + (s.level - 1) * L.perLevel.hp + d.hpBonus}</b></span><span>Max sanity <b>${L.sanity + (s.level - 1) * L.perLevel.sanity + d.sanBonus}</b></span>
