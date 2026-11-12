@@ -9,7 +9,7 @@ SRC = "/workspace/hats"; OUT = "/workspace/hats/out"; BODY = "/workspace/catrev/
 EYE = {"f": 0.86, "m": 0.915}   # world z of the painted eye line on each body
 R = {
   "megoggles":      dict(w=1.06, gap=0.010, strap=True),
-  "asyncvisor":     dict(w=1.10, gap=0.030, dz=-0.03, strap=True),
+  "asyncvisor":     dict(w=1.10, gap=0.030, dz=-0.03, strap=True, front=(1, -1)),
   "crackedglasses": dict(w=0.92, gap=0.012),
   "lobbyshades":    dict(w=0.94, gap=0.012),
   "almondspecs":    dict(w=0.86, gap=0.012),
@@ -43,7 +43,7 @@ def load(kind):
         sl = [v for v in vs if (v[axis] > hi - d * 0.12 if sign > 0 else v[axis] < lo + d * 0.12)]
         if len(sl) < 8: return 0
         o2 = 1 - axis; return (max(v.z for v in sl) - min(v.z for v in sl)) * (max(v[o2] for v in sl) - min(v[o2] for v in sl))
-    best = max(((ax, sg) for ax in (0, 1) for sg in (1, -1)), key=lambda k: area(*k))
+    best = R[kind].get("front") or max(((ax, sg) for ax in (0, 1) for sg in (1, -1)), key=lambda k: area(*k))
     yaw = {(1, -1): 0, (1, 1): math.pi, (0, 1): -math.pi / 2, (0, -1): math.pi / 2}[best]   # turn that end to -Y
     if yaw: o.data.transform(Matrix.Rotation(yaw, 4, "Z"))
     print("FRONT", kind, best)
