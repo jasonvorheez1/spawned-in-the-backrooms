@@ -26,7 +26,11 @@ export function layShop(ctx) {
   wall("wall-w", -41.9, 0, 0, 0.2, 5, 24, CREAM); wall("wall-n", -35, 0, -11.9, 13.6, 5, 0.2, CREAM); wall("wall-s", -35, 0, 11.9, 13.6, 5, 0.2, CREAM);
   wall("base-n", -35, 0, -11.79, 13.6, 0.9, 0.03, TEAL); wall("base-s", -35, 0, 11.79, 13.6, 0.9, 0.03, TEAL);
   // shopfront: two stubs and a header over a 14 m opening
-  wall("front-n", -28.125, 0, -9.5, 0.25, 3.2, 5, TEAL); wall("front-s", -28.125, 0, 9.5, 0.25, 3.2, 5, TEAL); wall("header", -28.125, 3.2, 0, 0.25, 1.8, 24, "oklch(0.3 0.05 200)");
+  // shopfront stubs: four Tripo teal-and-chrome memphis pilasters each (file 0.29 x 1 x 0.48 m), a hidden box per stub for collision
+  for (const [k, z0] of [["n", -9.5], ["s", 9.5]]) {
+    sp("front-" + k, { feetPosition: { x: -28.125, y: 0, z: z0 }, primitive: { kind: "box", width: 0.25, height: 3.2, depth: 5 }, render: false, physics: "static",
+      children: [0, 1, 2, 3].map((i) => ({ id: "p" + i, feetPosition: { x: 0, y: 0, z: (i - 1.5) * 1.25 }, model: "/cdn/value.8faca840ae55cd7013f7d9933f73bf8da283dabe7217ff98753b8c4752aeb954.glb", scale: { x: 1.05, y: 3.2, z: 2.6 } })) });
+  } wall("header", -28.125, 3.2, 0, 0.25, 1.8, 24, "oklch(0.3 0.05 200)");
   prop("neon", "neon", -27.96, 3.35, 0, E, false);
   // west wall: slatwall behind the counter, tees to the north, plush and CDs to the south
   prop("slat-a", "slatA", WX + 0.094, 0, -1.55, E, false); prop("slat-b", "slatB", WX + 0.094, 0, 1.55, E, false);
