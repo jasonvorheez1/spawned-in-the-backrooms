@@ -148,11 +148,7 @@ const hashOf = (str) => { let h = 2166136261; for (const c of String(str)) { h ^
 const CORE_SPECIES = C.species.filter((k) => !['human', 'faceling'].includes(k))
 export const speciesFor = (id, faction, role) => {
   const h = hashOf(id + ':sp')
-  if (['meg', 'guard', 'officer'].includes(faction) || ['guard', 'scout', 'captain'].includes(role)) {
-    if (h % 100 < 50) return 'human'
-  } else if (['survivor', 'wanderer', 'bntg', 'civ'].includes(faction)) {
-    if (h % 100 < 25) return 'human'
-  }
+  // Shelly Nov 12 "stop using the old critter models as the npcs": nobody rolls the old human body any more
   return CORE_SPECIES[h % CORE_SPECIES.length]
 }
 
@@ -175,6 +171,7 @@ export function npcLook(id, look, faction, level, role) {
 
   // If look did not specify species, roll across species
   if (!look?.species) l.species = speciesFor(id, faction, role)
+  if (l.species === 'human') l.species = 'cat' // a written-in human wears the new cat body too (Shelly Nov 12)
 
   l.role = role || (['guard', 'medic', 'trader', 'scout', 'quarter', 'scavenger', 'clerk', 'captain', 'keeper', 'psychic', 'pilgrim'].includes(faction) ? faction : (look?.role ?? 'survivor'))
   l.faction = faction || (look?.faction ?? 'wanderer')

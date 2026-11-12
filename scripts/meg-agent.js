@@ -9,7 +9,7 @@ import { seatFor } from "./lib/seat.js";
 import { rollLoot, garmentsOf } from "./lib/loot.js";
 import { stripTo, SLOTS } from "./lib/clothes.js";
 import { lifeOf, FEAR_TAGS, FEAR_LINES, WANT_LINES } from "./lib/npc-life.js";
-import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, isNewCat, CAT_JIGGLE, speciesFor, buildFor, critterSpec, faceMorph, baseBones, HUMAN, humanFace, mouthAt, setStyle } from "./lib/critter-model.js";
+import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, isNewCat, CAT_JIGGLE, speciesFor, buildFor, critterSpec, faceMorph, baseBones, HUMAN, humanFace, mouthAt, setStyle, bodyModel, seatCat } from "./lib/critter-model.js";
 // An M.E.G. agent: holds its post, greets players, and fights. It paths (builtin/nav) to the nearest creature
 // (hound, stealer) or a player who attacked the camp, shoots from range with line of sight, and goes home after.
 // Hostility is per player: scripts/player.js marks state.angry when a player hits an agent; every agent nearby adopts it.
@@ -110,6 +110,10 @@ function dress(ctx, me) {
   const was = toMesh(ctx, me);
   if (was) me.state.wear = was;
   else if (!me.state.wear && me.model) { const l = lookFromModel(me.model, ctx.getObject(me.id + "/" + HEAD_ID)?.model?.id ?? ctx.getObject(me.id + "/" + HEAD_ID)?.model); if (l?.species) me.state.wear = l; }
+  if (!HUMAN && me.model && me.state.wear?.species === "human" && me.session.catSwap !== 1) { // Shelly Nov 12: an NPC still on the old human body moves onto the new cat model, clothes and colours kept
+    me.session.catSwap = 1; const l = { ...me.state.wear, species: "cat" }; me.state.wear = l; if (me.state.look?.species === "human") me.state.look = { ...me.state.look, species: "cat" };
+    try { me.model = bodyModel(l); seatCat(ctx, me, l); } catch (e) { ctx.log("cat swap", me.id, String(e)); }
+  }
   if (staleBody(me.model)) { // an older Blender pass: re-dress on the current body and head, keeping its clothes and colours
     const local = String(me.id).split("/").pop(), old = { ...(lookFromModel(me.model, null) ?? {}), ...(me.state.wear ?? {}) }
     const l = { ...old, species: old.species && old.species !== "cat" ? old.species : speciesFor(local), sex: old.sex ?? "m" }
