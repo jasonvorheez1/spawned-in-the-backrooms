@@ -88,7 +88,9 @@ export function layXmas(ctx) {
   ctx.spawn("xmas-watcher", { ...ws, tags: ["xmas", "still-life", "container"], feetPosition: { x: wt.x, y: 0, z: wt.z }, rotation: { yaw: 20 }, physics: { body: "static", collider: "box" }, behavior: "scripts/xmas-still.js", children: [...(ws.children ?? []), seam(1.1, 0.1), seam(0.7, -0.12)],
     state: { role: "watcher", home: wt, name: "Still Life", verb: "Search", items: "stuffing,bauble,bauble" } });
   // the far door, shut; the closet behind it holds (c) the Red Stray
-  ctx.spawn("xmas-exit-door", { tags: ["xmas", "xmas-shut"], feetPosition: { x: dx, y: 0, z: R.z1 }, pivot: [0, 0.5, 0.5], physics: "kinematic", primitive: { kind: "box", width: 1.15, height: 2.12, depth: 0.06 }, material: { texture: "cdn/texture-worn-hardwood-grain.png", color: "oklch(0.45 0.06 40)", roughness: 0.6 }, state: { open: false } });
+  ctx.spawn("xmas-exit-door", { tags: ["xmas", "xmas-shut"], feetPosition: { x: dx - 0.58, y: 0, z: R.z1 }, physics: "kinematic", state: { open: false }, // the hinge, on the doorway's left jamb: the leaf swings with it (Shelly: "the door where that one red still life is is broken")
+    children: [{ feetPosition: { x: 0.575, y: 0, z: 0 }, physics: "static", primitive: { kind: "box", width: 1.15, height: 2.12, depth: 0.06 }, material: { texture: "cdn/texture-worn-hardwood-grain.png", color: "oklch(0.45 0.06 40)", roughness: 0.6 } },
+      { feetPosition: { x: 1.02, y: 0.98, z: -0.06 }, primitive: { kind: "sphere", radius: 0.035 }, material: { color: "oklch(0.7 0.1 80)", metalness: 0.9, roughness: 0.3 } }] });
   const rs = stillLook("m", "#a8322c");
   ctx.spawn("xmas-red-stray", { ...rs, tags: ["xmas", "still-life", "l8-hostile"], feetPosition: { x: dx, y: 0, z: R.z1 + 2 }, rotation: { yaw: 0 }, physics: "character", behavior: "scripts/xmas-still.js", children: [...(rs.children ?? []), seam(1.15, -0.12)],
     state: { role: "stray", name: "Red Stray", hp: X.stray.hp, maxHp: X.stray.hp, home: { x: dx, z: R.z1 + 2 } } });
