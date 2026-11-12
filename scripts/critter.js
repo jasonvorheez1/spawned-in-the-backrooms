@@ -230,8 +230,9 @@ export function update(ctx) {
   if (!ctx.self.state.look) ctx.self.state.look = randomLook(ctx, { ...C.default }, 'clothes') // a new critter: regular clothes only (saved looks are never touched)
   const ses = ctx.self.session, rawLook = ctx.self.state.look
   let l = ses.cachedLook
-  if (!l || rawLook !== ses.lastLookRef) {
-    ses.lastLookRef = rawLook
+  const rawKey = JSON.stringify(rawLook) // Nov 12: compared by value; a state handle can stay the same object after a salon change, so the body never redressed (Shelly: "the salon doesnt seem to affect me")
+  if (!l || rawKey !== ses.lastLookRef) {
+    ses.lastLookRef = rawKey
     l = ses.cachedLook = lookOf(ctx)
     ses.lookKey = null
   }
