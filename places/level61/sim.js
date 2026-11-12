@@ -13,7 +13,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 56;
+const V = 57;
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -846,7 +846,17 @@ function layStep(ctx) {
     layQ.reverse();
     return false;
   }
-  for (let n = 0; n < 250 && layQ.length; n++) { const [id, spec] = layQ.pop(); ctx.spawn(id, spec); }
+  for (let n = 0; n < 250 && layQ.length; n++) {
+    const [id, spec] = layQ.pop(), o = spec.model ? ctx.getObject(id) : null;
+    if (o && o.primitive) { // a standing shape the respec turned into a model: refit it in place
+      o.primitive = null; o.material = null; o.ui = null;
+      o.layout = spec.layout ?? null; o.model = spec.model; if (spec.rotation != null) o.rotation = spec.rotation;
+      if (spec.feetPosition) o.feetPosition = spec.feetPosition;
+      for (const c of o.children ?? []) if (c?.id && !c.light) ctx.destroy(c.id);
+      continue;
+    }
+    ctx.spawn(id, spec);
+  }
   if (layQ.length) return false;
   for (let n = 0; n < 120 && layDrop.length; n++) ctx.destroy(layDrop.pop());
   if (layDrop.length) return false;
