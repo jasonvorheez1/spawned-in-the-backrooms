@@ -28,7 +28,7 @@ export function hubUi(ctx, player) {
   let title = "", sub = "", rows = ""
   if (k === "diner") {
     title = "Tom's Diner"; sub = "Just for fun. Nothing here leaves the mall, and nothing here fills you up out there."
-    rows = Object.entries(B.food ?? {}).map(([key, f]) => `<div class="row"><div><div class="n">${f.name}</div></div><button ${can(f.price) ? "" : "disabled"} onclick="${act("food", key)}">${bd(f.price)}</button></div>`).join("")
+    rows = Object.entries(B.food ?? {}).map(([key, f]) => `<div class="row"><div><div class="n">${f.name}</div></div><button ${can(f.price) ? "" : "disabled"} onclick="${act("food", key)}">FREE</button></div>`).join("")
   } else if (k === "clothes") {
     title = "Liminal Clothes"; sub = "Casual wear. Bought pieces go in your bag (I)."
     rows = (B.clothes ?? []).map(([tok, price], i) => { const p = parseCloth(tok); const name = `${p?.pat ? p.pat + " " : ""}${p?.row?.name ?? tok}`; return `<div class="row"><div style="display:flex;gap:10px;align-items:center"><span style="width:18px;height:18px;border-radius:4px;background:${p?.colour ?? "#888"};border:1px solid #fff4"></span><div class="n">${name}</div></div><button ${can(price) ? "" : "disabled"} onclick="${act("cloth", i)}">${bd(price)}</button></div>` }).join("")

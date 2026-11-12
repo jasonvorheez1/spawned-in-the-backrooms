@@ -37,7 +37,7 @@ export function update(ctx) {
 
 function buyFood(ctx, s, key) {
   const f = B.food?.[key]; if (!f) return
-  const cost = Math.round((f.price ?? 1) * 100)
+  const cost = 0 // Tom's is on the house (Shelly: paying felt like a ripoff)
   if ((s.cents ?? 0) < cost) { ding(ctx, NOPE); return tell(ctx, s, `Not enough Backdollars for ${f.name}.`) }
   s.cents -= cost; ding(ctx, CASH)
   s.hubFood = { key, at: ctx.now() } // held in your hand while you're in the mall; ui.js and the diner's models read it
