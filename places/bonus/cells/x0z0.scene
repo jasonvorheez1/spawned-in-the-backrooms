@@ -608,7 +608,7 @@ bc-juicebar:
   tags: [bonus-court, usable]
 bc-juicebar-sign:
   castShadow: true
-  feetPosition: {x: 6.45, y: 1.68, z: 12}
+  feetPosition: {x: 6.12, y: 1.7, z: 12}
   id: bc-juicebar-sign
   material: {roughness: 0.7, texture: /cdn/value.6a5f5c5ffb034f2ab700535dd41bbb7a5aac403e67333c4ad5554f37715007bd.png}
   primitive: {depth: 0.04, height: 0.6, kind: box, width: 1.6}
