@@ -1,7 +1,7 @@
 import {upgradeNearby,upgradeProp,containerPose,toggleLamp} from './lib/prop-interactions.js'
 import { screen } from './lib/screen.js'
 import { regrowWrecks } from "./lib/breakables.js";
-import { vo } from './lib/voices.js';
+import { vo, voiceKey } from './lib/voices.js';
 import { heard } from "./lib/hear.js";
 import { sitDown, standUp, seatTick, spotsOf, holder } from './lib/seat.js'
 import { rollItemL3 } from './lib/loot3.js'
