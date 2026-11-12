@@ -35,7 +35,15 @@ function say(ctx, me, key, to) {
   me.state.line = { t: text, at: now, d }; me.state.talkTo = to?.id ?? null;
   const clip = vo("l7-tiny", text);
   // telepathy: it sounds inside the head, not from the water, so it is not spatial and only the hunted hears it
-  if (clip && to) heard(ctx, { clip, volume: 0.95, bus: "Voice" }, { audience: { player: to.id } });
+  if (clip && to) {
+    heard(ctx, { clip, volume: 0.95, bus: "Voice" }, { audience: { player: to.id } });
+    // a second him, lower and quiet, under the first: two voices sharing one throat
+    ctx.emit("playSound", { clip, volume: 0.28, pitch: 0.8, bus: "Voice" }, { audience: { player: to.id } });
+    // the skull echo rides only the hunted player's voice bus while he speaks
+    me.audio = { kind: "program", script: "scripts/tiny-mind.js", input: "Voice", spatial: false, listeners: [to.id] };
+    m.mindOff = now + d + 900;
+    ctx.emit("screenFlash", { color: "#04121a", duration: d / 1000, intensity: 0.32 }, { audience: { player: to.id } });
+  }
 }
 
 export function onSpawn(ctx) {
@@ -57,6 +65,7 @@ export const ears = {
 export function update(ctx, dt) {
   const me = ctx.self, m = me.session, s = me.state, now = ctx.now(), p = me.feetPosition;
   m.mode ??= "patrol"; m.ang ??= 0; m.v ??= { x: 0, y: 0, z: 0 };
+  if (me.audio && now > (m.mindOff ?? 0)) me.audio = null;
   const swimmers = ctx.place.players.filter((q) => wet(q) && !q.state?.dead && (q.state?.hp ?? 1) > 0);
   let prey = m.prey ? ctx.place.players.find((q) => q.id === m.prey) : null;
   if (prey && (prey.state?.dead || (prey.state?.hp ?? 1) <= 0)) { say(ctx, me, "kill", prey); m.prey = null; prey = null; m.mode = "patrol"; }
