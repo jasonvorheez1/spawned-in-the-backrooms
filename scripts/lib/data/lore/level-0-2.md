@@ -1,5 +1,5 @@
 # Level 0.2 "Remodeled Mess" (Wikidot, survival difficulty 3)
-Shelly handed this page on Nov 12 (#242xxx) and asked for the level plus a quest with a physics puzzle.
+Shelly handed this page on Nov 12 (#242849) and asked for the level plus a quest with a physics puzzle.
 
 - A sub-section between Level 0 and Level 1, made by Backrooms Remodeling Co. trying to "remodel" Level 0.
 - Untouched, it looks fixed: dry red carpet, repainted white walls, working Wi-Fi and outlets, the odd bathroom.

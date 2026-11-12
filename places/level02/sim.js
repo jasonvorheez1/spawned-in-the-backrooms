@@ -4,13 +4,11 @@
 // Empty for 15 s, the whole thing is put back as if nothing happened. Puzzle: the freight lift (east) is stuck up top
 // with a freshener on it; three paint cans (14 kg) on the counterweight pan bring it down. Cap'n stands by the stairs.
 import { animate } from "builtin/tween";
-import { critterSpec } from "../../scripts/lib/critter-model.js";
-import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 import { S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, xOf } from "../../scripts/lib/level02.js";
 import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 export const cadence = "250ms";
-const V = 1, STEP_MS = 2600;
+const V = 2, STEP_MS = 2600;
 const W = 2 * S * 0 + NX * S, D = NZ * S; // 32 x 20 m
 const CARPET = { color: "oklch(0.42 0.12 25)", roughness: 0.95, texture: "cdn/texture-dry-red-office-carpet-low-pile.png", wrap: "repeat", repeat: [0.5, 0.5] };
 const PAINT = { color: "oklch(0.95 0.006 90)", roughness: 0.85 };
@@ -82,8 +80,8 @@ function layShell(ctx) {
   layCans(ctx);
   // Cap'n, by the stairs, clipboard in hand: grey trench coat, white apron, brown wool trousers, rain boots (wiki look)
   sp(ctx, "l02-capn", {
-    tags: ["npc", "remodel"], feetPosition: { x: -4, y: BASE + 0.05, z: -6 }, rotation: { yaw: 120 }, physics: "character",
-    ...critterSpec(npcLook("l02-capn", { species: "faceling", sex: "m", topw: "jacket", top: "#9fb0bf", botw: "pants", bottom: "#6b4a2e", shoes: "boots" }, "wanderer", 2)),
+    tags: ["npc", "remodel", "essential"], feetPosition: { x: -4, y: BASE + 0.05, z: -6 }, rotation: { yaw: 120 }, physics: "character",
+    primitive: { kind: "scripted", script: "scripts/remodel-crew-geo.js", params: { badge: "silver" } }, // pitch-black, faceless, white circle eyes (remodeling-co.md)
     behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
     state: { name: "Cap'n · Remodeling Co.", role: "wanderer", voice: "l02-capn#m", faction: "remodel", factionName: "Backrooms Remodeling Co.", home: { x: -4, z: -6 }, line: "Sorry for the inconvenience. We are improving things.", ...npcState(ctx, "wanderer", 100) },
   });

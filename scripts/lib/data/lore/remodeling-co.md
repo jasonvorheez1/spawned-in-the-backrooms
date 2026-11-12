@@ -1,7 +1,7 @@
 # Backrooms Remodeling Co. (Wikidot group page)
 Shelly handed this page on Nov 12 with Level 0.2.
 
-- Militaristic housing/remodeling company. Pitch-black humanoid employees who "improve" areas of the Backrooms,
+- Militaristic housing/remodeling company. Pitch-black employees who "improve" areas of the Backrooms,
   usually catastrophically; a remodeled area splits off into its own sub-level.
 - Intentions read as good. Attempts to stop them have ceased to keep peace with their military.
 - Look: featureless dark faces, no mouth or nose, yet they talk; big white circle eyes that emote comically.
@@ -14,12 +14,13 @@ Shelly handed this page on Nov 12 with Level 0.2.
 - Tech bends Level reality. Object 32 "Reality Fresheners" hang on their belts; set down, they lock the surrounding
   reality so the area stops changing.
 - Task force 102-CX employees:
-  - Cap'n: most human-looking, silver badge, the leader, holds full conversations.
+  - Cap'n: the most upright of the crew, silver badge, the leader, holds full conversations.
   - Penelope: six legs under the torso, walks like a spider or ant, runs the errands and menial work.
   - Grunt: big muscular, knuckle-walks like a gorilla, barely speaks.
   - Toaster: an unplugged toaster the crew carries around; may not be alive.
 - Supervisor: Major Took (writes the job notes, frustrated with this crew).
 - Remodeled levels: 0.2 Remodeled Mess, 0.3 Icy Rooms, 90 Newly Renovated Home, 381 Comfy Cellar, 481 The Code,
   998.2 Fight Club. Connected: Entity 132 TV Heads, Entity 332 Constructors, Phenomenon 9 Blue Consumption.
-- In this game (critter world): the crew are the faceless-black exception like Facelings, kept faceless with big
   white eyes. Their quest is given by Kade (B.N.T.G. Acquisitions, Level 0), who wants the fresheners.
+
+- Look in this game: every employee is a pitch-black, featureless figure with no mouth or nose and two big white circle eyes that emote. Uniform: blue-grey buttoned trench coat, red pauldrons, white apron, black belt, brown wool trousers, black rain boots, dark grey beret with a rank badge (copper, silver, gold).
