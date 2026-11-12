@@ -93,12 +93,12 @@ function flairClip(face) {
       yaw.push(+(amp * w * Math.sin(t)).toFixed(2))
       pitch.push(+((i === 0 ? pit : pit * 0.35) + c * (TAIL_CURL[mood] ?? 0) + amp * 0.18 * Math.sin(2 * t)).toFixed(2)) // a little bob twice a swing: the bounce that sells it
     }
-    tracks[bone] = { yaw, pitch }
+    tracks[bone] = { roll: yaw, pitch } // the mesh tail's bones run along their own Y, so yaw only twisted it in place: roll is the side-to-side swing
   })
   tracks.EarL = { roll: f.ear.roll.map((v) => -v) }; tracks.EarR = { roll: f.ear.roll }
   return { duration: f.d, tracks }
 }
-const FLAIR_V = 'w3'
+const FLAIR_V = 'w4'
 function flair(obj, face) { obj.anim.flair = { clip: flairClip(face), loop: 'loop', weight: 1, blendIn: 0.3 } }
 
 // an old look (one outfit + one accessory) reads into the clothing slots
