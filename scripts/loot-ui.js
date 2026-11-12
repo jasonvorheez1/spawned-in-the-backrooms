@@ -679,7 +679,7 @@ function inventory(s) {
       <span class="stat-r"><span>×${s[k]}</span></span>
     </button>`).join('')
   // Misc list
-  const misc = `${s.compass > 0 ? `<button class="it" onclick="sendAction('inv',{k:'compass'})"><span class="cur">&gt;</span><span class="nm" style="color:#d8b56a">Old compass</span><span class="stat-r">${s.compass} reads</span></button>` : ''}
+  const misc = `${s.skates ? `<div class="it"><span class="cur">&gt;</span><span class="nm" style="color:#ff9a4a">Roller skates</span><span class="stat-r">Level 31 rink</span></div>` : ''}${s.compass > 0 ? `<button class="it" onclick="sendAction('inv',{k:'compass'})"><span class="cur">&gt;</span><span class="nm" style="color:#d8b56a">Old compass</span><span class="stat-r">${s.compass} reads</span></button>` : ''}
     ${s.firesalt > 0 ? `<button class="it" onclick="sendAction('inv',{k:'firesalt'})"><span class="cur">&gt;</span><span class="nm" style="color:#ff8a3a">Firesalt</span><span class="stat-r">${s.firesalt} pinches</span></button>` : ''}
     ${s.bobbypins ? `<button class="it${sel === 'bobbypin' ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'bobbypin'})"><span class="cur">&gt;</span><span class="nm">Bobby pins</span><span class="stat-r">${s.bobbypins}</span></button>` : ''}
     ${s.pages ? String(s.pages).split(',').filter(Boolean).sort((x, y) => x - y).map((n) => `<button class="it" onclick="sendAction('inv',{k:'read',n:${+n}})"><span class="cur">&gt;</span><span class="nm" style="color:#e8dcc0">${+n === 24 ? 'Field doc 24' : +n >= 21 && +n <= 23 ? 'Field doc ' + (+n - 20) : +n >= 11 && +n <= 17 ? 'Alef papers ' + (+n - 10) : 'Torn page ' + +n}</span><span class="stat-r">READ</span></button>`).join('') : ''}` || '<div class="em">No miscellaneous items.</div>'

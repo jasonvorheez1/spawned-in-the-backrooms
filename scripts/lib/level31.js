@@ -14,3 +14,30 @@ export const ARRIVE = { x: -30, y: 0.1, z: 27 }; // just inside the plywood door
 export const DOOR = { x: -30, z: 30 };
 export const onRink = (x, z) => { const dx = Math.max(0, Math.abs(x - RINK.cx) - RINK.half); return Math.hypot(dx, z - RINK.cz) <= RINK.r; };
 export const zoneAt = (x, z) => { if (onRink(x, z)) return "rink"; for (const [k, r] of Object.entries(ZONES)) if (x >= r.x0 && x <= r.x1 && z >= r.z0 && z <= r.z1) return k; return "carpet"; };
+
+// Skating on the wood (Shelly Nov 12: slip and slide in shoes, travel fine on bought skates with roller physics). All numbers Savi's picks.
+export const SKATE = {
+  shoe: { push: 1.5, top: 4.2, drag: 0.45, slipSpeed: 2.6, slipTurn: 0.25, slipFor: 0.7, slipKick: 2.2, slipEvery: 1.6 },
+  roll: { push: 3.6, sprintPush: 5.2, top: 7.5, sprintTop: 10.5, drag: 0.7, brake: 8.5, turn: 150, turnFast: 60 },
+};
+// one step of the rink: where the body's flat velocity goes next. w is the mover's scratch, rnd a 0..1 roll.
+export function skateStep(K, skates, w, dir, pressing, sprinting, vx, vz, dt, nowMs, rnd) {
+  let sp = Math.hypot(vx, vz); const dl = Math.hypot(dir.x, dir.z), dx = dl > 0.01 ? dir.x / dl : 0, dz = dl > 0.01 ? dir.z / dl : 0, go = pressing && dl > 0.01;
+  let hx = sp > 0.2 ? vx / sp : dx, hz = sp > 0.2 ? vz / sp : dz;
+  if (!skates) { // shoes on polished wood: barely any grip, and a hard turn at speed takes your feet out
+    const k = K.shoe; if (nowMs < (w.slipUntil ?? 0)) { sp = Math.max(0, sp - k.drag * dt); return { x: hx * sp, z: hz * sp }; }
+    if (go) { let nx = vx + dx * k.push * dt, nz = vz + dz * k.push * dt; const n = Math.hypot(nx, nz); if (n > k.top) { nx *= k.top / n; nz *= k.top / n; }
+      if (sp > k.slipSpeed && hx * dx + hz * dz < k.slipTurn && nowMs > (w.slipNext ?? 0)) { w.slipNext = nowMs + k.slipEvery * 1000; w.slipUntil = nowMs + k.slipFor * 1000; const a = (rnd - 0.5) * 2.4, c = Math.cos(a), s = Math.sin(a); return { x: (hx * c - hz * s) * (sp + k.slipKick), z: (hx * s + hz * c) * (sp + k.slipKick), slipped: true }; }
+      return { x: nx, z: nz }; }
+    sp = Math.max(0, sp - k.drag * dt); return { x: hx * sp, z: hz * sp };
+  }
+  const k = K.roll;
+  if (!go) { sp = Math.max(0, sp - k.drag * dt); return { x: hx * sp, z: hz * sp }; } // let go and you glide
+  const dot = hx * dx + hz * dz;
+  if (dot < -0.4 && sp > 0.6) { sp = Math.max(0, sp - k.brake * dt); return { x: hx * sp, z: hz * sp }; } // lean back: toe stop
+  const top = sprinting ? k.sprintTop : k.top, f = Math.min(1, sp / k.sprintTop), maxTurn = (k.turn + (k.turnFast - k.turn) * f) * Math.PI / 180 * dt; // wide arcs at speed
+  let ang = Math.atan2(hx * dz - hz * dx, dot); ang = Math.max(-maxTurn, Math.min(maxTurn, ang));
+  const c = Math.cos(ang), s = Math.sin(ang); const rx = hx * c - hz * s, rz = hx * s + hz * c;
+  sp = sp < top ? Math.min(top, sp + (sprinting ? k.sprintPush : k.push) * Math.max(0.25, dot) * dt) : Math.max(top, sp - k.drag * 2 * dt);
+  return { x: rx * sp, z: rz * sp };
+}

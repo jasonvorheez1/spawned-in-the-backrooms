@@ -61,6 +61,7 @@ import AW from './lib/data/almond.yml'
 import { MEAT } from './lib/items.js'
 import SNACKS from './lib/data/snacks.yml'
 import { carryAcross } from "./lib/carry.js";
+import { onRink, SKATE, skateStep } from './lib/level31.js'
 const sndTurn = {}
 const SND = (n) => { const takes = SOUNDS[n]; if (!takes?.length) return `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`; sndTurn[n] = ((sndTurn[n] ?? -1) + 1 + (takes.length > 2 ? Math.floor(takes.length / 2) : 0)) % takes.length; return takes[sndTurn[n]] }
 const L_PER = () => L.perLevel.damage
@@ -372,6 +373,11 @@ function takeToken1(ctx, token) {
   if (token === 'nvg') { // night vision goggles: they make no light, so Level 6's dark can't eat them (Savi's pick, Shelly asked for a way to see)
     if (s.nvg) { s.nvgSpare = (s.nvgSpare ?? 0) + 1; s.pickedAt = now; s.notice = { text: `Spare night vision goggles (${s.nvgSpare}) · swap in when the battery dies`, at: now }; sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true } } // a duplicate is a full spare, not wasted
     s.nvg = true; s.pickedAt = now; s.notice = { text: 'Night vision goggles · Press F to activate · Essential in the anomalous darkness of Level 6', at: now }
+    sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true }
+  }
+  if (token === 'skates') { // Level 31's rental skates: owning them is what makes the rink rideable (scripts/lib/level31.js)
+    if (s.skates) { s.cents = (s.cents ?? 0) + 500; s.notice = { text: 'You already have skates. The Coach hands your $5 back.', at: now }; return { ok: true } }
+    s.skates = true; s.pickedAt = now; s.notice = { text: 'Roller skates · they go on when you step onto the wood · forward pushes, let go to glide, back to brake', at: now }
     sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true }
   }
   if (token === 'compass') { // an old compass: a few reads left in it (use it from the inventory or a quick slot)
@@ -1295,6 +1301,14 @@ export function update(ctx, dt) {
   const step = (along ? PLAYER.acceleration : PLAYER.deceleration) * dt * (w.onSlick ? 0.07 : 1) // soup underfoot: you skate
   if (!Number.isFinite(intent.x) || !Number.isFinite(intent.z)) { intent.x = 0; intent.z = 0; if (!Number.isFinite(w.bur)) w.bur = undefined; w.dv = undefined } // a fresh save's sheet can read NaN for a beat: stand still, re-derive next tick
   const vx = Number.isFinite(v.x) ? v.x : 0, vz = Number.isFinite(v.z) ? v.z : 0, vy = Number.isFinite(v.y) ? v.y : 0
+  if (ctx.self.place === 'level31' && fp.y < 0.4 && onRink(fp.x, fp.z)) { // Level 31's wood: shoes slip, skates roll
+    const o = skateStep(SKATE, !!s.skates, w, dir, pressing, sprinting, vx, vz, dt, nowS, ctx.random())
+    if (o.slipped) { s.notice = { text: s.skateTip ? 'You slip.' : 'You slip. The wood is slick in shoes. The Coach rents skates.', at: nowS }; s.skateTip = 1; ctx.emit('playSound', { clip: 'cdn/sfx-sneaker-sole-squeak-slip-on-polished-wood-floor.mp3', volume: 0.6 }) }
+    if (!w.onRink) { w.onRink = true; if (s.skates) ctx.emit('playSound', { clip: 'cdn/sfx-roller-skate-wheels-step-onto-wood-rink-clack.mp3', volume: 0.5 }) }
+    ctx.self.velocity = { x: o.x, y: vy + ctx.place.gravity.y * dt, z: o.z }
+    return
+  }
+  if (w.onRink) w.onRink = false
   const dx = intent.x - vx, dz = intent.z - vz, gap = Math.hypot(dx, dz), k = gap > step ? step / gap : 1
   ctx.self.velocity = { x: vx + dx * k, y: vy + ctx.place.gravity.y * dt, z: vz + dz * k }
 
