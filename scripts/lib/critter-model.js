@@ -1027,7 +1027,7 @@ export function catLook(l) {
   o.tail = TAILS.includes(l?.tail) ? l.tail : hashPick(`${l?.fur}|${l?.fseed ?? ''}|tl`, ['classic', 'classic', 'fluffy', 'bob', 'puff', 'whip', 'curl'])
   o.fluff = Array.isArray(l?.fluff) ? l.fluff : l?.fluff ? [l.fluff] : ['cheeks']
   if (l?.chest != null) o.chest = l.chest; else if (sex === 'f' && Number(l?.bustS)) o.chest = Math.max(0, Math.min(1, 0.5 * Number(l.bustS)))
-  if (l?.species === 'faceling') o.etype = 'faceling'
+  if (l?.species === 'faceling') { o.etype = 'faceling'; if (!l?.fur) o.fur = hashPick(`${l?.fseed ?? ''}|${l?.top}|${l?.sex}|skin`, ['#ebd4c2', '#f3cfad', '#fae1dc', '#dfa273', '#c68652', '#8d5524']) } // a faceling's skin is a person's, never the orange default
   if (!o.hair) delete o.hair
   return o
 }
