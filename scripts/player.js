@@ -726,6 +726,15 @@ function tracer(ctx, p, f, range) {
 
 // ---- reloading: a magazine gun swaps its magazine; a shotgun loads one shell at a time and can be fired mid-reload.
 // player.state.loaded_<weapon> is the rounds in the gun; the ammo / shells counts are the reserve.
+// Nov 12 (Shelly: "reloading is broken again"): her body's after() timers sat due and never fired, so a reload hung.
+// the reload's steps now ride the body's own update clock: a list in session, stepped every tick (laterTick)
+function later(ctx, sec, name, p) { const q = (ctx.self.session.later ??= []); q.push({ at: ctx.now() + sec * 1000, name, p }) }
+function laterTick(ctx) {
+  const q = ctx.self.session.later; if (!q?.length) return
+  const now = ctx.now(), due = q.filter((e) => e.at <= now); if (!due.length) return
+  ctx.self.session.later = q.filter((e) => e.at > now)
+  for (const e of due) ({ reloadStep, reloadMagIn, reloadDone, pumpRack })[e.name]?.(ctx, e.p)
+}
 const reloadLive = (ctx, p) => { const s = ctx.self.state; return s.reloading === p.k && s.equipped === p.k && (s.reloadTok ?? 0) === p.tok }
 
 function startReload(ctx) {
@@ -737,11 +746,11 @@ function startReload(ctx) {
   s.reloading = k; s.ads = false; s.reloadDur = (wp.reloadTime ?? 1.7) * derived(s).reload // the viewmodel plays its timeline over the real length
   if (perRound(wp)) { // a shell, or a cartridge into a tube, a cylinder or a break-action's barrels, one at a time
     if (wp.sfx?.open) sound(ctx, wp.sfx.open, 0.65, true)
-    ctx.after(wp.reloadStart ?? 0.4, 'reloadStep', { k, tok })
+    later(ctx, wp.reloadStart ?? 0.4, 'reloadStep', { k, tok })
   } else {
     sound(ctx, GS(wp, 'eject', 'pistol-magazine-eject-click'), 0.6, true)
-    ctx.after(wp.reloadTime * derived(s).reload * 0.55, 'reloadMagIn', { k, tok })
-    ctx.after(wp.reloadTime * derived(s).reload, 'reloadDone', { k, tok })
+    later(ctx, wp.reloadTime * derived(s).reload * 0.55, 'reloadMagIn', { k, tok })
+    later(ctx, wp.reloadTime * derived(s).reload, 'reloadDone', { k, tok })
   }
 }
 
@@ -778,9 +787,9 @@ export function reloadStep(ctx, p) {
     s.reloadN = (s.reloadN ?? 0) + 1
     sound(ctx, GS(wp, 'shell', 'shotgun-shell-insert-click'), 0.7, true)
   }
-  if ((s['loaded_' + p.k] ?? 0) < wp.magSize && (s[rk] ?? 0) > 0) ctx.after(wp.reloadShell ?? 0.55, 'reloadStep', p)
+  if ((s['loaded_' + p.k] ?? 0) < wp.magSize && (s[rk] ?? 0) > 0) later(ctx, wp.reloadShell ?? 0.55, 'reloadStep', p)
   else if (wp.wheel || wp.breech) { s.reloading = ''; sound(ctx, GS(wp, 'done', 'shotgun-break-action-close-snap'), 0.75, true) } // the cylinder snaps shut, the barrels close: nothing to rack
-  else { s.reloading = ''; ctx.after(0.25, 'pumpRack', {}) }
+  else { s.reloading = ''; later(ctx, 0.25, 'pumpRack', {}) }
 }
 
 export function pumpRack(ctx) {
@@ -1224,6 +1233,7 @@ function fitPaws(body, w, left, both) {
 
 export function update(ctx, dt) {
   preloadTick(ctx) // a level door within reach starts its level's models downloading (lib/preload-next.js)
+  laterTick(ctx) // reload steps (later())
   forgiveTick(ctx) // the angry cool off an in-game hour after your last offence (lib/forgive.js)
   { const me = ctx.self, ses = me.session, hp = me.state.hp ?? 0, nowS = ctx.now(); tick3(me, nowS); if (ses.hpSeen != null && hp < ses.hpSeen - 2.5 && hp > 0 && nowS - (ses.stagAt ?? 0) > 450) { ses.stagAt = nowS; stagger3(ctx, me) } ses.hpSeen = hp } // a stagger take each real hit (Shelly Nov 10)
   { const st = ctx.self.state; if (st.reloading && (st.equipped !== st.reloading || !st.reloadAt || ctx.now() - st.reloadAt > 9000)) { st.reloading = ''; st.reloadTok = (st.reloadTok ?? 0) + 1 } } // a reload stranded by a swap, a page reload or a lost timer clears itself
