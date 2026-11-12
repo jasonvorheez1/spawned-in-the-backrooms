@@ -79,13 +79,26 @@ const FLAIR = {
   angry:  { d: 0.9, tail: { yaw: [-40, 10, 40, -10, -40], pitch: [25, 30, 25] }, ear: { roll: [-22, -22, -22] } },
 }
 const MOOD = { grin: 'happy', joy: 'happy', love: 'happy', wink: 'happy', smug: 'calm', smile: 'calm', sleepy: 'sad', sad: 'sad', scared: 'scared', surprised: 'scared', angry: 'angry' }
+// Shelly Nov 12 "animate the tails too and make them cute as hell": the mesh body's tail is three bones (Tail1..Tail3), so the swish is a
+// travelling wave down them, each joint a beat behind the one before, the tip curling up and flicking widest. Tail is the scripted body's root joint.
+const TAIL_SEG = [['Tail', 0.7, 0], ['Tail1', 0.75, 0], ['Tail2', 1.0, 0.6], ['Tail3', 1.3, 1.2]], TAIL_N = 13, TAIL_LAG = 0.75
+const TAIL_CURL = { happy: 16, calm: 12, sad: -4, scared: -2, angry: 4 } // how far each joint toward the tip lifts: a question-mark hook when happy
 function flairClip(face) {
-  const f = FLAIR[MOOD[face] || 'calm'], half = (a) => a.map((v) => v * 0.5)
-  return { duration: f.d, tracks: {
-    Tail: { yaw: f.tail.yaw, pitch: f.tail.pitch }, Tail1: { yaw: half(f.tail.yaw), pitch: half(f.tail.pitch) },
-    EarL: { roll: f.ear.roll.map((v) => -v) }, EarR: { roll: f.ear.roll },
-  } }
+  const mood = MOOD[face] || 'calm', f = FLAIR[mood], amp = Math.max(...f.tail.yaw.map(Math.abs)), pit = f.tail.pitch.reduce((a, b) => a + b, 0) / f.tail.pitch.length
+  const tracks = {}
+  TAIL_SEG.forEach(([bone, w, c], i) => {
+    const yaw = [], pitch = []
+    for (let k = 0; k < TAIL_N; k++) {
+      const t = (k / (TAIL_N - 1)) * Math.PI * 2 - i * TAIL_LAG
+      yaw.push(+(amp * w * Math.sin(t)).toFixed(2))
+      pitch.push(+((i === 0 ? pit : pit * 0.35) + c * (TAIL_CURL[mood] ?? 0) + amp * 0.18 * Math.sin(2 * t)).toFixed(2)) // a little bob twice a swing: the bounce that sells it
+    }
+    tracks[bone] = { yaw, pitch }
+  })
+  tracks.EarL = { roll: f.ear.roll.map((v) => -v) }; tracks.EarR = { roll: f.ear.roll }
+  return { duration: f.d, tracks }
 }
+const FLAIR_V = 'w2'
 function flair(obj, face) { obj.anim.flair = { clip: flairClip(face), loop: 'loop', weight: 1, blendIn: 0.3 } }
 
 // an old look (one outfit + one accessory) reads into the clothing slots
@@ -267,7 +280,7 @@ export function update(ctx) {
     const humanNow = HUMAN || speciesOf(ses.cachedParams) === 'human'
     if (humanNow) { if (ses.flair !== 'human') { ses.flair = 'human'; ctx.self.anim.flair = null; ctx.self.anim.cute = null; ctx.self.bones = {}; ses.lids = false; ses.twitch = null } } // the human rig has no tail, ears or lids
     if (!humanNow) {
-    if (ses.flair !== face) { ses.flair = face; flair(ctx.self, face) }
+    if (ses.flair !== face + FLAIR_V) { ses.flair = face + FLAIR_V; flair(ctx.self, face) }
     life(ctx, face)
     }
   }
@@ -296,7 +309,7 @@ export function update(ctx) {
       const bm = bustMorph(params)
       ctx.self.morph = bm ?? null
       ctx.self.material = { outline: { color: '#1d1420', width: 2.4 } }
-      ctx.self.jiggle = { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.68, bounce: 0.72 }
+      ctx.self.jiggle = { bones: ['Tail', 'Tail1', 'Tail2', 'Tail3', 'EarL', 'EarR'], amount: 0.68, bounce: 0.72 }
       wearHead(ctx, ctx.self, params)
       }
     }

@@ -767,7 +767,7 @@ export function critterSpec(l) {
       ...(maskOf(l) ? { visible: false } : {})
     }, maskChild(l), hairChild(l), beardChild(l)].filter(Boolean),
     material: { outline: { color: '#1d1420', width: 2.4 } },
-    jiggle: { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.68, bounce: 0.72 },
+    jiggle: { bones: ['Tail', 'Tail1', 'Tail2', 'Tail3', 'EarL', 'EarR'], amount: 0.68, bounce: 0.72 },
     ...(l?.heightS || l?.buildS ? { scale: { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 } } : {})
   }
 }
