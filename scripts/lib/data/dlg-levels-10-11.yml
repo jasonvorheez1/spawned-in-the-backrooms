@@ -469,11 +469,43 @@ bonus-dawn:
   barks: { idle: ["Layers.", "No rustling.", "That's the look."], hi: ["Hey.", "Hi!"] }
   gest: { wave: "Hey!", gift: "Ooh, thanks!", dance: "Runway! Go!", nodance: "Folding.", insult: "Your outfit said worse." }
 bonus-rico:
-  hi: "Teleport Station! Step on the pad, pick your level, try not to flinch. Everyone flinches."
-  back: ["Back! Where to?", "Hey! Flinched last time?"]
-  bye: "Keep your arms in!"
+  hi: "Bonus Line, platform one! I'm Rico. I punch tickets, I call the train, I keep the yellow line yellow."
+  back: ["Back! Where's she taking you today?", "Hey! Marigold missed you. That's the train.", "Platform one, still open. Always open."]
+  warm: "My favorite rider. Front car's yours, nobody sits there anyway."
+  cold: "Ticket. Then the train. Then not my problem."
+  bye: "Arms in, eyes front!"
+  walk: "Hey, the train doesn't wait! Okay it does. But still!"
   ask:
-    - q: "Is teleporting safe?"
-      a: "Totally. Mostly. A guy came out with his watch on the other wrist once. That's it. That's the only story. I think."
-  barks: { idle: ["Step on the pad!", "Arms in!", "Everyone flinches."], hi: ["Hey!", "Where to?"] }
-  gest: { wave: "Yo!", gift: "Ha, thanks!", dance: "On the pad? Ha!", nodance: "Station's busy.", insult: "I'll send you somewhere damp." }
+    - q: "What is this train?"
+      a: "Marigold. She runs from here to wherever you last stood, and back. Nobody built the tracks. They were just here one morning, warm."
+      then:
+        - q: "Who drives her?"
+          a: "Nobody. I tried knocking on the cab once. Somebody knocked back. I don't knock anymore."
+        - q: "Warm tracks?"
+          a: "Like somebody just got off them. Every day. I stopped putting my hand on them."
+    - q: "Why do you work here?"
+      a: "I woke up holding a ticket punch. Felt rude not to use it. Five years now. I think. The clock up there only does eleven."
+    - q: "Can I ride for free?"
+      a: "For you? Sure. Don't tell Tom, he charges for ketchup."
+      sk: speech 40
+      fail: "Ha! No. Kiosk's right there. Marigold has bills too. I assume."
+      do: discount
+    - q: "Seen anything strange out here?"
+      a: "A guy got off who never got on. Same coat as you. I punched his ticket anyway. It was blank."
+      sk: survival 30
+      fail: "Strange? It's a train in a mall. Pick something."
+  barks:
+    idle: ["Platform one!", "Mind the yellow.", "Marigold's warm today.", "Tickets, tickets."]
+    hi: ["Hey! Riding?", "Rider!", "Where to?"]
+    drawn: ["Whoa. No guns on the platform.", "Put that away, she spooks."]
+    hurt: ["You're bleeding on my yellow line.", "Sit down before you ride, okay?"]
+    spot: ["Uh. That's not a rider.", "Off my platform!"]
+    hostile: ["Ticket revoked!", "Last stop, pal!"]
+    hit: ["Ow! I punch tickets!", "Hey!"]
+    kill: ["Doors closing.", "End of the line."]
+    clear: ["Okay. Okay. Platform's open.", "Nobody saw that."]
+    flee: ["Marigold, wait for me!", "Nope!"]
+    death: ["Tell her I..."]
+    sneak: ["I see you, rider."]
+    close: ["Personal space. Like the yellow line."]
+  gest: { wave: "Yo! Rider!", gift: "Ha, a tip! Thanks!", dance: "Platform party! Ha!", nodance: "Train's due. Rain check.", insult: "I'll put you on the slow one." }
