@@ -25,6 +25,7 @@ export function onInput(ctx, input) {
   const m = mem(ctx)
   m.z = input.axes?.moveZ ?? 0
   if (input.pressed?.jump) m.jump = true
+  if (input.pressed?.interact) m.use = true // E at the foot of a ladder takes hold too
 }
 
 function ladderOf(ctx, id) {
@@ -43,22 +44,24 @@ export function update(ctx, dt) {
   if (!m.on) {
     if (s.climbing) s.climbing = false // a climb cut by a reload or a crossing leaves no hold behind: hands and weapon come back
     if (now - m.scanAt > 300) { m.scanAt = now; m.near = ctx.query({ tags: ['ladder'], radius: 12, select: 'ids' }) }
-    if (!m.near?.length) { m.jump = false; return }
+    if (!m.near?.length) { m.jump = false; m.use = false; return }
     const look = me.camera?.rotation?.yaw ?? (typeof me.rotation === 'number' ? me.rotation : me.rotation?.yaw ?? 0)
     const vel = me.velocity ?? { x: 0, z: 0 }, spd = Math.hypot(vel.x, vel.z)
     for (const id of m.near) {
       const L = ladderOf(ctx, id); if (!L) continue
       const toward = spd > 0.5 ? (vel.x * L.f.x + vel.z * L.f.z) / spd : null // Shelly Nov 12 "i also cant climb still": the camera's yaw reads 180 off the ladder's yaw, so the way the body MOVES decides: into the rungs from below, back over the edge from the top
       const dx = p.x - L.base.x, dz = p.z - L.base.z, along = dx * L.f.x + dz * L.f.z, side = Math.abs(dx * L.f.z - dz * L.f.x), dy = p.y - L.base.y
-      if (side > 0.7) continue
+      if (side > 0.9) continue
       // from below: in front of it, facing it, pushing forward
-      if (m.z > 0.3 && along > -1.0 && along < 0.15 && dy > -0.5 && dy < L.h - 0.4 && (toward == null ? Math.abs(wrap(look - L.yaw)) < 65 : toward > 0.4)) { grab(ctx, m, L, Math.max(dy, 0.05)); break }
+      // Shelly Nov 12 "ii still cant climb": facing and velocity tests refused real approaches; now W (or E) anywhere at the foot takes hold unless you're walking away from it
+      if ((m.z > 0.3 || m.use) && along > -1.3 && along < 0.4 && dy > -0.6 && dy < L.h - 0.4 && (toward == null || toward > -0.3)) { grab(ctx, m, L, Math.max(dy, 0.05)); break }
       // from the top: standing on the deck behind it, facing away, walking back over the edge
       if (L.top && along > -0.2 && along < 1.4 && dy > L.h - 0.4 && dy < L.h + 0.9 && (toward == null ? ((m.z > 0.3 && Math.abs(wrap(look - L.yaw - 180)) < 70) || (m.z < -0.3 && Math.abs(wrap(look - L.yaw)) < 70)) : (Math.abs(m.z) > 0.3 && toward < -0.4))) { grab(ctx, m, L, L.h - 1.05); break }
     }
-    m.jump = false
+    m.jump = false; m.use = false
     return
   }
+  m.use = false
 
   const L = ladderOf(ctx, m.on)
   if (!L) { letGo(ctx, m); return }
