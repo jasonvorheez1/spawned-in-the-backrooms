@@ -28,6 +28,10 @@ export const ears = {
       heard(ctx, { clip: STATIC, position: pos, volume: 0.5, maxDistance: 10 });
       heard(ctx, { clip: WHISPER, position: pos, volume: 0.9, maxDistance: 6, bus: "Voice" });
       if (who) who.state.notice = { text: "…static… a whisper: “don't trust the lights.”", at: now };
+    } else if (s.kind === "stairs" && who) { // a stairwell: the flight between the maze and the Manila Rooms below
+      heard(ctx, { clip: s.sound, position: pos, volume: 0.8, maxDistance: 10 });
+      ctx.emit("screenFlash", { color: "#000000", duration: 0.6, intensity: 1 }, { audience: { player: who.id } });
+      who.feetPosition = s.to; who.velocity = { x: 0, y: 0, z: 0 }; who.rotation = { yaw: s.yaw };
     } else if (s.kind === "note" && who) {
       who.state.notice = { text: s.text, at: now };
     } else if (s.kind === "cassette" && who) {
