@@ -3,7 +3,7 @@
 // and answers their buttons. Food here is just for fun and never leaves the mall.
 import { toHub, toSolo, HOMES, HUB_PLACE, lastLevel } from "./lib/hub.js"
 import { animate } from "builtin/tween"
-import { vo } from "./lib/voices.js"
+import { actedVoice } from "./lib/voices.js"
 import B from "./lib/data/bonus.yml"
 import FOODM from "./lib/data/bonus-food-models.yml"
 import FURN from "./lib/data/furniture.yml"
@@ -97,12 +97,17 @@ const DEPART = "cdn/sfx-subway-train-electric-motor-whine-accelerating-away-rail
 // Rico, the Bonus Line attendant, sees each rider off (Shelly Nov 12: "put rico there in cutscenes")
 const RICO = { id: "bonus-rico", post: { x: -19.5, y: 5.5, z: -3.5, yaw: 180 }, door: { x: -19.9, y: 5.5, z: -12.4, yaw: 200 } }
 const CALLS = ["All aboard! Arms in!", "Marigold's leaving, rider!", "Doors closing. Eyes front!", "Next stop, wherever you left off!"]
+  .map((line) => actedVoice(RICO.id, line)).filter(Boolean)
 function ricoCall(ctx, on) {
   const r = ctx.getObject(RICO.id); if (!r) return
   const p = on ? RICO.door : RICO.post
   r.feetPosition = { x: p.x, y: p.y, z: p.z }; r.rotation = { yaw: p.yaw }
   r.anim.wave = on ? { clip: "cdn/clip-wave.glb", weight: 1, mask: { from: "Spine" } } : null
-  if (on) { const line = CALLS[Math.floor(ctx.random() * CALLS.length)], clip = vo("bonus-rico", line); if (clip) ctx.emit("playSound", { clip, position: { x: p.x, y: p.y + 1.6, z: p.z }, volume: 0.95, bus: "Voice", maxDistance: 20 }) }
+  if (!on || !CALLS.length) return
+  const last = ctx.session.ricoCall, choices = CALLS.filter((clip) => clip !== last)
+  const clip = choices[Math.floor(ctx.random() * choices.length)] ?? CALLS[0]
+  ctx.session.ricoCall = clip
+  ctx.emit("playSound", { clip, position: { x: p.x, y: p.y + 1.6, z: p.z }, volume: 0.95, bus: "Voice", maxDistance: 20 })
 }
 function board(ctx, s, to, keep) {
   const me = ctx.self, now = ctx.now()

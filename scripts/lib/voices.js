@@ -1,4 +1,6 @@
 import V from './data/npc-voices.yml'
+import CAST from './data/voice-cast.yml'
+import TIMING from './data/voice-timing.yml'
 import ACTED from './data/voice-acted.yml' // recorded performances (art/vo/act.py, the tape method): key: hash('<id>|<slug>') base36, value: the clip's sha
 // One throat per character: the voice file's name is its prompt, so each character's words below ARE their voice.
 // Every speaking helper builds its clip through vo(who, line); a new who falls back to a throat picked from its name.
@@ -54,4 +56,19 @@ const NUM = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eig
 const slug = (line, n = 180) => String(line ?? '').slice(0, n).replace(/\d/g, (d) => ' ' + NUM[d] + ' ').replace(/[^a-z ]/gi, ' ').trim().toLowerCase().replace(/ +/g, '-')
 // a line with no real word in it (empty, "hmm", "...", a stray symbol) makes the voice maker fill in its own test words: those stay silent, the subtitle still shows
 const real = (sl) => sl.split('-').some((w) => w.length >= 3 && /[aeiouy]/.test(w) && !/^(hmm+|mmm*|uhh*|umm*|hm+|ahh*|ohh*|erm*)$/.test(w))
-export const vo = (who, line, n) => { const sl = slug(line, n); if (!real(sl)) return null; const sha = ACTED?.[hash(String(who).split('#')[0] + '|' + slug(line)).toString(36)]; return sha ? `/cdn/value.${sha}.mp3` : `/cdn/voice-${throatOf(who)}-saying-${sl}.mp3` }
+const actorId = (who) => String(who).split('#')[0]
+const asset = (sha) => `/cdn/value.${sha}.mp3`
+const recorded = new Map(Object.entries(ACTED).map(([key, sha]) => [asset(sha), (TIMING[key] ?? 0) * 100]))
+export const isVoiceClip = (clip) => recorded.has(clip) || String(clip).includes('/voice-')
+export const recordedDuration = (clip) => recorded.get(clip) || 0
+export const hasCast = (who) => Object.hasOwn(CAST, actorId(who))
+export function actedVoice(who, line) {
+  const sha = ACTED[hash(actorId(who) + '|' + slug(line)).toString(36)]
+  return sha ? asset(sha) : null
+}
+export function vo(who, line, n) {
+  const clip = actedVoice(who, line)
+  if (clip) return clip
+  const sl = slug(line, n)
+  return real(sl) ? `/cdn/voice-${throatOf(who)}-saying-${sl}.mp3` : null
+}
