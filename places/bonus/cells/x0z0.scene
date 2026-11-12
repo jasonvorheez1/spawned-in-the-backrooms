@@ -680,25 +680,25 @@ bc-plaque-1:
   feetPosition: {x: 23.93, y: 7, z: -18.85}
   id: bc-plaque-1
   rotation: {yaw: 90}
-  vector: "<svg viewBox='0 0 120 60' width='0.3m'><rect x='1' y='1' width='118' height='58' rx='3' fill='#c9a24a' stroke='#7a5a1c' stroke-width='2'/><text x='60' y='26' text-anchor='middle' font-family='serif' font-size='11' fill='#2a1d08'>Untitled No. 1, 1996</text><text x='60' y='44' text-anchor='middle' font-family='serif' font-size='9' fill='#2a1d08'>Oil on canvas</text></svg>"
+  vector: "<svg viewBox='0 0 120 60' width='0.3m'><rect x='1' y='1' width='118' height='58' rx='3' fill='#c9a24a' stroke='#7a5a1c' stroke-width='2'/><text x='60' y='26' text-anchor='middle' font-family='serif' font-size='11' fill='#2a1d08'>Afternoon Float, 1996</text><text x='60' y='44' text-anchor='middle' font-family='serif' font-size='9' fill='#2a1d08'>R. Delgado · acrylic</text></svg>"
 bc-plaque-2:
   castShadow: false
   feetPosition: {x: 23.93, y: 7, z: -6.85}
   id: bc-plaque-2
   rotation: {yaw: 90}
-  vector: "<svg viewBox='0 0 120 60' width='0.3m'><rect x='1' y='1' width='118' height='58' rx='3' fill='#c9a24a' stroke='#7a5a1c' stroke-width='2'/><text x='60' y='26' text-anchor='middle' font-family='serif' font-size='11' fill='#2a1d08'>Untitled No. 2, 1997</text><text x='60' y='44' text-anchor='middle' font-family='serif' font-size='9' fill='#2a1d08'>Oil on canvas</text></svg>"
+  vector: "<svg viewBox='0 0 120 60' width='0.3m'><rect x='1' y='1' width='118' height='58' rx='3' fill='#c9a24a' stroke='#7a5a1c' stroke-width='2'/><text x='60' y='26' text-anchor='middle' font-family='serif' font-size='11' fill='#2a1d08'>Waiting Room, 1997</text><text x='60' y='44' text-anchor='middle' font-family='serif' font-size='9' fill='#2a1d08'>M. Okun · oil on board</text></svg>"
 bc-plaque-3:
   castShadow: false
   feetPosition: {x: 18.15, y: 7, z: -27.93}
   id: bc-plaque-3
   rotation: {yaw: 180}
-  vector: "<svg viewBox='0 0 120 60' width='0.3m'><rect x='1' y='1' width='118' height='58' rx='3' fill='#c9a24a' stroke='#7a5a1c' stroke-width='2'/><text x='60' y='26' text-anchor='middle' font-family='serif' font-size='11' fill='#2a1d08'>Untitled No. 3, 1998</text><text x='60' y='44' text-anchor='middle' font-family='serif' font-size='9' fill='#2a1d08'>Oil on canvas</text></svg>"
+  vector: "<svg viewBox='0 0 120 60' width='0.3m'><rect x='1' y='1' width='118' height='58' rx='3' fill='#c9a24a' stroke='#7a5a1c' stroke-width='2'/><text x='60' y='26' text-anchor='middle' font-family='serif' font-size='11' fill='#2a1d08'>Late Shift, 1998</text><text x='60' y='44' text-anchor='middle' font-family='serif' font-size='9' fill='#2a1d08'>J. Pratt · gouache</text></svg>"
 bc-plaque-4:
   castShadow: false
   feetPosition: {x: 15.85, y: 7, z: -0.07000000000000021}
   id: bc-plaque-4
   rotation: {yaw: 360}
-  vector: "<svg viewBox='0 0 120 60' width='0.3m'><rect x='1' y='1' width='118' height='58' rx='3' fill='#c9a24a' stroke='#7a5a1c' stroke-width='2'/><text x='60' y='26' text-anchor='middle' font-family='serif' font-size='11' fill='#2a1d08'>Untitled No. 4, 1999</text><text x='60' y='44' text-anchor='middle' font-family='serif' font-size='9' fill='#2a1d08'>Oil on canvas</text></svg>"
+  vector: "<svg viewBox='0 0 120 60' width='0.3m'><rect x='1' y='1' width='118' height='58' rx='3' fill='#c9a24a' stroke='#7a5a1c' stroke-width='2'/><text x='60' y='26' text-anchor='middle' font-family='serif' font-size='11' fill='#2a1d08'>Head Study IV, 1999</text><text x='60' y='44' text-anchor='middle' font-family='serif' font-size='9' fill='#2a1d08'>L. Fenn · oil on linen</text></svg>"
 bc-poster-1:
   children: [{feetPosition: {x: 0, y: 0, z: 0}, id: frame, material: {color: oklch(0.2 0.02 280), metalness: 0.6, roughness: 0.35}, primitive: {depth: 0.03, height: 1.32, kind: box, width: 0.92}}, {feetPosition: {x: 0, y: 0.04, z: 0.017}, id: art, material: {roughness: 0.55, texture: /cdn/value.58e4f083025b0e3807fe53134cee9f91da913df0a9eac2f01ced62e3de3a45f3.png}, primitive: {height: 1.24, kind: plane, width: 0.84}}]
   feetPosition: {x: 13.75, y: 2.35, z: -23.96}
