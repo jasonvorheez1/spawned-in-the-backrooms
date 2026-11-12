@@ -34,11 +34,12 @@ export function update(ctx, dt) {
   v.y += g * dt;
   const p = me.feetPosition, speed = Math.hypot(v.x, v.y, v.z);
   let next = { x: p.x + v.x * dt, y: p.y + v.y * dt, z: p.z + v.z * dt };
-  if ((s.age = (s.age ?? 0) + dt) > 6 || p.y < -60) return s.kind === "fresh" ? settle(ctx, p) : s.kind === "molotov" ? shatter(ctx, p, { x: 0, y: 1, z: 0 }) : explode(ctx);
+  if ((s.age = (s.age ?? 0) + dt) > 6 || p.y < -60) return s.kind === "fresh" ? settle(ctx, p) : s.kind === "molotov" ? shatter(ctx, p, { x: 0, y: 1, z: 0 }) : s.kind === "bauble" ? bauble(ctx, p) : explode(ctx);
   if (speed > 1e-4) {
     const dir = { x: v.x / speed, y: v.y / speed, z: v.z / speed };
     const hit = raycast(ctx, p, dir, { distance: speed * dt + 0.06, bodies: "static", physicsOnly: true, ignoreEntities: [me.id, s.ownerId].filter(Boolean) });
     if (hit && s.kind === "fresh") return settle(ctx, hit.position);
+    if (hit && s.kind === "bauble") return bauble(ctx, hit.position);
     if (hit && s.kind === "molotov") return shatter(ctx, hit.position, hit.normal ?? { x: 0, y: 1, z: 0 });
     if (hit) { // the frag bounces and rolls (Grudge: restitution .35, ground friction .45)
       const n = hit.normal ?? { x: 0, y: 1, z: 0 }, vn = dot(v, n);
@@ -112,4 +113,18 @@ function burn(ctx) { // every tick seconds: what stands in the fire takes dmg; t
   const self = ctx.place.players.find((p) => p.id === s.ownerId), sf = self?.feetPosition;
   const inMe = sf && Math.hypot(sf.x - c.x, sf.z - c.z) < M.radius && Math.abs(sf.y - c.y) < M.height;
   if (s.ownerId && (hits.length || inMe)) ctx.emit("blast", { hits, self: inMe ? Math.round(M.damage / 2) : 0, from: c, fire: true }, { to: s.ownerId });
+}
+
+const GLITTER = `fx
+pop glass burst=?mobile:24|40 life=.5..1 v=sdir()*(2..4.5)+up(1.2) size=.02..0.045 spin=-12..12 tint=<2.6,.3,.25>..<2.6,1.9,.5> acc=grav()+drag(.6) col=$tint a=1>.7:1>0 sz=$size rot=$age*$spin floor=bounce(.3) r=sprite(shard,add,velocity,.02)
+pop tinsel burst=?mobile:12|22 life=1..1.8 v=sdir()*(1..2.2)+up(1.4) size=.03..0.06 spin=-8..8 tint=<.3,2.2,.5>..<2.4,1.8,.4> acc=grav()*.35+drag(1.8) col=$tint*flick(6,.5) a=1>.6:1>0 sz=$size rot=$age*$spin r=sprite(stalk,add,velocity,.02)
+pop flash burst=1 life=.18 tint=<1,.8,.5> r=light($tint,6,4)`;
+function bauble(ctx, at) { // the Glass Bauble: shatters on contact into glitter and tinsel; a little damage and a daze on foes close by
+  const me = ctx.self, s = me.state, B = T.bauble, c = { x: at.x, y: at.y + 0.05, z: at.z }, until = ctx.now() + B.daze * 1000;
+  s.done = true;
+  const hits = reached(ctx, c, B.radius, 0.3).map((h) => { const o = ctx.getObject(h.id); if (o) { o.state.stunUntil = Math.max(o.state.stunUntil ?? 0, until); o.state.dazeUntil = until; } return { id: h.id, d: B.damage, dir: h.dir, heavy: 0.3 }; });
+  if (s.ownerId) ctx.emit("blast", { hits, self: 0, from: c }, { to: s.ownerId });
+  ctx.emit("fx", { position: c, script: GLITTER });
+  ctx.emit("playSound", { clip: "/cdn/moodboard-gothic-horror/sfx-glass-christmas-ornament-shatter-tinkle.mp3", position: c, volume: 0.8 });
+  ctx.destroy(me.id);
 }

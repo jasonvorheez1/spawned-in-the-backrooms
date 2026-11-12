@@ -662,7 +662,7 @@ function inventory(s) {
     </button>`).join('') || '<div class="em">Out of ammunition.</div>'
 
   // Throwables: listed with the ammo, a THROW button and a card each
-  const THROWN = { grenades: ['frag', 'Frag grenade'], molotovs: ['molotov', 'Molotov cocktail'], fresh: ['fresh', 'Reality Freshener'] }
+  const THROWN = { grenades: ['frag', 'Frag grenade'], molotovs: ['molotov', 'Molotov cocktail'], fresh: ['fresh', 'Reality Freshener'], baubles: ['bauble', 'Glass Bauble'] }
   const throwRows = Object.entries(THROWN).filter(([k]) => s[k] > 0).map(([k, [t, nm]]) => `
     <button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})">
       <span class="cur">&gt;</span><span class="nm" style="color:${t === 'frag' ? '#b8c49a' : t === 'fresh' ? '#9fd8e6' : '#f0a050'}">${nm}</span>

@@ -17,6 +17,7 @@ import { syncLevel0 } from "../../scripts/lib/breakables.js";
 import { layMoments } from "../../scripts/lib/level0-moments.js";
 import { layZenithEntry } from "../../scripts/lib/zenith-quest.js";
 import { layL02Door } from "../../scripts/lib/level02.js";
+import { layXmas } from "../../scripts/lib/xmas-room.js";
 export const cadence = "1s";
 // office furniture: breakable props scattered through the halls (desk, chair, shelf: [mat, hp])
 // Blender-built office pieces (art/office-furniture/build.py), front +Z
@@ -133,6 +134,7 @@ export function tick(ctx) {
   dressThresholds(ctx, l0Ways()); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state, now = ctx.now();
+  layXmas(ctx); // the Christmas Area off the north rim (scripts/lib/xmas-room.js)
   layL02Door(ctx); // Level 0.2: the half-built Remodeling Co. door (scripts/lib/level02.js)
   layZenithEntry(ctx); // Level 0.1: Kade and the B.N.T.G. bulkhead in the safe room
   if (!s.almondTidy) { s.almondTidy = 1; for (const o of ctx.query({ tags: ["almond"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const p = o.feetPosition ?? { x: 0, y: 0, z: 0 }; if (p.y < 0.15 && !(false)) ctx.destroy(o.id); } } // loose floor bottles cleared once: almond water lives in containers and drops now

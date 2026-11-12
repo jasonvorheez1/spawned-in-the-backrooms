@@ -39,3 +39,7 @@ firstaid: { name: "First aid kit", info: "Patches you up properly. Medicine help
 royal_ration: { name: "Royal ration", info: "Level 3's rare tin. Full health, a clear head", hunger: 60, thirst: 0, sanity: 60, hp: 999, color: "#e8c83a" }
 # crafted (craft.yml humloop): Level 13 tape and glass, Level 0.2 putty. Savi's picks
 humloop: { name: "Hum loop", info: "A cassette ring, puttied shut. It plays the Lobby's hum, and the hum is somehow a comfort", hunger: 0, thirst: 0, sanity: 40, hp: 0, color: "#d4b96a", aid: true }
+
+# The Christmas Area (only there)
+eggnog:   { name: "Eggnog Thermos", info: "Warm, sweet, nutmeg. Somebody poured it for you", hunger: 10, thirst: 20, sanity: 25, hp: 12, color: "#f2e2b0", drink: true, aid: true }
+musicbox: { name: "Wind-up Music Box", info: "Plays the same four bars. You know the next note before it comes", hunger: 0, thirst: 0, sanity: 20, hp: 0, color: "#c8a050", keep: true, cooldown: 300, clip: "/cdn/moodboard-gothic-horror/sfx-short-wind-up-music-box-carol-melody.mp3" }

@@ -48,7 +48,9 @@ export function wallX(cx, cz) {
   return hash(cx, cz, 11) < p || (z1 === "halls" && z2 === "halls" && hash(cx, cz >> 2, 51) < 0.12 && cz % 4 !== 0);
 }
 // wall on the +z side of cell (cx,cz)
+export const XMAS_CELL = { cx: 44, cz: N - 1 }; // the Christmas Area: its rim wall opens (scripts/lib/xmas-room.js)
 export function wallZ(cx, cz) {
+  if (cx === XMAS_CELL.cx && cz === XMAS_CELL.cz) return false;
   if (cz < 0 || cz >= N - 1) return true;
   if (cx >= L.hub[0] && cx <= L.hub[1] && hubEdge(cz, cz + 1)) return cx !== L.hub[0] + 1 && cx !== L.hub[0] + 2;
   if (inHub(cx, cz) && inHub(cx, cz + 1)) return false;

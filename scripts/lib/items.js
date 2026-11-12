@@ -35,6 +35,8 @@ const L2_DESC = {
   fuse: () => ({ name: 'Fuse', info: 'Opens an ELECTRICAL door', color: '#7fc8ff' }),
   valve: () => ({ name: 'Valve wheel', info: 'Opens a PUMP ROOM door', color: '#e05a3a' }),
   frag: () => ({ name: 'Frag grenade', info: 'G throws it. Bounces, 2 s fuse, 6 m blast', color: '#9aa58a' }),
+  bauble: () => ({ name: 'Glass Bauble', info: 'G throws it. Shatters into glitter, dazes what stands near for 3 s', color: '#d8323c' }),
+  stuffing: () => ({ name: 'Stuffing', info: 'White, clean, cold. It came out of something that looked like you', color: '#f2efe6' }),
   molotov: () => ({ name: 'Molotov cocktail', info: 'G throws it. Shatters into a 7 s fire', color: '#e08a3a' }),
   keycard: () => ({ name: 'Keycard', info: 'Opens a STORAGE cage', color: '#9ff0b0' }),
 }

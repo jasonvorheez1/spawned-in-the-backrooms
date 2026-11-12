@@ -82,6 +82,8 @@ export const xpNeed = (lv) => L.xpBase * lv
 
 const owned = (s) => ['fists', ...(s.weapons ? s.weapons.split(',') : [])]
 const usable = (s, k) => !!W[k] // no level lock on weapons (Shelly, #37: any weapon you hold works)
+import XMAS from './lib/data/xmas.yml'
+const inXmas = (f) => f && f.x > XMAS.bounds.x0 && f.x < XMAS.bounds.x1 && f.z > XMAS.bounds.z0 && f.z < XMAS.bounds.z1 // no hum in the Christmas Area
 export const weaponOf = (s) => W[s.equipped] ?? W.fists
 
 const DOWN_MS = 3200 // how long you watch yourself lie there (Savi's pick); camera.js and the creatures read the same window
@@ -308,6 +310,12 @@ function takeToken0(ctx, token) {
 export function useSnack(ctx, token) { // consume one from the bag
   const s = ctx.self.state, now = ctx.now(), n = s.snacks?.[token] ?? 0
   if (n <= 0 || !SNACKS[token]) return
+  if (SNACKS[token].keep) { // a keepsake: used, not eaten, once per cooldown
+    const v = SNACKS[token], left = ((s.keepAt?.[token] ?? -1e12) + v.cooldown * 1000 - now) / 1000
+    if (left > 0) { s.notice = { text: `${v.name}: the spring needs ${Math.ceil(left / 60)} min`, at: now }; return }
+    s.keepAt = { ...s.keepAt, [token]: now }; const ms = maxSan(s.level, s); s.sanity = Math.min(ms, (s.sanity ?? ms) + v.sanity)
+    ctx.emit('playSound', { clip: v.clip, position: ctx.self.feetPosition, volume: 0.6 }); s.notice = { text: `${v.name}. Sanity +${v.sanity}`, at: now }; return
+  }
   s.snacks = { ...s.snacks, [token]: n - 1 }
   {
     const v = SNACKS[token], mh = maxHp(s.level, s), ms = maxSan(s.level, s)
@@ -337,7 +345,8 @@ function takeToken1(ctx, token) {
     sound(ctx, 'pickup-ammo', 0.5, true)
     return { ok: true }
   }
-  if (token === 'frag' || token === 'molotov') { // throwables: counted, G throws (data/throwables.yml)
+  if (token === 'stuffing') { s.stuffing = (s.stuffing ?? 0) + 1; s.pickedAt = now; s.notice = { text: `Stuffing (${s.stuffing}). Soft. Cold`, at: now }; return { ok: true } }
+  if (token === 'frag' || token === 'molotov' || token === 'bauble') { // throwables: counted, G throws (data/throwables.yml)
     const T = THROW[token]; s[T.key] = (s[T.key] ?? 0) + 1; s.pickedAt = now
     s.notice = { text: `${T.name} (${s[T.key]} carried) · G to throw`, at: now }
     sound(ctx, 'pickup-ammo', 0.6, true)
@@ -644,7 +653,8 @@ function swing(ctx, power = 0) {
   }
   found.sort((x, y) => x.d - y.d)
   hitTarget(ctx, s, found[0].m, Math.round(base), f, !wp.quiet, power, penOf(wp, s.equipped))
-  if (power) { const m = found[0].m, d = found[0].d || 1; ctx.emit('impulse', { target: m.id, impulse: { x: f.x * 260 * power, y: 60 * power, z: f.z * 260 * power } }) } // a heavy shoves them back
+  if (power && wp.pull) { const m = found[0].m; ctx.emit('impulse', { target: m.id, impulse: { x: -f.x * wp.pull * power, y: 40 * power, z: -f.z * wp.pull * power } }); m.state.stunUntil = Math.max(m.state.stunUntil ?? 0, ctx.now() + 900); ctx.emit('playSound', { clip: '/cdn/moodboard-gothic-horror/sfx-small-sleigh-jingle-bell-shake.mp3', position: m.feetPosition, volume: 0.6 }) } // the Crook's hook: a heavy yanks them to you
+  else if (power) { const m = found[0].m, d = found[0].d || 1; ctx.emit('impulse', { target: m.id, impulse: { x: f.x * 260 * power, y: 60 * power, z: f.z * 260 * power } }) } // a heavy shoves them back
 }
 
 export function fishNibble(ctx, d) {
@@ -761,7 +771,7 @@ export function pullToken(ctx, t) { // one carried thing out of the bag as its p
     else if (t.startsWith('almond:')) { const k = AW_KEY[t.slice(7)]; if (k && s[k] > 0) { s[k] -= 1; tok = t } }
     else if (t.startsWith('meat:')) { const c = t.slice(5); if ((s.meat?.[c] ?? 0) > 0) { s.meat = { ...s.meat, [c]: s.meat[c] - 1 }; tok = t } }
     else if (t.startsWith('snack:')) { const c = t.slice(6); if ((s.snacks?.[c] ?? 0) > 0) { s.snacks = { ...s.snacks, [c]: s.snacks[c] - 1 }; tok = c } }
-    else if (t === 'frag' || t === 'molotov') { const k = THROW[t].key; if ((s[k] ?? 0) > 0) { s[k] -= 1; tok = t } }
+    else if (t === 'frag' || t === 'molotov' || t === 'bauble') { const k = THROW[t].key; if ((s[k] ?? 0) > 0) { s[k] -= 1; tok = t } }
     else if (t === 'ammo' || t === 'shells' || t === 'cells') { const per = W[t]?.perPickup ?? 1; if ((s[t] ?? 0) >= per) { s[t] -= per; tok = t } else s.notice = { text: `Need a full box (${per})`, at: ctx.now() } }
     else if (t === 'bobbypin') { if (s.bobbypins > 0) { s.bobbypins -= 1; tok = 'bobbypin' } }
   return tok
@@ -798,7 +808,7 @@ function invAction(ctx, d) {
     else spawnRemains(ctx, at, [tok], 'Dropped bag')
     sound(ctx, 'gun-raise-cloth-rustle', 0.5, true); return
   }
-  if (d.k === 'nadePick') { s.nadePick = d.t === 'molotov' ? 'molotov' : d.t === 'fresh' ? 'fresh' : 'frag'; s.notice = { text: `G throws: ${THROW[s.nadePick].name}`, at: ctx.now() }; return }
+  if (d.k === 'nadePick') { s.nadePick = d.t === 'molotov' ? 'molotov' : d.t === 'bauble' ? 'bauble' : d.t === 'fresh' ? 'fresh' : 'frag'; s.notice = { text: `G throws: ${THROW[s.nadePick].name}`, at: ctx.now() }; return }
   if (d.k === 'sel') { s.invSel = String(d.t || '').slice(0, 80); return }
   if (d.k === 'tab') { s.invTab = ['all', 'weapons', 'repair', 'aid', 'apparel', 'ammo', 'misc', 'tapes', 'key', 'throw'].includes(d.t) ? d.t : 'all'; return }
   if (d.k === 'sort') { s.invSort = ['name', 'dam', 'wg', 'cnd'].includes(d.s) ? d.s : 'name'; return }
@@ -1344,7 +1354,7 @@ function tickStats(ctx, t, moving) {
   }
 
   // the lights' hum spikes: a loud surge that eats sanity while you stand in it; keep moving
-  if (zone !== 'hub' && ctx.self.place === 'main') {
+  if (zone !== 'hub' && ctx.self.place === 'main' && !inXmas(ctx.self.feetPosition)) {
     const [a, b] = L.humSpikeEvery
     w.nextSpike ??= now + (a + ctx.random() * (b - a)) * 1000
     if (now >= w.nextSpike && !w.spikeUntil) {
@@ -1482,7 +1492,7 @@ function pullPin(ctx) {
   const s = ctx.self.state, now = ctx.now(), w = walkOf(ctx)
   if (s.dead || w.nade || now < (w.throwAt ?? 0)) return
   const pick = s.nadePick && (s[THROW[s.nadePick].key] ?? 0) > 0 ? s.nadePick : null
-  const kind = pick ?? ((s.grenades ?? 0) > 0 ? 'frag' : (s.molotovs ?? 0) > 0 ? 'molotov' : (s.fresh ?? 0) > 0 ? 'fresh' : null)
+  const kind = pick ?? ((s.grenades ?? 0) > 0 ? 'frag' : (s.molotovs ?? 0) > 0 ? 'molotov' : (s.baubles ?? 0) > 0 ? 'bauble' : (s.fresh ?? 0) > 0 ? 'fresh' : null)
   if (!kind) { s.notice = { text: 'Nothing to throw', at: now }; return }
   const T = THROW[kind]
   w.nade = { kind, at: now, fuseAt: now + (T.fuse ?? 0) }
