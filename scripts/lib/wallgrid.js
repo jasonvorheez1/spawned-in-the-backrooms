@@ -69,8 +69,16 @@ const l3 = {
     if (edgeOut(L3.N, axis, cx, cz)) return true
     const [ox, oz] = nb(axis, cx, cz), d = axis === 'x' ? 0 : 1
     if (L3.isGate?.(cx, cz, d) || L3.isBars(cx, cz, d)) return true
-    for (const [x, z] of [[cx, cz], [ox, oz]]) { const zn = L3.zoneOf(x, z); if (zn === 'tight' || zn === 'vault' || L3.inGamma(x, z) || (x === L3.ARRIVE.cx && z === L3.ARRIVE.cz)) return true }
+    for (const [x, z] of [[cx, cz], [ox, oz]]) { const zn = L3.zoneOf(x, z); if (zn === 'vault' || L3.inGamma(x, z) || (x === L3.ARRIVE.cx && z === L3.ARRIVE.cz)) return true }
     return false
+  },
+  // a hit on a crawl hall's brick liner strikes the hall wall behind it (the liner drops when that wall first breaks: scripts/level3-geo.js)
+  liner(pos, normal) {
+    const { cx, cz } = L3.cellAt(pos.x, pos.z); if (L3.zoneOf(cx, cz) !== 'tight') return null
+    const c = L3.cellCenter(cx, cz)
+    if (Math.abs(normal.x) > Math.abs(normal.z)) { const d = pos.x > c.x ? 0 : 2; if (Math.abs(Math.abs(pos.x - c.x) - L3.TW) > 0.2) return null; return d === 0 ? { axis: 'x', cx, cz } : { axis: 'x', cx: cx - 1, cz } }
+    const d = pos.z > c.z ? 1 : 3; if (Math.abs(Math.abs(pos.z - c.z) - L3.TW) > 0.2) return null
+    return d === 1 ? { axis: 'z', cx, cz } : { axis: 'z', cx, cz: cz - 1 }
   },
   skin(axis, cx, cz) {
     const k = skin3(cx, cz), K = SKIN3[k] ?? SKIN3.orange

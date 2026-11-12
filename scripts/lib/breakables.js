@@ -58,7 +58,7 @@ export function gridWallAt(G, pos, normal, key) {
     cz = axis === 'z' ? Math.round((pos.z + G.HALF) / G.S) - 1 : Math.floor((pos.z + G.HALF) / G.S)
     // only a hit on the wall's face itself (not a pillar, a rack or a door frame near it)
     const f = (axis === 'x' ? cx + 1 : cz + 1) * G.S - G.HALF
-    if (Math.abs((axis === 'x' ? pos.x : pos.z) - f) > G.T + 0.15) return null
+    if (Math.abs((axis === 'x' ? pos.x : pos.z) - f) > G.T + 0.15) { const l = G.liner?.(pos, normal); if (!l) return null; ({ axis, cx, cz } = l) }
     if (!G.has(axis, cx, cz)) return null
   }
   const V = VG(G), fr = wallFrame(G, axis, cx, cz)

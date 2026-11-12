@@ -74,10 +74,11 @@ export function geometry(ctx) {
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     if (zoneOf(cx, cz) !== "tight") continue; const c = cellCenter(cx, cz), h = S / 2, arms = tightArms(cx, cz);
     for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) box(ctx, c.x + sx * TW, c.x + sx * h, 0, TH, c.z + sz * TW, c.z + sz * h); // corners always
-    if (!arms.includes(0)) box(ctx, c.x + TW, c.x + h, 0, TH, c.z - TW, c.z + TW);
-    if (!arms.includes(2)) box(ctx, c.x - h, c.x - TW, 0, TH, c.z - TW, c.z + TW);
-    if (!arms.includes(1)) box(ctx, c.x - TW, c.x + TW, 0, TH, c.z + TW, c.z + h);
-    if (!arms.includes(3)) box(ctx, c.x - TW, c.x + TW, 0, TH, c.z - h, c.z - TW);
+    // a liner whose hall wall has been broken is gone (lib/wallgrid.js liner(): a hit on it strikes that wall)
+    if (!arms.includes(0) && !CUT.has(`x:${cx}:${cz}`)) box(ctx, c.x + TW, c.x + h, 0, TH, c.z - TW, c.z + TW);
+    if (!arms.includes(2) && !CUT.has(`x:${cx - 1}:${cz}`)) box(ctx, c.x - h, c.x - TW, 0, TH, c.z - TW, c.z + TW);
+    if (!arms.includes(1) && !CUT.has(`z:${cx}:${cz}`)) box(ctx, c.x - TW, c.x + TW, 0, TH, c.z + TW, c.z + h);
+    if (!arms.includes(3) && !CUT.has(`z:${cx}:${cz - 1}`)) box(ctx, c.x - TW, c.x + TW, 0, TH, c.z - h, c.z - TW);
     ctx.smooth(); for (const sp of tightSpans(cx, cz)) vault(ctx, cx, cz, sp, 0, hi ? 4 : 3); ctx.flat();
   }
   // bars: across the barred edges, floor to ceiling, never a gate
