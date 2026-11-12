@@ -1,0 +1,47 @@
+# Level 13 "The Boiling Frogs": every tuned number of its creatures (scripts/l13-foes.js, scripts/lib/level13-foes.js).
+foes:
+  v: 1                  # Savi's pick: bump to re-lay every l13e- object
+  respawnMs: 300000     # Savi's pick: 5 minutes after death
+  respawnClear: 20      # Savi's pick: no player within this many metres
+  corpseMinMs: 60000    # Savi's pick: an emptied body stays at least this long
+  tenant:
+    flats: [a3, a8]     # Savi's pick
+    hp: 40              # Savi's pick
+    height: 1.72        # Savi's pick
+    kitchenDx: 2.6      # Savi's pick: where it stands, metres from the room's middle along the hall
+    hallRange: 9        # Savi's pick: hall sight through its doorway
+    windMs: 700         # Savi's pick: arm back before the throw
+    everyMs: 2200       # Savi's pick: one throw per
+    speed: 14           # Savi's pick: m/s off the hand
+    gravity: 9.8        # Savi's pick
+    dmg: 8              # Savi's pick
+    throws: 6           # Savi's pick: then it restocks
+    restockMs: 4000     # Savi's pick: the opening
+    walk: 0.9           # Savi's pick: shuffle m/s
+    doorIn: 1.0         # Savi's pick: how far inside its doorway it stops
+    forgetMs: 7000      # Savi's pick: waits at the doorway this long, then back to the TV
+    shoveRange: 1.5     # Savi's pick
+    shoveDmg: 4         # Savi's pick
+    shoveMs: 1500       # Savi's pick
+    shoveKnock: 520     # Savi's pick: impulse
+    stunMs: 300         # Savi's pick
+  lurker:
+    flat: a5            # Savi's pick
+    hp: 60              # Savi's pick
+    height: 2.05        # Savi's pick: standing; it moves crouched
+    trigger: 2.5        # Savi's pick: metres from the doorway
+    lookDeg: 70         # Savi's pick: looking further off than this = not watching
+    tellMs: 500         # Savi's pick
+    lungeMs: 300        # Savi's pick: out to the victim
+    dragMs: 1600        # Savi's pick: the whole grab, lunge included
+    lockMaxMs: 1800     # Savi's pick: the victim's lock expires on its own by then (hard cap 3000)
+    grabDmg: 6          # Savi's pick
+    grabSanity: 8       # Savi's pick
+    bathMs: 8000        # Savi's pick: hides in the bathroom after a drag
+    coolMs: 4000        # Savi's pick: after a hiss or a cancelled grab
+    speed: 2.3          # Savi's pick: m/s in the flat
+    swipeRange: 1.7     # Savi's pick
+    swipeDmg: 10        # Savi's pick
+    swipeMs: 1500       # Savi's pick
+    swipeWindMs: 450    # Savi's pick
+    lampOn: 0.35        # Savi's pick: a5's lamp as the shell lays it
