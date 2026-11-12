@@ -1,3 +1,4 @@
+import { animate } from "builtin/tween";
 // Level 11 depths: one manager steps every foe in the crawl (data: scripts/lib/data/l11-depths.yml).
 // The Clump (Wikidot Entity: a rolling mass of fused human arms): slow, then it gathers itself and hurls forward.
 // Hounds: fast, maul at close range. Both are l8-hostile so every gun, swing and kick hits them; player.js pays XP.
@@ -186,6 +187,12 @@ export function update(ctx, dt) {
         if (f.state.kind === "hound") f.anim.main = { clip: "death", loop: false, clampWhenFinished: true, weight: 1 };
         else if (BOTS.has(f.state.kind)) { m.talkUntil = 0; speak(ctx, f, m, "die", now); ctx.emit("fx", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, script: BOLT }); f.anim.main = null; f.anim.aim = null; f.anim.fire = null; f.state.kg = 160; deathRag(f); }
         else { ctx.emit("playSound", { clip: SND("wet-bone-crunch-and-limp-limbs-collapsing"), position: pos, volume: 0.9 }); f.anim.main = null; f.state.kg = 70; deathRag(f); } }
+      if (!BOTS.has(f.state.kind)) { // a flesh corpse (Shelly Nov 12: "clump corpses are very annoying"): walk-through once it has fallen, then it sinks into the floor. Savi's numbers: 3 s, 90 s, 10 s
+        const age = now - m.died;
+        if (age > 3000 && !m.ghost) { m.ghost = true; f.physics = "none"; }
+        if (age > 90000 && !m.sink) { m.sink = true; animate(ctx, f, { "feetPosition.y": "-=1.6" }, { duration: 10, easing: "easeInQuad" }); }
+        if (age > 100000) { delete ctx.place.objects[id]; continue; }
+      }
       if (now - m.died > (f.visible === false ? 300 : 3600000)) delete ctx.place.objects[id];
       continue;
     }
