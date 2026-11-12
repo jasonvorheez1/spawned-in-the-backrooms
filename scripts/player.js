@@ -1,3 +1,4 @@
+import { firstPersonGun } from './lib/fp-gun.js'
 import { setQuest } from './lib/quests.js'
 import { offended, forgiveTick } from './lib/forgive.js'
 import { preloadTick } from './lib/preload-next.js'
@@ -568,7 +569,7 @@ function swing(ctx, power = 0) {
     const cp = Math.cos(pv), sp = Math.sin(pv); let mz = { x: eye.x + fv.x * cp * 0.8 - fv.z * 0.12, y: eye.y + sp * 0.8 - 0.14, z: eye.z + fv.z * cp * 0.8 + fv.x * 0.12 }
     if (!s.tp) { // first person: the streak leaves the gun's own muzzle, where the viewmodel holds it on the camera (Shelly: "bullets shoot from above them")
       const vf = (w.vm && ctx.getObject(w.vm)?.feetPosition) || {}, at = { x: Number.isFinite(vf.x) ? vf.x : 0.2, y: Number.isFinite(vf.y) ? vf.y : -0.2, d: Number.isFinite(vf.depth) ? vf.depth : 0.42 }
-      const m = wp.muzzle ?? [0, 0.08, -0.4], r = at.x + m[0], u = at.y + m[1], fd = at.d - m[2]
+      const m = firstPersonGun(baseOf(s.equipped), wp.look)?.muzzle ?? wp.muzzle ?? [0, 0.08, -0.4], r = at.x + m[0], u = at.y + m[1], fd = at.d - m[2]
       mz = { x: eye.x + fv.x * cp * fd - fv.z * r - fv.x * sp * u, y: eye.y + sp * fd + cp * u, z: eye.z + fv.z * cp * fd + fv.x * r - fv.z * sp * u }
       const sock = s.vmId && ctx.getObjectSocket?.(s.vmId, 'muzzle') // the drawn gun's own muzzle, where the flash already sits: the streak leaves the barrel, not the eye
       if (sock?.position && Math.hypot(sock.position.x - eye.x, sock.position.y - eye.y, sock.position.z - eye.z) < 2) mz = sock.position
@@ -1029,17 +1030,12 @@ function toggleLight(ctx) {
 
 // First person: the local player's own arm and held weapon, riding the camera. Only this machine sees it.
 const Q_MELEE = { x: -0.5, y: 0.5, z: 0.5, w: 0.5 } // its length up, its blade forward
-const Q_ID = { x: 0, y: 0, z: 0, w: 1 } // the pistol mesh already points its muzzle down -Z
 // the viewmodel sits a hand from the eye under the troffers: its skin is drawn a shade deeper so it reads as skin, not a white glare
 function vmSkin(hex) { const n = parseInt(String(hex ?? '#efcfb4').slice(1), 16), k = 0.72; return '#' + [16, 8, 0].map((b) => Math.round(((n >> b) & 255) * k).toString(16).padStart(2, '0')).join('') }
+const point = ([x, y, z]) => ({ x, y, z })
 const Q_GUN = { x: 0, y: 1, z: 0, w: 0 } // yaw 180: lays the mesh's +Z barrel forward (-Z) in camera space
-// The Tripo shotgun mesh lies tilted ~35 deg muzzle-up (butt at its origin, trigger at mesh (0,-0.08,0.33)).
-// Inside the Q_GUN frame (yaw 180), a child pitch of 35 levels it to point straight forward (-Z).
-// `at` = { x: 0, y: 0.255, z: -0.224 } translates the trigger to (0, 0, 0) so it lands in the fist.
 // degrees to a quaternion: yaw about Y, then pitch about X, then roll about Z (the viewmodel's children take quaternions; an euler rotation on a mesh child was ignored)
 const eulerQ = (yaw, pitch, roll) => { const h = Math.PI / 360, [cy, sy, cp, sp, cr, sr] = [Math.cos(yaw * h), Math.sin(yaw * h), Math.cos(pitch * h), Math.sin(pitch * h), Math.cos(roll * h), Math.sin(roll * h)]; return { x: cy * sp * cr + sy * cp * sr, y: sy * cp * cr - cy * sp * sr, z: cy * cp * sr - sy * sp * cr, w: cy * cp * cr + sy * sp * sr } }
-// q: the correction, from the mesh itself (measured from its vertices, art/weapons: the barrel axis leans 23.8 deg to +x and 32.4 deg up; q = Ry(10) * Rx(32.4) * Ry(-23.8) lays it along +Z, the 10 being the sights lined up on the crosshair). A child's rotation must be a quaternion: the euler form is ignored on a mesh child.
-const GUN_FIX = { shotgun: { outer: { x: 0, y: 0, z: 0, w: 1 }, q: { x: 0, y: 0, z: 0, w: 1 }, at: { x: 0, y: 0.046, z: 0.17 } } } // the shotgun mesh is baked level (art/weapon-split/shotgun_straight.py): muzzle down -Z, top up +Y, centred on its box; the engine stands its lowest point (the butt) at weapon-look's offset, so this lifts the stock wrist into the fist, 0.19 m behind the box centre
 function toggleHolster(ctx) {
   const s = ctx.self.state; cancelReload(ctx); s.ads = false
   if (!s.sheathed) { if (s.equipped !== 'fists') s.holstered = s.equipped; s.equipped = 'fists'; s.sheathed = true; s.sheathAt = ctx.now() } // hands away: nothing in view
@@ -1059,38 +1055,52 @@ function viewmodel(ctx, moving, sprinting) {
   const cs = !hb && !l.modelUrl && !HUMAN && isNewCat(l) ? critterSpec(l) : null // cats (Shelly Nov 12: 'you didnt have to make an entirely new model'): the first-person arm IS her own cat body, its sleeve on it
   const ply = l.modelUrl || (hb ? hb.id + '#' + (hb.materials.Body_Skin.color ?? '') : '') || (cs ? 'cat:' + JSON.stringify([l.sex, l.fur, l.topw, l.top, l.skin, l.pattern, l.heightS, l.buildS]) : '')
   // cats (Shelly Nov 12 "make the first person arms match the cat charcters"): her fur colour, a round paw with pink beans, her sleeve
-  const arm = hb || ply ? { hidden: true } : { human: true, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v31' + JSON.stringify(s.vmTune ?? null)
+  const arm = hb || ply ? { hidden: true } : { species: l.species ?? 'cat', fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v33' + JSON.stringify(s.vmTune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     if (w.plyObj) { ctx.destroy(w.plyObj); w.plyObj = null }
-    w.plyRig = null
+    w.plyRig = null; w.plySplit = !!cs
     const bk = baseOf(kind), g = HOLD[bk], wp = W[kind] ?? {}, gun = !!wp.ranged
+    const fp = gun ? firstPersonGun(bk, wp.look) : null
+    const support = s.vmTune?.lat ?? (fp?.left ? point(fp.left) : wp.two ? { x: wp.two[3] ?? -0.01, y: wp.two[0], z: wp.two[1] } : null)
     const child = g == null ? [] : [gun
-      ? (GUN_FIX[bk]
-        // the Tripo shotgun mesh lies tilted ~35 deg muzzle-up with its butt at the origin: level it and put its trigger in the fist
-        ? { feetPosition: { x: 0, y: 0.01, z: 0.02 }, rotation: s.vmTune?.rot ?? GUN_FIX[bk].outer ?? Q_GUN, audience: 'local', children: [{ feetPosition: s.vmTune?.at ?? GUN_FIX[bk].at, rotation: s.vmTune?.q ?? (s.vmTune?.pitch != null || s.vmTune?.yaw != null ? eulerQ(s.vmTune?.yaw ?? 0, s.vmTune?.pitch ?? 0, s.vmTune?.roll ?? 0) : GUN_FIX[bk].q), castShadow: false, ...weaponBody(kind), audience: 'local' }] }
-        : { id: 'gun', feetPosition: s.vmTune?.at ?? { x: 0, y: (bk === 'pistol' || bk === 'laser_pistol' || bk === 'raygun') ? 0.03 : -0.04, z: (bk === 'pistol' || bk === 'laser_pistol' || bk === 'raygun') ? 0.04 : 0.14 }, rotation: s.vmTune?.rot ?? ((bk === 'pistol' || bk === 'laser_pistol' || bk === 'raygun') ? Q_ID : Q_GUN), castShadow: false, ...weaponBody(kind), audience: 'local' })
+      ? { id: 'gun', feetPosition: s.vmTune?.at ?? point(fp?.at ?? [0, -.04, .14]), rotation: s.vmTune?.rot ?? s.vmTune?.q ?? (s.vmTune?.pitch != null || s.vmTune?.yaw != null ? eulerQ(s.vmTune?.yaw ?? 0, s.vmTune?.pitch ?? 0, s.vmTune?.roll ?? 0) : fp ? eulerQ(...fp.turn) : Q_GUN), castShadow: false, ...weaponBody(kind), audience: 'local' }
       : MESHGRIP[bk]
         ? { feetPosition: s.vmTune?.mat ?? { x: MESHGRIP[bk].at[0], y: MESHGRIP[bk].at[1], z: MESHGRIP[bk].at[2] }, rotation: s.vmTune?.mrot ?? { x: MESHGRIP[bk].q[0], y: MESHGRIP[bk].q[1], z: MESHGRIP[bk].q[2], w: MESHGRIP[bk].q[3] }, castShadow: false, ...weaponBody(kind), audience: 'local' }
         : { feetPosition: s.vmTune?.mat ?? { x: 0, y: -g, z: 0 }, rotation: s.vmTune?.mrot ?? Q_MELEE, castShadow: false, ...weaponBody(kind), audience: 'local' }]
     // a two-handed weapon: the off hand rides the viewmodel too, on the fore-end (guns, ahead of the trigger hand) or up the haft (melee), at weapons.yml two: [up, forward-is-negative, radius]
     const fpa = hb ? FP_ARM[l.sex === 'f' ? 'f' : 'm'] : null, skinM = hb ? { Body_Skin: { ...hb.materials.Body_Skin, color: vmSkin(hb.materials.Body_Skin.color), roughness: 0.78, metalness: 0, emissive: '#000000' } } : null
-    if (wp.two && fpa) { const bc = FP_BC[l.sex === 'f' ? 'f' : 'm'], arm = { id: 'fparm-l', model: { id: fpa.L, materials: skinM }, castShadow: false, visibleInFirstPerson: true, audience: 'local' }
-      if (gun) child.push({ id: 'fphold-l', feetPosition: s.vmTune?.lat ?? { x: wp.two[3] ?? -0.01, y: wp.two[0], z: wp.two[1] }, rotation: s.vmTune?.lq ?? FP_TWO_Q, audience: 'local', children: [{ ...arm, feetPosition: { x: -bc.x, y: bc.y, z: bc.z } }] }) // a gun's fore-end: the fist turned palm-up under it, its hollow along the barrel, the forearm in from the lower left (the arm mesh is laid for a pistol grip, which left it a claw beside the gun)
-      else child.push({ ...arm, feetPosition: { x: (wp.two[3] ?? -0.01) - bc.x, y: wp.two[0] + bc.y, z: wp.two[1] + bc.z } }) } // a haft: the pistol-grip fist already closes round it
-    else if (wp.two && !ply) child.push({ feetPosition: { x: 0, y: wp.two[0], z: wp.two[1] }, castShadow: false, audience: 'local', primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: { ...arm, support: { axis: gun ? 'z' : 'y', r: wp.two[2] } } } })
+    if (support && fpa) { const bc = FP_BC[l.sex === 'f' ? 'f' : 'm'], arm = { id: 'fparm-l', model: { id: fpa.L, materials: skinM }, castShadow: false, visibleInFirstPerson: true, audience: 'local' }
+      if (gun) child.push({ id: 'fphold-l', feetPosition: support, rotation: s.vmTune?.lq ?? (fp?.vertical ? FP_VERTICAL_Q : FP_TWO_Q), audience: 'local', children: [{ ...arm, feetPosition: { x: -bc.x, y: bc.y, z: bc.z } }] })
+      else child.push({ ...arm, feetPosition: { x: support.x - bc.x, y: support.y + bc.y, z: support.z + bc.z } })
+    } else if (support && !ply) child.push({ feetPosition: support, castShadow: false, audience: 'local', primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: { ...arm, support: { axis: gun && !fp?.vertical ? 'z' : 'y', r: wp.two?.[2] ?? .023 } } } })
+    w.plyGrip = fp ? { x: .01, y: .055, z: .085 } : { x: .03, y: -.02, z: .05 }
+    w.plySupport = support && (fp ? { ...support, x: s.vmTune?.lat || fp.vertical ? support.x : -.045 } : { x: -.06, y: support.y - .08, z: support.z + .1 })
     // the worn model rides the viewmodel: shoulder just behind and below the eye, its right hand reaching the grip
     // human: the body turned to face the look, its right shoulder just right of and below the eye (female shoulder 1.19 m, male scaled by height)
     if (fpa) child.push({ id: 'fparm-r', feetPosition: s.vmTune?.aat ?? FP_AT(l.sex === 'f' ? 'f' : 'm'), rotation: s.vmTune?.arot ?? FP_ROT, model: { id: fpa.R, materials: skinM }, castShadow: false, visibleInFirstPerson: true, audience: 'local' }) // her own right arm (art/fp-arm), its fist closed on the grip at the viewmodel's origin
-    else if (cs) child.push({ id: 'plyarm', model: { ...cs.model, id: CAT_FPARM[l.sex === 'f' ? 'f' : 'm'].glb }, morph: cs.morph, ...(cs.scale ? { scale: cs.scale } : {}), children: [], feetPosition: s.vmTune?.cat ?? CAT_FPARM[l.sex === 'f' ? 'f' : 'm'].at, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'cdn/clip-idle-loop.glb', loop: 'loop', weight: 1 } } })
+    else if (cs) {
+      const cat = CAT_FPARM[l.sex === 'f' ? 'f' : 'm']
+      const arms = { model: { ...cs.model, id: cat.glb }, morph: cs.morph, ...(cs.scale ? { scale: cs.scale } : {}),
+        castShadow: false, visibleInFirstPerson: true, audience: 'local' }
+      child.push({ ...arms, id: 'plyarm', bones: { 'mixamorig:LeftArm': { scale: 0 } }, feetPosition: s.vmTune?.cat ?? cat.at })
+      // The cut cat has short arms. Seat the left shoulder behind the fore-end so the paw can reach it.
+      if (support) {
+        const f = w.plySupport
+        const scale = cs.scale ?? { x: 1, y: 1, z: 1 }
+        child.push({ ...arms, id: 'plyarm-left', bones: { 'mixamorig:RightArm': { scale: 0 } },
+          scale: { x: scale.x * 1.22, y: scale.y * 1.22, z: scale.z * 1.22 },
+          feetPosition: { x: f.x + .02, y: f.y - .32, z: f.z + .11 } })
+      }
+    }
     else if (ply) child.push({ id: 'plyarm', model: ply, feetPosition: { x: 0.02, y: -1.62, z: 0.62 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
     w.vm = ctx.spawn({
       feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42, fov: 55 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
-      primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: arm, ...(wp.muzzle ? { sockets: { muzzle: wp.muzzle } } : {}) }, children: child
+      primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: arm, ...((fp?.muzzle ?? wp.muzzle) ? { sockets: { muzzle: fp?.muzzle ?? wp.muzzle } } : {}) }, children: child
     })
     w.vmKind = armKey
   }
-  w.plyWant = !!ply && !hb; w.plyHuman = !!hb; w.plyTwo = wp_two(kind) // a two-handed weapon keeps the left arm: its hand reaches the fore-end
+  w.plyWant = !!ply && !hb
   if (ply && !w.plyRig && ctx.now() >= (w.plyNext ?? 0)) { w.plyNext = ctx.now() + 500; plyArm(ctx, w) } // its skeleton arrives with the model: look twice a second, not every tick
   if (w.vm && s.vmId !== w.vm) s.vmId = w.vm // scripts/lib/vmpose.js poses it every display frame from the camera rig
 }
@@ -1107,34 +1117,43 @@ const FP_ARM = {
   m: { R: '/cdn/value.7217b9235387299104686cdd782ec11f1801444037bd8eceefe445e11001b020.glb', L: '/cdn/value.70fede1b834eff766531f0b51f4772832f8ac989f9f48cffe988120bba1970cb.glb' } }
 // the engine stands a model's bounds bottom-centre on feetPosition, so the fist (the mesh origin) needs that offset back; BC = bounds bottom-centre of each GLB
 const FP_TWO_Q = { x: -0.2804, y: -0.5107, z: 0.4678, w: 0.6646 } // the left fist re-laid for a fore-end: forearm (-0.75,-0.45,0.48), back of hand down, grip hollow forward along the barrel
+const FP_VERTICAL_Q = eulerQ(-12, 0, 12)
 const FP_BC = { f: { x: 0.0304, y: -0.2624, z: 0.1128 }, m: { x: 0.0375, y: -0.2836, z: 0.1145 } }
 const FP_SEAT = { x: 0, y: 0.039, z: 0.096 } // the pistol grip's centre in viewmodel space, measured off the mesh (art/weapon-split/fitview.py): the fist's hollow lands on it
 const FP_AT = (sx) => ({ x: FP_BC[sx].x + FP_SEAT.x, y: FP_BC[sx].y + FP_SEAT.y, z: FP_BC[sx].z + FP_SEAT.z }), FP_ROT = { yaw: 0, pitch: 0, roll: 0 }
 // first-person arms cut from her own body GLBs (art/cat-fparm/build.py): same mesh, rig, slots and bind pose, only arm/forearm/hand kept, so no torso or sleeve lump fills the view.
 // at: the model's bounds bottom-centre placed so its right shoulder sits below-right of and a little ahead of the eye, an arm's reach behind the grip (viewmodel origin); the hand reaches the grip by IK (plyArm)
 const CAT_FPARM = { f: { glb: '/cdn/value.1a50c4f098271ae5981ef730799d0a2e9913570abeb76d1475ab61869585a26a.glb', at: { x: -0.035, y: -0.16, z: 0.28 } }, m: { glb: '/cdn/value.0ac8ed9fa781f9f7a002a249ccb98c55be6cd8f29698bb508e008517c604cc25.glb', at: { x: -0.05, y: -0.185, z: 0.28 } } }
-function wp_two(kind) { return W[kind]?.two ? { y: W[kind].two[0], z: W[kind].two[1] } : null }
-export function plyBounds(ctx, p) { const b = ctx.getObject(p.id), v = ctx.getObject(p.id.split('/plyarm')[0]); ctx.log('[plyarm] bounds', JSON.stringify(b?.bounds ?? null), 'vm', JSON.stringify(v?.bounds ?? null), 'wfp', JSON.stringify(b?.worldFeetPosition ?? null), 'me', JSON.stringify(ctx.self.feetPosition), 'vis', b?.visible, b?.visibleInFirstPerson) }
+const LH = /(^|[^a-z])(l|left)[_. ]?hand$|hand[_. ]?(l|left)$/i
+const RIGHT_CHAIN = /(^|[^a-z])(r|right)[_. ]?(clavicle|shoulder|upperarm|arm)$|(clavicle|shoulder|upperarm)[_. ]?(r|right)$/i
 function plyArm(ctx, w) {
-  const body = ((w.plyObj && ctx.getObject(w.plyObj)) || ctx.getObject(w.vm + '/plyarm')) ?? ctx.getObject('plyarm') ?? (ctx.getObject(w.vm)?.children ?? []).map((c) => (typeof c === 'string' ? ctx.getObject(c) : c)).find((c) => c?.model)
-  if (!w.plyLogged) { w.plyLogged = true; ctx.log('[plyarm] vm', w.vm, 'body', body?.id ?? null, 'pos', JSON.stringify(body?.worldFeetPosition ?? null), 'skel', body?.skeleton ? Object.keys(body.skeleton).length : 'none') }
-  const names = body?.skeleton ? (Array.isArray(body.skeleton) ? body.skeleton : Object.keys(body.skeleton)).map((b) => (typeof b === 'string' ? b : b.name)) : null
-  if (!names?.length) return
+  const root = ctx.getObject(w.vm)
+  const kids = (root?.children ?? []).map((c) => typeof c === 'string' ? ctx.getObject(c) : c).filter(Boolean)
+  const find = (id) => ctx.getObject(w.vm + '/' + id) ?? kids.find((c) => c.id === id || c.id?.endsWith('/' + id))
+  const right = find('plyarm')
+  const left = w.plySplit && w.plySupport ? find('plyarm-left') : null
+  const rightReady = fitPaws(right, w, false, !w.plySplit && !!w.plySupport)
+  const leftReady = !w.plySplit || !w.plySupport || fitPaws(left, w, true, false)
+  w.plyRig = rightReady && leftReady
+}
+function fitPaws(body, w, left, both) {
+  const rig = body?.skeleton
+  if (!rig) return false
+  const names = (Array.isArray(rig) ? rig : Object.keys(rig)).map((b) => typeof b === 'string' ? b : b.name).filter(Boolean)
+  if (!names.length) return false
   const bones = {}
-  const cut = w.plyTwo && !w.plyHuman ? CUT.filter((_, i) => i !== 1) : CUT
-  for (const n of names) if (cut.some((r) => r.test(n.replace(/^mixamorig:/, '')))) {
-    const par = names.find((m) => m !== n && cut.some((r) => r.test(m.replace(/^mixamorig:/, ''))) && n.startsWith(m)) // a parent already cut covers it
-    if (!par) bones[n] = { scale: 0 }
+  const bone = (n) => n.replace(/^mixamorig:/, '')
+  const cut = CUT.filter((_, i) => i !== 1)
+  if (!both) cut.push(left ? RIGHT_CHAIN : CUT[1])
+  for (const name of names) if (cut.some((r) => r.test(bone(name)))) bones[name] = { scale: 0 }
+  const grip = (left, offset) => {
+    const name = names.find((n) => (left ? LH : RH).test(bone(n)))
+    if (name) bones[name] = { ...(left && w.plySplit ? { scale: 1 / 1.22 } : {}), reach: { to: { object: w.vm, offset }, pole: { object: w.vm, offset: { x: left ? -.45 : .42, y: -.55, z: .38 } } } }
   }
-  const hand = names.find((n) => RH.test(n.replace(/^mixamorig:/, '')))
-  if (hand && w.plyHuman) bones[hand] = { scale: 0 } // the closed scripted hand grips; the model's flat hand folds away
-  else if (hand) bones[hand] = { reach: { to: { object: w.vm, offset: { x: 0.03, y: -0.02, z: 0.05 } }, pole: { object: w.vm, offset: { x: 0.6, y: -0.6, z: 0.4 } } } }
-  const lh = w.plyTwo && names.find((n) => /(^|[^a-z])(l|left)[_. ]?hand$|hand[_. ]?(l|left)$/i.test(n.replace(/^mixamorig:/, '')))
-  if (lh && !w.plyHuman) bones[lh] = { ...(w.plyHuman ? { scale: 0 } : {}), reach: { to: { object: w.vm, offset: { x: -0.06, y: w.plyTwo.y - 0.08, z: w.plyTwo.z + 0.1 } }, pole: { object: w.vm, offset: { x: -0.7, y: -0.6, z: 0.4 } } } }
+  if (left || both) grip(true, w.plySupport)
+  if (!left) grip(false, w.plyGrip)
   body.bones = bones
-  w.plyRig = true
-  ctx.after?.(1, 'plyBounds', { id: body.id })
-  ctx.log('[plyarm] rigged', hand ?? 'no right hand', 'cut', Object.keys(bones).join(','), 'all', names.join(','))
+  return true
 }
 
 export function update(ctx, dt) {
