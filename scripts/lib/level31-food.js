@@ -8,6 +8,7 @@ const G = {
   benchO: "/cdn/value.a2c6ff61773dad10900e1d9438fd7d531ff3d50a5777942c46eb6fae0f3455cc.glb", benchG: "/cdn/value.e5b68318e51038b74580baf037ebfe2f2c615afd5454d31f109b00ef05588593.glb",
   trash: "/cdn/value.b2b4a6b6432a1fa06b5b7221dc44910a04ad25f47bbb97a8c70c17c00913c568.glb", condi: "/cdn/value.5c5a4885c63007e6e9641d674001f1b672315abd05804698f6856ee020d726a0.glb",
   pizza: "/cdn/value.94489c95bccefcf999e9167007fdc37c595c0870ac5c55f21b53e8c977e86224.glb", grill: "/cdn/value.2f6588063f2a79088a29a82f37fd985c1b9c35479895c1e58b37177a75badbdf.glb",
+  sprite: "/cdn/value.a8fa78fe97d7a4433a1f5ce5cacb2e5ae69aabe51e91ae21e867c39aaff669b7.glb", capri: "/cdn/value.edf5f857dd939618098f90a7946280471677192360f1e654e31b18e0ee79d1fc.glb",
   wings: "/cdn/value.2a86cc1225956d7affdefab951435412e8d1eff6a49fce68c60c5588dda68d47.glb", soda: "/cdn/value.dccac7a9af42b8a71ffcd628fd16438030ddc40387223fc7e2bc9cf3ac857c84.glb",
 };
 // what each order does to you. All free. Numbers Savi's picks.
@@ -16,6 +17,7 @@ export const L31_FOOD = {
   mild: { name: "Mild wings", hunger: 40, thirst: 2, sanity: 6 }, hot: { name: "Hot wings", hunger: 40, thirst: 1, sanity: 6 }, toohot: { name: "Too hot wings", hunger: 40, thirst: 1, sanity: 3 },
   hotdog: { name: "Foot-long hot dog", hunger: 45, thirst: 2, sanity: 6 },
   cola: { name: "Cola", hunger: 3, thirst: 30, sanity: 5 }, orange: { name: "Orange soda", hunger: 3, thirst: 30, sanity: 5 }, lime: { name: "Lime soda", hunger: 3, thirst: 30, sanity: 5 },
+  sprite: { name: "Sprite", hunger: 3, thirst: 32, sanity: 7 }, capri: { name: "Capri Sun", hunger: 4, thirst: 26, sanity: 9 },
   almond: { name: "Almond water", hunger: 2, thirst: 45, sanity: 15 },
 };
 export const L31_ZONE_X = 25; // west of this with a tray = you left it
@@ -54,6 +56,12 @@ export function layFood(ctx) {
   for (const [i, z] of [10.6, 14, 17.4, 20.6, 23.4].entries()) P(`counter-brk${i}`, { feetPosition: { x: 37.45, y: 0.72, z }, primitive: box(0.3, 0.08, 0.03), material: { color: "#8a8d92", metalness: 0.8, roughness: 0.4 } });
   M("pizza", "pizza", 38.05, 12, 90, { physics: "none" }, 0.92); M("grill", "grill", 38.05, 14.7, 90, { physics: "none" }, 0.92);
   M("wings", "wings", 38.05, 19.4, 90, { physics: "none" }, 0.92); M("soda", "soda", 38.05, 22, 90, { physics: "none" }, 0.92);
+  // real Frontrooms drinks (Tripo): a row of Sprite and Capri Sun by the soda fountain, strays on the tables
+  const D = (id, key, x, y, z, yaw) => P(id, { model: { id: G[key], forward: "+x" }, feetPosition: { x, y, z }, rotation: { yaw },
+    layout: { box: key === "sprite" ? { min: { x: -0.033, y: 0, z: -0.033 }, max: { x: 0.033, y: 0.22, z: 0.033 } } : { min: { x: -0.016, y: 0, z: -0.055 }, max: { x: 0.016, y: 0.16, z: 0.055 } } } });
+  [23.3, 23.45, 23.6].forEach((z, i) => D(`sprite${i}`, "sprite", 37.8, 0.9, z, 90 + i * 7));
+  [23.85, 23.97, 24.09, 24.21].forEach((z, i) => D(`capri${i}`, "capri", 37.8, 0.9, z, 90 - i * 5));
+  D("sprite-t1", "sprite", 33.2, 0.74, 12.2, 40); D("capri-t3", "capri", 29.3, 0.74, 23.15, 120); D("capri-t5", "capri", 33.15, 0.74, 17.3, 200);
   P("haze", { feetPosition: { x: 38.05, y: 1.75, z: 12 }, fx: { script: HAZE } });
   // backlit menu board on the east wall
   P("menu-box", { feetPosition: { x: 41.9, y: 2.4, z: 17 }, primitive: box(0.16, 2.0, 6.6), material: { color: "#1a1412", roughness: 0.6 } });

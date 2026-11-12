@@ -8,6 +8,7 @@ import { ZONES, H } from "./level31.js";
 const SELF = "scripts/lib/level31-arcade.js";
 const SFX = "/cdn/moodboard-realistic-gritty/";
 const GLB = {
+  felix: "/cdn/value.a34bd774d1847e4ea13da73b3aaa23d2520c224c6ce7056cd98851c0bbcdd205.glb",
   dispenser: "/cdn/value.f759116da56aba87735b8064a9fe7b00f9a373dadf68a856453d2f01173eca10.glb",
   upright: "/cdn/value.f025413cd07f33ee4e744a88cdbe78e81a6057ba2b9fa1e5b77a9543ea556977.glb",
   pinball: "/cdn/value.38ea1184b8c82b3771c13c050fd5e3c5e090a504e7b95c21a22663994d233826.glb",
@@ -125,8 +126,12 @@ export function layArcade(ctx) {
   const U = (id, x, z, yaw, state, side, body, scr, svg, extra = []) => M(id, "upright", x, z, yaw, { res: "upright", ...state },
     { screen: scr, marquee: lamp("#fff4d0", 0.5), side, body_red: body, cpanel: { color: body.color } },
     [{ id: "title", feetPosition: { x: 0, y: 1.6, z: -0.352 }, vector: svg, castShadow: false }, ...extra]);
-  U("marty", E - 0.42, -16.5, W, { name: "Mend-It Marty Jr." }, { texture: tex("retro-arcade-cabinet-side-art-green-yellow-vertical-stripes"), roughness: 0.5 }, { color: "#b9c832" },
-    glow("retro-arcade-crt-screen-pixel-handyman-climbing-brick-building-game"), MARTY);
+  // the real Fix-It Felix Jr. upright (Tripo, from Shelly's photo), sky-blue cab, true size 0.66 x 1.82 x 0.78 m
+  ctx.spawn("l31-arcade-felix", { feetPosition: { x: E - 0.45, y: 0, z: -16.5 }, rotation: { yaw: W },
+    model: { id: GLB.felix, forward: "+x" }, layout: { box: { min: { x: -0.39, y: 0, z: -0.33 }, max: { x: 0.39, y: 1.82, z: 0.33 } } },
+    physics: { body: "static", collider: "box" }, behavior: SELF, tags: ["usable", "l31-arcade"],
+    state: { kind: "attract", verb: "Play", info: "Fix-It Felix Jr. Takes a card.", name: "Fix-It Felix Jr.", res: "upright" },
+    children: [{ id: "glow", feetPosition: { x: 0, y: 1.35, z: -0.6 }, light: { kind: "point", color: "#9fd4ff", intensity: 0.6, distance: 2.5 } }] });
   U("panic", E - 0.42, -24.5, W, { kind: "arcade", game: "blockpanic", name: "Block Panic", info: "arcade cabinet, takes a card" }, { color: "#2a1c5c", roughness: 0.4 }, { color: "#ff4fa3" },
     glow("retro-arcade-crt-screen-pixel-falling-block-puzzle-game", "#ffffff", 1.5), PANIC);
   U("comet", 27.2, N + 0.42, S, { name: "Comet Cadets", pitch: 1.3 }, { color: "#0c2a66", roughness: 0.4 }, { color: "#ff8a2a" },
@@ -136,7 +141,7 @@ export function layArcade(ctx) {
     [{ id: "note", feetPosition: { x: 0.02, y: 0.74, z: -0.34 }, vector: PAPER, castShadow: false }]);
 
   // three faceling customers, each stood at a machine (docile; lines in scripts/lib/data/dlg-generic.yml by id)
-  [["face1", E - 1.5, -16.5, EA, "f", { topw: "jacket", top: "#7a3d52", bottom: "#27293a" }, "Faceling at the Marty machine"],
+  [["face1", E - 1.5, -16.5, EA, "f", { topw: "jacket", top: "#7a3d52", bottom: "#27293a" }, "Faceling at the Felix machine"],
    ["face2", 37.05, N + 2.05, 0, "m", { topw: "tee", top: "#3f6f8f", bottom: "#3a352e" }, "Faceling at the pinball"],
    ["face3", E - 3.75, -2.77, EA, "m", { topw: "hoodie", top: "#c9a23a", bottom: "#22232b" }, "Faceling at the Skee-Ball"]].forEach(([id, x, z, yaw, sex, wear, name]) =>
     ctx.spawn("l31-arcade-" + id, { feetPosition: { x, y: 0.05, z }, rotation: { yaw }, physics: "character", tags: ["npc", "usable", "faceling", "l31-arcade"],

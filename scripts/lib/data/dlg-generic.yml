@@ -295,6 +295,18 @@ l31-food-clerk:
   bye: "Trash cans are by the opening."
   walk: "Tray goes in the trash."
   ask:
+    - q: "Got anything from back home?"
+      tag: "Order"
+      a: "Sprite. Capri Sun. Nobody restocks them. They're just always there."
+      then:
+        - q: "Sprite."
+          tag: "Order"
+          a: "One Sprite. Cold. No charge."
+          do: "l31:sprite"
+        - q: "Capri Sun."
+          tag: "Order"
+          a: "Capri Sun. Good luck with the straw."
+          do: "l31:capri"
     - q: "A slice of pizza."
       tag: "Order"
       a: "Cheese or pepperoni."
