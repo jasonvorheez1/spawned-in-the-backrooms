@@ -192,12 +192,20 @@ function moodFace(ctx, l) {
   const hp = s.hp ?? 100
   if (ses.hp != null && hp < ses.hp - 0.5) ses.hurtUntil = now + C.hurtFace * 1000
   ses.hp = hp
-  if (now < (ses.hurtUntil || 0)) return 'scared'
-  if (hp <= 0) return 'sad'
+  if (s.dead || s.down || hp <= 0) return 'ko'
+  if (now < (ses.hurtUntil || 0)) return 'hit'   // the painted hit face (Shelly liked it, stars off)
+  if (s.angry) return 'angry'
   if (hp < 30) return 'sad'
   if ((s.san ?? 100) < 25) return 'scared'
+  // a resting face lives a little (Nov 12 'animated faces'): now and then a smile or a blep, on each cat's own beat
+  if (!l.expr || l.expr === 'neutral' || l.expr === 'resting') {
+    if (now > (ses.quirkNext ?? 0)) { const r = ctx.random(); ses.quirk = r < 0.55 ? 'smile' : r < 0.8 ? 'blep' : 'joy'; ses.quirkUntil = now + 1500 + r * 1500; ses.quirkNext = ses.quirkUntil + 14000 + ctx.random() * 22000 }
+    if (now < (ses.quirkUntil ?? 0)) return ses.quirk
+  }
   return l.expr
 }
+// talking (Nov 12): a line being said (state.line, written by talk.js and every NPC that speaks) opens and shuts the mouth in the face shader
+const talkingNow = (ctx) => { const ln = ctx.self.state.line; return !!(ln && ln.t && ctx.now() < (ln.at ?? 0) + (ln.d ?? 1400 + String(ln.t).length * 60)) }
 
 // Shelly's Universal Animation Library: a human NPC stands its own way (arms folded, on the phone), picked once by its id; players keep the plain idle
 const WARRIOR = { walk: 'cdn/clip-warrior-walk-cycle-589b8756-loop.glb', run: 'cdn/clip-warrior-run-cycle-9a42782f-loop.glb' } // Shelly's warrior gait, refit to the human rig
@@ -291,7 +299,8 @@ export function update(ctx) {
   if(!worn && HUMAN && ses.cachedParams)humanFaceTick(ctx,face)
   if (worn && ctx.getObject(ctx.self.id + '/' + HEAD_ID)) dropHead(ctx, ctx.self) // a worn body never keeps the critter head, whoever put it back
   if (MESH && !HUMAN && !worn && ses.headFace !== face) { ses.headFace = face; applyBones(ctx) }
-  if (MESH && !HUMAN && !worn && isNewCat(ses.cachedParams) && ses.catFace !== face) { ses.catFace = face; ctx.self.model = bodyModel({ ...ses.cachedParams, expr: face }) } // the new cat's face is a picture in its skin: a mood swaps it
+  const talk = talkingNow(ctx), faceKey = face + (talk ? ':talk' : '')
+  if (MESH && !HUMAN && !worn && isNewCat(ses.cachedParams) && ses.catFace !== faceKey) { ses.catFace = faceKey; ctx.self.model = bodyModel({ ...ses.cachedParams, expr: face, talk }) } // the new cat's face is a picture in its skin: a mood swaps it
   const hs = Number(l.headS) || 1, ts = Number(l.tailS) || 1
   if (!worn && !HUMAN && (hs !== (ses.headS || 1) || ts !== (ses.tailS || 1))) { ses.headS = hs; ses.tailS = ts; applyBones(ctx) }
 

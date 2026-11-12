@@ -992,6 +992,7 @@ export function catLook(l) {
   for (const k of ['fur', 'topw', 'botw', 'shoes', 'hat', 'neck', 'top', 'bottom', 'shoec', 'hatc', 'neckc', 'topp', 'hairc', 'fluffc', 'inner']) if (l?.[k] != null && l[k] !== '') o[k] = l[k]
   o.fur = o.fur || M.species[l?.species]?.fur || '#f2a65a'   // an old species look keeps its fur colour on the new body   // orange cat by default (Shelly: cat back orange, not cream)
   o.expression = CAT_FACE[l?.expression ?? l?.expr] ?? 'neutral'
+  if (l?.talk) o.talk = true
   if (typeof l?.shadow === 'string' && l.shadow && l.shadow !== 'none') o.shadow = l.shadow   // eyeshadow
   for (const k of ['etype', 'mtype']) if (typeof l?.[k] === 'string' && l[k] && l[k] !== 'classic') o[k] = l[k]   // eye and mouth type picks (critter-faces.yml eyes/mouths)
   // eyes: the look's own colour, else one per cat picked from its fur and name so a crowd isn't one colour
