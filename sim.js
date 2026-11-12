@@ -1,12 +1,35 @@
 // The world's program: the referee. Behaviors write their own rows (ctx.self.state.*); this reads what
 // changed and writes the rows everyone reads: ctx.world.state.* and ctx.place.state.*.
-export const cadence = "1s";
-import { setStyle, restylePlace } from "./scripts/lib/critter-model.js";
+// Nov 12: the whole-place restyle sweep ran every second over every object (a 1247 ms tick in Level 5).
+// Now each occupied place keeps a queue of ids, refilled when it runs dry, and a tick restyles a few.
+export const cadence = "250ms";
+import { setStyle, restyle } from "./scripts/lib/critter-model.js";
+const PER_TICK = 40; // objects looked at per tick across all places (her pick: ~160/s, a 550-thing level in ~4 s)
+const queues = new Map(); // place id -> { ids, ward } ; this machine's working memory, not shared state
+function refill(pl) {
+  const skip = new Set((pl.players ?? []).map((p) => p.id));
+  const all = Object.keys(pl.objects ?? {}), ward = new Set();
+  for (const k of all) { const i = k.indexOf("/critter-ward-"); if (i > 0) ward.add(k.slice(0, i)); }
+  return { ids: all.filter((id) => !skip.has(id) && !id.startsWith("player/")), ward };
+}
 export function tick(ctx) {
   setStyle(ctx.world.state.bodyStyle); // this machine's spawns follow the BODIES pick
-  // every person standing in a level someone is in follows it too (NPCs, scene-laid people, corpses); restyle skips what already matches
-  const seen = new Set();
-  for (const p of ctx.world.players) { const id = p.place?.id ?? p.place; if (!id || seen.has(id)) continue; seen.add(id); const pl = ctx.world.places[id]; if (pl) { const n = restylePlace(ctx, pl); if (n) ctx.log("restyle", id, n) } }
+  const live = new Set();
+  for (const p of ctx.world.players) { const id = p.place?.id ?? p.place; if (id) live.add(id); }
+  for (const id of [...queues.keys()]) if (!live.has(id)) queues.delete(id);
+  let budget = PER_TICK, n = 0;
+  for (const id of live) {
+    const pl = ctx.world.places[id]; if (!pl) continue;
+    let q = queues.get(id);
+    if (!q || !q.ids.length) { q = refill(pl); queues.set(id, q); }
+    while (q.ids.length && budget > 0) {
+      const o = pl.objects[q.ids.pop()];
+      if (!o || o.audience === "local" || !o.model) continue;
+      budget--; if (restyle(ctx, o, q.ward)) n++;
+    }
+    if (budget <= 0) break;
+  }
+  if (n) ctx.log("restyle", n);
 }
 
 // Something that falls below a place's worldBounds would respawn at the place's spawn point, which is
