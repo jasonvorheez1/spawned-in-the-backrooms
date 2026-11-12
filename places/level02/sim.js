@@ -13,7 +13,7 @@ import { S, NX, NZ, X0, Z0, BASE, CEIL, LIFT, BIN, xOf } from "../../scripts/lib
 import { FRESH_BODY, setRemodStep } from "../../scripts/lib/remodel-quest.js";
 import P from "../../scripts/lib/data/l02-props.yml";
 export const cadence = "250ms";
-const V = 16, STEP_MS = 3400, WARNING_MS = 1200;
+const V = 17, STEP_MS = 3400, WARNING_MS = 1200;
 const CREAK = "/cdn/moodboard-realistic-gritty/sfx-deep-structural-wood-creak-groan.mp3";
 const OFFICE_LIGHT = { kind: "point", color: "oklch(0.96 0.025 95)", intensity: 1.35, distance: 11 };
 const WARN_LIGHT = { ...OFFICE_LIGHT, color: "oklch(0.76 0.16 54)", intensity: 0.95, distance: 8 };
@@ -95,7 +95,7 @@ function layShell(ctx) {
   sp(ctx, "l02-haze", { feetPosition: { x: cx, y: BASE + 0.3, z: cz }, fx: { script: HAZE } });
   // stairs from the basement up to the door room's edge, a 2x4 baluster per step and a rail
   // Shelly Nov 12 "make this not blocky using tripo": one Tripo pine staircase (open treads on notched stringers, baluster rail on the room side) over the ramp collider below
-  sp(ctx, "l02-stairs", { feetPosition: { x: -9, y: BASE, z: Z0 + 1.1 }, model: { id: "/cdn/value.c2b6803633d0f2ad5b1a5fbac7422a4e036ecdd90d575f615b0879689e40035e.glb" },
+  sp(ctx, "l02-stairs", { feetPosition: { x: -9, y: BASE, z: Z0 + 1.1 }, model: { id: "/cdn/value.c2b6803633d0f2ad5b1a5fbac7422a4e036ecdd90d575f615b0879689e40035e.glb", materials: { "tripo_material_1a20605f-c7ae-4a92-946d-32b1ae6c3c91": { color: "oklch(0.8 0.045 70)", roughness: 0.88, metalness: 0 } } },
     layout: { box: { min: { x: -3.05, y: 0, z: -0.9 }, max: { x: 3.05, y: -BASE + 0.95, z: 0.9 } } }, castShadow: true, receiveShadow: true });
   { // one smooth ramp collider under the treads: (-6.0, BASE) up to (-12.0, 0), so the climb never hangs on a riser
     const run = 6, rise = -BASE, len = Math.hypot(run, rise), ang = Math.atan2(rise, run) * 180 / Math.PI;
