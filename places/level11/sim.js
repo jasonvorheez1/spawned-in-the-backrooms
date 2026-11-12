@@ -25,7 +25,7 @@ import MODELS from "../../scripts/lib/data/level11-models.yml";
 export const cadence = "1s";
 const RENO_FLOOR = 0.32;
 const mallTrash = (i) => ({ x: -15.15 + i * 0.2, y: 0.33, z: 28.1 + i * 0.65 });
-const V = 139; // the market court and the central pedestrian route
+const V = 140; // the market court and the central pedestrian route
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1075,6 +1075,26 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
     sp("l11-spam-bulb", { feetPosition: { x: AX + W / 2 - 0.1, y: 2.7, z: Z0 + 8 }, primitive: { kind: "sphere", radius: 0.09 }, material: { color: "#ffe9b0", emissive: "#ffcf70", emissiveIntensity: 3 }, light: { kind: "point", color: "#ffcf8a", intensity: 2.2, distance: 9 }, castShadow: false });
     sp("l11-spam-sign", { feetPosition: { x: AX - W / 2 + 0.02, y: 2.0, z: Z0 + LEN - 1 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 1.1, height: 0.5, depth: 0.03 }, material: { color: "oklch(0.92 0.02 90)", roughness: 0.8 },
       ui: `<div face="front" width="1.1m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:Arial Black,Arial,sans-serif;color:#1b1b1b;font-size:64px;text-align:center;line-height:1">NO DUMPING<br><span style="font-size:34px;color:#b01818">VIOLATORS WILL BE [[PROSECUTED]]</span></div>` });
+    // Nov 12 (Shelly: improve the area where spamton is, no BIG SHOT sign): the alley dressed as a lived-in service alley
+    const ABRICK = { ...T("wet-dark-red-brick-wall-with-grime-streaks", 1), repeat: [3, 1.5], color: "oklch(0.62 0.05 35)", roughness: 0.55 };
+    for (const sd of [-1, 1]) {
+      sp(`l11-alley-brick-${sd}`, { feetPosition: { x: AX + sd * (W / 2 - 0.06), y: 0.08, z: Z0 + LEN / 2 }, primitive: { kind: "box", width: 0.08, height: 6, depth: LEN }, material: ABRICK });
+      sp(`l11-alley-pipe-${sd}`, { feetPosition: { x: AX + sd * (W / 2 - 0.2), y: 0.08, z: Z0 + (sd < 0 ? 3.2 : 9.6) }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 6.2 }, material: { color: "oklch(0.35 0.03 140)", metalness: 0.6, roughness: 0.5 } });
+      sp(`l11-alley-pipe-shoe-${sd}`, { feetPosition: { x: AX + sd * (W / 2 - 0.3), y: 0.1, z: Z0 + (sd < 0 ? 3.2 : 9.6) }, rotation: { roll: sd * 60 }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.09, height: 0.28 }, material: { color: "oklch(0.33 0.03 140)", metalness: 0.6, roughness: 0.5 } });
+    }
+    sp("l11-alley-door", { feetPosition: { x: AX + W / 2 - 0.1, y: 0.08, z: Z0 + 5.2 }, rotation: { yaw: -90 }, primitive: { kind: "box", width: 1.0, height: 2.1, depth: 0.08 }, material: { ...T("chipped-painted-steel-door-panel", 1), color: "oklch(0.45 0.06 250)", metalness: 0.4, roughness: 0.6 } });
+    sp("l11-alley-door-step", { feetPosition: { x: AX + W / 2 - 0.35, y: 0.08, z: Z0 + 5.2 }, primitive: { kind: "box", width: 0.5, height: 0.14, depth: 1.3 }, material: { ...T("stained-concrete-floor", 1), color: "oklch(0.6 0.01 80)" }, physics: "static" });
+    sp("l11-alley-cage-lamp", { feetPosition: { x: AX + W / 2 - 0.22, y: 2.45, z: Z0 + 5.2 }, primitive: { kind: "cylinder", radiusTop: 0.09, radiusBottom: 0.12, height: 0.22 }, material: { color: "#ffe2a0", emissive: "#ffc860", emissiveIntensity: 2.4 }, light: { kind: "point", color: "#ffcf8a", intensity: 1.6, distance: 7 }, audio: { clip: "cdn/moodboard-realistic-gritty/sfx-faint-buzzing-caged-bulb-hum-loop.mp3", loop: true, gain: 0.12, spatial: true, maxDistance: 6 } });
+    sp("l11-alley-vent", { feetPosition: { x: AX - W / 2 + 0.3, y: 0.08, z: Z0 + 8.6 }, primitive: { kind: "box", width: 0.5, height: 0.04, depth: 0.7 }, material: { ...T("grimy-scratched-steel-plate", 1), color: "oklch(0.4 0.01 80)", metalness: 0.7 },
+      fx: { script: `fx
+pop steam rate=?mobile:6|12 on=disc(.2) life=1.6..2.6 v=up(.7..1.1)+sdir()*.15 size=.3..0.5 acc=buoy(.4)+curl(.4)*.4+drag(.9) sz=$size*(.6>2.6) col=<.82,.82,.8> a=0>.18:.22>.7:.1>0 rot=spin(.2) r=sprite(smoke-puff,alpha)` } });
+    for (const [k, x, z, yaw, tip] of [[0, AX - 1.55, Z0 + 2.2, 8, 0], [1, AX - 1.62, Z0 + 2.3, 4, 78]])
+      sp(`l11-alley-pallet-${k}`, { feetPosition: { x, y: 0.08, z }, rotation: { yaw, roll: tip }, primitive: { kind: "box", width: 1.0, height: 0.14, depth: 1.2 }, material: { ...T("weathered-grey-pallet-wood-planks", 1), color: "oklch(0.62 0.03 70)" }, physics: tip ? undefined : "static" });
+    for (const [k, x, z, yaw] of [[0, AX + 0.9, Z0 + 3.4, 20], [1, AX - 0.4, Z0 + 7.1, -35], [2, AX + 1.4, Z0 + 10.2, 70], [3, AX - 1.0, Z0 + 11.3, 5]])
+      sp(`l11-alley-paper-${k}`, { feetPosition: { x, y: 0.085, z }, rotation: { yaw }, primitive: { kind: "box", width: 0.42, height: 0.006, depth: 0.3 }, material: { ...T("soggy-crumpled-old-newspaper-page", 1), color: "oklch(0.78 0.02 90)", roughness: 0.9 } });
+    for (const [k, x, z, r] of [[0, AX + 0.6, Z0 + 6.3, 0.7], [1, AX - 0.9, Z0 + 9.4, 0.5]])
+      sp(`l11-alley-wet-${k}`, { feetPosition: { x, y: 0.083, z }, primitive: { kind: "cylinder", radiusTop: r, radiusBottom: r, height: 0.004 }, scale: { x: 1.6, y: 1, z: 1 }, material: { color: "oklch(0.18 0.01 240)", roughness: 0.05, metalness: 0.3, transparent: true, opacity: 0.7 } });
+    sp("l11-alley-drip", { feetPosition: { x: AX, y: 0.1, z: Z0 + 7 }, audio: { clip: "cdn/moodboard-realistic-gritty/sfx-slow-water-drips-into-alley-puddle-echo-loop.mp3", loop: true, gain: 0.14, spatial: true, maxDistance: 10 } });
   }
 
   // ==========================================
