@@ -79,8 +79,8 @@ function floor(ctx) {
   // the rubber runner: counter, out to the aisle, along it, up to the south gate of the rink
   const mat = (id, x, z, w, d) => ctx.spawn(`l31-rental-mat${id}`, { feetPosition: { x, y: 0, z }, primitive: box(w, 0.016, d), material: RUB, castShadow: false, receiveShadow: true, tags: ["l31-rental"] });
   mat(0, 13, 22.2, 1.3, 3.9); mat(1, 6.5, 19.6, 14.3, 1.3); mat(2, 0, 15.75, 1.3, 6.4);
-  ctx.spawn("l31-rental-light0", { feetPosition: { x: 9.6, y: 2.95, z: 26.9 }, light: { kind: "point", color: "#ffd9a8", intensity: 2.6, distance: 9 } });
-  ctx.spawn("l31-rental-light1", { feetPosition: { x: 16.4, y: 2.95, z: 26.9 }, light: { kind: "point", color: "#ffd9a8", intensity: 2.6, distance: 9 } });
+  ctx.spawn("l31-rental-light0", { feetPosition: { x: 9.6, y: 2.95, z: 26.9 }, light: { kind: "point", color: "#ffd9a8", intensity: 5, distance: 9 } });
+  ctx.spawn("l31-rental-light1", { feetPosition: { x: 16.4, y: 2.95, z: 26.9 }, light: { kind: "point", color: "#ffd9a8", intensity: 5, distance: 9 } });
   ctx.spawn("l31-rental-light2", { feetPosition: { x: 13, y: 2.3, z: 22.9 }, light: { kind: "point", color: "#8fdcff", intensity: 1.8, distance: 8 } });
 }
 function coach(ctx) {

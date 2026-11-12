@@ -57,7 +57,8 @@ export function layFood(ctx) {
   P("haze", { feetPosition: { x: 38.05, y: 1.75, z: 12 }, fx: { script: HAZE } });
   // backlit menu board on the east wall
   P("menu-box", { feetPosition: { x: 41.9, y: 2.4, z: 17 }, primitive: box(0.16, 2.0, 6.6), material: { color: "#1a1412", roughness: 0.6 } });
-  P("menu-glow", { feetPosition: { x: 41.81, y: 2.45, z: 17 }, primitive: box(0.02, 1.9, 6.4), material: { color: "#fff1cf", emissive: "#ffe2a8", emissiveIntensity: 0.22 } });
+  P("menu-glow", { feetPosition: { x: 41.81, y: 2.45, z: 17 }, primitive: box(0.02, 1.9, 6.4), material: { color: "#fff1cf", emissive: "#ffe2a8", emissiveIntensity: 0.07 } });
+  P("staff-light", { feetPosition: { x: 36.2, y: 2.6, z: 28.6 }, light: { kind: "point", color: "#ffd2a0", intensity: 2.5, distance: 7 } });
   P("menu", { feetPosition: { x: 41.79, y: 3.4, z: 17 }, rotation: { yaw: 90 }, vector: MENU });
   // neon on the partition, the paper note over the trash cans
   P("neon", { feetPosition: { x: 37.5, y: 3.3, z: 6.17 }, rotation: { yaw: 180 }, vector: NEON });
