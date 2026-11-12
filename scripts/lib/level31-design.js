@@ -4,6 +4,7 @@
 // gift-shop sign (each sign its own style), and carpeted half-walls that turn the open carpet into a lounge.
 // All positions are Savi's picks against scripts/lib/level31.js ZONES; ids are l31-ld-*.
 import { H, B, RINK, ZONES } from "./level31.js";
+import { rbox } from "./rbox.js";
 const PROPS = "scripts/l31-props-geo.js";
 const CARPET = { texture: "cdn/texture-black-arcade-carpet-neon-confetti-squiggles.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.95 0.01 300)", roughness: 0.95 };
 const CHROME = { color: "#c9ccd4", metalness: 1, roughness: 0.18 };
@@ -38,11 +39,11 @@ export function layDesign(ctx) {
   }
 
   // 4. rubber mats at both gates, where skates meet carpet
-  for (const s of [-1, 1]) sp(`mat${s}`, { feetPosition: { x: 0, y: 0, z: s * (RINK.rail + 1.0) }, primitive: { kind: "box", width: 2.6, height: 0.025, depth: 1.6 }, material: RUBBER, receiveShadow: true });
+  for (const s of [-1, 1]) sp(`mat${s}`, { feetPosition: { x: 0, y: 0, z: s * (RINK.rail + 1.0) }, primitive: rbox(2.6, 0.025, 1.6, 0.008), material: RUBBER, receiveShadow: true });
 
   // 5. carpeted half-walls: a lounge pocket each side of the south gate, a ledge to lean on and watch the skaters
-  const half = (id, x, z, len, yaw) => sp(`hw-${id}`, { feetPosition: { x, y: 0, z }, rotation: { yaw }, primitive: { kind: "box", width: len, height: 1.05, depth: 0.22 }, material: CARPET, physics: "static",
-    children: [{ feetPosition: { x: 0, y: 1.05, z: 0 }, primitive: { kind: "box", width: len + 0.06, height: 0.05, depth: 0.32 }, material: { color: "#d8322a", roughness: 0.35 } }] });
+  const half = (id, x, z, len, yaw) => sp(`hw-${id}`, { feetPosition: { x, y: 0, z }, rotation: { yaw }, primitive: rbox(len, 1.05, 0.22), material: CARPET, physics: "static",
+    children: [{ feetPosition: { x: 0, y: 1.05, z: 0 }, primitive: rbox(len + 0.06, 0.05, 0.32, 0.02), material: { color: "#d8322a", roughness: 0.35 } }] });
   half("sw", -12.5, 20.2, 5, 0); half("sw2", -15, 22.6, 4.8, 90); half("nw", -14, -18.6, 4, 0); half("ne", 14, -18.6, 4, 0);
 
   // 6. food court gateway: a backlit menu-board arch over the way in (a lightbox, not neon)

@@ -5,6 +5,7 @@ import { H, T, B, RINK, ZONES, ARRIVE, DOOR } from "../../scripts/lib/level31.js
 import { layParts } from "../../scripts/lib/level31-parts.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
+import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
 const V = 27;
 const PROPS = "scripts/l31-props-geo.js";
@@ -47,11 +48,11 @@ function rink(ctx) {
   ctx.spawn("l31-rink", { feetPosition: { x: 0, y: 0, z: 0 }, primitive: box(half * 2, 0.04, r * 2), material: WOOD, receiveShadow: true, castShadow: false, tags: ["l31-wood"] });
   for (const s of [-1, 1]) ctx.spawn(`l31-rink-end${s}`, { feetPosition: { x: s * half, y: 0, z: 0 }, primitive: { kind: "cylinder", radiusTop: r, radiusBottom: r, height: 0.04, radialSegments: 48 }, material: WOOD, receiveShadow: true, castShadow: false, tags: ["l31-wood"] });
   let n = 0;
-  const seg = (x, z, len, yaw) => ctx.spawn(`l31-rail${n++}`, { feetPosition: { x, y: 0, z }, rotation: { yaw }, primitive: box(len, 1.0, 0.14), material: RAIL, physics: "static",
-    children: [{ feetPosition: { x: 0, y: 1.0, z: 0 }, primitive: box(len + 0.02, 0.06, 0.2), material: RAILCAP }, { feetPosition: { x: 0, y: 0, z: 0 }, primitive: box(len + 0.02, 0.1, 0.17), material: { color: "#1a1418" } }] });
+  const seg = (x, z, len, yaw) => ctx.spawn(`l31-rail${n++}`, { feetPosition: { x, y: 0, z }, rotation: { yaw }, primitive: rbox(len, 1.0, 0.14), material: RAIL, physics: "static",
+    children: [{ feetPosition: { x: 0, y: 1.0, z: 0 }, primitive: rbox(len + 0.02, 0.06, 0.2), material: RAILCAP }, { feetPosition: { x: 0, y: 0, z: 0 }, primitive: rbox(len + 0.02, 0.1, 0.17), material: { color: "#1a1418" } }] });
   // straights, each with one 1.8 m gateway (the flaps hang in them)
   for (const s of [-1, 1]) for (const [a, b] of [[-half, -0.9], [0.9, half]]) seg((a + b) / 2, s * rail, b - a, 0);
-  for (const s of [-1, 1]) for (const k of [-1, 1]) ctx.spawn(`l31-flap${s}${k}`, { feetPosition: { x: k * 0.9, y: 0.25, z: s * rail }, rotation: { yaw: k * s * 18 }, pivot: [k < 0 ? 0 : 1, 0, 0.5], primitive: box(0.86, 0.7, 0.05), material: RAIL, castShadow: false });
+  for (const s of [-1, 1]) for (const k of [-1, 1]) ctx.spawn(`l31-flap${s}${k}`, { feetPosition: { x: k * 0.9, y: 0.25, z: s * rail }, rotation: { yaw: k * s * 18 }, pivot: [k < 0 ? 0 : 1, 0, 0.5], primitive: rbox(0.86, 0.7, 0.05), material: RAIL, castShadow: false });
   // the two curved ends, 12 flat panels each
   for (const s of [-1, 1]) for (let i = 0; i < 12; i++) {
     const a = (-90 + (i + 0.5) * 15) * Math.PI / 180, len = 2 * rail * Math.sin((7.5 * Math.PI) / 180) + 0.04, rr = rail * Math.cos((7.5 * Math.PI) / 180);
@@ -125,7 +126,7 @@ function cinema(ctx) {
     children: [{ feetPosition: { x: 0, y: 0.1, z: 0.075 }, primitive: box(4.6, 2.6, 0.01), material: { texture: "cdn/texture-old-animated-movie-still-dog-on-clouds-crt-scanlines.png", color: "#ffffff", emissive: "#9ab6ff", emissiveIntensity: 0.3 } }] });
   ctx.spawn("l31-tv-light", { feetPosition: { x: cx, y: 2.6, z: C.z0 + 2 }, light: { kind: "point", color: "#8fb0ff", intensity: 1.6, distance: 11 } });
   for (let i = 0; i < 3; i++) { const z = C.z0 + 4.2 + i * 1.6, y = i * 0.3;
-    if (i) ctx.spawn(`l31-step${i}`, { feetPosition: { x: cx, y: 0, z: z + 0.5 }, primitive: box(9, y, 1.6), material: CARPET, physics: "static", castShadow: false });
+    if (i) ctx.spawn(`l31-step${i}`, { feetPosition: { x: cx, y: 0, z: z + 0.5 }, primitive: rbox(9, y, 1.6), material: CARPET, physics: "static", castShadow: false });
     ctx.spawn(`l31-bench${i}`, { feetPosition: { x: cx, y, z: z + 0.1 }, ...P({ kind: "seats", n: 14 - i }), physics: "static", tags: ["seat"], state: { name: "Cinema seat" } }); }
   for (const s of [-1, 1]) ctx.spawn(`l31-curtain${s}`, { feetPosition: { x: cx + s * 3.75, y: 0, z: C.z0 + 0.3 }, rotation: { yaw: 180 }, ...P({ kind: "curtain", w: 2.6, h: 4.6 }), castShadow: false });
   ctx.spawn("l31-valance", { feetPosition: { x: cx, y: 4.35, z: C.z0 + 0.35 }, primitive: { kind: "box", width: 10.2, height: 0.5, depth: 0.12 }, material: { texture: "cdn/texture-burgundy-velvet-cinema-seat-upholstery.png", wrap: "repeat", repeat: [1, 1], color: "oklch(0.75 0.06 20)", roughness: 0.95 }, castShadow: false });
@@ -136,8 +137,8 @@ function cinema(ctx) {
 
 function djBooth(ctx) {
   const d = ZONES.dj, cx = (d.x0 + d.x1) / 2, cz = (d.z0 + d.z1) / 2;
-  ctx.spawn("l31-dj-riser", { feetPosition: { x: cx, y: 0, z: cz }, primitive: box(6, 0.5, 3.5), material: { texture: "cdn/texture-black-rubber-stage-riser-diamond-tread.png", wrap: "repeat", repeat: [1, 1], color: "#fff", roughness: 0.8 }, physics: "static" });
-  ctx.spawn("l31-dj-front", { feetPosition: { x: cx, y: 0.5, z: d.z0 + 0.2 }, primitive: box(5.6, 0.75, 0.25), material: RAIL, physics: "static",
+  ctx.spawn("l31-dj-riser", { feetPosition: { x: cx, y: 0, z: cz }, primitive: rbox(6, 0.5, 3.5), material: { texture: "cdn/texture-black-rubber-stage-riser-diamond-tread.png", wrap: "repeat", repeat: [1, 1], color: "#fff", roughness: 0.8 }, physics: "static" });
+  ctx.spawn("l31-dj-front", { feetPosition: { x: cx, y: 0.5, z: d.z0 + 0.2 }, primitive: rbox(5.6, 0.75, 0.25), material: RAIL, physics: "static",
     children: [{ feetPosition: { x: 0, y: 0.375, z: -0.135 }, vector: `<svg viewBox='0 0 300 60' width='4.6m'><text x='150' y='44' text-anchor='middle' font-family='display' font-size='40' fill='#ff3fa4' filter='drop-shadow(0 0 5 #ff3fa4)'>REQUEST LINE</text></svg>` }] });
   // the Faceling DJ (wiki: "a docile Faceling sitting inside selecting songs"): stands behind the rail at a deck, facing the rink
   // the DJ's console: a Tripo model fitted into the old deck's 2.2 x 0.75 x 0.8 footprint, its face toward the rink (-Z)

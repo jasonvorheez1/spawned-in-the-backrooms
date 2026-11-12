@@ -2,6 +2,7 @@
 // l31Order is the clerk's menu: scripts/talk.js calls it for a dialogue node with do: "l31:<key>" (dlg-generic.yml l31-food-clerk).
 import { critterSpec } from "./critter-model.js";
 import { npcLook } from "./clothes.js";
+import { rbox } from "./rbox.js";
 
 const G = {
   table: "/cdn/value.85f5e243770f31969de327bdc34870693134536eb58b94392e7715d4fd3bc8f2.glb", chair: "/cdn/value.2d974b903f651908da4ab7d3423171988b715420cf07c9f7f15bb854bfd1b4bc.glb",
@@ -48,11 +49,11 @@ export function layFood(ctx) {
   const L = (x, y, z, color, intensity) => ({ feetPosition: { x, y, z }, light: { kind: "point", color, intensity, distance: 15 } });
   P("bp", { feetPosition: { x: 34, y: 0, z: 18 }, children: [L(3.2, 2.9, -4, "#ffd9a0", 7), L(3.2, 2.9, 3, "#ffd9a0", 7), L(-3, 3.8, 0.5, "#ffb060", 22), L(-1, 3.4, -9.5, "#ff9ac8", 12)] });
   // serving counter along the east wall: carcass, kick, stainless top, tray rail
-  P("counter", { feetPosition: { x: 38, y: 0.1, z: 17 }, primitive: box(0.8, 0.78, 14), material: { color: "#2c3446", roughness: 0.45 }, physics: "static" });
-  P("counter-kick", { feetPosition: { x: 38.03, y: 0, z: 17 }, primitive: box(0.7, 0.1, 13.96), material: { color: "#141416", roughness: 0.6 } });
+  P("counter", { feetPosition: { x: 38, y: 0.1, z: 17 }, primitive: rbox(0.8, 0.78, 14), material: { color: "#2c3446", roughness: 0.45 }, physics: "static" });
+  P("counter-kick", { feetPosition: { x: 38.03, y: 0, z: 17 }, primitive: rbox(0.7, 0.1, 13.96), material: { color: "#141416", roughness: 0.6 } });
   P("counter-stripe", { feetPosition: { x: 37.595, y: 0.52, z: 17 }, primitive: box(0.012, 0.09, 14), material: { color: "#f2c33a", roughness: 0.5 } });
-  P("counter-top", { feetPosition: { x: 38, y: 0.88, z: 17 }, primitive: box(0.92, 0.04, 14.06), material: { color: "#d4d7db", metalness: 0.35, roughness: 0.35 } });
-  P("counter-rail", { feetPosition: { x: 37.36, y: 0.8, z: 17 }, primitive: box(0.3, 0.025, 13.6), material: { color: "#d4d7db", metalness: 0.35, roughness: 0.35 } });
+  P("counter-top", { feetPosition: { x: 38, y: 0.88, z: 17 }, primitive: rbox(0.92, 0.04, 14.06), material: { color: "#d4d7db", metalness: 0.35, roughness: 0.35 } });
+  P("counter-rail", { feetPosition: { x: 37.36, y: 0.8, z: 17 }, primitive: rbox(0.3, 0.025, 13.6), material: { color: "#d4d7db", metalness: 0.35, roughness: 0.35 } });
   for (const [i, z] of [10.6, 14, 17.4, 20.6, 23.4].entries()) P(`counter-brk${i}`, { feetPosition: { x: 37.45, y: 0.72, z }, primitive: box(0.3, 0.08, 0.03), material: { color: "#8a8d92", metalness: 0.8, roughness: 0.4 } });
   M("pizza", "pizza", 38.05, 12, 90, { physics: "none" }, 0.92); M("grill", "grill", 38.05, 14.7, 90, { physics: "none" }, 0.92);
   M("wings", "wings", 38.05, 19.4, 90, { physics: "none" }, 0.92); M("soda", "soda", 38.05, 22, 90, { physics: "none" }, 0.92);
@@ -64,7 +65,7 @@ export function layFood(ctx) {
   D("sprite-t1", "sprite", 33.2, 0.74, 12.2, 40); D("capri-t3", "capri", 29.3, 0.74, 23.15, 120); D("capri-t5", "capri", 33.15, 0.74, 17.3, 200);
   P("haze", { feetPosition: { x: 38.05, y: 1.75, z: 12 }, fx: { script: HAZE } });
   // backlit menu board on the east wall
-  P("menu-box", { feetPosition: { x: 41.9, y: 2.4, z: 17 }, primitive: box(0.16, 2.0, 6.6), material: { color: "#1a1412", roughness: 0.6 } });
+  P("menu-box", { feetPosition: { x: 41.9, y: 2.4, z: 17 }, primitive: rbox(0.16, 2.0, 6.6), material: { color: "#1a1412", roughness: 0.6 } });
   P("menu-glow", { feetPosition: { x: 41.81, y: 2.45, z: 17 }, primitive: box(0.02, 1.9, 6.4), material: { color: "#8a7a5c", emissive: "#ffe2a8", emissiveIntensity: 0.02 } });
   P("staff-light", { feetPosition: { x: 36.2, y: 2.6, z: 28.6 }, light: { kind: "point", color: "#ffd2a0", intensity: 7, distance: 7 } });
   P("menu", { feetPosition: { x: 41.79, y: 3.4, z: 17 }, rotation: { yaw: 90 }, vector: MENU });
@@ -88,7 +89,7 @@ export function layFood(ctx) {
     side.forEach(([dx, dz, yaw], c) => { const p = pulled[`${t}-${c}`]; M(`chair${t}-${c}`, "chair", x + dx + (p?.[0] ?? 0), z + dz + (p?.[1] ?? 0), yaw + (p?.[2] ?? 0)); });
   }
   // raised rubber mat behind the counter: the clerk stands on it so he reads at full height over the top
-  P("duckboard", { feetPosition: { x: 40.1, y: 0, z: 17 }, primitive: box(3.2, 0.32, 13.4), material: { color: "#1b1b1d", roughness: 0.9 }, physics: "static", castShadow: false, receiveShadow: true });
+  P("duckboard", { feetPosition: { x: 40.1, y: 0, z: 17 }, primitive: rbox(3.2, 0.32, 13.4), material: { color: "#1b1b1d", roughness: 0.9 }, physics: "static", castShadow: false, receiveShadow: true });
   // people: the clerk behind the counter, two customers at table 3
   const person = (id, look, x, z, yaw, state, sit, y = 0) => P(id, { tags: ["npc", "faceling"], feetPosition: { x, y, z }, rotation: { yaw }, physics: sit ? "none" : "character", ...critterSpec(npcLook(`l31-food-${id}`, { species: "faceling", ...look }, "wanderer", 1)),
     behavior: sit ? ["scripts/l31-food.js"] : ["scripts/humanoid-locomotion.js", "scripts/l31-food.js"], state: { faction: "faceling", hp: 60, docile: true, essential: true, sex: look.sex, ...state } });

@@ -4,6 +4,7 @@
 import { critterSpec, anime } from "./critter-model.js";
 import { npcLook } from "./clothes.js";
 import { npcState } from "./stats.js";
+import { rbox } from "./rbox.js";
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
 const SK = { // heel size -> pair
   5: "/cdn/value.3a7c408e5aaa1f079f2cfff0ab9170412c0fbcaf4e719f76563f9ea945507e88.glb", 6: "/cdn/value.7bb71bfcd7333e1a8234a8e21b9a186d1931dd7595b46e483b937b8d18da91de.glb",
@@ -28,7 +29,7 @@ const h32 = (s) => { let h = 2166136261; for (const c of String(s)) h = Math.imu
 function booth(ctx) {
   const W = S.cols * S.cw, cx = S.x0 + W / 2, top = S.base + S.rows * S.rh, kids = [];
   // wings and the header that carries the neon
-  for (const x of [5.9, 20.1]) kids.push({ feetPosition: { x: x - 13, y: 0, z: -2.87 }, primitive: box(0.16, 3.3, 5.8), material: BLUE, physics: "static" });
+  for (const x of [5.9, 20.1]) kids.push({ feetPosition: { x: x - 13, y: 0, z: -2.87 }, primitive: rbox(0.16, 3.3, 5.8), material: BLUE, physics: "static" });
   kids.push({ feetPosition: { x: 0, y: 2.45, z: -5.69 }, primitive: box(14.36, 0.85, 0.16), material: BLUE, castShadow: false });
   kids.push({ feetPosition: { x: 0, y: 2.43, z: -5.69 }, primitive: box(14.36, 0.03, 0.2), material: glow("#ff4fa8", 2.2), castShadow: false });
   // the cubby carcass
@@ -53,12 +54,12 @@ function skates(ctx) {
 }
 function counter(ctx) {
   const L = 13.1, cx = 6 + L / 2; // x 6..19.1, the flip-up gap from there to the east wing
-  ctx.spawn("l31-rental-counter", { feetPosition: { x: cx, y: 0.1, z: 24.5 }, primitive: box(L, 0.92, 0.6), material: FRONT, physics: "static", tags: ["l31-rental"], children: [
-    { feetPosition: { x: 0, y: -0.1, z: 0.03 }, primitive: box(L, 0.1, 0.5), material: DARK },
-    { feetPosition: { x: 0.02, y: 0.92, z: -0.03 }, primitive: box(L + 0.06, 0.05, 0.76), material: LAM },
-    { feetPosition: { x: 0, y: 0.86, z: -0.385 }, primitive: box(L + 0.06, 0.05, 0.05), material: { color: "#b9b4a8", metalness: 0.8, roughness: 0.35 } },
+  ctx.spawn("l31-rental-counter", { feetPosition: { x: cx, y: 0.1, z: 24.5 }, primitive: rbox(L, 0.92, 0.6), material: FRONT, physics: "static", tags: ["l31-rental"], children: [
+    { feetPosition: { x: 0, y: -0.1, z: 0.03 }, primitive: rbox(L, 0.1, 0.5), material: DARK },
+    { feetPosition: { x: 0.02, y: 0.92, z: -0.03 }, primitive: rbox(L + 0.06, 0.05, 0.76), material: LAM },
+    { feetPosition: { x: 0, y: 0.86, z: -0.385 }, primitive: rbox(L + 0.06, 0.05, 0.05), material: { color: "#b9b4a8", metalness: 0.8, roughness: 0.35 } },
     // the flap, stood open on its hinge
-    { feetPosition: { x: L / 2 + 0.06, y: 0.97, z: -0.03 }, rotation: { roll: -7 }, primitive: box(0.05, 0.98, 0.76), material: LAM },
+    { feetPosition: { x: L / 2 + 0.06, y: 0.97, z: -0.03 }, rotation: { roll: -7 }, primitive: rbox(0.05, 0.98, 0.76), material: LAM },
     // US size chart, screwed to the front
     { feetPosition: { x: -3.2, y: 0.08, z: -0.31 }, primitive: box(1.25, 0.76, 0.02), material: { color: "#f3efe2", roughness: 0.5 },
       ui: `<div face="front" width="1.25m" style="height:760px;box-sizing:border-box;padding:20px 30px;background:#f3efe2;color:#1b2a55;font-family:sans-serif"><div style="font-size:76px;font-weight:900;letter-spacing:6px;border-bottom:8px solid #c7362b;padding-bottom:6px">US SIZES</div>${[["MEN", 5, 6, 7, 8, 9, 10, 11, 12], ["WOMEN", "6½", "7½", "8½", "9½", "10½", "11½", "12½", "13½"], ["CM", 23, 24, 25, 26, 27, 28, 29, 30]].map((row, i) => `<div style="display:flex;align-items:center;height:130px;margin-top:${i ? 0 : 14}px;background:${i % 2 ? "#e3dcc6" : "#f3efe2"};font-size:62px;font-weight:800">${row.map((v, j) => `<div style="${j ? "width:105px;text-align:center;font-size:50px" : "width:300px;font-size:52px;color:#c7362b"}">${v}</div>`).join("")}</div>`).join("")}<div style="font-size:40px;margin-top:14px">Kids sizes, ask at the counter. Wheels run true.</div></div>` },
@@ -89,7 +90,7 @@ function floor(ctx) {
 function coach(ctx) {
   const id = "l31-coach";
   const look = npcLook(id, { species: "faceling", sex: "m", fur: "#f3cfad", hair: "none", topw: "breton", top: "#e9e4d8", botw: "pants", bot: "#1c1c22", shoes: "sneakers", shoe: "#22201e", clothesOwn: true, bodyOwn: true }, "wanderer", 10, "trader");
-  ctx.spawn("l31-rental-riser", { feetPosition: { x: 12.55, y: 0, z: 25.75 }, primitive: box(13.1, 0.45, 1.8), material: RUB, physics: "static", castShadow: false, tags: ["l31-rental"] });
+  ctx.spawn("l31-rental-riser", { feetPosition: { x: 12.55, y: 0, z: 25.75 }, primitive: rbox(13.1, 0.45, 1.8), material: RUB, physics: "static", castShadow: false, tags: ["l31-rental"] });
   ctx.spawn(id, { tags: ["npc", "l31-rental", "docile"], feetPosition: { x: 13, y: 0.46, z: 25.7 }, rotation: { yaw: 0 }, physics: "character",
     ...critterSpec(look), scale: 1.25, behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
     state: { ...npcState(ctx, "agent", 80), name: "Coach", role: "trader", faction: "survivor", voice: "l31-coach", docile: true, essential: true, post: { x: 13, z: 25.7 }, home: { x: 13, y: 0.46, z: 25.7 } } });
