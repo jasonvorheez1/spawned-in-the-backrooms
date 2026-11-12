@@ -51,17 +51,13 @@ const INK = "#3a2416", CHALK = "#2b2b2e";
 // hand lettering (Shelly Nov 12 "de-ai slop signs"): every letter its own wobble, size and lean, so no line reads as a typed font
 const HJ = (t, i, k) => { const v = Math.sin((t.charCodeAt(i % t.length) + 1) * 12.9898 + i * 78.233 + k * 37.719) * 43758.5453; return v - Math.floor(v); };
 const hand = (text, cx, y, size0, fill, { family = "sans-serif", weight = 700, track = 0.56, lean = 0, wob = 1, op = 0.9, k = 0, maxW = 270 } = {}) => {
-  const cs = [...text], size = Math.min(size0, maxW / (cs.length * track)), w = cs.length * size * track, x0 = cx - w / 2; // shrinks to fit its board
-  return `<g fill='${fill}' fill-opacity='${op}' font-family='${family}' font-weight='${weight}' transform='rotate(${lean} ${cx} ${y})'>` + cs.map((c, i) => {
-    if (c === " ") return "";
-    const x = x0 + (i + 0.5) * size * track + (HJ(text, i, k) - 0.5) * size * 0.12 * wob, yy = y + (HJ(text, i, k + 1) - 0.5) * size * 0.16 * wob + i * 0.25 * wob;
-    const r = (HJ(text, i, k + 2) - 0.5) * 14 * wob, sz = size * (0.9 + HJ(text, i, k + 3) * 0.2);
-    return `<text x='${x.toFixed(1)}' y='${yy.toFixed(1)}' font-size='${sz.toFixed(1)}' text-anchor='middle' transform='rotate(${r.toFixed(1)} ${x.toFixed(1)} ${yy.toFixed(1)})'>${c.replace(/&/g, "&amp;").replace(/'/g, "&#39;")}</text>`;
-  }).join("") + `</g>`;
+  // one line, one hand (Shelly Nov 12 "de-ai slop signs"): a single run of letters, a slight lean and a drifting baseline like a marker dragged across paper, never a ransom note of jittered glyphs
+  const size = Math.min(size0, maxW / ([...text].length * track)), sk = (HJ(text, 1, k) - 0.5) * 6 * wob, sw = (size * (weight >= 700 ? 0.05 : 0.025)).toFixed(1);
+  return `<g transform='rotate(${lean} ${cx} ${y})'><text x='${cx}' y='${y}' font-size='${size.toFixed(1)}' font-family='${family}' font-weight='${weight}' text-anchor='middle' fill='${fill}' fill-opacity='${op}' stroke='${fill}' stroke-opacity='${(op * 0.8).toFixed(2)}' stroke-width='${sw}' stroke-linejoin='round' transform='skewX(${sk.toFixed(1)})'>${text.replace(/&/g, "&amp;").replace(/'/g, "&#39;")}</text></g>`;
 };
 const drip = (x, y, len, fill) => `<path d='M${x} ${y} L${x + 0.6} ${y + len}' stroke='${fill}' stroke-opacity='.55' stroke-width='2' stroke-linecap='round'/>`;
 const SCRIBBLE = {
-  notsafe: `<svg viewBox='0 0 300 120' width='1.5m'>${hand("IT'S NOT SAFE", 150, 70, 46, INK, { weight: 900, lean: -4, wob: 1.4, k: 1 })}<path d='M28 92 C90 88 180 90 268 84' stroke='${INK}' stroke-opacity='.8' stroke-width='5' fill='none' stroke-linecap='round'/>${drip(64, 76, 22, INK)}${drip(196, 74, 14, INK)}</svg>`,
+  notsafe: `<svg viewBox='0 0 300 120' width='1.5m'>${hand("IT'S NOT SAFE", 150, 70, 46, INK, { weight: 900, lean: -4, wob: 1.4, k: 1 })}<path d='M28 92 C90 88 180 90 268 84' stroke='${INK}' stroke-opacity='.8' stroke-width='5' fill='none' stroke-linecap='round'/></svg>`,
   lights: `<svg viewBox='0 0 300 120' width='1.3m'>${hand("don't trust", 150, 50, 32, INK, { family: 'serif', weight: 400, track: 0.5, lean: 3, k: 2 })}${hand('the lights', 156, 96, 32, INK, { family: 'serif', weight: 400, track: 0.5, lean: 2, k: 3 })}</svg>`,
   tally: `<svg viewBox='0 0 300 120' width='1.1m'><g stroke='${CHALK}' stroke-width='5' stroke-linecap='round' fill='none'>${[0, 1, 2, 3, 4].map((g) => [0, 1, 2, 3].map((k) => `<path d='M${14 + g * 58 + k * 10} ${22 + (k % 2) * 3} L${16 + g * 58 + k * 10} ${92 - (k % 3) * 2}'/>`).join("") + `<path d='M${6 + g * 58} 80 L${54 + g * 58} 34'/>`).join("")}<path d='M${14 + 5 * 58} 24 L${15 + 5 * 58} 92'/><path d='M${24 + 5 * 58} 22 L${26 + 5 * 58} 90'/></g>${hand('days?', 150, 114, 16, CHALK, { weight: 400, op: 0.8, k: 6 })}</svg>`,
   arrow: `<svg viewBox='0 0 200 100' width='0.9m'><g stroke='${CHALK}' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'><path d='M18 54 C60 46 110 56 170 50'/><path d='M138 22 L176 50 L136 80'/></g></svg>`,
