@@ -42,7 +42,7 @@ function social(ctx, ses) {
     const o = ctx.getObject(row.id); if (!o || o.state?.dead) continue
     const mem = o.state.mem?.[k]
     const dd = flat(o.feetPosition, me.feetPosition), quiet = now - (o.state.line?.at ?? 0) > 4000 && !ctx.self.state.talkWith && !o.state.hostile && !o.state.fleeing
-    const sees = (quiet && dd < 5) && canSee(ctx, o, me)
+    const sees = (quiet && ses.aimReaction?.id !== o.id && dd < 5) && canSee(ctx, o, me)
     if (mem && quiet && sees && dd < 3.5 && now - (hi[o.id] ?? -1e9) > 180000) {
       hi[o.id] = now; const r = o.state.rapport?.[k] ?? 0
       o.state.talkTo = me.id; o.state.talkAt = now; say(ctx, o, r < -20 ? HI(addressFor(o, me, mem), r)[0] : (barkOf(o, 'hi', () => ctx.random(), me.place) ?? lineFor(o, 'hi', addressFor(o, me, mem))), r < -20 ? 'annoyed' : 'happy')
@@ -85,7 +85,7 @@ function react(ctx, ses, o, kind, now) {
 }
 
 function aimReaction(ctx, ses, s, now) {
-  if (!s.ads || s.sheathed || s.reloading || !W[s.equipped]?.ranged || s.dead || s.downAt || s.talkWith || s.shopOpen || s.invOpen || s.lootOpen) {
+  if (!s.ads || s.sheathed || s.reloading || !W[s.equipped]?.ranged || s.dead || (s.downAt && now - s.downAt < 1200) || s.talkWith || s.shopOpen || s.invOpen || s.lootOpen) {
     ses.aimReaction = null
     return
   }
@@ -106,26 +106,36 @@ function aimReaction(ctx, ses, s, now) {
   if (aim?.id !== o.id) { ses.aimReaction = { id: o.id, at: now }; return }
   if (aim.spoke || now - aim.at < 250 || !react(ctx, ses, o, 'drawn', now)) return
   aim.spoke = true
-  const m = o.session?.m
-  if (m) {
-    m.brandishAt = now; m.brandishPl = ctx.self.id
-    o.anim.gest = { clip: 'cdn/clip-shake-no.glb', loop: 'once', weight: 0.9, blendIn: 0.2, blendOut: 0.35, mask: { from: 'Spine' } }
-    m.gestEnd = now + 1500
-  }
+  o.state.socialReaction = { kind: 'drawn', by: ctx.self.id, at: now }
 }
 
 export function onCollide(ctx, other, contact) {
-  if (!other.tags?.includes('npc') || Math.abs(contact.normal?.y ?? 0) > 0.65) return
+  if (!other?.tags?.includes('npc') || Math.abs(contact?.normal?.y ?? 0) > 0.65) return
   const me = ctx.self, ses = me.session, dir = ses['player.js']?.dir, p = me.feetPosition, q = other.feetPosition
   if (!dir || !q || dir.x * (q.x - p.x) + dir.z * (q.z - p.z) <= 0.05) return
-  const o = ctx.getObject(other.id), now = ctx.now()
-  if (!react(ctx, ses, o, 'close', now)) return
-  const m = o.session?.m
-  if (m) {
-    m.bumpAt = now
-    o.anim.hit = { clip: 'cdn/clip-hit-react.glb', loop: 'once', weight: 0.75, blendIn: 0.05, blendOut: 0.3, timeAt: now }
-    m.hitAt = now
-  }
+  bump(ctx, ses, ctx.getObject(other.id), ctx.now())
+}
+function bump(ctx, ses, o, now) {
+  if (!o?.tags?.includes('npc') || !react(ctx, ses, o, 'close', now)) return
+  o.state.socialReaction = { kind: 'close', by: ctx.self.id, at: now }
+}
+
+// Character controllers can pass through other characters without dispatching onCollide.
+function contactReaction(ctx, ses, s, now) {
+  if (now < (ses.contactCheckAt ?? 0)) return
+  ses.contactCheckAt = now + 100
+  const me = ctx.self, p = me.feetPosition, prev = ses.contactFeet, move = ses['player.js']?.dir
+  ses.contactFeet = { x: p.x, y: p.y, z: p.z, place: me.place }
+  if (!prev || prev.place !== me.place || !move || s.dead || s.talkWith || s.shopOpen || me.parent
+    || now - (ses.reactAny ?? -Infinity) < 6000) return
+  const dx = p.x - prev.x, dz = p.z - prev.z, distance = Math.hypot(dx, dz)
+  if (distance < 0.02 || distance > 2 || Math.abs(p.y - prev.y) > 0.4 || dx * move.x + dz * move.z <= 0.01) return
+  const capsule = me.physics?.capsule, radius = capsule?.radius ?? 0.32
+  const from = { x: prev.x, y: prev.y + Math.max(radius + 0.1, (capsule?.height ?? 1.6) * 0.5), z: prev.z }
+  const hit = raycast(ctx, from, { x: dx / distance, y: 0, z: dz / distance }, {
+    distance: distance + 0.025, radius, physicsOnly: true, ignoreEntities: [me.id],
+  })
+  if (hit?.id) bump(ctx, ses, ctx.getObject(hit.id), now)
 }
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v))
 const note = (ctx, text) => { ctx.self.state.notice = { text, at: ctx.now() } }
@@ -386,7 +396,9 @@ export function update(ctx, dt) {
     ses.talkingTo = null
     s.talkChoices = null
   }
-  aimReaction(ctx, ses, s, ctx.now())
+  const now = ctx.now()
+  aimReaction(ctx, ses, s, now)
+  contactReaction(ctx, ses, s, now)
   social(ctx, ses)
   if (!s.talkWith && !s.shopOpen) return
   m.acc += dt; if (m.acc < 0.3) return; m.acc = 0
