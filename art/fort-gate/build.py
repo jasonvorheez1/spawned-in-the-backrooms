@@ -21,8 +21,8 @@ print("KILL", len(kill), "of", len(bm.faces))
 bmesh.ops.delete(bm, geom=kill, context='FACES'); bm.to_mesh(o.data); bm.free()
 sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = sc.render.resolution_y = 700
 cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam")); sc.collection.objects.link(cam); sc.camera = cam
-cam.location = (C.x + across.x * -3.2 + 0.3, C.y + across.y * -3.2, 2.2)
-look = Vector((C.x, C.y, 1.2)) - cam.location; cam.rotation_euler = look.to_track_quat('-Z', 'Y').to_euler()
+cam.location = (C.x + across.x * -4.5, C.y + across.y * -4.5, 4.5)
+look = Vector((C.x, C.y, 1.0)) - cam.location; cam.rotation_euler = look.to_track_quat('-Z', 'Y').to_euler()
 sun = bpy.data.objects.new("sun", bpy.data.lights.new("sun", "SUN")); sun.data.energy = 4; sun.location = cam.location; sun.rotation_euler = cam.rotation_euler; sc.collection.objects.link(sun)
 w = bpy.data.worlds.new("w"); sc.world = w; w.color = (0.4, 0.4, 0.45)
 sc.render.filepath = "/tmp/fortgate/proof.png"; bpy.ops.render.render(write_still=True)
