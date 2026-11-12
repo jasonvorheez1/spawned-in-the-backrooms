@@ -523,8 +523,9 @@ function pane(s, sel, eqKey) {
     acts.push(btn('EAT', { k: 'eat', c: sel.slice(5) }), btn('DROP ONE', { k: 'dropItem', t: sel }))
   } else if (sel.startsWith('snack:') && (s.snacks?.[sel.slice(6)] ?? 0) > 0 && SNACKS[sel.slice(6)]) {
     const v = SNACKS[sel.slice(6)]
-    card = `<div class="dt def"><div class="dt-header"><h4>${v.name}</h4><span class="dt-rarity">${v.drink ? 'DRINK' : 'FOOD'}</span></div><div class="g">${v.drink ? cell('THIRST', '+' + v.thirst) : cell('HUNGER', '+' + v.hunger)}${cell('CARRIED', s.snacks[sel.slice(6)], true)}</div></div>`
-    acts.push(btn(v.drink ? 'DRINK' : 'EAT', { k: 'snack', c: sel.slice(6) }), btn('DROP ONE', { k: 'dropItem', t: sel }))
+    const trinket = !v.drink && !v.hunger && !v.thirst   // a thing you use, not eat: the music box winds, the hum loop plays (Shelly: "eat a music box")
+    card = `<div class="dt def"><div class="dt-header"><h4>${v.name}</h4><span class="dt-rarity">${v.drink ? 'DRINK' : trinket ? (v.keep ? 'KEEPSAKE' : 'AID') : 'FOOD'}</span></div>${v.info ? `<div style="opacity:.75;font-size:12px;margin:4px 0 6px">${v.info}</div>` : ''}<div class="g">${v.drink ? cell('THIRST', '+' + v.thirst) : trinket ? cell('SANITY', '+' + (v.sanity ?? 0)) + (v.keep ? cell('USES', 'NEVER RUNS OUT') : '') : cell('HUNGER', '+' + v.hunger)}${cell('CARRIED', s.snacks[sel.slice(6)], true)}</div></div>`
+    acts.push(btn(v.verb ?? (v.drink ? 'DRINK' : trinket ? 'USE' : 'EAT'), { k: 'snack', c: sel.slice(6) }), btn('DROP ONE', { k: 'dropItem', t: sel }))
   } else if ((sel === 'ammo' || sel === 'shells' || sel === 'cells') && s[sel] > 0) { card = detail(sel, s, true); acts.push(btn('DROP A BOX', { k: 'dropItem', t: sel })) }
   else if (sel === 'fresh' && s.fresh > 0) {
     card = `<div class="dt def"><div class="dt-header"><h4 style="color:#9fd8e6">Reality Freshener</h4><span class="dt-rarity">THROWABLE</span></div><div class="g">${cell('RADIUS', '6 M') + cell('LASTS', 'UNTIL TAKEN') + cell('CARRIED', s.fresh) + cell('HOW', 'HOLD G, LET GO', true)}</div></div>`
@@ -618,7 +619,7 @@ function inventory(s) {
     const v = SNACKS[c]
     return `<button class="it${sel === 'snack:' + c ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'snack:${c}'})" ondblclick="sendAction('inv',{k:'snack',c:'${c}'})">
       <span class="cur">&gt;</span><span class="nm">${v.name}</span>
-      <span class="stat-r"><span>×${n}</span><span>${v.drink ? `THI +${v.thirst}` : `HUN +${v.hunger}`}</span></span>
+      <span class="stat-r"><span>×${n}</span><span>${v.drink ? `THI +${v.thirst}` : !v.hunger && v.sanity ? `SAN +${v.sanity}` : `HUN +${v.hunger}`}</span></span>
     </button>`
   }).join('')
 
