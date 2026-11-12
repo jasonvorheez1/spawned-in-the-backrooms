@@ -219,6 +219,8 @@ pop steam rate=14 on=disc(.35) life=1.6..2.6 v=up(.9..1.5)+sdir()*.12 size=.18..
     cyl(`l11-sub-post-${s}`, SUB.x + s * 1.2, 0.336, SUB.z - 2.1, 0.05, 0.08, 2.6, IRON);
     sp(`l11-sub-globe-${s}`, { feetPosition: { x: SUB.x + s * 1.2, y: 3.14, z: SUB.z - 2.1 }, primitive: { kind: "sphere", radius: 0.2 }, material: { color: "oklch(0.8 0.2 145)", emissive: "oklch(0.8 0.2 145)", emissiveIntensity: 2.4 }, light: { kind: "point", color: "oklch(0.85 0.2 145)", intensity: 2.5, distance: 8 }, behavior: "scripts/l11-globe.js", state: { base: 2.5 }, children: [{ feetPosition: { x: 0, y: -0.24, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.09, radiusBottom: 0.06, height: 0.08 }, material: IRON }] });
   }
+  // Nov 12 (Shelly: the entrance is blocky, Tripo it): the cast-iron enclosure, floor cut out (art/l11sub/build.py), open end at the street (-z); the invisible rails above stay its colliders
+  sp("l11-sub-railing", { feetPosition: { x: SUB.x, y: 0.336, z: SUB.z - 0.05 }, rotation: { yaw: 90 }, scale: { x: 1.8, y: 0.85, z: 1.6 }, model: { id: "/cdn/value.84db1401a82c32688b828afcf61d0c7d0e347a91b7355b78386935204b0f32bd.glb" }, castShadow: true });
   sp("l11-sub-sign", { feetPosition: { x: SUB.x, y: 2.74, z: SUB.z - 2.1 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 1.6, height: 0.5, depth: 0.06 }, material: { color: "oklch(0.2 0.02 250)" }, ui: `<div face="front" width="1.6m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;font-size:240px;letter-spacing:8px;color:#fff;background:#1a6b3a">SUBWAY</div>` });
   // billboards on stilts that change their ads when nobody is looking
   const bb = [];
