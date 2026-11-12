@@ -18,17 +18,19 @@ for o in bpy.context.scene.objects:
     me = o.data; MW = o.matrix_world; MI = MW.inverted().to_3x3()
     blocks = me.shape_keys.key_blocks if me.shape_keys else None
     W = [MW @ v.co for v in me.vertices]; z0 = min(w.z for w in W); z1 = max(w.z for w in W); h = z1 - z0
+    top = [w for w in W if w.z > z1 - h * 0.15]; cx = sum(w.x for w in top) / len(top); cy = sum(w.y for w in top) / len(top)   # the band's own centre: inside the torso
     mx = 0; gap0 = 0
     for i, w in enumerate(W):
         t = sm((w.z - (z1 - h * BAND)) / (h * BAND))       # 1 at the band's top edge, 0 where the flare begins
         if t <= 0: continue
         # the body's surface along the horizontal ray from the spine axis out through this vert
-        d = Vector((w.x, w.y, 0)); r = d.length
+        d = Vector((w.x - cx, w.y - cy, 0)); r = d.length
         if r < 1e-5: continue
-        d /= r; org = Vector((0, 0, w.z)) + d * 0.6
-        hit = bvh.ray_cast(MBi @ org, (MBi.to_3x3() @ -d).normalized())
+        d /= r; org = Vector((cx, cy, w.z))                 # cast from inside outward: the torso's own skin, never an arm or the tail
+        hit = bvh.ray_cast(MBi @ org, (MBi.to_3x3() @ d).normalized())
         if not hit or hit[0] is None: continue
-        p = MWb @ hit[0]; rb = Vector((p.x, p.y, 0)).length
+        p = MWb @ hit[0]; rb = Vector((p.x - cx, p.y - cy, 0)).length
+        if rb > r: continue
         gap0 = max(gap0, r - rb)
         nr = rb + GAP + max(0, r - rb - GAP) * (1 - t)
         dl = MI @ (d * (nr - r)); mx = max(mx, dl.length)
