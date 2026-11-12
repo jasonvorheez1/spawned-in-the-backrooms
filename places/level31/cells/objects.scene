@@ -1,0 +1,15 @@
+# spawn-scene v2 yaml objects
+l31-cinema-sign/wirea:
+  castShadow: false
+  feetPosition: {x: -1.4, y: 0.36, z: 0}
+  id: l31-cinema-sign/wirea
+  material: {color: "#222"}
+  parent: l31-cinema-sign
+  primitive: {height: 0.7400000000000002, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}
+l31-cinema-sign/wireb:
+  castShadow: false
+  feetPosition: {x: 1.4, y: 0.36, z: 0}
+  id: l31-cinema-sign/wireb
+  material: {color: "#222"}
+  parent: l31-cinema-sign
+  primitive: {height: 0.7400000000000002, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}
