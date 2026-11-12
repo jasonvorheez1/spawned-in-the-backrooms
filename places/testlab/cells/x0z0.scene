@@ -1,0 +1,40 @@
+# spawn-scene v2 yaml x0z0
+tl-catdemo-f1:
+  behavior: scripts/cat-demo.js
+  feetPosition: {x: -19, y: 0.05, z: 4.5}
+  id: tl-catdemo-f1
+  rotation: {yaw: 90}
+  state: {clip: Walk, look: {bottom: "#3b4f7a", botw: jeans, chest: 1, ears: tall, etype: sparkle, expression: neutral, eyes: blue, fluff: [bangs], fseed: 0, fur: "#f3c98a", hair: ponytail, hairc: "#c0563a", hat: divehelm, hatc: "#c0392b", mtype: fang, rv: 1, shoec: "#5a3a2a", shoes: steeltoe, snout: pointy, top: "#c4a46a", topw: pghoodie}, sex: f}
+  tags: [catdemo]
+tl-catdemo-m2:
+  behavior: scripts/cat-demo.js
+  feetPosition: {x: -19, y: 0.05, z: 7}
+  id: tl-catdemo-m2
+  rotation: {yaw: 90}
+  state: {clip: Walk, look: {bottom: "#444", botw: cargo, chest: 1, ears: small, etype: sleepy, expression: neutral, eyes: violet, fluff: [crest], fur: "#d9d9de", hair: fluffy, hairc: "#2e2a33", hat: padbeanie, hatc: "#e8c14a", mtype: grin, rv: 1, shoec: "#222226", shoes: sneakers, snout: flat, top: "#c8a878", topp: gmsplit, topw: blazer}, sex: m}
+  tags: [catdemo]
+tl-cats-floor:
+  feetPosition: {x: -18.5, y: 0, z: 8.25}
+  id: tl-cats-floor
+  material: {color: oklch(0.42 0.06 20), roughness: 0.95}
+  physics: static
+  primitive: {depth: 10.5, height: 0.04, kind: box, width: 6}
+  receiveShadow: true
+tl-cats-sign:
+  feetPosition: {x: -23.85, y: 3.2, z: 8.25}
+  id: tl-cats-sign
+  rotation: {yaw: 90}
+  vector: "<svg viewBox='0 0 400 70' width='3.6m'><rect x='0' y='0' width='400' height='70' rx='6' fill='#14161a' opacity='0.85'/><rect x='6' y='6' width='388' height='58' rx='4' fill='none' stroke='#e8c25a' stroke-width='3'/><text x='200' y='47' text-anchor='middle' font-family='display' font-size='34' fill='#f3d27a'>CAT WARDROBE</text></svg>"
+tl-cats-spot-0:
+  feetPosition: {x: -17.8, y: 3.4, z: 4.5}
+  id: tl-cats-spot-0
+  light: {aim: {x: -19, y: 0.9, z: 4.5}, angle: 38, color: "#fff3dc", distance: 6, intensity: 6, kind: spot, penumbra: 0.6}
+tl-cats-spot-1:
+  feetPosition: {x: -17.8, y: 3.4, z: 7}
+  id: tl-cats-spot-1
+  light: {aim: {x: -19, y: 0.9, z: 7}, angle: 38, color: "#fff3dc", distance: 6, intensity: 6, kind: spot, penumbra: 0.6}
+tl-cats-stripe:
+  feetPosition: {x: -15.45, y: 0.041, z: 8.25}
+  id: tl-cats-stripe
+  material: {color: "#e8c25a", emissive: "#e8c25a", emissiveIntensity: 0.4}
+  primitive: {depth: 10.5, height: 0.005, kind: box, width: 0.1}
