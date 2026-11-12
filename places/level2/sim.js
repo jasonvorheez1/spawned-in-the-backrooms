@@ -40,6 +40,16 @@ export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
   if (!(Math.abs(now - (ctx.session.wallTick ?? -1e9)) < 2000)) { ctx.session.wallTick = now; tickWalls(ctx); } // broken interior walls: holes drawn, regrown after a while (lib/breakables.js)
   if (!s.almondTidy) { s.almondTidy = 1; for (const o of ctx.query({ tags: ["almond"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const p = o.feetPosition ?? { x: 0, y: 0, z: 0 }; if (p.y < 0.15 && !(false)) ctx.destroy(o.id); } } // loose floor bottles cleared once: almond water lives in containers and drops now
+  if (s.seeded && s.hallLitV !== 1) { s.hallLitV = 1; // Shelly Nov 12 "improve this area": the Boiler Hall read black; sodium floods over the tank and floor, caged work lamps low on the walls
+    const cx = (HALL.x0 + HALL.x1) / 2, cz = (HALL.z0 + HALL.z1) / 2;
+    for (const [dx, dz] of [[0, -3], [0, 3], [-7, 0], [7, 0]]) ctx.spawn(`l2-hall-flood-${dx}-${dz}`, { feetPosition: { x: cx + dx, y: HALL_H - 1.2, z: cz + dz }, physics: "none", castShadow: false, visibleRange: { max: 55 },
+      light: { kind: "point", color: "oklch(0.82 0.13 65)", intensity: 22, distance: 16, shadow: { enabled: false } } });
+    for (const [x, z] of [[HALL.x0 + 0.5, cz - 6], [HALL.x0 + 0.5, cz + 6], [HALL.x1 - 0.5, cz - 6], [HALL.x1 - 0.5, cz + 6]]) {
+      ctx.spawn({ feetPosition: { x, y: 2.6, z }, physics: "none", castShadow: false, visibleRange: { max: 40 }, primitive: { kind: "cylinder", radiusTop: 0.09, radiusBottom: 0.12, height: 0.22 },
+        material: { color: "oklch(0.9 0.08 80)", emissive: "oklch(0.85 0.12 75)", emissiveIntensity: 3 }, light: { kind: "point", color: "oklch(0.85 0.1 75)", intensity: 6, distance: 9, shadow: { enabled: false } },
+        audio: { clip: GRIT("fluorescent-light-buzz-loop"), gain: 0.12, loop: true, spatial: true, maxDistance: 7 } });
+    }
+  }
   tickChatter(ctx, CHATTER.level2, {"surv-wren": "wren", "surv-hollis": "hollis", "surv-mags": "mags"}); // the camp talks among itself while someone's near
   if (s.seeded && s.kitV !== 1) { // rooms laid out before the modelled kit: add it, and switch the old shell's visuals over
     s.kitV = 1; spawnKit(ctx);
