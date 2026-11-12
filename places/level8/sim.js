@@ -1,3 +1,4 @@
+import { dressThresholds } from "../../scripts/lib/thresholds.js";
 // Level 8 "Cave Systems" (backrooms-wiki.wikidot.com/level-8): the first level whose environment is wholly enclosed. A sprawling network of organic karst caves, cold, dark,
 // jagged spikes from the ceiling and floor, tunnels branching on all sides. This is the 9th Road: one cave built in Blender (art/level8/build.py > cave_road.glb, the
 // stations in scripts/lib/data/level8.yml): the entrance lake you wade out of (from Level 7's diving bell), the welcome sign, a hall whose crawl tunnel loops back once,
@@ -556,7 +557,10 @@ function lay(ctx) {
   sp("l8-life", { behavior: "scripts/l8-life.js" });
 }
 
+// the tunnel mouth to Level 2.1: the cave floor there can't be probed from the sim, so its dressing trusts the arrival's own height
+const l8Ways = () => { const d = P(46, -8.9, 0), m = P(46, -5.4, 0), l = Math.hypot(m.x - d.x, m.z - d.z) || 1; return [{ id: "l8-to-l21", at: { x: d.x, y: m.y, z: d.z }, fwd: { x: (m.x - d.x) / l, z: (m.z - d.z) / l }, trust: true }]; };
 export function tick(ctx) {
+  dressThresholds(ctx, l8Ways()); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state;
   if (s.lakeDoorV !== 2) { const d = ctx.place.objects["l8-lake-back"]; if (d) { s.lakeDoorV = 2; d.primitive = { kind: "box", width: 6, height: 0.7, depth: 6 }; d.feetPosition = { ...d.feetPosition, y: -2.65 }; } } // the lake swims; only its bed's middle leads down to 7

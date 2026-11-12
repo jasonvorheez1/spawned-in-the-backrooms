@@ -1,3 +1,4 @@
+import { dressThresholds } from "../../scripts/lib/thresholds.js";
 // Level 6.1 "The Snackrooms" (backrooms-wiki.wikidot.com/level-6-1)
 // An endless 1980s mall food court and retro diner sanctuary.
 // Features curved diner booths, revolving chrome pedestal stools, hot coffee urns, pie domes,
@@ -923,6 +924,7 @@ function slim(ctx, st) {
 }
 
 export function tick(ctx) {
+  dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const st = ctx.place.state;
   if ((st.builtV ?? 0) < V) { if (layStep(ctx)) { st.builtV = V; st.crewV = 0; } else return; }

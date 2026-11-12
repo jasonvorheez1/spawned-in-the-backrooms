@@ -1,3 +1,4 @@
+import { dressThresholds } from "../../scripts/lib/thresholds.js";
 // Level 184 "Field of Forgotten Forts": lays the countryside once per version.
 //  - from Level 10: walking into the canola patch there (l10-canola-in) → you stand on the track here (l184-from-l10)
 //  - back: the gap in the old stone wall at the track's far end (l184-back) → Level 10's canola patch (l10-from-l184)
@@ -54,6 +55,7 @@ function lay(ctx) {
   sp("l184-ambience", { feetPosition: T(0, 0), audience: "local", audio: { clip: AMB, gain: 0.2, loop: true, spatial: false, bus: "Ambience" } });
 }
 export function tick(ctx) {
+  dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   const s = ctx.place.state;
   if (!ctx.place.players.length) return;
   if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); }

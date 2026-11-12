@@ -1,3 +1,4 @@
+import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import { rotationFromDirection } from "builtin/vec3";
 // Level 7 "Thalassophobia" Simulation:
 // Wikidot Backrooms Level 7 - An infinite subterranean ocean beneath a towering concrete ceiling void.
@@ -915,6 +916,7 @@ function lay(ctx) {
 }
 
 export function tick(ctx) {
+  dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state;
   if ((s.builtV ?? 0) < V) {

@@ -84,8 +84,13 @@ export function lampAt(cx, cz) {
   return cx % 2 === 0 && cz % 2 === 0 ? "tube" : null;
 }
 
-// the ways out: back into Level 0 at the camp's flickering wall, and the pipes threshold toward Level 2
-export const BACK = { x: cellCenter(ARRIVE.cx, ARRIVE.cz).x - 9.2, z: cellCenter(ARRIVE.cx, ARRIVE.cz).z };
+// the ways out: back into Level 0 at the flickering wall, and the pipes threshold toward Level 2.
+// The wall stands in the far west halls (Nov 11: "reaching the M.E.G. camp should take more effort"): about 130 m
+// of hound country from the camp, which used to be 9 m away. M.E.G. marks the way from it (scripts/lib/thresholds.js).
+export const BACK_OLD = { x: cellCenter(ARRIVE.cx, ARRIVE.cz).x - 9.2, z: cellCenter(ARRIVE.cx, ARRIVE.cz).z }; // where it stood (sim moves rooms laid before)
+export const BACK = { x: -HALF + 3, z: cellCenter(0, 22).z };
+// where the tutorial's soft floor drops a newcomer (places/level1/config.yaml defaultSpawnPoint): the south-west halls
+export const DROP = { x: cellCenter(7, 27).x, z: cellCenter(7, 27).z };
 export const ONWARD = { x: HALF - 0.6, z: cellCenter(N - 1, 12).z };
 
 export const L1_NAMES = {

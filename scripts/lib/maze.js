@@ -59,7 +59,7 @@ export function wallZ(cx, cz) {
 }
 export const isArchWall = (cx, cz, dir) => zoneOf(cx, cz) === "arches" || (dir === "x" ? zoneOf(cx + 1, cz) : zoneOf(cx, cz + 1)) === "arches";
 export const hasPit = (cx, cz) => zoneOf(cx, cz) === "holes" && hash(cx, cz, 17) < 0.6;
-export const hasPillar = (cx, cz) => { const z = zoneOf(cx, cz); return z === "pillars" || (z === "expanse" && cx % 3 === 1 && cz % 3 === 1 && hash(cx, cz, 21) < 0.85) || (z === "halls" && !inHub(cx, cz) && hash(cx, cz, 19) < 0.1); };
+export const hasPillar = (cx, cz) => { if (cx === EXIT.cx && cz === EXIT.cz) return false; /* Nov 11: none in front of the flickering wall out */ const z = zoneOf(cx, cz); return z === "pillars" || (z === "expanse" && cx % 3 === 1 && cz % 3 === 1 && hash(cx, cz, 21) < 0.85) || (z === "halls" && !inHub(cx, cz) && hash(cx, cz, 19) < 0.1); };
 // a standing spot in a cell that is never inside its pillar: the centre, or a corner-ward point beside the pillar
 export const openPoint = (cx, cz) => { const c = cellCenter(cx, cz); return hasPillar(cx, cz) ? { x: c.x + 1.3, z: c.z + 1.3 } : c; };
 export const hasLight = (cx, cz) => zoneOf(cx, cz) !== "dark" && (inHub(cx, cz) || hash(cx, cz, 23) < (zoneOf(cx, cz) === "expanse" ? 0.85 : 0.7));

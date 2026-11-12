@@ -7,12 +7,22 @@ const HALO_MODEL = { id: "/cdn/value.28190f626e7fab441feb638bbf3abfb719b3f9a55a8
 const FM = { desk: "/cdn/value.dc2f7ac92df4c08964be1ea4af5e520bbf4c12d50609157f85b41db8f3c21fcf.glb", chair: "/cdn/value.34ee5f211b991e7489c032ed09d062af9fda8ef8a79c69afadafd1a650be47d8.glb", shelf: "/cdn/value.9f3b838cc1b4403a54d96e1b80372c75c9a440c1d4e61a4760f60de82133526b.glb", copier: "/cdn/value.5489a9397b8e52f5ea0f528a387d0449d0787726d6bc65bd041ec8faf80f9362.glb" }
 // [kind, x, z, yaw]: a few office pieces someone left behind
 const PROPS = [["chair", 3.6, -3.4, 200], ["shelf", -4.6, 2.5, 90], ["desk", DESK.x, DESK.z, 90], ["chair", -3.1, -15.2, 250], ["copier", 3.3, -30.4, 0], ["chair", 22, -27.3, 30], ["shelf", 47.4, -32.2, 270], ["desk", 50.6, 2.6, 270], ["chair", 39.5, -6.4, 140]]
+// Nov 11, a harder walk to the soft floor: a shelf that came down across corridor E and a dead copier past it, so you weave;
+// the corridor's last light gave out to a dim stutter. Both leave the drawings on the walls in view.
+const BLOCK = [["shelf", 43.35, -15.6, { yaw: 4, pitch: 84 }, 0], ["copier", 44.75, -12.2, { yaw: 200, roll: 6 }, 0.02]]
+function harder(ctx, s) {
+  if (s.t0hard === 1) return
+  s.t0hard = 1
+  for (const [k, x, z, rot, y] of BLOCK) ctx.spawn({ tags: ["furniture", "t0prop", "t0block", k], feetPosition: { x, y, z }, rotation: rot, physics: { body: "static", collider: "box" }, model: { id: FM[k], forward: "+z" } })
+  ctx.spawn({ tags: ["t0prop", "t0block"], feetPosition: { x: 44.2, y: 0, z: -14.2 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/moments-geo.js", params: { kind: "papers", seed: 23 } } })
+  const o = ctx.getObject("t0-light-18"); if (o?.light) o.light = { ...o.light, intensity: 1.4 }
+}
 export function tick(ctx) {
   const s = ctx.place.state
-  if (s.built === 4) return
+  if (s.built === 4) return harder(ctx, s)
   if (s.built) for (const o of ctx.query({ anyTags: ["t0prop", "furniture", "halogen-unit", "almond"] })) ctx.destroy(o.id) // an older layout, laid again whole
   for (let i = 0; i < LIGHTS.length; i++) if (ctx.getObject(`t0-light-${i}`)) ctx.destroy(`t0-light-${i}`)
-  s.built = 4
+  s.built = 4; s.t0hard = 0
   LIGHTS.forEach(([x, z, hall], i) => hall !== 2 && ctx.spawn({ id: `t0-light-${i}`, tags: hall ? ["t0hall"] : ["t0light"], feetPosition: { x, y: H - 0.3, z }, visibleRange: { max: 42 }, light: { kind: "point", color: "oklch(0.95 0.06 95)", intensity: 5, distance: 10, shadow: { enabled: false } } }))
   for (const [k, x, z, yaw] of PROPS) ctx.spawn({ tags: ["furniture", "t0prop", k], feetPosition: { x, y: 0, z }, rotation: yaw, physics: { body: "static", collider: "box" }, model: { id: FM[k], forward: "+z" } })
   // room B: the desk that gave out, one leg already off it, where they'll be cornered

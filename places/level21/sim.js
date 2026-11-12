@@ -1,3 +1,4 @@
+import { dressThresholds } from "../../scripts/lib/thresholds.js";
 // Level 2.1 "Locked" (backrooms-wiki.wikidot.com/level-2-1): the sublevel above Level 2 that M.E.G. Base Alef was locked into in 2020. You come up the one stairwell (Level 2's far
 // dead end, once its steel shutter is broken); hot, humid storage halls of lockers and janitorial gear, Base Alef's gutted atrium and wings, Refrigerator Paradise (with Saltine
 // stockpiles, coil-water collector, workbench and Quartermaster errand board), and in the east The Edges: deep, dark rock-cut concrete caves stalked by Smilers whose last tunnel
@@ -413,6 +414,7 @@ function dress21(ctx) {
 const PROPS_SIZE = (k) => ({ mop: 0.45, drum: 0.6, canister: 0.32, shelf: 0.45, stackchair: 0.5, fuse: 0.24 })[k] ?? 0.6;
 
 export function tick(ctx) {
+  dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state, now = ctx.now();
   if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); dress21(ctx); s.peopleV = 0; }

@@ -2,8 +2,8 @@ mode: 3d
 terrain:
   kind: "off"
 gravity: { x: 0, y: -24, z: 0 }
-defaultSpawnPoint: { x: 4, y: 0.1, z: 4 }
-defaultSpawnRotation: { yaw: 90 }
+defaultSpawnPoint: { x: -60, y: 0.1, z: 100 }
+defaultSpawnRotation: { yaw: -34 }
 atmosphere:
   clouds: { enabled: false }
   fog: { kind: linear, near: 10, far: 58, color: oklch(0.2 0.012 250) }

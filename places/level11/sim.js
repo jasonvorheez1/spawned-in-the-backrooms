@@ -1,3 +1,4 @@
+import { dressThresholds } from "../../scripts/lib/thresholds.js";
 // Level 11 "The Infinite City" - Master Simulation & World Generator
 // Wikidot lore: "The City That Never Sleeps" (backrooms-wiki.wikidot.com/level-11)
 // An endless realistic Western metropolis faithfully realizing all 5 canonical Wikidot scenes:
@@ -1758,6 +1759,7 @@ const L11_VOICES = {
 // Master tick simulation loop
 const mem = { ringAt: 0, adAt: 0, lightAt: 0, lightPhase: 0 };
 export function tick(ctx) {
+  dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return;
   const st = ctx.place.state, now = ctx.now();
   if ((st.builtV ?? 0) < V && !st.lq) lay(ctx);

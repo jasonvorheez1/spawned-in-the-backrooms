@@ -8,7 +8,7 @@ l4-detail:
   receiveShadow: true
 l4-fun-poster:
   children: [{behavior: scripts/level-door.js, feetPosition: {x: 0, y: 0, z: 0}, physics: {body: static, trigger: true}, primitive: {depth: 0.9, height: 1.6, kind: box, width: 0.9}, rotation: {pitch: 90}, state: {to: level26}, visible: false}]
-  feetPosition: {x: 34, y: 0.02, z: -27}
+  feetPosition: {x: 30.4, y: 0.02, z: 25.8}
   id: l4-fun-poster
   material: {roughness: 0.95, texture: /cdn/value.8d29187c9d1ff71bb79ca79db24e350421d27f62bad5cee4c68ce68bb2ce32f2.png}
   primitive: {height: 0.66, kind: plane, width: 0.45}

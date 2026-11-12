@@ -1,3 +1,4 @@
+import { dressThresholds } from "../../scripts/lib/thresholds.js";
 // Level 27 "The Bunker Springs" (backrooms-wiki.wikidot.com/level-27): one small limestone cave around a warm, potable, mineral-rich spring.
 // Two waterfalls feed it; a drain too small to crawl into empties it. The M.E.G. built steel stairs up to the tunnel the first waterfall runs out of:
 // walk up the stream and you are back where you came from. No entities. The cave is art/level27/build.py (l27_cave.glb), in game coordinates.
@@ -80,6 +81,7 @@ function spawnNode(ctx, id) {
       { feetPosition: { x: 0, y: 0.3, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.05 220)", intensity: 0.35, distance: 2.5, shadow: { enabled: false } } }] });
 }
 export function tick(ctx) {
+  dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return;
   const s = ctx.place.state, now = ctx.now();
   if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); }

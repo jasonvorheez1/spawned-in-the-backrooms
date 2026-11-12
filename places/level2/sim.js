@@ -1,3 +1,4 @@
+import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import { spawnKit } from "../../scripts/lib/l2kit.js";
 import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { tickWalls } from "../../scripts/lib/breakables.js";
@@ -32,6 +33,7 @@ const lit = (cx, cz) => zoneOf(cx, cz) !== "dark";
 
 const slAt = {}; // per-player sludge hiss clock, this machine's
 export function tick(ctx) {
+  dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state, now = ctx.now();
   if (!(Math.abs(now - (ctx.session.wallTick ?? -1e9)) < 2000)) { ctx.session.wallTick = now; tickWalls(ctx); } // broken interior walls: holes drawn, regrown after a while (lib/breakables.js)

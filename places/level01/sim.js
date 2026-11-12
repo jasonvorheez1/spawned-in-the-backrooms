@@ -1,3 +1,4 @@
+import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import { setZen, migrateZen } from "../../scripts/lib/zenith-quest.js";
 // Level 0.1 "Zenith Station": a fragment of a spherical research megastructure grown into Level 0. One kit (scripts/zenith-geo.js), one layout:
 // vestibule (the way back to Level 0) → a spine hall running north, intact at the south end and failing toward the north → eight rooms off it →
@@ -184,6 +185,7 @@ function furnish(ctx) {
   }
 }
 export function tick(ctx) {
+  dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   const s = ctx.place.state;
   if (s.furnV !== FURNV && s.layV === LAYV && ctx.place.players?.length) { s.furnV = FURNV; furnish(ctx); }
   if (s.breakV !== BREAKV && s.layV === LAYV && ctx.place.players?.length) { s.breakV = BREAKV; breakable(ctx); }

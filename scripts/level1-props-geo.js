@@ -89,11 +89,11 @@ export function geometry(ctx) {
       tube(ctx, [[a.x, H - 0.1, z], [a.x + S * 0.5, H - 0.55, z], [a.x + S, H - 0.75, z], [a.x + S * 1.5, H - 0.55, z], [a.x + S * 2, H - 0.1, z]], [0.025, 0.025, 0.025, 0.025, 0.025], 5);
     }
   }
-  // a yellow guide line painted from the camp to the flickering wall home, and arrows on it
-  const a = cellCenter(ARRIVE.cx, ARRIVE.cz);
+  // a yellow guide line painted out of the camp's west side, and arrows on it pointing home (the wall itself is far west now: BACK)
+  const a = cellCenter(ARRIVE.cx, ARRIVE.cz), L0 = a.x - 7.6;
   ctx.color("oklch(0.85 0.17 95)"); ctx.roughness(0.7);
-  for (let x = BACK.x + 1.6; x < a.x - 3; x += 1.6) box(ctx, x, 0.012, a.z, 0.5, 0.004, 0.09);
-  for (const [x, dir] of [[BACK.x + 3.5, -1], [BACK.x + 7, -1]]) { box(ctx, x, 0.012, a.z, 0.25, 0.004, 0.09); for (const sd of [-1, 1]) box(ctx, x + dir * 0.18, 0.012, a.z + sd * 0.12, 0.2, 0.004, 0.05); }
+  for (let x = L0; x < a.x - 3; x += 1.6) box(ctx, x, 0.012, a.z, 0.5, 0.004, 0.09);
+  for (const [x, dir] of [[L0 + 1.9, -1], [L0 + 5.4, -1]]) { box(ctx, x, 0.012, a.z, 0.25, 0.004, 0.09); for (const sd of [-1, 1]) box(ctx, x + dir * 0.18, 0.012, a.z + sd * 0.12, 0.2, 0.004, 0.05); }
   // the camp: M.E.G. waypoint (real mode: the Tripo camp in places/level1/sim.js holds the tents, cots and table; these flat ones doubled it, Nov 11)
   if (!real) {
   tent(ctx, a.x - 4.8, a.z - 5, 0.3, "oklch(0.5 0.08 135)");

@@ -1,3 +1,4 @@
+import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { heard } from "../../scripts/lib/hear.js";
 import { tickWalls } from "../../scripts/lib/breakables.js";
@@ -10,7 +11,7 @@ import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import L from "../../scripts/lib/data/level1.yml";
 import { RACK } from "../../scripts/lib/level1.js";
 import { rollItemL1 } from "../../scripts/lib/loot.js";
-import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, ONWARD, ARRIVE, hash, S, HALF, hasPillar, DECK, RAMPS, rampBox, rampCell, inHole } from "../../scripts/lib/level1.js";
+import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, BACK_OLD, DROP, ONWARD, ARRIVE, hash, S, HALF, hasPillar, DECK, RAMPS, rampBox, rampCell, inHole } from "../../scripts/lib/level1.js";
 import { spawnAlmond } from "../../scripts/lib/loot.js";
 import { spawnFurniture, pickKind, wallSpot1, sizeOf } from "../../scripts/lib/furniture.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
@@ -40,7 +41,10 @@ pop flame rate=26 on=disc(.18) life=.4..0.7 v=up(1.1)+cone(18)*(.2..0.5) size=.1
 pop smoke on=@flame?.2 life=1.5..2.5 size=.15..0.25 acc=buoy(.8)+curl(.3)*.4+drag(.8) sz=$size*(.7>2.6) col=<.3,.28,.26> a=0>.2:.25>0 r=sprite(smoke-puff,alpha)
 pop glow n=1 r=light(<1,.55,.24>,fire()*6,7)`;
 
+// the tutorial's drop point isn't a door; the dresser lays M.E.G.'s welcome there too, turned toward the camp
+const l1Ways = () => { const a = cellCenter(ARRIVE.cx, ARRIVE.cz), dx = a.x - DROP.x, dz = a.z - DROP.z, l = Math.hypot(dx, dz); return [{ id: "l1-drop", at: { x: DROP.x - dx / l * 0.9, y: 0, z: DROP.z - dz / l * 0.9 }, fwd: { x: dx / l, z: dz / l } }]; };
 export function tick(ctx) {
+  dressThresholds(ctx, l1Ways()); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state, now = ctx.now();
   if (!(Math.abs(now - (ctx.session.wallTick ?? -1e9)) < 2000)) { ctx.session.wallTick = now; tickWalls(ctx); } // broken interior walls: holes drawn, regrown after a while (lib/breakables.js)
@@ -94,6 +98,11 @@ export function tick(ctx) {
   }
   if ((s.envV ?? 0) < 2) { s.envV = 2; const a = cellCenter(ARRIVE.cx, ARRIVE.cz);
     for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id], f = o.feetPosition; if (o.light && o.primitive?.kind === "sphere" && f && Math.abs(f.x - a.x - 1) < 0.1 && Math.abs(f.z - a.z - 8.2) < 0.1) ctx.destroy(id); } // the old map lamp sat inside the board
+  }
+  if ((s.backV ?? 0) < 1 && s.seeded && s.arrive2) { s.backV = 1; // Nov 11: the flickering wall home stands in the far west halls now (scripts/lib/level1.js BACK); a room laid before moves its pieces
+    const mv = (id, x, y, z) => { const o = ctx.place.objects[id]; if (o) o.feetPosition = { x, y, z }; };
+    mv("l1-back", BACK.x + 0.5, 0, BACK.z); mv("l1-from-main", BACK.x + 2.4, 0.1, BACK.z); mv("l1-backwall", BACK.x - 0.2 + L1M.wallDx, 0, BACK.z);
+    for (const o of Object.values(ctx.place.objects)) { const f = o.feetPosition; if (o.light && !o.primitive && !o.model && f && Math.abs(f.x - BACK_OLD.x - 0.4) < 0.15 && Math.abs(f.z - BACK_OLD.z) < 0.15) o.feetPosition = { x: BACK.x + 0.4, y: f.y, z: BACK.z }; }
   }
   if (!s.megCamp) { s.megCamp = true; // the M.E.G. waypoint: the camp, its fire, its lamps, and three agents
     if (ctx.place.objects["meg-cloth"]) ctx.destroy("meg-cloth");

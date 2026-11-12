@@ -168,8 +168,16 @@ pop buzz n=1 at=point().c(2.92) size=.9 col=hdr(1.6,1.4,.9) a=.35+.4*flick(.9,.5
   while (Q.length) { const [x, z] = Q.shift(); if (x === EXIT.cx && z === EXIT.cz) break; for (const [dx, dz, open] of step(x, z)) { const nx = x + dx, nz = z + dz; if (!open || nx < 0 || nz < 0 || nx >= N || nz >= N || prev.has(key(nx, nz)) || hasPit(nx, nz)) continue; prev.set(key(nx, nz), [x, z]); Q.push([nx, nz]); } }
   const path = []; for (let c = prev.has(key(EXIT.cx, EXIT.cz)) ? [EXIT.cx, EXIT.cz] : null; c; c = prev.get(key(...c))) path.unshift(c);
   let last = -9, arrows = 0;
+  const giveOut = Math.floor(path.length * 0.55); // Nov 11: whoever chalked the way ran out of chalk a little past halfway; the rest you find yourself
   for (let i = 1; i < path.length - 1 && arrows < 40; i++) {
     const [x, z] = path[i]; if (inHub(x, z)) continue;
+    if (i >= giveOut) { // the stub of chalk where it ran out, and what they wrote on the way
+      put("papers", { feetPosition: { ...cellCenter(x, z), y: 0 }, primitive: geo("papers", { seed: 11 }) });
+      const c = cellCenter(x, z);
+      put("note", { feetPosition: { x: c.x + 0.6, y: 0, z: c.z - 0.4 }, tags: ["moment", "m-note", "usable"], primitive: { kind: "box", width: 0.21, height: 0.004, depth: 0.27 }, material: { color: "oklch(0.93 0.025 90)", roughness: 0.95 }, behavior: "scripts/moments.js",
+        state: { kind: "note", name: "Chalk-dusted note", verb: "Read", info: "the chalk stub beside it is worn to nothing", text: "Out of chalk. The way out is still WEST, I'm sure of it, past where the carpet gets wet. You'll hear it before you see it: a wall that hisses like a dead channel. Don't look for a door. There isn't one." } });
+      break;
+    }
     const turn = i > 0 && (path[i + 1][0] - x !== x - path[i - 1][0] || path[i + 1][1] - z !== z - path[i - 1][1]);
     if (i - last < (turn ? 1 : 3)) continue; // one at every turn, else every third room
     const tx = path[i + 1][0] - x, tz = path[i + 1][1] - z, sides = tx ? [1, 3] : [0, 2], ix = x - path[i - 1][0], iz = z - path[i - 1][1], ahead = turn ? [0, 1, 2, 3].find((q) => NRM[q][0] === -ix && NRM[q][1] === -iz && hasWall(x, z, q)) : undefined, d = sides.find((s) => hasWall(x, z, s)) ?? ahead; if (d == null) continue; // a side wall, else at a turn the wall you walk into
@@ -199,19 +207,19 @@ pop buzz n=1 at=point().c(2.92) size=.9 col=hdr(1.6,1.4,.9) a=.35+.4*flick(.9,.5
   // 9 · The Noclip Wall (Exit to Level 1, Wikidot Lore)
   const ex = cellCenter(EXIT.cx, EXIT.cz);
   const NOCLIP_FX = `fx
-pop rift rate=8 burst=0 life=.6..1.2 on=box(.1,1.8,2.8) v=sdir()*.1 size=.03..0.07 col=<0,.85,.9> a=.7>0 sz=$size r=sprite(soft-disc,add)`;
-  put("noclip-wall", {
+pop rift rate=2 burst=0 life=.8..1.6 on=box(.05,1.6,2.2) v=sdir()*.05 size=.015..0.035 col=<.6,.8,.85> a=.35>0 sz=$size r=sprite(soft-disc,add)`;
+  put("noclip-wall", { // Nov 11: no sign, no glow. A patch of the wallpaper that's warped and cold, a faint shimmer, static you hear before you find it
     tags: ["moment", "m-noclip", "usable"],
-    feetPosition: { x: -HALF + 0.05, y: 1.5, z: ex.z },
+    feetPosition: { x: -HALF + 0.11, y: 1.4, z: ex.z },
     rotation: 90,
-    primitive: { kind: "plane", width: 3.2, height: 2.8 },
-    material: { color: "#060910", roughness: 0.2 },
-    ui: `<div face="front" width="3.2m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle,rgba(0,180,216,0.25) 0%,rgba(6,9,16,0.95) 75%);border:3px dashed #00d2d3;box-sizing:border-box;color:#00d2d3;font-family:'Courier New',monospace;padding:16px;text-align:center"><div style="font-size:36px;letter-spacing:4px;font-weight:900;text-shadow:0 0 12px #00d2d3">LEVEL 1 NOCLIP SEAM</div><div style="font-size:18px;color:#a8e6cf;margin-top:8px">PUSH THROUGH WALL TO NOCLIP</div><div style="font-size:14px;color:#888;margin-top:4px">WIKIDOT CLASS 1 · CONFIRMED EXIT</div></div>`,
-    light: { kind: "point", color: "#00d2d3", intensity: 2.8, distance: 7 },
+    primitive: { kind: "plane", width: 2.4, height: 2.6 },
+    material: { texture: WALLPAPER, repeat: [2, 2.2], color: "oklch(0.8 0.06 92)", roughness: 0.9, transparent: true, opacity: 0.82 },
+    ui: `<div face="front" width="2.4m" style="width:100%;height:100%;position:relative;background:radial-gradient(ellipse at 52% 55%,rgba(40,60,70,0.35) 0%,rgba(60,55,30,0.12) 45%,rgba(0,0,0,0) 72%)"><div style="position:absolute;left:58%;top:62%;transform:rotate(-7deg);font-family:cursive,serif;font-size:22px;color:rgba(40,36,30,0.55)">it's thinner here</div></div>`,
+    light: { kind: "point", color: "oklch(0.8 0.05 200)", intensity: 0.5, distance: 3.5 },
     fx: { script: NOCLIP_FX },
-    audio: { clip: STATIC, loop: true, gain: 0.35, spatial: true, maxDistance: 12 },
+    audio: { clip: STATIC, loop: true, gain: 0.3, spatial: true, maxDistance: 14 },
     behavior: "scripts/moments.js",
-    state: { kind: "noclip-wall", name: "Anomalous Noclip Wall Seam", verb: "Inspect Wall" },
+    state: { kind: "noclip-wall", name: "Warped wallpaper", verb: "Touch" },
   });
   // scattered paper elsewhere
   for (const seed of [701, 702, 703]) { const p = pick(seed, (cx, cz) => plainZone(cx, cz)); if (p) put("papers", { feetPosition: { ...cellCenter(p.cx, p.cz), y: 0 }, primitive: geo("papers", { seed: seed % 50 }) }); }

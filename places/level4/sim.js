@@ -1,3 +1,4 @@
+import { dressThresholds } from "../../scripts/lib/thresholds.js";
 // Level 4 "Abandoned Office": lays the floor, lights, door plates, coolers, fountains, vending, the lift and the stairwell,
 // M.E.G. Base Omega's two agents and the sound beds once (place.state.builtV); each second it watches the bare windows.
 import { heard } from "../../scripts/lib/hear.js";
@@ -113,6 +114,8 @@ function layOffice(ctx) {
   ctx.spawn("l4-office-mgr", { feetPosition: { x: 0, y: 0, z: 0 }, behavior: "scripts/l4-office.js", state: { kind: "manager" } });
 }
 export function tick(ctx) {
+  if (ctx.place.state.posterV !== 1 && ctx.place.players?.length) { const o = ctx.place.objects["l4-fun-poster"]; if (o) { ctx.place.state.posterV = 1; o.feetPosition = { x: 30.4, y: 0.02, z: 25.8 }; } } // Nov 11: the =) poster lay outside the lift's outer wall where nobody could reach it; now it's on the break room floor (cells/x0z0.scene)
+  dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   if (ctx.place.state.stairsV !== 1) { ctx.place.state.stairsV = 1; // the stairwell's chain came off: down to Level 5
     ctx.spawn("l4-stairs-down", { tags: ["door"], feetPosition: { x: STAIRS.x, y: 0, z: STAIRS.z - 0.5 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1.4, height: 2.4, depth: 0.6 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level5#l5-from-l4" } });

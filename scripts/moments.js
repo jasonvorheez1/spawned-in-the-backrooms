@@ -70,8 +70,8 @@ export const ears = {
     } else if (s.kind === "noclip-wall" && who) {
       heard(ctx, { clip: STATIC, position: pos, volume: 0.8, maxDistance: 10 });
       who.state.sub = {
-        who: "ANOMALOUS NOCLIP BOUNDARY",
-        t: "The wallpaper here is cold to the touch and flickers with static. Pushing through the wall will noclip you directly to Level 1 ('Lurking Danger'). Walk into the wall to proceed.",
+        who: "WARPED WALLPAPER",
+        t: "Cold under your palm, and it gives a little, like something on the other side is leaning back. The static is coming from inside the wall. Wanderers say Level 0 lets go of you where it's thinnest. Walk into it, and don't stop walking.",
         at: now,
         d: 6000,
       };

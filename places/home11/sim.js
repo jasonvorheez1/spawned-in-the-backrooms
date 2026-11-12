@@ -1,3 +1,4 @@
+import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import { builtSpec } from "../../scripts/lib/build-piece.js";
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
@@ -26,6 +27,7 @@ const M = {
 const W = 10, D = 12, H = 2.8; // room x -5..5, z -6..6; front door on the +z wall
 
 export function tick(ctx) {
+  dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   const st = ctx.place.state;
   const owner = ctx.place.players.find((p) => p.state?.home11 && typeof p.state.homeFridge === "string");
   const fr = ctx.place.objects["h-fridge"];

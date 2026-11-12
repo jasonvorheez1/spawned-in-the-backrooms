@@ -1,3 +1,4 @@
+import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { heard } from "../../scripts/lib/hear.js";
 import { tickWalls } from "../../scripts/lib/breakables.js";
@@ -121,6 +122,7 @@ function layGammaSignage(ctx) {
 }
 
 export function tick(ctx) {
+  dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   if (ctx.place.state.liftV !== 1) { ctx.place.state.liftV = 1; // the freight lift has power again: up to Level 4
     ctx.spawn("l3-lift", { tags: ["door"], feetPosition: { x: LIFT.x - 0.6, y: 0, z: LIFT.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 2.2 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level4#l4-lift-arrive" } });
