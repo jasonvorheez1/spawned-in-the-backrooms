@@ -60,18 +60,24 @@ for o in [o for o in bpy.data.objects if o.type == "MESH"]:
         for i, c in enumerate(base): disp[i] = male(o.matrix_world @ c)
     if not CLOTH and o.name == "Body" and arm:          # tail root: relax the crumple where the tail meets the back
         t1 = arm.matrix_world @ arm.data.bones["mixamorig:Tail1"].head_local
-        bm = bmesh.new(); bm.from_mesh(me); bm.verts.ensure_lookup_table()
         cur = [base[i] + disp[i] for i in range(len(base))]
-        sel = [v.index for v in bm.verts if ((o.matrix_world @ base[v.index]) - t1).length < 0.085]
-        wt = {i: 1 - sm((((o.matrix_world @ base[i]) - t1).length - 0.05) / 0.035) for i in sel}
+        key = lambda c: (round(c.x, 5), round(c.y, 5), round(c.z, 5))     # a .glb splits verts at seams: smooth welded clusters, or the seam tears open
+        cl = {}; cid = []
+        for i, c in enumerate(base): cid.append(cl.setdefault(key(c), len(cl)))
+        nbr = {}
+        for e in me.edges:
+            u, v = cid[e.vertices[0]], cid[e.vertices[1]]
+            if u != v: nbr.setdefault(u, set()).add(v); nbr.setdefault(v, set()).add(u)
+        pos = {}
+        for i, c in enumerate(cur): pos[cid[i]] = c
+        rest = {}
+        for i, c in enumerate(base): rest[cid[i]] = o.matrix_world @ c
+        sel = [c for c in pos if (rest[c] - t1).length < 0.085]
+        wt = {c: 1 - sm(((rest[c] - t1).length - 0.05) / 0.035) for c in sel}
         for _ in range(14):
-            nxt = {}
-            for i in sel:
-                nb = [e.other_vert(bm.verts[i]).index for e in bm.verts[i].link_edges]
-                if nb: nxt[i] = cur[i].lerp(sum((cur[j] for j in nb), Vector()) / len(nb), 0.5 * wt[i])
-            for i, c in nxt.items(): cur[i] = c
-        for i in sel: disp[i] = cur[i] - base[i]
-        bm.free()
+            nxt = {c: pos[c].lerp(sum((pos[j] for j in nbr[c]), Vector()) / len(nbr[c]), 0.5 * wt[c]) for c in sel if nbr.get(c)}
+            pos.update(nxt)
+        for i in range(len(base)): disp[i] = pos[cid[i]] - base[i]
     mw3 = o.matrix_world.to_3x3().inverted()
     for i in range(len(base)): disp[i] = mw3 @ disp[i] if o.matrix_world != o.matrix_world.Identity(4) else disp[i]
     if kb:
