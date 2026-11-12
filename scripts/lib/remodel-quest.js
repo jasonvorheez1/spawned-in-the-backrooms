@@ -1,5 +1,5 @@
 // "Fresh Paint": Mara (B.N.T.G. Realty, Level 11) wants the Remodeling Co.'s Reality Fresheners out of Level 0.2.
-// Stages: 1 find the half-built door in Level 0 · 2 recover three fresheners (bathroom sink, the stuck freight lift, Cap'n)
+// Stages: 1 find the half-built door in Level 0 · 2 recover three fresheners (bathroom sink, the shifting rooms, Cap'n for three paint cans)
 // · 3 sell them to Mara or give them back to Cap'n. player.state: remodQ (step, 99 done), l02got { sink, lift, capn },
 // fresh (fresheners carried), capnAsk, capnFailed. A carried freshener is set down from the inventory (placeFreshener).
 import { pushFeed } from "./feed.js";
@@ -15,7 +15,7 @@ export const QUESTS02 = {
     key: "remodQ", name: "Fresh Paint",
     tips: {
       1: "Find the half-built door in Level 0, out from the safe room",
-      2: "Collect 3 Reality Fresheners in Level 0.2: the bathroom, the stuck freight lift, and Cap'n",
+      2: "Collect 3 Reality Fresheners in Level 0.2: the bathroom, the shifting rooms, and Cap'n",
       3: "Sell the fresheners to Mara in Level 11, or give them back to Cap'n",
     },
     marks: { 1: { place: "main", id: "l0-to-l02" }, 3: { place: "level11", id: "l11-realty-agent" } },
@@ -24,9 +24,9 @@ export const QUESTS02 = {
       if (step === 2) {
         const missing = LOCATIONS.find(([slot]) => !s.l02got?.[slot]);
         if (missing) {
-          const released = missing[0] === "lift" && place === "level02" && room?.liftDown;
-          return { step: `Recover the Reality Fresheners (${gotCount(s)}/3) · ${released ? "Take the canister from the lift" : missing[2]}`,
-            mark: { place: "level02", id: released ? "l02-fresh-lift" : missing[1] } };
+          const cans = s.l02paint?.length ?? 0, paint = missing[0] === "capn" && s.capnFailed && cans < 3;
+          return { step: `Recover the Reality Fresheners (${gotCount(s)}/3) · ${paint ? `Get the paint cans out of the shifting rooms (${cans}/3)` : missing[2]}`,
+            mark: { place: "level02", id: paint ? ["l02-paint0", "l02-paint1", "l02-paint2"].find((id) => !s.l02paint?.includes(id)) : missing[1] } };
         }
       }
       if (step === 3 && place === "level02") return { step: this.tips[step], mark: { place, id: "l02-capn" } };
@@ -36,7 +36,7 @@ export const QUESTS02 = {
 };
 const LOCATIONS = [
   ["sink", "l02-fresh-sink", "Check the bathroom sink"],
-  ["lift", "l02-pan", "Lower the freight lift"],
+  ["lift", "l02-fresh-grid", "Take the freshener from the middle of the shifting rooms"],
   ["capn", "l02-capn", "Speak to Cap'n by the basement stairs"],
 ];
 const posOf = (p) => p.worldFeetPosition ?? p.feetPosition;
@@ -83,7 +83,7 @@ export function remodelChoices(id, s) {
     if (!g.capn && q >= 1 && q < 99) {
       if (!s.capnAsk) out.push({ text: "Mara sent me for the Reality Fresheners.", tag: "Quest" });
       else if (!s.capnFailed) out.push({ text: "Come on. Spare the one on your belt.", tag: "Speech 40" });
-      if (g.lift) out.push({ text: "Your freight lift is down. Penelope's mess is fixed.", tag: "Quest" });
+      if ((s.l02paint?.length ?? 0) >= 3) out.push({ text: "I got your paint cans out of the shifting rooms.", tag: "Quest" });
     }
     if (q === 3) out.push({ text: "Take them back. Do the job right this time.", tag: "Quest Turn-In" });
   }
@@ -114,9 +114,9 @@ export function handleDialogueQuest02(ctx, p, npc, text) {
       const c = rollCheck(ctx, s, { skill: "speech", difficulty: 40 });
       if (c.ok) return give("You know what, you have an honest face. I assume. Take it. If Major Took asks, it fell through the floor.");
       s.capnFailed = 1;
-      return { reply: "I cannot. But Penelope jammed the freight lift by the east wall with one still on it. Get the lift down and I will owe you one.", mood: "calm" };
+      return { reply: "I cannot. But the crew left three cans of Fresh Paint in the back rooms, and the rooms keep moving. Bring them out and I will owe you one.", mood: "calm" };
     }
-    if (t.includes("freight lift is down") && g.lift && !g.capn) return give("You fixed Penelope's lift? Nobody fixes anything here. Here. You earned it more than we did.");
+    if (t.includes("paint cans out") && (s.l02paint?.length ?? 0) >= 3 && !g.capn) return give("You got all three out? The rooms let you? Here. You earned it more than we did.");
     if (t.includes("take them back") && q === 3) {
       if ((s.fresh ?? 0) < 3) return { reply: "That is not all of them. I can count to three. Penelope taught me.", mood: "annoyed" };
       s.fresh -= 2;
@@ -151,6 +151,14 @@ export const FRESH_BODY = {
     { feetPosition: { x: 0, y: 0.3, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.1 200)", intensity: 0.5, distance: 3 } },
   ],
 };
+// a Fresh Paint can from the shifting rooms (places/level02 grid): three bring Cap'n round
+export function gotPaint(ctx, p, id) {
+  const s = p.state, have = [...(s.l02paint ?? [])];
+  if (!have.includes(id)) have.push(id);
+  s.l02paint = have; ctx.destroy(id);
+  tell(ctx, p, have.length >= 3 ? "Fresh Paint (3/3) · Bring the cans to Cap'n" : `Fresh Paint (${have.length}/3) · Get the paint cans out of the shifting rooms`);
+  if (s.remodQ === 2) syncHUD(s, p.place, ctx.place.state);
+}
 export function pickPlaced(ctx, p, id) { p.state.fresh = (p.state.fresh ?? 0) + 1; ctx.destroy(id); tell(ctx, p, `Reality Freshener picked up (${p.state.fresh} carried)`, HISS); }
 // the sanity bubble: any set-down freshener within 6 m (scripts/player.js), read once a second
 export function nearFresh(ctx) {
