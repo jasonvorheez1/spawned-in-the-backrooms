@@ -10,11 +10,11 @@ export function onSpawn(ctx) {
   for (let i = 0; i < n; i++) {
     const id = ctx.spawn({ parent: root, feetPosition: { x: -len / 2, y: s.beltY ?? 0.8, z: 0 }, rotation: { yaw: (i * 37) % 20 - 10 },
       model: s.box, layout: { box: { min: { x: -0.24, y: 0, z: -0.2 }, max: { x: 0.24, y: 0.34, z: 0.2 } } }, castShadow: false, visibleRange: { max: 40 }, interpolation: { teleportThreshold: 2 } });
-    animate(ctx, getObject(id), { "feetPosition.x": [-len / 2, len / 2] }, { duration: secs, easing: "linear", loop: true, delay: (secs / n) * i });
+    animate(ctx, ctx.getObject(id), { "feetPosition.x": [-len / 2, len / 2] }, { duration: secs, easing: "linear", loop: true, delay: (secs / n) * i });
   }
   // the cabinet's three lamps, at the downstream end
   LAMPS.forEach(([color, off], i) => {
     const id = ctx.spawn({ parent: root, feetPosition: { x: len / 2 + 0.3, y: 1.35 - i * 0.18, z: 0.9 }, light: { kind: "point", color, intensity: 0.6, distance: 3, shadow: { enabled: false } }, visibleRange: { max: 30 } });
-    animate(ctx, getObject(id), { "light.intensity": [0.05, 0.9, 0.05] }, { duration: 1.6 + i * 0.4, easing: "linear", loop: true, delay: off });
+    animate(ctx, ctx.getObject(id), { "light.intensity": [0.05, 0.9, 0.05] }, { duration: 1.6 + i * 0.4, easing: "linear", loop: true, delay: off });
   });
 }
