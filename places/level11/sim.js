@@ -25,7 +25,7 @@ import MODELS from "../../scripts/lib/data/level11-models.yml";
 export const cadence = "1s";
 const RENO_FLOOR = 0.32;
 const mallTrash = (i) => ({ x: -15.15 + i * 0.2, y: 0.33, z: 28.1 + i * 0.65 });
-const V = 147; // the market court and the central pedestrian route
+const V = 148; // the market court and the central pedestrian route
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1020,7 +1020,8 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
   // 10. SPAMTON'S ALLEY & DUMPSTER
   // ==========================================
   {
-    const AX = 44, Z0 = 19, LEN = 13, W = 4.2;
+    const AX = 39.95, Z0 = 20.6, LEN = 13, W = 4.2; // Nov 12 (Shelly: a more natural placement): the alley is the gap between the tower (east face x 37.8) and the brick block beside it
+    md("l11-alley-block", "brick_b", 48.75, 0, 27.4, dress("brick_b", 0.42), "box", { rotation: { yaw: -90 } }); // the neighbour that closes the alley's east side, facing the avenue
     const BRICK = { ...T("grimy-red-brick-wall", 2), color: "oklch(0.42 0.07 35)", roughness: 0.92 };
     const GRIME = { ...T("stained-concrete-floor", 3), color: "oklch(0.32 0.012 80)", roughness: 0.95 };
     md("l11-spam-wall-back", "spam_alley", AX, 0, Z0 + LEN / 2, { brick: BRICK, metal: STEEL, rust: RUST, door: { ...STEEL, color: "oklch(0.55 0.03 250)" }, concrete: GRIME }, "mesh");
