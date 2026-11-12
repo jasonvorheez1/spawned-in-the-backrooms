@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 6824,
-  "updatedAt": "2026-11-12T23:40:42.359Z",
+  "basedOnSpecVersion": 6830,
+  "updatedAt": "2026-11-12T23:44:25.135Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG across Level 0, a social hub and authored lore destinations; player saves hold progression, gear, quests and homes, while tutorial0 is solo and ephemeral. Shared player behaviors, place simulations and reusable builders join authored scenes to generated spaces. Level 31 is a versioned Roller Rink with an 8 m shell, a west mezzanine and modular venue builders; the Gavi mod adds creator-facing commands, skills and a live crew-request panel.",
   "scriptPaths": [],
   "places": [
@@ -51,22 +51,22 @@
     "scripts/lib/remodel-quest.js - remodQ, l02got/l02paint, fresh, capnAsk/capnFailed and Fresh Paint quest/HUD/payout/reputation.",
     "scripts/build.js + places/level5/sim.js - player homeKeep.built or homeKeep.l5built and reconstruction; scripts/l5-resident.js owns booking keys/room identity and place.state.l5rent exclusive-room ledger.",
     "scripts/arcade-play.js + scripts/lib/felix-game.js - player.state.arcade/arcadeBest/felixBest; active game frames and input progression are in session state, consumed by arcade UI.",
-    "Enemy managers own AI/sneakTarget; scripts/lib/meg-agent.js keeps NPC combat memory and pose; places/level31/sim.js owns place.state.v31=63 and generated l31-* venue roots; mods/awakening/input.js mirrors switches to world.state.awakening.",
-    "mods/gavi/equipe.js - god behavior state gaviVigia/gaviUltimo/gaviTotal for crew-watch toggle, last request and request count; gavi panel itself only renders."
+    "Enemy managers own AI/sneakTarget; scripts/lib/meg-agent.js keeps NPC combat memory and pose; places/level31/sim.js owns place.state.v31=67 and generated l31-* venue roots; mods/awakening/input.js mirrors switches to world.state.awakening.",
+    "mods/gavi/equipe.js - god behavior state gaviVigia/gaviUltimo/gaviTotal for crew-watch toggle, last request and request count; Gavi panel itself only renders."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific behavior.",
-    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera; camera writes aimPt/aimPitch → player.js ballistics/weaponAim; player.js zoneHere → scripts/lib/maze.js zone names; configured action bindings reach their handlers.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific handlers.",
+    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera; camera writes aimPt/aimPitch → player.js ballistics/weaponAim; player.js zoneHere → scripts/lib/maze.js zone names; configured bindings reach their behavior handlers.",
     "scripts/routing.js requested room → scripts/lib/hub.js solo selection; toHub/toSolo cross to hub/home and maintain roomHop/save-place; kiosk resolves booked Level 5 home IDs.",
     "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close to intro/tutorial0; menuOpen drives menu UI and solo pause scaling.",
     "tutorial0 HALOGEN cut → scripts/lib/tut0-cut.js + scripts/lib/dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ and play recorded voices.",
     "scripts/build.js placement/removal → homeKeep.built or homeKeep.l5built; Level 5 sim restores separately; l5-resident booking → player l5home/l5room and place.state.l5rent, hub kiosk routes per room.",
     "Level 2 sim l2-to-l31 → scripts/level-door.js to level31#l31-from-l2; Level 31 l31-back → level2#l2-from-l31; quest-route.js maps both directed crossings.",
-    "Level 31 sim reads H/B/RINK/ZONES/DOOR/BACK, rebuilds l31-* roots at place.state.v31=63 and dispatches layParts; mezzanine/shop elevations and stair align with shared geometry; arcade is east back room, party occupies former arcade footprint.",
+    "Level 31 sim reads H/B/RINK/ZONES/DOOR/BACK, rebuilds l31-* roots at place.state.v31=67 and dispatches layParts; mezzanine/shop elevations and stair align with shared geometry; arcade is east back room, party occupies former arcade footprint.",
     "scripts/talk.js assembles authored dialogue and recorded voice takes; unhandled quest text → handleDialogueQuest31; Marlowe/Coach/DJ/clerk dialogue advances l31q; l31-crate.js → openCrate and l31-deck.js → useDeck.",
-    "Level 31 arcade usable press → scripts/lib/level31-arcade.js initializes player.state.arcade; arcade-play.js dispatches Block Panic or felix-game input/ticks and arcade-ui.js dispatches to Felix UI; felix-game session frame → felix-ui.js draws it.",
+    "Level 31 arcade usable press → scripts/lib/level31-arcade.js initializes player.state.arcade; arcade-play.js dispatches Block Panic or felix-game input/ticks and arcade-ui.js dispatches to Felix UI; felix-game session frames → felix-ui.js.",
     "Awakening config selects mods/awakening/lighting.js and look.js at Level 31; mod input opens panel.js and commits optional switches, mirroring switches to world.state.awakening.",
-    "mods/gavi/painel-equipe.js buttons → sendAction to mods/gavi/equipe.js god behavior; crew call/watch gathers current place, camera target and nearby objects then api.notifyDm sends context to the builder; scheduled watch observes at 5 s intervals with a 60 s message cooldown."
+    "mods/gavi/painel-equipe.js buttons → sendAction to mods/gavi/equipe.js god behavior; crew call/watch gathers current place, camera target and nearby objects then api.notifyDm sends context to the builder; scheduled watch observes at 5 s intervals."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored mall shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
@@ -76,7 +76,7 @@
     "places/level01/sim.js + Zenith geometry/breach/hatch/bot/hazard scripts; places/level02/sim.js + l02-grid.js vary partitions, lights, crew, knocks and reset.",
     "scripts/lib/meg-agent.js - per-NPC nerve/stats/weapon reactions, cover and authored/voiced barks; scripts/lib/critter-model.js refits appearances across Level 7, Bonus and Level 0.2, with global sim.js propagation.",
     "Level 13 furnishing/dressing data and foe/people/tape layers vary rooms, story, encounters and residents; weapon data vary requirements/stats/loot while stats.js and weapon-look/fp-gun/vmpose supply handling and visuals.",
-    "Level 31 modular venue builders vary arcade, food, rental, shop, Side B and design around scripts/lib/level31.js geometry; mezzanine elevates Dottie's Tripo-stocked gift shop above the skate lounge, with authored collision for structural and model props."
+    "Level 31 modular venue builders vary arcade, food, rental, shop, Side B and design around scripts/lib/level31.js geometry; mezzanine elevates Dottie's Tripo-stocked gift shop above the skate lounge, with authored collision for structural assets."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -88,9 +88,9 @@
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. Keep this bounded sweep.",
     "Global body-style restyling skips player IDs and player/ roots and ignores local-audience or model-less objects; wardrobe membership is derived from critter-ward object IDs and passed to restyle.",
-    "Level 31 sim uses place.state.v31=63 and removes/rebuilds l31-* roots; keep generated IDs prefixed l31- and align shell, zone coordinates, arrivals and door IDs with scripts/lib/level31.js.",
+    "Level 31 sim uses place.state.v31=67 and removes/rebuilds l31-* roots; keep generated IDs prefixed l31- and align shell, zone coordinates, arrivals and door IDs with scripts/lib/level31.js.",
     "Level 31 shell H=8 and mezzanine ZONES.mezz.y=4 are coupled to the stair/landing/rail; scripts/lib/level31-shop.js adds 4 m to every spawned shop object's y, so move/update these together.",
-    "Level 31 Tripo gateposts use static cylinder colliders; DJ-stage and rental-counter GLBs are visuals over hidden static box collision. Rental repeats five counter modules; DJ front retains the REQUEST LINE text sign.",
+    "Level 31 mezzanine columns use Tripo teal pillars with hidden cylinder colliders; brass-and-glass rail-panel GLBs tile the balcony and sloped stair, while hidden static barrier primitives retain collision. New assets are l31-column-2 and l31-railpanel-2.",
     "Level 31 arcade is the BACK room east of the hall; party occupies the previous arcade footprint. Side-set IDs use l31-q-* and design IDs l31-ld-* with separate clearing; Awakening terrain/water remains opt-in."
   ]
 }
