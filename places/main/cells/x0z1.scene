@@ -745,3 +745,102 @@ object/x05249135d8ba8922/9:
   state: {hp: 80, items: "almond,almond,almond", kind: cabinet, mat: metal, maxHp: 80, name: Office supply cabinet}
   tags: [container, furniture, lootfurn, breakable]
   visibleRange: {max: 45}
+xmas-cane-0:
+  feetPosition: {x: 60, y: 0, z: 144.35}
+  id: xmas-cane-0
+  physics: {body: static, collider: cylinder}
+  primitive: {kind: scripted, params: {h: 2.1, hook: true, kind: cane, r: 0.045}, script: scripts/xmas-geo.js}
+  rotation: {roll: -2, yaw: 0}
+  tags: [xmas]
+xmas-cane-1:
+  feetPosition: {x: 61.2, y: 0, z: 153.85}
+  id: xmas-cane-1
+  physics: {body: static, collider: cylinder}
+  primitive: {kind: scripted, params: {h: 1.7, hook: false, kind: cane, r: 0.045}, script: scripts/xmas-geo.js}
+  rotation: {roll: 3, yaw: 67}
+  tags: [xmas]
+xmas-cane-3:
+  feetPosition: {x: 63, y: 0, z: 149.85}
+  id: xmas-cane-3
+  physics: {body: static, collider: cylinder}
+  primitive: {kind: scripted, params: {h: 1.5, hook: true, kind: cane, r: 0.045}, script: scripts/xmas-geo.js}
+  rotation: {roll: 3, yaw: 201}
+  tags: [xmas]
+xmas-cane-5:
+  feetPosition: {x: 59.2, y: 0, z: 150.85}
+  id: xmas-cane-5
+  physics: {body: static, collider: cylinder}
+  primitive: {kind: scripted, params: {h: 2, hook: false, kind: cane, r: 0.045}, script: scripts/xmas-geo.js}
+  rotation: {roll: 3, yaw: 335}
+  tags: [xmas]
+xmas-floorlights-0:
+  feetPosition: {x: 58.3, y: 0.01, z: 142.2}
+  id: xmas-floorlights-0
+  primitive: {kind: scripted, params: {kind: string, len: 15.4}, script: scripts/xmas-geo.js}
+  rotation: {yaw: 0}
+  tags: [xmas]
+xmas-floorlights-1:
+  feetPosition: {x: 58.35, y: 0.01, z: 142.45}
+  id: xmas-floorlights-1
+  primitive: {kind: scripted, params: {kind: string, len: 13}, script: scripts/xmas-geo.js}
+  rotation: {yaw: -90}
+  tags: [xmas]
+xmas-house:
+  feetPosition: {x: 63.8, y: 0, z: 155.04999999999998}
+  id: xmas-house
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: house}, script: scripts/xmas-geo.js}
+  rotation: {yaw: 10}
+  state: {items: musicbox, name: Miniature house, verb: Open}
+  tags: [xmas, container]
+xmas-lamp-sitter:
+  behavior: scripts/xmas-still.js
+  children: [{feetPosition: {x: 0, y: 0, z: 0}, id: chair, primitive: {kind: scripted, params: {kind: chair}, script: scripts/xmas-geo.js}}, {bones: {"mixamorig:LeftArm": {rotate: [-8, 0, 0]}, "mixamorig:RightArm": {rotate: [-8, 0, 0]}}, children: [{attachment: {skin: true}, id: cw-fluff-cheeks, model: {forward: "+z", id: /cdn/value.913cb228b13365372589e34cb2a9af64893e228fdc2d08987ae57a5e12a55257.glb, materials: {fluff: {color: "#e6dfd2", kind: scripted, params: {bHi: 0.47, bLo: 0.2708, bot: 0, botB: 0.107, botG: 0.0467, botR: 0.0284, bpat: denim, frontZ: 0.082, fur: "", nB: 0.018, nF: 0.036, nW: 0.074, sHi: 0, sock: 0, sockB: 1, sockG: 1, sockR: 1, t0x: 0.025, t0y: 0.433, t0z: -0.067, t1x: 0.096, t1y: 0.379, t1z: -0.166, t2x: 0.217, t2y: 0.434, t2z: -0.237, t3x: 0.274, t3y: 0.555, t3z: -0.313, tHi: 0.705, tLo: 0.435, tShIn: 0.02, tShTop: 0.05, tShoulder: 1, tSl: 0.17720000000000002, tailR: 0.048, top: 0, topB: 0.3564, topG: 0.3372, topR: 0.3278, tpat: weave, trimB: 1, trimG: 1, trimR: 1, tuckB: 0, tuckS: 0}, script: scripts/mat-catskin.js}}}, morph: {Chest: 0.575, Ear_Fold: 0, Ear_Hide: 1, Ear_Small: 0, Ear_Tall: 0, Ear_Wide: 0, Hatted: 0, Snout_Flat: 1, Snout_Long: 0, Snout_Pointy: 0, Snout_Puff: 0, Tail_Bob: 1, Tail_Curl: 0, Tail_Fluffy: 0, Tail_Puff: 0, Tail_Whip: 0}}, {attachment: {skin: true}, id: cw-ears, model: {forward: "+z", id: /cdn/value.85e4c77a7217e93fabb4646bf4c9f76f4d832cf0deac24e4a0a6b7cf1aaa88b1.glb, materials: {earFur: {color: "#e6dfd2", roughness: 0.9}, earInner: {color: "#f4a3c4", roughness: 0.7}, earTuft: {color: "#e6dfd2", roughness: 0.9}}}}, {attachment: {skin: true}, id: cw-hair, model: {forward: "+z", id: /cdn/value.aaa27e7dda5e516e9584d148d854edf692e6dc945fa42059a18c349f0cc8691d.glb, materials: {hair: {color: "#3a2a22", kind: scripted, params: {crown: 1.62}, script: scripts/mat-hair.js}}}, morph: {Chest: 0.575, Ear_Fold: 0, Ear_Hide: 1, Ear_Small: 0, Ear_Tall: 0, Ear_Wide: 0, Hatted: 0, Snout_Flat: 1, Snout_Long: 0, Snout_Pointy: 0, Snout_Puff: 0, Tail_Bob: 1, Tail_Curl: 0, Tail_Fluffy: 0, Tail_Puff: 0, Tail_Whip: 0}}, {feetPosition: {x: 0.13, y: 1, z: -0.13}, primitive: {kind: scripted, params: {kind: seam}, script: scripts/xmas-geo.js}}], feetPosition: {x: 0, y: 0.08, z: 0.02}, id: body, jiggle: {amount: 0.55, bones: ["mixamorig:Tail1", "mixamorig:Tail2", "mixamorig:Tail3"], bounce: 0.5, colliders: [{bone: "mixamorig:Hips", radius: 0.13}, {bone: "mixamorig:LeftUpLeg", radius: 0.08, tail: [0, -0.3, 0]}, {bone: "mixamorig:RightUpLeg", radius: 0.08, tail: [0, -0.3, 0]}], gravity: 0.6, limit: 50}, model: {forward: "+z", id: /cdn/value.a935fee298a38e28d69d6472997a747507062f2507ac308f0db98fa42efa1dd3.glb, materials: {fur: {color: "#e6dfd2", kind: scripted, params: {bHi: 0.47, bLo: 0.2708, bot: 1, botB: 0.107, botG: 0.0467, botR: 0.0284, bpat: denim, frontZ: 0.082, fur: /cdn/value.58ce243610699df44f4552ccfdfc667580c63c99f28103ecf2d1dd72c94657fe.jpg, nB: 0.018, nF: 0.036, nW: 0.074, sHi: 0, sock: 0, sockB: 1, sockG: 1, sockR: 1, t0x: 0.025, t0y: 0.433, t0z: -0.067, t1x: 0.096, t1y: 0.379, t1z: -0.166, t2x: 0.217, t2y: 0.434, t2z: -0.237, t3x: 0.274, t3y: 0.555, t3z: -0.313, tHi: 0.705, tLo: 0.435, tShIn: 0.02, tShTop: 0.05, tShoulder: 1, tSl: 0.17720000000000002, tailR: 0.048, top: 1, topB: 0.3564, topG: 0.3372, topR: 0.3278, tpat: weave, trimB: 1, trimG: 1, trimR: 1, tuckB: 0, tuckS: 0}, script: scripts/mat-catskin.js}, fur2: {color: "#ffffff", kind: scripted, params: {bHi: 0.47, bLo: 0.2708, bot: 1, botB: 0.107, botG: 0.0467, botR: 0.0284, bpat: denim, frontZ: 0.082, fur: /cdn/value.58ce243610699df44f4552ccfdfc667580c63c99f28103ecf2d1dd72c94657fe.jpg, nB: 0.018, nF: 0.036, nW: 0.074, sHi: 0, sock: 0, sockB: 1, sockG: 1, sockR: 1, t0x: 0.025, t0y: 0.433, t0z: -0.067, t1x: 0.096, t1y: 0.379, t1z: -0.166, t2x: 0.217, t2y: 0.434, t2z: -0.237, t3x: 0.274, t3y: 0.555, t3z: -0.313, tHi: 0.705, tLo: 0.435, tShIn: 0.02, tShTop: 0.05, tShoulder: 1, tSl: 0.17720000000000002, tailR: 0.048, top: 1, topB: 0.3564, topG: 0.3372, topR: 0.3278, tpat: weave, trimB: 1, trimG: 1, trimR: 1, tuckB: 0, tuckS: 0}, script: scripts/mat-catskin.js}, headFur: {color: "#e6dfd2", kind: scripted, params: {bSeed: 0.375, eyeB: 0.8751375823652049, eyeG: 0.267358060183772, eyeR: 0.03847274632019464, face: /cdn/value.8f23419441b7dc3c4dbbbbae28daf9a8f16965a76f0bbb6fa4acc620f4829593.png, faceNear: -0.011, faceVBias: -2.118, faceVScale: 2.9946, faceless: 1, noseCutV: 0.4, noseS: 1.2, noseY: 0.855, noseZ: 0.315, talk: 0}, script: scripts/mat-catskin.js}, innerEar: {color: "#d58e8a", roughness: 0.74}}}, morph: {Chest: 0.575, Ear_Fold: 0, Ear_Hide: 1, Ear_Small: 0, Ear_Tall: 0, Ear_Wide: 0, Hatted: 0, Snout_Flat: 1, Snout_Long: 0, Snout_Pointy: 0, Snout_Puff: 0, Tail_Bob: 1, Tail_Curl: 0, Tail_Fluffy: 0, Tail_Puff: 0, Tail_Whip: 0}}, {feetPosition: {x: 0.28, y: 1.66, z: -0.05}, id: lamp, light: {aim: [0, -0.35, -1], angle: 28, color: "#ffd9a0", distance: 12, intensity: 0, kind: spot, penumbra: 0.6}}]
+  feetPosition: {x: 55.2, y: 0, z: 131.85}
+  id: xmas-lamp-sitter
+  physics: {body: static, collider: box}
+  rotation: {yaw: -125}
+  state: {home: {x: 55.2, z: 131.85}, lamp: 0, role: sitter}
+  tags: [xmas, still-life]
+xmas-orn-gift-4:
+  feetPosition: {x: 59.5, y: 0, z: 147.85}
+  id: xmas-orn-gift-4
+  primitive: {kind: scripted, params: {col: "#d8d0c8", d: 0.32, h: 0.22, kind: present, w: 0.42}, script: scripts/xmas-geo.js}
+  rotation: {yaw: 164}
+  tags: [xmas]
+xmas-still-a:
+  bones: {"mixamorig:LeftArm": {rotate: [-8, 0, 0]}, "mixamorig:RightArm": {rotate: [-8, 0, 0]}}
+  children: [{attachment: {skin: true}, id: cw-fluff-cheeks, model: {forward: "+z", id: /cdn/value.080633ed1b21454104bdfc34df72e50f14b0ffe6f97967875a172219cc61dc27.glb, materials: {fluff: {color: "#ebe4d8", kind: scripted, params: {bHi: 0.435, bLo: 0.2444, bot: 0, botB: 0.4179, botG: 0.1878, botR: 0.0782, bpat: denim, frontZ: 0.045, fur: "", nB: 0.0374, nF: 0.0644, nW: 0.066, sHi: 0, sock: 0, sockB: 1, sockG: 1, sockR: 1, t0x: 0.014, t0y: 0.412, t0z: -0.018, t1x: 0.053, t1y: 0.302, t1z: -0.179, t2x: 0.169, t2y: 0.359, t2z: -0.147, t3x: 0.385, t3y: 0.576, t3z: -0.111, tHi: 0.626, tLo: 0.47927, tShIn: 0.02, tShTop: 0.05, tShoulder: 1, tSl: 0.158, tailR: 0.068, tband: 1, top: 0, topB: 0.1022, topG: 0.1845, topR: 0.7454, tpat: stripes, trimB: 0.3231, trimG: 0.2542, trimR: 0.6939, tuckB: 0, tuckS: 0}, script: scripts/mat-catskin.js}}}, morph: {Chest: 0.575, Ear_Fold: 0, Ear_Hide: 1, Ear_Small: 0, Ear_Tall: 0, Ear_Wide: 0, Hatted: 0, Snout_Flat: 0, Snout_Long: 0, Snout_Pointy: 0, Snout_Puff: 0, Tail_Bob: 1, Tail_Curl: 0, Tail_Fluffy: 0, Tail_Puff: 0, Tail_Whip: 0}}, {attachment: {skin: true}, id: cw-ears, model: {forward: "+z", id: /cdn/value.4a1a1772f9fac90af6efe7cc4ef589310b0a419d78221b3b66404aa2c3c5cddd.glb, materials: {earFur: {color: "#ebe4d8", roughness: 0.9}, earInner: {color: "#f4a3c4", roughness: 0.7}, earTuft: {color: "#ebe4d8", roughness: 0.9}}}}, {attachment: {skin: true}, id: cw-hair, model: {forward: "+z", id: /cdn/value.4e26aea5d9dc307af90a6ed03ddcd30cffcd1cf8b2a4e7e3999b6840d39e5ea0.glb, materials: {hair: {color: "#7a2e2a", kind: scripted, params: {crown: 1.55}, script: scripts/mat-hair.js}}}, morph: {Chest: 0.575, Ear_Fold: 0, Ear_Hide: 1, Ear_Small: 0, Ear_Tall: 0, Ear_Wide: 0, Hatted: 0, Snout_Flat: 0, Snout_Long: 0, Snout_Pointy: 0, Snout_Puff: 0, Tail_Bob: 1, Tail_Curl: 0, Tail_Fluffy: 0, Tail_Puff: 0, Tail_Whip: 0}}, {feetPosition: {x: -0.1, y: 1.05, z: -0.13}, primitive: {kind: scripted, params: {kind: seam}, script: scripts/xmas-geo.js}}]
+  feetPosition: {x: 62.9, y: -0.95, z: 124.45}
+  id: xmas-still-a
+  jiggle: {amount: 0.55, bones: ["mixamorig:Tail1", "mixamorig:Tail2", "mixamorig:Tail3"], bounce: 0.5, colliders: [{bone: "mixamorig:Hips", radius: 0.13}, {bone: "mixamorig:LeftUpLeg", radius: 0.08, tail: [0, -0.3, 0]}, {bone: "mixamorig:RightUpLeg", radius: 0.08, tail: [0, -0.3, 0]}], gravity: 0.6, limit: 50}
+  model: {forward: "+z", id: /cdn/value.e8e63dfafb7285f7362bb87c7e685d38fda0180e9f00f711ec56436ff43fa0c4.glb, materials: {fur: {color: "#ebe4d8", kind: scripted, params: {bHi: 0.435, bLo: 0.2444, bot: 1, botB: 0.4179, botG: 0.1878, botR: 0.0782, bpat: denim, frontZ: 0.045, fur: /cdn/value.1c4f4402e22ebd41f1cca9b45fc42ef2bec051041b40c8a3c40b88028a23ca58.jpg, nB: 0.0374, nF: 0.0644, nW: 0.066, sHi: 0, sock: 0, sockB: 1, sockG: 1, sockR: 1, t0x: 0.014, t0y: 0.412, t0z: -0.018, t1x: 0.053, t1y: 0.302, t1z: -0.179, t2x: 0.169, t2y: 0.359, t2z: -0.147, t3x: 0.385, t3y: 0.576, t3z: -0.111, tHi: 0.626, tLo: 0.47927, tShIn: 0.02, tShTop: 0.05, tShoulder: 1, tSl: 0.158, tailR: 0.068, tband: 1, top: 1, topB: 0.1022, topG: 0.1845, topR: 0.7454, tpat: stripes, trimB: 0.3231, trimG: 0.2542, trimR: 0.6939, tuckB: 0, tuckS: 0}, script: scripts/mat-catskin.js}, fur2: {color: "#ffffff", kind: scripted, params: {bHi: 0.435, bLo: 0.2444, bot: 1, botB: 0.4179, botG: 0.1878, botR: 0.0782, bpat: denim, frontZ: 0.045, fur: /cdn/value.1c4f4402e22ebd41f1cca9b45fc42ef2bec051041b40c8a3c40b88028a23ca58.jpg, nB: 0.0374, nF: 0.0644, nW: 0.066, sHi: 0, sock: 0, sockB: 1, sockG: 1, sockR: 1, t0x: 0.014, t0y: 0.412, t0z: -0.018, t1x: 0.053, t1y: 0.302, t1z: -0.179, t2x: 0.169, t2y: 0.359, t2z: -0.147, t3x: 0.385, t3y: 0.576, t3z: -0.111, tHi: 0.626, tLo: 0.47927, tShIn: 0.02, tShTop: 0.05, tShoulder: 1, tSl: 0.158, tailR: 0.068, tband: 1, top: 1, topB: 0.1022, topG: 0.1845, topR: 0.7454, tpat: stripes, trimB: 0.3231, trimG: 0.2542, trimR: 0.6939, tuckB: 0, tuckS: 0}, script: scripts/mat-catskin.js}, headFur: {color: "#ebe4d8", kind: scripted, params: {bSeed: 0.31, eyeB: 0.8751375823652049, eyeG: 0.267358060183772, eyeR: 0.03847274632019464, face: /cdn/value.8f23419441b7dc3c4dbbbbae28daf9a8f16965a76f0bbb6fa4acc620f4829593.png, faceNear: 0.055, faceVBias: -2.0198, faceVScale: 2.9946, faceless: 1, noseCutV: 0.39, noseS: 1, noseY: 0.797, noseZ: 0.249, talk: 0}, script: scripts/mat-catskin.js}, innerEar: {color: "#d58e8a", roughness: 0.74}}}
+  morph: {Chest: 0.575, Ear_Fold: 0, Ear_Hide: 1, Ear_Small: 0, Ear_Tall: 0, Ear_Wide: 0, Hatted: 0, Snout_Flat: 0, Snout_Long: 0, Snout_Pointy: 0, Snout_Puff: 0, Tail_Bob: 1, Tail_Curl: 0, Tail_Fluffy: 0, Tail_Puff: 0, Tail_Whip: 0}
+  physics: {body: static, collider: box}
+  rotation: {pitch: -55, yaw: 70}
+  state: {items: "stuffing,stuffing", name: Still Life, verb: Search}
+  tags: [xmas, still-life, container]
+xmas-table:
+  feetPosition: {x: 59, y: 0, z: 143.04999999999998}
+  id: xmas-table
+  physics: {body: static, collider: cylinder}
+  primitive: {kind: scripted, params: {kind: table}, script: scripts/xmas-geo.js}
+  tags: [xmas]
+xmas-thermos:
+  feetPosition: {x: 59.05, y: 0.69, z: 143}
+  id: xmas-thermos
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: thermos}, script: scripts/xmas-geo.js}
+  state: {items: eggnog, name: "Thermos, still warm", verb: Take}
+  tags: [xmas, container]
+xmas-wreath:
+  feetPosition: {x: 58.14, y: 1.85, z: 146.85}
+  id: xmas-wreath
+  primitive: {kind: scripted, params: {kind: wreath}, script: scripts/xmas-geo.js}
+  rotation: {yaw: -90}
+  tags: [xmas]
+xmas-wreath-light:
+  feetPosition: {x: 58.7, y: 1.9, z: 146.85}
+  id: xmas-wreath-light
+  light: {color: "#ff4a3a", distance: 7, intensity: 1.3, kind: point}
+  tags: [xmas]
