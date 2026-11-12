@@ -1,6 +1,6 @@
 // Level 13 "The Boiling Frogs": lays the apartment complex once (shell here; furniture, residents and creatures in their own
 // files), then keeps the lethargy: the longer you stay inside one flat, the heavier you get (player.state.leth13, 0..1).
-import { H, HALL, T, UNIT, HALLS, APTS, SPAWN, EXIT0, aptAt } from "../../scripts/lib/level13.js";
+import { H, HALL, T, UNIT, HALLS, APTS, RECEPTION, SPAWN, EXIT0, aptAt } from "../../scripts/lib/level13.js";
 import { layFurnish } from "../../scripts/lib/level13-furnish.js";
 import { layFoes } from "../../scripts/lib/level13-foes.js";
 import { layPeople } from "../../scripts/lib/level13-people.js";
@@ -9,9 +9,10 @@ import { layTape } from "../../scripts/lib/level13-tape.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 export const cadence = "1s";
-const V = 1;
+const V = 2;
 export const LETH = { startS: 45, fullS: 180, coolS: 20 }; // Savi's pick: lethargy starts after 45 s in one flat, full at 3 min, gone 20 s after you leave
 const WALL = { texture: "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.86 0.035 88)", roughness: 0.9 };
+const PROJECTWALL = { ...WALL, color: "oklch(0.84 0.04 133)" };
 const APTWALL = { texture: "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.93 0.012 90)", roughness: 0.92 };
 const HALLFLOOR = { texture: "cdn/texture-worn-brown-laminate-wood-hallway-floor.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.6 0.05 65)", roughness: 0.55 };
 const CARPET = { texture: "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.68 0.025 80)", roughness: 0.97 };
@@ -24,12 +25,18 @@ const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
 let n = 0; // only counts wall ids inside one lay()
 const STAY = new Map(); // player id -> { apt, s }: the sim's own working memory of who has sat where, how long
 // a wall along x (at z) or along z (at x), from a to b, with doorways cut at `gaps` (centres); a lintel closes each doorway's top
-function wall(ctx, along, at, a, b, gaps = [], mat = WALL) {
+function wall(ctx, along, at, a, b, gaps = [], mat = WALL, trimFace = 0) {
   const cuts = gaps.slice().sort((p, q) => p - q), segs = []; let from = a;
   for (const g of cuts) { segs.push([from, g - UNIT.doorW / 2, 0, H]); segs.push([g - UNIT.doorW / 2, g + UNIT.doorW / 2, UNIT.doorH, H - UNIT.doorH]); from = g + UNIT.doorW / 2; }
   segs.push([from, b, 0, H]);
   for (const [p, q, y, h] of segs) { const len = q - p; if (len < 0.02) continue; const mid = (p + q) / 2;
-    ctx.spawn(`l13-w${n++}`, { feetPosition: along === "x" ? { x: mid, y, z: at } : { x: at, y, z: mid }, primitive: along === "x" ? box(len, h, T) : box(T, h, len), material: mat, physics: "static", castShadow: false }); }
+    ctx.spawn(`l13-w${n++}`, { feetPosition: along === "x" ? { x: mid, y, z: at } : { x: at, y, z: mid }, primitive: along === "x" ? box(len, h, T) : box(T, h, len), material: mat, physics: "static", castShadow: false });
+    if (trimFace && y === 0) ctx.spawn(`l13-skirt-${n}`, {
+      feetPosition: along === "x" ? { x: mid, y: 0, z: at + trimFace * T / 2 } : { x: at + trimFace * T / 2, y: 0, z: mid },
+      primitive: along === "x" ? box(len, 0.12, 0.035) : box(0.035, 0.12, len),
+      material: mat === PROJECTWALL ? { color: "#536452", roughness: 0.75 } : TRIM, castShadow: false,
+    });
+  }
 }
 function lay(ctx) {
   for (const id of Object.keys(ctx.place.objects)) if (id.startsWith("l13-") && !id.includes("/")) ctx.destroy(id);
@@ -39,8 +46,18 @@ function lay(ctx) {
   ctx.spawn("l13-ceil", { feetPosition: { x: 0, y: H, z: 5 }, primitive: box(90, 0.2, 36), material: CEIL, physics: "static", castShadow: false });
   const A = HALLS.A, B = HALLS.B, doors = (hall, s) => APTS.filter((a) => a.hall === hall && a.s === s && a.open).map((a) => a.door.x);
   // hall fronts (the flats' doorways cut through), back walls, end caps and the connector
-  wall(ctx, "x", -HALL, A.x0, A.x1, doors("A", -1)); wall(ctx, "x", HALL, A.x0, -HALL, doors("A", 1));
-  wall(ctx, "x", B.z - HALL, HALL, B.x1, doors("B", -1)); wall(ctx, "x", B.z + HALL, B.x0, B.x1, doors("B", 1));
+  wall(ctx, "x", -HALL, A.x0, A.x1, doors("A", -1), WALL, 1);
+  wall(ctx, "x", HALL, A.x0, -HALL, doors("A", 1), WALL, -1);
+  wall(ctx, "x", B.z - HALL, HALL, B.x1, doors("B", -1), PROJECTWALL, 1);
+  const r = RECEPTION;
+  wall(ctx, "x", r.front, B.x0, r.x0, [], PROJECTWALL, -1);
+  wall(ctx, "x", r.front, r.x1, B.x1, doors("B", 1), PROJECTWALL, -1);
+  wall(ctx, "z", r.x0, r.front, r.back, [], PROJECTWALL, 1);
+  wall(ctx, "z", r.x1, r.front, r.back, [], PROJECTWALL, -1);
+  wall(ctx, "x", r.back, r.x0, r.x1, [], PROJECTWALL, -1);
+  const rx = (r.x0 + r.x1) / 2;
+  ctx.spawn("l13-reception-floor", { feetPosition: { x: rx, y: 0, z: (r.front + r.back) / 2 }, primitive: box(r.x1 - r.x0 - T, 0.012, r.back - r.front), material: LINO, receiveShadow: true, castShadow: false });
+  ctx.spawn("l13-reception-light", { feetPosition: { x: rx, y: H - 0.25, z: r.front + 0.85 }, light: { kind: "point", color: "#ffebc0", intensity: 1.5, distance: 5 } });
   wall(ctx, "z", A.x0, -HALL, HALL); wall(ctx, "z", HALL, -HALL, B.z - HALL); wall(ctx, "z", -HALL, HALL, B.z + HALL); wall(ctx, "z", B.x1, B.z - HALL, B.z + HALL);
   for (const [hall, s] of [["A", -1], ["A", 1], ["B", -1], ["B", 1]]) {
     const h = HALLS[hall], zf = h.z + s * HALL, zb = zf + s * (UNIT.main + UNIT.back), z0 = Math.min(zf, zb), z1 = Math.max(zf, zb);
@@ -51,7 +68,7 @@ function lay(ctx) {
     const hx = a.door.x, face = a.zf - a.s * (T / 2 + 0.012); // the hall face of the front wall
     // the number by every door, and a closed door on the shut ones
     ctx.spawn(`l13-num-${a.id}`, { feetPosition: { x: hx + 0.75, y: 1.55, z: face }, rotation: { yaw: a.s < 0 ? 180 : 0 }, castShadow: false,
-      vector: `<svg viewBox='0 0 80 40' width='0.2m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>${a.num}</text></svg>` });
+      vector: `<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>${a.num}</text></svg>` });
     if (!a.open) { ctx.spawn(`l13-shut-${a.id}`, { feetPosition: { x: hx, y: 0, z: face + a.s * 0.02 }, primitive: box(UNIT.doorW, UNIT.doorH, 0.045), material: DOORMAT, castShadow: false, state: { name: `Flat ${a.num}`, info: "Locked from inside. A television is on." },
       children: [{ feetPosition: { x: 0.4, y: 1, z: -a.s * 0.04 }, primitive: { kind: "sphere", radius: 0.03 }, material: { color: "oklch(0.7 0.08 85)", metalness: 0.9, roughness: 0.35 } },
         { feetPosition: { x: 0, y: UNIT.doorH, z: 0 }, primitive: box(UNIT.doorW + 0.16, 0.08, 0.07), material: TRIM }, { feetPosition: { x: -UNIT.doorW / 2 - 0.04, y: 0, z: 0 }, primitive: box(0.08, UNIT.doorH, 0.07), material: TRIM }, { feetPosition: { x: UNIT.doorW / 2 + 0.04, y: 0, z: 0 }, primitive: box(0.08, UNIT.doorH, 0.07), material: TRIM }] }); continue; }
@@ -59,8 +76,14 @@ function lay(ctx) {
     wall(ctx, "x", a.zm, a.x0, a.x1, [a.x0 + UNIT.bedDoorX, a.x0 + UNIT.bathDoorX], APTWALL);
     wall(ctx, "z", a.x0 + UNIT.bedW, Math.min(a.zm, a.zb), Math.max(a.zm, a.zb), [], APTWALL);
     const fl = (id, r, mat) => ctx.spawn(`l13-fl-${a.id}-${id}`, { feetPosition: { x: r.cx, y: 0, z: r.cz }, primitive: box(r.x1 - r.x0 - T, 0.012, r.z1 - r.z0 - T), material: mat, receiveShadow: true, castShadow: false });
-    fl("main", a.main, CARPET); fl("bed", a.bed, CARPET); fl("bath", a.bath, LINO);
-    ctx.spawn(`l13-door-${a.id}`, { feetPosition: { x: hx - UNIT.doorW / 2, y: 0, z: a.zf + a.s * 0.08 }, rotation: { yaw: a.s < 0 ? 78 : -78 }, pivot: [0, 0, 0.5], primitive: box(UNIT.doorW - 0.04, UNIT.doorH - 0.03, 0.045), material: DOORMAT, physics: "static",
+    const kitchenX = a.kind === "lurk" ? a.x1 : a.x0 + 4.62;
+    const strip = (x0, x1) => ({ ...a.main, x0, x1, cx: (x0 + x1) / 2 });
+    fl("main", strip(a.x0, kitchenX), CARPET);
+    if (kitchenX < a.x1) {
+      fl("kitchen", strip(kitchenX - T, a.x1), LINO);
+    }
+    fl("bed", a.bed, CARPET); fl("bath", a.bath, LINO);
+    ctx.spawn(`l13-door-${a.id}`, { feetPosition: { x: hx - UNIT.doorW / 2, y: 0, z: a.zf + a.s * 0.08 }, rotation: { yaw: a.s < 0 ? 78 : -78 }, pivot: [0, 0, 0.5], primitive: box(UNIT.doorW - 0.04, UNIT.doorH - 0.03, 0.045), material: DOORMAT,
       children: [{ feetPosition: { x: 0.4, y: 1, z: 0.04 }, primitive: { kind: "sphere", radius: 0.03 }, material: { color: "oklch(0.7 0.08 85)", metalness: 0.9, roughness: 0.35 } }] });
     ctx.spawn(`l13-lamp-${a.id}`, { feetPosition: { x: a.main.cx, y: H - 0.25, z: a.main.cz }, light: { kind: "point", color: "oklch(0.9 0.06 80)", intensity: a.kind === "lurk" ? 0.35 : 1.1, distance: 8 },
       children: [{ feetPosition: { x: 0, y: 0.1, z: 0 }, primitive: { kind: "sphere", radius: 0.16, widthSegments: 20, heightSegments: 12 }, material: { color: "oklch(0.95 0.04 85)", emissive: "oklch(0.92 0.06 80)", emissiveIntensity: a.kind === "lurk" ? 0.4 : 1.6 } }] });
@@ -72,11 +95,10 @@ function lay(ctx) {
       children: [{ feetPosition: { x: 0, y: -0.004, z: 0 }, rotation: { pitch: 90 }, primitive: { kind: "plane", width: 1.02, height: 0.46 }, material: { color: "#fffdf0", emissive: "#fff6d8", emissiveIntensity: dead ? 0.05 : 1.8 }, castShadow: false }] });
     if (!dead) ctx.spawn(`l13-hl-${i}`, { feetPosition: { x, y: H - 0.4, z }, light: { kind: "point", color: "oklch(0.92 0.05 88)", intensity: 0.9, distance: 9 } }); };
   let i = 0; for (let x = -38; x <= -2; x += 9) tube(i++, x, 0, 0); tube(i++, 0, 5, 90); for (let x = 4; x <= 40; x += 9) tube(i++, x, 10, 0);
-  // skirting down both halls, and the S-bend's sign for Floor 283
-  for (const [id, x, z, w] of [["an", -20.4, -HALL + 0.075, 43.2], ["as", -21.6, HALL - 0.075, 40.8], ["bn", 21.6, 10 - HALL + 0.075, 40.8], ["bs", 20.4, 10 + HALL - 0.075, 43.2]])
-    ctx.spawn(`l13-skirt-${id}`, { feetPosition: { x, y: 0, z }, primitive: box(w, 0.1, 0.03), material: TRIM, castShadow: false });
-  ctx.spawn("l13-283", { feetPosition: { x: HALL - 0.075, y: 1.6, z: 9.2 }, rotation: { yaw: 90 }, castShadow: false,
-    vector: "<svg viewBox='0 0 360 120' width='1.2m'><rect x='2' y='2' width='356' height='116' rx='6' fill='#efe6cf' stroke='#b0572a' stroke-width='4'/><text x='180' y='50' text-anchor='middle' font-family='sans-serif' font-size='34' font-weight='bold' fill='#b0572a'>FLOOR 283</text><text x='180' y='90' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#4a3b2c'>B.N.T.G. FREE HOME PROJECT →</text></svg>" });
+  ctx.spawn("l13-reception-header", { feetPosition: { x: rx, y: 2.13, z: r.front + T / 2 }, primitive: box(r.x1 - r.x0, H - 2.13, T), material: PROJECTWALL, physics: "static", castShadow: false });
+  // The floor number faces arrivals at the bend.
+  ctx.spawn("l13-283", { feetPosition: { x: 0.4, y: 2.19, z: r.front }, castShadow: false,
+    vector: "<svg viewBox='0 0 360 120' width='1.2m'><rect x='2' y='2' width='356' height='116' rx='6' fill='#efe6cf' stroke='#b0572a' stroke-width='4'/><text x='180' y='50' text-anchor='middle' font-family='sans-serif' font-size='34' font-weight='bold' fill='#b0572a'>FLOOR 283</text><text x='180' y='90' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#4a3b2c'>FLATS 28301 – 28310 →</text></svg>" });
   // the ways through: the arrival from Level 12, and the bland door that isn't like the others (to Level 0)
   ctx.spawn("l13-from-l12", { feetPosition: { ...SPAWN }, rotation: { yaw: -90 } });
   ctx.spawn("l13-exit-door", { feetPosition: { x: EXIT0.x - 0.08, y: 0, z: EXIT0.z }, rotation: { yaw: 90 }, primitive: box(1, 2.1, 0.05), material: { color: "oklch(0.8 0.09 95)", roughness: 0.75 }, castShadow: false, state: { name: "Door", info: "Plainer than the others. A yellower beige. The hum behind it is familiar." },
@@ -86,7 +108,7 @@ function lay(ctx) {
 }
 export function tick(ctx) {
   const st = ctx.place.state;
-  if (st.v !== V || !("l13-floor" in ctx.place.objects)) { lay(ctx); st.v = V; return; }
+  if (st.v !== V || !("l13-floor" in ctx.place.objects)) { lay(ctx); delete st.dv; st.v = V; return; }
   restyleSigns(ctx, "level13"); dressThresholds(ctx);
   layFurnish(ctx); layFoes(ctx); layPeople(ctx); layDress(ctx); layTape(ctx);
   // the lethargy: seconds spent inside one flat, written only when its step (a tenth) changes

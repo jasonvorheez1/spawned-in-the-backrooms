@@ -2,7 +2,7 @@
 // The hall as people left it: wall lamps between doors, radiators, what was left at each door, notes, and the drag marks into the lurker's flat. Ids l13d-*.
 import { APTS, H, HALL, T, UNIT, EXIT0 } from "./level13.js";
 import D from "./data/l13-dress.yml";
-const DV = 8;
+const DV = 9;
 const DOOR = (part, style, o = {}) => ({ kind: "scripted", script: "scripts/door-geo.js", params: { style, part, w: UNIT.doorW, h: UNIT.doorH, hingeSide: "left", ...o } });
 const fit = (k) => { const m = D.models[k]; if (!m?.model) return null; const [w, h, d] = m.size; return { model: m.forward ? { id: m.model, forward: m.forward } : { id: m.model }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } } }; };
 const svg = (w, [vw, vh], body) => `<svg viewBox='0 0 ${vw} ${vh}' width='${w}m'>${body}</svg>`;
@@ -27,17 +27,17 @@ export function layDress(ctx) {
       ctx.spawn(`l13d-${a.id}-${n++}`, { feetPosition: { x: a.door.x + it.dx, y: 0, z: a.zf - s * (T / 2 + it.out) }, rotation: { yaw: (it.yaw ?? 0) + yawIn }, castShadow: true, receiveShadow: true, ...f,
         ...(it.m === "trash" || it.m === "mop" ? { physics: { body: "static", collider: "box" } } : {}), state: { name: it.one ? "One shoe" : it.m } }); }
     const note = D.notes[a.id];
-    if (note) ctx.spawn(`l13d-note-${a.id}`, { feetPosition: { x: a.door.x + 0.1, y: 1.3, z: face - s * 0.05 }, rotation: { yaw: yawIn, roll: a.id === "a5" ? -7 : 4 }, castShadow: false,
+    if (note) ctx.spawn(`l13d-note-${a.id}`, { feetPosition: { x: a.door.x + (a.open ? 0.84 : 0.1), y: 1.3, z: face - s * 0.05 }, rotation: { yaw: yawIn, roll: a.id === "a5" ? -7 : 4 }, castShadow: false,
       vector: svg(0.22, [110, 80], `<rect width='110' height='80' fill='#f4efd8'/><rect x='45' y='-4' width='20' height='10' fill='#d8d2b0' opacity='0.8'/>${note.map((l, i) => `<text x='55' y='${32 + i * 20}' text-anchor='middle' font-family='serif' font-size='${a.id === "a5" ? 15 : 12}' fill='${a.id === "a5" ? "#7a1a14" : "#2a2a3a"}'>${l}</text>`).join("")}`) });
   }
   // the drag: two dark scuffed streaks from mid-hall into flat a5's doorway, and one shoe left behind (in doors.a5)
   const l = APTS.find((x) => x.id === "a5");
   if (l) for (const [i, dx] of [[0, -0.18], [1, 0.16]]) {
-    const z0 = l.zf - l.s * (HALL + 0.6), z1 = l.zf + l.s * 1.6;
-    ctx.spawn(`l13d-drag-${i}`, { feetPosition: { x: l.door.x + dx + i * 0.05, y: 0.006, z: (z0 + z1) / 2 }, rotation: { pitch: -90, yaw: (i ? 3 : -4) }, castShadow: false, receiveShadow: true,
+    const z0 = l.zf - l.s * (HALL + 0.2), z1 = l.zf + l.s * 0.1;
+    ctx.spawn(`l13d-drag-${i}`, { feetPosition: { x: l.door.x + 0.18 + dx + i * 0.05, y: 0.006, z: (z0 + z1) / 2 }, rotation: { pitch: -90, yaw: (i ? 3 : -4) }, castShadow: false, receiveShadow: true,
       primitive: { kind: "plane", width: 0.09, height: Math.abs(z1 - z0) }, material: { color: "oklch(0.24 0.03 50 / 0.55)", transparent: true, roughness: 1, depthWrite: false } });
   }
-  // every open flat's doorway: a cased frame, and a real veneer leaf standing open on its hinge at the jamb (the plain slab stays hidden for its collider)
+  // every open flat's doorway: a cased frame, and a real veneer leaf standing open on its hinge at the jamb (the plain slab stays hidden as the quest marker)
   for (const a of APTS) { if (!a.open) continue;
     ctx.spawn(`l13d-fr-${a.id}`, { feetPosition: { x: a.door.x, y: 0, z: a.zf }, rotation: { yaw: a.s < 0 ? 180 : 0 }, castShadow: false, receiveShadow: true, primitive: DOOR("frame", "flat", { d: T + 0.01 }), material: { pbr: true, roughness: 0.6 } });
     const slab = ctx.getObject(`l13-door-${a.id}`); if (slab) slab.visible = false;
@@ -55,7 +55,7 @@ export function layDress(ctx) {
   // the floors don't add up, and someone noticed: Floor 1 at the start, a pencilled note under the bend's FLOOR 283
   ctx.spawn("l13d-floor1", { feetPosition: { x: -37.6, y: 1.48, z: -HALL + 0.068 }, castShadow: false,
     vector: svg(0.6, [300, 100], `<rect x='2' y='2' width='296' height='96' rx='6' fill='#efe6cf' stroke='#8a6a3a' stroke-width='4'/><text x='150' y='48' text-anchor='middle' font-family='sans-serif' font-size='34' font-weight='bold' fill='#5a4430'>FLOOR 1</text><text x='150' y='82' text-anchor='middle' font-family='sans-serif' font-size='20' fill='#4a3b2c'>FLATS 101 – 110 →</text>`) });
-  ctx.spawn("l13d-283-note", { feetPosition: { x: HALL - 0.07, y: 1.18, z: 9.3 }, rotation: { yaw: 90, roll: -3 }, castShadow: false,
+  ctx.spawn("l13d-283-note", { feetPosition: { x: HALL - 0.076, y: 1.36, z: 8.14 }, rotation: { yaw: 90, roll: -3 }, castShadow: false,
     vector: svg(0.3, [150, 70], `<rect width='150' height='70' fill='#f4efd8'/><rect x='62' y='-4' width='26' height='10' fill='#d8d2b0' opacity='0.8'/><text x='75' y='30' text-anchor='middle' font-family='serif' font-size='13' fill='#2a2a3a'>Floor 1 was 20 steps ago.</text><text x='75' y='52' text-anchor='middle' font-family='serif' font-size='13' fill='#2a2a3a'>There are no stairs.</text>`) });
   const rad = fit("radiator");
   if (rad) D.radiators.forEach(([x, z, yaw], i) => ctx.spawn(`l13d-rad-${i}`, { feetPosition: { x, y: 0.08, z }, rotation: { yaw }, castShadow: true, physics: { body: "static", collider: "box" }, ...rad }));
