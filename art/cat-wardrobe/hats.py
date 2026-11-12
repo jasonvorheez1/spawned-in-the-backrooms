@@ -6,22 +6,25 @@ import bpy, bmesh, json, os, sys
 from mathutils import Vector, Matrix
 from mathutils.bvhtree import BVHTree
 SRC = "/workspace/hats"; OUT = "/workspace/hats/out"; os.makedirs(OUT, exist_ok=True); os.makedirs("/tmp/hf/proof", exist_ok=True)
+# fit: "wrap" = the rim hugs the skull's own oval at `band` (share of head height down from the crown), the inside of the crown resting on the skull (beanie, cap);
+#      "enclose" = a helmet sized round the whole head, the face in its opening; "perch" = set down until the rim rests on the dome, then sunk `sink` m (top hat, crown, bows)
+#      "band" = headphones over the ears (the old recipe). Nov 12 refit (Shelly: "the hats arent being worn correctly"): width-only scaling floated beanies, shrank the top hat, turned the dive helmet sideways.
 R = {
-  "cap":        dict(w=1.02, sink=0.30, tilt=-6,  dy=0.0),
-  "beanie":     dict(w=1.06, sink=0.36, tilt=-10, dy=-0.005),
-  "tophat":     dict(w=0.62, sink=0.08, tilt=-8,  dy=-0.005),
-  "headphones": dict(w=0.98, sink=0.55, tilt=0,   dy=0.0, fit="band", yaw=90),
-  "bow":        dict(w=0.40, sink=0.14, tilt=-25, dy=-0.03, dx=0.0),
-  "flower":     dict(w=0.34, sink=0.10, tilt=-15, dy=0.0, dx=0.10, side=True),
-  "partyhat":   dict(w=0.42, sink=0.06, tilt=-12, dy=0.0, dx=0.03, roll=8),
-  "crown":      dict(w=0.80, sink=0.12, tilt=-6,  dy=0.0),
-  "beret":      dict(w=1.00, sink=0.22, tilt=-14, dy=-0.01, dx=0.02, roll=10),
-  "souwester":  dict(w=1.12, sink=0.58, tilt=-8,  dy=-0.01),
-  "divehelm":   dict(w=1.08, sink=0.55, tilt=0,   dy=-0.01),
-  "chitinhelm": dict(w=1.08, sink=0.34, tilt=-6,  dy=0.0),
+  "cap":        dict(fit="wrap", band=0.30, ease=1.04, tilt=-6),
+  "beanie":     dict(fit="wrap", band=0.36, ease=1.05, tilt=-8),
+  "souwester":  dict(fit="wrap", band=0.40, ease=1.06, tilt=-6),
+  "chitinhelm": dict(fit="wrap", band=0.44, ease=1.06, tilt=-4),
+  "beret":      dict(fit="wrap", band=0.20, ease=1.03, tilt=-12, roll=10, dx=0.015),
+  "divehelm":   dict(fit="enclose", ease=1.10, yaw=-90),
+  "tophat":     dict(fit="perch", w=0.74, sink=0.03, tilt=-8, dy=-0.01),
+  "crown":      dict(fit="perch", w=0.70, sink=0.02, tilt=-6),
+  "partyhat":   dict(fit="perch", w=0.42, sink=0.01, tilt=-12, dx=0.03, roll=8),
+  "bow":        dict(fit="perch", w=0.40, sink=0.0, tilt=-25, dy=-0.03),
+  "flower":     dict(fit="perch", w=0.34, sink=0.0, tilt=-15, dx=0.10),
+  "headphones": dict(fit="band", w=0.98, sink=0.55, tilt=0, dy=0.0, yaw=90),
 }
 only = sys.argv[sys.argv.index("--")+1:] if "--" in sys.argv else list(R)
-CLEAR = 0.012
+CLEAR = 0.018   # room for the pressed-flat hair under a hat
 def clear(): bpy.ops.wm.read_factory_settings(use_empty=True)
 def body(sex):
     bpy.ops.import_scene.gltf(filepath=f"/tmp/hf/body{sex}.glb")
@@ -68,13 +71,56 @@ for sex in ("f", "m"):
         if not os.path.exists(f"{SRC}/{kind}.glb"): print("MISSING", kind); continue
         clear(); arm, pts, bvh = body(sex); H = headinfo(pts); r = R[kind]
         hat = load_hat(kind)
+        import math
+        rad = math.radians
+        # 1. yaw the source so its front faces -Y, then sit its rim centre on the origin
+        hat.data.transform(Matrix.Rotation(rad(r.get("yaw", 0)), 4, "Z")); hat.data.update()
         vs = [v.co.copy() for v in hat.data.vertices]
         a = Vector([min(v[i] for v in vs) for i in range(3)]); b = Vector([max(v[i] for v in vs) for i in range(3)])
-        wid = (b.y - a.y) if r.get("yaw") else (b.x - a.x)
-        s = (2 * H["half"] * r["w"]) / max(wid, 1e-6)
-        cy = (H["ymin"] + H["ymax"]) / 2 + r.get("dy", 0); bz = H["top"] - H["h"] * r["sink"]
-        M = Matrix.Translation(Vector((r.get("dx", 0) * (-1 if False else 1), cy, bz))) @ Matrix.Rotation(__import__("math").radians(r.get("roll", 0)), 4, "Y") @ Matrix.Rotation(__import__("math").radians(r["tilt"]), 4, "X") @ Matrix.Scale(s, 4) @ Matrix.Rotation(__import__("math").radians(r.get("yaw", 0)), 4, "Z") @ Matrix.Translation(Vector((-(a.x + b.x) / 2, -(a.y + b.y) / 2, -a.z)))
-        hat.data.transform(M); hat.data.update()
+        hgt = b.z - a.z
+        rim = [v for v in vs if v.z < a.z + hgt * 0.08] or vs
+        rx0, rx1 = min(v.x for v in rim), max(v.x for v in rim); ry0, ry1 = min(v.y for v in rim), max(v.y for v in rim)
+        hat.data.transform(Matrix.Translation(Vector((-(rx0 + rx1) / 2, -(ry0 + ry1) / 2, -a.z)))); hat.data.update()
+        rimW, rimD = max(rx1 - rx0, 1e-6), max(ry1 - ry0, 1e-6)
+        fit = r.get("fit", "perch")
+        def slice_at(z):
+            sl = [p for p in pts if abs(p.z - z) < 0.012] or pts
+            return min(p.x for p in sl), max(p.x for p in sl), min(p.y for p in sl), max(p.y for p in sl)
+        hb = BVHTree.FromObject(hat, bpy.context.evaluated_depsgraph_get())
+        def inner_top():   # the underside of the crown above the rim's centre, in the hat's own frame
+            loc, *_ = hb.ray_cast(Vector((0, 0, -0.001)), Vector((0, 0, 1)))
+            return loc.z if loc is not None and loc.z > hgt * 0.25 else hgt * 0.8
+        if fit in ("wrap", "enclose"):
+            if fit == "wrap":
+                zb = H["top"] - H["h"] * r["band"]; x0, x1, y0, y1 = slice_at(zb)
+            else:
+                allp = pts; x0, x1 = min(p.x for p in allp), max(p.x for p in allp); y0, y1 = min(p.y for p in allp), max(p.y for p in allp)
+                zb = H["bot"] - 0.02
+            e = r.get("ease", 1.05)
+            sx, sy = (x1 - x0) * e / rimW, (y1 - y0) * e / rimD
+            zi = inner_top()
+            sz = (H["top"] + 0.02 - zb) / zi if fit == "wrap" else (H["top"] + 0.05 - zb) / zi
+            sz = max(min(sz, max(sx, sy) * 1.25), min(sx, sy) * 0.7)   # a crown pressed to the skull, never a stretched tube or a pancake
+            cx, cy = (x0 + x1) / 2 + r.get("dx", 0), (y0 + y1) / 2 + r.get("dy", 0)
+            M = Matrix.Translation(Vector((cx, cy, zb))) @ Matrix.Rotation(rad(r.get("roll", 0)), 4, "Y") @ Matrix.Rotation(rad(r.get("tilt", 0)), 4, "X") @ Matrix.Diagonal(Vector((sx, sy, sz, 1)))
+            s = (sx + sy) / 2
+            hat.data.transform(M); hat.data.update()
+        elif fit == "perch":
+            s = (2 * H["half"] * r["w"]) / max(rimW, rimD)
+            cy = (H["ymin"] + H["ymax"]) / 2 + r.get("dy", 0); cx = r.get("dx", 0)
+            hat.data.transform(Matrix.Rotation(rad(r.get("roll", 0)), 4, "Y") @ Matrix.Rotation(rad(r.get("tilt", 0)), 4, "X") @ Matrix.Scale(s, 4)); hat.data.update()
+            low = sorted(hat.data.vertices, key=lambda v: v.co.z)[: max(8, len(hat.data.vertices) // 25)]
+            rest = -1e9
+            for v in low:   # the skull's height under each low vertex: the hat comes down until the first one touches
+                loc, *_ = bvh.ray_cast(Vector((cx + v.co.x, cy + v.co.y, H["top"] + 1)), Vector((0, 0, -1)))
+                if loc is not None: rest = max(rest, loc.z - v.co.z)
+            if rest < -1e8: rest = H["top"]
+            hat.data.transform(Matrix.Translation(Vector((cx, cy, rest - r.get("sink", 0))))); hat.data.update()
+        else:   # band: headphones, the old recipe
+            wid = rimD if r.get("yaw") else rimW
+            s = (2 * H["half"] * r["w"]) / max(wid, 1e-6)
+            cy = (H["ymin"] + H["ymax"]) / 2 + r.get("dy", 0); bz = H["top"] - H["h"] * r["sink"]
+            hat.data.transform(Matrix.Translation(Vector((r.get("dx", 0), cy, bz))) @ Matrix.Rotation(rad(r.get("tilt", 0)), 4, "X") @ Matrix.Scale(s, 4)); hat.data.update()
         # no clip: any vertex inside the head (or nearer than CLEAR) slides out along the head's normal
         pushed = 0
         for v in hat.data.vertices:
