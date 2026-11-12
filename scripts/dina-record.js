@@ -1,10 +1,11 @@
-import { setDinaStep } from "./lib/dina-quest.js";
+import { setDinaStep, questVoice } from "./lib/dina-quest.js";
 
 const RECORDS = {
   freight: {
     stage: 7,
     min: 6,
     text: "C-23. One waterproof case from the Adventure. Pickup at the Electrical Station checkpoint. Paid in batteries. — Voss",
+    voice: "bntg-voss", line: "C-23. One waterproof case from the Adventure. Pickup at the Electrical Station checkpoint. Paid in batteries.",
     early: "Freight slips from the Habitable Zone. Each delivery has a ticket number.",
     notice: "Freight slip C-23 names the Electrical Station checkpoint.",
   },
@@ -32,5 +33,6 @@ export const ears = {
     const known = (st.dinaQ ?? 0) >= record.min;
     if (known) setDinaStep(ctx, st, record.stage, record.notice);
     st.sub = { who: ctx.self.state.name, t: known ? record.text : record.early, at: ctx.now(), d: 15000 };
+    questVoice(ctx, known ? record.voice ?? "q-clerk" : "q-clerk", known ? record.line ?? record.text : record.early, event.by);
   },
 };

@@ -1,6 +1,8 @@
 // The Way Back follows Dina's courier trail. Keep dinaQ stages for saved games.
 import { setQuest, endQuest } from "./quests.js";
 import { pushFeed } from "./feed.js";
+import { vo } from "./voices.js";
+export function questVoice(ctx, who, line, pid) { const clip = vo(who, line); if (clip) ctx.emit("playSound", { clip, volume: 0.95, bus: "Voice", mode: "restart" }, { audience: { player: pid } }); }
 const LEGACY = "the-undelivered";
 export const HOME = { id: "the-way-back", name: "The Way Back" };
 export const CAMP = { x: 22.3, y: 0, z: 38.4 };
@@ -25,6 +27,7 @@ export function dinaLead(ctx, st) {
   st.dinaLead = true;
   ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-soft-pda-beep-confirm.mp3", volume: 0.55 }, { audience: { player: ctx.self.id } });
   st.sub = { who: "HALOGEN · UNSENT MESSAGE", t: "If this unit still boots, find my radio on Level One. I heard a station from home. They read out tomorrow's weather. River made a copy. — Dina", at: ctx.now(), d: 12500 };
+  questVoice(ctx, "q-dina", "If this unit still boots, find my radio on Level One. I heard a station from home. They read out tomorrow's weather. River made a copy.", ctx.self.id);
   syncHome(ctx, st, "tutorial0");
 }
 function syncHome(ctx, st, place) {
