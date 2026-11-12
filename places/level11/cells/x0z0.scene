@@ -27,14 +27,21 @@ l11-ladder-scaf:
   tags: [ladder]
 l11-lot-booth:
   children: [{feetPosition: {x: 0, y: 2.2, z: -1.6}, light: {color: oklch(0.9 0.1 80), distance: 7, intensity: 2, kind: point}}]
-  feetPosition: {x: 17.4, y: 0.06, z: 31}
+  feetPosition: {x: 11.3, y: 0.06, z: 31.4}
   id: l11-lot-booth
-  layout: {box: {max: {x: 1.4, y: 3.3, z: 1.3}, min: {x: -1.4, y: 0, z: -1.3}}}
+  layout: {box: {max: {x: 1.8, y: 4.2, z: 1.7}, min: {x: -1.8, y: 0, z: -1.7}}}
   model: {forward: "+z", id: /cdn/value.81df5dcd9facfce891f660c61a078c0a091ea5cbaa3d866169dcc9e3bc139d88.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: 90}
   state: {info: "Desk fan still running. A note: BACK IN 5 MIN, dated 1994.", name: Idle Hands sales booth, verb: Look}
   tags: [usable]
+l11-lot-booth-sign:
+  feetPosition: {x: 10.9, y: 3.15, z: 31.4}
+  id: l11-lot-booth-sign
+  material: {color: "#f2ead2", roughness: 0.8}
+  primitive: {depth: 0.08, height: 0.85, kind: box, width: 3.1}
+  rotation: {yaw: 90}
+  ui: "<div face=\"front\" class=\"w-full h-full flex flex-col items-center justify-center\" style=\"background:#f2ead2;border:30px solid #b8201c;font-family:display;color:#1b1b1b\"><div style=\"font-size:300px;line-height:1;color:#b8201c\">IDLE HANDS</div><div style=\"font-size:120px\">SALES · ASK INSIDE</div></div>"
 l11-lot-held:
   feetPosition: {x: 14.6, y: 0.14, z: 20}
   id: l11-lot-held
