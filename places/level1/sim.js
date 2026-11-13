@@ -16,6 +16,7 @@ import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, BACK_OLD, DROP, ONW
 import { spawnAlmond } from "../../scripts/lib/loot.js";
 import { spawnFurniture, pickKind, wallSpot1, sizeOf } from "../../scripts/lib/furniture.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
+const DECKS = [0.17, 0.69, 1.165, 1.72]; // the Tripo rack's wire floor and three boards, measured from the glb at its placed size
 const RACK_GLB = "/cdn/value.8ceb4f350a3ca27cb5655cbf36551ce25ea905511cae0e3e598962655bc28f2b.glb"; // Tripo pallet rack, Nov 13
 const L1M = { door: "/cdn/value.020545cb36957131cc5f5eab3f6c2c38511e55076fb5e5542b93aff45e424288.glb", wall: "/cdn/value.1aa1542440b2b55ab177731e12bade8dfdb7ca60226cb2b55ff2491a998298fe.glb", board: "/cdn/value.1ed44cd9733b0a1d469ee47af7a8f609fcaee84b4aef6828e976544608979e8b.glb", wallDx: 0, boardYaw: 0 }; // Blender builds: art/level1/build.py
 
@@ -263,7 +264,7 @@ export function tick(ctx) {
       for (const [ri, r] of RACK.rows.entries()) for (const b of [-1, 1]) ctx.spawn(`l1rack-${cx}-${cz}-${ri}-${b}`, { tags: ["l1rack"], feetPosition: { x: c.x + b * RACK.len / 4, y: 0, z: c.z + r }, rotation: { yaw: (ri ? 180 : 0) + (hash(cx, cz, 600 + ri * 2 + b) - 0.5) * 1.2 },
         model: { id: RACK_GLB }, layout: { box: { min: { x: -RACK.len / 4, y: 0, z: -RACK.depth / 2 }, max: { x: RACK.len / 4, y: RACK.top, z: RACK.depth / 2 } } }, physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 45 } }); }
   }
-  if (s.l1StockV !== 2) { s.l1StockV = 2; for (const o of ctx.query({ tags: ["l1stock"] })) delete ctx.place.objects[o.id]; s.l1Stock = 0; } // stock v2: real box models
+  if (s.l1StockV !== 3) { s.l1StockV = 3; for (const o of ctx.query({ tags: ["l1stock"] })) delete ctx.place.objects[o.id]; s.l1Stock = 0; } // stock v2: real box models
   if (!s.l1Stock) { s.l1Stock = layStock(ctx) || 1; }
   if (s.puddles !== 2) { s.puddles = 2; for (const o of ctx.query({ tags: ["puddle"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id);
     for (let i = 0; i < 70; i++) { const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N); if (zoneOf(cx, cz) !== "halls" && zoneOf(cx, cz) !== "storage") continue;
@@ -352,10 +353,10 @@ function layStock(ctx) {
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     if (zoneOf(cx, cz) !== "storage") continue;
     const c = cellCenter(cx, cz), x0 = c.x - RACK.len / 2;
-    for (const r of RACK.rows) for (const [li, y] of RACK.levels.entries()) for (let k = 0; k < 6; k++) {
+    for (const r of RACK.rows) for (const [li, y] of DECKS.entries()) for (let k = 0; k < 6; k++) {
       const h0 = hash(cx * 7 + li, cz * 5 + k, r > 0 ? 71 : 73); if (h0 < 0.84) continue; // about 350 across the level: each is its own draw
       const bx = x0 + 0.35 + k * 0.9 + (hash(cx, cz, 80 + k) - 0.5) * 0.2, bz = c.z + r + (hash(cx, cz, 90 + k) - 0.5) * 0.25;
-      if (Math.abs(bx - c.x) < 0.15 || [-2.2, -0.75, 0.75, 2.2].some((dx) => Math.abs(bx - (c.x + dx)) < 0.35)) continue;
+      const ax = Math.abs(bx - c.x); if (ax < 0.45 || ax > 2.55) continue; // inside one of the two 2.5 m Tripo bays, clear of its uprights
       const items = []; const m = 1 + Math.floor(ctx.random() * 2); for (let i = 0; i < m; i++) items.push(rollItemL1(ctx));
       if (h0 < 0.95) {
         const w = 0.3 + hash(cx, k, li) * 0.25, d = 0.3 + hash(k, cz, li) * 0.2, hh = 0.22 + hash(li, k, cz) * 0.28;
