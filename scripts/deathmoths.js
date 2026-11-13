@@ -9,6 +9,7 @@ import { cellAt, cellCenter, zoneAt } from "./lib/level3.js";
 import { stepToward, cellNear } from "./lib/maze3path.js";
 import { npcState, dmgAfterArmor } from "./lib/stats.js";
 import { MOTH_GLB } from "../templates/deathmoths.js";
+import { pickVariant, vmul } from "./lib/foe-variant.js";
 
 const M = C.moths;
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
@@ -89,9 +90,11 @@ export function update(ctx, dt) {
     });
     const pos = s.feetPosition;
     const st = s.state ?? {};
+    const vm = vmul("moths", st.variant);
 
     if (st.hp == null && !st.dead) {
-      Object.assign(s.state, npcState(ctx, "moths", M.hp, { xp: M.xp }));
+      const variant = pickVariant(ctx, "moths"), vm0 = vmul("moths", variant); // leveled list: scripts/lib/data/foe-variants.yml
+      Object.assign(s.state, npcState(ctx, "moths", Math.round(M.hp * vm0.hp), { xp: Math.round(M.xp * vm0.xp), variant, ...(vm0.name ? { title: vm0.name } : {}) }));
       continue;
     }
 
@@ -216,7 +219,7 @@ export function update(ctx, dt) {
         gx = head.x + Math.cos(a) * D.circleR;
         gz = head.z + Math.sin(a) * D.circleR;
         gy = D.circleY + Math.sin(m.bob) * 0.2;
-        sp = M.chase * 1.4;
+        sp = (M.chase * vm.speed) * 1.4;
       } else if (m.mode === "dive") {
         gx = head.x;
         gz = head.z;
@@ -255,7 +258,7 @@ export function update(ctx, dt) {
           : 99;
 
         if (p && hd < D.hitAt) {
-          const dmg = dmgAfterArmor(p.state.look, M.bite * 2);
+          const dmg = dmgAfterArmor(p.state.look, M.bite * 2 * vm.dmg);
           p.state.hp -= dmg;
           p.state.sanity = Math.max(0, (p.state.sanity ?? 100) - M.sanity * 4);
           const at = { x: p.feetPosition.x, y: p.feetPosition.y + 1.5, z: p.feetPosition.z };
@@ -279,11 +282,11 @@ export function update(ctx, dt) {
       }
     } else {
       let goal;
-      let sp = M.speed;
+      let sp = (M.speed * vm.speed);
 
       if (prey) {
         goal = prey.feetPosition;
-        sp = lit ? M.chase : M.speed * 1.2;
+        sp = lit ? (M.chase * vm.speed) : (M.speed * vm.speed) * 1.2;
       } else {
         if (!m.wander || now > m.wanderUntil) {
           const hc = cellAt(home.x, home.z);
