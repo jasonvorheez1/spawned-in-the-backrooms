@@ -30,7 +30,7 @@ export const QUESTS21 = {
     name: "The Edges Sentry",
     tips: {
       1: "Speak to Goknar at the corridor doorway post",
-      2: "Patrol the dark threshold toward The Edges past John Banks's blast site",
+      2: "Walk the dark corridor past John Banks's blast site until the lights give out at The Edges",
       3: "Report the perimeter status back to Goknar",
     },
     marks: {
@@ -154,6 +154,7 @@ export function handleDialogueQuest21(ctx, p, npc, text) {
         };
       }
     }
+    if (t.includes("freezer still holding") && s.saltineQ === 99) return { reply: "Cold as a grave, and the saltines are dry. You're the first runner in a month who brought back what they said they would.", mood: "calm" };
     // 1c. Turn in Saltine Quota quest
     if (t.includes("brought 3 copper wire") || t.includes("brought the copper wire") || t.includes("fix the condenser water tubes") || t.includes("copper wire coils to fix")) {
       const items = String(s.items ?? "").split(",").filter(Boolean);
@@ -200,13 +201,26 @@ export function handleDialogueQuest21(ctx, p, npc, text) {
         if (repOf(s, "meg") <= -35) return { reply: "I don't work with hostiles. Back off the door.", mood: "angry" };
         setEdgesStep(ctx, p, s.l21Scouted ? 3 : 2, "Quest Started: The Edges Sentry · Scout the perimeter toward The Edges");
         return {
-          reply: "Tubes blew out in the corridor to the Edges yesterday. Three Smilers hanging past the line. Walk down to the Edges sign, check the breaker's holding, make sure nothing's crawling this way. Light steady.",
+          reply: "Tubes blew out in the corridor to the Edges yesterday. Three Smilers hanging past the line. Walk it till the lights give out, see if anything's moving our way, and come back. Don't go chasing grins in the dark.",
           mood: "calm",
         };
       }
     }
     // 2b. Turn in Edges Sentry quest
-    if (t.includes("surveyed the edges") || t.includes("secured the dark corridor") || t.includes("the edges perimeter and secured")) {
+    // 2b'. Survival read on the Smilers: a better report, a better plan
+    if (t.includes("smilers stop where the light stops")) {
+      if (s.edgesQ >= 1 && s.edgesQ < 99 && s.l21Scouted && !s.edgesSurvFailed) {
+        const c = rollCheck(ctx, s, { skill: "survival", difficulty: 30 });
+        if (pos) heard(ctx, { clip: c.ok ? CHIME : FAIL, position: pos, volume: 0.5, maxDistance: 16 }, { audience: { player: p.id } });
+        if (!c.ok) { s.edgesSurvFailed = true; return { reply: "Light keeps them off? Tell that to the last man who trusted a tube. Just give me what you saw.", mood: "annoyed" }; }
+        finishQuest21(ctx, p, "edges", { xp: 180, cents: 7000, items: ["ammo", "firstaid", "battery"], by: "meg", rep: [["meg", 14], ["survivors", 4], ["karma", 2]],
+          text: "Quest Completed: The Edges Sentry · read the Smilers' line (+180 XP, +$70.00, Ammo Crate, First Aid Kit, Battery)" });
+        return { reply: "They hold at the dark. Huh. Then we spend batteries, not bullets. Take a cell for your torch, and the rounds anyway. I'll put a lamp on that line tonight.", mood: "happy" };
+      }
+    }
+    // 2c. after the job: Goknar remembers it
+    if (t.includes("how's the line holding") && s.edgesQ === 99) return { reply: "Lamp's burning on your line. They sit out there grinning at it. Haven't lost a night's sleep since.", mood: "calm" };
+    if (t.includes("surveyed the edges") || t.includes("secured the dark corridor") || t.includes("walked the dark corridor to the edges")) {
       if ((s.edgesQ === 1 || s.edgesQ === 2 || s.edgesQ === 3) && s.l21Scouted) {
         finishQuest21(ctx, p, "edges", {
           xp: 140,
@@ -217,7 +231,7 @@ export function handleDialogueQuest21(ctx, p, npc, text) {
           text: "Quest Completed: The Edges Sentry · +140 XP, +$70.00, Ammo Crate, First Aid Kit",
         });
         return {
-          reply: "Good. With that corridor quiet, Ned and I can sleep in shifts again. Seventy and a box of rounds from Alef stock.",
+          reply: "Good. Quiet's all I asked for. Ned and I can sleep in shifts again. Seventy and a box of rounds from Alef stock.",
           mood: "happy",
         };
       } else if (s.edgesQ >= 1 && s.edgesQ < 99 && !s.l21Scouted) {

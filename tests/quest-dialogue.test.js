@@ -113,3 +113,34 @@ test('briefings survive objective updates and completion; counters reflect inven
   expect(s.qdone.job.briefing).toBe('Look behind the desk.')
   expect(questProgress('the-saltine-quota', { saltineQ: 2, items: 'wire,copper', scrap: { wire: 1 } })).toBe('Copper wire: 3/3')
 })
+
+// Nov 13: the Edges Sentry and Zenith Survey endings (skill routes, haggling, lines after the job)
+function at(id, place, st) { const sc = scene(id, place); Object.assign(sc.s, st); openDialogue(sc.ctx, sc.npc); return sc }
+
+test('the Edges Sentry has a Survival route at the report, and Goknar remembers the job', () => {
+  const { s, choose } = at('l21-goknar', 'level21', { edgesQ: 3, l21Scouted: 1, skl: Array(20).fill(100).join(',') })
+  choose('The Smilers stop where the light stops. Keep the tubes lit and they stay put.')
+  expect(s.edgesQ).toBe(99)
+  expect(s.payout.xp).toBe(180)
+  choose("How's the line holding?")
+  expect(s.sub.t).toContain('Lamp')
+})
+
+test('the Edges Sentry report no longer mentions a breaker that is not there', () => {
+  const { s, choose } = at('l21-goknar', 'level21', { edgesQ: 3, l21Scouted: 1 })
+  choose("Walked the dark corridor to the Edges. Nothing's crossing the line.")
+  expect(s.edgesQ).toBe(99)
+  expect(JSON.stringify(s.qdone ?? {}).toLowerCase()).not.toContain('breaker')
+})
+
+test('Kade pays more after a won haggle, once, and talks about Zenith after the job', () => {
+  const { s, choose } = at('l0-bntg-kade', 'main', { zenQ: 5, zenV: 2, zenDrive: true, skl: Array(20).fill(100).join(',') })
+  choose('Sixty is light for a walk past armed drones.')
+  expect(s.zenHaggle).toBe(4000)
+  expect(s.talkChoices.some((c) => c.text.startsWith('Sixty'))).toBe(false)
+  choose('I found the drive. Here it is.')
+  expect(s.zenQ).toBe(99)
+  expect(s.cents).toBe(10000)
+  choose('Any more work in Zenith?')
+  expect(s.sub.t).toContain('Guild')
+})

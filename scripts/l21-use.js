@@ -250,7 +250,7 @@ export function update(ctx, dt) {
     if (cx >= EDGE_X + 4 && !p.state.l21Scouted) {
       p.state.l21Scouted = 1;
       heard(ctx, { clip: G("eerie-low-chime-level-up"), position: p.feetPosition, volume: 0.85, maxDistance: 20 }, { audience: { player: p.id } });
-      ctx.emit("damageNumber", { position: { x: p.feetPosition.x, y: p.feetPosition.y + 1.8, z: p.feetPosition.z }, text: "THE EDGES: SCOUTED (+140 XP)", color: "#ffd700", size: 1.3 }, { audience: { player: p.id } });
+      ctx.emit("damageNumber", { position: { x: p.feetPosition.x, y: p.feetPosition.y + 1.8, z: p.feetPosition.z }, text: "THE EDGES: SCOUTED", color: "#ffd700", size: 1.3 }, { audience: { player: p.id } });
       if ((p.state.edgesQ ?? 0) >= 1 && (p.state.edgesQ ?? 0) < 3) {
         setEdgesStep(ctx, p, 3, "The Edges threshold scouted! Report the status back to Goknar at the doorway post.");
       }

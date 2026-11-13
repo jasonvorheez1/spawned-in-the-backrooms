@@ -5,6 +5,7 @@
 import { pushFeed } from "./feed.js";
 import { setQuest, endQuest, qid } from "./quests.js";
 import { addRep, addKarma, repOf } from "./rep.js";
+import { rollCheck } from "./npc-talk.js";
 const NAME = "The Zenith Survey";
 const QID = qid(NAME);
 export const TIPS = {
@@ -55,9 +56,22 @@ export function handleDialogueQuestZ(ctx, p, npc, text) {
     s.zenKey = true; setZen(ctx, p, 3, "B.N.T.G. Keycard added");
     return { reply: "Here's your card. Go to the far gallery over the hollow. The black box is up there. Sixty Backdollars when you hand it over. Leave the drones alone.", mood: "happy" };
   }
+  // before the hand-over: read the drive yourself (Science 45), or haggle (Barter 40). One try each.
+  if (s.zenQ === 5 && s.zenDrive && t.includes("see what's on it") && !s.zenSci) {
+    const c = rollCheck(ctx, s, { skill: "science", difficulty: 45 }); s.zenSci = c.ok ? 1 : -1;
+    if (!c.ok) return { reply: "Don't. That casing's keyed. Crack it wrong and it wipes itself, and then neither of us gets paid.", mood: "annoyed" };
+    s.payout = { xp: 60, text: "Read the Zenith flight recorder before handing it over · +60 XP" };
+    return { reply: "You got it open? ...Drone patrol routes, and the crew's last log. They set the drones to guard the gallery, then stopped answering. Close it up. That stays between us.", mood: "neutral" };
+  }
+  if (s.zenQ === 5 && s.zenDrive && t.includes("sixty is light") && !s.zenHaggle) {
+    const c = rollCheck(ctx, s, { skill: "barter", difficulty: 40 }); s.zenHaggle = c.ok ? 4000 : -1;
+    return c.ok ? { reply: "Drones, a dead station, and you walked out. Fine. A hundred. Don't tell the others what I paid.", mood: "neutral" }
+      : { reply: "Sixty was the price when you took the job. It's still sixty.", mood: "annoyed" };
+  }
+  if (s.zenQ === 99 && t.includes("more work in zenith")) return { reply: "There will be. The Guild wants that station, and so does M.E.G. When I know who's moving first, you'll hear it from me.", mood: "neutral" };
   if (s.zenQ === 5 && s.zenDrive && /drive|recorder|box|got|found|here/.test(t)) {
     const rep = repOf(s, "bntg"), bonus = rep >= 35 ? 0.25 : rep >= 12 ? 0.1 : 0;
-    const extra = Math.round(6000 * bonus), cents = 6000 + extra;
+    const base = 6000 + (s.zenHaggle > 0 ? s.zenHaggle : 0), extra = Math.round(base * bonus), cents = base + extra;
     s.zenDrive = false; s.zenQ = 99; if (s.quest?.name === NAME) s.quest = null;
     endQuest(s, QID, "Recovered the Zenith Station flight recorder for Kade");
     s.cents = (s.cents ?? 0) + cents;
@@ -73,14 +87,19 @@ export function handleDialogueQuestZ(ctx, p, npc, text) {
   return null;
 }
 export function zenithChoice(ctx, it, s, list) {
-  if (String(it?.id ?? "").split("/").pop() !== KADE || !Array.isArray(list) || s?.zenQ === 99) return list;
+  if (String(it?.id ?? "").split("/").pop() !== KADE || !Array.isArray(list)) return list;
+  if (s?.zenQ === 99) return [{ text: "Any more work in Zenith?", tag: "Talk" }, ...list];
   if (!s?.zenQ && repOf(s, "bntg") <= -35) return list;
   const q = s?.zenQ;
   const pick = !q ? { text: "You look like you're hiring. What's the job?", tag: "Quest Start" }
     : q === 2 ? { text: "I found your seal out east.", tag: "Quest" }
     : q === 5 && s.zenDrive ? { text: "I found the drive. Here it is.", tag: "Quest" }
     : { text: "Where's this station again?", tag: "Zenith" };
-  return [pick, ...list];
+  const extra = q === 5 && s.zenDrive ? [
+    ...(!s.zenSci ? [{ text: "Before I hand it over, I want to see what's on it.", tag: "Science 45", check: { skill: "science", difficulty: 45 } }] : []),
+    ...(!s.zenHaggle ? [{ text: "Sixty is light for a walk past armed drones.", tag: "Barter 40", check: { skill: "barter", difficulty: 40 } }] : []),
+  ] : [];
+  return [pick, ...extra, ...list];
 }
 // laid by places/main/sim.js: the sealed breach on the outer east wall (ZEN_ENTRY), and Kade in the safe room. ENTRYV 2 moved it out of the safe room.
 const ENTRYV = 3;

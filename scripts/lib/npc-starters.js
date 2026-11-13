@@ -91,12 +91,16 @@ export function questChoices(ctx, it, s) {
       if (s?.saltineQ >= 1 && s?.saltineQ < 99 && wireCount >= 3) {
         qChoices.push({ text: "Brought 3 copper wire coils. Clean ones.", tag: "Quest Turn-In" })
       }
+      if (s?.saltineQ === 99) qChoices.push({ text: "Freezer still holding?", tag: "Talk" })
     }
   } else if (id === 'l21-goknar') {
     if (!s?.edgesQ && repOf(s, "meg") > -35) {
       qChoices.push({ text: "I'll patrol the hallway down to the Edges.", tag: "Quest Start" })
     } else if (s?.edgesQ >= 1 && s?.edgesQ < 99 && s?.l21Scouted) {
-      qChoices.push({ text: "Walked the Edges perimeter and secured the dark corridor. Breaker's holding.", tag: "Quest Turn-In" })
+      qChoices.push({ text: "Walked the dark corridor to the Edges. Nothing's crossing the line.", tag: "Quest Turn-In" })
+      if (!s?.edgesSurvFailed) qChoices.push({ text: "The Smilers stop where the light stops. Keep the tubes lit and they stay put.", tag: "Survival 30", check: { skill: "survival", difficulty: 30 } })
+    } else if (s?.edgesQ === 99) {
+      qChoices.push({ text: "How's the line holding?", tag: "Talk" })
     }
   }
 
