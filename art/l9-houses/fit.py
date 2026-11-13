@@ -2,6 +2,8 @@
 import bpy, sys, math, json, mathutils
 a = sys.argv[sys.argv.index("--")+1:]
 src, dst, W, D, faces = a[0], a[1], float(a[2]), float(a[3]), int(a[4])
+# the front door hole, in the fitted file's Blender metres: door centre x, the shell's front face y (negative), threshold z; the game hangs a real door there
+CUT = {k: v for k, v in (x.split("=") for x in a[5:])}
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=src)
 ms = [o for o in bpy.context.scene.objects if o.type == 'MESH']
@@ -17,6 +19,12 @@ mn = mathutils.Vector([min(v[i] for v in vs) for i in range(3)]); mx = mathutils
 sx, sy, sz = mx - mn
 s = min(W / sx, D / sy)
 for v in o.data.vertices: v.co = (v.co - mathutils.Vector(((mn.x+mx.x)/2, (mn.y+mx.y)/2, mn.z))) * s
+import bmesh
+if "door" in CUT:
+    dx, fy, fz = map(float, CUT["door"].split(","))
+    bm = bmesh.new(); bm.from_mesh(o.data)
+    kill = [f for f in bm.faces if abs(f.calc_center_median().x - dx) < 0.5 and fy - 0.5 < f.calc_center_median().y < fy + 0.6 and fz - 0.05 < f.calc_center_median().z < fz + 2.1]
+    bmesh.ops.delete(bm, geom=kill, context="FACES"); bm.to_mesh(o.data); bm.free(); print("CUT", len(kill))
 n = len(o.data.polygons)
 if n > faces:
     m = o.modifiers.new("dec", 'DECIMATE'); m.ratio = faces / n
