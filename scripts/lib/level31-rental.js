@@ -83,8 +83,7 @@ function floor(ctx) {
   for (const [i, x] of [9.4, 16.6].entries()) ctx.spawn(`l31-rental-bench${i}`, { feetPosition: { x, y: 0, z: 22.3 }, physics: "static", tags: ["l31-rental", "seat"], state: { name: "Lacing bench", seat: { w: 2, gap: 0.8 } },
     model: { id: BENCH, materials: { carpet: { texture: "cdn/texture-blue-loop-pile-commercial-carpet.png", color: "oklch(0.92 0.05 260)", roughness: 1 } } } });
   // Shelly Nov 13 "de ai slop this": the flat mat became the fitter's stool, the sizer on its slant (slope 0.4 = 21.8 deg, front low)
-  ctx.spawn("l31-rental-fitmat", { feetPosition: { x: 11.3, y: 0, z: 22.95 }, rotation: { yaw: 14 }, primitive: { kind: "scripted", script: "scripts/l31-fit-stool.js" }, physics: "static", tags: ["l31-rental"],
-    children: [{ feetPosition: { x: 0, y: 0.322, z: -0.25 }, rotation: { pitch: -21.8 }, model: DEVICE, scale: 0.75 }] });
+  ctx.spawn("l31-rental-fitmat", { feetPosition: { x: 11.3, y: 0, z: 22.95 }, rotation: { yaw: 14 }, model: { id: "/cdn/value.87b584579107a1d933acb13401369c42a98f245b4acf46c989d634ee8213ab5e.glb", forward: "+z" }, physics: "static", tags: ["l31-rental"] }); // art/l31-fitstool/build.py
   // the rubber runner: counter, out to the aisle, along it, up to the south gate of the rink
   const mat = (id, x, z, w, d) => ctx.spawn(`l31-rental-mat${id}`, { feetPosition: { x, y: 0, z }, primitive: box(w, 0.016, d), material: RUB, castShadow: false, receiveShadow: true, tags: ["l31-rental"] });
   mat(0, 13, 22.2, 1.3, 3.9); mat(1, 6.5, 19.6, 14.3, 1.3); mat(2, 0, 15.75, 1.3, 6.4);
