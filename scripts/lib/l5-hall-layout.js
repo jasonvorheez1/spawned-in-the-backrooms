@@ -71,7 +71,7 @@ for (const [i, sz] of [[0, -1], [1, 1]]) { const zc = sz * 7.6;
 for (const [i, x, z] of [[0, -31, -3.4], [1, -31, 3.4], [2, -45.3, -10.6], [3, -45.3, 10.6], [4, -31.2, -8.6], [5, -31.2, 9.3]]) add(`palm${i}`, "palm", x, z, i * 40, { seed: i + 1 });
 add("gclock", "clock", -42, -12.72, 180, {});
 add("hatstand", "hatstand", -43.6, 6.6, 0, {});
-for (const [i, x] of [[0, -35.2], [1, -40.8]]) add(`portrait-n${i}`, "painting", x, -12.92, 180, { w: 0.8, h: 1.05, style: "portrait", seed: 3 + i }, { y: 1.7 });
+for (const [i, x] of [[1, -40.8]]) add(`portrait-n${i}`, "painting", x, -12.92, 180, { w: 0.8, h: 1.05, style: "portrait", seed: 3 + i }, { y: 1.7 });
 for (const [i, x] of [[0, -34], [1, -38], [2, -42]]) add(`portrait-s${i}`, "painting", x, 12.92, 0, { w: 0.8, h: 1.05, style: "portrait", seed: 10 + i }, { y: 1.7 });
 add("lobby-cab", "cabinet", -33.5, 12.69, 0, {}, { loot: L("almond,tape", "Curio cabinet", "cabinet", null, "wood") });
 // ---- gallery (x -30..-6, z -3..3)
