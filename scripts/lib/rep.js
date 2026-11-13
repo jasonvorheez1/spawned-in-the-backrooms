@@ -13,9 +13,11 @@ export const GROUPS = {
   bntg: { name: "B.N.T.G.", info: "the Backrooms Nonaligned Trade Group" },
   concession: { name: "B.N.T.G. Rink Concession", info: "Marlowe's table on Level 31" },
   rink: { name: "Rink Facelings", info: "the faces that run Level 31" },
+  froid: { name: "Kingdom of Froidetown", info: "Level 70's parliament, its River Guard and its townsfolk" },
+  gelu: { name: "Carnifices of Gelu", info: "the frost cult camped in Iceshed" },
 };
 const MAP = { meg: "meg", hk: "meg", guard: "meg", camp: "meg", survivor: "survivors", trader: "survivors", pilgrim: "survivors", wanderer: "survivors", scavenger: "survivors", alef: "survivors",
-  homely: "hotel", hotel: "hotel", orig: "hotel", surrender: "surrender", lightless: "lightless", bntg: "bntg", concession: "concession", rink: "rink" };
+  homely: "hotel", hotel: "hotel", orig: "hotel", surrender: "surrender", lightless: "lightless", bntg: "bntg", concession: "concession", rink: "rink", froid: "froid", gelu: "gelu" };
 const PREFIX = { bntg: "bntg", meg: "meg", hk: "meg", surv: "survivors", omega: "survivors", l5: "hotel", homely: "hotel", tbd: "survivors", gamma: "meg", l61: "survivors" };
 export function groupOf(it) {
   const f = it?.state?.faction5 ?? it?.state?.faction; if (f && MAP[f]) return MAP[f];
