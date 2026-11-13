@@ -6,6 +6,7 @@ import { vo } from "./voices.js";
 import { skillsOf } from "./stats.js";
 import { entryOf } from "./dialogue.js";
 import Q from "./data/dlg-quest-main.yml";
+import { hubRoute } from "./hub-route.js";
 const LEGACY = "the-undelivered";
 export const HOME = { id: "the-way-back", name: "The Way Back" };
 export const CAMP = { x: 22.3, y: 0, z: 38.4 };
@@ -202,6 +203,7 @@ export function dinaTick(ctx, ses, st, place = ctx.self.place) {
     if (st.menuOpen || st.cut || st.arrive || st.arrivePending || place === "intake" || st.level == null) return false;
     migrate(st);
     watchTalk(ctx, st, place);
+    hubRoute(ctx, st, place); // The Tenth Tunnel: Chapter 1's end, or Phoebe, opens the way into the Hub
     if (place !== "tutorial0" && place !== "bonus" && !st.trail?.name) dinaLead(ctx, st); // skipped the waking: the wrist unit still has her message
     if (st.trail?.pass && (st.dinaQ ?? 0) < 2) setDinaStep(ctx, st, 2);
     else if (place === "level26" && st.dinaQ === 2 && !st.l26cut) setDinaStep(ctx, st, 3);
