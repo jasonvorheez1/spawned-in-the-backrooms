@@ -46,7 +46,10 @@ def build(col):
             f = j / rings; ring = []
             for i in range(seg):
                 a = i / seg * math.tau; n = noise.noise(Vector((cx + math.cos(a) * f * 2.1, cz + math.sin(a) * f * 2.1, seed + 3.3)))
-                r = f * (1 + 0.22 * n); ring.append(k.bm.verts.new((cx + math.cos(a) * rx * r, -(cz + math.sin(a) * rz * r), y0 - 0.06 * (f > 0.99) + h * (math.cos(f * math.pi / 2) ** 0.55) * (1 + 0.25 * n))))
+                r = f * (1 + 0.22 * n); vx, vz = cx + math.cos(a) * rx * r, cz + math.sin(a) * rz * r
+                if -4.8 < vx < -0.2 and -7.4 < vz < -3.45:  # a berm vertex inside the storm cellar: pressed back onto the nearest outer wall face
+                    vx, vz = min(((-5.02, vz), (0.02, vz), (vx, -7.62)), key=lambda q: abs(q[0] - vx) + abs(q[1] - vz))
+                ring.append(k.bm.verts.new((vx, -vz, y0 - 0.06 * (f > 0.99) + h * (math.cos(f * math.pi / 2) ** 0.55) * (1 + 0.25 * n))))
             for i in range(seg):
                 a, b = ring[i], ring[(i + 1) % seg]
                 fc = k.bm.faces.new([top, a, b]) if prev is None else k.bm.faces.new([prev[i], a, b, prev[(i + 1) % seg]])
