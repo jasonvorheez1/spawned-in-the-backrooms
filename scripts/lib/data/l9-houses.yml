@@ -5,11 +5,11 @@
 # door: the hole fit.py cuts in the front wall (centre x, front face z, threshold y, 1 m wide, 2.1 m tall); the sim hangs a hinged door there
 # footprints the lots are cut for (model: null = a blueprint box stands in):
 houses:
-  ranch:    { name: "Ranch",      w: 16, d: 10, stories: 1, model: "/cdn/value.4a645602e196be6acbbbc6bef1c15404f8576a1c5715df1c347c57ea3fa15f0a.glb", door: { x: -2.1, z: 3.1, y: 0.4 }, rooms: [] }
-  bungalow: { name: "Bungalow",   w: 9,  d: 11, stories: 1, model: "/cdn/value.9b8a9a4ea4df2457fe5c9b31512a1dbf3368567eea0363ffbbe61f9e0053fc26.glb", door: { x: 0.86, z: 1.89, y: 0.65 }, rooms: [] }
-  colonial: { name: "Colonial",   w: 11, d: 9,  stories: 2, model: "/cdn/value.ad18565c0c4a4e1146c200d3b3a88f51eb4836b2e440daf06618b184140e4d98.glb", door: { x: 0, z: 2.9, y: 0.44 }, rooms: [] }
-  cape:     { name: "Cape Cod",   w: 10, d: 8,  stories: 2, model: "/cdn/value.4e16a18c2814bb4b89c98b4d1d5fe63a3352f8c19e942c5a79aa3c303a96195a.glb", door: { x: 0, z: 2.85, y: 0.55 }, rooms: [] }
-  garage2:  { name: "Two-storey with garage", w: 15, d: 9, stories: 2, model: "/cdn/value.f59b4b503e14e38dcec2f5afc99df8351d605bdafb30f49e79b9872bd1c40f81.glb", door: { x: 1.56, z: 2.62, y: 0.5 }, rooms: [] }
+  ranch:    { name: "Ranch",      w: 16, d: 10, stories: 1, model: "/cdn/value.9ebf8f0e943d8aeec801c35d35b324f158e67967b2ad719d7103975f81cb101a.glb", door: { x: -2.1, z: 3.1, y: 0.4 }, rooms: [] }
+  bungalow: { name: "Bungalow",   w: 9,  d: 11, stories: 1, model: "/cdn/value.1d2e7a6342812fdc9cac7e23234dad35e1c8dc5b26980438d6e6d1f548d7c557.glb", door: { x: 0.86, z: 1.89, y: 0.65 }, rooms: [] }
+  colonial: { name: "Colonial",   w: 11, d: 9,  stories: 2, model: "/cdn/value.ab46a92fba82de8ff438406f1d7d6d9bc6eeac6d47151e0b68a6e07b4573842f.glb", door: { x: 0, z: 2.9, y: 0.44 }, rooms: [] }
+  cape:     { name: "Cape Cod",   w: 10, d: 8,  stories: 2, model: "/cdn/value.4f140d4d73d21ca7bd71d2c94dd98708129b0af08c44159865c6c2c0d1b9c154.glb", door: { x: 0, z: 2.85, y: 0.55 }, rooms: [] }
+  garage2:  { name: "Two-storey with garage", w: 15, d: 9, stories: 2, model: "/cdn/value.72935aefe9ea44d808642083a823ff156987ad130d264b977f80a4adb1d3f302.glb", door: { x: 1.56, z: 2.62, y: 0.5 }, rooms: [] }
 # siding / trim / roof paint a house can roll (index by seed)
 paints:
   - { siding: "#b9b3a2", trim: "#e6e2d6", roof: "#3a3632" }
