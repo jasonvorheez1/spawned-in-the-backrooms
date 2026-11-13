@@ -13,11 +13,13 @@ export function layLoft(ctx) {
   P("rug", { feetPosition: { x: -35, y: Y + 0.006, z: -25.5 }, primitive: { kind: "box", width: 12, height: 0.01, depth: 7 }, material: { texture: "cdn/texture-black-arcade-carpet-neon-confetti-squiggles.png", wrap: "repeat", repeat: [0.5, 0.5], color: "#9a90ac", roughness: 0.95 }, receiveShadow: true });
   // lockers: three banks on the west wall facing east, one door hanging open on each (the model's own), 2.3 x 1.95 x 0.5 m
   for (const [i, z] of [-27.4, -24.9, -22.4, -19.9].entries())
-    P(`lockers${i}`, { feetPosition: { x: -41.6, y: Y, z }, rotation: { yaw: 90 }, model: { id: LOCKERS, forward: "+z" }, layout: fit(2.35, 1.95, 0.5), physics: { body: "static", collider: "box" } });
-  P("bench", { feetPosition: { x: -39.6, y: Y, z: -23.6 }, rotation: { yaw: 0 }, model: { id: BENCH }, layout: fit(0.45, 0.48, 3.0), physics: { body: "static", collider: "box" }, tags: ["seat"] });
+    P(`lockers${i}`, { feetPosition: { x: -41.6, y: Y, z }, rotation: { yaw: 0 }, model: { id: LOCKERS, forward: "+z" }, scale: { x: 0.75, y: 1.6, z: 1.68 }, // native 0.73 deep x 1.2 tall x 1.37 wide (along z) -> 0.55 x 1.92 x 2.3 m
+      physics: { body: "static", collider: "box" } });
+  P("bench", { feetPosition: { x: -39.6, y: Y, z: -23.6 }, rotation: { yaw: 90 }, model: { id: BENCH }, scale: 1.05, physics: { body: "static", collider: "box" }, tags: ["seat"] });
   // curved booths against the north wall, opening south, a table in each
   for (const [i, x] of [-37.5, -33.5, -29.5].entries()) {
-    P(`booth${i}`, { feetPosition: { x, y: Y, z: -28.6 }, rotation: { yaw: 0 }, model: { id: BOOTH, forward: "+z" }, layout: fit(2.8, 1.15, 2.0), physics: { body: "static", collider: "mesh" }, tags: ["seat"] });
+    P(`booth${i}`, { feetPosition: { x, y: Y, z: -28.75 }, rotation: { yaw: 90 }, model: { id: BOOTH, forward: "+z" }, scale: 1.25, // native 1.8 deep x 0.85 tall x 2.37 wide -> 2.25 x 1.06 x 2.96 m
+      physics: { body: "static", collider: "mesh" }, tags: ["seat"] });
     P(`table${i}`, { feetPosition: { x, y: Y, z: -28.1 }, model: { id: G.table, forward: "+z" }, layout: fit(0.9, 0.74, 0.9), physics: { body: "static", collider: "box" } });
     P(`lamp${i}`, { feetPosition: { x, y: Y + 2.3, z: -28.2 }, primitive: { kind: "cone", radius: 0.22, height: 0.22, radialSegments: 20, openEnded: true }, material: { color: "#e88a2a", roughness: 0.4, metalness: 0.4, side: "double", emissive: "#ffb060", emissiveIntensity: 0.25 },
       children: [{ feetPosition: { x: 0, y: 0.22, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.006, radiusBottom: 0.006, height: 1.5 }, material: { color: "#222" } },
