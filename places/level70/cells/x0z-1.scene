@@ -410,9 +410,9 @@ l70-c-pallet:
 l70-c-rug:
   feetPosition: {x: 33.4, y: 0.01, z: -77.6}
   id: l70-c-rug
-  layout: {box: {max: {x: 2, y: 0.03, z: 1.5}, min: {x: -2, y: 0, z: -1.5}}}
   model: /cdn/value.7a52a205e6005afc81d4fb66c6bd697f8b8a470cb14e2d812ee207660fd6a48c.glb
   rotation: {yaw: 12}
+  scale: {x: 0.18, y: 0.025, z: 0.135}
 l70-c-sled-1:
   feetPosition: {x: 4.8, y: 0, z: -78}
   id: l70-c-sled-1
