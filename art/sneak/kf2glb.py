@@ -27,7 +27,7 @@ SP, SL = {}, {}
 def walk(n, par):
     if not isinstance(n, NifFormat.NiNode): return
     nm = n.name.decode(); SP[nm] = par
-    SL[nm] = (np.array(n.rotation.as_list()), np.array([n.translation.x, n.translation.y, n.translation.z]))
+    SL[nm] = (np.array(n.rotation.as_list()).T, np.array([n.translation.x, n.translation.y, n.translation.z]))
     for c in n.children:
         if c: walk(c, nm)
 for r in d.roots: walk(r, None)
@@ -50,8 +50,9 @@ def src_world(f):
     def get(nm):
         if nm in W: return W[nm]
         R, t = SL[nm]
-        if f is not None and nm in tracks:
-            rs, ts = tracks[nm]
+        tk = 'Bip01 NonAccum' if nm == 'Bip' else nm  # the FO3 skeleton names its NonAccum 'Bip', under a stack of identity controller nodes
+        if f is not None and tk in tracks:
+            rs, ts = tracks[tk]
             if rs: R = rs[min(f, len(rs)-1)]
             if ts: t = ts[min(f, len(ts)-1)]
         p = SP.get(nm)
