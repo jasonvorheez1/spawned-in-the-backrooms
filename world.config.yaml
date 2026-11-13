@@ -152,6 +152,7 @@ inputs:
         button: false
     dress: {}
     mmenu: {}
+    tabaway: {}
     mainmenu:
       keys:
         - backspace

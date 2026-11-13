@@ -402,6 +402,13 @@ function tarVeil(ctx, player) {
   const k = Math.round(until);
   return `<style>@keyframes tar${k}{0%{opacity:1}70%{opacity:.85}100%{opacity:0}}</style><div id="tar${k}" class="fixed inset-0 pointer-events-none" style="animation:tar${k} 3s ease-in forwards;background:radial-gradient(ellipse at 50% 45%,transparent 18%,rgba(4,6,8,.75) 46%,#020304 72%)"></div>`;
 }
+
+// tab-out pause (Shelly, Nov 13: "the game should pause when i tab out only in single player"): the page tells the body when it hides and returns; main-menu.js holds time only while you're alone
+let _tabAway = null
+export function onMount() { _tabAway = () => sendAction('tabaway', { away: document.hidden }); document.addEventListener('visibilitychange', _tabAway); window.addEventListener('blur', _tabBlur); window.addEventListener('focus', _tabFocus) }
+function _tabBlur() { sendAction('tabaway', { away: true }) }
+function _tabFocus() { sendAction('tabaway', { away: false }) }
+export function onDestroy() { if (_tabAway) document.removeEventListener('visibilitychange', _tabAway); window.removeEventListener('blur', _tabBlur); window.removeEventListener('focus', _tabFocus) }
 export default function render(ctx, player) { return tarVeil(ctx, player) + renderHud(ctx, player) + unlock12(ctx, player) + ritual12(ctx, player) + lagscopeOverlay(ctx, player) + renderCinemaOverlays(player) + (player.state?.cinemaOpen ? cinemaPanel(player) : '') + UI_THEME } // the 3D studio button is off the HUD (Shelly, Nov 9: bothersome)
 function renderHud(ctx, player) {
   const s = player.state ?? {}
