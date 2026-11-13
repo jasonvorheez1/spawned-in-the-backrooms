@@ -74,7 +74,8 @@ export function syncWalls(ctx, gname) {
   const name = gridHere(ctx, gname); if (!name) return
   const G = GRIDS[name], o = ctx.place.objects[G.obj]
   const br = ctx.place.state.broken ?? {}, walls = {}
-  for (const k of Object.keys(br)) { const p = k.split(':'), w = p.slice(0, 3).join(':'); (walls[w] ??= []); if (p.length === 5) walls[w].push(`${p[3]}:${p[4]}`); else walls[w].whole = true }
+  for (const k of Object.keys(br)) { const p = k.split(':'), w = p.slice(0, 3).join(':'); if (G.has && !G.has(p[0], +p[1], +p[2])) { delete br[k]; continue } // a wall the layout no longer has leaves no patch standing in the way
+    (walls[w] ??= []); if (p.length === 5) walls[w].push(`${p[3]}:${p[4]}`); else walls[w].whole = true }
   const cut = Object.keys(walls).sort(), cur = (o.primitive?.params?.cut ?? []).join(',')
   if (cur !== cut.join(',')) o.primitive = { ...o.primitive, kind: 'scripted', script: G.script, params: { ...(o.primitive?.params ?? {}), cut } }
   for (const k of G.kit ?? []) { const ko = ctx.place.objects[k]; if (ko && (ko.primitive?.params?.cut ?? []).join(',') !== cut.join(',')) ko.primitive = { ...ko.primitive, params: { ...(ko.primitive?.params ?? {}), cut } } } // the modelled kit's walls and piers follow the same cuts
