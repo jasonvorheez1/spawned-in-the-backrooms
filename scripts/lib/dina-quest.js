@@ -56,10 +56,10 @@ const STEP = {
 const ASK = [
   { step: "Find someone. Ask where you are.", mark: null },
   { step: "Something left you a name: Dina. Find people. Ask where you are, and who she is.", mark: null },
-  { step: "Find out who Dina is. Somebody at the camp keeps a list of names.", mark: { place: "level1", id: "dina-freight-slip" } },
+  { step: "Find out who Dina is. Somebody at the camp keeps a list of names.", mark: { place: "level1", id: "meg-callum" } },
   { step: "Dina asked about ways out, then went down. Look for what she left on the levels below the camp.", mark: { place: "level3", id: "dina-handoff" } },
-  { step: "Dina's tape says she took a room at the hotel on Level 5. Ask the staff what she left behind.", mark: { place: "level5" } },
-  { step: "Dina left the hotel for the city on Level 11, looking for a radio. Ask who ran one for her.", mark: { place: "level11" } },
+  { step: "Dina's tape says she took a room at a hotel, a few levels down. Find it and ask the staff what she left behind.", mark: { place: "level5" } },
+  { step: "Dina left the hotel for a city, looking for a radio. Find the city and ask who ran one for her.", mark: { place: "level11" } },
   { step: "The broadcast is real, and Dina booked passage on a ship. Find out which ship and where it boards.", mark: { place: "level11" } },
 ];
 // the main quest's tracker row for a save: { step, mark }
@@ -119,7 +119,7 @@ function watchTalk(ctx, st, place) {
   if (ses.trailWith !== st.talkWith) { ses.trailWith = st.talkWith; ses.trailSeen = 0; }
   if ((ses.trailSeen ?? 0) >= asked.length) return;
   const it = ctx.getObject(st.talkWith), sid = String(st.talkWith).split("/").pop();
-  let e = null; try { e = it ? entryOf(it, place)?.e : null; } catch { e = null; }
+  let e = null; try { e = entryOf(it ?? sid, place)?.e ?? null; } catch { e = null; } // the words by id even when the person is not loaded here
   for (let i = ses.trailSeen ?? 0; i < asked.length; i++) {
     const q = String(asked[i] ?? ""), n = findNode(e?.ask, q);
     if (n?.sk) { const x = [...(st.talks?.[sid] ?? [])].reverse().find((r) => r[0] === "x"); if (!x || /FAILED/.test(x[1])) continue; }
