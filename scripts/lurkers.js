@@ -1,4 +1,5 @@
 import { clearSight } from './lib/sight.js';
+import { EYES, LIGHT_STUN, STARE_RETREAT, STALK, pickEyes, dress, undress } from "./lib/lurker-kind.js";
 import { targetsOf } from "./lib/decoys.js";
 // The lurker pack: pale things that only move when nobody is looking at them. A wanderer who keeps one in view
 // holds it still (and pays sanity for it); look away, or break the line of sight, and it closes the gap fast.
@@ -193,10 +194,13 @@ export function update(ctx, dt) {
       st.mesh = 3;
       m.clip = null;
     }
+    if (!st.eyes) st.eyes = pickEyes(ctx);
+    if (!st.dead) dress(ctx, w, st.eyes);
+    const EK = EYES[st.eyes] ?? EYES.white;
 
     if (st.dead) {
       if (!m.dying) {
-        m.dying = now;
+        m.dying = now; undress(ctx, w); // the murk goes out with it
         w.velocity = { x: 0, y: 0, z: 0 };
         deathRag(w); // limp along the killing blow
         heard(ctx, { clip: SND("bone-crack-twist"), position: pos, volume: 0.9, maxDistance: 24 });
@@ -236,7 +240,7 @@ export function update(ctx, dt) {
         const ax = p.state?.aimX ?? 0;
         const az = p.state?.aimZ ?? -1;
         if (((-dx) * ax + (-dz) * az) / (d || 1) > L.lurkerWatchCos) {
-          watched = p;
+          watched = p; m.watchD = d;
         }
         if (d < bd) {
           best = p;
@@ -253,25 +257,21 @@ export function update(ctx, dt) {
       }
       if ((st.sneakTarget ?? null) !== m.prey) st.sneakTarget = m.prey;
 
-      if (watched && !m.watched) {
-        let k;
-        do {
-          k = POSES[Math.floor(ctx.random() * POSES.length)];
-        } while (k === m.pose && POSES.length > 1);
-        m.pose = k;
+      // seen is the end of the stalk; then each eye colour has its own counter (wiki, Entity 30)
+      if (watched && best) { m.hunt = true; if (!m.seen) { m.seen = 1; heard(ctx, { clip: SND("lurker-distorted-tearing-scream"), position: { x: pos.x, y: pos.y + 2, z: pos.z }, volume: 0.8, maxDistance: 40 }); } }
+      if (st.eyes === "white" && watched?.state?.light && (m.watchD ?? 99) < LIGHT_STUN.range && now >= (m.stunCd ?? 0)) { // a flashlight in its face
+        m.stun = now + LIGHT_STUN.ms; m.stunCd = now + LIGHT_STUN.cooldownMs; m.pose = POSES[Math.floor(ctx.random() * POSES.length)];
+        heard(ctx, { clip: SND("shadow-creature-dissolve-hiss"), position: pos, volume: 1, maxDistance: 28 });
+        ctx.emit("shake", { target: w.id, intensity: 0.2, duration: 0.6 });
       }
-      m.watched = !!watched;
-      // stared at too long, it snaps: a scream, then it lurches at you in bursts even under your gaze
-      m.stare = watched && best ? (m.stare ?? 0) + 0.2 : Math.max(0, (m.stare ?? 0) - 0.4);
-      if (m.stare >= (L.lurkerStareSnap ?? 4.5) && now >= (m.frenzy ?? 0)) {
-        m.stare = 0; m.screamEnd = now + 900; m.frenzy = now + 900 + (L.lurkerSnapRush ?? 2.2) * 1000;
-        heard(ctx, { clip: SND("lurker-distorted-tearing-scream"), position: { x: pos.x, y: pos.y + 2, z: pos.z }, volume: 1, maxDistance: 40 });
-        ctx.emit("shake", { target: w.id, intensity: 0.15, duration: 0.8 });
-        if (watched) {
-          ctx.emit("screenShake", { intensity: 0.25, duration: 0.35 }, { audience: { player: watched.id } });
-          watched.state.sanity = Math.max(0, watched.state.sanity - L.lurkerSanity);
-        }
+      if (st.eyes === "yellow") { // hold its eyes and it backs into the dark
+        m.stare = watched ? (m.stare ?? 0) + 0.2 : Math.max(0, (m.stare ?? 0) - 0.3);
+        if (m.stare >= STARE_RETREAT.seconds && now >= (m.flee ?? 0)) { m.stare = 0; m.flee = now + STARE_RETREAT.ms; m.hunt = false; m.seen = 0; m.stalkUntil = now + STARE_RETREAT.ms + STALK.minMs;
+          heard(ctx, { clip: SND("shadow-creature-dissolve-hiss"), position: pos, volume: 0.9, maxDistance: 24 }); }
       }
+      if (best && !m.stalkUntil) m.stalkUntil = now + STALK.minMs + ctx.random() * (STALK.maxMs - STALK.minMs);
+      if (m.stalkUntil && now >= m.stalkUntil && best) m.hunt = true; // trailed you long enough: it comes
+      m.watched = now < (m.stun ?? 0);
       if (watched) {
         watched.state.sanity = Math.max(0, watched.state.sanity - L.lurkerGaze * 0.2);
       }
@@ -315,9 +315,16 @@ export function update(ctx, dt) {
     let goal;
     let speed;
 
-    if (prey) {
+    if (prey && now < (m.flee ?? 0)) { // a stared-down yellow-eye backs away into the dark
+      const ax = pos.x - prey.feetPosition.x, az = pos.z - prey.feetPosition.z, al = Math.hypot(ax, az) || 1;
+      goal = { x: pos.x + ax / al * 6, z: pos.z + az / al * 6 }; speed = L.lurkerSpeed * 1.1;
+    } else if (prey && !m.hunt) { // the stalk: hang back behind them, where they are not looking
+      const ax = prey.state?.aimX ?? 0, az = prey.state?.aimZ ?? -1, dd = Math.hypot(prey.feetPosition.x - pos.x, prey.feetPosition.z - pos.z);
+      goal = { x: prey.feetPosition.x - ax * STALK.behind, z: prey.feetPosition.z - az * STALK.behind };
+      speed = dd > STALK.behind + 3 ? L.lurkerSpeed * 0.7 : dd < STALK.behind - 2 ? 0.6 : 1.6;
+    } else if (prey) {
       goal = prey.feetPosition;
-      speed = L.lurkerSpeed;
+      speed = L.lurkerSpeed * EK.speed;
     } else if (m.last && now - m.last.at < (L.chaseMemory ?? 12) * 1000) {
       m.lead ??= leadOf(m.last);
       goal = m.heard ? m.last : m.lead;
@@ -336,7 +343,7 @@ export function update(ctx, dt) {
         }
       }
     } else {
-      m.last=null; m.lead=null;
+      m.last=null; m.lead=null; m.hunt=false; m.seen=0; m.stalkUntil=0;
       if(m.search && now>m.search.until) { m.search=null; m.next=null; m.restUntil=0; }
       if (m.next && Math.hypot(m.next.x - pos.x, m.next.z - pos.z) < 0.6 && !m.restUntil) m.restUntil = now + 2000 + ctx.random() * 3000;
       if (!m.next || now > (m.nextBy ?? 0) || (m.restUntil && now > m.restUntil)) {
@@ -419,7 +426,7 @@ export function update(ctx, dt) {
     let vz = 0;
     const near = way && way.cells > 0 ? 0.35 : prey ? 1.1 : 0.3;
     if (d > near) {
-      const cap = (L.sprintSpeed ?? 7.4) * (L.lurkerSprintCap ?? 0.85); // never faster than your sprint (Shelly: i cant outsprint them)
+      const cap = (L.sprintSpeed ?? 7.4) * (L.lurkerSprintCap ?? 0.85) * Math.min(1, EK.speed); // never faster than your sprint (Shelly: i cant outsprint them)
       const sp = Math.min(speed * mu.speed, cap);
       vx = ux * sp;
       vz = uz * sp;
@@ -491,7 +498,7 @@ export function update(ctx, dt) {
     }
 
     // The catch: reached unseen, grabs and holds
-    if (prey && !m.watched && !m.grab && !prey.state.lurkHold && now >= (prey.state.lurkFree ?? 0) && Math.hypot(prey.feetPosition.x - pos.x, prey.feetPosition.z - pos.z) < 1.6 && now >= (m.bite ?? 0)) {
+    if (prey && m.hunt && now >= (m.flee ?? 0) && !m.watched && !m.grab && !prey.state.lurkHold && now >= (prey.state.lurkFree ?? 0) && Math.hypot(prey.feetPosition.x - pos.x, prey.feetPosition.z - pos.z) < 1.6 && now >= (m.bite ?? 0)) {
       m.grab = { id: prey.id, at: now };
       prey.state.lurkHold = {
         by: w.id,
@@ -504,7 +511,7 @@ export function update(ctx, dt) {
         prey.behavior = [...b, ME];
       }
       heard(ctx, { clip: SND("bone-crack-twist"), position: pos, volume: 1, maxDistance: 25 });
-      ctx.emit("screenFlash", { color: "#1a160c", duration: 0.25, intensity: 0.6 }, { audience: { player: prey.id } });
+      ctx.emit("screenFlash", { color: "#000000", duration: 1.4, intensity: 0.92 }, { audience: { player: prey.id } }); // engulfed: the murk swallows the screen
     }
   }
 }

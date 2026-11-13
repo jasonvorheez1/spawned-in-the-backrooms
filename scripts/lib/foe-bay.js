@@ -123,7 +123,7 @@ export function foeBayTick(ctx) {
   if (w.kind === "decoy") { const n = ctx.query({ tags: ["bay-decoy"], radius: 1e4 }).length; if (n >= CAP) return;
     ctx.spawn({ tags: ["bay-decoy", "tl-bay-foe"], feetPosition: { x: PEN.x - 6 + n * 1.6, y: 0, z: PEN.z - 2 + n * 1.2 }, physics: { body: "kinematic", collider: "capsule" }, behavior: "scripts/decoy.js",
       primitive: { kind: "capsule", radius: 0.3, halfHeight: 0.55 }, material: { color: "oklch(0.72 0.09 70)", texture: "cdn/texture-burlap-sack-weave.png", roughness: 0.9 },
-      state: { hp: 300, maxHp: 300, name: "Test Dummy" },
+      state: { hp: 300, maxHp: 300, sanity: 100, name: "Test Dummy" },
       ui: '<div face="front" at="0.5 0.92" width="0.6m" facing="player" class="px-2 py-1 bg-black/80 text-amber-200 text-center rounded" style="font-size:70px">DUMMY {{ state.hp | round }}</div>' });
     return; }
   if (w.kind === "clear") { for (const o of ctx.query({ tags: ["tl-bay-foe"], radius: 1e4 })) ctx.destroy(o.id); return; }
