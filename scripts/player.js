@@ -1,4 +1,5 @@
 import { migrate, wakePlace, wakeLog, canSaveHere } from "./lib/save.js"
+import { layout as layout9, zoneAt as zoneAt9 } from './lib/level9.js'
 import { firstPersonGun, firstPersonTuning } from './lib/fp-gun.js'
 import { setQuest } from './lib/quests.js'
 import { assaulted, forgiveTick, hostileReason } from './lib/forgive.js'
@@ -51,7 +52,9 @@ import { zoneAt as zoneAt4, DRAIN4 } from './lib/level4.js'
 import { zoneAt as zoneAt5, DRAIN5 } from './lib/level5.js'
 import { beastStruck } from './lib/l5-beast.js'
 import L3 from './lib/data/level3.yml'
-const zoneHere = (ctx, x, z) => ctx.self.place === 'thehub' ? (x > 505 ? 'hub_dark' : x > 2 && x < 30 && z < -4 && z > -16 ? 'hub_meg' : x > 174 && x < 196 && z > 4 && z < 13 ? 'hub_amber' : 'hub_road') : ctx.self.place === 'level02' ? (ctx.self.feetPosition.y < -1 ? 'l02_basement' : 'l02_remodel') : ctx.self.place === 'spamton' ? 'spam_arena' : ctx.self.place === 'level7' ? (Math.hypot(x - 46, z + 120) < 34 ? 'l7_seawatch' : Math.hypot(x + 70, z + 95) < 55 ? 'l7_fort' : z > -4 && Math.hypot(x, z) < 12 ? 'l7_room1' : z > -36 && Math.abs(x) < 10 ? 'l7_pier' : 'l7_sea') : ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : ctx.self.place === 'level2' ? 'l2_' + zoneAt2(x, z) : ctx.self.place === 'level3' ? 'l3_' + zoneAt3(x, z) : ctx.self.place === 'gamma' ? 'l3_gamma' : ctx.self.place === 'level4' ? 'l4_' + zoneAt4(x, z, ctx.self.state.home) : ctx.self.place === 'level5' ? 'l5_' + (zoneAt5(x, z)?.id ?? 'lobby') : ctx.self.place === 'level6' ? 'l6_halls' : ctx.self.place === 'level61' ? 'l61_court' : ctx.self.place === 'level12' ? 'l12_matrix' : ctx.self.place === 'level13' ? 'l13_halls' : ctx.self.place === 'level11' ? 'l11_city' : ctx.self.place === 'level10' ? 'l10_fields' : ctx.self.place === 'level8' ? 'l8_cave' : ctx.self.place === 'level21' ? 'l21_' + zoneAt21(x, z) : ctx.self.place === 'level70' ? 'l70_' + zoneAt70(x, z) : ctx.self.place === 'level31' ? 'l31_' + (ctx.self.feetPosition.y > 2.5 && x < -24.9 ? 'mezz' : zoneAt31(x, z)) : (ctx.place?.state?.moments?.manilaAt && Math.abs(x - ctx.place.state.moments.manilaAt.x) < 5.8 && Math.abs(z - ctx.place.state.moments.manilaAt.z) < 5.8 ? 'manila' : zoneAt(x, z))
+let L9 = null
+const zone9 = (ctx, x, z) => { const sd = ctx.place?.state?.l9seed; if (sd == null) return 'l9_street'; if (L9?.seed !== sd) L9 = layout9(sd); return zoneAt9(L9, x, z) }
+const zoneHere = (ctx, x, z) => ctx.self.place === 'thehub' ? (x > 505 ? 'hub_dark' : x > 2 && x < 30 && z < -4 && z > -16 ? 'hub_meg' : x > 174 && x < 196 && z > 4 && z < 13 ? 'hub_amber' : 'hub_road') : ctx.self.place === 'level02' ? (ctx.self.feetPosition.y < -1 ? 'l02_basement' : 'l02_remodel') : ctx.self.place === 'spamton' ? 'spam_arena' : ctx.self.place === 'level7' ? (Math.hypot(x - 46, z + 120) < 34 ? 'l7_seawatch' : Math.hypot(x + 70, z + 95) < 55 ? 'l7_fort' : z > -4 && Math.hypot(x, z) < 12 ? 'l7_room1' : z > -36 && Math.abs(x) < 10 ? 'l7_pier' : 'l7_sea') : ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : ctx.self.place === 'level2' ? 'l2_' + zoneAt2(x, z) : ctx.self.place === 'level3' ? 'l3_' + zoneAt3(x, z) : ctx.self.place === 'gamma' ? 'l3_gamma' : ctx.self.place === 'level4' ? 'l4_' + zoneAt4(x, z, ctx.self.state.home) : ctx.self.place === 'level5' ? 'l5_' + (zoneAt5(x, z)?.id ?? 'lobby') : ctx.self.place === 'level6' ? 'l6_halls' : ctx.self.place === 'level61' ? 'l61_court' : ctx.self.place === 'level12' ? 'l12_matrix' : ctx.self.place === 'level13' ? 'l13_halls' : ctx.self.place === 'level11' ? 'l11_city' : ctx.self.place === 'level10' ? 'l10_fields' : ctx.self.place === 'level8' ? 'l8_cave' : ctx.self.place === 'level9' ? zone9(ctx, x, z) : ctx.self.place === 'level21' ? 'l21_' + zoneAt21(x, z) : ctx.self.place === 'level70' ? 'l70_' + zoneAt70(x, z) : ctx.self.place === 'level31' ? 'l31_' + (ctx.self.feetPosition.y > 2.5 && x < -24.9 ? 'mezz' : zoneAt31(x, z)) : (ctx.place?.state?.moments?.manilaAt && Math.abs(x - ctx.place.state.moments.manilaAt.x) < 5.8 && Math.abs(z - ctx.place.state.moments.manilaAt.z) < 5.8 ? 'manila' : zoneAt(x, z))
 
 import SOUNDS from './lib/data/sounds.yml'
 import THROW from './lib/data/throwables.yml'
@@ -105,7 +108,7 @@ export const weaponOf = (s) => W[s.equipped] ?? W.fists
 
 const DOWN_MS = 3200 // how long you watch yourself lie there (Savi's pick); camera.js and the creatures read the same window
 // checkpoints: each place's safe spawn plus every doorway's arrival marker; you wake at the nearest one
-const CHECKS = { main: ['main-from-l1'], level1: ['l1-from-main', 'l1-from-l2'], level2: ['l2-from-l1', 'l2-from-l3', 'l2-from-l21'], level21: ['l21-from-l2', 'l21-from-l8'], level3: ['l3-from-l2', 'l3-gamma-door', 'l3-lift-arrive', 'l3-from-l5'], level4: ['l4-lift-arrive', 'l4-from-l5'], level5: ['l5-from-l3', 'l5-from-l4', 'l5-from-l6', 'l5-lobby'], level6: ['l6-from-l5', 'l6-from-l7', 'l6-from-l61'], level61: ['l61-from-l6', 'l61-from-l4', 'l61-arrive'], level11: ['l11-from-l61', 'l11-spawn'], level7: ['l7-from-l6', 'l7-seawatch-spawn', 'l7-fort-spawn'], level8: ['l8-from-l7', 'l8-from-camp', 'l8-from-l21'], gamma: [] }
+const CHECKS = { main: ['main-from-l1'], level1: ['l1-from-main', 'l1-from-l2'], level2: ['l2-from-l1', 'l2-from-l3', 'l2-from-l21'], level21: ['l21-from-l2', 'l21-from-l8'], level3: ['l3-from-l2', 'l3-gamma-door', 'l3-lift-arrive', 'l3-from-l5'], level4: ['l4-lift-arrive', 'l4-from-l5'], level5: ['l5-from-l3', 'l5-from-l4', 'l5-from-l6', 'l5-lobby'], level6: ['l6-from-l5', 'l6-from-l7', 'l6-from-l61'], level61: ['l61-from-l6', 'l61-from-l4', 'l61-arrive'], level11: ['l11-from-l61', 'l11-spawn'], level7: ['l7-from-l6', 'l7-seawatch-spawn', 'l7-fort-spawn'], level8: ['l8-from-l7', 'l8-from-camp', 'l8-from-l21'], level9: ['l9-from-l8', 'l9-from-hub'], gamma: [] }
 function nearestCheckpoint(ctx, at) {
   const sp = ctx.place.defaultSpawnPoint ?? {}, yaw0 = ctx.place.defaultSpawnRotation?.yaw
   let best = { pos: { x: sp.x ?? 0, y: 0.1, z: sp.z ?? 0 }, rot: yaw0 }, bd = Math.hypot(best.pos.x - at.x, best.pos.z - at.z)
@@ -144,6 +147,7 @@ const CONCRETE = new Set(['level1', 'level2', 'level3', 'gamma', 'level6', 'leve
 function floorOf(ctx) {
   const pl = ctx.self.place
   if (pl === 'level8') return 'gravel'
+  if (pl === 'level9') return zone9(ctx, ctx.self.feetPosition.x, ctx.self.feetPosition.z) === 'l9_house' ? 'office' : 'concrete'
   if (pl === 'level10') return 'field'
   if (pl === 'level7') return 'wood'
   if (pl === 'level61') return 'terrazzo'

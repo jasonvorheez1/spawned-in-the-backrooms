@@ -19,6 +19,7 @@ function lay(ctx, L) {
   sp("l9-from-l8", { feetPosition: T(0, 30, 0.2), rotation: { yaw: 0 } });
   sp("l9-from-hub", { feetPosition: T(2, 24, 0.2), rotation: { yaw: 0 } });
   sp("l9-to-l8", { ...DOOR("level8#l8-from-l9", 9, 4, 2), feetPosition: T(0, 61, 0) });
+  sp("l9-to-l10", { ...DOOR("level10#l10-from-l11", 3, 4, 14), feetPosition: T(-58, 44, 0) });
   const [nx, nz] = L.north;
   sp("l9-to-l11", { ...DOOR("level11#lv10-arrive", 9, 4, 2), feetPosition: T(nx, nz - 2, 0) });
   sp("l9-city-glow", { feetPosition: { x: nx, y: 14, z: nz - 60 }, light: { kind: "point", color: "oklch(0.75 0.1 60)", intensity: 40, distance: 160 }, visibleRange: { max: 400 } });

@@ -1,7 +1,7 @@
 # Sign styles (scripts/lib/sign-style.js, Shelly Nov 12: "look through evrey single sign and make them more unique").
 # A sign is any box with a ui panel whose id or tags say sign; its place's style unless ids names one. Her picks throughout.
 places: { main: tin, level01: enamel, level1: tin, level2: enamel, level21: plywood, level3: enamel, gamma: plywood, level4: enamel,
-  level5: plaque, level6: plank, level61: cardboard, level7: plank, level8: plywood, level10: plank, level11: street, level12: tin,
+  level5: plaque, level6: plank, level61: cardboard, level7: plank, level8: plywood, level9: street, level10: plank, level11: street, level12: tin,
   level184: tin, level26: enamel, level27: enamel, home11: plaque, testlab: enamel }
 ids:
   l7-fort-sign: plank

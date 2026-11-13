@@ -21,7 +21,8 @@ const EXITS = {
   level6: [{ to: "level5", id: "l6-back" }, { to: "level7", id: "l6-to-l7", label: "Stairwell" }, { to: "level61", id: "l6-to-l61", label: "Tripwire" }, { to: "level61", id: "l6-wire-trip", label: "Tripwire" }],
   level61: [{ to: "level6", id: "l61-to-l6", label: "M.E.G. checkpoint", needs: "l61Clearance" }, { to: "level3", id: "l61-vent-in", label: "Suction vent" }, { to: "level11", id: "l61-to-l11" }],
   level7: [{ to: "level6", id: "l7-back", label: "Stairs up" }, { to: "level8", id: "l7-diving-bell", label: "Diving bell" }],
-  level8: [{ to: "level21", id: "l8-to-l21", label: "Cave tunnel" }, { to: "level7", id: "l8-lake-back", label: "Underwater passage" }],
+  level8: [{ to: "level21", id: "l8-to-l21", label: "Cave tunnel" }, { to: "level9", id: "l8-to-l9", label: "Cave mouth with rain in it" }, { to: "level7", id: "l8-lake-back", label: "Underwater passage" }],
+  level9: [{ to: "level8", id: "l9-to-l8", label: "The road back into the rock" }, { to: "level11", id: "l9-to-l11", label: "North road, toward the glow" }, { to: "level10", id: "l9-to-l10", label: "The gap in the fence" }],
   level10: [
     { to: "level11", id: "l10-road-north", label: "North road" }, { to: "level11", id: "l10-road-south", label: "South road" },
     { to: "level7", id: "l10-lake-deep", label: "Lake opening" }, { to: "level26", id: "l10-fun-poster", label: "Ship poster" },
