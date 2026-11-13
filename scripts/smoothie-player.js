@@ -17,7 +17,7 @@ pop juice burst=40 life=.5..0.9 v=up(2.2..3.4)+sdir()*(.6..1.4) size=.04..0.09 a
 const CONFETTI = `fx
 pop conf burst=90 life=1.4..2.4 v=up(4..6)+sdir()*(1.5..3) size=.05..0.09 spin=-10..10 acc=grav()*.35+drag(1.2) col=<1,.4,.72>..<.3,.95,1> a=1>.8:1>0 sz=$size rot=$age*$spin r=sprite(soft-disc,alpha)
 pop sparkle burst=30 life=.6..1.2 v=sdir()*(1..2.5) size=.06..0.12 acc=drag(2) col=hdr(4,3,1.6) a=1>0 sz=$size r=sprite(soft-disc,add)
-pop glow n=1 life=1.2 glo=1>0 r=light(<1,.6,.85>,$glo*20,8)`
+pop glow burst=1 life=1.2 glo=1>0 r=light(<1,.6,.85>,$glo*20,8)`
 export function onInput(ctx, input) {
   if (!input.pressed?.smoothie) return
   const s = ctx.self.state, d = input.actionData?.smoothie ?? {}
