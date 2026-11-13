@@ -95,7 +95,7 @@ export function layFood(ctx) {
   M("bench-n1", "benchO", 35.6, 6.5, 180, BSEAT); M("bench-n2", "benchG", 39.4, 6.5, 180, BSEAT);
   M("condi", "condi", 40.85, 8.15, 90, {}, floorY);
   // the staff door on the south wall
-  P("door", { feetPosition: { x: 40.05, y: 0.018, z: 29.96 }, primitive: box(1.0, 2.1, 0.06), material: { color: "#7d8085", roughness: 0.55, metalness: 0.3 }, tags: ["usable"], state: { name: "Employees only", verb: "Open", info: "Locked from the other side.", kind: "door" }, behavior: "scripts/l31-food.js",
+  P("door", { feetPosition: { x: 40.05, y: 0.018, z: 29.96 }, model: { id: "/cdn/value.42cc40912cdb368cf2af90712a4d55bf4d91aa4b9cd970b3a731e96c721cf974.glb", forward: "+z" } /* art/l31-staffdoor/build.py */, tags: ["usable"], state: { name: "Employees only", verb: "Open", info: "Locked from the other side.", kind: "door" }, behavior: "scripts/l31-food.js",
     children: [{ feetPosition: { x: 0, y: 0, z: 0.02 }, primitive: box(1.16, 2.18, 0.05), material: { color: "#3c3e42", roughness: 0.6 } }, { feetPosition: { x: -0.38, y: 1.0, z: -0.07 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.03, height: 0.06 }, rotation: { pitch: 90 }, material: { color: "#c9ccd0", metalness: 0.9, roughness: 0.3 } }, { feetPosition: { x: 0, y: 0.1, z: -0.035 }, primitive: box(0.9, 0.25, 0.01), material: { color: "#b9bcc0", metalness: 0.8, roughness: 0.4 } }] });
   P("door-label", { feetPosition: { x: 40.05, y: 1.698, z: 29.925 }, rotation: { yaw: 0 }, vector: DOORTXT });
   // Tables west of the ordering lane, left as people left them (Shelly Nov 13: "de ai slop this"): chairs pushed out and turned, one table short a chair, none in a grid
