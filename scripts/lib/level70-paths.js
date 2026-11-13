@@ -8,7 +8,7 @@ import { GARAGE_DOOR, HOTEL_DOOR } from "./level70-civic.js";
 import { CAMP_FIRE, RIG, DOCK_POST, TREES } from "./level70-wild.js";
 export const V = 1;
 const TEX = "cdn/texture-trampled-packed-snow-path-with-boot-prints-and-slush.png";
-const HEAPS = ["/cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb", "/cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb"];
+const HEAPS = ["/cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb", "/cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb"];
 export const WALKS = [
   { id: "house", w: 2.4, pts: [[-4.6, -16.2], [-18, -16.4], [-28, -16.2], [-32.2, -16.2]] },
   { id: "igloo", w: 1.8, pts: [[-26, -15.4], [-31, -9.5], [-38, -6], [-44, -4.4], [IGLOO_DOOR.x, IGLOO_DOOR.z]] },
@@ -61,8 +61,7 @@ export function lay(ctx) {
     sp("l70-path-glow-" + id, { feetPosition: { x, y: 2.2, z }, light: { kind: "point", color: "#ffb36b", intensity: 1.6, distance: 11 } });
   for (const [id, x0, y0, z0, x1, y1, z1, wd] of RAMPS) {
     const dx = x1 - x0, dz = z1 - z0, L = Math.hypot(dx, dz), a = Math.atan2(y1 - y0, L), yaw = Math.atan2(-dx, -dz);
-    const q = (h) => ({ x: Math.cos(yaw / 2) * Math.sin(-a / 2) * 0 + Math.sin(-a / 2) * Math.cos(yaw / 2), y: Math.sin(yaw / 2) * Math.cos(-a / 2), z: -Math.sin(yaw / 2) * Math.sin(-a / 2), w: Math.cos(yaw / 2) * Math.cos(-a / 2) });
-    sp("l70-path-ramp-" + id, { feetPosition: { x: (x0 + x1) / 2, y: (y0 + y1) / 2 - 0.05, z: (z0 + z1) / 2 }, pivot: "center", rotation: q(),
+    sp("l70-path-ramp-" + id, { feetPosition: { x: (x0 + x1) / 2, y: (y0 + y1) / 2 - 0.05, z: (z0 + z1) / 2 }, pivot: "center", rotation: { yaw: yaw * 57.2958, pitch: a * 57.2958 },
       primitive: { kind: "box", width: wd, height: 0.1, depth: Math.hypot(L, y1 - y0) + 0.3 }, visible: false, physics: { body: "static", collider: "box" } });
   }
 }
