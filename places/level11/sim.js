@@ -25,7 +25,7 @@ import MODELS from "../../scripts/lib/data/level11-models.yml";
 export const cadence = "1s";
 const RENO_FLOOR = 0.32;
 const mallTrash = (i) => ({ x: -15.15 + i * 0.2, y: 0.33, z: 28.1 + i * 0.65 });
-const V = 156; // 154: newsbox out of the hot dog cart, printed cards // 148 laid a cut list (a throw mid-lay): 149 lays it whole again // the market court and the central pedestrian route
+const V = 157; // 157: substation 4 Tripo pieces, vault wall opened (Shelly Nov 13) // // 154: newsbox out of the hot dog cart, printed cards // 148 laid a cut list (a throw mid-lay): 149 lays it whole again // the market court and the central pedestrian route
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
