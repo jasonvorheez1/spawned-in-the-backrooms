@@ -8,7 +8,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 80;
+const V = 81;
 const RAIL_GLB = "/cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb";
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
@@ -158,8 +158,12 @@ function cinema(ctx) {
   // north alcove: the big television and three stepped metal benches. It is the darkest, quietest corner.
   const C = ZONES.cinema, cx = (C.x0 + C.x1) / 2;
   ctx.spawn("l31-tv", { feetPosition: { x: cx, y: 1.3, z: C.z0 + 0.12 }, primitive: box(4.8, 2.8, 0.14), material: { color: "#0a0a0c", roughness: 0.3 }, castShadow: false,
-    children: [{ feetPosition: { x: 0, y: 0.1, z: 0.075 }, primitive: box(4.6, 2.6, 0.01), material: { texture: "cdn/texture-old-animated-movie-still-dog-on-clouds-crt-scanlines.png", color: "#ffffff", emissive: "#9ab6ff", emissiveIntensity: 0.3 } }] });
-  ctx.spawn("l31-tv-light", { feetPosition: { x: cx, y: 2.6, z: C.z0 + 2 }, light: { kind: "point", color: "#8fb0ff", intensity: 1.6, distance: 11 } });
+    children: [ // Shelly Nov 13: "make this screen better + show dandy's world": her Dandy's World art, once, on a lit panel the colour of its own sky
+      { feetPosition: { x: 0, y: 0.1, z: 0.072 }, primitive: box(4.6, 2.6, 0.006), material: { color: "#1f7ea8", emissive: "#1f7ea8", emissiveIntensity: 0.55, roughness: 0.25 } },
+      { feetPosition: { x: 0, y: 0.15, z: 0.078 }, primitive: { kind: "plane", width: 2.5, height: 2.5 }, material: { texture: "/cdn/image-u019svac1.webp", color: "#ffffff", emissive: "#ffffff", emissiveMap: "/cdn/image-u019svac1.webp", emissiveIntensity: 0.6, roughness: 0.2 } },
+      { feetPosition: { x: 0, y: 1.43, z: 0.03 }, primitive: box(4.9, 0.06, 0.2), material: { color: "#1a1a1e", roughness: 0.4, metalness: 0.5 } },
+      { feetPosition: { x: 1.95, y: -1.26, z: 0.08 }, primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.025, height: 0.01 }, rotation: { pitch: 90 }, material: { color: "#ff3020", emissive: "#ff3020", emissiveIntensity: 2 } }] });
+  ctx.spawn("l31-tv-light", { feetPosition: { x: cx, y: 1.6, z: C.z0 + 1.6 }, light: { kind: "point", color: "#7fc6ff", intensity: 2.2, distance: 11 } });
   for (let i = 0; i < 3; i++) { const z = C.z0 + 4.2 + i * 1.6, y = i * 0.3;
     if (i) ctx.spawn(`l31-step${i}`, { feetPosition: { x: cx, y: 0, z: z + 0.5 }, primitive: rbox(9, y, 1.6), material: CARPET, physics: "static", castShadow: false });
     ctx.spawn(`l31-bench${i}`, { feetPosition: { x: cx, y, z: z + 0.1 }, ...P({ kind: "seats", n: 14 - i }), physics: "static", tags: ["seat"], state: { name: "Cinema seat" } }); }
