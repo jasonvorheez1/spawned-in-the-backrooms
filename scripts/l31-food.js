@@ -3,7 +3,6 @@ import { L31_ZONE_X } from "./lib/level31-food.js";
 import { swingTo } from "./lib/door-swing.js";
 const SIT = { m: "cdn/clip-sit-loop.glb", f: "cdn/clip-sit-female-loop.glb" };
 const tell = (ctx, pl, text) => { pl.state.notice = { text, at: ctx.now() }; };
-export const updateSchedule = { every: { seconds: 0.5 } }; // a door mid-swing wakes every tick: sleep() ends on its own write
 export const ears = {
   press: (ctx, p) => {
     const pl = ctx.place.players.find((x) => x.id === p?.by), k = ctx.self.state.kind; if (!pl) return;
@@ -28,4 +27,5 @@ export function update(ctx) {
     const s = pl.state;
     if (s.l31tray && !s.l31banned && pl.feetPosition.x < L31_ZONE_X) { s.l31banned = true; tell(ctx, pl, "You left the food court with your tray."); }
   }
+  ctx.sleep(0.5); // the clerk checks twice a second; the door alone runs every tick while it swings
 }
