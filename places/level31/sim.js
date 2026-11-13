@@ -8,7 +8,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 70;
+const V = 71;
 const RAIL_GLB = "/cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb";
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
@@ -82,7 +82,11 @@ function shell(ctx) {
   ctx.spawn("l31-wall-e-lintel", { feetPosition: { x: B.x1 + T / 2, y: K.doorH, z: K.doorZ }, primitive: box(T, H - K.doorH, K.doorW), material: WALL, physics: "static", castShadow: false });
   ctx.spawn("l31-arch", { feetPosition: { x: B.x1 + T / 2, y: 0, z: K.doorZ }, // Tripo chrome-and-teal neon arch (drawn 0.31 x 1.8 x 1.42 m, opening along z) stretched to the doorway
     castShadow: false,
-    children: [{ id: "m", model: "/cdn/value.bb1c9a9a967c29f467ae23a80e6b5ff9f2dc4d7362c94ba43ce18ee444957e25.glb", scale: { x: 1.6, y: 1.92, z: 2.8 } }, { feetPosition: { x: -0.32, y: K.doorH + 0.45, z: 0 }, rotation: { yaw: 90 }, vector: `<svg viewBox='0 0 300 60' width='2.6m'><text x='150' y='44' text-anchor='middle' font-family='display' font-size='40' font-weight='bold' letter-spacing='4' fill='#ecdaba'>ARCADE</text></svg>`, castShadow: false }] });
+    children: [ // chrome jambs and a rounded head, teal neon on the inner face (the old Tripo arch carried two bars across the opening: Shelly Nov 13 "fix this")
+      ...[-1, 1].map((sd, i) => ({ id: "jamb" + i, feetPosition: { x: 0, y: 0, z: sd * (K.doorW / 2 + 0.06) }, primitive: { kind: "cylinder", radiusTop: 0.09, radiusBottom: 0.1, height: K.doorH - K.doorW / 2 * 0.35, radialSegments: 20 }, material: { color: "#d9dde3", metalness: 0.95, roughness: 0.22 } })),
+      ...[-1, 1].map((sd, i) => ({ id: "neon" + i, feetPosition: { x: 0, y: 0.05, z: sd * (K.doorW / 2 - 0.05) }, primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.025, height: K.doorH - K.doorW / 2 * 0.35 - 0.1, radialSegments: 10 }, material: { color: "#1d7b80", emissive: "#3ff0e0", emissiveIntensity: 2.2 } })),
+      { id: "head", feetPosition: { x: 0, y: K.doorH - K.doorW / 2 * 0.35, z: 0 }, rotation: { yaw: 90 }, scale: { x: 1, y: 0.35, z: 1 }, primitive: { kind: "torus", radius: K.doorW / 2 + 0.06, tube: 0.1, radialSegments: 16, tubularSegments: 40, arc: Math.PI }, material: { color: "#d9dde3", metalness: 0.95, roughness: 0.22 } },
+      { feetPosition: { x: -0.32, y: K.doorH + 0.45, z: 0 }, rotation: { yaw: 90 }, vector: `<svg viewBox='0 0 300 60' width='2.6m'><text x='150' y='44' text-anchor='middle' font-family='display' font-size='40' font-weight='bold' letter-spacing='4' fill='#ecdaba'>ARCADE</text></svg>`, castShadow: false }] });
   // the back room: its own floor, ceiling and three walls
   const KW = K.x1 - K.x0, KD = K.z1 - K.z0, kx = (K.x0 + K.x1) / 2 + T / 2, kz = (K.z0 + K.z1) / 2;
   ctx.spawn("l31-back-floor", { feetPosition: { x: kx, y: -0.3, z: kz }, primitive: box(KW + T, 0.3, KD), material: ARCADE_CARPET, physics: "static", receiveShadow: true, castShadow: false });
