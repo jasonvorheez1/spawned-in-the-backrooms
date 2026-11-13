@@ -7,7 +7,7 @@ hit: [6, 10]        # hp per scratch or bite; the victim never drops below 1
 gap: [450, 850]     # ms between pounces
 hits: [4, 7]        # attacks before she blinks away
 rageMs: 14000
-warnMs: 8000        # empty-handed: this long before she turns back to her cards (never claws)
+warnMs: 8000        # empty-handed: this long before she turns back to her cards then claws if they still carry none
 awayMs: [40000, 60000]   # gone after a fight, then back calm at home
 blinkHp: 60         # struck below this, she is simply elsewhere
 blinkEvery: [120000, 240000]  # a psychic hop between rooms now and then
