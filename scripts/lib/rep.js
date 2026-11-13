@@ -15,13 +15,28 @@ export const GROUPS = {
   rink: { name: "Rink Facelings", info: "the faces that run Level 31" },
   froid: { name: "Kingdom of Froidetown", info: "Level 70's parliament, its River Guard and its townsfolk" },
   gelu: { name: "Carnifices of Gelu", info: "the frost cult camped in Iceshed" },
+  amber: { name: "Camp Amber", info: "wanderers who keep supply stops in the Hub" },
 };
+// New Vegas reputation: fame and infamy are kept apart per faction (s.fame[g], s.infamy[g], 0..100); s.rep[g] stays the net (fame - infamy) every older reader uses.
+// A favour for one side is a slight to its rival: RIVALS[g] takes infamy at RIVAL_CUT of the fame earned (her pick, 1/3).
+export const RIVALS = { meg: ["bntg"], bntg: ["meg"], froid: ["gelu"], gelu: ["froid"], concession: ["rink"], rink: ["concession"] };
+const RIVAL_CUT = 1 / 3;
+const LV = (n) => (n >= 60 ? 3 : n >= 35 ? 2 : n >= 12 ? 1 : 0);
+// TITLE[fame level][infamy level], the game's own grid
+const TITLE = [["Neutral", "Shunned", "Hated", "Vilified"], ["Accepted", "Mixed", "Sneering Punk", "Merciful Thug"], ["Liked", "Smiling Troublemaker", "Unpredictable", "Soft-Hearted Devil"], ["Idolized", "Good-Natured Rascal", "Dark Hero", "Wild Child"]];
+const seed = (s, g) => { const r = s?.rep?.[g] ?? 0; return { f: s?.fame?.[g] ?? Math.max(0, r), i: s?.infamy?.[g] ?? Math.max(0, -r) } }; // an older save: its net becomes fame or infamy
+export const fameOf = (s, g) => Math.round(seed(s, g).f);
+export const infamyOf = (s, g) => Math.round(seed(s, g).i);
+export const titleOf = (s, g) => TITLE[LV(fameOf(s, g))][LV(infamyOf(s, g))];
+export const titleColor = (s, g) => { const f = LV(fameOf(s, g)), i = LV(infamyOf(s, g)); return i === 0 ? (f >= 2 ? "#9bd27a" : f ? "#c4d88a" : "#d8d0b0") : f === 0 ? (i >= 2 ? "#e06050" : "#e0a050") : "#d8b860" };
 const MAP = { meg: "meg", hk: "meg", guard: "meg", camp: "meg", survivor: "survivors", trader: "survivors", pilgrim: "survivors", wanderer: "survivors", scavenger: "survivors", alef: "survivors",
   homely: "hotel", hotel: "hotel", orig: "hotel", surrender: "surrender", lightless: "lightless", bntg: "bntg", concession: "concession", rink: "rink", froid: "froid", gelu: "gelu" };
 const PREFIX = { bntg: "bntg", meg: "meg", hk: "meg", surv: "survivors", omega: "survivors", l5: "hotel", homely: "hotel", tbd: "survivors", gamma: "meg", l61: "survivors" };
 export function groupOf(it) {
+  if (String(it?.id ?? "").split("/").pop().startsWith("hub-amber")) return "amber";
   const f = it?.state?.faction5 ?? it?.state?.faction4 ?? it?.state?.faction; if (f && MAP[f]) return MAP[f];
   const id = String(it?.id ?? "").split("/").pop(), p = id.split("-")[0];
+  if (id.startsWith("hub-amber")) return "amber";
   return PREFIX[p] ?? "survivors";
 }
 export const TIERS = [[60, "Idolized"], [35, "Liked"], [12, "Accepted"], [-11.99, "Neutral"], [-34.99, "Disliked"], [-59.99, "Hated"], [-1e9, "Vilified"]];
@@ -29,8 +44,9 @@ export const tierOf = (n) => (TIERS.find(([lo]) => n >= lo) ?? TIERS[TIERS.lengt
 export const tierColor = (n) => (n >= 35 ? "#9bd27a" : n >= 12 ? "#c4d88a" : n > -12 ? "#d8d0b0" : n > -35 ? "#e0a050" : "#e06050");
 export const repOf = (s, g) => Math.max(-100, Math.min(100, Math.round((s?.rep?.[g] ?? 0) * 10) / 10));
 export const standing = (s, it) => repOf(s, groupOf(it));
-export const isVilified = (s, it) => !["lightless", "survivors"].includes(groupOf(it)) && repOf(s, groupOf(it)) <= -60;
-export const isHated = (s, it) => repOf(s, groupOf(it)) <= -35;
+// shot on sight: Vilified, Hated or Merciful Thug (infamy high, little fame to soften it); a Soft-Hearted Devil or Wild Child is let be
+export const isVilified = (s, it) => { const g = groupOf(it); if (["lightless", "survivors"].includes(g)) return false; return (infamyOf(s, g) >= 60 && fameOf(s, g) < 35) || (infamyOf(s, g) >= 35 && fameOf(s, g) < 12) };
+export const isHated = (s, it) => { const g = groupOf(it); return infamyOf(s, g) >= 35 && fameOf(s, g) < 35 };
 // price change from standing, as a discount fraction (negative = dearer)
 export const repDisc = (s, it) => { const r = standing(s, it); return r >= 60 ? 0.2 : r >= 35 ? 0.12 : r >= 12 ? 0.05 : r > -12 ? 0 : r > -35 ? -0.15 : -0.35 };
 export const karmaOf = (s) => Math.max(-100, Math.min(100, Math.round(s?.karma ?? 0)));
@@ -38,11 +54,19 @@ export const karmaTitle = (k) => (k >= 60 ? "Very Good" : k >= 25 ? "Good" : k >
 export const karmaColor = (k) => (k >= 25 ? "#9bd27a" : k > -25 ? "#d8d0b0" : "#e06050");
 
 // writes: both return a one-line notice when a tier changed, else ""
+function bump(s, g, d) { // one faction's fame (d > 0) or infamy (d < 0); returns the new title's notice
+  const was = titleOf(s, g), c = seed(s, g), cap = (n) => Math.round(Math.max(0, Math.min(100, n)) * 10) / 10;
+  if (d > 0) c.f = cap(c.f + d); else c.i = cap(c.i - d);
+  s.fame = { ...(s.fame ?? {}), [g]: c.f }; s.infamy = { ...(s.infamy ?? {}), [g]: c.i };
+  s.rep = { ...(s.rep ?? {}), [g]: cap(50 + (c.f - c.i) / 2) * 2 - 100 };
+  const now = titleOf(s, g);
+  return was !== now ? `${GROUPS[g]?.name ?? g}: ${now}` : "";
+}
 export function addRep(s, g, d) {
   if (!g || !d) return "";
-  const was = repOf(s, g), now = Math.max(-100, Math.min(100, was + d));
-  s.rep = { ...(s.rep ?? {}), [g]: Math.round(now * 10) / 10 };
-  return tierOf(was) !== tierOf(now) ? `Reputation with ${GROUPS[g]?.name ?? g}: ${tierOf(now)}` : "";
+  const out = [bump(s, g, d)];
+  if (d > 0) for (const r of RIVALS[g] ?? []) out.push(bump(s, r, -d * RIVAL_CUT));
+  return out.filter(Boolean).join(" · ");
 }
 export function addKarma(s, d) {
   const was = karmaOf(s); s.karma = Math.max(-100, Math.min(100, (s.karma ?? 0) + d));
@@ -67,9 +91,9 @@ export function repKill(ctx, victim, killer, seen = [], provoked = false) {
 // a kindness: karma and the group's standing
 export function repKind(ctx, who, it, karma = 1, rep = 2) { const s = who?.state; if (!s) return; say(ctx, s, addKarma(s, karma), addRep(s, groupOf(it), rep)) }
 // a fair trade nudges standing up a hair; never past what trading can earn
-export function repTrade(ctx, who, it) { const s = who?.state; if (!s) return; const g = groupOf(it); if (repOf(s, g) < 30) s.rep = { ...(s.rep ?? {}), [g]: Math.round((repOf(s, g) + 0.2) * 10) / 10 } }
+export function repTrade(ctx, who, it) { const s = who?.state; if (!s) return; const g = groupOf(it); if (fameOf(s, g) < 30) bump(s, g, 0.2) }
 // a line for the language model about how this group sees the player
 export function repLine(s, it) {
   const g = groupOf(it), r = repOf(s, g), k = karmaOf(s);
-  return `Your people (${GROUPS[g]?.name ?? g}) think of this wanderer as ${tierOf(r)} (${r}).${r <= -35 ? " They have wronged your people; you are cold, short, and do not want to help." : r >= 35 ? " They have done right by your people; you are warmer than you would be to a stranger." : ""}${k <= -25 ? " Word is they are a bad person." : k >= 25 ? " Word is they are decent." : ""}`;
+  return `Your people (${GROUPS[g]?.name ?? g}) think of this wanderer as ${titleOf(s, g)} (${r}).${r <= -35 ? " They have wronged your people; you are cold, short, and do not want to help." : r >= 35 ? " They have done right by your people; you are warmer than you would be to a stranger." : ""}${k <= -25 ? " Word is they are a bad person." : k >= 25 ? " Word is they are decent." : ""}`;
 }
