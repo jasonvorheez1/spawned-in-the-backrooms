@@ -118,6 +118,8 @@ export function update(ctx, dt) {
       if (m.roam && flat(m.roam, pos) > 0.6) { const d = flat(m.roam, pos); vx = (m.roam.x - pos.x) / d * 0.9; vz = (m.roam.z - pos.z) / d * 0.9; play(f, m, "prowl", PROWL); }
       else play(f, m, "fidget", FIDGET);
     }
+    for (const o of foes) { if (o.id === f.id) continue; const ox = pos.x - o.feetPosition.x, oz = pos.z - o.feetPosition.z, od = Math.hypot(ox, oz); // two knots never merge into one
+      if (od < 1.4) { const k = (1.4 - od) * 3, ux = od > 0.01 ? ox / od : Math.cos(f.id.length + o.id.length), uz = od > 0.01 ? oz / od : Math.sin(f.id.length * 7); vx += ux * k; vz += uz * k; } }
     if (now > (m.tw ?? 0)) { // a knot of limbs never sits square: it lurches as it goes
       const mv = !!(vx || vz); m.tw = now + (mv ? 140 : 300 + ctx.random() * 500);
       const yaw = mv ? Math.atan2(-vx, -vz) * 57.3 : (typeof f.rotation === "number" ? f.rotation : f.rotation?.yaw ?? 0);
