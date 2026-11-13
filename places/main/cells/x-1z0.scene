@@ -56,7 +56,7 @@ level0-lights/l10_12:
 level0-lights/l10_24:
   feetPosition: {x: -70, y: 2.7, z: -14}
   id: level0-lights/l10_24
-  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 0, kind: point, shadow: {enabled: false}}
   parent: level0-lights
   visibleRange: {max: 42}
 level0-lights/l10_26:
@@ -602,19 +602,19 @@ level0-lights/l6_42:
 level0-lights/l7_15:
   feetPosition: {x: -82, y: 2.7, z: -50}
   id: level0-lights/l7_15
-  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  light: {color: oklch(0.86 0.04 210), distance: 10, intensity: 1.6, kind: point, shadow: {enabled: false}}
   parent: level0-lights
   visibleRange: {max: 42}
 level0-lights/l7_19:
   feetPosition: {x: -82, y: 2.7, z: -34}
   id: level0-lights/l7_19
-  light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
+  light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 0, kind: point, shadow: {enabled: false}}
   parent: level0-lights
   visibleRange: {max: 42}
 level0-lights/l7_21:
   feetPosition: {x: -82, y: 2.7, z: -26}
   id: level0-lights/l7_21
-  light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
+  light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 0, kind: point, shadow: {enabled: false}}
   parent: level0-lights
   visibleRange: {max: 42}
 level0-lights/l7_25:
@@ -674,7 +674,7 @@ level0-lights/l8_14:
 level0-lights/l8_24:
   feetPosition: {x: -78, y: 2.7, z: -14}
   id: level0-lights/l8_24
-  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 0, kind: point, shadow: {enabled: false}}
   parent: level0-lights
   visibleRange: {max: 42}
 level0-lights/l8_26:
@@ -734,7 +734,7 @@ level0-lights/l9_13:
 level0-lights/l9_15:
   feetPosition: {x: -74, y: 2.7, z: -50}
   id: level0-lights/l9_15
-  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  light: {color: oklch(0.86 0.04 210), distance: 10, intensity: 1.6, kind: point, shadow: {enabled: false}}
   parent: level0-lights
   visibleRange: {max: 42}
 level0-lights/l9_25:
