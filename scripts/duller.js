@@ -56,7 +56,8 @@ function wallBetween(ctx, o, p) { // a wall between it and you, close enough to 
   const a = { x: o.feetPosition.x, y: o.feetPosition.y + 1.3, z: o.feetPosition.z }, b = { x: p.feetPosition.x, y: p.feetPosition.y + 1.2, z: p.feetPosition.z };
   const dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z, d = Math.hypot(dx, dy, dz) || 1;
   const h = raycast(ctx, a, { x: dx / d, y: dy / d, z: dz / d }, { distance: d, physicsOnly: true, bodies: "static", excludeTags: ["player", "duller"] });
-  return h && h.distance < d - 0.3 ? { x: h.position.x, y: h.position.y, z: h.position.z, n: { x: dx / d, y: 0, z: dz / d } } : null;
+  const n = Math.hypot(dx, dz) || 1;
+  return h && h.distance < d - 0.3 ? { x: h.position.x, y: h.position.y, z: h.position.z, n: { x: dx / n, y: 0, z: dz / n } } : null;
 }
 function flee(ctx, o, m, from, now) { m.flee = now + D.fleeMs; m.fleeFrom = { x: from.x, z: from.z }; m.fleeGoal = null; m.path = null; }
 export function update(ctx, dt) {
@@ -89,15 +90,20 @@ export function update(ctx, dt) {
     if (!m.slink || now > m.slinkAt) { m.slink = fleeGoal(ctx, o, tgt.feetPosition); m.slinkAt = now + 1500; m.path = null; }
     moveTo(ctx, o, m, m.slink, D.walk * 1.3, dt, now); anim(o, m, "Walk"); return;
   }
-  // unseen: it works round to the far side of the wall you are standing at
-  if (td < D.reachRange && now >= (m.cool ?? 0) && !drank(tgt, now) && !tgt.state?.freeze) {
+  // unseen: it never comes round the corner. it finds the wall you are standing at and comes up behind it
+  if (td < D.stalk && now >= (m.cool ?? 0) && !drank(tgt, now) && !tgt.state?.freeze) {
     const w = wallBetween(ctx, o, tgt);
-    if (w) {
-      m.reach = { id: tgt.id, at: now, wall: w }; m.path = null; m.clip = null; anim(o, m, "cdn/clip-attack.glb", false);
-      stand(ctx, o, dt); face(o, m, tgt.feetPosition.x - pos.x, tgt.feetPosition.z - pos.z, now);
-      say(ctx, S.crack, w, 1, 20);
-      ctx.emit("fx", { position: w, script: DUST, params: { n: w.n } });
-      ctx.emit("screenShake", { intensity: 0.2, duration: 0.3 }, { audience: { player: tgt.id } });
+    if (w && flat(tgt.feetPosition, w) < D.wallNear) {
+      if (flat(pos, w) < D.armNear) {
+        m.reach = { id: tgt.id, at: now, wall: w }; m.path = null; m.clip = null; anim(o, m, "cdn/clip-attack.glb", false);
+        stand(ctx, o, dt); face(o, m, tgt.feetPosition.x - pos.x, tgt.feetPosition.z - pos.z, now);
+        say(ctx, S.crack, w, 1, 20);
+        ctx.emit("fx", { position: w, script: DUST, params: { n: w.n } });
+        ctx.emit("screenShake", { intensity: 0.2, duration: 0.3 }, { audience: { player: tgt.id } });
+        return;
+      }
+      const spot = { x: w.x - w.n.x * 0.7, z: w.z - w.n.z * 0.7 };
+      if (moveTo(ctx, o, m, spot, D.walk, dt, now) > 0) anim(o, m, "Walk"); else anim(o, m, "Idle");
       return;
     }
   }

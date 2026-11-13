@@ -8,7 +8,10 @@ run: 8.6           # it bolts faster than your sprint
 sight: 16          # how far it notices you
 charge: 2.2        # you closing in on it faster than this (m/s) = you're charging it: it runs
 fleeMs: 5000
-reachRange: 3.4    # through one wall
+reachRange: 3.4    # how far you can be from the wall hole before the arm misses
+stalk: 22          # unseen within this, it comes up behind the wall you stand at
+wallNear: 2.4      # you within this of a wall: it hunts you through it
+armNear: 1.2       # it this close to its side of the wall: the arm comes through
 tellMs: 750        # the plaster cracks: this long to step away or drink almond water
 dragMs: 900
 grabDmg: 16
