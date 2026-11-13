@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7410,
-  "updatedAt": "2026-11-13T16:34:13.161Z",
+  "basedOnSpecVersion": 7415,
+  "updatedAt": "2026-11-13T16:44:56.237Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social hub and authored lore destinations; player.state carries progression, gear, quests, homes, companions and resume location. Shared player behaviors and place simulations join authored scenes to generated spaces, with reusable dialogue, quests, NPC systems and enemy kits; Dina's saved clue trail and playable recordings reveal the Way Back.",
   "scriptPaths": [],
   "places": [
@@ -9,7 +9,7 @@
     "places/bonus (3D) - vaporwave mall with simulated staff, shops, arcade, payphones, player-home kiosk, Squeeze Play and Glow Up Salon.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo, ephemeral) - character creation/waking, staged tutorial and HALOGEN handoff to Dina's lead.",
     "places/level01 (3D) - Zenith Station, breach, bots, hazards and recorder quest.",
-    "places/level1, level2, level02, level21, level3, gamma (3D) - Habitable Zone car park, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma.",
+    "places/level1, level2, level02, level21, level3, gamma (3D) - Habitable Zone car park with improved lit/service-dressed back corridors, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma.",
     "places/level31 (3D) - Roller Rink venue and Level 70 door; places/level70 (3D, Froidetown) - snowy Canadian planetoid city; both use Awakening lighting.",
     "places/level5 (3D) - Homely Hotel / Terror Hotel; sim restores hotel systems and the versioned Gentleman (Entity 18) office, errand props and seated NPC.",
     "places/testlab (3D) - Test Range with weapon/physics stations and Enemy Bay; other authored lore destinations including Levels 4-13 and 26-27 hold stories, hazards and residents."
@@ -19,8 +19,8 @@
     "places/<place>/config.yaml + cells/*.scene + sim.js - local configuration, placements and generated/ticked simulation; Level 1 dispatches geometry builders.",
     "sim.js - global tick for body-style propagation and bounded incremental restyling in occupied places.",
     "scripts/main-menu.js + main-menu-ui.js + intake/tutorial scripts - title, character creation, arrival, tutorial and Dina routing; main-menu ticks errands.",
-    "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, wake/resume, aiming, third-person view and HUD zone naming.",
-    "scripts/ui.js + scripts/stats-ui.js - composed HUD/menus and character status, including quest journal and Level 70-only CHILL bar.",
+    "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, wake/resume, aiming, third-person view and HUD zone naming; host camera yields to Absolute Cinema shots.",
+    "scripts/ui.js + scripts/stats-ui.js - composed HUD/menus and character status, including quest journal, Level 70-only CHILL bar and Absolute Cinema panel/overlays.",
     "places/main/sim.js + scripts/lib/maze.js + scripts/lib/xmas-room.js + scripts/lib/level0-moments.js - Level 0 layout and deterministic dressing.",
     "places/level5/sim.js + scripts/lib/level5.js + scripts/level5-geo.js - hotel plan, shell and local simulation; Level 5 sim restores the Beast's office via l5-beast.js."
   ],
@@ -32,7 +32,7 @@
     "scripts/lib/quest-route.js + quest-mark.js + quests.js + errands.js - directed crossings and common quest/errand journal, tracker, rewards and step messaging.",
     "scripts/lib/data/dlg-*.yml + dialogue.js + talk.js + voices.js + quest-dialogue.js - authored conversations, barks, voice selection and job-offer text.",
     "scripts/lib/errands.js + errands.yml; npc-temper.js + notify.js - data-driven NPC jobs, weapon filtering and notices; loot-bags-geo builds reusable loot bags.",
-    "scripts/interact.js - shared raycast/input interaction selection for props and NPCs; a small door-target angle penalty lets a usable target beside a door win."
+    "mods/absolute-cinema/ - globally attached player/camera cinematic toolkit; UI modules are composed by scripts/ui.js and camera takeover is coordinated with scripts/camera.js."
   ],
   "notableExports": [
     "scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate, wakeLog.",
@@ -52,7 +52,7 @@
     "scripts/lib/level31-quest.js + level70-quest.js + remodel-quest.js - Level 31/70 and remodel quest stages, routes and rewards.",
     "scripts/build.js + places/level5/sim.js; scripts/l5-resident.js - homeKeep.built/l5built reconstruction, booking identity and place.state.l5rent.",
     "scripts/lib/l5-beast.js - per-player l5b and Tobias l5t/l5tSeen quest stages, offer/register/card flags, wrath expiry and favor; Level 5 sim owns place.state.officeV, while NPC greeting cadence is session-local.",
-    "scripts/lib/breakables.js; companion.js; forgive.js; samantha.js; testlab sim/pad/foe-bay and duller.js - wall damage, save-scoped crew, NPC incidents, cat feeding, bay requests/version and Duller HP/stolen items/remains."
+    "mods/absolute-cinema/cinema-director.js + vfx-playback.js - player.state cinema nodes/sequences/effects/library/playback and vfxClip timeline; director owns playback/skip state, VFX behavior owns vfxClip and fired-event bookkeeping."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interaction, combat, inventory, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js supply game-specific play.",
@@ -65,14 +65,14 @@
     "tutorial0 HALOGEN cut → tut0-cut.js + dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ.",
     "scripts/build.js placement/removal → homeKeep.built or homeKeep.l5built; Level 5 sim restores separately; l5-resident booking → player l5home/l5room and place.state.l5rent.",
     "Level 2/31 and Level 31/70 directed triggers → scripts/level-door.js; quest-route.js maps the paired crossings; level31/70 sims read versioned layouts and arrival layers.",
-    "Level 5 npc-starters.js offers beastChoices to talk-ui; scripts/talk.js dispatches handleDialogueQuestBeast; l5b stages and register/card prop presses advance The Gentleman's Terms; card delivery starts Tobias's Debt after l5b=99, with l5-beast.js dialogue letting the player pay $200 or pass Speech 60, then tell Tobias for +$150.",
-    "Level 5 sim calls layOffice when place.state.officeV differs and ticks wrathTick; l5-beast.js owns office geometry/props, beastStruck handles player hits, and l5-beast-npc.js seats/animates the Gentleman; interact.js raycasts NPC head heig…"
+    "mods/absolute-cinema/mod.json attaches cinema-director, vfx-playback, loading-transition and node-gizmos to players and cinema-camera to cameras; director actions/UI update player state → cinema-camera drives the view, node-gizmos/overlays render it, and scripts/camera.js yields then reseeds its local rig.",
+    "Absolute Cinema cinema:toggle (Digit9)/cinema command → cinema-director toggles cinemaOpen and handles node/sequence/playback actions; scripts/ui.js renders ui-cinema panel and ui-cinema-overlays, while vfx:play/stop/scrub → vfx-playback consumes vfxClip timeline events."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored mall shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; home11 and Level 5 use separate buckets.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and tagged paired leaves; thresholds/sign boards share geometry.",
-    "Level 01 sim/Zenith geometry and hazards; Level 1 sim + level1-geo.js + level1-details-geo.js - authored station and car park/service geometry with versioned fallen-slab rubble.",
+    "Level 01 sim/Zenith geometry and hazards; Level 1 sim + level1-geo.js + level1-details-geo.js - authored station and car park/service geometry; corridor materials, pipes, fixtures and lights vary deterministically per corridor cell.",
     "scripts/meg-agent.js + npc-temper.js + forgive.js - shared NPC reactions, cover, voiced barks, movement/fighting and companion following; weapon filtering and first-hit assault handling vary by NPC.",
     "errands.yml + errands.js + quest-dialogue.js + quests.js - shared job offers, objective stages, journal/tracker and rewards; named NPCs/levels vary objectives and text.",
     "Level 0 kit builders/data + places/main/sim.js - model catalogs feed deterministic dressing in DR.batch rows with per-piece fixes and room-fit collision rules; l0-dress.yml varies cubicles/camp variants and blackout-edge lamp states.",
@@ -87,10 +87,10 @@
   ],
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
-    "scripts/lib/save.js SAVE_V=2: intake, bonus and tutorial0 are transient and never save resume locations; migration clears legacy transient savePlace/savePos without overwriting earned state. player.js retries wake crossings up to three tim…",
+    "scripts/lib/save.js SAVE_V=2: intake, bonus and tutorial0 are transient and never save resume locations; migration clears legacy transient savePlace/savePos without overwriting earned state. player.js retries wake crossings up to three times.",
     "Level 31 rebuilds l31-* roots at place.state.v31=100; align IDs and shell/zone/door/arrival geometry with level31.js and preserve the white-door pair with Level 70. Level 70 retains versioned district layers.",
     "Generated wall damage lives in place.state.wallHp/broken; syncWalls treats wall-grid membership as authoritative and deletes stale broken keys. Companions are save-scoped: set player.state.crew when adopting.",
-    "Dina's Level 3 cassette (state.kind=cassette) gives holotapes.dina4 and is distinct from the C-23 handoff log; Level 2/4 clue flags are dinaCrate/dinaCarbon and keep existing dinaQ steps.",
-    "Level 5 office rebuild is keyed by place.state.officeV against OFFICE_V=6 in l5-beast.js; increment OFFICE_V for laid office changes. The register is Take-able and l5bReg controls hiding its placed ID; the Room 1408 slot targets its plate. Tobias's Debt requires l5b=99; l5t advances 0→1→2→99 and l5tSeen gates his initial dialogue."
+    "Level 1 sim corrV=1 migrates seeded rooms by replacing l1lamp objects in corridor zones; the per-cell lights are authored in sim while corridor fixtures/floor are generated by scripts/level1-geo.js.",
+    "Absolute Cinema camera takeover depends on scripts/camera.js setting session.cinemaYield and returning while possessedNodeId/cinemaPlaying/cinemaPlayback.playing is active; clear the yield flag and reseed ctx.self.session.cam when normal camera control resumes."
   ]
 }
