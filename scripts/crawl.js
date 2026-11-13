@@ -6,7 +6,7 @@
 import { raycast } from 'builtin/physics'
 import { rotate } from 'builtin/vec3'
 // Shelly's prone clips (her "sneak" .kf files, Nov 13), converted onto the body's skeleton by art/sneak/kf2glb.py
-const PRONE = { f: 'cdn/clip-prone-forward-0962574f.glb', b: 'cdn/clip-prone-backward-e06fc4ae.glb', l: 'cdn/clip-prone-left-543e6f4a.glb', r: 'cdn/clip-prone-right-37f8f4c3.glb' }
+const PRONE = { f: 'cdn/clip-prone-forward-0962574f.glb', b: 'cdn/clip-prone-backward-e06fc4ae.glb', l: 'cdn/clip-prone-forward-0962574f.glb', r: 'cdn/clip-prone-forward-0962574f.glb' } // her left/right files roll the body onto its back and over: kept on the CDN (clip-prone-left-543e6f4a, -right-37f8f4c3), unused
 const HOLD = 0.35          // s of held C before a crouch becomes a crawl
 const CAP_H = 0.85, CAP_R = 0.32, STAND_H = 1.9, STAND_R = 0.35   // capsules: crawling, and the body's own (read off the player: 1.9 x 0.35)
 const NEED = 1.95          // m of clear height over the feet to stand up
