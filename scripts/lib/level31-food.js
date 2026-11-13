@@ -97,15 +97,30 @@ export function layFood(ctx) {
   P("door", { feetPosition: { x: 40.05, y: 0.018, z: 29.96 }, primitive: box(1.0, 2.1, 0.06), material: { color: "#7d8085", roughness: 0.55, metalness: 0.3 }, tags: ["usable"], state: { name: "Employees only", verb: "Open", info: "Locked from the other side.", kind: "door" }, behavior: "scripts/l31-food.js",
     children: [{ feetPosition: { x: 0, y: 0, z: 0.02 }, primitive: box(1.16, 2.18, 0.05), material: { color: "#3c3e42", roughness: 0.6 } }, { feetPosition: { x: -0.38, y: 1.0, z: -0.07 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.03, height: 0.06 }, rotation: { pitch: 90 }, material: { color: "#c9ccd0", metalness: 0.9, roughness: 0.3 } }, { feetPosition: { x: 0, y: 0.1, z: -0.035 }, primitive: box(0.9, 0.25, 0.01), material: { color: "#b9bcc0", metalness: 0.8, roughness: 0.4 } }] });
   P("door-label", { feetPosition: { x: 40.05, y: 1.698, z: 29.925 }, rotation: { yaw: 0 }, vector: DOORTXT });
-  // Tables sit west of the ordering lane. The two occupied seats face each other.
-  const seats = [[0, -0.89, 180], [0, 0.89, 0], [-0.89, 0, -90], [0.89, 0, 90]];
-  const tables = [[29.3, 14.1], [29.3, 22.4], [33.1, 14.1], [33.1, 22.4]];
-  for (const [i, [x, z]] of tables.entries()) {
-    M("table" + (i + 1), "table", x, z, 0, {}, floorY);
-    for (const [c, [dx, dz, yaw]] of seats.entries()) {
-      M("chair" + (i + 1) + "-" + c, "chair", x + dx, z + dz, yaw, { tags: ["seat"] }, floorY);
-    }
+  // Tables west of the ordering lane, left as people left them (Shelly Nov 13: "de ai slop this"): chairs pushed out and turned, one table short a chair, none in a grid
+  const tables = [
+    [29.6, 13.6, 8, [[0, -0.95, 172], [0.15, 1.05, 14], [-1.05, 0.1, -76]]],
+    [33.4, 15.2, -11, [[0.2, -0.9, 200], [0, 1.25, 33], [-0.95, -0.15, -95], [1.1, 0.25, 118]]],
+    [29.3, 22.4, 0, [[0, -0.89, 180], [0, 0.89, 0], [-0.89, 0, -90], [0.89, 0, 90]]],
+    [33.6, 21.6, 17, [[-0.1, -1.0, 160], [1.0, 0.1, 74]]],
+  ];
+  for (const [i, [x, z, yaw, chairs]] of tables.entries()) {
+    M("table" + (i + 1), "table", x, z, yaw, {}, floorY);
+    for (const [c, [dx, dz, cy]] of chairs.entries()) M("chair" + (i + 1) + "-" + c, "chair", x + dx, z + dz, cy, { tags: ["seat"] }, floorY);
   }
+  M("chair-stray", "chair", 35.6, 18.6, 141, { tags: ["seat"] }, floorY); // dragged over to the counter queue
+  // curved diner booths along the back wall, open to the room
+  const BOOTH = "/cdn/value.13e98688536b8996d72997d03461590d77f616b6ffdbc802895762ab9813a00d.glb";
+  for (const [i, x] of [28.6, 32.4].entries()) {
+    P("booth" + i, { feetPosition: { x, y: floorY, z: 28.6 }, rotation: { yaw: -90 }, model: { id: BOOTH, forward: "+z" }, scale: 1.2, physics: { body: "static", collider: "mesh" }, tags: ["seat"] });
+    M("btable" + i, "table", x, 28.15, 0, {}, floorY);
+    P("blamp" + i, { feetPosition: { x, y: 2.5, z: 28.2 }, primitive: { kind: "cone", radius: 0.22, height: 0.22, radialSegments: 20, openEnded: true }, material: { color: "#c8201c", roughness: 0.4, metalness: 0.4, side: "double", emissive: "#ffb060", emissiveIntensity: 0.25 },
+      children: [{ feetPosition: { x: 0, y: 0.22, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.006, radiusBottom: 0.006, height: 2.4 }, material: { color: "#222" } }, { feetPosition: { x: 0, y: -0.15, z: 0 }, light: { kind: "point", color: "#ffc68a", intensity: 2.2, distance: 5 } }] });
+  }
+  D("capri-b0", "capri", 28.4, 0.765 + floorY, 28.0, 60); D("sprite-b1", "sprite", 32.6, 0.765 + floorY, 28.3, 10);
+  // neon over the counter, pink script with a teal underline; the old menu board stays
+  P("neon", { feetPosition: { x: 41.75, y: 4.9, z: 17 }, rotation: { yaw: 90 }, vector: `<svg viewBox='0 0 420 110' width='3.6m'><g filter='drop-shadow(0 0 6 #ff4fa8)'><text x='210' y='72' text-anchor='middle' font-family='serif' font-style='italic' font-size='66' fill='#ffd0e8' stroke='#ff4fa8' stroke-width='2'>Snacks</text></g><path d='M90 92H330' stroke='#5ff2e8' stroke-width='4' stroke-linecap='round' filter='drop-shadow(0 0 5 #5ff2e8)'/></svg>` });
+  P("neon-glow", { feetPosition: { x: 41.2, y: 4.9, z: 17 }, light: { kind: "point", color: "#ff7cc8", intensity: 2, distance: 7 } });
   // raised rubber mat behind the counter: the clerk stands on it so he reads at full height over the top
   P("duckboard", { feetPosition: { x: 40.1, y: 0, z: 17 }, primitive: rbox(3.2, 0.32, 13.4), material: { color: "#1b1b1d", roughness: 0.9 }, physics: "static", castShadow: false, receiveShadow: true });
   // people: the clerk behind the counter, two customers at the southwest table
