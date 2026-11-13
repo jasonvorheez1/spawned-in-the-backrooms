@@ -44,7 +44,11 @@ export function layThings(ctx) {
     state: { kind: "blank", name: "Door with no mark", verb: "Touch", info: "No keyhole.", c: { x: 558.6, y: 1.2, z: 0 } },
     children: [{ id: "leaf", feetPosition: { x: 0, y: 0.2, z: 0.78 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/hub-door-geo.js", params: { part: "leaf" }, seed: 9001 }, material: { roughness: 0.9 } }] });
 }
-export function keepCrew(ctx) { keepPeople(ctx, CREW_IDS, person); }
+export function keepCrew(ctx) { // first walk-in lays everyone at once; after that the shared respawn clock keeps them
+  const st = ctx.place.state;
+  if (!st.crewLaid) { st.crewLaid = true; for (const id of CREW_IDS) if (!ctx.place.objects[id]) person(ctx, id); return; }
+  keepPeople(ctx, CREW_IDS, person);
+}
 // The Keymaster: rare. A roll every four minutes while someone walks the tunnels (my picks: 18%, 2 minutes on the road).
 // He stands at a side tunnel's mouth a good way ahead of whoever is nearest, never at the camps, and leaves when he is done.
 const KM = "hub-keymaster", ROLL_MS = 240000, CHANCE = 0.18, STAY_MS = 120000;
