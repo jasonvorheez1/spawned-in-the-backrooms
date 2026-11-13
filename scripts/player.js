@@ -204,6 +204,13 @@ export function holoEnd(ctx, p) {
   }
   s.holoPlay = null
 }
+function swapBattery(ctx) { // a fresh cell into the flashlight from the bag; true if one went in
+  const s = ctx.self.state, w = walkOf(ctx)
+  if ((s.batteries ?? 0) <= 0) return false
+  s.batteries -= 1; w.battery = 100; s.battery = 100
+  s.notice = { text: `Fresh battery in · ${s.batteries} spare`, at: ctx.now() }; sound(ctx, 'pickup-ammo', 0.6, true)
+  return true
+}
 export function takeToken(ctx, token) {
   const r = takeToken0(ctx, token), f = CR.food[token]
   if (r.ok && f && !SNACKS[token]) { const s = ctx.self.state; s.hunger = Math.min(100, (s.hunger ?? 100) + f) }
@@ -400,9 +407,9 @@ function takeToken1(ctx, token) {
     sound(ctx, 'pickup-ammo', 0.5, true)
     return { ok: true }
   }
-  if (token === 'battery') {
-    const w = walkOf(ctx); w.battery = Math.min(100, (w.battery ?? s.battery ?? 0) + L1.batteryCharge); s.battery = Math.round(w.battery)
-    s.pickedAt = now; sound(ctx, 'pickup-ammo', 0.7, true)
+  if (token === 'battery') { // carried, not spent on pickup (Shelly Nov 13: "no way to recharge it even though i have batteries"): the flashlight swaps one in when it runs dry
+    s.batteries = (s.batteries ?? 0) + 1; s.pickedAt = now; s.notice = { text: `Battery · ${s.batteries} spare`, at: now }
+    sound(ctx, 'pickup-ammo', 0.7, true)
     return { ok: true }
   }
   if (token.startsWith('book:')) { // a skill book: +3 to that skill, read on the spot
@@ -1102,7 +1109,7 @@ function toggleLight(ctx) {
     else s.notice = { text: 'Night vision battery depleted. Insert fresh batteries.', at: ctx.now() }
     s.nvgOn = !!w.nvg; sound(ctx, 'flashlight-switch-click', 0.65, true); return
   }
-  else if ((w.battery ?? s.battery) > 1) {
+  else if ((w.battery ?? s.battery) > 1 || swapBattery(ctx)) {
     w.light = ctx.spawn({
       feetPosition: { attach: 'camera', x: 0, y: 0.08, depth: 0 }, // at the brow, so the held arm and gun sit outside the cone (it sat on the hand and blew them white)
       light: { kind: 'spot', color: 'oklch(0.97 0.03 90)', intensity: ctx.self.place === 'level8' ? 1.4 : ctx.self.place === 'level34' ? 3.5 : 10, distance: ctx.self.place === 'level8' ? 16 : 28, angle: 26, penumbra: 0.55, aim: 'forward', shadow: { enabled: true } },
@@ -1479,7 +1486,7 @@ function tickStats(ctx, t, moving) {
   }
   // flashlight battery
   if (s.batteryTake) { w.battery = Math.max(0, (w.battery ?? s.battery ?? 0) - s.batteryTake); s.batteryTake = 0 } // a quest or trade spends charge (scripts/l5-goggles.js): the walk's battery is the truth, state mirrors it
-  if (w.light) { w.battery -= L.batteryDrain * t * (ctx.self.place === 'level8' ? 2.2 : 1); if (w.battery <= 0) { w.battery = 0; toggleLight(ctx) } }
+  if (w.light) { w.battery -= L.batteryDrain * t * (ctx.self.place === 'level8' ? 2.2 : 1); if (w.battery <= 0) { w.battery = 0; if (!swapBattery(ctx)) toggleLight(ctx) } }
   if (w.nvg) { w.battery -= L.batteryDrain * 0.25 * t; if (w.battery <= 0 && (s.nvgSpare ?? 0) > 0) { s.nvgSpare -= 1; w.battery = 100; s.notice = { text: `Goggles died · swapped in a spare · ${s.nvgSpare} left`, at: ctx.now() } } if (w.battery <= 0 || ctx.self.place !== 'level6') { w.battery = Math.max(0, w.battery); ctx.destroy(w.nvg); w.nvg = null; s.nvgOn = false } } // goggles drink faster than a torch
   else if (s.nvgOn) s.nvgOn = false
   const st = Math.round(w.stamina), bt = Math.round(w.battery)
