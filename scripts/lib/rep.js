@@ -60,13 +60,17 @@ export const karmaOf = (s) => Math.max(-100, Math.min(100, Math.round(s?.karma ?
 export const karmaTitle = (k) => (k >= 60 ? "Very Good" : k >= 25 ? "Good" : k > -25 ? "Neutral" : k > -60 ? "Evil" : "Very Evil");
 export const karmaColor = (k) => (k >= 25 ? "#9bd27a" : k > -25 ? "#d8d0b0" : "#e06050");
 
+// M.E.G. honorary ranks (Shelly Nov 13 revamp): earned by fame, lost while they think you're trouble. Thresholds match the quartermasters' gear gates (shops.yml). Savi's picks.
+export const MEG_RANKS = [[75, "Team Lead"], [55, "Senior Operative"], [40, "Operative"], [25, "Field Volunteer"], [12, "Associate"]];
+export const megRank = (s) => (infamyOf(s, "meg") >= 35 ? null : (MEG_RANKS.find(([lo]) => fameOf(s, "meg") >= lo)?.[1] ?? null));
 // writes: both return a one-line notice when a tier changed, else ""
 function bump(s, g, d) { // one faction's fame (d > 0) or infamy (d < 0); returns the new title's notice
   const was = titleOf(s, g), c = seed(s, g), cap = (n) => Math.round(Math.max(0, Math.min(100, n)) * 10) / 10;
   if (d > 0) c.f = cap(c.f + d); else c.i = cap(c.i - d);
   s.fame = { ...(s.fame ?? {}), [g]: c.f }; s.infamy = { ...(s.infamy ?? {}), [g]: c.i };
   s.rep = { ...(s.rep ?? {}), [g]: cap(50 + (c.f - c.i) / 2) * 2 - 100 };
-  const now = titleOf(s, g);
+  const now = titleOf(s, g), rk = g === "meg" ? megRank(s) : null;
+  if (g === "meg" && rk !== (s.megRank ?? null)) { const up = rk && MEG_RANKS.findIndex(([, n]) => n === rk) < MEG_RANKS.findIndex(([, n]) => n === s.megRank); s.megRank = rk; if (rk && (up || !was)) return `M.E.G. rank: ${rk}`; }
   return was !== now ? `${GROUPS[g]?.name ?? g}: ${now}` : "";
 }
 export function addRep(s, g, d) {
@@ -101,5 +105,5 @@ export function repTrade(ctx, who, it) { const s = who?.state; if (!s) return; c
 // a line for the language model about how this group sees the player
 export function repLine(s, it) {
   const g = groupOf(it), r = repOf(s, g), k = karmaOf(s);
-  return `Your people (${GROUPS[g]?.name ?? g}) think of this wanderer as ${titleOf(s, g)} (${r}).${r <= -35 ? " They have wronged your people; you are cold, short, and do not want to help." : r >= 35 ? " They have done right by your people; you are warmer than you would be to a stranger." : ""}${k <= -25 ? " Word is they are a bad person." : k >= 25 ? " Word is they are decent." : ""}`;
+  return `Your people (${GROUPS[g]?.name ?? g}) think of this wanderer as ${titleOf(s, g)} (${r}).${g === "meg" && megRank(s) ? ` The M.E.G. has made them an honorary ${megRank(s)}; you may use it.` : ""}${r <= -35 ? " They have wronged your people; you are cold, short, and do not want to help." : r >= 35 ? " They have done right by your people; you are warmer than you would be to a stranger." : ""}${k <= -25 ? " Word is they are a bad person." : k >= 25 ? " Word is they are decent." : ""}`;
 }
