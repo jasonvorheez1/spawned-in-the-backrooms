@@ -1104,8 +1104,8 @@ function toggleLight(ctx) {
   }
   else if ((w.battery ?? s.battery) > 1) {
     w.light = ctx.spawn({
-      feetPosition: { attach: 'camera', x: 0.22, y: -0.25, depth: 0.1 },
-      light: { kind: 'spot', color: 'oklch(0.97 0.03 90)', intensity: ctx.self.place === 'level8' ? 1.4 : 10, distance: ctx.self.place === 'level8' ? 16 : 28, angle: 26, penumbra: 0.55, aim: 'forward', shadow: { enabled: true } },
+      feetPosition: { attach: 'camera', x: 0, y: 0.08, depth: 0 }, // at the brow, so the held arm and gun sit outside the cone (it sat on the hand and blew them white)
+      light: { kind: 'spot', color: 'oklch(0.97 0.03 90)', intensity: ctx.self.place === 'level8' ? 1.4 : ctx.self.place === 'level34' ? 3.5 : 10, distance: ctx.self.place === 'level8' ? 16 : 28, angle: 26, penumbra: 0.55, aim: 'forward', shadow: { enabled: true } },
       audience: 'local', scope: 'session',
     })
   }
