@@ -5,16 +5,16 @@ from mathutils import Vector, Matrix
 W = "/workspace/l0props"
 # axis: w (x), h (up), d (depth); value in metres. yaw: degrees about up applied to the Tripo file so its front lands on glTF -Z.
 SPEC = {
- "boxes-stack":   dict(axis="h", v=1.00, yaw=180),
- "box-single":    dict(axis="w", v=0.40, yaw=180),
- "folding-table": dict(axis="w", v=1.80, yaw=180),
- "stack-chair":   dict(axis="h", v=0.80, yaw=180),
- "filing":        dict(axis="h", v=1.32, yaw=180),
- "crt":           dict(axis="h", v=0.50, yaw=180),
- "phone":         dict(axis="w", v=0.22, yaw=180),
- "bin":           dict(axis="h", v=0.30, yaw=180),
- "fakeplant":     dict(axis="h", v=1.50, yaw=180, keep_islands=True),
- "copier":        dict(axis="h", v=1.05, yaw=180),
+ "boxes-stack":   dict(axis="h", v=1.00, yaw=0),
+ "box-single":    dict(axis="w", v=0.40, yaw=0),
+ "folding-table": dict(axis="w", v=1.80, yaw=0),
+ "stack-chair":   dict(axis="h", v=0.80, yaw=0),
+ "filing":        dict(axis="h", v=1.32, yaw=0),
+ "crt":           dict(axis="h", v=0.50, yaw=0),
+ "phone":         dict(axis="w", v=0.22, yaw=0),
+ "bin":           dict(axis="h", v=0.30, yaw=0),
+ "fakeplant":     dict(axis="h", v=1.50, yaw=0),
+ "copier":        dict(axis="h", v=1.05, yaw=0),
 }
 a = sys.argv[sys.argv.index("--") + 1:]
 kind = a[0]; sp = SPEC[kind]
@@ -34,24 +34,35 @@ bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 for o in list(bpy.context.scene.objects):
     if o != ob: bpy.data.objects.remove(o)
 me = ob.data
-# junk islands: tiny loose pieces (welded by position) well under the piece's size
-if not sp.get("keep_islands"):
-    bm = bmesh.new(); bm.from_mesh(me)
-    key = lambda v: (round(v.co.x, 4), round(v.co.y, 4), round(v.co.z, 4))
-    par = {}
-    def find(k):
-        while par.setdefault(k, k) != k:
-            par[k] = par[par[k]]; k = par[k]
-        return k
-    for e in bm.edges: par[find(key(e.verts[0]))] = find(key(e.verts[1]))
-    isl = {}
-    for f in bm.faces: isl.setdefault(find(key(f.verts[0])), []).append(f)
-    tot = len(bm.faces); dead = []
-    for fs in isl.values():
-        if len(fs) < max(12, tot * 0.002): dead += fs
-    print("ISLANDS", len(isl), "junk faces", len(dead))
-    bmesh.ops.delete(bm, geom=dead, context="FACES")
-    bm.to_mesh(me); bm.free()
+# junk islands: loose pieces (welded by position) whose box touches nothing connected to the main body
+bm = bmesh.new(); bm.from_mesh(me)
+key = lambda v: (round(v.co.x, 4), round(v.co.y, 4), round(v.co.z, 4))
+par = {}
+def find(k):
+    while par.setdefault(k, k) != k:
+        par[k] = par[par[k]]; k = par[k]
+    return k
+for e in bm.edges: par[find(key(e.verts[0]))] = find(key(e.verts[1]))
+isl = {}
+for f in bm.faces: isl.setdefault(find(key(f.verts[0])), []).append(f)
+rows = []
+for fs in isl.values():
+    cs = [v.co for f in fs for v in f.verts]
+    rows.append([fs, [min(c[i] for c in cs) for i in range(3)], [max(c[i] for c in cs) for i in range(3)]])
+rows.sort(key=lambda r: -len(r[0]))
+m = 0.015 * max(rows[0][2][i] - rows[0][1][i] for i in range(3))
+touch = lambda p, q: all(p[1][i] - m <= q[2][i] and q[1][i] - m <= p[2][i] for i in range(3))
+kept, rest, grew = [rows[0]], rows[1:], True
+while grew:
+    grew = False
+    for r in list(rest):
+        if any(touch(r, k) for k in kept): kept.append(r); rest.remove(r); grew = True
+dead = [f for r in rest for f in r[0]] + [f for r in kept if len(r[0]) < 4 for f in r[0]]
+print("ISLANDS", len(rows), "junk islands", len(rest), "junk faces", len(dead))
+bmesh.ops.delete(bm, geom=dead, context="FACES")
+loose = [v for v in bm.verts if not v.link_faces]
+bmesh.ops.delete(bm, geom=loose, context="VERTS")
+bm.to_mesh(me); bm.free()
 # face -Z in glTF (= +Y in Blender), long axis on X for the table
 me.transform(Matrix.Rotation(math.radians(yaw), 4, "Z"))
 def bb():
