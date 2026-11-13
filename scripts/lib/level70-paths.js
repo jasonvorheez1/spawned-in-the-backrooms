@@ -6,11 +6,11 @@
 import { HOUSE_DOOR, IGLOO_DOOR } from "./level70-town.js";
 import { GARAGE_DOOR, HOTEL_DOOR } from "./level70-civic.js";
 import { CAMP_FIRE, RIG, DOCK_POST, TREES } from "./level70-wild.js";
-export const V = 3;
+export const V = 4;
 const TEX = "cdn/texture-trampled-packed-snow-path-with-boot-prints-and-slush.png";
 const HEAPS = ["/cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb", "/cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb"];
 export const WALKS = [
-  { id: "house", w: 2.4, pts: [[-4.6, -19.2], [-12, -17.4], [-18, -16.6], [-28, -16.2], [-32.2, -16.2]] },
+  { id: "house", w: 2.4, pts: [[-4.6, -18.2], [-9, -17.4], [-18, -16.6], [-28, -16.2], [-32.2, -16.2]] },
   { id: "igloo", w: 1.8, pts: [[-24, -16.2], [-23, -6], [-34, -3.5], [-44, -4.2], [IGLOO_DOOR.x, IGLOO_DOOR.z]] },
   { id: "garage", w: 3.2, pts: [[4.6, -22], [12, -22], [GARAGE_DOOR.x + 1.5, GARAGE_DOOR.z]] },
   { id: "hotel", w: 2.8, pts: [[4.6, -82.4], [12, -81], [16, -80], [HOTEL_DOOR.x - 0.6, HOTEL_DOOR.z]] },
@@ -29,7 +29,18 @@ const nearTree = (x, z, r) => TREES.some((t) => Math.hypot(t.x - x, t.z - z) < r
 function clearMouths(ctx) {
   for (const m of MOUTHS) for (const o of ctx.query({ center: { x: m.x, y: 0, z: m.z }, radius: 4.2 })) if (/^l70-bank-\d+$/.test(o.id)) ctx.destroy(o.id);
 }
+// The town's poles collide as their whole box (crossarm and wires), a wall across the sidewalk: each keeps a trunk-sized collider instead.
+function poles(ctx) {
+  for (let i = 0; i < 4; i++) {
+    const p = ctx.place.objects["l70-pole-" + i]; if (!p) continue;
+    if (p.physics?.body !== "none" && p.physics !== "none") p.physics = "none";
+    const id = "l70-path-polecol-" + i;
+    if (!ctx.place.objects[id]) ctx.spawn(id, { feetPosition: { ...p.feetPosition }, visible: false, primitive: { kind: "cylinder", radius: 0.2, height: 9 }, physics: { body: "static", collider: "cylinder" } });
+  }
+}
 export function lay(ctx) {
+  for (let i = 0; i < 4; i++) if (ctx.place.objects["l70-path-polecol-" + i]) ctx.destroy("l70-path-polecol-" + i);
+  poles(ctx);
   const sp = (id, spec) => { if (ctx.place.objects[id]) ctx.destroy(id); return ctx.spawn(id, spec); };
   clearMouths(ctx);
   let rnd = 7;
@@ -66,6 +77,7 @@ export function lay(ctx) {
 }
 let at = 0;
 export function tick(ctx) {
+  poles(ctx);
   if (ctx.now() - at < 10000) return; at = ctx.now();
   clearMouths(ctx);
 }

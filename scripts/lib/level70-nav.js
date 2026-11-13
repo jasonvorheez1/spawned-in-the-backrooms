@@ -74,7 +74,7 @@ export function route(ctx, from, to) {
   if (!chain) return { ok: false, partial, points: [...pts, { x: to.x, y: to.y ?? 0, z: to.z }] };
   for (let i = 1; i < chain.length; i++) { const k = key(chain[i - 1], chain[i]), seg = e[k], fwd = chain[i - 1] < chain[i]; if (seg) { const s = fwd ? seg : [...seg].reverse(); for (const p of s) pts.push({ x: p[0], y: p[1], z: p[2] }); } else pts.push({ ...NODES[chain[i]] }); }
   if (chain.length === 1) pts.push({ ...NODES[a] });
-  const last = NODES[b]; let ok = true;
-  if (D(last, to) > 1.5) { let r = null; try { r = findPath(ctx, last, { x: to.x, y: to.y ?? 0, z: to.z }, { radius: 0.32 }); } catch (err) { r = null; } if (r?.ok && r.points?.length) for (const p of r.points) pts.push({ x: p.x, y: p.y ?? 0, z: p.z }); else { if (r?.partial) partial = true; else ok = false; pts.push({ x: to.x, y: to.y ?? 0, z: to.z }); } }
-  return { ok, partial, points: pts, nodes: chain };
+  const last = NODES[b]; let ok = true, snapped = false; // snapped: the anchor itself stands inside furniture or a mesh; the walk ends at its node beside it
+  if (D(last, to) > 1.5) { let r = null; try { r = findPath(ctx, last, { x: to.x, y: to.y ?? 0, z: to.z }, { radius: 0.32 }); } catch (err) { r = null; } if (r?.ok && r.points?.length) for (const p of r.points) pts.push({ x: p.x, y: p.y ?? 0, z: p.z }); else if (r?.partial) { partial = true; pts.push({ x: to.x, y: to.y ?? 0, z: to.z }); } else if (D(last, to) < 8) snapped = true; else { ok = false; pts.push({ x: to.x, y: to.y ?? 0, z: to.z }); } }
+  return { ok, partial, snapped, points: pts, nodes: chain };
 }
