@@ -18,25 +18,25 @@ sounds:
   stab: /cdn/moodboard-realistic-gritty/sfx-bone-spear-tip-punching-through-wet-rubber-diving-suit-underwater-thud.mp3
 lines:
   notice:
-    - "Something fell in my water."
-    - "I felt that. Every kick."
-    - "Oh, a visitor."
+  - Something fell in my water.
+  - I felt that. Every kick.
+  - Oh. Company.
   circle:
-    - "Soft. Pink. Still kicking."
-    - "No teeth. No claws. Just you."
-    - "Do you know what you are, in here?"
-    - "Swim faster. Go on."
+  - Small. Warm. Still kicking.
+  - No shell on you. No spines. Nothing.
+  - You don't know where you are, do you?
+  - Swim faster. Go on. I like the fast ones.
   hit:
-    - "There."
-    - "That's what you are."
-    - "Again?"
+  - There.
+  - Now you know what you are.
+  - Again?
   shore:
-    - "Stay up there, then. The water keeps."
-    - "Clever. Legs. Enjoy them."
-    - "You'll get thirsty."
+  - Stay up there, then. The water waits.
+  - Legs. Clever. Enjoy them.
+  - You'll get thirsty. It's all mine to drink.
   noise:
-    - "Stop that. Stop that!"
-    - "Loud little thing."
+  - Stop that. Stop that!
+  - Loud little thing.
   kill:
-    - "Research won't help you swim."
-    - "Take that back to your people."
+  - You wanted a way out. That was one.
+  - Whatever you came looking for, it isn't down here.
