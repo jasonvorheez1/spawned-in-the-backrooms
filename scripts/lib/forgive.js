@@ -1,6 +1,7 @@
 import { gameNow, HOUR_MS } from "./clock.js";
 import { groupOf, GROUPS, isVilified } from "./rep.js";
 import { clearSight } from "./sight.js";
+import { STRIKE_WINDOW_MS } from "./npc-temper.js";
 
 const BORN_HOSTILE = new Set(["l7-ezra", "l7-tobit"]);
 const REP_EXEMPT = new Set(["l70-npc-larsson", "l70-npc-vael"]);
@@ -53,6 +54,16 @@ export function alliedWitnesses(ctx, victim, player, rows) {
 export function assaulted(ctx, victim, player) {
   if (victim.state?.follow || !victim.state) return;
   const prior = incidentOf(ctx, victim, player);
+  // a first stray hit is a warning, on every level (Shelly: "some determination between im doing it deliberately and on accident"):
+  // only a second within STRIKE_WINDOW_MS, or a killing blow, is an assault. Already-hostile NPCs are unaffected.
+  if (!prior && !hostileReason(ctx, victim, player) && (victim.state.hp ?? 1) > 0) {
+    const last = victim.state.struckAt?.[player.id], now = ctx.now();
+    if (!(last && now - last < STRIKE_WINDOW_MS)) {
+      victim.state.struckAt = { ...victim.state.struckAt, [player.id]: now };
+      if (player.state) player.state.notice = { text: `${String(victim.state.name ?? "They").split(" ·")[0]} flinches: "Hey! Watch it." Hit them again and they'll fight back.`, at: now };
+      return;
+    }
+  }
   const first = prior?.kind !== "assault";
   if (prior?.kind !== "murder") recordIncident(ctx, victim, player, "assault");
   if (!first || victim.state?.hp <= 0) return;
@@ -65,7 +76,7 @@ export function assaulted(ctx, victim, player) {
 
 function clearIncident(npc, id) {
   const s = npc.state;
-  for (const key of ["incidents", "angry", "fresh", "warned", "trespass"]) {
+  for (const key of ["incidents", "angry", "fresh", "warned", "trespass", "struckAt"]) {
     if (!s[key] || !Object.hasOwn(s[key], id)) continue;
     const next = { ...s[key] }; delete next[id]; s[key] = next;
   }
