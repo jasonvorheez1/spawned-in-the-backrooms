@@ -18,7 +18,7 @@ export function update(ctx, dt) {
   if (!all.length) { ctx.sleep(2); return; }
   const live = all.filter((p) => !downed(p, now));
   if (now - firesAt > 5000) { firesAt = now; fires = ctx.query({ anyTags: ["l70-fire", "fire", "campfire"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).map((f) => f.feetPosition); }
-  const g = ctx.place.gravity?.y ?? -24;
+  let awake = 0; const g = ctx.place.gravity?.y ?? -24;
   for (const r of ctx.query({ tags: ["l70foe"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
     const st = r.state, K = F[st.kind]; if (!K) continue;
     const pos = r.feetPosition;
@@ -36,7 +36,7 @@ export function update(ctx, dt) {
     }
     let p = null, d = 1e9; for (const q of live) { const dd = flat(q.feetPosition, pos); if (dd < d) { d = dd; p = q; } }
     if (!p || d > 60) { m.seen = 0; m.backT = 0; pk.rushUntil = 0; pk.seen = 0; if (!m.asleep) { m.asleep = true; r.velocity = { x: 0, y: 0, z: 0 }; r.anim.move = null; m.moving = false; } continue; }
-    m.asleep = false; gaitOf(ctx, r, m, K);
+    m.asleep = false; awake++; gaitOf(ctx, r, m, K);
     const hurt = (st.hp ?? 0) < (m.hp ?? st.hp); m.hp = st.hp;
     if (hurt) { m.stagger = now + 280; pk.rushUntil = now + 8000; m.hot = now + 9000; ctx.emit("flash", { target: r.id, color: "#ffffff", duration: 0.12 }); heard(ctx, st.kind === "froidling" ? "small-creature-pained-yelp-hiss" : "rat-squeak-pained", pos, 0.7); }
     const pp = p.feetPosition, tx = (pp.x - pos.x) / (d || 1), tz = (pp.z - pos.z) / (d || 1);
