@@ -8,7 +8,8 @@ import { actedVoice, hasCast, recordedDuration } from './lib/voices.js'
 // Traders open a shop from the card. Numbers: lib/data/talk.yml, lib/data/shops.yml.
 import { heard as hearAt } from "./lib/hear.js";
 import T from './lib/data/talk.yml'
-import { nameOf, keyOf, isTrader, voiceOf, VO, rollCheck, freshStock, buyPrice, sellPrice, sellables, removeOne, SHOPS, repairables, repairPrice } from './lib/npc-talk.js'
+import { fameOf, groupOf } from './lib/rep.js'
+import { nameOf, keyOf, isTrader, voiceOf, VO, rollCheck, freshStock, buyPrice, sellPrice, sellables, removeOne, SHOPS, repairables, repairPrice, stockOf } from './lib/npc-talk.js'
 import { takeToken, weaponAim } from './player.js'
 import W from './lib/weapons.js'
 import { talk as service } from './interact.js'
@@ -363,6 +364,7 @@ function shop(ctx, d) {
   const stock = { ...it.state.stock }
   if (d.k === 'buy') {
     const row = stock[t]; if (!row || row[0] < 1) { note(ctx, 'Sold out.'); return }
+    const gate = stockOf(it).find((r) => r[0] === t)?.[3]; if (gate && fameOf(s, groupOf(it)) < gate) { note(ctx, `Team issue. The M.E.G. sells that to people it trusts (fame ${fameOf(s, groupOf(it))}/${gate}).`); return }
     const price = buyPrice(row[1], barter, disc)
     const cents = price * 100 // Backdollars only: traders don't take almond water as money any more
     if ((s.cents ?? 0) < cents) { note(ctx, `Not enough Backdollars: $${price}.00`); return }

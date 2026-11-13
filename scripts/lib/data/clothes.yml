@@ -29,7 +29,7 @@ leveled:
   lift: 0.04          # per level past a row's own: rarer rows get this much heavier (a level 20 finder sees more rare cloth)
   # NPC wardrobes by faction: the rows a faction dresses from (ids below), and how often each optional slot is filled
   factions:
-    meg:      { rows: [megjacket, longsleeve, cargo, pants, boots, steeltoe, cap, beanie, padbeanie, shades, megoggles, scarf, padjacket, hazmat], extra: { hat: 0.45, eyew: 0.3, neck: 0.25 } }
+    meg:      { rows: [megjacket, cpjacket, tmcap, longsleeve, cargo, pants, boots, steeltoe, cap, beanie, padbeanie, shades, megoggles, scarf, padjacket, hazmat], extra: { hat: 0.45, eyew: 0.3, neck: 0.25 } }
     survivor: { rows: [hoodie, sweater, jacket, padjacket, wirehood, pants, cargo, overalls, canvasskirt, boots, sneakers, beanie, padbeanie, cap, scarf, cape, necklace, carpetponcho, glasses, bntgvest, tarpponcho], extra: { hat: 0.4, eyew: 0.2, neck: 0.35 } }
     wanderer: { rows: [tee, hoodie, sweater, officeshirt, pajamas, pants, shorts, skirt, slacks, sneakers, slippers, beanie, bow, headphones, glasses, crackedglasses, lobbyshades, scarf, necklace, bowtie, bell, carpetponcho, tarpponcho], extra: { hat: 0.35, eyew: 0.25, neck: 0.25 } }
     office:   { rows: [officeshirt, longsleeve, dress, slacks, longskirt, sneakers, boots, glasses, bowtie], extra: { hat: 0.05, eyew: 0.5, neck: 0.4 } }
@@ -43,10 +43,10 @@ leveled:
   # faction's for the slots they cover; pats: fabrics it leans to (60%). Savi's picks.
   roles:
     scout:     { rows: [jacket, padjacket, cargo, pants, boots, steeltoe, beanie, padbeanie, cap, shades, scarf, bntgvest], pats: [camo, canvas], extra: { hat: 0.65, eyew: 0.35, neck: 0.3 } }
-    guard:     { rows: [megjacket, padjacket, wirehood, cargo, steeltoe, boots, cap, padbeanie, shades, hazmat], pats: [camo, canvas, leather], extra: { hat: 0.85, eyew: 0.5, neck: 0.05 } }
-    agent:     { rows: [megjacket, padjacket, cargo, pants, boots, steeltoe, cap, shades, scarf, hazmat], pats: [camo, canvas], extra: { hat: 0.6, eyew: 0.45, neck: 0.15 } }
+    guard:     { rows: [megjacket, wwplate, wwhelmet, padjacket, wirehood, cargo, steeltoe, boots, cap, padbeanie, shades, hazmat], pats: [camo, canvas, leather], extra: { hat: 0.85, eyew: 0.5, neck: 0.05 } }
+    agent:     { rows: [megjacket, cpjacket, qmvest, padjacket, cargo, pants, boots, steeltoe, cap, shades, scarf, hazmat], pats: [camo, canvas], extra: { hat: 0.6, eyew: 0.45, neck: 0.15 } }
     captain:   { rows: [padjacket, jacket, cargo, slacks, steeltoe, boots, cap, shades, scarf], pats: [leather, canvas], extra: { hat: 0.9, eyew: 0.3, neck: 0.4 } }
-    medic:     { rows: [longsleeve, apron, slacks, pants, sneakers, boots, glasses, cap], pats: [weave, canvas], extra: { hat: 0.15, eyew: 0.6, neck: 0.05 } }
+    medic:     { rows: [lljacket, longsleeve, apron, slacks, pants, sneakers, boots, glasses, cap], pats: [weave, canvas], extra: { hat: 0.15, eyew: 0.6, neck: 0.05 } }
     trader:    { rows: [apron, sweater, jacket, overalls, pants, cargo, boots, sneakers, beanie, cap, scarf, glasses, bntgvest], pats: [plaid, denim, knit, canvas], extra: { hat: 0.5, eyew: 0.3, neck: 0.4 } }
     quarter:   { rows: [apron, padjacket, jacket, cargo, overalls, steeltoe, boots, cap, glasses], pats: [canvas, denim, leather], extra: { hat: 0.5, eyew: 0.4, neck: 0.1 } }
     keeper:    { rows: [sweater, apron, longskirt, pants, slippers, boots, scarf, glasses], pats: [knit, cable, floral], extra: { hat: 0.1, eyew: 0.5, neck: 0.5 } }
@@ -112,6 +112,14 @@ rows:
   - { id: wirehood,    slot: topw, kind: hoodie,     name: Wire-mesh hoodie,   dr: 6, kg: 2.4, rarity: rare,     strict: true, level: 12, colours: [6e6e64], crafted: true, pats: [canvas, camo] }
   - { id: steeltoe,    slot: shoes, kind: boots,     name: Steel-toe boots,    dr: 4, kg: 1.8, rarity: uncommon, strict: true, level: 9,  colours: [3a3a30], crafted: true, pats: [leather] }
   - { id: platevest,   slot: topw, kind: apron,      name: Drywall plate vest, dr: 7, kg: 3.2, rarity: rare,     strict: true, level: 14, colours: [cfc8b8], crafted: true, pats: [canvas] }
+  # M.E.G. major teams (Shelly Nov 13: "revamp M.E.G and maybe add new armor and weapons for them", wiki M.E.G. hub). One uniform per team; dr/kg/level Savi's picks.
+  # rarity agency: never in a crate below level 14; their quartermasters sell them at M.E.G. fame (scripts/lib/data/shops.yml, 4th column).
+  - { id: cpjacket,    slot: topw, kind: jacket,     name: Compass Point field jacket,  dr: 6, kg: 1.6, rarity: agency, strict: true, level: 10, colours: [5f6b3a], pats: [canvas] }   # the explorers: olive canvas, map pockets
+  - { id: lljacket,    slot: topw, kind: jacket,     name: Life Line medic jacket,      dr: 5, kg: 1.4, rarity: agency, strict: true, level: 8,  colours: [e8ece6], pats: [weave] }    # the saviors: white, washed too often
+  - { id: qmvest,      slot: topw, kind: tank,       name: Quick Match rig vest,        dr: 6, kg: 1.8, rarity: agency, strict: true, level: 10, colours: [c46a2a], pats: [canvas] }   # the improvisers: orange webbing, pouches
+  - { id: wwplate,     slot: topw, kind: apron,      name: Wild Warriors plate carrier, dr: 9, kg: 4.6, rarity: agency, strict: true, level: 16, colours: [3a4048], pats: [camo] }     # the protectors: heaviest top in the game
+  - { id: wwhelmet,    slot: hat,  kind: beanie,     name: Wild Warriors padded helmet, dr: 4, kg: 1.1, rarity: agency, strict: true, level: 14, colours: [3a4048], pats: [camo] }
+  - { id: tmcap,       slot: hat,  kind: cap,        name: Track Mappers survey cap,    dr: 2, kg: 0.2, rarity: agency, strict: true, level: 6,  colours: [d8b23a], pats: [canvas] }   # the gatherers: mustard, chalk-marked brim
   # Level 5's hotel wardrobe: old kinds in the Terror Hotel's own cuts (reuse is fine, Shelly). places: rolls only there (Savi's picks for dr/kg/rarity)
   - { id: bellhop,     slot: topw, kind: jacket,     name: Bellhop jacket,     dr: 3, kg: 0.8, rarity: uncommon, places: [level5], strict: true, colours: [b0302a, 7a1f1f], pats: [velvet, weave] }
   - { id: tailcoat,    slot: topw, kind: jacket,     name: Evening tailcoat,   dr: 2, kg: 0.9, rarity: uncommon, places: [level5], strict: true, colours: [1a1a22, 2b2b33], pats: [velvet, pinstripe] }
