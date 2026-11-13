@@ -7,6 +7,7 @@ hit: [6, 10]        # hp per scratch or bite; the victim never drops below 1
 gap: [450, 850]     # ms between pounces
 hits: [4, 7]        # attacks before she blinks away
 rageMs: 14000
+fedGraceMs: 600000  # after a meal she won't warn or claw that wanderer for 10 min (their paws are empty because she ate it)
 warnMs: 2500        # empty-handed: tail flick, then claws right away if they still carry no meat (Shelly Nov 13: "immediately")
 awayMs: [40000, 60000]   # gone after a fight, then back calm at home
 blinkHp: 60         # struck below this, she is simply elsewhere
@@ -34,6 +35,7 @@ lines:
   refuse: "Then the saucer stays empty, and so does your future. Come back with meat."
   back: "Allora. Shall we try that again, politely?"
   rage: "I did warn you."
+  full: "Mm. Still licking my whiskers, cara. Sit a while."
   premium: "Bene. Sit. Let me look at you."
   poor: "This? You bring me this?"
   return: "Where was I? Ah yes. Everywhere."
