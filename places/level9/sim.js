@@ -62,6 +62,10 @@ function fog(ctx, s) {
   if (Math.abs((f?.far ?? 0) - far) > 0.4) ctx.place.atmosphere.fog = { kind: "linear", near, far, color: k > 0.5 ? "oklch(0.2 0.015 250)" : "oklch(0.1 0.02 262)" };
 }
 export function tick(ctx) {
+  if (!ctx.place.objects["sewer9-drain"]) { // Level 34's way in from the suburbs: a storm drain by the road (Shelly Nov 13: "a reliable way to get to level 9 without needing the Hub")
+    ctx.spawn("sewer9-drain", { tags: ["usable"], feetPosition: T(4.2, 27, 0.02), primitive: { kind: "box", width: 0.9, height: 0.06, depth: 0.6 }, physics: "static", material: { texture: "cdn/texture-rusty-cast-iron-storm-drain-grate-slots.png", color: "oklch(0.35 0.03 50)", roughness: 0.7, metalness: 0.5 }, behavior: "scripts/sewer-grate.js", state: { name: "Storm drain", verb: "Climb down", to: "level34#l34-from-l9" } });
+    ctx.spawn("l9-from-l34", { feetPosition: T(4.2, 25.6, 0.2), rotation: { yaw: 0 } });
+  }
   const s = ctx.place.state;
   if (s.l9seed == null) s.l9seed = (hashStr(String(ctx.getRoomId?.() ?? "main")) ^ Math.floor(ctx.random() * 0x7fffffff)) >>> 0; // rolled once per room, kept with the room
   if (s.l9V !== V) { lay(ctx, layout(s.l9seed)); s.l9V = V; }
