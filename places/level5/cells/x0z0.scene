@@ -4188,7 +4188,8 @@ l5-office-chair:
   model: {forward: "+x", id: /cdn/value.07a9798f6eec6c10157142da7130514ee8c8301290fe16d553f43818e8103796.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: 10}
-  tags: [l5-office]
+  state: {name: Leather armchair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
+  tags: [l5-office, seat, usable]
 l5-office-desk:
   feetPosition: {x: -38, y: 0, z: -19}
   id: l5-office-desk
