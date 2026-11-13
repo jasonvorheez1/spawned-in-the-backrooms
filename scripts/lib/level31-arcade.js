@@ -152,6 +152,13 @@ export function layArcade(ctx) {
     const [name, body, side, scr, svg] = ISL[(i + row + 1) % 4];
     U(`islb-${row}${i}`, row ? 53.05 : 51.95, -6.1 + i * 0.86, row ? EA : W, { name, pitch: 1.0 + i * 0.06 }, { color: body, roughness: 0.4 }, { color: side }, glow("retro-arcade-crt-screen-" + scr, "#ffffff", 1.3), svg);
   }
+  // wall rows: six down the west wall past the dispenser, six up the east wall past Felix's flank, each its own paint
+  const PAINT = [["#5a1424", "#ffcf3a"], ["#163d2a", "#7dff9a"], ["#d9d2bd", "#2a5fd1"], ["#101018", "#ff3b4e"], ["#3a1f5c", "#3ff0e0"], ["#7a4a12", "#ffe8b0"]];
+  for (let i = 0; i < 6; i++) {
+    const [n1, , , s1, v1] = ISL[i % 4], [b1, d1] = PAINT[i], [n2, , , s2, v2] = ISL[(i + 2) % 4], [b2, d2] = PAINT[(i + 3) % 6];
+    U(`ww-${i}`, 42.6, -7.6 + i * 0.86, EA, { name: n1, pitch: 0.85 + i * 0.05 }, { color: b1, roughness: 0.45 }, { color: d1 }, glow("retro-arcade-crt-screen-" + s1, "#ffffff", 1.2), v1);
+    U(`ew-${i}`, E - 0.6, -18.2 - i * 0.86, W, { name: n2, pitch: 1.1 - i * 0.04 }, { color: b2, roughness: 0.45 }, { color: d2 }, glow("retro-arcade-crt-screen-" + s2, "#ffffff", 1.2), v2);
+  }
   ctx.spawn("l31-arcade-isl-cap", { feetPosition: { x: 50, y: 0, z: -21.15 }, primitive: { kind: "cylinder", radiusTop: 0.45, radiusBottom: 0.5, height: 0.9, radialSegments: 24 }, material: { color: "#1b1630", roughness: 0.5 }, physics: "static", castShadow: false,
     children: [{ feetPosition: { x: 0, y: 0.9, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.47, radiusBottom: 0.47, height: 0.04, radialSegments: 24 }, material: { color: "#d9dde3", metalness: 0.9, roughness: 0.25 } }] });
   ctx.spawn("l31-arcade-isl-ring", { feetPosition: { x: 50, y: 3.6, z: -23.3 }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "torus", radius: 2.4, tube: 0.05, radialSegments: 8, tubularSegments: 64 }, material: { color: "#ff4fb8", emissive: "#ff4fb8", emissiveIntensity: 2.4 }, castShadow: false,
