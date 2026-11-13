@@ -86,6 +86,16 @@ export function update(ctx, dt) {
     if (!m.fleeGoal || now > (m.fleeAt ?? 0) || flat(pos, m.fleeGoal) < 1) { m.fleeGoal = fleeGoal(ctx, o, tgt.feetPosition); m.fleeAt = now + 1200; m.path = null; }
     moveTo(ctx, o, m, m.fleeGoal, D.run, dt, now); anim(o, m, "Run"); pace(ctx, o, m, now, true); return;
   }
+  // Shelly Nov 13 "dullers still arent using their attacks on me": the wall reach alone almost never fired. Up close, or with your back turned, it comes for you
+  if (m.swipe) return swipeStep(ctx, o, m, tgt, td, now, dt);
+  if (td < D.swipeRange && now >= (m.swipeCool ?? 0) && !drank(tgt, now) && !tgt.state?.freeze) {
+    m.swipe = { id: tgt.id, at: now }; m.path = null; m.clip = null; anim(o, m, "cdn/clip-attack.glb", false);
+    stand(ctx, o, dt); face(o, m, tgt.feetPosition.x - pos.x, tgt.feetPosition.z - pos.z, now);
+    say(ctx, S.grip, pos, 0.8, 16); return;
+  }
+  if (seen && !watched && td < D.creep && !drank(tgt, now)) { // you looked away: it closes the gap fast and quiet
+    moveTo(ctx, o, m, tgt.feetPosition, D.run * 0.55, dt, now); anim(o, m, "Run"); pace(ctx, o, m, now, false); return;
+  }
   if (seen) { // seen but not charged: it slinks back out of your sight
     if (!m.slink || now > m.slinkAt) { m.slink = fleeGoal(ctx, o, tgt.feetPosition); m.slinkAt = now + 1500; m.path = null; }
     moveTo(ctx, o, m, m.slink, D.walk * 1.3, dt, now); anim(o, m, "Walk"); return;
@@ -118,6 +128,21 @@ function wallBy(ctx, tgt) {
     if (h && (!best || h.distance < best.dist)) best = { x: h.position.x, y: h.position.y, z: h.position.z, n: { x: -d.x, y: 0, z: -d.z }, dist: h.distance };
   }
   return best;
+}
+function swipeStep(ctx, o, m, tgt, td, now, dt) { // a wind-up you can back out of, then long fingers rake you
+  const w = m.swipe; stand(ctx, o, dt); face(o, m, tgt.feetPosition.x - o.feetPosition.x, tgt.feetPosition.z - o.feetPosition.z, now);
+  if (now - w.at < D.swipeTellMs) return;
+  m.swipe = null; m.swipeCool = now + D.swipeCdMs; m.clip = null;
+  const p = ctx.place.players.find((q) => q.id === w.id);
+  if (!p || !alive(p) || flat(o.feetPosition, p.feetPosition) > D.swipeRange + 0.9) { say(ctx, S.miss, o.feetPosition, 0.6, 14); return; }
+  const s = p.state, dmg = D.swipeDmg; s.hp -= dmgAfterArmor(s.look, dmg); s.sanity = Math.max(0, (s.sanity ?? 100) - D.swipeSan);
+  const at = { x: p.feetPosition.x, y: p.feetPosition.y + 1.2, z: p.feetPosition.z };
+  ctx.emit("damageNumber", { position: at, value: dmg, color: "#ff5040" });
+  ctx.emit("slash", { position: at, size: 0.9, shape: "crescent" });
+  ctx.emit("cameraPunch", { direction: { x: p.feetPosition.x - o.feetPosition.x, y: 0, z: p.feetPosition.z - o.feetPosition.z }, intensity: 0.6 }, { audience: { player: p.id } });
+  ctx.emit("screenShake", { intensity: 0.35, duration: 0.25 }, { audience: { player: p.id } });
+  say(ctx, S.grip, at, 1, 16);
+  if (ctx.random() < D.swipeFlee) flee(ctx, o, m, p.feetPosition, now); // sometimes it hits and bolts, sometimes it stays on you
 }
 function pace(ctx, o, m, now, run) {
   if (now < (m.stepAt ?? 0)) return; m.stepAt = now + (run ? 2600 : 900 + ctx.random() * 500);
