@@ -58,7 +58,7 @@ export function laySideB(ctx) {
     face3: [st(-24, 12, 8), st(-24, 4, 7), st(-24, -6, 9), st(-24, 4, 6)],
   };
   // three rink facelings: blank faces, regulars who belong to the place. Docile until you sell their song.
-  const F = (id, x, z, yaw, sex, top) => person(id, x, z, yaw, { species: "faceling", sex, topw: sex === "f" ? "longsleeve" : "tee", top, botw: "pants", bottom: "#22232b", shoes: "sneakers" },
+  const F = (id, x, z, yaw, sex, top) => person(id, x, z, yaw, { species: "faceling", sex, topw: "tee", top, botw: "pants", bottom: "#22232b", shoes: "sneakers" },
     "rink", "the Roller Rink", "Rink Regular", "regular", { docile: true, rounds: LAPS[id] });
   F("face1", -11, -16.8, 180, "f", "#8a3f6a"); F("face2", 16, -15, 200, "m", "#2f6a7a"); F("face3", -24, 12, 120, "m", "#a8743a");
 }
