@@ -1,3 +1,4 @@
+import { strike } from './lib/npc-temper.js'
 import { incidentOf } from "./lib/forgive.js";
 // Samantha (Entity 26): a very small tuxedo cat who keeps the Beverly Room. A real cat on four legs (her own rig and clips:
 // Idle sits with a tail flick, Groom, Walk, Run, Pounce). She ambles a slow round through the Main Hall, sits on furniture,
@@ -92,10 +93,7 @@ function enrage(ctx, pid, now) {
 // a first strike, a bump or a stray swing gets a hiss and a warning; only a second one inside 20 s turns her claws on you
 function provoke(ctx, pid, now) {
   const ses = ctx.self.session, p = ctx.getObject(pid); if (!p) return
-  ses.struck ??= {}
-  const last = ses.struck[pid]
-  if (last && now - last < 20000) { ses.struck[pid] = 0; enrage(ctx, pid, now); return }
-  ses.struck[pid] = now
+  if (strike(ctx, pid) === 'answer') { enrage(ctx, pid, now); return } // scripts/lib/npc-temper.js
   if (p.state) p.state.notice = { text: "Samantha hisses. \"Do that again and you'll regret it.\"", at: now }
   heard(ctx, { clip: SND('cat-warning-hiss-short'), position: ctx.self.feetPosition, volume: 0.7, maxDistance: 12 })
 }

@@ -1,3 +1,4 @@
+import { weaponsOf as sharedWeapons } from "./lib/npc-temper.js";
 import { clearSight } from './lib/sight.js';
 import { knocked } from "./lib/knock.js";
 import { vo, hasVoice, actedVoice } from "./lib/voices.js";
@@ -29,9 +30,7 @@ const ARMS = {
 };
 const poolOf = (s) => s.role === "medic" ? ARMS.medic : ["trader", "quarter", "clerk", "concierge"].includes(s.role) ? ARMS.trade : (s.faction5 === "orig" || ["socialite", "maid", "bellhop", "cook", "guide"].includes(s.role) && s.faction5 !== "hk") ? ARMS.civ : ARMS.fight;
 function rollArm(id, pool) { let h = 2166136261; for (const c of String(id)) h = Math.imul(h ^ c.charCodeAt(0), 16777619); const tot = pool.reduce((a, [, w]) => a + w, 0); let r = ((h >>> 0) % 1000) / 1000 * tot; for (const [k, w] of pool) { if ((r -= w) < 0) return k; } return pool[0][0]; }
-// a weapon is a child that names its kind: wardrobe pieces (cw-hair, cw-ears…) and the head are never one (Shelly: npcs swung their hair)
-const weaponsOf = (ctx, me) => (me.children ?? []).map((c) => (typeof c === "string" ? ctx.getObject(c) : c?.id ? ctx.getObject(c.id) : c)).filter((c) => c && c.state?.kind && !String(c.id).endsWith("/" + HEAD_ID) && !/\/cw-/.test(String(c.id)) && (c.model || c.primitive));
-const heldOf = (ctx, me) => weaponsOf(ctx, me)[0];
+const weaponsOf = (ctx, me) => sharedWeapons(ctx, me, HEAD_ID), heldOf = (ctx, me) => weaponsOf(ctx, me)[0]; // scripts/lib/npc-temper.js: every level
 // once per agent: keep what its spawner handed it unless that was the stock pistol, else roll from its kind's rack and swap the held body
 // nerve (Shelly's confidence system): brave hold their ground, steady fight until hurt, cowards run, frenzied (rare) go for anyone. Savi's odds: 24/50/23/3
 const hashN = (id, salt) => { let h = 2166136261 ^ salt; for (const c of String(id)) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return ((h >>> 0) % 1000) / 1000; };

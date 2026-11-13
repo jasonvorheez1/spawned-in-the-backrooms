@@ -1,6 +1,7 @@
 // Samantha: The Beverly Room psychic cat (Wikidot Backrooms Level 5 lore).
 // A sleek tuxedo cat with glowing golden eyes that communicates telepathically.
 // Trades fortunes, predictions, and blessings for meat cuts (player.state.meat).
+import { strike } from "./lib/npc-temper.js";
 import { heard } from "./lib/hear.js";
 import { MEAT } from "./lib/items.js";
 import { faceMorph, HEAD_ID } from "./lib/critter-model.js";
@@ -150,9 +151,7 @@ export const ears = {
     if (!who) return;
 
     // a first stray hit is a warning; only a second one within 20 s is answered
-    const last = ctx.self.session.hitAt ?? -1e9;
-    ctx.self.session.hitAt = ctx.now();
-    if (ctx.now() - last > 20000) {
+    if (strike(ctx, by) === "warn") { // scripts/lib/npc-temper.js: per player, the same rule every level uses
       who.state.notice = { text: "Samantha's ears go flat: 'Careful, visitor. I will assume that was clumsiness. Once.'", at: ctx.now() };
       return;
     }
