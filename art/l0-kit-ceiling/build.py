@@ -74,6 +74,7 @@ if C.get("back"):    # an open lattice gets the dark plenum behind it
     bs = pm.node_tree.nodes["Principled BSDF"]; bs.inputs["Base Color"].default_value = (0.012, 0.011, 0.01, 1); bs.inputs["Roughness"].default_value = 1
     me.materials.append(pm)
     bm = bmesh.new(); bm.from_mesh(me); h = sz[0] / 2 - 0.002
+    for v in bm.verts: v.co.x = max(-sz[0] / 2, min(sz[0] / 2, v.co.x)); v.co.y = max(-sz[1] / 2, min(sz[1] / 2, v.co.y))
     bm.normal_update()   # the pale pocket floors go: every cell opens onto the plenum
     bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.normal.z < -0.8 and f.calc_center_median().z > mn.z + 0.008 and max(abs(f.calc_center_median().x), abs(f.calc_center_median().y)) < h - 0.03], context="FACES")
     f = bm.faces.new([bm.verts.new((x, y, mx.z - 0.0015)) for x, y in ((-h, -h), (-h, h), (h, h), (h, -h))]); f.material_index = len(me.materials) - 1
@@ -117,6 +118,8 @@ ob.name = kind; me.name = kind
 for m in me.materials:
     if m.name not in ('wire', 'plenum'): m.name = kind
 me.calc_loop_triangles(); mn, mx = bounds(); d = mx - mn
+for im in bpy.data.images:
+    if im.size[0] > 1024: im.scale(1024, 1024)
 out = f"{W}/out/{kind}.glb"; os.makedirs(f"{W}/out", exist_ok=True)
 bpy.ops.export_scene.gltf(filepath=out, export_apply=True)
 print(f"RESULT {kind} size_xyz(blender) {d.x:.3f} {d.y:.3f} {d.z:.3f} engine[w,h,d] [{d.x:.3f},{d.z:.3f},{d.y:.3f}] tris {len(me.loop_triangles)} zmin {mn.z:.3f} zmax {mx.z:.3f}")
