@@ -408,8 +408,9 @@ l70-c-pallet:
   physics: {body: static, collider: mesh}
   rotation: {yaw: 15}
 l70-c-rug:
-  feetPosition: {x: 33.4, y: 0.045, z: -77.6}
+  feetPosition: {x: 33.4, y: 0.01, z: -77.6}
   id: l70-c-rug
+  layout: {box: {max: {x: 2, y: 0.03, z: 1.5}, min: {x: -2, y: 0, z: -1.5}}}
   model: /cdn/value.7a52a205e6005afc81d4fb66c6bd697f8b8a470cb14e2d812ee207660fd6a48c.glb
   rotation: {yaw: 12}
 l70-c-sled-1:
