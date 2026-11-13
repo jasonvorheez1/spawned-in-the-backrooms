@@ -570,6 +570,7 @@ l70-bp-office:
   rotation: {yaw: 0}
   tags: [l70-civic]
 l70-breaker:
+  behavior: [scripts/l70-press.js]
   feetPosition: {x: 48.3, y: 1, z: -19.14}
   id: l70-breaker
   model: /cdn/value.0919a72230d19f7a5fadf929b70747b4182eb4e61cb8d6f75633b74c5a87d390.glb
@@ -1791,6 +1792,7 @@ l70-swing-snow:
   tags: [l70, l70-town]
   visible: true
 l70-valve-0:
+  behavior: [scripts/l70-press.js]
   feetPosition: {x: 49.5, y: 0.62, z: -23.5}
   id: l70-valve-0
   layout: {box: {max: {y: 0.54}, min: {y: 0}}}
@@ -1800,6 +1802,7 @@ l70-valve-0:
   state: {n: 0, turn: 0}
   tags: [usable, l70-valve]
 l70-valve-1:
+  behavior: [scripts/l70-press.js]
   feetPosition: {x: 49.5, y: 0.62, z: -22.5}
   id: l70-valve-1
   layout: {box: {max: {y: 0.54}, min: {y: 0}}}
@@ -1809,6 +1812,7 @@ l70-valve-1:
   state: {n: 1, turn: 0}
   tags: [usable, l70-valve]
 l70-valve-2:
+  behavior: [scripts/l70-press.js]
   feetPosition: {x: 49.5, y: 0.62, z: -21.5}
   id: l70-valve-2
   layout: {box: {max: {y: 0.54}, min: {y: 0}}}
@@ -1818,6 +1822,7 @@ l70-valve-2:
   state: {n: 2, turn: 0}
   tags: [usable, l70-valve]
 l70-valve-3:
+  behavior: [scripts/l70-press.js]
   feetPosition: {x: 49.5, y: 0.62, z: -20.5}
   id: l70-valve-3
   layout: {box: {max: {y: 0.54}, min: {y: 0}}}
