@@ -1,3 +1,1711 @@
-# Level 70 Froidetown people. Quest lines live in scripts/lib/level70-quest.js (l70Choices + handleDialogueQuest70).
-# Per-NPC greetings and barks still to be written in the dlg schema; empty map keeps dialogue.js loading.
-{}
+# Level 70 Froidetown people, written by hand. Quest lines live in scripts/lib/level70-quest.js (l70Choices).
+{
+ "l70-npc-marinerson": {
+  "hi": [
+   "Pull up some snow, friend. Sorry there's no chair."
+  ],
+  "back": [
+   "Back again. Fire's still free."
+  ],
+  "warm": [
+   "Back again. Fire's still free."
+  ],
+  "cold": [
+   "I remember you. Sorry, but I do."
+  ],
+  "follow": [
+   "Right behind you, eh.",
+   "Lead on."
+  ],
+  "bye": [
+   "Keep your toque on.",
+   "Mind the ice."
+  ],
+  "walk": [
+   "Oh. Okay then.",
+   "Bye, I guess. Sorry."
+  ],
+  "ask": [
+   {
+    "q": "What happened to the water?",
+    "a": [
+     "Pipes ran dry a month back. Almond Water used to run under every street. Now my kettle just sits there judging me."
+    ]
+   },
+   {
+    "q": "How long have you lived here?",
+    "a": [
+     "Born here. Well, arrived here. Same thing after sixty winters."
+    ]
+   },
+   {
+    "q": "Who runs Froidetown?",
+    "a": [
+     "Parliament. PM Larsson at the hotel. She's good. Bit of a talker. We all are."
+    ]
+   },
+   {
+    "q": "Anything I should avoid?",
+    "sk": "survival 25",
+    "a": [
+     "Froidlings hunt in threes. Keep your back to a fire and they lose their nerve. And don't follow the robed folk into the Iceshed."
+    ],
+    "fail": [
+     "The cold. Mostly the cold. Sorry, that's not helpful."
+    ]
+   }
+  ],
+  "barks": {
+   "idle": [
+    "Back when the pipes sang, you could skate to work.",
+    "My knees say minus forty. They are never wrong.",
+    "Sit a spell. The fire doesn't charge."
+   ],
+   "hi": [
+    "Hi there.",
+    "Evening.",
+    "Cold one, eh?"
+   ],
+   "drawn": [
+    "Whoa, whoa. Put that away, please.",
+    "Easy, bud. We're all friends here.",
+    "Sorry, is that pointed at me?"
+   ],
+   "hurt": [
+    "You're bleeding on the snow, bud.",
+    "That looks bad. Sorry."
+   ],
+   "close": [
+    "Oh, hi. Sorry, didn't see you."
+   ],
+   "spot": [
+    "Okay, that's enough of that!"
+   ],
+   "hostile": [
+    "Okay, that's enough of that!",
+    "Sorry, but you asked for it!"
+   ],
+   "hit": [
+    "Sorry! Not sorry.",
+    "Ow, eh!"
+   ],
+   "kill": [
+    "Sorry it came to that."
+   ],
+   "clear": [
+    "Okay. Okay. We're okay."
+   ],
+   "flee": [
+    "Nope! Sorry! Nope!",
+    "Guard! GUARD!"
+   ],
+   "death": [
+    "Tell my mom... sorry..."
+   ],
+   "lowHealth": [
+    "I'm not doing great, honestly."
+   ]
+  },
+  "gest": {
+   "wave": "Oh! Hi! *waves with a mitten*",
+   "gift": "For me? Oh, you shouldn't have. Thank you so much.",
+   "dance": "Keeps the blood moving, eh!",
+   "nodance": "My knees are frozen solid, sorry.",
+   "insult": "Well. That was uncalled for. Sorry you feel that way."
+  }
+ },
+ "l70-npc-larsson": {
+  "hi": [
+   "Welcome to Parliament. Sorry about the draft, the whole building is one."
+  ],
+  "back": [
+   "The member from the outside returns. Hello again."
+  ],
+  "warm": [
+   "The member from the outside returns. Hello again."
+  ],
+  "cold": [
+   "I remember you. Sorry, but I do."
+  ],
+  "follow": [
+   "Right behind you, eh.",
+   "Lead on."
+  ],
+  "bye": [
+   "The house thanks you. Mostly me. I am the house, today."
+  ],
+  "walk": [
+   "Oh. Okay then.",
+   "Bye, I guess. Sorry."
+  ],
+  "ask": [
+   {
+    "q": "What is Froidetown?",
+    "a": [
+     "A Kingdom, a city, a very long winter. We have a parliament, a river, and one functioning kettle."
+    ]
+   },
+   {
+    "q": "Who are the robed people in the woods?",
+    "a": [
+     "The Carnifices of Gelu. They pray to the frost and cut our pipes. We have tabled several strongly worded motions."
+    ]
+   },
+   {
+    "q": "What's Froston?",
+    "a": [
+     "An old B.N.T.G. camp past the river. They pumped something out, then left. Nobody wants to go see what."
+    ]
+   }
+  ],
+  "barks": {
+   "idle": [
+    "Order, please. Sorry. Order.",
+    "The pipes are a file on my desk. A cold one.",
+    "Motion to be warm carries, eh."
+   ],
+   "hi": [
+    "Hi there.",
+    "Evening.",
+    "Cold one, eh?"
+   ],
+   "drawn": [
+    "Point of order: please lower that.",
+    "There's no weapons in the chamber. Sorry, that's the rule."
+   ],
+   "hurt": [
+    "You're bleeding on the snow, bud.",
+    "That looks bad. Sorry."
+   ],
+   "close": [
+    "Oh, hi. Sorry, didn't see you."
+   ],
+   "spot": [
+    "Okay, that's enough of that!"
+   ],
+   "hostile": [
+    "Okay, that's enough of that!",
+    "Sorry, but you asked for it!"
+   ],
+   "hit": [
+    "Sorry! Not sorry.",
+    "Ow, eh!"
+   ],
+   "kill": [
+    "Sorry it came to that."
+   ],
+   "clear": [
+    "Okay. Okay. We're okay."
+   ],
+   "flee": [
+    "Nope! Sorry! Nope!",
+    "Guard! GUARD!"
+   ],
+   "death": [
+    "Tell my mom... sorry..."
+   ],
+   "lowHealth": [
+    "I'm not doing great, honestly."
+   ]
+  },
+  "gest": {
+   "wave": "Oh! Hi! *waves with a mitten*",
+   "gift": "For me? Oh, you shouldn't have. Thank you so much.",
+   "dance": "Keeps the blood moving, eh!",
+   "nodance": "My knees are frozen solid, sorry.",
+   "insult": "Well. That was uncalled for. Sorry you feel that way."
+  }
+ },
+ "l70-npc-odell": {
+  "hi": [
+   "Have a look, no rush. Sorry about the prices, it's the cold."
+  ],
+  "back": [
+   "Back for the one good boot?"
+  ],
+  "warm": [
+   "Back for the one good boot?"
+  ],
+  "cold": [
+   "I remember you. Sorry, but I do."
+  ],
+  "follow": [
+   "Right behind you, eh.",
+   "Lead on."
+  ],
+  "bye": [
+   "Come back with scrap, eh.",
+   "No refunds. Love you though."
+  ],
+  "walk": [
+   "Oh. Okay then.",
+   "Bye, I guess. Sorry."
+  ],
+  "ask": [
+   {
+    "q": "What are you selling?",
+    "a": [
+     "Scrap, wire, a mitten, a boot. Everything here fell off something nicer."
+    ]
+   },
+   {
+    "q": "Where does your stock come from?",
+    "a": [
+     "Froston, mostly. The B.N.T.G. left in a hurry. I just tidy up after them. For a fee."
+    ]
+   },
+   {
+    "q": "Any discount for a stranger?",
+    "sk": "barter 35",
+    "do": "discount",
+    "a": [
+     "Oh, fine. You've got an honest face. Under all that frost."
+    ],
+    "fail": [
+     "Sorry. Prices are prices. I'd feel bad, but I'd still charge you."
+    ]
+   }
+  ],
+  "barks": {
+   "idle": [
+    "Scrap, wire, one good boot. Sorry, just the one.",
+    "Everything here fell off something nicer.",
+    "No refunds. I'll feel bad about it though."
+   ],
+   "hi": [
+    "Hi there.",
+    "Evening.",
+    "Cold one, eh?"
+   ],
+   "drawn": [
+    "Hey now. That's not how bartering works.",
+    "Sorry, shop's closed to pointy things."
+   ],
+   "hurt": [
+    "You're bleeding on the snow, bud.",
+    "That looks bad. Sorry."
+   ],
+   "close": [
+    "Oh, hi. Sorry, didn't see you."
+   ],
+   "spot": [
+    "Okay, that's enough of that!"
+   ],
+   "hostile": [
+    "Okay, that's enough of that!",
+    "Sorry, but you asked for it!"
+   ],
+   "hit": [
+    "Sorry! Not sorry.",
+    "Ow, eh!"
+   ],
+   "kill": [
+    "Sorry it came to that."
+   ],
+   "clear": [
+    "Okay. Okay. We're okay."
+   ],
+   "flee": [
+    "Nope! Sorry! Nope!",
+    "Guard! GUARD!"
+   ],
+   "death": [
+    "Tell my mom... sorry..."
+   ],
+   "lowHealth": [
+    "I'm not doing great, honestly."
+   ]
+  },
+  "gest": {
+   "wave": "Oh! Hi! *waves with a mitten*",
+   "gift": "For me? Oh, you shouldn't have. Thank you so much.",
+   "dance": "Keeps the blood moving, eh!",
+   "nodance": "My knees are frozen solid, sorry.",
+   "insult": "Well. That was uncalled for. Sorry you feel that way."
+  }
+ },
+ "l70-npc-ines": {
+  "hi": [
+   "River Guard. Mind the ice, and sorry in advance if we yell."
+  ],
+  "back": [
+   "You again. Still alive, good."
+  ],
+  "warm": [
+   "You again. Still alive, good."
+  ],
+  "cold": [
+   "I remember you. Sorry, but I do."
+  ],
+  "follow": [
+   "Right behind you, eh.",
+   "Lead on."
+  ],
+  "bye": [
+   "Stay off the thin parts.",
+   "Shout if it chitters."
+  ],
+  "walk": [
+   "Oh. Okay then.",
+   "Bye, I guess. Sorry."
+  ],
+  "ask": [
+   {
+    "q": "What does the River Guard do?",
+    "a": [
+     "Watch the Burns River, keep the froidlings out of town, apologize to anyone we tackle."
+    ]
+   },
+   {
+    "q": "Tell me about froidlings.",
+    "a": [
+     "Little, pale, furry, hungry. Packs of three. They circle, then rush the second you turn. Fire spooks them."
+    ]
+   },
+   {
+    "q": "Want to come with me?",
+    "sk": "speech 45",
+    "do": "recruit",
+    "a": [
+     "One patrol. Then I'm back on the river."
+    ],
+    "fail": [
+     "Sorry, I'm on shift. Forever, apparently."
+    ]
+   }
+  ],
+  "barks": {
+   "idle": [
+    "River's holding. Ice is thick as a ministry report.",
+    "Eyes on the treeline, please and thank you.",
+    "If it howls, that's ours. If it chitters, shout."
+   ],
+   "hi": [
+    "Hi there.",
+    "Evening.",
+    "Cold one, eh?"
+   ],
+   "drawn": [
+    "Drop it. Now. Please.",
+    "Weapon down, or I put you down. Sorry."
+   ],
+   "hurt": [
+    "You're bleeding on the snow, bud.",
+    "That looks bad. Sorry."
+   ],
+   "close": [
+    "Oh, hi. Sorry, didn't see you."
+   ],
+   "spot": [
+    "River Guard! Stand down!"
+   ],
+   "hostile": [
+    "River Guard! Stand down!",
+    "You had your warning, bud."
+   ],
+   "hit": [
+    "Sorry! Not sorry.",
+    "Ow, eh!"
+   ],
+   "kill": [
+    "Sorry it came to that."
+   ],
+   "clear": [
+    "Okay. Okay. We're okay."
+   ],
+   "flee": [
+    "Falling back!"
+   ],
+   "death": [
+    "Tell my mom... sorry..."
+   ],
+   "lowHealth": [
+    "I'm not doing great, honestly."
+   ]
+  },
+  "gest": {
+   "wave": "Oh! Hi! *waves with a mitten*",
+   "gift": "For me? Oh, you shouldn't have. Thank you so much.",
+   "dance": "Keeps the blood moving, eh!",
+   "nodance": "My knees are frozen solid, sorry.",
+   "insult": "Well. That was uncalled for. Sorry you feel that way."
+  }
+ },
+ "l70-npc-vael": {
+  "hi": [
+   "You walked far to be this cold. Speak."
+  ],
+  "back": [
+   "The cold remembered you. So did I."
+  ],
+  "warm": [
+   "The cold remembered you. So did I."
+  ],
+  "cold": [
+   "You burned something of ours. Leave."
+  ],
+  "follow": [
+   "Right behind you, eh.",
+   "Lead on."
+  ],
+  "bye": [
+   "Go. The frost walks with you.",
+   "Leave the fire behind."
+  ],
+  "walk": [
+   "Oh. Okay then.",
+   "Bye, I guess. Sorry."
+  ],
+  "ask": [
+   {
+    "q": "What is Gelu?",
+    "a": [
+     "The cold that was here before the city. It does not ask. It keeps."
+    ]
+   },
+   {
+    "q": "Why cut the town's pipes?",
+    "a": [
+     "Water that runs is water that thaws. Froidetown borrows warmth it cannot repay."
+    ]
+   },
+   {
+    "q": "Can I join you?",
+    "sk": "speech 50",
+    "a": [
+     "Sit in the snow until you stop shaking. Then come back."
+    ],
+    "fail": [
+     "You still love your fire. Go away."
+    ]
+   }
+  ],
+  "barks": {
+   "idle": [
+    "Gelu keeps what it takes.",
+    "Warmth is a loan. The frost collects.",
+    "You shiver. Good. You are listening."
+   ],
+   "hi": [
+    "Hi there.",
+    "Evening.",
+    "Cold one, eh?"
+   ],
+   "drawn": [
+    "Steel is warm. Your mistake.",
+    "Raise it, then. See who bleeds slower."
+   ],
+   "hurt": [
+    "You're bleeding on the snow, bud.",
+    "That looks bad. Sorry."
+   ],
+   "close": [
+    "Oh, hi. Sorry, didn't see you."
+   ],
+   "spot": [
+    "For Gelu!"
+   ],
+   "hostile": [
+    "For Gelu!",
+    "The frost takes you."
+   ],
+   "hit": [
+    "Sorry! Not sorry.",
+    "Ow, eh!"
+   ],
+   "kill": [
+    "Sorry it came to that."
+   ],
+   "clear": [
+    "Okay. Okay. We're okay."
+   ],
+   "flee": [
+    "The woods will hide us."
+   ],
+   "death": [
+    "Tell my mom... sorry..."
+   ],
+   "lowHealth": [
+    "I'm not doing great, honestly."
+   ]
+  },
+  "gest": {
+   "wave": "Oh! Hi! *waves with a mitten*",
+   "gift": "For me? Oh, you shouldn't have. Thank you so much.",
+   "dance": "Keeps the blood moving, eh!",
+   "nodance": "My knees are frozen solid, sorry.",
+   "insult": "Well. That was uncalled for. Sorry you feel that way."
+  }
+ },
+ "l70-npc-pierrette": {
+  "hi": [
+   "Oh, sorry, am I in your way? I'm always in somebody's way."
+  ],
+  "back": [
+   "Oh, hi again!",
+   "Back so soon? Nice."
+  ],
+  "warm": [
+   "Oh, hi again!",
+   "Back so soon? Nice."
+  ],
+  "cold": [
+   "I remember you. Sorry, but I do."
+  ],
+  "follow": [
+   "Right behind you, eh.",
+   "Lead on."
+  ],
+  "bye": [
+   "Stay warm, eh.",
+   "Bye now. Sorry. Bye."
+  ],
+  "walk": [
+   "Oh. Okay then.",
+   "Bye, I guess. Sorry."
+  ],
+  "ask": [
+   {
+    "q": "What do you do here?",
+    "a": [
+     "It snows, I shovel. That's the job."
+    ]
+   },
+   {
+    "q": "How's life in Froidetown?",
+    "a": [
+     "Cold. Polite. Cold again. We manage."
+    ]
+   },
+   {
+    "q": "Seen anything strange lately?",
+    "a": [
+     "Little tracks round the bins at night. Three sets. Always three."
+    ]
+   }
+  ],
+  "barks": {
+   "idle": [
+    "Sorry, just shovelling. Again. Forever.",
+    "It snows, I shovel, it apologizes. Kidding. It never does.",
+    "Watch your step there, bud."
+   ],
+   "hi": [
+    "Hi there.",
+    "Evening.",
+    "Cold one, eh?"
+   ],
+   "drawn": [
+    "Whoa, whoa. Put that away, please.",
+    "Easy, bud. We're all friends here.",
+    "Sorry, is that pointed at me?"
+   ],
+   "hurt": [
+    "You're bleeding on the snow, bud.",
+    "That looks bad. Sorry."
+   ],
+   "close": [
+    "Oh, hi. Sorry, didn't see you."
+   ],
+   "spot": [
+    "Okay, that's enough of that!"
+   ],
+   "hostile": [
+    "Okay, that's enough of that!",
+    "Sorry, but you asked for it!"
+   ],
+   "hit": [
+    "Sorry! Not sorry.",
+    "Ow, eh!"
+   ],
+   "kill": [
+    "Sorry it came to that."
+   ],
+   "clear": [
+    "Okay. Okay. We're okay."
+   ],
+   "flee": [
+    "Nope! Sorry! Nope!",
+    "Guard! GUARD!"
+   ],
+   "death": [
+    "Tell my mom... sorry..."
+   ],
+   "lowHealth": [
+    "I'm not doing great, honestly."
+   ]
+  },
+  "gest": {
+   "wave": "Oh! Hi! *waves with a mitten*",
+   "gift": "For me? Oh, you shouldn't have. Thank you so much.",
+   "dance": "Keeps the blood moving, eh!",
+   "nodance": "My knees are frozen solid, sorry.",
+   "insult": "Well. That was uncalled for. Sorry you feel that way."
+  }
+ },
+ "l70-npc-gord": {
+  "hi": [
+   "Need wood? I've got wood. Sorry, that's the whole pitch."
+  ],
+  "back": [
+   "Oh, hi again!",
+   "Back so soon? Nice."
+  ],
+  "warm": [
+   "Oh, hi again!",
+   "Back so soon? Nice."
+  ],
+  "cold": [
+   "I remember you. Sorry, but I do."
+  ],
+  "follow": [
+   "Right behind you, eh.",
+   "Lead on."
+  ],
+  "bye": [
+   "Stay warm, eh.",
+   "Bye now. Sorry. Bye."
+  ],
+  "walk": [
+   "Oh. Okay then.",
+   "Bye, I guess. Sorry."
+  ],
+  "ask": [
+   {
+    "q": "What do you do here?",
+    "a": [
+     "I split logs for every fire in town. Birch for heat, spruce for spite."
+    ]
+   },
+   {
+    "q": "How's life in Froidetown?",
+    "a": [
+     "Cold. Polite. Cold again. We manage."
+    ]
+   },
+   {
+    "q": "Seen anything strange lately?",
+    "a": [
+     "Little tracks round the bins at night. Three sets. Always three."
+    ]
+   }
+  ],
+  "barks": {
+   "idle": [
+    "Birch burns hot. Spruce burns rude.",
+    "Sorry, coming through with a log.",
+    "Wood's free. Carrying it is extra."
+   ],
+   "hi": [
+    "Hi there.",
+    "Evening.",
+    "Cold one, eh?"
+   ],
+   "drawn": [
+    "Whoa, whoa. Put that away, please.",
+    "Easy, bud. We're all friends here.",
+    "Sorry, is that pointed at me?"
+   ],
+   "hurt": [
+    "You're bleeding on the snow, bud.",
+    "That looks bad. Sorry."
+   ],
+   "close": [
+    "Oh, hi. Sorry, didn't see you."
+   ],
+   "spot": [
+    "Okay, that's enough of that!"
+   ],
+   "hostile": [
+    "Okay, that's enough of that!",
+    "Sorry, but you asked for it!"
+   ],
+   "hit": [
+    "Sorry! Not sorry.",
+    "Ow, eh!"
+   ],
+   "kill": [
+    "Sorry it came to that."
+   ],
+   "clear": [
+    "Okay. Okay. We're okay."
+   ],
+   "flee": [
+    "Nope! Sorry! Nope!",
+    "Guard! GUARD!"
+   ],
+   "death": [
+    "Tell my mom... sorry..."
+   ],
+   "lowHealth": [
+    "I'm not doing great, honestly."
+   ]
+  },
+  "gest": {
+   "wave": "Oh! Hi! *waves with a mitten*",
+   "gift": "For me? Oh, you shouldn't have. Thank you so much.",
+   "dance": "Keeps the blood moving, eh!",
+   "nodance": "My knees are frozen solid, sorry.",
+   "insult": "Well. That was uncalled for. Sorry you feel that way."
+  }
+ },
+ "l70-npc-maple": {
+  "hi": [
+   "Hi there! Sorry, the kettle froze to the table again."
+  ],
+  "back": [
+   "Oh, hi again!",
+   "Back so soon? Nice."
+  ],
+  "warm": [
+   "Oh, hi again!",
+   "Back so soon? Nice."
+  ],
+  "cold": [
+   "I remember you. Sorry, but I do."
+  ],
+  "follow": [
+   "Right behind you, eh.",
+   "Lead on."
+  ],
+  "bye": [
+   "Stay warm, eh.",
+   "Bye now. Sorry. Bye."
+  ],
+  "walk": [
+   "Oh. Okay then.",
+   "Bye, I guess. Sorry."
+  ],
+  "ask": [
+   {
+    "q": "What do you do here?",
+    "a": [
+     "I run the tea stall. Well, the ice tea stall. Not by choice."
+    ]
+   },
+   {
+    "q": "How's life in Froidetown?",
+    "a": [
+     "Cold. Polite. Cold again. We manage."
+    ]
+   },
+   {
+    "q": "Seen anything strange lately?",
+    "a": [
+     "Little tracks round the bins at night. Three sets. Always three."
+    ]
+   }
+  ],
+  "barks": {
+   "idle": [
+    "Tea's frozen. It's a tea popsicle now. Two backdollars.",
+    "Take a mitt. I only found the one, sorry.",
+    "You look cold. Everyone looks cold. Still."
+   ],
+   "hi": [
+    "Hi there.",
+    "Evening.",
+    "Cold one, eh?"
+   ],
+   "drawn": [
+    "Whoa, whoa. Put that away, please.",
+    "Easy, bud. We're all friends here.",
+    "Sorry, is that pointed at me?"
+   ],
+   "hurt": [
+    "You're bleeding on the snow, bud.",
+    "That looks bad. Sorry."
+   ],
+   "close": [
+    "Oh, hi. Sorry, didn't see you."
+   ],
+   "spot": [
+    "Okay, that's enough of that!"
+   ],
+   "hostile": [
+    "Okay, that's enough of that!",
+    "Sorry, but you asked for it!"
+   ],
+   "hit": [
+    "Sorry! Not sorry.",
+    "Ow, eh!"
+   ],
+   "kill": [
+    "Sorry it came to that."
+   ],
+   "clear": [
+    "Okay. Okay. We're okay."
+   ],
+   "flee": [
+    "Nope! Sorry! Nope!",
+    "Guard! GUARD!"
+   ],
+   "death": [
+    "Tell my mom... sorry..."
+   ],
+   "lowHealth": [
+    "I'm not doing great, honestly."
+   ]
+  },
+  "gest": {
+   "wave": "Oh! Hi! *waves with a mitten*",
+   "gift": "For me? Oh, you shouldn't have. Thank you so much.",
+   "dance": "Keeps the blood moving, eh!",
+   "nodance": "My knees are frozen solid, sorry.",
+   "insult": "Well. That was uncalled for. Sorry you feel that way."
+  }
+ },
+ "l70-npc-doug": {
+  "hi": [
+   "Fishing's slow, eh. Sorry, were you hoping for good news?"
+  ],
+  "back": [
+   "Oh, hi again!",
+   "Back so soon? Nice."
+  ],
+  "warm": [
+   "Oh, hi again!",
+   "Back so soon? Nice."
+  ],
+  "cold": [
+   "I remember you. Sorry, but I do."
+  ],
+  "follow": [
+   "Right behind you, eh.",
+   "Lead on."
+  ],
+  "bye": [
+   "Stay warm, eh.",
+   "Bye now. Sorry. Bye."
+  ],
+  "walk": [
+   "Oh. Okay then.",
+   "Bye, I guess. Sorry."
+  ],
+  "ask": [
+   {
+    "q": "What do you do here?",
+    "a": [
+     "I fish the river through a hole. Mostly I catch cold."
+    ]
+   },
+   {
+    "q": "How's life in Froidetown?",
+    "a": [
+     "Cold. Polite. Cold again. We manage."
+    ]
+   },
+   {
+    "q": "Seen anything strange lately?",
+    "a": [
+     "Little tracks round the bins at night. Three sets. Always three."
+    ]
+   }
+  ],
+  "barks": {
+   "idle": [
+    "Nothing biting. Fish are polite like that.",
+    "Caught a boot once. Odell bought it.",
+    "Shh. Sorry. Shh."
+   ],
+   "hi": [
+    "Hi there.",
+    "Evening.",
+    "Cold one, eh?"
+   ],
+   "drawn": [
+    "Whoa, whoa. Put that away, please.",
+    "Easy, bud. We're all friends here.",
+    "Sorry, is that pointed at me?"
+   ],
+   "hurt": [
+    "You're bleeding on the snow, bud.",
+    "That looks bad. Sorry."
+   ],
+   "close": [
+    "Oh, hi. Sorry, didn't see you."
+   ],
+   "spot": [
+    "Okay, that's enough of that!"
+   ],
+   "hostile": [
+    "Okay, that's enough of that!",
+    "Sorry, but you asked for it!"
+   ],
+   "hit": [
+    "Sorry! Not sorry.",
+    "Ow, eh!"
+   ],
+   "kill": [
+    "Sorry it came to that."
+   ],
+   "clear": [
+    "Okay. Okay. We're okay."
+   ],
+   "flee": [
+    "Nope! Sorry! Nope!",
+    "Guard! GUARD!"
+   ],
+   "death": [
+    "Tell my mom... sorry..."
+   ],
+   "lowHealth": [
+    "I'm not doing great, honestly."
+   ]
+  },
+  "gest": {
+   "wave": "Oh! Hi! *waves with a mitten*",
+   "gift": "For me? Oh, you shouldn't have. Thank you so much.",
+   "dance": "Keeps the blood moving, eh!",
+   "nodance": "My knees are frozen solid, sorry.",
+   "insult": "Well. That was uncalled for. Sorry you feel that way."
+  }
+ },
+ "l70-npc-bev": {
+  "hi": [
+   "Member for Kelpie North. Sorry, I have to say that every time."
+  ],
+  "back": [
+   "Oh, hi again!",
+   "Back so soon? Nice."
+  ],
+  "warm": [
+   "Oh, hi again!",
+   "Back so soon? Nice."
+  ],
+  "cold": [
+   "I remember you. Sorry, but I do."
+  ],
+  "follow": [
+   "Right behind you, eh.",
+   "Lead on."
+  ],
+  "bye": [
+   "Stay warm, eh.",
+   "Bye now. Sorry. Bye."
+  ],
+  "walk": [
+   "Oh. Okay then.",
+   "Bye, I guess. Sorry."
+  ],
+  "ask": [
+   {
+    "q": "What do you do here?",
+    "a": [
+     "I sit in Parliament. Mostly I sit near the radiator that doesn't work."
+    ]
+   },
+   {
+    "q": "How's life in Froidetown?",
+    "a": [
+     "Cold. Polite. Cold again. We manage."
+    ]
+   },
+   {
+    "q": "Seen anything strange lately?",
+    "a": [
+     "Little tracks round the bins at night. Three sets. Always three."
+    ]
+   }
+  ],
+  "barks": {
+   "idle": [
+    "I'd like to table a motion about my toes.",
+    "Point of order. Sorry. It's cold.",
+    "With respect, and I mean it, brr."
+   ],
+   "hi": [
+    "Hi there.",
+    "Evening.",
+    "Cold one, eh?"
+   ],
+   "drawn": [
+    "Whoa, whoa. Put that away, please.",
+    "Easy, bud. We're all friends here.",
+    "Sorry, is that pointed at me?"
+   ],
+   "hurt": [
+    "You're bleeding on the snow, bud.",
+    "That looks bad. Sorry."
+   ],
+   "close": [
+    "Oh, hi. Sorry, didn't see you."
+   ],
+   "spot": [
+    "Okay, that's enough of that!"
+   ],
+   "hostile": [
+    "Okay, that's enough of that!",
+    "Sorry, but you asked for it!"
+   ],
+   "hit": [
+    "Sorry! Not sorry.",
+    "Ow, eh!"
+   ],
+   "kill": [
+    "Sorry it came to that."
+   ],
+   "clear": [
+    "Okay. Okay. We're okay."
+   ],
+   "flee": [
+    "Nope! Sorry! Nope!",
+    "Guard! GUARD!"
+   ],
+   "death": [
+    "Tell my mom... sorry..."
+   ],
+   "lowHealth": [
+    "I'm not doing great, honestly."
+   ]
+  },
+  "gest": {
+   "wave": "Oh! Hi! *waves with a mitten*",
+   "gift": "For me? Oh, you shouldn't have. Thank you so much.",
+   "dance": "Keeps the blood moving, eh!",
+   "nodance": "My knees are frozen solid, sorry.",
+   "insult": "Well. That was uncalled for. Sorry you feel that way."
+  }
+ },
+ "l70-guard-1": {
+  "hi": [
+   "Evening. River Guard. Sorry to bother you by standing here."
+  ],
+  "back": [
+   "Still in one piece? Good."
+  ],
+  "warm": [
+   "Still in one piece? Good."
+  ],
+  "cold": [
+   "I remember you. Sorry, but I do."
+  ],
+  "follow": [
+   "Right behind you, eh.",
+   "Lead on."
+  ],
+  "bye": [
+   "Stay on the street after dark, eh."
+  ],
+  "walk": [
+   "Oh. Okay then.",
+   "Bye, I guess. Sorry."
+  ],
+  "ask": [
+   {
+    "q": "Anything to report?",
+    "a": [
+     "Tracks by the river. Small ones. Three sets."
+    ]
+   },
+   {
+    "q": "Who are you watching for?",
+    "a": [
+     "Froidlings, rats, and the robed lot from the Iceshed. In that order. Usually."
+    ]
+   }
+  ],
+  "barks": {
+   "idle": [
+    "Patrol's patrol.",
+    "Keep your hood up.",
+    "Froidlings hate a fire. Remember that."
+   ],
+   "hi": [
+    "Hi there.",
+    "Evening.",
+    "Cold one, eh?"
+   ],
+   "drawn": [
+    "Drop the weapon, please.",
+    "Easy. I don't want paperwork."
+   ],
+   "hurt": [
+    "You're bleeding on the snow, bud.",
+    "That looks bad. Sorry."
+   ],
+   "close": [
+    "Oh, hi. Sorry, didn't see you."
+   ],
+   "spot": [
+    "River Guard! Stand down!"
+   ],
+   "hostile": [
+    "River Guard! Stand down!",
+    "Sorry, you're under arrest. Ish."
+   ],
+   "hit": [
+    "Sorry! Not sorry.",
+    "Ow, eh!"
+   ],
+   "kill": [
+    "Sorry it came to that."
+   ],
+   "clear": [
+    "Okay. Okay. We're okay."
+   ],
+   "flee": [
+    "Falling back!"
+   ],
+   "death": [
+    "Tell my mom... sorry..."
+   ],
+   "lowHealth": [
+    "I'm not doing great, honestly."
+   ]
+  },
+  "gest": {
+   "wave": "Oh! Hi! *waves with a mitten*",
+   "gift": "For me? Oh, you shouldn't have. Thank you so much.",
+   "dance": "Keeps the blood moving, eh!",
+   "nodance": "My knees are frozen solid, sorry.",
+   "insult": "Well. That was uncalled for. Sorry you feel that way."
+  }
+ },
+ "l70-guard-2": {
+  "hi": [
+   "River Guard. You're fine, I'm just looking at you professionally."
+  ],
+  "back": [
+   "Still in one piece? Good."
+  ],
+  "warm": [
+   "Still in one piece? Good."
+  ],
+  "cold": [
+   "I remember you. Sorry, but I do."
+  ],
+  "follow": [
+   "Right behind you, eh.",
+   "Lead on."
+  ],
+  "bye": [
+   "Stay on the street after dark, eh."
+  ],
+  "walk": [
+   "Oh. Okay then.",
+   "Bye, I guess. Sorry."
+  ],
+  "ask": [
+   {
+    "q": "Anything to report?",
+    "a": [
+     "Tracks by the river. Small ones. Three sets."
+    ]
+   },
+   {
+    "q": "Who are you watching for?",
+    "a": [
+     "Froidlings, rats, and the robed lot from the Iceshed. In that order. Usually."
+    ]
+   }
+  ],
+  "barks": {
+   "idle": [
+    "Patrol's patrol.",
+    "Keep your hood up.",
+    "Froidlings hate a fire. Remember that."
+   ],
+   "hi": [
+    "Hi there.",
+    "Evening.",
+    "Cold one, eh?"
+   ],
+   "drawn": [
+    "Drop the weapon, please.",
+    "Easy. I don't want paperwork."
+   ],
+   "hurt": [
+    "You're bleeding on the snow, bud.",
+    "That looks bad. Sorry."
+   ],
+   "close": [
+    "Oh, hi. Sorry, didn't see you."
+   ],
+   "spot": [
+    "River Guard! Stand down!"
+   ],
+   "hostile": [
+    "River Guard! Stand down!",
+    "Sorry, you're under arrest. Ish."
+   ],
+   "hit": [
+    "Sorry! Not sorry.",
+    "Ow, eh!"
+   ],
+   "kill": [
+    "Sorry it came to that."
+   ],
+   "clear": [
+    "Okay. Okay. We're okay."
+   ],
+   "flee": [
+    "Falling back!"
+   ],
+   "death": [
+    "Tell my mom... sorry..."
+   ],
+   "lowHealth": [
+    "I'm not doing great, honestly."
+   ]
+  },
+  "gest": {
+   "wave": "Oh! Hi! *waves with a mitten*",
+   "gift": "For me? Oh, you shouldn't have. Thank you so much.",
+   "dance": "Keeps the blood moving, eh!",
+   "nodance": "My knees are frozen solid, sorry.",
+   "insult": "Well. That was uncalled for. Sorry you feel that way."
+  }
+ },
+ "l70-guard-3": {
+  "hi": [
+   "Kelpie Street patrol. All good here, sorry for the uniform."
+  ],
+  "back": [
+   "Still in one piece? Good."
+  ],
+  "warm": [
+   "Still in one piece? Good."
+  ],
+  "cold": [
+   "I remember you. Sorry, but I do."
+  ],
+  "follow": [
+   "Right behind you, eh.",
+   "Lead on."
+  ],
+  "bye": [
+   "Stay on the street after dark, eh."
+  ],
+  "walk": [
+   "Oh. Okay then.",
+   "Bye, I guess. Sorry."
+  ],
+  "ask": [
+   {
+    "q": "Anything to report?",
+    "a": [
+     "Tracks by the river. Small ones. Three sets."
+    ]
+   },
+   {
+    "q": "Who are you watching for?",
+    "a": [
+     "Froidlings, rats, and the robed lot from the Iceshed. In that order. Usually."
+    ]
+   }
+  ],
+  "barks": {
+   "idle": [
+    "Patrol's patrol.",
+    "Keep your hood up.",
+    "Froidlings hate a fire. Remember that."
+   ],
+   "hi": [
+    "Hi there.",
+    "Evening.",
+    "Cold one, eh?"
+   ],
+   "drawn": [
+    "Drop the weapon, please.",
+    "Easy. I don't want paperwork."
+   ],
+   "hurt": [
+    "You're bleeding on the snow, bud.",
+    "That looks bad. Sorry."
+   ],
+   "close": [
+    "Oh, hi. Sorry, didn't see you."
+   ],
+   "spot": [
+    "River Guard! Stand down!"
+   ],
+   "hostile": [
+    "River Guard! Stand down!",
+    "Sorry, you're under arrest. Ish."
+   ],
+   "hit": [
+    "Sorry! Not sorry.",
+    "Ow, eh!"
+   ],
+   "kill": [
+    "Sorry it came to that."
+   ],
+   "clear": [
+    "Okay. Okay. We're okay."
+   ],
+   "flee": [
+    "Falling back!"
+   ],
+   "death": [
+    "Tell my mom... sorry..."
+   ],
+   "lowHealth": [
+    "I'm not doing great, honestly."
+   ]
+  },
+  "gest": {
+   "wave": "Oh! Hi! *waves with a mitten*",
+   "gift": "For me? Oh, you shouldn't have. Thank you so much.",
+   "dance": "Keeps the blood moving, eh!",
+   "nodance": "My knees are frozen solid, sorry.",
+   "insult": "Well. That was uncalled for. Sorry you feel that way."
+  }
+ },
+ "l70-gelu-1": {
+  "hi": [
+   "The Hierophant speaks for us. Go to him."
+  ],
+  "back": [
+   "You again. The cold is patient. We are less."
+  ],
+  "warm": [
+   "Your breath is quieter now. Good."
+  ],
+  "cold": [
+   "I remember you. Sorry, but I do."
+  ],
+  "follow": [
+   "Right behind you, eh.",
+   "Lead on."
+  ],
+  "bye": [
+   "Go."
+  ],
+  "walk": [
+   "Oh. Okay then.",
+   "Bye, I guess. Sorry."
+  ],
+  "ask": [
+   {
+    "q": "What are you doing out here?",
+    "a": [
+     "Keeping the frost. Go ask Vael. Go."
+    ]
+   }
+  ],
+  "barks": {
+   "idle": [
+    "The thaw is a lie.",
+    "Blades stay sharp in the cold.",
+    "Leave the fire alone.",
+    "Gelu sees your breath."
+   ],
+   "hi": [
+    "Hi there.",
+    "Evening.",
+    "Cold one, eh?"
+   ],
+   "drawn": [
+    "Steel is warm. Your mistake."
+   ],
+   "hurt": [
+    "You're bleeding on the snow, bud.",
+    "That looks bad. Sorry."
+   ],
+   "close": [
+    "Oh, hi. Sorry, didn't see you."
+   ],
+   "spot": [
+    "For Gelu!"
+   ],
+   "hostile": [
+    "For Gelu!",
+    "The frost takes you."
+   ],
+   "hit": [
+    "Sorry! Not sorry.",
+    "Ow, eh!"
+   ],
+   "kill": [
+    "Sorry it came to that."
+   ],
+   "clear": [
+    "Okay. Okay. We're okay."
+   ],
+   "flee": [
+    "Into the trees!"
+   ],
+   "death": [
+    "Tell my mom... sorry..."
+   ],
+   "lowHealth": [
+    "I'm not doing great, honestly."
+   ]
+  },
+  "gest": {
+   "wave": "Oh! Hi! *waves with a mitten*",
+   "gift": "For me? Oh, you shouldn't have. Thank you so much.",
+   "dance": "Keeps the blood moving, eh!",
+   "nodance": "My knees are frozen solid, sorry.",
+   "insult": "Well. That was uncalled for. Sorry you feel that way."
+  }
+ },
+ "l70-gelu-2": {
+  "hi": [
+   "The Hierophant speaks for us. Go to him."
+  ],
+  "back": [
+   "You again. The cold is patient. We are less."
+  ],
+  "warm": [
+   "Your breath is quieter now. Good."
+  ],
+  "cold": [
+   "I remember you. Sorry, but I do."
+  ],
+  "follow": [
+   "Right behind you, eh.",
+   "Lead on."
+  ],
+  "bye": [
+   "Go."
+  ],
+  "walk": [
+   "Oh. Okay then.",
+   "Bye, I guess. Sorry."
+  ],
+  "ask": [
+   {
+    "q": "What are you doing out here?",
+    "a": [
+     "Keeping the frost. Go ask Vael. Go."
+    ]
+   }
+  ],
+  "barks": {
+   "idle": [
+    "The thaw is a lie.",
+    "Blades stay sharp in the cold.",
+    "Leave the fire alone.",
+    "Gelu sees your breath."
+   ],
+   "hi": [
+    "Hi there.",
+    "Evening.",
+    "Cold one, eh?"
+   ],
+   "drawn": [
+    "Steel is warm. Your mistake."
+   ],
+   "hurt": [
+    "You're bleeding on the snow, bud.",
+    "That looks bad. Sorry."
+   ],
+   "close": [
+    "Oh, hi. Sorry, didn't see you."
+   ],
+   "spot": [
+    "For Gelu!"
+   ],
+   "hostile": [
+    "For Gelu!",
+    "The frost takes you."
+   ],
+   "hit": [
+    "Sorry! Not sorry.",
+    "Ow, eh!"
+   ],
+   "kill": [
+    "Sorry it came to that."
+   ],
+   "clear": [
+    "Okay. Okay. We're okay."
+   ],
+   "flee": [
+    "Into the trees!"
+   ],
+   "death": [
+    "Tell my mom... sorry..."
+   ],
+   "lowHealth": [
+    "I'm not doing great, honestly."
+   ]
+  },
+  "gest": {
+   "wave": "Oh! Hi! *waves with a mitten*",
+   "gift": "For me? Oh, you shouldn't have. Thank you so much.",
+   "dance": "Keeps the blood moving, eh!",
+   "nodance": "My knees are frozen solid, sorry.",
+   "insult": "Well. That was uncalled for. Sorry you feel that way."
+  }
+ },
+ "l70-gelu-3": {
+  "hi": [
+   "The Hierophant speaks for us. Go to him."
+  ],
+  "back": [
+   "You again. The cold is patient. We are less."
+  ],
+  "warm": [
+   "Your breath is quieter now. Good."
+  ],
+  "cold": [
+   "I remember you. Sorry, but I do."
+  ],
+  "follow": [
+   "Right behind you, eh.",
+   "Lead on."
+  ],
+  "bye": [
+   "Go."
+  ],
+  "walk": [
+   "Oh. Okay then.",
+   "Bye, I guess. Sorry."
+  ],
+  "ask": [
+   {
+    "q": "What are you doing out here?",
+    "a": [
+     "Keeping the frost. Go ask Vael. Go."
+    ]
+   }
+  ],
+  "barks": {
+   "idle": [
+    "The thaw is a lie.",
+    "Blades stay sharp in the cold.",
+    "Leave the fire alone.",
+    "Gelu sees your breath."
+   ],
+   "hi": [
+    "Hi there.",
+    "Evening.",
+    "Cold one, eh?"
+   ],
+   "drawn": [
+    "Steel is warm. Your mistake."
+   ],
+   "hurt": [
+    "You're bleeding on the snow, bud.",
+    "That looks bad. Sorry."
+   ],
+   "close": [
+    "Oh, hi. Sorry, didn't see you."
+   ],
+   "spot": [
+    "For Gelu!"
+   ],
+   "hostile": [
+    "For Gelu!",
+    "The frost takes you."
+   ],
+   "hit": [
+    "Sorry! Not sorry.",
+    "Ow, eh!"
+   ],
+   "kill": [
+    "Sorry it came to that."
+   ],
+   "clear": [
+    "Okay. Okay. We're okay."
+   ],
+   "flee": [
+    "Into the trees!"
+   ],
+   "death": [
+    "Tell my mom... sorry..."
+   ],
+   "lowHealth": [
+    "I'm not doing great, honestly."
+   ]
+  },
+  "gest": {
+   "wave": "Oh! Hi! *waves with a mitten*",
+   "gift": "For me? Oh, you shouldn't have. Thank you so much.",
+   "dance": "Keeps the blood moving, eh!",
+   "nodance": "My knees are frozen solid, sorry.",
+   "insult": "Well. That was uncalled for. Sorry you feel that way."
+  }
+ },
+ "l70-gelu-4": {
+  "hi": [
+   "The Hierophant speaks for us. Go to him."
+  ],
+  "back": [
+   "You again. The cold is patient. We are less."
+  ],
+  "warm": [
+   "Your breath is quieter now. Good."
+  ],
+  "cold": [
+   "I remember you. Sorry, but I do."
+  ],
+  "follow": [
+   "Right behind you, eh.",
+   "Lead on."
+  ],
+  "bye": [
+   "Go."
+  ],
+  "walk": [
+   "Oh. Okay then.",
+   "Bye, I guess. Sorry."
+  ],
+  "ask": [
+   {
+    "q": "What are you doing out here?",
+    "a": [
+     "Keeping the frost. Go ask Vael. Go."
+    ]
+   }
+  ],
+  "barks": {
+   "idle": [
+    "The thaw is a lie.",
+    "Blades stay sharp in the cold.",
+    "Leave the fire alone.",
+    "Gelu sees your breath."
+   ],
+   "hi": [
+    "Hi there.",
+    "Evening.",
+    "Cold one, eh?"
+   ],
+   "drawn": [
+    "Steel is warm. Your mistake."
+   ],
+   "hurt": [
+    "You're bleeding on the snow, bud.",
+    "That looks bad. Sorry."
+   ],
+   "close": [
+    "Oh, hi. Sorry, didn't see you."
+   ],
+   "spot": [
+    "For Gelu!"
+   ],
+   "hostile": [
+    "For Gelu!",
+    "The frost takes you."
+   ],
+   "hit": [
+    "Sorry! Not sorry.",
+    "Ow, eh!"
+   ],
+   "kill": [
+    "Sorry it came to that."
+   ],
+   "clear": [
+    "Okay. Okay. We're okay."
+   ],
+   "flee": [
+    "Into the trees!"
+   ],
+   "death": [
+    "Tell my mom... sorry..."
+   ],
+   "lowHealth": [
+    "I'm not doing great, honestly."
+   ]
+  },
+  "gest": {
+   "wave": "Oh! Hi! *waves with a mitten*",
+   "gift": "For me? Oh, you shouldn't have. Thank you so much.",
+   "dance": "Keeps the blood moving, eh!",
+   "nodance": "My knees are frozen solid, sorry.",
+   "insult": "Well. That was uncalled for. Sorry you feel that way."
+  }
+ }
+}
