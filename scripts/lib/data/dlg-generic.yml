@@ -10,6 +10,14 @@
   bye: ["Watch yourself.", "Don't follow the voices.", "Yeah. See you. Maybe."]
   walk: ["Okay then.", "Fine."]
   ask:
+    - q: "Where am I?"
+      a: ["Level 1, the folks here call it. Under all the rest. You came out of the yellow rooms, right? Everybody does, first.", "The Backrooms. You fell out of the real world somewhere, same as me. This part's Level 1."]
+    - q: "What are the Backrooms?"
+      a: ["Rooms behind the rooms. You step wrong, you clip out of the real world, and you land here. It goes on. Levels on levels.", "Nobody knows what built it. Some say it's a mistake in the world. I say it's a place that eats people who stand still."]
+    - q: "How do I get out of here?"
+      a: ["You don't, mostly. People say the exits are deeper, not back. Find the camp, ask the ones who've been here years.", "Down, not up. Every level has a way to the next. Somewhere at the bottom there's supposed to be a door home. I've never met anyone who used it."]
+    - q: "Do you know someone called Dina?"
+      a: ["Dina? Name rings a bell. Somebody at the camp keeps a list of the lost. Ask there.", "Heard the name on a recorder once. Never saw her face. If she's alive, she's ahead of you, not behind."]
     - q: "How long have you been down here?"
       a: ["Lost count after the second notebook.", "Long enough to stop hoping for doors.", "A year? Three? The days don't add up right here."]
     - q: "Where should I go from here?"
