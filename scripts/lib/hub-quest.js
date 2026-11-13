@@ -6,14 +6,16 @@ import { addRep, isVilified } from "./rep.js";
 // the M.E.G. hates you: their post won't talk, so Camp Amber carries Dina's lead (Shelly Nov 13: alternate routes when a faction is hostile)
 export const megHostile = (s) => isVilified(s, { id: "hub-meg-okafor", state: { faction: "meg" } });
 import { giveKey, hasKey, keysOf, keyDoor } from "./hubkeys.js";
-import { runOf, KEYED } from "./thehub.js";
+import { runOf, KEYED, KEY_NAMES, sealed } from "./thehub.js";
 import { rollCheck } from "./npc-talk.js";
 const short = (it) => String(it?.id ?? it ?? "").split("/").pop();
 const M = (id) => ({ place: "thehub", id });
 export const MK = "hub-missing-key", LR = "hub-lost-records", UP = "hub-uncharted";
 const N = { [MK]: "The Missing Key", [LR]: "Lost Expedition Records", [UP]: "Uncharted Passage" };
-const DRAW = { level2: 150, level3: 200, level4: 250, level5: 300 }; // what Lin will sign out, in Backdollars (my picks). One an hour.
-const DRAW_MS = 3600000;
+// The catalogue names the surveyed destination. Unbuilt levels are never sold.
+const DRAW = { main: 75, level02: 100, level2: 100, level21: 100, level3: 125, level4: 125, level5: 150, level6: 150, level61: 150, level7: 175, level8: 175, level9: 175, level10: 200, level12: 200, level13: 200, level14: 225, level15: 225, level16: 225, level17: 250, level18: 250, level19: 250, level20: 250 };
+const keyOffer = (place, price) => `I'd like the ${KEY_NAMES[place]} key. [$${price}]`;
+const offered = (ctx, place) => !!keyDoor(place) && !sealed(ctx, place);
 const pay = (s, d) => { s.cents = (s.cents ?? 0) + d * 100; };
 // where a door is, in words a person would use: tunnel count and side, never a number on the door
 export function whereIs(place) {
@@ -28,8 +30,8 @@ export function hubChoices(ctx, it, s) {
     if (!mk) out.push(s.hubMKask ? { text: "I'll find your key.", tag: "Quest Start" } : { text: "Something wrong with the cabinet?", tag: "Ask" });
     if (mk === 1) out.push({ text: "Who was on watch that night?", tag: "Ask" });
     if (mk === 3) { out.push({ text: "Found it. Here's your key.", tag: "Quest" }); if (!s.hubMKlie) out.push({ text: "[Speech 45] It's gone. Someone used it.", tag: "speech" }); }
-    if (mk === 99) for (const [pl, c] of Object.entries(DRAW)) out.push({ text: `Sign me out the key with ${MARKS[pl]}. [$${c}]`, tag: "Key" });
-    if (mk === 99 || keysOf(s).length) out.push({ text: "Where's the door for the key I'm holding?", tag: "Ask" });
+    if (mk === 99) for (const [pl, c] of Object.entries(DRAW)) if (offered(ctx, pl) && !hasKey(s, pl)) out.push({ text: keyOffer(pl, c), tag: "Key" });
+    for (const [pl] of keysOf(s)) if (keyDoor(pl)) out.push({ text: `Where is the door for my ${KEY_NAMES[pl] ?? pl} key?`, tag: "Directions" });
   }
   if (id === "hub-meg-dace") {
     if (mk === 1) out.push({ text: "Lin says a key went missing on your watch.", tag: "Quest" });
@@ -65,17 +67,18 @@ export function handleDialogueQuestHub(ctx, p, npc, text) {
     if (t.includes("wrong with the cabinet") && !mk) { s.hubMKask = 1; return { reply: "Thirty-two hooks. Thirty-one keys. I counted at lights-down and I counted again and one walked. Nobody signed for it. If you want to be useful, that's how.", mood: "annoyed" }; }
     if (t.includes("find your key") && !mk && s.hubMKask) { s.hubMK = 1; setQuest(s, MK, { name: N[MK], step: "A Level Key left Lin's cabinet unsigned. Ask Dace at the barrier who came through on his watch.", mark: M("hub-meg-dace") }); tellQuest(ctx, p, `Quest Started: ${N[MK]}`); return { reply: "Fine. Dace had the late watch. Start there. And visitor, if you find it, it comes back to this desk. Not to your pocket.", mood: "calm" }; }
     if (t.includes("who was on watch") && mk === 1) return { reply: "Dace. Down at the barrier, where the lamps stop. He'll say he saw nothing. Ask him what he heard.", mood: "calm" };
-    if (t.includes("here's your key") && mk === 3) { s.hubMK = 99; delete s.hubTag; pay(s, 120); addRep(s, "meg", 8, "Returned Lin's missing key"); endQuest(s, MK, "You brought the key back to Lin's cabinet. She will sign keys out to you now."); tellQuest(ctx, p, `Quest Completed: ${N[MK]} · +$120`); return { reply: "Thirty-two. Thirty-two! Oh, that's lovely. Right. You're on the sheet now, visitor. One key an hour, you pay the deposit, you sign. Don't make it weird.", mood: "happy" }; }
+    if (t.includes("here's your key") && mk === 3) { s.hubMK = 99; delete s.hubTag; pay(s, 120); addRep(s, "meg", 8, "Returned Lin's missing key"); endQuest(s, MK, "You brought the key back to Lin's cabinet. She will sign keys out to you now."); tellQuest(ctx, p, `Quest Completed: ${N[MK]} · +$120`); return { reply: "Thirty-two. Thirty-two! Oh, that's lovely. Right. You're on the sheet now, visitor. Pick a surveyed destination and pay for its key. One key opens its door once.", mood: "happy" }; }
     if (t.includes("it's gone. someone used it") && mk === 3 && !s.hubMKlie) {
       if (!rollCheck(ctx, s, { skill: "speech", difficulty: 45 }).ok) { s.hubMKlie = 1; return { reply: "Used. With a brass tag still wired to it, poking out of your pocket. Try that again and I'll write you down instead. Give it here.", mood: "annoyed" }; }
       s.hubMK = 99; delete s.hubTag; giveKey(ctx, p, "level5"); addRep(s, "meg", 2); endQuest(s, MK, "You told Lin the key was spent, and kept it. She signs keys out to you anyway."); tellQuest(ctx, p, `Quest Completed: ${N[MK]} · Level Key kept`);
-      return { reply: "Used. Of course it was. Thirty-one, then. I'll change the sheet. Thank you for looking, that's more than my own people did. You can draw from me, one an hour.", mood: "sad" }; }
-    for (const [pl, c] of Object.entries(DRAW)) if (mk === 99 && t.includes(MARKS[pl])) {
-      if (ctx.now() - (s.hubDrawAt ?? -1e12) < DRAW_MS) return { reply: "You drew one this hour. The sheet says so and the sheet doesn't lie. Come back later.", mood: "annoyed" };
+      return { reply: "Used. Of course it was. Thirty-one, then. I'll change the sheet. Thank you for looking, that's more than my own people did. You can buy keys from the surveyed cabinet.", mood: "sad" }; }
+    for (const [pl, c] of Object.entries(DRAW)) if (mk === 99 && (t === keyOffer(pl, c).toLowerCase() || (MARKS[pl] && t.includes(MARKS[pl])))) {
+      if (!offered(ctx, pl)) return { reply: "That door is sealed. I won't sell you a key you can't use.", mood: "calm" };
       if (hasKey(s, pl)) return { reply: "You're holding that one already. I can see it glowing through your pocket.", mood: "calm" };
-      if ((s.cents ?? 0) < c * 100) return { reply: `Deposit's ${c}. You're short. I don't do tabs, I do hooks.`, mood: "calm" };
-      s.cents -= c * 100; s.hubDrawAt = ctx.now(); giveKey(ctx, p, pl);
-      return { reply: `Signed. It fits one door and you get one trip. It's in ${whereIs(pl)}. Match the mark on the bow to the mark over the door.`, mood: "calm" }; }
+      if ((s.cents ?? 0) < c * 100) return { reply: `The key costs ${c}. You're short. I don't do tabs.`, mood: "calm" };
+      s.cents -= c * 100; giveKey(ctx, p, pl);
+      return { reply: `That's the ${KEY_NAMES[pl]} key. One trip. Its door is at ${whereIs(pl)}. The key gets warm when you're close.`, mood: "calm" }; }
+    for (const [pl] of keysOf(s)) if (keyDoor(pl) && t === `where is the door for my ${KEY_NAMES[pl] ?? pl} key?`.toLowerCase()) return { reply: `For ${KEY_NAMES[pl] ?? pl}, look in ${whereIs(pl)}. The key will warm up when you're close.`, mood: "calm" };
     if (t.includes("door for the key i'm holding")) { const k = keysOf(s)[0]; return { reply: k ? `Let me see the bow. Right. That's ${whereIs(k[0])}. It'll get warm when you're close.` : "You're not holding one.", mood: "calm" }; }
   }
   if (id === "hub-meg-dace") {

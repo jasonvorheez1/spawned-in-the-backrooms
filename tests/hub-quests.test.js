@@ -132,3 +132,38 @@ test('Level 1 errands require explicit acceptance and do not consume supplies on
  const done=fieldErrandChoices(c,npc,s).find(x=>x.tag==='Quest Turn-In'); handleFieldErrand(c,p,npc,done.text)
  expect(s.snacks.stillwater).toBe(0); expect(s.errands['ale-water'].done).toBe(1)
 })
+
+test('Lin offers named keys for built levels and never charges for sealed doors', () => {
+ const c = ctx(), npc={id:'hub-meg-lin'}, s={hubMK:99,cents:50000}
+ c.world.files = ['places/level6/config.yaml','places/level13/config.yaml']
+ const choices = hubChoices(c,npc,s)
+ const six = choices.find(x=>x.text.includes('Level 6 key'))
+ const thirteen = choices.find(x=>x.text.includes('Level 13 key'))
+ expect(six).toBeTruthy(); expect(thirteen).toBeTruthy(); expect(choices.some(x=>x.text.includes('Level 14 key'))).toBe(false)
+ say(c,s,npc.id,six.text); expect(s.hubKeys.level6).toBe(1); expect(s.cents).toBe(35000)
+ say(c,s,npc.id,thirteen.text); expect(s.hubKeys.level13).toBe(1); expect(s.cents).toBe(15000)
+ say(c,s,npc.id,thirteen.text); expect(s.cents).toBe(15000); expect(s.hubKeys.level13).toBe(1)
+ const result=say(c,s,npc.id,"I'd like the Level 14 key. [$225]")
+ expect(result.reply).toContain('sealed'); expect(s.cents).toBe(15000)
+})
+
+test('Lin checks funds before issuing a key and requires the Missing Key quest', () => {
+ const c=ctx(), s={cents:14999}; c.world.files=['places/level6/config.yaml']
+ const choice="I'd like the Level 6 key. [$150]"
+ expect(hubChoices(c,{id:'hub-meg-lin'},s).some(x=>x.text===choice)).toBe(false)
+ s.hubMK=99; expect(say(c,s,'hub-meg-lin',choice).reply).toContain('short')
+ expect(s.cents).toBe(14999); expect(s.hubKeys).toBeUndefined()
+})
+
+
+test('Lin gives directions for each held key independently', () => {
+ const c=ctx(), s={hubMK:99, hubKeys:{level6:1,level13:1}}
+ c.world.files=['places/level6/config.yaml','places/level13/config.yaml']
+ const options=hubChoices(c,{id:'hub-meg-lin'},s)
+ const six=options.find(x=>x.text==='Where is the door for my Level 6 key?')
+ const thirteen=options.find(x=>x.text==='Where is the door for my Level 13 key?')
+ expect(six).toBeTruthy(); expect(thirteen).toBeTruthy()
+ expect(say(c,s,'hub-meg-lin',six.text).reply).toContain('twelfth tunnel')
+ expect(say(c,s,'hub-meg-lin',thirteen.text).reply).toContain('back road')
+})
+
