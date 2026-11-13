@@ -1,0 +1,96 @@
+{
+ "sleepingbag": {
+  "src": "sleepingbag.glb",
+  "size": [
+   0.75,
+   0.12,
+   1.9
+  ],
+  "up": "min",
+  "fit": "d",
+  "squash": true,
+  "squashW": 0.8
+ },
+ "backpack": {
+  "src": "backpack.glb",
+  "size": [
+   0.35,
+   0.48,
+   0.25
+  ],
+  "fit": "h"
+ },
+ "lantern": {
+  "src": "lantern.glb",
+  "size": [
+   0.12,
+   0.22,
+   0.12
+  ],
+  "fit": "h"
+ },
+ "almond-crate": {
+  "src": "almond-crate3.glb",
+  "size": [
+   0.33,
+   0.22,
+   0.24
+  ],
+  "fit": "h",
+  "tray": 0.3,
+  "rot": [
+   0,
+   0,
+   90
+  ]
+ },
+ "campstove": {
+  "src": "campstove.glb",
+  "size": [
+   0.3,
+   0.26,
+   0.22
+  ],
+  "up": "mid",
+  "fit": "w"
+ },
+ "note-clipboard": {
+  "src": "note-clipboard2.glb",
+  "size": [
+   0.23,
+   0.02,
+   0.32
+  ],
+  "up": "min",
+  "upHint": [
+   0,
+   1,
+   0
+  ],
+  "frontHint": [
+   0,
+   0,
+   1
+  ],
+  "fit": "d"
+ },
+ "tape-marks": {
+  "src": "tape-marks2.glb",
+  "size": [
+   0.165,
+   0.05,
+   0.12
+  ],
+  "fit": "w"
+ },
+ "shoes": {
+  "src": "shoes.glb",
+  "size": [
+   0.22,
+   0.11,
+   0.3
+  ],
+  "up": "min",
+  "fit": "d"
+ }
+}
