@@ -24,6 +24,8 @@ R = {
   "bow":        dict(fit="perch", w=0.45, seat=1.0, sink=0.035, tilt=-58, dy=0.07, orient=dict(yaw=-90)),   # Shelly Nov 12 "doesnt fit her head": it stood upright on its knot over the hair; now laid back on the crown, knot sunk in the hair
   "flower":     dict(fit="perch", w=0.30, seat=0.3, sink=0.012, tilt=-8, dx=0.14, roll=32, orient=dict(yaw=-90)),
   "headphones": dict(fit="band", ease=1.0, orient=dict(yaw=90)),
+  "wwhelmet":   dict(fit="wrap", band=0.42, ease=1.06, tilt=-6),   # Nov 13 M.E.G. Wild Warriors helmet (Tripo): a combat shell down to the brow
+  "bntgcap":    dict(fit="wrap", band=0.32, ease=0.98, tilt=-12, at=0.5, rim="back"),   # Nov 13 B.N.T.G. courier flat cap (Tripo), brass scale badge front
   "pilgrimhat": dict(fit="perch", w=1.75, seat=0.85, sink=0.07, tilt=-8),   # Nov 12 Brother Wat: felt pilgrim hat, scallop shell on the front; wrap sank the brim over the eyes
 }
 CLEARS = dict(wrap=0.014, perch=0.004, band=0.006, enclose=0.0)   # wrap leaves room for the pressed-flat hair
