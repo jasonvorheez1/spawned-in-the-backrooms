@@ -165,16 +165,34 @@ const ss = (a, b, t) => { const u = Math.min(1, Math.max(0, (t - a) / (b - a)));
 const L = (a, b, u) => ({ x: a.x + (b.x - a.x) * u, y: a.y + (b.y - a.y) * u, z: a.z + (b.z - a.z) * u });
 const me1 = (ctx) => ({ audience: { player: ctx.self.id } });
 const snd = (ctx, clip, v, at) => ctx.emit("playSound", { clip, position: at ?? ctx.self.feetPosition, volume: v, maxDistance: 80 }, me1(ctx));
+// After the ship (Shelly, Nov 13): the voice from the party room stays with you, unseen and unnamed. One whisper as each step lands.
+// She calls you "stray" as she did below deck; Mike (Mike Sunderland, Backrooms [REDACTED]) is only ever named by her, never explained.
+export const WHISPER = {
+  6: "Voss sells to anyone, stray. He sold to me once.",
+  7: "Batteries. Somebody wanted that drive kept powered. Walk faster.",
+  8: "Mike read that same page, you know. She didn't like it either.",
+  9: "A voice on the line isn't a door. Keep looking for the drive, stray. So will I.",
+};
+const WV = (w) => `/cdn/voice-soft-breathy-young-woman-whispering-amused-saying-${encodeURIComponent(w)}.mp3`;
+function whisperTick(ctx, st) {
+  const w = st.whisper; if (!w || ctx.now() < w.at || st.cut || st.menuOpen || st.dcut) return;
+  st.whisper = null; const line = WHISPER[w.n]; if (!line) return;
+  ctx.emit("playSound", { clip: WV(line), volume: 0.9, bus: "Voice" }, { audience: { player: ctx.self.id } });
+  ctx.emit("uiEvent", { name: "caption", payload: { who: "???", text: line, ms: 4200 } }, { audience: { player: ctx.self.id } });
+  pushFeed(st, `A voice, close by: "${line}"`, ctx.now(), "info");
+}
 export function setDinaStep(ctx, st, n, note) {
   if (n <= (st.dinaQ ?? 0) || !STEP[n]) return false;
   for (const k of TRAIL) learn(ctx, st, k, true); // a ship stage means the trail is behind them
   st.dinaQ = n;
   syncHome(ctx, st);
   if (note) { st.notice = { text: note, at: ctx.now() }; pushFeed(st, note, ctx.now(), "info"); }
+  if (WHISPER[n]) st.whisper = { n, at: ctx.now() + 3500 }; // after the notice has been read
   return true;
 }
 export function dinaTick(ctx, ses, st, place = ctx.self.place) {
   const me = ctx.self;
+  whisperTick(ctx, st);
   if (!st.dcut) {
     if (st.menuOpen || st.cut || st.arrive || st.arrivePending || place === "intake" || st.level == null) return false;
     migrate(st);

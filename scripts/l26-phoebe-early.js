@@ -54,7 +54,8 @@ export function lightsBack(ctx) {
 export function line(ctx, { i }) {
   const s = ctx.self.state
   ctx.emit("playSound", { clip: V(LINES[i][1]), position: s.behind ?? s.seat, volume: 0.95, maxDistance: 30 }, { audience: { player: s.who } })
-  ctx.emit("uiEvent", { name: "caption", payload: { who: "PHOEBE", text: LINES[i][1], ms: 3800 } }, { audience: { player: s.who } })
+  ctx.emit("uiEvent", { name: "caption", payload: { who: "???", // the player has not learned her name (Shelly, Nov 13)
+     text: LINES[i][1], ms: 3800 } }, { audience: { player: s.who } })
 }
 export function gone(ctx) { // the second blackout takes her
   const s = ctx.self.state

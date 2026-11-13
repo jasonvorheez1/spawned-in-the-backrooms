@@ -36,3 +36,20 @@ test('the first good meal teaches Dina\'s room, the second the road to the city,
 test('without Samantha the journal keeps the plain city step', () => {
   expect(trailStep({ trail: { name: 1, word: 1, list: 1, tape: 1, room: 1 } }).step).not.toContain('Samantha')
 })
+
+// Nov 13: the unseen voice after SS Fun: one unnamed whisper per step from 6 on, played on the player's own tick
+test('each step after the ship queues one whisper, played once, never naming her', async () => {
+  const { setDinaStep, dinaTick, WHISPER } = await import('../scripts/lib/dina-quest.js')
+  let now = 1000; const out = []
+  const st = { dinaQ: 5, trail: { name: 1, word: 1, list: 1, tape: 1, room: 1, radio: 1, pass: 1 }, level: 1 }
+  const ctx = { self: { id: 'p', place: 'level1', feetPosition: { x: 0, y: 0, z: 0 } }, now: () => now, emit: (k, d) => out.push([k, d]) }
+  expect(setDinaStep(ctx, st, 6, 'x')).toBe(true)
+  dinaTick(ctx, {}, st)
+  expect(out.some(([k]) => k === 'uiEvent')).toBe(false)
+  now += 4000; dinaTick(ctx, {}, st)
+  const cap = out.find(([k]) => k === 'uiEvent')[1].payload
+  expect(cap.text).toBe(WHISPER[6]); expect(cap.who).toBe('???')
+  now += 4000; out.length = 0; dinaTick(ctx, {}, st)
+  expect(out.some(([k]) => k === 'uiEvent')).toBe(false)
+  for (const w of Object.values(WHISPER)) expect(w.toLowerCase()).not.toContain('phoebe')
+})
