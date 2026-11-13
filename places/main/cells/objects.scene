@@ -1,1 +1,3 @@
 # spawn-scene v2 yaml objects
+favi-brain:
+  template: mods/favi/templates/brain.js#brain

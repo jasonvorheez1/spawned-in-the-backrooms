@@ -1,0 +1,47 @@
+{
+  "name": "favi",
+  "displayName": "Favi",
+  "description": "Favi, the design buddy from Idea Forge, living on your god-mode rail. Chat with a Favi who can actually see your game and answers with tap-to-send follow-ups. NEW: Playtest Eyes, she watches you play for a minute and tells you where you got stuck, bored or lost. Plan vs game shows how much of your Forge file is really built. A daily spark idea on her home screen, and your style moodboard on top of chat. Carry your Idea Forge files in pocket form: edit fields, answer her question rounds, then Finalize into prompts, a rating, a pitch card or a one-tap Savi build brief. Name an art style and she gathers 10+ reference images; tap one to get more like it, then type /style to Savi. Plus a ranked Mod Market, /mods, /favi and /uninstall.",
+  "tags": [
+    "creator",
+    "chat",
+    "ai",
+    "tool",
+    "design",
+    "references"
+  ],
+  "visibility": "public",
+  "version": "1.6.0",
+  "objects": [
+    {
+      "id": "favi-brain",
+      "template": "templates/brain.js#brain"
+    }
+  ],
+  "inputs": {
+    "actions": {
+      "nav": {},
+      "refs": {},
+      "send": {},
+      "clear": {},
+      "extra": {},
+      "forge": {},
+      "retry": {},
+      "market": {}
+    }
+  },
+  "attach": [
+    {
+      "target": {
+        "kind": "god"
+      },
+      "behavior": "favi.js"
+    }
+  ],
+  "tab": {
+    "id": "chat",
+    "label": "Favi",
+    "icon": "💬",
+    "render": "panel.js"
+  }
+}
