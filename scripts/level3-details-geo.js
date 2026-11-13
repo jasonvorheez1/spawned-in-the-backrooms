@@ -8,7 +8,7 @@ const TILE = "cdn/texture-photoreal-glazed-tan-brown-ceramic-wall-tile-grimy-gro
 import { N, S, H, TH, HALF, isOpen, isBars, isGate, openings, zoneOf, hash, cellCenter, ceilingAt, BLOCKS, SLUDGE, SPARKS, inGamma, TW, TSP, OOB, tightSpans } from "./lib/level3.js";
 import { vault } from "./lib/level3-arch.js";
 import { hatchAt } from "./lib/level3-hatch.js";
-import { slab, tube, sphere, prism } from "./lib/shapes.js";
+import { slab, tube, sphere, prism, rounded } from "./lib/shapes.js";
 
 const T = 0.3;
 const D4 = [[1, 0], [0, 1], [-1, 0], [0, -1]];
@@ -47,11 +47,36 @@ export function geometry(ctx) {
       // M.E.G. paranoia-hotspot plate at the mouth of the blind halls
       if (zone === "dark" && hash(cx * 4 + d, cz, 403) < 0.12) { ctx.color("oklch(0.82 0.15 90)"); wb(-0.35, 0.35, -0.004, 0.03, 1.5, 1.9); ctx.color("oklch(0.12 0.005 60)"); wb(-0.28, 0.28, 0.03, 0.04, 1.58, 1.62); wb(-0.28, 0.28, 0.03, 0.04, 1.78, 1.82); wb(-0.05, 0.05, 0.03, 0.04, 1.62, 1.78); }
       // a long electrical box with wires fanning out of it and over the ceiling
-      if (hash(cx * 4 + d, cz, 405) < 0.1 && zone !== "tight") {
-        const a = (hash(cx, cz, 407) - 0.5) * 1.4;
-        ctx.metalness(0.5); ctx.roughness(0.5); ctx.color("oklch(0.55 0.01 240)"); wb(a - 0.7, a + 0.7, -0.01, 0.2, 1.2, 1.55);
-        ctx.color("oklch(0.25 0.01 250)"); wb(a - 0.5, a - 0.38, 0.2, 0.22, 1.28, 1.47); wb(a - 0.05, a + 0.07, 0.2, 0.22, 1.28, 1.47); wb(a + 0.38, a + 0.5, 0.2, 0.22, 1.28, 1.47); ctx.metalness(0);
-        if (hi) { ctx.color("oklch(0.15 0.008 250)"); ctx.roughness(0.9); for (let k = 0; k < 3; k++) { const sx = a - 0.5 + k * 0.5; const P = (aa, o, y) => [wx + tx * aa - nx * o, y, wz + tz * aa - nz * o]; tube(ctx, [P(sx, 0.1, 1.55), P(sx + (k - 2) * 0.12, 0.12, 2.0), P(sx + (k - 2) * 0.3, 0.2, top - 0.2)], [0.014, 0.014, 0.014], 4, [1, 1], 0, 1, 1); } }
+      if (hash(cx * 4 + d, cz, 405) < 0.1 && zone !== "tight") { // Shelly Nov 13 "found a blocky": three fused safety switches on a strut rail, conduit to the ceiling
+        const a = (hash(cx, cz, 407) - 0.5) * 1.4, P = (aa, o, y) => [wx + tx * aa - nx * o, y, wz + tz * aa - nz * o];
+        const wr = (a0, a1, o0, o1, y0, y1, rad) => { const p = P(a0, o0, y0), q = P(a1, o1, y1); rounded(ctx, [(p[0] + q[0]) / 2, (y0 + y1) / 2, (p[2] + q[2]) / 2], [Math.abs(q[0] - p[0]) / 2, (y1 - y0) / 2, Math.abs(q[2] - p[2]) / 2], rad); };
+        ctx.albedo(null); ctx.metalness(0.6); ctx.roughness(0.55); ctx.color("oklch(0.42 0.01 250)"); // galvanised strut rails behind
+        wr(a - 0.8, a + 0.8, -0.01, 0.035, 1.14, 1.18, 0.006); wr(a - 0.8, a + 0.8, -0.01, 0.035, 1.56, 1.6, 0.006);
+        for (let k = 0; k < 3; k++) {
+          const ca = a + (k - 1) * 0.47, aged = hash(cx + k, cz, 409);
+          ctx.metalness(0.25); ctx.roughness(0.6); ctx.color(aged < 0.5 ? "oklch(0.5 0.025 165)" : "oklch(0.55 0.012 240)"); // enamelled steel, one greener than the others
+          wr(ca - 0.17, ca + 0.17, 0.035, 0.2, 1.1, 1.62, 0.018);
+          ctx.color(aged < 0.5 ? "oklch(0.54 0.025 165)" : "oklch(0.59 0.012 240)"); wr(ca - 0.15, ca + 0.15, 0.19, 0.212, 1.13, 1.59, 0.008); // the door
+          ctx.metalness(0); ctx.roughness(0.8); ctx.color("oklch(0.86 0.03 90)"); wr(ca - 0.08, ca + 0.08, 0.211, 0.215, 1.49, 1.54, 0.002); // circuit label
+          ctx.color("oklch(0.2 0.01 60)"); wr(ca - 0.06, ca + 0.04, 0.214, 0.217, 1.505, 1.52, 0.001);
+          ctx.color("oklch(0.78 0.16 88)"); wr(ca - 0.04, ca + 0.04, 0.211, 0.215, 1.22, 1.29, 0.004); // shock warning sticker
+          ctx.color("oklch(0.18 0.01 60)"); wr(ca - 0.012, ca + 0.012, 0.214, 0.217, 1.235, 1.275, 0.001);
+          if (hi) { ctx.metalness(0.7); ctx.roughness(0.4); ctx.color("oklch(0.3 0.005 250)"); for (const [da, dy] of [[-0.13, 1.15], [0.13, 1.15], [-0.13, 1.57], [0.13, 1.57]]) wr(ca + da - 0.008, ca + da + 0.008, 0.21, 0.218, dy - 0.008, dy + 0.008, 0.004); } // door screws
+          // the throw lever on the right flank: a hub and a handle angled down to OFF, red grip
+          ctx.metalness(0.5); ctx.roughness(0.45); ctx.color("oklch(0.24 0.01 250)");
+          tube(ctx, [P(ca + 0.17, 0.12, 1.44), P(ca + 0.2, 0.12, 1.44)], [0.03, 0.03], 10, [1, 1], 0, 1, 1);
+          const off = aged > 0.7, tip = off ? P(ca + 0.215, 0.2, 1.3) : P(ca + 0.215, 0.2, 1.56);
+          tube(ctx, [P(ca + 0.205, 0.12, 1.44), P(ca + 0.215, 0.16, off ? 1.37 : 1.5), tip], [0.013, 0.013, 0.013], 8, [1, 1], 0, 1, 1);
+          ctx.metalness(0); ctx.roughness(0.5); ctx.color("oklch(0.48 0.17 28)"); tube(ctx, [tip, off ? P(ca + 0.215, 0.235, 1.27) : P(ca + 0.215, 0.235, 1.59)], [0.019, 0.019], 8, [1, 1], 0, 1, 1);
+          // rigid conduit from a top hub straight up to the ceiling, strapped twice
+          ctx.metalness(0.6); ctx.roughness(0.5); ctx.color("oklch(0.5 0.008 240)");
+          tube(ctx, [P(ca, 0.12, 1.6), P(ca, 0.12, 1.67)], [0.034, 0.034], 10, [1, 1], 0, 1, 1);
+          tube(ctx, [P(ca, 0.12, 1.66), P(ca, 0.12, top - 0.02)], [0.022, 0.022], 8, [1, 1], 0, 1, 1);
+          if (hi) { ctx.color("oklch(0.38 0.01 240)"); for (const yy of [2.1, top - 0.45]) if (yy < top - 0.1) wr(ca - 0.04, ca + 0.04, 0.0, 0.15, yy, yy + 0.025, 0.004); }
+          // a rust run down the brick from the box's bottom seam
+          ctx.metalness(0); ctx.roughness(0.95); ctx.color("oklch(0.35 0.07 45)"); wb(ca - 0.06 + aged * 0.08, ca - 0.03 + aged * 0.08, -0.004, 0.003, 0.75 + aged * 0.2, 1.1);
+        }
+        ctx.metalness(0); ctx.roughness(0.9);
       }
       // a hasp and padlock on the occasional wall hatch (a steel door with a lock, as in the doors photograph)
       if (false) { ctx.color("oklch(0.88 0.012 90)"); wb(-0.5, 0.5, -0.004, 0.06, 0, 2.15); ctx.color("oklch(0.4 0.02 60)"); wb(0.35, 0.45, 0.06, 0.1, 1.0, 1.25); wb(0.38, 0.42, 0.1, 0.12, 0.85, 1.0); wb(-0.52, -0.5, 0.06, 0.1, 0.3, 0.45); wb(-0.52, -0.5, 0.06, 0.1, 1.6, 1.75); }
