@@ -1,8 +1,9 @@
 // Level 31 food court: the trash cans, the staff door, the clerk's tray watch and the seated customers. One script, state.kind picks the part.
 import { L31_ZONE_X } from "./lib/level31-food.js";
+import { swingTo } from "./lib/door-swing.js";
 const SIT = { m: "cdn/clip-sit-loop.glb", f: "cdn/clip-sit-female-loop.glb" };
 const tell = (ctx, pl, text) => { pl.state.notice = { text, at: ctx.now() }; };
-export const updateSchedule = { every: { seconds: 0.5 } };
+export const updateSchedule = { every: { seconds: 0.5 } }; // a door mid-swing wakes every tick: sleep() ends on its own write
 export const ears = {
   press: (ctx, p) => {
     const pl = ctx.place.players.find((x) => x.id === p?.by), k = ctx.self.state.kind; if (!pl) return;
@@ -12,14 +13,14 @@ export const ears = {
       tell(ctx, pl, had ? "Tray cleared." : "Nothing to throw away.");
       ctx.emit("playSound", { clip: "cdn/sfx-trash-can-flap-swing-thud.mp3", position: ctx.self.worldFeetPosition, volume: 0.5, maxDistance: 14 });
     } else if (k === "door") {
-      tell(ctx, pl, "Locked.");
-      ctx.emit("playSound", { clip: "cdn/sfx-locked-door-handle-rattle.mp3", position: ctx.self.worldFeetPosition, volume: 0.5, maxDistance: 14 });
+      const st = ctx.self.state; st.open = !st.open; st.verb = st.open ? "Close" : "Open"; // the back room is open to anyone (Shelly Nov 13: "give it an interior")
     }
   },
 };
 export function update(ctx) {
   const me = ctx.self, k = me.state.kind;
   if (k === "sitter") { if (!me.anim.sit) me.anim.sit = { clip: SIT[me.state.sex === "f" ? "f" : "m"], weight: 1, loop: true }; return ctx.sleep(5); }
+  if (k === "door") { if (!swingTo(ctx, me.state.open ? 95 : 0, !!me.state.open, "metal")) return ctx.sleep(); return; }
   if (k !== "clerk") return ctx.sleep();
   const h = me.state.home, p = me.feetPosition; // stays at the till
   if (h && Math.hypot(p.x - h.x, p.z - h.z) > 0.6) me.feetPosition = { x: h.x, y: p.y, z: h.z };
