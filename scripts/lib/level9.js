@@ -60,4 +60,12 @@ export function layout(seed) {
   if (!lamps.some((l) => l.lit && l.z > -30)) { const l = lamps.find((q) => q.z < 22 && q.z > -30) ?? lamps[0]; l.lit = true; l.flick = false; } // one lamp burns where you arrive: the first frame reads
   return { seed, streets, lots, lamps, bulbs, north: main[main.length - 1] };
 }
-export const zoneAt = (L, x, z) => { for (const l of L.lots) if (Math.hypot(l.x - x, l.z - z) < l.rad * 0.7) return "l9_house"; return "l9_street"; };
+export const zoneAt = (L, x, z) => {
+  for (const l of L.lots) {
+    const h = HOUSES[l.kind];
+    if (!h?.model || !h.rooms?.length) continue; // unfinished shells cannot shelter anyone
+    const dx = x - l.x, dz = z - l.z, u = dx * -l.fz + dz * l.fx, v = dx * l.fx + dz * l.fz;
+    if (Math.abs(u) < h.w / 2 && Math.abs(v) < h.d / 2) return "l9_house";
+  }
+  return "l9_street";
+};

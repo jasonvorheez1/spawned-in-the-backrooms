@@ -47,6 +47,19 @@ function lay(ctx, L) {
   sp("l9-ambience", { feetPosition: T(0, 0), audience: "local", audio: { clip: "cdn/ambience-dead-quiet-suburb-midnight-light-wind-distant-wet-road-hiss-no-crickets-loop.mp3", gain: 0.16, loop: true, spatial: false, bus: "Ambience" } });
 }
 
+// Sparse, seeded curbside details make the repeated streets readable without blocking their centre.
+function dressStreets(ctx, L) {
+  for (const l of L.lots) {
+    const side = l.seed % 2 ? 1 : -1, tx = -l.fz * side, tz = l.fx * side;
+    for (const [kind, every, along, back] of [["mailbox", 3, 2.4, 0.8], ["trash_bin", 5, -2.5, 1.2]]) {
+      if (l.seed % every !== 0) continue;
+      const shape = model(kind); if (!shape) continue;
+      const id = `l9-dress-${l.id}-${kind}`; if (ctx.place.objects[id]) continue;
+      ctx.spawn(id, { feetPosition: T(l.kerb.x + tx * along - l.fx * back, l.kerb.z + tz * along - l.fz * back), rotation: { yaw: l.yaw }, ...shape, physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 65 } });
+    }
+  }
+}
+
 const FOG_CLEAR = { near: 12, far: 120 }, FOG_BANK = { near: 1.5, far: 17 };
 const between = (ctx, [a, b]) => (a + ctx.random() * (b - a)) * 1000;
 // the fog: a bank rolls in over ~14 s, sits, rolls out. place.state.l9fog = { on, until } is what scripts/l9-mangled.js hunts by.
@@ -69,6 +82,7 @@ export function tick(ctx) {
   }
   const s = ctx.place.state;
   if (s.l9seed == null) s.l9seed = (hashStr(String(ctx.getRoomId?.() ?? "main")) ^ Math.floor(ctx.random() * 0x7fffffff)) >>> 0; // rolled once per room, kept with the room
-  if (s.l9V !== V) { lay(ctx, layout(s.l9seed)); s.l9V = V; }
+  if (s.l9V !== V) { lay(ctx, layout(s.l9seed)); s.l9V = V; s.l9DressV = 0; }
+  if (s.l9DressV !== 1) { dressStreets(ctx, layout(s.l9seed)); s.l9DressV = 1; }
   if (ctx.place.players.length) fog(ctx, s);
 }
