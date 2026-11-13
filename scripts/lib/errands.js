@@ -130,7 +130,7 @@ export function errandTick(ctx, ses, s, place) {
     for (const [id, r] of Object.entries(s.errands ?? {})) if (!r.done && ERRANDS[id] && ERRANDS[id].giver !== sid) step(ctx, s, id, sid, null);
   }
   // do: "errand:<id>" / "errand-alt:<id>" on any dialogue node
-  const asked = ses.askedNow;
+  const asked = ctx.self.session?.askedNow; // scripts/talk.js keeps the asked questions on the body's own session
   if (sid && asked?.length && (ses.errSeen ?? 0) < asked.length) {
     let ent = null; try { const it = ctx.getObject(s.talkWith); ent = it ? entryOf(it, place)?.e : null; } catch { ent = null; }
     for (let i = ses.errSeen ?? 0; i < asked.length; i++) {
