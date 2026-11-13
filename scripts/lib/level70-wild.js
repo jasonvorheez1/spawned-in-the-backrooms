@@ -1,7 +1,7 @@
 // Level 70 "wild" layer: the land between (trees, boulders, fences, signs, pylon, skyline), the Carnifices of Gelu camp in Iceshed,
 // Froston (the dead B.N.T.G. extraction camp) and the River Guard post on the Burns River. lay(ctx) once per V; tick(ctx) lays the trees in batches.
 import { ZONES, SPOT, RIVER, wildness, zoneAt } from "./level70.js";
-export const V = 5;
+export const V = 6;
 const U = (h) => "/cdn/value." + h + ".glb";
 export const GLB = {
   spruce: U("04eaaea5ce01839348a9b539d39fb1da7be7b82825c48883f28ea36c21dbac23"), birch: U("00db5651af342e40af65ef83853f2d6cd6d55635511f8b26a862fd23e02cc2eb"),
@@ -137,9 +137,9 @@ export function lay(ctx) {
   sp("l70-sign-heap1", { tags: ["l70-wild"], feetPosition: g(-9, -103.4, -0.05), rotation: { yaw: 80 }, model: { id: GLB.heap }, layout: fit(0.7) });
   sp("l70-pylon", { tags: ["l70-wild"], feetPosition: g(172, -34, -0.5), rotation: { yaw: 78, roll: 2.5 }, model: { id: GLB.pylon }, layout: fit(44), visibleRange: { max: 700 } });
   [[-150, -178, 52, 0], [-88, -190, 44, 90], [-30, -184, 60, 180], [34, -192, 47, 270], [92, -182, 56, 90], [150, -175, 42, 0],
-   [-120, 208, 46, 180], [-52, 226, 58, 270], [18, 214, 43, 0], [84, 222, 54, 90], [146, 196, 41, 180]].forEach(([x, z, h, yaw], i) =>
-    sp("l70-skyline" + i, { tags: ["l70-wild", "l70-skyline"], feetPosition: g(x, z, -1), rotation: { yaw }, model: { id: GLB.skyline, materials: { "tripo_material_05692072-2f16-4333-a2ec-e88663003b42": { color: "oklch(0.42 0.03 250)", roughness: 0.6 } } }, layout: fit(h), castShadow: false, visibleRange: { max: 900 } }));
-  [[-60, 30, -200], [60, 26, -200], [0, 28, 192]].forEach(([x, y, z], i) => sp("l70-cityglow" + i, { tags: ["l70-wild"], feetPosition: { x, y, z }, light: { kind: "point", color: "oklch(0.78 0.15 65)", intensity: 900, distance: 90 } }));
+   [-120, 158, 46, 180], [-52, 172, 58, 270], [26, 164, 43, 0], [84, 170, 54, 90], [146, 152, 41, 180]].forEach(([x, z, h, yaw], i) =>
+    sp("l70-skyline" + i, { tags: ["l70-wild", "l70-skyline"], feetPosition: g(x, z, -1), rotation: { yaw }, model: { id: GLB.skyline, materials: { "tripo_material_05692072-2f16-4333-a2ec-e88663003b42": { color: "oklch(0.32 0.03 250)", roughness: 0.55 } } }, layout: fit(h), castShadow: false, visibleRange: { max: 900 } }));
+  [[-60, 30, -200], [60, 26, -200], [0, 28, 150]].forEach(([x, y, z], i) => sp("l70-cityglow" + i, { tags: ["l70-wild"], feetPosition: { x, y, z }, light: { kind: "point", color: "oklch(0.78 0.15 65)", intensity: 900, distance: 90 } }));
   ctx.place.state.w70i = 0;
 }
 export function tick(ctx) {
