@@ -39,5 +39,13 @@ function leaf(ctx, solid) {
   if (ctx.lod <= 2) for (let i = 0; i < 6; i++) { const x = (i % 2 ? 1 : -1) * (w - 0.45), y = 0.55 + Math.floor(i / 2) * 1.12; if (Math.abs(x - kx) < 0.3 && Math.abs(y - ky) < 0.4) continue; B(ctx, x - 0.02, x + 0.02, y - 0.02, y + 0.02, -0.034, -0.03); }
   ctx.color("oklch(0.34 0.07 50)"); for (let i = 0; i < 3; i++) if (R(i) > 0.45) { const x = (R(10 + i) - 0.5) * 2 * (w - 0.3); B(ctx, x - 0.012, x + 0.012, h - 0.1 - 0.3 - R(20 + i) * 0.8, h - 0.1, -0.035, -0.033); }
 }
-export function geometry(ctx) { (ctx.params.part === "leaf" ? leaf : frame)(ctx, false); }
-export function collider(ctx) { (ctx.params.part === "leaf" ? leaf : frame)(ctx, true); }
+// part "back": only what the modeled surround doesn't carry: the slab's track, the sill plate and the dark past the opening
+function back(ctx) {
+  const hw = DOOR_W / 2, ow = OPEN_W / 2, top = CURB + OPEN_H;
+  ctx.albedo(STEEL); ctx.color("oklch(0.8 0.01 70)"); ctx.metalness(0.7); ctx.roughness(0.55);
+  B(ctx, -ow, ow, CURB, CURB + 0.025, 0.45, 1.1);
+  B(ctx, -ow, hw + 0.5, top - 0.02, top + 0.06, 0.77, 1.06);
+  ctx.metalness(0); ctx.albedo(null); ctx.color("oklch(0.02 0 0)"); ctx.roughness(1); B(ctx, -ow - 0.2, ow + 0.2, CURB, top + 0.2, 1.3, 1.34);
+}
+export function geometry(ctx) { const k = ctx.params.part; (k === "leaf" ? leaf : k === "back" ? back : frame)(ctx, false); }
+export function collider(ctx) { (ctx.params.part === "leaf" ? leaf : frame)(ctx, true); } // "back" collides as the frame: jambs and lintel stay solid under the model

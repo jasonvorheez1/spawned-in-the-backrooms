@@ -4,7 +4,9 @@ import { keysOf, keyDoor } from "../../scripts/lib/hubkeys.js";
 import { layThings, keepCrew, keymaster } from "../../scripts/lib/hub-people.js";
 import { ARRIVE } from "../../scripts/lib/thehub.js";
 export const cadence = "1s";
-const V = 3;
+const V = 4;
+const DOOR = { frame: { url: "/cdn/value.86c9f9f6e66d057fda78af73bde7c72cea84386e49891e45ea0ed3cddadb3e70.glb", offset: [0, 0, 0.432] }, leaf: { url: "/cdn/value.9437304a5bfa3c822e8830c3d88d9e6310980e867ff78651d84fc6dc5b01035c.glb" } }; // art/hub/doors.yml
+const PANEL = "cdn/texture-smooth-cast-concrete-lintel-panel-clean-fine-pores.png"; // the frame's lintel panel came mottled: a clean cast face for the carved mark
 const SODIUM = "oklch(0.8 0.15 68)";
 function layShell(ctx) {
   for (const r of RUNS) ctx.spawn("hub-run-" + r.id, { tags: ["hub-shell"], feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/thehub-geo.js", params: { run: r.id } }, material: { roughness: 0.88, pbr: true } });
@@ -18,10 +20,13 @@ function layDoors(ctx) {
     const always = !!d.open;
     ctx.spawn(d.obj, { tags: ["usable", "hub-door"], feetPosition: { x: d.x, y: 0, z: d.z }, rotation: { yaw: d.yaw }, physics: { body: "static", collider: "mesh" }, castShadow: false, receiveShadow: true,
       state: { name: always ? "Open door" : "Concrete door", verb: "Try", open: always, always, c: { ...doorFront(d, -0.6), y: 1.2 } }, behavior: "scripts/hub-door.js",
-      primitive: { kind: "scripted", script: "scripts/hub-door-geo.js", params: { part: "frame" } }, material: { roughness: 0.9 },
+      primitive: { kind: "scripted", script: "scripts/hub-door-geo.js", params: { part: "back" } }, material: { roughness: 0.9 }, // the dark past the slab and its track; the surround is the modeled cast (art/hub/doors.yml)
       children: [
-        { id: "leaf", feetPosition: { x: always ? 2.75 : 0, y: CURB + 0.02, z: 0.78 }, physics: { body: "kinematic", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/hub-door-geo.js", params: { part: "leaf" }, seed: d.seed }, material: { roughness: 0.9 } },
-        { id: "mark", feetPosition: { x: 0, y: CURB + 3.4 + 0.72, z: 0.395 }, vector: symbolSvg(d.seed, 2.1) },
+        { id: "cast", feetPosition: { x: 0, y: CURB, z: 0.42 }, physics: { body: "static", collider: "mesh" }, castShadow: false, receiveShadow: true,
+          model: { id: DOOR.frame.url, offset: DOOR.frame.offset, materials: { panel: { texture: PANEL, color: "oklch(0.9 0.008 82)", roughness: 0.92, metalness: 0 } } } },
+        { id: "leaf", feetPosition: { x: always ? 2.75 : 0, y: CURB + 0.02, z: 0.78 }, physics: { body: "kinematic", collider: "box" }, castShadow: false,
+          model: { id: DOOR.leaf.url, offset: [0, 0, 0.13] } }, // centred on its feet so it slides about the opening's middle, not its hinge edge
+        { id: "mark", feetPosition: { x: 0, y: CURB + 4.0, z: 0.4 }, vector: symbolSvg(d.seed, 2.1) },
       ] });
     ctx.spawn(d.obj + "-t", { feetPosition: { x: d.x, y: CURB, z: d.z }, rotation: { yaw: d.yaw }, visible: false, state: { door: d.obj }, behavior: "scripts/hub-door.js",
       children: [{ id: "box", feetPosition: { x: 0, y: 0, z: 0.95 }, visible: false, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 2.3, height: 2.6, depth: 0.5 }, state: { door: d.obj }, behavior: "scripts/hub-door.js" }] });
@@ -40,7 +45,7 @@ function resonance(ctx) {
 export function tick(ctx) {
   const s = ctx.place.state;
   if ((s.hubV ?? 0) < 1) { layShell(ctx); layLamps(ctx); }
-  if ((s.hubV ?? 0) < 2) layDoors(ctx);
+  if ((s.hubV ?? 0) < 4) { if ((s.hubV ?? 0) >= 2) for (const d of DOORS) { if (ctx.place.objects[d.obj]) ctx.destroy(d.obj); if (ctx.place.objects[d.obj + "-t"]) ctx.destroy(d.obj + "-t"); } layDoors(ctx); } // v4: the modeled door set
   if ((s.hubV ?? 0) < 3) { layThings(ctx); if (!ctx.place.objects["hub-from-l1"]) ctx.spawn("hub-from-l1", { feetPosition: { x: ARRIVE.x + 1, y: ARRIVE.y, z: ARRIVE.z }, rotation: { yaw: -90 } }); }
   s.hubV = V;
   if (!ctx.place.players?.length) return;
