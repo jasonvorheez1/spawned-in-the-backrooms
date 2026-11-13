@@ -568,8 +568,8 @@ function cctvUi(ctx, player) {
 #cctv{position:fixed;inset:0;pointer-events:none;font-family:'Courier New',monospace;color:#f2f0e6;text-shadow:0 0 4px #000,2px 2px 0 #000}
 #cctv .scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,#0000 0 2px,#0006 2px 3px);mix-blend-mode:multiply}
 #cctv .tint{position:absolute;inset:0;background:radial-gradient(ellipse at center,#0000 55%,#000c 100%);backdrop-filter:grayscale(1) contrast(1.25) brightness(.95)}
-#cctv .roll{position:absolute;left:0;right:0;height:18%;background:linear-gradient(#fff0,#ffffff14,#fff0);animation:cctvroll 6s linear infinite}
-@keyframes cctvroll{from{top:-20%}to{top:110%}}
+#cctv .roll{position:absolute;left:0;right:0;top:0;height:18%;background:linear-gradient(#fff0,#ffffff14,#fff0);animation:cctvroll 6s linear infinite;will-change:transform}
+@keyframes cctvroll{from{transform:translateY(-110%)}to{transform:translateY(620%)}}
 @keyframes cctvcut{0%{opacity:1}100%{opacity:0;visibility:hidden}}
 @keyframes cctvrec{50%{opacity:0}}
 #cctv .snow{position:absolute;inset:0;background:repeating-radial-gradient(circle at 37% 61%,#fff 0 1px,#000 1px 2px,#888 2px 3px);animation:cctvcut .35s forwards}
