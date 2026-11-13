@@ -1,0 +1,42 @@
+# Level 9 "The Suburbs" (backrooms-wiki.wikidot.com/level-9): an eerily normal suburb stuck at midnight. Wet unpainted roads,
+# mostly dead streetlights, furnished empty houses. The neighbourhood is rolled per room from place.state.l9seed (places/level9/sim.js),
+# so the ground here is the same everywhere: flat lawn; the streets are road splines the sim lays.
+mode: 3d
+terrain:
+  kind: heightmap
+  seed: 909
+  generator: scripts/terrain9.js
+  materials:
+    - { id: lawn, albedo: cdn/texture-terrain-short-mown-suburban-lawn-grass-night.png, tint: "oklch(0.3 0.05 140)", textureScale: 2.5 }
+    - { id: rough, albedo: cdn/texture-terrain-rough-overcast-meadow-grass.png, tint: "oklch(0.27 0.04 130)", textureScale: 3 }
+    - { id: dirt, albedo: cdn/texture-terrain-packed-brown-farm-track-dirt-tire-ruts.png, tint: "oklch(0.24 0.02 70)", textureScale: 2.5 }
+  decorations:
+    layers:
+      lawn:
+        items:
+          - { kind: scripted, script: scripts/grass.js, scale: [0.25, 0.5], randomRotation: true, useTerrainColor: true, wind: { force: 0.03, scale: 5, speed: 0.8 } }
+        density: 14
+      rough:
+        items:
+          - { kind: scripted, script: scripts/grass.js, scale: [0.6, 1.1], randomRotation: true, useTerrainColor: true, wind: { force: 0.04, scale: 5, speed: 0.8 } }
+        density: 18
+    bindings: { lawn: [lawn], rough: [rough] }
+    settings: { maxDistance: 70, fadeDistance: 20 }
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: 0, y: { terrain: 0.2 }, z: 30 }
+defaultSpawnRotation: { yaw: 0 }
+worldBounds: { bottom: -40 }
+atmosphere:
+  look: { script: scripts/look-photo.js }
+  sky: { kind: color, color: oklch(0.06 0.02 265) }
+  timeOfDay: 0
+  cycle: { frozen: 0 }
+  clouds: { enabled: false }
+  fog: { kind: linear, near: 12, far: 120, color: oklch(0.1 0.02 262) }
+  sun: { light: { intensity: 0 } }
+  moon: { enabled: true, intensity: 0.35 }
+  stars: { enabled: false }
+  ambient: { light: { color: oklch(0.55 0.05 262), intensity: 0.55 } }
+  hemisphere: { skyColor: oklch(0.34 0.05 262), groundColor: oklch(0.14 0.02 150), intensity: 0.6 }
+  wind: { direction: 200, speed: 1.5 }
+acoustics: { reverb: 0.12 }

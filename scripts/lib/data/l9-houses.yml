@@ -1,0 +1,18 @@
+# Level 9's house kit. One row per house model; the layout (scripts/lib/level9.js) picks rows by seed and the sim furnishes `rooms`.
+# CONTRACT (every model): origin at ground centre of the w x d footprint, front door on the +Z side of the file (placed forward: "+z"),
+# interior floor at y = floorY, rooms in the model's own metres (x right, z toward the front door).
+# footprints the lots are cut for (model: null = a blueprint box stands in):
+houses:
+  ranch:    { name: "Ranch",      w: 16, d: 10, stories: 1, model: null, rooms: [] }
+  bungalow: { name: "Bungalow",   w: 9,  d: 11, stories: 1, model: null, rooms: [] }
+  colonial: { name: "Colonial",   w: 11, d: 9,  stories: 2, model: null, rooms: [] }
+  cape:     { name: "Cape Cod",   w: 10, d: 8,  stories: 2, model: null, rooms: [] }
+  garage2:  { name: "Two-storey with garage", w: 15, d: 9, stories: 2, model: null, rooms: [] }
+# siding / trim / roof paint a house can roll (index by seed)
+paints:
+  - { siding: "#b9b3a2", trim: "#e6e2d6", roof: "#3a3632" }
+  - { siding: "#8f9a8e", trim: "#dcdccf", roof: "#2e2f33" }
+  - { siding: "#a48f7a", trim: "#e0d6c4", roof: "#40332c" }
+  - { siding: "#7f8894", trim: "#d8dade", roof: "#2b2d31" }
+  - { siding: "#c2b48c", trim: "#efe9d6", roof: "#4a3d33" }
+  - { siding: "#9c7f78", trim: "#e4dcd2", roof: "#352f2f" }

@@ -1,0 +1,19 @@
+# Level 9's street and house props (Tripo, then 3D Modeling Studio). model: null = the sim's plain stand-in.
+# CONTRACT: origin at ground centre, front toward +Z in the file (placed forward: "+z"), real metres; size: [w, h, d].
+forward: "+z"
+props:
+  streetlight: { model: null, size: [0.5, 7.5, 2.6], lamp: [0, 7.2, 2.2] }   # lamp: where the light hangs, in the model's metres
+  mailbox:     { model: null, size: [0.25, 1.15, 0.5] }
+  sedan_a:     { model: null, size: [1.8, 1.45, 4.6] }
+  sedan_b:     { model: null, size: [1.85, 1.5, 4.8] }
+  trash_bin:   { model: null, size: [0.6, 1.05, 0.7] }
+  hydrant:     { model: null, size: [0.35, 0.75, 0.35] }
+  fence:       { model: null, size: [2.4, 1.0, 0.08] }
+  street_tree: { model: null, size: [5, 7, 5] }
+# numbers the sim reads (my picks)
+tune:
+  lampSpacing: 38        # m between streetlights
+  lampLit: 0.28          # share of streetlights that still burn
+  windowLit: 0.12        # share of houses with a light on inside
+  fogEvery: [240, 420]   # s between fog banks
+  fogLasts: [70, 110]    # s a bank stays
