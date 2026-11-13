@@ -12,6 +12,7 @@ import { LURKER_MODEL, LURKER_SCALE } from "../../scripts/lurkers.js";
 import { MODEL as SMILER_MODEL, SCALE as SMILER_SCALE } from "../../scripts/smilers.js";
 import { stepQuest } from "../../scripts/testlab-use.js";
 import { labBuild, labTick } from "../../scripts/lib/loot-lab.js";
+import { BAY_V, foeBayBuild, foeBayTick } from "../../scripts/lib/foe-bay.js";
 export const cadence = "250ms";
 const V = 2, REFILL = 4000; // ms before a taken thing comes back (my pick)
 const HX = 24, HZ0 = -26, HZ1 = 24, H = 6; // the hall: x -24..24, z -26..24, 6 m to the ceiling
@@ -119,9 +120,11 @@ function due(s, key, now) { if (!s[key]) { s[key] = now + REFILL; return false; 
 export function tick(ctx) {
   restyleSigns(ctx, "testlab"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   const s = ctx.place.state, now = ctx.now();
-  if (s.builtV !== V) { build(ctx); s.builtV = V; s.seeded = false; s.labV = 0; }
+  if (s.builtV !== V) { build(ctx); s.builtV = V; s.seeded = false; s.labV = 0; s.bayV = 0; }
   if (s.labV !== 2) { labBuild(ctx, pad, sign); s.labV = 2; } // the Loot Lab lays itself beside the hall, never rebuilding the rest
+  if (s.bayV !== BAY_V) { foeBayBuild(ctx, pad, sign); s.bayV = BAY_V; } // the Enemy Bay east of the hall (scripts/lib/foe-bay.js)
   if (!ctx.place.players?.length) return;
+  foeBayTick(ctx);
   // refills: weapons, containers, physics on request, foes on request
   const R = (s.refill ??= {});
   WEAPONS.forEach((k, i) => { const id = "tl-w-" + k; if (ctx.place.objects[id]) { delete R[id]; return; } if (s.seeded && !due(R, id, now)) return; ctx.spawn(id, weaponSpec(k, i)); });

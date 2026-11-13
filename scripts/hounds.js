@@ -48,7 +48,7 @@ function sees(ctx,h,p) {
 export function update(ctx, dt) {
   const place = ctx.self.place;
   const L6 = place === "level6", L3 = place === "level3", L2 = place === "level2", L5 = place === "level5", L21 = place === "level21", L1 = !L2 && !L3 && !L5 && !L6 && !L21;
-  const safeAt = L6 || L21 ? () => false : L3 ? (x, z) => zoneAt3(x, z) === "gamma" : L2 ? (x, z) => zoneAt2(x, z) === "camp" : L5 ? (x, z) => zoneAt5(x, z)?.id !== "boiler" : (x, z) => safeZone(zoneAt(x, z));
+  const safeAt = L6 || L21 || place === "testlab" ? () => false : L3 ? (x, z) => zoneAt3(x, z) === "gamma" : L2 ? (x, z) => zoneAt2(x, z) === "camp" : L5 ? (x, z) => zoneAt5(x, z)?.id !== "boiler" : (x, z) => safeZone(zoneAt(x, z));
   if (!ctx.place.players.length) { ctx.sleep(2); return; } // empty level: the pack rests (perf)
   const now = ctx.now(), dark = ctx.place.state.flicker === "dark", mem = (ctx.self.session.m ??= {});
   const players = ctx.place.players.filter((p) => !safeAt(p.feetPosition.x, p.feetPosition.z) && !(p.state?.downAt && now - p.state.downAt < 4500));
