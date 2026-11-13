@@ -6,7 +6,7 @@ W = "/workspace/l0props"
 # axis: w (x), h (up), d (depth); value in metres. yaw: degrees about up applied to the Tripo file so its front lands on glTF -Z.
 SPEC = {
  "boxes-stack":   dict(axis="h", v=1.00, yaw=90, src="boxes-stack-v2"),
- "box-single":    dict(axis="w", v=0.40, yaw=90, src="box-single-v3"),
+ "box-single":    dict(axis="w", v=0.40, yaw=0, src="box-single-v3"),
  "folding-table": dict(yaw=90, fit=(1.80, 0.74, 0.75)),
  "stack-chair":   dict(axis="h", v=0.80, yaw=0),
  "filing":        dict(yaw=0, fit=(0.38, 1.32, None), src="filing-v3"),
@@ -86,6 +86,10 @@ else:
 mn, mx = bb()
 me.transform(Matrix.Translation((-(mn.x + mx.x) / 2, -(mn.y + mx.y) / 2, -mn.z)))
 mn, mx = bb(); sz = mx - mn
+me.calc_loop_triangles()
+if len(me.loop_triangles) > 11800:  # the kit's cap is 12k
+    md = ob.modifiers.new("dec", "DECIMATE"); md.ratio = 11600 / len(me.loop_triangles)
+    bpy.ops.object.modifier_apply(modifier="dec"); me = ob.data
 for p in me.polygons: p.use_smooth = True
 me.set_sharp_from_angle(angle=math.radians(40))
 me.update(); me.calc_loop_triangles(); tris = len(me.loop_triangles)
