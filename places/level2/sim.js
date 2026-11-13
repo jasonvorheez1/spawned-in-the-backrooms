@@ -81,7 +81,7 @@ export function tick(ctx) {
     const SIGN_TEX = "/cdn/value.184984b3698a8e811d65fabd0495cb2d59125220555cc5346558efc46ebf9c4b.png";
     // the camp: three warm lanterns and a stove
     const a = cellCenter(1, ARRIVE.cz);
-    for (const [dx, dz] of [[2, 0], [5, 4.5], [5, -4.5]]) ctx.spawn({ ...campLantern(), feetPosition: { x: a.x + dx, y: 0.83, z: a.z + dz }, light: { kind: "point", color: "oklch(0.85 0.14 70)", intensity: 1.4, distance: 10, shadow: { enabled: false }, visibleRange: { max: 40 } } });
+    for (const [dx, dz] of [[2, 0], [5, 4.5], [5, -4.5]]) ctx.spawn({ ...campLantern(), feetPosition: { x: a.x + dx, y: 0.83, z: a.z + dz }, light: { kind: "point", color: "oklch(0.85 0.14 70)", intensity: 0.6, distance: 8, shadow: { enabled: false }, visibleRange: { max: 40 } } });
     ctx.spawn({ ...campStove(), feetPosition: { x: a.x + 5, y: 0.85, z: a.z - 4.7 },
       fx: { script: `fx\npop flame rate=18 on=disc(.07) life=.3..0.5 v=up(.6) size=.06..0.1 sz=$size*(1>.2) col=hdr(1.2,2,4)>hdr(.4,.6,2) a=0>.15:1>.7:.6>0 r=sprite(flame-wisp,add)\npop glow n=1 r=light(<.6,.7,1>,fire()*2,4)` } });
     ctx.spawn({ feetPosition: { x: a.x + 3, y: 2.4, z: a.z + 0.01 - 2.45 }, visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "box", width: 2.4, height: 0.8, depth: 0.02 }, material: { texture: SIGN_TEX, roughness: 0.95 }, rotation: { roll: -2 } });
@@ -383,7 +383,7 @@ function layGraffiti2(ctx) {
 
 // ---- Tripo props (scripts/lib/l2props.js): the camp's lanterns and stove, and the one-time re-dress of rooms laid before them
 const campLantern = () => ({ tags: ["l2camp-lantern"], visibleRange: { max: 40 }, castShadow: false, model: { id: PROPS.kinds.lantern.id, forward: PROPS.forward }, layout: fitBox(PROPS.kinds.lantern.size),
-  light: { kind: "point", color: "oklch(0.85 0.14 70)", intensity: 1.4, distance: 10, shadow: { enabled: false }, visibleRange: { max: 40 } } });
+  light: { kind: "point", color: "oklch(0.85 0.14 70)", intensity: 0.6, distance: 8, shadow: { enabled: false }, visibleRange: { max: 40 } } });
 const campStove = () => ({ tags: ["l2camp-stove"], visibleRange: { max: 40 }, castShadow: false, model: { id: PROPS.kinds.stove.id, forward: PROPS.forward }, layout: fitBox(PROPS.kinds.stove.size) });
 function fixBreak(ctx) {
   const all = { radius: 1e5, center: { x: 0, y: 0, z: 0 } }, vend = {};
