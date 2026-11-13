@@ -370,7 +370,7 @@ function turnPt(p, pitch, yaw, roll) { // YXZ: yaw over pitch over roll, as the 
 }
 
 // the split pistol's own parts: the slide blows back on a shot and racks in the reload, the magazine drops out and slides home
-const PARTS = { pistol: Object.fromEntries(SPLIT.pistol.map(([id, , at]) => [id, at])) }
+const PARTS = Object.fromEntries(Object.entries(SPLIT).map(([k, rows]) => [k, Object.fromEntries(rows.map(([id, , at]) => [id, at]))]))
 function partsPose(ctx, ps, kind, dt, m) {
   if (kind === 'carolynne') return carolPose(ctx, ps, dt, m)
   const base = PARTS[kind]; if (!base) return
