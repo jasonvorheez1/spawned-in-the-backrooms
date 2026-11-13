@@ -4,7 +4,7 @@ l70-bank-16:
   feetPosition: {x: -6.916390582907479, y: -0.06, z: -91.36584444067557}
   id: l70-bank-16
   layout: {box: {max: {y: 1.1107668068747443}, min: {y: 0}}}
-  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb}
+  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb, materials: {tripo_material_961a531c-67ef-4089-8b70-70766e70f68a: {color: oklch(0.99 0.015 240), roughness: 0.95}}}
   physics: {body: static, collider: mesh}
   rotation: {pitch: 0, roll: 0, yaw: -1.0311402468942106}
   scale: 1
@@ -15,7 +15,7 @@ l70-bank-17:
   feetPosition: {x: -7.126815270224324, y: -0.06, z: -99.31198695371131}
   id: l70-bank-17
   layout: {box: {max: {y: 1.2426905289998103}, min: {y: 0}}}
-  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb}
+  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb, materials: {tripo_material_961a531c-67ef-4089-8b70-70766e70f68a: {color: oklch(0.99 0.015 240), roughness: 0.95}}}
   physics: {body: static, collider: mesh}
   rotation: {pitch: 0, roll: 0, yaw: 174.85009584357613}
   scale: 1
@@ -26,7 +26,7 @@ l70-bank-18:
   feetPosition: {x: -6.9107668068747445, y: -0.06, z: -107.62889253086178}
   id: l70-bank-18
   layout: {box: {max: {y: 0.9339319347713172}, min: {y: 0}}}
-  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb}
+  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb, materials: {tripo_material_961a531c-67ef-4089-8b70-70766e70f68a: {color: oklch(0.99 0.015 240), roughness: 0.95}}}
   physics: {body: static, collider: mesh}
   rotation: {pitch: 0, roll: 0, yaw: 0.8408884509699419}
   scale: 1
@@ -37,7 +37,7 @@ l70-bank-19:
   feetPosition: {x: -7.0426905289998105, y: -0.06, z: -116.64373801955298}
   id: l70-bank-19
   layout: {box: {max: {y: 0.9335388898311067}, min: {y: 0}}}
-  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb}
+  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb, materials: {tripo_material_961a531c-67ef-4089-8b70-70766e70f68a: {color: oklch(0.99 0.015 240), roughness: 0.95}}}
   physics: {body: static, collider: mesh}
   rotation: {pitch: 0, roll: 0, yaw: 178.01956366484956}
   scale: 1
@@ -48,7 +48,7 @@ l70-bank-35:
   feetPosition: {x: 7.05692814774302, y: -0.06, z: -90.05348112754291}
   id: l70-bank-35
   layout: {box: {max: {y: 1.1647051559492296}, min: {y: 0}}}
-  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb}
+  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb, materials: {tripo_material_961a531c-67ef-4089-8b70-70766e70f68a: {color: oklch(0.99 0.015 240), roughness: 0.95}}}
   physics: {body: static, collider: mesh}
   rotation: {pitch: 0, roll: 0, yaw: 181.59828858578112}
   scale: 1
@@ -59,7 +59,7 @@ l70-bank-36:
   feetPosition: {x: 6.785529372827296, y: -0.06, z: -99.92434763816709}
   id: l70-bank-36
   layout: {box: {max: {y: 1.2208194126927991}, min: {y: 0}}}
-  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb}
+  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb, materials: {tripo_material_961a531c-67ef-4089-8b70-70766e70f68a: {color: oklch(0.99 0.015 240), roughness: 0.95}}}
   physics: {body: static, collider: mesh}
   rotation: {pitch: 0, roll: 0, yaw: -6.877097035408951}
   scale: 1
@@ -70,7 +70,7 @@ l70-bank-37:
   feetPosition: {x: 6.96470515594923, y: -0.06, z: -107.30021392677736}
   id: l70-bank-37
   layout: {box: {max: {y: 1.2438758458441952}, min: {y: 0}}}
-  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb}
+  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb, materials: {tripo_material_961a531c-67ef-4089-8b70-70766e70f68a: {color: oklch(0.99 0.015 240), roughness: 0.95}}}
   physics: {body: static, collider: mesh}
   rotation: {pitch: 0, roll: 0, yaw: 179.35404046438634}
   scale: 1
@@ -81,7 +81,7 @@ l70-bank-38:
   feetPosition: {x: 7.020819412692799, y: -0.06, z: -116.85963712942612}
   id: l70-bank-38
   layout: {box: {max: {y: 1.2616297181142726}, min: {y: 0}}}
-  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb}
+  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb, materials: {tripo_material_961a531c-67ef-4089-8b70-70766e70f68a: {color: oklch(0.99 0.015 240), roughness: 0.95}}}
   physics: {body: static, collider: mesh}
   rotation: {pitch: 0, roll: 0, yaw: -2.6207406498724595}
   scale: 1
@@ -325,7 +325,7 @@ l70-pole-2:
   id: l70-pole-2
   layout: {box: {max: {y: 9}, min: {y: 0}}}
   model: {id: /cdn/value.76853fda663d318c17f12d0d8b66410e8ba2b131260ef1a373fe11a2a1629d1e.glb}
-  physics: none
+  physics: {body: static, collider: box}
   rotation: {pitch: 0, roll: 2.2238667025536416, yaw: 2.965841676771106}
   scale: 1
   tags: [l70, l70-town]
@@ -346,7 +346,7 @@ l70-pole-3:
   id: l70-pole-3
   layout: {box: {max: {y: 9}, min: {y: 0}}}
   model: {id: /cdn/value.76853fda663d318c17f12d0d8b66410e8ba2b131260ef1a373fe11a2a1629d1e.glb}
-  physics: none
+  physics: {body: static, collider: box}
   rotation: {pitch: 0, roll: 0.03984171860211083, yaw: -6.39871806561132}
   scale: 1
   tags: [l70, l70-town]
