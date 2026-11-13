@@ -8,8 +8,8 @@ import { npcState } from "./stats.js";
 import { F } from "../l70-foes.js";
 export const V = 3;
 export const M = {
-  froidling: { id: "/cdn/value.e0f92de3c91a51d13d955a5f18b0ebb02e61aab925729be60816dcd684d80ca3.glb", forward: "+x" },
-  deathrat70: { id: "/cdn/value.5eab5f42c4c7fdce53c51e1b8f7853c3d4c5b87ae279382dbf976d10a38263b5.glb", forward: "+x" },
+  froidling: { id: "/cdn/value.e0f92de3c91a51d13d955a5f18b0ebb02e61aab925729be60816dcd684d80ca3.glb", forward: "+x", materials: { "tripo_material_6d76fd7a-542c-480e-9456-6d3a283302bb": { color: "oklch(0.76 0.06 245)", roughness: 0.92 } } }, // frost-blue, a step darker than the snow
+  deathrat70: { id: "/cdn/value.5eab5f42c4c7fdce53c51e1b8f7853c3d4c5b87ae279382dbf976d10a38263b5.glb", forward: "+x", materials: { "tripo_material_38027c01-d62b-448c-9dd6-d921438d58da": { color: "oklch(0.66 0.025 60)", roughness: 1 } } },
   blade: "/cdn/value.a8cfabf0d01cc861caaed21698d7a5effde319bd13e7cd400aa4a63e57fef3f1.glb",
   shovel: "/cdn/value.eb724a76bd16097a5f616f6bc9f6f5267a4a8cb43f616824d14e71cb68eeb626.glb", rod: "/cdn/value.540b3610c23860a7131ea26b9885ca1e2504191a3674280633f4651f2b5956c8.glb", firewood: "/cdn/value.115a094884c3dbdf23da630432dec2b7825fa33881a35de4308fd89ab76ada0e.glb", bench: "/cdn/value.3ab361d2b595004161aee889b2721dbe184120d32f253f2d150b77704e8e50b0.glb",
 };
