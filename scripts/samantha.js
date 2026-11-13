@@ -193,8 +193,8 @@ export function read(ctx, r, pay) {
 export function poorRead(ctx, pay) { const p = ctx.getObject(pay?.by); if (p?.state) say(ctx, p, S.poorReadings[pay.i] ?? S.poorReadings[0], 'annoyed') }
 function snub(ctx, p, now) { if (p.state.talkWith === ctx.self.id) p.state.talkWith = null; p.state.notice = { text: 'Samantha taps the empty saucer by her paws, then turns back to her cards. Bring meat.', at: now }; ctx.self.state.dishAt = now } // no hiss: an empty dish says it (Shelly Nov 13)
 const fedAt = (ctx, pid) => ctx.self.state.fed?.[pid] ?? -1e12
-const fedLately = (ses, pid, now, ctx = ses.__ctx) => now - fedAt(ctx, pid) < (S.fedGraceMs ?? 600000) // a fed wanderer's paws are empty because she ate it
-function warn(ctx, p, now, refused) { const ses = ctx.self.session; if (!refused && fedLately(ses, p.id, now)) return; if (!ses.warn || ses.warn.pid !== p.id) { ses.warn = { pid: p.id, at: now, refused: !!refused }; flick(ctx, p, now) } else if (refused) { ses.warn.refused = true; ses.warn.at = Math.min(ses.warn.at, now - S.warnMs + 2500) } } // a no shortens the fuse
+const fedLately = (ctx, pid, now) => now - fedAt(ctx, pid) < (S.fedGraceMs ?? 600000) // a fed wanderer's paws are empty because she ate it
+function warn(ctx, p, now, refused) { const ses = ctx.self.session; if (!refused && fedLately(ctx, p.id, now)) return; if (!ses.warn || ses.warn.pid !== p.id) { ses.warn = { pid: p.id, at: now, refused: !!refused }; flick(ctx, p, now) } else if (refused) { ses.warn.refused = true; ses.warn.at = Math.min(ses.warn.at, now - S.warnMs + 2500) } } // a no shortens the fuse
 function flick(ctx, p, now) { p.state.notice = { text: "Samantha's tail lashes once, hard. Her eyes go to your empty paws, then to her empty saucer. Bring her meat.", at: now }; ctx.self.anim.flick = { clip: 'cdn/clip-shake-no.glb', loop: 'once', weight: 0.6, mask: { from: 'Spine' } }; ctx.self.session.flickAt = now }
 
 export const ears = {
@@ -227,7 +227,7 @@ export function update(ctx, dt) {
   if (me.anim.flick && now - (ses.flickAt ?? 0) > 1500) me.anim.flick = null
   if (ses.mode === 'rage') { pounce(ctx, dt, now); return }
   // the rude one has had their warning
-  if (ses.warn && now - ses.warn.at > S.warnMs) { const w = ses.warn, p = ctx.getObject(w.pid); ses.warn = null; if (p?.state && !(!w.refused && fedLately(ses, w.pid, now)) && !((ses.fed?.[w.pid] ?? -1) >= w.at) && (w.refused || !meatOf(p))) enrage(ctx, w.pid, now); return } // told, tail flicked, still no meat: claws (Shelly Nov 13), never her claws (Shelly Nov 13: she attacked after a question)
+  if (ses.warn && now - ses.warn.at > S.warnMs) { const w = ses.warn, p = ctx.getObject(w.pid); ses.warn = null; if (p?.state && !(!w.refused && fedLately(ctx, w.pid, now)) && !(fedAt(ctx, w.pid) >= w.at) && (w.refused || !meatOf(p))) enrage(ctx, w.pid, now); return } // told, tail flicked, still no meat: claws (Shelly Nov 13), never her claws (Shelly Nov 13: she attacked after a question)
   // whoever holds her card: greet once, stay put, look at them
   let talker = null; ses.talkers ??= {}
   for (const p of ctx.place.players) {
@@ -236,7 +236,7 @@ export function update(ctx, dt) {
     if (!ses.talkers[p.id]) {
       ses.talkers[p.id] = 1
       if (meatOf(p)) say(ctx, p, S.lines.meat)
-      else if (fedLately(ses, p.id, now)) say(ctx, p, S.lines.full, 'happy') // she just ate your gift: no saucer, no tail (Shelly Nov 13: fed her, she ate, then attacked)
+      else if (fedLately(ctx, p.id, now)) say(ctx, p, S.lines.full, 'happy') // she just ate your gift: no saucer, no tail (Shelly Nov 13: fed her, she ate, then attacked)
       else { say(ctx, p, S.lines.none); ctx.self.state.dishAt = now; warn(ctx, p, now) } // she looks to her empty dish; no meat is never a fight
     }
   }
