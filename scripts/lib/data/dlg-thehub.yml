@@ -1,0 +1,126 @@
+# The Hub (Nov 13). Doorstep Carpet (M.E.G.), Camp Amber, the Keymaster. Human, short, no em dashes, each their own word for you.
+hub-meg-okafor:
+  hi: "Stop there, traveller. You walked in off the road, so you get the short version. This is Doorstep Carpet. M.E.G. post. Touch nothing with a tag on it."
+  back: ["Traveller. Still got all your fingers. Good.", "Back again. The road hasn't moved, I checked."]
+  warm: "There's my favourite stray. Kettle's on the left crate."
+  cold: "Say it quick."
+  bye: "Count the tunnels on your way. Out loud helps."
+  walk: "Right. Mind the kerb."
+  ask:
+    - q: "Where am I?"
+      a: "Under everything, as far as we can tell. We call it the Hub. One long road, side tunnels off it, and doors. A lot of doors. Each one goes somewhere else and none of them come back."
+      then:
+        - q: "None come back?"
+          a: "You step through, you turn round, there's a wall. I've lost two good mugs testing that. Plan your trip before you take it."
+    - q: "How do I get out?"
+      a: "Out of the Hub, easy. Three doors stand open and never shut. Fifth tunnel, seventh, tenth. Out of all of it? If I knew that I'd not be sleeping on a cot beside a road."
+      then:
+        - q: "Where do the three go?"
+          a: "Seventh goes back to the car park, the one with our waypoint. Tenth goes to a city, quiet one. The fifth we keep a rope across. Nobody we sent through it ever radioed."
+    - q: "What are the marks over the doors?"
+      a: "Nobody knows. Not letters, not numbers. Sato has drawn four hundred of them and gone a bit strange. You learn your door by its mark or you don't learn it."
+    - q: "How do the locked ones open?"
+      a: "A key. One key, one door, one trip. The key's gone after and the door shuts itself. Lin keeps what keys we've got. She doesn't hand them out for a smile."
+    - q: "What's down the dark end?"
+      a: "Past our barrier the lamps stop. We found more road in there in 2019 and we still haven't found the end of it. Dace watches the line. Ask him, he loves company. That's a joke."
+  barks:
+    idle: ["Fifth, seventh, tenth. Fifth, seventh, tenth.", "Who moved the kettle.", "Quiet tonight. It's always tonight."]
+    hi: ["Traveller.", "Mind the cables."]
+hub-meg-lin:
+  hi: "Hands off the cabinet, visitor. I count those hooks every hour and I am very good at counting."
+  back: ["Visitor. Hooks are all still mine, I see.", "You again. Sign the sheet if you're drawing, don't if you're not."]
+  warm: "Oh, it's you. Come round the desk, I'll not bite."
+  cold: "The cabinet's locked. So am I."
+  bye: "Close the gate behind you."
+  walk: "Mm."
+  ask:
+    - q: "What are these keys?"
+      a: "Level Keys. Each one fits one door out there and nothing else. It gets warm when you're near its door. Use it and it's gone, just gone, out of your hand. I hate them. I love them."
+    - q: "Where do keys come from?"
+      a: "We find them. On the road, in the dark end, once in a boot. And there's him. Tall, quiet, doesn't like us. He's handed a few to people who asked nicely. Never to me. I asked nicely."
+    - q: "Can a lock be picked?"
+      a: "Try it. Dace bent six picks and a butter knife. There's nothing inside to pick. It's a hole that wants one thing."
+  barks:
+    idle: ["Thirty-one hooks. Thirty-one.", "Somebody's been breathing on my glass."]
+hub-meg-sato:
+  hi: "Oh. A walker. Don't stand on the chalk, please, that's four days of work you're about to stand on."
+  back: ["Walker. You missed the chalk this time, thank you.", "Hello again. I've drawn eleven more since you left."]
+  warm: "My favourite walker! Look at this one, look, it has two little moons on it."
+  cold: "I'm drawing."
+  bye: "If you see a mark with three rings, write down where."
+  walk: "Mind the chalk."
+  ask:
+    - q: "What are you drawing?"
+      a: "The marks. Every door has one and no two match. I thought it was a language. Then I thought it was a map. Now I think it's a joke and I'm the last one to get it."
+    - q: "Where am I?"
+      a: "A junction. People upstairs call this whole place the Backrooms. Down here is where its roads meet. I'd say 'under' but I've measured and there's no 'under'. It upsets me a bit."
+    - q: "How do I find one door?"
+      a: "Count tunnels from our post going away from the dead end. Odd ones open on this side of the road, even ones across. Then learn the mark. Numbers won't help you, the doors don't have any."
+  barks:
+    idle: ["Two rings and a tail. Two rings and a tail.", "That's not chalk dust. Is that chalk dust?"]
+hub-meg-dace:
+  hi: "That's far enough, citizen. Past this line there's no lamps and no us."
+  back: ["Citizen. Line's still here.", "You. Still breathing. Line's still here too."]
+  warm: "Alright, citizen. Pull up a barrel."
+  cold: "Line. Behind it."
+  bye: "Walk in the middle of the road if you go in. Walls aren't friendly in there."
+  walk: "Yep."
+  ask:
+    - q: "What's past the line?"
+      a: "More road. No lamps. We put a team down it in 2019 and they found doors with no marks on. Then the radio got funny and I got this job."
+    - q: "Can I go in?"
+      a: "I'm a guard, not your mum. Take a light. If something reaches out of a wall, that's a you problem."
+    - q: "Seen anybody odd pass?"
+      a: "Tall one. Coat to the floor, keys on him like a Christmas tree. He goes in the dark end without a torch and comes out when he likes. Doesn't talk to me. I respect it."
+  barks:
+    idle: ["Line's holding.", "Thought I heard a door. It's always a door."]
+hub-amber-jo:
+  hi: "Easy, pilgrim, you look like you came the long way. Sit. This is Camp Amber. We're not staying, so don't get attached."
+  back: ["Pilgrim. Tea's stewed but it's hot.", "Still on your feet, pilgrim. Good going."]
+  warm: "Here's trouble. Sit down, your cup's the chipped one."
+  cold: "Tea's for friends today."
+  bye: "Go slow. Nothing down here is in a hurry except people."
+  walk: "Off you go then."
+  ask:
+    - q: "Where am I?"
+      a: "The Hub. Roads and doors. Safest spot you'll find, which is why it feels wrong. Nothing lives here. It's so quiet your ears make things up."
+    - q: "How do I get out?"
+      a: "Out of here, pick an open door. Out for good, nobody I've poured tea for has managed it. I've poured a lot of tea."
+    - q: "Got anything for a newcomer?"
+      a: "One box per face, that's the rule. It's by the stove. Water, a tin, a bandage. Don't thank me, thank whoever we took it off."
+    - q: "Which doors should I avoid?"
+      a: "Fifth tunnel, the one the uniforms roped off. And any door that opens by itself. If the key's not in your hand and the door's moving, walk the other way."
+    - q: "Why don't you stay put?"
+      a: "Stay anywhere too long down here and you start counting things. We pack up every few sleeps. Keeps the head clean."
+  barks:
+    idle: ["Kettle. Kettle. Where's the lid.", "We move after this pot."]
+hub-amber-pip:
+  hi: "Whoa, hi, new face! Sorry. Loud. I've been told. Hi, new face."
+  back: ["New face! Well, old new face.", "You're back! I knew it. I bet Jo a tin."]
+  warm: "It's you! I saved you the good spot by the stove."
+  cold: "Oh. Hi."
+  bye: "Remember your mark! Draw it on your hand!"
+  walk: "Okay bye!"
+  ask:
+    - q: "What do you do here?"
+      a: "I walk people to their doors! For free! Mostly because I get lost on the way back and it's exciting."
+    - q: "Any place I shouldn't go?"
+      a: "There's one that's all water and it's warm and that's the bad sign. There's one that's a hotel and the hotel is too nice. And there's a party. Do not go to the party."
+    - q: "How do you not get lost?"
+      a: "I do get lost! But the camp has the orange tarp and the uniforms have the green tape on the kerb. Find either one and follow the kerb."
+  barks:
+    idle: ["One, two, three, four... no. One, two...", "Jo! Jo, is this the same tin?"]
+hub-keymaster:
+  hi: "..."
+  back: ["...", "You. Again."]
+  warm: "..."
+  cold: "No."
+  bye: "..."
+  walk: "..."
+  ask:
+    - q: "Who are you?"
+      a: "Nobody who wants to be asked."
+    - q: "Are those all keys?"
+      a: "Yes."
+  barks:
+    idle: ["..."]
