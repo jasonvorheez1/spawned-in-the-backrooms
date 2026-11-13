@@ -76,7 +76,7 @@ export function lay(ctx) {
   }
 }
 let at = 0;
-// Leash: a Froidetownite, Guard or cultist stranded 45 m past every stop of its round (chased something over the river, fled into the snow)
+// Leash: a Froidetownite, Guard or cultist stranded 30 m past every stop of its round (chased something over the river, fled into the snow)
 // for 20 s is set back at its home. Foes keep their own manager.
 const away = {};
 function leash(ctx) {
@@ -85,7 +85,7 @@ function leash(ctx) {
     const s = o.state, f = o.feetPosition; if (!s?.home || !f) continue;
     const pts = s.rounds?.length ? s.rounds : [s.home];
     const d = Math.min(...pts.map((p) => Math.hypot(p.x - f.x, p.z - f.z)));
-    if (d < 45 && f.y > -1) { delete away[id]; continue; }
+    if (d < 30 && f.y > -1) { delete away[id]; continue; }
     away[id] ??= ctx.now();
     if (ctx.now() - away[id] > 20000 || f.y < -1) { o.feetPosition = { x: s.home.x, y: 0.1, z: s.home.z }; o.velocity = { x: 0, y: 0, z: 0 }; s.ri = 0; delete away[id]; }
   }
