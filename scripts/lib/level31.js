@@ -17,6 +17,7 @@ export const ARRIVE = { x: -30, y: 0.1, z: 27 }; // just inside the plywood door
 export const DOOR = { x: -30, z: 30 };
 export const BACK = { x0: 42, x1: 58, z0: -30, z1: 6, doorZ: -12, doorW: 3.6, doorH: 3.2 }; // the arcade's own room east of the hall
 export const onRink = (x, z) => { const dx = Math.max(0, Math.abs(x - RINK.cx) - RINK.half); return Math.hypot(dx, z - RINK.cz) <= RINK.r; };
+export const L31_NAMES = { l31_rink: "The Rink", l31_arcade: "Arcade", l31_party: "Party Room", l31_food: "Snack Bar", l31_rental: "Skate Rental", l31_shop: "Dottie's Gifts & Skate", l31_cinema: "Cinema", l31_mezz: "Mezzanine", l31_stair: "Mezzanine Stair", l31_dj: "DJ Booth", l31_carpet: "Roller Rink" };
 export const zoneAt = (x, z) => { if (onRink(x, z)) return "rink"; for (const [k, r] of Object.entries(ZONES)) if (x >= r.x0 && x <= r.x1 && z >= r.z0 && z <= r.z1) return k; return "carpet"; };
 
 // Skating on the wood (Shelly Nov 12: slip and slide in shoes, travel fine on bought skates with roller physics). All numbers Savi's picks.
