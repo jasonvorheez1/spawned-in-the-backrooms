@@ -60,7 +60,7 @@ export function stepTick(ctx, w, dt, o) {
   }
   fs.air = 0; fs.minVy = 0
   if (!o.moving || sp < 0.35) {
-    if (fs.walked > FS.scuffAfter && sp < 0.35) play(ctx, o.clip(FS.scuff), F.v * 0.7 * (o.crouched ? FS.loud.crouch : 1), 0.95 + ctx.random() * 0.1, 0)
+    // the stop scuff is gone (Shelly Nov 13: "remove the sound for highlighting stuff... it plays when i stop")
     fs.walked = 0; fs.dist = Math.max(fs.dist, 0.6 * strideOf(o, sp)); return
   }
   fs.dist += sp * dt; fs.walked += sp * dt
