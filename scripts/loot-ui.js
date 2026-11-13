@@ -591,7 +591,7 @@ function inventory(s) {
   const sortMode = s.invSort ?? 'name', sel = s.invSel || eqKey
 
   // Weapons list
-  let weaponKeys = (W.order ?? []).filter((k) => owned(s).includes(k))
+  let weaponKeys = [...new Set([...(W.order ?? []).filter((k) => owned(s).includes(k)), ...owned(s).filter((k) => W[k] && !(W.order ?? []).includes(k))])] // variant keys (revolver~lucky13) aren't in W.order
   if (sortMode === 'dam') weaponKeys.sort((a, b) => (W[b]?.damage ?? 0) - (W[a]?.damage ?? 0))
   else if (sortMode === 'wg') weaponKeys.sort((a, b) => (W[b]?.kg ?? 1) - (W[a]?.kg ?? 1))
   else if (sortMode === 'cnd') weaponKeys.sort((a, b) => cndOf(s, a) - cndOf(s, b))
