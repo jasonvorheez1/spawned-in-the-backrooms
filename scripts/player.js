@@ -588,7 +588,7 @@ function swing(ctx, power = 0) {
       if (perRound(wp) && (s[loadedKey] ?? 0) > 0) cancelReload(ctx)
       else return
     }
-    if (s.god && (s[loadedKey] ?? 0) <= 0) s[loadedKey] = wp.mag ?? 30 // an empty gun in god mode comes back full
+    if (s.god && (s[loadedKey] ?? 0) <= 0) s[loadedKey] = wp.magSize ?? 30 // an empty gun in god mode comes back full
     if ((s[loadedKey] ?? 0) <= 0) {
       w.nextSwing = now + 350
       if ((s[ammoKey] ?? 0) > 0) startReload(ctx)
