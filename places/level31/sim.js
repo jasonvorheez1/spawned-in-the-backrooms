@@ -9,7 +9,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 97; // 96: the white 70 door opens onto Level 70 // 95: tripo folding tables + booths // 94: snack bar as a rink cafe (folding tables, green booths, cosmic carpet) // 93: rink regular off the shredded jacket // 91: staff room tripo pass + gap wall // 89: staff doorway cut; 90: the staff back room behind it, Nov 13
+const V = 98; // 96: the white 70 door opens onto Level 70 // 95: tripo folding tables + booths // 94: snack bar as a rink cafe (folding tables, green booths, cosmic carpet) // 93: rink regular off the shredded jacket // 91: staff room tripo pass + gap wall // 89: staff doorway cut; 90: the staff back room behind it, Nov 13
 const STAFF = { x: 40.05 };
 const RAIL_GLB = "/cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb";
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
@@ -154,7 +154,7 @@ function doors(ctx) {
   // the white door marked 70, west wall under the mezzanine: Level 70 Froidetown (Shelly Nov 13). Tripo steel door, frost fx at the sill, a cold light.
   const X70 = B.x0 + 0.07, Z70 = -22;
   ctx.spawn("l31-door-70", { feetPosition: { x: X70, y: 0, z: Z70 }, rotation: { yaw: -90 }, castShadow: false,
-    model: { id: "/cdn/value.9fdae43fcaf5713af173eb262dfa4b526ccc98a79e34d99b72f458948db6e11d.glb", forward: "+x" }, layout: { box: { min: { x: -0.62, y: 0, z: -0.09 }, max: { x: 0.62, y: 2.2, z: 0.09 } } },
+    model: { id: "/cdn/value.9fdae43fcaf5713af173eb262dfa4b526ccc98a79e34d99b72f458948db6e11d.glb", forward: "+x" }, layout: { box: { min: { x: -0.7, y: 0, z: -0.4 }, max: { x: 0.7, y: 2.35, z: 0.4 } } },
     state: { name: "White door", info: "A 70 is engraved in the paint. Cold air under it." } });
   ctx.spawn("l31-door-70-cold", { feetPosition: { x: X70 + 0.9, y: 1.9, z: Z70 }, light: { kind: "point", color: "oklch(0.86 0.06 235)", intensity: 1.6, distance: 7 } });
   ctx.spawn("l31-door-70-frost", { feetPosition: { x: X70 + 0.25, y: 0.03, z: Z70 }, fx: { script: `fx
