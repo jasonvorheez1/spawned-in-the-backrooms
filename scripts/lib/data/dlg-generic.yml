@@ -11,7 +11,7 @@
   walk: ["Okay then.", "Fine."]
   ask:
     - q: "Where am I?"
-      a: ["Level 1, the folks here call it. Under all the rest. You came out of the yellow rooms, right? Everybody does, first.", "The Backrooms. You fell out of the real world somewhere, same as me. This part's Level 1."]
+      a: ["The Backrooms. You came out of the yellow rooms, right? Everybody does, first. This is one of the levels past them.", "The Backrooms. You fell out of the real world somewhere, same as me. Each level's its own place. Learn this one before the next."]
     - q: "What are the Backrooms?"
       a: ["Rooms behind the rooms. You step wrong, you clip out of the real world, and you land here. It goes on. Levels on levels.", "Nobody knows what built it. Some say it's a mistake in the world. I say it's a place that eats people who stand still."]
     - q: "How do I get out of here?"
