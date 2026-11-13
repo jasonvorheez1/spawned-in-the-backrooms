@@ -304,12 +304,12 @@ l5-beast:
   tags: [l5-office, npc, l5-beast]
 l5-beast-register:
   behavior: scripts/l5-beast-prop.js
-  feetPosition: {x: -42.75, y: 1.12, z: 1.1}
+  feetPosition: {x: -42.6, y: 0.95, z: 1.75}
   id: l5-beast-register
   material: {color: oklch(0.32 0.1 25), roughness: 0.7, texture: cdn/texture-worn-red-leather-book-cover.png}
   primitive: {depth: 0.3, height: 0.07, kind: box, width: 0.42}
   rotation: {yaw: -80}
-  state: {kind: register, name: Guest register, verb: Look}
+  state: {kind: register, name: Guest register, verb: Take}
   tags: [l5-office, usable, l5-beast-prop]
 l5-beast-slot:
   behavior: scripts/l5-beast-prop.js
@@ -1590,7 +1590,7 @@ l5-hall-frontdesk:
   feetPosition: {x: -42.6, y: 0, z: 3.2}
   id: l5-hall-frontdesk
   physics: static
-  primitive: {kind: scripted, params: {kind: frontdesk, w: 3.6}, script: scripts/l5-hall-geo.js}
+  primitive: {kind: scripted, params: {h: 0.95, kind: frontdesk, w: 3.6}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, items: "bobbypin,battery,almond", kind: desk, lock: "lockpick:30", mat: wood, maxHp: 60, name: Front desk drawers}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
@@ -4330,7 +4330,7 @@ l5-radio-desk:
   audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
   behavior: scripts/l5-door.js
   castShadow: false
-  feetPosition: {x: -42.6, y: 1.12, z: 3.2}
+  feetPosition: {x: -42.6, y: 0.95, z: 3.2}
   id: l5-radio-desk
   material: {color: oklch(0.42 0.08 50), roughness: 0.4, texture: cdn/texture-worn-hardwood-grain.png}
   physics: static
