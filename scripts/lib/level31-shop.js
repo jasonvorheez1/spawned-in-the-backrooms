@@ -45,7 +45,7 @@ export function layShop(ctx) {
   const prize = (id, m, z, sc) => sp(id, { feetPosition: { x: WX + 0.42, y: 0, z }, rotation: { yaw: 0 }, model: M[m], scale: sc });
   // live bounds at x1: A 1.82 m tall x 2.48 long, B 2.13 x 2.75 -> both ~2.4 m tall
   prize("prize-a", "prizeA", -1.75, 1.32); prize("prize-b", "prizeB", 1.75, 1.13);
-  tr("counter", "counter", -38.3, 0, -0.1, 0, 1.35); tr("case-side", "case", -39.3, 0, 1.25, S, 1);
+  tr("counter", "counter", -38.45, 0, -0.1, 0, 1.12); /* Shelly Nov 13 "the counter is too big": x1.12 = 0.90 m tall, 1.11 m long */ tr("case-side", "case", -39.3, 0, 1.25, S, 1);
   // two stocked gift gondolas down the middle (file 0.91 x 1.0 x 0.94 m) at x1.55 = 1.55 m tall, eye level for a 1.7 m player
   const gon = (id, z) => sp(id, { feetPosition: { x: -34.2, y: 0, z }, rotation: { yaw: E }, model: M.gondola2, scale: 2.25, /* file 0.90 x 0.71 x 0.43 m read live -> 2.0 x 1.6 x 0.97 m */ physics: { body: "static", collider: "box" } });
   gon("gondola-n", -4.2); gon("gondola-s", 4.2);
