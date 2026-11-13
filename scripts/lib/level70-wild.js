@@ -1,7 +1,7 @@
 // Level 70 "wild" layer: the land between (trees, boulders, fences, signs, pylon, skyline), the Carnifices of Gelu camp in Iceshed,
 // Froston (the dead B.N.T.G. extraction camp) and the River Guard post on the Burns River. lay(ctx) once per V; tick(ctx) lays the trees in batches.
 import { ZONES, SPOT, RIVER, wildness, zoneAt } from "./level70.js";
-export const V = 1;
+export const V = 2;
 const U = (h) => "/cdn/value." + h + ".glb";
 export const GLB = {
   spruce: U("04eaaea5ce01839348a9b539d39fb1da7be7b82825c48883f28ea36c21dbac23"), birch: U("00db5651af342e40af65ef83853f2d6cd6d55635511f8b26a862fd23e02cc2eb"),
@@ -88,7 +88,11 @@ export function lay(ctx) {
   sp("l70-bp-camp", { tags: ["l70-wild", "l70-campfire"], feetPosition: { x: C.x, y: 0, z: C.z }, fx: { script: COLD_FIRE }, children: kids });
   // ---- Froston: the dead B.N.T.G. extraction camp (root is the rig)
   const fk = [
-    { id: "office", tags: ["l70-container-open"], ...m("openbox", -10, 0, 5, 3.0, 0), physics: MESH },
+    { id: "office", tags: ["l70-container-open"], ...m("openbox", -10, 0, 5, 3.0, 0), physics: MESH, model: { id: GLB.openbox, materials: {
+      steel: { texture: "cdn/texture-corrugated-shipping-container-steel-faded-blue-paint-rust-streaks-frost.png", wrap: "repeat", repeat: [0.5, 0.5], roughness: 0.6, metalness: 0 },
+      frame: { texture: "cdn/texture-rusted-dark-painted-steel-beam-chipped-frost.png", wrap: "repeat", repeat: [1, 1], roughness: 0.55 },
+      wood: { texture: "cdn/texture-worn-container-plywood-floor-scuffed-dirty-boot-prints.png", wrap: "repeat", repeat: [0.7, 0.7], roughness: 0.85 },
+      snow: { texture: "cdn/texture-fresh-powder-snow-windblown.png", wrap: "repeat", repeat: [0.5, 0.5], roughness: 0.95 } } } },
     { id: "desk", tags: ["l70-desk"], ...m("desk", -11.9, 0.16, 5, 1.2, -90), physics: "static" },
     { id: "papers", ...m("papers", -10.4, 0.17, 5.2, 0.08, 20) },
     { id: "papers2", ...m("papers", -6.2, 0.02, 5.6, 0.08, 140) },
