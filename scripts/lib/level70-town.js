@@ -2,8 +2,8 @@
 // lay(ctx) builds it once per V (ctx.place.state.v70town), tick(ctx) runs each second. Every visible thing is a Tripo or Blender mesh
 // (art/l70-town/*.py build the house and igloo; art/l70-town/models.py fills M from the Tripo logs). Map: ./level70.js.
 import { HUT, SPOT } from "./level70.js";
-export const V = 1;
-const M = /*M*/{"house": "/cdn/value.9c720700d57a2a87fdb79f1b9dbbf7f165badf6777c9884c9ea24e4ce30ee8f9.glb", "housecol": "/cdn/value.6d4c22f046170f6cf599277144dc9b6185bfe0c4298b8da27f8ec820589b2448.glb", "igloo": "/cdn/value.bf91214316bae9d634c33f7b8cc475f2bea9d87a64926c4d2815e1c3889f904c.glb", "lamp": "/cdn/value.df187005a34dd410bd5de07e4253a96b988c4a12840d62b14ec6248dd28cfc52.glb", "pole": "/cdn/value.76853fda663d318c17f12d0d8b66410e8ba2b131260ef1a373fe11a2a1629d1e.glb", "sedan": "/cdn/value.8bab8a27c8807090412480c7a890104a34ddd3178edf5f288a57d6941440a8d0.glb", "pickup": "/cdn/value.077bedb487349a0148196019451d1bd4543792c89251898bc5e1cc6e8777b37d.glb", "snowbank": "/cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb", "bldga": "/cdn/value.7e99de62f1d6a8e9730d41fbd07ad2686651db9127868f64e4c18fbbd1ef63ec.glb", "bldgb": "/cdn/value.198edb96a33553fe6d550ac9b35acc12754e4414467a7542fd372462df11898a.glb", "nhouse": "/cdn/value.82b465081f6775e6c5d0483430060c237943db4f47082b5d4e532099671dad29.glb", "shelter": "/cdn/value.e2e5e8dfabdb35770aee07467ae5acc35db33c82e79e3b110218ad9ad4318b03.glb", "swing": "/cdn/value.1d56eef705a4541fa9f97a6174118d8491550fe41610969a2420b08378acb671.glb"}/*M*/;
+export const V = 2;
+const M = /*M*/{"house": "/cdn/value.1bdea65fb6af6ad08a32a36c5ec23a3c92b1c4d62a8e79105ba254af48e2f198.glb", "housecol": "/cdn/value.c860d11865acc09c5900aca4b729e8cb31bc86589b1c349f453dd77a24d946ba.glb", "igloo": "/cdn/value.600dc4c53bd57d818bd513ffa49258c425f38da0de26e07d7795c0be9b1a6f91.glb", "lamp": "/cdn/value.df187005a34dd410bd5de07e4253a96b988c4a12840d62b14ec6248dd28cfc52.glb", "pole": "/cdn/value.76853fda663d318c17f12d0d8b66410e8ba2b131260ef1a373fe11a2a1629d1e.glb", "sedan": "/cdn/value.8bab8a27c8807090412480c7a890104a34ddd3178edf5f288a57d6941440a8d0.glb", "pickup": "/cdn/value.077bedb487349a0148196019451d1bd4543792c89251898bc5e1cc6e8777b37d.glb", "snowbank": "/cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb", "bldga": "/cdn/value.7e99de62f1d6a8e9730d41fbd07ad2686651db9127868f64e4c18fbbd1ef63ec.glb", "bldgb": "/cdn/value.198edb96a33553fe6d550ac9b35acc12754e4414467a7542fd372462df11898a.glb", "nhouse": "/cdn/value.82b465081f6775e6c5d0483430060c237943db4f47082b5d4e532099671dad29.glb", "shelter": "/cdn/value.e2e5e8dfabdb35770aee07467ae5acc35db33c82e79e3b110218ad9ad4318b03.glb", "swing": "/cdn/value.1d56eef705a4541fa9f97a6174118d8491550fe41610969a2420b08378acb671.glb"}/*M*/;
 const HUTG = "/cdn/value.0b1ccbbffd913e4a0cf600a19d17f5eb95171b6cb43c624ad0f61ee3fccf3f01.glb", DOORG = "/cdn/value.9fdae43fcaf5713af173eb262dfa4b526ccc98a79e34d99b72f458948db6e11d.glb";
 const HS = SPOT.house, IG = SPOT.igloo;
 export const HUT_DOOR = { x: HUT.x, y: 0, z: 45 };
@@ -71,8 +71,8 @@ export function lay(ctx) {
   const can = asset("trashcan-2"); mesh("l70-bin-0", can, -5.8, 2.5, 0.95, { roll: 4 }); mesh("l70-bin-1", can, 5.9, -40.5, 0.95, { pitch: 88, yaw: 40, y: 0.3 });
 
   // 3. Burns Crescent: the house (Blender; walkable ground floor + storm cellar on its north wall), its invisible shell, furniture, neighbours
-  mesh("l70-bp-house", M.house, HS.x, HS.z, 6.9, { layout: null, solid: false, materials: HOUSE_MATS });
-  mesh("l70-house-shell", M.housecol, HS.x, HS.z, 6.5, { layout: null, visible: false, shadow: false });
+  mesh("l70-bp-house", M.house, HS.x, HS.z, 6.9, { y: -0.3, layout: null, solid: false, materials: HOUSE_MATS });
+  mesh("l70-house-shell", M.housecol, HS.x, HS.z, 6.5, { y: -0.3, layout: null, visible: false, shadow: false });
   const at = (x, z) => [HS.x + x, HS.z + z], F = 0.54, put = (id, g, x, z, h, o = {}) => mesh(id, g, ...at(x, z), h, { y: o.y ?? F, ...o });
   put("l70-house-sofa", asset("sofa-4") ?? asset("sofa"), -1.2, 2.75, 0.85, { yaw: 180 }); put("l70-house-table", asset("coffee-table"), -1.3, 1.5, 0.45, {});
   put("l70-house-fridge", asset("fridge"), 1.5, -2.9, 1.75, { yaw: 180 }); put("l70-house-stove", asset("stove"), 0.4, -2.95, 0.93, { yaw: 180 }); put("l70-house-counter", asset("counter-furniture") ?? asset("counter"), -0.9, -2.95, 0.93, { yaw: 180 });
@@ -89,7 +89,7 @@ export function lay(ctx) {
   [[8.2, -3.3, 0.6], [8.4, 3.4, 0.7], [-8.5, 0, 0.9], [2, 6.5, 0.6]].forEach(([x, z, h], i) => snow("l70-house-snow-" + i, HS.x + x, HS.z + z, h, i * 85));
 
   // 4. the igloo (Blender): entry passage on +x, lantern and furs inside, a small fire outside
-  mesh("l70-bp-igloo", M.igloo, IG.x, IG.z, 2.9, { layout: null, materials: { snow: { color: "oklch(0.95 0.014 240)", roughness: 0.88 }, pack: { color: "oklch(0.86 0.02 240)", roughness: 0.95 }, fur: { texture: "cdn/texture-thick-brown-bear-fur-pelt.png", color: "oklch(0.92 0.03 70)", roughness: 1 } } });
+  mesh("l70-bp-igloo", M.igloo, IG.x, IG.z, 2.9, { y: -0.06, layout: null, materials: { snow: { color: "oklch(0.95 0.014 240)", roughness: 0.88 }, pack: { color: "oklch(0.86 0.02 240)", roughness: 0.95 }, fur: { texture: "cdn/texture-thick-brown-bear-fur-pelt.png", color: "oklch(0.92 0.03 70)", roughness: 1 } } });
   mesh("l70-igloo-lantern", lantern, IG.x - 0.2, IG.z + 1.2, 0.4, { y: 0.05, solid: false }); lamp("l70-igloo-light", IG.x - 0.2, 0.7, IG.z + 0.9, "oklch(0.82 0.13 65)", 1.8, 6);
   mesh("l70-igloo-fire", asset("firepit"), IG.x + 5.4, IG.z + 2.2, 0.4, {});
   sp("l70-igloo-fire-fx", { tags: ["l70", "l70-town"], feetPosition: { x: IG.x + 5.4, y: 0.25, z: IG.z + 2.2 }, fx: { script: FIRE }, light: { kind: "point", color: "oklch(0.78 0.16 55)", intensity: 2.2, distance: 9, shadow: { enabled: false } }, audio: { clip: "cdn/moodboard-realistic-gritty/sfx-small-campfire-crackle-loop.mp3", gain: 0.25, loop: true, spatial: true, maxDistance: 14 } });
