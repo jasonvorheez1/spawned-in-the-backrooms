@@ -26,3 +26,21 @@ l70-rock8:
   rotation: {yaw: 180.70709584280849}
   tags: [l70-wild, l70-rock]
   visibleRange: {max: 260}
+l70-skyline10:
+  castShadow: false
+  feetPosition: {x: 146, y: {terrain: -1}, z: 152}
+  id: l70-skyline10
+  layout: {box: {max: {y: 41}, min: {y: 0}}}
+  model: {id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb, materials: {tripo_material_05692072-2f16-4333-a2ec-e88663003b42: {color: oklch(0.32 0.03 250), roughness: 0.55}}}
+  rotation: {yaw: 180}
+  tags: [l70-wild, l70-skyline]
+  visibleRange: {max: 900}
+l70-skyline9:
+  castShadow: false
+  feetPosition: {x: 84, y: {terrain: -1}, z: 170}
+  id: l70-skyline9
+  layout: {box: {max: {y: 54}, min: {y: 0}}}
+  model: {id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb, materials: {tripo_material_05692072-2f16-4333-a2ec-e88663003b42: {color: oklch(0.32 0.03 250), roughness: 0.55}}}
+  rotation: {yaw: 90}
+  tags: [l70-wild, l70-skyline]
+  visibleRange: {max: 900}

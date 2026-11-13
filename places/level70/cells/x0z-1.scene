@@ -842,7 +842,7 @@ l70-skyline2:
   feetPosition: {x: -30, y: {terrain: -1}, z: -184}
   id: l70-skyline2
   layout: {box: {max: {y: 60}, min: {y: 0}}}
-  model: {id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb, materials: {tripo_material_05692072-2f16-4333-a2ec-e88663003b42: {color: oklch(0.42 0.03 250), roughness: 0.6}}}
+  model: {id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb, materials: {tripo_material_05692072-2f16-4333-a2ec-e88663003b42: {color: oklch(0.32 0.03 250), roughness: 0.55}}}
   rotation: {yaw: 180}
   tags: [l70-wild, l70-skyline]
   visibleRange: {max: 900}
@@ -851,7 +851,7 @@ l70-skyline3:
   feetPosition: {x: 34, y: {terrain: -1}, z: -192}
   id: l70-skyline3
   layout: {box: {max: {y: 47}, min: {y: 0}}}
-  model: {id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb, materials: {tripo_material_05692072-2f16-4333-a2ec-e88663003b42: {color: oklch(0.42 0.03 250), roughness: 0.6}}}
+  model: {id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb, materials: {tripo_material_05692072-2f16-4333-a2ec-e88663003b42: {color: oklch(0.32 0.03 250), roughness: 0.55}}}
   rotation: {yaw: 270}
   tags: [l70-wild, l70-skyline]
   visibleRange: {max: 900}
