@@ -588,13 +588,14 @@ function swing(ctx, power = 0) {
       if (perRound(wp) && (s[loadedKey] ?? 0) > 0) cancelReload(ctx)
       else return
     }
+    if (s.god && (s[loadedKey] ?? 0) <= 0) s[loadedKey] = wp.mag ?? 30 // an empty gun in god mode comes back full
     if ((s[loadedKey] ?? 0) <= 0) {
       w.nextSwing = now + 350
       if ((s[ammoKey] ?? 0) > 0) startReload(ctx)
       else { sound(ctx, GS(wp, 'dry', 'gun-dry-fire-click'), 0.6, true); s.dryAt = now }
       return
     }
-    s[loadedKey] -= 1
+    if (!s.god) s[loadedKey] -= 1 // god mode spends no rounds (Shelly, Nov 13)
     sound(ctx, wp.sound ?? (wp.pellets ? 'shotgun-blast-boom' : 'pistol-gunshot-echo'), 0.95)
     ctx.emit('screenFlash', { color: wp.beam ? '#d6f2ff' : '#fff1c8', duration: 0.06, intensity: wp.pellets ? 0.45 : wp.auto ? 0.12 : 0.25 }, { audience: { player: ctx.self.id } })
     if (wp.spread) { // full auto: the barrel climbs and the cone opens the longer the trigger stays down; heat bleeds off between bursts
