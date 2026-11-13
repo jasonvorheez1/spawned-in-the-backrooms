@@ -10,10 +10,13 @@ const PLY = "cdn/texture-weathered-plywood-crate-boards-stencil-scuffs.png";
 const ORANGE = "cdn/texture-orange-hard-plastic-equipment-case-scuffed-dusty.png";
 function ledger(ctx) {
   ctx.albedo(STEEL); ctx.color("oklch(0.62 0.02 140)"); ctx.metalness(0.8); ctx.roughness(0.5);
-  ctx.color("oklch(0.72 0.02 140)"); // lighter steel so the legs read in the post's dim light
-  for (const sx of [-1, 1]) { tube(ctx, [[sx * 0.26, 0, 0.18], [sx * 0.24, 0.98, -0.02]], 0.026, 8); tube(ctx, [[sx * 0.26, 0, -0.2], [sx * 0.24, 0.98, -0.02]], 0.026, 8);
-    tube(ctx, [[sx * 0.26, 0.02, 0.22], [sx * 0.26, 0.02, -0.24]], 0.02, 6); B(ctx, sx * 0.26 - 0.04, sx * 0.26 + 0.04, 0, 0.012, 0.18, 0.26); B(ctx, sx * 0.26 - 0.04, sx * 0.26 + 0.04, 0, 0.012, -0.28, -0.2); } // splayed feet on the floor
-  tube(ctx, [[-0.25, 0.42, 0], [0.25, 0.42, 0]], 0.018, 6); tube(ctx, [[-0.26, 0.04, 0], [0.26, 0.04, 0]], 0.016, 6);
+  ctx.color("oklch(0.72 0.02 140)"); // lighter steel so the legs read in the post's dim light; square tube, the drawn tube() came out empty here
+  const w = 0.022;
+  for (const sx of [-1, 1]) { const x = sx * 0.25;
+    for (const z of [0.17, -0.19]) B(ctx, x - w, x + w, 0, 1.0, z - w, z + w); // legs
+    B(ctx, x - w, x + w, 0.02, 0.06, -0.26, 0.24); // foot rail
+    B(ctx, x - w * 0.8, x + w * 0.8, 0.42, 0.45, -0.19, 0.17); } // side brace
+  B(ctx, -0.25, 0.25, 0.42, 0.45, -0.19 - w * 0.8, -0.19 + w * 0.8); // back brace
   ctx.color("oklch(0.5 0.03 140)"); R(ctx, [0, 1.0, 0], [0.32, 0.018, 0.24], 0.008); // the tray, tilted by its rim
   B(ctx, -0.32, 0.32, 1.0, 1.06, 0.22, 0.24);
   ctx.metalness(0); ctx.albedo(null); ctx.color("oklch(0.22 0.03 30)"); ctx.roughness(0.7); R(ctx, [0, 1.035, 0], [0.27, 0.014, 0.2], 0.006); // the book's boards
