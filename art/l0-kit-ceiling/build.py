@@ -12,7 +12,7 @@ KIT = {
   "sprinkler":    dict(rot=(0, 0, 0),   size=(0.08, 0.08, 0.07), junk=0.002, origin="ceiling"),
   "smokedet":     dict(src="smokedet2", rot=(0, 90, 0),  size=(0.14, 0.14, 0.05), origin="ceiling"),
   "troffer-hang": dict(src="troffer-hang3", rot=(0, 90, 0),  size=(0.6, 1.2, 0.12), hang=32, junk=0, origin="ceiling"),
-  "tile-fallen":  dict(rot=(0, 0, 0),   size=(None, None, 0.05), fit=0.64, origin="floor"),
+  "tile-fallen":  dict(rot=(0, 0, 0),   size=(None, None, 0.05), fit=0.64, renormal=True, origin="floor"),
 }
 a = sys.argv[sys.argv.index("--") + 1:]
 kind = a[0]
@@ -51,6 +51,7 @@ for v in bm.verts:
 tot = len(bm.verts); junk = [v for g in isl if len(g) < tot * C.get("junk", 0.015) for v in g]
 print("islands", sorted((len(g) for g in isl), reverse=True)[:12], "junk verts", len(junk))
 bmesh.ops.delete(bm, geom=junk, context="VERTS")
+if C.get("renormal"): bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
 bm.to_mesh(me); bm.free()
 mn, mx = bounds(); d = mx - mn
 sz = C["size"]
