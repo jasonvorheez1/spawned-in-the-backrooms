@@ -1,3 +1,4 @@
+import { raycast } from "builtin/physics";
 // Turns the humanoid avatar, plays its 3D GLB clips (Idle/Walk/Run/Sprint) by movement speed: the body's own
 // paces pick the clip, and its rate comes from the body's speed and its pace on this body (paceRate below), and sits it
 // when it is seated. turnTo picks the heading: the body's own state.turnTo when a script
@@ -420,7 +421,18 @@ export function update(ctx, dt) {
   // airtime picks, then clears itself. Memo in gait (this machine), the channels are the only writes.
   const now = ctx.now()
   const vy = vel.y || 0
-  const noAir = ctx.self.state?.swimming || ctx.self.state?.climbing || ctx.self.tags?.includes?.('helper')
+  // Shelly Nov 13 "fix this person endlessly falling": a standing NPC a few cm over its floor, not moving down, read as airborne forever.
+  // A body that isn't a player, off the ground with no real fall, checks the floor under it (twice a second at most): within 0.3 m counts as standing.
+  let nearFloor = false
+  if (ctx.self.grounded === false && !String(ctx.self.id).startsWith('player') && Math.abs(vel.y || 0) < 0.3) {
+    if (gait.floorAt == null || ctx.now() - gait.floorAt > 500) {
+      const f = ctx.self.worldFeetPosition ?? ctx.self.feetPosition
+      const h = raycast(ctx, { x: f.x, y: f.y + 0.2, z: f.z }, { x: 0, y: -1, z: 0 }, { distance: 0.5, physicsOnly: true, bodies: 'all', excludeTags: ['npc', 'player'], ignoreEntities: [ctx.self.id] })
+      gait.floorAt = ctx.now(); gait.nearFloor = !!h
+    }
+    nearFloor = gait.nearFloor
+  }
+  const noAir = nearFloor || ctx.self.state?.swimming || ctx.self.state?.climbing || ctx.self.tags?.includes?.('helper')
   if (ctx.self.grounded === false && !noAir) gait.airSince ??= now
   else if (ctx.self.grounded || noAir) {
     const air = gait.airSince != null ? (now - gait.airSince) / 1000 : 0
