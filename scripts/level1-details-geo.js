@@ -40,12 +40,12 @@ export function geometry(ctx) {
     for (let i = 1; i < N; i += 2) { const x = i * S - HALF - 1.5; for (const [a, b] of runs("z", x, -HALF, HALF)) tube(ctx, [[x, H - 0.62, a], [x, H - 0.62, b]], [0.035, 0.035], 10, [1, 1], 0, 1, 1); }
     // Nov 13 realism pass: a grooved coupling every 6 m and a clevis hanger (threaded rod, steel loop) every 3 m on each main, dull galvanised
     ctx.color("oklch(0.42 0.17 28)");
-    for (let j = 1; j < N; j += 2) { const z = j * S - HALF + 1.9; for (const [a, b] of runs("x", z + 0.07, -HALF, HALF)) for (let x = a + 3; x < b - 0.5; x += 6) for (const dz of [0, 0.14]) tube(ctx, [[x - 0.035, H - 0.66, z + dz], [x + 0.035, H - 0.66, z + dz]], [0.056, 0.056], 10); }
+    for (let j = 1; j < N; j += 2) { const z = j * S - HALF + 1.9; for (const [a, b] of runs("x", z + 0.07, -HALF, HALF)) for (let x = a + 3; x < b - 0.5; x += 9) for (const dz of [0, 0.14]) tube(ctx, [[x - 0.035, H - 0.66, z + dz], [x + 0.035, H - 0.66, z + dz]], [0.056, 0.056], 10); }
     ctx.color("oklch(0.55 0.01 250)"); ctx.metalness(0.7); ctx.roughness(0.55);
-    for (let j = 1; j < N; j += 2) { const z = j * S - HALF + 1.9; for (const [a, b] of runs("x", z + 0.07, -HALF, HALF)) for (let x = a + 1.5; x < b - 0.5; x += 3) for (const dz of [0, 0.14]) {
+    for (let j = 1; j < N; j += 2) { const z = j * S - HALF + 1.9; for (const [a, b] of runs("x", z + 0.07, -HALF, HALF)) for (let x = a + 1.5; x < b - 0.5; x += 4.5) { // one trapeze carries both mains
       if (inHole(x, z)) continue;
-      tube(ctx, [[x, H - 0.6, z + dz], [x, H, z + dz]], [0.006, 0.006], 3);
-      tube(ctx, [[x - 0.012, H - 0.66, z + dz], [x + 0.012, H - 0.66, z + dz]], [0.052, 0.052], 6);
+      box(ctx, x - 0.02, x + 0.02, H - 0.72, H - 0.7, z - 0.08, z + 0.22);
+      for (const dz of [-0.07, 0.21]) box(ctx, x - 0.005, x + 0.005, H - 0.72, H, z + dz - 0.005, z + dz + 0.005);
     } }
     ctx.color("oklch(0.7 0.14 40)");
     for (let j = 1; j < N; j += 2) for (let i = 0; i < N; i += 2) { const x = i * S - HALF + 2, z = j * S - HALF + 1.9; if (inHole(x, z)) continue; } // Nov 13 (Shelly: "make whatever that is on the roof tripo"): the heads are Tripo sprinklers now (places/level1/sim.js l1Spr)
