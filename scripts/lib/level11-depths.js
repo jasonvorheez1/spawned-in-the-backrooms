@@ -18,6 +18,8 @@ const AD1 = "/cdn/value.2620b5aa701569f943e6d36644895e0f3b59d528b7f3d819f84ae03f
 const RAYGUN = "/cdn/value.f78423b01c71d65f4b04e41bf27a0b3c5f3b06820933ae52d304cad136a54db5.glb"; // the R-55 as the hand holds it (scripts/lib/weapon-look.js)
 const NEW = { reel: "/cdn/value.2d037c484973cd0b26e6d4f42824e86c7ced0cb6de6365152abf1c2dceaea5e3.glb", bench: "/cdn/value.6dbfae6ddd374113031c50469a62658fbba5802bc135560bd615e510d813dce3.glb", remains: "/cdn/value.1ad9648dfba4b00ae0850e9658bf0a5213aecf5d346150840d4eeb4a3a822e19.glb", cabinet: "/cdn/value.60af0a15c90074242ff3fd8cf18189c876c72daeff7d48cc2c70977a6678f1a1.glb", cot: "/cdn/value.33c28c7c26824f91a35711a491f8c4b0f3141404981b101e0fe7d433e9abeaff.glb", barrel: "/cdn/value.adb792b5d96fdd99a2d2a43e3c8e8bed55728414e497c975828d1cb366765d6e.glb" }; // Tripo, Nov 10
 const FURN = { armchair: "/cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb", lamp: "/cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb", shelf: "/cdn/value.918584eed8336eda888580753019763471fcce0adcaf2bc66def78f53ae3fad0.glb" };
+// Substation 4 remodel (Shelly, Nov 13: "the entire area"): Tripo models, fitted in place by layout boxes
+const SUB = { genset: "/cdn/value.79939b0081c76ca10d9b5611beec3a13fb263c462a00880d9c9402aa2c22e74b.glb", pillar: "/cdn/value.3ce7bf633fe917f5b3f9252f29e6f7e76e73013d5a235fad84457bd8854b9658.glb", breaker: "/cdn/value.4671f162a8c7bdbb44b8199d3ff429601b57b520a6804f0db9375a76c2ce4df1.glb" };
 // a caged bulkhead lamp: dim, some dead, the odd one guttering
 // a caged bulkhead lamp (Blender, art/l11crawl): cast-iron dome and wire cage hung under the vault; on = brightness 0..1 (0 = dead)
 const lampAt = (sp, id, x, y, z, on = 1, c = "oklch(0.9 0.08 85)") => sp(id, { feetPosition: { x, y, z }, model: { id: KIT.lamp, forward: "-z", materials: on ? undefined : { glow: { color: "oklch(0.3 0.01 60)", emissiveIntensity: 0 } } }, castShadow: false, visibleRange: { max: 60 },
@@ -76,9 +78,9 @@ export function layDepths(ctx, { sp, bx, cyl }) {
   for (const [id, x, z, w, d] of [["w", 34.01, 168, 0.02, 19.6], ["e", 49.99, 168, 0.02, 19.6], ["s1", 36.9, 158.21, 6.2, 0.02], ["s2", 47.1, 158.21, 6.2, 0.02], ["n1", 36.9, 177.79, 6.2, 0.02], ["n2", 47.1, 177.79, 6.2, 0.02]])
     bx(`l11d-h-dado-${id}`, x, FL, z, w, 1.2, d, PAINT, { physics: undefined, castShadow: false }); // the old substation green, to shoulder height
   for (const [k, x, z] of [[0, 37.5, 162.5], [1, 46.5, 162.5], [2, 37.5, 173.5], [3, 46.5, 173.5]])
-    sp(`l11d-h-pillar-${k}`, { feetPosition: { x, y: FL, z }, model: { id: KIT.pillar, forward: "-z", materials: { concrete: HALLWALL } }, physics: { body: "static", collider: "box" } });
-  sp("l11d-h-genset", { feetPosition: { x: 42, y: FL, z: 168 }, model: { id: KIT.generator, forward: "-z" }, physics: { body: "static", collider: "box" } });
-  sp("l11d-h-breaker", { feetPosition: { x: 34.2, y: FL, z: 166 }, rotation: { yaw: -90 }, model: { id: KIT.breaker, forward: "-z" }, physics: { body: "static", collider: "box" } });
+    sp(`l11d-h-pillar-${k}`, { feetPosition: { x, y: FL, z }, model: { id: SUB.pillar }, layout: { box: { min: { x: -0.65, y: 0, z: -0.65 }, max: { x: 0.65, y: HH - FL, z: 0.65 } } }, physics: { body: "static", collider: "box" } });
+  sp("l11d-h-genset", { feetPosition: { x: 42, y: FL, z: 168 }, model: { id: SUB.genset }, layout: { box: { min: { x: -1.6, y: 0, z: -0.75 }, max: { x: 1.6, y: 1.9, z: 0.75 } } }, physics: { body: "static", collider: "box" } });
+  sp("l11d-h-breaker", { feetPosition: { x: 34.4, y: FL + 0.45, z: 166 }, model: { id: SUB.breaker }, layout: { box: { min: { x: -0.2, y: 0, z: -0.6 }, max: { x: 0.2, y: 1.7, z: 0.6 } } }, physics: { body: "static", collider: "box" } });
   for (let k = 0; k < 4; k++) { sp(`l11d-h-pipes-w${k}`, { feetPosition: { x: 34.32, y: FL + 2.6, z: 162 + k * 4 }, model: { id: KIT.pipes, forward: "-z" }, physics: "none", castShadow: false });
     sp(`l11d-h-pipes-e${k}`, { feetPosition: { x: 49.68, y: FL + 2.6, z: 162 + k * 4 }, rotation: { yaw: 180 }, model: { id: KIT.pipes, forward: "-z" }, physics: "none", castShadow: false }); }
   sp("l11d-h-locker-0", { feetPosition: { x: 49.55, y: FL, z: 160.4 }, rotation: { yaw: 90 }, model: { id: KIT.locker, forward: "-z" }, physics: { body: "static", collider: "box" } });
