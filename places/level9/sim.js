@@ -160,6 +160,12 @@ function hounds(ctx, s, L) {
   const have = ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((h) => !h.state?.dead).length;
   const ps = ctx.place.players.map((p) => p.feetPosition);
   const far = () => { const pts = L.streets.flatMap((st) => st.pts); for (let i = 0; i < 40; i++) { const [x, z] = pts[Math.floor(ctx.random() * pts.length)]; if (ps.every((p) => Math.hypot(p.x - x, p.z - z) > TUNE.houndFar)) return { x, z }; } return null; };
+  if (ctx.world.files.includes("templates/deathmoths.js")) { // deathmoths: a swarm round a lit streetlight, drawn to a flashlight
+    if (!s.mothMgr || !(s.mothMgr in ctx.place.objects)) s.mothMgr = ctx.spawn({ behavior: "scripts/deathmoths.js" });
+    const lit = L.lamps.filter((l) => l.lit && ps.every((p) => Math.hypot(p.x - l.x, p.z - l.z) > 25));
+    const mh = ctx.query({ tags: ["moths"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((m) => !m.state?.dead && !m.tags?.includes("l5rat")).length;
+    for (let i = mh; i < TUNE.moths && lit.length; i++) { const l = lit.splice(Math.floor(ctx.random() * lit.length), 1)[0]; ctx.spawn({ template: "templates/deathmoths.js#swarm", feetPosition: { x: l.x, y: 3.2, z: l.z }, state: { home: { x: l.x, z: l.z } } }); }
+  }
   for (let i = have, c = null; i < TUNE.hounds; i++) {
     if (i % 3 === 0 || !c) c = far(); if (!c) break;
     ctx.spawn({ tags: ["hound"], feetPosition: T(c.x + (i % 3) * 0.9, c.z + (i % 3) * 0.5, 0.05), physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/hound-geo.js" }, state: npcState(ctx, "hound", TUNE.houndHp, { xp: 45 }) });
