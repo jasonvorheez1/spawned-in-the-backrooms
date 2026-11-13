@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7404,
-  "updatedAt": "2026-11-13T16:25:37.515Z",
+  "basedOnSpecVersion": 7408,
+  "updatedAt": "2026-11-13T16:30:00.428Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social hub and authored lore destinations; player.state carries progression, gear, quests, homes, companions and resume location. Shared player behaviors and place simulations join authored scenes to generated spaces, with reusable dialogue, quests, NPC systems and enemy kits; Dina's saved clue trail and playable recordings reveal the Way Back.",
   "scriptPaths": [],
   "places": [
@@ -29,10 +29,10 @@
     "scripts/lib/loot.js + items.js + weapons.js/data/weapons.yml - common loot, containers, item definitions, rarity and weapon variants.",
     "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/lib/level3-hatch.js - parametric doors/motion and deterministic Level 3 paired hatch layout.",
     "scripts/lib/data/l02-props.yml + l02-remodel.yml + l02-grid.js; breakables.js + breakables data + wallgrid.js - Level 0.2 remodel and shared prop/generated-wall damage and regrowth.",
-    "scripts/lib/quest-route.js + quest-mark.js + quests.js - directed crossings and common quest/errand journal, tracker, rewards and step messaging.",
+    "scripts/lib/quest-route.js + quest-mark.js + quests.js + errands.js - directed crossings and common quest/errand journal, tracker, rewards and step messaging.",
     "scripts/lib/data/dlg-*.yml + dialogue.js + talk.js + voices.js + quest-dialogue.js - authored conversations, barks, voice selection and job-offer text.",
     "scripts/lib/errands.js + errands.yml; npc-temper.js + notify.js - data-driven NPC jobs, weapon filtering and notices; loot-bags-geo builds reusable loot bags.",
-    "scripts/lib/foe-bay.js + scripts/lib/decoys.js + scripts/lib/duller-spec.js + scripts/lib/lurker-kind.js - Test Range reuses home enemy rows/managers; shared Duller and lurker specifications."
+    "scripts/interact.js - shared raycast/input interaction selection for props and NPCs; a small door-target angle penalty lets a usable target beside a door win."
   ],
   "notableExports": [
     "scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate, wakeLog.",
@@ -65,8 +65,8 @@
     "tutorial0 HALOGEN cut → tut0-cut.js + dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ.",
     "scripts/build.js placement/removal → homeKeep.built or homeKeep.l5built; Level 5 sim restores separately; l5-resident booking → player l5home/l5room and place.state.l5rent.",
     "Level 2/31 and Level 31/70 directed triggers → scripts/level-door.js; quest-route.js maps the paired crossings; level31/70 sims read versioned layouts and arrival layers.",
-    "Level 5 npc-starters.js offers beastChoices to talk-ui; scripts/talk.js dispatches handleDialogueQuestBeast; l5b stages and register/card prop presses drive The Gentleman's Terms, while doubt starts wrath and resets an unfinished deal.",
-    "Level 5 sim calls layOffice when place.state.officeV differs and ticks wrathTick; l5-beast.js owns office geometry/props, beastStruck handles player hits, and l5-beast-npc.js seats/animates the Gentleman; interact.js raycasts NPC head height over desks/counters and ignores nearby seat/counter obstruction."
+    "Level 5 npc-starters.js offers beastChoices to talk-ui; scripts/talk.js dispatches handleDialogueQuestBeast; l5b stages and register/card prop presses advance The Gentleman's Terms, with card delivery moving the tracker to reporting back; doubt starts wrath and resets an unfinished deal.",
+    "Level 5 sim calls layOffice when place.state.officeV differs and ticks wrathTick; l5-beast.js owns office geometry/props, beastStruck handles player hits, and l5-beast-npc.js seats/animates the Gentleman; interact.js raycasts NPC head height and resolves usable targets against nearby doors."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored mall shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
@@ -91,6 +91,6 @@
     "Level 31 rebuilds l31-* roots at place.state.v31=100; align IDs and shell/zone/door/arrival geometry with level31.js and preserve the white-door pair with Level 70. Level 70 retains versioned district layers.",
     "Generated wall damage lives in place.state.wallHp/broken; syncWalls treats wall-grid membership as authoritative and deletes stale broken keys. Companions are save-scoped: set player.state.crew when adopting.",
     "Dina's Level 3 cassette (state.kind=cassette) gives holotapes.dina4 and is distinct from the C-23 handoff log; Level 2/4 clue flags are dinaCrate/dinaCarbon and keep existing dinaQ steps.",
-    "Level 5 office rebuild is keyed by place.state.officeV against OFFICE_V=5 in l5-beast.js; increment OFFICE_V for laid office changes. The register is Take-able and l5bReg controls hiding its placed ID; frontdesk geometry/collider height must follow layout h, and the office door leaf—not its doorway—is solid."
+    "Level 5 office rebuild is keyed by place.state.officeV against OFFICE_V=6 in l5-beast.js; increment OFFICE_V for laid office changes. The register is Take-able and l5bReg controls hiding its placed ID; the Room 1408 slot targets its plate face so it wins look selection beside the door."
   ]
 }
