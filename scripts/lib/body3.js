@@ -51,6 +51,7 @@ export function famOf(kind) {
   if (base === 'fishing_rod') return 'cast'
   return 'club'
 }
+const HEAD_LEVEL = { duration: 1, tracks: { Neck: { pitch: [0, 0] }, Head: { pitch: [0, 0] } } } // rest pose: eyes ahead
 const MASK = { upper: { from: 'Spine' }, full: undefined }
 // one table row onto one channel; returns the seconds until its blow lands
 export function play(me, ch, row, o = {}) {
@@ -105,6 +106,9 @@ export function aimPose(me, fam, mode, pitch = 0) {
   const key = mode && G ? fam + mode : null
   if (ss.aim3 !== key) { ss.aim3 = key; me.anim.aim = key ? { ...chan(G[mode] ?? G.aim) } : null; ss.aimP3 = null }
   const step = !key ? 0 : mode === 'ready' ? (G.readyPitch ?? 0) : Math.round(pitch / RAD / 6) * 6 // ready: the aim hold dipped low (readyPitch), so the gun stays seated in both hands
+  // Shelly Nov 13: "hipfire makes my character's head face down": the low-ready dip bends the whole upper body, head too; hold neck and head at rest over it
+  const hold = key && mode === 'ready'
+  if (!!ss.headUp3 !== !!hold) { ss.headUp3 = !!hold; me.anim.headUp = hold ? { clip: HEAD_LEVEL, weight: 60, loop: 'loop', blend: 'override', blendIn: 0.2, blendOut: 0.2 } : null }
   if (ss.aimP3 !== step) {
     ss.aimP3 = step
     if (!step) { if (me.anim.aimp) me.anim.aimp = null }
