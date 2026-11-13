@@ -21,9 +21,9 @@ export const QUESTS1 = {
   rations: {
     key: "rationsQ", name: "Short Rations",
     tips: {
-      1: "Find out who's been taking cans from Callum's crates",
-      2: "Ale's been eating well. Deal with her",
-      3: "Tell Callum what happened to his rations",
+      1: "Ask Dr. Ortiz or examine Callum's crates for clues about the missing cans",
+      2: "Ask Ale about the missing cans and decide what to do",
+      3: "Report back to Callum. Your choices depend on what you learned from Ale",
       4: "Tell Callum what happened to his rations",
     },
     marks: { 1: MARK("meg-ortiz"), 2: MARK("meg-ale"), 3: MARK("meg-callum"), 4: MARK("meg-callum") },
@@ -73,14 +73,14 @@ export function l1Choice(ctx, it, s, list) {
   if (!Array.isArray(list) || !s) return list;
   const id = who(it), r = s.rationsQ ?? 0, w = s.waterQ ?? 0, add = [], failed = s.l1Fail ?? {};
   if (id === "meg-callum") {
-    if (!r && (s.rep?.meg ?? 0) > -35) add.push(opt("rStart", "Quest"));
+    if (!r && (s.rep?.meg ?? 0) > -35) add.push(opt("rStart", "Quest Start"));
     if (r === 1 && !s.rTracked) add.push(opt("rTrack"));
     if (r === 3) { add.push(opt(s.rAleDead ? "rKilled" : "rTruth", "Quest")); if (!s.rAleDead) { if (s.rAleTalked === "rAid") add.push(opt("rResolve", "Quest")); add.push(opt("rCover")); } }
     if (r === 4) add.push(opt(s.rAleDead ? "rKilled" : "rTruth", "Quest"));
     if (w === 1 && repOf(s, "meg") > -35) { add.push(opt("wAsk", "Quest")); add.push(opt("wMed")); if ((s.cents ?? 0) >= 1500) add.push(opt("wBuy")); }
   } else if (id === "meg-ortiz" && repOf(s, "meg") > -35) {
     if (r === 1) add.push(opt("rOrtiz", "Quest"));
-    if (!w) add.push(opt("wStart", "Quest"));
+    if (!w) add.push(opt("wStart", "Quest Start"));
     if (w === 2) add.push(opt("wGive", "Quest"));
     if (w === 3) add.push(opt("wDone", "Quest"));
   } else if (id === "bntg-voss" && repOf(s, "bntg") > -35) {
@@ -96,7 +96,7 @@ export function l1Choice(ctx, it, s, list) {
   }
   for (let i = add.length - 1; i >= 0; i--) if (failed[Object.keys(C).find((k) => C[k] === add[i].text)]) add.splice(i, 1);
   if (!add.length) return list;
-  return [...add, ...list.filter((c) => !add.some((a) => a.text === c?.text))].slice(0, Math.max(4, add.length));
+  return [...add, ...list.filter((c) => !add.some((a) => a.text === c?.text))];
 }
 
 // ---- steps, rewards, standing
@@ -182,8 +182,8 @@ export function handleDialogueQuest1(ctx, p, it, text) {
     }
     const kind = s.rAleTalked !== "rAleBarter"; // she told you why
     aleFeels(ctx, p, -60);
-    finish(ctx, p, "rations", { xp: 150, cents: 1500, items: ["weapon:" + UNIQUE, "ammo"], text: "Quest completed: Short Rations · Callum's Lucky Thirteen", rep: [["meg", 10], ["survivors", kind ? -3 : 0]] });
-    return { reply: "Ale. Figures. I'll handle her. Here. My old thirty-eight, thirteen notches on the grip. Never jammed on me once. You earned it.", mood: "happy" };
+    finish(ctx, p, "rations", { xp: 150, cents: 1500, items: ["ration", "bandage"], text: "Quest completed: Short Rations · supplies and $15", rep: [["meg", 10], ["survivors", kind ? -3 : 0]] });
+    return { reply: "Ale. Figures. I'll handle it. Here's fifteen, a ration and a clean bandage. You did what I asked.", mood: "happy" };
   }
   if (k === "rCover" && id === "meg-callum" && (r === 3 || r === 4)) {
     if (!roll(ctx, p, it, k)) { setStep1(ctx, p, "rations", 4); addRep(s, "meg", -3); return { reply: "Rats don't open tins with a knife. Try again, and this time don't lie to me.", mood: "angry" }; }
@@ -236,7 +236,7 @@ export function handleDialogueQuest1(ctx, p, it, text) {
   }
   if (k === "wGive" && id === "meg-ortiz" && w === 2) {
     setStep1(ctx, p, "water", 3, "Ortiz is treating the sick wanderer.");
-    return { reply: "Good. Give me an hour with him. Come back and I'll have something for you.", mood: "happy" };
+    return { reply: "Good. I'll start treating him. Ask me how he's doing once I've had a look.", mood: "happy" };
   }
   if (k === "wDone" && id === "meg-ortiz" && w === 3) {
     finish(ctx, p, "water", { xp: 110, cents: 0, items: ["firstaid", "bandage", "bandage"], text: "Quest completed: Bad Water", rep: [["meg", 8], ["karma", 3]] });

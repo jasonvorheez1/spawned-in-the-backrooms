@@ -13,15 +13,14 @@ const NVG_Q = {
 const REG_STATE = { list: null, asked: false }; // the older quests' own tables: { key, name, tips, marks } rows, read once
 function registry() {
   if (REG_STATE.asked) return; REG_STATE.asked = true;
-  Promise.all([import("./lib/level10-quests.js"), import("./lib/level11-quests.js"), import("./lib/level21-quests.js"), import("./lib/level8-quests.js"), import("./lib/zenith-quest.js"), import("./lib/remodel-quest.js")])
-    .then(([a, b, c, d, z, r]) => { REG_STATE.list = [...Object.values(r.QUESTS02 ?? {}), ...Object.values(a.QUESTS10 ?? {}), ...Object.values(b.QUESTS ?? {}), ...Object.values(c.QUESTS21 ?? {}), ...Object.values(d.QUESTS8 ?? {}), { key: "zenQ", name: "The Zenith Survey", tips: z.TIPS ?? {}, marks: z.MARKS ?? {} }, NVG_Q].filter((q) => q?.key && q?.name && q?.tips); })
+  Promise.all([import("./lib/level10-quests.js"), import("./lib/level11-quests.js"), import("./lib/level21-quests.js"), import("./lib/level8-quests.js"), import("./lib/zenith-quest.js"), import("./lib/remodel-quest.js"), import("./lib/level1-quests.js")])
+    .then(([a, b, c, d, z, r, l1]) => { REG_STATE.list = [...Object.values(l1.QUESTS1 ?? {}), ...Object.values(r.QUESTS02 ?? {}), ...Object.values(a.QUESTS10 ?? {}), ...Object.values(b.QUESTS ?? {}), ...Object.values(c.QUESTS21 ?? {}), ...Object.values(d.QUESTS8 ?? {}), { key: "zenQ", name: "The Zenith Survey", tips: z.TIPS ?? {}, marks: z.MARKS ?? {} }, NVG_Q].filter((q) => q?.key && q?.name && q?.tips); })
     .catch(() => { REG_STATE.list = []; });
 }
 function fold(ctx, s, ses) {
   const q = s.quest, sig = q?.step ? q.name + "|" + q.step : "";
   if (sig !== ses.qsig) {
     if (q?.step) setQuest(s, qid(q.name), { name: q.name, step: q.step, mark: q.mark });
-    else if (ses.qlast) endQuest(s, qid(ses.qlast));
     ses.qsig = sig; ses.qlast = q?.step ? q.name : null;
   }
   const now = ctx.now(); if (now - (ses.qregAt ?? -1e9) < 2000) return; ses.qregAt = now;
@@ -30,8 +29,6 @@ function fold(ctx, s, ses) {
     const id = qid(r.name), step = s[r.key];
     const { step: tip, mark } = r.progress?.(s, ctx.self.place, ctx.place.state) ?? { step: r.tips[step], mark: r.marks?.[step] ?? null };
     if (step === -1) continue; // failed for good: its record is already in the journal log
-    const giver = mark?.id && mark.place === ctx.place?.id ? ctx.place.objects?.[mark.id] : null;
-    if (giver?.tags?.includes?.("npc") && giver.state?.dead) { s[r.key] = -1; endQuest(s, id, `${String(giver.state.name ?? "Your contact").split(" ·")[0]} is dead, so the job is lost`, "failed"); continue; } // the one you work for was killed: the quest fails instead of hanging in the journal
     if (tip) setQuest(s, id, { name: r.name, step: tip, mark }); else if (s.quests?.[id]) endQuest(s, id);
   }
 }

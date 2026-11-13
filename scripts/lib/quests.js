@@ -18,7 +18,7 @@ export function setQuest(s, id, q) {
   const history = old?.step && old.step !== q.step
     ? [...(old.history ?? []).filter((step) => step !== old.step && step !== q.step), old.step].slice(-12)
     : old?.history;
-  s.quests = { ...cur, [id]: { name: q.name, step: q.step, mark, main, at: Date.now(), ...(history?.length ? { history } : {}) } };
+  s.quests = { ...cur, [id]: { name: q.name, step: q.step, mark, main, at: Date.now(), ...(history?.length ? { history } : {}), ...(q.briefing ?? old?.briefing ? { briefing: q.briefing ?? old.briefing } : {}) } };
   const tr = (s.qtrack ?? []).filter((k) => s.quests[k]);
   if (!old && !tr.includes(id)) { if (q.main) { tr.unshift(id); tr.length = Math.min(tr.length, MAX_TRACK); } else if (tr.length < MAX_TRACK) tr.push(id); } // a new quest is tracked while a slot is free; the main quest always takes one
   s.qtrack = tr;
@@ -31,7 +31,7 @@ export function endQuest(s, id, doneText, outcome = "completed") {
     s.qtrack = (s.qtrack ?? []).filter((k) => k !== id);
     if (doneText !== false) {
       const place = old.mark?.place ?? null;
-      s.qdone = { ...(s.qdone ?? {}), [id]: { name: old.name, text: typeof doneText === "string" ? doneText : "Completed", place, main: !!old.main, outcome, at: Date.now(), ...(old.history?.length ? { history: old.history } : {}) } };
+      s.qdone = { ...(s.qdone ?? {}), [id]: { name: old.name, text: typeof doneText === "string" ? doneText : "Completed", place, main: !!old.main, outcome, at: Date.now(), ...(old.history?.length ? { history: old.history } : {}), ...(old.briefing ? { briefing: old.briefing } : {}) } };
     }
   } else if (typeof doneText === "string" && id) {
     s.qdone = { ...(s.qdone ?? {}), [id]: { name: s.qdone?.[id]?.name ?? id, text: doneText, outcome, at: Date.now() } };

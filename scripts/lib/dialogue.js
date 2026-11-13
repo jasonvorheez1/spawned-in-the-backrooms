@@ -53,7 +53,7 @@ export const BYE_CHOICE = { text: "That's all for now.", tag: "Leave", node: "by
 export function rootChoices(it, place, askedSet) {
   const { key } = entryOf(it, place), N = nodes(key), out = [];
   for (const [id, n] of Object.entries(N)) if (!id.includes(".") && !askedSet?.has(n.q)) out.push(asChoice(key, id, n));
-  return [...out.slice(0, 4), BYE_CHOICE];
+  return [...out, BYE_CHOICE];
 }
 export function childChoices(nodeRef) { const [key, id] = String(nodeRef).split("|"), N = nodes(key), n = N[id]; return (n?.then ?? []).map((c, i) => asChoice(key, `${id}.${i}`, c)); }
 export function nodeOf(nodeRef) { const [key, id] = String(nodeRef ?? "").split("|"); return nodes(key)[id] ?? null; }

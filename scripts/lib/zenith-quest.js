@@ -76,11 +76,11 @@ export function zenithChoice(ctx, it, s, list) {
   if (String(it?.id ?? "").split("/").pop() !== KADE || !Array.isArray(list) || s?.zenQ === 99) return list;
   if (!s?.zenQ && repOf(s, "bntg") <= -35) return list;
   const q = s?.zenQ;
-  const pick = !q ? { text: "You look like you're hiring. What's the job?", tag: "Job" }
+  const pick = !q ? { text: "You look like you're hiring. What's the job?", tag: "Quest Start" }
     : q === 2 ? { text: "I found your seal out east.", tag: "Quest" }
     : q === 5 && s.zenDrive ? { text: "I found the drive. Here it is.", tag: "Quest" }
     : { text: "Where's this station again?", tag: "Zenith" };
-  return [pick, ...list].slice(0, 4);
+  return [pick, ...list];
 }
 // laid by places/main/sim.js: the sealed breach on the outer east wall (ZEN_ENTRY), and Kade in the safe room. ENTRYV 2 moved it out of the safe room.
 const ENTRYV = 3;

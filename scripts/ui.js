@@ -1,3 +1,4 @@
+import { questBriefing, questProgress } from './lib/quest-dialogue.js'
 import { wristNav } from './lib/wrist-nav.js'
 import { quickBar } from './lib/hud-quickbar.js'
 import { UI_THEME } from './lib/ui-theme.js'
@@ -332,7 +333,7 @@ function journalUi(s, player, ctx) {
   }
   let detail = '<p class="quest-empty">Your Journal is empty. Quests appear here as you find them.</p>'
   if (selected) {
-    const { id, status, name, step, text, mark, main, history } = selected
+    const { id, status, name, step, text, mark, main, history, briefing } = selected
     const current = status === 'Current', pinned = tr.some((q) => q.id === id)
     const target = current ? questMark(ctx, player, selected) : null
     const feet = player?.feetPosition
@@ -347,9 +348,11 @@ function journalUi(s, player, ctx) {
     detail = `<div class="quest-detail" id="quest-detail-${esc(id)}">
       <div class="quest-meta"><span>${current && main ? 'Main quest' : status === 'Current' ? 'In progress' : status}</span>${location ? `<span>${esc(location)}</span>` : ''}</div>
       <h2>${esc(name)}</h2>
+      ${briefing || questBriefing(id) ? `<p class="quest-briefing">${esc(briefing || questBriefing(id))}</p>` : ''}
       <div class="quest-objective">
         <h3>${current ? 'Current objective' : 'Outcome'}</h3>
         <p>${esc(current ? step || 'No current objective.' : text || status)}</p>
+        ${current && questProgress(id, s) ? `<p>${esc(questProgress(id, s))}</p>` : ''}
       </div>
       ${target?.exit ? `<p class="quest-route"><b>Next crossing</b> ${esc(route)}</p>` : route ? `<p class="quest-route">${esc(route)}</p>` : ''}
       ${current ? `<div class="quest-actions"><button aria-pressed="${pinned}" ${full ? 'disabled' : ''} onclick="sendAction('qtrack',{id:${esc(JSON.stringify(id))}})">${pinned ? 'Stop tracking' : 'Track quest'}</button>${full ? '<small>All tracking slots are in use.</small>' : ''}</div>` : ''}
