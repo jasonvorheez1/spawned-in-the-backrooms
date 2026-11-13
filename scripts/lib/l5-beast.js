@@ -149,7 +149,7 @@ const M = {
   cabinet: "/cdn/value.3c8f64f304503e74a1893815ebafc5a3345ec466f701d46a602010f4a75683bc.glb",
   portrait: "/cdn/value.9ad60bda4c117e23cb0b077d89ede8cd399646054150bea3ee4973a5500685f6.png",
 };
-export const OFFICE_V = 5;
+export const OFFICE_V = 6;
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
 const fit = (w, h, d) => ({ box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } });
 const WOOD = { color: "oklch(0.3 0.06 40)", texture: "cdn/texture-worn-hardwood-grain.png", roughness: 0.5 };
@@ -187,7 +187,8 @@ export function layOffice(ctx) {
   ] });
   // his errand props: the register on the front desk, the card slot by 1408
   put("l5-beast-register", { feetPosition: { x: -42.6, y: 0.95, z: 1.75 }, rotation: { yaw: -80 }, ...prop("register", "Guest register", "Take"), primitive: box(0.42, 0.07, 0.3), material: { color: "oklch(0.32 0.1 25)", texture: "cdn/texture-worn-red-leather-book-cover.png", roughness: 0.7 } });
-  put("l5-beast-slot", { feetPosition: { x: -16.85, y: 1.1, z: -12.83 }, ...prop("slot", "Card slot · Room 1408", "Use"), primitive: box(0.2, 0.08, 0.025), material: { color: "oklch(0.7 0.11 80)", metalness: 0.9, roughness: 0.35 } });
+  const slotP = prop("slot", "Card slot · Room 1408", "Slip card"); slotP.state.c = { x: -16.85, y: 1.12, z: -12.76 }; // the look aims at the plate face itself
+  put("l5-beast-slot", { feetPosition: { x: -16.85, y: 1.06, z: -12.8 }, ...slotP, primitive: box(0.26, 0.12, 0.04), material: { color: "oklch(0.7 0.11 80)", metalness: 0.9, roughness: 0.35 } });
   // the last signatory's dictaphone, dropped in the library's far corner
   put("l5-beast-tape", { tags: ["container"], feetPosition: { x: -22.7, y: 0, z: -20.3 }, rotation: { yaw: 35 }, state: { items: "holo:beast18", name: "A dictaphone under a torn page", verb: "Take tape" },
     primitive: box(0.09, 0.03, 0.16), material: { color: "oklch(0.22 0.01 250)", roughness: 0.5 }, children: [

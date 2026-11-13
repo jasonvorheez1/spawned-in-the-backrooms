@@ -91,8 +91,10 @@ function findFocus(ctx, ray) {
       const hy = p.y + (it.state?.seated ? 1.2 : Math.max(1.1, (it.state?.build?.h ?? 1) * 1.45)) - o.y, hdist = Math.hypot(vx, hy, vz)
       wall = raycast(ctx, o, { x: vx / hdist, y: hy / hdist, z: vz / hdist }, { distance: hdist - 0.05, physicsOnly: true, ignoreEntities: [it.id, ctx.self.id], bodies: 'static' })
     }
-    if (wall && ((tag !== 'usable' && tag !== 'seat' && tag !== 'door') || dist - wall.distance > 0.6)) continue // a usable set into furniture (a desk's computer) is reached through its own desk's shell
-    best = { id: it.id, tag }; bestAng = ang
+    if (wall && ((tag !== 'usable' && tag !== 'seat' && tag !== 'door') || dist - wall.distance > 0.6)) continue
+    const bias = tag === 'door' ? 0.05 : 0 // a door is a wall of target: a small thing set beside it (a card slot, a keypad) wins when the look is on it
+    if (ang + bias >= bestAng) continue // a usable set into furniture (a desk's computer) is reached through its own desk's shell
+    best = { id: it.id, tag }; bestAng = ang + bias
   }
   return best
 }
