@@ -46,7 +46,7 @@ function deskItems(ctx) {
 // hash() and a seeded roll (the same every run and every room), then laid DR.batch a tick so no tick stalls.
 const fitBox = ([w, h, d]) => ({ box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } });
 const sideWall = (cx, cz) => [0, 1, 2, 3].filter((d) => d === 0 ? wallX(cx, cz) : d === 1 ? wallZ(cx, cz) : d === 2 ? wallX(cx - 1, cz) : wallZ(cx, cz - 1));
-const KIT = {}; for (const K of [KC, KW, KP, KM]) for (const k of Object.keys(K.models)) if ((DR.kit ?? []).includes(k)) KIT[k] = { id: K.models[k], size: K.sizes[k], origin: K.origin[k], fwd: K.forward[k] ?? "-z" };
+const KIT = {}; for (const K of [KC, KW, KP, KM]) for (const k of Object.keys(K.models)) if ((DR.kit ?? []).includes(k)) KIT[k] = { id: K.models[k], size: DR.fix?.size?.[k] ?? K.sizes[k], origin: K.origin[k], fwd: DR.fix?.forward?.[k] ?? K.forward[k] ?? "-z" };
 const SMALL = new Set(DR.small ?? []);
 // a real wall on side d of a cell (arch walls are open frames, not faces); the cell across it; the wall's own key
 const plainWall = (cx, cz, d) => d === 0 ? wallX(cx, cz) && !isArchWall(cx, cz, "x") : d === 1 ? wallZ(cx, cz) && !isArchWall(cx, cz, "z") : d === 2 ? wallX(cx - 1, cz) && !isArchWall(cx - 1, cz, "x") : wallZ(cx, cz - 1) && !isArchWall(cx, cz - 1, "z");
