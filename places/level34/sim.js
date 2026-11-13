@@ -3,7 +3,7 @@
 //   shaft A (0,0) step-irons up to Level 9's storm drain → tunnel north 20 m → junction (0,25): foul pool, dive down to Level 7;
 //   a dead-end east branch (the smilers' lair) → tunnel on 20 m → shaft B (0,50) step-irons up to Level 11's street grate.
 export const cadence = "1s";
-const V = 2;
+const V = 3;
 const GEO = "scripts/l34-sewer-geo.js";
 const WATER = { kind: "water", color: "oklch(0.52 0.09 95)", opacity: 0.88, waveIntensity: 0.15 };
 const SMILERS = [
@@ -55,6 +55,10 @@ function lay(ctx) {
   // a thin cold light falling down each shaft through the grate above: the only light the sewer has of its own
   sp("l34-a-glow", { feetPosition: { x: 0, y: 5.6, z: 0 }, light: { kind: "point", color: "oklch(0.78 0.12 65)", intensity: 3, distance: 14, shadow: { enabled: false } } });
   sp("l34-b-glow", { feetPosition: { x: 0, y: 5.6, z: 50 }, light: { kind: "point", color: "oklch(0.82 0.03 230)", intensity: 3, distance: 14, shadow: { enabled: false } } });
+  // a knee-high stone lip round the pool (Shelly fell in walking through, Nov 13): you walk round it, or hop it on purpose to dive
+  const LIP = { color: "oklch(0.36 0.025 80)", roughness: 0.95 };
+  for (const [id, x, z, w, d] of [["n", 0, 26.6, 3.4, 0.2], ["s", 0, 23.4, 3.4, 0.2], ["e", 1.6, 25, 0.2, 3], ["w", -1.6, 25, 0.2, 3]])
+    sp("l34-pool-lip-" + id, { feetPosition: { x, y: 0, z }, primitive: { kind: "box", width: w, height: 0.4, depth: d }, material: LIP, physics: "static", castShadow: false });
   sp("l34-pool-glow", { feetPosition: { x: 0, y: -0.6, z: 25 }, light: { kind: "point", color: "oklch(0.7 0.12 110)", intensity: 0.35, distance: 6, shadow: { enabled: false } } });
   sp("l34-a-grate", { feetPosition: { x: 0, y: 5.95, z: 0 }, primitive: { kind: "box", width: 0.9, height: 0.05, depth: 0.6 }, material: { texture: "cdn/texture-rusty-cast-iron-storm-drain-grate-slots.png", color: "oklch(0.35 0.03 50)", roughness: 0.7, metalness: 0.5 } });
   sp("l34-b-grate", { feetPosition: { x: 0, y: 5.95, z: 50 }, primitive: { kind: "box", width: 0.9, height: 0.05, depth: 0.6 }, material: { texture: "cdn/texture-rusty-cast-iron-storm-drain-grate-slots.png", color: "oklch(0.35 0.03 50)", roughness: 0.7, metalness: 0.5 } });
