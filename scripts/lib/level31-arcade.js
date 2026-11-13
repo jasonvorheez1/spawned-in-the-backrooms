@@ -141,4 +141,23 @@ export function layArcade(ctx) {
     ctx.spawn("l31-arcade-" + id, { feetPosition: { x, y: 0.05, z }, rotation: { yaw }, physics: "character", tags: ["npc", "usable", "faceling", "l31-arcade"],
       ...critterSpec(npcLook("l31-arcade-" + id, { species: "faceling", sex, botw: "pants", shoes: "sneakers", ...wear }, "wanderer", 1)),
       behavior: ["scripts/humanoid-locomotion.js"], state: { name, role: "regular", faction: "wanderer", factionName: "Rink regular", docile: true, hp: 60, home: { x, z }, stay: true } }));
+  // the centre island (Shelly Nov 13 "improve this"): two rows of uprights back to back down the middle, a neon ring over them, a high-score board
+  const ISL = [["Block Panic", "#2a1c5c", "#ff4fa3", "pixel-falling-block-puzzle-game", PANIC], ["Comet Cadets", "#0c2a66", "#ff8a2a", "pixel-space-shooter-starfield-game", COMET],
+    ["Pickle Patrol", "#e9dfc2", "#5c9a2e", "pixel-maze-chase-green-game", PICKLE], ["Marty's Run", "#f4c21c", "#c8281e", "pixel-maze-chase-green-game", MARTY]];
+  for (let row = 0; row < 2; row++) for (let i = 0; i < 4; i++) {
+    const [name, body, side, scr, svg] = ISL[(i + row * 2) % 4];
+    U(`isl-${row}${i}`, row ? 50.55 : 49.45, -19.8 + i * 0.86, row ? EA : W, { name, pitch: 0.9 + i * 0.07 }, { color: body, roughness: 0.4 }, { color: side }, glow("retro-arcade-crt-screen-" + scr, "#ffffff", 1.3), svg);
+  }
+  ctx.spawn("l31-arcade-isl-cap", { feetPosition: { x: 50, y: 0, z: -21 }, primitive: { kind: "cylinder", radiusTop: 0.45, radiusBottom: 0.5, height: 0.9, radialSegments: 24 }, material: { color: "#1b1630", roughness: 0.5 }, physics: "static", castShadow: false,
+    children: [{ feetPosition: { x: 0, y: 0.9, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.47, radiusBottom: 0.47, height: 0.04, radialSegments: 24 }, material: { color: "#d9dde3", metalness: 0.9, roughness: 0.25 } }] });
+  ctx.spawn("l31-arcade-isl-ring", { feetPosition: { x: 50, y: 3.6, z: -18.5 }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "torus", radius: 2.4, tube: 0.05, radialSegments: 8, tubularSegments: 64 }, material: { color: "#ff4fb8", emissive: "#ff4fb8", emissiveIntensity: 2.4 }, castShadow: false,
+    children: [{ feetPosition: { x: 0, y: 0, z: 0 }, light: { kind: "point", color: "#ff7cc8", intensity: 3.2, distance: 9 } }] });
+  ctx.spawn("l31-arcade-isl-ring2", { feetPosition: { x: 50, y: 3.45, z: -18.5 }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "torus", radius: 2.1, tube: 0.035, radialSegments: 8, tubularSegments: 64 }, material: { color: "#3ff0e0", emissive: "#3ff0e0", emissiveIntensity: 2.2 }, castShadow: false });
+  ctx.spawn("l31-arcade-scores", { feetPosition: { x: 50, y: 2.2, z: 5.85 }, rotation: { yaw: 180 }, castShadow: false, vector: `<svg viewBox='0 0 300 200' width='2.4m'><rect width='300' height='200' rx='8' fill='#0b0716' stroke='#3ff0e0' stroke-width='3'/>
+    <text x='150' y='36' text-anchor='middle' font-family='display' font-size='24' fill='#ffd23a' filter='drop-shadow(0 0 3 #ff8a2a)'>HIGH SCORES</text>
+    <g font-family='display' font-size='17' fill='#f2e8ff'><text x='34' y='76'>1 DOT</text><text x='266' y='76' text-anchor='end'>48,200</text><text x='34' y='104'>2 ???</text><text x='266' y='104' text-anchor='end'>41,750</text>
+    <text x='34' y='132'>3 KAY</text><text x='266' y='132' text-anchor='end'>39,010</text><text x='34' y='160'>4 MEG</text><text x='266' y='160' text-anchor='end'>12,400</text></g>
+    <text x='150' y='188' text-anchor='middle' font-family='sans-serif' font-size='10' fill='#8a7fa8'>scores reset every Monday. they have not reset.</text></svg>` });
+  ctx.spawn("l31-arcade-bolt", { feetPosition: { x: 42.35, y: 2.3, z: -18 }, rotation: { yaw: -90 }, castShadow: false, vector: `<svg viewBox='0 0 120 160' width='0.9m'><path d='M70 6L22 88H58L44 154L100 62H64Z' fill='none' stroke='#ffd23a' stroke-width='6' stroke-linejoin='round' filter='drop-shadow(0 0 6 #ffb000)'/></svg>` });
+  ctx.spawn("l31-arcade-bolt-light", { feetPosition: { x: 42.8, y: 2.3, z: -18 }, light: { kind: "point", color: "#ffc040", intensity: 1.6, distance: 5 } });
 }
