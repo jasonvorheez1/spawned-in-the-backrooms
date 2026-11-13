@@ -1,4 +1,5 @@
 import { dullerSpec } from "./duller-spec.js";
+import { dress, undress } from "./lurker-kind.js";
 // The Test Range's Enemy Bay (Shelly, Nov 13: "make an enemy testing area in debug room"): a walled annex east of the hall,
 // one pad per foe kind, pens at the far wall. Each foe is the same row its home level spawns, run by the same manager.
 // Pads write place.state.want_bay = { kind, at }; foeBayTick spawns it. Cap per kind keeps the bay sane.
@@ -121,6 +122,10 @@ function spawnFoe(ctx, kind, n) {
 }
 
 export function foeBayTick(ctx) {
+  // bay hall lurkers wear what the level 13 ones wear: the murk and two yellow eyes; a dead one goes dark
+  for (const r of ctx.query({ tags: ["bay-lurker13"], radius: 1e4 })) { const o = ctx.getObject(r.id); if (!o) continue;
+    const dead = r.state?.dead || r.state?.corpseAt || (r.state?.hp ?? 1) <= 0;
+    if (dead) { if (o.state.dressed) undress(ctx, o); } else if (o.state.dressed !== "yellow" || !((o.id + "/lk-eyes") in ctx.place.objects)) dress(ctx, o, "yellow"); }
   const s = ctx.place.state, w = s.want_bay; if (!w) return;
   s.want_bay = null;
   if (w.kind === "decoy") { const n = ctx.query({ tags: ["bay-decoy"], radius: 1e4 }).length; if (n >= CAP) return;
