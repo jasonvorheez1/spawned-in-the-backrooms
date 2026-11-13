@@ -36,9 +36,9 @@ doors:
   l70-back: level31
 models:
   level70:
-    - "/cdn/value.9c720700d57a2a87fdb79f1b9dbbf7f165badf6777c9884c9ea24e4ce30ee8f9.glb"
-    - "/cdn/value.6d4c22f046170f6cf599277144dc9b6185bfe0c4298b8da27f8ec820589b2448.glb"
-    - "/cdn/value.bf91214316bae9d634c33f7b8cc475f2bea9d87a64926c4d2815e1c3889f904c.glb"
+    - "/cdn/value.1bdea65fb6af6ad08a32a36c5ec23a3c92b1c4d62a8e79105ba254af48e2f198.glb"
+    - "/cdn/value.c860d11865acc09c5900aca4b729e8cb31bc86589b1c349f453dd77a24d946ba.glb"
+    - "/cdn/value.600dc4c53bd57d818bd513ffa49258c425f38da0de26e07d7795c0be9b1a6f91.glb"
     - "/cdn/value.df187005a34dd410bd5de07e4253a96b988c4a12840d62b14ec6248dd28cfc52.glb"
     - "/cdn/value.76853fda663d318c17f12d0d8b66410e8ba2b131260ef1a373fe11a2a1629d1e.glb"
     - "/cdn/value.8bab8a27c8807090412480c7a890104a34ddd3178edf5f288a57d6941440a8d0.glb"
