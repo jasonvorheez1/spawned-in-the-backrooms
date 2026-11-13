@@ -16,7 +16,7 @@ import L11 from "./data/l11-depths.yml";
 import L13 from "./data/level13.yml";
 import C3 from "./data/creatures3.yml";
 
-export const BAY_V = 5; // 5: a test-dummy pad; // 4: clumps run scripts/clumps.js; // 3: the Dark Smiler runs its own revamped hunt; // 2: a pad for every enemy (Shelly: "im pretty sure theres more enemies than that")
+export const BAY_V = 6; // 6: Custodian robots; // 5: a test-dummy pad; // 4: clumps run scripts/clumps.js; // 3: the Dark Smiler runs its own revamped hunt; // 2: a pad for every enemy (Shelly: "im pretty sure theres more enemies than that")
 const X0 = 24, X1 = 50, Z0 = -26, Z1 = -2, H = 6, DOOR = [-14, -10.5]; // the annex box and the doorway through the hall's east wall
 const CAP = 4; // live foes per kind (my pick)
 const PEN = { x: 46, z: -14 }; // where they come out
@@ -32,6 +32,8 @@ export const KINDS = {
   moths: { name: "Deathmoths", tag: "bay-moths", color: "oklch(0.55 0.04 70)" },
   smiler6: { name: "Dark Smiler", tag: "bay-smiler6", color: "oklch(0.4 0.02 260)" },
   rat5: { name: "Death Rat", tag: "bay-rat5", color: "oklch(0.45 0.1 30)" },
+  sentry: { name: "Custodian Unit", tag: "bay-sentry", color: "oklch(0.7 0.12 80)" },
+  smgbot: { name: "Custodian Suppressor", tag: "bay-smgbot", color: "oklch(0.55 0.18 25)" },
   clump: { name: "Clump", tag: "bay-clump", color: "oklch(0.65 0.08 40)" },
   tenant: { name: "Tenant", tag: "bay-tenant", color: "oklch(0.6 0.06 200)" },
   lurker13: { name: "Hall Lurker", tag: "bay-lurker13", color: "oklch(0.45 0.08 150)" },
@@ -41,6 +43,8 @@ const CLUMP_GLB = "/cdn/value.aeb91c70e11f57592fd7fe510b2e8bfd86065edacbb87155c0
 const BRAIN = {
   moths: { hp: C3.moths.hp, brain: { fly: 1, speed: 2.6, reach: 1.2, dmg: C3.moths.bite, cd: 1.1, bite: "dry-moth-wings-fluttering-burst" } },
   rat5: { hp: E5.rat.hp, brain: { speed: 4.2, reach: 0.9, dmg: Array.isArray(E5.rat.bite) ? E5.rat.bite[1] : (E5.rat.bite ?? 3), cd: 0.7, rig: 0 } },
+  sentry: { hp: L11.kinds.sentry.hp, brain: { speed: L11.kinds.sentry.speed, reach: 0.8, range: L11.kinds.sentry.range, keep: L11.kinds.sentry.keep, dmg: L11.kinds.sentry.dmg, cd: L11.kinds.sentry.cd, rig: 1, bolt: 65 } },
+  smgbot: { hp: L11.kinds.smgbot.hp, brain: { speed: L11.kinds.smgbot.speed, reach: 0.8, range: L11.kinds.smgbot.range, keep: L11.kinds.smgbot.keep, dmg: L11.kinds.smgbot.dmg, cd: L11.kinds.smgbot.cd, burst: L11.kinds.smgbot.burst, burstGap: L11.kinds.smgbot.burstGap, rig: 1, bolt: 200 } },
   clump: { hp: L11.kinds.clump.hp, brain: { speed: L11.kinds.clump.speed, reach: L11.kinds.clump.reach, dmg: L11.kinds.clump.dmg, cd: L11.kinds.clump.cd } },
   tenant: { hp: L13.foes.tenant.hp, brain: { rig: 1, speed: 1.8, reach: 1.4, dmg: 10, cd: 1.2 } },
   lurker13: { hp: L13.foes.lurker.hp, brain: { rig: 1, speed: 2.8, reach: 1.6, dmg: 16, cd: 1.3 } },
@@ -100,7 +104,7 @@ function spawnFoe(ctx, kind, n) {
   if (BRAIN[kind]) {
     const b = BRAIN[kind], st = { hp: b.hp, maxHp: b.hp, name: KINDS[kind].name, kind, brain: b.brain, xp: 30 }, tags = ["baybrain", "l8-hostile", KINDS[kind].tag, "tl-bay-foe"];
     if (kind === "moths") return ctx.spawn({ ...MOTHS, tags: [...MOTHS.tags, ...tags], feetPosition: { ...p, y: 1.4 }, state: { ...MOTHS.state, ...st } });
-    const look = { smiler6: { model: SMILER6_MODEL, scale: SMILER6_SCALE }, rat5: { model: { id: E5.rat.model, forward: "+x" }, layout: { box: { min: { x: -0.5, y: 0, z: -0.5 }, max: { x: 0.5, y: 0.21, z: 0.5 } } } },
+    const look = { sentry: { model: "/cdn/value.5a18bb1b3ab741080cf1b881ad99be1a9ace445a5e3fa9a4c7c2c6cb9dafb71d.glb" }, smgbot: { model: "/cdn/value.43aa4b081f1cd7b36230499f345e1768336249a85f6e12e9e3707a38c4b5e3b7.glb" }, smiler6: { model: SMILER6_MODEL, scale: SMILER6_SCALE }, rat5: { model: { id: E5.rat.model, forward: "+x" }, layout: { box: { min: { x: -0.5, y: 0, z: -0.5 }, max: { x: 0.5, y: 0.21, z: 0.5 } } } },
       clump: { model: { id: CLUMP_GLB, forward: "+x" }, layout: { box: { min: { x: -0.8, y: 0, z: -0.8 }, max: { x: 0.8, y: 1.2, z: 0.8 } } } },
       tenant: { model: { id: TENANT, forward: "+x" }, layout: { box: { min: { x: -0.6, y: 0, z: -0.6 }, max: { x: 0.6, y: L13.foes.tenant.height, z: 0.6 } } } },
       lurker13: { model: { id: LURKER13, forward: "+x" }, layout: { box: { min: { x: -0.6, y: 0, z: -0.6 }, max: { x: 0.6, y: L13.foes.lurker.height, z: 0.6 } } } } }[kind];
