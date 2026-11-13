@@ -209,6 +209,17 @@ export function tick(ctx) {
     layLines(ctx);
   }
   if (!s.arrive2 && s.seeded) { s.arrive2 = true; ctx.spawn("l3-from-l2", { feetPosition: { x: BACK.x + 2.4, y: 0.1, z: BACK.z }, rotation: { yaw: -90 } }); } // where the Level 2 door lets you out
+  if (!s.snackVent) {
+    s.snackVent = true;
+    const x = BACK.x + 4.25, z = BACK.z;
+    ctx.spawn("l3-from-l61", { feetPosition: { x, y: 1.35, z }, rotation: { yaw: -90 } });
+    ctx.spawn("l3-snack-duct", {
+      feetPosition: { x, y: H - 0.28, z }, rotation: { pitch: 180 }, castShadow: false,
+      primitive: { kind: "box", width: 1.08, height: 0.3, depth: 0.79 },
+      material: { color: "#4d514d", metalness: 0.55, roughness: 0.69 },
+      children: [{ feetPosition: { x: 0, y: 0.31, z: 0 }, primitive: { kind: "box", width: 0.87, height: 0.035, depth: 0.59 }, material: { color: "#111416" } }],
+    });
+  }
   if (!s.seeded) {
     s.seeded = true;
     ctx.spawn("l3-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level3-geo.js" }, material: { roughness: 0.9 } });

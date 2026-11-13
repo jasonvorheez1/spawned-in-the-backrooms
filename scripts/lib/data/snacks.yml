@@ -53,3 +53,4 @@ slap_bracelet: { name: "Slap bracelet", info: "Max sanity +5 while you carry it"
 walkman: { name: "Walkman", info: "The rink's tape, quietly, for 5 min. Use again to stop", hunger: 0, thirst: 0, sanity: 0, hp: 0, color: "#8a8a92", use: walkman, secs: 300 }
 # Level 31 "Side B" quest reward (Shelly Nov 12: the quest features a new item). A keepsake: played, not eaten. Savi's picks.
 mixtape: { name: "Side B (mixtape)", verb: "PLAY", info: "A dub of the rink's master tape. Four songs and the sound of skates. It smells like a birthday party", hunger: 0, thirst: 0, sanity: 25, hp: 0, color: "#f0e6c8", keep: true, cooldown: 240, clip: "/cdn/moodboard-toon-vibrant/sfx-walkman-play-click-then-muffled-80s-roller-rink-pop-snippet.mp3" }
+purified_water: { name: "Purified water", info: "A sealed bottle of plain drinking water from the Snackrooms.", hunger: 0, thirst: 50, sanity: 0, hp: 0, color: "#9cb9ca", drink: true }
