@@ -118,12 +118,12 @@ export function geometry(ctx) {
     }
     face(ctx, [b.xh, 0, b.za - 0.22], [b.xh, 0, b.zb + 0.22], [b.xh, Y, b.zb + 0.22], [b.xh, Y, b.za - 0.22], [dir, 0, 0]); // its tall end, under the deck
     if (hi) { // anti-slip grooves across the slope, an expansion joint at mid-run, steel plates at the foot and the top, a trench drain at the foot
-      ctx.albedo(null); ctx.color("oklch(0.42 0.008 80)"); ctx.roughness(0.95);
-      for (let t = 1.2; t < L - 0.9; t += 0.45) { const x0 = xs(t), x1 = xs(t + 0.07), y0 = yAt(x0) + 0.006, y1 = yAt(x1) + 0.006; face(ctx, [x0, y0, b.za + 0.12], [x1, y1, b.za + 0.12], [x1, y1, b.zb - 0.12], [x0, y0, b.zb - 0.12], [0, 1, 0]); }
-      ctx.color("oklch(0.18 0.01 80)"); { const x0 = xs(L / 2 - 0.03), x1 = xs(L / 2 + 0.03); face(ctx, [x0, yAt(x0) + 0.008, b.za], [x1, yAt(x1) + 0.008, b.za], [x1, yAt(x1) + 0.008, b.zb], [x0, yAt(x0) + 0.008, b.zb], [0, 1, 0]); }
-      ctx.color("oklch(0.5 0.01 240)"); ctx.metalness(0.8); ctx.roughness(0.45);
+      ctx.albedo(FLOOR); ctx.color("oklch(0.66 0.008 80)"); ctx.roughness(0.9); // Nov 13 (Shelly: "de ai slop and refine this ramp"): grooves were flat 0.42 grey, read as black bars
+      for (let t = 1.2; t < L - 0.9; t += 0.45) { const x0 = xs(t), x1 = xs(t + 0.035), y0 = yAt(x0) + 0.006, y1 = yAt(x1) + 0.006; face(ctx, [x0, y0, b.za + 0.12], [x1, y1, b.za + 0.12], [x1, y1, b.zb - 0.12], [x0, y0, b.zb - 0.12], [0, 1, 0]); }
+      ctx.albedo(null); ctx.color("oklch(0.3 0.01 80)"); { const x0 = xs(L / 2 - 0.012), x1 = xs(L / 2 + 0.012); face(ctx, [x0, yAt(x0) + 0.008, b.za], [x1, yAt(x1) + 0.008, b.za], [x1, yAt(x1) + 0.008, b.zb], [x0, yAt(x0) + 0.008, b.zb], [0, 1, 0]); }
+      ctx.albedo("cdn/texture-worn-galvanized-diamond-tread-steel-floor-plate-scuffed-rust-edges.png"); ctx.color("oklch(0.9 0.004 240)"); ctx.metalness(0.5); ctx.roughness(0.55); // a tread plate, not a flat blue slab
       for (const [t0, t1] of [[0, 0.5], [L - 0.5, L]]) { const x0 = xs(t0), x1 = xs(t1); face(ctx, [x0, yAt(x0) + 0.012, b.za], [x1, yAt(x1) + 0.012, b.za], [x1, yAt(x1) + 0.012, b.zb], [x0, yAt(x0) + 0.012, b.zb], [0, 1, 0]); }
-      ctx.color("oklch(0.12 0.005 240)"); const xd = b.xl - dir * 0.6; // the drain: a dark slot with cast bars across it
+      ctx.albedo(null); ctx.color("oklch(0.12 0.005 240)"); const xd = b.xl - dir * 0.6; // the drain: a dark slot with cast bars across it
       face(ctx, [xd - 0.18, 0.01, b.za], [xd + 0.18, 0.01, b.za], [xd + 0.18, 0.01, b.zb], [xd - 0.18, 0.01, b.zb], [0, 1, 0]);
       ctx.color("oklch(0.32 0.01 240)"); for (let z = b.za + 0.1; z < b.zb; z += 0.16) box(ctx, xd - 0.18, xd + 0.18, 0.01, 0.025, z, z + 0.05);
       ctx.metalness(0);
