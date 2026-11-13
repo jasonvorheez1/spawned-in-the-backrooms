@@ -19,7 +19,7 @@ for (const k of Y.order.slice(1)) {
       ? Object.fromEntries(Object.entries(w.req).map(([key, target]) => [key, Math.max(1, target + (v.reqDelta[key] ?? 0))]))
       : w.req
     W[k + '~' + vk] = {
-      ...w, req, base: k, variant: vk, name: `${v.name} ${w.name.toLowerCase()}`,
+      ...w, req, base: k, variant: vk, name: `${v.name} ${/^[A-Z.]{2,}/.test(w.name) ? w.name : w.name.toLowerCase()}`,
       damage: Math.round(m('damage')), cooldown: +(m('cooldown')).toFixed(2), stamina: Math.round(m('stamina')), xp: Math.round(m('xp')),
       rarity: RAR[ri], cnd: v.cnd ?? null, look: v.look, tint: v.tint ?? null,
       ...(w.ranged ? {
