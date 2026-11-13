@@ -1,6 +1,7 @@
 // what every Level 0 hunter shares: hearing a wanderer through walls, and guessing where a lost one went.
 import L from "./data/level0.yml";
 import { raycast } from "builtin/physics";
+import { clearSight } from "./sight.js";
 // the nearest wanderer this hunter hears from pos (sprinting carries far, walking near, crouching never)
 let clock = () => 0;
 const now = () => clock();
@@ -54,4 +55,13 @@ export function sighting(p, now) {
 export function leadOf(last) {
   const k = L.leadSeconds ?? 1.6;
   return { x: last.x + (last.vx ?? 0) * k, z: last.z + (last.vz ?? 0) * k };
+}
+
+// can this attacker actually land a blow on p (every level, every foe): within reach on the flat, on the same floor (not through a ceiling
+// or up a stairwell) and with nothing solid between its body and theirs (never through a wall or a closed door)
+export function canStrike(ctx, from, p, reach, ids = []) {
+  const t = p?.feetPosition; if (!t || !from) return false
+  if (Math.hypot(t.x - from.x, t.z - from.z) > reach) return false
+  if (Math.abs((t.y ?? 0) - (from.y ?? 0)) > 1.8) return false
+  return clearSight(ctx, { x: from.x, y: (from.y ?? 0) + 0.6, z: from.z }, { x: t.x, y: t.y + 1, z: t.z }, ids)
 }

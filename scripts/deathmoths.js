@@ -1,3 +1,4 @@
+import { canStrike } from "./lib/hunt.js";
 // Deathmoths: one manager steps every swarm in the place. They hang about home, go for the brightest
 // light near (a lit flashlight), wheel round its holder's head, then DIVE: a hit bursts a cloud of wing
 // dust across the bitten player's eyes and eats their nerve. They follow the halls cell by cell so they
@@ -258,7 +259,7 @@ export function update(ctx, dt) {
           ? Math.hypot(p.feetPosition.x - nx, p.feetPosition.z - nz) + Math.abs(p.feetPosition.y + 1.5 - ny) * 0.5
           : 99;
 
-        if (p && hd < D.hitAt) {
+        if (p && hd < D.hitAt && canStrike(ctx, { x: nx, y: ny - 1, z: nz }, p, D.hitAt + 0.5, [s.id, p.id])) {
           const dmg = dmgAfterArmor(p.state.look, M.bite * 2 * vm.dmg);
           p.state.hp -= dmg;
           p.state.sanity = Math.max(0, (p.state.sanity ?? 100) - M.sanity * 4);

@@ -2,6 +2,7 @@
 // One manager steps every one; a pack with no player within 60 m sleeps. Rows are laid by scripts/lib/level70-life.js. Players hurt them the game's way (tag "moths", state.hp).
 import { SND, flat, yawTo, downed, hit, killerOf } from "./lib/l5-hostile.js";
 import { route } from "./lib/level70-nav.js";
+import { canStrike } from "./lib/hunt.js";
 export const updateSchedule = { every: 3 };
 export const F = { froidling: { hp: 110, bite: 16, biteMs: 850, stalk: 4.2, run: 8.4, ring: 10, notice: 40, loot: "froidpelt", name: "Snow Hound", lie: 0.3, bob: 9, packMs: 900 },
   deathrat70: { hp: 22, bite: 4, chill: 6, biteMs: 900, walk: 1.6, run: 7.4, notice: 16, loot: "meat:rat", name: "White Death Rat", lie: 0.16, bob: 5 } };
@@ -60,7 +61,7 @@ export function update(ctx, dt) {
         if ((m.backT > 0.9 || now - m.seen > 16000 || d < 3) && now > pk.rushUntil) { pk.rushUntil = now + 7000; heard(ctx, "small-creature-attack-screech", pos, 0.8); }
         if (now < pk.rushUntil) {
           if (now < (m.recoil ?? 0)) { vx = -tx * 4; vz = -tz * 4; } else if (d > 1.05) { vx = tx * K.run; vz = tz * K.run; } // stop at the body, never inside it
-          if (d < 1.5 && now > m.nextBite && now > (pk.biteAt ?? 0)) { hit(ctx, p, K.bite); m.nextBite = now + K.biteMs; pk.biteAt = now + K.packMs; m.recoil = now + 650; heard(ctx, "creature-bite-snap", pos, 0.7); } // one jaw at a time per pack
+          if (d < 1.5 && now > m.nextBite && now > (pk.biteAt ?? 0) && canStrike(ctx, pos, p, 1.5, [r.id, p.id])) { hit(ctx, p, K.bite); m.nextBite = now + K.biteMs; pk.biteAt = now + K.packMs; m.recoil = now + 650; heard(ctx, "creature-bite-snap", pos, 0.7); } // one jaw at a time per pack
           if (now + 200 > pk.rushUntil) { m.seen = now; m.backT = 0; }
         } else {
           m.ang += 0.32 * dt; const gx = pp.x + Math.cos(m.ang) * K.ring, gz = pp.z + Math.sin(m.ang) * K.ring, dx = gx - pos.x, dz = gz - pos.z, l = Math.hypot(dx, dz);
@@ -73,7 +74,7 @@ export function update(ctx, dt) {
         if (!m.squeal) { m.squeal = true; heard(ctx, "rat-swarm-squeaking-aggressive", pos, 0.6); }
         const w = Math.sin(now / 180 + m.ph) * 0.5, sx = tx - tz * w, sz = tz + tx * w, l = Math.hypot(sx, sz) || 1;
         if (now < (m.recoil ?? 0)) { vx = -tx * 5; vz = -tz * 5; } else if (d > 0.8) { vx = (sx / l) * K.run; vz = (sz / l) * K.run; }
-        if (d < 1.25 && now > m.nextBite) { hit(ctx, p, K.bite, "#9fd8ff"); p.state.chill = (p.state.chill ?? 0) + K.chill; m.nextBite = now + K.biteMs; m.recoil = now + 450; heard(ctx, "rat-bite-squeak", pos, 0.6); }
+        if (d < 1.25 && now > m.nextBite && canStrike(ctx, pos, p, 1.25, [r.id, p.id])) { hit(ctx, p, K.bite, "#9fd8ff"); p.state.chill = (p.state.chill ?? 0) + K.chill; m.nextBite = now + K.biteMs; m.recoil = now + 450; heard(ctx, "rat-bite-squeak", pos, 0.6); }
       } else { m.squeal = false; [vx, vz] = stroll(ctx, r, m, st, pos, now, K.walk, 4); }
     }
     if (now < (m.stagger ?? 0)) { vx = -tx * 3; vz = -tz * 3; }

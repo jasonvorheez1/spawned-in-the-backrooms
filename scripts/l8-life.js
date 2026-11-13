@@ -3,6 +3,8 @@
 // Spiders are tag l8spider: scripts/player.js and scripts/lib/ballistics.js let you hit them; scripts/meg-agent.js has the camp fight them.
 import L8 from "./lib/data/level8.yml";
 import { heard } from "./lib/hear.js";
+import { canStrike } from "./lib/hunt.js";
+import { clearSight } from "./lib/sight.js";
 import { npcState, dmgAfterArmor } from "./lib/stats.js";
 import { spawnRemains } from "./lib/loot.js";
 export const updateSchedule = { every: { seconds: 0.1 } };
@@ -108,6 +110,9 @@ export function update(ctx, dt) {
     const p = sp.feetPosition, home = st.home ?? nestC;
     let tgt = null, bd = st.boss ? 26 : st.nest === "nest" ? 22 : 16;
     for (const pl of players) { const d = flat(pl.feetPosition, p); if (d < bd && !(pl.feetPosition.y < P(sOf(pl.feetPosition)).y - 0.7 && sOf(pl.feetPosition) < 40)) { bd = d; tgt = pl; } } // they cannot swim
+    // and they need a reason: in sight (rock hides you), or the one they were already on within 6 s of losing it, or felt close by (3 m, the web hums)
+    if (tgt && bd > 3 && mm.prey !== tgt.id && !clearSight(ctx, { x: p.x, y: p.y + 0.5, z: p.z }, { x: tgt.feetPosition.x, y: tgt.feetPosition.y + 1, z: tgt.feetPosition.z }, [sp.id, tgt.id])) tgt = null;
+    if (tgt) { if (mm.prey !== tgt.id || now - (mm.seenAt ?? 0) > 1000) { if (clearSight(ctx, { x: p.x, y: p.y + 0.5, z: p.z }, { x: tgt.feetPosition.x, y: tgt.feetPosition.y + 1, z: tgt.feetPosition.z }, [sp.id, tgt.id]) || bd <= 3) mm.seenAt = now; } mm.prey = tgt.id; if (now - (mm.seenAt ?? now) > 6000) { tgt = null; mm.prey = null; } } else mm.prey = null;
     let vx = 0, vz = 0;
     if (tgt) {
       const dx = tgt.feetPosition.x - p.x, dz = tgt.feetPosition.z - p.z, d = Math.hypot(dx, dz) || 1, sp0 = st.boss ? 6.2 : 5.8;
@@ -120,7 +125,7 @@ export function update(ctx, dt) {
         heard(ctx, { clip: G("spider-skittering-squeal-and-crunch"), position: p, volume: 0.55, maxDistance: 20 });
       }
       const reach = st.boss ? 2.1 : 1.5;
-      if (d < reach && now - mm.bite > (st.boss ? 700 : 750)) {
+      if (d < reach && now - mm.bite > (st.boss ? 700 : 750) && canStrike(ctx, p, tgt, reach, [sp.id, tgt.id])) {
         mm.bite = now; const look = tgt.state?.look, rawDmg = (st.boss ? 22 : 11) + ctx.random() * (st.boss ? 8 : 4), dmg = Math.max(1, Math.round(dmgAfterArmor(look, rawDmg)));
         tgt.state.hp -= dmg; tgt.state.sanity = Math.max(0, (tgt.state.sanity ?? 80) - (st.boss ? 6 : 3));
         ctx.emit("damageNumber", { position: { x: tgt.feetPosition.x, y: tgt.feetPosition.y + 1.4, z: tgt.feetPosition.z }, value: dmg, color: "#ff5040" });

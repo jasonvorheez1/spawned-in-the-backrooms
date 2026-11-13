@@ -1,3 +1,4 @@
+import { canStrike } from "./lib/hunt.js";
 // Level 1's skin-stealers (Wikidot lore + Shelly's sheet): it wears a critter it killed, a skin a little too tall and
 // too thin, walking stiff. Docile: it wanders and parrots words it has heard (your name) without understanding them,
 // until it is hungry or you hurt it. Then the skin splits. Its blood runs clear. Almond water burns it.
@@ -361,7 +362,7 @@ export function update(ctx, dt) {
         const targetPlayer = ctx.place.players.find((q) => q.id === m.who);
         const hitDist = targetPlayer ? Math.hypot(targetPlayer.feetPosition.x - pos.x, targetPlayer.feetPosition.z - pos.z) : Infinity;
 
-        if (targetPlayer && hitDist < T.reach + 0.6) {
+        if (targetPlayer && hitDist < T.reach + 0.6 && canStrike(ctx, pos, targetPlayer, T.reach + 0.6, [e.id, targetPlayer.id])) {
           const dmg = dmgAfterArmor(targetPlayer.state.look, Math.round(L.stealerHit * T.slashDmg * mu.dmg));
           targetPlayer.state.hp -= dmg;
           const at = { x: targetPlayer.feetPosition.x, y: targetPlayer.feetPosition.y + 1.2, z: targetPlayer.feetPosition.z };

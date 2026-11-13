@@ -1,3 +1,4 @@
+import { canStrike } from "./lib/hunt.js";
 // Level 5's Death Rats (Wikidot): black, long-bodied, brown horns glowing red at the tips. One manager steps every pack.
 // They nest in the Boiler Room; every few minutes a pack comes up a vent into the halls, roams, and goes back down.
 // Skittish: a lit flashlight or a raised weapon sends them scattering. Alone or hurt, they swarm with small fast bites.
@@ -310,7 +311,7 @@ export function update(ctx, dt) {
           goal = { x: target.feetPosition.x + Math.cos(a) * 0.45, z: target.feetPosition.z + Math.sin(a) * 0.45 };
           sp = R.run;
 
-          if (flat(target.feetPosition, pos) < R.reach && now >= (m.bite ?? 0)) {
+          if (flat(target.feetPosition, pos) < R.reach && now >= (m.bite ?? 0) && canStrike(ctx, pos, target, R.reach, [r.id, target.id])) {
             m.bite = now + rnd(ctx, R.biteEvery);
             const at = hit(ctx, target, Math.round(rnd(ctx, [R.bite[0], R.bite[1] + 0.99]) - 0.49));
             heard(ctx, { maxDistance: 14, refDistance: 2, clip: SND("small-rat-bite-squeak"), position: at, volume: 0.7, pitch: 0.9 + ctx.random() * 0.3 });
