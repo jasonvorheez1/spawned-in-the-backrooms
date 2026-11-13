@@ -134,7 +134,7 @@ from:
   botw: { pants: pants, shorts: shorts, pjpants: pjpants, skirt: skirt, longskirt: skirt, overalls: pants, slacks: pants, cargo: pants,
           canvasskirt: skirt, pinstripe: pants, velvetskirt: skirt, tarwaders: pants, jeans: pants, briefs: briefs, leggings: leggings }
   shoes: { sneakers: socks, slippers: socks, boots: boots, steeltoe: boots, hotelslip: socks, ballastboots: boots, pitchboots: boots, heels: socks, socks: socks }
-  hat: { cap: cap, beanie: beanie, tophat: tophat, bow: bow, flower: flower, partyhat: partyhat, crown: crown, padbeanie: beanie,
+  hat: { cap: cap, beanie: beanie, tophat: tophat, bow: bow, flower: flower, partyhat: partyhat, crown: crown, padbeanie: beanie, wwhelmet: beanie, tmcap: cap,
          opera: tophat, headphones: headphones, souwester: souwester, divehelm: divehelm, chitinhelm: chitinhelm, pgmask: bagmask, ppmask: shellmask, beret: beret }
   eyew: { glasses: almondspecs, shades: lobbyshades, megoggles: megoggles, asyncvisor: asyncvisor, crackedglasses: crackedglasses, lobbyshades: lobbyshades, almondspecs: almondspecs }
   neck: { scarf: scarf, cape: cape, bowtie: bowtie, necklace: necklace, bell: bell }
