@@ -2,15 +2,36 @@
 // finds the same streets and the same emptied drawers; another room rolls its own), lays the streets, houses and lamps from it,
 // and runs the fog banks. Layout: scripts/lib/level9.js. House kit: scripts/lib/data/l9-houses.yml. Props: l9-props.yml.
 import { rotate } from "builtin/vec3";
+import { rollLoot } from "../../scripts/lib/loot.js";
+import FURN from "../../scripts/lib/data/furniture.yml";
 import { layout, hashStr, HOUSES, PAINTS, PROPS, TUNE, FWD, ROAD_W, WALK } from "../../scripts/lib/level9.js";
 export const cadence = "1s";
-const V = 6; // 3: Tripo house models on the lots; 6: plaster insides; 5 (4 hung them on the back): door holes cut, a hinged front door and a stoop on each (keeps seed and loot)
+const V = 7; // 3: Tripo house models on the lots; 6: plaster insides; 7: wallpaper box-mapped, a bedroom wall, furniture and loot inside; 5 (4 hung them on the back): door holes cut, a hinged front door and a stoop on each (keeps seed and loot)
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BLUE = { kind: "scripted", script: "engine/blueprint" };
 const ASPHALT = { texture: "cdn/texture-worn-dark-grey-asphalt-road-coarse-aggregate-damp-patches-cracks.png", wrap: "repeat", repeat: [0.3, 0.3], color: "oklch(0.42 0.01 250)", roughness: 0.62, metalness: 0 }; // Shelly "why are level 9 roads water": 0.16 roughness mirrored the sky; damp, not a puddle
 const SODIUM = "oklch(0.8 0.13 70)";
 const DOOR = (to, w, h, d) => ({ primitive: { kind: "box", width: w, height: h, depth: d }, visible: false, physics: { body: "static", trigger: true }, behavior: "scripts/level-door.js", state: { to } });
 const model = (key) => PROPS[key]?.model ? { model: { id: PROPS[key].model, forward: FWD }, layout: { box: { min: { x: -PROPS[key].size[0] / 2, y: 0, z: -PROPS[key].size[2] / 2 }, max: { x: PROPS[key].size[0] / 2, y: PROPS[key].size[1], z: PROPS[key].size[2] / 2 } } } } : null;
+
+// inside a house (Shelly #325044): one wall splits a bedroom off the living room, both furnished from the mall's catalog
+// (Tripo pieces), and the bookshelf, the TV stand and the nightstand are searchable. Frame: yaw Y, the front door at +z.
+const WALLPAPER = { texture: "cdn/texture-faded-cream-floral-wallpaper-water-stained.png", wrap: "repeat", repeat: [0.8, 0.8], color: "oklch(0.8 0.03 85)", roughness: 0.92 };
+const LOOT = { bookshelf: "Bookshelf", crt_tv: "TV stand", lava_lamp: "Nightstand" };
+function furnish(ctx, sp, l, H, D, Y) {
+  const hw = H.w / 2 - 0.9, hd = D.z - 0.45, side = D.x >= 0 ? 1 : -1, P = -side * hw * 0.3, fy = D.y;
+  const at = (x, z, up = 0) => { const r = rotate({ yaw: Y }, { x, y: 0, z }); return T(l.x + r.x, l.z + r.z, fy + up); };
+  for (const [k, z0, z1] of [["a", -hd - 0.3, -0.5], ["b", 0.5, hd + 0.3]]) // the bedroom wall, a doorway in its middle
+    sp(`l9-${l.id}-wall${k}`, { feetPosition: at(P, (z0 + z1) / 2), rotation: { yaw: Y }, primitive: { kind: "box", width: 0.1, height: 2.3, depth: z1 - z0 }, physics: "static", material: WALLPAPER });
+  const piece = (k, x, z, yaw = 180) => { const F = FURN.pieces[k]; if (!F) return; const [w, h, d] = F.size, id = `l9-${l.id}-${k}`;
+    sp(id, { tags: LOOT[k] ? ["l9furn", "container"] : ["l9furn"], feetPosition: at(x, z), rotation: { yaw: Y + yaw }, model: { id: F.model, forward: F.forward ?? "-z" }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, physics: { body: "static", collider: "box" }, visibleRange: { max: 40 },
+      state: LOOT[k] ? { name: LOOT[k], mat: "wood", items: rollLoot(ctx, 1, 1, "l5").join(",") } : { name: F.name } }); };
+  const lx = (P + side * hw) / 2, bx = (P - side * hw) / 2;
+  piece("sofa", lx, -hd + 0.55); piece("coffee_table", lx, -hd + 1.6, 0); piece("floor_lamp", lx - side * 1.4, -hd + 0.3);
+  if (hd * 2 > 4.4) piece("crt_tv", lx, -hd + 2.9, 0);
+  piece("bookshelf", side * hw - side * 0.5, -hd + 0.25); piece("fiddle_plant", side * hw - side * 0.45, hd - 0.45);
+  piece("double_bed", bx, -hd + 1.05); piece("lava_lamp", bx + side * 1.3, -hd + 0.3);
+}
 
 function lay(ctx, L) {
   const keep = {};
@@ -41,7 +62,7 @@ function lay(ctx, L) {
   // houses: the model when the kit has it, a blueprint box on the lot until then
   for (const l of L.lots) {
     const H = HOUSES[l.kind], p = PAINTS[l.paint];
-    if (H.model) sp(`l9-${l.id}`, { tags: ["l9house"], feetPosition: T(l.x, l.z, 0.02), rotation: { yaw: l.yaw }, model: { id: H.model, forward: "+z", materials: { interior: { color: "oklch(0.74 0.035 85)", roughness: 0.92, texture: "cdn/texture-faded-cream-floral-wallpaper-water-stained.png", wrap: "repeat", repeat: [0.6, 0.6] } } }, physics: { body: "static", collider: "mesh" }, visibleRange: { max: 300 }, state: { kind: l.kind, seed: l.seed } });
+    if (H.model) sp(`l9-${l.id}`, { tags: ["l9house"], feetPosition: T(l.x, l.z, 0.02), rotation: { yaw: l.yaw }, model: { id: H.model, forward: "+z", materials: { interior: { color: "oklch(0.8 0.03 85)", roughness: 0.92, texture: "cdn/texture-faded-cream-floral-wallpaper-water-stained.png", wrap: "repeat", repeat: [0.8, 0.8] }, ceiling: { color: "oklch(0.86 0.015 85)", roughness: 0.95, texture: "cdn/texture-popcorn-ceiling-off-white-stained.png", wrap: "repeat", repeat: [0.5, 0.5] } } }, physics: { body: "static", collider: "mesh" }, visibleRange: { max: 300 }, state: { kind: l.kind, seed: l.seed } });
     if (H.model && H.door) { // the front door: a kinematic hinge at the left jamb, the leaf its child; E swings it inward (scripts/home11-door.js "door")
       const D = H.door, W = 0.96, Y = l.yaw + 180, at = (lx, lz) => { const r = rotate({ yaw: Y }, { x: lx, y: 0, z: lz }); return T(l.x + r.x, l.z + r.z, 0.02 + D.y); };
       const dp = { style: "wood", w: W, h: 2.05, hingeSide: "left", swing: 1, d: 0.08, seed: l.seed % 97 };
@@ -53,6 +74,7 @@ function lay(ctx, L) {
       if (l.seed % 4 === 0) { const c = rotate({ yaw: Y }, { x: 0, y: 0, z: 0 }); sp(`l9-${l.id}-lamp`, { feetPosition: T(l.x + c.x, l.z + c.z, D.y + 2.3), light: { kind: "point", color: "oklch(0.85 0.09 75)", intensity: 1.2, distance: 9 } }); } // someone left a lamp on: a warm window down the street, a lit room to walk into
       const f = rotate({ yaw: l.yaw }, { x: 0, y: 0, z: 0 }); // the floor inside: the shell is hollow, so a plank floor at the threshold's height under the whole footprint
       sp(`l9-${l.id}-floor`, { feetPosition: T(l.x + f.x, l.z + f.z, D.y - 0.04), rotation: { yaw: l.yaw }, primitive: { kind: "box", width: H.w - 1.2, height: 0.04, depth: D.z * 2 - 0.4 }, physics: "static", material: { texture: "cdn/texture-dusty-worn-oak-hardwood-floor-planks.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.55 0.05 60)", roughness: 0.8 } });
+      furnish(ctx, sp, l, H, D, Y);
     }
     else if (!H.model) sp(`l9-${l.id}`, { tags: ["l9house"], feetPosition: T(l.x, l.z), rotation: { yaw: l.yaw }, primitive: { kind: "box", width: H.w, height: H.stories * 2.9 + 1.2, depth: H.d }, material: BLUE, physics: "none", state: { kind: l.kind, seed: l.seed } });
   }
