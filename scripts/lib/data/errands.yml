@@ -33,6 +33,7 @@
 - id: callum-quiet
   giver: meg-callum
   place: level1
+  needs: { group: meg, fame: 6, text: "Not yet. Help the M.E.G. out with something smaller first." }
   title: "Thin the Herd"
   stages:
     - { text: "Put down whatever is prowling near camp", kind: clear, target: hostile, count: 3 }
@@ -54,6 +55,7 @@
 - id: hollis-lamps
   giver: surv-hollis
   place: level2
+  needs: { group: survivors, fame: 6, text: "Not yet. Help the survivors here out with something smaller first." }
   title: "Lights in the Tunnel"
   stages:
     - { text: "Find a fuse", kind: fetch, target: fuse, count: 2 }
@@ -84,7 +86,7 @@
     - { text: "Find the photo by the gate", kind: find, target: l3-gate-photo, count: 1 }
     - { text: "Tell Reyes what you saw", kind: talk, target: gamma-reyes, count: 1 }
   alt: { kind: speech, sk: 35, pay: 0.6, text: "Reyes would rather not know. Fair." }
-  reward: { cents: 1500, xp: 70 }
+  reward: { cents: 1500, xp: 70, rep: { group: meg, d: 2 } }
 
 - id: pell-coils
   giver: gamma-pell
@@ -95,7 +97,7 @@
     - { text: "Find a circuit board", kind: fetch, target: circuit, count: 1 }
     - { text: "Bring the parts to Pell", kind: carry, target: gamma-pell, item: copper_coil, count: 3 }
   alt: { kind: item, item: motor, count: 1, text: "Pell strips the motor for coils on the spot." }
-  reward: { cents: 4000, xp: 150, item: [ammo] }
+  reward: { cents: 4000, xp: 150, item: [ammo], rep: { group: meg, d: 2 } }
 
 - id: june-rations
   giver: gamma-june
@@ -106,7 +108,7 @@
     - { text: "Bring them to June", kind: carry, target: gamma-june, item: ration, count: 4 }
     - { text: "Let Tess know the shelf is full", kind: talk, target: gamma-tess, count: 1 }
   alt: { kind: item, item: royal_ration, count: 1, text: "June stares at the tin for a while. Then she takes it." }
-  reward: { cents: 3000, xp: 110 }
+  reward: { cents: 3000, xp: 110, rep: { group: meg, d: 2 } }
 
 - id: tess-sweep
   giver: gamma-tess
@@ -117,18 +119,19 @@
     - { text: "Check in with Duke on watch", kind: talk, target: gamma-duke, count: 1 }
     - { text: "Report to Tess", kind: talk, target: gamma-tess, count: 1 }
   alt: { kind: speech, sk: 55, pay: 0.5, text: "Tess logs the sweep as done. She does not look up." }
-  reward: { cents: 4500, xp: 180, item: [shells] }
+  reward: { cents: 4500, xp: 180, item: [shells], rep: { group: meg, d: 2 } }
 
 - id: otto-gears
   giver: gamma-otto
   place: gamma
+  needs: { group: meg, fame: 6, text: "Not yet. Help the M.E.G. out with something smaller first." }
   title: "Otto's Clock"
   stages:
     - { text: "Find gears", kind: fetch, target: gears, count: 3 }
     - { text: "Find springs", kind: fetch, target: springs, count: 2 }
     - { text: "Bring them to Otto", kind: carry, target: gamma-otto, item: gears, count: 3 }
   alt: { kind: item, item: musicbox, count: 1, text: "Otto takes the music box apart with a happy little noise." }
-  reward: { cents: 2500, xp: 100 }
+  reward: { cents: 2500, xp: 100, rep: { group: meg, d: 2 } }
 
 - id: vell-cooler
   giver: amor-vell
@@ -139,18 +142,19 @@
     - { text: "Find bottled water", kind: fetch, target: stillwater, count: 2 }
     - { text: "Bring the water to Vell", kind: carry, target: amor-vell, item: stillwater, count: 2 }
   alt: { kind: item, item: gatorade, count: 2, text: "Vell takes the sports drinks. Calls it a promotion." }
-  reward: { cents: 2000, xp: 80 }
+  reward: { cents: 2000, xp: 80, rep: { group: survivors, d: 2 } }
 
 - id: hask-lift
   giver: amor-hask
   place: level4
+  needs: { group: survivors, fame: 6, text: "Not yet. Help the survivors here out with something smaller first." }
   title: "Stuck Lift"
   stages:
     - { text: "Find a motor", kind: fetch, target: motor, count: 1 }
     - { text: "Fix the lift door", kind: repair, target: l4-lift-door, item: motor, count: 1 }
     - { text: "Tell Hask", kind: talk, target: amor-hask, count: 1 }
   alt: { kind: speech, sk: 40, pay: 0.5, text: "Hask agrees the stairs are good exercise." }
-  reward: { cents: 3500, xp: 130, item: [snapple] }
+  reward: { cents: 3500, xp: 130, item: [snapple], rep: { group: survivors, d: 2 } }
 
 - id: dolores-coat
   giver: l5-dolores
@@ -166,6 +170,7 @@
 - id: harlan-ledger
   giver: l5-harlan
   place: level5
+  needs: { group: hotel, fame: 6, text: "Not yet. Help the hotel staff out with something smaller first." }
   title: "The Guest Book"
   stages:
     - { text: "Ask Vanderholt about the guest book", kind: talk, target: l5-vanderholt, count: 1 }
@@ -183,7 +188,7 @@
     - { text: "Find cloth stuffing", kind: fetch, target: stuffing, count: 4 }
     - { text: "Bring it to Millie", kind: carry, target: l5-millie, item: stuffing, count: 4 }
   alt: { kind: item, item: spider_silk, count: 2, text: "Millie holds the silk up to the light and goes quiet." }
-  reward: { cents: 1800, xp: 70, item: [bandage] }
+  reward: { cents: 1800, xp: 70, item: [bandage], rep: { group: hotel, d: 2 } }
 
 - id: wat-candles
   giver: l5-wat
@@ -194,7 +199,7 @@
     - { text: "Look at the Boiler Room sign", kind: find, target: l5-ball-boilersign, count: 1 }
     - { text: "Bring the light to Wat", kind: carry, target: l5-wat, item: glow_cap, count: 2 }
   alt: { kind: item, item: glow_necklace, count: 1, text: "Wat wears the necklace like a holy relic." }
-  reward: { cents: 1500, xp: 90 }
+  reward: { cents: 1500, xp: 90, rep: { group: hotel, d: 2 } }
 
 - id: zelda-cards
   giver: l5-zelda
@@ -205,7 +210,7 @@
     - { text: "Ask Imani to sit in", kind: talk, target: l5-imani, count: 1 }
     - { text: "Bring Zelda a bottle", kind: carry, target: l5-zelda, item: smirnoffice, count: 1 }
   alt: { kind: speech, sk: 40, pay: 0.6, text: "Zelda deals you in instead. You lose on purpose." }
-  reward: { cents: 2500, xp: 80 }
+  reward: { cents: 2500, xp: 80, rep: { group: hotel, d: 2 } }
 
 - id: jude-ladder
   giver: l7-jude
@@ -216,11 +221,12 @@
     - { text: "Find rope fibre or silk", kind: fetch, target: spider_silk, count: 2 }
     - { text: "Bring it to Jude", kind: carry, target: l7-jude, item: spider_silk, count: 2 }
   alt: { kind: item, item: wire, count: 4, text: "Jude says wire will hold. Jude is probably right." }
-  reward: { cents: 3000, xp: 120 }
+  reward: { cents: 3000, xp: 120, rep: { group: surrender, d: 2 } }
 
 - id: mara-gate
   giver: l7-mara
   place: level7
+  needs: { group: surrender, fame: 6, text: "Not yet. Help Fort Surrender out with something smaller first." }
   title: "The Fort Gate"
   stages:
     - { text: "Check the gate at the fort", kind: find, target: l7f-gate-0, count: 1 }
@@ -239,22 +245,24 @@
     - { text: "Find pitch", kind: fetch, target: pitch, count: 3 }
     - { text: "Bring it to Wen", kind: carry, target: l8-wen, item: pitch, count: 3 }
   alt: { kind: item, item: crew_putty, count: 2, text: "Wen sniffs the putty and shrugs. It'll do." }
-  reward: { cents: 2000, xp: 90 }
+  reward: { cents: 2000, xp: 90, rep: { group: survivors, d: 2 } }
 
 - id: marit-crawl
   giver: l8-marit
   place: level8
+  needs: { group: survivors, fame: 6, text: "Not yet. Help the survivors here out with something smaller first." }
   title: "Something in the Dark"
   stages:
     - { text: "Clear the crawlers near the cave camp", kind: clear, target: hostile, count: 5 }
     - { text: "Find chitin to prove it", kind: fetch, target: chitin, count: 2 }
     - { text: "Bring it to Marit", kind: carry, target: l8-marit, item: chitin, count: 2 }
   alt: { kind: speech, sk: 60, pay: 0.4, text: "Marit takes your word. Marit regrets it later." }
-  reward: { cents: 5000, xp: 200, item: [ammo] }
+  reward: { cents: 5000, xp: 200, item: [ammo], rep: { group: survivors, d: 2 } }
 
 - id: hale-silo
   giver: l10-meg-hale
   place: level10
+  needs: { group: meg, fame: 6, text: "Not yet. Help the M.E.G. out with something smaller first." }
   title: "The Silo Ladder"
   stages:
     - { text: "Check the silo ladder", kind: find, target: l10-ladder-silo, count: 1 }
@@ -285,7 +293,7 @@
     - { text: "Find bread", kind: fetch, target: bread, count: 2 }
     - { text: "Bring it to Wren", kind: carry, target: l10-meg-wren, item: bread, count: 2 }
   alt: { kind: item, item: stew, count: 1, text: "Wren tips the stew straight into the pot." }
-  reward: { cents: 1500, xp: 70 }
+  reward: { cents: 1500, xp: 70, rep: { group: meg, d: 2 } }
 
 - id: walker-booth
   giver: l11-walker-2
@@ -374,6 +382,7 @@
   alt: { kind: speech, sk: 35, pay: 0.6, text: "Bev laughs and says she'll just make more." }
   reward: { cents: 2000, xp: 90, rep: { group: froid, d: 3 } }
 
+# needs fame 6 on the level jobs: about two small jobs for that faction first (her pick).
 # ---- faction work (Shelly Nov 13: quests count toward standing, some need it). needs: { group, fame, text } gates the offer.
 - id: jo-supply
   giver: hub-amber-jo
