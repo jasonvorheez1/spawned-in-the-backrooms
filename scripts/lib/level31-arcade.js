@@ -80,9 +80,9 @@ export function layArcade(ctx) {
     audio: { clip: "/cdn/moodboard-pixel-bright/sfx-arcade-room-garbled-attract-machines-loop.mp3", gain: 0.12, loop: true, spatial: true, maxDistance: 24 },
   });
   for (const [id, x, z, color] of [
-    ["racing", 46.5, -22, "#c4dceb"], ["pinball", 53.7, -25.8, "#ffe0bd"],
-    ["entry", 47, -12, "#fff0d5"], ["uprights", 55, -16.8, "#c4e4dc"],
-    ["lanes", 54, -4, "#e8d9ff"], ["hockey", 49.8, -3.6, "#e5eafa"],
+    ["racing", 44.5, -25.2, "#c4dceb"], ["pinball", 54.4, -27.6, "#ffe0bd"],
+    ["entry", 46, -12, "#fff0d5"], ["uprights", 56, -13.6, "#c4e4dc"],
+    ["lanes", 55, 1.6, "#e8d9ff"], ["hockey", 46.8, -4.5, "#e5eafa"], ["islb", 52.5, -5.2, "#d6c4ff"], ["wheel", 46, 3.6, "#ffd9a8"],
   ]) ctx.spawn("l31-arcade-light-" + id, {
     feetPosition: { x, y: H - 0.14, z },
     primitive: { kind: "box", width: 0.45, height: 0.08, depth: 1.3 },
@@ -98,46 +98,46 @@ export function layArcade(ctx) {
   const T = (id, key, x, z, yaw, state, box) => ctx.spawn("l31-arcade-" + id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: GLB[key], forward: "+x" }, layout: { box },
     physics: { body: "static", collider: "box" }, behavior: SELF, tags: ["usable", "l31-arcade"], state: { kind: "attract", verb: "Play", info: "arcade machine, takes a card", ...state } });
   // Tripo v3.1 (Nov 12): dispenser 0.7 x 1.7 x 0.5 m, air hockey 2.1 x 0.85 x 1.15 m
-  T("dispenser", "dispenser", Z.x0 + 2.1, -8.2, 180, { kind: "dispenser", name: "Card dispenser", verb: "Press", info: "Please press the button to get a card" }, { min: { x: -0.35, y: 0, z: -0.25 }, max: { x: 0.35, y: 1.7, z: 0.25 } });
+  T("dispenser", "dispenser", 42.45, -9.2, -90, { kind: "dispenser", name: "Card dispenser", verb: "Press", info: "Please press the button to get a card" }, { min: { x: -0.35, y: 0, z: -0.25 }, max: { x: 0.35, y: 1.7, z: 0.25 } });
 
   // Twin-seat racers face the center aisle.
   for (let r = 0; r < 2; r++) for (let i = 0; i < 2; i++)
-    ctx.spawn(`l31-arcade-racer-${r}${i}`, { feetPosition: { x: 44, y: 0, z: -26 + (r * 2 + i) * 3 }, rotation: { yaw: EA },
+    ctx.spawn(`l31-arcade-racer-${r}${i}`, { feetPosition: { x: 43.05, y: 0, z: (r ? -23.6 : -28.2) + i * 1.62 }, rotation: { yaw: EA },
       model: { id: GLB.racer, forward: "+z" }, layout: { box: { min: { x: -0.8, y: 0, z: -0.63 }, max: { x: 0.8, y: 1.8, z: 0.63 } } }, physics: { body: "static", collider: "box" },
       behavior: SELF, tags: ["usable", "l31-arcade"], state: { kind: "attract", verb: "Play", info: "arcade machine, takes a card", name: "Dust Devil GP", res: "racer", pitch: 0.94 + (r * 2 + i) * 0.05 } });
   // ride-on bikes against the north wall
-  for (let i = 0; i < 2; i++) M("moto-" + i, "moto", 47.7 + i * 2.3, N + 1.4, S, { name: "Night Ride 500", res: "moto", pitch: 1.08 },
+  for (let i = 0; i < 2; i++) M("moto-" + i, "moto", 46.4 + i * 1.5, N + 1.4, S, { name: "Night Ride 500", res: "moto", pitch: 1.08 },
     { screen: glow("retro-arcade-crt-screen-motorbike-coast-road-racing-game", i ? "#d8ffe0" : "#ffffff"), marquee: lamp(i ? "#58c8ff" : "#ff4fb8", 1.4), tail: lamp("#ff2a1a", 2) });
   // pinball: three in a row, backs to the north wall
   const PB = [["Moon Diner", "#ffffff", "#ffd0f0"], ["High Tide", "#bfe6ff", "#9fe0ff"], ["Thunder Alley", "#ffe2a8", "#ffc070"]];
   PB.forEach(([name, a, b], i) => M("pinball-" + i, "pinball", 53 + i * 1.45, N + 0.85, S, { name, res: "pinball", pitch: 1.15 },
     { playfield: glow("pinball-machine-playfield-top-down-bumpers-lanes-art", a, 0.7), backglass: glow("pinball-backglass-art-1970s-painted-illustration", b, 1.2) }));
   // skee-ball: two lanes side by side, heads on the east wall
-  for (let i = 0; i < 2; i++) M("skee-" + i, "skee", E - 1.7, -6.1 + i * 2.3, W, { name: "Skee-Ball lane " + (i + 1), verb: "Roll", res: "skee", pitch: 0.9 }, { lane: { texture: tex("grey-cork-lane-surface"), roughness: 0.7 } });
-  M("wheel", "wheel", E - 0.55, -9.4, W, { name: "Big Prize Wheel", verb: "Spin", res: "wheel", pitch: 1.2 }, { screen: lamp("#ff3b30", 1.6), marquee: lamp("#ffd76a", 1.5), bulbs: lamp("#ffdf9a", 2.5) });
-  T("hockey", "hockey", 49.8, -3.6, 0, { name: "Air hockey", res: "hockey", pitch: 0.85 }, { min: { x: -0.575, y: 0, z: -1.05 }, max: { x: 0.575, y: 0.85, z: 1.05 } });
+  for (let i = 0; i < 2; i++) M("skee-" + i, "skee", E - 1.7, 0.4 + i * 1.25, W, { name: "Skee-Ball lane " + (i + 1), verb: "Roll", res: "skee", pitch: 0.9 }, { lane: { texture: tex("grey-cork-lane-surface"), roughness: 0.7 } });
+  M("wheel", "wheel", 46, 5.45, 0, { name: "Big Prize Wheel", verb: "Spin", res: "wheel", pitch: 1.2 }, { screen: lamp("#ff3b30", 1.6), marquee: lamp("#ffd76a", 1.5), bulbs: lamp("#ffdf9a", 2.5) });
+  T("hockey", "hockey", 46.8, -4.5, 0, { name: "Air hockey", res: "hockey", pitch: 0.85 }, { min: { x: -0.575, y: 0, z: -1.05 }, max: { x: 0.575, y: 0.85, z: 1.05 } });
   // a row of upright games against the east wall
   const U = (id, x, z, yaw, state, side, body, scr, svg, extra = []) => M(id, "upright", x, z, yaw, { res: "upright", ...state },
     { screen: scr, marquee: lamp("#fff4d0", 0.5), side, body_red: body, cpanel: { color: body.color } },
     [{ id: "title", feetPosition: { x: 0, y: 1.6, z: -0.352 }, vector: svg, castShadow: false }, ...extra]);
   // the real Fix-It Felix Jr. upright (Tripo, from Shelly's photo), sky-blue cab, true size 0.66 x 1.82 x 0.78 m
-  ctx.spawn("l31-arcade-felix", { feetPosition: { x: E - 0.65, y: 0, z: -14.6 }, rotation: { yaw: W },
+  ctx.spawn("l31-arcade-felix", { feetPosition: { x: E - 0.65, y: 0, z: -12 }, rotation: { yaw: W },
     model: { id: GLB.felix, forward: "+x" }, layout: { box: { min: { x: -0.7, y: 0, z: -0.7 }, max: { x: 0.7, y: 1.82, z: 0.7 } } },
     physics: { body: "static", collider: "box" }, behavior: SELF, tags: ["usable", "l31-arcade"],
     state: { kind: "arcade", game: "felix", verb: "Play", info: "Fix-It Felix Jr. Takes a card.", name: "Fix-It Felix Jr.", res: "upright" },
     children: [{ id: "glow", feetPosition: { x: 0, y: 1.35, z: -0.6 }, light: { kind: "point", color: "#9fd4ff", intensity: 0.6, distance: 2.5 } }] });
-  U("panic", E - 0.6, -19.25, W, { kind: "arcade", game: "blockpanic", name: "Block Panic", info: "arcade cabinet, takes a card" }, { color: "#2a1c5c", roughness: 0.4 }, { color: "#ff4fa3" },
+  U("panic", E - 0.6, -14.01, W, { kind: "arcade", game: "blockpanic", name: "Block Panic", info: "arcade cabinet, takes a card" }, { color: "#2a1c5c", roughness: 0.4 }, { color: "#ff4fa3" },
     glow("retro-arcade-crt-screen-pixel-falling-block-puzzle-game", "#ffffff", 1.5), PANIC);
-  U("comet", E - 0.6, -21.6, W, { name: "Comet Cadets", pitch: 1.3 }, { color: "#0c2a66", roughness: 0.4 }, { color: "#ff8a2a" },
+  U("comet", E - 0.6, -14.87, W, { name: "Comet Cadets", pitch: 1.3 }, { color: "#0c2a66", roughness: 0.4 }, { color: "#ff8a2a" },
     glow("retro-arcade-crt-screen-pixel-space-shooter-starfield-game", "#d8e8ff"), COMET);
-  U("pickle", E - 0.6, -16.9, W, { name: "Pickle Patrol", pitch: 0.8 }, { color: "#e9dfc2", roughness: 0.55 }, { color: "#5c9a2e" },
+  U("pickle", E - 0.6, -13.15, W, { name: "Pickle Patrol", pitch: 0.8 }, { color: "#e9dfc2", roughness: 0.55 }, { color: "#5c9a2e" },
     glow("retro-arcade-crt-screen-pixel-maze-chase-green-game", "#e6ffd0"), PICKLE,
     [{ id: "note", feetPosition: { x: 0.02, y: 0.74, z: -0.34 }, vector: PAPER, castShadow: false }]);
 
   // three faceling customers, each stood at a machine (docile; lines in scripts/lib/data/dlg-generic.yml by id)
-  [["face1", 55.7, -13.7, EA, "f", { topw: "jacket", top: "#7a3d52", bottom: "#27293a" }, "Faceling at the Felix machine"],
-   ["face2", 53, -26.65, 0, "m", { topw: "tee", top: "#3f6f8f", bottom: "#3a352e" }, "Faceling at the pinball"],
-   ["face3", 53, -5.2, EA, "m", { topw: "hoodie", top: "#c9a23a", bottom: "#22232b" }, "Faceling at the Skee-Ball"]].forEach(([id, x, z, yaw, sex, wear, name]) =>
+  [["face1", 56.35, -11.6, EA, "f", { topw: "jacket", top: "#7a3d52", bottom: "#27293a" }, "Faceling at the Felix machine"],
+   ["face2", 54.45, -27.9, 0, "m", { topw: "tee", top: "#3f6f8f", bottom: "#3a352e" }, "Faceling at the pinball"],
+   ["face3", 54.2, 0.4, EA, "m", { topw: "hoodie", top: "#c9a23a", bottom: "#22232b" }, "Faceling at the Skee-Ball"]].forEach(([id, x, z, yaw, sex, wear, name]) =>
     ctx.spawn("l31-arcade-" + id, { feetPosition: { x, y: 0.05, z }, rotation: { yaw }, physics: "character", tags: ["npc", "usable", "faceling", "l31-arcade"],
       ...critterSpec(npcLook("l31-arcade-" + id, { species: "faceling", sex, botw: "pants", shoes: "sneakers", ...wear }, "wanderer", 1)),
       behavior: ["scripts/humanoid-locomotion.js"], state: { name, role: "regular", faction: "wanderer", factionName: "Rink regular", docile: true, hp: 60, home: { x, z }, stay: true } }));
@@ -146,14 +146,18 @@ export function layArcade(ctx) {
     ["Pickle Patrol", "#e9dfc2", "#5c9a2e", "pixel-maze-chase-green-game", PICKLE], ["Marty's Run", "#f4c21c", "#c8281e", "pixel-maze-chase-green-game", MARTY]];
   for (let row = 0; row < 2; row++) for (let i = 0; i < 4; i++) {
     const [name, body, side, scr, svg] = ISL[(i + row * 2) % 4];
-    U(`isl-${row}${i}`, row ? 50.55 : 49.45, -19.8 + i * 0.86, row ? EA : W, { name, pitch: 0.9 + i * 0.07 }, { color: body, roughness: 0.4 }, { color: side }, glow("retro-arcade-crt-screen-" + scr, "#ffffff", 1.3), svg);
+    U(`isl-${row}${i}`, row ? 50.55 : 49.45, -24.6 + i * 0.86, row ? EA : W, { name, pitch: 0.9 + i * 0.07 }, { color: body, roughness: 0.4 }, { color: side }, glow("retro-arcade-crt-screen-" + scr, "#ffffff", 1.3), svg);
   }
-  ctx.spawn("l31-arcade-isl-cap", { feetPosition: { x: 50, y: 0, z: -21 }, primitive: { kind: "cylinder", radiusTop: 0.45, radiusBottom: 0.5, height: 0.9, radialSegments: 24 }, material: { color: "#1b1630", roughness: 0.5 }, physics: "static", castShadow: false,
+  for (let row = 0; row < 2; row++) for (let i = 0; i < 3; i++) { // island B: three a side, the late-90s row
+    const [name, body, side, scr, svg] = ISL[(i + row + 1) % 4];
+    U(`islb-${row}${i}`, row ? 53.05 : 51.95, -6.1 + i * 0.86, row ? EA : W, { name, pitch: 1.0 + i * 0.06 }, { color: body, roughness: 0.4 }, { color: side }, glow("retro-arcade-crt-screen-" + scr, "#ffffff", 1.3), svg);
+  }
+  ctx.spawn("l31-arcade-isl-cap", { feetPosition: { x: 50, y: 0, z: -21.15 }, primitive: { kind: "cylinder", radiusTop: 0.45, radiusBottom: 0.5, height: 0.9, radialSegments: 24 }, material: { color: "#1b1630", roughness: 0.5 }, physics: "static", castShadow: false,
     children: [{ feetPosition: { x: 0, y: 0.9, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.47, radiusBottom: 0.47, height: 0.04, radialSegments: 24 }, material: { color: "#d9dde3", metalness: 0.9, roughness: 0.25 } }] });
-  ctx.spawn("l31-arcade-isl-ring", { feetPosition: { x: 50, y: 3.6, z: -18.5 }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "torus", radius: 2.4, tube: 0.05, radialSegments: 8, tubularSegments: 64 }, material: { color: "#ff4fb8", emissive: "#ff4fb8", emissiveIntensity: 2.4 }, castShadow: false,
+  ctx.spawn("l31-arcade-isl-ring", { feetPosition: { x: 50, y: 3.6, z: -23.3 }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "torus", radius: 2.4, tube: 0.05, radialSegments: 8, tubularSegments: 64 }, material: { color: "#ff4fb8", emissive: "#ff4fb8", emissiveIntensity: 2.4 }, castShadow: false,
     children: [{ feetPosition: { x: 0, y: 0, z: 0 }, light: { kind: "point", color: "#ff7cc8", intensity: 3.2, distance: 9 } }] });
-  ctx.spawn("l31-arcade-isl-ring2", { feetPosition: { x: 50, y: 3.45, z: -18.5 }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "torus", radius: 2.1, tube: 0.035, radialSegments: 8, tubularSegments: 64 }, material: { color: "#3ff0e0", emissive: "#3ff0e0", emissiveIntensity: 2.2 }, castShadow: false });
-  ctx.spawn("l31-arcade-scores", { feetPosition: { x: 50, y: 2.2, z: 5.85 }, rotation: { yaw: 180 }, castShadow: false, vector: `<svg viewBox='0 0 300 200' width='2.4m'><rect width='300' height='200' rx='8' fill='#0b0716' stroke='#3ff0e0' stroke-width='3'/>
+  ctx.spawn("l31-arcade-isl-ring2", { feetPosition: { x: 50, y: 3.45, z: -23.3 }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "torus", radius: 2.1, tube: 0.035, radialSegments: 8, tubularSegments: 64 }, material: { color: "#3ff0e0", emissive: "#3ff0e0", emissiveIntensity: 2.2 }, castShadow: false });
+  ctx.spawn("l31-arcade-scores", { feetPosition: { x: 51.5, y: 2.2, z: 5.85 }, rotation: { yaw: 180 }, castShadow: false, vector: `<svg viewBox='0 0 300 200' width='2.4m'><rect width='300' height='200' rx='8' fill='#0b0716' stroke='#3ff0e0' stroke-width='3'/>
     <text x='150' y='36' text-anchor='middle' font-family='display' font-size='24' fill='#ffd23a' filter='drop-shadow(0 0 3 #ff8a2a)'>HIGH SCORES</text>
     <g font-family='display' font-size='17' fill='#f2e8ff'><text x='34' y='76'>1 DOT</text><text x='266' y='76' text-anchor='end'>48,200</text><text x='34' y='104'>2 ???</text><text x='266' y='104' text-anchor='end'>41,750</text>
     <text x='34' y='132'>3 KAY</text><text x='266' y='132' text-anchor='end'>39,010</text><text x='34' y='160'>4 MEG</text><text x='266' y='160' text-anchor='end'>12,400</text></g>
