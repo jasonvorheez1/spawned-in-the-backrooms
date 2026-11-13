@@ -192,8 +192,8 @@ const STEAM = `fx
 pop steam rate=(flick(.3,1)^3)*?mobile:22|40 on=disc(.04) life=.7..1.3 v=<%dir|0,0,1>*(1.6..2.6)+sdir()*.35 size=.12..0.22 acc=buoy(.5)+curl(.5)*.6+drag(1.3) sz=$size*(.5>3.4) col=<.82,.84,.86> a=0>.08:.38>.6:.18>0 rot=spin(.3) r=sprite(smoke-puff,alpha)`;
 const SPARKS = `fx
 pop spark rate=(flick(1.4,1)^8)*260 on=disc(.06) life=.25..0.6 v=<%dir|0,0,1>*(1..2.5)+sdir()*1.6 size=.012..0.025 acc=grav()+drag(.4) floor=bounce(.3) sz=$size col=hdr(4,4,6)>hdr(3,1.6,.4) a=1>0 r=sprite(ember,add,velocity,.03)
-pop zap n=1 r=light(<.65,.8,1>,(flick(1.4,1)^8)*14,5)`;
-const flickFx = (col, k) => `fx\npop glow n=1 r=light(${col},(.15+.85*flick(${(3 + k * 5).toFixed(2)},.85))*6,11)`;
+pop zap n=1 r=light(<.65,.8,1>,(flick(1.4,1)^8)*6,2.5)`;
+const flickFx = (col, k) => `fx\npop glow n=1 r=light(${col},(.15+.85*flick(${(3 + k * 5).toFixed(2)},.85))*2.5,4.5)`; // my pick: 4.5 m keeps it inside the room; 11 m lit the corridor through the walls
 const FIREBOX = `fx
 pop glow n=1 r=light(<1,.45,.15>,fire()*10,9)
 pop ember rate=3 on=disc(.4) life=1..2 v=up(.6..1.2)+sdir()*.2 size=.015..0.03 acc=curl(.6)+drag(.4) col=hdr(4,1.6,.3)>hdr(1,.2,.04) a=(1>0)*flick(9,.4) sz=$size r=sprite(ember,add)`;
