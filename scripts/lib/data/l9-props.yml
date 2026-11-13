@@ -39,3 +39,7 @@ tune:
   windowLit: 0.12        # share of houses with a light on inside
   fogEvery: [240, 420]   # s between fog banks
   fogLasts: [70, 110]    # s a bank stays
+  hounds: 6              # hounds kept on the streets, in packs of 3 (my pick)
+  houndHp: 65            # base hp, rolled per hound (my pick)
+  houndEvery: 150        # s before a dead hound's place is filled again (my pick)
+  houndFar: 45           # m a new hound arrives from every player (my pick)

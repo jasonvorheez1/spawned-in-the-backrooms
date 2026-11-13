@@ -3,6 +3,7 @@
 // and runs the fog banks. Layout: scripts/lib/level9.js. House kit: scripts/lib/data/l9-houses.yml. Props: l9-props.yml.
 import { rotate } from "builtin/vec3";
 import { rollLoot } from "../../scripts/lib/loot.js";
+import { npcState } from "../../scripts/lib/stats.js";
 import FURN from "../../scripts/lib/data/furniture.yml";
 import { layout, hashStr, HOUSES, PAINTS, PROPS, TUNE, FWD, ROAD_W, WALK } from "../../scripts/lib/level9.js";
 export const cadence = "1s";
@@ -146,5 +147,21 @@ export function tick(ctx) {
   if (s.l9seed == null) s.l9seed = (hashStr(String(ctx.getRoomId?.() ?? "main")) ^ Math.floor(ctx.random() * 0x7fffffff)) >>> 0; // rolled once per room, kept with the room
   if (s.l9V !== V) { lay(ctx, layout(s.l9seed)); s.l9V = V; s.l9DressV = 0; }
   if (s.l9DressV !== 1) { dressStreets(ctx, layout(s.l9seed)); s.l9DressV = 1; }
-  if (ctx.place.players.length) fog(ctx, s);
+  if (ctx.place.players.length) { fog(ctx, s); hounds(ctx, s, layout(s.l9seed)); }
+}
+
+// hounds (Wikidot: Level 9's streets have them): one pack manager (scripts/hounds.js, its Level 9 branch keeps them on the street,
+// so a house is shelter), topped up to TUNE.hounds in threes, each pack arriving far from every player on a street point.
+function hounds(ctx, s, L) {
+  const now = ctx.now();
+  if (!s.packMgr || !(s.packMgr in ctx.place.objects)) s.packMgr = ctx.spawn({ behavior: "scripts/hounds.js" });
+  if (s.houndAt && now - s.houndAt < TUNE.houndEvery * 1000) return;
+  s.houndAt = now;
+  const have = ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((h) => !h.state?.dead).length;
+  const ps = ctx.place.players.map((p) => p.feetPosition);
+  const far = () => { const pts = L.streets.flatMap((st) => st.pts); for (let i = 0; i < 40; i++) { const [x, z] = pts[Math.floor(ctx.random() * pts.length)]; if (ps.every((p) => Math.hypot(p.x - x, p.z - z) > TUNE.houndFar)) return { x, z }; } return null; };
+  for (let i = have, c = null; i < TUNE.hounds; i++) {
+    if (i % 3 === 0 || !c) c = far(); if (!c) break;
+    ctx.spawn({ tags: ["hound"], feetPosition: T(c.x + (i % 3) * 0.9, c.z + (i % 3) * 0.5, 0.05), physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/hound-geo.js" }, state: npcState(ctx, "hound", TUNE.houndHp, { xp: 45 }) });
+  }
 }
