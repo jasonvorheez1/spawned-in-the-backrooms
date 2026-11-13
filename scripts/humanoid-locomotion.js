@@ -405,9 +405,11 @@ export function update(ctx, dt) {
     // the crouch pair sat 0.46 m (idle) and 0.81 m (walk) off the ground at the hips against 0.94 standing: a full squat that popped up into an almost
     // upright stoop the moment you moved, a body far above the lowered eye and hitbox. Both now blend to one sneaking height (about 0.65 m): the idle takes
     // a third of the standing idle under the squat, the walk takes some of the squat under it.
-    ctx.self.anim.idle = { clip: clips.idle || 'Idle', loop: 'loop', weight: Math.max(0.001, (1 - go) * 0.35), blendIn: 0.2, ...(human && !steered ? { speed: idleRate(ctx) } : {}) }
-    ctx.self.anim.crouch = { clip: 'cdn/clip-crouch-idle-loop.glb', loop: 'loop', weight: Math.max(0.001, (1 - go) * 0.65 + go * 0.4), blendIn: 0.2 }
-    ctx.self.anim.walk = { clip: 'cdn/clip-crouch-walk-loop.glb', loop: 'loop', weight: Math.max(0.001, go * 0.6), speed: Math.max(0.5, walkRate * 1.3), blendIn: 0.2 }
+    // Nov 13 (Shelly: "fix crouching animation", prone is fine): the standing idle mixed under the squat folded the body halfway, a mangled stoop.
+    // Now one crouch clip owns the body at a time: the crouch idle when still, the crouch walk when moving, crossfaded by speed, the standing idle silent.
+    ctx.self.anim.idle = { clip: clips.idle || 'Idle', loop: 'loop', weight: 0.001, blendIn: 0.2 }
+    ctx.self.anim.crouch = { clip: 'cdn/clip-crouch-idle-loop.glb', loop: 'loop', weight: Math.max(0.001, 1 - go), blendIn: 0.2 }
+    ctx.self.anim.walk = { clip: 'cdn/clip-crouch-walk-loop.glb', loop: 'loop', weight: Math.max(0.001, go), speed: Math.max(0.6, walkRate * 1.1), blendIn: 0.2 }
     ctx.self.anim.run = { clip: runClip, loop: 'loop', weight: 0.001, blendIn: 0.2 }
     if (ctx.self.anim.sprint) ctx.self.anim.sprint = { ...ctx.self.anim.sprint, weight: 0.001 }
   }
