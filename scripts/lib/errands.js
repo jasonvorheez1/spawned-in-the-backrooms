@@ -57,7 +57,7 @@ function enter(s, id, stage) {
 export function offerErrand(ctx, s, id) {
   const e = ERRANDS[id]; if (!e || s.errands?.[id]) return false;
   enter(s, id, 0); sync(s, id);
-  if ((s.qtrack ?? []).length < MAX_TRACK) s.qtrack = [...(s.qtrack ?? []), qidOf(id)];
+  if (!(s.qtrack ?? []).includes(qidOf(id)) && (s.qtrack ?? []).length < MAX_TRACK) s.qtrack = [...(s.qtrack ?? []), qidOf(id)];
   tell(ctx, s, `New job: ${e.title}`, "info");
   return true;
 }
