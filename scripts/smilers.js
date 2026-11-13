@@ -1,3 +1,4 @@
+import { targetsOf } from "./lib/decoys.js";
 const walled = (ctx, a, b, ids) => !clearSight(ctx, { x: a.x, y: a.y + 1, z: a.z }, { x: b.x, y: b.y + 1, z: b.z }, ids) // Shelly: no hits through walls
 import { clearSight } from './lib/sight.js';
 // The pack manager: one script moves every smiler. They drift cell to cell along open doorways,
@@ -102,7 +103,7 @@ function act(w, clip, extra) {
 export function update(ctx, dt) {
   if (!ctx.place.players.length) { ctx.sleep(2); return; }
   const now = ctx.now();
-  const players = ctx.place.players.filter((p) => !(p.state?.downAt && now - p.state.downAt < 4500));
+  const players = targetsOf(ctx, ctx.place.players).filter((p) => !(p.state?.downAt && now - p.state.downAt < 4500));
   const mem = (ctx.self.session.m ??= {});
   if (!mem.smilersAt || now > mem.smilersAt || !mem.allSmilers) {
     mem.smilersAt = now + 1200;

@@ -16,7 +16,7 @@ import L11 from "./data/l11-depths.yml";
 import L13 from "./data/level13.yml";
 import C3 from "./data/creatures3.yml";
 
-export const BAY_V = 4; // 4: clumps run scripts/clumps.js; // 3: the Dark Smiler runs its own revamped hunt; // 2: a pad for every enemy (Shelly: "im pretty sure theres more enemies than that")
+export const BAY_V = 5; // 5: a test-dummy pad; // 4: clumps run scripts/clumps.js; // 3: the Dark Smiler runs its own revamped hunt; // 2: a pad for every enemy (Shelly: "im pretty sure theres more enemies than that")
 const X0 = 24, X1 = 50, Z0 = -26, Z1 = -2, H = 6, DOOR = [-14, -10.5]; // the annex box and the doorway through the hall's east wall
 const CAP = 4; // live foes per kind (my pick)
 const PEN = { x: 46, z: -14 }; // where they come out
@@ -77,6 +77,7 @@ export function foeBayBuild(ctx, pad, sign) {
   // pads, a row along the safe strip
   Object.entries(KINDS).forEach(([k, K], i) => { const col = i % 2, row = Math.floor(i / 2); pad(ctx, "tl-bay-pad-" + k, "bay:" + k, K.name.toUpperCase(), 28.8 + col * 2.4, -24.4 + row * 2.6 + col * 1.3, K.color); if (col) { const l = ctx.place.objects["tl-bay-pad-" + k + "-label"]; if (l) l.feetPosition = { ...l.feetPosition, y: 2.3 }; } });
   pad(ctx, "tl-bay-pad-clear", "bay:clear", "CLEAR BAY", 26.5, -22, "oklch(0.78 0.15 80)");
+  pad(ctx, "tl-bay-pad-decoy", "bay:decoy", "TEST DUMMY", 26.5, -14, "oklch(0.75 0.1 70)");
   pad(ctx, "tl-bay-pad-heal", "heal", "FULL HEAL", 26.5, -6, "oklch(0.7 0.17 150)");
   // the packs that run them: the bay's own managers, same scripts as the levels
   ctx.spawn("tl-bay-hounds", { feetPosition: { x: PEN.x, y: 0, z: PEN.z }, behavior: "scripts/hounds.js" });
@@ -113,6 +114,12 @@ function spawnFoe(ctx, kind, n) {
 export function foeBayTick(ctx) {
   const s = ctx.place.state, w = s.want_bay; if (!w) return;
   s.want_bay = null;
+  if (w.kind === "decoy") { const n = ctx.query({ tags: ["bay-decoy"], radius: 1e4 }).length; if (n >= CAP) return;
+    ctx.spawn({ tags: ["bay-decoy", "tl-bay-foe"], feetPosition: { x: PEN.x - 6 + n * 1.6, y: 0, z: PEN.z - 2 + n * 1.2 }, physics: { body: "kinematic", collider: "capsule" }, behavior: "scripts/decoy.js",
+      primitive: { kind: "capsule", radius: 0.3, halfHeight: 0.55 }, material: { color: "oklch(0.72 0.09 70)", texture: "cdn/texture-burlap-sack-weave.png", roughness: 0.9 },
+      state: { hp: 300, maxHp: 300, name: "Test Dummy" },
+      ui: '<div face="front" at="0.5 0.92" width="0.6m" facing="player" class="px-2 py-1 bg-black/80 text-amber-200 text-center rounded" style="font-size:70px">DUMMY {{ state.hp | round }}</div>' });
+    return; }
   if (w.kind === "clear") { for (const o of ctx.query({ tags: ["tl-bay-foe"], radius: 1e4 })) ctx.destroy(o.id); return; }
   const K = KINDS[w.kind]; if (!K) return;
   const live = ctx.query({ tags: [K.tag, "tl-bay-foe"], radius: 1e4 }).filter((o) => !o.state?.dead && !o.state?.corpseAt).length;

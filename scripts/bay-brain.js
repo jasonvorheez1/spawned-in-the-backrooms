@@ -1,3 +1,4 @@
+import { targetsOf } from "./lib/decoys.js";
 // The Enemy Bay's stand-in brain (Shelly, Nov 13: "im pretty sure theres more enemies than that"): foes whose home
 // manager walks its own level's map (deathmoths on Level 3's cells, the Level 6 smiler, Level 5's rats, the Clump,
 // Level 13's tenant and lurker) come out here with their real model, hp and bite, and this one manager makes them hunt:
@@ -9,7 +10,7 @@ const BAY = { x0: 24.5, x1: 49.5, z0: -25.5, z1: -2.5 };
 const SMOKE = `fx
 pop smoke burst=24 on=sphere(.4) life=1.2..2.2 v=up(1)+sdir()*.5 size=.25..0.5 acc=buoy(.6)+drag(1) sz=$size*(.6>2) col=<.06,.06,.06> a=0>.6:.5>.6:.3>0 r=sprite(smoke-puff,alpha)`;
 export function update(ctx, dt) {
-  const players = ctx.place.players.filter((p) => p.feetPosition.x > BAY.x0 && p.feetPosition.x < BAY.x1 && p.feetPosition.z > BAY.z0 && p.feetPosition.z < BAY.z1 && !(p.state?.hp <= 0));
+  const players = targetsOf(ctx, ctx.place.players).filter((p) => p.feetPosition.x > BAY.x0 && p.feetPosition.x < BAY.x1 && p.feetPosition.z > BAY.z0 && p.feetPosition.z < BAY.z1 && !(p.state?.hp <= 0));
   const foes = ctx.query({ tags: ["baybrain"], radius: 1e4 });
   if (!foes.length) return ctx.sleep(1);
   const now = ctx.now(), g = ctx.place.gravity?.y ?? -9.8, seen = (ctx.self.session.gait ??= {});

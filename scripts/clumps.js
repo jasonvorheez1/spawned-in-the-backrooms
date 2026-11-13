@@ -1,3 +1,4 @@
+import { targetsOf } from "./lib/decoys.js";
 // Clumps (Entity 5), one manager for every row tagged "clump-ai" in its place. The wiki's rules, played:
 // - starved: it lets a quiet wanderer pass. Crouch-walk by and it only watches. Come within 8 ft standing, sprint near it, or hurt it: it hunts.
 // - it scrabbles in bursts, swiping at the floor, then stops dead and twitches.
@@ -31,7 +32,7 @@ function hurt(ctx, f, p, dmg) { // never more than a third of a full bar in one 
 }
 
 export function update(ctx, dt) {
-  const players = ctx.place.players.filter((p) => (p.state?.hp ?? 1) > 0);
+  const players = targetsOf(ctx, ctx.place.players).filter((p) => (p.state?.hp ?? 1) > 0);
   const foes = ctx.query({ tags: ["clump-ai"], radius: 1e4 });
   if (!foes.length || !players.length) { ctx.sleep(1); return; }
   const now = ctx.now(), mem = (ctx.self.session.m ??= {}), g = ctx.place.gravity?.y ?? -9.8;

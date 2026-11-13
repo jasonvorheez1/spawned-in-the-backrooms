@@ -1,3 +1,4 @@
+import { targetsOf } from "./lib/decoys.js";
 // Level 6 "Lights Out" Smiler: a terrifying predator lurking in total darkness.
 // Follows Wikidot Backrooms lore:
 // - Pitch dark: only its glowing luminescent white eyes and predatory smile are visible.
@@ -86,7 +87,7 @@ export function update(ctx, dt) {
   if (!ctx.place.players.length) { ctx.sleep(2); return; } // nobody in this level: rest
   const now = ctx.now();
   const mem = (ctx.self.session.m ??= {});
-  const players = ctx.place.players.filter((p) => !(p.state?.downAt && now - p.state.downAt < 4500));
+  const players = targetsOf(ctx, ctx.place.players).filter((p) => !(p.state?.downAt && now - p.state.downAt < 4500));
   const smilers = ctx.query({ tags: ["l6-smiler"] });
 
   for (const w of smilers) {

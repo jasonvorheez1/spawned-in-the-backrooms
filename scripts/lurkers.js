@@ -1,4 +1,5 @@
 import { clearSight } from './lib/sight.js';
+import { targetsOf } from "./lib/decoys.js";
 // The lurker pack: pale things that only move when nobody is looking at them. A wanderer who keeps one in view
 // holds it still (and pays sanity for it); look away, or break the line of sight, and it closes the gap fast.
 // They wander the halls like smilers, but never cross into the safe room. Dead lurkers are cleared here.
@@ -169,7 +170,7 @@ export function update(ctx, dt) {
   if (!ctx.place.players.length) { ctx.sleep(2); return; }
 
   const now = ctx.now();
-  const players = ctx.place.players.filter((p) => !(p.state?.downAt && now - p.state.downAt < 4500));
+  const players = targetsOf(ctx, ctx.place.players).filter((p) => !(p.state?.downAt && now - p.state.downAt < 4500));
   const mem = (ctx.self.session.m ??= {});
   if (!mem.lurkersAt || now > mem.lurkersAt || !mem.allLurkers) {
     mem.lurkersAt = now + 1200;
