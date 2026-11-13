@@ -8,8 +8,15 @@ import { LURKER_MODEL, LURKER_SCALE } from "../lurkers.js";
 import { MODEL as SMILER_MODEL, SCALE as SMILER_SCALE } from "../smilers.js";
 import { M as M70 } from "./level70-life.js";
 import { F as F70 } from "../l70-foes.js";
+import { MODEL as SMILER6_MODEL, SCALE as SMILER6_SCALE } from "../l6-smiler.js";
+import { TENANT, LURKER as LURKER13 } from "./level13-foes.js";
+import { swarm as MOTHS } from "../../templates/deathmoths.js";
+import E5 from "./data/l5-entities.json";
+import L11 from "./data/l11-depths.yml";
+import L13 from "./data/level13.yml";
+import C3 from "./data/creatures3.yml";
 
-export const BAY_V = 1;
+export const BAY_V = 2; // 2: a pad for every enemy (Shelly: "im pretty sure theres more enemies than that")
 const X0 = 24, X1 = 50, Z0 = -26, Z1 = -2, H = 6, DOOR = [-14, -10.5]; // the annex box and the doorway through the hall's east wall
 const CAP = 4; // live foes per kind (my pick)
 const PEN = { x: 46, z: -14 }; // where they come out
@@ -19,7 +26,25 @@ export const KINDS = {
   lurker: { name: "Lurker", tag: "lurker", color: "oklch(0.55 0.17 300)" },
   hound: { name: "Hound", tag: "hound", color: "oklch(0.6 0.16 50)" },
   froidling: { name: "Snow Hound", tag: "froidling", color: "oklch(0.72 0.1 240)" },
-  deathrat70: { name: "Death Rat", tag: "deathrat70", color: "oklch(0.7 0.03 70)" },
+  deathrat70: { name: "Snow Rat", tag: "deathrat70", color: "oklch(0.7 0.03 70)" },
+  partygoer: { name: "Partygoer", tag: "partygoer", color: "oklch(0.75 0.17 90)" },
+  balloon: { name: "Balloon", tag: "l26-balloon", color: "oklch(0.7 0.18 140)" },
+  moths: { name: "Deathmoths", tag: "bay-moths", color: "oklch(0.55 0.04 70)" },
+  smiler6: { name: "Dark Smiler", tag: "bay-smiler6", color: "oklch(0.4 0.02 260)" },
+  rat5: { name: "Death Rat", tag: "bay-rat5", color: "oklch(0.45 0.1 30)" },
+  clump: { name: "Clump", tag: "bay-clump", color: "oklch(0.65 0.08 40)" },
+  tenant: { name: "Tenant", tag: "bay-tenant", color: "oklch(0.6 0.06 200)" },
+  lurker13: { name: "Hall Lurker", tag: "bay-lurker13", color: "oklch(0.45 0.08 150)" },
+};
+const CLUMP_GLB = "/cdn/value.aeb91c70e11f57592fd7fe510b2e8bfd86065edacbb87155c02fa34a5761c396.glb", PARTY_GLB = "/cdn/value.26b362d316413677eaf77a390fda1afb0b1651baf57b6c1c3ba429dc3447fa2d.glb", BALLOON_GLB = "/cdn/value.bbcd28912111e39613cec71f06224b7742148d3493106c89a76f739e3003f366.glb";
+// stand-ins run by scripts/bay-brain.js: their home level's model and numbers, a simple hunt
+const BRAIN = {
+  moths: { hp: C3.moths.hp, brain: { fly: 1, speed: 2.6, reach: 1.2, dmg: C3.moths.bite, cd: 1.1, bite: "dry-moth-wings-fluttering-burst" } },
+  smiler6: { hp: 120, brain: { speed: 3.2, reach: 1.6, dmg: 22, cd: 1.4 } },
+  rat5: { hp: E5.rat.hp, brain: { speed: 4.2, reach: 0.9, dmg: E5.rat.bite ?? 5, cd: 0.7, rig: 0 } },
+  clump: { hp: L11.kinds.clump.hp, brain: { speed: L11.kinds.clump.speed, reach: L11.kinds.clump.reach, dmg: L11.kinds.clump.dmg, cd: L11.kinds.clump.cd } },
+  tenant: { hp: L13.tenant.hp, brain: { rig: 1, speed: 1.8, reach: 1.4, dmg: 10, cd: 1.2 } },
+  lurker13: { hp: L13.lurker.hp, brain: { rig: 1, speed: 2.8, reach: 1.6, dmg: 16, cd: 1.3 } },
 };
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, wrap: "repeat", repeat: [rep, rep], color, roughness: 0.85 });
 
@@ -51,11 +76,13 @@ export function foeBayBuild(ctx, pad, sign) {
   ctx.spawn("tl-bay-sign", { feetPosition: { x: X1 - 0.2, y: 4.2, z: PEN.z }, rotation: { yaw: -90 }, vector: sign("ENEMY BAY") });
   ctx.spawn("tl-bay-help", { feetPosition: { x: 27, y: 2.2, z: Z1 - 0.2 }, rotation: { yaw: 180 }, vector: `<svg viewBox='0 0 520 120' width='3.2m'><rect width='520' height='120' rx='8' fill='#14161a' opacity='0.9'/><text x='20' y='44' font-family='display' font-size='28' fill='#f3d27a'>STEP ON A PAD TO RELEASE A FOE</text><text x='20' y='86' font-family='sans-serif' font-size='22' fill='#e9e2c4'>max ${CAP} of each · CLEAR wipes the bay · HEAL tops you up</text></svg>` });
   // pads, a row along the safe strip
-  Object.entries(KINDS).forEach(([k, K], i) => pad(ctx, "tl-bay-pad-" + k, "bay:" + k, "SPAWN " + K.name.toUpperCase(), 29.5, -22 + i * 3, K.color));
+  Object.entries(KINDS).forEach(([k, K], i) => { const col = i % 2, row = Math.floor(i / 2); pad(ctx, "tl-bay-pad-" + k, "bay:" + k, K.name.toUpperCase(), 28.8 + col * 2.4, -24.4 + row * 2.6 + col * 1.3, K.color); if (col) { const l = ctx.place.objects["tl-bay-pad-" + k + "-label"]; if (l) l.feetPosition = { ...l.feetPosition, y: 2.3 }; } });
   pad(ctx, "tl-bay-pad-clear", "bay:clear", "CLEAR BAY", 26.5, -22, "oklch(0.78 0.15 80)");
   pad(ctx, "tl-bay-pad-heal", "heal", "FULL HEAL", 26.5, -6, "oklch(0.7 0.17 150)");
   // the packs that run them: the bay's own managers, same scripts as the levels
   ctx.spawn("tl-bay-hounds", { feetPosition: { x: PEN.x, y: 0, z: PEN.z }, behavior: "scripts/hounds.js" });
+  ctx.spawn("tl-bay-party", { feetPosition: { x: PEN.x, y: 0, z: PEN.z }, behavior: "scripts/partygoers.js" });
+  ctx.spawn("tl-bay-brain", { feetPosition: { x: PEN.x, y: 0, z: PEN.z }, behavior: "scripts/bay-brain.js" });
   ctx.spawn("tl-bay-l70", { tags: ["l70-mgr"], feetPosition: { x: PEN.x, y: 0, z: PEN.z }, behavior: "scripts/l70-foes.js" });
   ctx.spawn("tl-bay-growl", { feetPosition: { x: PEN.x, y: 1, z: PEN.z }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-low-distant-creature-growl-loop.mp3", gain: 0.08, loop: true, maxDistance: 18 } });
 }
@@ -65,6 +92,17 @@ function spawnFoe(ctx, kind, n) {
   if (kind === "smiler") return ctx.spawn({ tags: ["smiler", "tl-bay-foe"], feetPosition: p, rotation: rot, model: SMILER_MODEL, scale: SMILER_SCALE, physics: { body: "character" }, state: { hp: L.smilerHp } });
   if (kind === "lurker") return ctx.spawn({ tags: ["lurker", "tl-bay-foe"], feetPosition: p, rotation: rot, model: LURKER_MODEL, scale: LURKER_SCALE, physics: { body: "character" }, state: { hp: L.lurkerHp, kind: "lurker" } });
   if (kind === "hound") return ctx.spawn({ tags: ["hound", "tl-bay-foe"], feetPosition: p, rotation: rot, physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/hound-geo.js" }, state: npcState(ctx, "hound", L1.houndHp, { xp: L1.xpHound }) });
+  if (kind === "partygoer") return ctx.spawn({ tags: ["partygoer", "l8-hostile", "tl-bay-foe"], feetPosition: p, rotation: rot, model: { forward: "+x", id: PARTY_GLB }, layout: { box: { min: { x: -0.55, y: 0, z: -0.55 }, max: { x: 0.55, y: 1.45, z: 0.55 } } }, physics: { body: "character", collider: "capsule" }, state: { home: { x: p.x, y: 0, z: p.z }, hp: 220 } });
+  if (kind === "balloon") return ctx.spawn({ tags: ["l26-balloon", "l8-hostile", "tl-bay-foe"], feetPosition: { ...p, x: p.x - 4 }, model: { id: BALLOON_GLB }, layout: { box: { min: { x: -0.28, y: 0.15, z: -0.28 }, max: { x: 0.28, y: 1.85, z: 0.28 } } }, physics: { body: "kinematic", collider: "sphere" }, state: { home: { x: p.x - 4, y: 0, z: p.z }, hp: 10 } });
+  if (BRAIN[kind]) {
+    const b = BRAIN[kind], st = { hp: b.hp, maxHp: b.hp, name: KINDS[kind].name, kind, brain: b.brain, xp: 30 }, tags = ["baybrain", "l8-hostile", KINDS[kind].tag, "tl-bay-foe"];
+    if (kind === "moths") return ctx.spawn({ ...MOTHS, tags: [...MOTHS.tags, ...tags], feetPosition: { ...p, y: 1.4 }, state: { ...MOTHS.state, ...st } });
+    const look = { smiler6: { model: SMILER6_MODEL, scale: SMILER6_SCALE }, rat5: { model: { id: E5.rat.model, forward: "+x" }, layout: { box: { min: { x: -0.5, y: 0, z: -0.5 }, max: { x: 0.5, y: 0.21, z: 0.5 } } } },
+      clump: { model: { id: CLUMP_GLB, forward: "+x" }, layout: { box: { min: { x: -0.8, y: 0, z: -0.8 }, max: { x: 0.8, y: 1.2, z: 0.8 } } } },
+      tenant: { model: { id: TENANT, forward: "+x" }, layout: { box: { min: { x: -0.6, y: 0, z: -0.6 }, max: { x: 0.6, y: L13.tenant.height, z: 0.6 } } } },
+      lurker13: { model: { id: LURKER13, forward: "+x" }, layout: { box: { min: { x: -0.6, y: 0, z: -0.6 }, max: { x: 0.6, y: L13.lurker.height, z: 0.6 } } } } }[kind];
+    return ctx.spawn({ tags, feetPosition: p, rotation: rot, ...look, physics: { body: "character", collider: "capsule" }, state: st });
+  }
   const K = F70[kind];
   return ctx.spawn({ tags: ["moths", "l70foe", kind, "tl-bay-foe"], feetPosition: p, rotation: rot, model: { ...M70[kind] }, layout: { box: BOX70[kind] }, physics: { body: "character", collider: "capsule" },
     state: { ...npcState(ctx, "rat", K.hp, { xp: kind === "froidling" ? 40 : 14 }), kind, name: K.name, pack: "bay-" + kind, n, home: { x: PEN.x, y: 0, z: PEN.z } } });
