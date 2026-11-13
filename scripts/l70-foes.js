@@ -22,6 +22,11 @@ export function update(ctx, dt) {
   for (const r of ctx.query({ tags: ["l70foe"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
     const st = r.state, K = F[st.kind]; if (!K) continue;
     const pos = r.feetPosition;
+    if (st.corpseAt && !st.l70loot) { // the player's own kill handler laid the body first: put the beast's drop in it and count the kill once
+      st.l70loot = 1; st.items = [st.items, K.loot].filter(Boolean).join(","); st.name = K.name + " remains";
+      const k = killerOf(ctx, pos); if (k) { const c = { ...(k.state.l70kills ?? {}) }; c[st.kind] = (c[st.kind] ?? 0) + 1; k.state.l70kills = c; }
+      heard(ctx, st.kind === "froidling" ? "small-creature-death-shriek-icy" : "rat-death-squeal", pos, 0.85);
+    }
     if (st.corpseAt) { if (now - st.corpseAt > 180000) { ctx.destroy(r.id); mem.delete(r.id); } continue; }
     let m = mem.get(r.id); if (!m) { m = { ang: (st.n ?? 0) * 2.094, hp: st.hp, ph: (st.n ?? 0) * 1.7, nextBite: 0 }; mem.set(r.id, m); }
     const pk = (packs[st.pack] ??= { rushUntil: 0, seen: 0 });
@@ -29,7 +34,7 @@ export function update(ctx, dt) {
       const k = killerOf(ctx, pos);
       r.velocity = { x: 0, y: 0, z: 0 }; r.physics = "none"; r.anim.move = null;
       r.rotation = { yaw: yawOfRot(r.rotation), roll: 90 }; r.feetPosition = { x: pos.x, y: pos.y + K.lie, z: pos.z };
-      r.tags = ["l70foe", "container", "remains"]; st.name = K.name + " remains"; st.items = K.loot; st.corpseAt = now; st.dead = true;
+      r.tags = ["l70foe", "container", "remains"]; st.name = K.name + " remains"; st.items = K.loot; st.corpseAt = now; st.dead = true; st.l70loot = 1;
       heard(ctx, st.kind === "froidling" ? "small-creature-death-shriek-icy" : "rat-death-squeal", pos, 0.85);
       if (k) { const c = { ...(k.state.l70kills ?? {}) }; c[st.kind] = (c[st.kind] ?? 0) + 1; k.state.l70kills = c; }
       continue;
