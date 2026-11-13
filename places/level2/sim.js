@@ -113,6 +113,12 @@ export function tick(ctx) {
     ctx.spawn("l2-to-l3", { feetPosition: { x: SEALED.x - 0.7, y: 0, z: SEALED.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 1.4 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level3" } });
     ctx.spawn({ feetPosition: { x: SEALED.x - 0.6, y: 2.25, z: SEALED.z }, visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "box", width: 0.02, height: 0.3, depth: 1.2 }, material: { color: "oklch(0.25 0.03 150)" }, ui: '<div face="left" width="1.2m" style="font-size:100px;font-weight:900;color:#ffd890;text-align:center">LEVEL 3 · ELECTRICAL</div>' });
   }
+  if (!s.dinaCrate) { s.dinaCrate = true;
+    ctx.spawn("dina-courier-crate", { tags: ["usable"], feetPosition: { x: SEALED.x - 3.6, y: 0, z: SEALED.z + 0.75 }, rotation: { yaw: 20 }, physics: "none", visibleRange: { max: 40 }, castShadow: false, behavior: "scripts/dina-record.js",
+      primitive: { kind: "box", width: 0.5, height: 0.32, depth: 0.36 }, material: { color: "oklch(0.36 0.05 140)", roughness: 0.8 },
+      children: [{ feetPosition: { x: 0, y: 0.33, z: 0 }, primitive: { kind: "box", width: 0.46, height: 0.02, depth: 0.32 }, material: { color: "oklch(0.3 0.04 140)", roughness: 0.8 } }],
+      state: { kind: "crate", name: "Courier's battery crate", verb: "Check the crate" } }); // The Way Back detour (Nov 13): the C-23 courier came this way
+  }
   if ((s.rev ?? 0) >= 4 && (s.snapped ?? 0) < 1) { snapContainers(ctx); s.snapped = 1; }
   if (STAIR && (s.rev ?? 0) >= 4 && !s.stairV) sideRoom(ctx, STAIR); // rooms that were laid before the stairwell existed get it now
   if (s.seeded && (s.rev ?? 0) >= 4 && s.propsV !== 2) reprop(ctx, s);
