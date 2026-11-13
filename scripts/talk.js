@@ -34,6 +34,7 @@ import { greetingOf, rootChoices, childChoices, nodeOf, lineOf, barkOf, gestOf, 
 import { questChoices, realtyChoice } from './lib/npc-starters.js'
 import { zenithChoice } from './lib/zenith-quest.js'
 import { l1Choice } from './lib/level1-quests.js'
+import { jobOffer, choicePage } from './lib/quest-dialogue.js'
 
 const short = (it) => String(it.id).split('/').pop()
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z)
@@ -183,6 +184,7 @@ export function openDialogue(ctx, it) {
   s.shopOpen = null
   ses.talkingTo = it.id
   ses.askedNow = []
+  ses.questOffer = null
   it.state.talkAt = now
   it.state.talkTo = ctx.self.id
   const hist = s.talks?.[short(it)] ?? [], key = keyOf(ctx.self)
@@ -196,12 +198,13 @@ export function openDialogue(ctx, it) {
 function offer(ctx, it, s, next) {
   const place = ctx.self.place, ses = ctx.self.session, asked = new Set(ses.askedNow ?? [])
   let list = next?.length ? [...next, { text: 'Back to something else.', tag: 'Back', node: 'root' }] : rootChoices(it, place, asked).filter((c) => c.node !== 'bye')
-  if (!next?.length) list = [...questChoices(ctx, it, s), ...list]
-  list = l1Choice(ctx, it, s, zenithChoice(ctx, it, s, realtyChoice(ctx, it, s, list))) ?? list
-  list = list.filter(Boolean).slice(0, 5)
-  if (list.length >= 5) list = list.slice(0, 4)
-  list.push(BYE_CHOICE)
-  return list
+  if (!next?.length) {
+    list = [...questChoices(ctx, it, s), ...list]
+    list = l1Choice(ctx, it, s, zenithChoice(ctx, it, s, realtyChoice(ctx, it, s, list))) ?? list
+  }
+  ses.talkPageList = list.filter(Boolean)
+  ses.talkPage = 0
+  return choicePage(ses.talkPageList, 0, BYE_CHOICE)
 }
 
 function send(ctx, d) {
@@ -216,11 +219,31 @@ function send(ctx, d) {
   ses.talkAt = now
   const place = ctx.self.place
   if (choice.node === 'bye') { logLine(ctx, it, 'p', text); const l = lineOf(it, place, 'bye', Math.floor(ctx.random() * 1e9)); if (l) { say(ctx, it, l, 'calm'); logLine(ctx, it, 'n', l) } close(ctx); return }
-  if (choice.node === 'root') { s.talkChoices = offer(ctx, it, s, null); return }
+  if (choice.node === 'root') { ses.questOffer = null; s.talkChoices = offer(ctx, it, s, null); return }
+  if (choice.node === 'page') { ses.talkPage = (ses.talkPage ?? 0) + 1; s.talkChoices = choicePage(ses.talkPageList ?? [], ses.talkPage, BYE_CHOICE); return }
+  if (choice.node === 'job-decline') { ses.questOffer = null; logLine(ctx, it, 'p', text); s.talkChoices = offer(ctx, it, s, null); return }
+  let questText = text, briefing = null
+  if (choice.node === 'job-accept') {
+    const pending = ses.questOffer; ses.questOffer = null
+    const available = offer(ctx, it, s, null)
+    const all = ses.talkPageList ?? available
+    if (!pending || pending.npc !== it.id || !all.some((c) => c.text === pending.text && c.tag === 'Quest Start')) { s.talkChoices = available; return }
+    questText = pending.text; briefing = pending.journal
+  } else {
+    const proposal = jobOffer(it, choice)
+    if (proposal) {
+      ses.questOffer = { npc: it.id, text, journal: proposal.journal }
+      logLine(ctx, it, 'p', text); say(ctx, it, proposal.briefing, 'calm'); logLine(ctx, it, 'n', proposal.briefing)
+      s.talkChoices = [{ text: "I'll take the job.", tag: 'Accept', node: 'job-accept' }, { text: 'Not right now.', tag: 'Decline', node: 'job-decline' }, BYE_CHOICE]
+      return
+    }
+  }
   logLine(ctx, it, 'p', text)
-  if (!choice.node) { // a quest line: the quest's own handler answers it (scripts/lib/level*-quests.js, zenith-quest.js)
-    const qRes = handleDialogueQuest02(ctx, ctx.self, it, text) ?? handleDialogueQuest13(ctx, ctx.self, it, text) ?? handleDialogueQuest(ctx, ctx.self, it, text) ?? handleDialogueQuest10(ctx, ctx.self, it, text) ?? handleDialogueQuest8(ctx, ctx.self, it, text)
-      ?? handleDialogueQuest21(ctx, ctx.self, it, text) ?? handleDialogueQuestZ(ctx, ctx.self, it, text) ?? handleDialogueQuest1(ctx, ctx.self, it, text) ?? handleDialogueQuest31(ctx, ctx.self, it, text) ?? handleDialogueQuest70(ctx, ctx.self, it, text)
+  if (!choice.node || choice.node === 'job-accept') {
+    const before = new Set(Object.keys(s.quests ?? {})) // a quest line: the quest's own handler answers it (scripts/lib/level*-quests.js, zenith-quest.js)
+    const qRes = handleDialogueQuest02(ctx, ctx.self, it, questText) ?? handleDialogueQuest13(ctx, ctx.self, it, questText) ?? handleDialogueQuest(ctx, ctx.self, it, questText) ?? handleDialogueQuest10(ctx, ctx.self, it, questText) ?? handleDialogueQuest8(ctx, ctx.self, it, questText)
+      ?? handleDialogueQuest21(ctx, ctx.self, it, questText) ?? handleDialogueQuestZ(ctx, ctx.self, it, questText) ?? handleDialogueQuest1(ctx, ctx.self, it, questText) ?? handleDialogueQuest31(ctx, ctx.self, it, questText) ?? handleDialogueQuest70(ctx, ctx.self, it, questText)
+    if (briefing) for (const [id, q] of Object.entries(s.quests ?? {})) if (!before.has(id)) s.quests = { ...s.quests, [id]: { ...q, briefing } }
     const line = qRes?.reply ?? lineOf(it, place, 'back', 1) ?? 'Hm.'
     say(ctx, it, line, qRes?.mood ?? 'calm'); logLine(ctx, it, 'n', line)
     s.talkChoices = offer(ctx, it, s, null); return

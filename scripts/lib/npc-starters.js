@@ -11,7 +11,7 @@ export function realtyChoice(ctx, it, s, list) {
   if (String(it?.id ?? '').split('/').pop() !== 'l11-realty-agent' || !Array.isArray(list) || s?.home11) return list
   const asked = s?.homeAsk && ctx.now() - s.homeAsk < 120000
   const pick = asked ? { text: "Deal. I'll take the house.", tag: 'Buy $2,500' } : { text: "I want to buy the green house.", tag: 'House' }
-  return [pick, ...list.filter((c) => !/house/i.test(c?.text ?? ''))].slice(0, 4)
+  return [pick, ...list.filter((c) => !/house/i.test(c?.text ?? ''))]
 }
 
 export function questChoices(ctx, it, s) {

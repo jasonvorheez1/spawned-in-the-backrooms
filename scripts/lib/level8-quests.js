@@ -150,10 +150,10 @@ export function handleDialogueQuest8(ctx, p, npc, text) {
         s.sanity = Math.min(100, (s.sanity ?? 80) + 35);
         finishQuest8(ctx, p, "carla", {
           xp: 90,
-          cents: 3000,
+          cents: 0,
           items: ["almond", "bandage"],
           rep: [["survivors", 8], ["karma", 4]],
-          text: "Quest Completed: Carla's Melody · +90 XP, +$30.00, +35 Sanity, Almond Water, Clean Bandage",
+          text: "Quest Completed: Carla's Melody · +90 XP, +35 Sanity, Almond Water, Clean Bandage",
         });
         return {
           reply: "Mum, look what they found! Here, my good bandage. I kept the water cold in the stream. Do you want to hear me play?",
