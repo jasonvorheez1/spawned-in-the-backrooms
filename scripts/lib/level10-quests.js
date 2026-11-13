@@ -18,11 +18,11 @@ export const QUESTS10 = {
     key: "wheatQ",
     name: "The Golden Bumper",
     tips: {
-      1: "Speak to Homesteader Cooper at M.E.G. Outpost Bountiful",
-      2: "Reap 3 Golden Wheat Sheaves from the wheat fields",
-      3: "Grind the wheat into flour at the Windmill Quern",
-      4: "Bake a warm homestead loaf at the outpost hearth oven",
-      5: "Deliver the fresh loaf to Homesteader Cooper at Outpost Bountiful",
+      1: "Ask Cooper about the harvest at Outpost Bountiful.",
+      2: "Cut three sheaves of golden wheat.",
+      3: "Grind the wheat at the windmill.",
+      4: "Bake a loaf in the outpost hearth.",
+      5: "Bring the loaf to Cooper for the city caravan.",
     },
     marks: {
       1: MARK("l10-meg-cooper"),
@@ -36,9 +36,9 @@ export const QUESTS10 = {
     key: "watcherQ",
     name: "The Still Watcher",
     tips: {
-      1: "Speak to Dr. Maeve at M.E.G. Outpost Bountiful regarding the scarecrows",
-      2: "Locate the Eastern Scarecrow among the tall barley and inspect its coat",
-      3: "Deliver the recovered survivor notebook (Document 24) to Dr. Maeve",
+      1: "Ask Dr. Maeve about the scarecrow at Outpost Bountiful.",
+      2: "Search the scarecrow's coat in the east barley field.",
+      3: "Bring the notebook from the coat to Dr. Maeve.",
     },
     marks: {
       1: MARK("l10-meg-maeve"),
@@ -50,8 +50,8 @@ export const QUESTS10 = {
     key: "cellarQ",
     name: "Cellar in the Shadows",
     tips: {
-      1: "Investigate strange scratching noises from the abandoned Storm Cellar",
-      2: "Report the secured storm cellar pantry to Homesteader Cooper at Outpost Bountiful",
+      1: "Check the storm cellar behind the farmhouse.",
+      2: "Tell Cooper what you found in the cellar.",
     },
     marks: {
       1: MARK("l10-storm-cellar"),

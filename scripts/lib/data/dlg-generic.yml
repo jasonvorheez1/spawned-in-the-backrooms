@@ -295,18 +295,6 @@ l31-food-clerk:
   bye: "Trash cans are by the opening."
   walk: "Tray goes in the trash."
   ask:
-    - q: "Got anything from back home?"
-      tag: "Order"
-      a: "Sprite. Capri Sun. Nobody restocks them. They're just always there."
-      then:
-        - q: "Sprite."
-          tag: "Order"
-          a: "One Sprite. Cold. No charge."
-          do: "l31:sprite"
-        - q: "Capri Sun."
-          tag: "Order"
-          a: "Capri Sun. Good luck with the straw."
-          do: "l31:capri"
     - q: "A slice of pizza."
       tag: "Order"
       a: "Cheese or pepperoni."
@@ -343,93 +331,109 @@ l31-food-clerk:
       tag: "Order"
       a: "Cola, orange, lime, or almond water."
       then:
-        - q: "Cola."
+        - q: "Fountain soda."
           tag: "Order"
-          a: "One cola. No charge."
-          do: "l31:cola"
-        - q: "Orange."
-          tag: "Order"
-          a: "One orange soda. No charge."
-          do: "l31:orange"
-        - q: "Lime."
-          tag: "Order"
-          a: "One lime soda. No charge."
-          do: "l31:lime"
+          a: "Cola, orange, or lime?"
+          then:
+            - q: "Cola."
+              tag: "Order"
+              a: "One cola. No charge."
+              do: "l31:cola"
+            - q: "Orange."
+              tag: "Order"
+              a: "One orange soda. No charge."
+              do: "l31:orange"
+            - q: "Lime."
+              tag: "Order"
+              a: "One lime soda. No charge."
+              do: "l31:lime"
         - q: "Almond water."
           tag: "Order"
           a: "One almond water. No charge."
           do: "l31:almond"
-    - q: "What is this place? How do I get out of the Backrooms?"
-      a: "I work the counter."
+        - q: "Sprite or Capri Sun?"
+          tag: "Order"
+          a: "Sprite's in the cooler. Capri Sun's in the little basket."
+          then:
+            - q: "Sprite."
+              tag: "Order"
+              a: "Here. Watch the cap, it's wet."
+              do: "l31:sprite"
+            - q: "Capri Sun."
+              tag: "Order"
+              a: "Here you go. Straw's on the back."
+              do: "l31:capri"
+    - q: "Where's the way out?"
+      a: "Plywood door past the concession table. Look for the exit sign."
   barks:
     idle: ["Order up.", "Slices are fresh."]
     hi: ["Welcome.", "It's all free."]
     close: ["Staff only back here."]
   gest: { wave: "Hello.", gift: "We don't take tips.", dance: "Not on shift.", nodance: "Not on shift.", insult: "Next, please." }
 l31-food-cust1:
-  hi: "We're on the couples skate after this. He says his knees can take it."
-  back: ["The pepperoni's better than the cheese. Don't tell the counter."]
-  bye: "Mind your tray."
+  hi: "We're waiting for the couples skate. He's been eating that same slice since they announced it."
+  back: ["I got the pepperoni this time. Want the other half?"]
+  bye: "See you by the rail."
   ask:
-    - q: "How long have you been here?"
-      a: "Since the last song. Or the one before. It's a long song."
-    - q: "Is the food any good?"
-      a: "It's hot and nobody asks you to pay. I've stopped being picky."
-  gest: { wave: "Hi there.", gift: "Oh, for me?", dance: "Save it for the rink.", nodance: "After I finish this.", insult: "That's not very nice." }
+    - q: "Does the couples skate ever start?"
+      a: "They turn the lights down and everybody gets up. Then somebody asks for another song. We sit back down."
+    - q: "Is that your partner?"
+      a: "On the rink. I asked him to hold my place in line once and he stayed right there till I came back."
+  gest: { wave: "Come sit with us.", gift: "Here, set it between us.", dance: "Save me a turn.", nodance: "After I finish this.", insult: "There are other tables." }
 l31-food-cust2:
-  hi: "Sit anywhere. Nobody's saving a seat."
-  back: ["Still here. Still on the same slice."]
+  hi: "Sit if you like. Keep that chair free, though. That's where she puts her skates."
+  back: ["She's ordering again. I'm still working on mine."]
   bye: "See you on the floor."
   ask:
     - q: "Do you skate?"
-      a: "Badly. She does the turning for both of us."
-    - q: "Why does everyone clear their trays?"
-      a: "Somebody didn't once. The counter wouldn't look at him after."
-  gest: { wave: "Evening.", gift: "Thanks, pal.", dance: "My knees say no.", nodance: "My knees say no.", insult: "Alright, alright." }
+      a: "If she takes the inside. I can't turn left without taking somebody with me."
+    - q: "Why's the clerk so particular about trays?"
+      a: "I left mine by the rail once. He carried it all the way back to this table and waited for me to get up."
+  gest: { wave: "Hey.", gift: "Thanks. You can have my napkins.", dance: "Ask her first.", nodance: "Give my knee a minute.", insult: "Take it somewhere else." }
 
-# Level 31 arcade customers (Facelings, docile). Keys are their object ids.
+# Level 31 arcade customers.
 "l31-arcade-face1":
-  hi: ["Hang on. Third floor. Okay, hi.", "Oh. Hi. Is it your turn? It isn't a line, I'm just here."]
-  back: ["Still on Marty.", "You again. Good."]
-  bye: ["See you round the rink.", "Okay. Bye now."]
+  hi: ["Hang on. Let me fix this window.", "If you want a turn, take it. Leave me the same building."]
+  back: ["You see that top window? It's broken again."]
+  bye: "Don't lean on the stick. It catches."
   ask:
-    - q: "How do I play these?"
-      a: ["Green card. The metal box by the way in, big blue button. It's free. Everything's free, it just wants the card."]
-    - q: "Any good?"
-      a: ["I fix the windows, the big guy breaks them, I fix them again. I've been on this building a while. I like it."]
+    - q: "How do I start a game?"
+      a: "Get a green card from the dispenser by the arch. You can use it on every cabinet."
+    - q: "How far have you got?"
+      a: "The roof. I can get there with all my lives, but by the time I come back down somebody's smashed the ground floor again."
   barks:
-    idle: ["Come on, Marty.", "Left. Left. Up.", "Nearly."]
-    hi: ["Hi.", "Hey there."]
-    hit: ["Hey! Ow."]
-    flee: ["I'm going, I'm going."]
-  gest: { wave: "Hi! One sec.", gift: "For me? Thank you.", dance: "After this screen.", nodance: "I'm mid-game.", insult: "That's not very nice." }
+    idle: ["Missed one.", "Up a floor.", "Come on, stick."]
+    hi: ["Hey."]
+    hit: ["Hey!"]
+    flee: ["Take the machine."]
+  gest: { wave: "Hi. One second.", gift: "Thanks. Set it by the screen?", dance: "After I clear this floor.", nodance: "I'm mid-game.", insult: "Then find another cabinet." }
 "l31-arcade-face2":
-  hi: ["Don't bump the table.", "Hey. Watch this ball."]
-  back: ["Same ball. I think.", "Back for a turn?"]
-  bye: ["Take it easy.", "Mind the cord."]
+  hi: ["Mind the table. It tilts if you look at it wrong.", "Watch the left ramp. That's the shot."]
+  back: ["You want next? I'll finish this ball."]
+  bye: "Don't trip on the cord."
   ask:
-    - q: "What's your high score?"
-      a: ["Board says SAL. It always says SAL. Never met a Sal."]
+    - q: "Is SAL your high score?"
+      a: "I put in my initials once. Looked right until I let go of the button. Then it said SAL again."
     - q: "Is anyone working here?"
-      a: ["Somebody restocks the cards. I never see them do it."]
+      a: "The stool by the dispenser was warm when I got here. That's as close as I've come."
   barks:
-    idle: ["Stay up, stay up.", "Not the middle.", "Ha."]
-    hi: ["Hey.", "Yep."]
-    hit: ["Ow. Tilt."]
-    flee: ["Okay, okay!"]
-  gest: { wave: "Hands are busy. Hi.", gift: "Oh, nice. Thanks.", dance: "Can't. Flippers.", nodance: "Nope.", insult: "Sure, pal." }
+    idle: ["Stay up.", "Off the post.", "There it goes."]
+    hi: ["Hey."]
+    hit: ["Watch it!"]
+    flee: ["All right, I'm going."]
+  gest: { wave: "I'd wave back, but look.", gift: "Thanks. Put it next to my drink.", dance: "After this ball.", nodance: "Both hands, see?", insult: "Got a quarter's worth out of that, did you?" }
 "l31-arcade-face3":
-  hi: ["Lane two's open if you want it.", "Hi. You roll?"]
-  back: ["Lane two. Still open.", "Hey again."]
-  bye: ["Good luck out there.", "Roll well."]
+  hi: ["Lane two's free. The one on the left eats balls.", "Can you see if that ball came back?"]
+  back: ["I found the ball. It was in the other lane."]
+  bye: "Leave a ball in the trough if you find one."
   ask:
-    - q: "Where do the tickets go?"
-      a: ["Nowhere. It counts them up and that's all. I'm at four hundred something."]
-    - q: "How long have you been here?"
-      a: ["Since the song started. It's a long song."]
+    - q: "What can I get with the tickets?"
+      a: "I saved for the radio. Look at the prize wheel. They took the radio down and left the price tag."
+    - q: "What's the trick to the hundred?"
+      a: "Aim off to the side and let it ride the rail. It works right up until someone watches."
   barks:
-    idle: ["Forty.", "Come on, hundred.", "Short. Too short."]
-    hi: ["Hi.", "Hello."]
-    hit: ["Ow!"]
-    flee: ["Leaving!"]
-  gest: { wave: "Hi there.", gift: "Thanks. Really.", dance: "Sure, why not.", nodance: "Not right now.", insult: "Okay." }
+    idle: ["Forty.", "Too hard.", "Come back down."]
+    hi: ["Hi."]
+    hit: ["Hey!"]
+    flee: ["Have the lane."]
+  gest: { wave: "Hey there.", gift: "You sure? Thanks.", dance: "One more ball.", nodance: "I just started.", insult: "Pick a lane, then." }

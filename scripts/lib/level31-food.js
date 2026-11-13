@@ -24,11 +24,11 @@ export const L31_FOOD = {
 export const L31_ZONE_X = 25; // west of this with a tray = you left it
 export function l31Order(ctx, key) {
   const s = ctx.self.state, f = L31_FOOD[key]; if (!f) return null;
-  if (s.l31banned) { s.notice = { text: "No service until you clear your tray at a trash can.", at: ctx.now() }; return { say: "You left your tray." }; }
+  if (s.l31banned) { s.notice = { text: "Clear your tray at the bins by the snack bar entrance.", at: ctx.now() }; return { say: "Tray first. Bins are by the entrance." }; }
   const up = (k, v) => { s[k] = Math.max(0, Math.min(100, (s[k] ?? 100) + v)); };
   up("hunger", f.hunger); up("thirst", f.thirst); up("sanity", f.sanity);
   s.l31tray = true;
-  s.notice = { text: `${f.name}. Free. Clear your tray at the trash cans before you go.`, at: ctx.now() };
+  s.notice = { text: `${f.name}. Clear your tray at the bins before you leave.`, at: ctx.now() };
   return null;
 }
 
@@ -91,7 +91,7 @@ export function layFood(ctx) {
   P("menu", { feetPosition: { x: 41.79, y: 3.4, z: 17 }, rotation: { yaw: 90 }, vector: MENU });
   // Clear trays on the way back to the rink aisle.
   P("note", { feetPosition: { x: 29.05, y: 1.72, z: 6.16 }, rotation: { yaw: 180 }, vector: PAPER });
-  for (const [i, x] of [28.15, 29.95].entries()) M(`trash${i + 1}`, "trash", x, 6.47, 180, { tags: ["usable"], state: { name: "Trash can", verb: "Clear tray", info: "Push flap. A tray shelf on top.", kind: "trash" }, behavior: "scripts/l31-food.js" });
+  for (const [i, x] of [28.15, 29.95].entries()) M(`trash${i + 1}`, "trash", x, 6.47, 180, { tags: ["usable"], state: { name: "Trash can", verb: "Clear tray", info: "Clear your tray here before leaving the snack bar.", kind: "trash" }, behavior: "scripts/l31-food.js" });
   const BSEAT = { tags: ["seat"], state: { name: "Bench", seat: { w: 2, gap: 0.7 } } };
   M("bench-n1", "benchO", 35.6, 6.5, 180, BSEAT); M("bench-n2", "benchG", 39.4, 6.5, 180, BSEAT);
   M("condi", "condi", 40.85, 8.15, 90, {}, floorY);

@@ -99,7 +99,7 @@ l10-meg-sully:
   ask:
     - q: "What are you listening to?"
       a: "The antenna points at the ground. Don't ask me why. Shortwave comes up out of the dirt. Weather reports. For towns I can't find on a map. Rain tomorrow, in all of them."
-    - q: "Anything strange lately?"
+    - q: "What was on the last broadcast?"
       a: "A man reading a shopping list. Very slowly. Eggs, milk, the boy, bread. I logged it. I didn't like logging it."
   barks:
     idle: ["Shh.", "Rain tomorrow.", "Tea's stewed. Good."]
@@ -202,7 +202,7 @@ l11-commuter-faceling:
   bye: "Wait for the little man."
   walk: "Good morning."
   ask:
-    - q: "How long have you lived here?"
+    - q: "How long have you been taking this route?"
       a: "Eleven years. I take the same train. I read the same paper. The headlines change. Not much. Just the names."
     - q: "What's your name?"
       a: "Oh. I don't think I ever had one. People call me 'excuse me'. I like that one."
@@ -251,7 +251,7 @@ l11-walker-2:
     - q: "I'm not doing well. Can you help?"
       do: heal
       a: "Oh no! Here, I have a first aid kit at my desk, it's company issue. Hold this. Okay! You look better already. Do you want a coffee?"
-    - q: "What's the catch here?"
+    - q: "There has to be a catch, right?"
       a: "Catch? It's perfect! Well. I can't look up at the towers, I get dizzy. And my desk has a nameplate with my name on it, and I didn't put it there. But it's spelled right!"
   barks:
     idle: ["Coffee!", "Don't look up, don't look up.", "Data entry, yay."]
@@ -542,19 +542,19 @@ l02-capn:
     insult: "That will go in my report. Which nobody reads."
 
 l31-shop-keeper:
-  hi: "Hi hon. Everything in the case is from home. Take your time, nobody's closing."
-  back: ["Back again. Good.", "Hi hon. Need a gumball?"]
-  warm: "There's my regular. I set a camera aside for you."
-  cold: "Look all you like."
-  bye: "Skate safe."
-  walk: "Okay hon."
+  hi: "Have a look. If you want a camera, ask me first. I keep the batteries out of them."
+  back: ["The gumball machine's full again.", "Hello, hon. Looking for something in particular?"]
+  warm: "I set the camera with the clean lens aside for you."
+  cold: "Please leave the case shut."
+  bye: "Mind the step on your way out."
+  walk: "I'll be here."
   ask:
-    - q: "Where does the stock come from?"
-      a: "The shelves are full when I turn the lights on. Same shirts since I got here. I just dust them."
-    - q: "Is there a way out of here?"
-      a: "People skate a few laps and then they're not here anymore. I never asked where. I like the music."
-    - q: "Better deal?"
+    - q: "Who brings you the stock?"
+      a: "Nobody. A girl bought the last blue shirt once. When I went to take the tag down, there was another blue shirt behind it. I order by leaving a gap."
+    - q: "How do I get out of the rink?"
+      a: "Plywood door in the southwest corner. You'll hear the pipes before you see them."
+    - q: "Can you do a little better on the price?"
       sk: barter 30
       do: discount
-      a: "Oh, alright. You remind me of somebody. I can't think who."
-      fail: "Prices are on the stickers, hon."
+      a: "All right. Help me get something out of the case for once."
+      fail: "I can give you a fresh battery. The price stays."

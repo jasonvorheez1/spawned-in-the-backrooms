@@ -25,7 +25,7 @@ export function update(ctx) {
   if (h && Math.hypot(p.x - h.x, p.z - h.z) > 0.6) me.feetPosition = { x: h.x, y: p.y, z: h.z };
   for (const pl of ctx.place.players) {
     const s = pl.state;
-    if (s.l31tray && !s.l31banned && pl.feetPosition.x < L31_ZONE_X) { s.l31banned = true; tell(ctx, pl, "You left the food court with your tray."); }
+    if (s.l31tray && !s.l31banned && pl.feetPosition.x < L31_ZONE_X) { s.l31banned = true; tell(ctx, pl, "The clerk points you back to the tray return by the entrance."); }
   }
   ctx.sleep(0.5); // the clerk checks twice a second; the door alone runs every tick while it swings
 }

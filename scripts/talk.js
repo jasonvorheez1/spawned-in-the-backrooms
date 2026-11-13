@@ -191,7 +191,7 @@ export function openDialogue(ctx, it) {
 function offer(ctx, it, s, next) {
   const place = ctx.self.place, ses = ctx.self.session, asked = new Set(ses.askedNow ?? [])
   let list = next?.length ? [...next, { text: 'Back to something else.', tag: 'Back', node: 'root' }] : rootChoices(it, place, asked).filter((c) => c.node !== 'bye')
-  list = [...questChoices(ctx, it, s), ...list]
+  if (!next?.length) list = [...questChoices(ctx, it, s), ...list]
   list = l1Choice(ctx, it, s, zenithChoice(ctx, it, s, realtyChoice(ctx, it, s, list))) ?? list
   list = list.filter(Boolean).slice(0, 5)
   if (list.length >= 5) list = list.slice(0, 4)
