@@ -1,19 +1,1 @@
 # spawn-scene v2 yaml x1z-2
-l70-skyline4:
-  castShadow: false
-  feetPosition: {x: 92, y: {terrain: -1}, z: -218}
-  id: l70-skyline4
-  layout: {box: {max: {y: 56}, min: {y: 0}}}
-  model: {id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb, materials: {tripo_material_05692072-2f16-4333-a2ec-e88663003b42: {color: oklch(0.42 0.03 250), roughness: 0.6}}}
-  rotation: {yaw: 90}
-  tags: [l70-wild, l70-skyline]
-  visibleRange: {max: 900}
-l70-skyline5:
-  castShadow: false
-  feetPosition: {x: 150, y: {terrain: -1}, z: -205}
-  id: l70-skyline5
-  layout: {box: {max: {y: 42}, min: {y: 0}}}
-  model: {id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb, materials: {tripo_material_05692072-2f16-4333-a2ec-e88663003b42: {color: oklch(0.42 0.03 250), roughness: 0.6}}}
-  rotation: {yaw: 0}
-  tags: [l70-wild, l70-skyline]
-  visibleRange: {max: 900}
