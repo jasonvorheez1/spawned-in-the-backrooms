@@ -40,9 +40,9 @@ export function geometry(ctx) {
     for (let i = 1; i < N; i += 2) { const x = i * S - HALF - 1.5; for (const [a, b] of runs("z", x, -HALF, HALF)) tube(ctx, [[x, H - 0.62, a], [x, H - 0.62, b]], [0.035, 0.035], 10, [1, 1], 0, 1, 1); }
     // Nov 13 realism pass: a grooved coupling every 6 m and a clevis hanger (threaded rod, steel loop) every 3 m on each main, dull galvanised
     ctx.color("oklch(0.42 0.17 28)");
-    for (let j = 1; j < N; j += 2) { const z = j * S - HALF + 1.9; for (const [a, b] of runs("x", z + 0.07, -HALF, HALF)) for (let x = a + 3; x < b - 0.5; x += 9) for (const dz of [0, 0.14]) tube(ctx, [[x - 0.035, H - 0.66, z + dz], [x + 0.035, H - 0.66, z + dz]], [0.056, 0.056], 10); }
+    for (let j = 1; j < N; j += 2) { const z = j * S - HALF + 1.9; for (const [a, b] of runs("x", z + 0.07, -HALF, HALF)) for (let x = a + 3; x < b - 0.5; x += 18) for (const dz of [0, 0.14]) tube(ctx, [[x - 0.035, H - 0.66, z + dz], [x + 0.035, H - 0.66, z + dz]], [0.056, 0.056], 10); }
     ctx.color("oklch(0.55 0.01 250)"); ctx.metalness(0.7); ctx.roughness(0.55);
-    for (let j = 1; j < N; j += 2) { const z = j * S - HALF + 1.9; for (const [a, b] of runs("x", z + 0.07, -HALF, HALF)) for (let x = a + 1.5; x < b - 0.5; x += 4.5) { // one trapeze carries both mains
+    for (let j = 1; j < N; j += 2) { const z = j * S - HALF + 1.9; for (const [a, b] of runs("x", z + 0.07, -HALF, HALF)) for (let x = a + 1.5; x < b - 0.5; x += 9) { // one trapeze carries both mains
       if (inHole(x, z)) continue;
       box(ctx, x - 0.02, x + 0.02, H - 0.72, H - 0.7, z - 0.08, z + 0.22);
       for (const dz of [-0.07, 0.21]) box(ctx, x - 0.005, x + 0.005, H - 0.72, H, z + dz - 0.005, z + dz + 0.005);
@@ -57,12 +57,12 @@ export function geometry(ctx) {
     for (let i = 3; i < N; i += 6) { const x = i * S - HALF + 2.2, y0 = H - 0.82; for (const [a, b] of runs("z", x, -HALF, HALF)) {
       ctx.color("oklch(0.62 0.16 48)"); ctx.metalness(0.2); ctx.roughness(0.6);
       for (const sx of [-1, 1]) { const xo = x + sx * 0.205; box(ctx, xo - 0.006, xo + 0.006, y0, y0 + 0.1, a, b); box(ctx, xo - (sx > 0 ? 0.022 : 0), xo + (sx < 0 ? 0.022 : 0), y0 + 0.094, y0 + 0.1, a, b); box(ctx, xo - (sx > 0 ? 0.022 : 0), xo + (sx < 0 ? 0.022 : 0), y0, y0 + 0.006, a, b); }
-      for (let z = a + 0.15; z < b; z += 0.6) box(ctx, x - 0.2, x + 0.2, y0, y0 + 0.018, z - 0.014, z + 0.014);
+      for (let z = a + 0.15; z < b; z += 1.2) box(ctx, x - 0.2, x + 0.2, y0, y0 + 0.018, z - 0.014, z + 0.014);
       ctx.color("oklch(0.5 0.01 250)"); ctx.metalness(0.7);
-      for (let z = a + 1; z < b - 0.3; z += 2) for (const sx of [-1, 1]) tube(ctx, [[x + sx * 0.23, y0 - 0.02, z], [x + sx * 0.23, H, z]], [0.006, 0.006], 3);
+      for (let z = a + 1; z < b - 0.3; z += 4) for (const sx of [-1, 1]) tube(ctx, [[x + sx * 0.23, y0 - 0.02, z], [x + sx * 0.23, H, z]], [0.006, 0.006], 3);
       ctx.metalness(0); ctx.roughness(0.7);
       for (let k = 0; k < 3; k++) { const ox = x - 0.11 + k * 0.11 + (hash(i, k, 61) - 0.5) * 0.02, r = 0.012 + hash(i, k, 62) * 0.012; ctx.color(k % 2 ? "oklch(0.22 0.005 250)" : "oklch(0.45 0.01 250)");
-        const pts = []; for (let z = a; z <= b + 0.01; z += 1.5) pts.push([ox + Math.sin(z * 0.7 + k) * 0.01, y0 + 0.018 + r + Math.abs(Math.sin(z * 0.9 + k * 1.3)) * 0.012, Math.min(z, b)]);
+        const pts = []; for (let z = a; z <= b + 0.01; z += 3) pts.push([ox + Math.sin(z * 0.7 + k) * 0.01, y0 + 0.018 + r + Math.abs(Math.sin(z * 0.9 + k * 1.3)) * 0.012, Math.min(z, b)]);
         tube(ctx, pts, [r, r], 4); }
     } }
     ctx.metalness(0.4); ctx.color("oklch(0.82 0.005 250)");
