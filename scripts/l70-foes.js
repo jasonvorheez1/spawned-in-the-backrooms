@@ -77,6 +77,7 @@ export function update(ctx, dt) {
     if (sp > 0.3 || face != null) { const yaw = face ?? yawTo(vx / sp, vz / sp); r.rotation = m.legs ? { yaw } : { yaw, pitch: sp > 0.3 ? Math.sin(now / (sp > 4 ? 70 : 130) + m.ph) * K.bob : 0, roll: sp > 0.3 ? Math.sin(now / (sp > 4 ? 140 : 260) + m.ph) * K.bob * 0.6 : 0 }; }
     const moving = sp > 0.3; if (m.legs && moving !== m.moving) { m.moving = moving; r.anim.move = moving ? m.legs : null; }
   }
+  if (!awake) ctx.sleep(2); // no pack or swarm has a player within 60 m: the manager naps until a write or 2 s pass
 }
 // at ease: potter round the nest; far from it, walk home on the nav graph
 function stroll(ctx, r, m, st, pos, now, speed, reach) {
