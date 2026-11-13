@@ -407,7 +407,7 @@ function renderHud(ctx, player) {
   const s = player.state ?? {}
   const quick = !s.building && screen(s,player.place)==='play' && Object.keys(s.quickSlots??{}).length ? quickItems(s) : []
   if (s.level == null) return ''
-  if (s.cut || s.dcut || s.l26cut || s.arrive || s.arrivePending || (s.t0cut && !s.sheetOpen)) return cutUi(ctx, player)
+  if (s.cut || s.dcut || s.l26cut || s.hubcut || s.arrive || s.arrivePending || (s.t0cut && !s.sheetOpen)) return cutUi(ctx, player)
   if (s.menuOpen) return mainMenu(ctx, player)
   if (s.wardrobeOpen && s.salonOpen && !s.wrMenu) return `<div id="hud" style="position:fixed;inset:0;pointer-events:none">${salon(ctx, player)}</div>`
   if (s.wardrobeOpen) return `${THEME}<div id="hud" style="position:fixed;inset:0;pointer-events:none">${wardrobe(ctx, player)}</div>`

@@ -3,6 +3,7 @@ import { PACE } from "./lib/tut0.js"
 export function cutUi(ctx, player) {
   if (player.state.dcut) return dUi(ctx, player)
   if (player.state.l26cut) return l26Ui(ctx, player)
+  if (player.state.hubcut) return hubUi(ctx, player)
   if (player.state.t0cut) return t0Ui(ctx, player)
   if (player.state.arrive || player.state.arrivePending) return arriveUi(ctx, player)
   const e = ctx.now() - (player.state.cut || ctx.now())
@@ -90,4 +91,19 @@ function dUi(ctx, player) {
 .dp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:dz linear both}
 .dv{position:fixed;inset:0;z-index:51;pointer-events:none;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.72) 100%)}
 </style>${page(PAGE1, PAGES[0], 0)}${page(PAGE2, PAGES[1], 1)}<div class="dv"></div><div class="db" style="top:0"></div><div class="db" style="bottom:0"></div>`
+}
+
+// The Hub's first arrival (scripts/lib/hub-cut.js): letterbox, the place's name in sodium orange, her lines
+import { HUB_LINES, HUB_LEN } from "./lib/hub-cut.js"
+function hubUi(ctx, player) {
+  const e = ctx.now() - player.state.hubcut.at, d = (s) => `${s * 1000 - e}ms`
+  const caps = HUB_LINES.map(([at, len, who, txt]) => `<div class="hc" style="animation-duration:${len * 1000}ms;animation-delay:${d(at)}"><span style="color:#e8a65a">${who}</span> &nbsp;${txt}</div>`).join("")
+  return `<style>
+@keyframes hb{from{height:0}to{height:11vh}} @keyframes hbo{from{height:11vh}to{height:0}} @keyframes hcx{0%{opacity:0}10%{opacity:.92}88%{opacity:.92}100%{opacity:0}}
+@keyframes ht{0%{opacity:0;letter-spacing:.7em;filter:blur(6px)}25%{opacity:1;letter-spacing:.34em;filter:blur(0)}80%{opacity:1}100%{opacity:0}}
+.hb{position:fixed;left:0;right:0;height:11vh;background:#000;z-index:50;animation:hb .8s ease-out both,hbo 1s ease-in both;animation-delay:0ms,${d(HUB_LEN - 1)}}
+.hc{position:fixed;left:6vw;right:6vw;bottom:14vh;text-align:center;z-index:53;color:#f2ead8;font:400 17px/1.4 Georgia,serif;letter-spacing:.04em;text-shadow:1px 1px 3px #000;opacity:0;animation-name:hcx;animation-fill-mode:both}
+.ht{position:fixed;left:0;right:0;top:40%;text-align:center;z-index:54;color:#f0b25e;font:400 44px/1.1 Georgia,serif;text-shadow:0 0 22px rgba(240,150,60,.35);opacity:0;animation:ht 5.4s ease both;animation-delay:${d(1.2)}}
+.hk{position:fixed;right:28px;bottom:3vh;z-index:55;color:#8a8a7a;font:400 11px/1 Georgia,serif;letter-spacing:.2em}
+</style><div class="hb" style="top:0"></div><div class="hb" style="bottom:0"></div><div class="ht">THE HUB</div>${caps}<div class="hk">HOLD JUMP TO SKIP</div>`
 }

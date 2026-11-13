@@ -42,6 +42,7 @@ export function hubChoices(ctx, it, s) {
   if (id === "hub-meg-okafor") {
     if (up === 2) out.push({ text: "There's an unmarked door past your barrier.", tag: "Quest" });
     if (s.hubLedger && !s.hubDinaAsk) out.push({ text: "Your ledger has a Dina A. in it.", tag: "Ask" });
+    else if (s.hubDinaLead && !s.hubLedger && !s.hubDinaAsk) out.push({ text: "Did a Dina come through here? Somebody said you wrote her down.", tag: "Ask" }); // Phoebe's lead (scripts/lib/hub-cut.js)
   }
   if (id === "hub-keymaster") {
     if (!s.hubKmKey) out.push({ text: "Would you spare a key? Please.", tag: "Ask" }, { text: "Hand over a key.", tag: "Demand" });
@@ -84,7 +85,7 @@ export function handleDialogueQuestHub(ctx, p, npc, text) {
   }
   if (id === "hub-meg-okafor") {
     if (t.includes("unmarked door past your barrier") && up === 2) return finishUP(ctx, p, "okafor");
-    if (t.includes("dina a.") && s.hubLedger) { s.hubDinaAsk = 1; return { reply: "I remember her. Didn't want a key. Wanted the tenth tunnel and a radio, in that order. I told her the city past that door is quiet and she said quiet was fine. She walked. Nobody walks the tenth alone. She did.", mood: "calm" }; }
+    if ((t.includes("dina a.") && s.hubLedger) || (t.includes("did a dina come through") && s.hubDinaLead)) { s.hubDinaAsk = 1; return { reply: "I remember her. Didn't want a key. Wanted the tenth tunnel and a radio, in that order. I told her the city past that door is quiet and she said quiet was fine. She walked. Nobody walks the tenth alone. She did.", mood: "calm" }; }
   }
   if (id === "hub-amber-pip" && t.includes("buy some m.e.g. recorders") && lr === 2) { s.hubLR = 99; delete s.hubRec; pay(s, 260); addRep(s, "meg", -6); endQuest(s, LR, "You sold the 2019 team's tapes to Camp Amber. Sato never heard them."); tellQuest(ctx, p, `Quest Completed: ${N[LR]} · +$260`); return { reply: "Uniform tapes? Yes! Jo trades those back to the uniforms for stove gas. Everybody wins! Except whoever asked you to get them. Sorry, them.", mood: "happy" }; }
   if (id === "hub-keymaster") {
