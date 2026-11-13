@@ -5,7 +5,7 @@
 models:
   diffuser: /cdn/value.d96ecea03eb9caec86298b40a15c18fe0ed4e05b78203c0063dc007e7d2a5ecd.glb
   returngrille: /cdn/value.5920b1c6461f4f0027d04bddb215366a0373b626f5fd1a611fdb0c636576816f.glb
-  sprinkler: /cdn/value.84bc79425b0a4d793285ec1a968880a2af0406f1a7e39617723c2a85a6481cdf.glb
+  sprinkler: /cdn/value.42229cfc739d0fcfaa893469e85adca1d17fcf49ca626bd94944c7ec8a292d2a.glb
   smokedet: /cdn/value.54dc55a118b2ed541090b8dd84a7922e3416da0980d75d5ac3fbdad642cd36fb.glb
   troffer-hang: /cdn/value.8a4ddc080c451ba1ef6d21450ea57336413ad765e858b95aeda586b0992c1c58.glb
   tile-fallen: /cdn/value.06f6a49745ce0b39fd97e68ef63530c19b28f6a3d21b061d6ac5270ced5b4a60.glb
@@ -33,7 +33,7 @@ forward:
 tris:
   diffuser: 5447
   returngrille: 1476
-  sprinkler: 11753
+  sprinkler: 1580
   smokedet: 11500
   troffer-hang: 11773
   tile-fallen: 11500
