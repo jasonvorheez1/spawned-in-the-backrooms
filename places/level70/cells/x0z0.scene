@@ -565,10 +565,218 @@ l70-bp-igloo:
 l70-bp-office:
   feetPosition: {x: 38, y: 0, z: -22}
   id: l70-bp-office
-  material: {kind: scripted, script: engine/blueprint}
-  physics: none
-  primitive: {depth: 18, height: 14, kind: box, width: 30}
-  tags: [blueprint]
+  model: /cdn/value.737a95509c5473fa3eda467ca6b9296292d6005bfd56ccddd17ea5d6c701af42.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  tags: [l70-civic]
+l70-breaker:
+  feetPosition: {x: 48.3, y: 1, z: -19.14}
+  id: l70-breaker
+  model: /cdn/value.0919a72230d19f7a5fadf929b70747b4182eb4e61cb8d6f75633b74c5a87d390.glb
+  physics: static
+  rotation: {yaw: 0}
+  state: {"on": false}
+  tags: [usable, l70-breaker]
+l70-c-banner:
+  feetPosition: {x: 0, y: 0, z: -60}
+  id: l70-c-banner
+  model: /cdn/value.185990cc9f76c0378ec544a7cef07f92cc87928e1bbd68a5e968369cc84efac3.glb
+  rotation: {yaw: 0}
+l70-c-car-0:
+  feetPosition: {x: 30.5, y: 0.04, z: -28.3}
+  id: l70-c-car-0
+  layout: {box: {max: {y: 1.45}, min: {y: 0}}}
+  model: {forward: "+x", id: /cdn/value.943f235f8e91d633e7520e554c35d8ae9fa93622797b27c08014f95cb1d34857.glb}
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+l70-c-car-1:
+  feetPosition: {x: 35.7, y: 0.04, z: -15.7}
+  id: l70-c-car-1
+  layout: {box: {max: {y: 1.45}, min: {y: 0}}}
+  model: {forward: "+x", id: /cdn/value.943f235f8e91d633e7520e554c35d8ae9fa93622797b27c08014f95cb1d34857.glb}
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 176}
+l70-c-gbag-0:
+  feetPosition: {x: 45.4, y: 0.04, z: -27.4}
+  id: l70-c-gbag-0
+  layout: {box: {max: {y: 0.55}, min: {y: 0}}}
+  model: /cdn/value.995feda9ff8f26806fc11b84645a37bf2ae5bd8cb1bcfe8a8146d20b5aba877a.glb
+  rotation: {yaw: 10}
+l70-c-gbag-1:
+  feetPosition: {x: 23.6, y: 0.04, z: -28.2}
+  id: l70-c-gbag-1
+  layout: {box: {max: {y: 0.6}, min: {y: 0}}}
+  model: /cdn/value.995feda9ff8f26806fc11b84645a37bf2ae5bd8cb1bcfe8a8146d20b5aba877a.glb
+  rotation: {yaw: 70}
+l70-c-gcrate-0:
+  feetPosition: {x: 26.4, y: 0.04, z: -15.6}
+  id: l70-c-gcrate-0
+  layout: {box: {max: {y: 0.8}, min: {y: 0}}}
+  model: /cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 12}
+l70-c-gcrate-1:
+  feetPosition: {x: 27.3, y: 0.04, z: -15.4}
+  id: l70-c-gcrate-1
+  layout: {box: {max: {y: 0.7}, min: {y: 0}}}
+  model: /cdn/value.65b1cf4b647cedc952ad4a7628071e0fbbf64952b6cd06bb3ae156a729b11eb6.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: -20}
+l70-c-gcrate-2:
+  feetPosition: {x: 26.8, y: 0.84, z: -15.5}
+  id: l70-c-gcrate-2
+  layout: {box: {max: {y: 0.6}, min: {y: 0}}}
+  model: /cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 40}
+l70-c-gfill-0:
+  feetPosition: {x: 28, y: 2.4, z: -22}
+  id: l70-c-gfill-0
+  light: {color: oklch(0.88 0.03 220), distance: 14, intensity: 5, kind: point}
+l70-c-gfill-1:
+  feetPosition: {x: 38.5, y: 2.4, z: -22}
+  id: l70-c-gfill-1
+  light: {color: oklch(0.88 0.03 220), distance: 14, intensity: 5, kind: point}
+l70-c-ggen:
+  feetPosition: {x: 44.2, y: 0.04, z: -28}
+  id: l70-c-ggen
+  layout: {box: {max: {y: 0.9}, min: {y: 0}}}
+  model: /cdn/value.43dce37c5c94828c4f73c350c550d1912c43026086ce914206d5ef670c478c2e.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+l70-c-glant:
+  feetPosition: {x: 44.6, y: 0.95, z: -28}
+  id: l70-c-glant
+  layout: {box: {max: {y: 0.42}, min: {y: 0}}}
+  model: /cdn/value.4c87f2d28b86fe9703caf37d92b67726f5d8598e312f590bcfb50bfc5ac15971.glb
+  rotation: {yaw: 0}
+l70-c-glantlight:
+  feetPosition: {x: 44.6, y: 1.5, z: -28}
+  id: l70-c-glantlight
+  light: {color: oklch(0.8 0.13 62), distance: 8, intensity: 3, kind: point}
+l70-c-gpallet:
+  feetPosition: {x: 40.5, y: 0.04, z: -15.8}
+  id: l70-c-gpallet
+  model: /cdn/value.54dc26df7dc70e622aeb7df92fe86d9ace1a4c0ebd461dc8835643e5798a0dac.glb
+  rotation: {yaw: 8}
+l70-c-gpcrate:
+  feetPosition: {x: 40.5, y: 0.2, z: -15.8}
+  id: l70-c-gpcrate
+  layout: {box: {max: {y: 0.75}, min: {y: 0}}}
+  model: /cdn/value.65b1cf4b647cedc952ad4a7628071e0fbbf64952b6cd06bb3ae156a729b11eb6.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 25}
+l70-c-heap-4:
+  feetPosition: {x: -5.6, y: 0, z: -58.8}
+  id: l70-c-heap-4
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 212}
+  scale: 0.8
+l70-c-heap-5:
+  feetPosition: {x: 5.8, y: 0, z: -59}
+  id: l70-c-heap-5
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 265}
+  scale: 1
+l70-c-ice-garage:
+  feetPosition: {x: 21.75, y: 2.1, z: -20.5}
+  id: l70-c-ice-garage
+  model: /cdn/value.b05c80a9b51d43b51e05f663eadb3050b2f40992c56b85489856160bbb2717e6.glb
+  rotation: {yaw: 90}
+l70-c-ice-garage2:
+  feetPosition: {x: 21.75, y: 2.1, z: -23.6}
+  id: l70-c-ice-garage2
+  model: /cdn/value.b05c80a9b51d43b51e05f663eadb3050b2f40992c56b85489856160bbb2717e6.glb
+  rotation: {yaw: 90}
+  scale: 1.2
+l70-c-icefall:
+  feetPosition: {x: 49.2, y: 0, z: -24.2}
+  id: l70-c-icefall
+  layout: {box: {max: {y: 2.6}, min: {y: 0}}}
+  model: {forward: "+x", id: /cdn/value.72d2b572286f76cb493d3ec6130dbf1928669bdea80c2fc227491dc29c25c5e7.glb}
+  rotation: {yaw: 0}
+l70-c-kitchen:
+  feetPosition: {x: 6, y: 0, z: -64}
+  id: l70-c-kitchen
+  layout: {box: {max: {y: 2.1}, min: {y: 0}}}
+  model: {forward: "+x", id: /cdn/value.c5cf97f2932caf44b61d9cb3d3bd3069008c07542e3016965890fdeb20c34e81.glb}
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 36.86989764584402}
+l70-c-pipes-0:
+  feetPosition: {x: 30.2, y: 2, z: -20.5}
+  id: l70-c-pipes-0
+  layout: {box: {max: {y: 0.7}, min: {y: 0}}}
+  model: /cdn/value.39b4a4c5355091c644d89e231477dc7232178b75d9016faabc0b6322ba5b3744.glb
+  rotation: {yaw: 90}
+l70-c-pipes-1:
+  feetPosition: {x: 33.7, y: 2, z: -20.5}
+  id: l70-c-pipes-1
+  layout: {box: {max: {y: 0.7}, min: {y: 0}}}
+  model: /cdn/value.39b4a4c5355091c644d89e231477dc7232178b75d9016faabc0b6322ba5b3744.glb
+  rotation: {yaw: 90}
+l70-c-pipes-2:
+  feetPosition: {x: 37.2, y: 2, z: -20.5}
+  id: l70-c-pipes-2
+  layout: {box: {max: {y: 0.7}, min: {y: 0}}}
+  model: /cdn/value.39b4a4c5355091c644d89e231477dc7232178b75d9016faabc0b6322ba5b3744.glb
+  rotation: {yaw: 90}
+l70-c-pipes-3:
+  feetPosition: {x: 40.7, y: 2, z: -20.5}
+  id: l70-c-pipes-3
+  layout: {box: {max: {y: 0.7}, min: {y: 0}}}
+  model: /cdn/value.39b4a4c5355091c644d89e231477dc7232178b75d9016faabc0b6322ba5b3744.glb
+  rotation: {yaw: 90}
+l70-c-sled-0:
+  feetPosition: {x: -3.6, y: 0, z: -62.5}
+  id: l70-c-sled-0
+  model: /cdn/value.6915653bca3fbcf61f38d869818195b028ab539769c1d7539e9df055de3139a0.glb
+  rotation: {yaw: 40}
+l70-c-stallsnow-2:
+  feetPosition: {x: -7.32, y: 0, z: -62.26}
+  id: l70-c-stallsnow-2
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 140}
+  scale: 1.1
+l70-c-tube-0:
+  feetPosition: {x: 25, y: 2.6, z: -26.5}
+  id: l70-c-tube-0
+  light: {color: oklch(0.93 0.03 220), distance: 13, intensity: 5, kind: point}
+l70-c-tube-1:
+  feetPosition: {x: 31, y: 2.6, z: -17.5}
+  id: l70-c-tube-1
+  light: {color: oklch(0.93 0.03 220), distance: 13, intensity: 5, kind: point}
+l70-c-tube-2:
+  feetPosition: {x: 42.2, y: 2.6, z: -26.5}
+  id: l70-c-tube-2
+  light: {color: oklch(0.93 0.03 220), distance: 13, intensity: 5, kind: point}
+l70-c-tube-flicker:
+  feetPosition: {x: 37, y: 2.6, z: -17.5}
+  id: l70-c-tube-flicker
+  light: {color: oklch(0.93 0.03 220), distance: 13, intensity: 5, kind: point}
+l70-c-tubefix-0:
+  feetPosition: {x: 25, y: 2.68, z: -26.5}
+  id: l70-c-tubefix-0
+  model: /cdn/value.e1d7e9d8285363fde672073e9fa6ea81325922de9f94306bc9ce454a7b0b53b7.glb
+  rotation: {yaw: 90}
+l70-c-tubefix-1:
+  feetPosition: {x: 31, y: 2.68, z: -17.5}
+  id: l70-c-tubefix-1
+  model: /cdn/value.e1d7e9d8285363fde672073e9fa6ea81325922de9f94306bc9ce454a7b0b53b7.glb
+  rotation: {yaw: 90}
+l70-c-tubefix-2:
+  feetPosition: {x: 42.2, y: 2.68, z: -26.5}
+  id: l70-c-tubefix-2
+  model: /cdn/value.e1d7e9d8285363fde672073e9fa6ea81325922de9f94306bc9ce454a7b0b53b7.glb
+  rotation: {yaw: 90}
+l70-c-tubefix-3:
+  feetPosition: {x: 37, y: 2.68, z: -17.5}
+  id: l70-c-tubefix-3
+  model: /cdn/value.e1d7e9d8285363fde672073e9fa6ea81325922de9f94306bc9ce454a7b0b53b7.glb
+  rotation: {yaw: 90}
+l70-c-valvelight:
+  feetPosition: {x: 47, y: 2.5, z: -22}
+  id: l70-c-valvelight
+  light: {color: oklch(0.9 0.05 90), distance: 9, intensity: 6, kind: point}
 l70-car-0:
   castShadow: true
   feetPosition: {x: 4.4, y: 0, z: 13}
@@ -778,6 +986,13 @@ l70-drive-car-snow2:
   scale: 1
   tags: [l70, l70-town]
   visible: true
+l70-gauge:
+  feetPosition: {x: 47, y: 0.5, z: -24.86}
+  id: l70-gauge
+  model: /cdn/value.d40c12f73436558674f508d566b5397f6f91e3beebeadbb47611327ee28d7e54.glb
+  physics: static
+  rotation: {yaw: 180}
+  tags: [l70-gauge]
 l70-house-counter:
   castShadow: true
   feetPosition: {x: -40.9, y: 0.54, z: -20.95}
@@ -1524,6 +1739,15 @@ l70-pole-1-snow:
   scale: 1
   tags: [l70, l70-town]
   visible: true
+l70-pump:
+  feetPosition: {x: 46.6, y: 0.16, z: -20.1}
+  id: l70-pump
+  layout: {box: {max: {y: 0.9}, min: {y: 0}}}
+  model: /cdn/value.debf3c1e0ee3d3d9e38d2188746f9cb4da0a1e2f0f0d70b0b9eba6d4eb17575b.glb
+  physics: static
+  rotation: {yaw: 0}
+  state: {"on": false}
+  tags: [usable, l70-pump]
 l70-shelter:
   castShadow: true
   feetPosition: {x: -5.9, y: 0, z: -44.5}
@@ -1566,3 +1790,39 @@ l70-swing-snow:
   scale: 1
   tags: [l70, l70-town]
   visible: true
+l70-valve-0:
+  feetPosition: {x: 49.5, y: 0.62, z: -23.5}
+  id: l70-valve-0
+  layout: {box: {max: {y: 0.54}, min: {y: 0}}}
+  model: /cdn/value.a76bacd25382accd2629f0b3460299de143f6911ad0837f6728d172e0429fc38.glb
+  physics: static
+  rotation: {yaw: 0}
+  state: {n: 0, turn: 0}
+  tags: [usable, l70-valve]
+l70-valve-1:
+  feetPosition: {x: 49.5, y: 0.62, z: -22.5}
+  id: l70-valve-1
+  layout: {box: {max: {y: 0.54}, min: {y: 0}}}
+  model: /cdn/value.a76bacd25382accd2629f0b3460299de143f6911ad0837f6728d172e0429fc38.glb
+  physics: static
+  rotation: {yaw: 0}
+  state: {n: 1, turn: 0}
+  tags: [usable, l70-valve]
+l70-valve-2:
+  feetPosition: {x: 49.5, y: 0.62, z: -21.5}
+  id: l70-valve-2
+  layout: {box: {max: {y: 0.54}, min: {y: 0}}}
+  model: /cdn/value.a76bacd25382accd2629f0b3460299de143f6911ad0837f6728d172e0429fc38.glb
+  physics: static
+  rotation: {yaw: 0}
+  state: {n: 2, turn: 0}
+  tags: [usable, l70-valve]
+l70-valve-3:
+  feetPosition: {x: 49.5, y: 0.62, z: -20.5}
+  id: l70-valve-3
+  layout: {box: {max: {y: 0.54}, min: {y: 0}}}
+  model: /cdn/value.a76bacd25382accd2629f0b3460299de143f6911ad0837f6728d172e0429fc38.glb
+  physics: static
+  rotation: {yaw: 0}
+  state: {n: 3, turn: 0}
+  tags: [usable, l70-valve]

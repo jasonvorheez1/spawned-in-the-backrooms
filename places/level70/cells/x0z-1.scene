@@ -97,17 +97,454 @@ l70-bp-dock:
 l70-bp-hotel:
   feetPosition: {x: 34, y: 0, z: -80}
   id: l70-bp-hotel
-  material: {kind: scripted, script: engine/blueprint}
-  physics: none
-  primitive: {depth: 16, height: 18, kind: box, width: 18}
-  tags: [blueprint]
+  model: /cdn/value.d65eb95495c0ce9cf8463384f0d0526e56a0661e9c73eaf49beadc6d1e0aed9a.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  tags: [l70-civic]
 l70-bp-market:
   feetPosition: {x: 0, y: 0, z: -72}
   id: l70-bp-market
-  material: {kind: scripted, script: engine/blueprint}
-  physics: none
-  primitive: {depth: 26, height: 4, kind: box, width: 26}
-  tags: [blueprint]
+  model: /cdn/value.3fc9c3fd400394d9c7add056d11697b647ac6207f9d7e0c339ef30b1704ffde6.glb
+  rotation: {yaw: 0}
+  tags: [l70-civic]
+l70-c-barrellight:
+  feetPosition: {x: 22.6, y: 1.3, z: -82.4}
+  id: l70-c-barrellight
+  light: {color: oklch(0.78 0.16 50), distance: 8, intensity: 4, kind: point}
+l70-c-bench-00:
+  feetPosition: {x: -5.1, y: 0, z: -70.5}
+  id: l70-c-bench-00
+  model: /cdn/value.9516cd89c5d8fb10afca59dfa6da7ee03080244ea56105c1d27eb5adac65d832.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: -90}
+  state: {seat: {d: 0, gap: 0.55, w: 3, y: 0.47}}
+  tags: [seat, usable]
+l70-c-bench-01:
+  feetPosition: {x: -3.2, y: 0, z: -68.5}
+  id: l70-c-bench-01
+  model: /cdn/value.9516cd89c5d8fb10afca59dfa6da7ee03080244ea56105c1d27eb5adac65d832.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  state: {seat: {d: 0, gap: 0.55, w: 3, y: 0.47}}
+  tags: [seat, usable]
+l70-c-bench-10:
+  feetPosition: {x: 5.1, y: 0, z: -73.5}
+  id: l70-c-bench-10
+  model: /cdn/value.9516cd89c5d8fb10afca59dfa6da7ee03080244ea56105c1d27eb5adac65d832.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  state: {seat: {d: 0, gap: 0.55, w: 3, y: 0.47}}
+  tags: [seat, usable]
+l70-c-bench-11:
+  feetPosition: {x: 3.2, y: 0, z: -75.5}
+  id: l70-c-bench-11
+  model: /cdn/value.9516cd89c5d8fb10afca59dfa6da7ee03080244ea56105c1d27eb5adac65d832.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 180}
+  state: {seat: {d: 0, gap: 0.55, w: 3, y: 0.47}}
+  tags: [seat, usable]
+l70-c-candles-0:
+  feetPosition: {x: 35.1, y: 0.04, z: -76.6}
+  id: l70-c-candles-0
+  layout: {box: {max: {y: 0.35}, min: {y: 0}}}
+  model: /cdn/value.ae97d51c608e349cb357872bed72fbce88260ee166074c5136c36932f1639fca.glb
+  rotation: {yaw: 0}
+l70-c-candles-1:
+  feetPosition: {x: 36.6, y: 0.04, z: -78.9}
+  id: l70-c-candles-1
+  layout: {box: {max: {y: 0.35}, min: {y: 0}}}
+  model: /cdn/value.ae97d51c608e349cb357872bed72fbce88260ee166074c5136c36932f1639fca.glb
+  rotation: {yaw: 40}
+l70-c-candles-2:
+  feetPosition: {x: 27, y: 0.04, z: -75}
+  id: l70-c-candles-2
+  layout: {box: {max: {y: 0.35}, min: {y: 0}}}
+  model: /cdn/value.ae97d51c608e349cb357872bed72fbce88260ee166074c5136c36932f1639fca.glb
+  rotation: {yaw: 80}
+l70-c-chair-0:
+  feetPosition: {x: 31.368860661799456, y: 0.04, z: -77.95765640131187}
+  id: l70-c-chair-0
+  layout: {box: {max: {y: 0.95}, min: {y: 0}}}
+  model: {forward: "+z", id: /cdn/value.3f03c5a041552a2699cd8fe8fcd2d9a220328ba5440dbb226a8375df048fd4cc.glb}
+  physics: static
+  rotation: {yaw: -118.99999999999986}
+  state: {seat: {d: 0, gap: 0.5, w: 1}}
+  tags: [seat, usable]
+l70-c-chair-1:
+  feetPosition: {x: 31.968951761165595, y: 0.04, z: -78.92739281194251}
+  id: l70-c-chair-1
+  layout: {box: {max: {y: 0.95}, min: {y: 0}}}
+  model: /cdn/value.e02cceb0c66d902fced411a31f21de9e9584de3272263a09e20b85c9455411be.glb
+  physics: static
+  rotation: {yaw: -126.5}
+  state: {seat: {d: 0, gap: 0.5, w: 1}}
+  tags: [seat, usable]
+l70-c-chair-2:
+  feetPosition: {x: 32.905952840230036, y: 0.04, z: -79.57741358966683}
+  id: l70-c-chair-2
+  layout: {box: {max: {y: 0.9}, min: {y: 0}}}
+  model: /cdn/value.324d9a05c6aca4bc72f791c510f751bee89cfbbc0e2104e59ad075531e70a750.glb
+  physics: static
+  rotation: {yaw: -166.00000000000003}
+  state: {seat: {d: 0, gap: 0.5, w: 1}}
+  tags: [seat, usable]
+l70-c-chair-3:
+  feetPosition: {x: 34.024434299395445, y: 0.04, z: -79.79989338457968}
+  id: l70-c-chair-3
+  layout: {box: {max: {y: 0.95}, min: {y: 0}}}
+  model: /cdn/value.b8d82a3ce214d0d151b9535237651d29ad5503bd098b052ed99e95be8d0fd779.glb
+  physics: static
+  rotation: {yaw: 186.50000000000006}
+  state: {seat: {d: 0, gap: 0.5, w: 1}}
+  tags: [seat, usable]
+l70-c-chair-4:
+  feetPosition: {x: 35.13886260061224, y: 0.04, z: -79.55792728139929}
+  id: l70-c-chair-4
+  layout: {box: {max: {y: 0.95}, min: {y: 0}}}
+  model: {forward: "+z", id: /cdn/value.3f03c5a041552a2699cd8fe8fcd2d9a220328ba5440dbb226a8375df048fd4cc.glb}
+  physics: static
+  rotation: {yaw: 147}
+  state: {seat: {d: 0, gap: 0.5, w: 1}}
+  tags: [seat, usable]
+l70-c-chair-5:
+  feetPosition: {x: 36.06437654306835, y: 0.04, z: -78.89165258132385}
+  id: l70-c-chair-5
+  layout: {box: {max: {y: 0.9}, min: {y: 0}}}
+  model: /cdn/value.324d9a05c6aca4bc72f791c510f751bee89cfbbc0e2104e59ad075531e70a750.glb
+  physics: static
+  rotation: {yaw: 139.50000000000006}
+  state: {seat: {d: 0, gap: 0.5, w: 1}}
+  tags: [seat, usable]
+l70-c-chair-6:
+  feetPosition: {x: 36.647452011678084, y: 0.04, z: -77.91159083248004}
+  id: l70-c-chair-6
+  layout: {box: {max: {y: 0.95}, min: {y: 0}}}
+  model: /cdn/value.e02cceb0c66d902fced411a31f21de9e9584de3272263a09e20b85c9455411be.glb
+  physics: static
+  rotation: {yaw: 100.00000000000014}
+  state: {seat: {d: 0, gap: 0.5, w: 1}}
+  tags: [seat, usable]
+l70-c-chandelier:
+  feetPosition: {x: 31.5, y: 2.35, z: -80}
+  id: l70-c-chandelier
+  layout: {box: {max: {y: 1.45}, min: {y: 0}}}
+  model: /cdn/value.31ca981b457c1721057600f5d92e7dd6dd5d1102c518a566ebd99075b47c78f1.glb
+  rotation: {yaw: 0}
+l70-c-corrlight:
+  feetPosition: {x: 39.5, y: 2.2, z: -80}
+  id: l70-c-corrlight
+  light: {color: oklch(0.7 0.12 55), distance: 7, intensity: 2.5, kind: point}
+l70-c-crate-k:
+  feetPosition: {x: 7.6, y: 0, z: -65.2}
+  id: l70-c-crate-k
+  layout: {box: {max: {y: 0.62}, min: {y: 0}}}
+  model: /cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 10}
+l70-c-desk:
+  feetPosition: {x: 29.5, y: 0.04, z: -84.4}
+  id: l70-c-desk
+  layout: {box: {max: {y: 1.1}, min: {y: 0}}}
+  model: /cdn/value.2c088503b2d0bc2059170d8cfd3c309ff0c962ab60e22a79372dd44229ef85be.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+l70-c-desklight:
+  feetPosition: {x: 29.5, y: 1.8, z: -83.2}
+  id: l70-c-desklight
+  light: {color: oklch(0.8 0.13 62), distance: 8, intensity: 4, kind: point}
+l70-c-doorbarrel:
+  feetPosition: {x: 22.6, y: 0, z: -82.4}
+  id: l70-c-doorbarrel
+  layout: {box: {max: {y: 0.95}, min: {y: 0}}}
+  model: /cdn/value.f9480030aeb78abf6f6f50b8f2a655d8ca77540fbddc0301e23d8b2fe1ee82ef.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+l70-c-doorheap:
+  feetPosition: {x: 22.2, y: 0, z: -77.4}
+  id: l70-c-doorheap
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 140}
+  scale: 0.8
+l70-c-doorlight:
+  feetPosition: {x: 24.3, y: 2.6, z: -80}
+  id: l70-c-doorlight
+  light: {color: oklch(0.8 0.13 62), distance: 9, intensity: 4, kind: point}
+l70-c-drum-0:
+  feetPosition: {x: -3.2, y: 0, z: -70.5}
+  id: l70-c-drum-0
+  layout: {box: {max: {y: 0.95}, min: {y: 0}}}
+  model: /cdn/value.f9480030aeb78abf6f6f50b8f2a655d8ca77540fbddc0301e23d8b2fe1ee82ef.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+l70-c-drum-1:
+  feetPosition: {x: 3.2, y: 0, z: -73.5}
+  id: l70-c-drum-1
+  layout: {box: {max: {y: 0.95}, min: {y: 0}}}
+  model: /cdn/value.f9480030aeb78abf6f6f50b8f2a655d8ca77540fbddc0301e23d8b2fe1ee82ef.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 50}
+l70-c-fire-0:
+  audio: {clip: cdn/moodboard-realistic-gritty/sfx-oil-drum-fire-crackle-loop.mp3, gain: 0.5, loop: true, maxDistance: 26, spatial: true}
+  feetPosition: {x: -3.2, y: 0.9, z: -70.5}
+  fx: {script: "fx\npop coals n=8 on=disc(.16) size=.06..0.12 tint=<2.4,.9,.25>..<1.1,.3,.08> sz=$size*flick(.5,.12) col=$tint*flick(.8,.3) a=.9 r=sprite(soft-disc,add)\npop flame rate=flick(.45,.2)*?mobile:16|26 on=disc(.17) life=.35..0.6 v=up(.9)+cone(18)*(.2..0.5) size=.14..0.26 acc=curl(.5)*1.2+buoy(1.3)+drag(1.8)\n  sz=$size*(.5>.25:1>.7:.7>.14) col=hdr(2.6,1.7,.6)>.3:hdr(2,.8,.16)>.65:hdr(1.2,.32,.06)>hdr(.4,.08,.02) a=0>.12:1>.75:.85>0 rot=spin(.2) r=sprite(flame-wisp,add)\npop embers rate=4 on=disc(.16) life=.8..1.6 v=up(2.4)+cone(30)*(.4..1.2) size=.02..0.05 acc=curl(.8)+grav()*.4+drag(.5) sz=$size*(1>.7:.8>.3) col=hdr(5,2.8,.8)>.6:hdr(2.4,.8,.15)>hdr(1,.22,.04) a=(0>.08:1>.65:.9>0)*flick(11,.35) r=sprite(ember,add,velocity,.02)\npop smoke on=@flame?.2 inh=p;v:$v*.4 life=1.8..3 size=.16..0.26 acc=buoy(.9)+curl(.35)*.5+drag(.8) sz=$size*(.7>3.2) col=<.3,.28,.26>><.15,.15,.16> a=0>.22:.3>.7:.18>0 rot=spin(.15) r=sprite(smoke-puff,alpha)"}
+  id: l70-c-fire-0
+  light: {color: oklch(0.78 0.16 55), distance: 16, intensity: 28, kind: point}
+l70-c-fire-1:
+  audio: {clip: cdn/moodboard-realistic-gritty/sfx-oil-drum-fire-crackle-loop.mp3, gain: 0.5, loop: true, maxDistance: 26, spatial: true}
+  feetPosition: {x: 3.2, y: 0.9, z: -73.5}
+  fx: {script: "fx\npop coals n=8 on=disc(.16) size=.06..0.12 tint=<2.4,.9,.25>..<1.1,.3,.08> sz=$size*flick(.5,.12) col=$tint*flick(.8,.3) a=.9 r=sprite(soft-disc,add)\npop flame rate=flick(.45,.2)*?mobile:16|26 on=disc(.17) life=.35..0.6 v=up(.9)+cone(18)*(.2..0.5) size=.14..0.26 acc=curl(.5)*1.2+buoy(1.3)+drag(1.8)\n  sz=$size*(.5>.25:1>.7:.7>.14) col=hdr(2.6,1.7,.6)>.3:hdr(2,.8,.16)>.65:hdr(1.2,.32,.06)>hdr(.4,.08,.02) a=0>.12:1>.75:.85>0 rot=spin(.2) r=sprite(flame-wisp,add)\npop embers rate=4 on=disc(.16) life=.8..1.6 v=up(2.4)+cone(30)*(.4..1.2) size=.02..0.05 acc=curl(.8)+grav()*.4+drag(.5) sz=$size*(1>.7:.8>.3) col=hdr(5,2.8,.8)>.6:hdr(2.4,.8,.15)>hdr(1,.22,.04) a=(0>.08:1>.65:.9>0)*flick(11,.35) r=sprite(ember,add,velocity,.02)\npop smoke on=@flame?.2 inh=p;v:$v*.4 life=1.8..3 size=.16..0.26 acc=buoy(.9)+curl(.35)*.5+drag(.8) sz=$size*(.7>3.2) col=<.3,.28,.26>><.15,.15,.16> a=0>.22:.3>.7:.18>0 rot=spin(.15) r=sprite(smoke-puff,alpha)"}
+  id: l70-c-fire-1
+  light: {color: oklch(0.78 0.16 55), distance: 16, intensity: 28, kind: point}
+l70-c-heap-0:
+  feetPosition: {x: -10.5, y: 0, z: -66}
+  id: l70-c-heap-0
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 0}
+  scale: 1.3
+l70-c-heap-1:
+  feetPosition: {x: 10.8, y: 0, z: -68}
+  id: l70-c-heap-1
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 53}
+  scale: 1.1
+l70-c-heap-2:
+  feetPosition: {x: -10, y: 0, z: -78}
+  id: l70-c-heap-2
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 106}
+  scale: 1.5
+l70-c-heap-3:
+  feetPosition: {x: 9.5, y: 0, z: -79}
+  id: l70-c-heap-3
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 159}
+  scale: 0.9
+l70-c-heap-6:
+  feetPosition: {x: 2.2, y: 0, z: -83}
+  id: l70-c-heap-6
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 318}
+  scale: 0.7
+l70-c-ice-hotel:
+  feetPosition: {x: 24.25, y: 2, z: -80}
+  id: l70-c-ice-hotel
+  model: /cdn/value.b05c80a9b51d43b51e05f663eadb3050b2f40992c56b85489856160bbb2717e6.glb
+  rotation: {yaw: 90}
+l70-c-lant-0:
+  feetPosition: {x: 28.2, y: 0.04, z: -83.6}
+  id: l70-c-lant-0
+  layout: {box: {max: {y: 0.45}, min: {y: 0}}}
+  model: /cdn/value.4c87f2d28b86fe9703caf37d92b67726f5d8598e312f590bcfb50bfc5ac15971.glb
+  rotation: {yaw: 20}
+l70-c-lant-1:
+  feetPosition: {x: 37.2, y: 0.04, z: -75.4}
+  id: l70-c-lant-1
+  layout: {box: {max: {y: 0.45}, min: {y: 0}}}
+  model: /cdn/value.4c87f2d28b86fe9703caf37d92b67726f5d8598e312f590bcfb50bfc5ac15971.glb
+  rotation: {yaw: 70}
+l70-c-lant-2:
+  feetPosition: {x: 26.4, y: 0.04, z: -77.2}
+  id: l70-c-lant-2
+  layout: {box: {max: {y: 0.45}, min: {y: 0}}}
+  model: /cdn/value.4c87f2d28b86fe9703caf37d92b67726f5d8598e312f590bcfb50bfc5ac15971.glb
+  rotation: {yaw: 0}
+l70-c-lantlight-0:
+  feetPosition: {x: 28.2, y: 0.6, z: -83.6}
+  id: l70-c-lantlight-0
+  light: {color: oklch(0.8 0.13 62), distance: 6, intensity: 2.2, kind: point}
+l70-c-lantlight-1:
+  feetPosition: {x: 37.2, y: 0.6, z: -75.4}
+  id: l70-c-lantlight-1
+  light: {color: oklch(0.8 0.13 62), distance: 6, intensity: 2.2, kind: point}
+l70-c-lantlight-2:
+  feetPosition: {x: 26.4, y: 0.6, z: -77.2}
+  id: l70-c-lantlight-2
+  light: {color: oklch(0.8 0.13 62), distance: 5, intensity: 1.8, kind: point}
+l70-c-lbag:
+  feetPosition: {x: 31.4, y: 0.04, z: -85.6}
+  id: l70-c-lbag
+  layout: {box: {max: {y: 0.6}, min: {y: 0}}}
+  model: /cdn/value.995feda9ff8f26806fc11b84645a37bf2ae5bd8cb1bcfe8a8146d20b5aba877a.glb
+  rotation: {yaw: 33}
+l70-c-lbench:
+  feetPosition: {x: 27.2, y: 0.04, z: -86.2}
+  id: l70-c-lbench
+  layout: {box: {max: {y: 0.9}, min: {y: 0}}}
+  model: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+l70-c-lectern:
+  feetPosition: {x: 34, y: 0.04, z: -77}
+  id: l70-c-lectern
+  layout: {box: {max: {y: 1.9}, min: {y: 0}}}
+  model: {forward: "+x", id: /cdn/value.956a6800bd9fd9e304d895d54df3fe8be38b48cbbf72767cb1d1d2e2ae616e02.glb}
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+l70-c-lecternlight:
+  feetPosition: {x: 34.4, y: 1.9, z: -77.6}
+  id: l70-c-lecternlight
+  light: {color: oklch(0.8 0.13 62), distance: 9, intensity: 5, kind: point}
+l70-c-lobbyfill:
+  feetPosition: {x: 36.5, y: 2.4, z: -82.5}
+  id: l70-c-lobbyfill
+  light: {color: oklch(0.8 0.09 70), distance: 12, intensity: 4, kind: point}
+l70-c-lobbylight:
+  feetPosition: {x: 31.5, y: 2.2, z: -80}
+  id: l70-c-lobbylight
+  light: {color: oklch(0.82 0.12 65), distance: 16, intensity: 9, kind: point}
+l70-c-notice:
+  feetPosition: {x: 4, y: 0, z: -80.5}
+  id: l70-c-notice
+  model: /cdn/value.4bdc3899162211807dfe16cb602e0861364f4b1e68b394edaa4061ae0a09761b.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 154.79887635452494}
+l70-c-noticelamp:
+  feetPosition: {x: 3.6, y: 2.2, z: -79.6}
+  id: l70-c-noticelamp
+  light: {color: oklch(0.8 0.13 62), distance: 6, intensity: 2.5, kind: point}
+l70-c-pallet:
+  feetPosition: {x: -5, y: 0, z: -75.5}
+  id: l70-c-pallet
+  layout: {box: {max: {y: 0.7}, min: {y: 0}}}
+  model: /cdn/value.54dc26df7dc70e622aeb7df92fe86d9ace1a4c0ebd461dc8835643e5798a0dac.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 15}
+l70-c-rug:
+  feetPosition: {x: 33.4, y: 0.045, z: -77.6}
+  id: l70-c-rug
+  model: /cdn/value.7a52a205e6005afc81d4fb66c6bd697f8b8a470cb14e2d812ee207660fd6a48c.glb
+  rotation: {yaw: 12}
+l70-c-sled-1:
+  feetPosition: {x: 4.8, y: 0, z: -78}
+  id: l70-c-sled-1
+  model: /cdn/value.6915653bca3fbcf61f38d869818195b028ab539769c1d7539e9df055de3139a0.glb
+  rotation: {yaw: -70}
+l70-c-stall-0:
+  feetPosition: {x: -7.5, y: 0, z: -76.5}
+  id: l70-c-stall-0
+  layout: {box: {max: {y: 2.6}, min: {y: 0}}}
+  model: {forward: "+x", id: /cdn/value.5d69a7477ebf01d638933b9fc1c4a2d3170f7cf7d8a90785062ced159f4dbe5f.glb}
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: -125.96375653207352}
+l70-c-stall-1:
+  feetPosition: {x: -8.5, y: 0, z: -70.5}
+  id: l70-c-stall-1
+  layout: {box: {max: {y: 2.7}, min: {y: 0}}}
+  model: {forward: "+x", id: /cdn/value.889e6c7023f8f41389ed28a5cd911f8333f6065d8ceeb6dce3b8c8d095a579ba.glb}
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: -73.99202019855866}
+l70-c-stall-2:
+  feetPosition: {x: -6, y: 0, z: -65}
+  id: l70-c-stall-2
+  layout: {box: {max: {y: 2.84}, min: {y: 0}}}
+  model: {forward: "+x", id: /cdn/value.5d69a7477ebf01d638933b9fc1c4a2d3170f7cf7d8a90785062ced159f4dbe5f.glb}
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: -45.60129464500447}
+l70-c-stall-3:
+  feetPosition: {x: 7.5, y: 0, z: -75.5}
+  id: l70-c-stall-3
+  layout: {box: {max: {y: 2.7}, min: {y: 0}}}
+  model: {forward: "+x", id: /cdn/value.889e6c7023f8f41389ed28a5cd911f8333f6065d8ceeb6dce3b8c8d095a579ba.glb}
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 121.01689347810002}
+l70-c-stall-4:
+  feetPosition: {x: 8, y: 0, z: -68.5}
+  id: l70-c-stall-4
+  layout: {box: {max: {y: 2.72}, min: {y: 0}}}
+  model: {forward: "+x", id: /cdn/value.5d69a7477ebf01d638933b9fc1c4a2d3170f7cf7d8a90785062ced159f4dbe5f.glb}
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 61.37062226934319}
+l70-c-stallcrate-0:
+  feetPosition: {x: -5.15, y: 0, z: -76.97}
+  id: l70-c-stallcrate-0
+  layout: {box: {max: {y: 0.62}, min: {y: 0}}}
+  model: /cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+l70-c-stallcrate-1:
+  feetPosition: {x: -6.01, y: 0, z: -71.80999999999999}
+  id: l70-c-stallcrate-1
+  layout: {box: {max: {y: 0.62}, min: {y: 0}}}
+  model: /cdn/value.65b1cf4b647cedc952ad4a7628071e0fbbf64952b6cd06bb3ae156a729b11eb6.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 37}
+l70-c-stallcrate-2:
+  feetPosition: {x: -3.8600000000000003, y: 0, z: -67.08}
+  id: l70-c-stallcrate-2
+  layout: {box: {max: {y: 0.62}, min: {y: 0}}}
+  model: /cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 74}
+l70-c-stallcrate-3:
+  feetPosition: {x: 7.75, y: 0, z: -76.11}
+  id: l70-c-stallcrate-3
+  layout: {box: {max: {y: 0.62}, min: {y: 0}}}
+  model: /cdn/value.65b1cf4b647cedc952ad4a7628071e0fbbf64952b6cd06bb3ae156a729b11eb6.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 111}
+l70-c-stallcrate-4:
+  feetPosition: {x: 8.18, y: 0, z: -70.08999999999999}
+  id: l70-c-stallcrate-4
+  layout: {box: {max: {y: 0.62}, min: {y: 0}}}
+  model: /cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 148}
+l70-c-stalllamp-0:
+  feetPosition: {x: -6.75, y: 2.1, z: -76.05}
+  id: l70-c-stalllamp-0
+  light: {color: oklch(0.8 0.13 62), distance: 7, intensity: 3, kind: point}
+l70-c-stalllamp-1:
+  feetPosition: {x: -7.65, y: 2.1, z: -70.65}
+  id: l70-c-stalllamp-1
+  light: {color: oklch(0.8 0.13 62), distance: 7, intensity: 3, kind: point}
+l70-c-stalllamp-2:
+  feetPosition: {x: -5.4, y: 2.1, z: -65.7}
+  id: l70-c-stalllamp-2
+  light: {color: oklch(0.8 0.13 62), distance: 7, intensity: 3, kind: point}
+l70-c-stalllamp-3:
+  feetPosition: {x: 6.75, y: 2.1, z: -75.15}
+  id: l70-c-stalllamp-3
+  light: {color: oklch(0.8 0.13 62), distance: 7, intensity: 3, kind: point}
+l70-c-stalllamp-4:
+  feetPosition: {x: 7.2, y: 2.1, z: -68.85}
+  id: l70-c-stalllamp-4
+  light: {color: oklch(0.8 0.13 62), distance: 7, intensity: 3, kind: point}
+l70-c-stallsnow-0:
+  feetPosition: {x: -9.15, y: 0, z: -76.28999999999999}
+  id: l70-c-stallsnow-0
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 0}
+  scale: 0.7
+l70-c-stallsnow-1:
+  feetPosition: {x: -10.37, y: 0, z: -68.97}
+  id: l70-c-stallsnow-1
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 70}
+  scale: 0.8999999999999999
+l70-c-stallsnow-3:
+  feetPosition: {x: 9.15, y: 0, z: -75.07}
+  id: l70-c-stallsnow-3
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 210}
+  scale: 0.7
+l70-c-stallsnow-4:
+  feetPosition: {x: 9.76, y: 0, z: -66.53}
+  id: l70-c-stallsnow-4
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 280}
+  scale: 0.8999999999999999
+l70-c-wood-0:
+  feetPosition: {x: -4.5, y: 0, z: -80.5}
+  id: l70-c-wood-0
+  model: /cdn/value.a8269d471ada83554f083b37b4036d3cf8dc5f4626a48ff4cf8fa2116ea229fe.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 20}
+l70-c-wood-1:
+  feetPosition: {x: 9.6, y: 0, z: -72}
+  id: l70-c-wood-1
+  model: /cdn/value.a8269d471ada83554f083b37b4036d3cf8dc5f4626a48ff4cf8fa2116ea229fe.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 95}
 l70-car-4:
   castShadow: true
   feetPosition: {x: 4.5, y: 0, z: -96}
