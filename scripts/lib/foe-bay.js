@@ -41,10 +41,10 @@ const CLUMP_GLB = "/cdn/value.aeb91c70e11f57592fd7fe510b2e8bfd86065edacbb87155c0
 const BRAIN = {
   moths: { hp: C3.moths.hp, brain: { fly: 1, speed: 2.6, reach: 1.2, dmg: C3.moths.bite, cd: 1.1, bite: "dry-moth-wings-fluttering-burst" } },
   smiler6: { hp: 120, brain: { speed: 3.2, reach: 1.6, dmg: 22, cd: 1.4 } },
-  rat5: { hp: E5.rat.hp, brain: { speed: 4.2, reach: 0.9, dmg: E5.rat.bite ?? 5, cd: 0.7, rig: 0 } },
+  rat5: { hp: E5.rat.hp, brain: { speed: 4.2, reach: 0.9, dmg: Array.isArray(E5.rat.bite) ? E5.rat.bite[1] : (E5.rat.bite ?? 3), cd: 0.7, rig: 0 } },
   clump: { hp: L11.kinds.clump.hp, brain: { speed: L11.kinds.clump.speed, reach: L11.kinds.clump.reach, dmg: L11.kinds.clump.dmg, cd: L11.kinds.clump.cd } },
-  tenant: { hp: L13.tenant.hp, brain: { rig: 1, speed: 1.8, reach: 1.4, dmg: 10, cd: 1.2 } },
-  lurker13: { hp: L13.lurker.hp, brain: { rig: 1, speed: 2.8, reach: 1.6, dmg: 16, cd: 1.3 } },
+  tenant: { hp: L13.foes.tenant.hp, brain: { rig: 1, speed: 1.8, reach: 1.4, dmg: 10, cd: 1.2 } },
+  lurker13: { hp: L13.foes.lurker.hp, brain: { rig: 1, speed: 2.8, reach: 1.6, dmg: 16, cd: 1.3 } },
 };
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, wrap: "repeat", repeat: [rep, rep], color, roughness: 0.85 });
 
@@ -99,8 +99,8 @@ function spawnFoe(ctx, kind, n) {
     if (kind === "moths") return ctx.spawn({ ...MOTHS, tags: [...MOTHS.tags, ...tags], feetPosition: { ...p, y: 1.4 }, state: { ...MOTHS.state, ...st } });
     const look = { smiler6: { model: SMILER6_MODEL, scale: SMILER6_SCALE }, rat5: { model: { id: E5.rat.model, forward: "+x" }, layout: { box: { min: { x: -0.5, y: 0, z: -0.5 }, max: { x: 0.5, y: 0.21, z: 0.5 } } } },
       clump: { model: { id: CLUMP_GLB, forward: "+x" }, layout: { box: { min: { x: -0.8, y: 0, z: -0.8 }, max: { x: 0.8, y: 1.2, z: 0.8 } } } },
-      tenant: { model: { id: TENANT, forward: "+x" }, layout: { box: { min: { x: -0.6, y: 0, z: -0.6 }, max: { x: 0.6, y: L13.tenant.height, z: 0.6 } } } },
-      lurker13: { model: { id: LURKER13, forward: "+x" }, layout: { box: { min: { x: -0.6, y: 0, z: -0.6 }, max: { x: 0.6, y: L13.lurker.height, z: 0.6 } } } } }[kind];
+      tenant: { model: { id: TENANT, forward: "+x" }, layout: { box: { min: { x: -0.6, y: 0, z: -0.6 }, max: { x: 0.6, y: L13.foes.tenant.height, z: 0.6 } } } },
+      lurker13: { model: { id: LURKER13, forward: "+x" }, layout: { box: { min: { x: -0.6, y: 0, z: -0.6 }, max: { x: 0.6, y: L13.foes.lurker.height, z: 0.6 } } } } }[kind];
     return ctx.spawn({ tags, feetPosition: p, rotation: rot, ...look, physics: { body: "character", collider: "capsule" }, state: st });
   }
   const K = F70[kind];
