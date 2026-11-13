@@ -62,10 +62,11 @@ export function layFood(ctx) {
   const P = (id, spec) => ctx.spawn(`l31-food-${id}`, { castShadow: false, ...spec });
   const M = (id, key, x, z, yaw, extra = {}, y = 0) => P(id, { model: { id: G[key], forward: "+z" }, feetPosition: { x, y, z }, rotation: { yaw }, physics: { body: "static", collider: "box" }, ...extra });
   const floorY = 0.018;
+  // Shelly Nov 13 (photo of a real rink cafe): cosmic glow carpet wall to wall, like the rink party rooms
   P("tile", {
     feetPosition: { x: 34, y: 0.002, z: 18.075 },
     primitive: box(15.98, 0.016, 23.83),
-    material: { texture: "cdn/texture-worn-beige-waxed-vinyl-composition-floor-tile-12-inch.png", wrap: "repeat", repeat: [5, 7], color: "#c5beaa", roughness: 0.82 },
+    material: { texture: "cdn/texture-black-cosmic-bowling-carpet-neon-pink-red-purple-swirls-and-stars.png", wrap: "repeat", repeat: [6, 9], color: "#d8d2e0", roughness: 0.97 },
     receiveShadow: true,
   });
   // the zone's root, where the blueprint stood: its lights
@@ -99,32 +100,38 @@ export function layFood(ctx) {
     children: [{ feetPosition: { x: 0, y: 0, z: 0.02 }, primitive: box(1.16, 2.18, 0.05), material: { color: "#3c3e42", roughness: 0.6 } }, { feetPosition: { x: -0.38, y: 1.0, z: -0.07 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.03, height: 0.06 }, rotation: { pitch: 90 }, material: { color: "#c9ccd0", metalness: 0.9, roughness: 0.3 } }, { feetPosition: { x: 0, y: 0.1, z: -0.035 }, primitive: box(0.9, 0.25, 0.01), material: { color: "#b9bcc0", metalness: 0.8, roughness: 0.4 } }] });
   P("door-label", { parent: "l31-food-door", feetPosition: { x: 0, y: 1.68, z: -0.035 }, rotation: { yaw: 0 }, vector: DOORTXT });
   layStaffRoom(ctx, P, M);
-  // Tables west of the ordering lane, left as people left them (Shelly Nov 13: "de ai slop this"): chairs pushed out and turned, one table short a chair, none in a grid
-  const tables = [
-    [29.6, 13.6, 8, [[0, -0.95, 172], [0.15, 1.05, 14], [-1.05, 0.1, -76]]],
-    [33.4, 15.2, -11, [[0.2, -0.9, 200], [0, 1.25, 33], [-0.95, -0.15, -95], [1.1, 0.25, 118]]],
-    [29.3, 22.4, 0, [[0, -0.89, 180], [0, 0.89, 0], [-0.89, 0, -90], [0.89, 0, 90]]],
-    [33.6, 21.6, 17, [[-0.1, -1.0, 160], [1.0, 0.1, 74]]],
-  ];
-  // hand-built meshes (Shelly Nov 13 "custom meshes"): fiberglass shell chairs in three faded colours, formica pedestal tables
-  const SHELLS = ["#d9661e", "#c99a2e", "#b5532a", "#d27a2a"];
-  const TBL = (id, x, z, yaw, round) => P(id, { feetPosition: { x, y: floorY, z }, rotation: { yaw }, primitive: { kind: "scripted", script: "scripts/l31-diner-table.js", params: { round: !!round } }, physics: "static", receiveShadow: true });
-  const CHR = (id, x, z, yaw, k) => P(id, { feetPosition: { x, y: floorY, z }, rotation: { yaw }, primitive: { kind: "scripted", script: "scripts/l31-shell-chair.js", params: { color: SHELLS[k % SHELLS.length] } }, physics: "static", tags: ["seat"] });
+  // the cafe (Shelly Nov 13, her photo): long white folding tables with benches in three rows, a few knocked off true,
+  // green vinyl booths in back-to-back bays along the south wall, a little laminate table between each pair
+  const FT = (id, x, z, yaw, wear) => P(id, { feetPosition: { x, y: floorY, z }, rotation: { yaw }, primitive: { kind: "scripted", script: "scripts/l31-fold-table.js", params: { wear } }, physics: "static", receiveShadow: true, tags: ["seat"], state: { name: "Bench", seat: { w: 2, gap: 0.64 } } });
+  const ROWS = [28.3, 31.1, 33.9], ZS = [10.6, 13.8, 17.0, 20.2, 23.4];
   let n = 0;
-  for (const [i, [x, z, yaw, chairs]] of tables.entries()) {
-    TBL("table" + (i + 1), x, z, yaw, i % 2);
-    for (const [c, [dx, dz, cy]] of chairs.entries()) CHR("chair" + (i + 1) + "-" + c, x + dx, z + dz, cy, n++ * 7 % 5);
+  for (const [r, x] of ROWS.entries()) for (const [k, z] of ZS.entries()) {
+    if (r === 2 && k === 2) continue; // the gap the queue cuts through to the counter
+    const j = n++, dx = ((j * 37) % 7 - 3) * 0.03, yaw = 90 + ((j * 53) % 9 - 4) * 0.9;
+    FT(`ftable${r}-${k}`, x + dx, z + ((j * 13) % 5 - 2) * 0.04, yaw, j % 3 === 0 ? 1 : 0);
   }
-  CHR("chair-stray", 35.6, 18.6, 141, 2); // dragged over to the counter queue
-  // curved diner booths along the back wall, open to the room
-  const BOOTH = "/cdn/value.13e98688536b8996d72997d03461590d77f616b6ffdbc802895762ab9813a00d.glb";
-  for (const [i, x] of [28.6, 32.4].entries()) {
-    P("booth" + i, { feetPosition: { x, y: floorY, z: 28.6 }, rotation: { yaw: -90 }, model: { id: BOOTH, forward: "+z" }, scale: 1.2, physics: { body: "static", collider: "mesh" }, tags: ["seat"] });
-    TBL("btable" + i, x, 28.15, 0, true);
-    P("blamp" + i, { feetPosition: { x, y: 2.5, z: 28.2 }, primitive: { kind: "cone", radius: 0.22, height: 0.22, radialSegments: 20, openEnded: true }, material: { color: "#c8201c", roughness: 0.4, metalness: 0.4, side: "double", emissive: "#ffb060", emissiveIntensity: 0.25 },
-      children: [{ feetPosition: { x: 0, y: 0.22, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.006, radiusBottom: 0.006, height: 2.4 }, material: { color: "#222" } }, { feetPosition: { x: 0, y: -0.15, z: 0 }, light: { kind: "point", color: "#ffc68a", intensity: 2.2, distance: 5 } }] });
+  const BOOTHC = ["#2f9a4a", "#2c9446", "#33a04f"];
+  const BB = (id, x, z, yaw, k) => P(id, { feetPosition: { x, y: floorY, z }, rotation: { yaw }, primitive: { kind: "scripted", script: "scripts/l31-green-booth.js", params: { color: BOOTHC[k % 3] } }, physics: "static", receiveShadow: true, tags: ["seat"], state: { name: "Booth" } });
+  const BOOTHZ = 29.1;
+  for (let i = 0; i < 5; i++) {
+    const x0 = 27.0 + i * 1.95; // each bay: bench facing +x, table, bench facing -x
+    BB(`booth${i}a`, x0, BOOTHZ, 90, i); BB(`booth${i}b`, x0 + 1.32, BOOTHZ, -90, i + 1);
+    P(`btable${i}`, { feetPosition: { x: x0 + 0.66, y: floorY, z: BOOTHZ }, primitive: { kind: "scripted", script: "scripts/l31-diner-table.js", params: { round: false, size: 0.38 } }, scale: { x: 1, y: 1, z: 1.7 }, physics: "static", receiveShadow: true });
   }
-  D("capri-b0", "capri", 28.4, 0.765 + floorY, 28.0, 60); D("sprite-b1", "sprite", 32.6, 0.765 + floorY, 28.3, 10);
+  // what people left: drinks and a napkin pile on the folding tables
+  D("sprite-t1", "sprite", 31.1, 0.76 + floorY, 13.5, 40); D("capri-t3", "capri", 28.4, 0.76 + floorY, 23.1, 120); D("capri-t5", "capri", 33.8, 0.76 + floorY, 20.6, 200);
+  D("capri-b0", "capri", 27.6, 0.765 + floorY, 29.0, 60); D("sprite-b1", "sprite", 31.6, 0.765 + floorY, 29.2, 10);
+  // overhead: café string lights swagged across the room, and coloured tube lights down both long walls
+  for (let i = 0; i < 4; i++) {
+    const z0 = 8 + i * 6;
+    P(`strand${i}`, { feetPosition: { x: 26.4, y: 3.9, z: z0 }, spline: { kind: "stringlight", points: [[0, 0, 0], [3.8, -0.55, 2.2], [7.6, 0, 0.6], [11.4, -0.6, 3.2], [15.2, 0, 1.4]] } });
+  }
+  const TUBES = [["#7dff9a", 26.2], ["#ff5fa8", 41.6]];
+  for (const [col, x] of TUBES) for (let i = 0; i < 3; i++) {
+    const z = 10 + i * 7.5;
+    P(`tube-${x}-${i}`, { feetPosition: { x, y: 4.2, z }, primitive: { kind: "capsule", radius: 0.05, halfHeight: 1.5 }, rotation: { pitch: 90 }, material: { color: col, emissive: col, emissiveIntensity: 3, roughness: 0.3 }, castShadow: false,
+      children: [{ feetPosition: { x: 0, y: 0, z: 0 }, light: { kind: "point", color: col, intensity: 3, distance: 9 } }] });
+  }
   // neon over the counter, pink script with a teal underline; the old menu board stays
   P("neon", { feetPosition: { x: 41.75, y: 4.9, z: 17 }, rotation: { yaw: 90 }, vector: `<svg viewBox='0 0 420 120' width='3.4m'><rect x='4' y='4' width='412' height='112' rx='14' fill='#c7362b'/><rect x='14' y='14' width='392' height='92' rx='8' fill='#fff7e2' filter='drop-shadow(0 0 8 #fff1c0)'/><text x='210' y='80' text-anchor='middle' font-family='sans-serif' font-weight='900' font-size='64' letter-spacing='10' fill='#c7362b'>SNACKS</text><path d='M70 94 Q90 86 110 94 T150 94 T190 94 T230 94 T270 94 T310 94 T350 94' stroke='#e6b21c' stroke-width='5' fill='none' stroke-linecap='round'/><circle cx='30' cy='28' r='3' fill='#7a1d16'/><circle cx='390' cy='28' r='3' fill='#7a1d16'/></svg>` });
   P("neon-glow", { feetPosition: { x: 41.2, y: 4.9, z: 17 }, light: { kind: "point", color: "#ff7cc8", intensity: 2, distance: 7 } });
@@ -135,8 +142,8 @@ export function layFood(ctx) {
     behavior: sit ? ["scripts/l31-food.js"] : ["scripts/humanoid-locomotion.js", "scripts/l31-food.js"], state: { faction: "faceling", hp: 60, docile: true, essential: true, sex: look.sex, ...state } });
   person("clerk", { sex: "m", topw: "apron", top: "#c8201c", botw: "pants", bottom: "#1c1c22", shoes: "sneakers", hat: "cap" }, 39.5, 17, 90, { name: "Counter clerk", role: "clerk", kind: "clerk", home: { x: 39.5, z: 17 } }, false, 0.32);
   ctx.spawn("l31-food-tag", { parent: "l31-food-clerk", attachment: { bone: "Spine2" }, feetPosition: { x: 0.09, y: 0.1, z: 0.125 }, primitive: box(0.075, 0.028, 0.006), material: { color: "#f4f2ea", roughness: 0.4 }, castShadow: false });
-  person("cust1", { sex: "f", topw: "sweater", top: "#6a86a8", botw: "pants", bottom: "#3a3a44", shoes: "sneakers" }, 29.3 - 0.89, 22.4, -90, { name: "Faceling", role: "customer", kind: "sitter" }, true, 0.35 + floorY);
-  person("cust2", { sex: "m", topw: "jacket", top: "#5a4a32", botw: "pants", bottom: "#26262c", shoes: "boots" }, 29.3 + 0.89, 22.4, 90, { name: "Faceling", role: "customer", kind: "sitter" }, true, 0.35 + floorY);
+  person("cust1", { sex: "f", topw: "sweater", top: "#6a86a8", botw: "pants", bottom: "#3a3a44", shoes: "sneakers" }, 28.3 - 0.64, 23.4, 90, { name: "Faceling", role: "customer", kind: "sitter" }, true, 0.37 + floorY);
+  person("cust2", { sex: "m", topw: "jacket", top: "#5a4a32", botw: "pants", bottom: "#26262c", shoes: "boots" }, 28.3 + 0.64, 23.4, -90, { name: "Faceling", role: "customer", kind: "sitter" }, true, 0.37 + floorY);
 }
 
 // The staff back room behind the snack bar door (Shelly Nov 13: "make the staff only door not blocky + give it an interior").
