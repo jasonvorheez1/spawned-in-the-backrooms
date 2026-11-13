@@ -3,7 +3,7 @@
 import { findPath } from "builtin/nav";
 import { traverseCheck } from "builtin/physics";
 import { ARRIVE, ZONES, SPOT } from "./level70.js";
-export const NODES = {}; export const ADJ = {}; export const NAV_V = 3;
+export const NODES = {}; export const ADJ = {}; export const NAV_V = 4;
 const add = (id, x, z) => { NODES[id] = { x, y: 0, z }; ADJ[id] = ADJ[id] ?? []; };
 const link = (a, b) => { ADJ[a].push(b); ADJ[b].push(a); };
 add("arrive", ARRIVE.x, ARRIVE.z);
@@ -14,7 +14,7 @@ for (const k of ["suburb", "office", "hotel", "froston", "iceshed"]) rim(k);
 add("market", SPOT.market.x, SPOT.market.z); link("market", "s-60"); link("market", "s-80");
 add("pocket-w", -22, -72); link("pocket-w", "market"); link("pocket-w", "rim-iceshed");
 link("rim-suburb", "s-20"); link("rim-suburb", "s0"); link("rim-office", "s-20"); link("rim-hotel", "s-80"); add("froston-mouth", 7, 18); link("froston-mouth", "s20"); link("rim-froston", "froston-mouth");
-add("house", SPOT.house.x + 11, SPOT.house.z + 1.8); link("house", "rim-suburb");
+add("house", SPOT.house.x + 11, SPOT.house.z + 1.8); link("house", "rim-suburb"); add("house-walk", -12, -17.2); link("house-walk", "house"); link("house-walk", "s-20");
 add("igloo", SPOT.igloo.x + 3, SPOT.igloo.z + 2); link("igloo", "house"); link("igloo", "rim-suburb");
 add("garage-door", SPOT.garage.x - 15, SPOT.garage.z); link("garage-door", "rim-office");
 add("garage", SPOT.garage.x, SPOT.garage.z); link("garage", "garage-door");
@@ -35,7 +35,7 @@ chain([
   ["igloo-in", -51.2, -4, "igloo"],
   ["garage-mouth", 24.5, -22, ["garage-door", "garage"]], ["valve-door", 44.5, -22, ["garage", "valves"]],
   ["lobby-in", 27.6, -80, ["lobby-door", "lobby"]],
-  ["froston-yard", 44, 21, ["rim-froston", "rig"]], ["container", 48.8, 21, "froston-yard", 0.62],
+  ["froston-yard", 44, 21, ["rim-froston", "rig"]], ["container", 54.6, 21, "rig", 0.2],
 ]);
 const D = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
 export const key = (a, b) => (a < b ? a + ">" + b : b + ">" + a);

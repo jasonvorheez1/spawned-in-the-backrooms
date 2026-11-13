@@ -6,26 +6,25 @@
 import { HOUSE_DOOR, IGLOO_DOOR } from "./level70-town.js";
 import { GARAGE_DOOR, HOTEL_DOOR } from "./level70-civic.js";
 import { CAMP_FIRE, RIG, DOCK_POST, TREES } from "./level70-wild.js";
-export const V = 1;
+export const V = 2;
 const TEX = "cdn/texture-trampled-packed-snow-path-with-boot-prints-and-slush.png";
 const HEAPS = ["/cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb", "/cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb"];
 export const WALKS = [
-  { id: "house", w: 2.4, pts: [[-4.6, -16.2], [-18, -16.4], [-28, -16.2], [-32.2, -16.2]] },
-  { id: "igloo", w: 1.8, pts: [[-26, -15.4], [-31, -9.5], [-38, -6], [-44, -4.4], [IGLOO_DOOR.x, IGLOO_DOOR.z]] },
+  { id: "house", w: 2.4, pts: [[-4.6, -17.4], [-12, -17.2], [-18, -16.6], [-28, -16.2], [-32.2, -16.2]] },
+  { id: "igloo", w: 1.8, pts: [[-24, -16.2], [-23, -6], [-34, -3.5], [-44, -4.2], [IGLOO_DOOR.x, IGLOO_DOOR.z]] },
   { id: "garage", w: 3.2, pts: [[4.6, -22], [12, -22], [GARAGE_DOOR.x + 1.5, GARAGE_DOOR.z]] },
-  { id: "hotel", w: 2.8, pts: [[4.6, -80], [14, -80], [HOTEL_DOOR.x - 0.6, HOTEL_DOOR.z]] },
-  { id: "market", w: 2.6, pts: [[-4.6, -72], [-12, -72.4], [-22, -72]] },
+  { id: "hotel", w: 2.8, pts: [[4.6, -82.4], [12, -81], [16, -80], [HOTEL_DOOR.x - 0.6, HOTEL_DOOR.z]] },
+  { id: "market", w: 2.6, pts: [[-4.6, -74], [-12, -72.4], [-22, -72]] },
   { id: "camp", w: 1.6, pts: [[-22, -72], [-36, -73.5], [-50, -75], [-62, -77.5], [-74, -79.5], [-84, -81], [CAMP_FIRE.x + 4.5, CAMP_FIRE.z]] },
   { id: "froston", w: 2.2, pts: [[4.6, 18], [14, 18.6], [26, 18.4], [36, 19.6], [44, 21]] },
-  { id: "dock", w: 2, pts: [[0, -119], [1.2, -122], [3.2, -124.6], [DOCK_POST.x - 1.6, DOCK_POST.z + 1.4]] },
+  { id: "dock", w: 2, pts: [[0, -119], [-1.5, -123], [1, -126.6], [DOCK_POST.x - 1.6, DOCK_POST.z + 1.4]] },
 ];
 // invisible ramps: [id, x0, y0, z0, x1, y1, z1, width]
 const RAMPS = [
   ["porch", -32.1, 0, -16.2, -36.1, 0.86, -16.2, 1.5],
   ["cellar", -43.2, 0.86, -19.2, -43.2, 0.3, -21.4, 1.1],
-  ["container", 45.4, 0, 21, 48.2, 0.63, 21, 2],
 ];
-const MOUTHS = WALKS.filter((w) => Math.abs(w.pts[0][0]) < 6).map((w) => ({ x: w.pts[0][0], z: w.pts[0][1] }));
+const MOUTHS = WALKS.filter((w) => Math.abs(w.pts[0][0]) > 3 && Math.abs(w.pts[0][0]) < 6).map((w) => ({ x: w.pts[0][0], z: w.pts[0][1] }));
 const nearTree = (x, z, r) => TREES.some((t) => Math.hypot(t.x - x, t.z - z) < r);
 function clearMouths(ctx) {
   for (const m of MOUTHS) for (const o of ctx.query({ center: { x: m.x, y: 0, z: m.z }, radius: 4.2 })) if (/^l70-bank-\d+$/.test(o.id)) ctx.destroy(o.id);
@@ -57,7 +56,7 @@ export function lay(ctx) {
     if (n < 64) for (let k = n; k < n + 12; k++) if (ctx.place.objects[`l70-path-${w.id}-heap${k}`]) ctx.destroy(`l70-path-${w.id}-heap${k}`);
   }
   // trail lanterns where the walks leave the lamps behind: a warm glow, no body
-  for (const [id, x, z] of [["camp-a", -50, -76.4], ["camp-b", -74, -81], ["froston", 30, 20.4], ["dock", 2.4, -122.8]])
+  for (const [id, x, z] of [["camp-a", -50, -76.4], ["camp-b", -74, -81], ["froston", 30, 20.4], ["dock", -1.6, -121.4]])
     sp("l70-path-glow-" + id, { feetPosition: { x, y: 2.2, z }, light: { kind: "point", color: "#ffb36b", intensity: 1.6, distance: 11 } });
   for (const [id, x0, y0, z0, x1, y1, z1, wd] of RAMPS) {
     const dx = x1 - x0, dz = z1 - z0, L = Math.hypot(dx, dz), a = Math.atan2(y1 - y0, L), yaw = Math.atan2(-dx, -dz);
