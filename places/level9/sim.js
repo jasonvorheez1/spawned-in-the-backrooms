@@ -6,7 +6,7 @@ import { rollLoot } from "../../scripts/lib/loot.js";
 import FURN from "../../scripts/lib/data/furniture.yml";
 import { layout, hashStr, HOUSES, PAINTS, PROPS, TUNE, FWD, ROAD_W, WALK } from "../../scripts/lib/level9.js";
 export const cadence = "1s";
-const V = 13; // 3: Tripo house models on the lots; 6: plaster insides; 7: wallpaper box-mapped, a bedroom wall, furniture and loot inside; 5 (4 hung them on the back): door holes cut, a hinged front door and a stoop on each (keeps seed and loot)
+const V = 14; // 14: dining set split into table + chairs, dresser + kitchen cabinet, only storage is searchable; // 3: Tripo house models on the lots; 6: plaster insides; 7: wallpaper box-mapped, a bedroom wall, furniture and loot inside; 5 (4 hung them on the back): door holes cut, a hinged front door and a stoop on each (keeps seed and loot)
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BLUE = { kind: "scripted", script: "engine/blueprint" };
 const ASPHALT = { texture: "cdn/texture-worn-dark-grey-asphalt-road-coarse-aggregate-damp-patches-cracks.png", wrap: "repeat", repeat: [0.3, 0.3], color: "oklch(0.42 0.01 250)", roughness: 0.62, metalness: 0 }; // Shelly "why are level 9 roads water": 0.16 roughness mirrored the sky; damp, not a puddle
@@ -21,7 +21,7 @@ const WALLPAPER = { texture: "cdn/texture-faded-cream-floral-wallpaper-water-sta
 const PLASTER = { texture: "cdn/texture-popcorn-ceiling-off-white-stained.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.9 0.012 85)", roughness: 0.95 };
 const BASE = { color: "oklch(0.42 0.05 55)", roughness: 0.6 };
 const RUG = { texture: "cdn/texture-faded-persian-rug-worn-red-and-cream.png", color: "oklch(0.75 0.04 40)", roughness: 1 };
-const LOOT = { bookshelf: "Bookshelf", crt_tv: "TV stand", lava_lamp: "Nightstand", dining_set: "Sideboard", sofa: "Sofa cushions", double_bed: "Under the bed", armchair: "Recliner" };
+const LOOT = { lava_lamp: "Nightstand drawer", dresser: "Dresser drawers", kitchen_cabinet: "Kitchen cabinet" }; // Shelly: only real storage gets searched
 // what every piece breaks as (scripts/lib/breakables.js: tag "breakable" + state { mat, hp, maxHp }; numbers in data/breakables.yml)
 const MAT = { floor_lamp: ["fixture", 25], lava_lamp: ["fixture", 25], crt_tv: ["machine", 60], fiddle_plant: ["wood", 20] };
 const FLOOR = { texture: "cdn/texture-dusty-worn-oak-hardwood-floor-planks.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.55 0.05 60)", roughness: 0.8 };
@@ -44,21 +44,24 @@ function furnish(ctx, sp, l, H, D, Y) {
   wall("pa", P, z0, P, z1 - 1.7); wall("pb", P, z1 - 0.65, P, z1);
   for (const [k, x] of [["liv", Lc], ["bed", Bc]]) sp(`l9-${l.id}-dome${k}`, { ...IN, feetPosition: at(x, (z0 + z1) / 2, ROOM_H - 0.09), primitive: { kind: "sphere", radius: 0.22, widthSegments: 20, heightSegments: 8, thetaLength: 1.6 }, rotation: { yaw: Y, pitch: 180 }, material: { color: "#fff3d8", emissive: "#ffd9a0", emissiveIntensity: 2.2 }, physics: "none",
     children: [{ id: "glow", feetPosition: { x: 0, y: -0.3, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.07 78)", intensity: 2.6, distance: 9, shadow: { enabled: false } } }] });
-  const piece = (k, x, z, yaw) => { const F = FURN.pieces[k]; if (!F) return; const [w, h, d] = F.size, [mat, hp] = MAT[k] ?? ["wood", 45];
-    sp(`l9-${l.id}-${k}`, { ...IN, tags: LOOT[k] ? ["l9furn", "container", "breakable"] : ["l9furn", "breakable"], feetPosition: at(x, z), rotation: { yaw: Y + yaw }, model: { id: F.model, forward: F.forward ?? "-z" }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, physics: { body: "static", collider: "box" },
+  const piece = (k, x, z, yaw, tag = k) => { const F = FURN.pieces[k]; if (!F) return; const [w, h, d] = F.size, [mat, hp] = MAT[k] ?? ["wood", 45];
+    sp(`l9-${l.id}-${tag}`, { ...IN, tags: LOOT[k] ? ["l9furn", "container", "breakable"] : ["l9furn", "breakable"], feetPosition: at(x, z), rotation: { yaw: Y + yaw }, model: { id: F.model, forward: F.forward ?? "-z" }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, physics: { body: "static", collider: "box" },
       state: { mat, hp, maxHp: hp, ...(LOOT[k] ? { name: LOOT[k], verb: "Search", items: rollLoot(ctx, 1, 1, "l5").join(",") } : { name: F.name }) } }); };
   // living room: sofa on the back wall, rug and table before it, the TV facing it, a shelf on the outer wall, dining by the front
   piece("sofa", Lc, z0 + 0.55, 180); box("rug", Lc, z0 + 1.75, 2.2, 1.6, 0.012, RUG, 0, "none"); piece("coffee_table", Lc, z0 + 1.7, 0);
   if (z1 - z0 > 4.6) piece("crt_tv", Lc, z0 + 3.2, 0);
   piece("floor_lamp", Lc + 1.45, z0 + 0.35, 0);
   piece("bookshelf", outer + os * 0.28, z0 + 1.6, os > 0 ? 90 : -90);
-  if (lv1 - lv0 > 4.4 && z1 - z0 > 5.2) piece("dining_set", outer + os * 1.1, z1 - 1.0, 0);
+  if (lv1 - lv0 > 4.4 && z1 - z0 > 5.2) { const tx = outer + os * 1.2, tz = z1 - 1.1; piece("dining_table", tx, tz, 0); piece("dining_chair", tx - 0.78, tz, CH.l, "chairA"); piece("dining_chair", tx + 0.78, tz, CH.r, "chairB"); }
+  piece("kitchen_cabinet", P - s * 0.34, z0 + 1.0, CAB(s));
   piece("fiddle_plant", D.x + (toR ? -1.1 : 1.1), z1 - 0.45, 0);
   // bedroom: headboard to the back wall, the lamp on the nightstand side, a chair in the corner by the doorway
   piece("double_bed", Bc, z0 + 1.05, 180); piece("lava_lamp", Bc + s * 1.3 > (toR ? x1 - 0.3 : x0 + 0.3) === toR ? Bc - s * 1.3 : Bc + s * 1.3, z0 + 0.3, 180);
   if (z1 - z0 > 5) piece("armchair", Bc + s * 0.9, z1 - 0.6, 180);
+  piece("dresser", (toR ? x1 : x0) - s * 0.28, (z0 + z1) / 2 + 0.7, DRS(s));
 }
 
+const CH = { l: 90, r: -90 }, CAB = (s) => (s > 0 ? -90 : 90), DRS = (s) => (s > 0 ? -90 : 90); // facings, checked by eye
 function lay(ctx, L) {
   const keep = {};
   for (const id of Object.keys(ctx.place.objects ?? {})) if (/^l9-/.test(id) && !id.includes("/")) { const o = ctx.place.objects[id]; if (o?.tags?.includes("container")) keep[id] = { ...o.state }; ctx.destroy(id); }
