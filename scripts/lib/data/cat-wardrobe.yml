@@ -60,9 +60,9 @@ models:
   # Tripo eyewear fitted to the cat heads (art/cat-wardrobe/eyewear.py; Shelly #252235): its own paint, skinned to the head bone
   megoggles: { tint: false, f: /cdn/value.31249a7f052194fde6b3032983974da4e648bd6583b7a88682f0811f23e248f4.glb, m: /cdn/value.1bb96e0ab9fa8bad65d2c6f3e7e58ef9fa3430d7f32b0f2f197a80f43f846f5f.glb }
   asyncvisor: { tint: false, f: /cdn/value.e839bd0548d36417532e270fa0d019a8554e8cadab8a12760885fd2b60e27c96.glb, m: /cdn/value.594367821dacc682628a32fb90b6bdabf7f32a7624816752810639e2aaefd3ca.glb }
-  crackedglasses: { tint: false, f: /cdn/value.8a036d4e4c38c2f039a06b7cf62a1a88409176f993e41dc6ed40bdcbc92f8a62.glb, m: /cdn/value.8cb1ae8b72496bb2992dcc5b82de408e1c1b1a87f4ed99eb237a8b2dbc88b032.glb }
-  lobbyshades: { tint: false, f: /cdn/value.ae52cbfae8a278ac67c1e2a13295c4b8d723dbfe1540c7395fd73800eb3f5fcd.glb, m: /cdn/value.0f7043094a48b450e47249cfc649bc8dbde750680cb367b6f585e0fa3fb81d75.glb }
-  almondspecs: { tint: false, f: /cdn/value.b0c9dae31ef34d9f9c71e492e596d195a355fe5deaedaea1943497ff7910c280.glb, m: /cdn/value.e29f15878bcdbdfae72a072cbc03f9cf78e85a1f68ca2346163faadc5d65ae75.glb }
+  crackedglasses: { tint: false, f: /cdn/value.5251fecbb3ce39c9258658d1d53a641835386f5fd4d0e8b047cec8ef9ef85077.glb, m: /cdn/value.c45c8e07d25ab7921953919631bd9fa91277524e81d602113175cf33d8fa517d.glb }
+  lobbyshades: { tint: false, f: /cdn/value.56be6a4ef59389880dad8a0d7398843d12bd927cd41c77717eccf64870ad4405.glb, m: /cdn/value.50cd1c46df3d6ed32234e63ee72e8390aadcd9869b7768e03d749c9546f9161c.glb }
+  almondspecs: { tint: false, f: /cdn/value.940c88ebd185f8a608275f83766b293d6021bad75b273ca57475c45c1ed6361e.glb, m: /cdn/value.a9e8801e527b3899b9ed962d76b85c1ffecc4fb80b943d29d66818627b55d19c.glb }
 defaults:
   f: { topw: crop, top: "#e0775a", botw: shorts, bottom: "#4f78ad" }
   m: { topw: tee, top: "#9b9da1", botw: shorts, bottom: "#2f3d5c" }
