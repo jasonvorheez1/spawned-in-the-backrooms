@@ -76,7 +76,7 @@ export function update(ctx, dt) {
   // static ceiling over the whole body for ~0.4 s, or a lintel as wide as you with low room past it (Shelly: no prone at weird moments)
   if (!s.crawl && m.t > 0.12) {
     m.t = 0
-    const yaw = (me.rotation?.yaw ?? 0) * Math.PI / 180, fd = { x: -Math.sin(yaw), y: 0, z: -Math.cos(yaw) }
+    const fw0 = rotate(me.rotation, { x: 0, y: 0, z: -1 }), fl = Math.hypot(fw0.x, fw0.z) || 1, fd = { x: fw0.x / fl, y: 0, z: fw0.z / fl }
     if (lowAll(ctx, p, fd)) { m.low = (m.low ?? 0) + 1; if (m.low >= 3) down(ctx, m, true) }
     else {
       m.low = 0
