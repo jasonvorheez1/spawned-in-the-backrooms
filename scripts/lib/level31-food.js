@@ -91,7 +91,8 @@ export function layFood(ctx) {
   // Clear trays on the way back to the rink aisle.
   P("note", { feetPosition: { x: 29.05, y: 1.72, z: 6.16 }, rotation: { yaw: 180 }, vector: PAPER });
   for (const [i, x] of [28.15, 29.95].entries()) M(`trash${i + 1}`, "trash", x, 6.47, 180, { tags: ["usable"], state: { name: "Trash can", verb: "Clear tray", info: "Push flap. A tray shelf on top.", kind: "trash" }, behavior: "scripts/l31-food.js" });
-  M("bench-n1", "benchO", 35.6, 6.5, 180); M("bench-n2", "benchG", 39.4, 6.5, 180);
+  const BSEAT = { tags: ["seat"], state: { name: "Bench", seat: { w: 2, gap: 0.7 } } };
+  M("bench-n1", "benchO", 35.6, 6.5, 180, BSEAT); M("bench-n2", "benchG", 39.4, 6.5, 180, BSEAT);
   M("condi", "condi", 40.85, 8.15, 90, {}, floorY);
   // the staff door on the south wall
   P("door", { feetPosition: { x: 40.05, y: 0.018, z: 29.96 }, primitive: box(1.0, 2.1, 0.06), material: { color: "#7d8085", roughness: 0.55, metalness: 0.3 }, tags: ["usable"], state: { name: "Employees only", verb: "Open", info: "Locked from the other side.", kind: "door" }, behavior: "scripts/l31-food.js",

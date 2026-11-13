@@ -80,7 +80,7 @@ function counter(ctx) {
     ui: `<div face="front" emissive width="5.2m" style="height:660px;display:flex;align-items:center;justify-content:center;background:#0d1230;font-family:cursive;font-style:italic;font-weight:700;font-size:520px;line-height:1;color:#dffcff;text-shadow:0 0 18px #3fe0ff,0 0 60px #3fe0ff,0 0 130px #1c8cff">Skate Rental</div>` });
 }
 function floor(ctx) {
-  for (const [i, x] of [9.4, 16.6].entries()) ctx.spawn(`l31-rental-bench${i}`, { feetPosition: { x, y: 0, z: 22.3 }, physics: "static", tags: ["l31-rental"],
+  for (const [i, x] of [9.4, 16.6].entries()) ctx.spawn(`l31-rental-bench${i}`, { feetPosition: { x, y: 0, z: 22.3 }, physics: "static", tags: ["l31-rental", "seat"], state: { name: "Lacing bench", seat: { w: 2, gap: 0.8 } },
     model: { id: BENCH, materials: { carpet: { texture: "cdn/texture-blue-loop-pile-commercial-carpet.png", color: "oklch(0.92 0.05 260)", roughness: 1 } } } });
   ctx.spawn("l31-rental-fitmat", { feetPosition: { x: 11.3, y: 0, z: 22.95 }, rotation: { yaw: 14 }, primitive: box(0.62, 0.014, 0.86), material: RUB, castShadow: false, tags: ["l31-rental"],
     children: [{ feetPosition: { x: 0, y: 0.014, z: 0 }, model: DEVICE, scale: 1 }] });
