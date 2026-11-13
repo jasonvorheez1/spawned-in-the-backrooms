@@ -1,0 +1,29 @@
+# spawn-scene v2 yaml x0z-2
+l70-cityglow0:
+  feetPosition: {x: -60, y: 30, z: -200}
+  id: l70-cityglow0
+  light: {color: oklch(0.78 0.15 65), distance: 90, intensity: 900, kind: point}
+  tags: [l70-wild]
+l70-cityglow1:
+  feetPosition: {x: 60, y: 26, z: -200}
+  id: l70-cityglow1
+  light: {color: oklch(0.78 0.15 65), distance: 90, intensity: 900, kind: point}
+  tags: [l70-wild]
+l70-skyline2:
+  castShadow: false
+  feetPosition: {x: -30, y: {terrain: -1}, z: -222}
+  id: l70-skyline2
+  layout: {box: {max: {y: 60}, min: {y: 0}}}
+  model: {id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb, materials: {tripo_material_05692072-2f16-4333-a2ec-e88663003b42: {color: oklch(0.42 0.03 250), fog: false, roughness: 0.6}}}
+  rotation: {yaw: 180}
+  tags: [l70-wild, l70-skyline]
+  visibleRange: {max: 900}
+l70-skyline3:
+  castShadow: false
+  feetPosition: {x: 34, y: {terrain: -1}, z: -236}
+  id: l70-skyline3
+  layout: {box: {max: {y: 47}, min: {y: 0}}}
+  model: {id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb, materials: {tripo_material_05692072-2f16-4333-a2ec-e88663003b42: {color: oklch(0.42 0.03 250), fog: false, roughness: 0.6}}}
+  rotation: {yaw: 270}
+  tags: [l70-wild, l70-skyline]
+  visibleRange: {max: 900}

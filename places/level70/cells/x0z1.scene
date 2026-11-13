@@ -1,0 +1,19 @@
+# spawn-scene v2 yaml x0z1
+l70-rock1:
+  feetPosition: {x: -46.41105706188494, y: {terrain: -0.13609761126751357}, z: 83.14097567054867}
+  id: l70-rock1
+  layout: {box: {max: {y: 0.7560978403750754}, min: {y: 0}}}
+  model: {id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb}
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 300.6294871028513}
+  tags: [l70-wild, l70-rock]
+  visibleRange: {max: 260}
+l70-rock5:
+  feetPosition: {x: -20.48925426515127, y: {terrain: -0.26664272692650043}, z: 164.7198594486204}
+  id: l70-rock5
+  layout: {box: {max: {y: 1.4813484829250023}, min: {y: 0}}}
+  model: {id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb}
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 286.43143236637115}
+  tags: [l70-wild, l70-rock]
+  visibleRange: {max: 260}
