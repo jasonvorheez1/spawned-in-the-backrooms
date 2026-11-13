@@ -11,7 +11,7 @@ KIT = {
   "returngrille": dict(src="returngrille3", rot=(90, 0, 0), size=(0.6, 0.6, None), cut=0.03, back=True, junk=0, origin="ceiling"),
   "sprinkler":    dict(rot=(0, 0, 0),   size=(0.08, 0.08, 0.07), junk=0.002, origin="ceiling"),
   "smokedet":     dict(src="smokedet2", rot=(0, 90, 0),  size=(0.14, 0.14, 0.05), origin="ceiling"),
-  "troffer-hang": dict(src="troffer-hang3", rot=(0, 90, 0),  size=(0.6, 1.2, 0.12), hang=32, junk=0, origin="ceiling"),
+  "troffer-hang": dict(src="troffer-hang3", rot=(180, 90, 0),  size=(0.6, 1.2, 0.12), hang=32, junk=0, origin="ceiling"),
   "tile-fallen":  dict(rot=(0, 0, 0),   size=(None, None, 0.05), fit=0.64, renormal=True, origin="floor"),
 }
 a = sys.argv[sys.argv.index("--") + 1:]
