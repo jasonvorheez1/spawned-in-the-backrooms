@@ -113,7 +113,7 @@ export function update(ctx, dt) {
     const vm = vmul("moths", st.variant);
 
     if (st.hp == null && !st.dead) {
-      const variant = pickVariant(ctx, "moths"), vm0 = vmul("moths", variant); // leveled list: scripts/lib/data/foe-variants.yml
+      const variant = s.state.variant ?? pickVariant(ctx, "moths"), vm0 = vmul("moths", variant); // leveled list: scripts/lib/data/foe-variants.yml
       const V0 = VAR[variant]; if (V0) { s.fx = { script: V0.fx }; s.scale = V0.scale; if (V0.clip || V0.pitch) s.audio = { clip: V0.clip ?? "/cdn/moodboard-realistic-gritty/sfx-dry-moth-wings-fluttering-loop.mp3", gain: 0.25, loop: true, spatial: true, maxDistance: 16, pitch: V0.pitch ?? 1 }; }
       Object.assign(s.state, npcState(ctx, "moths", Math.round(M.hp * vm0.hp), { xp: Math.round(M.xp * vm0.xp), variant, ...(vm0.name ? { title: vm0.name } : {}) }));
       continue;
