@@ -891,7 +891,7 @@ function invAction(ctx, d) {
     ctx.self.session.holoSnd = ctx.emit('playSound', { clip: T.clip ?? vo(T.who, T.line), volume: 0.9, bus: 'Voice' }) // dina4: her own voiced line
     s.holoPlay = { id, at: ctx.now() }; if (ctx.self.session.holoEnd) ctx.cancel(ctx.self.session.holoEnd); ctx.self.session.holoEnd = ctx.after(T.len, 'holoEnd', { at: s.holoPlay.at }); return
   }
-  if (d.k === 'read') { s.reading = parseInt(d.n) || null; s.invOpen = false; return }
+  if (d.k === 'read') { if (s.ledgerOpen) s.ledgerOpen = 0; s.reading = parseInt(d.n) || null; s.invOpen = false; return }
   if (d.k === 'repair') { repairAction(ctx, d); return }
   if (d.k === 'compass') { s.invOpen = false; useCompass(ctx); return }
   if (d.k === 'fresh') { s.invOpen = false; if (s.fresh > 0) kneel(ctx); placeFreshener(ctx); return }

@@ -6,7 +6,7 @@ export const ears = {
   press(ctx, { by }) {
     const p = ctx.getObject(by), k = ctx.self.state.kind, s = p?.state; if (!s) return;
     if (k === "ledger") { s.hubLedger = 1; s.hubLead = 1; ctx.emit("playSound", { clip: "cdn/sfx-heavy-paper-ledger-page-turn-dry.mp3", position: ctx.self.worldFeetPosition, volume: 0.6 });
-      return notify(ctx, p, "KEYS OUT. Most rows are a name, a mark, a signature. One row has no mark: \"Dina A. No key drawn. Walked the tenth tunnel. Asked for a radio.\""); }
+      s.ledgerOpen = 1; s.invOpen = false; return; } // the book opens on screen (scripts/ui.js ledgerUi); you find her row yourself
     if (k === "keytag") { if ((s.hubMK ?? 0) !== 2) return notify(ctx, p, "A Level Key, lying on the road with a brass tag wired to it. It isn't yours and nobody has asked you about it."); s.hubMK = 3; s.hubTag = 1;
       setQuest(s, "hub-missing-key", { name: "The Missing Key", step: "You have the key. Its tag reads CABINET 14. Take it back to Lin, or tell her it's gone.", mark: M("hub-meg-lin") }); tellQuest(ctx, p, "The Missing Key · Return to Lin");
       ctx.self.visible = false; ctx.self.tags = []; return notify(ctx, p, "A key with a brass tag: CABINET 14. Beside it, long bare footprints in the dust that stop at the wall."); }

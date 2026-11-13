@@ -409,6 +409,25 @@ export function onMount() { _tabAway = () => sendAction('tabaway', { away: docum
 function _tabBlur() { sendAction('tabaway', { away: true }) }
 function _tabFocus() { sendAction('tabaway', { away: false }) }
 export function onDestroy() { if (_tabAway) document.removeEventListener('visibilitychange', _tabAway); window.removeEventListener('blur', _tabBlur); window.removeEventListener('focus', _tabFocus) }
+
+// the Doorstep Carpet key ledger (Shelly, Nov 13: "opening the key ledger should not just be a notification"): the book itself, three hands, one row with no mark
+const LEDGER_ROWS = [
+  ['04/02', 'R. Okafor', '◬', 'K-3', 'returned', 'Okafor'], ['04/09', 'Wen T.', '⟁', 'K-11', 'used', 'W.T.'], ['04/11', 'survey 2', '◎', '—', 'escort only', 'Sato'],
+  ['04/17', 'Marguerite', '⌬', 'K-7', 'used', 'M.'], ['04/22', 'Lin', '◬', 'K-3', 'returned', 'Lin'], ['05/01', 'unnamed (tall)', '?', 'K-14', 'NOT RETURNED', '—'],
+  ['05/06', 'Dina A.', '', 'none drawn', 'walked tenth tunnel. asked for a radio', 'D.A.'], ['05/13', 'Okafor', '⟁', 'K-11', 'returned', 'Okafor'], ['05/19', 'Pell', '◎', 'K-9', 'used', 'P.'],
+]
+function ledgerUi(s) {
+  if (!s.ledgerOpen) return ''
+  const hands = ['Courier New,monospace', 'Georgia,serif', 'Comic Sans MS,cursive']
+  const rows = LEDGER_ROWS.map((r, i) => `<tr style="font-family:${hands[i % 3]};${r[1] === 'Dina A.' ? 'color:#3b2a1a' : ''}">${r.map((c, j) => `<td style="padding:4px 6px;border-bottom:1px solid #b9ab88;${j === 2 ? 'font-size:16px;text-align:center' : ''}${j === 4 && c === 'NOT RETURNED' ? ';color:#8a1c12;font-weight:bold' : ''}">${c}</td>`).join('')}</tr>`).join('')
+  return `<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);pointer-events:auto;z-index:40" data-modal>
+  <div style="width:min(720px,94vw);background:#e4d7b6;color:#2a241a;padding:22px 26px 16px;box-shadow:0 10px 40px rgba(0,0,0,.7);transform:rotate(-.6deg);border-left:10px solid #3a2a1c;background-image:repeating-linear-gradient(#e4d7b6 0 27px,#d6c79f 27px 28px)">
+    <div style="display:flex;justify-content:space-between;font-family:Georgia,serif;font-size:13px;color:#6b5a3c;margin-bottom:10px"><span>M.E.G. · DOORSTEP CARPET</span><span style="letter-spacing:.2em">KEYS OUT</span></div>
+    <table style="width:100%;border-collapse:collapse;font-size:13px"><tr style="font-family:Georgia,serif;font-size:11px;color:#7a6c50;text-align:left"><th>date</th><th>name</th><th>mark</th><th>key</th><th>status</th><th>signed</th></tr>${rows}</table>
+    <div style="font-family:Comic Sans MS,cursive;font-size:12px;color:#8a1c12;margin-top:10px;transform:rotate(-2deg)">K-14 cabinet: WHO HAS IT</div>
+    <div style="text-align:right;margin-top:10px"><button onclick="sendAction('inv',{k:'read',n:0})" style="background:#2a241a;color:#e4d7b6;border:0;padding:5px 14px;font-family:Georgia,serif;cursor:pointer">close the ledger</button></div>
+  </div></div>`
+}
 export default function render(ctx, player) { return tarVeil(ctx, player) + renderHud(ctx, player) + unlock12(ctx, player) + ritual12(ctx, player) + lagscopeOverlay(ctx, player) + renderCinemaOverlays(player) + (player.state?.cinemaOpen ? cinemaPanel(player) : '') + UI_THEME } // the 3D studio button is off the HUD (Shelly, Nov 9: bothersome)
 function renderHud(ctx, player) {
   const s = player.state ?? {}
@@ -532,5 +551,5 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
     <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('emote', 'T')}</kbd> face
   </div>
 
-</div>${journalUi(s, player, ctx)}${feedUi(ctx, player)}${lootUi(ctx, player)}${pickUi(ctx, player)}${spamUi(ctx, player)}${spamArenaUi(ctx, player)}${talkUi(ctx, player)}${hubUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${arcadeUi(ctx, player)}${smoothieUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
+</div>${ledgerUi(s)}${journalUi(s, player, ctx)}${feedUi(ctx, player)}${lootUi(ctx, player)}${pickUi(ctx, player)}${spamUi(ctx, player)}${spamArenaUi(ctx, player)}${talkUi(ctx, player)}${hubUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${arcadeUi(ctx, player)}${smoothieUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
 }
