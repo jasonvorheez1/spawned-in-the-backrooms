@@ -28,14 +28,18 @@ const RECORDS = {
 export const ears = {
   press(ctx, event) {
     const st = ctx.getObject(event?.by)?.state;
+    if (ctx.self.state.kind === "cassette") { // Dina's own tape, a real cassette by the log: pocket it, play it on HALOGEN (I > Misc)
+      const p = ctx.getObject(event?.by), have = String(st.holotapes ?? "").split(",").filter(Boolean);
+      if (!have.includes("dina4")) { st.holotapes = [...have, "dina4"].join(","); st.notice = { text: "Dina, Tape Four · in your bag · play it on HALOGEN (I > Misc)", at: ctx.now() }; }
+      else st.notice = { text: "You already have Dina's tape.", at: ctx.now() };
+      if (p) p.hidden = [...(p.hidden ?? []), ctx.self.id]; // gone from your hand's side of the shelf
+      ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-cassette-tape-pickup-plastic-clack.mp3", position: ctx.self.feetPosition, volume: 0.7 }, { audience: { player: event.by } });
+      return;
+    }
     const record = RECORDS[ctx.self.state.kind];
     if (!st || !record) return;
     const known = (st.dinaQ ?? 0) >= record.min;
     if (known) setDinaStep(ctx, st, record.stage, record.notice);
-    if (ctx.self.state.kind === "handoff") { // Dina's own cassette sits clipped to the log: it goes in the bag, plays on HALOGEN
-      const have = String(st.holotapes ?? "").split(",").filter(Boolean);
-      if (!have.includes("dina4")) { st.holotapes = [...have, "dina4"].join(","); st.notice = { text: "Dina's tape added · play it on HALOGEN (I > Misc)", at: ctx.now() }; }
-    }
     st.sub = { who: ctx.self.state.name, t: known ? record.text : record.early, at: ctx.now(), d: 15000 };
     questVoice(ctx, known ? record.voice ?? "q-clerk" : "q-clerk", known ? record.line ?? record.text : record.early, event.by);
   },
