@@ -143,7 +143,7 @@ function grabStep(ctx, o, m, now, dt) {
 function dead(ctx, o, m, now) {
   const pos = o.feetPosition;
   if (!m.deadAt) {
-    m.deadAt = now; m.grab = null; m.reach = null;
+    m.deadAt = now; m.grab = null; m.reach = null; o.anim.main = null; m.clip = null; o.velocity = { x: 0, y: 0, z: 0 };
     say(ctx, S.die, pos, 0.9, 26);
     const loot = [...String(o.state.stolen ?? "").split(",").filter(Boolean), ...(ctx.random() < 0.5 ? ["almond"] : []), ...(ctx.random() < 0.4 ? ["cash:25"] : [])];
     if (!o.tags?.includes("remains")) becomeCorpse(ctx, o, "Duller", []);
