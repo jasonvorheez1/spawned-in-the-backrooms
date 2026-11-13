@@ -33,9 +33,8 @@ for kind in kinds:
     ob = bpy.context.view_layer.objects.active
     bpy.ops.object.parent_clear(type="CLEAR_KEEP_TRANSFORM")
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-    # turn: Tripo fronts face Blender -Y; the kit fronts face glTF -Z = Blender +Y
-    ob.rotation_euler = (0, 0, math.radians(K.get("turn", 180)))
-    bpy.ops.object.transform_apply(rotation=True)
+    # turn: Tripo fronts face Blender +X; the kit fronts face glTF -Z = Blender +Y
+    ob.data.transform(Matrix.Rotation(math.radians(K.get("turn", 90)), 4, "Z"))
     # junk islands: small loose parts whose centre lies outside the largest part's box
     bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT")
     bpy.ops.mesh.remove_doubles(threshold=1e-5); bpy.ops.mesh.separate(type="LOOSE"); bpy.ops.object.mode_set(mode="OBJECT")
@@ -86,7 +85,7 @@ for kind in kinds:
                         stretch=[round(s.x / s.z, 3), round(s.y / s.z, 3)], lo=[round(v, 4) for v in lo], hi=[round(v, 4) for v in hi])
     bpy.ops.export_scene.gltf(filepath=f"{OUT}/{kind}.glb", export_apply=True, export_image_format="JPEG", export_jpeg_quality=88)
     # proof: front 3/4 from the +Y side (the kit's front), lit from the camera
-    sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12
+    sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 8
     sc.render.resolution_x = sc.render.resolution_y = 640
     w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True; w.node_tree.nodes["Background"].inputs[1].default_value = 0.9
     c = Vector((0, size.y / 2 if K["origin"] == "wall" else 0, size.z / 2)); r = max(size.x, size.z) * 1.9
