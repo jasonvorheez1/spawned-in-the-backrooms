@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7428,
-  "updatedAt": "2026-11-13T17:14:44.927Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social mall and authored lore destinations; player.state carries progression, gear, quests, homes, companions and resume location. Shared player behaviors join authored scenes to generated spaces, with reusable dialogue, quests, NPC systems and enemy kits; the new Hub is a generated tunnel crossroads with keyed level doors and its own NPC questlines, including Dina's trail.",
+  "basedOnSpecVersion": 7449,
+  "updatedAt": "2026-11-13T17:39:19.157Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social mall and authored lore destinations; player.state carries progression, gear, quests, homes, companions and resume location. Shared player behaviors join authored scenes to generated spaces, with reusable dialogue, quests, NPC systems and enemy kits; The Hub is a generated tunnel crossroads with keyed level doors, camps, quest props and its own arrival scene.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, ecology, routes, landmarks, anomalies and deterministic modeled dressing; seeded cubicles/camps and Blackout Zone edge lamp states.",
     "places/bonus (3D) - vaporwave mall with simulated staff, shops, arcade, payphones, player-home kiosk, Squeeze Play and Glow Up Salon.",
-    "places/thehub (3D) - The Hub crossroads: generated trunk, twelve side tunnels, two ring roads, doors, lamps, M.E.G. Doorstep Carpet, Camp Amber and dark road; starts at the blind west end.",
+    "places/thehub (3D) - generated tunnel crossroads with doors, sodium fixtures, Doorstep Carpet M.E.G. post, Camp Amber, dark road, crew and quest props; Phoebe's first-arrival scene starts at the blind west end.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo, ephemeral) - character creation/waking, staged tutorial and HALOGEN handoff to Dina's lead.",
     "places/level01 (3D) - Zenith Station, breach, bots, hazards and recorder quest; authored lore destinations include Levels 1-13, 21, 26-27, Gamma, Spamton and Test Range.",
-    "places/level1, level2, level02, level21, level3, gamma (3D) - Habitable Zone car park with station/service dressing, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma.",
+    "places/level1, level2, level02, level21, level3, gamma (3D) - Habitable Zone car park with station/service dressing, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma; Level 1 now has a deep-hall Hub threshold.",
     "places/level31 (3D) - Roller Rink venue and Level 70 door; places/level70 (3D, Froidetown) - snowy Canadian planetoid city; both use Awakening lighting.",
     "places/level5 (3D) - Homely Hotel / Terror Hotel; sim restores hotel systems and versioned Gentleman office, errand props and seated NPC."
   ],
@@ -18,11 +18,11 @@
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input mappings; player template includes per-player Duller spawning.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - local configuration, authored placements and generated/ticked simulation; Level 1 dispatches geometry builders.",
     "sim.js - global tick for body-style propagation and bounded incremental restyling in occupied places.",
-    "scripts/main-menu.js + main-menu-ui.js + intake/tutorial scripts - title, character creation, arrival, tutorial and Dina routing; main-menu ticks errands.",
-    "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, wake/resume, aiming, third-person view and HUD zone naming; host camera yields to Absolute Cinema shots.",
-    "scripts/ui.js + scripts/stats-ui.js - composed HUD/menus and character status, quest journal, Level 70 CHILL bar and Absolute Cinema panel/overlays.",
+    "scripts/main-menu.js + main-menu-ui.js + intake/tutorial scripts - title, character creation, arrival, tutorial and Dina routing; main-menu update also ticks errands and arrival cutscenes.",
+    "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, wake/resume, aiming, third-person view and HUD zone naming; host camera yields to Absolute Cinema shots and cutscenes.",
+    "scripts/ui.js + scripts/stats-ui.js - composed HUD/menus and character status, quest journal, Level 70 CHILL bar and Absolute Cinema panel/overlays; cutscene-ui handles letterboxing and scene text.",
     "places/main/sim.js + scripts/lib/maze.js + scripts/lib/xmas-room.js + scripts/lib/level0-moments.js - Level 0 layout and deterministic dressing.",
-    "places/thehub/sim.js + scripts/lib/thehub.js + scripts/thehub-geo.js - versioned generated Hub plan, tunnel shell/lamps/doors and NPC/key resonance simulation."
+    "places/thehub/sim.js + scripts/lib/thehub.js + hub-people.js + hub-dress.js + scripts/thehub-geo.js - versioned Hub topology, shell, doors, modeled dressing, people and key resonance."
   ],
   "shared": [
     "scripts/lib/hub.js + preload data/scripts - existing Bonus shared-room routing, solo room IDs, home destinations, display names and proximity preload (distinct from The Hub place).",
@@ -41,8 +41,8 @@
     "scripts/lib/level31-quest.js - QID/QNAME, openCrate, useDeck, l31Choices, handleDialogueQuest31.",
     "scripts/lib/level70-quest.js + scripts/terrain70.js - Level 70 quest, terrain and civic/life layer exports.",
     "scripts/lib/errands.js - ERRANDS, held, errandText, offerErrand, payErrand, tryAlt, errandTick.",
-    "scripts/lib/thehub.js - PLACE, dimensions, ARRIVE, BRANCHES/RUNS/DOORS, OPEN/KEYED, runOf, at, doorById, doorFront, lamps, symbolSvg.",
-    "scripts/lib/hub-quest.js + scripts/lib/hubkeys.js - MK/LR/UP, whereIs, hubChoices, handleDialogueQuestHub; keysOf/hasKey/giveKey/spendKey/keyDoor."
+    "scripts/lib/thehub.js + scripts/lib/hub-dress.js + hub-people.js - Hub topology/doors/helpers; FX, BAYLIGHTS, layLampModels, layDress, CREW_IDS, layThings, keepCrew, keymaster.",
+    "scripts/lib/hub-quest.js + scripts/lib/hubkeys.js + scripts/lib/hub-cut.js - MK/LR/UP, whereIs, hubChoices, handleDialogueQuestHub; keysOf/hasKey/giveKey/spendKey/keyDoor; HUB_LEN/HUB_LINES/HER/hubCutTick."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved place/position, tapes, currency, karma/rep and homeKeep; save.js owns migration/versioning.",
@@ -51,7 +51,7 @@
     "scripts/lib/errands.js - player.state.errands records, errHints and errand journal entries; completion updates cents, payout, rep and hints.",
     "scripts/lib/level31-quest.js + level70-quest.js + remodel-quest.js - Level 31/70 and remodel quest stages, routes and rewards.",
     "scripts/build.js + places/level5/sim.js; scripts/l5-resident.js - homeKeep.built/l5built reconstruction, booking identity and place.state.l5rent.",
-    "scripts/lib/hubkeys.js + scripts/lib/hub-quest.js + scripts/hub-thing.js - player.state.hubKeys counts and Hub quest stages/flags (hubMK/LR/UP, tapes, ledger, Dina lead); scripts/hub-door.js owns each door's open/always state and place.state.hubV versions generated layout.",
+    "scripts/lib/hubkeys.js + scripts/lib/hub-quest.js + scripts/hub-thing.js + scripts/lib/hub-cut.js - player.state.hubKeys and Hub quest/cutscene fields (hubMK/LR/UP, tapes, ledger, Dina lead, hubcut/hubPhoebe); hub-door.js owns door open/always state and place.state owns Hub sim version/crew clocks.",
     "mods/absolute-cinema/cinema-director.js + vfx-playback.js - player.state cinema nodes/sequences/effects/library/playback and vfxClip timeline; director owns playback/skip state, VFX behavior owns vfxClip and fired-event bookkeeping."
   ],
   "flows": [
@@ -62,11 +62,11 @@
     "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close runs intro-cut then tutorial0 first time or main later; wardrobe/salon actions update critter appearance look.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js offers matching-place jobs; errands progress from carried items, kills and world events → quests.js journal, player.state.errands/qtrack and payouts; craft consumes pending item objectives.",
     "tutorial0 HALOGEN cut → tut0-cut.js + dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ.",
-    "places/thehub/sim.js reads scripts/lib/thehub.js → lays versioned runs, lamps and doors; scripts/thehub-geo.js and hub-door-geo.js render/collide, hub-door.js handles press/open/threshold crossing and consumes matching player.state.hubKeys for keyed trips.",
-    "scripts/lib/data/dlg-thehub.yml + npc-voices.yml → dialogue.js resolves Hub NPC lines/voices; npc-starters.js adds hubChoices and talk.js dispatches responses to handleDialogueQuestHub.",
-    "Hub quest dialogue and scripts/hub-thing.js interactables → player hubMK/hubLR/hubUP, hubRec and key flags, quest journal/rewards/rep; key ledger exposes Dina's tenth-tunnel lead, while key resonance in places/thehub/sim.js reads hubKeys and proximity to matching doors.",
-    "scripts/build.js placement/removal → homeKeep.built or homeKeep.l5built; Level 5 sim restores separately; l5-resident booking → player l5home/l5room and place.state.l5rent.",
-    "Level 2/31 and Level 31/70 directed triggers → scripts/level-door.js; quest-route.js maps paired crossings; mods/absolute-cinema director/UI/VFX flows remain coordinated with scripts/camera.js."
+    "places/level1/sim.js lays l1-to-hub (state.to=thehub) and l1-hub-door/mark/light deep in the halls → scripts/level-door.js trigger → thehub; Hub arrival marker hub-from-l1 returns players to its arrival position.",
+    "places/thehub/sim.js reads lib/thehub.js and hub-people.js/hub-dress.js → versioned shell, lamps, doors, props, crew and camp dressing; scripts/hub-door-geo.js renders door parts, hub-door.js handles use/open and level crossing, hub-dress lays modeled fixtures and barriers.",
+    "scripts/main-menu.js on thehub → lib/hub-cut.js hubCutTick at first arrival → Phoebe and the player-specific cutscene camera/audio; hold jump skips; cutscene-ui.js renders hubcut and completion sets hubPhoebe/hubDinaLead for Hub quest dialogue.",
+    "dlg-thehub.yml + npc-voices.yml → dialogue.js resolves Hub lines/voices; npc-starters.js adds hubChoices and talk.js dispatches responses to handleDialogueQuestHub; hub-thing.js ledger/keytag/recorders/blank door/amber box → quest, tape, key, kit and notice state.",
+    "scripts/build.js placement/removal → homeKeep.built or homeKeep.l5built; Level 5 sim restores separately; l5-resident booking → player l5home/l5room and place.state.l5rent. Level 2/31 and Level 31/70 directed triggers → scripts/level-door.js; quest-route.js maps paired crossings; Absolute Cinema director/UI/VFX flows coordinate with scripts/camera.js."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored mall shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
@@ -76,7 +76,7 @@
     "scripts/meg-agent.js + npc-temper.js + forgive.js - shared NPC reactions, cover, voiced barks, movement/fighting and companion following; weapon filtering and first-hit assault handling vary by NPC.",
     "errands.yml + errands.js + quest-dialogue.js + quests.js - shared job offers, objective stages, journal/tracker and rewards; named NPCs/levels vary objectives and text.",
     "Level 0 kit builders/data + places/main/sim.js - model catalogs feed deterministic dressing in DR.batch rows with per-piece fixes and room-fit collision rules; l0-dress.yml varies cubicles/camp variants and blackout-edge lamp states.",
-    "places/thehub/sim.js + lib/thehub.js + thehub-geo.js + hub-door-geo.js - shared parametric run topology and wall/door geometry; run IDs, gaps, door slots, seeded crop-circle marks and lamp placement vary per run/door."
+    "places/thehub/sim.js + lib/thehub.js + hub-dress.js + hub-people.js - shared run topology and data-driven fixture/door models; position, branch gaps, door slots, seeded marks, camps, crew and props vary by run or site."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -89,8 +89,8 @@
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
     "scripts/lib/save.js SAVE_V=2: intake, bonus and tutorial0 are transient and never save resume locations; migration clears legacy transient savePlace/savePos without overwriting earned state. player.js retries wake crossings up to three times.",
     "The Hub's run frame and coordinates are centralized in scripts/lib/thehub.js; u follows a run, v spans its width, +X trunk, side tunnels alternate north/south. Preserve door IDs, OPEN/KEYED mappings and coordinates together across sim/geometry/quests.",
-    "Hub Level Keys are player.state.hubKeys keyed by destination place; a keyed threshold consumes one matching key on crossing, while three OPEN doors are permanent and the Level 178 door deliberately has no destination. Don't conflate the thehub place with Bonus routing in lib/hub.js.",
-    "Level 31 rebuilds l31-* roots at place.state.v31=100; align IDs and shell/zone/door/arrival geometry with level31.js and preserve the white-door pair with Level 70. Level 70 retains versioned district layers.",
-    "Generated wall damage lives in place.state.wallHp/broken; syncWalls treats wall-grid membership as authoritative and deletes stale broken keys. Companions are save-scoped: set player.state.crew when adopting; Level 1 corridor sim corrV=1 replaces seeded l1lamp objects."
+    "Hub place.state.hubV is the generated-scene migration version (now 5); sim rebuild steps replace the door set at v4 and lay models/dressing at v5. art/hub/*.yml records model dimensions, offsets and slots; runtime IDs and fit offsets are duplicated in hub sim/dress code.",
+    "Hub Level Keys are player.state.hubKeys keyed by destination place; a keyed threshold consumes one matching key on crossing, while three OPEN doors are permanent and the Level 178 door deliberately has no destination. Don't conflate these with Bonus shared-room routing.",
+    "Level 31 rebuilds l31-* roots at place.state.v31=100; align IDs and shell/zone/door/arrival geometry with level31.js and preserve the white-door pair with Level 70. Level 70 retains versioned district layers; Level 1 places the Hub doorway only after its seeded layout."
   ]
 }
