@@ -16,6 +16,8 @@ import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, BACK_OLD, DROP, ONW
 import { spawnAlmond } from "../../scripts/lib/loot.js";
 import { spawnFurniture, pickKind, wallSpot1, sizeOf } from "../../scripts/lib/furniture.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
+import { symbolSvg } from "../../scripts/lib/thehub.js";
+const symbolSvgL1 = (w) => symbolSvg(77, w);
 const DECKS = [0.17, 0.69, 1.165, 1.72]; // the Tripo rack's wire floor and three boards, measured from the glb at its placed size
 const RACK_GLB = "/cdn/value.8ceb4f350a3ca27cb5655cbf36551ce25ea905511cae0e3e598962655bc28f2b.glb"; // Tripo pallet rack, Nov 13
 const L1M = { door: "/cdn/value.020545cb36957131cc5f5eab3f6c2c38511e55076fb5e5542b93aff45e424288.glb", wall: "/cdn/value.1aa1542440b2b55ab177731e12bade8dfdb7ca60226cb2b55ff2491a998298fe.glb", board: "/cdn/value.1ed44cd9733b0a1d469ee47af7a8f609fcaee84b4aef6828e976544608979e8b.glb", wallDx: 0, boardYaw: 0 }; // Blender builds: art/level1/build.py
@@ -120,6 +122,13 @@ export function tick(ctx) {
     ctx.spawn("l1-back-lamp", { feetPosition: { x: BACK.x + 0.4, y: 0, z: BACK.z }, visibleRange: { max: 35 }, light: { kind: "point", color: "oklch(0.85 0.12 92)", intensity: 3, distance: 6, shadow: { enabled: false } } });
     ctx.spawn("l1-from-main", { feetPosition: { x: BACK.x + 2.4, y: 0.1, z: BACK.z }, rotation: { yaw: -90 } });
     ctx.spawn("l1-backwall", { feetPosition: { x: BACK.x - 0.2 + L1M.wallDx, y: 0, z: BACK.z }, physics: "static", model: { id: L1M.wall }, receiveShadow: true, castShadow: false });
+  }
+  if (s.seeded && !s.hubDoor) { s.hubDoor = true; // Nov 13: the Hub's way in. Deep in the south-east halls, one more door in the east wall, unmarked but for a carved mark over it
+    const hz = cellCenter(N - 1, 28).z, hx = HALF;
+    ctx.spawn("l1-to-hub", { feetPosition: { x: hx - 0.9, y: 0, z: hz }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.8, height: 2.4, depth: 1.6 }, visible: false, behavior: "scripts/level-door.js", state: { to: "thehub" } });
+    ctx.spawn("l1-hub-door", { feetPosition: { x: hx - 0.15, y: 0, z: hz }, physics: { body: "static", collider: "box" }, model: { id: L1M.door }, visibleRange: { max: 60 }, castShadow: false });
+    ctx.spawn("l1-hub-mark", { feetPosition: { x: hx - 0.3, y: 2.75, z: hz }, rotation: { yaw: 90 }, vector: symbolSvgL1(0.9), visibleRange: { max: 30 } });
+    ctx.spawn("l1-hub-lamp", { feetPosition: { x: hx - 1.2, y: 3.2, z: hz }, visibleRange: { max: 40 }, light: { kind: "point", color: "oklch(0.78 0.15 68)", intensity: 2.2, distance: 7, shadow: { enabled: false } } });
   }
   if (!s.megCamp) { s.megCamp = true; // the M.E.G. waypoint: the camp, its fire, its lamps, and three agents
     if (ctx.place.objects["meg-cloth"]) ctx.destroy("meg-cloth");

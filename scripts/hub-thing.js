@@ -1,7 +1,6 @@
 // Small things in the Hub you press: the key ledger, the dropped key, the 2019 recorders, the blank door, Camp Amber's box, tapes.
 import { setQuest, tellQuest } from "./lib/quests.js";
 import { notify } from "./lib/notify.js";
-import { takeToken } from "./player.js";
 const M = (id) => ({ place: "thehub", id });
 export const ears = {
   press(ctx, { by }) {
@@ -18,7 +17,7 @@ export const ears = {
       return; }
     if (k === "blank") { if ((s.hubUP ?? 0) === 1) { s.hubUP = 2; s.hubBlank = 1; setQuest(s, "hub-uncharted", { name: "Uncharted Passage", step: "The blank door is warm under your hand. Tell Sato, or report it to Okafor.", mark: M("hub-meg-sato") }); tellQuest(ctx, p, "Uncharted Passage · Report back"); }
       s.hubBlank = 1; return notify(ctx, p, "No mark over it. No keyhole. The concrete is warm, like something on the other side has been leaning on it for a long time."); }
-    if (k === "amberbox") { if (s.hubAmberKit) return notify(ctx, p, "One box per face. You've had yours."); s.hubAmberKit = 1; for (const t of ctx.self.state.gives ?? []) takeToken.call(null, { ...ctx, self: p }, t);
+    if (k === "amberbox") { if (s.hubAmberKit) return notify(ctx, p, "One box per face. You've had yours."); s.hubAmberKit = 1; const bag = { ...(s.snacks ?? {}) }; for (const t of ["purified_water", "bandage", "stew"]) bag[t] = (bag[t] ?? 0) + 1; s.snacks = bag;
       return notify(ctx, p, "Camp Amber's newcomer box: water, a tin, a bandage. Someone has written GO SLOW on the lid."); }
     if (k === "note") return notify(ctx, p, ctx.self.state.text);
   },
