@@ -72,7 +72,7 @@ export const RACK = { len: 6, depth: 0.8, levels: [0.12, 0.95, 1.78], top: 2.6, 
 export function shelfSlots(cx, cz) {
   if (zoneOf(cx, cz) !== "storage") return [];
   const c = cellCenter(cx, cz), out = [];
-  for (const r of RACK.rows) for (const y of RACK.levels) for (const dx of [-2.2, -0.75, 0.75, 2.2]) out.push({ x: c.x + dx, y, z: c.z + r });
+  for (const r of RACK.rows) for (const y of [0.69, 1.165, 1.72]) for (const dx of [-2.1, -0.9, 0.9, 2.1]) out.push({ x: c.x + dx, y, z: c.z + r });
   return out;
 }
 
