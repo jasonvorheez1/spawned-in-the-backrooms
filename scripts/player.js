@@ -12,6 +12,7 @@ import { attrsOf as attrsOfS } from './lib/stats.js'
 import { canOpen, openWrist, screen } from './lib/screen.js'
 import { quickItems, assignQuick } from './lib/quick-items.js'
 import { heard } from "./lib/hear.js";
+import { vo } from './lib/voices.js'
 import PLAYER from './lib/data/player.yml'
 import L from './lib/data/level0.yml'
 import CAM from './lib/data/camera.yml'
@@ -187,7 +188,7 @@ export function gain(ctx, n) {
 // Nothing is picked up by walking over it: scripts/interact.js calls this when you press E on what you are looking at.
 // eaten food also feeds hunger (scripts/craft.js drains it)
 // tapes HALOGEN can play: id → the reel and its length in seconds
-export const HOLO = { b8: { clip: '/cdn/value.08ccdd2071a61c196217f8ad7fa7b0a1773fbe9bcef00b87df3b58018e00a788.mp3', len: 24, name: 'B8, Night Forty' }, r55: { clip: '/cdn/value.b7bbbfcb923978bb4ac8ae234d44454562debf569936a5f20c378f0e28110e01.mp3', len: 35, name: 'Atomic Age Defender' }, walt41: { clip: '/cdn/value.13b431f3dead226e2ffab8155644c00c326ef6767b9b57df23b71353cbd1a50e.mp3', len: 28, name: 'Field Test 41' }, matrix: { clip: '/cdn/value.a39bb477f8132dc691b97e44f8176bb55b7faf1e7cf241e1e54b2e0a8c0e013b.mp3', len: 24, name: 'Expedition Log: Matrix' } }
+export const HOLO = { dina4: { who: 'q-dina', line: "Dina, tape four. I have six ways down on my map and not one way out. A man on the pipes swears there is a signal from home. I took a room at the hotel to think it over.", len: 14, name: 'Dina, Tape Four' }, b8: { clip: '/cdn/value.08ccdd2071a61c196217f8ad7fa7b0a1773fbe9bcef00b87df3b58018e00a788.mp3', len: 24, name: 'B8, Night Forty' }, r55: { clip: '/cdn/value.b7bbbfcb923978bb4ac8ae234d44454562debf569936a5f20c378f0e28110e01.mp3', len: 35, name: 'Atomic Age Defender' }, walt41: { clip: '/cdn/value.13b431f3dead226e2ffab8155644c00c326ef6767b9b57df23b71353cbd1a50e.mp3', len: 28, name: 'Field Test 41' }, matrix: { clip: '/cdn/value.a39bb477f8132dc691b97e44f8176bb55b7faf1e7cf241e1e54b2e0a8c0e013b.mp3', len: 24, name: 'Expedition Log: Matrix' } }
 export function holoEnd(ctx, p) {
   const s = ctx.self.state
   if (s.holoPlay?.at !== p?.at) return
@@ -883,7 +884,7 @@ function invAction(ctx, d) {
     const id = String(d.id ?? ''), T = HOLO[id]; if (!T || !String(s.holotapes ?? '').split(',').includes(id)) return
     if (ctx.self.session.holoSnd != null) ctx.emit('stopSound', { soundId: ctx.self.session.holoSnd })
     if (s.holoPlay?.id === id && ctx.now() - s.holoPlay.at < T.len * 1000) { ctx.self.session.holoSnd = null; s.holoPlay = null; return } // a second press stops it
-    ctx.self.session.holoSnd = ctx.emit('playSound', { clip: T.clip, volume: 0.9, bus: 'Voice' })
+    ctx.self.session.holoSnd = ctx.emit('playSound', { clip: T.clip ?? vo(T.who, T.line), volume: 0.9, bus: 'Voice' }) // dina4: her own voiced line
     s.holoPlay = { id, at: ctx.now() }; if (ctx.self.session.holoEnd) ctx.cancel(ctx.self.session.holoEnd); ctx.self.session.holoEnd = ctx.after(T.len, 'holoEnd', { at: s.holoPlay.at }); return
   }
   if (d.k === 'read') { s.reading = parseInt(d.n) || null; s.invOpen = false; return }
