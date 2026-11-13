@@ -274,6 +274,8 @@ export function tick(ctx) {
   for (const p of ctx.place.players) {
     const s = p.state, at = p.feetPosition; if (!s || !at) continue;
     if (s.l70rats != null && s.l70q === 2 && kills(s, "deathrat70") - s.l70rats >= RATS && !s.l70ratsTold) { s.l70ratsTold = true; setQuest(s, QID, { name: QNAME, step: "The rats are dead. Tell Odell", mark: M(ODELL) }); }
+    if (s.l70pelt === 1 && !s.l70froidTold) { const n = Math.min(FROIDS, kills(s, "froidling") - (s.l70froid0 ?? 0)); if (n !== s.l70froidN && n < FROIDS) { s.l70froidN = n; setQuest(s, PID, { name: PNAME, step: `Kill ${FROIDS} froidlings in the woods and outskirts (${n}/${FROIDS})`, mark: M(INES) }); } }
+    if (s.l70rats != null && s.l70q === 2 && !s.l70ratsTold) { const n = Math.min(RATS, kills(s, "deathrat70") - s.l70rats); if (n !== s.l70ratN && n < RATS) { s.l70ratN = n; setQuest(s, QID, { name: QNAME, step: `Kill the death rats (${n}/${RATS})`, mark: M(ODELL) }); } }
     if (s.l70pelt === 1 && kills(s, "froidling") - (s.l70froid0 ?? 0) >= FROIDS && !s.l70froidTold) { s.l70froidTold = true; setQuest(s, PID, { name: PNAME, step: "Six down. Tell Sergeant Ines", mark: M(INES) }); }
     const nearFire = fires.some((f) => Math.hypot(f.x - at.x, f.z - at.z) < COLD.fireR);
     let d = nearFire ? COLD.fire : indoors(at) ? COLD.indoor : COLD.rise + COLD.wildRise * wild(at);
