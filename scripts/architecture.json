@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7408,
-  "updatedAt": "2026-11-13T16:30:00.428Z",
+  "basedOnSpecVersion": 7410,
+  "updatedAt": "2026-11-13T16:34:13.161Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social hub and authored lore destinations; player.state carries progression, gear, quests, homes, companions and resume location. Shared player behaviors and place simulations join authored scenes to generated spaces, with reusable dialogue, quests, NPC systems and enemy kits; Dina's saved clue trail and playable recordings reveal the Way Back.",
   "scriptPaths": [],
   "places": [
@@ -51,7 +51,7 @@
     "scripts/lib/errands.js - player.state.errands records, errHints and errand journal entries; completion updates cents, payout, rep and hints.",
     "scripts/lib/level31-quest.js + level70-quest.js + remodel-quest.js - Level 31/70 and remodel quest stages, routes and rewards.",
     "scripts/build.js + places/level5/sim.js; scripts/l5-resident.js - homeKeep.built/l5built reconstruction, booking identity and place.state.l5rent.",
-    "scripts/lib/l5-beast.js - per-player l5b quest stage, offer/register/card flags, wrath expiry and favor; Level 5 sim owns place.state.officeV, while NPC greeting cadence is session-local.",
+    "scripts/lib/l5-beast.js - per-player l5b and Tobias l5t/l5tSeen quest stages, offer/register/card flags, wrath expiry and favor; Level 5 sim owns place.state.officeV, while NPC greeting cadence is session-local.",
     "scripts/lib/breakables.js; companion.js; forgive.js; samantha.js; testlab sim/pad/foe-bay and duller.js - wall damage, save-scoped crew, NPC incidents, cat feeding, bay requests/version and Duller HP/stolen items/remains."
   ],
   "flows": [
@@ -65,8 +65,8 @@
     "tutorial0 HALOGEN cut → tut0-cut.js + dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ.",
     "scripts/build.js placement/removal → homeKeep.built or homeKeep.l5built; Level 5 sim restores separately; l5-resident booking → player l5home/l5room and place.state.l5rent.",
     "Level 2/31 and Level 31/70 directed triggers → scripts/level-door.js; quest-route.js maps the paired crossings; level31/70 sims read versioned layouts and arrival layers.",
-    "Level 5 npc-starters.js offers beastChoices to talk-ui; scripts/talk.js dispatches handleDialogueQuestBeast; l5b stages and register/card prop presses advance The Gentleman's Terms, with card delivery moving the tracker to reporting back; doubt starts wrath and resets an unfinished deal.",
-    "Level 5 sim calls layOffice when place.state.officeV differs and ticks wrathTick; l5-beast.js owns office geometry/props, beastStruck handles player hits, and l5-beast-npc.js seats/animates the Gentleman; interact.js raycasts NPC head height and resolves usable targets against nearby doors."
+    "Level 5 npc-starters.js offers beastChoices to talk-ui; scripts/talk.js dispatches handleDialogueQuestBeast; l5b stages and register/card prop presses advance The Gentleman's Terms; card delivery starts Tobias's Debt after l5b=99, with l5-beast.js dialogue letting the player pay $200 or pass Speech 60, then tell Tobias for +$150.",
+    "Level 5 sim calls layOffice when place.state.officeV differs and ticks wrathTick; l5-beast.js owns office geometry/props, beastStruck handles player hits, and l5-beast-npc.js seats/animates the Gentleman; interact.js raycasts NPC head heig…"
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored mall shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
@@ -87,10 +87,10 @@
   ],
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
-    "scripts/lib/save.js SAVE_V=2: intake, bonus and tutorial0 are transient and never save resume locations; migration clears legacy transient savePlace/savePos without overwriting earned state. player.js retries wake crossings up to three times.",
+    "scripts/lib/save.js SAVE_V=2: intake, bonus and tutorial0 are transient and never save resume locations; migration clears legacy transient savePlace/savePos without overwriting earned state. player.js retries wake crossings up to three tim…",
     "Level 31 rebuilds l31-* roots at place.state.v31=100; align IDs and shell/zone/door/arrival geometry with level31.js and preserve the white-door pair with Level 70. Level 70 retains versioned district layers.",
     "Generated wall damage lives in place.state.wallHp/broken; syncWalls treats wall-grid membership as authoritative and deletes stale broken keys. Companions are save-scoped: set player.state.crew when adopting.",
     "Dina's Level 3 cassette (state.kind=cassette) gives holotapes.dina4 and is distinct from the C-23 handoff log; Level 2/4 clue flags are dinaCrate/dinaCarbon and keep existing dinaQ steps.",
-    "Level 5 office rebuild is keyed by place.state.officeV against OFFICE_V=6 in l5-beast.js; increment OFFICE_V for laid office changes. The register is Take-able and l5bReg controls hiding its placed ID; the Room 1408 slot targets its plate face so it wins look selection beside the door."
+    "Level 5 office rebuild is keyed by place.state.officeV against OFFICE_V=6 in l5-beast.js; increment OFFICE_V for laid office changes. The register is Take-able and l5bReg controls hiding its placed ID; the Room 1408 slot targets its plate. Tobias's Debt requires l5b=99; l5t advances 0→1→2→99 and l5tSeen gates his initial dialogue."
   ]
 }
