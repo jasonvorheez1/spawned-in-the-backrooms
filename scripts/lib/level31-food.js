@@ -102,7 +102,7 @@ export function layFood(ctx) {
   layStaffRoom(ctx, P, M);
   // the cafe (Shelly Nov 13, her photo): long white folding tables with benches in three rows, a few knocked off true,
   // green vinyl booths in back-to-back bays along the south wall, a little laminate table between each pair
-  const FT = (id, x, z, yaw, wear) => P(id, { feetPosition: { x, y: floorY, z }, rotation: { yaw }, primitive: { kind: "scripted", script: "scripts/l31-fold-table.js", params: { wear } }, physics: "static", receiveShadow: true, tags: ["seat"], state: { name: "Bench", seat: { w: 2, gap: 0.64 } } });
+  const FT = (id, x, z, yaw, wear) => P(id, { feetPosition: { x, y: floorY, z }, rotation: { yaw }, model: { id: "/cdn/value.f106a1dcbe11b66b98bc57dfe19f96299e4e0204832815f3841c9f751e0aaf60.glb", forward: "-z" }, layout: { box: { min: { x: -1.22, y: 0, z: -0.78 }, max: { x: 1.22, y: 0.74, z: 0.78 } } }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, tags: ["seat"], state: { name: "Bench", seat: { w: 2, gap: 0.64 } } });
   const ROWS = [28.3, 31.1, 33.9], ZS = [10.6, 13.8, 17.0, 20.2, 23.4];
   let n = 0;
   for (const [r, x] of ROWS.entries()) for (const [k, z] of ZS.entries()) {
@@ -111,7 +111,7 @@ export function layFood(ctx) {
     FT(`ftable${r}-${k}`, x + dx, z + ((j * 13) % 5 - 2) * 0.04, yaw, j % 3 === 0 ? 1 : 0);
   }
   const BOOTHC = ["#2f9a4a", "#2c9446", "#33a04f"];
-  const BB = (id, x, z, yaw, k) => P(id, { feetPosition: { x, y: floorY, z }, rotation: { yaw }, primitive: { kind: "scripted", script: "scripts/l31-green-booth.js", params: { color: BOOTHC[k % 3] } }, physics: "static", receiveShadow: true, tags: ["seat"], state: { name: "Booth" } });
+  const BB = (id, x, z, yaw, k) => P(id, { feetPosition: { x, y: floorY, z }, rotation: { yaw }, model: { id: "/cdn/value.bacfe730c242d1a69d417c6ecbb04e237c11115d2f6602751c6ed06fd9ca92b3.glb", forward: "+x" }, layout: { box: { min: { x: -0.7, y: 0, z: -0.3 }, max: { x: 0.7, y: 1.05, z: 0.3 } } }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, tags: ["seat"], state: { name: "Booth" } });
   const BOOTHZ = 29.1;
   for (let i = 0; i < 5; i++) {
     const x0 = 27.0 + i * 1.95; // each bay: bench facing +x, table, bench facing -x
