@@ -25,7 +25,7 @@ house: { name: "House Mix", desc: "A little healing", minutes: 45, hp: 1, every:
 # Sal's recorded lines (Callum, husky trickster)
 lines:
   hello: /cdn/value.7c874f1055011d262d4c8124329de15b8709a3c333249b3f72f44cd335ea1d2a.mp3
-  blend: /cdn/value.ecc966a5fc60f69d754fe5587bae905e62862906b3840c6c8337a3ef95d3526d.mp3
+  blend: /cdn/value.bb5d21510805a0a7360d8f4c5cdc1794c7cc9175316e2b5632dfdd7427c7df36.mp3  # "Ice in, lid on. Give me three seconds and a little faith."
   newRecipe: /cdn/value.e865a98118285a8cdb8616b85eefe358dec6ae9d6abfab16eca5b9b96ba15260.mp3
   known: /cdn/value.17f11c5675444c9e09a7b7eb47ae0ec43c00b96e416a520310f7102f277f140a.mp3
   house: /cdn/value.555f6ff11298d6fe68218911a96b9647d23c4737981dc722d7b71c2cd69e8c93.mp3
