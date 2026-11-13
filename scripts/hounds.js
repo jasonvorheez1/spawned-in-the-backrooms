@@ -18,6 +18,8 @@ import { stepToward as stepToward3, cellNear } from "./lib/maze3path.js";
 import { stepToward as stepTowardBoiler } from "./lib/boilerpath.js";
 import { stepToward6 } from "./lib/level6path.js";
 import C from "./lib/data/creatures3.yml";
+import { layout as layout9, zoneAt as zoneAt9 } from "./lib/level9.js";
+let LAY9 = null; const town9 = (seed) => (LAY9 && LAY9.seed === seed ? LAY9 : (LAY9 = layout9(seed)));
 const H3 = C.hounds3;
 const sn = (p) => (p?.state?.attr ? sneakMul(p.state) : 1);
 const SND = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
@@ -47,8 +49,10 @@ function sees(ctx,h,p) {
 }
 export function update(ctx, dt) {
   const place = ctx.self.place;
-  const L6 = place === "level6", L3 = place === "level3", L2 = place === "level2", L5 = place === "level5", L21 = place === "level21", L1 = !L2 && !L3 && !L5 && !L6 && !L21;
-  const safeAt = L6 || L21 || place === "testlab" ? () => false : L3 ? (x, z) => zoneAt3(x, z) === "gamma" : L2 ? (x, z) => zoneAt2(x, z) === "camp" : L5 ? (x, z) => zoneAt5(x, z)?.id !== "boiler" : (x, z) => safeZone(zoneAt(x, z));
+  const L6 = place === "level6", L3 = place === "level3", L2 = place === "level2", L5 = place === "level5", L21 = place === "level21", L9 = place === "level9", L1 = !L2 && !L3 && !L5 && !L6 && !L21 && !L9;
+  if (L9 && ctx.place.state.l9seed == null) { ctx.sleep(1); return; }
+  const T9 = L9 ? town9(ctx.place.state.l9seed) : null; // Level 9: the pack keeps to the streets; a house is shelter from it
+  const safeAt = L9 ? (x, z) => zoneAt9(T9, x, z) !== "l9_street" : L6 || L21 || place === "testlab" ? () => false : L3 ? (x, z) => zoneAt3(x, z) === "gamma" : L2 ? (x, z) => zoneAt2(x, z) === "camp" : L5 ? (x, z) => zoneAt5(x, z)?.id !== "boiler" : (x, z) => safeZone(zoneAt(x, z));
   if (!ctx.place.players.length) { ctx.sleep(2); return; } // empty level: the pack rests (perf)
   const now = ctx.now(), dark = ctx.place.state.flicker === "dark", mem = (ctx.self.session.m ??= {});
   const players = ctx.place.players.filter((p) => !safeAt(p.feetPosition.x, p.feetPosition.z) && !(p.state?.downAt && now - p.state.downAt < 4500));
@@ -154,6 +158,7 @@ export function update(ctx, dt) {
       else if (L2) way = stepToward2(pos.x, pos.z, goal.x, goal.z, 30);
       else if (L21) way = stepToward21(pos.x, pos.z, goal.x, goal.z, 30);
       else if (L5) way = stepTowardBoiler(pos.x, pos.z, goal.x, goal.z, 30);
+      else if (L9) way = null; // open streets: straight at the goal, wallSteer slides it round the cars and bins
       else way = stepToward1(pos.x, pos.z, goal.x, goal.z, 30);
     }
     if (!way && !prey && !directSight && !m.lastSeen) m.roam = null;
