@@ -37,6 +37,8 @@ export function update(ctx) {
     if (!st.madeChar && (st.xp || st.lvl || st.level || st.visits)) st.madeChar = true // a save that already played keeps its critter
     if (place !== "intake" && !st.roomHop) { st.menuOpen = true; st.menuKind = "title" } // a walk between rooms (the Bonus Room) is no launch
   }
+  // Shelly Nov 13 "still endlessly falling": a cut that ends with a crossing (the intro's fall into Level 0) left anim.cut on the body; every new place starts with no cut pose and no air pose
+  if (ses.animPlace !== place) { ses.animPlace = place; if (ctx.self.anim) { ctx.self.anim.cut = null; ctx.self.anim.air = null } }
   // the intake room: the creator opens on arrival; once it closes, back out to where you came from
   if (place === "intake") {
     if (!ses.inIntake) { ses.inIntake = true; ses.leftIntake = false; if (st.cut) { st.cut = null; ses.cut = null; ctx.view.camera = null }; st.menuOpen = false; st.wardrobeOpen = true; st.wrMenu = true; st.wrTab = "body" }
