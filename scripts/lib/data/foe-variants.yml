@@ -8,6 +8,11 @@ lurker:
 moths:
   - { id: base, minLevel: 1, weight: 100, grow: 0 }
   - { id: razorwing, name: "Razorwing Swarm", minLevel: 5, weight: 20, grow: 8, cap: 70, hp: 1.5, dmg: 1.7, speed: 1.35, sight: 1.4, xp: 1.8 }
+  # the ladder, each creepier (Shelly Nov 13; numbers my picks): razorwing cuts and you bleed; whisperwing snuffs your light and whispers;
+  # eyespot stares, every wing an eye, and your nerve goes; the hollow choir sings and splits in two when it bites
+  - { id: whisperwing, name: "Whisperwing Swarm", minLevel: 8, weight: 16, grow: 6, cap: 55, hp: 1.8, dmg: 1.4, speed: 1.5, sight: 1.6, xp: 2.4 }
+  - { id: eyespot, name: "Eyespot Swarm", minLevel: 11, weight: 12, grow: 5, cap: 45, hp: 2.2, dmg: 1.6, speed: 1.6, sight: 1.8, xp: 3 }
+  - { id: choir, name: "Hollow Choir", minLevel: 14, weight: 8, grow: 4, cap: 35, hp: 3, dmg: 2, speed: 1.7, sight: 2, xp: 4.5 }
 wretch:
   - { id: base, minLevel: 1, weight: 100, grow: 0 }
   - { id: hollow, name: "Hollow-Mask", minLevel: 6, weight: 25, grow: 10, cap: 80, hp: 1.5, dmg: 1.35, speed: 1.15, xp: 1.8 }

@@ -54,6 +54,19 @@ const BLIND = `fx follow=camera
 pop veil burst=16 on=box(.5,.35,.5) life=1.8..2.6 v=sdir()*.08 size=.35..0.6 acc=drag(2) col=<.5,.45,.37> a=0>.6:.55>0 sz=$size*(.8>1.4) rot=spin(.2) r=sprite(smoke-puff,alpha)
 pop scales burst=24 on=box(.5,.35,.5) life=1.4..2.4 v=sdir()*.2 size=.008..0.016 acc=grav()*.15+drag(1.5) col=<.8,.72,.58> a=1>.7:1>0 r=sprite(mote,alpha)`;
 
+// variants: a look (wing colour, size, the hum's pitch) and what the bite does on top of the dust
+const VFX = (col, n, extra = "") => `fx
+pop moths n=?mobile:${Math.round(n * .55)}|${n} local on=sphere(.7) life=1.4..2.8 v=sdir()*(.5..1.2) size=.03..0.06 acc=curl(1.4)*2.6+attract(7)+drag(1.1) sz=$size*flick(14,.5) asp=1.7*flick(18,.65) col=${col} a=(0>.1:1>.85:1>0) rot=spin(1.5) r=sprite(petal,alpha)${extra}`;
+const VAR = {
+  razorwing: { fx: VFX("oklch(.32 .06 25)..oklch(.45 .09 30)", 22), pitch: 1.2, scale: 1.1 },
+  whisperwing: { fx: VFX("oklch(.82 .01 260)..oklch(.95 .01 260)", 26, "\npop glim n=6 local on=sphere(.6) size=.04 col=hdr(1.6,1.7,2) a=.6*flick(3,.5) r=sprite(soft-disc,add)"), pitch: 0.7, scale: 1.2,
+    clip: "/cdn/moodboard-gothic-horror/sfx-many-faint-overlapping-whispers-in-moth-wings-loop.mp3" },
+  eyespot: { fx: VFX("oklch(.3 .04 60)..oklch(.4 .05 70)", 30, "\npop eye n=10 local on=sphere(.75) size=.06..0.09 col=hdr(2.6,2.2,.6)*flick(.5,.6) a=.9 sz=$size*flick(.3,.7) r=sprite(soft-disc,add)"), pitch: 0.55, scale: 1.4 },
+  choir: { fx: VFX("oklch(.18 .01 20)..oklch(.28 .02 20)", 40, "\npop eye n=14 local on=sphere(.9) size=.05..0.08 col=hdr(3,.4,.3)*flick(.4,.6) a=.9 r=sprite(soft-disc,add)"), pitch: 0.4, scale: 1.7,
+    clip: "/cdn/moodboard-gothic-horror/sfx-low-wordless-choir-hum-under-thick-moth-wings-loop.mp3" },
+};
+const EYES_SEEN = `fx follow=camera
+pop eye burst=26 on=box(.9,.5,.6) life=1.6..2.6 size=.03..0.07 col=hdr(2.4,2,.5) a=0>.9:.3>1:.8>0 sz=$size*(1>.2:1>.8:0) r=sprite(soft-disc,add)`;
 const kids = (ctx, id) => [0, 1, 2].map((i) => ctx.place.objects[`${id}/m${i}`]).filter(Boolean);
 
 function setSwarmClip(ctx, s, m, name, opt = {}) {
@@ -101,6 +114,7 @@ export function update(ctx, dt) {
 
     if (st.hp == null && !st.dead) {
       const variant = pickVariant(ctx, "moths"), vm0 = vmul("moths", variant); // leveled list: scripts/lib/data/foe-variants.yml
+      const V0 = VAR[variant]; if (V0) { s.fx = { script: V0.fx }; s.scale = V0.scale; if (V0.clip || V0.pitch) s.audio = { clip: V0.clip ?? "/cdn/moodboard-realistic-gritty/sfx-dry-moth-wings-fluttering-loop.mp3", gain: 0.25, loop: true, spatial: true, maxDistance: 16, pitch: V0.pitch ?? 1 }; }
       Object.assign(s.state, npcState(ctx, "moths", Math.round(M.hp * vm0.hp), { xp: Math.round(M.xp * vm0.xp), variant, ...(vm0.name ? { title: vm0.name } : {}) }));
       continue;
     }
@@ -151,6 +165,9 @@ export function update(ctx, dt) {
     }
 
     const home = st.home ?? (s.state.home = { x: pos.x, z: pos.z });
+    if (m.bleed && now >= m.bleed.next) { const bp = ctx.place.players.find((q) => q.id === m.bleed.pid);
+      if (bp && (bp.state.hp ?? 0) > 0) { const b = Math.max(1, Math.round(M.bite * 0.6)); bp.state.hp -= b; ctx.emit("damageNumber", { position: { x: bp.feetPosition.x, y: bp.feetPosition.y + 1.2, z: bp.feetPosition.z }, value: b, color: "#a01818" }); ctx.emit("screenFlash", { color: "#5a0000", duration: 0.25, intensity: 0.25 }, { audience: { player: bp.id } }); }
+      m.bleed.n--; m.bleed.next = now + 900; if (m.bleed.n <= 0 || !bp) m.bleed = null; }
 
     // Target selection: lit flashlight takes priority over unlit nearby players
     let prey = null;
@@ -279,6 +296,22 @@ export function update(ctx, dt) {
 
           p.vignette = 0.3;
           blur[p.id] = now + D.blurFor * 1000;
+          const v = st.variant;
+          if (v === "razorwing" || v === "choir") m.bleed = { pid: p.id, n: v === "choir" ? 5 : 3, next: now + 900 }; // cuts that keep bleeding
+          if (v === "whisperwing" || v === "eyespot" || v === "choir") { // it snuffs your light and leaves a whisper in your ear
+            p.state.light = false; p.state.sanity = Math.max(0, p.state.sanity - M.sanity * 4);
+            ctx.emit("playSound", { clip: "/cdn/moodboard-gothic-horror/sfx-close-breathy-whisper-saying-your-name-in-left-ear.mp3", volume: 0.9 }, { audience: { player: p.id } });
+          }
+          if (v === "eyespot" || v === "choir") { // the eyes on its wings stay on yours
+            ctx.emit("fx", { position: at, script: EYES_SEEN }, { audience: { player: p.id } });
+            ctx.emit("screenShake", { intensity: 0.35, duration: 0.6 }, { audience: { player: p.id } });
+            p.state.sanity = Math.max(0, p.state.sanity - M.sanity * 6); p.vignette = 0.6; blur[p.id] = now + 4500;
+          }
+          if (v === "choir" && !st.split && ctx.query({ tags: ["moths"], radius: 30, center: pos }).length < 6) { // bitten, it sings and splits in two
+            s.state.split = true;
+            ctx.spawn({ template: "templates/deathmoths.js#swarm", feetPosition: { x: pos.x + 1, y: pos.y, z: pos.z }, state: { home: { ...home }, variant: "eyespot", split: true } });
+            heard(ctx, { clip: "/cdn/moodboard-gothic-horror/sfx-wordless-choir-swell-into-tearing-wings.mp3", position: pos, volume: 1, maxDistance: 22 });
+          }
           setSwarmClip(ctx, s, m, "Bite");
           m.mode = "recover";
           m.at = now;
