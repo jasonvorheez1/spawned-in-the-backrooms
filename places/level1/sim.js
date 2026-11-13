@@ -207,6 +207,11 @@ export function tick(ctx) {
       if (lit) ctx.spawn({ parent: id, feetPosition: { x: 0, y: 0.015, z: 0 }, primitive: { kind: "box", width: 2.2, height: 0.035, depth: 0.07 }, material: { color: "oklch(0.97 0.02 220)", emissive: "oklch(0.95 0.03 220)", emissiveIntensity: 2.4 }, castShadow: false, visibleRange: { max: 42 } });
     }
   }
+  if (s.seeded && s.l1Spr !== 1) { s.l1Spr = 1; // a pendant sprinkler under the red main every other bay, threads up into the pipe
+    const SPR = "/cdn/value.984d06dc216cff395889a0b02b9b200c97991f11e10b6043cea18ffb298d1fd0.glb";
+    for (let j = 1; j < N; j += 2) for (let i = 0; i < N; i += 2) { const x = i * S - HALF + 2, z = j * S - HALF + 1.9; if (inHole(x, z)) continue;
+      ctx.spawn("l1-spr-" + i + "-" + j, { feetPosition: { x, y: H - 0.9, z: z + 0.07 }, rotation: { yaw: 0, pitch: 0, roll: 180 }, pivot: "center", model: { id: SPR }, layout: { box: { min: { x: -0.05, y: 0, z: -0.05 }, max: { x: 0.05, y: 0.24, z: 0.05 } } }, castShadow: false, visibleRange: { max: 28 } }); }
+  }
   if (s.l1Tripo === 3 && s.l1Rubble !== 1) { s.l1Rubble = 1; // Nov 13 (Shelly: "improve this"): the fallen ceiling slab as Tripo concrete with rebar, a rubble pile beside it, no flat grit decal
     const SLAB = "/cdn/value.85959a522f0f25f5c7318ba795c488adf5aba0a196f780bc74415ba5ebf68907.glb", PILE = "/cdn/value.644c38e17be893d9013699ab57f00c4a1413a0d76642683fe9dff4f249a73e3c.glb";
     for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {

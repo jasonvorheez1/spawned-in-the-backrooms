@@ -39,7 +39,7 @@ export function geometry(ctx) {
     for (let j = 1; j < N; j += 2) { const z = j * S - HALF + 1.9; for (const [a, b] of runs("x", z + 0.07, -HALF, HALF)) { tube(ctx, [[a, H - 0.66, z], [b, H - 0.66, z]], [0.042, 0.042], 10, [1, 1], 0, 1, 1); tube(ctx, [[a, H - 0.66, z + 0.14], [b, H - 0.66, z + 0.14]], [0.042, 0.042], 10, [1, 1], 0, 1, 1); } }
     for (let i = 1; i < N; i += 2) { const x = i * S - HALF - 1.5; for (const [a, b] of runs("z", x, -HALF, HALF)) tube(ctx, [[x, H - 0.62, a], [x, H - 0.62, b]], [0.035, 0.035], 10, [1, 1], 0, 1, 1); }
     ctx.color("oklch(0.7 0.14 40)");
-    for (let j = 1; j < N; j += 2) for (let i = 0; i < N; i += 2) { const x = i * S - HALF + 2, z = j * S - HALF + 1.9; if (inHole(x, z)) continue; box(ctx, x - 0.025, x + 0.025, H - 0.9, H - 0.7, z - 0.025, z + 0.025); box(ctx, x - 0.07, x + 0.07, H - 0.92, H - 0.9, z - 0.07, z + 0.07); }
+    for (let j = 1; j < N; j += 2) for (let i = 0; i < N; i += 2) { const x = i * S - HALF + 2, z = j * S - HALF + 1.9; if (inHole(x, z)) continue; } // Nov 13 (Shelly: "make whatever that is on the roof tripo"): the heads are Tripo sprinklers now (places/level1/sim.js l1Spr)
     ctx.color("oklch(0.45 0.02 250)");
     for (let j = 1; j < N; j += 2) for (let i = 0; i < N; i += 2) { const x = i * S - HALF + 5.6, z = j * S - HALF + 1.9; if (inHole(x, z)) continue; box(ctx, x - 0.012, x + 0.012, H - 0.62, H, z - 0.012, z + 0.012); }
     // orange cable trays and a white duct
