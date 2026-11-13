@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7704,
-  "updatedAt": "2026-11-13T22:18:01.970Z",
+  "basedOnSpecVersion": 7725,
+  "updatedAt": "2026-11-13T22:54:13.818Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG across Level 0, the mall, The Hub and authored lore destinations; player.state carries progression, gear, quests, faction standing and resume location. Shared player behaviors and place simulations connect authored spaces with generated layouts, encounters and quests, while Slate and Bulk Data Manager add creator-facing studio and registry tools.",
   "scriptPaths": [],
   "places": [
@@ -9,7 +9,7 @@
     "places/bonus (3D) - vaporwave mall with shops, simulated staff, arcade, homes and salon; authored placements live in cells/.",
     "places/thehub (3D) - tunnel crossroads, keyed destination doors, camps, crew and quest props; distinct from Bonus room routing.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation, waking, staged tutorial and HALOGEN handoff to Dina's lead.",
-    "places/level9 (3D, The Suburbs) - room-seeded streets, houses, lamps, sparse curbside mailboxes/trash bins and fog; zoneAt follows completed house footprints.",
+    "places/level9 (3D, The Suburbs) - room-seeded streets and five fitted house types with walk-in interiors, hinged front doors, furniture/loot, lamps, curb dressing and fog.",
     "places/level11 (3D) - Sedco Spotlight and city blocks; sim.js uses shared city and vault/depth builders for the subway, Sedco vault and Robotics crawl/storeroom.",
     "places/level01, level02, level1-7, level10-13, level21, level26-27, level31, level70 (3D) - authored lore destinations; Level 11 includes Sedco CCTV and street-grate access.",
     "places/gamma, spamton, testlab (3D) - additional authored destinations and test space."
@@ -29,7 +29,7 @@
     "scripts/lib/thehub.js + scripts/lib/hubkeys.js - canonical Hub tunnels, door/key registry and position helpers; shared by geometry, simulation, quests, doors and UI.",
     "scripts/lib/loot.js + items.js + weapons.js/data/weapons.yml + scripts/lib/weapon-look.js - common loot/items and weapon variants; weapon-look selects fitted meshes or scripted geometry for held weapons.",
     "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/lib/level3-hatch.js - parametric doors/motion and deterministic paired Level 3 hatches.",
-    "scripts/lib/data/l9-houses.yml + l9-props.yml + scripts/lib/level9.js - Level 9 catalogs and pure seed-driven layout, used by places/level9/sim.js and zone lookup.",
+    "scripts/lib/data/l9-houses.yml + l9-props.yml + scripts/lib/level9.js - Level 9 house/model/door and prop catalogs plus pure seed-driven layout; consumed by places/level9/sim.js and zone lookup.",
     "scripts/lib/data/l02-props.yml + l02-remodel.yml + l02-grid.js; breakables.js + breakable data + wallgrid.js - Level 0.2 remodel and shared prop/generated-wall damage and regrowth.",
     "scripts/lib/quest-route.js + quest-mark.js + quests.js + errands.js - directed crossings and shared quest/errand journal, tracker, rewards and step messaging.",
     "mods/bulk-data-manager/lib/data-manager.js + data-loader.js - registry query/storage helpers and paged/chunked import server behavior, used by the creator panel and game behaviors."
@@ -45,14 +45,14 @@
     "mods/bulk-data-manager/lib/data-manager.js - setStorageData, getStorageCollections, getAll, query, find, getById, count, distinct, groupBy, getRandom, sample, getFields, sort; scripts/db.js - migrate."
   ],
   "ownership": [
-    "scripts/player.js + scripts/lib/save.js - durable player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved place/position, tapes, currency, karma/rep and homeKeep; player.state.batteries stores battery charge.",
+    "scripts/player.js + scripts/lib/save.js - durable player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved place/position, tapes, currency, karma/rep and homeKeep.",
     "scripts/lib/stats.js - derived attributes, skills and combat/carry stats; scripts/stats-ui.js formats derived stats, including non-finite capacity as ∞.",
     "scripts/critter.js - per-player look and creator/wardrobe/salon state; scripts/lib/body3.js - session.ready3 and transient me.anim.ready melee-carry pose; scripts/main-menu.js - session.tabAway, session.animPlace and place.timeScale pause.",
     "scripts/lib/quests.js + scripts/lib/dina-quest.js - quests/qtrack/qdone/claimed; Dina trail keys, stages, diary/cut/clue fields and migration.",
     "scripts/lib/errands.js - player.state.errands records, errHints and errand journal entries; completion updates currency, payout, reputation and hints; scripts/lib/field-errands.js + hub-errands.js own confirmation maps.",
     "scripts/lib/level31-quest.js + level70-quest.js + remodel-quest.js + scripts/lib/level11-quests.js - their level-specific quest stages, routes and rewards; Level 11 progress is stored under player.state.quests/qdone and related quest keys.",
     "scripts/lib/rep.js - player.state.fame/infamy by faction, compatibility net rep for legacy readers, karma and bounded repHistory; fame/infamy drive faction titles/ranks and hostility checks.",
-    "places/level9/sim.js owns per-room l9seed/layout, fog, versioned curb dressing and looted-container persistence; the Bulk Data Manager object owns collection metadata/records, while mods/slate/input.js writes shared world plan/app state and per-player tablet preferences; scripts/db.js migrates SQL assets."
+    "places/level9/sim.js - per-room l9seed, generated house/street layout, fog, l9DressV curb dressing and house/container state; Bulk Data Manager object owns collection metadata/records, while mods/slate/input.js writes shared world plan/app state."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest and CCTV behaviors; arcade-play.js and smoothie-player.js add game-specific play.",
@@ -66,7 +66,7 @@
     "tutorial0 HALOGEN cut → tut0-cut.js + dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ; Dina quest tick routes to The Tenth Tunnel at dinaQ 9 or hubPhoebe.",
     "places/level1/sim.js l1-to-hub → scripts/level-door.js crossing → thehub; hub-from-l1 returns to arrival position; Level 1 zoneAt classifies KEEP bounds and labels.",
     "places/thehub/sim.js → lib/thehub.js and hub-people.js/hub-dress.js versioned shell, doors, props, crew and camps; hub-door-geo.js renders doors, hub-door.js handles use/crossing, plaques label destinations.",
-    "scripts/db.js migrate → SQL assets(kind,id) schema; scripts/lib/data/registry/*.json are game data collections. Bulk Data Manager creator UI → data-loader import/page actions → placed manager object state/storage; data-manager.js exposes runtime queries. Slate panel/input actions operate its shared project/apps and per-player tablet state."
+    "places/level9/sim.js reads scripts/lib/level9.js layout, l9-houses.yml and furniture.yml → fitted house shells, hinged doors, rooms/furniture and searchable loot containers; scripts/lib/loot.js rolls their contents."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
@@ -76,7 +76,7 @@
     "Level 01/Zenith and Level 1 geometry builders - authored station and car park/service geometry; corridor materials, pipes, fixtures and lights vary deterministically per cell.",
     "scripts/meg-agent.js + npc-temper.js + forgive.js + critter-model.js - NPC reactions, cover, barks, movement/fighting and companion following; faction, role, outfit and assault incidents vary by NPC.",
     "scripts/duller-spawn.js + duller-spec.js + scripts/lib/data/dullers.yml - shared Duller spec for ambient spawn and Foe Bay; per-place caps/chances and 240-second per-player rolls tune its rarity.",
-    "mods/slate/lib/apps/* + apps/index.js - modular studio apps share APP/page/op registration and Slate navigation; each app varies its screens and operations."
+    "places/level9/sim.js + scripts/lib/data/l9-houses.yml + art/l9-houses/fit.py - five house typologies share fitted +Z-facing models and a seeded interior furnishing/loot layout; per-house dimensions, front-door cut/coordinates and features vary by catalog row."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -88,9 +88,9 @@
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
     "The Hub run frame/coordinates are centralized in scripts/lib/thehub.js; u follows a run, v spans its width, +X trunk, side tunnels alternate north/south. Preserve door IDs, mappings and coordinates together; Hub place.state.hubV versions its layout.",
-    "Level 9's room seed and looted contents/fog persist across generated rebuilds; l9DressV versions curbside detail placement.",
+    "Level 9 keeps l9seed, fog and looted container contents across generated rebuilds. sim.js layout V=8 rebuilds houses/interiors but carries items/scavved/lock from existing containers; l9DressV independently versions curbside detail placement.",
+    "Level 9 house contract: fitted models are grounded and centred in catalog w×d footprints, with front at file +Z; keep each l9-houses.yml door x/z/y aligned to the 1 m × 2.1 m hole cut by art/l9-houses/fit.py and the sim's rotated hinge/stoop. Interior floor height and furnishing coordinates use the same model-local metres.",
     "scripts/crawl.js stores crawl state on the player and restores the reduced capsule after reload; standing up requires clear 1.95 m headroom. Crouch animation uses crouch idle/walk as the pose pair.",
-    "Weapon meshes fitted by art/weapons/build.py and art/weapons/fit.json must stay in scripts/lib/weapon-look.js's scripted frame: mesh offsets and hand-grip transforms determine placement; body3's carbine HAND_FLIP and low-ready head hold preserve forward hipfire pose.",
-    "Level 11 subway stairs/ramps, column and vault dressing are split between scripts/lib/level11-city.js and level11-vaults.js, called by places/level11/sim.js; preserve the smooth walkable slope and shared station floor alignment. scripts/db.js declares SQL assets, while Bulk Data Manager's object storage and JSON registry files are separate data paths."
+    "Weapon meshes fitted by art/weapons/build.py and art/weapons/fit.json must stay in scripts/lib/weapon-look.js's scripted frame: mesh offsets and hand-grip transforms determine placement; body3's carbine HAND_FLIP and low-ready head hold position are coupled."
   ]
 }
