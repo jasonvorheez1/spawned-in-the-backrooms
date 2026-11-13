@@ -8,7 +8,7 @@ W = "/workspace/l0ceil"
 # cut: keep only the lowest <cut> metres after scaling to width (drops the plenum box above the ceiling plane)
 KIT = {
   "diffuser":     dict(rot=(0, 90, 0),  size=(0.6, 0.6, None), cut=0.08, origin="ceiling"),
-  "returngrille": dict(src="returngrille3", rot=(90, 0, 0), size=(0.6, 0.6, None), cut=0.03, back=True, origin="ceiling"),
+  "returngrille": dict(src="returngrille3", rot=(90, 0, 0), size=(0.6, 0.6, None), cut=0.03, back=True, junk=0, origin="ceiling"),
   "sprinkler":    dict(rot=(0, 0, 0),   size=(0.08, 0.08, 0.07), junk=0.002, origin="ceiling"),
   "smokedet":     dict(src="smokedet2", rot=(0, 90, 0),  size=(0.14, 0.14, 0.05), origin="ceiling"),
   "troffer-hang": dict(src="troffer-hang3", rot=(0, 90, 0),  size=(0.6, 1.2, 0.12), hang=32, junk=0, origin="ceiling"),
@@ -74,6 +74,8 @@ if C.get("back"):    # an open lattice gets the dark plenum behind it
     bs = pm.node_tree.nodes["Principled BSDF"]; bs.inputs["Base Color"].default_value = (0.012, 0.011, 0.01, 1); bs.inputs["Roughness"].default_value = 1
     me.materials.append(pm)
     bm = bmesh.new(); bm.from_mesh(me); h = sz[0] / 2 - 0.002
+    bm.normal_update()   # the pale pocket floors go: every cell opens onto the plenum
+    bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.normal.z < -0.8 and f.calc_center_median().z > mn.z + 0.008 and max(abs(f.calc_center_median().x), abs(f.calc_center_median().y)) < h - 0.03], context="FACES")
     f = bm.faces.new([bm.verts.new((x, y, mx.z - 0.0015)) for x, y in ((-h, -h), (-h, h), (h, h), (h, -h))]); f.material_index = len(me.materials) - 1
     bm.to_mesh(me); bm.free(); me.update()
 mn, mx = bounds()
