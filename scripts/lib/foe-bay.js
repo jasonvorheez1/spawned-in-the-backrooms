@@ -1,3 +1,4 @@
+import { dullerSpec } from "./duller-spec.js";
 // The Test Range's Enemy Bay (Shelly, Nov 13: "make an enemy testing area in debug room"): a walled annex east of the hall,
 // one pad per foe kind, pens at the far wall. Each foe is the same row its home level spawns, run by the same manager.
 // Pads write place.state.want_bay = { kind, at }; foeBayTick spawns it. Cap per kind keeps the bay sane.
@@ -16,7 +17,7 @@ import L11 from "./data/l11-depths.yml";
 import L13 from "./data/level13.yml";
 import C3 from "./data/creatures3.yml";
 
-export const BAY_V = 8; // 8: Custodians at Level 11 size (1.9 m, forward +x); // 7: Custodians run their real kit (scripts/custodians.js); // 6: Custodian robots; // 5: a test-dummy pad; // 4: clumps run scripts/clumps.js; // 3: the Dark Smiler runs its own revamped hunt; // 2: a pad for every enemy (Shelly: "im pretty sure theres more enemies than that")
+export const BAY_V = 9; // 9: a Duller pad; // 8: Custodians at Level 11 size (1.9 m, forward +x); // 7: Custodians run their real kit (scripts/custodians.js); // 6: Custodian robots; // 5: a test-dummy pad; // 4: clumps run scripts/clumps.js; // 3: the Dark Smiler runs its own revamped hunt; // 2: a pad for every enemy (Shelly: "im pretty sure theres more enemies than that")
 const X0 = 24, X1 = 50, Z0 = -26, Z1 = -2, H = 6, DOOR = [-14, -10.5]; // the annex box and the doorway through the hall's east wall
 const CAP = 4; // live foes per kind (my pick)
 const PEN = { x: 46, z: -14 }; // where they come out
@@ -37,6 +38,7 @@ export const KINDS = {
   clump: { name: "Clump", tag: "bay-clump", color: "oklch(0.65 0.08 40)" },
   tenant: { name: "Tenant", tag: "bay-tenant", color: "oklch(0.6 0.06 200)" },
   lurker13: { name: "Hall Lurker", tag: "bay-lurker13", color: "oklch(0.45 0.08 150)" },
+  duller: { name: "Duller", tag: "duller", color: "oklch(0.7 0.01 90)" },
 };
 const CLUMP_GLB = "/cdn/value.aeb91c70e11f57592fd7fe510b2e8bfd86065edacbb87155c02fa34a5761c396.glb", PARTY_GLB = "/cdn/value.26b362d316413677eaf77a390fda1afb0b1651baf57b6c1c3ba429dc3447fa2d.glb", BALLOON_GLB = "/cdn/value.bbcd28912111e39613cec71f06224b7742148d3493106c89a76f739e3003f366.glb";
 // stand-ins run by scripts/bay-brain.js: their home level's model and numbers, a simple hunt
@@ -100,6 +102,7 @@ function spawnFoe(ctx, kind, n) {
   if (kind === "hound") return ctx.spawn({ tags: ["hound", "tl-bay-foe"], feetPosition: p, rotation: rot, physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/hound-geo.js" }, state: npcState(ctx, "hound", L1.houndHp, { xp: L1.xpHound }) });
   if (kind === "smiler6") return ctx.spawn({ tags: ["smiler", "l6-smiler", "hostile", "bay-smiler6", "tl-bay-foe"], feetPosition: p, rotation: rot, model: SMILER6_MODEL, scale: SMILER6_SCALE, physics: { body: "character" }, state: { hp: 160, maxHp: 160, name: "Dark Smiler", arena: 1, home: { x: PEN.x, y: 0, z: PEN.z } } });
   if (kind === "sentry" || kind === "smgbot") return ctx.spawn({ tags: ["custodian-ai", "l8-hostile", "l11sentry", KINDS[kind].tag, "tl-bay-foe"], feetPosition: p, rotation: rot, model: { id: kind === "sentry" ? "/cdn/value.5a18bb1b3ab741080cf1b881ad99be1a9ace445a5e3fa9a4c7c2c6cb9dafb71d.glb" : "/cdn/value.43aa4b081f1cd7b36230499f345e1768336249a85f6e12e9e3707a38c4b5e3b7.glb", forward: "+x" }, layout: { box: { min: { x: -0.5, y: 0, z: -0.5 }, max: { x: 0.5, y: 1.9, z: 0.5 } } }, physics: { body: "character" }, audio: { clip: "/cdn/moodboard-scifi-neon/sfx-old-vacuum-tube-electrical-hum-and-relay-ticking-loop.mp3", loop: true, gain: 0.25, spatial: true, maxDistance: 12 }, state: { hp: L11.kinds[kind].hp, maxHp: L11.kinds[kind].hp, name: L11.kinds[kind].name, kind, xp: L11.kinds[kind].xp } });
+  if (kind === "duller") { const sp = dullerSpec(p, -90); sp.tags = [...sp.tags, "tl-bay-foe"]; return ctx.spawn(sp); }
   if (kind === "clump") return ctx.spawn({ tags: ["clump-ai", "l8-hostile", "bay-clump", "tl-bay-foe"], feetPosition: p, rotation: rot, model: { id: CLUMP_GLB, forward: "+x" }, layout: { box: { min: { x: -0.8, y: 0, z: -0.8 }, max: { x: 0.8, y: 1.2, z: 0.8 } } }, physics: { body: "character", collider: "capsule" }, state: { hp: L11.kinds.clump.hp, maxHp: L11.kinds.clump.hp, name: "Clump", kind: "clump", xp: L11.kinds.clump.xp, home: { x: PEN.x, y: 0, z: PEN.z } } });
   if (kind === "partygoer") return ctx.spawn({ tags: ["partygoer", "l8-hostile", "tl-bay-foe"], feetPosition: p, rotation: rot, model: { forward: "+x", id: PARTY_GLB }, layout: { box: { min: { x: -0.55, y: 0, z: -0.55 }, max: { x: 0.55, y: 1.45, z: 0.55 } } }, physics: { body: "character", collider: "capsule" }, state: { home: { x: p.x, y: 0, z: p.z }, hp: 220 } });
   if (kind === "balloon") return ctx.spawn({ tags: ["l26-balloon", "l8-hostile", "tl-bay-foe"], feetPosition: { ...p, x: p.x - 4 }, model: { id: BALLOON_GLB }, layout: { box: { min: { x: -0.28, y: 0.15, z: -0.28 }, max: { x: 0.28, y: 1.85, z: 0.28 } } }, physics: { body: "kinematic", collider: "sphere" }, state: { home: { x: p.x - 4, y: 0, z: p.z }, hp: 10 } });
