@@ -85,7 +85,11 @@ function findFocus(ctx, ray) {
     if (dist > REACH || dist < 0.05) continue
     const ang = Math.acos(Math.max(-1, Math.min(1, (vx * d.x + vy * d.y + vz * d.z) / dist)))
     if (ang > Math.max(0.075, Math.atan(reachR / dist)) || ang >= bestAng) continue
-    const wall = raycast(ctx, o, { x: vx / dist, y: vy / dist, z: vz / dist }, { distance: dist - 0.05, physicsOnly: true, ignoreEntities: [it.id, ctx.self.id], bodies: 'static' })
+    let wall = raycast(ctx, o, { x: vx / dist, y: vy / dist, z: vz / dist }, { distance: dist - 0.05, physicsOnly: true, ignoreEntities: [it.id, ctx.self.id], bodies: 'static' })
+    if (wall && tag === 'npc') { // someone behind a desk or counter: their head clears it, so the look reaches them over the top
+      const hy = p.y + (it.state?.seated ? 1.2 : Math.max(1.1, (it.state?.build?.h ?? 1) * 1.45)) - o.y, hdist = Math.hypot(vx, hy, vz)
+      wall = raycast(ctx, o, { x: vx / hdist, y: hy / hdist, z: vz / hdist }, { distance: hdist - 0.05, physicsOnly: true, ignoreEntities: [it.id, ctx.self.id], bodies: 'static' })
+    }
     if (wall && ((tag !== 'usable' && tag !== 'seat' && tag !== 'door') || dist - wall.distance > 0.6)) continue // a usable set into furniture (a desk's computer) is reached through its own desk's shell
     best = { id: it.id, tag }; bestAng = ang
   }
