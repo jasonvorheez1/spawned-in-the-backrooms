@@ -1,0 +1,38 @@
+# Entity 6, the Duller (Shelly, Nov 13, the wiki page): rare in the unsafe parts of Levels 0 to 20.
+# Every number is Savi's pick.
+model: "/cdn/value.5d9c6828fd2e6d66e22d3f10871cf54221343de5861df8b5824c80f100e3b819.png.glb"
+height: 2.7
+hp: 90
+walk: 2.1          # the wobbling stalk
+run: 8.6           # it bolts faster than your sprint
+sight: 16          # how far it notices you
+charge: 2.2        # you closing in on it faster than this (m/s) = you're charging it: it runs
+fleeMs: 5000
+reachRange: 3.4    # through one wall
+tellMs: 750        # the plaster cracks: this long to step away or drink almond water
+dragMs: 900
+grabDmg: 16
+grabSan: 10
+noAlmondExtra: 8   # nothing to steal: it hurts you more
+cooldownMs: 25000
+almondMs: 120000   # drank almond water this recently: it won't touch you, and keeps clear
+almondKeep: 9
+despawnRange: 95
+safeRadius: 45     # never this close to a level's arrival point
+rollEvery: 60      # seconds between spawn rolls per player
+places:            # cap = most alive at once, chance per roll. Level 5 is safe, so none there
+  main: { cap: 2, chance: 0.22 }
+  level01: { cap: 1, chance: 0.15 }
+  level1: { cap: 1, chance: 0.12 }
+  level2: { cap: 1, chance: 0.15 }
+  level02: { cap: 1, chance: 0.15 }
+  level21: { cap: 1, chance: 0.15 }
+  level3: { cap: 1, chance: 0.15 }
+  level4: { cap: 1, chance: 0.15 }
+  level6: { cap: 1, chance: 0.15 }
+  level7: { cap: 1, chance: 0.12 }
+  level8: { cap: 1, chance: 0.15 }
+  level10: { cap: 1, chance: 0.15 }
+  level11: { cap: 1, chance: 0.15 }
+  level12: { cap: 1, chance: 0.15 }
+  level13: { cap: 1, chance: 0.15 }

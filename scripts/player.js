@@ -977,7 +977,7 @@ function drink(ctx, c) {
   if (!c || (s[AW_KEY[c]] ?? 0) <= 0) return
   const a = AW[c], mh = maxHp(s.level, s), ms = maxSan(s.level, s), heal = derived(s).heal
   if (c === 'grey' && s.hp >= mh && s.sanity >= ms && (s.thirst ?? 100) >= 99) return
-  s[AW_KEY[c]] -= 1
+  s[AW_KEY[c]] -= 1; s.almondAt = now // a Duller keeps clear of you a while (scripts/duller.js)
   s.thirst = Math.min(100, (s.thirst ?? 100) + a.thirst)
   s.hp = Math.min(mh, s.hp + a.hp * heal)
   s.sanity = Math.min(ms, s.sanity + a.sanity * heal)
