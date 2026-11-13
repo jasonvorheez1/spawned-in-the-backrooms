@@ -25,7 +25,7 @@ function lay(ctx, L) {
   sp("l9-city-glow", { feetPosition: { x: nx, y: 14, z: nz - 60 }, light: { kind: "point", color: "oklch(0.75 0.1 60)", intensity: 40, distance: 160 }, visibleRange: { max: 400 } });
   // streets: wet, unpainted, kerbed
   for (const s of L.streets) {
-    sp(`l9-road-${s.id}`, { tags: ["l9road"], spline: { kind: "road", points: s.pts.map(([x, z]) => [x, 0.04, z]), width: ROAD_W, snapToTerrain: true, yOffset: 0.04, roadside: { markings: false, sidewalks: { width: WALK, height: 0.14 }, lampPosts: false, hedges: false } }, material: ASPHALT, physics: "static", visibleRange: { max: 320 } });
+    sp(`l9-road-${s.id}`, { tags: ["l9road"], spline: { kind: "road", points: s.pts.map(([x, z]) => [x, 0.04, z]), width: ROAD_W, snapToTerrain: true, yOffset: 0.04, roadside: { markings: false, sidewalks: { width: WALK, height: 0.14 }, lampPosts: false, hedges: false } }, material: ASPHALT, state: { floor: "asphalt" }, physics: "static", visibleRange: { max: 320 } }); // sounds dry: the texture name says rain-soaked (Shelly: "the roads have water sounds")
   }
   for (const [i, b] of L.bulbs.entries()) sp(`l9-bulb-${i}`, { feetPosition: T(b.x, b.z, 0.03), primitive: { kind: "cylinder", radiusTop: b.r, radiusBottom: b.r, height: 0.06, radialSegments: 40 }, material: ASPHALT, physics: "static", visibleRange: { max: 320 } });
   // streetlights: most are dead
