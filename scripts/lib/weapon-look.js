@@ -84,31 +84,36 @@ export const SPLIT = { pistol: [
   ["slide", "/cdn/value.de102cb046cad8bf072449b2258194dc2e8a3d97ef2216add66e3be21e1b8720.glb", [0.0114, 0.0846, -0.0047]],
   ["mag", "/cdn/value.98a0e360dcb08df9ad6b19ed459e7b3c162a69e9d4520f99e43285bb3afd2608.glb", [-0.0148, -0.064, 0.0564]],
 ],
+  // each part's bottom-centre where it sat in the whole gun (art/weapon-split/pistols.py bc.json), muzzle toward -z, grip and mag at +z.
+  // Their files face +z (SPLIT_FWD), so the engine turns each part to face the gun's -z; checked alone with preview_object Nov 13.
   pocket9: [
-  ["frame", "/cdn/value.b223a90b1db672ef9e2e000f3f645c4ddde130830a03a9cbba64d34206fcec09.glb", [-0.0004, -0.0008, -0.0052]],
-  ["slide", "/cdn/value.fc8bd6420ed1a9644b8670b87b64500a793ef904f14f6599b033d49950d89365.glb", [0.0002, 0.001, -0.0703]],
-  ["mag", "/cdn/value.04a3f517c38039dd63f98e7fd9219978efcf02379bae07b8cfab185820edd0a1.glb", [-0.0035, -0.054, -0.0]],
+  ["frame", "/cdn/value.b223a90b1db672ef9e2e000f3f645c4ddde130830a03a9cbba64d34206fcec09.glb", [0.0005, -0.0241, 0.0008]],
+  ["slide", "/cdn/value.fc8bd6420ed1a9644b8670b87b64500a793ef904f14f6599b033d49950d89365.glb", [-0.0001, 0.041, -0.001]],
+  ["mag", "/cdn/value.04a3f517c38039dd63f98e7fd9219978efcf02379bae07b8cfab185820edd0a1.glb", [0.0036, -0.0293, 0.054]],
   ],
   govt45: [
-  ["frame", "/cdn/value.2644d27756af4e359188ebbb9a27efbdf7da2de3d6ff67fa71efa35ec9e189a5.glb", [0.0, -0.0006, -0.002]],
-  ["slide", "/cdn/value.d383ec2ab9697f156b14ac7c4c83eec06de679692fb98e01e248b4d4da165d75.glb", [0.0001, 0.0062, -0.0889]],
-  ["mag", "/cdn/value.54e43492136d088aa8d41d8c627f4b0051c10588bc2b3b00be4965ba3227a123.glb", [-0.0032, -0.0718, -0.0]],
+  ["frame", "/cdn/value.2644d27756af4e359188ebbb9a27efbdf7da2de3d6ff67fa71efa35ec9e189a5.glb", [0.0, -0.0406, 0.0006]],
+  ["slide", "/cdn/value.d383ec2ab9697f156b14ac7c4c83eec06de679692fb98e01e248b4d4da165d75.glb", [-0.0001, 0.0463, -0.0062]],
+  ["mag", "/cdn/value.54e43492136d088aa8d41d8c627f4b0051c10588bc2b3b00be4965ba3227a123.glb", [0.0032, -0.0426, 0.0718]],
   ],
   target22: [
-  ["frame", "/cdn/value.65f6a48f77eead43933ca08c968e98029e74739f44913fe87281ee4d6ad586a0.glb", [0.0, 0.0, -0.0055]],
-  ["slide", "/cdn/value.cb964d1319291204d3322a3654702b3640584bc34fc4f5159b2cf49d96ad7afe.glb", [-0.0, -0.0689, -0.0852]],
-  ["mag", "/cdn/value.5fc7739972e0d1d31e79d1eb8ca7eeb5c9fb23ec1e7b3c1e9294460b72d2b1a6.glb", [0.0, -0.1043, -0.0]],
+  ["frame", "/cdn/value.65f6a48f77eead43933ca08c968e98029e74739f44913fe87281ee4d6ad586a0.glb", [-0.0, -0.0373, -0.0]],
+  ["slide", "/cdn/value.cb964d1319291204d3322a3654702b3640584bc34fc4f5159b2cf49d96ad7afe.glb", [0.0, 0.0424, 0.0689]],
+  ["mag", "/cdn/value.5fc7739972e0d1d31e79d1eb8ca7eeb5c9fb23ec1e7b3c1e9294460b72d2b1a6.glb", [-0.0, -0.0428, 0.1043]],
   ],
 }
-export const SPLIT_FWD = { pocket9: "-z", govt45: "-z", target22: "-z" }
+export const SPLIT_FWD = { pocket9: "+z", govt45: "+z", target22: "+z" }
+// each split pistol's one material slot, so a variant (rusty, M.E.G.) tints the real model instead of falling back to a scripted block
+const SPLIT_MAT = { pocket9: "tripo_material_0a924838-8023-4c3e-a417-fcb5379f1afc", govt45: "tripo_material_085dbb74-0a50-4c2b-bc14-2a1a7eda6b6c", target22: "tripo_material_826773d8-4906-4323-91c4-8de54c5e4054" }
+const splitBody = (kind, tint) => ({ children: SPLIT[kind].map(([id, url, at]) => ({ id, model: { id: url, forward: SPLIT_FWD[kind], ...(tint && SPLIT_MAT[kind] ? { materials: { [SPLIT_MAT[kind]]: { color: tint } } } : {}) }, feetPosition: { x: at[0], y: at[1], z: at[2] }, castShadow: false })) })
 export const HOLD = {
-  fists: null, soup_bowl: 0.0, table_leg: 0.16, pipe_scrap: 0.12, crowbar: 0.14, bat: 0.14, hatchet: 0.12, fire_axe: 0.18, pistol: 0.04, shotgun: 0.14, rebar: 0.14, wrench: 0.12, scrapper70: 0.14, icepick70: 0.1, flaregun70: 0.04, screwdriver: 0.05, sledgehammer: 0.14, stun_baton: 0.10, lineman_machete: 0.09, crook: 0.14, knife: 0.05, smg: 0.14, golf_club: 0.14, tire_iron: 0.12, pickaxe: 0.16, baton: 0.1, cleaver: 0.06, revolver: 0.05, laser_pistol: 0.04, raygun: 0.04, laser_rifle: 0.14, coach_gun: 0.14, lever_rifle: 0.14, hunting_rifle: 0.14, carbine: 0.14, fishing_rod: 0.14,
+  fists: null, soup_bowl: 0.0, table_leg: 0.16, pipe_scrap: 0.12, crowbar: 0.14, bat: 0.14, hatchet: 0.12, fire_axe: 0.18, pistol: 0.04, pocket9: 0.04, govt45: 0.04, target22: 0.04, shotgun: 0.14, rebar: 0.14, wrench: 0.12, scrapper70: 0.14, icepick70: 0.1, flaregun70: 0.04, screwdriver: 0.05, sledgehammer: 0.14, stun_baton: 0.10, lineman_machete: 0.09, crook: 0.14, knife: 0.05, smg: 0.14, golf_club: 0.14, tire_iron: 0.12, pickaxe: 0.16, baton: 0.1, cleaver: 0.06, revolver: 0.05, laser_pistol: 0.04, raygun: 0.04, laser_rifle: 0.14, coach_gun: 0.14, lever_rifle: 0.14, hunting_rifle: 0.14, carbine: 0.14, fishing_rod: 0.14,
 }
 export function weaponBody(kind) {
   const base = baseOf(kind), w = W[kind] ?? {}, m = MESH[base], look = w.look, short = look === 'sawn' ? 0.72 : 1
   // the pistol in three parts (art/weapon-split/pistol.py): frame, slide, magazine, each standing where it sat in the whole mesh, so the reload moves real parts
   if (base === 'carolynne' && !look && !w.tint) return { children: [...CAROL_SPLIT.map(([id, url]) => ({ id, model: { id: url, forward: '+z' }, feetPosition: { x: 0, y: 0, z: 0 }, castShadow: false })), ...CAROL_FESTIVE] }
-  if (SPLIT[kind] && kind !== 'pistol' && !look && !w.tint) return { children: SPLIT[kind].map(([id, url, at]) => ({ id, model: { id: url }, feetPosition: { x: at[0], y: at[1], z: at[2] }, castShadow: false })) }
+  if (SPLIT_FWD[base]) return splitBody(base, look || w.tint ? (w.tint ?? MESHTINT[look] ?? null) : null)
   if (base === 'pistol' && !look && !w.tint) return { children: SPLIT.pistol.map(([id, url, at]) => ({ id, model: { id: url }, feetPosition: { x: at[0], y: at[1], z: at[2] }, castShadow: false })) }
   const body = m
     ? { model: { id: m[0], offset: [0, m[1], m[5] ?? 0], ...(m[4] ? { forward: m[4] } : {}) } }

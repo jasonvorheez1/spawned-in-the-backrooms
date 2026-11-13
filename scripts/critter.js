@@ -330,8 +330,10 @@ export function update(ctx) {
 
   // held weapon in third person: attached to RightHand bone so other players and third-person camera see it
   const eq = ctx.self.state.equipped ?? 'fists'
-  if (ses.heldKind !== eq || !ses.heldSwept || (eq!=='fists' && (!ses.heldObj || !ctx.getObject(ses.heldObj)))) {
-    ses.heldKind = eq; ses.heldSwept = true
+  // the human rig's hand bone sits turned from the critter's: a one-handed gun needs its own turn there (scripts/lib/body3.js heldRot), so the key carries the style
+  const heldHuman = !ses.cachedWorn && !!(HUMAN || speciesOf(ses.cachedParams) === 'human'), heldKey = eq + (heldHuman ? ':h' : '')
+  if (ses.heldKind !== heldKey || !ses.heldSwept || (eq!=='fists' && (!ses.heldObj || !ctx.getObject(ses.heldObj)))) {
+    ses.heldKind = heldKey; ses.heldSwept = true
     // old held guns from earlier sessions (some from before the held3p tag) stay parented to the body: clear every hand-held child but the mall's food
     for (const c of ctx.getObject(ctx.self.id)?.children ?? []) { const cid = c?.id ?? c; const o = ctx.getObject(cid); if (o?.attachment?.bone === 'RightHand' && cid !== ctx.session?.hubHeld && cid !== ses.heldObj) { try { ctx.destroy(cid) } catch (e) {} } }
     if (ses.heldObj) { try { ctx.destroy(ses.heldObj) } catch (e) {} ses.heldObj = null }
@@ -346,7 +348,7 @@ export function update(ctx) {
         feetPosition: { x: 0, y: 0, z: -g },
         visibleInFirstPerson: false,
         ...weaponBody(eq),
-        ...heldRot(eq),
+        ...heldRot(eq, heldHuman),
       })
     }
   }

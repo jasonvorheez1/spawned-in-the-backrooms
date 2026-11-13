@@ -373,7 +373,7 @@ function turnPt(p, pitch, yaw, roll) { // YXZ: yaw over pitch over roll, as the 
 const PARTS = Object.fromEntries(Object.entries(SPLIT).map(([k, rows]) => [k, Object.fromEntries(rows.map(([id, , at]) => [id, at]))]))
 function partsPose(ctx, ps, kind, dt, m) {
   if (kind === 'carolynne') return carolPose(ctx, ps, dt, m)
-  const base = PARTS[kind]; if (!base) return
+  const base = PARTS[kind] ?? PARTS[baseOf(kind)]; if (!base) return // a variant (rusty pocket 9) keeps its base's moving parts
   const gun = ctx.getObject(ps.vmId + '/gun'); if (!gun) return
   const kids = (gun.children ?? []).map((c) => (typeof c === 'string' ? ctx.getObject(c) : c)).filter(Boolean)
   const part = (n) => kids.find((c) => c.id === n || c.id?.endsWith('/' + n))

@@ -4,6 +4,7 @@
 import { animate } from 'builtin/tween'
 import W, { baseOf } from './weapons.js'
 import CA from './data/combat-anims.yml'
+import { firstPersonGun } from './fp-gun.js'
 
 const RAD = Math.PI / 180
 const FAM = {}
@@ -12,9 +13,30 @@ for (const [f, ks] of Object.entries(CA.families ?? {})) for (const k of ks) FAM
 // a long gun's mesh runs along its own +Z; turned pitch -90 it lies along the Mixamo hand's fingers, and sits back so the grip (not its middle) is in the palm
 // a long gun in the RightHand bone's frame, turned 180 about its up for the KF rifle clips (checked on debug mannequins Nov 9): the inverse of the hand's world turn in the gun aim clip (T-pose rest), so the barrel runs along the body's facing; grip sits in the palm
 // the shotgun mesh's barrel runs -Z; the scripted long guns (weapon-geo.js) run +Z with the grip 0.14 up the bore: they turn 180 about their up and slide back so the grip, not the butt, sits in the fist (checked on debug mannequins Nov 9)
-export const heldRot = (kind) => famOf(kind) !== 'long' ? {} : baseOf(kind ?? '') === 'shotgun'
-  ? { rotation: { x: -0.342, y: 0.756, z: -0.352, w: -0.433 }, feetPosition: { x: -0.041, y: -0.056, z: -0.048 } }
-  : { rotation: { x: 0.352, y: -0.433, z: -0.342, w: -0.756 }, feetPosition: { x: -0.003, y: -0.072, z: -0.066 } }
+// Nov 13: every other long gun takes its turn from its first-person fit (scripts/lib/fp-gun.js), which already knows which way its mesh runs
+// and how far it is tilted: the scripted guns turn 180 there (barrel +Z) and get the rifle turn as is; the Tripo coach gun, hunting rifle and
+// laser rifle run -Z like the shotgun (they were held stock-first) and the hunting and laser rifles' barrels rise in their files (-25, -17).
+// hand turn = RIFLE_Q * yaw180^-1 * fp turn: for the shotgun this lands on its hand-tuned turn within 2 degrees, the check that the rule holds.
+const RIFLE_Q = { x: 0.352, y: -0.433, z: -0.342, w: -0.756 }, RIFLE_AT = { x: -0.003, y: -0.072, z: -0.066 }
+const SHOTGUN_Q = { x: -0.342, y: 0.756, z: -0.352, w: -0.433 }, SHOTGUN_AT = { x: -0.041, y: -0.056, z: -0.048 }
+// where each Tripo long gun's grip lands in the palm (RightHand frame), fitted on preview renders of both body styles
+// (the shotgun's spot moved by the difference of their first-person offsets, which were all fitted against the same fist)
+const HELD_AT = { coach_gun: { x: 0.094, y: -0.118, z: -0.004 }, hunting_rifle: { x: 0.138, y: -0.256, z: -0.017 }, laser_rifle: { x: 0.08, y: 0.08, z: -0.033 } } // the ZR-7 then slid forward along itself (hand +y) so its pistol grip, not its middle, is in the palm
+const qmul = (a, b) => ({ w: a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z, x: a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y, y: a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x, z: a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w })
+const eulerQ = (yaw, pitch, roll) => { const h = Math.PI / 360, cy = Math.cos(yaw * h), sy = Math.sin(yaw * h), cp = Math.cos(pitch * h), sp = Math.sin(pitch * h), cr = Math.cos(roll * h), sr = Math.sin(roll * h); return { x: cy * sp * cr + sy * cp * sr, y: sy * cp * cr - cy * sp * sr, z: cy * cp * sr - sy * sp * cr, w: cy * cp * cr + sy * sp * sr } }
+const UNYAW = { x: 0, y: -1, z: 0, w: 0 } // yaw 180 undone
+const r4 = (q) => ({ x: +q.x.toFixed(4), y: +q.y.toFixed(4), z: +q.z.toFixed(4), w: +q.w.toFixed(4) })
+// a one-handed gun on the critters' hand needs no turn; the human rig's RightHand stands it barrel-up (seen live Nov 13, revolver and pistols alike),
+// so there it turns pitch 90 and rolls over, and its grip sinks into the palm (fitted on preview renders)
+const HUMAN_PISTOL_Q = { pitch: 90, roll: 180 }
+export function heldRot(kind, human = false) {
+  if (famOf(kind) !== 'long') return human && W[kind]?.ranged ? { rotation: HUMAN_PISTOL_Q, feetPosition: { x: 0, y: 0.02, z: 0.04 } } : {}
+  const base = baseOf(kind ?? ''), fp = firstPersonGun(base, W[kind]?.look)
+  if (base === 'shotgun') return { rotation: SHOTGUN_Q, feetPosition: SHOTGUN_AT }
+  if (!fp || (fp.turn[0] === 180 && !fp.turn[1] && !fp.turn[2])) return { rotation: RIFLE_Q, feetPosition: RIFLE_AT }
+  const minusZ = Math.abs(fp.turn[0]) < 90
+  return { rotation: r4(qmul(qmul(RIFLE_Q, UNYAW), eulerQ(...fp.turn))), feetPosition: HELD_AT[base] ?? (minusZ ? SHOTGUN_AT : RIFLE_AT) }
+}
 export function famOf(kind) {
   const base = baseOf(kind ?? 'fists'), wp = W[kind] ?? W[base] ?? {}
   if (FAM[base]) return FAM[base]
