@@ -259,3 +259,13 @@ sell:
   firesalt: 4
   weapon: { common: 4, uncommon: 9, rare: 20 }
   cloth: { common: 3, uncommon: 6, rare: 10, agency: 14 }
+  l70-npc-odell:     # Level 70 scrap trader (Savi's picks)
+    - [weapon:scrapper70, 1, 24]
+    - [weapon:flaregun70, 1, 18]
+    - [flare70, 4, 3]
+    - [fuse70, 1, 60]
+    - [poutine70, 4, 3]
+    - [maple70, 4, 3]
+    - [handwarmer70, 5, 2]
+    - [toque70, 2, 6]
+    - [froidpelt, 0, 9]

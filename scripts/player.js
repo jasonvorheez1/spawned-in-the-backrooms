@@ -326,6 +326,7 @@ export function useSnack(ctx, token) { // consume one from the bag
   if (n <= 0 || !SNACKS[token]) return
   if (SNACKS[token].use) { useGadget(ctx, token, SNACKS[token], n); return } // Level 31 gadgets (scripts/lib/rink-items.js)
   if (token === 'musicbox') { s.invOpen = false; placeMusicBox(ctx); return } // set down, not eaten (scripts/lib/musicbox.js)
+  if (SNACKS[token].quest) { s.notice = { text: SNACKS[token].name + ': ' + SNACKS[token].info, at: now }; return } // Level 70 quest goods: looked at, kept
   if (SNACKS[token].keep) { // a keepsake: used, not eaten, once per cooldown
     const v = SNACKS[token], left = ((s.keepAt?.[token] ?? -1e12) + v.cooldown * 1000 - now) / 1000
     if (left > 0) { s.notice = { text: `${v.name}: the spring needs ${Math.ceil(left / 60)} min`, at: now }; return }
@@ -337,6 +338,7 @@ export function useSnack(ctx, token) { // consume one from the bag
     const v = SNACKS[token], mh = maxHp(s.level, s), ms = maxSan(s.level, s)
     s.hp = Math.min(mh, (s.hp ?? mh) + v.hp * (v.aid ? derived(s).healMed : derived(s).heal)); s.sanity = Math.min(ms, (s.sanity ?? ms) + v.sanity)
     s.hunger = Math.max(0, Math.min(100, (s.hunger ?? 100) + v.hunger)); s.thirst = Math.max(0, Math.min(100, (s.thirst ?? 100) + v.thirst))
+    if (v.warm) s.chill = Math.max(0, (s.chill ?? 0) - v.warm) // Level 70 cold (scripts/lib/level70-quest.js)
     if (v.drunk) { s.drunk = Math.min(100, (s.drunk ?? 0) + v.drunk); s.drunkAt = now }
     if (v.stamina) { const w = walkOf(ctx); w.stamina = Math.min(L.stamina * 2, (w.stamina ?? s.stamina ?? 0) + v.stamina) }
     s.pickedAt = now; s.notice = { text: `${v.name}. ${v.drink ? `Thirst +${v.thirst}` : `Hunger +${v.hunger}`}`, at: now }

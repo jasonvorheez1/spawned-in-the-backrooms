@@ -1,0 +1,16 @@
+# Level 70 "Dry Pipes" valve puzzle. All numbers Savi's picks.
+# Four handwheels, each 0..3 quarter turns. Pressure (bar) = base + sum over valves of turn * couple[valve].
+# Columns: [CITY, HOTEL, SPUR]. Every one of the 256 settings gives a different reading, so each target below has exactly one answer.
+base: [3, 3, 3]
+couple:
+  - [2, 1, -1]    # valve 0 "KELPIE MAIN"
+  - [1, -1, 2]    # valve 1 "CROSSOVER"
+  - [-1, 2, 1]    # valve 2 "HOTEL RISER"
+  - [2, 0, -2]    # valve 3 "SPUR GATE"
+names: [KELPIE MAIN, CROSSOVER, HOTEL RISER, SPUR GATE]
+targets:
+  city:     { read: [18, 3, 0],  turns: [3, 3, 0, 3], label: "City mains" }      # froid route
+  spur:     { read: [3, 6, 12],  turns: [0, 3, 3, 0], label: "Iceshed spur" }    # gelu route
+  balanced: { read: [7, 6, 8],   turns: [0, 3, 3, 2], label: "Split feed" }      # both, harder
+vent: 15        # any line at or past this that is not a target vents freezing steam
+ventChill: 8    # chill added by a vent
