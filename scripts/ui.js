@@ -491,7 +491,7 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
     <div class="row" style="margin-top:6px;justify-content:flex-end;gap:8px">
       <span>CASH</span><span style="font-size:15px;color:#9fcf8a">$${((s.cents ?? 0) / 100).toFixed(2)}</span><span>ALMOND</span><span style="font-size:15px">${s.almonds ?? 0}</span>${[['almondsG','#7fcf6a'],['almondsR','#d0574a'],['almondsB','#6f9be0']].filter(([k]) => s[k]).map(([k, c]) => `<span style="font-size:15px;color:${c}">${s[k]}</span>`).join('')}
     </div>
-    ${s.attr != null ? (() => { const cap = derived(s).carry, kg = _kg(s); return `<div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px;${kg > cap ? 'color:oklch(0.68 0.2 35)' : ''}"><span>${kg > cap ? 'OVERENCUMBERED · ' : ''}WG</span><span>${kg.toFixed(1)}/${cap}</span></div>` })() : ''}
+    ${s.attr != null ? (() => { const cap = derived(s).carry, kg = _kg(s); return `<div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px;${kg > cap ? 'color:oklch(0.68 0.2 35)' : ''}"><span>${kg > cap ? 'OVERENCUMBERED · ' : ''}WG</span><span>${kg.toFixed(1)}/${s.god ? '∞' : cap}</span></div>` })() : ''}
     <div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px">
       <span>LIGHT</span><span style="${s.light ? '' : 'opacity:.45'}">${s.light ? Math.round(s.battery) + '%' : 'OFF'}</span>
     </div>
