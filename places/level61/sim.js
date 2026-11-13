@@ -16,7 +16,7 @@ import { rbox } from "../../scripts/lib/rbox.js";
 import { layService } from "../../scripts/lib/level61-service.js";
 
 export const cadence = "1s";
-const V = 60;
+const V = 61;
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -229,7 +229,7 @@ function lay(ctx) {
     sp(`l61-fountain-bench-${i}`, {
       feetPosition: { x, y: -0.45, z }, rotation: { yaw }, physics: { body: "static", collider: "box" },
       model: { id: M_BENCH, forward: "+z" }, tags: ["seat"],
-      state: { seat: { w: 1.8, d: 0.22, y: 0.44 }, name: "Conversation court bench" },
+      state: { seat: { w: 3, gap: 0.65, d: 0.06, y: 0.31 }, name: "Conversation court bench" },
     });
   }
   sp("l61-fountain-pedestal", {
@@ -715,7 +715,7 @@ function lay(ctx) {
     }
   }
   sp("l61-meg-scream", { feetPosition: { x: -HW + 0.5, y: 1.2, z: 0 }, audio: { clip: G("distant-muffled-screaming-behind-heavy-steel-door-loop"), loop: true, gain: 0.12, spatial: true, maxDistance: 9 } });
-  sp("l61-from-l6", { feetPosition: { x: -20.5, y: 1.38, z: -25.9 }, rotation: { yaw: 0 } }); // the tripwire drops you into Clippers, the red bar 6.1 was found in
+  sp("l61-from-l6", { feetPosition: { x: -20.5, y: 1.38, z: -24 }, rotation: { yaw: 0 } }); // the tripwire drops you into Clippers, the red bar 6.1 was found in
 
   // East suction vent to Level 3
   box("l61-vent", HW - 0.2, 0.1, 8, 0.12, 0.94, 1.25, { color: "oklch(0.25 0.005 250)", metalness: 0.6, roughness: 0.5 }, {
@@ -760,9 +760,10 @@ function layStep(ctx) {
       const before = existing.state;
       const next = spec.state;
       if (before.kind === next?.kind) {
-        for (const key of ["cool", "stockWeek", "dispensed", "sel", "ord"]) {
+        for (const key of ["cool", "stockWeek", "dispensed", "sel"]) {
           if (before[key] != null) next[key] = before[key];
         }
+        if (before.ord) next.ord = Object.fromEntries(Object.entries(before.ord).filter(([, order]) => order.done));
       }
     }
     if (existing) ctx.destroy(id);
