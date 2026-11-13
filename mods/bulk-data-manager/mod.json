@@ -1,0 +1,47 @@
+{
+  "name": "bulk-data-manager",
+  "displayName": "Bulk Data Manager",
+  "description": "Turn Savi into a bulk data entry interface. Create, generate, and query large game data registries (items, enemies, quests, cards) with sharded storage for 1000+ records and a clean runtime query API.",
+  "tags": [
+    "data",
+    "workflow",
+    "creator-tool",
+    "registry",
+    "bulk"
+  ],
+  "visibility": "public",
+  "version": "2.9.0",
+  "objects": [
+    {
+      "id": "bdm-obj",
+      "template": "templates/bdm-obj.js#bdm_obj"
+    }
+  ],
+  "inputs": {
+    "actions": {
+      "dataDelete": {},
+      "dataImport": {},
+      "dataRefresh": {},
+      "dataAddRecord": {},
+      "dataEditRecord": {},
+      "dataImportChunk": {},
+      "dataRequestPage": {},
+      "dataDeleteRecord": {},
+      "dataImportFinalize": {}
+    }
+  },
+  "attach": [
+    {
+      "target": {
+        "kind": "god"
+      },
+      "behavior": "data-loader.js"
+    }
+  ],
+  "tab": {
+    "id": "data-manager",
+    "label": "Data Manager",
+    "icon": "DB",
+    "render": "creator-data-ui.js"
+  }
+}

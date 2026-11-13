@@ -1,3 +1,5 @@
 # spawn-scene v2 yaml objects
+bdm-obj:
+  template: mods/bulk-data-manager/templates/bdm-obj.js#bdm_obj
 favi-brain:
   template: mods/favi/templates/brain.js#brain
