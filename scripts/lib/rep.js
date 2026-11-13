@@ -78,9 +78,12 @@ function bump(s, g, d) { // one faction's fame (d > 0) or infamy (d < 0); return
   if (R && rk !== (s[R[2]] ?? null)) { const L = R[0], was2 = s[R[2]], up = rk && (!was2 || L.findIndex(([, n]) => n === rk) < L.findIndex(([, n]) => n === was2)); s[R[2]] = rk; if (up) return `${R[3]}: ${rk}`; }
   return was !== now ? `${GROUPS[g]?.name ?? g}: ${now}` : "";
 }
-export function addRep(s, g, d) {
+export function addRep(s, g, d, reason) {
   if (!g || !d) return "";
+  const before = d > 0 ? fameOf(s, g) : infamyOf(s, g);
   const out = [bump(s, g, d)];
+  const after = d > 0 ? fameOf(s, g) : infamyOf(s, g), change = after - before;
+  if (reason && change > 0) s.repHistory = [...(s.repHistory ?? []), { group: g, kind: d > 0 ? "fame" : "infamy", amount: change, reason: String(reason).slice(0, 160) }].slice(-30);
   return out.filter(Boolean).join(" · ");
 }
 export function addKarma(s, d) {
@@ -99,7 +102,7 @@ export function repKill(ctx, victim, killer, seen = [], provoked = false) {
   const trader = ["trader", "quarter", "medic", "smith"].includes(victim.state?.role);
   msgs.push(addKarma(s, provoked ? -3 : trader ? -25 : -15));
   if (seen.some(id => { const witness = ctx.getObject(id); return witness && groupOf(witness) === g; })) {
-    msgs.push(addRep(s, g, provoked ? -4 : -18));
+    msgs.push(addRep(s, g, provoked ? -4 : -18, `Witnessed killing of ${String(victim.state?.name ?? "a faction member").split(" ·")[0]}`));
   }
   say(ctx, s, ...msgs);
 }
