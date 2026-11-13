@@ -22,5 +22,5 @@ export function geometry(ctx) {
   plate(ctx, { w: W, d: 0.11, th: 0.04, n: 10, rings: 1, seg, map: (x, z, h) => [x, 1.0 + h, z + 0.2] });
 }
 export function collider() {
-  return [{ kind: "box", size: [1.4, 0.46, 0.52], center: [0, 0.23, 0] }, { kind: "box", size: [1.4, 1.04, 0.14], center: [0, 0.52, 0.21] }];
+  return [{ kind: "box", width: 1.4, height: 0.46, depth: 0.52, center: [0, 0.23, 0] }, { kind: "box", width: 1.4, height: 1.04, depth: 0.14, center: [0, 0.52, 0.21] }];
 }

@@ -21,5 +21,5 @@ export function geometry(ctx) {
   for (const x of [-0.95, 0.95]) tube(ctx, [x, 0.3, -0.42], [x, 0.3, 0.42], 0.016, sides);
 }
 export function collider() {
-  return [{ kind: "box", size: [2.44, 0.05, 0.76], center: [0, 0.72, 0] }, { kind: "box", size: [2.44, 0.04, 0.28], center: [0, 0.43, -0.64] }, { kind: "box", size: [2.44, 0.04, 0.28], center: [0, 0.43, 0.64] }];
+  return [{ kind: "box", width: 2.44, height: 0.05, depth: 0.76, center: [0, 0.72, 0] }, { kind: "box", width: 2.44, height: 0.04, depth: 0.28, center: [0, 0.43, -0.64] }, { kind: "box", width: 2.44, height: 0.04, depth: 0.28, center: [0, 0.43, 0.64] }];
 }
