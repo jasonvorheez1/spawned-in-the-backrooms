@@ -40,11 +40,14 @@ export const rnd = (seed, k = 0) => { let t = (seed + 0x6d2b79f5 * (k + 1)) | 0;
 // what stands behind which door. Three stand open for good (canon); the rest take a Level Key, once.
 // `place` null = a level nobody has reached from here yet: the door says so and never fakes a trip.
 export const OPEN = { "t5-a2": { place: null, name: "Level 178" }, "t7-b1": { place: "level1", name: "Level 1" }, "t10-a3": { place: "level11", name: "Level 11" } };
-export const KEYED = { // door id -> the place its key belongs to (my picks: scattered, never in level order)
-  "t1-b2": "level4", "t2-a0": "level8", "t3-a3": "level5", "t4-b1": "level02", "t6-a1": "level3", "t8-b3": "level7", "t9-a0": "level31",
-  "t11-b2": "level10", "t12-a1": "level6", "ringn-a2": "level2", "ringn-a4": "level21", "rings-b1": "level70", "rings-b4": "level13", "t2-b3": "main", "t9-b2": "level61", "t11-a0": "level184", "t4-a2": "level27",
+export const KEYED = { // door id -> the place its key belongs to (my picks: scattered, never in level order). Shelly Nov 13: Levels 0 to 20; a level not built yet is a sealed door (SEALED below)
+  "t1-b2": "level4", "t2-a0": "level8", "t3-a3": "level5", "t4-b1": "level02", "t6-a1": "level3", "t8-b3": "level7", "t9-a0": "level12",
+  "t11-b2": "level10", "t12-a1": "level6", "ringn-a2": "level2", "ringn-a4": "level21", "rings-b1": "level9", "rings-b4": "level13", "t2-b3": "main", "t9-b2": "level61", "t11-a0": "level14",
+  "t3-b0": "level15", "t6-b2": "level16", "t8-a1": "level17", "t10-b1": "level18", "t12-b3": "level19", "ringn-a0": "level20",
 };
-export const KEY_NAMES = { main: "Level 0", level02: "Level 0.2", level2: "Level 2", level21: "Level 2.1", level3: "Level 3", level4: "Level 4", level5: "Level 5", level6: "Level 6", level61: "Level 6.1", level7: "Level 7", level8: "Level 8", level10: "Level 10", level13: "Level 13", level27: "Level 27", level31: "Level 31", level70: "Level 70", level184: "Level 184" };
+export const KEY_NAMES = { main: "Level 0", level02: "Level 0.2", level1: "Level 1", level2: "Level 2", level21: "Level 2.1", level3: "Level 3", level4: "Level 4", level5: "Level 5", level6: "Level 6", level61: "Level 6.1", level7: "Level 7", level8: "Level 8", level9: "Level 9", level10: "Level 10", level11: "Level 11", level12: "Level 12", level13: "Level 13", level14: "Level 14", level15: "Level 15", level16: "Level 16", level17: "Level 17", level18: "Level 18", level19: "Level 19", level20: "Level 20" };
+// a door whose level is not built yet: no key turns it, nothing crosses
+export const sealed = (ctx, place) => !!place && !(ctx.world.files ?? []).some((f) => f.startsWith(`places/${place}/`));
 export const doorOfKey = (place) => Object.keys(KEYED).find((d) => KEYED[d] === place) ?? null;
 function buildDoors() {
   const out = [];

@@ -2,7 +2,7 @@
 // Three stand open for good. The rest take their own Level Key: the key is spent, the slab slides, and it shuts again on its own.
 // Nothing about an unlock is saved: the next visitor finds it shut. Lockpicks never see it (it is no 'door' to scripts/lockpick.js).
 import { animate } from "builtin/tween";
-import { doorById, KEY_NAMES } from "./lib/thehub.js";
+import { doorById, KEY_NAMES, sealed } from "./lib/thehub.js";
 import { hasKey, spendKey, keysOf } from "./lib/hubkeys.js";
 import { bring } from "./lib/companion.js";
 import { carryAcross } from "./lib/carry.js";
@@ -23,6 +23,7 @@ export const ears = {
   press(ctx, { by }) {
     const d = doorById(ctx.self.id), who = ctx.getObject(by), st = ctx.self.state; if (!d || !who) return;
     if (st.open) return notify(ctx, who, d.open && !d.open.place ? "Cold air. No floor you can see past the sill. Nobody has come back to say what Level 178 does with people." : "It stands open. Whatever is past it, the way back will not be this one.");
+    if (d.to && sealed(ctx, d.to)) { ctx.emit("playSound", { clip: DEAD, position: mid(ctx.self), volume: 0.6, maxDistance: 20 }); return notify(ctx, who, "Sealed. The keyhole is filled with set concrete. Whatever is past this one is not ready for anyone yet."); }
     if (d.to && hasKey(who.state, d.to)) {
       spendKey(who, d.to); st.open = true; st.name = "Open door"; slide(ctx, true); ctx.after(HOLD, "close");
       ctx.emit("playSound", { clip: KEYIN, position: mid(ctx.self), volume: 0.9, maxDistance: 30 });
@@ -38,6 +39,7 @@ export function onTriggerEnter(ctx, other) {
   if (!other?.state || other.state.level == null) return;
   const door = ctx.getObject(ctx.self.state.door), d = doorById(ctx.self.state.door); if (!door?.state.open || !d) return;
   const to = d.open ? d.open.place : d.to;
+  if (sealed(ctx, to)) return;
   if (!to) return notify(ctx, other, "You put a foot over the sill and there is nothing under it. Not this door. Not yet.");
   ctx.emit("screenFlash", { color: "#000000", duration: 1.1, intensity: 1 }, { audience: { player: other.id } });
   other.state.clipKind = "wall"; other.state.hubFrom = d.id;
