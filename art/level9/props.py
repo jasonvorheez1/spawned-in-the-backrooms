@@ -70,7 +70,7 @@ def build(name, C):
     xform(o, Matrix.Scale(s, 4))
     if C.get("fit"):
         lo, hi = bounds(o); d = hi - lo
-        xform(o, Matrix.Diagonal([(f / d[i]) if f else 1 for i, f in enumerate(C["fit"])] + [1]))
+        xform(o, Matrix.Diagonal([(float(f[1:]) if isinstance(f, str) else f / d[i]) if f else 1 for i, f in enumerate(C["fit"])] + [1]))   # "*0.64" = a plain factor
     if C.get("stretch"):
         lo, hi = bounds(o); H = hi.z - lo.z; f0, f1, T = C["stretch"]; z0, z1, add = lo.z + f0 * H, lo.z + f1 * H, T - H
         for v in o.data.vertices:
