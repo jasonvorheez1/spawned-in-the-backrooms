@@ -6,7 +6,7 @@ import { rollLoot } from "../../scripts/lib/loot.js";
 import FURN from "../../scripts/lib/data/furniture.yml";
 import { layout, hashStr, HOUSES, PAINTS, PROPS, TUNE, FWD, ROAD_W, WALK } from "../../scripts/lib/level9.js";
 export const cadence = "1s";
-const V = 11; // 3: Tripo house models on the lots; 6: plaster insides; 7: wallpaper box-mapped, a bedroom wall, furniture and loot inside; 5 (4 hung them on the back): door holes cut, a hinged front door and a stoop on each (keeps seed and loot)
+const V = 12; // 3: Tripo house models on the lots; 6: plaster insides; 7: wallpaper box-mapped, a bedroom wall, furniture and loot inside; 5 (4 hung them on the back): door holes cut, a hinged front door and a stoop on each (keeps seed and loot)
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BLUE = { kind: "scripted", script: "engine/blueprint" };
 const ASPHALT = { texture: "cdn/texture-worn-dark-grey-asphalt-road-coarse-aggregate-damp-patches-cracks.png", wrap: "repeat", repeat: [0.3, 0.3], color: "oklch(0.42 0.01 250)", roughness: 0.62, metalness: 0 }; // Shelly "why are level 9 roads water": 0.16 roughness mirrored the sky; damp, not a puddle
@@ -27,8 +27,8 @@ const MAT = { floor_lamp: ["fixture", 25], lava_lamp: ["fixture", 25], crt_tv: [
 const FLOOR = { texture: "cdn/texture-dusty-worn-oak-hardwood-floor-planks.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.55 0.05 60)", roughness: 0.8 };
 const ROOM_H = 2.5, IN = { visibleRange: { max: 40 }, castShadow: false };
 function furnish(ctx, sp, l, H, D, Y) {
-  const R = H.inside ?? { x0: -H.w / 2 + 0.9, x1: H.w / 2 - 0.9, z0: -D.z + 0.4, z1: D.z - 0.15 }, fy = D.y;
-  const x0 = R.x0 + 0.06, x1 = R.x1 - 0.06, z0 = R.z0 + 0.06, z1 = Math.min(R.z1, D.z - 0.12);
+  const R = H.inside ?? { x0: -H.w / 2 + 0.9, x1: H.w / 2 - 0.9, z0: -D.z + 0.4, z1: D.z - 0.15 }, fy = D.y + 0.07; // a hair above the shell's own lumpy floor, so it never pokes through
+  const x0 = R.x0 + 0.2, x1 = R.x1 - 0.2, z0 = R.z0 + 0.2, z1 = Math.min(R.z1, D.z - 0.12);
   const at = (x, z, up = 0) => { const r = rotate({ yaw: Y }, { x, y: 0, z }); return T(l.x + r.x, l.z + r.z, fy + up); };
   const box = (k, x, z, w, d, h, mat, up = 0, phys = "static") => sp(`l9-${l.id}-${k}`, { ...IN, feetPosition: at(x, z, up), rotation: { yaw: Y }, primitive: { kind: "box", width: w, height: h, depth: d }, physics: phys, material: mat });
   const wall = (k, ax, az, bx, bz) => { const w = Math.max(0.1, Math.abs(bx - ax)), d = Math.max(0.1, Math.abs(bz - az)), x = (ax + bx) / 2, z = (az + bz) / 2;
