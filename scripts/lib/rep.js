@@ -27,7 +27,7 @@ const TITLE = [["Neutral", "Shunned", "Hated", "Vilified"], ["Accepted", "Mixed"
 // an older save: its net becomes fame or infamy; a quest that wrote s.rep straight (Level 31, Level 70 routes) moves fame or infamy to match it
 const seed = (s, g) => {
   const r = s?.rep?.[g] ?? 0; let f = s?.fame?.[g] ?? Math.max(0, r), i = s?.infamy?.[g] ?? Math.max(0, -r);
-  const gap = r - (f - i); if (Math.abs(gap) > 0.5) { if (gap > 0) f = Math.min(100, f + gap); else i = Math.min(100, i - gap) }
+  const gap = s?.rep?.[g] == null ? 0 : r - (f - i); if (Math.abs(gap) > 0.5) { if (gap > 0) f = Math.min(100, f + gap); else i = Math.min(100, i - gap) }
   return { f, i };
 };
 // a faction's own uniform lets you pass for one of them at a distance; up close (DISGUISE_NEAR m) they see through it
@@ -42,7 +42,7 @@ const MAP = { meg: "meg", hk: "meg", guard: "meg", camp: "meg", survivor: "survi
 const PREFIX = { bntg: "bntg", meg: "meg", hk: "meg", surv: "survivors", omega: "survivors", l5: "hotel", homely: "hotel", tbd: "survivors", gamma: "meg", l61: "survivors" };
 export function groupOf(it) {
   if (String(it?.id ?? "").split("/").pop().startsWith("hub-amber")) return "amber";
-  const f = it?.state?.faction5 ?? it?.state?.faction4 ?? it?.state?.faction; if (f && MAP[f]) return MAP[f];
+  const f = it?.state?.faction5 ?? it?.state?.faction4 ?? it?.state?.faction; if (f && GROUPS[f]) return f; if (f && MAP[f]) return MAP[f];
   const id = String(it?.id ?? "").split("/").pop(), p = id.split("-")[0];
   return PREFIX[p] ?? "survivors";
 }

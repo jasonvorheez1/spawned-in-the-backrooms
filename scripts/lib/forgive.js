@@ -21,7 +21,7 @@ export function incidentOf(ctx, npc, player) {
 export function disguised(npc, player) {
   const u = UNIFORMS[groupOf(npc)]; if (!u) return false;
   if (!wornTokens(player.state?.look).some((t) => u.includes(t.split(":")[2]))) return false;
-  const a = npc.feetPosition, b = player.feetPosition; if (!a || !b) return true;
+  const a = npc.feetPosition, b = player.feetPosition; if (!a || !b) return false;
   return Math.hypot(a.x - b.x, a.z - b.z) > DISGUISE_NEAR;
 }
 
