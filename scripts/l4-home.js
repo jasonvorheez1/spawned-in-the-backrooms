@@ -1,10 +1,11 @@
 // Level 4's things you press (state.kind): an office's door plate (claim it: it's your home), your office's water cooler
 // (the bottling game: E starts the fill, E again stops it; stop in the band and you keep a bottle), the open floor's
 // fountains, the break room's vending machines, the chained stairwell to Level 5.
+import { notify } from "./lib/notify.js";
 import { heard } from "./lib/hear.js";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const BAND = [82, 96], JUGS = 3, REFILL = 120000; // her pick: a jug back every 2 minutes, three on the shelf
-const say = (who, text, ctx) => { if (who) who.state.notice = { text, at: ctx.now() }; };
+const say = (who, text, ctx) => notify(ctx, who, text); // scripts/lib/notify.js, shared
 const snd = (ctx, clip, v = 0.6) => heard(ctx, { clip: G(clip), position: { ...ctx.self.worldFeetPosition, y: 1 }, volume: v, maxDistance: 12 });
 function jugs(ctx) { const s = ctx.self.state, now = ctx.now(); const add = Math.floor((now - (s.jugAt ?? 0)) / REFILL);
   if ((s.jugs ?? JUGS) < JUGS && add > 0) { s.jugs = Math.min(JUGS, (s.jugs ?? JUGS) + add); s.jugAt = now; } return s.jugs ?? JUGS; }

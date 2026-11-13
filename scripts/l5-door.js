@@ -1,9 +1,10 @@
 // Level 5's things you press that aren't people (state.kind): a radio (E turns the polonaise off and on, for the whole room),
 // a sealed door (the lore's other levels: it tells you what's behind it and why it won't open).
+import { notify } from "./lib/notify.js";
 import { heard } from "./lib/hear.js";
 import { animate } from "builtin/tween";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
-const say = (who, text, ctx) => { if (who) who.state.notice = { text, at: ctx.now() }; };
+const say = (who, text, ctx) => notify(ctx, who, text); // scripts/lib/notify.js, shared
 export const ears = {
   press: (ctx, { by }) => {
     const s = ctx.self.state, who = ctx.getObject(by);

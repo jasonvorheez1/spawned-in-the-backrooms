@@ -1,3 +1,4 @@
+import { notify } from "./lib/notify.js";
 import { voiceKey } from "./lib/voices.js";
 // Level 8 "Cave Systems": what you press and walk into (places/level8/sim.js). state.kind:
 //   pool (almond water, drink), soup and fire (the camp), kazoo (a stone kazoo in a niche on Hyperspace Lane), altar (acoustic stone pipes on Hyperspace Lane),
@@ -8,7 +9,7 @@ import { vo } from "./lib/voices.js";
 import { setCarlaStep, setKarstStep, finishQuest8 } from "./lib/level8-quests.js";
 import { addRep, repOf } from "./lib/rep.js";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
-const say = (who, text, ctx) => { if (who?.state) who.state.notice = { text, at: ctx.now() }; };
+const say = (who, text, ctx) => notify(ctx, who, text); // scripts/lib/notify.js, shared
 const CARLA = [
   "Hi! You're new. Soup's three Backbucks.",
   "Mum says the blue lights down the Road are friendly. Not the red ones.",
