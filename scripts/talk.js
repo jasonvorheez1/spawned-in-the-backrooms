@@ -84,8 +84,8 @@ function react(ctx, ses, o, kind, now) {
   if (now - (ses.reactAny ?? -Infinity) < 6000 || !canReact(ctx, o)) return false
   ra[key] = now; ses.reactAny = now
   const me = ctx.self, name = addressFor(o, me, o.state.mem?.[keyOf(me)])
-  const line = barkOf(o, kind, () => ctx.random(), me.place) ?? lineFor(o, kind, name)
-  say(ctx, o, line.replaceAll('{u}', name), kind === 'drawn' ? 'scared' : kind === 'hurt' ? 'calm' : 'annoyed')
+  const line = kind === 'close' ? 'Excuse me.' : (barkOf(o, kind, () => ctx.random(), me.place) ?? lineFor(o, kind, name))
+  say(ctx, o, line.replaceAll('{u}', name), kind === 'drawn' ? 'scared' : 'calm')
   return true
 }
 
@@ -114,14 +114,15 @@ function aimReaction(ctx, ses, s, now) {
   o.state.socialReaction = { kind: 'drawn', by: ctx.self.id, at: now }
 }
 
+const canBump = (npc) => npc?.tags?.includes('npc') || npc?.tags?.includes('l61fc')
 export function onCollide(ctx, other, contact) {
-  if (!other?.tags?.includes('npc') || Math.abs(contact?.normal?.y ?? 0) > 0.65) return
+  if (!canBump(other) || Math.abs(contact?.normal?.y ?? 0) > 0.65) return
   const me = ctx.self, ses = me.session, dir = ses['player.js']?.dir, p = me.feetPosition, q = other.feetPosition
   if (!dir || !q || dir.x * (q.x - p.x) + dir.z * (q.z - p.z) <= 0.05) return
   bump(ctx, ses, ctx.getObject(other.id), ctx.now())
 }
 function bump(ctx, ses, o, now) {
-  if (!o?.tags?.includes('npc') || !react(ctx, ses, o, 'close', now)) return
+  if (!canBump(o) || !react(ctx, ses, o, 'close', now)) return
   o.state.socialReaction = { kind: 'close', by: ctx.self.id, at: now }
 }
 

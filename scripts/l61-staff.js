@@ -171,7 +171,7 @@ export const ears = {
 
     if (me.tags?.includes("l61fc")) {
       if (s.dead) return;
-      if (s.hostile || s.mood === "angry" || s.mood === "defend") { tell("(it stares at you. no plate.)", "#ff9a7a"); return; }
+      if (hostileReason(ctx, ctx.self, who)) { tell("(it stares at you. no plate.)", "#ff9a7a"); return; }
       s.met = { ...(s.met ?? {}), [uid]: (s.met?.[uid] ?? 0) + 1 };
       const n = nickFor(s, who);
       if (n) tell(pickOf(ctx, FC.greetNick).replace("{n}", n));
@@ -221,7 +221,7 @@ function stepTo(ctx, me, m, goal, speed, dt) {
   if (!w.hold) me.rotation = { yaw: turn(me.rotation?.yaw ?? 0, yawOf(w.ux, w.uz), 0.25) };
 }
 const faceTo = (me, at, k = 0.25) => { const p = me.feetPosition; me.rotation = { yaw: turn(me.rotation?.yaw ?? 0, yawOf(at.x - p.x, at.z - p.z), k) }; };
-// returns true when the mind holds the body this tick (dead, hostile, angry, defending, copying a crouch, turning to someone)
+// returns true when the mind holds the body this tick (dead, hostile, copying a crouch, turning to someone)
 function social(ctx, me, s, m, now, dt) {
   const p = me.feetPosition;
   if (s.hp == null) s.hp = FC.hp;
@@ -267,11 +267,9 @@ function social(ctx, me, s, m, now, dt) {
     }
     return true;
   }
-  if (s.mood === "angry") {
-    const q = ctx.place.players.find((o) => o.id === s.stareAt);
-    if (q && now < (m.stareEnd ?? 0)) { applyRest(me, dt); faceTo(me, q.feetPosition, 0.3); return true; }
-    if (now > (s.calmAt ?? 0)) { s.mood = null; s.stareAt = null; s.temper = {}; } // a single bump is forgiven in time
-    else if (now >= (m.stareEnd ?? 0) && m.stareEnd) { m.stareEnd = 0; } // back to work, still remembering
+  // Clear the old bump mood in rooms that already had one.
+  if (s.mood === "angry" || s.mood === "defend") {
+    s.mood = null; s.stareAt = null; s.defends = null; s.temper = null;
   }
   // the scan: a few times a second, only with a player in reach.notice
   if (now >= (m.socAt ?? 0)) {
@@ -280,17 +278,7 @@ function social(ctx, me, s, m, now, dt) {
     for (const o of ctx.place.players) { const op = o.feetPosition; if (!op) continue; const e = (op.x - p.x) ** 2 + (op.z - p.z) ** 2; if (e < d2) { d2 = e; q = o; } }
     m.near = q ? q.id : null;
     if (q) {
-      const qp = q.feetPosition, d = Math.sqrt(d2), uid = uidOf(q), L = m.lastQ;
-      const speed = L && L.id === q.id ? Math.hypot(qp.x - L.x, qp.z - L.z) / Math.max(0.05, (now - L.at) / 1000) : 0;
-      m.lastQ = { id: q.id, x: qp.x, z: qp.z, at: now };
-      const working = !!(m.gestEnd || m.arrived || s.job === "post" || s.deliver);
-      if (d < FC.reach.shove && speed > FC.shoveSpeed && working && now > (m.shoveAt ?? 0)) { // barged straight through it while it worked
-        m.shoveAt = now + FC.every.shove * 1000;
-        ctx.emit("squash", { target: me.id, axis: "y", intensity: 0.2, duration: 0.2 });
-        s.mood = "angry"; s.stareAt = q.id; s.calmAt = now + 5000; m.stareEnd = now + 1500;
-        say(ctx, me, pickOf(ctx, FC.warn), "#ffb35a", q.id);
-        return true;
-      }
+      const d = Math.sqrt(d2), uid = uidOf(q);
       if (d < FC.reach.mimic) { // mimicry: it copies what you just did, now and then
         const crouch = !!q.state?.crouch;
         if (crouch && !m.crouch && now > (m.mimicAt ?? 0) && ctx.random() < FC.mimicChance) {
@@ -305,7 +293,7 @@ function social(ctx, me, s, m, now, dt) {
         }
         m.emoSeen = emo;
       } else if (m.crouch) { m.crouch = 0; me.anim.gest = null; m.gestEnd = 0; }
-      const idle = !s.deliver && !m.crouch && !(m.faceUntil && now < m.faceUntil) && s.mood !== "angry"; // a chore gesture gives way to a wave
+      const idle = !s.deliver && !m.crouch && !(m.faceUntil && now < m.faceUntil); // a chore gesture gives way to a wave
       if (d < FC.reach.wave && idle && now - ((m.waved ??= {})[uid] ?? -1e9) > FC.every.wave * 1000) { // waving at whoever passes
         m.waved[uid] = now; m.faceUntil = now + 3600; m.faceId = q.id;
         s.lastWave = { uid, at: now };
@@ -336,7 +324,7 @@ export function update(ctx, dt) {
   const p = me.feetPosition, v = me.velocity ?? { x: 0, z: 0 };
 
   // Tiered distance sleeping for staff when no active orders/deliveries
-  if (!s.deliver && !s.orderAt && !(m.react && now < m.react) && !s.hostile && s.mood !== "defend" && !(s.talkAt && now - s.talkAt < 8000)) {
+  if (!s.deliver && !s.orderAt && !(m.react && now < m.react) && !s.hostile && !(s.talkAt && now - s.talkAt < 8000)) {
     let nearDistSq = Infinity;
     for (const q of ctx.place.players) {
       const qp = q.feetPosition;

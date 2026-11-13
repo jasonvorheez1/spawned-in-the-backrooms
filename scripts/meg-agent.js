@@ -462,8 +462,6 @@ export function update(ctx, dt) {
       m.gestEnd = now + 1500;
     } else if (reaction.kind === "close") {
       m.bumpAt = reaction.at;
-      me.anim.hit = { clip: "cdn/clip-hit-react.glb", loop: "once", weight: 0.75, blendIn: 0.05, blendOut: 0.3, timeAt: now };
-      m.hitAt = now;
     }
   }
   const talkLen = s.line && typeof s.line === "object" && s.line.at >= (s.talkAt ?? 0) - 50 ? Math.max(2600, (s.line.d ?? 0) + 300) : 2600; // the gesture lasts the line, not a fixed beat

@@ -1,21 +1,16 @@
 # Level 6.1 Facelings (Entity 9, "The 11 Effect"): friendly staff who mimic, wave, learn your name, and close ranks when one is hurt.
 # scripts/l61-staff.js reads every number here.
 hp: 60
-every: { social: 0.4, wave: 45, mimic: 7, shove: 3 }   # seconds
-reach: { notice: 12, wave: 6, mimic: 4, shove: 0.6, defend: 12 }   # metres
+every: { social: 0.4, wave: 45, mimic: 7 }   # seconds
+reach: { notice: 12, wave: 6, mimic: 4 }   # metres
 mimicChance: 0.55        # per thing the player does within reach
 crouchHold: 6            # seconds a faceling stays crouched copying you
-shoveSpeed: 2.6          # m/s a player has to be moving to shove through a working faceling
 nickAfter: 3             # visits before it greets you by a name it picked
 temper:
-  stare: 5               # seconds an angry faceling stops and stares
-  calm: 120              # seconds of peace before one forgets a single disturbance
-  forget: 90             # seconds a hostile chases with no fresh hit before it gives up
   run: 3.4
   reach: 1.4
   hit: 6
   swing: 1.3
-warn: ["Hey. Don't do that.", "Please. We are working.", "Watch it.", "Careful. We remember."]
 hostile: ["NOW YOU'VE DONE IT.", "OUT.", "YOU DON'T TOUCH US."]
 defend: ["LEAVE THEM ALONE.", "NOT IN OUR KITCHEN."]
 greetNick: ["Hey, {n}!", "{n}! The usual?", "Look who's back. {n}.", "Hi {n}. Hot ones just out."]
