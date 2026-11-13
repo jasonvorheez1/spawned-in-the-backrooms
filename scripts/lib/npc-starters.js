@@ -4,6 +4,8 @@ import { remodelChoices } from './remodel-quest.js'
 import { l13Choices } from './level13-quest.js'
 import { l31Choices } from './level31-quest.js'
 import { l70Choices } from './level70-quest.js'
+import { l10Choices } from './level10-quests.js'
+import { l11Choices } from './level11-quests.js'
 
 const short = (it) => String(it?.id ?? '').split('/').pop()
 
@@ -18,45 +20,8 @@ export function questChoices(ctx, it, s) {
   if (!it) return []
   const id = short(it)
   const qChoices = [...remodelChoices(id, s), ...l13Choices(id, s), ...l31Choices(id, s), ...l70Choices(id, s)]
-  if (id === 'l11-walker-1') {
-    if (!s?.sedcoQ && repOf(s, "survivors") > -35) {
-      qChoices.push({ text: "That's a lot of parcels. Need a hand with a Sedco manifest?", tag: "Quest Start" })
-    } else if (s?.sedcoQ === 5) {
-      qChoices.push({ text: "Got it. The master security drive, out of the vault.", tag: "Quest Turn-In" })
-    }
-  } else if (id === 'l11-meg-agent-vance') {
-    if (s?.sedcoQ === 5) {
-      qChoices.push({ text: "I pulled the master security drive out of Sedco's vault. Want it?", tag: "Quest Turn-In" })
-    }
-  } else if (id === 'l11-trader-kael') {
-    if (!s?.craneQ && repOf(s, "bntg") > -35) {
-      qChoices.push({ text: "Docks are dead quiet. Something wrong with the canal?", tag: "Quest Start" })
-    } else if (s?.craneQ === 4) {
-      qChoices.push({ text: "Valve's free. I cleared the canal lock myself.", tag: "Quest Turn-In" })
-    }
-  } else if (id === 'l11-walker-3') {
-    if (!s?.maintQ && repOf(s, "survivors") > -35) {
-      qChoices.push({ text: "Rough night on the maintenance rounds?", tag: "Quest Start" })
-    } else if (s?.maintQ === 4) {
-      qChoices.push({ text: "Pressure's bled, and apartment 11-B has hot water again.", tag: "Quest Turn-In" })
-    }
-  } else if (id === 'l10-meg-cooper') {
-    if (!s?.wheatQ && repOf(s, "meg") > -35) {
-      qChoices.push({ text: "Need another pair of hands for the harvest?", tag: "Quest Start" })
-    } else if ((s?.wheatQ >= 1 && s?.wheatQ < 99) && (s?.bread ?? 0) >= 1) {
-      qChoices.push({ text: "Here. A fresh loaf, straight out of the hearth.", tag: "Quest Turn-In" })
-    }
-    if (!s?.cellarQ && repOf(s, "meg") > -35) {
-      qChoices.push({ text: "Something's rattling in the storm cellar. Want me to look?", tag: "Quest Start" })
-    } else if (s?.cellarQ === 2) {
-      qChoices.push({ text: "Storm cellar's fine. Just the draft, and your preserves.", tag: "Quest Turn-In" })
-    }
-  } else if (id === 'l10-meg-maeve') {
-    if (!s?.watcherQ && repOf(s, "meg") > -35) {
-      qChoices.push({ text: "I'll go look at that scarecrow for you.", tag: "Quest Start" })
-    } else if (s?.watcherQ === 3) {
-      qChoices.push({ text: "Found document 24 sewn into its coat.", tag: "Quest Turn-In" })
-    }
+  if (id.startsWith('l10-') || id.startsWith('l11-')) {
+    qChoices.push(...l10Choices(id, s), ...l11Choices(id, s)) // Levels 10 and 11, written in scripts/lib/level10-quests.js and level11-quests.js
   } else if (id === 'l8-carla-kid') {
     if (!s?.carlaQ) {
       qChoices.push({ text: "You look fed up, Carla. What would cheer you up?", tag: "Quest Start" })

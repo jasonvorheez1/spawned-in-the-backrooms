@@ -76,6 +76,7 @@ export function remodelChoices(id, s) {
   if (id === "l11-realty-agent") {
     if (!q) out.push({ text: "Got any work for me?", tag: "Quest Start" });
     if (q === 3) out.push({ text: "I've got your three fresheners.", tag: "Quest Turn-In" });
+    if (q === 99) out.push({ text: "How are the listings holding up?", tag: "Talk" });
   } else if (id === "l02-capn") {
     const cans = s?.l02paint?.length ?? 0;
     if (!q && !s?.capnJob && !g.capn) out.push({ text: "What happened down here?" });
@@ -86,6 +87,7 @@ export function remodelChoices(id, s) {
       if ((s.l02paint?.length ?? 0) >= 3) out.push({ text: "I got your paint cans out of the shifting rooms.", tag: "Quest" });
     }
     if (q === 3) out.push({ text: "Take them back. Do the job right this time.", tag: "Quest Turn-In" });
+    if (q === 99) out.push({ text: "How's the remodel coming along?", tag: "Talk" });
   }
   return out;
 }
@@ -100,10 +102,13 @@ export function handleDialogueQuest02(ctx, p, npc, text) {
     }
     if (t.includes("three fresheners") && q === 3) {
       if ((s.fresh ?? 0) < 3) return { reply: `I count ${s.fresh ?? 0}. The deal was three.`, mood: "annoyed" };
-      s.fresh -= 3;
+      s.fresh -= 3; s.remodTo = "mara";
       finish(ctx, p, { xp: 220, cents: 30000, rep: [["bntg", 15]], text: "Quest Completed: Fresh Paint · Sold to Mara (+220 XP, +$300.00)" });
       return { reply: "Oh, they're cold. Lovely. One in every listing and the walls stay where I left them. Three hundred, as promised.", mood: "happy" };
     }
+    if (t.includes("listings holding up") && q === 99) return s.remodTo === "capn"
+      ? { reply: "You gave them back. To the people who botched Level 0. I had buyers lined up, client. I'll forgive you when the walls stop moving. So, never.", mood: "annoyed" }
+      : { reply: "Three listings, three sales. Walls where I left them, doors where the brochure says. One buyer cried. Happy tears. I think. I don't ask.", mood: "happy" };
     return null;
   }
   if (id === "l02-capn") {
@@ -118,9 +123,12 @@ export function handleDialogueQuest02(ctx, p, npc, text) {
       return { reply: "I cannot. But the crew left three cans of Fresh Paint in the back rooms, and the rooms keep moving. Bring them out and I will owe you one.", mood: "calm" };
     }
     if (t.includes("paint cans out") && (s.l02paint?.length ?? 0) >= 3 && !g.capn) return give("You got all three out? The rooms let you? Here. You earned it more than we did.");
+    if (t.includes("remodel coming along") && q === 99) return s.remodTo === "capn"
+      ? { reply: "Better! The rooms back there have stopped moving. Mostly. Major Took counted the fresheners and got the right number for the first time in his life. He smiled. It was horrible. Thank you.", mood: "happy" }
+      : { reply: "Major Took counted the fresheners. He got a smaller number than last week. I said they fell through the floor. He wrote that down. I think he believed me. I don't think I'll be promoted.", mood: "calm" };
     if (t.includes("take them back") && q === 3) {
       if ((s.fresh ?? 0) < 3) return { reply: "That is not all of them. I can count to three. Penelope taught me.", mood: "annoyed" };
-      s.fresh -= 2;
+      s.fresh -= 2; s.remodTo = "capn";
       finish(ctx, p, { xp: 220, cents: 5000, rep: [["karma", 5]], text: "Quest Completed: Fresh Paint · Returned to Cap'n, kept one freshener (+220 XP, +$50.00)" });
       return { reply: "You brought them back? Nobody brings anything back. Keep one. Put it somewhere you like. And take this, it's from the petty cash.", mood: "happy" };
     }
