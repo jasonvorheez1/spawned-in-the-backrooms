@@ -1,0 +1,31 @@
+# spawn-scene v2 yaml x0z-1
+l10-fam-barrow:
+  castShadow: true
+  feetPosition: {x: -56, y: {terrain: 0.01}, z: -100.6}
+  id: l10-fam-barrow
+  layout: {box: {max: {x: 0.8, y: 0.85, z: 0.45}, min: {x: -0.8, y: 0, z: -0.45}}}
+  model: {id: /cdn/value.72c3387ca214e4fa6edfe4fb2605b6bf8f02c22f5da2bf546cdbbc167eb77ca8.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 160}
+  state: {kind: family-prop, name: Barrow of salvaged planks, verb: Search the barrow}
+  tags: [l10-family]
+l10-fam-beds:
+  castShadow: true
+  feetPosition: {x: -53.8, y: {terrain: 0.01}, z: -104.2}
+  id: l10-fam-beds
+  layout: {box: {max: {x: 1, y: 0.55, z: 0.75}, min: {x: -1, y: 0, z: -0.75}}}
+  model: {id: /cdn/value.9857d12fb35a7c58b0ae1e2699770ac30cd38728ac32c6d0dc4fad2df28320e7.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 90}
+  state: {kind: family-prop, name: Bedrolls and a dog bowl, verb: Look at the bedrolls}
+  tags: [l10-family]
+l10-fam-pot:
+  castShadow: true
+  feetPosition: {x: -55.6, y: {terrain: 0.01}, z: -108.2}
+  id: l10-fam-pot
+  layout: {box: {max: {x: 0.42, y: 0.85, z: 0.42}, min: {x: -0.42, y: 0, z: -0.42}}}
+  model: {id: /cdn/value.339b38141be827875efe734cae68c9300fb75cab6f741d60843a1662d9dd0008.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 200}
+  state: {kind: family-prop, name: Pot of burnt porridge, verb: Look in the pot}
+  tags: [l10-family]

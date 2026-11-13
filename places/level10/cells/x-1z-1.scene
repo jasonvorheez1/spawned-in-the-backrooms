@@ -1,0 +1,11 @@
+# spawn-scene v2 yaml x-1z-1
+l10-fam-step:
+  castShadow: true
+  feetPosition: {x: -64.3, y: {terrain: 0.01}, z: -105}
+  id: l10-fam-step
+  layout: {box: {max: {x: 0.7, y: 1.3, z: 0.09}, min: {x: -0.7, y: 0, z: -0.09}}}
+  model: {id: /cdn/value.a97a6c8edbdb8ff2364e17f3ed377a0c688979bdafa117c6a6a19465752647fb.glb}
+  physics: {body: static, collider: box}
+  rotation: {pitch: -90, yaw: 90}
+  state: {kind: family-prop, name: New wooden doorstep, verb: Look at the doorstep}
+  tags: [l10-family]
