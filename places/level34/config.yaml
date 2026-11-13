@@ -1,0 +1,22 @@
+# Level 34 "Sewer System" (Shelly, Nov 13: "a reliable way to get to level 9 without needing the Hub"; backrooms-wiki level-34).
+# Four-foot brick-over-stone tunnels, no light of its own, foul water, Smilers. Up the shaft under Level 9's storm drain, up the shaft
+# under Level 11's grate, or down through the junction pool to Level 7. Layout and exits: places/level34/sim.js.
+mode: 3d
+terrain:
+  kind: "off"
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: 0, y: 0.1, z: 0.4 }
+defaultSpawnRotation: { yaw: 0 }
+worldBounds: { bottom: -20 }
+atmosphere:
+  look: { script: scripts/look-photo.js }
+  clouds: { enabled: false }
+  fog: { kind: linear, near: 3, far: 26, color: oklch(0.07 0.012 95) }
+  moon: { enabled: false, intensity: 0 }
+  sky: { kind: color, color: oklch(0.02 0.005 95) }
+  stars: { enabled: false }
+  timeOfDay: 0
+  wind: { direction: 0, speed: 0 }
+  ambient: { light: { color: oklch(0.55 0.04 95), intensity: 0.07 } }
+  hemisphere: { skyColor: oklch(0.3 0.03 95), groundColor: oklch(0.16 0.03 110), intensity: 0.08 }
+acoustics: { reverb: 0.9 }
