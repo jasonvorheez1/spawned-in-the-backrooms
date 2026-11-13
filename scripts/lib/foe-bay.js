@@ -16,7 +16,7 @@ import L11 from "./data/l11-depths.yml";
 import L13 from "./data/level13.yml";
 import C3 from "./data/creatures3.yml";
 
-export const BAY_V = 2; // 2: a pad for every enemy (Shelly: "im pretty sure theres more enemies than that")
+export const BAY_V = 3; // 3: the Dark Smiler runs its own revamped hunt; // 2: a pad for every enemy (Shelly: "im pretty sure theres more enemies than that")
 const X0 = 24, X1 = 50, Z0 = -26, Z1 = -2, H = 6, DOOR = [-14, -10.5]; // the annex box and the doorway through the hall's east wall
 const CAP = 4; // live foes per kind (my pick)
 const PEN = { x: 46, z: -14 }; // where they come out
@@ -40,7 +40,6 @@ const CLUMP_GLB = "/cdn/value.aeb91c70e11f57592fd7fe510b2e8bfd86065edacbb87155c0
 // stand-ins run by scripts/bay-brain.js: their home level's model and numbers, a simple hunt
 const BRAIN = {
   moths: { hp: C3.moths.hp, brain: { fly: 1, speed: 2.6, reach: 1.2, dmg: C3.moths.bite, cd: 1.1, bite: "dry-moth-wings-fluttering-burst" } },
-  smiler6: { hp: 120, brain: { speed: 3.2, reach: 1.6, dmg: 22, cd: 1.4 } },
   rat5: { hp: E5.rat.hp, brain: { speed: 4.2, reach: 0.9, dmg: Array.isArray(E5.rat.bite) ? E5.rat.bite[1] : (E5.rat.bite ?? 3), cd: 0.7, rig: 0 } },
   clump: { hp: L11.kinds.clump.hp, brain: { speed: L11.kinds.clump.speed, reach: L11.kinds.clump.reach, dmg: L11.kinds.clump.dmg, cd: L11.kinds.clump.cd } },
   tenant: { hp: L13.foes.tenant.hp, brain: { rig: 1, speed: 1.8, reach: 1.4, dmg: 10, cd: 1.2 } },
@@ -82,6 +81,7 @@ export function foeBayBuild(ctx, pad, sign) {
   // the packs that run them: the bay's own managers, same scripts as the levels
   ctx.spawn("tl-bay-hounds", { feetPosition: { x: PEN.x, y: 0, z: PEN.z }, behavior: "scripts/hounds.js" });
   ctx.spawn("tl-bay-party", { feetPosition: { x: PEN.x, y: 0, z: PEN.z }, behavior: "scripts/partygoers.js" });
+  ctx.spawn("tl-bay-smiler6", { feetPosition: { x: PEN.x, y: 0, z: PEN.z }, behavior: "scripts/l6-smiler.js" });
   ctx.spawn("tl-bay-brain", { feetPosition: { x: PEN.x, y: 0, z: PEN.z }, behavior: "scripts/bay-brain.js" });
   ctx.spawn("tl-bay-l70", { tags: ["l70-mgr"], feetPosition: { x: PEN.x, y: 0, z: PEN.z }, behavior: "scripts/l70-foes.js" });
   ctx.spawn("tl-bay-growl", { feetPosition: { x: PEN.x, y: 1, z: PEN.z }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-low-distant-creature-growl-loop.mp3", gain: 0.08, loop: true, maxDistance: 18 } });
@@ -92,6 +92,7 @@ function spawnFoe(ctx, kind, n) {
   if (kind === "smiler") return ctx.spawn({ tags: ["smiler", "tl-bay-foe"], feetPosition: p, rotation: rot, model: SMILER_MODEL, scale: SMILER_SCALE, physics: { body: "character" }, state: { hp: L.smilerHp } });
   if (kind === "lurker") return ctx.spawn({ tags: ["lurker", "tl-bay-foe"], feetPosition: p, rotation: rot, model: LURKER_MODEL, scale: LURKER_SCALE, physics: { body: "character" }, state: { hp: L.lurkerHp, kind: "lurker" } });
   if (kind === "hound") return ctx.spawn({ tags: ["hound", "tl-bay-foe"], feetPosition: p, rotation: rot, physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/hound-geo.js" }, state: npcState(ctx, "hound", L1.houndHp, { xp: L1.xpHound }) });
+  if (kind === "smiler6") return ctx.spawn({ tags: ["smiler", "l6-smiler", "hostile", "bay-smiler6", "tl-bay-foe"], feetPosition: p, rotation: rot, model: SMILER6_MODEL, scale: SMILER6_SCALE, physics: { body: "character" }, state: { hp: 160, maxHp: 160, name: "Dark Smiler", arena: 1, home: { x: PEN.x, y: 0, z: PEN.z } } });
   if (kind === "partygoer") return ctx.spawn({ tags: ["partygoer", "l8-hostile", "tl-bay-foe"], feetPosition: p, rotation: rot, model: { forward: "+x", id: PARTY_GLB }, layout: { box: { min: { x: -0.55, y: 0, z: -0.55 }, max: { x: 0.55, y: 1.45, z: 0.55 } } }, physics: { body: "character", collider: "capsule" }, state: { home: { x: p.x, y: 0, z: p.z }, hp: 220 } });
   if (kind === "balloon") return ctx.spawn({ tags: ["l26-balloon", "l8-hostile", "tl-bay-foe"], feetPosition: { ...p, x: p.x - 4 }, model: { id: BALLOON_GLB }, layout: { box: { min: { x: -0.28, y: 0.15, z: -0.28 }, max: { x: 0.28, y: 1.85, z: 0.28 } } }, physics: { body: "kinematic", collider: "sphere" }, state: { home: { x: p.x - 4, y: 0, z: p.z }, hp: 10 } });
   if (BRAIN[kind]) {
