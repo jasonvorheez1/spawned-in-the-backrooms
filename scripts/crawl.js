@@ -7,7 +7,17 @@ import { raycast } from 'builtin/physics'
 const HOLD = 0.35          // s of held C before a crouch becomes a crawl
 const CAP_H = 0.85, CAP_R = 0.32, STAND_H = 1.9, STAND_R = 0.35   // capsules: crawling, and the body's own (read off the player: 1.9 x 0.35)
 const NEED = 1.95          // m of clear height over the feet to stand up
-const CLIP = 'cdn/clip-rig-crawling-5112ae15-loop.glb'
+// hands and knees, keyed on the body's own bones (the library crawl clip names bones this rig lacks, so it never played). Savi's pick: 1.1 s a cycle
+const L = (a, b) => [a, b, a]                                  // a there-and-back swing
+const CLIP = { duration: 1.1, tracks: {
+  Hips: { pitch: [-62, -62, -62], roll: [3, -3, 3] },
+  Spine: { pitch: [8, 10, 8] }, Spine1: { pitch: [6, 6, 6] }, Spine2: { pitch: [4, 4, 4] },
+  Neck: { pitch: [-30, -30, -30] }, Head: { pitch: [-22, -18, -22] },
+  LeftUpLeg: { pitch: L(-30, -62) }, RightUpLeg: { pitch: L(-62, -30) },
+  LeftLeg: { pitch: [95, 85, 95] }, RightLeg: { pitch: [85, 95, 85] },
+  LeftArm: { pitch: L(-50, -80), roll: [-10, -10, -10] }, RightArm: { pitch: L(-80, -50), roll: [10, 10, 10] },
+  LeftForeArm: { pitch: [-10, -20, -10] }, RightForeArm: { pitch: [-20, -10, -20] },
+} }
 const SCUFF = '/cdn/moodboard-realistic-gritty/sfx-crawling-hands-knees-on-wet-stone-scuff.mp3'
 
 export function onInput(ctx, input) {
