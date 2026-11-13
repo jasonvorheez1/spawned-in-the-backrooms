@@ -1,7 +1,7 @@
 # spawn-scene v2 yaml objects
 bdm-obj:
   overrides:
-    state: {collections: [{count: 49, fields: [id, model, ammo, name, damage, cooldown, reach, weight, two, ranged], importedAt: 0, name: weapons, source: scripts/lib/data/registry/weapons.json}, {count: 8, fields: [id, source, minLevel, weight, name, hp, speed], importedAt: 0, name: enemies, source: scripts/lib/data/registry/enemies.json}, {count: 79, fields: [id, source, name, group, weight], importedAt: 0, name: items, source: scripts/lib/data/registry/items.json}, {count: 10, fields: [id, name, price, model, forward, size, info], importedAt: 0, name: furniture, source: scripts/lib/data/registry/furniture.json}, {count: 1816, fields: [id, model, file, note, uses], importedAt: 0, name: meshes, source: scripts/lib/data/registry/meshes.json}]}
+    state: {collections: [{count: 49, fields: [id, model, ammo, name, damage, cooldown, reach, weight, two, ranged], importedAt: 0, name: weapons, source: "game database: assets table, kind weapons"}, {count: 8, fields: [id, source, minLevel, weight, name, hp, speed], importedAt: 0, name: enemies, source: "game database: assets table, kind enemies"}, {count: 79, fields: [id, source, name, group, weight], importedAt: 0, name: items, source: "game database: assets table, kind items"}, {count: 10, fields: [id, name, price, model, forward, size, info], importedAt: 0, name: furniture, source: "game database: assets table, kind furniture"}, {count: 1816, fields: [id, model, file, note, uses], importedAt: 0, name: meshes, source: "game database: assets table, kind meshes"}]}
   template: mods/bulk-data-manager/templates/bdm-obj.js#bdm_obj
 favi-brain:
   template: mods/favi/templates/brain.js#brain
