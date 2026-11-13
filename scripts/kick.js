@@ -8,6 +8,7 @@ import { HUMAN, humanBody } from './lib/critter-model.js'
 import { attrsOf } from './lib/stats.js'
 import { foeStats } from './lib/knock.js'
 import { kickLoose, stepFlights } from './lib/loose.js'
+import { damageEntity, B as BRK } from './lib/breakables.js'
 // kicking a foe (Shelly: physics, ragdoll by strength/agility). Savi's picks: power = HAR + 0.6 AGI vs the foe's heft;
 // under 0.8x heft barely moves it, up to 1.4x staggers, past that knocks it down for ~1.1 s, then it gets up
 const HEFT = { partygoer: 6, hound: 4, smiler: 10, lurker: 8, stealer: 7, l8spider: 5, npc: 6 }
@@ -191,6 +192,13 @@ function kickAny(ctx, s, f, p) {
   const wall = raycast(ctx, from, { x: f.x, y: 0, z: f.z }, { distance: dist + half, physicsOnly: true, ignoreEntities: [best.id, ctx.self.id] })
   if (wall) dist = Math.max(0, wall.distance - half - 0.05)
   const hitAt = { x: from.x, y: from.y + 0.3, z: from.z }
+  // Shelly Nov 13: "i should be able to kick stuff i can also break". A boot is blunt: 8 + 2.5 x HAR before the material's
+  // blunt multiplier (Savi's pick): HAR 5 cracks a wooden crate in about 4 kicks, sheet metal in about 15
+  if (best.tags?.includes('breakable') && !best.tags?.includes('npc') && !bdead) {
+    const mul = BRK.materials?.[best.state?.mat ?? 'wood']?.mul?.blunt ?? 1
+    damageEntity(ctx, best, Math.round((8 + at.h * 2.5) * mul), hitAt, { x: -f.x, y: 0, z: -f.z }, 'kick')
+    if (best.state?.broke) { ctx.emit('cameraPunch', { direction: { x: f.x, y: 0, z: f.z }, intensity: 0.3 }, { audience: { player: ctx.self.id } }); return true }
+  }
   ctx.emit('squash', { target: best.id, axis: 'z', intensity: 0.15, duration: 0.18 })
   ctx.emit('cameraPunch', { direction: { x: f.x, y: 0, z: f.z }, intensity: 0.22 }, { audience: { player: ctx.self.id } })
   ctx.emit('noise', { position: hitAt, radius: 10, kind: 'kick' }, { audience: { nearby: hitAt, radius: 10 } })
