@@ -517,6 +517,7 @@ export function update(ctx, dt) {
   if (listener) { stop(me, dt); face(me, listener.feetPosition.x - me.feetPosition.x, listener.feetPosition.z - me.feetPosition.z, dt); s.talkAt = Math.max(s.talkAt ?? 0, now - 2000); return; }
   // a companion a player talked into tagging along (scripts/talk.js): their leader is home, so it walks after them and fights what comes at them
   let lead = s.follow ? ctx.place.players.find((p) => p.id === s.follow) : null;
+  if (s.follow && lead && !(lead.state?.crew ?? []).includes(me.id)) { s.follow = null; lead = null; } // hired on another save: this save never took them on
   if (s.follow) { if (lead) m.lostAt = 0; else m.lostAt ||= now; if ((lead && incidentOf(ctx, me, lead)) || (!lead && now - m.lostAt > 20000)) { s.follow = null; lead = null; } }
   // a day's work (state.rounds: stops with a dwell, a chore clip, a thing to face): the post moves stop to stop
   const waiting = !!(s.follow && s.cmd === "wait" && s.waitAt); if (waiting) lead = null; // told to wait: stays on the spot, still fights what comes at it

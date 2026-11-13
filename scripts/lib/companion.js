@@ -47,7 +47,7 @@ export function recruit(ctx, pl, it) {
 // the setup, without the checks (a person the chat has talked into coming along is adopted the same way)
 export function adopt(pl, it) {
   const s = it.state, perk = perkOf(it);
-  s.follow = pl.id; s.cperk = perk; s.loyal ??= 50; s.cmd = "follow"; s.cstance = "free"; s.waitAt = undefined; s.rounds = undefined;
+  s.follow = pl.id; pl.state.crew = [...new Set([...(pl.state.crew ?? []), it.id])]; s.cperk = perk; s.loyal ??= 50; s.cmd = "follow"; s.cstance = "free"; s.waitAt = undefined; s.rounds = undefined;
   if (perk === "tough" && !s.toughed) { s.toughed = true; s.maxHp = Math.round((s.maxHp ?? 100) * 1.6); s.hp = Math.min(s.maxHp, Math.round((s.hp ?? 100) * 1.6)); }
 }
 export function dismiss(ctx, pl, it) {
