@@ -7,6 +7,11 @@ import { canStrike } from "./lib/hunt.js";
 import { heard } from "./lib/hear.js";
 import C from "./lib/data/creatures3.yml";
 import { cellAt, cellCenter, zoneAt } from "./lib/level3.js";
+import { layout as layout9, zoneAt as zoneAt9 } from "./lib/level9.js";
+// Level 9: open suburbs, no maze cells: the swarms stay out of the houses and drift round their home streetlight
+let LAY9 = null, T9 = null; const town9 = (seed) => (LAY9 && LAY9.seed === seed ? LAY9 : (LAY9 = layout9(seed)));
+const blocked = (x, z) => T9 ? zoneAt9(T9, x, z) !== "l9_street" : cellAt(x, z) == null;
+const gammaAt = (x, z) => !T9 && zoneAt(x, z) === "gamma";
 import { stepToward, cellNear } from "./lib/maze3path.js";
 import { npcState, dmgAfterArmor } from "./lib/stats.js";
 import { MOTH_GLB } from "../templates/deathmoths.js";
@@ -61,6 +66,7 @@ function setSwarmClip(ctx, s, m, name, opt = {}) {
 
 export function update(ctx, dt) {
   if (!ctx.place.players.length) { ctx.sleep(2); return; }
+  if (ctx.self.place === "level9") { if (ctx.place.state.l9seed == null) { ctx.sleep(1); return; } T9 = town9(ctx.place.state.l9seed); } else T9 = null;
   const now = ctx.now();
   const mem = (ctx.self.session.m ??= {});
   const blur = (ctx.self.session.blur ??= {});
@@ -74,7 +80,7 @@ export function update(ctx, dt) {
   }
 
   const players = ctx.place.players.filter(
-    (p) => zoneAt(p.feetPosition.x, p.feetPosition.z) !== "gamma" && (p.state?.hp ?? 1) > 0
+    (p) => !gammaAt(p.feetPosition.x, p.feetPosition.z) && (p.state?.hp ?? 1) > 0
   );
 
   if (!mem.mothsAt || now > mem.mothsAt || !mem.allSwarms) {
@@ -248,7 +254,7 @@ export function update(ctx, dt) {
       }
 
       ny = pos.y + (gy - pos.y) * Math.min(1, dt * (m.mode === "dive" ? 8 : 3));
-      if (cellAt(nx, nz) == null) {
+      if (blocked(nx, nz)) {
         nx = pos.x;
         nz = pos.z;
       }
@@ -291,9 +297,9 @@ export function update(ctx, dt) {
         sp = lit ? (M.chase * vm.speed) : (M.speed * vm.speed) * 1.2;
       } else {
         if (!m.wander || now > m.wanderUntil) {
-          const hc = cellAt(home.x, home.z);
-          const c = cellNear(() => ctx.random(), hc.cx, hc.cz, M.roam);
-          const cc = c ? cellCenter(c[0], c[1]) : home;
+          const hc = T9 ? null : cellAt(home.x, home.z);
+          const c = hc ? cellNear(() => ctx.random(), hc.cx, hc.cz, M.roam) : null;
+          const cc = c ? cellCenter(c[0], c[1]) : T9 ? { x: home.x + (ctx.random() - 0.5) * 14, z: home.z + (ctx.random() - 0.5) * 14 } : home;
           m.wander = {
             x: cc.x + (ctx.random() - 0.5) * 1.6,
             z: cc.z + (ctx.random() - 0.5) * 1.6,
@@ -347,7 +353,7 @@ export function update(ctx, dt) {
     }
 
     // Base Gamma boundary check
-    if (zoneAt(nx, nz) === "gamma") {
+    if (gammaAt(nx, nz)) {
       nx = pos.x;
       nz = pos.z;
     }
