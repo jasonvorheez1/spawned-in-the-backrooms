@@ -76,17 +76,6 @@ l70-bank-21:
   scale: 1
   tags: [l70, l70-town]
   visible: true
-l70-bank-22:
-  castShadow: true
-  feetPosition: {x: 6.872003261572172, y: -0.06, z: 19.48971306880412}
-  id: l70-bank-22
-  layout: {box: {max: {y: 0.989065495111754}, min: {y: 0}}}
-  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {pitch: 0, roll: 0, yaw: 7.257957084802911}
-  scale: 1
-  tags: [l70, l70-town]
-  visible: true
 l70-bank-23:
   castShadow: true
   feetPosition: {x: 6.917776867284556, y: -0.06, z: 11.572448845094186}
@@ -1268,13 +1257,227 @@ l70-nhouse-1:
   scale: 1
   tags: [l70, l70-town]
   visible: true
+l70-path-camp:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l70-path-camp
+  material: {color: oklch(0.95 0.01 245), metalness: 0, pbr: true, repeat: [0.45, 0.45], roughness: 0.93, texture: cdn/texture-trampled-packed-snow-path-with-boot-prints-and-slush.png, wrap: repeat}
+  receiveShadow: true
+  spline: {kind: road, points: [[-22, 0, -72], [-36, 0, -73.5], [-50, 0, -75], [-62, 0, -77.5], [-74, 0, -79.5], [-84, 0, -81], [-91.5, 0, -82]], snapToTerrain: true, width: 1.6, yOffset: 0.015}
+l70-path-dock:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l70-path-dock
+  material: {color: oklch(0.95 0.01 245), metalness: 0, pbr: true, repeat: [0.45, 0.45], roughness: 0.93, texture: cdn/texture-trampled-packed-snow-path-with-boot-prints-and-slush.png, wrap: repeat}
+  receiveShadow: true
+  spline: {kind: road, points: [[0, 0, -119], [-1.5, 0, -123], [1, 0, -126.6], [4.4, 0, -126.6]], snapToTerrain: true, width: 2, yOffset: 0.015}
+l70-path-froston:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l70-path-froston
+  material: {color: oklch(0.95 0.01 245), metalness: 0, pbr: true, repeat: [0.45, 0.45], roughness: 0.93, texture: cdn/texture-trampled-packed-snow-path-with-boot-prints-and-slush.png, wrap: repeat}
+  receiveShadow: true
+  spline: {kind: road, points: [[4.6, 0, 18], [14, 0, 18.6], [26, 0, 18.4], [36, 0, 19.6], [44, 0, 21]], snapToTerrain: true, width: 2.2, yOffset: 0.015}
+l70-path-froston-heap0:
+  castShadow: false
+  feetPosition: {x: 22.71127333160825, y: {terrain: -0.06}, z: 21.022617668412323}
+  id: l70-path-froston-heap0
+  layout: {box: {max: {x: 1.0344078986600078, y: 0.39677638937569054, z: 0.6206447391960047}, min: {x: -1.0344078986600078, y: 0, z: -0.6206447391960047}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 172.02807573396575}
+l70-path-froston-heap1:
+  castShadow: false
+  feetPosition: {x: 28.66928499259887, y: {terrain: -0.06}, z: 21.335315019037726}
+  id: l70-path-froston-heap1
+  layout: {box: {max: {x: 1.1958214807770315, y: 0.5858137097842123, z: 0.717492888466219}, min: {x: -1.1958214807770315, y: 0, z: -0.717492888466219}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 181.39366720086156}
+l70-path-froston-heap2:
+  castShadow: false
+  feetPosition: {x: 39.30617966600895, y: {terrain: -0.06}, z: 18.11092234073197}
+  id: l70-path-froston-heap2
+  layout: {box: {max: {x: 1.0610915301186459, y: 0.632673352040664, z: 0.6366549180711875}, min: {x: -1.0610915301186459, y: 0, z: -0.6366549180711875}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 184.3106026181727}
+l70-path-garage:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l70-path-garage
+  material: {color: oklch(0.95 0.01 245), metalness: 0, pbr: true, repeat: [0.45, 0.45], roughness: 0.93, texture: cdn/texture-trampled-packed-snow-path-with-boot-prints-and-slush.png, wrap: repeat}
+  receiveShadow: true
+  spline: {kind: road, points: [[4.6, 0, -22], [12, 0, -22], [23.5, 0, -22]], snapToTerrain: true, width: 3.2, yOffset: 0.015}
+l70-path-garage-heap0:
+  castShadow: false
+  feetPosition: {x: 7.6, y: {terrain: -0.06}, z: -24.599330241745026}
+  id: l70-path-garage-heap0
+  layout: {box: {max: {x: 1.183935176759928, y: 0.4492579020556332, z: 0.7103611060559568}, min: {x: -1.183935176759928, y: 0, z: -0.7103611060559568}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 175.94033087054808}
+l70-path-garage-heap1:
+  castShadow: false
+  feetPosition: {x: 7.6, y: {terrain: -0.06}, z: -19.300457012187902}
+  id: l70-path-garage-heap1
+  layout: {box: {max: {x: 1.27216218424596, y: 0.5649153109243676, z: 0.763297310547576}, min: {x: -1.27216218424596, y: 0, z: -0.763297310547576}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 172.0035471693961}
+l70-path-garage-heap2:
+  castShadow: false
+  feetPosition: {x: 15, y: {terrain: -0.06}, z: -25.01780693033608}
+  id: l70-path-garage-heap2
+  layout: {box: {max: {x: 1.3445911849125247, y: 0.5720224124016344, z: 0.8067547109475148}, min: {x: -1.3445911849125247, y: 0, z: -0.8067547109475148}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 180.49393531995136}
+l70-path-garage-heap3:
+  castShadow: false
+  feetPosition: {x: 15, y: {terrain: -0.06}, z: -19.086602978308967}
+  id: l70-path-garage-heap3
+  layout: {box: {max: {x: 1.5577008214116566, y: 0.48885273285622366, z: 0.9346204928469939}, min: {x: -1.5577008214116566, y: 0, z: -0.9346204928469939}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 186.25358220121117}
+l70-path-garage-heap4:
+  castShadow: false
+  feetPosition: {x: 21.002241549315976, y: {terrain: -0.06}, z: -24.71035273159405}
+  id: l70-path-garage-heap4
+  layout: {box: {max: {x: 1.1314198847075085, y: 0.487001139548142, z: 0.6788519308245051}, min: {x: -1.1314198847075085, y: 0, z: -0.6788519308245051}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 188.8482625787703}
+l70-path-garage-heap5:
+  castShadow: false
+  feetPosition: {x: 21.002241549315976, y: {terrain: -0.06}, z: -19.43335565465193}
+  id: l70-path-garage-heap5
+  layout: {box: {max: {x: 1.473430975840162, y: 0.377205472801442, z: 0.8840585855040972}, min: {x: -1.473430975840162, y: 0, z: -0.8840585855040972}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 177.21074728271086}
+l70-path-glow-froston:
+  feetPosition: {x: 30, y: 2.2, z: 20.4}
+  id: l70-path-glow-froston
+  light: {color: "#ffb36b", distance: 11, intensity: 1.6, kind: point}
+l70-path-hotel:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l70-path-hotel
+  material: {color: oklch(0.95 0.01 245), metalness: 0, pbr: true, repeat: [0.45, 0.45], roughness: 0.93, texture: cdn/texture-trampled-packed-snow-path-with-boot-prints-and-slush.png, wrap: repeat}
+  receiveShadow: true
+  spline: {kind: road, points: [[4.6, 0, -82.4], [12, 0, -81], [16, 0, -80], [25, 0, -80]], snapToTerrain: true, width: 2.8, yOffset: 0.015}
+l70-path-house:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l70-path-house
+  material: {color: oklch(0.95 0.01 245), metalness: 0, pbr: true, repeat: [0.45, 0.45], roughness: 0.93, texture: cdn/texture-trampled-packed-snow-path-with-boot-prints-and-slush.png, wrap: repeat}
+  receiveShadow: true
+  spline: {kind: road, points: [[-4.6, 0, -18.2], [-9, 0, -17.4], [-18, 0, -16.6], [-28, 0, -16.2], [-32.2, 0, -16.2]], snapToTerrain: true, width: 2.4, yOffset: 0.015}
+l70-path-house-heap0:
+  castShadow: false
+  feetPosition: {x: -12.189516885233406, y: {terrain: -0.06}, z: -19.39899396464627}
+  id: l70-path-house-heap0
+  layout: {box: {max: {x: 1.0473856464249014, y: 0.6052797316598145, z: 0.6284313878549408}, min: {x: -1.0473856464249014, y: 0, z: -0.6284313878549408}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 6.054781634555546}
+l70-path-house-heap1:
+  castShadow: false
+  feetPosition: {x: -20.89556267951537, y: {terrain: -0.06}, z: -13.929090968703447}
+  id: l70-path-house-heap1
+  layout: {box: {max: {x: 1.2799951901100552, y: 0.5895800898501556, z: 0.7679971140660331}, min: {x: -1.2799951901100552, y: 0, z: -0.7679971140660331}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 6.36158738108741}
+l70-path-house-heap2:
+  castShadow: false
+  feetPosition: {x: -21.08733923034332, y: {terrain: -0.06}, z: -18.72350473940226}
+  id: l70-path-house-heap2
+  layout: {box: {max: {x: 1.1619620117181735, y: 0.5977654736711482, z: 0.697177207030904}, min: {x: -1.1619620117181735, y: 0, z: -0.697177207030904}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 8.225519903037833}
+l70-path-igloo:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l70-path-igloo
+  material: {color: oklch(0.95 0.01 245), metalness: 0, pbr: true, repeat: [0.45, 0.45], roughness: 0.93, texture: cdn/texture-trampled-packed-snow-path-with-boot-prints-and-slush.png, wrap: repeat}
+  receiveShadow: true
+  spline: {kind: road, points: [[-24, 0, -16.2], [-23, 0, -6], [-34, 0, -3.5], [-44, 0, -4.2], [-48.4, 0, -4]], snapToTerrain: true, width: 1.8, yOffset: 0.015}
+l70-path-igloo-heap0:
+  castShadow: false
+  feetPosition: {x: -21.636476516552392, y: {terrain: -0.06}, z: -13.417334935557069}
+  id: l70-path-igloo-heap0
+  layout: {box: {max: {x: 1.5456812748432538, y: 0.6325931452832152, z: 0.9274087649059523}, min: {x: -1.5456812748432538, y: 0, z: -0.9274087649059523}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 84.2848467915887}
+l70-path-igloo-heap1:
+  castShadow: false
+  feetPosition: {x: -26.04995508883598, y: {terrain: -0.06}, z: -12.984640957882208}
+  id: l70-path-igloo-heap1
+  layout: {box: {max: {x: 1.3819510101722325, y: 0.5753139823560203, z: 0.8291706061033395}, min: {x: -1.3819510101722325, y: 0, z: -0.8291706061033395}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 97.92273387441406}
+l70-path-igloo-heap2:
+  castShadow: false
+  feetPosition: {x: -25.476982064127316, y: {terrain: -0.06}, z: -3.362104074946022}
+  id: l70-path-igloo-heap2
+  layout: {box: {max: {x: 1.1347703944587941, y: 0.6430098344772168, z: 0.6808622366752765}, min: {x: -1.1347703944587941, y: 0, z: -0.6808622366752765}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 7.766127598618604}
+l70-path-igloo-heap3:
+  castShadow: false
+  feetPosition: {x: -31.430977459510327, y: {terrain: -0.06}, z: -2.05653060804185}
+  id: l70-path-igloo-heap3
+  layout: {box: {max: {x: 1.5560831891168294, y: 0.5450797432777843, z: 0.9336499134700976}, min: {x: -1.5560831891168294, y: 0, z: -0.9336499134700976}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 19.676745696098347}
+l70-path-igloo-heap4:
+  castShadow: false
+  feetPosition: {x: -32.27581876414835, y: {terrain: -0.06}, z: -5.773832348449151}
+  id: l70-path-igloo-heap4
+  layout: {box: {max: {x: 1.091443591421211, y: 0.5462205081462024, z: 0.6548661548527266}, min: {x: -1.091443591421211, y: 0, z: -0.6548661548527266}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 13.062615139228967}
+l70-path-igloo-heap5:
+  castShadow: false
+  feetPosition: {x: -36.86468514477026, y: {terrain: -0.06}, z: -5.537941049594275}
+  id: l70-path-igloo-heap5
+  layout: {box: {max: {x: 1.1558244115932959, y: 0.4704428242614692, z: 0.6934946469559775}, min: {x: -1.1558244115932959, y: 0, z: -0.6934946469559775}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 0.9215336535443086}
+l70-path-market:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l70-path-market
+  material: {color: oklch(0.95 0.01 245), metalness: 0, pbr: true, repeat: [0.45, 0.45], roughness: 0.93, texture: cdn/texture-trampled-packed-snow-path-with-boot-prints-and-slush.png, wrap: repeat}
+  receiveShadow: true
+  spline: {kind: road, points: [[-4.6, 0, -74], [-12, 0, -72.4], [-22, 0, -72]], snapToTerrain: true, width: 2.6, yOffset: 0.015}
+l70-path-polecol-0:
+  feetPosition: {x: -7.150444448922644, y: 0, z: 25}
+  id: l70-path-polecol-0
+  physics: {body: static, collider: cylinder}
+  primitive: {height: 9, kind: cylinder, radius: 0.2}
+  visible: false
+l70-path-polecol-1:
+  feetPosition: {x: -7.39668742052163, y: 0, z: -20}
+  id: l70-path-polecol-1
+  physics: {body: static, collider: cylinder}
+  primitive: {height: 9, kind: cylinder, radius: 0.2}
+  visible: false
+l70-path-ramp-cellar:
+  feetPosition: {x: -43.8, y: 0.24000000000000005, z: -20.8}
+  id: l70-path-ramp-cellar
+  physics: {body: static, collider: box}
+  pivot: center
+  primitive: {depth: 2.7599999999999985, height: 0.1, kind: box, width: 0.95}
+  rotation: {pitch: -12.680388025870588, yaw: 0}
+  visible: false
+l70-path-ramp-porch:
+  feetPosition: {x: -34.7, y: 0.23000000000000004, z: -16.2}
+  id: l70-path-ramp-porch
+  physics: {body: static, collider: box}
+  pivot: center
+  primitive: {depth: 2.959624033580688, height: 0.1, kind: box, width: 1.5}
+  rotation: {pitch: 12.154946043393828, yaw: 90.00003218077504}
+  visible: false
 l70-pole-0:
   castShadow: true
   feetPosition: {x: -7.150444448922644, y: 0, z: 25}
   id: l70-pole-0
   layout: {box: {max: {y: 9}, min: {y: 0}}}
   model: {id: /cdn/value.76853fda663d318c17f12d0d8b66410e8ba2b131260ef1a373fe11a2a1629d1e.glb}
-  physics: {body: static, collider: box}
+  physics: none
   rotation: {pitch: 0, roll: -1.5294231295250937, yaw: -7.451940285391174}
   scale: 1
   tags: [l70, l70-town]
@@ -1295,7 +1498,7 @@ l70-pole-1:
   id: l70-pole-1
   layout: {box: {max: {y: 9}, min: {y: 0}}}
   model: {id: /cdn/value.76853fda663d318c17f12d0d8b66410e8ba2b131260ef1a373fe11a2a1629d1e.glb}
-  physics: {body: static, collider: box}
+  physics: none
   rotation: {pitch: 0, roll: -1.8005159920907317, yaw: 9.707587976008654}
   scale: 1
   tags: [l70, l70-town]

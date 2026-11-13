@@ -6,3 +6,42 @@ l70-bp-camp:
   physics: none
   primitive: {depth: 18, height: 4, kind: box, width: 18}
   tags: [blueprint]
+l70-path-camp-heap11:
+  castShadow: false
+  feetPosition: {x: -65.29363900386528, y: {terrain: -0.06}, z: -75.986453567703}
+  id: l70-path-camp-heap11
+  layout: {box: {max: {x: 1.4399810814484866, y: 0.6810179523569615, z: 0.8639886488690919}, min: {x: -1.4399810814484866, y: 0, z: -0.8639886488690919}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: -10.007483302420379}
+l70-path-camp-heap12:
+  castShadow: false
+  feetPosition: {x: -70.93459105197118, y: {terrain: -0.06}, z: -81.02989826692944}
+  id: l70-path-camp-heap12
+  layout: {box: {max: {x: 1.293065670082842, y: 0.5273585411614545, z: 0.7758394020497051}, min: {x: -1.293065670082842, y: 0, z: -0.7758394020497051}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: -1.7552515498029866}
+l70-path-camp-heap13:
+  castShadow: false
+  feetPosition: {x: -77.2213036175115, y: {terrain: -0.06}, z: -78.24839096608008}
+  id: l70-path-camp-heap13
+  layout: {box: {max: {x: 1.1091854098761387, y: 0.5395918941309638, z: 0.6655112459256832}, min: {x: -1.1091854098761387, y: 0, z: -0.6655112459256832}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: -17.455338456946187}
+l70-path-camp-heap14:
+  castShadow: false
+  feetPosition: {x: -76.68873852541442, y: {terrain: -0.06}, z: -81.79882491339389}
+  id: l70-path-camp-heap14
+  layout: {box: {max: {x: 1.065000398673583, y: 0.5808502534548055, z: 0.6390002392041497}, min: {x: -1.065000398673583, y: 0, z: -0.6390002392041497}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: -10.66289653061193}
+l70-path-camp-heap15:
+  castShadow: false
+  feetPosition: {x: -86.676842519825, y: {terrain: -0.06}, z: -83.62280002694489}
+  id: l70-path-camp-heap15
+  layout: {box: {max: {x: 1.3766330232269284, y: 0.6856106874931653, z: 0.825979813936157}, min: {x: -1.3766330232269284, y: 0, z: -0.825979813936157}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: -21.845429671952758}
+l70-path-glow-camp-b:
+  feetPosition: {x: -74, y: 2.2, z: -81}
+  id: l70-path-glow-camp-b
+  light: {color: "#ffb36b", distance: 11, intensity: 1.6, kind: point}

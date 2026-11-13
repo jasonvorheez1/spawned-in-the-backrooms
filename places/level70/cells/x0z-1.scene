@@ -201,13 +201,131 @@ l70-line-2b:
   id: l70-line-2b
   spline: {kind: powerline, points: [[0, 8.3, 0], [-0.006023416002153725, 7.643750000000001, -5.625], [-0.01204683200430745, 7.175000000000001, -11.25], [-0.018070248006461176, 6.893750000000001, -16.875], [-0.0240936640086149, 6.800000000000001, -22.5], [-0.030117080010768627, 6.893750000000001, -28.125], [-0.03614049601292235, 7.175000000000001, -33.75], [-0.04216391201507608, 7.643750000000001, -39.375], [-0.0481873280172298, 8.3, -45]], width: 0.03}
   tags: [l70, l70-town]
+l70-path-camp-heap0:
+  castShadow: false
+  feetPosition: {x: -25.179065321011365, y: {terrain: -0.06}, z: -70.48897935121805}
+  id: l70-path-camp-heap0
+  layout: {box: {max: {x: 1.1617615275838233, y: 0.662997050659264, z: 0.697056916550294}, min: {x: -1.1617615275838233, y: 0, z: -0.697056916550294}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: -17.571403832430704}
+l70-path-camp-heap1:
+  castShadow: false
+  feetPosition: {x: -24.801631324003736, y: {terrain: -0.06}, z: -74.01169665662258}
+  id: l70-path-camp-heap1
+  layout: {box: {max: {x: 1.5390935831885288, y: 0.5729263248028822, z: 0.9234561499131173}, min: {x: -1.5390935831885288, y: 0, z: -0.9234561499131173}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 6.540927463938884}
+l70-path-camp-heap10:
+  castShadow: false
+  feetPosition: {x: -59.28779067729549, y: {terrain: -0.06}, z: -79.20600768538404}
+  id: l70-path-camp-heap10
+  layout: {box: {max: {x: 1.5428238041898346, y: 0.4198385092755027, z: 0.9256942825139007}, min: {x: -1.5428238041898346, y: 0, z: -0.9256942825139007}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: -7.419323036641691}
+l70-path-camp-heap2:
+  castShadow: false
+  feetPosition: {x: -30.686515052022116, y: {terrain: -0.06}, z: -71.10744174897448}
+  id: l70-path-camp-heap2
+  layout: {box: {max: {x: 1.5781160050435532, y: 0.5478483834992388, z: 0.9468696030261319}, min: {x: -1.5781160050435532, y: 0, z: -0.9468696030261319}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: -0.7413145647008799}
+l70-path-camp-heap3:
+  castShadow: false
+  feetPosition: {x: -30.298037065577134, y: {terrain: -0.06}, z: -74.73323628912765}
+  id: l70-path-camp-heap3
+  layout: {box: {max: {x: 1.0462542445148595, y: 0.5475437806209287, z: 0.6277525467089157}, min: {x: -1.0462542445148595, y: 0, z: -0.6277525467089157}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: -19.552221058183484}
+l70-path-camp-heap4:
+  castShadow: false
+  feetPosition: {x: -39.20967750693535, y: {terrain: -0.06}, z: -71.70326561592756}
+  id: l70-path-camp-heap4
+  layout: {box: {max: {x: 1.2487310591846383, y: 0.36145585810833414, z: 0.749238635510783}, min: {x: -1.2487310591846383, y: 0, z: -0.749238635510783}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: -17.81339270192732}
+l70-path-camp-heap5:
+  castShadow: false
+  feetPosition: {x: -38.79346297156015, y: {terrain: -0.06}, z: -75.58793461276275}
+  id: l70-path-camp-heap5
+  layout: {box: {max: {x: 1.3815032496030923, y: 0.6625580395863195, z: 0.8289019497618554}, min: {x: -1.3815032496030923, y: 0, z: -0.8289019497618554}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: -20.01075551611782}
+l70-path-camp-heap6:
+  castShadow: false
+  feetPosition: {x: -46.45240961286374, y: {terrain: -0.06}, z: -72.31111906709623}
+  id: l70-path-camp-heap6
+  layout: {box: {max: {x: 1.5680035353954898, y: 0.617709695998444, z: 0.9408021212372938}, min: {x: -1.5680035353954898, y: 0, z: -0.9408021212372938}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: -8.534528209600873}
+l70-path-camp-heap7:
+  castShadow: false
+  feetPosition: {x: -53.332404527253246, y: {terrain: -0.06}, z: -73.71363907574195}
+  id: l70-path-camp-heap7
+  layout: {box: {max: {x: 1.0643234020864234, y: 0.4917094332593071, z: 0.638594041251854}, min: {x: -1.0643234020864234, y: 0, z: -0.638594041251854}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: -0.16623196805112528}
+l70-path-camp-heap8:
+  castShadow: false
+  feetPosition: {x: -52.54721263995787, y: {terrain: -0.06}, z: -77.48256013475975}
+  id: l70-path-camp-heap8
+  layout: {box: {max: {x: 1.3350576798129163, y: 0.6072123078430128, z: 0.8010346078877498}, min: {x: -1.3350576798129163, y: 0, z: -0.8010346078877498}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: -16.725106681568327}
+l70-path-camp-heap9:
+  castShadow: false
+  feetPosition: {x: -60.11227381424744, y: {terrain: -0.06}, z: -75.24848862801468}
+  id: l70-path-camp-heap9
+  layout: {box: {max: {x: 1.1182001450183803, y: 0.6949186619580344, z: 0.6709200870110281}, min: {x: -1.1182001450183803, y: 0, z: -0.6709200870110281}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 3.0486314185197543}
+l70-path-glow-camp-a:
+  feetPosition: {x: -50, y: 2.2, z: -76.4}
+  id: l70-path-glow-camp-a
+  light: {color: "#ffb36b", distance: 11, intensity: 1.6, kind: point}
+l70-path-glow-dock:
+  feetPosition: {x: -1.6, y: 2.2, z: -121.4}
+  id: l70-path-glow-dock
+  light: {color: "#ffb36b", distance: 11, intensity: 1.6, kind: point}
+l70-path-hotel-heap0:
+  castShadow: false
+  feetPosition: {x: 7.0956215873111095, y: {terrain: -0.06}, z: -79.45271091827638}
+  id: l70-path-hotel-heap0
+  layout: {box: {max: {x: 1.3426549043239349, y: 0.40048848618776, z: 0.8055929425943609}, min: {x: -1.3426549043239349, y: 0, z: -0.8055929425943609}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 168.005919446069}
+l70-path-hotel-heap1:
+  castShadow: false
+  feetPosition: {x: 19, y: {terrain: -0.06}, z: -77.1692607636886}
+  id: l70-path-hotel-heap1
+  layout: {box: {max: {x: 1.5234021333155232, y: 0.6598273169993549, z: 0.9140412799893138}, min: {x: -1.5234021333155232, y: 0, z: -0.9140412799893138}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 192.2394987961793}
+l70-path-market-heap0:
+  castShadow: false
+  feetPosition: {x: -15.091081154167716, y: {terrain: -0.06}, z: -74.61705283501202}
+  id: l70-path-market-heap0
+  layout: {box: {max: {x: 1.4188042216090504, y: 0.5212762916559708, z: 0.8512825329654302}, min: {x: -1.4188042216090504, y: 0, z: -0.8512825329654302}}}
+  model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
+  rotation: {yaw: 7.9099088384568415}
+l70-path-polecol-2:
+  feetPosition: {x: -7.301597904648951, y: 0, z: -65}
+  id: l70-path-polecol-2
+  physics: {body: static, collider: cylinder}
+  primitive: {height: 9, kind: cylinder, radius: 0.2}
+  visible: false
+l70-path-polecol-3:
+  feetPosition: {x: -7.349785232666181, y: 0, z: -110}
+  id: l70-path-polecol-3
+  physics: {body: static, collider: cylinder}
+  primitive: {height: 9, kind: cylinder, radius: 0.2}
+  visible: false
 l70-pole-2:
   castShadow: true
   feetPosition: {x: -7.301597904648951, y: 0, z: -65}
   id: l70-pole-2
   layout: {box: {max: {y: 9}, min: {y: 0}}}
   model: {id: /cdn/value.76853fda663d318c17f12d0d8b66410e8ba2b131260ef1a373fe11a2a1629d1e.glb}
-  physics: {body: static, collider: box}
+  physics: none
   rotation: {pitch: 0, roll: 2.2238667025536416, yaw: 2.965841676771106}
   scale: 1
   tags: [l70, l70-town]
@@ -228,7 +346,7 @@ l70-pole-3:
   id: l70-pole-3
   layout: {box: {max: {y: 9}, min: {y: 0}}}
   model: {id: /cdn/value.76853fda663d318c17f12d0d8b66410e8ba2b131260ef1a373fe11a2a1629d1e.glb}
-  physics: {body: static, collider: box}
+  physics: none
   rotation: {pitch: 0, roll: 0.03984171860211083, yaw: -6.39871806561132}
   scale: 1
   tags: [l70, l70-town]
