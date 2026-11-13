@@ -226,7 +226,7 @@
 - id: mara-gate
   giver: l7-mara
   place: level7
-  needs: { group: surrender, fame: 6, text: "Not yet. Help Fort Surrender out with something smaller first." }
+  needs: { group: surrender, fame: 2, text: "Not yet. Help Fort Surrender out with something smaller first." }
   title: "The Fort Gate"
   stages:
     - { text: "Check the gate at the fort", kind: find, target: l7f-gate-0, count: 1 }
