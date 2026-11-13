@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7188,
-  "updatedAt": "2026-11-13T12:25:23.095Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social hub and authored lore destinations; player saves hold progression, gear, quests, faction standing, homes and companions, while tutorial0 is solo and ephemeral. Shared player behaviors and place simulations join authored scenes to generated spaces, with reusable dialogue, quest, hostility and NPC notice systems, a Tripo cat appearance pipeline and data-driven errands. The Way Back reveals Dina's story through a saved clue trail, including playable cassette recordings, before continuing its ship and recovery stages.",
+  "basedOnSpecVersion": 7197,
+  "updatedAt": "2026-11-13T12:45:44.753Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG across Level 0, a social hub and authored lore destinations; player saves hold progression, gear, quests, faction standing, homes and companions, while tutorial0 is solo and ephemeral. Shared player behaviors and place simulations join authored scenes to generated spaces, with reusable dialogue, deliberate quest offers, NPC threat checks, errands and a Tripo cat appearance pipeline. The Way Back reveals Dina's story through a saved clue trail, including playable cassette recordings, before continuing its ship and recovery stages.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0's yellow maze, ecology, routes, landmarks, Christmas Area and stair anomalies; objects.scene also carries the Favi brain row.",
@@ -20,19 +20,19 @@
     "sim.js - global tick for body-style propagation and bounded incremental restyling of objects in occupied places.",
     "scripts/main-menu.js + main-menu-ui.js + intake/tutorial scripts - title, character creation, arrival, tutorial and Dina quest routing/tick; main-menu also ticks errands.",
     "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, aiming camera, third-person toggle and per-place HUD zone naming.",
-    "scripts/ui.js + scripts/stats-ui.js - composed player HUD/menus and character status, including derived sanity cap, smoothie UI and Level 70-only CHILL bar.",
+    "scripts/ui.js + scripts/stats-ui.js - composed player HUD/menus and character status, including quest journal, derived sanity cap, smoothie UI and Level 70-only CHILL bar.",
     "places/main/sim.js + scripts/lib/maze.js + scripts/lib/xmas-room.js + scripts/lib/level0-moments.js - Level 0 layout, Christmas Area, stair anomalies and deterministic wall-side moments.",
     "places/level31/sim.js + scripts/lib/level31.js + scripts/lib/level31-parts.js; places/level70/sim.js + scripts/lib/level70.js + scripts/terrain70.js - versioned venue and layered Froidetown map/terrain, routes, arrivals and weather."
   ],
   "shared": [
     "scripts/lib/hub.js + scripts/lib/data/preload.yml + scripts/lib/preload-next.js - solo room IDs/destinations, home destinations, display names and proximity-preload manifest.",
-    "scripts/lib/loot.js + scripts/lib/items.js + scripts/lib/weapons.js/data/weapons.yml - common loot, containers, item definitions, rarity and weapon variants.",
+    "scripts/lib/loot.js + scripts/lib/items.js + scripts/lib/weapons.js/data/weapons.yml - common loot, containers, item definitions, rarity and weapon variants; snacks and loot tables supply food/meat.",
     "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/lib/level3-hatch.js - parametric doors/motion and deterministic Level 3 paired hatch layout; threshold/sign geometry is shared by participating places.",
     "scripts/lib/data/l02-props.yml + scripts/lib/data/l02-remodel.yml + scripts/lib/l02-grid.js; scripts/lib/breakables.js + data/breakables.yml + wallgrid.js - Level 0.2 partitions/props and shared prop/generated-wall damage, drops and regrowth.",
     "scripts/lib/quest-route.js + scripts/lib/quest-mark.js + scripts/lib/quests.js - directed crossings/objectives and common quest state, journal, tracker and quest-step messaging.",
     "scripts/lib/data/dlg-*.yml + scripts/lib/dialogue.js + scripts/talk.js + scripts/lib/voices.js - authored conversations, barks, checks/actions and voice selection for named and archetype NPCs.",
-    "scripts/lib/errands.js + scripts/lib/data/errands.yml - shared data-driven NPC jobs across authored levels; uses inventory, breakables, dialogue, skills, journal, reputation and payout helpers.",
-    "scripts/lib/npc-temper.js + scripts/lib/notify.js - shared NPC weapon filtering/strike-window helper and per-player notice writer; used by meg-agent, Samantha and level-specific interactions."
+    "scripts/lib/quest-dialogue.js - job offer briefings, journal descriptions/progress text and paged choices; scripts/talk.js and scripts/ui.js consume it.",
+    "scripts/lib/errands.js + scripts/lib/data/errands.yml; scripts/lib/npc-temper.js + scripts/lib/notify.js - data-driven NPC jobs and shared NPC weapon filtering/strike-window and per-player notice helpers."
   ],
   "notableExports": [
     "sim.js - cadence, tick, onOutOfBounds; body-style propagation and bounded incremental object restyling.",
@@ -42,41 +42,41 @@
     "scripts/lib/level70.js + scripts/terrain70.js; level70-civic.js exports V, STALL, FIRE, LECTERN, HOTEL_DOOR, GARAGE_DOOR, VALVE_POS, GAUGE, PUMP, BREAKER, lay, tick; level70-life.js exports V, M, PACKS, lay, tick.",
     "scripts/lib/errands.js - ERRANDS, held, errandText, offerErrand, payErrand, tryAlt, errandTick; common offer/progress/alternate-solution/reward handler for errands.yml.",
     "scripts/lib/companion.js - PERKS, perkOf, isMine, followersOf, loyaltyScale, whyNot, recruit, adopt, dismiss, order, giveWeapon, takeWeapon; recruitment and companion commands/perks.",
-    "scripts/lib/quests.js - MAX_TRACK, TINT, PLACE_NAMES, qid, setQuest, endQuest, tracked, toggleTrack, questStep, tellQuest; npc-temper.js exports weaponsOf, heldWeapon, STRIKE_WINDOW_MS, strike; notify.js exports notify."
+    "scripts/lib/quests.js - MAX_TRACK, TINT, PLACE_NAMES, qid, setQuest, endQuest, tracked, toggleTrack, questStep, tellQuest; quest-dialogue.js exports jobOffer, questBriefing, questProgress, choicePage; threat.js exports hunting."
   ],
   "ownership": [
-    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved position, tapes/holotapes, currency, karma/rep and homeKeep; initializes hp to max and hunger/thirst to 100 once per save.",
+    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved position, tapes/holotapes, currency, karma/rep and homeKeep; initializes hp to max and hunger/thirst to 1.",
     "scripts/critter.js - per-player appearance look and transient critter/creator/salon state (wardrobeOpen, wrTab, salonOpen/salonTab); dress actions update look, including selected model or uploaded model URL.",
     "scripts/lib/quests.js + scripts/lib/dina-quest.js - quests/qtrack/qdone; Dina's saved trail keys (name, word, list, tape, room, radio, pass), dinaQ stages, diary/cut/lead fields and legacy migration.",
     "scripts/lib/errands.js - player.state.errands per-job stage/count/kill-baseline/done records, errHints and errand quest-journal entries; completion updates cents, payout, rep and trail hints.",
-    "scripts/lib/level31-quest.js + scripts/lib/level70-quest.js + scripts/lib/remodel-quest.js - l31q/l31route/l31qh and Level 31 quest rewards; l70q/l70route/l70pelt/l70led; remodQ, l02got/l02paint, fresh, capnAsk/capnFailed and Fresh Paint history.",
+    "scripts/lib/level31-quest.js + scripts/lib/level70-quest.js + scripts/lib/remodel-quest.js - l31q/l31route/l31qh and Level 31 quest rewards; l70q/l70route/l70pelt/l70led; remodQ, l02got/l02paint, fresh and Fresh Paint hint fields.",
     "scripts/build.js + places/level5/sim.js - player homeKeep.built or homeKeep.l5built and reconstruction; scripts/l5-resident.js owns booking keys/room identity and place.state.l5rent exclusive-room ledger.",
     "scripts/lib/breakables.js - place.state.wallHp and place.state.broken hold generated wall damage/broken timestamps; syncWalls removes stale broken records when the current grid says that wall no longer exists.",
-    "scripts/lib/companion.js owns player.state.crew and companion follow/perk/loyalty/orders; scripts/lib/forgive.js owns NPC incidents/angry/fresh/struckAt records, npc-temper.js uses each NPC session for special-handler strike timing, and Samantha keeps her own reading/rage behavior."
+    "scripts/lib/companion.js owns player.state.crew and companion follow/perk/loyalty/orders; scripts/lib/forgive.js owns NPC incidents/angry/fresh/struckAt records; level interactions and Samantha maintain their own local NPC behavior state."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific behaviors.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific player behavior.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera; camera writes aimPt/aimPitch → player.js ballistics/weaponAim; player.js zoneHere → maze names and Level 31/70 zoneAt labels.",
     "scripts/routing.js requested room → scripts/lib/hub.js solo selection; toHub/toSolo cross to hub/home and maintain roomHop/save-place; kiosk resolves booked Level 5 home IDs.",
-    "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close runs scripts/lib/intro-cut.js cutTick, then crosses to tutorial0 first time or main later; wardrobe/salon dress actions update the appearance look via scripts/critter.js.",
+    "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close runs scripts/lib/intro-cut.js cutTick, then crosses to tutorial0 first time or main later; wardrobe/salon dress actions update appearance look via scripts/critter.js.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js: matching-place dialogue or errand:<id>/errand-alt:<id> offers jobs; active jobs progress from carried items, kills and world events.",
     "scripts/lib/errands.js → scripts/lib/quests.js journal (err-<id>), player.state.errands, qtrack, cents/payout/rep and optional trail-hint queue; scripts/craft.js consumes pending item objectives.",
-    "tutorial0 HALOGEN cut → scripts/lib/tut0-cut.js + scripts/lib/dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ; Level 3 Dina handoff adds holotapes.dina4, which player.js can play on HALOGEN.",
+    "tutorial0 HALOGEN cut → scripts/lib/tut0-cut.js + scripts/lib/dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ; Level 3 Dina handoff adds holotapes.dina4, which player.js can play on cassette players.",
     "scripts/build.js placement/removal → homeKeep.built or homeKeep.l5built; Level 5 sim restores separately; l5-resident booking → player l5home/l5room and place.state.l5rent, hub kiosk routes per room.",
     "Level 2 l2-to-l31 and Level 31 l31-back triggers → scripts/level-door.js directed crossings to Level 31/Level 2; Level 31 l31-to-l70 and Level 70 l70-back similarly cross via paired arrivals; quest-route.js maps both pairs.",
     "Level 31 sim reads H/B/RINK/ZONES/DOOR/BACK, rebuilds l31-* roots at place.state.v31=100 and dispatches layParts; Level 70 sim lays arrival/return, weather and version-gated district layers, with place.state.v70* build keys.",
-    "scripts/talk.js recruit/order actions → scripts/lib/companion.js writes player.state.crew and companion state; scripts/meg-agent.js follows/fights only when the leader's save lists that NPC, and scripts/level-door.js carries followers across transitions.",
-    "Player hit handling → scripts/lib/forgive.js records the NPC-side first-hit warning; only a repeat within 20 seconds (or killing blow) becomes assault and can alert allied witnesses; talk close is not an aggro hit. l4-home/l5-door/l8-use notices use lib/notify.js."
+    "scripts/talk.js recruit/order actions → scripts/lib/companion.js writes player.state.crew and companion state; scripts/meg-agent.js follows/fights only when the leader's save lists that NPC, and scripts/level-door.js carries followers across thresholds.",
+    "scripts/talk.js Quest Start choice → quest-dialogue.js briefing and pending accept/decline; acceptance calls the relevant quest handler and scripts/lib/quests.js journals it; quest-dialogue text/progress → scripts/ui.js journal card."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored mall shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; home11 and Level 5 have separate buckets.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage motion, legacy migration and tagged paired leaves such as Fort Surrender; thresholds and sign boards share geometry.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage motion, legacy migration and tagged paired leaves such as Fort Surrender; thresholds and sign boards use shared geometry.",
     "places/level01/sim.js + Zenith geometry/breach/hatch/bot/hazard scripts; places/level02/sim.js + l02-grid.js vary partitions, lights, crew, knocks and reset.",
-    "scripts/meg-agent.js - shared NPC nerve/stats/weapon reactions, cover, authored/voiced barks, movement/fighting and companion following; npc-temper.js filters NPC wieldable child weapons, while forgive.js owns generic human-NPC first-hit assault handling.",
-    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + art/cat-wardrobe - shared Tripo cat appearance assembly varied by body/sex, painted or skinned garments, head keys, hair and fitted ear models; lop uses its own sex-specific uploaded GLBs.",
+    "scripts/meg-agent.js - shared NPC nerve/stats/weapon reactions, cover, authored/voiced barks, movement/fighting and companion following; npc-temper.js filters wieldable child weapons, forgive.js owns generic first-hit assault handling.",
+    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + art/cat-wardrobe - shared Tripo cat appearance assembly varied by body/sex, painted or skinned garments, head keys, hair and fitted ear models; lop uses sex-specific uploaded GLBs.",
     "scripts/lib/data/errands.yml + scripts/lib/errands.js - one stage/reward engine reused by named NPCs across Levels 1-13 and 70; each row varies giver/place, objectives, alternate path and reward.",
-    "scripts/l5-samantha.js + scripts/samantha.js - distinct Beverly Room cats trade readings/blessings or meals; hits use a first-strike warning then 20-second response, while Samantha's empty-handed/refusal reading interaction turns away rather than attacking. arcade-play.js closes the cabinet screen when leaving the cabinet or changing level."
+    "scripts/l5-samantha.js + scripts/samantha.js - distinct Beverly Room cats trade readings/blessings or meals; Samantha accepts meat tokens and meat-marked snacks, warns empty-handed visitors before attacking, and stays to eat after feeding."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -87,10 +87,10 @@
   ],
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player IDs/player roots and local-audience objects.",
-    "Level 2 survivors keep generated looks in NPC state.wear; survBodyV=1 triggers the migration/refit path. Cat wardrobe is only for new Tripo cat bodies; cat-wardrobe.yml stores garment/model assets and maps ears per sex, while art/cat-wardrobe assets remain separate.",
+    "Level 2 survivors keep generated looks in NPC state.wear; survBodyV=1 triggers the migration/refit path. Cat wardrobe is only for new Tripo cat bodies; cat-wardrobe.yml stores garment/model assets and maps ears per sex.",
     "Level 31 rebuilds l31-* roots at place.state.v31=100; align IDs and shell/zone/door/arrival geometry with level31.js, and keep the white-door exit paired with Level 70's l70-from-l31 arrival.",
     "Level 70 level70.js keeps built zone discs, street and Burns River at y=0 while terrain70.js raises terrain outside them; layer versions invalidate builds and nav cache keys include town/civic/wild/path versions.",
-    "Generated wall damage lives in place.state.wallHp/broken; syncWalls treats wall-grid membership as authoritative and deletes stale broken keys before deriving cutouts. Companions are save-scoped: set player.state.crew when adopting and do not infer recruitment from NPC state alone.",
-    "Generic NPC first-hit timestamps are per NPC/player in state.struckAt and expire by the 20,000 ms window; bumps do not create assaults, already-hostile NPCs are unaffected, and player death clears grudges. npc-temper session strikes serve special handlers; Samantha's empty-hand/refusal warning is separate from hit retaliation."
+    "Generated wall damage lives in place.state.wallHp/broken; syncWalls treats wall-grid membership as authoritative and deletes stale broken keys before deriving cutouts. Companions are save-scoped: set player.state.crew when adopting and do not infer ownership from a nearby NPC.",
+    "Quest offer dialogue is keyed by NPC and Quest Start choice: talk.js requires explicit acceptance of the pending offer before handing it to quest handlers. Samantha's empty-dish warning window is 2.5s; meat-marked snack additions and meat:<kind> tokens must stay aligned with Samantha's accepted-food data."
   ]
 }
