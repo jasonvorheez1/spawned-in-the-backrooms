@@ -66,9 +66,14 @@ function counter(ctx) {
     { feetPosition: { x: 2.4, y: 0.38, z: -0.305 }, rotation: { roll: 3 }, primitive: box(0.3, 0.21, 0.004), material: { color: "#fbfaf2", roughness: 0.9 },
       ui: `<div face="front" width="0.3m" style="height:210px;box-sizing:border-box;padding:18px 16px;background:#fbfaf2;color:#22201c;font-family:cursive;font-size:30px;line-height:1.15;text-align:center;font-weight:700">socks on,<br>please!<div style="font-size:21px;font-weight:400;margin-top:10px">street shoes stay off the wood</div></div>`,
       children: [{ feetPosition: { x: -0.11, y: 0.185, z: -0.003 }, rotation: { roll: 30 }, primitive: box(0.07, 0.025, 0.002), material: { color: "#d9cf9a", roughness: 0.4, transparent: true, opacity: 0.8 } }, { feetPosition: { x: 0.11, y: 0.185, z: -0.003 }, rotation: { roll: -35 }, primitive: box(0.07, 0.025, 0.002), material: { color: "#d9cf9a", roughness: 0.4, transparent: true, opacity: 0.8 } }] },
-    // price card in a stand on the top
-    { feetPosition: { x: 1.3, y: 0.97, z: -0.2 }, rotation: { pitch: -12 }, primitive: box(0.3, 0.22, 0.012), material: { color: "#101014", roughness: 0.3 },
-      ui: `<div face="front" width="0.3m" style="height:220px;box-sizing:border-box;padding:14px;background:#14213f;color:#ffd84a;font-family:sans-serif;text-align:center;border:6px solid #ffd84a"><div style="font-size:30px;letter-spacing:4px;font-weight:700">SKATE HIRE</div><div style="font-size:92px;font-weight:900;line-height:1">$5</div><div style="font-size:22px;color:#fff">a pair · all sizes</div></div>` },
+    // price board on the top: an old black felt letterboard with push-in white letters, a little crooked, one letter upside down, a 5 cut from a cereal box
+    { feetPosition: { x: 1.3, y: 0.97, z: -0.2 }, rotation: { pitch: -14, roll: -2 }, primitive: rbox(0.46, 0.34, 0.03), material: { color: "#7a5332", roughness: 0.7, texture: "cdn/texture-worn-oak-wood-grain.png" },
+      ui: `<div face="front" width="0.42m" style="margin:20px;height:300px;box-sizing:border-box;padding:18px 14px;background:#151313;background-image:repeating-linear-gradient(0deg,#1d1b1b 0 6px,#0c0b0b 6px 9px);color:#eeeae0;font-family:sans-serif;font-weight:700;line-height:1.05">${[["SKATES", -1, 0], ["$5 A PAIR", 1.5, 6], ["ALL SIZES", -0.5, 2], ["NO REFUNDS", 1, -3]].map(([t, r, x]) => `<div style="font-size:40px;letter-spacing:5px;transform:rotate(${r}deg) translateX(${x}px);text-align:center;margin:4px 0">${[...t].map((c, i) => `<span style="display:inline-block;transform:translateY(${(i * 7 % 5) - 2}px) rotate(${t === "ALL SIZES" && i === 6 ? 180 : (i * 13 % 7) - 3}deg)">${c === " " ? "&nbsp;" : c}</span>`).join("")}</div>`).join("")}</div>`,
+      children: [
+        { feetPosition: { x: 0, y: -0.12, z: 0.06 }, rotation: { pitch: 30 }, primitive: rbox(0.04, 0.26, 0.02), material: { color: "#5c3d24", roughness: 0.8 } }, // easel leg
+        { feetPosition: { x: 0.16, y: 0.2, z: -0.02 }, rotation: { roll: 11 }, primitive: box(0.12, 0.1, 0.003), material: { color: "#c9a46a", roughness: 0.95 }, // a Post-it on the corner
+          ui: `<div face="front" width="0.12m" style="height:100px;padding:6px;box-sizing:border-box;background:#f4dd62;color:#2a3a8a;font-family:cursive;font-size:17px;line-height:1.1">size 9s<br>all out<br>— D</div>` },
+      ] },
   ] });
   // neon script on the header
   ctx.spawn("l31-rental-neon", { feetPosition: { x: 13, y: 2.56, z: 24.2 }, primitive: box(5.2, 0.66, 0.03), material: { color: "#0d1230", roughness: 0.6 }, castShadow: false, tags: ["l31-rental"],
