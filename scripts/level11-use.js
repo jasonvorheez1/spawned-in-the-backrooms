@@ -640,7 +640,7 @@ export const ears = {
       if (now - (w.cctvOffAt ?? 0) < 600) return; // the E that left the desk is not a press to sit back down
       heard(ctx, { clip: BUTTON_CLICK, position: pos, volume: 0.85, maxDistance: 12 });
       ctx.emit("screenFlash", { color: "#9fc0b0", duration: 0.3, intensity: 0.35 }, { audience: { player: who.id } });
-      w.cctv = { i: w.sedcoQ === 2 ? 0 : (w.cctvLast ?? 0), at: now, cutAt: now };
+      w.cctv = { i: w.sedcoQ === 2 && !w.sedcoMonitorsChecked ? 3 : (w.cctvLast ?? 0), at: now, cutAt: now };
       return;
     }
 

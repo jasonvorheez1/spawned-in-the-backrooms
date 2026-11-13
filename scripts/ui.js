@@ -587,7 +587,7 @@ function cctvUi(ctx, player) {
   <div style="position:absolute;top:110px;right:calc(var(--spawn-chrome-reservation-right-inset,50px) + 68px);font-size:16px;letter-spacing:.08em">${stamp}</div>
   <div style="position:absolute;bottom:136px;left:68px;font-size:13px;letter-spacing:.14em;opacity:.8">SEDCO SPOTLIGHT · LOSS PREVENTION · CH ${String(i + 1).padStart(2, '0')}/08</div>
   <div style="position:absolute;bottom:24px;left:0;right:0;display:flex;justify-content:center">
-    <div class="pointer-events-auto" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:#0c0c0be6;border:2px solid #5c5a52;padding:8px 10px;box-shadow:4px 4px 0 #000">
+    <div data-modal class="pointer-events-auto" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;max-width:calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 24px));background:#0c0c0be6;border:2px solid #5c5a52;padding:8px 10px;box-shadow:4px 4px 0 #000">
       <button onclick="sendAction('cctv',{go:'prev'})" style="font:700 13px 'Courier New',monospace;padding:8px 12px;border:2px solid #5c5a52;background:#0c0c0b;color:#cfcbbd">◀ A</button>
       ${tabs}
       <button onclick="sendAction('cctv',{go:'next'})" style="font:700 13px 'Courier New',monospace;padding:8px 12px;border:2px solid #5c5a52;background:#0c0c0b;color:#cfcbbd">D ▶</button>

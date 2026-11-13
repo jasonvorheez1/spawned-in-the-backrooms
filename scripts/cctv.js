@@ -10,7 +10,7 @@ const L = (a, b, u) => ({ x: a.x + (b.x - a.x) * u, y: a.y + (b.y - a.y) * u, z:
 
 function go(ctx, i) {
   const s = ctx.self.state, n = CAMS.length
-  s.cctv = { ...s.cctv, i: ((i % n) + n) % n, cutAt: ctx.now(), zoom: 1 }
+  s.cctv = { ...s.cctv, i: ((i % n) + n) % n, cutAt: ctx.now(), zoom: 1 }; s.cctvLast = s.cctv.i
   ctx.emit('playSound', { clip: STATIC, volume: 0.35, pitch: 0.9 + ctx.random() * 0.3 })
   ctx.emit('playSound', { clip: CLICK, volume: 0.5 })
 }
@@ -29,6 +29,7 @@ export function onInput(ctx, input) {
   const d = input.actionData?.cctv
   if (input.pressed.cctv && d) { if (d.go === 'exit') return leave(ctx); if (d.go === 'next') return go(ctx, c.i + 1); if (d.go === 'prev') return go(ctx, c.i - 1); if (typeof d.cam === 'number') return go(ctx, d.cam) }
   if (input.pressed.interact || input.pressed.jump) return leave(ctx)
+  if (input.pressed.cycleWeapon) return go(ctx, c.i + 1)
   for (let k = 1; k <= 8; k++) if (input.pressed['quick' + k]) return go(ctx, k - 1)
   if (x > 0.5 && !((m.cx ?? 0) > 0.5)) go(ctx, c.i + 1)
   if (x < -0.5 && !((m.cx ?? 0) < -0.5)) go(ctx, c.i - 1)
