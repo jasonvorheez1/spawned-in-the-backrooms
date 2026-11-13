@@ -2,7 +2,7 @@
 throat: voice-tinny-crackling-1950s-robot-announcer-with-radio-static-and-vacuum-tube-hum
 lines:
   spot: ["Unauthorized personnel detected. Please remain still.", "Halt. This corridor is company property.", "Visitor. You do not have a badge. Correcting.", "Good evening. Your presence has not been approved."]
-  shoot: ["Discharging courtesy beam.", "Please hold still for your safety.", "Engaging. Thank you for your patience.", "Backrooms Robotics thanks you for not resisting."]
+  shoot: ["Discharging courtesy beam.", "Please hold still for your safety.", "Engaging. Thank you for your patience.", "Custodial Robotics thanks you for not resisting."]
   hurt: ["Warranty void.", "Hull integrity at sixty percent. Remaining cheerful.", "That was very rude.", "Damage logged. Filing complaint with management."]
   lost: ["Visitor has left the premises. Resuming patrol.", "Area secure. Returning to post.", "Thank you for visiting. Do not come back."]
   die: ["Shutting... down... please... remain... cour...teous.", "Tell the foreman... I kept... the lights on."]
