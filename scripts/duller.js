@@ -92,7 +92,7 @@ export function update(ctx, dt) {
   }
   // unseen: it never comes round the corner. it finds the wall you are standing at and comes up behind it
   if (td < D.stalk && now >= (m.cool ?? 0) && !drank(tgt, now) && !tgt.state?.freeze) {
-    const w = wallBetween(ctx, o, tgt);
+    const w = wallBetween(ctx, o, tgt) ?? wallBy(ctx, tgt);
     if (w && flat(tgt.feetPosition, w) < D.wallNear) {
       if (flat(pos, w) < D.armNear) {
         m.reach = { id: tgt.id, at: now, wall: w }; m.path = null; m.clip = null; anim(o, m, "cdn/clip-attack.glb", false);
@@ -102,12 +102,22 @@ export function update(ctx, dt) {
         ctx.emit("screenShake", { intensity: 0.2, duration: 0.3 }, { audience: { player: tgt.id } });
         return;
       }
-      const spot = { x: w.x - w.n.x * 0.7, z: w.z - w.n.z * 0.7 };
+      const spot = { x: w.x - w.n.x * 1.0, z: w.z - w.n.z * 1.0 };
       if (moveTo(ctx, o, m, spot, D.walk, dt, now) > 0) anim(o, m, "Walk"); else anim(o, m, "Idle");
       return;
     }
   }
   if (moveTo(ctx, o, m, tgt.feetPosition, td < 6 ? D.walk * 0.7 : D.walk, dt, now) > 0) anim(o, m, "Walk"); else anim(o, m, "Idle");
+}
+// the wall you stand at, any side: the hall behind it is where it waits. n points from its side toward you
+function wallBy(ctx, tgt) {
+  const f = tgt.feetPosition, eye = { x: f.x, y: f.y + 1.2, z: f.z }; let best = null;
+  for (let i = 0; i < 8; i++) {
+    const a = i * Math.PI / 4, d = { x: Math.cos(a), y: 0, z: Math.sin(a) };
+    const h = raycast(ctx, eye, d, { distance: D.wallNear, physicsOnly: true, bodies: "static", excludeTags: ["player", "duller"] });
+    if (h && (!best || h.distance < best.dist)) best = { x: h.position.x, y: h.position.y, z: h.position.z, n: { x: -d.x, y: 0, z: -d.z }, dist: h.distance };
+  }
+  return best;
 }
 function reachStep(ctx, o, m, now, dt) {
   const r = m.reach, p = ctx.place.players.find((q) => q.id === r.id); stand(ctx, o, dt);

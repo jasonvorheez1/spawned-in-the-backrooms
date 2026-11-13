@@ -11,7 +11,7 @@ fleeMs: 5000
 reachRange: 3.4    # how far you can be from the wall hole before the arm misses
 stalk: 22          # unseen within this, it comes up behind the wall you stand at
 wallNear: 2.4      # you within this of a wall: it hunts you through it
-armNear: 1.2       # it this close to its side of the wall: the arm comes through
+armNear: 1.6       # it this close to its side of the wall: the arm comes through
 tellMs: 750        # the plaster cracks: this long to step away or drink almond water
 dragMs: 900
 grabDmg: 16
