@@ -3,7 +3,7 @@
 import { findPath } from "builtin/nav";
 import { traverseCheck } from "builtin/physics";
 import { ARRIVE, ZONES, SPOT } from "./level70.js";
-export const NODES = {}; const ADJ = {};
+export const NODES = {}; export const ADJ = {}; export const NAV_V = 2;
 const add = (id, x, z) => { NODES[id] = { x, y: 0, z }; ADJ[id] = ADJ[id] ?? []; };
 const link = (a, b) => { ADJ[a].push(b); ADJ[b].push(a); };
 add("arrive", ARRIVE.x, ARRIVE.z);
@@ -25,8 +25,20 @@ add("rig", SPOT.rig.x - 4, SPOT.rig.z); link("rig", "rim-froston");
 add("ice-mid", -78, -80); link("ice-mid", "rim-iceshed");
 add("camp", SPOT.camp.x + 3, SPOT.camp.z); link("camp", "ice-mid");
 add("dock", SPOT.dock.x, SPOT.dock.z); link("dock", "s-120");
+// door thresholds and interiors (paths layer): the house up its porch, hall, living room, kitchen and storm cellar; the igloo;
+// the garage mouth and valve room; the hotel lobby; Froston's open container. Each is a chain of short, provable legs.
+const chain = (rows) => { for (const [id, x, z, to, y] of rows) { add(id, x, z); if (y) NODES[id].y = y; for (const t of [].concat(to)) link(id, t); } };
+chain([
+  ["house-door", -35.4, -18, "house", 0.54], ["house-hall", -36.8, -18, "house-door", 0.54],
+  ["house-living", -39.6, -16.4, "house-hall", 0.54], ["house-kitchen", -39.6, -19.9, ["house-hall", "house-living"], 0.54],
+  ["cellar-top", -43, -20.6, "house-kitchen", 0.54], ["cellar", -42.5, -23.4, "cellar-top", 0.02],
+  ["igloo-in", -51.2, -4, "igloo"],
+  ["garage-mouth", 24.5, -22, ["garage-door", "garage"]], ["valve-door", 44.5, -22, ["garage", "valves"]],
+  ["lobby-in", 27.6, -80, ["lobby-door", "lobby"]],
+  ["froston-yard", 52, 16, ["rim-froston", "rig"]], ["container", 50.1, 21, "froston-yard", 0.16],
+]);
 const D = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
-const key = (a, b) => (a < b ? a + ">" + b : b + ">" + a);
+export const key = (a, b) => (a < b ? a + ">" + b : b + ">" + a);
 export function nearest(p) { let best = null, bd = 1e9; for (const [id, n] of Object.entries(NODES)) { const d = D(n, p); if (d < bd) { bd = d; best = id; } } return best; }
 function dijkstra(a, b, bad) {
   const dist = { [a]: 0 }, prev = {}, open = new Set([a]), done = new Set();
@@ -47,7 +59,7 @@ function prove(ctx, A, B) {
   return 0;
 }
 export function route(ctx, from, to) {
-  const ps = ctx.place.state, ver = [ps.v70town, ps.v70civic, ps.v70wild].join("|");
+  const ps = ctx.place.state, ver = [ps.v70town, ps.v70civic, ps.v70wild, ps.v70paths, NAV_V].join("|");
   let st = ps.l70nav; if (!st || st.ver !== ver) st = { ver, e: {} };
   const e = { ...st.e }; let dirty = st !== ps.l70nav, partial = false;
   const a = nearest(from), b = nearest(to), bad = new Set(Object.keys(e).filter((k) => e[k] === 0));
