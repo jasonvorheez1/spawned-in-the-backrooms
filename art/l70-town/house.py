@@ -39,14 +39,14 @@ def build(col):
     def pb(ax, c, s, u, o, y, su, so, sy, mat):  # a box on a wall: u along, o out from the wall's centre, y up
         if ax == "x": bx(u - su / 2, u + su / 2, y - sy / 2, y + sy / 2, c + s * o - so / 2, c + s * o + so / 2, mat)
         else: bx(c + s * o - so / 2, c + s * o + so / 2, y - sy / 2, y + sy / 2, u - su / 2, u + su / 2, mat)
-    def mound(cx, cz, rx, rz, h, y0=0.0, mat="snow", seg=18, rings=6, seed=0.0):
+    def mound(cx, cz, rx, rz, h, y0=0.0, mat="snow", seg=24, rings=10, seed=0.0):
         if col: return
         top = k.bm.verts.new((cx, -cz, y0 + h * (1 + 0.15 * noise.noise(Vector((cx, cz, seed)))))); prev = None
         for j in range(1, rings + 1):
             f = j / rings; ring = []
             for i in range(seg):
                 a = i / seg * math.tau; n = noise.noise(Vector((cx + math.cos(a) * f * 2.1, cz + math.sin(a) * f * 2.1, seed + 3.3)))
-                r = f * (1 + 0.22 * n); ring.append(k.bm.verts.new((cx + math.cos(a) * rx * r, -(cz + math.sin(a) * rz * r), y0 - 0.06 * (f > 0.99) + h * (math.cos(f * math.pi / 2) ** 1.3) * (1 + 0.25 * n))))
+                r = f * (1 + 0.22 * n); ring.append(k.bm.verts.new((cx + math.cos(a) * rx * r, -(cz + math.sin(a) * rz * r), y0 - 0.06 * (f > 0.99) + h * (math.cos(f * math.pi / 2) ** 0.55) * (1 + 0.25 * n))))
             for i in range(seg):
                 a, b = ring[i], ring[(i + 1) % seg]
                 fc = k.bm.faces.new([top, a, b]) if prev is None else k.bm.faces.new([prev[i], a, b, prev[(i + 1) % seg]])
