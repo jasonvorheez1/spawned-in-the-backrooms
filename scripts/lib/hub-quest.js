@@ -5,6 +5,7 @@ import { setQuest, endQuest, tellQuest } from "./quests.js";
 import { addRep } from "./rep.js";
 import { giveKey, hasKey, keysOf, keyDoor } from "./hubkeys.js";
 import { runOf, KEYED } from "./thehub.js";
+import { rollCheck } from "./npc-talk.js";
 const short = (it) => String(it?.id ?? it ?? "").split("/").pop();
 const M = (id) => ({ place: "thehub", id });
 export const MK = "hub-missing-key", LR = "hub-lost-records", UP = "hub-uncharted";
@@ -24,7 +25,7 @@ export function hubChoices(ctx, it, s) {
   if (id === "hub-meg-lin") {
     if (!mk) out.push(s.hubMKask ? { text: "I'll find your key.", tag: "Quest Start" } : { text: "Something wrong with the cabinet?", tag: "Ask" });
     if (mk === 1) out.push({ text: "Who was on watch that night?", tag: "Ask" });
-    if (mk === 3) { out.push({ text: "Found it. Here's your key.", tag: "Quest" }); out.push({ text: "[Speech 45] It's gone. Someone used it.", tag: "speech" }); }
+    if (mk === 3) { out.push({ text: "Found it. Here's your key.", tag: "Quest" }); if (!s.hubMKlie) out.push({ text: "[Speech 45] It's gone. Someone used it.", tag: "speech" }); }
     if (mk === 99) for (const [pl, c] of Object.entries(DRAW)) out.push({ text: `Sign me out the key with ${MARKS[pl]}. [$${c}]`, tag: "Key" });
     if (mk === 99 || keysOf(s).length) out.push({ text: "Where's the door for the key I'm holding?", tag: "Ask" });
   }
@@ -35,14 +36,15 @@ export function hubChoices(ctx, it, s) {
   if (id === "hub-meg-sato") {
     if (!lr) out.push(s.hubLRask ? { text: "I'll bring the recorders back.", tag: "Quest Start" } : { text: "What happened in 2019?", tag: "Ask" });
     if (lr === 2) out.push({ text: "Three recorders. All yours.", tag: "Quest" });
-    if (lr === 99 && !up) out.push(s.hubUPask ? { text: "I'll go and look at it.", tag: "Quest Start" } : { text: "What was on the recorders?", tag: "Ask" });
+    if (lr === 99 && !up && !s.hubLRsold) out.push(s.hubUPask ? { text: "I'll go and look at it.", tag: "Quest Start" } : { text: "What was on the recorders?", tag: "Ask" });
     if (up === 2) out.push({ text: "I found the door with no mark.", tag: "Quest" });
   }
   if (id === "hub-amber-pip" && lr === 2) out.push({ text: "Want to buy some M.E.G. recorders?", tag: "Barter" });
+  if (id === "hub-amber-pip" && lr === 99 && s.hubLRsold && !up) out.push(s.hubUPask ? { text: "I'll go and find that door.", tag: "Quest Start" } : { text: "Anything good on those tapes?", tag: "Ask" }); // sold the tapes: Sato never heard them, so Pip has the blank door
   if (id === "hub-meg-okafor") {
     if (up === 2) out.push({ text: "There's an unmarked door past your barrier.", tag: "Quest" });
     if (s.hubLedger && !s.hubDinaAsk) out.push({ text: "Your ledger has a Dina A. in it.", tag: "Ask" });
-    else if (s.hubDinaLead && !s.hubLedger && !s.hubDinaAsk) out.push({ text: "Did a Dina come through here? Somebody said you wrote her down.", tag: "Ask" }); // Phoebe's lead (scripts/lib/hub-cut.js)
+    else if ((s.hubDinaLead || s.trail?.name || (s.dinaQ ?? 0) >= 9) && !s.hubLedger && !s.hubDinaAsk) out.push({ text: "Did a Dina come through here? Somebody said you wrote her down.", tag: "Ask" }); // Phoebe's lead (scripts/lib/hub-cut.js)
   }
   if (id === "hub-keymaster") {
     if (!s.hubKmKey) out.push({ text: "Would you spare a key? Please.", tag: "Ask" }, { text: "Hand over a key.", tag: "Demand" });
@@ -60,7 +62,8 @@ export function handleDialogueQuestHub(ctx, p, npc, text) {
     if (t.includes("find your key") && !mk && s.hubMKask) { s.hubMK = 1; setQuest(s, MK, { name: N[MK], step: "A Level Key left Lin's cabinet unsigned. Ask Dace at the barrier who came through on his watch.", mark: M("hub-meg-dace") }); tellQuest(ctx, p, `Quest Started: ${N[MK]}`); return { reply: "Fine. Dace had the late watch. Start there. And visitor, if you find it, it comes back to this desk. Not to your pocket.", mood: "calm" }; }
     if (t.includes("who was on watch") && mk === 1) return { reply: "Dace. Down at the barrier, where the lamps stop. He'll say he saw nothing. Ask him what he heard.", mood: "calm" };
     if (t.includes("here's your key") && mk === 3) { s.hubMK = 99; delete s.hubTag; pay(s, 120); addRep(s, "meg", 8); endQuest(s, MK, "You brought the key back to Lin's cabinet. She will sign keys out to you now."); tellQuest(ctx, p, `Quest Completed: ${N[MK]} · +$120`); return { reply: "Thirty-two. Thirty-two! Oh, that's lovely. Right. You're on the sheet now, visitor. One key an hour, you pay the deposit, you sign. Don't make it weird.", mood: "happy" }; }
-    if (t.includes("it's gone. someone used it") && mk === 3) {
+    if (t.includes("it's gone. someone used it") && mk === 3 && !s.hubMKlie) {
+      if (!rollCheck(ctx, s, { skill: "speech", difficulty: 45 }).ok) { s.hubMKlie = 1; return { reply: "Used. With a brass tag still wired to it, poking out of your pocket. Try that again and I'll write you down instead. Give it here.", mood: "annoyed" }; }
       s.hubMK = 99; delete s.hubTag; giveKey(ctx, p, "level5"); addRep(s, "meg", 2); endQuest(s, MK, "You told Lin the key was spent, and kept it. She signs keys out to you anyway."); tellQuest(ctx, p, `Quest Completed: ${N[MK]} · Level Key kept`);
       return { reply: "Used. Of course it was. Thirty-one, then. I'll change the sheet. Thank you for looking, that's more than my own people did. You can draw from me, one an hour.", mood: "sad" }; }
     for (const [pl, c] of Object.entries(DRAW)) if (mk === 99 && t.includes(MARKS[pl])) {
@@ -87,7 +90,9 @@ export function handleDialogueQuestHub(ctx, p, npc, text) {
     if (t.includes("unmarked door past your barrier") && up === 2) return finishUP(ctx, p, "okafor");
     if ((t.includes("dina a.") && s.hubLedger) || (t.includes("did a dina come through") && s.hubDinaLead)) { s.hubDinaAsk = 1; return { reply: "I remember her. Didn't want a key. Wanted the tenth tunnel and a radio, in that order. I told her the city past that door is quiet and she said quiet was fine. She walked. Nobody walks the tenth alone. She did.", mood: "calm" }; }
   }
-  if (id === "hub-amber-pip" && t.includes("buy some m.e.g. recorders") && lr === 2) { s.hubLR = 99; delete s.hubRec; pay(s, 260); addRep(s, "meg", -6); endQuest(s, LR, "You sold the 2019 team's tapes to Camp Amber. Sato never heard them."); tellQuest(ctx, p, `Quest Completed: ${N[LR]} · +$260`); return { reply: "Uniform tapes? Yes! Jo trades those back to the uniforms for stove gas. Everybody wins! Except whoever asked you to get them. Sorry, them.", mood: "happy" }; }
+  if (id === "hub-amber-pip" && t.includes("anything good on those tapes") && lr === 99 && s.hubLRsold && !up) { s.hubUPask = 1; return { reply: "Jo played one before she traded it. Mostly counting. Then a uniform goes 'this one's blank'. A door with no mark, right at the end of the dark road. Jo says that's worth more than the tapes.", mood: "happy" }; }
+  if (id === "hub-amber-pip" && t.includes("go and find that door") && lr === 99 && s.hubLRsold && !up && s.hubUPask) { s.hubUP = 1; setQuest(s, UP, { name: N[UP], step: "Jo's tape mentions a door with no mark at the end of the dark road. Find it, then tell someone who'd care: Sato, or Okafor at the barrier.", mark: M("hub-uncharted") }); tellQuest(ctx, p, `Quest Started: ${N[UP]}`); return { reply: "Go on then! Hand on it, see if it's warm. Then tell the uniforms, they pay better than us. Don't say where you heard it.", mood: "happy" }; }
+  if (id === "hub-amber-pip" && t.includes("buy some m.e.g. recorders") && lr === 2) { s.hubLR = 99; s.hubLRsold = 1; delete s.hubRec; pay(s, 260); addRep(s, "meg", -6); endQuest(s, LR, "You sold the 2019 team's tapes to Camp Amber. Sato never heard them."); tellQuest(ctx, p, `Quest Completed: ${N[LR]} · +$260`); return { reply: "Uniform tapes? Yes! Jo trades those back to the uniforms for stove gas. Everybody wins! Except whoever asked you to get them. Sorry, them.", mood: "happy" }; }
   if (id === "hub-keymaster") {
     if (t.includes("spare a key") && !s.hubKmKey) {
       const pool = Object.values(KEYED).filter((pl) => !hasKey(s, pl) && ctx.world.places?.[pl] !== undefined), pl = pool[Math.floor(ctx.random() * pool.length)];
