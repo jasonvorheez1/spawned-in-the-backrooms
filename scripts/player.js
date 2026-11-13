@@ -1274,7 +1274,8 @@ export function update(ctx, dt) {
   ensure(ctx)
   if (ctx.self.parent) return
   const w = walkOf(ctx), s = ctx.self.state
-  w.stamina ??= s.stamina; w.battery ??= s.battery
+  if (!Number.isFinite(w.stamina)) w.stamina = Number.isFinite(s.stamina) ? s.stamina : L.stamina
+  if (!Number.isFinite(w.battery)) w.battery = Number.isFinite(s.battery) ? s.battery : L.battery // a wake before the save lands used to leave these unset: NaN went into the save as null
   { const hp0 = w.hpSeen ?? s.hp; if (typeof s.hp === 'number' && hp0 - s.hp >= 2 && s.look) wearArmor(ctx, hp0 - s.hp); w.hpSeen = s.hp } // a hit that got through wears what you have on (lib/condition.js)
   let dir = w.dir ?? { x: 0, z: 0 }, pressing = dir.x !== 0 || dir.z !== 0
   { // pressed into a wall: the keys say go, the feet stay put. after a beat you stop running (no drain, no steps, no bob)
