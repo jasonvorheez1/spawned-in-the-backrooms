@@ -24,7 +24,7 @@ export const ears = {
     ctx.emit("playSound", { clip: "cdn/sfx-computer-terminal-beep-confirm.mp3", position: ctx.self.feetPosition, volume: 0.6 });
     const q = s.rangeQ;
     if (!q) { s.rangeQ = { stage: 0 }; stepQuest(s, 0); s.notice = { text: "Range Check started. Six steps, one per station", at: now }; return; }
-    if (q.stage >= 5) { endQuest(s, QID, "Every station on the range works"); s.rangeQ = null; s.payout = { xp: 50, text: "Range Check complete. +50 XP" }; return; }
+    if (q.stage >= 5) { const first = !s.qdone?.[QID]; endQuest(s, QID, "Every station on the range works"); s.rangeQ = null; s.payout = first ? { xp: 50, text: "Range Check complete. +50 XP" } : { text: "Range Check complete again. No XP the second time" }; return; } // XP once: the range can be rerun for practice
     s.notice = { text: `Range Check: ${STEPS[q.stage][0]}`, at: now };
   },
 };
