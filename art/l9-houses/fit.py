@@ -35,9 +35,18 @@ o.name = "house"
 inn = o.copy(); inn.data = o.data.copy(); bpy.context.scene.collection.objects.link(inn); inn.name = "interior"
 bm = bmesh.new(); bm.from_mesh(inn.data); bm.normal_update()
 for v in bm.verts: v.co -= v.normal * 0.04
-bmesh.ops.reverse_faces(bm, faces=bm.faces); bm.to_mesh(inn.data); bm.free()
+bmesh.ops.reverse_faces(bm, faces=bm.faces); bm.normal_update()
+# box-projected UVs in metres (the Tripo atlas smeared any tiled paper), and the faces looking down are the ceiling slot
+uv = bm.loops.layers.uv.verify()
+for f in bm.faces:
+    n = f.normal; ax = max(range(3), key=lambda i: abs(n[i]))
+    f.material_index = 1 if n.z < -0.5 else 0
+    for lp in f.loops:
+        c = lp.vert.co; lp[uv] = (c.y, c.z) if ax == 0 else (c.x, c.z) if ax == 1 else (c.x, c.y)
+bm.to_mesh(inn.data); bm.free()
 mat = bpy.data.materials.new("interior"); mat.use_nodes = True
 b = mat.node_tree.nodes["Principled BSDF"]; b.inputs["Base Color"].default_value = (0.78, 0.72, 0.6, 1); b.inputs["Roughness"].default_value = 0.9
-inn.data.materials.clear(); inn.data.materials.append(mat)
+ceil = bpy.data.materials.new("ceiling"); ceil.use_nodes = True; ceil.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.85, 0.82, 0.74, 1)
+inn.data.materials.clear(); inn.data.materials.append(mat); inn.data.materials.append(ceil)
 bpy.ops.export_scene.gltf(filepath=dst, export_format='GLB', use_selection=False, export_image_format='JPEG')
 print("FIT", json.dumps({"w": sx*s, "d": sy*s, "h": sz*s, "faces": len(o.data.polygons)}))
