@@ -19,7 +19,7 @@ const SVC = { scout: 'Ask for tactical tips', medic: 'Medical triage & healing',
 
 const CSS = `<style>
 @keyframes tcOpen{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-@keyframes tcLine{from{opacity:0}to{opacity:1}}
+@keyframes tcLine{from{opacity:0}to{opacity:1}}@keyframes tcYou{0%{opacity:0}12%{opacity:1}100%{opacity:.55}}@keyframes tcIn{0%,100%{opacity:0}}@keyframes tcGate{0%,99%{pointer-events:none}100%{pointer-events:auto}}.tc-you{font-size:17px;line-height:1.4;color:#ffe2a8;opacity:.55;margin-bottom:8px;animation:tcYou 1s ease-out}.tc-you b{font-weight:400;opacity:.7;margin-right:6px}.tc-seq .tc-now-txt{animation:tcIn .9s step-end,tcLine .35s ease-out .9s both}.tc-seq-choices{animation:tcIn 1.5s step-end,tcLine .3s ease-out 1.5s both,tcGate 1.5s step-end}
 @keyframes tcPulse{0%,100%{opacity:.35}50%{opacity:1}}
 .tkw{--amb:#ffb642;--amb2:#ffcf87;--ink:#0b0803;position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:14px;padding:0 calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px) 26px;background:linear-gradient(0deg,rgba(0,0,0,.42),transparent 48%);pointer-events:none;font-family:'Monofonto','Share Tech Mono','Consolas',monospace;z-index:90;color:var(--amb)}
 .tc-who{position:absolute;top:24px;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);text-align:right;text-shadow:0 0 6px rgba(255,182,66,.45),1px 1px 0 #000;pointer-events:none}
@@ -161,8 +161,9 @@ export function talkUi(ctx, player) {
   if (s.talkBusy) {
     nowHtml = `<div class="tc-line" role="status" aria-live="polite"><div class="tc-now-txt tc-waiting"><span>.</span><span>.</span><span>.</span></div></div>`
   } else if (activeLine) {
-    nowHtml = `<div class="tc-line" id="tcl${activeIdx}-${String(activeLine).length}" aria-live="polite" aria-atomic="true">
-      ${latestCheck ? checkBanner(latestCheck[1]) : ''}<div class="tc-now-txt">${esc(activeLine)}</div>
+    const asked = activeIdx > 0 && log[activeIdx - 1][0] === 'p' ? log[activeIdx - 1][1] : null // FNV order: the line you picked, then his answer, then your next choices
+    nowHtml = `<div class="tc-line${asked ? ' tc-seq' : ''}" id="tcl${activeIdx}-${String(activeLine).length}" aria-live="polite" aria-atomic="true">
+      ${asked ? `<div class="tc-you"><b>YOU</b>${esc(asked)}</div>` : ''}${latestCheck ? checkBanner(latestCheck[1]) : ''}<div class="tc-now-txt">${esc(activeLine)}</div>
     </div>`
   } else {
     nowHtml = ''
@@ -258,7 +259,7 @@ export function talkUi(ctx, player) {
     </div>
     ${nowHtml}
     <div class="tc-box" data-interactive>
-      <div class="tc-choices-list" data-interactive>
+      <div class="tc-choices-list${activeIdx > 0 && log[activeIdx - 1][0] === 'p' ? ' tc-seq-choices' : ''}" id="tcc${activeIdx}-${String(activeLine ?? '').length}" data-interactive>
         ${choiceItems || '<div style="font-size:16px;opacity:.6;padding:6px 12px">...</div>'}
       </div>
       <div class="tc-foot" data-interactive>
