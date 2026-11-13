@@ -33,13 +33,20 @@ export function onInput(ctx, input) {
   m.mv = Math.hypot(input.axes?.moveX ?? 0, input.axes?.moveZ ?? 0)
 }
 
-const headroom = (ctx, p) => { // clear height over the feet, capped at 3 m
-  const h = raycast(ctx, { x: p.x, y: p.y + 0.3, z: p.z }, { x: 0, y: 1, z: 0 }, { distance: 2.7, radius: 0.2, physicsOnly: true })
-  return h ? h.distance + 0.3 : 3
+const isSolid = (ctx, h) => { const o = h?.id && ctx.getObject?.(h.id); return !(o?.physics?.trigger) } // a trigger volume is no ceiling
+const headroom = (ctx, p) => { // clear height over the feet, capped at 3 m: static, solid colliders only (a lamp shade, an NPC, a loot box or a trigger overhead never counts)
+  const h = raycast(ctx, { x: p.x, y: p.y + 0.3, z: p.z }, { x: 0, y: 1, z: 0 }, { distance: 2.7, radius: 0.2, physicsOnly: true, bodies: 'static' })
+  return h && isSolid(ctx, h) ? h.distance + 0.3 : 3
+}
+const lowAll = (ctx, p, d) => { // a real low ceiling covers the body, not one edge of it: centre and both shoulders
+  if (headroom(ctx, p) >= 1.6) return false
+  const sx = -d.z * 0.3, sz = d.x * 0.3
+  return headroom(ctx, { x: p.x + sx, y: p.y, z: p.z + sz }) < 1.6 && headroom(ctx, { x: p.x - sx, y: p.y, z: p.z - sz }) < 1.6
 }
 
-function down(ctx, m) {
+function down(ctx, m, auto) {
   const me = ctx.self, s = me.state
+  m.auto = !!auto; m.low = 0; m.clear = 0
   s.crawl = true; s.crouch = true
   me.physics = { body: 'character', collider: 'capsule', capsule: { height: CAP_H, radius: CAP_R } }
   m.clip = null
@@ -55,32 +62,42 @@ export function update(ctx, dt) {
   if (ctx.self.isLocal === false) return
   const me = ctx.self, s = me.state, m = (me.session.crawl ??= {}), p = me.feetPosition
   if (s.level == null) return
-  if (!m.boot) { m.boot = true; if (s.crawl) down(ctx, m) } // a reload or a level change: the saved crawl takes the small capsule again
+  if (!m.boot) { m.boot = true; if (s.crawl) down(ctx, m, true) } // a saved crawl stands back up once there is room // a reload or a level change: the saved crawl takes the small capsule again
   const busy = s.dead || (s.hp ?? 1) <= 0 || s.swimming || s.climbing || s.sit || me.parent
   if (busy) { if (s.crawl) up(ctx, m, false); m.wantDown = m.wantUp = false; return }
   m.t = (m.t ?? 0) + dt
-  if (m.wantDown) { m.wantDown = false; down(ctx, m) }
+  if (m.wantDown) { m.wantDown = false; down(ctx, m, false) }
   if (s.crawl && m.wantUp) {
     m.wantUp = false
     if (headroom(ctx, p) >= NEED) up(ctx, m, true)
     else if (ctx.now() - (m.noRoomAt ?? 0) > 2500) { m.noRoomAt = ctx.now(); s.notice = { text: 'No room to stand up here.', at: ctx.now() } }
   }
-  // a low ceiling, or a low opening straight ahead: down you go on your own
+  // a low ceiling, or a low opening straight ahead: down you go on your own, but only when it is plainly a crawlspace:
+  // static ceiling over the whole body for ~0.4 s, or a lintel as wide as you with low room past it (Shelly: no prone at weird moments)
   if (!s.crawl && m.t > 0.12) {
     m.t = 0
-    if (headroom(ctx, p) < 1.6) down(ctx, m)
-    else if ((m.mv ?? 0) > 0.2) {
-      const v = me.velocity, sp = Math.hypot(v.x, v.z)
-      if (sp > 0.3) {
-        const d = { x: v.x / sp, y: 0, z: v.z / sp }
-        const hiHit = raycast(ctx, { x: p.x, y: p.y + 1.45, z: p.z }, d, { distance: 0.75, physicsOnly: true })
-        const loHit = raycast(ctx, { x: p.x, y: p.y + 0.45, z: p.z }, d, { distance: 1.2, physicsOnly: true })
-        if (hiHit && !loHit && (hiHit.normal?.y ?? 0) < 0.5) {
-          const ahead = { x: p.x + d.x * 0.9, y: p.y, z: p.z + d.z * 0.9 } // a lintel, not a wall: there is floor and low room past it
-          if (headroom(ctx, ahead) < 1.6) down(ctx, m)
+    const yaw = (me.rotation?.yaw ?? 0) * Math.PI / 180, fd = { x: -Math.sin(yaw), y: 0, z: -Math.cos(yaw) }
+    if (lowAll(ctx, p, fd)) { m.low = (m.low ?? 0) + 1; if (m.low >= 3) down(ctx, m, true) }
+    else {
+      m.low = 0
+      if ((m.mv ?? 0) > 0.2) {
+        const v = me.velocity, sp = Math.hypot(v.x, v.z)
+        if (sp > 0.3) {
+          const d = { x: v.x / sp, y: 0, z: v.z / sp }, sx = -d.z * 0.3, sz = d.x * 0.3
+          const ray = (ox, oz, y, dist) => { const h = raycast(ctx, { x: p.x + ox, y: p.y + y, z: p.z + oz }, d, { distance: dist, physicsOnly: true, bodies: 'static' }); return h && isSolid(ctx, h) ? h : null }
+          const hiHit = ray(0, 0, 1.45, 0.75), loHit = ray(0, 0, 0.45, 1.2)
+          if (hiHit && !loHit && (hiHit.normal?.y ?? 0) < 0.5 && ray(sx, sz, 1.45, 0.75) && ray(-sx, -sz, 1.45, 0.75) && !ray(sx, sz, 0.45, 1.2) && !ray(-sx, -sz, 0.45, 1.2)) {
+            const ahead = { x: p.x + d.x * 0.9, y: p.y, z: p.z + d.z * 0.9 } // a lintel, not a wall: there is floor and low room past it
+            if (lowAll(ctx, ahead, d)) down(ctx, m, true)
+          }
         }
       }
     }
+  }
+  // a drop the world made, the world undoes: clear of the ceiling for ~0.5 s, you get back up (a crawl you chose stays yours)
+  if (s.crawl && m.auto) {
+    m.ct = (m.ct ?? 0) + dt
+    if (m.ct > 0.12) { m.ct = 0; if (headroom(ctx, p) >= NEED) { m.clear = (m.clear ?? 0) + 1; if (m.clear >= 4) { up(ctx, m, false); m.auto = false } } else m.clear = 0 }
   }
   if (!s.crawl) return
   if (!s.crouch) s.crouch = true // a sprint or a jump stands a crouch up (scripts/player.js); not a crawl
