@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 6891,
-  "updatedAt": "2026-11-13T01:40:37.258Z",
+  "basedOnSpecVersion": 6908,
+  "updatedAt": "2026-11-13T02:12:43.110Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG across Level 0, a social hub and authored lore destinations; player saves hold progression, gear, quests and homes, while tutorial0 is solo and ephemeral. Shared player behaviors, place simulations and reusable builders join authored scenes to generated spaces. Level 31 is a versioned Roller Rink with modular venue zones and authored NPC patrols; the Favi creator-assistant mod adds a game-aware chat, Idea Forge, playtest feedback and a mod market on the god-mode rail.",
   "scriptPaths": [],
   "places": [
@@ -9,8 +9,8 @@
     "places/bonus (3D) - shared vaporwave mall with simulated staff, shops, directory, arcade, payphones and player-home kiosk.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo, ephemeral) - character creation/waking, staged tutorial and HALOGEN handoff to Dina's lead.",
     "places/level01 (3D) - Zenith Station, breach, bots, hazards and recorder quest.",
-    "places/level1, level2, level02, level21, level3, gamma (3D) - Habitable Zone camp and modeled pallet racks with searchable shelf stock; Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma. Level 1 sim also owns puddle refresh…",
-    "places/level31 (3D) - Roller Rink, cinema/DJ booth, east arcade, party room, snack bar and rental; Dottie's gift shop and skate loft are on the west mezzanine; Awakening lighting/look configured here.",
+    "places/level1, level2, level02, level21, level3, gamma (3D) - Habitable Zone camp and modeled pallet racks with searchable shelf stock; Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma. Level 1 sim also owns generated sprinkler heads and Tripo rubble/stock; its back-to-Level-0 arrival is inset into the west wall.",
+    "places/level31 (3D) - Roller Rink, cinema/DJ booth, east arcade, party room, snack bar and rental; Dottie's gift shop and skate loft are on the west mezzanine, with an employees-only snack-bar back room; Awakening lighting/look configured here.",
     "places/level4, level5, level6, level7, level10, level11, level12, level13 (3D) - resident hubs, rentals, malls, stories, hazards and deeper authored destinations.",
     "places/level26, level27, spamton, testlab and remaining configured places - additional lore, special/test destinations and deeper levels; place scenes supply their own objects."
   ],
@@ -22,7 +22,7 @@
     "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, aiming camera and third-person toggle.",
     "scripts/ui.js + scripts/stats-ui.js - composed player HUD/menus and character status, including derived sanity cap.",
     "places/main/sim.js + scripts/lib/maze.js + scripts/lib/xmas-room.js - Level 0 layout, Christmas Area and stair-anomaly seeding.",
-    "places/level31/sim.js + scripts/lib/level31.js + scripts/lib/level31-parts.js - v88 rink shell, mezzanine/stair, doors and modular venue builders; mods/favi/mod.json registers Favi's creator-assistant tab and brain object."
+    "places/level31/sim.js + scripts/lib/level31.js + scripts/lib/level31-parts.js - v90 rink shell, mezzanine/stair, doors and modular venue builders; mods/favi/mod.json registers Favi's creator-assistant tab and brain object."
   ],
   "shared": [
     "scripts/lib/hub.js + scripts/lib/data/preload.yml + scripts/lib/preload-next.js - solo room IDs/destinations, home destinations and proximity-preload manifest; Level 5 labels use level5.js placards.",
@@ -32,7 +32,7 @@
     "scripts/lib/data/l02-props.yml + scripts/lib/data/l02-remodel.yml + scripts/lib/l02-grid.js - Level 0.2 prop catalog, partitions, lamp/paint configuration, crew dressing and reset.",
     "scripts/lib/breakables.js + scripts/lib/data/breakables.yml - shared prop/wall damage, material, drops and regrowth; place sims opt in with sweepProps/tickWalls.",
     "scripts/lib/data/dlg-*.yml + scripts/lib/dialogue.js + scripts/lib/data/voice-cast.yml, voice-acted.yml + scripts/lib/voices.js - authored NPC talk/barks, performer assignments and recorded takes; scripts/meg-agent.js prefers per-NPC barks.",
-    "scripts/lib/critter-model.js + scripts/lib/data/cat-wardrobe.yml + scripts/lib/rep.js + scripts/lib/rbox.js + scripts/lib/seat.js; mods/awakening/lib/* - character appearance/refitting (including painted and model cat garments), faction/ge…"
+    "scripts/lib/critter-model.js + scripts/lib/data/cat-wardrobe.yml + scripts/lib/rep.js + scripts/lib/rbox.js + scripts/lib/seat.js; mods/awakening/lib/* - character appearance/refitting (including painted and model cat garments), faction/geometry and seating helpers reused across places."
   ],
   "notableExports": [
     "sim.js - cadence, tick, onOutOfBounds; body-style propagation and bounded incremental object restyling.",
@@ -51,22 +51,22 @@
     "scripts/lib/remodel-quest.js - remodQ, l02got/l02paint, fresh, capnAsk/capnFailed and Fresh Paint quest/HUD/payout/reputation.",
     "scripts/build.js + places/level5/sim.js - player homeKeep.built or homeKeep.l5built and reconstruction; scripts/l5-resident.js owns booking keys/room identity and place.state.l5rent exclusive-room ledger.",
     "scripts/arcade-play.js + scripts/lib/felix-game.js - player.state.arcade/arcadeBest/felixBest; active game frames and input progression are in session state, consumed by arcade UI.",
-    "Enemy managers own AI/sneakTarget; scripts/lib/meg-agent.js owns NPC runtime combat/movement memory; places/level2/sim.js owns survBodyV and camp survivor replacement, while places/level31/sim.js owns place.state.v31=88 and generated l31-*…",
+    "Enemy managers own AI/sneakTarget; scripts/lib/meg-agent.js owns NPC runtime combat/movement memory; places/level2/sim.js owns survBodyV and camp survivor replacement, while places/level31/sim.js owns place.state.v31=90 and generated l31-* geometry/props.",
     "scripts/lib/seat.js - sitter player.state.sit and each seat's state.by claims; scripts/humanoid-locomotion.js reads seat state to animate seated bodies."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific…",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific input paths.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera; camera writes aimPt/aimPitch → player.js ballistics/weaponAim; player.js zoneHere → scripts/lib/maze.js names and Level 31 zoneAt/L31_NAMES.",
     "scripts/routing.js requested room → scripts/lib/hub.js solo selection; toHub/toSolo cross to hub/home and maintain roomHop/save-place; kiosk resolves booked Level 5 home IDs.",
     "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close to intro/tutorial0; menuOpen drives menu UI and solo pause scaling.",
     "tutorial0 HALOGEN cut → scripts/lib/tut0-cut.js + scripts/lib/dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ and play recorded voices.",
     "scripts/build.js placement/removal → homeKeep.built or homeKeep.l5built; Level 5 sim restores separately; l5-resident booking → player l5home/l5room and place.state.l5rent, hub kiosk routes per room.",
     "Level 2 sim l2-to-l31 → scripts/level-door.js to level31#l31-from-l2; Level 31 l31-back → level2#l2-from-l31; quest-route.js maps both directed crossings.",
-    "Level 31 sim reads H/B/RINK/ZONES/DOOR/BACK, rebuilds l31-* roots at place.state.v31=88 and dispatches layParts; builders dress rink zones; level31.js supplies zone IDs and placement geometry, then texturePass styles eligible flat-color pr…",
+    "Level 31 sim reads H/B/RINK/ZONES/DOOR/BACK, rebuilds l31-* roots at place.state.v31=90 and dispatches layParts; level31.js supplies zone IDs and placement geometry, then texturePass styles eligible flat-color props.",
+    "Level 31 sim cuts the south snack-bar wall for the employees-only doorway; scripts/lib/level31-food.js lays its hinged door and staff-room interior (lockers, shelves, clock, mop, break table and noticeboard) as part of the food builder.",
     "scripts/talk.js assembles authored dialogue and recorded voice takes; unhandled quest text → handleDialogueQuest31; Marlowe/Coach/DJ/clerk dialogue advances l31q; l31-crate.js → openCrate and l31-deck.js → useDeck.",
-    "Level 31 arcade usable press → scripts/lib/level31-arcade.js initializes player.state.arcade; arcade-play.js dispatches Block Panic or felix-game ticks to arcade UI; tagged seat usable/input → scripts/lib/seat.js claims a spot, writes play…",
-    "Favi tab actions → mods/favi/favi.js and world.state.favi; inbox/watch/reminder requests are handled by the platform-simulated favi-brain row in places/main/cells/objects.scene via mods/favi/brain-runner.js, which submits model jobs and wr…",
-    "places/level1/sim.js reads scripts/lib/level1.js RACK/shelfSlots and seeds tagged modeled l1rack rows plus searchable l1stock cartons/pails at the Tripo rack deck heights; scripts/level1-geo.js puddles on hall/storage floors are now a thin translucent film (roughness 0.02, color alpha 0.28), not opaque black blotches."
+    "Level 31 arcade usable press → scripts/lib/level31-arcade.js initializes player.state.arcade; arcade-play.js dispatches Block Panic or felix-game ticks to arcade UI; tagged seat usable/input → scripts/lib/seat.js claims a spot, writes player.state.sit and seat.state.by.",
+    "Favi tab actions → mods/favi/favi.js and world.state.favi; inbox/watch/reminder requests are handled by the platform-simulated favi-brain row in places/main/cells/objects.scene via mods/favi/brain-runner.js, which submits model jobs and writes results back to Favi state."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored mall shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
@@ -76,7 +76,7 @@
     "places/level01/sim.js + Zenith geometry/breach/hatch/bot/hazard scripts; places/level02/sim.js + l02-grid.js vary partitions, lights, crew, knocks and reset.",
     "scripts/lib/meg-agent.js - per-NPC nerve/stats/weapon reactions, cover and authored/voiced barks; NPC state.rounds supports patrols and Meg handles movement/fighting; scripts/lib/critter-model.js refits appearances across levels.",
     "Level 13 furnishing/dressing data and foe/people/tape layers vary rooms, story, encounters and residents; weapon data vary requirements/stats/loot while stats.js and weapon-look/fp-gun/vmpose supply handling and visuals.",
-    "scripts/lib/data/cat-wardrobe.yml + art/cat-wardrobe/{eyewear,hats}.py + scripts/lib/critter-model.js - cat garment paint/model variants and fitted eyewear/headwear are reused across cat looks; Level 31 modular builders vary venue zones ar…"
+    "scripts/lib/data/cat-wardrobe.yml + art/cat-wardrobe/{eyewear,hats}.py + scripts/lib/critter-model.js - cat garment paint/model variants and fitted eyewear/headwear are reused across cat looks; Level 31 modular builders vary venue zones and props."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -88,8 +88,8 @@
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. Keep this bounded sweep.",
     "Global body-style restyling skips player IDs and player/ roots and ignores local-audience or model-less objects; wardrobe membership is derived from critter-ward object IDs and passed to restyle.",
-    "Level 2 camp survivors must keep their generated look in NPC state.wear for global body restyling; survBodyV=1 triggers a one-time destroy/rebuild so survivors laid on the older body are refit. Keep their home positions and replacement pat…",
-    "Level 31 sim uses place.state.v31=88 and rebuilds l31-* roots; align IDs, shell H=8, zone/door/arrival geometry and mezzanine y=4 with level31.js; shop builder adds 4 m, and texturePass must spare lights/neon/glass/glows/hidden geometry.",
+    "Level 2 camp survivors must keep their generated look in NPC state.wear for global body restyling; survBodyV=1 triggers a one-time destroy/rebuild so survivors laid on the older body are refit. Keep their home positions and replacement patrol/quest behavior aligned.",
+    "Level 31 sim uses place.state.v31=90 and rebuilds l31-* roots; align IDs, shell H=8, zone/door/arrival geometry, south staff doorway/room, and mezzanine y=4 with level31.js; shop builder adds 4 m, and texturePass must spare lights/neon/glass/glows/hidden geometry.",
     "scripts/lib/seat.js parents a seated body to the tagged seat in seat-local coordinates; cushionLift ray-probes seat geometry unless state.seat.y overrides it. Keep seat state.by claims in step with sitter state.sit.",
     "Favi's brain row is platform-simulated and leased in world.state.favi.beat; brain-runner keeps it near a player so it remains in the tick bubble. Keep inbox processing single-writer/idempotent rather than letting tab actions write it."
   ]
