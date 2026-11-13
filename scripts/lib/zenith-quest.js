@@ -3,7 +3,7 @@
 // and the keycard comes mid-quest, once you've proved you can reach it (Shelly, Nov 9: "give you ACCESS to level 0.1 mid-way as in lore its locked up by bntg").
 // zenQ: 1 find the seal · 2 report back · 3 keycard in hand · 4 inside the station · 5 holding the drive · 99 paid. zenV 2 = this numbering.
 import { pushFeed } from "./feed.js";
-import { setQuest, endQuest, qid } from "./quests.js";
+import { setQuest, endQuest, qid, claimReward } from "./quests.js";
 import { addRep, addKarma, repOf } from "./rep.js";
 import { rollCheck } from "./npc-talk.js";
 const NAME = "The Zenith Survey";
@@ -69,7 +69,7 @@ export function handleDialogueQuestZ(ctx, p, npc, text) {
       : { reply: "Sixty was the price when you took the job. It's still sixty.", mood: "annoyed" };
   }
   if (s.zenQ === 99 && t.includes("more work in zenith")) return { reply: "There will be. The Guild wants that station, and so does M.E.G. When I know who's moving first, you'll hear it from me.", mood: "neutral" };
-  if (s.zenQ === 5 && s.zenDrive && /drive|recorder|box|got|found|here/.test(t)) {
+  if (s.zenQ === 5 && s.zenDrive && /drive|recorder|box|got|found|here/.test(t) && claimReward(s, QID)) {
     const rep = repOf(s, "bntg"), bonus = rep >= 35 ? 0.25 : rep >= 12 ? 0.1 : 0;
     const base = 6000 + (s.zenHaggle > 0 ? s.zenHaggle : 0), extra = Math.round(base * bonus), cents = base + extra;
     s.zenDrive = false; s.zenQ = 99; if (s.quest?.name === NAME) s.quest = null;

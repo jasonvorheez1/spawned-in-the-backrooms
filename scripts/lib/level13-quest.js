@@ -7,7 +7,7 @@
 import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
 import { addRep } from "./rep.js";
-import { setQuest, endQuest, tellQuest } from "./quests.js";
+import { setQuest, endQuest, tellQuest, claimReward } from "./quests.js";
 import { rollCheck } from "./npc-talk.js";
 import { apt, aptAt } from "./level13.js";
 export const QID = "l13-still-home", QNAME = "Still Home";
@@ -44,7 +44,7 @@ export function setL13(ctx, p, step, text, clip) {
   setQuest(s, QID, { name: QNAME, step: TIPS[key], mark: MARKS[key] }); if (text) tell(ctx, p, text, clip);
 }
 function finish(ctx, p, who) {
-  const s = p.state; if (s.l13q === 99) return; // paid once
+  const s = p.state; if (!claimReward(s, QID)) { s.l13q = 99; return; } // one payout per save (scripts/lib/quests.js)
   const pay = PAY[who], quiet = s.l13route === "tv", xp = pay.xp + (quiet ? QUIET_XP : 0);
   s.l13q = 99; s.l13locket = false; s.l13end = who;
   endQuest(s, QID, (who === "noor" ? "Gave Bea's locket to Noor" : "Handed Bea's locket in at the desk as lost property")

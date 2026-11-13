@@ -86,3 +86,16 @@ test('Side B: Marlowe and the DJ each have something to say once it is over', ()
   expect(L31.l31Choices('l31-q-marlowe', { l31q: 99, l31route: 'rink' }).some((c) => c.text === "How's business?")).toBe(false)
   expect(L31.l31Choices('l31-dj', { l31q: 99, l31route: 'rink' }).some((c) => c.text === 'How does it sound now?')).toBe(true)
 })
+
+test('Side B pays its mixtape and money once, on the rink ending', () => {
+  const { ctx, s, p } = scene('l31-coach', 'level31', { l31q: 4, l31route: 'rink' })
+  const coach = { id: 'l31-coach' }
+  L31.handleDialogueQuest31(ctx, p, coach, 'The DJ has the master again.')
+  expect(s.l31q).toBe(99)
+  expect(s.snacks.mixtape).toBe(1)
+  const cents = s.cents
+  s.l31q = 4
+  L31.handleDialogueQuest31(ctx, p, coach, 'The DJ has the master again.')
+  expect(s.snacks.mixtape).toBe(1)
+  expect(s.cents).toBe(cents)
+})

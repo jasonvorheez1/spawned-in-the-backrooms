@@ -45,7 +45,7 @@ function arm(ctx, me, m) {
   for (const w of all) if (w !== keep) ctx.destroy(w.id); // one weapon a body: spares that piled up over reloads go
   if (s.arm === "fists") { m.armed = true; m.drawn = undefined; return; }
   if (keep) { m.armed = true; m.heldId = keep.id; return; }
-  m.heldId = ctx.spawn({ parent: me.id, attachment: { bone: "RightHand" }, visible: false, state: { kind: s.arm }, ...weaponBody(s.arm), ...heldRot(s.arm) });
+  m.heldId = ctx.spawn("held", { parent: me.id, attachment: { bone: "RightHand" }, visible: false, state: { kind: s.arm }, ...weaponBody(s.arm), ...heldRot(s.arm) });
   m.drawn = undefined; m.armed = true;
 }
 const SHOTS = { shotgun: "/cdn/moodboard-realistic-gritty/sfx-shotgun-blast-heavy-boom.mp3", smg: "/cdn/moodboard-realistic-gritty/sfx-smg-tommy-gun-loud-rattle-shot.mp3" };
@@ -396,6 +396,7 @@ export function update(ctx, dt) {
     else if (nearPlayerDist > 18 && !m.aimAt && !m.inspect && !m.flee) { ctx.sleep(0.1); dt += 0.1; }
   }
   if (!m.armed && !s.dead && now - (m.bornAt ??= now) > 1500) arm(ctx, me, m); // after the spawner has handed over its weapon
+  if (m.armed && now - (m.sweptAt ?? 0) > 10000) { m.sweptAt = now; const all = weaponsOf(ctx, me); if (all.length > 1) { const k = all.find((w) => w.id === m.heldId) ?? all[0]; m.heldId = k.id; for (const w of all) if (w !== k) ctx.destroy(w.id); } } // spares that landed after arming go too
   // essential: whoever walks with a player drops to a knee instead of dying, then gets back up
   // a companion who fell anyway (killed by a path that set dead directly) comes back too
   if (s.dead && s.follow && ctx.place.players.some((p) => p.id === s.follow)) { s.dead = false; s.hp = 0; }
