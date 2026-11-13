@@ -185,17 +185,17 @@ function layStaffRoom(ctx, P, M) {
   // one fluorescent troffer, slightly green, the way back rooms always are
   P("staff-troffer", { feetPosition: { x: cx, y: h - 0.04, z: cz }, primitive: box(0.6, 0.04, 1.2), material: { color: "#e9f4ea", emissive: "#e9f4ea", emissiveIntensity: 2.2 },
     children: [{ feetPosition: { x: 0, y: -0.3, z: 0 }, light: { kind: "point", color: "#e6f2dc", intensity: 4.5, distance: 9 } }] });
-  // Tripo props at true size: layout fits each into its real box before it stands
+  // Tripo props at true size: each box keeps the GLB's own proportions (measured in Blender, art/l31-staff) scaled to a real height; layout fits uniformly, so a box off the model's aspect shrank it
   const T = (id, key, x, y, z, yaw, size, solid = true) => P(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: { id: STAFF_G[key], forward: "+z" },
     layout: { box: { min: { x: -size[0] / 2, y: 0, z: -size[2] / 2 }, max: { x: size[0] / 2, y: size[1], z: size[2] / 2 } } }, ...(solid ? { physics: { body: "static", collider: "box" } } : {}), castShadow: true });
-  T("staff-lockers", "lockers", x0 + 0.28, 0, 33.3, 90, [1.35, 1.85, 0.45]); // three lockers against the west wall, doors facing the room
-  T("staff-shelf1", "shelf", 41.0, 0, z1 - 0.3, 180, [0.95, 1.6, 0.45]);
-  T("staff-shelf2", "shelf", 42.3, 0, z1 - 0.32, 176, [0.95, 1.6, 0.45]);
-  T("staff-mop", "mop", 43.3, 0, 31.1, -125, [0.75, 1.25, 0.45]);
-  T("staff-clock", "clock", 41.6, 1.15, z0 + 0.1, 0, [0.48, 0.4, 0.16], false); // on the door wall: you punch in on the way in
+  T("staff-lockers", "lockers", x0 + 0.45, 0, 33.3, 0, [0.817, 1.85, 1.846]); // three lockers against the west wall, doors facing the room
+  T("staff-shelf1", "shelf", 41.0, 0, z1 - 0.28, 90, [0.47, 1.6, 1.065]);
+  T("staff-shelf2", "shelf", 42.3, 0, z1 - 0.3, 92, [0.47, 1.6, 1.065]);
+  T("staff-mop", "mop", 43.2, 0, 31.2, -125, [0.43, 1.2, 1.09]);
+  T("staff-clock", "clock", 41.6, 1.9, z0 + 0.1, 90, [0.136, 0.35, 0.333], false); // on the door wall: you punch in on the way in
   // the break table, one chair pushed back, a schedule nobody reads
-  T("staff-table", "table", 38.6, 0, 34.4, 12, [0.8, 0.74, 0.8]);
-  T("staff-chair1", "chair", 37.85, 0, 33.75, 150, [0.48, 0.82, 0.52]);
-  T("staff-chair2", "chair", 39.55, 0, 34.95, -80, [0.48, 0.82, 0.52]);
+  T("staff-table", "table", 38.6, 0, 34.4, 12, [0.96, 0.74, 0.96]);
+  T("staff-chair1", "chair", 37.85, 0, 33.75, 150, [0.61, 0.85, 0.63]);
+  T("staff-chair2", "chair", 39.55, 0, 34.95, -80, [0.61, 0.85, 0.63]);
   P("staff-cork", { feetPosition: { x: 38.6, y: 1.55, z: z1 - 0.02 }, rotation: { yaw: 0 }, vector: CORK });
 }
