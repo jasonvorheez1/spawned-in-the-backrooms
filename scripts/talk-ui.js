@@ -2,7 +2,7 @@
 import T from './lib/data/talk.yml'
 import { nameOf, keyOf, isTrader, faction, buyPrice, sellPrice, sellables, repairables, repairPrice, SECTIONS, sectionOf, money } from './lib/npc-talk.js'
 import { band, bandColor } from './lib/condition.js'
-import { repDisc, standing, tierOf, tierColor } from './lib/rep.js'
+import { repDisc, standing, tierOf, tierColor, titleOf, titleColor, groupOf } from './lib/rep.js'
 import { PERKS, perkOf, isMine } from './lib/companion.js'
 import { describe } from './lib/items.js'
 import { skillsOf } from './lib/stats.js'
@@ -96,7 +96,7 @@ function shopUi(ctx, s, it) {
   return `<div class="tkp">
     <div class="tkh">
       <h2>${esc(nameOf(it))}</h2>
-      <span class="f">BARTER ${barter}${disc > 0 ? ` · ${Math.round(disc * 100)}% OFF` : ''}${standing(s, it) ? ` · <b style="color:${tierColor(standing(s, it))}">${tierOf(standing(s, it)).toUpperCase()}</b>` : ''}</span>
+      <span class="f">BARTER ${barter}${disc > 0 ? ` · ${Math.round(disc * 100)}% OFF` : ''}${titleOf(s, groupOf(it)) !== 'Neutral' ? ` · <b style="color:${titleColor(s, groupOf(it))}">${titleOf(s, groupOf(it)).toUpperCase()}</b>` : ''}</span>
       <span class="r">${money(cash)}</span>
     </div>
     <div class="tkb">${tb('buy', 'Buy Goods')}${tb('sell', 'Sell Loot')}${it.state?.role === 'smith' ? tb('repair', 'Repair Gear') : ''}</div>

@@ -24,7 +24,15 @@ const RIVAL_CUT = 1 / 3;
 const LV = (n) => (n >= 60 ? 3 : n >= 35 ? 2 : n >= 12 ? 1 : 0);
 // TITLE[fame level][infamy level], the game's own grid
 const TITLE = [["Neutral", "Shunned", "Hated", "Vilified"], ["Accepted", "Mixed", "Sneering Punk", "Merciful Thug"], ["Liked", "Smiling Troublemaker", "Unpredictable", "Soft-Hearted Devil"], ["Idolized", "Good-Natured Rascal", "Dark Hero", "Wild Child"]];
-const seed = (s, g) => { const r = s?.rep?.[g] ?? 0; return { f: s?.fame?.[g] ?? Math.max(0, r), i: s?.infamy?.[g] ?? Math.max(0, -r) } }; // an older save: its net becomes fame or infamy
+// an older save: its net becomes fame or infamy; a quest that wrote s.rep straight (Level 31, Level 70 routes) moves fame or infamy to match it
+const seed = (s, g) => {
+  const r = s?.rep?.[g] ?? 0; let f = s?.fame?.[g] ?? Math.max(0, r), i = s?.infamy?.[g] ?? Math.max(0, -r);
+  const gap = r - (f - i); if (Math.abs(gap) > 0.5) { if (gap > 0) f = Math.min(100, f + gap); else i = Math.min(100, i - gap) }
+  return { f, i };
+};
+// a faction's own uniform lets you pass for one of them at a distance; up close (DISGUISE_NEAR m) they see through it
+export const UNIFORMS = { meg: ["megjacket"], bntg: ["bntgvest"] };
+export const DISGUISE_NEAR = 3;
 export const fameOf = (s, g) => Math.round(seed(s, g).f);
 export const infamyOf = (s, g) => Math.round(seed(s, g).i);
 export const titleOf = (s, g) => TITLE[LV(fameOf(s, g))][LV(infamyOf(s, g))];
@@ -36,7 +44,6 @@ export function groupOf(it) {
   if (String(it?.id ?? "").split("/").pop().startsWith("hub-amber")) return "amber";
   const f = it?.state?.faction5 ?? it?.state?.faction4 ?? it?.state?.faction; if (f && MAP[f]) return MAP[f];
   const id = String(it?.id ?? "").split("/").pop(), p = id.split("-")[0];
-  if (id.startsWith("hub-amber")) return "amber";
   return PREFIX[p] ?? "survivors";
 }
 export const TIERS = [[60, "Idolized"], [35, "Liked"], [12, "Accepted"], [-11.99, "Neutral"], [-34.99, "Disliked"], [-59.99, "Hated"], [-1e9, "Vilified"]];

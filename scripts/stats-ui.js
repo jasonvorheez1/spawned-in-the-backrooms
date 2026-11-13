@@ -1,7 +1,7 @@
 import { wristNav } from './lib/wrist-nav.js'
 // The character sheet (K), the carry-weight chip and the creature read-out. All from player.state
 // (written by scripts/stats.js): attr, skl, apts, spts, sheetOpen, target. Buttons send the 'stat' action.
-import { GROUPS, tierOf, tierColor, repOf, karmaOf, karmaTitle, karmaColor } from './lib/rep.js'
+import { GROUPS, tierOf, tierColor, repOf, karmaOf, karmaTitle, karmaColor, titleOf, titleColor, fameOf, infamyOf } from './lib/rep.js'
 import L from './lib/data/level0.yml'
 import W from './lib/weapons.js'
 import { ATTRS, SKILLS, ATTR_MAX, SKILL_MAX, attrsOf, skillsOf, spentOf, tagsOf, dmgMul, derived, carried, burden, handling, reqText } from './lib/stats.js'
@@ -115,7 +115,7 @@ export function statsUi(ctx, player) {
     <div class="dv">
       <span>Max HP <b>${L.hp + (s.level - 1) * L.perLevel.hp + d.hpBonus}</b></span><span>Max sanity <b>${L.sanity + (s.level - 1) * L.perLevel.sanity + d.sanBonus}</b></span>
       <span>Carry weight <b>${kg.toFixed(1)} / ${cap} kg${slow ? ' (slowed)' : ''}</b></span><span>Stamina <b>${Math.round(d.staMax)}</b></span>
-      <span>Karma <b style="color:${karmaColor(karmaOf(s))}">${karmaTitle(karmaOf(s))} (${karmaOf(s)})</b></span>${Object.keys(GROUPS).map((g) => `<span>${GROUPS[g].name} <b style="color:${tierColor(repOf(s, g))}">${tierOf(repOf(s, g))} (${repOf(s, g)})</b></span>`).join('')}
+      <span>Karma <b style="color:${karmaColor(karmaOf(s))}">${karmaTitle(karmaOf(s))} (${karmaOf(s)})</b></span>${Object.keys(GROUPS).map((g) => `<span>${GROUPS[g].name} <b style="color:${titleColor(s, g)}">${titleOf(s, g)}</b> <i style="opacity:.7;font-style:normal">fame ${fameOf(s, g)} · infamy ${infamyOf(s, g)}</i></span>`).join('')}
       <span>Damage resist <b>DR ${d.dr}</b></span><span>Clothes find <b>×${d.clothFind.toFixed(2)}</b></span>
       <span>${wp.name} DAM <b>${dam(wp)}</b></span><span>DPS <b>${Math.round(dam(wp) * (wp.pellets ? 1 : 1) / (wp.cooldown * (wp.ranged ? 1 : d.swing)))}</b></span>
       ${wp.req ? `<span>${wp.name} needs <b>${reqText(wp)}</b></span><span>${handling(s, wp).notes.length ? `<b style="color:#ff9a8a">${handling(s, wp).notes.join(' · ')}</b>` : 'You can handle it'}${wp.ranged ? ` · spread ×${handling(s, wp).spread.toFixed(2)} · kick ×${handling(s, wp).recoil.toFixed(2)}` : ''}</span>` : ''}
