@@ -1502,7 +1502,7 @@ function tickStats(ctx, t, moving) {
     if (s.wakeAtSave && sp && s.savePlace === ctx.self.place) { s.wakeAtSave = null; ctx.self.feetPosition = { x: sp.x, y: sp.y + 0.1, z: sp.z }; return } // the station's last-level ride: back where you stood
     s.wakeAtSave = null
     if (ctx.self.place === 'bonus' || s.roomHop) { /* the mall and room hops land where their door puts you (scripts/lib/hub.js) */ }
-    else if (sp && wp && wp !== ctx.self.place) { ctx.cross(ctx.self, wp); return }
+    else if (sp && wp && wp !== ctx.self.place && (ctx.session.wakeTry ?? 0) < 3) { ctx.session.wakeTry = (ctx.session.wakeTry ?? 0) + 1; s.wakeAtSave = true; ctx.session.wokeAt = 0; ctx.cross(ctx.self, wp); return } // the wake runs again on arrival and stands you on the saved spot (it used to leave you at the level's door); three tries, then you stay put
     if (sp && s.savePlace === ctx.self.place) { ctx.self.feetPosition = { x: sp.x, y: sp.y + 0.1, z: sp.z }; return }
   }
   // a threshold aims at an arrival marker the far level lays only once someone stands in it (its sim): the first crossing into a
