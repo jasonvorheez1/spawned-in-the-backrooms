@@ -8,7 +8,7 @@ import SNACKS from "./data/snacks.yml";
 import BRK from "./data/breakables.yml";
 import { setQuest, endQuest, MAX_TRACK } from "./quests.js";
 import { pushFeed } from "./feed.js";
-import { addRep } from "./rep.js";
+import { addRep, fameOf, isHated, GROUPS } from "./rep.js";
 import { skillsOf } from "./stats.js";
 import { entryOf } from "./dialogue.js";
 
@@ -54,8 +54,18 @@ function enter(s, id, stage) {
   s.errands = { ...(s.errands ?? {}), [id]: r };
 }
 
+// a job with needs: { group, fame } waits until that faction knows your name that well (New Vegas: Accepted 12, Liked 35);
+// any job's giver turns you away while their faction hates you. Told once a session, then quiet.
+export function standingOk(s, e) {
+  const g = e?.needs?.group ?? e?.reward?.rep?.group;
+  if (g && isHated(s, { faction: g })) return { ok: false, why: `${GROUPS[g]?.name ?? g} won't give you work while they hate you.` };
+  if (e?.needs?.group && fameOf(s, e.needs.group) < (e.needs.fame ?? 0)) return { ok: false, why: e.needs.text ?? `${GROUPS[e.needs.group]?.name ?? e.needs.group} has more work, once they trust you.` };
+  return { ok: true };
+}
 export function offerErrand(ctx, s, id) {
   const e = ERRANDS[id]; if (!e || s.errands?.[id]) return false;
+  const gate = standingOk(s, e);
+  if (!gate.ok) { const ss = ctx.session ?? {}; if (!ss.errGate?.[id]) { ss.errGate = { ...(ss.errGate ?? {}), [id]: 1 }; tell(ctx, s, gate.why, "info"); } return false; }
   enter(s, id, 0); sync(s, id);
   if (!(s.qtrack ?? []).includes(qidOf(id)) && (s.qtrack ?? []).length < MAX_TRACK) s.qtrack = [...(s.qtrack ?? []), qidOf(id)];
   tell(ctx, s, `New job: ${e.title}`, "info");

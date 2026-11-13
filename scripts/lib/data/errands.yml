@@ -373,3 +373,49 @@
     - { text: "Bring one back to Bev", kind: carry, target: l70-npc-bev, item: eggnog, count: 1 }
   alt: { kind: speech, sk: 35, pay: 0.6, text: "Bev laughs and says she'll just make more." }
   reward: { cents: 2000, xp: 90, rep: { group: froid, d: 3 } }
+
+# ---- faction work (Shelly Nov 13: quests count toward standing, some need it). needs: { group, fame, text } gates the offer.
+- id: jo-supply
+  giver: hub-amber-jo
+  place: thehub
+  title: "Stock the Box"
+  stages:
+    - { text: "Find bandages for the newcomer box", kind: fetch, target: bandage, count: 2 }
+    - { text: "Give the bandages to Jo", kind: carry, target: hub-amber-jo, item: bandage, count: 2 }
+  alt: { kind: item, item: firstaid, count: 1, text: "Jo takes the whole kit. Says it'll stretch further than you'd think." }
+  reward: { cents: 1500, xp: 70, rep: { group: amber, d: 4 } }
+
+- id: pip-route
+  giver: hub-amber-pip
+  place: thehub
+  needs: { group: amber, fame: 12, text: "Pip shrugs. Camp Amber keeps its routes for people it knows." }
+  title: "Chalk the Route"
+  stages:
+    - { text: "Find the door in the seventh tunnel", kind: find, target: hd-t7-b1, count: 1 }
+    - { text: "Find the door in the tenth tunnel", kind: find, target: hd-t10-a3, count: 1 }
+    - { text: "Tell Pip what you saw", kind: talk, target: hub-amber-pip, count: 1 }
+  alt: { kind: speech, sk: 40, pay: 0.5, text: "Pip takes your word for it. He chalks it anyway." }
+  reward: { cents: 2500, xp: 110, item: [firstaid], rep: { group: amber, d: 5 } }
+
+- id: okafor-cold-door
+  giver: hub-meg-okafor
+  place: thehub
+  needs: { group: meg, fame: 12, text: "Okafor looks you over. \"Come back when the M.E.G. knows your name.\"" }
+  title: "The Cold Door"
+  stages:
+    - { text: "Look at the open door in the fifth tunnel", kind: find, target: hd-t5-a2, count: 1 }
+    - { text: "Look at the door with no mark on the dark road", kind: find, target: hub-blank, count: 1 }
+    - { text: "Report to Okafor", kind: talk, target: hub-meg-okafor, count: 1 }
+  alt: { kind: speech, sk: 55, pay: 0.4, text: "Okafor writes down what you say. She doesn't look convinced." }
+  reward: { cents: 4000, xp: 160, item: [bandage], rep: { group: meg, d: 5 } }
+
+- id: sato-markers
+  giver: hub-meg-sato
+  place: thehub
+  needs: { group: meg, fame: 35, text: "Sato only hands his survey to people the M.E.G. trusts." }
+  title: "Survey Markers"
+  stages:
+    - { text: "Clear what's prowling the far tunnels", kind: clear, target: hostile, count: 3 }
+    - { text: "Report to Sato", kind: talk, target: hub-meg-sato, count: 1 }
+  alt: { kind: speech, sk: 60, pay: 0.5, text: "Sato marks it clear on your say-so. Bold of him." }
+  reward: { cents: 6000, xp: 220, rep: { group: meg, d: 6 } }
