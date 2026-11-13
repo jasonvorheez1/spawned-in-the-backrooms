@@ -109,12 +109,19 @@ export function geometry(ctx) {
   // pillars: concrete, a sector-coloured band at eye height, chipped feet
   for (let i = 1; i < N; i++) for (let j = 1; j < N; j++) {
     if (!hasPillar(i, j)) continue;
-    const x = i * S - HALF, z = j * S - HALF, r = 0.45, c = hi ? 0.035 : 0;
+    const x = i * S - HALF, z = j * S - HALF, r = 0.45, c = hi ? 0.07 : 0; // Nov 13 (Shelly: "revamp level 1 ... more realistic"): deeper cast chamfer
     ctx.albedo(PILLAR); ctx.roughness(0.92); ctx.color("oklch(0.95 0.006 250)");
     if (hi) { prism(ctx, chamf(x, z, r, c), 0.14, 1.4); prism(ctx, chamf(x, z, r, c), 1.75, H); } else box(ctx, x - r, x + r, 0, H, z - r, z + r);
     ctx.albedo(null); ctx.roughness(0.7);
     ctx.color(sectorOf(Math.min(N - 1, i), Math.min(N - 1, j)).band); if (hi) prism(ctx, chamf(x, z, r + 0.004, c), 1.4, 1.75); else box(ctx, x - r - 0.01, x + r + 0.01, 1.4, 1.75, z - r - 0.01, z + r + 0.01);
     if (hi) { ctx.color("oklch(0.42 0.01 250)"); ctx.roughness(0.85); prism(ctx, chamf(x, z, r + 0.03, c + 0.02), 0, 0.14); } // tarred kick plinth where the forklifts scuff
+    if (hi) { // the cast capital: a stepped drop head that carries the slab, as poured car-park columns have, and a chipped arris low down where bumpers hit
+      ctx.albedo(PILLAR); ctx.roughness(0.93); ctx.color("oklch(0.9 0.006 250)");
+      prism(ctx, chamf(x, z, r + 0.08, c + 0.04), H - 0.55, H - 0.3); prism(ctx, chamf(x, z, r + 0.2, c + 0.08), H - 0.3, H);
+      const k = Math.floor(hash(i, j, 977) * 4), sx = k & 1 ? 1 : -1, sz = k & 2 ? 1 : -1, cy = 0.35 + hash(i, j, 979) * 0.4; // one knocked corner per column, seeded
+      ctx.color("oklch(0.62 0.01 70)"); prism(ctx, [[x + sx * (r - 0.09), z + sz * (r + 0.001)], [x + sx * (r + 0.001), z + sz * (r + 0.001)], [x + sx * (r + 0.001), z + sz * (r - 0.09)]], cy, cy + 0.12 + hash(i, j, 981) * 0.1);
+      ctx.albedo(null);
+    }
     ctx.roughness(null);
   }
   // storage racks (Shelly: "this area could be less blocky and have better detail"): warehouse pallet racking.
