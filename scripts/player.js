@@ -1496,14 +1496,17 @@ function tickStats(ctx, t, moving) {
   }
   if (!ctx.session.wokeAt && ctx.self.ragdoll) ctx.self.ragdoll = null // a reload mid-fall stands you back up
   // the save: where you stand, every few seconds; a fresh visit wakes you there (level, items, weapons already live in player.state)
+  if (ctx.session.wakeCrossAt && now - ctx.session.wakeCrossAt < 3000 && s.savePlace !== ctx.self.place) return // the ride to the saved level is under way: nothing re-wakes or re-saves here
+  if (w.wakeHold && now < w.wakeHold.until) { const h = w.wakeHold; if (Math.hypot(p.x - h.x, p.z - h.z) > 1.5) { ctx.self.feetPosition = { x: h.x, y: h.y + 0.1, z: h.z }; ctx.self.velocity = { x: 0, y: 0, z: 0 }; return } } // a level's own arrival (its door marker, its default spawn) lands a beat after the wake: the saved spot wins for 2.5 s
   if (!ctx.session.wokeAt) {
     ctx.session.wokeAt = now
+    if (s.savePos && s.savePlace === ctx.self.place) w.wakeHold = { x: s.savePos.x, y: s.savePos.y, z: s.savePos.z, until: now + 2500 }
     wakeLog(ctx, s, migrate(ctx, s)) // scripts/lib/save.js: the save's version and migration, before anything reads it
     const sp = s.savePos, wp = wakePlace(ctx, s)
     if (s.wakeAtSave && sp && s.savePlace === ctx.self.place) { s.wakeAtSave = null; ctx.self.feetPosition = { x: sp.x, y: sp.y + 0.1, z: sp.z }; return } // the station's last-level ride: back where you stood
     s.wakeAtSave = null
     if (ctx.self.place === 'bonus' || s.roomHop) { /* the mall and room hops land where their door puts you (scripts/lib/hub.js) */ }
-    else if (sp && wp && wp !== ctx.self.place && (ctx.session.wakeTry ?? 0) < 3) { ctx.session.wakeTry = (ctx.session.wakeTry ?? 0) + 1; s.wakeAtSave = true; ctx.session.wokeAt = 0; ctx.cross(ctx.self, wp); return } // the wake runs again on arrival and stands you on the saved spot (it used to leave you at the level's door); three tries, then you stay put
+    else if (sp && wp && wp !== ctx.self.place && (ctx.session.wakeTry ?? 0) < 3) { ctx.session.wakeTry = (ctx.session.wakeTry ?? 0) + 1; s.wakeAtSave = true; ctx.session.wokeAt = 0; ctx.session.wakeCrossAt = now; ctx.cross(ctx.self, wp); return } // the wake runs again on arrival and stands you on the saved spot (it used to leave you at the level's door); three tries, then you stay put
     if (sp && s.savePlace === ctx.self.place) { ctx.self.feetPosition = { x: sp.x, y: sp.y + 0.1, z: sp.z }; return }
   }
   // a threshold aims at an arrival marker the far level lays only once someone stands in it (its sim): the first crossing into a
