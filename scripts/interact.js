@@ -148,7 +148,19 @@ function closeLoot(ctx) {
 }
 
 const REFILL_MS = 60 * 60000 // Shelly: looted containers refill after an hour
-function refill(ctx, c) { const st = c?.state; if (st?.full != null && st.refillAt && ctx.now() >= st.refillAt) { st.items = st.full; st.refillAt = 0; st.scavved = false } }
+function refill(ctx, c) {
+  const st = c?.state; if (!st) return
+  // the place's ledger outlives a rebuilt container (a level update re-lays its props full): what you took stays taken until its hour is up
+  const led = ctx.place.state?.looted?.[c.id]
+  if (led && led.at > ctx.now() && !st.refillAt) { if (st.full == null) st.full = st.items ?? ''; st.items = led.items; st.refillAt = led.at }
+  if (st.full != null && st.refillAt && ctx.now() >= st.refillAt) { st.items = st.full; st.refillAt = 0; st.scavved = false }
+}
+function ledger(ctx, c) { // one row per looted container in this place, expired rows pruned as it writes
+  const now = ctx.now(), old = ctx.place.state.looted ?? {}, next = {}
+  for (const k in old) if (old[k]?.at > now) next[k] = old[k]
+  next[c.id] = { at: c.state.refillAt, items: c.state.items }
+  ctx.place.state.looted = next
+}
 // Spamton (a key item won in Level 11): money already in the loot pays 2% more (at least 1¢); no money, a 10% chance of a backquarter. His laugh says it fired. (Savi's reading of Shelly's rule)
 const SPAM_LAUGH = '/cdn/snd-spamton-laugh-glitch-sfx-7vvbohql.mp3'
 function spamtonPerk(ctx, c) {
@@ -440,6 +452,7 @@ function lootAction(ctx, d) {
     c.state.refillAt = ctx.now() + REFILL_MS
   }
   c.state.items = items.join(',')
+  if (c.state.refillAt > ctx.now() && !c.tags?.includes('storage')) ledger(ctx, c)
   s.lootList = c.state.items
   if (c.tags?.includes('storage') && c.state.saveKey) s[c.state.saveKey] = c.state.items
   if (c.state.look && (c.primitive?.params || c.model)) { // a garment taken off a body comes off the body, now, on every screen, scripted or mesh
