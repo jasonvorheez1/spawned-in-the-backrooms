@@ -32,12 +32,14 @@ const r4 = (q) => ({ x: +q.x.toFixed(4), y: +q.y.toFixed(4), z: +q.z.toFixed(4),
 const HUMAN_PISTOL_Q = { pitch: 90, roll: 180 }
 // melee pieces whose file runs head-first along the critter hand's grip axis: in the fist they swung handle-out, the blade or head by the knuckles
 // (the scripted blades and the Tripo hatchet and fire axe; checked at each family's contact frame on the cat, Nov 13). Turned end for end, grip back in the palm.
+const HAND_FLIP = new Set(['carbine']) // Shelly Nov 13: the carbine sat backwards in the paw at hipfire, right in the sights
 const MELEE_FLIP = new Set(['machete', 'katana', 'sword', 'shiv', 'switchblade', 'hatchet', 'fire_axe'])
 export function heldRot(kind, human = false) {
   if (!human && !W[kind]?.ranged && MELEE_FLIP.has(baseOf(kind ?? ''))) return { rotation: { yaw: 180 }, feetPosition: { x: 0, y: 0, z: HOLD[baseOf(kind)] ?? 0 } }
   if (famOf(kind) !== 'long') return human && W[kind]?.ranged ? { rotation: HUMAN_PISTOL_Q, feetPosition: { x: 0, y: 0.02, z: 0.04 } } : {}
   const base = baseOf(kind ?? ''), fp = firstPersonGun(base, W[kind]?.look)
   if (base === 'shotgun') return { rotation: SHOTGUN_Q, feetPosition: SHOTGUN_AT }
+  if (HAND_FLIP.has(base)) return { rotation: r4(qmul(RIFLE_Q, UNYAW)), feetPosition: SHOTGUN_AT } // its mesh runs the other way in the paw than in the sights
   if (!fp || (fp.turn[0] === 180 && !fp.turn[1] && !fp.turn[2])) return { rotation: RIFLE_Q, feetPosition: RIFLE_AT }
   const minusZ = Math.abs(fp.turn[0]) < 90
   return { rotation: r4(qmul(qmul(RIFLE_Q, UNYAW), eulerQ(...fp.turn))), feetPosition: HELD_AT[base] ?? (minusZ ? SHOTGUN_AT : RIFLE_AT) }
