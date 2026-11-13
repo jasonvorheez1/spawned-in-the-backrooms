@@ -18,24 +18,27 @@ const feel = (r) => (r <= -60 ? 'HOSTILE' : r <= -25 ? 'COLD' : r < 10 ? 'WARY' 
 const SVC = { scout: 'Ask for tactical tips', medic: 'Medical triage & healing', quarter: 'Collect ration supplies', smith: 'Repair damaged gear' }
 
 const CSS = `<style>
-@keyframes tcOpen{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-@keyframes tcPulse{0%,100%{opacity:.4}50%{opacity:1}}
-.tkw{position:fixed;inset:0;display:flex;align-items:flex-end;justify-content:center;padding:0 calc(var(--spawn-chrome-reservation-right-inset, 50px) + 12px) 18px;background:linear-gradient(0deg,rgba(0,0,0,.34),transparent 55%);pointer-events:none;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;z-index:90}
-.tc-chassis{width:min(780px,100%);max-height:min(78vh,640px);overflow-y:auto;box-sizing:border-box;background:rgba(20,17,13,.97);border:1px solid rgba(218,177,107,.6);border-radius:8px;box-shadow:0 12px 40px rgba(0,0,0,.55);padding:18px 22px;pointer-events:auto;animation:tcOpen .2s ease-out;color:#eee4d2;scrollbar-width:thin;scrollbar-color:#8e7650 transparent}
-.tc-hdr{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.tc-name-grp{min-width:0}.tc-name{font-size:18px;font-weight:650;color:#fff4df;letter-spacing:.01em;margin:0}.tc-subhead{font-size:12px;color:#b8a98f;margin-top:3px}.tc-badge+.tc-badge:before{content:' · ';color:#7f725f}
-.tc-rep-grp{margin-left:auto;color:#c2ae88;font-size:12px;white-space:nowrap}.tc-rep-lbl{display:flex;gap:5px}.tc-rep-bar-wrap{display:none}
-.tc-close-btn{border:0;background:transparent;color:#cbbda7;font:inherit;font-size:13px;padding:8px;cursor:pointer}.tc-close-btn:hover,.tc-close-btn:focus-visible{color:#fff;background:#473b2a;border-radius:4px;outline:2px solid #d1ad70}
-.tc-stream{max-height:140px;overflow-y:auto;scrollbar-width:thin;padding:8px 0;color:#b9aa91}.tc-hist-line{font-size:13px;line-height:1.5;margin:3px 0}.tc-hist-line b{font-weight:600;color:#e6c68f}.tc-chk-banner{font-size:12px;padding:4px 0}.tc-chk-pass{color:#9dd9aa}.tc-chk-fail{color:#ef9a8c}.tc-chk-info{color:#a8c5d8}
-.tc-active-line{border-left:2px solid #c9a36c;padding:2px 0 2px 16px;margin:0 0 18px}.tc-now-spk{font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;color:#cbb48f}.tc-now-txt{font-size:18px;line-height:1.45;color:#fff2dd;overflow-wrap:anywhere}.tc-dots span{animation:tcPulse 1.2s infinite}.tc-dots span:nth-child(2){animation-delay:.2s}.tc-dots span:nth-child(3){animation-delay:.4s}
-.tc-choices-hdr{font-size:11px;letter-spacing:.1em;color:#b7a487;text-transform:uppercase;margin-bottom:8px}.tc-choices-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.tc-choice:last-child:nth-child(odd){grid-column:1/-1}
-.tc-choice{width:100%;background:rgba(255,255,255,.035);border:1px solid rgba(218,177,107,.18);border-radius:4px;color:#f3e5cf;font:inherit;font-size:14px;line-height:1.35;padding:9px 11px;cursor:pointer;display:flex;align-items:baseline;gap:10px;text-align:left}
-.tc-choice:hover,.tc-choice:focus-visible{background:rgba(218,177,107,.16);border-color:#d6b77d;outline:2px solid transparent}.tc-ch-num{color:#caa96f;font-size:12px;min-width:16px}.tc-ch-tag{font-size:11px;letter-spacing:.03em;color:#e4bf7f;white-space:nowrap}.tc-ch-txt{flex:1;min-width:0;overflow-wrap:anywhere}
-.tc-extra{margin-top:10px;color:#cbb99b;font-size:13px}.tc-extra summary{cursor:pointer;width:fit-content;padding:5px 0}.tc-extra summary:hover,.tc-extra summary:focus-visible{color:#fff1da;outline-color:#d1ad70}
-.tc-prompt-bar{display:flex;align-items:center;gap:8px;margin-top:12px}.tc-prompt-inp{flex:1;min-width:0;background:rgba(0,0,0,.26);border:1px solid #75644b;color:#fff4df;font:inherit;font-size:14px;padding:9px 10px;border-radius:4px}.tc-prompt-inp:focus{outline:2px solid #d1ad70;outline-offset:1px}.tc-prompt-inp::placeholder{color:#9b8e79}.tc-send-btn{background:#d5b57f;border:1px solid #d5b57f;border-radius:4px;color:#241b10;font:inherit;font-size:13px;font-weight:650;padding:9px 13px;cursor:pointer}.tc-send-btn:hover,.tc-send-btn:focus-visible{background:#f0d4a1;outline:2px solid #f0d4a1}
-.tc-deck{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:12px}.tc-act-btn{background:transparent;border:1px solid #6c5d47;border-radius:4px;color:#decaab;font:inherit;font-size:12px;padding:7px 10px;cursor:pointer}.tc-act-btn:hover,.tc-act-btn:focus-visible{background:#55442d;border-color:#d7b77f;color:#fff;outline:2px solid transparent}.tc-act-btn.gold,.tc-act-btn.cyan{color:#f3d39d;border-color:#aa8957}.tc-social{display:flex;gap:6px;flex-wrap:wrap;padding-top:5px}
-@media(max-width:600px){.tc-choices-list{grid-template-columns:1fr}.tc-choice:last-child:nth-child(odd){grid-column:auto}.tkw{padding:0 10px 10px}.tc-chassis{max-height:78vh;padding:14px}.tc-name{font-size:16px}.tc-now-txt{font-size:16px}.tc-choice{padding:8px}.tc-rep-grp{font-size:11px}}
-@media(prefers-reduced-motion:reduce){.tc-chassis,.tc-dots span{animation:none}}
+@keyframes tcOpen{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes tcLine{from{opacity:0}to{opacity:1}}
+@keyframes tcPulse{0%,100%{opacity:.35}50%{opacity:1}}
+.tkw{--amb:#ffb642;--amb2:#ffcf87;--ink:#0b0803;position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:14px;padding:0 calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px) 26px;background:linear-gradient(0deg,rgba(0,0,0,.42),transparent 48%);pointer-events:none;font-family:'Monofonto','Share Tech Mono','Consolas',monospace;z-index:90;color:var(--amb)}
+.tc-who{position:absolute;top:24px;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);text-align:right;text-shadow:0 0 6px rgba(255,182,66,.45),1px 1px 0 #000;pointer-events:none}
+.tc-name{font-size:24px;letter-spacing:.03em;color:var(--amb2);margin:0;font-weight:400}.tc-subhead{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,182,66,.75);margin-top:2px}.tc-badge+.tc-badge:before{content:' · '}.tc-stance{font-size:12px;letter-spacing:.12em;margin-top:2px}
+.tc-line{width:min(820px,100%);box-sizing:border-box;background:rgba(6,4,1,.78);padding:14px 22px;box-shadow:0 0 0 1px rgba(0,0,0,.6);animation:tcLine .25s ease-out}
+.tc-now-txt{font-size:20px;line-height:1.42;color:var(--amb2);text-shadow:0 0 6px rgba(255,182,66,.35);overflow-wrap:anywhere}.tc-waiting span{animation:tcPulse 1.1s infinite}.tc-waiting span:nth-child(2){animation-delay:.18s}.tc-waiting span:nth-child(3){animation-delay:.36s}
+.tc-chk-banner{font-size:14px;letter-spacing:.04em;margin-bottom:6px}.tc-chk-pass{color:#9dff9d}.tc-chk-fail{color:#ff8a70}.tc-chk-info{color:#9fd3ff}
+.tc-box{width:min(860px,100%);box-sizing:border-box;max-height:min(52vh,460px);overflow-y:auto;background:rgba(14,10,3,.9);border:2px solid var(--amb);box-shadow:0 0 0 1px #000,0 0 18px rgba(255,182,66,.18) inset,0 10px 30px rgba(0,0,0,.6);padding:10px 12px;pointer-events:auto;animation:tcOpen .2s ease-out;scrollbar-width:thin;scrollbar-color:rgba(255,182,66,.5) transparent}
+.tc-choices-list{display:flex;flex-direction:column;gap:2px}
+.tc-choice{width:100%;background:transparent;border:2px solid transparent;color:var(--amb);font:inherit;font-size:19px;line-height:1.3;padding:5px 12px;cursor:pointer;display:flex;align-items:baseline;gap:8px;text-align:left;text-shadow:0 0 5px rgba(255,182,66,.3)}
+.tc-choice:hover,.tc-choice:focus-visible{border-color:var(--amb);background:rgba(255,182,66,.1);color:#ffe2a8;outline:none}.tc-choice:disabled{opacity:.4}
+.tc-ch-num{display:none}.tc-ch-tag{white-space:nowrap}.tc-ch-txt{flex:1;min-width:0;overflow-wrap:anywhere}
+.tc-tag-quest{color:#ffe28a}.tc-tag-speech,.tc-tag-barter,.tc-tag-med,.tc-tag-surv,.tc-tag-guns,.tc-tag-sci,.tc-tag-sneak{color:var(--amb2)}
+.tc-foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,182,66,.35)}
+.tc-act-btn,.tc-close-btn{background:rgba(255,182,66,.06);border:1px solid rgba(255,182,66,.4);color:var(--amb);font:inherit;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;cursor:pointer}
+.tc-act-btn:hover,.tc-act-btn:focus-visible,.tc-close-btn:hover,.tc-close-btn:focus-visible{background:var(--amb);color:var(--ink);outline:none}.tc-close-btn{margin-left:auto}
+.tc-extra{font-size:13px;color:rgba(255,182,66,.8)}.tc-extra summary{cursor:pointer;padding:4px 0;letter-spacing:.06em;text-transform:uppercase}.tc-stream{max-height:130px;overflow-y:auto;padding:4px 0}.tc-hist-line{font-size:14px;line-height:1.45;margin:2px 0;color:rgba(255,207,135,.8)}.tc-hist-line b{font-weight:400;color:var(--amb)}
+@media(max-width:600px){.tkw{padding:0 10px 10px;gap:8px}.tc-who{top:12px;right:12px}.tc-name{font-size:18px}.tc-now-txt{font-size:16px}.tc-choice{font-size:16px;padding:6px 8px;min-height:44px}.tc-line{padding:10px 12px}}
+@media(prefers-reduced-motion:reduce){.tc-box,.tc-line,.tc-waiting span{animation:none}}
 
 /* Shop Modal */
 .tkp{background:linear-gradient(180deg,rgba(16,11,4,.98) 0%,rgba(8,5,2,.99) 100%);padding:14px 20px 12px;width:min(660px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 24px)));max-height:min(580px,88vh);box-sizing:border-box;display:flex;flex-direction:column;gap:8px;border:2px solid #ffb642;box-shadow:0 0 0 1px #000,0 8px 32px rgba(0,0,0,.85),0 0 24px rgba(255,182,66,.15) inset;color:#ffb642}
@@ -156,16 +159,13 @@ export function talkUi(ctx, player) {
   // Render current speaker response or busy state
   let nowHtml = ''
   if (s.talkBusy) {
-    nowHtml = `<div class="tc-active-line" role="status" aria-live="polite"><div class="tc-now-txt tc-waiting">Waiting for a response…</div></div>`
+    nowHtml = `<div class="tc-line" role="status" aria-live="polite"><div class="tc-now-txt tc-waiting"><span>.</span><span>.</span><span>.</span></div></div>`
   } else if (activeLine) {
-    nowHtml = `<div class="tc-active-line" aria-live="polite" aria-atomic="true">
-      <div class="tc-now-txt">${esc(activeLine)}</div>
+    nowHtml = `<div class="tc-line" id="tcl${activeIdx}-${String(activeLine).length}" aria-live="polite" aria-atomic="true">
+      ${latestCheck ? checkBanner(latestCheck[1]) : ''}<div class="tc-now-txt">${esc(activeLine)}</div>
     </div>`
   } else {
-    nowHtml = `<div class="tc-active-line" style="opacity:.6">
-      <div class="tc-now-spk">${who}</div>
-      <div class="tc-now-txt">...</div>
-    </div>`
+    nowHtml = ''
   }
 
   // Choices list
@@ -210,7 +210,7 @@ export function talkUi(ctx, player) {
 
     return `<button class="tc-choice" data-interactive ${s.talkBusy?'disabled':''} onclick="${clickAction}">
       <span class="tc-ch-num">${i + 1}.</span>
-      ${tag && tag.toLowerCase() !== 'reply' ? `<span class="tc-ch-tag ${tagCls}">${esc(tag)}</span>` : ''}
+      ${tag && tag.toLowerCase() !== 'reply' ? `<span class="tc-ch-tag ${tagCls}">[${esc(tag.replace(/^◆ /, ''))}]</span>` : ''}
       <span class="tc-ch-txt">${esc(txt)}</span>
     </button>`
   }).join('')
@@ -251,50 +251,21 @@ export function talkUi(ctx, player) {
 
   return `${CSS}
   <div class="tkw" data-modal tabindex="0" onkeydown="${kd}">
-    <div class="tc-chassis" data-interactive>
-      <!-- Header & Dossier -->
-      <div class="tc-hdr">
-        <div class="tc-name-grp">
-          <h2 class="tc-name">${who}</h2>
-          <div class="tc-subhead">
-            <span class="tc-badge">${factionName}</span>
-            <span class="tc-badge">${roleName}</span>
-            ${isCompanion ? `<span class="tc-badge" style="color:#60ff90">${esc(perk?.name ?? 'Companion')} · ${Math.round(it.state.loyal ?? 50)}% loyalty</span>` : ''}
-          </div>
-        </div>
-
-        <div class="tc-rep-grp">
-          <div class="tc-rep-lbl" data-stance="${feelStatus}">
-            <span>${feelStatus}</span>
-          </div>
-        </div>
-
+    <div class="tc-who">
+      <h2 class="tc-name">${who}</h2>
+      <div class="tc-subhead"><span class="tc-badge">${factionName}</span><span class="tc-badge">${roleName}</span>${isCompanion ? `<span class="tc-badge" style="color:#60ff90">${esc(perk?.name ?? 'Companion')} ${Math.round(it.state.loyal ?? 50)}%</span>` : ''}</div>
+      <div class="tc-stance">${feelStatus}</div>
+    </div>
+    ${nowHtml}
+    <div class="tc-box" data-interactive>
+      <div class="tc-choices-list" data-interactive>
+        ${choiceItems || '<div style="font-size:16px;opacity:.6;padding:6px 12px">...</div>'}
+      </div>
+      <div class="tc-foot" data-interactive>
+        ${sysActions.join('')}
+        ${histHtml ? `<details class="tc-extra" data-interactive><summary>Log</summary><div class="tc-stream">${histHtml}</div></details>` : ''}
         <button class="tc-close-btn" data-interactive onclick="sendAction('talkdo',{k:'leave'})" aria-label="Leave conversation">Leave · Esc</button>
       </div>
-
-      <!-- Transcript History -->
-
-
-      <!-- Live NPC Speech / Busy Indicator -->
-      ${nowHtml}
-      ${latestCheck ? `<div class="tc-check-current" role="status">${checkBanner(latestCheck[1])}</div>` : ''}
-
-      <!-- Interactive Choices -->
-      <div class="tc-choices-hdr">
-        <span>Choose a response${choices.length ? ` · 1–${choices.length}` : ''}</span>
-      </div>
-      <div class="tc-choices-list" data-interactive>
-        ${choiceItems || '<div style="font-size:13px;opacity:.6;padding:8px 10px">...</div>'}
-      </div>
-
-      <!-- Conversation history (choices are the only way to speak: scripts/lib/dialogue.js) -->
-      <div class="tc-optional">
-      ${histHtml ? `<details class="tc-extra" data-interactive><summary>Conversation history</summary><div class="tc-stream">${histHtml}</div></details>` : ''}
-      </div>
-
-      <!-- Contextual actions -->
-      ${sysActions.length ? `<div class="tc-deck" data-interactive>${sysActions.join('')}</div>` : ''}
-      
     </div>
   </div>`
 }
