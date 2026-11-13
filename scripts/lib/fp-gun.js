@@ -18,7 +18,9 @@ export const FP_GUN = {
   smg:          { at: [0, .049, .134], turn: [180, 0, 0], ads: [0, -.15, .47, 0], hold: [0, -.018, .065, 0, 5, -3], left: [-.03, .037, -.21], vertical: true, muzzle: [0, .119, -.503] },
   carbine:      { at: [0, .067, .066], turn: [180, 0, 0], ads: [0, -.177, .48, 0], hold: [0, -.02, .07, 0, 5, -3], left: [-.068, .078, -.23], muzzle: [0, .149, -.494] },
   carolynne:    { at: [.02, -.09, -.04], turn: [184, -18, 0], ads: [0, -.2, .55, 0], hold: [0, -.1, .14, 0, 5, -3], left: [-.068, .06, -.3], muzzle: [0, .12, -.85] }, // the ornament launcher: the mesh's tube rises ~18° in its own frame, so pitch -18 levels the barrel on the crosshair
-  laser_rifle:  { at: [0, -.025, -.164], turn: [0, 0, 0], ads: [0, -.305, .61, 0], hold: [0, -.16, .2, 0, 5, -3], left: [-.068, .148, -.325], muzzle: [0, .282, -.71] },
+  // Nov 13 (Shelly: "laser rifle is still wrong"): the Tripo ZR-7 lies yawed ~19° left and rises ~11° in its own file, its pistol grip at file (0.098, -0.15, 0.41):
+  // turn yaw -19 / pitch -11 lines it up, and at puts that grip where the pistol's grip sits (0, .048, .027), so the gun no longer runs back through the camera
+  laser_rifle:  { at: [.038, .115, -.414], turn: [-19, -11, 0], ads: [0, -.33, .61, 0], hold: [0, -.16, .2, 0, 5, -3], left: [-.04, .14, -.40], muzzle: [-.03, .3, -.765] },
 }
 
 const SHORT_SHOTGUN = { ...FP_GUN.shotgun, at: [0, .082, -.13], left: [-.068, .02, -.13], muzzle: [0, .119, -.48] }
