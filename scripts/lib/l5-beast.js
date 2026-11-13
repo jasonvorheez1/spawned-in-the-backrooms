@@ -28,6 +28,7 @@ export const wrathOn = (ctx, s) => (s?.l5bWrath ?? 0) > ctx.now();
 
 // the choices his card adds to the talk (no node: handleDialogueQuestBeast answers them by their words)
 export function beastChoices(ctx, it, s) {
+  if (s && short(it) === TOBIAS) return tobiasChoices(s);
   if (short(it) !== BEAST || !s) return [];
   if (wrathOn(ctx, s)) return [];
   const st = s.l5b ?? 0, out = [];
@@ -38,6 +39,10 @@ export function beastChoices(ctx, it, s) {
   }
   if (st === 1) out.push(s.l5bReg ? { text: "Here's your guest register.", tag: "Quest" } : { text: "Where do I find the register?", tag: "Ask" });
   if (st === 2) { out.push(s.l5bCard ? { text: "The card's under the door of 1408.", tag: "Quest" } : { text: "Who's in Room 1408?", tag: "Ask" }); }
+  if (st === 99 && s.l5t === 1) { // Tobias's Debt: two ways to free him at this desk
+    out.push({ text: "Put Tobias's debt on my tab. [$200]", tag: "Quest" });
+    out.push({ text: "[Speech 60] Tobias is under my protection now. Let him go.", tag: "speech" });
+  }
   if (st === 1 || st === 2) out.push(heardTape(s) ? { text: "[Speech 55] I heard the last one's tape. The contract's void.", tag: "speech" } : { text: "I want out of this deal.", tag: "Doubt" });
   return out;
 }
@@ -54,6 +59,7 @@ function wrath(ctx, p, why) {
 
 export function handleDialogueQuestBeast(ctx, p, npc, text) {
   const t = String(text ?? "").toLowerCase(), s = p?.state;
+  if (s && short(npc) === TOBIAS) return tobiasTalk(ctx, p, t);
   if (!s || short(npc) !== BEAST) return null;
   if (wrathOn(ctx, s)) return { reply: "...", mood: "calm" };
   const st = s.l5b ?? 0;
@@ -79,6 +85,15 @@ export function handleDialogueQuestBeast(ctx, p, npc, text) {
     endQuest(s, QID, "You kept your end. The hotel stopped pressing on you. Something in the portraits keeps watching.");
     tellQuest(ctx, p, `Quest Complete: ${QNAME} · +$250 · Level 5 no longer drains your sanity`);
     return { reply: "There. I'm a man of my word. The hotel won't trouble you anymore, not the halls, not the hum. Come and go as you please. I'll be watching. Fondly.", mood: "happy" }; }
+  if (t.includes("tobias's debt on my tab") && st === 99 && s.l5t === 1) {
+    if ((s.cents ?? 0) < 20000) return { reply: "Generous. And broke. Come back when your pockets agree with your heart.", mood: "calm" };
+    s.cents -= 20000; s.l5t = 2; setQuest(s, TQID, { name: TQNAME, ...TSTEP[2] }); tellQuest(ctx, p, `${TQNAME} · Debt paid · -$200 · Tell Tobias`);
+    return { reply: "Paid in full. How touching. Tell the clerk he can sleep tonight. Tell him I said goodnight.", mood: "happy" }; }
+  if (t.includes("under my protection") && st === 99 && s.l5t === 1) {
+    const c = rollCheck(ctx, s, { skill: "speech", difficulty: 60 });
+    if (!c.ok) return { reply: "Your protection. From me. In my hotel. Try that again when you've thought about it.", mood: "annoyed" };
+    s.l5t = 2; setQuest(s, TQID, { name: TQNAME, ...TSTEP[2] }); tellQuest(ctx, p, `${TQNAME} · He let Tobias go · Tell Tobias`);
+    return { reply: "Hm. You've got a spine now. I gave you that, you know. Fine. The clerk's debt is yours to worry about, not mine. Don't make me regret liking you.", mood: "calm" }; }
   if (t.includes("i want out of this deal") && (st === 1 || st === 2)) { wrath(ctx, p);
     return { reply: "Out? We shook on it. Why are you doubting me? ...I thought I made it clear.", mood: "annoyed" }; }
   if (t.includes("contract's void") && (st === 1 || st === 2)) {
@@ -87,6 +102,49 @@ export function handleDialogueQuestBeast(ctx, p, npc, text) {
     s.l5b = -2; endQuest(s, QID, "You held up the last signatory's tape and walked away from the deal. He let you.", "voided");
     tellQuest(ctx, p, `${QNAME} · Contract voided`);
     return { reply: "Clever. Someone kept notes. Very well, consider it void. You keep what I gave you. I'll keep the rest. I'll be seeing you. I always am.", mood: "calm" }; }
+  return null;
+}
+
+// Tobias's Debt (Shelly Nov 13 "sure" to: Tobias found the card and begs you to break the deal).
+// After The Gentleman's Terms is paid (l5b 99), Tobias in 1408 holds up the card you slipped him.
+// l5t: 0 none, 1 helping, 2 freed (go tell him), 99 done. Free him at the Gentleman's desk: pay $200, or Speech 60 (retryable).
+const TOBIAS = "l5-tobias";
+const TQID = "tobias-s-debt", TQNAME = "Tobias's Debt";
+const TSTEP = {
+  1: { step: "Get the Gentleman to let Tobias off his debt", mark: { place: "level5", id: BEAST } },
+  2: { step: "Tell Tobias he's free", mark: { place: "level5", id: TOBIAS } },
+};
+function tobiasChoices(s) {
+  if (s.l5b !== 99) return [];
+  const t = s.l5t ?? 0;
+  if (!t) return s.l5tSeen
+    ? [{ text: "Yeah. He asked me to.", tag: "Quest Start" }, { text: "[Speech 40] Never seen that card before.", tag: "speech" }, { text: "Not my problem.", tag: "Ask" }]
+    : [{ text: "You look like you've seen a ghost.", tag: "Quest" }];
+  if (t === 1) return [{ text: "What do you owe him?", tag: "Ask" }];
+  if (t === 2) return [{ text: "You're free. He's done with you.", tag: "Quest" }];
+  return [];
+}
+function startDebt(ctx, p) {
+  const s = p.state; s.l5t = 1; setQuest(s, TQID, { name: TQNAME, ...TSTEP[1] }); tellQuest(ctx, p, `Quest Started: ${TQNAME}`);
+}
+function tobiasTalk(ctx, p, t) {
+  const s = p.state, st = s.l5t ?? 0;
+  if (s.l5b !== 99) return null;
+  if (t.includes("seen a ghost") && !st) { s.l5tSeen = 1;
+    return { reply: "Worse. Look. This came under my door. His card. Blank on both sides, but I know what it means. Did you put it there?", mood: "scared" }; }
+  if (t.includes("he asked me to") && !st && s.l5tSeen) { startDebt(ctx, p);
+    return { reply: "Okay. Okay. At least you're honest. So you talk to him. He likes you, I can tell, he never sends anybody twice. Get him to drop it. Please.", mood: "scared" }; }
+  if (t.includes("never seen that card") && !st && s.l5tSeen) {
+    const c = rollCheck(ctx, s, { skill: "speech", difficulty: 40 }); startDebt(ctx, p);
+    return c.ok ? { reply: "Right. Sure. Then it just walked in. Either way, you're the only one here he talks to. Ask him to let it go. Please.", mood: "scared" }
+                : { reply: "You smell like his office. Cigar and old paper. It's fine, I'm not mad. Just fix it. Please.", mood: "annoyed" }; }
+  if (t.includes("not my problem") && !st) return { reply: "Yeah. That's what the last guy said. He's still checked in, by the way. Room nine. He doesn't come out.", mood: "sad" };
+  if (t.includes("what do you owe him") && st === 1) return { reply: "A signature. I signed for a guest who never paid. Now the bill's mine. He'll take two hundred, or he'll take me. I don't have two hundred.", mood: "scared" };
+  if (t.includes("you're free") && st === 2) {
+    s.l5t = 99; if (claimReward(s, TQID)) s.cents = (s.cents ?? 0) + 15000;
+    endQuest(s, TQID, "Tobias tore the card in half and laughed for the first time since you met him.");
+    tellQuest(ctx, p, `Quest Complete: ${TQNAME} · +$150`);
+    return { reply: "Free. Huh. I'm gonna sleep with the lights off. No I'm not. Here, it's my whole tip jar. Don't argue. And if you ever need a room fast, my door's open.", mood: "happy" }; }
   return null;
 }
 
