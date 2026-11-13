@@ -65,7 +65,7 @@ export function geometry(ctx) {
     }
   }
   // standing water: glassy puddles in the low spots of the halls and storage, the tubes smeared across them (Shelly's wet-garage reference)
-  ctx.albedo(null); ctx.metalness(0); ctx.roughness(0.03); ctx.color("oklch(0.3 0.01 240 / 0.9)");
+  ctx.albedo(null); ctx.metalness(0); ctx.roughness(0.02); ctx.color("oklch(0.5 0.012 230 / 0.28)"); // Nov 13 (Shelly's "improve this" shot): was 0.3 / 0.9, opaque black blots; now a thin film the floor shows through
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     const zone = zoneOf(cx, cz); if ((zone !== "halls" && zone !== "storage") || rampCell(cx, cz) || hash(cx, cz, 461) > 0.4) continue;
     const x0 = cx * S - HALF, z0 = cz * S - HALF;
