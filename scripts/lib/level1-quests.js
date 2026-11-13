@@ -6,7 +6,7 @@
 import { rollCheck, keyOf } from "./npc-talk.js";
 import { addRep, addKarma, GROUPS, repOf } from "./rep.js";
 const NAMES = Object.fromEntries(Object.entries(GROUPS).map(([k, v]) => [k, v.name]));
-import { setQuest, endQuest } from "./quests.js";
+import { setQuest, endQuest, payOnce } from "./quests.js";
 import { pushFeed } from "./feed.js";
 import { setDinaStep } from "./dina-quest.js";
 import { heard } from "./hear.js";
@@ -115,6 +115,7 @@ export function setStep1(ctx, p, q, step, text, doneSummary, outcome) {
 const BONUS = (s, g) => { const v = repOf(s, g); return v >= 35 ? 0.25 : v >= 12 ? 0.1 : 0; };
 function finish(ctx, p, q, { xp = 100, cents = 0, items = [], text, rep = [], by = "meg" }) {
   const s = p.state, msgs = [text], b = BONUS(s, by);
+  if (!payOnce(s, "l1-" + (typeof q === "string" ? q : q?.id ?? q?.key ?? q?.name))) return; // paid once per save (scripts/lib/quests.js)
   if (b && cents) { const extra = Math.round(cents * b); cents += extra; msgs.push(`${NAMES[by] ?? by} bonus +$${(extra / 100).toFixed(2)}`); }
   setStep1(ctx, p, q, 99, null, text);
   for (const [g, d] of rep) { if (!d) continue; const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d); msgs.push(tier || `${g === "karma" ? "Karma" : NAMES[g] ?? g} ${d > 0 ? "+" : ""}${d}`); }
