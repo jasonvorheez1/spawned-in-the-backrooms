@@ -63,6 +63,7 @@ export function update(ctx, dt) {
   if (!!a !== !!ctx.self.session.arcOn) { ctx.self.session.arcOn = !!a; ctx.self.anim.arcade = a ? { clip: 'cdn/clip-idle-loop.glb', weight: 1, loop: true } : null }
   if (!a) return
   const cab = ctx.getObject(a.id), me = ctx.self.feetPosition
+  if (!cab || Math.hypot(cab.feetPosition.x - me.x, cab.feetPosition.z - me.z) > 4) { s.arcade = null; s.arcadeClosedAt = ctx.now(); ctx.self.session.ap = null; ctx.self.session.ff = null; ctx.session.ffv = null; return } // a saved screen whose cabinet isn't here (another level, a reload) closes instead of trapping the player
   if (cab) ctx.self.rotation = { yaw: Math.atan2(-(cab.feetPosition.x - me.x), -(cab.feetPosition.z - me.z)) * 180 / Math.PI }
   const v = ctx.self.velocity; ctx.self.velocity = { x: 0, y: v.y, z: 0 }
   if (a.game === 'felix') return felixUpdate(ctx, dt)
