@@ -1,3 +1,4 @@
+import { CAMS as CCTV_CAMS } from './lib/l11-cctv.js'
 import { questBriefing, questProgress } from './lib/quest-dialogue.js'
 import { wristNav } from './lib/wrist-nav.js'
 import { quickBar } from './lib/hud-quickbar.js'
@@ -433,6 +434,7 @@ function renderHud(ctx, player) {
   const s = player.state ?? {}
   const quick = !s.building && screen(s,player.place)==='play' && Object.keys(s.quickSlots??{}).length ? quickItems(s) : []
   if (s.level == null) return ''
+  if (s.cctv) return cctvUi(ctx, player)
   if (s.cut || s.dcut || s.l26cut || s.hubcut || s.arrive || s.arrivePending || (s.t0cut && !s.sheetOpen)) return cutUi(ctx, player)
   if (s.menuOpen) return mainMenu(ctx, player)
   if (s.wardrobeOpen && s.salonOpen && !s.wrMenu) return `<div id="hud" style="position:fixed;inset:0;pointer-events:none">${salon(ctx, player)}</div>`
@@ -552,4 +554,46 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
   </div>
 
 </div>${ledgerUi(s)}${journalUi(s, player, ctx)}${feedUi(ctx, player)}${lootUi(ctx, player)}${pickUi(ctx, player)}${spamUi(ctx, player)}${spamArenaUi(ctx, player)}${talkUi(ctx, player)}${hubUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${arcadeUi(ctx, player)}${smoothieUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
+}
+
+// Sedco CCTV desk (scripts/cctv.js owns the view): the feed's frame over the live picture
+function cctvUi(ctx, player) {
+  const c = player.state.cctv, i = c.i ?? 0, cam = CCTV_CAMS[i] ?? CCTV_CAMS[0], now = ctx.now()
+  const t = new Date(Date.UTC(2009, 2, 14, 3, 12, 0) + now), pad = (n) => String(n).padStart(2, '0')
+  const stamp = `03/14/2009 ${pad(t.getUTCHours())}:${pad(t.getUTCMinutes())}:${pad(t.getUTCSeconds())}`
+  const cut = Math.round(c.cutAt ?? 0)
+  const tabs = CCTV_CAMS.map((k, n) => `<button onclick="sendAction('cctv',{cam:${n}})" class="pointer-events-auto" style="font:700 13px 'Courier New',monospace;letter-spacing:.1em;padding:8px 12px;border:2px solid ${n === i ? '#f2f0e6' : '#5c5a52'};background:${n === i ? '#f2f0e6' : '#0c0c0bcc'};color:${n === i ? '#111' : '#cfcbbd'};${k.haunt ? 'color:' + (n === i ? '#7a0f0f' : '#c96a5a') : ''}">${String(n + 1).padStart(2, '0')}</button>`).join('')
+  const haunt = cam.haunt && (Math.floor(now / 2300) % 5 === 3)
+  return `<style>
+#cctv{position:fixed;inset:0;pointer-events:none;font-family:'Courier New',monospace;color:#f2f0e6;text-shadow:0 0 4px #000,2px 2px 0 #000}
+#cctv .scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,#0000 0 2px,#0006 2px 3px);mix-blend-mode:multiply}
+#cctv .tint{position:absolute;inset:0;background:radial-gradient(ellipse at center,#0000 55%,#000c 100%);backdrop-filter:grayscale(1) contrast(1.25) brightness(.95)}
+#cctv .roll{position:absolute;left:0;right:0;height:18%;background:linear-gradient(#fff0,#ffffff14,#fff0);animation:cctvroll 6s linear infinite}
+@keyframes cctvroll{from{top:-20%}to{top:110%}}
+@keyframes cctvcut{0%{opacity:1}100%{opacity:0;visibility:hidden}}
+@keyframes cctvrec{50%{opacity:0}}
+#cctv .snow{position:absolute;inset:0;background:repeating-radial-gradient(circle at 37% 61%,#fff 0 1px,#000 1px 2px,#888 2px 3px);animation:cctvcut .35s forwards}
+#cctv .brk{position:absolute;width:44px;height:44px;border:3px solid #f2f0e6;opacity:.85}
+</style>
+<div id="cctv">
+  <div class="tint"></div><div class="scan"></div><div class="roll"></div>
+  ${haunt ? `<div style="position:absolute;inset:0;background:#3a0000;opacity:.28"></div><div style="position:absolute;top:44%;inset-x:0;left:0;right:0;text-align:center;font-size:22px;letter-spacing:.5em;color:#ffd7d0">SIGNAL LOST</div>` : ''}
+  <div id="cut${cut}" class="snow"></div>
+  <div class="brk" style="top:64px;left:48px;border-right:0;border-bottom:0"></div><div class="brk" style="top:64px;right:calc(var(--spawn-chrome-reservation-right-inset,50px) + 48px);border-left:0;border-bottom:0"></div>
+  <div class="brk" style="bottom:120px;left:48px;border-right:0;border-top:0"></div><div class="brk" style="bottom:120px;right:calc(var(--spawn-chrome-reservation-right-inset,50px) + 48px);border-left:0;border-top:0"></div>
+  <div style="position:absolute;top:78px;left:68px;font-size:30px;font-weight:700;letter-spacing:.12em">${cam.tag}</div>
+  <div style="position:absolute;top:116px;left:68px;font-size:16px;letter-spacing:.14em;opacity:.9">${cam.where}</div>
+  <div style="position:absolute;top:80px;right:calc(var(--spawn-chrome-reservation-right-inset,50px) + 68px);font-size:20px;letter-spacing:.1em;display:flex;align-items:center;gap:10px"><span style="width:14px;height:14px;border-radius:50%;background:#e0261c;box-shadow:0 0 8px #e0261c;animation:cctvrec 1s steps(1) infinite"></span>REC</div>
+  <div style="position:absolute;top:110px;right:calc(var(--spawn-chrome-reservation-right-inset,50px) + 68px);font-size:16px;letter-spacing:.08em">${stamp}</div>
+  <div style="position:absolute;bottom:136px;left:68px;font-size:13px;letter-spacing:.14em;opacity:.8">SEDCO SPOTLIGHT · LOSS PREVENTION · CH ${String(i + 1).padStart(2, '0')}/08</div>
+  <div style="position:absolute;bottom:24px;left:0;right:0;display:flex;justify-content:center">
+    <div class="pointer-events-auto" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:#0c0c0be6;border:2px solid #5c5a52;padding:8px 10px;box-shadow:4px 4px 0 #000">
+      <button onclick="sendAction('cctv',{go:'prev'})" style="font:700 13px 'Courier New',monospace;padding:8px 12px;border:2px solid #5c5a52;background:#0c0c0b;color:#cfcbbd">◀ A</button>
+      ${tabs}
+      <button onclick="sendAction('cctv',{go:'next'})" style="font:700 13px 'Courier New',monospace;padding:8px 12px;border:2px solid #5c5a52;background:#0c0c0b;color:#cfcbbd">D ▶</button>
+      <span style="font:700 12px 'Courier New',monospace;color:#9a968a;padding:0 8px">W/S ZOOM</span>
+      <button onclick="sendAction('cctv',{go:'exit'})" style="font:700 13px 'Courier New',monospace;padding:8px 14px;border:2px solid #a8924b;background:#2a2416;color:#e8d9a8">E · LEAVE DESK</button>
+    </div>
+  </div>
+</div>`
 }
