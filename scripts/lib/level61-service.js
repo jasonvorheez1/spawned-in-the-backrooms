@@ -5,7 +5,7 @@ const TILE = { texture: "cdn/texture-worn-beige-waxed-vinyl-composition-floor-ti
 const PAINT = { color: "#8c9b90", roughness: 0.68, metalness: 0.1 };
 const STEEL = { color: "#9da4a0", roughness: 0.4, metalness: 0.62 };
 const OFF = { color: "#3e4848", roughness: 0.83 };
-const board = (heading, sub, width, paper = false) => `<svg viewBox='${SIZE}' width='${width}m'>
+const board = (heading, sub, width, paper = false) => `<svg viewBox='0 0 240 76' width='${width}m'>
   <rect width='240' height='76' rx='2' fill='${paper ? "#e8dfc7" : "#263e44"}'/>
   <path d='M6 6h228v64H6z' fill='none' stroke='${paper ? "#a09579" : "#8fa49f"}'/>
   <g text-anchor='middle' font-family='sans-serif' fill='${paper ? "#293b3c" : "#f1e7d0"}'>

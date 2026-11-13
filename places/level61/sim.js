@@ -16,7 +16,7 @@ import { rbox } from "../../scripts/lib/rbox.js";
 import { layService } from "../../scripts/lib/level61-service.js";
 
 export const cadence = "1s";
-const V = 58;
+const V = 59;
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -741,14 +741,14 @@ function lay(ctx) {
 let layQ = null, layDrop = null;
 function layStep(ctx) {
   if (!layQ) {
-    layQ = [];
-    const q = new Proxy(ctx, { get: (t, k) => k === "spawn" ? (id, spec) => { layQ.push([id, spec]); return id; } : (typeof t[k] === "function" ? t[k].bind(t) : t[k]) });
+    const queued = [];
+    const q = new Proxy(ctx, { get: (t, k) => k === "spawn" ? (id, spec) => { queued.push([id, spec]); return id; } : (typeof t[k] === "function" ? t[k].bind(t) : t[k]) });
     lay(q);
-    const keep = new Set(layQ.map(([id]) => id));
+    const keep = new Set(queued.map(([id]) => id));
     layDrop = Object.keys(ctx.place.objects ?? {}).filter((id) => /^l61-/.test(id) && !id.includes("/") && !id.startsWith("l61-tray-") && !keep.has(id));
     // what you stand on and bump into goes first; a fresh room (no floor yet) gets all of that this very tick
     const solid = ([, sp]) => !!sp.physics && sp.physics !== "none";
-    layQ = [...layQ.filter(solid), ...layQ.filter((r) => !solid(r))];
+    layQ = [...queued.filter(solid), ...queued.filter((r) => !solid(r))];
     if (!ctx.getObject("l61-floor-main")) { while (layQ.length && solid(layQ[0])) { const [id, sp] = layQ.shift(); ctx.spawn(id, sp); } }
     layQ.reverse();
     return false;
