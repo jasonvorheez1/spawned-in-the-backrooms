@@ -1,0 +1,8 @@
+# spawn-scene v2 yaml x1z0
+hub-baylight-3:
+  castShadow: false
+  feetPosition: {x: 190, y: 2.6, z: 8.5}
+  id: hub-baylight-3
+  light: {color: oklch(0.88 0.09 82), distance: 11, intensity: 1.8, kind: point, shadow: {enabled: false}}
+  material: {color: oklch(0.95 0.06 85), emissive: oklch(0.95 0.06 85), emissiveIntensity: 6}
+  primitive: {kind: sphere, radius: 0.09}
