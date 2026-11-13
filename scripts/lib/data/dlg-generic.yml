@@ -388,7 +388,7 @@
       a: ["The roadworks move at night. Apples turn up in crates. My neighbor's door has a new number every morning. Otherwise, normal."]
     - q: "Ever hear the name Dina?"
       a: ["Dina? There's a Dana at the bakery. Is that close enough?", "It rings a little bell. Somebody was asking around a while back. A woman. I never caught her name, so maybe that was her."]
-    - q: "What's this city like?"
+    - q: "What's this town like?"
       a: ["It goes on. It's nice. Nothing bad happens. Almost nothing."]
   barks:
     idle: ["Lovely day.", "Same train again.", "Coffee's good today."]

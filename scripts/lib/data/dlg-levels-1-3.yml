@@ -45,7 +45,7 @@ meg-ale:
       do: recruit
       a: "You didn't scream and you didn't run. Okay, rookie. I'm in. I'm not carrying you, though. You drop, you stay dropped."
       fail: "You breathe like a kettle. No offense. A little offense."
-    - q: "Who runs this camp?"
+    - q: "Who's in charge here?"
       a: "Ortiz, if somebody's bleeding. Callum, if it comes in a can. Me, when they're both asleep."
   barks:
     idle: ["Who sat in my chair? It's warm.", "Lights are holding. Don't jinx it.", "Callum, those peaches came open. I swear.", "Not asleep. Resting my eyes at the hallway."]
@@ -212,7 +212,7 @@ surv-wren:
       a: "Out of the pipes? Stairs up, or the barred door. Out of everything? I don't know. I stopped asking. Mags says there's no out, Hollis says the radio comes from somewhere. Pick one."
     - q: "You alright? You're limping."
       a: "Am not. The floor's bumpy. Hollis says I twisted it. Hollis says tons of stuff."
-    - q: "What's past the camp?"
+    - q: "What's past all this?"
       a: "Pipes. Then more pipes. Then pipes that burn you. And a barred door with a three on it. It kind of breathes at night. I don't go there."
     - q: "Ever hear the name Dina?"
       a: "The tape lady? She talked into a little box the whole time, like it was a friend. She let me say hi into it. She went off toward the hot pipes. I told her not to."
