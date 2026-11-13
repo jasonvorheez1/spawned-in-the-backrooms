@@ -6,7 +6,7 @@ import { rollLoot } from "../../scripts/lib/loot.js";
 import FURN from "../../scripts/lib/data/furniture.yml";
 import { layout, hashStr, HOUSES, PAINTS, PROPS, TUNE, FWD, ROAD_W, WALK } from "../../scripts/lib/level9.js";
 export const cadence = "1s";
-const V = 9; // 3: Tripo house models on the lots; 6: plaster insides; 7: wallpaper box-mapped, a bedroom wall, furniture and loot inside; 5 (4 hung them on the back): door holes cut, a hinged front door and a stoop on each (keeps seed and loot)
+const V = 10; // 3: Tripo house models on the lots; 6: plaster insides; 7: wallpaper box-mapped, a bedroom wall, furniture and loot inside; 5 (4 hung them on the back): door holes cut, a hinged front door and a stoop on each (keeps seed and loot)
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BLUE = { kind: "scripted", script: "engine/blueprint" };
 const ASPHALT = { texture: "cdn/texture-worn-dark-grey-asphalt-road-coarse-aggregate-damp-patches-cracks.png", wrap: "repeat", repeat: [0.3, 0.3], color: "oklch(0.42 0.01 250)", roughness: 0.62, metalness: 0 }; // Shelly "why are level 9 roads water": 0.16 roughness mirrored the sky; damp, not a puddle
@@ -22,41 +22,39 @@ const PLASTER = { texture: "cdn/texture-popcorn-ceiling-off-white-stained.png", 
 const BASE = { color: "oklch(0.42 0.05 55)", roughness: 0.6 };
 const RUG = { texture: "cdn/texture-faded-persian-rug-worn-red-and-cream.png", color: "oklch(0.75 0.04 40)", roughness: 1 };
 const LOOT = { bookshelf: "Bookshelf", crt_tv: "TV stand", lava_lamp: "Nightstand", dining_set: "Sideboard" };
-const ROOM_H = 2.6, IN = { visibleRange: { max: 40 }, castShadow: false };
+const FLOOR = { texture: "cdn/texture-dusty-worn-oak-hardwood-floor-planks.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.55 0.05 60)", roughness: 0.8 };
+const ROOM_H = 2.5, IN = { visibleRange: { max: 40 }, castShadow: false };
 function furnish(ctx, sp, l, H, D, Y) {
-  const hx = H.w / 2 - 0.75, hz = D.z - 0.12, fy = D.y, cz = 0;
+  const R = H.inside ?? { x0: -H.w / 2 + 0.9, x1: H.w / 2 - 0.9, z0: -D.z + 0.4, z1: D.z - 0.15 }, fy = D.y;
+  const x0 = R.x0 + 0.06, x1 = R.x1 - 0.06, z0 = R.z0 + 0.06, z1 = Math.min(R.z1, D.z - 0.12);
   const at = (x, z, up = 0) => { const r = rotate({ yaw: Y }, { x, y: 0, z }); return T(l.x + r.x, l.z + r.z, fy + up); };
   const box = (k, x, z, w, d, h, mat, up = 0, phys = "static") => sp(`l9-${l.id}-${k}`, { ...IN, feetPosition: at(x, z, up), rotation: { yaw: Y }, primitive: { kind: "box", width: w, height: h, depth: d }, physics: phys, material: mat });
-  const wall = (k, x0, z0, x1, z1) => { const w = Math.max(0.1, Math.abs(x1 - x0)), d = Math.max(0.1, Math.abs(z1 - z0)), x = (x0 + x1) / 2, z = (z0 + z1) / 2;
-    box(`w${k}`, x, z, w, d, ROOM_H, WALLPAPER);
-    box(`b${k}`, x, z, w + (w > d ? 0 : 0.03), d + (d > w ? 0 : 0.03), 0.11, BASE, 0, "none"); };
-  // the shell walls: back, two sides, the front split round the door (1.1 m gap at D.x)
-  wall("bk", -hx, -hz, hx, -hz); wall("l", -hx, -hz, -hx, hz); wall("r", hx, -hz, hx, hz);
-  wall("f1", -hx, hz, D.x - 0.6, hz); wall("f2", D.x + 0.6, hz, hx, hz);
-  box("ceil", 0, cz, hx * 2 + 0.1, hz * 2 + 0.1, 0.06, PLASTER, ROOM_H);
-  // the bedroom: the half away from the door, behind a wall with a 1 m doorway near the back
-  const side = D.x >= 0 ? -1 : 1, P = side * hx * 0.2, bedFar = side * hx;
-  wall("pa", P, -hz, P, -hz + 0.9); wall("pb", P, -hz + 1.9, P, hz);
-  const lx = (P - bedFar) / 2 + 0, bx = (P + bedFar) / 2, livW = Math.abs(P + side * hx * -1);
-  for (const [k, x] of [["liv", (P - side * hx) / 2], ["bed", bx]]) { // a frosted dome light and its glow, one per room
-    sp(`l9-${l.id}-dome${k}`, { ...IN, feetPosition: at(x, 0, ROOM_H - 0.09), primitive: { kind: "sphere", radius: 0.22, widthSegments: 20, heightSegments: 8, thetaLength: 1.6 }, rotation: { yaw: Y, pitch: 180 }, material: { color: "#fff3d8", emissive: "#ffd9a0", emissiveIntensity: 2.2 }, physics: "none",
-      children: [{ id: "glow", feetPosition: { x: 0, y: -0.3, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.07 78)", intensity: 2.4, distance: 9, shadow: { enabled: false } } }] });
-  }
-  const piece = (k, x, z, yaw, tag = k) => { const F = FURN.pieces[k]; if (!F) return; const [w, h, d] = F.size, id = `l9-${l.id}-${tag}`;
-    sp(id, { ...IN, tags: LOOT[k] ? ["l9furn", "container"] : ["l9furn"], feetPosition: at(x, z), rotation: { yaw: Y + yaw }, model: { id: F.model, forward: F.forward ?? "-z" }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, physics: { body: "static", collider: "box" },
+  const wall = (k, ax, az, bx, bz) => { const w = Math.max(0.1, Math.abs(bx - ax)), d = Math.max(0.1, Math.abs(bz - az)), x = (ax + bx) / 2, z = (az + bz) / 2;
+    box(`w${k}`, x, z, w, d, ROOM_H, WALLPAPER); box(`b${k}`, x, z, w + 0.03, d + 0.03, 0.11, BASE, 0, "none"); };
+  // the room's skin, just inside the shell: back, sides, the front split round the door
+  wall("bk", x0, z0 - 0.05, x1, z0 - 0.05); wall("l", x0 - 0.05, z0, x0 - 0.05, z1); wall("r", x1 + 0.05, z0, x1 + 0.05, z1);
+  wall("f1", x0, z1 + 0.05, D.x - 0.58, z1 + 0.05); wall("f2", D.x + 0.58, z1 + 0.05, x1, z1 + 0.05);
+  box("floor", (x0 + x1) / 2, (z0 + z1) / 2, x1 - x0 + 0.2, z1 - z0 + 0.2, 0.03, FLOOR, -0.03);
+  box("ceil", (x0 + x1) / 2, (z0 + z1) / 2, x1 - x0 + 0.2, z1 - z0 + 0.2, 0.06, PLASTER, ROOM_H);
+  // the bedroom: the end away from the door, behind a wall with a doorway toward the front
+  const toR = D.x < (x0 + x1) / 2, bw = Math.min(3.8, Math.max(3, (x1 - x0) * 0.4)), P = toR ? x1 - bw : x0 + bw, s = toR ? 1 : -1;
+  const lv0 = toR ? x0 : P, lv1 = toR ? P : x1, Lc = (lv0 + lv1) / 2, Bc = (P + (toR ? x1 : x0)) / 2, outer = toR ? x0 : x1, os = toR ? 1 : -1;
+  wall("pa", P, z0, P, z1 - 1.7); wall("pb", P, z1 - 0.65, P, z1);
+  for (const [k, x] of [["liv", Lc], ["bed", Bc]]) sp(`l9-${l.id}-dome${k}`, { ...IN, feetPosition: at(x, (z0 + z1) / 2, ROOM_H - 0.09), primitive: { kind: "sphere", radius: 0.22, widthSegments: 20, heightSegments: 8, thetaLength: 1.6 }, rotation: { yaw: Y, pitch: 180 }, material: { color: "#fff3d8", emissive: "#ffd9a0", emissiveIntensity: 2.2 }, physics: "none",
+    children: [{ id: "glow", feetPosition: { x: 0, y: -0.3, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.07 78)", intensity: 2.6, distance: 9, shadow: { enabled: false } } }] });
+  const piece = (k, x, z, yaw) => { const F = FURN.pieces[k]; if (!F) return; const [w, h, d] = F.size;
+    sp(`l9-${l.id}-${k}`, { ...IN, tags: LOOT[k] ? ["l9furn", "container"] : ["l9furn"], feetPosition: at(x, z), rotation: { yaw: Y + yaw }, model: { id: F.model, forward: F.forward ?? "-z" }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, physics: { body: "static", collider: "box" },
       state: LOOT[k] ? { name: LOOT[k], mat: "wood", items: rollLoot(ctx, 1, 1, "l5").join(",") } : { name: F.name } }); };
-  const Lc = (P - side * hx) / 2; // living room centre x
-  // living room: sofa on the back wall facing the door, rug and table before it, the TV facing it, a shelf on the outer wall
-  piece("sofa", Lc, -hz + 0.62, 180); box("rug", Lc, -hz + 1.7, 2.2, 1.6, 0.012, RUG, 0, "none");
-  piece("coffee_table", Lc, -hz + 1.65, 0);
-  if (hz * 2 > 4.2) piece("crt_tv", Lc, -hz + 3.1, 0);
-  piece("floor_lamp", Lc + side * 1.35, -hz + 0.35, 0);
-  piece("bookshelf", -side * hx + side * 0.3, -hz + 1.4, side > 0 ? 90 : -90);
-  if (hz * 2 > 5) piece("dining_set", Lc - side * 0.2, hz - 1.1, 0);
-  piece("fiddle_plant", -side * hx + side * 0.5, hz - 0.5, 0);
-  // bedroom: headboard to the back wall, a nightstand lamp beside it
-  piece("double_bed", bx, -hz + 1.08, 180); piece("lava_lamp", bx - side * 1.3, -hz + 0.3, 180);
-  if (hz * 2 > 5) piece("armchair", bedFar - side * 0.6, hz - 0.7, side > 0 ? -135 : 135);
+  // living room: sofa on the back wall, rug and table before it, the TV facing it, a shelf on the outer wall, dining by the front
+  piece("sofa", Lc, z0 + 0.55, 180); box("rug", Lc, z0 + 1.75, 2.2, 1.6, 0.012, RUG, 0, "none"); piece("coffee_table", Lc, z0 + 1.7, 0);
+  if (z1 - z0 > 4.6) piece("crt_tv", Lc, z0 + 3.2, 0);
+  piece("floor_lamp", Lc + 1.45, z0 + 0.35, 0);
+  piece("bookshelf", outer + os * 0.28, z0 + 1.6, os > 0 ? 90 : -90);
+  if (lv1 - lv0 > 4.4 && z1 - z0 > 5.2) piece("dining_set", outer + os * 1.1, z1 - 1.0, 0);
+  piece("fiddle_plant", D.x + (toR ? -1.1 : 1.1), z1 - 0.45, 0);
+  // bedroom: headboard to the back wall, the lamp on the nightstand side, a chair in the corner by the doorway
+  piece("double_bed", Bc, z0 + 1.05, 180); piece("lava_lamp", Bc + s * 1.3 > (toR ? x1 - 0.3 : x0 + 0.3) === toR ? Bc - s * 1.3 : Bc + s * 1.3, z0 + 0.3, 180);
+  if (z1 - z0 > 5) piece("armchair", Bc + s * 0.9, z1 - 0.6, 180);
 }
 
 function lay(ctx, L) {
@@ -98,8 +96,6 @@ function lay(ctx, L) {
       for (let i = 0; i < 3; i++) { const h = D.y * (i + 1) / 3, r = rotate({ yaw: Y }, { x: D.x, y: 0, z: D.z + 0.9 - i * 0.3 });  // a stoop: three concrete steps up to the threshold, flush with the floor inside
         sp(`l9-${l.id}-step${i}`, { feetPosition: T(l.x + r.x, l.z + r.z, 0), rotation: { yaw: Y }, primitive: { kind: "box", width: 1.5, height: h + 0.05, depth: 0.32 }, physics: "static", material: { texture: "cdn/texture-weathered-poured-concrete-stoop-hairline-cracks.png", color: "oklch(0.62 0.01 80)", roughness: 0.9 } }); }
       if (l.seed % 4 === 0) { const c = rotate({ yaw: Y }, { x: 0, y: 0, z: 0 }); sp(`l9-${l.id}-lamp`, { feetPosition: T(l.x + c.x, l.z + c.z, D.y + 2.3), light: { kind: "point", color: "oklch(0.85 0.09 75)", intensity: 1.2, distance: 9 } }); } // someone left a lamp on: a warm window down the street, a lit room to walk into
-      const f = rotate({ yaw: l.yaw }, { x: 0, y: 0, z: 0 }); // the floor inside: the shell is hollow, so a plank floor at the threshold's height under the whole footprint
-      sp(`l9-${l.id}-floor`, { feetPosition: T(l.x + f.x, l.z + f.z, D.y - 0.04), rotation: { yaw: l.yaw }, primitive: { kind: "box", width: H.w - 1.4, height: 0.04, depth: D.z * 2 - 0.2 }, physics: "static", material: { texture: "cdn/texture-dusty-worn-oak-hardwood-floor-planks.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.55 0.05 60)", roughness: 0.8 } });
       furnish(ctx, sp, l, H, D, Y);
     }
     else if (!H.model) sp(`l9-${l.id}`, { tags: ["l9house"], feetPosition: T(l.x, l.z), rotation: { yaw: l.yaw }, primitive: { kind: "box", width: H.w, height: H.stories * 2.9 + 1.2, depth: H.d }, material: BLUE, physics: "none", state: { kind: l.kind, seed: l.seed } });

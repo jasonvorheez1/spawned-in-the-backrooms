@@ -3,13 +3,14 @@
 # interior floor at y = floorY, rooms in the model's own metres (x right, z toward the front door).
 # models: Tripo houses fitted by art/l9-houses/fit.py (front turned to +Z, scaled into w x d).
 # door: the hole fit.py cuts in the front wall (centre x, front face z, threshold y, 1 m wide, 2.1 m tall); the sim hangs a hinged door there
+# inside: the clear rectangle inside the shell 1.2 m above the threshold, measured by art/l9-houses/plan.py (model frame)
 # footprints the lots are cut for (model: null = a blueprint box stands in):
 houses:
-  ranch:    { name: "Ranch",      w: 16, d: 10, stories: 1, model: "/cdn/value.9ebf8f0e943d8aeec801c35d35b324f158e67967b2ad719d7103975f81cb101a.glb", door: { x: -2.1, z: 3.1, y: 0.4 }, rooms: [] }
-  bungalow: { name: "Bungalow",   w: 9,  d: 11, stories: 1, model: "/cdn/value.1d2e7a6342812fdc9cac7e23234dad35e1c8dc5b26980438d6e6d1f548d7c557.glb", door: { x: 0.86, z: 1.89, y: 0.65 }, rooms: [] }
-  colonial: { name: "Colonial",   w: 11, d: 9,  stories: 2, model: "/cdn/value.ab46a92fba82de8ff438406f1d7d6d9bc6eeac6d47151e0b68a6e07b4573842f.glb", door: { x: 0, z: 2.9, y: 0.44 }, rooms: [] }
-  cape:     { name: "Cape Cod",   w: 10, d: 8,  stories: 2, model: "/cdn/value.4f140d4d73d21ca7bd71d2c94dd98708129b0af08c44159865c6c2c0d1b9c154.glb", door: { x: 0, z: 2.85, y: 0.55 }, rooms: [] }
-  garage2:  { name: "Two-storey with garage", w: 15, d: 9, stories: 2, model: "/cdn/value.72935aefe9ea44d808642083a823ff156987ad130d264b977f80a4adb1d3f302.glb", door: { x: 1.56, z: 2.62, y: 0.5 }, rooms: [] }
+  ranch:    { name: "Ranch",      w: 16, d: 10, stories: 1, model: "/cdn/value.9ebf8f0e943d8aeec801c35d35b324f158e67967b2ad719d7103975f81cb101a.glb", door: { x: -2.1, z: 3.1, y: 0.4 }, inside: { x0: -7.37, x1: 2.33, z0: -3.67, z1: 2.93 }, rooms: [] }
+  bungalow: { name: "Bungalow",   w: 9,  d: 11, stories: 1, model: "/cdn/value.1d2e7a6342812fdc9cac7e23234dad35e1c8dc5b26980438d6e6d1f548d7c557.glb", door: { x: 0.86, z: 1.89, y: 0.65 }, inside: { x0: -3.62, x1: 3.68, z0: -4.42, z1: 1.58 }, rooms: [] }
+  colonial: { name: "Colonial",   w: 11, d: 9,  stories: 2, model: "/cdn/value.ab46a92fba82de8ff438406f1d7d6d9bc6eeac6d47151e0b68a6e07b4573842f.glb", door: { x: 0, z: 2.9, y: 0.44 }, inside: { x0: -4.88, x1: 4.72, z0: -3.73, z1: 2.57 }, rooms: [] }
+  cape:     { name: "Cape Cod",   w: 10, d: 8,  stories: 2, model: "/cdn/value.4f140d4d73d21ca7bd71d2c94dd98708129b0af08c44159865c6c2c0d1b9c154.glb", door: { x: 0, z: 2.85, y: 0.55 }, inside: { x0: -4.14, x1: 4.06, z0: -3.39, z1: 2.61 }, rooms: [] }
+  garage2:  { name: "Two-storey with garage", w: 15, d: 9, stories: 2, model: "/cdn/value.72935aefe9ea44d808642083a823ff156987ad130d264b977f80a4adb1d3f302.glb", door: { x: 1.56, z: 2.62, y: 0.5 }, inside: { x0: -6.71, x1: 6.19, z0: -3.74, z1: 2.36 }, rooms: [] }
 # siding / trim / roof paint a house can roll (index by seed)
 paints:
   - { siding: "#b9b3a2", trim: "#e6e2d6", roof: "#3a3632" }
