@@ -6,6 +6,7 @@ import { l31Choices } from './level31-quest.js'
 import { beastChoices } from './l5-beast.js'
 import { hubChoices } from './hub-quest.js'
 import { hubErrandChoices } from './hub-errands.js'
+import { fieldErrandChoices } from './field-errands.js'
 import { l70Choices } from './level70-quest.js'
 import { l10Choices } from './level10-quests.js'
 import { l11Choices } from './level11-quests.js'
@@ -23,7 +24,7 @@ export function realtyChoice(ctx, it, s, list) {
 export function questChoices(ctx, it, s) {
   if (!it) return []
   const id = short(it)
-  const qChoices = [...remodelChoices(id, s), ...l13Choices(id, s), ...l31Choices(id, s), ...l70Choices(id, s), ...beastChoices(ctx, it, s), ...hubChoices(ctx, it, s), ...hubErrandChoices(it, s)]
+  const qChoices = [...remodelChoices(id, s), ...l13Choices(id, s), ...l31Choices(id, s), ...l70Choices(id, s), ...beastChoices(ctx, it, s), ...hubChoices(ctx, it, s), ...hubErrandChoices(it, s), ...fieldErrandChoices(ctx, it, s)]
   if (id.startsWith('l10-') || id.startsWith('l11-')) {
     qChoices.push(...l10Choices(id, s), ...l11Choices(id, s)) // Levels 10 and 11, written in scripts/lib/level10-quests.js and level11-quests.js
   } else if (id.startsWith('l8-')) {

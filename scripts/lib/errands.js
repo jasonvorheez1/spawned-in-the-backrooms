@@ -81,7 +81,7 @@ export function payErrand(ctx, s, id, scale = 1, how = null) {
   if (w.rep?.group && w.rep.d) { const t = addRep(s, w.rep.group, w.rep.d); if (t) msgs.push(t); }
   if (how) msgs.unshift(how);
   s.errands = { ...s.errands, [id]: { stage: e.stages.length, n: 0, done: 1 } };
-  endQuest(s, qidOf(id), e.place === "thehub" ? (how || `${e.title} completed for ${e.giver.replace(/^hub-(meg|amber)-/, '')}.`) : false);
+  endQuest(s, qidOf(id), deliberateErrands(e.place) ? (how || `${e.title} completed for ${e.giver.replace(/^hub-(meg|amber)-/, '')}.`) : false);
   let hint = null;
   if (w.trail && e.hint && !s.trail?.[w.trail] && (e.hintNeeds !== "name" || s.trail?.name)) { hint = e.hint; s.errHints = [...(s.errHints ?? []).filter((h) => h !== hint), hint].slice(-12); } // a lead, never the trail key itself
   tell(ctx, s, msgs.join(". "));
@@ -115,9 +115,10 @@ function step(ctx, s, id, sid, me) {
 }
 
 // A Hub hand-in is an explicit dialogue choice, including for jobs already in progress.
+export const deliberateErrands = (place) => ["main", "level01", "level02", "level1", "level2", "level21", "level3", "level4", "level5", "level6", "level61", "level7", "level8", "level9", "level10", "level11", "thehub"].includes(place);
 export function turnInErrand(ctx, s, id, npc) {
   const e = ERRANDS[id], r = s.errands?.[id];
-  if (!e || e.place !== "thehub" || !r || r.done || e.giver !== npc) return false;
+  if (!e || !deliberateErrands(e.place) || !r || r.done) return false;
   const g = e.stages[r.stage];
   if (!g || !["talk", "carry"].includes(g.kind) || g.target !== npc) return false;
   const before = r.stage; step(ctx, s, id, npc, null);
@@ -141,13 +142,13 @@ export function errandTick(ctx, ses, s, place) {
   ses.errTalk = sid;
   if (fresh) {
     for (const e of BY_GIVER[sid] ?? []) {
-      if (e.place !== place || e.place === "thehub") continue;
+      if (e.place !== place || deliberateErrands(e.place)) continue;
       const r = s.errands?.[e.id];
       if (!r) offerErrand(ctx, s, e.id);
       else if (!r.done) { step(ctx, s, e.id, sid, null); if (!s.errands[e.id].done && ses.errMet?.[e.id]) tryAlt(ctx, s, e.id); }
       ses.errMet = { ...(ses.errMet ?? {}), [e.id]: 1 };
     }
-    for (const [id, r] of Object.entries(s.errands ?? {})) if (!r.done && ERRANDS[id] && ERRANDS[id].place !== "thehub" && ERRANDS[id].giver !== sid) step(ctx, s, id, sid, null);
+    for (const [id, r] of Object.entries(s.errands ?? {})) if (!r.done && ERRANDS[id] && !deliberateErrands(ERRANDS[id].place) && ERRANDS[id].giver !== sid) step(ctx, s, id, sid, null);
   }
   // do: "errand:<id>" / "errand-alt:<id>" on any dialogue node
   const asked = ctx.self.session?.askedNow; // scripts/talk.js keeps the asked questions on the body's own session
