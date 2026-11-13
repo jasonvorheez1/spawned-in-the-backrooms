@@ -141,11 +141,13 @@ export function layFood(ctx) {
 
 // The staff back room behind the snack bar door (Shelly Nov 13: "make the staff only door not blocky + give it an interior").
 // Outside the hall's south wall: x 36.2..43.9, z 30.3..35.8, a 3 m drop ceiling. Tripo props, real sizes.
-const STAFF_G = {
-  lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb",
-  shelf: "/cdn/value.8e72f7f37b80c9e96c97fa180ed93d497a4099cbdfbc464895fc5a8894c8c120.glb",
-  mop: "/cdn/value.9bb14394c3dc491f86feda55a3e491fb39727a492b1858535eab3fec6254e817.glb",
-  clock: "/cdn/value.3a4e211abefd48d24f081bfc00dc49b84b0b07af75c746ac7aaa6ef4969860db.glb",
+const STAFF_G = { // Tripo pass Nov 13 (art/l31-staff): "use tripo to improve every model here"
+  lockers: "/cdn/value.7e1783ad878bacd2a6d0249c0afbb065b237abf19f6b89e45f0532fd9ac78ee8.glb",
+  shelf: "/cdn/value.92398963134aa0463225eaf19965e19c453d7530c4c1e7806f55df5da703b9f3.glb",
+  mop: "/cdn/value.7dc069bf2aa2600b2357bdb6b30e65cfaa0fad9005da73ac086a519c24c665f5.glb",
+  clock: "/cdn/value.58b4984016fee376ccc5e205d6b094de92e24e21b15c74f371f565c796088b50.glb",
+  table: "/cdn/value.20cc3ce927bd1f988fb1acc15bee74095c4d0a864853711ab60efad6c545fdb9.glb",
+  chair: "/cdn/value.b8d82a3ce214d0d151b9535237651d29ad5503bd098b052ed99e95be8d0fd779.glb",
 };
 const SR = { x0: 36.2, x1: 43.9, z0: 30.3, z1: 35.8, h: 3.0 };
 const CORK = `<svg viewBox='0 0 300 200' width='1.2m'>
@@ -184,16 +186,16 @@ function layStaffRoom(ctx, P, M) {
   P("staff-troffer", { feetPosition: { x: cx, y: h - 0.04, z: cz }, primitive: box(0.6, 0.04, 1.2), material: { color: "#e9f4ea", emissive: "#e9f4ea", emissiveIntensity: 2.2 },
     children: [{ feetPosition: { x: 0, y: -0.3, z: 0 }, light: { kind: "point", color: "#e6f2dc", intensity: 4.5, distance: 9 } }] });
   // Tripo props at true size: layout fits each into its real box before it stands
-  const T = (id, key, x, y, z, yaw, size, solid = true) => P(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: { id: STAFF_G[key], forward: "+x" },
+  const T = (id, key, x, y, z, yaw, size, solid = true) => P(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: { id: STAFF_G[key], forward: "+z" },
     layout: { box: { min: { x: -size[0] / 2, y: 0, z: -size[2] / 2 }, max: { x: size[0] / 2, y: size[1], z: size[2] / 2 } } }, ...(solid ? { physics: { body: "static", collider: "box" } } : {}), castShadow: true });
-  P("staff-lockers", { feetPosition: { x: x0 + 0.25, y: 0, z: 33.4 }, rotation: { yaw: -90 }, model: { id: STAFF_G.lockers }, layout: { box: { min: { x: -0.9, y: 0, z: -0.24 }, max: { x: 0.9, y: 1.85, z: 0.24 } } }, physics: { body: "static", collider: "box" }, castShadow: true });
-  T("staff-shelf1", "shelf", 41.0, 0, z1 - 0.28, 0, [0.9, 1.75, 0.45]);
-  T("staff-shelf2", "shelf", 42.3, 0, z1 - 0.3, -4, [0.9, 1.75, 0.45]);
-  T("staff-mop", "mop", 43.35, 0, 31.2, 35, [0.42, 1.2, 0.42]);
-  T("staff-clock", "clock", 41.55, 1.05, z0 + 0.09, 180, [0.36, 0.42, 0.14], false); // on the door wall: you punch in on the way in
+  T("staff-lockers", "lockers", x0 + 0.28, 0, 33.3, 90, [1.35, 1.85, 0.45]); // three lockers against the west wall, doors facing the room
+  T("staff-shelf1", "shelf", 41.0, 0, z1 - 0.3, 180, [0.95, 1.6, 0.45]);
+  T("staff-shelf2", "shelf", 42.3, 0, z1 - 0.32, 176, [0.95, 1.6, 0.45]);
+  T("staff-mop", "mop", 43.3, 0, 31.1, -125, [0.75, 1.25, 0.45]);
+  T("staff-clock", "clock", 41.6, 1.15, z0 + 0.1, 0, [0.48, 0.4, 0.16], false); // on the door wall: you punch in on the way in
   // the break table, one chair pushed back, a schedule nobody reads
-  M("staff-table", "table", 38.6, 34.4, 12, {}, 0.0);
-  M("staff-chair1", "chair", 38.0, 33.6, 160, {}, 0.0);
-  M("staff-chair2", "chair", 39.5, 34.9, -70, {}, 0.0);
+  T("staff-table", "table", 38.6, 0, 34.4, 12, [0.8, 0.74, 0.8]);
+  T("staff-chair1", "chair", 37.85, 0, 33.75, 150, [0.48, 0.82, 0.52]);
+  T("staff-chair2", "chair", 39.55, 0, 34.95, -80, [0.48, 0.82, 0.52]);
   P("staff-cork", { feetPosition: { x: 38.6, y: 1.55, z: z1 - 0.02 }, rotation: { yaw: 0 }, vector: CORK });
 }
