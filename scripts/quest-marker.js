@@ -3,13 +3,10 @@
 import { questMark } from "./lib/quest-mark.js";
 import { setQuest, endQuest, tracked, toggleTrack, qid, MAX_TRACK, PLACE_NAMES } from "./lib/quests.js";
 import { canOpen, openWrist } from "./lib/screen.js";
+import { NVG_Q } from "./l5-goggles.js";
 export const updateSchedule = { every: { seconds: 0.25 } };
 const art = (c, exit) => `<svg viewBox='0 0 100 86' width='0.9m' billboard='full'><g stroke='#1a1004' stroke-width='3'>${exit ? `<rect x='34' y='8' width='32' height='40' rx='2' fill='${c}'/><path d='M43 28 H57 M52 22 L58 28 L52 34' stroke-width='3' fill='none'/>` : `<path d='M50 4 L66 26 L50 48 L34 26 Z' fill='${c}'/><path d='M50 14 L58 26 L50 38 L42 26 Z' fill='#fffbe8'/>`}</g><g fill='${c}' stroke='#1a1004' stroke-width='3' paint-order='stroke' font-family='sans-serif' font-weight='bold' text-anchor='middle'><text x='50' y='64' font-size='12'>${exit ? (PLACE_NAMES[exit] ?? exit) : ''}</text><text x='50' y='${exit ? 80 : 68}' font-size='15'>{{ state.d }} m</text></g></svg>`;
-const NVG_Q = {
-  key: "nvgQ", name: "Ines's goggles",
-  tips: { 1: "Find Ines's goggle case at the south end of the Boiler Room", 2: "Follow the drag marks east to the hound den", 3: "Bring the goggles and a battery to the M.E.G. drop box, northeast" },
-  marks: { 1: { place: "level5", id: "l5-nvg-case", x: 31.5, y: 0, z: 23.4 }, 2: { place: "level5", id: "l5-nvg-den", x: 44, y: 0, z: 1 }, 3: { place: "level5", id: "l5-nvg-drop", x: 45.2, y: 0, z: -19.6 } },
-};
+// Ines's goggles keeps its own table (scripts/l5-goggles.js), so the journal and the quest never disagree
 const REG_STATE = { list: null, asked: false }; // the older quests' own tables: { key, name, tips, marks } rows, read once
 function registry() {
   if (REG_STATE.asked) return; REG_STATE.asked = true;

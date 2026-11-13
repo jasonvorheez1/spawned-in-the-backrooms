@@ -237,7 +237,7 @@ l8-hobb:
     - q: "What happened to your fingers?"
       a: "Winch cable. Ten years a sapper for M.E.G. You learn what a cable does when it snaps. You learn it the once."
     - q: "Need a hand with the camp?"
-      a: "Spiders are getting bold. Talk to me again if you'll gather chitin for the barricade."
+      a: "Spiders are getting bold, butty. Ask me about plate for the perimeter if you've the stomach for it. Carla wants cheering up, too, and the Harmouth lad has a map he can't finish alone."
     - q: "Sell me supplies?"
       sk: barter 30
       do: discount
