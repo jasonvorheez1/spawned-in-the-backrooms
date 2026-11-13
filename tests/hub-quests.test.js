@@ -116,3 +116,19 @@ test('Hub routes identify the real crossings', async () => {
   p.place = 'thehub'; c.place = { id: 'thehub', objects: { 'hd-t10-a3': { feetPosition: { x: 8, y: 0, z: 0 } } } }
   expect(nextQuestExit(c, p, 'level11')).toMatchObject({ exit: 'hd-t10-a3', via: 'level11' })
 })
+
+test('Level 1 errands require explicit acceptance and do not consume supplies on greeting', async () => {
+ const { errandTick } = await import('../scripts/lib/errands.js')
+ const { fieldErrandChoices, handleFieldErrand } = await import('../scripts/lib/field-errands.js')
+ const s = { talkWith: 'meg-ale', snacks: { stillwater: 3 } }, p = { id:'p', place:'level1', state:s, session:{}, feetPosition:{x:0,y:0,z:0} }
+ const c = { ...ctx(), self:p, session:{}, getObject:()=>null }, npc={id:'meg-ale'}
+ errandTick(c,c.session,s,'level1'); expect(s.errands).toBeUndefined()
+ const inquiry = fieldErrandChoices(c,npc,s).find(x=>x.text.includes('Water for the Fire'))
+ expect(inquiry).toBeTruthy(); handleFieldErrand(c,p,npc,inquiry.text); expect(s.errands).toBeUndefined()
+ const offer=fieldErrandChoices(c,npc,s).find(x=>x.tag==='Quest Start'); handleFieldErrand(c,p,npc,offer.text)
+ c.session.errAt = 0; errandTick(c,c.session,s,'level1'); expect(s.errands['ale-water'].stage).toBe(1)
+ s.talkWith=null; errandTick(c,c.session,s,'level1'); s.talkWith=npc.id; errandTick(c,c.session,s,'level1')
+ expect(s.snacks.stillwater).toBe(3); expect(s.errands['ale-water'].done).toBeUndefined()
+ const done=fieldErrandChoices(c,npc,s).find(x=>x.tag==='Quest Turn-In'); handleFieldErrand(c,p,npc,done.text)
+ expect(s.snacks.stillwater).toBe(0); expect(s.errands['ale-water'].done).toBe(1)
+})
