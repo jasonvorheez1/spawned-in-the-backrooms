@@ -1400,6 +1400,7 @@ function tickStats(ctx, t, moving) {
   if (s.wet !== wet) s.wet = wet
   if (s.sanity > ms) s.sanity = ms
   if (s.sanity < 0) s.sanity = 0
+  if (!s.startFull) { s.startFull = 1; s.hp = maxHp(s.level, s); s.hunger = 100; s.thirst = 100 } // Shelly: a run starts with full health, food and water (once per save)
   if (s.god) { if (s.sanity < ms) s.sanity = ms; const gh = maxHp(s.level, s); if ((s.hp ?? gh) < gh) s.hp = gh; if (s.dead) s.dead = false } // god mode (creator's testing switch): topped up every tick
   // sanity 0 never hurts (johnadams2): it weakens your stats instead, see derived() in scripts/lib/stats.js
   if (zone === 'hub' || zone === 'manila' || zone === 'l4_home' || zone === 'l5_housekeeping' || zone === 'l5_kitchen') { s.hp = Math.min(mh, s.hp + 3 * t); w.battery = Math.min(L.battery, w.battery + 15 * t) }
