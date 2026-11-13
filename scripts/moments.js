@@ -56,8 +56,8 @@ export const ears = {
     } else if (s.kind === "damp-carpet" && who) {
       heard(ctx, { clip: DRIP, position: pos, volume: 0.85, maxDistance: 10 });
       who.state.sub = {
-        who: "CARPET MOISTURE HAZARD",
-        t: "Saturated Carpet: Lukewarm stagnant fluid smelling of damp mildew and machine oil. Chemical tests confirm fungal mold spores and industrial grease. Ingestion causes acute poisoning. Drink only sealed Almond Water.",
+        who: "WET CARPET",
+        t: "Soaked through. Warm, like something slept on it. Smells like mildew and old engine oil. You would not drink this.",
         at: now,
         d: 6500,
       };
@@ -70,8 +70,8 @@ export const ears = {
     } else if (s.kind === "meg-board" && who) {
       heard(ctx, { clip: G + "sfx-clothing-rustle-getting-up-from-seat.mp3", position: pos, volume: 0.7, maxDistance: 10 });
       who.state.sub = {
-        who: "M.E.G. WAYPOINT ALPHA-0",
-        t: "=== M.E.G. SURVEY BULLETIN #0-01 ===\nSTATUS: Temporary Waypoint Alpha-0.\nADVISORY FOR WANDERERS:\n• CARPET: Liquid is non-potable industrial runoff; do not ingest.\n• HUM SPIKE: When fluorescent buzzing spikes in volume, keep moving to reduce sanity decay.\n• ENTITY 3 (SMILERS): Maintain direct eye contact while slowly backing away. Do not run.\n• EXIT: Follow chalk arrows west. Noclip through the discolored wall to Level 1.",
+        who: "PINNED NOTICE",
+        t: "Typed, then fixed in pen.\n• Don't drink off the carpet.\n• When the lights get loud, keep walking. Standing still is worse.\n• If something in the dark is smiling, look at it and back off slow. Don't run.\n• Somebody marked arrows in chalk, heading west. We haven't checked where they go.\n(pen) They go to a wall. Ask me how I know.",
         at: now,
         d: 9000,
       };
