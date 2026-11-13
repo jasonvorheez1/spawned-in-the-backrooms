@@ -7,6 +7,7 @@ import { heard } from "./lib/hear.js";
 import { dmgAfterArmor } from "./lib/stats.js";
 import { layout, zoneAt, HOUSES } from "./lib/level9.js";
 import T from "./lib/data/l9-mangled.yml";
+import { navPath } from "./lib/nav.js"; // the game's shared nav layer: budgeted, cached findPath over the colliders
 const DEG = 57.2958, C = T.clips, S = T.sounds;
 const MIST = `fx
 pop mist burst=22 life=1.2..2 on=box(.5,1.2,.5).c(1.2) v=sdir()*(.2..0.7)+up(.2) size=.5..0.9 acc=drag(1.2) col=<.2,.21,.24> a=0>.3:.5>0 sz=$size*(.6>1.8) r=sprite(smoke-puff,alpha)`;
@@ -85,7 +86,17 @@ export function update(ctx, dt) {
     }
     const stand = () => { anim(h, m, C.idle, true, 0.3); h.velocity = { x: 0, y: vy, z: 0 }; };
     const face = (x, z) => { const yaw = Math.atan2(-(x - pos.x), -(z - pos.z)) * DEG; if (Math.abs(yaw - (m.yaw ?? 999)) > 2) { m.yaw = yaw; h.rotation = { yaw }; } };
-    const go = (x, z, speed, clip, rate) => { let dx = x - pos.x, dz = z - pos.z; const n = Math.hypot(dx, dz) || 1; [dx, dz] = skirt(L, pos, dx / n, dz / n); face(pos.x + dx, pos.z + dz); anim(h, m, clip, true, rate); h.velocity = { x: dx * speed, y: vy, z: dz * speed }; };
+    const steer = (x, z) => { // past a few metres it follows a planned path (fences, cars, porches); close in it goes straight
+      if (flat(pos, { x, z }) < 2.5) { m.path = null; return [x, z]; }
+      if (!m.path || now >= (m.pathAt ?? 0) || flat(m.goal, { x, z }) > 2) {
+        const r = navPath(ctx, pos, { x, y: pos.y, z });
+        if (!r.wait) { m.pathAt = now + 700; m.goal = { x, z }; m.path = r.points?.length ? r.points : null; m.pi = 0; }
+      }
+      if (!m.path) return [x, z];
+      while (m.pi < m.path.length - 1 && flat(pos, m.path[m.pi]) < 0.7) m.pi++;
+      const w = m.path[m.pi]; return w ? [w.x, w.z] : [x, z];
+    };
+    const go = (x0, z0, speed, clip, rate) => { const [x, z] = steer(x0, z0); let dx = x - pos.x, dz = z - pos.z; const n = Math.hypot(dx, dz) || 1; [dx, dz] = skirt(L, pos, dx / n, dz / n); face(pos.x + dx, pos.z + dz); anim(h, m, clip, true, rate); h.velocity = { x: dx * speed, y: vy, z: dz * speed }; };
     if (now < (st.stunUntil ?? 0)) { stand(); continue; }
     let near = null, nd = Infinity; for (const p of players) { const d = flat(p.feetPosition, pos); if (d < nd) { nd = d; near = p; } }
     if (!fog) { // the bank is rolling out: it turns and walks off into what is left of it
