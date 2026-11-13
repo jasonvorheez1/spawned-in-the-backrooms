@@ -1,25 +1,25 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7215,
-  "updatedAt": "2026-11-13T13:14:22.463Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG across Level 0, a social hub and authored lore destinations; player saves hold progression, gear, quests, faction standing, homes and companions, while tutorial0 is solo and ephemeral. Shared player behaviors and place simulations join authored scenes to generated spaces, with reusable dialogue, deliberate quest offers, NPC threat checks, errands and a Tripo cat appearance pipeline. The Way Back reveals Dina's story through a saved clue trail and playable recordings, including a collectible Level 3 cassette, before continuing its ship and recovery stages.",
+  "basedOnSpecVersion": 7270,
+  "updatedAt": "2026-11-13T13:59:47.671Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG across Level 0, a social hub and authored lore destinations; player.state holds progression, gear, quests, homes, companions and now the versioned resume location. Shared player behaviors and place simulations join authored scenes to generated spaces, with reusable dialogue, deliberate quest offers, NPC threat checks and errands. The Way Back reveals Dina's story through a saved clue trail and playable recordings, now including Level 2 and Level 4 detours.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0's yellow maze, ecology, routes, landmarks, Christmas Area and stair anomalies; objects.scene also carries the Favi brain row.",
     "places/bonus (3D) - shared vaporwave mall with simulated staff, shops, directory, arcade, payphones, player-home kiosk and Squeeze Play smoothie bar; Glow Up Salon is here.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo, ephemeral) - character creation/waking, staged tutorial and HALOGEN handoff to Dina's lead.",
     "places/level01 (3D) - Zenith Station, breach, bots, hazards and recorder quest.",
-    "places/level1, level2, level02, level21, level3, gamma (3D) - Habitable Zone camp, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma; Level 1 also generates spiral anomalies.",
+    "places/level1, level2, level02, level21, level3, gamma (3D) - Habitable Zone camp, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma; Level 1 also generates spiral anomalies; Level 2 sim places Dina's courier-crate detour.",
     "places/level31 (3D) - Roller Rink, cinema/DJ booth, arcade, party room, cafe/snack bar, rental, gift shop/skate loft and white Level 70 door; Awakening lighting configured.",
     "places/level70 (3D; Froidetown) - snowy Canadian city on a planetoid: Kelpie Street, Burns Crescent, Calor Office Block, Noahtown, Parliament Hotel, Froston, Iceshed and Burns River; layered districts, packed-snow walks, NPCs and foes.",
-    "places/level4, level5, level6, level7, level8, level10-13, level26, level27, spamton, testlab and other lore/test destinations - authored stories, hazards, encounters and residents; Level 5 includes the Homely Hotel, Housekeeping and Samantha's readings."
+    "places/level4, level5, level6, level7, level8, level10-13, level26, level27, spamton, testlab and other lore/test destinations - authored stories, hazards, encounters and residents; Level 4 sim places Dina's carbon-copy detour; Level 5 includes the Homely Hotel, Housekeeping and Samantha."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input mappings; config selects shared lighting.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - local configuration, authored placements and generated/ticked simulation.",
     "sim.js - global tick for body-style propagation and bounded incremental restyling of objects in occupied places.",
     "scripts/main-menu.js + main-menu-ui.js + intake/tutorial scripts - title, character creation, arrival, tutorial and Dina quest routing/tick; main-menu also ticks errands.",
-    "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, aiming camera, third-person toggle and per-place HUD zone naming.",
+    "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, save wake/resume, aiming camera, third-person toggle and per-place HUD zone naming.",
     "scripts/ui.js + scripts/stats-ui.js - composed player HUD/menus and character status, including quest journal, derived sanity cap, smoothie UI and Level 70-only CHILL bar.",
     "places/main/sim.js + scripts/lib/maze.js + scripts/lib/xmas-room.js + scripts/lib/level0-moments.js - Level 0 layout, Christmas Area, stair anomalies and deterministic wall-side moments.",
     "places/level31/sim.js + scripts/lib/level31.js + scripts/lib/level31-parts.js; places/level70/sim.js + scripts/lib/level70.js + scripts/terrain70.js - versioned venue and layered Froidetown map/terrain, routes, arrivals and weather."
@@ -29,13 +29,13 @@
     "scripts/lib/loot.js + scripts/lib/items.js + scripts/lib/weapons.js/data/weapons.yml - common loot, containers, item definitions, rarity and weapon variants; snacks and loot tables supply food/meat.",
     "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/lib/level3-hatch.js - parametric doors/motion and deterministic Level 3 paired hatch layout; threshold/sign geometry is shared by participating places.",
     "scripts/lib/data/l02-props.yml + scripts/lib/data/l02-remodel.yml + scripts/lib/l02-grid.js; scripts/lib/breakables.js + data/breakables.yml + wallgrid.js - Level 0.2 partitions/props and shared prop/generated-wall damage, drops and regrowth.",
-    "scripts/lib/quest-route.js + scripts/lib/quest-mark.js + scripts/lib/quests.js - directed crossings/objectives and common quest state, journal, tracker and quest-step messaging.",
+    "scripts/lib/quest-route.js + scripts/lib/quest-mark.js + scripts/lib/quests.js - directed crossings/objectives and common quest/errand journal, tracker, reward-claim and quest-step messaging.",
     "scripts/lib/data/dlg-*.yml + scripts/lib/dialogue.js + scripts/talk.js + scripts/lib/voices.js - authored conversations, barks, checks/actions and voice selection for named and archetype NPCs.",
-    "scripts/lib/quest-dialogue.js - job offer briefings, journal descriptions/progress text and paged choices; scripts/talk.js and scripts/ui.js consume it.",
-    "scripts/lib/errands.js + scripts/lib/data/errands.yml; scripts/lib/npc-temper.js + scripts/lib/notify.js - data-driven NPC jobs and shared NPC weapon filtering/strike-window and per-player notice helpers; scripts/loot-bags-geo.js builds reusable loot furniture, including fuse cabinets."
+    "scripts/lib/quest-dialogue.js - shared job-offer briefings, journal descriptions/progress text and paged choices; scripts/talk.js and scripts/ui.js consume it.",
+    "scripts/lib/errands.js + scripts/lib/data/errands.yml; scripts/lib/npc-temper.js + scripts/lib/notify.js - data-driven NPC jobs and shared NPC weapon filtering/strike-window and per-player notice helpers; scripts/loot-bags-geo.js builds reusable loot bags."
   ],
   "notableExports": [
-    "sim.js - cadence, tick, onOutOfBounds; body-style propagation and bounded incremental object restyling.",
+    "scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate, wakeLog; shared player-save versioning, eligibility, migration and wake diagnostics.",
     "scripts/lib/critter-model.js - STYLE_V, sw194, furrySpec, restyle, restyleQueue, restyleStep, restylePlace; character construction and refitting.",
     "scripts/lib/level31.js - H, B, RINK, ZONES, ARRIVE, DOOR, BACK, onRink, L31_NAMES, zoneAt, SKATE, skateStep; venue geometry, area labels and rink movement.",
     "scripts/lib/level31-parts.js - layParts; dispatches venue builders; scripts/lib/level31-quest.js exports QID/QNAME, openCrate, useDeck, l31Choices and handleDialogueQuest31.",
@@ -45,28 +45,29 @@
     "scripts/lib/level1-quests.js - UNIQUE, QUESTS1, l1Choice, setStep1, handleDialogueQuest1, questLift1, questKill1; Level 1 quest routes and the Lucky Thirteen reward definition."
   ],
   "ownership": [
-    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved position, tapes/holotapes, currency, karma/rep and homeKeep; initializes hp to max and hunger/thirst to 1.",
+    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved position/place, tapes/holotapes, currency, karma/rep and homeKeep; initializes hp to max and hunger/thirst to 1.",
+    "scripts/lib/save.js - saveV migration rules and eligibility/wake-location policy; player.state remains the save payload, with savePlace/savePos written by player.js.",
     "scripts/critter.js - per-player appearance look and transient critter/creator/salon state (wardrobeOpen, wrTab, salonOpen/salonTab); dress actions update look, including selected model or uploaded model URL.",
-    "scripts/lib/quests.js + scripts/lib/dina-quest.js - quests/qtrack/qdone; Dina's saved trail keys (name, word, list, tape, room, radio, pass), dinaQ stages, diary/cut/lead fields and legacy migration.",
+    "scripts/lib/quests.js + scripts/lib/dina-quest.js - quests/qtrack/qdone/claimed; Dina's saved trail keys (name, word, list, tape, room, radio, pass, dinaCrate, dinaCarbon), dinaQ stages, diary/cut/lead fields and legacy migration.",
     "scripts/lib/errands.js - player.state.errands per-job stage/count/kill-baseline/done records, errHints and errand quest-journal entries; completion updates cents, payout, rep and trail hints.",
     "scripts/lib/level31-quest.js + scripts/lib/level70-quest.js + scripts/lib/remodel-quest.js - l31q/l31route/l31qh and Level 31 quest rewards; l70q/l70route/l70pelt/l70led; remodQ, l02got/l02paint, fresh and Fresh Paint hint fields.",
     "scripts/build.js + places/level5/sim.js - player homeKeep.built or homeKeep.l5built and reconstruction; scripts/l5-resident.js owns booking keys/room identity and place.state.l5rent exclusive-room ledger.",
-    "scripts/lib/breakables.js - place.state.wallHp and place.state.broken hold generated wall damage/broken timestamps; syncWalls removes stale broken records when the current grid says that wall no longer exists.",
-    "scripts/lib/companion.js owns player.state.crew and companion follow/perk/loyalty/orders; scripts/lib/forgive.js owns NPC incidents/angry/fresh/struckAt; scripts/samantha.js owns Samantha's local behavior plus persistent me.state.fed timestamps keyed by player ID."
+    "scripts/lib/breakables.js; scripts/lib/companion.js; scripts/lib/forgive.js; scripts/samantha.js - place.state.wallHp/broken; save-scoped crew/orders; NPC incidents; and Samantha's me.state.fed timestamps keyed by player ID."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific minigames.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific play.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera; camera writes aimPt/aimPitch → player.js ballistics/weaponAim; player.js zoneHere → maze names and Level 31/70 zoneAt labels.",
+    "scripts/player.js wake → scripts/lib/save.js migrate/log/wakePlace; valid savePlace crosses to the saved place and savePos restores the saved coordinates; periodic saves write savePlace/savePos only outside intake, bonus and tutorial0 copies.",
     "scripts/routing.js requested room → scripts/lib/hub.js solo selection; toHub/toSolo cross to hub/home and maintain roomHop/save-place; kiosk resolves booked Level 5 home IDs.",
     "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close runs scripts/lib/intro-cut.js cutTick, then crosses to tutorial0 first time or main later; wardrobe/salon dress actions update appearance look via scripts/critter.js.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js: matching-place dialogue or errand:<id>/errand-alt:<id> offers jobs; active jobs progress from carried items, kills and world events.",
     "scripts/lib/errands.js → scripts/lib/quests.js journal (err-<id>), player.state.errands, qtrack, cents/payout/rep and optional trail-hint queue; scripts/craft.js consumes pending item objectives.",
-    "tutorial0 HALOGEN cut → scripts/lib/tut0-cut.js + scripts/lib/dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ; the placed Level 3 dina-cassette uses scripts/dina-record.js to add holotapes.dina4 on take, then player.js plays it on HALOGEN.",
+    "tutorial0 HALOGEN cut → scripts/lib/tut0-cut.js + scripts/lib/dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ; Level 2/4 sims place the Dina crate/carbon clues, and scripts/dina-record.js gates and records clue pickups.",
     "scripts/build.js placement/removal → homeKeep.built or homeKeep.l5built; Level 5 sim restores separately; l5-resident booking → player l5home/l5room and place.state.l5rent, hub kiosk routes per room.",
     "Level 2 l2-to-l31 and Level 31 l31-back triggers → scripts/level-door.js directed crossings to Level 31/Level 2; Level 31 l31-to-l70 and Level 70 l70-back similarly cross via paired arrivals; quest-route.js maps both pairs.",
     "Level 31 sim reads H/B/RINK/ZONES/DOOR/BACK, rebuilds l31-* roots at place.state.v31=100 and dispatches layParts; Level 70 sim lays arrival/return, weather and version-gated district layers, with place.state.v70* build keys.",
-    "scripts/talk.js recruit/order actions → scripts/lib/companion.js writes player.state.crew and companion state; scripts/meg-agent.js follows/fights only when the leader's save lists that NPC, and scripts/level-door.js carries followers across paired routes.",
-    "scripts/talk.js Quest Start choice → quest-dialogue.js briefing and pending accept/decline; acceptance calls the relevant quest handler and scripts/lib/quests.js journals it; Level 1 scripts/lib/level1-quests.js awards Callum's UNIQUE Lucky Thirteen for resolving Short Rations by getting help for Ale's family."
+    "scripts/talk.js recruit/order actions → scripts/lib/companion.js writes player.state.crew and companion state; scripts/meg-agent.js follows/fights only when the leader's save lists that NPC, and scripts/level-door.js carries followers across level transitions.",
+    "scripts/talk.js Quest Start choice → quest-dialogue.js briefing and pending accept/decline; acceptance calls the relevant quest handler and scripts/lib/quests.js journals it; common claimReward/payOnce guards plus quest handlers keep rewards one-time, while quest-specific checks offer alternate routes."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored mall shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
@@ -74,9 +75,9 @@
     "scripts/door-geo.js + scripts/lib/door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage motion, legacy migration and tagged paired leaves such as Fort Surrender; thresholds and sign boards share geometry.",
     "places/level01/sim.js + Zenith geometry/breach/hatch/bot/hazard scripts; places/level02/sim.js + l02-grid.js vary partitions, lights, crew, knocks and reset.",
     "scripts/meg-agent.js - shared NPC nerve/stats/weapon reactions, cover, authored/voiced barks, movement/fighting and companion following; npc-temper.js filters wieldable child weapons, forgive.js owns generic first-hit assault handling.",
-    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + art/cat-wardrobe - shared Tripo cat appearance assembly varied by body/sex, painted or skinned garments, head keys, hair and fitted ear models; lop uses sex-specific uploaded GLBs.",
     "scripts/lib/data/errands.yml + scripts/lib/errands.js - one stage/reward engine reused by named NPCs across Levels 1-13 and 70; each row varies giver/place, objectives, alternate path and reward.",
-    "scripts/l5-samantha.js + scripts/samantha.js - distinct Beverly Room cats trade readings/blessings or meals; Samantha accepts meat tokens and meat-marked snacks, persists fed-player grace across machine handoff, warns empty-handed visitors and attacks after an unheeded warning."
+    "scripts/lib/quest-dialogue.js + scripts/lib/quests.js + per-level quest handlers/data - shared briefing, journal and reward guards; quest variations provide skill checks, noncombat alternatives, after-lines and step-specific rewards across Levels 5, 8, 10, 11, 13, 31 and 70.",
+    "scripts/l5-samantha.js + scripts/samantha.js - distinct Beverly Room cats trade readings/blessings or meals; Samantha accepts meat tokens and meat-marked snacks, persists fed-player grace across machine handoff, warns empty-handed visitors."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -86,11 +87,11 @@
     "scripts/dbg-bodypad.js, scripts/debug-pad.js - debug-room pads after places/debug removal; no current references found."
   ],
   "migrationNotes": [
-    "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player IDs/player roots and local-audience FX.",
-    "Level 2 survivors keep generated looks in NPC state.wear; survBodyV=1 triggers the migration/refit path. Cat wardrobe is only for new Tripo cat bodies; cat-wardrobe.yml stores garment/model assets and maps ears per sex.",
-    "Level 31 rebuilds l31-* roots at place.state.v31=100; align IDs and shell/zone/door/arrival geometry with level31.js, and keep the white-door exit paired with Level 70's l70-from-l31 arrival.",
-    "Level 70 level70.js keeps built zone discs, street and Burns River at y=0 while terrain70.js raises terrain outside them; layer versions invalidate builds and nav cache keys include town/civic/wild/path versions.",
-    "Generated wall damage lives in place.state.wallHp/broken; syncWalls treats wall-grid membership as authoritative and deletes stale broken keys before deriving cutouts. Companions are save-scoped: set player.state.crew when adopting and do not infer ownership from NPC proximity.",
-    "Dina's placed Level 3 cassette (state.kind=cassette) is taken via scripts/dina-record.js, adds holotapes.dina4, and is distinct from the C-23 handoff log. Samantha's fed timestamps live in me.state.fed keyed by player ID, survive machine handoff, and grant 600000ms grace; a pending warning must not claw someone who has just fed her."
+    "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player IDs/player roots and local-audience objects.",
+    "scripts/lib/save.js SAVE_V=2: intake, bonus and tutorial0 are transient and never save resume locations; migration clears legacy transient savePlace/savePos without overwriting earned state, and wakePlace rejects missing places.",
+    "Player wake routing is stateful: player.js retries a cross to the saved place up to three times, then holds/restores the saved coordinates after a level's own arrival; preserve wakeAtSave/wakeCrossAt/wakeHold safeguards when changing spawn flows.",
+    "Level 31 rebuilds l31-* roots at place.state.v31=100; align IDs and shell/zone/door/arrival geometry with level31.js, and keep the white-door exit paired with Level 70's l70-from-l31 arrival. Level 70 keeps built zone discs, street and Burns River at y=0 while terrain70.js raises terrain outside them.",
+    "Generated wall damage lives in place.state.wallHp/broken; syncWalls treats wall-grid membership as authoritative and deletes stale broken keys before deriving cutouts. Companions are save-scoped: set player.state.crew when adopting.",
+    "Dina's placed Level 3 cassette (state.kind=cassette) is taken via scripts/dina-record.js, adds holotapes.dina4, and is distinct from the C-23 handoff log; Level 2/4 clue flags are dinaCrate/dinaCarbon and keep existing dinaQ step numbers. Samantha's fed timestamps live in me.state.fed keyed by player ID."
   ]
 }
