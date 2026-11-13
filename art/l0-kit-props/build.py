@@ -1,0 +1,88 @@
+# Level 0 office props kit: Tripo source -> faced -Z, floor origin, true size, cleaned, proof, .glb
+# blender -b --factory-startup --python-exit-code 1 --python art/l0-kit-props/build.py -- <kind> [src.glb] [yawDeg]
+import bpy, sys, math, json, bmesh
+from mathutils import Vector, Matrix
+W = "/workspace/l0props"
+# axis: w (x), h (up), d (depth); value in metres. yaw: degrees about up applied to the Tripo file so its front lands on glTF -Z.
+SPEC = {
+ "boxes-stack":   dict(axis="h", v=1.00, yaw=180),
+ "box-single":    dict(axis="w", v=0.40, yaw=180),
+ "folding-table": dict(axis="w", v=1.80, yaw=180),
+ "stack-chair":   dict(axis="h", v=0.80, yaw=180),
+ "filing":        dict(axis="h", v=1.32, yaw=180),
+ "crt":           dict(axis="h", v=0.50, yaw=180),
+ "phone":         dict(axis="w", v=0.22, yaw=180),
+ "bin":           dict(axis="h", v=0.30, yaw=180),
+ "fakeplant":     dict(axis="h", v=1.50, yaw=180, keep_islands=True),
+ "copier":        dict(axis="h", v=1.05, yaw=180),
+}
+a = sys.argv[sys.argv.index("--") + 1:]
+kind = a[0]; sp = SPEC[kind]
+src = a[1] if len(a) > 1 else f"{W}/{kind}.glb"
+yaw = float(a[2]) if len(a) > 2 else sp["yaw"]
+bpy.ops.wm.read_factory_settings(use_empty=True)
+bpy.ops.import_scene.gltf(filepath=src)
+meshes = [o for o in bpy.context.scene.objects if o.type == "MESH"]
+bpy.ops.object.select_all(action="DESELECT")
+for o in meshes: o.select_set(True)
+bpy.context.view_layer.objects.active = meshes[0]
+if len(meshes) > 1: bpy.ops.object.join()
+ob = bpy.context.view_layer.objects.active
+ob.parent = None if ob.parent is None else ob.parent
+mw = ob.matrix_world.copy(); ob.parent = None; ob.matrix_world = mw
+bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+for o in list(bpy.context.scene.objects):
+    if o != ob: bpy.data.objects.remove(o)
+me = ob.data
+# junk islands: tiny loose pieces (welded by position) well under the piece's size
+if not sp.get("keep_islands"):
+    bm = bmesh.new(); bm.from_mesh(me)
+    key = lambda v: (round(v.co.x, 4), round(v.co.y, 4), round(v.co.z, 4))
+    par = {}
+    def find(k):
+        while par.setdefault(k, k) != k:
+            par[k] = par[par[k]]; k = par[k]
+        return k
+    for e in bm.edges: par[find(key(e.verts[0]))] = find(key(e.verts[1]))
+    isl = {}
+    for f in bm.faces: isl.setdefault(find(key(f.verts[0])), []).append(f)
+    tot = len(bm.faces); dead = []
+    for fs in isl.values():
+        if len(fs) < max(12, tot * 0.002): dead += fs
+    print("ISLANDS", len(isl), "junk faces", len(dead))
+    bmesh.ops.delete(bm, geom=dead, context="FACES")
+    bm.to_mesh(me); bm.free()
+# face -Z in glTF (= +Y in Blender), long axis on X for the table
+me.transform(Matrix.Rotation(math.radians(yaw), 4, "Z"))
+def bb():
+    xs = [v.co for v in me.vertices]
+    mn = Vector((min(c.x for c in xs), min(c.y for c in xs), min(c.z for c in xs)))
+    mx = Vector((max(c.x for c in xs), max(c.y for c in xs), max(c.z for c in xs)))
+    return mn, mx
+mn, mx = bb(); sz = mx - mn
+cur = {"w": sz.x, "h": sz.z, "d": sz.y}[sp["axis"]]
+s = sp["v"] / cur
+me.transform(Matrix.Scale(s, 4))
+mn, mx = bb()
+me.transform(Matrix.Translation((-(mn.x + mx.x) / 2, -(mn.y + mx.y) / 2, -mn.z)))
+mn, mx = bb(); sz = mx - mn
+for p in me.polygons: p.use_smooth = True
+me.set_sharp_from_angle(angle=math.radians(40))
+me.update(); me.calc_loop_triangles(); tris = len(me.loop_triangles)
+for img in bpy.data.images:
+    if img.size[0] > 1024: img.scale(1024, 1024)
+out = f"{W}/out/{kind}.glb"
+bpy.ops.export_scene.gltf(filepath=out, export_apply=True, export_image_format="AUTO")
+json.dump({"kind": kind, "size": [round(sz.x, 3), round(sz.z, 3), round(sz.y, 3)], "tris": tris}, open(f"{W}/out/{kind}.json", "w"))
+print("DONE", kind, [round(sz.x, 3), round(sz.z, 3), round(sz.y, 3)], tris)
+# proof: front 3/4 (camera on the +Y side = the face that exports as -Z) and back 3/4
+sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12
+sc.render.resolution_x = sc.render.resolution_y = 560
+w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True
+w.node_tree.nodes["Background"].inputs[0].default_value = (1, 1, 1, 1); w.node_tree.nodes["Background"].inputs[1].default_value = 1.1
+R = max(sz) * 1.9; c = Vector((0, 0, sz.z / 2))
+for name, ang in (("a", 35), ("b", 215)):
+    cd = bpy.data.cameras.new(name); cam = bpy.data.objects.new(name, cd); sc.collection.objects.link(cam)
+    t = math.radians(ang); cam.location = c + Vector((math.sin(t) * R, math.cos(t) * R, R * 0.45))
+    cam.rotation_euler = (c - cam.location).to_track_quat("-Z", "Y").to_euler(); cd.lens = 50
+    sc.camera = cam; sc.render.filepath = f"{W}/out/{kind}_{name}.png"; bpy.ops.render.render(write_still=True)
