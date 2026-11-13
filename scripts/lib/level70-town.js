@@ -2,7 +2,7 @@
 // lay(ctx) builds it once per V (ctx.place.state.v70town), tick(ctx) runs each second. Every visible thing is a Tripo or Blender mesh
 // (art/l70-town/*.py build the house and igloo; art/l70-town/models.py fills M from the Tripo logs). Map: ./level70.js.
 import { HUT, SPOT } from "./level70.js";
-export const V = 4;
+export const V = 5;
 const M = /*M*/{"house": "/cdn/value.ccfc0d22611756b81211e7588895817d54099b9c9e953f4fc70666c13506c5a5.glb", "housecol": "/cdn/value.0edcb5f24560a45372d0b4c4c776acb8d9b4db9e4754df04f2d1b331c6228efd.glb", "igloo": "/cdn/value.ddbadda06e9aa49abab62ec4bf82e49b7b784eeb11bbfd52cf32bfd3f3e317d0.glb", "lamp": "/cdn/value.df187005a34dd410bd5de07e4253a96b988c4a12840d62b14ec6248dd28cfc52.glb", "pole": "/cdn/value.76853fda663d318c17f12d0d8b66410e8ba2b131260ef1a373fe11a2a1629d1e.glb", "sedan": "/cdn/value.8bab8a27c8807090412480c7a890104a34ddd3178edf5f288a57d6941440a8d0.glb", "pickup": "/cdn/value.077bedb487349a0148196019451d1bd4543792c89251898bc5e1cc6e8777b37d.glb", "snowbank": "/cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb", "bldga": "/cdn/value.7e99de62f1d6a8e9730d41fbd07ad2686651db9127868f64e4c18fbbd1ef63ec.glb", "bldgb": "/cdn/value.198edb96a33553fe6d550ac9b35acc12754e4414467a7542fd372462df11898a.glb", "nhouse": "/cdn/value.82b465081f6775e6c5d0483430060c237943db4f47082b5d4e532099671dad29.glb", "shelter": "/cdn/value.e2e5e8dfabdb35770aee07467ae5acc35db33c82e79e3b110218ad9ad4318b03.glb", "swing": "/cdn/value.1d56eef705a4541fa9f97a6174118d8491550fe41610969a2420b08378acb671.glb"}/*M*/;
 const HUTG = "/cdn/value.0b1ccbbffd913e4a0cf600a19d17f5eb95171b6cb43c624ad0f61ee3fccf3f01.glb", DOORG = "/cdn/value.9fdae43fcaf5713af173eb262dfa4b526ccc98a79e34d99b72f458948db6e11d.glb";
 const HS = SPOT.house, IG = SPOT.igloo;
@@ -60,7 +60,7 @@ export function lay(ctx) {
     mesh("l70-car-" + i, M[k], x, z, h, { yaw: yaw + TUNE.carYaw }); snow("l70-car-" + i + "-snow", x + (x > 0 ? 1.5 : -1.5), z + 1.2, 0.7, i * 50); snow("l70-car-" + i + "-snow2", x - (x > 0 ? 0.4 : -0.4), z - 2.6, 0.5, i * 110); });
   lamp("l70-car-1-light", -4.5, 1.15, -7, "oklch(0.86 0.05 230)", 0.9, 4);
   let n = 0; for (const s of [-1, 1]) for (let z = 36; z > -118; z -= 8.5) { n++; const gap = (Math.abs(z + 20) < 5.5) || (z < -58 && z > -86); if (gap) continue;
-    mesh("l70-bank-" + n, M.snowbank, s * (6.7 + rnd(n) * 0.5), z + rnd(n + 5) * 2, 0.9 + rnd(n + 2) * 0.5, { yaw: TUNE.bankYaw + (rnd(n + 7) - 0.5) * 16 + (n % 2 ? 180 : 0), y: -0.06 }); }
+    mesh("l70-bank-" + n, M.snowbank, s * (6.7 + rnd(n) * 0.5), z + rnd(n + 5) * 2, 0.9 + rnd(n + 2) * 0.5, { yaw: TUNE.bankYaw + (rnd(n + 7) - 0.5) * 16 + (n % 2 ? 180 : 0), y: -0.06, materials: { "tripo_material_961a531c-67ef-4089-8b70-70766e70f68a": { color: "oklch(0.99 0.015 240)", roughness: 0.95 } } }); }
   n = 0; for (const s of [-1, 1]) [24, 12, 0, -11.5, -31, -43].forEach((z, i) => { n++; const k = (i + (s > 0 ? 1 : 0)) % 2 ? "bldgb" : "bldga", h = k === "bldgb" ? 14 : 11.5;
     mesh("l70-bldg-" + n, M[k], s * 12.6, z, h, { layout: H(h, 11.4, 7.2), fwd: "+z", yaw: s < 0 ? TUNE.bldgW : TUNE.bldgE, physics: { body: "static", collider: "box" } });
     if (i % 2 === (s > 0 ? 0 : 1)) lamp("l70-bldg-" + n + "-win", s * 8.4, 4.2 + (i % 3) * 2.6, z + (rnd(n) - 0.5) * 5, "oklch(0.84 0.1 75)", 1.1, 6);
