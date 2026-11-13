@@ -19,10 +19,10 @@ Layering: shared default (scripts/lib) -> level data (places/<level>, dlg-*.yml,
 | loot + items | scripts/lib/loot.js, scripts/lib/items.js, data/weapons.yml | loot tables |
 | player notices | scripts/lib/notify.js | text |
 
-## Still separate (next to fold in)
-- Per-level NPC brains with their own movement/fight loops: l4-people, l8-life, l13-foes, l7-tiny, partygoers, l61-staff, level70-life.
-  Their weapon + temper rules should import npc-temper.js; their movement should move onto one shared walker.
-- Quest files with their own step logic beyond the journal: level1-quests, level13-quest, level31-quest, level70-quest, zenith-quest.
+## Intentionally separate
+- Every person NPC (meg-agent on every level incl. Level 70 town, l4-people, l5-people, l61-staff, Samantha, companions) decides hostility through scripts/lib/forgive.js: one fix reaches them all.
+- Creature brains (l8-life spiders, partygoers, l13-foes, l7-tiny, hounds, smilers, deathmoths) are hostile by nature; each keeps its own hunt. Shared rules for them go in a lib file the same way.
+- Quest files (level13/31/70/remodel/zenith) keep their own story steps but write the journal and messages only through scripts/lib/quests.js.
 
 ## Checking every level at once
 `python3 tests/check.py`: imports, missing scripts, dialogue structure and actions, quest place names, data files, across all places.
