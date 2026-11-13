@@ -1,0 +1,3 @@
+# Level 70 Froidetown people. Quest lines live in scripts/lib/level70-quest.js (l70Choices + handleDialogueQuest70).
+# Per-NPC greetings and barks still to be written in the dlg schema; empty map keeps dialogue.js loading.
+{}
