@@ -152,7 +152,7 @@ def build(col):
     wall("x", -7.475, 0.25, -5, 0, -0.3, 2.6, [], "concrete"); wall("x", -3.56, 0.12, -4.75, -0.25, 0, 2.6, [(-3.5, -2.5, FL, FL + 2.3)], "concrete")
     bx(-4.75, -0.25, -0.12, 0.02, -7.35, -3.5, "concrete"); bx(-5.1, 0.1, 2.6, 2.84, -7.7, -3.5, "concrete")
     bx(-3.5, -2.5, 0, FL, -3.62, -3.3, "concrete"); bx(-3.5, -2.5, 0, 0.36, -3.92, -3.62, "concrete"); bx(-3.5, -2.5, 0, 0.18, -4.22, -3.92, "concrete")
-    bx(-2.5, -1.46, FL + 0.01, FL + 1.98, -3.28, -3.24, "steel")  # the cellar's steel door, open against the kitchen wall
+    if not col: bx(-2.5, -1.46, FL + 0.01, FL + 1.98, -3.28, -3.24, "steel")  # the cellar's steel door, open against the kitchen wall
     if not col:
         for u in (-3.55, -2.45): bx(u - 0.04, u + 0.04, FL, FL + 2.34, -3.66, -3.28, "steel")
         bx(-3.59, -2.41, FL + 2.3, FL + 2.38, -3.66, -3.28, "steel"); bx(-3.52, -3.48, 0.2, 1.3, -4.2, -3.64, "steel", rot=(0, 0, 0))
