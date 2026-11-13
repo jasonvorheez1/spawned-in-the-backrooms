@@ -1,7 +1,7 @@
 // Level 2.1 "Locked" - Quests & Refrigerator Paradise Operations
 import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
-import { setQuest, endQuest, qid } from "./quests.js";
+import { setQuest, endQuest, qid, questStep } from "./quests.js";
 import { addRep, addKarma, repOf, GROUPS } from "./rep.js";
 import { rollCheck } from "./npc-talk.js";
 
@@ -41,18 +41,7 @@ export const QUESTS21 = {
   },
 };
 
-function syncHUD(p, qKey, step, doneSummary) {
-  const q = QUESTS21[qKey], s = p?.state;
-  if (!q || !s) return;
-  const tip = q.tips[step], id = qid(q.name), mark = q.marks?.[step] ?? null;
-  if (tip) {
-    s.quest = { name: q.name, step: tip, mark, at: Date.now() };
-    setQuest(s, id, { name: q.name, step: tip, mark });
-  } else {
-    if (s.quest?.name === q.name) s.quest = null;
-    endQuest(s, id, doneSummary);
-  }
-}
+const syncHUD = (p, qKey, step, doneSummary) => questStep(p?.state, QUESTS21[qKey], step, doneSummary); // scripts/lib/quests.js, shared
 
 export function setSaltineStep(ctx, p, step, noteText) {
   const s = p?.state;

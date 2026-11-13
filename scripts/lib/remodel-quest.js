@@ -6,7 +6,7 @@ import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
 import { addRep, addKarma } from "./rep.js";
 import { rollCheck } from "./npc-talk.js";
-import { setQuest, endQuest, qid } from "./quests.js";
+import { setQuest, endQuest, qid, tellQuest } from "./quests.js";
 const CHIME = "cdn/sfx-soft-bright-two-note-success-chime.mp3";
 const FANFARE = "/cdn/moodboard-realistic-gritty/sfx-level-up-jingle-retro-terminal-chime-rising-three-notes.mp3";
 const HISS = "cdn/sfx-aerosol-can-short-hiss-click-plastic-cap.mp3";
@@ -40,10 +40,7 @@ const LOCATIONS = [
   ["capn", "l02-capn", "Speak to Cap'n by the basement stairs"],
 ];
 const posOf = (p) => p.worldFeetPosition ?? p.feetPosition;
-function tell(ctx, p, text, clip = CHIME) {
-  const s = p.state, now = ctx.now(); s.notice = { text, at: now }; pushFeed(s, text, now, "good");
-  const pos = posOf(p); if (pos) heard(ctx, { clip, position: pos, volume: 0.7, maxDistance: 16 }, { audience: { player: p.id } });
-}
+const tell = tellQuest; // scripts/lib/quests.js, shared
 function syncHUD(s, place, room, done) {
   const q = QUESTS02.remodel, progress = q.progress(s, place, room), id = qid(q.name);
   if (progress.step) { s.quest = { name: q.name, ...progress, at: Date.now() }; setQuest(s, id, { name: q.name, ...progress }); }

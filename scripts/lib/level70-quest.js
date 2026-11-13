@@ -9,7 +9,7 @@
 import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
 import { addRep } from "./rep.js";
-import { setQuest, endQuest } from "./quests.js";
+import { setQuest, endQuest, tellQuest } from "./quests.js";
 import { rollCheck } from "./npc-talk.js";
 import { SPOT, wildness } from "./level70.js";
 import * as TOWN from "./level70-town.js";
@@ -49,10 +49,7 @@ const bag = (s, k) => s.snacks?.[k] ?? 0;
 const give = (s, k, n = 1) => { s.snacks = { ...(s.snacks ?? {}), [k]: Math.max(0, bag(s, k) + n) }; };
 const kills = (s, k) => s.l70kills?.[k] ?? 0;
 const arm = (s, k) => { s.weapons = [...new Set([...String(s.weapons ?? "").split(",").filter(Boolean), k])].join(","); };
-function tell(ctx, p, text, clip = CHIME) {
-  const s = p.state, now = ctx.now(); s.notice = { text, at: now }; pushFeed(s, text, now, "good");
-  const pos = posOf(p); if (pos) heard(ctx, { clip, position: pos, volume: 0.7, maxDistance: 16 }, { audience: { player: p.id } });
-}
+const tell = tellQuest; // scripts/lib/quests.js, shared
 function setStep(ctx, p, step, text, clip) {
   const s = p.state; s.l70q = step; const k = step === 6 ? "6" + s.l70route : step;
   if (TIPS[k]) setQuest(s, QID, { name: QNAME, step: TIPS[k], mark: MARKS[k] }); if (text) tell(ctx, p, text, clip);

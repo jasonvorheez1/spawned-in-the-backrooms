@@ -2,6 +2,8 @@
 // player.state.quests = { <id>: { name, step, mark, main, at } }; player.state.qtrack = up to three ids, each drawn with its
 // own tracker row, world marker and compass pip in its own tint. Older quests still write player.state.quest; scripts/quest-marker.js
 // folds those in, so nothing a quest giver wrote is lost when a second quest starts.
+import { pushFeed } from "./feed.js";
+import { heard } from "./hear.js";
 export const MAX_TRACK = 3; // her number
 export const TINT = ["#ffc44d", "#8fd8ff", "#a6f08e"]; // slot 1 amber, 2 pale blue, 3 pale green (my picks)
 export const PLACE_NAMES = {
@@ -43,4 +45,20 @@ export function toggleTrack(s, id) {
   if (tr.includes(id)) { s.qtrack = tr.filter((k) => k !== id); return false; }
   if (tr.length >= MAX_TRACK) return null;
   s.qtrack = [...tr, id]; return true;
+}
+
+
+// ---- shared by every level's quest file (Shelly Nov 13: fix once, every level gets it) ----
+export const CHIME = "cdn/sfx-soft-bright-two-note-success-chime.mp3";
+// a quest row's step into the journal and tracker: q = { name, tips: [...], marks?: [...] }; past the last tip it closes
+export function questStep(s, q, step, doneSummary) {
+  if (!q || !s) return;
+  const tip = q.tips?.[step], id = qid(q.name), mark = q.marks?.[step] ?? null;
+  if (tip) { s.quest = { name: q.name, step: tip, mark, at: Date.now() }; setQuest(s, id, { name: q.name, step: tip, mark }); }
+  else { if (s.quest?.name === q.name) s.quest = null; endQuest(s, id, doneSummary); }
+}
+// a quest beat told to one player: the notice, the feed line and a chime only they hear
+export function tellQuest(ctx, p, text, clip = CHIME) {
+  const s = p.state, now = ctx.now(); s.notice = { text, at: now }; pushFeed(s, text, now, "good");
+  const pos = p.worldFeetPosition ?? p.feetPosition; if (pos) heard(ctx, { clip, position: pos, volume: 0.7, maxDistance: 16 }, { audience: { player: p.id } });
 }

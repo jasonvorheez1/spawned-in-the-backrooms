@@ -4,7 +4,7 @@
 import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
 import { addRep } from "./rep.js";
-import { setQuest, endQuest } from "./quests.js";
+import { setQuest, endQuest, tellQuest } from "./quests.js";
 import { apt, aptAt } from "./level13.js";
 export const QID = "l13-still-home", QNAME = "Still Home";
 export const NOOR = "l13p-noor", CLERK = "l13p-oona", KEEP = "l13p-keepsake", KEEP_BODY = "l13p-keepsake-body";
@@ -20,10 +20,7 @@ const TIPS = {
 };
 const MARKS = { 1: { place: "level13", id: "l13-door-a8" }, 2: { place: "level13", id: KEEP }, 3: { place: "level13", id: NOOR } };
 const posOf = (p) => p.worldFeetPosition ?? p.feetPosition;
-function tell(ctx, p, text, clip = CHIME) {
-  const s = p.state, now = ctx.now(); s.notice = { text, at: now }; pushFeed(s, text, now, "good");
-  const pos = posOf(p); if (pos) heard(ctx, { clip, position: pos, volume: 0.7, maxDistance: 16 }, { audience: { player: p.id } });
-}
+const tell = tellQuest; // scripts/lib/quests.js, shared
 export function setL13(ctx, p, step, text, clip) {
   p.state.l13q = step; setQuest(p.state, QID, { name: QNAME, step: TIPS[step], mark: MARKS[step] }); if (text) tell(ctx, p, text, clip);
 }

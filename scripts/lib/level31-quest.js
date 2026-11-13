@@ -6,7 +6,7 @@
 import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
 import { addRep } from "./rep.js";
-import { setQuest, endQuest } from "./quests.js";
+import { setQuest, endQuest, tellQuest } from "./quests.js";
 import { rollCheck } from "./npc-talk.js";
 export const QID = "l31-side-b", QNAME = "Side B";
 export const MARLOWE = "l31-q-marlowe", DEZ = "l31-q-dez", CRATE = "l31-q-crate", DECK = "l31-dj-deck";
@@ -55,10 +55,7 @@ function logStep(s) {
   setQuest(s, QID, { name: QNAME, step: tip, mark });
 }
 const posOf = (p) => p.worldFeetPosition ?? p.feetPosition;
-function tell(ctx, p, text, clip = CHIME) {
-  const s = p.state, now = ctx.now(); s.notice = { text, at: now }; pushFeed(s, text, now, "good");
-  const pos = posOf(p); if (pos) heard(ctx, { clip, position: pos, volume: 0.7, maxDistance: 16 }, { audience: { player: p.id } });
-}
+const tell = tellQuest; // scripts/lib/quests.js, shared
 function setStep(ctx, p, step, text, clip) {
   const s = p.state; s.l31q = step;
   logStep(s);
