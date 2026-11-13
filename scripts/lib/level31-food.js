@@ -104,16 +104,21 @@ export function layFood(ctx) {
     [29.3, 22.4, 0, [[0, -0.89, 180], [0, 0.89, 0], [-0.89, 0, -90], [0.89, 0, 90]]],
     [33.6, 21.6, 17, [[-0.1, -1.0, 160], [1.0, 0.1, 74]]],
   ];
+  // hand-built meshes (Shelly Nov 13 "custom meshes"): fiberglass shell chairs in three faded colours, formica pedestal tables
+  const SHELLS = ["#d9661e", "#c99a2e", "#b5532a", "#d27a2a"];
+  const TBL = (id, x, z, yaw, round) => P(id, { feetPosition: { x, y: floorY, z }, rotation: { yaw }, primitive: { kind: "scripted", script: "scripts/l31-diner-table.js", params: { round: !!round } }, physics: "static", receiveShadow: true });
+  const CHR = (id, x, z, yaw, k) => P(id, { feetPosition: { x, y: floorY, z }, rotation: { yaw }, primitive: { kind: "scripted", script: "scripts/l31-shell-chair.js", params: { color: SHELLS[k % SHELLS.length] } }, physics: "static", tags: ["seat"] });
+  let n = 0;
   for (const [i, [x, z, yaw, chairs]] of tables.entries()) {
-    M("table" + (i + 1), "table", x, z, yaw, {}, floorY);
-    for (const [c, [dx, dz, cy]] of chairs.entries()) M("chair" + (i + 1) + "-" + c, "chair", x + dx, z + dz, cy, { tags: ["seat"] }, floorY);
+    TBL("table" + (i + 1), x, z, yaw, i % 2);
+    for (const [c, [dx, dz, cy]] of chairs.entries()) CHR("chair" + (i + 1) + "-" + c, x + dx, z + dz, cy, n++ * 7 % 5);
   }
-  M("chair-stray", "chair", 35.6, 18.6, 141, { tags: ["seat"] }, floorY); // dragged over to the counter queue
+  CHR("chair-stray", 35.6, 18.6, 141, 2); // dragged over to the counter queue
   // curved diner booths along the back wall, open to the room
   const BOOTH = "/cdn/value.13e98688536b8996d72997d03461590d77f616b6ffdbc802895762ab9813a00d.glb";
   for (const [i, x] of [28.6, 32.4].entries()) {
     P("booth" + i, { feetPosition: { x, y: floorY, z: 28.6 }, rotation: { yaw: -90 }, model: { id: BOOTH, forward: "+z" }, scale: 1.2, physics: { body: "static", collider: "mesh" }, tags: ["seat"] });
-    M("btable" + i, "table", x, 28.15, 0, {}, floorY);
+    TBL("btable" + i, x, 28.15, 0, true);
     P("blamp" + i, { feetPosition: { x, y: 2.5, z: 28.2 }, primitive: { kind: "cone", radius: 0.22, height: 0.22, radialSegments: 20, openEnded: true }, material: { color: "#c8201c", roughness: 0.4, metalness: 0.4, side: "double", emissive: "#ffb060", emissiveIntensity: 0.25 },
       children: [{ feetPosition: { x: 0, y: 0.22, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.006, radiusBottom: 0.006, height: 2.4 }, material: { color: "#222" } }, { feetPosition: { x: 0, y: -0.15, z: 0 }, light: { kind: "point", color: "#ffc68a", intensity: 2.2, distance: 5 } }] });
   }
