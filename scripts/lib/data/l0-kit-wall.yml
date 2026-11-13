@@ -1,0 +1,64 @@
+# Level 0 wall and door kit. Tripo source, refined by art/l0-kit-wall/build.py. True size, metres [w, h, d].
+# origin "wall": back face, bottom centre (sits flush on a wall face). origin "floor": floor, centre of the frame's thickness.
+# Every piece faces -Z as built: no model.forward needed.
+models:
+  outlet: /cdn/value.98f9bd879584785d2e7c20ea9efffa538da37451d0bc9158b0851ceba7982535.glb
+  switch: /cdn/value.184b9c2ce984d4e339ceb04b10f6fac789f2c9e848829e4432e43ff7cc4a58f1.glb
+  thermostat: /cdn/value.44636c48292ad926fd1ee7c4c74eeda41f61dd0b130c5ba3dd33d16d54f8c217.glb
+  exitsign: /cdn/value.76f208597984c5f7cc09e5fcdfd85a2f1db2e86bf7132a9cb9080a29b86d6b97.glb
+  extinguisher: /cdn/value.3ef36fc8ed3797c2da4a033df5cbd59dae385b6c2480e1adc53495d0939d0267.glb
+  firepull: /cdn/value.24fc27eb6e77feb4297192121bfd4f5d9e3da016b8b009a7bf976073c5fa1973.glb
+  wallvent: /cdn/value.564b04e2039344111b059a817d4b252ea609c04e944bf765d2152daea4462717.glb
+  door-office: /cdn/value.ff376a9605a0fa7322a7c7723da5b75a4fbc8de1d841f5d89fddb1907fca5bb5.glb
+  door-stair: /cdn/value.5cc24ccb39402d748669a43aef1fede1a4211ac0c7369dad16a0f8074a9bf922.glb
+sizes:
+  outlet: [0.07, 0.115, 0.012]
+  switch: [0.07, 0.115, 0.018]
+  thermostat: [0.12, 0.08, 0.035]
+  exitsign: [0.33, 0.2, 0.05]
+  extinguisher: [0.2215, 0.5, 0.2382]
+  firepull: [0.11, 0.14, 0.05]
+  wallvent: [0.6, 0.3, 0.03]
+  door-office: [1.02, 2.13, 0.2041]
+  door-stair: [1.02, 2.13, 0.2]
+origin:
+  outlet: wall
+  switch: wall
+  thermostat: wall
+  exitsign: wall
+  extinguisher: wall
+  firepull: wall
+  wallvent: wall
+  door-office: floor
+  door-stair: floor
+forward:
+  outlet: "-z"
+  switch: "-z"
+  thermostat: "-z"
+  exitsign: "-z"
+  extinguisher: "-z"
+  firepull: "-z"
+  wallvent: "-z"
+  door-office: "-z"
+  door-stair: "-z"
+tris:
+  outlet: 11800
+  switch: 11945
+  thermostat: 11991
+  exitsign: 11799
+  extinguisher: 11800
+  firepull: 11944
+  wallvent: 11800
+  door-office: 11799
+  door-stair: 11799
+# mount heights above the floor (feet y) a placer can use
+mount:
+  outlet: 0.35
+  switch: 1.15
+  thermostat: 1.45
+  exitsign: 2.3
+  extinguisher: 0.9
+  firepull: 1.15
+  wallvent: 0.12
+  door-office: 0
+  door-stair: 0
