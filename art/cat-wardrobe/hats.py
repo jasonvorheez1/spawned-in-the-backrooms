@@ -13,7 +13,7 @@ from mathutils.bvhtree import BVHTree
 SRC = "/workspace/hats"; OUT = "/workspace/hats/out"; BODY = "/workspace/catrev/body%s.glb"; os.makedirs(OUT, exist_ok=True)
 R = {
   "cap":        dict(fit="wrap", band=0.30, ease=0.96, tilt=-14, at=0.5, rim="back"),
-  "beanie":     dict(fit="wrap", band=0.36, ease=1.03, tilt=-10, at=0.12, squash=1.15, orient=dict(roll=13)),
+  "beanie":     dict(fit="wrap", band=0.52, ease=0.99, tilt=-8, at=0.12, squash=1.0, orient=dict(roll=13)),   # Shelly Nov 13 "mesh fitting": it rode high off the skull; cuff now down at the brow, snug
   "souwester":  dict(fit="wrap", band=0.40, ease=1.04, tilt=-12, at=0.6, rim="wide", cut="auto"),   # cut: the chin cord under the brim
   "chitinhelm": dict(fit="wrap", band=0.40, ease=1.05, tilt=-4, orient=dict(yaw=-90)),
   "beret":      dict(fit="perch", w=1.12, seat=1.0, sink=0.045, tilt=-10, roll=10, dx=0.02),   # soft and wider than its band: sized whole, set down on the dome, rolled to one side
