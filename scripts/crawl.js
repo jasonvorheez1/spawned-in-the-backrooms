@@ -74,5 +74,5 @@ export function update(ctx, dt) {
   const v = me.velocity, sp = Math.hypot(v.x, v.z), moving = sp > 0.15
   const clip = moving ? 'go' : 'still'
   if (m.clip !== clip) { m.clip = clip; me.anim.crawl = { clip: CLIP, loop: 'loop', weight: 6, blendIn: 0.25, speed: moving ? Math.max(0.6, sp / 0.9) : 0.0001 } }
-  if (moving) { m.scuff = (m.scuff ?? 0) + dt * sp; if (m.scuff > 1.1) { m.scuff = 0; ctx.emit('playSound', { clip: SCUFF, volume: 0.28, position: p, maxDistance: 10 }) } }
+  if (moving) { m.scuff = (m.scuff ?? 0) + dt * sp; if (m.scuff > 1.7) { m.scuff = 0; ctx.emit('playSound', { clip: SCUFF, volume: 0.12, pitch: 0.92 + ctx.random() * 0.16, position: p, maxDistance: 10 }) } }
 }

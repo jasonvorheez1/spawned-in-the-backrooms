@@ -1332,7 +1332,7 @@ export function update(ctx, dt) {
   ctx.self.velocity = { x: vx + dx * k, y: vy + ctx.place.gravity.y * dt, z: vz + dz * k }
 
   // Footsteps (scripts/lib/footsteps.js): the floor under you, a step per stride, left/right feet, weight, scuffs and landings
-  stepTick(ctx, w, dt, { moving, sprinting, crouched, wet: w.wet, bur: w.bur ?? 1, fallback: floorOf(ctx), clip: SND })
+  if (!s.crawl) stepTick(ctx, w, dt, { moving, sprinting, crouched, wet: w.wet, bur: w.bur ?? 1, fallback: floorOf(ctx), clip: SND })
 
   w.acc = (w.acc ?? 0) + dt
   if (s.fishingState) {
