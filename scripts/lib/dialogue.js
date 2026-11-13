@@ -16,8 +16,9 @@ import D7 from "./data/dlg-levels-7-8.yml";
 import D10 from "./data/dlg-levels-10-11.yml";
 import D13 from "./data/dlg-level13.yml";
 import D31 from "./data/dlg-level31.yml";
+import D70 from "./data/dlg-level70.yml";
 import DG from "./data/dlg-generic.yml";
-const ALL = { ...DG, ...D1, ...D4, ...D5, ...D7, ...D10, ...D13, ...D31 };
+const ALL = { ...DG, ...D1, ...D4, ...D5, ...D7, ...D10, ...D13, ...D31, ...D70 };
 // people who share one script of lines (a pair of guards, a crew)
 for (const [k, v] of Object.entries({ "l61-guard-b": "l61-guard-a", "l61-amber-b": "l61-amber-a", "l61-guild-b": "l61-guild-a", "l61-guild-c": "l61-guild-a" })) ALL[k] ??= ALL[v];
 export const DLG = ALL;

@@ -3,6 +3,7 @@ import { repOf } from './rep.js'
 import { remodelChoices } from './remodel-quest.js'
 import { l13Choices } from './level13-quest.js'
 import { l31Choices } from './level31-quest.js'
+import { l70Choices } from './level70-quest.js'
 
 const short = (it) => String(it?.id ?? '').split('/').pop()
 
@@ -16,7 +17,7 @@ export function realtyChoice(ctx, it, s, list) {
 export function questChoices(ctx, it, s) {
   if (!it) return []
   const id = short(it)
-  const qChoices = [...remodelChoices(id, s), ...l13Choices(id, s), ...l31Choices(id, s)]
+  const qChoices = [...remodelChoices(id, s), ...l13Choices(id, s), ...l31Choices(id, s), ...l70Choices(id, s)]
   if (id === 'l11-walker-1') {
     if (!s?.sedcoQ && repOf(s, "survivors") > -35) {
       qChoices.push({ text: "That's a lot of parcels. Need a hand with a Sedco manifest?", tag: "Quest Start" })

@@ -26,6 +26,7 @@ import { handleDialogueQuest1 } from './lib/level1-quests.js'
 import { handleDialogueQuest02 } from './lib/remodel-quest.js'
 import { handleDialogueQuest13 } from './lib/level13-quest.js'
 import { handleDialogueQuest31 } from './lib/level31-quest.js'
+import { handleDialogueQuest70 } from './lib/level70-quest.js'
 
 import { greetingOf, rootChoices, childChoices, nodeOf, lineOf, barkOf, gestOf, BYE_CHOICE } from './lib/dialogue.js'
 import { questChoices, realtyChoice } from './lib/npc-starters.js'
@@ -214,7 +215,7 @@ function send(ctx, d) {
   logLine(ctx, it, 'p', text)
   if (!choice.node) { // a quest line: the quest's own handler answers it (scripts/lib/level*-quests.js, zenith-quest.js)
     const qRes = handleDialogueQuest02(ctx, ctx.self, it, text) ?? handleDialogueQuest13(ctx, ctx.self, it, text) ?? handleDialogueQuest(ctx, ctx.self, it, text) ?? handleDialogueQuest10(ctx, ctx.self, it, text) ?? handleDialogueQuest8(ctx, ctx.self, it, text)
-      ?? handleDialogueQuest21(ctx, ctx.self, it, text) ?? handleDialogueQuestZ(ctx, ctx.self, it, text) ?? handleDialogueQuest1(ctx, ctx.self, it, text) ?? handleDialogueQuest31(ctx, ctx.self, it, text)
+      ?? handleDialogueQuest21(ctx, ctx.self, it, text) ?? handleDialogueQuestZ(ctx, ctx.self, it, text) ?? handleDialogueQuest1(ctx, ctx.self, it, text) ?? handleDialogueQuest31(ctx, ctx.self, it, text) ?? handleDialogueQuest70(ctx, ctx.self, it, text)
     const line = qRes?.reply ?? lineOf(it, place, 'back', 1) ?? 'Hm.'
     say(ctx, it, line, qRes?.mood ?? 'calm'); logLine(ctx, it, 'n', line)
     s.talkChoices = offer(ctx, it, s, null); return
