@@ -16,7 +16,7 @@ import D7 from "./data/dlg-levels-7-8.yml";
 import D10 from "./data/dlg-levels-10-11.yml";
 import D13 from "./data/dlg-level13.yml";
 import D31 from "./data/dlg-level31.yml";
-import D70 from "./data/dlg-level70.yml";
+import D70 from "./data/dlg-level70.yml"; // Level 70 Froidetown
 import DG from "./data/dlg-generic.yml";
 const ALL = { ...DG, ...D1, ...D4, ...D5, ...D7, ...D10, ...D13, ...D31, ...D70 };
 // people who share one script of lines (a pair of guards, a crew)
