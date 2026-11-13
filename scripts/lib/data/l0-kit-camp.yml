@@ -1,0 +1,47 @@
+# Level 0 wanderer's leavings kit: what earlier lost people left. Tripo -> Blender (art/l0-kit-camp/build.py) -> upload.
+# sizes are measured [w, h, d] metres at scale 1. Every origin is the floor bottom centre; every model faces -Z (no forward turn).
+models:
+  sleepingbag: /cdn/value.8479da2c7748c8cc7686ada842788dc44e2f1aa309ec6516ec9f7f3de65e18d4.glb
+  backpack: /cdn/value.7d6ce57264bea91bdbdd2292f791291660b752ba473d32350f36411d5048fdf1.glb
+  lantern: /cdn/value.410024f3c007309ac70176030b519238843a9a494571accd8d24e23d375a1844.glb
+  almond-crate: /cdn/value.9636a96906b63e815b1511818ee0a4d4d62c1525e5a5d12b8e2c5545659f40cd.glb
+  campstove: /cdn/value.f0bda6e3b43bd8df3f262c67fc1fb141f944d3d8c0e8e71f2c430625cfd5ba57.glb
+  note-clipboard: /cdn/value.ca886a43afd880b8c071d5c0c9369d2a191ba94a36eee152c71dcc0ac7bbc234.glb
+  tape-marks: /cdn/value.5625ea7e0ec755f210698899c4a812fbb86bb925203ac2ee5a6e3e15c01a9f35.glb
+  shoes: /cdn/value.3ec74f3f3cf35ae75730e69666676d2ce2b0a416e9d4da846b8bc9d8f1294f6e.glb
+sizes:
+  sleepingbag: [0.8, 0.12, 1.9]
+  backpack: [0.357, 0.48, 0.367]
+  lantern: [0.109, 0.22, 0.106]
+  almond-crate: [0.299, 0.22, 0.21]
+  campstove: [0.3, 0.257, 0.211]
+  note-clipboard: [0.202, 0.049, 0.32]
+  tape-marks: [0.165, 0.066, 0.221]
+  shoes: [0.224, 0.137, 0.3]
+origin:
+  sleepingbag: floor
+  backpack: floor
+  lantern: floor
+  almond-crate: floor
+  campstove: floor
+  note-clipboard: floor
+  tape-marks: floor
+  shoes: floor
+forward:
+  sleepingbag: "-z"
+  backpack: "-z"
+  lantern: "-z"
+  almond-crate: "-z"
+  campstove: "-z"
+  note-clipboard: "-z"
+  tape-marks: "-z"
+  shoes: "-z"
+tris:
+  sleepingbag: 11800
+  backpack: 11763
+  lantern: 11579
+  almond-crate: 11345
+  campstove: 10779
+  note-clipboard: 11800
+  tape-marks: 11800
+  shoes: 11800
