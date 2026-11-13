@@ -444,6 +444,7 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
     ${bar('HP', s.hp, mh, hpF < 0.3 ? 'oklch(0.68 0.2 35)' : 'var(--a)', `${Math.ceil(s.hp)}/${mh}`)}
     ${bar(`SAN <span style="opacity:.7">· ${sanWord}</span>`, s.sanity, ms, sanF < 0.25 ? 'oklch(0.68 0.2 35)' : 'var(--a)', `${Math.round(Math.max(0,Math.min(1,sanF))*100)}%`)}
     ${(s.cold ?? 0) > 0 ? bar(`COLD <span style="opacity:.7">· ${s.cold >= 70 ? 'freezing' : s.cold >= 40 ? 'shivering' : 'chilly'}</span>`, s.cold, 100, s.cold >= 70 ? 'oklch(0.72 0.14 235)' : 'oklch(0.82 0.08 220)') : ''}
+    ${(s.chill ?? 0) > 0 && ctx.self?.place === 'level70' ? bar(`CHILL <span style="opacity:.7">· ${s.chill >= 70 ? 'numb' : s.chill >= 40 ? 'shivering' : 'nippy'}</span>`, s.chill, 100, s.chill >= 70 ? 'oklch(0.72 0.14 235)' : 'oklch(0.82 0.08 220)') : ''}
     ${(s.heat ?? 0) > 0 ? bar(`HEAT <span style="opacity:.7">· ${s.heat >= 70 ? 'scalding' : s.heat >= 40 ? 'sweltering' : 'warm'}</span>`, s.heat, 100, s.heat >= 70 ? 'oklch(0.66 0.22 30)' : s.heat >= 40 ? 'oklch(0.75 0.17 55)' : 'oklch(0.82 0.14 80)', `${Math.round(s.heat)}°`) : ''}
     ${compass(((player.camera?.rotation?.yaw ?? 0) % 360 + 360) % 360)}
     ${questPip(ctx, player, ((player.camera?.rotation?.yaw ?? 0) % 360 + 360) % 360)}
