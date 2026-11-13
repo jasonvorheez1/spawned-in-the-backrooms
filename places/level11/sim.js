@@ -25,7 +25,7 @@ import MODELS from "../../scripts/lib/data/level11-models.yml";
 export const cadence = "1s";
 const RENO_FLOOR = 0.32;
 const mallTrash = (i) => ({ x: -15.15 + i * 0.2, y: 0.33, z: 28.1 + i * 0.65 });
-const V = 163; // 163: subway stair ramp carries the feet, Tripo deposit wall // 162: 162: bin true size // // 161: band split at vault door // // 160: vault door fit // // 159: vault door scaled flat // // 158: Tripo vault door + bins // // 157: substation 4 Tripo pieces, vault wall opened (Shelly Nov 13) // // 154: newsbox out of the hot dog cart, printed cards // 148 laid a cut list (a throw mid-lay): 149 lays it whole again // the market court and the central pedestrian route
+const V = 164; // 164: stair mouth opened to z 63.8 (head room on the last steps) // 163: 163: subway stair ramp carries the feet, Tripo deposit wall // 162: 162: bin true size // // 161: band split at vault door // // 160: vault door fit // // 159: vault door scaled flat // // 158: Tripo vault door + bins // // 157: substation 4 Tripo pieces, vault wall opened (Shelly Nov 13) // // 154: newsbox out of the hot dog cart, printed cards // 148 laid a cut list (a throw mid-lay): 149 lays it whole again // the market court and the central pedestrian route
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -184,7 +184,7 @@ function lay(ctx) {
 
   sp("l11-sw-east-mid", { feetPosition: { x: 12, y: 0.08, z: -6 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 24, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } }); // stops at the 11th street crossing (z 6..18) so cars drive through
   // east-south sidewalk, cut open around the subway stairwell (x 12.4..14.8, z 58.4..62.6) so the stair goes down through it
-  for (const [id, x, z, w, d] of [["l11-sw-east-south", 12, 39.2, 7.6, 38.4], ["l11-sw-east-south-n", 12, 69.3, 7.6, 13.4], ["l11-sw-east-south-w", 10.3, 60.5, 4.2, 4.2], ["l11-sw-east-south-e", 15.3, 60.5, 1, 4.2]])
+  for (const [id, x, z, w, d] of [["l11-sw-east-south", 12, 39.2, 7.6, 38.4], ["l11-sw-east-south-n", 12, 69.9, 7.6, 12.2], ["l11-sw-east-south-nw", 10.3, 63.2, 4.2, 1.2], ["l11-sw-east-south-ne", 15.3, 63.2, 1, 1.2], ["l11-sw-east-south-w", 10.3, 60.5, 4.2, 4.2], ["l11-sw-east-south-e", 15.3, 60.5, 1, 4.2]])
     sp(id, { feetPosition: { x, y: 0.08, z }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w, d, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
   sp("l11-sw-east-north", { feetPosition: { x: 12, y: 0.08, z: -55 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 50, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
   bx("l11-curb-e-mid", 8.1, 0.08, -6, 0.2, 0.28, 24, CURB_MAT);

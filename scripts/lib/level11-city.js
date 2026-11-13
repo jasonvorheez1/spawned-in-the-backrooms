@@ -52,7 +52,10 @@ export function layCity(ctx, h) {
     bx("l11-ground",0,-.45,-175,620,.3,270,G);
     bx("l11-ground-before-subway",0,-.45,19.2,620,.3,78.4,G);
     for(const side of [-1,1])bx(`l11-ground-canal-end-${side}`,side*280,-.45,-30,60,.3,20,G);
-    bx("l11-ground-n", 0, -0.45, 226.3, 620, 0.3, 327.4, G);
+    // the street slab over the stair foot starts 1.2 m further on (z 63.8): at 62.6 its edge met a walker's head on the last steps (Shelly: "i cant stop going prone plus i still snag")
+    bx("l11-ground-n", 0, -0.45, 226.9, 620, 0.3, 326.2, G);
+    bx("l11-ground-n-w", -148.8, -0.45, 63.2, 322.4, 0.3, 1.2, G);
+    bx("l11-ground-n-e", 162.4, -0.45, 63.2, 295.2, 0.3, 1.2, G);
     bx("l11-ground-w", -148.8, -0.45, 60.5, 322.4, 0.3, 4.2, G);
     bx("l11-ground-e", 162.4, -0.45, 60.5, 295.2, 0.3, 4.2, G);
   }
@@ -225,6 +228,14 @@ pop steam rate=14 on=disc(.35) life=1.6..2.6 v=up(.9..1.5)+sdir()*.12 size=.18..
     sp(`l11-sub-globe-${s}`, { feetPosition: { x: SUB.x + s * 1.2, y: 3.14, z: SUB.z - 2.1 }, primitive: { kind: "sphere", radius: 0.2 }, material: { color: "oklch(0.8 0.2 145)", emissive: "oklch(0.8 0.2 145)", emissiveIntensity: 2.4 }, light: { kind: "point", color: "oklch(0.85 0.2 145)", intensity: 2.5, distance: 8 }, behavior: "scripts/l11-globe.js", state: { base: 2.5 }, children: [{ feetPosition: { x: 0, y: -0.24, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.09, radiusBottom: 0.06, height: 0.08 }, material: IRON }] });
   }
   // Nov 12 (Shelly: the entrance is blocky, Tripo it): the cast-iron enclosure, floor cut out (art/l11sub/build.py), open end at the street (-z); the invisible rails above stay its colliders
+  { // the widened mouth's guard: iron posts and a top bar round the extra 1.2 m (z 62.6..63.8), same dark iron as the enclosure
+    const IRON = { color: "oklch(0.22 0.01 160)", metalness: 0.75, roughness: 0.45 };
+    const bar = (id, x, z, len, yaw) => sp(id, { feetPosition: { x, y: 0.336 + 0.9, z }, rotation: { yaw, roll: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.025, height: len, radialSegments: 10 }, material: IRON, physics: { body: "static", collider: "box" } });
+    const post = (id, x, z) => sp(id, { feetPosition: { x, y: 0.336, z }, primitive: { kind: "cylinder", radiusTop: 0.022, radiusBottom: 0.03, height: 0.92, radialSegments: 10 }, material: IRON, physics: { body: "static", collider: "cylinder" } });
+    for (const s of [-1, 1]) { bar(`l11-sub-mouth-bar-${s}`, SUB.x + s * 1.2, 63.2, 1.2, 90); post(`l11-sub-mouth-post-${s}`, SUB.x + s * 1.2, 63.8); post(`l11-sub-mouth-mid-${s}`, SUB.x + s * 0.4, 63.8); }
+    bar("l11-sub-mouth-end", SUB.x, 63.8, 2.4, 0);
+    sp("l11-sub-mouth-guard", { feetPosition: { x: SUB.x, y: 0.336, z: 63.8 }, primitive: { kind: "box", width: 2.4, height: 0.95, depth: 0.06 }, material: { color: "oklch(0 0 0 / 0)", transparent: true, opacity: 0, depthWrite: false }, castShadow: false, physics: { body: "static", collider: "box" } });
+  }
   sp("l11-sub-railing", { feetPosition: { x: SUB.x, y: 0.336, z: SUB.z - 0.05 }, rotation: { yaw: 90 }, scale: { x: 1.8, y: 0.85, z: 1.6 }, model: { id: "/cdn/value.84db1401a82c32688b828afcf61d0c7d0e347a91b7355b78386935204b0f32bd.glb" }, castShadow: true });
   sp("l11-sub-sign", { feetPosition: { x: SUB.x, y: 2.74, z: SUB.z - 2.1 }, rotation: { yaw: 0 }, primitive: { kind: "box", width: 1.6, height: 0.5, depth: 0.06 }, material: { color: "oklch(0.2 0.02 250)" }, ui: `<div face="front" width="1.6m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;font-size:240px;letter-spacing:8px;color:#fff;background:#1a6b3a">SUBWAY</div>` }); // faces the street (-z): it read mirrored from there (Nov 12)
   // billboards on stilts that change their ads when nobody is looking
