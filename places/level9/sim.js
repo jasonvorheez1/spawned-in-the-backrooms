@@ -1,9 +1,10 @@
 // Level 9 "The Suburbs": the referee. Rolls the room's seed once (place.state.l9seed: kept with everything looted here, so a reload
 // finds the same streets and the same emptied drawers; another room rolls its own), lays the streets, houses and lamps from it,
 // and runs the fog banks. Layout: scripts/lib/level9.js. House kit: scripts/lib/data/l9-houses.yml. Props: l9-props.yml.
+import { rotate } from "builtin/vec3";
 import { layout, hashStr, HOUSES, PAINTS, PROPS, TUNE, FWD, ROAD_W, WALK } from "../../scripts/lib/level9.js";
 export const cadence = "1s";
-const V = 3; // 3: Tripo house models on the lots (keeps seed and loot)
+const V = 4; // 3: Tripo house models on the lots; 4: door holes cut, a hinged front door and a stoop on each (keeps seed and loot)
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BLUE = { kind: "scripted", script: "engine/blueprint" };
 const ASPHALT = { texture: "cdn/texture-worn-dark-grey-asphalt-road-coarse-aggregate-damp-patches-cracks.png", wrap: "repeat", repeat: [0.3, 0.3], color: "oklch(0.42 0.01 250)", roughness: 0.62, metalness: 0 }; // Shelly "why are level 9 roads water": 0.16 roughness mirrored the sky; damp, not a puddle
@@ -41,7 +42,18 @@ function lay(ctx, L) {
   for (const l of L.lots) {
     const H = HOUSES[l.kind], p = PAINTS[l.paint];
     if (H.model) sp(`l9-${l.id}`, { tags: ["l9house"], feetPosition: T(l.x, l.z, 0.02), rotation: { yaw: l.yaw }, model: { id: H.model, forward: "+z" }, physics: { body: "static", collider: "mesh" }, visibleRange: { max: 300 }, state: { kind: l.kind, seed: l.seed } });
-    else sp(`l9-${l.id}`, { tags: ["l9house"], feetPosition: T(l.x, l.z), rotation: { yaw: l.yaw }, primitive: { kind: "box", width: H.w, height: H.stories * 2.9 + 1.2, depth: H.d }, material: BLUE, physics: "none", state: { kind: l.kind, seed: l.seed } });
+    if (H.model && H.door) { // the front door: a kinematic hinge at the left jamb, the leaf its child; E swings it inward (scripts/home11-door.js "door")
+      const D = H.door, W = 0.96, at = (lx, lz) => { const r = rotate({ yaw: l.yaw }, { x: lx, y: 0, z: lz }); return T(l.x + r.x, l.z + r.z, 0.02 + D.y); };
+      const dp = { style: "wood", w: W, h: 2.05, hingeSide: "left", swing: 1, d: 0.08, seed: l.seed % 97 };
+      sp(`l9-${l.id}-door`, { feetPosition: at(D.x - W / 2, D.z - 0.04), rotation: { yaw: l.yaw }, physics: "kinematic", tags: ["usable"], behavior: "scripts/home11-door.js", state: { open: false, closedYaw: l.yaw, openYaw: l.yaw - 95, kind: "door", name: "Front Door", verb: "Open", hinge: `l9-${l.id}-door` },
+        children: [{ id: "leaf", tags: ["usable"], feetPosition: { x: 0, y: 0, z: 0 }, primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { ...dp, part: "leaf" } }, material: { pbr: true }, physics: "static", behavior: "scripts/home11-door.js", state: { kind: "door", name: "Front Door", verb: "Open", hinge: `l9-${l.id}-door` } }] });
+      sp(`l9-${l.id}-jamb`, { feetPosition: at(D.x, D.z - 0.04), rotation: { yaw: l.yaw }, physics: { body: "static", collider: "auto" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { ...dp, part: "frame" } }, material: { pbr: true } });
+      for (let i = 0; i < 3; i++) { const h = D.y * (i + 1) / 3, r = rotate({ yaw: l.yaw }, { x: D.x, y: 0, z: D.z + 0.9 - i * 0.3 });  // a stoop: three concrete steps up to the threshold, flush with the floor inside
+        sp(`l9-${l.id}-step${i}`, { feetPosition: T(l.x + r.x, l.z + r.z, 0), rotation: { yaw: l.yaw }, primitive: { kind: "box", width: 1.5, height: h + 0.05, depth: 0.32 }, physics: "static", material: { texture: "cdn/texture-weathered-poured-concrete-stoop-hairline-cracks.png", color: "oklch(0.62 0.01 80)", roughness: 0.9 } }); }
+      const f = rotate({ yaw: l.yaw }, { x: 0, y: 0, z: 0 }); // the floor inside: the shell is hollow, so a plank floor at the threshold's height under the whole footprint
+      sp(`l9-${l.id}-floor`, { feetPosition: T(l.x + f.x, l.z + f.z, D.y - 0.04), rotation: { yaw: l.yaw }, primitive: { kind: "box", width: H.w - 1.2, height: 0.04, depth: D.z * 2 - 0.4 }, physics: "static", material: { texture: "cdn/texture-dusty-worn-oak-hardwood-floor-planks.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.55 0.05 60)", roughness: 0.8 } });
+    }
+    else if (!H.model) sp(`l9-${l.id}`, { tags: ["l9house"], feetPosition: T(l.x, l.z), rotation: { yaw: l.yaw }, primitive: { kind: "box", width: H.w, height: H.stories * 2.9 + 1.2, depth: H.d }, material: BLUE, physics: "none", state: { kind: l.kind, seed: l.seed } });
   }
   if ((ctx.world.files ?? []).includes("scripts/l9-mangled.js")) sp("l9-mangled-mgr", { feetPosition: T(0, 0), behavior: "scripts/l9-mangled.js", audience: "all" });
   sp("l9-ambience", { feetPosition: T(0, 0), audience: "local", audio: { clip: "cdn/ambience-dead-quiet-suburb-midnight-light-wind-distant-wet-road-hiss-no-crickets-loop.mp3", gain: 0.16, loop: true, spatial: false, bus: "Ambience" } });
