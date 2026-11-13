@@ -9,7 +9,7 @@
 import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
 import { addRep } from "./rep.js";
-import { setQuest, endQuest, tellQuest } from "./quests.js";
+import { setQuest, endQuest, tellQuest, claimReward } from "./quests.js";
 import { rollCheck } from "./npc-talk.js";
 import { SPOT, wildness } from "./level70.js";
 import * as TOWN from "./level70-town.js";
@@ -55,7 +55,7 @@ function setStep(ctx, p, step, text, clip) {
   if (TIPS[k]) setQuest(s, QID, { name: QNAME, step: TIPS[k], mark: MARKS[k] }); if (text) tell(ctx, p, text, clip);
 }
 function pay(ctx, p, key, qid, name, text, items = []) {
-  const s = p.state, k = PAY[key]; endQuest(s, qid, text); s.cents = (s.cents ?? 0) + k.cents;
+  const s = p.state, k = PAY[key]; if (!claimReward(s, qid)) return; endQuest(s, qid, text); s.cents = (s.cents ?? 0) + k.cents;
   const line = `Quest Completed: ${name} (+${k.xp} XP, +$${(k.cents / 100).toFixed(2)})${items.length ? " · Got: " + items.join(", ") : ""}`;
   s.payout = { xp: k.xp, items: [], text: line }; s.notice = { text: line, at: ctx.now() }; pushFeed(s, line, ctx.now(), "good");
   const pos = posOf(p);

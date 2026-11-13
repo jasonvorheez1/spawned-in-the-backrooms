@@ -62,3 +62,10 @@ export function tellQuest(ctx, p, text, clip = CHIME) {
   const s = p.state, now = ctx.now(); s.notice = { text, at: now }; pushFeed(s, text, now, "good");
   const pos = p.worldFeetPosition ?? p.feetPosition; if (pos) heard(ctx, { clip, position: pos, volume: 0.7, maxDistance: 16 }, { audience: { player: p.id } });
 }
+
+// one payout per quest per save (Shelly Nov 13 save brief): every quest's reward asks here first; a finished quest never pays again
+export function claimReward(s, id) {
+  if (!id || s.claimed?.[id] || s.qdone?.[id]) return false;
+  s.claimed = { ...(s.claimed ?? {}), [id]: 1 };
+  return true;
+}

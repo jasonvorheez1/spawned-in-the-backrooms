@@ -6,7 +6,7 @@
 import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
 import { addRep } from "./rep.js";
-import { setQuest, endQuest, tellQuest } from "./quests.js";
+import { setQuest, endQuest, tellQuest, claimReward } from "./quests.js";
 import { rollCheck } from "./npc-talk.js";
 export const QID = "l31-side-b", QNAME = "Side B";
 export const MARLOWE = "l31-q-marlowe", DEZ = "l31-q-dez", CRATE = "l31-q-crate", DECK = "l31-dj-deck";
@@ -73,7 +73,7 @@ function side(ctx, p, route) {
   if (route === "dub") { addRep(s, "rink", 20); addRep(s, "concession", 20); }
 }
 function finish(ctx, p, payKey, text) {
-  const s = p.state, pay = PAY[payKey]; s.l31q = 99; s.l31tape = false; giveTape(s);
+  const s = p.state, pay = PAY[payKey]; if (!claimReward(s, QID)) { s.l31q = 99; return; } s.l31q = 99; s.l31tape = false; giveTape(s);
   endQuest(s, QID, text);
   s.cents = (s.cents ?? 0) + pay.cents;
   const line = `Side B complete. You receive a mixtape, ${pay.xp} XP and $${(pay.cents / 100).toFixed(2)}.`;
