@@ -11,7 +11,7 @@ function layLamps(ctx) {
     light: { kind: "point", color: SODIUM, intensity: 9, distance: 19, shadow: { enabled: false } } });
 }
 export function tick(ctx) {
-  if (!ctx.place.players?.length) return;
   const s = ctx.place.state;
   if (s.hubV !== V) { s.hubV = V; layShell(ctx); layLamps(ctx); }
+  if (!ctx.place.players?.length) return;
 }
