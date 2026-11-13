@@ -2,6 +2,8 @@
 // cell picked by hash() so each room of the game finds them in the same spots. Props sit against walls only.
 import { N, S, H, HALF, MID, hash, inHub, zoneOf, cellCenter, wallX, wallZ, isArchWall, hasPit, hasPillar, hasLight, EXIT } from "./maze.js";
 import { DRIP, STATIC } from "../moments.js";
+import KW from "./data/l0-kit-wall.yml";
+import KM from "./data/l0-kit-camp.yml";
 const GEO = "scripts/moments-geo.js";
 const FMODEL = {
   desk: "/cdn/value.dc2f7ac92df4c08964be1ea4af5e520bbf4c12d50609157f85b41db8f3c21fcf.glb",
@@ -107,7 +109,7 @@ export function layMoments(ctx) {
     [[X0, mc.z, 0.18, 12], [X1, mc.z, 0.18, 12], [mc.x, Z0, 12, 0.18], [mc.x, Z1, 12, 0.18]].forEach(([x, z, w, d], i) => put("manila-seal", { id: undefined, feetPosition: { x, y: 0, z }, primitive: { kind: "box", width: w, height: H, depth: d }, material: MW, physics: "static" }));
     const STAIR_SND = "cdn/moodboard-realistic-gritty/sfx-footsteps-on-concrete-stairwell-steps-echo.mp3";
     const outside = { x: X1 + 0.9, y: 0.05, z: mc.z }, inside = { x: X1 - 1, y: 0.05, z: Z1 - 0.7 };
-    put("manila-stairdoor", { tags: ["usable"], feetPosition: { x: X1 + 0.1, y: 0, z: mc.z }, rotation: 90, primitive: { kind: "box", width: 1.0, height: 2.1, depth: 0.06 }, material: { texture: "cdn/texture-worn-hardwood-grain.png", color: "oklch(0.42 0.05 55)", roughness: 0.7 }, physics: "static", behavior: "scripts/moments.js", state: { kind: "stairs", name: "Stairwell Door", verb: "Go Downstairs", to: inside, yaw: 90, sound: STAIR_SND } });
+    put("manila-stairdoor", { tags: ["usable"], feetPosition: { x: X1 + 0.01, y: 0, z: mc.z }, rotation: -90, model: { id: KW.models["door-stair"], forward: "-z" }, layout: { box: { min: { x: -0.51, y: 0, z: -0.1 }, max: { x: 0.51, y: 2.13, z: 0.1 } } }, visibleRange: { max: 46 }, physics: { body: "static", collider: "box" }, behavior: "scripts/moments.js", state: { kind: "stairs", name: "Stairwell Door", verb: "Go Downstairs", to: inside, yaw: 90, sound: STAIR_SND } });
     put("manila-stairsign", { feetPosition: { x: X1 + 0.14, y: 2.35, z: mc.z }, rotation: -90, vector: "<svg viewBox='0 0 200 60' width='0.9m'><rect x='2' y='2' width='196' height='56' rx='4' fill='oklch(0.22 0.02 60)' stroke='oklch(0.8 0.08 85)' stroke-width='3'/><text x='100' y='40' font-family='sans-serif' font-size='28' text-anchor='middle' fill='oklch(0.92 0.08 85)'>STAIRS ↓ B1</text></svg>" });
     put("manila-stairs", { feetPosition: { x: X1 - 1, y: 0, z: Z1 - 1.4 }, primitive: { kind: "scripted", script: "scripts/stairs-geo.js" }, physics: { body: "static", collider: "mesh" } }); // the flight you came down, rising into the ceiling
     put("manila-stairup", { tags: ["usable"], feetPosition: { x: X1 - 1, y: 1.4, z: Z1 - 4.2 }, primitive: { kind: "box", width: 1.2, height: 1.2, depth: 0.6 }, visible: false, behavior: "scripts/moments.js", state: { kind: "stairs", name: "Stairwell", verb: "Go Upstairs", to: outside, yaw: -90, sound: STAIR_SND } });
@@ -166,6 +168,9 @@ pop buzz n=1 at=point().c(2.92) size=.9 col=hdr(1.6,1.4,.9) a=.35+.4*flick(.9,.5
     put("camp", { feetPosition: { x: xs, y: 0, z: zs }, rotation: yw, primitive: geo("camp"), physics: { body: "static", collider: "auto" } });
     const r = (yw * Math.PI) / 180, lx = 1.05, lz = -1.05, nx = xs + lx * Math.cos(r) + lz * Math.sin(r), nz = zs - lx * Math.sin(r) + lz * Math.cos(r);
     put("note", { feetPosition: { x: nx, y: 0, z: nz }, tags: ["moment", "m-note", "usable", "container"], primitive: { kind: "box", width: 0.22, height: 0.02, depth: 0.3 }, visible: false, behavior: "scripts/moments.js", state: { kind: "note", name: "Wanderer's note", verb: "Read", info: "pencil, smudged", text: "Day 31? Ran out of the water. The lights hum louder when they're close. Follow the chalk west, it's still there, it HAS to be., R.", items: "page:23" } });
+    // the modeled camp kit (l0-kit-camp.yml) beside the camp, in the corner's free stretch along its first wall (local x 2.05..3.6, z 0..-1.7), clear of the camp's 1.9 x 2.3 footprint and the note
+    const kit = (kind, lx2, lz2, turn) => { const [w, h, d] = KM.sizes[kind], x = xs + lx2 * Math.cos(r) + lz2 * Math.sin(r), z = zs - lx2 * Math.sin(r) + lz2 * Math.cos(r); put("camp-" + kind, { tags: ["moment", "m-campkit", kind], feetPosition: { x, y: 0, z }, rotation: yw + turn, model: { id: KM.models[kind], forward: "-z" }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, visibleRange: { max: 22 }, castShadow: false, ...(Math.max(w, d) > 0.3 && h > 0.15 ? { physics: { body: "static", collider: "box" } } : {}) }); };
+    kit("backpack", 2.35, -0.3, 200); kit("lantern", 2.75, -0.2, 30); kit("almond-crate", 3.25, -0.25, 0); kit("campstove", 2.45, -0.95, 75); kit("note-clipboard", 3.15, -0.9, 20); kit("tape-marks", 3.35, -1.45, 140); kit("shoes", 2.45, -1.55, 100);
     scrib("tally", cp.cx, cp.cz, a, 0.9, 1.25);
     out.campAt = cellCenter(cp.cx, cp.cz);
   }
