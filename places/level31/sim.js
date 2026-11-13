@@ -9,7 +9,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 96; // 96: the white 70 door opens onto Level 70 // 95: tripo folding tables + booths // 94: snack bar as a rink cafe (folding tables, green booths, cosmic carpet) // 93: rink regular off the shredded jacket // 91: staff room tripo pass + gap wall // 89: staff doorway cut; 90: the staff back room behind it, Nov 13
+const V = 97; // 96: the white 70 door opens onto Level 70 // 95: tripo folding tables + booths // 94: snack bar as a rink cafe (folding tables, green booths, cosmic carpet) // 93: rink regular off the shredded jacket // 91: staff room tripo pass + gap wall // 89: staff doorway cut; 90: the staff back room behind it, Nov 13
 const STAFF = { x: 40.05 };
 const RAIL_GLB = "/cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb";
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
@@ -159,7 +159,7 @@ function doors(ctx) {
   ctx.spawn("l31-door-70-cold", { feetPosition: { x: X70 + 0.9, y: 1.9, z: Z70 }, light: { kind: "point", color: "oklch(0.86 0.06 235)", intensity: 1.6, distance: 7 } });
   ctx.spawn("l31-door-70-frost", { feetPosition: { x: X70 + 0.25, y: 0.03, z: Z70 }, fx: { script: `fx
 pop mist rate=7 on=line(<0,0,-.55>,<0,0,.55>) life=2.2..3.4 v=<.35,.02,0>+sdir()*.08 size=.25..0.45 acc=drag(.6) col=<.82,.9,1> a=0>.2:.16>.7:.08>0 sz=$size*(.6>2.2) rot=spin(.1) r=sprite(smoke-puff,alpha)
-pop flake rate=5 on=line(<0,.1,-.5>,<0,.1,.5>) life=1.2..2 v=<.5..0.9,.2..0.5,0>+sdir()*.15 size=.012..0.025 acc=grav()*.12+drag(.8) col=<1,1,1> a=0>.15:.9>.8:.6>0 sz=$size r=sprite(soft-disc,alpha)` } });
+pop flake rate=5 on=line(<0,.1,-.5>,<0,.1,.5>) life=1.2..2 v=<1,.45,0>*(.5..0.9)+sdir()*.15 size=.012..0.025 acc=grav()*.12+drag(.8) col=<1,1,1> a=0>.15:.9>.8:.6>0 sz=$size r=sprite(soft-disc,alpha)` } });
   ctx.spawn("l31-door-70-wind", { feetPosition: { x: X70 + 0.3, y: 1, z: Z70 }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-arctic-wind-howl-over-empty-snowy-street-loop.mp3", loop: true, spatial: true, gain: 0.25, maxDistance: 9 } });
   ctx.spawn("l31-from-l70", { feetPosition: { x: X70 + 1.6, y: 0.1, z: Z70 }, rotation: { yaw: -90 } });
   ctx.spawn("l31-to-l70", { feetPosition: { x: X70 + 0.35, y: 0, z: Z70 }, physics: { body: "static", trigger: true }, primitive: box(0.4, 2.2, 1.2), visible: false, behavior: "scripts/level-door.js", state: { to: "level70#l70-from-l31" } });
