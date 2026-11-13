@@ -1,3 +1,4 @@
+import { migrate, wakePlace, wakeLog, canSaveHere } from "./lib/save.js"
 import { firstPersonGun, firstPersonTuning } from './lib/fp-gun.js'
 import { setQuest } from './lib/quests.js'
 import { assaulted, forgiveTick, hostileReason } from './lib/forgive.js'
@@ -1496,11 +1497,12 @@ function tickStats(ctx, t, moving) {
   // the save: where you stand, every few seconds; a fresh visit wakes you there (level, items, weapons already live in player.state)
   if (!ctx.session.wokeAt) {
     ctx.session.wokeAt = now
-    const sp = s.savePos
+    wakeLog(ctx, s, migrate(ctx, s)) // scripts/lib/save.js: the save's version and migration, before anything reads it
+    const sp = s.savePos, wp = wakePlace(ctx, s)
     if (s.wakeAtSave && sp && s.savePlace === ctx.self.place) { s.wakeAtSave = null; ctx.self.feetPosition = { x: sp.x, y: sp.y + 0.1, z: sp.z }; return } // the station's last-level ride: back where you stood
     s.wakeAtSave = null
     if (ctx.self.place === 'bonus' || s.roomHop) { /* the mall and room hops land where their door puts you (scripts/lib/hub.js) */ }
-    else if (sp && s.savePlace && s.savePlace !== 'bonus' && s.savePlace !== ctx.self.place) { ctx.cross(ctx.self, s.savePlace); return }
+    else if (sp && wp && wp !== ctx.self.place) { ctx.cross(ctx.self, wp); return }
     if (sp && s.savePlace === ctx.self.place) { ctx.self.feetPosition = { x: sp.x, y: sp.y + 0.1, z: sp.z }; return }
   }
   // a threshold aims at an arrival marker the far level lays only once someone stands in it (its sim): the first crossing into a
@@ -1523,7 +1525,7 @@ function tickStats(ctx, t, moving) {
       }
     }
   }
-  if (ctx.self.place !== 'bonus' && now - (w.savedAt ?? 0) > 4000) { w.savedAt = now; s.savePos = { x: Math.round(p.x * 10) / 10, y: Math.round(p.y * 10) / 10, z: Math.round(p.z * 10) / 10 }; s.savePlace = ctx.self.place }
+  if (canSaveHere(ctx.self.place) && now - (w.savedAt ?? 0) > 4000) { w.savedAt = now; s.savePos = { x: Math.round(p.x * 10) / 10, y: Math.round(p.y * 10) / 10, z: Math.round(p.z * 10) / 10 }; s.savePlace = ctx.self.place }
   // exploring: every new cell is xp
   const { cx, cz } = cellAt(p.x, p.z)
   if (cx >= 0 && cz >= 0 && cx < N && cz < N) {
