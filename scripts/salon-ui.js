@@ -70,7 +70,7 @@ export function salon(ctx, player) {
       + row('Tufts', fl.map((f) => CN[f] || f).join(', ') || 'none') + `<div class="chips">${Object.keys(CW.fluff || {}).map((v) => `<button class="${fl.includes(v) ? 'on' : ''}" onclick="${act('fluff', v)}">${CN[v] || nice(v)}</button>`).join('')}</div>`
   } else if (!human && tab === 'face') {
     body = row('Snout', CN[l.snout] || nice(l.snout)) + pk('snout', ['button', 'long', 'pointy', 'flat', 'puff'], l.snout)
-      + row('Ears', CN[l.ears] || nice(l.ears)) + pk('ears', ['upright', 'tall', 'small', 'fold', 'wide'], l.ears)
+      + row('Ears', CN[l.ears] || nice(l.ears)) + pk('ears', ['upright', 'tall', 'small', 'fold', 'wide', 'bunny', 'lop', 'fox', 'bear'], l.ears)
       + row('Eye colour', '') + dots('eye', C.eye)
       + row('Eyes', l.etype || 'classic') + pk('cateye', ['classic', 'sparkle', 'sleepy', 'slit', 'sharp', 'bean'], l.etype || 'classic')
       + row('Mouth', l.mtype || 'classic') + pk('catmouth', ['classic', 'fang', 'grin', 'smirk', 'open', 'line'], l.mtype || 'classic')

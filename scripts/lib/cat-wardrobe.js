@@ -127,7 +127,7 @@ export function catModel(sex, look) {
 // the Chest key is a sculpted bust (art/cat-wardrobe/bust.py, Shelly 'bust isnt there'): slider 0 → a hint, 1 → full; garments carry the same key and follow
 export const chestOf = (look) => { const c = Math.max(0, Math.min(1, +(look?.chest ?? 0.5))); return { Chest: +(0.15 + c * 0.85).toFixed(3) } }
 // snout and ear types (Shelly Nov 11): shape keys on the head (art/cat-wardrobe/head-keys.py and style_fit.py). look.snout: button (default) | long | pointy | flat | puff; look.ears: upright (default) | tall | small | fold | wide
-export const SNOUTS = ['button', 'long', 'pointy', 'flat', 'puff'], EARS = ['upright', 'tall', 'small', 'fold', 'wide'], TAILS = ['classic', 'fluffy', 'bob', 'puff', 'whip', 'curl'] // look.tail (Shelly 'new tail types too'): Tail_* keys on the body
+export const SNOUTS = ['button', 'long', 'pointy', 'flat', 'puff'], EARS = ['upright', 'tall', 'small', 'fold', 'wide', 'bunny', 'lop', 'fox', 'bear'], TAILS = ['classic', 'fluffy', 'bob', 'puff', 'whip', 'curl'] // look.tail (Shelly 'new tail types too'): Tail_* keys on the body
 const SNOUT_KEY = { long: 'Snout_Long', pointy: 'Snout_Pointy', flat: 'Snout_Flat', puff: 'Snout_Puff' }, EAR_KEY = { tall: 'Ear_Tall', small: 'Ear_Small', fold: 'Ear_Fold', wide: 'Ear_Wide' }
 // how far each snout key goes: pointy at full read as a beak (Shelly #218xxx 'too silly'), long reined in with it
 const TAIL_KEY = { fluffy: 'Tail_Fluffy', bob: 'Tail_Bob', puff: 'Tail_Puff', whip: 'Tail_Whip', curl: 'Tail_Curl' }
