@@ -29,6 +29,7 @@ function music(ctx, want) {
 }
 
 export function update(ctx) {
+  { const ss = ctx.session; if (ss.hushed && !ss.tabAway && ctx.now() - (ss.backAt ?? 0) > 1500) { ss.hushed = false; ctx.self.gains = null } } // tab-out hush lifts on its own
   if (!ctx.self.isLocal && ctx.self.isLocal !== undefined) return ctx.sleep()
   const st = ctx.self.state, ses = ctx.session, place = ctx.self.place?.startsWith("tutorial0") ? "tutorial0" : ctx.self.place // a solo copy is named tutorial0-<id>
   if (!ses.menuMark) {
