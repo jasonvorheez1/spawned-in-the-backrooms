@@ -1764,11 +1764,12 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
 const WALK_V = 3;
 const W_LOOP = [{ x: -11.05, z: 24 }, { x: -11.05, z: 48 }, { x: -12.2, z: 51, dwell: 4, act: "wave" }, { x: -11.05, z: 64, dwell: 2 }, { x: -11.05, z: 24 }, { x: -11.05, z: 6 }, { x: -11.05, z: -10, dwell: 2 }];
 const E_LOOP = [{ x: 11.25, z: 34 }, { x: 11.25, z: 51 }, { x: 12.25, z: 53.5, dwell: 4 }, { x: 10.9, z: 57 }, { x: 10.9, z: 64, dwell: 2 }, { x: 10.9, z: 55 }, { x: 11.25, z: 34 }];
-const CROSS = [{ x: 14.65, z: 15.1, dwell: 6 }, { x: 10.85, z: 18.8 }, { x: -10.85, z: 18.8 }, { x: -17.55, z: 17.95, dwell: 4 }, { x: -10.85, z: 18.8 }, { x: 10.85, z: 18.8 }];
+// the courier keeps to the canal bank, as his quest says (Shelly Nov 13: he stood inside Sedco, the shop his job has you break into)
+const CROSS = [{ x: 10.85, z: -17.6, dwell: 8 }, { x: 10.85, z: -8 }, { x: 4, z: -17.6, dwell: 5 }, { x: 10.85, z: -8 }];
 const MAINT = [{ x: -11.2, z: 53.4, dwell: 5 }, { x: -11.2, z: 43.4 }, { x: -11.2, z: 37.4, dwell: 4 }, { x: -11.2, z: 50.2 }, { x: -10.7, z: 57.3, dwell: 2 }];
 const WALKERS = [
   { id: "l11-commuter-faceling", seed: "l11-faceling1", look: { species: "faceling", sex: "f", trait: "gentle", topw: "jacket", top: "#2a2a35", botw: "pants", bottom: "#202028", shoes: "boots" }, at: { x: -11.05, z: 24 }, route: W_LOOP, name: "Commuter Faceling", voice: "wren", line: "Pardon me, heading to the commercial plaza before the streetlights turn." },
-  { id: "l11-walker-1", seed: "l11-walker-1", look: { species: "human", sex: "m", trait: "perky", topw: "hoodie", top: "#5a3a2a", botw: "jeans", bottom: "#2a3550", shoes: "sneakers" }, at: { x: 14.65, z: 15.1 }, route: CROSS, name: "Courier", voice: "reyes", line: "Can't stop, kid. Package for the twelfth floor and the elevator's moody." },
+  { id: "l11-walker-1", seed: "l11-walker-1", look: { species: "human", sex: "m", trait: "perky", topw: "hoodie", top: "#5a3a2a", botw: "jeans", bottom: "#2a3550", shoes: "sneakers" }, at: { x: 10.85, z: -17.6 }, route: CROSS, name: "Courier", voice: "reyes", line: "Can't stop, kid. Package for the twelfth floor and the elevator's moody." },
   { id: "l11-walker-2", seed: "l11-walker-2", look: { species: "human", sex: "f", trait: "dreamy", topw: "sweater", top: "#d8c8a8", botw: "pants", bottom: "#3a2a40", shoes: "sneakers" }, at: { x: 11.25, z: 34 }, route: E_LOOP, name: "Office Temp", voice: "wren", line: "Third week in the city. The coffee cart guy knows my order already. Is that bad?" },
   { id: "l11-walker-3", seed: "l11-walker-3", look: { species: "human", sex: "m", trait: "cynical", topw: "jacket", top: "#3a3a2a", botw: "pants", bottom: "#25252a", shoes: "boots" }, at: { x: -11.2, z: 53.4 }, route: MAINT, name: "Night Shift Janitor", voice: "reyes", line: "Every block looks like the last one if you walk it long enough. Keep your map close, wanderer." },
 ];
