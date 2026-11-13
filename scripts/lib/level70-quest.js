@@ -157,12 +157,12 @@ export function l70Choices(id, s) {
       if (s.l70rats != null && kills(s, "deathrat70") - s.l70rats >= RATS) out.push({ text: "Your garage is rat-free. Fuse, please.", tag: "Quest Turn-In" });
       if (!s.l70pickFail) out.push({ text: "[Sneak 45] (Lift the fuse off his table while he talks.)", tag: "Quest" });
     }
-    if (pt === 2 && bag(s, "froidpelt") >= PELTS) out.push({ text: "Four froidling pelts. What'll you give me?", tag: "Quest Turn-In" });
+    if (pt === 2 && bag(s, "froidpelt") >= PELTS) out.push({ text: "Four hound pelts. What'll you give me?", tag: "Quest Turn-In" });
     if (ld === 2) out.push({ text: "Want to buy a B.N.T.G. ledger?", tag: "Quest Turn-In" });
   }
   if (id === INES) {
     if (!pt) out.push({ text: "Anything need doing, Sergeant?", tag: "Quest Start" });
-    if (pt === 1 && kills(s, "froidling") - (s.l70froid0 ?? 0) >= FROIDS) out.push({ text: "Six froidlings down.", tag: "Quest" });
+    if (pt === 1 && kills(s, "froidling") - (s.l70froid0 ?? 0) >= FROIDS) out.push({ text: "Six hounds down.", tag: "Quest" });
     if (pt === 2 && bag(s, "froidpelt") >= PELTS) out.push({ text: "Pelts for the Guard. Four of them.", tag: "Quest Turn-In" });
     if (q >= 2 && q < 5 && !s.l70h?.ines) out.push({ text: "How do the Guard run the valves?", tag: "Quest" });
     if (ld === 2) out.push({ text: "I found a B.N.T.G. ledger at Froston.", tag: "Quest Turn-In" });
@@ -216,15 +216,15 @@ export function handleDialogueQuest70(ctx, p, npc, text) {
       if (!roll("sneak", 45)) { s.l70pickFail = true; return { reply: "That's my fuse your hand is on. I'm going to pretend it fell. You're going to pretend to pay for it.", mood: "annoyed" }; }
       toFuse(ctx, p, s, "[Sneak 45] Succeeded · Got: Pump fuse");
       return { reply: "...and that's why you never trust a hubcap. Anyway, you buying or what?", mood: "neutral" }; }
-    if (t.includes("froidling pelts")) { give(s, "froidpelt", -PELTS); s.l70pelt = 99; addRep(s, "froid", -5); pay(ctx, p, "peltOdell", PID, PNAME, "Sold the pelts to Odell");
+    if (t.includes("hound pelts")) { give(s, "froidpelt", -PELTS); s.l70pelt = 99; addRep(s, "froid", -5); pay(ctx, p, "peltOdell", PID, PNAME, "Sold the pelts to Odell");
       return { reply: "Ooh. Frost fur. That's mittens for a whole family. Rich family. Don't tell Ines, she thinks pelts are taxable.", mood: "happy" }; }
     if (t.includes("buy a b.n.t.g. ledger")) { give(s, "ledger70", -1); s.l70led = 99; pay(ctx, p, "ledgerSell", LID, LNAME, "Sold the ledger to Odell");
       return { reply: "B.N.T.G. paperwork. I can sell this back to the B.N.T.G. for twice what I'm paying you. I'm telling you that because I'm honest. Not generous. Honest.", mood: "happy" }; }
   }
   if (id === INES) {
     if (t.includes("need doing") && !s.l70pelt) { s.l70pelt = 1; s.l70froid0 = kills(s, "froidling"); setQuest(s, PID, { name: PNAME, step: `Kill ${FROIDS} snow hounds in the woods and outskirts`, mark: M(INES) });
-      tell(ctx, p, `Quest Started: ${PNAME}`); return { reply: "Froidlings. Little white buggers, come in packs, steal anything with a zipper. Thin them out. Six. Then bring me four pelts, the Crown taxes pelts. I don't make the rules. I enforce them. Grumpily.", mood: "neutral" }; }
-    if (t.includes("six froidlings")) { s.l70pelt = 2; setQuest(s, PID, { name: PNAME, step: `Bring ${PELTS} hound pelts to Ines, or sell them to Odell`, mark: M(INES) });
+      tell(ctx, p, `Quest Started: ${PNAME}`); return { reply: "Snow hounds. Big white brutes, come in packs, drag off anything that walks alone. Thin them out. Six. Then bring me four pelts, the Crown taxes pelts. I don't make the rules. I enforce them. Grumpily.", mood: "neutral" }; }
+    if (t.includes("six hounds")) { s.l70pelt = 2; setQuest(s, PID, { name: PNAME, step: `Bring ${PELTS} hound pelts to Ines, or sell them to Odell`, mark: M(INES) });
       return { reply: "Good. Now the pelts. Four. Odell will offer you more for them. Odell is a weasel in a parka.", mood: "happy" }; }
     if (t.includes("pelts for the guard")) { give(s, "froidpelt", -PELTS); s.l70pelt = 99; addRep(s, "froid", 15); pay(ctx, p, "pelt", PID, PNAME, "Paid the pelt tax to the River Guard");
       return { reply: "Tax paid, in full, with a smile. Well. With a face. Thank you. The Guard remembers.", mood: "happy" }; }
