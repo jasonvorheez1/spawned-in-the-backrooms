@@ -38,6 +38,8 @@ lines:
   full: "Mm. Still licking my whiskers, cara. Sit a while."
   premium: "Bene. Sit. Let me look at you."
   poor: "This? You bring me this?"
+  dina: "Dina. Yes. She sat where you sit and fed me fish from a tin, very polite. Room three-oh-seven, cara. She paid for the week and stayed three days. Every night she asked about a radio in a city, a voice that knew her home. Then she went to find it, and she never came back for her change."
+  route: "The city? Through the boiler room, cara, past the bulkhead and into the pipes of Six. Watch the floor for a wire and let it trip you. You will land somewhere that smells of fried food. Their glass doors open onto the streets. Bring me something from a street cart."
   return: "Where was I? Ah yes. Everywhere."
 poorReadings:
   - "I see... a door. Possibly several. You will walk through one of them, eventually, badly."

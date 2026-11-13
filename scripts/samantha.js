@@ -13,6 +13,7 @@ import { describe } from './lib/items.js'
 import S from './lib/data/samantha.yml'
 import SNACKS from './lib/data/snacks.yml'
 import TK from './lib/data/talk.yml'
+import { learn, trailText } from './lib/dina-quest.js'
 
 export const MODEL = '/cdn/value.05b6fcdb02ae0489f79f366c2285414facaa51f7639114b24430fb4ac82f5455.glb'
 const ME = 'l5-samantha'
@@ -175,7 +176,10 @@ function feed(ctx, p) {
   rest(ctx, now, 'groom'); ses.until = now + 12000; ses.blinkAt = Math.max(ses.blinkAt ?? 0, now + 60000) // she eats where she sits; no psychic hop right after a meal (Shelly Nov 13: fed her, she vanished)
   if (!premium) { ctx.after(2.2, 'poorRead', { by: p.id, i: Math.floor(ctx.random() * S.poorReadings.length) }); return }
   ses.reading = now; p.state.talkBusy = now
+  const beat = trailBeat(p.state) // the main quest: she knew Dina, and she knows the way to the city (Shelly Nov 13: Samantha in the main quest)
+  if (beat) { ctx.after(1.6, 'dinaRead', { by: p.id, beat }); return }
   const f = facts(ctx, p), fb = plainReading(f)
+  if (p.state.quests?.['the-way-back']) f.push(`What they are searching for, and their next step: ${trailText(p.state)}`)
   const system = [TK.personas[ME], 'You have just eaten good meat and now give the psychic reading you promised. Speak as Samantha to the wanderer, second person.',
     'Use ONLY these true facts and name the real places in them; turn them into a vision that is genuinely useful (where supplies wait, which lock to pick, which way out, what to fear, what to mend).',
     '4-6 sentences, eloquent and amused, perhaps one French or Italian word. End with one eerie line about their past drawn from the past facts. Never mention numbers as stats, games or facts; reply with the reading only, no quotes, no JSON.'].join('\n')
@@ -189,6 +193,20 @@ export function read(ctx, r, pay) {
   if (text.length < 40 || text.startsWith('{')) text = pay.fb
   if (text.length > 700) { const cut = text.slice(0, 700), end = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! '), cut.lastIndexOf('? ')); text = end > 200 ? cut.slice(0, end + 1) : cut.replace(/\s+\S*$/, '') + '…' } // whole sentences, never cut mid-word
   say(ctx, p, text, 'happy', false)
+}
+// written, not generated: these lines carry the main quest. 'dina' teaches the hotel clue; 'route' names the road to the city
+export function trailBeat(st) {
+  const t = st?.trail ?? {}
+  if (!t.name || t.radio || t.pass || (st.dinaQ ?? 0) >= 2) return null
+  if (!t.room) return 'dina'
+  return st.samRoute ? null : 'route'
+}
+export function dinaRead(ctx, pay) {
+  const p = ctx.getObject(pay?.by); ctx.self.session.reading = 0; if (!p?.state) return
+  p.state.talkBusy = 0
+  say(ctx, p, S.lines[pay.beat === 'dina' ? 'dina' : 'route'], 'happy')
+  if (pay.beat === 'dina') learn(ctx, p.state, 'room')
+  else { p.state.samRoute = 1; p.state.notice = { text: 'Learned: the road to the city, from Samantha', at: ctx.now() } }
 }
 export function poorRead(ctx, pay) { const p = ctx.getObject(pay?.by); if (p?.state) say(ctx, p, S.poorReadings[pay.i] ?? S.poorReadings[0], 'annoyed') }
 function snub(ctx, p, now) { if (p.state.talkWith === ctx.self.id) p.state.talkWith = null; p.state.notice = { text: 'Samantha taps the empty saucer by her paws, then turns back to her cards. Bring meat.', at: now }; ctx.self.state.dishAt = now } // no hiss: an empty dish says it (Shelly Nov 13)
