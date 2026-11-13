@@ -227,6 +227,8 @@ surv-wren:
       do: recruit
       a: "For real? I mean, sure. Whatever. I'll grab my stuff. I have no stuff. Ready!"
       fail: "You're nice. You look like you're headed somewhere awful, though."
+    - q: "What's that knocking in the walls?"
+      a: "Pressure. Hollis says. I think it's somebody tapping back. I tap twice and sometimes it taps twice. Don't tell Mags, she'll charge for it."
     - q: "How'd you end up here?"
       a: "Hide and seek. Found the best spot in the world. Nobody found me. It's a good joke if you say it fast."
   barks:
@@ -273,6 +275,8 @@ surv-hollis:
           a: "Not with me. She talked into those tapes like a diary, though. Somebody that careful leaves one behind sooner or later. Look where she slept, out past the hot pipes."
     - q: "What's the barred door with the three?"
       a: "Folks say that's the next one down. Bare wire, and things that come to the hum. If you go, wear rubber on your feet and carry nothing metal."
+    - q: "Any tips for the hot pipes?"
+      a: "Back of your hand, never your palm. You feel the heat coming off a pipe before it bites. Palm grabs on its own when you flinch. Learned that on a substation in '91."
     - q: "How do you stay so calm?"
       a: "Thirty years a lineman. Ice storms, hot wire, wind. This here is only a storm that won't quit."
   barks:
@@ -314,6 +318,8 @@ surv-mags:
       a: "The one with the tape recorder. Sure. Traded me a real nice wristwatch for rubber boots and didn't even argue. You only want rubber boots for one place, honey. The barred door."
     - q: "Where's all this from?"
       a: "Pockets of people who quit needing pockets. Oh, don't look at me like that. They're done with it. You're not."
+    - q: "What do you charge for the barred door?"
+      a: "Nothing, honey. I don't sell that trip. I sell the boots, the tape for your cuffs and a flashlight. Then I sell your stuff to the next one if you don't come back. Circle of life."
     - q: "Seen anything strange?"
       a: "Prints in the grease by the boiler. Bare feet. More toes than a foot should come with. I quit going that way. Take the hint."
   barks:
