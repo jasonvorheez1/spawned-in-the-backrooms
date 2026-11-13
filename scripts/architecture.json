@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7286,
-  "updatedAt": "2026-11-13T14:12:51.618Z",
+  "basedOnSpecVersion": 7314,
+  "updatedAt": "2026-11-13T14:37:08.022Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG across Level 0, a social hub and authored lore destinations; player.state holds progression, gear, quests, homes, companions and the versioned resume location. Shared player behaviors and place simulations join authored scenes to generated spaces, with reusable dialogue, quests, NPC systems and errands. The Way Back reveals Dina's story through a saved clue trail and playable recordings.",
   "scriptPaths": [],
   "places": [
@@ -30,9 +30,9 @@
     "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/lib/level3-hatch.js - parametric doors/motion and deterministic Level 3 paired hatch layout; threshold/sign geometry is shared by participating places.",
     "scripts/lib/data/l02-props.yml + scripts/lib/data/l02-remodel.yml + scripts/lib/l02-grid.js; scripts/lib/breakables.js + data/breakables.yml + wallgrid.js - Level 0.2 partitions/props and shared prop/generated-wall damage, drops and regrowth.",
     "scripts/lib/quest-route.js + scripts/lib/quest-mark.js + scripts/lib/quests.js - directed crossings/objectives and common quest/errand journal, tracker, reward-claim and quest-step messaging.",
-    "scripts/lib/data/dlg-*.yml + scripts/lib/dialogue.js + scripts/talk.js + scripts/lib/voices.js - authored conversations, barks, checks/actions and voice selection for named and archetype NPCs.",
-    "scripts/lib/quest-dialogue.js - shared job-offer briefings, journal descriptions/progress text and paged choices; scripts/talk.js and scripts/ui.js consume it.",
-    "scripts/lib/errands.js + scripts/lib/data/errands.yml; scripts/lib/npc-temper.js + scripts/lib/notify.js - data-driven NPC jobs, shared NPC weapon filtering/strike-window and per-player notices; loot-bags-geo builds reusable loot-bag geometry."
+    "scripts/lib/data/dlg-*.yml + scripts/lib/dialogue.js + scripts/talk.js + scripts/lib/voices.js + scripts/lib/quest-dialogue.js - authored conversations, barks, voice selection and shared job-offer briefings/progress text for named and archetype NPCs; talk.js and ui.js consume quest dialogue.",
+    "scripts/lib/errands.js + scripts/lib/data/errands.yml; scripts/lib/npc-temper.js + scripts/lib/notify.js - data-driven NPC jobs, shared NPC weapon filtering/strike-window and per-player notices; loot-bags-geo builds reusable loot-bag geometry.",
+    "scripts/lib/data/l0-kit-{camp,ceiling,props,wall}.yml - Level 0 asset catalogs mapping named kits to CDN models and true-size/origin/facing metadata; wall entries also give mount heights."
   ],
   "notableExports": [
     "scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate, wakeLog; shared player-save versioning, eligibility, migration and wake diagnostics.",
@@ -45,7 +45,7 @@
     "scripts/lib/level1-quests.js - UNIQUE, QUESTS1, l1Choice, setStep1, handleDialogueQuest1, questLift1, questKill1; Level 1 quest routes and Lucky Thirteen reward definition."
   ],
   "ownership": [
-    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved position/place, tapes/holotapes, currency, karma/rep and homeKeep; initializes hp to max and hunger/thirst.",
+    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved position/place, tapes/holotapes, currency, karma/rep and homeKeep; initializes hp to max and hunger/thirst state.",
     "scripts/lib/save.js - saveV migration rules and eligibility/wake-location policy; player.state remains the save payload, with savePlace/savePos written by player.js.",
     "scripts/critter.js - per-player appearance look and transient critter/creator/salon state (wardrobeOpen, wrTab, salonOpen/salonTab); dress actions update look, including selected model or uploaded model URL.",
     "scripts/lib/quests.js + scripts/lib/dina-quest.js - quests/qtrack/qdone/claimed; Dina's saved trail keys, dinaQ stages, diary/cut/clue fields and legacy migration.",
@@ -55,7 +55,7 @@
     "scripts/lib/breakables.js; scripts/lib/companion.js; scripts/lib/forgive.js; scripts/samantha.js - place.state.wallHp/broken; save-scoped crew/orders; NPC incidents; and Samantha's me.state.fed timestamps keyed by player ID."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific play.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific minigames.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera; camera writes aimPt/aimPitch → player.js ballistics/weaponAim; player.js zoneHere → maze names and Level 31/70 zoneAt labels.",
     "scripts/player.js wake → scripts/lib/save.js migrate/log/wakePlace; valid savePlace crosses to saved place and savePos restores saved coordinates; periodic saves write savePlace/savePos only outside intake, bonus and tutorial0.",
     "scripts/routing.js requested room → scripts/lib/hub.js solo selection; toHub/toSolo cross to hub/home and maintain roomHop/save-place; kiosk resolves booked Level 5 home IDs.",
@@ -71,12 +71,12 @@
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored mall shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; home11 and Level 5 have separate buckets.",
-    "scripts/door-geo.js + scripts/lib/door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage motion, legacy migration and tagged paired leaves such as Fort Surrender; thresholds and sign boards share geometry helpers.",
+    "scripts/door-geo.js + scripts/lib/door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage motion, legacy migration and tagged paired leaves such as Fort Surrender; thresholds and sign boards share geometry contracts.",
     "places/level01/sim.js + Zenith geometry/breach/hatch/bot/hazard scripts; places/level02/sim.js + l02-grid.js vary partitions, lights, crew, knocks and reset.",
     "scripts/meg-agent.js - shared NPC nerve/stats/weapon reactions, cover, authored/voiced barks, movement/fighting and companion following; npc-temper.js filters wieldable child weapons, forgive.js owns generic first-hit assault handling.",
     "scripts/lib/data/errands.yml + scripts/lib/errands.js + scripts/lib/quest-dialogue.js + scripts/lib/quests.js - shared job offers, objective stages, journal/tracker and reward handling; named NPCs and levels vary objectives and text.",
     "scripts/l5-samantha.js + scripts/samantha.js - distinct Beverly Room cats trade readings/blessings or meals; Samantha accepts meat tokens and meat-marked snacks, persists fed-player grace across machine handoff, warns empty-handed visitors.",
-    "art/l0-kit-camp/build.py, art/l0-kit-wall/build.py, art/l0-kit-props/build.py + art/l0-kit-ceiling/build.py - Level 0 Tripo-to-GLB builders; camp infers tight-box axes from up/front hints, wall rotates mesh data to face the kit front, props support per-axis sizing/source overrides/trimming, and ceiling takes piece/source overrides."
+    "art/l0-kit-{camp,ceiling,props,wall}/build.py + scripts/lib/data/l0-kit-*.yml - separate Tripo-to-GLB Level 0 builders and asset catalogs for camp, office props, ceiling and wall/doors; catalogs record CDN model, metre dimensions, origin/facing and triangle counts (wall also mount heights), while camp build kinds come from art/l0-kit-camp/kit.json."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -86,7 +86,7 @@
     "scripts/dbg-bodypad.js, scripts/debug-pad.js - debug-room pads after places/debug removal; no current references found."
   ],
   "migrationNotes": [
-    "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player IDs/player roots and local-audience objects.",
+    "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player IDs/player roots and local-audience-only props.",
     "scripts/lib/save.js SAVE_V=2: intake, bonus and tutorial0 are transient and never save resume locations; migration clears legacy transient savePlace/savePos without overwriting earned state, and wakePlace rejects missing places.",
     "Player wake routing is stateful: player.js retries a cross to the saved place up to three times, then holds/restores saved coordinates after a level's own arrival; preserve wakeAtSave/wakeCrossAt/wakeHold safeguards when changing spawn routing.",
     "Level 31 rebuilds l31-* roots at place.state.v31=100; align IDs and shell/zone/door/arrival geometry with level31.js, and keep the white-door exit paired with Level 70's l70-from-l31 arrival. Level 70 retains versioned built zone/street layers.",
