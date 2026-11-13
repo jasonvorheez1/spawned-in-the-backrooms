@@ -14,6 +14,7 @@ import { cellAt, cellCenter as cellMid, openPoint, hasPillar, inHub, wallX, wall
 const cellCenter = openPoint; // every standing spot this pack picks is clear of the cell's pillar
 import { stepToward as stepToward0 } from "./lib/maze0path.js";
 import { npcMul, sneakMul, dmgAfterArmor } from "./lib/stats.js";
+import { vmul } from "./lib/foe-variant.js";
 
 const sn = (p) => (p?.state?.attr ? sneakMul(p.state) : 1) * crouchMul(p); // sneak skill, and a crouch hides you (scripts/lib/sneak.js)
 
@@ -184,7 +185,7 @@ export function update(ctx, dt) {
     const m = (mem[w.id] ??= {});
     const st = w.state ?? {};
     const pos = w.feetPosition;
-    const mu = npcMul(st);
+    const vm = vmul("lurker", st.variant), mu0 = npcMul(st), mu = { ...mu0, dmg: mu0.dmg * vm.dmg, speed: mu0.speed * vm.speed, sight: mu0.sight * vm.sight }; // leveled variant (foe-variants.yml)
     if (knocked(ctx, w, now, dt)) { if (st.sneakTarget) st.sneakTarget = null; continue; }
 
     if (st.mesh !== 3) {
