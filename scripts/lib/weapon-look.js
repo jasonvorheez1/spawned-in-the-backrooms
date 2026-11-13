@@ -62,6 +62,9 @@ const MESH = { // kind: [model, offset y, scale, the mesh's material slot]
   screwdriver: ["/cdn/value.6204c5be1e422e3d5547054301386a5efec3bf51e4d02e4b38769563fc8541ad.glb", 0.02, 0, "tripo_material_f9e3059d-8b3b-4fdf-b3da-dcb466a61983"], // Tripo remake, fitted by art/weapons/build.py
   stun_baton: ["/cdn/value.2a5234080ee9216480cbdaafa7aa0589d00bbf08c3b3e964151c98b4e929d608.glb", 0.015, 0, "tripo_material_c231497c-1587-4cb1-bec3-151ea766af13"], // Tripo remake, fitted by art/weapons/build.py
   wrench: ["/cdn/value.ec0be310ee2a279074961d777a41ee95af9a2c8bbc6768d6a06e250e15ba1c9e.glb", 0.014, 0, "tripo_material_588e0f62-de58-4273-8d0e-d358e50e51cf"], // Tripo remake, fitted by art/weapons/build.py
+  scrapper70: ["/cdn/value.31c3a0b17d66e2b00e6cd50f6ebf4b6d5c46d10f4ef79c72bfd0ee6a91012100.glb", 0.012, 0, "tripo_material_e549f744-df41-4bed-84f2-d31195d87afa"], // Level 70 Froston Scrapper, Tripo, fitted by art/weapons/build.py
+  icepick70: ["/cdn/value.a9912e2551dabae6c10990a486feb6ea177d95a7cbe9c793843cf16ba0b9585b.glb", 0.013, 0, "tripo_material_e82a83b6-1ef0-4a5b-8e64-c63a59ddda1a"], // Level 70 Gelu Ice Pick
+  flaregun70: ["/cdn/value.53e72f64dee0951883d4f953d26241d9db354c4cc829381af993d84cc627aed7.glb", -0.0965, 0, "tripo_material_01611391-d364-4eb8-85ce-e7c5c8ae56d4"], // Level 70 River Guard flare gun
 };
 // each mesh's box centre in the scripted frame (x, z), from art/weapons/fit.json
 const CENTER = { table_leg: [0, 0.3325], pipe_scrap: [0, 0.415], crowbar: [0, 0.4425], bat: [0, 0.4895], hatchet: [0.07, 0.417], fire_axe: [0.0175, 0.5395], pistol: [0, 0.114], shotgun: [0.002, 0.452] }
@@ -82,7 +85,7 @@ export const SPLIT = { pistol: [
   ["mag", "/cdn/value.98a0e360dcb08df9ad6b19ed459e7b3c162a69e9d4520f99e43285bb3afd2608.glb", [-0.0148, -0.064, 0.0564]],
 ] }
 export const HOLD = {
-  fists: null, soup_bowl: 0.0, table_leg: 0.16, pipe_scrap: 0.12, crowbar: 0.14, bat: 0.14, hatchet: 0.12, fire_axe: 0.18, pistol: 0.04, shotgun: 0.14, rebar: 0.14, wrench: 0.12, screwdriver: 0.05, sledgehammer: 0.14, stun_baton: 0.10, lineman_machete: 0.09, crook: 0.14, knife: 0.05, smg: 0.14, golf_club: 0.14, tire_iron: 0.12, pickaxe: 0.16, baton: 0.1, cleaver: 0.06, revolver: 0.05, laser_pistol: 0.04, raygun: 0.04, laser_rifle: 0.14, coach_gun: 0.14, lever_rifle: 0.14, hunting_rifle: 0.14, carbine: 0.14, fishing_rod: 0.14,
+  fists: null, soup_bowl: 0.0, table_leg: 0.16, pipe_scrap: 0.12, crowbar: 0.14, bat: 0.14, hatchet: 0.12, fire_axe: 0.18, pistol: 0.04, shotgun: 0.14, rebar: 0.14, wrench: 0.12, scrapper70: 0.14, icepick70: 0.1, flaregun70: 0.04, screwdriver: 0.05, sledgehammer: 0.14, stun_baton: 0.10, lineman_machete: 0.09, crook: 0.14, knife: 0.05, smg: 0.14, golf_club: 0.14, tire_iron: 0.12, pickaxe: 0.16, baton: 0.1, cleaver: 0.06, revolver: 0.05, laser_pistol: 0.04, raygun: 0.04, laser_rifle: 0.14, coach_gun: 0.14, lever_rifle: 0.14, hunting_rifle: 0.14, carbine: 0.14, fishing_rod: 0.14,
 }
 export function weaponBody(kind) {
   const base = baseOf(kind), w = W[kind] ?? {}, m = MESH[base], look = w.look, short = look === 'sawn' ? 0.72 : 1
