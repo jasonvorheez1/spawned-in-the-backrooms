@@ -24,7 +24,7 @@ export function dress(ctx, o, kind) {
   if (o.state.dressed !== kind) { o.fx = { script: FOG }; o.state.dressed = kind; }
   if ((o.id + "/lk-eyes") in ctx.place.objects) return;
   const eye = (x) => ({ feetPosition: { x, y: 0.02, z: -0.11 }, pivot: "center", primitive: { kind: "sphere", radius: 0.028 }, material: { color: E.color, emissive: E.color, emissiveIntensity: 6 }, castShadow: false });
-  ctx.spawn({ id: "lk-eyes", parent: o.id, attachment: { bone: "Head" }, feetPosition: { x: 0, y: 0, z: 0 }, castShadow: false,
+  ctx.spawn({ id: "lk-eyes", parent: o.id, attachment: { bone: "mixamorig:Head" }, feetPosition: { x: 0, y: 0, z: 0 }, castShadow: false,
     light: { kind: "point", color: E.light, intensity: 0.5, distance: 2.5 }, children: [eye(-0.045), eye(0.045)] });
 }
 export function undress(ctx, o) { o.fx = null; o.state.dressed = null; const id = o.id + "/lk-eyes"; if (id in ctx.place.objects) ctx.destroy(id); }
