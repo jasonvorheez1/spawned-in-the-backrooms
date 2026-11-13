@@ -19,7 +19,7 @@ const EXITS = {
   level4: [{ to: "level3", id: "l4-lift-door", label: "Elevator" }, { to: "level5", id: "l4-stairs-down", label: "Stairs down" }, { to: "level26", id: "l4-fun-poster", label: "Ship poster" }],
   level5: [{ to: "level3", id: "l5-lift3", label: "Elevator" }, { to: "level4", id: "l5-stairs-up", label: "Stairs up" }, { to: "level6", id: "l5-to-l6", label: "Boiler Room bulkhead" }],
   level6: [{ to: "level5", id: "l6-back" }, { to: "level7", id: "l6-to-l7", label: "Stairwell" }, { to: "level61", id: "l6-to-l61", label: "Tripwire" }, { to: "level61", id: "l6-wire-trip", label: "Tripwire" }],
-  level61: [{ to: "level6", id: "l61-to-l6" }, { to: "level3", id: "l61-vent-in", label: "Suction vent" }, { to: "level11", id: "l61-to-l11" }],
+  level61: [{ to: "level6", id: "l61-to-l6", label: "M.E.G. checkpoint", needs: "l61Clearance" }, { to: "level3", id: "l61-vent-in", label: "Suction vent" }, { to: "level11", id: "l61-to-l11" }],
   level7: [{ to: "level6", id: "l7-back", label: "Stairs up" }, { to: "level8", id: "l7-diving-bell", label: "Diving bell" }],
   level8: [{ to: "level21", id: "l8-to-l21", label: "Cave tunnel" }, { to: "level7", id: "l8-lake-back", label: "Underwater passage" }],
   level10: [
@@ -36,15 +36,19 @@ const EXITS = {
 };
 
 const cache = new Map();
+const hasNightVision = (state) => !!state.nvg && ((state.battery ?? 0) > 1 || state.nvgSpare > 0);
+const canUse = (exit, state) => exit.needs === "l61Clearance"
+  ? hasNightVision(state)
+  : !exit.needs || !!state[exit.needs];
 function distances(here, goal, state) {
-  const key = JSON.stringify([here, goal, !!state.zenKey, !!state.know12]);
+  const key = JSON.stringify([here, goal, !!state.zenKey, !!state.know12, hasNightVision(state)]);
   if (cache.has(key)) return cache.get(key);
   const depth = new Map([[goal, 0]]);
   const queue = [goal];
   for (const place of queue) {
     for (const [from, exits] of Object.entries(EXITS)) {
       if (from === here || depth.has(from)) continue;
-      if (!exits.some((exit) => exit.to === place && (!exit.needs || state[exit.needs]))) continue;
+      if (!exits.some((exit) => exit.to === place && canUse(exit, state))) continue;
       depth.set(from, depth.get(place) + 1);
       queue.push(from);
     }
@@ -61,7 +65,7 @@ export function nextQuestExit(ctx, player, goal) {
   const depth = distances(here, goal, player.state);
   let best = null, bestDistance = Infinity;
   for (const exit of exits) {
-    if (exit.needs && !player.state[exit.needs]) continue;
+    if (!canUse(exit, player.state)) continue;
     const remaining = depth.get(exit.to);
     if (remaining == null || (best && remaining + 1 > best.hops)) continue;
     const object = ctx.place?.objects?.[exit.id];

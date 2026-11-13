@@ -4,10 +4,15 @@ import { heard } from "./lib/hear.js";
 import { animate } from "builtin/tween";
 import { itemSpec } from "./lib/vend-item.js";
 import { handTray } from "./lib/snacktray.js";
+import { bring } from "./lib/companion.js";
+import { carryAcross } from "./lib/carry.js";
+import SNACKS from "./lib/data/snacks.yml";
 
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const POOL = { snack: ["doritos", "doritos", "coolranch"], soda: ["coke", "coke", "pepsi", "dew", "sprite", "drpepper", "cherrycoke", "vault", "redbull", "snapple", "gatorade", "sobe"] };
 const COOL = 20000;
+const WEEK = 7 * 24 * 60 * 60 * 1000;
+const LEVEL6 = "level6#l6-from-l61";
 
 // Menus at each food court venue: [name, items given, original crossed-out price]
 export const MENUS = {
@@ -19,7 +24,7 @@ export const MENUS = {
 
 const KEYS = ["clip", "liq", "slice", "burger"];
 const keyOf = (id) => KEYS.find((k) => String(id).includes(`-${k}-`) || String(id).endsWith(`-${k}`));
-const PICKUP = { clip: [-19.2, 1.12, -29.65], liq: [-11.75, 1.1, -25.2], slice: [5.4, 1.02, -28.9], burger: [19.4, 1.02, -28.2] };
+const PICKUP = { clip: [-19.2, 1.12, -29.65], liq: [-11.75, 1.1, -25.2], slice: [5.4, 1.49, -29.4], burger: [19.4, 1.065, -28.4] };
 const NAME = { clip: "Clippers", liq: "Liquorette", slice: "Slice Palace", burger: "Burger Bop" };
 
 const board = (key, n) => `<div face="front" width="1.8m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Courier New',monospace;background:#101418;color:#7affb0;text-align:center"><div style="font-size:54px;color:#ffd84a">NOW SERVING</div><div style="font-size:150px;font-weight:700;letter-spacing:6px;text-shadow:0 0 18px #3f9">${String(n).padStart(3, "0")}</div><div style="font-size:34px;color:#9fb8c8">${NAME[key].toUpperCase()}</div></div>`;
@@ -44,6 +49,34 @@ export const ears = {
     const now = ctx.now(), uid = who.userId ?? by, cool = (s.cool ??= {}), pos = ctx.self.worldFeetPosition ?? ctx.self.feetPosition, w = who.state;
     const tell = (text, color = "#ffe9a8") => ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.6, z: pos.z }, text, color, size: 0.95 }, { audience: { player: who.id } });
     const snd = (n, v = 0.7, d = 14) => heard(ctx, { clip: G(n), position: { x: pos.x, y: pos.y + 0.8, z: pos.z }, volume: v, maxDistance: d });
+
+    if (s.kind === "notice") {
+      w.notice = { text: s.line, at: now };
+      snd("paper-flip-card-stand", 0.3, 5);
+      return;
+    }
+    if (s.kind === "serviceDoor") {
+      if (now - (w.l61ServiceAt ?? -1e9) < 1100) return;
+      const destination = ctx.getObject(s.to);
+      if (!destination) return;
+      w.l61ServiceAt = now;
+      ctx.emit("screenFlash", { color: "#000000", duration: 0.55, intensity: 1 }, { audience: { player: who.id } });
+      snd("heavy-metal-door-creak-open", 0.35, 9);
+      ctx.cross(who, `level61#${s.to}`);
+      return;
+    }
+    if (s.kind === "level6") {
+      if (!w.nvg || ((w.battery ?? 0) <= 1 && !(w.nvgSpare > 0))) {
+        w.notice = { text: "Passage denied. Bring working night vision. Flashlights go out past this door.", at: now };
+        return;
+      }
+      w.clipKind = "wall";
+      bring(ctx, who, LEVEL6);
+      carryAcross(ctx, who, LEVEL6);
+      ctx.emit("screenFlash", { color: "#000000", duration: 0.75, intensity: 1 }, { audience: { player: who.id } });
+      ctx.cross(who, LEVEL6);
+      return;
+    }
 
     if (s.kind === "stew") { // Camp Amber's pot: the price is said first, E again within 10 s pays it (the 9th Road soup flow, scripts/l8-use.js)
       const PRICE = 200, ask = (s.ask ??= {});
@@ -156,7 +189,7 @@ export const ears = {
 
     if (s.kind === "directory") {
       snd("paper-flip-card-stand", 0.5, 8);
-      tell("MAP: CLIPPERS & LIQUORETTE [WEST] · SLICE & BURGER [EAST] · RESTROOMS [SOUTH]", "#ffd84a");
+      w.notice = { text: "Track Mappers: restaurants north. Supplies and toilets south. Glass exit to Level 11 east. Level 6 checkpoint west.", at: now };
       return;
     }
 
@@ -175,14 +208,23 @@ export const ears = {
       ctx.after(0.45, "takeItem", { id: tray.item });
       snd("plastic-bottle-pickup-rattle", 0.6, 8);
       w.payout = { xp: 1, items: [tray.tok] };
-      tell("+" + tray.tok.toUpperCase(), "#9fffb0");
+      tell(SNACKS[tray.tok]?.name ?? (tray.tok === "almond" ? "Almond water" : tray.tok), "#9fffb0");
       return;
     }
 
     if (now - (cool[uid] ?? -1e9) < (s.cooldown ?? COOL)) {
-      tell(s.kind === "vend" ? "RESTOCKING..." : "PLEASE WAIT");
+      tell(s.kind === "vend" ? "Give the machine a moment." : "Please wait.");
       return;
     }
+    if (s.kind === "vend" && s.weeklyStock) {
+      const nowWeek = Math.floor(now / WEEK);
+      if (s.stockWeek !== nowWeek) { s.stockWeek = nowWeek; s.dispensed = 0; }
+      if ((s.dispensed ?? 0) >= s.weeklyStock) {
+        tell("Empty. Try another machine.");
+        return;
+      }
+    }
+
     cool[uid] = now;
     const list = s.gives ? s.gives.split(",") : POOL[s.sells ?? "snack"], tok = list[Math.floor(ctx.random() * list.length)];
 
@@ -193,9 +235,10 @@ export const ears = {
       animate(ctx, item, { "feetPosition.y": 0.17, "feetPosition.x": 0.08 }, { duration: 0.42, delay: 0.9, easing: "easeInQuad" });
       animate(ctx, item, { "feetPosition.z": -0.5, "rotation.roll": 90 }, { duration: 0.2, delay: 1.3, easing: "easeOutQuad" });
       s.tray = { ...(s.tray ?? {}), [uid]: { tok, item, down: false } };
+      if (s.weeklyStock) s.dispensed = (s.dispensed ?? 0) + 1;
       ctx.after(1.32, "landed", { uid, item });
       snd("vending-machine-spiral-coil-motor-turning-whir", 0.65, 10);
-      tell("DISPENSING... PRESS FLAP TO TAKE", "#ffe9a8");
+      tell("Dispensing. Press again to take it.");
       return;
     }
 

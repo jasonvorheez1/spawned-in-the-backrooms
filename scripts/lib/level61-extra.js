@@ -1,12 +1,9 @@
-// Level 6.1 "The Snackrooms": what makes the mall lively. Round pillars with neon rings, a sunken conversation pit with a mirror ball throwing coloured light round the hall, hanging banners and palms that
-// sway, neon-framed store fronts, steam off the grill and flame in the pizza oven, dust in the daylight that comes from nowhere; the Facelings (Entity 9) who cook, serve and clear the tables; the M.E.G. guards on the
-// steel door, Camp Amber's outpost and the Guild of Many's picket; the sliding glass doors to the restaurant on Level 11, and the bent wall to the Blue Channel. Called from places/level61/sim.js.
+// Level 6.1 storefront fixtures, groups, and thresholds.
 import { critterSpec } from "./critter-model.js";
 import { npcLook } from "./clothes.js";
 import { npcState } from "./stats.js";
 import { weaponBody } from "./weapon-look.js";
 const A = "scripts/ambient-anim.js";
-const NEON_P = "oklch(0.74 0.2 350)", NEON_T = "oklch(0.8 0.13 190)";
 const INK = { color: "#060606", roughness: 1, metalness: 0 };
 const faceless = (spec) => { const h = spec.children?.[0]; if (h?.model) { if (typeof h.model === "string") h.model = { id: h.model }; h.model.materials = { fur: INK, ...h.model.materials, pupil: INK, eyewhite: INK, eyeink: INK, mouth: INK, blush: INK, tongue: INK, nose: INK, tip: INK, mark: INK }; h.morph = undefined; } return spec; };
 const yawOf = (dx, dz) => (Math.atan2(-dx, -dz) * 180) / Math.PI;
@@ -16,72 +13,23 @@ pop smoke rate=7 on=disc(.35) life=1.4..2.4 v=up(.5)+sdir()*.12 size=.2..0.4 acc
 const FLAME = `fx
 pop flame rate=16 on=disc(.25) life=.3..0.55 v=up(.7) size=.08..0.16 sz=$size*(1>.2) col=hdr(2,1,.2)>hdr(.6,.2,.05) a=0>.2:1>.7:.7>0 r=sprite(flame-wisp,add)
 pop glow n=1 r=light(<1,.5,.15>,fire()*5,6)`;
-const SUNDUST = `fx
-pop mote rate=14 on=box(7,3,7) life=6..11 v=sdir()*.06 size=.014..0.03 acc=curl(.4)*.07 col=<1,.95,.8> a=0>.5:.25>.5:.75>0 r=sprite(mote,alpha)`;
-const GLINT = `fx
-pop glint rate=20 on=sphere(.52) life=.25..0.5 v=sdir()*.2 size=.04..0.09 col=hdr(3,3,3) a=1>0 sz=$size r=sprite(soft-disc,add)`;
-const FLICK = (c, s) => `fx\npop flick n=1 r=light(${c},flick(${s},.45)*4,6)`;
-const JUKE = `fx
-pop note rate=1.6 on=disc(.3) life=2.2..3.2 v=up(.35)+sdir()*.2 size=.07..0.11 col=hdr(2,.6,1.6)..hdr(.6,1.8,2) a=0>.9:.3>.9:.7>0 sz=$size r=sprite(soft-disc,add)`;
-
 export function layExtra(ctx, { HW, HD, HH }) {
   const sp = (id, spec) => ctx.spawn(id, spec);
   const bx = (id, x, y, z, w, h, d, material, extra = {}) => sp(id, { feetPosition: { x, y, z }, primitive: { kind: "box", width: w, height: h, depth: d }, material, ...extra });
-  const neon = (c) => ({ color: c, emissive: c, emissiveIntensity: 2.4, roughness: 0.3 });
-  const PLASTER = { color: "oklch(0.93 0.02 85)", roughness: 0.85 };
-
-  // ---- round pillars: cream columns with a neon ring at the foot and the capital, a planter ring round the base
-  [[-15, -12], [15, -12], [-15, 12], [15, 12], [-27, -6], [27, -6], [-27, 6], [27, 6]].forEach(([x, z], k) => {
-    sp(`l61-col-${k}`, { feetPosition: { x, y: 0, z }, physics: { body: "static", collider: "cylinder" }, primitive: { kind: "cylinder", radiusTop: 0.4, radiusBottom: 0.44, height: HH }, material: PLASTER,
-      children: [
-        { feetPosition: { x: 0, y: 0, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.62, radiusBottom: 0.68, height: 0.5 }, material: { color: "oklch(0.3 0.1 262)", roughness: 0.45 } },
-        { feetPosition: { x: 0, y: 0.52, z: 0 }, primitive: { kind: "torus", radius: 0.55, tube: 0.035 }, rotation: { pitch: 90 }, material: neon(k % 2 ? NEON_P : NEON_T) },
-        { feetPosition: { x: 0, y: HH - 0.6, z: 0 }, primitive: { kind: "torus", radius: 0.48, tube: 0.04 }, rotation: { pitch: 90 }, material: neon(k % 2 ? NEON_T : NEON_P) },
-        { feetPosition: { x: 0, y: HH - 0.45, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.7, radiusBottom: 0.46, height: 0.45 }, material: PLASTER },
-      ] });
-  });
-  // coving: a navy baseboard round the hall, and neon lines round the hall's four walls and the fountain rotunda base
-  for (const s of [-1, 1]) {
-    bx(`l61-skirt-z${s}`, 0, 0, s * (HD - 0.2), 2 * HW - 0.5, 0.26, 0.12, { color: "oklch(0.25 0.08 262)", roughness: 0.5 });
-    bx(`l61-skirt-x${s}`, s * (HW - 0.2), 0, 0, 0.12, 0.26, 2 * HD - 0.5, { color: "oklch(0.25 0.08 262)", roughness: 0.5 });
+  const PLASTER = { color: "#ddd4bd", roughness: 0.85 };
+  const TRIM = { color: "#9a9689", roughness: 0.57, metalness: 0.22 };
+  for (const [i, [x, z]] of [[-20, -7], [20, -7], [-20, 7], [20, 7]].entries()) {
+    sp(`l61-col-${i}`, {
+      feetPosition: { x, y: 0, z }, physics: { body: "static", collider: "cylinder" },
+      primitive: { kind: "cylinder", radiusTop: 0.32, radiusBottom: 0.32, height: HH, radialSegments: 24 },
+      material: PLASTER, children: [
+        { feetPosition: { x: 0, y: 0, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.365, radiusBottom: 0.37, height: 0.14 }, material: TRIM },
+        { feetPosition: { x: 0, y: HH - 0.16, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.42, radiusBottom: 0.32, height: 0.16 }, material: TRIM },
+      ],
+    });
   }
-  sp("l61-rotunda-neon-ring", { feetPosition: { x: 0, y: 0.02, z: 0 }, rotation: { pitch: 90 }, primitive: { kind: "torus", radius: 5.4, tube: 0.025 }, material: neon(NEON_T), physics: undefined });
-  // the skylights get rafters and neon edges, so the black glass reads as a window and not a hole
-  for (const sx of [-18, 0, 18]) for (const sz of [-9, 9]) {
-    bx(`l61-raf-${sx}-${sz}-a`, sx, HH - 0.32, sz, 9.4, 0.2, 0.2, { color: "oklch(0.36 0.02 250)", metalness: 0.7, roughness: 0.4 }, { physics: undefined });
-    bx(`l61-raf-${sx}-${sz}-b`, sx, HH - 0.32, sz, 0.2, 0.2, 7.4, { color: "oklch(0.36 0.02 250)", metalness: 0.7, roughness: 0.4 }, { physics: undefined });
-    for (const [dx, dz, w, d] of [[0, -3.55, 9.2, 0.05], [0, 3.55, 9.2, 0.05], [-4.55, 0, 0.05, 7.1], [4.55, 0, 0.05, 7.1]]) bx(`l61-skn-${sx}-${sz}-${dx}-${dz}`, sx + dx, HH - 0.26, sz + dz, w, 0.05, d, neon((sx + sz) % 2 ? NEON_P : NEON_T), { physics: undefined });
-  }
-  // neon frames round the store openings, a flickering tube in each sign
-  [-21, -7, 7, 21].forEach((cx, k) => {
-    const c = k % 2 ? NEON_T : NEON_P;
-    bx(`l61-nf-${k}-l`, cx - 2.15, 0, -HD + 0.05, 0.12, 3.3, 0.12, neon(c), { physics: undefined }); bx(`l61-nf-${k}-r`, cx + 2.15, 0, -HD + 0.05, 0.12, 3.3, 0.12, neon(c), { physics: undefined });
-    bx(`l61-nf-${k}-t`, cx, 3.25, -HD + 0.05, 4.4, 0.12, 0.12, neon(c), { physics: undefined });
-    sp(`l61-nf-${k}-f`, { feetPosition: { x: cx, y: 3.9, z: -HD + 0.6 }, fx: { script: FLICK(k % 2 ? "<.4,.9,1>" : "<1,.35,.75>", 4 + k * 1.3) } });
-  });
-
-  // ---- the sunken pit: two steps down; benches, the planter, and a mirror ball over it throwing slow coloured light round the whole hall
-  sp("l61-ball", { feetPosition: { x: 0, y: HH - 1.7, z: 0 }, behavior: A, state: { anim: { kind: "spin", sec: 14 } }, primitive: { kind: "sphere", radius: 0.5 }, material: { color: "oklch(0.9 0.005 250)", metalness: 1, roughness: 0.08 }, fx: { script: GLINT },
-    children: [
-      { feetPosition: { x: 0, y: 1.0, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.012, radiusBottom: 0.012, height: 1.1 }, material: { color: "oklch(0.3 0.01 250)" } },
-      { feetPosition: { x: 4.5, y: -0.4, z: 0 }, light: { kind: "point", color: "oklch(0.75 0.25 350)", intensity: 7, distance: 17, shadow: { enabled: false } } },
-      { feetPosition: { x: -4.5, y: -0.4, z: 0 }, light: { kind: "point", color: "oklch(0.8 0.15 190)", intensity: 7, distance: 17, shadow: { enabled: false } } },
-      { feetPosition: { x: 0, y: -0.4, z: 4.5 }, light: { kind: "point", color: "oklch(0.85 0.17 85)", intensity: 6, distance: 17, shadow: { enabled: false } } },
-      { feetPosition: { x: 0, y: -0.4, z: -4.5 }, light: { kind: "point", color: "oklch(0.7 0.2 290)", intensity: 6, distance: 17, shadow: { enabled: false } } },
-    ] });
-
-  // ---- hanging banners and swaying palms
-  [[-9, -4], [9, -4], [-9, 4], [9, 4], [-21, 0], [21, 0]].forEach(([x, z], k) => {
-    sp(`l61-banner-${k}`, { feetPosition: { x, y: HH - 0.1, z }, rotation: { yaw: k % 2 ? 90 : 0 }, behavior: A, state: { anim: { kind: "sway", deg: 4, sec: 3.6 + (k % 3) * 0.6, axis: "roll", phase: k / 6 } },
-      primitive: { kind: "box", width: 0.9, height: 0.05, depth: 0.05 }, material: { color: "oklch(0.3 0.01 250)" },
-      children: [{ feetPosition: { x: 0, y: -2.0, z: 0 }, primitive: { kind: "box", width: 0.85, height: 1.9, depth: 0.03 }, material: { color: [NEON_P, NEON_T, "oklch(0.85 0.17 85)"][k % 3], emissive: [NEON_P, NEON_T, "oklch(0.85 0.17 85)"][k % 3], emissiveIntensity: 0.5, roughness: 0.8 },
-        ui: `<div face="front" width="0.85m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;color:#fff;text-shadow:2px 2px 0 #0008;text-align:center"><div style="font-size:60px">${["SUMMER","SALE","FREE","'86","EAT","NEW!"][k]}</div><div style="font-size:24px">${["all season","everything must go","take two","grand reopening","you are welcome","same as always"][k]}</div></div>` }] });
-  });
-  // dust in the daylight that has no sun, steam off the grill, flame in the oven, notes off the jukebox
-  [[-18, 3, -8], [18, 3, -8], [-18, 3, 8], [18, 3, 8], [0, 3, 14], [0, 3, -14]].forEach(([x, y, z], k) => sp(`l61-dust-${k}`, { feetPosition: { x, y, z }, fx: { script: SUNDUST } }));
   sp("l61-grill-smoke", { feetPosition: { x: 21, y: 1.05, z: -31.3 }, fx: { script: SMOKE } });
   sp("l61-oven-fire", { feetPosition: { x: 9.5, y: 0.7, z: -31.0 }, fx: { script: FLAME } });
-  sp("l61-juke-notes", { feetPosition: { x: -26.4, y: 1.7, z: -25 }, fx: { script: JUKE } });
 
   // ---- Level 11: the sliding glass doors (the safe way out) in the east wall, opening to Level 11 The Infinite City
   const dz = -9;
@@ -113,15 +61,15 @@ export function layExtra(ctx, { HW, HD, HH }) {
   // Arrival marker when returning from Level 11
   sp("l61-from-l11", {
     feetPosition: { x: HW + 4.8, y: 0.05, z: dz },
-    rotation: { yaw: -90 },
+    rotation: { yaw: 90 },
   });
   sp("l61-l11-light", { feetPosition: { x: HW + 3, y: 3, z: dz }, light: { kind: "point", color: "oklch(0.97 0.03 90)", intensity: 5, distance: 10 } });
 
   // ---- the bent wall: a stretch of the east wall that buckles away from the room, with the cold blue of the Blue Channel behind its cracks
   const bz = -17.5;
   [[0, 3.8], [1, 8], [2, 12]].forEach(([i, a]) => bx(`l61-bent-${i}`, HW - 0.5 - i * 0.12, 0, bz + i * 1.2, 0.3, HH - 0.2 - i * 0.1, 1.25, { ...PLASTER, color: "oklch(0.88 0.03 220)" }, { rotation: { yaw: -a * (i + 1), roll: i * 2 }, physics: "static" }));
-  sp("l61-bent-glow", { feetPosition: { x: HW - 0.2, y: 1.8, z: bz + 1.3 }, behavior: A, state: { anim: { kind: "pulse", amp: 1.35, sec: 2.2 } }, primitive: { kind: "box", width: 0.06, height: 3.4, depth: 0.5 }, material: { color: "oklch(0.8 0.14 225)", emissive: "oklch(0.8 0.16 225)", emissiveIntensity: 2.6 },
-    children: [{ feetPosition: { x: -1.2, y: 0, z: 0 }, light: { kind: "point", color: "oklch(0.75 0.14 225)", intensity: 3, distance: 9 } }] });
+  sp("l61-bent-glow", { feetPosition: { x: HW - 0.2, y: 1.8, z: bz + 1.3 }, behavior: A, state: { anim: { kind: "pulse", amp: 1.35, sec: 2.2 } }, primitive: { kind: "box", width: 0.06, height: 3.4, depth: 0.5 }, material: { color: "oklch(0.8 0.14 225)", emissive: "oklch(0.8 0.16 225)", emissiveIntensity: 1.2 },
+    children: [{ feetPosition: { x: -1.2, y: 0, z: 0 }, light: { kind: "point", color: "oklch(0.75 0.14 225)", intensity: 1.45, distance: 5.5 } }] });
 
   // Environmental cues on bent wall: cold vapor seep, sparking wall sconce, and void draft hum (show, don't tell)
   sp("l61-bent-mist", {
@@ -156,13 +104,15 @@ export function layExtra(ctx, { HW, HD, HH }) {
   amb("l61-amber-lamp-0", "lamp", -24.9, 13.6, 0, { min: { x: -0.1, y: 0, z: -0.1 }, max: { x: 0.1, y: 0.32, z: 0.1 } }, { physics: undefined, children: [{ feetPosition: { x: 0, y: 0.2, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.12 70)", intensity: 1.6, distance: 6 } }] });
   amb("l61-amber-lamp-1", "lamp", -25.3, 10.1, 0, { min: { x: -0.1, y: 0, z: -0.1 }, max: { x: 0.1, y: 0.32, z: 0.1 } }, { physics: undefined, children: [{ feetPosition: { x: 0, y: 0.2, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.12 70)", intensity: 1.6, distance: 6 } }] });
   const AMB2 = { fire: "/cdn/value.4a5665988ced9c8d4a2b352e55c37106a4e520e50fd3aca97346dbefb5fe4fab.glb", crate: "/cdn/value.c03d3f17fee5dc6f29ee139111a22bd63c84dc0a4d7de19fdcef4b4c7d20c7ce.glb", line: "/cdn/value.b4be443343cd755687acf8093795207bb423979d9c56560447fd1242d91bbec9.glb", shirt: "/cdn/value.5cbdae8191b40262268884fd2d4f1a60b36b8912a2bba560d0d2dddd7c5ae74e.glb", pants: "/cdn/value.5191fe508cd088297c566705e322bfb48bffbb8c06f359e0acb5e5e7e439f788.glb", towel: "/cdn/value.0c59a430307e2bceee513d5594b6ec3a3aa03a8bc5181d2d37b103a5aee480cf.glb" }; // art/l61-amber/build.py
-  const CAMPFIRE = `fx
-pop coals n=6 on=disc(.14) size=.04..0.09 tint=<2.4,.9,.25>..<1.1,.3,.08> sz=$size*flick(.5,.12) col=$tint*flick(.8,.3) a=.9 r=sprite(soft-disc,add)
-pop flame rate=flick(.45,.2)*?mobile:22|34 on=disc(.12).c(.12) life=.4..0.75 v=up(.9)+cone(20)*(.2..0.5) size=.13..0.24 acc=curl(.5)*1.0+buoy(1.6)+drag(1.5) sz=$size*(.5>.25:1>.7:.7>.14) col=hdr(4.6,3.4,1.4)>.3:hdr(3.2,1.4,.3)>.65:hdr(1.8,.5,.1)>hdr(.6,.12,.03) a=0>.12:1>.75:.85>0 rot=spin(.2) r=sprite(flame-wisp,add)
-pop embers rate=3 on=disc(.12).c(.15) life=.7..1.3 v=up(1.6)+cone(30)*(.3..0.9) size=.015..0.03 acc=curl(.8)+grav()*.4+drag(.5) col=hdr(5,2.8,.8)>.6:hdr(2.4,.8,.15)>hdr(1,.22,.04) a=(0>.08:1>.65:.9>0)*flick(11,.35) r=sprite(ember,add,velocity,.02)
-pop smoke on=@flame?.15 inh=p;v:$v*.4 life=1.5..2.5 size=.12..0.2 acc=buoy(.8)+curl(.35)*.5+drag(.8) sz=$size*(.7>3) col=<.3,.28,.26>><.15,.15,.16> a=0>.2:.25>.7:.15>0 rot=spin(.15) r=sprite(smoke-puff,alpha)
-pop glow n=1 at=disc(.1).c(.4) glo=.6+fire()*.4 r=light(<1,.55,.24>,$glo*2,7)`; // a small cookfire: one light whose brightness rides the flicker, ~2
-  sp("l61-amber-fire", { feetPosition: { x: -23.2, y: 0, z: 10.4 }, rotation: { yaw: 20 }, model: { id: AMB2.fire, forward: "+z" }, fx: { script: CAMPFIRE }, audio: { clip: "cdn/moodboard-realistic-gritty/sfx-campfire-crackle-small-loop.mp3", loop: true, gain: 0.2, spatial: true, maxDistance: 10 } });
+  sp("l61-amber-fire", { feetPosition: { x: -23.2, y: 0, z: 10.4 }, rotation: { yaw: 20 }, model: { id: AMB2.fire, forward: "+z" }, castShadow: false });
+  sp("l61-amber-board", {
+    feetPosition: { x: -29.67, y: 1.59, z: 13.5 }, rotation: { yaw: -90 },
+    primitive: { kind: "box", width: 1.6, height: 0.86, depth: 0.065 }, material: { color: "#817057", roughness: 0.9 },
+    tags: ["usable"], behavior: "scripts/l61-use.js",
+    state: { kind: "notice", name: "Camp Amber notice board", verb: "Read", line: "Looking for Bee. Red coat. Last seen coming off the Level 11 bus route. Leave word with Wren." },
+    children: [{ feetPosition: { x: 0, y: 0.44, z: -0.038 },
+      vector: "<svg viewBox='0 0 160 82' width='1.54m'><rect width='160' height='82' fill='#827458'/><g fill='#eee2bf'><path d='M12 8h63v55H12zM85 24h60v42H85z'/></g><g font-family='sans-serif' fill='#2d3936'><text x='18' y='22' font-size='8' font-weight='bold'>LOOKING FOR BEE</text><text x='19' y='36' font-size='7'>Red coat. L11 bus.</text><text x='19' y='48' font-size='7'>Ask for Wren.</text><text x='92' y='38' font-size='7' font-weight='bold'>SUPPLY RUN</text><text x='92' y='50' font-size='7'>Back after lunch.</text></g></svg>" }],
+  });
   [[-21.5, 14.7, 8, 0], [-21.55, 15.45, -6, 0], [-21.5, 15.05, 84, 0.46]].forEach(([x, z, yaw, y], i) => sp(`l61-amber-crate-${i}`, { feetPosition: { x, y, z }, rotation: { yaw }, model: { id: AMB2.crate, forward: "+z" }, physics: "static" }));
   sp("l61-amber-line", { feetPosition: { x: -23.1, y: 0, z: 17.3 }, model: { id: AMB2.line, forward: "+z" }, physics: { body: "static", collider: "mesh" } });
   [["shirt", -24.0, 0.62, 0], ["towel", -23.25, 0.6, 0.35], ["pants", -22.5, 0.75, 0.7], ["shirt", -21.95, 0.62, 0.15]].forEach(([g, x, h, ph], i) => sp(`l61-amber-wash-${i}`, { feetPosition: { x, y: 1.86 - 0.12 * Math.sin(((x + 24.6) / 3) * Math.PI) - h, z: 17.3 + (i % 2 ? 0.16 : -0.16) }, pivot: "top", model: { id: AMB2[g], forward: "+z" }, behavior: "scripts/ambient-anim.js", state: { anim: { kind: "sway", deg: 4, sec: 2.6 + i * 0.3, axis: "pitch", phase: ph } }, ...(i === 3 ? { model: { id: AMB2.shirt, forward: "+z", materials: { cloth_shirt: { color: "#5a8a5a" } } } } : {}) }));
@@ -221,9 +171,9 @@ pop glow n=1 at=disc(.1).c(.4) glo=.6+fire()*.4 r=light(<1,.55,.24>,$glo*2,7)`; 
       ] });
   }
   // a faceling is mopping: wet-floor signs in the aisles, and the sound of a busy food court
-  for (const [k, [x, z]] of [[8, 12], [-18, 17], [10, -20]].entries()) sp(`l61-wet-${k}`, { feetPosition: { x, y: 0, z }, rotation: { yaw: 30 + k * 40 }, primitive: { kind: "box", width: 0.34, height: 0.62, depth: 0.04 }, material: { color: "oklch(0.88 0.17 95)", roughness: 0.6 },
+  for (const [k, [x, z]] of [[9.3, 26.5], [-12.3, 32]].entries()) sp(`l61-wet-${k}`, { feetPosition: { x, y: 0, z }, rotation: { yaw: 30 + k * 40 }, primitive: { kind: "box", width: 0.34, height: 0.62, depth: 0.04 }, material: { color: "oklch(0.88 0.17 95)", roughness: 0.6 },
     ui: `<div face="front" width="0.34m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;color:#c0201a;text-align:center"><div style="font-size:34px">CAUTION</div><div style="font-size:26px;color:#222">WET FLOOR</div></div>` });
-  [[-15, 0], [15, 0], [0, -18], [0, 18]].forEach(([x, z], k) => sp(`l61-murmur-${k}`, { feetPosition: { x, y: 1.5, z }, audio: { clip: "cdn/sfx-busy-restaurant-ambience-dishes-clinking-distant-chatter-loop.mp3", loop: true, gain: 0.16, spatial: true, maxDistance: 20 } }));
+  [[-14, -8], [14, -7]].forEach(([x, z], k) => sp(`l61-murmur-${k}`, { feetPosition: { x, y: 1.5, z }, audio: { clip: "cdn/sfx-busy-restaurant-ambience-dishes-clinking-distant-chatter-loop.mp3", loop: true, gain: 0.065, spatial: true, maxDistance: 13 } }));
 }
 
 // ---- the people: Facelings, the staff, the guards and the pickets
@@ -236,14 +186,14 @@ const FACELINGS = [
   { id: "l61-fc-b", hasTray: true, route: [[21, -12, 3, "wipe"], [15.2, -14.6, 3, "tray"], [15, -18, 2.5, "groove"], [21, -18, 3, "wipe"]] },
   { id: "l61-fc-c", route: [[-21, 12, 3, "wipe"], [-15.2, 14.6, 2.5, "groove"], [-15, 18, 3, "nod"], [-21, 18, 3, "wipe"]] },
   { id: "l61-fc-d", route: [[21, 12, 3, "wipe"], [15.2, 14.6, 2.5, "groove"], [15, 18, 3, "nod"], [21, 18, 3, "wipe"]] },
-  { id: "l61-fc-e", route: [[-25.8, -4.8, 3, "groove"], [-25.8, 4.8, 3, "wipe"], [-21, 6, 2.5, "serve"], [-21, -6, 2.5, "nod"]] },
+  { id: "l61-fc-e", route: [[-20.1, -3.8, 3, "wipe"], [-20.1, 3.2, 3, "wipe"], [-13.8, 3.2, 2.5, "serve"], [-13.8, -3.8, 2.5, "nod"]] },
   { id: "l61-fc-f", route: [[25.8, -4.8, 3, "wipe"], [25.8, 4.8, 3, "groove"], [21, 6, 2.5, "serve"], [21, -6, 2.5, "nod"]] },
-  { id: "l61-fc-g", hasTray: true, route: [[-14, 19, 4, "tray"], [-14, 28, 4, "nod"]] },
+  { id: "l61-fc-g", hasTray: true, route: [[-14, 19, 4, "tray"], [-14, 29, 4, "nod"], [-11, 33, 3, "wipe"], [-11, 38, 4, "nod"], [-11, 33, 2, "tray"], [-14, 29, 2, "nod"]] },
 ];
 const PATRONS = [
-  { id: "l61-patron-w", name: "Diner Regular", at: [-22.3, 0], face: 90, acts: ["lounge", "drink", "groove"], look: { species: "cat", sex: "f", topw: "sweater", top: "#904050", botw: "pants", bottom: "#202028", shoes: "sneakers" } },
+  { id: "l61-patron-w", name: "Diner Regular", at: [-22.3, -4], face: 90, acts: ["lounge", "drink", "groove"], look: { species: "cat", sex: "f", topw: "sweater", top: "#904050", botw: "pants", bottom: "#202028", shoes: "sneakers" } },
   { id: "l61-patron-e", name: "Wandering Survivor", at: [22.3, 0], face: -90, acts: ["eat", "relief", "groove"], look: { species: "fox", sex: "m", topw: "jacket", top: "#305040", botw: "cargo", bottom: "#282820", shoes: "boots" } },
-  { id: "l61-patron-bar", name: "Clippers Patron", at: [-23.4, -29.2], face: 0, acts: ["drink", "groove", "nod"], look: { species: "dog", sex: "m", topw: "tee", top: "#d09030", botw: "pants", bottom: "#182030", shoes: "sneakers" } },
+  { id: "l61-patron-bar", name: "Clippers Patron", at: [-23.4, -28.78], face: 0, acts: ["drink", "groove", "nod"], look: { species: "dog", sex: "m", topw: "tee", top: "#d09030", botw: "pants", bottom: "#182030", shoes: "sneakers" } },
 ];
 const HUMANS = {
   "l61-guard-a": { name: "M.E.G. Guard · Level 6 door", voice: "reyes", faction: "guard", look: { species: "human", sex: "m", topw: "megjacket", top: "#4a5a3a", botw: "cargo", bottom: "#3a3a30", shoes: "boots" }, gun: "carbine", at: [-27.6, -2.4], face: -90 },

@@ -1,6 +1,6 @@
 // What a vending machine drops: a 2000s can, bottle or chip bag in the snack's colour (snacks.yml color). Shared by the machine (scripts/l61-use.js) and the grabbing hand (scripts/player.js).
 import SNACKS from "./data/snacks.yml";
-const BAG = new Set(["doritos", "coolranch", "chips", "bar"]), BOTTLE = new Set(["coke", "sprite", "snapple", "gatorade", "sobe", "almond"]);
+const BAG = new Set(["doritos", "coolranch", "chips", "bar"]), BOTTLE = new Set(["coke", "sprite", "snapple", "gatorade", "sobe", "almond", "purified_water"]);
 export function itemSpec(tok) {
   const c = SNACKS[tok]?.color ?? "#d8d0c0";
   if (BAG.has(tok)) return { primitive: { kind: "box", width: 0.13, height: 0.18, depth: 0.035 }, material: { color: c, roughness: 0.35, metalness: 0.5 } };

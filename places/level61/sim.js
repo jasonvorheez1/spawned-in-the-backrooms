@@ -12,19 +12,21 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
+import { rbox } from "../../scripts/lib/rbox.js";
+import { layService } from "../../scripts/lib/level61-service.js";
+
 export const cadence = "1s";
-const V = 57;
+const V = 58;
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
-const SNACK = "/cdn/value.50b5fa3844cf9c705ca675660ef22ddb556c1cf0f31ad1cd69deeb8d8395df71.png";
 const SODA = "/cdn/value.4db3afe09f392fef7c9d80e531484862384aef0ea5bcba295dc62b57197b659f.png";
 
 const T = (name, rep) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
-const TERRAZZO = { ...T("polished-cream-terrazzo-mall-floor-with-flecks", 0.6), color: "oklch(0.9 0.02 80)", roughness: 0.35 };
+const TERRAZZO = { ...T("grey-terrazzo-floor-tiles-dusty", 0.65), color: "#d8ccba", roughness: 0.61 };
 const PLASTER = { ...T("cream-painted-plaster-wall", 0.5), color: "oklch(0.93 0.02 85)", roughness: 0.85 };
 const CEIL = { ...T("white-2x2-acoustic-drop-ceiling-tiles-with-aluminum-t-bar-grid", 0.83), color: "oklch(0.96 0.01 90)", roughness: 0.9 };
-const WAINSCOT = { ...T("glossy-pastel-teal-square-ceramic-wall-tiles-with-white-grout", 1), color: "oklch(0.95 0.02 190)", roughness: 0.18 };
+const WAINSCOT = { ...T("glossy-pastel-teal-square-ceramic-wall-tiles-with-white-grout", 1), color: "#8daca3", roughness: 0.46 };
 const BRASS = { color: "oklch(0.78 0.11 85)", metalness: 0.9, roughness: 0.25 };
 const WOOD = { ...T("worn-hardwood-grain", 0.6), color: "oklch(0.55 0.08 55)", roughness: 0.6 };
 const DARKWOOD = { ...T("worn-hardwood-grain", 0.6), color: "oklch(0.3 0.05 40)", roughness: 0.5 };
@@ -103,8 +105,12 @@ function lay(ctx) {
     model: soda ? { id: M_VEND, forward: "+z", materials: { cabinet: { color: "oklch(0.5 0.2 27)", roughness: 0.4, metalness: 0.35 } } } : { id: M_SNACK_TRIPO, forward: "+z" },
     tags: extra.dead ? [] : ["usable"],
     behavior: extra.dead ? undefined : "scripts/l61-use.js",
-    state: extra.dead ? {} : { kind: "vend", sells: soda ? "soda" : "snack", name: soda ? "Soda machine" : "Snack machine", verb: "Press a button", info: soda ? "Chilled soda machine." : "Packaged snack machine." },
-    children: soda ? [{ feetPosition: { x: 0.1, y: 0.38, z: -0.447 }, primitive: { kind: "box", width: 0.72, height: 1.32, depth: 0.01 }, material: { texture: soda ? SODA : SNACK, roughness: 0.15, emissive: "oklch(0.35 0 0)", emissiveIntensity: 0.4 } }] : [],
+    state: extra.dead ? {} : { kind: "vend", gives: extra.gives, weeklyStock: extra.weeklyStock, sells: soda ? "soda" : "snack", name: extra.gives?.includes("purified_water") ? "Water dispenser" : soda ? "Soda machine" : "Snack machine", verb: "Press a button", info: extra.gives?.includes("purified_water") ? "Free bottled drinking water." : soda ? "Chilled soda. No charge." : "Packaged snacks. No charge." },
+    children: soda ? [{ feetPosition: { x: 0.1, y: 0.38, z: -0.447 }, primitive: { kind: "box", width: 0.72, height: 1.32, depth: 0.01 }, material: extra.gives?.includes("purified_water") ? { color: "#457275", roughness: 0.6 } : { texture: SODA, roughness: 0.15, emissive: "oklch(0.35 0 0)", emissiveIntensity: 0.4 },
+      ...(extra.gives?.includes("purified_water") ? { children: [{
+        feetPosition: { x: 0, y: 0.67, z: -0.012 },
+        vector: "<svg viewBox='0 0 64 118' width='0.62m'><path d='M0 0h64v118H0z' fill='#467478'/><path d='M5 5h54v108H5z' fill='none' stroke='#97b6ae'/><path d='M28 20h8v9l5 8v27H23V37l5-8z' fill='#dfebdf'/><g text-anchor='middle' font-family='sans-serif' fill='#f0eee0'><text x='32' y='82' font-size='8' font-weight='bold'>WATER</text><text x='32' y='100' font-size='6'>NO CHARGE</text></g></svg>",
+      }] } : {}) }] : [],
   });
 
   const tableSet = (id, x, z, yaw) => sp(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, physics: { body: "static", collider: "mesh" }, visibleRange: { max: 45 }, castShadow: false, model: { id: M_TABLE, forward: "+z" } });
@@ -148,19 +154,24 @@ function lay(ctx) {
   });
 
   // ---- The Hall: Continuous polished terrazzo, brass expansion joints, drop ceiling with skylights
-  box("l61-floor-main", 0, -0.3, 0, 2 * HW + 12, 0.3, 2 * HD + 26, TERRAZZO);
+  box("l61-floor-main", 0, -0.3, 14.5, 14, 0.3, 15, TERRAZZO);
+  box("l61-floor-west", -18.5, -0.3, 0, 23, 0.3, 44, TERRAZZO);
+  box("l61-floor-east", 18.5, -0.3, 0, 23, 0.3, 44, TERRAZZO);
+  box("l61-floor-north", 0, -0.3, -14.5, 14, 0.3, 15, TERRAZZO);
   box("l61-roof", 0, HH, 0, 2 * HW, 0.3, 2 * HD, CEIL);
 
   for (const [i, sx] of [-18, 0, 18].entries()) {
     for (const [j, sz] of [-9, 9].entries()) {
       const k = `${i}${j}`;
-      box(`l61-sky-${k}`, sx, HH - 0.02, sz, 9, 0.05, 7, { color: "oklch(0.97 0.02 230)", emissive: "oklch(0.95 0.03 225)", emissiveIntensity: 1.3, roughness: 0.6 }, { physics: undefined });
+      box(`l61-sky-${k}`, sx, HH - 0.02, sz, 9, 0.05, 7, { color: "#182532", metalness: 0.28, roughness: 0.26 }, { physics: undefined });
       for (const m of [-1.5, 1.5]) box(`l61-skym-${k}-x${m}`, sx + m * 1.5, HH - 0.1, sz, 0.08, 0.08, 7, { color: "oklch(0.86 0.01 90)", metalness: 0.5, roughness: 0.4 }, { physics: undefined });
       box(`l61-skym-${k}-z`, sx, HH - 0.1, sz, 9, 0.08, 0.08, { color: "oklch(0.86 0.01 90)", metalness: 0.5, roughness: 0.4 }, { physics: undefined });
       for (const [n, f] of [[0, [0, -3.5, 9.4, 0.25]], [1, [0, 3.5, 9.4, 0.25]], [2, [-4.5, 0, 0.25, 7.2]], [3, [4.5, 0, 0.25, 7.2]]]) {
         box(`l61-skyf-${k}-${n}`, sx + f[0], HH - 0.2, sz + f[1], f[2], 0.2, f[3], { color: "oklch(0.86 0.01 90)", metalness: 0.5, roughness: 0.4 }, { physics: undefined });
       }
-      light(`l61-skyl-${k}`, sx, HH - 0.6, sz, "oklch(0.98 0.03 85)", 9, 24);
+      light(`l61-skyl-${k}`, sx, HH - 0.5, sz, "#f6eee1", 5.5, 19);
+      for (const dx of [-4.7, 4.7]) box(`l61-sky-tube-${k}-${dx}`, sx + dx, HH - 0.18, sz, 0.085, 0.06, 6.65,
+        { color: "#e6ded0", emissive: "#fff1d4", emissiveIntensity: 0.78 }, { physics: undefined, castShadow: false });
     }
   }
 
@@ -181,12 +192,12 @@ function lay(ctx) {
   wain("l61-wain-w", "z", -HW + 0.19, -HD + 0.2, HD - 0.2, [[0, 1.6], [-21, 0.01]]);
   wain("l61-wain-e", "z", HW - 0.19, -HD + 0.2, HD - 0.2, [[-9, 2.2]]);
   let bs = 0;
-  for (let x = -28; x <= 28; x += 4) for (const [z0, z1] of (Math.abs(x) < 5.8 ? [[-HD, -6.2], [6.2, HD]] : [[-HD, HD]])) box(`l61-brass-${bs++}`, x, -0.003, (z0 + z1) / 2, 0.035, 0.006, z1 - z0, BRASS, { physics: undefined, receiveShadow: true });
-  for (let z = -20; z <= 20; z += 4) for (const [x0, x1] of (Math.abs(z) < 5.8 ? [[-HW, -6.2], [6.2, HW]] : [[-HW, HW]])) box(`l61-brass-${bs++}`, (x0 + x1) / 2, -0.003, z, x1 - x0, 0.006, 0.035, BRASS, { physics: undefined, receiveShadow: true });
+  for (let x = -24; x <= 24; x += 8) for (const [z0, z1] of (Math.abs(x) < 5.8 ? [[-HD, -6.2], [6.2, HD]] : [[-HD, HD]])) box(`l61-brass-${bs++}`, x, -0.003, (z0 + z1) / 2, 0.035, 0.006, z1 - z0, BRASS, { physics: undefined, receiveShadow: true });
+  for (let z = -16; z <= 16; z += 8) for (const [x0, x1] of (Math.abs(z) < 5.8 ? [[-HW, -6.2], [6.2, HW]] : [[-HW, HW]])) box(`l61-brass-${bs++}`, (x0 + x1) / 2, -0.003, z, x1 - x0, 0.006, 0.035, BRASS, { physics: undefined, receiveShadow: true });
 
-  // the two trim bands follow the wainscot: broken at every doorway, never across one
+  // The trim band follows the wainscot and breaks at each doorway., never across one
   const DOORS = { "z-1": [[-21, 4], [-7, 4], [7, 4], [21, 4]], "z1": [[-14, 3], [14, 2.2]], "x-1": [[0, 1.6]], "x1": [[-9, 2.2]] };
-  for (const [n, y, c] of [[0, 1.0, "oklch(0.62 0.09 190)"], [1, 1.2, "oklch(0.74 0.11 350)"]]) {
+  for (const [n, y, c] of [[0, 1.0, "#6f8077"]]) {
     for (const [ax, sg] of [["z", -1], ["z", 1], ["x", -1], ["x", 1]]) {
       const half = ax === "z" ? HW : HD, fixed = sg * ((ax === "z" ? HD : HW) - 0.17);
       let a = -half + 0.2, k = 0;
@@ -197,157 +208,42 @@ function lay(ctx) {
   }
 
   for (let k = 0; k < 4; k++) {
-    const z = -12 + k * 8, X = HW - 0.18, F = { color: "oklch(0.88 0.01 90)", metalness: 0.6, roughness: 0.35 }, np = { physics: undefined };
+    const z = [-20, -3.4, 4.1, 17][k], X = HW - 0.18;
     // a modelled sash window (art/l61-window/build.py): casing, two sashes of three lites, deep sill; warm glass + daylight spill
-    sp(`l61-win-${k}`, { feetPosition: { x: X - 0.14, y: 1.3, z }, rotation: { yaw: -90 }, model: { id: "/cdn/value.1955fac0b54d9d89e37c8561ef6c6ceed252e01659f6e154d655cc7213ea7e16.glb", forward: "+z", materials: { Glass: { color: "oklch(0.95 0.05 75)", emissive: "oklch(0.93 0.07 70)", emissiveIntensity: 1.5, roughness: 0.1 } } },
+    sp(`l61-win-${k}`, { feetPosition: { x: X - 0.14, y: 1.3, z }, rotation: { yaw: 90 }, model: { id: "/cdn/value.1955fac0b54d9d89e37c8561ef6c6ceed252e01659f6e154d655cc7213ea7e16.glb", forward: "+z", materials: { Glass: { color: "oklch(0.95 0.05 75)", emissive: "oklch(0.93 0.07 70)", emissiveIntensity: 1.5, roughness: 0.1 } } },
       children: [{ feetPosition: { x: 0, y: 1.2, z: 0 }, light: { kind: "rect", color: "oklch(0.93 0.07 70)", intensity: 2.2, width: 3.0, height: 1.9, aim: "forward" } }] });
   }
 
-  // ---- Central Fountain & Garden Rotunda (The Main Centerpiece at 0, 0)
-  // Outer circular marble retaining wall & rounded brass coping
-  sp("l61-rotunda-wall", {
-    feetPosition: { x: 0, y: 0, z: 0 },
-    physics: { body: "static", collider: "cylinder" },
-    primitive: { kind: "cylinder", radiusTop: 4.6, radiusBottom: 4.8, height: 0.52 },
-    material: { ...TERRAZZO, color: "oklch(0.92 0.02 85)", roughness: 0.3 },
+  // The open, circular seating pit is part of the walkable floor.
+  const court = (id, y, part, radius, material, outer, height) => sp(id, {
+    feetPosition: { x: 0, y, z: 0 }, primitive: { kind: "scripted", script: "scripts/l61-court-geo.js", params: { part, radius, outer, height } },
+    material: { ...material, side: "double" }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false,
   });
-  sp("l61-rotunda-rim", {
-    feetPosition: { x: 0, y: 0.52, z: 0 },
-    rotation: { pitch: 90 },
-    primitive: { kind: "torus", radius: 4.65, tube: 0.045 },
-    material: BRASS,
-    physics: undefined,
-  });
-  // Circular polished honey-oak seating ledge around the rotunda rim
-  sp("l61-rotunda-bench", {
-    feetPosition: { x: 0, y: 0.44, z: 0 },
-    rotation: { pitch: 90 },
-    primitive: { kind: "torus", radius: 4.88, tube: 0.11 },
-    material: WOOD,
-    physics: undefined,
-  });
-  for (let k = 0; k < 4; k++) {
-    const a = (k * Math.PI) / 2;
-    sp(`l61-rotunda-seat-${k}`, {
-      feetPosition: { x: Math.sin(a) * 4.9, y: 0, z: Math.cos(a) * 4.9 },
-      rotation: { yaw: (a * 180) / Math.PI + 180 },
-      tags: ["seat", "chair"],
-      state: { seat: { w: 1.2, d: 0.3, y: 0.44 }, verb: "Sit by the fountain", name: "Fountain ledge" },
-    });
-  }
-  // Soft teal under-glow beneath seating overhang
-  sp("l61-rotunda-glow", {
-    feetPosition: { x: 0, y: 0.12, z: 0 },
-    rotation: { pitch: 90 },
-    primitive: { kind: "torus", radius: 4.5, tube: 0.02 },
-    material: { color: "oklch(0.8 0.14 195)", emissive: "oklch(0.8 0.14 195)", emissiveIntensity: 2.2, roughness: 0.3 },
-    physics: undefined,
-  });
-
-  // Concentric brass floor inlay ring & geometric quadrant medallions on the terrazzo
-  sp("l61-rotunda-inlay-ring", {
-    feetPosition: { x: 0, y: 0.004, z: 0 },
-    rotation: { pitch: 90 },
-    primitive: { kind: "torus", radius: 5.4, tube: 0.02 },
-    material: BRASS,
-    physics: undefined,
-  });
+  court("l61-court-hall", 0, "hall", 5.9, TERRAZZO, 7, 0.15);
+  court("l61-court-step1", -0.15, "step", 5.52, TERRAZZO, 5.9, 0.15);
+  court("l61-court-step2", -0.3, "step", 5.14, TERRAZZO, 5.52, 0.15);
+  court("l61-court-floor", -0.45, "floor", 5.14, { ...MOSAIC, color: "#92a2a2", roughness: 0.65 }, 5.14, 0);
   for (let i = 0; i < 4; i++) {
-    const a = (i * Math.PI) / 2 + Math.PI / 4;
-    sp(`l61-medallion-${i}`, {
-      feetPosition: { x: Math.sin(a) * 5.7, y: 0.003, z: Math.cos(a) * 5.7 },
-      rotation: { yaw: (a * 180) / Math.PI + 45 },
-      primitive: { kind: "box", width: 0.9, height: 0.005, depth: 0.9 },
-      material: { ...TERRAZZO, color: i % 2 === 0 ? "oklch(0.65 0.1 190)" : "oklch(0.72 0.12 350)" },
-      physics: undefined,
+    const angle = (45 + 90 * i) * Math.PI / 180;
+    const x = Math.sin(angle) * 4.14, z = Math.cos(angle) * 4.14, yaw = 225 + 90 * i;
+    sp(`l61-fountain-bench-${i}`, {
+      feetPosition: { x, y: -0.45, z }, rotation: { yaw }, physics: { body: "static", collider: "box" },
+      model: { id: M_BENCH, forward: "+z" }, tags: ["seat"],
+      state: { seat: { w: 1.8, d: 0.22, y: 0.44 }, name: "Conversation court bench" },
     });
   }
-
-  // Inner pool basin: aquatic mosaic floor, rippling water, underwater spotlights, wishing coins
-  sp("l61-pool-floor", {
-    feetPosition: { x: 0, y: 0.04, z: 0 },
-    primitive: { kind: "cylinder", radiusTop: 4.25, radiusBottom: 4.25, height: 0.04 },
-    material: { ...MOSAIC, color: "oklch(0.72 0.06 215)", roughness: 0.3 },
-    physics: undefined,
-  });
-  sp("l61-pool-water", {
-    feetPosition: { x: 0, y: 0.40, z: 0 },
-    primitive: { kind: "cylinder", radiusTop: 4.25, radiusBottom: 4.25, height: 0.02 },
-    material: { kind: "water", color: "oklch(0.82 0.08 200)", opacity: 0.74, roughness: 0.08, waveIntensity: 0.06 },
-    physics: undefined,
-  });
-  for (let k = 0; k < 4; k++) {
-    const a = (k * Math.PI) / 2 + Math.PI / 4;
-    sp(`l61-pool-light-${k}`, {
-      feetPosition: { x: Math.sin(a) * 2.8, y: 0.15, z: Math.cos(a) * 2.8 },
-      light: { kind: "point", color: "oklch(0.85 0.14 195)", intensity: 3.5, distance: 8, shadow: { enabled: false } },
-    });
-  }
-  const COIN_BRASS = { color: "oklch(0.78 0.12 85)", metalness: 0.95, roughness: 0.2 };
-  const COIN_COPPER = { color: "oklch(0.65 0.14 45)", metalness: 0.9, roughness: 0.25 };
-  const COINS = [
-    [1.8, 1.2, 0], [-2.1, 1.5, 1], [0.8, -2.4, 0], [-1.4, -1.9, 1],
-    [2.4, -1.1, 0], [-0.7, 2.6, 1], [2.2, 2.0, 1], [-2.5, -0.9, 0],
-    [0.4, 1.9, 0], [-1.9, 0.7, 1], [1.5, -1.8, 1], [-0.5, -2.8, 0]
-  ];
-  COINS.forEach(([cx, cz, ct], i) => {
-    sp(`l61-coin-${i}`, {
-      feetPosition: { x: cx, y: 0.045, z: cz },
-      primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.04, height: 0.006 },
-      material: ct === 0 ? COIN_BRASS : COIN_COPPER,
-      physics: undefined,
-    });
-  });
-
-  // Central fluted pedestal & upper overflow spill basin with weeping fig tree
-  // Tripo tiered marble fountain (AAA pass): stands in the pool, 3.6 m across
   sp("l61-fountain-pedestal", {
-    feetPosition: { x: 0, y: 0.04, z: 0 },
+    feetPosition: { x: 0, y: -0.45, z: 0 },
+    layout: { box: { min: { x: -1.05, y: 0, z: -1.05 }, max: { x: 1.05, y: 1.46, z: 1.05 } } },
     physics: { body: "static", collider: "cylinder" },
-    layout: { box: { min: { x: -1.8, y: 0, z: -1.8 }, max: { x: 1.8, y: 2.7, z: 1.8 } } },
     model: { id: "/cdn/value.542739d35f5380fd81f3efd2de1fbb28dae68774d83969f0760f658de21033cd.glb" },
   });
-  const FOUNTAIN_FX = `fx
-pop spray rate=12 on=arc(.55,6.283,.1) life=.7..1.2 v=up(.7..1.2)+sdir()*.18 size=.03..0.06 acc=grav() floor=die col=<.75,.9,1> a=0>.6:1>.8:.8>0 sz=$size r=sprite(soft-disc,alpha)
-pop mist rate=5 on=arc(.6,6.283,.2) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0.22 col=<.85,.95,1> a=0>.4:.2>.4:.8>0 sz=$size*(.8>1.8) r=sprite(smoke-puff,alpha)`;
-  sp("l61-fountain-spray", {
-    feetPosition: { x: 0, y: 2.35, z: 0 },
-    fx: { script: FOUNTAIN_FX },
-    audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-calm-sea-water-lapping-against-small-wooden-boat-hull-loop.mp3", loop: true, gain: 0.18, spatial: true, maxDistance: 18 },
-  });
-
-  // 4 Outer promenade curved benches & fluted ficus planters facing outward from the rotunda
-  for (let k = 0; k < 4; k++) {
-    const a = (k * Math.PI) / 2;
-    const bx = Math.sin(a) * 6.0, bz = Math.cos(a) * 6.0;
-    sp(`l61-fountain-bench-${k}`, {
-      feetPosition: { x: bx, y: 0, z: bz },
-      rotation: { yaw: (a * 180) / Math.PI + 180 },
-      physics: { body: "static", collider: "box" },
-      model: { id: M_BENCH, forward: "+z" },
-    });
-    for (const side of [-1, 1]) {
-      const pAngle = a + side * 0.22;
-      const px = Math.sin(pAngle) * 5.85, pz = Math.cos(pAngle) * 5.85;
-      sp(`l61-fountain-pot-${k}-${side}`, {
-        feetPosition: { x: px, y: 0, z: pz },
-        physics: "static",
-        primitive: { kind: "cylinder", radiusTop: 0.38, radiusBottom: 0.30, height: 0.58 },
-        material: BRASS,
-        children: [
-          { feetPosition: { x: 0, y: 0.55, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.35, radiusBottom: 0.35, height: 0.05 }, material: { ...T("dark-potting-soil-with-bark-mulch", 1), color: "oklch(0.38 0.04 50)", roughness: 1 } },
-          { feetPosition: { x: 0, y: 0.58, z: 0 }, primitive: { kind: "scripted", script: "scripts/tree61.js", params: { h: 2.2 }, seed: 70 + k * 2 + (side > 0 ? 1 : 0) }, material: { alphaTest: 0.5, side: "double", roughness: 0.55 } },
-        ],
-      });
-    }
-  }
 
   // ---- The Dining Terraces: West Bistro & East Fast-Casual Wings
   // Perimeter curved diner booths
   spawnBooth("l61-booth-w0", -23, -12, 90);
-  spawnBooth("l61-booth-w1", -23, 0, 90);
-  spawnBooth("l61-booth-w2", -23, 3, 90); // clear of Camp Amber (z 8..18) and the z=6 divider
-  spawnBooth("l61-booth-e0", 23, -12, -90);
+  spawnBooth("l61-booth-w1", -23, -4, 90);
+  spawnBooth("l61-booth-e0", 23, -16, -90);
   spawnBooth("l61-booth-e1", 23, 0, -90);
   spawnBooth("l61-booth-e2", 23, 12, -90);
   spawnBooth("l61-booth-s0", -6, 15, 0);
@@ -403,12 +299,12 @@ pop mist rate=5 on=arc(.6,6.283,.2) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0.
 
   // West Lounge: 2 High-Top Cocktail Tables near Clippers with chrome swivel barstools
   const HIGH_TOPS = [
-    [-19.5, -19.0],
-    [-15.0, -19.0],
+    [-25.4, -17.6],
+    [-25.4, -13.8],
   ];
   HIGH_TOPS.forEach(([hx, hz], hi) => {
     sp(`l61-hightop-${hi}`, {
-      feetPosition: { x: hx, y: 0, z: hz },
+      feetPosition: { x: hx, y: 1.03, z: hz },
       physics: { body: "static", collider: "cylinder" },
       primitive: { kind: "cylinder", radiusTop: 0.55, radiusBottom: 0.55, height: 0.05 },
       material: DARKWOOD,
@@ -445,14 +341,14 @@ pop mist rate=5 on=arc(.6,6.283,.2) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0.
   // ---- Authentic Food Court Amenities
   // 1. Central 3-Sided Illuminated Mall Directory & Map Lightbox Kiosk at (0, 8.5)
   sp("l61-directory-kiosk", {
-    feetPosition: { x: 0, y: 0, z: 8.5 },
+    feetPosition: { x: -3.7, y: 0, z: 11.4 },
     rotation: { yaw: 0 },
     physics: { body: "static", collider: "cylinder" },
     layout: { box: { min: { x: -0.8, y: 0, z: -0.8 }, max: { x: 0.8, y: 2.3, z: 0.8 } } },
     model: { id: "/cdn/value.040b126ce265489b8c749408579cfa89f5003af8edb9c74602d30e396d149f37.glb", forward: "+x" },
     tags: ["usable"],
     behavior: "scripts/l61-use.js",
-    state: { kind: "directory", name: "Mall Directory & Map", verb: "Inspect directory", info: "Illuminated 3-sided directory kiosk.", tint: "#ffd84a" },
+    state: { kind: "directory", name: "Track Mappers directory", verb: "Read directions", info: "A map of the surveyed food court.", tint: "#ffd84a" },
     children: [
       { feetPosition: { x: 0, y: 2.2, z: 0.8 }, light: { kind: "point", color: "oklch(0.95 0.05 85)", intensity: 2.4, distance: 5 } },
     ],
@@ -468,7 +364,7 @@ pop mist rate=5 on=arc(.6,6.283,.2) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0.
       model: { id: "/cdn/value.7693b029bbd89b812461c06342dcc4c68571861c243473ea51d79eda192ba589.glb", forward: "+x" },
       tags: ["usable"],
       behavior: "scripts/l61-use.js",
-      state: { kind: "condiment", name: "Condiment & Waste Station", verb: "Pump ketchup or mustard", line: "PUMP SQUIRT! (Extra Heinz & French's on your napkin)", tint: "#ff4a3a" },
+      state: { kind: "return", name: "Tray return", verb: "Return tray", info: "Leave used trays here.", tint: "#a1d1cc" },
     });
   }
 
@@ -537,13 +433,14 @@ pop mist rate=5 on=arc(.6,6.283,.2) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0.
   ];
 
   for (const [cx, k, floor, wall, html, bg, lc] of STORES) {
-    const wm = { ...T("faded-cream-1980s-damask-vinyl-wallpaper-with-pinstripes", 0.7), color: wall, roughness: 0.7 }, z0 = -HD - 0.15, z1 = -HD - 10;
+    const wm = { ...PLASTER, color: wall, roughness: 0.82 }, z0 = -HD - 0.15, z1 = -HD - 10;
     box(`l61-${k}-floor`, cx, -0.29, (z0 + z1) / 2, 14, 0.3, 10, floor);
     box(`l61-${k}-roof`, cx, 4, (z0 + z1) / 2, 14, 0.3, 10, { ...CEIL, color: "oklch(0.88 0.01 90)" });
     box(`l61-${k}-back`, cx, 0, z1, 14, 4, 0.3, wm);
     box(`l61-${k}-wl`, cx - 7, 0, (z0 + z1) / 2, 0.3, 4, 10, wm);
     box(`l61-${k}-wr`, cx + 7, 0, (z0 + z1) / 2, 0.3, 4, 10, wm);
-    box(`l61-${k}-front`, cx, 0, z0 - 0.3, 14, 4, 0.05, wm, { physics: undefined, visible: false });
+    for (const dx of [-2.14, 2.14]) box(`l61-${k}-jamb-${dx}`, cx + dx, 0, -HD + 0.08, 0.23, 3.34, 0.31, { color: bg, roughness: 0.55 }, { physics: undefined });
+    box(`l61-${k}-header`, cx, 3.22, -HD + 0.08, 4.48, 0.16, 0.31, { color: bg, roughness: 0.55 }, { physics: undefined });
     sign(`l61-${k}-sign`, cx, 3.6, -HD + 0.2, 180, 4.6, 1.4, html, bg);
     light(`l61-${k}-l0`, cx - 3, 3.5, -HD - 5, lc, 4, 12);
     light(`l61-${k}-l1`, cx + 3, 3.5, -HD - 5, lc, 4, 12);
@@ -551,7 +448,12 @@ pop mist rate=5 on=arc(.6,6.283,.2) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0.
 
   // 1. Clippers: Red 1950s bar, stools, back shelves, and the interactive Wurlitzer 80s Internet Radio Jukebox
   counter("l61-clip-bar", -21, -30.2, 180, M_BAR10, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "budweiser,budweiser,jackcoke,whiskey,smirnoffice,coke", name: "Clippers bar", verb: "Order what the menu shows", info: "Clippers drink counter." } });
-  for (let k = 0; k < 5; k++) stool(`l61-clip-stool-${k}`, -25 + k * 2.0, -29.2, "oklch(0.45 0.18 25)");
+  for (const [k, x] of [-25, -23.4, -22, -18.3, -16.8].entries()) stool(`l61-clip-stool-${k}`, x, -29.12, "#6a2831");
+  for (const [i, x] of [-24.8, -20.5, -16.6].entries()) tableSet(`l61-clip-table-${i}`, x, -25.9, 0);
+  box("l61-clip-lambris", -27.81, 0, -27, 0.08, 1.03, 9.25, DARKWOOD, { physics: undefined });
+  box("l61-clip-back-dado", -21, 0, -31.8, 13.6, 1.05, 0.12, DARKWOOD, { physics: undefined });
+  box("l61-clip-bottle-back", -21, 1.02, -31.78, 9.2, 1.54, 0.09, { color: "#827d6c", metalness: 0.7, roughness: 0.32 }, { physics: undefined });
+  for (const [i, x] of [-25, -20.5, -16.4].entries()) light(`l61-clip-lamp-${i}`, x, 2.55, -28.1, "#ffcf9b", 2, 6);
   for (const [n, y] of [[0, 1.4], [1, 2.0]]) {
     sp(`l61-clip-shelf-${n}`, {
       feetPosition: { x: -21, y, z: -31.6 },
@@ -717,22 +619,7 @@ pop mist rate=5 on=arc(.6,6.283,.2) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0.
     },
   });
 
-  // ---- The South Vending Room (x: -22..-6)
-  const vz0 = HD + 0.15, vz1 = HD + 10;
-  box("l61-vend-roof", -14, 4, (vz0 + vz1) / 2, 16, 0.3, 10, CEIL);
-  box("l61-vend-back", -14, 0, vz1, 16, 4, 0.3, PLASTER);
-  box("l61-vend-wl", -22, 0, (vz0 + vz1) / 2, 0.3, 4, 10, PLASTER);
-  box("l61-vend-wr", -6, 0, (vz0 + vz1) / 2, 0.3, 4, 10, PLASTER);
-  sign("l61-vend-sign", -14, 3.4, HD - 0.2, 0, 3.6, 0.9, `<div style="font-size:140px;color:#ffffff">VENDING</div><div style="font-size:70px;color:#ffe08a">FREE · TAKE WHAT YOU NEED · M.E.G.</div>`, "oklch(0.35 0.12 260)");
-  for (let k = 0; k < 7; k++) vend(`l61-vend-b${k}`, -20.5 + k * 2.1, vz1 - 0.6, 0, k % 2 === 1);
-  for (let k = 0; k < 4; k++) vend(`l61-vend-l${k}`, -21.3, vz0 + 2 + k * 1.6, -90, k % 2 === 0);
-  for (let k = 0; k < 3; k++) vend(`l61-vend-r${k}`, -6.7, vz0 + 2 + k * 1.6, 90, k !== 1);
-  vend("l61-vend-pile0", -18.4, vz1 - 0.7, -8, false, { y: 1.85, dead: true, rot: { roll: 6 } });
-  vend("l61-vend-pile1", -14.2, vz1 - 0.6, 6, true, { y: 1.85, dead: true });
-  vend("l61-vend-fall", -8.4, vz1 - 1.8, 130, true, { y: 0.45, dead: true, rot: { pitch: 90 } });
-  light("l61-vend-l0", -17, 3.6, HD + 5, "oklch(0.95 0.02 230)", 5, 12);
-  light("l61-vend-l1", -11, 3.6, HD + 5, "oklch(0.95 0.02 230)", 5, 12);
-  sp("l61-vend-hum", { feetPosition: { x: -14, y: 1.5, z: HD + 6 }, audio: { clip: G("vending-machine-compressor-hum-loop"), loop: true, gain: 0.15, spatial: true, maxDistance: 12 } });
+  layService(ctx, { box, wallZ, light, vend, PLASTER, CEIL, WAINSCOT });
 
   // ---- Restrooms (x: 8..20)
   const rz1 = HD + 8;
@@ -742,15 +629,35 @@ pop mist rate=5 on=arc(.6,6.283,.2) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0.
   box("l61-rest-wl", 8, 0, HD + 4, 0.3, 3.2, 8, BATH);
   box("l61-rest-wr", 20, 0, HD + 4, 0.3, 3.2, 8, BATH);
   sign("l61-rest-sign", 14, 2.75, HD - 0.2, 0, 1.6, 0.4, `<div style="font-size:150px;color:#fff">RESTROOMS</div>`, "oklch(0.4 0.09 230)");
-  for (let k = 0; k < 4; k++) box(`l61-rest-stallw-${k}`, 14 + k * 1.6, 0.15, rz1 - 0.9, 0.05, 1.9, 1.6, { color: "oklch(0.7 0.06 200)", metalness: 0.3, roughness: 0.4 });
-  for (let k = 0; k < 3; k++) box(`l61-rest-door-${k}`, 14.8 + k * 1.6, 0.15, rz1 - 1.7, 1.4, 1.9, 0.04, { color: "oklch(0.7 0.06 200)", metalness: 0.3, roughness: 0.4 }, { physics: undefined, rotation: { yaw: k === 1 ? 35 : 0 } });
-  box("l61-rest-sinks", 9.0, 0, HD + 4, 0.6, 0.85, 5, { color: "oklch(0.9 0.01 90)", roughness: 0.2 });
-  box("l61-rest-mirror", 8.2, 1.2, HD + 4, 0.03, 1.1, 5, { color: "oklch(0.85 0.01 230)", metalness: 1, roughness: 0.05 }, { physics: undefined });
+  const partition = { color: "#879c96", metalness: 0.18, roughness: 0.65 };
+  for (const [i, x] of [11.65, 13.7, 15.15, 16.6].entries()) box(`l61-rest-stallw-${i}`, x, 0.12, rz1 - 1.14, 0.045, 1.88, 2.18, partition);
+  for (const [i, x] of [12.68, 14.43, 15.88].entries()) {
+    box(`l61-rest-door-${i}`, x + 0.26, 0.12, rz1 - 2.07, 1.06, 1.88, 0.04, partition, { physics: undefined, rotation: { yaw: -72 } });
+    sp(`l61-rest-toilet-${i}`, {
+      feetPosition: { x, y: 0.012, z: rz1 - 0.61 },
+      primitive: rbox(0.39, 0.37, 0.52, 0.07), material: BATH, physics: "static",
+      children: [
+        { feetPosition: { x: 0, y: 0.38, z: -0.09 }, rotation: { pitch: 90 }, scale: { x: 0.96, y: 1.35, z: 1 }, primitive: { kind: "torus", radius: 0.157, tube: 0.023 }, material: BATH },
+        { feetPosition: { x: 0, y: 0.31, z: 0.19 }, primitive: rbox(0.4, 0.43, 0.19, 0.036), material: BATH },
+      ],
+    });
+  }
+  box("l61-rest-sinks", 8.57, 0, HD + 4.3, 0.82, 0.83, 4.35, { color: "#bbc3bf", roughness: 0.43 });
+  box("l61-rest-mirror", 8.18, 1.13, HD + 4.3, 0.04, 1.06, 4.35, { color: "#a7b4b3", metalness: 0.88, roughness: 0.13 }, { physics: undefined });
+  for (const [i, z] of [HD + 3.05, HD + 4.3, HD + 5.55].entries()) {
+    sp(`l61-rest-basin-${i}`, { feetPosition: { x: 8.58, y: 0.844, z }, rotation: { pitch: 90 },
+      scale: { x: 0.85, y: 1.42, z: 1 }, primitive: { kind: "torus", radius: 0.218, tube: 0.027 }, material: BATH });
+    box(`l61-rest-tap-${i}`, 8.32, 0.84, z, 0.1, 0.13, 0.07, STEEL, { physics: undefined });
+  }
+  box("l61-rest-screen", 14.6, 0.015, HD + 1.45, 4.1, 2.04, 0.16, BATH);
   light("l61-rest-l", 14, 2.9, HD + 4, "oklch(0.97 0.01 220)", 4, 10);
 
   // ---- Exits and Outposts
   // Rusty steel door to Level 6 with M.E.G. outpost
-  box("l61-meg-door", -HW + 0.2, 0, 0, 0.1, 2.2, 1.5, RUST, { physics: undefined });
+  box("l61-to-l6", -HW + 0.2, 0, 0, 0.1, 2.2, 1.5, RUST, {
+    tags: ["usable"], behavior: "scripts/l61-use.js",
+    state: { kind: "level6", name: "Level 6 access", verb: "Request passage", info: "M.E.G. checkpoint. Night vision required." },
+  });
   // the outpost: framed steel door, enamel plate, booth, barrier arm, sandbags, fence, desk, crates
   {
     const X = -HW, OLIVE = { color: "oklch(0.38 0.05 125)", roughness: 0.85 }, SAND = { ...T("rough-burlap-sack-weave", 2), color: "oklch(0.64 0.05 80)", roughness: 1 };
@@ -808,8 +715,7 @@ pop mist rate=5 on=arc(.6,6.283,.2) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0.
     }
   }
   sp("l61-meg-scream", { feetPosition: { x: -HW + 0.5, y: 1.2, z: 0 }, audio: { clip: G("distant-muffled-screaming-behind-heavy-steel-door-loop"), loop: true, gain: 0.12, spatial: true, maxDistance: 9 } });
-  sp("l61-to-l6", { tags: ["door"], feetPosition: { x: -HW + 0.45, y: 0, z: 0 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.5, height: 2.2, depth: 1.4 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level6#l6-from-l61" } });
-  sp("l61-from-l6", { feetPosition: { x: -20.5, y: 1.4, z: -26.2 }, rotation: { yaw: 0 } }); // the tripwire drops you into Clippers, the red bar 6.1 was found in
+  sp("l61-from-l6", { feetPosition: { x: -20.5, y: 1.38, z: -25.9 }, rotation: { yaw: 0 } }); // the tripwire drops you into Clippers, the red bar 6.1 was found in
 
   // East suction vent to Level 3
   box("l61-vent", HW - 0.2, 0.15, 8, 0.1, 0.7, 1.1, { color: "oklch(0.25 0.005 250)", metalness: 0.6, roughness: 0.5 }, {
@@ -817,16 +723,17 @@ pop mist rate=5 on=arc(.6,6.283,.2) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0.
     children: Array.from({ length: 6 }, (_, i) => ({ feetPosition: { x: -0.06, y: 0.06 + i * 0.1, z: 0 }, primitive: { kind: "box", width: 0.03, height: 0.03, depth: 1.05 }, material: STEEL })),
     audio: { clip: G("strong-air-suction-whistle-through-metal-vent-loop"), loop: true, gain: 0.14, spatial: true, maxDistance: 6 },
   });
-  sp("l61-vent-in", { tags: ["door"], feetPosition: { x: HW - 0.4, y: 0, z: 8 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.5, height: 0.9, depth: 1.0 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level3" } });
+  sp("l61-vent-in", { tags: ["door"], feetPosition: { x: HW - 0.4, y: 0, z: 8 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.5, height: 0.9, depth: 1.0 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level3#l3-from-l61" } });
 
   // Spawn arrivals
   sp("l61-arrive", { feetPosition: { x: 0, y: 0.1, z: 14 }, rotation: { yaw: 0 } });
-  sp("l61-from-l4", { feetPosition: { x: -14, y: 0.1, z: 18.5 }, rotation: { yaw: 0 } });
+  sp("l61-from-l4", { feetPosition: { x: -14, y: 0.1, z: 25.4 }, rotation: { yaw: 180 } });
 
-  // Extra mall features: mirror ball, banners, swaying palms, sliding glass doors to Level 11, Blue Channel wall
+  // Exits, outposts, and service counters.
   layExtra(ctx, { HW, HD, HH });
 
-  sign("l61-welcome", 0, 3.8, HD - 0.2, 0, 5, 1.0, `<div style="font-size:150px;color:#ff7ab8;font-style:italic">The Snackrooms</div><div style="font-size:70px;color:#5ad8e0">EAT · DRINK · STAY AS LONG AS YOU LIKE</div>`, "oklch(0.22 0.06 280)");
+  sp("l61-welcome", { feetPosition: { x: 0, y: 3.8, z: HD - 0.2 }, castShadow: false,
+    vector: "<svg viewBox='0 0 440 72' width='4.4m'><rect width='440' height='72' fill='#293f43'/><path d='M5 5h430v62H5z' fill='none' stroke='#91a39a'/><text x='220' y='47' text-anchor='middle' font-family='serif' font-size='35' fill='#e9dfc2'>The Snackrooms</text></svg>" });
 }
 
 // perf: a rebuild is queued and laid ~250 rows a tick (cadence 1s). Each row replaces its old self in place (same id),
@@ -838,7 +745,7 @@ function layStep(ctx) {
     const q = new Proxy(ctx, { get: (t, k) => k === "spawn" ? (id, spec) => { layQ.push([id, spec]); return id; } : (typeof t[k] === "function" ? t[k].bind(t) : t[k]) });
     lay(q);
     const keep = new Set(layQ.map(([id]) => id));
-    layDrop = Object.keys(ctx.place.objects ?? {}).filter((id) => /^l61-/.test(id) && !id.includes("/") && !keep.has(id));
+    layDrop = Object.keys(ctx.place.objects ?? {}).filter((id) => /^l61-/.test(id) && !id.includes("/") && !id.startsWith("l61-tray-") && !keep.has(id));
     // what you stand on and bump into goes first; a fresh room (no floor yet) gets all of that this very tick
     const solid = ([, sp]) => !!sp.physics && sp.physics !== "none";
     layQ = [...layQ.filter(solid), ...layQ.filter((r) => !solid(r))];

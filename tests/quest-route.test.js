@@ -30,3 +30,11 @@ test('routes respect gates and pick the nearer available equivalent exit', () =>
 test('Zenith Station return guidance uses the actual return hatch', () => {
   expect(mark('level01', 'main', objects('l01-back'))).toMatchObject({ exit: 'l01-back', via: 'main' })
 })
+
+test('Snackrooms guidance points to the Level 6 checkpoint only with working night vision', () => {
+  const exits = objects('l61-to-l6', 'l61-vent-in')
+  expect(mark('level61', 'level6', exits)).toMatchObject({ exit: 'l61-vent-in' })
+  expect(mark('level61', 'level6', exits, { nvg: true, battery: 0 })).toMatchObject({ exit: 'l61-vent-in' })
+  expect(mark('level61', 'level6', exits, { nvg: true, battery: 80 })).toMatchObject({ exit: 'l61-to-l6' })
+  expect(mark('level61', 'level6', exits, { nvg: true, battery: 0, nvgSpare: 1 })).toMatchObject({ exit: 'l61-to-l6' })
+})
