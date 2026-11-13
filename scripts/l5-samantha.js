@@ -149,7 +149,13 @@ export const ears = {
     const who = ctx.getObject(by);
     if (!who) return;
 
+    // a first stray hit is a warning; only a second one within 20 s is answered
+    const last = ctx.self.session.hitAt ?? -1e9;
     ctx.self.session.hitAt = ctx.now();
+    if (ctx.now() - last > 20000) {
+      who.state.notice = { text: "Samantha's ears go flat: 'Careful, visitor. I will assume that was clumsiness. Once.'", at: ctx.now() };
+      return;
+    }
 
     // Psychic counter-repulsion when struck
     const me = ctx.self.worldFeetPosition, p = who.worldFeetPosition;
