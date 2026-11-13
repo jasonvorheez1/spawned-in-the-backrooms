@@ -61,7 +61,7 @@ export function gotFresh(ctx, p, slot) {
 function finish(ctx, p, { xp, cents, rep, text }) {
   const s = p.state; if (s.remodQ === 99 || !payOnce(s, "remodel")) return; s.remodQ = 99; syncHUD(s, p.place, ctx.place.state, text); s.cents = (s.cents ?? 0) + cents;
   const msgs = [];
-  for (const [g, d] of rep) { const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d); msgs.push(tier || `${g === "karma" ? "Karma" : g === "bntg" ? "B.N.T.G." : g} +${d}`); }
+  for (const [g, d] of rep) { const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d, "Completed Fresh Paint"); msgs.push(tier || `${g === "karma" ? "Karma" : g === "bntg" ? "B.N.T.G." : g} +${d}`); }
   const summary = [text, ...msgs].join(" · ");
   s.payout = { xp, items: [], text: summary }; s.notice = { text: summary, at: ctx.now() }; pushFeed(s, summary, ctx.now(), "good");
   const pos = posOf(p);

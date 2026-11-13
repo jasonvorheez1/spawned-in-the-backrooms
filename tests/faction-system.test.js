@@ -25,3 +25,16 @@ test('faction history records actual changes with their cause, and remains bound
   expect(s.repHistory).toHaveLength(30)
 })
 
+
+test('faction conversations require standing with the correct group', async () => {
+  const { factionChoices, factionReply } = await import('../scripts/lib/faction-dialogue.js')
+  const callum = { id:'meg-callum' }, voss = { id:'bntg-voss' }, s = { rep: { meg:12, bntg:0 } }
+  expect(factionChoices(callum,s)).toHaveLength(1)
+  expect(factionChoices(voss,s)).toHaveLength(0)
+  const text = factionChoices(callum,s)[0].text
+  expect(factionReply(callum,s,text).reply).toContain('routes')
+  s.rep.meg = -40
+  expect(factionChoices(callum,s)).toHaveLength(0)
+  expect(factionReply(callum,s,text)).toBeNull()
+})
+

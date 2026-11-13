@@ -75,7 +75,7 @@ export function handleDialogueQuestZ(ctx, p, npc, text) {
     s.zenDrive = false; s.zenQ = 99; if (s.quest?.name === NAME) s.quest = null;
     endQuest(s, QID, "Recovered the Zenith Station flight recorder for Kade");
     s.cents = (s.cents ?? 0) + cents;
-    const tier = addRep(s, "bntg", 12); addKarma(s, 2);
+    const tier = addRep(s, "bntg", 12, "Recovered the Zenith flight recorder"); addKarma(s, 2);
     const parts = [`Quest Completed: The Zenith Survey · +150 XP, +$${(cents / 100).toFixed(2)}, Almond Water`];
     if (extra) parts.push(`B.N.T.G. bonus +$${(extra / 100).toFixed(2)}`);
     parts.push(tier || "B.N.T.G. +12");
