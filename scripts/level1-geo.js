@@ -21,6 +21,24 @@ function wallSeg(ctx, axis, fixed, a, b, y0 = 0, y1 = H, grime = null) {
     const t = T + 0.012, col = grime[0];
     ctx.color(grime[1]); if (axis === "x") box(ctx, fixed - t, fixed + t, 0, 0.14, a, b); else box(ctx, a, b, 0, 0.14, fixed - t, fixed + t); ctx.color(col);
   }
+  if (grime && y0 === 0 && grime[2] && b - a > 0.8) { // Nov 13 realism pass: what a real car-park wall carries
+    const k = grime[2], t2 = T + 0.006, X = (u0, u1, v0, v1, w0, w1) => axis === "x" ? box(ctx, w0, w1, v0, v1, u0, u1) : box(ctx, u0, u1, v0, v1, w0, w1), col = grime[0];
+    ctx.albedo(null);
+    if (k.dado) { // a painted grey dado to 1.2 m and a yellow pinstripe above it, both faces
+      ctx.color("oklch(0.52 0.012 250)"); ctx.roughness(0.7); X(a, b, 0.14, 1.2, fixed - t2, fixed + t2);
+      ctx.color("oklch(0.74 0.15 90)"); X(a, b, 1.2, 1.28, fixed - t2, fixed + t2);
+    }
+    if (k.conduit) { // one grey conduit at 2.7 m on the +side, a saddle clip every 1.5 m, a junction box at the run's middle
+      const w = fixed + T + 0.03, y = 2.7, pts = axis === "x" ? [[w, y, a], [w, y, b]] : [[a, y, w], [b, y, w]];
+      ctx.color("oklch(0.62 0.006 250)"); ctx.roughness(0.5); ctx.metalness(0.5);
+      tube(ctx, pts, [0.016, 0.016], 6);
+      for (let u = a + 0.75; u < b - 0.2; u += 1.5) X(u - 0.015, u + 0.015, y - 0.022, y + 0.022, fixed + T, fixed + T + 0.05);
+      const m = (a + b) / 2; ctx.color("oklch(0.55 0.008 250)"); X(m - 0.1, m + 0.1, y - 0.1, y + 0.1, fixed + T, fixed + T + 0.07);
+      if (k.drop) { tube(ctx, axis === "x" ? [[w, y - 0.1, m], [w, 1.45, m]] : [[m, y - 0.1, w], [m, 1.45, w]], [0.014, 0.014], 6); ctx.color("oklch(0.8 0.01 90)"); X(m - 0.045, m + 0.045, 1.33, 1.45, fixed + T, fixed + T + 0.04); } // a switch box
+      ctx.metalness(0);
+    }
+    ctx.albedo(k.tex); ctx.color(col); ctx.roughness(0.9);
+  }
 }
 
 export function geometry(ctx) {
@@ -88,7 +106,7 @@ export function geometry(ctx) {
     if (cut.has(`${axis}:${cx}:${cz}`)) continue;
     const corridor = zoneOf(cx, cz) === "corridors" || zoneOf(axis === "x" ? cx + 1 : cx, axis === "z" ? cz + 1 : cz) === "corridors";
     const wcol = corridor ? "oklch(0.84 0.014 85)" : ["oklch(0.76 0.01 250)", "oklch(0.7 0.014 75)", "oklch(0.8 0.006 240)", "oklch(0.66 0.012 90)"][Math.floor(hash(cx, cz, axis === "x" ? 11 : 13) * 4)];
-    const gr = [wcol, corridor ? "oklch(0.66 0.02 80)" : "oklch(0.6 0.015 70)"]; // the kick band a step darker than the wall, not a black strip
+    const gr = [wcol, corridor ? "oklch(0.66 0.02 80)" : "oklch(0.6 0.015 70)", hi ? { tex: corridor ? CMU : WALL, dado: !corridor, conduit: hash(cx, cz, axis === "x" ? 21 : 23) < 0.55, drop: hash(cx, cz, 25) < 0.25 } : null]; // the kick band a step darker than the wall, not a black strip
     ctx.albedo(corridor ? CMU : WALL); ctx.color(wcol); // Nov 13 (Shelly: "this area looks like garbage"): corridors are painted block, not the smeared pour
     const fixed = axis === "x" ? (cx + 1) * S - HALF : (cz + 1) * S - HALF, start = axis === "x" ? cz * S - HALF : cx * S - HALF;
     if (e.door == null) { wallSeg(ctx, axis, fixed, start, start + S, 0, H, gr); continue; }
