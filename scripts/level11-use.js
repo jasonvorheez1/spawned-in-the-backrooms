@@ -635,27 +635,12 @@ export const ears = {
       return;
     }
 
-    // 24. Sedco Spotlight: CCTV Surveillance Monitor Wall
+    // 24. Sedco Spotlight: CCTV Surveillance Monitor Wall: sits you at the desk (scripts/cctv.js runs the view, the quest step reads Cam 04)
     if (s.kind === "sedco-monitors") {
+      if (now - (w.cctvOffAt ?? 0) < 600) return; // the E that left the desk is not a press to sit back down
       heard(ctx, { clip: BUTTON_CLICK, position: pos, volume: 0.85, maxDistance: 12 });
-      heard(ctx, { clip: PAYPHONE_STATIC, position: pos, volume: 0.6, maxDistance: 10 });
       ctx.emit("screenFlash", { color: "#9fc0b0", duration: 0.3, intensity: 0.35 }, { audience: { player: who.id } });
-      ctx.emit("damageNumber", {
-        position: { x: pos.x, y: pos.y + 1.4, z: pos.z },
-        text: "CCTV CH 04: 14TH ST SUBWAY B2 VAULT GATE",
-        color: "#00d2d3",
-        size: 1.05,
-      }, { audience: { player: who.id } });
-      if (w.sedcoQ === 2) {
-        w.sedcoMonitorsChecked = true;
-        if (w.sedcoCounterChecked) {
-          setSedcoStep(ctx, who, 3, "Spotlight on Sedco · Camera four covers the vault stair · Turn the stage spotlight on its lens");
-        } else {
-          if (w) w.notice = { text: "CCTV Feeds: Cam 01 monitors 11th Ave; Cam 04 shows the locked B2 subway vault! Search the counter.", at: now };
-        }
-      } else if (w) {
-        w.notice = { text: "CCTV Monitor Wall: Nine CRT monitors cycling green-tinted surveillance loops across Level 11.", at: now };
-      }
+      w.cctv = { i: w.sedcoQ === 2 ? 0 : (w.cctvLast ?? 0), at: now, cutAt: now };
       return;
     }
 

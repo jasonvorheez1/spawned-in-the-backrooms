@@ -115,6 +115,7 @@ inputs:
       keys:
         - e
     loot: {}
+    cctv: {}
     spam: {}
     grab:
       keys:
