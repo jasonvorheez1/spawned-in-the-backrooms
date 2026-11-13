@@ -5,6 +5,7 @@
 // face out while the sit pose blends in; standing it steps forward, the pose blends out, and the seat lets it go.
 // scripts/camera.js pulls the eye out to third person through both glides.
 import { heard } from "./hear.js";
+import { raycast } from "builtin/physics";
 export const SIT_S = 0.7, STAND_S = 0.55
 const LIFT = 0.1 // Savi's pick: the sit clip's hips sat below the cushion; a seat's own state.seat.y overrides
 export const SIT_CLIP = { m: 'cdn/clip-sit-loop.glb', f: 'cdn/clip-sit-female-loop.glb' }
@@ -46,6 +47,25 @@ const sexOf = (body) => (body.state?.look?.sex === 'f' || body.state?.look?.body
 const SIT_SND = '/cdn/moodboard-realistic-gritty/sfx-soft-cushion-sit-down-fabric-rustle.mp3'
 const STAND_SND = '/cdn/moodboard-realistic-gritty/sfx-clothing-rustle-getting-up-from-seat.mp3'
 
+// Shelly Nov 13: "they usually are too low": the sit clip's hips ride HIP above the feet, so the feet go to the cushion's
+// own height minus HIP. The cushion is measured on the seat's mesh: rays down across the spot, the lowest surface of the seat
+// between 0.25 and 0.95 m (armrests and backs stand higher). A seat's state.seat.y still wins.
+export const HIP = 0.12 // Savi's pick, read off a seated customer: hips sat 0.13 m over the feet
+export function cushionLift(ctx, seat, sp, ignore) {
+  const y = yawOf(seat.rotation), f = fwdOf(y), r = { x: -f.z, z: f.x }, p = seat.worldFeetPosition ?? seat.feetPosition
+  const top = (seat.bounds?.max?.y ?? p.y + 1.5) + 0.05
+  let best = null
+  for (const dz of [0, 0.12, -0.12, 0.24]) for (const dx of [0, 0.12, -0.12]) {
+    const lx = sp.lx + dx, lz = sp.lz + dz
+    const o = { x: p.x + r.x * lx - f.x * lz, y: top, z: p.z + r.z * lx - f.z * lz }
+    const hit = raycast(ctx, o, { x: 0, y: -1, z: 0 }, { distance: top - p.y + 0.1, hits: 'geometry', ignoreEntities: ignore })
+    if (!hit || !String(hit.id ?? '').startsWith(seat.id)) continue
+    const h = hit.position.y - p.y
+    if (h > 0.25 && h < 0.95 && (best == null || h < best)) best = h
+  }
+  return best == null ? null : Math.max(LIFT, best - HIP)
+}
+
 export function sitDown(ctx, seat) {
   const me = ctx.self, s = me.state
   if (s.sit) return false
@@ -53,6 +73,7 @@ export function sitDown(ctx, seat) {
   let best = null, bd = 1e9
   for (const sp of localSpots(seat)) { const t = holder(ctx, seat, sp.i); if (t && t !== me.id) continue; const dd = Math.hypot(sp.lx - lp.x, sp.lz - lp.z); if (dd < bd) { bd = dd; best = sp } }
   if (!best) return false
+  if (seat.state?.seat?.y == null) { const ly = cushionLift(ctx, seat, best, [me.id]); if (ly != null) best = { ...best, ly } }
   claim(ctx, seat.id, best.i, me.id)
   const fromYaw = ((yawOf(me.rotation) - yawOf(seat.rotation) + 540) % 360) - 180
   me.velocity = { x: 0, y: 0, z: 0 }

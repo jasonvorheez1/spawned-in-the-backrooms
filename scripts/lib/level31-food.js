@@ -134,6 +134,6 @@ export function layFood(ctx) {
     behavior: sit ? ["scripts/l31-food.js"] : ["scripts/humanoid-locomotion.js", "scripts/l31-food.js"], state: { faction: "faceling", hp: 60, docile: true, essential: true, sex: look.sex, ...state } });
   person("clerk", { sex: "m", topw: "apron", top: "#c8201c", botw: "pants", bottom: "#1c1c22", shoes: "sneakers", hat: "cap" }, 39.5, 17, 90, { name: "Counter clerk", role: "clerk", kind: "clerk", home: { x: 39.5, z: 17 } }, false, 0.32);
   ctx.spawn("l31-food-tag", { parent: "l31-food-clerk", attachment: { bone: "Spine2" }, feetPosition: { x: 0.09, y: 0.1, z: 0.125 }, primitive: box(0.075, 0.028, 0.006), material: { color: "#f4f2ea", roughness: 0.4 }, castShadow: false });
-  person("cust1", { sex: "f", topw: "sweater", top: "#6a86a8", botw: "pants", bottom: "#3a3a44", shoes: "sneakers" }, 29.3 - 0.89, 22.4, -90, { name: "Faceling", role: "customer", kind: "sitter" }, true, 0.14 + floorY);
-  person("cust2", { sex: "m", topw: "jacket", top: "#5a4a32", botw: "pants", bottom: "#26262c", shoes: "boots" }, 29.3 + 0.89, 22.4, 90, { name: "Faceling", role: "customer", kind: "sitter" }, true, 0.14 + floorY);
+  person("cust1", { sex: "f", topw: "sweater", top: "#6a86a8", botw: "pants", bottom: "#3a3a44", shoes: "sneakers" }, 29.3 - 0.89, 22.4, -90, { name: "Faceling", role: "customer", kind: "sitter" }, true, 0.35 + floorY);
+  person("cust2", { sex: "m", topw: "jacket", top: "#5a4a32", botw: "pants", bottom: "#26262c", shoes: "boots" }, 29.3 + 0.89, 22.4, 90, { name: "Faceling", role: "customer", kind: "sitter" }, true, 0.35 + floorY);
 }
