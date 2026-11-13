@@ -10,6 +10,7 @@ import { navPath } from "./lib/nav.js";
 import { raycast } from "builtin/physics";
 import BOT from "./lib/data/l11-sentry.yml";
 import { knocked, deathRag } from "./lib/knock.js";
+import { shotAt } from "./lib/hunt.js";
 import { rollLoot, rollCash } from "./lib/loot.js";
 import { rollVariant } from "./lib/weapons.js";
 const SENTRY = "/cdn/value.5a18bb1b3ab741080cf1b881ad99be1a9ace445a5e3fa9a4c7c2c6cb9dafb71d.glb";
@@ -198,10 +199,17 @@ export function update(ctx, dt) {
     }
     if (knocked(ctx, f, now, dt)) { m.limbs = m.sclip = m.clip = null; continue; }
     m.mode ??= "idle";
-    // hurt by someone it never saw: it turns on the nearest of them
+    // hurt by someone it never saw: the shooter's own ground, however far (player.js writes state.shot), else the nearest of them
     const hurt = m.hp0 != null && f.state.hp < m.hp0; m.hp0 = f.state.hp;
     let sense = perceive(ctx, f, m, players, now, id);
-    if (!sense && hurt) { const p = players.slice().sort((a, b) => flat(a.feetPosition, pos) - flat(b.feetPosition, pos))[0]; if (p && flat(p.feetPosition, pos) < 45) sense = { p, d: flat(p.feetPosition, pos), seen: false }; }
+    const sh = shotAt(f.state, now);
+    if (!sense && sh && (m.shotSeen ?? 0) < sh.at) {
+      m.shotSeen = sh.at;
+      const near = players.slice().sort((a, b) => flat(a.feetPosition, sh) - flat(b.feetPosition, sh))[0];
+      if (near && flat(near.feetPosition, sh) < 12) sense = { p: near, d: flat(near.feetPosition, pos), seen: false }; // the one standing where the shot came from
+      else { m.last = { x: sh.x, z: sh.z, vx: sh.vx ?? 0, vz: sh.vz ?? 0 }; m.lastAt = now; m.mode = "hunt"; m.woke = true; m.hunt = null; } // the shooter moved on: run to the spot and look
+    }
+    if (!sense && hurt && !sh) { const p = players.slice().sort((a, b) => flat(a.feetPosition, pos) - flat(b.feetPosition, pos))[0]; if (p && flat(p.feetPosition, pos) < 45) sense = { p, d: flat(p.feetPosition, pos), seen: false }; }
     if (sense && now < (m.ignoreUntil ?? 0) && !hurt) sense = null; // pulled back to its leash a moment ago
     const prevMode = m.mode;
     if (sense) {
@@ -316,3 +324,5 @@ export function update(ctx, dt) {
     if (f.state.kind === "hound" && m.clip !== clip) { m.clip = clip; f.anim.main = { clip, loop: clip !== "pounce" && clip !== "maul", weight: 1, blend: 0.2 }; }
   }
 }
+
+
