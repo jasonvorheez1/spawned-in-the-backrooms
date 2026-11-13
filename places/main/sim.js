@@ -3,6 +3,7 @@ import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import { overlapPoint } from "builtin/physics";
 import { npcState } from "../../scripts/lib/stats.js";
 import { LURKER_MODEL, LURKER_SCALE } from "../../scripts/lurkers.js";
+import { pickVariant, vmul } from "../../scripts/lib/foe-variant.js";
 import { MODEL as SMILER_MODEL, SCALE as SMILER_SCALE } from "../../scripts/smilers.js";
 // Level 0's referee: keeps almond water on the floor and smilers in the dark.
 import L from "../../scripts/lib/data/level0.yml";
@@ -443,7 +444,8 @@ export function tick(ctx) {
     const fill = s.lurkersSeeded ? 1 : L.lurkers - lurkers;
     for (let i = 0; i < fill; i++) {
       const c = cell(ctx, ["halls", "arches", "holes", "offices"]);
-      if (c) ctx.spawn({ tags: ["lurker"], feetPosition: { x: c.x, y: 0.05, z: c.z }, model: LURKER_MODEL, scale: LURKER_SCALE, physics: { body: "character" }, state: { ...npcState(ctx, "lurker", L.lurkerHp, { kind: "lurker" }), mesh: 3 } });
+      if (c) { const variant = pickVariant(ctx, "lurker"), vm = vmul("lurker", variant); // leveled list: scripts/lib/data/foe-variants.yml
+        ctx.spawn({ tags: ["lurker"], feetPosition: { x: c.x, y: 0.05, z: c.z }, model: LURKER_MODEL, scale: LURKER_SCALE, physics: { body: "character" }, state: { ...npcState(ctx, "lurker", Math.round(L.lurkerHp * vm.hp), { kind: "lurker", variant, ...(vm.name ? { title: vm.name } : {}) }), mesh: 3 } }); }
     }
     s.lurkersSeeded = true;
     s.nextLurker = now + L.lurkerRespawn * 1000;
