@@ -175,6 +175,8 @@ function layStaffRoom(ctx, P, M) {
   P("staff-wall-w", { feetPosition: { x: x0 - t / 2, y: 0, z: cz }, primitive: box(t, h, D + t), material: wall, physics: "static" });
   P("staff-wall-e", { feetPosition: { x: x1 + t / 2, y: 0, z: cz }, primitive: box(t, h, D + t), material: wall, physics: "static" });
   P("staff-wall-s", { feetPosition: { x: cx, y: 0, z: z1 + t / 2 }, primitive: box(W + t * 2, h, t), material: wall, physics: "static" });
+  // the hall's south wall stops at x 42; this closes the strip past it to the east wall
+  P("staff-wall-n", { feetPosition: { x: (42 + x1 + t) / 2, y: 0, z: z0 - 0.15 }, primitive: box(x1 + t - 42, h + 0.12, 0.3), material: wall, physics: "static" });
   // a scuffed rubber base round the room, where the mop bangs
   for (const [k, x, z, w, d] of [["w", x0 + 0.01, cz, 0.02, D], ["e", x1 - 0.01, cz, 0.02, D], ["s", cx, z1 - 0.01, W, 0.02]])
     P(`staff-base-${k}`, { feetPosition: { x, y: 0, z }, primitive: box(w, 0.1, d), material: { color: "#3a3430", roughness: 0.8 } });
