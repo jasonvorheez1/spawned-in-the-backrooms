@@ -18,8 +18,8 @@ export const BREAKER = { x: 48.3, y: 1.0, z: -19.14 };
 const SOLID = { physics: { body: "static", collider: "mesh" } };
 const FLAME = `fx
 pop coals n=8 on=disc(.16) size=.06..0.12 tint=<2.4,.9,.25>..<1.1,.3,.08> sz=$size*flick(.5,.12) col=$tint*flick(.8,.3) a=.9 r=sprite(soft-disc,add)
-pop flame rate=flick(.45,.2)*?mobile:28|46 on=disc(.17) life=.5..0.9 v=up(1.6)+cone(18)*(.3..0.7) size=.22..0.4 acc=curl(.5)*1.2+buoy(2.2)+drag(1.5)
-  sz=$size*(.5>.25:1>.7:.7>.14) col=hdr(4.6,3.4,1.4)>.3:hdr(3.2,1.4,.3)>.65:hdr(1.8,.5,.1)>hdr(.6,.12,.03) a=0>.12:1>.75:.85>0 rot=spin(.2) r=sprite(flame-wisp,add)
+pop flame rate=flick(.45,.2)*?mobile:16|26 on=disc(.17) life=.35..0.6 v=up(.9)+cone(18)*(.2..0.5) size=.14..0.26 acc=curl(.5)*1.2+buoy(1.3)+drag(1.8)
+  sz=$size*(.5>.25:1>.7:.7>.14) col=hdr(2.6,1.7,.6)>.3:hdr(2,.8,.16)>.65:hdr(1.2,.32,.06)>hdr(.4,.08,.02) a=0>.12:1>.75:.85>0 rot=spin(.2) r=sprite(flame-wisp,add)
 pop embers rate=4 on=disc(.16) life=.8..1.6 v=up(2.4)+cone(30)*(.4..1.2) size=.02..0.05 acc=curl(.8)+grav()*.4+drag(.5) sz=$size*(1>.7:.8>.3) col=hdr(5,2.8,.8)>.6:hdr(2.4,.8,.15)>hdr(1,.22,.04) a=(0>.08:1>.65:.9>0)*flick(11,.35) r=sprite(ember,add,velocity,.02)
 pop smoke on=@flame?.2 inh=p;v:$v*.4 life=1.8..3 size=.16..0.26 acc=buoy(.9)+curl(.35)*.5+drag(.8) sz=$size*(.7>3.2) col=<.3,.28,.26>><.15,.15,.16> a=0>.22:.3>.7:.18>0 rot=spin(.15) r=sprite(smoke-puff,alpha)`;
 const TUBE = { kind: "point", color: "oklch(0.93 0.03 220)", intensity: 5, distance: 13 };
