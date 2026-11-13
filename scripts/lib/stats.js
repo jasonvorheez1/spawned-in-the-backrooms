@@ -207,7 +207,7 @@ export function rollNpc(ctx, kind) {
 // multipliers for a creature from its state.attr
 export function npcMul(st) {
   const a = attrsOf(st)
-  return { hp: 0.5 + a.h * 0.1, dmg: (0.5 + a.h * 0.1) * (st?.follow && st.cperk === 'gunhand' ? 1.4 * (1 + (st.loyal ?? 50) / 400) : 1), speed: 0.8 + a.a * 0.04, sight: 0.7 + a.o * 0.06, loot: 0.6 + a.l * 0.08, scale: 0.94 + a.h * 0.012 }
+  return { hp: 0.5 + a.h * 0.1, dmg: (0.5 + a.h * 0.1) * (st?.follow && st.cperk === 'gunhand' ? 1.4 * (1 + (st.loyal ?? 50) / 400) : 1) * (st?.vdmg ?? 1), speed: (0.8 + a.a * 0.04) * (st?.vspd ?? 1), sight: 0.7 + a.o * 0.06, loot: 0.6 + a.l * 0.08, scale: 0.94 + a.h * 0.012 }
 }
 // state for a new creature: its hp scaled by hardiness and its own attributes and title
 export function npcState(ctx, kind, baseHp, extra = {}) {

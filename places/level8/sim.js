@@ -1,3 +1,4 @@
+import { pickVariant, vmul } from "../../scripts/lib/foe-variant.js";
 import { sweepProps } from "../../scripts/lib/breakables.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
@@ -736,18 +737,22 @@ function keepWretched(ctx) {
   }
   if (ch) s.wretchDead = deadAt;
 }
+// a Hollow-Mask's face: Tripo mask, finished in Blender; seated on the head bone (Savi's fit, tune offset/scale here)
+const HOLLOW_MASK = { model: { id: "HOLLOW_MASK_GLB", forward: "+z" }, feetPosition: { x: 0, y: 0.02, z: 0.1 }, scale: 0.2, castShadow: false };
 function spawnWretch(ctx, id) {
   const g = WRETCH[id], d = DENS[g.den];
   Promise.all([import("../../scripts/lib/critter-model.js"), import("../../scripts/lib/clothes.js"), import("../../scripts/lib/stats.js"), import("../../scripts/lib/weapon-look.js")]).then(([{ critterSpec }, { npcLook }, { npcState }, { weaponBody }]) => {
     if (ctx.place.objects[id]) return;
     const c = P(d.s, d.side, 0), x = c.x + g.at[0], z = c.z + g.at[1];
-    const look = { species: g.sp, sex: g.sex, eye: "#0a0a0a", topw: "sweater", top: g.top, botw: "pants", bottom: "#221e18", shoes: "boots", shoec: "#141010" };
+    const variant = pickVariant(ctx, "wretch"), vm = vmul("wretch", variant), hollow = variant === "hollow"; // leveled list: scripts/lib/data/foe-variants.yml
+    const look = { species: g.sp, sex: g.sex, eye: hollow ? "#c8281e" : "#0a0a0a", topw: "sweater", top: hollow ? "#140e0c" : g.top, botw: "pants", bottom: "#221e18", shoes: "boots", shoec: "#141010" };
     ctx.spawn(id, {
       tags: ["npc", "l8-npc", "l8-hostile", "wretched"], feetPosition: { x, y: c.y + 0.3, z }, rotation: { yaw: ctx.random() * 360 }, physics: "character", ...critterSpec(npcLook(id, look, "survivor", 8)),
       behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
-      state: { ...npcState(ctx, "agent", 75), name: `${g.name} · the Lightless`, role: "survivor", faction: "lightless", factionName: "the Lightless: wanderers on the 9th Road whom the dark got into", nerve: "frenzied", arm: g.gun, barks: WRETCH_BARKS,
+      state: { ...npcState(ctx, "agent", Math.round(75 * vm.hp)), variant, vdmg: vm.dmg, vspd: vm.speed, name: hollow ? `${g.name} · ${vm.name}` : `${g.name} · the Lightless`, role: "survivor", faction: "lightless", factionName: "the Lightless: wanderers on the 9th Road whom the dark got into", nerve: "frenzied", arm: g.gun, barks: WRETCH_BARKS,
         rounds: [{ x, y: c.y + 0.3, z, dwell: 30, act: null, look: { x: c.x, z: c.z } }], ri: 0, home: { x, z } },
     });
     ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: g.gun }, ...weaponBody(g.gun) });
+    if (hollow) ctx.spawn({ id: "hollow-mask", parent: id, attachment: { bone: "mixamorig:Head" }, ...HOLLOW_MASK }); // the bone mask the Hollow wear
   });
 }
