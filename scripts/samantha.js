@@ -160,6 +160,7 @@ function feed(ctx, p) {
   if (ses.reading && now - ses.reading < 15000) return
   const sn = t.startsWith('snack:') ? t.slice(6) : null
   if (sn) p.state.snacks = { ...p.state.snacks, [sn]: p.state.snacks[sn] - 1 }; else p.state.meat = { ...p.state.meat, [t]: p.state.meat[t] - 1 }
+  ses.warn = null; ses.fed ??= {}; ses.fed[p.id] = now // fed means forgiven: a pending tail-flick warning must not turn into claws once the meat is gone (Shelly Nov 13: fed her, then she attacked)
   const premium = S.premium.includes(t), name = sn ? (SNACKS[sn]?.name ?? sn) : (describe(`meat:${t}`)?.name ?? t)
   if (ses.warn?.pid === p.id) ses.warn = null
   mark(p, `you gave Samantha ${name.toLowerCase()}`)
@@ -224,7 +225,7 @@ export function update(ctx, dt) {
   if (me.anim.flick && now - (ses.flickAt ?? 0) > 1500) me.anim.flick = null
   if (ses.mode === 'rage') { pounce(ctx, dt, now); return }
   // the rude one has had their warning
-  if (ses.warn && now - ses.warn.at > S.warnMs) { const w = ses.warn, p = ctx.getObject(w.pid); ses.warn = null; if (p?.state && (w.refused || !meatOf(p))) enrage(ctx, w.pid, now); return } // told, tail flicked, still no meat: claws (Shelly Nov 13), never her claws (Shelly Nov 13: she attacked after a question)
+  if (ses.warn && now - ses.warn.at > S.warnMs) { const w = ses.warn, p = ctx.getObject(w.pid); ses.warn = null; if (p?.state && !((ses.fed?.[w.pid] ?? -1) >= w.at) && (w.refused || !meatOf(p))) enrage(ctx, w.pid, now); return } // told, tail flicked, still no meat: claws (Shelly Nov 13), never her claws (Shelly Nov 13: she attacked after a question)
   // whoever holds her card: greet once, stay put, look at them
   let talker = null; ses.talkers ??= {}
   for (const p of ctx.place.players) {
