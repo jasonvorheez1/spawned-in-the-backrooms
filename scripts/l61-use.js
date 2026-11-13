@@ -217,7 +217,7 @@ export const ears = {
       return;
     }
     if (s.kind === "vend" && s.weeklyStock) {
-      const nowWeek = Math.floor(now / WEEK);
+      const nowWeek = Math.floor(Date.now() / WEEK);
       if (s.stockWeek !== nowWeek) { s.stockWeek = nowWeek; s.dispensed = 0; }
       if ((s.dispensed ?? 0) >= s.weeklyStock) {
         tell("Empty. Try another machine.");

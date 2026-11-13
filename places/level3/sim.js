@@ -209,9 +209,9 @@ export function tick(ctx) {
     layLines(ctx);
   }
   if (!s.arrive2 && s.seeded) { s.arrive2 = true; ctx.spawn("l3-from-l2", { feetPosition: { x: BACK.x + 2.4, y: 0.1, z: BACK.z }, rotation: { yaw: -90 } }); } // where the Level 2 door lets you out
-  if (!s.snackVent) {
-    s.snackVent = true;
-    const x = BACK.x + 4.25, z = BACK.z;
+  if (s.snackVent !== 2) {
+    s.snackVent = 2;
+    const x = BACK.x + 7.5, z = BACK.z;
     ctx.spawn("l3-from-l61", { feetPosition: { x, y: 1.35, z }, rotation: { yaw: -90 } });
     ctx.spawn("l3-snack-duct", {
       feetPosition: { x, y: H - 0.28, z }, rotation: { pitch: 180 }, castShadow: false,
