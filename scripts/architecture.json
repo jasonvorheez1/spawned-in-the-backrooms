@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7115,
-  "updatedAt": "2026-11-13T04:44:20.865Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social hub and authored lore destinations; player saves hold progression, gear, quests, faction standing and homes, while tutorial0 is solo and ephemeral. Shared player behaviors, place simulations and reusable builders join authored scenes to generated spaces, with a cat wardrobe/appearance pipeline supporting the character creator and in-world salon.",
+  "basedOnSpecVersion": 7118,
+  "updatedAt": "2026-11-13T04:48:28.949Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social hub and authored lore destinations; player saves hold progression, gear, quests, faction standing and homes, while tutorial0 is solo and ephemeral. Shared player behaviors, place simulations and reusable builders join authored scenes to generated spaces, with a Tripo cat wardrobe/appearance pipeline supporting the character creator and in-world salon.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0's yellow maze, ecology, routes, landmarks, Christmas Area and stair anomalies; its objects.scene also carries the Favi brain row.",
@@ -11,7 +11,7 @@
     "places/level01 (3D) - Zenith Station, breach, bots, hazards and recorder quest.",
     "places/level1, level2, level02, level21, level3, gamma (3D) - Habitable Zone camp, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma; Level 1 also generates spiral anomalies.",
     "places/level31 (3D) - Roller Rink, cinema/DJ booth, arcade, party room, cafe/snack bar, rental, gift shop/skate loft and white Level 70 door; Awakening lighting configured.",
-    "places/level70 (3D; Froidetown) - snowy Canadian city on a planetoid: Kelpie Street, Burns Crescent, Calor Office Block, Noahtown, Parliament Hotel, Froston, Iceshed and Burns River; layered districts, packed-snow walks, NPCs, foes and dark lighting.",
+    "places/level70 (3D; Froidetown) - snowy Canadian city on a planetoid: Kelpie Street, Burns Crescent, Calor Office Block, Noahtown, Parliament Hotel, Froston, Iceshed and Burns River; layered districts, packed-snow walks, NPCs and foes.",
     "places/level4, level5, level6, level7, level10-13, level26, level27, spamton, testlab and other lore/test destinations - authored food court, resident hubs, rentals, stories, hazards and encounters."
   ],
   "roots": [
@@ -55,10 +55,10 @@
     "Enemy managers own AI/sneakTarget; scripts/lib/meg-agent.js owns NPC runtime combat/movement memory; scripts/lib/forgive.js records NPC incidents/angry/fresh and clears expired offenses; places/level2/sim.js owns survBodyV."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific controls.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific actions.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera; camera writes aimPt/aimPitch → player.js ballistics/weaponAim; player.js zoneHere → maze names and Level 31/70 zoneAt labels.",
     "scripts/routing.js requested room → scripts/lib/hub.js solo selection; toHub/toSolo cross to hub/home and maintain roomHop/save-place; kiosk resolves booked Level 5 home IDs.",
-    "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close to intro/tutorial0; menuOpen drives menu UI and solo pause scaling.",
+    "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close runs scripts/lib/intro-cut.js cutTick for the wake-up/wall-crossing scene (Phoebe spawn branch disabled), then crosses to tutorial0 first time or main later; menuOpen drives menu UI and solo pause scaling.",
     "C creator / intake appearance UI (scripts/wardrobe-ui.js) and Bonus salon service UI (scripts/salon-ui.js) → dress action handled by scripts/critter.js; model choice/upload and ears/face/clothes update the appearance look used for live dressing.",
     "scripts/humanoid-locomotion.js reads wrMenu/wardrobeOpen → zeros horizontal velocity while the character creator is open.",
     "tutorial0 HALOGEN cut → scripts/lib/tut0-cut.js + scripts/lib/dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ and play recorded voices.",
@@ -66,8 +66,7 @@
     "Level 2 sim l2-to-l31 → scripts/level-door.js to level31#l31-from-l2; Level 31 l31-back → level2#l2-from-l31; quest-route.js maps both directed crossings.",
     "Level 31 l31-to-l70 trigger → scripts/level-door.js + companion/carry transfer → level70#l70-from-l31; Level 70 l70-back → level31#l31-from-l70; quest-route.js exposes the white-door pair and preload.yml preloads destinations/models.",
     "Level 31 sim reads H/B/RINK/ZONES/DOOR/BACK, rebuilds l31-* roots at place.state.v31=100 and dispatches layParts; level31.js supplies zone IDs/placement geometry, then texturePass styles eligible flat-color props.",
-    "Level 70 sim lays arrival/return trigger, snow and wind, then version-gates town/civic/wild/life/quest/paths lay(ctx) and ticks each second; place.state.v70* keys record layer builds, while paths lay packed-snow splines to buildings and residents.",
-    "scripts/player.js and scripts/grab.js hits → forgive.js assaulted records offense against victim and visible nearby faction allies; kill → witness.markKill records clear-sight witnesses and repKill adjusts killer player.state karma/rep."
+    "Level 70 sim lays arrival/return trigger, snow and wind, then version-gates town/civic/wild/life/quest/paths lay(ctx) and ticks each second; place.state.v70* keys record layer builds, while paths lay packed-snow routes to buildings."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored mall shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
@@ -76,7 +75,7 @@
     "scripts/lib/thresholds.js + scripts/threshold-geo.js + participating place sims, alongside sign-style.js/sign-geo.js - shared crossing clues and per-place/per-id sign-board styles.",
     "places/level01/sim.js + Zenith geometry/breach/hatch/bot/hazard scripts; places/level02/sim.js + l02-grid.js vary partitions, lights, crew, knocks and reset.",
     "scripts/lib/meg-agent.js - per-NPC nerve/stats/weapon reactions, cover and authored/voiced barks; NPC state.rounds supports patrols and Meg handles movement/fighting; critter-model.js refits appearances across levels.",
-    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + art/cat-wardrobe - shared Tripo cat appearance assembly varied by body/sex, painted or skinned garments, head keys, hair and new fitted ear models; creator and salon expose the same look choices.",
+    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + art/cat-wardrobe - shared Tripo cat appearance assembly varied by body/sex, painted or skinned garments, head keys, hair and fitted ear models; lop uses its own sex-specific uploaded GLBs and down-hanging generated form.",
     "Level 13 furnishing/dressing data and foe/people/tape layers vary rooms, story, encounters and residents; weapon data vary requirements/stats/loot while stats.js and weapon-look/fp-gun/vmpose supply handling and visuals."
   ],
   "probableOrphans": [
@@ -88,8 +87,8 @@
   ],
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. Keep this bounded sweep.",
-    "Global body-style restyling skips player IDs and player/ roots and ignores local-audience or model-less objects; wardrobe membership derives from critter-ward IDs. Level 2 survivors keep generated looks in NPC state.wear; survBodyV=1 triggers the current refit.",
-    "Cat wardrobe is only for new Tripo cat bodies; cat-wardrobe.yml stores garment/model assets and maps ears per sex, while art/cat-wardrobe/ears.py generates the sculpted ear forms. Keep old critter body/clothes separate; modelled parts ride as skinned children.",
+    "Global body-style restyling skips player IDs and player/ roots and ignores local-audience or model-less objects; wardrobe membership derives from critter-ward IDs. Level 2 survivors keep generated looks in NPC state.wear; survBodyV=1 triggers the generated-body path.",
+    "Cat wardrobe is only for new Tripo cat bodies; cat-wardrobe.yml stores garment/model assets and maps ears per sex, while art/cat-wardrobe/ears.py generates sculpted ear forms. Keep old critter body/clothes separate; lop asset paths in the YAML must stay paired with their sex-specific uploaded GLBs.",
     "Level 31 rebuilds l31-* roots at place.state.v31=100; align IDs and shell/zone/door/arrival geometry with level31.js, and keep the white-door exit paired with Level 70's l70-from-l31 arrival.",
     "Level 70 level70.js keeps built zone discs, street and Burns River at y=0 while terrain70.js raises terrain outside them; layer versions invalidate builds and nav cache keys include town/civic/wild/path versions.",
     "NPC incidents are offender-keyed on NPC state and use gameNow/clock.js for a one-in-game-hour expiry; only allied, sighted witnesses join fights, and kill witnesses require clear sight of both body and killer."
