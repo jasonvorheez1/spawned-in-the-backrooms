@@ -167,7 +167,7 @@ function dressPlan(ctx) {
 
   // FLOOR: office leftovers inside each room's walls, 1.2 m off every open edge so the walkways stay clear
   const rects = new Map();
-  const roomBox = (cx, cz) => { const m = (d) => plainWall(cx, cz, d) ? 0.12 : 1.2; return [lo(cx) + m(2), lo(cx) + S - m(0), lo(cz) + m(3), lo(cz) + S - m(1)]; };
+  const roomBox = (cx, cz) => { const m = (d) => plainWall(cx, cz, d) ? 0.07 : 1.2; return [lo(cx) + m(2), lo(cx) + S - m(0), lo(cz) + m(3), lo(cz) + S - m(1)]; };
   const fp = (x, z, w, d, yaw) => { const q = Math.abs(Math.round(yaw / 90)) % 2 === 1, a = (q ? d : w) / 2 + 0.03, b = (q ? w : d) / 2 + 0.03; return [x - a, x + a, z - b, z + b]; };
   const fits = (cx, cz, r) => { const [x0, x1, z0, z1] = roomBox(cx, cz); if (r[0] < x0 || r[1] > x1 || r[2] < z0 || r[3] > z1) return false; return !(rects.get(cx + "," + cz) ?? []).some((o) => r[0] < o[1] && r[1] > o[0] && r[2] < o[3] && r[3] > o[2]); };
   const floor = (kind, cx, cz, x, z, yaw, y = 0, check = true) => { const [w, , d] = KIT[kind].size, r = fp(x, z, w, d, yaw); if (check && !fits(cx, cz, r)) return false; const k = cx + "," + cz; if (!rects.has(k)) rects.set(k, []); if (check) rects.get(k).push(r); kput(kind, x, y, z, yaw); return true; };
