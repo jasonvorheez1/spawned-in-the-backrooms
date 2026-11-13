@@ -1,6 +1,7 @@
 // Level 70 waypoint graph: every NPC and foe walks route(ctx, from, to). Nodes: arrival, Kelpie Street every 20 m, each SPOT, zone rims.
 // An edge is proven by builtin/nav the first time it is used and cached in place.state.l70nav; the cache drops when a building layer's version moves.
-import { findPath, traverseCheck } from "builtin/nav";
+import { findPath } from "builtin/nav";
+import { traverseCheck } from "builtin/physics";
 import { ARRIVE, ZONES, SPOT } from "./level70.js";
 export const NODES = {}; const ADJ = {};
 const add = (id, x, z) => { NODES[id] = { x, y: 0, z }; ADJ[id] = ADJ[id] ?? []; };

@@ -6,12 +6,12 @@ import { critterSpec } from "./critter-model.js";
 import { npcLook } from "./clothes.js";
 import { npcState } from "./stats.js";
 import { F } from "../l70-foes.js";
-export const V = 1;
+export const V = 2;
 export const M = {
   froidling: { id: "/cdn/value.e0f92de3c91a51d13d955a5f18b0ebb02e61aab925729be60816dcd684d80ca3.glb", forward: "+x" },
   deathrat70: { id: "/cdn/value.5eab5f42c4c7fdce53c51e1b8f7853c3d4c5b87ae279382dbf976d10a38263b5.glb", forward: "+x" },
-  blade: "/cdn/value.5f289d5a6b9277de9cfabb6da1a9001067ad745e0b44498a90488b4ca397f7dd.glb",
-  shovel: null, rod: null, firewood: null, bench: null,
+  blade: "/cdn/value.a8cfabf0d01cc861caaed21698d7a5effde319bd13e7cd400aa4a63e57fef3f1.glb",
+  shovel: "/cdn/value.eb724a76bd16097a5f616f6bc9f6f5267a4a8cb43f616824d14e71cb68eeb626.glb", rod: "/cdn/value.540b3610c23860a7131ea26b9885ca1e2504191a3674280633f4651f2b5956c8.glb", firewood: "/cdn/value.115a094884c3dbdf23da630432dec2b7825fa33881a35de4308fd89ab76ada0e.glb", bench: "/cdn/value.3ab361d2b595004161aee889b2721dbe184120d32f253f2d150b77704e8e50b0.glb",
 };
 const FIRE = `fx
 pop flame rate=flick(.45,.2)*40 on=disc(.2) life=.5..0.9 v=up(1.4)+cone(22)*(.3..0.7) size=.2..0.38 acc=curl(.5)*1.2+buoy(2.2)+drag(1.5)
