@@ -257,11 +257,11 @@ export function tick(ctx) {
     }
     s.l1Deck = 3; delete s.l1DeckPh; delete s.l1DeckCx;
   }
-  if (s.l1RackV !== 1) { s.l1RackV = 1; // Nov 13 (Shelly: "massively revamp this area ... tripo"): real modeled pallet racking, two 3 m bays per rack row
+  if (s.l1RackV !== 2) { s.l1RackV = 2; // Nov 13 (Shelly: "massively revamp this area ... tripo"): real modeled pallet racking, two 3 m bays per rack row
     for (const o of ctx.query({ tags: ["l1rack"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id);
     for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) { if (zoneOf(cx, cz) !== "storage") continue; const c = cellCenter(cx, cz);
       for (const [ri, r] of RACK.rows.entries()) for (const b of [-1, 1]) ctx.spawn(`l1rack-${cx}-${cz}-${ri}-${b}`, { tags: ["l1rack"], feetPosition: { x: c.x + b * RACK.len / 4, y: 0, z: c.z + r }, rotation: { yaw: (ri ? 180 : 0) + (hash(cx, cz, 600 + ri * 2 + b) - 0.5) * 1.2 },
-        model: { id: RACK_GLB }, layout: { box: { min: { x: -RACK.len / 4, y: 0, z: -RACK.depth / 2 }, max: { x: RACK.len / 4, y: RACK.top, z: RACK.depth / 2 } } }, physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 45 } }); }
+        model: { id: RACK_GLB }, scale: { x: 1.2, y: 1.307, z: 1 }, layout: { box: { min: { x: -RACK.len / 4, y: 0, z: -RACK.depth / 2 }, max: { x: RACK.len / 4, y: RACK.top, z: RACK.depth / 2 } } }, physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 45 } }); }
   }
   if (s.l1StockV !== 2) { s.l1StockV = 2; for (const o of ctx.query({ tags: ["l1stock"] })) delete ctx.place.objects[o.id]; s.l1Stock = 0; } // stock v2: real box models
   if (!s.l1Stock) { s.l1Stock = layStock(ctx) || 1; }
