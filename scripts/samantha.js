@@ -171,7 +171,7 @@ function feed(ctx, p) {
   } else {
     p.state.sanity = Math.min(100, (p.state.sanity ?? 0) + 15)
   }
-  rest(ctx, now, 'groom'); ses.until = now + 4000
+  rest(ctx, now, 'groom'); ses.until = now + 12000; ses.blinkAt = Math.max(ses.blinkAt ?? 0, now + 60000) // she eats where she sits; no psychic hop right after a meal (Shelly Nov 13: fed her, she vanished)
   if (!premium) { ctx.after(2.2, 'poorRead', { by: p.id, i: Math.floor(ctx.random() * S.poorReadings.length) }); return }
   ses.reading = now; p.state.talkBusy = now
   const f = facts(ctx, p), fb = plainReading(f)
@@ -240,6 +240,7 @@ export function update(ctx, dt) {
   if (talker) {
     const a = me.feetPosition, b = talker.feetPosition; me.rotation = { yaw: yawTo(b.x - a.x, b.z - a.z) }
     if (ses.mode === 'walk') rest(ctx, now, 'sit')
+    ses.blinkAt = Math.max(ses.blinkAt ?? 0, now + 20000) // never blink away the moment a talk ends
     if (ses.mode === 'perched' || ses.mode === 'sit' || ses.mode === 'groom') ses.until = Math.max(ses.until, now + 3000)
     return
   }
