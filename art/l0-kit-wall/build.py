@@ -60,12 +60,12 @@ for kind in kinds:
     bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT")
     bpy.ops.mesh.remove_doubles(threshold=1e-5); bpy.ops.mesh.separate(type="LOOSE"); bpy.ops.object.mode_set(mode="OBJECT")
     parts = [o for o in bpy.context.scene.objects if o.type == "MESH"]
-    parts.sort(key=lambda o: -len(o.data.vertices)); main = parts[0]; lo, hi = bbox(main); pad = (hi - lo) * 0.02
-    total = sum(len(o.data.vertices) for o in parts); dropped = 0
-    for o in parts[1:]:
-        a, b = bbox(o); c = (a + b) / 2
-        outside = any(c[i] < lo[i] - pad[i] or c[i] > hi[i] + pad[i] for i in range(3))
-        if outside and len(o.data.vertices) < total * 0.01:
+    parts.sort(key=lambda o: -len(o.data.vertices)); main = parts[0]
+    boxes = {o.name: bbox(o) for o in parts}; lo = Vector([min(b[0][i] for b in boxes.values()) for i in range(3)]); hi = Vector([max(b[1][i] for b in boxes.values()) for i in range(3)])
+    pad = (hi - lo).length * 0.01; total = sum(len(o.data.vertices) for o in parts); dropped = 0
+    def touches(a, b): return all(a[0][i] - pad <= b[1][i] and b[0][i] - pad <= a[1][i] for i in range(3))
+    for o in parts[1:]:   # junk: a small island whose box meets no other island's box
+        if len(o.data.vertices) < total * 0.01 and not any(touches(boxes[o.name], boxes[q.name]) for q in parts if q is not o):
             bpy.data.objects.remove(o); dropped += 1
     parts = [o for o in bpy.context.scene.objects if o.type == "MESH"]
     bpy.ops.object.select_all(action="DESELECT")
