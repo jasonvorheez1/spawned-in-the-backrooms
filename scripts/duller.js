@@ -11,7 +11,7 @@ import { knocked } from "./lib/knock.js";
 import D from "./lib/data/dullers.yml";
 export const updateSchedule = { every: 2 };
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
-const S = { crack: "drywall-cracking-as-a-bony-hand-pushes-through-it", grip: "cold-long-fingers-clamping-hard-around-a-wrist", drag: "body-dragged-fast-across-carpet-and-through-drywall",
+const S = { step: "slow-bare-bony-feet-padding-on-damp-carpet", bolt: "long-limbs-skittering-fast-away-on-carpet", crack: "drywall-cracking-as-a-bony-hand-pushes-through-it", grip: "cold-long-fingers-clamping-hard-around-a-wrist", drag: "body-dragged-fast-across-carpet-and-through-drywall",
   hurt: "dry-airless-wheeze-from-a-faceless-thing", die: "brittle-thin-limbs-folding-onto-carpet", miss: "long-arm-snatching-back-through-a-wall-hole" };
 const DUST = `fx
 pop chunks burst=10..14 life=.6..1 v=<%n|0,0,1>*(1.5..3)+sdir()*(.6..1.2) size=.03..0.07 acc=grav()+drag(.4) col=<.82,.78,.62> a=1>.8:1>0 sz=$size floor=bounce(.2) r=sprite(soft-disc,alpha)
@@ -84,7 +84,7 @@ export function update(ctx, dt) {
   if (now >= (m.flee ?? 0) && seen && (closing > D.charge || (watched && td < 9) || (drank(tgt, now) && td < D.almondKeep))) flee(ctx, o, m, tgt.feetPosition, now);
   if (now < (m.flee ?? 0)) { // bolting, silent
     if (!m.fleeGoal || now > (m.fleeAt ?? 0) || flat(pos, m.fleeGoal) < 1) { m.fleeGoal = fleeGoal(ctx, o, tgt.feetPosition); m.fleeAt = now + 1200; m.path = null; }
-    moveTo(ctx, o, m, m.fleeGoal, D.run, dt, now); anim(o, m, "Run"); return;
+    moveTo(ctx, o, m, m.fleeGoal, D.run, dt, now); anim(o, m, "Run"); pace(ctx, o, m, now, true); return;
   }
   if (seen) { // seen but not charged: it slinks back out of your sight
     if (!m.slink || now > m.slinkAt) { m.slink = fleeGoal(ctx, o, tgt.feetPosition); m.slinkAt = now + 1500; m.path = null; }
@@ -103,7 +103,7 @@ export function update(ctx, dt) {
         return;
       }
       const spot = { x: w.x - w.n.x * 1.0, z: w.z - w.n.z * 1.0 };
-      if (moveTo(ctx, o, m, spot, D.walk, dt, now) > 0) anim(o, m, "Walk"); else anim(o, m, "Idle");
+      if (moveTo(ctx, o, m, spot, D.walk, dt, now) > 0) { anim(o, m, "Walk"); pace(ctx, o, m, now, false); } else anim(o, m, "Idle");
       return;
     }
   }
@@ -118,6 +118,10 @@ function wallBy(ctx, tgt) {
     if (h && (!best || h.distance < best.dist)) best = { x: h.position.x, y: h.position.y, z: h.position.z, n: { x: -d.x, y: 0, z: -d.z }, dist: h.distance };
   }
   return best;
+}
+function pace(ctx, o, m, now, run) {
+  if (now < (m.stepAt ?? 0)) return; m.stepAt = now + (run ? 2600 : 900 + ctx.random() * 500);
+  say(ctx, run ? S.bolt : S.step, o.feetPosition, run ? 0.8 : 0.45, run ? 22 : 12);
 }
 function reachStep(ctx, o, m, now, dt) {
   const r = m.reach, p = ctx.place.players.find((q) => q.id === r.id); stand(ctx, o, dt);
