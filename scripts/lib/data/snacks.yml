@@ -5,8 +5,8 @@ pepsi:   { name: "Pepsi", info: "The blue globe can. Sweeter than you remember",
 dew:     { name: "Mountain Dew", info: "Do the Dew. Neon green, wildly caffeinated · stamina", hunger: 3, thirst: 26, sanity: 4, hp: 2, color: "#7ae83a", drink: true, stamina: 40 }
 doritos: { name: "Doritos Nacho Cheese", info: "Orange dust on your fingers for an hour", hunger: 22, thirst: -6, sanity: 5, hp: 6, color: "#ff6a2a" }
 coolranch: { name: "Doritos Cool Ranch", info: "The blue bag. Nobody knows what ranch is cool about it", hunger: 22, thirst: -6, sanity: 5, hp: 6, color: "#3a9ae8" }
-pizza:   { name: "Slice of pepperoni pizza", info: "Hot from Slice Palace. Free, like everything here", hunger: 34, thirst: -4, sanity: 8, hp: 10, color: "#e8a03a" }
-burger:  { name: "Burger Bop cheeseburger", info: "Wrapped in waxed paper. A faceling made it with care", hunger: 45, thirst: -5, sanity: 8, hp: 14, color: "#c87a3a" }
+pizza:   { name: "Slice of pepperoni pizza", info: "Hot from Slice Palace. Free, like everything here", hunger: 34, thirst: -4, sanity: 8, hp: 10, color: "#e8a03a", meat: true }
+burger:  { name: "Burger Bop cheeseburger", info: "Wrapped in waxed paper. A faceling made it with care", hunger: 45, thirst: -5, sanity: 8, hp: 14, color: "#c87a3a", meat: true }
 # more 2000s sodas and drinks (Shelly: "the drinks should be real world based")
 sprite:  { name: "Sprite", info: "Green bottle, lemon-lime. Obey your thirst", hunger: 3, thirst: 30, sanity: 5, hp: 2, color: "#3ac86a", drink: true }
 drpepper: { name: "Dr Pepper", info: "23 flavors. Maroon can, 2002", hunger: 4, thirst: 27, sanity: 6, hp: 3, color: "#8a1a2a", drink: true }

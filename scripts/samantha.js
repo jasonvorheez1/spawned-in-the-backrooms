@@ -11,6 +11,7 @@ import { findPath } from 'builtin/nav'
 import { EXITS, ZONES, zoneAt, ZONE_NAMES } from './lib/level5.js'
 import { describe } from './lib/items.js'
 import S from './lib/data/samantha.yml'
+import SNACKS from './lib/data/snacks.yml'
 import TK from './lib/data/talk.yml'
 
 export const MODEL = '/cdn/value.05b6fcdb02ae0489f79f366c2285414facaa51f7639114b24430fb4ac82f5455.glb'
@@ -43,7 +44,7 @@ function say(ctx, p, line, mood = 'calm', voice = true) {
   if (voice) heard(ctx, { clip: VOX(line), position: { x: pos.x, y: pos.y + 0.4, z: pos.z }, volume: 0.75, refDistance: 1.5, maxDistance: 9 }, { audience: { nearby: pos, radius: 10 } })
 }
 function mark(p, t) { const all = { ...(p.state.talks ?? {}) }; all[ME] = [...(all[ME] ?? []), ['x', t]].slice(-(TK.memory ?? 12)); p.state.talks = all }
-const meatOf = (p) => S.order.find((m) => (p?.state?.meat?.[m] ?? 0) > 0)
+const meatOf = (p) => S.order.find((m) => (p?.state?.meat?.[m] ?? 0) > 0) ?? Object.keys(SNACKS).filter((k) => SNACKS[k]?.meat).map((k) => 'snack:' + k).find((k) => (p?.state?.snacks?.[k.slice(6)] ?? 0) > 0) // a burger is meat too
 
 function clip(ctx, name) { const ses = ctx.self.session; if (ses.clip === name) return; ses.clip = name; ctx.self.anim.body = { clip: name, loop: true } }
 function strike(ctx) { ctx.self.anim.act = { clip: 'Pounce', loop: 'once', blend: 'override', weight: 4, time: 0, speed: 1.6 } }
@@ -157,8 +158,9 @@ function feed(ctx, p) {
   const me = ctx.self, ses = me.session, now = ctx.now(), t = meatOf(p)
   if (!t) { say(ctx, p, S.lines.none); ctx.self.state.dishAt = now; warn(ctx, p, now); return }
   if (ses.reading && now - ses.reading < 15000) return
-  p.state.meat = { ...p.state.meat, [t]: p.state.meat[t] - 1 }
-  const premium = S.premium.includes(t), name = describe(`meat:${t}`)?.name ?? t
+  const sn = t.startsWith('snack:') ? t.slice(6) : null
+  if (sn) p.state.snacks = { ...p.state.snacks, [sn]: p.state.snacks[sn] - 1 }; else p.state.meat = { ...p.state.meat, [t]: p.state.meat[t] - 1 }
+  const premium = S.premium.includes(t), name = sn ? (SNACKS[sn]?.name ?? sn) : (describe(`meat:${t}`)?.name ?? t)
   if (ses.warn?.pid === p.id) ses.warn = null
   mark(p, `you gave Samantha ${name.toLowerCase()}`)
   say(ctx, p, premium ? S.lines.premium : S.lines.poor, premium ? 'happy' : 'annoyed')

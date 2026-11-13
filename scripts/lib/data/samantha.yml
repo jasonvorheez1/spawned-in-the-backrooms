@@ -26,7 +26,7 @@ spots:              # the slow round: Beverly Room, Main Hall gallery, lobby
   - { x: -36.0, z: -6.0 }
   - { x: -40.0, z: 9.0 }
 perchZones: [beverly, gallery, lobby]
-order: [steak, fish, chicken, spam, sardines, rat]
+order: [steak, fish, chicken, crab, spam, jerky, hotdog, sardines, rat]   # meat:<k> tokens; snacks.yml rows with meat: true count too, as poor
 premium: [steak, fish, chicken]
 lines:
   meat: "Ah. You smell of supper. Set it down, mon cher, and I will tell you what is coming."

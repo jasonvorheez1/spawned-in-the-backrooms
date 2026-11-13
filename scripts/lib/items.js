@@ -48,6 +48,8 @@ export const MEAT = {
   spam:     { name: 'Tin of spam',      tier: 'good',    hp: 9,  food: 18, color: '#d98aa0' },
   sardines: { name: 'Tin of sardines',  tier: 'poor',    hp: 7,  food: 14, color: '#b8c4c8' },
   crab:     { name: 'Crawler leg meat', tier: 'good',    hp: 10, food: 20, color: '#e8a08a' },
+  jerky:    { name: 'Beef jerky (Jack Link\'s)', tier: 'good', hp: 8, food: 16, color: '#8a4a2a' },
+  hotdog:   { name: 'Oscar Mayer hot dog', tier: 'good', hp: 8, food: 16, color: '#d8604a' },
   rat:      { name: 'Dead rat',         tier: 'poor',    hp: 3,  food: 8,  color: '#8a7a6a' },
 }
 const TIER = { premium: 'PREMIUM', good: 'GOOD', poor: 'POOR' }
