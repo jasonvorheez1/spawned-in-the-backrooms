@@ -229,6 +229,10 @@ const MESH_SWAP = {
     officeshirt: 'longsleeve',
     wirehood: 'hoodie',
     padjacket: 'jacket',
+    cpjacket: 'jacket',
+    lljacket: 'jacket',
+    qmvest: 'tank',
+    wwplate: 'tank',
   },
   botw: {
     cargo: 'pants',
