@@ -106,10 +106,10 @@ export function tick(ctx) {
   // Nov 11: the flickering wall home stands in the far west halls (scripts/lib/level1.js BACK). A room laid before had its door
   // moved by a position write, which leaves a static trigger's collider where it was spawned: the way back to Level 0 stayed
   // invisible beside the camp. So the door, its wall, its lamp and the arrival are taken down, then laid fresh a tick later.
-  if ((s.backV ?? 0) < 2 && s.seeded && s.arrive2) {
+  if ((s.backV ?? 0) < 3 && s.seeded && s.arrive2) { // v3: moved flush into the west wall
     for (const id of ["l1-back", "l1-backwall", "l1-from-main", "l1-back-lamp"]) if (ctx.place.objects[id]) ctx.destroy(id);
     for (const [id, o] of Object.entries(ctx.place.objects)) { const f = o.feetPosition; if (o.light && !o.primitive && !o.model && f && f.y < 0.5 && [BACK_OLD, BACK].some((b) => Math.abs(f.x - b.x - 0.4) < 0.15 && Math.abs(f.z - b.z) < 0.15)) ctx.destroy(id); }
-    s.backV = 2; s.backLay = true;
+    s.backV = 3; s.backLay = true;
   } else if (s.backLay) { s.backLay = false;
     ctx.spawn("l1-back", { feetPosition: { x: BACK.x + 0.5, y: 0, z: BACK.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.8, height: 2.4, depth: 2.2 }, visible: false, behavior: "scripts/level-door.js", state: { to: "main" } });
     ctx.spawn("l1-back-lamp", { feetPosition: { x: BACK.x + 0.4, y: 0, z: BACK.z }, visibleRange: { max: 35 }, light: { kind: "point", color: "oklch(0.85 0.12 92)", intensity: 3, distance: 6, shadow: { enabled: false } } });

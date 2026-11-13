@@ -88,7 +88,7 @@ export function lampAt(cx, cz) {
 // The wall stands in the far west halls (Nov 11: "reaching the M.E.G. camp should take more effort"): about 130 m
 // of hound country from the camp, which used to be 9 m away. M.E.G. marks the way from it (scripts/lib/thresholds.js).
 export const BACK_OLD = { x: cellCenter(ARRIVE.cx, ARRIVE.cz).x - 9.2, z: cellCenter(ARRIVE.cx, ARRIVE.cz).z }; // where it stood (sim moves rooms laid before)
-export const BACK = { x: -HALF + 3, z: cellCenter(0, 22).z };
+export const BACK = { x: -HALF + 0.81, z: cellCenter(0, 22).z }; // Nov 13 (Shelly: "improve and move this"): flush into the west wall, was free-standing 2.7 m out at -HALF + 3
 // where the tutorial's soft floor drops a newcomer (places/level1/config.yaml defaultSpawnPoint): the south-west halls
 export const DROP = { x: cellCenter(7, 27).x, z: cellCenter(7, 27).z };
 export const ONWARD = { x: HALF - 0.6, z: cellCenter(N - 1, 12).z };
