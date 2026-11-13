@@ -172,8 +172,8 @@ export function handleDialogueQuest1(ctx, p, it, text) {
   }
   if (id === "meg-callum" && r === 3 && k === "rResolve" && s.rAleTalked === "rAid" && !s.rAleDead) {
     aleFeels(ctx, p, 45);
-    finish(ctx, p, "rations", { xp: 130, cents: 500, items: ["bandage"], text: "Quest completed: Short Rations · found help for Ale's family", rep: [["meg", 3], ["survivors", 8], ["karma", 5]] });
-    return { reply: "She should have asked. But the kids need to eat. I'll set aside a share, and Ale can run it out there. You paid in already. Take this for the road.", mood: "calm" };
+    finish(ctx, p, "rations", { xp: 130, cents: 500, items: ["bandage", "weapon:" + UNIQUE], text: "Quest completed: Short Rations · found help for Ale's family · Callum's Lucky Thirteen", rep: [["meg", 3], ["survivors", 8], ["karma", 5]] });
+    return { reply: "She should have asked. But the kids need to eat. I'll set aside a share, and Ale can run it out there. You paid in already. Take this too. Thirteen years it's kept me breathing. Your turn.", mood: "calm" };
   }
   if (id === "meg-callum" && (r === 3 || r === 4) && (k === "rTruth" || k === "rKilled")) {
     if (k === "rKilled") {
