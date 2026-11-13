@@ -15,7 +15,7 @@ import { ZONES } from "./level5.js";
 
 export const BEAST = "l5-beast";
 export const QID = "the-gentleman-s-terms", QNAME = "The Gentleman's Terms";
-const WRATH_MS = 15 * 60 * 1000; // my pick: a quarter hour of being watched
+const WRATH_MS = 5 * 60 * 1000; // my pick: five minutes of being watched (was 15)
 const G = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
 const STEP = {
   1: { step: "Bring the Gentleman the guest register from the front desk", mark: { place: "level5", id: "l5-beast-register" } },
@@ -32,22 +32,23 @@ export function beastChoices(ctx, it, s) {
   const st = s.l5b ?? 0, out = [];
   if (!st) {
     if (!s.l5bOffer) out.push({ text: "You mentioned a deal.", tag: "Quest Start" });
-    else { out.push({ text: "[Shake his hand] It's a deal.", tag: "Quest Start" }); out.push({ text: "Why should I trust you?", tag: "Ask" }); }
+    else { out.push({ text: "[Shake his hand] It's a deal.", tag: "Quest Start" }); out.push({ text: "Why should I trust you?", tag: "Doubt" }); }
     if (heardTape(s)) out.push({ text: "I heard what the last one said about you.", tag: "Quest" });
   }
   if (st === 1) out.push(s.l5bReg ? { text: "Here's your guest register.", tag: "Quest" } : { text: "Where do I find the register?", tag: "Ask" });
   if (st === 2) { out.push(s.l5bCard ? { text: "The card's under the door of 1408.", tag: "Quest" } : { text: "Who's in Room 1408?", tag: "Ask" }); }
-  if (st === 1 || st === 2) out.push(heardTape(s) ? { text: "[Speech 55] I heard the last one's tape. The contract's void.", tag: "speech" } : { text: "I want out of this deal.", tag: "Ask" });
+  if (st === 1 || st === 2) out.push(heardTape(s) ? { text: "[Speech 55] I heard the last one's tape. The contract's void.", tag: "speech" } : { text: "I want out of this deal.", tag: "Doubt" });
   return out;
 }
 
 function wrath(ctx, p, why) {
   const s = p.state; s.l5bWrath = ctx.now() + WRATH_MS;
   if (s.l5b === 1 || s.l5b === 2) { endQuest(s, QID, "He stopped answering. You doubted him.", "failed"); s.l5b = 0; }
+  if ((s.l5b ?? 0) <= 0) { delete s.l5bOffer; delete s.l5bReg; delete s.l5bCard; } // a deal offered again starts from the top
   const pos = p.worldFeetPosition ?? p.feetPosition;
   if (pos) heard(ctx, { clip: G("low-wet-whisper-close-behind-ear"), position: pos, volume: 0.8, maxDistance: 8 }, { audience: { player: p.id } });
   ctx.emit("screenFlash", { color: "#05080a", duration: 1.2, intensity: 0.85 }, { audience: { player: p.id } });
-  notify(ctx, p, why ?? "The lamp gutters. When it steadies, the chair behind the desk is empty.");
+  notify(ctx, p, (why ?? "The lamp gutters. When it steadies, the chair behind the desk is empty.") + " He won't let you see him for a while.");
 }
 
 export function handleDialogueQuestBeast(ctx, p, npc, text) {
@@ -146,7 +147,7 @@ const M = {
   cabinet: "/cdn/value.3c8f64f304503e74a1893815ebafc5a3345ec466f701d46a602010f4a75683bc.glb",
   portrait: "/cdn/value.9ad60bda4c117e23cb0b077d89ede8cd399646054150bea3ee4973a5500685f6.png",
 };
-export const OFFICE_V = 2;
+export const OFFICE_V = 3;
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
 const fit = (w, h, d) => ({ box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } });
 const WOOD = { color: "oklch(0.3 0.06 40)", texture: "cdn/texture-worn-hardwood-grain.png", roughness: 0.5 };
@@ -158,7 +159,7 @@ export function layOffice(ctx) {
   const put = (id, spec) => { if (ctx.getObject(id)) ctx.destroy(id); ctx.spawn(id, { ...spec, tags: ["l5-office", ...(spec.tags ?? [])] }); };
   put("l5-office-rug", { feetPosition: { x: -38, y: 0.003, z: -17.6 }, primitive: box(5.2, 0.012, 3.8), material: { texture: "cdn/texture-faded-red-persian-rug-worn-fringe.png", roughness: 0.95 }, castShadow: false });
   put("l5-office-desk", { feetPosition: { x: -38, y: 0, z: -19 }, rotation: { yaw: 180 }, physics: { body: "static", collider: "box" }, model: { id: M.desk, forward: "+x" }, layout: fit(2.1, 1.3, 1.1) });
-  put("l5-office-chair", { feetPosition: { x: -38.5, y: 0, z: -17.2 }, rotation: { yaw: 10 }, physics: { body: "static", collider: "box" }, model: { id: M.chair, forward: "+x" }, layout: fit(0.85, 1.0, 0.85) });
+  put("l5-office-chair", { tags: ["seat", "usable"], state: { name: "Leather armchair", verb: "Sit", seat: { d: 0.04, w: 1, gap: 0.62 } }, feetPosition: { x: -38.5, y: 0, z: -17.2 }, rotation: { yaw: 10 }, physics: { body: "static", collider: "box" }, model: { id: M.chair, forward: "+x" }, layout: fit(0.85, 1.0, 0.85) });
   // his own chair, behind the desk, turned to the door (no collider: he is seated in it)
   put("l5-office-seat", { feetPosition: { x: -38, y: 0, z: -20.55 }, rotation: { yaw: 190 }, model: { id: M.chair, forward: "+x" }, layout: fit(0.9, 1.05, 0.9) });
   put("l5-office-globe", { feetPosition: { x: -43.7, y: 0, z: -20.7 }, rotation: { yaw: 150 }, physics: { body: "static", collider: "box" }, model: { id: M.globe, forward: "+x" }, layout: fit(0.75, 1.1, 0.75) });
