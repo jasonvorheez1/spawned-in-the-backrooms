@@ -1,0 +1,3 @@
+// One inline script: capture this player's frame (canvas only, no HUD), upload it, drop it in the gallery (a toast offers the ticket).
+// GUARD: goes inside an onclick="…" attribute — single quotes only.
+export const SNAP="var el=this;if(el.dataset.busy)return;el.dataset.busy=1;var was=el.innerHTML;el.innerHTML='…';(async function(){try{var b=await window.spawn.view.captureFrame({type:'image/jpeg',quality:0.85,maxSize:1600});var r=await window.spawn.assets.upload({blob:b,name:'slate-shot.jpg'});sendAction('planShot',{url:r.url});el.innerHTML='✓';}catch(e){el.innerHTML='✕';el.title='snapshot failed: '+(e&&(e.code||e.message)||e);}setTimeout(function(){el.innerHTML=was;delete el.dataset.busy;},1500);})();event.stopPropagation();";

@@ -1,0 +1,103 @@
+// FLOW view: phases as squares flowing left to right; the open phase unfolds below, its beats a row of notes.
+const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const jq=v=>esc(String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r?\n/g,'\\n'));
+const ink='#d9e0d9',dim='#8a9aa0',line='#2c3b4c',gold='#a37d45';
+const btn=`background:#1a2b3d;border:1px solid ${line};color:${ink};cursor:pointer;padding:3px 7px;font-size:11px`;
+let V={},O={},SEND=o=>`sendAction('planLoom',${o})`;
+const F=o=>SEND(o);
+const STOP="event.stopPropagation()";
+const col=(h,l=0.7,c=0.12)=>`oklch(${l} ${c} ${h})`;
+const PLAY=u=>`(function(b){var a=window.__flowA;if(a){a.pause();if(a.__b===b){window.__flowA=null;b.textContent='▶';return}a.__b&&(a.__b.textContent='▶')}a=new Audio('${jq(u)}');a.__b=b;window.__flowA=a;b.textContent='■';a.onended=function(){b.textContent='▶';window.__flowA=null};a.play()})(this)`;
+
+export function flowView(ctx,player,plan,L,kindOf,opts={}){O=opts||{};V=O.view||player?.state||{};SEND=O.send||(o=>`sendAction('planLoom',${o})`);
+ const lanes=(L.lanes&&L.lanes.length)?L.lanes:[{id:'campaign',name:'Campaign'}],lane0=lanes[0].id,laneOf=x=>lanes.some(l=>l.id===x.lane)?x.lane:lane0;
+ const lane=lanes.find(l=>l.id===V.flowLane)||lanes[0];
+ const flow=(L.flow||[]).filter(x=>laneOf(x)===lane.id),pages=L.pages||[],chs=L.chapters||[],cards=plan.cards||[];
+ const chKind=id=>kindOf(chs.find(c=>c.id===id)?.name);
+ const story=pages.filter(p=>chKind(p.ch)==='story'&&!p.hero),cast=pages.filter(p=>chKind(p.ch)==='characters');
+ const sel=flow.find(x=>x.id===V.flowSel)||flow[0];
+ const pgOf=id=>pages.find(p=>p.id===id),cardOf=id=>cards.find(c=>c.id===id);
+ const prog=ph=>{const t=(ph.tix||[]).map(cardOf).filter(Boolean);return {n:t.length,d:t.filter(c=>c.col==='done').length};};
+ // the track
+ const square=(ph,i)=>{const on=ph===sel,pr=prog(ph),bs=(ph.beats||[]).map(pgOf).filter(Boolean);
+  return `<button onclick="${F(`{op:'flowSel',ph:'${ph.id}'}`)}" style="flex:none;width:188px;height:188px;text-align:left;cursor:pointer;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px;background:linear-gradient(160deg,${col(ph.hue,0.34,0.07)},#0a121e 85%);border:${on?`2px solid ${col(ph.hue,0.8,0.14)}`:`1px solid ${col(ph.hue,0.45,0.06)}`};box-shadow:${on?`0 0 0 4px ${col(ph.hue,0.6,0.1)}33,0 10px 24px #0008`:'0 6px 14px #0006'};color:${ink};transform:${on?'translateY(-3px)':'none'}">
+   <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:26px;font-weight:200;color:${col(ph.hue,0.82,0.13)}">${String(i+1).padStart(2,'0')}</span><span style="font-family:Georgia,serif;font-size:15px;line-height:1.15">${esc(ph.t)}</span></div>
+   <div style="font-size:10.5px;color:${dim};line-height:1.35;max-height:42px;overflow:hidden">${esc(ph.sub||'')}</div>
+   <div style="flex:1"></div>
+   <div title="The beats this phase plays, in order" style="display:flex;gap:3px;align-items:flex-end;height:26px">${bs.slice(0,12).map((b,k)=>`<span style="width:12px;height:${10+((k*7)%16)}px;border-radius:2px;background:${b.img?`#000 url('${jq(b.img)}') center/cover`:col(ph.hue,0.7,0.12)};box-shadow:0 0 0 1px #0006"></span>`).join('')||`<span style="font-size:9.5px;color:${dim}">No beats yet</span>`}</div>
+   <div style="font-size:9.5px;letter-spacing:.08em;color:#bdc7c7">${(ph.mech||[]).length} mechanics · ${(ph.chars||[]).length} cast · ${(ph.lines||[]).length} lines${(ph.music||[]).length?' · ♪':''}</div>
+   <div title="${pr.d} of ${pr.n} tickets done" style="height:4px;background:#ffffff14;border-radius:2px;overflow:hidden"><div style="height:100%;width:${pr.n?Math.round(pr.d/pr.n*100):0}%;background:${col(ph.hue,0.8,0.14)}"></div></div>
+  </button>`;};
+ const arrow=`<div style="flex:none;align-self:center;width:30px;height:2px;background:linear-gradient(90deg,${line},#53d9e5aa);position:relative"><span style="position:absolute;right:-4px;top:-5px;color:#53d9e5;font-size:10px">▶</span></div>`;
+ const track=`<div style="display:flex;align-items:stretch;gap:0;overflow-x:auto;padding:8px 4px 16px;scrollbar-gutter:stable">${flow.map((ph,i)=>(i?arrow:'')+square(ph,i)).join('')}${flow.length?arrow:''}
+   <div style="flex:none;width:150px;height:188px;border:1px dashed ${line};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:${dim}"><span style="font-size:22px">+</span><input placeholder="Next phase…" onkeydown="${STOP};if(event.key==='Enter'&&this.value.trim()){${F("{op:'flowAdd',t:this.value}")};this.value=''}" style="width:120px;background:transparent;border:none;border-bottom:1px solid ${line};color:${ink};font-size:11px;text-align:center;padding:3px"></div></div>`;
+ if(!sel)return head(flow,lanes,lane)+(O.flowTool?O.flowTool(flow):'')+track+`<div style="color:${dim};font-size:12px;padding:8px">${flow.length?'Tap a phase to open it, or name the next one in the + square.':'name your first phase in the + square: where the player starts.'}</div>`;
+ // the open phase
+ const h=sel.hue,idx=flow.indexOf(sel),P=`ph:'${sel.id}'`;
+ const box=(title,tip,inner,right='')=>`<div style="background:#0a121e;border:1px solid ${line};border-top:2px solid ${col(h,0.6,0.1)};border-radius:6px;padding:10px 12px;min-width:0;overflow:hidden"><div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;margin-bottom:8px"><span style="font-size:10px;letter-spacing:.16em;color:${col(h,0.82,0.12)}">${title}</span><span style="font-size:10px;color:${dim};white-space:nowrap">${tip}</span><span style="flex:1"></span>${right}</div>${inner}</div>`;
+ const x=(k,v)=>`<button title="Take it out of this phase" onclick="event.stopPropagation();${F(`{op:'flowPull',${P},k:'${k}',v:'${jq(v)}'}`)}" style="background:none;border:none;color:#b0503a;cursor:pointer;font-size:11px;padding:0 2px">×</button>`;
+ const picker=(k,opts,label)=>opts.length?`<select onchange="if(this.value){${F(`{op:'flowPush',${P},k:'${k}',v:this.value}`)}}" style="background:#111b2c;border:1px solid ${line};color:${ink};font-size:11px;padding:3px;max-width:100%;min-width:0"><option value="">${label}</option>${opts}</select>`:'';
+ // beats: the song
+ const beats=(sel.beats||[]).map(pgOf).filter(Boolean);
+ const beatOpts=(()=>{const secs=[...new Set(story.map(p=>p.sec||''))];return secs.map(s=>`<optgroup label="${esc(s||'Loose beats')}">${story.filter(p=>(p.sec||'')===s&&!(sel.beats||[]).includes(p.id)).map(p=>`<option value="${p.id}">${esc(p.t.slice(0,60))}</option>`).join('')}</optgroup>`).join('');})();
+ const song=`<div style="display:flex;gap:10px;overflow-x:auto;padding:4px 2px 8px;align-items:flex-end">${beats.map((b,i)=>`<div style="flex:none;width:128px;position:relative">
+   <button onclick="${F(`{op:'open',ch:'${b.ch}',id:'${b.id}'}`)}" title="Open the beat" style="width:128px;height:128px;border-radius:6px;border:1px solid ${col(h,0.5,0.08)};cursor:pointer;padding:0;overflow:hidden;position:relative;background:${b.img?`#000 url('${jq(b.img)}') center/cover`:`linear-gradient(160deg,${col(h,0.4,0.08)},#111b2c)`}">
+    <span style="position:absolute;left:6px;top:4px;font-size:18px;font-weight:200;color:#fff;text-shadow:0 1px 4px #000">${i+1}</span>
+    <span style="position:absolute;left:0;right:0;bottom:0;padding:5px 6px;background:linear-gradient(transparent,#000c);font-size:10.5px;line-height:1.25;color:#fff;text-align:left">${esc(b.t.slice(0,70))}</span></button>
+   <div style="display:flex;justify-content:space-between;margin-top:3px"><button onclick="${F(`{op:'flowShift',${P},k:'beats',v:'${b.id}',dir:-1}`)}" style="${btn};padding:0 6px">◀</button>${x('beats',b.id)}<button onclick="${F(`{op:'flowShift',${P},k:'beats',v:'${b.id}',dir:1}`)}" style="${btn};padding:0 6px">▶</button></div></div>`).join('')||`<div style="font-size:11px;color:${dim}">Add the story beats this phase plays, in order.</div>`}</div>`;
+ const storyCh=chs.find(c=>kindOf(c.name)==='story')?.id;
+ const newBeat=storyCh?`<input placeholder="+ write a new beat for this phase… (enter)" title="Drills down: it becomes a page in Story, filed under ${esc(sel.t)}" onkeydown="${STOP};if(event.key==='Enter'&&this.value.trim()){${F(`{op:'flowNewBeat',${P},ch:'${storyCh}',t:this.value}`)};this.value=''}" style="width:100%;margin-top:4px;background:transparent;border:1px dashed ${line};color:${ink};font-size:11.5px;padding:4px 8px">`:'';
+ // music: what you hear here
+ const name=u=>{const b=String(u).split('/').pop().replace(/\.mp3.*$/,'').replace(/^music-/,'').replace(/-loop$/,'');return b.length>40?b.slice(0,10)+'…':b.replace(/-/g,' ');};
+ const tune=u=>/^cdn\//.test(u)?'/'+u:u;
+ const music=`${(sel.music||[]).map(m=>`<div style="display:flex;gap:6px;align-items:center;padding:4px 0;border-top:1px solid ${line}"><button title="Hear it" onclick="${PLAY(tune(m.clip))}" style="${btn};color:#53d9e5;border-color:#53d9e5">▶</button><input value="${esc(m.note||name(m.clip))}" title="${esc(m.clip)}" onkeydown="${STOP};if(event.key==='Enter')this.blur()" onchange="${F(`{op:'flowMusic',${P},mid:'${m.id}',note:this.value}`)}" style="flex:1;background:transparent;border:none;color:${ink};font-size:11.5px"><button onclick="${F(`{op:'flowMusic',${P},del:'${m.id}'}`)}" style="background:none;border:none;color:#b0503a;cursor:pointer;font-size:11px">×</button></div>`).join('')||`<div style="font-size:11px;color:${dim}">The track that plays here: paste its /cdn/ address.</div>`}
+  <input placeholder="+ paste a track's /cdn/… address (enter)" onkeydown="${STOP};if(event.key==='Enter'&&this.value.trim()){${F(`{op:'flowMusic',${P},clip:this.value.trim()}`)};this.value=''}" style="width:100%;margin-top:6px;background:transparent;border:1px dashed ${line};color:${ink};font-size:11px;padding:3px 8px">`;
+ // mechanics
+ const mech=`<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">${(sel.mech||[]).map(m=>`<span style="background:${col(h,0.3,0.06)};border:1px solid ${col(h,0.5,0.08)};border-radius:12px;padding:2px 6px 2px 10px;font-size:11px">${esc(m)}${x('mech',m)}</span>`).join('')}<input placeholder="+ mechanic" onkeydown="${STOP};if(event.key==='Enter'&&this.value.trim()){${F(`{op:'flowPush',${P},k:'mech',v:this.value}`)};this.value=''}" style="width:130px;background:transparent;border:1px dashed ${line};border-radius:12px;color:${ink};font-size:11px;padding:2px 9px"></div>`;
+ // cast
+ const castRow=`<div style="display:flex;gap:8px;flex-wrap:wrap">${(sel.chars||[]).map(pgOf).filter(Boolean).map(c=>`<div style="display:flex;align-items:center;gap:6px;background:#111b2c;border:1px solid ${line};border-radius:20px;padding:2px 8px 2px 2px"><button onclick="${F(`{op:'open',ch:'${c.ch}',id:'${c.id}'}`)}" style="width:28px;height:28px;border-radius:50%;border:1px solid ${gold};padding:0;cursor:pointer;background:${c.img?`#000 url('${jq(c.img)}') center/cover`:col(h,0.5,0.1)}"></button><span style="font-size:11.5px">${esc(c.t)}</span>${x('chars',c.id)}</div>`).join('')}</div>`;
+ const castOpts=cast.filter(c=>!(sel.chars||[]).includes(c.id)).map(c=>`<option value="${c.id}">${esc(c.t)}</option>`).join('');
+ // lines
+ const whoOpts=w=>`<option value="">Narrator</option>${cast.map(c=>`<option value="${c.id}"${c.id===w?' selected':''}>${esc(c.t)}</option>`).join('')}`;
+ const lines=`${(sel.lines||[]).map(l=>`<div style="display:flex;gap:6px;align-items:flex-start;padding:5px 0;border-top:1px solid ${line}">
+   <select onchange="${F(`{op:'flowLine',${P},lid:'${l.id}',who:this.value}`)}" style="background:#111b2c;border:1px solid ${line};color:#e9c9a0;font-size:10.5px;padding:2px;width:120px;flex:none">${whoOpts(l.who)}</select>
+   <textarea rows="1" onkeydown="${STOP}" onchange="${F(`{op:'flowLine',${P},lid:'${l.id}',text:this.value}`)}" style="flex:1;background:transparent;border:none;color:${ink};font-family:Georgia,serif;font-style:italic;font-size:12.5px;resize:vertical;min-height:20px">${esc(l.text)}</textarea>
+   ${l.clip?`<button title="Hear it" onclick="${PLAY(l.clip)}" style="${btn};color:#53d9e5;border-color:#53d9e5">▶</button>`:O.board===false?'':`<button title="Savi voices it in that character's voice" onclick="${F(`{op:'flowVoice',${P},lid:'${l.id}'}`)};this.textContent='Asked ✓'" style="${btn};color:#ffd79a;border-color:${gold}">${l.asked?'Asked ✓':'🔊 Voice it'}</button>`}
+   <button onclick="${F(`{op:'flowLine',${P},del:'${l.id}'}`)}" style="background:none;border:none;color:#b0503a;cursor:pointer;font-size:11px">×</button></div>`).join('')}
+  <div style="display:flex;gap:6px;margin-top:6px"><select id="vwf-who" style="background:#111b2c;border:1px solid ${line};color:#e9c9a0;font-size:10.5px;padding:2px;width:120px">${whoOpts('')}</select><input placeholder="+ a line someone says here… (enter)" onkeydown="${STOP};if(event.key==='Enter'&&this.value.trim()){${F(`{op:'flowLine',${P},who:document.getElementById('vwf-who').value,text:this.value}`)};this.value=''}" style="flex:1;background:transparent;border:1px dashed ${line};color:${ink};font-size:11.5px;padding:3px 8px"></div>`;
+ // tickets
+ const tix=(sel.tix||[]).map(cardOf).filter(Boolean),pr=prog(sel);
+ const tixRow=`<div style="display:flex;flex-direction:column;gap:3px">${tix.map(c=>`<div style="display:flex;align-items:center;gap:6px"><button onclick="sendAction('planTab',{tab:'board'});sendAction('planOpen',{id:'${c.id}'})" style="${btn};flex:1;text-align:left;border-left:3px solid ${c.col==='done'?'#7bd88f':c.col==='doing'?'#53d9e5':gold};${c.col==='done'?'opacity:.6;text-decoration:line-through':''}">${esc(c.t)}</button>${x('tix',c.id)}</div>`).join('')||`<div style="font-size:11px;color:${dim}">Link the tickets that build this phase.</div>`}</div>`;
+ const tixOpts=cards.filter(c=>!(sel.tix||[]).includes(c.id)).map(c=>`<option value="${c.id}">${c.col==='done'?'✓ ':''}${esc(String(c.t||"untitled").slice(0,60))}</option>`).join('');
+ const detail=`<div style="margin-top:4px;padding:12px;min-width:0;max-width:100%;box-sizing:border-box;border-radius:8px;background:linear-gradient(180deg,${col(h,0.25,0.05)},transparent 140px);border:1px solid ${col(h,0.4,0.06)}">
+  <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+   <span style="font-size:30px;font-weight:200;color:${col(h,0.82,0.13)}">${String(idx+1).padStart(2,'0')}</span>
+   <div style="flex:1 1 200px;min-width:0;display:flex;flex-direction:column;gap:4px">${O.phaseTool?'<div class="wkb"><div class="wki">':''}<input value="${esc(sel.t)}" onkeydown="${STOP};if(event.key==='Enter')this.blur()" onchange="${F(`{op:'flowEdit',${P},t:this.value}`)}" style="width:100%;background:transparent;border:none;color:${ink};font-family:Georgia,serif;font-size:20px">${O.phaseTool?O.phaseTool('t',sel)+'</div>':''}
+    ${O.phaseTool?'<div class="wkb"><div class="wki">':''}<input value="${esc(sel.sub||'')}" placeholder="What the player does here, in one line" onkeydown="${STOP};if(event.key==='Enter')this.blur()" onchange="${F(`{op:'flowEdit',${P},sub:this.value}`)}" style="width:100%;background:transparent;border:none;color:${dim};font-size:12px">${O.phaseTool?O.phaseTool('sub',sel)+'</div>':''}</div>
+   <input type="range" min="0" max="359" value="${h}" title="Phase colour" onchange="${F(`{op:'flowEdit',${P},hue:+this.value}`)}" style="width:70px;accent-color:${col(h,0.7,0.14)}">
+   <button title="Move earlier" onclick="${F(`{op:'flowMove',${P},dir:-1}`)}" style="${btn}">◀</button><button title="Move later" onclick="${F(`{op:'flowMove',${P},dir:1}`)}" style="${btn}">▶</button>
+   ${lanes.length>1?`<select title="Move this phase to another flow" onchange="if(this.value)${F(`{op:'flowToLane',${P},lane:this.value}`)}" style="background:#111b2c;border:1px solid ${line};color:${ink};font-size:11px;padding:3px"><option value="">Move to flow…</option>${lanes.filter(l=>l.id!==lane.id).map(l=>`<option value="${l.id}">${esc(l.name)}</option>`).join('')}</select>`:''}
+   <button onclick="if(confirm('Archive this phase? its beats and tickets stay where they are.'))${F(`{op:'flowDel',${P}}`)}" style="${btn};color:#ff9156">Archive</button></div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+   ${box('BEATS','The story, in the order it plays',song+newBeat,picker('beats',beatOpts,'+ An existing beat…'))}
+   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
+    ${box('MECHANICS','What you do here',mech)}
+    ${box('CAST','Who you meet',castRow||'',picker('chars',castOpts,'+ Someone…'))}</div>
+   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">${box('LINES','What they say, written and spoken',lines)}${box('MUSIC','What you hear here',music)}</div>
+   ${O.board===false?'':box('BUILT BY',`${pr.d}/${pr.n} tickets done`,tixRow,picker('tix',tixOpts,'+ Link a ticket…'))}</div></div>`;
+ return head(flow,lanes,lane)+track+detail;
+}
+function head(flow,lanes,lane){const tab=l=>{const on=l.id===lane.id;return on?`<span contenteditable="true" spellcheck="false" title="Click to rename this flow" onkeydown="${STOP};if(event.key==='Enter'){event.preventDefault();this.blur()}" onblur="var v=this.innerText.trim();if(v&&v!=='${jq(l.name)}')${F(`{op:'flowLaneRen',lane:'${l.id}',name:v}`)}" style="display:inline-block;white-space:nowrap;background:#1d3346;border:1px solid #53d9e5;border-radius:14px;color:#dff8fb;font-size:12px;padding:3px 12px;outline:none;cursor:text">${esc(l.name)}</span>`:`<button onclick="${F(`{op:'flowLane',lane:'${l.id}'}`)}" style="background:transparent;border:1px solid ${line};border-radius:14px;color:${ink};cursor:pointer;font-size:12px;padding:3px 12px">${esc(l.name)}</button>`;};
+ return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap"><span style="font-family:Georgia,serif;font-size:20px;color:#e9c9a0">⇢ Flows</span><span style="font-size:10px;letter-spacing:.16em;color:#bdc7c7;margin-right:6px">The game as the player walks it</span>
+  ${lanes.map(tab).join('')}<input placeholder="+ flow" title="Another way to play: a mode, a side path" onkeydown="${STOP};if(event.key==='Enter'&&this.value.trim()){${F("{op:'flowLaneAdd',name:this.value}")};this.value=''}" style="width:70px;background:transparent;border:1px dashed ${line};border-radius:14px;color:${ink};font-size:11px;padding:3px 9px">
+  ${lane.id!==lanes[0].id?`<button title="Remove this flow; its phases go back to ${esc(lanes[0].name)}" onclick="if(confirm('Archive this flow? its phases move to ${esc(lanes[0].name)}.'))${F(`{op:'flowLaneDel',lane:'${lane.id}'}`)}" style="${btn};color:#ff9156">×</button>`:''}<span style="flex:1"></span><span style="font-size:10.5px;color:${dim}">${flow.length} phases</span></div>`;}
+
+// an empty book: three doors, nothing that blocks
+export function startView(L,opts={}){O=opts||{};SEND=O.send||(o=>`sendAction('planLoom',${o})`);
+ const door=(k,icon,t,tip,hot)=>`<button onclick="${F(`{op:'start',kind:'${k}'}`)}${k==='savi'?";this.querySelector('b').textContent='Savi is reading your world…'":''}" style="flex:1;min-width:180px;text-align:left;cursor:pointer;background:${hot?'linear-gradient(160deg,#3a2c16,#0a121e)':'#0a121e'};border:1px solid ${hot?gold:line};border-radius:10px;padding:16px;color:${ink};display:flex;flex-direction:column;gap:8px"><span style="font-size:26px">${icon}</span><b style="font-family:Georgia,serif;font-size:15px;font-weight:400;color:${hot?'#ffd79a':ink}">${t}</b><span style="font-size:11.5px;color:${dim};line-height:1.45">${tip}</span></button>`;
+ return `<div style="max-width:720px;margin:30px auto;text-align:center"><div style="font-family:Georgia,serif;font-size:24px;color:#e9c9a0">Every game has a story, even a small one.</div>
+  <div style="font-size:12.5px;color:${dim};margin:8px 0 22px">This book holds yours: how it plays from start to end, who's in it, where it happens. Pick a way in, you can change everything later.</div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap">${L.startAsked?`<div style="flex:1;padding:16px;border:1px solid ${gold};border-radius:10px;color:#ffd79a">✦ Savi is drafting your book from your world. Pages she writes wear a ✦ so you know what to check.</div>`:door('savi','✦','Savi drafts it','she reads your world and writes a starter book: the flow of play, the cast, the places, a few story beats. all editable.',true)}
+   ${door('template','⇢','Start with a flow','three empty phases to fill: first steps, the core loop, the big moment. think in play, the story follows.')}
+   ${door('blank','✎','Blank book','Just the chapters. Write what you want, when you want.')}</div></div>`;
+}

@@ -1,0 +1,192 @@
+{
+  "name": "slate",
+  "displayName": "Slate",
+  "description": "Slate — your game studio, inside your world.\n\nCatch an idea before it disappears. Turn a screenshot into a task. Keep your plans, stories, assets and conversations together while you build with Savi.\n\nSlate is a floating tablet for creators, from the first scribbled idea to your next release.\n\nMAKE SENSE OF THE MAKING\n• Loom holds your game’s story, characters, places and decisions. The Design board gives ideas room to grow.\n• Planner keeps tickets, epics and sprints organised, with editable links between related work.\n• Shared discussions keep feedback with the work, with an option to ask Savi for her thoughts.\n• Kiln holds your production workflows. Workbench brings assets and references together.\n• Camera and Gallery turn moments in your world into something you can build on.\n\nFIND YOUR WAY. MAKE IT YOURS.\nSearch across Slate, return to recent pages and choose your own navigation shortcuts. Personalise your tablet with themes, backgrounds, fonts and glowing controls. Keep it open while building, or tuck it into an edge tab while you play.\n\nAdd more through Slate’s app store. Your team shares the work; your layout and preferences stay yours.\n\nMade for builders. Out of your players’ way.",
+  "tags": [
+    "app-store",
+    "assets",
+    "creator-tools",
+    "kanban",
+    "music",
+    "planning",
+    "productivity",
+    "screenshots",
+    "tool",
+    "toolkit",
+    "tools"
+  ],
+  "visibility": "public",
+  "version": "1.10.1",
+  "inputs": {
+    "actions": {
+      "copy": {},
+      "ctrl": {},
+      "floor": {},
+      "paste": {},
+      "planMs": {},
+      "planRn": {},
+      "planAdd": {},
+      "planApp": {},
+      "planAsk": {},
+      "planDel": {},
+      "planGal": {},
+      "planOrb": {},
+      "planRel": {},
+      "planTab": {},
+      "realign": {},
+      "setSnap": {},
+      "planEdit": {},
+      "planFlow": {},
+      "planLoom": {},
+      "planMove": {},
+      "planNote": {},
+      "planOpen": {},
+      "planShot": {},
+      "planUndo": {},
+      "slateK_0": {
+        "keys": [
+          "0"
+        ]
+      },
+      "slateK_4": {
+        "keys": [
+          "4"
+        ]
+      },
+      "slateK_5": {
+        "keys": [
+          "5"
+        ]
+      },
+      "slateK_6": {
+        "keys": [
+          "6"
+        ]
+      },
+      "slateK_7": {
+        "keys": [
+          "7"
+        ]
+      },
+      "slateK_8": {
+        "keys": [
+          "8"
+        ]
+      },
+      "slateK_9": {
+        "keys": [
+          "9"
+        ]
+      },
+      "slateK_b": {
+        "keys": [
+          "b"
+        ]
+      },
+      "slateK_h": {
+        "keys": [
+          "h"
+        ]
+      },
+      "slateK_i": {
+        "keys": [
+          "i"
+        ]
+      },
+      "slateK_j": {
+        "keys": [
+          "j"
+        ]
+      },
+      "slateK_k": {
+        "keys": [
+          "k"
+        ]
+      },
+      "slateK_l": {
+        "keys": [
+          "l"
+        ]
+      },
+      "slateK_m": {
+        "keys": [
+          "m"
+        ]
+      },
+      "slateK_n": {
+        "keys": [
+          "n"
+        ]
+      },
+      "slateK_o": {
+        "keys": [
+          "o"
+        ]
+      },
+      "slateK_t": {
+        "keys": [
+          "t"
+        ]
+      },
+      "slateK_u": {
+        "keys": [
+          "u"
+        ]
+      },
+      "slateK_v": {
+        "keys": [
+          "v"
+        ]
+      },
+      "slateK_x": {
+        "keys": [
+          "x"
+        ]
+      },
+      "slateK_y": {
+        "keys": [
+          "y"
+        ]
+      },
+      "slateK_z": {
+        "keys": [
+          "z"
+        ]
+      },
+      "planAddon": {},
+      "planMsDel": {},
+      "planWorld": {},
+      "planPocket": {},
+      "planRelDel": {},
+      "planSprint": {},
+      "planStudio": {},
+      "setEnabled": {},
+      "ungroupOne": {},
+      "groupDelete": {},
+      "planArchive": {},
+      "planEpicRel": {},
+      "planNoteDel": {},
+      "planTicketTalk": {}
+    }
+  },
+  "attach": [
+    {
+      "target": {
+        "kind": "player"
+      },
+      "behavior": "input.js"
+    },
+    {
+      "target": {
+        "kind": "god"
+      },
+      "behavior": "input.js"
+    }
+  ],
+  "tab": {
+    "id": "slate",
+    "label": "Slate",
+    "icon": "📱",
+    "render": "panel.js"
+  }
+}
