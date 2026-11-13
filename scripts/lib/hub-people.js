@@ -24,7 +24,7 @@ function person(ctx, id) {
 }
 // the things you press, each with its own pool of light so it reads in the dark end
 const THINGS = [
-  { id: "hub-ledger", kind: "ledger", at: [19.6, -7.2], face: 180, state: { kind: "ledger", name: "Key ledger", verb: "Read", info: "KEYS OUT, in three hands." } },
+  { id: "hub-ledger", kind: "ledger", at: [19.6, -7.2], y: 0.18, face: 180, state: { kind: "ledger", name: "Key ledger", verb: "Read", info: "KEYS OUT, in three hands." } },
   { id: "hub-amberbox", kind: "amberbox", at: [185.2, 7.0], face: 10, state: { kind: "amberbox", name: "Newcomer box", verb: "Open", info: "One per face." } },
   { id: "hub-keytag", kind: "keytag", at: [360.6, -84.0], face: 30, lamp: 0.5, state: { kind: "keytag", name: "Something on the road", verb: "Pick up", info: "Small. Metal." } },
   { id: "hub-rec-0", kind: "recorder", at: [516.2, -2.6], face: 70, lamp: 0.6, state: { kind: "rec", i: 0, name: "Orange recorder", verb: "Take the tape", info: "M.E.G. survey, 2019." } },
@@ -34,7 +34,7 @@ const THINGS = [
 export function layThings(ctx) {
   for (const t of THINGS) {
     if (ctx.place.objects[t.id]) continue;
-    ctx.spawn(t.id, { tags: ["usable", "hub-thing"], feetPosition: { x: t.at[0], y: 0, z: t.at[1] }, rotation: { yaw: t.face }, physics: { body: "static", collider: "auto" }, castShadow: false,
+    ctx.spawn(t.id, { tags: ["usable", "hub-thing"], feetPosition: { x: t.at[0], y: t.y ?? 0, z: t.at[1] }, rotation: { yaw: t.face }, physics: { body: "static", collider: "auto" }, castShadow: false,
       primitive: { kind: "scripted", script: "scripts/hub-props-geo.js", params: { kind: t.kind } }, behavior: "scripts/hub-thing.js", state: { ...t.state, c: { x: t.at[0], y: 0.4, z: t.at[1] } },
       children: t.lamp ? [{ id: "glint", feetPosition: { x: 0, y: 0.6, z: 0 }, light: { kind: "point", color: "oklch(0.75 0.06 80)", intensity: t.lamp, distance: 4, shadow: { enabled: false } } }] : [] });
   }
