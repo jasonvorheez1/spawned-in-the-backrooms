@@ -18,7 +18,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 
 export const cadence = "1s";
-const V = 20;
+const V = 21;
 const DOCK_Y = 0.2; // deck starts at the measured west-bank landing
 const CEDAR = { texture: "cdn/texture-worn-hardwood-grain.png", color: "#776049", roughness: 0.92 };
 const spot = ({ x, y, z }) => ({ x, y, z });
@@ -346,6 +346,12 @@ pop glow n=1 at=disc(.2).c(.45) glo=fire()*(#flame/35)~ r=light(<1,.55,.24>,$glo
   // ==========================================
   sp("l10-barn", { ...BARN(18, 9, 4.6, 8.4, "brick", 4.2), feetPosition: T(-48, -55, 0), rotation: { yaw: 180 } });
   sp("l10-stable", { ...BARN(12, 7, 3.4, 5.8, "brick", 3), feetPosition: T(-58, -105, 0), rotation: { yaw: 90 } });
+  // the wiki's lost family (Level 10 diary): they made the stable home. Mum's new doorstep at its door, the porridge that burnt the night they fell, the dog's bowl by the bedrolls, and the wood and nails they pulled off the sheds.
+  const FAM = (id, model, x, z, box, yaw, name, verb, extra = {}) => sp(id, { tags: ["l10-family"], feetPosition: T(x, z, 0.01), rotation: { yaw, ...(extra.rot ?? {}) }, model: { id: model }, layout: { box }, physics: { body: "static", collider: "box" }, castShadow: true, state: { kind: "family-prop", name, verb } });
+  FAM("l10-fam-step", "/cdn/value.a97a6c8edbdb8ff2364e17f3ed377a0c688979bdafa117c6a6a19465752647fb.glb", -64.3, -105, { min: { x: -0.7, y: 0, z: -0.09 }, max: { x: 0.7, y: 1.3, z: 0.09 } }, 90, "New wooden doorstep", "Look at the doorstep", { rot: { pitch: -90 } });
+  FAM("l10-fam-pot", "/cdn/value.339b38141be827875efe734cae68c9300fb75cab6f741d60843a1662d9dd0008.glb", -55.6, -108.2, { min: { x: -0.42, y: 0, z: -0.42 }, max: { x: 0.42, y: 0.85, z: 0.42 } }, 200, "Pot of burnt porridge", "Look in the pot");
+  FAM("l10-fam-beds", "/cdn/value.9857d12fb35a7c58b0ae1e2699770ac30cd38728ac32c6d0dc4fad2df28320e7.glb", -53.8, -104.2, { min: { x: -1, y: 0, z: -0.75 }, max: { x: 1, y: 0.55, z: 0.75 } }, 90, "Bedrolls and a dog bowl", "Look at the bedrolls");
+  FAM("l10-fam-barrow", "/cdn/value.72c3387ca214e4fa6edfe4fb2605b6bf8f02c22f5da2bf546cdbbc167eb77ca8.glb", -56, -100.6, { min: { x: -0.8, y: 0, z: -0.45 }, max: { x: 0.8, y: 0.85, z: 0.45 } }, 160, "Barrow of salvaged planks", "Search the barrow");
   sp("l10-shed-a", { ...BARN(5, 4, 2.6, 3.9, "plank", 1.8), feetPosition: T(36, -150, 0), rotation: { yaw: -20 } });
   sp("l10-shed-b", { ...BARN(4.5, 3.6, 2.5, 3.6, "plank", 1.6), feetPosition: T(95, -60, 0), rotation: { yaw: 200 } });
 
