@@ -11,10 +11,11 @@ Layering: shared default (scripts/lib) -> level data (places/<level>, dlg-*.yml,
 | side jobs | scripts/lib/errands.js | scripts/lib/data/errands.yml rows |
 | main story trail | scripts/lib/dina-quest.js, scripts/lib/quest-route.js | clue rows |
 | NPC weapons + temper (first hit warns, second within 20 s fights) | scripts/lib/npc-temper.js | the NPC's state.kind weapon |
-| hostility, incidents, forgiveness | scripts/lib/forgive.js, scripts/lib/rep.js | faction fields on the NPC |
+| hostility, incidents, forgiveness (assaulted(): first stray hit warns, second within 20 s or a kill is assault, allies join) | scripts/lib/forgive.js, scripts/lib/rep.js | faction fields on the NPC |
 | armed people (fight, cover, barks, companions) | scripts/meg-agent.js, scripts/lib/companion.js | NPC rows + dlg barks |
 | breakable walls/props | scripts/lib/breakables.js | data/breakables.yml |
 | doors | scripts/door-geo.js, scripts/lib/door-swing.js | door rows |
+| tapes (HALOGEN) | scripts/player.js HOLO + scripts/lib/items.js holo:<id> | a holo:<id> token in any container |
 | loot + items | scripts/lib/loot.js, scripts/lib/items.js, data/weapons.yml | loot tables |
 | player notices | scripts/lib/notify.js | text |
 
