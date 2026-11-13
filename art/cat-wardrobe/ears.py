@@ -15,7 +15,7 @@ TYPES = {
     "fold":    dict(h=1.0, w=1.04, lean=4,  fold=125, foldAt=0.4,  round=0.8,  key="Ear_Small"),
     "wide":    dict(h=1.0,  w=1.02, lean=6,  fold=0,  foldAt=1,    round=0.6,  key="Ear_Wide", tip=-58),
     "bunny":   dict(h=2.15, w=0.7,  lean=7,  fold=0,  foldAt=1,    round=0.75, key="Ear_Small"),
-    "lop":     dict(h=1.9,  w=0.74, lean=70, fold=110, foldAt=0.3, round=0.8,  key="Ear_Small"),
+    "lop":     dict(h=1.7,  w=0.78, lean=135, fold=0, foldAt=1,   round=0.85, key="Ear_Small"),   # Shelly: the first lop curled up like a horn; a lop arcs out and hangs down
     "fox":     dict(h=1.3,  w=1.18, lean=10, fold=0,  foldAt=1,    round=0.25, key="Ear_Small"),
     "bear":    dict(h=0.6,  w=1.1,  lean=4,  fold=0,  foldAt=1,    round=1.0,  key="Ear_Small"),
 }

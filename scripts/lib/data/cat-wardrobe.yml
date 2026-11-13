@@ -97,7 +97,7 @@ ears:
   fold: { f: '/cdn/value.4a1a1772f9fac90af6efe7cc4ef589310b0a419d78221b3b66404aa2c3c5cddd.glb', m: '/cdn/value.85e4c77a7217e93fabb4646bf4c9f76f4d832cf0deac24e4a0a6b7cf1aaa88b1.glb' }
   wide: { f: '/cdn/value.14142ad9b5a0d5f3912988ad54f8efd72ca650321e4e08e3e0e5ee007cf38028.glb', m: '/cdn/value.a8b7d99008a5f8887525c4b2a7387180809dfbc4d3f018ac20866634a5bc97cb.glb' }
   bunny: { f: '/cdn/value.5901f8bfe8f6308f3a6ec0dc07a8676ab8b54f5c9baeb072e8febd9013f59c4d.glb', m: '/cdn/value.e5268331d0d628fbac1b86eec2f03235382e1d5a6a1e9dd8b056303eb021846a.glb' }
-  lop: { f: '/cdn/value.4790935f411e2cd6f4df75d7a6e4bf085e0e1824146e4cbde63b32e707fd782c.glb', m: '/cdn/value.10bface95da96c878d29c738c51d3e04401e183b07370c7ab5b2e4b2bb54915e.glb' }
+  lop: { f: '/cdn/value.fca232b5bcc3399988e6c907b5d08452429ef842f63b169d5e26640a09b01cee.glb', m: '/cdn/value.b9f6911395bc982474bd3c482c429ac5b36bd08e255228ba919e00fba745cf0e.glb' }
   fox: { f: '/cdn/value.7fe2374ed283c5a979455b18d0240a09a9a699f43d3487fbd86223b2b68c3a78.glb', m: '/cdn/value.245e324012eccb50faa6fad3b51a9fc999c01afdb1bc003f1529f3f218856636.glb' }
   bear: { f: '/cdn/value.ab7eace5072c9bb59a907f753d31c7c5dcafaee91c7b54dc703325c4fc452c0f.glb', m: '/cdn/value.2933c3cf2c16d04b2ca693da0c392127fe16fc1a8e7c86ce14ea0da1c42acab7.glb' }
 
