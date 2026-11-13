@@ -53,6 +53,7 @@ const MESH = { // kind: [model, offset y, scale, the mesh's material slot]
   shotgun:    ["/cdn/value.104163217085585686f5b41208ef60d422b0c1836d7ef20078f129b016e8fdaf.glb", -0.18, 0, "tripo_material_7b83893e-ced9-4331-b685-1a4a787052e6"],
   cleaver: ["/cdn/value.f0c1dc5c8e605bc7ede97003855e4bb4cd0b01ccdf0f0f529f1564e709fd16e3.glb", 0.025, 0, "tripo_material_5a45f7d0-e903-4c02-844d-3d88d7b8bf9b"], // Tripo remake, fitted by art/weapons/build.py
   coach_gun: ["/cdn/value.2b91df14f52f129e448ddcd7b3374ccaed5152234a2d83b7408c692e752530f0.glb", -0.02, 0, "tripo_material_d372804d-21f6-4276-bfc0-8e41efe499ee"], // Tripo remake, fitted by art/weapons/build.py
+  carbine: ["/cdn/value.18c0075d4fb5e8afb7cc390ff1d62fd16f362092cf2472ab7e908aa2f7a80926.glb", -0.062, 0, "tripo_material_0d5977b0-210b-43b9-9c63-11ac84b1bfd1"], // Tripo remake (Shelly, Nov 13: the gun needs a pass too), turned upright and fitted by art/weapons/build.py
   hunting_rifle: ["/cdn/value.97657752011ab7664f7865f122968e0c266841627187f4a6039900005ba95cf4.glb", -0.027, 0, "tripo_material_fe89de78-56f1-4294-bafe-cb90967640a2"], // Tripo remake, fitted by art/weapons/build.py
   knife: ["/cdn/value.d3ceae8b13d2230c37d25b11416839251358716ab7090a68ae8479c1c0272b2a.glb", 0.026, 0, "tripo_material_403b10b6-6542-44ed-9dfe-8e21adde4316"], // Tripo remake, fitted by art/weapons/build.py
   laser_rifle: ["/cdn/value.e8c8a1244131da46708f766983742ffb13760b300cef632176a9da4b2ca404b6.glb", -0.052, 0, "tripo_material_344de087-5dc4-481d-99b7-1efaae4434c9"], // Tripo remake, fitted by art/weapons/build.py
