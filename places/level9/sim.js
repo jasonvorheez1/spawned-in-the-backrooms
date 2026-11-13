@@ -166,6 +166,22 @@ function hounds(ctx, s, L) {
     const mh = ctx.query({ tags: ["moths"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((m) => !m.state?.dead && !m.tags?.includes("l5rat")).length;
     for (let i = mh; i < TUNE.moths && lit.length; i++) { const l = lit.splice(Math.floor(ctx.random() * lit.length), 1)[0]; ctx.spawn({ template: "templates/deathmoths.js#swarm", feetPosition: { x: l.x, y: 3.2, z: l.z }, state: { home: { x: l.x, z: l.z } } }); }
   }
+  // smilers (Wikidot: Level 9): one to a dark house, its grin in the hall; the street has hounds, the dark houses have these
+  const sm = ctx.query({ tags: ["l9-smiler"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((e) => !e.state?.dead);
+  const taken = new Set(sm.map((e) => e.state?.lot));
+  const dark = L.lots.filter((l) => !l.lit && !taken.has(l.id) && ps.every((p) => Math.hypot(p.x - l.x, p.z - l.z) > 30));
+  for (let i = sm.length; i < TUNE.smilers && dark.length; i++) {
+    const lot = dark.splice(Math.floor(ctx.random() * dark.length), 1)[0], H = HOUSES[lot.kind];
+    const R = H.inside ?? { x0: -H.w / 2 + 0.9, x1: H.w / 2 - 0.9, z0: -H.d / 2 + 0.9, z1: H.d / 2 - 0.9 }, m = 1.1, rot = { yaw: lot.yaw };
+    const W = (lx, lz) => { const v = rotate(rot, { x: lx, y: 0, z: lz }); return [+(lot.x + v.x).toFixed(2), +(lot.z + v.z).toFixed(2)]; };
+    const route = [W(R.x0 + m, R.z0 + m), W(R.x1 - m, R.z0 + m), W(R.x1 - m, R.z1 - m), W(R.x0 + m, R.z1 - m)];
+    const fy = (ctx.place.terrain.heightAt(lot.x, lot.z) ?? 0) + (H.door?.y ?? 0.4) + 0.12, c = W((R.x0 + R.x1) / 2, (R.z0 + R.z1) / 2);
+    ctx.spawn({ tags: ["smiler", "l9-smiler", "hostile"], feetPosition: { x: c[0], y: fy, z: c[1] }, castShadow: false, visibleRange: { max: 40 },
+      model: { id: "/cdn/value.fb443f6a23bcd4977c437db42b3f9abe2510fcb6cf2076ee4956fb235d581b26.glb", forward: "+x" },
+      layout: { box: { min: { x: -0.4, y: 0, z: -0.35 }, max: { x: 0.4, y: 1.7, z: 0.35 } } },
+      physics: { body: "character" }, behavior: "scripts/l9-smiler.js",
+      state: { hp: 90, maxHp: 90, name: "Smiler", lot: lot.id, home: { x: c[0], z: c[1] }, leash: Math.max(R.x1 - R.x0, R.z1 - R.z0) / 2 + 0.6, route, leg: 0 } });
+  }
   // skin-stealers (Wikidot: Level 9): a critter on the pavement, until it is close
   if (!s.stealMgr || !(s.stealMgr in ctx.place.objects)) s.stealMgr = ctx.spawn({ behavior: "scripts/stealers.js" });
   const sh = ctx.query({ tags: ["stealer"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((e) => !e.state?.dead).length;

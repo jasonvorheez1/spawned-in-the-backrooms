@@ -43,6 +43,7 @@ tune:
   houndHp: 65            # base hp, rolled per hound (my pick)
   houndEvery: 150        # s before a dead hound's place is filled again (my pick)
   moths: 3               # deathmoth swarms, each homed on a streetlight that still burns (my pick)
+  smilers: 3            # smilers, one to a dark house, never leaving it (my pick)
   stealers: 2            # skin-stealers walking the streets, wearing a critter's skin (my pick)
   stealerHp: 90          # base hp (my pick)
   houndFar: 45           # m a new hound arrives from every player (my pick)
