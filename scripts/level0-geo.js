@@ -159,6 +159,19 @@ export function geometry(ctx) {
       if (wallX(cx, cz) && !isArchWall(cx, cz, "x")) box(ctx, xw - T - 0.02, 0, cz * S - HALF, xw + T + 0.02, 0.1, (cz + 1) * S - HALF);
       if (wallZ(cx, cz) && !isArchWall(cx, cz, "z")) box(ctx, cx * S - HALF, 0, zw - T - 0.02, (cx + 1) * S - HALF, 0.1, zw + T + 0.02);
     }
+    // Nov 13 art pass: the base gets a shoe moulding at the carpet and a thin cap bead, so it has a profile instead of one strip
+    for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
+      const xw = (cx + 1) * S - HALF, zw = (cz + 1) * S - HALF;
+      if (wallX(cx, cz) && !isArchWall(cx, cz, "x")) { box(ctx, xw - T - 0.034, 0, cz * S - HALF, xw + T + 0.034, 0.022, (cz + 1) * S - HALF); box(ctx, xw - T - 0.026, 0.1, cz * S - HALF, xw + T + 0.026, 0.112, (cz + 1) * S - HALF); }
+      if (wallZ(cx, cz) && !isArchWall(cx, cz, "z")) { box(ctx, cx * S - HALF, 0, zw - T - 0.034, (cx + 1) * S - HALF, 0.022, zw + T + 0.034); box(ctx, cx * S - HALF, 0.1, zw - T - 0.026, (cx + 1) * S - HALF, 0.112, zw + T + 0.026); }
+    }
+    // the drop ceiling's wall angle: the white steel L every suspended grid lands on, yellowed
+    ctx.albedo(null); ctx.color("oklch(0.86 0.035 92)"); ctx.roughness(0.45);
+    for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
+      const xw = (cx + 1) * S - HALF, zw = (cz + 1) * S - HALF;
+      if (wallX(cx, cz)) box(ctx, xw - T - 0.024, H - 0.02, cz * S - HALF, xw + T + 0.024, H - 0.001, (cz + 1) * S - HALF, false);
+      if (wallZ(cx, cz)) box(ctx, cx * S - HALF, H - 0.02, zw - T - 0.024, (cx + 1) * S - HALF, H - 0.001, zw + T + 0.024, false);
+    }
     ctx.roughness(null);
   }
   // WEAR (near detail): water stains bleeding down the paper, damp carpet, dead outlets, missing tiles
@@ -237,10 +250,15 @@ export function geometry(ctx) {
     box(ctx, mx - hx - 0.05, H - 0.04, mz - hz - 0.05, mx + hx + 0.05, H, mz + hz + 0.05); // frame
     if (lit) {
       const boost = inHub(cx, cz) ? 1.15 : 1.0;
-      ctx.emissive(zone === "red" ? [3.0, 0.25, 0.18] : [1.55 * boost, 1.45 * boost, 1.15 * boost]);
+      ctx.emissive(zone === "red" ? [2.2, 0.2, 0.14] : [1.05 * boost, 0.98 * boost, 0.76 * boost]); // the prismatic lens glows; the tubes behind it are the hot part (below)
     }
     ctx.color(lit ? (zone === "red" ? "#ff4a3a" : "#fffaf0") : "oklch(0.45 0.01 90)");
     face(ctx, [mx - hx, H - 0.045, mz - hz], [mx + hx, H - 0.045, mz - hz], [mx + hx, H - 0.045, mz + hz], [mx - hx, H - 0.045, mz + hz], [0, -1, 0]);
+    if (lit) { // two fluorescent tubes showing through the lens as brighter bars
+      ctx.emissive(zone === "red" ? [3.4, 0.3, 0.2] : [2.1, 2.0, 1.6]);
+      const Yt = H - 0.046, tw = 0.035;
+      for (const k of [-0.5, 0.5]) { const o = (rot ? hz : hx) * k; if (rot) face(ctx, [mx - hx + 0.04, Yt, mz + o - tw], [mx + hx - 0.04, Yt, mz + o - tw], [mx + hx - 0.04, Yt, mz + o + tw], [mx - hx + 0.04, Yt, mz + o + tw], [0, -1, 0]); else face(ctx, [mx + o - tw, Yt, mz - hz + 0.04], [mx + o + tw, Yt, mz - hz + 0.04], [mx + o + tw, Yt, mz + hz - 0.04], [mx + o - tw, Yt, mz + hz - 0.04], [0, -1, 0]); }
+    }
     ctx.emissive(null);
     if (ctx.lod <= 1) { // a 2x4 troffer reads as one: a centre T-bar splitting two diffuser lenses and a grimy lip; flat faces only (10 tris a fixture)
       const Y = H - 0.047, F = (x0, z0, x1, z1) => face(ctx, [x0, Y, z0], [x1, Y, z0], [x1, Y, z1], [x0, Y, z1], [0, -1, 0]);
