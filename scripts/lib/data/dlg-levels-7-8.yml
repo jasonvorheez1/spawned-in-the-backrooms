@@ -380,6 +380,8 @@ l8-carla-kid:
       a: "Here. Blow on it, it's hot. Is it good? It's good. Hobb says it's good. Three Backbucks, but you can pay later. Hobb says don't say that."
     - q: "You're not scared of spiders?"
       a: "No. They're just big bugs. The singing's scary. The singing knows my name. Hobb says it doesn't. It does."
+    - q: "Where's your mum?"
+      a: "Down the road. She's coming back. Hobb says so too. He says it slower every time."
     - q: "Ever hear the name Dina?"
       a: "No. Is she lost? I can ask Mum when she's back. Mum's seen the whole road by now."
   barks:
