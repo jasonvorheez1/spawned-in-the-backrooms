@@ -9,7 +9,7 @@ W = "/workspace/l0ceil"
 KIT = {
   "diffuser":     dict(rot=(0, 90, 0),  size=(0.6, 0.6, None), cut=0.08, origin="ceiling"),
   "returngrille": dict(rot=(0, 0, 0),   size=(0.6, 0.6, None), cut=0.03, origin="ceiling"),
-  "sprinkler":    dict(rot=(0, 0, 0),   size=(0.08, 0.08, 0.07), origin="ceiling"),
+  "sprinkler":    dict(rot=(0, 0, 0),   size=(0.08, 0.08, 0.07), junk=0.002, origin="ceiling"),
   "smokedet":     dict(rot=(0, 0, 0),   size=(0.14, 0.14, 0.05), origin="ceiling"),
   "troffer-hang": dict(rot=(0, 0, 0),   size=(0.6, None, None), origin="ceiling"),
   "tile-fallen":  dict(rot=(0, 0, 0),   size=(None, None, 0.05), fit=0.72, origin="floor"),
@@ -65,6 +65,8 @@ if C.get("cut"):
     bm = bmesh.new(); bm.from_mesh(me)
     bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=(0, 0, mn.z + C["cut"]), plane_no=(0, 0, 1), clear_outer=True)
     bm.to_mesh(me); bm.free()
+    mn, mx = bounds(); d = mx - mn      # the flange alone now: refit it to the grid module
+    xf(Matrix.Diagonal((sz[0] / d.x, sz[1] / d.y, 1, 1)))
 mn, mx = bounds()
 z0 = mx.z if C["origin"] == "ceiling" else mn.z
 xf(Matrix.Translation((-(mn.x + mx.x) / 2, -(mn.y + mx.y) / 2, -z0)))
