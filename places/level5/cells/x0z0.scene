@@ -2532,13 +2532,6 @@ l5-hall-plaque-suite-sw:
   primitive: {kind: scripted, params: {kind: placard, label: "237", "no": "237", text: "237"}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: 180}
   tags: [l5-hall]
-l5-hall-portrait-n0:
-  feetPosition: {x: -35.2, y: 1.7, z: -12.825}
-  id: l5-hall-portrait-n0
-  primitive: {kind: scripted, params: {h: 1.05, kind: painting, seed: 3, style: portrait, w: 0.8}, script: scripts/l5-hall-geo.js}
-  rotation: {pitch: 0, yaw: 180}
-  state: {hp: 60, mat: wood, maxHp: 60}
-  tags: [l5-hall, furniture, breakable]
 l5-hall-portrait-n1:
   feetPosition: {x: -40.8, y: 1.7, z: -12.825}
   id: l5-hall-portrait-n1
