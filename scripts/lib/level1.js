@@ -27,8 +27,12 @@ export function zoneOf(cx, cz) {
   if (r < 0.56) return "storage";
   return "halls";
 }
-export const zoneAt = (x, z) => { const { cx, cz } = cellAt(x, z); return zoneOf(cx, cz); };
-export const safeZone = (z) => z === "corridors" || z === "camp" || z === "void";
+// the Trader's Keep (Shelly Nov 13 "expand upon b.n.t.g"): the B.N.T.G.'s home base fills the Gild Sector storage block in the far north-west,
+// its racks the company stock, its west wall the Trader's Vault of roll-up storage rooms. Guarded: hounds and stealers keep out.
+export const KEEP = { x0: -120, x1: -80, z0: -80, z1: -40 };
+export const inKeep = (x, z) => x > KEEP.x0 && x < KEEP.x1 && z > KEEP.z0 && z < KEEP.z1;
+export const zoneAt = (x, z) => { if (inKeep(x, z)) return "keep"; const { cx, cz } = cellAt(x, z); return zoneOf(cx, cz); };
+export const safeZone = (z) => z === "corridors" || z === "camp" || z === "void" || z === "keep";
 
 // sectors: the faint differences wanderers navigate by. The pillar band is the sector's colour.
 export const SECTORS = [
@@ -94,7 +98,7 @@ export const DROP = { x: cellCenter(7, 27).x, z: cellCenter(7, 27).z };
 export const ONWARD = { x: HALF - 0.6, z: cellCenter(N - 1, 12).z };
 
 export const L1_NAMES = {
-  l1_halls: "The Halls", l1_storage: "Storage Racks", l1_corridors: "The Corridors", l1_camp: "M.E.G. Waypoint", l1_pipes: "The Pipeworks", l1_void: "The Halls",
+  l1_halls: "The Halls", l1_storage: "Storage Racks", l1_corridors: "The Corridors", l1_camp: "M.E.G. Waypoint", l1_pipes: "The Pipeworks", l1_keep: "The Trader's Keep", l1_void: "The Halls",
 };
 
 // the upper deck (Shelly: "there should be at least a second floor"): a second parking floor over the long hall band,
