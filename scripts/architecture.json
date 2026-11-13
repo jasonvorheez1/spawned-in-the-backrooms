@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7600,
-  "updatedAt": "2026-11-13T19:55:58.698Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG across Level 0, the mall, The Hub and authored lore destinations; player.state carries progression, gear, quests, faction standing and resume location. Shared player behaviors, quest/dialogue systems and level simulations connect authored places with generated spaces and encounters.",
+  "basedOnSpecVersion": 7607,
+  "updatedAt": "2026-11-13T20:03:01.079Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, the mall, The Hub and authored lore destinations; player.state carries progression, gear, quests, faction standing and resume location. Shared player behaviors, quest/dialogue systems and place simulations connect authored spaces with generated layouts and encounters.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes, anomalies, generated dressing and lurker spawns; authored placements live in cells/.",
     "places/bonus (3D) - vaporwave mall with shops, simulated staff, arcade, homes and salon; authored placements live in cells/.",
     "places/thehub (3D) - tunnel crossroads, keyed destination doors, camps, crew and quest props; Phoebe's first-arrival scene starts here.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation, waking, staged tutorial and HALOGEN handoff to Dina's lead.",
-    "places/level9 (3D, The Suburbs) - seed-generated streets/houses and fog; fog gates Mangled spawns and timed hunt behavior.",
+    "places/level9 (3D, The Suburbs) - seed-generated streets/houses and fog; fog gates Mangled spawns and timed hunt behavior; roads use damp, rough asphalt.",
     "places/level8 (3D, Cave Systems) - cave routes and Lightless dens; den wretches spawn leveled Hollow-Mask variants.",
-    "places/level01, level02, level1-7, level10-13, level21, level26-27, level31, level70, gamma, spamton, testlab (3D) - authored lore destinations; Level 1 station/car park, Level 5 Terror Hotel, Level 7 sea/islands and other level-specific quest spaces.",
-    "places/main/cells and places/bonus/cells - authored Level 0 and mall placements; their place sims add generated or simulated content."
+    "places/level01, level02, level1-7, level10-13, level21, level26-27, level31, level70, gamma, spamton, testlab (3D) - authored lore destinations; Level 1 station/car park, Level 5 Terror Hotel, Level 7 sea/islands and other level-specific quests and geometry.",
+    "places/main/cells and places/bonus/cells - authored Level 0 and mall placements, complemented by local simulations."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input actions.",
@@ -42,31 +42,31 @@
     "scripts/lib/level70-quest.js + scripts/terrain70.js - Level 70 quest, terrain and civic/life layer exports.",
     "scripts/lib/errands.js - ERRANDS, held, errandText, offerErrand, payErrand, tryAlt, deliberateErrands, turnInErrand, errandTick.",
     "scripts/lib/rep.js - GROUPS, RIVALS, groupOf, fameOf, infamyOf, repOf, titleOf, tierOf, rankOf, addRep, addKarma, repKill/Kind/Trade/Line.",
-    "scripts/lib/foe-variant.js - placeLevel, pickVariant, vrow, vmul; scripts/l9-mangled.js - update (Level 9 fog-entity manager)."
+    "scripts/lib/stats.js - ATTRS, SKILLS, SKILL_KEYS, ATTR_MAX, START, attrsOf, packAttrs, tagsOf, spentOf, baseSkill, skillsOf, wclass; scripts/l9-mangled.js - update."
   ],
   "ownership": [
-    "scripts/player.js + scripts/lib/save.js - durable player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved place/position, tapes, currency, karma/rep and homeKeep; save.js owns migration/versioning.",
-    "scripts/critter.js - per-player look and creator/wardrobe/salon state; scripts/lib/body3.js - session.ready3 and transient me.anim.ready melee-carry pose; scripts/main-menu.js - session.tabAway and place.timeScale pause control.",
+    "scripts/player.js + scripts/lib/save.js - durable player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved place/position, tapes, currency, karma/rep and homeKeep; save.js owns migration/version and resume eligibility.",
+    "scripts/lib/stats.js - derived attributes, skills and combat/carry stats; god state yields infinite carry. scripts/stats-ui.js formats derived stats, including non-finite capacity as ∞.",
+    "scripts/critter.js - per-player look and creator/wardrobe/salon state; scripts/lib/body3.js - session.ready3 and transient me.anim.ready melee-carry pose; scripts/main-menu.js - session.tabAway, session.animPlace and place.timeScale pause control.",
     "scripts/lib/quests.js + scripts/lib/dina-quest.js - quests/qtrack/qdone/claimed; Dina trail keys, stages, diary/cut/clue fields and migration.",
     "scripts/lib/errands.js - player.state.errands records, errHints and errand journal entries; completion updates currency, payout, reputation and hints.",
     "scripts/lib/field-errands.js + hub-errands.js - fieldErrAsk and hubErrAsk confirmation maps; errands.js owns ongoing progress and completion.",
     "scripts/lib/level31-quest.js + level70-quest.js + remodel-quest.js - Level 31/70 and remodel quest stages, routes and rewards.",
-    "scripts/lib/rep.js - player.state.fame/infamy by faction, compatibility net rep, karma and bounded repHistory; fame/infamy drive faction titles/ranks and hostility checks.",
-    "places/level9/sim.js - place.state.l9seed/layout and looted-container state; place.state.l9fog controls fog timing and the Mangled manager."
+    "scripts/lib/rep.js - player.state.fame/infamy by faction, compatibility net rep, karma and bounded repHistory; fame/infamy drive faction titles/ranks and hostility checks; places/level9/sim.js owns l9seed/layout, looted-container state and l9fog timing."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interaction, combat, inventory, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js add game-specific play.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera; camera writes aimPt/aimPitch → ballistics/weaponAim; zoneHere → maze and authored level labels, including Level 9 zoneAt.",
-    "scripts/lib/body3.js tick3 → third-person body pose: camera rotation quaternion supplies aim yaw/pitch; combat-anims.yml family rows drive gun/melee clips, and session.ready3 selects a ready melee carry except during swings or disabled states.",
+    "scripts/lib/body3.js tick3 → third-person body pose: camera rotation quaternion supplies aim yaw/pitch; combat-anims.yml family rows drive gun/melee clips, and session.ready3 selects a ready melee carry except during swings or disabled state.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; periodic saves exclude intake, bonus and tutorial0.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; toHub/toSolo cross to mall/home and maintain roomHop/save-place; separate from places/thehub.",
-    "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close → intro-cut then tutorial0 first time or main later; ui.js visibility/blur/focus → tabaway → main-menu.js pause state.",
+    "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close → intro-cut then tutorial0 first time or main later; on place change main-menu.js clears ctx.self.anim.cut and .air to prevent a cut/fall pose carrying across rooms; ui.js visibility/blur/focus → tabaway → main-menu.js pause state.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js offers place-matched jobs; carried items/kills/world events advance errands → quests.js journal, player.state.errands/qtrack and payouts.",
     "talk.js openDialogue → npc-starters.js questChoices (including factionChoices); selected text → quest-specific handlers, hub/field errand handlers or factionReply; reputation dialogue is gated by faction fame/infamy.",
     "tutorial0 HALOGEN cut → tut0-cut.js + dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ; Dina quest tick routes to The Tenth Tunnel at dinaQ 9 or hubPhoebe.",
     "places/level1/sim.js l1-to-hub → scripts/level-door.js crossing → thehub; hub-from-l1 returns to arrival position; Level 1 zoneAt classifies KEEP bounds and labels.",
     "places/thehub/sim.js → lib/thehub.js and hub-people.js/hub-dress.js versioned shell, doors, props, crew and camps; hub-door-geo.js renders doors, hub-door.js handles use/crossing, plaques label destinations.",
-    "places/main/sim.js selects lurker variants via foe-variant.js; lurkers.js applies state.variant combat multipliers; Level 8 wretch spawns and deathmoths.js similarly select/read family variants from foe-variants.yml; Level 9 l9seed/l9fog → l9-mangled.js → Mangled entities."
+    "places/main/sim.js selects lurker variants via foe-variant.js; lurkers.js applies state.variant combat multipliers; Level 8 wretch spawns and deathmoths.js similarly select/read family variants from foe-variants.yml; Level 9 l9seed/l9fog drives deterministic layout and Mangled timing, and sim.js V=2 rebuilds street surface as damp rough asphalt while retaining seed and loot."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
@@ -75,7 +75,7 @@
     "Level 01/Zenith and Level 1 geometry builders - authored station and car park/service geometry; corridor materials, pipes, fixtures and lights vary deterministically per cell.",
     "scripts/meg-agent.js + npc-temper.js + forgive.js + critter-model.js - NPC reactions, cover, barks, movement/fighting and companion following; faction, role, outfit and assault incidents vary by NPC.",
     "errands.yml + errands.js + quest-dialogue.js + quests.js - shared offers, objectives, journal/tracker and rewards; legacy errands tick by events, deliberate field/Hub jobs use dialogue and turn-in handlers.",
-    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + body3.js + critter-model.js - shared cat body/face morphs, skinned garments and human/furry combat poses across players and NPCs; sex/look/gear vary assembly, combat-anims.yml supplies family-specific clips and ready carries.",
+    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + body3.js + critter-model.js - shared cat body/face morphs, skinned garments and human/furry combat poses across players and NPCs; sex/look/gear vary assembly, combat-anims.yml supplies family clips.",
     "scripts/lib/data/foe-variants.yml + foe-variant.js - shared level-weighted lurker, moth and wretch variants; place-level pool selection stamps variant state, family readers apply hp/damage/speed/sight/xp multipliers and variant-specific modifiers."
   ],
   "probableOrphans": [
@@ -90,7 +90,7 @@
     "scripts/lib/save.js SAVE_V=2: intake, bonus and tutorial0 are transient and never save resume locations; migration clears legacy transient savePlace/savePos without overwriting earned state.",
     "The Hub run frame/coordinates are centralized in scripts/lib/thehub.js; u follows a run, v spans its width, +X trunk, side tunnels alternate north/south. Preserve door IDs, mappings and coordinates together.",
     "Hub place.state.hubV is generated-scene migration version (v8); versioned rebuilds include doors, dressing, door-mark lamps and plaques. Hub keys live in player.state.hubKeys and matching keyed thresholds consume one key.",
-    "Level 9 place.state.l9seed is its persistent deterministic layout seed and l9fog.on gates Mangled spawning; preserve seed and looted container contents/locks on rebuild. Faction RIVALS is descriptive only: standing gains/losses do not spill across rival groups.",
+    "Level 9 V=2 changes only road surface; preserve persistent l9seed, generated layout, fog state and looted container contents/locks across rebuilds. Roads are damp asphalt (roughness 0.62), not reflective puddles.",
     "Faction fame and infamy are separate durable 0..100 values; rep is their compatibility net for legacy readers. M.E.G./B.N.T.G. ranks derive from standing, and faction dialogue requires fame ≥12 and infamy <35."
   ]
 }
