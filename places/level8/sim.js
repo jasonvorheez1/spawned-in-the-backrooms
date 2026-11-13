@@ -10,7 +10,7 @@ import L8 from "../../scripts/lib/data/level8.yml";
 import { DRIP, RIPPLE } from "../../scripts/lib/ambient.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 export const cadence = "1s";
-const V = 18;
+const V = 19;
 const GLB = {
   cave: "/cdn/value.6ae7c035c9583dda020bc92a7e80e75e9d3d462632234677d4a5f5a717fe311b.glb",
   spider: "/cdn/value.f2baeaec87cf017372e92e66ec42fae95179b52161e15051d3253036b89b9323.glb",
