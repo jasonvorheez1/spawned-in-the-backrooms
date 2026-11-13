@@ -232,6 +232,7 @@ function send(ctx, d) {
   if (pc) {
     const c = rollCheck(ctx, s, pc), v = skillsOf(s)[pc.skill] ?? 0
     passed = c.ok
+    if (!passed) { const a = ses.askedNow ?? []; const i = a.lastIndexOf(n.q); if (i >= 0) a.splice(i, 1) } // a failed check stays on the card: try it again
     const pct = Math.max(0, Math.min(100, Math.round((T.roll - (pc.difficulty - v) + 1) / T.roll * 100)))
     logLine(ctx, it, 'x', `[${skn(pc.skill)} ${pct}%] ${passed ? 'SUCCEEDED' : 'FAILED'}`)
     hearAt(ctx, { clip: passed ? 'cdn/sfx-soft-bright-two-note-success-chime.mp3' : 'cdn/sfx-dull-low-wooden-thunk-fail-buzz.mp3', volume: 0.5 })
