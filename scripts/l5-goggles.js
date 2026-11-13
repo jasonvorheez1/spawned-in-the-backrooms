@@ -1,8 +1,8 @@
 // "Ines's goggles": Level 5's night-vision quest, on four pressables (state.kind):
-//   radio — by the Housekeeping door to the Boiler Room: Ines, a M.E.G. boiler tech stuck in the Cold Room, talks you through it
-//   case  — her dropped case, south end of the Boiler Room: empty, the strap chewed; drag marks lead to the hound den
-//   den   — a hound den of bones and scrap: the goggles glint green in it; taking them makes the pack howl
-//   drop  — the M.E.G. drop box in the Cold Room: hand in the goggles plus one battery cell; she tests them and they're yours
+//   radio: by the Housekeeping door to the Boiler Room: Ines, a M.E.G. boiler tech stuck in the Cold Room, talks you through it
+//   case: her dropped case, south end of the Boiler Room: empty, the strap chewed; drag marks lead to the hound den
+//   den: a hound den of bones and scrap: the goggles glint green in it; taking them makes the pack howl
+//   drop: the M.E.G. drop box in the Cold Room: hand in the goggles plus one battery cell; she tests them and they're yours
 // Progress is the player's own: player.state.nvgQ 1 asked · 2 case found empty · 3 goggles taken (cracked, no cell) · 4 done.
 import { heard } from "./lib/hear.js";
 import { setQuest, endQuest, qid } from "./lib/quests.js";

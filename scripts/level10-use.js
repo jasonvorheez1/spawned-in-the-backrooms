@@ -59,7 +59,7 @@ export const ears = {
 
         who.state.sub = {
           who: "WINDMILL STONE QUERN",
-          t: "The massive millstones grind the grain kernels into smooth Backrooms flour. Ready for the baking hearth.",
+          t: "The massive millstones grind the grain kernels into smooth flour. Ready for the baking hearth.",
           at: now,
           d: 5000,
         };
@@ -97,7 +97,7 @@ export const ears = {
 
         who.state.sub = {
           who: "OUTPOST HEARTH OVEN",
-          t: "A golden-crusted loaf emerges from the brick hearth. The warm aroma of fresh Backrooms bread revitalizes you.",
+          t: "A golden-crusted loaf emerges from the brick hearth. The warm aroma of fresh bread revitalizes you.",
           at: now,
           d: 5500,
         };

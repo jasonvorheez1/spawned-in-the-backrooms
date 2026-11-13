@@ -18,7 +18,7 @@ const RADIO_LOGS = [
   "HARMOUTH LOG #14: \"Do not trust the crawl past Marker #78 on your first pass. The karst loops back on itself until you've seen the Face Rock twice.\"",
   "M.E.G. SURVEY: \"The third cavern floods on a five-and-a-half-minute siphon cycle. When the water hits your ankles, take the limestone ledges on the left wall.\"",
   "HARMOUTH LOG #22: \"Hyperspace Lane's cyan lights respond to acoustic resonance. Hum into the hollow flowstone pipes and the cold leaves your bones.\"",
-  "B.N.T.G. DISPATCH: \"We rigged a cable dredge on the west rim of the Tar Pool. Crank it fast—if the pitch starts reaching back, let go of the handle.\"",
+  "B.N.T.G. DISPATCH: \"We rigged a cable dredge on the west rim of the Tar Pool. Crank it fast. If the pitch starts reaching back, let go of the handle.\"",
   "SENTRY ALERT: \"A Broodmother has nested beyond the red glyph at Marker #76. Her chitin plates stop small-caliber rounds, but the camp pays top dollar for them.\"",
 ];
 

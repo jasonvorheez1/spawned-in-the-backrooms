@@ -29,9 +29,9 @@ const NED = [
 const ALEF_LOGS = [
   "ALEF LOG [11 JUL 2020 · 03:18]: \"Wilson here. A solid steel shutter just dropped across the Level 2 stairwell. Blowtorches barely scratch it. All 53 of us are sealed in.\"",
   "ALEF LOG [14 JUL 2020 · 19:04]: \"Rations are down to quarter-shares. The heat from the lower pipes is 98°F and there's no running water in the halls. People are eyeing the specimen berries in Exploration.\"",
-  "ALEF LOG [19 JUL 2020 · 11:42]: \"Connor found a room north of the checkered lockers—banks of humming refrigerators packed floor-to-ceiling with Saltines. He calls it 'Refrigerator Paradise'. Half the base is moving there.\"",
+  "ALEF LOG [19 JUL 2020 · 11:42]: \"Connor found a room north of the checkered lockers. Banks of humming refrigerators packed floor-to-ceiling with Saltines. He calls it 'Refrigerator Paradise'. Half the base is moving there.\"",
   "ALEF LOG [27 JUL 2020 · 22:15]: \"John Banks took six sticks of dynamite and a plunger box east into The Edges. He thinks the concrete roof is only five meters thick. If he blows a hole, maybe we reach the surface.\"",
-  "ALEF LOG [02 AUG 2020 · 04:50]: \"Banks's blast only brought down rock and woke the Smilers in the east caverns. But the last survey team found a cold karst fissure at the far end of the lane—it leads down to Level 8.\"",
+  "ALEF LOG [02 AUG 2020 · 04:50]: \"Banks's blast only brought down rock and woke the Smilers in the east caverns. But the last survey team found a cold karst fissure at the far end of the lane. It leads down to Level 8.\"",
 ];
 
 export const ears = {

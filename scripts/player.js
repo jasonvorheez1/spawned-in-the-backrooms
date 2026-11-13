@@ -1292,7 +1292,7 @@ export function update(ctx, dt) {
   const l2Hot = ctx.self.place === 'level2' && (fz === 'l2_pipes' || fz === 'l2_hall')
   if (l2Hot && nowS - (s.heatWarnAt ?? 0) > 45000) {
     s.heatWarnAt = nowS
-    s.notice = { text: 'Suffocating heat (110°F) radiates from the pipes — stamina drains faster.', at: nowS }
+    s.notice = { text: 'Suffocating heat (110°F) comes off the pipes. You tire faster here.', at: nowS }
   }
   w.stamina = Math.max(0, Math.min(dv.staMax, w.stamina + (sprinting ? -L.staminaDrain * (green ? AW.green.staminaMul : 1) * (l2Hot ? 1.25 : 1) : L.staminaRegen * dv.staRegen * (tired ? 0.3 : 1) * (w.winded ? (L.windedRegen ?? 0.6) : 1) * (l2Hot ? 0.68 : 1) * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
   const inArch = fz === 'arches' && (ctx.self.place === 'main' || ctx.self.place === 'tutorial0') // the flooded arches are Level 0's alone: other places without their own zones fall through to Level 0's map

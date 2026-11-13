@@ -1,4 +1,4 @@
-// Interactive objects on Level 7 ("Thalassophobia") — 100% Show, Don't Tell:
+// Interactive objects on Level 7 ("Thalassophobia"): 100% Show, Don't Tell:
 // - Rowboat skiff ferries between Entrance Pier, M.E.G. Outpost Seawatch, and Fort Surrender
 // - M.E.G. Deep-Trench Hydrophone & Sonar Console (green CRT phosphor traces, hydrophone pings, whale groans)
 // - Driftwood & oil-drum warming braziers (ember sizzle, screen warmth, floating stat restore)
