@@ -118,7 +118,7 @@ hair:   # each carries a Hatted key (art/cat-wardrobe/hair-hatted.py): flat to t
   pixie: { f: '/cdn/value.3dfb3ebff3285cea4aa0d1aa2a2994ea63a634853c1de4524f1a2aff36168cb4.glb' }
   shaggy: { m: '/cdn/value.6be6920ce5aee2f2aa5fe2a0f7dc213ae6d0aa755c514f09a64fb0cb492629ba.glb' }
   # Nov 13 unisex five (Shelly #328121 "add 5 unisex hairs"): Tripo, fitted to both bodies by art/cat-wardrobe/hair-newfit.py
-  wolfcut: { f: '/cdn/value.96e8c6a34bc0c7d205a9dcb828dd4e3a9a3f32407479e421b8dcdbcff4bc1dd2.glb', m: '/cdn/value.7e7103791b2abc22ed24c935fbf358f2b51c41213c49449e0ccddc01c0a0b446.glb' }
+  wolfcut: { f: '/cdn/value.5c1216982cb0b07f120718d772b8539eb2646e86cb75cc1e6471ed5fe2999343.glb', m: '/cdn/value.712b1be3b517d773605d3ec13165d2bbb32da9430eb79a2e1e04e33c62bc0bda.glb' }   # turned 180 (was backwards, Nov 13)
   mullet: { f: '/cdn/value.743511b348e4b78fd974b60e1c14a0d59a0b4a46087e695725271b87425cd848.glb', m: '/cdn/value.5e44eb809003435576a9d7ba3331942938c8b83aa1a50d828ecbdfeb65d5f404.glb' }   # turned 180 (bangs had sat on the back, Shelly Nov 13)
   curtains: { f: '/cdn/value.dd9c862b8df79393a99730aeed17c4f007645b5bab1ad93d96c37e029f99d0d9.glb', m: '/cdn/value.2d6125d5e2a5fffcc94a25b5b0cae07bda134d1789812eb220d6d677d37819c7.glb' }
   locs: { f: '/cdn/value.97cdbe7c779bae07732feabc508b3835b6ee80241c004db960549fa7a0c59c35.glb', m: '/cdn/value.df9ea044bc1f926f3a60dbd41105b8a89652394ea793b5dab960c4bf382bbfa1.glb' }
