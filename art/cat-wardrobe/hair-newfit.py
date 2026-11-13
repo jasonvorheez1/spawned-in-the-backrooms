@@ -61,7 +61,10 @@ for f in cap.faces:
     c = f.calc_center_median(); nr = f.normal
     if c.z < top - 0.62 * hh or nr.length < 0.5: drop.append(f); continue
     hit = hbvh.ray_cast(c + nr * 0.001, nr, 0.08)
-    if hit[0] is None: drop.append(f)
+    # Nov 13: a sparse wig (locs, buzz, curtains) left bare scalp between its strands. The cap now covers the whole
+    # hair zone: the crown, and the back and sides down to the hairline; only the face (front, below the brow) needs a strand over it
+    face = nr.y < -0.35 and c.z < top - 0.28 * hh
+    if hit[0] is None and (face or c.z < top - 0.55 * hh): drop.append(f)
 bmesh.ops.delete(cap, geom=drop, context="FACES")
 for v in cap.verts: v.co += v.normal * 0.003
 cm = bpy.data.meshes.new("cap"); cap.to_mesh(cm); ncap = len(cm.polygons)
