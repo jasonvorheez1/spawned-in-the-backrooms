@@ -16,9 +16,10 @@ KIT = {
 }
 a = sys.argv[sys.argv.index("--") + 1:]
 kind = a[0]
-C = dict(KIT[kind]); src = f"{W}/{C.get('src', kind)}.glb"
+C = dict(KIT[kind])
 for kv in a[1:]:
-    k, v = kv.split("="); C[k] = eval(v)
+    k, v = kv.split("=", 1); C[k] = eval(v)
+src = f"{W}/{C.get('src', kind)}.glb"
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=src, merge_vertices=True)
 ms = [o for o in bpy.context.scene.objects if o.type == "MESH"]
