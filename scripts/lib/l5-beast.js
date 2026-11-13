@@ -20,6 +20,7 @@ const G = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
 const STEP = {
   1: { step: "Bring the Gentleman the guest register from the front desk", mark: { place: "level5", id: "l5-beast-register" } },
   2: { step: "Slip his calling card under the door of Room 1408", mark: { place: "level5", id: "l5-beast-slot" } },
+  3: { step: "Tell the Gentleman the card is under the door", mark: { place: "level5", id: "l5-beast" } },
 };
 const short = (it) => String(it?.id ?? it ?? "").split("/").pop();
 const heardTape = (s) => String(s?.holotapes ?? "").split(",").includes("beast18");
@@ -105,7 +106,7 @@ export function pressProp(ctx, kind, who) {
     notify(ctx, who, "Mr. Ambrose's guest register. Thousands of names, every one still checked in. None checked out."); return;
   }
   if (kind === "slot") {
-    if (s.l5b === 2 && !s.l5bCard) { s.l5bCard = 1; notify(ctx, who, "The card slides under the door. On the other side, someone stops breathing for a moment.");
+    if (s.l5b === 2 && !s.l5bCard) { s.l5bCard = 1; notify(ctx, who, "The card slides under the door. On the other side, someone stops breathing for a moment."); setQuest(s, QID, { name: QNAME, ...STEP[3] }); tellQuest(ctx, who, "The Gentleman's Terms · Card delivered. Go tell him it's done");
       heard(ctx, { clip: G("paper-card-slide-under-wooden-door"), position: pos, volume: 0.7, maxDistance: 8 }); return; }
     notify(ctx, who, "A brass card slot. Engraved: MESSAGES FOR 1408. There's a draught coming out of it."); return;
   }
