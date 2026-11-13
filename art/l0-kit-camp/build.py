@@ -68,6 +68,48 @@ for kind in want:
         x = dp.cross(up)
         R = Matrix((x, dp, up)).to_4x4()           # rows: new X, Y, Z in raw coords
         me.transform(R)
+    if k.get("tray"):
+        # a tray of bottles: up = the bottles' own long axis; the carton (widest island) is cut down to a shallow tray at k["tray"] of the bottle height
+        import numpy as np
+        from mathutils.geometry import box_fit_2d
+        def islands(bm):
+            seen, out = set(), []
+            for v in bm.verts:
+                if v in seen: continue
+                st, comp = [v], []; seen.add(v)
+                while st:
+                    a_ = st.pop(); comp.append(a_)
+                    for e_ in a_.link_edges:
+                        b_ = e_.other_vert(a_)
+                        if b_ not in seen: seen.add(b_); st.append(b_)
+                out.append(comp)
+            return out
+        bm = bmesh.new(); bm.from_mesh(me); isl2 = islands(bm)
+        diag = lambda c: (np.array([v.co[:] for v in c]).max(0) - np.array([v.co[:] for v in c]).min(0))
+        isl2.sort(key=lambda c: -np.linalg.norm(diag(c))); box = isl2[0]
+        bots = [c for c in isl2[1:] if len(c) > len(bm.verts) * 0.02]
+        ups = []
+        for c in bots:
+            P = np.array([v.co[:] for v in c]); w_, v_ = np.linalg.eigh(np.cov((P - P.mean(0)).T)); ax_ = v_[:, 2]
+            ups.append(ax_ if ax_[2] > 0 else -ax_)
+        up = Vector(np.mean(ups, 0)).normalized(); print("TRAY bottles", len(bots), "up", up[:], "islands", [len(c) for c in isl2])
+        u = up.orthogonal().normalized(); v = up.cross(u)
+        Rm = Matrix((u, v, up)).to_4x4(); bmesh.ops.transform(bm, matrix=Rm, verts=bm.verts)
+        ang = box_fit_2d([(q.co.x, q.co.y) for q in box]); bmesh.ops.transform(bm, matrix=Matrix.Rotation(ang, 4, "Z"), verts=bm.verts)
+        zb = [q.co.z for c in bots for q in c]; z0 = min(q.co.z for q in bm.verts); cut = min(zb) + (max(zb) - min(zb)) * k["tray"]
+        bset = set(box); geom = list(box) + [e_ for e_ in bm.edges if e_.verts[0] in bset] + [f for f in bm.faces if f.verts[0] in bset]
+        res = bmesh.ops.bisect_plane(bm, geom=geom, plane_co=(0, 0, cut), plane_no=(0, 0, 1), clear_outer=True, dist=1e-5)
+        ce = [g for g in res["geom_cut"] if isinstance(g, bmesh.types.BMEdge)]
+        uvl = bm.loops.layers.uv.active
+        nf = bmesh.ops.holes_fill(bm, edges=ce, sides=0)["faces"]
+        for f in nf:
+            f.smooth = False
+            for l in f.loops:
+                src = next((l2 for l2 in l.vert.link_loops if l2.face not in nf), None)
+                if src and uvl: l[uvl].uv = src[uvl].uv
+            if nf and f.loops[0].vert.link_faces: f.material_index = next((g.material_index for g in f.loops[0].vert.link_faces if g not in nf), 0)
+        bmesh.ops.triangulate(bm, faces=nf)
+        bm.to_mesh(me); bm.free()
     for ax, deg in zip("XYZ", k.get("rot", [0, 0, 0])):
         if deg: me.transform(Matrix.Rotation(math.radians(deg), 4, ax))
     def bb():
@@ -81,6 +123,7 @@ for kind in want:
     i = {"w": 0, "d": 1, "h": 2}[k.get("fit", "h")]; s = tgt[i] / sz[i]
     sc = Vector((s, s, s))
     if k.get("squash"): sc.z = tgt.z / sz.z   # cloth only: settle the height
+    if k.get("squashW"): sc.x = k["squashW"] / sz.x
     me.transform(Matrix.Diagonal((sc.x, sc.y, sc.z, 1)))
     lo, hi = bb()
     me.transform(Matrix.Translation((-(lo.x + hi.x) / 2, -(lo.y + hi.y) / 2, -lo.z)))
