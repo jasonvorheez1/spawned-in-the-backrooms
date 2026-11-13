@@ -212,13 +212,13 @@ export function tick(ctx) {
     for (let j = 1; j < N; j += 2) for (let i = 0; i < N; i += 2) { const x = i * S - HALF + 2, z = j * S - HALF + 1.9; if (inHole(x, z)) continue;
       ctx.spawn("l1-spr-" + i + "-" + j, { feetPosition: { x, y: H - 0.9, z: z + 0.07 }, rotation: { yaw: 0, pitch: 0, roll: 180 }, pivot: "center", model: { id: SPR }, layout: { box: { min: { x: -0.05, y: 0, z: -0.05 }, max: { x: 0.05, y: 0.24, z: 0.05 } } }, castShadow: false, visibleRange: { max: 28 } }); }
   }
-  if (s.l1Tripo === 3 && s.l1Rubble !== 1) { s.l1Rubble = 1; // Nov 13 (Shelly: "improve this"): the fallen ceiling slab as Tripo concrete with rebar, a rubble pile beside it, no flat grit decal
-    const SLAB = "/cdn/value.85959a522f0f25f5c7318ba795c488adf5aba0a196f780bc74415ba5ebf68907.glb", PILE = "/cdn/value.644c38e17be893d9013699ab57f00c4a1413a0d76642683fe9dff4f249a73e3c.glb";
+  if (s.l1Tripo === 3 && s.l1Rubble !== 2) { s.l1Rubble = 2; for (const o of ctx.query({ tags: ["l1prop"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (o.id.startsWith("l1-rub")) ctx.destroy(o.id); // Nov 13 (Shelly: "improve this"): the fallen ceiling slab as Tripo concrete with rebar, a rubble pile beside it, no flat grit decal
+    const SLAB = "/cdn/value.fc1fe594b7588d296db3f7bb983c8832fe77245a72f41a83471a278e732ec9fc.glb" /* Nov 13 v2: painted concept → Tripo, three tilted chunks with rebar and its own grit */, PILE = "/cdn/value.644c38e17be893d9013699ab57f00c4a1413a0d76642683fe9dff4f249a73e3c.glb";
     for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
       if (zoneOf(cx, cz) !== "halls") continue; const r = hash(cx, cz, 201); if (r < 0.19 || r >= 0.23) continue;
       const c = cellCenter(cx, cz), x = c.x + (hash(cx, cz, 203) - 0.5) * 3.2, z = c.z + (hash(cx, cz, 205) - 0.5) * 3.2, yaw = hash(cx * 13 + cz, 2, 5) * 360;
-      ctx.spawn("l1-rub-" + cx + "-" + cz, { tags: ["l1prop"], feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: SLAB }, layout: { box: { min: { x: -0.75, y: 0, z: -0.55 }, max: { x: 0.75, y: 0.4, z: 0.55 } } }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, state: { name: "Fallen slab", mat: "concrete" } });
-      ctx.spawn("l1-rubp-" + cx + "-" + cz, { tags: ["l1prop"], feetPosition: { x: x + Math.cos(yaw) * 1.1, y: 0, z: z + Math.sin(yaw) * 1.1 }, rotation: { yaw: yaw * 1.7 }, model: { id: PILE }, layout: { box: { min: { x: -0.5, y: 0, z: -0.45 }, max: { x: 0.5, y: 0.32, z: 0.45 } } }, visibleRange: { max: 35 } });
+      ctx.spawn("l1-rub-" + cx + "-" + cz, { tags: ["l1prop"], feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: SLAB }, layout: { box: { min: { x: -1.3, y: 0, z: -0.95 }, max: { x: 1.3, y: 0.95, z: 0.95 } } }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, state: { name: "Fallen slab", mat: "concrete" } });
+      // the heap carries its own rubble now: no separate pile
     }
   }
   if (s.l1Tripo === 3 && s.l1Kit === 1 && s.l1Nooks !== 1) s.l1Nooks = tuckClutter(ctx) || (s.l1NookTry = (s.l1NookTry | 0) + 1) > 3 ? 1 : 0;
