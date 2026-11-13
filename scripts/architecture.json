@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7627,
-  "updatedAt": "2026-11-13T20:33:21.187Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, the mall, The Hub and authored lore destinations; player.state carries progression, gear, quests, faction standing and resume location. Shared player behaviors, dialogue/quest systems and place simulations connect authored spaces with generated layouts and encounters, including the crawl-scale Level 34 sewer route between Levels 9, 11 and 7.",
+  "basedOnSpecVersion": 7641,
+  "updatedAt": "2026-11-13T20:49:07.760Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, the mall, The Hub and authored lore destinations; player.state carries progression, gear, quests, faction standing and resume location. Shared player behaviors, dialogue/quest systems and place simulations connect authored spaces with generated layouts and encounters, including the crawl-scale Level 34 sewer network linking Levels 11, 9 and 7.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes, anomalies, generated dressing and lurker spawns; authored placements live in cells/.",
     "places/bonus (3D) - vaporwave mall with shops, simulated staff, arcade, homes and salon; authored placements live in cells/.",
     "places/thehub (3D) - tunnel crossroads, keyed destination doors, camps, crew and quest props; distinct from Bonus room routing.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation, waking, staged tutorial and HALOGEN handoff to Dina's lead.",
-    "places/level9 (3D, The Suburbs) - seed-generated streets/houses and fog; has a storm-drain entry to Level 34 as well as its other level routes.",
-    "places/level34 (3D, Sewer System) - generated brick-and-stone, four-foot sewer with crawl passages, foul-water junction/pool to Level 7, shafts to Levels 9 and 11, and Drain Smilers.",
+    "places/level9 (3D, The Suburbs) - seed-generated streets/houses and fog; its storm drain is an exit from Level 34 only, with an arrival marker by the road.",
+    "places/level34 (3D, Sewer System) - versioned brick-and-stone four-foot sewer with crawl passages, pool/lip down to Level 7, step-irons out to Levels 9 and 11, and submerged Drain Smilers; enter from Level 11's grate (Level 9 drain is exit-only).",
     "places/level8 (3D, Cave Systems) - cave routes and Lightless dens; den wretches spawn leveled Hollow-Mask variants.",
     "places/level01, level02, level1-7, level10-13, level21, level26-27, level31, level70, gamma, spamton, testlab (3D) - authored lore destinations; Level 11 street-grate access joins the Level 34 sewer network."
   ],
@@ -32,7 +32,7 @@
     "scripts/lib/data/l9-houses.yml + l9-props.yml + scripts/lib/level9.js - Level 9 catalogs and pure seed-driven layout, used by places/level9/sim.js and zone lookup.",
     "scripts/lib/data/l02-props.yml + l02-remodel.yml + l02-grid.js; breakables.js + breakable data + wallgrid.js - Level 0.2 remodel and shared prop/generated-wall damage and regrowth.",
     "scripts/lib/quest-route.js + quest-mark.js + quests.js + errands.js - directed crossings and shared quest/errand journal, tracker, rewards and step messaging.",
-    "scripts/crawl.js + scripts/sewer-grate.js + scripts/lib/carry.js - shared player crawl behavior and usable sewer crossings; templates/player.js enables crawling globally, Level 9/11 drains and Level 34 step-irons use the grate handler."
+    "scripts/crawl.js + scripts/sewer-grate.js + scripts/lib/carry.js - global player crawl behavior and usable sewer crossings; Level 11's street grate enters Level 34, its step-irons exit to Levels 9/11, and Level 9's storm drain is exit-only."
   ],
   "notableExports": [
     "scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate, wakeLog.",
@@ -41,18 +41,18 @@
     "scripts/lib/level31-quest.js + level31-parts.js - venue geometry/zones/arrivals/skating/layParts and quest QID/QNAME/openCrate/useDeck/choice/dialogue exports.",
     "scripts/lib/level70-quest.js + scripts/terrain70.js - Level 70 quest, terrain and civic/life layer exports.",
     "scripts/lib/errands.js - ERRANDS, held, errandText, offerErrand, payErrand, tryAlt, deliberateErrands, turnInErrand, errandTick.",
-    "scripts/lib/rep.js - GROUPS, RIVALS, groupOf, fameOf, infamyOf, repOf, titleOf, tierOf, rankOf, addRep, addKarma, repKill/Kind/Trade/Line; scripts/lib/stats.js - ATTRS, SKILLS, SKILL_KEYS, ATTR_MAX, START, attrsOf, packAttrs, tagsOf, spentOf, baseSkill, skillsOf, wclass.",
+    "scripts/lib/rep.js - GROUPS, RIVALS, groupOf, fameOf, infamyOf, repOf, titleOf, tierOf, rankOf, addRep, addKarma, repKill/Kind/Trade/Line; scripts/lib/stats.js - ATTRS, SKILLS, SKILL_KEYS, ATTR_MAX, START, attrsOf, packAttrs, tagsOf, spent helpers.",
     "scripts/crawl.js - onInput, update; scripts/lib/level11-quests.js - windowStep, finishQuest, handleDialogueQuest, l11Choices."
   ],
   "ownership": [
-    "scripts/player.js + scripts/lib/save.js - durable player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved place/position, tapes, currency, karma/rep and homeKeep; save.js owns migration/versioning.",
+    "scripts/player.js + scripts/lib/save.js - durable player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved place/position, tapes, currency, karma/rep and homeKeep; player.state.batteries stores spare flashlight cells and save.js owns migration/versioning.",
     "scripts/lib/stats.js - derived attributes, skills and combat/carry stats; scripts/stats-ui.js formats derived stats, including non-finite capacity as ∞.",
     "scripts/critter.js - per-player look and creator/wardrobe/salon state; scripts/lib/body3.js - session.ready3 and transient me.anim.ready melee-carry pose; scripts/main-menu.js - session.tabAway, session.animPlace and place.timeScale pause state.",
     "scripts/lib/quests.js + scripts/lib/dina-quest.js - quests/qtrack/qdone/claimed; Dina trail keys, stages, diary/cut/clue fields and migration.",
     "scripts/lib/errands.js - player.state.errands records, errHints and errand journal entries; completion updates currency, payout, reputation and hints; scripts/lib/field-errands.js + hub-errands.js own confirmation maps.",
-    "scripts/lib/level31-quest.js + level70-quest.js + remodel-quest.js + scripts/lib/level11-quests.js - their level-specific quest stages, routes, and rewards; Level 11 quest progress is stored under player.state.quests/qdone and related known-clue fields.",
+    "scripts/lib/level31-quest.js + level70-quest.js + remodel-quest.js + scripts/lib/level11-quests.js - their level-specific quest stages, routes, and rewards; Level 11 quest progress is stored under player.state.quests/qdone and related knowledge fields.",
     "scripts/lib/rep.js - player.state.fame/infamy by faction, compatibility net rep, karma and bounded repHistory; fame/infamy drive faction titles/ranks and hostility checks.",
-    "places/level9/sim.js owns per-room l9seed/layout, fog and looted-container persistence; places/level34/sim.js owns place.state.l34V and deadAt smiler respawn times; scripts/crawl.js maintains player.state.crawl and reconstructs the small capsule on reload."
+    "places/level9/sim.js owns per-room l9seed/layout, fog and looted-container persistence; places/level34/sim.js owns place.state.l34V and deadAt smiler respawn times; scripts/crawl.js maintains player.state.crawl and session crawl motion/capsule state."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js add game-specific play.",
@@ -62,21 +62,21 @@
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; toHub/toSolo cross to mall/home and maintain roomHop/save-place; separate from places/thehub.",
     "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close → intro-cut then tutorial0 first time or main later; on place change main-menu.js clears ctx.self.anim.cut and .air to prevent a cut/fall pose carrying across rooms.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js offers place-matched jobs; carried items/kills/world events advance errands → quests.js journal, player.state.errands/qtrack and payouts.",
-    "talk.js openDialogue → npc-starters.js questChoices (including faction and M.E.G. assignment choices); selected text → level-specific/Hub/errand handlers, factionReply or megAssignmentReply; faction replies and assignments check player faction standing/membership.",
+    "talk.js openDialogue → npc-starters.js questChoices (including faction and M.E.G. assignment choices); selected text → level-specific/Hub/errand handlers, factionReply or megAssignmentReply; faction replies and assignments check faction/standing gates.",
     "tutorial0 HALOGEN cut → tut0-cut.js + dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ; Dina quest tick routes to The Tenth Tunnel at dinaQ 9 or hubPhoebe.",
     "places/level1/sim.js l1-to-hub → scripts/level-door.js crossing → thehub; hub-from-l1 returns to arrival position; Level 1 zoneAt classifies KEEP bounds and labels.",
     "places/thehub/sim.js → lib/thehub.js and hub-people.js/hub-dress.js versioned shell, doors, props, crew and camps; hub-door-geo.js renders doors, hub-door.js handles use/crossing, plaques label destinations.",
-    "places/level9/sim.js sewer9-drain and places/level11/sim.js sewer11-grate → scripts/sewer-grate.js crosses to Level 34 arrival markers; sewer step-irons use the same handler to return to Levels 9/11, and the swimming pool trigger uses scripts/level-door.js to reach Level 7. places/level34/sim.js lays geometry and feeds Drain Smilers; scripts/l34-smiler.js hunts crawlers/players. Separately, main sim selects lurker variants via foe-variant.js; Level 8 wretches and deathmoths use the same family data, while Level 9 l9seed/l9fog drive generated layout and Mangled hunts."
+    "scripts/crawl.js onInput (hold C/tap C or Space) + update → player.state.crawl, reduced capsule and hands-and-knees me.anim.crawl; scripts/player.js reads crawl for slower movement and suppresses normal footstep ticks, while crawl.js emits scuffs. Level 11 sewer grate → Level 34; sewer step-irons → Levels 9/11; Level 34 pool trigger → Level 7."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; home11 and Level 5 use separate buckets.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
-    "scripts/crawl.js + scripts/player.js - one global crawl/crouch movement family with capsule/headroom, animation and speed variation; Level 34's narrow bore is its first designed use.",
+    "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js - one global crawl/crouch movement family with reduced capsule/headroom checks, hands-and-knees keyed body tracks, pace-scaled movement, scuff audio and separate normal-footstep suppression; Level 34's narrow bore is its first designed use.",
     "Level 01/Zenith and Level 1 geometry builders - authored station and car park/service geometry; corridor materials, pipes, fixtures and lights vary deterministically per cell.",
     "scripts/meg-agent.js + npc-temper.js + forgive.js + critter-model.js - NPC reactions, cover, barks, movement/fighting and companion following; faction, role, outfit and assault incidents vary by NPC.",
     "errands.yml + errands.js + quest-dialogue.js + quests.js - shared offers, objectives, journal/tracker and rewards; legacy errands tick by events, deliberate field/Hub jobs use dialogue and turn-in handlers.",
-    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + body3.js + critter-model.js and scripts/lib/data/foe-variants.yml + foe-variant.js - shared cat body/face/garment/pose assembly and level-weighted lurker, moth and wretch variants; appearance, gear, family and place pools vary."
+    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + body3.js + critter-model.js and scripts/lib/data/foe-variants.yml + foe-variant.js - shared cat body/face/garment/pose assembly and level-weighted lurker, moth and wretch variants; appearance varies by species, gear and foe rolls."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -88,9 +88,9 @@
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
     "scripts/lib/save.js SAVE_V=2: intake, bonus and tutorial0 are transient and never save resume locations; migration clears legacy transient savePlace/savePos without overwriting earned state.",
-    "The Hub run frame/coordinates are centralized in scripts/lib/thehub.js; u follows a run, v spans its width, +X trunk, side tunnels alternate north/south. Preserve door IDs, mappings and coordinates together; Hub place.state.hubV versions its scene, while one matching keyed threshold consumes one player.state.hubKeys key.",
-    "Level 9's room seed and looted contents/fog persist across generated rebuilds. Level 34 uses place.state.l34V for generated-scene migration and place.state.deadAt for the six-minute Drain Smiler respawn; retain the authored drain/shaft arrival IDs and their crossing targets together.",
+    "The Hub run frame/coordinates are centralized in scripts/lib/thehub.js; u follows a run, v spans its width, +X trunk, side tunnels alternate north/south. Preserve door IDs, mappings and coordinates together; Hub place.state.hubV versions its topology.",
+    "Level 9's room seed and looted contents/fog persist across generated rebuilds. Level 34 uses place.state.l34V for generated-scene migration and place.state.deadAt for six-minute Drain Smiler respawns; preserve its Level 11 entry, Level 9 exit-only drain, step-iron destinations and pool trigger when changing the layout.",
     "Faction fame and infamy are separate durable 0..100 values; rep is their compatibility net for legacy readers. M.E.G./B.N.T.G. ranks derive from standing; faction dialogue and M.E.G. assignments have membership/standing gates.",
-    "scripts/crawl.js stores crawl state on the player and restores the reduced capsule after reload; standing up requires clear 1.95 m headroom. scripts/player.js applies the crawl speed multiplier, so keep the capsule, movement state and locomotion behavior in sync."
+    "scripts/crawl.js stores crawl state on the player and restores the reduced capsule after reload; standing up requires clear 1.95 m headroom. scripts/player.js applies the crawl speed multiplier and skips regular footsteps while crawl.js emits its own scuff; keep capsule, movement state and animation coordinated."
   ]
 }
