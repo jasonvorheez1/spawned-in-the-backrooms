@@ -9,7 +9,8 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 88;
+const V = 89; // 89: staff doorway cut, Nov 13
+const STAFF = { x: 40.05 };
 const RAIL_GLB = "/cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb";
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
@@ -93,7 +94,9 @@ function shell(ctx) {
   ctx.spawn("l31-back-floor", { feetPosition: { x: kx, y: -0.3, z: kz }, primitive: box(KW + T, 0.3, KD), material: ARCADE_CARPET, physics: "static", receiveShadow: true, castShadow: false });
   ctx.spawn("l31-back-ceil", { feetPosition: { x: kx, y: H, z: kz }, primitive: box(KW + T, 0.2, KD), material: CEIL, physics: "static", castShadow: false });
   w("bn", kx, K.z0 - T / 2, KW + T * 2, T); w("bs", kx, K.z1 + T / 2, KW + T * 2, T); w("be", K.x1 + T * 1.5, kz, T, KD + T * 2); w("w", B.x0 - T / 2, 0, T, D);
-  w("s1", (B.x0 + DOOR.x - 0.6) / 2, B.z1 + T / 2, DOOR.x - 0.6 - B.x0, T); w("s2", (DOOR.x + 0.6 + B.x1) / 2, B.z1 + T / 2, B.x1 - DOOR.x - 0.6, T);
+  w("s1", (B.x0 + DOOR.x - 0.6) / 2, B.z1 + T / 2, DOOR.x - 0.6 - B.x0, T); { const a = DOOR.x + 0.6, b = STAFF.x - 0.62, c = STAFF.x + 0.62; // the staff doorway behind the snack bar (Shelly Nov 13: "give it an interior")
+    w("s2", (a + b) / 2, B.z1 + T / 2, b - a, T); w("s3", (c + B.x1) / 2, B.z1 + T / 2, B.x1 - c, T);
+    ctx.spawn("l31-wall-s-staff-lintel", { feetPosition: { x: STAFF.x, y: 2.24, z: B.z1 + T / 2 }, primitive: box(1.24, H - 2.24, T), material: WALL, physics: "static", castShadow: false }); }
   ctx.spawn("l31-wall-s-lintel", { feetPosition: { x: DOOR.x, y: 2.3, z: B.z1 + T / 2 }, primitive: box(1.2, H - 2.3, T), material: WALL, physics: "static", castShadow: false });
   // The party room and the snack bar share a service wall. Both face the public aisle.
   w("party-food", 34, 6, 16, T, { ...WALL, color: "#a9a69f" });
