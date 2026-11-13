@@ -1,0 +1,22 @@
+# spawn-scene v2 yaml x0z0
+l70-bp-house:
+  feetPosition: {x: -40, y: 0, z: -18}
+  id: l70-bp-house
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 10, height: 7, kind: box, width: 12}
+  tags: [blueprint]
+l70-bp-hut:
+  feetPosition: {x: 0, y: 0, z: 47}
+  id: l70-bp-hut
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 4, height: 3.2, kind: box, width: 4}
+  tags: [blueprint]
+l70-bp-igloo:
+  feetPosition: {x: -52, y: 0, z: -4}
+  id: l70-bp-igloo
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 4, height: 2.2, kind: box, width: 4}
+  tags: [blueprint]
