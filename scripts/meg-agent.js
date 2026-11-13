@@ -29,7 +29,9 @@ const ARMS = {
 };
 const poolOf = (s) => s.role === "medic" ? ARMS.medic : ["trader", "quarter", "clerk", "concierge"].includes(s.role) ? ARMS.trade : (s.faction5 === "orig" || ["socialite", "maid", "bellhop", "cook", "guide"].includes(s.role) && s.faction5 !== "hk") ? ARMS.civ : ARMS.fight;
 function rollArm(id, pool) { let h = 2166136261; for (const c of String(id)) h = Math.imul(h ^ c.charCodeAt(0), 16777619); const tot = pool.reduce((a, [, w]) => a + w, 0); let r = ((h >>> 0) % 1000) / 1000 * tot; for (const [k, w] of pool) { if ((r -= w) < 0) return k; } return pool[0][0]; }
-const heldOf = (ctx, me) => (me.children ?? []).map((c) => (typeof c === "string" ? ctx.getObject(c) : c?.id ? ctx.getObject(c.id) : c)).find((c) => c && !String(c.id).endsWith("/" + HEAD_ID) && (c.model || c.primitive));
+// a weapon is a child that names its kind: wardrobe pieces (cw-hair, cw-ears…) and the head are never one (Shelly: npcs swung their hair)
+const weaponsOf = (ctx, me) => (me.children ?? []).map((c) => (typeof c === "string" ? ctx.getObject(c) : c?.id ? ctx.getObject(c.id) : c)).filter((c) => c && c.state?.kind && !String(c.id).endsWith("/" + HEAD_ID) && !/\/cw-/.test(String(c.id)) && (c.model || c.primitive));
+const heldOf = (ctx, me) => weaponsOf(ctx, me)[0];
 // once per agent: keep what its spawner handed it unless that was the stock pistol, else roll from its kind's rack and swap the held body
 // nerve (Shelly's confidence system): brave hold their ground, steady fight until hurt, cowards run, frenzied (rare) go for anyone. Savi's odds: 24/50/23/3
 const hashN = (id, salt) => { let h = 2166136261 ^ salt; for (const c of String(id)) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return ((h >>> 0) % 1000) / 1000; };
@@ -40,9 +42,10 @@ function arm(ctx, me, m) {
   const s = me.state; s.nerve ??= nerveOf(me.id); if (s.mjguest) { m.armed = true; return; }
   const held = heldOf(ctx, me), given = held?.state?.kind;
   if (!s.arm) s.arm = given && given !== "pistol" ? given : hashN(me.id, 31) < UNARMED[s.nerve] ? "fists" : s.nerve === "frenzied" ? rollArm(me.id, ARMS.civ.filter(([k]) => !WP[k]?.ranged)) : rollArm(me.id, poolOf(s));
-  if (s.arm === "fists") { if (held) ctx.destroy(held.id); m.armed = true; m.drawn = undefined; return; }
-  if (held && given === s.arm) { m.armed = true; m.heldId = held.id; return; }
-  if (held) ctx.destroy(held.id);
+  const all = weaponsOf(ctx, me), keep = s.arm === "fists" ? null : all.find((w) => w.state.kind === s.arm);
+  for (const w of all) if (w !== keep) ctx.destroy(w.id); // one weapon a body: spares that piled up over reloads go
+  if (s.arm === "fists") { m.armed = true; m.drawn = undefined; return; }
+  if (keep) { m.armed = true; m.heldId = keep.id; return; }
   m.heldId = ctx.spawn({ parent: me.id, attachment: { bone: "RightHand" }, visible: false, state: { kind: s.arm }, ...weaponBody(s.arm), ...heldRot(s.arm) });
   m.drawn = undefined; m.armed = true;
 }
@@ -281,7 +284,7 @@ function gait(me, m, kind) { m.gait = kind; }
 // the pistol: on the right hip while calm, in the right hand while fighting
 function holster(ctx, me, m, drawn) {
   if (m.drawn === drawn && m.holsterV === 2) return;
-  const gun = (me.children ?? []).map((c) => (typeof c === "string" ? ctx.getObject(c) : c?.id ? ctx.getObject(c.id) : c)).find((c) => c && !String(c.id).endsWith("/" + HEAD_ID) && (c.model || c.primitive)); // the gun, never the head
+  const gun = heldOf(ctx, me); // the weapon, never the head, hair or ears
   if (!gun) return; m.drawn = drawn; m.holsterV = 2; if (!!me.state.armed !== !!drawn) me.state.armed = !!drawn; // critter.js: a drawn weapon walks and runs the warrior's way
   const ranged = !!(WP[me.state.arm ?? gun.state?.kind ?? "pistol"] ?? WP.pistol).ranged;
   // calm: a gun rides slung across the back; a melee weapon is put away out of sight. a fight brings either to the right hand
