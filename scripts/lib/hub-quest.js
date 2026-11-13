@@ -2,9 +2,9 @@
 // each quest is a line the player chooses. Stages live on the player: hubMK (The Missing Key), hubLR (Lost Expedition Records),
 // hubUP (Uncharted Passage): 0 none, 1.. stages, 99 done. Keys: scripts/lib/hubkeys.js.
 import { setQuest, endQuest, tellQuest } from "./quests.js";
-import { addRep, infamyOf, fameOf } from "./rep.js";
+import { addRep, isVilified } from "./rep.js";
 // the M.E.G. hates you: their post won't talk, so Camp Amber carries Dina's lead (Shelly Nov 13: alternate routes when a faction is hostile)
-export const megHostile = (s) => infamyOf(s, "meg") >= 35 && fameOf(s, "meg") < 35;
+export const megHostile = (s) => isVilified(s, { id: "hub-meg-okafor", state: { faction: "meg" } });
 import { giveKey, hasKey, keysOf, keyDoor } from "./hubkeys.js";
 import { runOf, KEYED } from "./thehub.js";
 import { rollCheck } from "./npc-talk.js";
@@ -41,6 +41,7 @@ export function hubChoices(ctx, it, s) {
     if (lr === 99 && !up && !s.hubLRsold) out.push(s.hubUPask ? { text: "I'll go and look at it.", tag: "Quest Start" } : { text: "What was on the recorders?", tag: "Ask" });
     if (up === 2) out.push({ text: "I found the door with no mark.", tag: "Quest" });
   }
+  if (id === "hub-amber-pip" && up === 2) out.push({ text: "I found the unmarked door you wanted to know about.", tag: "Quest Turn-In" });
   if (id === "hub-amber-pip" && lr === 2) out.push({ text: "Want to buy some M.E.G. recorders?", tag: "Barter" });
   if (id === "hub-amber-pip" && lr === 99 && s.hubLRsold && !up) out.push(s.hubUPask ? { text: "I'll go and find that door.", tag: "Quest Start" } : { text: "Anything good on those tapes?", tag: "Ask" }); // sold the tapes: Sato never heard them, so Pip has the blank door
   if (id === "hub-meg-okafor") {
@@ -86,15 +87,16 @@ export function handleDialogueQuestHub(ctx, p, npc, text) {
     if (t.includes("bring the recorders back") && !lr && s.hubLRask) { s.hubLR = 1; s.hubRec = {}; setQuest(s, LR, { name: N[LR], step: "Find the 2019 survey team's three recorders on the dark road past the M.E.G. barrier: 0 / 3.", mark: M("hub-rec-0") }); tellQuest(ctx, p, `Quest Started: ${N[LR]}`); return { reply: "Would you? Oh, wonderful. Three recorders, orange cases, somewhere on the dark road. Don't play them in there. I mean it, walker. Bring them to me first.", mood: "happy" }; }
     if (t.includes("three recorders") && lr === 2) { s.hubLR = 99; delete s.hubRec; pay(s, 180); addRep(s, "meg", 10); endQuest(s, LR, "Sato has the 2019 team's tapes."); tellQuest(ctx, p, `Quest Completed: ${N[LR]} · +$180`); return { reply: "All three. Look at them. They're warm, why are they warm. Never mind. Thank you, walker. Give me a minute with these and then ask me what's on them.", mood: "happy" }; }
     if (t.includes("what was on the recorders") && lr === 99 && !up) { s.hubUPask = 1; return { reply: "Counting, mostly. Then on the third tape somebody says 'this one's blank'. A door with no mark over it. Every door here has a mark. Every single one. If there's a blank one, it's the most interesting thing on this road.", mood: "happy" }; }
-    if (t.includes("go and look at it") && lr === 99 && !up && s.hubUPask) { s.hubUP = 1; setQuest(s, UP, { name: N[UP], step: "The third tape mentions a door with no mark. Follow the dark road to its end and find it.", mark: M("hub-uncharted") }); tellQuest(ctx, p, `Quest Started: ${N[UP]}`); return { reply: "The tape puts it right at the end, where the road just stops. Don't try to open it. Put your hand on it and tell me if it's warm. That's all I want to know.", mood: "calm" }; }
+    if (t.includes("go and look at it") && lr === 99 && !up && s.hubUPask) { s.hubUP = 1; setQuest(s, UP, { name: N[UP], step: "The third tape mentions a door with no mark. Follow the dark road to its end and find it.", mark: M("hub-blank") }); tellQuest(ctx, p, `Quest Started: ${N[UP]}`); return { reply: "The tape puts it right at the end, where the road just stops. Don't try to open it. Put your hand on it and tell me if it's warm. That's all I want to know.", mood: "calm" }; }
     if (t.includes("door with no mark") && up === 2) return finishUP(ctx, p, "sato");
   }
   if (id === "hub-meg-okafor") {
     if (t.includes("unmarked door past your barrier") && up === 2) return finishUP(ctx, p, "okafor");
-    if ((t.includes("dina a.") && s.hubLedger) || (t.includes("did a dina come through") && s.hubDinaLead)) { s.hubDinaAsk = 1; return { reply: "I remember her. Didn't want a key. Wanted the tenth tunnel and a radio, in that order. I told her the city past that door is quiet and she said quiet was fine. She walked. Nobody walks the tenth alone. She did.", mood: "calm" }; }
+    if ((t.includes("dina a.") && s.hubLedger) || (t.includes("did a dina come through") && (s.hubDinaLead || s.trail?.name || (s.dinaQ ?? 0) >= 9))) { s.hubDinaAsk = 1; return { reply: "I remember her. Didn't want a key. Wanted the tenth tunnel and a radio, in that order. I told her the city past that door is quiet and she said quiet was fine. She walked. Nobody walks the tenth alone. She did.", mood: "calm" }; }
   }
+  if (id === "hub-amber-pip" && t.includes("unmarked door you wanted") && up === 2) return finishUP(ctx, p, "pip");
   if (id === "hub-amber-pip" && t.includes("anything good on those tapes") && lr === 99 && s.hubLRsold && !up) { s.hubUPask = 1; return { reply: "Jo played one before she traded it. Mostly counting. Then a uniform goes 'this one's blank'. A door with no mark, right at the end of the dark road. Jo says that's worth more than the tapes.", mood: "happy" }; }
-  if (id === "hub-amber-pip" && t.includes("go and find that door") && lr === 99 && s.hubLRsold && !up && s.hubUPask) { s.hubUP = 1; setQuest(s, UP, { name: N[UP], step: "Jo's tape mentions a door with no mark at the end of the dark road. Find it, then tell someone who'd care: Sato, or Okafor at the barrier.", mark: M("hub-uncharted") }); tellQuest(ctx, p, `Quest Started: ${N[UP]}`); return { reply: "Go on then! Hand on it, see if it's warm. Then tell the uniforms, they pay better than us. Don't say where you heard it.", mood: "happy" }; }
+  if (id === "hub-amber-pip" && t.includes("go and find that door") && lr === 99 && s.hubLRsold && !up && s.hubUPask) { s.hubUP = 1; setQuest(s, UP, { name: N[UP], step: "Jo's tape mentions a door with no mark at the end of the dark road. Find it, then report to Pip, Sato, or Okafor at the barrier.", mark: M("hub-blank") }); tellQuest(ctx, p, `Quest Started: ${N[UP]}`); return { reply: "Go on then! Hand on it, see if it's warm. Then tell the uniforms, they pay better than us. Don't say where you heard it.", mood: "happy" }; }
   if (id === "hub-amber-pip" && t.includes("buy some m.e.g. recorders") && lr === 2) { s.hubLR = 99; s.hubLRsold = 1; delete s.hubRec; pay(s, 260); addRep(s, "meg", -6); endQuest(s, LR, "You sold the 2019 team's tapes to Camp Amber. Sato never heard them."); tellQuest(ctx, p, `Quest Completed: ${N[LR]} · +$260`); return { reply: "Uniform tapes? Yes! Jo trades those back to the uniforms for stove gas. Everybody wins! Except whoever asked you to get them. Sorry, them.", mood: "happy" }; }
   if (id === "hub-amber-jo" && t.includes("uniforms won't talk to me") && megHostile(s) && !s.hubDinaAsk) { s.hubDinaAsk = 1; s.hubDinaVia = "amber"; addRep(s, "amber", 1); return { reply: "Small woman, big bag, asked for the tenth tunnel like she was ordering lunch. I walked her halfway. She didn't want tea. Rude, honestly. Tenth tunnel, pilgrim. Keep your head down near the post.", mood: "calm" }; }
   if (id === "hub-keymaster") {
@@ -104,13 +106,14 @@ export function handleDialogueQuestHub(ctx, p, npc, text) {
       s.hubKmKey = pl; giveKey(ctx, p, pl); npc.state.leaveAt = ctx.now() + 20000;
       return { reply: "You asked. Most take. One. It knows its door. Don't follow me.", mood: "calm" }; }
     if (t.includes("hand over a key") && !s.hubKmKey) { s.hubKmKey = "refused"; npc.state.leaveAt = ctx.now() + 4000; return { reply: "No.", mood: "annoyed" }; }
-    if (t.includes("which door does my key want")) { const k = keysOf(s)[0]; npc.state.leaveAt = ctx.now() + 15000; return { reply: k ? `${whereIs(k[0])[0].toUpperCase()}${whereIs(k[0]).slice(1)}. It's warm already.` : "You hold nothing.", mood: "calm" }; }
+    if (t.includes("which door does my key want")) { const k = keysOf(s)[0]; npc.state.leaveAt = ctx.now() + 15000; return { reply: k && whereIs(k[0]) ? `${whereIs(k[0])[0].toUpperCase()}${whereIs(k[0]).slice(1)}. It's warm already.` : k ? "I don't know that one." : "You hold nothing.", mood: "calm" }; }
   }
   return null;
 }
 function finishUP(ctx, p, who) {
   const s = p.state; s.hubUP = 99; s.hubUPto = who;
-  if (who === "sato") { giveKey(ctx, p, "level70"); addRep(s, "meg", 6); endQuest(s, UP, "You told Sato about the blank door. He gave you a key he'd been keeping."); tellQuest(ctx, p, `Quest Completed: ${N[UP]} · Level Key`); return { reply: "Warm. It's warm. Oh, I knew it. Here. I've had this in my boot for a year and I'm never going to use it, I'd miss the chalk. It's yours, walker.", mood: "happy" }; }
-  pay(s, 300); addRep(s, "meg", 12); endQuest(s, UP, "You reported the blank door to Okafor. The barrier moved thirty metres further in."); tellQuest(ctx, p, `Quest Completed: ${N[UP]} · +$300`);
+  if (who === "sato") { giveKey(ctx, p, "level2"); addRep(s, "meg", 6); endQuest(s, UP, "You told Sato about the blank door. He gave you a key he'd been keeping."); tellQuest(ctx, p, `Quest Completed: ${N[UP]} · Level Key`); return { reply: "Warm. It's warm. Oh, I knew it. Here. I've had this in my boot for a year and I'm never going to use it, I'd miss the chalk. It's yours, walker.", mood: "happy" }; }
+  if (who === "pip") { pay(s, 120); addRep(s, "amber", 8); endQuest(s, UP, "You told Pip about the warm, unmarked door. Camp Amber can warn travellers."); tellQuest(ctx, p, `Quest Completed: ${N[UP]} · +$120`); return { reply: "Warm? I'll tell Jo. We'll keep people away until somebody knows what it is. Here, for going all that way.", mood: "calm" }; }
+  pay(s, 300); addRep(s, "meg", 12); endQuest(s, UP, "You reported the blank door to Okafor. Okafor will add it to the post's survey."); tellQuest(ctx, p, `Quest Completed: ${N[UP]} · +$300`);
   return { reply: "No mark. Right. That goes up the line tonight and Sato doesn't hear it from you, he'll be down there with a pillow. Good work, traveller. Take this.", mood: "calm" };
 }

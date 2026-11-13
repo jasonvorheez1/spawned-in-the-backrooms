@@ -43,7 +43,17 @@ const JOURNAL_OFFERS = {
   'l13-still-home': 'l13p-noor', 'l31-side-b': 'l31-q-marlowe', 'l70-dry-pipes': 'l70-npc-marinerson',
   'l70-pelt-tax': 'l70-npc-ines', 'l70-ledger': 'l70-npc-larsson', 'ines-s-goggles': 'l5-ines-radio',
 }
-export const questBriefing = (id) => id === 'the-way-back' ? 'Look for a way out. Follow the leads you uncover and ask people what they know.' : OFFERS[JOURNAL_OFFERS[id]]?.[1] ?? ''
+const HUB_JOURNAL = {
+  'the-tenth-tunnel': "Follow Dina's trail through the Hub. Doorstep Carpet's ledger and Camp Amber may know where she went.",
+  'hub-missing-key': "A key vanished from Lin's cabinet. Ask Dace about his watch, then decide what to do with the key if you find it.",
+  'hub-lost-records': "Sato wants three abandoned 2019 survey tapes from beyond the M.E.G. barrier. Sato and Camp Amber both have an interest in the recordings.",
+  'hub-uncharted': "A recording mentions an unmarked door at the end of the dark road. Examine it, then choose who to tell.",
+  'err-jo-supply': "Jo needs two bandages for Camp Amber's newcomer box. A first-aid kit is another option.",
+  'err-pip-route': "Pip needs the open doors in the seventh and tenth tunnels checked.",
+  'err-okafor-cold-door': "Okafor wants a report on the fifth tunnel's cold door and the unmarked door beyond the barrier.",
+  'err-sato-markers': "Sato needs the mark on the fourth door in the third tunnel for his survey.",
+}
+export const questBriefing = (id) => id === 'the-way-back' ? 'Look for a way out. Follow the leads you uncover and ask people what they know.' : HUB_JOURNAL[id] ?? OFFERS[JOURNAL_OFFERS[id]]?.[1] ?? ''
 export function questProgress(id, s) {
   if (id === 'the-golden-bumper' && s.wheatQ === 2) return `Golden wheat: ${Math.min(3, s.wheat ?? 0)}/3`
   if (id === 'plate-for-the-perimeter' && s.spiderQ === 2) return `Chitin plates: ${Math.min(3, s.scrap?.chitin ?? 0)}/3`

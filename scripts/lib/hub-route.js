@@ -7,16 +7,23 @@ export const ROUTE = { id: "the-tenth-tunnel", name: "The Tenth Tunnel" };
 const S = {
   door: { step: "Find the door at the end of Level 1's deepest halls.", mark: { place: "level1", id: "l1-hub-door" } },
   look: { step: "Read the key ledger at the M.E.G. post, Doorstep Carpet, or ask them if Dina came through.", mark: { place: "thehub", id: "hub-ledger" } },
-  ask: { step: "Ask at the M.E.G. post, Doorstep Carpet, if Dina came through.", mark: { place: "thehub", id: "hub-ledger" } },
+  ask: { step: "Ask at the M.E.G. post, Doorstep Carpet, if Dina came through.", mark: { place: "thehub", id: "hub-meg-okafor" } },
   amber: { step: "The M.E.G. post won't talk to you. Ask Jo at Camp Amber if Dina came through.", mark: { place: "thehub", id: "hub-amber-jo" } },
   follow: { step: "Take the door in the tenth tunnel.", mark: { place: "thehub", id: "hd-t10-a3" } },
 };
 export function hubRoute(ctx, st, place) {
+  if (st.hubUPto === "sato" && (st.hubKeys?.level70 ?? 0) > 0 && !st.hubKeyFix) {
+    const keys = { ...st.hubKeys }, n = keys.level70 - 1;
+    if (n) keys.level70 = n; else delete keys.level70;
+    keys.level2 = (keys.level2 ?? 0) + 1; st.hubKeys = keys; st.hubKeyFix = 1;
+  }
+  const uncharted = st.quests?.["hub-uncharted"];
+  if (st.hubUP === 1 && uncharted?.mark?.id === "hub-uncharted") setQuest(st, "hub-uncharted", { ...uncharted, mark: { place: "thehub", id: "hub-blank" } });
   if (st.hubRouteDone) return;
   const open = (st.dinaQ ?? 0) >= 9 || st.hubPhoebe;
   if (!open) return;
   const knows = st.hubDinaAsk || st.hubLedger; // asked Okafor, or read the ledger's Dina line yourself
-  if (knows && place === "level11") {
+  if (knows && st.hubTenthCrossed) {
     st.hubRouteDone = 1;
     if (st.quests?.[ROUTE.id]) endQuest(st, ROUTE.id, "Through the tenth tunnel.");
     return;

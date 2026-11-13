@@ -45,5 +45,8 @@ export function onTriggerEnter(ctx, other) {
   other.state.clipKind = "wall"; other.state.hubFrom = d.id;
   other.state.notice = { text: `${KEY_NAMES[to] ?? d.open?.name ?? "Somewhere"}. The door you came through is not behind you.`, at: ctx.now() };
   bring(ctx, other, to); carryAcross(ctx, other, to);
-  ctx.cross(other, to);
+  const previous = other.state.hubTenthCrossed;
+  if (d.id === "t10-a3" && (other.state.hubDinaAsk || other.state.hubLedger)) other.state.hubTenthCrossed = 1;
+  const result = ctx.cross(other, to);
+  if (result?.crossed === false) other.state.hubTenthCrossed = previous;
 }
