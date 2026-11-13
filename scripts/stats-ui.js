@@ -114,7 +114,7 @@ export function statsUi(ctx, player) {
     <div class="cols"><div class="col"><div class="sec">ATTRIBUTES</div>${attrRows}</div><div class="col"><div class="sec">SKILLS</div>${skillRows}</div></div>
     <div class="dv">
       <span>Max HP <b>${L.hp + (s.level - 1) * L.perLevel.hp + d.hpBonus}</b></span><span>Max sanity <b>${L.sanity + (s.level - 1) * L.perLevel.sanity + d.sanBonus}</b></span>
-      <span>Carry weight <b>${kg.toFixed(1)} / ${cap} kg${slow ? ' (slowed)' : ''}</b></span><span>Stamina <b>${Math.round(d.staMax)}</b></span>
+      <span>Carry weight <b>${kg.toFixed(1)} / ${Number.isFinite(cap) ? cap : "∞"} kg${slow ? ' (slowed)' : ''}</b></span><span>Stamina <b>${Math.round(d.staMax)}</b></span>
       <span>Karma <b style="color:${karmaColor(karmaOf(s))}">${karmaTitle(karmaOf(s))} (${karmaOf(s)})</b></span>${Object.keys(GROUPS).map((g) => `<span>${GROUPS[g].name} <b style="color:${titleColor(s, g)}">${titleOf(s, g)}</b>${g === 'meg' && megRank(s) ? ` <b style="color:#b6e04a">· ${megRank(s)}</b>` : ''} <i style="opacity:.7;font-style:normal">fame ${fameOf(s, g)} · infamy ${infamyOf(s, g)}</i></span>`).join('')}
       ${s.repHistory?.length ? `<span><b>Recent faction changes</b></span>${s.repHistory.slice().reverse().map((h) => `<span>${escT(GROUPS[h.group]?.name ?? h.group)} · ${escT(h.kind)} +${escT(h.amount)} <small>${escT(h.reason)}</small></span>`).join('')}` : ''}
       <span>Damage resist <b>DR ${d.dr}</b></span><span>Clothes find <b>×${d.clothFind.toFixed(2)}</b></span>
