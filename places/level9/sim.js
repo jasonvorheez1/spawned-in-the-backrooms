@@ -43,11 +43,27 @@ function lay(ctx, L) {
     if (H.model) sp(`l9-${l.id}`, { tags: ["l9house"], feetPosition: T(l.x, l.z, 0.02), rotation: { yaw: l.yaw }, model: { id: H.model, forward: "+z", materials: { siding: { color: p.siding }, trim: { color: p.trim }, roof: { color: p.roof } } }, physics: { body: "static", collider: "mesh" }, visibleRange: { max: 300 }, state: { kind: l.kind, seed: l.seed } });
     else sp(`l9-${l.id}`, { tags: ["l9house"], feetPosition: T(l.x, l.z), rotation: { yaw: l.yaw }, primitive: { kind: "box", width: H.w, height: H.stories * 2.9 + 1.2, depth: H.d }, material: BLUE, physics: "none", state: { kind: l.kind, seed: l.seed } });
   }
+  if ((ctx.world.files ?? []).includes("scripts/l9-mangled.js")) sp("l9-mangled-mgr", { feetPosition: T(0, 0), behavior: "scripts/l9-mangled.js", audience: "all" });
   sp("l9-ambience", { feetPosition: T(0, 0), audience: "local", audio: { clip: "cdn/ambience-dead-quiet-suburb-midnight-light-wind-distant-wet-road-hiss-no-crickets-loop.mp3", gain: 0.16, loop: true, spatial: false, bus: "Ambience" } });
 }
 
+const FOG_CLEAR = { near: 12, far: 120 }, FOG_BANK = { near: 1.5, far: 17 };
+const between = (ctx, [a, b]) => (a + ctx.random() * (b - a)) * 1000;
+// the fog: a bank rolls in over ~14 s, sits, rolls out. place.state.l9fog = { on, until } is what scripts/l9-mangled.js hunts by.
+function fog(ctx, s) {
+  const now = ctx.now();
+  if (!s.l9fog) s.l9fog = { on: false, until: now + between(ctx, [100, 160]) }; // the first bank comes early: a new arrival meets it (my pick)
+  if (now >= s.l9fog.until) {
+    const on = !s.l9fog.on; s.l9fog = { on, until: now + between(ctx, on ? TUNE.fogLasts : TUNE.fogEvery), at: now };
+    if (on) ctx.emit("playSound", { clip: "cdn/sfx-distant-air-raid-siren-single-slow-wail-far-across-a-suburb-at-night.mp3", volume: 0.5 }, { audience: { place: ctx.place.id ?? "level9" } });
+  }
+  const t = Math.min(1, (now - (s.l9fog.at ?? 0)) / 14000), k = s.l9fog.on ? t : 1 - t, f = ctx.place.atmosphere.fog;
+  const near = FOG_CLEAR.near + (FOG_BANK.near - FOG_CLEAR.near) * k, far = FOG_CLEAR.far + (FOG_BANK.far - FOG_CLEAR.far) * k;
+  if (Math.abs((f?.far ?? 0) - far) > 0.4) ctx.place.atmosphere.fog = { kind: "linear", near, far, color: k > 0.5 ? "oklch(0.2 0.015 250)" : "oklch(0.1 0.02 262)" };
+}
 export function tick(ctx) {
   const s = ctx.place.state;
   if (s.l9seed == null) s.l9seed = (hashStr(String(ctx.getRoomId?.() ?? "main")) ^ Math.floor(ctx.random() * 0x7fffffff)) >>> 0; // rolled once per room, kept with the room
   if (s.l9V !== V) { lay(ctx, layout(s.l9seed)); s.l9V = V; }
+  if (ctx.place.players.length) fog(ctx, s);
 }

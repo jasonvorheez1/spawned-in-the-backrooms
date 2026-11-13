@@ -547,6 +547,11 @@ function lay(ctx) {
       { feetPosition: { x: 0.62, y: -1.3, z: -0.04 }, primitive: { kind: "cylinder", radiusTop: 0.05, radiusBottom: 0.06, height: 1.6 }, material: WOOD },
     ],
   });
+  // ---- the way out to Level 9: a second mouth across the hall, rain blowing in from a street that is always midnight (scripts/level-door.js)
+  sp("l8-from-l9", at(P(46, 5.4, 0.1), { rotation: { yaw: P(46).yaw - 90 } }));
+  sp("l8-to-l9", { ...at(P(46, 8.9, 0)), physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1.8, height: 2.6, depth: 1.8 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level9#l9-from-l8" } });
+  sp("l8-l9-dark", { ...at({ ...P(46, 8.75, 1.15), yaw: P(46).yaw + 90 }), primitive: { kind: "box", width: 1.5, height: 2.2, depth: 0.1 }, material: { color: "#05060a" }, visibleRange: { max: 45 }, castShadow: false });
+  sp("l8-l9-glow", { ...at(P(46, 7.6, 1.6)), light: { kind: "point", color: "oklch(0.8 0.13 70)", intensity: 1.6, distance: 7, shadow: { enabled: false } }, audio: { clip: "cdn/sfx-light-rain-on-wet-asphalt-heard-through-a-cave-opening-loop.mp3", gain: 0.2, loop: true, spatial: true, maxDistance: 14 } });
   // ---- the way you can come from Level 2.1: a rough concrete tunnel mouth in the hall's wall, where the cave of The Edges runs out (scripts/level-door.js)
   const tm = P(46, -8.4, 0);
   sp("l8-from-l21", at(P(46, -5.4, 0.1), { rotation: { yaw: P(46).yaw + 90 } }));
