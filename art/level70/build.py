@@ -84,11 +84,11 @@ def finish(name):
     ob=bpy.data.objects.new(name,me); bpy.context.scene.collection.objects.link(ob); ob.select_set(True); bpy.context.view_layer.objects.active=ob
     bpy.ops.export_scene.gltf(filepath=OUT+name+".glb",use_selection=True,export_apply=True,export_image_format='JPEG')
     xs=[v.co for v in me.vertices]; print("BUILT",name,"tris",sum(len(p.vertices)-2 for p in me.polygons),"size",[round(max(c[i] for c in xs)-min(c[i] for c in xs),2) for i in range(3)])
-def shell(f,size,dx,cut):
+def shell(f,size,dx,cut,rot=math.pi):
     p=SRC+f+".glb"
     if not os.path.exists(p) or os.path.getsize(p)<1e5: print("NOSHELL",f); return None
     bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(filepath=p)
-    obs=[o for o in bpy.context.scene.objects if o.type=="MESH"]; o=obs[0]; me=o.data; me.transform(o.matrix_world); me.transform(Matrix.Rotation(math.pi,4,'Z'))
+    obs=[o for o in bpy.context.scene.objects if o.type=="MESH"]; o=obs[0]; me=o.data; me.transform(o.matrix_world); me.transform(Matrix.Rotation(rot,4,"Z"))
     cs=[v.co for v in me.vertices]; mn=Vector([min(c[i] for c in cs) for i in range(3)]); mx=Vector([max(c[i] for c in cs) for i in range(3)]); print("SHELL",f,"native",[round(mx[i]-mn[i],3) for i in range(3)])
     sc=(size[0]/(mx.x-mn.x),size[2]/(mx.y-mn.y),size[1]/(mx.z-mn.z))
     me.transform(Matrix.Translation((dx,0,0))@Matrix.Diagonal((*sc,1))@Matrix.Translation((-(mn.x+mx.x)/2,-(mn.y+mx.y)/2,-mn.z)))
@@ -130,7 +130,7 @@ def hotel():
 # ---------------- OFFICE (root 38,0,-22) ----------------
 def office():
     def cut(tb): bmesh.ops.bisect_plane(tb,geom=tb.verts[:]+tb.edges[:]+tb.faces[:],plane_co=(0,0,3.32),plane_no=(0,0,1),clear_inner=True)
-    begin_keep(shell("office",(30,14,19),-1,cut)); H=3.0
+    begin_keep(shell("office",(30,14,19),-1,cut,math.pi/2)); H=3.0
     box((28.6,.2,18.6),"gfloor",T(-2,-.16,0),bev=0); box((29,.34,19),"conc",T(-2,H,0),bev=.03)
     wall((-16,9),(-16,-9),H,M_("cinder"),ops=[(5.5,12.5,2.6)]); wall((-16,-9),(12,-9),H,M_("cinder")); wall((12,9),(-16,9),H,M_("cinder")); wall((12,-9),(12,9),H,M_("cinder"))
     wall((6,3),(6,-3),H,M_("conc"),th=.25,ops=[(2.42,3.58,2.1)]); wall((6,-3),(12,-3),H,M_("conc"),th=.25); wall((12,3),(6,3),H,M_("conc"),th=.25)
