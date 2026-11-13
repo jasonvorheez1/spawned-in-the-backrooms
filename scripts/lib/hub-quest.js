@@ -2,7 +2,9 @@
 // each quest is a line the player chooses. Stages live on the player: hubMK (The Missing Key), hubLR (Lost Expedition Records),
 // hubUP (Uncharted Passage): 0 none, 1.. stages, 99 done. Keys: scripts/lib/hubkeys.js.
 import { setQuest, endQuest, tellQuest } from "./quests.js";
-import { addRep } from "./rep.js";
+import { addRep, infamyOf, fameOf } from "./rep.js";
+// the M.E.G. hates you: their post won't talk, so Camp Amber carries Dina's lead (Shelly Nov 13: alternate routes when a faction is hostile)
+export const megHostile = (s) => infamyOf(s, "meg") >= 35 && fameOf(s, "meg") < 35;
 import { giveKey, hasKey, keysOf, keyDoor } from "./hubkeys.js";
 import { runOf, KEYED } from "./thehub.js";
 import { rollCheck } from "./npc-talk.js";
@@ -46,6 +48,7 @@ export function hubChoices(ctx, it, s) {
     if (s.hubLedger && !s.hubDinaAsk) out.push({ text: "Your ledger has a Dina A. in it.", tag: "Ask" });
     else if ((s.hubDinaLead || s.trail?.name || (s.dinaQ ?? 0) >= 9) && !s.hubLedger && !s.hubDinaAsk) out.push({ text: "Did a Dina come through here? Somebody said you wrote her down.", tag: "Ask" }); // Phoebe's lead (scripts/lib/hub-cut.js)
   }
+  if (id === "hub-amber-jo" && megHostile(s) && !s.hubDinaAsk && !s.hubLedger && (s.hubDinaLead || s.trail?.name || (s.dinaQ ?? 0) >= 9)) out.push({ text: "The uniforms won't talk to me. Did a Dina come through?", tag: "Ask" });
   if (id === "hub-keymaster") {
     if (!s.hubKmKey) out.push({ text: "Would you spare a key? Please.", tag: "Ask" }, { text: "Hand over a key.", tag: "Demand" });
     if (keysOf(s).length) out.push({ text: "Which door does my key want?", tag: "Ask" });
@@ -93,6 +96,7 @@ export function handleDialogueQuestHub(ctx, p, npc, text) {
   if (id === "hub-amber-pip" && t.includes("anything good on those tapes") && lr === 99 && s.hubLRsold && !up) { s.hubUPask = 1; return { reply: "Jo played one before she traded it. Mostly counting. Then a uniform goes 'this one's blank'. A door with no mark, right at the end of the dark road. Jo says that's worth more than the tapes.", mood: "happy" }; }
   if (id === "hub-amber-pip" && t.includes("go and find that door") && lr === 99 && s.hubLRsold && !up && s.hubUPask) { s.hubUP = 1; setQuest(s, UP, { name: N[UP], step: "Jo's tape mentions a door with no mark at the end of the dark road. Find it, then tell someone who'd care: Sato, or Okafor at the barrier.", mark: M("hub-uncharted") }); tellQuest(ctx, p, `Quest Started: ${N[UP]}`); return { reply: "Go on then! Hand on it, see if it's warm. Then tell the uniforms, they pay better than us. Don't say where you heard it.", mood: "happy" }; }
   if (id === "hub-amber-pip" && t.includes("buy some m.e.g. recorders") && lr === 2) { s.hubLR = 99; s.hubLRsold = 1; delete s.hubRec; pay(s, 260); addRep(s, "meg", -6); endQuest(s, LR, "You sold the 2019 team's tapes to Camp Amber. Sato never heard them."); tellQuest(ctx, p, `Quest Completed: ${N[LR]} · +$260`); return { reply: "Uniform tapes? Yes! Jo trades those back to the uniforms for stove gas. Everybody wins! Except whoever asked you to get them. Sorry, them.", mood: "happy" }; }
+  if (id === "hub-amber-jo" && t.includes("uniforms won't talk to me") && megHostile(s) && !s.hubDinaAsk) { s.hubDinaAsk = 1; s.hubDinaVia = "amber"; addRep(s, "amber", 1); return { reply: "Small woman, big bag, asked for the tenth tunnel like she was ordering lunch. I walked her halfway. She didn't want tea. Rude, honestly. Tenth tunnel, pilgrim. Keep your head down near the post.", mood: "calm" }; }
   if (id === "hub-keymaster") {
     if (t.includes("spare a key") && !s.hubKmKey) {
       const pool = Object.values(KEYED).filter((pl) => !hasKey(s, pl) && ctx.world.places?.[pl] !== undefined), pl = pool[Math.floor(ctx.random() * pool.length)];
