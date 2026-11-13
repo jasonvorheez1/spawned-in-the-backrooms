@@ -4,10 +4,13 @@
 // While crawling: the body's capsule shrinks to CAP_H (fits a 1.2 m bore), the eye sits low, the crawl clip plays at your pace,
 // and scripts/player.js slows you (state.crawl, CRAWL_MUL there). Runs after scripts/player.js and scripts/climb.js.
 import { raycast } from 'builtin/physics'
+import { rotate } from 'builtin/vec3'
+// Shelly's prone clips (her "sneak" .kf files, Nov 13), converted onto the body's skeleton by art/sneak/kf2glb.py
+const PRONE = { f: 'cdn/clip-prone-forward-0962574f.glb', b: 'cdn/clip-prone-backward-e06fc4ae.glb', l: 'cdn/clip-prone-left-543e6f4a.glb', r: 'cdn/clip-prone-right-37f8f4c3.glb' }
 const HOLD = 0.35          // s of held C before a crouch becomes a crawl
 const CAP_H = 0.85, CAP_R = 0.32, STAND_H = 1.9, STAND_R = 0.35   // capsules: crawling, and the body's own (read off the player: 1.9 x 0.35)
 const NEED = 1.95          // m of clear height over the feet to stand up
-// hands and knees, keyed on the body's own bones (the library crawl clip names bones this rig lacks, so it never played). Savi's pick: 1.1 s a cycle
+// the old hands-and-knees keyframes, kept as a fallback, unused: keyed on the body's own bones (the library crawl clip names bones this rig lacks, so it never played). Savi's pick: 1.1 s a cycle
 const L = (a, b) => [a, b, a]                                  // a there-and-back swing
 const CLIP = { duration: 1.1, tracks: {
   Hips: { pitch: [-62, -62, -62], roll: [3, -3, 3] },
@@ -82,7 +85,13 @@ export function update(ctx, dt) {
   if (!s.crawl) return
   if (!s.crouch) s.crouch = true // a sprint or a jump stands a crouch up (scripts/player.js); not a crawl
   const v = me.velocity, sp = Math.hypot(v.x, v.z), moving = sp > 0.15
-  const clip = moving ? 'go' : 'still'
-  if (m.clip !== clip) { m.clip = clip; me.anim.crawl = { clip: CLIP, loop: 'loop', weight: 6, blendIn: 0.25, speed: moving ? Math.max(0.6, sp / 0.9) : 0.0001 } }
+  let dir = 'f'
+  if (moving) { // which way the body goes against where it faces
+    const fw = rotate(me.rotation, { x: 0, y: 0, z: -1 }), fx = fw.x, fz = fw.z
+    const along = (v.x * fx + v.z * fz) / sp, side = (v.x * -fz + v.z * fx) / sp
+    dir = Math.abs(along) >= Math.abs(side) ? (along >= 0 ? 'f' : 'b') : (side >= 0 ? 'r' : 'l')
+  }
+  const clip = moving ? dir + Math.round(Math.max(0.6, sp / 0.9) * 4) : 'still'
+  if (m.clip !== clip) { m.clip = clip; me.anim.crawl = { clip: PRONE[dir], loop: 'loop', weight: 6, blendIn: 0.25, speed: moving ? Math.max(0.6, sp / 0.9) : 0.0001 } }
   if (moving) { m.scuff = (m.scuff ?? 0) + dt * sp; if (m.scuff > 1.7) { m.scuff = 0; ctx.emit('playSound', { clip: SCUFF, volume: 0.12, pitch: 0.92 + ctx.random() * 0.16, position: p, maxDistance: 10 }) } }
 }
