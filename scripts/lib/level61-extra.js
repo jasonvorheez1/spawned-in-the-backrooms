@@ -33,14 +33,16 @@ export function layExtra(ctx, { HW, HD, HH }) {
 
   // ---- Level 11: the sliding glass doors (the safe way out) in the east wall, opening to Level 11 The Infinite City
   const dz = -9;
-  bx("l61-l11-floor", HW + 3, -0.29, dz, 6, 0.3, 6, { color: "oklch(0.8 0.01 80)", roughness: 0.4 }); bx("l61-l11-roof", HW + 3, 3.4, dz, 6, 0.3, 6, { color: "oklch(0.9 0.01 90)" });
-  // Opening doorway in back wall leading into Level 11
-  bx("l61-l11-back-l", HW + 6, 0, dz - 1.8, 0.3, 3.4, 2.4, PLASTER);
-  bx("l61-l11-back-r", HW + 6, 0, dz + 1.8, 0.3, 3.4, 2.4, PLASTER);
-  bx("l61-l11-back-top", HW + 6, 2.8, dz, 0.3, 0.6, 1.2, PLASTER);
-  bx("l61-l11-wn", HW + 3, 0, dz - 3, 6, 3.4, 0.3, PLASTER); bx("l61-l11-ws", HW + 3, 0, dz + 3, 6, 3.4, 0.3, PLASTER);
+  const solid = { physics: "static", castShadow: false };
+  bx("l61-l11-floor", HW + 3, -0.29, dz, 6, 0.3, 6, { color: "#c0b8a7", roughness: 0.63 }, solid);
+  bx("l61-l11-roof", HW + 3, 3.4, dz, 6, 0.3, 6, PLASTER, solid);
+  for (const side of [-1, 1]) {
+    bx("l61-l11-back-" + side, HW + 6, 0, dz + side * 1.8, 0.3, 3.4, 2.4, PLASTER, solid);
+    bx("l61-l11-side-" + side, HW + 3, 0, dz + side * 3, 6, 3.4, 0.3, PLASTER, solid);
+  }
+  bx("l61-l11-back-top", HW + 6, 2.8, dz, 0.3, 0.6, 1.2, PLASTER, solid);
   const glass = { color: "oklch(0.8 0.05 220)", opacity: 0.32, transparent: true, roughness: 0.05, metalness: 0.2 };
-  for (const s of [-1, 1]) sp(`l61-l11-panel-${s}`, { feetPosition: { x: HW, y: 0, z: dz + s * 0.5 }, behavior: "scripts/l61-door.js", physics: { body: "kinematic", collider: "box" }, state: { slide: s * 1.0, axis: "z", home: { x: HW, z: dz + s * 0.5 }, sense: { x: HW, z: dz } },
+  for (const s of [-1, 1]) sp(`l61-l11-panel-${s}`, { feetPosition: { x: HW, y: 0, z: dz + s * 0.5 }, behavior: "scripts/l61-door.js", physics: { body: "kinematic", collider: "box" }, state: { slide: s * 1.0, axis: "z", home: { x: HW, z: dz + s * 0.5 }, sense: { x: HW + 0.45, z: dz } },
     primitive: { kind: "box", width: 0.06, height: 2.6, depth: 1.0 }, material: glass, children: [{ feetPosition: { x: 0, y: 1.3, z: 0 }, primitive: { kind: "box", width: 0.08, height: 0.06, depth: 1.02 }, material: { color: "oklch(0.7 0.01 250)", metalness: 0.8 } }] });
   bx("l61-l11-head", HW, 2.6, dz, 0.3, 0.8, 2.6, { color: "oklch(0.3 0.01 250)", metalness: 0.5 });
   sp("l61-l11-sign", { feetPosition: { x: HW - 0.2, y: 3.15, z: dz }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 2.4, height: 0.5, depth: 0.05 }, material: { color: "oklch(0.2 0.03 160)" },
