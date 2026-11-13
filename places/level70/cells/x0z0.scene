@@ -20,3 +20,10 @@ l70-bp-igloo:
   physics: none
   primitive: {depth: 4, height: 2.2, kind: box, width: 4}
   tags: [blueprint]
+l70-bp-office:
+  feetPosition: {x: 38, y: 0, z: -22}
+  id: l70-bp-office
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 18, height: 14, kind: box, width: 30}
+  tags: [blueprint]
