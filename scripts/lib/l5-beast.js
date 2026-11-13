@@ -160,7 +160,7 @@ export function layOffice(ctx) {
   put("l5-office-desk", { feetPosition: { x: -38, y: 0, z: -19 }, rotation: { yaw: 180 }, physics: { body: "static", collider: "box" }, model: { id: M.desk, forward: "+x" }, layout: fit(2.1, 1.3, 1.1) });
   put("l5-office-chair", { feetPosition: { x: -38.5, y: 0, z: -17.2 }, rotation: { yaw: 10 }, physics: { body: "static", collider: "box" }, model: { id: M.chair, forward: "+x" }, layout: fit(0.85, 1.0, 0.85) });
   put("l5-office-globe", { feetPosition: { x: -43.7, y: 0, z: -20.7 }, rotation: { yaw: 150 }, physics: { body: "static", collider: "box" }, model: { id: M.globe, forward: "+x" }, layout: fit(0.75, 1.1, 0.75) });
-  for (const [i, x] of [[0, -42.6], [1, -33.4]].map((v, k) => [k, v[1]])) put(`l5-office-cabinet-${i}`, { feetPosition: { x, y: 0, z: -21.5 }, rotation: { yaw: 180 }, physics: { body: "static", collider: "box" }, model: { id: M.cabinet, forward: "+x" }, layout: fit(1.15, 2.3, 0.5) });
+  for (const [i, x] of [[0, -42.6], [1, -33.4]]) put(`l5-office-cabinet-${i}`, { feetPosition: { x, y: 0, z: -21.5 }, rotation: { yaw: 180 }, physics: { body: "static", collider: "box" }, model: { id: M.cabinet, forward: "+x" }, layout: fit(1.15, 2.3, 0.5) });
   // two tall windows full of a daylight that has nowhere to come from
   for (const [i, x] of [[0, -39.9], [1, -36.1]]) put(`l5-office-window-${i}`, { feetPosition: { x, y: 0.75, z: -21.82 }, ...prop("window", "A window", "Look out"), children: [
     { feetPosition: { x: 0, y: 0, z: 0 }, primitive: box(1.15, 2.0, 0.03), material: { color: "oklch(0.97 0.04 85)", emissive: "oklch(0.95 0.06 80)", emissiveIntensity: 2.2 } },
@@ -170,12 +170,12 @@ export function layOffice(ctx) {
     { feetPosition: { x: 0, y: 1.0, z: 0.6 }, light: { kind: "point", color: "oklch(0.93 0.07 85)", intensity: 3.2, distance: 7, shadow: { enabled: false } } },
   ] });
   // the proprietor's portraits: one over the globe, one by the door, one facing the desk
-  for (const [i, x, z, yaw] of [[0, -44.83, -18.2, -90], [1, -31.17, -16.6, 90], [2, -44.83, -15.2, -90]]) put(`l5-office-portrait-${i}`, { feetPosition: { x, y: 1.35, z }, rotation: { yaw }, ...prop("portrait", "A portrait", "Look closer"),
+  for (const [i, x, z, yaw] of [[0, -45.82, -18.2, -90], [1, -30.18, -16.6, 90], [2, -45.82, -15.2, -90]]) put(`l5-office-portrait-${i}`, { feetPosition: { x, y: 1.35, z }, rotation: { yaw }, ...prop("portrait", "A portrait", "Look closer"),
     primitive: box(0.86, 1.3, 0.05), material: { texture: M.portrait, roughness: 0.6 } });
   put("l5-office-lamp", { feetPosition: { x: -38.7, y: 1.25, z: -19.2 }, light: { kind: "point", color: "oklch(0.82 0.12 75)", intensity: 2.4, distance: 6, shadow: { enabled: true } } });
   put("l5-office-ceiling", { feetPosition: { x: -38, y: 3.3, z: -17 }, light: { kind: "point", color: "oklch(0.78 0.09 70)", intensity: 3, distance: 11, shadow: { enabled: false } } });
   // the door, left ajar: "Come in, come in! I implore you."
-  put("l5-office-door", { feetPosition: { x: -34.08, y: 0, z: -13.08 }, rotation: { yaw: 62 }, physics: { body: "static", collider: "box" }, children: [
+  put("l5-office-door", { feetPosition: { x: -34.0, y: 0, z: -13.2 }, rotation: { yaw: 118 }, physics: { body: "static", collider: "box" }, children: [
     { feetPosition: { x: 0.56, y: 0, z: 0 }, primitive: box(1.1, 2.36, 0.05), material: WOOD },
     { feetPosition: { x: 0.98, y: 1.0, z: 0.04 }, primitive: { kind: "sphere", radius: 0.035 }, material: { color: "oklch(0.7 0.11 80)", metalness: 0.9, roughness: 0.3 } },
     { feetPosition: { x: 0.56, y: 1.62, z: 0.035 }, vector: "<svg viewBox='0 0 300 80' width='0.6m'><rect x='2' y='2' width='296' height='76' rx='6' fill='#2a1c12' stroke='#b8923a' stroke-width='4'/><text x='150' y='50' text-anchor='middle' font-family='serif' font-size='30' fill='#e8c983'>PROPRIETOR</text></svg>" },

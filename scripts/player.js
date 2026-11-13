@@ -49,6 +49,7 @@ import L2 from './lib/data/level2.yml'
 import { zoneAt as zoneAt3 } from './lib/level3.js'
 import { zoneAt as zoneAt4, DRAIN4 } from './lib/level4.js'
 import { zoneAt as zoneAt5, DRAIN5 } from './lib/level5.js'
+import { beastStruck } from './lib/l5-beast.js'
 import L3 from './lib/data/level3.yml'
 const zoneHere = (ctx, x, z) => ctx.self.place === 'level02' ? (ctx.self.feetPosition.y < -1 ? 'l02_basement' : 'l02_remodel') : ctx.self.place === 'spamton' ? 'spam_arena' : ctx.self.place === 'level7' ? (Math.hypot(x - 46, z + 120) < 34 ? 'l7_seawatch' : Math.hypot(x + 70, z + 95) < 55 ? 'l7_fort' : z > -4 && Math.hypot(x, z) < 12 ? 'l7_room1' : z > -36 && Math.abs(x) < 10 ? 'l7_pier' : 'l7_sea') : ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : ctx.self.place === 'level2' ? 'l2_' + zoneAt2(x, z) : ctx.self.place === 'level3' ? 'l3_' + zoneAt3(x, z) : ctx.self.place === 'gamma' ? 'l3_gamma' : ctx.self.place === 'level4' ? 'l4_' + zoneAt4(x, z, ctx.self.state.home) : ctx.self.place === 'level5' ? 'l5_' + (zoneAt5(x, z)?.id ?? 'lobby') : ctx.self.place === 'level6' ? 'l6_halls' : ctx.self.place === 'level61' ? 'l61_court' : ctx.self.place === 'level12' ? 'l12_matrix' : ctx.self.place === 'level13' ? 'l13_halls' : ctx.self.place === 'level11' ? 'l11_city' : ctx.self.place === 'level10' ? 'l10_fields' : ctx.self.place === 'level8' ? 'l8_cave' : ctx.self.place === 'level21' ? 'l21_' + zoneAt21(x, z) : ctx.self.place === 'level70' ? 'l70_' + zoneAt70(x, z) : ctx.self.place === 'level31' ? 'l31_' + (ctx.self.feetPosition.y > 2.5 && x < -24.9 ? 'mezz' : zoneAt31(x, z)) : (ctx.place?.state?.moments?.manilaAt && Math.abs(x - ctx.place.state.moments.manilaAt.x) < 5.8 && Math.abs(z - ctx.place.state.moments.manilaAt.z) < 5.8 ? 'manila' : zoneAt(x, z))
 
@@ -189,7 +190,7 @@ export function gain(ctx, n) {
 // Nothing is picked up by walking over it: scripts/interact.js calls this when you press E on what you are looking at.
 // eaten food also feeds hunger (scripts/craft.js drains it)
 // tapes HALOGEN can play: id → the reel and its length in seconds
-export const HOLO = { dina4: { who: 'q-dina', line: "Dina, tape four. I have six ways down on my map and not one way out. A man on the pipes swears there is a signal from home. I took a room at the hotel to think it over.", len: 14, name: 'Dina, Tape Four' }, b8: { clip: '/cdn/value.08ccdd2071a61c196217f8ad7fa7b0a1773fbe9bcef00b87df3b58018e00a788.mp3', len: 24, name: 'B8, Night Forty' }, r55: { clip: '/cdn/value.b7bbbfcb923978bb4ac8ae234d44454562debf569936a5f20c378f0e28110e01.mp3', len: 35, name: 'Atomic Age Defender' }, walt41: { clip: '/cdn/value.13b431f3dead226e2ffab8155644c00c326ef6767b9b57df23b71353cbd1a50e.mp3', len: 28, name: 'Field Test 41' }, matrix: { clip: '/cdn/value.a39bb477f8132dc691b97e44f8176bb55b7faf1e7cf241e1e54b2e0a8c0e013b.mp3', len: 24, name: 'Expedition Log: Matrix' } }
+export const HOLO = { beast18: { clip: '/cdn/value.3863a6524e3c97d5f8d0bafa6c84d550c267084037f980dd487716a00f09ab5d.mp3', len: 25, name: 'Entity 18 · The Last Signatory' }, dina4: { who: 'q-dina', line: "Dina, tape four. I have six ways down on my map and not one way out. A man on the pipes swears there is a signal from home. I took a room at the hotel to think it over.", len: 14, name: 'Dina, Tape Four' }, b8: { clip: '/cdn/value.08ccdd2071a61c196217f8ad7fa7b0a1773fbe9bcef00b87df3b58018e00a788.mp3', len: 24, name: 'B8, Night Forty' }, r55: { clip: '/cdn/value.b7bbbfcb923978bb4ac8ae234d44454562debf569936a5f20c378f0e28110e01.mp3', len: 35, name: 'Atomic Age Defender' }, walt41: { clip: '/cdn/value.13b431f3dead226e2ffab8155644c00c326ef6767b9b57df23b71353cbd1a50e.mp3', len: 28, name: 'Field Test 41' }, matrix: { clip: '/cdn/value.a39bb477f8132dc691b97e44f8176bb55b7faf1e7cf241e1e54b2e0a8c0e013b.mp3', len: 24, name: 'Expedition Log: Matrix' } }
 export function holoEnd(ctx, p) {
   const s = ctx.self.state
   if (s.holoPlay?.at !== p?.at) return
@@ -509,6 +510,7 @@ export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pe
     return
   }
   if (npc) dmg = pellets > 1 ? pellets * dmgAfterArmor(lookOfNpc(m), dmg / pellets, false, pen) : dmgAfterArmor(lookOfNpc(m), dmg, false, pen) // an agent's or survivor's clothes soak the hit like yours do: a shotgun's pellets one by one, and a hit's armor penetration takes some of it off
+  if (m.tags?.includes('l5-beast')) { beastStruck(ctx, m); return } // the Gentleman takes no damage: he stops letting you see him (scripts/lib/l5-beast.js)
   const defending = npc && (isVilified(s, m) || hostileReason(ctx, m, ctx.self) === "hostile");
   m.state.hp -= dmg
   if (!npc && !m.tags?.includes('l61fc')) { const sp0 = ctx.self.feetPosition, v0 = ctx.self.velocity ?? {}; m.state.shot = { x: sp0.x, z: sp0.z, vx: v0.x ?? 0, vz: v0.z ?? 0, at: ctx.now() } } // a creature that is hit knows where from, however far: smilers, lurkers and hounds go to the spot (hunt.js shotAt)

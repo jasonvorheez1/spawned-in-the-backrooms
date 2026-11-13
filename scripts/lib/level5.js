@@ -5,6 +5,7 @@
 export const T = 0.15, DOORH = 2.4;
 // zone: { id, kind, x0, x1, z0, z1, h (ceiling), name, drain (sanity / min, negative heals) }
 export const ZONES = [
+  { id: "office", kind: "office", name: "The Proprietor's Office", x0: -46, x1: -30, z0: -22, z1: -13, h: 3.6, drain: 0.6 }, // Entity 18's (scripts/lib/l5-beast.js)
   { id: "lobby", kind: "lobby", name: "The Main Hall · Lobby", x0: -46, x1: -30, z0: -13, z1: 13, h: 7.5, drain: 0.15 },
   { id: "gallery", kind: "hall", name: "The Main Hall", x0: -30, x1: -6, z0: -3, z1: 3, h: 5, drain: 0.15 },
   { id: "crossN", kind: "hall", name: "The Main Hall", x0: -19, x1: -16, z0: -10, z1: -3, h: 3.6, drain: 0.15 },
@@ -38,6 +39,7 @@ export const ZONES = [
 ];
 // openings: { ax, at, a0, a1, h, kind }. ax "z" = in a wall at z = at, spanning x a0..a1; ax "x" = in a wall at x = at, spanning z a0..a1
 export const OPENINGS = [
+  { ax: "z", at: -13, a0: -35.2, a1: -34.0, h: DOORH, kind: "arch" }, // lobby ↔ the proprietor's office
   // lobby ↔ gallery (an arch), lobby ↔ both corridors
   { ax: "x", at: -30, a0: -2.2, a1: 2.2, h: 4.2, kind: "arch" },
   { ax: "x", at: -30, a0: -12.6, a1: -10.4, h: DOORH, kind: "arch" },

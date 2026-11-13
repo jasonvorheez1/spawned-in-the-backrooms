@@ -5,6 +5,7 @@ import { dressThresholds } from "../../scripts/lib/thresholds.js";
 // (place.state.builtV). The plan is scripts/lib/level5.js.
 // Also lays Samantha (the Beverly Room psychic cat), M.E.G. Outpost Housekeeping, Homely Hotel's concierge and chef,
 // library bookshelves, front desk, grand piano, guest doors with authentic placards, and roaming creatures.
+import { layOffice, OFFICE_V, wrathTick } from "../../scripts/lib/l5-beast.js";
 import { ZONES, EXITS, ARRIVALS, LIGHTS, RADIOS, PLACARDS, OPENINGS, POLONAISE } from "../../scripts/lib/level5.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
@@ -402,6 +403,8 @@ export function tick(ctx) {
       }
     }
   }
+  if (s.officeV !== OFFICE_V) { s.officeV = OFFICE_V; layOffice(ctx); } // Entity 18's office (scripts/lib/l5-beast.js)
+  wrathTick(ctx);
   if (s.builtV !== V) {
     s.builtV = V;
     lay(ctx);
