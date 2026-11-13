@@ -10,12 +10,12 @@ OUT = "/workspace/l70"; os.makedirs(OUT, exist_ok=True)
 FL, CE, HT, T = 0.54, 3.14, 3.3, 0.2
 PITCH = math.atan(0.667); EAVE = 0.45; HY = 3.5 + EAVE; RIDGE = HT + 3.5 * 0.667 + 0.05; LEN = 10.7; SLOPE = HY / math.cos(PITCH)
 EXT = [  # (axis the wall runs along, fixed coord of its centre, outward sign, a0, a1, gaps (a, b, lo, hi))
-    ("z", 4.9, 1, -3.5, 3.5, [(-0.55, 0.55, FL, FL + 2.1), (1.6, 2.8, FL + 0.9, FL + 2.1), (-2.8, -1.6, FL + 0.9, FL + 2.1)]),
+    ("z", 4.9, 1, -3.5, 3.5, [(-0.55, 0.55, FL, FL + 2.3), (1.6, 2.8, FL + 0.9, FL + 2.1), (-2.8, -1.6, FL + 0.9, FL + 2.1)]),
     ("z", -4.9, -1, -3.5, 3.5, [(-2.6, -1.5, FL + 1.05, FL + 2.1)]),
     ("x", 3.4, 1, -5, 5, [(-3.6, -2.2, FL + 0.8, FL + 2.1), (-0.9, 0.5, FL + 0.8, FL + 2.1), (2.9, 4.0, FL + 0.9, FL + 2.1)]),
-    ("x", -3.4, -1, -5, 5, [(-3.5, -2.5, FL, FL + 2.0), (0.6, 1.7, FL + 1.05, FL + 2.1)]),
+    ("x", -3.4, -1, -5, 5, [(-3.5, -2.5, FL, FL + 2.3), (0.6, 1.7, FL + 1.05, FL + 2.1)]),
 ]
-INT = [("x", -0.5, -4.8, 2.0, [(-1.6, -0.5, FL, FL + 2.05)]), ("z", 2.0, -3.3, 3.3, [(1.0, 2.1, FL, FL + 2.05), (-2.4, -1.3, FL, FL + 2.05)])]
+INT = [("x", -0.5, -4.8, 2.0, [(-1.6, -0.5, FL, FL + 2.3)]), ("z", 2.0, -3.3, 3.3, [(1.0, 2.1, FL, FL + 2.3), (-2.4, -1.3, FL, FL + 2.3)])]
 def build(col):
     k = Kit(7070)
     names = "siding trim shingle glass concrete brick wall ceiling floor lino door steel snow ice soot bulb".split()
@@ -136,7 +136,7 @@ def build(col):
         for (x0, x1, y0, y1) in ((0.08, 0.5, 0.25, 0.9), (0.6, 1.02, 0.25, 0.9), (0.08, 0.5, 1.02, 1.5), (0.6, 1.02, 1.02, 1.5), (0.08, 0.5, 1.62, 1.95), (0.6, 1.02, 1.62, 1.95)):
             bx(4.78 - x1, 4.78 - x0, FL + y0, FL + y1, -0.645, -0.59, "door")
         bx(4.76, 4.8, FL + 1.0, FL + 1.06, -0.6, -0.52, "steel")
-    bx(3.68, 4.78, FL + 0.01, FL + 2.08, -0.64, -0.6, "door")
+    bx(3.68, 4.78, FL + 0.01, FL + 2.28, -0.64, -0.6, "door")
     # ---------- chimney on the west wall and the cold brick fireplace inside (living room, z = 1.4)
     bx(-5.55, -5.0, -0.3, RIDGE + 0.5, 0.8, 2.0, "brick"); bx(-4.8, -4.45, FL, CE, 0.5, 2.3, "brick")
     if not col:
@@ -149,13 +149,13 @@ def build(col):
             k.cyl((cx, -cz, CE - 0.02), 0.17, 0.04, m["steel"], verts=20); k.sph((cx, -cz, CE - 0.06), (0.15, 0.15, 0.07), m["bulb"], seg=16, rings=6)
     # ---------- the storm cellar: concrete shell on the ground against the north wall, three steps down from the kitchen
     wall("z", -4.875, 0.25, -7.6, -3.5, -0.3, 2.6, [], "concrete"); wall("z", -0.125, 0.25, -7.6, -3.5, -0.3, 2.6, [], "concrete")
-    wall("x", -7.475, 0.25, -5, 0, -0.3, 2.6, [], "concrete"); wall("x", -3.56, 0.12, -4.75, -0.25, 0, 2.6, [(-3.5, -2.5, FL, FL + 2.0)], "concrete")
+    wall("x", -7.475, 0.25, -5, 0, -0.3, 2.6, [], "concrete"); wall("x", -3.56, 0.12, -4.75, -0.25, 0, 2.6, [(-3.5, -2.5, FL, FL + 2.3)], "concrete")
     bx(-4.75, -0.25, -0.12, 0.02, -7.35, -3.5, "concrete"); bx(-5.1, 0.1, 2.6, 2.84, -7.7, -3.5, "concrete")
     bx(-3.5, -2.5, 0, FL, -3.62, -3.3, "concrete"); bx(-3.5, -2.5, 0, 0.36, -3.92, -3.62, "concrete"); bx(-3.5, -2.5, 0, 0.18, -4.22, -3.92, "concrete")
     bx(-2.5, -1.46, FL + 0.01, FL + 1.98, -3.28, -3.24, "steel")  # the cellar's steel door, open against the kitchen wall
     if not col:
-        for u in (-3.55, -2.45): bx(u - 0.04, u + 0.04, FL, FL + 2.04, -3.66, -3.28, "steel")
-        bx(-3.59, -2.41, FL + 2.0, FL + 2.08, -3.66, -3.28, "steel"); bx(-3.52, -3.48, 0.2, 1.3, -4.2, -3.64, "steel", rot=(0, 0, 0))
+        for u in (-3.55, -2.45): bx(u - 0.04, u + 0.04, FL, FL + 2.34, -3.66, -3.28, "steel")
+        bx(-3.59, -2.41, FL + 2.3, FL + 2.38, -3.66, -3.28, "steel"); bx(-3.52, -3.48, 0.2, 1.3, -4.2, -3.64, "steel", rot=(0, 0, 0))
         sheet(lambda u, v: (-5.25 + u * 5.5, 2.86 + 0.42 * (min(1, min(u, 1 - u, v) / 0.12) ** 0.5) * (1 + 0.3 * noise.noise(Vector((u * 4, v * 3, 4)))), -7.85 + v * 4.4), 22, 16)
         i = 0
         for (cx, cz, rx, rz, h) in [(-5.6, -4.4, 1.5, 1.6, 1.5), (-5.7, -6.3, 1.6, 1.7, 1.75), (-4.3, -8.0, 1.8, 1.4, 1.6), (-2.3, -8.2, 1.7, 1.5, 1.85), (-0.5, -7.9, 1.6, 1.5, 1.55), (0.6, -6.0, 1.4, 1.7, 1.7), (0.6, -4.3, 1.3, 1.3, 1.3),
