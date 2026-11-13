@@ -1,4 +1,4 @@
-# Level 70 igloo (SPOT.igloo): a domed snow-block igloo 4.4 m across with an arched entry passage on +x (1.95 m clear), packed floor, fur pelts.
+# Level 70 igloo (SPOT.igloo): a domed snow-block igloo 4.4 m across with an arched entry passage on +x (2.2 m apex, 1.9 m capsule fits), packed floor, fur pelts.
 # World-local metres: x east, y up, z south. Out: /workspace/l70/igloo.glb (slots snow pack fur). blender -b --factory-startup --python-exit-code 1 --python art/l70-town/igloo.py
 import sys, os, math; sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "l7kit"))
 from l7lib import Kit
@@ -18,7 +18,7 @@ def grid(P, nu, nv, mat, skip=None, flip=False, wrap=False):
             try: k.bm.faces.new(f[::-1] if flip else f).material_index = m[mat]
             except ValueError: pass
 arch = lambda z, w, h: h - w + math.sqrt(max(0, w * w - z * z)) if abs(z) < w else -1  # arch top height at z for half-width w, apex h
-door = lambda x, y, z: x > 0 and abs(z) < 0.72 and y < arch(z, 0.72, 2.12)
+door = lambda x, y, z: x > 0 and abs(z) < 0.78 and y < arch(z, 0.78, 2.26)
 NU, NV = 96, 30
 def dome(R, H, blocks):
     def P(u, v):
@@ -34,7 +34,7 @@ grid(dome(2.2, 2.8, True), NU, NV, "snow", skip=door, wrap=True, flip=True)
 grid(dome(1.85, 2.5, False), NU, NV, "snow", skip=door, wrap=True)
 def tunnel(w, h, blocks):  # an arch profile swept along x from 1.05 to 3.0
     def P(u, v):
-        x = 1.05 + u * 1.95; t = v * (2 * (h - w) + math.pi * w); s = h - w
+        x = 0.85 + u * 2.15; t = v * (2 * (h - w) + math.pi * w); s = h - w
         if t < s: z, y = -w, t
         elif t < s + math.pi * w: a = (t - s) / w; z, y = -w * math.cos(a), s + w * math.sin(a)
         else: z, y = w, s - (t - s - math.pi * w)
@@ -45,16 +45,16 @@ def tunnel(w, h, blocks):  # an arch profile swept along x from 1.05 to 3.0
         return (x, y, z)
     return P
 inside = lambda x, y, z: (x / 2.05) ** 2 + (y / 2.6) ** 2 + (z / 2.05) ** 2 < 1 and x < 1.6
-grid(tunnel(0.9, 2.3, True), 12, 24, "snow", skip=lambda x, y, z: (x / 2.0) ** 2 + (y / 2.55) ** 2 + (z / 2.0) ** 2 < 1)
-grid(tunnel(0.55, 1.95, False), 12, 24, "snow", flip=True)
+grid(tunnel(1.08, 2.55, True), 12, 24, "snow", skip=lambda x, y, z: (x / 2.0) ** 2 + (y / 2.55) ** 2 + (z / 2.0) ** 2 < 1)
+grid(tunnel(0.76, 2.22, False), 12, 24, "snow", flip=True)
 def rim(x, flip):  # the ring of snow between the inner and outer arch at one end
     def P(u, v):
-        a = tunnel(0.55, 1.95, False)(0, v); b = tunnel(0.9, 2.3, False)(0, v); n = 0.05 * noise.noise(Vector((v * 9, u * 3, x)))
+        a = tunnel(0.76, 2.22, False)(0, v); b = tunnel(1.08, 2.55, False)(0, v); n = 0.05 * noise.noise(Vector((v * 9, u * 3, x)))
         return (x + (0.08 * math.sin(u * math.pi) + n if x > 2 else 0), a[1] + (b[1] - a[1]) * u, a[2] + (b[2] - a[2]) * u)
     grid(P, 2, 24, "snow", flip=flip)
-rim(3.0, False); rim(1.05, True)
+rim(3.0, False)
 grid(lambda u, v: (math.cos(u * math.tau) * 1.9 * v, 0.03 + 0.012 * noise.noise(Vector((u * 9, v * 6, 2))) * v, math.sin(u * math.tau) * 1.9 * v) if v > 0 else (0, 0.03, 0), 32, 6, "pack", wrap=True, flip=True)
-grid(lambda u, v: (1.0 + u * 2.3, 0.03 + 0.01 * noise.noise(Vector((u * 5, v * 5, 3))), -0.58 + v * 1.16), 6, 3, "pack")
+grid(lambda u, v: (1.0 + u * 2.3, 0.03 + 0.01 * noise.noise(Vector((u * 5, v * 5, 3))), -0.78 + v * 1.56), 6, 3, "pack")
 def pelt(cx, cz, L, W, yaw, y0=0.045, seed=0.0):
     def P(u, v):
         a = u * math.tau; r = v * (1 + 0.28 * math.cos(4 * a) * (abs(math.cos(4 * a)) ** 0.5) + 0.1 * noise.noise(Vector((math.cos(a) * 3, math.sin(a) * 3, seed))))
