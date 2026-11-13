@@ -39,6 +39,8 @@ const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z)
 const BYE = ["oh. okay then.", "rude.", "...guess we're done.", "fine, go.", "hey, i wasn't finished."]
 const HI = (n, mood) => mood < -20 ? [`you again.`, `${n}. keep walking.`] : mood > 40 ? [`${n}! you're back.`, `hey ${n}, good to see you breathing.`, `${n}! over here.`] : [`oh, ${n}.`, `${n}. still alive, huh.`, `hey, ${n}.`]
 // once a second: someone who knows you looks up when you come close (once every 3 min each); people who know you tell the ones beside them
+// trail keys a person's answer gives: player.state.trail.<k> = 1 (design/story-spine.md)
+const TRAIL_TALK = [{ who: 'ale', q: /where am i|what is this place/i, k: 'word' }, { who: 'callum', q: /dina/i, k: 'list' }, { who: 'ambrose', q: /dina|307|three-oh-seven|ledger|room/i, k: 'room' }]
 function social(ctx, ses) {
   const now = ctx.now(); if (now < (ses.socAt ?? 0)) return; ses.socAt = now + 1000
   const me = ctx.self, k = keyOf(me), hi = (ses.hiAt ??= {})
@@ -224,6 +226,7 @@ function send(ctx, d) {
   }
   const n = nodeOf(choice.node); if (!n) { s.talkChoices = offer(ctx, it, s, null); return }
   ;(ses.askedNow ??= []).push(n.q)
+  { const who = `${it.id} ${it.state?.name ?? ''} ${it.state?.dlg ?? ''}`.toLowerCase(); const t = TRAIL_TALK.find((r) => who.includes(r.who) && r.q.test(n.q)); if (t && !ctx.self.state.trail?.[t.k]) ctx.self.state.trail = { ...(ctx.self.state.trail ?? {}), [t.k]: 1 } } // the clue trail: who tells you what (design/story-spine.md)
   let passed = true
   const pc = choice.check && SKILLS.some((x) => x.k === choice.check.skill) ? choice.check : null
   if (pc) {

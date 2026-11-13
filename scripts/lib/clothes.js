@@ -245,7 +245,7 @@ export function npcLook(id, look, faction, level, role) {
 export function plainLook(ctx, cur) {
   const l = { ...cur, hat: 'none', eyew: 'none', neck: 'none' }, pick = (a) => a[Math.floor(ctx.random() * a.length)]
   for (const slot of ['topw', 'botw', 'shoes']) {
-    const row = pick(CL.rows.filter((r) => r.regular && r.slot === slot && (slot !== 'topw' || r.kind !== 'tank')))
+    const row = pick(CL.rows.filter((r) => r.regular && r.slot === slot && (slot !== 'topw' || r.kind !== 'tank') && (slot !== 'botw' || !/skirt/.test(r.kind))))
     l[slot] = row.id; l[CL.colourKey[slot]] = '#' + pick(CL.regularColours)
     l[CL.patKey[slot]] = pickPat(row, () => ctx.random()) ?? ''
   }
