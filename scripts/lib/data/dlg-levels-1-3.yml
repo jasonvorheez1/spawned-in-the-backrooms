@@ -47,6 +47,8 @@ meg-ale:
       fail: "You breathe like a kettle. No offense. A little offense."
     - q: "Who's in charge here?"
       a: "Ortiz, if somebody's bleeding. Callum, if it comes in a can. Me, when they're both asleep."
+    - q: "Why camp here, of all places?"
+      a: "Sandbags on three sides, one way in, and the lights on this block never flicker. Never. Six months. Ortiz says it's luck. I say don't say it out loud."
   barks:
     idle: ["Who sat in my chair? It's warm.", "Lights are holding. Don't jinx it.", "Callum, those peaches came open. I swear.", "Not asleep. Resting my eyes at the hallway."]
     hi: ["Rookie. Still vertical.", "Oh look, it walks."]
@@ -141,10 +143,12 @@ meg-callum:
       do: discount
       a: "Hm. You didnae whinge. I like that. Fifteen off. Tell a soul and it's thirty on."
       fail: "No. And for asking, it's just gone up."
+    - q: "What was this place?"
+      a: "A car park, by the lines. Bays numbered to four hundred and then they just keep going. There's oil stains under bay twelve. Somebody parked here once. Never found the car."
     - q: "You miss anything?"
       a: "The carpet up in the yellow rooms. Daft, eh? Soaking, stinking thing. But you could lie down on it. This concrete wants you gone."
     - q: "Need anything brought in?"
-      a: "Ration crates. Something's lifting them between the racks. Speak to me again if you want the job done right."
+      a: "Ration crates. Three gone from the racks this week, seals cut clean. That's no a hound, hounds chew. Find who's cutting, bring my tins back, and I'll pay you out the till."
   barks:
     idle: ["Thirty-eight. Thirty-nine. Who's had forty?", "Peaches dinnae grow legs.", "I'll find where it went. I always do."]
     hi: ["Aye. You.", "After something, pal?"]
@@ -181,6 +185,8 @@ bntg-voss:
       sk: barter 35
       a: "Someone sells camp rations two blocks south. Same tins, labels scratched off. Not me, friend. If I scratch a label, you cannot tell."
       fail: "News has a price too, friend."
+    - q: "Where do you get your stock?"
+      a: "Dead men's bags, mostly. Do not make the face, friend. They are not using them. I give a fair price to the living for what the dead leave by the racks."
     - q: "How's business?"
       a: "Slow, until the lights go. Then everyone needs batteries and nobody argues about the price. I love the dark."
   barks:
