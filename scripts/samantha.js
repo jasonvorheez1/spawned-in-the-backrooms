@@ -89,6 +89,16 @@ function enrage(ctx, pid, now) {
   say(ctx, p, S.lines.rage, 'angry')
   heard(ctx, { clip: SND('angry-cat-hiss-yowl'), position: me.feetPosition, volume: 0.9, maxDistance: 18 })
 }
+// a first strike, a bump or a stray swing gets a hiss and a warning; only a second one inside 20 s turns her claws on you
+function provoke(ctx, pid, now) {
+  const ses = ctx.self.session, p = ctx.getObject(pid); if (!p) return
+  ses.struck ??= {}
+  const last = ses.struck[pid]
+  if (last && now - last < 20000) { ses.struck[pid] = 0; enrage(ctx, pid, now); return }
+  ses.struck[pid] = now
+  if (p.state) p.state.notice = { text: "Samantha hisses. \"Do that again and you'll regret it.\"", at: now }
+  heard(ctx, { clip: SND('cat-warning-hiss-short'), position: ctx.self.feetPosition, volume: 0.7, maxDistance: 12 })
+}
 function vanish(ctx, now) {
   const me = ctx.self, ses = me.session, a = me.feetPosition
   ctx.emit('fx', { position: { x: a.x, y: a.y + 0.2, z: a.z }, script: BLINK })
@@ -189,7 +199,7 @@ export const ears = {
     if (d.k === 'feed') feed(ctx, p)
     else if (d.k === 'refuse') { say(ctx, p, S.lines.refuse, 'annoyed'); warn(ctx, p, ctx.now(), true) }
   },
-  hit: (ctx, d) => { if (d?.by) enrage(ctx, d.by, ctx.now()) },
+  hit: (ctx, d) => { if (d?.by) provoke(ctx, d.by, ctx.now()) },
 }
 
 export function onSpawn(ctx) { ctx.self.scale = S.scale ?? 1.1; ctx.self.session.mode = null }
@@ -200,7 +210,7 @@ export function update(ctx, dt) {
   if (!ses.mode) { ses.y = me.feetPosition.y > 0.05 ? me.feetPosition.y : 0; rest(ctx, now, 'sit'); ses.blinkAt = now + rr(S.blinkEvery, ctx); ses.talkers = {} }
   // struck or crossed in words: whoever it was, she remembers in claws
   const ang = ctx.place.players.find(p => st.fresh?.[p.id] && incidentOf(ctx, me, p)?.kind === "assault")?.id
-  if (ang) { st.angry = {}; st.fresh = {}; enrage(ctx, ang, now) }
+  if (ang) { st.angry = {}; st.fresh = {}; provoke(ctx, ang, now) }
   if (st.dead) st.dead = false
   if ((st.hp ?? 1000) < 1000 - S.blinkHp) { st.hp = 1000; if (ses.mode !== 'gone') vanish(ctx, now) }
   if (ses.mode === 'gone') {
