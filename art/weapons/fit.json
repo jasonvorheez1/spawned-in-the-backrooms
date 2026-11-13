@@ -294,7 +294,8 @@
    0.12,
    0.562
   ],
-  "second": "up"
+  "second": "up",
+  "pca": true
  },
  "fishing_rod": {
   "min": [

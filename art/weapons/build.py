@@ -24,6 +24,13 @@ for kind in only:
     # a manual pre-rotation (degrees, Blender XYZ) from fit.json, then axis mapping by extents
     r = c.get("rot", [0, 0, 0])
     ob.data.transform(Matrix.Rotation(math.radians(r[0]), 4, "X") @ Matrix.Rotation(math.radians(r[1]), 4, "Y") @ Matrix.Rotation(math.radians(r[2]), 4, "Z"))
+    if c.get("pca"):  # a model Tripo posed on a diagonal: turn its principal axes onto Blender's before the extents pick them
+        import numpy as np
+        P = np.array([tuple(v.co) for v in ob.data.vertices]); ctr = P.mean(0)
+        Vt = np.linalg.svd(P - ctr, full_matrices=False)[2]
+        if np.linalg.det(Vt) < 0: Vt[2] *= -1
+        ob.data.transform(Matrix.Translation(-Vector(ctr.tolist())))
+        ob.data.transform(Matrix([list(r) + [0] for r in Vt.tolist()] + [[0, 0, 0, 1]]))
     vs = [v.co for v in ob.data.vertices]
     ext = [max(v[i] for v in vs) - min(v[i] for v in vs) for i in range(3)]
     order = sorted(range(3), key=lambda i: -ext[i])  # longest, second, third (Blender axes)
