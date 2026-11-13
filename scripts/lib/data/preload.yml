@@ -32,6 +32,8 @@ doors:
   l7-back: level6
   l8-to-l21: level21
   lv10-backroad: level10
+  l31-to-l70: level70
+  l70-back: level31
 models:
   level31:
     - "/cdn/value.4e4232d504243753b8093ecbded15cf7a15d83caa454d9a7267753de18ec803b.glb"

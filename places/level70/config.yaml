@@ -1,0 +1,32 @@
+# Level 70 "Froidetown" (backrooms-wiki.wikidot.com/level-70): a snowed-in modern Canadian city on a planetoid, -15 to -45 C.
+# Blue hour, sodium street lamps, snow in the air. Map: scripts/lib/level70.js. Built by places/level70/sim.js.
+mode: 3d
+terrain:
+  kind: heightmap
+  seed: 7070
+  generator: scripts/terrain70.js
+  materials:
+    - { id: snow, albedo: cdn/texture-terrain-fresh-powder-snow-windblown-drifts.png, tint: "oklch(0.93 0.015 245)", textureScale: 4 }
+    - { id: packed, albedo: cdn/texture-terrain-trampled-packed-dirty-snow-footprints.png, tint: "oklch(0.82 0.015 245)", textureScale: 3 }
+    - { id: asphalt, albedo: cdn/texture-terrain-wet-black-asphalt-road-with-slush-and-salt.png, tint: "oklch(0.42 0.01 250)", textureScale: 3 }
+    - { id: ice, albedo: cdn/texture-terrain-frozen-river-ice-cracked-with-snow-dusting.png, tint: "oklch(0.8 0.03 225)", textureScale: 5 }
+  decorations: null
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: 0, y: { terrain: 0.2 }, z: 42 }
+defaultSpawnRotation: { yaw: 0 }
+worldBounds: { bottom: -40 }
+atmosphere:
+  look: { script: mods/awakening/look.js, params: { mistBase: 0, mistDensity: 0.006, mistReach: 90, bloomThreshold: 0.85, bloomStrength: 0.45, vignette: 0.14, aoStrength: 0.8, sharpen: 0.3 } }
+  sky: { kind: realistic, model: hosek }
+  timeOfDay: 17.4
+  cycle: { frozen: 17.4 }
+  clouds: { enabled: true, density: 0.75, opacity: 0.9, altitude: 800, thickness: 400, speed: 1.4, color: "#7f8da6" }
+  fog: { kind: linear, near: 30, far: 260, color: oklch(0.6 0.04 250) }
+  sun: { light: { intensity: 0.35, color: oklch(0.8 0.05 250), shadow: { enabled: true } } }
+  ambient: { light: { color: oklch(0.72 0.05 250), intensity: 1.0 } }
+  hemisphere: { skyColor: oklch(0.7 0.06 250), groundColor: oklch(0.8 0.02 245), intensity: 0.7 }
+  wind: { direction: 300, speed: 7 }
+  moon: { enabled: true }
+  stars: { enabled: false }
+lighting: mods/awakening/lighting.js
+acoustics: { reverb: 0.04 }
