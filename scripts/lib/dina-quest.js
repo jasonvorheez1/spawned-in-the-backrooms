@@ -68,6 +68,7 @@ export function trailStep(st) {
   if (t.pass) return STEP[Math.max(2, st.dinaQ ?? 0)] ?? STEP[2];
   let hi = 0; TRAIL.forEach((k, i) => { if (t[k]) hi = i + 1; });
   if (hi === 2 && !t.name) return { step: "Ask around the camp how people get out of here.", mark: null };
+  if (hi === 5 && st.samRoute) return { step: "Samantha says the city is past the hotel's boiler room: through Level 6, trip the wire into the Snackrooms, and out their glass doors. Find who ran a radio for Dina.", mark: ASK[5].mark };
   return ASK[hi];
 }
 export const trailText = (st) => trailStep(st).step;
