@@ -78,7 +78,7 @@ export function payErrand(ctx, s, id, scale = 1, how = null) {
   s.cents = (s.cents ?? 0) + cents;
   const prev = s.payout; s.payout = { xp: (prev?.xp ?? 0) + xp, items: [...(prev?.items ?? []), ...items], text: null }; // scripts/craft.js hands these over
   const msgs = [`${e.title} done. ${xp} XP, $${(cents / 100).toFixed(2)}`];
-  if (w.rep?.group && w.rep.d) { const t = addRep(s, w.rep.group, w.rep.d); if (t) msgs.push(t); }
+  if (w.rep?.group && w.rep.d) { const t = addRep(s, w.rep.group, w.rep.d, `Completed ${e.title}`); if (t) msgs.push(t); }
   if (how) msgs.unshift(how);
   s.errands = { ...s.errands, [id]: { stage: e.stages.length, n: 0, done: 1 } };
   endQuest(s, qidOf(id), deliberateErrands(e.place) ? (how || `${e.title} completed for ${e.giver.replace(/^hub-(meg|amber)-/, '')}.`) : false);

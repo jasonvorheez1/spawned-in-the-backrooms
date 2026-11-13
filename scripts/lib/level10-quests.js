@@ -75,7 +75,7 @@ export function finishQuest(ctx, p, qKey, { xp = 100, cents = 5000, items = [], 
   questStep(s, q, 99, text || `Completed ${q.name}`);
   for (const [g, d] of rep) {
     if (!d) continue;
-    const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d);
+    const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d, `Completed ${q.name}`);
     msgs.push(tier || `${g === "karma" ? "Karma" : GROUPS[g]?.name ?? g} ${d > 0 ? "+" : ""}${d}`);
   }
   s.cents = (s.cents ?? 0) + cents;
