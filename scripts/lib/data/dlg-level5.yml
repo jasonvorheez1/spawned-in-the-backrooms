@@ -1,499 +1,635 @@
 # Level 5, the Terror Hotel: the Homely Hotel staff, Outpost Housekeeping (M.E.G.), the Originals' salon, and Samantha.
-# Written by hand, Nov 11. The hotel's lore is hinted, never explained: nobody has checked out, the old staff have no
-# faces and only move when unwatched, the Beast is in the boiler room, lifts past twelve don't come back.
+# Written by hand. Nov 13 pass to design/story-spine.md: the player knows nothing, so no choice assumes a name or a place;
+# everyone answers "Where am I?", "How do I get out?" and "Ever hear the name Dina?" their own way, partly, sometimes wrong.
+# The hotel's lore is hinted, never explained: nobody has checked out, the old staff have no faces and only move when
+# unwatched, the Beast is in the boiler room, lifts past twelve don't come back.
+# Main quest (trail.room): Dina kept room three-oh-seven. Nobody here knew her; they know the room and her habits
+# (coffee at the door, wire out the window, a recorder, the light on all night). The desk ledger is the clue: her line
+# has a forwarding note, "gone to the city, re: a radio". Staff point at the ledger; each adds one small true thing.
+# Their words for the player: Ambrose "guest", Dolores "skinny", Pip "chief", Odette "new one", Barnaby "my dear guest",
+# Auguste "mon ami", Harlan "buyer", Vesna "tourist", Tobias "new person", Imani "traveller", Constance "cheri",
+# Vance "sunshine", Millie "ace", Whitlock "landsman", Vanderholt "upstart", Zelda "darling", Wat "pilgrim", Samantha "visitor".
 
 l5-ambrose:
-  hi: "Good evening, and welcome to the Homely Hotel. We have been expecting you. We are always expecting someone."
-  back: ["Welcome back. Your key is exactly where you left it.", "Ah. A returning guest. How lovely. They usually are."]
-  warm: "A favourite guest. I've had the good towels set aside."
-  cold: "Good evening. The desk is open. It is always open."
-  bye: "Do enjoy your stay. However long."
-  walk: "Of course. Take your time. There is so much of it."
+  hi: "Good evening, guest, and welcome to the Homely Hotel. We were expecting you. We are always expecting someone."
+  back: ["Welcome back, guest. Your key is precisely where you left it.", "Ah. A returning guest. They generally are."]
+  warm: "One of our favourite guests. I have had the good towels put by."
+  cold: "Good evening. The desk is open. The desk is always open."
+  bye: "Do enjoy your stay, guest. However long it proves."
+  walk: "By all means. Take your time. We have a great deal of it."
   ask:
     - q: "I'd like a room."
-      a: "Certainly. Fifteen for a room, forty for a suite. Lovely views of the corridor. Ring the bell and I'll see to the key."
-    - q: "When is check-out?"
-      a: "Whenever you like. The desk is always open."
+      a: "Certainly. Fifteen for a room, forty for a suite. Every one overlooks the corridor. Ring the bell and I shall see to your key."
+    - q: "Where am I?"
+      a: "The Homely Hotel, guest. Finest establishment on the street. One day I really must step out and see the street."
+    - q: "How do I get out?"
+      a: "Check-out is at the guest's convenience. One simply settles the bill and leaves. I have the form somewhere. It has not been asked for in my time."
       then:
-        - q: "Has anyone ever checked out?"
-          a: "What a curious question. Would you like a mint?"
-    - q: "Who are the people in the salon?"
-      a: "Our longest guests. Charming. Generous with their opinions, less so with their bills. I'm sure they'll warm to you. Eventually. Possibly."
-    - q: "Is it safe to take the lift?"
-      a: "Floors one through twelve are a delight. Above twelve, the hotel prefers to keep its guests."
+        - q: "Nobody has checked out?"
+          a: "What a curious thing to wonder. May I offer you a mint?"
+    - q: "Ever hear the name Dina?"
+      a: "The desk does not discuss its guests. The ledger, however, lies open beside the bell, and I am often looking the other way."
+      then:
+        - q: "Just tell me her room."
+          sk: speech 40
+          a: "Since you ask so nicely. Three-oh-seven. Paid a month ahead, in coins I did not recognise. Asked three times whether we had a wireless. We do not. She left a forwarding note. One does not see those."
+          fail: "I could not possibly. The ledger is on the desk, guest. I shall be polishing the bell."
+    - q: "Who else is staying?"
+      a: "Our longest guests keep the salon. Charming people. Generous with opinions, slower with their bills. They may warm to you. I would not wait up."
+    - q: "Is the lift all right?"
+      a: "Floors one through twelve are a pleasure. Above twelve, the hotel grows fond of people."
   barks:
-    idle: ["Good evening.", "The desk is always open.", "A mint? No? Another time."]
-    hi: ["Welcome.", "Good evening, guest."]
-    drawn: ["We don't do that in the lobby. We don't do that anywhere."]
-    hurt: ["Oh dear. The kitchen keeps bandages."]
-    close: ["Yes?"]
-    spot: ["Oh dear. A disturbance."]
-    hostile: ["You have outstayed your welcome. That is very hard to do."]
-    hit: ["How rude."]
-    kill: ["The staff will clean that."]
-    flee: ["Excuse me one moment."]
-    death: ["Check... out..."]
-  gest: { wave: "Good evening to you too.", gift: "How thoughtful. The hotel thanks you.", dance: "The ballroom is open. It is always open. Shall we?", nodance: "I'm on duty, I'm afraid. I'm always on duty.", insult: "Noted, with a smile." }
+    idle: ["Good evening. Still.", "The desk never closes.", "A mint? No? I shall ask again later."]
+    hi: ["Welcome, guest.", "Good evening to you."]
+    drawn: ["Not in the lobby, guest. Nor anywhere else, ideally."]
+    hurt: ["Oh dear. The kitchen keeps bandages, I believe."]
+    close: ["Yes, guest?"]
+    spot: ["Oh dear. A disturbance in the lobby."]
+    hostile: ["You have outstayed your welcome. Nobody has managed that before."]
+    hit: ["How very rude."]
+    kill: ["Housekeeping will see to that."]
+    flee: ["Do excuse me a moment."]
+    death: ["The form... at last..."]
+  gest: { wave: "And a good evening to you.", gift: "How thoughtful. The hotel is obliged.", dance: "The ballroom is open. It is always open. After you.", nodance: "I am on duty, I fear. I am always on duty.", insult: "I have made a note of it. Smiling." }
 
 l5-dolores:
-  hi: "You! Sit. You're too thin. Steak, chicken, or stew. Pick one or I pick for you and I pick stew."
-  back: ["Back! Hungry? You're hungry. Sit.", "Ah, my eater. Plate's warm."]
-  warm: "My favourite! Biggest piece. Don't tell the salon, they send everything back."
-  cold: "Order. Eat. Go."
-  bye: "Take bread for the road!"
-  walk: "Your stew gets cold!"
+  hi: "You! Skinny! Sit. Steak, chicken, or stew. You pick, or I pick, and I always pick stew."
+  back: ["Skinny's back! Hungry? Yes you are. Sit.", "Ah, my eater. I kept a plate warm."]
+  warm: "My favourite skinny! Biggest piece for you. Not a word to the salon, they send everything back."
+  cold: "Order. Eat. Out."
+  bye: "Take bread! For your pockets!"
+  walk: "Your stew is going cold, skinny!"
   ask:
     - q: "I'm hurt. Can you feed me up?"
       do: heal
-      a: "Start with the broth. Small sips. If you can keep that down, I'll bring you the rest."
-    - q: "What's the feud with the maid?"
-      a: "She took my ladle. The big one. She says she didn't. The ladle says otherwise. I find it in her cart, I cook her."
-    - q: "Where does the food come from?"
-      a: "The dumbwaiter goes down full and comes up full. Of what? Meat. Good meat. Don't ask more. Eat."
+      a: "Broth first. Small sips. You keep that down, I bring the real food."
+    - q: "Where am I?"
+      a: "My kitchen! Best room in the hotel. Out there is carpet and bad manners. In here is garlic."
+    - q: "How do I get out?"
+      a: "On an empty stomach? Nowhere. Eat, then ask the desk. Me, I came in the back with the deliveries twenty years ago. Never saw that door again. Didn't look hard. The kitchen's good."
+    - q: "Ever hear the name Dina?"
+      a: "I know rooms, not names. Ask me a room. Three-oh-seven? Black coffee, bread, tray left at the door. Never once my stew. A woman who eats standing up is running from something or to it."
+    - q: "Lost something?"
+      a: "My ladle! The big one. The maid has it. She says no. I've known that ladle longer than I've known her. One of them is lying and it isn't the ladle."
+    - q: "Where's the food from?"
+      a: "The dumbwaiter goes down full and comes back full. Meat. Good meat. That's the end of the question, skinny. Eat."
   barks:
-    idle: ["Who took my ladle!", "Stew's on!", "Salon sent it back AGAIN."]
-    hi: ["Sit! Eat!", "You're thin."]
-    drawn: ["Not in my kitchen!"]
-    hurt: ["Sit, I'll feed you!"]
-    spot: ["Get behind the stove!"]
-    hostile: ["I'll cook you!"]
-    hit: ["Ow! You!"]
-    kill: ["Hah! Into the pot."]
-    flee: ["The stew!"]
-    death: ["My ladle..."]
-  gest: { wave: "Hi! Eat!", gift: "For me? Sit. I feed you double.", dance: "Ha! Come here, I lead!", nodance: "The pot!", insult: "No dessert for you." }
+    idle: ["Where is my ladle!", "Stew's ready! Who's sitting!", "The salon sent it back. AGAIN."]
+    hi: ["Sit, skinny! Eat!", "Look at you. Bones."]
+    drawn: ["Not in my kitchen you don't!"]
+    hurt: ["Sit down, I'll feed you right!"]
+    spot: ["Behind the stove, everybody!"]
+    hostile: ["I have a hot pan and no patience!"]
+    hit: ["Ow! Why, you!"]
+    kill: ["Hah! And stay out of my kitchen."]
+    flee: ["Somebody watch the stew!"]
+    death: ["Find... my ladle..."]
+  gest: { wave: "Hello! Now eat!", gift: "For me? Sit. You get double.", dance: "Ha! Come here, I lead!", nodance: "The pot will burn!", insult: "No dessert. Ever." }
 
 l5-pip:
-  hi: "Can I take your bag? Oh, you're keeping it. If you're using the lift, get out at twelve. Promise me you will."
-  back: ["Oh, you're back! That's good. That's really good.", "Hi! You came back down!"]
-  warm: "Oh, it's you! Okay, okay, I can relax a bit now."
-  cold: "Oh. H-hi."
-  bye: "Stay on the panel floors!"
-  walk: "Oh. Okay. Bye!"
+  hi: "Take your bag, chief? No? That's fine. If you ride the lift, get out by twelve. Say you will. Please."
+  back: ["Oh, chief, you're back! Good. That's really good.", "Hi, chief! You came down again!"]
+  warm: "Oh, it's you, chief! Okay. Okay. I can breathe a bit now."
+  cold: "Oh. H-hello, chief."
+  bye: "Only the floors with buttons, chief!"
+  walk: "Oh. Right. Bye, chief!"
   ask:
+    - q: "Where am I?"
+      a: "The Homely Hotel, chief! Lobby level. Twelve floors of rooms. Twelve. If anybody tells you a higher number they're mistaken, and so is the lift."
+    - q: "How do I get out?"
+      a: "The front doors, I suppose? I've never tried them. Mr. Ambrose says those are for guests who are leaving, and nobody's been leaving, so I've never had to hold them."
+    - q: "Ever hear the name Dina?"
+      a: "I do bags, chief, not names. Was she three-oh-seven? One bag, really heavy, and it clicked. She asked which floor was highest. For reception, she said. I told her twelve. I told her twice."
+      then:
+        - q: "Did she go higher?"
+          a: "I don't know. I didn't look at the dial. I never look at the dial. But she came back down, chief, I carried the same bag out. So. That's something."
     - q: "What's wrong with the lift?"
-      a: "Nothing! It's a lovely lift. Twelve lovely floors. And then thirteen. And fourteen, and they keep going, and the buttons are warm. Mr. Ambrose says not to talk about it."
-    - q: "Do you like working here?"
-      a: "Mr. Ambrose says I have a future here. A long one. A really, really long one. That's good, right?"
-    - q: "What are the rooms not on the panel?"
-      a: "I hear them. Room service bells from floors that aren't there. I don't go. I'm a bellhop, not a, not a... whatever goes there."
+      a: "Nothing! Lovely lift. Twelve lovely floors. Then thirteen. Then fourteen, and they keep coming, and the buttons are warm. Mr. Ambrose says not to bring it up."
+      then:
+        - q: "What's up there?"
+          a: "Bells. Room service bells from floors we don't have. I don't answer them. I'm a bellhop, I'm not, I'm not whatever answers those."
+    - q: "Do you like it here?"
+      a: "Mr. Ambrose says I've got a future here. A long one. A really, really long one. That's good. Isn't that good?"
   barks:
-    idle: ["Bags? No bags.", "Twelve floors. Twelve.", "Mr. Ambrose? Mr. Ambrose?"]
-    hi: ["Oh! Hi!", "W-welcome!"]
-    drawn: ["Oh no oh no please!"]
-    hurt: ["You're bleeding on the carpet! I mean, are you okay?"]
-    spot: ["S-something's in the hall!"]
-    hostile: ["I'm telling Mr. Ambrose!"]
-    hit: ["Eep!"]
-    flee: ["Lift! No! Stairs!"]
-    death: ["Twelve..."]
-  gest: { wave: "Oh! Hi! Hi!", gift: "For me? Oh wow. Thank you!", dance: "I'm not good but okay!", nodance: "Mr. Ambrose is watching.", insult: "Oh. Sorry." }
+    idle: ["Any bags? No bags.", "Twelve floors. Just the twelve.", "Mr. Ambrose? Are you there, Mr. Ambrose?"]
+    hi: ["Oh! Hi, chief!", "W-welcome to the hotel!"]
+    drawn: ["Oh no, oh no, chief, please don't!"]
+    hurt: ["You're getting it on the carpet! Sorry. Are you all right?"]
+    spot: ["Th-there's something in the hall!"]
+    hostile: ["I'm fetching Mr. Ambrose!"]
+    hit: ["Eep! Ow!"]
+    flee: ["The lift! No! The stairs!"]
+    death: ["Twelve... only twelve..."]
+  gest: { wave: "Oh! Hi! Hi, chief!", gift: "A tip? For me? Oh, wow. Thank you!", dance: "I'm no good at it, but okay!", nodance: "Mr. Ambrose can see us.", insult: "Oh. Sorry, chief." }
 
 l5-odette:
-  hi: "Mm. You're dripping on my carpet. New? You're new. Don't touch the ballroom. I'm not cleaning it."
-  back: ["You again. Left your towel on the floor.", "Mm. Still alive."]
-  warm: "You. Sit, I'll tell you who's sleeping with who. Nobody. It's a hotel of ghosts. But still."
-  cold: "Out of my way, I'm cleaning."
-  bye: "Wipe your feet."
-  walk: "Rude. Normal."
+  hi: "Mm. You are dripping on my carpet, new one. Stay out of the ballroom. I do not clean in there."
+  back: ["The new one again. You left a towel on the floor.", "Mm. Not dead. Good for you."]
+  warm: "Sit, new one. I will tell you who is sleeping with who. Nobody. But I can make it sound good."
+  cold: "Move. I am working."
+  bye: "Feet. Wipe them."
+  walk: "Rude. So, normal."
   ask:
-    - q: "Why won't you clean the ballroom?"
-      a: "Because the music's always playing and nobody's ever dancing, and then you're dancing. With somebody. And it's three days later. No."
-    - q: "What have you noticed in the rooms?"
-      a: "Beds made that I didn't make. Water in the bath, still warm. Somebody's teeth in a glass in 409. Nobody in 409."
-    - q: "Cut me a deal on something?"
+    - q: "Where am I?"
+      a: "Third floor, east. Or the lobby, if that is where I am when you ask. I know this hotel by its stains, new one. Outside of it, nothing. I have never needed the outside."
+    - q: "How do I get out?"
+      a: "I clean rooms. Rooms have one door and it goes to the corridor. The corridor goes to more rooms. You want a different answer, ask someone who does not push a cart."
+    - q: "Ever hear the name Dina?"
+      a: "I know doors. Three-oh-seven had the do-not-disturb sign up for weeks. So, I disturbed. Maps pinned in my wallpaper. A wire out the window. A little machine she talked to. Then one morning, empty. Bed made. She made it herself. Nobody does that."
+      then:
+        - q: "Did she leave anything?"
+          a: "Pin holes. Forty-one of them, I counted, I had to fill them. And a note for the desk. I do not read notes. It said she went to the city to find a radio."
+    - q: "Cut me a deal?"
       sk: speech 35
       do: discount
-      a: "Fine. I have a bag of 'lost property'. Pick something. Cheap."
+      a: "Fine. I have a bag. We call it lost property. Pick something. Cheap."
       fail: "Non."
-    - q: "Did you take Dolores's ladle?"
-      a: "Which ladle."
+    - q: "Why not the ballroom?"
+      a: "The music plays and nobody dances. Then you are dancing. With somebody. Then it is three days later and your feet hurt. Non."
+    - q: "What's in your cart?"
+      a: "Sheets. Soap. Lost property. No ladle, whatever that cook tells you."
+      then:
+        - q: "What ladle?"
+          a: "Exactly."
+    - q: "Seen anything odd?"
+      a: "Beds made that I did not make. A bath run, still warm. A set of false teeth in a glass in four-oh-nine. Nobody is booked in four-oh-nine."
   barks:
-    idle: ["Not cleaning the ballroom.", "Who leaves a towel there.", "Mm. Gossip."]
-    hi: ["Mm.", "You."]
-    drawn: ["You'll stain the wallpaper."]
-    hurt: ["Bleed on the tile, not the carpet."]
-    spot: ["Something in 409."]
-    hostile: ["Mm. You'll be a stain."]
-    hit: ["Aïe!"]
-    kill: ["Another stain."]
-    flee: ["Linen closet!"]
-    death: ["Not cleaning... that..."]
-  gest: { wave: "Mm. Bonjour.", gift: "Mm. Merci.", dance: "Not in the ballroom.", nodance: "Non.", insult: "I've cleaned worse." }
+    idle: ["I do not do the ballroom.", "Who drops a towel right there.", "Mm. I heard something good about the second floor."]
+    hi: ["Mm. New one.", "You. Feet."]
+    drawn: ["You will mark the wallpaper with that."]
+    hurt: ["On the tile, please, not the carpet."]
+    spot: ["There is something in four-oh-nine."]
+    hostile: ["Mm. I have scrubbed out worse than you."]
+    hit: ["Aie! Stop that!"]
+    kill: ["More for me to mop."]
+    flee: ["Into the linen closet!"]
+    death: ["Who cleans... this..."]
+  gest: { wave: "Mm. Bonjour, new one.", gift: "Mm. Merci. It is clean?", dance: "Not in the ballroom. Here, fine.", nodance: "Non. My feet.", insult: "I have cleaned up after worse mouths." }
 
 homely-barnaby:
-  hi: "Barnaby, at your service. If you're waiting for someone, I'll put a chair by the door."
-  back: ["Welcome back. Your usual chair is free.", "Delighted to see you again."]
-  warm: "A distinguished returning guest. The good chair, I insist."
-  cold: "Good evening. How may I assist you. Briefly."
-  bye: "Do come back. Most do."
-  walk: "Of course."
+  hi: "Barnaby, my dear guest, at your service. Are you waiting on someone? I can set a chair by the door."
+  back: ["Welcome back, my dear guest. Your chair is free.", "A pleasure to see you again. Truly."]
+  warm: "A distinguished guest returns. The good chair. I insist upon it."
+  cold: "Good evening. How may I help. Briefly, if you please."
+  bye: "Do come again, my dear guest. Most people do."
+  walk: "Naturally."
   ask:
-    - q: "I've had a rough day. Can you help?"
+    - q: "Rough day. Can you help?"
       do: heal
-      a: "Sit. A hot towel, a cup of something, and a moment of quiet. There. We take care of our guests. We always take care of our guests."
+      a: "Sit, my dear guest. A hot towel. A cup of something. A minute's quiet. There. We look after our guests. We always look after our guests."
+    - q: "Where am I?"
+      a: "The front hall of the Homely Hotel, my dear guest. I hold this door. It is nineteen thirty-one, the weather is mild, and you are most welcome."
+    - q: "How do I get out?"
+      a: "Through my door, of course. I hold it for anyone. Though I confess I mostly hold it for people coming in. It has been some time since I held it the other way."
+    - q: "Ever hear the name Dina?"
+      a: "I am poor with names and good with luggage. A lady went out through my door with one bag, quite early. She said 'the city', and I said 'which one', and she said that was a fair question."
     - q: "How long have you worked here?"
-      a: "Since 1931. Or perhaps it was always 1931. One loses track in good service."
+      a: "Since nineteen thirty-one. Or it has been nineteen thirty-one since I started. One stops checking, in good service."
   barks:
-    idle: ["At your service.", "A hot towel, perhaps.", "The good chair is free."]
-    hi: ["Good evening.", "Welcome."]
-    drawn: ["Please. Not in the lobby."]
-    spot: ["A disturbance, guests!"]
-    hostile: ["Most unseemly."]
-    hit: ["Oh!"]
-    flee: ["Pardon me!"]
-    death: ["Service..."]
-  gest: { wave: "Good evening.", gift: "Most kind, most kind.", dance: "A foxtrot? Delighted.", nodance: "I'm on duty.", insult: "Very good, sir." }
+    idle: ["At your service, as ever.", "A hot towel, anyone?", "The good chair is free just now."]
+    hi: ["Good evening, my dear guest.", "Welcome, welcome."]
+    drawn: ["Please. Not in the front hall."]
+    spot: ["A disturbance! Guests, mind yourselves!"]
+    hostile: ["This is most unseemly."]
+    hit: ["Oh! I say!"]
+    flee: ["Do pardon me!"]
+    death: ["The door... someone hold it..."]
+  gest: { wave: "Good evening to you.", gift: "Too kind, my dear guest. Too kind.", dance: "A foxtrot? I should be delighted.", nodance: "Not while I have the door.", insult: "Very good, my dear guest." }
 
 homely-auguste:
-  hi: "AH! A guest! Come, come, you look starved. Auguste feeds you. Sit! Sit!"
-  back: ["My guest returns! Sit, eat!", "Ah, hungry again? Good!"]
-  warm: "For you, the best cut! Do not tell anyone."
-  cold: "Plate is there. Eat."
-  bye: "Eat well before the boiler halls!"
-  walk: "Ah, but the soup!"
+  hi: "AH! Mon ami! You look starved. Auguste will fix this. Sit! No, there! Sit!"
+  back: ["Mon ami is back! Sit, eat!", "Hungry again? Good! This is correct!"]
+  warm: "For you, mon ami, the best cut. This stays between us and the pan."
+  cold: "There is the plate. Eat it."
+  bye: "Eat well before you go near the hot pipes, mon ami!"
+  walk: "But the soup! You have not met the soup!"
   ask:
     - q: "I'm hurt and starving."
       do: heal
-      a: "Then you are in the right kitchen! Here. Broth, bread, meat. Eat slowly. No, faster. There. You live."
+      a: "Then you found the right kitchen! Broth, bread, meat. Slowly. No, faster. There. You live. I am a genius."
+    - q: "Where am I?"
+      a: "The second kitchen, mon ami. The first kitchen is that loud woman's. Mine is smaller and better. Around us, a hotel. I am told it is nice. I am busy."
+    - q: "How do I get out?"
+      a: "The dumbwaiter! It goes down, something is at the bottom, voila, a way. I would not fit. You, perhaps. No. Forget I said it. Things come up that shaft. Nothing should go down."
+    - q: "Ever hear the name Dina?"
+      a: "A name, no. An order, yes. Three-oh-seven. Coffee and bread, sent up by the dumbwaiter, every day. Never my veal. I sent the veal anyway. It came back with a thank-you note. A polite insult is still an insult."
     - q: "What are you cooking?"
-      a: "What comes up the dumbwaiter. Today, something like veal. Tomorrow, something like veal. It is always something like veal."
+      a: "What comes up the dumbwaiter. Today, something like veal. Tomorrow, something like veal. I have stopped asking it questions."
   barks:
-    idle: ["Something like veal!", "Taste, taste, salt!", "Who wants bread!"]
-    hi: ["Ah! Guest!", "Hungry? Sit!"]
-    drawn: ["Not near my knives!"]
-    spot: ["In my kitchen? No!"]
-    hostile: ["Get out of my kitchen!"]
-    hit: ["Ahh!"]
-    kill: ["Hah!"]
-    flee: ["The bread!"]
-    death: ["Salt..."]
-  gest: { wave: "Ah! Bonjour!", gift: "For the kitchen! Merci!", dance: "Ha! Come!", nodance: "The ovens!", insult: "Ha! Eat first, then insult." }
+    idle: ["Something like veal, coming up!", "Taste it. Salt. More salt.", "Bread! Who has not had bread!"]
+    hi: ["Ah! Mon ami!", "You are hungry. I can tell. Sit!"]
+    drawn: ["Not beside my knives, mon ami!"]
+    spot: ["In my kitchen? Never!"]
+    hostile: ["Out! Out of my kitchen!"]
+    hit: ["Ahh! My arm!"]
+    kill: ["Hah! Auguste wins!"]
+    flee: ["Save the bread!"]
+    death: ["Needs... salt..."]
+  gest: { wave: "Ah! Bonjour, mon ami!", gift: "For the kitchen! Merci, merci!", dance: "Ha! Around the table, come!", nodance: "The ovens need me!", insult: "Ha! Eat first. Then be rude." }
 
 l5-harlan:
-  hi: "Housekeeping. Quartermaster. Ammo, bandages, one SMG, none of it cheap. Count's in my head. Don't test it."
-  back: ["You. Buying?", "Rounds are still pricey."]
-  warm: "Good. Someone who pays. Sit."
-  cold: "Money first."
-  bye: "Mind the boiler."
-  walk: "Hm."
+  hi: "Quartermaster. Ammo, bandages, one submachine gun. None of it cheap, buyer. I keep the count in my head. Don't try me on it."
+  back: ["Buyer. You buying?", "Rounds still cost what they cost."]
+  warm: "Good. A buyer who pays. Sit down."
+  cold: "Money on the counter first."
+  bye: "Keep clear of the boiler."
+  walk: "Right."
   ask:
-    - q: "Why's everything so expensive?"
-      a: "Because the boiler eats people and the people eat ammo. I keep the staff supplied first. They were here before us. They'll be here after."
-    - q: "Bit off?"
+    - q: "Where am I?"
+      a: "A hotel. Staff run the upstairs. My lot hold the basement side and keep the vermin down. We call ourselves Housekeeping. It's a joke. Nobody laughs."
+    - q: "How do I get out?"
+      a: "Don't know one. I know ways off this floor of the world, and every one of them is worse than a warm bed here. People work that out and stay. Then they buy from me."
+    - q: "Ever hear the name Dina?"
+      a: "I do receipts by room. Three-oh-seven bought batteries. Twelve. And all the copper wire I had, sixty feet. Paid full price, didn't haggle. I remember the ones who don't haggle."
+    - q: "Knock a bit off?"
       sk: barter 45
       do: discount
-      a: "...Fine. You don't waste rounds, I can tell. Little off."
+      a: "...Fine. You don't look like you waste rounds. Little off."
       fail: "No."
-    - q: "What's in the boiler room?"
-      a: "Heat. Pipes. Rats the size of dogs. And the Beast. You'll hear it before anything. If you hear it close, you're done."
+    - q: "Why so expensive?"
+      a: "The boiler takes people. People take ammo with them. I supply the hotel staff first. They were here before us. They'll be here after."
+    - q: "What's dangerous here?"
+      a: "Boiler room. Heat, pipes, rats up to your knee. And the Beast. You hear it before you see it. If it sounds close, you waited too long."
   barks:
-    idle: ["Three hundred twelve rounds.", "Who signed this out.", "Hm."]
-    hi: ["Hm.", "Buying?"]
-    drawn: ["Lower it."]
-    spot: ["Contact. Housekeeping, up!"]
-    hostile: ["Wrong man."]
-    hit: ["Hrm."]
-    kill: ["One round. Good."]
-    flee: ["Back to the stores."]
-    death: ["Count..."]
-    reload: ["Reloading."]
-  gest: { wave: "Hm.", gift: "...Thanks.", dance: "No.", nodance: "No.", insult: "Hm." }
+    idle: ["Three hundred and twelve rounds. Still.", "Who signed this out and didn't sign.", "Stock's right. Good."]
+    hi: ["Buyer.", "You buying or looking?"]
+    drawn: ["Lower that, buyer."]
+    spot: ["Contact. Housekeeping, on your feet!"]
+    hostile: ["You picked the wrong counter."]
+    hit: ["Hrm. Felt that."]
+    kill: ["One round. That's how it's done."]
+    flee: ["Falling back to the stores."]
+    death: ["Somebody... keep count..."]
+    reload: ["Loading."]
+  gest: { wave: "Right. Hello.", gift: "...Appreciated.", dance: "Not a chance.", nodance: "Still no.", insult: "That one's free." }
 
 l5-vesna:
-  hi: "I am Vesna. I walk people to the boiler room door. Not through it. Never through it. You want to go?"
-  back: ["Again? You like the heat.", "Still in one piece. Good."]
-  warm: "Ah. My favourite tourist. Come, I'll show you the long way."
-  cold: "Speak quickly."
-  bye: "Try not to be cooked."
-  walk: "Hm."
+  hi: "I am Vesna. I walk people to the boiler room door, tourist. To it. Not through it. You are going?"
+  back: ["Again, tourist? You like the heat.", "All your pieces are still on. Good."]
+  warm: "Ah. My favourite tourist. Come, I show you the long way. It has a nice pipe."
+  cold: "Talk fast."
+  bye: "Try not to come back cooked."
+  walk: "So go."
   ask:
-    - q: "Why won't you go through?"
-      a: "I went through once. I came back. My partner did not. Now I walk people to the door, and I count them, and I wait."
-    - q: "What's the safest route?"
+    - q: "Where am I?"
+      a: "Under a hotel. Upstairs there are towels and mints. Down here there are pipes and me. I think you had the better half and left it."
+    - q: "How do I get out?"
+      a: "Everybody asks at this door. As if the worst room must hide the exit. It is only a way in, tourist. I checked. It cost me a partner to check."
+    - q: "Ever hear the name Dina?"
+      a: "I do not take names until they come back. One woman asked me your same question, about a way out through the boiler. I said no. She believed me. First one who ever did. She went upstairs and I did not have to count her."
+    - q: "What do you do here?"
+      a: "I walk them down. I count them in. I wait. I count them out. The numbers do not always agree."
+      then:
+        - q: "Why not go through?"
+          a: "I went once. I came back. My partner did not. So now I stand at the door, and that is close enough."
+    - q: "What's the safest way in?"
       sk: survival 40
-      a: "Left wall, every time. The pipes on the left are cooler, the rats nest right. When you hear the Beast breathe, stop. Don't hide. Stop."
-      fail: "There is no safe route. There is the route."
+      a: "Left wall, always. Left pipes run cooler and the rats nest on the right. If you hear the Beast breathing, stop. Do not hide. Only stop."
+      fail: "There is no safe way. There is the way."
     - q: "Do people come back?"
-      a: "Some. I make tea for them. They don't drink it. They just hold the cup."
+      a: "Some. I make them tea. They do not drink it. They hold the cup until it is cold."
   barks:
-    idle: ["Count them out. Count them in.", "Hm. Heat today.", "Left wall."]
-    hi: ["Tourist.", "Hm. You."]
-    drawn: ["Save it for the rats."]
-    spot: ["Rats! Housekeeping!"]
-    hostile: ["You chose badly."]
-    hit: ["Tch."]
-    kill: ["Gone."]
-    flee: ["Back to the door!"]
-    death: ["Count... me..."]
-  gest: { wave: "Hm. Hello.", gift: "Thank you. I'll keep it for the ones who come back.", dance: "Ha. A short one.", nodance: "Not today.", insult: "Funny. Come to the boiler, say it there." }
+    idle: ["Count them in. Count them out.", "Hot today. Hot every day.", "Keep to the left wall."]
+    hi: ["Tourist.", "So. You."]
+    drawn: ["Keep that for the rats."]
+    spot: ["Rats! Housekeeping, to me!"]
+    hostile: ["You chose this, tourist."]
+    hit: ["Tch. Is that all."]
+    kill: ["That one is counted."]
+    flee: ["To the door! Back!"]
+    death: ["Count me... out..."]
+  gest: { wave: "Yes. Hello, tourist.", gift: "Thank you. I keep it for one who comes back.", dance: "Ha. Short one.", nodance: "Not at this door.", insult: "Funny. Say it again inside the boiler." }
 
 l5-tobias:
-  hi: "The boiler crew needs five rats gone. Pay's in water. The job's on the board. Let's talk about it away from the vents."
-  back: ["Oh, you! Rats! I mean, hi!", "Back for a job? Or. Just talking. Talking's fine."]
-  warm: "Okay, good, a friend. I need to tell you a theory."
-  cold: "Job board's there."
-  bye: "Count your rats!"
-  walk: "Oh. Okay."
+  hi: "Oh! New person. Hi. There's a job on the board, five rats, pays in water. Can we talk over here? Not by the vent. Over here."
+  back: ["Oh, new person! Rats! I mean hi!", "You want the job? Or just a chat. A chat's fine. I can chat."]
+  warm: "Okay, good, a friend. I need to run a theory past somebody."
+  cold: "Board's over there."
+  bye: "Count the rats twice!"
+  walk: "Oh. Okay. Sure."
   ask:
-    - q: "What's the job?"
-      a: "Death Rats. Five of them, near the boiler. Bring proof. Tails work. Don't bring the rest. Please don't bring the rest."
-    - q: "You think the hotel is alive?"
-      a: "Okay so. The corridors are longer at night. The carpet's warm. The wallpaper has a pulse, I timed it, seventy beats a minute. That's a resting heart rate. That's ALIVE."
+    - q: "Where am I?"
+      a: "A hotel. Basement office of a hotel. I say 'hotel'. It has a pulse and it gets longer at night, so I don't know what the right word is. 'Hotel' is the polite one."
+    - q: "How do I get out?"
+      a: "Okay, so, theory. You don't walk out of something alive. It has to let you out. Like a sneeze. I haven't worked out how you make a hotel sneeze. I've got a list. It's mostly pepper."
+    - q: "Ever hear the name Dina?"
+      a: "Three-oh-seven? With the recorder? She's the only one who didn't laugh! She held the microphone on the wallpaper for a full minute. She got seventy-one beats. I get seventy. We argued about it. Best afternoon I've had here."
+    - q: "Got any work?"
+      a: "Rats. Big ones, five, by the boiler. Bring proof. Tails are fine. Just the tails. Please, just the tails."
+    - q: "You seem jumpy."
+      a: "Okay so. The halls are longer at night. The carpet's warm. The wallpaper has a pulse. I timed it. Seventy a minute. That's a resting heart rate. Something's resting."
       then:
-        - q: "Maybe you need some sleep."
-          a: "I sleep! Four hours. In a room that's always the same room. Except twice."
-    - q: "Calm down, it's okay."
-      a: "I'm calm. This is calm. You should see me not calm."
+        - q: "Maybe get some sleep."
+          a: "I sleep! Four hours. Same room every night. Except twice."
+    - q: "Calm down. It's okay."
+      a: "I'm calm. This is me calm. You haven't seen the other one."
   barks:
-    idle: ["Seventy beats a minute.", "Five rats. Five.", "Is the carpet warm? It's warm."]
-    hi: ["Hi! Rats!", "Oh, hi!"]
-    drawn: ["Ahh! Not at me!"]
-    spot: ["It's alive! Something! Rats!"]
-    hostile: ["I knew you were weird!"]
-    hit: ["Owww!"]
-    flee: ["Nope!"]
-    death: ["Told... you..."]
-  gest: { wave: "Hi! Hi!", gift: "Oh! Thanks! Is it a rat? No. Good.", dance: "Okay! I'm bad at it!", nodance: "The floor's listening.", insult: "Oh. Okay. Fair." }
+    idle: ["Seventy a minute. Still seventy.", "Five rats. It said five.", "Is the carpet warm? It's warm. It's warm again."]
+    hi: ["Hi! Rats! Sorry. Hi!", "Oh, new person!"]
+    drawn: ["Ahh! Not me, not me!"]
+    spot: ["It's moving! Something! Rats!"]
+    hostile: ["I knew you were off! I had a feeling!"]
+    hit: ["Owww! Why!"]
+    flee: ["Nope! Leaving!"]
+    death: ["I was... right..."]
+  gest: { wave: "Hi! Hello! Hi!", gift: "Oh! Thanks! It's not a rat, is it? Good.", dance: "Okay! I'm terrible at this!", nodance: "The floor can feel it.", insult: "Oh. Yeah. That's fair." }
 
 l5-imani:
-  hi: "Evening. I walk the halls so the staff don't have to. Don't bother them, don't bother the guests, don't bother me."
-  back: ["You. Behaving?", "Evening."]
-  warm: "Ah, good. Walk with me, I'm sick of my own company."
-  cold: "Keep walking."
-  bye: "Be nice to the staff."
-  walk: "Mm."
+  hi: "Evening, traveller. I walk these halls so the staff don't have to. Leave them be, leave the guests be, leave me be. We'll get along."
+  back: ["Traveller. Keeping out of trouble?", "Evening again."]
+  warm: "Good, it's you. Walk a round with me. I'm tired of my own opinions."
+  cold: "Keep moving, traveller."
+  bye: "Be decent to the staff."
+  walk: "As you like."
   ask:
-    - q: "What do you think of the Originals?"
-      a: "Rich people who drowned, crashed or fell in a long time ago and still think the world owes them a table. They tip in buttons."
-    - q: "Why protect the hotel staff?"
-      a: "Because they don't hurt anyone. That's rare enough to guard."
+    - q: "Where am I?"
+      a: "A hotel with more hallway than it should have. I've walked rounds here two years and the round still comes out a different length. I've made my peace with it."
+    - q: "How do I get out?"
+      a: "I was sent here to hold a post, not find a door. If my people had found a way home, traveller, believe me, I would not be guarding bellhops."
+    - q: "Ever hear the name Dina?"
+      a: "Not the name. A room, maybe. Three-oh-seven. Light under the door all night, every round, and a voice in there talking to itself. I knocked once to check. She said, 'I'm fine, I'm just taking notes out loud.' That light's been off a while."
+    - q: "Who's in the salon?"
+      a: "Old money. They fell in here a long time back, off ships and out of the sky, and they still think somebody owes them a table. They tip in buttons."
+    - q: "Why guard the staff?"
+      a: "They don't hurt anybody. In here that's rare enough to put a guard on."
   barks:
-    idle: ["Evening.", "Be nice.", "Salon's loud again."]
-    hi: ["Evening.", "Mm."]
-    drawn: ["Put it away. Now."]
-    spot: ["Contact. Staff, behind me."]
-    hostile: ["Bad idea."]
-    hit: ["Hm. Fine."]
-    kill: ["Down."]
-    flee: ["Falling back."]
-    death: ["Look after... the staff..."]
-  gest: { wave: "Evening.", gift: "Huh. Thanks.", dance: "One. I'm on rounds.", nodance: "On rounds.", insult: "Cute." }
+    idle: ["Quiet round. I'll take it.", "Be decent, people.", "The salon's loud again."]
+    hi: ["Evening, traveller.", "On my round."]
+    drawn: ["Put that away. I won't ask nicely twice."]
+    spot: ["Contact. Staff, get behind me."]
+    hostile: ["That was a poor idea, traveller."]
+    hit: ["Hm. All right."]
+    kill: ["Down. Round continues."]
+    flee: ["Pulling back. Staff first."]
+    death: ["Somebody... mind the staff..."]
+  gest: { wave: "Evening.", gift: "Huh. Thank you, traveller.", dance: "One song. I'm on my round.", nodance: "Not on a round.", insult: "Sweet of you." }
 
 hk-constance:
-  hi: "Bonsoir. Housekeeping. I keep the linen and the supplies. You look like you need both."
-  back: ["Ah. Again. Linen?", "Bonsoir."]
-  warm: "My dear. Come, sit. Clean sheets. Real ones."
-  cold: "What do you need."
-  bye: "Don't follow the waltz."
-  walk: "Hm."
+  hi: "Bonsoir, cheri. I keep the linen and the stores for our side. You look like you could use a bit of both."
+  back: ["Ah, cheri again. Sheets?", "Bonsoir, bonsoir."]
+  warm: "Cheri. Come, sit. Clean sheets. Real cotton. Feel that."
+  cold: "What is it you need."
+  bye: "If you hear a waltz, cheri, walk the other way."
+  walk: "Bon."
   ask:
-    - q: "What should I avoid here?"
-      a: "The ballroom when the waltz plays. You'll want to stay. Everyone wants to stay. And the boiler. Nobody wants to stay there, and still."
+    - q: "Where am I?"
+      a: "A hotel, cheri. An old one, and well kept, I will give them that. We rent the back rooms from the staff and pay in work. It is not the worst arrangement I have had."
+    - q: "How do I get out?"
+      a: "I stopped asking. That is not the same as giving up, cheri. I simply found I sleep better on a clean sheet than on a question."
+    - q: "Ever hear the name Dina?"
+      a: "Three-oh-seven, I think. The maid complained to me. The guest would not let her change the bed. But she came to me for one extra sheet. I asked why. She said to hang over the window, so nobody saw her wire. I did not ask what wire."
     - q: "Trade me something?"
       sk: barter 35
       do: discount
-      a: "For you. A little less. Don't tell Harlan, he sulks."
-      fail: "Non, the price is the price."
+      a: "For you, cheri, a little less. Not a word to Harlan. He sulks for days."
+      fail: "Non. The price is the price."
+    - q: "What should I avoid?"
+      a: "The ballroom when the waltz is on. You will want to stay. Everybody wants to stay. And the boiler. Nobody wants to stay there, and some do anyway."
   barks:
-    idle: ["Linen, linen.", "Hm. The waltz.", "Fold, fold."]
-    hi: ["Bonsoir.", "Mm."]
-    drawn: ["Not near the linen."]
-    spot: ["Housekeeping! Up!"]
-    hostile: ["Dommage."]
-    hit: ["Aïe!"]
-    kill: ["Bon."]
-    flee: ["Linen closet!"]
-    death: ["Merde..."]
-  gest: { wave: "Bonsoir.", gift: "Merci, chéri.", dance: "Not the waltz. Something else.", nodance: "Not here.", insult: "Charmant." }
+    idle: ["Sheets, towels, sheets.", "There is that waltz again.", "Corner to corner. Fold. Again."]
+    hi: ["Bonsoir, cheri.", "Ah. Hello."]
+    drawn: ["Not beside the clean linen."]
+    spot: ["Housekeeping! On your feet!"]
+    hostile: ["Dommage, cheri."]
+    hit: ["Aie! Enough!"]
+    kill: ["Bon. Finished."]
+    flee: ["To the linen room!"]
+    death: ["Zut... the sheets..."]
+  gest: { wave: "Bonsoir to you.", gift: "Merci, cheri. Very sweet.", dance: "Anything but the waltz.", nodance: "Not tonight, cheri.", insult: "Charmant. Truly." }
 
 hk-vance:
-  hi: "Watch the pressure gauge. No, the other one. Good. You can handle heat? You'll need to."
-  back: ["Still got eyebrows? Good.", "Back. Heat's up."]
-  warm: "Ah, you. Pass me the wrench."
-  cold: "Out of the way."
-  bye: "Stay off the hot side."
-  walk: "Aye."
+  hi: "Eyes on that gauge, sunshine. Not that one. The other one. Good. Can you stand heat? You'll want to."
+  back: ["Still got your eyebrows, sunshine? Grand.", "You again. She's running hot today."]
+  warm: "Ah, sunshine. Hand us that wrench, would you."
+  cold: "Shift. I'm working."
+  bye: "Keep off the hot side."
+  walk: "Aye, off you pop."
   ask:
-    - q: "What's the pressure for?"
-      a: "If that needle goes red, the boiler vents, and the corridor fills with steam that cooks you through your boots. I watch the needle. Somebody has to."
-    - q: "Anything stalking the guest wings?"
+    - q: "Where am I?"
+      a: "Boiler works. Under a hotel. I was a heating engineer in Leeds, so of all the daft places to wake up, this is the one I can actually do something about."
+    - q: "How do I get out?"
+      a: "Follow the pipes, I thought. Pipes always come from somewhere. I traced the main feed for a week, sunshine. It goes in a circle. Feeds itself. Put me right off my tea."
+    - q: "Ever hear the name Dina?"
+      a: "Never caught a name. Lass from upstairs borrowed me wire cutters. Brought them back same day, cleaned. Nobody brings a tool back cleaned. I'd have lent her the wrench."
+    - q: "What are you watching?"
+      a: "That needle. If she goes red, the boiler vents, and the corridor fills with steam hot enough to cook you in your boots. So I watch her. Somebody has to."
+    - q: "Anything hunting in the halls?"
       sk: survival 35
-      a: "Faceless staff. They only move when you're not looking. So you look. Back out of a room, don't turn round. Feels daft. Do it."
-      fail: "Everything. Stay in the lobby."
+      a: "Staff with no faces. They only move when you're not looking. So you look. Back out of the room, don't turn round. Feels daft. Do it anyway."
+      fail: "All sorts, sunshine. Stop in the lobby."
   barks:
-    idle: ["Needle's holding.", "Wrench. Where's me wrench.", "Hot one today."]
-    hi: ["Aye.", "You."]
-    drawn: ["Point it at a rat."]
+    idle: ["Needle's steady. Good lass.", "Where've I put me wrench.", "Warm one. They're all warm ones."]
+    hi: ["Aye aye, sunshine.", "Mind the pipes."]
+    drawn: ["Find a rat to point that at."]
     spot: ["Rats! Rats on the hot side!"]
-    hostile: ["You'll regret that, pal."]
-    hit: ["Argh! Hot!"]
-    kill: ["Down, you."]
-    flee: ["Get behind the valves!"]
-    death: ["Watch... the needle..."]
-  gest: { wave: "Aye.", gift: "Ta.", dance: "Ha. No.", nodance: "No.", insult: "Aye, heard worse." }
+    hostile: ["You'll be sorry for that, sunshine."]
+    hit: ["Argh! That's scalding!"]
+    kill: ["Stay down, you."]
+    flee: ["Behind the valves, quick!"]
+    death: ["Mind... the needle..."]
+  gest: { wave: "Aye. Now then.", gift: "Ta, sunshine.", dance: "Ha. Give over.", nodance: "Not on shift.", insult: "Aye. Me mam said worse." }
 
 l5-millie:
-  hi: "Well, hello there. Modern, aren't you? Shame. Can't join the salon. Can sit and lose at cards, though."
-  back: ["Back for another hiding?", "Hiya, flyboy. Flygirl. Whatever."]
-  warm: "Pull up a chair, pal. I'll go easy on you. I won't."
-  cold: "Moderns stand."
-  bye: "Keep your nose up!"
-  walk: "Rude. I like it."
+  hi: "Well, hello, ace. New model, aren't you? Shame. Can't let you in the club. You can sit and lose at cards, though."
+  back: ["Back for another licking, ace?", "Hiya, ace. Pull up."]
+  warm: "Grab a chair, ace. I'll go easy on you. That's a lie."
+  cold: "Newcomers stand."
+  bye: "Nose up, ace!"
+  walk: "Rude. I like that in a person."
   ask:
-    - q: "What happened to you?"
-      a: "Pacific, '37. Engines quit, sky went white, and I came down on carpet. Best landing of my life. Nobody saw it."
-    - q: "Why won't the salon take me?"
-      a: "House rules. Nobody born after the Hindenburg. I didn't make the rules. Vanderholt did. I just enjoy them."
+    - q: "Where am I?"
+      a: "The salon of a very decent hotel. Before this I was over the Pacific with two dead engines. So wherever it is, ace, it's a step up from wet."
+    - q: "How do I get out?"
+      a: "I'd say fly, but I've checked the windows. Corridor, corridor, brick. No sky anywhere in the building. You can't take off without sky. Believe me, I've thought about the lobby."
+    - q: "Ever hear the name Dina?"
+      a: "The wireless girl? Didn't get her name, we weren't introduced. She asked me how far a radio signal carries. I said you need height and a proper set, and there's no proper set in this hotel. The only ones I've heard of are in the city."
+      then:
+        - q: "What city?"
+          a: "Search me, ace. Guests talk about it. Tall buildings, nobody home. Sounds like a place you'd put an aerial, though. I told her so."
     - q: "Trade me something?"
       sk: barter 35
       do: discount
-      a: "You've got moxie. Here, an heirloom, half price. Don't tell the baron."
-      fail: "Not on your life, pal."
+      a: "You've got moxie. Here, a family heirloom, half off. Somebody's family. Don't tell the baron."
+      fail: "Not on your life, ace."
+    - q: "What happened to you?"
+      a: "Pacific, nineteen thirty-seven. Engines quit, sky went white, and I set her down on carpet. Smoothest landing I ever made and not one witness."
+    - q: "What is this club?"
+      a: "House rule. Nobody born after the Hindenburg. I didn't write it, the baron did. I just enjoy it."
   barks:
-    idle: ["Deal me in.", "Whose turn to feed the cat?", "Nothing like a good tailwind."]
-    hi: ["Hiya, modern.", "Look who it is."]
-    drawn: ["Ooh, a gun. How quaint."]
-    spot: ["Bandits at twelve!"]
-    hostile: ["You want a fight? I flew through hurricanes."]
-    hit: ["Ow! Cheap shot!"]
-    kill: ["Shot down!"]
-    flee: ["Bail out! Bail out!"]
-    death: ["Blue... sky..."]
-  gest: { wave: "Waggle the wings!", gift: "Ooh, souvenir! Ta!", dance: "Lindy hop, let's go!", nodance: "I'm winning this hand.", insult: "Ha! Got spirit." }
+    idle: ["Deal me in, boys.", "Whose turn is it to feed the cat?", "What I'd give for a tailwind."]
+    hi: ["Hiya, ace.", "Well, look what blew in."]
+    drawn: ["Ooh, a pistol. How darling."]
+    spot: ["Bandits, twelve o'clock!"]
+    hostile: ["You want a scrap? I flew through typhoons, ace."]
+    hit: ["Ow! That's a cheap shot!"]
+    kill: ["Splash one!"]
+    flee: ["Bail out, bail out!"]
+    death: ["There's... the sky..."]
+  gest: { wave: "Wing waggle right back at you!", gift: "Ooh, a souvenir! Thanks, ace!", dance: "Lindy hop! Try and keep up!", nodance: "Not while I'm winning this hand.", insult: "Ha! There's some spirit." }
 
 l5-whitlock:
-  hi: "Captain Whitlock. You'll address me as Captain. You are not a member, but you may stand at a respectful distance."
-  back: ["You. Standing. Good.", "Ah. The modern."]
-  warm: "Hm. You may sit. On the small chair."
-  cold: "Stand further back."
-  bye: "Good day."
+  hi: "Captain Whitlock. You will say 'Captain', landsman. You are not a member. You may stand over there, respectfully."
+  back: ["Landsman. Standing, I see. Good.", "Ah. You again. Same distance, please."]
+  warm: "Hm. You may sit, landsman. The small chair."
+  cold: "Further back."
+  bye: "Good day to you."
   walk: "Insolence."
   ask:
-    - q: "What ship did you command?"
-      a: "The finest liner ever built. She went down in under three hours. I went down with her. I did not expect to arrive."
-    - q: "Do you feed Samantha too?"
-      a: "Proper meat. Not the slop the aviatrix brings. A creature of quality deserves quality."
-    - q: "You bluff badly at cards."
-      a: "I do not bluff. I remain confident in unfavourable circumstances. It is called seamanship."
+    - q: "Where am I?"
+      a: "Ashore, landsman. Regrettably. A hotel of some size, without a harbour. I have asked the desk for the harbour repeatedly."
+    - q: "How do I get out?"
+      a: "By sea. It is the only honest way out of anywhere. There is no sea here. You see the difficulty."
+    - q: "Ever hear the name Dina?"
+      a: "A young woman of this era put a question to me. Did I know of a ship that takes passengers. I told her the only ship I know took hers to the bottom. She wrote that down. I cannot think why."
+    - q: "What ship was yours?"
+      a: "The finest liner afloat. She went down inside three hours. I stayed on the bridge, as one does. I did not expect to arrive anywhere."
+    - q: "Anything here you like?"
+      a: "The cat. I bring her proper meat. Not the scraps the aviatrix offers. A creature of quality is owed quality."
+    - q: "Are you winning?"
+      a: "I do not bluff, if that is the implication. I remain confident in poor conditions. It is called seamanship."
   barks:
-    idle: ["Hm. Seamanship.", "Proper meat.", "Stand back."]
-    hi: ["Hm.", "Modern."]
-    drawn: ["Holster that, sailor."]
-    spot: ["All hands!"]
-    hostile: ["Mutiny!"]
-    hit: ["Blast!"]
-    kill: ["Overboard."]
-    flee: ["Abandon ship!"]
-    death: ["The... bridge..."]
-  gest: { wave: "Hm. A salute would suffice.", gift: "Acceptable.", dance: "A waltz. Correctly.", nodance: "Certainly not.", insult: "I've hanged men for less." }
+    idle: ["Steady as she goes.", "Proper meat for the cat. I shall see to it.", "No harbour. Absurd."]
+    hi: ["Landsman.", "Hm. You."]
+    drawn: ["Stow that weapon, landsman."]
+    spot: ["All hands on deck!"]
+    hostile: ["This is mutiny!"]
+    hit: ["Blast and confound it!"]
+    kill: ["Over the side with him."]
+    flee: ["To the boats!"]
+    death: ["Still... on the bridge..."]
+  gest: { wave: "A salute is customary. That will do.", gift: "Acceptable, landsman.", dance: "A waltz. Done properly or not at all.", nodance: "Certainly not.", insult: "Men have scrubbed decks for less." }
 
 l5-vanderholt:
-  hi: "Vanderholt. Of the Vanderholt railways. You've heard of them. No? Pity. Your loss, not mine."
-  back: ["You again. Still poor?", "Ah. The modern."]
-  warm: "Sit, sit. I'll lend you money. You'll never pay it back. Nobody does."
-  cold: "I don't speak to the unpropertied."
+  hi: "Vanderholt. Of the Vanderholt railways. You know the name, upstart. No? Then you are poorer than you look."
+  back: ["The upstart again. Still without means?", "Ah. You. I was just not thinking of you."]
+  warm: "Sit, upstart, sit. I shall lend you money. You won't pay it back. No one ever has."
+  cold: "I do not converse with people who rent."
   bye: "Good day. Remember the name."
-  walk: "Hmph."
+  walk: "Hmph. No breeding."
   ask:
-    - q: "Lend me some money?"
-      a: "Of course. Here. Interest at twelve percent, compounded hourly. I'm joking. I'll never see it again. Nobody's ever paid me back in this hotel."
+    - q: "Where am I?"
+      a: "In a hotel I do not own. I have made three offers. The man at the desk says it is not for sale. Everything is for sale, upstart. That is what frightens me about this place."
+    - q: "How do I get out?"
+      a: "One buys one's way out of anything. I simply have not found who to pay. When I do, I shall go first, and you may apply to my secretary."
+    - q: "Ever hear the name Dina?"
+      a: "I do not retain the names of debtors, there are too many. A young woman from the third floor borrowed forty from me for a fare. A fare to where, I asked. 'The city, and then a boat.' Nobody in this hotel has ever repaid me. She left an envelope at the desk with forty in it. I was quite upset."
     - q: "Trade me an heirloom?"
       sk: barter 40
       do: discount
-      a: "You haggle like a railman. Fine. A bargain. I'll tell the club you robbed me."
-      fail: "Price is firm. Like my handshake."
+      a: "You bargain like a railwayman. Very well. A steal. I shall tell the club you robbed me."
+      fail: "The price is firm. Like my handshake."
+    - q: "Lend me some money?"
+      a: "Naturally. Twelve percent, compounded hourly. I jest. I'll never see it again. I keep a ledger of what this hotel owes me. It is thicker than theirs."
     - q: "What was your railway like?"
-      a: "Four thousand miles of steel. I built towns where there was dust. Now I'm in a hotel I can't buy. Galling."
+      a: "Four thousand miles of steel. I put towns where there was only dust. Now I cannot buy one hotel. It is galling."
   barks:
-    idle: ["Four thousand miles.", "Pass the port.", "Pity."]
-    hi: ["Hm.", "You."]
-    drawn: ["Put that down, ruffian."]
-    spot: ["Brigands!"]
-    hostile: ["I'll have you arrested!"]
-    hit: ["Outrageous!"]
-    kill: ["Hmph."]
-    flee: ["My valet!"]
-    death: ["Pity..."]
-  gest: { wave: "Hm. Yes. Hello.", gift: "A gift? How quaint. Thank you.", dance: "I danced with a Rockefeller.", nodance: "My gout.", insult: "I've been insulted by senators." }
+    idle: ["Four thousand miles of it.", "Pass the port, would you.", "Not for sale. Preposterous."]
+    hi: ["Upstart.", "Hm. It's you."]
+    drawn: ["Put that down, you ruffian."]
+    spot: ["Brigands! In the salon!"]
+    hostile: ["I shall have you arrested, sir or madam!"]
+    hit: ["Outrageous! I have lawyers!"]
+    kill: ["Hmph. Send the bill to his people."]
+    flee: ["Where is my valet!"]
+    death: ["Not... for sale..."]
+  gest: { wave: "Yes, yes. Hello.", gift: "A gift? How quaint. I accept.", dance: "I once danced with a Rockefeller. You are no Rockefeller.", nodance: "My gout forbids it.", insult: "I have been insulted by senators. Try harder." }
 
 l5-zelda:
-  hi: "Ohh, darling! Who are YOU? Modern? Oh, how ghastly, how fun! You can't join, but sit, sit, tell me EVERYTHING."
-  back: ["Darling! You're back! Gossip?", "Oh, the modern! The bee's knees!"]
-  warm: "My favourite modern! Come, sit, spill."
-  cold: "Oh. You. How dull."
+  hi: "Ohh, darling! And who are YOU? Brand new? How ghastly. How fun! You can't join, but sit, sit, and tell me simply everything."
+  back: ["Darling! You're back! Any gossip?", "Oh, it's the new darling! Isn't that the berries!"]
+  warm: "My very favourite darling! Come, sit, spill it all."
+  cold: "Oh. It's you. What a bore."
   bye: "Toodle-oo, darling!"
-  walk: "Well! I never!"
+  walk: "Well! Of all the nerve!"
   ask:
-    - q: "Which war is on now?"
-      a: "Oh, darling, who can keep track? Last I heard the Kaiser was being frightfully rude. Is he still?"
+    - q: "Where am I?"
+      a: "At the party, darling! Well. After the party. Well. There was a yacht, and champagne, and I fell off the back of one into the other, and I came up here. It's a hotel. The band never stops. Isn't it heaven?"
+    - q: "How do I get out?"
+      a: "Out? Darling, why would you leave before the end? Nobody's called the end yet. I've been waiting to see who does."
+    - q: "Ever hear the name Dina?"
+      a: "Is that her name? The girl in three-oh-seven? Darling, the scandal of it. Weeks in the house and she never came to one single party. Not one! She had a wire hanging out her window. I thought it was for a gentleman to climb. It was not. I checked every night."
     - q: "Got any gossip?"
-      a: "The Captain cheats at whist. Vanderholt is broke, darling, BROKE, he just doesn't know it. And Millie's sweet on a pilot who's been dead since 1937. Aren't we all?"
-    - q: "Why can't I join the salon?"
-      a: "Because you were born after the good parties, darling. It's not your fault. It's just tragic."
+      a: "The Captain cheats at whist. The baron is broke, darling, BROKE, and nobody's had the heart to tell him. And Millie's sweet on a pilot who has not written since nineteen thirty-seven."
+    - q: "What year is it?"
+      a: "Oh, darling, who's counting? Last I heard the Kaiser was being perfectly beastly. Is he still at it?"
+    - q: "Can I join your party?"
+      a: "You were born after all the good ones, darling. It isn't your fault. It's only tragic."
   barks:
-    idle: ["Whist, anyone?", "Darling, darling, DARLING.", "Isn't it all just too much?"]
-    hi: ["Darling!", "Oh, hello!"]
-    drawn: ["Ooh, dramatic!"]
-    spot: ["Eek! A beastie!"]
-    hostile: ["You brute!"]
-    hit: ["Oww! My dress!"]
-    flee: ["Toodle-oo!"]
-    death: ["How... dull..."]
-  gest: { wave: "Yoo-hoo!", gift: "For me? You shouldn't have! Gimme.", dance: "Charleston! Come on!", nodance: "My feet are simply dead.", insult: "Oh, darling, how modern of you." }
+    idle: ["Whist, anybody? Anybody?", "Darling. Darling! DARLING.", "Isn't it all just too, too much?"]
+    hi: ["Darling!", "Oh, hello, you!"]
+    drawn: ["Ooh! How dramatic!"]
+    spot: ["Eek! There's a beastie!"]
+    hostile: ["Oh, you perfect brute!"]
+    hit: ["Oww! This is silk!"]
+    flee: ["Toodle-oo, must dash!"]
+    death: ["What a... bore..."]
+  gest: { wave: "Yoo-hoo, darling!", gift: "For me? You shouldn't have! Hand it over.", dance: "The Charleston! Come on, come on!", nodance: "My feet are simply finished, darling.", insult: "Oh, darling. How very new of you." }
 
 l5-wat:
-  hi: "God keep thee. Is this the Abbey? Art thou sent by the Abbot? The candles here burn without flame. Witchery."
-  back: ["Thou art returned. God be praised.", "Hast thou found the Abbot?"]
-  warm: "Friend! Sit by me. Pray with me a little."
-  cold: "Thou frightenest me."
-  bye: "Go with God. And stay from the lifts."
-  walk: "Ah. Gone."
+  hi: "God keep thee, pilgrim. Is this the Abbey? Did the Abbot send thee? The candles here burn with no flame. I like it not."
+  back: ["Thou art come again, pilgrim. God be thanked.", "Hast thou found the Abbot yet?"]
+  warm: "Pilgrim! Sit by me. Pray with me a little while."
+  cold: "Thou dost frighten me, pilgrim."
+  bye: "Go with God. And keep from the moving closets."
+  walk: "Ah. Gone again."
   ask:
-    - q: "Where do you think you are?"
-      a: "Purgatory, mayhap. Or an abbey the size of England. There is meat at every meal and nobody fasts. That is how I know it is not Heaven."
-    - q: "I need help. I'm hurt."
+    - q: "I'm hurt. Can you help?"
       do: heal
-      a: "Kneel. I have herbs, from the garden that grows in the bath. Chew. Bitter, aye. There. God heals. And herbs."
+      a: "Kneel, pilgrim. I have herbs, from the garden that grows in the bath. Chew. Bitter, aye. There. God heals. The herbs help Him."
+    - q: "Where am I?"
+      a: "Purgatory, I think. Or an abbey the size of England. There is meat at every meal and no man fasts. By that I know it is not Heaven."
+    - q: "How do I get out?"
+      a: "By prayer, pilgrim, and a clean soul. I have prayed here longer than I can reckon. So either the way is long, or my soul is not so clean as I was told."
+    - q: "Ever hear the name Dina?"
+      a: "I know not the name. There was a woman who spake into a small box, and the box spake back in her own voice. I crossed myself. She smiled, and let me hear my own voice from it. I have not slept well since."
     - q: "What year was it for you?"
-      a: "The year of our Lord thirteen hundred and forty-eight. A great sickness walked the land. I hid in the abbey cellar. I came up here."
+      a: "The year of our Lord thirteen hundred and forty-eight. A great sickness was on the land. I hid in the abbey cellar. I came up the stair into this."
   barks:
-    idle: ["Ave Maria...", "Witchery, all of it.", "Where is the Abbot?"]
-    hi: ["God keep thee.", "Peace, friend."]
-    drawn: ["Put up thy blade!"]
-    hurt: ["Thou bleedest! Kneel!"]
-    spot: ["A demon! A demon!"]
-    hostile: ["God forgive thee!"]
-    hit: ["Mercy!"]
-    flee: ["Sanctuary!"]
-    death: ["Into thy hands..."]
-  gest: { wave: "Bless thee.", gift: "Bless thee! Bless thee.", dance: "Is it holy? Very well.", nodance: "It is unseemly.", insult: "I shall pray for thee." }
+    idle: ["Ave Maria, gratia plena...", "No flame in them. Not one.", "Where is the Abbot gone?"]
+    hi: ["God keep thee, pilgrim.", "Peace be on thee."]
+    drawn: ["Put up thy blade, I beg thee!"]
+    hurt: ["Thou art hurt, pilgrim! Kneel, kneel!"]
+    spot: ["A devil! A devil in the hall!"]
+    hostile: ["God forgive thee this!"]
+    hit: ["Mercy! Have mercy!"]
+    flee: ["Sanctuary! I claim sanctuary!"]
+    death: ["Into Thy hands, Lord..."]
+  gest: { wave: "Bless thee, pilgrim.", gift: "A gift! Bless thee. Bless thee twice.", dance: "Is it a holy dance? Then, very well.", nodance: "It is not seemly.", insult: "I shall pray for thee. At length." }
 
 l5-samantha:
-  hi: "Oh, look. Another one. You've been wondering whether I'm going to bite. Sit down. You'll find out either way."
-  back: ["You came back. I knew you would. I know a great many things.", "Sit. I've been expecting you. Not hoping. Expecting."]
-  warm: "My favourite visitor. Sit closer. I won't. Probably."
-  cold: "Oh dear. You again. Mind your fingers."
-  bye: "Go on. I'll see you before you see me."
-  walk: "Mm. You'll be back."
+  hi: "Oh, look. A visitor. You are wondering if I bite. Sit down. You will know soon either way."
+  back: ["You came back, visitor. I knew you would. I know a great many things.", "Sit. I was expecting you. Not hoping. Expecting."]
+  warm: "My favourite visitor. Sit closer. I won't do anything. Probably."
+  cold: "Oh dear. The visitor again. Mind your fingers."
+  bye: "Off you go. I shall see you before you see me."
+  walk: "Mm. You will be back."
   ask:
-    - q: "Can you read my future?"
-      a: "Your future has stairs in it, and a door you don't open, and one you do. Shall I tell you which? No. Where's the fun in that."
-    - q: "Can you help me? I feel awful."
+    - q: "I feel awful. Can you help?"
       do: heal
-      a: "Come here. Look at me. Not my teeth. My eyes. There. Better? The mind is a door. I just opened a window."
-    - q: "What are you, really?"
-      a: "A very small cat with very good manners. The people upstairs number me. Twenty-six, I believe. I prefer Samantha."
+      a: "Come here. Look at me. Not the teeth. The eyes. There. Better? The mind is a door. I only opened a window."
+    - q: "Where am I?"
+      a: "On my rug. Around the rug there is a hotel. Around the hotel there is a great deal more indoors. I am told there is an outdoors somewhere. I am a cat. I have never trusted it."
+    - q: "How do I get out?"
+      a: "You are asking a cat how doors work. We sit in front of them until somebody opens one. It has never failed me. It may take you longer."
+    - q: "Ever hear the name Dina?"
+      a: "She brought me tinned fish. Real fish, visitor, do you know how rare that is? She asked if the voice on her radio was real. I said yes. I did not say whose. She did not ask, and I answer what I am asked."
+      then:
+        - q: "Whose voice was it?"
+          a: "Now you ask. I don't know. I only know real from not real. It is a smaller gift than people expect. Go and look at the book on the front desk. She wrote in it before she left."
+    - q: "Can you read my future?"
+      a: "There are stairs in it. A door you leave shut and one you do not. Shall I say which is which? No. That would spoil my evening."
+    - q: "What are you?"
+      a: "A very small cat with very good manners. Somebody upstairs gave me a number. Twenty-six, I believe. I prefer Samantha."
     - q: "Do you ever lie?"
-      a: "Only when the truth would be boring."
+      a: "Only when the truth would be dull."
   barks:
-    idle: ["Mm.", "Someone is coming. Oh, you.", "They forgot my dinner again."]
-    hi: ["Ah. You.", "Sit."]
+    idle: ["Someone is on the stairs. Oh. Only you.", "They have forgotten my dinner again.", "I can wait. I am very good at it."]
+    hi: ["Ah. The visitor.", "Sit down."]
     drawn: ["Oh, how sweet. Put it away."]
-    hurt: ["You're bleeding. It's very distracting."]
-    spot: ["Something unpleasant approaches."]
-    hostile: ["Oh, you shouldn't have."]
-    hit: ["How rude."]
-    kill: ["There."]
-    death: ["I saw that coming."]
-  gest: { wave: "Charming.", gift: "For me? You've been well raised.", dance: "I'll watch you dance. That's better.", nodance: "Cats don't.", insult: "I know how you die. Keep going." }
+    hurt: ["You are bleeding, visitor. I find it distracting."]
+    spot: ["Something ill mannered is coming."]
+    hostile: ["Oh, you really should not have."]
+    hit: ["How very rude."]
+    kill: ["There. Done."]
+    death: ["Yes. I saw this one coming."]
+  gest: { wave: "Charming. Do it again.", gift: "For me? Somebody raised you properly.", dance: "You dance. I shall watch. That is the better seat.", nodance: "Cats do not.", insult: "I know how your story ends, visitor. Do go on." }
