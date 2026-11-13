@@ -26,6 +26,8 @@ const CAMP = [
   ["ambertent", 185.0, 10.45, 0, [183.8, 1.7, 10.4, 1.4]], ["handcart", 192.4, 7.6, 160], ["crates", 178.2, 10.6, 0], ["cot", 179.0, 7.4, 90],
   ["marker", 512.5, -3.6, 30],
 ];
+// work lights strung over the bays: [x, y, z, intensity]
+export const BAYLIGHTS = [[9, 3.6, -10, 3.5], [20, 3.6, -10, 3.5], [27, 3.0, -6.5, 1.6], [190, 2.6, 8.5, 1.8]];
 const M = (spec, extra = {}) => ({ model: { ...spec }, castShadow: false, receiveShadow: true, ...extra });
 export function layLampModels(ctx) {
   for (const l of lamps()) {
@@ -49,6 +51,8 @@ export function layDress(ctx) {
   }
   // the dark line: a chicane of jersey barriers past Dace's post
   for (const [i, x, z] of [[0, DARK_X - 4, -3.6], [1, DARK_X - 4, 3.6], [2, DARK_X - 1.5, 0]]) ctx.spawn(`hub-barrier-${i}`, { feetPosition: { x, y: 0, z }, rotation: { yaw: 90 }, physics: { body: "static", collider: "box" }, ...M(FX.barrier) });
+  BAYLIGHTS.forEach(([x, y, z, i], k) => ctx.spawn(`hub-baylight-${k}`, { feetPosition: { x, y, z }, primitive: { kind: "sphere", radius: 0.09 }, material: { color: "oklch(0.95 0.06 85)", emissive: "oklch(0.95 0.06 85)", emissiveIntensity: 6 }, castShadow: false,
+    light: { kind: "point", color: "oklch(0.88 0.09 82)", intensity: i, distance: 11, shadow: { enabled: false } } }));
   CAMP.forEach(([k, x, z, yaw, lamp], i) => {
     const y = x > 500 ? 0 : CURB;
     ctx.spawn(`hub-camp-${i}-${k}`, { tags: ["hub-camp"], feetPosition: { x, y, z }, rotation: { yaw }, physics: { body: "static", collider: "box" }, ...M(OP[k]) });
