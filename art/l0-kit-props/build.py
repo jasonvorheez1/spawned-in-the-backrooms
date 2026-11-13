@@ -5,20 +5,20 @@ from mathutils import Vector, Matrix
 W = "/workspace/l0props"
 # axis: w (x), h (up), d (depth); value in metres. yaw: degrees about up applied to the Tripo file so its front lands on glTF -Z.
 SPEC = {
- "boxes-stack":   dict(axis="h", v=1.00, yaw=0),
- "box-single":    dict(axis="w", v=0.40, yaw=0),
- "folding-table": dict(axis="w", v=1.80, yaw=0),
+ "boxes-stack":   dict(axis="h", v=1.00, yaw=90, src="boxes-stack-v2"),
+ "box-single":    dict(axis="w", v=0.40, yaw=90, src="box-single-v3"),
+ "folding-table": dict(yaw=90, fit=(1.80, 0.74, 0.75)),
  "stack-chair":   dict(axis="h", v=0.80, yaw=0),
- "filing":        dict(axis="h", v=1.32, yaw=0),
- "crt":           dict(axis="h", v=0.50, yaw=0),
+ "filing":        dict(yaw=0, fit=(0.38, 1.32, None), src="filing-v3"),
+ "crt":           dict(axis="h", v=0.50, yaw=0, trim=True),
  "phone":         dict(axis="w", v=0.22, yaw=0),
  "bin":           dict(axis="h", v=0.30, yaw=0),
- "fakeplant":     dict(axis="h", v=1.50, yaw=0),
+ "fakeplant":     dict(axis="h", v=1.50, yaw=0, squeeze=0.8),
  "copier":        dict(axis="h", v=1.05, yaw=0),
 }
 a = sys.argv[sys.argv.index("--") + 1:]
 kind = a[0]; sp = SPEC[kind]
-src = a[1] if len(a) > 1 else f"{W}/{kind}.glb"
+src = a[1] if len(a) > 1 else f"{W}/{sp.get('src', kind)}.glb"
 yaw = float(a[2]) if len(a) > 2 else sp["yaw"]
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=src)
@@ -58,6 +58,12 @@ while grew:
     for r in list(rest):
         if any(touch(r, k) for k in kept): kept.append(r); rest.remove(r); grew = True
 dead = [f for r in rest for f in r[0]] + [f for r in kept if len(r[0]) < 4 for f in r[0]]
+if sp.get("trim"):  # thin stray bits (a cable stub) poking out of the body's own box
+    tot = sum(len(r[0]) for r in rows); big = [r for r in rows if len(r[0]) >= tot * 0.05]
+    lo = [min(r[1][i] for r in big) - 2 * m for i in range(3)]; hi = [max(r[2][i] for r in big) + 2 * m for i in range(3)]
+    for r in kept:
+        if len(r[0]) < tot * 0.01 and any(r[1][i] < lo[i] or r[2][i] > hi[i] for i in range(3)): dead += r[0]
+dead = list(set(dead))
 print("ISLANDS", len(rows), "junk islands", len(rest), "junk faces", len(dead))
 bmesh.ops.delete(bm, geom=dead, context="FACES")
 loose = [v for v in bm.verts if not v.link_faces]
@@ -71,9 +77,12 @@ def bb():
     mx = Vector((max(c.x for c in xs), max(c.y for c in xs), max(c.z for c in xs)))
     return mn, mx
 mn, mx = bb(); sz = mx - mn
-cur = {"w": sz.x, "h": sz.z, "d": sz.y}[sp["axis"]]
-s = sp["v"] / cur
-me.transform(Matrix.Scale(s, 4))
+if sp.get("fit"):  # a hard-surface piece takes its catalogue size per axis (d None: follows the height's scale)
+    fw, fh, fd = sp["fit"]; kz = fh / sz.z; kx = fw / sz.x; ky = fd / sz.y if fd else kz
+    me.transform(Matrix.Diagonal((kx, ky, kz, 1)))
+else:
+    s = sp["v"] / {"w": sz.x, "h": sz.z, "d": sz.y}[sp["axis"]]; q = sp.get("squeeze", 1)
+    me.transform(Matrix.Diagonal((s * q, s * q, s, 1)))
 mn, mx = bb()
 me.transform(Matrix.Translation((-(mn.x + mx.x) / 2, -(mn.y + mx.y) / 2, -mn.z)))
 mn, mx = bb(); sz = mx - mn
