@@ -30,4 +30,4 @@ export function geometry(ctx) {
   ctx.metalness(0); ctx.color("#0d0d0d"); ctx.roughness(0.9);
   for (const [x, z] of [[-0.168, -0.02], [0.168, -0.02], [-0.168, 0.27], [0.168, 0.27], [-0.132, sz - 0.2], [0.132, sz - 0.2]]) tube(ctx, [x, 0, z], [x, 0.022, z], 0.02, 10);
 }
-export function collider() { return [{ kind: "box", size: [0.42, 0.44, 0.78], center: [0, 0.22, -0.02] }]; }
+export function collider() { return [{ kind: "box", width: 0.42, height: 0.44, depth: 0.78, center: [0, 0.22, -0.02] }]; }
