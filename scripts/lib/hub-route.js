@@ -4,9 +4,9 @@
 import { setQuest, endQuest } from "./quests.js";
 export const ROUTE = { id: "the-tenth-tunnel", name: "The Tenth Tunnel" };
 const S = {
-  door: { step: "River's runner came back out on Level 1. The camp says the deepest halls there end in a door nobody walks back through. Find it.", mark: { place: "level1", id: "l1-hub-door" } },
-  ask: { step: "Phoebe says the M.E.G. post in these tunnels writes down everyone who passes. Ask at Doorstep Carpet if Dina came through.", mark: { place: "thehub", id: "hub-ledger" } },
-  follow: { step: "Dina took the tenth tunnel's door. It's always open, and it doesn't take you back. Follow her.", mark: { place: "thehub", id: "hd-t10-a3" } },
+  door: { step: "Find the door at the end of Level 1's deepest halls.", mark: { place: "level1", id: "l1-hub-door" } },
+  ask: { step: "Ask at the M.E.G. post, Doorstep Carpet, if Dina came through.", mark: { place: "thehub", id: "hub-ledger" } },
+  follow: { step: "Take the door in the tenth tunnel.", mark: { place: "thehub", id: "hd-t10-a3" } },
 };
 export function hubRoute(ctx, st, place) {
   if (st.hubRouteDone) return;
@@ -14,7 +14,7 @@ export function hubRoute(ctx, st, place) {
   if (!open) return;
   if (st.hubDinaAsk && place === "level11") {
     st.hubRouteDone = 1;
-    if (st.quests?.[ROUTE.id]) endQuest(st, ROUTE.id, "You followed Dina through the tenth tunnel.");
+    if (st.quests?.[ROUTE.id]) endQuest(st, ROUTE.id, "Through the tenth tunnel.");
     return;
   }
   const k = st.hubDinaAsk ? "follow" : (place === "thehub" || st.hubPhoebe) ? "ask" : "door";

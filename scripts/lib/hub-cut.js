@@ -50,7 +50,7 @@ export function hubCutTick(ctx, ses, st) {
     dropPhoebe(ctx, "phoebe-hub"); ctx.view.camera = null
     if (skip) { if (c.score) ctx.emit("stopSound", { soundId: c.score }, me1(ctx)); if (c.vo) ctx.emit("stopSound", { soundId: c.vo }, me1(ctx)) }
     st.hubcut = null; st.hubPhoebe = true; st.hubDinaLead = 1; ses.hc = null; ses.hcskip = null
-    st.notice = { text: "New lead: Dina went through the tenth tunnel. The M.E.G. post wrote her down.", at: ctx.now() }
+    st.notice = { text: "Journal updated", at: ctx.now() }
     return false
   }
   const p = c.p0, head = { x: p.x, y: p.y + 1.6, z: p.z }, herHead = { x: HER.x, y: HER.y + 1.5, z: HER.z }
