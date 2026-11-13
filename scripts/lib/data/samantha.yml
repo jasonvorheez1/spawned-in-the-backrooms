@@ -7,7 +7,7 @@ hit: [6, 10]        # hp per scratch or bite; the victim never drops below 1
 gap: [450, 850]     # ms between pounces
 hits: [4, 7]        # attacks before she blinks away
 rageMs: 14000
-warnMs: 8000        # "Nothing? How very rude." then this long before the claws
+warnMs: 8000        # empty-handed: this long before she turns back to her cards (never claws)
 awayMs: [40000, 60000]   # gone after a fight, then back calm at home
 blinkHp: 60         # struck below this, she is simply elsewhere
 blinkEvery: [120000, 240000]  # a psychic hop between rooms now and then
@@ -30,8 +30,8 @@ order: [steak, fish, chicken, spam, sardines, rat]
 premium: [steak, fish, chicken]
 lines:
   meat: "Ah. You smell of supper. Set it down, mon cher, and I will tell you what is coming."
-  none: "Nothing? How very rude."
-  refuse: "Nothing? How very rude."
+  none: "Empty paws, cara? My saucer is empty too. I read for supper. Bring me meat and sit."
+  refuse: "Then the saucer stays empty, and so does your future. Come back with meat."
   back: "Allora. Shall we try that again, politely?"
   rage: "I did warn you."
   premium: "Bene. Sit. Let me look at you."

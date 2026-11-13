@@ -155,7 +155,7 @@ function plainReading(f) {
 
 function feed(ctx, p) {
   const me = ctx.self, ses = me.session, now = ctx.now(), t = meatOf(p)
-  if (!t) { say(ctx, p, S.lines.none, 'annoyed'); warn(ctx, p, now); return }
+  if (!t) { say(ctx, p, S.lines.none); ctx.self.state.dishAt = now; warn(ctx, p, now); return }
   if (ses.reading && now - ses.reading < 15000) return
   p.state.meat = { ...p.state.meat, [t]: p.state.meat[t] - 1 }
   const premium = S.premium.includes(t), name = describe(`meat:${t}`)?.name ?? t
@@ -188,7 +188,7 @@ export function read(ctx, r, pay) {
   say(ctx, p, text, 'happy', false)
 }
 export function poorRead(ctx, pay) { const p = ctx.getObject(pay?.by); if (p?.state) say(ctx, p, S.poorReadings[pay.i] ?? S.poorReadings[0], 'annoyed') }
-function snub(ctx, p, now) { if (p.state.talkWith === ctx.self.id) p.state.talkWith = null; p.state.notice = { text: 'Samantha flicks her tail and turns away. No meat, no reading.', at: now }; heard(ctx, { clip: SND('cat-warning-hiss-short'), position: ctx.self.feetPosition, volume: 0.5, maxDistance: 10 }) }
+function snub(ctx, p, now) { if (p.state.talkWith === ctx.self.id) p.state.talkWith = null; p.state.notice = { text: 'Samantha taps the empty saucer by her paws, then turns back to her cards. Bring meat.', at: now }; ctx.self.state.dishAt = now } // no hiss: an empty dish says it (Shelly Nov 13)
 function warn(ctx, p, now, refused) { const ses = ctx.self.session; if (!ses.warn || ses.warn.pid !== p.id) ses.warn = { pid: p.id, at: now, refused: !!refused }; else if (refused) ses.warn.refused = true }
 
 export const ears = {
@@ -229,7 +229,7 @@ export function update(ctx, dt) {
     if (!ses.talkers[p.id]) {
       ses.talkers[p.id] = 1
       if (meatOf(p)) say(ctx, p, S.lines.meat)
-      else { say(ctx, p, S.lines.none, 'annoyed'); warn(ctx, p, now) }
+      else { say(ctx, p, S.lines.none); ctx.self.state.dishAt = now; warn(ctx, p, now) } // she looks to her empty dish; no meat is never a fight
     }
   }
   st.offers = [['o:feed', 'Offer meat'], ['o:refuse', 'Refuse']]
