@@ -53,3 +53,19 @@ test('each step after the ship queues one whisper, played once, never naming her
   expect(out.some(([k]) => k === 'uiEvent')).toBe(false)
   for (const w of Object.values(WHISPER)) expect(w.toLowerCase()).not.toContain('phoebe')
 })
+
+// Nov 13: chapter 1 detours: Level 2's courier crate before the Level 3 handoff, Level 4's carbon before Gamma
+test('the handoff and archive records wait for their detour clue, and the journal follows', async () => {
+  const { ears } = await import('../scripts/dina-record.js')
+  const { trailStep } = await import('../scripts/lib/dina-quest.js')
+  const st = { dinaQ: 7, trail: { name: 1, word: 1, list: 1, tape: 1, room: 1, radio: 1, pass: 1 } }
+  const press = (kind) => ears.press({ self: { state: { kind, name: kind } }, getObject: () => ({ state: st }), now: () => 1, emit: () => {} }, { by: 'p' })
+  expect(trailStep(st).mark.place).toBe('level2')
+  press('handoff'); expect(st.dinaQ).toBe(7)
+  press('crate'); expect(st.dinaCrate).toBe(1)
+  expect(trailStep(st).mark.place).toBe('level3')
+  press('handoff'); expect(st.dinaQ).toBe(8)
+  expect(trailStep(st).mark.place).toBe('level4')
+  press('archive'); expect(st.dinaQ).toBe(8)
+  press('carbon'); press('archive'); expect(st.dinaQ).toBe(9)
+})

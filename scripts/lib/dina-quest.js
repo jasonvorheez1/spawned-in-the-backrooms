@@ -48,8 +48,8 @@ const STEP = {
   4: { step: "The drive case is empty. Follow the wet prints below decks and ask who passed through.", mark: { place: "level26", id: "l26d-phoebe-room" } },
   5: { step: "Follow the wet prints past the party to the bedroll at the end of the hall.", mark: { place: "level26", id: "l26d-stow-nest" } },
   6: { step: "The stowaway's chit came from a trader named Voss on Level 1. Ask him, or check the slips by his stall.", mark: { place: "level1", id: "dina-freight-slip" } },
-  7: { step: "The slip names a checkpoint at the Electrical Station on Level 3. Find the handoff record there.", mark: { place: "level3", id: "dina-handoff" } },
-  8: { step: "Check River's test number against the public records inside Base Gamma.", mark: { place: "gamma", id: "dina-return-record" } },
+  7: { step: "The slip names a checkpoint at the Electrical Station on Level 3. The courier went through Level 2 first: find the crate they left by the barred door marked 3, then the handoff record.", mark: { place: "level2", id: "dina-courier-crate" } },
+  8: { step: "The handoff log's carbon was torn out. River's copy went up the lift to Level 4's offices: find it, then check the public records inside Base Gamma.", mark: { place: "level4", id: "dina-carbon-copy" } },
   9: { step: "Chapter 1 complete. River reached a voice on the other side. Nobody has crossed, and the backup drive is still missing.", mark: null },
 };
 // before trail.pass: questions. Indexed by how far the trail has gone (the furthest key learned)
@@ -65,7 +65,12 @@ const ASK = [
 // the main quest's tracker row for a save: { step, mark }
 export function trailStep(st) {
   const t = st?.trail ?? {};
-  if (t.pass) return STEP[Math.max(2, st.dinaQ ?? 0)] ?? STEP[2];
+  if (t.pass) {
+    const n = Math.max(2, st.dinaQ ?? 0);
+    if (n === 7 && st.dinaCrate) return { step: "The courier's waybill says C-23 went on to the Electrical Station on Level 3. Find the handoff record there.", mark: { place: "level3", id: "dina-handoff" } };
+    if (n === 8 && st.dinaCarbon) return { step: "River filed Return Test 04 at Base Gamma. Check it against the public records inside.", mark: { place: "gamma", id: "dina-return-record" } };
+    return STEP[n] ?? STEP[2];
+  }
   let hi = 0; TRAIL.forEach((k, i) => { if (t[k]) hi = i + 1; });
   if (hi === 2 && !t.name) return { step: "Ask around the camp how people get out of here.", mark: null };
   if (hi === 5 && st.samRoute) return { step: "Samantha says the city is past the hotel's boiler room: through Level 6, trip the wire into the Snackrooms, and out their glass doors. Find who ran a radio for Dina.", mark: ASK[5].mark };

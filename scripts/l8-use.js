@@ -6,7 +6,7 @@ import { voiceKey } from "./lib/voices.js";
 //   loop (the end of the crawl: the first time, it brings you out where you started), exit (the asphalt, a dim glow ahead).
 import { heard } from "./lib/hear.js";
 import { vo } from "./lib/voices.js";
-import { setCarlaStep, setKarstStep, finishQuest8 } from "./lib/level8-quests.js";
+import { setCarlaStep, setKarstStep, deliverKazoo } from "./lib/level8-quests.js";
 import { addRep, repOf } from "./lib/rep.js";
 import { errandStep, errandDone } from "./lib/quests.js";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
@@ -88,7 +88,9 @@ export const ears = {
       w.kazoo = true;
       snd("walkie-talkie-radio-click-static-burst", 0.4);
       ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "+STONE KAZOO", color: "#f2d870", size: 1.2 }, { audience: { player: who.id } });
-      if ((w.carlaQ ?? 0) < 3) setCarlaStep(ctx, who, 3, "Recovered the Stone Kazoo! Deliver it to Carla at the 9th Road campfire.");
+      const q = w.carlaQ ?? 0;
+      if (q >= 1 && q < 3) setCarlaStep(ctx, who, 3, "Got the stone kazoo. Bring it to Carla at the 9th Road campfire.");
+      else if (!q && !w.kazooGiven) say(who, "A stone kazoo, carved with holes that hum in the draft. Somebody small would love this.", ctx);
       return ctx.destroy(ctx.self.id);
     }
     if (s.kind === "altar") {
@@ -158,7 +160,7 @@ export const ears = {
       if (repOf(w, "survivors") <= -35) return say(who, "Board: the camp has struck your name off the errand list. Make amends with the Survivors first.", ctx);
       const Q = [
         { name: "Lights for the Road", need: { glow_cap: 4 }, xp: 60, items: ["battery", "cash:1500"], text: "The camp wants four glow caps for the lamps." },
-        { name: "Plate for the Perimeter", need: { chitin: 3 }, xp: 80, items: ["bandage", "bandage", "cash:2500"], text: "Three chitin plates, for the sentries' armor. They come off cave spiders." },
+        { name: "Spare Plating", need: { chitin: 3 }, xp: 80, items: ["bandage", "bandage", "cash:2500"], text: "Three chitin plates, for the sentries' armor. They come off cave spiders." },
         { name: "A Sample from the Tar", need: { pitch: 3 }, xp: 90, items: ["firstaid", "cash:2000"], text: "Three scrapings of tar pitch. Use the dredge winch or scrape the seeps." },
         { name: "Flowstone for the Wall", need: { flowstone: 6 }, xp: 70, items: ["almond", "almond", "cash:1500"], text: "Six flowstone shards for the camp's wall. Break the pale stalagmites." },
         { name: "Ore for the Smith", need: { ironstone: 4 }, xp: 100, items: ["kit", "ammo", "cash:3000"], text: "Four ironstone ore. The dark red-brown rocks in the walls." },
@@ -186,23 +188,15 @@ export const ears = {
       return;
     }
     if (s.kind === "carla") {
-      if (w.kazoo && !w.kazooGiven) {
-        w.kazoo = false; w.kazooGiven = true; w.sanity = Math.min(100, (w.sanity ?? 80) + 35);
-        finishQuest8(ctx, who, "carla", {
-          xp: 90,
-          cents: 3000,
-          items: ["almond", "bandage"],
-          rep: [["survivors", 8], ["karma", 4]],
-          text: "Quest Completed: Carla's Melody · +90 XP, +$30.00, +35 Sanity, Almond Water, Clean Bandage",
-        });
+      if (w.kazoo && !w.kazooGiven && deliverKazoo(ctx, who, "kazoo")) { // the same payout as the talk card's turn-in, paid once
         const line = "A KAZOO. Listen! Mum, look!";
         heard(ctx, { clip: vo("l8-carla-kid", line), position: pos, volume: 1.0, maxDistance: 14 });
-        return;
+        return; // the notice keeps the reward line
       }
       const n = (s.said ??= {})[uid] = ((s.said ?? {})[uid] ?? -1) + 1;
       const line = CARLA[n % CARLA.length];
       heard(ctx, { clip: vo("l8-carla-kid", line), position: pos, volume: 1.0, maxDistance: 14 });
-      return say(who, `Carla: "${line}"${w.kazooGiven ? " (She hums into the stone kazoo.)" : ""}`, ctx);
+      return say(who, `Carla: "${line}"${w.kazooGiven ? ` (She hums into the ${w.carlaWhistle ? "tin whistle" : "stone kazoo"}.)` : ""}`, ctx);
     }
   },
 };

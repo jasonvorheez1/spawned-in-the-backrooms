@@ -4,6 +4,7 @@ import { remodelChoices } from './remodel-quest.js'
 import { l13Choices } from './level13-quest.js'
 import { l31Choices } from './level31-quest.js'
 import { l70Choices } from './level70-quest.js'
+import { l8Choices } from './level8-quests.js'
 
 const short = (it) => String(it?.id ?? '').split('/').pop()
 
@@ -57,29 +58,8 @@ export function questChoices(ctx, it, s) {
     } else if (s?.watcherQ === 3) {
       qChoices.push({ text: "Found document 24 sewn into its coat.", tag: "Quest Turn-In" })
     }
-  } else if (id === 'l8-carla-kid') {
-    if (!s?.carlaQ) {
-      qChoices.push({ text: "You look fed up, Carla. What would cheer you up?", tag: "Quest Start" })
-    } else if ((s?.carlaQ >= 1 && s?.carlaQ < 99 && s?.kazoo) && !s?.kazooGiven) {
-      qChoices.push({ text: "Close your eyes. I brought the kazoo.", tag: "Quest Turn-In" })
-    }
-  } else if (id === 'l8-hobb') {
-    if (!s?.spiderQ && repOf(s, "survivors") > -35) {
-      qChoices.push({ text: "Your sentries look jumpy. Need plate for the perimeter?", tag: "Quest Start" })
-    } else if (s?.spiderQ >= 1 && s?.spiderQ < 99 && (s?.scrap?.chitin ?? 0) >= 3) {
-      qChoices.push({ text: "Brought 3 chitin plates. Still sticky.", tag: "Quest Turn-In" })
-    }
-  } else if (id === 'l8-ivo') {
-    if (!s?.karstQ && repOf(s, "survivors") > -35) {
-      qChoices.push({ text: "I'll go crawl that looping karst crevice for you.", tag: "Quest Start" })
-    } else {
-      if ((s?.karstQ === 1 || s?.karstQ === 2) && !s?.karstSciFailed) {
-        qChoices.push({ text: "Give me your Harmouth telemetry. I think I can do it on paper.", tag: "Science 45", check: { skill: "science", difficulty: 45 } })
-      }
-      if (s?.karstQ >= 1 && s?.karstQ < 99 && (s?.l8Loops ?? 0) >= 1) {
-        qChoices.push({ text: "Passed the Face Rock twice. Here are the Face Rock readings.", tag: "Quest Turn-In" })
-      }
-    }
+  } else if (id.startsWith('l8-')) {
+    qChoices.push(...l8Choices(id, s)) // Level 8's three quests, written in scripts/lib/level8-quests.js
   } else if (id === 'l21-ned') {
     if (!s?.saltineQ && repOf(s, "survivors") > -35) {
       qChoices.push({ text: "That condenser's hissing. Need copper wire?", tag: "Quest Start" })

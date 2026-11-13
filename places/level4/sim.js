@@ -119,6 +119,12 @@ export function tick(ctx) {
   if (ctx.place.state.posterV !== 1 && ctx.place.players?.length) { const o = ctx.place.objects["l4-fun-poster"]; if (o) { ctx.place.state.posterV = 1; o.feetPosition = { x: 30.4, y: 0.02, z: 25.8 }; } } // Nov 11: the =) poster lay outside the lift's outer wall where nobody could reach it; now it's on the break room floor (cells/x0z0.scene)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
+  if (!ctx.place.state.dinaIndex) { ctx.place.state.dinaIndex = true; // The Way Back detour (Nov 13): River's carbon copy, left in the lift lobby's out-tray
+    ctx.spawn("dina-carbon-copy", { tags: ["usable"], feetPosition: { x: LIFT.x - 2.2, y: 0, z: LIFT.z + 2.4 }, physics: "static", visibleRange: { max: 40 }, castShadow: false, behavior: "scripts/dina-record.js",
+      primitive: { kind: "box", width: 0.5, height: 0.9, depth: 0.4 }, material: { color: "oklch(0.55 0.02 90)", metalness: 0.4, roughness: 0.6 },
+      children: [{ feetPosition: { x: 0, y: 0.92, z: 0 }, primitive: { kind: "box", width: 0.3, height: 0.03, depth: 0.22 }, material: { color: "oklch(0.9 0.02 90)", roughness: 0.9 } }],
+      state: { kind: "carbon", name: "Out-tray on a filing cabinet", verb: "Read the carbon copy" } });
+  }
   if (ctx.place.state.stairsV !== 1) { ctx.place.state.stairsV = 1; // the stairwell's chain came off: down to Level 5
     ctx.spawn("l4-stairs-down", { tags: ["door"], feetPosition: { x: STAIRS.x, y: 0, z: STAIRS.z - 0.5 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1.4, height: 2.4, depth: 0.6 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level5#l5-from-l4" } });
     ctx.spawn("l4-from-l5", { feetPosition: { x: STAIRS.x, y: 0.1, z: STAIRS.z - 3 }, rotation: { yaw: 0 } });
