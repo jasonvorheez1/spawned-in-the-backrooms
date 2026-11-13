@@ -69,6 +69,7 @@ export function geometry(ctx) {
   ctx.albedo(null); ctx.metalness(0); ctx.roughness(0.02); ctx.color("oklch(0.5 0.012 230 / 0.28)"); // Nov 13 (Shelly's "improve this" shot): was 0.3 / 0.9, opaque black blots; now a thin film the floor shows through
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     const zone = zoneOf(cx, cz); if ((zone !== "halls" && zone !== "storage") || rampCell(cx, cz) || hash(cx, cz, 461) > 0.4) continue;
+    if (zone === "halls" && hash(cx, cz, 201) >= 0.19 && hash(cx, cz, 201) < 0.23) continue; // a fallen slab stands in this cell: dry ground under it (Shelly: no black puddle)
     const x0 = cx * S - HALF, z0 = cz * S - HALF;
     for (let k = 0; k < 1 + Math.floor(hash(cx, cz, 462) * 3); k++) puddle(ctx, x0 + 1.2 + hash(cx, cz, 470 + k) * 5.6, 0.006, z0 + 1.2 + hash(cx, cz, 480 + k) * 5.6, 0.5 + hash(cx, cz, 490 + k) * 1.8, cx * 131 + cz * 17 + k);
   }
