@@ -30,7 +30,7 @@ function limbClip(dur, amp, jitter) {
     tracks[`tripo::${l}_Limb_1`] = { pitch: shift([0, amp * 0.9, amp * 0.2, -amp * 0.5, 0], k) }; });
   return { duration: dur, tracks };
 }
-const CRAWL = limbClip(0.8, 32, 1), FIDGET = limbClip(2.2, 9, 2.5);
+import { CRAWL, FIDGET, REACH, MAW } from "./lib/clump.js"; // one body language for every clump
 const HOUND = "/cdn/value.180d1072a97d34551e1394960b70202777c9d0b51fb0ca67779a59e429ef6fa7.glb";
 const SND = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
@@ -275,7 +275,7 @@ export function update(ctx, dt) {
       else if (m.windUntil > now) { clip = "pounce"; } // the tell: it gathers before it throws itself
       else if (m.windUntil && now >= m.windUntil && now - m.windUntil < 100) { m.lv = { x: dx / n * K.lunge * 1.6, z: dz / n * K.lunge * 1.6 }; m.lungeTo = now + 450; m.windUntil = 0; }
       else if (K.grab && best < K.grab && best > K.reach && now > (m.nextGrab ?? 0) && reachable()) {
-        m.nextGrab = now + K.grabCd * 1000; m.nextHit = now + 350; // the longest arm snaps out and reels you in to the mouth
+        m.nextGrab = now + K.grabCd * 1000; m.nextHit = now + 350; m.limbs = "reach"; f.anim.main = { clip: REACH, loop: false, weight: 1, blend: 0.1 }; // the longest arm snaps out and reels you in to the mouth
         ctx.emit("impulse", { target: prey.id, impulse: { x: -dx / n * 260, y: 60, z: -dz / n * 260 } });
         ctx.emit("squash", { target: id, axis: "y", intensity: -0.3, duration: 0.3 }); ctx.emit("shake", { target: id, intensity: 0.12, duration: 0.3 });
         ctx.emit("playSound", { clip: SND("dozens-of-hands-grabbing-and-slapping"), position: pos, volume: 1 });
@@ -284,7 +284,7 @@ export function update(ctx, dt) {
       else if (K.lungeRange && best < K.lungeRange && best > K.reach && now > (m.nextLunge ?? 0) && clearLane(ctx, pos, prey.feetPosition, R, [id, prey.id])) { m.windUntil = now + 600; m.nextLunge = now + 4500; ctx.emit("squash", { target: id, axis: "y", intensity: 0.3, duration: 0.6 }); }
       else if (best > K.reach * 0.8) { go(prey.feetPosition, K.speed); clip = K.speed > 3.5 ? "sprint" : "prowl"; }
       if (best < K.reach && now > (m.nextHit ?? 0) && reachable()) {
-        m.nextHit = now + K.cd * 1000; clip = "maul";
+        m.nextHit = now + K.cd * 1000; clip = "maul"; if (f.state.kind === "clump") { m.limbs = "maw"; f.anim.main = { clip: MAW, loop: false, weight: 1, blend: 0.1 }; }
         const dmg = Math.round(K.dmg * (m.lungeTo > now ? 1.4 : 1));
         prey.state.hp -= dmgAfterArmor(prey.state.look, dmg);
         const at = { x: prey.feetPosition.x, y: prey.feetPosition.y + 1.1, z: prey.feetPosition.z };
@@ -313,7 +313,7 @@ export function update(ctx, dt) {
       if (m.clip !== mv) { m.clip = mv; f.anim.main = { clip: mv, loop: true, weight: 1, blend: 0.25 }; }
       if (m.up !== up) { m.up = up; f.anim.aim = up ? { clip: "cdn/clip-rifle-up-50cc7349-loop.glb", loop: true, weight: 1, mask: "Spine", blend: 0.3 } : null; } }
     f.velocity = { x: vx, y: f.grounded ? -0.5 : (f.velocity?.y ?? 0) + g * dt, z: vz };
-    if (f.state.kind === "clump") { const mode = (vx || vz) ? "crawl" : "fidget";
+    if (f.state.kind === "clump" && !(m.limbs === "reach" || m.limbs === "maw") || f.state.kind === "clump" && now > (m.nextHit ?? 0) - K.cd * 1000 + 600) { const mode = (vx || vz) ? "crawl" : "fidget";
       if (m.limbs !== mode) { m.limbs = mode; f.anim.main = { clip: mode === "crawl" ? CRAWL : FIDGET, loop: true, weight: 1, blend: 0.2 }; } }
     if (f.state.kind === "clump" && now > (m.tw ?? 0)) { // a knot of limbs never sits still: it lurches crawling, shudders at rest
       const mv = !!(vx || vz), yaw = face ? Math.atan2(-face.x, -face.z) * 180 / Math.PI : mv ? Math.atan2(-vx, -vz) * 180 / Math.PI : (yawOf(f.rotation) ?? 0);
