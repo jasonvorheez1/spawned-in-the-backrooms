@@ -1,0 +1,39 @@
+# Level 0 ceiling kit: Tripo meshes refined in Blender (art/l0-kit-ceiling/build.py), true size in metres.
+# sizes: [w, h, d]. origin "ceiling": the file's origin is the TOP centre; the engine stands a model on its
+# lowest point, so place at feet y = 3.0 - h (or model.offset [0, -h, 0] with feet at 3.0). "floor": bottom centre.
+# forward "-z": no model.forward needed. troffer-hang: long axis on Z, its high end at the ceiling.
+models:
+  diffuser: /cdn/value.d96ecea03eb9caec86298b40a15c18fe0ed4e05b78203c0063dc007e7d2a5ecd.glb
+  returngrille: /cdn/value.5920b1c6461f4f0027d04bddb215366a0373b626f5fd1a611fdb0c636576816f.glb
+  sprinkler: /cdn/value.84bc79425b0a4d793285ec1a968880a2af0406f1a7e39617723c2a85a6481cdf.glb
+  smokedet: /cdn/value.54dc55a118b2ed541090b8dd84a7922e3416da0980d75d5ac3fbdad642cd36fb.glb
+  troffer-hang: /cdn/value.8a4ddc080c451ba1ef6d21450ea57336413ad765e858b95aeda586b0992c1c58.glb
+  tile-fallen: /cdn/value.06f6a49745ce0b39fd97e68ef63530c19b28f6a3d21b061d6ac5270ced5b4a60.glb
+sizes:
+  diffuser: [0.6, 0.08, 0.6]
+  returngrille: [0.598, 0.03, 0.599]
+  sprinkler: [0.08, 0.07, 0.08]
+  smokedet: [0.14, 0.05, 0.14]
+  troffer-hang: [0.6, 0.733, 1.08]
+  tile-fallen: [0.64, 0.05, 0.603]
+origin:
+  diffuser: ceiling
+  returngrille: ceiling
+  sprinkler: ceiling
+  smokedet: ceiling
+  troffer-hang: ceiling
+  tile-fallen: floor
+forward:
+  diffuser: "-z"
+  returngrille: "-z"
+  sprinkler: "-z"
+  smokedet: "-z"
+  troffer-hang: "-z"
+  tile-fallen: "-z"
+tris:
+  diffuser: 5447
+  returngrille: 1476
+  sprinkler: 11753
+  smokedet: 11500
+  troffer-hang: 11773
+  tile-fallen: 11500
