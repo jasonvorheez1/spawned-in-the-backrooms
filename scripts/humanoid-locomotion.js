@@ -425,7 +425,7 @@ export function update(ctx, dt) {
   // Shelly Nov 13 "fix this person endlessly falling": a standing NPC a few cm over its floor, not moving down, read as airborne forever.
   // A body that isn't a player, off the ground with no real fall, checks the floor under it (twice a second at most): within 0.3 m counts as standing.
   let nearFloor = false
-  if (ctx.self.grounded === false && !String(ctx.self.id).startsWith('player') && Math.abs(vel.y || 0) < 0.3) {
+  if (ctx.self.grounded === false && Math.abs(vel.y || 0) < 0.3) { // players too (Shelly: "im still endlessly falling animation")
     if (gait.floorAt == null || ctx.now() - gait.floorAt > 500) {
       const f = ctx.self.worldFeetPosition ?? ctx.self.feetPosition
       const h = raycast(ctx, { x: f.x, y: f.y + 0.2, z: f.z }, { x: 0, y: -1, z: 0 }, { distance: 0.5, physicsOnly: true, bodies: 'all', excludeTags: ['npc', 'player'], ignoreEntities: [ctx.self.id] })
@@ -453,6 +453,7 @@ export function update(ctx, dt) {
     for (const ch of ['idle', 'walk', 'run', 'sprint']) if (ctx.self.anim[ch]) ctx.self.anim[ch] = { ...ctx.self.anim[ch], weight: 0.001 }
     if (ctx.self.anim.cute) ctx.self.anim.cute = { ...ctx.self.anim.cute, weight: 0.001 }
   }
+  if (!airborne && !gait.inAir && ctx.self.anim.air) ctx.self.anim.air = null // a fall pose left from another machine or place, with no fall under way
   if (gait.landUntil && now > gait.landUntil) { gait.landUntil = 0; ctx.self.anim.land = null }
   if (airborne || gait.landUntil) return
   // Standing, facing where it was told to: the clips hold their weights until the body moves or onInput
