@@ -69,8 +69,8 @@ function bedTick(ctx, c, t, y0) {
 // returns true once the scene is over and the player has been sent on
 export function cutTick(ctx, ses, st) {
   const raw = (ctx.now() - st.cut) / 1000, c = (ses.cut ??= { p0: { x: UP.x, y: ctx.self.feetPosition.y || 0, z: UP.z }, did: {} }), y0 = c.p0.y || 0
-  // Phoebe half behind the headboard, watching them wake and wander; gone once the camera turns to the wall
-  if (raw > 5.6 && raw < PRE + 6.5) { if (!c.phoebe) { c.phoebe = true; spawnPhoebe(ctx, "phoebe-intro", { x: -2.75, y: y0, z: 2.2 }, 40, PRE + 8); ctx.self.faded = { ...(ctx.self.faded || {}), "phoebe-intro": 0.55 } } }
+  // Shelly #: no Phoebe in the first scene (disabled). Phoebe half behind the headboard, watching them wake and wander; gone once the camera turns to the wall
+  if (false && raw > 5.6 && raw < PRE + 6.5) { if (!c.phoebe) { c.phoebe = true; spawnPhoebe(ctx, "phoebe-intro", { x: -2.75, y: y0, z: 2.2 }, 40, PRE + 8); ctx.self.faded = { ...(ctx.self.faded || {}), "phoebe-intro": 0.55 } } }
   else if (raw >= PRE + 6.5 && !c.phoebeGone) { c.phoebeGone = true; dropPhoebe(ctx, "phoebe-intro") }
   if (raw < PRE) return bedTick(ctx, c, raw, y0)
   const t = raw - PRE
