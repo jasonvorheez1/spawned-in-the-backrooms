@@ -1,0 +1,57 @@
+# Level 0 office props kit. Tripo meshes refined by art/l0-kit-props/build.py (one row of its SPEC per kind).
+# Every piece: true size in metres [w, h, d], origin at the floor bottom centre, front on -Z (no model.forward needed).
+models:
+  boxes-stack: /cdn/value.469d7ab5a6c17c49fb7e20242d5af7694814a5228e40972db7498d5d4e856acb.glb
+  box-single: /cdn/value.53e0ce8cf1653565587b8af4ea844018efd9fca4715e183fc406ac3b099d1247.glb
+  folding-table: /cdn/value.06a55d005b0cfd708c2d6ff5b133f1036291aa0d9ec7817d6b3396c87882392a.glb
+  stack-chair: /cdn/value.80900d483825ce0d9a49856eec81061d394be5e9685ecc76961c3227c20547ca.glb
+  filing: /cdn/value.d25070642ded150bfca6a56a79a3eeaac3f51354b15152f40271c3349ea45dd6.glb
+  crt: /cdn/value.4d7cdfb4d4149cdab0da978e8e037c0e734e28f6f812d0cec6c2f73ae9de52df.glb
+  phone: /cdn/value.5862b4f102a13f92edd7fe5166f3636695fd6a6d43a3a838241c4630349753d0.glb
+  bin: /cdn/value.ebf1ccd5c1d4ab6f4ee6fdcf19dc1d60f5631bd2cb6560617e4df9cba31ba916.glb
+  fakeplant: /cdn/value.e201fb41a574d7b13a69a1684e7034bc7809aaded1cdfac48354c70cac244b16.glb
+  copier: /cdn/value.761b50dce26eee795c80dff616b78a4c7951f584c809768ccfe77f3bb50ccafa.glb
+sizes:
+  boxes-stack: [1.0, 1.0, 0.597]
+  box-single: [0.4, 0.296, 0.264]
+  folding-table: [1.8, 0.74, 0.75]
+  stack-chair: [0.581, 0.8, 0.509]
+  filing: [0.38, 1.32, 0.58]
+  crt: [0.476, 0.5, 0.42]
+  phone: [0.22, 0.121, 0.243]
+  bin: [0.261, 0.3, 0.261]
+  fakeplant: [0.79, 1.5, 0.778]
+  copier: [0.676, 1.05, 0.696]
+origin:
+  boxes-stack: floor
+  box-single: floor
+  folding-table: floor
+  stack-chair: floor
+  filing: floor
+  crt: floor
+  phone: floor
+  bin: floor
+  fakeplant: floor
+  copier: floor
+forward:
+  boxes-stack: "-z"
+  box-single: "-z"
+  folding-table: "-z"
+  stack-chair: "-z"
+  filing: "-z"
+  crt: "-z"
+  phone: "-z"
+  bin: "-z"
+  fakeplant: "-z"
+  copier: "-z"
+tris:
+  boxes-stack: 10736
+  box-single: 11599
+  folding-table: 11553
+  stack-chair: 11684
+  filing: 9514
+  crt: 11600
+  phone: 11361
+  bin: 11600
+  fakeplant: 9319
+  copier: 11564
