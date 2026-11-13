@@ -7,17 +7,38 @@ SRC = "/workspace/l0kit-wall"; OUT = SRC + "/out"; os.makedirs(OUT, exist_ok=Tru
 KIT = {
  "outlet":       dict(size=[0.07, 0.115, 0.012], fit="xyz", origin="wall"),
  "switch":       dict(size=[0.07, 0.115, 0.018], fit="xyz", origin="wall"),
- "thermostat":   dict(size=[0.12, 0.08, 0.035], fit="xyz", origin="wall"),
- "exitsign":     dict(size=[0.33, 0.2, 0.05], fit="xyz", origin="wall"),
+ "thermostat":   dict(src="thermostat2", size=[0.12, 0.08, 0.035], fit="xyz", origin="wall"),
+ "exitsign":     dict(src="exitsign2", size=[0.33, 0.2, 0.05], fit="xyz", origin="wall"),
  "extinguisher": dict(size=[0.15, 0.5, 0.15], fit="h", origin="wall"),
- "firepull":     dict(size=[0.11, 0.14, 0.05], fit="xyz", origin="wall"),
+ "firepull":     dict(src="firepull2", size=[0.11, 0.14, 0.05], fit="xyz", origin="wall"),
  "wallvent":     dict(size=[0.6, 0.3, 0.03], fit="xyz", origin="wall"),
- "door-office":  dict(size=[1.02, 2.13, 0.2], fit="door", origin="floor"),
- "door-stair":   dict(size=[1.02, 2.13, 0.2], fit="door", origin="floor"),
+ "door-office":  dict(size=[1.02, 2.13, 0.2], fit="door", origin="floor", almond=0.07),
+ "door-stair":   dict(size=[1.02, 2.13, 0.2], fit="door", origin="floor", almond="all"),
 }
 OVR = json.load(open(SRC + "/overrides.json")) if os.path.exists(SRC + "/overrides.json") else {}
 kinds = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else list(KIT)
 report = {}
+import numpy as np
+def almond(ob, mode):
+    """Repaint the yellow frame paint almond in the base-colour picture. mode "all": every saturated yellow texel;
+    a number: only texels of faces within that many metres of the frame's outer edge (the slab keeps its veneer)."""
+    from PIL import Image, ImageDraw, ImageFilter
+    im = next(n.image for n in ob.data.materials[0].node_tree.nodes if n.type == "TEX_IMAGE" and n.image and n.image.name.startswith("Color"))
+    im.scale(2048, 2048); n = 2048
+    px = np.empty(n * n * 4, dtype=np.float32); im.pixels.foreach_get(px); px = px.reshape(n, n, 4)
+    rgb = px[..., :3]; mx = rgb.max(-1); mn = rgb.min(-1); sat = (mx - mn) / np.maximum(mx, 1e-6)
+    r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
+    yellow = (sat > 0.35) & (r >= g) & (g > b) & ((g - b) / np.maximum(r - b, 1e-6) > 0.45)   # hue above ~27 deg
+    if mode != "all":
+        lo, hi = bbox(ob); m = Image.new("L", (n, n), 0); d = ImageDraw.Draw(m); uv = ob.data.uv_layers.active.data
+        for p in ob.data.polygons:
+            c = p.center
+            if abs(c.x) > hi.x - mode or c.z > hi.z - mode:
+                d.polygon([(uv[i].uv.x * n, uv[i].uv.y * n) for i in p.loop_indices], fill=255)
+        m = m.filter(ImageFilter.MaxFilter(5)); yellow &= np.asarray(m) > 0
+    lum = mx[yellow][:, None]
+    rgb[yellow] = np.clip(lum * 1.22, 0, 0.95) * np.array([0.93, 0.86, 0.72], dtype=np.float32)
+    im.pixels.foreach_set(px.ravel()); im.pack()
 def bbox(o):
     vs = [o.matrix_world @ v.co for v in o.data.vertices]
     return Vector((min(v.x for v in vs), min(v.y for v in vs), min(v.z for v in vs))), Vector((max(v.x for v in vs), max(v.y for v in vs), max(v.z for v in vs)))
@@ -44,7 +65,7 @@ for kind in kinds:
     for o in parts[1:]:
         a, b = bbox(o); c = (a + b) / 2
         outside = any(c[i] < lo[i] - pad[i] or c[i] > hi[i] + pad[i] for i in range(3))
-        if (outside and len(o.data.vertices) < total * 0.01) or len(o.data.vertices) < 8:
+        if outside and len(o.data.vertices) < total * 0.01:
             bpy.data.objects.remove(o); dropped += 1
     parts = [o for o in bpy.context.scene.objects if o.type == "MESH"]
     bpy.ops.object.select_all(action="DESELECT")
@@ -72,6 +93,7 @@ for kind in kinds:
         ys = [v.co.y for v in ob.data.vertices if v.co.z > hi.z - (hi.z - lo.z) * 0.02]
         off = Vector(((lo.x + hi.x) / 2, (min(ys) + max(ys)) / 2, lo.z))
     ob.data.transform(Matrix.Translation(-off)); ob.location = (0, 0, 0)
+    if K.get("almond"): almond(ob, K["almond"])
     tris = sum(len(p.vertices) - 2 for p in ob.data.polygons)
     if tris > 12000:
         m = ob.modifiers.new("dec", "DECIMATE"); m.ratio = 11800 / tris; bpy.ops.object.modifier_apply(modifier="dec")
