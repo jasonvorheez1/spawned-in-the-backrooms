@@ -146,7 +146,7 @@ const M = {
   cabinet: "/cdn/value.3c8f64f304503e74a1893815ebafc5a3345ec466f701d46a602010f4a75683bc.glb",
   portrait: "/cdn/value.9ad60bda4c117e23cb0b077d89ede8cd399646054150bea3ee4973a5500685f6.png",
 };
-export const OFFICE_V = 1;
+export const OFFICE_V = 2;
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
 const fit = (w, h, d) => ({ box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } });
 const WOOD = { color: "oklch(0.3 0.06 40)", texture: "cdn/texture-worn-hardwood-grain.png", roughness: 0.5 };
@@ -159,6 +159,8 @@ export function layOffice(ctx) {
   put("l5-office-rug", { feetPosition: { x: -38, y: 0.003, z: -17.6 }, primitive: box(5.2, 0.012, 3.8), material: { texture: "cdn/texture-faded-red-persian-rug-worn-fringe.png", roughness: 0.95 }, castShadow: false });
   put("l5-office-desk", { feetPosition: { x: -38, y: 0, z: -19 }, rotation: { yaw: 180 }, physics: { body: "static", collider: "box" }, model: { id: M.desk, forward: "+x" }, layout: fit(2.1, 1.3, 1.1) });
   put("l5-office-chair", { feetPosition: { x: -38.5, y: 0, z: -17.2 }, rotation: { yaw: 10 }, physics: { body: "static", collider: "box" }, model: { id: M.chair, forward: "+x" }, layout: fit(0.85, 1.0, 0.85) });
+  // his own chair, behind the desk, turned to the door (no collider: he is seated in it)
+  put("l5-office-seat", { feetPosition: { x: -38, y: 0, z: -20.55 }, rotation: { yaw: 190 }, model: { id: M.chair, forward: "+x" }, layout: fit(0.9, 1.05, 0.9) });
   put("l5-office-globe", { feetPosition: { x: -43.7, y: 0, z: -20.7 }, rotation: { yaw: 150 }, physics: { body: "static", collider: "box" }, model: { id: M.globe, forward: "+x" }, layout: fit(0.75, 1.1, 0.75) });
   for (const [i, x] of [[0, -42.6], [1, -33.4]]) put(`l5-office-cabinet-${i}`, { feetPosition: { x, y: 0, z: -21.5 }, rotation: { yaw: 180 }, physics: { body: "static", collider: "box" }, model: { id: M.cabinet, forward: "+x" }, layout: fit(1.15, 2.3, 0.5) });
   // two tall windows full of a daylight that has nowhere to come from
@@ -175,7 +177,7 @@ export function layOffice(ctx) {
   put("l5-office-lamp", { feetPosition: { x: -38.7, y: 1.25, z: -19.2 }, light: { kind: "point", color: "oklch(0.82 0.12 75)", intensity: 2.4, distance: 6, shadow: { enabled: true } } });
   put("l5-office-ceiling", { feetPosition: { x: -38, y: 3.3, z: -17 }, light: { kind: "point", color: "oklch(0.78 0.09 70)", intensity: 3, distance: 11, shadow: { enabled: false } } });
   // the door, left ajar: "Come in, come in! I implore you."
-  put("l5-office-door", { feetPosition: { x: -34.0, y: 0, z: -13.2 }, rotation: { yaw: 118 }, physics: { body: "static", collider: "box" }, children: [
+  put("l5-office-door", { feetPosition: { x: -34.0, y: 0, z: -13.2 }, rotation: { yaw: 90 }, physics: { body: "static", collider: "box" }, children: [
     { feetPosition: { x: 0.56, y: 0, z: 0 }, primitive: box(1.1, 2.36, 0.05), material: WOOD },
     { feetPosition: { x: 0.98, y: 1.0, z: 0.04 }, primitive: { kind: "sphere", radius: 0.035 }, material: { color: "oklch(0.7 0.11 80)", metalness: 0.9, roughness: 0.3 } },
     { feetPosition: { x: 0.56, y: 1.62, z: 0.035 }, vector: "<svg viewBox='0 0 300 80' width='0.6m'><rect x='2' y='2' width='296' height='76' rx='6' fill='#2a1c12' stroke='#b8923a' stroke-width='4'/><text x='150' y='50' text-anchor='middle' font-family='serif' font-size='30' fill='#e8c983'>PROPRIETOR</text></svg>" },
@@ -188,7 +190,7 @@ export function layOffice(ctx) {
     primitive: box(0.09, 0.03, 0.16), material: { color: "oklch(0.22 0.01 250)", roughness: 0.5 }, children: [
       { feetPosition: { x: 0.12, y: 0, z: 0.05 }, rotation: { yaw: 20 }, vector: "<svg viewBox='0 0 200 260' width='0.2m'><rect width='200' height='260' fill='#e9e2cf'/><text x='16' y='60' font-family='serif' font-size='22' fill='#3a2a20'>DON'T LOOK AT</text><text x='16' y='96' font-family='serif' font-size='22' fill='#3a2a20'>THE PORTRAITS</text><text x='16' y='150' font-family='serif' font-size='18' fill='#6a2018'>get out get out</text></svg>", rotation: { pitch: -90 } } ] });
   // the Gentleman of Level 5
-  put(BEAST, { tags: ["npc", "l5-beast"], feetPosition: { x: -38, y: 0, z: -20.25 }, rotation: { yaw: 180 }, physics: "character", model: BEAST_MODEL, layout: fit(0.9, 2.15, 0.6),
+  put(BEAST, { tags: ["npc", "l5-beast"], feetPosition: { x: -38, y: 0, z: -20.35 }, rotation: { yaw: 180 }, physics: "kinematic", model: BEAST_MODEL, layout: fit(0.9, 2.15, 0.6),
     behavior: ["scripts/humanoid-locomotion.js", "scripts/l5-beast-npc.js"],
-    state: { name: "The Gentleman · Proprietor", title: "Entity 18", role: "proprietor", faction5: "hotel", hp: 9999, maxHp: 9999, voice: "beast", essential: true, home: { x: -38, z: -20.25 } } });
+    state: { name: "The Gentleman · Proprietor", title: "Entity 18", role: "proprietor", faction5: "hotel", hp: 9999, maxHp: 9999, voice: "beast", essential: true, home: { x: -38, z: -20.35 }, seated: true } });
 }
