@@ -13,7 +13,7 @@ const OP = {
   keycabinet: { id: "/cdn/value.4ed2941b49c21a40e5eac82796224fdc356d15f0db938c695815ebb4f327cc7a.glb", offset: [-0.042, 0, -0.631] },
   comms: { id: "/cdn/value.6501d0251919b1495fabd9cdbd73e2ef1bbbdbb56bd8a927237d0e70f7f9c1c0.glb" },
   cot: { id: "/cdn/value.4b7be3299db70753945e1e5a69ad3a14bb88adedb17a6b35e9de33eb980e2faa.glb" },
-  crates: { id: "/cdn/value.8f97966c351c924ea714e28303d91a951f8ef446d46c4695d9979d32a5abd416.glb" },
+  crates: { id: "/cdn/value.b3b466f23bb9c4a393e9b0d47b11c69a1e59ba9ecd1b1a09e4192b7a017c2b1b.glb" } /* stencils repainted Nov 13: M.E.G. SUPPLY, FRAGILE */,
   marker: { id: "/cdn/value.db31e8cb3fa572fc99ba0add37740c4acec673e9a809e4780f5de652720e0a1b.glb" },
   ambertent: { id: "/cdn/value.0e59962cb859f0aef1c815f3e858f16bda49a42e8b198071e6626c42ab7cb32e.glb", materials: { glow: { color: "oklch(0.85 0.14 70)", emissive: "oklch(0.85 0.14 70)", emissiveIntensity: 3 } } },
   handcart: { id: "/cdn/value.a8986029efe64649020725f8bd9fa3aea5ed4a79f007fb85d360decefe7e7a83.glb" },
