@@ -86,25 +86,16 @@ export function update(ctx, dt) {
     if (!m.fleeGoal || now > (m.fleeAt ?? 0) || flat(pos, m.fleeGoal) < 1) { m.fleeGoal = fleeGoal(ctx, o, tgt.feetPosition); m.fleeAt = now + 1200; m.path = null; }
     moveTo(ctx, o, m, m.fleeGoal, D.run, dt, now); anim(o, m, "Run"); pace(ctx, o, m, now, true); return;
   }
-  // Shelly Nov 13 "dullers still arent using their attacks on me": the wall reach alone almost never fired. Up close, or with your back turned, it comes for you
-  if (m.swipe) return swipeStep(ctx, o, m, tgt, td, now, dt);
-  if (td < D.swipeRange && now >= (m.swipeCool ?? 0) && !drank(tgt, now) && !tgt.state?.freeze) {
-    m.swipe = { id: tgt.id, at: now }; m.path = null; m.clip = null; anim(o, m, "cdn/clip-attack.glb", false);
-    stand(ctx, o, dt); face(o, m, tgt.feetPosition.x - pos.x, tgt.feetPosition.z - pos.z, now);
-    say(ctx, S.grip, pos, 0.8, 16); return;
-  }
-  if (seen && !watched && td < D.creep && !drank(tgt, now)) { // you looked away: it closes the gap fast and quiet
-    moveTo(ctx, o, m, tgt.feetPosition, D.run * 0.55, dt, now); anim(o, m, "Run"); pace(ctx, o, m, now, false); return;
-  }
   if (seen) { // seen but not charged: it slinks back out of your sight
     if (!m.slink || now > m.slinkAt) { m.slink = fleeGoal(ctx, o, tgt.feetPosition); m.slinkAt = now + 1500; m.path = null; }
     moveTo(ctx, o, m, m.slink, D.walk * 1.3, dt, now); anim(o, m, "Walk"); return;
   }
   // unseen: it never comes round the corner. it finds the wall you are standing at and comes up behind it
   if (td < D.stalk && now >= (m.cool ?? 0) && !drank(tgt, now) && !tgt.state?.freeze) {
-    const w = wallBetween(ctx, o, tgt) ?? wallBy(ctx, tgt);
+    // Shelly Nov 13: "they pull you in through walls with their long stretched out arms from afar": a wall between you and it is enough, it needn't walk up to it
+    const wb = wallBetween(ctx, o, tgt), w = wb ?? wallBy(ctx, tgt);
     if (w && flat(tgt.feetPosition, w) < D.wallNear) {
-      if (flat(pos, w) < D.armNear) {
+      if (flat(pos, w) < D.armNear || (wb && td < D.reachFar)) {
         m.reach = { id: tgt.id, at: now, wall: w }; m.path = null; m.clip = null; anim(o, m, "cdn/clip-attack.glb", false);
         stand(ctx, o, dt); face(o, m, tgt.feetPosition.x - pos.x, tgt.feetPosition.z - pos.z, now);
         say(ctx, S.crack, w, 1, 20);
@@ -129,21 +120,6 @@ function wallBy(ctx, tgt) {
   }
   return best;
 }
-function swipeStep(ctx, o, m, tgt, td, now, dt) { // a wind-up you can back out of, then long fingers rake you
-  const w = m.swipe; stand(ctx, o, dt); face(o, m, tgt.feetPosition.x - o.feetPosition.x, tgt.feetPosition.z - o.feetPosition.z, now);
-  if (now - w.at < D.swipeTellMs) return;
-  m.swipe = null; m.swipeCool = now + D.swipeCdMs; m.clip = null;
-  const p = ctx.place.players.find((q) => q.id === w.id);
-  if (!p || !alive(p) || flat(o.feetPosition, p.feetPosition) > D.swipeRange + 0.9) { say(ctx, S.miss, o.feetPosition, 0.6, 14); return; }
-  const s = p.state, dmg = D.swipeDmg; s.hp -= dmgAfterArmor(s.look, dmg); s.sanity = Math.max(0, (s.sanity ?? 100) - D.swipeSan);
-  const at = { x: p.feetPosition.x, y: p.feetPosition.y + 1.2, z: p.feetPosition.z };
-  ctx.emit("damageNumber", { position: at, value: dmg, color: "#ff5040" });
-  ctx.emit("slash", { position: at, size: 0.9, shape: "crescent" });
-  ctx.emit("cameraPunch", { direction: { x: p.feetPosition.x - o.feetPosition.x, y: 0, z: p.feetPosition.z - o.feetPosition.z }, intensity: 0.6 }, { audience: { player: p.id } });
-  ctx.emit("screenShake", { intensity: 0.35, duration: 0.25 }, { audience: { player: p.id } });
-  say(ctx, S.grip, at, 1, 16);
-  if (ctx.random() < D.swipeFlee) flee(ctx, o, m, p.feetPosition, now); // sometimes it hits and bolts, sometimes it stays on you
-}
 function pace(ctx, o, m, now, run) {
   if (now < (m.stepAt ?? 0)) return; m.stepAt = now + (run ? 2600 : 900 + ctx.random() * 500);
   say(ctx, run ? S.bolt : S.step, o.feetPosition, run ? 0.8 : 0.45, run ? 22 : 12);
@@ -159,12 +135,13 @@ function reachStep(ctx, o, m, now, dt) {
   const away = { x: pos.x - r.wall.x, z: pos.z - r.wall.z }, al = Math.hypot(away.x, away.z) || 1;
   const to = { x: pos.x - (away.x / al) * 0.2, y: pos.y, z: pos.z - (away.z / al) * 0.2 }; // its own hall, right where it stood
   o.feetPosition = { x: pos.x + (away.x / al) * 1.1, y: pos.y + 0.02, z: pos.z + (away.z / al) * 1.1 }; // it steps back to haul you through
-  m.reach = null; m.grab = { id: p.id, at: now, from, to };
-  p.state.freeze = { until: now + D.dragMs + 400, yaw: (Math.atan2(-(r.wall.x - from.x), -(r.wall.z - from.z)) * 180) / Math.PI, pitch: 0, by: "duller" };
-  const len = Math.hypot(r.wall.x - from.x, r.wall.z - from.z) + 1.2;
-  ctx.spawn({ id: "duller-arm-" + Math.floor(now), lifetime: D.dragMs / 1000 + 0.2, feetPosition: { x: r.wall.x, y: from.y + 1.2, z: r.wall.z },
+  const far = Math.hypot(to.x - from.x, to.z - from.z), dur = D.dragMs * Math.max(1, far / 3.5);
+  m.reach = null; m.grab = { id: p.id, at: now, from, to, dur };
+  p.state.freeze = { until: now + dur + 400, yaw: (Math.atan2(-(r.wall.x - from.x), -(r.wall.z - from.z)) * 180) / Math.PI, pitch: 0, by: "duller" };
+  const sh = { x: pos.x, y: pos.y + 2.2, z: pos.z }, len = Math.hypot(from.x - sh.x, from.y + 1.1 - sh.y, from.z - sh.z); // one long grey arm: its shoulder, through the wall, to you
+  ctx.spawn({ id: "duller-arm-" + Math.floor(now), lifetime: dur / 1000 + 0.2, feetPosition: sh,
     rotation: { lookAt: { x: from.x, y: from.y + 1.1, z: from.z }, include: ["yaw", "pitch"] },
-    children: [{ feetPosition: { x: 0, y: 0, z: -len / 2 + 0.6 }, pivot: "center", rotation: { pitch: 90 }, primitive: { kind: "cylinder", radiusTop: 0.035, radiusBottom: 0.05, height: len }, material: { color: "oklch(0.58 0.012 90)", roughness: 0.9 }, castShadow: false }] });
+    children: [{ feetPosition: { x: 0, y: 0, z: -len / 2 }, pivot: "center", rotation: { pitch: 90 }, primitive: { kind: "cylinder", radiusTop: 0.035, radiusBottom: 0.055, height: len }, material: { color: "oklch(0.58 0.012 90)", roughness: 0.9 }, castShadow: false }] });
   say(ctx, S.grip, from, 1, 18); say(ctx, S.drag, r.wall, 1, 26);
   ctx.emit("screenFlash", { color: "#2a2a26", duration: 0.35, intensity: 0.6 }, { audience: { player: p.id } });
   ctx.emit("screenShake", { intensity: 0.8, duration: 0.6 }, { audience: { player: p.id } });
@@ -172,7 +149,7 @@ function reachStep(ctx, o, m, now, dt) {
 function grabStep(ctx, o, m, now, dt) {
   const g = m.grab, p = ctx.place.players.find((q) => q.id === g.id); stand(ctx, o, dt);
   if (!p) { m.grab = null; return; }
-  const k = Math.min(1, (now - g.at) / D.dragMs), e = k * k * (3 - 2 * k);
+  const k = Math.min(1, (now - g.at) / (g.dur ?? D.dragMs)), e = k * k * (3 - 2 * k);
   p.feetPosition = { x: g.from.x + (g.to.x - g.from.x) * e, y: Math.max(g.from.y, g.to.y) + 0.05, z: g.from.z + (g.to.z - g.from.z) * e };
   if (k < 1) return;
   m.grab = null; m.cool = now + D.cooldownMs;

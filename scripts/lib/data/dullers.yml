@@ -18,13 +18,7 @@ grabDmg: 16
 grabSan: 10
 noAlmondExtra: 8   # nothing to steal: it hurts you more
 cooldownMs: 25000
-swipeRange: 2.1    # up close it rakes you (Savi's pick, Shelly asked they attack)
-swipeTellMs: 450   # the wind-up: step back to dodge
-swipeDmg: 11
-swipeSan: 4
-swipeCdMs: 2200
-swipeFlee: 0.35    # chance it bolts after landing a rake
-creep: 12          # your back turned within this: it closes in
+reachFar: 14       # a wall between you and it, you this close to it: the arm stretches through from here (Savi's pick)
 almondMs: 120000   # drank almond water this recently: it won't touch you, and keeps clear
 almondKeep: 9
 despawnRange: 95
