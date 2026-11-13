@@ -160,7 +160,7 @@ function feed(ctx, p) {
   if (ses.reading && now - ses.reading < 15000) return
   const sn = t.startsWith('snack:') ? t.slice(6) : null
   if (sn) p.state.snacks = { ...p.state.snacks, [sn]: p.state.snacks[sn] - 1 }; else p.state.meat = { ...p.state.meat, [t]: p.state.meat[t] - 1 }
-  ses.warn = null; ses.fed ??= {}; ses.fed[p.id] = now // fed means forgiven: a pending tail-flick warning must not turn into claws once the meat is gone (Shelly Nov 13: fed her, then she attacked)
+  ses.warn = null; me.state.fed = Object.fromEntries([...Object.entries(me.state.fed ?? {}).filter(([, t]) => now - t < (S.fedGraceMs ?? 600000)), [p.id, now]]) // kept in her state, not this machine's session: when another machine takes her over she still remembers the meal (Shelly Nov 13: fed her, she ate, then attacked); fed means forgiven: a pending tail-flick warning must not turn into claws once the meat is gone (Shelly Nov 13: fed her, then she attacked)
   const premium = S.premium.includes(t), name = sn ? (SNACKS[sn]?.name ?? sn) : (describe(`meat:${t}`)?.name ?? t)
   if (ses.warn?.pid === p.id) ses.warn = null
   mark(p, `you gave Samantha ${name.toLowerCase()}`)
@@ -192,7 +192,8 @@ export function read(ctx, r, pay) {
 }
 export function poorRead(ctx, pay) { const p = ctx.getObject(pay?.by); if (p?.state) say(ctx, p, S.poorReadings[pay.i] ?? S.poorReadings[0], 'annoyed') }
 function snub(ctx, p, now) { if (p.state.talkWith === ctx.self.id) p.state.talkWith = null; p.state.notice = { text: 'Samantha taps the empty saucer by her paws, then turns back to her cards. Bring meat.', at: now }; ctx.self.state.dishAt = now } // no hiss: an empty dish says it (Shelly Nov 13)
-const fedLately = (ses, pid, now) => now - (ses.fed?.[pid] ?? -1e12) < (S.fedGraceMs ?? 600000) // a fed wanderer's paws are empty because she ate it
+const fedAt = (ctx, pid) => ctx.self.state.fed?.[pid] ?? -1e12
+const fedLately = (ses, pid, now, ctx = ses.__ctx) => now - fedAt(ctx, pid) < (S.fedGraceMs ?? 600000) // a fed wanderer's paws are empty because she ate it
 function warn(ctx, p, now, refused) { const ses = ctx.self.session; if (!refused && fedLately(ses, p.id, now)) return; if (!ses.warn || ses.warn.pid !== p.id) { ses.warn = { pid: p.id, at: now, refused: !!refused }; flick(ctx, p, now) } else if (refused) { ses.warn.refused = true; ses.warn.at = Math.min(ses.warn.at, now - S.warnMs + 2500) } } // a no shortens the fuse
 function flick(ctx, p, now) { p.state.notice = { text: "Samantha's tail lashes once, hard. Her eyes go to your empty paws, then to her empty saucer. Bring her meat.", at: now }; ctx.self.anim.flick = { clip: 'cdn/clip-shake-no.glb', loop: 'once', weight: 0.6, mask: { from: 'Spine' } }; ctx.self.session.flickAt = now }
 
