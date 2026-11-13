@@ -738,7 +738,7 @@ function keepWretched(ctx) {
   if (ch) s.wretchDead = deadAt;
 }
 // a Hollow-Mask's face: Tripo mask, finished in Blender; seated on the head bone (Savi's fit, tune offset/scale here)
-const HOLLOW_MASK = { model: { id: "HOLLOW_MASK_GLB", forward: "+z" }, feetPosition: { x: 0, y: 0.02, z: 0.1 }, scale: 0.2, castShadow: false };
+const HOLLOW_MASK = { model: { id: "/cdn/value.943274474efa6ba284fbedc6d3b7c7817c6a772e42a8d414f876250c47ad6f16.glb", forward: "+z" }, feetPosition: { x: 0, y: 0.02, z: 0.1 }, scale: 0.2, castShadow: false };
 function spawnWretch(ctx, id) {
   const g = WRETCH[id], d = DENS[g.den];
   Promise.all([import("../../scripts/lib/critter-model.js"), import("../../scripts/lib/clothes.js"), import("../../scripts/lib/stats.js"), import("../../scripts/lib/weapon-look.js")]).then(([{ critterSpec }, { npcLook }, { npcState }, { weaponBody }]) => {

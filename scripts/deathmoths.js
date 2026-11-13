@@ -105,7 +105,8 @@ export function update(ctx, dt) {
           ctx.spawn({
             id: `m${i}`,
             parent: s.id,
-            model: { id: MOTH_GLB, forward: "+z" },
+            model: { id: st.variant === "razorwing" ? "/cdn/value.e78e3e637dccd15d7bdb5c8153ccea4be8be12a45e6fd6257e6419567c848eb2.glb" : MOTH_GLB, forward: "+z" }, // razorwing: its own Tripo body
+            ...(st.variant === "razorwing" ? { layout: { box: { min: { x: -0.35, y: 0, z: -0.35 }, max: { x: 0.35, y: 0.5, z: 0.35 } } } } : {}),
             castShadow: false,
             feetPosition: {
               x: Math.cos((a * Math.PI) / 180) * 0.75,

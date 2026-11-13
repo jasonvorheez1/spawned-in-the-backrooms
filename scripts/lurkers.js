@@ -22,6 +22,7 @@ export const LURKER_MODEL = {
   id: "/cdn/value.1ab72159712e0df88095f833909b0aaffb6ee0d75924e3fc05806836daa110af.glb",
   forward: "+x",
 };
+export const FRENZIED_MODEL = { id: "/cdn/value.a58b8f65dd52e254b37c87d7b7e32eba310867c8c13260500090d2e15701630c.glb", forward: "+x" }; // Tripo rig, Studio-registered (Nov 13)
 export const LURKER_SCALE = 1.333; // 1.8 m file -> 2.4 m
 
 const CLIP = {
