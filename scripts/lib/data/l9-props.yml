@@ -2,14 +2,36 @@
 # CONTRACT: origin at ground centre, front toward +Z in the file (placed forward: "+z"), real metres; size: [w, h, d].
 forward: "+z"
 props:
-  streetlight: { model: null, size: [0.5, 7.5, 2.6], lamp: [0, 7.2, 2.2] }   # lamp: where the light hangs, in the model's metres
-  mailbox:     { model: null, size: [0.25, 1.15, 0.5] }
-  sedan_a:     { model: null, size: [1.8, 1.45, 4.6] }
-  sedan_b:     { model: null, size: [1.85, 1.5, 4.8] }
-  trash_bin:   { model: null, size: [0.6, 1.05, 0.7] }
-  hydrant:     { model: null, size: [0.35, 0.75, 0.35] }
-  fence:       { model: null, size: [2.4, 1.0, 0.08] }
-  street_tree: { model: null, size: [5, 7, 5] }
+  streetlight:         { model: "/cdn/value.31f1558bb64e274d2e823693af92d95cc9996682c129cc1ecebd9d4576dcef21.glb", size: [1.01, 7.5, 2.88], lamp: [0, 7.06, 0.99] }   # lamp: the lens centre, in the model's metres
+  mailbox:             { model: "/cdn/value.c9b6a30e9436d73341b7982907345189139dd935f74dd4e4deac0307c50e14a9.glb", size: [0.37, 1.15, 0.5] }
+  sedan_a:             { model: "/cdn/value.d93962e8bfd2a5fa8a95d683bac31b5b1f310d31a0236921c3d8099f2610a5e1.glb", size: [2.13, 1.58, 4.6] }
+  sedan_b:             { model: "/cdn/value.1fb4d86d7c461dbf8c775ff0d27f4555c18a867c72463bbfe0f398752fe8e069.glb", size: [2.0, 1.72, 4.8] }
+  trash_bin:           { model: "/cdn/value.e6b96ae4d68e849a98f46509c695f91e81617a1c48701287f130905432e29cd8.glb", size: [0.79, 1.05, 0.73] }
+  hydrant:             { model: "/cdn/value.69537bfc4940a8b594c4cee096ba078701881b5a94b139eb25f92a6aba203820.glb", size: [0.43, 0.75, 0.43] }
+  fence:               { model: "/cdn/value.90c0be840283033f0ddee8f43daa2935d38aff44591d26d4233d1a104144f8d5.glb", size: [2.4, 1.0, 0.24] }
+  street_tree:         { model: "/cdn/value.908f9199b2bd1dffb69a7571d28eacc5fc7095efac86d1ee7a9819bca0840272.glb", size: [7.0, 6.94, 6.92] }
+  # house interiors (same contract)
+  kitchen_counter:     { model: "/cdn/value.9b408150f256ac5b013e6af6301ebc5bf9226bcc0fc03fb52c5357cf532df4c1.glb", size: [2.0, 0.9, 0.62] }
+  stove:               { model: "/cdn/value.5c54a59a829d9eaf81e8a016e3ae2e55d2210957de7a43b7b35a8b5620ab5813.glb", size: [0.76, 1.0, 0.73] }
+  dresser:             { model: "/cdn/value.bc63127aca0172e7dd68bedaad965b19d3859a022931144c9ca1a5310a322a12.glb", size: [1.4, 0.85, 0.72] }
+  nightstand:          { model: "/cdn/value.414689c0c7baa9c4b254fe9256c52020f56733e0f9c965eaa772c9f52584893c.glb", size: [0.6, 0.62, 0.51] }
+  toilet:              { model: "/cdn/value.cad77ecd4a2b64b9894a60de7550ebd83dfadd538cad7a9e240ccf745482036b.glb", size: [0.42, 0.78, 0.7] }   # Level 0.2's toilet, re-cleaned to this contract
+  bathtub:             { model: "/cdn/value.ba9233128e515eefc4c0d55d2b1915c83d25110188905c92ea4c1ebfc3776f79.glb", size: [1.5, 0.51, 0.78] }
+  kitchen_table_small: { model: "/cdn/value.8c1826d70bf4d84e88ce119b4e2983463310d48c46d11b165504cd585685025d.glb", size: [0.85, 0.75, 1.1] }
+  washing_machine:     { model: "/cdn/value.840829575ceae40a7ec7ece91ab8487782c48696906130b3ae3c9e29066623de.glb", size: [0.69, 1.06, 0.7] }
+  front_door:          { model: "/cdn/value.16c5feeb8bcd8337af1c307e1329f0787464ccf12689d533bb4b444cf394915d.glb", size: [0.91, 2.03, 0.19] }   # origin at the bottom of the HINGE edge; the leaf runs +X from it
+  # owned already (furniture.yml, Level 0.2): these rows carry their own forward; coffee_table has none in furniture.yml (faces -Z)
+  fridge:              { model: "/cdn/value.713ecdc73aeccf951f49b81e23757b2ecc4e8e2a9ea71ed55f65dcac90d5c647.glb", forward: "+x", size: [0.75, 1.75, 0.72] }   # Level 0.2's fridge; size is the box it is fitted into
+  sofa:                { model: "/cdn/value.ff13bc205536a957826e2f7fed75554c07ffe7848198e50e1d65f257cabacdd9.glb", forward: "+x", size: [2.1, 1.05, 1.01] }
+  armchair:            { model: "/cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb", forward: "+x", size: [1.04, 1.05, 0.95] }
+  floor_lamp:          { model: "/cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb", forward: "+x", size: [0.51, 1.8, 0.51] }
+  bookshelf:           { model: "/cdn/value.918584eed8336eda888580753019763471fcce0adcaf2bc66def78f53ae3fad0.glb", forward: "+x", size: [0.93, 1.85, 0.45] }
+  crt_tv:              { model: "/cdn/value.30ae8e4fd0c2e307d21943aa6fa38f3f816fcc7a10335f5a15ff865b00b84ce4.glb", forward: "+x", size: [1.22, 1.25, 0.67] }
+  double_bed:          { model: "/cdn/value.b0a66618043549ab8c909dcd3ba2010c3e5134b8e1434a324b78d78a7a043411.glb", forward: "+x", size: [1.98, 1.03, 2.0] }
+  fiddle_plant:        { model: "/cdn/value.53fa6b1388302684d3e567ca755e213843bd4d5ac5ee17c0b54fa1d579c9a019.glb", forward: "+x", size: [0.87, 1.9, 0.83] }
+  dining_set:          { model: "/cdn/value.b43d69457f2c3ef6551772b02d406b27f4d66f37e2fbfc8c3d01629280227983.glb", forward: "+x", size: [1.75, 0.97, 1.16] }
+  lava_lamp:           { model: "/cdn/value.2f0eae283b6ebd13603b9891c607686c47f142b2e36b43e6148b098ac56a24af.glb", forward: "+x", size: [0.44, 0.95, 0.44] }
+  coffee_table:        { model: "/cdn/value.b59b6a4d3115b48b5e3e42462530bbb5364e66607ba416592c80166a6cdd6483.glb", forward: null, size: [1.15, 0.46, 0.59] }
 # numbers the sim reads (my picks)
 tune:
   lampSpacing: 38        # m between streetlights
