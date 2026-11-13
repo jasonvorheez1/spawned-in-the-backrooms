@@ -40,6 +40,7 @@ export function update(ctx, dt) {
     else if (now - m.dieAt > 1800 && !m.gone) { m.gone = true; ctx.emit("fx", { position: { x: pos.x, y: pos.y + 0.3, z: pos.z }, script: POOF }); ((ctx.place.state.deadAt ??= {})[w.id.split("/").pop()] = now); ctx.destroy(w.id); }
     return;
   }
+  if (w.visible === false) w.visible = true; // older copies were hidden while they lurked
   if (m.up === undefined) { m.up = false; w.visible = true; w.fx = { script: LURK }; }
   const surface = (on) => { if (m.up === on) return; m.up = on; w.visible = true; w.fx = { script: on ? EYES : LURK };
     heard(ctx, { clip: on ? SND("smiler-wet-giggle-hiss-stalking") : SND("smiler-giggle-fading-into-dark-room"), position: pos, volume: on ? 1 : 0.6, maxDistance: 26 });
