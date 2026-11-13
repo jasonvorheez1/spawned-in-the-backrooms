@@ -5,6 +5,7 @@ import { animate } from 'builtin/tween'
 import W, { baseOf } from './weapons.js'
 import CA from './data/combat-anims.yml'
 import { firstPersonGun } from './fp-gun.js'
+import { HOLD } from './weapon-look.js'
 
 const RAD = Math.PI / 180
 const FAM = {}
@@ -29,7 +30,11 @@ const r4 = (q) => ({ x: +q.x.toFixed(4), y: +q.y.toFixed(4), z: +q.z.toFixed(4),
 // a one-handed gun on the critters' hand needs no turn; the human rig's RightHand stands it barrel-up (seen live Nov 13, revolver and pistols alike),
 // so there it turns pitch 90 and rolls over, and its grip sinks into the palm (fitted on preview renders)
 const HUMAN_PISTOL_Q = { pitch: 90, roll: 180 }
+// melee pieces whose file runs head-first along the critter hand's grip axis: in the fist they swung handle-out, the blade or head by the knuckles
+// (the scripted blades and the Tripo hatchet and fire axe; checked at each family's contact frame on the cat, Nov 13). Turned end for end, grip back in the palm.
+const MELEE_FLIP = new Set(['machete', 'katana', 'sword', 'shiv', 'switchblade', 'hatchet', 'fire_axe'])
 export function heldRot(kind, human = false) {
+  if (!human && !W[kind]?.ranged && MELEE_FLIP.has(baseOf(kind ?? ''))) return { rotation: { yaw: 180 }, feetPosition: { x: 0, y: 0, z: HOLD[baseOf(kind)] ?? 0 } }
   if (famOf(kind) !== 'long') return human && W[kind]?.ranged ? { rotation: HUMAN_PISTOL_Q, feetPosition: { x: 0, y: 0.02, z: 0.04 } } : {}
   const base = baseOf(kind ?? ''), fp = firstPersonGun(base, W[kind]?.look)
   if (base === 'shotgun') return { rotation: SHOTGUN_Q, feetPosition: SHOTGUN_AT }
@@ -108,7 +113,15 @@ export function aimPose(me, fam, mode, pitch = 0) {
     }
   }
 }
-const chan = (r) => ({ clip: r.clip, weight: r.weight ?? 4, loop: r.loop ? 'loop' : 'once', speed: r.speed ?? 1, mask: MASK[r.mask ?? 'upper'], blendIn: r.blendIn ?? 0.15, blendOut: r.blendOut ?? 0.3 })
+const chan = (r) => ({ clip: r.clip, weight: r.weight ?? 4, loop: r.loop || r.freeze ? 'loop' : 'once', speed: r.freeze ? 0.00001 : r.speed ?? 1, ...(r.time != null ? { time: r.time } : {}), mask: MASK[r.mask ?? 'upper'], blendIn: r.blendIn ?? 0.15, blendOut: r.blendOut ?? 0.3 }) // freeze: one frame of the take held (a carry pose)
+// a melee weapon out: carried across the body between swings (the family's ready row); off while a swing plays so the take reads at full strength,
+// and off for fists, a holstered weapon, a seat, a fall, a talk or a menu
+function meleeReady(me, s, now) {
+  const ss = me.session, fam = famOf(s.equipped), R = CA.melee?.[fam]?.ready
+  const on = !!R && !s.sheathed && !s.sit && !isDown(s, now) && !s.mj?.seats && !s.os && !s.talkWith && !s.building && now - (s.swingAt ?? 0) > 1000
+  const key = on ? fam : null
+  if (ss.ready3 !== key) { ss.ready3 = key; me.anim.ready = key ? chan(R) : null }
+}
 export const aimMode = (me, aiming, crouch) => { const v = me.velocity ?? {}, sp = Math.hypot(v.x ?? 0, v.z ?? 0); return !aiming ? 'ready' : crouch ? (sp > 0.4 ? 'aimCrouchWalk' : 'aimCrouch') : sp > 3.2 ? 'aimJog' : sp > 0.4 ? 'aimWalk' : 'aim' }
 // the long gun's hands: stock at the right shoulder along the look, left hand on the foregrip of the held body (or out along the barrel)
 export function longHands(me, held, yaw, pitch, aiming, crouch, len = 0.62) {
@@ -123,12 +136,17 @@ export function longHands(me, held, yaw, pitch, aiming, crouch, len = 0.62) {
 }
 
 const bodyYaw = (me) => { const q = me.rotation; if (typeof q === 'number') return q * RAD; if (q && q.w != null) return Math.atan2(2 * (q.w * q.y + q.x * q.z), 1 - 2 * (q.x * q.x + q.y * q.y)); return (q?.yaw ?? 0) * RAD }
-const pitchOf = (cam) => { let p = cam?.pitch ?? 0; if (Math.abs(p) > 1.6) p *= RAD; return p }
+const pitchOf = (cam) => { if (cam && typeof cam.w === 'number' && cam.pitch == null) return Math.asin(Math.max(-1, Math.min(1, 2 * (cam.w * cam.x - cam.y * cam.z)))); let p = cam?.pitch ?? 0; if (Math.abs(p) > 1.6) p *= RAD; return p }
+// the camera's look reads as a quaternion (x, y, z, w) on the live engine, not { yaw, pitch }: its yaw in degrees either way (cam.yaw alone read 0, so a third-person aim never turned with the look)
+const camYaw = (cam) => { if (!cam) return 0; if (typeof cam.yaw === 'number') return cam.yaw; if (typeof cam.w === 'number') return Math.atan2(2 * (cam.w * cam.y + cam.x * cam.z), 1 - 2 * (cam.x * cam.x + cam.y * cam.y)) / RAD; return 0 }
+// down: the 3.2 s a fall takes (the death camera's window). downAt is a stamp that is never cleared, so a plain truthy test held every gun pose off for good after a first death
+const isDown = (s, now) => !!s.downAt && now - s.downAt < 3200
 // the player's hands each tick (scripts/critter.js merges the bones it returns): aim/ready clips for guns, IK only for a long gun's grip, the rows and the rod.
 // `aiming` also tells the body to face the camera.
 export function stance(ctx) {
   const me = ctx.self, s = me.state, now = ctx.now()
   tick3(me, now)
+  { const w0 = W[s.equipped ?? 'fists']; if ((!w0 || w0.ranged || s.rowHands || s.fishingState) && me.session.ready3) { me.session.ready3 = null; me.anim.ready = null } } // the melee carry ends with the melee weapon
   // rowing the dory (scripts/l7-dory.js writes where the oar handles are): both hands on the handles, whatever is equipped
   if (s.rowHands && now - s.rowHands.at < 500 && s.sit) {
     aimPose(me, null, null)
@@ -136,9 +154,9 @@ export function stance(ctx) {
     return { bones: { RightHand: { reach: { to: pt(h.r), blendIn: 0.1, blendOut: 0.3 } }, LeftHand: { reach: { to: pt(h.l), blendIn: 0.1, blendOut: 0.3 } } }, aiming: false }
   }
   // active fishing stance: both hands holding the rod elevated over water, facing the cast
-  if (s.fishingState && !s.sheathed && !s.sit && !s.downAt) {
+  if (s.fishingState && !s.sheathed && !s.sit && !isDown(s, now)) {
     aimPose(me, null, null)
-    const cam = me.camera?.rotation ?? null, yaw = (cam?.yaw ?? 0) * RAD
+    const cam = me.camera?.rotation ?? null, yaw = camYaw(cam) * RAD
     const f = { x: -Math.sin(yaw), z: -Math.cos(yaw) }, r = { x: Math.cos(yaw), z: -Math.sin(yaw) }, p = me.feetPosition, y0 = p.y + (s.crouch ? 1.0 : 1.4)
     const isBite = s.fishingState.phase === 'bite', isReel = s.fishingState.phase === 'reeling'
     const pc = isBite ? -0.32 : isReel ? 0.38 : 0.18, c = Math.cos(pc), sn = Math.sin(pc)
@@ -148,12 +166,12 @@ export function stance(ctx) {
   const wp = W[s.equipped ?? 'fists'], ss = me.session
   // a reload plays Gunplay's handling once per reload
   if (s.reloading && wp?.ranged) { if (!ss.rel3) { ss.rel3 = true; handle3(ctx, me, 'reload', s.equipped) } } else ss.rel3 = false
-  if (!wp?.ranged || s.sheathed || s.sit || s.downAt || s.mj?.seats) { aimPose(me, null, null); return null }
+  if (!wp?.ranged || s.sheathed || s.sit || isDown(s, now) || s.mj?.seats) { aimPose(me, null, null); if (wp && !wp.ranged) meleeReady(me, s, now); return null }
   if (s.os || s.talkWith || s.building) { aimPose(me, famOf(s.equipped), 'ready', 0); return { bones: null, aiming: false } } // in a talk, a menu or build mode the gun stays at low ready: with no clip at all it hung from a slack hand, muzzle at the floor (Shelly's screenshot at the camp)
   const cam = me.camera?.rotation ?? null; if (!cam) return null
   const aiming = !s.reloading && (!!s.ads || now - (s.swingAt ?? 0) < 1400)
   // resting hands ride the BODY's facing; only an aimed gun follows the camera (Shelly: arms moving with the camera)
-  const fam = famOf(s.equipped), yaw = aiming ? (cam.yaw ?? 0) * RAD : bodyYaw(me)
+  const fam = famOf(s.equipped), yaw = aiming ? camYaw(cam) * RAD : bodyYaw(me)
   let pitch = aiming ? pitchOf(cam) : 0
   if (aiming && s.tp && s.aimPt) { const e = me.feetPosition, dy = s.aimPt.y - (e.y + (s.crouch ? 1.0 : 1.45)), hh = Math.hypot(s.aimPt.x - e.x, s.aimPt.z - e.z); if (hh > 1.2) pitch = Math.atan2(dy, hh) } // third person: the camera looks down on you from behind, so its pitch folded the body forward; aim at the crosshair's point instead
   pitch = Math.max(-0.7, Math.min(0.7, pitch)) // and never past 40 degrees, whatever the camera does

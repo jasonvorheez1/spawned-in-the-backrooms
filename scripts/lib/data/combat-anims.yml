@@ -83,23 +83,27 @@ melee: # third person: Shelly's DS attack pack (Meshes/Characters/_male 1hm/2hm 
       - { clip: cdn/clip-ds2-1hm-left-a-343fa87c.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.30, speed: 1.1, cut: 0.95 }
       - { clip: cdn/clip-ds2-1hm-rightdown-a-34d8a280.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.10 }
     heavy: { clip: cdn/clip-ds2-1hm-rightup-b-789ae950.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 0.9, cut: 1.10 }
+    ready: { clip: cdn/clip-ds2-1hm-right-a-e10f7ab7.glb, time: 1.1, freeze: true, weight: 3, mask: upper, blendIn: 0.3, blendOut: 0.15 }   # the carry between swings (Nov 13): the first combo take held at its recovery, weapon up across the body
   slash:
     combo:
       - { clip: cdn/clip-ds2-1hm-right-b-391b50e5.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.10 }
       - { clip: cdn/clip-ds2-1hm-left-b-ae6a695e.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.30, speed: 1.1, cut: 0.95 }
       - { clip: cdn/clip-ds2-1hm-leftdown-a-02e3b26c.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.30, speed: 1.1, cut: 0.95 }
     heavy: { clip: cdn/clip-ds2-1hm-rightup-a-26bd4e03.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 0.9, cut: 1.10 }
+    ready: { clip: cdn/clip-ds2-1hm-right-b-391b50e5.glb, time: 1.1, freeze: true, weight: 3, mask: upper, blendIn: 0.3, blendOut: 0.15 }   # the carry between swings (Nov 13): the first combo take held at its recovery, weapon up across the body
   stab:
     combo:
       - { clip: cdn/clip-ds2-1hm-rightdown-b-4c3c474e.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.10 }
       - { clip: cdn/clip-ds2-1hm-leftup-a-c313db93.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.30, speed: 1.1, cut: 0.95 }
     heavy: { clip: cdn/clip-ds2-1hm-rightdown-a-34d8a280.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 0.9, cut: 1.10 }
+    ready: { clip: cdn/clip-ds2-1hm-rightdown-b-4c3c474e.glb, time: 1.1, freeze: true, weight: 3, mask: upper, blendIn: 0.3, blendOut: 0.15 }   # the carry between swings (Nov 13): the first combo take held at its recovery, weapon up across the body
   chop:
     combo:
       - { clip: cdn/clip-ds2-1hm-right-a-e10f7ab7.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.10 }
       - { clip: cdn/clip-ds2-1hm-leftdown-b-b2b71690.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.30, speed: 1.1, cut: 0.95 }
       - { clip: cdn/clip-ds2-1hm-leftup-b-d57cfa24.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.30, speed: 1.1, cut: 0.95 }
     heavy: { clip: cdn/clip-ds2-1hm-rightup-b-789ae950.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 0.9, cut: 1.10 }
+    ready: { clip: cdn/clip-ds2-1hm-right-a-e10f7ab7.glb, time: 1.1, freeze: true, weight: 3, mask: upper, blendIn: 0.3, blendOut: 0.15 }   # the carry between swings (Nov 13): the first combo take held at its recovery, weapon up across the body
   heavy:
     combo:
       - { clip: cdn/clip-ds2-2hm-right-a-b7f51e84.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.45, speed: 1.1, cut: 1.20 }
@@ -107,3 +111,4 @@ melee: # third person: Shelly's DS attack pack (Meshes/Characters/_male 1hm/2hm 
       - { clip: cdn/clip-ds2-2hm-rightdown-a-8da1666e.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.45, speed: 1.1, cut: 1.20 }
       - { clip: cdn/clip-ds2-2hm-leftup-a-adcb4c10.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.40, speed: 1.1, cut: 1.20 }
     heavy: { clip: cdn/clip-ds2-2hm-rightup-b-207fe282.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.3, hit: 0.45, speed: 0.9, cut: 1.20 }
+    ready: { clip: cdn/clip-ds2-2hm-right-a-b7f51e84.glb, time: 1.2, freeze: true, weight: 3, mask: upper, blendIn: 0.3, blendOut: 0.15 }   # the carry between swings (Nov 13): the first combo take held at its recovery, weapon up across the body
