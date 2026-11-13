@@ -9,6 +9,7 @@ import { tutStart, tutTick, tutInput } from "./lib/tutorial.js"
 import { t0Tick } from "./lib/tut0-cut.js"
 import { l26Tick } from "./lib/l26-cut.js"
 import { dinaTick } from "./lib/dina-quest.js"
+import { errandTick } from "./lib/errands.js"
 import { animate } from "builtin/tween";
 import { toHub } from "./lib/hub.js"
 const MUSIC = "/cdn/moodboard-lowpoly-cozy/music-soft-mellow-fingerpicked-acoustic-guitar-and-warm-rhodes-early-2000s-bedroom-calm-loop.mp3"; // the drone was exhausting (johnadams2): soft and quiet instead
@@ -55,6 +56,7 @@ export function update(ctx) {
   // Level 26: the first time aboard, the ship in the fog and Phoebe at the rail (scripts/lib/l26-cut.js)
   if (place === "level26" && !st.menuOpen && (st.l26cut || !st.l26seen)) { if (l26Tick(ctx, ses, st)) return ctx.sleep(0) }
   if (place !== "tutorial0" && dinaTick(ctx, ses, st, place)) return ctx.sleep(0)
+  errandTick(ctx, ses, st, place) // odd jobs people hand out (scripts/lib/errands.js)
   if (st.tut) tutTick(ctx, st)
   const playing = music(ctx, place !== "bonus" && ((st.menuOpen && st.menuKind === "title") || (place === "intake" && !st.cut))) // the mall has its own track: the title theme never plays over it (shelly, Nov 12)
   // behind the title the camera slowly looks around the halls from head height; gone the moment it closes
