@@ -111,6 +111,7 @@ function tenant(ctx, mem, o, m, a, players, now, dt) {
   let prey = null, best = 1e9;
   for (const p of players) {
     const d = flat(pos, p.feetPosition), own = inFlat(a, p.feetPosition);
+    if (a.id === "a8" && (p.state?.l13calm ?? 0) > now) continue; // Still Home: Bea's set is on her weather, and she watches it (scripts/lib/level13-quest.js tuneTv)
     if (!own && !(inHall(p.feetPosition.x, p.feetPosition.z) && d < TN.hallRange * crouchMul(p) * sn(p))) continue;
     if (d >= best || !clearSight(ctx, head(o), head(p, p.state?.crouch ? 0.65 : 1), [o.id, p.id])) continue;
     best = d; prey = p;

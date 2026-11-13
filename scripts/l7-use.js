@@ -10,6 +10,7 @@
 import { heard } from "./lib/hear.js";
 import { skillsOf } from "./lib/stats.js";
 import { carryAcross } from "./lib/carry.js";
+import { errandDone } from "./lib/quests.js"; // Level 7's one-off jobs go in the journal as finished errands
 
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const snd = (ctx, pos, clip, v = 0.65, maxDistance = 16) =>
@@ -62,6 +63,7 @@ export const ears = {
           xp,
           items: bonus ? ["battery", "almond"] : ["almond"],
         };
+        errandDone(who.state, "l7-sonar", "Seawatch Sonar Sweep", bonus ? `Ran the M.E.G. hydrophone at Seawatch Outpost and pinned both contacts: Entity 20 at 180 m, and something called Tiny at 3,800 m. (+${xp} XP)` : `Ran the M.E.G. hydrophone at Seawatch Outpost. Two contacts under the water, too deep to name. (+${xp} XP)`);
         ctx.emit("damageNumber", {
           position: { x: pos.x, y: pos.y + 1.3, z: pos.z },
           text: bonus ? "SONAR LOCK: ENTITY 20 (180m) & TINY (3800m) (+55 XP)" : "SONAR SWEEP: 2 CONTACTS CONFIRMED (+35 XP)",
@@ -178,6 +180,7 @@ export const ears = {
           xp,
           items: pass ? ["blue", "firesalt"] : ["blue"],
         };
+        errandDone(who.state, "l7-altar", "The Leviathan's Blessing", `Knelt at the ribcage altar on Fort Surrender's summit${pass ? " and said the right words" : ""}. The deep answered with ${pass ? "blue water and fire salt" : "blue water"}. (+${xp} XP)`);
         ctx.emit("damageNumber", {
           position: { x: pos.x, y: pos.y + 1.5, z: pos.z },
           text: pass ? "LEVIATHAN BLESSING: BLUE WATER & FIRE SALT (+65 XP)" : "LEVIATHAN BLESSING: BLUE WATER (+40 XP)",
@@ -206,6 +209,7 @@ export const ears = {
           xp: 60,
           items: ["kit", "shells", "almond"],
         };
+        errandDone(who.state, "l7-bell", "The Dive Canister", "Winched up the M.E.G. dive canister from the diving bell: a repair kit, shells and almond water. The bell goes down to Level 8 now. (+60 XP)");
         ctx.emit("damageNumber", {
           position: { x: pos.x, y: pos.y + 1.4, z: pos.z },
           text: "SURFACED DIVE CANISTER (+60 XP, +KIT, +SHELLS)",

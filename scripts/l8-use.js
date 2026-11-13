@@ -8,6 +8,7 @@ import { heard } from "./lib/hear.js";
 import { vo } from "./lib/voices.js";
 import { setCarlaStep, setKarstStep, finishQuest8 } from "./lib/level8-quests.js";
 import { addRep, repOf } from "./lib/rep.js";
+import { errandStep, errandDone } from "./lib/quests.js";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const say = (who, text, ctx) => notify(ctx, who, text); // scripts/lib/notify.js, shared
 const CARLA = [
@@ -170,6 +171,9 @@ export const ears = {
       const have = need ? Object.entries(need).every(([k, n]) => (sc[k] ?? 0) >= n) : (w.l8Exits ?? 0) >= 1;
       if (!have) {
         const list = need ? Object.entries(need).map(([k, n]) => `${sc[k] ?? 0}/${n} ${NAME[k]}`).join(", ") : "not yet";
+        errandStep(w, "l8-" + q.name, q.name, need // the board's job in the journal, as an errand (scripts/lib/quests.js)
+          ? `${q.text} Bring ${Object.entries(need).map(([k, n]) => `${n} ${NAME[k]}`).join(" and ")} back to the errand board at the survivors' camp.`
+          : `${q.text} Then read the errand board at the survivors' camp again.`, { place: "level8", id: ctx.self.id });
         return say(who, `ERRAND ${qi + 1}${lap ? ` (round ${lap + 1})` : ""}: ${q.name}. ${q.text} Have: ${list}.`, ctx);
       }
       if (need) { const left = { ...sc }; for (const [k, n] of Object.entries(need)) left[k] = (left[k] ?? 0) - n; w.scrap = left; }
@@ -177,6 +181,7 @@ export const ears = {
       const sv = repOf(w, "survivors"), bonus = sv >= 35 ? 0.25 : sv >= 12 ? 0.1 : 0; // friends of the camp are paid better, as in every level
       const items = q.items.map((it) => (bonus && String(it).startsWith("cash:") ? `cash:${Math.round(Number(String(it).slice(5)) * (1 + bonus))}` : it));
       const tier = addRep(w, "survivors", 2);
+      errandDone(w, "l8-" + q.name, q.name, `Done for the camp's errand board. Paid ${Math.round(q.xp * (1 + lap * 0.5))} XP, cash and supplies.`);
       w.payout = { xp: Math.round(q.xp * (1 + lap * 0.5)), items, text: `ERRAND DONE: ${q.name}. "Good. That helps more than you think." The camp pays you. (+${Math.round(q.xp * (1 + lap * 0.5))} XP${bonus ? ", Survivors bonus" : ""}${tier ? `, ${tier}` : ", Survivors +2"})` };
       return;
     }

@@ -13,14 +13,14 @@ export const PLACE_NAMES = {
 };
 export const qid = (name) => String(name ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 export function setQuest(s, id, q) {
-  const cur = s.quests ?? {}, old = cur[id], mark = q.mark === undefined ? old?.mark ?? null : q.mark, main = !!(q.main ?? old?.main);
-  if (old && old.step === q.step && old.name === q.name && !!old.main === main && JSON.stringify(old.mark ?? null) === JSON.stringify(mark)) return false;
+  const cur = s.quests ?? {}, old = cur[id], mark = q.mark === undefined ? old?.mark ?? null : q.mark, main = !!(q.main ?? old?.main), kind = q.kind ?? old?.kind ?? null;
+  if (old && old.step === q.step && old.name === q.name && !!old.main === main && (old.kind ?? null) === kind && JSON.stringify(old.mark ?? null) === JSON.stringify(mark)) return false;
   const history = old?.step && old.step !== q.step
     ? [...(old.history ?? []).filter((step) => step !== old.step && step !== q.step), old.step].slice(-12)
     : old?.history;
-  s.quests = { ...cur, [id]: { name: q.name, step: q.step, mark, main, at: Date.now(), ...(history?.length ? { history } : {}), ...(q.briefing ?? old?.briefing ? { briefing: q.briefing ?? old.briefing } : {}) } };
+  s.quests = { ...cur, [id]: { name: q.name, step: q.step, mark, main, at: Date.now(), ...(kind ? { kind } : {}), ...(history?.length ? { history } : {}), ...(q.briefing ?? old?.briefing ? { briefing: q.briefing ?? old.briefing } : {}) } };
   const tr = (s.qtrack ?? []).filter((k) => s.quests[k]);
-  if (!old && !tr.includes(id)) { if (q.main) { tr.unshift(id); tr.length = Math.min(tr.length, MAX_TRACK); } else if (tr.length < MAX_TRACK) tr.push(id); } // a new quest is tracked while a slot is free; the main quest always takes one
+  if (!old && !tr.includes(id) && kind !== "errand") { if (q.main) { tr.unshift(id); tr.length = Math.min(tr.length, MAX_TRACK); } else if (tr.length < MAX_TRACK) tr.push(id); } // a new quest is tracked while a slot is free; the main quest always takes one; an errand waits to be tracked by hand
   s.qtrack = tr;
   return !old;
 }
@@ -31,11 +31,20 @@ export function endQuest(s, id, doneText, outcome = "completed") {
     s.qtrack = (s.qtrack ?? []).filter((k) => k !== id);
     if (doneText !== false) {
       const place = old.mark?.place ?? null;
-      s.qdone = { ...(s.qdone ?? {}), [id]: { name: old.name, text: typeof doneText === "string" ? doneText : "Completed", place, main: !!old.main, outcome, at: Date.now(), ...(old.history?.length ? { history: old.history } : {}), ...(old.briefing ? { briefing: old.briefing } : {}) } };
+      s.qdone = { ...(s.qdone ?? {}), [id]: { name: old.name, text: typeof doneText === "string" ? doneText : "Completed", place, main: !!old.main, outcome, at: Date.now(), ...(old.kind ? { kind: old.kind } : {}), ...(old.history?.length ? { history: old.history } : {}), ...(old.briefing ? { briefing: old.briefing } : {}) } };
     }
   } else if (typeof doneText === "string" && id) {
     s.qdone = { ...(s.qdone ?? {}), [id]: { name: s.qdone?.[id]?.name ?? id, text: doneText, outcome, at: Date.now() } };
   }
+}
+// Errands (Nov 13): the boards and odd jobs that pay through player.state.payout, in the journal as kind "errand" — listed
+// after the quests, never tracked on their own. A one-press job with no open entry is logged straight into the archive.
+export const errandId = (key) => "errand-" + qid(key);
+export function errandStep(s, key, name, step, mark = null) { return s ? setQuest(s, errandId(key), { name, step, mark, kind: "errand" }) : false; }
+export function errandDone(s, key, name, text) {
+  if (!s) return; const id = errandId(key);
+  if (s.quests?.[id]) endQuest(s, id, text);
+  else s.qdone = { ...(s.qdone ?? {}), [id]: { name, text, outcome: "completed", kind: "errand", at: Date.now() } };
 }
 export const tracked = (s) => (s?.qtrack ?? []).filter((id) => s.quests?.[id]).slice(0, MAX_TRACK).map((id, i) => ({ id, ...s.quests[id], tint: TINT[i] }));
 // true = now tracked, false = untracked, null = all three slots taken

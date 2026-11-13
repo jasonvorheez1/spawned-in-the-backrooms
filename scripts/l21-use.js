@@ -9,6 +9,7 @@ import { stepToward } from "./lib/maze21path.js";
 import { npcState, npcMul, dmgAfterArmor } from "./lib/stats.js";
 import { setEdgesStep } from "./lib/level21-quests.js";
 import { addRep, repOf } from "./lib/rep.js";
+import { errandStep, errandDone } from "./lib/quests.js";
 
 export const updateSchedule = { every: { seconds: 0.1 } };
 
@@ -160,6 +161,9 @@ export const ears = {
       const have = need ? Object.entries(need).every(([k, n]) => (sc[k] ?? 0) >= n) : (w.l21Scouted ?? 0) >= 1;
       if (!have) {
         const list = need ? Object.entries(need).map(([k, n]) => `${sc[k] ?? 0}/${n} ${NAME[k]}`).join(", ") : "explore further east";
+        errandStep(w, "l21-" + q.name, q.name, need // the board's job in the journal, as an errand (scripts/lib/quests.js)
+          ? `${q.text} Bring ${Object.entries(need).map(([k, n]) => `${n} ${NAME[k]}`).join(" and ")} back to the quartermaster's errand board in Refrigerator Paradise.`
+          : `${q.text} Then press the quartermaster's errand board in Refrigerator Paradise.`, { place: "level21", id: ctx.self.id });
         ctx.self.ui = `<div face="front" width="1.4m" style="font-family:Arial,sans-serif;font-weight:900;color:#e8e0c0;text-align:center;background:#181814;padding:8px;border:2px solid #8b7355"><div style="font-size:46px;color:#f2d870;border-bottom:1px solid #8b7355;margin-bottom:6px">ERRAND: ${q.name.toUpperCase()}</div><div style="font-size:32px;color:#ffffff;margin-bottom:4px">REQUIRED: ${list.toUpperCase()}</div><div style="font-size:24px;color:#a8d8c8">SEE NED IN REFRIGERATOR PARADISE</div></div>`;
         snd("container-open-rustle", 0.5);
         ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: `ERRAND: ${q.name.toUpperCase()} (${list.toUpperCase()})`, color: "#f2d870", size: 1.15 }, { audience: { player: who.id } });
@@ -172,6 +176,7 @@ export const ears = {
       const items = q.items.map((it) => (bonus && String(it).startsWith("cash:") ? `cash:${Math.round(Number(String(it).slice(5)) * (1 + bonus))}` : it));
       const tier = addRep(w, "survivors", 2);
       w.payout = { xp, items, text: `ERRAND DONE: ${q.name}${bonus ? " · Survivors bonus" : ""}${tier ? ` · ${tier}` : " · Survivors +2"}` };
+      errandDone(w, "l21-" + q.name, q.name, `Done for the quartermaster's board in Refrigerator Paradise. Paid ${xp} XP, cash and supplies.`);
       const line = "That'll do it. Freezers stay cold another week.";
       heard(ctx, { clip: vo("l21-ned", line), position: pos, volume: 0.9, maxDistance: 16 });
       ctx.self.ui = `<div face="front" width="1.4m" style="font-family:Arial,sans-serif;font-weight:900;color:#e8e0c0;text-align:center;background:#181814;padding:8px;border:2px solid #3fa860"><div style="font-size:46px;color:#7aff9a;border-bottom:1px solid #3fa860;margin-bottom:6px">ERRAND COMPLETED!</div><div style="font-size:32px;color:#ffffff;margin-bottom:4px">${q.name.toUpperCase()} (+${xp} XP)</div><div style="font-size:24px;color:#a8d8c8">BOUNTY PAID IN CASH &amp; SUPPLIES</div></div>`;

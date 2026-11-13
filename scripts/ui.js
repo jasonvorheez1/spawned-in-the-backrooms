@@ -318,17 +318,18 @@ function questTracker(s, player, ctx) {
 function journalUi(s, player, ctx) {
   if (!s.jrnOpen) return ''
   const recent = (a, b) => (b.at ?? 0) - (a.at ?? 0)
-  const open = Object.entries(s.quests ?? {}).map(([id, q]) => ({ ...q, id, status: 'Current' }))
-    .sort((a, b) => Number(!!b.main) - Number(!!a.main) || recent(a, b))
+  const errandLast = (a, b) => Number(a.kind === 'errand') - Number(b.kind === 'errand') // quests first, then errands (scripts/lib/quests.js errandStep)
+  const open =Object.entries(s.quests ?? {}).map(([id, q]) => ({ ...q, id, status: 'Current' }))
+    .sort((a, b) => Number(!!b.main) - Number(!!a.main) || errandLast(a, b) || recent(a, b))
   const archive = Object.entries(s.qdone ?? {}).filter(([id]) => !Object.hasOwn(s.quests ?? {}, id))
-    .map(([id, q]) => ({ ...q, id, status: q.outcome === 'failed' || (!q.outcome && /\bfailed\b/i.test(q.text ?? '')) ? 'Failed' : 'Completed' })).sort(recent)
+    .map(([id, q]) => ({ ...q, id, status: q.outcome === 'failed' || (!q.outcome && /\bfailed\b/i.test(q.text ?? '')) ? 'Failed' : 'Completed' })).sort((a, b) => errandLast(a, b) || recent(a, b))
   const list = [...open, ...archive], tr = tracked(s)
   const selected = list.find((q) => q.id === s.qview) ?? list.find((q) => q.id === tr[0]?.id) ?? list[0]
   const row = (q) => {
     const marker = tr.find((t) => t.id === q.id)
     return `<button class="quest-entry" data-quest="${esc(q.id)}" data-status="${q.status}" ${q === selected ? 'aria-current="true"' : ''} onclick="sendAction('qselect',{id:${esc(JSON.stringify(q.id))}})">
       <i class="quest-box" aria-hidden="true" ${marker ? `style="--quest-marker:${marker.tint}"` : ''}></i>
-      <span>${esc(q.name)}</span><span class="quest-sr">${marker ? ', tracked' : q.status !== 'Current' ? ', ' + q.status : ''}</span>
+      <span>${esc(q.name)}${q.kind === 'errand' ? ' <small style="opacity:.6;font-size:.78em;letter-spacing:.06em">ERRAND</small>' : ''}</span><span class="quest-sr">${marker ? ', tracked' : q.status !== 'Current' ? ', ' + q.status : ''}</span>
     </button>`
   }
   let detail = '<p class="quest-empty">Your Journal is empty. Quests appear here as you find them.</p>'
@@ -346,7 +347,7 @@ function journalUi(s, player, ctx) {
       : off ? 'Route unknown from this level' : ''
     const full = !pinned && tr.length >= MAX_TRACK
     detail = `<div class="quest-detail" id="quest-detail-${esc(id)}">
-      <div class="quest-meta"><span>${current && main ? 'Main quest' : status === 'Current' ? 'In progress' : status}</span>${location ? `<span>${esc(location)}</span>` : ''}</div>
+      <div class="quest-meta"><span>${current && main ? 'Main quest' : selected.kind === 'errand' ? (current ? 'Errand' : 'Errand · ' + status) : status === 'Current' ? 'In progress' : status}</span>${location ? `<span>${esc(location)}</span>` : ''}</div>
       <h2>${esc(name)}</h2>
       ${briefing || questBriefing(id) ? `<p class="quest-briefing">${esc(briefing || questBriefing(id))}</p>` : ''}
       <div class="quest-objective">

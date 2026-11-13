@@ -21,6 +21,7 @@ import {
   RELIEF_SIGH,
 } from "./lib/l61-anim.js";
 import { handTray } from "./lib/snacktray.js";
+import { errandStep } from "./lib/quests.js";
 
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 
@@ -401,6 +402,7 @@ export function update(ctx, dt) {
         ctx.destroy(D.tray);
         handTray(ctx, who, D.n); // the patron takes a real tray (scripts/lib/snacktray.js)
         who.state.payout = { xp: 2, items: D.items };
+        errandStep(who.state, "l61-tray", "Bus Your Tray", "Finish your food, then slide the tray into the tray return rack in the Level 6.1 food court. The facelings notice who does."); // the food court's odd job (scripts/l61-use.js)
         ctx.emit(
           "damageNumber",
           { position: { x: p.x, y: p.y + 2.1, z: p.z }, text: `ORDER #${D.n} SERVED!`, color: "#9fffb0", size: 0.95 },

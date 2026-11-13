@@ -8,6 +8,11 @@ import { heard } from "./lib/hear.js";
 import { ROOMS } from "./lib/level4.js";
 import { spawnCrate } from "./lib/loot.js";
 import { skillsOf } from "./lib/stats.js";
+import { errandStep, errandDone, errandId, endQuest } from "./lib/quests.js";
+// the shift board's task in the journal, as an errand (scripts/lib/quests.js): one entry per kind of task
+const JOB = { phones: "Shift Board: Phones", memo: "Shift Board: Memo Run", printer: "Shift Board: Paper Jam", papers: "Shift Board: Spilled Papers" };
+const jobStep = (s, t) => errandStep(s, "l4-" + t.kind, JOB[t.kind], `${t.text} on the Level 4 office floor${t.need > 1 ? ` (${t.have ?? 0}/${t.need})` : ""}. The shift board by the north island pays in supplies.`,
+  t.kind === "printer" ? { place: "level4", id: t.printer } : null);
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const VO = (line) => `/cdn/voice-office-phone-caller-saying-${line.replace(/[^a-z ]/gi, "").trim().toLowerCase().replace(/ +/g, "-").slice(0, 120)}.mp3`;
 const RING = 25000, GAP = [35000, 80000];
@@ -57,11 +62,12 @@ const TASKS = ["phones", "memo", "printer", "papers"];
 function progress(ctx, who, n = 1) {
   const t = who?.state?.l4task; if (!t) return;
   t.have = Math.min(t.need, (t.have ?? 0) + n); who.state.l4task = { ...t };
-  if (t.have >= t.need) finish(ctx, who);
+  if (t.have >= t.need) finish(ctx, who); else jobStep(who.state, t);
 }
 function finish(ctx, who) {
   const lv = who.state.level ?? 1, xp = 45 + 6 * lv;
   who.state.payout = { xp, items: [pick(ctx, ["almond", "almond", "battery", "ammo", "kit", "bandage"])], text: `Task done. +${xp} XP and something from the supply cupboard.` };
+  const t = who.state.l4task; if (t?.kind) errandDone(who.state, "l4-" + t.kind, JOB[t.kind], `${t.text}: done. Paid ${xp} XP and something from the supply cupboard.`);
   who.state.l4task = null; who.state.l4done = (who.state.l4done ?? 0) + 1;
   for (const o of ctx.query({ tags: ["l4-papers"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (o.state.owner === who.id) ctx.destroy(o.id);
 }
@@ -83,7 +89,7 @@ function giveTask(ctx, who) {
         state: { kind: "papers", owner: who.id, name: "Spilled papers", verb: "Pick up", info: "Somebody's paperwork", tint: "#f2c14e" } })
     }
   }
-  who.state.l4task = t
+  who.state.l4task = t; jobStep(who.state, t)
   sub(who, `New task: ${t.text}.`, ctx, "Shift board")
 }
 
@@ -92,7 +98,7 @@ export const ears = {
     const s = ctx.self.state, who = ctx.getObject(by), now = ctx.now(), p = ctx.self.worldFeetPosition ?? ctx.self.feetPosition;
     if (s.kind === "board") {
       const t = who?.state?.l4task
-      if (t) { sub(who, `Your task: ${t.text} (${t.have ?? 0}/${t.need}). Press again to give it up.`, ctx, "Shift board"); if (now - (who.state.l4ask ?? 0) < 4000) { who.state.l4task = null; sub(who, "Task dropped. Take another when you like.", ctx, "Shift board") } who.state.l4ask = now; return }
+      if (t) { sub(who, `Your task: ${t.text} (${t.have ?? 0}/${t.need}). Press again to give it up.`, ctx, "Shift board"); if (now - (who.state.l4ask ?? 0) < 4000) { endQuest(who.state, errandId("l4-" + t.kind), false); who.state.l4task = null; sub(who, "Task dropped. Take another when you like.", ctx, "Shift board") } who.state.l4ask = now; return }
       giveTask(ctx, who); snd(ctx, G("paper-note-tear-off-pin"), p, 0.5); return
     }
     if (s.kind === "papers") {

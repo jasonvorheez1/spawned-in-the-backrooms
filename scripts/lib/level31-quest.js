@@ -19,12 +19,12 @@ const DUB = "/cdn/moodboard-toon-vibrant/sfx-cassette-deck-high-speed-dubbing-wh
 const PAY = { bntg: { xp: 320, cents: 20000 }, bntgHi: { xp: 340, cents: 35000 }, rink: { xp: 360, cents: 4000 }, dub: { xp: 420, cents: 15000 } };
 const M = (id) => ({ place: "level31", id });
 const TIPS = {
-  1: "Ask the Coach at skate rental and the DJ at the booth about Side B.",
-  2: "Open the crate behind the cinema screen. Use a green arcade card or pick the lock.",
-  3: "Sell the master to Marlowe or return it to the DJ.",
-  "4bntg": "Collect the rest of your payment from Dez by the plywood exit.",
-  "4rink": "Tell the Coach you returned the master to the DJ.",
-  "4dub": "Make a copy at the DJ booth.",
+  1: "Ask the Coach at the skate rental counter and the DJ in the booth over the rink about Side B.",
+  2: "Open the steel crate in the dark back corner behind the cinema screen. A green card from the arcade fits the slot, or pick the lock (Lockpick 40).",
+  3: "Decide who gets Side B: sell it to Marlowe at the B.N.T.G. stall on the south carpet (Barter 45 for more, Speech 50 to sell him a copy instead), or give it back to the DJ in the booth.",
+  "4bntg": "Collect the rest of your pay from Dez in the dark corner by the plywood exit. The rink regulars want you hurt.",
+  "4rink": "Tell the Coach at skate rental that the DJ has his master back. Marlowe's crew want you hurt.",
+  "4dub": "Dub a copy on the tape deck in the DJ booth.",
 };
 const MARKS = { 2: M(CRATE), 3: M(MARLOWE), "4bntg": M(DEZ), "4rink": M(COACH), "4dub": M(DECK) };
 const CHOICES = {
@@ -41,15 +41,17 @@ const CHOICES = {
   djReturn: "I found your tape. I want you to have it back.",
   clerkHint: "Where does the DJ go on break?",
   collect: "Marlowe said you have the rest of my pay.",
+  marAfter: "How's business?",
+  djAfter: "How does it sound now?",
 };
 function logStep(s) {
   const step = s.l31q;
   const key = step === 4 ? "4" + s.l31route : step;
   const hints = s.l31qh ?? {};
   const copyReady = key === "4dub" && s.l31dub;
-  const tip = copyReady ? "Bring Marlowe the copy. The master stays with the DJ."
-    : step === 1 && hints.coach ? "Ask the DJ at the booth about Side B."
-    : step === 1 && hints.dj ? "Ask the Coach at skate rental about Side B."
+  const tip = copyReady ? "Bring Marlowe the copy at the B.N.T.G. stall on the south carpet. The master stays with the DJ."
+    : step === 1 && hints.coach ? "Ask the DJ in the booth over the rink about Side B."
+    : step === 1 && hints.dj ? "Ask the Coach at the skate rental counter about Side B."
     : TIPS[key];
   const mark = copyReady ? M(MARLOWE) : step === 1 ? M(hints.coach ? DJ : COACH) : MARKS[key];
   setQuest(s, QID, { name: QNAME, step: tip, mark });
@@ -73,7 +75,7 @@ function side(ctx, p, route) {
   if (route === "dub") { addRep(s, "rink", 20); addRep(s, "concession", 20); }
 }
 function finish(ctx, p, payKey, text) {
-  const s = p.state, pay = PAY[payKey]; s.l31q = 99; s.l31tape = false; giveTape(s);
+  const s = p.state, pay = PAY[payKey]; if (s.l31q === 99) return; s.l31q = 99; // paid once s.l31tape = false; giveTape(s);
   endQuest(s, QID, text);
   s.cents = (s.cents ?? 0) + pay.cents;
   const line = `Side B complete. You receive a mixtape, ${pay.xp} XP and $${(pay.cents / 100).toFixed(2)}.`;
@@ -125,6 +127,7 @@ export function l31Choices(id, s) {
       if (!s.l31speechFail) out.push({ text: CHOICES.speech, tag: "Quest" });
     }
     if (q === 4 && r === "dub" && s.l31dub) out.push({ text: CHOICES.copy, tag: "Quest Turn-In" });
+    if (q === 99 && !s.l31marAfter && r !== "rink") out.push({ text: CHOICES.marAfter, tag: "Quest" });
   }
   if (id === COACH) {
     if (q === 1 && !h.coach) out.push({ text: CHOICES.coachHint, tag: "Quest" });
@@ -134,6 +137,7 @@ export function l31Choices(id, s) {
   if (id === DJ) {
     if (q === 1 && !h.dj) out.push({ text: CHOICES.djHint, tag: "Quest" });
     if (q === 3) out.push({ text: CHOICES.djReturn, tag: "Quest Turn-In" });
+    if (q === 99 && !s.l31djAfter && r !== "bntg") out.push({ text: CHOICES.djAfter, tag: "Quest" });
   }
   if (id === CLERK && q === 1 && !h.dj) out.push({ text: CHOICES.clerkHint, tag: "Quest" });
   if (id === DEZ && q === 4 && r === "bntg") out.push({ text: CHOICES.collect, tag: "Quest Turn-In" });
@@ -148,7 +152,7 @@ export function handleDialogueQuest31(ctx, p, npc, text) {
   if (id === MARLOWE) {
     if (chose("start") && !q) {
       setStep(ctx, p, 1, "Side B started. Ask the Coach and the DJ about the master.");
-      return { reply: "Both. Always both. Here's the pitch. The faceling in the booth has a tape. One tape. It's why this place feels like your first birthday party. I dub that, I sell comfort by the cassette from here to Level 11. Three hundred backdollars to whoever brings it. Ask the coach where it lives. He'll lie nicely.", mood: "happy" };
+      return { reply: "Both. Always both. Here's the pitch. The faceling in the booth has a tape. One tape. Every song in this rink is on it, and it's why the place feels like your eighth birthday party. I dub that, I sell comfort by the cassette from here to Level 11. Three hundred backdollars to whoever brings it. Ask the coach where it lives. He'll lie nicely. And if anyone with no face asks, you're here for the skating.", mood: "happy" };
     }
     if (chose("remind", "what i'm stealing") && (q === 1 || q === 2)) {
       return { reply: q === 1 ? "Borrowing. The DJ's master tape. Talk to the coach and the faceling in the booth. Somebody knows where he hides it." : "Behind the cinema screen. Crate with a card lock. Arcade cards fit everything in here, it's a real design flaw.", mood: "calm" };
@@ -172,6 +176,12 @@ export function handleDialogueQuest31(ctx, p, npc, text) {
     if (chose("copy", "one dub") && q === 4 && s.l31route === "dub" && s.l31dub) {
       finish(ctx, p, "dub", "The DJ kept the master. Marlowe got a copy.");
       return { reply: "Hiss on the B side. Customers will call that vintage. Pleasure. There's an extra dub in there for you, I'm not a monster.", mood: "happy" };
+    }
+    if (chose("marAfter") && q === 99 && s.l31route !== "rink") {
+      s.l31marAfter = true;
+      return s.l31route === "dub"
+        ? { reply: "Booming. Copies sell, nobody bleeds, and the faceling in the booth nods at me now. I think it's a nod. I'm calling it a nod. You ever want work that doesn't keep me up at night, you know where the table is.", mood: "happy" }
+        : { reply: "Shipped forty dubs to Level 11 yesterday. People cry when they play it. Good crying, mostly. The regulars here won't look at me. Course, they can't look at anyone. Keep your head down on the carpet, friend. They remember you better than me.", mood: "calm" };
     }
     return null;
   }
@@ -198,6 +208,12 @@ export function handleDialogueQuest31(ctx, p, npc, text) {
     if (chose("djReturn", "giving it back") && q === 3) {
       side(ctx, p, "rink"); setStep(ctx, p, 4, "The DJ has the master. Marlowe's crew turns on you.");
       return { reply: "Oh. Oh, you brought it back. Listen, it sounds right again. I don't have anything for you. The Coach will. I'll tell him.", mood: "happy" };
+    }
+    if (chose("djAfter") && q === 99 && s.l31route !== "bntg") {
+      s.l31djAfter = true;
+      return s.l31route === "dub"
+        ? { reply: "Like it's in the room. The master stays in the dark behind the screen, and a copy goes walking. I didn't know a song could be in two places at once. I think I like it. Skate a lap. This one's for you.", mood: "happy" }
+        : { reply: "Right. It sounds right. Listen, the bass is coming back into the floor. That's the rink breathing. Thank you for not selling it. Skate a lap before you go.", mood: "happy" };
     }
     return null;
   }

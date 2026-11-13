@@ -15,10 +15,11 @@ const OFFERS = {
   'l21-ned': ["A freezer condenser is leaking. I need three coils of copper wire from the Exploration Wing, unless you can repair the bypass yourself. Can you help?", "Ned needs three copper wire coils from the Exploration Wing, or a direct repair to the condenser bypass."],
   'l21-goknar': ["The lights failed on the way to the Edges. Walk the corridor until it goes dark and tell me what's moving out there. There may be Smilers past the line. Will you go?", "Goknar wants the dark corridor to the Edges walked to where the lights die, and a report on the Smilers past the line."],
   'l11-realty-agent': ["A crew tried to stabilize part of Level 0 and left behind canisters called Reality Fresheners. Bring me three and I'll pay three hundred. Interested?", "Mara wants three Reality Fresheners from the remodeling crew. Find the half-built doorway in Level 0 and speak to the crew."],
-  'l13p-noor': ["My friend Bea stopped answering. Her flat is in the first hall, next to the chess players. I can't face going in myself. Will you check on her?", "Noor is worried about Bea. Check the flat in the first hall, next to the chess players."],
-  'l31-q-marlowe': ["I'm buying a master tape called Side B. The DJ and the coach might know where it is. Bring it to me and I'll pay three hundred. Interested?", "Marlowe wants the DJ's Side B master tape. Ask the coach and DJ about it before deciding what to do with it."],
-  'l70-npc-marinerson': ["The town's taps have been dry for three days. The Prime Minister at the hotel might know what's wrong. Would you ask her?", "Noah says Froidetown's water has stopped. Ask Prime Minister Larsson at the hotel about the pipes."],
-  'l70-npc-ines': ["Snow hounds are taking people near town. Thin out six and bring four pelts to the Guard. Can you take that on?", "Sergeant Ines wants six snow hounds dealt with and four pelts delivered to the Guard."],
+  'l13p-noor': ["Bea and I came up the stairs together. She took the flat next to the chess players in the first hall, and a week ago she stopped answering. I'm leaving tonight and I can't make myself open that door. Will you knock for me?", "Noor came up to the Free Home floor with her friend Bea. Bea stopped answering her door in the first hall, next to the chess players, and Noor leaves tonight. Find out what happened to her."],
+  'l31-q-marlowe': ["The DJ has a master tape, Side B. Every song in this rink is on it. I want to dub it and sell it to people who need a good memory. Three hundred backdollars if you bring it to me. Ask the coach and the DJ where it's kept. Interested?", "Marlowe of the B.N.T.G. wants the DJ's master tape, Side B, to copy and sell. The rink's facelings will not take kindly to losing it. Ask the Coach and the DJ, then decide who should have it."],
+  'l70-npc-marinerson': ["Three days the taps have coughed and nothing. Almond water runs under this whole town in pipes older than me, and something's stopped it. The Prime Minister at the Parliament Hotel might know what. Would you go and ask her?", "Froidetown's almond water stopped three days ago. Noah Marinerson wants someone to ask Prime Minister Larsson at the Parliament Hotel why, and to get it running."],
+  'l70-npc-larsson': ["A B.N.T.G. outfit camped at the Froston rig, pumped something out of the ground, and left the week our taps went dry. Their footlocker is still out there. If there are papers in it, I'd like to know what they say. Would you look?", "Prime Minister Larsson suspects the B.N.T.G. camp at Froston had something to do with the dry taps. Search their footlocker by the rig, then decide who should see what's inside."],
+  'l70-npc-ines': ["Snow hounds have been dragging off anyone who walks the outskirts alone. The Guard can't cover it all. Thin them out, six, and the Crown taxes pelts, so bring four to me. Unless you know a better way. Can you take that on?", "Snow hounds are taking people on the Froidetown outskirts. Sergeant Ines of the River Guard wants six dealt with and four pelts paid as tax, or a better idea for keeping them off."],
 }
 
 export function jobOffer(npc, choice) {
@@ -38,7 +39,7 @@ const JOURNAL_OFFERS = {
   'carla-s-melody': 'l8-carla-kid', 'plate-for-the-perimeter': 'l8-hobb', 'the-karst-survey': 'l8-ivo',
   'the-saltine-quota': 'l21-ned', 'the-edges-sentry': 'l21-goknar', 'fresh-paint': 'l11-realty-agent',
   'l13-still-home': 'l13p-noor', 'l31-side-b': 'l31-q-marlowe', 'l70-dry-pipes': 'l70-npc-marinerson',
-  'l70-pelt-tax': 'l70-npc-ines',
+  'l70-pelt-tax': 'l70-npc-ines', 'l70-ledger': 'l70-npc-larsson',
 }
 export const questBriefing = (id) => id === 'the-way-back' ? 'Look for a way out. Follow the leads you uncover and ask people what they know.' : OFFERS[JOURNAL_OFFERS[id]]?.[1] ?? ''
 export function questProgress(id, s) {

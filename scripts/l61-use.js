@@ -4,6 +4,8 @@ import { heard } from "./lib/hear.js";
 import { animate } from "builtin/tween";
 import { itemSpec } from "./lib/vend-item.js";
 import { handTray } from "./lib/snacktray.js";
+import { errandStep, errandDone } from "./lib/quests.js";
+const BUS = ["l61-tray", "Bus Your Tray", "Finish your food, then slide the tray into the tray return rack in the Level 6.1 food court. The facelings notice who does."]; // the food court's odd job (scripts/lib/quests.js errands)
 import { bring } from "./lib/companion.js";
 import { carryAcross } from "./lib/carry.js";
 import SNACKS from "./lib/data/snacks.yml";
@@ -140,7 +142,7 @@ export const ears = {
       }
       snd("paper-plate-slid-across-counter", 0.85, 12);
       handTray(ctx, who, s.n, s.info); // a real tray in their hands (l61Hold + l61Tray)
-      w.payout = { xp: 2, items: s.items };
+      w.payout = { xp: 2, items: s.items }; errandStep(w, ...BUS);
       tell(s.items.map((t) => "+" + t.toUpperCase()).join(" "), "#9fffb0");
       ctx.destroy(ctx.self.id);
       return;
@@ -158,7 +160,7 @@ export const ears = {
       w.l61Tray = 0; w.l61Hold = null;
       snd("plastic-tray-slid-into-rack-clatter", 0.8, 12);
       w.sanity = Math.min(100, (w.sanity ?? 80) + 3);
-      w.payout = { xp: 3, items: [] };
+      w.payout = { xp: 3, items: [] }; errandDone(w, BUS[0], BUS[1], "Returned the tray to the rack. The nearest faceling nodded at you. (+3 XP, +3 Sanity)");
       tell("+3 SANITY (TRAY RETURNED)", "#9fe8ff");
 
       // Nearest faceling acknowledges with a nod

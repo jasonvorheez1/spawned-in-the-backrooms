@@ -4,7 +4,9 @@
 // 3 the cellar note (Carnifices froze the main; Vael offers the spur), 4 the valve room: fuse in, breaker thrown, four handwheels,
 // 5 the water runs (l70route city | spur | balanced), 6 report back (Larsson or Vael), 99 done. l70h = hints heard.
 // SIDES: "Pelt Tax" l70pelt (1 kill 6 froidlings, 2 bring 4 pelts, then Ines or Odell, 99 done);
-// "Froston's Ledger" l70led (found at the rig footlocker = 2, then Ines, Odell or Vael, 99 done).
+// "Froston's Ledger" l70led (1 Larsson's lead, Nov 13; found at the rig footlocker = 2, then Ines, Odell or Vael, 99 done).
+// Nov 13 pass: every quest has a way without a fight (Sneak 45 for the fuse, Survival 45 to drive the hounds off, Barter 40 at Odell),
+// journal steps name the place, each giver has a line after it ends, and each payout is paid once (the step is checked first).
 // COLD: player.state.chill 0..100 on Level 70 only, ticked here once a second (never hurts). Numbers below are Savi's picks.
 import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
@@ -29,19 +31,28 @@ const CASSETTE = "/cdn/value.6ad7bdb76bcbe3407075a965abdc5ba017010b417682aabebd0
 const LOCKERGLB = "/cdn/value.bb28fe4d2d4dc8b0dc1d759ab065b18b63e4ce607fa1c9030f70b9121fbb0a9d.glb";
 // Savi's picks: what each ending pays (cents; 30000 = $300)
 const PAY = { city: { xp: 450, cents: 30000 }, spur: { xp: 450, cents: 22000 }, balanced: { xp: 380, cents: 15000 },
-  pelt: { xp: 150, cents: 6000 }, peltOdell: { xp: 120, cents: 11000 }, ledger: { xp: 160, cents: 8000 }, ledgerSell: { xp: 120, cents: 16000 } };
+  pelt: { xp: 150, cents: 6000 }, peltOdell: { xp: 120, cents: 11000 }, peltOdellHi: { xp: 130, cents: 15000 }, peltLure: { xp: 170, cents: 4000 },
+  ledger: { xp: 160, cents: 8000 }, ledgerSell: { xp: 120, cents: 16000 }, ledgerSellHi: { xp: 130, cents: 22000 } };
 const RATS = 5, FROIDS = 6, PELTS = 4;
 // cold, Savi's picks, per second: ~6 min outdoors in town to 80, faster in the wild; fires thaw fast
 const COLD = { rise: 0.22, wildRise: 0.18, indoor: -1.2, fire: -4, fireR: 6, toque: 0.6, charmCap: 60 };
 const M = (id) => ({ place: "level70", id });
 const TIPS = {
   1: "Noah Marinerson says the pipes ran dry. Talk to Prime Minister Larsson in the Parliament Hotel lobby",
-  2: "Get a pump fuse from Odell in the Noahtown market: buy it, earn it, or lift it",
+  2: "Get a 600 amp pump fuse from Odell in the Noahtown market: buy it for $60, clear the rats from his garage, or lift it off his table (Sneak 45)",
   3: "Someone was in the Burns Crescent house cellar the night the pipes froze. Check the workbench, or go straight to the valve room",
   4: "Valve room, east end of the Calor garage: fit the fuse, throw the breaker, set the four handwheels. The gauge and the schematic tell you how",
   "6city": "The city has water. Tell Prime Minister Larsson",
   "6spur": "The spur runs to Iceshed. Tell Hierophant Vael",
   "6balanced": "Both lines run. Tell Larsson, and tell Vael",
+};
+const PTIPS = {
+  1: `Kill ${FROIDS} snow hounds in the woods past the Froidetown outskirts, or tell Sergeant Ines at the River Guard dock how to drive them off (Survival 45)`,
+  2: `Bring ${PELTS} hound pelts to Sergeant Ines at the River Guard dock, or sell them to Odell in the Noahtown market`,
+};
+const LTIPS = {
+  1: "Search the B.N.T.G. footlocker at the dead extraction rig in Froston, the camp past the river",
+  2: "Decide who gets the Froston ledger: Sergeant Ines at the River Guard dock, Odell in the Noahtown market, or Hierophant Vael in Iceshed",
 };
 const MARKS = { 1: M(LARSSON), 2: M(ODELL), 3: M(NOTE), 4: M("l70-breaker"), "6city": M(LARSSON), "6spur": M(VAEL), "6balanced": M(LARSSON) };
 const posOf = (p) => p.worldFeetPosition ?? p.feetPosition;
@@ -121,8 +132,8 @@ export function press70(ctx, p, obj) {
   }
   if (id === LOCKER) {
     if (s.l70led) { s.notice = { text: "An open B.N.T.G. footlocker. Frozen socks, a dead walkie, a lot of nothing.", at: now }; return; }
-    give(s, "ledger70"); s.l70led = 2; setQuest(s, LID, { name: LNAME, step: "Decide who gets the Froston ledger: Sergeant Ines, Odell, or Hierophant Vael", mark: M(INES) });
-    tell(ctx, p, "Quest Started: Froston's Ledger · Got: Tape: B.N.T.G. Froston ledger", CLUNK); return;
+    const lead = s.l70led === 1; give(s, "ledger70"); s.l70led = 2; setQuest(s, LID, { name: LNAME, step: LTIPS[2], mark: M(INES) });
+    tell(ctx, p, `${lead ? "" : "Quest Started: Froston's Ledger · "}Got: Tape: B.N.T.G. Froston ledger · Forty thousand litres, pumped out from under the town`, CLUNK); return;
   }
 }
 function resolve(ctx, p, route) {
@@ -141,11 +152,15 @@ export function l70Choices(id, s) {
   if (id === NOAH) {
     if (!q) out.push({ text: "You look like a man with a dry kettle.", tag: "Quest Start" });
     if (q >= 3 && q < 5 && !s.l70h?.noah) out.push({ text: "Any idea how the valves were set, back when it worked?", tag: "Quest" });
+    if (q === 99 && !s.l70after?.noah) out.push({ text: "How's the kettle?", tag: "Quest" });
   }
   if (id === LARSSON) {
     if (q === 1) out.push({ text: "Noah sent me. Something about the pipes.", tag: "Quest" });
     if (q >= 2 && q <= 4) out.push({ text: "Remind me what the pump needs.", tag: "Quest" });
     if (q === 6 && (r === "city" || r === "balanced") && !s.l70tLars) out.push({ text: "The water's running.", tag: "Quest Turn-In" });
+    if (!ld) out.push({ text: "Who was out at the Froston rig before the taps went dry?", tag: "Quest Start" });
+    if (ld === 1) out.push({ text: "Where's this footlocker again?", tag: "Quest" });
+    if (q === 99 && !s.l70after?.larsson) out.push({ text: "How is Parliament taking it?", tag: "Quest" });
   }
   if (id === ODELL) {
     if (q === 2 && !bag(s, "fuse70")) {
@@ -154,20 +169,29 @@ export function l70Choices(id, s) {
       if (s.l70rats != null && kills(s, "deathrat70") - s.l70rats >= RATS) out.push({ text: "Your garage is rat-free. Fuse, please.", tag: "Quest Turn-In" });
       if (!s.l70pickFail) out.push({ text: "[Sneak 45] (Lift the fuse off his table while he talks.)", tag: "Quest" });
     }
-    if (pt === 2 && bag(s, "froidpelt") >= PELTS) out.push({ text: "Four hound pelts. What'll you give me?", tag: "Quest Turn-In" });
-    if (ld === 2) out.push({ text: "Want to buy a B.N.T.G. ledger?", tag: "Quest Turn-In" });
+    if (pt === 2 && bag(s, "froidpelt") >= PELTS) {
+      out.push({ text: "Four hound pelts. What'll you give me?", tag: "Quest Turn-In" });
+      if (!s.l70peltBarterFail) out.push({ text: "[Barter 40] Frost fur, four whole pelts. That's worth $150.", tag: "Quest Turn-In" });
+    }
+    if (ld === 2) {
+      out.push({ text: "Want to buy a B.N.T.G. ledger?", tag: "Quest Turn-In" });
+      if (!s.l70ledBarterFail) out.push({ text: "[Barter 40] The B.N.T.G. will pay you double for this. I want $220.", tag: "Quest Turn-In" });
+    }
   }
   if (id === INES) {
     if (!pt) out.push({ text: "Anything need doing, Sergeant?", tag: "Quest Start" });
     if (pt === 1 && kills(s, "froidling") - (s.l70froid0 ?? 0) >= FROIDS) out.push({ text: "Six hounds down.", tag: "Quest" });
+    if (pt === 1 && !s.l70lureFail) out.push({ text: "[Survival 45] The hounds follow the gut pile behind the fish shacks. Burn it and they'll range north.", tag: "Quest Turn-In" });
     if (pt === 2 && bag(s, "froidpelt") >= PELTS) out.push({ text: "Pelts for the Guard. Four of them.", tag: "Quest Turn-In" });
     if (q >= 2 && q < 5 && !s.l70h?.ines) out.push({ text: "How do the Guard run the valves?", tag: "Quest" });
     if (ld === 2) out.push({ text: "I found a B.N.T.G. ledger at Froston.", tag: "Quest Turn-In" });
+    if ((pt === 99 || ld === 99) && !s.l70after?.ines) out.push({ text: "Quiet out there lately, Sergeant?", tag: "Quest" });
   }
   if (id === VAEL) {
     if (q >= 2 && q < 5 && !s.l70h?.vael) out.push({ text: s.l70note ? "Your people froze the main." : "What do the Carnifices want with the water?", tag: "Quest" });
     if (q === 6 && (r === "spur" || r === "balanced") && !s.l70tVael) out.push({ text: "The spur is running.", tag: "Quest Turn-In" });
     if (ld === 2) out.push({ text: "This ledger says who really drained the city.", tag: "Quest Turn-In" });
+    if ((q === 99 || s.l70ledTo === "vael") && !s.l70after?.vael) out.push({ text: "Has the Cold forgiven anyone yet?", tag: "Quest" });
   }
   return out;
 }
@@ -185,16 +209,24 @@ const toFuse = (ctx, p, s, line) => { give(s, "fuse70"); s.l70q = 3; setQuest(s,
 export function handleDialogueQuest70(ctx, p, npc, text) {
   const t = String(text ?? "").toLowerCase(), s = p?.state; if (!s || !npc) return null;
   const id = String(npc.id ?? "").split("/").pop(); if (!id.startsWith("l70-npc-")) return null;
-  const q = s.l70q ?? 0, pos = posOf(p), h = (k) => { s.l70h = { ...(s.l70h ?? {}), [k]: true }; };
+  const q = s.l70q ?? 0, pt = s.l70pelt ?? 0, ld = s.l70led ?? 0, pos = posOf(p), h = (k) => { s.l70h = { ...(s.l70h ?? {}), [k]: true }; };
+  const after = (k) => { s.l70after = { ...(s.l70after ?? {}), [k]: true }; };
   const roll = (skill, difficulty) => { const c = rollCheck(ctx, s, { skill, difficulty }); if (pos) heard(ctx, { clip: c.ok ? CHIME : FAIL, position: pos, volume: 0.5, maxDistance: 16 }, { audience: { player: p.id } }); return c.ok; };
   if (id === NOAH) {
     if (t.includes("dry kettle") && !q) { setStep(ctx, p, 1, `Quest Started: ${QNAME} · Talk to Prime Minister Larsson`);
       return { reply: "Three days, eh. Three days the taps have coughed and nothing. Almond water runs under this whole town in pipes older than me, and I'm old. Go see the Prime Minister at the hotel. Tell her Noah sent you. She'll pretend she knows me.", mood: "sad" }; }
     if (t.includes("valves were set")) { h("noah"); return { reply: `My dad ran that room. He said when both sides were happy the needles read ${fmt(T.balanced)}. City, Hotel, Spur. Never got it there twice, mind you. Swore a lot.`, mood: "neutral" }; }
+    if (t.includes("how's the kettle") && q === 99) { after("noah"); const r = s.l70route;
+      return { reply: r === "spur" ? "Dry as a church, eh. Water went north to the ice people, they tell me. I've been melting snow on the stove like my granny. Tastes like roofs. I don't blame you. Much." : r === "balanced" ? "Whistles half the time. Pressure's thin, the Hierophant's lot are drinking too, and you know what? Nobody froze. I'll take thin. Sit, if you can find a chair." : "Whistling like a choir, friend. First cup in three days. I put a second one out for you. It's gone cold. Everything goes cold. Drink it anyway.", mood: r === "spur" ? "sad" : "happy" }; }
   }
   if (id === LARSSON) {
     if (t.includes("noah sent me") && q === 1) { setStep(ctx, p, 2, "The pump under the Calor Office Block needs a fuse. Odell has one");
       return { reply: "Noah! Yes. Lovely man. Look, I'm sorry to ask a stranger, that's very un-Canadian of me. The pump under the Calor Office Block has no fuse. Odell at the market has one. Odell has everything, and he charges for all of it. Fit it, turn the water back on. Parliament will be grateful. Formally. In writing.", mood: "neutral" }; }
+    if (t.includes("who was out at the froston rig") && !ld) { s.l70led = 1; setQuest(s, LID, { name: LNAME, step: LTIPS[1], mark: M(LOCKER) }); tell(ctx, p, `Quest Started: ${LNAME} · Search the footlocker at Froston`);
+      return { reply: "The B.N.T.G. had a camp at Froston, past the river. They pumped something up out of the ground for a month and left in a hurry the week the taps went dry. I'm sure that's a coincidence. I'm a politician, I'm paid to be sure. Their footlocker is still by the rig. If there's paperwork in it, I'd like to read it before anyone else does. Sorry. Thank you.", mood: "neutral" }; }
+    if (t.includes("footlocker again") && ld === 1) return { reply: "Froston. East, past the river, where the rig is. Big dead tower, you can't miss it. The footlocker's by the base. Dress warmly. Sorry, that's obvious. Dress warmer.", mood: "neutral" };
+    if (t.includes("parliament taking it") && q === 99) { after("larsson"); const r = s.l70route;
+      return { reply: r === "city" ? "Standing ovation. Well, standing. The heating's off. There's a motion to name a tap after you. It's a very small tap. Don't let it go to your head." : r === "balanced" ? "Badly, loudly, and with a lot of paperwork. But the hospital has water and so does Iceshed, and nobody's burning anything down. That's a good week for Froidetown. I'm told I'm smiling. I'm not." : "Water's going up the spur to the Carnifices and Parliament has voted to be furious about it. I abstained. I was too tired. If you ever want to make it right, the valve room's still there.", mood: r === "spur" ? "annoyed" : "neutral" }; }
     if (t.includes("what the pump needs")) return { reply: "A six hundred amp fuse in the breaker, the breaker thrown, then the valves. The Guard know the city setting. Ask Sergeant Ines at the dock. Sorry. Thank you. Sorry.", mood: "neutral" };
     if (t.includes("water's running") && q === 6) { s.l70tLars = true; const r = s.l70route; doneMain(ctx, p);
       return { reply: r === "city" ? "I heard the pipes knock from up here. People are filling bathtubs and crying. Good crying. The Kingdom owes you, and the Kingdom pays its debts. Slowly, but it pays." : "Both lines? You gave the Carnifices water. I'm furious and also, quietly, relieved nobody froze. Here. Smaller than it would have been. Don't make that face.", mood: r === "city" ? "happy" : "annoyed" }; }
@@ -205,7 +237,7 @@ export function handleDialogueQuest70(ctx, p, npc, text) {
       s.cents -= 6000; toFuse(ctx, p, s, "Got: Pump fuse (-$60.00)");
       return { reply: "Pleasure. Six hundred amps of pure Kingdom Works. Don't lick it.", mood: "happy" }; }
     if (t.includes("pays in fuses") && q === 2) { s.l70rats = kills(s, "deathrat70");
-      setQuest(s, QID, { name: QNAME, step: `Kill ${RATS} white death rats in the Calor garage for Odell`, mark: M(ODELL) });
+      setQuest(s, QID, { name: QNAME, step: `Kill ${RATS} white death rats in the parking garage under the Calor Office Block, then go back to Odell`, mark: M(ODELL) });
       return { reply: "The parking garage under Calor. Death rats. White ones. They ate my snow tires. Both sets. Kill five and the fuse is yours. I don't need proof, I believe you. I don't, but I'll check.", mood: "annoyed" }; }
     if (t.includes("rat-free") && q === 2) { toFuse(ctx, p, s, "Got: Pump fuse");
       return { reply: "Hear that? That's my tires not being eaten. Here. One fuse. We're square.", mood: "happy" }; }
@@ -213,29 +245,46 @@ export function handleDialogueQuest70(ctx, p, npc, text) {
       if (!roll("sneak", 45)) { s.l70pickFail = true; return { reply: "That's my fuse your hand is on. I'm going to pretend it fell. You're going to pretend to pay for it.", mood: "annoyed" }; }
       toFuse(ctx, p, s, "[Sneak 45] Succeeded · Got: Pump fuse");
       return { reply: "...and that's why you never trust a hubcap. Anyway, you buying or what?", mood: "neutral" }; }
-    if (t.includes("hound pelts")) { give(s, "froidpelt", -PELTS); s.l70pelt = 99; addRep(s, "froid", -5); pay(ctx, p, "peltOdell", PID, PNAME, "Sold the pelts to Odell");
+    if (t.includes("[barter 40] frost fur") && pt === 2 && bag(s, "froidpelt") >= PELTS) {
+      if (!roll("barter", 40)) { s.l70peltBarterFail = true; return { reply: "A hundred and fifty. For fur. You've been out in the cold too long, chief. Offer's what it was.", mood: "annoyed" }; }
+      give(s, "froidpelt", -PELTS); s.l70pelt = 99; s.l70peltTo = "odell"; addRep(s, "froid", -5); pay(ctx, p, "peltOdellHi", PID, PNAME, "Sold the pelts to Odell, at a price he'll complain about");
+      return { reply: "You know what, fine. One-fifty. You've got a merchant's mouth and a hunter's smell. Don't tell Ines. I mean it this time.", mood: "happy" }; }
+    if (t.includes("[barter 40] the b.n.t.g. will pay") && ld === 2) {
+      if (!roll("barter", 40)) { s.l70ledBarterFail = true; return { reply: "Double for them is a risk for me. One-sixty, take it or keep the frostbite.", mood: "annoyed" }; }
+      give(s, "ledger70", -1); s.l70led = 99; s.l70ledTo = "odell"; pay(ctx, p, "ledgerSellHi", LID, LNAME, "Sold the Froston ledger to Odell for $220");
+      return { reply: "Two-twenty. You'd do well in the market, chief. Stay out of it, I don't need the competition.", mood: "happy" }; }
+    if (t.includes("hound pelts") && pt === 2 && bag(s, "froidpelt") >= PELTS) { s.l70peltTo = "odell"; give(s, "froidpelt", -PELTS); s.l70pelt = 99; addRep(s, "froid", -5); pay(ctx, p, "peltOdell", PID, PNAME, "Sold the pelts to Odell");
       return { reply: "Ooh. Frost fur. That's mittens for a whole family. Rich family. Don't tell Ines, she thinks pelts are taxable.", mood: "happy" }; }
-    if (t.includes("buy a b.n.t.g. ledger")) { give(s, "ledger70", -1); s.l70led = 99; pay(ctx, p, "ledgerSell", LID, LNAME, "Sold the ledger to Odell");
+    if (t.includes("buy a b.n.t.g. ledger") && ld === 2) { s.l70ledTo = "odell"; give(s, "ledger70", -1); s.l70led = 99; pay(ctx, p, "ledgerSell", LID, LNAME, "Sold the ledger to Odell");
       return { reply: "B.N.T.G. paperwork. I can sell this back to the B.N.T.G. for twice what I'm paying you. I'm telling you that because I'm honest. Not generous. Honest.", mood: "happy" }; }
   }
   if (id === INES) {
-    if (t.includes("need doing") && !s.l70pelt) { s.l70pelt = 1; s.l70froid0 = kills(s, "froidling"); setQuest(s, PID, { name: PNAME, step: `Kill ${FROIDS} snow hounds in the woods and outskirts`, mark: M(INES) });
+    if (t.includes("need doing") && !s.l70pelt) { s.l70pelt = 1; s.l70froid0 = kills(s, "froidling"); setQuest(s, PID, { name: PNAME, step: PTIPS[1], mark: M(INES) });
       tell(ctx, p, `Quest Started: ${PNAME}`); return { reply: "Snow hounds. Big white brutes, come in packs, drag off anything that walks alone. Thin them out. Six. Then bring me four pelts, the Crown taxes pelts. I don't make the rules. I enforce them. Grumpily.", mood: "neutral" }; }
-    if (t.includes("six hounds")) { s.l70pelt = 2; setQuest(s, PID, { name: PNAME, step: `Bring ${PELTS} hound pelts to Ines, or sell them to Odell`, mark: M(INES) });
+    if (t.includes("[survival 45] the hounds follow") && pt === 1) {
+      if (!roll("survival", 45)) { s.l70lureFail = true; return { reply: "Gut pile. I've heard that one from every trapper with a beard. They come for the people, civilian, not the fish. Six. Go.", mood: "annoyed" }; }
+      s.l70pelt = 99; s.l70peltTo = "lure"; addRep(s, "froid", 10); pay(ctx, p, "peltLure", PID, PNAME, "Talked Sergeant Ines into burning the gut pile. The hounds ranged north, and nobody had to shoot them.");
+      return { reply: "...Huh. Tracks do bend round the shacks. Every one of them. Fine. I'll have the lads burn it tonight and watch the treeline. If you're right, you saved us bullets and you saved the dogs. No pelts means no tax, which means my sergeant's pay goes to you instead. Don't spend it on Odell.", mood: "happy" }; }
+    if (t.includes("six hounds") && pt === 1) { s.l70pelt = 2; setQuest(s, PID, { name: PNAME, step: PTIPS[2], mark: M(INES) });
       return { reply: "Good. Now the pelts. Four. Odell will offer you more for them. Odell is a weasel in a parka.", mood: "happy" }; }
-    if (t.includes("pelts for the guard")) { give(s, "froidpelt", -PELTS); s.l70pelt = 99; addRep(s, "froid", 15); pay(ctx, p, "pelt", PID, PNAME, "Paid the pelt tax to the River Guard");
+    if (t.includes("pelts for the guard") && pt === 2 && bag(s, "froidpelt") >= PELTS) { s.l70peltTo = "ines"; give(s, "froidpelt", -PELTS); s.l70pelt = 99; addRep(s, "froid", 15); pay(ctx, p, "pelt", PID, PNAME, "Paid the pelt tax to the River Guard");
       return { reply: "Tax paid, in full, with a smile. Well. With a face. Thank you. The Guard remembers.", mood: "happy" }; }
     if (t.includes("guard run the valves")) { h("ines"); return { reply: `City setting reads ${fmt(T.city)} on the gauge. City, Hotel, Spur. Spur at zero, that's the whole point. The schematic on the wall shows which wheel pushes which line. It's faded. So am I.`, mood: "neutral" }; }
-    if (t.includes("ledger at froston")) { give(s, "ledger70", -1); s.l70led = 99; addRep(s, "froid", 20); addRep(s, "bntg", -15); pay(ctx, p, "ledger", LID, LNAME, "Gave the Froston ledger to the River Guard");
+    if (t.includes("ledger at froston") && ld === 2) { s.l70ledTo = "ines"; give(s, "ledger70", -1); s.l70led = 99; addRep(s, "froid", 20); addRep(s, "bntg", -15); pay(ctx, p, "ledger", LID, LNAME, "Gave the Froston ledger to the River Guard");
       return { reply: "Forty thousand litres. Out from under us. And we blamed the cold. Parliament's going to have a very loud afternoon. Thank you.", mood: "angry" }; }
+    if (t.includes("quiet out there lately") && (pt === 99 || ld === 99)) { after("ines"); const pw = s.l70peltTo, lw = s.l70ledTo;
+      return { reply: [pw === "lure" ? "Gut pile burned three nights running. The hounds are howling up north now, where they're Iceshed's problem. Haven't fired a flare in a week. The lads are bored. Bored is good." : pw === "ines" ? "Pelts are on the Guard's coats now. Warmest I've been since I enlisted. Packs are thinner on the outskirts. Thank you, civilian." : pw === "odell" ? "Quieter. Packs are thinner. I hear Odell's selling frost-fur mittens at a price that should be illegal. I'm looking into whether it is." : "",
+        lw === "ines" ? "Parliament's still shouting about that ledger. The B.N.T.G. sent a letter. We used it to start a fire." : lw === "odell" ? "Somebody sold a B.N.T.G. ledger in the market. Odell won't say who. He doesn't have to." : lw === "vael" ? "The Carnifices are preaching from a ledger now. Forty thousand litres. I'd rather they'd preached from anything else." : ""].filter(Boolean).join(" ") || "Quiet as the river under the ice.", mood: "neutral" }; }
   }
   if (id === VAEL) {
     if (t.includes("froze the main") || t.includes("carnifices want with the water")) { h("vael");
       return { reply: `Froze it? We blessed it. The Cold took what the town wasted. Send the water up the spur to Iceshed instead, ${fmt(T.spur)} on their little gauge, and my people drink. The town learns humility. Everybody grows.`, mood: "neutral" }; }
     if (t.includes("spur is running") && q === 6) { s.l70tVael = true; const r = s.l70route; if (r === "spur") addRep(s, "gelu", 10); doneMain(ctx, p);
       return { reply: r === "spur" ? "I felt it in the ice. Kneel, or don't, the Cold doesn't care. Take this. It bites back." : "Half. You gave us half. The Cold respects a coward's math. Barely.", mood: r === "spur" ? "happy" : "annoyed" }; }
-    if (t.includes("really drained the city")) { give(s, "ledger70", -1); s.l70led = 99; addRep(s, "gelu", 20); addRep(s, "froid", -10); pay(ctx, p, "ledger", LID, LNAME, "Gave the Froston ledger to the Carnifices");
+    if (t.includes("really drained the city") && ld === 2) { s.l70ledTo = "vael"; give(s, "ledger70", -1); s.l70led = 99; addRep(s, "gelu", 20); addRep(s, "froid", -10); pay(ctx, p, "ledger", LID, LNAME, "Gave the Froston ledger to the Carnifices");
       return { reply: "So it wasn't us. Not only us. Wonderful. Our sermons just got so much longer.", mood: "happy" }; }
+    if (t.includes("cold forgiven anyone") && (q === 99 || s.l70ledTo === "vael")) { after("vael"); const r = q === 99 ? s.l70route : null;
+      return { reply: r === "spur" ? "The Cold doesn't forgive. It keeps. And it is keeping my people alive. The spur sings under the snow at night. Come and listen, warm one, before it changes its mind about you." : r === "city" ? "You chose the town. The town wastes. The Cold will come for its share. It always does. Not today. Today I only remember your face." : r === "balanced" ? "Half a sermon, half a cup. My people drink, the town drinks, and nobody kneels. You may have invented a new sin. Moderation. I'll have to think about it." : "The ledger is read aloud in Iceshed every evening. Forty thousand litres. The children know it by heart. The Cold is patient with the honest. Mostly.", mood: r === "city" ? "annoyed" : "neutral" }; }
   }
   return null;
 }
@@ -271,10 +320,10 @@ export function tick(ctx) {
   const fires = ctx.query({ tags: ["l70-fire"], radius: 5000, center: { x: 0, y: 0, z: 0 } }).map((f) => f.feetPosition);
   for (const p of ctx.place.players) {
     const s = p.state, at = p.feetPosition; if (!s || !at) continue;
-    if (s.l70rats != null && s.l70q === 2 && kills(s, "deathrat70") - s.l70rats >= RATS && !s.l70ratsTold) { s.l70ratsTold = true; setQuest(s, QID, { name: QNAME, step: "The rats are dead. Tell Odell", mark: M(ODELL) }); }
-    if (s.l70pelt === 1 && !s.l70froidTold) { const n = Math.min(FROIDS, kills(s, "froidling") - (s.l70froid0 ?? 0)); if (n !== s.l70froidN && n < FROIDS) { s.l70froidN = n; setQuest(s, PID, { name: PNAME, step: `Kill ${FROIDS} snow hounds in the woods and outskirts (${n}/${FROIDS})`, mark: M(INES) }); } }
+    if (s.l70rats != null && s.l70q === 2 && kills(s, "deathrat70") - s.l70rats >= RATS && !s.l70ratsTold) { s.l70ratsTold = true; setQuest(s, QID, { name: QNAME, step: "The garage rats are dead. Tell Odell in the Noahtown market", mark: M(ODELL) }); }
+    if (s.l70pelt === 1 && !s.l70froidTold) { const n = Math.min(FROIDS, kills(s, "froidling") - (s.l70froid0 ?? 0)); if (n !== s.l70froidN && n < FROIDS) { s.l70froidN = n; setQuest(s, PID, { name: PNAME, step: `${PTIPS[1]} (${n}/${FROIDS})`, mark: M(INES) }); } }
     if (s.l70rats != null && s.l70q === 2 && !s.l70ratsTold) { const n = Math.min(RATS, kills(s, "deathrat70") - s.l70rats); if (n !== s.l70ratN && n < RATS) { s.l70ratN = n; setQuest(s, QID, { name: QNAME, step: `Kill the death rats (${n}/${RATS})`, mark: M(ODELL) }); } }
-    if (s.l70pelt === 1 && kills(s, "froidling") - (s.l70froid0 ?? 0) >= FROIDS && !s.l70froidTold) { s.l70froidTold = true; setQuest(s, PID, { name: PNAME, step: "Six down. Tell Sergeant Ines", mark: M(INES) }); }
+    if (s.l70pelt === 1 && kills(s, "froidling") - (s.l70froid0 ?? 0) >= FROIDS && !s.l70froidTold) { s.l70froidTold = true; setQuest(s, PID, { name: PNAME, step: "Six hounds down. Tell Sergeant Ines at the River Guard dock", mark: M(INES) }); }
     const nearFire = fires.some((f) => Math.hypot(f.x - at.x, f.z - at.z) < COLD.fireR);
     let d = nearFire ? COLD.fire : indoors(at) ? COLD.indoor : COLD.rise + COLD.wildRise * wild(at);
     if (d > 0 && bag(s, "toque70")) d *= COLD.toque;
