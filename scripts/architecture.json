@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7356,
-  "updatedAt": "2026-11-13T15:33:41.505Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG across Level 0, a social hub and authored lore destinations; player.state carries progression, gear, quests, homes, companions and resume location. Shared player behaviors and place simulations join authored scenes to generated spaces, with reusable dialogue, quests, NPC systems and errands. The Way Back reveals Dina's story through a saved clue trail and playable recordings.",
+  "basedOnSpecVersion": 7374,
+  "updatedAt": "2026-11-13T15:35:17.862Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG across Level 0, a social hub and authored lore destinations; player.state carries progression, gear, quests, homes, companions and resume location. Shared player behaviors and place simulations join authored scenes to generated spaces, with reusable dialogue, quests, NPC systems and enemy kits; the Way Back reveals Dina's story through a saved clue trail and playable recordings.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0 yellow maze, ecology, routes, landmarks, anomalies and deterministic modeled dressing; objects.scene carries the Favi brain row.",
+    "places/main (3D) - Level 0 yellow maze, ecology, routes, landmarks, anomalies and deterministic modeled dressing; cubicles/camps vary by seeded dressing data and the Blackout Zone edge gets failing or dead lamps; objects.scene carries the Favi brain row.",
     "places/bonus (3D) - vaporwave mall with simulated staff, shops, arcade, payphones, player-home kiosk, Squeeze Play and Glow Up Salon.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo, ephemeral) - character creation/waking, staged tutorial and HALOGEN handoff to Dina's lead.",
     "places/level01 (3D) - Zenith Station, breach, bots, hazards and recorder quest.",
@@ -15,7 +15,7 @@
     "places/testlab (3D) - Test Range with weapon/physics stations and east Enemy Bay; authored lore destinations including Levels 4-13, 26-27 and others hold stories, hazards and residents."
   ],
   "roots": [
-    "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input mappings.",
+    "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input mappings; player template includes per-player duller spawning.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - local configuration, placements and generated/ticked simulation; Level 1 dispatches its geometry builders.",
     "sim.js - global tick for body-style propagation and bounded incremental restyling in occupied places.",
     "scripts/main-menu.js + main-menu-ui.js + intake/tutorial scripts - title, character creation, arrival, tutorial and Dina routing; main-menu ticks errands.",
@@ -32,7 +32,7 @@
     "scripts/lib/quest-route.js + quest-mark.js + quests.js - directed crossings and common quest/errand journal, tracker, rewards and step messaging.",
     "scripts/lib/data/dlg-*.yml + dialogue.js + talk.js + voices.js + quest-dialogue.js - authored conversations, barks, voice selection and job-offer text.",
     "scripts/lib/errands.js + errands.yml; npc-temper.js + notify.js - data-driven NPC jobs, weapon filtering and notices; loot-bags-geo builds reusable loot bags.",
-    "scripts/lib/foe-bay.js + scripts/lib/decoys.js - Test Range enemy bay uses home foe data/models/managers; decoys join player target lists for participating foe brains."
+    "scripts/lib/foe-bay.js + scripts/lib/decoys.js + scripts/lib/duller-spec.js + scripts/lib/lurker-kind.js - Test Range reuses home enemy rows/managers; common Duller spec feeds spawning and bay, lurker appearance is shared by Level 0/13 and bay, and decoys join participating foes' target lists."
   ],
   "notableExports": [
     "scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate, wakeLog.",
@@ -42,7 +42,7 @@
     "scripts/lib/level70-quest.js + scripts/terrain70.js; level70-civic.js and level70-life.js - Level 70 quest, terrain and civic/life layer exports.",
     "scripts/lib/errands.js - ERRANDS, held, errandText, offerErrand, payErrand, tryAlt, errandTick.",
     "scripts/lib/companion.js - PERKS, perkOf, isMine, followersOf, loyaltyScale, whyNot, recruit, adopt, dismiss, order, giveWeapon, takeWeapon.",
-    "scripts/clumps.js + scripts/bay-brain.js + scripts/decoy.js - update; scripts/lib/clump.js - CRAWL, PROWL, FIDGET, REACH, MAW, COWER; scripts/lib/decoys.js - targetsOf."
+    "scripts/clumps.js + scripts/bay-brain.js + scripts/decoy.js + scripts/custodians.js - update; scripts/lib/clump.js - CRAWL, PROWL, FIDGET, REACH, MAW, COWER; scripts/lib/decoys.js - targetsOf; scripts/lib/duller-spec.js - dullerSpec; scripts/lib/lurker-kind.js - EYES, LIGHT_STUN, STARE_RETREAT, STALK, pickEyes, dress, undress."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved place/position, tapes, currency, karma/rep and homeKeep; save.js owns save migration/versioning.",
@@ -52,7 +52,7 @@
     "scripts/lib/level31-quest.js + level70-quest.js + remodel-quest.js - Level 31/70 and remodel quest stages, routes and rewards.",
     "scripts/build.js + places/level5/sim.js; scripts/l5-resident.js - homeKeep.built/l5built reconstruction, booking identity and place.state.l5rent.",
     "scripts/lib/breakables.js; companion.js; forgive.js; samantha.js - place.state.wallHp/broken, save-scoped crew/orders, NPC incidents and Samantha's me.state.fed timestamps.",
-    "places/testlab/sim.js + scripts/testlab-pad.js + scripts/lib/foe-bay.js - place.state.bayV build version and want_bay request/consumption; foe-bay constructs bay rows and decoys."
+    "places/testlab/sim.js + scripts/testlab-pad.js + scripts/lib/foe-bay.js + scripts/duller.js - place.state.bayV and want_bay requests; foe-bay builds bay rows, while Duller entities own their HP, stolen items and remains/loot state."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interaction, combat, inventory, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js supply game-specific play.",
@@ -65,8 +65,8 @@
     "tutorial0 HALOGEN cut → tut0-cut.js + dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ.",
     "scripts/build.js placement/removal → homeKeep.built or homeKeep.l5built; Level 5 sim restores separately; l5-resident booking → player l5home/l5room and place.state.l5rent.",
     "Level 2/31 and Level 31/70 directed triggers → scripts/level-door.js; quest-route.js maps the paired crossings; level31/70 sims read versioned layouts and arrival layers.",
-    "Test Range pad trigger → scripts/testlab-pad.js writes place.state.want_bay → places/testlab/sim.js calls foeBayTick; foeBayBuild places pads/managers and foeBayTick releases capped home-level foes or bay-brain stand-ins.",
-    "Test Range TEST DUMMY pad → want_bay decoy → foe-bay spawns bay-decoy rows; scripts/lib/decoys.js targetsOf adds living decoys beside players for clumps, smilers, lurkers and bay-brain targets."
+    "Test Range pad trigger → scripts/testlab-pad.js writes place.state.want_bay → places/testlab/sim.js calls foeBayTick; foeBayBuild lays manager rows and foeBayTick releases capped foes using shared level kits, Duller spec, or bay-brain stand-ins.",
+    "templates/player.js duller-spawn (5 s) reads dullers.yml and places a Duller out of sight in configured unsafe Levels 0-20 → duller.js hunts, flees charge/almond water, reaches through walls to steal almond water and drops its stolen items as loot; player.js writes almondAt when almond water is consumed."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored mall shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
@@ -75,8 +75,8 @@
     "Level 01 sim/Zenith geometry and hazards; Level 1 sim + level1-geo.js + level1-details-geo.js - authored station and car park/service geometry with versioned fallen-slab rubble.",
     "scripts/meg-agent.js + npc-temper.js + forgive.js - shared NPC reactions, cover, voiced barks, movement/fighting and companion following; weapon filtering and first-hit assault handling vary by NPC.",
     "errands.yml + errands.js + quest-dialogue.js + quests.js - shared job offers, objective stages, journal/tracker and rewards; named NPCs/levels vary objectives and text.",
-    "Level 0 kit builders/data + places/main/sim.js - model catalogs feed deterministic dressing in DR.batch rows with per-piece fixes and room-fit collision rules.",
-    "scripts/lib/foe-bay.js + testlab-pad.js + places/testlab/sim.js - bay kinds reuse home managers/models or bay-brain stand-ins; scripts/clumps.js + lib/clump.js animate/manage all clump-ai rows across levels and bay."
+    "Level 0 kit builders/data + places/main/sim.js - model catalogs feed deterministic dressing in DR.batch rows with per-piece fixes and room-fit collision rules; l0-dress.yml varies cubicles/camp variants and blackout-edge lamp states.",
+    "scripts/lib/foe-bay.js + testlab-pad.js + places/testlab/sim.js - bay kinds reuse home managers/models or bay-brain stand-ins; scripts/clumps.js + scripts/lib/clump.js manage clump-ai rows, scripts/custodians.js runs Custodian AI, scripts/lib/duller-spec.js unifies Duller rows, and scripts/lib/lurker-kind.js shares Lurker presentation across Levels 0/13 and bay."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -86,11 +86,11 @@
     "scripts/dbg-bodypad.js, scripts/debug-pad.js - debug-room pads after places/debug removal; no current references found."
   ],
   "migrationNotes": [
-    "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player IDs/player roots and local-audience objects.",
+    "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player IDs/player roots and local-audience-only objects.",
     "scripts/lib/save.js SAVE_V=2: intake, bonus and tutorial0 are transient and never save resume locations; migration clears legacy transient savePlace/savePos without overwriting earned state. player.js retries wake crossings up to three times.",
     "Level 31 rebuilds l31-* roots at place.state.v31=100; align IDs and shell/zone/door/arrival geometry with level31.js and preserve the white-door pair with Level 70. Level 70 retains versioned district layers.",
     "Generated wall damage lives in place.state.wallHp/broken; syncWalls treats wall-grid membership as authoritative and deletes stale broken keys. Companions are save-scoped: set player.state.crew when adopting.",
     "Dina's Level 3 cassette (state.kind=cassette) gives holotapes.dina4 and is distinct from the C-23 handoff log; Level 2/4 clue flags are dinaCrate/dinaCarbon and keep existing dinaQ steps.",
-    "Enemy hitTarget writes player.state.shot; stealers, smilers, lurkers, hounds and Level 11 crawl foes use its ground stamp to investigate distant shots. Level 0 dressing keeps DR.v=6 hash placements, room-fit exclusions and arch openings stable."
+    "Enemy hitTarget writes player.state.shot; stealers, smilers, lurkers, hounds and Level 11 crawl foes use its ground stamp to investigate distant shots. Duller spawning is per-player, rate/cap/place-configured by dullers.yml; almondAt is written on drinking and controls the Duller's avoidance window. Level 0 dressing retains DR.v=6 hash placements, room-fit exclusions and arch openings."
   ]
 }
