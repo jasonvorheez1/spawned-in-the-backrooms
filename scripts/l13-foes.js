@@ -7,6 +7,7 @@ import D from "./lib/data/level13.yml";
 import { apt, aptAt, inHall } from "./lib/level13.js";
 import { SLOTS, homeOf, foeSpec } from "./lib/level13-foes.js";
 import { knocked } from "./lib/knock.js";
+import { dress, undress, STARE_RETREAT } from "./lib/lurker-kind.js";
 import { clearSight } from "./lib/sight.js";
 import { heard } from "./lib/hear.js";
 import { shotAt } from "./lib/hunt.js";
@@ -197,6 +198,7 @@ function lurker(ctx, mem, o, m, a, players, now, dt) {
   const door = { x: a.door.x, z: a.zf }, peer = { x: a.door.x, z: a.zf + a.s * 1.6 }; // peer: a point inside the doorway: watching means facing into the flat
   const hitNow = m.hp != null && (st.hp ?? 0) < m.hp;
   m.mode ??= "wait";
+  dress(ctx, o, "yellow"); // the Hall Lurker is a yellow-eye: look at it and it gives ground
   if (m.grab) { // lunge out, then haul the victim back along the same line; the victim's own lock expires by itself
     const g = m.grab, p = players.find((q) => q.id === g.id), t = now - g.at;
     if (!p || t >= LK.dragMs) { release(ctx, o, m, a, now, !!p); return; }
@@ -235,6 +237,10 @@ function lurker(ctx, mem, o, m, a, players, now, dt) {
   if (prey && (m.mode === "fight" || best < 3.2 || now < (m.angryUntil ?? 0) || clearSight(ctx, head(o, 0.9), head(prey, 1), [o.id, prey.id]))) m.mode = "fight";
   else if (!prey && m.mode === "fight") m.mode = "wait";
   if ((st.sneakTarget ?? null) !== (m.mode === "fight" ? prey?.id ?? null : null)) st.sneakTarget = m.mode === "fight" ? prey?.id ?? null : null;
+  if (m.mode === "fight" && prey && !m.swingAt) { // hold its yellow eyes in the fight and it backs off to the bathroom
+    m.stare = looking(prey, head(o, 1.2)) ? (m.stare ?? 0) + dt : Math.max(0, (m.stare ?? 0) - dt);
+    if (m.stare >= STARE_RETREAT.seconds && !hitNow) { m.stare = 0; m.mode = "bath"; m.bathUntil = now + STARE_RETREAT.ms; st.sneakTarget = null; say(ctx, S.hiss, pos, 1, 22); return; }
+  }
   if (m.mode === "fight" && prey) {
     if (m.swingAt) { // a slow swipe: the arm comes round, then lands if you are still there
       stand(o, dt);
@@ -269,7 +275,7 @@ function lurker(ctx, mem, o, m, a, players, now, dt) {
 function dead(ctx, o, m, slot, now, book) {
   const pos = o.feetPosition, T = slot.kind === "tenant";
   if (!m.deadAt) {
-    m.deadAt = now; if (!book[slot.id]) ctx.self.state.deadAt = { ...book, [slot.id]: now };
+    m.deadAt = now; if (!T) undress(ctx, o); if (!book[slot.id]) ctx.self.state.deadAt = { ...book, [slot.id]: now };
     if (m.grab) release(ctx, o, m, apt(slot.flat), now, false);
     if (!T) lamp(ctx, apt(slot.flat), true);
     if (o.state.sneakTarget) o.state.sneakTarget = null;
