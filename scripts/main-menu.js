@@ -92,8 +92,13 @@ export function onInput(ctx, input) {
     st.menuOpen = !st.menuOpen
     if (st.menuOpen) { st.menuKind = "pause"; st.wardrobeOpen = false; st.wrMenu = false }
   }
-  if (input.pressed?.tabaway) ctx.session.tabAway = !!input.actionData?.tabaway?.away && !(ctx.self.tags ?? []).includes("helper") // a helper's page never holds the room
-  else if (ctx.session.tabAway && (Object.values(input.axes ?? {}).some((v) => v) || Object.keys(input.pressed ?? {}).some((k) => input.pressed[k]))) ctx.session.tabAway = false // any move or key means they're back
+  // tab-out (Shelly Nov 13): a key still held as the window lost focus kept an axis non-zero, and that read as "they're back" the same tick, so the pause never held.
+  // Now only the focus event or a fresh key press a second after leaving brings you back; held axes are ignored.
+  const ss = ctx.session
+  if (input.pressed?.tabaway) { const away = !!input.actionData?.tabaway?.away && !(ctx.self.tags ?? []).includes("helper"); if (away && !ss.tabAway) ss.awayAt = ctx.now(); if (!away && ss.tabAway) ss.backAt = ctx.now(); ss.tabAway = away }
+  else if (ss.tabAway && ctx.now() - (ss.awayAt ?? 0) > 1000 && Object.keys(input.pressed ?? {}).some((k) => input.pressed[k])) { ss.tabAway = false; ss.backAt = ctx.now() }
+  // while away the voices and effects are muted for you alone, so nothing that slipped through piles up and plays at once on return; they come back 1.5 s after you do
+  if (ss.tabAway && !ss.hushed) { ss.hushed = true; ctx.self.gains = { Voice: 0, SFX: 0, Ambience: 0 } }
   const d = input.actionData?.mmenu
   if (input.pressed?.mmenu && d) {
     ctx.emit("playSound", { clip: CLICK, volume: 0.5 }, { audience: { player: ctx.self.id } })
@@ -109,6 +114,8 @@ export function onInput(ctx, input) {
 // while you're the only one in it; the Bonus Room is shared and never stops
 function holdTime(ctx, st) {
   const solo = ctx.self.place !== "bonus" && (ctx.place.playerCount ?? 1) <= 1
+  const ss = ctx.session
+  if (ss.hushed && !ss.tabAway && ctx.now() - (ss.backAt ?? 0) > 1500) { ss.hushed = false; ctx.self.gains = null }
   const want = ((st.menuOpen && st.menuKind === "pause") || (ctx.session.tabAway && !(ctx.self.tags ?? []).includes("helper"))) && solo ? 0 : 1 // a hidden tab holds a solo place too
   if ((ctx.place.timeScale ?? 1) !== want) ctx.place.timeScale = want
 }
