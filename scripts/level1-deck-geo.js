@@ -138,10 +138,11 @@ export function geometry(ctx) {
       void e0; void e1;
     }
     ctx.metalness(0); ctx.roughness(0.6);
-    if (hi) { ctx.color("oklch(0.8 0.15 88)"); const m = (b.za + b.zb) / 2; // chevrons at the foot, pointing up the slope
-      for (let k = 0; k < 3; k++) { const x = b.xl + dir * (0.8 + k * 1.1), yy = (Math.abs(x - b.xl) / (2 * S)) * Y + 0.01, t = dir * 0.5;
-        ctx.quad(x, yy, m - 2.2, x + t, yy + 0.15, m, x + t + dir * 0.3, yy + 0.16, m, x + dir * 0.3, yy, m - 2.2);
-        ctx.quad(x + dir * 0.3, yy, m + 2.2, x + t + dir * 0.3, yy + 0.16, m, x + t, yy + 0.15, m, x, yy, m + 2.2); } }
+    if (hi) { ctx.albedo(STALL); ctx.color("oklch(0.82 0.16 86)"); ctx.roughness(0.55); const m = (b.za + b.zb) / 2, yA = (x) => (Math.abs(x - b.xl) / L) * Y + 0.012; // Nov 13 (Shelly: "de ai slop and refine this ramp"): bold worn-paint chevrons, 45 cm wide, sat flush on the slope
+      for (let k = 0; k < 3; k++) { const x = b.xl + dir * (1.0 + k * 1.6), t = dir * 1.1, w = dir * 0.45;
+        ctx.quad(x, yA(x), m - 2.6, x + t, yA(x + t), m, x + t + w, yA(x + t + w), m, x + w, yA(x + w), m - 2.6);
+        ctx.quad(x + w, yA(x + w), m + 2.6, x + t + w, yA(x + t + w), m, x + t, yA(x + t), m, x, yA(x), m + 2.6); }
+      ctx.albedo(null); }
   }
   ctx.color(null); ctx.roughness(null); ctx.albedo(null);
 }
