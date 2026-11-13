@@ -11,9 +11,9 @@ const chamf = (x, z, r, c) => [[x - r + c, z - r], [x + r - c, z - r], [x + r, z
 const X0 = DECK.cx0 * S - HALF, X1 = (DECK.cx1 + 1) * S - HALF, Z0 = DECK.cz0 * S - HALF, Z1 = (DECK.cz1 + 1) * S - HALF, Y = DECK.y, TOP = DECK.y + DECK.h;
 
 // a puddle: an irregular disc a hair over the floor, dark and glassy so the tubes stretch across it
-export function puddle(ctx, x, y, z, r, seed) {
-  const n = 11, pts = [];
-  for (let i = 0; i < n; i++) { const a = (i / n) * Math.PI * 2, k = 0.55 + hash(seed, i, 7) * 0.6; pts.push([x + Math.cos(a) * r * k * (1 + hash(seed, 1, 3) * 0.8), z + Math.sin(a) * r * k]); }
+export function puddle(ctx, x, y, z, r, seed) { // Nov 13: a soft wavy outline (two octaves of seeded wobble over 24 points), not an 11-point star
+  const n = 24, pts = [], st = 0.6 + hash(seed, 1, 3) * 0.8, ph = hash(seed, 2, 5) * 6.28, ph2 = hash(seed, 4, 9) * 6.28;
+  for (let i = 0; i < n; i++) { const a = (i / n) * Math.PI * 2, k = 0.78 + 0.16 * Math.sin(a * 2 + ph) + 0.08 * Math.sin(a * 5 + ph2) + (hash(seed, i, 7) - 0.5) * 0.06; pts.push([x + Math.cos(a) * r * k * st, z + Math.sin(a) * r * k]); }
   for (let i = 0; i < n; i++) { const p = pts[i], q = pts[(i + 1) % n]; ctx.tri(x, y, z, q[0], y, q[1], p[0], y, p[1]); }
 }
 
@@ -54,7 +54,7 @@ export function geometry(ctx) {
     }
   }
   // puddles where the deck sags: dark glassy water catching the tubes
-  ctx.albedo(null); ctx.metalness(0); ctx.roughness(0.03); ctx.color("oklch(0.3 0.01 240 / 0.9)");
+  ctx.albedo(null); ctx.metalness(0); ctx.roughness(0.03); ctx.color("oklch(0.5 0.012 230 / 0.28)"); // Nov 13: the ground floor's thin film here too, not opaque blots
   for (let cx = DECK.cx0; cx <= DECK.cx1; cx++) for (let cz = DECK.cz0; cz <= DECK.cz1; cz++) {
     if (rampCell(cx, cz) || hash(cx, cz, 421) > 0.55) continue;
     const x0 = cx * S - HALF, z0 = cz * S - HALF;
