@@ -123,6 +123,10 @@ hair:   # each carries a Hatted key (art/cat-wardrobe/hair-hatted.py): flat to t
   curtains: { f: '/cdn/value.dd9c862b8df79393a99730aeed17c4f007645b5bab1ad93d96c37e029f99d0d9.glb', m: '/cdn/value.2d6125d5e2a5fffcc94a25b5b0cae07bda134d1789812eb220d6d677d37819c7.glb' }
   locs: { f: '/cdn/value.97cdbe7c779bae07732feabc508b3835b6ee80241c004db960549fa7a0c59c35.glb', m: '/cdn/value.df9ea044bc1f926f3a60dbd41105b8a89652394ea793b5dab960c4bf382bbfa1.glb' }
   buzz: { f: '/cdn/value.874e5605104811fae8728e8722459da701905fb5b24943e5c69f10e63bf236c3.glb', m: '/cdn/value.e6f71b667ca5f5fa8353ed98a1182a30b98297fb1314ff8b0d9620445dfd2849.glb' }
+  # Nov 13 unisex three (Shelly #333472 "2 or 3 new unisex hairs"): Tripo, prefit + hair-newfit.py on both bodies
+  coils: { f: '/cdn/value.68f167f7729dae27fba90f2c55b6329c2e6bcc82f1662cab095a7ff779f0b93d.glb', m: '/cdn/value.2cabd99220b6dc0a187e24e563e37a160a6475a36038f4a17af307c58cfe566e.glb' }
+  slickback: { f: '/cdn/value.70becdbf50e1f684d9d4f6a58ae646fc2ece045f00f5f2a6fc45b39a3d1cdacb.glb', m: '/cdn/value.fe1970cc026672f38b8cad9b9fd9261b538bcb3b194543e89dacde9e5c5e86c4.glb' }
+  topknot: { f: '/cdn/value.81048f732b7d1e4a981f8a7c00c2efd4c178de3b508cfe386d758137cc702500.glb', m: '/cdn/value.b962c8c2ca944fc1a70587748222cd55dbc95ab42dfbd561d139eedd488b03e2.glb' }
   sidetail: { f: '/cdn/value.8370ca026f597a90421e9ea4f49d79a51ceeea2b573669422bcadb521e81ae7e.glb' }
   twintails: { f: '/cdn/value.40a22c971ed4e3f1c46695d58f41d4feb6ca1220c852961e5d1ecee1c92b216c.glb' }   # Nov 11 Tripo remake (old one rejected #219816)
   ponytail: { f: '/cdn/value.024f6f0f18d3e33bf0cd5f1b62d7b8ba43c747ec17a14e0da73b67ae65ba668e.glb' }
