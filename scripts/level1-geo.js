@@ -4,6 +4,7 @@ import { N, S, H, HALF, DOOR, zoneOf, edge, hasPillar, sectorOf, cellCenter, RAC
 import { puddle } from "./level1-deck-geo.js";
 import { slab, prism, tube } from "./lib/shapes.js";
 
+const CFLOOR = "cdn/texture-sealed-epoxy-coated-concrete-service-corridor-floor-scuffed-worn-patches.png";
 const CMU = "cdn/texture-painted-concrete-block-wall-cream-paint-scuffed-damp-grime-low.png";
 const FLOOR = "cdn/texture-wet-sealed-parking-garage-concrete-floor-tire-scuffs-oil-stains-hairline-cracks.png", STALL = "cdn/texture-worn-chipped-white-road-line-paint-on-concrete.png", WALL = "cdn/texture-discolored-poured-concrete-wall-water-stains.png", CEIL = "cdn/texture-concrete-ceiling-panels.png";
 const box = (ctx, x0, x1, y0, y1, z0, z1) => slab(ctx, [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], [(x1 - x0) / 2, (y1 - y0) / 2, (z1 - z0) / 2]);
@@ -50,8 +51,53 @@ export function geometry(ctx) {
     // light poured concrete like the reference garages: pale and even, a few cells darker where water sits (Shelly: "the floor textures need improvement")
     ctx.color(zone === "corridors" ? "oklch(0.86 0.01 80)" : hash(cx, cz, 3) < 0.18 ? "oklch(0.74 0.008 240)" : hash(cx, cz, 4) < 0.5 ? "oklch(0.84 0.007 85)" : "oklch(0.9 0.005 240)");
     ctx.roughness(hash(cx, cz, 5) < 0.35 ? 0.16 : 0.48); // wet patches catch the tubes
+    if (zone === "corridors") { ctx.albedo(CFLOOR); ctx.color("oklch(0.78 0.02 160)"); ctx.roughness(0.32); } // Nov 13 corridor pass: sealed service-corridor floor, a step greener than the car park
     ctx.quad(x0, 0, z0, x0, 0, z0 + S, x0 + S, 0, z0 + S, x0 + S, 0, z0);
+    if (zone === "corridors") ctx.albedo(FLOOR);
   }
+  // Nov 13 corridor pass (Shelly: "this area looks like garbage" / "improve this area"): each back-corridor room gets a
+  // yellow safety line inset from its walls, a caged bulkhead lamp on the ceiling (its light: places/level1/sim.js corrV),
+  // a pipe run on hangers and a fire-hose cabinet or breaker panel on one wall
+  if (hi) for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
+    if (zoneOf(cx, cz) !== "corridors") continue;
+    const x0 = cx * S - HALF, z0 = cz * S - HALF, x1 = x0 + S, z1 = z0 + S, mx = x0 + S / 2, mz = z0 + S / 2, i = 0.45, w = 0.07;
+    ctx.albedo(STALL); ctx.color("oklch(0.78 0.15 88)"); ctx.roughness(0.55);
+    for (const [ax0, ax1, az0, az1] of [[x0 + i, x1 - i, z0 + i, z0 + i + w], [x0 + i, x1 - i, z1 - i - w, z1 - i], [x0 + i, x0 + i + w, z0 + i, z1 - i], [x1 - i - w, x1 - i, z0 + i, z1 - i]])
+      ctx.quad(ax0, 0.004, az0, ax0, 0.004, az1, ax1, 0.004, az1, ax1, 0.004, az0);
+    ctx.albedo(null);
+    // bulkhead: a cast base, a frosted dome, a wire cage over it, hung on a short conduit drop
+    ctx.color("oklch(0.4 0.01 250)"); ctx.metalness(0.6); ctx.roughness(0.45);
+    tube(ctx, [[mx, H, mz], [mx, H - 0.32, mz]], [0.018, 0.018], 6);
+    box(ctx, mx - 0.13, mx + 0.13, H - 0.38, H - 0.32, mz - 0.13, mz + 0.13);
+    ctx.metalness(0); ctx.color("oklch(0.97 0.03 90)"); ctx.emissive("oklch(0.95 0.06 85)");
+    box(ctx, mx - 0.1, mx + 0.1, H - 0.5, H - 0.38, mz - 0.1, mz + 0.1);
+    ctx.emissive(null); ctx.color("oklch(0.3 0.01 250)"); ctx.metalness(0.7);
+    for (const d of [-0.11, 0, 0.11]) { box(ctx, mx + d - 0.006, mx + d + 0.006, H - 0.52, H - 0.38, mz - 0.115, mz + 0.115); box(ctx, mx - 0.115, mx + 0.115, H - 0.52, H - 0.38, mz + d - 0.006, mz + d + 0.006); }
+    // a pair of insulated pipes along one side on drop hangers
+    const alongX = hash(cx, cz, 601) < 0.5, side = hash(cx, cz, 602) < 0.5 ? 0.55 : S - 0.55;
+    for (const [k, r, col] of [[0, 0.07, "oklch(0.86 0.01 90)"], [0.2, 0.045, "oklch(0.5 0.12 30)"]]) {
+      ctx.color(col); ctx.metalness(k ? 0.4 : 0); ctx.roughness(k ? 0.5 : 0.85);
+      const y = H - 0.42, o = side + (side < S / 2 ? k : -k);
+      tube(ctx, alongX ? [[x0, y, z0 + o], [x1, y, z0 + o]] : [[x0 + o, y, z0], [x0 + o, y, z1]], [r, r], 8);
+    }
+    ctx.color("oklch(0.35 0.01 250)"); ctx.metalness(0.6);
+    for (let u = 1; u < S; u += 2) { const y = H - 0.42; if (alongX) box(ctx, x0 + u - 0.01, x0 + u + 0.01, y, H, z0 + side - 0.02, z0 + side + 0.02); else box(ctx, x0 + side - 0.02, x0 + side + 0.02, y, H, z0 + u - 0.01, z0 + u + 0.01); }
+    // one wall fixture: a red hose cabinet or a grey breaker panel, set against a wall that is there
+    const kind = hash(cx, cz, 603);
+    if (kind < 0.6) {
+      const ex = edge(cx, cz, "x"), wx = x1 - 0.12; // the cell's +x wall
+      if (ex && ex.door == null) {
+        const red = kind < 0.25, zc = mz + (hash(cx, cz, 604) - 0.5) * 3;
+        ctx.metalness(0.5); ctx.roughness(0.4); ctx.color(red ? "oklch(0.5 0.18 27)" : "oklch(0.62 0.01 240)");
+        box(ctx, wx - 0.2, wx, red ? 0.9 : 1.1, red ? 1.75 : 1.95, zc - (red ? 0.35 : 0.25), zc + (red ? 0.35 : 0.25));
+        ctx.color("oklch(0.2 0.01 250)"); box(ctx, wx - 0.205, wx - 0.195, red ? 1.3 : 1.5, red ? 1.36 : 1.56, zc + (red ? 0.25 : 0.17), zc + (red ? 0.31 : 0.21));
+        if (!red) { ctx.color("oklch(0.62 0.006 250)"); tube(ctx, [[wx - 0.1, 1.95, zc], [wx - 0.1, H, zc]], [0.02, 0.02], 6); }
+        if (red) { ctx.color("oklch(0.95 0.01 90)"); ctx.metalness(0); box(ctx, wx - 0.206, wx - 0.2, 1.62, 1.7, zc - 0.22, zc + 0.22); }
+      }
+    }
+    ctx.metalness(0); ctx.roughness(0.85);
+  }
+  ctx.albedo(FLOOR);
   // painted floor: parking stall lines along the hall cells, a yellow walkway edge, tire tracks darkening the drive lanes
   if (hi) {
     ctx.albedo(STALL); ctx.roughness(0.6);

@@ -54,7 +54,12 @@ export function tick(ctx) {
   if (!(Math.abs(now - (ctx.session.wallTick ?? -1e9)) < 2000)) { ctx.session.wallTick = now; tickWalls(ctx); } // broken interior walls: holes drawn, regrown after a while (lib/breakables.js)
   if (!s.almondTidy) { s.almondTidy = 1; for (const o of ctx.query({ tags: ["almond"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const p = o.feetPosition ?? { x: 0, y: 0, z: 0 }; if (p.y < 0.15 && !(Math.hypot(p.x - cellCenter(ARRIVE.cx, ARRIVE.cz).x - 2.4, p.z - cellCenter(ARRIVE.cx, ARRIVE.cz).z + 2.4) < 3)) ctx.destroy(o.id); } } // loose floor bottles cleared once: almond water lives in containers and drops now
   tickChatter(ctx, CHATTER.level1, {"meg-ale": "ale", "meg-ortiz": "ortiz", "meg-callum": "callum"}); // the camp talks among itself while someone's near
-  if (!s.seeded) { s.backV = 2; // a fresh room lays its wall home where it belongs: nothing to move
+  if (s.seeded && s.corrV !== 1) { s.corrV = 1; // Nov 13 corridor pass: every back-corridor room lit by its bulkhead (scripts/level1-geo.js draws the fixture)
+    for (const o of ctx.query({ tags: ["l1lamp"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const p = o.feetPosition; const { cx, cz } = { cx: Math.floor((p.x + N * S / 2) / S), cz: Math.floor((p.z + N * S / 2) / S) }; if (zoneOf(cx, cz) === "corridors") ctx.destroy(o.id); }
+    for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) { if (zoneOf(cx, cz) !== "corridors") continue; const c = cellCenter(cx, cz);
+      ctx.spawn({ tags: ["l1lamp", "l1corr"], feetPosition: { x: c.x, y: H - 0.55, z: c.z }, light: { kind: "point", color: "oklch(0.92 0.06 85)", intensity: 3.2, distance: 11, shadow: { enabled: false } } }); }
+  }
+  if (!s.seeded) { s.backV = 2; s.corrV = 1; // a fresh room lays its wall home where it belongs: nothing to move
     s.seeded = true;
     ctx.spawn("l1-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level1-geo.js" }, material: { roughness: 0.85, emissiveIntensity: 2 } });
     for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
