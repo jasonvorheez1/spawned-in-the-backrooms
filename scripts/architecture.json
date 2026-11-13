@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7529,
-  "updatedAt": "2026-11-13T18:55:13.327Z",
+  "basedOnSpecVersion": 7530,
+  "updatedAt": "2026-11-13T18:56:17.596Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG across Level 0, a social mall, The Hub and authored lore destinations; durable player.state carries progression, gear, quests, homes, companions, reputation and resume location. Shared player behaviors join generated and authored spaces, while The Hub maps doors to destinations and faction standing shapes dialogue, disguise and trade.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0 yellow maze, ecology, routes, landmarks, anomalies and deterministic modeled dressing.",
-    "places/bonus (3D) - vaporwave mall with simulated staff, shops, arcade, payphones, player-home kiosk, Squeeze Play and Glow Up Salon.",
+    "places/main (3D) - Level 0 yellow maze, ecology, routes, landmarks, anomalies and deterministic modeled dressing; authored placements live in cells/.",
+    "places/bonus (3D) - vaporwave mall with simulated staff, shops, arcade, payphones, player-home kiosk, Squeeze Play and Glow Up Salon; authored placements live in cells/.",
     "places/thehub (3D) - generated tunnel crossroads with destination doors, keyed thresholds, survey plaques, fixtures, camps, crew and quest props; Phoebe's first-arrival scene starts here.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo, ephemeral) - character creation/waking, staged tutorial and HALOGEN handoff to Dina's lead.",
     "places/level9 (3D, The Suburbs) - seed-generated streets/houses and timed fog banks; the fog's Mangled hunt the streets, freeze when watched, and lurk outside houses.",
     "places/level8 (3D) - Cave Systems; its cave-mouth exit connects to Level 9 alongside its other authored cave routes.",
-    "places/level01, level02, level1-7, level10-13, level21, level26-27, level31, level70, gamma, spamton, testlab (3D) - authored lore destinations; Level 1 has station/car-park geometry, Level 5 the Terror Hotel, Level 7 sea/islands and Level 31/70 bespoke systems.",
-    "places/bonus/cells and places/main/cells - mall and Level 0 authored placements; Level 0 sim supplies generated maze dressing."
+    "places/level01, level02, level1-7, level10-13, level21, level26-27, level31, level70, gamma, spamton, testlab (3D) - authored lore destinations; Level 1 has station/car-park geometry, Level 5 the Terror Hotel, Level 7 sea/islands and Level…",
+    "places/bonus/cells and places/main/cells - authored mall and Level 0 placements; Level 0 sim supplies generated maze dressing."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input mappings; player template includes per-player Duller spawning.",
@@ -76,7 +76,7 @@
     "scripts/meg-agent.js + npc-temper.js + forgive.js + critter-model.js - shared NPC reactions, cover, voiced barks, movement/fighting and companion following; faction, role, outfit and first-hit assault handling vary by NPC.",
     "errands.yml + errands.js + quest-dialogue.js + quests.js - shared job offers, objective stages, journal/tracker and rewards; named NPCs/levels vary objectives and text.",
     "Level 0 kit builders/data + places/main/sim.js - model catalogs feed deterministic dressing in DR.batch rows with per-piece fixes and room-fit collision rules; l0-dress.yml varies cubicles/camp variants and blackout-edge lamp states.",
-    "places/level9/sim.js + scripts/lib/level9.js + l9-houses.yml/l9-props.yml + scripts/l9-mangled.js - persistent seed-driven streets/house dressing and timed fog entity behavior; Mangled spawn/targeting varies by player locations, visibility and house lots."
+    "places/level9/sim.js + scripts/lib/level9.js + l9-houses.yml/l9-props.yml + scripts/l9-mangled.js - persistent seed-driven streets/house dressing and timed fog entity behavior; Mangled spawn/targeting varies by player locations, visibility…"
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -87,10 +87,10 @@
   ],
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
-    "scripts/lib/save.js SAVE_V=2: intake, bonus and tutorial0 are transient and never save resume locations; migration clears legacy transient savePlace/savePos without overwriting earned state. player.js retries wake crossings up to three times.",
-    "The Hub's run frame and coordinates are centralized in scripts/lib/thehub.js; u follows a run, v spans its width, +X trunk, side tunnels alternate north/south. Preserve door IDs, OPEN/KEYED mappings and coordinates together across simulation/door/key consumers.",
-    "Hub place.state.hubV is generated-scene migration version (v8); its versioned rebuilds include door set, dressing, door-mark lamps and plaques. Hub Level Keys are player.state.hubKeys keyed by destination; keyed thresholds consume one matching key.",
-    "Level 9 uses place.state.l9seed as persistent deterministic layout seed and l9fog.on as the Mangled spawn/behavior gate; preserve seed and looted container contents/lock state on rebuild. Mangled use the l8-hostile combat tag; model is 2.5 m, feet-origin, +Z forward.",
+    "scripts/lib/save.js SAVE_V=2: intake, bonus and tutorial0 are transient and never save resume locations; migration clears legacy transient savePlace/savePos without overwriting earned state. player.js retries wake crossings up to three tim…",
+    "The Hub's run frame and coordinates are centralized in scripts/lib/thehub.js; u follows a run, v spans its width, +X trunk, side tunnels alternate north/south. Preserve door IDs, OPEN/KEYED mappings and coordinates together across simulati…",
+    "Hub place.state.hubV is generated-scene migration version (v8); its versioned rebuilds include door set, dressing, door-mark lamps and plaques. Hub Level Keys are player.state.hubKeys keyed by destination; keyed thresholds consume one matc…",
+    "Level 9 uses place.state.l9seed as persistent deterministic layout seed and l9fog.on as the Mangled spawn/behavior gate; preserve seed and looted container contents/lock state on rebuild. Mangled use the l8-hostile combat tag; model is 2.5…",
     "Faction fame and infamy are separate durable 0..100 values per group; rep is their signed compatibility net for existing readers. M.E.G. and B.N.T.G. ranks derive from standing; hit squads use session state, not durable faction fields."
   ]
 }
