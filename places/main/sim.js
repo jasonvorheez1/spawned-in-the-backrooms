@@ -72,7 +72,7 @@ function dressPlan(ctx) {
   const OF = DR.offices ?? {}, cubeLeft = [];
   for (const [cx, cz, d] of cells(["offices"], DR.counts.cubicles)) {
     const side = rnd() < 0.5 ? -1 : 1, chOff = (rnd() - 0.5) * 0.4, chYaw = (rnd() - 0.5) * 70, pnYaw = (rnd() - 0.5) * 6;
-    const hv = (s) => hash(cx, cz, s), cleared = hv(601) < (OF.cleared ?? 0), shove = hv(602) * (OF.shove ?? 0);
+    const hv = (s) => (hash(cx, cz, s) * 9.973) % 1, cleared = hv(601) < (OF.cleared ?? 0), shove = hv(602) * (OF.shove ?? 0);
     const desk = wallPose(cx, cz, d, side * 0.4, 0.42 + shove), yaw = desk.yaw + 180 + (hv(604) - 0.5) * 2 * (OF.deskYaw ?? 0);
     if (!cleared) add({ tags: ["l0dress", "breakable", "furniture", "container", "desk"], feetPosition: { x: desk.x, y: 0, z: desk.z }, rotation: yaw, visibleRange: { max: 46 }, castShadow: true, physics: { body: "static", collider: "box" }, model: fmodel("desk"), state: { mat: "wood", hp: 80, items: null, name: "Desk drawers" } });
     else cubeLeft.push([hv(606) < 0.5 ? "box-single" : "bin", desk.x, desk.z, hv(607) * 360]);
