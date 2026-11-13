@@ -50,7 +50,7 @@ export function layVaults(ctx, { sp, bx, cyl }) {
   }
   for (const [i, z] of [68.5, 72.5, 76.5, 80.5, 84.5, 88.3].entries()) {
     sp(`l11-vault-girder-${i}`, { feetPosition: { x: 13.3, y: -0.62, z }, model: { id: MODELS.ibeam, forward: "-z" } });
-    if (i > 0 && i < 5) sp(`l11-vault-col-${i}`, { feetPosition: { x: 12.4, y: FY, z }, model: { id: "/cdn/value.e146ed8989e58f4c4777db16c9bf93fd51d55ab0f832b1710fe7a887e0b07574.glb", forward: "-z" }, layout: { box: { min: { x: -0.32, y: 0, z: -0.32 }, max: { x: 0.32, y: -0.62 - FY, z: 0.32 } } }, physics: { body: "static", collider: "box" } }); // Tripo riveted IRT column (Shelly Nov 13: revamp this subway)
+    if (i > 0 && i < 5) sp(`l11-vault-col-${i}`, { feetPosition: { x: 12.4, y: FY, z }, model: { id: "/cdn/value.e146ed8989e58f4c4777db16c9bf93fd51d55ab0f832b1710fe7a887e0b07574.glb", forward: "-z" }, layout: { box: { min: { x: -0.42, y: 0, z: -0.42 }, max: { x: 0.42, y: -0.62 - FY, z: 0.42 } } }, physics: { body: "static", collider: "box" } }); // Tripo riveted IRT column (Shelly Nov 13: revamp this subway)
   }
   for (let z = 70; z <= 86; z += 5.3) sp(`l11-vault-lamp-${z}`, LAMP(z, 15.3, z, z === 80.6 ? "oklch(0.6 0.08 120)" : undefined, z === 80.6 ? 0.8 : 2.2));
   // the dead train in the pit: one long car, doors open onto nothing
