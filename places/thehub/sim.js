@@ -1,11 +1,11 @@
 // The Hub: lays the tunnels, lamps, doors and camps once per room (place.state.hubV), then keeps its people.
-import { RUNS, lamps, DOORS, CURB, symbolSvg, doorFront } from "../../scripts/lib/thehub.js";
+import { RUNS, lamps, DOORS, CURB, symbolSvg, doorFront, KEY_NAMES, sealed } from "../../scripts/lib/thehub.js";
 import { keysOf, keyDoor } from "../../scripts/lib/hubkeys.js";
 import { layThings, keepCrew, keymaster } from "../../scripts/lib/hub-people.js";
 import { ARRIVE } from "../../scripts/lib/thehub.js";
 import { layLampModels, layDress } from "../../scripts/lib/hub-dress.js";
 export const cadence = "1s";
-const V = 6;
+const V = 7;
 const DOOR = { frame: { url: "/cdn/value.86c9f9f6e66d057fda78af73bde7c72cea84386e49891e45ea0ed3cddadb3e70.glb", offset: [0, 0, 0.432] }, leaf: { url: "/cdn/value.9437304a5bfa3c822e8830c3d88d9e6310980e867ff78651d84fc6dc5b01035c.glb" } }; // art/hub/doors.yml
 const PANEL = "cdn/texture-smooth-cast-concrete-lintel-panel-clean-fine-pores.png"; // the frame's lintel panel came mottled: a clean cast face for the carved mark
 const SODIUM = "oklch(0.8 0.15 68)";
@@ -48,7 +48,8 @@ export function tick(ctx) {
   if ((s.hubV ?? 0) < 1) { layShell(ctx); layLamps(ctx); }
   if ((s.hubV ?? 0) < 4) { if ((s.hubV ?? 0) >= 2) for (const d of DOORS) { if (ctx.place.objects[d.obj]) ctx.destroy(d.obj); if (ctx.place.objects[d.obj + "-t"]) ctx.destroy(d.obj + "-t"); } layDoors(ctx); } // v4: the modeled door set
   if ((s.hubV ?? 0) < 3) { layThings(ctx); if (!ctx.place.objects["hub-from-l1"]) ctx.spawn("hub-from-l1", { feetPosition: { x: ARRIVE.x + 1, y: ARRIVE.y, z: ARRIVE.z }, rotation: { yaw: -90 } }); }
-  if ((s.hubV ?? 0) < 6) layDoorLamps(ctx); // v6 (Nov 13 walk): each door's mark sat in the dark between wall lamps
+  if ((s.hubV ?? 0) < 6) layDoorLamps(ctx);
+  if ((s.hubV ?? 0) < 7) layPlaques(ctx); // v7 (Shelly Nov 13 "some indicator on which level is which") // v6 (Nov 13 walk): each door's mark sat in the dark between wall lamps
   if ((s.hubV ?? 0) < 5) { layLampModels(ctx); layDress(ctx); } // v5: modeled lamps, fans, tray, gutters, barriers, camp furniture
   s.hubV = V;
   if (!ctx.place.players?.length) return;
@@ -64,5 +65,19 @@ function layDoorLamps(ctx) {
     if (ctx.place.objects[id]) ctx.destroy(id);
     ctx.spawn(id, { feetPosition: { x: f.x, y: 4.95, z: f.z }, primitive: { kind: "cylinder", radiusTop: 0.16, radiusBottom: 0.2, height: 0.14 }, material: { color: "oklch(0.92 0.09 75)", emissive: "oklch(0.8 0.14 65)", emissiveIntensity: 3 }, castShadow: false,
       light: { kind: "point", color: "oklch(0.8 0.13 68)", intensity: 5, distance: 9, shadow: { enabled: false } } });
+  }
+}
+
+// a M.E.G. survey plaque bolted beside each door: the level it was logged to, sealed ones marked, the rest uncharted
+function layPlaques(ctx) {
+  for (const d of DOORS) {
+    const id = `hub-plaque-${d.id}`; if (ctx.place.objects[id]) ctx.destroy(id);
+    if (!ctx.place.objects[d.obj]) continue;
+    const name = d.open ? d.open.name : d.to ? KEY_NAMES[d.to] ?? d.to : null;
+    const shut = d.to && sealed(ctx, d.to), canon = !!d.open;
+    const line = name ? name.toUpperCase() : "UNCHARTED", sub = canon ? "ALWAYS OPEN" : shut ? "SEALED" : name ? "KEY REQUIRED" : "NO SURVEY";
+    const ink = shut ? "#8a2a1c" : canon ? "#2e5a2a" : name ? "#1d1a14" : "#5b5346";
+    ctx.spawn(id, { parent: d.obj, feetPosition: { x: 2.55, y: 1.45, z: -0.12 }, castShadow: false, primitive: { kind: "box", width: 0.62, height: 0.4, depth: 0.025 }, material: { color: "oklch(0.78 0.04 85)", metalness: 0.5, roughness: 0.6 },
+      ui: `<div face="front" class="w-full h-full flex flex-col items-center justify-center" style="font-family:monospace;color:${ink};border:6px solid ${ink};box-sizing:border-box;background:rgba(235,225,190,.92)"><div style="font-size:30px;letter-spacing:2px">M.E.G. SURVEY</div><div style="font-size:82px;font-weight:700;line-height:1">${line}</div><div style="font-size:34px;letter-spacing:4px">${sub}</div></div>` });
   }
 }
