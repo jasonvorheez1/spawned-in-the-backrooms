@@ -30,6 +30,9 @@ function seatedOn(player, ride) {
 export function update(ctx, dt) {
   // The eye sits inside the body, so the body is not drawn for its owner (everyone else still sees it).
   ctx.self.hideLocalPlayer = true
+  { const cs = ctx.player?.state // Absolute Cinema drives the view while a shot is possessed or a sequence plays
+    if (cs && (cs.possessedNodeId || cs.cinemaPlaying || cs.cinemaPlayback?.playing)) { ctx.self.session.cinemaYield = true; return }
+    if (ctx.self.session.cinemaYield) { ctx.self.session.cinemaYield = false; ctx.self.session.cam = { t: 0 } } }
 
   // Aiming down sights eases the field of view in (player.state.ads is written by scripts/player.js).
   const ps = ctx.player?.state, sess = (ctx.self.session.cam ??= { t: 0 })

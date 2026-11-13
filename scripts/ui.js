@@ -4,6 +4,8 @@ import { quickBar } from './lib/hud-quickbar.js'
 import { UI_THEME } from './lib/ui-theme.js'
 import { screen } from './lib/screen.js'
 import { overlay as lagscopeOverlay } from '../mods/lagscope/panel.js'
+import cinemaPanel from '../mods/absolute-cinema/lib/ui-cinema.js'
+import { renderCinemaOverlays } from '../mods/absolute-cinema/lib/ui-cinema-overlays.js'
 import * as modelingStudio from '../mods/modeling-studio/hud.js'
 export { m3dPvDown, m3dPvWheel, m3dPvReset, m3dPvTool, m3dPvDraft, m3dPvEdit, m3dPvClear, m3dTkMeasure, m3dTkDown, m3dTkWheel, m3dTkReset, m3dMpvMove, m3dMpvSize, m3dDraft, m3dPose, m3dPick, m3dPreview, m3dUpload, m3dAsk, m3dClearRefs, m3dGuide } from '../mods/modeling-studio/hud.js'
 // HUD and screen composition. Shared panel styling lives in lib/ui-theme.js.
@@ -400,7 +402,7 @@ function tarVeil(ctx, player) {
   const k = Math.round(until);
   return `<style>@keyframes tar${k}{0%{opacity:1}70%{opacity:.85}100%{opacity:0}}</style><div id="tar${k}" class="fixed inset-0 pointer-events-none" style="animation:tar${k} 3s ease-in forwards;background:radial-gradient(ellipse at 50% 45%,transparent 18%,rgba(4,6,8,.75) 46%,#020304 72%)"></div>`;
 }
-export default function render(ctx, player) { return tarVeil(ctx, player) + renderHud(ctx, player) + unlock12(ctx, player) + ritual12(ctx, player) + lagscopeOverlay(ctx, player) + UI_THEME } // the 3D studio button is off the HUD (Shelly, Nov 9: bothersome)
+export default function render(ctx, player) { return tarVeil(ctx, player) + renderHud(ctx, player) + unlock12(ctx, player) + ritual12(ctx, player) + lagscopeOverlay(ctx, player) + renderCinemaOverlays(player) + (player.state?.cinemaOpen ? cinemaPanel(player) : '') + UI_THEME } // the 3D studio button is off the HUD (Shelly, Nov 9: bothersome)
 function renderHud(ctx, player) {
   const s = player.state ?? {}
   const quick = !s.building && screen(s,player.place)==='play' && Object.keys(s.quickSlots??{}).length ? quickItems(s) : []
