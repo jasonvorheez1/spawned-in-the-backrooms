@@ -251,6 +251,10 @@ shops:
     - ["cloth:topw:jacket:2c3e50", 1, 12]
     - ["cloth:shoes:boots:1a1a24", 1, 8]
     - ["cloth:hat:cap:8e44ad", 1, 6]
+    # B.N.T.G. company stock: the 4th column is the B.N.T.G. fame it takes to be sold one (Savi's picks; scripts/talk.js shop)
+    - ["cloth:topw:tank:8a7a55", 1, 26, 12]
+    - [weapon:pistol~bntgissue, 1, 52, 25]
+    - [weapon:carbine~vaultissue, 1, 120, 55]
   default:
     - [ammo, 2, 5]
     - [ration, 2, 3]

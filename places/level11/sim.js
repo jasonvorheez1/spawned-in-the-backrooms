@@ -1588,7 +1588,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
       role: "merchant",
       voice: "reyes",
       faction: "bntg",
-      factionName: "Backrooms Non-Commercial Traders Guild",
+      factionName: "B.N.T.G., the Backrooms Nonaligned Trade Group",
       home: { x: MKT_X + 1.04, z: MKT_Z + 2.93 },
       line: "Greetings, citizen! Fresh bread and apples just noclipped into our crates this morning. The Capital always keeps its people fed.",
       ...npcState(ctx, "trader", 100),

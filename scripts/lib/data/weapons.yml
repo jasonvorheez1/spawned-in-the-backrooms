@@ -93,6 +93,8 @@ variants:
   cpissue:  { name: Compass Point,  for: [ranged], chance: 0, damage: 1.05, cone: 0.55, range: 1.2, rarity: 2, xp: 2, cnd: 100, look: meg }       # explorers: true at range
   qmissue:  { name: Quick Match,    for: [melee, ranged], chance: 0, cooldown: 0.84, reloadTime: 0.75, stamina: 0.85, rarity: 2, xp: 2, cnd: 100, look: meg }   # improvisers: fast hands
   wwissue:  { name: Wild Warriors,  for: [melee, ranged], chance: 0, damage: 1.22, magSize: 1.25, cooldown: 1.04, rarity: 2, xp: 2.4, cnd: 100, look: meg }       # protectors: hits hardest
+  bntgissue: { name: Trader's Keep,  for: [ranged], chance: 0, damage: 1.0, reloadTime: 0.8, cnd: 100, rarity: 2, xp: 2, look: mag }   # B.N.T.G. couriers: kept clean, fast to load
+  vaultissue: { name: Vault Guard,   for: [ranged], chance: 0, damage: 1.18, magSize: 1.3, cone: 0.6, cnd: 100, rarity: 2, xp: 2.4, look: mag }   # the Trader's Vault watch
   meg:      { name: M.E.G.-issue, for: [melee, ranged], chance: 4, damage: 1.12, cooldown: 0.92, cone: 0.7, rarity: 2, xp: 2.2, cnd: 100, look: meg }
 # Zenith Station energy weapons (Shelly, Nov 9: "introduce laser weapons (using the energy weapons stat)"). energy: true = the Energy Weapons skill
 # (Observation behind it), ammoType cells. A beam is a near-instant bolt: mv 2400 m/s, no drag. Found only on Zenith drones and in the station (pools: [l01]).

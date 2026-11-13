@@ -363,7 +363,7 @@ function shop(ctx, d) {
   const stock = { ...it.state.stock }
   if (d.k === 'buy') {
     const row = stock[t]; if (!row || row[0] < 1) { note(ctx, 'Sold out.'); return }
-    const gate = stockOf(it).find((r) => r[0] === t)?.[3]; if (gate && fameOf(s, groupOf(it)) < gate) { note(ctx, `Team issue. The M.E.G. sells that to people it trusts (fame ${fameOf(s, groupOf(it))}/${gate}).`); return }
+    const gate = stockOf(it).find((r) => r[0] === t)?.[3]; if (gate && fameOf(s, groupOf(it)) < gate) { note(ctx, groupOf(it) === 'bntg' ? `Company stock. The B.N.T.G. sells that to people on its books (fame ${fameOf(s, 'bntg')}/${gate}).` : `Team issue. The M.E.G. sells that to people it trusts (fame ${fameOf(s, groupOf(it))}/${gate}).`); return }
     const price = buyPrice(row[1], barter, disc)
     const cents = price * 100 // Backdollars only: traders don't take almond water as money any more
     if ((s.cents ?? 0) < cents) { note(ctx, `Not enough Backdollars: $${price}.00`); return }
