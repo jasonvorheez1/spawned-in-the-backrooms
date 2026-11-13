@@ -17,7 +17,7 @@ import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, isNewCat, 
 import { navPath } from "./lib/nav.js";
 import { raycast } from "builtin/physics";
 import { animate } from "builtin/tween";
-import { swing3, fire3, aimPose, aimMode, longHands, famOf, tick3, heldRot, stagger3 } from "./lib/body3.js";
+import { swing3, fire3, aimPose, aimMode, longHands, famOf, tick3, heldRot, stagger3, carry3 } from "./lib/body3.js";
 import G from "./lib/data/meg.yml";
 import WP from "./lib/data/weapons.yml";
 import { weaponBody } from "./lib/weapon-look.js";
@@ -383,6 +383,7 @@ export function update(ctx, dt) {
   if (!ctx.self.state.temperV && ctx.self.state.attr) shapeTemper(ctx.self);
   const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0, shots: 0 }), now = ctx.now();
   m.nowT = now; tick3(me, now); // release finished combat takes
+  { const A = WP[me.state.arm]; carry3(me, me.state.arm, !!A && !A.ranged && !!me.state.armed && (me.state.hp ?? 1) > 0 && now - (m3(me).at ?? 0) > 1000); } // a drawn melee weapon is carried across the body between swings, as a player's is (scripts/lib/body3.js)
   if (m.dressed !== 5) { m.dressed = 5; if (!s.dead) dress(ctx, me); }
   // empty level or far-off NPC: sleep to save CPU (perf)
   if (!ctx.place.players.length) { ctx.sleep(2); return; }

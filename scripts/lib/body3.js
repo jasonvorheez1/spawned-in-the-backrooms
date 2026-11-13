@@ -33,9 +33,12 @@ const HUMAN_PISTOL_Q = { pitch: 90, roll: 180 }
 // melee pieces whose file runs head-first along the critter hand's grip axis: in the fist they swung handle-out, the blade or head by the knuckles
 // (the scripted blades and the Tripo hatchet and fire axe; checked at each family's contact frame on the cat, Nov 13). Turned end for end, grip back in the palm.
 const HAND_FLIP = new Set(['carbine']) // Shelly Nov 13: the carbine sat backwards in the paw at hipfire, right in the sights
-const MELEE_FLIP = new Set(['machete', 'katana', 'sword', 'shiv', 'switchblade', 'hatchet', 'fire_axe'])
+const MELEE_FLIP = new Set(['machete', 'katana', 'sword', 'shiv', 'switchblade', 'hatchet', 'pickaxe'])
+// the hatchet and pickaxe files have their origin up by the head: turned and slid down the handle so the fist closes on its end and the head leads the swing (both cats, carry and contact frames).
+// the fire axe is left as it was: its file is built off-centre (head at the origin, handle off to one side) and no turn seats it; it needs its own fit
+const MELEE_AT = { hatchet: -0.4, pickaxe: -0.4 }
 export function heldRot(kind, human = false) {
-  if (!human && !W[kind]?.ranged && MELEE_FLIP.has(baseOf(kind ?? ''))) return { rotation: { yaw: 180 }, feetPosition: { x: 0, y: 0, z: HOLD[baseOf(kind)] ?? 0 } }
+  if (!human && !W[kind]?.ranged && MELEE_FLIP.has(baseOf(kind ?? ''))) return { rotation: { yaw: 180 }, feetPosition: { x: 0, y: 0, z: MELEE_AT[baseOf(kind)] ?? HOLD[baseOf(kind)] ?? 0 } }
   if (famOf(kind) !== 'long') return human && W[kind]?.ranged ? { rotation: HUMAN_PISTOL_Q, feetPosition: { x: 0, y: 0.02, z: 0.04 } } : {}
   const base = baseOf(kind ?? ''), fp = firstPersonGun(base, W[kind]?.look)
   if (base === 'shotgun') return { rotation: SHOTGUN_Q, feetPosition: SHOTGUN_AT }
@@ -123,9 +126,11 @@ const chan = (r) => ({ clip: r.clip, weight: r.weight ?? 4, loop: r.loop || r.fr
 // a melee weapon out: carried across the body between swings (the family's ready row); off while a swing plays so the take reads at full strength,
 // and off for fists, a holstered weapon, a seat, a fall, a talk or a menu
 function meleeReady(me, s, now) {
-  const ss = me.session, fam = famOf(s.equipped), R = CA.melee?.[fam]?.ready
-  const on = !!R && !s.sheathed && !s.sit && !isDown(s, now) && !s.mj?.seats && !s.os && !s.talkWith && !s.building && now - (s.swingAt ?? 0) > 1000
-  const key = on ? fam : null
+  carry3(me, s.equipped, !s.sheathed && !s.sit && !isDown(s, now) && !s.mj?.seats && !s.os && !s.talkWith && !s.building && now - (s.swingAt ?? 0) > 1000)
+}
+// the carry channel for any body (players above; armed NPCs in scripts/meg-agent.js): written only when it changes
+export function carry3(me, kind, on) {
+  const ss = me.session, fam = famOf(kind), R = CA.melee?.[fam]?.ready, key = on && R ? fam : null
   if (ss.ready3 !== key) { ss.ready3 = key; me.anim.ready = key ? chan(R) : null }
 }
 export const aimMode = (me, aiming, crouch) => { const v = me.velocity ?? {}, sp = Math.hypot(v.x ?? 0, v.z ?? 0); return !aiming ? 'ready' : crouch ? (sp > 0.4 ? 'aimCrouchWalk' : 'aimCrouch') : sp > 3.2 ? 'aimJog' : sp > 0.4 ? 'aimWalk' : 'aim' }
