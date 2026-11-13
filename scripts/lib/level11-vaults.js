@@ -62,7 +62,7 @@ export function layVaults(ctx, { sp, bx, cyl }) {
   for (let k = 0; k < 3; k++) sp(`l11-vault-turn-${k}`, { feetPosition: { x: 13.3 + k * 1.1, y: FY, z: 68.4 }, primitive: null, material: null, model: { id: MODELS.turnstile, forward: "-z" }, scale: 0.82, physics: "none" }); // a 1.0 m steel token turnstile, arms swing aside so the lanes stay walkable
   sp("l11-vault-mvm", { feetPosition: { x: 18.95, y: FY, z: 69.2 }, rotation: { yaw: -90 }, model: { id: MODELS.mvm, forward: "-z" }, physics: { body: "static", collider: "box" } });
   for (const [i, z] of [[0, 74], [1, 83]]) sp(`l11-vault-bench-${i}`, { feetPosition: { x: 18.9, y: FY, z }, rotation: { yaw: -90 }, model: { id: MODELS.bench, forward: "-z" }, physics: { body: "static", collider: "box" } });
-  sp("l11-vault-bin", { feetPosition: { x: 18.9, y: FY, z: 71.6 }, model: { id: MODELS.bin, forward: "-z" }, physics: { body: "static", collider: "box" } });
+  sp("l11-vault-bin", { feetPosition: { x: 18.9, y: FY, z: 71.6 }, model: { id: MODELS.bin, forward: "-z" }, layout: { box: { min: { x: -0.3, y: 0, z: -0.3 }, max: { x: 0.3, y: 1.0, z: 0.3 } } }, physics: { body: "static", collider: "box" } });
   sp("l11-vault-crate-plat", { tags: ["usable"], feetPosition: { x: 17.8, y: FY, z: 87.6 }, model: { id: MODELS.meg_cache, forward: "-z", materials: { metal: STEEL } }, physics: { body: "static", collider: "box" }, behavior: "scripts/level11-use.js", state: { kind: "supply-chest", name: "Abandoned Commuter Locker", verb: "Search" } });
   // the Sedco vault, off the east wall at z 76..82: a second gate, SEDCO-SEC-01's
   bx("l11-vault-sfloor", 23, FY - 0.3, 79, 6.4, 0.3, 7, { color: "oklch(0.5 0.01 80)", roughness: 0.4, metalness: 0.3 });
