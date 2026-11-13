@@ -18,11 +18,11 @@ export const QUESTS = {
     key: "sedcoQ",
     name: "Spotlight on Sedco",
     tips: {
-      1: "Breach Sedco Spotlight by overriding terminal SEDCO-SEC-01 (Password: 'spotlight')",
-      2: "Search the sales counter and review CCTV camera feeds inside Sedco Spotlight",
-      3: "Calibrate the Fresnel Stage Spotlight inside Sedco Spotlight",
-      4: "Descend into the 14th St subway station and retrieve the Sedco Master Drive from the vault",
-      5: "Deliver the Sedco Master Drive to Courier on 11th Ave or Vance at Base Beta",
+      1: "Use the terminal outside Sedco Spotlight to unlock the shop. Password: spotlight.",
+      2: "Check the sales counter and the security footage inside Sedco.",
+      3: "Adjust the stage spotlight inside the shop.",
+      4: "Find Sedco's master drive in the vault under 14th Street station.",
+      5: "Give the drive to the courier on 11th Avenue or Vance at Base Beta.",
     },
     marks: {
       1: MARK("l11-sedco-terminal"),
@@ -36,10 +36,10 @@ export const QUESTS = {
     key: "craneQ",
     name: "The Paper Bird's Blessing",
     tips: {
-      1: "Seek out Entity 14 (Lucky Crane) resting on the Grand Canal balustrade",
-      2: "Follow the canal promenade to the Grand Canal Spillway Valve Station",
-      3: "Clear the jammed spillway valve and collect pure Canal Almond Water",
-      4: "Deliver the pure Almond Water to Trader Kael at the Central Market",
+      1: "Find the paper crane on the canal wall.",
+      2: "Follow the canal walkway to the spillway valve.",
+      3: "Free the jammed valve and collect a sample of canal almond water.",
+      4: "Bring the water sample to Kael at the market.",
     },
     marks: {
       1: MARK("l11-lucky-crane"),
@@ -52,10 +52,10 @@ export const QUESTS = {
     key: "maintQ",
     name: "Capital Infrastructure: The Night Shift",
     tips: {
-      1: "Bleed the overpressured B.R.C. Diesel Compressor at the west lane roadworks",
-      2: "Enter Apartment 11-B and vent the cast iron steam radiator",
-      3: "Test the apartment Almond Water kitchen tap and tune the radio to 104.2 FM",
-      4: "Report back to the Night Shift Janitor on 11th Avenue",
+      1: "Bleed the compressor at the roadworks in the west lane.",
+      2: "Vent the radiator in Apartment 11-B.",
+      3: "Test the kitchen tap and tune the radio to 104.2 FM.",
+      4: "Report back to the janitor on 11th Avenue.",
     },
     marks: {
       1: MARK("l11-roadwork-gen"),

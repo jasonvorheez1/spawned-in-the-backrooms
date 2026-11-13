@@ -20,13 +20,13 @@ const GLB = {
 };
 // what a machine tells you after its two seconds of noise, by state.res
 const RESULTS = {
-  racer: ["4th place. The other three cars had no drivers.", "Finished the lap. It was the same lap.", "2nd place. Initials entered: AAA."],
-  moto: ["You leaned the whole way. Time: 1:31.", "The bike rocks once and the screen says RIDE AGAIN."],
-  skee: ["No balls come down the chute. 0 points.", "The 100 ring lights by itself. 2 tickets, no slot to give them."],
+  racer: ["4th place. The other three cars had no drivers.", "You finish the lap. The lap counter still reads 1.", "2nd place. Initials entered: AAA."],
+  moto: ["Time: 1:31. The race timer keeps running after you stop.", "The bike rocks once and the screen says RIDE AGAIN."],
+  skee: ["No balls come down the chute. 0 points.", "The 100 ring lights by itself. The display counts two tickets. The tray stays empty."],
   hockey: ["The air comes on. There is no puck.", "The puck slides to your goal on its own. 0 - 1."],
-  wheel: ["The wheel lands on 5. Nothing comes out.", "It ticks round to JACKPOT, then one more click to 2."],
+  wheel: ["Five tickets. The paper in the slot has been cut flush.", "It ticks round to JACKPOT, then one more click to 2."],
   pinball: ["Ball drains down the middle. 12,400.", "TILT.", "One ball, three bumpers, 31,050. No replay."],
-  upright: ["GAME OVER. You made the fifth screen.", "High score still belongs to SAL.", "You lasted ninety seconds. The machine says THANKS."],
+  upright: ["GAME OVER. You made the fifth screen.", "High score still belongs to SAL.", "The screen goes black. THANKS appears in the high-score box."],
 };
 const note = (who, text, ctx) => { who.state.notice = { text, at: ctx.now() }; };
 export const ears = {
@@ -38,7 +38,7 @@ export const ears = {
       who.state.l31card = true;
       ctx.emit("playSound", { clip: SFX + "sfx-vending-machine-heavy-clunk.mp3", position: at, volume: 0.7, maxDistance: 16 });
       ctx.after(0.45, "cardSlide");
-      return note(who, "A green card drops into the tray. You take it.", ctx);
+      return note(who, "A green card slides into the tray. You pocket it.", ctx);
     }
     if (!who.state.l31card) { ctx.emit("playSound", { clip: SFX + "sfx-arcade-error-buzz-short.mp3", position: at, volume: 0.4, maxDistance: 12 }); return note(who, "Insert card.", ctx); }
     if (s.kind === "arcade") { // the game's Block Panic path (scripts/arcade.js), behind the card
@@ -92,11 +92,11 @@ export function layArcade(ctx) {
 
   const M = (id, key, x, z, yaw, state, materials, children) => ctx.spawn("l31-arcade-" + id, {
     feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: GLB[key], forward: "+z", materials }, physics: { body: "static", collider: "box" },
-    behavior: SELF, tags: ["usable", "l31-arcade"], state: { kind: "attract", verb: "Play", info: "arcade machine, takes a card", ...state }, children });
+    behavior: SELF, tags: ["usable", "l31-arcade"], state: { kind: "attract", verb: "Play", info: "Use a green card from the dispenser by the arch.", ...state }, children });
   const W = 90, EA = -90, S = 180; // the way a machine's player side faces
 
   const T = (id, key, x, z, yaw, state, box) => ctx.spawn("l31-arcade-" + id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: GLB[key], forward: "+x" }, layout: { box },
-    physics: { body: "static", collider: "box" }, behavior: SELF, tags: ["usable", "l31-arcade"], state: { kind: "attract", verb: "Play", info: "arcade machine, takes a card", ...state } });
+    physics: { body: "static", collider: "box" }, behavior: SELF, tags: ["usable", "l31-arcade"], state: { kind: "attract", verb: "Play", info: "Use a green card from the dispenser by the arch.", ...state } });
   // Tripo v3.1 (Nov 12): dispenser 0.7 x 1.7 x 0.5 m, air hockey 2.1 x 0.85 x 1.15 m
   T("dispenser", "dispenser", 42.45, -9.2, -90, { kind: "dispenser", name: "Card dispenser", verb: "Press", info: "Please press the button to get a card" }, { min: { x: -0.35, y: 0, z: -0.25 }, max: { x: 0.35, y: 1.7, z: 0.25 } });
 
@@ -104,7 +104,7 @@ export function layArcade(ctx) {
   for (let r = 0; r < 2; r++) for (let i = 0; i < 2; i++)
     ctx.spawn(`l31-arcade-racer-${r}${i}`, { feetPosition: { x: 43.05, y: 0, z: (r ? -23.6 : -28.2) + i * 1.62 }, rotation: { yaw: EA },
       model: { id: GLB.racer, forward: "+z" }, layout: { box: { min: { x: -0.8, y: 0, z: -0.63 }, max: { x: 0.8, y: 1.8, z: 0.63 } } }, physics: { body: "static", collider: "box" },
-      behavior: SELF, tags: ["usable", "l31-arcade"], state: { kind: "attract", verb: "Play", info: "arcade machine, takes a card", name: "Dust Devil GP", res: "racer", pitch: 0.94 + (r * 2 + i) * 0.05 } });
+      behavior: SELF, tags: ["usable", "l31-arcade"], state: { kind: "attract", verb: "Play", info: "Use a green card from the dispenser by the arch.", name: "Dust Devil GP", res: "racer", pitch: 0.94 + (r * 2 + i) * 0.05 } });
   // ride-on bikes against the north wall
   for (let i = 0; i < 2; i++) M("moto-" + i, "moto", 46.4 + i * 1.5, N + 1.4, S, { name: "Night Ride 500", res: "moto", pitch: 1.08 },
     { screen: glow("retro-arcade-crt-screen-motorbike-coast-road-racing-game", i ? "#d8ffe0" : "#ffffff"), marquee: lamp(i ? "#58c8ff" : "#ff4fb8", 1.4), tail: lamp("#ff2a1a", 2) });

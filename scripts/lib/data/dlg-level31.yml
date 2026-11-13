@@ -1,4 +1,4 @@
-# Level 31, the Roller Rink: the people who work the carpet. Written by hand, Nov 12.
+# Level 31, the Roller Rink. Recorded lines are keyed to the transcript.
 
 l31-coach:
   hi: "Hey there. Welcome in. Take a breath, nobody's in a hurry here. You skating today or just looking?"
@@ -22,7 +22,7 @@ l31-coach:
       then:
         - q: "How long have you been here?"
           a: "Long enough to know better. A place this comfortable will keep you if you let it. Skate a while, feel good, then go be somewhere that needs you. That's not me kicking you out. That's me liking you."
-    - q: "How do I leave?"
+    - q: "Where’s the exit to Level 2?"
       a: "Plywood door, south-west corner. Looks like somebody forgot to finish it. Push through and you're out. You're always welcome back."
   barks:
     idle: ["Bend your knees. Always the knees.", "Size nines are all out. Figures.", "Same song again. I don't mind it."]
@@ -71,8 +71,8 @@ l31-q-guard1:
   bye: "Mm."
   walk: "Good talk."
   ask:
-    - q: "What's the bat for?"
-      a: "Softball. B.N.T.G. company league. We were undefeated until we noticed nobody else was playing."
+    - q: "What did you do before this?"
+      a: "Counted stock at the hotel. Here I count the people who come in and the people who leave. It never comes out even."
     - q: "You like working for Marlowe?"
       a: "He pays on time and he talks enough for both of us. Best job I've had since the hotel."
   barks:
@@ -117,7 +117,7 @@ l31-dj:
   bye: "Okay. Skate good."
   walk: "The music's still on. It's always on."
   ask:
-    - q: "Can you play something else?"
+    - q: "What happens if you change the record?"
       a: "I try. Every time I put a new record on, it plays this. I've stopped minding. It's a good song."
     - q: "How long have you been the DJ?"
       a: "Since the lights came on. Somebody had to. Nobody else wanted to sit still."
@@ -158,7 +158,7 @@ l31-q-face2:
   ask:
     - q: "How long have you been practicing?"
       a: "Since I got here. I've gotten pretty good at falling. Like, really good."
-    - q: "Who runs this place?"
+    - q: "Is the Coach in charge?"
       a: "Coach, kind of. And the DJ. And the song. Mostly the song."
   barks:
     idle: ["Backwards. Backwards.", "Okay, that one counted.", "Who put a rail there?"]
@@ -176,7 +176,7 @@ l31-q-face3:
   bye: "Okay. Watch the lights."
   walk: "Fine."
   ask:
-    - q: "What happens at the slow one?"
+    - q: "How do you know when the slow skate starts?"
       a: "The lights go blue and everyone holds hands. Well. Everyone who's here. Which is me."
     - q: "Have you ever left?"
       a: "I tried the plywood door once. The music got quieter. I didn't like that, so I came back in."

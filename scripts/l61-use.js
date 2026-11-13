@@ -81,8 +81,8 @@ export const ears = {
     if (s.kind === "stew") { // Camp Amber's pot: the price is said first, E again within 10 s pays it (the 9th Road soup flow, scripts/l8-use.js)
       const PRICE = 200, ask = (s.ask ??= {});
       if (now - (cool[uid] ?? -1e9) < 15000) return tell("Eat what you've got first.");
-      if (!(now - (ask[uid] ?? -1e9) < 10000)) { s.ask = { ...ask, [uid]: now }; return tell("Camp stew, $2 backdollars. Buy?  (E again to pay $2.00)"); }
-      if ((w.cents ?? 0) < PRICE) { s.ask = { ...ask, [uid]: 0 }; return tell("Two backdollars a bowl. You're short.", "#ff9a7a"); }
+      if (!(now - (ask[uid] ?? -1e9) < 10000)) { s.ask = { ...ask, [uid]: now }; return tell("Camp stew is $2. Press again to buy a bowl."); }
+      if ((w.cents ?? 0) < PRICE) { s.ask = { ...ask, [uid]: 0 }; return tell("You need $2 for a bowl.", "#ff9a7a"); }
       s.ask = { ...ask, [uid]: 0 }; s.cool = { ...cool, [uid]: now }; w.cents -= PRICE;
       w.weapons = [...(w.weapons ? w.weapons.split(",") : []), "soup_bowl"].join(","); // the bowl: equip it, use from inventory or quick slot, click throws (scripts/player.js)
       snd("pot-lid-clink-and-ladle-in-soup", 0.55, 10);
@@ -150,7 +150,7 @@ export const ears = {
       const held = w.l61Hold && ctx.getObject(w.l61Hold);
       if (!held && (!w.l61Tray || w.l61Hold)) { // a tray set down or thrown has to be picked back up first
         snd("paper-flip-card-stand", 0.3, 6);
-        tell(w.l61Hold ? "BRING THE TRAY BACK FIRST" : "NO TRAY TO RETURN", "#aaaaaa");
+        tell(w.l61Hold ? "Bring the tray back first." : "You aren't carrying a tray.", "#aaaaaa");
         if (w.l61Hold && !held) { w.l61Hold = null; w.l61Tray = 0; }
         return;
       }
@@ -189,13 +189,13 @@ export const ears = {
 
     if (s.kind === "directory") {
       snd("paper-flip-card-stand", 0.5, 8);
-      w.notice = { text: "Track Mappers: restaurants north. Supplies and toilets south. Glass exit to Level 11 east. Level 6 checkpoint west.", at: now };
+      w.notice = { text: "Restaurants north. Vending and toilets south. Level 11 exit east. M.E.G. checkpoint west.", at: now };
       return;
     }
 
     if (s.kind === "payphone") {
       snd("walkie-talkie-radio-click-static-burst", 0.45, 6);
-      tell("...STATIC ON THE LINE... (NO OUTSIDE CARRIER · LEVEL 6.1 EXTENSIONS ONLY)", "#9fe8ff");
+      tell("The local line works. Dial out and you get static.", "#9fe8ff");
       return;
     }
 
