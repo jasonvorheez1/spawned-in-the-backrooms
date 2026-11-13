@@ -1,3 +1,4 @@
+import { hostileReason } from "./lib/forgive.js";
 import { l31Order } from './lib/level31-food.js'
 import { plain } from './lib/plain.js'
 import { actedVoice, hasCast, recordedDuration } from './lib/voices.js'
@@ -73,7 +74,7 @@ function canSee(ctx, o, me) {
 function canReact(ctx, o) {
   const s = ctx.self.state, n = o?.state
   return !!n && !s.dead && !s.talkWith && !s.shopOpen && !n.dead && !n.down && (n.hp ?? 1) > 0
-    && !n.hostile && !n.fleeing && !n.target && !n.angry?.[ctx.self.id]
+    && !n.hostile && !n.fleeing && !n.target && !hostileReason(ctx, o, ctx.self)
     && !ctx.place.players.some((p) => p.state?.talkWith === o.id || p.state?.shopOpen === o.id)
 }
 function react(ctx, ses, o, kind, now) {
@@ -145,7 +146,7 @@ const clamp = (v, a, b) => Math.max(a, Math.min(b, v))
 const note = (ctx, text) => { ctx.self.state.notice = { text, at: ctx.now() } }
 const skn = (k) => SKILLS.find((x) => x.k === k)?.name ?? (k[0].toUpperCase() + k.slice(1))
 function live(ctx, id) { const it = id && ctx.getObject(id); return it && !it.state?.dead && (it.state?.hp ?? 1) > 0 ? it : null }
-const rapportOf = (ctx, it) => it.state?.rapport?.[keyOf(ctx.self)] ?? (it.state?.angry?.[ctx.self.id] ? -60 : 0)
+const rapportOf = (ctx, it) => it.state?.rapport?.[keyOf(ctx.self)] ?? (hostileReason(ctx, it, ctx.self) ? -60 : 0)
 function setRapport(ctx, it, v) { it.state.rapport = { ...(it.state.rapport ?? {}), [keyOf(ctx.self)]: clamp(Math.round(v), -100, 100) } }
 
 function logLine(ctx, it, w, t) {
@@ -173,7 +174,7 @@ function close(ctx) { const s = ctx.self.state; ctx.self.session.tkHp = null; ct
 
 export function openDialogue(ctx, it) {
   const s = ctx.self.state, ses = ctx.self.session, now = ctx.now()
-  if (!it || it.state?.dead || (it.state?.hp ?? 1) <= 0) return
+  if (!it || it.state?.dead || (it.state?.hp ?? 1) <= 0 || hostileReason(ctx, it, ctx.self)) return
   s.talkWith = it.id
   s.shopOpen = null
   ses.talkingTo = it.id
@@ -205,7 +206,7 @@ function send(ctx, d) {
   const text = String(d.text ?? '').replace(/\s+/g, ' ').trim()
   if (!text) return
   if (now - (ses.talkAt ?? -1e9) < 500) return
-  if (it.state?.angry?.[ctx.self.id]) { service(ctx, it); return }
+  if (hostileReason(ctx, it, ctx.self)) { service(ctx, it); return }
   const choice = (s.talkChoices ?? []).find((c) => c && (c.text === text))
   if (!choice) return // only what's on the card can be said
   ses.talkAt = now
@@ -299,7 +300,7 @@ function gesture(ctx, it, k) {
     note(ctx, `Gave ${name}.`); answer('gift', 'happy', 'Oh. Thank you.'); return
   }
   if (k === 'dance') {
-    const willing = r > -10 && !it.state?.angry?.[ctx.self.id] && ctx.random() < 0.55 + r / 200
+    const willing = r > -10 && !hostileReason(ctx, it, ctx.self) && ctx.random() < 0.55 + r / 200
     if (willing) {
       const clip = 'cdn/clip-dance-loop.glb'
       it.anim.groove = { clip, loop: 'loop', weight: 0.85, blendIn: 0.3, blendOut: 0.4 }
@@ -324,7 +325,7 @@ function restock(ctx, it) {
 }
 function shop(ctx, d) {
   const s = ctx.self.state, it = live(ctx, s.shopOpen)
-  if (!it || !isTrader(it) || it.state?.angry?.[ctx.self.id]) { s.shopOpen = null; return }
+  if (!it || !isTrader(it) || hostileReason(ctx, it, ctx.self)) { s.shopOpen = null; return }
   restock(ctx, it)
   const t = String(d.t ?? ''), barter = skillsOf(s).barter ?? 0, disc = (it.state.discount?.[keyOf(ctx.self)] ?? 0) + repDisc(s, it)
   const stock = { ...it.state.stock }
@@ -408,12 +409,12 @@ export function update(ctx, dt) {
   if (!s.talkWith && !s.shopOpen) return
   m.acc += dt; if (m.acc < 0.3) return; m.acc = 0
   const it = live(ctx, s.talkWith ?? s.shopOpen)
-  if (it && !it.state?.angry?.[ctx.self.id] && flat(it.feetPosition, ctx.self.feetPosition) > T.range && s.talkWith) { // walked off mid-talk: they say so, and remember it
+  if (it && !hostileReason(ctx, it, ctx.self) && flat(it.feetPosition, ctx.self.feetPosition) > T.range && s.talkWith) { // walked off mid-talk: they say so, and remember it
     const k = keyOf(ctx.self), m0 = it.state.mem?.[k] ?? { met: 1, notes: [] }
     it.state.mem = { ...(it.state.mem ?? {}), [k]: { ...m0, notes: [...(m0.notes ?? []).filter((n) => n !== 'walked off mid-conversation'), 'walked off mid-conversation'].slice(-6) } }
     say(ctx, it, lineOf(it, ctx.self.place, 'walk', Math.floor(ctx.random() * 1e9)) ?? BYE[Math.floor(ctx.random() * BYE.length)], 'annoyed')
   }
-  if (!it || flat(it.feetPosition, ctx.self.feetPosition) > T.range || it.state?.angry?.[ctx.self.id]) close(ctx) // walk off and it closes
+  if (!it || flat(it.feetPosition, ctx.self.feetPosition) > T.range || hostileReason(ctx, it, ctx.self)) close(ctx) // walk off and it closes
   else if (combat(ctx, it, ses)) { close(ctx); s.notice = { text: 'Combat! The conversation ends.', at: ctx.now() } }
 
 }

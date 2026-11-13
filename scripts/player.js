@@ -1,6 +1,6 @@
 import { firstPersonGun, firstPersonTuning } from './lib/fp-gun.js'
 import { setQuest } from './lib/quests.js'
-import { offended, forgiveTick } from './lib/forgive.js'
+import { assaulted, forgiveTick, hostileReason } from './lib/forgive.js'
 import { preloadTick } from './lib/preload-next.js'
 import { powerKnock } from './lib/knock.js'
 import SNK from "./lib/data/sneak.yml"
@@ -26,7 +26,7 @@ import { swing3, fire3, stagger3, tick3 } from './lib/body3.js'
 import { dropLoot, rollLoot, spawnWeapon, poolOf, spawnRemains } from './lib/loot.js'
 import { becomeCorpse } from './lib/l5-hostile.js'
 import { markKill } from './lib/witness.js'
-import { repKill } from './lib/rep.js'
+import { isVilified, repKill } from './lib/rep.js'
 import { questKill1 } from './lib/level1-quests.js'
 import D from './lib/data/difficulty.yml'
 import { penOf, vary } from './lib/combat.js'
@@ -507,11 +507,12 @@ export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pe
     return
   }
   if (npc) dmg = pellets > 1 ? pellets * dmgAfterArmor(lookOfNpc(m), dmg / pellets, false, pen) : dmgAfterArmor(lookOfNpc(m), dmg, false, pen) // an agent's or survivor's clothes soak the hit like yours do: a shotgun's pellets one by one, and a hit's armor penetration takes some of it off
+  const defending = npc && (isVilified(s, m) || hostileReason(ctx, m, ctx.self) === "hostile");
   m.state.hp -= dmg
   if (!npc && !m.tags?.includes('l61fc')) { const sp0 = ctx.self.feetPosition, v0 = ctx.self.velocity ?? {}; m.state.shot = { x: sp0.x, z: sp0.z, vx: v0.x ?? 0, vz: v0.z ?? 0, at: ctx.now() } } // a creature that is hit knows where from, however far: smilers, lurkers and hounds go to the spot (hunt.js shotAt)
   m.state.hitDir = { x: Math.round(f.x * 100) / 100, z: Math.round(f.z * 100) / 100, p: Math.round(heavy * 100) / 100 } // the killing blow's push for a ragdoll death
   if (heavy && !W[s.equipped]?.ranged && powerKnock(ctx, m, f, heavy, attrsOfS(s)) > 0) { ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2.2, z: m.feetPosition.z }, text: 'KNOCKDOWN', color: '#ff9a3c', size: 1.2 }); sound(ctx, 'brutal-kick-body-flies-and-crashes', 1) }
-  if (npc || m.tags?.includes('l61fc')) { m.state.angry = { ...(m.state.angry ?? {}), [ctx.self.id]: true }; m.state.fresh = { ...(m.state.fresh ?? {}), [ctx.self.id]: true }; offended(ctx, m.id) } // the camp remembers who shot first; a fresh shot spreads even after a pardon
+  if (npc || m.tags?.includes('l61fc')) assaulted(ctx, m, ctx.self)
   const hit = { x: m.feetPosition.x, y: m.feetPosition.y + 1.5, z: m.feetPosition.z }
   if (loud) sound(ctx, 'heavy-pipe-hit-flesh-thud', 0.95)
   ctx.emit('damageNumber', { position: hit, value: dmg, color: '#f7d98b' })
@@ -535,7 +536,7 @@ export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pe
   if (m.state.hp <= 0 && !m.state.dead) {
     m.state.dead = true
     if (W[s.equipped]?.vaporize) vaporize(ctx, m, hit, npc) // the R-55: the thing burns to light and ash where it stood
-    { const seen = markKill(ctx, m, ctx.self); if ((m.tags ?? []).includes('npc')) { repKill(ctx, m, ctx.self, seen); questKill1(ctx, ctx.self, m) } if (!seen.length && s.crouch) s.notice = { text: 'Nobody saw that', at: ctx.now() } } // witnesses: scripts/lib/witness.js
+    { const seen = markKill(ctx, m, ctx.self); if ((m.tags ?? []).includes('npc')) { repKill(ctx, m, ctx.self, seen, defending); questKill1(ctx, ctx.self, m) } if (npc && !seen.length && s.crouch) s.notice = { text: 'Nobody saw that', at: ctx.now() } } // witnesses: scripts/lib/witness.js
     s.kills += 1
     gain(ctx, m.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
     const tg = m.tags ?? [], ent = tg.includes('smiler') || tg.includes('lurker')
@@ -720,7 +721,7 @@ export function fishCatch(ctx, d) {
 // not onto you: no grudge, not hunting you, and you are behind it or crouched in the dark
 function unaware(ctx, s, m) {
   const st = m.state ?? {}, me = ctx.self.id
-  if (st.angry?.[me] || st.fresh?.[me] || st.target === me || st.sneakTarget === me || st.hunting || st.chase || st.aggro || st.alert) return false
+  if (hostileReason(ctx, m, ctx.self) || st.target === me || st.sneakTarget === me || st.hunting || st.chase || st.aggro || st.alert) return false
   if (s.crouch) return true
   const r = ctx.getObject(m.id)?.rotation, p = ctx.self.feetPosition
   const yaw = yawOf(r)
@@ -1332,7 +1333,7 @@ export function update(ctx, dt) {
 }
 
 const HOSTILE = ['smiler', 'lurker', 'hound', 'stealer', 'deathmoth', 'moth']
-const HOSTILE_AND_NPC = [...HOSTILE, 'npc']
+const HOSTILE_AND_NPC = [...HOSTILE, 'npc', 'l61fc']
 const _rayEye = { x: 0, y: 0, z: 0 }
 const _rayDir = { x: 0, y: 0, z: 0 }
 const SWING_TAGS = ["smiler", "lurker", "hound", "stealer", "moths", "l8spider", "npc", "l61fc", "spamboss", "zdrone", "l8-hostile"] // one query for every swing target, each thing once, not one query per tag (perf, Nov 12)
@@ -1346,7 +1347,7 @@ function detection(ctx, p, w, t, moving) {
   for (const o of ctx.query({ anyTags: HOSTILE_AND_NPC, radius: 24 })) {
     const st = o.state ?? {}; if (st.dead || (st.hp ?? 1) <= 0) continue
     const q = o.feetPosition, dx = p.x - q.x, dz = p.z - q.z, d = Math.hypot(dx, dz)
-    const hostile = !o.tags?.includes('npc') || st.angry?.[me]
+    const hostile = !(o.tags?.includes('npc') || o.tags?.includes('l61fc')) || hostileReason(ctx, o, ctx.self)
     if (hostile && (st.target === me || st.prey === me || st.sneakTarget === me || st.hunting === me || st.chase === me)) { hunted = true; break }
     if (d > reach) continue
     const yaw = (yawOf(ctx.getObject(o.id)?.rotation) ?? 0) * Math.PI / 180

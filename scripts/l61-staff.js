@@ -1,3 +1,5 @@
+import { explainHostility, hostileReason, incidentOf } from "./lib/forgive.js";
+import { clearSight } from "./lib/sight.js";
 // Level 6.1 "The Snackrooms": its natural entities, the Facelings (Entity 9), and the Snackrooms staff who work beside them.
 // The wiki: friendly, they cook, clean and serve and give food without payment.
 // Custom Level 6.1 animations: counter wiping, plate serving, burger flipping, tray carrying, 80s jukebox grooving, coffee sipping, and diner lounging.
@@ -213,21 +215,6 @@ function goHostile(ctx, me, s, whoId, now, line) {
   s.hostile = whoId; s.mood = "hostile"; s.hostileAt = now; me.anim.gest = null;
   if (line) say(ctx, me, line, "#ff5a4a");
 }
-// a player disturbed this one: the first time it stops, stares and warns; the second time it turns hostile. An attack calls the others within reach.defend
-function disturb(ctx, me, s, m, who, now, attacked) {
-  if (!who || s.dead) return;
-  const uid = uidOf(who), t = { ...(s.temper ?? {}) };
-  t[uid] = (t[uid] ?? 0) + 1; s.temper = t; s.calmAt = now + FC.temper.calm * 1000;
-  if (t[uid] >= 2 || s.hostile === who.id) goHostile(ctx, me, s, who.id, now, s.hostile ? null : pickOf(ctx, FC.hostile));
-  else { s.mood = "angry"; s.stareAt = who.id; m.stareEnd = now + FC.temper.stare * 1000; me.anim.gest = null; m.gestEnd = 0; say(ctx, me, pickOf(ctx, FC.warn), "#ffb35a"); }
-  if (!attacked) return;
-  for (const o of ctx.query({ tags: ["l61fc"], center: me.feetPosition, radius: FC.reach.defend })) {
-    if (o.id === me.id || o.state?.dead || o.state?.hostile) continue;
-    const h = ctx.getObject(o.id); if (!h) continue;
-    if (s.hostile) goHostile(ctx, h, h.state, who.id, now, pickOf(ctx, FC.defend));
-    else { h.state.mood = "defend"; h.state.defends = me.id; h.state.stareAt = who.id; h.state.hostileAt = now; }
-  }
-}
 function stepTo(ctx, me, m, goal, speed, dt) {
   const v = me.velocity ?? { x: 0, z: 0 }, w = waypoint(ctx, me, m, goal);
   me.velocity = { x: easeVal(v.x ?? 0, w.ux * speed, dt), y: (v.y ?? 0) - 20 * dt, z: easeVal(v.z ?? 0, w.uz * speed, dt) };
@@ -247,16 +234,24 @@ function social(ctx, me, s, m, now, dt) {
     }
     applyRest(me, dt); return true;
   }
-  if (s.hp < m.hp0) { // struck: by a swing, a shot or something thrown
-    const by = Object.keys(s.fresh ?? {})[0];
-    const who = (by && ctx.place.players.find((q) => q.id === by)) || ctx.place.players.reduce((a, q) => (!a || (q.feetPosition.x - p.x) ** 2 + (q.feetPosition.z - p.z) ** 2 < (a.feetPosition.x - p.x) ** 2 + (a.feetPosition.z - p.z) ** 2 ? q : a), null);
-    m.hp0 = s.hp; s.fresh = null;
-    disturb(ctx, me, s, m, who, now, true);
+  if (s.hp < m.hp0) {
+    const by = Object.entries(s.fresh ?? {}).filter(([, at]) => typeof at === "number").sort((a, b) => b[1] - a[1])[0]?.[0];
+    const who = by && ctx.place.players.find(q => q.id === by);
+    if (who && incidentOf(ctx, me, who)) goHostile(ctx, me, s, who.id, now, pickOf(ctx, FC.hostile));
+  }
+  m.hp0 = s.hp;
+  const target = ctx.place.players.find(q => (q.state?.hp ?? 1) > 0 && hostileReason(ctx, me, q)
+    && Math.hypot(q.feetPosition.x - p.x, q.feetPosition.z - p.z) < FC.reach.notice
+    && clearSight(ctx, { ...p, y: p.y + 1.1 }, { ...q.feetPosition, y: q.feetPosition.y + 1.1 }, [me.id, q.id]));
+  if (target && s.hostile !== target.id) {
+    goHostile(ctx, me, s, target.id, now, pickOf(ctx, FC.defend));
+    const text = explainHostility(me, hostileReason(ctx, me, target));
+    if (text) target.state.notice = { text, at: now };
   }
   if (s.hostile) {
-    const q = ctx.place.players.find((o) => o.id === s.hostile);
-    if (!q || q.state?.dead || (q.state?.hp ?? 1) <= 0 || now - (s.hostileAt ?? 0) > FC.temper.forget * 1000) { // gone, dead, or long enough: grudges drop
-      s.hostile = null; s.mood = null; s.defends = null; if (q && ((q.state?.hp ?? 1) <= 0 || q.state?.dead)) s.temper = {};
+    const q = target?.id === s.hostile ? target : null;
+    if (!q) {
+      s.hostile = null; s.mood = null; s.defends = null;
       me.anim.gest = null; return false;
     }
     const qp = q.feetPosition, d = Math.hypot(qp.x - p.x, qp.z - p.z);
@@ -270,15 +265,6 @@ function social(ctx, me, s, m, now, dt) {
       ctx.emit("cameraPunch", { direction: { x: (qp.x - p.x) / (d || 1), y: 0, z: (qp.z - p.z) / (d || 1) }, intensity: 0.35 }, { audience: { player: q.id } });
       heard(ctx, { clip: G("heavy-pipe-hit-flesh-thud"), position: { x: qp.x, y: qp.y + 1, z: qp.z }, volume: 0.6, maxDistance: 14 });
     }
-    return true;
-  }
-  if (s.mood === "defend") { // a sibling was hit: drop the work, stand over the one who did it
-    const q = ctx.place.players.find((o) => o.id === s.stareAt), friend = s.defends && ctx.getObject(s.defends);
-    if (!q || now - (s.hostileAt ?? 0) > 20000) { s.mood = null; s.defends = null; s.stareAt = null; return false; }
-    if (friend?.state?.hostile === q.id) { goHostile(ctx, me, s, q.id, now, pickOf(ctx, FC.defend)); return true; }
-    const qp = q.feetPosition;
-    if ((qp.x - p.x) ** 2 + (qp.z - p.z) ** 2 > 3.2) stepTo(ctx, me, m, qp, FC.temper.run * 0.8, dt);
-    else { applyRest(me, dt); faceTo(me, qp); }
     return true;
   }
   if (s.mood === "angry") {
@@ -301,7 +287,8 @@ function social(ctx, me, s, m, now, dt) {
       if (d < FC.reach.shove && speed > FC.shoveSpeed && working && now > (m.shoveAt ?? 0)) { // barged straight through it while it worked
         m.shoveAt = now + FC.every.shove * 1000;
         ctx.emit("squash", { target: me.id, axis: "y", intensity: 0.2, duration: 0.2 });
-        disturb(ctx, me, s, m, q, now, false);
+        s.mood = "angry"; s.stareAt = q.id; s.calmAt = now + 5000; m.stareEnd = now + 1500;
+        say(ctx, me, pickOf(ctx, FC.warn), "#ffb35a", q.id);
         return true;
       }
       if (d < FC.reach.mimic) { // mimicry: it copies what you just did, now and then

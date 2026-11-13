@@ -1,3 +1,4 @@
+import { incidentOf } from "./lib/forgive.js";
 // Samantha (Entity 26): a very small tuxedo cat who keeps the Beverly Room. A real cat on four legs (her own rig and clips:
 // Idle sits with a tail flick, Groom, Walk, Run, Pounce). She ambles a slow round through the Main Hall, sits on furniture,
 // now and then is simply in another room. E opens the talk card (scripts/talk.js; persona in data/talk.yml). Her card buttons
@@ -198,7 +199,7 @@ export function update(ctx, dt) {
   if (!ses.mode && (me.visible === false || me.feetPosition.y < -1)) { const h = HOME(ctx); me.feetPosition = { x: h.x, y: 0, z: h.z }; me.visible = true; me.state.target = null } // a fresh machine forgets she was away: bring her home, seen
   if (!ses.mode) { ses.y = me.feetPosition.y > 0.05 ? me.feetPosition.y : 0; rest(ctx, now, 'sit'); ses.blinkAt = now + rr(S.blinkEvery, ctx); ses.talkers = {} }
   // struck or crossed in words: whoever it was, she remembers in claws
-  const ang = st.angry && Object.keys(st.angry).find((k) => st.angry[k])
+  const ang = ctx.place.players.find(p => st.fresh?.[p.id] && incidentOf(ctx, me, p)?.kind === "assault")?.id
   if (ang) { st.angry = {}; st.fresh = {}; enrage(ctx, ang, now) }
   if (st.dead) st.dead = false
   if ((st.hp ?? 1000) < 1000 - S.blinkHp) { st.hp = 1000; if (ses.mode !== 'gone') vanish(ctx, now) }

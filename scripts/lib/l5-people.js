@@ -1,3 +1,5 @@
+import { clearSight } from "./sight.js";
+import { hostileReason, recordIncident } from "./forgive.js";
 import { voiceKey } from './voices.js'
 import { mayReturn } from "./npc-respawn.js";
 // Level 5's residents (Homely Hotel staff, Housekeeping, the Originals), run by scripts/l5-people.js once a second.
@@ -95,18 +97,18 @@ function trespass(ctx, o, z, now) {
   const me = o.feetPosition; if (!inZ(z, me)) return;
   const T = P.trespass, s = o.state, book = ctx.place.state.l5rent ?? {};
   for (const p of ctx.place.players) {
-    const f = p.feetPosition; if (!inZ(z, f) || s.angry?.[p.id]) continue;
+    const f = p.feetPosition; if (!inZ(z, f) || hostileReason(ctx, o, p)) continue;
     if (book[z.id]?.uid === (p.userId ?? p.id) && book[z.id].until > now) continue;
     const dx = f.x - me.x, dz = f.z - me.z, d = Math.hypot(dx, dz), sneak = !!p.state?.crouch;
     const yaw = typeof o.rotation === "number" ? o.rotation : o.rotation?.yaw ?? 0, r = yaw * Math.PI / 180;
     const ahead = d < 0.01 ? 1 : (-Math.sin(r) * dx - Math.cos(r) * dz) / d, inCone = ahead > Math.cos((T.cone / 2) * Math.PI / 180);
     const asleep = s.rounds?.[s.ri]?.act === ACT.sleep && Math.hypot(me.x - s.rounds[s.ri].x, me.z - s.rounds[s.ri].z) < 0.8;
     const seen = sneak ? d < T.sneakSee && inCone && !asleep : d < T.see && (inCone || d < 2.5) && (!asleep || d < 1.5);
-    if (!seen) continue;
+    if (!seen || !clearSight(ctx, { ...me, y: me.y + 1.4 }, { ...f, y: f.y + 1.1 }, [o.id, p.id])) continue;
     const w = s.trespass?.[p.id] ?? 0, who = s.name?.split(" ·")[0] ?? "They";
     if (w && now - w < T.grace * 1000) {
       if (now - w < 2500) continue; // the shove gets them out first
-      s.angry = { ...(s.angry ?? {}), [p.id]: true }; s.fresh = { ...(s.fresh ?? {}), [p.id]: true };
+      recordIncident(ctx, o, p, "trespass");
       say1(ctx, o, p, pickIn(ctx, ["I warned you. Get OUT!", "That's it. You don't come in here twice.", "Right. You asked for this."]));
       continue;
     }

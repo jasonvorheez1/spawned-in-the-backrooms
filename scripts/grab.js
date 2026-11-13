@@ -1,3 +1,4 @@
+import { assaulted } from "./lib/forgive.js";
 // Z: pick up a breakable thing in front of you (never a wall) and carry it; Z again throws it along your look.
 // Strength (the sheet's H) decides how heavy a thing you can lift and how hard it flies; a heavy load slows your walk
 // (player.js reads state.carryMul). A thrown thing hurts what it hits: NPCs take damage and turn on you, props crack.
@@ -224,7 +225,7 @@ export function update(ctx) {
     if (h.tags.includes("breakable") && !h.tags.includes("npc")) damageEntity(ctx, h, dmg, at, n, "thrown");
     else {
       h.state.hp = (h.state.hp ?? 40) - dmg;
-      h.state.angry = { ...(h.state.angry ?? {}), [ctx.self.id]: true }; h.state.fresh = { ...(h.state.fresh ?? {}), [ctx.self.id]: true };
+      if (h.tags.includes("npc") || h.tags.includes("l61fc")) assaulted(ctx, h, ctx.self);
       ctx.emit("squash", { target: h.id, axis: "y", intensity: 0.25, duration: 0.2 });
     }
     damageEntity(ctx, o, Math.round(dmg * 0.6), at, n, "thrown");

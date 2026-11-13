@@ -1,3 +1,5 @@
+import { clearSight } from "./lib/sight.js";
+import { hostileReason, explainHostility, recordIncident } from "./lib/forgive.js";
 import {upgradeNearby,upgradeProp,containerPose,toggleLamp} from './lib/prop-interactions.js'
 import { screen } from './lib/screen.js'
 import { regrowWrecks } from "./lib/breakables.js";
@@ -210,7 +212,7 @@ function speak(ctx, it, who, line) {
 }
 export function talk(ctx, it) {
   const s = ctx.self.state, now = ctx.now(), role = it.state?.role
-  if (it.state?.angry?.[ctx.self.id]) { note(ctx, `${it.state.name.split(' ·')[0]} won't talk to you.`); return }
+  if (hostileReason(ctx, it, ctx.self)) { note(ctx, explainHostility(it, hostileReason(ctx, it, ctx.self)) ?? "They refuse to speak to you."); return }
   it.state.talkAt = now; it.state.talkTo = ctx.self.id // they gesture while they speak
   const v = it.state?.voice
   if (role === 'scout') { const tips = ctx.self.place === 'level2' ? TIPS2 : TIPS; s.megTip = ((s.megTip ?? -1) + 1) % tips.length; speak(ctx, it, v ?? 'ale', tips[s.megTip]); return }
@@ -263,7 +265,7 @@ function facingAway(ctx, it) {
 }
 function pickChance(ctx, it) {
   const s = ctx.self.state, st = it.state ?? {}
-  if (!s.crouch || st.dead || st.angry?.[ctx.self.id] || st.follow === ctx.self.id || s.talkWith) return null
+  if (!s.crouch || st.dead || hostileReason(ctx, it, ctx.self) || st.follow === ctx.self.id || s.talkWith) return null
   const f = facingAway(ctx, it) // seen or not, you can try; being watched just makes it much harder
   const sk = skillsOf(s).sneak ?? 0, agi = Number(String(s.attr ?? '5,5,5,5,5,5,5').split(',')[5]) || 5
   const lifted = st.picked?.[ctx.self.id] ?? 0
@@ -310,15 +312,19 @@ function liftOne(ctx, it, i) {
   closeLoot(ctx)
   caught(ctx, it, who)
 }
+const warnedRecently = (ctx, it) => {
+  const at = it.state.warned?.[ctx.self.id]
+  return typeof at === "number" && ctx.now() - at < 30000
+}
 function caught(ctx, it, who) {
   const s = ctx.self.state
   // caught: they spin round. the first time they shove you off with a warning; the second, they turn on you (creator's rule)
   const p = ctx.self.feetPosition, q = it.feetPosition
   it.rotation = { yaw: Math.atan2(-(p.x - q.x), -(p.z - q.z)) * 57.2958 }
   s.crouch = false
-  const warned = it.state.warned?.[ctx.self.id]
+  const warned = warnedRecently(ctx, it)
   if (!warned) {
-    it.state.warned = { ...(it.state.warned ?? {}), [ctx.self.id]: true }
+    it.state.warned = { ...(it.state.warned ?? {}), [ctx.self.id]: ctx.now() }
     const dx = p.x - q.x, dz = p.z - q.z, d = Math.hypot(dx, dz) || 1
     ctx.self.velocity = { x: dx / d * 7, y: 2.5, z: dz / d * 7 } // the shove
     ctx.emit('cameraPunch', { direction: { x: dx / d, y: 0, z: dz / d }, intensity: 0.5 }, { audience: { player: ctx.self.id } })
@@ -328,7 +334,7 @@ function caught(ctx, it, who) {
     snd(ctx, 'ui-denied-click', 0.5)
     return
   }
-  it.state.angry = { ...(it.state.angry ?? {}), [ctx.self.id]: true }
+  recordIncident(ctx, it, ctx.self, "theft")
   const line = CAUGHT[Math.floor(ctx.random() * CAUGHT.length)]
   speak(ctx, it, voiceKey(it), line)
   note(ctx, `Caught again! ${who} turns on you.`)
@@ -345,7 +351,7 @@ function press(ctx) {
   const it = ctx.getObject(f.id)
   if (!it || it.state?.taken) return
   if (f.tag === 'npc' && pickChance(ctx, it) != null) { pickpocket(ctx, it); m.key = ''; refocus(ctx, true); return }
-  if (f.tag === 'npc') { if (it.state?.dead) { if (it.state.items !== undefined) openLoot(ctx, it) } else if (it.state?.angry?.[ctx.self.id]) talk(ctx, it); else { openDialogue(ctx, it) } return } // the conversation card (scripts/talk.js); the old services sit on its buttons
+  if (f.tag === 'npc') { if (it.state?.dead) { if (it.state.items !== undefined) openLoot(ctx, it) } else if (hostileReason(ctx, it, ctx.self)) talk(ctx, it); else { openDialogue(ctx, it) } return } // the conversation card (scripts/talk.js); the old services sit on its buttons
   if (f.tag === 'usable' && it.state?.kind === 'computer') { // Back OS boots on the presser's own machine: their state, their screen
     const c = it.state, now = ctx.now()
     if (!s.os && now - (s.osClosedAt ?? 0) > 600) {
@@ -379,7 +385,8 @@ const OWN_R = 9, SEE_R = 14
 function ownerOf(ctx, c) {
   if (c.tags?.includes('rubble') || c.tags?.includes('npc') || c.state.dead || /^remains/i.test(c.state.name ?? '')) return null
   if (c.state.owner === undefined) { // decided once, the first time anyone opens it
-    const q = c.feetPosition, near = ctx.query({ tags: ['npc'], center: q, radius: OWN_R }).find((n) => !n.state.dead && !n.state.hostile && n.state.name)
+    const q = c.feetPosition, near = ctx.query({ tags: ['npc'], center: q, radius: OWN_R }).find((n) => !n.state?.dead && !n.state?.hostile && n.state?.name
+      && clearSight(ctx, { ...n.feetPosition, y: n.feetPosition.y + 1.4 }, { ...q, y: q.y + 0.4 }, [n.id, c.id]))
     c.state.owner = near?.id ?? ''; if (near) c.state.ownerName = String(near.state.name).split(' ·')[0]
   }
   if (!c.state.owner) return null
@@ -390,7 +397,7 @@ function watching(ctx, o) {
   const p = ctx.self.feetPosition, q = o.feetPosition, d = Math.hypot(p.x - q.x, p.z - q.z)
   if (d > SEE_R) return false
   if (ctx.self.state.crouch && d > 5) return false
-  return true
+  return clearSight(ctx, { ...q, y: q.y + 1.45 }, { ...p, y: p.y + 1.05 }, [o.id, ctx.self.id])
 }
 // the loot menu's buttons: take one, take all, close
 function lootAction(ctx, d) {
@@ -410,9 +417,9 @@ function lootAction(ctx, d) {
   }
   let items = itemsOf(c.state?.items), fail = ''
   const own = (d.k === 'take' || d.k === 'all') ? ownerOf(ctx, c) : null
-  if (own && watching(ctx, own) && !own.state.angry?.[ctx.self.id]) {
+  if (own && watching(ctx, own) && !hostileReason(ctx, own, ctx.self)) {
     const who = c.state.ownerName ?? String(own.state.name ?? 'Someone').split(' ·')[0]
-    if (!own.state.warned?.[ctx.self.id]) { // first time: it never reaches your bag
+    if (!warnedRecently(ctx, own)) { // first time: it never reaches your bag
       closeLoot(ctx); note(ctx, `${who} snatches it back out of your hands.`); caught(ctx, own, who); return
     }
     caught(ctx, own, who) // second time: you get it, and they come for you

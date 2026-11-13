@@ -1,7 +1,7 @@
 // Karma and faction reputation, Fallout: New Vegas style. Karma is what you are (one number, -100..100, secret from the people you meet);
 // reputation is what each group thinks of you (-100..100 each). Both live on player.state (karma, rep = { group: n }) and are durable.
 // Groups: who counts as whom (an npc's state.faction / faction5, else the prefix of its id). Tiers decide prices, who talks to you, and who shoots on sight.
-//   Vilified (<= -60): the group attacks you on sight, wherever it sees you, and a holstered weapon does not calm it
+//   Vilified (<= -60): organized factions attack on sight; unaffiliated survivors still react to local incidents
 //   Hated    (<= -35): its traders will not deal with you, its people are cold; they do not attack unless provoked
 //   Disliked (<= -12): worse prices          Accepted (>= 12): a little better    Liked (>= 35): better still      Idolized (>= 60): the best, and they say so
 export const GROUPS = {
@@ -20,7 +20,7 @@ const MAP = { meg: "meg", hk: "meg", guard: "meg", camp: "meg", survivor: "survi
   homely: "hotel", hotel: "hotel", orig: "hotel", surrender: "surrender", lightless: "lightless", bntg: "bntg", concession: "concession", rink: "rink", froid: "froid", gelu: "gelu" };
 const PREFIX = { bntg: "bntg", meg: "meg", hk: "meg", surv: "survivors", omega: "survivors", l5: "hotel", homely: "hotel", tbd: "survivors", gamma: "meg", l61: "survivors" };
 export function groupOf(it) {
-  const f = it?.state?.faction5 ?? it?.state?.faction; if (f && MAP[f]) return MAP[f];
+  const f = it?.state?.faction5 ?? it?.state?.faction4 ?? it?.state?.faction; if (f && MAP[f]) return MAP[f];
   const id = String(it?.id ?? "").split("/").pop(), p = id.split("-")[0];
   return PREFIX[p] ?? "survivors";
 }
@@ -29,7 +29,7 @@ export const tierOf = (n) => (TIERS.find(([lo]) => n >= lo) ?? TIERS[TIERS.lengt
 export const tierColor = (n) => (n >= 35 ? "#9bd27a" : n >= 12 ? "#c4d88a" : n > -12 ? "#d8d0b0" : n > -35 ? "#e0a050" : "#e06050");
 export const repOf = (s, g) => Math.max(-100, Math.min(100, Math.round((s?.rep?.[g] ?? 0) * 10) / 10));
 export const standing = (s, it) => repOf(s, groupOf(it));
-export const isVilified = (s, it) => groupOf(it) !== "lightless" && repOf(s, groupOf(it)) <= -60;
+export const isVilified = (s, it) => !["lightless", "survivors"].includes(groupOf(it)) && repOf(s, groupOf(it)) <= -60;
 export const isHated = (s, it) => repOf(s, groupOf(it)) <= -35;
 // price change from standing, as a discount fraction (negative = dearer)
 export const repDisc = (s, it) => { const r = standing(s, it); return r >= 60 ? 0.2 : r >= 35 ? 0.12 : r >= 12 ? 0.05 : r > -12 ? 0 : r > -35 ? -0.15 : -0.35 };
@@ -51,18 +51,16 @@ export function addKarma(s, d) {
 const say = (ctx, s, ...ms) => { const m = ms.filter(Boolean).join(" · "); if (m) s.notice = { text: m, at: ctx.now() } };
 
 // a player killed an npc: karma for the deed, reputation for who saw it (the Fallout rule: a witnessed killing costs standing, an unseen one only costs karma)
-export function repKill(ctx, victim, killer, seen = []) {
+export function repKill(ctx, victim, killer, seen = [], provoked = false) {
   const s = killer?.state; if (!s || !victim || (victim.tags ?? []).includes("faceling")) return; // facelings are not people
-  const g = groupOf(victim), provoked = !!victim.state?.angry?.[killer.id], msgs = [];
+  const g = groupOf(victim), msgs = [];
   if (g === "lightless") { // the cave's insane: nobody mourns them
     msgs.push(addKarma(s, 2), addRep(s, "meg", 2), addRep(s, "survivors", 2)); say(ctx, s, ...msgs); return;
   }
   const trader = ["trader", "quarter", "medic", "smith"].includes(victim.state?.role);
   msgs.push(addKarma(s, provoked ? -3 : trader ? -25 : -15));
-  if (seen.length) {
+  if (seen.some(id => { const witness = ctx.getObject(id); return witness && groupOf(witness) === g; })) {
     msgs.push(addRep(s, g, provoked ? -4 : -18));
-    const others = new Set(seen.map((id) => groupOf(ctx.getObject(id))).filter((x) => x && x !== g && x !== "lightless"));
-    for (const o of others) msgs.push(addRep(s, o, provoked ? 0 : -3));
   }
   say(ctx, s, ...msgs);
 }

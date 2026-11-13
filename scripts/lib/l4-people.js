@@ -1,3 +1,4 @@
+import { hostileReason } from "./forgive.js";
 import { voiceKey } from './voices.js'
 import { mayReturn } from "./npc-respawn.js";
 import { vo } from "./voices.js";
@@ -151,7 +152,7 @@ export function tickPeople(ctx) {
   const greeted = (s.l4greet ??= {});
   for (const p of players) {
     for (const o of awake) {
-      if (flat(p.feetPosition, o.feetPosition) > 3.2 || now - (o.state.line?.at ?? -1e9) < 4000 || o.state.angry?.[p.id]) continue;
+      if (flat(p.feetPosition, o.feetPosition) > 3.2 || now - (o.state.line?.at ?? -1e9) < 4000 || hostileReason(ctx, o, p)) continue;
       const k = `${o.id}|${p.id}`; if (now - (greeted[k] ?? -1e9) < P.greetAgain * 1000) continue;
       greeted[k] = now; speak(ctx, o, pick(ctx, P.greet[P.people[o.id].faction])); o.state.talkTo = p.id;
     }

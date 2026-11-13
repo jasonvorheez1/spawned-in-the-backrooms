@@ -3,7 +3,7 @@ import { knocked } from "./lib/knock.js";
 import { vo, hasVoice, actedVoice } from "./lib/voices.js";
 import { social } from "./lib/npc-social.js";
 import { barkOf } from "./lib/dialogue.js";
-import { isVilified } from "./lib/rep.js";
+import { explainHostility, hostileReason, incidentOf, faction } from "./lib/forgive.js";
 import { heard } from "./lib/hear.js";
 import { seatFor } from "./lib/seat.js";
 import { rollLoot, garmentsOf } from "./lib/loot.js";
@@ -12,7 +12,7 @@ import { lifeOf, FEAR_TAGS, FEAR_LINES, WANT_LINES } from "./lib/npc-life.js";
 import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, isNewCat, CAT_JIGGLE, speciesFor, buildFor, critterSpec, faceMorph, baseBones, HUMAN, humanFace, mouthAt, setStyle, bodyModel, seatCat, refitBody } from "./lib/critter-model.js";
 // An M.E.G. agent: holds its post, greets players, and fights. It paths (builtin/nav) to the nearest creature
 // (hound, stealer) or a player who attacked the camp, shoots from range with line of sight, and goes home after.
-// Hostility is per player: scripts/player.js marks state.angry when a player hits an agent; every agent nearby adopts it.
+// Player hostility comes from a local incident, faction standing, or an authored hostile NPC.
 import { navPath } from "./lib/nav.js";
 import { raycast } from "builtin/physics";
 import { animate } from "builtin/tween";
@@ -145,7 +145,7 @@ function pickTarget(ctx, me, m) {
   const p = me.feetPosition, now = ctx.now();
   if (m.curTarget) {
     const cur = ctx.getObject(m.curTarget);
-    if (cur && !DEAD(cur) && inView(ctx, me, m, cur, flat(cur.feetPosition, p))) {
+    if (cur && !DEAD(cur) && (!ctx.place.players.some(p => p.id === cur.id) || hostileReason(ctx, me, cur)) && inView(ctx, me, m, cur, flat(cur.feetPosition, p))) {
       if (now < (m.retargetAt ?? 0)) return cur;
     } else {
       m.curTarget = null;
@@ -159,7 +159,7 @@ function pickTarget(ctx, me, m) {
   const fighter = (!me.state.faction5 || me.state.faction5 === "hk" || me.state.follow) && !me.state.mjguest; // hotel guests are no fighters: a hound is something to run from, but anything on top of them gets the weapon
   if (!me.state.mjguest) {
     for (const f of ctx.query({ anyTags: HOSTILE, radius: fighter ? G.sight : 5 })) {
-      if (DEAD(f) || f.tags?.includes?.("l5staff") || f.id === me.id || (me.state.faction && f.state?.faction === me.state.faction)) continue; // a wretch never counts its own den
+      if (DEAD(f) || f.tags?.includes?.("player") || f.tags?.includes?.("l5staff") || f.id === me.id || (faction(me) && faction(f) === faction(me))) continue; // a wretch never counts its own den
       const d = flat(f.feetPosition, p);
       if (d >= bd || !inView(ctx, me, m, f, d)) continue; // a creature behind (or stuck in) a wall is not a target
       bd = d; best = f;
@@ -168,56 +168,22 @@ function pickTarget(ctx, me, m) {
   // struck by an npc, or a crewmate or a player near me was: go for the striker (Shelly Nov 12: Dez never swung at the faceling)
   if (!me.state.mjguest && (me.state.hp ?? 1) > 0) {
     const nowH = ctx.now(), pids = new Set(ctx.place.players.map((q) => q.id));
-    const near = [me, ...ctx.query({ tags: ["npc"], radius: 14 }), ...ctx.place.players.filter((q) => flat(q.feetPosition, p) < 14)];
+    const near = [me, ...ctx.query({ tags: ["npc"], radius: 14 }), ...ctx.place.players.filter((q) => me.state.follow === q.id && flat(q.feetPosition, p) < 14)];
     for (const n of near) {
       const h = n.state?.hitBy; if (!h || nowH - h.at > 15000 || h.id === me.id || pids.has(h.id)) continue;
-      if (!(n === me || pids.has(n.id) || (me.state.faction && n.state?.faction === me.state.faction))) continue;
+      if (!(n === me || pids.has(n.id) || (faction(me) && faction(n) === faction(me)))) continue;
       const f = ctx.getObject(h.id); if (!f || DEAD(f) || (f.state?.hp ?? 1) <= 0) continue;
-      if (n !== me && me.state.faction && f.state?.faction === me.state.faction) continue; // a crew squabble is not mine to join
-      const d = flat(f.feetPosition, p); if (d < bd) { bd = d; best = f; }
+      if (n !== me && faction(me) && faction(f) === faction(me)) continue; // a crew squabble is not mine to join
+      const d = flat(f.feetPosition, p); if (d < bd && inView(ctx, me, m, f, d)) { bd = d; best = f; }
     }
   }
-  if (me.state.nerve === "frenzied" && !me.state.mjguest && !me.state.docile) { // a docile local never starts it // anyone close enough: npc or player
-    for (const n of ctx.query({ tags: ["npc"], radius: 12 })) {
-      if (n.state?.dead || (n.state?.hp ?? 1) <= 0 || (me.state.faction && n.state?.faction === me.state.faction)) continue;
-      const d = flat(n.feetPosition, p);
-      if (d < bd) { bd = d; best = n; }
-    }
-    for (const pl of ctx.place.players) {
-      if ((pl.state?.hp ?? 1) <= 0) continue;
-      const d = flat(pl.feetPosition, p);
-      if (d < bd && (d < 4 || inView(ctx, me, m, pl, d))) { bd = d; best = pl; }
-    } // the insane hunt you on sight, not only up close
-  }
-  // a player who attacked the camp: this agent's grudge, or a neighbour's
-  const grudges = new Set(Object.keys(me.state.angry ?? {}));
-  if (now > (m.grudgeAt ?? 0)) {
-    m.grudgeAt = now + 1500;
-    for (const n of ctx.query({ tags: ["npc"], radius: 30 })) {
-      if (n.id === me.id) continue;
-      for (const k of Object.keys(n.state?.angry ?? {})) {
-        if (!grudges.has(k) && !(me.state.pardoned?.[k] && !me.state.angry?.[k] && !n.state?.fresh?.[k])) {
-          grudges.add(k);
-          me.state.angry = { ...(me.state.angry ?? {}), [k]: true };
-        }
-      }
-    }
-  }
-  // a group that has you Vilified (scripts/lib/rep.js) shoots on sight: no provocation needed, and holstering does not calm it
-  for (const pl of ctx.place.players) if (!grudges.has(pl.id) && (pl.state?.hp ?? 1) > 0 && isVilified(pl.state, me) && flat(pl.feetPosition, p) < G.sight) { grudges.add(pl.id); me.state.angry = { ...(me.state.angry ?? {}), [pl.id]: true }; ctx.emit("damageNumber", { position: { x: p.x, y: p.y + 2.1, z: p.z }, text: "VILIFIED", color: "#e06050", size: 1.0 }, { audience: { player: pl.id } }); }
   for (const pl of ctx.place.players) {
-    if (!grudges.has(pl.id) || (pl.state?.hp ?? 1) <= 0) continue;
-    // holstering calms the camp once (like Fallout): weapon away within sight, never pardoned before
-    if (pl.state?.equipped === "fists" && !me.state.pardoned?.[pl.id] && !isVilified(pl.state, me) && flat(pl.feetPosition, p) < G.sight) {
-      for (const n of [me, ...ctx.query({ tags: ["npc"], radius: 40 })]) {
-        const a = { ...(n.state?.angry ?? {}) }; delete a[pl.id]; n.state.angry = a;
-        n.state.pardoned = { ...(n.state?.pardoned ?? {}), [pl.id]: true };
-      }
-      grudges.delete(pl.id);
-      ctx.emit("damageNumber", { position: { x: p.x, y: p.y + 2.1, z: p.z }, text: "STAND DOWN", color: "#c6f060", size: 1.1 }, { audience: { player: pl.id } });
-      continue;
-    }
-    const d = flat(pl.feetPosition, p); if (d < bd) { bd = d; best = pl; }
+    if (DEAD(pl)) continue;
+    const reason = hostileReason(ctx, me, pl);
+    if (!reason) continue;
+    const d = flat(pl.feetPosition, p);
+    if (d >= bd || !inView(ctx, me, m, pl, d)) continue;
+    bd = d; best = pl;
   }
   m.curTarget = best ? best.id : null;
   m.retargetAt = now + 650;
@@ -549,11 +515,11 @@ export function update(ctx, dt) {
     }
   }
   // held in conversation: while a player's dialogue is open on this one (player.state.talkWith), it stops where it stands and faces them; a threat or a hit still breaks it
-  const listener = !s.dead && !m.aimAt && now - (m.hitAt ?? 0) > 3000 ? ctx.place.players.find((p) => p.state?.talkWith === me.id && Math.hypot(p.feetPosition.x - me.feetPosition.x, p.feetPosition.z - me.feetPosition.z) < 7) : null;
+  const listener = !s.dead && !m.aimAt && now - (m.hitAt ?? 0) > 3000 ? ctx.place.players.find((p) => p.state?.talkWith === me.id && !hostileReason(ctx, me, p) && Math.hypot(p.feetPosition.x - me.feetPosition.x, p.feetPosition.z - me.feetPosition.z) < 7) : null;
   if (listener) { stop(me, dt); face(me, listener.feetPosition.x - me.feetPosition.x, listener.feetPosition.z - me.feetPosition.z, dt); s.talkAt = Math.max(s.talkAt ?? 0, now - 2000); return; }
   // a companion a player talked into tagging along (scripts/talk.js): their leader is home, so it walks after them and fights what comes at them
   let lead = s.follow ? ctx.place.players.find((p) => p.id === s.follow) : null;
-  if (s.follow) { if (lead) m.lostAt = 0; else m.lostAt ||= now; if (s.angry?.[s.follow] || (!lead && now - m.lostAt > 20000)) { s.follow = null; lead = null; } }
+  if (s.follow) { if (lead) m.lostAt = 0; else m.lostAt ||= now; if ((lead && incidentOf(ctx, me, lead)) || (!lead && now - m.lostAt > 20000)) { s.follow = null; lead = null; } }
   // a day's work (state.rounds: stops with a dwell, a chore clip, a thing to face): the post moves stop to stop
   const waiting = !!(s.follow && s.cmd === "wait" && s.waitAt); if (waiting) lead = null; // told to wait: stays on the spot, still fights what comes at it
   const stop0 = !lead && !s.follow && s.rounds?.length ? s.rounds[(s.ri ?? 0) % s.rounds.length] : null;
@@ -564,7 +530,14 @@ export function update(ctx, dt) {
   if (tid !== (m.barkT ?? null)) {
     const prev = m.barkT ? ctx.getObject(m.barkT) : null, prevDead = prev && (prev.state?.dead || (prev.state?.hp ?? 1) <= 0);
     if (prevDead && corpseOf(prev) && !VERMIN(prev) && !m.inspect && !s.follow) { m.inspect = { id: prev.id, x: prev.feetPosition.x, z: prev.feetPosition.z, at: now, phase: "walk", hostile: true }; prev.state.inspectUntil = now + 16000; } // what they killed: go and see it's dead
-    if (tid) bark(ctx, me, t.tags?.includes?.("player") || ctx.place.players.some((p) => p.id === tid) ? "hostile" : (prevDead ? "kill" : "spot"), !!prevDead);
+    if (tid) {
+      const pl = ctx.place.players.find(p => p.id === tid);
+      bark(ctx, me, pl ? "hostile" : (prevDead ? "kill" : "spot"), !!prevDead);
+      if (pl && now - (pl.state.hostilityNoticeAt ?? -Infinity) > 4500) {
+        const text = explainHostility(me, hostileReason(ctx, me, pl));
+        if (text) { pl.state.notice = { text, at: now }; pl.state.hostilityNoticeAt = now; }
+      }
+    }
     else if (m.barkT) { bark(ctx, me, prevDead || !prev ? "kill" : "clear", true); m.clearAt = now + 2600; }
     m.barkT = tid;
   }
@@ -603,7 +576,7 @@ export function update(ctx, dt) {
     // nerve: break and run when it fails them; cornered (arm's length) they lash out anyway. Armed people stand and fight: a lone coward still runs,
     // but one with a friend near holds until it is badly hurt; the unarmed (fists) run unless brave.
     const nv = s.nerve ?? "steady", hpF = (s.hp ?? 1) / (s.maxHp ?? 100), dT = flat(t.feetPosition, me.feetPosition);
-    if (now > (m.allyAt ?? 0)) { m.allyAt = now + 1000; m.ally = ctx.query({ tags: ["npc"], radius: 14 }).some((n) => n.id !== me.id && !DEAD(n) && !n.tags?.includes?.("l5staff") && !n.state?.mjguest && n.state?.arm && n.state.arm !== "fists"); }
+    if (now > (m.allyAt ?? 0)) { m.allyAt = now + 1000; m.ally = ctx.query({ tags: ["npc"], radius: 14 }).some((n) => n.id !== me.id && !DEAD(n) && !n.tags?.includes?.("l5staff") && !n.state?.mjguest && n.state?.arm && n.state.arm !== "fists" && faction(n) && faction(n) === faction(me)); }
     const hpBreak = nv === "brave" ? 0.15 : nv === "steady" ? 0.3 : 0.6;
     const breaks = nv === "frenzied" ? false : s.arm === "fists" ? nv !== "brave" : hpF < hpBreak || (nv === "coward" && !m.ally);
     if (breaks && dT > 1.6) {
@@ -679,7 +652,7 @@ export function update(ctx, dt) {
 
   // The player dialogue behavior handles weapon warnings and contact.
   const eq = close.state?.equipped;
-  if (!s.angry?.[close.id]) {
+  if (!hostileReason(ctx, me, close)) {
     if (m.brandishPl === close.id && (close.state?.sheathed || eq === "fists") && now - m.brandishAt < 7000) {
       m.brandishPl = null;
       bark(ctx, me, "holstered", true);
@@ -703,7 +676,7 @@ export function update(ctx, dt) {
     }
   }
 
-  if (!m.waved[close.id] && best < 5 && !s.angry?.[close.id] && !close.state?.ads && now - (m.bumpAt ?? 0) > 3000) {
+  if (!m.waved[close.id] && best < 5 && !hostileReason(ctx, me, close) && !close.state?.ads && now - (m.bumpAt ?? 0) > 3000) {
     m.waved[close.id] = true;
     m.wavedAt = now;
     me.anim.wave = { clip: "cdn/clip-wave-loop.glb", loop: "once", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } };

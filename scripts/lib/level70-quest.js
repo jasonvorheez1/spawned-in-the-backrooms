@@ -135,8 +135,6 @@ function resolve(ctx, p, route) {
   if (route === "city") { addRep(s, "froid", 30); s.rep = { ...s.rep, gelu: -100 }; }
   if (route === "spur") { addRep(s, "gelu", 30); s.rep = { ...s.rep, froid: -100 }; }
   if (route === "balanced") s.rep = { ...s.rep, froid: Math.min(s.rep?.froid ?? 0, -20), gelu: Math.min(s.rep?.gelu ?? 0, -20) }; // wary, not hostile
-  for (const n of ctx.query({ radius: 2000 })) { const st = n.state; if (!st || (st.faction !== "froid" && st.faction !== "gelu")) continue;
-    if ((s.rep?.[st.faction] ?? 0) <= -60 && n.id !== LARSSON && n.id !== VAEL) n.state.angry = { ...(st.angry ?? {}), [p.id]: true }; }
   const msg = { city: "The pipes knock all down Kelpie Street and the taps run. The Carnifices will not forgive this", spur: "The water turns north under the snow toward Iceshed. The Kingdom will know who did it", balanced: "Both gauges settle. The city drinks, the spur drinks. Nobody's thrilled with you, which is how you know it's fair" }[route];
   s.l70q = 5; setStep(ctx, p, 6, msg, KNOCK);
 }

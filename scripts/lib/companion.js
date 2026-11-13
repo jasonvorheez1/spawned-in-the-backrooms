@@ -1,3 +1,4 @@
+import { hostileReason } from "./forgive.js";
 // Companions, Fallout: New Vegas style. A person who walks with you (state.follow = your id; scripts/meg-agent.js does the walking and fighting) now also has:
 //   a perk      what they are good at, always the same for the same person (medic, mule, gunhand, mechanic, tough), stronger as loyalty grows
 //   loyalty     0..100, grows while they walk with you and when you treat their people well, falls when you are cruel; at 0 they leave
@@ -33,7 +34,7 @@ export function whyNot(ctx, pl, it) {
   if (s.dead || (s.hp ?? 1) <= 0) return "They are in no shape to go anywhere.";
   if (NOT.includes(s.role)) return "They have a stall to keep. They are not leaving it.";
   if (s.mjguest || it.tags?.includes?.("faceling") || it.tags?.includes?.("l5staff")) return "They are not the walking kind.";
-  if (s.angry?.[pl.id] || isHated(pl.state, it)) return "They want nothing to do with you.";
+  if (hostileReason(ctx, it, pl) || isHated(pl.state, it)) return "They want nothing to do with you.";
   const r = s.rapport?.[pl.userId ?? pl.id] ?? 0;
   if (r < T.join.rapport) return `They do not know you well enough yet (${Math.round(r)}/${T.join.rapport} rapport).`;
   if (followersOf(ctx, pl).length >= T.join.max) return `You already have ${T.join.max} people with you.`;

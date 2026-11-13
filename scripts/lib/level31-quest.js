@@ -74,7 +74,6 @@ function side(ctx, p, route) {
   s.rep = rep;
   if (route === "bntg") addRep(s, "bntg", 10); if (route === "rink") addRep(s, "bntg", -15);
   if (route === "dub") { addRep(s, "rink", 20); addRep(s, "concession", 20); }
-  for (const n of ctx.query({ tags: ["l31q-crew"] })) { const st = n.state; if (!st) continue; const g = st.faction === "rink" ? "rink" : "concession"; if (rep[g] <= -60) st.angry = { ...(st.angry ?? {}), [p.id]: true }; }
 }
 function finish(ctx, p, payKey, text) {
   const s = p.state, pay = PAY[payKey]; s.l31q = 99; s.l31tape = false; giveTape(s);
