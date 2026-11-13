@@ -294,13 +294,13 @@ l5-ball-smoke-1:
   tags: [l5-ball]
 l5-beast:
   behavior: [scripts/humanoid-locomotion.js, scripts/l5-beast-npc.js]
-  feetPosition: {x: -38, y: 0, z: -20.25}
+  feetPosition: {x: -38, y: 0, z: -20.35}
   id: l5-beast
   layout: {box: {max: {x: 0.45, y: 2.15, z: 0.3}, min: {x: -0.45, y: 0, z: -0.3}}}
   model: cdn/value.fb4cf0aa8f83feb0dbe3d94397c89349b38f92c5459e80bc326f7f55afe432a9.png.glb
-  physics: character
+  physics: kinematic
   rotation: {yaw: 180}
-  state: {essential: true, faction5: hotel, home: {x: -38, z: -20.25}, hp: 9999, maxHp: 9999, name: "The Gentleman · Proprietor", role: proprietor, title: Entity 18, voice: beast}
+  state: {essential: true, faction5: hotel, home: {x: -38, z: -20.35}, hp: 9999, maxHp: 9999, name: "The Gentleman · Proprietor", role: proprietor, seated: true, title: Entity 18, voice: beast}
   tags: [l5-office, npc, l5-beast]
 l5-beast-register:
   behavior: scripts/l5-beast-prop.js
@@ -4202,7 +4202,7 @@ l5-office-door:
   feetPosition: {x: -34, y: 0, z: -13.2}
   id: l5-office-door
   physics: {body: static, collider: box}
-  rotation: {yaw: 118}
+  rotation: {yaw: 90}
   tags: [l5-office]
 l5-office-globe:
   feetPosition: {x: -43.7, y: 0, z: -20.7}
@@ -4250,6 +4250,13 @@ l5-office-rug:
   id: l5-office-rug
   material: {roughness: 0.95, texture: cdn/texture-faded-red-persian-rug-worn-fringe.png}
   primitive: {depth: 3.8, height: 0.012, kind: box, width: 5.2}
+  tags: [l5-office]
+l5-office-seat:
+  feetPosition: {x: -38, y: 0, z: -20.55}
+  id: l5-office-seat
+  layout: {box: {max: {x: 0.45, y: 1.05, z: 0.45}, min: {x: -0.45, y: 0, z: -0.45}}}
+  model: {forward: "+x", id: /cdn/value.07a9798f6eec6c10157142da7130514ee8c8301290fe16d553f43818e8103796.glb}
+  rotation: {yaw: 190}
   tags: [l5-office]
 l5-office-window-0:
   behavior: scripts/l5-beast-prop.js
