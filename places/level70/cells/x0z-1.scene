@@ -1,4 +1,11 @@
 # spawn-scene v2 yaml x0z-1
+l70-bp-dock:
+  feetPosition: {x: 6, y: 0, z: -128}
+  id: l70-bp-dock
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 8, height: 4, kind: box, width: 8}
+  tags: [blueprint]
 l70-bp-hotel:
   feetPosition: {x: 34, y: 0, z: -80}
   id: l70-bp-hotel

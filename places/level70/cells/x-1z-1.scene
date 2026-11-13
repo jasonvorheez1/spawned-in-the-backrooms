@@ -1,0 +1,8 @@
+# spawn-scene v2 yaml x-1z-1
+l70-bp-camp:
+  feetPosition: {x: -96, y: 0, z: -82}
+  id: l70-bp-camp
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 18, height: 4, kind: box, width: 18}
+  tags: [blueprint]

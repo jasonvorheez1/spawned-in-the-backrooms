@@ -1,4 +1,11 @@
 # spawn-scene v2 yaml x0z0
+l70-bp-froston:
+  feetPosition: {x: 62, y: 0, z: 16}
+  id: l70-bp-froston
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 16, height: 9, kind: box, width: 20}
+  tags: [blueprint]
 l70-bp-house:
   feetPosition: {x: -40, y: 0, z: -18}
   id: l70-bp-house
