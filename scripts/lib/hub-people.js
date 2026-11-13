@@ -54,7 +54,7 @@ export function keepCrew(ctx) { // first walk-in lays everyone at once; after th
 const KM = "hub-keymaster", ROLL_MS = 240000, CHANCE = 0.18, STAY_MS = 120000;
 export function keymaster(ctx) {
   const s = ctx.place.state, now = ctx.now(), o = ctx.place.objects[KM];
-  if (o) { if (now > (o.state.leaveAt ?? 0) || o.state.dead) { ctx.destroy(KM); s.kmGoneAt = now; } return; }
+  if (o) { if (o.state.dead || (now > (o.state.leaveAt ?? 0) && !ctx.place.players.some((p) => p.state?.talkWith === KM))) { ctx.destroy(KM); s.kmGoneAt = now; } return; }
   if (now - (s.kmRollAt ?? 0) < ROLL_MS) return; s.kmRollAt = now;
   if (ctx.random() > CHANCE) return;
   const p = ctx.place.players[Math.floor(ctx.random() * ctx.place.players.length)]; if (!p) return;

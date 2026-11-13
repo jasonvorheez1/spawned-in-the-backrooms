@@ -424,7 +424,7 @@
   needs: { group: meg, fame: 35, text: "Sato only hands his survey to people the M.E.G. trusts." }
   title: "Survey Markers"
   stages:
-    - { text: "Clear what's prowling the far tunnels", kind: clear, target: hostile, count: 3 }
+    - { text: "Examine the fourth door on the left in the third tunnel", kind: find, target: hd-t3-a3, count: 1 }
     - { text: "Report to Sato", kind: talk, target: hub-meg-sato, count: 1 }
   alt: { kind: speech, sk: 60, pay: 0.5, text: "Sato marks it clear on your say-so. Bold of him." }
   reward: { cents: 6000, xp: 220, rep: { group: meg, d: 6 } }

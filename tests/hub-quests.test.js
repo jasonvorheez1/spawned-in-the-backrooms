@@ -14,11 +14,14 @@ test('arriving without Phoebe still points at the ledger, and reading it opens t
   expect(s.quests['the-tenth-tunnel'].step).not.toContain('Phoebe')
   s.hubLedger = 1; hubRoute(ctx(), s, 'thehub')
   expect(s.quests['the-tenth-tunnel'].step).toContain('tenth tunnel')
-  hubRoute(ctx(), s, 'level11'); expect(s.hubRouteDone).toBe(1)
+  hubRoute(ctx(), s, 'level11'); expect(s.hubRouteDone).toBeUndefined()
+  s.hubTenthCrossed = 1; hubRoute(ctx(), s, 'level11'); expect(s.hubRouteDone).toBe(1)
 })
 
 test('Okafor can be asked about Dina by anyone who knows her name', () => {
-  expect(hubChoices(ctx(), { id: 'hub-meg-okafor' }, { trail: { name: 1 } }).some((c) => c.text.includes('Dina'))).toBe(true)
+  const s = { trail: { name: 1 } }
+  const c = hubChoices(ctx(), { id: 'hub-meg-okafor' }, s).find((x) => x.text.includes('Dina'))
+  expect(c).toBeTruthy(); expect(say(ctx(), s, 'hub-meg-okafor', c.text).reply).toContain('tenth tunnel'); expect(s.hubDinaAsk).toBe(1)
 })
 
 test("Lin's Speech 45 is rolled; a failed lie hides the option but returning the key still works", () => {
@@ -36,4 +39,80 @@ test('selling the tapes to Pip moves the blank-door lead to Pip, not Sato', () =
   say(ctx(), s, 'hub-amber-pip', 'Anything good on those tapes?')
   say(ctx(), s, 'hub-amber-pip', "I'll go and find that door.")
   expect(s.hubUP).toBe(1)
+})
+
+test('the blank-door objective points to the actual door and repairs older saves', () => {
+  const s = { hubLR: 99, hubUPask: 1 }
+  say(ctx(), s, 'hub-meg-sato', "I'll go and look at it.")
+  expect(s.quests['hub-uncharted'].mark.id).toBe('hub-blank')
+  s.quests['hub-uncharted'].mark.id = 'hub-uncharted'
+  hubRoute(ctx(), s, 'thehub')
+  expect(s.quests['hub-uncharted'].mark.id).toBe('hub-blank')
+})
+
+test('Camp Amber can complete the door investigation when the post is hostile', () => {
+  const s = { hubUP: 2, rep: { meg: -80 }, quests: { 'hub-uncharted': { name: 'Uncharted Passage', step: 'Report back' } } }
+  expect(hubChoices(ctx(), { id: 'hub-amber-pip' }, s).some(x => x.text.includes('unmarked door you wanted'))).toBe(true)
+  say(ctx(), s, 'hub-amber-pip', 'I found the unmarked door you wanted to know about.')
+  expect(s.hubUP).toBe(99); expect(s.cents).toBe(12000); expect(s.qdone['hub-uncharted'].outcome).toBe('completed')
+})
+
+test('Sato rewards a key that has an actual matching door', async () => {
+  const { keyDoor } = await import('../scripts/lib/hubkeys.js')
+  const s = { hubUP: 2 }
+  say(ctx(), s, 'hub-meg-sato', 'I found the door with no mark.')
+  const place = Object.keys(s.hubKeys)[0]
+  expect(keyDoor(place)).toBeTruthy()
+})
+
+test('the missing key remains available to another player', async () => {
+  const { ears } = await import('../scripts/hub-thing.js')
+  const item = { state: { kind: 'keytag' }, visible: true, tags: ['usable', 'hub-thing'] }
+  const a = { id: 'a', state: { hubMK: 2 } }, b = { id: 'b', state: { hubMK: 2 } }
+  const c = { ...ctx(), self: item, getObject: id => id === 'a' ? a : b }
+  ears.press(c, { by: 'a' }); ears.press(c, { by: 'b' })
+  expect(a.state.hubMK).toBe(3); expect(b.state.hubMK).toBe(3)
+  expect(item.visible).toBe(true); expect(item.tags).toContain('usable')
+})
+
+test('Hub errands require a clear offer and a deliberate hand-in', async () => {
+  const { errandTick } = await import('../scripts/lib/errands.js')
+  const { hubErrandChoices, handleHubErrand } = await import('../scripts/lib/hub-errands.js')
+  const s = { talkWith: 'hub-amber-jo', snacks: { bandage: 2, firstaid: 1 } }
+  const p = { id: 'p', state: s, session: {}, feetPosition: { x: 0, y: 0, z: 0 } }
+  const c = { ...ctx(), self: p, session: {}, getObject: () => null }
+  const npc = { id: 'hub-amber-jo' }
+  errandTick(c, c.session, s, 'thehub')
+  expect(s.errands).toBeUndefined()
+  const ask = hubErrandChoices(npc, s).find(x => x.text.includes('newcomer box'))
+  expect(ask).toBeTruthy(); handleHubErrand(c, p, npc, ask.text)
+  expect(s.errands).toBeUndefined()
+  const accept = hubErrandChoices(npc, s).find(x => x.tag === 'Quest Start')
+  handleHubErrand(c, p, npc, accept.text)
+  expect(s.errands['jo-supply'].stage).toBe(0)
+  errandTick(c, c.session, s, 'thehub')
+  c.session.errAt = 0; errandTick(c, c.session, s, 'thehub')
+  expect(s.errands['jo-supply'].stage).toBe(1)
+  s.talkWith = null; errandTick(c, c.session, s, 'thehub'); s.talkWith = npc.id; errandTick(c, c.session, s, 'thehub')
+  expect(s.snacks).toEqual({ bandage: 2, firstaid: 1 }); expect(s.errands['jo-supply'].done).toBeUndefined()
+  const hand = hubErrandChoices(npc, s).find(x => x.tag === 'Quest Turn-In')
+  handleHubErrand(c, p, npc, hand.text)
+  expect(s.snacks).toEqual({ bandage: 0, firstaid: 1 }); expect(s.errands['jo-supply'].done).toBe(1)
+  expect(s.qdone['err-jo-supply'].outcome).toBe('completed')
+})
+
+test('the third-tunnel survey asks for an actual door rather than imaginary enemies', async () => {
+  const { ERRANDS } = await import('../scripts/lib/errands.js')
+  const { doorById } = await import('../scripts/lib/thehub.js')
+  const stage = ERRANDS['sato-markers'].stages[0]
+  expect(stage.kind).toBe('find'); expect(doorById(stage.target)).toBeTruthy()
+})
+
+test('Hub routes identify the real crossings', async () => {
+  const { nextQuestExit } = await import('../scripts/lib/quest-route.js')
+  const p = { place: 'level1', state: {}, feetPosition: { x: 0, y: 0, z: 0 } }
+  const c = { place: { id: 'level1', objects: { 'l1-to-hub': { feetPosition: { x: 5, y: 0, z: 0 } } } } }
+  expect(nextQuestExit(c, p, 'thehub')).toMatchObject({ exit: 'l1-to-hub', via: 'thehub' })
+  p.place = 'thehub'; c.place = { id: 'thehub', objects: { 'hd-t10-a3': { feetPosition: { x: 8, y: 0, z: 0 } } } }
+  expect(nextQuestExit(c, p, 'level11')).toMatchObject({ exit: 'hd-t10-a3', via: 'level11' })
 })

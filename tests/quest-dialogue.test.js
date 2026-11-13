@@ -34,6 +34,16 @@ test('asking about a job explains it without starting it, and declining leaves i
   expect(s.quests['the-golden-bumper'].briefing).toContain('windmill')
 })
 
+test('Hub errand offers and acceptance work on the conversation card', () => {
+  const { s, choose } = scene('hub-amber-jo', 'thehub')
+  choose('Could the newcomer box use supplies?')
+  expect(s.errands).toBeUndefined()
+  expect(s.sub.t).toContain('Two bandages')
+  choose("I'll bring supplies for the box.")
+  expect(s.errands['jo-supply'].stage).toBe(0)
+  expect(s.quests['err-jo-supply'].step).toContain('bandages')
+})
+
 test('accepting one job does not accept another offer from the same person', () => {
   const { s, choose } = scene('l10-meg-cooper')
   choose("Something's rattling in the storm cellar. Want me to look?")

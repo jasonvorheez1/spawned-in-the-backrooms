@@ -53,6 +53,8 @@ export function tick(ctx) {
   if ((s.hubV ?? 0) < 5) { layLampModels(ctx); layDress(ctx); } // v5: modeled lamps, fans, tray, gutters, barriers, camp furniture
   s.hubV = V;
   if (!ctx.place.players?.length) return;
+  const key = ctx.place.objects["hub-keytag"];
+  if (key && (key.visible === false || !key.tags?.includes("usable"))) { key.visible = true; key.tags = ["usable", "hub-thing"]; }
   keepCrew(ctx); keymaster(ctx);
   resonance(ctx);
 }
