@@ -35,7 +35,39 @@ for kind in want:
     n = len(bm.verts); dead = [v for c in isl if len(c) < n * k.get("junk", 0.004) for v in c]
     bmesh.ops.delete(bm, geom=dead, context="VERTS")
     bm.to_mesh(me); bm.free()
-    # orient: rot = [rx, ry, rz] degrees in Blender axes (Z up), applied in that order
+    # orient: Tripo stands a prop at whatever tilt its concept picture had. Fit the tightest box (hull-face search), then name its
+    # axes: up = the box's "min" | "mid" | "max" side (k["up"]), signed by upHint; depth signed by frontHint (raw Blender axes).
+    if k.get("up"):
+        import numpy as np
+        from mathutils.geometry import box_fit_2d
+        bm = bmesh.new(); bm.from_mesh(me)
+        hull = bmesh.ops.convex_hull(bm, input=bm.verts)["geom"]
+        hv = [g for g in hull if isinstance(g, bmesh.types.BMVert)]; hf = [g for g in hull if isinstance(g, bmesh.types.BMFace)]
+        P = np.array([v.co[:] for v in hv]); best = None; done = set()
+        for f in sorted(hf, key=lambda f: -f.calc_area())[:400]:
+            nrm = f.normal.normalized(); key = tuple(round(c, 2) for c in nrm)
+            if key in done or nrm.length < .5: continue
+            done.add(key)
+            u = nrm.orthogonal().normalized(); v = nrm.cross(u)
+            q = P @ np.array([u[:], v[:], nrm[:]]).T
+            ang = box_fit_2d([tuple(r) for r in q[:, :2]]); c, s_ = math.cos(ang), math.sin(ang)
+            a1 = u * c - v * s_; a2 = u * s_ + v * c       # box_fit_2d: rotating by ang aligns the box
+            A = np.array([a1[:], a2[:], nrm[:]]); e = (P @ A.T).max(0) - (P @ A.T).min(0)
+            if best is None or e.prod() < best[0]: best = (e.prod(), A, e)
+        bm.free()
+        _, A, e = best; order = sorted(range(3), key=lambda j: e[j])
+        iu = order[{"min": 0, "mid": 1, "max": 2}[k["up"]]]; rest = [j for j in range(3) if j != iu]
+        W, H, D = k["size"]; big = max(rest, key=lambda j: e[j]); small = min(rest, key=lambda j: e[j])
+        idp, iw = (big, small) if D >= W else (small, big)
+        up = Vector(A[iu]); dp = Vector(A[idp])
+        if up.dot(Vector(k.get("upHint", [0, 0, 1]))) < 0: up = -up
+        if dp.dot(Vector(k.get("frontHint", [0, -1, 0]))) < 0: dp = -dp
+        dp = -dp                                   # raw front -> Blender -Y... engine front is glTF -Z = Blender +Y; flipped below
+        dp = -dp
+        x = dp.cross(up) * -1                      # x = up cross? keep right-handed: X = Y x Z
+        x = dp.cross(up)
+        R = Matrix((x, dp, up)).to_4x4()           # rows: new X, Y, Z in raw coords
+        me.transform(R)
     for ax, deg in zip("XYZ", k.get("rot", [0, 0, 0])):
         if deg: me.transform(Matrix.Rotation(math.radians(deg), 4, ax))
     def bb():
@@ -46,11 +78,7 @@ for kind in want:
     lo, hi = bb(); sz = hi - lo
     W, H, D = k["size"]                       # glTF x, y(up), z  == Blender x, z, y
     tgt = Vector((W, D, H))
-    fit = k.get("fit", "max")
-    if fit == "max":
-        i = max(range(3), key=lambda j: tgt[j]); s = tgt[i] / sz[i]
-    else:
-        i = "xyz".index(fit); s = tgt[i] / sz[i]
+    i = {"w": 0, "d": 1, "h": 2}[k.get("fit", "h")]; s = tgt[i] / sz[i]
     sc = Vector((s, s, s))
     if k.get("squash"): sc.z = tgt.z / sz.z   # cloth only: settle the height
     me.transform(Matrix.Diagonal((sc.x, sc.y, sc.z, 1)))
