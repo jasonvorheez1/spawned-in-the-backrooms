@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7126,
-  "updatedAt": "2026-11-13T05:05:08.279Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social hub and authored lore destinations; player saves hold progression, gear, quests, faction standing and homes, while tutorial0 is solo and ephemeral. Shared player behaviors, place simulations and reusable builders join authored scenes to generated spaces, with a Tripo cat wardrobe/appearance pipeline supporting the character creator and in-world salon.",
+  "basedOnSpecVersion": 7138,
+  "updatedAt": "2026-11-13T05:11:39.853Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social hub and authored lore destinations; player saves hold progression, gear, quests, faction standing and homes, while tutorial0 is solo and ephemeral. Shared player behaviors and place simulations join authored scenes to generated spaces, with reusable dialogue/quest systems and a Tripo cat appearance pipeline. The Way Back now reveals Dina's story through a saved clue trail before continuing its ship and recovery stages.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0's yellow maze, ecology, routes, landmarks, Christmas Area and stair anomalies; its objects.scene also carries the Favi brain row.",
@@ -31,7 +31,7 @@
     "scripts/lib/quest-route.js + scripts/lib/quest-mark.js + scripts/lib/quests.js - directed crossing graph/objectives and common quest state; dialogue data, npc-starters and npc-talk support conversations/checks.",
     "scripts/lib/data/l02-props.yml + scripts/lib/data/l02-remodel.yml + scripts/lib/l02-grid.js - Level 0.2 prop catalog, partitions, lamp/paint configuration, crew dressing and reset.",
     "scripts/lib/breakables.js + scripts/lib/data/breakables.yml - shared prop/wall damage, material, drops and regrowth; place sims opt in with sweepProps/tickWalls.",
-    "scripts/lib/data/dlg-*.yml + scripts/lib/dialogue.js + voice-cast/voice-acted data + scripts/lib/voices.js - authored NPC talk/barks, performer assignments and recorded playback; dlg-tiny.yml mirrors tiny.yml for VO recording, while the game reads tiny.yml.",
+    "scripts/lib/data/dlg-*.yml + scripts/lib/dialogue.js + scripts/talk.js + scripts/lib/voices.js - authored NPC conversation and barks, checks/actions, voice playback; dlg-quest-main.yml also supplies Dina's clue-trail and purser lines.",
     "scripts/lib/cat-wardrobe.js + scripts/lib/data/cat-wardrobe.yml + scripts/mat-catskin.js - new Tripo cat body, painted/modelled garment, face, hair and ear construction, used by critter.js and cat-demo.js; old critter clothes remain separate."
   ],
   "notableExports": [
@@ -42,12 +42,12 @@
     "scripts/lib/level31-quest.js - QID/QNAME, NPC/object IDs, openCrate, useDeck, l31Choices, handleDialogueQuest31; Side B quest state and interactions.",
     "scripts/lib/forgive.js + scripts/lib/rep.js + scripts/lib/witness.js - incident/hostility helpers, faction standing and karma helpers, repKill, markKill and sighted-witness recording.",
     "scripts/lib/level70.js + scripts/terrain70.js; level70-civic.js exports V, STALL, FIRE, LECTERN, HOTEL_DOOR, GARAGE_DOOR, VALVE_POS, GAUGE, PUMP, BREAKER, lay, tick; level70-life.js exports V, M, PACKS, lay, tick.",
-    "scripts/lib/cat-wardrobe.js - CAT_BODY, CAT_OLD, CAT_BODY2, paintOf, skinParams, EYE_COLORS, SHADOWS, faceLife, catModel, chestOf, SNOUTS, EARS, TAILS, catMorph and wardrobe construction helpers."
+    "scripts/lib/dina-quest.js - HOME, TRAIL, learn, trailStep/trailText, dinaLead, funGate, setDinaStep, dinaTick; The Way Back clue tracker and stage progression."
   ],
   "ownership": [
-    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved position, tapes, currency, karma/rep and homeKeep; initializes hp to max and hunger/thirst to 100 once per player.",
+    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved position, tapes, currency, karma/rep and homeKeep; initializes hp to max and hunger/thirst to 100 once per save.",
     "scripts/critter.js - per-player appearance look and transient critter/creator/salon state (wardrobeOpen, wrTab, salonOpen/salonTab); dress actions update look, including selected model or uploaded model URL.",
-    "scripts/lib/quests.js + scripts/lib/dina-quest.js - quests/qtrack/qdone; Dina quest/diary/cut/lead fields and legacy quest migration.",
+    "scripts/lib/quests.js + scripts/lib/dina-quest.js - quests/qtrack/qdone; Dina's saved trail keys (name, word, list, tape, room, radio, pass), dinaQ stages, diary/cut/lead fields and legacy migration.",
     "scripts/lib/level31-quest.js - player.state.l31q/l31route/l31qh and quest tape/card/check/ending fields; route consequences, faction rep, cents, payout and mixtape reward.",
     "scripts/lib/level70-quest.js - player.state.l70q/l70route, l70pelt/l70led and related quest/hint/count fields; quest tick and snack/steam handlers also write player.state.chill; place.state holds layer-build versions.",
     "scripts/lib/remodel-quest.js - remodQ, l02got/l02paint, fresh, capnAsk/capnFailed and Fresh Paint quest/HUD/payout/reputation.",
@@ -55,19 +55,18 @@
     "Enemy managers own AI/sneakTarget; scripts/lib/meg-agent.js owns NPC runtime combat/movement memory; scripts/lib/forgive.js records NPC incidents/angry/fresh and clears expired offenses; places/level2/sim.js owns survBodyV."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific controls.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific actions.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera; camera writes aimPt/aimPitch → player.js ballistics/weaponAim; player.js zoneHere → maze names and Level 31/70 zoneAt labels.",
     "scripts/routing.js requested room → scripts/lib/hub.js solo selection; toHub/toSolo cross to hub/home and maintain roomHop/save-place; kiosk resolves booked Level 5 home IDs.",
-    "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close runs scripts/lib/intro-cut.js cutTick for the wake-up/wall-crossing scene (Phoebe spawn branch disabled), then crosses to tutorial0 first time or main later.",
-    "C creator / intake appearance UI (scripts/wardrobe-ui.js) and Bonus salon service UI (scripts/salon-ui.js) → dress action handled by scripts/critter.js; model choice/upload and ears/face/clothes update the appearance look used for live dressing.",
-    "scripts/humanoid-locomotion.js reads wrMenu/wardrobeOpen → zeros horizontal velocity while the character creator is open.",
+    "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close runs scripts/lib/intro-cut.js cutTick for the wake-up/wall-crossing scene, then crosses to tutorial0 first time or main later.",
+    "Creator/intake appearance UI (scripts/wardrobe-ui.js) and Bonus salon UI (scripts/salon-ui.js) → dress action in scripts/critter.js; selections update the appearance look used for live dressing.",
     "tutorial0 HALOGEN cut → scripts/lib/tut0-cut.js + scripts/lib/dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ and play recorded voices.",
     "scripts/build.js placement/removal → homeKeep.built or homeKeep.l5built; Level 5 sim restores separately; l5-resident booking → player l5home/l5room and place.state.l5rent, hub kiosk routes per room.",
     "Level 2 sim l2-to-l31 → scripts/level-door.js to level31#l31-from-l2; Level 31 l31-back → level2#l2-from-l31; quest-route.js maps both directed crossings.",
     "Level 31 l31-to-l70 trigger → scripts/level-door.js + companion/carry transfer → level70#l70-from-l31; Level 70 l70-back → level31#l31-from-l70; quest-route.js exposes the white-door pair and preload.yml preloads destinations/models.",
     "Level 31 sim reads H/B/RINK/ZONES/DOOR/BACK, rebuilds l31-* roots at place.state.v31=100 and dispatches layParts; level31.js supplies zone IDs/placement geometry, then texturePass styles eligible flat-color props.",
     "Level 70 sim lays arrival/return trigger, snow and wind, then version-gates town/civic/wild/life/quest/paths lay(ctx) and ticks each second; place.state.v70* keys record layer builds, while paths lay packed-snow routes to buildings.",
-    "Level 7 Tiny interaction: scripts/l7-tiny.js reads tiny.yml for line pools and calls voices.js/vo plus heard for targeted telepathy; scripts/lib/data/dlg-tiny.yml mirrors the lines for art/vo/act.py recording."
+    "The Way Back: scripts/talk.js choices and scripts/lib/dina-quest.js watchTalk read dlg-*.yml ask nodes/check results → player.state.trail; dinaTick syncs trailStep into quests.the-way-back; talk choices at Ale/Callum/Ambrose also mark word/list/room. level-door.js calls funGate before any crossing to level26; pass, crouching, Speech or 50 Backdollars allows boarding."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored mall shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
@@ -88,10 +87,10 @@
   ],
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. Keep this bounded sweep.",
-    "Global body-style restyling skips player IDs and player/ roots and ignores local-audience or model-less objects; wardrobe membership derives from critter-ward IDs. Level 2 survivors keep generated looks in NPC state.wear; survBodyV=1 triggers their restyle.",
-    "Cat wardrobe is only for new Tripo cat bodies; cat-wardrobe.yml stores garment/model assets and maps ears per sex, while art/cat-wardrobe/ears.py generates sculpted ear forms. Keep old critter body/clothes separate; lop asset paths in the config are sex-specific.",
+    "Global body-style restyling skips player IDs and player/ roots and ignores local-audience or model-less objects; wardrobe membership derives from critter-ward IDs. Level 2 survivors keep generated looks in NPC state.wear; survBodyV=1 triggers their replacement.",
+    "Cat wardrobe is only for new Tripo cat bodies; cat-wardrobe.yml stores garment/model assets and maps ears per sex, while art/cat-wardrobe/ears.py generates sculpted ear forms. Keep old critter body/clothes separate; lop asset paths use sex-specific GLBs.",
     "Level 31 rebuilds l31-* roots at place.state.v31=100; align IDs and shell/zone/door/arrival geometry with level31.js, and keep the white-door exit paired with Level 70's l70-from-l31 arrival.",
     "Level 70 level70.js keeps built zone discs, street and Burns River at y=0 while terrain70.js raises terrain outside them; layer versions invalidate builds and nav cache keys include town/civic/wild/path versions.",
-    "NPC incidents are offender-keyed on NPC state and use gameNow/clock.js for a one-in-game-hour expiry; only allied, sighted witnesses join fights, and kill witnesses require clear sight of both body and killer."
+    "The Way Back clue trail is player.state.trail, migrated once from dinaLead/dinaDiary/dinaQ/l26 flags; trail.pass unlocks old dinaQ stages. level-door.js gates every level26 crossing through funGate, whose alternative entry paths are crouch, Speech 70 or 5000 cents (50 Backdollars)."
   ]
 }
