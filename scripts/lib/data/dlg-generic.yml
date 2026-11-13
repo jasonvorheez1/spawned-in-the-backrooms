@@ -1,134 +1,160 @@
 # The unnamed: everyone without their own entry speaks as their faction and role ("faction:role"). Each line slot can be a
 # list; a person always draws the same one (picked by their id), so two strangers rarely sound alike. Written by hand, Nov 11.
+# Nov 13: rewritten to design/story-spine.md. The player knows nothing, so no choice names a place, a group or a person
+# the player has not been told. Everyone answers the three questions (where, the way out, the name Dina) from their own life.
 
 "survivor:default":
-  hi: ["Hold up. Stand under the light a second.", "Don't come closer till I've had a look at you.", "Sorry. Thought you were the thing from the next room.", "Which hall did you come through?"]
-  back: ["You found your way back.", "Anything following you?", "Oh, it's you. Hi."]
-  warm: ["Hey. Sit. I've got half a can of something.", "Good to see a face I know."]
-  cold: ["Keep your distance.", "I remember you."]
-  follow: ["Behind you.", "I'm here. Go."]
-  bye: ["Watch yourself.", "Don't follow the voices.", "Yeah. See you. Maybe."]
-  walk: ["Okay then.", "Fine."]
+  hi: ["Hold up. Stand under the light where I can see you.", "That's close enough, stranger. Let me look at you first.", "Sorry. I thought you were the thing from the next room.", "You're real? Say something so I know you're real."]
+  back: ["You made it back around.", "Anything behind you this time?", "Oh. You. Hi."]
+  warm: ["Hey. Sit down. I've got half a can of something.", "A face I know. That doesn't happen much."]
+  cold: ["Stay over there.", "I remember you. That's not good news for you."]
+  follow: ["Right behind you.", "I'm here. Keep walking."]
+  bye: ["Watch yourself, stranger.", "If you hear somebody call you, don't answer.", "Yeah. See you. Maybe."]
+  walk: ["Okay then.", "Fine. Bye, I guess."]
   ask:
     - q: "Where am I?"
-      a: ["The Backrooms. You came out of the yellow rooms, right? Everybody does, first. This is one of the levels past them.", "The Backrooms. You fell out of the real world somewhere, same as me. Each level's its own place. Learn this one before the next."]
-    - q: "What are the Backrooms?"
-      a: ["Rooms behind the rooms. You step wrong, you clip out of the real world, and you land here. It goes on. Levels on levels.", "Nobody knows what built it. Some say it's a mistake in the world. I say it's a place that eats people who stand still."]
-    - q: "How do I get out of here?"
-      a: ["You don't, mostly. People say the exits are deeper, not back. Find the camp, ask the ones who've been here years.", "Down, not up. Every level has a way to the next. Somewhere at the bottom there's supposed to be a door home. I've never met anyone who used it."]
-    - q: "Do you know someone called Dina?"
-      a: ["Dina? Name rings a bell. Somebody at the camp keeps a list of the lost. Ask there.", "Heard the name on a recorder once. Never saw her face. If she's alive, she's ahead of you, not behind."]
-    - q: "How long have you been down here?"
-      a: ["Lost count after the second notebook.", "Long enough to stop hoping for doors.", "A year? Three? The days don't add up right here."]
-    - q: "Where should I go from here?"
+      a: ["Wish I had a good answer. I leaned on a wall at work and it wasn't there. Been walking since. Nobody I've met has a name for it that sticks.", "Somewhere behind everything. That's my best guess. I was in a parking garage, then I wasn't. You'll want somebody smarter than me."]
+    - q: "How do I get out?"
+      a: ["I tried going back the way I came. There is no back. So I go forward and hope. People with a camp might know more.", "You're asking a man who's been lost two years. Some say the way out is further in. I think they just don't want to stop walking."]
+    - q: "Ever hear the name Dina?"
+      a: ["Dina. No. I'm bad with names now, though. Somebody who writes things down would do you more good.", "Might have seen it scratched on something. Or that was Dana. Sorry, stranger."]
+    - q: "Who built all this?"
+      a: ["Nobody. That's what scares me. No pipes go anywhere. No switch does anything. It's like a place somebody described badly.", "I used to think about that. Then I started sleeping better when I didn't."]
+    - q: "How long have you been here?"
+      a: ["I lost count after the second notebook.", "Long enough that my watch quit and I didn't mind.", "A year? Three? The days don't add up right."]
+    - q: "Which way should I go?"
       sk: survival 30
-      a: ["Hold a scrap of paper up at the junction. Take the hall where it moves. The dead ends don't draw air.", "Look for a wall somebody's wiped down. The clean ones usually lead to a camp."]
-      fail: ["Away from me, for a start.", "Don't know. If I knew, I wouldn't be here."]
-    - q: "Have you seen anyone else?"
-      a: ["A woman in a yellow coat, two days back. She was walking fast. I didn't ask from what.", "Tracks in the dust. I followed them until they went up the wall."]
+      a: ["Hold a scrap of paper up at the junction. Take the hall where it moves. Dead ends don't pull air.", "Look for a wall somebody wiped down. People clean near where they sleep."]
+      fail: ["Away from me, for a start.", "If I knew that, I wouldn't be standing here."]
+    - q: "Seen anyone else?"
+      a: ["A woman in a yellow coat, two sleeps back. Walking fast. I didn't ask what from.", "Footprints in the dust. I followed them till they went up the wall. Then I stopped following."]
     - q: "Want to come with me?"
       sk: speech 40
       do: recruit
-      a: ["Give me a second to get my pack. You take point.", "Where are we headed? I'll walk with you."]
-      fail: ["No. I've buried enough company.", "I go alone. Nothing personal."]
+      a: ["Let me get my pack. You go first.", "Sure. Two is harder to sneak up on."]
+      fail: ["No. I've lost enough company.", "I walk alone. Nothing personal."]
   barks:
-    idle: ["The lights have gone quiet.", "Feet hurt.", "Was that a door?", "Don't think about it.", "One more room."]
-    hi: ["Hey.", "You.", "Oh. Hi."]
-    drawn: ["Easy. Easy.", "Put that down."]
-    hurt: ["You're bleeding.", "You look bad."]
-    sneak: ["I hear you."]
-    close: ["Back off a bit."]
-    spot: ["Something's coming!", "There! Over there!"]
-    hostile: ["Get back!", "Alright, you want this?"]
+    idle: ["The lights went quiet.", "My feet hurt.", "Was that a door?", "Don't think about it.", "One more room."]
+    hi: ["Hey.", "You there.", "Oh. Hi."]
+    drawn: ["Easy. Easy now.", "Point that somewhere else."]
+    hurt: ["You're bleeding, you know.", "You look awful."]
+    sneak: ["I can hear you."]
+    close: ["Give me some room."]
+    spot: ["Something's coming!", "There! Right there!"]
+    hostile: ["Get back!", "Fine. You asked for it."]
     hit: ["Agh!", "It got me!"]
     kill: ["Got it.", "Stay down."]
     clear: ["Is it gone?"]
-    flee: ["I'm out!", "Not dying here!"]
+    flee: ["I'm gone!", "Not dying here!"]
     death: ["Oh.", "No..."]
-  gest: { wave: "Uh. Hi.", gift: "For me? Thanks. Really.", dance: "Here? Sure, why not.", nodance: "No. Not in the mood.", insult: "Nice. Real nice." }
+  gest: { wave: "Uh. Hi.", gift: "For me? Thanks. I mean it.", dance: "Here? Sure, why not.", nodance: "No. Not today.", insult: "Nice. Real nice." }
 
 "survivor:scout":
-  hi: ["Down. Quiet. Okay, it moved on. Who are you?", "Stay low. Something's been walking the next hall."]
-  back: ["You. Still quiet. Good.", "Back. Any trouble?"]
-  bye: ["Keep low.", "Quiet feet."]
+  hi: ["Down. Quiet. Okay, it moved on. Who's this?", "Stay low, loudfoot. Something's walking the next hall."]
+  back: ["You again. Still breathing. Good.", "Back already. Trouble?"]
+  bye: ["Stay low.", "Soft feet, loudfoot."]
   ask:
+    - q: "Where am I?"
+      a: ["Three halls from a dead end and one from something big. That's the where that matters.", "No idea what it is. I know how it's laid out, about a day in each direction. Past that, I'm guessing like you."]
+    - q: "How do I get out?"
+      a: ["Out of this stretch? Sure. Out of all of it? I've walked eleven days one way and never hit an edge.", "I've found doors that go somewhere else. Never one that goes home. Walk enough and you'll find one too."]
     - q: "What's moving out there?"
-      a: ["Something big two halls over. It stops when you stop. So I stopped for an hour.", "Hounds. Three. They circle. Don't let them circle you."]
-    - q: "Any safe spots near here?"
+      a: ["Something big, two halls over. It stops when you stop. So I stopped for an hour.", "Three of them, on four legs. They circle. Don't let them get around you."]
+    - q: "Any safe spots?"
       sk: survival 30
-      a: ["The room with the dead lamp. Nothing goes in there. I don't know why, I don't ask.", "Look for fresh paint on the corners. The people keeping watch mark their routes that way."]
-      fail: ["I haven't found anywhere I'd sleep through both watches."]
+      a: ["The room with the dead lamp. Nothing goes in there. I don't know why and I don't ask.", "Look for fresh paint on the corners. People who keep watch mark their routes."]
+      fail: ["Nowhere I'd sleep through both watches."]
+    - q: "Ever hear the name Dina?"
+      a: ["I follow feet, not names. Small boot, long stride, heading down. That's all I'd know of anybody.", "No. People don't tell me names. I tell them to be quiet first."]
   barks:
-    idle: ["Shh.", "Listening.", "Something moved."]
-    hi: ["Shh.", "Low."]
-    spot: ["Contact!", "There!"]
+    idle: ["Shh.", "Listening.", "That moved."]
+    hi: ["Shh.", "Get low."]
+    spot: ["Eyes up!", "There!"]
     hit: ["Ngh!"]
     kill: ["Down."]
-    flee: ["Pulling back!"]
-  gest: { wave: "Shh. Hi.", gift: "Thanks.", dance: "Too loud.", nodance: "Too loud.", insult: "Quietly, please." }
+    flee: ["Backing off!"]
+  gest: { wave: "Shh. Hi.", gift: "Thanks. Quiet one, I hope.", dance: "Too loud.", nodance: "Too loud.", insult: "Say it quieter." }
 
 "survivor:medic":
-  hi: ["Sit down. You're grey. Let me look.", "Hurt? Course you're hurt. Sit."]
-  back: ["Let me see that again.", "Healing up? Show me."]
+  hi: ["Sit down. You've gone grey. Let me look.", "Hurt? Of course you're hurt. Sit, patient."]
+  back: ["Let me see that again.", "Healing up? Show me, don't tell me."]
   bye: ["Keep it clean.", "Don't pick at it."]
   ask:
     - q: "Can you patch me up?"
       do: heal
-      a: ["Hold still while I rinse it. There. Change the dressing when it soaks through.", "Put your thumb here and keep the pressure on while I tie it."]
+      a: ["Hold still while I rinse it. There. Change the wrap when it soaks through.", "Thumb here. Press. Keep pressing while I tie it."]
+    - q: "Where am I?"
+      a: ["Somewhere the air's damp and nothing heals fast. I was a dental nurse. Then I was here. That's as much as I can tell you.", "I couldn't say. I can tell you what it does to people. Bad sleep, cracked feet, and they stop finishing sentences."]
+    - q: "How do I get out?"
+      a: ["Everyone I patch asks me that. I ask them back. Nobody's given me an answer I could use.", "I don't know, patient. I'd settle for you getting out of this week alive."]
+    - q: "Ever hear the name Dina?"
+      a: ["People give me a wound first and a name on the second visit. Most don't get a second visit.", "No. If she ever came by cut up, I'd know the cut. Not the name."]
     - q: "How do you keep supplies?"
-      a: ["I boil the instruments and wash the wraps. When the wraps wear through, I cut up a clean shirt."]
+      a: ["I boil what I can and wash the wraps. When the wraps give out, I cut up a clean shirt. Yours looks clean enough."]
   barks:
-    idle: ["Bandages, bandages.", "Boil it."]
-    hurt: ["Sit, you're bleeding."]
-    spot: ["Wounded, behind me!"]
-    hit: ["Ah! Fine."]
+    idle: ["Wraps, wraps, wraps.", "Boil it first."]
+    hurt: ["Sit. You're leaking."]
+    spot: ["Hurt ones behind me!"]
+    hit: ["Ah! Fine. I'm fine."]
     flee: ["Grab the kit!"]
-  gest: { wave: "Hi. Sit.", gift: "That'll help someone.", dance: "Gently.", nodance: "Busy.", insult: "Still patching you." }
+  gest: { wave: "Hi. Sit.", gift: "That'll help somebody.", dance: "Gently. I just fixed that knee.", nodance: "Busy.", insult: "I'd still patch you. Slower." }
 
 "survivor:trader":
-  hi: ["Set what you're trading on the cloth. If you're buying, I've got batteries.", "Everything's for sale except my boots.", "I'll take cash or sealed water."]
-  back: ["Back! Pockets full?", "My customer!"]
-  bye: ["Come back richer.", "Tell anyone who needs batteries where to find me."]
+  hi: ["Put what you're trading on the cloth, customer. If you're buying, I've got batteries.", "Everything's for sale except my boots.", "I take cash or sealed water. No promises, no stories."]
+  back: ["Back! Pockets full, I hope?", "My favorite customer. Today, anyway."]
+  bye: ["Come back richer.", "Tell anybody who needs batteries where I sit."]
   ask:
-    - q: "What've you got?"
-      a: ["A bit of everything. Most of it works.", "Tape, batteries, a lighter with three flicks left. Fair prices."]
+    - q: "Where am I?"
+      a: ["At my shop. It's a blanket, but it's a shop. Past the blanket, I couldn't tell you. I sell here, I don't study it.", "Nowhere with rent, customer. That's the one nice thing I'll say about it."]
+    - q: "How do I get out?"
+      a: ["If I had that for sale I'd be the richest man alive, and gone. Buy a flashlight. It's the next best thing.", "People walk past me going every direction, all sure of it. None of them come back to say they were right."]
     - q: "Cut me a deal?"
       sk: barter 35
       do: discount
-      a: ["Alright, alright. A bit off. Don't spread it around.", "Fine. I'll take a little off this time."]
-      fail: ["Nope.", "Price is the price."]
+      a: ["Alright, alright. A bit off. Keep it to yourself.", "Fine. A little off, this once."]
+      fail: ["Nope.", "The price is the price."]
+    - q: "Ever hear the name Dina?"
+      a: ["Does she owe you? If she owed me, I'd remember. So no.", "I know people by what they buy. Give me that and I'll tell you if she's been by."]
+    - q: "What've you got?"
+      a: ["A bit of everything. Most of it works.", "Tape, batteries, a lighter with three flicks left. Fair prices."]
   barks:
-    idle: ["Selling!", "Fair prices.", "Batteries!"]
-    hi: ["Buying?", "Hey!"]
-    spot: ["Guard the stock!"]
+    idle: ["Selling!", "Fair prices. Fair-ish.", "Batteries!"]
+    hi: ["Buying?", "Hey, customer!"]
+    spot: ["Watch the stock!"]
     hostile: ["Thief!"]
-    hit: ["My stock!"]
+    hit: ["Not the stock!"]
     flee: ["Grab the good stuff!"]
-  gest: { wave: "Hey!", gift: "A gift? I'll never understand you people. Thanks.", dance: "Ha! Okay!", nodance: "Shop's open.", insult: "Prices just doubled." }
+  gest: { wave: "Hey! Waving's free.", gift: "A gift? I'll never get you people. Thanks.", dance: "Ha! Okay!", nodance: "Shop's open.", insult: "Prices just doubled." }
 
 "meg:default":
-  hi: ["M.E.G. checkpoint. Let me see your hands before you come in.", "You're in M.E.G. territory. Weapons low.", "Come inside. Quietly, please. The watch is listening."]
-  back: ["You again. Behaving?", "Welcome back."]
-  warm: ["Good to see you. You looking for water or a bunk?"]
+  hi: ["Checkpoint. Hands where I can see them, walker.", "You're on guarded ground now. Keep your weapons low.", "Come in. Quietly. The watch is listening for something."]
+  back: ["You again. Behaving?", "Welcome back, walker."]
+  warm: ["Good to see you. Water or a bunk?"]
   cold: ["I'm watching you."]
-  bye: ["Tell the next watch you came through here.", "Weapons low."]
+  bye: ["Tell the next post you came through here.", "Weapons low on the way out."]
   walk: ["Noted."]
   ask:
-    - q: "What does M.E.G. do?"
-      a: ["Survey crews draw the maps. The rest of us keep the camps open so people have somewhere to come back to.", "We write down what kills people so it kills fewer of them."]
+    - q: "Where am I?"
+      a: ["A guarded camp. Lights stay on, water gets boiled. What's past the fence isn't my department. The people at the desk get paid to explain it.", "My post. Past my post, more halls. The ones with clipboards can tell you what it all is. I just know what tries the fence at night."]
+    - q: "How do I get out?"
+      a: ["Out of camp, through that gate. Out of the rest? We've had crews drawing maps for years. No one's handed me one with a door home on it.", "Above my pay. I've stood this post two years and I've never signed anyone out for good."]
+    - q: "Who are you people?"
+      a: ["We explore, we write it down, and we keep camps open so there's somewhere to come back to. It has a long name. Everyone just says the three letters.", "We write down what kills people so it kills fewer of them. Some days that works."]
+    - q: "Ever hear the name Dina?"
+      a: ["I see a hundred faces through here and no names. Names go in a book. The one who keeps the book isn't me.", "Not to me. If she came through a gate, someone wrote her down. We write everybody down."]
     - q: "What's the danger here?"
       sk: survival 30
-      a: ["Check the board by the door. The latest patrol report's at the top."]
-      fail: ["Everything. Stay inside."]
+      a: ["Read the board by the door. Latest patrol report's on top."]
+      fail: ["Everything. Stay inside the fence."]
     - q: "Come with me?"
       sk: speech 45
       do: recruit
-      a: ["Alright. I'll log it as a patrol."]
+      a: ["Alright. I'll write it up as a patrol."]
       fail: ["My post is here."]
   barks:
     idle: ["Post's quiet.", "Radio check.", "Weapons low in camp."]
-    hi: ["Wanderer.", "Hello."]
-    drawn: ["Weapon down."]
+    hi: ["Walker.", "Hello."]
+    drawn: ["Weapon down. Now."]
     hurt: ["Medic's inside."]
     spot: ["Contact!", "Movement!"]
     hostile: ["Stand down!"]
@@ -138,156 +164,234 @@
     flee: ["Falling back!"]
     death: ["Report... it..."]
     reload: ["Reloading!"]
-  gest: { wave: "Hello.", gift: "Appreciated.", dance: "On duty.", nodance: "On duty.", insult: "Logged." }
+  gest: { wave: "Hello.", gift: "Appreciated.", dance: "On duty.", nodance: "On duty.", insult: "That goes in the report." }
 
 "meg:scout":
-  hi: ["Scout. Don't block the hall. What's behind you?", "Patrol. Seen anything moving?"]
+  hi: ["Patrol. Don't block the hall. What's behind you?", "You came from that way? Seen anything move?"]
   back: ["Anything new out there?", "You. Report."]
-  bye: ["Watch your six."]
+  bye: ["Check your corners."]
   ask:
+    - q: "Where am I?"
+      a: ["Sector I walked this morning. We give them numbers. The number won't mean anything to you, and it means less to me every week.", "Mapped ground. That's the good news. Somebody's walked it and lived."]
+    - q: "How do I get out?"
+      a: ["I map ways through. Through and out aren't the same. Every door I've logged goes to more of this.", "If there's a way home, it's past where my map stops. My map stops a lot."]
     - q: "What's out there?"
       sk: survival 30
-      a: ["Two hounds working the east halls. A dead light at the junction. Go west.", "Quiet sector. Too quiet. I'd wait a while."]
+      a: ["Two hounds working the east halls. A dead light at the junction. Go west.", "Quiet sector. Too quiet. I'd give it a while."]
       fail: ["Things you'll meet soon enough."]
-    - q: "Can I patrol with you?"
+    - q: "Can I walk with you?"
       sk: speech 40
       do: recruit
       a: ["Fine. Keep up, keep quiet."]
       fail: ["Not with that footwork."]
+    - q: "Ever hear the name Dina?"
+      a: ["I log tracks and bodies. She's not one of my bodies, if that helps.", "Not on my routes. Somebody at camp keeps the names. I just bring back what I find."]
   barks:
     idle: ["Sweep's clear.", "Next sector."]
     spot: ["Contact! Hounds!", "Movement!"]
     hit: ["I'm hit!"]
     kill: ["Down."]
     flee: ["Falling back!"]
-  gest: { wave: "Hm.", gift: "Thanks.", dance: "On patrol.", nodance: "On patrol.", insult: "Noted." }
+  gest: { wave: "Hm.", gift: "Thanks.", dance: "On patrol.", nodance: "On patrol.", insult: "Heard worse from hounds." }
 
 "meg:medic":
-  hi: ["Medical. Bleeding? Infected? Hearing things? Sit.", "Sit. Let me check you over."]
+  hi: ["Medical. Bleeding? Fever? Hearing things? Sit.", "Sit. I'll check you over."]
   bye: ["Drink water.", "Rest when you can."]
   ask:
     - q: "Can you patch me up?"
       do: heal
       a: ["Hold still. There. Fluids, rest, and stop getting bitten."]
+    - q: "Where am I?"
+      a: ["The medical tent. If you mean bigger than that, you're asking the wrong tent. I can tell you your pulse is high, which is normal for the question."]
+    - q: "How do I get out?"
+      a: ["New arrivals ask that for about a month. Then they ask where the water is. I don't have an answer for the first one."]
+    - q: "Ever hear the name Dina?"
+      a: ["My charts say 'female, thirties, sprained wrist'. No names on them. Ask whoever takes names at the front."]
   barks:
     idle: ["Next.", "Boil the water."]
     hurt: ["Sit. Now."]
     spot: ["Wounded to the back!"]
-  gest: { wave: "Hello.", gift: "Thank you.", dance: "Briefly.", nodance: "Patients.", insult: "Still treating you." }
+  gest: { wave: "Hello.", gift: "Thank you.", dance: "Briefly.", nodance: "Patients.", insult: "I'll treat you anyway." }
 
 "meg:trader":
-  hi: ["Requisitions. What do you need, what can you pay.", "Supplies. Everything logged."]
+  hi: ["Stores. What do you need, what can you pay.", "Supplies. Everything gets signed for."]
   bye: ["Signed out."]
   ask:
     - q: "What's in stock?"
-      a: ["Water, filters, bandages, rounds. Logged, counted, fair."]
+      a: ["Water, filters, bandages, rounds. Counted twice. Fair."]
+    - q: "Where am I?"
+      a: ["Stores. Shelf A through F. Outside this cage I know what crews carry out and what they don't bring back. That tells me plenty about out there."]
+    - q: "How do I get out?"
+      a: ["Nobody's ever signed out a ticket home. I'd have the form for it. I don't."]
     - q: "Any discount?"
       sk: barter 40
       do: discount
-      a: ["For a friend of M.E.G., a little."]
+      a: ["For someone who's been useful, a little."]
       fail: ["Prices are set."]
-  barks: { idle: ["Count's off.", "Sign here."], spot: ["Secure the stores!"] }
-  gest: { wave: "Hello.", gift: "Logged as a donation.", dance: "No.", nodance: "No.", insult: "Logged." }
+    - q: "Ever hear the name Dina?"
+      a: ["If she signed for gear, she's in my book. My book isn't for visitors. Try the front desk, they like questions."]
+  barks: { idle: ["Count's off.", "Sign here."], spot: ["Lock the stores!"] }
+  gest: { wave: "Hello.", gift: "I'll log it as a donation.", dance: "No.", nodance: "No.", insult: "Logged." }
 
 "bntg:default":
-  hi: ["B.N.T.G. We move goods, not feelings. Buying?", "Trade route's open. What've you got?"]
+  hi: ["We move goods, not feelings. You buying, friend?", "Route's open. What are you carrying?"]
   bye: ["Good trading."]
   ask:
-    - q: "What's B.N.T.G.?"
-      a: ["Traders. Routes between levels. Chits for credit. If it's moving, we're moving it."]
+    - q: "Where am I?"
+      a: ["On a trade route. It's a line on a map between two places with money. What's off the line, I don't haul through."]
+    - q: "How do I get out?"
+      a: ["We run goods everywhere a cart fits. Nobody's ever sent a shipment home. Believe me, we'd charge for it."]
+    - q: "Who do you work for?"
+      a: ["Traders. A whole outfit of us. We carry things between places and take paper chits for credit. If it moves, we're moving it."]
     - q: "Any deals?"
       sk: barter 35
       do: discount
       a: ["For a good customer, sure."]
       fail: ["Not today."]
-  barks: { idle: ["Trade's open.", "Chits accepted."], spot: ["Protect the goods!"], hostile: ["Contract void!"] }
-  gest: { wave: "Hello.", gift: "Noted on your account.", dance: "Ha.", nodance: "Working.", insult: "Priced in." }
+    - q: "Ever hear the name Dina?"
+      a: ["Names cost extra. Kidding. No, friend. I know cargo, not passengers."]
+  barks: { idle: ["Trade's open.", "Chits taken here."], spot: ["Protect the goods!"], hostile: ["Deal's off!"] }
+  gest: { wave: "Hello.", gift: "That goes on your account.", dance: "Ha.", nodance: "Working.", insult: "Already priced in." }
 "bntg:trader":
-  hi: ["Goods for sale, goods for trade, honest weights. Mostly.", "B.N.T.G. stall. Look all you like, buy what you can."]
+  hi: ["Goods for sale, goods for trade, honest weights. Mostly.", "Look all you like, buyer. Buy what you can."]
   bye: ["Come back with coin."]
   ask:
     - q: "What've you got?"
-      a: ["Batteries, rations, tools. Prices on the tags."]
+      a: ["Batteries, rations, tools. Prices are on the tags."]
+    - q: "Where am I?"
+      a: ["My stall. Best spot on the row. The row's the same wherever they set it up, so I stopped asking what's around it."]
+    - q: "How do I get out?"
+      a: ["Can't sell you that. I can sell you a compass. It spins, but it looks good on a belt."]
     - q: "Cheaper?"
       sk: barter 35
       do: discount
       a: ["Fine. A little."]
       fail: ["Tags don't lie."]
-  barks: { idle: ["Fresh stock!", "Honest weights."], spot: ["Guard the stall!"] }
-  gest: { wave: "Hey!", gift: "Thanks, friend.", dance: "Ha!", nodance: "Customers.", insult: "Prices up." }
+    - q: "Ever hear the name Dina?"
+      a: ["Did she pay or run a tab? Tabs I remember. No Dina on my tabs."]
+  barks: { idle: ["Fresh stock!", "Honest weights."], spot: ["Mind the stall!"] }
+  gest: { wave: "Hey!", gift: "Thanks, buyer. Now I feel bad about the prices.", dance: "Ha!", nodance: "Customers.", insult: "Prices just went up." }
 
 "tbd:default":
-  hi: ["T.B.D. Show me something that does nothing.", "Got anything strange? Strange is currency."]
-  bye: ["Bring me nothing."]
+  hi: ["Show me something that does nothing.", "Got anything odd, carrier? Odd spends here."]
+  bye: ["Bring me nothing. I mean that nicely."]
   ask:
+    - q: "Where am I?"
+      a: ["Somewhere with no use. That's why I like it. A building with no outside. Somebody should collect it."]
+    - q: "How do I get out?"
+      a: ["I have a key that fits no lock and a door handle with no door. Put them together and you still don't have a way out. I checked."]
     - q: "What do you want?"
-      a: ["Objects with no purpose. A key to nothing. A map of nowhere."]
-  barks: { idle: ["Useless. Good.", "Hm. Strange."] }
-  gest: { wave: "Mm.", gift: "Useful? Pity. Thanks.", dance: "Pointless. Yes.", nodance: "No.", insult: "Useless. I'll keep it." }
+      a: ["Things with no purpose. A key to nothing. A map of nowhere. A clock with one hand."]
+    - q: "Ever hear the name Dina?"
+      a: ["A name with nobody attached? That's my kind of item. No. But I'd trade for it."]
+  barks: { idle: ["Useless. Good.", "Hm. Odd."] }
+  gest: { wave: "Mm.", gift: "It works? Pity. Thanks.", dance: "Pointless. Yes.", nodance: "No.", insult: "Useless. I'll keep it." }
 
 "amor:default":
   hi: ["Softly. The bloom is listening.", "Welcome, child. Breathe."]
   bye: ["Go gently."]
   ask:
+    - q: "Where am I?"
+      a: ["In the garden, child. Before it, I was lost in grey halls like you. Then something green took me in. That's all the where I need."]
+    - q: "How do I get out?"
+      a: ["Out to what? You were tired there too. Stay a while and you'll stop asking. Everyone here did."]
     - q: "What is this?"
-      a: ["A garden. A home. It holds us. It will hold you, if you let it."]
+      a: ["A garden. A home. It holds us. It'll hold you too, if you let it."]
+    - q: "Ever hear the name Dina?"
+      a: ["We put our names down when we come in. If she's here, she isn't called that now."]
   barks: { idle: ["It grows.", "Breathe."], hostile: ["Then you'll feed it."] }
-  gest: { wave: "Peace.", gift: "An offering. It's grateful.", dance: "We sway.", nodance: "Stillness.", insult: "It heard you." }
+  gest: { wave: "Peace.", gift: "An offering. It's grateful.", dance: "We sway.", nodance: "Stillness.", insult: "It heard that." }
 
 "hotel:default":
-  hi: ["Good evening, guest. Welcome to the Homely.", "Welcome. May I help you find your room?"]
+  hi: ["Good evening, guest. Welcome.", "Welcome, guest. May I help you find your room?"]
   bye: ["Enjoy your stay."]
   ask:
+    - q: "Where am I?"
+      a: ["The hotel, guest. The lobby is downstairs and the rooms are upstairs. I'm afraid I've never needed to know more than that."]
+    - q: "How do I get out?"
+      a: ["Checkout is at the front desk, guest. Though I can't recall the last time anyone did. Where the front doors lead, I couldn't say. I've never used them."]
     - q: "How long have you worked here?"
       a: ["Always, guest. Always."]
+    - q: "Ever hear the name Dina?"
+      a: ["We know our guests by room number. The front desk keeps the book with the names in it."]
   barks: { idle: ["Good evening.", "Your room is ready."], drawn: ["Not in the hotel, please."] }
   gest: { wave: "Good evening.", gift: "How kind.", dance: "The ballroom is open.", nodance: "On duty.", insult: "Of course, guest." }
 
 "hk:default":
-  hi: ["Housekeeping. Watch the boiler doors.", "M.E.G. Housekeeping. Need supplies?"]
+  hi: ["Housekeeping. Mind the boiler doors.", "You need towels or you need help? I've got both, lodger."]
   bye: ["Mind the heat."]
   ask:
-    - q: "What should I avoid here?"
-      a: ["The boiler room, the waltz, and anything on a floor above twelve."]
+    - q: "Where am I?"
+      a: ["Big old hotel. Too many floors and the staff smile too much. We keep a few halls safe for regular people. Stay in those."]
+    - q: "How do I get out?"
+      a: ["I know every service door in this place. They all open on more hotel. If there's a street out front, I've never seen it."]
+    - q: "What should I avoid?"
+      a: ["The boiler room, the dancing, and any floor above twelve."]
+    - q: "Ever hear the name Dina?"
+      a: ["Not on my linen list. I know rooms by how they leave the towels. Desk has the names."]
   barks: { idle: ["Pressure's up.", "Linen."], spot: ["Rats!"] }
-  gest: { wave: "Hello.", gift: "Thanks.", dance: "Not the waltz.", nodance: "Working.", insult: "Hm." }
+  gest: { wave: "Hello.", gift: "Thanks.", dance: "Not the waltz. Never the waltz.", nodance: "Working.", insult: "Hm." }
 
 "orig:default":
-  hi: ["Modern, aren't you. How unfortunate.", "Members only, I'm afraid. You may stand."]
+  hi: ["Modern, aren't you. How unfortunate.", "Members only, I'm afraid. You may stand, dear."]
   bye: ["Good day."]
   ask:
+    - q: "Where am I?"
+      a: ["The members' lounge, dear. Beyond it, a rather good hotel. Beyond that, I stopped looking some time ago. One gets comfortable."]
+    - q: "How do I get out?"
+      a: ["Leave? We looked, in my day. Quite hard. Then the brandy turned out to be bottomless and the matter rather settled itself."]
     - q: "Who are you people?"
       a: ["The ones who arrived first. Long before you, dear. Long before."]
+    - q: "Ever hear the name Dina?"
+      a: ["Is she a member? No? Then I'm afraid I wouldn't have been introduced."]
   barks: { idle: ["Whist, anyone?", "Insufferable."], drawn: ["How vulgar."] }
-  gest: { wave: "Hm.", gift: "How quaint.", dance: "A proper waltz, if you know one.", nodance: "Certainly not.", insult: "How modern." }
+  gest: { wave: "Hm.", gift: "How quaint.", dance: "A proper waltz, if you know one.", nodance: "Certainly not.", insult: "How modern of you." }
 
 "surrender:default":
-  hi: ["Peace. Stop fighting the water.", "You came across the sea. Rest. Here, we stop."]
+  hi: ["Peace. Stop fighting the water.", "You came across the sea, swimmer. Rest. Here, we stop."]
   bye: ["The tide is patient."]
   ask:
+    - q: "Where am I?"
+      a: ["On the last dry thing before the deep. We stopped running here. You look like you've been running."]
+    - q: "How do I get out?"
+      a: ["Down. The way out is down, under the water. Everyone's too afraid to go and see. We're working on the fear."]
     - q: "What do you believe?"
       a: ["That the deep is a door, and fear keeps it shut."]
-  barks: { idle: ["Listen.", "It turns below."], hostile: ["The deep will take you."], death: ["Down..."] }
-  gest: { wave: "Peace.", gift: "An offering.", dance: "We sway.", nodance: "Stillness.", insult: "The sea forgives." }
+    - q: "Ever hear the name Dina?"
+      a: ["Names are the first thing to sink, swimmer. I couldn't tell you my own without thinking."]
+  barks: { idle: ["Listen.", "It turns below."], hostile: ["The deep will have you."], death: ["Down..."] }
+  gest: { wave: "Peace.", gift: "An offering.", dance: "We sway.", nodance: "Stillness.", insult: "The sea forgives. I'm slower." }
 
 "lightless:default":
-  hi: ["Light... put it out...", "Shh. Too bright. Too bright."]
+  hi: ["Light... put it out...", "Shh. Too bright. You're too bright."]
   bye: ["Come back dark."]
-  ask: []
+  ask:
+    - q: "Where am I?"
+      a: ["In the dark. The good dark. It was bright before. It hurt. Don't make it bright."]
+    - q: "How do I get out?"
+      a: ["Out is bright. Why would you want that? Close your eyes. There. You're out."]
+    - q: "Ever hear the name Dina?"
+      a: ["No names in the dark. Just breathing. I know everyone's breathing. Yours is new."]
   barks: { idle: ["Hush...", "Out, out..."], spot: ["Light!"], hostile: ["Put it OUT!"], death: ["Dark..."] }
-  gest: { wave: "...", gift: "Is it a light? Break it.", dance: "Sway in the dark.", nodance: "No.", insult: "Sing louder." }
+  gest: { wave: "...", gift: "Is it a light? Break it.", dance: "Sway in the dark.", nodance: "No.", insult: "Say it softer." }
 
 "city:default":
-  hi: ["Good afternoon. Lovely day.", "Hello. Are you lost? Most people are, at first.", "Oh, hello. New in town?"]
-  back: ["Hello again.", "Good afternoon."]
+  hi: ["Good afternoon. Lovely day.", "Hello. Are you lost? Most people are, at first.", "Oh, hello. New in town, neighbor?"]
+  back: ["Hello again.", "Good afternoon, neighbor."]
   bye: ["Have a nice day.", "Mind the crosswalk."]
   ask:
-    - q: "What's this city?"
-      a: ["The Capital, people call it. It goes on. It's nice. Nothing bad happens. Almost nothing."]
-    - q: "Anything strange around here?"
-      a: ["The roadworks move at night. The apples turn up in crates. My neighbour's door has a different number every morning. Otherwise, normal."]
+    - q: "Where am I?"
+      a: ["Downtown, more or less. It's all downtown. People call it the city. Nobody could agree on a better name, so nobody tried.", "The city, neighbor. Where it is, I couldn't tell you. I walked to the end of my street once and it was my street again."]
+    - q: "How do I get out?"
+      a: ["Out of the city? Goodness. The trains run but I've never known where to. There's a harbor, they say. I'm not a boat person.", "Why would you leave? Well. People do ask. Try someone with a uniform or a radio. They always seem to know things."]
+    - q: "Anything strange here?"
+      a: ["The roadworks move at night. Apples turn up in crates. My neighbor's door has a new number every morning. Otherwise, normal."]
+    - q: "Ever hear the name Dina?"
+      a: ["Dina? There's a Dana at the bakery. Is that close enough?", "It rings a little bell. Somebody was asking around a while back. A woman. I never caught her name, so maybe that was her."]
+    - q: "What's this city like?"
+      a: ["It goes on. It's nice. Nothing bad happens. Almost nothing."]
   barks:
-    idle: ["Lovely day.", "Same train.", "Coffee's good today."]
+    idle: ["Lovely day.", "Same train again.", "Coffee's good today."]
     hi: ["Hello.", "Afternoon."]
     drawn: ["Oh. That's not polite."]
     spot: ["Oh dear!"]
@@ -298,22 +402,24 @@
 
 # Level 31 "The Roller Rink" snack bar. The clerk's orders run through do: l31:<key> (scripts/lib/level31-food.js).
 l31-food-clerk:
-  hi: "Welcome. Everything is free. Clear your tray when you're done."
-  back: ["Welcome back. Still free.", "What can I get you."]
+  hi: "Welcome. It's all free. Clear your tray when you're done."
+  back: ["Welcome back. Still free.", "What'll it be."]
   bye: "Trash cans are by the opening."
   walk: "Tray goes in the trash."
   ask:
+    - q: "Where am I?"
+      a: "The snack bar. Rink's that way, arcade's that way. That's the whole place, as far as my shift goes."
     - q: "A slice of pizza."
       tag: "Order"
       a: "Cheese or pepperoni."
       then:
         - q: "Cheese."
           tag: "Order"
-          a: "One cheese slice. No charge."
+          a: "One cheese. No charge."
           do: "l31:cheese"
         - q: "Pepperoni."
           tag: "Order"
-          a: "One pepperoni slice. No charge."
+          a: "One pepperoni. No charge."
           do: "l31:pepperoni"
     - q: "Chicken wings."
       tag: "Order"
@@ -329,7 +435,7 @@ l31-food-clerk:
           do: "l31:hot"
         - q: "Too hot."
           tag: "Order"
-          a: "Too hot wings. The sign did tell you."
+          a: "Too hot wings. The sign warned you."
           do: "l31:toohot"
     - q: "A foot-long hot dog."
       tag: "Order"
@@ -337,7 +443,7 @@ l31-food-clerk:
       do: "l31:hotdog"
     - q: "Something to drink."
       tag: "Order"
-      a: "Cola, orange, lime, or almond water."
+      a: "Soda, almond water, or something from the cooler."
       then:
         - q: "Fountain soda."
           tag: "Order"
@@ -349,99 +455,131 @@ l31-food-clerk:
               do: "l31:cola"
             - q: "Orange."
               tag: "Order"
-              a: "One orange soda. No charge."
+              a: "One orange. No charge."
               do: "l31:orange"
             - q: "Lime."
               tag: "Order"
-              a: "One lime soda. No charge."
+              a: "One lime. No charge."
               do: "l31:lime"
         - q: "Almond water."
           tag: "Order"
           a: "One almond water. No charge."
           do: "l31:almond"
-        - q: "Sprite or Capri Sun?"
+        - q: "What's in the cooler?"
           tag: "Order"
           a: "Sprite's in the cooler. Capri Sun's in the little basket."
           then:
             - q: "Sprite."
               tag: "Order"
-              a: "Here. Watch the cap, it's wet."
+              a: "Here. Mind the cap, it's wet."
               do: "l31:sprite"
             - q: "Capri Sun."
               tag: "Order"
-              a: "Here you go. Straw's on the back."
+              a: "There you go. Straw's on the back."
               do: "l31:capri"
-    - q: "Where's the way out?"
-      a: "Plywood door past the concession table. Look for the exit sign."
+    - q: "How do I get out?"
+      a: "Plywood door past the concession table. Look for the exit sign. Where it goes after that, I don't know. I've never clocked out."
+    - q: "Ever hear the name Dina?"
+      a: "Nobody gives a name here. It's free, so there's no tab to put one on."
   barks:
     idle: ["Order up.", "Slices are fresh."]
     hi: ["Welcome.", "It's all free."]
     close: ["Staff only back here."]
   gest: { wave: "Hello.", gift: "We don't take tips.", dance: "Not on shift.", nodance: "Not on shift.", insult: "Next, please." }
 l31-food-cust1:
-  hi: "We're waiting for the couples skate. He's been eating that same slice since they announced it."
-  back: ["I got the pepperoni this time. Want the other half?"]
+  hi: "We're waiting on the couples skate. He's been eating that same slice since they announced it."
+  back: ["I got pepperoni this time. Want the other half, hon?"]
   bye: "See you by the rail."
   ask:
-    - q: "Does the couples skate ever start?"
-      a: "They turn the lights down and everybody gets up. Then somebody asks for another song. We sit back down."
+    - q: "Where am I?"
+      a: "The rink, hon. Skates, pizza, the good songs. I came in for a birthday party once. I think it was mine."
+    - q: "How do I get out?"
+      a: "Before couples skate? You'd lose your table. There's an exit sign back past the food. I've never seen the other side of it."
+    - q: "Does that skate ever start?"
+      a: "They turn the lights down and everybody gets up. Then somebody asks for one more song. We sit back down."
     - q: "Is that your partner?"
-      a: "On the rink. I asked him to hold my place in line once and he stayed right there till I came back."
-  gest: { wave: "Come sit with us.", gift: "Here, set it between us.", dance: "Save me a turn.", nodance: "After I finish this.", insult: "There are other tables." }
+      a: "Out on the floor. I asked him to hold my place in line once and he stood right there till I came back."
+    - q: "Ever hear the name Dina?"
+      a: "They call names over the speaker for lost skates sometimes. Could've been one. I only listen for the couples skate."
+  gest: { wave: "Come sit with us.", gift: "Oh, put it between us.", dance: "Save me a turn.", nodance: "After I finish this.", insult: "There are other tables, hon." }
 l31-food-cust2:
-  hi: "Sit if you like. Keep that chair free, though. That's where she puts her skates."
-  back: ["She's ordering again. I'm still working on mine."]
+  hi: "Sit if you want, pal. Leave that chair, though. That's where she puts her skates."
+  back: ["She's ordering again. I'm still on my first."]
   bye: "See you on the floor."
   ask:
+    - q: "Where am I?"
+      a: "Table six. Okay, the roller rink. What town? Pal, I stopped wondering about the time I stopped getting hungry between slices."
+    - q: "How do I get out?"
+      a: "Same way you came in, I'd figure. I don't remember coming in. That used to bother me."
     - q: "Do you skate?"
-      a: "If she takes the inside. I can't turn left without taking somebody with me."
-    - q: "Why's the clerk so particular about trays?"
-      a: "I left mine by the rail once. He carried it all the way back to this table and waited for me to get up."
-  gest: { wave: "Hey.", gift: "Thanks. You can have my napkins.", dance: "Ask her first.", nodance: "Give my knee a minute.", insult: "Take it somewhere else." }
+      a: "If she takes the inside. I can't turn left without taking somebody down with me."
+    - q: "Why's the clerk fussy about trays?"
+      a: "I left mine by the rail once. He carried it all the way back here and stood there till I got up."
+    - q: "Ever hear the name Dina?"
+      a: "Nope. Ask her when she's back. She talks to everybody in line. I just hold the table."
+  gest: { wave: "Hey.", gift: "Thanks. You can have my napkins.", dance: "Ask her first.", nodance: "Give my knee a minute.", insult: "Take it to another table, pal." }
 
 # Level 31 arcade customers.
 "l31-arcade-face1":
-  hi: ["Hang on. Let me fix this window.", "If you want a turn, take it. Leave me the same building."]
-  back: ["You see that top window? It's broken again."]
+  hi: ["Hang on. I have to fix this window.", "You want a turn, player two? Take it. Leave my building how you found it."]
+  back: ["See that top window? Broken again."]
   bye: "Don't lean on the stick. It catches."
   ask:
+    - q: "Where am I?"
+      a: "The arcade. Which is in the rink. Which is in... huh. I've only ever thought about it one floor at a time."
+    - q: "How do I get out?"
+      a: "Of the game? You don't. It loops at the roof. Of the building, there's a sign past the food. I haven't got a spare life to go check."
     - q: "How do I start a game?"
-      a: "Get a green card from the dispenser by the arch. You can use it on every cabinet."
+      a: "Get a green card from the dispenser by the arch. It works on every cabinet."
     - q: "How far have you got?"
-      a: "The roof. I can get there with all my lives, but by the time I come back down somebody's smashed the ground floor again."
+      a: "The roof. I can get there on all my lives. By the time I'm back down, somebody's smashed the ground floor again."
+    - q: "Ever hear the name Dina?"
+      a: "Four letters won't fit on the board. It only takes three. So not on this machine."
   barks:
     idle: ["Missed one.", "Up a floor.", "Come on, stick."]
     hi: ["Hey."]
     hit: ["Hey!"]
     flee: ["Take the machine."]
-  gest: { wave: "Hi. One second.", gift: "Thanks. Set it by the screen?", dance: "After I clear this floor.", nodance: "I'm mid-game.", insult: "Then find another cabinet." }
+  gest: { wave: "Hi. One second.", gift: "Thanks. Set it by the screen?", dance: "After this floor.", nodance: "I'm mid-game.", insult: "Then find another cabinet." }
 "l31-arcade-face2":
-  hi: ["Mind the table. It tilts if you look at it wrong.", "Watch the left ramp. That's the shot."]
-  back: ["You want next? I'll finish this ball."]
+  hi: ["Mind the table. It tilts if you look at it wrong.", "Watch the left ramp, champ. That's the shot."]
+  back: ["You want next? Let me finish this ball."]
   bye: "Don't trip on the cord."
   ask:
-    - q: "Is SAL your high score?"
-      a: "I put in my initials once. Looked right until I let go of the button. Then it said SAL again."
-    - q: "Is anyone working here?"
-      a: "The stool by the dispenser was warm when I got here. That's as close as I've come."
+    - q: "Where am I?"
+      a: "Next to the best table in the room. Past that it's all skating and I don't skate. Bad ankles, good wrists."
+    - q: "How do I get out?"
+      a: "Lose your last ball. That's the only way out I know, and I'm not doing it on purpose."
+    - q: "Whose score is that?"
+      a: "I put my initials in once. Looked right till I let go of the button. Then it said SAL again."
+    - q: "Does anyone work here?"
+      a: "The stool by the dispenser was warm when I got here. That's the closest I've come."
+    - q: "Ever hear the name Dina?"
+      a: "Only name I ever see is SAL. Top of every board. If your Dina plays, she isn't beating SAL."
   barks:
     idle: ["Stay up.", "Off the post.", "There it goes."]
     hi: ["Hey."]
     hit: ["Watch it!"]
     flee: ["All right, I'm going."]
-  gest: { wave: "I'd wave back, but look.", gift: "Thanks. Put it next to my drink.", dance: "After this ball.", nodance: "Both hands, see?", insult: "Got a quarter's worth out of that, did you?" }
+  gest: { wave: "I'd wave back, but look.", gift: "Thanks. Put it by my drink.", dance: "After this ball.", nodance: "Both hands, see?", insult: "Got your quarter's worth out of that?" }
 "l31-arcade-face3":
-  hi: ["Lane two's free. The one on the left eats balls.", "Can you see if that ball came back?"]
-  back: ["I found the ball. It was in the other lane."]
-  bye: "Leave a ball in the trough if you find one."
+  hi: ["Lane two's free. The left one eats balls.", "Hey, lane buddy. Did you see that ball come back?"]
+  back: ["Found the ball. It was in the other lane."]
+  bye: "If you find a ball, leave it in the trough."
   ask:
-    - q: "What can I get with the tickets?"
-      a: "I saved for the radio. Look at the prize wheel. They took the radio down and left the price tag."
+    - q: "Where am I?"
+      a: "The ticket games. I keep meaning to look around the rest. Then I get close to a prize and, well. Forty more."
+    - q: "How do I get out?"
+      a: "I figured the big prize on the wheel was a door key. Then they took the prize down. So I don't know now."
+    - q: "What do tickets get me?"
+      a: "I was saving for the radio. Look at the prize wheel. They took the radio and left the price tag."
     - q: "What's the trick to the hundred?"
-      a: "Aim off to the side and let it ride the rail. It works right up until someone watches."
+      a: "Aim off to the side and let it ride the rail. Works right up until somebody watches."
+    - q: "Ever hear the name Dina?"
+      a: "No. I did hear a voice on that radio once, before they took it down. A lady, reading out numbers. I never got her name."
   barks:
     idle: ["Forty.", "Too hard.", "Come back down."]
     hi: ["Hi."]
     hit: ["Hey!"]
     flee: ["Have the lane."]
-  gest: { wave: "Hey there.", gift: "You sure? Thanks.", dance: "One more ball.", nodance: "I just started.", insult: "Pick a lane, then." }
+  gest: { wave: "Hey there.", gift: "You sure? Thanks.", dance: "One more ball.", nodance: "I just started.", insult: "Pick another lane, then." }
