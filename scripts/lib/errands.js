@@ -8,7 +8,7 @@ import SNACKS from "./data/snacks.yml";
 import BRK from "./data/breakables.yml";
 import { setQuest, endQuest, MAX_TRACK } from "./quests.js";
 import { pushFeed } from "./feed.js";
-import { addRep, fameOf, isHated, GROUPS } from "./rep.js";
+import { addRep, fameOf, infamyOf, GROUPS } from "./rep.js";
 import { skillsOf } from "./stats.js";
 import { entryOf } from "./dialogue.js";
 
@@ -58,7 +58,7 @@ function enter(s, id, stage) {
 // any job's giver turns you away while their faction hates you. Told once a session, then quiet.
 export function standingOk(s, e) {
   const g = e?.needs?.group ?? e?.reward?.rep?.group;
-  if (g && isHated(s, { faction: g })) return { ok: false, why: `${GROUPS[g]?.name ?? g} won't give you work while they hate you.` };
+  if (g && infamyOf(s, g) >= 35 && fameOf(s, g) < 35) return { ok: false, why: `${GROUPS[g]?.name ?? g} won't give you work while they hate you.` };
   if (e?.needs?.group && fameOf(s, e.needs.group) < (e.needs.fame ?? 0)) return { ok: false, why: e.needs.text ?? `${GROUPS[e.needs.group]?.name ?? e.needs.group} has more work, once they trust you.` };
   return { ok: true };
 }
