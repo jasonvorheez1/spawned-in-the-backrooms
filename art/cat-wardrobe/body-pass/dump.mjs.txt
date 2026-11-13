@@ -1,0 +1,22 @@
+// node dump.mjs in.glb out.json : every skinned primitive's arrays, joint names and morph deltas (glTF space)
+import { NodeIO } from '@gltf-transform/core'
+import fs from 'node:fs'
+const io = new NodeIO()
+const [, , inF, outF] = process.argv
+const doc = await io.read(inF)
+const root = doc.getRoot()
+const out = { nodes: [], prims: [] }
+for (const node of root.listNodes()) {
+  const mesh = node.getMesh(); if (!mesh) continue
+  const skin = node.getSkin()
+  out.nodes.push({ name: node.getName(), m: node.getWorldMatrix(), skinned: !!skin })
+  mesh.listPrimitives().forEach((p, pi) => {
+    const a = (s) => p.getAttribute(s)?.getArray() ? Array.from(p.getAttribute(s).getArray()) : null
+    const targets = p.listTargets().map((t, ti) => ({ name: mesh.getExtras()?.targetNames?.[ti] ?? String(ti), pos: t.getAttribute('POSITION') ? Array.from(t.getAttribute('POSITION').getArray()) : null, nrm: t.getAttribute('NORMAL') ? Array.from(t.getAttribute('NORMAL').getArray()) : null }))
+    out.prims.push({ node: node.getName(), mesh: mesh.getName(), pi, joints: skin ? skin.listJoints().map((j) => j.getName()) : [], jointPos: skin ? skin.listJoints().map((j) => j.getWorldTranslation()) : [],
+      pos: a('POSITION'), nrm: a('NORMAL'), J: a('JOINTS_0'), W: a('WEIGHTS_0'), J1: a('JOINTS_1'), idx: p.getIndices() ? Array.from(p.getIndices().getArray()) : null, targets,
+      wType: p.getAttribute('WEIGHTS_0')?.getComponentType(), wNorm: p.getAttribute('WEIGHTS_0')?.getNormalized() })
+  })
+}
+fs.writeFileSync(outF, JSON.stringify(out))
+console.log('dumped', inF, out.prims.map((p) => `${p.mesh}#${p.pi} v${p.pos.length / 3} t${p.targets.length} J1:${!!p.J1} wType:${p.wType}`).join(' | '), out.nodes.map((n) => n.name + (n.m.every((v, i) => Math.abs(v - [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1][i]) < 1e-6) ? ':I' : ':M')).join(','))

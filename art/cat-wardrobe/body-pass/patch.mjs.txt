@@ -1,0 +1,24 @@
+// node patch.mjs in.glb edits.json out.glb : write back POSITION / NORMAL / WEIGHTS_0 / JOINTS_0 / target POSITION per primitive (same counts)
+import { NodeIO } from '@gltf-transform/core'
+import fs from 'node:fs'
+const io = new NodeIO()
+const [, , inF, edF, outF] = process.argv
+const doc = await io.read(inF)
+const ed = JSON.parse(fs.readFileSync(edF, 'utf8'))
+let n = 0
+for (const node of doc.getRoot().listNodes()) {
+  const mesh = node.getMesh(); if (!mesh) continue
+  mesh.listPrimitives().forEach((p, pi) => {
+    const e = ed[`${mesh.getName()}#${pi}`]; if (!e) return
+    const set = (s, arr) => { const acc = p.getAttribute(s); if (!acc || !arr) return; const old = acc.getArray(); if (old.length !== arr.length) throw new Error(s + ' length ' + old.length + ' vs ' + arr.length); const A = new old.constructor(arr.length); for (let i = 0; i < arr.length; i++) A[i] = arr[i]; acc.setArray(A); n++ }
+    set('POSITION', e.pos); set('NORMAL', e.nrm); set('JOINTS_0', e.J)
+    if (e.W) { const acc = p.getAttribute('WEIGHTS_0'); const old = acc.getArray(); const A = new old.constructor(e.W.length); const sc = old instanceof Float32Array ? 1 : old instanceof Uint16Array ? 65535 : 255
+      for (let v = 0; v < e.W.length; v += 4) { let s = 0; for (let k = 0; k < 4; k++) { A[v + k] = sc === 1 ? e.W[v + k] : Math.round(e.W[v + k] * sc); s += A[v + k] } if (sc !== 1) { let m = 0; for (let k = 1; k < 4; k++) if (A[v + k] > A[v + m]) m = k; A[v + m] += sc - s } }
+      acc.setArray(A); n++ }
+    if (e.targets) p.listTargets().forEach((t, ti) => { const arr = e.targets[ti]; if (!arr) return; const acc = t.getAttribute('POSITION'); const old = acc.getArray(); if (old.length !== arr.length) throw new Error('target len'); acc.setArray(new Float32Array(arr)); n++ })
+    // keep bounds valid
+    const pa = p.getAttribute('POSITION'); if (pa) { const a = pa.getArray(); const mn = [1e9, 1e9, 1e9], mx = [-1e9, -1e9, -1e9]; for (let i = 0; i < a.length; i += 3) for (let k = 0; k < 3; k++) { mn[k] = Math.min(mn[k], a[i + k]); mx[k] = Math.max(mx[k], a[i + k]) } }
+  })
+}
+await io.write(outF, doc)
+console.log('patched', n, 'arrays ->', outF)
