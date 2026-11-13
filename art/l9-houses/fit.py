@@ -11,7 +11,7 @@ if len(ms) > 1: bpy.ops.object.join()
 o = bpy.context.view_layer.objects.active
 o.parent = None
 bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-o.rotation_euler = (0, 0, -math.pi/2); bpy.ops.object.transform_apply(rotation=True)
+o.rotation_euler = (0, 0, math.pi)  # Tripo front lands on Blender +Y here; turned to -Y (glTF +Z); bpy.ops.object.transform_apply(rotation=True)
 vs = [o.matrix_world @ v.co for v in o.data.vertices]
 mn = mathutils.Vector([min(v[i] for v in vs) for i in range(3)]); mx = mathutils.Vector([max(v[i] for v in vs) for i in range(3)])
 sx, sy, sz = mx - mn
