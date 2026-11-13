@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7662,
-  "updatedAt": "2026-11-13T21:20:36.678Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, the mall, The Hub and authored lore destinations; player.state carries progression, gear, quests, faction standing and resume location. Shared player behaviors, dialogue/quest systems and place simulations connect authored spaces with generated layouts and encounters, including the crawl-scale Level 34 sewer network linking Levels 11, 9 and 7.",
+  "basedOnSpecVersion": 7683,
+  "updatedAt": "2026-11-13T21:44:26.117Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG across Level 0, the mall, The Hub and authored lore destinations; player.state carries progression, gear, quests, faction standing and resume location. Shared player behaviors, dialogue/quest systems and place simulations connect authored spaces with generated layouts and encounters.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes, anomalies, generated dressing and lurker spawns; authored placements live in cells/.",
@@ -10,9 +10,9 @@
     "places/thehub (3D) - tunnel crossroads, keyed destination doors, camps, crew and quest props; distinct from Bonus room routing.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation, waking, staged tutorial and HALOGEN handoff to Dina's lead.",
     "places/level9 (3D, The Suburbs) - room-seeded streets, houses, lamps, sparse curbside mailboxes/trash bins and fog; zoneAt follows completed house footprints.",
-    "places/level34 (3D, Sewer System) - versioned brick-and-stone four-foot sewer with crawl passages, pool/lip down to Level 7, step-irons out to Levels 9 and 11, and submerged Drain Smilers; enter from Level 11's grate (Level 9 drain is exit…).",
-    "places/level8 (3D, Cave Systems) - cave routes and Lightless dens; den wretches spawn leveled Hollow-Mask variants.",
-    "places/level01, level02, level1-7, level10-13, level21, level26-27, level31, level70, gamma, spamton, testlab (3D) - authored lore destinations; Level 11's Sedco Spotlight includes the CCTV desk and street-grate access to the sewer network."
+    "places/level11 (3D) - Sedco Spotlight and city blocks; sim.js lays authored city and calls shared vault/depth builders for the subway vault, crawl and Robotics storeroom.",
+    "places/level01, level02, level1-7, level10-13, level21, level26-27, level31, level70 (3D) - authored lore destinations; Level 11 includes the Sedco CCTV desk and street-grate access.",
+    "places/gamma, spamton, testlab (3D) - additional authored destinations and test space."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input actions; scripts/cctv.js is in the shared player behavior stack.",
@@ -20,14 +20,14 @@
     "sim.js - global tick for body-style propagation and bounded incremental restyling in occupied places.",
     "scripts/main-menu.js + main-menu-ui.js + intake/tutorial scripts - title, character creation, arrival, tutorial and Dina routing; ticks errands, cutscenes, solo pause and faction hit squads.",
     "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, wake/resume, aiming, third-person view and HUD zone naming.",
-    "scripts/ui.js + scripts/stats-ui.js - composed HUD/menus, status, quest journal, ledger, reputation, Level 70 CHILL, cutscene panels and the Sedco CCTV feed overlay.",
+    "scripts/ui.js + scripts/stats-ui.js - composed HUD/menus, status, quest journal, ledger, reputation, Level 70 CHILL, cutscene panels and Sedco CCTV feed overlay.",
     "places/main/sim.js + scripts/lib/maze.js + xmas-room.js + level0-moments.js - Level 0 layout and deterministic dressing/encounters.",
-    "places/thehub/sim.js + scripts/lib/thehub.js + hub-people.js + hub-dress.js + scripts/thehub-geo.js - versioned Hub topology, doors, dressing and crew; places/level34/sim.js owns the sewer scene and smiler population."
+    "places/thehub/sim.js + scripts/lib/thehub.js + hub-people.js + hub-dress.js + scripts/thehub-geo.js - versioned Hub topology, doors, dressing and crew."
   ],
   "shared": [
     "scripts/lib/hub.js + preload data/scripts - Bonus shared-room routing, solo IDs, home destinations, labels and proximity preload; distinct from places/thehub.",
     "scripts/lib/thehub.js + scripts/lib/hubkeys.js - canonical Hub tunnels, door/key registry and position helpers; shared by geometry, simulation, quests, doors and UI.",
-    "scripts/lib/loot.js + items.js + weapons.js/data/weapons.yml - common loot, containers, item definitions, rarity and weapon variants.",
+    "scripts/lib/loot.js + items.js + weapons.js/data/weapons.yml + scripts/lib/weapon-look.js - common loot/items and weapon variants; weapon-look selects fitted meshes or scripted geometry for held weapons.",
     "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/lib/level3-hatch.js - parametric doors/motion and deterministic paired Level 3 hatches.",
     "scripts/lib/data/l9-houses.yml + l9-props.yml + scripts/lib/level9.js - Level 9 catalogs and pure seed-driven layout, used by places/level9/sim.js and zone lookup.",
     "scripts/lib/data/l02-props.yml + l02-remodel.yml + l02-grid.js; breakables.js + breakable data + wallgrid.js - Level 0.2 remodel and shared prop/generated-wall damage and regrowth.",
@@ -36,47 +36,47 @@
   ],
   "notableExports": [
     "scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate, wakeLog.",
-    "scripts/lib/critter-model.js - STYLE_V (sw197), sw194, furrySpec, restyle, restyleQueue, restyleStep, restylePlace; scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, stagger3, react3, aimPose, aimMode, longHands.",
+    "scripts/lib/critter-model.js - STYLE_V, sw194, furrySpec, restyle, restyleQueue, restyleStep, restylePlace; scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, stagger3, react3, aimPose, aimMode, longHands.",
     "scripts/lib/level9.js - HOUSES, ROAD_W, rng, hashStr, yawFacing, layout, zoneAt.",
     "scripts/lib/level31-quest.js + level31-parts.js - venue geometry/zones/arrivals/skating/layParts and quest QID/QNAME/openCrate/useDeck/choice/dialogue exports.",
     "scripts/lib/level70-quest.js + scripts/terrain70.js - Level 70 quest, terrain and civic/life layer exports.",
     "scripts/lib/errands.js - ERRANDS, held, errandText, offerErrand, payErrand, tryAlt, deliberateErrands, turnInErrand, errandTick.",
-    "scripts/lib/rep.js - GROUPS, RIVALS, groupOf, fameOf, infamyOf, repOf, titleOf, tierOf, rankOf, addRep, addKarma, repKill/Kind/Trade/Line; scripts/lib/stats.js - ATTRS, SKILLS, SKILL_KEYS, ATTR_MAX, START, attrsOf, packAttrs, tagsOf, spent…",
-    "scripts/cctv.js - onInput, update; scripts/lib/l11-cctv.js - ZOOM_MIN, CAMS; scripts/crawl.js - onInput, update; scripts/lib/fp-gun.js - FP_GUN, firstPersonGun, firstPersonTuning; scripts/lib/level11-quests.js - windowStep, finishQuest, handleDialogueQuest, l11Choices."
+    "scripts/lib/rep.js - GROUPS, RIVALS, groupOf, fameOf, infamyOf, repOf, titleOf, tierOf, rankOf, addRep, addKarma, repKill/Kind/Trade/Line; scripts/lib/stats.js - ATTRS, SKILLS, SKILL_KEYS, ATTR_MAX, START, attrsOf, packAttrs, tagsOf.",
+    "scripts/cctv.js - onInput, update; scripts/lib/l11-cctv.js - ZOOM_MIN, CAMS; scripts/crawl.js - onInput, update; scripts/lib/fp-gun.js - FP_GUN, firstPersonGun, firstPersonTuning; scripts/lib/level11-vaults.js - layVaults; scripts/lib/level11-depths.js - layDepths; scripts/lib/weapon-look.js - MESHGRIP, CAROL_SPLIT, SPLIT, weaponBody."
   ],
   "ownership": [
-    "scripts/player.js + scripts/lib/save.js - durable player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved place/position, tapes, currency, karma/rep and homeKeep; player.state.batteries stores…",
+    "scripts/player.js + scripts/lib/save.js - durable player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved place/position, tapes, currency, karma/rep and homeKeep; player.state.batteries stores flashlight charge.",
     "scripts/lib/stats.js - derived attributes, skills and combat/carry stats; scripts/stats-ui.js formats derived stats, including non-finite capacity as ∞.",
-    "scripts/critter.js - per-player look and creator/wardrobe/salon state; scripts/lib/body3.js - session.ready3 and transient me.anim.ready melee-carry pose; scripts/main-menu.js - session.tabAway, session.animPlace and place.timeScale pause; scripts/cctv.js - local player.state.cctv/cctvLast/cctvOffAt desk state and session camera/zoom/watch state.",
+    "scripts/critter.js - per-player look and creator/wardrobe/salon state; scripts/lib/body3.js - session.ready3 and transient me.anim.ready melee-carry pose; scripts/main-menu.js - session.tabAway, session.animPlace and place.timeScale pause.",
     "scripts/lib/quests.js + scripts/lib/dina-quest.js - quests/qtrack/qdone/claimed; Dina trail keys, stages, diary/cut/clue fields and migration.",
     "scripts/lib/errands.js - player.state.errands records, errHints and errand journal entries; completion updates currency, payout, reputation and hints; scripts/lib/field-errands.js + hub-errands.js own confirmation maps.",
-    "scripts/lib/level31-quest.js + level70-quest.js + remodel-quest.js + scripts/lib/level11-quests.js - their level-specific quest stages, routes, and rewards; Level 11 quest progress is stored under player.state.quests/qdone and related known fields, including Sedco monitor/counter checks.",
-    "scripts/lib/rep.js - player.state.fame/infamy by faction, compatibility net rep, karma and bounded repHistory; fame/infamy drive faction titles/ranks and hostility checks.",
-    "places/level9/sim.js owns per-room l9seed/layout, fog, versioned curb dressing and looted-container persistence; places/level34/sim.js owns place.state.l34V and deadAt smiler respawn times; scripts/crawl.js maintains player.state.crawl and session crawl motion/capsule."
+    "scripts/lib/level31-quest.js + level70-quest.js + remodel-quest.js + scripts/lib/level11-quests.js - their level-specific quest stages, routes and rewards; Level 11 progress is stored under player.state.quests/qdone and related quest keys.",
+    "scripts/lib/rep.js - player.state.fame/infamy by faction, compatibility net rep for legacy readers, karma and bounded repHistory; fame/infamy drive faction titles/ranks and hostility checks.",
+    "places/level9/sim.js owns per-room l9seed/layout, fog, versioned curb dressing and looted-container persistence; scripts/crawl.js maintains player.state.crawl and the reduced crawl capsule."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest and CCTV behaviors; arcade-play.js and smoothie-player.js add game-specific play.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera; camera writes aimPt/aimPitch → ballistics/weaponAim; zoneHere → maze and authored level labels, including Level 9 zoneAt.",
-    "scripts/lib/body3.js tick3 → third-person body pose: camera rotation quaternion supplies aim yaw/pitch; combat-anims.yml family rows drive gun/melee clips, and session.ready3 selects a ready melee carry except during swings or disabled states.",
+    "scripts/lib/body3.js tick3 → third-person body pose: camera rotation quaternion supplies aim yaw/pitch; combat-anims.yml family rows drive gun/melee clips, and session.ready3 selects a ready melee carry except during swings or disabled state.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; periodic saves exclude intake, bonus and tutorial0.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; toHub/toSolo cross to mall/home and maintain roomHop/save-place; separate from places/thehub.",
     "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close → intro-cut then tutorial0 first time or main later; on place change main-menu.js clears ctx.self.anim.cut and .air to prevent a cut/fall pose carrying across rooms.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js offers place-matched jobs; carried items/kills/world events advance errands → quests.js journal, player.state.errands/qtrack and payouts.",
-    "talk.js openDialogue → npc-starters.js questChoices (including faction and M.E.G. assignment choices); selected text → level-specific/Hub/errand handlers, factionReply or megAssignmentReply; faction replies and assignments check faction standing and membership gates.",
+    "talk.js openDialogue → npc-starters.js questChoices (including faction and M.E.G. assignment choices); selected text → level-specific/Hub/errand handlers, factionReply or megAssignmentReply; faction replies and assignments check standing/membership gates.",
     "tutorial0 HALOGEN cut → tut0-cut.js + dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ; Dina quest tick routes to The Tenth Tunnel at dinaQ 9 or hubPhoebe.",
     "places/level1/sim.js l1-to-hub → scripts/level-door.js crossing → thehub; hub-from-l1 returns to arrival position; Level 1 zoneAt classifies KEEP bounds and labels.",
     "places/thehub/sim.js → lib/thehub.js and hub-people.js/hub-dress.js versioned shell, doors, props, crew and camps; hub-door-geo.js renders doors, hub-door.js handles use/crossing, plaques label destinations.",
-    "Sedco monitor wall interaction in scripts/level11-use.js writes player.state.cctv → scripts/cctv.js handles desk input, camera view/zoom and watched Cam 04; scripts/lib/l11-cctv.js supplies camera data to the ui.js feed. Two seconds on Cam 04 marks sedcoMonitorsChecked; together with sedcoCounterChecked, level11-quests advances the spotlight step."
+    "places/level11/sim.js → layVaults → layDepths places the subway/Sedco vault and Robotics crawl/storeroom; Sedco monitor interaction writes player.state.cctv → scripts/cctv.js desk input/view/zoom and scripts/ui.js feed overlay, with CAM 04 watch timing for the quest."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; home11 and Level 5 use separate buckets.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
-    "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js - global crawl/crouch movement with reduced capsule/headroom checks, pace-scaled movement and scuff audio; crawling uses converted prone clips selected by travel direction.",
+    "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; crouch idle/walk crossfade as one lowered pose, while sprint threshold selects the sprint clip.",
     "Level 01/Zenith and Level 1 geometry builders - authored station and car park/service geometry; corridor materials, pipes, fixtures and lights vary deterministically per cell.",
     "scripts/meg-agent.js + npc-temper.js + forgive.js + critter-model.js - NPC reactions, cover, barks, movement/fighting and companion following; faction, role, outfit and assault incidents vary by NPC.",
-    "errands.yml + errands.js + quest-dialogue.js + quests.js - shared offers, objectives, journal/tracker and rewards; legacy errands tick by events, deliberate field/Hub jobs use dialogue and turn-in handlers.",
-    "scripts/lib/l11-cctv.js + scripts/cctv.js + scripts/ui.js - eight Sedco camera feeds reuse one camera registry; each feed has its own sweep, lens and optional haunt signal, while desk controls switch/zoom and Cam 04 timing gates the quest."
+    "scripts/duller-spawn.js + duller-spec.js + scripts/lib/data/dullers.yml - shared Duller spec for ambient spawn and Foe Bay; per-place caps/chances and 240-second per-player rolls tune its rarity.",
+    "errands.yml + errands.js + quest-dialogue.js + quests.js - shared offers, objectives, journal/tracker and rewards; legacy errands tick by events, deliberate field/Hub jobs use dialogue and turn-in handlers."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -86,11 +86,11 @@
     "scripts/dbg-bodypad.js, scripts/debug-pad.js - debug-room pads after places/debug removal; no current references found."
   ],
   "migrationNotes": [
-    "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
-    "scripts/lib/save.js SAVE_V=2: intake, bonus and tutorial0 are transient and never save resume locations; migration clears legacy transient savePlace/savePos without overwriting earned state.",
-    "The Hub run frame/coordinates are centralized in scripts/lib/thehub.js; u follows a run, v spans its width, +X trunk, side tunnels alternate north/south. Preserve door IDs, mappings and coordinates together; Hub place.state.hubV versions its layout.",
-    "Level 9's room seed and looted contents/fog persist across generated rebuilds; l9DressV versions curbside detail placement. Level 34 uses place.state.l34V for generated-scene migration and place.state.deadAt for six-minute Drain Smiler respawns; preserve its Level 11 entry, Level 9 exit and Level 7 pool crossing.",
+    "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects. scripts/lib/save.js SAVE_V=2: intake, bonus and tutorial0 are transient and never save resume locations; migration clears legacy transient savePlace/savePos without overwriting earned state.",
+    "The Hub run frame/coordinates are centralized in scripts/lib/thehub.js; u follows a run, v spans its width, +X trunk, side tunnels alternate north/south. Preserve door IDs, mappings and coordinates together; Hub place.state.hubV versions its generated shell.",
+    "Level 9's room seed and looted contents/fog persist across generated rebuilds; l9DressV versions curbside detail placement.",
     "Faction fame and infamy are separate durable 0..100 values; rep is their compatibility net for legacy readers. M.E.G./B.N.T.G. ranks derive from standing; faction dialogue and M.E.G. assignments have membership/standing gates.",
-    "scripts/crawl.js stores crawl state on the player and restores the reduced capsule after reload; standing up requires clear 1.95 m headroom. Converted prone clips use forward/backward assets for travel direction; sideways currently reuses the directional set."
+    "scripts/crawl.js stores crawl state on the player and restores the reduced capsule after reload; standing up requires clear 1.95 m headroom. Crouch animation uses crouch idle/walk as the pose pair, with standing idle nearly silent; scripts/lib/data/player.yml sprintThreshold selects sprint gait.",
+    "Weapon meshes fitted by art/weapons/build.py and art/weapons/fit.json must stay in scripts/lib/weapon-look.js's scripted frame: mesh lowest-point offsets, centers and hand-grip transforms determine first/third-person placement; variants reuse their base mesh."
   ]
 }
