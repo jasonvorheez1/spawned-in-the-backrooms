@@ -1,3 +1,4 @@
+import os
 # A Tripo wig on a grey mannequin -> hair only, retargeted head-to-head onto the cat skull (mannequin skull box mapped to the cat's), ready for hair-rebuild.py.
 # blender -b --factory-startup --python-exit-code 1 --python art/cat-wardrobe/hair-prefit.py -- <raw.glb> <out.glb> <f|m>
 import bpy, bmesh, sys
@@ -46,10 +47,11 @@ for f in bm.faces:
     for v in f.verts: (hv if lab[f.index] else mv)[v.index] = True
 M, Hr = P[mv & ~hv], P[hv]
 # the wig hugs the skull: measure the skull from the hair's crown band with human head ratios (depth 1.27 w, height 1.5 w)
-ztop = Hr[:, 2].max(); E = min(np.percentile(Hr[:, 0], 99) - np.percentile(Hr[:, 0], 1), np.percentile(Hr[:, 1], 99) - np.percentile(Hr[:, 1], 1)) / 2
+ztop = Hr[:, 2].max() - float(os.environ.get('PREFIT_DROP', 0)) * (Hr[:, 2].max() - Hr[:, 2].min()); E = min(np.percentile(Hr[:, 0], 99) - np.percentile(Hr[:, 0], 1), np.percentile(Hr[:, 1], 99) - np.percentile(Hr[:, 1], 1)) / 2
 hb = Hr[Hr[:, 2] > ztop - 0.7 * E]; c0 = np.array([np.median(hb[:, 0]), np.median(hb[:, 1])])
 F = M[(M[:, 2] > ztop - 2.4 * E) & (M[:, 2] < ztop - 0.6 * E)]; d = F[:, :2].mean(0) - c0   # the bare face looks out of the hair
 ax = 0 if abs(d[0]) > abs(d[1]) else 1; ang = {(0, 1): -1.5708, (0, -1): 1.5708, (1, 1): 3.14159, (1, -1): 0}[(ax, 1 if d[ax] > 0 else -1)]
+ang = float(os.environ['PREFIT_ANG']) if 'PREFIT_ANG' in os.environ else ang  # a sculpt whose face reads wrong gets its turn by hand
 R = np.array(Matrix.Rotation(ang, 3, "Z")); P = P @ R.T; Hr = P[hv]
 hb = Hr[Hr[:, 2] > ztop - 0.7 * E]; cx = np.median(hb[:, 0]); w = 0.88 * np.percentile(np.abs(hb[:, 0] - cx), 97)
 my0, my1 = np.percentile(hb[:, 1], 1), np.percentile(hb[:, 1], 99); crown = ztop - 0.10 * w
