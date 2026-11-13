@@ -25,9 +25,9 @@ const SURV = {
   "surv-mags": { name: "Mags · Survivor Trader", role: "quarter", voice: "mags", look: { species: "raccoon", sex: "f", eye: "#c27420", belly: "#eae6ec", tip: "#2a2830", nose: "#1c1a20", topw: "jacket", top: "#c27a2a", botw: "pants", bottom: "#3a3a3a", shoes: "boots", shoec: "#2a2420", hat: "beanie", hatc: "#5a2a2a", expr: "grin" }, at: [5.0, -3.6], gun: "shotgun" },
 };
 function survivor(ctx, id) {
-  const g = SURV[id], a = cellCenter(1, ARRIVE.cz);
+  const g = SURV[id], a = cellCenter(1, ARRIVE.cz), look = npcLook(id, g.look, g.faction ?? "survivor", g.level ?? 8, g.role);
   ctx.spawn(id, { tags: ["npc"], feetPosition: { x: a.x + g.at[0], y: 0, z: a.z + g.at[1] }, rotation: { yaw: -90 }, physics: "character",
-    ...critterSpec(npcLook(id, g.look, g.faction ?? "survivor", g.level ?? 8, g.role)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"], state: { name: g.name, role: g.role, voice: g.voice, ...npcState(ctx, "agent", MEG.hp) } });
+    ...critterSpec(look), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"], state: { name: g.name, role: g.role, voice: g.voice, wear: look, home: { x: a.x + g.at[0], y: 0, z: a.z + g.at[1] }, ...npcState(ctx, "agent", MEG.hp) } }); // wear kept so the body restyle can refit them later (Shelly Nov 13: Wren was still on the old model)
   ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: g.gun }, ...weaponBody(g.gun) });
 }
 const lit = (cx, cz) => zoneOf(cx, cz) !== "dark";
@@ -123,6 +123,7 @@ export function tick(ctx) {
   if (s.sludgeV !== 1) { s.sludgeV = 1; laySludge2(ctx); }
   if (s.graffitiV !== 1) { s.graffitiV = 1; layGraffiti2(ctx); }
   // a fallen survivor is replaced after a while
+  if (s.survBodyV !== 1) { s.survBodyV = 1; for (const id of Object.keys(SURV)) { if (ctx.place.objects[id]) ctx.destroy(id); survivor(ctx, id); } } // Nov 13: the camp was spawned before the new body and never refit (no wear in state); laid fresh once on the current body
   keepPeople(ctx, Object.keys(SURV), survivor);
   // hounds roam the far halls, kept topped up
   if ((!s.packMgr || !(s.packMgr in ctx.place.objects))) s.packMgr = ctx.spawn({ behavior: "scripts/hounds.js" });
