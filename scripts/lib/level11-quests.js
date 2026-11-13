@@ -6,10 +6,10 @@
 
 import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
-import { setQuest, endQuest, qid, questStep } from "./quests.js";
+import { setQuest, questStep, tellQuest } from "./quests.js";
+import { rollCheck } from "./npc-talk.js";
 import { addRep, addKarma, repOf, GROUPS } from "./rep.js";
 
-const CHIME = "cdn/sfx-soft-bright-two-note-success-chime.mp3";
 const FANFARE = "/cdn/moodboard-realistic-gritty/sfx-level-up-jingle-retro-terminal-chime-rising-three-notes.mp3";
 const MARK = (id) => ({ place: "level11", id });
 
@@ -18,97 +18,61 @@ export const QUESTS = {
     key: "sedcoQ",
     name: "Spotlight on Sedco",
     tips: {
-      1: "Use the terminal outside Sedco Spotlight to unlock the shop. Password: spotlight.",
-      2: "Check the sales counter and the security footage inside Sedco.",
-      3: "Adjust the stage spotlight inside the shop.",
-      4: "Find Sedco's master drive in the vault under 14th Street station.",
-      5: "Give the drive to the courier on 11th Avenue or Vance at Base Beta.",
+      1: "Get into terminal SEDCO-SEC-01 on the desk outside Sedco Spotlight (log in, or hack it), then release the front door from its security panel.",
+      2: "Inside Sedco, search the sales counter and review the camera feeds on the monitor wall.",
+      3: "Reset the stage spotlight in the corner of the shop. Camera four is blind while it points at the lens.",
+      4: "Open the Sedco crate in the vault under the 14th Street subway station and take the master drive.",
+      5: "Bring the drive to the courier on the street by the canal, or to Specialist Vance at the Base Beta outpost.",
     },
-    marks: {
-      1: MARK("l11-sedco-terminal"),
-      2: MARK("l11-sedco-int-counter"),
-      3: MARK("l11-sedco-int-spot-0"),
-      4: MARK("l11-vault-crate-sedco"),
-      5: MARK("l11-walker-1"),
-    },
+    marks: { 1: MARK("l11-sedco-terminal"), 2: MARK("l11-sedco-int-counter"), 3: MARK("l11-sedco-int-spot-0"), 4: MARK("l11-vault-crate-sedco"), 5: MARK("l11-walker-1") },
   },
   crane: {
     key: "craneQ",
     name: "The Paper Bird's Blessing",
     tips: {
-      1: "Find the paper crane on the canal wall.",
-      2: "Follow the canal walkway to the spillway valve.",
-      3: "Free the jammed valve and collect a sample of canal almond water.",
-      4: "Bring the water sample to Kael at the market.",
+      1: "Find the paper crane perched on the canal wall. Canal folk say it roosts near whatever is broken.",
+      2: "Follow the canal walkway to the spillway valve station and free the jammed valve.",
+      3: "Press the valve station again to draw a sample of the lock water.",
+      4: "Bring the lock-water sample to Kael's stall at the market.",
     },
-    marks: {
-      1: MARK("l11-lucky-crane"),
-      2: MARK("l11-canal-pump"),
-      3: MARK("l11-canal-pump"),
-      4: MARK("l11-trader-kael"),
-    },
+    marks: { 1: MARK("l11-lucky-crane"), 2: MARK("l11-canal-pump"), 3: MARK("l11-canal-pump"), 4: MARK("l11-trader-kael") },
   },
   maint: {
     key: "maintQ",
     name: "Capital Infrastructure: The Night Shift",
     tips: {
-      1: "Bleed the compressor at the roadworks in the west lane.",
-      2: "Vent the radiator in Apartment 11-B.",
-      3: "Test the kitchen tap and tune the radio to 104.2 FM.",
-      4: "Report back to the janitor on 11th Avenue.",
+      1: "Bleed the compressor at the roadworks on the west lane.",
+      2: "Go into Apartment 11-B and bleed the radiator.",
+      3: "In 11-B, run the kitchen tap and tune the radio to 104.2. The boiler keeps time by that station.",
+      4: "Tell the janitor on his rounds that 11-B has heat and water again.",
     },
-    marks: {
-      1: MARK("l11-roadwork-gen"),
-      2: MARK("l11-apt-radiator"),
-      3: MARK("l11-apt-sink"),
-      4: MARK("l11-walker-3"),
-    },
+    marks: { 1: MARK("l11-roadwork-gen"), 2: MARK("l11-apt-radiator"), 3: MARK("l11-apt-sink"), 4: MARK("l11-walker-3") },
   },
 };
-
-const syncHUD = (p, qKey, step, doneSummary) => questStep(p?.state, QUESTS[qKey], step, doneSummary); // scripts/lib/quests.js, shared
-
-export function setSedcoStep(ctx, p, step, noteText) {
-  const s = p?.state;
-  if (!s || (s.sedcoQ ?? 0) >= step) return;
-  s.sedcoQ = step;
-  syncHUD(p, "sedco", step);
-  const now = ctx.now();
-  if (noteText) {
-    s.notice = { text: noteText, at: now };
-    pushFeed(s, noteText, now, "info");
-  }
-  const pos = p.worldFeetPosition ?? p.feetPosition;
-  if (pos) heard(ctx, { clip: CHIME, position: pos, volume: 0.7, maxDistance: 16 }, { audience: { player: p.id } });
+// "The Lit Window" (Vance): the window entity in the alley eats whoever walks into it, unless they know Cmdr. Harris's
+// ritual. Steps are journal text only (player.state.quests['the-lit-window']); know12 is the ritual (scripts/player.js,
+// on hearing the "Matrix" tape), and walking through pays once (scripts/level12-window.js).
+export const WINDOW = {
+  id: "the-lit-window", name: "The Lit Window",
+  tape: { step: "Take Cmdr. Harris's tape recorder, marked MATRIX, from the radio desk at the Base Beta outpost and play the tape on your HALOGEN to the end.", mark: MARK("l11-harris-log") },
+  walk: { step: "Walk straight into the lit window in the alley with the green dumpster. Don't stop, don't look away.", mark: MARK("l11-win12") },
+};
+export function windowStep(s) {
+  if (!s || s.qdone?.[WINDOW.id]) return;
+  const w = s.know12 ? WINDOW.walk : WINDOW.tape;
+  setQuest(s, WINDOW.id, { name: WINDOW.name, step: w.step, mark: w.mark });
 }
 
-export function setCraneStep(ctx, p, step, noteText) {
-  const s = p?.state;
-  if (!s || (s.craneQ ?? 0) >= step) return;
-  s.craneQ = step;
-  syncHUD(p, "crane", step);
-  const now = ctx.now();
-  if (noteText) {
-    s.notice = { text: noteText, at: now };
-    pushFeed(s, noteText, now, "info");
-  }
-  const pos = p.worldFeetPosition ?? p.feetPosition;
-  if (pos) heard(ctx, { clip: CHIME, position: pos, volume: 0.7, maxDistance: 16 }, { audience: { player: p.id } });
+function setStep(ctx, p, qKey, step, noteText) {
+  const s = p?.state, q = QUESTS[qKey];
+  if (!s || !q || (s[q.key] ?? 0) >= step) return;
+  s[q.key] = step;
+  questStep(s, q, step);
+  tellQuest(ctx, p, noteText || `${q.name} · ${q.tips[step] ?? ""}`);
 }
-
-export function setMaintStep(ctx, p, step, noteText) {
-  const s = p?.state;
-  if (!s || (s.maintQ ?? 0) >= step) return;
-  s.maintQ = step;
-  syncHUD(p, "maint", step);
-  const now = ctx.now();
-  if (noteText) {
-    s.notice = { text: noteText, at: now };
-    pushFeed(s, noteText, now, "info");
-  }
-  const pos = p.worldFeetPosition ?? p.feetPosition;
-  if (pos) heard(ctx, { clip: CHIME, position: pos, volume: 0.7, maxDistance: 16 }, { audience: { player: p.id } });
-}
+export const setSedcoStep = (ctx, p, step, noteText) => setStep(ctx, p, "sedco", step, noteText);
+export const setCraneStep = (ctx, p, step, noteText) => setStep(ctx, p, "crane", step, noteText);
+export const setMaintStep = (ctx, p, step, noteText) => setStep(ctx, p, "maint", step, noteText);
 
 const BONUS = (s, g) => { const v = repOf(s, g); return v >= 35 ? 0.25 : v >= 12 ? 0.1 : 0; };
 
@@ -116,12 +80,12 @@ export function finishQuest(ctx, p, qKey, { xp = 100, cents = 5000, items = [], 
   const s = p?.state;
   if (!s) return;
   const q = QUESTS[qKey];
-  if (!q) return;
+  if (!q || s[q.key] === 99) return false; // paid once
 
   const b = BONUS(s, by), msgs = [];
   if (b && cents) { const extra = Math.round(cents * b); cents += extra; msgs.push(`${GROUPS[by]?.name ?? by} bonus +$${(extra / 100).toFixed(2)}`); }
   s[q.key] = 99;
-  syncHUD(p, qKey, 99, text || `Completed ${q.name}`);
+  questStep(s, q, 99, text || `Completed ${q.name}`);
   for (const [g, d] of rep) {
     if (!d) continue;
     const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d);
@@ -175,110 +139,157 @@ export function handleDialogueQuest(ctx, p, npc, text) {
     }
   }
 
-  // 1. Sedco Quest Start (from Courier)
-  if (npcId === "l11-walker-1" && (t.includes("sedco manifest") || t.includes("need a hand"))) {
-    if (!s.sedcoQ) {
+  // ---- Spotlight on Sedco (the courier; Vance takes the drive too) ----
+  if (npcId === "l11-walker-1") {
+    if (t.includes("sedco manifest") && !s.sedcoQ) {
       if (repOf(s, "survivors") <= -35) return { reply: "Word on the avenue says you're trouble. Find your own work.", mood: "angry" };
-      setSedcoStep(ctx, p, 1, "Quest Started: Spotlight on Sedco · Breach terminal SEDCO-SEC-01");
-      return {
-        reply: "Oh thank god. Sedco's alarm went off on camera four and locked the store and the vault. Override the terminal out front, grab the camera backup, pull the drive from the vault downstairs. We split whatever's in it, half and half.",
-        mood: "happy",
-      };
+      setSedcoStep(ctx, p, 1, "Quest Started: Spotlight on Sedco · Get into terminal SEDCO-SEC-01 outside the shop");
+      return { reply: "Okay, here's the deal, chief. Sedco's night alarm tripped on camera four and the whole shop time-locked, vault and all, with a week of my signed manifests inside. No manifests, no pay. Get in, blind camera four so it doesn't trip again, and pull the master drive from the vault under 14th Street. Whatever cash is down there, we split it down the middle.", mood: "happy" };
     }
-  }
-
-  // 1b. Sedco Quest Turn-in (to Courier or Specialist Vance)
-  if ((npcId === "l11-walker-1" || npcId === "l11-meg-agent-vance") && (t.includes("recovered the sedco") || t.includes("retrieved the sedco") || t.includes("master security drive"))) {
-    if (s.sedcoQ === 5) {
-      if (npcId === "l11-walker-1") {
-        finishQuest(ctx, p, "sedco", {
-          xp: 120,
-          cents: 7500,
-          items: ["firstaid", "kit"],
-          by: "survivors",
-          rep: [["survivors", 8], ["bntg", 6]],
-          text: "Quest Completed: Spotlight on Sedco · Split the vault salvage with Courier (+120 XP, +$75.00)",
-        });
-        return {
-          reply: "Put the drive under the parcels. Here's your half, seventy-five, and the two kits. If management asks, I ran the route myself.",
-          mood: "happy",
-        };
-      } else {
-        finishQuest(ctx, p, "sedco", {
-          xp: 135,
-          cents: 6000,
-          items: ["firstaid", "kit", "ammo"],
-          by: "meg",
-          rep: [["meg", 12], ["karma", 3]],
-          text: "Quest Completed: Spotlight on Sedco · Turned the Sedco drive over to M.E.G. Base Beta (+135 XP, +$60.00)",
-        });
-        return {
-          reply: "Beta's been trying to get into Sedco's archive for weeks. Bounty's approved. Sixty, meds, tools, ammo. Good work.",
-          mood: "happy",
-        };
+    if (t.includes("night password") && s.sedcoQ === 1 && !s.sedcoPwAsk) {
+      const c = rollCheck(ctx, s, { skill: "speech", difficulty: 30 });
+      s.sedcoPwAsk = c.ok ? 1 : -1;
+      if (c.ok) return { reply: "You didn't hear it from me. 'Spotlight.' All lower case. The night guy wrote it on a sticky note on the desk anyway. Some security.", mood: "happy" };
+      return { reply: "Chief, I carry boxes. I don't carry passwords. Figure the terminal out yourself. Hacking's a thing, right?", mood: "calm" };
+    }
+    if (t.includes("master security drive") && s.sedcoQ === 5) {
+      if (t.includes("sixty-forty") && !s.sedcoHaggle) {
+        const c = rollCheck(ctx, s, { skill: "speech", difficulty: 45 });
+        s.sedcoHaggle = c.ok ? 1 : -1;
+        if (!c.ok) return { reply: "Sixty-forty? I found the job, chief. Half. Take it or keep the drive and explain it to Sedco yourself.", mood: "annoyed" };
       }
-    }
-  }
-
-  // 2. Crane Quest Start (from Trader Kael)
-  if (npcId === "l11-trader-kael" && (t.includes("canal shipments") || t.includes("wrong with the canal") || t.includes("canal trade route"))) {
-    if (!s.craneQ) {
-      if (repOf(s, "bntg") <= -35) return { reply: "The Guild's got your name on a list. Step away from my stall.", mood: "angry" };
-      setCraneStep(ctx, p, 1, "Quest Started: The Paper Bird's Blessing · Visit Entity 14 on the canal coping");
-      return {
-        reply: "The canal locks. The spillway valve's jammed and the barge from 6.1 can't dock. Even the cranes on the promenade went quiet. Find the paper crane on the canal wall. Follow where it points.",
-        mood: "calm",
-      };
-    }
-  }
-
-  // 2b. Crane Quest Turn-in (to Trader Kael)
-  if (npcId === "l11-trader-kael" && (t.includes("cleared the canal lock") || t.includes("pure almond water") || t.includes("canal water"))) {
-    if (s.craneQ === 4) {
-      finishQuest(ctx, p, "crane", {
-        xp: 95,
-        cents: 4000,
-        items: ["ration", "almond", "almond"],
-        by: "bntg",
-        rep: [["bntg", 10], ["survivors", 4], ["karma", 2]],
-        text: "Quest Completed: The Paper Bird's Blessing · +95 XP, +$40.00, Fresh Provisions",
+      const cents = s.sedcoHaggle === 1 ? 10500 : 7500;
+      s.sedcoTo = "courier";
+      finishQuest(ctx, p, "sedco", {
+        xp: 120, cents, items: ["firstaid", "kit"], by: "survivors", rep: [["survivors", 8], ["bntg", 6]],
+        text: `Quest Completed: Spotlight on Sedco · Split the vault with the courier (+120 XP, +$${(cents / 100).toFixed(2)})`,
       });
-      return {
-        reply: "Hear the lock filling? That's our barge coming in. Here's forty, the rations and two sealed bottles. First pot of coffee's on me.",
-        mood: "happy",
-      };
+      return s.sedcoHaggle === 1
+        ? { reply: "Sixty-forty. Fine. You did crawl into a vault for me. A hundred and five, and the two kits. If management asks, I ran the route myself and you were never here.", mood: "happy" }
+        : { reply: "That's the one. Under the parcels it goes. Seventy-five, your half, and the two kits I swiped off the depot shelf. If management asks, I ran the route myself.", mood: "happy" };
+    }
+    if (t.includes("any trouble from sedco") && s.sedcoQ === 99) {
+      return s.sedcoTo === "vance"
+        ? { reply: "You gave it to the uniforms. My manifests are in an evidence box at Beta now. Thanks a lot, chief. No, really. They're paying me hazard rate until they give them back.", mood: "annoyed" }
+        : { reply: "Sedco reopened the next morning like nothing happened. New guard, same sticky note. My manifests are signed and I got paid. Best week I've had in this city.", mood: "happy" };
+    }
+  }
+  if (npcId === "l11-meg-agent-vance") {
+    if (t.includes("master security drive") && s.sedcoQ === 5) {
+      s.sedcoTo = "vance";
+      finishQuest(ctx, p, "sedco", {
+        xp: 135, cents: 6000, items: ["firstaid", "kit", "ammo"], by: "meg", rep: [["meg", 12], ["karma", 3]],
+        text: "Quest Completed: Spotlight on Sedco · Turned the drive over to M.E.G. Base Beta (+135 XP, +$60.00)",
+      });
+      return { reply: "Sedco's camera four looks down the 14th Street platform, citizen. Past the dead train there's a service tunnel nobody on our roster has walked out of. Beta's wanted that footage for weeks. Bounty's approved. Sixty, a med kit, tools and a box of rounds.", mood: "happy" };
+    }
+    if (t.includes("what did beta find on the drive") && s.sedcoQ === 99 && s.sedcoTo === "vance") {
+      return { reply: "Three nights of the platform. Something in a work coat walks out of that tunnel at two in the morning, stands by the train, walks back. Same route, same minute, every night. It moves like it's still on shift. Stay off the platform after midnight.", mood: "calm" };
+    }
+    // ---- The Lit Window ----
+    if (t.includes("don't look in that window") && !s.quests?.[WINDOW.id] && !s.qdone?.[WINDOW.id]) {
+      windowStep(s);
+      tellQuest(ctx, p, `Quest Started: The Lit Window · ${s.know12 ? "Walk into the lit window in the alley" : "Find Cmdr. Harris's MATRIX tape at the outpost"}`);
+      return s.know12
+        ? { reply: "You've heard Harris's tape already. Then you know more than I do. Go on. Straight in, no flinching. I'll log you as on patrol.", mood: "calm" }
+        : { reply: "Harris's recorder is on the radio desk here at the outpost. Take it. Play the whole tape before you go near that alley. If it tells you something different from me, believe the tape.", mood: "calm" };
+    }
+    if (t.includes("what did harris say") && s.quests?.[WINDOW.id] && !s.know12 && !s.vanceWinAsk) {
+      const c = rollCheck(ctx, s, { skill: "speech", difficulty: 35 });
+      s.vanceWinAsk = c.ok ? 1 : -1;
+      if (!c.ok) return { reply: "I'm not putting a dead man's words in your mouth, citizen. Play the tape.", mood: "calm" };
+      s.know12 = true; s.u12At = ctx.now(); windowStep(s);
+      tellQuest(ctx, p, "The Lit Window · Vance told you Harris's way through · Walk into the lit window in the alley");
+      return { reply: "Fine. Off the record. Harris said it lets you in if you walk at it like you live there. No stopping, no looking away, no hand out to feel for the glass. Everyone it kills hesitates at the sill. Don't hesitate.", mood: "calm" };
+    }
+    if (t.includes("walked through that window") && s.qdone?.[WINDOW.id]) {
+      return { reply: "And came back. Harris did too. Neither of you blinks enough afterward. I've written it in the log. Don't make me write it twice.", mood: "calm" };
     }
   }
 
-  // 3. Maintenance Quest Start (from Night Shift Janitor)
-  if (npcId === "l11-walker-3" && (t.includes("maintenance rounds") || t.includes("need assistance") || t.includes("help with the maintenance"))) {
-    if (!s.maintQ) {
+  // ---- The Paper Bird's Blessing (Kael) ----
+  if (npcId === "l11-trader-kael") {
+    if (t.includes("wrong with the canal") && !s.craneQ) {
+      if (repOf(s, "bntg") <= -35) return { reply: "The Guild's got your name on a list. Step away from my stall.", mood: "angry" };
+      setCraneStep(ctx, p, 1, "Quest Started: The Paper Bird's Blessing · Find the paper crane on the canal wall");
+      return { reply: "Spillway valve's jammed, boss, so the lock won't fill, and the Guild barge from 6.1 is sitting outside it with my coffee on board. The pilot won't bring her in till someone draws a sample and proves the lock water's still almond water. Canal folk say the paper crane on the wall roosts by whatever's broken. Silly. Never wrong, though.", mood: "calm" };
+    }
+    if (t.includes("cleared the canal lock") && s.craneQ === 4) {
+      if (t.includes("cut of the cargo") && !s.kaelHaggle) {
+        const c = rollCheck(ctx, s, { skill: "barter", difficulty: 40 });
+        s.kaelHaggle = c.ok ? 1 : -1;
+        if (!c.ok) return { reply: "A cut? Boss, that coffee's spoken for three times over. Forty, as agreed, and the provisions. Hand me the sample.", mood: "annoyed" };
+      }
+      const cents = s.kaelHaggle === 1 ? 6500 : 4000;
+      finishQuest(ctx, p, "crane", {
+        xp: 95, cents, items: ["ration", "almond", "almond"], by: "bntg", rep: [["bntg", 10], ["survivors", 4], ["karma", 2]],
+        text: `Quest Completed: The Paper Bird's Blessing · +95 XP, +$${(cents / 100).toFixed(2)}, Fresh Provisions`,
+      });
+      return s.kaelHaggle === 1
+        ? { reply: "Hear the lock filling? Fine, fine, a cut. Sixty-five, the rations and two sealed bottles. You'd make a good Guild trader, boss. That's not a compliment.", mood: "happy" }
+        : { reply: "Clear as tap water. Hear the lock filling? That's our barge. Forty, the rations and two sealed bottles. First pot of coffee off her is yours.", mood: "happy" };
+    }
+    if (t.includes("barge come in all right") && s.craneQ === 99) {
+      return { reply: "Came in Tuesday. Or what passes for Tuesday. Coffee, batteries, and a crate of something the pilot wouldn't name. The paper crane left the wall the morning the lock filled. Nobody's seen it since. I miss it, boss. Bad for business, missing things.", mood: "calm" };
+    }
+  }
+
+  // ---- Capital Infrastructure: The Night Shift (the janitor) ----
+  if (npcId === "l11-walker-3") {
+    if (t.includes("maintenance rounds") && !s.maintQ) {
       if (repOf(s, "survivors") <= -35) return { reply: "I don't want you near my steam lines. Move along.", mood: "angry" };
-      setMaintStep(ctx, p, 1, "Quest Started: Capital Infrastructure · Bleed the B.R.C. Diesel Compressor on the west lane");
-      return {
-        reply: "City threw a roadworks across the west lane overnight and the compressor's whistling like a kettle. Bleed the pressure, check the radiator in 11-B, run the tap. Tell me if it comes out brown.",
-        mood: "calm",
-      };
+      setMaintStep(ctx, p, 1, "Quest Started: The Night Shift · Bleed the compressor at the west-lane roadworks");
+      return { reply: "City dropped a roadworks on the west lane overnight and tied its compressor into the steam main, so it's whistling like a kettle. Bleed it before it blows. Then 11-B: the tenant's had no heat for three nights. Bleed the radiator, run the tap, and put the radio on 104.2. The boiler keeps time off that station. Off the station, it thinks it's always midnight.", mood: "calm" };
     }
-  }
-
-  // 3b. Maintenance Quest Turn-in (to Night Shift Janitor)
-  if (npcId === "l11-walker-3" && (t.includes("compressor is bypassed") || t.includes("utilities are running smooth") || t.includes("apartment 11-b"))) {
-    if (s.maintQ === 4) {
+    if (t.includes("apartment 11-b has hot water") && s.maintQ === 4) {
       finishQuest(ctx, p, "maint", {
-        xp: 90,
-        cents: 3500,
-        items: ["kit", "battery"],
-        by: "survivors",
-        rep: [["survivors", 8], ["karma", 2]],
+        xp: 90, cents: 3500, items: ["kit", "battery"], by: "survivors", rep: [["survivors", 8], ["karma", 2]],
         text: "Quest Completed: Capital Infrastructure · +90 XP, +$35.00, Repair Kit, Battery",
       });
-      return {
-        reply: "Eleventh's back in the green. I'll take 11-B off the call sheet. Here's thirty-five, the repair kit and a battery. Get inside before the streetlights go down.",
-        mood: "happy",
-      };
+      return s.maintBurned
+        ? { reply: "Got scalded on that compressor, didn't you? I can see it on your hand. Still, Eleventh's back in the green. Thirty-five, a repair kit and a battery. Next time, wrap a rag round the valve.", mood: "happy" }
+        : { reply: "Clean bleed, too. I heard it from three blocks. Eleventh's back in the green and 11-B's off my call sheet. Thirty-five, a repair kit and a battery. Get inside before the streetlights go down.", mood: "happy" };
+    }
+    if (t.includes("11-b still warm") && s.maintQ === 99) {
+      return { reply: "Warm as toast. The tenant left a note on my cart. 'Thank you.' Just that. Nobody's ever thanked the night shift. City put another roadworks on Fourth since. Course it did.", mood: "calm" };
     }
   }
 
   return null;
+}
+
+// what the talk card offers (scripts/lib/npc-starters.js questChoices); handleDialogueQuest above answers each one
+export function l11Choices(id, s) {
+  const out = [], surv = repOf(s, "survivors") > -35;
+  if (id === "l11-walker-1") {
+    const q = s?.sedcoQ ?? 0;
+    if (!q && surv) out.push({ text: "That's a lot of parcels. Need a hand with a Sedco manifest?", tag: "Quest Start" });
+    if (q === 1 && !s?.sedcoPwAsk) out.push({ text: "You've run Sedco parcels for months. You know the night password.", tag: "Speech 30" });
+    if (q === 5) {
+      out.push({ text: "Got it. The master security drive, out of the vault.", tag: "Quest Turn-In" });
+      if (!s?.sedcoHaggle) out.push({ text: "Here's the master security drive. I did the crawling, so it's sixty-forty.", tag: "Speech 45" });
+    }
+    if (q === 99) out.push({ text: "Any trouble from Sedco since?", tag: "Talk" });
+  } else if (id === "l11-meg-agent-vance") {
+    const q = s?.sedcoQ ?? 0;
+    if (q === 5) out.push({ text: "I pulled the master security drive out of Sedco's vault. Want it?", tag: "Quest Turn-In" });
+    if (q === 99 && s?.sedcoTo === "vance") out.push({ text: "What did Beta find on the drive?", tag: "Talk" });
+    if (!s?.quests?.[WINDOW.id] && !s?.qdone?.[WINDOW.id]) out.push({ text: "You said don't look in that window. What is it?", tag: "Quest Start" });
+    if (s?.quests?.[WINDOW.id] && !s?.know12 && !s?.vanceWinAsk) out.push({ text: "You've heard the tape. What did Harris say?", tag: "Speech 35" });
+    if (s?.qdone?.[WINDOW.id]) out.push({ text: "I walked through that window. And back.", tag: "Talk" });
+  } else if (id === "l11-trader-kael") {
+    const q = s?.craneQ ?? 0;
+    if (!q && repOf(s, "bntg") > -35) out.push({ text: "Docks are dead quiet. Something wrong with the canal?", tag: "Quest Start" });
+    if (q === 4) {
+      out.push({ text: "Valve's free. I cleared the canal lock myself.", tag: "Quest Turn-In" });
+      if (!s?.kaelHaggle) out.push({ text: "I cleared the canal lock. I want a cut of the cargo.", tag: "Barter 40" });
+    }
+    if (q === 99) out.push({ text: "Did the barge come in all right?", tag: "Talk" });
+  } else if (id === "l11-walker-3") {
+    const q = s?.maintQ ?? 0;
+    if (!q && surv) out.push({ text: "Rough night on the maintenance rounds?", tag: "Quest Start" });
+    if (q === 4) out.push({ text: "Pressure's bled, and apartment 11-B has hot water again.", tag: "Quest Turn-In" });
+    if (q === 99) out.push({ text: "Is 11-B still warm?", tag: "Talk" });
+  }
+  return out;
 }

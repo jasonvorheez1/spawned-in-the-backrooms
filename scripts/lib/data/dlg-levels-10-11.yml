@@ -181,7 +181,7 @@ l11-meg-agent-vance:
       do: heal
       a: "Field kit. Hold still, citizen. There. Next time find me before you start leaking."
     - q: "Anything here I should fear?"
-      a: "Roadworks that weren't there yesterday. Lifts that skip floors. And a window on the eleventh floor of the brown building. Don't look in it."
+      a: "Roadworks that weren't there yesterday. Lifts that skip floors. And a lit window in the alley by the green dumpster, in a wall nobody lives behind. Don't walk into it. Ask me about it if you won't take that for an answer."
     - q: "Where am I?"
       a: "The city. That's all we call it. Streets, towers, weather, no country around it. It's the safest place I've been posted and I still can't tell you what it is."
     - q: "How do I get out?"

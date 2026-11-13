@@ -5,6 +5,7 @@
 
 import { heard } from "./lib/hear.js";
 import { setSedcoStep, setCraneStep, setMaintStep } from "./lib/level11-quests.js";
+import { rollCheck } from "./lib/npc-talk.js";
 import { carryAcross } from "./lib/carry.js";
 
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
@@ -357,6 +358,14 @@ export const ears = {
 
     // 13. Supply Chest
     if (s.kind === "supply-chest") {
+      if (ctx.self.id === "l11-vault-crate-sedco" && w.sedcoQ === 4) { // "Spotlight on Sedco": the drive is yours whoever emptied the crate first
+        heard(ctx, { clip: CHEST_OPEN, position: pos, volume: 0.9, maxDistance: 14 });
+        const first = !w.sedcoVault; w.sedcoVault = 1;
+        if (first) { w.cents = (w.cents ?? 0) + 5000; w.payout = { xp: 60, items: ["sedco_drive", "firstaid"] }; }
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: first ? "+SEDCO MASTER DRIVE & $50.00 CASH" : "+SEDCO MASTER DRIVE", color: "#00d2d3", size: 1.15 }, { audience: { player: who.id } });
+        setSedcoStep(ctx, who, 5, "Spotlight on Sedco · Master drive recovered · Bring it to the courier by the canal, or to Vance at the Base Beta outpost");
+        return;
+      }
       if (s.opened) {
         if (w) w.notice = { text: "Chest already salvaged.", at: now };
         return;
@@ -364,18 +373,9 @@ export const ears = {
       s.opened = true;
       heard(ctx, { clip: CHEST_OPEN, position: pos, volume: 0.9, maxDistance: 14 });
       if (ctx.self.id === "l11-vault-crate-sedco") {
-        w.cents = (w.cents ?? 0) + 5000;
-        w.payout = {
-          xp: 60,
-          items: ["sedco_drive", "firstaid"],
-        };
-        ctx.emit("damageNumber", {
-          position: { x: pos.x, y: pos.y + 1.2, z: pos.z },
-          text: "+SEDCO MASTER DRIVE & $50.00 CASH",
-          color: "#00d2d3",
-          size: 1.15,
-        }, { audience: { player: who.id } });
-        setSedcoStep(ctx, who, 5, "Objective Complete: Sedco Master Drive secured! Deliver it to Courier on 11th Ave or Vance at Base Beta");
+        w.cents = (w.cents ?? 0) + 5000; w.sedcoVault = 1;
+        w.payout = { xp: 20, items: ["firstaid"] };
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "+$50.00 CASH & FIRST AID", color: "#00d2d3", size: 1.15 }, { audience: { player: who.id } });
         return;
       }
       w.payout = {
@@ -467,7 +467,7 @@ export const ears = {
     if (s.kind === "lucky-crane") {
       heard(ctx, { clip: "cdn/sfx-soft-bright-two-note-success-chime.mp3", position: pos, volume: 0.85, maxDistance: 12 });
       w.sanity = Math.min(100, (w.sanity ?? 80) + 25);
-      w.payout = { xp: 20, items: w.craneQ === 1 ? ["crane_feather"] : [] };
+      if (!w.craneBlessed) { w.craneBlessed = 1; w.payout = { xp: 20, items: ["crane_feather"] }; } // once: the blessing is not an XP tap
 
       ctx.emit("sparkle", {
         position: { x: pos.x, y: pos.y + 0.4, z: pos.z },
@@ -483,10 +483,10 @@ export const ears = {
       }, { audience: { player: who.id } });
 
       if (w.craneQ === 1) {
-        setCraneStep(ctx, who, 2, "Objective Complete: Lucky Crane blessed you · Follow the promenade to the Grand Canal Spillway");
+        setCraneStep(ctx, who, 2, "The Paper Bird's Blessing · The crane turned its head down the canal · Follow the walkway to the spillway valve");
       }
 
-      if (w) w.notice = { text: "Entity 14 (Lucky Crane): The folded paper crane flutters its delicate wings peacefully under the Level 11 Effect.", at: now };
+      if (w && w.notice?.at !== now) w.notice = { text: "Entity 14 (Lucky Crane): The folded paper crane flutters its delicate wings peacefully under the Level 11 Effect.", at: now };
       return;
     }
 
@@ -533,7 +533,12 @@ export const ears = {
         size: 1.0,
       }, { audience: { player: who.id } });
       if (w.maintQ === 1) {
-        setMaintStep(ctx, who, 2, "Objective Complete: B.R.C. Compressor bled · Enter Apartment 11-B and vent the radiator");
+        const c = rollCheck(ctx, w, { skill: "repair", difficulty: 30 });
+        if (!c.ok) { w.maintBurned = 1; w.hp = Math.max(1, (w.hp ?? 100) - 10); ctx.emit("fx", { position: { x: pos.x, y: pos.y + 0.8, z: pos.z }, spec: STEAM_FX }); }
+        setMaintStep(ctx, who, 2, c.ok
+          ? "The Night Shift · Compressor bled, slow and clean · Go into Apartment 11-B and bleed the radiator"
+          : "The Night Shift · The bleed valve spat steam over your hand (-10 HP), but the pressure's down · Go into Apartment 11-B and bleed the radiator");
+        return;
       }
       if (w) w.notice = { text: "Roadworks Site: B.R.C. permit #74-ROADS. As ambassadors noted in 1977, city maintenance appears spontaneously.", at: now };
       return;
@@ -555,7 +560,7 @@ export const ears = {
       if (w.maintQ === 3) {
         w.aptTapTested = true;
         if (w.aptRadioTested) {
-          setMaintStep(ctx, who, 4, "Objective Complete: Utilities verified · Report back to the Night Shift Janitor on 11th Ave");
+          setMaintStep(ctx, who, 4, "The Night Shift · Boiler back on the clock, tap running clear · Tell the janitor on his rounds");
         } else {
           if (w) w.notice = { text: "Almond Water tap tested: Running clear and sweet! Now tune the apartment radio.", at: now };
         }
@@ -576,9 +581,9 @@ export const ears = {
         size: 1.0,
       }, { audience: { player: who.id } });
       if (w.maintQ === 2) {
-        setMaintStep(ctx, who, 3, "Objective Complete: Radiator vented · Test the kitchen tap and tune radio to 104.2 FM");
+        setMaintStep(ctx, who, 3, "The Night Shift · The radiator knocks, hisses, and warms · Run the kitchen tap and tune the radio to 104.2");
       }
-      if (w) w.notice = { text: "Cast Iron Radiator: Radiating gentle steam warmth generated by Level 11's autonomous utilities.", at: now };
+      if (w && w.notice?.at !== now) w.notice = { text: "Cast Iron Radiator: Radiating gentle steam warmth generated by Level 11's autonomous utilities.", at: now };
       return;
     }
 
@@ -595,7 +600,7 @@ export const ears = {
       if (w.maintQ === 3) {
         w.aptRadioTested = true;
         if (w.aptTapTested) {
-          setMaintStep(ctx, who, 4, "Objective Complete: Utilities verified · Report back to the Night Shift Janitor on 11th Ave");
+          setMaintStep(ctx, who, 4, "The Night Shift · Boiler back on the clock, tap running clear · Tell the janitor on his rounds");
         }
       }
       if (w) w.notice = { text: STATIONS[s.stationIdx], at: now };
@@ -620,7 +625,7 @@ export const ears = {
       if (w.sedcoQ === 2) {
         w.sedcoCounterChecked = true;
         if (w.sedcoMonitorsChecked) {
-          setSedcoStep(ctx, who, 3, "Objective Complete: Counter & CCTV verified · Calibrate the Stage Fresnel Spotlight");
+          setSedcoStep(ctx, who, 3, "Spotlight on Sedco · Camera four covers the vault stair · Turn the stage spotlight on its lens");
         } else {
           if (w) w.notice = { text: "Sedco Counter: Found CCTV operator manual. Review the monitor wall across the aisle!", at: now };
         }
@@ -644,7 +649,7 @@ export const ears = {
       if (w.sedcoQ === 2) {
         w.sedcoMonitorsChecked = true;
         if (w.sedcoCounterChecked) {
-          setSedcoStep(ctx, who, 3, "Objective Complete: Counter & CCTV verified · Calibrate the Stage Fresnel Spotlight");
+          setSedcoStep(ctx, who, 3, "Spotlight on Sedco · Camera four covers the vault stair · Turn the stage spotlight on its lens");
         } else {
           if (w) w.notice = { text: "CCTV Feeds: Cam 01 monitors 11th Ave; Cam 04 shows the locked B2 subway vault! Search the counter.", at: now };
         }
@@ -666,9 +671,9 @@ export const ears = {
         size: 1.1,
       }, { audience: { player: who.id } });
       if (w.sedcoQ === 3) {
-        setSedcoStep(ctx, who, 4, "Objective Complete: Spotlight calibrated · Descend to the 14th St subway station vault");
+        setSedcoStep(ctx, who, 4, "Spotlight on Sedco · Camera four is blind · Take the stair down to the vault under the 14th Street station");
       }
-      if (w) w.notice = { text: "Sedco Fresnel Spotlight: High-intensity beam calibrated. Lens illuminates the store and alley.", at: now };
+      if (w && w.notice?.at !== now) w.notice = { text: "Sedco Fresnel Spotlight: High-intensity beam calibrated. Lens illuminates the store and alley.", at: now };
       return;
     }
 
@@ -692,14 +697,16 @@ export const ears = {
       }, { audience: { player: who.id } });
 
       if (w.craneQ === 2) {
-        setCraneStep(ctx, who, 3, "Objective Complete: Spillway valve purged · Collect pure Canal Almond Water from basin");
-        if (w) w.notice = { text: "Spillway Valve: Debris cleared! Water surges into the lock basin. Press [E] again to collect pure water.", at: now };
+        const c = rollCheck(ctx, w, { skill: "repair", difficulty: w.craneBlessed ? 25 : 35 });
+        if (!c.ok) { w.hp = Math.max(1, (w.hp ?? 100) - 15); ctx.emit("screenShake", { intensity: 0.4, duration: 0.3 }, { audience: { player: who.id } }); }
+        setCraneStep(ctx, who, 3, c.ok
+          ? "The Paper Bird's Blessing · You found the paper wedged in the gate and worked it free · Press the valve again to draw a sample"
+          : "The Paper Bird's Blessing · You forced the wheel and it kicked back (-15 HP), but the lock is filling · Press the valve again to draw a sample");
         return;
       }
       if (w.craneQ === 3) {
         w.payout = { xp: 25, items: ["canal_water"] };
-        setCraneStep(ctx, who, 4, "Objective Complete: Pure Almond Water drawn · Deliver to Trader Kael at Central Market");
-        if (w) w.notice = { text: "Collected 1x Canal Lock Almond Water. Bring it to Trader Kael at the market!", at: now };
+        setCraneStep(ctx, who, 4, "The Paper Bird's Blessing · Lock water drawn, clear and sweet · Bring it to Kael at the market");
         return;
       }
       if (w) w.notice = { text: "B.N.T.G. Spillway Valve Station: Regulates water balance and locks for trading barges.", at: now };
