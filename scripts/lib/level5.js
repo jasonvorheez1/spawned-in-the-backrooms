@@ -136,7 +136,7 @@ export const LIGHTS = (() => {
 // radios playing the polonaise (the creator's track): one per lived-in space; E turns one off and on (scripts/l5-radio.js)
 export const POLONAISE = "/cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3";
 export const RADIOS = [
-  { id: "l5-radio-desk", x: -42.6, y: 1.12, z: 3.2, yaw: -90, where: "the front desk" },
+  { id: "l5-radio-desk", x: -42.6, y: 0.95, z: 3.2, yaw: -90, where: "the front desk" },
   { id: "l5-radio-ball", x: 15.5, y: 0.95, z: -10.6, yaw: 0, where: "the Beverly Room's bandstand" },
   { id: "l5-radio-salon", x: 0.2, y: 0.8, z: -22.6, yaw: 0, where: "the Originals' salon" },
   { id: "l5-radio-kitchen", x: -7, y: 1.0, z: 20.4, yaw: 180, where: "Homely Hotel's dining room" },

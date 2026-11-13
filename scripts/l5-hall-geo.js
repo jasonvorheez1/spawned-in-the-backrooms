@@ -245,11 +245,11 @@ function hatstand(c, p) { WOOD(c, "walnut"); turned(c, 0, 0, 0.05, 1.8, 0.03); f
   paint(c, "oklch(0.38 0.03 40)", "tweed"); lathe(c, -0.07, 1.78, 0.05, [[0, 0], [0.17, 0], [0.18, 0.01], [0.1, 0.02], [0.09, 0.12], [0.06, 0.14], [0, 0.13]], 16); }
 // ---------- lobby pieces ----------
 function frontdesk(c, p) {
-  const w = p.w ?? 3.6, d = 0.72, h = 1.12, hw = w / 2, zf = -d / 2;
-  WOOD(c); bx(c, -hw, hw, 0.12, 1.05, zf + 0.02, d / 2 - 0.05, 0.01); bx(c, -hw - 0.03, hw + 0.03, 0, 0.13, zf - 0.01, d / 2 - 0.03, 0.015);
-  const n = Math.round(w / 0.6); for (let i = 0; i < n; i++) { const x0 = -hw + (w * i) / n, x1 = -hw + (w * (i + 1)) / n; WOOD(c); bx(c, x0 - 0.02, x0 + 0.04, 0.12, 1.05, zf - 0.015, zf + 0.02, 0.008); rpanel(c, x0 + 0.08, x1 - 0.06, 0.22, 0.95, zf + 0.02); }
-  WOOD(c); bx(c, hw - 0.04, hw + 0.02, 0.12, 1.05, zf - 0.015, zf + 0.02, 0.008);
-  paint(c, "oklch(0.96 0.01 90)", "marble", 0.18); bx(c, -hw - 0.05, hw + 0.05, 1.05, h, zf - 0.06, d / 2, 0.015);
+  const w = p.w ?? 3.6, d = 0.72, h = p.h ?? 1.12, hb = h - 0.07, hw = w / 2, zf = -d / 2;
+  WOOD(c); bx(c, -hw, hw, 0.12, hb, zf + 0.02, d / 2 - 0.05, 0.01); bx(c, -hw - 0.03, hw + 0.03, 0, 0.13, zf - 0.01, d / 2 - 0.03, 0.015);
+  const n = Math.round(w / 0.6); for (let i = 0; i < n; i++) { const x0 = -hw + (w * i) / n, x1 = -hw + (w * (i + 1)) / n; WOOD(c); bx(c, x0 - 0.02, x0 + 0.04, 0.12, hb, zf - 0.015, zf + 0.02, 0.008); rpanel(c, x0 + 0.08, x1 - 0.06, 0.22, hb - 0.1, zf + 0.02); }
+  WOOD(c); bx(c, hw - 0.04, hw + 0.02, 0.12, hb, zf - 0.015, zf + 0.02, 0.008);
+  paint(c, "oklch(0.96 0.01 90)", "marble", 0.18); bx(c, -hw - 0.05, hw + 0.05, hb, h, zf - 0.06, d / 2, 0.015);
   BRASS(c); pipe(c, [-hw, 0.2, zf - 0.12], [hw, 0.2, zf - 0.12], 0.02, 10); for (const x of [-hw + 0.1, 0, hw - 0.1]) pipe(c, [x, 0.2, zf - 0.12], [x, 0.2, zf + 0.02], 0.012, 6);
   // the bell, the guest ledger open on a page that never ends, a pen in its stand
   BRASS(c); lathe(c, 0.9, h, 0, [[0, 0], [0.06, 0], [0.06, 0.012], [0.055, 0.015], [0.05, 0.04], [0.025, 0.065], [0, 0.07]], 18); pipe(c, [0.9, h + 0.07, 0], [0.9, h + 0.085, 0], 0.006, 6); ball(c, 0.9, h + 0.09, 0, 0.01, 6);
@@ -441,7 +441,7 @@ export function collider(ctx) {
     case "sidetable": return B(0.5, p.h ?? 0.68, 0.4); case "wardrobe": return B(p.w ?? 1.1, 2.05, 0.6); case "dresser": return B(p.w ?? 1.1, 0.86, 0.52); case "nightstand": return B(0.5, 0.62, 0.42);
     case "cabinet": return B(1.0, 1.95, 0.46); case "bookshelf": return B(p.w ?? 1.6, p.h ?? 2.2, 0.42); case "bed": return [B((p.w ?? 1.4) + 0.08, 0.66, 2.05), B((p.w ?? 1.4) + 0.08, 1.25, 0.1, 0, 0.98)];
     case "luggage": case "openbag": return B(0.72, 0.5, 0.48); case "hatstand": return { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.25, height: 1.8 };
-    case "frontdesk": return B(p.w ?? 3.6, 1.12, 0.78); case "cubbies": return B(p.w ?? 1.9, 2.6, 0.36); case "palm": return { kind: "cylinder", radiusTop: 0.3, radiusBottom: 0.22, height: 0.65 };
+    case "frontdesk": return B(p.w ?? 3.6, p.h ?? 1.12, 0.78); case "cubbies": return B(p.w ?? 1.9, 2.6, 0.36); case "palm": return { kind: "cylinder", radiusTop: 0.3, radiusBottom: 0.22, height: 0.65 };
     case "clock": return B(0.6, 2.2, 0.4); case "ladder": return null; case "maptable": return B(2.2, 0.82, 1.2); case "lectern": return B(0.6, 1.1, 0.5); case "tomes": return null;
     case "range": return B(1.3, 0.95, 0.72); case "counter": return B(p.w ?? 2.0, p.h ?? 1.0, 0.67); case "icebox": return B(0.9, 1.52, 0.62); case "dtable": return B((p.w ?? 1.8) + 0.04, 0.78, 0.94);
     case "wdesk": return B(1.27, 0.76, 0.64); case "vanity": return B(1.17, 0.76, 0.5); case "console": return B(p.w ?? 1.2, 0.84, 0.4); case "urn": return { kind: "cylinder", radiusTop: 0.15, radiusBottom: 0.22, height: 0.95 };

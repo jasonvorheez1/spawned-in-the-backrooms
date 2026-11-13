@@ -124,6 +124,8 @@ export function wrathTick(ctx) {
     const s = p.state ?? {}, on = wrathOn(ctx, s), hid = p.hidden ?? [];
     const want = on ? (hid.includes(BEAST) ? hid : [...hid, BEAST]) : hid.filter((x) => x !== BEAST);
     if (want !== hid && want.length !== hid.length) p.hidden = want;
+    const reg = "l5-beast-register", hid2 = p.hidden ?? []; // the register stays gone from the front desk for whoever carried it off
+    if (s.l5bReg && !hid2.includes(reg)) p.hidden = [...hid2, reg]; else if (!s.l5bReg && hid2.includes(reg)) p.hidden = hid2.filter((x) => x !== reg);
     if (!on) continue;
     const ses = (ctx.session.l5bGlimpse ??= {});
     if (now < (ses[p.id] ?? 0)) continue;
@@ -147,7 +149,7 @@ const M = {
   cabinet: "/cdn/value.3c8f64f304503e74a1893815ebafc5a3345ec466f701d46a602010f4a75683bc.glb",
   portrait: "/cdn/value.9ad60bda4c117e23cb0b077d89ede8cd399646054150bea3ee4973a5500685f6.png",
 };
-export const OFFICE_V = 4;
+export const OFFICE_V = 5;
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
 const fit = (w, h, d) => ({ box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } });
 const WOOD = { color: "oklch(0.3 0.06 40)", texture: "cdn/texture-worn-hardwood-grain.png", roughness: 0.5 };
@@ -184,7 +186,7 @@ export function layOffice(ctx) {
     { feetPosition: { x: 0.56, y: 1.62, z: 0.035 }, vector: "<svg viewBox='0 0 300 80' width='0.6m'><rect x='2' y='2' width='296' height='76' rx='6' fill='#2a1c12' stroke='#b8923a' stroke-width='4'/><text x='150' y='50' text-anchor='middle' font-family='serif' font-size='30' fill='#e8c983'>PROPRIETOR</text></svg>" },
   ] });
   // his errand props: the register on the front desk, the card slot by 1408
-  put("l5-beast-register", { feetPosition: { x: -42.75, y: 1.12, z: 1.1 }, rotation: { yaw: -80 }, ...prop("register", "Guest register", "Look"), primitive: box(0.42, 0.07, 0.3), material: { color: "oklch(0.32 0.1 25)", texture: "cdn/texture-worn-red-leather-book-cover.png", roughness: 0.7 } });
+  put("l5-beast-register", { feetPosition: { x: -42.6, y: 0.95, z: 1.75 }, rotation: { yaw: -80 }, ...prop("register", "Guest register", "Take"), primitive: box(0.42, 0.07, 0.3), material: { color: "oklch(0.32 0.1 25)", texture: "cdn/texture-worn-red-leather-book-cover.png", roughness: 0.7 } });
   put("l5-beast-slot", { feetPosition: { x: -16.85, y: 1.1, z: -12.83 }, ...prop("slot", "Card slot · Room 1408", "Use"), primitive: box(0.2, 0.08, 0.025), material: { color: "oklch(0.7 0.11 80)", metalness: 0.9, roughness: 0.35 } });
   // the last signatory's dictaphone, dropped in the library's far corner
   put("l5-beast-tape", { tags: ["container"], feetPosition: { x: -22.7, y: 0, z: -20.3 }, rotation: { yaw: 35 }, state: { items: "holo:beast18", name: "A dictaphone under a torn page", verb: "Take tape" },

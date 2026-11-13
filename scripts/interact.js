@@ -86,6 +86,7 @@ function findFocus(ctx, ray) {
     const ang = Math.acos(Math.max(-1, Math.min(1, (vx * d.x + vy * d.y + vz * d.z) / dist)))
     if (ang > Math.max(0.075, Math.atan(reachR / dist)) || ang >= bestAng) continue
     let wall = raycast(ctx, o, { x: vx / dist, y: vy / dist, z: vz / dist }, { distance: dist - 0.05, physicsOnly: true, ignoreEntities: [it.id, ctx.self.id], bodies: 'static' })
+    if (wall && tag === 'npc' && Math.hypot(wall.position.x - p.x, wall.position.z - p.z) < 0.8) wall = null // the chair they sit in or the counter they lean on never hides them
     if (wall && tag === 'npc') { // someone behind a desk or counter: their head clears it, so the look reaches them over the top
       const hy = p.y + (it.state?.seated ? 1.2 : Math.max(1.1, (it.state?.build?.h ?? 1) * 1.45)) - o.y, hdist = Math.hypot(vx, hy, vz)
       wall = raycast(ctx, o, { x: vx / hdist, y: hy / hdist, z: vz / hdist }, { distance: hdist - 0.05, physicsOnly: true, ignoreEntities: [it.id, ctx.self.id], bodies: 'static' })

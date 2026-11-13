@@ -156,7 +156,7 @@ export function lay(ctx) {
   if (!ctx.getObject("l5-front-bell")) {
     ctx.spawn("l5-front-bell", { visibleRange: { min: 0, max: 40 }, castShadow: false, 
       tags: ["usable"],
-      feetPosition: { x: -42.35, y: 1.12, z: 1.9 },
+      feetPosition: { x: -42.35, y: 0.95, z: 1.9 },
       primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 0.06 },
       material: { color: "oklch(0.78 0.14 78)", metalness: 0.9, roughness: 0.2 },
       behavior: "scripts/l5-door.js",

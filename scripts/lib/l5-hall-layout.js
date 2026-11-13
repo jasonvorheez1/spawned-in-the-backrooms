@@ -62,7 +62,7 @@ for (const o of OPENINGS) if (o.kind === "door" && SUITE[o.room]) {
 // ---- lobby (x -46..-30, z -13..13)
 add("lobby-rug", "rug", -37.5, 0, 0, { w: 9, d: 14, col: "oklch(0.8 0.08 150)" });
 add("lobby-table", "rtable", -37, 0, 0, { r: 0.65, orchid: true });
-add("frontdesk", "frontdesk", -42.6, 3.2, -90, { w: 3.6 }, { loot: L("bobbypin,battery,almond", "Front desk drawers", "desk", "lockpick:30") });
+add("frontdesk", "frontdesk", -42.6, 3.2, -90, { w: 3.6, h: 0.95 }, { loot: L("bobbypin,battery,almond", "Front desk drawers", "desk", "lockpick:30") });
 add("cubbies", "cubbies", -45.74, 3.2, -90, { w: 1.9 });
 for (const [i, sz] of [[0, -1], [1, 1]]) { const zc = sz * 7.6;
   add(`lobby-sofa${i}a`, "sofa", -37, zc - 1.7 * sz, sz < 0 ? 0 : 180, { w: 2.2, up: "leather" }); add(`lobby-sofa${i}b`, "sofa", -37, zc + 1.7 * sz, sz < 0 ? 180 : 0, { w: 2.2, up: "leather" });
