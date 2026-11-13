@@ -3,12 +3,12 @@
 import { SND, flat, yawTo, downed, hit, killerOf } from "./lib/l5-hostile.js";
 import { route } from "./lib/level70-nav.js";
 export const updateSchedule = { every: 3 };
-export const F = { froidling: { hp: 55, bite: 9, biteMs: 1100, stalk: 3.2, run: 6.8, ring: 10, notice: 32, loot: "froidpelt", name: "Froidling", lie: 0.3, bob: 9 },
+export const F = { froidling: { hp: 55, bite: 9, biteMs: 1100, stalk: 3.2, run: 6.8, ring: 10, notice: 32, loot: "froidpelt", name: "Froidling", lie: 0.3, bob: 9, packMs: 650 },
   deathrat70: { hp: 22, bite: 4, chill: 6, biteMs: 900, walk: 1.6, run: 7.4, notice: 16, loot: "meat:rat", name: "White Death Rat", lie: 0.16, bob: 5 } };
 const mem = new Map(), packs = {}; let fires = [], firesAt = -1e9;
 const yawOfRot = (r) => typeof r === "number" ? r : r?.yaw != null ? r.yaw : r?.w != null ? (Math.atan2(2 * (r.w * r.y + r.x * r.z), 1 - 2 * (r.y * r.y + r.x * r.x)) * 180) / Math.PI : 0;
 const heard = (ctx, clip, position, volume = 0.7) => ctx.emit("playSound", { clip: SND(clip), position, volume, refDistance: 4, maxDistance: 34 }, { audience: { nearby: position, radius: 40 } });
-const flare = (p, now) => (p.state?.flare70Until ?? 0) > now || p.state?.held === "flare70";
+const flare = (p, now) => (p.state?.flare70Until ?? 0) > now || p.state?.held === "flare70" || p.state?.equipped === "flaregun70"; // a flare gun in hand burns its pilot flare
 function gaitOf(ctx, r, m, K) { // a rigged body scurries on its own legs; an unrigged one lopes by its whole body
   if (m.legs !== undefined) return; m.legs = null;
   try { const res = ctx.getObjectBoneNames(r.id), names = Array.isArray(res) ? res : res?.names ?? res?.bones ?? []; const legs = names.filter((n) => /leg|thigh|upperarm|shoulder|hip_|_hip/i.test(n) && !/twist|end/i.test(n)).slice(0, 8); if (legs.length >= 2) { const tracks = {}; legs.forEach((n, i) => { tracks[n] = { pitch: i % 2 ? [28, -28, 28] : [-28, 28, -28] }; }); m.legs = { clip: { duration: 0.36, tracks }, loop: "loop", weight: 1 }; } } catch (e) { m.legs = null; }
@@ -35,7 +35,7 @@ export function update(ctx, dt) {
       continue;
     }
     let p = null, d = 1e9; for (const q of live) { const dd = flat(q.feetPosition, pos); if (dd < d) { d = dd; p = q; } }
-    if (!p || d > 60) { if (!m.asleep) { m.asleep = true; r.velocity = { x: 0, y: 0, z: 0 }; r.anim.move = null; m.moving = false; } continue; }
+    if (!p || d > 60) { m.seen = 0; m.backT = 0; pk.rushUntil = 0; pk.seen = 0; if (!m.asleep) { m.asleep = true; r.velocity = { x: 0, y: 0, z: 0 }; r.anim.move = null; m.moving = false; } continue; }
     m.asleep = false; gaitOf(ctx, r, m, K);
     const hurt = (st.hp ?? 0) < (m.hp ?? st.hp); m.hp = st.hp;
     if (hurt) { m.stagger = now + 280; pk.rushUntil = now + 8000; m.hot = now + 9000; ctx.emit("flash", { target: r.id, color: "#ffffff", duration: 0.12 }); heard(ctx, st.kind === "froidling" ? "small-creature-pained-yelp-hiss" : "rat-squeak-pained", pos, 0.7); }
@@ -54,8 +54,8 @@ export function update(ctx, dt) {
         m.backT = fx * -tx + fz * -tz < -0.15 ? (m.backT ?? 0) + dt : Math.max(0, (m.backT ?? 0) - dt * 2);
         if ((m.backT > 0.9 || now - m.seen > 16000 || d < 3) && now > pk.rushUntil) { pk.rushUntil = now + 7000; heard(ctx, "small-creature-attack-screech", pos, 0.8); }
         if (now < pk.rushUntil) {
-          if (now < (m.recoil ?? 0)) { vx = -tx * 4; vz = -tz * 4; } else { vx = tx * K.run; vz = tz * K.run; }
-          if (d < 1.5 && now > m.nextBite) { hit(ctx, p, K.bite); m.nextBite = now + K.biteMs; m.recoil = now + 500; heard(ctx, "creature-bite-snap", pos, 0.7); }
+          if (now < (m.recoil ?? 0)) { vx = -tx * 4; vz = -tz * 4; } else if (d > 1.05) { vx = tx * K.run; vz = tz * K.run; } // stop at the body, never inside it
+          if (d < 1.5 && now > m.nextBite && now > (pk.biteAt ?? 0)) { hit(ctx, p, K.bite); m.nextBite = now + K.biteMs; pk.biteAt = now + K.packMs; m.recoil = now + 650; heard(ctx, "creature-bite-snap", pos, 0.7); } // one jaw at a time per pack
           if (now + 200 > pk.rushUntil) { m.seen = now; m.backT = 0; }
         } else {
           m.ang += 0.32 * dt; const gx = pp.x + Math.cos(m.ang) * K.ring, gz = pp.z + Math.sin(m.ang) * K.ring, dx = gx - pos.x, dz = gz - pos.z, l = Math.hypot(dx, dz);
@@ -67,7 +67,7 @@ export function update(ctx, dt) {
       if (now < (m.hot ?? 0) && d < 40) {
         if (!m.squeal) { m.squeal = true; heard(ctx, "rat-swarm-squeaking-aggressive", pos, 0.6); }
         const w = Math.sin(now / 180 + m.ph) * 0.5, sx = tx - tz * w, sz = tz + tx * w, l = Math.hypot(sx, sz) || 1;
-        if (now < (m.recoil ?? 0)) { vx = -tx * 5; vz = -tz * 5; } else { vx = (sx / l) * K.run; vz = (sz / l) * K.run; }
+        if (now < (m.recoil ?? 0)) { vx = -tx * 5; vz = -tz * 5; } else if (d > 0.8) { vx = (sx / l) * K.run; vz = (sz / l) * K.run; }
         if (d < 1.25 && now > m.nextBite) { hit(ctx, p, K.bite, "#9fd8ff"); p.state.chill = (p.state.chill ?? 0) + K.chill; m.nextBite = now + K.biteMs; m.recoil = now + 450; heard(ctx, "rat-bite-squeak", pos, 0.6); }
       } else { m.squeal = false; [vx, vz] = stroll(ctx, r, m, st, pos, now, K.walk, 4); }
     }
