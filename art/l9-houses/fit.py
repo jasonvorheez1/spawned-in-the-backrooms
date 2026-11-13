@@ -11,7 +11,7 @@ if len(ms) > 1: bpy.ops.object.join()
 o = bpy.context.view_layer.objects.active
 o.parent = None
 bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-o.data.transform(mathutils.Matrix.Rotation(math.pi/2, 4, 'Z'))  # Tripo's front (+X) turned to Blender -Y, glTF +Z: the kit's front; glTF import is quaternion-mode, so the mesh turns, not the object
+o.data.transform(mathutils.Matrix.Rotation(-math.pi/2, 4, 'Z'))  # Tripo's front (-X in Blender here) turned to Blender -Y, glTF +Z: the kit's front; glTF import is quaternion-mode, so the mesh turns, not the object
 vs = [o.matrix_world @ v.co for v in o.data.vertices]
 mn = mathutils.Vector([min(v[i] for v in vs) for i in range(3)]); mx = mathutils.Vector([max(v[i] for v in vs) for i in range(3)])
 sx, sy, sz = mx - mn
