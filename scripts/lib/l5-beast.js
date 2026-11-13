@@ -147,7 +147,7 @@ const M = {
   cabinet: "/cdn/value.3c8f64f304503e74a1893815ebafc5a3345ec466f701d46a602010f4a75683bc.glb",
   portrait: "/cdn/value.9ad60bda4c117e23cb0b077d89ede8cd399646054150bea3ee4973a5500685f6.png",
 };
-export const OFFICE_V = 3;
+export const OFFICE_V = 4;
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
 const fit = (w, h, d) => ({ box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } });
 const WOOD = { color: "oklch(0.3 0.06 40)", texture: "cdn/texture-worn-hardwood-grain.png", roughness: 0.5 };
@@ -178,8 +178,8 @@ export function layOffice(ctx) {
   put("l5-office-lamp", { feetPosition: { x: -38.7, y: 1.25, z: -19.2 }, light: { kind: "point", color: "oklch(0.82 0.12 75)", intensity: 2.4, distance: 6, shadow: { enabled: true } } });
   put("l5-office-ceiling", { feetPosition: { x: -38, y: 3.3, z: -17 }, light: { kind: "point", color: "oklch(0.78 0.09 70)", intensity: 3, distance: 11, shadow: { enabled: false } } });
   // the door, left ajar: "Come in, come in! I implore you."
-  put("l5-office-door", { feetPosition: { x: -34.0, y: 0, z: -13.2 }, rotation: { yaw: 90 }, physics: { body: "static", collider: "box" }, children: [
-    { feetPosition: { x: 0.56, y: 0, z: 0 }, primitive: box(1.1, 2.36, 0.05), material: WOOD },
+  put("l5-office-door", { feetPosition: { x: -33.96, y: 0, z: -13.2 }, rotation: { yaw: 90 }, children: [ // swung flat to the wall; only the leaf itself is solid, never the doorway
+    { feetPosition: { x: 0.56, y: 0, z: 0 }, primitive: box(1.1, 2.36, 0.05), material: WOOD, physics: { body: "static", collider: "box" } },
     { feetPosition: { x: 0.98, y: 1.0, z: 0.04 }, primitive: { kind: "sphere", radius: 0.035 }, material: { color: "oklch(0.7 0.11 80)", metalness: 0.9, roughness: 0.3 } },
     { feetPosition: { x: 0.56, y: 1.62, z: 0.035 }, vector: "<svg viewBox='0 0 300 80' width='0.6m'><rect x='2' y='2' width='296' height='76' rx='6' fill='#2a1c12' stroke='#b8923a' stroke-width='4'/><text x='150' y='50' text-anchor='middle' font-family='serif' font-size='30' fill='#e8c983'>PROPRIETOR</text></svg>" },
   ] });
