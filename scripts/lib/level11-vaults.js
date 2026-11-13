@@ -26,7 +26,7 @@ export function layVaults(ctx, { sp, bx, cyl }) {
   bx("l11-vault-edge", 11.2, FY - 0.02, 78, 0.4, 0.02, 22, { color: "oklch(0.85 0.15 95)" }, { physics: undefined }); // the yellow line
   bx("l11-vault-pit", 9, FY - 1.3, 78, 4, 0.3, 22, GRIME);
   for (const s of [-0.7, 0.7]) bx(`l11-vault-rail-${s}`, 9 + s, FY - 1.0, 78, 0.08, 0.12, 22, STEEL);
-  bx("l11-vault-wall-w", 6.9, FY - 1, 78, 0.2, 3.6, 22, WALL); bx("l11-vault-wall-e", 19.7, FY, 78, 0.2, 2.6, 22, WALL);
+  bx("l11-vault-wall-w", 6.9, FY - 1, 78, 0.2, 3.6, 22, WALL); bx("l11-vault-wall-e", 19.7, FY, 72.35, 0.2, 2.6, 10.7, WALL); bx("l11-vault-wall-e2", 19.7, FY, 84.65, 0.2, 2.6, 8.7, WALL); bx("l11-vault-wall-e-lintel", 19.7, FY + 2.4, 79, 0.2, 0.2, 2.6, WALL); // Shelly Nov 13: the wall stood across the vault door; split around its 2.6 m opening at z 77.7..80.3
   bx("l11-vault-wall-n", 15.4, FY - 1, 89.1, 8.8, 3.6, 0.2, WALL); // the pit end stays open: the service tunnel runs on north
   bx("l11-vault-wall-n-lintel", 8.95, FY + 1.3, 89.1, 4.1, 1.3, 0.2, WALL);
   // service steps from the platform's end down into the pit (and back up)
@@ -62,7 +62,7 @@ export function layVaults(ctx, { sp, bx, cyl }) {
   for (let k = 0; k < 3; k++) sp(`l11-vault-turn-${k}`, { feetPosition: { x: 13.3 + k * 1.1, y: FY, z: 68.4 }, primitive: null, material: null, model: { id: MODELS.turnstile, forward: "-z" }, scale: 0.82, physics: "none" }); // a 1.0 m steel token turnstile, arms swing aside so the lanes stay walkable
   sp("l11-vault-mvm", { feetPosition: { x: 18.95, y: FY, z: 69.2 }, rotation: { yaw: -90 }, model: { id: MODELS.mvm, forward: "-z" }, physics: { body: "static", collider: "box" } });
   for (const [i, z] of [[0, 74], [1, 83]]) sp(`l11-vault-bench-${i}`, { feetPosition: { x: 18.9, y: FY, z }, rotation: { yaw: -90 }, model: { id: MODELS.bench, forward: "-z" }, physics: { body: "static", collider: "box" } });
-  sp("l11-vault-bin", { feetPosition: { x: 18.9, y: FY, z: 78.5 }, model: { id: MODELS.bin, forward: "-z" }, physics: { body: "static", collider: "box" } });
+  sp("l11-vault-bin", { feetPosition: { x: 18.9, y: FY, z: 71.6 }, model: { id: MODELS.bin, forward: "-z" }, physics: { body: "static", collider: "box" } });
   sp("l11-vault-crate-plat", { tags: ["usable"], feetPosition: { x: 17.8, y: FY, z: 87.6 }, model: { id: MODELS.meg_cache, forward: "-z", materials: { metal: STEEL } }, physics: { body: "static", collider: "box" }, behavior: "scripts/level11-use.js", state: { kind: "supply-chest", name: "Abandoned Commuter Locker", verb: "Search" } });
   // the Sedco vault, off the east wall at z 76..82: a second gate, SEDCO-SEC-01's
   bx("l11-vault-sfloor", 23, FY - 0.3, 79, 6.4, 0.3, 7, { color: "oklch(0.5 0.01 80)", roughness: 0.4, metalness: 0.3 });
