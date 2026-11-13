@@ -6,11 +6,11 @@
 import { HOUSE_DOOR, IGLOO_DOOR } from "./level70-town.js";
 import { GARAGE_DOOR, HOTEL_DOOR } from "./level70-civic.js";
 import { CAMP_FIRE, RIG, DOCK_POST, TREES } from "./level70-wild.js";
-export const V = 2;
+export const V = 3;
 const TEX = "cdn/texture-trampled-packed-snow-path-with-boot-prints-and-slush.png";
 const HEAPS = ["/cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb", "/cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb"];
 export const WALKS = [
-  { id: "house", w: 2.4, pts: [[-4.6, -17.4], [-12, -17.2], [-18, -16.6], [-28, -16.2], [-32.2, -16.2]] },
+  { id: "house", w: 2.4, pts: [[-4.6, -19.2], [-12, -17.4], [-18, -16.6], [-28, -16.2], [-32.2, -16.2]] },
   { id: "igloo", w: 1.8, pts: [[-24, -16.2], [-23, -6], [-34, -3.5], [-44, -4.2], [IGLOO_DOOR.x, IGLOO_DOOR.z]] },
   { id: "garage", w: 3.2, pts: [[4.6, -22], [12, -22], [GARAGE_DOOR.x + 1.5, GARAGE_DOOR.z]] },
   { id: "hotel", w: 2.8, pts: [[4.6, -82.4], [12, -81], [16, -80], [HOTEL_DOOR.x - 0.6, HOTEL_DOOR.z]] },
