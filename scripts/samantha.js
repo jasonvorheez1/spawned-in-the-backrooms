@@ -226,7 +226,7 @@ export function update(ctx, dt) {
   // the rude one has had their warning
   if (ses.warn && now - ses.warn.at > S.warnMs) { const w = ses.warn, p = ctx.getObject(w.pid); ses.warn = null; if (p?.state && (w.refused || !meatOf(p))) enrage(ctx, w.pid, now); return } // told, tail flicked, still no meat: claws (Shelly Nov 13), never her claws (Shelly Nov 13: she attacked after a question)
   // whoever holds her card: greet once, stay put, look at them
-  let talker = null
+  let talker = null; ses.talkers ??= {}
   for (const p of ctx.place.players) {
     if (p.state?.talkWith !== me.id) { if (ses.talkers[p.id]) delete ses.talkers[p.id]; continue }
     talker = p
