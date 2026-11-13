@@ -31,7 +31,7 @@ import PLAYER from './lib/data/player.yml'
 import BODIES from './lib/data/critter-models.yml'
 // a human body with no gait named (residents, staff, shoppers): the library's human cycles, the woman's walk and idle on a woman, an idle of its own per person
 const HUMAN_IDS = new Set(Object.values(BODIES.human ?? {}))
-const HUM = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-run-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
+const HUM = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 const HUM_F = { ...HUM, idle: 'cdn/clip-idle-female-loop.glb', walk: 'cdn/clip-walk-female-loop.glb' }
 const NPC_IDLES = ['cdn/clip-ual-idle-talkingphone-5737f83c-loop.glb'] // Shelly: the folded-arms idle drives the arms through a human chest
 function humanClips(ctx) {
