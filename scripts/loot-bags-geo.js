@@ -1,6 +1,6 @@
 // Searchable soft and wall-hung loot furniture (params.kind from data/furniture-loot.yml): backpack, duffel, satchel,
 // shelfbin, fuse. Feet at the bottom centre (fuse: the box's bottom), front faces -Z, back flush at +Z against the wall.
-import { slab, tube, rounded } from "./lib/shapes.js";
+import { slab, tube, rounded, face } from "./lib/shapes.js";
 import D from "./lib/data/furniture-loot.yml";
 const CANVAS = "cdn/texture-worn-canvas-fabric.png", STEEL = "cdn/texture-scratched-worn-steel.png";
 const box = (ctx, x0, x1, y0, y1, z0, z1) => slab(ctx, [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], [Math.abs(x1 - x0) / 2, Math.abs(y1 - y0) / 2, Math.abs(z1 - z0) / 2]);
@@ -45,9 +45,9 @@ export function geometry(ctx) {
     ctx.color("oklch(0.45 0.05 70)"); for (let i = 0; i < 3; i++) box(ctx, -X + 0.06 + i * 0.16, -X + 0.18 + i * 0.16, 0.02, 0.1 + (i % 2) * 0.05, -Z + 0.08, Z - 0.08); // parts inside
   } else if (kind === "fuse") { // wall-hung steel fuse cabinet: rolled edges, hinged door with louvres, latch, warning sticker, flex conduits curving into the floor
     const R = (x0, x1, y0, y1, z0, z1, r) => rounded(ctx, [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], [Math.abs(x1 - x0) / 2, Math.abs(y1 - y0) / 2, Math.abs(z1 - z0) / 2], r);
-    ctx.albedo(STEEL); ctx.metalness(0.45); ctx.roughness(0.62); ctx.color(pick(["oklch(0.6 0.015 220)", "oklch(0.56 0.03 150)", "oklch(0.62 0.01 90)"], sd));
+    ctx.albedo(STEEL); ctx.metalness(0.45); ctx.roughness(0.62); ctx.color(pick(["oklch(0.86 0.015 220)", "oklch(0.8 0.04 150)", "oklch(0.88 0.015 90)"], sd));
     R(-X, X, 0, h, -Z + 0.012, Z, 0.022); // the body, edges rolled like pressed sheet steel
-    ctx.color("oklch(0.57 0.015 220)"); R(-X + 0.025, X - 0.025, 0.025, h - 0.025, -Z - 0.004, -Z + 0.02, 0.012); // door, a hair proud of the body
+    ctx.color(pick(["oklch(0.82 0.015 220)", "oklch(0.76 0.04 150)", "oklch(0.84 0.015 90)"], sd)); R(-X + 0.025, X - 0.025, 0.025, h - 0.025, -Z - 0.004, -Z + 0.02, 0.012); // door, a hair proud of the body
     ctx.albedo(null); ctx.color("oklch(0.18 0.005 220)"); // louvre slots, top and bottom
     for (const y0 of [h - 0.16, 0.08]) for (let i = 0; i < 4; i++) { const y = y0 + i * 0.022; tube(ctx, [[-0.12, y, -Z - 0.006], [0.12, y, -Z - 0.006]], [0.006, 0.006], 6, [1, 0.5], 0, 1, 1); }
     ctx.color("oklch(0.72 0.01 250)"); ctx.metalness(0.85); ctx.roughness(0.35);
@@ -56,8 +56,10 @@ export function geometry(ctx) {
     tube(ctx, [[X - 0.068, h * 0.47, -Z - 0.03], [X - 0.068, h * 0.47, -Z - 0.05]], [0.009, 0.009], 8, [1, 1], 0, 1, 1); // padlock eye
     ctx.color("oklch(0.62 0.12 85)"); ctx.metalness(0.7); R(X - 0.09, X - 0.045, h * 0.36, h * 0.44, -Z - 0.065, -Z - 0.04, 0.01); // brass padlock hanging
     ctx.metalness(0); ctx.roughness(0.8);
-    ctx.color("oklch(0.85 0.17 95)"); tube(ctx, [[0, h * 0.66, -Z - 0.007], [0, h * 0.66 + 0.001, -Z - 0.007]], [0.075, 0.075], 3, [1, 1], 0, 1, 1); // hazard triangle
-    ctx.color("oklch(0.12 0 0)"); R(-0.008, 0.008, h * 0.645, h * 0.69, -Z - 0.011, -Z - 0.007, 0.003);
+    { const ty = h * 0.62, zz = -Z - 0.008, T = (r, z) => [[-r, ty, z], [r, ty, z], [0, ty + r * 1.7, z], [0, ty + r * 1.7, z]];
+      ctx.color("oklch(0.15 0 0)"); { const q = T(0.07, zz); face(ctx, q[0], q[1], q[2], q[3], [0, 0, -1]); }
+      ctx.color("oklch(0.85 0.17 95)"); { const q = T(0.058, zz - 0.0015).map((v, i) => i < 2 ? [v[0], v[1] + 0.008, v[2]] : [v[0], v[1] - 0.004, v[2]]); face(ctx, q[0], q[1], q[2], q[3], [0, 0, -1]); } } // hazard triangle
+    ctx.color("oklch(0.12 0 0)"); R(-0.007, 0.007, h * 0.66, h * 0.71, -Z - 0.012, -Z - 0.009, 0.003); R(-0.007, 0.007, h * 0.64, h * 0.652, -Z - 0.012, -Z - 0.009, 0.003);
     ctx.color("oklch(0.93 0.01 90)"); R(-0.1, 0.06, h * 0.52, h * 0.57, -Z - 0.008, -Z - 0.005, 0.003); // a stencilled circuit label
     ctx.color("oklch(0.32 0.06 45)"); R(-X + 0.03, X - 0.03, 0.004, 0.03, -Z - 0.007, -Z - 0.002, 0.004); // rust bloom along the door's bottom lip
     ctx.color("oklch(0.25 0.01 250)"); ctx.metalness(0.4); ctx.roughness(0.7);
