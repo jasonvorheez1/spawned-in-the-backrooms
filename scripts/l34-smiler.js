@@ -4,6 +4,7 @@
 // flashlight off immediately, look down, and wait"). Light off and look down (or crawl still, light off) and it sinks and slides away
 // for a while: "if you think it's gone, it's gone". Every number is Savi's pick.
 import { raycast } from "builtin/physics";
+import { findPath } from "builtin/nav";
 import { knocked } from "./lib/knock.js";
 import { heard } from "./lib/hear.js";
 import { dmgAfterArmor } from "./lib/stats.js";
@@ -72,8 +73,21 @@ export function update(ctx, dt) {
     if (Math.hypot(gx - pos.x, gz - pos.z) < 0.6) st.leg = ((st.leg ?? 0) + 1) % r.length;
     goal = { x: gx, z: gz }; speed = T.walk;
   }
-  const dx = goal.x - pos.x, dz = goal.z - pos.z, d = Math.hypot(dx, dz), vy = (w.velocity?.y ?? 0) + ctx.place.gravity.y * dt;
-  if (prey && d < T.bite) {
+  // pathing: a walked path over the sewer's colliders, re-asked when the goal moves a metre or every 0.8 s; it steers at the next corner
+  const P = (m.path ??= { pts: null, i: 0, at: 0, gx: 1e9, gz: 1e9 });
+  if (now >= P.at || Math.hypot(goal.x - P.gx, goal.z - P.gz) > 1) {
+    const r = findPath(ctx, pos, { x: goal.x, y: pos.y, z: goal.z }, { radius: 0.35, height: 1.1 });
+    if (!r.partial) { P.pts = r.points?.length ? r.points : null; P.i = 0; P.at = now + 800; P.gx = goal.x; P.gz = goal.z; }
+  }
+  let aim = goal;
+  if (P.pts) { while (P.i < P.pts.length - 1 && Math.hypot(P.pts[P.i].x - pos.x, P.pts[P.i].z - pos.z) < 0.4) P.i++; aim = P.pts[P.i]; }
+  // stuck: barely moved for a second while walking: sidestep along the wall and ask again
+  if (now >= (m.stuckAt ?? 0)) { const mv = m.lastPos ? Math.hypot(pos.x - m.lastPos.x, pos.z - m.lastPos.z) : 1; if (mv < 0.15 && m.clip === "move") { m.side = now + 500; P.at = 0; } m.lastPos = { x: pos.x, z: pos.z }; m.stuckAt = now + 1000; }
+  const gd = Math.hypot(goal.x - pos.x, goal.z - pos.z);
+  let dx = aim.x - pos.x, dz = aim.z - pos.z;
+  if (now < (m.side ?? 0)) { const t = dx; dx = -dz; dz = t; }
+  const d = Math.max(Math.hypot(dx, dz), gd < 0.25 ? 0 : 0.21), vy = (w.velocity?.y ?? 0) + ctx.place.gravity.y * dt;
+  if (prey && gd < T.bite) {
     w.velocity = { x: 0, y: vy, z: 0 }; play(w, m, "idle");
     if (now - (m.bit ?? 0) > T.biteCd) {
       m.bit = now; w.anim.act = { clip: CLIP.bite, loop: "once", blend: "override", weight: 4, time: 0 };
@@ -83,8 +97,8 @@ export function update(ctx, dt) {
       ctx.emit("squash", { target: w.id, axis: "z", intensity: 0.18, duration: 0.2 });
       heard(ctx, { clip: SND("smiler-teeth-snap-bite"), position: pos, volume: 1, maxDistance: 20 });
     }
-  } else if (d > 0.2) {
-    w.velocity = { x: (dx / d) * speed, y: vy, z: (dz / d) * speed }; play(w, m, "move");
+  } else if (gd > 0.2) {
+    const l = Math.hypot(dx, dz) || 1; w.velocity = { x: (dx / l) * speed, y: vy, z: (dz / l) * speed }; play(w, m, "move");
   } else { w.velocity = { x: 0, y: vy, z: 0 }; play(w, m, "idle"); }
-  if (d > 0.2 && now >= (m.turn ?? 0)) { m.turn = now + 250; w.rotation = { lookAt: { x: goal.x, y: pos.y, z: goal.z } }; }
+  if (gd > 0.2 && now >= (m.turn ?? 0)) { m.turn = now + 250; w.rotation = { lookAt: { x: pos.x + dx, y: pos.y, z: pos.z + dz } }; }
 }

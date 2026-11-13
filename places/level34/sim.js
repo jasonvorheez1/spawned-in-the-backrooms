@@ -3,17 +3,17 @@
 //   shaft A (0,0) step-irons up to Level 9's storm drain → tunnel north 20 m → junction (0,25): foul pool, dive down to Level 7;
 //   a dead-end east branch (the smilers' lair) → tunnel on 20 m → shaft B (0,50) step-irons up to Level 11's street grate.
 export const cadence = "1s";
-const V = 3;
+const V = 4;
 const GEO = "scripts/l34-sewer-geo.js";
 const WATER = { kind: "water", color: "oklch(0.52 0.09 95)", opacity: 0.88, waveIntensity: 0.15 };
 const SMILERS = [
-  { id: "l34-smiler-lair", at: { x: 16.5, z: 25 }, route: [[16.5, 25], [5, 25], [0, 25], [0, 33], [0, 25], [5, 25]] },
-  { id: "l34-smiler-run", at: { x: 0, z: 40 }, route: [[0, 46], [0, 30], [0, 25], [0, 6], [0, 25], [0, 30]] },
+  { id: "l34-smiler-lair", at: { x: 16.5, z: 25 }, route: [[16.5, 25], [5, 25], [2.6, 25], [2.6, 27.5], [0, 31], [2.6, 27.5], [2.6, 25], [5, 25]] },
+  { id: "l34-smiler-run", at: { x: 0, z: 40 }, route: [[0, 46], [0, 30], [-2.6, 27.5], [-2.6, 22.5], [0, 19], [0, 6], [0, 19], [-2.6, 22.5], [-2.6, 27.5], [0, 30]] },
 ];
 const RESPAWN_MS = 6 * 60 * 1000; // her pick: a killed smiler is back six minutes later
 
 function lay(ctx) {
-  for (const id of Object.keys(ctx.place.objects ?? {})) if (/^l34-/.test(id) && !id.includes("/") && !/smiler/.test(id)) ctx.destroy(id);
+  for (const id of Object.keys(ctx.place.objects ?? {})) if (/^l34-/.test(id) && !id.includes("/")) ctx.destroy(id); // smilers too: they respawn on the new routes
   const sp = (id, spec) => ctx.spawn(id, spec);
   const geo = (id, x, z, params, extra = {}) => sp(id, { feetPosition: { x, y: 0, z }, primitive: { kind: "scripted", script: GEO, params }, castShadow: false, ...extra });
   const B = (id, x0, x1, y0, y1, z0, z1) => sp(id, { feetPosition: { x: (x0 + x1) / 2, y: y0, z: (z0 + z1) / 2 }, primitive: { kind: "box", width: x1 - x0, height: y1 - y0, depth: z1 - z0 }, visible: false, physics: "static" });
