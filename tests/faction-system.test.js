@@ -29,12 +29,26 @@ test('faction history records actual changes with their cause, and remains bound
 test('faction conversations require standing with the correct group', async () => {
   const { factionChoices, factionReply } = await import('../scripts/lib/faction-dialogue.js')
   const callum = { id:'meg-callum' }, voss = { id:'bntg-voss' }, s = { rep: { meg:12, bntg:0 } }
-  expect(factionChoices(callum,s)).toHaveLength(1)
+  expect(factionChoices(callum,s).filter(x => x.tag === 'Reputation')).toHaveLength(1)
   expect(factionChoices(voss,s)).toHaveLength(0)
   const text = factionChoices(callum,s)[0].text
   expect(factionReply(callum,s,text).reply).toContain('routes')
   s.rep.meg = -40
-  expect(factionChoices(callum,s)).toHaveLength(0)
+  expect(factionChoices(callum,s).filter(x => x.tag === 'Reputation')).toHaveLength(0)
   expect(factionReply(callum,s,text)).toBeNull()
 })
 
+
+test('joining the M.E.G. requires consent and enough trust, and issues one jacket', async () => {
+  const { factionChoices, factionReply } = await import('../scripts/lib/faction-dialogue.js')
+  const npc = { id:'meg-callum' }, s = {}
+  expect(factionReply(npc,s,'How do I join the M.E.G.?').reply).toContain('trust')
+  expect(factionChoices(npc,s).some(x => x.tag === 'Enlist')).toBe(false)
+  s.rep = { meg: 12 }
+  expect(factionChoices(npc,s).some(x => x.tag === 'Enlist')).toBe(true)
+  const yes = "I'll sign on as a M.E.G. volunteer."
+  factionReply(npc,s,yes)
+  expect(s.megMember).toBe(true); expect(s.clothes).toContain('megjacket')
+  const original = s.clothes; expect(factionReply(npc,s,yes)).toBeNull(); expect(s.clothes).toBe(original)
+  expect(factionChoices(npc,s).some(x => x.text.includes('where should I report'))).toBe(true)
+})
