@@ -1,25 +1,26 @@
 # Tiny's telepathic lines, mirrored from tiny.yml so art/vo/act.py records them. The game reads tiny.yml.
+# Nov 13 rewrite to design/story-spine.md: Tiny knows his water and nothing about who fell into it.
 l7-tiny:
   circle:
-  - Soft. Pink. Still kicking.
-  - No teeth. No claws. Just you.
-  - Do you know what you are, in here?
-  - Swim faster. Go on.
+  - Small. Warm. Still kicking.
+  - No shell on you. No spines. Nothing.
+  - You don't know where you are, do you?
+  - Swim faster. Go on. I like the fast ones.
   gloat:
-  - Research won't help you swim.
-  - Take that back to your people.
+  - You wanted a way out. That was one.
+  - Whatever you came looking for, it isn't down here.
   noise:
   - Stop that. Stop that!
   - Loud little thing.
   notice:
   - Something fell in my water.
   - I felt that. Every kick.
-  - Oh, a visitor.
+  - Oh. Company.
   shore:
-  - Stay up there, then. The water keeps.
-  - Clever. Legs. Enjoy them.
-  - You'll get thirsty.
+  - Stay up there, then. The water waits.
+  - Legs. Clever. Enjoy them.
+  - You'll get thirsty. It's all mine to drink.
   strike:
   - There.
-  - That's what you are.
+  - Now you know what you are.
   - Again?
