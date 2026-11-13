@@ -1,172 +1,203 @@
 # Level 13 "The Boiling Frogs", Floor 283 (scripts/lib/level13-people.js). Written lines only, per skills/npc-dialogue.md.
+# Written to design/story-spine.md: the player knows nothing, each person answers the three questions their own way.
 l13p-oona:
-  hi: "Welcome to Floor 283! Oona Pell, B.N.T.G. Free Home Project. You look like an applicant. Everyone who walks in here looks like an applicant."
-  back: ["Applicant! Still on your feet. Good for you.", "Back at the desk. Flat or snacks?"]
-  warm: "My favourite applicant. I'd give you a flat with a window if we had windows."
-  cold: "The desk is closed to you specifically."
-  bye: "Mind the mat. It says welcome and it means it."
-  walk: "I don't leave the desk. The desk is the job."
+  hi: "Welcome to Floor 283! Oona Pell, Free Home Project. You've got the look of an applicant. Everybody who comes up to this desk does."
+  back: ["Applicant! Still upright. Lovely.", "Back at the desk. Is it a flat today, or snacks?"]
+  warm: "My best applicant. If we had a flat with a window, it'd be yours."
+  cold: "The desk is open. Just not for you."
+  bye: "Mind the mat. It says welcome and I had it checked."
+  walk: "I don't leave the desk. The desk is the whole job."
   ask:
+    - q: "Where am I?"
+      a: "Floor 283! Flats down both halls, reception right here, me behind it. Past the stairs I couldn't tell you. My map stops at the mat."
+      then:
+        - q: "And outside the building?"
+          a: "I've not seen an outside. I've seen a stairwell. I took a job on this side of it and I've been very happy."
+    - q: "How do I get out?"
+      a: "Why would you want to? End of the second hall, plain yellowish door, no number. Goes somewhere damp. Nobody I've housed has ever asked for it twice."
     - q: "What's the Free Home Project?"
-      a: "A flat. Yours. Free. Fridge fills itself, TV works, door locks. The Trade Group does one nice thing a year and this is it."
+      a: "A flat. Yours. Free. The fridge fills itself, the TV works, the door locks. My company does one kind thing a year and you're standing in it."
       then:
         - q: "What's the catch?"
-          a: "No catch! There's a form. The form is short. People love it here. They love it so much they hardly ever come out."
-    - q: "A lot of names on that board are crossed out."
-      a: "That's an administrative matter. Can I interest you in Almond Water? It's cold. Coldish."
+          a: "No catch! One form. Short form. People love it here. They love it so much you hardly see them again."
+    - q: "Lots of crossed out names on that board."
+      a: "That's a filing matter. Can I get you an Almond Water? It's cold. Well. It was."
       then:
-        - q: "Where did those people go?"
-          a: "They're home. Their doors are shut and their televisions are on. That is what being home looks like. Next question, and make it about snacks."
+        - q: "Where did they go?"
+          a: "Home. Doors shut, televisions on. That's what home looks like, applicant. Next question, and I'd like it to be about snacks."
     - q: "Who lives on the first hall?"
-      a: "Unaligned. Not ours. They were here before the Project and they refuse a form on principle. Two of them have been playing one game of chess since I got this desk."
-    - q: "Knock a little off for a future resident?"
+      a: "Not ours. They were here before the Project and they won't sign a form out of spite. Two of them have had one chess game going since I got this desk."
+    - q: "Any discount for a future resident?"
       sk: barter 35
       do: discount
-      a: "Oh, you're good. Fine. Applicant rate. Don't tell the first hall."
-      fail: "Future residents pay full. It's how I know they're serious."
-    - q: "Is there a way out of here?"
-      a: "Why would you want one? End of this floor, plain yellowish door, goes back to Level 0. Nobody I've housed has ever used it."
+      a: "Oh, you're good at this. Fine. Applicant rate. Not a word to the first hall."
+      fail: "Future residents pay full price. That's how I tell they mean it."
+    - q: "Ever hear the name Dina?"
+      a: "Not on my board, and I know my board. There was a woman through a while back who wouldn't take a key. Kept asking about doors. I gave her a pamphlet."
   barks:
-    idle: ["Flats available. Flats always available.", "Key, key, key. Where's 14.", "Free means free, people."]
-    hi: ["Applicant!", "Welcome home. Potentially."]
-    drawn: ["We do not do that at reception."]
-    hurt: ["That's coming out of your deposit!"]
-    spot: ["Not in my hall!"]
+    idle: ["Flats going. Flats always going.", "Key for 14. Where did I put 14.", "Free means free, folks."]
+    hi: ["Applicant!", "Welcome home. Pending paperwork."]
+    drawn: ["Not at reception, thank you."]
+    hurt: ["That comes off your deposit!"]
+    spot: ["Not in my hall, you don't!"]
     hostile: ["Application denied!"]
     hit: ["Denied!"]
-    kill: ["Vacancy."]
-    flee: ["Desk's closed!"]
-    death: ["Who's got... the keys..."]
-  gest: { wave: "Hello hello!", gift: "For the desk? I'll log it as a donation.", dance: "On the mat, please. Not past it.", nodance: "I'm on shift until forever.", insult: "I've had worse from people I gave a free home to." }
+    kill: ["That's a vacancy."]
+    flee: ["Desk is closed!"]
+    death: ["Somebody take... the keys..."]
+  gest: { wave: "Hello, hello!", gift: "For the desk? I'll write it down as a donation.", dance: "On the mat, please. Not past the mat.", nodance: "My shift ends never.", insult: "I've heard worse from people I gave a free flat." }
 
 l13p-gus:
-  hi: "Oh. Neighbour. Hi. Sit down if you... no. Wait. Somebody told me to say don't. I forget who."
-  back: ["You again. Or the first time. Hi.", "Neighbour. Is it still today?"]
-  warm: "You keep coming by. That's nice. Nobody comes by."
-  cold: "I'm watching this."
-  bye: "Okay. Shut the... leave it. It's fine."
-  walk: "Out there? Maybe after this show."
+  hi: "Oh. Neighbour. Hi. Have a seat if you... no. Hang on. Somebody said to tell people don't. I forget who."
+  back: ["You again. Or it's the first time. Hi.", "Neighbour. Is it still today?"]
+  warm: "You keep dropping in. That's nice. Nobody drops in."
+  cold: "I'm in the middle of a show."
+  bye: "Okay. Get the door on your... leave it. It's fine."
+  walk: "Out there? Maybe when this one's over."
   ask:
+    - q: "Where am I?"
+      a: "My place. It's a good place. There's a number on the door but that's on the outside, and I'm on the inside."
+    - q: "How do I get out?"
+      a: "Out the door, I guess. Then there's the hall. Then... I used to know this one. Ask the desk lady. She's got the keys."
     - q: "How long have you lived here?"
-      a: "Three weeks. Or eight. I moved in on a Tuesday. There's been a lot of Tuesdays."
+      a: "Three weeks. Maybe eight. I moved in on a Tuesday. There's been a lot of Tuesdays since."
       then:
-        - q: "When did you last go into the hall?"
-          a: "The hall. Sure. I went out for... I got the key from the desk lady. That was going in, though. Huh."
+        - q: "When were you last in the hall?"
+          a: "The hall. Sure. I was out there getting my key off the desk lady. That was on the way in, though. Huh."
     - q: "What are you watching?"
-      a: "The one with the family. They have a dog now. They didn't have a dog before. Or it's a different family."
-    - q: "Are you feeling alright?"
-      a: "I feel great. Heavy. Great and heavy. Like after a big lunch, all the time. The fridge does a good lunch."
-    - q: "You should get up and take a walk."
+      a: "The one with the family. They've got a dog now. They didn't have a dog. Or it's another family."
+    - q: "You feeling alright?"
+      a: "I feel great. Heavy. Great and heavy. Like I just had a big lunch, all day. The fridge makes a good lunch."
+    - q: "Get up. Take a walk."
       sk: speech 40
-      a: "A walk. Yeah. You know, my legs remember that. Give me a minute. I'll stand up at the next ad. Thanks, neighbour. Really."
-      fail: "I will. After this one. It's almost over. It's been almost over for a while."
+      a: "A walk. Yeah. You know, my legs remember walks. Give me a minute. I'll get up at the next ad. Thanks, neighbour. I mean it."
+      fail: "I will. After this one. It's nearly done. It's been nearly done for a while."
+    - q: "Ever hear the name Dina?"
+      a: "Is she on the show? There's a lady on the show. No, that's Diane. Or the dog. Sorry, neighbour."
   barks:
-    idle: ["Mm.", "Is that the same episode.", "Fridge is humming again.", "I should get up."]
-    hi: ["Oh. Hi.", "Neighbour."]
-    drawn: ["That's... put that... okay."]
+    idle: ["Mm.", "Didn't I see this one.", "Fridge is humming again.", "I ought to get up."]
+    hi: ["Oh. Hi.", "Hey, neighbour."]
+    drawn: ["That's... could you... okay."]
     hurt: ["Ow. Huh."]
-    spot: ["Something's in the flat."]
-    hostile: ["Don't make me get up."]
-    hit: ["Sorry."]
-    kill: ["Oh no."]
-    flee: ["Too far. It's too far."]
-    death: ["Leave it on..."]
-  gest: { wave: "Hey.", gift: "For me? Put it by the... anywhere.", dance: "Look at you go.", nodance: "Next ad.", insult: "Probably fair." }
+    spot: ["There's something in my flat."]
+    hostile: ["Don't make me stand up."]
+    hit: ["Sorry about that."]
+    kill: ["Oh. Oh no."]
+    flee: ["It's too far. It's all too far."]
+    death: ["Leave the TV on..."]
+  gest: { wave: "Hey.", gift: "For me? Put it over by the... wherever.", dance: "Look at you go.", nodance: "Next ad break.", insult: "Yeah, probably." }
 
 l13p-noor:
-  hi: "Don't sit down. I mean it, walker. Not the sofa, not the bed, not the edge of the tub. I'm out of here tonight."
-  back: ["Still standing? Good. Keep doing that.", "Walker. You're not living here yet, are you?"]
-  warm: "You're the only one on this floor who still walks like they've got somewhere to be."
-  cold: "I'm packing. Go be somewhere."
+  hi: "Don't sit. I mean it, walker. Not the sofa, not the bed, not the edge of the tub. I'm gone from here tonight."
+  back: ["Still on your feet? Good. Keep it up.", "Walker. Tell me you haven't taken a key."]
+  warm: "You're the only one on this floor who walks like there's somewhere to get to."
+  cold: "I'm packing. Go stand somewhere else."
   bye: "Stay on your feet."
-  walk: "I'm walking out tonight. Alone is faster."
+  walk: "I'm leaving tonight. One person moves faster than two."
   ask:
-    - q: "Why shouldn't I sit down?"
-      a: "Because it's comfortable. Stay in one flat too long and you go slow. Then you stop going out. Then one day your door's shut and the TV's on and that's all anyone knows."
+    - q: "Where am I?"
+      a: "A floor of free flats, and every one of them is a trap with a sofa in it. Past that I only know the rooms I walked through to get here. Yellow ones. Wet ones."
+    - q: "How do I get out?"
+      a: "Off this floor? Plain door, far end of the second hall. Out of all of it? I've never met anyone who did. I've quit asking and started walking."
+    - q: "Why can't I sit down?"
+      a: "Because it's comfortable. Stay in one flat and you slow down. Then you stop going out. Then your door's shut and your TV's on and that's all anyone knows about you."
       then:
         - q: "How do I shake it off?"
-          a: "Walk out the door. That's it. Hall air clears your head in a minute. The trick is wanting to, and the flat is very good at making you not want to."
+          a: "Walk out the door. That's all. The hall clears your head in a minute. The hard part is wanting to, and the flat is very good at that."
     - q: "The fridges really refill?"
-      a: "Every time you leave and come back. Take the food, by all means. Just eat it standing up, somewhere else."
-    - q: "What's in the flats with the noise?"
-      a: "Tenants. People who stayed. They throw things, plates, lamps, a toaster once. But only from inside their own rooms. They won't follow you into the hall. Don't dawdle in their doorways."
+      a: "Every time you step out and come back. Take the food, I would. Eat it standing up, somewhere that isn't here."
+    - q: "What's the banging in the flats?"
+      a: "Tenants. People who stayed too long. They throw things. Plates, lamps, a toaster once. Only from inside their own rooms, though. Don't hang around in their doorways."
     - q: "And the dark flat?"
-      a: "First hall, lights out, door open. Something stands in there. Look at it when you pass. Walk past looking the other way and you'll hear it step out behind you."
+      a: "First hall, lights off, door open. Something stands in there. Look at it when you go by. Walk past with your head turned and you'll hear it step out after you."
     - q: "Where will you go?"
-      a: "Plain door at the far end of this hall. Level 0. Damp carpet and nothing to sit on. Never thought I'd miss it."
+      a: "Through the plain door. Damp carpet, yellow walls, nothing to sit on. Never thought I'd miss a place like that."
+    - q: "Ever hear the name Dina?"
+      a: "No. But a woman came through before me asking everyone about ways out. Didn't sit down once, they said. That's how I know it can be done."
   barks:
-    idle: ["Socks. Where are my socks.", "Not sitting. Not sitting.", "One bag. That's all I came with."]
-    hi: ["On your feet. Good.", "Walker."]
-    drawn: ["Point that at a Tenant, not me."]
-    hurt: ["Not tonight!"]
-    spot: ["It's out of its room!"]
-    hostile: ["I am leaving and you're not stopping me."]
-    hit: ["Move!"]
-    kill: ["Should have stayed in."]
-    flee: ["Hall! Get to the hall!"]
-    death: ["So close..."]
-  gest: { wave: "Yeah. Hi.", gift: "I'm trying to carry less. But thanks.", dance: "Fine. Dancing isn't sitting.", nodance: "I'm packing.", insult: "Say it standing up, at least." }
+    idle: ["Socks. Where are my socks.", "Not sitting. Not sitting.", "One bag in, one bag out."]
+    hi: ["Standing. Good.", "Walker."]
+    drawn: ["Save that for the Tenants."]
+    hurt: ["Not tonight, no!"]
+    spot: ["It's left its room!"]
+    hostile: ["I'm leaving. You don't get a say."]
+    hit: ["Out of my way!"]
+    kill: ["Should've stayed inside."]
+    flee: ["The hall! Get in the hall!"]
+    death: ["I was so close..."]
+  gest: { wave: "Yeah. Hi.", gift: "I'm trying to carry less. Thanks, though.", dance: "Fine. Dancing isn't sitting.", nodance: "I've got a bag to pack.", insult: "Say it on your feet, at least." }
 
 l13p-hale:
-  hi: "Shh. I'm thinking. I've been thinking since spring, kid, and she's been breathing on me the whole time."
-  back: ["Kid. It's still my move.", "You're back. So's my headache."]
-  warm: "Pull up a wall and watch, kid. Don't pull up a chair."
-  cold: "You're in my light."
-  bye: "Don't touch the board on your way out."
-  walk: "And leave her alone with the board? She cheats."
+  hi: "Shh. I'm thinking. Been thinking since spring, kid, and she's breathed on me the whole time."
+  back: ["Kid. Still my move.", "You're back. So's the headache."]
+  warm: "Find a wall and watch, kid. A wall. Not a chair."
+  cold: "You're standing in my light."
+  bye: "Hands off the board on your way out."
+  walk: "And leave her alone with it? She cheats."
   ask:
-    - q: "How long has this game been going?"
-      a: "A year. Give or take. I'm winning."
+    - q: "Where am I?"
+      a: "Floor 283. Don't ask me 283 of what, I never counted the other ones. You walk long enough in the yellow rooms, you end up at a door, and here's what's behind it."
+    - q: "How do I get out?"
+      a: "Second hall, all the way down. Dull yellowish door, no number. Puts you back in the damp rooms. We've been through it. We came back. The chess is here."
       then:
-        - q: "Who's actually winning?"
-          a: "I'm up a knight. She says the knight fell on the floor in June and doesn't count. It counts."
-    - q: "You're not with the Trade Group?"
-      a: "We were here before the desk, the mat and the smile. Nobody gave us a flat. We just never signed the form. Keeps the head clearer, not owing anybody."
-    - q: "Why haven't you gone slow like the others?"
-      a: "Because every hour she says something so stupid I have to stand up and walk the hall. Works out. You can't nod off angry."
-    - q: "How do I get out of this place?"
-      a: "Second hall, Floor 283, all the way down. Bland yellowish door, no number. Opens on Level 0. We've used it. We came back. The chess is here."
+        - q: "I mean out for good."
+          a: "Kid, if I knew that I'd be losing at chess in a real kitchen. Every door I ever found went to more rooms."
+    - q: "How long's this game been going?"
+      a: "A year. About. I'm winning."
+      then:
+        - q: "Who's really winning?"
+          a: "I'm a knight up. She says the knight hit the floor in June so it's off. It's not off."
+    - q: "You're not with the desk?"
+      a: "We were here before the desk, the mat and the smile. Nobody handed us a flat. We just never signed. A man thinks clearer when he doesn't owe."
+    - q: "Why haven't you gone slow?"
+      a: "Because once an hour she says something so dumb I have to get up and walk the hall. Turns out you can't nod off angry."
+    - q: "Ever hear the name Dina?"
+      a: "No. Had a woman lean over this board once and ask where the doors go. I told her mine goes to my kitchen. She didn't laugh. Dot did."
   barks:
-    idle: ["Hmm.", "Bishop. No.", "Don't rush me.", "It counts."]
+    idle: ["Hmm.", "Bishop. No.", "Don't rush me.", "It's not off."]
     hi: ["Shh.", "Kid."]
-    drawn: ["Not near the board."]
-    hurt: ["My move's coming to me!"]
-    spot: ["Dot. Door."]
-    hostile: ["You knocked a pawn over. That's it."]
+    drawn: ["Not by the board."]
+    hurt: ["I nearly had the move!"]
+    spot: ["Dot. The door."]
+    hostile: ["You tipped a pawn. That does it."]
     hit: ["Check."]
     kill: ["Mate."]
-    flee: ["Grab the board!"]
-    death: ["Still... my move..."]
-  gest: { wave: "Mm.", gift: "If it's a clock for the game, she'll break it.", dance: "You'll shake the table.", nodance: "I'm thinking.", insult: "Dot says worse before breakfast." }
+    flee: ["Get the board!"]
+    death: ["It's still... my move..."]
+  gest: { wave: "Mm.", gift: "If that's a chess clock, she'll break it.", dance: "You're shaking the table.", nodance: "Thinking.", insult: "Dot does better before breakfast." }
 
 l13p-dot:
-  hi: "Oh thank goodness, sunshine, a witness. Tell him it's been his move for nine days."
-  back: ["Sunshine! He still hasn't moved.", "Back again. So is his indecision."]
-  warm: "You I like. You can have his chair when he finally gives up."
+  hi: "Oh, thank heavens, sunshine, a witness. Tell him it's been his move nine days."
+  back: ["Sunshine! He still hasn't gone.", "You're back. So is his dithering."]
+  warm: "You I like. You get his chair the day he gives up."
   cold: "Shoo. I'm busy waiting."
-  bye: "Go on. I'll be here. He'll still be thinking."
-  walk: "The second I leave he nudges a rook. No."
+  bye: "Off you go. I'll be here. He'll be thinking."
+  walk: "The minute I'm gone he nudges a rook. No."
   ask:
+    - q: "Where am I?"
+      a: "My front room, sunshine, and you didn't wipe your feet. The building's all flats. What the building's in, I gave up on. I had a street once. It had a bakery."
+    - q: "How do I get out?"
+      a: "Plain door at the end of 283. Yellowish. So dull you'd walk past it. Smells of wet carpet when you open it, that's how you know. Out out? Oh, sunshine. I'd have gone to the bakery."
     - q: "Nine days for one move?"
-      a: "His record is twenty. I knitted a scarf. It's this scarf."
+      a: "His record's twenty. I knitted a scarf. This is the scarf."
       then:
         - q: "Why not start a new game?"
-          a: "Because I'm winning this one. A new one, who knows. I'm old, not reckless."
-    - q: "He says he's up a knight."
-      a: "That knight went under the fridge in June. The fridge restocks everything in this flat except his knight. I take that as a ruling."
-    - q: "Is it true about the people who stay in?"
-      a: "True as carpet. We had a neighbour, lovely girl, Bea. Stopped coming round for tea. Now there's banging from her flat and I don't knock anymore. Keep moving, sunshine. Argue with someone. It helps."
-    - q: "Know a way back to Level 0?"
-      a: "The plain door at the end of 283. Yellowish. You'd walk right past it, it's that dull. Smells like wet carpet when you open it. That's how you know."
+          a: "Because I'm winning this one. A new one, who can say. I'm old, I'm not reckless."
+    - q: "He says he's a knight up."
+      a: "That knight went under the fridge in June. The fridge puts back everything in this flat but his knight. I call that a ruling."
+    - q: "Is it true about people who stay in?"
+      a: "True as carpet. We had a neighbour, Bea, lovely girl. Stopped coming for tea. Now there's banging in her flat and I don't knock. Keep moving, sunshine. Pick a fight with someone. It helps."
+    - q: "Ever hear the name Dina?"
+      a: "Dina. No. There was a girl asked Hale about doors and he made his kitchen joke. She had a little recorder going the whole time. I told her to cut that part."
   barks:
-    idle: ["Any day now.", "It's your move, Hale.", "Tick tock.", "It went under the fridge."]
+    idle: ["Any day now.", "Your move, Hale.", "Tick tock.", "Under the fridge, it went."]
     hi: ["Sunshine!", "A witness!"]
-    drawn: ["Aim it at him, he might move."]
-    hurt: ["Mind the scarf!"]
-    spot: ["Hale! Door!"]
-    hostile: ["I've waited nine days to hit something."]
+    drawn: ["Point it at him. He might move."]
+    hurt: ["Mind my scarf!"]
+    spot: ["Hale! The door!"]
+    hostile: ["Nine days I've waited to hit something."]
     hit: ["Your move!"]
-    kill: ["I win that one."]
-    flee: ["Board first, then us!"]
-    death: ["Don't let him... move my queen..."]
-  gest: { wave: "Hello, sunshine.", gift: "Is it a knight? He needs one.", dance: "Finally, something moving in here.", nodance: "I'm mid-game, dear.", insult: "Oh, that's nothing. Sit through a year of him." }
+    kill: ["I'll take that one."]
+    flee: ["The board first, then us!"]
+    death: ["Don't let him... touch my queen..."]
+  gest: { wave: "Hello, sunshine.", gift: "Is it a knight? He's short one.", dance: "At last, something in here moves.", nodance: "I'm in a game, dear.", insult: "That's nothing. Try a year across from him." }
