@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7530,
-  "updatedAt": "2026-11-13T18:56:17.596Z",
+  "basedOnSpecVersion": 7577,
+  "updatedAt": "2026-11-13T19:25:40.972Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG across Level 0, a social mall, The Hub and authored lore destinations; durable player.state carries progression, gear, quests, homes, companions, reputation and resume location. Shared player behaviors join generated and authored spaces, while The Hub maps doors to destinations and faction standing shapes dialogue, disguise and trade.",
   "scriptPaths": [],
   "places": [
@@ -11,7 +11,7 @@
     "places/intake + places/tutorial0 (3D; tutorial0 solo, ephemeral) - character creation/waking, staged tutorial and HALOGEN handoff to Dina's lead.",
     "places/level9 (3D, The Suburbs) - seed-generated streets/houses and timed fog banks; the fog's Mangled hunt the streets, freeze when watched, and lurk outside houses.",
     "places/level8 (3D) - Cave Systems; its cave-mouth exit connects to Level 9 alongside its other authored cave routes.",
-    "places/level01, level02, level1-7, level10-13, level21, level26-27, level31, level70, gamma, spamton, testlab (3D) - authored lore destinations; Level 1 has station/car-park geometry, Level 5 the Terror Hotel, Level 7 sea/islands and Level…",
+    "places/level01, level02, level1-7, level10-13, level21, level26-27, level31, level70, gamma, spamton, testlab (3D) - authored lore destinations; Level 1 has station/car-park geometry, Level 5 the Terror Hotel, Level 7 sea/islands and Level 70 winter settlement.",
     "places/bonus/cells and places/main/cells - authored mall and Level 0 placements; Level 0 sim supplies generated maze dressing."
   ],
   "roots": [
@@ -38,10 +38,10 @@
     "scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate, wakeLog.",
     "scripts/lib/critter-model.js - STYLE_V (sw197), sw194, furrySpec, restyle, restyleQueue, restyleStep, restylePlace; sw197 is the Wild Warriors helmet refit.",
     "scripts/lib/level9.js - HOUSES, PAINTS, PROPS, TUNE, FWD, ROAD_W, WALK, rng/hashStr, yawFacing, layout and zoneAt for deterministic suburb generation/classification.",
-    "scripts/lib/level31.js + level31-parts.js + level31-quest.js - venue geometry/zones/arrivals/skating/layParts and QID/QNAME/openCrate/useDeck/choice/dialogue exports.",
+    "scripts/lib/level31-quest.js + level31-parts.js + level31-quest.js - venue geometry/zones/arrivals/skating/layParts and QID/QNAME/openCrate/useDeck/choice/dialogue exports.",
     "scripts/lib/level70-quest.js + scripts/terrain70.js - Level 70 quest, terrain and civic/life layer exports.",
-    "scripts/lib/errands.js - ERRANDS, held, errandText, offerErrand, payErrand, tryAlt, errandTick.",
-    "scripts/lib/rep.js + scripts/lib/hub-quest.js + hubkeys.js + hub-cut.js + hub-route.js + hit-squad.js - faction standing/ranks and Hub choices, keys, cut, routes and squad tick/follow exports.",
+    "scripts/lib/errands.js - ERRANDS, held, errandText, offerErrand, payErrand, tryAlt, deliberateErrands, turnInErrand, errandTick.",
+    "scripts/lib/rep.js + scripts/lib/hub-quest.js + hubkeys.js + hub-cut.js + hub-route.js - faction standing/ranks and Hub choices, keys, cut, routes and squad tick/follow exports.",
     "scripts/l9-mangled.js - update, the Level 9 fog-entity manager."
   ],
   "ownership": [
@@ -49,10 +49,10 @@
     "Transient appearance/pause state - scripts/critter.js owns per-player look and creator/wardrobe/salon state; scripts/main-menu.js owns session.tabAway and place.timeScale pause control.",
     "scripts/lib/quests.js + scripts/lib/dina-quest.js - quests/qtrack/qdone/claimed; Dina trail keys, dinaQ stages, diary/cut/clue fields and migration.",
     "scripts/lib/errands.js - player.state.errands records, errHints and errand journal entries; completion updates cents, payout, rep and hints.",
+    "scripts/lib/field-errands.js + hub-errands.js - fieldErrAsk and hubErrAsk dialogue-confirmation maps in player.state; these gate explicit job acceptance, while errands.js owns progress and completion.",
     "scripts/lib/level31-quest.js + level70-quest.js + remodel-quest.js - Level 31/70 and remodel quest stages, routes and rewards.",
     "places/level9/sim.js - place.state.l9seed fixes each room's generated streets/houses and looted-container state; place.state.l9fog owns fog-bank timing/intensity and gates the Mangled manager.",
-    "scripts/build.js + places/level5/sim.js; scripts/l5-resident.js - homeKeep.built/l5built reconstruction, booking identity and place.state.l5rent.",
-    "scripts/lib/rep.js owns player.state.karma, fame[group], infamy[group], compatibility net rep[group], megRank and bntgRank; scripts/lib/hit-squad.js writes squadAt per faction and delayed squad state."
+    "scripts/build.js + places/level5/sim.js; scripts/l5-resident.js - homeKeep.built/l5built reconstruction, booking identity and place.state.l5rent."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interaction, combat, inventory, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js supply game-specific play.",
@@ -61,12 +61,12 @@
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; toHub/toSolo cross to mall/home and maintain roomHop/save-place; this is separate from places/thehub.",
     "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close runs intro-cut then tutorial0 first time or main later; ui.js visibilitychange/blur/focus → tabaway action → main-menu.js session.tabAway and place.timeScale pause.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js offers matching-place jobs; errands progress from carried items, kills and world events → quests.js journal, player.state.errands/qtrack and payouts.",
+    "talk.js openDialogue → npc-starters.js questChoices and fieldErrandChoices/hubErrandChoices; selected dialogue → quest-specific handlers then hub/field errand handlers → offerErrand, turnInErrand/step and quest journal. Deliberate errands require explicit acceptance and targeted turn-in rather than automatic giver proximity.",
     "tutorial0 HALOGEN cut → tut0-cut.js + dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ; dina-quest tick calls hub-route.js The Tenth Tunnel, unlocked at dinaQ 9 or hubPhoebe.",
     "places/level1/sim.js lays l1-to-hub → scripts/level-door.js crossing → thehub; Hub arrival marker hub-from-l1 returns players to its arrival position. Level 1 zoneAt classifies KEEP bounds and labels.",
     "places/thehub/sim.js reads lib/thehub.js and hub-people.js/hub-dress.js → versioned shell, lamps, doors, props, crew and camp dressing; hub-door-geo.js renders doors, hub-door.js handles use/open/crossing, plaques label destinations.",
     "scripts/main-menu.js on thehub → lib/hub-cut.js hubCutTick at first arrival → Phoebe/player cutscene; completion sets hubPhoebe/hubDinaLead; Hub dialogue and hub-thing ledger presses update quest/ledger state for UI.",
-    "places/level9/sim.js persists l9seed and writes place.state.l9fog; its l9-mangled-mgr runs scripts/l9-mangled.js → templates/mangled.js entities, which use l9-mangled.yml tuning and existing hostile combat targeting.",
-    "Level 8 sim's l8-to-l9 trigger → scripts/level-door.js → level9#l9-from-l8; Level 9's l9-to-l8/l9-to-l11/l9-to-l10 triggers return to Level 8 or route north to Levels 11/10 via quest-route.js destination IDs."
+    "places/level9/sim.js persists l9seed and writes place.state.l9fog; its l9-mangled-mgr runs scripts/l9-mangled.js → templates/mangled.js entities, which use l9-mangled.yml tuning and existing hostile combat targeting; Level 8/9 exits route via level-door.js and quest-route.js."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored mall shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
@@ -74,9 +74,9 @@
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and tagged paired leaves; thresholds/sign boards share geometry.",
     "Level 01 sim/Zenith geometry and Level 1 sim + level1-geo.js + level1-details-geo.js - authored station and car park/service geometry; corridor materials, pipes, fixtures and lights vary deterministically per corridor cell.",
     "scripts/meg-agent.js + npc-temper.js + forgive.js + critter-model.js - shared NPC reactions, cover, voiced barks, movement/fighting and companion following; faction, role, outfit and first-hit assault handling vary by NPC.",
-    "errands.yml + errands.js + quest-dialogue.js + quests.js - shared job offers, objective stages, journal/tracker and rewards; named NPCs/levels vary objectives and text.",
-    "Level 0 kit builders/data + places/main/sim.js - model catalogs feed deterministic dressing in DR.batch rows with per-piece fixes and room-fit collision rules; l0-dress.yml varies cubicles/camp variants and blackout-edge lamp states.",
-    "places/level9/sim.js + scripts/lib/level9.js + l9-houses.yml/l9-props.yml + scripts/l9-mangled.js - persistent seed-driven streets/house dressing and timed fog entity behavior; Mangled spawn/targeting varies by player locations, visibility…"
+    "errands.yml + errands.js + quest-dialogue.js + quests.js - shared job offers, objective stages, journal/tracker and rewards; legacy errands tick by location/events, while deliberate field and Hub jobs use dialogue choice/turn-in handlers.",
+    "scripts/lib/cat-wardrobe.js + cat-wardrobe.yml + body3.js + critter-model.js - shared cat body/face morphs and skinned garments/ears across player look, NPCs and demo; sex, look keys, clothing and hat ear coverage vary the assembly.",
+    "places/level9/sim.js + scripts/lib/level9.js + l9-houses.yml/l9-props.yml + scripts/l9-mangled.js - persistent seed-driven streets/house dressing and timed fog entity behavior; Mangled spawn/targeting varies by player locations, visibility and fog state."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -87,10 +87,10 @@
   ],
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
-    "scripts/lib/save.js SAVE_V=2: intake, bonus and tutorial0 are transient and never save resume locations; migration clears legacy transient savePlace/savePos without overwriting earned state. player.js retries wake crossings up to three tim…",
-    "The Hub's run frame and coordinates are centralized in scripts/lib/thehub.js; u follows a run, v spans its width, +X trunk, side tunnels alternate north/south. Preserve door IDs, OPEN/KEYED mappings and coordinates together across simulati…",
-    "Hub place.state.hubV is generated-scene migration version (v8); its versioned rebuilds include door set, dressing, door-mark lamps and plaques. Hub Level Keys are player.state.hubKeys keyed by destination; keyed thresholds consume one matc…",
-    "Level 9 uses place.state.l9seed as persistent deterministic layout seed and l9fog.on as the Mangled spawn/behavior gate; preserve seed and looted container contents/lock state on rebuild. Mangled use the l8-hostile combat tag; model is 2.5…",
+    "scripts/lib/save.js SAVE_V=2: intake, bonus and tutorial0 are transient and never save resume locations; migration clears legacy transient savePlace/savePos without overwriting earned state. player.js retries wake crossings up to three times.",
+    "The Hub's run frame and coordinates are centralized in scripts/lib/thehub.js; u follows a run, v spans its width, +X trunk, side tunnels alternate north/south. Preserve door IDs, OPEN/KEYED mappings and coordinates together across simulation/geometry/route edits.",
+    "Hub place.state.hubV is generated-scene migration version (v8); its versioned rebuilds include door set, dressing, door-mark lamps and plaques. Hub Level Keys are player.state.hubKeys keyed by destination; keyed thresholds consume one matching key and openings are transient.",
+    "Level 9 uses place.state.l9seed as persistent deterministic layout seed and l9fog.on as the Mangled spawn/behavior gate; preserve seed and looted container contents/lock state on rebuild. Mangled use the l8-hostile combat tag; model is 2.5.",
     "Faction fame and infamy are separate durable 0..100 values per group; rep is their signed compatibility net for existing readers. M.E.G. and B.N.T.G. ranks derive from standing; hit squads use session state, not durable faction fields."
   ]
 }
