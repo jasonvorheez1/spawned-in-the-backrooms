@@ -30,5 +30,14 @@ if n > faces:
     m = o.modifiers.new("dec", 'DECIMATE'); m.ratio = faces / n
     bpy.ops.object.modifier_apply(modifier="dec")
 o.name = "house"
+# the inside: Tripo shells are one-sided, so from indoors the walls vanish. A copy, normals flipped and pulled 4 cm in, wears its own
+# "interior" slot (the game paints it plaster) so every room reads walled and roofed from within.
+inn = o.copy(); inn.data = o.data.copy(); bpy.context.scene.collection.objects.link(inn); inn.name = "interior"
+bm = bmesh.new(); bm.from_mesh(inn.data); bm.normal_update()
+for v in bm.verts: v.co -= v.normal * 0.04
+bmesh.ops.reverse_faces(bm, faces=bm.faces); bm.to_mesh(inn.data); bm.free()
+mat = bpy.data.materials.new("interior"); mat.use_nodes = True
+b = mat.node_tree.nodes["Principled BSDF"]; b.inputs["Base Color"].default_value = (0.78, 0.72, 0.6, 1); b.inputs["Roughness"].default_value = 0.9
+inn.data.materials.clear(); inn.data.materials.append(mat)
 bpy.ops.export_scene.gltf(filepath=dst, export_format='GLB', use_selection=False, export_image_format='JPEG')
 print("FIT", json.dumps({"w": sx*s, "d": sy*s, "h": sz*s, "faces": len(o.data.polygons)}))
