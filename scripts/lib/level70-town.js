@@ -2,8 +2,8 @@
 // lay(ctx) builds it once per V (ctx.place.state.v70town), tick(ctx) runs each second. Every visible thing is a Tripo or Blender mesh
 // (art/l70-town/*.py build the house and igloo; art/l70-town/models.py fills M from the Tripo logs). Map: ./level70.js.
 import { HUT, SPOT } from "./level70.js";
-export const V = 0;
-const M = /*M*/{}/*M*/;
+export const V = 1;
+const M = /*M*/{"house": "/cdn/value.9c720700d57a2a87fdb79f1b9dbbf7f165badf6777c9884c9ea24e4ce30ee8f9.glb", "housecol": "/cdn/value.6d4c22f046170f6cf599277144dc9b6185bfe0c4298b8da27f8ec820589b2448.glb", "igloo": "/cdn/value.bf91214316bae9d634c33f7b8cc475f2bea9d87a64926c4d2815e1c3889f904c.glb", "lamp": "/cdn/value.df187005a34dd410bd5de07e4253a96b988c4a12840d62b14ec6248dd28cfc52.glb", "pole": "/cdn/value.76853fda663d318c17f12d0d8b66410e8ba2b131260ef1a373fe11a2a1629d1e.glb", "sedan": "/cdn/value.8bab8a27c8807090412480c7a890104a34ddd3178edf5f288a57d6941440a8d0.glb", "pickup": "/cdn/value.077bedb487349a0148196019451d1bd4543792c89251898bc5e1cc6e8777b37d.glb", "snowbank": "/cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb", "bldga": "/cdn/value.7e99de62f1d6a8e9730d41fbd07ad2686651db9127868f64e4c18fbbd1ef63ec.glb", "bldgb": "/cdn/value.198edb96a33553fe6d550ac9b35acc12754e4414467a7542fd372462df11898a.glb", "nhouse": "/cdn/value.82b465081f6775e6c5d0483430060c237943db4f47082b5d4e532099671dad29.glb", "shelter": "/cdn/value.e2e5e8dfabdb35770aee07467ae5acc35db33c82e79e3b110218ad9ad4318b03.glb", "swing": "/cdn/value.1d56eef705a4541fa9f97a6174118d8491550fe41610969a2420b08378acb671.glb"}/*M*/;
 const HUTG = "/cdn/value.0b1ccbbffd913e4a0cf600a19d17f5eb95171b6cb43c624ad0f61ee3fccf3f01.glb", DOORG = "/cdn/value.9fdae43fcaf5713af173eb262dfa4b526ccc98a79e34d99b72f458948db6e11d.glb";
 const HS = SPOT.house, IG = SPOT.igloo;
 export const HUT_DOOR = { x: HUT.x, y: 0, z: 45 };
