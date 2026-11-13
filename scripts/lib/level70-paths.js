@@ -6,7 +6,7 @@
 import { HOUSE_DOOR, IGLOO_DOOR } from "./level70-town.js";
 import { GARAGE_DOOR, HOTEL_DOOR } from "./level70-civic.js";
 import { CAMP_FIRE, RIG, DOCK_POST, TREES } from "./level70-wild.js";
-export const V = 4;
+export const V = 5;
 const TEX = "cdn/texture-trampled-packed-snow-path-with-boot-prints-and-slush.png";
 const HEAPS = ["/cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb", "/cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb"];
 export const WALKS = [
@@ -21,8 +21,8 @@ export const WALKS = [
 ];
 // invisible ramps: [id, x0, y0, z0, x1, y1, z1, width]
 const RAMPS = [
-  ["porch", -32.1, 0, -16.2, -36.1, 0.86, -16.2, 1.5],
-  ["cellar", -43.2, 0.86, -19.2, -43.2, 0.3, -21.4, 1.1],
+  ["porch", -33.4, 0, -16.2, -36.0, 0.56, -16.2, 1.5],
+  ["cellar", -43.2, 0.56, -19.6, -43.2, 0.02, -22.0, 1.1],
 ];
 const MOUTHS = WALKS.filter((w) => Math.abs(w.pts[0][0]) > 3 && Math.abs(w.pts[0][0]) < 6).map((w) => ({ x: w.pts[0][0], z: w.pts[0][1] }));
 const nearTree = (x, z, r) => TREES.some((t) => Math.hypot(t.x - x, t.z - z) < r);
