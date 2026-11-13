@@ -1,0 +1,13 @@
+# Leveled spawn lists for creature families (Shelly, Nov 13: "a new variant of deathmoths, lurkers, wretch that's more aggressive,
+# somewhat more different model wise, in those enemies' leveled spawn pools"). Fallout-style: a row turns up once the highest-level
+# player in the place reaches minLevel; its weight grows by `grow` per level past that. Every number is Savi's pick, tune freely.
+# Multipliers ride the family's own numbers: hp, dmg (bites/hits), speed, sight; xp is the kill reward multiplier.
+lurker:
+  - { id: base, minLevel: 1, weight: 100, grow: 0 }
+  - { id: frenzied, name: "Frenzied Lurker", minLevel: 4, weight: 20, grow: 8, cap: 70, hp: 1.6, dmg: 1.45, speed: 1.2, sight: 1.3, snap: 0.45, xp: 1.8 }
+moths:
+  - { id: base, minLevel: 1, weight: 100, grow: 0 }
+  - { id: razorwing, name: "Razorwing Swarm", minLevel: 5, weight: 20, grow: 8, cap: 70, hp: 1.5, dmg: 1.7, speed: 1.35, sight: 1.4, xp: 1.8 }
+wretch:
+  - { id: base, minLevel: 1, weight: 100, grow: 0 }
+  - { id: hollow, name: "Hollow-Mask", minLevel: 6, weight: 25, grow: 10, cap: 80, hp: 1.5, dmg: 1.35, speed: 1.15, xp: 1.8 }
