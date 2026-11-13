@@ -31,7 +31,7 @@ const seed = (s, g) => {
   return { f, i };
 };
 // a faction's own uniform lets you pass for one of them at a distance; up close (DISGUISE_NEAR m) they see through it
-export const UNIFORMS = { meg: ["megjacket"], bntg: ["bntgvest"] };
+export const UNIFORMS = { meg: ["megjacket", "cpjacket", "lljacket", "qmvest", "wwplate"], bntg: ["bntgvest", "bntgcoat", "bntgguard"] };
 export const DISGUISE_NEAR = 3;
 export const fameOf = (s, g) => Math.round(seed(s, g).f);
 export const infamyOf = (s, g) => Math.round(seed(s, g).i);

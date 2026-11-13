@@ -42,12 +42,12 @@ leveled:
   # what a job wears (Shelly, Nov 7: "disperse clothes/armors to existing npcs and make sure they make sense"): a role's rows replace its
   # faction's for the slots they cover; pats: fabrics it leans to (60%). Savi's picks.
   roles:
-    scout:     { rows: [jacket, padjacket, cargo, pants, boots, steeltoe, beanie, padbeanie, cap, shades, scarf, bntgvest], pats: [camo, canvas], extra: { hat: 0.65, eyew: 0.35, neck: 0.3 } }
+    scout:     { rows: [jacket, padjacket, cargo, pants, boots, steeltoe, beanie, padbeanie, cap, shades, scarf, bntgvest, bntgcoat, bntgcap], pats: [camo, canvas], extra: { hat: 0.65, eyew: 0.35, neck: 0.3 } }
     guard:     { rows: [megjacket, wwplate, wwhelmet, padjacket, wirehood, cargo, steeltoe, boots, cap, padbeanie, shades, hazmat], pats: [camo, canvas, leather], extra: { hat: 0.85, eyew: 0.5, neck: 0.05 } }
     agent:     { rows: [megjacket, cpjacket, qmvest, padjacket, cargo, pants, boots, steeltoe, cap, shades, scarf, hazmat], pats: [camo, canvas], extra: { hat: 0.6, eyew: 0.45, neck: 0.15 } }
     captain:   { rows: [padjacket, jacket, cargo, slacks, steeltoe, boots, cap, shades, scarf], pats: [leather, canvas], extra: { hat: 0.9, eyew: 0.3, neck: 0.4 } }
     medic:     { rows: [lljacket, longsleeve, apron, slacks, pants, sneakers, boots, glasses, cap], pats: [weave, canvas], extra: { hat: 0.15, eyew: 0.6, neck: 0.05 } }
-    trader:    { rows: [apron, sweater, jacket, overalls, pants, cargo, boots, sneakers, beanie, cap, scarf, glasses, bntgvest], pats: [plaid, denim, knit, canvas], extra: { hat: 0.5, eyew: 0.3, neck: 0.4 } }
+    trader:    { rows: [apron, sweater, jacket, overalls, pants, cargo, boots, sneakers, beanie, cap, scarf, glasses, bntgvest, bntgcoat, bntgcap], pats: [plaid, denim, knit, canvas], extra: { hat: 0.5, eyew: 0.3, neck: 0.4 } }
     quarter:   { rows: [apron, padjacket, jacket, cargo, overalls, steeltoe, boots, cap, glasses], pats: [canvas, denim, leather], extra: { hat: 0.5, eyew: 0.4, neck: 0.1 } }
     keeper:    { rows: [sweater, apron, longskirt, pants, slippers, boots, scarf, glasses], pats: [knit, cable, floral], extra: { hat: 0.1, eyew: 0.5, neck: 0.5 } }
     clerk:     { rows: [officeshirt, longsleeve, slacks, longskirt, sneakers, glasses, bowtie], pats: [pinstripe, weave], extra: { hat: 0, eyew: 0.6, neck: 0.5 } }
@@ -119,6 +119,9 @@ rows:
   - { id: qmvest,      slot: topw, kind: tank,       name: Quick Match rig vest,        dr: 6, kg: 1.8, rarity: agency, strict: true, level: 10, colours: [c46a2a], pats: [canvas] }   # the improvisers: orange webbing, pouches
   - { id: wwplate,     slot: topw, kind: apron,      name: Wild Warriors plate carrier, dr: 9, kg: 4.6, rarity: agency, strict: true, level: 16, colours: [3a4048], pats: [camo] }     # the protectors: heaviest top in the game
   - { id: wwhelmet,    slot: hat,  kind: beanie,     name: Wild Warriors padded helmet, dr: 4, kg: 1.1, rarity: agency, strict: true, level: 14, colours: [3a4048], pats: [camo] }
+  - { id: bntgcoat,    slot: topw, kind: jacket,     name: B.N.T.G. courier's duster,   dr: 6, kg: 2.0, rarity: agency, strict: true, level: 10, colours: [6b6440], pats: [canvas] }   # Nov 13 B.N.T.G. revamp: couriers on the long routes
+  - { id: bntgguard,   slot: topw, kind: apron,      name: Trader's Vault plate carrier, dr: 9, kg: 4.4, rarity: agency, strict: true, level: 16, colours: [8a6a3c], pats: [canvas] }   # the Vault watch
+  - { id: bntgcap,     slot: hat,  kind: cap,        name: B.N.T.G. trader's flat cap,   dr: 1, kg: 0.2, rarity: agency, strict: true, level: 4,  colours: [5a3a2a], pats: [canvas] }
   - { id: tmcap,       slot: hat,  kind: cap,        name: Track Mappers survey cap,    dr: 2, kg: 0.2, rarity: agency, strict: true, level: 6,  colours: [d8b23a], pats: [canvas] }   # the gatherers: mustard, chalk-marked brim
   # Level 5's hotel wardrobe: old kinds in the Terror Hotel's own cuts (reuse is fine, Shelly). places: rolls only there (Savi's picks for dr/kg/rarity)
   - { id: bellhop,     slot: topw, kind: jacket,     name: Bellhop jacket,     dr: 3, kg: 0.8, rarity: uncommon, places: [level5], strict: true, colours: [b0302a, 7a1f1f], pats: [velvet, weave] }
