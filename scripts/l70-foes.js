@@ -3,7 +3,7 @@
 import { SND, flat, yawTo, downed, hit, killerOf } from "./lib/l5-hostile.js";
 import { route } from "./lib/level70-nav.js";
 export const updateSchedule = { every: 3 };
-export const F = { froidling: { hp: 55, bite: 9, biteMs: 1100, stalk: 3.2, run: 6.8, ring: 10, notice: 32, loot: "froidpelt", name: "Froidling", lie: 0.3, bob: 9, packMs: 900 },
+export const F = { froidling: { hp: 110, bite: 16, biteMs: 850, stalk: 4.2, run: 8.4, ring: 10, notice: 40, loot: "froidpelt", name: "Snow Hound", lie: 0.3, bob: 9, packMs: 900 },
   deathrat70: { hp: 22, bite: 4, chill: 6, biteMs: 900, walk: 1.6, run: 7.4, notice: 16, loot: "meat:rat", name: "White Death Rat", lie: 0.16, bob: 5 } };
 const mem = new Map(), packs = {}; let fires = [], firesAt = -1e9;
 const yawOfRot = (r) => typeof r === "number" ? r : r?.yaw != null ? r.yaw : r?.w != null ? (Math.atan2(2 * (r.w * r.y + r.x * r.z), 1 - 2 * (r.y * r.y + r.x * r.x)) * 180) / Math.PI : 0;

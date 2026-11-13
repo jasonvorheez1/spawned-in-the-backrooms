@@ -224,9 +224,9 @@ export function handleDialogueQuest70(ctx, p, npc, text) {
       return { reply: "B.N.T.G. paperwork. I can sell this back to the B.N.T.G. for twice what I'm paying you. I'm telling you that because I'm honest. Not generous. Honest.", mood: "happy" }; }
   }
   if (id === INES) {
-    if (t.includes("need doing") && !s.l70pelt) { s.l70pelt = 1; s.l70froid0 = kills(s, "froidling"); setQuest(s, PID, { name: PNAME, step: `Kill ${FROIDS} froidlings in the woods and outskirts`, mark: M(INES) });
+    if (t.includes("need doing") && !s.l70pelt) { s.l70pelt = 1; s.l70froid0 = kills(s, "froidling"); setQuest(s, PID, { name: PNAME, step: `Kill ${FROIDS} snow hounds in the woods and outskirts`, mark: M(INES) });
       tell(ctx, p, `Quest Started: ${PNAME}`); return { reply: "Froidlings. Little white buggers, come in packs, steal anything with a zipper. Thin them out. Six. Then bring me four pelts, the Crown taxes pelts. I don't make the rules. I enforce them. Grumpily.", mood: "neutral" }; }
-    if (t.includes("six froidlings")) { s.l70pelt = 2; setQuest(s, PID, { name: PNAME, step: `Bring ${PELTS} froidling pelts to Ines, or sell them to Odell`, mark: M(INES) });
+    if (t.includes("six froidlings")) { s.l70pelt = 2; setQuest(s, PID, { name: PNAME, step: `Bring ${PELTS} hound pelts to Ines, or sell them to Odell`, mark: M(INES) });
       return { reply: "Good. Now the pelts. Four. Odell will offer you more for them. Odell is a weasel in a parka.", mood: "happy" }; }
     if (t.includes("pelts for the guard")) { give(s, "froidpelt", -PELTS); s.l70pelt = 99; addRep(s, "froid", 15); pay(ctx, p, "pelt", PID, PNAME, "Paid the pelt tax to the River Guard");
       return { reply: "Tax paid, in full, with a smile. Well. With a face. Thank you. The Guard remembers.", mood: "happy" }; }
@@ -277,7 +277,7 @@ export function tick(ctx) {
   for (const p of ctx.place.players) {
     const s = p.state, at = p.feetPosition; if (!s || !at) continue;
     if (s.l70rats != null && s.l70q === 2 && kills(s, "deathrat70") - s.l70rats >= RATS && !s.l70ratsTold) { s.l70ratsTold = true; setQuest(s, QID, { name: QNAME, step: "The rats are dead. Tell Odell", mark: M(ODELL) }); }
-    if (s.l70pelt === 1 && !s.l70froidTold) { const n = Math.min(FROIDS, kills(s, "froidling") - (s.l70froid0 ?? 0)); if (n !== s.l70froidN && n < FROIDS) { s.l70froidN = n; setQuest(s, PID, { name: PNAME, step: `Kill ${FROIDS} froidlings in the woods and outskirts (${n}/${FROIDS})`, mark: M(INES) }); } }
+    if (s.l70pelt === 1 && !s.l70froidTold) { const n = Math.min(FROIDS, kills(s, "froidling") - (s.l70froid0 ?? 0)); if (n !== s.l70froidN && n < FROIDS) { s.l70froidN = n; setQuest(s, PID, { name: PNAME, step: `Kill ${FROIDS} snow hounds in the woods and outskirts (${n}/${FROIDS})`, mark: M(INES) }); } }
     if (s.l70rats != null && s.l70q === 2 && !s.l70ratsTold) { const n = Math.min(RATS, kills(s, "deathrat70") - s.l70rats); if (n !== s.l70ratN && n < RATS) { s.l70ratN = n; setQuest(s, QID, { name: QNAME, step: `Kill the death rats (${n}/${RATS})`, mark: M(ODELL) }); } }
     if (s.l70pelt === 1 && kills(s, "froidling") - (s.l70froid0 ?? 0) >= FROIDS && !s.l70froidTold) { s.l70froidTold = true; setQuest(s, PID, { name: PNAME, step: "Six down. Tell Sergeant Ines", mark: M(INES) }); }
     const nearFire = fires.some((f) => Math.hypot(f.x - at.x, f.z - at.z) < COLD.fireR);
