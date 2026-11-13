@@ -11,6 +11,7 @@ import { l26Tick } from "./lib/l26-cut.js"
 import { hubCutTick } from "./lib/hub-cut.js"
 import { dinaTick } from "./lib/dina-quest.js"
 import { errandTick } from "./lib/errands.js"
+import { squadTick, squadFollow } from "./lib/hit-squad.js"
 import { animate } from "builtin/tween";
 import { toHub } from "./lib/hub.js"
 const MUSIC = "/cdn/moodboard-lowpoly-cozy/music-soft-mellow-fingerpicked-acoustic-guitar-and-warm-rhodes-early-2000s-bedroom-calm-loop.mp3"; // the drone was exhausting (johnadams2): soft and quiet instead
@@ -60,6 +61,7 @@ export function update(ctx) {
   if (place === "thehub" && !st.menuOpen && (st.hubcut || !st.hubPhoebe)) { if (hubCutTick(ctx, ses, st)) return ctx.sleep(0); if (!st.hubPhoebe) return ctx.sleep(0.5) }
   else ses.hubIn = null
   if (place !== "tutorial0" && dinaTick(ctx, ses, st, place)) return ctx.sleep(0)
+  squadTick(ctx, ses, st, place); if (ctx.now() - (ses.sqFollowAt ?? 0) > 3000) { ses.sqFollowAt = ctx.now(); squadFollow(ctx) } // factions that hate you send people (scripts/lib/hit-squad.js)
   errandTick(ctx, ses, st, place) // odd jobs people hand out (scripts/lib/errands.js)
   if (st.tut) tutTick(ctx, st)
   const playing = music(ctx, place !== "bonus" && ((st.menuOpen && st.menuKind === "title") || (place === "intake" && !st.cut))) // the mall has its own track: the title theme never plays over it (shelly, Nov 12)
