@@ -120,7 +120,7 @@ function layGammaSignage(ctx) {
   if (GENS.length) {
     const g0 = GENS[0];
     ctx.spawn({ tags: ["l3sign"], feetPosition: { x: g0.x - 3.8, y: 1.9, z: g0.z }, rotation: { yaw: 90 }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 1.8, height: 0.45, depth: 0.02 }, material: { color: "oklch(0.25 0.04 40)", roughness: 0.9 },
-      ui: '<div face="right" width="1.8m" style="font-size:85px;font-weight:900;color:#ffaa33;text-align:center;line-line:1.15">DANGER: 10,000 VOLTS<div style="font-size:50px;color:#ffd060">TRANSFORMER SUB-STATION · LIVE ARC HAZARD</div></div>' });
+      ui: '<div face="right" width="1.8m" style="font-size:85px;font-weight:900;color:#ffaa33;text-align:center;line-height:1.15">DANGER: 10,000 VOLTS<div style="font-size:50px;color:#ffd060">TRANSFORMER SUB-STATION · LIVE ARC HAZARD</div></div>' });
   }
   // Indestructible bars caution stencil:
   if (OOB.length) {
