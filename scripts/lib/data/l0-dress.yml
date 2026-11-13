@@ -1,6 +1,6 @@
 # Level 0 dressing (Shelly Nov 12: "use AAA quality, tripo and materials to improve level 0 + improve placements + more variety").
 # Tripo pieces, each placed where it belongs: cubicles in the Abandoned Offices, coolers on hall walls, wet-floor signs by the soaked arch rooms. Counts are Savi's picks.
-v: 5
+v: 6
 models:
   partition: /cdn/value.d591f5cb3377610f5d5845dfb1a3c32e6e7dbe3d839654e08d35730a88f341d1.glb   # fabric cubicle panel, 1.4 m wide, 1.5 m tall
   cooler: /cdn/value.07799be5e46bec639736b31a87f3ea8cd4fb506cca67c1718e40b2fb2594574e.glb      # beige water cooler, 1.25 m
