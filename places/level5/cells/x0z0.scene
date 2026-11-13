@@ -4199,10 +4199,9 @@ l5-office-desk:
   rotation: {yaw: 180}
   tags: [l5-office]
 l5-office-door:
-  children: [{feetPosition: {x: 0.56, y: 0, z: 0}, material: {color: oklch(0.3 0.06 40), roughness: 0.5, texture: cdn/texture-worn-hardwood-grain.png}, primitive: {depth: 0.05, height: 2.36, kind: box, width: 1.1}}, {feetPosition: {x: 0.98, y: 1, z: 0.04}, material: {color: oklch(0.7 0.11 80), metalness: 0.9, roughness: 0.3}, primitive: {kind: sphere, radius: 0.035}}, {feetPosition: {x: 0.56, y: 1.62, z: 0.035}, vector: "<svg viewBox='0 0 300 80' width='0.6m'><rect x='2' y='2' width='296' height='76' rx='6' fill='#2a1c12' stroke='#b8923a' stroke-width='4'/><text x='150' y='50' text-anchor='middle' font-family='serif' font-size='30' fill='#e8c983'>PROPRIETOR</text></svg>"}]
-  feetPosition: {x: -34, y: 0, z: -13.2}
+  children: [{feetPosition: {x: 0.56, y: 0, z: 0}, material: {color: oklch(0.3 0.06 40), roughness: 0.5, texture: cdn/texture-worn-hardwood-grain.png}, physics: {body: static, collider: box}, primitive: {depth: 0.05, height: 2.36, kind: box, width: 1.1}}, {feetPosition: {x: 0.98, y: 1, z: 0.04}, material: {color: oklch(0.7 0.11 80), metalness: 0.9, roughness: 0.3}, primitive: {kind: sphere, radius: 0.035}}, {feetPosition: {x: 0.56, y: 1.62, z: 0.035}, vector: "<svg viewBox='0 0 300 80' width='0.6m'><rect x='2' y='2' width='296' height='76' rx='6' fill='#2a1c12' stroke='#b8923a' stroke-width='4'/><text x='150' y='50' text-anchor='middle' font-family='serif' font-size='30' fill='#e8c983'>PROPRIETOR</text></svg>"}]
+  feetPosition: {x: -33.96, y: 0, z: -13.2}
   id: l5-office-door
-  physics: {body: static, collider: box}
   rotation: {yaw: 90}
   tags: [l5-office]
 l5-office-globe:
