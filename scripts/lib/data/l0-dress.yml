@@ -1,6 +1,6 @@
 # Level 0 dressing (Shelly Nov 12: "use AAA quality, tripo and materials to improve level 0 + improve placements + more variety").
 # Tripo pieces, each placed where it belongs: cubicles in the Abandoned Offices, coolers on hall walls, wet-floor signs by the soaked arch rooms. Counts are Savi's picks.
-v: 6
+v: 7
 models:
   partition: /cdn/value.d591f5cb3377610f5d5845dfb1a3c32e6e7dbe3d839654e08d35730a88f341d1.glb   # fabric cubicle panel, 1.4 m wide, 1.5 m tall
   cooler: /cdn/value.07799be5e46bec639736b31a87f3ea8cd4fb506cca67c1718e40b2fb2594574e.glb      # beige water cooler, 1.25 m
@@ -14,10 +14,20 @@ counts: { cubicles: 26, coolers: 14, wetsigns: 12 }
 kit: [diffuser, returngrille, sprinkler, smokedet, troffer-hang, tile-fallen, outlet, switch, thermostat, exitsign, extinguisher, firepull, wallvent, door-office, boxes-stack, box-single, folding-table, stack-chair, filing, crt, phone, bin, fakeplant, copier, sleepingbag, backpack, lantern, almond-crate, campstove, note-clipboard, tape-marks, shoes]
 small: [sprinkler, smokedet, outlet, switch, thermostat, firepull, lantern, note-clipboard, tape-marks, shoes, phone, almond-crate]   # drawn to 22 m, no shadow
 batch: 220          # rows laid per sim tick
-ceiling: { diffuserX: 3, diffuserZ: 2, grilleOne: 14, sprinklerEvery: 2, smokeOne: 20, troffers: 8, fallenTiles: 20 }
+ceiling: { diffuserX: 3, diffuserZ: 2, grilleOne: 14, sprinklerEvery: 2, smokeOne: 20, troffers: 14, fallenTiles: 20 }
 wall: { gap: 0.5, doors: 40, switches: 40, exitsigns: 30, firepairs: 24, thermostats: 30, wallvents: 40, outletEvery: 3 }
 props: { hallShare: 0.15, tables: 16, chairs: 40, crt: 12, phone: 12, bins: 30, filing: 30, copier: 8, stacks: 40, singles: 30, plants: 14 }
 camps: 6
+# each camp rolls a story: what's missing (drop: chance) and what's extra (add: [kind, along back wall, out from it, yaw, jitter])
+campVariants:
+  solo: { drop: { shoes: 0.5, tape-marks: 0.4 } }
+  pair: { drop: { note-clipboard: 0.5 }, add: [[sleepingbag, -1.4, 1.11, 0, 4], [backpack, -0.85, 0.3, 200, 25], [shoes, -1.4, 2.3, 180, 30]] }
+  hoard: { drop: { shoes: 1 }, add: [[boxes-stack, -1.25, 0.45, 0, 6], [box-single, -1.2, 1.4, 0, 35], [almond-crate, -0.55, 0.95, 90, 25], [almond-crate, 0.3, 2.2, 40, 30]] }
+  fled: { drop: { campstove: 1, backpack: 1, lantern: 0.6, almond-crate: 0.7 }, add: [[bin, -1.25, 0.3, 0, 180], [box-single, -0.9, 1.7, 0, 50]] }
+# cubicles: chances a desk is gone, a chair gone or knocked over, a panel missing; shove/deskYaw: how far a desk sits off true
+offices: { cleared: 0.22, noChair: 0.2, toppled: 0.22, toppledLift: 0.27, spun: 0.25, noPanel: 0.18, clutter: 0.35, shove: 0.35, deskYaw: 9 }
+# lights whose cell is within reach of the Blackout Zone: dead share, the rest flicker-weak and cold
+darkRim: { reach: 1, dead: 0.6, failing: 1.6, color: "oklch(0.86 0.04 210)" }
 
 # per-piece corrections seen in the engine look: a mesh facing off its kit axis, a door frame sunk flush in the wall
 fix:

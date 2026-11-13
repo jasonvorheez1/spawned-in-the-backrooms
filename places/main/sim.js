@@ -68,13 +68,21 @@ function dressPlan(ctx) {
   const M = DR.models, add = (spec) => { plan.push(spec); const k = spec.tags[spec.tags.length - 1]; count[k] = (count[k] ?? 0) + 1; };
   const put = (kind, pos, yaw, extra = {}) => M[kind] && add({ tags: ["l0dress", "furniture", kind], feetPosition: pos, rotation: yaw, visibleRange: { max: 46 }, layout: fitBox(DR.sizes[kind]), model: { id: M[kind], forward: "-z" }, physics: { body: "static", collider: "box" }, ...extra });
   const cells = (zones, n, ok) => { const out = []; for (let k = 0; k < 4000 && out.length < n; k++) { const cx = 1 + Math.floor(rnd() * (N - 2)), cz = 1 + Math.floor(rnd() * (N - 2)), key = cx + "," + cz; if (used.has(key) || inHub(cx, cz) || hasPit(cx, cz) || hasPillar(cx, cz) || !zones.includes(zoneOf(cx, cz))) continue; const w = sideWall(cx, cz); if (!w.length || (ok && !ok(cx, cz))) continue; used.add(key); out.push([cx, cz, w[Math.floor(rnd() * w.length)]]); } return out; };
+  // cubicles, each left its own way (l0-dress.yml offices): some cleared out, chairs gone or knocked over, desks shoved off the wall
+  const OF = DR.offices ?? {}, cubeLeft = [];
   for (const [cx, cz, d] of cells(["offices"], DR.counts.cubicles)) {
-    const side = rnd() < 0.5 ? -1 : 1, desk = wallPose(cx, cz, d, side * 0.4, 0.42), yaw = desk.yaw + 180;
-    add({ tags: ["l0dress", "breakable", "furniture", "container", "desk"], feetPosition: { x: desk.x, y: 0, z: desk.z }, rotation: yaw, visibleRange: { max: 46 }, castShadow: true, physics: { body: "static", collider: "box" }, model: fmodel("desk"), state: { mat: "wood", hp: 80, items: null, name: "Desk drawers" } });
-    const ch = wallPose(cx, cz, d, side * 0.4 + (rnd() - 0.5) * 0.4, 1.25);
-    add({ tags: ["l0dress", "breakable", "furniture", "chair"], feetPosition: { x: ch.x, y: 0, z: ch.z }, rotation: desk.yaw + (rnd() - 0.5) * 70, visibleRange: { max: 46 }, physics: { body: "static", collider: "box" }, model: fmodel("chair"), state: { mat: "metal", hp: 45 } });
-    const pn = wallPose(cx, cz, d, side * 0.4 - side * 0.95, 0.75);
-    put("partition", { x: pn.x, y: 0, z: pn.z }, desk.yaw + 90 + (rnd() - 0.5) * 6, { state: { mat: "wood", hp: 60 }, tags: ["l0dress", "breakable", "furniture", "partition"] });
+    const side = rnd() < 0.5 ? -1 : 1, chOff = (rnd() - 0.5) * 0.4, chYaw = (rnd() - 0.5) * 70, pnYaw = (rnd() - 0.5) * 6;
+    const hv = (s) => hash(cx, cz, s), cleared = hv(601) < (OF.cleared ?? 0), shove = hv(602) * (OF.shove ?? 0);
+    const desk = wallPose(cx, cz, d, side * 0.4, 0.42 + shove), yaw = desk.yaw + 180 + (hv(604) - 0.5) * 2 * (OF.deskYaw ?? 0);
+    if (!cleared) add({ tags: ["l0dress", "breakable", "furniture", "container", "desk"], feetPosition: { x: desk.x, y: 0, z: desk.z }, rotation: yaw, visibleRange: { max: 46 }, castShadow: true, physics: { body: "static", collider: "box" }, model: fmodel("desk"), state: { mat: "wood", hp: 80, items: null, name: "Desk drawers" } });
+    else cubeLeft.push([hv(606) < 0.5 ? "box-single" : "bin", desk.x, desk.z, hv(607) * 360]);
+    const rc = hv(603), noChair = OF.noChair ?? 0, top = noChair + (OF.toppled ?? 0);
+    if (rc >= noChair) {
+      const ch = wallPose(cx, cz, d, side * 0.4 + chOff * (rc < top ? 3 : 1), rc < top ? 1.6 : 1.25 + shove), spun = hv(608) < (OF.spun ?? 0) ? 180 : 0;
+      add({ tags: ["l0dress", "breakable", "furniture", "chair"], feetPosition: { x: ch.x, y: rc < top ? (OF.toppledLift ?? 0.27) : 0, z: ch.z }, rotation: rc < top ? { yaw: hv(609) * 360, pitch: 0, roll: 90 } : desk.yaw + chYaw + spun, visibleRange: { max: 46 }, physics: { body: "static", collider: "box" }, model: fmodel("chair"), state: { mat: "metal", hp: 45 } });
+    }
+    if (cleared || hv(610) >= (OF.noPanel ?? 0)) { const pn = wallPose(cx, cz, d, side * 0.4 - side * 0.95, 0.75); put("partition", { x: pn.x, y: 0, z: pn.z }, desk.yaw + 90 + pnYaw * (cleared ? 3 : 1), { state: { mat: "wood", hp: 60 }, tags: ["l0dress", "breakable", "furniture", "partition"] }); }
+    if (!cleared && hv(611) < (OF.clutter ?? 0)) { const c = wallPose(cx, cz, d, side * 0.4 + side * 0.85, 0.3); cubeLeft.push([hv(612) < 0.5 ? "bin" : "box-single", c.x, c.z, hv(613) * 360]); }
   }
   for (const [cx, cz, d] of cells(["halls", "expanse", "offices"], DR.counts.coolers)) { const w = wallPose(cx, cz, d, (rnd() - 0.5) * 2.2, 0.22); put("cooler", { x: w.x, y: 0, z: w.z }, w.yaw + (rnd() - 0.5) * 10, { state: { mat: "metal", hp: 50 }, tags: ["l0dress", "breakable", "furniture", "cooler"] }); }
   for (const [cx, cz] of cells(["arches", "halls"], DR.counts.wetsigns, (cx, cz) => [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => zoneOf(cx + a, cz + b) === "arches"))) { const c = cellCenter(cx, cz); put("wetsign", { x: c.x + (rnd() - 0.5) * 2, y: 0, z: c.z + (rnd() - 0.5) * 2 }, rnd() * 360, { physics: { body: "static", collider: "box" }, tags: ["l0dress", "furniture", "wetsign"] }); }
@@ -85,6 +93,7 @@ function dressPlan(ctx) {
     const [w, h, d] = k.size, small = SMALL.has(kind), solid = k.origin === "floor" && Math.max(w, d) > 0.3 && h > 0.15 && !kind.startsWith("door");
     add({ tags: ["l0dress", kind], feetPosition: { x, y, z }, rotation: yaw, visibleRange: { max: small ? 22 : 46 }, ...(small || k.origin === "ceiling" ? { castShadow: false } : {}), layout: fitBox(k.size), model: { id: k.id, forward: k.fwd }, ...(solid ? { physics: { body: "static", collider: "box" } } : {}) });
   };
+  for (const [kind, x, z, yaw] of cubeLeft) kput(kind, x, 0, z, yaw);
   const C = DR.ceiling, Wc = DR.wall, P = DR.props;
   const order = (seed, ok) => { const out = []; for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) if (ok(cx, cz)) out.push([hash(cx, cz, seed), cx, cz]); return out.sort((a, b) => a[0] - b[0]).map(([, cx, cz]) => [cx, cz]); };
   const lo = (c) => c * S - HALF;
@@ -181,14 +190,11 @@ function dressPlan(ctx) {
     if (campCells.some(([a, b]) => Math.abs(a - cx) + Math.abs(b - cz) < 6)) continue;
     const w3 = wallsOf(cx, cz), back = [0, 1, 2, 3].find((d) => w3.includes(d) && w3.includes((d + 1) % 4) && w3.includes((d + 3) % 4)), sg = hash(cx, cz, 503) < 0.5 ? 1 : -1;
     const at = (u, v) => wallPose(cx, cz, back, sg * u, v), yaw0 = wallPose(cx, cz, back, 0).yaw;
-    let p = at(1.4, 1.11); kput("sleepingbag", p.x, 0, p.z, yaw0 + jit(cx, cz, 505, 3)); // along the side wall, its head at the back wall
-    p = at(0.85, 0.3); kput("backpack", p.x, 0, p.z, yaw0 + 160 + jit(cx, cz, 507, 20));
-    p = at(0.4, 0.22); kput("lantern", p.x, 0, p.z, jit(cx, cz, 509, 180));
-    p = at(0.85, 0.9); kput("almond-crate", p.x, 0, p.z, yaw0 + 90 + jit(cx, cz, 511, 12));
-    p = at(0.8, 1.6); kput("campstove", p.x, 0, p.z, yaw0 - 90 + jit(cx, cz, 513, 25));
-    p = at(0.35, 1.0); kput("tape-marks", p.x, 0, p.z, jit(cx, cz, 515, 180));
-    p = at(0.3, 1.55); kput("note-clipboard", p.x, 0, p.z, yaw0 + jit(cx, cz, 517, 30));
-    p = at(1.4, 2.3); kput("shoes", p.x, 0, p.z, yaw0 + 180 + jit(cx, cz, 519, 25)); // at the foot
+    // one camp kit, a different story each time (l0-dress.yml campVariants): two sleepers, a hoard, one left in a hurry
+    const VN = Object.keys(DR.campVariants ?? { solo: {} }), V = DR.campVariants?.[VN[(campCells.length + Math.floor(hash(cx, cz, 521) * VN.length)) % VN.length]] ?? {};
+    const CAMP = [["sleepingbag", 1.4, 1.11, 0, 3], ["backpack", 0.85, 0.3, 160, 20], ["lantern", 0.4, 0.22, null, 180], ["almond-crate", 0.85, 0.9, 90, 12], ["campstove", 0.8, 1.6, -90, 25], ["tape-marks", 0.35, 1.0, null, 180], ["note-clipboard", 0.3, 1.55, 0, 30], ["shoes", 1.4, 2.3, 180, 25]];
+    CAMP.forEach(([kind, u, v, yo, j], i) => { if (hash(cx, cz, 531 + i) < (V.drop?.[kind] ?? 0)) return; const p = at(u, v); kput(kind, p.x, 0, p.z, (yo == null ? 0 : yaw0 + yo) + jit(cx, cz, 505 + i * 2, j)); });
+    (V.add ?? []).forEach(([kind, u, v, yo, j], i) => { const p = at(u, v); kput(kind, p.x, 0, p.z, yaw0 + yo + jit(cx, cz, 551 + i, j)); });
     campCells.push([cx, cz]); used.add(cx + "," + cz);
   }
   // plants: corners near the safe room, where someone still tried
@@ -227,6 +233,12 @@ function dressPlan(ctx) {
   return { plan, count };
 }
 export function dress(ctx, step) {
+  if (step === 0 && DR.darkRim) { // the blackout's edge: the lamps that reach into it are dead or failing, never dimmer copies
+    let i = 0; for (const id of Object.keys(ctx.place.objects)) { if (!id.startsWith("level0-lights/")) continue; const o = ctx.place.objects[id], f = o?.feetPosition; if (!f || !o.light) continue; const { cx, cz } = cellAt(f.x, f.z), r = DR.darkRim.reach ?? 1;
+      let near = false; for (let a = -r; a <= r && !near; a++) for (let b = -r; b <= r; b++) if (cx + a >= 0 && cz + b >= 0 && cx + a < N && cz + b < N && zoneOf(cx + a, cz + b) === "dark") { near = true; break; }
+      if (!near) continue; const h = hash(cx, cz, 701); i++;
+      o.light = { ...o.light, intensity: h < DR.darkRim.dead ? 0 : DR.darkRim.failing, color: h < DR.darkRim.dead ? o.light.color : DR.darkRim.color }; }
+    ctx.place.state.darkRimLights = i; }
   if (step === 0) for (const o of ctx.query({ tags: ["l0dress"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id);
   const { plan } = dressPlan(ctx), B = DR.batch ?? 200, part = plan.slice(step * B, step * B + B);
   for (const spec of part) { if (spec.tags.includes("desk")) spec.state.items = deskItems(ctx); ctx.spawn(spec); }
