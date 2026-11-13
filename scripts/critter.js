@@ -147,10 +147,10 @@ export function onInput(ctx, input) {
   }
   const d = input.actionData?.dress
   if (input.pressed?.dress && d && typeof d.k === 'string') {
-    if (d.k === 'stab') { if (['hair', 'face', 'body', 'wear'].includes(d.v)) st.salonTab = d.v; return } // the salon's service tabs
+    if (d.k === 'stab') { if (['hair', 'face', 'body', 'model', 'wear'].includes(d.v)) st.salonTab = d.v; return } // the salon's service tabs
     if (d.k === 'close') { if (st.salonOpen && st.sit) standUp(ctx); st.wardrobeOpen = false; st.salonOpen = false; if (st.wrMenu) { st.wrMenu = false; if (ctx.self.place !== 'intake') { st.menuOpen = true; st.menuKind = 'pause' } } return } // in the intake room, done walks you out (main-menu.js)
     if (d.k === 'face') { st.face = { expr: d.v, until: ctx.now() + C.holdFace * 1000 }; return }
-    if (d.k === 'tab') { if ((st.wrMenu ? ['body', 'face'] : ['body', 'face', 'clothes', 'outfits']).includes(d.v)) st.wrTab = d.v; return }
+    if (d.k === 'tab') { if ((st.wrMenu ? ['body', 'face', 'model'] : ['body', 'face', 'model', 'clothes', 'outfits']).includes(d.v)) st.wrTab = d.v; return }
     if (st.wrMenu) { // the menu's creator shapes the critter alone: clothes are loot, never picked here (Shelly)
       const keep = (l) => { const o = {}; for (const k of MENU_CLOTH) if (k in l) o[k] = l[k]; return o }
       if (d.k === 'random') { const cur = lookOf(ctx); dress(st, cur, { ...randomLook(ctx, cur, 'all'), ...keep(cur) }); st.face = null; return }

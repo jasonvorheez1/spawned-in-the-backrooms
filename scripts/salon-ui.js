@@ -5,7 +5,7 @@ import CW from './lib/data/cat-wardrobe.yml'
 // one body for everyone now (Shelly Nov 12: no species): the salon offers the new body's own options, the same 'dress' keys the creator sends
 const CN = { puff: 'mochi', wide: 'airplane', bob: 'bobtail', burns: 'sideburns', lynx: 'lynx tips', bangs: 'fur bangs', afropuff: 'afro puff', halfup: 'half up', sidetail: 'side tail', twintails: 'twin tails', long_h: 'long' }
 const CF = { neutral: 'calm', smile: 'smile', joy: 'happy', blep: 'blep', sad: 'sad', angry: 'angry', shock: 'shocked' }
-const SERVICES = [['hair', 'Hair', '✂'], ['face', 'Face', '✿'], ['body', 'Body', '◐']]
+const SERVICES = [['hair', 'Hair', '✂'], ['face', 'Face', '✿'], ['body', 'Body', '◐'], ['model', 'Custom Model', '◆']]
 const NM = { m: 'boy', f: 'girl', none: 'none', longsleeve: 'long sleeve', pjpants: 'pj pants', pajamas: 'pj top', longskirt: 'long skirt', tophat: 'top hat', partyhat: 'party hat', bowtie: 'bow tie', fullbeard: 'full beard' }
 const nice = (v) => NM[v] ?? String(v ?? 'none').replace(/^[mf]_/, '').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ')
 const act = (k, v = '') => `sendAction('dress',{k:'${k}',v:'${v}'})`
@@ -104,9 +104,6 @@ export function salon(ctx, player) {
       + (human ? row('Skin', '') + dots('skin', C.skin) : row('Fur', '') + dots('fur', C.fur))
       + row('Markings', nice(l.marks)) + chips('marks', human ? C.marks.filter((m) => ['none', 'freckles'].includes(m)) : C.marks)
       + row('Proportions', '') + `<div class="card">${sliders((k) => !['heightS', 'buildS'].includes(k) && !(human && FURRY.includes(k)) && (l.sex === 'f' || !['hipS', 'bustS'].includes(k)))}</div>`
-      + row('Custom model', l.modelUrl ? 'your plymodel' : l.model ? (C.models?.[l.model]?.name ?? '') : 'none')
-      + `<div class="card"><div class="chips" style="margin-top:8px"><button class="${!l.model && !l.modelUrl ? 'on' : ''}" onclick="${act('model', '')}">${human ? 'your body' : 'critter'}</button>${Object.entries(C.models || {}).map(([k, m]) => `<button class="${l.model === k ? 'on' : ''}" onclick="${act('model', k)}">${m.name}</button>`).join('')}${l.modelUrl ? `<button class="on">your plymodel</button>` : ''}</div>`
-      + `<div class="chips" style="margin-top:8px"><button onclick="this.nextElementSibling.click()">⬆ upload .plymodel</button><input type="file" accept=".plymodel" style="display:none" onchange="plyUpload(this)"></div><div id="ply-st" class="tip" style="margin-top:6px">any tower unite .plymodel, worn as your body</div></div>`
   } else {
     const slot = (t, k, ck) => `<div class="card">${row(t, nice(l[k]))}${chips(k, C[k])}${ck && l[k] !== 'none' ? `<div style="margin-top:7px">${dots(ck, C.cloth)}</div>` : ''}</div>`
     const fits = st.outfits || []
@@ -116,7 +113,10 @@ export function salon(ctx, player) {
   const gina = ctx.place.objects?.['bonus-stylist'], q = gina?.state?.queue ?? [], qi = q.indexOf(player.id)
   if (gina && gina.state?.with !== player.id) { // not her turn yet, or she's still walking over: a small plate, the chair keeps the cursor
     const w = qi > 0 ? `You're ${qi === 1 ? 'next' : '#' + (qi + 1)} in line` : 'Gina is on her way'
-    return `${CSS}<div id="glw" style="position:absolute;left:50%;bottom:120px;translate:-50% 0;padding:12px 20px;background:#2a1030;color:#ffe3f4;border:3px solid #ff71ce;box-shadow:4px 4px 0 #120616;font-size:20px;text-align:center;pointer-events:none"><div style="font-size:24px">✂ ${w}</div><div style="opacity:.75;font-size:15px;margin-top:4px">${qi > 0 ? 'Gina will come to your chair' : 'Sit tight'} · ${ctx.world.inputs?.actions?.interact?.label ?? 'E'} to get up</div></div>`
+    if (tab === 'model') body = row('Custom model', l.modelUrl ? 'your plymodel' : l.model ? (C.models?.[l.model]?.name ?? '') : 'none')
+      + `<div class="card"><div class="chips" style="margin-top:8px"><button class="${!l.model && !l.modelUrl ? 'on' : ''}" onclick="${act('model', '')}">${human ? 'your body' : 'critter'}</button>${Object.entries(C.models || {}).map(([k, m]) => `<button class="${l.model === k ? 'on' : ''}" onclick="${act('model', k)}">${m.name}</button>`).join('')}${l.modelUrl ? `<button class="on">your plymodel</button>` : ''}</div>`
+      + `<div class="chips" style="margin-top:8px"><button onclick="this.nextElementSibling.click()">⬆ upload .plymodel</button><input type="file" accept=".plymodel" style="display:none" onchange="plyUpload(this)"></div><div id="ply-st" class="tip" style="margin-top:6px">any tower unite .plymodel, worn as your body</div></div>`
+  return `${CSS}<div id="glw" style="position:absolute;left:50%;bottom:120px;translate:-50% 0;padding:12px 20px;background:#2a1030;color:#ffe3f4;border:3px solid #ff71ce;box-shadow:4px 4px 0 #120616;font-size:20px;text-align:center;pointer-events:none"><div style="font-size:24px">✂ ${w}</div><div style="opacity:.75;font-size:15px;margin-top:4px">${qi > 0 ? 'Gina will come to your chair' : 'Sit tight'} · ${ctx.world.inputs?.actions?.interact?.label ?? 'E'} to get up</div></div>`
   }
   const line = qi === 0 ? `<div class="q">✂ Gina is doing your hair</div>` : qi > 0 ? `<div class="q wait">Gina's finishing up with someone. You're ${qi === 1 ? 'next' : '#' + (qi + 1) + ' in line'}, change away meanwhile.</div>` : ''
   return `${CSS}<div id="gl" data-modal>

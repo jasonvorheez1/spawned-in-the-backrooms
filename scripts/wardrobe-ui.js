@@ -2,7 +2,7 @@
 import C from './lib/data/critter.yml'
 import CW from './lib/data/cat-wardrobe.yml'
 const NAMES = { m: 'boy', f: 'girl', none: 'none', tee: 't-shirt', tank: 'tank top', longsleeve: 'long sleeve', hoodie: 'hoodie', sweater: 'sweater', jacket: 'jacket', pajamas: 'pyjama top', apron: 'apron', dress: 'dress', pants: 'pants', shorts: 'shorts', pjpants: 'pyjama pants', overalls: 'overalls', skirt: 'skirt', longskirt: 'long skirt', sneakers: 'sneakers', boots: 'boots', slippers: 'slippers', bow: 'bow', flower: 'flower', cap: 'cap', beanie: 'beanie', tophat: 'top hat', crown: 'crown', headphones: 'headphones', partyhat: 'party hat', tuft: 'hair tuft', glasses: 'glasses', shades: 'sunglasses', scarf: 'scarf', bowtie: 'bow tie', bell: 'bell collar', cape: 'cape', round: 'round', tall: 'tall', wide: 'wide', freckles: 'freckles', stripes: 'stripes', patch: 'eye patch', heart: 'heart', stubble: 'stubble', mustache: 'mustache', goatee: 'goatee', handlebars: 'handlebars', fullbeard: 'full beard', chinstrap: 'chin strap', anchor: 'anchor', burly: 'burly', rugged: 'rugged', diamond: 'diamond' }
-const TABS = [['body', 'BODY', '01'], ['face', 'FACE', '02'], ['clothes', 'CLOTHES', '03'], ['outfits', 'OUTFITS', '04']]
+const TABS = [['body', 'BODY', '01'], ['face', 'FACE', '02'], ['model', 'CUSTOM MODEL', '03'], ['clothes', 'CLOTHES', '04'], ['outfits', 'OUTFITS', '05']]
 const CSS = `<style>
 @keyframes ccIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
 @keyframes ccScan{from{transform:translateY(-6px)}to{transform:translateY(0)}}
@@ -83,8 +83,8 @@ export function wardrobe(ctx, player) {
   SL_LOOK = l
   const human = (st.bodyStyle ?? ctx.world.state?.bodyStyle) === 'human' // human mode: no animal, fur, ears, snout or tail
   const FURRY_SL = ['earS', 'snoutS', 'tailS', 'waistS', 'hipS', 'headS'], FURRY_FT = ['snouty', 'foxlike'] // the human bodies carry no keys for these
-  const tabs = st.wrMenu ? TABS.slice(0, 2) : TABS // from the main menu: body and face only, clothes come from the world
-  const tab = st.wrMenu && !['body', 'face'].includes(st.wrTab) ? 'body' : (st.wrTab || 'body')
+  const tabs = st.wrMenu ? TABS.slice(0, 3) : TABS // from the main menu: body and face only, clothes come from the world
+  const tab = st.wrMenu && !['body', 'face', 'model'].includes(st.wrTab) ? 'body' : (st.wrTab || 'body')
   const grid = (k, list, names = NAMES) => `<div class="grid">${list.map((v) => tile(k, v, l[k] === v, names[v] || v)).join('')}</div>`
   const sws = (k, list) => `<div class="sws">${list.map((v) => sw(k, v, l[k] === v)).join('')}</div>`
   const slot = (title, k, colourKey) => `<div class="slot"><div class="sec" style="margin-top:2px"><span>${title}</span><span>${NAMES[l[k]] || l[k]}</span></div>${grid(k, C[k])}${colourKey && l[k] !== 'none' ? sws(colourKey, C.cloth) : ''}</div>`
@@ -122,10 +122,7 @@ export function wardrobe(ctx, player) {
     <div class="sec"><span>MARKINGS</span></div>${grid('marks', human ? C.marks.filter((m) => ['none', 'freckles'].includes(m)) : C.marks)}
     <div class="sec"><span>HAIR</span><span>${HN(l.hair)}</span></div><div class="grid">${['none', ...(l.sex === 'f' ? C.hairF : C.hairM)].map((v) => tile('hair', v, (l.hair || 'none') === v, HN(v))).join('')}</div>
     ${l.hair && l.hair !== 'none' ? `<div class="sec"><span>HAIR COLOUR</span></div>${sws('hairc', C.hairc)}` : ''}
-    <div class="sec"><span>PROPORTIONS</span></div>${sliderRows(C.sliders.filter((r) => !['heightS', 'buildS'].includes(r[0]) && !(human && FURRY_SL.includes(r[0])) && (l.sex === 'f' || !['hipS', 'bustS'].includes(r[0]))))}
-    <div class="sec"><span>IMPORTED MODELS</span><span>${l.modelUrl ? 'your upload' : l.model ? C.models[l.model]?.name || '' : human ? 'yours' : 'critter'}</span></div><div class="grid">${tile('model', '', !l.model && !l.modelUrl, human ? 'your body' : 'critter')}${Object.entries(C.models || {}).map(([k, m]) => tile('model', k, l.model === k, m.name)).join('')}</div>
-    <div style="font-size:11px;line-height:1.5;opacity:.85;margin:4px 0 6px;text-transform:none;letter-spacing:.02em">HOW TO GET A PLYMODEL<br>1. install <a href="https://developer.valvesoftware.com/wiki/SteamCMD" target="_blank" rel="noopener" style="color:#ffb642;text-decoration:underline;pointer-events:auto">SteamCMD</a> and open it<br>2. type <b>login anonymous</b> and press enter<br>3. on the <a href="https://steamcommunity.com/app/394690/workshop/" target="_blank" rel="noopener" style="color:#ffb642;text-decoration:underline;pointer-events:auto">Tower Unite workshop</a>, copy the link of the playermodel you want<br>4. paste it into <a href="https://steamworkshopdownloader.io/" target="_blank" rel="noopener" style="color:#ffb642;text-decoration:underline;pointer-events:auto">steamworkshopdownloader.io</a>, copy the line it gives you and paste that into SteamCMD<br>5. SteamCMD says where it saved it (steamapps/workshop/content/394690/...). press upload below and pick the .plymodel in that folder</div>
-    <div class="sl"><button style="flex:1;width:auto;padding:6px 0" onclick="this.nextElementSibling.click()">⬆ upload .plymodel</button><input type="file" accept=".plymodel" style="display:none" onchange="plyUpload(this)"></div><div id="ply-st" style="font-size:11px;opacity:.75;margin-top:4px">${l.modelUrl ? 'wearing your upload' : 'any tower unite .plymodel, worn as your body'}</div>`
+    <div class="sec"><span>PROPORTIONS</span></div>${sliderRows(C.sliders.filter((r) => !['heightS', 'buildS'].includes(r[0]) && !(human && FURRY_SL.includes(r[0])) && (l.sex === 'f' || !['hipS', 'bustS'].includes(r[0]))))}`
   else if (tab === 'face') body = `
     <div class="sec"><span>EYE SHAPE</span></div>${grid('eyes', C.eyes)}
     <div class="sec"><span>EYE COLOUR</span></div>${sws('eye', C.eye)}
@@ -157,6 +154,10 @@ export function wardrobe(ctx, player) {
       return `<div class="fit slot"><span class="nm">${i + 1}. ${nm}</span>${f ? `<button class="on" onclick="${act('wear', i)}">wear</button>` : ''}<button onclick="${act('save', i)}">save here</button></div>`
     }).join('') + `<div class="hint">saving keeps your whole look: ${human ? 'skin' : 'fur'}, colours, face and clothes. wear it again in one click.</div>`
   }
+  if (tab === 'model') body = `
+    <div class="sec"><span>CUSTOM MODEL</span><span>${l.modelUrl ? 'your upload' : l.model ? C.models[l.model]?.name || '' : human ? 'yours' : 'critter'}</span></div><div class="grid">${tile('model', '', !l.model && !l.modelUrl, human ? 'your body' : 'critter')}${Object.entries(C.models || {}).map(([k, m]) => tile('model', k, l.model === k, m.name)).join('')}</div>
+    <div style="font-size:11px;line-height:1.5;opacity:.85;margin:4px 0 6px;text-transform:none;letter-spacing:.02em">HOW TO GET A PLYMODEL<br>1. install <a href="https://developer.valvesoftware.com/wiki/SteamCMD" target="_blank" rel="noopener" style="color:#ffb642;text-decoration:underline;pointer-events:auto">SteamCMD</a> and open it<br>2. type <b>login anonymous</b> and press enter<br>3. on the <a href="https://steamcommunity.com/app/394690/workshop/" target="_blank" rel="noopener" style="color:#ffb642;text-decoration:underline;pointer-events:auto">Tower Unite workshop</a>, copy the link of the playermodel you want<br>4. paste it into <a href="https://steamworkshopdownloader.io/" target="_blank" rel="noopener" style="color:#ffb642;text-decoration:underline;pointer-events:auto">steamworkshopdownloader.io</a>, copy the line it gives you and paste that into SteamCMD<br>5. SteamCMD says where it saved it (steamapps/workshop/content/394690/...). press upload below and pick the .plymodel in that folder</div>
+    <div class="sl"><button style="flex:1;width:auto;padding:6px 0" onclick="this.nextElementSibling.click()">⬆ upload .plymodel</button><input type="file" accept=".plymodel" style="display:none" onchange="plyUpload(this)"></div><div id="ply-st" style="font-size:11px;opacity:.75;margin-top:4px">${l.modelUrl ? 'wearing your upload' : 'any tower unite .plymodel, worn as your body'}</div>`
   return `${CSS}<div id="cc" data-modal>
   <div class="hd"><div class="ttl"><h2>${human ? 'Character' : 'Character'}</h2><div class="sub">${human ? '' : 'cat · '}${NAMES[l.sex] || l.sex} · ${Math.round(170 * (Number(l.heightS) || 1))} cm</div></div><button class="x" onclick="${act('close')}">✕</button></div>
   <div class="main"><div class="tabs">${tabs.map(([k, n, i]) => `<button class="${tab === k ? 'on' : ''}" onclick="${act('tab', k)}"><span class="n">${i}</span>${n}</button>`).join('')}</div>
