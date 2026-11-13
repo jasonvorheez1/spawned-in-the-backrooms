@@ -3,7 +3,7 @@
 import { findPath } from "builtin/nav";
 import { traverseCheck } from "builtin/physics";
 import { ARRIVE, ZONES, SPOT } from "./level70.js";
-export const NODES = {}; export const ADJ = {}; export const NAV_V = 2;
+export const NODES = {}; export const ADJ = {}; export const NAV_V = 3;
 const add = (id, x, z) => { NODES[id] = { x, y: 0, z }; ADJ[id] = ADJ[id] ?? []; };
 const link = (a, b) => { ADJ[a].push(b); ADJ[b].push(a); };
 add("arrive", ARRIVE.x, ARRIVE.z);
@@ -13,14 +13,14 @@ const rim = (k) => { const c = ZONES[k], s = c.x > 0 ? -1 : 1; add("rim-" + k, c
 for (const k of ["suburb", "office", "hotel", "froston", "iceshed"]) rim(k);
 add("market", SPOT.market.x, SPOT.market.z); link("market", "s-60"); link("market", "s-80");
 add("pocket-w", -22, -72); link("pocket-w", "market"); link("pocket-w", "rim-iceshed");
-link("rim-suburb", "s-20"); link("rim-suburb", "s0"); link("rim-office", "s-20"); link("rim-hotel", "s-80"); link("rim-froston", "s20");
-add("house", SPOT.house.x + 8, SPOT.house.z); link("house", "rim-suburb");
+link("rim-suburb", "s-20"); link("rim-suburb", "s0"); link("rim-office", "s-20"); link("rim-hotel", "s-80"); add("froston-mouth", 7, 18); link("froston-mouth", "s20"); link("rim-froston", "froston-mouth");
+add("house", SPOT.house.x + 11, SPOT.house.z + 1.8); link("house", "rim-suburb");
 add("igloo", SPOT.igloo.x + 3, SPOT.igloo.z + 2); link("igloo", "house"); link("igloo", "rim-suburb");
 add("garage-door", SPOT.garage.x - 15, SPOT.garage.z); link("garage-door", "rim-office");
 add("garage", SPOT.garage.x, SPOT.garage.z); link("garage", "garage-door");
 add("valves", SPOT.valves.x - 2, SPOT.valves.z); link("valves", "garage");
 add("lobby-door", SPOT.lobby.x - 11, SPOT.lobby.z); link("lobby-door", "rim-hotel");
-add("lobby", SPOT.lobby.x, SPOT.lobby.z); link("lobby", "lobby-door");
+add("lobby", SPOT.lobby.x - 3.2, SPOT.lobby.z); link("lobby", "lobby-door");
 add("rig", SPOT.rig.x - 4, SPOT.rig.z); link("rig", "rim-froston");
 add("ice-mid", -78, -80); link("ice-mid", "rim-iceshed");
 add("camp", SPOT.camp.x + 3, SPOT.camp.z); link("camp", "ice-mid");
@@ -29,13 +29,13 @@ add("dock", SPOT.dock.x, SPOT.dock.z); link("dock", "s-120");
 // the garage mouth and valve room; the hotel lobby; Froston's open container. Each is a chain of short, provable legs.
 const chain = (rows) => { for (const [id, x, z, to, y] of rows) { add(id, x, z); if (y) NODES[id].y = y; for (const t of [].concat(to)) link(id, t); } };
 chain([
-  ["house-door", -35.4, -18, "house", 0.54], ["house-hall", -36.8, -18, "house-door", 0.54],
-  ["house-living", -39.6, -16.4, "house-hall", 0.54], ["house-kitchen", -39.6, -19.9, ["house-hall", "house-living"], 0.54],
-  ["cellar-top", -43, -20.6, "house-kitchen", 0.54], ["cellar", -42.5, -23.4, "cellar-top", 0.02],
+  ["house-step", -32, -16.2, "house"], ["house-door", -35.2, -16.2, "house-step", 0.84], ["house-hall", -37.4, -16.2, "house-door", 0.84],
+  ["house-living", -40.5, -14.6, "house-hall", 0.84], ["house-kitchen", -40.5, -18.6, ["house-hall", "house-living"], 0.84],
+  ["cellar-top", -43.2, -18.9, "house-kitchen", 0.84], ["cellar", -43.2, -22.2, "cellar-top", 0.32],
   ["igloo-in", -51.2, -4, "igloo"],
   ["garage-mouth", 24.5, -22, ["garage-door", "garage"]], ["valve-door", 44.5, -22, ["garage", "valves"]],
   ["lobby-in", 27.6, -80, ["lobby-door", "lobby"]],
-  ["froston-yard", 52, 16, ["rim-froston", "rig"]], ["container", 50.1, 21, "froston-yard", 0.16],
+  ["froston-yard", 44, 21, ["rim-froston", "rig"]], ["container", 48.8, 21, "froston-yard", 0.62],
 ]);
 const D = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
 export const key = (a, b) => (a < b ? a + ">" + b : b + ">" + a);
