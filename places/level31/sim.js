@@ -9,7 +9,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 95; // 95: tripo folding tables + booths // 94: snack bar as a rink cafe (folding tables, green booths, cosmic carpet) // 93: rink regular off the shredded jacket // 91: staff room tripo pass + gap wall // 89: staff doorway cut; 90: the staff back room behind it, Nov 13
+const V = 96; // 96: the white 70 door opens onto Level 70 // 95: tripo folding tables + booths // 94: snack bar as a rink cafe (folding tables, green booths, cosmic carpet) // 93: rink regular off the shredded jacket // 91: staff room tripo pass + gap wall // 89: staff doorway cut; 90: the staff back room behind it, Nov 13
 const STAFF = { x: 40.05 };
 const RAIL_GLB = "/cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb";
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
@@ -151,11 +151,18 @@ function doors(ctx) {
   ctx.spawn("l31-from-l2", { feetPosition: ARRIVE, rotation: { yaw: -45 } }); // facing the rink, not the gift shop's back wall
   ctx.spawn("l31-back", { feetPosition: { x: DOOR.x, y: 0, z: B.z1 - 0.25 }, physics: { body: "static", trigger: true }, primitive: box(1.2, 2.3, 0.4), visible: false, behavior: "scripts/level-door.js", state: { to: "level2#l2-from-l31" } });
   ctx.spawn("l31-exit-sign", { feetPosition: { x: DOOR.x, y: 2.45, z: B.z1 - 0.06 }, rotation: { yaw: 0 }, castShadow: false, vector: `<svg viewBox='0 0 100 40' width='0.7m'><rect width='100' height='40' rx='3' fill='#0d1a0f'/><text x='50' y='29' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='26' fill='#5dff7a' filter='drop-shadow(0 0 3 #5dff7a)'>EXIT</text></svg>` });
-  // the white door marked 70, north-west corner. It does not open. (Level 70 is not built.)
-  ctx.spawn("l31-door-70-casing", { feetPosition: { x: B.x0 + 0.02, y: 0, z: -22 }, rotation: { yaw: -90 }, ...P({ kind: "casing", w: 1.1, h: 2.2 }), castShadow: false });
-  ctx.spawn("l31-door-70-plaque", { feetPosition: { x: B.x0 + 0.03, y: 2.62, z: -22 }, rotation: { yaw: -90 }, castShadow: false, vector: `<svg viewBox='0 0 160 40' width='0.6m'><rect width='160' height='40' rx='3' fill='#e9e4d6' stroke='#77705f' stroke-width='2'/><text x='80' y='27' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='17' fill='#3a352c'>EMPLOYEES ONLY</text></svg>` });
-  ctx.spawn("l31-door-70", { feetPosition: { x: B.x0 + 0.04, y: 0, z: -22 }, rotation: { yaw: -90 }, primitive: box(1.1, 2.2, 0.06), material: { color: "oklch(0.95 0.005 90)", roughness: 0.5 }, castShadow: false, tags: ["usable"], state: { name: "White door", info: "A 70 is engraved in the paint. Locked. Cold air under it." },
-    children: [{ feetPosition: { x: 0, y: 1.5, z: -0.04 }, vector: `<svg viewBox='0 0 60 40' width='0.3m'><text x='30' y='32' text-anchor='middle' font-family='serif' font-size='34' fill='#b9b9b2'>70</text></svg>` }, { feetPosition: { x: 0.42, y: 1.0, z: -0.06 }, primitive: { kind: "sphere", radius: 0.035 }, material: { color: "#c9c2a8", metalness: 0.9, roughness: 0.3 } }] });
+  // the white door marked 70, west wall under the mezzanine: Level 70 Froidetown (Shelly Nov 13). Tripo steel door, frost fx at the sill, a cold light.
+  const X70 = B.x0 + 0.07, Z70 = -22;
+  ctx.spawn("l31-door-70", { feetPosition: { x: X70, y: 0, z: Z70 }, rotation: { yaw: -90 }, castShadow: false,
+    model: { id: "/cdn/value.9fdae43fcaf5713af173eb262dfa4b526ccc98a79e34d99b72f458948db6e11d.glb", forward: "+x" }, layout: { box: { min: { x: -0.62, y: 0, z: -0.09 }, max: { x: 0.62, y: 2.2, z: 0.09 } } },
+    state: { name: "White door", info: "A 70 is engraved in the paint. Cold air under it." } });
+  ctx.spawn("l31-door-70-cold", { feetPosition: { x: X70 + 0.9, y: 1.9, z: Z70 }, light: { kind: "point", color: "oklch(0.86 0.06 235)", intensity: 1.6, distance: 7 } });
+  ctx.spawn("l31-door-70-frost", { feetPosition: { x: X70 + 0.25, y: 0.03, z: Z70 }, fx: { script: `fx
+pop mist rate=7 on=line(<0,0,-.55>,<0,0,.55>) life=2.2..3.4 v=<.35,.02,0>+sdir()*.08 size=.25..0.45 acc=drag(.6) col=<.82,.9,1> a=0>.2:.16>.7:.08>0 sz=$size*(.6>2.2) rot=spin(.1) r=sprite(smoke-puff,alpha)
+pop flake rate=5 on=line(<0,.1,-.5>,<0,.1,.5>) life=1.2..2 v=<.5..0.9,.2..0.5,0>+sdir()*.15 size=.012..0.025 acc=grav()*.12+drag(.8) col=<1,1,1> a=0>.15:.9>.8:.6>0 sz=$size r=sprite(soft-disc,alpha)` } });
+  ctx.spawn("l31-door-70-wind", { feetPosition: { x: X70 + 0.3, y: 1, z: Z70 }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-arctic-wind-howl-over-empty-snowy-street-loop.mp3", loop: true, spatial: true, gain: 0.25, maxDistance: 9 } });
+  ctx.spawn("l31-from-l70", { feetPosition: { x: X70 + 1.6, y: 0.1, z: Z70 }, rotation: { yaw: -90 } });
+  ctx.spawn("l31-to-l70", { feetPosition: { x: X70 + 0.35, y: 0, z: Z70 }, physics: { body: "static", trigger: true }, primitive: box(0.4, 2.2, 1.2), visible: false, behavior: "scripts/level-door.js", state: { to: "level70#l70-from-l31" } });
 }
 
 function cinema(ctx) {
