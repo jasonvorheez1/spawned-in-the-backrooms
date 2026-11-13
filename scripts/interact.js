@@ -497,7 +497,7 @@ export function onInput(ctx, input) {
   if (input.pressed?.loot && d && typeof d.k === 'string') { lootAction(ctx, d); return }
   if (ctx.self.state.lootOpen && input.pressed?.reload) { lootAction(ctx, { k: 'all' }); return } // R takes everything, as in Fallout
   if (ctx.self.state.sit?.phase === 'sat' && (Math.abs(input.axes?.moveX ?? 0) > 0.3 || Math.abs(input.axes?.moveZ ?? 0) > 0.3 || input.pressed?.jump)) { if (ctx.self.state.salonOpen) { ctx.self.state.salonOpen = false; ctx.self.state.wardrobeOpen = false } standUp(ctx); return }
-  { const s = ctx.self.state; if (s.salonOpen && !s.sit && !s.wrMenu) { s.salonOpen = false; s.wardrobeOpen = false } } // a salon menu outlives no chair: crossing away or a lost seat closes it
+  { const s = ctx.self.state; if (s.salonOpen && !s.sit && !s.wrMenu && !s.salonFree) { s.salonOpen = false; s.wardrobeOpen = false } if (s.salonFree && !s.salonOpen) s.salonFree = false } // a salon menu outlives no chair: crossing away or a lost seat closes it
   refocus(ctx)
   if (input.pressed?.interact) press(ctx)
 }
