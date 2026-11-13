@@ -4,11 +4,12 @@ import { animate } from "builtin/tween";
 import { H, T, B, RINK, ZONES, ARRIVE, DOOR, BACK } from "../../scripts/lib/level31.js";
 import { G as FG } from "../../scripts/lib/level31-food.js";
 import { layParts } from "../../scripts/lib/level31-parts.js";
+import { texturePass } from "../../scripts/lib/l31-texpass.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { rbox } from "../../scripts/lib/rbox.js";
 export const cadence = "1s";
-const V = 86;
+const V = 87;
 const RAIL_GLB = "/cdn/value.2857b1776e7530e681bc3e86d3943165c85628f7856964245b2baa36e89125a4.glb";
 const TRIPO = { lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb", bench: "/cdn/value.2f7b960c45839606b871cd446580e4c87732b96f57e9807dca2bedbc0faea27c.glb" }; // Tripo v3.1, Nov 12
 const PROPS = "scripts/l31-props-geo.js";
@@ -296,5 +297,6 @@ export function tick(ctx) {
   for (const id of Object.keys(ctx.place.objects)) if (id.startsWith("l31-") && !id.includes("/")) ctx.destroy(id);
   shell(ctx); rink(ctx); starburst(ctx); doors(ctx); cinema(ctx); djBooth(ctx); party(ctx); mezzanine(ctx);
   layParts(ctx);
+  s.l31tex = texturePass(ctx);
   s.v31 = V;
 }
