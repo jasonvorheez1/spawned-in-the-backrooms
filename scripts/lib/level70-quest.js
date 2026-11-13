@@ -99,7 +99,8 @@ export function press70(ctx, p, obj) {
     paintGauge(ctx);
     if (!on) { s.notice = { text: "The handwheel turns. Nothing moves in the pipe. The pump's dead.", at: now }; return; }
     const read = pressures(turnsOf(ctx)), hit = matchOf(read);
-    if (hit) { resolve(ctx, p, hit); return; }
+    if (hit) { ctx.place.state.l70pend = { route: hit, at: now, by: p.id }; s.notice = { text: "The needles shiver and settle. Leave it be a moment...", at: now }; return; } // a setting locks in only if it holds (tick), so a path through another target never traps you
+    ctx.place.state.l70pend = null;
     if (read.some((v) => v >= VALVES.vent)) steam(ctx, p, { x: at.x, y: at.y + 0.6, z: at.z });
     return;
   }
@@ -270,6 +271,8 @@ function schematic() {
 const CH = new Map();
 export function tick(ctx) {
   wire(ctx); paintGauge(ctx);
+  const pd = ctx.place.state.l70pend;
+  if (pd && ctx.now() - pd.at > 3000) { ctx.place.state.l70pend = null; const pp = ctx.place.players.find((x) => x.id === pd.by) ?? ctx.place.players[0]; if (pp?.state && !!ctx.place.objects["l70-breaker"]?.state?.on && matchOf(pressures(turnsOf(ctx))) === pd.route) resolve(ctx, pp, pd.route); }
   const fires = ctx.query({ tags: ["l70-fire"], radius: 5000, center: { x: 0, y: 0, z: 0 } }).map((f) => f.feetPosition);
   for (const p of ctx.place.players) {
     const s = p.state, at = p.feetPosition; if (!s || !at) continue;
