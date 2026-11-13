@@ -226,7 +226,7 @@ function dressPlan(ctx) {
   }
   return { plan, count };
 }
-function dress(ctx, step) {
+export function dress(ctx, step) {
   if (step === 0) for (const o of ctx.query({ tags: ["l0dress"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id);
   const { plan } = dressPlan(ctx), B = DR.batch ?? 200, part = plan.slice(step * B, step * B + B);
   for (const spec of part) { if (spec.tags.includes("desk")) spec.state.items = deskItems(ctx); ctx.spawn(spec); }
