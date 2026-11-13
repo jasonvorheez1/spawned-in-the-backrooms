@@ -40,8 +40,10 @@ const T = {
   vanishMs: 2200, behind: 2.6,                 // at half health it blinks out and comes back behind you
 };
 export const EYES = `fx
-pop eyes n=2 local at=<-.09,1.02,-.16>;<.09,1.02,-.16> size=.05 col=hdr(4,4,3.6)*flick(3,.15) a=1 sz=$size r=sprite(soft-disc,add)
-pop grin n=1 local at=<0,.9,-.18> size=.16 asp=3.2 col=hdr(3.2,3.2,2.8)*flick(2,.2) a=.9 sz=$size r=sprite(soft-disc,add)`;
+local
+pop eyeL n=1 pos=<-.09,1.02,-.16> size=.05 col=hdr(4,4,3.6)*flick(3,.15) a=1 sz=$size r=sprite(soft-disc,add)
+pop eyeR n=1 pos=<.09,1.02,-.16> size=.05 col=hdr(4,4,3.6)*flick(3,.15) a=1 sz=$size r=sprite(soft-disc,add)
+pop grin n=1 pos=<0,.9,-.18> size=.16 asp=3.2 col=hdr(3.2,3.2,2.8)*flick(2,.2) a=.9 sz=$size r=sprite(soft-disc,add)`;
 const SHRIEK = `fx
 pop ring burst=1 life=.6 on=point() size=.4 col=hdr(2,2,2.4) a=.6>0 sz=$size*(1>14) r=sprite(soft-disc,add)
 pop shade burst=40 life=.8..1.6 on=sphere(.5).c(1) v=sdir()*(3..6) size=.3..0.7 acc=drag(2) col=<.02,.02,.03> a=.7>0 sz=$size*(.6>2) r=sprite(smoke-puff,alpha)`;
