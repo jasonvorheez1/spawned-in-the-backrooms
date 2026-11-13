@@ -43,7 +43,6 @@ function hashOf(str) {
 function wearSkin(ctx, e) {
   const id = e.id + "/skin";
   if (ctx.getObject(id)) return;
-  if (had) { const sc = had.scale; if (!sc || typeof sc === "number" || Math.abs((sc.x ?? 1) - (sc.y ?? 1)) < 0.01) return; ctx.destroy(id); } // an old skin stretched unevenly pulled its clothes off the body: re-dress it
   const h = hashOf(e.id);
   const look = npcLook(e.id, {
     species: SPECIES[h % SPECIES.length],
