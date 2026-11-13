@@ -23,20 +23,20 @@ almondMs: 120000   # drank almond water this recently: it won't touch you, and k
 almondKeep: 9
 despawnRange: 95
 safeRadius: 45     # never this close to a level's arrival point
-rollEvery: 60      # seconds between spawn rolls per player
+rollEvery: 240     # seconds between spawn rolls per player (Shelly, Nov 13: dullers are rare appearances; was 60)
 places:            # cap = most alive at once, chance per roll. Level 5 is safe, so none there
-  main: { cap: 2, chance: 0.22 }
-  level01: { cap: 1, chance: 0.15 }
-  level1: { cap: 1, chance: 0.12 }
-  level2: { cap: 1, chance: 0.15 }
-  level02: { cap: 1, chance: 0.15 }
-  level21: { cap: 1, chance: 0.15 }
-  level3: { cap: 1, chance: 0.15 }
-  level4: { cap: 1, chance: 0.15 }
-  level6: { cap: 1, chance: 0.15 }
-  level7: { cap: 1, chance: 0.12 }
-  level8: { cap: 1, chance: 0.15 }
-  level10: { cap: 1, chance: 0.15 }
-  level11: { cap: 1, chance: 0.15 }
-  level12: { cap: 1, chance: 0.15 }
-  level13: { cap: 1, chance: 0.15 }
+  main: { cap: 1, chance: 0.06 }
+  level01: { cap: 1, chance: 0.04 }
+  level1: { cap: 1, chance: 0.04 }
+  level2: { cap: 1, chance: 0.04 }
+  level02: { cap: 1, chance: 0.04 }
+  level21: { cap: 1, chance: 0.04 }
+  level3: { cap: 1, chance: 0.04 }
+  level4: { cap: 1, chance: 0.04 }
+  level6: { cap: 1, chance: 0.04 }
+  level7: { cap: 1, chance: 0.04 }
+  level8: { cap: 1, chance: 0.04 }
+  level10: { cap: 1, chance: 0.04 }
+  level11: { cap: 1, chance: 0.04 }
+  level12: { cap: 1, chance: 0.04 }
+  level13: { cap: 1, chance: 0.04 }
