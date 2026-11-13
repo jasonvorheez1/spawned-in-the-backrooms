@@ -1,6 +1,6 @@
 # Level 0 dressing (Shelly Nov 12: "use AAA quality, tripo and materials to improve level 0 + improve placements + more variety").
 # Tripo pieces, each placed where it belongs: cubicles in the Abandoned Offices, coolers on hall walls, wet-floor signs by the soaked arch rooms. Counts are Savi's picks.
-v: 2
+v: 3
 models:
   partition: /cdn/value.d591f5cb3377610f5d5845dfb1a3c32e6e7dbe3d839654e08d35730a88f341d1.glb   # fabric cubicle panel, 1.4 m wide, 1.5 m tall
   cooler: /cdn/value.07799be5e46bec639736b31a87f3ea8cd4fb506cca67c1718e40b2fb2594574e.glb      # beige water cooler, 1.25 m
@@ -10,3 +10,11 @@ sizes:            # w h d metres the model is fitted into
   cooler: [0.34, 1.25, 0.34]
   wetsign: [0.32, 0.62, 0.34]
 counts: { cubicles: 26, coolers: 14, wetsigns: 12 }
+# the modeled kit (l0-kit-*.yml), Nov 13: only these pieces are ever placed (each passed its look)
+kit: [diffuser, returngrille, sprinkler, smokedet, troffer-hang, tile-fallen, outlet, switch, thermostat, exitsign, extinguisher, firepull, wallvent, door-office, boxes-stack, box-single, folding-table, stack-chair, filing, crt, phone, bin, fakeplant, copier, sleepingbag, backpack, lantern, almond-crate, campstove, note-clipboard, tape-marks, shoes]
+small: [sprinkler, smokedet, outlet, switch, thermostat, firepull, lantern, note-clipboard, tape-marks, shoes, phone, almond-crate]   # drawn to 22 m, no shadow
+batch: 220          # rows laid per sim tick
+ceiling: { diffuserX: 3, diffuserZ: 2, grilleOne: 14, sprinklerEvery: 2, smokeOne: 20, troffers: 8, fallenTiles: 20 }
+wall: { gap: 0.5, doors: 40, switches: 40, exitsigns: 30, firepairs: 24, thermostats: 30, wallvents: 40, outletEvery: 3 }
+props: { hallShare: 0.15, tables: 16, chairs: 40, crt: 12, phone: 12, bins: 30, filing: 30, copier: 8, stacks: 40, singles: 30, plants: 14 }
+camps: 6
