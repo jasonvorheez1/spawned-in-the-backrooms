@@ -1,0 +1,35 @@
+# The Mangled (Level 9): every tuned number of the fog's entity. Manager: scripts/l9-mangled.js. Body: templates/mangled.js (art/level9/mangled.py).
+hp: 140
+base: 2            # alive while the fog sits = base + players in the place, capped
+cap: 5
+spawnMin: 28       # metres from the player it comes for
+spawnMax: 40
+spawnEvery: [2.5, 5]   # seconds between arrivals
+watchRange: 40
+watchCone: 50      # degrees either side of where a player's camera looks: on screen = watched
+watchEvery: 120    # ms between sight checks per creature
+flinchMs: 1200     # a hit breaks its stillness this long, watched or not
+walk: 2.2
+run: 6.2
+runWithin: 14
+reach: 1.6
+swipeCd: 1.1
+damage: 14
+sanity: 6
+windowGap: 2.5     # how far off a house wall it stands
+lotMargin: 1.4     # how close its path may pass a house
+leaveClear: 35     # fog gone: destroyed once nobody is this near...
+leaveMs: 20000     # ...or after this long
+deathMs: 2600
+clips:
+  idle: cdn/clip-ual-zombie-idle-722e8782-loop.glb
+  walk: cdn/clip-ual-zombie-walk-fwd-065f2615-loop.glb
+  run: cdn/clip-sprint-loop.glb
+  swipe: cdn/clip-attack.glb
+  die: cdn/clip-die.glb
+sounds:
+  spawn: /cdn/moodboard-gothic-horror/sfx-far-dry-bone-joint-crack-pop-single-in-open-night-air.mp3
+  step: /cdn/moodboard-gothic-horror/sfx-bare-foot-slap-on-wet-asphalt-single-fast-step.mp3
+  rasp: /cdn/moodboard-gothic-horror/sfx-breathy-static-rasp-wheeze-through-radio-hiss-loop.mp3
+  hit: /cdn/moodboard-gothic-horror/sfx-wet-heavy-thud-slap-on-body-single.mp3
+  die: /cdn/moodboard-gothic-horror/sfx-long-dry-joints-crackle-collapse-then-static-hiss-fading.mp3
