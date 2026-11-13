@@ -148,4 +148,4 @@ from:
   neck: { scarf: scarf, cape: cape, bowtie: bowtie, necklace: necklace, bell: bell }
   topp: { jerrytee: jerry, pphoodie: ppsad, pghoodie: pgsmile, gmhoodie: gmsplit, pgcoat: pgcoat }
 # hats that close over the ears: the sculpted ears stay off and the head's own fold flat under them
-covers: [divehelm, chitinhelm, beanie, souwester, pilgrimhat]
+covers: [divehelm, chitinhelm, beanie, souwester, pilgrimhat, wwhelmet]
