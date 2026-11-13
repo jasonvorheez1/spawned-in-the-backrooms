@@ -30,7 +30,7 @@ for p in me.polygons:
     for li in p.loop_indices:
         u = uv[li].uv; c += px[int((u.y % 1) * (Hh - 1)), int((u.x % 1) * (W - 1))]
     c /= p.loop_total; mx, mn = c.max(), c.min()
-    lab[p.index] = not (mx > 0.42 and (mx - mn) / max(mx, 1e-5) < 0.22)   # hair = dark or coloured; mannequin = bright grey
+    lab[p.index] = not (mx > 0.42 and (mx - mn) / max(mx, 1e-5) < float(os.environ.get("PREFIT_SAT", 0.22)))   # hair = dark or coloured; mannequin = bright grey
 bm = bmesh.new(); bm.from_mesh(me); bm.faces.ensure_lookup_table()
 for _ in range(3):   # majority vote over neighbours
     nl = lab.copy()
