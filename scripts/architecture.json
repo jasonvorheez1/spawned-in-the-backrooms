@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7100,
-  "updatedAt": "2026-11-13T04:24:24.303Z",
+  "basedOnSpecVersion": 7109,
+  "updatedAt": "2026-11-13T04:31:04.905Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social hub, and authored lore destinations; player saves hold progression, gear, quests, faction standing and homes, while tutorial0 is solo and ephemeral. Shared player behaviors, place simulations and reusable builders join authored scenes to generated spaces, including the Favi creator-assistant mod on the god-mode rail.",
   "scriptPaths": [],
   "places": [
@@ -11,8 +11,8 @@
     "places/level01 (3D) - Zenith Station, breach, bots, hazards and recorder quest.",
     "places/level1, level2, level02, level21, level3, gamma (3D) - Habitable Zone camp, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma; Level 1 also generates spiral anomalies.",
     "places/level31 (3D) - Roller Rink, cinema/DJ booth, arcade, party room, cafe/snack bar, rental, gift shop/skate loft and white Level 70 door; Awakening lighting configured.",
-    "places/level70 (3D; Froidetown) - snowy Canadian city on a planetoid: Kelpie Street, Burns Crescent, Calor Office Block, Noahtown, Parliament Hotel, Froston, Iceshed and Burns River; layered districts, packed-snow walks, NPCs, foes and dark skyline silhouettes ring the river across the expanded cell layout.",
-    "places/level61 and places/level4, level5, level6, level7, level10-13, level26, level27, spamton, testlab and other lore/test destinations - authored food court, resident hubs, rentals, stories, hazards and encounters."
+    "places/level70 (3D; Froidetown) - snowy Canadian city on a planetoid: Kelpie Street, Burns Crescent, Calor Office Block, Noahtown, Parliament Hotel, Froston, Iceshed and Burns River; layered districts, packed-snow walks, NPCs, foes and dark coats.",
+    "places/level4, level5, level6, level7, level10-13, level26, level27, spamton, testlab and other lore/test destinations - authored food court, resident hubs, rentals, stories, hazards and encounters."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input mappings; config selects shared lighting.",
@@ -25,14 +25,14 @@
     "places/level31/sim.js + scripts/lib/level31.js + scripts/lib/level31-parts.js; places/level70/sim.js + scripts/lib/level70.js + scripts/terrain70.js - versioned venue and layered Froidetown map/terrain, routes, arrivals and weather."
   ],
   "shared": [
-    "scripts/lib/hub.js + scripts/lib/data/preload.yml + scripts/lib/preload-next.js - solo room IDs/destinations, home destinations, display names and proximity-preload manifest; Level 70 manifest names the current house collision mesh and other common models.",
+    "scripts/lib/hub.js + scripts/lib/data/preload.yml + scripts/lib/preload-next.js - solo room IDs/destinations, home destinations, display names and proximity-preload manifest; Level 70 manifest names the current house collision mesh and other destination assets.",
     "scripts/lib/loot.js + scripts/lib/items.js + scripts/lib/weapons.js/data/weapons.yml - common loot, containers, item definitions, rarity and weapon variants.",
     "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/lib/level3-hatch.js - parametric doors/motion and deterministic Level 3 paired hatch layout; threshold/sign geometry is shared by participating places.",
     "scripts/lib/quest-route.js + scripts/lib/quest-mark.js + scripts/lib/quests.js - directed crossing graph/objectives and common quest state; dialogue data, npc-starters and npc-talk support conversations/checks.",
     "scripts/lib/data/l02-props.yml + scripts/lib/data/l02-remodel.yml + scripts/lib/l02-grid.js - Level 0.2 prop catalog, partitions, lamp/paint configuration, crew dressing and reset.",
     "scripts/lib/breakables.js + scripts/lib/data/breakables.yml - shared prop/wall damage, material, drops and regrowth; place sims opt in with sweepProps/tickWalls.",
     "scripts/lib/data/dlg-*.yml + scripts/lib/dialogue.js + voice-cast/voice-acted data + scripts/lib/voices.js - authored NPC talk/barks, performer assignments and recorded playback.",
-    "scripts/lib/critter-model.js + cat-wardrobe data + scripts/lib/rep.js + scripts/lib/forgive.js + scripts/lib/witness.js + scripts/lib/sight.js - character refitting, faction standing, incident hostility/forgiveness and clear-sight witnessing; mods/awakening/lib/*, rbox.js and seat.js are shared alongside Level 70 nav/path modules."
+    "scripts/lib/critter-model.js + cat-wardrobe data + scripts/lib/rep.js + scripts/lib/forgive.js + scripts/lib/witness.js + scripts/lib/sight.js - character refitting, faction standing, incident hostility/forgiveness and clear-sight witnessing."
   ],
   "notableExports": [
     "sim.js - cadence, tick, onOutOfBounds; body-style propagation and bounded incremental object restyling.",
@@ -40,9 +40,9 @@
     "scripts/lib/level31.js - H, B, RINK, ZONES, ARRIVE, DOOR, BACK, onRink, L31_NAMES, zoneAt, SKATE, skateStep; venue geometry, area labels and rink movement.",
     "scripts/lib/level31-parts.js - layParts; dispatches arcade, food, rental, shop, Side B, design and loft builders; level31-arcade.js and level31-food.js supply game and food interactions.",
     "scripts/lib/level31-quest.js - QID/QNAME, NPC/object IDs, openCrate, useDeck, l31Choices, handleDialogueQuest31; Side B quest state and interactions.",
-    "scripts/lib/forgive.js - faction, incidentOf, hostileReason, explainHostility, recordIncident, alliedWitnesses, assaulted, forgiveTick; NPC offense response and forgiveness.",
-    "scripts/lib/rep.js + scripts/lib/witness.js - faction group/standing and karma helpers, repKill; markKill records visible killers and witnesses.",
-    "scripts/lib/level70.js + scripts/terrain70.js; level70-civic.js + level70-nav.js + level70-paths.js - map/terrain queries, civic lay/tick and IDs, nav routing and packed-snow walks."
+    "scripts/lib/forgive.js + scripts/lib/rep.js + scripts/lib/witness.js - incident/hostility helpers, faction standing and karma helpers, repKill, markKill and sighted-witness recording.",
+    "scripts/lib/level70.js + scripts/terrain70.js; level70-civic.js exports V, STALL, FIRE, LECTERN, HOTEL_DOOR, GARAGE_DOOR, VALVE_POS, GAUGE, PUMP, BREAKER, lay, tick; level70-life.js exports V, M, PACKS, lay, tick.",
+    "scripts/l61-staff.js - ears, nickFor, revive, update; scripts/meg-agent.js - nerveOf, onSpawn, bark, update, vanish; scripts/talk.js - onCollide, openDialogue, heard, gestEnd, stopDance, onInput, update."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved position, tapes, currency, karma/rep and homeKeep; also owns furniture counts, skates, snacks and food effects.",
@@ -52,7 +52,7 @@
     "scripts/lib/remodel-quest.js - remodQ, l02got/l02paint, fresh, capnAsk/capnFailed and Fresh Paint quest/HUD/payout/reputation.",
     "scripts/build.js + places/level5/sim.js - player homeKeep.built or homeKeep.l5built and reconstruction; scripts/l5-resident.js owns booking keys/room identity and place.state.l5rent exclusive-room ledger.",
     "scripts/arcade-play.js + scripts/lib/felix-game.js - player.state.arcade/arcadeBest/felixBest; active game frames and input progression are in session state, consumed by arcade UI.",
-    "Enemy managers own AI/sneakTarget; scripts/lib/meg-agent.js owns NPC runtime combat/movement memory; scripts/lib/forgive.js writes NPC state incidents/angry/fresh and clears expired offenses; places/level2/sim.js owns survBodyV."
+    "Enemy managers own AI/sneakTarget; scripts/lib/meg-agent.js owns NPC runtime combat/movement memory; scripts/lib/forgive.js records NPC incidents/angry/fresh and clears expired offenses; places/level2/sim.js owns survBodyV."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific behavior.",
@@ -64,9 +64,9 @@
     "Level 2 sim l2-to-l31 → scripts/level-door.js to level31#l31-from-l2; Level 31 l31-back → level2#l2-from-l31; quest-route.js maps both directed crossings.",
     "Level 31 l31-to-l70 trigger → scripts/level-door.js + companion/carry transfer → level70#l70-from-l31; Level 70 l70-back → level31#l31-from-l70; quest-route.js exposes the white-door pair and preload.yml preloads destinations/models.",
     "Level 31 sim reads H/B/RINK/ZONES/DOOR/BACK, rebuilds l31-* roots at place.state.v31=100 and dispatches layParts; level31.js supplies zone IDs/placement geometry, then texturePass styles eligible flat-color props.",
-    "Level 70 sim lays arrival/return trigger, snow and wind, then version-gates town/civic/wild/life/quest/paths lay(ctx) and ticks each second; place.state.v70* keys record layer builds, while paths lay packed-snow splines to buildings, Gelu camp, Froston and river post.",
+    "Level 70 sim lays arrival/return trigger, snow and wind, then version-gates town/civic/wild/life/quest/paths lay(ctx) and ticks each second; place.state.v70* keys record layer builds, while paths lay packed-snow splines to buildings, Gelu and other routes.",
     "scripts/player.js and scripts/grab.js hits → forgive.js assaulted records offense against victim and visible nearby faction allies; kill → witness.markKill records clear-sight witnesses and repKill adjusts killer player.state karma/rep.",
-    "interact.js theft and l5-people.js trespass → forgive.js incidents; player.js, talk.js/interact.js, meg-agent.js, l61-staff.js, l4/l5-people.js and companion.js read hostileReason for combat, refusal and services; player tick forgives timed incidents or visible sheathed surrender."
+    "interact.js theft and l5-people.js trespass → forgive.js incidents; player.js, talk.js/interact.js, meg-agent.js, l61-staff.js, l4/l5-people.js and companion.js read hostileReason for combat, refusal and services; player tick forgives time-limited incidents; talk.js onCollide writes socialReaction(close) → meg-agent.js gives a polite bump reaction, not a hit."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored mall shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
@@ -83,15 +83,14 @@
     "scripts/hairtest-rig.js - marked temporary hair lane rig; no current references found.",
     "art/critter-hair-tripo/fit.py.held - saved fitter copy; active fit.py is the documented build fitter.",
     "scripts/dbg-pose.js - debug-room mannequin gallery after places/debug removal; no current placement found.",
-    "scripts/dbg-bodypad.js, scripts/debug-pad.js, scripts/lib/debug-layout.js - debug-room pads/layout after places/debug removal; no current references found.",
-    "scripts/l31-fold-table.js, scripts/l31-green-booth.js - authored procedural prop geometry files with no current path references found."
+    "scripts/dbg-bodypad.js, scripts/debug-pad.js - debug-room pads after places/debug removal; no current references found."
   ],
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. Keep this bounded sweep.",
-    "Global body-style restyling skips player IDs and player/ roots and ignores local-audience or model-less objects; wardrobe membership derives from critter-ward IDs. Level 2 survivors keep generated looks in NPC state.wear; survBodyV=1 triggers one-time rebuild/refit.",
+    "Global body-style restyling skips player IDs and player/ roots and ignores local-audience or model-less objects; wardrobe membership derives from critter-ward IDs. Level 2 survivors keep generated looks in NPC state.wear; survBodyV=1 triggers the one-time look migration.",
     "Level 31 rebuilds l31-* roots at place.state.v31=100; align IDs and shell/zone/door/arrival geometry with level31.js, and keep the white-door exit paired with Level 70's l70-from-l31 arrival.",
-    "Level 70 level70.js keeps built zone discs, street and Burns River at y=0 while terrain70.js raises terrain outside them; layer versions invalidate builds and nav cache keys include town/civic/wild/path versions. Town is V=3 and paths V=7.",
-    "NPC incidents are offender-keyed on NPC state and use gameNow/clock.js for a one-in-game-hour expiry; don't revive legacy player.state.grudges, which spread unsourced anger to bystanders. Only allied, sighted witnesses join fights; survivor reputation is not an automatic vilification trigger.",
-    "Kill witnesses require clear sight of both the body and killer; repKill uses the same-faction witnessed case and whether the victim was defending to distinguish murder from a provoked kill."
+    "Level 70 level70.js keeps built zone discs, street and Burns River at y=0 while terrain70.js raises terrain outside them; layer versions invalidate builds and nav cache keys include town/civic/wild/path versions. Town is V=3, civic V=5, life V=4 and paths V=7.",
+    "NPC incidents are offender-keyed on NPC state and use gameNow/clock.js for a one-in-game-hour expiry; do not revive legacy player.state.grudges, which spread unsourced anger to bystanders. Only allied, sighted witnesses join fights; survivors retain generated looks in NPC state.wear.",
+    "Kill witnesses require clear sight of both the body and killer; repKill uses the same-faction witnessed case and whether the victim was defending to distinguish murder from a provoked kill. Ordinary close bumps publish a socialReaction, not combat damage or hostility; hostility comes from forgive.js incidents."
   ]
 }
