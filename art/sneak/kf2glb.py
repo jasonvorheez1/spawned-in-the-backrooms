@@ -27,7 +27,7 @@ SP, SL = {}, {}
 def walk(n, par):
     if not isinstance(n, NifFormat.NiNode): return
     nm = n.name.decode(); SP[nm] = par
-    SL[nm] = (np.array(n.rotation.as_list()).T, np.array([n.translation.x, n.translation.y, n.translation.z]))
+    SL[nm] = (np.array(n.rotation.as_list()), np.array([n.translation.x, n.translation.y, n.translation.z]))
     for c in n.children:
         if c: walk(c, nm)
 for r in d.roots: walk(r, None)
