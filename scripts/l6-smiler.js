@@ -7,6 +7,7 @@
 import { knocked } from "./lib/knock.js";
 import { heard } from "./lib/hear.js";
 import { raycast } from "builtin/physics";
+import { shotAt, wallSteer, wedged } from "./lib/hunt.js";
 import { stepToward6, cellAt, cellCenter, isWalkable } from "./lib/level6path.js";
 import { npcMul, derived, dmgAfterArmor } from "./lib/stats.js";
 
@@ -85,6 +86,11 @@ export function update(ctx, dt) {
         heard(ctx, { clip: SND("smiler-wet-giggle-hiss-stalking"), position: pos, volume: 0.9, maxDistance: 28 });
       }
       m.prey = best?.id ?? null;
+      // shot from beyond its 16 m dark sight: it still turns on the shooter (player.js writes state.shot on every hit)
+      if (!best && !m.prey) {
+        const sh = shotAt(st, now);
+        if (sh && (!m.last || m.last.at < sh.at)) m.last = { ...sh };
+      }
     }
 
     const prey = m.prey ? players.find((p) => p.id === m.prey) : null;
@@ -126,6 +132,11 @@ export function update(ctx, dt) {
         ctx.emit("damageNumber", { position: { x: prey.feetPosition.x, y: 1.2, z: prey.feetPosition.z }, value: dmg, color: "#ff2233" });
         ctx.emit("screenShake", { intensity: 0.5, duration: 0.3 }, { audience: { player: prey.id } });
       }
+    } else if (m.last && now - m.last.at < 8000) {
+      // the shot's ground: it lopes for where the shooter stood, and forgets it standing there
+      goal = m.last;
+      speed = 3.8;
+      if (Math.hypot(goal.x - pos.x, goal.z - pos.z) < 0.8) m.last = null;
     } else {
       // Roaming through the labyrinth
       if (!m.roam || now > (m.roamUntil ?? 0) || Math.hypot(pos.x - m.roam.x, pos.z - m.roam.z) < 0.6) {
@@ -167,6 +178,8 @@ export function update(ctx, dt) {
         m.side = { s: ctx.random() < 0.5 ? -1 : 1, until: now + 500 };
         m.roam = null;
       }
+      // wedged: not budged for ~2 s while trying to walk: backed off the wall (the same cure the hounds and stealers take)
+      if (wedged(m, moved, speed > 0.5) && d > 0.01) { w.feetPosition = { x: pos.x - (dx / d) * 0.7, y: pos.y + 0.05, z: pos.z - (dz / d) * 0.7 }; w.velocity = { x: 0, y: 0, z: 0 }; m.roam = null }
       m.sk = { x: pos.x, z: pos.z, at: now };
     }
     if (m.side && now < m.side.until) {
@@ -177,9 +190,13 @@ export function update(ctx, dt) {
       ux /= l; uz /= l;
     }
 
+    if (speed > 0) [ux, uz] = wallSteer(ctx, m, now, pos, ux, uz, w.id); // walls on any level: a short ray along the heading
     anim(w, m, speed > 3 ? "skitter" : "skitter", true, speed > 3 ? 1.6 : 1);
     w.velocity = { x: ux * speed, y: (w.velocity?.y ?? 0) - 20 * dt, z: uz * speed };
     w.rotation = { yaw: Math.atan2(-ux, -uz) * 57.2958 };
   }
 }
+
+
+
 

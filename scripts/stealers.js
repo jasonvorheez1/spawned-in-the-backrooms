@@ -12,7 +12,7 @@ import { npcMul, dmgAfterArmor } from "./lib/stats.js";
 import { critterSpec, GAIT_LIB } from "./lib/critter-model.js";
 import { npcLook } from "./lib/clothes.js";
 import { stepToward as stepToward1 } from "./lib/maze1path.js";
-import { wallSteer, wedged } from "./lib/hunt.js";
+import { wallSteer, wedged, shotAt } from "./lib/hunt.js";
 import { raycast } from "builtin/physics";
 
 const GLB = "/cdn/value.6cc392a43a5cb12b4557b1fb35e23d329ad01c9d707b4267d923bdc14abcde2d.glb";
@@ -257,6 +257,13 @@ export function update(ctx, dt) {
       m.stunDone = false;
     }
 
+    // shot from beyond its 22 m call range: the crack of the round turns the skin that way (player.js writes state.shot on every hit)
+    const sh = shotAt(st, now);
+    if (sh && (!m.last || m.last.at < sh.at)) {
+      m.last = { x: sh.x, z: sh.z, vx: sh.vx ?? 0, vz: sh.vz ?? 0, at: sh.at };
+      if (m.ph === "skin") m.angry = true; // you hurt it: the skin walks your way and splits at 8 m
+    }
+
     // Find closest player using squared distance
     let prey = null;
     let bestDistSq = L.stealerCallRange * L.stealerCallRange;
@@ -387,6 +394,10 @@ export function update(ctx, dt) {
       }
     } else if (prey) {
       goal = prey.feetPosition;
+    } else if (m.last && now - m.last.at < 8000) {
+      // the shot's ground: a stiff hurried walk for where the shooter stood, forgotten on arrival
+      goal = m.last;
+      if (Math.hypot(goal.x - pos.x, goal.z - pos.z) < 1) m.last = null;
     } else {
       if (!m.roam || now > m.until) {
         const a = ctx.random() * 6.283;
@@ -414,6 +425,7 @@ export function update(ctx, dt) {
 
     const rev = m.ph !== "skin";
     let sp = (m.ph === "lunge" ? T.lungeSpeed : m.ph === "reveal" ? 0 : m.ph === "combo" ? 0.6 : rev ? L.stealerLunge * 0.55 : L.stealerWalk) * mu.speed;
+    if (goal === m.last) sp = Math.max(sp, 2.8 * mu.speed); // the skin knows where you stand: it hurries
 
     // Stuck detection: sidestep & repath if trapped
     m.sk ??= { x: pos.x, z: pos.z, at: now };
@@ -488,3 +500,5 @@ export function update(ctx, dt) {
     }
   }
 }
+
+
