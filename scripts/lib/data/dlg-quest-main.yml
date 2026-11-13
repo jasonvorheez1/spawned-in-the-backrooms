@@ -1,12 +1,24 @@
-# The Way Back: every line the main quest shows, recorded with the tape method (art/vo/act.py q-)
+# The Way Back: every line the main quest shows. Found things and one voice at the gangway, written to design/story-spine.md.
+# scripts/lib/dina-quest.js reads these by key. Each is voiced by its speaker and its own words (scripts/lib/voices.js).
 q-dina:
-  halogen: "If this unit still boots, find my radio on Level One. I heard a station from home. They read out tomorrow's weather. River made a copy."
-  diary: "River copied the return test. Cabin 23, SS Fun. If I miss the handoff, look there."
+  # trail.name: the wrist unit's one unsent message. A name and nothing else.
+  halogen: "Testing. This is Dina. If anybody can hear this... hello?"
+  # trail.word + trail.list: her diary at the camp
+  diary: "Day nine. The camp people call all of this the Backrooms. Levels, they say, like floors. They put my name on their list and told me nobody walks out. So I am going down to look."
 bntg-voss:
-  slip: "C-23. One waterproof case from the Adventure. Pickup at the Electrical Station checkpoint. Paid in batteries."
+  slip: "Ticket C-23. One waterproof case, off the boat. Pickup at the Electrical Station checkpoint. Paid in batteries."
 q-clerk:
-  slip-early: "Freight slips from the Habitable Zone. Each delivery has a ticket number."
-  handoff: "C-23 canceled. The stowaway never turned up. River filed a copy of the test results before the drive went missing. Look up Return Test 04 at Base Gamma."
-  handoff-early: "A handoff log. The page is indexed by freight ticket. Somebody tore out the carbon paper."
-  archive: "RETURN TEST 04. A phone rang on the other side. The operator gave the date. We called again and a second operator gave the same date. When we sent a runner through, she came back on Level 1. Voice contact confirmed. Crossing unverified."
-  archive-early: "The public index lists return experiments by number. Most files are marked UNVERIFIED."
+  # trail.list: the sheet clipped to the freight slips at the camp
+  slip-early: "Sign-in sheet. Line forty. Dina. Courier. Came in alone. Asked about ways out. Went down. Nobody has signed her back in."
+  handoff: "C-23 canceled. The stowaway never showed. River filed a copy of the test before the drive went missing. Ask for Return Test 04 at Base Gamma."
+  # trail.tape: Dina's own tape, left at the checkpoint (spoken as q-dina)
+  handoff-early: "Dina, tape four. I have six ways down on my map and not one way out. A man on the pipes swears there is a signal from home. I took a room at the hotel to think it over."
+  archive: "Return Test 04. A phone rang on the other side. The operator gave the date. We called again. A second operator gave the same date. We sent a runner through. She came back on Level 1. Voice contact confirmed. Crossing unverified."
+  archive-early: "A public index. Return experiments, filed by number. Most are stamped unverified."
+# the voice at the gangway. He calls everyone 'friend' and means none of it.
+q-purser:
+  refuse: "Boarding pass, friend. No pass? Then you are scenery. Come back with fifty Backdollars or a very good story."
+  talked: "Huh. You talk like a passenger. Go on up, friend, before I think about it."
+  paid: "Fifty. Would you look at that, your pass turned up. Welcome aboard."
+  broke: "I have heard better stories from the luggage, friend. And your pockets sound empty. Step back."
+  sneak: "You keep low. He is busy counting somebody else's money."
