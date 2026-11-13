@@ -18,7 +18,7 @@ export const FP_GUN = {
   smg:          { at: [0, .049, .134], turn: [180, 0, 0], ads: [0, -.15, .47, 0], hold: [0, -.018, .065, 0, 5, -3], left: [-.03, .037, -.21], vertical: true, muzzle: [0, .119, -.503] },
   carbine:      { at: [0, .067, .066], turn: [180, 0, 0], ads: [0, -.177, .48, 0], hold: [0, -.02, .07, 0, 5, -3], left: [-.068, .078, -.23], muzzle: [0, .149, -.494] },
   carolynne:    { at: [.02, -.09, -.04], turn: [184, -18, 0], ads: [0, -.2, .55, 0], hold: [0, -.1, .14, 0, 5, -3], left: [-.068, .06, -.3], muzzle: [0, .12, -.85] }, // the ornament launcher: the mesh's tube rises ~18° in its own frame, so pitch -18 levels the barrel on the crosshair
-  laser_rifle:  { at: [0, -.025, -.164], turn: [155, 0, 0], ads: [0, -.305, .61, 0], hold: [0, -.16, .2, 0, 5, -3], left: [-.068, .148, -.325], muzzle: [0, .282, -.71] },
+  laser_rifle:  { at: [0, -.025, -.164], turn: [158, -14, 0], ads: [0, -.305, .61, 0], hold: [0, -.16, .2, 0, 5, -3], left: [-.068, .148, -.325], muzzle: [0, .282, -.71] },
 }
 
 const SHORT_SHOTGUN = { ...FP_GUN.shotgun, at: [0, .082, -.13], left: [-.068, .02, -.13], muzzle: [0, .119, -.48] }
