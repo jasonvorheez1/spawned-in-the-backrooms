@@ -29,3 +29,17 @@ export function wildness(x, z) {
   d = Math.min(d, Math.abs(z - RIVER.z) - RIVER.w / 2);
   return Math.min(1, Math.max(0, d / 14));
 }
+// Fixed anchors every layer agrees on (all y = 0 ground)
+export const SPOT = {
+  house: { x: -40, z: -18 },        // suburban house footprint centre (door faces +x toward the street)
+  basement: { x: -40, y: -3.2, z: -18 }, // its windowless basement floor
+  igloo: { x: -52, z: -4 },
+  garage: { x: 36, z: -22 },        // office parking level interior centre (ground level, 28 x 18 m, entrance faces -x toward the street)
+  valves: { x: 47, z: -22 },        // the almond water valve room at the garage's east end
+  market: { x: 0, z: -72 },         // Noahtown market centre, on the street
+  lobby: { x: 34, z: -80 },         // Parliament Hotel lobby centre (entrance faces -x)
+  rig: { x: 62, z: 16 },            // Froston's dead extraction rig
+  camp: { x: -96, z: -82 },         // Carnifices of Gelu camp in Iceshed
+  dock: { x: 6, z: -128 },          // River Guard post on the Burns River bank
+};
+export const NPC = { pm: "l70-npc-larsson", carn: "l70-npc-vael", trader: "l70-npc-odell", guard: "l70-npc-ines", elder: "l70-npc-marinerson" };
