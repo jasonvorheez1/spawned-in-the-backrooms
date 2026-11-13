@@ -62,8 +62,8 @@ const MESH = { // kind: [model, offset y, scale, the mesh's material slot]
   screwdriver: ["/cdn/value.6204c5be1e422e3d5547054301386a5efec3bf51e4d02e4b38769563fc8541ad.glb", 0.02, 0, "tripo_material_f9e3059d-8b3b-4fdf-b3da-dcb466a61983"], // Tripo remake, fitted by art/weapons/build.py
   stun_baton: ["/cdn/value.2a5234080ee9216480cbdaafa7aa0589d00bbf08c3b3e964151c98b4e929d608.glb", 0.015, 0, "tripo_material_c231497c-1587-4cb1-bec3-151ea766af13"], // Tripo remake, fitted by art/weapons/build.py
   wrench: ["/cdn/value.ec0be310ee2a279074961d777a41ee95af9a2c8bbc6768d6a06e250e15ba1c9e.glb", 0.014, 0, "tripo_material_588e0f62-de58-4273-8d0e-d358e50e51cf"], // Tripo remake, fitted by art/weapons/build.py
-  scrapper70: ["/cdn/value.31c3a0b17d66e2b00e6cd50f6ebf4b6d5c46d10f4ef79c72bfd0ee6a91012100.glb", 0.012, 0, "tripo_material_e549f744-df41-4bed-84f2-d31195d87afa", "+z"], // Level 70 Froston Scrapper (head at file z 0: turned so the taped grip is the handle), Tripo, fitted by art/weapons/build.py
-  icepick70: ["/cdn/value.a9912e2551dabae6c10990a486feb6ea177d95a7cbe9c793843cf16ba0b9585b.glb", 0.013, 0, "tripo_material_e82a83b6-1ef0-4a5b-8e64-c63a59ddda1a", "+z"], // Level 70 Gelu Ice Pick (head at file z 0: turned)
+  scrapper70: ["/cdn/value.31c3a0b17d66e2b00e6cd50f6ebf4b6d5c46d10f4ef79c72bfd0ee6a91012100.glb", 0.012, 0, "tripo_material_e549f744-df41-4bed-84f2-d31195d87afa", "+z", 1.07], // Level 70 Froston Scrapper (head at file z 0: turned so the taped grip is the handle), Tripo, fitted by art/weapons/build.py
+  icepick70: ["/cdn/value.a9912e2551dabae6c10990a486feb6ea177d95a7cbe9c793843cf16ba0b9585b.glb", 0.013, 0, "tripo_material_e82a83b6-1ef0-4a5b-8e64-c63a59ddda1a", "+z", 0.54], // Level 70 Gelu Ice Pick (head at file z 0: turned)
   flaregun70: ["/cdn/value.53e72f64dee0951883d4f953d26241d9db354c4cc829381af993d84cc627aed7.glb", -0.0965, 0, "tripo_material_01611391-d364-4eb8-85ce-e7c5c8ae56d4"], // Level 70 River Guard flare gun
 };
 // each mesh's box centre in the scripted frame (x, z), from art/weapons/fit.json
