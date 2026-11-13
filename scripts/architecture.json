@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7068,
-  "updatedAt": "2026-11-13T04:09:55.648Z",
+  "basedOnSpecVersion": 7076,
+  "updatedAt": "2026-11-13T04:15:30.510Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social hub, and authored lore destinations; player saves hold progression, gear, quests and homes, while tutorial0 is solo and ephemeral. Shared player behaviors, place simulations and reusable builders join authored scenes to generated spaces, including the Favi creator-assistant mod on the god-mode rail.",
   "scriptPaths": [],
   "places": [
@@ -11,7 +11,7 @@
     "places/level01 (3D) - Zenith Station, breach, bots, hazards and recorder quest.",
     "places/level1, level2, level02, level21, level3, gamma (3D) - Habitable Zone camp, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma; Level 1 also generates spiral anomalies.",
     "places/level31 (3D) - Roller Rink, cinema/DJ booth, arcade, party room, cafe/snack bar, rental, gift shop/skate loft and white Level 70 door; Awakening lighting configured.",
-    "places/level70 (3D; Froidetown) - snowy Canadian city on a planetoid: Kelpie Street, Burns Crescent, Calor Office Block, Noahtown, Parliament Hotel, Froston, Iceshed and Burns River; layered districts, homes, paths, NPCs and wildlife.",
+    "places/level70 (3D; Froidetown) - snowy Canadian city on a planetoid: Kelpie Street, Burns Crescent, Calor Office Block, Noahtown, Parliament Hotel, Froston, Iceshed and Burns River; layered districts, homes, packed-snow walks, NPCs and wildlife.",
     "places/level61 and places/level4, level5, level6, level7, level10-13, level26, level27, spamton, testlab and other lore/test destinations - authored food court, resident hubs, rentals, stories, hazards and encounters."
   ],
   "roots": [
@@ -25,7 +25,7 @@
     "places/level31/sim.js + scripts/lib/level31.js + scripts/lib/level31-parts.js; places/level70/sim.js + scripts/lib/level70.js + scripts/terrain70.js - versioned venue and layered Froidetown map/terrain, routes, arrivals and weather."
   ],
   "shared": [
-    "scripts/lib/hub.js + scripts/lib/data/preload.yml + scripts/lib/preload-next.js - solo room IDs/destinations, home destinations, display names and proximity-preload manifest; Level 70 manifest names the current house collision mesh and other commonly used models.",
+    "scripts/lib/hub.js + scripts/lib/data/preload.yml + scripts/lib/preload-next.js - solo room IDs/destinations, home destinations, display names and proximity-preload manifest; Level 70 manifest names the current house collision mesh and oth…",
     "scripts/lib/loot.js + scripts/lib/items.js + scripts/lib/weapons.js/data/weapons.yml - common loot, containers, item definitions, rarity and weapon variants.",
     "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/lib/level3-hatch.js - parametric doors/motion and deterministic Level 3 paired hatch layout; threshold/sign geometry is shared by participating places.",
     "scripts/lib/quest-route.js + scripts/lib/quest-mark.js + scripts/lib/quests.js - directed crossing graph/objectives and common quest state; dialogue data, npc-starters and npc-talk support conversations/checks.",
@@ -55,7 +55,7 @@
     "Enemy managers own AI/sneakTarget; scripts/lib/meg-agent.js owns NPC runtime combat/movement memory; scripts/l70-foes.js owns Level 70 foe AI memory and writes player.state.l70kills; places/level2/sim.js owns survBodyV."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific handlers.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb, interact, grab/kick, build, inventory, combat, social, hub, camera and quest behaviors; arcade-play.js and smoothie-player.js provide game-specific…",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera; camera writes aimPt/aimPitch → player.js ballistics/weaponAim; player.js zoneHere → maze names and Level 31/70 zoneAt labels.",
     "scripts/routing.js requested room → scripts/lib/hub.js solo selection; toHub/toSolo cross to hub/home and maintain roomHop/save-place; kiosk resolves booked Level 5 home IDs.",
     "Fresh visit → main-menu.js; START routes to intake or Bonus, wardrobe close to intro/tutorial0; menuOpen drives menu UI and solo pause scaling.",
@@ -64,8 +64,8 @@
     "Level 2 sim l2-to-l31 → scripts/level-door.js to level31#l31-from-l2; Level 31 l31-back → level2#l2-from-l31; quest-route.js maps both directed crossings.",
     "Level 31 l31-to-l70 trigger → scripts/level-door.js + companion/carry transfer → level70#l70-from-l31; Level 70 l70-back → level31#l31-from-l70; quest-route.js exposes the white-door pair and preload.yml preloads destinations/models.",
     "Level 31 sim reads H/B/RINK/ZONES/DOOR/BACK, rebuilds l31-* roots at place.state.v31=100 and dispatches layParts; level31.js supplies zone IDs/placement geometry, then texturePass styles eligible flat-color props.",
-    "Level 70 sim lays arrival/return trigger, snow and wind, then version-gates town/civic/wild/life/quest/paths lay(ctx) and ticks each second; place.state.v70* keys record layer builds, while paths lay walk splines and nav stitches routes through town and countryside.",
-    "Level 70 valves/breaker/note/locker → scripts/l70-press.js → level70-quest.js; balanced valve setting must remain for 3 seconds before resolution, and quest tick updates counts/text. Foe kills → scripts/l70-foes.js corpses with loot plus player.state.l70kills.",
+    "Level 70 sim lays arrival/return trigger, snow and wind, then version-gates town/civic/wild/life/quest/paths lay(ctx) and ticks each second; place.state.v70* keys record layer builds, while paths lay packed-snow splines to buildings, Gelu camp, Froston and dock and nav stitches routes.",
+    "Level 70 valves/breaker/note/locker → scripts/l70-press.js → level70-quest.js; balanced valve setting must remain for 3 seconds before resolution, and quest tick updates counts/text. Foe kills → scripts/l70-foes.js corpses with loot plus p…",
     "Level 70 life NPCs carry home/rounds → level70-paths.js route/leash tick; strays over 30 m for 20 s (or below y=-1) are returned to home, while hound packs and death rats remain under scripts/l70-foes.js."
   ],
   "behaviorFamilies": [
@@ -76,7 +76,7 @@
     "places/level01/sim.js + Zenith geometry/breach/hatch/bot/hazard scripts; places/level02/sim.js + l02-grid.js vary partitions, lights, crew, knocks and reset.",
     "scripts/lib/meg-agent.js - per-NPC nerve/stats/weapon reactions, cover and authored/voiced barks; NPC state.rounds supports patrols and Meg handles movement/fighting; critter-model.js refits appearances across levels.",
     "Level 13 furnishing/dressing data and foe/people/tape layers vary rooms, story, encounters and residents; weapon data vary requirements/stats/loot while stats.js and weapon-look/fp-gun/vmpose supply handling and visuals.",
-    "Level 31 modular builders vary venue subareas; Level 70 town/civic/wild/life/quest/path layers build districts, meshes, residents, factions, encounters and packed-snow paths."
+    "Level 31 modular builders vary venue subareas; Level 70 town/civic/wild/life/quest/path layers build districts, residents, factions, encounters and packed-snow roads; art/l70-town/house.py and igloo.py generate the house/igloo models and house collider."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -91,6 +91,6 @@
     "Global body-style restyling skips player IDs and player/ roots and ignores local-audience or model-less objects; wardrobe membership is derived from critter-ward object IDs and passed to restyle.",
     "Level 2 camp survivors must keep their generated look in NPC state.wear for global body restyling; survBodyV=1 triggers a one-time destroy/rebuild so survivors laid on the older body are refit.",
     "Level 31 rebuilds l31-* roots at place.state.v31=100; align IDs and shell/zone/door/arrival geometry with level31.js, and keep the white-door exit paired with Level 70's l70-from-l31 arrival.",
-    "Level 70 level70.js keeps built zone discs, street and Burns River at y=0 while terrain70.js raises terrain outside them; layer versions invalidate builds and nav cache keys include town/civic/wild/path versions. Town is V=3 and paths V=6; cellar collision omits the open steel door and berm vertices stay clear of its doorway, while level70-paths.js cellar ramp endpoint must remain aligned with the cellar steps."
+    "Level 70 level70.js keeps built zone discs, street and Burns River at y=0 while terrain70.js raises terrain outside them; layer versions invalidate builds and nav cache keys include town/civic/wild/path versions. Town is V=3 and paths V=7; cellar ramp/path, threshold and house cellar geometry must stay aligned."
   ]
 }
