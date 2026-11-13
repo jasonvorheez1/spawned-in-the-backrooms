@@ -1,4 +1,5 @@
 import { hostileReason } from "./lib/forgive.js";
+import { hunting } from "./lib/threat.js";
 import { l31Order } from './lib/level31-food.js'
 import { plain } from './lib/plain.js'
 import { actedVoice, hasCast, recordedDuration } from './lib/voices.js'
@@ -392,10 +393,8 @@ function combat(ctx, it, ses) {
   const hurt = ses.tkHp != null && hp < ses.tkHp - 0.5, ihurt = ses.tkIt === it.id && ses.tkIhp != null && ihp < ses.tkIhp - 0.5
   ses.tkHp = hp; ses.tkIhp = ihp; ses.tkIt = it.id
   if (hurt || ihurt || it.state?.target) return true
-  for (const f of ctx.query({ anyTags: FOES, radius: 9 })) {
-    if (f.state?.dead || (f.state?.hp ?? 1) <= 0 || f.state?.disguised || f.state?.corpseAt) continue
-    return true
-  }
+  const me = ctx.self.feetPosition
+  for (const f of ctx.query({ anyTags: FOES, radius: 9 })) if (hunting(f, ctx.self.id, Math.hypot(f.feetPosition.x - me.x, f.feetPosition.z - me.z))) return true // scripts/lib/threat.js
   return false
 }
 export function update(ctx, dt) {
