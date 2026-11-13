@@ -52,7 +52,10 @@ def build(col):
                 ring.append(k.bm.verts.new((vx, -vz, y0 - 0.06 * (f > 0.99) + h * (math.cos(f * math.pi / 2) ** 0.55) * (1 + 0.25 * n))))
             for i in range(seg):
                 a, b = ring[i], ring[(i + 1) % seg]
-                fc = k.bm.faces.new([top, a, b]) if prev is None else k.bm.faces.new([prev[i], a, b, prev[(i + 1) % seg]])
+                vs = [top, a, b] if prev is None else [prev[i], a, b, prev[(i + 1) % seg]]
+                fx, fz = sum(v.co.x for v in vs) / len(vs), -sum(v.co.y for v in vs) / len(vs)
+                if -4.9 < fx < -0.1 and -7.5 < fz < -3.4: continue  # a face spanning the cellar's inside corner: dropped (its edges sit in the concrete)
+                fc = k.bm.faces.new(vs)
                 fc.material_index = m[mat]
             prev = ring
     def sheet(P, nu, nv, mat="snow"):  # a smooth grid; P(u, v) -> world-local (x, y, z); faces up for u along +x, v along +z order
