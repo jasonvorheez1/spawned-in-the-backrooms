@@ -264,7 +264,7 @@ export function tick(ctx) {
       for (const [ri, r] of RACK.rows.entries()) for (const b of [-1, 1]) ctx.spawn(`l1rack-${cx}-${cz}-${ri}-${b}`, { tags: ["l1rack"], feetPosition: { x: c.x + b * RACK.len / 4, y: 0, z: c.z + r }, rotation: { yaw: (ri ? 180 : 0) + (hash(cx, cz, 600 + ri * 2 + b) - 0.5) * 1.2 },
         model: { id: RACK_GLB }, layout: { box: { min: { x: -RACK.len / 4, y: 0, z: -RACK.depth / 2 }, max: { x: RACK.len / 4, y: RACK.top, z: RACK.depth / 2 } } }, physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 45 } }); }
   }
-  if (s.l1StockV !== 3) { s.l1StockV = 3; for (const o of ctx.query({ tags: ["l1stock"] })) delete ctx.place.objects[o.id]; s.l1Stock = 0; } // stock v2: real box models
+  if (s.l1StockV !== 4) { s.l1StockV = 4; for (const o of ctx.query({ tags: ["l1stock"] })) delete ctx.place.objects[o.id]; s.l1Stock = 0; } // stock v2: real box models
   if (!s.l1Stock) { s.l1Stock = layStock(ctx) || 1; }
   if (s.puddles !== 2) { s.puddles = 2; for (const o of ctx.query({ tags: ["puddle"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id);
     for (let i = 0; i < 70; i++) { const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N); if (zoneOf(cx, cz) !== "halls" && zoneOf(cx, cz) !== "storage") continue;
@@ -348,7 +348,7 @@ function tentWalls(ctx, a) {
     for (const sx of [-1, 1]) ctx.spawn("meg-t-tentwall-" + k + (sx > 0 ? "e" : "w"), { feetPosition: { x: a.x + dx + sx * (hw - 0.25), y: 0, z: a.z + dz }, primitive: { kind: "box", width: 0.5, height: h * 0.7, depth: hd * 2 }, visible: false, physics: "static" })
 }
 function layStock(ctx) {
-  const PAILS = ["oklch(0.88 0.01 250)", "oklch(0.55 0.13 250)", "oklch(0.6 0.16 30)"];
+  const PAILS = ["/cdn/value.14aaae5f8ff7dc07b0f3bbf46f2d5efae93cdd6819b5dd66ae8aba348b3769be.glb", "/cdn/value.e172acdb25d4f81d7a58f04fe25b6f01fce49336a281df46d7c91621861b7dac.glb", "/cdn/value.a1ef6570297b658f585c8842ce65c0aadb030f8ba592abab028f7eccf36fca1f.glb"]; // Tripo pails, Nov 13 (Shelly: "paint buckets need an overhaul too")
   let n = 0;
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     if (zoneOf(cx, cz) !== "storage") continue;
@@ -365,7 +365,7 @@ function layStock(ctx) {
           state: { name: "Carton", mat: "wood", hp: 20, maxHp: 20, items: items.join(",") } });
       } else {
         ctx.spawn({ tags: ["container", "breakable", "l1stock"], feetPosition: { x: bx, y, z: bz }, rotation: { yaw: hash(cx, k, 98) * 360 }, physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 40 },
-          primitive: { kind: "scripted", script: "scripts/l1-stock-geo.js", params: { kind: "pail", tint: PAILS[Math.floor(hash(cx, cz, k) * 3)] } },
+          model: { id: PAILS[Math.floor(hash(cx, cz, k) * 3)] }, layout: { box: { min: { x: -0.15, y: 0, z: -0.15 }, max: { x: 0.15, y: 0.36, z: 0.15 } } }, // a 5-gallon pail, ~36 cm tall
           state: { name: "Paint pail", mat: "metal", hp: 30, maxHp: 30, items: items.join(",") } });
       }
       n++;
