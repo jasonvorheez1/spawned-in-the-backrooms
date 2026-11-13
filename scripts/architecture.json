@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7384,
-  "updatedAt": "2026-11-13T15:50:46.268Z",
+  "basedOnSpecVersion": 7394,
+  "updatedAt": "2026-11-13T16:07:09.453Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, a social hub and authored lore destinations; player.state carries progression, gear, quests, homes, companions and resume location. Shared player behaviors and place simulations join authored scenes to generated spaces, with reusable dialogue, quests, NPC systems and enemy kits; Dina's saved clue trail and playable recordings reveal the Way Back.",
   "scriptPaths": [],
   "places": [
@@ -11,7 +11,7 @@
     "places/level01 (3D) - Zenith Station, breach, bots, hazards and recorder quest.",
     "places/level1, level2, level02, level21, level3, gamma (3D) - Habitable Zone car park, Pipe Dreams, Level 0.2, Locked, Electrical Station and Base Gamma.",
     "places/level31 (3D) - Roller Rink venue and Level 70 door; places/level70 (3D, Froidetown) - snowy Canadian planetoid city; both use Awakening lighting.",
-    "places/level5 (3D) - Homely Hotel / Terror Hotel; sim restores authored hotel systems and the versioned Gentleman (Entity 18) office and errand props.",
+    "places/level5 (3D) - Homely Hotel / Terror Hotel; sim restores hotel systems and the versioned Gentleman (Entity 18) office, errand props and seated NPC.",
     "places/testlab (3D) - Test Range with weapon/physics stations and Enemy Bay; other authored lore destinations including Levels 4-13 and 26-27 hold stories, hazards and residents."
   ],
   "roots": [
@@ -22,7 +22,7 @@
     "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, wake/resume, aiming, third-person view and HUD zone naming.",
     "scripts/ui.js + scripts/stats-ui.js - composed HUD/menus and character status, including quest journal and Level 70-only CHILL bar.",
     "places/main/sim.js + scripts/lib/maze.js + scripts/lib/xmas-room.js + scripts/lib/level0-moments.js - Level 0 layout and deterministic dressing.",
-    "places/level5/sim.js + scripts/lib/level5.js + scripts/level5-geo.js - hotel plan, shell and local simulation; level5 sim restores the Beast's office via l5-beast.js."
+    "places/level5/sim.js + scripts/lib/level5.js + scripts/level5-geo.js - hotel plan, shell and local simulation; Level 5 sim restores the Beast's office via l5-beast.js."
   ],
   "shared": [
     "scripts/lib/hub.js + preload data/scripts - solo room IDs, home destinations, display names and proximity preload.",
@@ -51,7 +51,7 @@
     "scripts/lib/errands.js - player.state.errands records, errHints and errand journal entries; completion updates cents, payout, rep and hints.",
     "scripts/lib/level31-quest.js + level70-quest.js + remodel-quest.js - Level 31/70 and remodel quest stages, routes and rewards.",
     "scripts/build.js + places/level5/sim.js; scripts/l5-resident.js - homeKeep.built/l5built reconstruction, booking identity and place.state.l5rent.",
-    "scripts/lib/l5-beast.js - per-player l5b quest stage, offer/register/card flags, wrath expiry and favor; Level 5 sim owns place.state.officeV, while its glimpse cadence is session-local.",
+    "scripts/lib/l5-beast.js - per-player l5b quest stage, offer/register/card flags, wrath expiry and favor; Level 5 sim owns place.state.officeV, while NPC greeting cadence is session-local.",
     "scripts/lib/breakables.js; companion.js; forgive.js; samantha.js; testlab sim/pad/foe-bay and duller.js - wall damage, save-scoped crew, NPC incidents, cat feeding, bay requests/version and Duller HP/stolen items/remains."
   ],
   "flows": [
@@ -65,8 +65,8 @@
     "tutorial0 HALOGEN cut → tut0-cut.js + dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ.",
     "scripts/build.js placement/removal → homeKeep.built or homeKeep.l5built; Level 5 sim restores separately; l5-resident booking → player l5home/l5room and place.state.l5rent.",
     "Level 2/31 and Level 31/70 directed triggers → scripts/level-door.js; quest-route.js maps the paired crossings; level31/70 sims read versioned layouts and arrival layers.",
-    "Level 5 beastChoices from npc-starters.js → talk-ui choices; scripts/talk.js dispatches handleDialogueQuestBeast; l5b flags + quest helpers track the Gentleman’s Terms, while register/card-slot prop presses set delivery flags and complete it.",
-    "Level 5 sim calls layOffice when place.state.officeV differs and ticks wrathTick; office geometry/props come from l5-beast.js, player hitTarget calls beastStruck, and per-player wrath hides the NPC and spawns glimpses/drains sanity."
+    "Level 5 npc-starters.js offers beastChoices to talk-ui; scripts/talk.js dispatches handleDialogueQuestBeast; l5b stages and register/card prop presses drive The Gentleman's Terms, while doubt starts wrath and resets an unfinished deal.",
+    "Level 5 sim calls layOffice when place.state.officeV differs and ticks wrathTick; l5-beast.js owns office geometry/props, beastStruck handles player hits, and l5-beast-npc.js seats/animates the Gentleman; per-player wrath hides him and spawns glimpses/drains sanity."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored mall shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
@@ -91,6 +91,6 @@
     "Level 31 rebuilds l31-* roots at place.state.v31=100; align IDs and shell/zone/door/arrival geometry with level31.js and preserve the white-door pair with Level 70. Level 70 retains versioned district layers.",
     "Generated wall damage lives in place.state.wallHp/broken; syncWalls treats wall-grid membership as authoritative and deletes stale broken keys. Companions are save-scoped: set player.state.crew when adopting.",
     "Dina's Level 3 cassette (state.kind=cassette) gives holotapes.dina4 and is distinct from the C-23 handoff log; Level 2/4 clue flags are dinaCrate/dinaCarbon and keep existing dinaQ steps.",
-    "Level 5 office reconstruction is keyed by place.state.officeV and OFFICE_V in l5-beast.js; increment when changing the laid office/props. l5b stages and favor are player state; wrath expiry is ctx.now() milliseconds, and wrath damage is sanity only."
+    "Level 5 office reconstruction is keyed by place.state.officeV and OFFICE_V=3 in l5-beast.js; increment OFFICE_V when changing laid geometry/props. The office version now includes seated Beast/extra chair, removed north portrait and open-door placement. l5b and l5bWrath are per-player state; wrath expiry uses ctx.now() milliseconds and lasts five minutes."
   ]
 }
