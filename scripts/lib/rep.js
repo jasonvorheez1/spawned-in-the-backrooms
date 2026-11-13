@@ -18,7 +18,7 @@ export const GROUPS = {
   amber: { name: "Camp Amber", info: "wanderers who keep supply stops in the Hub" },
 };
 // New Vegas reputation: fame and infamy are kept apart per faction (s.fame[g], s.infamy[g], 0..100); s.rep[g] stays the net (fame - infamy) every older reader uses.
-// A favour for one side is a slight to its rival: RIVALS[g] takes infamy at RIVAL_CUT of the fame earned (her pick, 1/3).
+// Shelly Nov 13: helping one faction never hurts another. RIVALS is a record of who opposes whom, read by nothing that moves standing.
 export const RIVALS = { meg: ["bntg"], bntg: ["meg"], froid: ["gelu"], gelu: ["froid"], concession: ["rink"], rink: ["concession"] };
 const RIVAL_CUT = 1 / 3;
 const LV = (n) => (n >= 60 ? 3 : n >= 35 ? 2 : n >= 12 ? 1 : 0);
@@ -72,7 +72,6 @@ function bump(s, g, d) { // one faction's fame (d > 0) or infamy (d < 0); return
 export function addRep(s, g, d) {
   if (!g || !d) return "";
   const out = [bump(s, g, d)];
-  if (d > 0) for (const r of RIVALS[g] ?? []) out.push(bump(s, r, -d * RIVAL_CUT));
   return out.filter(Boolean).join(" · ");
 }
 export function addKarma(s, d) {
