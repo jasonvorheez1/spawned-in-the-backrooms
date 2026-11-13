@@ -1,0 +1,375 @@
+# Errands: small jobs people hand out when you talk to them (scripts/lib/errands.js runs them).
+# Written to design/story-spine.md: a job never names a place, a level or a person the player has not been told about.
+# stage kinds: fetch (hold <count> of item <target>), carry (talk to NPC <target> holding <count> of <item>; handed over),
+#   talk (talk to NPC <target>), clear (<count> kills from the moment the stage starts), find (walk up to object <target>),
+#   repair (stand at object <target> holding <item>; one used per fix, <count> fixes).
+# alt: a second way through, tried each time you talk to the giver mid-job:
+#   speech (your Speech skill at <sk> or more talks them out of the rest, pay * <pay>), item (hand over <count> of <item> instead).
+# reward: cents (100 = 1 Backdollar), xp, item (tokens), rep { group, d }, trail (a hint toward that trail key, never the key;
+#   only given while the key is still unknown; hintNeeds: name keeps a hint quiet until the player has heard the name).
+
+- id: ale-water
+  giver: meg-ale
+  place: level1
+  title: "Water for the Fire"
+  stages:
+    - { text: "Find still water", kind: fetch, target: stillwater, count: 3 }
+    - { text: "Bring the water back to Ale", kind: carry, target: meg-ale, item: stillwater, count: 3 }
+  alt: { kind: item, item: mineralwater, count: 2, text: "Ale takes the fancy water instead. Says it tastes like a hotel." }
+  reward: { cents: 1500, xp: 60, rep: { group: meg, d: 2 }, trail: word }
+  hint: "Ale says the people around the fire have a name for all of this. Ask them where you are."
+
+- id: ortiz-lantern
+  giver: meg-ortiz
+  place: level1
+  title: "Lamp Check"
+  stages:
+    - { text: "Find wire", kind: fetch, target: wire, count: 2 }
+    - { text: "Fix the lantern by the camp", kind: repair, target: dina-lantern, item: wire, count: 1 }
+    - { text: "Tell Ortiz it's lit", kind: talk, target: meg-ortiz, count: 1 }
+  alt: { kind: item, item: copper_wire, count: 1, text: "Ortiz takes the copper and says he'll do it himself." }
+  reward: { cents: 2000, xp: 80, rep: { group: meg, d: 2 } }
+
+- id: callum-quiet
+  giver: meg-callum
+  place: level1
+  title: "Thin the Herd"
+  stages:
+    - { text: "Put down whatever is prowling near camp", kind: clear, target: hostile, count: 3 }
+    - { text: "Report to Callum", kind: talk, target: meg-callum, count: 1 }
+  alt: { kind: speech, sk: 45, pay: 0.5, text: "Callum buys the story. Mostly." }
+  reward: { cents: 3000, xp: 120, item: [bandage], rep: { group: meg, d: 3 } }
+
+- id: wren-bolts
+  giver: surv-wren
+  place: level2
+  title: "Loose Pipe"
+  stages:
+    - { text: "Find bolts", kind: fetch, target: bolts, count: 4 }
+    - { text: "Find nails", kind: fetch, target: nails, count: 4 }
+    - { text: "Bring the hardware to Wren", kind: carry, target: surv-wren, item: bolts, count: 4 }
+  alt: { kind: item, item: steel_pipe, count: 1, text: "Wren takes the whole pipe. Easier than fixing the old one." }
+  reward: { cents: 2500, xp: 90, rep: { group: survivors, d: 3 } }
+
+- id: hollis-lamps
+  giver: surv-hollis
+  place: level2
+  title: "Lights in the Tunnel"
+  stages:
+    - { text: "Find a fuse", kind: fetch, target: fuse, count: 2 }
+    - { text: "Fix the lamp down the pipe run", kind: repair, target: l2-sd-lamp0, item: fuse, count: 1 }
+    - { text: "Fix the next lamp along", kind: repair, target: l2-sd-lamp1, item: fuse, count: 1 }
+    - { text: "Tell Hollis", kind: talk, target: surv-hollis, count: 1 }
+  alt: { kind: speech, sk: 50, pay: 0.4, text: "Hollis decides the dark was cozy anyway." }
+  reward: { cents: 3500, xp: 140, rep: { group: survivors, d: 3 }, trail: tape }
+  hintNeeds: name
+  hint: "Hollis remembers a tape left at a checkpoint further down. A woman's voice. Somebody called it Dina's."
+
+- id: mags-soup
+  giver: surv-mags
+  place: level2
+  title: "Something Hot"
+  stages:
+    - { text: "Find canned beans", kind: fetch, target: beans, count: 2 }
+    - { text: "Find bread", kind: fetch, target: bread, count: 1 }
+    - { text: "Bring supper to Mags", kind: carry, target: surv-mags, item: beans, count: 2 }
+  alt: { kind: item, item: stew, count: 1, text: "Mags eats the stew cold and doesn't complain once." }
+  reward: { cents: 1200, xp: 70, item: [firstaid], rep: { group: survivors, d: 2 } }
+
+- id: reyes-photo
+  giver: gamma-reyes
+  place: level3
+  title: "The Photo by the Gate"
+  stages:
+    - { text: "Find the photo by the gate", kind: find, target: l3-gate-photo, count: 1 }
+    - { text: "Tell Reyes what you saw", kind: talk, target: gamma-reyes, count: 1 }
+  alt: { kind: speech, sk: 35, pay: 0.6, text: "Reyes would rather not know. Fair." }
+  reward: { cents: 1500, xp: 70 }
+
+- id: pell-coils
+  giver: gamma-pell
+  place: level3
+  title: "Spare Coils"
+  stages:
+    - { text: "Find copper coil", kind: fetch, target: copper_coil, count: 3 }
+    - { text: "Find a circuit board", kind: fetch, target: circuit, count: 1 }
+    - { text: "Bring the parts to Pell", kind: carry, target: gamma-pell, item: copper_coil, count: 3 }
+  alt: { kind: item, item: motor, count: 1, text: "Pell strips the motor for coils on the spot." }
+  reward: { cents: 4000, xp: 150, item: [ammo] }
+
+- id: june-rations
+  giver: gamma-june
+  place: gamma
+  title: "Short Rations"
+  stages:
+    - { text: "Find rations", kind: fetch, target: ration, count: 4 }
+    - { text: "Bring them to June", kind: carry, target: gamma-june, item: ration, count: 4 }
+    - { text: "Let Tess know the shelf is full", kind: talk, target: gamma-tess, count: 1 }
+  alt: { kind: item, item: royal_ration, count: 1, text: "June stares at the tin for a while. Then she takes it." }
+  reward: { cents: 3000, xp: 110 }
+
+- id: tess-sweep
+  giver: gamma-tess
+  place: gamma
+  title: "Perimeter Sweep"
+  stages:
+    - { text: "Deal with what's scratching at the walls", kind: clear, target: hostile, count: 4 }
+    - { text: "Check in with Duke on watch", kind: talk, target: gamma-duke, count: 1 }
+    - { text: "Report to Tess", kind: talk, target: gamma-tess, count: 1 }
+  alt: { kind: speech, sk: 55, pay: 0.5, text: "Tess logs the sweep as done. She does not look up." }
+  reward: { cents: 4500, xp: 180, item: [shells] }
+
+- id: otto-gears
+  giver: gamma-otto
+  place: gamma
+  title: "Otto's Clock"
+  stages:
+    - { text: "Find gears", kind: fetch, target: gears, count: 3 }
+    - { text: "Find springs", kind: fetch, target: springs, count: 2 }
+    - { text: "Bring them to Otto", kind: carry, target: gamma-otto, item: gears, count: 3 }
+  alt: { kind: item, item: musicbox, count: 1, text: "Otto takes the music box apart with a happy little noise." }
+  reward: { cents: 2500, xp: 100 }
+
+- id: vell-cooler
+  giver: amor-vell
+  place: level4
+  title: "Office Water"
+  stages:
+    - { text: "Find the water cooler in office ten", kind: find, target: l4-office-10-cooler, count: 1 }
+    - { text: "Find bottled water", kind: fetch, target: stillwater, count: 2 }
+    - { text: "Bring the water to Vell", kind: carry, target: amor-vell, item: stillwater, count: 2 }
+  alt: { kind: item, item: gatorade, count: 2, text: "Vell takes the sports drinks. Calls it a promotion." }
+  reward: { cents: 2000, xp: 80 }
+
+- id: hask-lift
+  giver: amor-hask
+  place: level4
+  title: "Stuck Lift"
+  stages:
+    - { text: "Find a motor", kind: fetch, target: motor, count: 1 }
+    - { text: "Fix the lift door", kind: repair, target: l4-lift-door, item: motor, count: 1 }
+    - { text: "Tell Hask", kind: talk, target: amor-hask, count: 1 }
+  alt: { kind: speech, sk: 40, pay: 0.5, text: "Hask agrees the stairs are good exercise." }
+  reward: { cents: 3500, xp: 130, item: [snapple] }
+
+- id: dolores-coat
+  giver: l5-dolores
+  place: level5
+  title: "A Coat Unclaimed"
+  stages:
+    - { text: "Go to the coat check", kind: find, target: l5-ball-coatcheck, count: 1 }
+    - { text: "Ask Millie about the coat", kind: talk, target: l5-millie, count: 1 }
+    - { text: "Tell Dolores", kind: talk, target: l5-dolores, count: 1 }
+  alt: { kind: speech, sk: 45, pay: 0.5, text: "Dolores decides the coat was ugly anyway." }
+  reward: { cents: 2500, xp: 90, rep: { group: hotel, d: 2 } }
+
+- id: harlan-ledger
+  giver: l5-harlan
+  place: level5
+  title: "The Guest Book"
+  stages:
+    - { text: "Ask Vanderholt about the guest book", kind: talk, target: l5-vanderholt, count: 1 }
+    - { text: "Find the bar cart in the ballroom", kind: find, target: l5-ball-barcart, count: 1 }
+    - { text: "Bring Harlan a whiskey for his trouble", kind: carry, target: l5-harlan, item: whiskey, count: 1 }
+  alt: { kind: item, item: budweiser, count: 2, text: "Harlan takes the beer. He's not proud." }
+  reward: { cents: 3000, xp: 110, rep: { group: hotel, d: 2 }, trail: room }
+  hint: "Harlan says the desk writes down every guest and every room. Ask the staff about anybody you're looking for."
+
+- id: millie-linen
+  giver: l5-millie
+  place: level5
+  title: "Clean Linen"
+  stages:
+    - { text: "Find cloth stuffing", kind: fetch, target: stuffing, count: 4 }
+    - { text: "Bring it to Millie", kind: carry, target: l5-millie, item: stuffing, count: 4 }
+  alt: { kind: item, item: spider_silk, count: 2, text: "Millie holds the silk up to the light and goes quiet." }
+  reward: { cents: 1800, xp: 70, item: [bandage] }
+
+- id: wat-candles
+  giver: l5-wat
+  place: level5
+  title: "Candles Without Flame"
+  stages:
+    - { text: "Find something that glows", kind: fetch, target: glow_cap, count: 2 }
+    - { text: "Look at the Boiler Room sign", kind: find, target: l5-ball-boilersign, count: 1 }
+    - { text: "Bring the light to Wat", kind: carry, target: l5-wat, item: glow_cap, count: 2 }
+  alt: { kind: item, item: glow_necklace, count: 1, text: "Wat wears the necklace like a holy relic." }
+  reward: { cents: 1500, xp: 90 }
+
+- id: zelda-cards
+  giver: l5-zelda
+  place: level5
+  title: "A Fourth for Cards"
+  stages:
+    - { text: "Ask Vesna to sit in", kind: talk, target: l5-vesna, count: 1 }
+    - { text: "Ask Imani to sit in", kind: talk, target: l5-imani, count: 1 }
+    - { text: "Bring Zelda a bottle", kind: carry, target: l5-zelda, item: smirnoffice, count: 1 }
+  alt: { kind: speech, sk: 40, pay: 0.6, text: "Zelda deals you in instead. You lose on purpose." }
+  reward: { cents: 2500, xp: 80 }
+
+- id: jude-ladder
+  giver: l7-jude
+  place: level7
+  title: "Up the Tower"
+  stages:
+    - { text: "Climb to the tower ladder", kind: find, target: l7-ladder-tower, count: 1 }
+    - { text: "Find rope fibre or silk", kind: fetch, target: spider_silk, count: 2 }
+    - { text: "Bring it to Jude", kind: carry, target: l7-jude, item: spider_silk, count: 2 }
+  alt: { kind: item, item: wire, count: 4, text: "Jude says wire will hold. Jude is probably right." }
+  reward: { cents: 3000, xp: 120 }
+
+- id: mara-gate
+  giver: l7-mara
+  place: level7
+  title: "The Fort Gate"
+  stages:
+    - { text: "Check the gate at the fort", kind: find, target: l7f-gate-0, count: 1 }
+    - { text: "Find sheet steel", kind: fetch, target: sheet_steel, count: 2 }
+    - { text: "Bring it to Mara", kind: carry, target: l7-mara, item: sheet_steel, count: 2 }
+  alt: { kind: speech, sk: 50, pay: 0.5, text: "Mara agrees the gate can wait one more storm." }
+  reward: { cents: 4000, xp: 150, rep: { group: surrender, d: 2 }, trail: pass }
+  hintNeeds: name
+  hint: "Mara says no boat she knows takes anybody aboard without a pass. The city people sell passes, and so does talk."
+
+- id: wen-tar
+  giver: l8-wen
+  place: level8
+  title: "Tar for the Roof"
+  stages:
+    - { text: "Find pitch", kind: fetch, target: pitch, count: 3 }
+    - { text: "Bring it to Wen", kind: carry, target: l8-wen, item: pitch, count: 3 }
+  alt: { kind: item, item: crew_putty, count: 2, text: "Wen sniffs the putty and shrugs. It'll do." }
+  reward: { cents: 2000, xp: 90 }
+
+- id: marit-crawl
+  giver: l8-marit
+  place: level8
+  title: "Something in the Dark"
+  stages:
+    - { text: "Clear the crawlers near the cave camp", kind: clear, target: hostile, count: 5 }
+    - { text: "Find chitin to prove it", kind: fetch, target: chitin, count: 2 }
+    - { text: "Bring it to Marit", kind: carry, target: l8-marit, item: chitin, count: 2 }
+  alt: { kind: speech, sk: 60, pay: 0.4, text: "Marit takes your word. Marit regrets it later." }
+  reward: { cents: 5000, xp: 200, item: [ammo] }
+
+- id: hale-silo
+  giver: l10-meg-hale
+  place: level10
+  title: "The Silo Ladder"
+  stages:
+    - { text: "Check the silo ladder", kind: find, target: l10-ladder-silo, count: 1 }
+    - { text: "Find bolts", kind: fetch, target: bolts, count: 3 }
+    - { text: "Bring them to Hale", kind: carry, target: l10-meg-hale, item: bolts, count: 3 }
+  alt: { kind: item, item: rebar_rod, count: 2, text: "Hale welds the rebar in and calls it a ladder." }
+  reward: { cents: 3000, xp: 120, rep: { group: meg, d: 2 } }
+
+- id: sully-worms
+  giver: l10-meg-sully
+  place: level10
+  title: "Worms in the Wheat"
+  stages:
+    - { text: "Look at the worm patch", kind: find, target: l10-worms, count: 1 }
+    - { text: "Clear what's eating the field", kind: clear, target: hostile, count: 3 }
+    - { text: "Tell Sully", kind: talk, target: l10-meg-sully, count: 1 }
+  alt: { kind: speech, sk: 45, pay: 0.5, text: "Sully decides worms are just extra protein." }
+  reward: { cents: 3500, xp: 140, rep: { group: meg, d: 2 }, trail: radio }
+  hintNeeds: name
+  hint: "Sully says there's a city past the fields with a man on the radio. People ask him about anybody gone missing."
+
+- id: wren10-pot
+  giver: l10-meg-wren
+  place: level10
+  title: "Supper Pot"
+  stages:
+    - { text: "Find the family's cooking pot", kind: find, target: l10-fam-pot, count: 1 }
+    - { text: "Find bread", kind: fetch, target: bread, count: 2 }
+    - { text: "Bring it to Wren", kind: carry, target: l10-meg-wren, item: bread, count: 2 }
+  alt: { kind: item, item: stew, count: 1, text: "Wren tips the stew straight into the pot." }
+  reward: { cents: 1500, xp: 70 }
+
+- id: walker-booth
+  giver: l11-walker-2
+  place: level11
+  title: "The Parking Booth"
+  stages:
+    - { text: "Find the booth in the parking lot", kind: find, target: l11-lot-booth, count: 1 }
+    - { text: "Find coffee money's worth of soda", kind: fetch, target: coke, count: 2 }
+    - { text: "Bring it back", kind: carry, target: l11-walker-2, item: coke, count: 2 }
+  alt: { kind: item, item: pepsi, count: 2, text: "Pepsi. Fine. Nobody's perfect." }
+  reward: { cents: 2000, xp: 70 }
+
+- id: commuter-bridge
+  giver: l11-commuter-faceling
+  place: level11
+  title: "The Footbridge"
+  stages:
+    - { text: "Cross the footbridge", kind: find, target: l11-footbridge, count: 1 }
+    - { text: "Find a lamp's worth of wire", kind: fetch, target: wire, count: 2 }
+    - { text: "Fix the footbridge lamp", kind: repair, target: l11-footbridge-lamp, item: wire, count: 1 }
+  alt: { kind: speech, sk: 40, pay: 0.5, text: "The commuter nods. Somebody else will fix it. Somebody always does." }
+  reward: { cents: 2500, xp: 100 }
+
+- id: dot-chair
+  giver: l13p-dot
+  place: level13
+  title: "Dot's Move"
+  stages:
+    - { text: "Talk to Hale about the game", kind: talk, target: l13p-hale, count: 1 }
+    - { text: "Find a snack for the table", kind: fetch, target: nachos, count: 1 }
+    - { text: "Bring it to Dot", kind: carry, target: l13p-dot, item: nachos, count: 1 }
+  alt: { kind: item, item: gumball, count: 3, text: "Dot shares the gumballs. Hale gets none." }
+  reward: { cents: 1500, xp: 60 }
+
+- id: hale13-think
+  giver: l13p-hale
+  place: level13
+  title: "Thinking Tea"
+  stages:
+    - { text: "Find something to drink", kind: fetch, target: snapple, count: 1 }
+    - { text: "Bring it to Hale", kind: carry, target: l13p-hale, item: snapple, count: 1 }
+  alt: { kind: item, item: sobe, count: 1, text: "Hale drinks it slowly. Still thinking." }
+  reward: { cents: 1200, xp: 50 }
+
+- id: gord-shovel
+  giver: l70-npc-gord
+  place: level70
+  title: "Snow on the Walk"
+  stages:
+    - { text: "Find scrap wood for a shovel handle", kind: fetch, target: scrap_wood, count: 3 }
+    - { text: "Find sheet steel for the blade", kind: fetch, target: sheet_steel, count: 1 }
+    - { text: "Bring the parts to Gord", kind: carry, target: l70-npc-gord, item: scrap_wood, count: 3 }
+  alt: { kind: speech, sk: 45, pay: 0.5, text: "Gord agrees the snow will melt eventually. Someday. Probably." }
+  reward: { cents: 2500, xp: 100, rep: { group: froid, d: 3 } }
+
+- id: maple-kettle
+  giver: l70-npc-maple
+  place: level70
+  title: "The Kettle"
+  stages:
+    - { text: "Find copper wire", kind: fetch, target: copper_wire, count: 2 }
+    - { text: "Ask Bev if she has a spare plug", kind: talk, target: l70-npc-bev, count: 1 }
+    - { text: "Bring the wire to Maple", kind: carry, target: l70-npc-maple, item: copper_wire, count: 2 }
+  alt: { kind: item, item: copper_coil, count: 1, text: "Maple winds the coil herself. Tea in ten." }
+  reward: { cents: 2000, xp: 90, rep: { group: froid, d: 3 } }
+
+- id: doug-bait
+  giver: l70-npc-doug
+  place: level70
+  title: "Bait for the River"
+  stages:
+    - { text: "Find bait", kind: fetch, target: bread, count: 2 }
+    - { text: "Bring it to Doug", kind: carry, target: l70-npc-doug, item: bread, count: 2 }
+    - { text: "Tell Gord the fish are biting", kind: talk, target: l70-npc-gord, count: 1 }
+  alt: { kind: item, item: almond, count: 3, text: "Doug has never tried almonds as bait. He is willing to learn." }
+  reward: { cents: 1800, xp: 80, item: [stew], rep: { group: froid, d: 2 } }
+
+- id: bev-cocoa
+  giver: l70-npc-bev
+  place: level70
+  title: "Cocoa Run"
+  stages:
+    - { text: "Find something warm to drink", kind: fetch, target: eggnog, count: 2 }
+    - { text: "Bring one to Pierrette", kind: carry, target: l70-npc-pierrette, item: eggnog, count: 1 }
+    - { text: "Bring one back to Bev", kind: carry, target: l70-npc-bev, item: eggnog, count: 1 }
+  alt: { kind: speech, sk: 35, pay: 0.6, text: "Bev laughs and says she'll just make more." }
+  reward: { cents: 2000, xp: 90, rep: { group: froid, d: 3 } }
