@@ -2,12 +2,13 @@
 // (scripts/lib/level70-town.js, -wild.js, -life.js, -quest.js): lay() once per its version, tick() every second.
 import { ARRIVE, HUT } from "../../scripts/lib/level70.js";
 import * as town from "../../scripts/lib/level70-town.js";
+import * as civic from "../../scripts/lib/level70-civic.js";
 import * as wild from "../../scripts/lib/level70-wild.js";
 import * as life from "../../scripts/lib/level70-life.js";
 import * as quest from "../../scripts/lib/level70-quest.js";
 export const cadence = "1s";
 const V = 1;
-const LAYERS = { town, wild, life, quest };
+const LAYERS = { town, civic, wild, life, quest };
 const SNOW = `fx follow=camera
 pop flake rate=?mobile:120|ultra:520|300 on=box(26,1,26) pos=<0,9,0> life=5..8 v=<1.6,-1.7,.9>+sdir()*.3 size=.025..0.06 acc=curl(.5)*.9 col=<.95,.97,1> a=0>.1:.85>.9:.8>0 sz=$size floor=die r=sprite(soft-disc,alpha)`;
 function spine(ctx) {
