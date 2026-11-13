@@ -42,7 +42,7 @@ for f in bm.faces:
     n = f.normal; ax = max(range(3), key=lambda i: abs(n[i]))
     f.material_index = 1 if n.z < -0.5 else 0
     for lp in f.loops:
-        c = lp.vert.co; lp[uv] = (c.y, c.z) if ax == 0 else (c.x, c.z) if ax == 1 else (c.x, c.y)
+        c = lp.vert.co; lp[uv].uv = (c.y, c.z) if ax == 0 else (c.x, c.z) if ax == 1 else (c.x, c.y)
 bm.to_mesh(inn.data); bm.free()
 mat = bpy.data.materials.new("interior"); mat.use_nodes = True
 b = mat.node_tree.nodes["Principled BSDF"]; b.inputs["Base Color"].default_value = (0.78, 0.72, 0.6, 1); b.inputs["Roughness"].default_value = 0.9
