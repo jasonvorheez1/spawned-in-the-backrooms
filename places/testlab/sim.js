@@ -109,7 +109,7 @@ function build(ctx) {
   pad(ctx, "tl-pad-lv10", "lv10", "LEVEL 10", 3, 20, "oklch(0.7 0.14 250)");
   pad(ctx, "tl-pad-reset", "resetphys", "RESET PHYSICS", 14, 12, "oklch(0.78 0.15 80)");
   pad(ctx, "tl-pad-exit", "exit", "BACK TO BONUS", 0, 22.6, "oklch(0.75 0.03 250)");
-  ctx.spawn("tl-hum", { feetPosition: { x: 0, y: 4, z: 0 }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-fluorescent-light-hum-loop.mp3", gain: 0.12, loop: true, spatial: false } });
+  // no ambient bed in the Test Range (Shelly, Nov 13: "remove the ambient noise in the debug")
 }
 
 const snackTotal = (s) => Object.values(s.snacks ?? {}).reduce((a, b) => a + (b || 0), 0);

@@ -84,7 +84,6 @@ export function foeBayBuild(ctx, pad, sign) {
   ctx.spawn("tl-bay-smiler6", { feetPosition: { x: PEN.x, y: 0, z: PEN.z }, behavior: "scripts/l6-smiler.js" });
   ctx.spawn("tl-bay-brain", { feetPosition: { x: PEN.x, y: 0, z: PEN.z }, behavior: "scripts/bay-brain.js" });
   ctx.spawn("tl-bay-l70", { tags: ["l70-mgr"], feetPosition: { x: PEN.x, y: 0, z: PEN.z }, behavior: "scripts/l70-foes.js" });
-  ctx.spawn("tl-bay-growl", { feetPosition: { x: PEN.x, y: 1, z: PEN.z }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-low-distant-creature-growl-loop.mp3", gain: 0.08, loop: true, maxDistance: 18 } });
 }
 
 function spawnFoe(ctx, kind, n) {
