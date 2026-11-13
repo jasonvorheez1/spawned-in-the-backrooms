@@ -1,7 +1,7 @@
 // Level 8 "The 9th Road" - Quests & Survival Camp Operations
 import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
-import { setQuest, endQuest, qid, questStep } from "./quests.js";
+import { setQuest, endQuest, qid, questStep, payOnce } from "./quests.js";
 import { addRep, addKarma, repOf, GROUPS } from "./rep.js";
 import { rollCheck } from "./npc-talk.js";
 
@@ -94,6 +94,7 @@ export function finishQuest8(ctx, p, qKey, { xp = 100, cents = 5000, items = [],
   if (!s) return;
   const q = QUESTS8[qKey];
   if (!q) return;
+  if (s[q.key] === 99 || !payOnce(s, "l8-" + qKey)) return; // paid once per save
 
   const b = BONUS(s, by), msgs = [];
   if (b && cents) { const extra = Math.round(cents * b); cents += extra; msgs.push(`${GROUPS[by]?.name ?? by} bonus +$${(extra / 100).toFixed(2)}`); }

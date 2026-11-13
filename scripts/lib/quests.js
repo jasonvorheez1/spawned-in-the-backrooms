@@ -78,3 +78,11 @@ export function claimReward(s, id) {
   s.claimed = { ...(s.claimed ?? {}), [id]: 1 };
   return true;
 }
+
+// the same promise for finishers that end their quest in the same breath: one mark per quest, kept apart from qdone (which they have just written)
+export function payOnce(s, id) {
+  if (!s || !id) return false;
+  if (s.paid?.[id]) return false;
+  s.paid = { ...(s.paid ?? {}), [id]: 1 };
+  return true;
+}

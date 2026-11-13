@@ -6,7 +6,7 @@ import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
 import { addRep, addKarma } from "./rep.js";
 import { rollCheck } from "./npc-talk.js";
-import { setQuest, endQuest, qid, tellQuest } from "./quests.js";
+import { setQuest, endQuest, qid, tellQuest, payOnce } from "./quests.js";
 const CHIME = "cdn/sfx-soft-bright-two-note-success-chime.mp3";
 const FANFARE = "/cdn/moodboard-realistic-gritty/sfx-level-up-jingle-retro-terminal-chime-rising-three-notes.mp3";
 const HISS = "cdn/sfx-aerosol-can-short-hiss-click-plastic-cap.mp3";
@@ -59,7 +59,7 @@ export function gotFresh(ctx, p, slot) {
   else if (s.remodQ === 2) syncHUD(s, p.place, ctx.place.state);
 }
 function finish(ctx, p, { xp, cents, rep, text }) {
-  const s = p.state; s.remodQ = 99; syncHUD(s, p.place, ctx.place.state, text); s.cents = (s.cents ?? 0) + cents;
+  const s = p.state; if (s.remodQ === 99 || !payOnce(s, "remodel")) return; s.remodQ = 99; syncHUD(s, p.place, ctx.place.state, text); s.cents = (s.cents ?? 0) + cents;
   const msgs = [];
   for (const [g, d] of rep) { const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d); msgs.push(tier || `${g === "karma" ? "Karma" : g === "bntg" ? "B.N.T.G." : g} +${d}`); }
   const summary = [text, ...msgs].join(" · ");
