@@ -75,6 +75,13 @@ for sex in ("f", "m"):
         lensback = max(v.co.y for v in o.data.vertices if v.co.y < a.y + 0.03 * s / s and abs(v.co.x) < half * 0.5) if not r.get("strap") else a.y + 0.02
         o.data.transform(Matrix.Translation(Vector((0, fy - r["gap"] - (lensback - a.y) - a.y, ez)))); o.data.update()
         n = push_out(o, bvh, 0.006)
+        # Nov 13 (Shelly: "mesh fitting"): the temples trailed straight back past a round skull and stood off its sides; every vert behind the frame now hugs the head 8 mm out
+        a, b = bbox(o); fb = a.y + (b.y - a.y) * 0.18; hug = 0
+        for v in o.data.vertices:
+            if v.co.y <= fb or r.get("strap"): continue
+            loc, nor, i, d = bvh.find_nearest(v.co)
+            if loc is not None and (v.co - loc).dot(nor) > 0.010: v.co = loc + nor * 0.008; hug += 1
+        o.data.update(); print("HUG", kind, sex, hug)
         for x in list(bpy.context.scene.objects):
             if x.type == "MESH" and x != o: bpy.data.objects.remove(x)
         if arm.animation_data: arm.animation_data.action = None
