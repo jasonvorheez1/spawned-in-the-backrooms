@@ -4,6 +4,7 @@ import { N, S, H, HALF, DOOR, zoneOf, edge, hasPillar, sectorOf, cellCenter, RAC
 import { puddle } from "./level1-deck-geo.js";
 import { slab, prism, tube } from "./lib/shapes.js";
 
+const CMU = "cdn/texture-painted-concrete-block-wall-cream-paint-scuffed-damp-grime-low.png";
 const FLOOR = "cdn/texture-wet-sealed-parking-garage-concrete-floor-tire-scuffs-oil-stains-hairline-cracks.png", STALL = "cdn/texture-worn-chipped-white-road-line-paint-on-concrete.png", WALL = "cdn/texture-discolored-poured-concrete-wall-water-stains.png", CEIL = "cdn/texture-concrete-ceiling-panels.png";
 const box = (ctx, x0, x1, y0, y1, z0, z1) => slab(ctx, [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], [(x1 - x0) / 2, (y1 - y0) / 2, (z1 - z0) / 2]);
 const T = 0.12;
@@ -18,7 +19,7 @@ function wallSeg(ctx, axis, fixed, a, b, y0 = 0, y1 = H, grime = null) {
   if (axis === "x") box(ctx, fixed - T, fixed + T, y0, y1, a, b); else box(ctx, a, b, y0, y1, fixed - T, fixed + T);
   if (grime && y0 === 0) { // a damp, scuffed kick band where the floor water wicks up
     const t = T + 0.012, col = grime[0];
-    ctx.color(grime[1]); if (axis === "x") box(ctx, fixed - t, fixed + t, 0, 0.28, a, b); else box(ctx, a, b, 0, 0.28, fixed - t, fixed + t); ctx.color(col);
+    ctx.color(grime[1]); if (axis === "x") box(ctx, fixed - t, fixed + t, 0, 0.14, a, b); else box(ctx, a, b, 0, 0.14, fixed - t, fixed + t); ctx.color(col);
   }
 }
 
@@ -86,8 +87,8 @@ export function geometry(ctx) {
     if (cut.has(`${axis}:${cx}:${cz}`)) continue;
     const corridor = zoneOf(cx, cz) === "corridors" || zoneOf(axis === "x" ? cx + 1 : cx, axis === "z" ? cz + 1 : cz) === "corridors";
     const wcol = corridor ? "oklch(0.84 0.014 85)" : ["oklch(0.76 0.01 250)", "oklch(0.7 0.014 75)", "oklch(0.8 0.006 240)", "oklch(0.66 0.012 90)"][Math.floor(hash(cx, cz, axis === "x" ? 11 : 13) * 4)];
-    const gr = [wcol, corridor ? "oklch(0.5 0.02 80)" : "oklch(0.42 0.015 70)"];
-    ctx.color(wcol);
+    const gr = [wcol, corridor ? "oklch(0.66 0.02 80)" : "oklch(0.6 0.015 70)"]; // the kick band a step darker than the wall, not a black strip
+    ctx.albedo(corridor ? CMU : WALL); ctx.color(wcol); // Nov 13 (Shelly: "this area looks like garbage"): corridors are painted block, not the smeared pour
     const fixed = axis === "x" ? (cx + 1) * S - HALF : (cz + 1) * S - HALF, start = axis === "x" ? cz * S - HALF : cx * S - HALF;
     if (e.door == null) { wallSeg(ctx, axis, fixed, start, start + S, 0, H, gr); continue; }
     const d0 = start + e.door - DOOR / 2, d1 = start + e.door + DOOR / 2;

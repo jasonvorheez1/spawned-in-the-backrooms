@@ -207,6 +207,15 @@ export function tick(ctx) {
       if (lit) ctx.spawn({ parent: id, feetPosition: { x: 0, y: 0.015, z: 0 }, primitive: { kind: "box", width: 2.2, height: 0.035, depth: 0.07 }, material: { color: "oklch(0.97 0.02 220)", emissive: "oklch(0.95 0.03 220)", emissiveIntensity: 2.4 }, castShadow: false, visibleRange: { max: 42 } });
     }
   }
+  if (s.l1Tripo === 3 && s.l1Rubble !== 1) { s.l1Rubble = 1; // Nov 13 (Shelly: "improve this"): the fallen ceiling slab as Tripo concrete with rebar, a rubble pile beside it, no flat grit decal
+    const SLAB = "/cdn/value.85959a522f0f25f5c7318ba795c488adf5aba0a196f780bc74415ba5ebf68907.glb", PILE = "/cdn/value.644c38e17be893d9013699ab57f00c4a1413a0d76642683fe9dff4f249a73e3c.glb";
+    for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
+      if (zoneOf(cx, cz) !== "halls") continue; const r = hash(cx, cz, 201); if (r < 0.19 || r >= 0.23) continue;
+      const c = cellCenter(cx, cz), x = c.x + (hash(cx, cz, 203) - 0.5) * 3.2, z = c.z + (hash(cx, cz, 205) - 0.5) * 3.2, yaw = hash(cx * 13 + cz, 2, 5) * 360;
+      ctx.spawn("l1-rub-" + cx + "-" + cz, { tags: ["l1prop"], feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: SLAB }, layout: { box: { min: { x: -0.75, y: 0, z: -0.55 }, max: { x: 0.75, y: 0.4, z: 0.55 } } }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, state: { name: "Fallen slab", mat: "concrete" } });
+      ctx.spawn("l1-rubp-" + cx + "-" + cz, { tags: ["l1prop"], feetPosition: { x: x + Math.cos(yaw) * 1.1, y: 0, z: z + Math.sin(yaw) * 1.1 }, rotation: { yaw: yaw * 1.7 }, model: { id: PILE }, layout: { box: { min: { x: -0.5, y: 0, z: -0.45 }, max: { x: 0.5, y: 0.32, z: 0.45 } } }, visibleRange: { max: 35 } });
+    }
+  }
   if (s.l1Tripo === 3 && s.l1Kit === 1 && s.l1Nooks !== 1) s.l1Nooks = tuckClutter(ctx) || (s.l1NookTry = (s.l1NookTry | 0) + 1) > 3 ? 1 : 0;
   if (s.megCamp) { // a fallen agent is replaced after a while; the new one holds no grudge
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz), at = Object.fromEntries(AGENTS.map(([id, dx, dz]) => [id, [dx, dz]]));

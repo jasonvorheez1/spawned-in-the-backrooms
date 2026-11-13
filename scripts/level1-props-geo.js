@@ -73,7 +73,7 @@ export function geometry(ctx) {
     const zone = zoneOf(cx, cz); if (zone !== "halls" && zone !== "storage") continue;
     const r = hash(cx, cz, 201), c = cellCenter(cx, cz), ox = (hash(cx, cz, 203) - 0.5) * 3.2, oz = zone === "storage" ? 0 : (hash(cx, cz, 205) - 0.5) * 3.2;
     const x = c.x + ox, z = c.z + oz;
-    if (real && r < 0.19) {}
+    if (real && (r < 0.19 || (r < 0.23 && zone === "halls"))) {} // real: the fallen slab is a Tripo model too (places/level1/sim.js l1Rubble)
     else if (r < 0.1) { const hue = ["oklch(0.45 0.13 28)", "oklch(0.42 0.1 250)", "oklch(0.5 0.1 145)"][Math.floor(hash(cx, cz, 207) * 3)]; drum(ctx, x, z, 0.9, hue); drum(ctx, x + 0.68, z + 0.1, 0.9, hue); if (r < 0.05) drum(ctx, x + 0.3, z + 0.65, 0.9, hue); }
     else if (r < 0.19) pallet(ctx, x, z, hash(cx, cz, 209) * 3.14, 1 + Math.floor(hash(cx, cz, 211) * 3));
     else if (r < 0.23 && zone === "halls") rubble(ctx, x, z, cx * 13 + cz, hi); // a chunk of ceiling slab that came down
