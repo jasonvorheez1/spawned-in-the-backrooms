@@ -20,7 +20,7 @@ C = dict(KIT[kind])
 for kv in a[2:]:
     k, v = kv.split("="); C[k] = eval(v)
 bpy.ops.wm.read_factory_settings(use_empty=True)
-bpy.ops.import_scene.gltf(filepath=src)
+bpy.ops.import_scene.gltf(filepath=src, merge_vertices=True)
 ms = [o for o in bpy.context.scene.objects if o.type == "MESH"]
 bpy.ops.object.select_all(action="DESELECT")
 for o in ms: o.select_set(True)
@@ -86,6 +86,6 @@ w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True; w.node_tree.node
 ctr = Vector((0, 0, (mn.z + mx.z) / 2)); R = max(d) * 1.9; up = -1 if C["origin"] == "ceiling" else 1
 cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam")); sc.collection.objects.link(cam); sc.camera = cam
 sun = bpy.data.objects.new("sun", bpy.data.lights.new("sun", "SUN")); sun.data.energy = 3; sc.collection.objects.link(sun)
-for n, p in (("a", Vector((0.05, -0.05, up)) * R), ("b", Vector((0.7, -0.8, up * 0.6)).normalized() * R), ("c", Vector((0.2, -1, up * 0.12)).normalized() * R)):
+for n, p in (("a", Vector((0.0, -0.02, up)) * R), ("b", Vector((0.7, -0.8, up * 0.6)).normalized() * R), ("c", Vector((0.2, -1, up * 0.12)).normalized() * R)):
     cam.location = ctr + p; q = (ctr - cam.location).to_track_quat("-Z", "Y"); cam.rotation_euler = q.to_euler(); sun.rotation_euler = q.to_euler()
     sc.render.filepath = f"/tmp/proof/{kind}_{n}.png"; bpy.ops.render.render(write_still=True)
