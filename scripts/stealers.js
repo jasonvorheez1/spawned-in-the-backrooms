@@ -8,7 +8,12 @@ import { canStrike } from "./lib/hunt.js";
 import { knocked } from "./lib/knock.js";
 import { heard } from "./lib/hear.js";
 import L from "./lib/data/level1.yml";
-import { zoneAt, safeZone } from "./lib/level1.js";
+import { zoneAt as zoneAt1, safeZone } from "./lib/level1.js";
+import { layout as layout9, zoneAt as zoneAt9 } from "./lib/level9.js";
+// Level 9: no maze; a house is shelter, the street is theirs
+let LAY9 = null, T9 = null; const town9 = (seed) => (LAY9 && LAY9.seed === seed ? LAY9 : (LAY9 = layout9(seed)));
+const zoneAt = (x, z) => T9 ? (zoneAt9(T9, x, z) === "l9_street" ? "halls" : "l9_house") : zoneAt1(x, z);
+const safe9 = (z) => z === "l9_house" || safeZone(z);
 import { npcMul, dmgAfterArmor } from "./lib/stats.js";
 import { critterSpec, GAIT_LIB } from "./lib/critter-model.js";
 import { npcLook } from "./lib/clothes.js";
@@ -148,12 +153,13 @@ function checkSightThrottled(ctx, m, now, a, b, ignoreId, targetId) {
 
 export function update(ctx, dt) {
   if (!ctx.place.players.length) { ctx.sleep(2); return; }
+  if (ctx.self.place === "level9") { if (ctx.place.state.l9seed == null) { ctx.sleep(1); return; } T9 = town9(ctx.place.state.l9seed); } else T9 = null;
   const now = ctx.now();
   const mem = (ctx.self.session.m ??= {});
   const bleeds = (ctx.self.session.b ??= {});
 
   const players = ctx.place.players.filter(
-    (p) => !safeZone(zoneAt(p.feetPosition.x, p.feetPosition.z)) && !(p.state?.downAt && now - p.state.downAt < 4500)
+    (p) => !safe9(zoneAt(p.feetPosition.x, p.feetPosition.z)) && !(p.state?.downAt && now - p.state.downAt < 4500)
   );
 
   // Bleeds tick on in the manager's own loop: small hits, a drip each
@@ -411,7 +417,7 @@ export function update(ctx, dt) {
     const sight = prey && checkSightThrottled(ctx, m, now, pos, prey.feetPosition, e.id, prey.id);
     let way = null;
     if (!sight) {
-      way = stepToward1(pos.x, pos.z, goal.x, goal.z, 30);
+      way = T9 ? null : stepToward1(pos.x, pos.z, goal.x, goal.z, 30);
     }
     if (!way && !prey && !sight) {
       m.roam = null;
@@ -478,7 +484,7 @@ export function update(ctx, dt) {
     uz /= ul;
     if (sp > 0) [ux, uz] = wallSteer(ctx, m, now, pos, ux, uz, e.id);
 
-    if (safeZone(zoneAt(pos.x + ux * sp * dt * 4, pos.z + uz * sp * dt * 4))) {
+    if (safe9(zoneAt(pos.x + ux * sp * dt * 4, pos.z + uz * sp * dt * 4))) {
       sp = 0;
     }
 

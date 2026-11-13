@@ -166,6 +166,10 @@ function hounds(ctx, s, L) {
     const mh = ctx.query({ tags: ["moths"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((m) => !m.state?.dead && !m.tags?.includes("l5rat")).length;
     for (let i = mh; i < TUNE.moths && lit.length; i++) { const l = lit.splice(Math.floor(ctx.random() * lit.length), 1)[0]; ctx.spawn({ template: "templates/deathmoths.js#swarm", feetPosition: { x: l.x, y: 3.2, z: l.z }, state: { home: { x: l.x, z: l.z } } }); }
   }
+  // skin-stealers (Wikidot: Level 9): a critter on the pavement, until it is close
+  if (!s.stealMgr || !(s.stealMgr in ctx.place.objects)) s.stealMgr = ctx.spawn({ behavior: "scripts/stealers.js" });
+  const sh = ctx.query({ tags: ["stealer"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((e) => !e.state?.dead).length;
+  for (let i = sh; i < TUNE.stealers; i++) { const c = far(); if (!c) break; ctx.spawn({ tags: ["stealer"], feetPosition: T(c.x, c.z, 0.05), physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/stealer-geo.js", params: { revealed: false } }, state: npcState(ctx, "stealer", TUNE.stealerHp, { xp: 60 }) }); }
   for (let i = have, c = null; i < TUNE.hounds; i++) {
     if (i % 3 === 0 || !c) c = far(); if (!c) break;
     ctx.spawn({ tags: ["hound"], feetPosition: T(c.x + (i % 3) * 0.9, c.z + (i % 3) * 0.5, 0.05), physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/hound-geo.js" }, state: npcState(ctx, "hound", TUNE.houndHp, { xp: 45 }) });
