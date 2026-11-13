@@ -15,3 +15,13 @@ test('explicit faction membership takes priority over an unrelated id', () => {
 test('disguise does not conceal a player whose position is unknown', () => {
   expect(disguised({ state: { faction: 'meg' } }, { state: { look: { topw: 'megjacket' } } })).toBe(false)
 })
+
+test('faction history records actual changes with their cause, and remains bounded', () => {
+  const s = {}
+  addRep(s, 'meg', 8, 'Returned a missing key')
+  addRep(s, 'meg', -6, 'Sold survey tapes')
+  expect(s.repHistory).toEqual([{ group:'meg', kind:'fame', amount:8, reason:'Returned a missing key' }, { group:'meg', kind:'infamy', amount:6, reason:'Sold survey tapes' }])
+  for (let i = 0; i < 40; i++) addRep(s, 'amber', 1, 'Helped the camp')
+  expect(s.repHistory).toHaveLength(30)
+})
+

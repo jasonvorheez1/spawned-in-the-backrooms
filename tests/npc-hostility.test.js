@@ -21,9 +21,12 @@ test("an assault alerts only allies who see it and only against the attacker", (
   const { ctx, victim, ally, outsider, player, other } = scene();
   blocked = true;
   assaulted(ctx, victim, player);
+  expect(hostileReason(ctx, victim, player)).toBeNull();
+  assaulted(ctx, victim, player);
   blocked = false;
   expect(hostileReason(ctx, victim, player)).toBe("assault");
   expect(hostileReason(ctx, ally, player)).toBeNull();
+  assaulted(ctx, ally, other);
   assaulted(ctx, ally, other);
   expect(hostileReason(ctx, victim, other)).toBe("assault");
   expect(hostileReason(ctx, outsider, other)).toBeNull();

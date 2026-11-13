@@ -118,7 +118,7 @@ function finish(ctx, p, q, { xp = 100, cents = 0, items = [], text, rep = [], by
   if (!payOnce(s, "l1-" + (typeof q === "string" ? q : q?.id ?? q?.key ?? q?.name))) return; // paid once per save (scripts/lib/quests.js)
   if (b && cents) { const extra = Math.round(cents * b); cents += extra; msgs.push(`${NAMES[by] ?? by} bonus +$${(extra / 100).toFixed(2)}`); }
   setStep1(ctx, p, q, 99, null, text);
-  for (const [g, d] of rep) { if (!d) continue; const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d); msgs.push(tier || `${g === "karma" ? "Karma" : NAMES[g] ?? g} ${d > 0 ? "+" : ""}${d}`); }
+  for (const [g, d] of rep) { if (!d) continue; const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d, `Completed ${QUESTS1[q].name}`); msgs.push(tier || `${g === "karma" ? "Karma" : NAMES[g] ?? g} ${d > 0 ? "+" : ""}${d}`); }
   s.cents = (s.cents ?? 0) + cents;
   s.payout = { xp, items, text }; // scripts/craft.js hands these over on the player's own machine
   note(ctx, p, msgs.filter(Boolean).join(" · "), "good"); ding(ctx, p, FANFARE, 0.85);
