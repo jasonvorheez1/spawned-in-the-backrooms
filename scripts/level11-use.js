@@ -597,7 +597,7 @@ export const ears = {
         "Backrooms Shortwave: '...M.E.G. Base Beta reporting all gates secure on 11th Avenue...'",
       ];
       s.stationIdx = ((s.stationIdx ?? -1) + 1) % STATIONS.length;
-      if (w.maintQ === 3) {
+      if (w.maintQ === 3 && s.stationIdx === 0) {
         w.aptRadioTested = true;
         if (w.aptTapTested) {
           setMaintStep(ctx, who, 4, "The Night Shift · Boiler back on the clock, tap running clear · Tell the janitor on his rounds");

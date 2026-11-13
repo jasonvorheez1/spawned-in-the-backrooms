@@ -25,6 +25,12 @@ export const QUESTS = {
       5: "Bring the drive to the courier on the street by the canal, or to Specialist Vance at the Base Beta outpost.",
     },
     marks: { 1: MARK("l11-sedco-terminal"), 2: MARK("l11-sedco-int-counter"), 3: MARK("l11-sedco-int-spot-0"), 4: MARK("l11-vault-crate-sedco"), 5: MARK("l11-walker-1") },
+    progress(s) {
+      const n = s.sedcoQ;
+      if (n === 2 && s.sedcoCounterChecked && !s.sedcoMonitorsChecked) return { step: "Review the camera feeds on Sedco's monitor wall.", mark: MARK("l11-sedco-int-monitors") };
+      if (n === 2 && s.sedcoMonitorsChecked && !s.sedcoCounterChecked) return { step: "Search the sales counter for the CCTV instructions.", mark: MARK("l11-sedco-int-counter") };
+      return { step: this.tips[n], mark: this.marks[n] ?? null };
+    },
   },
   crane: {
     key: "craneQ",
@@ -47,6 +53,12 @@ export const QUESTS = {
       4: "Tell the janitor on his rounds that 11-B has heat and water again.",
     },
     marks: { 1: MARK("l11-roadwork-gen"), 2: MARK("l11-apt-radiator"), 3: MARK("l11-apt-sink"), 4: MARK("l11-walker-3") },
+    progress(s) {
+      const n = s.maintQ;
+      if (n === 3 && s.aptTapTested && !s.aptRadioTested) return { step: "Tune the apartment radio to 104.2 FM.", mark: MARK("l11-apt-radio") };
+      if (n === 3 && s.aptRadioTested && !s.aptTapTested) return { step: "Run the kitchen tap in Apartment 11-B.", mark: MARK("l11-apt-sink") };
+      return { step: this.tips[n], mark: this.marks[n] ?? null };
+    },
   },
 };
 // "The Lit Window" (Vance): the window entity in the alley eats whoever walks into it, unless they know Cmdr. Harris's
