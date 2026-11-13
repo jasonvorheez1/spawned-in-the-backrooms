@@ -3,7 +3,7 @@
 // and runs the fog banks. Layout: scripts/lib/level9.js. House kit: scripts/lib/data/l9-houses.yml. Props: l9-props.yml.
 import { layout, hashStr, HOUSES, PAINTS, PROPS, TUNE, FWD, ROAD_W, WALK } from "../../scripts/lib/level9.js";
 export const cadence = "1s";
-const V = 2; // 2: damp asphalt roads (keeps seed and loot)
+const V = 3; // 3: Tripo house models on the lots (keeps seed and loot)
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BLUE = { kind: "scripted", script: "engine/blueprint" };
 const ASPHALT = { texture: "cdn/texture-worn-dark-grey-asphalt-road-coarse-aggregate-damp-patches-cracks.png", wrap: "repeat", repeat: [0.3, 0.3], color: "oklch(0.42 0.01 250)", roughness: 0.62, metalness: 0 }; // Shelly "why are level 9 roads water": 0.16 roughness mirrored the sky; damp, not a puddle
@@ -40,7 +40,7 @@ function lay(ctx, L) {
   // houses: the model when the kit has it, a blueprint box on the lot until then
   for (const l of L.lots) {
     const H = HOUSES[l.kind], p = PAINTS[l.paint];
-    if (H.model) sp(`l9-${l.id}`, { tags: ["l9house"], feetPosition: T(l.x, l.z, 0.02), rotation: { yaw: l.yaw }, model: { id: H.model, forward: "+z", materials: { siding: { color: p.siding }, trim: { color: p.trim }, roof: { color: p.roof } } }, physics: { body: "static", collider: "mesh" }, visibleRange: { max: 300 }, state: { kind: l.kind, seed: l.seed } });
+    if (H.model) sp(`l9-${l.id}`, { tags: ["l9house"], feetPosition: T(l.x, l.z, 0.02), rotation: { yaw: l.yaw }, model: { id: H.model, forward: "+z" }, physics: { body: "static", collider: "mesh" }, visibleRange: { max: 300 }, state: { kind: l.kind, seed: l.seed } });
     else sp(`l9-${l.id}`, { tags: ["l9house"], feetPosition: T(l.x, l.z), rotation: { yaw: l.yaw }, primitive: { kind: "box", width: H.w, height: H.stories * 2.9 + 1.2, depth: H.d }, material: BLUE, physics: "none", state: { kind: l.kind, seed: l.seed } });
   }
   if ((ctx.world.files ?? []).includes("scripts/l9-mangled.js")) sp("l9-mangled-mgr", { feetPosition: T(0, 0), behavior: "scripts/l9-mangled.js", audience: "all" });

@@ -1,13 +1,14 @@
 # Level 9's house kit. One row per house model; the layout (scripts/lib/level9.js) picks rows by seed and the sim furnishes `rooms`.
 # CONTRACT (every model): origin at ground centre of the w x d footprint, front door on the +Z side of the file (placed forward: "+z"),
 # interior floor at y = floorY, rooms in the model's own metres (x right, z toward the front door).
+# models: Tripo houses fitted by art/l9-houses/fit.py (front turned to +Z, scaled into w x d).
 # footprints the lots are cut for (model: null = a blueprint box stands in):
 houses:
-  ranch:    { name: "Ranch",      w: 16, d: 10, stories: 1, model: null, rooms: [] }
-  bungalow: { name: "Bungalow",   w: 9,  d: 11, stories: 1, model: null, rooms: [] }
-  colonial: { name: "Colonial",   w: 11, d: 9,  stories: 2, model: null, rooms: [] }
-  cape:     { name: "Cape Cod",   w: 10, d: 8,  stories: 2, model: null, rooms: [] }
-  garage2:  { name: "Two-storey with garage", w: 15, d: 9, stories: 2, model: null, rooms: [] }
+  ranch:    { name: "Ranch",      w: 16, d: 10, stories: 1, model: "/cdn/value.2dab747d4c01f8680845bd8ad385406e8f194c0193ef3b3f44cd7ffa4631fea4.glb", rooms: [] }
+  bungalow: { name: "Bungalow",   w: 9,  d: 11, stories: 1, model: "/cdn/value.5b8a173301b69427a311e17d4852fb0f7f8c9e7b05ecf7f3fbff2454b8fc2823.glb", rooms: [] }
+  colonial: { name: "Colonial",   w: 11, d: 9,  stories: 2, model: "/cdn/value.eff7daa8e7273ee2d6fd8d9dbbf3fcef26ae0baa74adca0c249769361af51851.glb", rooms: [] }
+  cape:     { name: "Cape Cod",   w: 10, d: 8,  stories: 2, model: "/cdn/value.37216de7c088bb4d561bc3226d6a18faec75442ed3490d9f2ae7c15a3a9bba08.glb", rooms: [] }
+  garage2:  { name: "Two-storey with garage", w: 15, d: 9, stories: 2, model: "/cdn/value.f12220d8fb855e2ffde552b659c27bb45b33d37f021de69b0c257c08974b7efe.glb", rooms: [] }
 # siding / trim / roof paint a house can roll (index by seed)
 paints:
   - { siding: "#b9b3a2", trim: "#e6e2d6", roof: "#3a3632" }
