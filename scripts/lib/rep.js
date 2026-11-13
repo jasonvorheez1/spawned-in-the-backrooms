@@ -70,7 +70,7 @@ function bump(s, g, d) { // one faction's fame (d > 0) or infamy (d < 0); return
   s.fame = { ...(s.fame ?? {}), [g]: c.f }; s.infamy = { ...(s.infamy ?? {}), [g]: c.i };
   s.rep = { ...(s.rep ?? {}), [g]: cap(50 + (c.f - c.i) / 2) * 2 - 100 };
   const now = titleOf(s, g), rk = g === "meg" ? megRank(s) : null;
-  if (g === "meg" && rk !== (s.megRank ?? null)) { const up = rk && MEG_RANKS.findIndex(([, n]) => n === rk) < MEG_RANKS.findIndex(([, n]) => n === s.megRank); s.megRank = rk; if (rk && (up || !was)) return `M.E.G. rank: ${rk}`; }
+  if (g === "meg" && rk !== (s.megRank ?? null)) { const up = rk && (!s.megRank || MEG_RANKS.findIndex(([, n]) => n === rk) < MEG_RANKS.findIndex(([, n]) => n === s.megRank)); s.megRank = rk; if (up) return `M.E.G. rank: ${rk}`; }
   return was !== now ? `${GROUPS[g]?.name ?? g}: ${now}` : "";
 }
 export function addRep(s, g, d) {
