@@ -193,7 +193,7 @@ pop steam rate=(flick(.3,1)^3)*?mobile:22|40 on=disc(.04) life=.7..1.3 v=<%dir|0
 const SPARKS = `fx
 pop spark rate=(flick(1.4,1)^8)*260 on=disc(.06) life=.25..0.6 v=<%dir|0,0,1>*(1..2.5)+sdir()*1.6 size=.012..0.025 acc=grav()+drag(.4) floor=bounce(.3) sz=$size col=hdr(4,4,6)>hdr(3,1.6,.4) a=1>0 r=sprite(ember,add,velocity,.03)
 pop zap n=1 r=light(<.65,.8,1>,(flick(1.4,1)^8)*6,2.5)`;
-const flickFx = (col, k) => `fx\npop glow n=1 r=light(${col},(.15+.85*flick(${(3 + k * 5).toFixed(2)},.85))*2.5,4.5)`; // my pick: 4.5 m keeps it inside the room; 11 m lit the corridor through the walls
+const flickFx = (col, k, i = 6, d = 11) => `fx\npop glow n=1 r=light(${col},(.15+.85*flick(${(3 + k * 5).toFixed(2)},.85))*${i},${d})`; // my pick: 4.5 m keeps it inside the room; 11 m lit the corridor through the walls
 const FIREBOX = `fx
 pop glow n=1 r=light(<1,.45,.15>,fire()*10,9)
 pop ember rate=3 on=disc(.4) life=1..2 v=up(.6..1.2)+sdir()*.2 size=.015..0.03 acc=curl(.6)+drag(.4) col=hdr(4,1.6,.3)>hdr(1,.2,.04) a=(1>0)*flick(9,.4) sz=$size r=sprite(ember,add)`;
@@ -279,7 +279,7 @@ function sideRoom(ctx, r) {
     ui: `<div face="front" width="1.1m" style="font-size:150px;font-weight:900;color:#e6dcc0;text-align:center;letter-spacing:12px;line-height:1.4">${T.label}</div>` });
   // the room's lamp: a caged bulb, flickering on the electrical rooms
   const lamp = { feetPosition: P(0, 0, H - 0.2), visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "sphere", radius: 0.07 }, material: { color: T.light, emissive: T.light, emissiveIntensity: 3 } };
-  if (r.type === "electrical") ctx.spawn({ ...lamp, fx: { script: flickFx(`<.6,.75,1>`, hash(r.cx, r.cz, 9)) } });
+  if (r.type === "electrical") ctx.spawn({ ...lamp, fx: { script: flickFx(`<.6,.75,1>`, hash(r.cx, r.cz, 9), 2.5, 4.5) } });
   else ctx.spawn({ ...lamp, light: { kind: "point", color: T.light, intensity: 5, distance: 8, shadow: { enabled: false }, visibleRange: { max: 40 } } });
   if (r.type === "electrical") ctx.spawn({ feetPosition: P(-0.5, 2.1 - 0.02, 1.6), fx: { script: SPARKS, params: { dir: { x: -tx, y: 0.3, z: -tz } } }, audio: { clip: GRIT("electrical-arc-buzz-loop"), gain: 0.3, loop: true, spatial: true, maxDistance: 9 } });
   if (r.type === "pump") {
