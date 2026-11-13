@@ -95,9 +95,10 @@ export function layFood(ctx) {
   M("bench-n1", "benchO", 35.6, 6.5, 180, BSEAT); M("bench-n2", "benchG", 39.4, 6.5, 180, BSEAT);
   M("condi", "condi", 40.85, 8.15, 90, {}, floorY);
   // the staff door on the south wall
-  P("door", { feetPosition: { x: 40.05, y: 0.018, z: 29.96 }, model: { id: "/cdn/value.42cc40912cdb368cf2af90712a4d55bf4d91aa4b9cd970b3a731e96c721cf974.glb", forward: "+z" } /* art/l31-staffdoor/build.py */, tags: ["usable"], state: { name: "Employees only", verb: "Open", info: "Locked from the other side.", kind: "door" }, behavior: "scripts/l31-food.js",
+  P("door", { feetPosition: { x: 40.05, y: 0.018, z: 29.96 }, pivot: { x: 0.58, y: 0, z: 0 }, physics: { body: "kinematic", collider: "box" }, model: { id: "/cdn/value.42cc40912cdb368cf2af90712a4d55bf4d91aa4b9cd970b3a731e96c721cf974.glb", forward: "+z" } /* art/l31-staffdoor/build.py */, tags: ["usable"], state: { name: "Employees only", verb: "Open", info: "The back room.", kind: "door" }, behavior: "scripts/l31-food.js",
     children: [{ feetPosition: { x: 0, y: 0, z: 0.02 }, primitive: box(1.16, 2.18, 0.05), material: { color: "#3c3e42", roughness: 0.6 } }, { feetPosition: { x: -0.38, y: 1.0, z: -0.07 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.03, height: 0.06 }, rotation: { pitch: 90 }, material: { color: "#c9ccd0", metalness: 0.9, roughness: 0.3 } }, { feetPosition: { x: 0, y: 0.1, z: -0.035 }, primitive: box(0.9, 0.25, 0.01), material: { color: "#b9bcc0", metalness: 0.8, roughness: 0.4 } }] });
-  P("door-label", { feetPosition: { x: 40.05, y: 1.698, z: 29.925 }, rotation: { yaw: 0 }, vector: DOORTXT });
+  P("door-label", { parent: "l31-food-door", feetPosition: { x: 0, y: 1.68, z: -0.035 }, rotation: { yaw: 0 }, vector: DOORTXT });
+  layStaffRoom(ctx, P, M);
   // Tables west of the ordering lane, left as people left them (Shelly Nov 13: "de ai slop this"): chairs pushed out and turned, one table short a chair, none in a grid
   const tables = [
     [29.6, 13.6, 8, [[0, -0.95, 172], [0.15, 1.05, 14], [-1.05, 0.1, -76]]],
@@ -136,4 +137,61 @@ export function layFood(ctx) {
   ctx.spawn("l31-food-tag", { parent: "l31-food-clerk", attachment: { bone: "Spine2" }, feetPosition: { x: 0.09, y: 0.1, z: 0.125 }, primitive: box(0.075, 0.028, 0.006), material: { color: "#f4f2ea", roughness: 0.4 }, castShadow: false });
   person("cust1", { sex: "f", topw: "sweater", top: "#6a86a8", botw: "pants", bottom: "#3a3a44", shoes: "sneakers" }, 29.3 - 0.89, 22.4, -90, { name: "Faceling", role: "customer", kind: "sitter" }, true, 0.35 + floorY);
   person("cust2", { sex: "m", topw: "jacket", top: "#5a4a32", botw: "pants", bottom: "#26262c", shoes: "boots" }, 29.3 + 0.89, 22.4, 90, { name: "Faceling", role: "customer", kind: "sitter" }, true, 0.35 + floorY);
+}
+
+// The staff back room behind the snack bar door (Shelly Nov 13: "make the staff only door not blocky + give it an interior").
+// Outside the hall's south wall: x 36.2..43.9, z 30.3..35.8, a 3 m drop ceiling. Tripo props, real sizes.
+const STAFF_G = {
+  lockers: "/cdn/value.db196dcd8d77b030e9d8c2fd6593b4ebd3ca4b89acef7ccb4064eeb0b8dfe13e.glb",
+  shelf: "/cdn/value.8e72f7f37b80c9e96c97fa180ed93d497a4099cbdfbc464895fc5a8894c8c120.glb",
+  mop: "/cdn/value.9bb14394c3dc491f86feda55a3e491fb39727a492b1858535eab3fec6254e817.glb",
+  clock: "/cdn/value.3a4e211abefd48d24f081bfc00dc49b84b0b07af75c746ac7aaa6ef4969860db.glb",
+};
+const SR = { x0: 36.2, x1: 43.9, z0: 30.3, z1: 35.8, h: 3.0 };
+const CORK = `<svg viewBox='0 0 300 200' width='1.2m'>
+  <rect width='300' height='200' rx='4' fill='#6b4a2b'/><rect x='8' y='8' width='284' height='184' fill='#b98a57'/>
+  <g transform='rotate(-3 80 70)'><rect x='22' y='22' width='118' height='96' fill='#f3efe2'/>
+    <g font-family='sans-serif' fill='#333' font-size='9'><text x='30' y='38' font-weight='bold' font-size='11'>FLOOR GUARD SHIFTS</text>
+    <text x='30' y='54'>FRI  Daz / Marlowe</text><text x='30' y='68'>SAT  Daz / ??? </text><text x='30' y='82'>SUN  nobody wants it</text>
+    <text x='30' y='100' fill='#b3261e'>NO SKATING IN THE BACK</text></g></g>
+  <circle cx='80' cy='26' r='4' fill='#d33'/>
+  <g transform='rotate(4 220 60)'><rect x='166' y='24' width='108' height='70' fill='#fff7a8'/>
+    <g font-family='serif' font-style='italic' fill='#2b3a8a' font-size='10'><text x='174' y='44'>who keeps taking</text><text x='174' y='58'>the almond water</text><text x='174' y='72'>from the cooler??</text><text x='230' y='88'>- D</text></g></g>
+  <circle cx='220' cy='28' r='4' fill='#2a7ad3'/>
+  <g transform='rotate(-6 200 150)'><rect x='150' y='118' width='120' height='60' fill='#dfe9f5'/>
+    <g font-family='sans-serif' fill='#222' font-size='9'><text x='158' y='134' font-weight='bold'>SKATE RENTAL</text><text x='158' y='148'>size 9 left wheel</text><text x='158' y='162'>squeaks. tagged.</text></g></g>
+  <circle cx='210' cy='122' r='4' fill='#3a3'/>
+  <rect x='30' y='134' width='90' height='46' fill='#e8e2d0' transform='rotate(2 75 157)'/>
+  <text x='38' y='160' font-family='sans-serif' font-size='9' fill='#555' transform='rotate(2 75 157)'>WASH HANDS</text>
+</svg>`;
+function layStaffRoom(ctx, P, M) {
+  const { x0, x1, z0, z1, h } = SR, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2, W = x1 - x0, D = z1 - z0, t = 0.15;
+  const wall = { texture: "cdn/texture-painted-cream-cinder-block-wall.png", wrap: "repeat", repeat: [0.8, 0.8], color: "#d8d2bf", roughness: 0.9 };
+  const floor = { texture: "cdn/texture-worn-red-quarry-tile-kitchen-floor.png", wrap: "repeat", repeat: [0.7, 0.7], color: "#b9a597", roughness: 0.75 };
+  const ceil = { texture: "cdn/texture-acoustic-drop-ceiling-tile-grid.png", wrap: "repeat", repeat: [0.6, 0.6], color: "#cfcab8", roughness: 0.95 };
+  const box = (w, hh, d) => ({ kind: "box", width: w, height: hh, depth: d });
+  P("staff-floor", { feetPosition: { x: cx, y: -0.3, z: cz }, primitive: box(W + t * 2, 0.3, D + t), material: floor, physics: "static", receiveShadow: true });
+  P("staff-ceil", { feetPosition: { x: cx, y: h, z: cz }, primitive: box(W + t * 2, 0.12, D + t), material: ceil, physics: "static" });
+  P("staff-wall-w", { feetPosition: { x: x0 - t / 2, y: 0, z: cz }, primitive: box(t, h, D + t), material: wall, physics: "static" });
+  P("staff-wall-e", { feetPosition: { x: x1 + t / 2, y: 0, z: cz }, primitive: box(t, h, D + t), material: wall, physics: "static" });
+  P("staff-wall-s", { feetPosition: { x: cx, y: 0, z: z1 + t / 2 }, primitive: box(W + t * 2, h, t), material: wall, physics: "static" });
+  // a scuffed rubber base round the room, where the mop bangs
+  for (const [k, x, z, w, d] of [["w", x0 + 0.01, cz, 0.02, D], ["e", x1 - 0.01, cz, 0.02, D], ["s", cx, z1 - 0.01, W, 0.02]])
+    P(`staff-base-${k}`, { feetPosition: { x, y: 0, z }, primitive: box(w, 0.1, d), material: { color: "#3a3430", roughness: 0.8 } });
+  // one fluorescent troffer, slightly green, the way back rooms always are
+  P("staff-troffer", { feetPosition: { x: cx, y: h - 0.04, z: cz }, primitive: box(0.6, 0.04, 1.2), material: { color: "#e9f4ea", emissive: "#e9f4ea", emissiveIntensity: 2.2 },
+    children: [{ feetPosition: { x: 0, y: -0.3, z: 0 }, light: { kind: "point", color: "#e6f2dc", intensity: 4.5, distance: 9 } }] });
+  // Tripo props at true size: layout fits each into its real box before it stands
+  const T = (id, key, x, y, z, yaw, size, solid = true) => P(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: { id: STAFF_G[key], forward: "+x" },
+    layout: { box: { min: { x: -size[0] / 2, y: 0, z: -size[2] / 2 }, max: { x: size[0] / 2, y: size[1], z: size[2] / 2 } } }, ...(solid ? { physics: { body: "static", collider: "box" } } : {}), castShadow: true });
+  P("staff-lockers", { feetPosition: { x: x0 + 0.25, y: 0, z: 33.4 }, rotation: { yaw: -90 }, model: { id: STAFF_G.lockers }, layout: { box: { min: { x: -0.9, y: 0, z: -0.24 }, max: { x: 0.9, y: 1.85, z: 0.24 } } }, physics: { body: "static", collider: "box" }, castShadow: true });
+  T("staff-shelf1", "shelf", 41.0, 0, z1 - 0.28, 0, [0.9, 1.75, 0.45]);
+  T("staff-shelf2", "shelf", 42.3, 0, z1 - 0.3, -4, [0.9, 1.75, 0.45]);
+  T("staff-mop", "mop", 43.35, 0, 31.2, 35, [0.42, 1.2, 0.42]);
+  T("staff-clock", "clock", 41.55, 1.05, z0 + 0.09, 180, [0.36, 0.42, 0.14], false); // on the door wall: you punch in on the way in
+  // the break table, one chair pushed back, a schedule nobody reads
+  M("staff-table", "table", 38.6, 34.4, 12, {}, 0.0);
+  M("staff-chair1", "chair", 38.0, 33.6, 160, {}, 0.0);
+  M("staff-chair2", "chair", 39.5, 34.9, -70, {}, 0.0);
+  P("staff-cork", { feetPosition: { x: 38.6, y: 1.55, z: z1 - 0.02 }, rotation: { yaw: 0 }, vector: CORK });
 }
