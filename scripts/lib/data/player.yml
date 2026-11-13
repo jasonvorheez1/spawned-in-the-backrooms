@@ -13,3 +13,5 @@ turnSpeed: 900
 turnTo: movement
 walkSpeed: 4.5
 runSpeed: 8
+
+sprintThreshold: 6.2
