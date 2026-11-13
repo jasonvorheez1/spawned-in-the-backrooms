@@ -90,7 +90,8 @@ export function onInput(ctx, input) {
     st.menuOpen = !st.menuOpen
     if (st.menuOpen) { st.menuKind = "pause"; st.wardrobeOpen = false; st.wrMenu = false }
   }
-  if (input.pressed?.tabaway) ctx.session.tabAway = !!input.actionData?.tabaway?.away
+  if (input.pressed?.tabaway) ctx.session.tabAway = !!input.actionData?.tabaway?.away && !(ctx.self.tags ?? []).includes("helper") // a helper's page never holds the room
+  else if (ctx.session.tabAway && (Object.values(input.axes ?? {}).some((v) => v) || Object.keys(input.pressed ?? {}).some((k) => input.pressed[k]))) ctx.session.tabAway = false // any move or key means they're back
   const d = input.actionData?.mmenu
   if (input.pressed?.mmenu && d) {
     ctx.emit("playSound", { clip: CLICK, volume: 0.5 }, { audience: { player: ctx.self.id } })
@@ -106,6 +107,6 @@ export function onInput(ctx, input) {
 // while you're the only one in it; the Bonus Room is shared and never stops
 function holdTime(ctx, st) {
   const solo = ctx.self.place !== "bonus" && (ctx.place.playerCount ?? 1) <= 1
-  const want = ((st.menuOpen && st.menuKind === "pause") || ctx.session.tabAway) && solo ? 0 : 1 // a hidden tab holds a solo place too
+  const want = ((st.menuOpen && st.menuKind === "pause") || (ctx.session.tabAway && !(ctx.self.tags ?? []).includes("helper"))) && solo ? 0 : 1 // a hidden tab holds a solo place too
   if ((ctx.place.timeScale ?? 1) !== want) ctx.place.timeScale = want
 }
