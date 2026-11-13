@@ -23,7 +23,7 @@ const OFFERS = {
   concierge: [["o:room", `Book a guest room ($${P.room.price})`], ["o:rent", `Rent a suite ($${P.rent.price})`]],
   guide: [["o:escort", "Escort me to the Boiler Room"]],
   clerk: [["o:job", "The rat job"]],
-  quarter: [["o:boilerkey", "[Speech 25] \"I need the boiler room key.\""]],
+  quarter: [], // the boiler key is a line in his talk now (dlg-level5.yml, do: boilerkey; Shelly Nov 13)
   maid: [["o:gossip", "Heard anything?"]], bellhop: [["o:gossip", "Heard anything?"]], agent: [["o:gossip", "Anything moving?"]],
 };
 const ORIG = [["o:member", "Ask to join the salon"], ["o:lore", "Ask about the hotel"]];

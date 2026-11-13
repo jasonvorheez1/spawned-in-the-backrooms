@@ -252,6 +252,7 @@ function send(ctx, d) {
     if (mine < T.join.max) { adopt(ctx.self, it); logLine(ctx, it, 'x', `${nameOf(it)} is coming with you`); note(ctx, `${nameOf(it)} is coming with you. ${PERKS[perkOf(it)]?.name}: ${PERKS[perkOf(it)]?.info}.`) }
     else logLine(ctx, it, 'x', `${T.join.max} people already follow you`)
   }
+  if (passed && n.do === 'boilerkey' && !s.l5boilerKey) { s.l5boilerKey = true; logLine(ctx, it, 'x', 'Got the Boiler Room key'); note(ctx, 'Got the Boiler Room key') } // Harlan's key, a dialogue line (Shelly Nov 13: not a bottom-menu button)
   if (passed && n.do === 'discount' && isTrader(it)) {
     it.state.discount = { ...(it.state.discount ?? {}), [keyOf(ctx.self)]: Math.max(it.state.discount?.[keyOf(ctx.self)] ?? 0, 0.15) }
     logLine(ctx, it, 'x', `${nameOf(it)} knocks 15% off for you`)

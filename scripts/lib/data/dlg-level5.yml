@@ -241,6 +241,11 @@ l5-harlan:
       a: "Don't know one. I know ways off this floor of the world, and every one of them is worse than a warm bed here. People work that out and stay. Then they buy from me."
     - q: "Ever hear the name Dina?"
       a: "I do receipts by room. Three-oh-seven bought batteries. Twelve. And all the copper wire I had, sixty feet. Paid full price, didn't haggle. I remember the ones who don't haggle."
+    - q: "I need the boiler room key."
+      sk: speech 25
+      do: boilerkey
+      a: "...Fine. You talk like someone who'd go in anyway. Take it. Kill a rat for me while you're down there."
+      fail: ["Staff only. Nice try.", "And why would I hand a stranger the keys to the hottest room in the house?", "No. Go pick a lock or something."]
     - q: "Knock a bit off?"
       sk: barter 45
       do: discount
