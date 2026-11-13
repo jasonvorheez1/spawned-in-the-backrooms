@@ -734,7 +734,7 @@ function aimedBy(ctx, me) {
   const f = me.feetPosition;
   for (const p of ctx.place.players) {
     const ps = p.state ?? {}, eq = String(ps.equipped ?? "fists").split("~")[0];
-    if (ps.sheathed || eq === "fists" || !WP[eq]?.ranged || (ps.hp ?? 1) <= 0) continue;
+    if (ps.sheathed || !ps.ads || eq === "fists" || !WP[eq]?.ranged || (ps.hp ?? 1) <= 0) continue; // aimed down sights at them, not just a weapon out (Shelly Nov 13)
     const dx = f.x - p.feetPosition.x, dz = f.z - p.feetPosition.z, d = Math.hypot(dx, dz);
     if (d > COW.range || d < 0.5) continue;
     const yaw = (p.camera?.rotation?.yaw ?? (typeof p.rotation === "number" ? p.rotation : p.rotation?.yaw) ?? 0) * Math.PI / 180;
