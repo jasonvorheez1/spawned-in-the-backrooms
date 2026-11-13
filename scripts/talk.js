@@ -33,6 +33,7 @@ import { handleDialogueQuestHub } from './lib/hub-quest.js'
 import { handleHubErrand } from './lib/hub-errands.js'
 import { handleFieldErrand } from './lib/field-errands.js'
 import { factionReply } from './lib/faction-dialogue.js'
+import { megAssignmentReply } from './lib/meg-assignment.js'
 import { handleDialogueQuest70 } from './lib/level70-quest.js'
 
 import { greetingOf, rootChoices, childChoices, nodeOf, lineOf, barkOf, gestOf, BYE_CHOICE } from './lib/dialogue.js'
@@ -247,7 +248,7 @@ function send(ctx, d) {
   if (!choice.node || choice.node === 'job-accept') {
     const before = new Set(Object.keys(s.quests ?? {})) // a quest line: the quest's own handler answers it (scripts/lib/level*-quests.js, zenith-quest.js)
     const qRes = handleDialogueQuest02(ctx, ctx.self, it, questText) ?? handleDialogueQuest13(ctx, ctx.self, it, questText) ?? handleDialogueQuest(ctx, ctx.self, it, questText) ?? handleDialogueQuest10(ctx, ctx.self, it, questText) ?? handleDialogueQuest8(ctx, ctx.self, it, questText)
-      ?? handleDialogueQuest21(ctx, ctx.self, it, questText) ?? handleDialogueQuestZ(ctx, ctx.self, it, questText) ?? handleDialogueQuest1(ctx, ctx.self, it, questText) ?? handleDialogueQuest31(ctx, ctx.self, it, questText) ?? handleDialogueQuestBeast(ctx, ctx.self, it, questText) ?? handleDialogueQuest70(ctx, ctx.self, it, questText) ?? handleDialogueQuestHub(ctx, ctx.self, it, questText) ?? handleHubErrand(ctx, ctx.self, it, questText) ?? handleFieldErrand(ctx, ctx.self, it, questText) ?? factionReply(it, s, questText)
+      ?? handleDialogueQuest21(ctx, ctx.self, it, questText) ?? handleDialogueQuestZ(ctx, ctx.self, it, questText) ?? handleDialogueQuest1(ctx, ctx.self, it, questText) ?? handleDialogueQuest31(ctx, ctx.self, it, questText) ?? handleDialogueQuestBeast(ctx, ctx.self, it, questText) ?? handleDialogueQuest70(ctx, ctx.self, it, questText) ?? handleDialogueQuestHub(ctx, ctx.self, it, questText) ?? handleHubErrand(ctx, ctx.self, it, questText) ?? handleFieldErrand(ctx, ctx.self, it, questText) ?? factionReply(it, s, questText) ?? megAssignmentReply(it, s, questText)
     if (briefing) for (const [id, q] of Object.entries(s.quests ?? {})) if (!before.has(id)) s.quests = { ...s.quests, [id]: { ...q, briefing } }
     const line = qRes?.reply ?? lineOf(it, place, 'back', 1) ?? 'Hm.'
     say(ctx, it, line, qRes?.mood ?? 'calm'); logLine(ctx, it, 'n', line)

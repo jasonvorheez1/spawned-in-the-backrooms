@@ -52,3 +52,19 @@ test('joining the M.E.G. requires consent and enough trust, and issues one jacke
   const original = s.clothes; expect(factionReply(npc,s,yes)).toBeNull(); expect(s.clothes).toBe(original)
   expect(factionChoices(npc,s).some(x => x.text.includes('where should I report'))).toBe(true)
 })
+
+test('M.E.G. volunteers can accept, complete and receive their first assignment once', async () => {
+ const { megAssignmentChoices, megAssignmentReply } = await import('../scripts/lib/meg-assignment.js')
+ const c={id:'meg-callum'}, o={id:'meg-ortiz'}, s={megMember:true}
+ expect(megAssignmentChoices(c,{})).toHaveLength(0)
+ const ask=megAssignmentChoices(c,s)[0]; megAssignmentReply(c,s,ask.text)
+ expect(s.megAssignment).toBeUndefined()
+ const accept=megAssignmentChoices(c,s)[0]; megAssignmentReply(c,s,accept.text)
+ expect(s.quests['meg-first-assignment'].mark.id).toBe('meg-ortiz')
+ const deliver=megAssignmentChoices(o,s)[0]; megAssignmentReply(o,s,deliver.text)
+ expect(s.quests['meg-first-assignment'].mark.id).toBe('meg-callum')
+ const report=megAssignmentChoices(c,s)[0]; megAssignmentReply(c,s,report.text)
+ expect(s.megAssignment).toBe(99); expect(s.cents).toBe(500); expect(s.qdone['meg-first-assignment'].outcome).toBe('completed')
+ expect(megAssignmentReply(c,s,report.text)).toBeNull(); expect(s.cents).toBe(500)
+})
+
