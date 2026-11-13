@@ -119,7 +119,8 @@ export function geometry(ctx) {
   // blue punched C-section uprights braced in a zig-zag, orange step beams on connector plates, bolted foot plates,
   // OSB decks over wire mesh, a yellow end guard, and stock on the shelves: taped cartons, paint pails, a shrink-wrapped stack
   const OSB = "cdn/texture-osb-oriented-strand-board-plywood.png", CARTON = "cdn/texture-corrugated-cardboard-box-side-packing-tape.png", MESH = "cdn/texture-galvanized-steel-wire-mesh-grid.png";
-  for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
+  // Nov 13: the racks are Tripo models now (l1rack rows, places/level1/sim.js); this drawn set stays off
+  if (false) for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     if (zoneOf(cx, cz) !== "storage") continue;
     const c = cellCenter(cx, cz);
     for (const r of RACK.rows) {
