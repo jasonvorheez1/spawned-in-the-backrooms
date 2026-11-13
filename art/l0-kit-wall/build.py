@@ -13,7 +13,7 @@ KIT = {
  "firepull":     dict(src="firepull2", size=[0.11, 0.14, 0.05], fit="xyz", origin="wall"),
  "wallvent":     dict(size=[0.6, 0.3, 0.03], fit="xyz", origin="wall"),
  "door-office":  dict(size=[1.02, 2.13, 0.2], fit="door", origin="floor", almond=0.07),
- "door-stair":   dict(size=[1.02, 2.13, 0.2], fit="door", origin="floor", almond="all"),
+ "door-stair":   dict(src="door-stair3", size=[1.02, 2.13, 0.2], fit="door", origin="floor", almond="all"),
 }
 OVR = json.load(open(SRC + "/overrides.json")) if os.path.exists(SRC + "/overrides.json") else {}
 kinds = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else list(KIT)
