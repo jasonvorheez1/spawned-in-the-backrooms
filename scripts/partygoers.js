@@ -203,6 +203,9 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
       gas.push({ x: b.feetPosition.x, y: b.feetPosition.y, z: b.feetPosition.z, until: now + 6000 })
       ctx.emit("fx", { position: { ...b.feetPosition, y: b.feetPosition.y + 1.1 }, script: GAS })
       ctx.emit("playSound", { clip: SND("balloon-pop-then-hissing-gas"), position: b.feetPosition, volume: 1 })
+      const it = ["latex"]; if (ctx.random() < 0.55) it.push("latex"); if (ctx.random() < 0.06) it.push(ctx.random() < 0.6 ? "weapon:balloon_pistol" : "weapon:balloon_shotgun") // salvage (Shelly Nov 14): the skin is the ammo
+      ctx.spawn({ tags: ["container", "remains", "l26-husk"], feetPosition: { x: b.feetPosition.x, z: b.feetPosition.z, y: { terrain: 0 } }, lifetime: 120, physics: "none",
+        model: { id: BALLOON_GLB }, scale: { x: 1.3, y: 0.18, z: 1.3 }, state: { name: "Popped balloon", verb: "Search", items: it.join(",") } })
       ctx.destroy(b.id); continue
     }
     for (const pl of players) {

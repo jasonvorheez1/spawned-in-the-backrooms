@@ -1,6 +1,6 @@
 # Melee weapons. Fists are what you start with: weak on purpose. Found weapons need a level to wield.
 # damage: base hit. levelScale: share of the per-level damage bonus it gets. cooldown: seconds. reach: metres. stamina: cost per swing.
-order: [fists, bobette, carolynne, table_leg, pipe_scrap, crowbar, bat, hatchet, fire_axe, pistol, shotgun, rebar, wrench, screwdriver, sledgehammer, stun_baton, lineman_machete, knife, smg, golf_club, tire_iron, pickaxe, baton, cleaver, revolver, coach_gun, lever_rifle, hunting_rifle, carbine, fishing_rod, soup_bowl, laser_pistol, laser_rifle, raygun, crook, pocket9, govt45, target22]
+order: [fists, bobette, carolynne, table_leg, pipe_scrap, crowbar, bat, hatchet, fire_axe, pistol, shotgun, rebar, wrench, screwdriver, sledgehammer, stun_baton, lineman_machete, knife, smg, golf_club, tire_iron, pickaxe, baton, cleaver, revolver, coach_gun, lever_rifle, hunting_rifle, carbine, fishing_rod, soup_bowl, laser_pistol, laser_rifle, raygun, crook, pocket9, govt45, target22, balloon_pistol, balloon_shotgun]
 # rarity: common < uncommon < rare. weight: how often it is rolled for floor spawns and smiler drops. xp: reward for picking one up.
 rarities:
   common:   { label: COMMON,   color: '#c9c2a0' }
@@ -13,7 +13,8 @@ ammo: { perPickup: 6, floor: 13, respawn: 170 }  # floor: ammo boxes lying in th
 crates: { count: 26, respawn: 150 }  # supply crates in the maze to search (1 to 3 items each)
 cells: { perPickup: 12 }  # energy cells for Zenith Station's laser weapons: only from drone wrecks and station lockers (Savi's pick)
 rockets: { perPickup: 1 }  # 84 mm rockets for the M.E.G. launcher: only from Level 109's B3 armory (Savi's pick)
-shells: { perPickup: 2, floor: 6, respawn: 240 }  # shotgun shells: scarcer than pistol ammo
+shells: { perPickup: 2, floor: 6, respawn: 240 }
+latex: { perPickup: 4 }  # balloon latex pellets: only salvaged from popped Level 26 balloons (Shelly Nov 14), Savi's pick of 4  # shotgun shells: scarcer than pistol ammo
 fists:      { name: Fists,      damage: 4,  levelScale: 0.3, cooldown: 0.45, reach: 1.9, stamina: 5,  minLevel: 1 }
 table_leg:  { name: Table leg,  damage: 10, levelScale: 0.8, cooldown: 0.5,  reach: 2.4, stamina: 8,  minLevel: 1, rarity: common, weight: 10, xp: 5, color: "oklch(0.55 0.08 60)",  length: 0.7, req: { h: 2, melee: 10 } , wear: 1.2 }
 pipe_scrap: { name: Pipe scrap, damage: 16, levelScale: 1,   cooldown: 0.6,  reach: 2.6, stamina: 10, minLevel: 2, rarity: common, weight: 8, xp: 5, color: "oklch(0.6 0.02 250)",  length: 0.8, req: { h: 3, melee: 15 } }
@@ -23,6 +24,8 @@ hatchet:    { name: Hatchet,    damage: 40, levelScale: 1.1, cooldown: 0.75, rea
 fire_axe:   { name: Fire axe,   damage: 56, levelScale: 1.2, cooldown: 1.0,  reach: 3.0, stamina: 20, minLevel: 8, rarity: rare, weight: 1, xp: 45, color: "oklch(0.5 0.2 25)", length: 1.0, req: { h: 6, melee: 45 }, two: [0.2, 0, 0.028] , wear: 1.1 }
 pistol:     { name: Pistol,     chamber: true, hold: [-0.04, 0.03, 0.1, 0, 18, 0], damage: 32, levelScale: 0.8, cooldown: 0.55, reach: 2, range: 28, ranged: true, magSize: 8, reloadTime: 1.7, cone: 0.975, adsCone: 0.997, fovAds: 44, ads: [0.002, -0.163, 0.46], muzzle: [0, 0.106, -0.19], recoil: { up: 230, back: 1.3, lift: 0.35, side: 45, twist: 60 }, stamina: 2, minLevel: 5, rarity: rare, weight: 1, xp: 40, color: "oklch(0.3 0.02 260)", length: 0.3, mv: 360, drag: 0.0045, acc: [2.4, 0.5], zero: 25, req: { h: 3, guns: 20 } }
 shotgun:    { name: Shotgun,    damage: 60, levelScale: 1, cooldown: 1.1, reach: 2, range: 11, cone: 0.88, adsCone: 0.94, pellets: 8, ammoType: shells, ranged: true, magSize: 4, reloadStart: 0.4, reloadShell: 0.55, fovAds: 52, ads: [0, -0.09, 0.72, 0], muzzle: [0, 0.11, -0.66], recoil: { up: 430, back: 2.8, lift: 0.6, side: 70, twist: 90 }, stamina: 6, minLevel: 10, rarity: rare, weight: 1, xp: 70, color: "oklch(0.3 0.03 60)", length: 0.9, mv: 400, drag: 0.016, acc: [4.5, 3.0], zero: 20, req: { h: 5, guns: 35 }, two: [0, -0.42, 0.03, 0.18] }
+balloon_pistol:  { name: Balloon pistol,  chamber: true, hold: [-0.04, 0.03, 0.1, 0, 18, 0], damage: 26, levelScale: 0.8, cooldown: 0.45, reach: 2, range: 24, ranged: true, magSize: 10, reloadTime: 1.5, cone: 0.97, adsCone: 0.995, fovAds: 46, ads: [0.002, -0.163, 0.46], muzzle: [0, 0.106, -0.19], recoil: { up: 160, back: 1.0, lift: 0.25, side: 35, twist: 45 }, ammoType: latex, stamina: 2, minLevel: 6, rarity: rare, weight: 1, xp: 45, color: "oklch(0.68 0.2 25)", length: 0.32, mv: 220, drag: 0.009, acc: [2.8, 0.7], zero: 20, sound: compressed-air-pistol-pop-with-rubbery-snap, pools: [l26], req: { h: 2, guns: 15 } }   # Savi's pick: an air gun firing latex slugs cut from popped balloons
+balloon_shotgun: { name: Balloon shotgun, damage: 52, levelScale: 1, cooldown: 0.95, reach: 2, range: 10, cone: 0.86, adsCone: 0.93, pellets: 8, ammoType: latex, ranged: true, magSize: 5, reloadStart: 0.35, reloadShell: 0.5, fovAds: 52, ads: [0, -0.09, 0.72, 0], muzzle: [0, 0.11, -0.66], recoil: { up: 320, back: 2.2, lift: 0.5, side: 60, twist: 70 }, stamina: 5, minLevel: 9, rarity: rare, weight: 1, xp: 65, color: "oklch(0.7 0.18 140)", length: 0.85, mv: 260, drag: 0.02, acc: [5, 3.4], zero: 15, sound: pneumatic-shotgun-burst-of-air-and-rubber-pellets, pools: [l26], req: { h: 4, guns: 30 }, two: [0, -0.42, 0.03, 0.18] }   # Savi's pick
 # Level 1 finds (only in Level 1 crates; level1: true keeps them out of Level 0's rolls). Savi's picks.
 rebar:      { name: Rebar spike, damage: 32, levelScale: 1,  cooldown: 0.65, reach: 3.1, stamina: 12, minLevel: 4, rarity: uncommon, weight: 4, xp: 20, level1: true, color: "oklch(0.42 0.06 40)", length: 1.1, req: { h: 4, melee: 25 } }
 wrench:     { name: Pipe wrench, damage: 44, levelScale: 1.1, cooldown: 0.9, reach: 2.6, stamina: 17, minLevel: 6, rarity: rare, weight: 3, xp: 35, level1: true, color: "oklch(0.45 0.15 25)", length: 0.6, req: { h: 5, melee: 30 } }
@@ -96,6 +99,14 @@ variants:
   wwissue:  { name: Wild Warriors,  for: [melee, ranged], chance: 0, damage: 1.22, magSize: 1.25, cooldown: 1.04, rarity: 2, xp: 2.4, cnd: 100, look: meg }       # protectors: hits hardest
   bntgissue: { name: Trader's Keep,  for: [ranged], chance: 0, damage: 1.0, reloadTime: 0.8, cnd: 100, rarity: 2, xp: 2, look: mag }   # B.N.T.G. couriers: kept clean, fast to load
   vaultissue: { name: Vault Guard,   for: [ranged], chance: 0, damage: 1.18, magSize: 1.3, cone: 0.6, cnd: 100, rarity: 2, xp: 2.4, look: mag }   # the Trader's Vault watch
+  # shotgun family (Shelly Nov 14: "new variants of shotguns"). Savi's picks.
+  riot:     { name: Riot,         for: [shotgun], chance: 8, magSize: 1.75, reloadShell: 0.85, damage: 0.95, cone: 1.05, rarity: 1, xp: 1.6, look: mag, reqDelta: { guns: 5 } }   # long tube, more shells
+  slug:     { name: Slug-bored,   for: [shotgun, coach_gun], chance: 7, pellets: 0.125, pelletMul: 6, damage: 1.1, range: 2.4, cone: 0.35, rarity: 1, xp: 1.7, look: edge }    # one heavy ball: reach, no spread
+  choked:   { name: Full-choke,   for: [shotgun, coach_gun], chance: 9, cone: 0.7, range: 1.35, damage: 1.0, rarity: 1, xp: 1.4 }                                       # tighter pattern
+  duckbill: { name: Duckbill,     for: [shotgun], chance: 5, cone: 1.3, pellets: 1.4, range: 0.85, damage: 1.05, rarity: 1, xp: 1.5, look: sawn }                          # wide flat spread, crowd clearer
+  hunter:   { name: Bird hunter,  for: [coach_gun], chance: 8, pellets: 1.6, damage: 0.85, cone: 1.15, rarity: 0, xp: 1.2, look: rust, tint: "oklch(0.55 0.07 60)" }         # fine shot, many pellets
+  # balloon guns' variants (Shelly Nov 14: one pistol and one shotgun variant for balloons)
+  confetti: { name: Confetti,     for: [balloon_pistol, balloon_shotgun], chance: 12, damage: 0.9, cooldown: 0.85, rarity: 1, xp: 1.4, tint: "oklch(0.78 0.16 340)" }
   meg:      { name: M.E.G.-issue, for: [melee, ranged], chance: 4, damage: 1.12, cooldown: 0.92, cone: 0.7, rarity: 2, xp: 2.2, cnd: 100, look: meg }
 # Zenith Station energy weapons (Shelly, Nov 9: "introduce laser weapons (using the energy weapons stat)"). energy: true = the Energy Weapons skill
 # (Observation behind it), ammoType cells. A beam is a near-instant bolt: mv 2400 m/s, no drag. Found only on Zenith drones and in the station (pools: [l01]).
