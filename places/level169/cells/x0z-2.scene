@@ -1,6 +1,422 @@
 # spawn-scene v2 yaml x0z-2
-l169-flora-bed:
-  feetPosition: {x: 0, y: 0, z: -250}
-  id: l169-flora-bed
-  scatter: {bounds: {depth: 600, shape: rectangle, width: 220}, count: 420, filter: {maxSlope: 0.35}, sampling: {strategy: poisson}, seed: 169, templates: [{castShadow: true, layout: {box: {max: {x: 0.7, y: 1, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}, model: {id: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb}, receiveShadow: true, weight: 6}, {castShadow: true, layout: {box: {max: {x: 0.6, y: 0.9, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}, model: {id: /cdn/value.35eb169b9a424e39454e42d11abf9d50dff5a3c6626750517ab166bc5daa2684.glb}, receiveShadow: true, weight: 3}, {castShadow: true, layout: {box: {max: {x: 0.6, y: 1.6, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}, model: {id: /cdn/value.c66c8c56c176265aa5b90fd48d0632ca2ea495b09b9c6931da5ddc9d05262586.glb}, receiveShadow: true, weight: 3}, {castShadow: true, layout: {box: {max: {x: 0.8, y: 5.5, z: 0.8}, min: {x: -0.8, y: 0, z: -0.8}}}, model: {id: /cdn/value.436022d4fc62276a709010379b6167c7f346e6166fa2333e5d2f0bf51c960eb5.glb}, physics: {body: static, collider: cylinder}, receiveShadow: true, weight: 1.5}, {castShadow: true, layout: {box: {max: {x: 1.1, y: 1.3, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}, model: {id: /cdn/value.b980609353285a03c5d756b506520a890529a2e3cd542624d5620ac06a4de6c1.glb}, physics: {body: static, collider: box}, receiveShadow: true, weight: 2}], variation: {scale: [0.75, 1.3], yaw: [0, 360]}}
+l169-flora-102:
+  castShadow: true
+  feetPosition: {x: -43.93502274478554, y: 37.69770159007456, z: -225.08687658006644}
+  id: l169-flora-102
+  layout: {box: {max: {x: 1.1, y: 1.3, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  model: {id: /cdn/value.b980609353285a03c5d756b506520a890529a2e3cd542624d5620ac06a4de6c1.glb}
+  physics: static
+  rotation: 20.701512648119365
+  scale: 0.9027269368305462
   tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-103:
+  castShadow: true
+  feetPosition: {x: 8.93050558815268, y: 36.8855276250443, z: -237.51523338608223}
+  id: l169-flora-103
+  layout: {box: {max: {x: 0.7, y: 5.2, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.436022d4fc62276a709010379b6167c7f346e6166fa2333e5d2f0bf51c960eb5.glb}
+  physics: static
+  rotation: 99.92443558756469
+  scale: 1.2306332279605015
+  tags: [l169-flora]
+  visibleRange: {max: 600}
+l169-flora-11:
+  castShadow: false
+  feetPosition: {x: 5.6972102283952815, y: 38.046995792418215, z: -231.92574372604759}
+  id: l169-flora-11
+  layout: {box: {max: {x: 0.7, y: 1, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb}
+  rotation: 125.62052451335849
+  scale: 1.1249028333578739
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-110:
+  castShadow: false
+  feetPosition: {x: 3.163820369711063, y: 23.9096054103526, z: -208.18046689880103}
+  id: l169-flora-110
+  layout: {box: {max: {x: 0.7, y: 1, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb}
+  rotation: 42.84188676757826
+  scale: 1.1156342864807856
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-119:
+  castShadow: true
+  feetPosition: {x: -24.40474386578647, y: -6.332905050047586, z: -274.8501876577968}
+  id: l169-flora-119
+  layout: {box: {max: {x: 0.7, y: 5.2, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.436022d4fc62276a709010379b6167c7f346e6166fa2333e5d2f0bf51c960eb5.glb}
+  physics: static
+  rotation: 72.23934283118665
+  scale: 1.1144916026454845
+  tags: [l169-flora]
+  visibleRange: {max: 600}
+l169-flora-120:
+  castShadow: true
+  feetPosition: {x: 12.914786359721232, y: -3.5078249772023584, z: -297.0063297390036}
+  id: l169-flora-120
+  layout: {box: {max: {x: 0.6, y: 1.6, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.c66c8c56c176265aa5b90fd48d0632ca2ea495b09b9c6931da5ddc9d05262586.glb}
+  rotation: 26.40879326798431
+  scale: 0.8738972063287614
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-122:
+  castShadow: false
+  feetPosition: {x: -26.7790175167746, y: 23.93172778968343, z: -243.07869299923942}
+  id: l169-flora-122
+  layout: {box: {max: {x: 0.7, y: 1, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb}
+  rotation: 67.76427657705
+  scale: 0.993148898004158
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-126:
+  castShadow: true
+  feetPosition: {x: -20.07949631199217, y: -3.845761161142647, z: -310.84856173063093}
+  id: l169-flora-126
+  layout: {box: {max: {x: 1.1, y: 1.3, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  model: {id: /cdn/value.b980609353285a03c5d756b506520a890529a2e3cd542624d5620ac06a4de6c1.glb}
+  physics: static
+  rotation: 190.0886555528681
+  scale: 0.7846724824908528
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-127:
+  castShadow: false
+  feetPosition: {x: -27.157626914399497, y: -4.8132829287285, z: -257.57803519609297}
+  id: l169-flora-127
+  layout: {box: {max: {x: 0.7, y: 1, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb}
+  rotation: 92.7682268306465
+  scale: 0.7504338507309714
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-129:
+  castShadow: false
+  feetPosition: {x: -46.653274538765324, y: 9.771121355142158, z: -255.34100544887642}
+  id: l169-flora-129
+  layout: {box: {max: {x: 0.7, y: 1, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb}
+  rotation: 280.85321508387716
+  scale: 0.9480412376569776
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-134:
+  castShadow: true
+  feetPosition: {x: -22.89311501565069, y: 22.600206750305762, z: -232.37869007623695}
+  id: l169-flora-134
+  layout: {box: {max: {x: 0.6, y: 0.9, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.35eb169b9a424e39454e42d11abf9d50dff5a3c6626750517ab166bc5daa2684.glb}
+  rotation: 318.13582217233994
+  scale: 0.9762531112536104
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-135:
+  castShadow: true
+  feetPosition: {x: 17.319666099417795, y: -4.17828943065907, z: -266.33939024821825}
+  id: l169-flora-135
+  layout: {box: {max: {x: 0.6, y: 1.6, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.c66c8c56c176265aa5b90fd48d0632ca2ea495b09b9c6931da5ddc9d05262586.glb}
+  rotation: 92.49224713653898
+  scale: 0.952311019670363
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-14:
+  castShadow: true
+  feetPosition: {x: -50.79330929638506, y: -2.402227381950525, z: -276.62593970383796}
+  id: l169-flora-14
+  layout: {box: {max: {x: 0.6, y: 0.9, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.35eb169b9a424e39454e42d11abf9d50dff5a3c6626750517ab166bc5daa2684.glb}
+  rotation: 352.3234056459383
+  scale: 0.8255600804349221
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-145:
+  castShadow: true
+  feetPosition: {x: -23.87487447209418, y: -6.540704925961221, z: -285.8224214593984}
+  id: l169-flora-145
+  layout: {box: {max: {x: 0.7, y: 5.2, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.436022d4fc62276a709010379b6167c7f346e6166fa2333e5d2f0bf51c960eb5.glb}
+  physics: static
+  rotation: 163.26880017447695
+  scale: 0.7854554315728394
+  tags: [l169-flora]
+  visibleRange: {max: 600}
+l169-flora-148:
+  castShadow: false
+  feetPosition: {x: 18.6958710088841, y: -3.769476020319999, z: -309.08860702025174}
+  id: l169-flora-148
+  layout: {box: {max: {x: 0.7, y: 1, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb}
+  rotation: 134.07271682008763
+  scale: 0.9870354514974334
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-150:
+  castShadow: false
+  feetPosition: {x: -53.24937793856923, y: 34.72613636693712, z: -242.72604445588127}
+  id: l169-flora-150
+  layout: {box: {max: {x: 0.7, y: 1, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb}
+  rotation: 185.9278714405037
+  scale: 0.8810129146468886
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-155:
+  castShadow: true
+  feetPosition: {x: 8.641861010641726, y: -4.073702137857748, z: -288.5299883589754}
+  id: l169-flora-155
+  layout: {box: {max: {x: 0.6, y: 0.9, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.35eb169b9a424e39454e42d11abf9d50dff5a3c6626750517ab166bc5daa2684.glb}
+  rotation: 208.62317549466303
+  scale: 0.9498345171566283
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-18:
+  castShadow: true
+  feetPosition: {x: 22.159171837456142, y: -4.030248847823016, z: -259.3167805156283}
+  id: l169-flora-18
+  layout: {box: {max: {x: 1.1, y: 1.3, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  model: {id: /cdn/value.b980609353285a03c5d756b506520a890529a2e3cd542624d5620ac06a4de6c1.glb}
+  physics: static
+  rotation: 146.38502431399422
+  scale: 0.8588548607001336
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-21:
+  castShadow: true
+  feetPosition: {x: 23.209017252181198, y: 24.730579982988345, z: -243.58795392028424}
+  id: l169-flora-21
+  layout: {box: {max: {x: 0.6, y: 0.9, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.35eb169b9a424e39454e42d11abf9d50dff5a3c6626750517ab166bc5daa2684.glb}
+  rotation: 273.22800917235577
+  scale: 0.9145634218885393
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-23:
+  castShadow: false
+  feetPosition: {x: 13.348368319379336, y: -3.8817590516786895, z: -263.59772931486265}
+  id: l169-flora-23
+  layout: {box: {max: {x: 0.7, y: 1, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb}
+  rotation: 0.5595939609033959
+  scale: 0.7929345424486951
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-27:
+  castShadow: false
+  feetPosition: {x: 19.734445233240002, y: 0.6446307116558794, z: -252.44403575660849}
+  id: l169-flora-27
+  layout: {box: {max: {x: 0.7, y: 1, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb}
+  rotation: 42.98454189812045
+  scale: 1.1556563140850777
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-30:
+  castShadow: true
+  feetPosition: {x: -30.261180813080248, y: 23.85720008143898, z: -243.9156344504634}
+  id: l169-flora-30
+  layout: {box: {max: {x: 1.1, y: 1.3, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  model: {id: /cdn/value.b980609353285a03c5d756b506520a890529a2e3cd542624d5620ac06a4de6c1.glb}
+  physics: static
+  rotation: 115.8246931786764
+  scale: 1.2689550160285807
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-31:
+  castShadow: true
+  feetPosition: {x: -20.08542070541783, y: 2.439738291229182, z: -201.73210776025994}
+  id: l169-flora-31
+  layout: {box: {max: {x: 0.6, y: 1.6, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.c66c8c56c176265aa5b90fd48d0632ca2ea495b09b9c6931da5ddc9d05262586.glb}
+  rotation: 6.3952290110267835
+  scale: 0.9158481448496916
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-32:
+  castShadow: true
+  feetPosition: {x: 40.26302120381176, y: -3.6584411260723906, z: -302.9624017108988}
+  id: l169-flora-32
+  layout: {box: {max: {x: 0.6, y: 1.6, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.c66c8c56c176265aa5b90fd48d0632ca2ea495b09b9c6931da5ddc9d05262586.glb}
+  rotation: 120.30158484368658
+  scale: 1.2511205922584612
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-33:
+  castShadow: false
+  feetPosition: {x: 25.13592832541835, y: 35.924172971094755, z: -219.19350404720453}
+  id: l169-flora-33
+  layout: {box: {max: {x: 0.7, y: 1, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb}
+  rotation: 136.06527994203628
+  scale: 0.9836977376992339
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-39:
+  castShadow: true
+  feetPosition: {x: -3.7401936756168475, y: -4.485940641429085, z: -262.6767065993867}
+  id: l169-flora-39
+  layout: {box: {max: {x: 0.6, y: 0.9, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.35eb169b9a424e39454e42d11abf9d50dff5a3c6626750517ab166bc5daa2684.glb}
+  rotation: 246.36407336516493
+  scale: 0.9676400541177206
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-42:
+  castShadow: true
+  feetPosition: {x: -18.226830249757892, y: -3.9575574802741094, z: -252.4826832127211}
+  id: l169-flora-42
+  layout: {box: {max: {x: 0.6, y: 1.6, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.c66c8c56c176265aa5b90fd48d0632ca2ea495b09b9c6931da5ddc9d05262586.glb}
+  rotation: 239.41267892690968
+  scale: 0.9238540946849874
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-5:
+  castShadow: true
+  feetPosition: {x: 35.3203558378482, y: 23.49339680625403, z: -244.38079784362614}
+  id: l169-flora-5
+  layout: {box: {max: {x: 0.6, y: 1.6, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.c66c8c56c176265aa5b90fd48d0632ca2ea495b09b9c6931da5ddc9d05262586.glb}
+  rotation: 18.359413267280633
+  scale: 1.1622644165587912
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-50:
+  castShadow: true
+  feetPosition: {x: 43.49548812373331, y: 37.11762123355707, z: -205.57067324201142}
+  id: l169-flora-50
+  layout: {box: {max: {x: 0.6, y: 1.6, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.c66c8c56c176265aa5b90fd48d0632ca2ea495b09b9c6931da5ddc9d05262586.glb}
+  rotation: 88.78668770603215
+  scale: 0.9791120156082846
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-54:
+  castShadow: false
+  feetPosition: {x: -37.07551236500754, y: 34.19640877914966, z: -218.93895957103882}
+  id: l169-flora-54
+  layout: {box: {max: {x: 0.7, y: 1, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb}
+  rotation: 334.52601943841483
+  scale: 0.9715422788968041
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-57:
+  castShadow: true
+  feetPosition: {x: -56.65357189050576, y: 27.49302444965499, z: -248.1621775488193}
+  id: l169-flora-57
+  layout: {box: {max: {x: 1.1, y: 1.3, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  model: {id: /cdn/value.b980609353285a03c5d756b506520a890529a2e3cd542624d5620ac06a4de6c1.glb}
+  physics: static
+  rotation: 132.77808728291564
+  scale: 0.7685668385441261
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-60:
+  castShadow: true
+  feetPosition: {x: 12.692711946411386, y: -4.571698235222464, z: -281.4684515872358}
+  id: l169-flora-60
+  layout: {box: {max: {x: 0.6, y: 0.9, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.35eb169b9a424e39454e42d11abf9d50dff5a3c6626750517ab166bc5daa2684.glb}
+  rotation: 116.73476653021517
+  scale: 0.971457032473505
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-64:
+  castShadow: true
+  feetPosition: {x: 35.02167772083621, y: 37.356211094591615, z: -193.15298180242672}
+  id: l169-flora-64
+  layout: {box: {max: {x: 0.6, y: 0.9, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.35eb169b9a424e39454e42d11abf9d50dff5a3c6626750517ab166bc5daa2684.glb}
+  rotation: 115.31564846416732
+  scale: 0.8769486628598295
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-67:
+  castShadow: true
+  feetPosition: {x: -30.36953350685981, y: 26.329163089033443, z: -222.42836153713444}
+  id: l169-flora-67
+  layout: {box: {max: {x: 0.6, y: 1.6, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.c66c8c56c176265aa5b90fd48d0632ca2ea495b09b9c6931da5ddc9d05262586.glb}
+  rotation: 357.2999165753368
+  scale: 0.9104477821665107
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-69:
+  castShadow: false
+  feetPosition: {x: 5.2196660061458475, y: -3.5102753526801056, z: -297.59265702571383}
+  id: l169-flora-69
+  layout: {box: {max: {x: 0.7, y: 1, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb}
+  rotation: 352.89922546264677
+  scale: 1.1801951063006162
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-70:
+  castShadow: true
+  feetPosition: {x: 21.30904758642849, y: -3.975875283457165, z: -261.74220799083923}
+  id: l169-flora-70
+  layout: {box: {max: {x: 1.1, y: 1.3, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  model: {id: /cdn/value.b980609353285a03c5d756b506520a890529a2e3cd542624d5620ac06a4de6c1.glb}
+  physics: static
+  rotation: 347.99346936307546
+  scale: 0.8303701824650029
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-71:
+  castShadow: true
+  feetPosition: {x: -26.743406084246658, y: 21.964801063870006, z: -244.4516632121297}
+  id: l169-flora-71
+  layout: {box: {max: {x: 0.7, y: 5.2, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.436022d4fc62276a709010379b6167c7f346e6166fa2333e5d2f0bf51c960eb5.glb}
+  physics: static
+  rotation: 177.79075537705364
+  scale: 1.2952711147001343
+  tags: [l169-flora]
+  visibleRange: {max: 600}
+l169-flora-73:
+  castShadow: false
+  feetPosition: {x: 44.96836223777773, y: 37.52986248019561, z: -208.8279994385447}
+  id: l169-flora-73
+  layout: {box: {max: {x: 0.7, y: 1, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb}
+  rotation: 358.6703188524909
+  scale: 0.9200688979914733
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-78:
+  castShadow: false
+  feetPosition: {x: -23.100425269035824, y: -4.729068509337898, z: -317.17429444527914}
+  id: l169-flora-78
+  layout: {box: {max: {x: 0.7, y: 1, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb}
+  rotation: 270.42423389406144
+  scale: 0.8955829801948663
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-91:
+  castShadow: false
+  feetPosition: {x: 10.05986909338267, y: -3.5566637829108867, z: -319.6631597679402}
+  id: l169-flora-91
+  layout: {box: {max: {x: 0.7, y: 1, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb}
+  rotation: 177.69183114994868
+  scale: 0.8075457531761125
+  tags: [l169-flora]
+  visibleRange: {max: 180}
+l169-flora-95:
+  castShadow: true
+  feetPosition: {x: -32.850870251120476, y: 31.329676432715644, z: -235.28154861427913}
+  id: l169-flora-95
+  layout: {box: {max: {x: 0.7, y: 5.2, z: 0.7}, min: {x: -0.7, y: 0, z: -0.7}}}
+  model: {id: /cdn/value.436022d4fc62276a709010379b6167c7f346e6166fa2333e5d2f0bf51c960eb5.glb}
+  physics: static
+  rotation: 165.57899518198286
+  scale: 1.1178707067239428
+  tags: [l169-flora]
+  visibleRange: {max: 600}

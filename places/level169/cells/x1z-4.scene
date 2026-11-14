@@ -1,0 +1,11 @@
+# spawn-scene v2 yaml x1z-4
+l169-flora-58:
+  castShadow: true
+  feetPosition: {x: 65.08350559700443, y: -0.48974150569264285, z: -451.8016641167}
+  id: l169-flora-58
+  layout: {box: {max: {x: 0.6, y: 0.9, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.35eb169b9a424e39454e42d11abf9d50dff5a3c6626750517ab166bc5daa2684.glb}
+  rotation: 15.21060029753046
+  scale: 1.0479575913855608
+  tags: [l169-flora]
+  visibleRange: {max: 180}
