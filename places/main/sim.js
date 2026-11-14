@@ -10,7 +10,7 @@ import L from "../../scripts/lib/data/level0.yml";
 const MID = (L.hub[0] + L.hub[1]) / 2; // the safe room's centre cell
 import W, { rarityCap, rarityIdx } from "../../scripts/lib/weapons.js";
 import { spawnAlmond, spawnWeapon, rollWeapon, rollCash } from "../../scripts/lib/loot.js";
-import { spawnFurniture, pickKind, wallSpot0 } from "../../scripts/lib/furniture.js";
+import { spawnFurniture, pickKind, wallSpot0, remodelFurniture } from "../../scripts/lib/furniture.js";
 import { N, S, H, HALF, zoneOf, inHub, hasPit, hasPillar, cellCenter, cellAt, wallX, wallZ, EXIT, openPoint } from "../../scripts/lib/maze.js";
 const PAPER = { texture: "/cdn/value.00a4e744acf9ab763779bbb0cc7f26fb1dd20aeafc69448c536939cd7212caeb.png", color: "oklch(0.98 0.01 90)", repeat: [1, 1] };
 import B from "../../scripts/lib/data/breakables.yml";

@@ -9,6 +9,7 @@ import B from "./data/breakables.yml";
 import { rollItem, rollItemL1, rollLock } from "./loot.js";
 import { rollTableL3 } from "./loot3.js";
 import * as M0 from "./maze.js";
+import { PROPS, containerModel } from "./l2props.js";
 import * as M1 from "./level1.js";
 import * as M3 from "./level3.js";
 
@@ -33,8 +34,27 @@ export function spawnFurniture(ctx, level, kind, spot, opts = {}) {
   const hp = Math.round((B.materials[K.mat]?.hp ?? 80) * 0.5), name = opts.name ?? K.name;
   return ctx.spawn(interactiveSpec({ tags: ["container", "furniture", "lootfurn", "breakable"], feetPosition: { x, y: (spot.y ?? 0.01) + (K.y ?? 0), z }, rotation: { yaw }, physics: { body: "static", collider: "box" },
     castShadow: false, visibleRange: { max: 45 },
-    primitive: { kind: "scripted", script: K.geo === "l2" ? "scripts/l2-props-geo.js" : "scripts/loot-bags-geo.js", params: { kind, seed: Math.floor(ctx.random() * 1000) } },
+    ...(furnLook(kind) ?? { primitive: { kind: "scripted", script: K.geo === "l2" ? "scripts/l2-props-geo.js" : "scripts/loot-bags-geo.js", params: { kind, seed: Math.floor(ctx.random() * 1000) } } }),
     state: { kind, mat: K.mat, hp, maxHp: hp, name: lk ? `${name} (locked)` : name, items: items.join(","), ...(lk ? { lock: lk.lock } : {}), ...(opts.state ?? {}) } }));
+}
+
+// the fitted Tripo mesh a kind wears (the l2props containers: filing, desk, cabinet, locker, toolbox), at its real size; null keeps the scripted look
+export function furnLook(kind) {
+  const id = D.kinds[kind]?.geo === "l2" ? containerModel(kind) : null; if (!id) return null;
+  const [w, h, d] = sizeOf(kind);
+  return { model: { id, forward: PROPS.forward }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } } };
+}
+// 2026-11-14: furniture already standing as scripted boxes swaps to its fitted mesh in place (same id, collider, state, tags); gated by place.state.furnModelV
+export const FURN_MODEL_V = 1;
+export function remodelFurniture(ctx) {
+  const s = ctx.place.state; if (s.furnModelV === FURN_MODEL_V) return 0;
+  let n = 0;
+  for (const r of ctx.query({ tags: ["lootfurn"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
+    const o = ctx.place.objects[r.id]; if (o?.primitive?.script !== "scripts/l2-props-geo.js") continue;
+    const L = furnLook(o.state?.kind ?? o.primitive.params?.kind); if (!L) continue;
+    o.primitive = null; o.model = L.model; o.layout = L.layout; n++;
+  }
+  s.furnModelV = FURN_MODEL_V; return n;
 }
 
 // the face point of side d of a cell (0 +x, 1 +z, 2 -x, 3 -z), slid `along` metres; T = half wall thickness
