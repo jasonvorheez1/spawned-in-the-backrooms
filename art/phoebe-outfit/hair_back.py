@@ -64,8 +64,8 @@ hair.parent = CAT; hair.modifiers.new("skin", "ARMATURE").object = CAT
 for o in olds: bpy.data.objects.remove(o)
 # a hair-coloured cap under the strands: the old cut was parted for a human skull, and on the rounder cat crown the part opened onto fur
 bm = bmesh.new(); bmesh.ops.create_uvsphere(bm, u_segments=32, v_segments=20, radius=1.0)
-cz = HC.z; rz = (newTop - cz) * 1.0
-for v in bm.verts: v.co = Vector((catHead.x + v.co.x * newW / 2 * 1.05, newCy + v.co.y * newD / 2 * 1.05, cz + v.co.z * rz))
+cz = HC.z; rz = (newTop - cz) * 0.9
+for v in bm.verts: v.co = Vector((catHead.x + v.co.x * newW / 2 * 0.93, newCy + v.co.y * newD / 2 * 0.95, cz + v.co.z * rz))
 cut = [v for v in bm.verts if (v.co.z < cz + (0.38 if v.co.y < newCy - newD * 0.2 else 0.0) * rz)]
 bmesh.ops.delete(bm, geom=cut, context="VERTS")
 cm = bpy.data.meshes.new("cap"); bm.to_mesh(cm); bm.free(); cm.materials.append(hairMat)
