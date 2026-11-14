@@ -86,7 +86,7 @@ describe("Chapter 2 quest progression and Mike Sunderland lore", () => {
     dropEars.press({ ...ctx, self: doorObj }, { by: p.id });
     expect(ctx.crossed.length).toBe(0);
 
-    // Stage 3 -> 4 via Commander Moss (accurate Mike Sunderland lore)
+    // Stage 3 -> 4 via Commander Moss (accurate Mike Sunderland lore) + IS LAB bench decode
     const moss = { id: "npc/gamma-moss", state: {} };
     const c3 = ch2Choices(ctx, moss, p.state);
     expect(c3.some((c) => c.text.includes("old intake logs"))).toBe(true);
@@ -95,8 +95,23 @@ describe("Chapter 2 quest progression and Mike Sunderland lore", () => {
     expect(r3.reply).toContain("River's brother");
     expect(r3.reply).not.toMatch(/sister|\bshe\b|\bher\b/i);
     expect(r3.reply).not.toMatch(/reincarnat|chosen|secret power/i);
+    expect(p.state.ch2Archive).toBe(1);
     expect(p.state.knowsMike).toBe(1);
+    expect(p.state.ch2Q).toBe(3);
+
+    // Door still holds until IS LAB bench carrier lock completes
+    dropEars.press({ ...ctx, self: doorObj }, { by: p.id });
+    expect(ctx.crossed.length).toBe(0);
+
+    // Decode via IS LAB bench using a salvaged relay
+    p.state.ch2Relay = 1;
+    const benchObj = { id: "l11-lab-bench", feetPosition: { x: -26.3, y: 1.26, z: 35.4 }, state: { kind: "lab-signal-bench" } };
+    dropEars.press({ ...ctx, self: benchObj }, { by: p.id });
+    expect(p.state.ch2SignalDecoded).toBe(1);
+    expect(p.state.ch2EchoDone).toBe(1);
     expect(p.state.ch2Q).toBe(4);
+    expect(p.state.payout.xp).toBe(120);
+    expect(p.state.payout.items).toEqual(["almond", "circuit"]);
 
     // Door opens at Stage 4
     dropEars.press({ ...ctx, self: doorObj }, { by: p.id });
@@ -119,6 +134,7 @@ describe("Chapter 2 quest progression and Mike Sunderland lore", () => {
     expect(p.state.ch2Q).toBe(2);
 
     setCh2Step(ctx, p.state, 3);
+    p.state.ch2SignalDecoded = 1;
     const jo = { id: "npc/hub-amber-jo", state: {} };
     const cj = ch2Choices(ctx, jo, p.state);
     expect(cj.some((c) => c.text.includes("red hospital door"))).toBe(true);
@@ -309,5 +325,130 @@ describe("Level ! intro, near-death rescue non-repeatability, and Phoebe conclus
     ctx._t += 200;
     sim.tick(simCtx);
     expect(objects["phoebe-lrun"]).toBeDefined();
+  });
+});
+
+describe("Chapter 2 side quests (Frequency Lock & Wait for the Tone) and Level 34 / Base Gamma routes", () => {
+  test("Frequency Lock supports Level 34 relay recovery, bench decode, and reverse Stage 3 completion", () => {
+    const p = makePlayer({ ch2Q: 3 });
+    const ctx = makeCtx(p);
+    const benchObj = { id: "l11-lab-bench", feetPosition: { x: -26.3, y: 1.26, z: 35.4 }, state: { kind: "lab-signal-bench" } };
+
+    // Low skills pressing IS LAB bench opens Frequency Lock at stage 2
+    dropEars.press({ ...ctx, self: benchObj }, { by: p.id });
+    expect(p.state.ch2EchoQ).toBe(2);
+    expect(p.state.ch2SignalDecoded).toBeUndefined();
+
+    // Recover waterproof relay in Level 34 east branch once
+    const relayObj = { id: "l34-ch2-relay", feetPosition: { x: 17.2, y: 0.05, z: 25 }, state: { kind: "l34-ch2-relay" } };
+    dropEars.press({ ...ctx, self: relayObj }, { by: p.id });
+    expect(p.state.ch2Relay).toBe(1);
+    expect(p.state.ch2EchoQ).toBe(3);
+    expect(p.state.payout).toEqual({ xp: 95, items: ["battery"], text: "Recovered Waterproof Relay Case (+95 XP, +1 Battery)" });
+
+    // Repeat press cannot farm relay XP
+    dropEars.press({ ...ctx, self: relayObj }, { by: p.id });
+    expect(p.state.payout.xp).toBe(95);
+
+    // Slot relay at IS LAB bench -> completes Frequency Lock and stacks payouts
+    dropEars.press({ ...ctx, self: benchObj }, { by: p.id });
+    expect(p.state.ch2SignalDecoded).toBe(1);
+    expect(p.state.ch2EchoQ).toBe(99);
+    expect(p.state.ch2EchoDone).toBe(1);
+    expect(p.state.cents).toBe(6500);
+    expect(p.state.payout.xp).toBe(215);
+    expect(p.state.payout.items).toEqual(["battery", "almond", "circuit"]);
+    expect(p.state.ch2Q).toBe(3);
+
+    // Base Gamma Vale finishes the archive side after IS LAB -> unlocks Stage 4
+    const vale = { id: "npc/gamma-vale", state: {} };
+    const cv = ch2Choices(ctx, vale, p.state);
+    expect(cv.some((c) => c.text.includes("Base Gamma's old intake"))).toBe(true);
+    const rv = handleDialogueCh2(ctx, p, vale, cv[0].text);
+    expect(rv.reply).toContain("Mike Sunderland");
+    expect(p.state.ch2Archive).toBe(1);
+    expect(p.state.ch2Q).toBe(4);
+  });
+
+  test("Frequency Lock allows Pip (battery trade) and Science 40 direct bypass routes", () => {
+    const pPip = makePlayer({ ch2Q: 3, ch2EchoQ: 2, batteries: 1 });
+    const ctxPip = makeCtx(pPip);
+    const pip = { id: "npc/gamma-pip", state: {} };
+    const cPip = ch2Choices(ctxPip, pip, pPip.state);
+    const tradeChoice = cPip.find((c) => c.text.includes("spare flashlight battery"));
+    expect(tradeChoice).toBeDefined();
+    handleDialogueCh2(ctxPip, pPip, pip, tradeChoice.text);
+    expect(pPip.state.batteries).toBe(0);
+    expect(pPip.state.ch2Relay).toBe(1);
+    expect(pPip.state.ch2EchoQ).toBe(3);
+
+    // Science 40 direct bench bypass without collecting any relay
+    const pSci = makePlayer({ ch2Q: 3, ch2Archive: 1, skl: Array(20).fill(50).join(",") });
+    const ctxSci = makeCtx(pSci);
+    const benchObj = { id: "l11-lab-bench", feetPosition: { x: -26.3, y: 1.26, z: 35.4 }, state: { kind: "lab-signal-bench" } };
+    dropEars.press({ ...ctxSci, self: benchObj }, { by: pSci.id });
+    expect(pSci.state.ch2SignalDecoded).toBe(1);
+    expect(pSci.state.ch2EchoDone).toBe(1);
+    expect(pSci.state.ch2Q).toBe(4);
+  });
+
+  test("Wait for the Tone traces payphone -> Camera 4 Ivy -> Mike's satchel and boosts Level ! pacing", async () => {
+    const { ears: l11Use } = await import("../scripts/level11-use.js");
+    const p = makePlayer({ ch2Q: 1 });
+    const ctx = makeCtx(p);
+    const phoneObj = { id: "l11-payphone", feetPosition: { x: -8.8, y: 0.33, z: 15.5 }, state: { kind: "payphone" } };
+
+    // Answer Level 11 payphone -> starts/advances Wait for the Tone
+    l11Use.press({ ...ctx, self: phoneObj }, { by: p.id });
+    expect(p.state.ch2TonePayphone).toBe(1);
+    expect(p.state.ch2ToneQ).toBe(2);
+
+    // Ask Ivy at Base Gamma about Camera 4
+    const ivy = { id: "npc/gamma-ivy", state: {} };
+    const ci = ch2Choices(ctx, ivy, p.state);
+    const camChoice = ci.find((c) => c.text.includes("Camera 4"));
+    expect(camChoice).toBeDefined();
+    handleDialogueCh2(ctx, p, ivy, camChoice.text);
+    expect(p.state.ch2CamLogged).toBe(1);
+    expect(p.state.ch2ToneQ).toBe(3);
+
+    // Recover Mike Sunderland's dropped field satchel -> completes Wait for the Tone & grants ch2Prep
+    const satchelObj = { id: "l11-sunderland-satchel", feetPosition: { x: -30.9, y: 0.1, z: 8.7 }, state: { kind: "sunderland-satchel" } };
+    dropEars.press({ ...ctx, self: satchelObj }, { by: p.id });
+    expect(p.state.ch2RunnerData).toBe(1);
+    expect(p.state.ch2ToneDone).toBe(1);
+    expect(p.state.ch2ToneQ).toBe(99);
+    expect(p.state.ch2Prep).toBe(1);
+    expect(p.state.knowsMike).toBe(1);
+    expect(p.state.payout.xp).toBe(135);
+    expect(p.state.payout.items).toEqual(["almond", "almond", "bandage", "bandage", "firstaid"]);
+
+    // Verify subtle Level ! pacing benefit while keeping Agility monotonicity
+    const base = agilityProfile({ attr: "5,5,5,5,5,5,5" });
+    const prepped = agilityProfile({ attr: "5,5,5,5,5,5,5", ch2Prep: 1 });
+    expect(prepped.sprintDrainMul).toBeLessThan(base.sprintDrainMul);
+    expect(prepped.stumbleMs).toBeLessThan(base.stumbleMs);
+
+    // Phoebe notes ch2Prep if mentioned in the alcove
+    p.state.ch2Q = 6;
+    p.state.lrunRescued = 1;
+    p.state.phoebeTalked = 1;
+    const phoebe = { id: "npc/phoebe-lrun", state: {} };
+    const pf = ch2Choices(ctx, phoebe, p.state);
+    const prepChoice = pf.find((c) => c.text.includes("pacing notes"));
+    expect(prepChoice).toBeDefined();
+    const rp = handleDialogueCh2(ctx, p, phoebe, prepChoice.text);
+    expect(rp.reply).toContain("cadence");
+  });
+
+  test("GAMMA-DB-01 admin intake file unlocks Stage 3 archive half via BackOS", async () => {
+    const { onInput } = await import("../scripts/os.js");
+    const p = makePlayer({ ch2Q: 3, ch2SignalDecoded: 1 });
+    p.state.os = { id: "GAMMA-DB-01", host: "GAMMA-DB-01", user: "admin", app: "files", sel: "" };
+    const ctx = makeCtx(p, { "GAMMA-DB-01": { id: "GAMMA-DB-01", feetPosition: { x: 0, y: 0, z: 0 }, state: {} } });
+    onInput(ctx, { pressed: { os: true }, actionData: { os: { k: "file", v: "sunderland_intake.txt" } } });
+    expect(p.state.ch2Archive).toBe(1);
+    expect(p.state.knowsMike).toBe(1);
+    expect(p.state.ch2Q).toBe(4);
   });
 });

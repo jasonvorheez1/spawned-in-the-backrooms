@@ -3,7 +3,18 @@
 //   shaft A (0,0) step-irons up to Level 9's storm drain → tunnel north 20 m → junction (0,25): foul pool, dive down to Level 7;
 //   a dead-end east branch (the smilers' lair) → tunnel on 20 m → shaft B (0,50) step-irons up to Level 11's street grate.
 export const cadence = "1s";
-const V = 4;
+const V = 5;
+const RELAY_CASE = {
+  tags: ["usable"],
+  feetPosition: { x: 17.2, y: 0.05, z: 25 },
+  rotation: { yaw: -90 },
+  primitive: { kind: "box", width: 0.36, height: 0.2, depth: 0.28 },
+  material: { color: "#4e5642", roughness: 0.6 },
+  physics: { body: "static", collider: "box" },
+  behavior: "scripts/l11-ch2-drop.js",
+  state: { kind: "l34-ch2-relay", name: "Waterproof Relay Case", verb: "Recover Relay" },
+  children: [{ offset: { x: 0.14, y: 0.11, z: 0.09 }, primitive: { kind: "box", width: 0.06, height: 0.03, depth: 0.06 }, material: { color: "#7fe0b0", emissive: "#48c78e", emissiveIntensity: 1.4 } }],
+};
 const GEO = "scripts/l34-sewer-geo.js";
 const WATER = { kind: "water", color: "oklch(0.52 0.09 95)", opacity: 0.88, waveIntensity: 0.15 };
 const SMILERS = [
@@ -90,5 +101,6 @@ function feed(ctx, s) {
 export function tick(ctx) {
   const s = ctx.place.state;
   if (s.l34V !== V) { lay(ctx); s.l34V = V; }
+  if (!ctx.place.objects?.["l34-ch2-relay"]) ctx.spawn("l34-ch2-relay", RELAY_CASE);
   if (ctx.place.players.length) feed(ctx, s);
 }

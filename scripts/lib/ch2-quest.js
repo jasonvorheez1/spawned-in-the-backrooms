@@ -1,340 +1,640 @@
-// Chapter 2 ("The Dead Signal") quest state machine, Dina arc extensions, Base Gamma/Sunderland lore, and Phoebe post-rescue conclusion.
-// Pure quest state helpers cleanly separated from Level ! physics so tests and dialogue run deterministically.
-import { setQuest, endQuest, tellQuest } from "./quests.js";
+// Chapter 2: "The Dead Signal" + supporting side quests leading up to Level !.
+// Flows forward from Dina's River trail (dinaQ >= 9) into Level 11, IS LAB, Level 34, Base Gamma, and Level !.
+import { addRep, repOf } from "./rep.js";
 import { pushFeed } from "./feed.js";
-import { addRep, isVilified } from "./rep.js";
+import { heard } from "./hear.js";
+import { endQuest, payOnce, setQuest } from "./quests.js";
+import { rollCheck } from "./npc-talk.js";
 
-export const CH2 = { id: "the-dead-signal", name: "The Dead Signal" };
+const CHIME = "cdn/sfx-soft-bright-two-note-success-chime.mp3";
+const FANFARE = "/cdn/moodboard-realistic-gritty/sfx-level-up-jingle-retro-terminal-chime-rising-three-notes.mp3";
 
-const short = (it) => String(it?.id ?? it ?? "").split("/").pop();
-const has = (s, fn) => typeof fn === "function" && fn(s);
+export const CH2 = {
+  id: "the-dead-signal",
+  name: "The Dead Signal",
+  kind: "main",
+  briefing: "Dina's River signal dropped out past Level 11. Follow her clinic note, decode the carrier on IS LAB's bench, confirm Base Gamma's old intake ledger, and step through the red hospital door.",
+};
 
-export const megHostileCh2 = (s) => isVilified(s, { id: "l11-meg-agent-vance", state: { faction: "meg" } });
+export const CH2_ECHO = {
+  id: "frequency-lock",
+  name: "Frequency Lock",
+  kind: "side",
+  briefing: "IS LAB's bench in Level 11's strip mall blew a splitter relay trying to lock the dead carrier. Scavenge a waterproof relay in the Level 34 sewers, get Pip at Base Gamma to calibrate one, buy a conduit key from Level 11's night janitor, or bypass the board directly.",
+};
 
-const CH2_WHISPER_LINE = "Same pace. Do not waste it on a locked door.";
-const WV = (w) => `/cdn/voice-soft-breathy-young-woman-whispering-amused-saying-${encodeURIComponent(w)}.mp3`;
+export const CH2_TONE = {
+  id: "wait-for-the-tone",
+  name: "Wait for the Tone",
+  kind: "side",
+  briefing: "A timed pace click rides under the static on 11th Avenue's payphone. Answer the phone, ask Ivy at Base Gamma about Camera 4's timestamp, and recover the runner's dropped satchel near Level 11's barricaded alley.",
+};
 
-// Phoebe's five answers in the Safe Alcove. She is curious, not fond. Mike is only brought up if already heard or Phoebe names him first.
-export const REPLIES = [
-  { id: "mike", stance: "curious", tag: "Ask", key: "mike", q: "You mentioned Mike earlier. Who is he?",
-    knownQ: "Did you watch Mike Sunderland run a hall like this too?",
-    a: "River's brother. Quick learner. A red hospital seam took him. I wanted to see if you'd go the same way.",
-    note: "You asked about Mike. Phoebe compared you to him, and didn't say who came out ahead." },
-  { id: "reminded", stance: "curious", tag: "Ask", key: "what were you waiting for", q: "Why pull me out at the end? What were you waiting for?",
-    a: "You run like an old runner I watched once. Mike. Same bad habits. I wanted to see if the ending changed.",
-    note: "Phoebe admitted you reminded her of Mike. Not sentiment. A rerun." },
-  { id: "want", stance: "suspicious", tag: "Suspicious", key: "what do you want", q: "What do you want from me?",
-    a: "Nothing yet. I like watching what people do when a room wants them dead.",
-    note: "You asked what she wants. She wants to keep watching." },
-  { id: "sooner", stance: "frustrated", tag: "Angry", key: "could've helped sooner", q: "You could've helped sooner.",
-    a: "Sure. Then I'd never know how far you get. Now I do. Six meters short.",
-    note: "You called her out for waiting. She didn't deny it was a test." },
-  { id: "thanks", stance: "relieved", tag: "Grateful", key: "thanks, i think", q: "Thanks, I think.",
-    a: "Don't. I was curious. You were interesting. Stay that way.",
-    note: "You thanked her. She said curiosity saved you, not kindness." },
-];
+export const megHostileCh2 = (s) => repOf(s, "meg") <= -30;
 
-const STEP = {
-  1: (s) => ({
-    step: megHostileCh2(s)
-      ? "M.E.G. dispatch won't talk to you. Ask trader Kael on Level 11 or check the clinic across from him for Dina's dead-drop."
-      : "Chapter 2 begins on Level 11. Ask M.E.G. Agent Vance at Base Beta Dispatch (or trader Kael) where Dina left her relay drop.",
-    mark: megHostileCh2(s) ? { place: "level11", id: "l11-trader-kael" } : { place: "level11", id: "l11-meg-agent-vance" },
-  }),
-  2: () => ({
-    step: "Dina stashed her drive packet inside the shuttered Centro Dermatologico clinic on Level 11's strip mall. Recover the sealed clinic cache.",
-    mark: { place: "level11", id: "l11-dina-cache" },
-  }),
-  3: () => ({
-    step: "Dina's note warns that someone cut a red-lit threshold behind the clinic and copied her route. Ask Commander Moss or Vale at Base Gamma (or Jo at Camp Amber) about the older pattern.",
-    mark: { place: "gamma", id: "gamma-moss" },
-  }),
-  4: () => ({
-    step: "Moss and Vale tied the doorway cadence to Mike Sunderland, River's brother, and a silent observer in yellow. Return to Level 11 and step through the anomalous hospital door behind the clinic.",
-    mark: { place: "level11", id: "l11-to-levelrun" },
-  }),
-  5: () => ({
-    step: "Run. Keep your balance over the gurneys and outrun the corridor collapse down to the EXIT sign.",
-    mark: { place: "levelrun", id: "lrun-exit-sign" },
-  }),
-  6: () => ({
-    step: "You survived the corridor collapse only because Phoebe pulled you through a ward. Speak with her in the alcove before heading back to Level 11.",
-    mark: { place: "levelrun", id: "phoebe-lrun" },
-  }),
+export const REPLIES = {
+  vance_q1: "Dina? Yeah, checked through Base Beta three sleeps back with half her pack missing, asking about some observer in yellow near the strip mall. Didn't stay for rations, either. She walked straight past Centro Dermatologico muttering about a carrier signal bleeding through the concrete. Look behind the clinic desk if she left a spare cache. If you want to read that static properly, check the test bench next door at IS LAB while you're in the mall.",
+  kael_q1: "She didn't buy supplies from me, friend. Too busy staring at that strip mall on the west edge. Said the dead frequencies were humming right behind Centro Dermatologico's exam wall, and she talked to the night tech over at IS LAB before she vanished. Try the clinic back room first, and keep your ears open near the 11th Ave payphone if it starts clicking.",
+  jo_hostile_q1: "M.E.G. pulled down Dina's chalk notes on 11th Avenue because Base Beta doesn't like unlogged signals near their perimeter. Check Centro Dermatologico in Level 11's strip mall anyway. She always tucks a spare strip of tape and an address behind clinic cabinets before taking a bad door, and IS LAB next door still has working test gear.",
+  moss_q3_need_bench: "That red hospital corridor keeps pulling runners in off wild seams. Dina wasn't the last person to catch it either: Base Gamma logged a courier named Mike Sunderland, River's brother, on that exact frequency before Dina ever stepped into Level 11. He survived the run back to our intake desk, barely standing. The archive file is yours. Before forcing that hospital latch, decode the carrier on IS LAB's bench back in Level 11's strip mall.",
+  moss_q3_ready: "Dina isn't the first name Base Gamma logged on that red hospital signal. Years back, Mike Sunderland, River's brother, got pulled through a door off Level 11 and dragged himself back to our intake desk, barely standing. Now that you've locked the carrier at IS LAB, both halves match. Head back to the strip mall hospital door with your eyes open.",
+  vale_q3_need_bench: "Every red-wall anomaly we've logged since 2021 shares that 400-hertz drop before the door swings. Dina followed it out of Level 11, same as River's brother Mike Sunderland did before reaching our intake ledger. You know who survived it once. Now go back to IS LAB in Level 11's strip mall and lock that carrier frequency on their bench before you touch the door.",
+  vale_q3_ready: "Same carrier pattern we pulled off the relay logs. Dina isn't the first person Gamma saw walk out of a red hospital corridor: Mike Sunderland, River's brother, caught that signal from Level 11, ran until his lungs gave out, and lived to sign our intake sheet. With IS LAB's frequency decode in hand, go force the red hospital door by Level 11's strip mall.",
+  jo_hostile_q3_need_bench: "M.E.G. patrols won't hand you Base Gamma's intake binders, so here's what Camp Amber copied off them before the freeze: Mike Sunderland, River's brother, came out of a red hospital corridor off Level 11 half-conscious, raving about exit signs and gurneys, before going quiet up in Level 989. You still need IS LAB's bench in Level 11's strip mall to lock the carrier before forcing that door.",
+  jo_hostile_q3_ready: "Here's what Camp Amber copied out of Base Gamma's intake sheets before M.E.G. cut access: courier Mike Sunderland, River's brother, survived a red hospital corridor off Level 11, left notes on the pacing, and later disappeared toward Level 989. You've already locked the carrier at IS LAB, so go force the red hospital door by Level 11's strip mall.",
+  phoebe_mike: "Huh. You actually asked M.E.G. about Mike Sunderland before coming down here? Most folks never bother checking the old logs, just run till their shoes fall off. Yeah, I watched him sprint half a mile down a hallway just like this once. Weird guy. Carried a fishing lure in his jacket pocket like it was good luck. You made better time than he did, though.",
+  phoebe_reminded: "Just waiting for the static to settle down so you wouldn't bolt back into the hallway and get chewed up. You know how noisy that exit is at first? Sort of reminded me of this wanderer Mike Sunderland I pulled behind a pillar years back, before he got obsessed with some quiet pier somewhere. You landed cleaner than he did, though.",
+  phoebe_want: "Right now? Mostly a breather and someone to talk to who isn't screaming. Look, that hallway spits people out down my neck of the woods maybe twice a year, and most of them bleed out behind a tipped gurney because nobody propped the alcove latch. I dragged you behind the plaster. You don't owe me a speech, just don't die in my hallway.",
+  phoebe_sooner: "Hey, nobody pays me hazard wages to sprint ten kilometers down a burning hallway, pal. I didn't build those gurneys, and I definitely didn't send the crowd behind you. I dragged you behind the only load-bearing pillar before your knees locked up. Take the save and catch your breath.",
+  phoebe_thanks: "You're welcome. Don't make it weird. Honestly, most people who survive the sprint spend the first five minutes checking if I have teeth in my sleeves before they say thanks. You handled the turn alright once I waved you into the alcove.",
+  phoebe_whisper: "Still got good ears, I see. Yeah, that's the Mike I meant. Ran a red hall, kept his jacket mostly together, talked nonstop about going fishing once he got out of the city. Strange taste in hobbies, if you ask me.",
+  phoebe_prep: "You kept a steady cadence on that run instead of blowing your legs out before the third turn. Looks like somebody found Mike's old pacing notes before stepping through the red door.",
+  phoebe_finish: "Door at the back of the alcove pushes right back out to Level 11's strip mall block. Watch the step on the far side, it drops two inches onto wet asphalt. Oh, and if you keep chasing Dina's signal north, stay out of the flooded drains at night.",
+};
+
+function shortId(it) {
+  return String(it?.id ?? it ?? "").split("/").pop();
+}
+
+export function addPayout(s, { xp = 0, items = [], text = null } = {}) {
+  const prev = s.payout;
+  if (!prev && !items.length && text == null) {
+    s.payout = { xp };
+    return;
+  }
+  const out = { xp: (prev?.xp ?? 0) + xp };
+  const mergedItems = [...(prev?.items ?? []), ...(items ?? [])];
+  if (mergedItems.length) out.items = mergedItems;
+  const mergedText = text ?? prev?.text;
+  if (mergedText) out.text = mergedText;
+  s.payout = out;
+}
+
+function questBanner(ctx, st, msg, clip = CHIME) {
+  const now = ctx.now();
+  st.notice = { text: msg, at: now };
+  pushFeed(st, msg, now, "good");
+  const pos = ctx.self?.worldFeetPosition ?? ctx.self?.feetPosition;
+  if (pos) heard(ctx, { clip, position: pos, volume: 0.75, maxDistance: 14 });
+}
+
+function stage3Info(s) {
+  const dec = !!s.ch2SignalDecoded;
+  const arc = !!s.ch2Archive;
+  const hostile = megHostileCh2(s);
+  if (dec && !arc) {
+    return {
+      step: hostile
+        ? "Carrier locked. Ask Jo at Camp Amber (The Hub) who ran a red hall like that before Dina"
+        : "Carrier locked. Ask Moss or Vale at Base Gamma (Level 3), or check GAMMA-DB-01, about who ran the red hall before Dina",
+      mark: hostile
+        ? { place: "thehub", x: 0, z: -18, label: "Camp Amber (The Hub)" }
+        : { place: "level3", x: 46, z: 46, label: "Base Gamma" },
+    };
+  }
+  if (!dec && arc) {
+    return {
+      step: "Gamma records point to Mike Sunderland. Decode the carrier on IS LAB's bench in Level 11",
+      mark: { place: "level11", x: -26.3, z: 35.4, label: "IS LAB Bench" },
+    };
+  }
+  return {
+    step: hostile
+      ? "Decode the carrier on IS LAB's bench in Level 11, then ask Camp Amber in The Hub about Base Gamma's old intake ledger"
+      : "Decode the carrier on IS LAB's bench in Level 11 and check Base Gamma's intake ledger in Level 3",
+    mark: { place: "level11", x: -26.3, z: 35.4, label: "IS LAB Bench" },
+  };
+}
+
+export const STEP = {
+  1: (s) => megHostileCh2(s)
+    ? { step: "Search Centro Dermatologico in Level 11's strip mall, or ask Jo at Camp Amber about Dina", mark: { place: "level11", x: -25.4, z: 28.9, label: "Strip Mall Clinic" } }
+    : { step: "Ask Vance at Base Beta or Trader Kael on 11th Ave about Dina's trail in Level 11", mark: { place: "level11", x: 14, z: -26, label: "Base Beta (Level 11)" } },
+  2: () => ({ step: "Search Centro Dermatologico in Level 11's strip mall for Dina's note", mark: { place: "level11", x: -25.4, z: 28.9, label: "Strip Mall Clinic" } }),
+  3: (s) => stage3Info(s),
+  4: () => ({ step: "Enter the red hospital door by Level 11's strip mall", mark: { place: "level11", x: -20, z: 36, label: "Red Hospital Door" } }),
+  5: () => ({ step: "Run the red hospital corridor and survive the horde", mark: { place: "levelrun", x: 0, z: -185, label: "Exit Alcove" } }),
+  6: () => ({ step: "Speak with Phoebe in the Safe Alcove", mark: { place: "levelrun", x: 0, z: -200, label: "Phoebe" } }),
+};
+
+export const ECHO_STEP = {
+  1: () => ({ step: "Inspect the shorted receiver bench inside IS LAB in Level 11's strip mall", mark: { place: "level11", x: -26.3, z: 35.4, label: "IS LAB Bench" } }),
+  2: (s) => s.ch2Relay
+    ? { step: "Slot the replacement relay into IS LAB's bench inside Level 11's strip mall", mark: { place: "level11", x: -26.3, z: 35.4, label: "IS LAB Bench" } }
+    : { step: "Source a working relay (Level 34 sewers, Pip at Base Gamma, or Level 11's janitor) or bypass the bench [Science 40 / Repair 35]", mark: { place: "level34", x: 17.2, z: 25, label: "Level 34 East Sewer" } },
+  3: () => ({ step: "Slot the replacement relay into IS LAB's bench inside Level 11's strip mall", mark: { place: "level11", x: -26.3, z: 35.4, label: "IS LAB Bench" } }),
+};
+
+export const TONE_STEP = {
+  1: () => ({ step: "Answer the ringing payphone on 11th Avenue in Level 11", mark: { place: "level11", x: -8.8, z: 15.5, label: "11th Ave Payphone" } }),
+  2: (s) => s.ch2RunnerData
+    ? { step: "Bring the field satchel pacing log to Ivy at Base Gamma or Kael on 11th Ave", mark: { place: "gamma", x: 0, z: 0, label: "Base Gamma (Ivy)" } }
+    : { step: "Ask Ivy at Base Gamma about Camera 4's timestamp, or search near Level 11's barricaded alley", mark: { place: "gamma", x: 0, z: 0, label: "Base Gamma (Ivy)" } },
+  3: (s) => !s.ch2RunnerData
+    ? { step: "Recover the dropped field satchel behind Level 11's barricaded alley pallets", mark: { place: "level11", x: -30.9, z: 8.7, label: "Barricaded Alley Satchel" } }
+    : { step: "Report the pacing notes to Ivy at Base Gamma or Kael on 11th Ave", mark: { place: "level11", x: -6, z: 4, label: "11th Ave (Trader Kael)" } },
 };
 
 export function syncCh2(s) {
-  if (!s) return false;
-  if (s.ch2Done) return false;
+  if (!s || s.ch2Done) return false;
   const q = s.ch2Q ?? 0;
-  if (!q || !STEP[q]) return false;
-  const info = STEP[q](s);
-  return setQuest(s, CH2.id, {
-    name: CH2.name,
-    step: info.step,
-    mark: info.mark,
-    main: true,
-    kind: "main",
-    briefing: "Chapter 2: Dina's trail through Level 11's clinic and Base Gamma's archive leads to an unstable hospital anomaly behind the strip mall.",
-  });
+  if (!q) return false;
+  const fn = STEP[q];
+  if (!fn) return false;
+  const info = fn(s);
+  return setQuest(s, CH2.id, { name: CH2.name, step: info.step, mark: info.mark, main: true, briefing: CH2.briefing });
 }
 
-export function setCh2Step(ctx, st, n, noticeText) {
+export function syncCh2Echo(s) {
+  if (!s || s.ch2EchoDone) return false;
+  const q = s.ch2EchoQ ?? 0;
+  if (!q) return false;
+  const fn = ECHO_STEP[q];
+  if (!fn) return false;
+  const info = fn(s);
+  return setQuest(s, CH2_ECHO.id, { name: CH2_ECHO.name, step: info.step, mark: info.mark, kind: "side", briefing: CH2_ECHO.briefing });
+}
+
+export function syncCh2Tone(s) {
+  if (!s || s.ch2ToneDone) return false;
+  const q = s.ch2ToneQ ?? 0;
+  if (!q) return false;
+  const fn = TONE_STEP[q];
+  if (!fn) return false;
+  const info = fn(s);
+  return setQuest(s, CH2_TONE.id, { name: CH2_TONE.name, step: info.step, mark: info.mark, kind: "side", briefing: CH2_TONE.briefing });
+}
+
+export function setCh2Step(ctx, st, n, noteText) {
   if (!st || st.ch2Done) return false;
   if (n <= (st.ch2Q ?? 0) || !STEP[n]) return false;
   st.ch2Q = n;
   syncCh2(st);
-  if (noticeText) {
-    st.notice = { text: noticeText, at: ctx.now() };
-    pushFeed(st, noticeText, ctx.now(), "info");
-  }
-  if (n === 4 && !st.ch2WhisperDone) {
-    st.ch2Whisper = { at: ctx.now() + 3000 };
+  if (noteText) {
+    questBanner(ctx, st, noteText);
+  } else {
+    const info = STEP[n](st);
+    questBanner(ctx, st, `${CH2.name}: ${info.step}`);
   }
   return true;
 }
 
-export function ch2Tick(ctx, _ses, st, place = ctx.self?.place) {
-  if (!st || st.menuOpen || st.cut || st.dcut || st.l26cut || st.hubcut || st.lrunCut || st.level == null) return false;
-
-  // Tick restrained Chapter 2 Phoebe whisper once outside cutscenes/menus.
-  if (st.ch2Whisper && !st.ch2WhisperDone && ctx.now() >= st.ch2Whisper.at) {
-    st.ch2Whisper = null;
-    st.ch2WhisperDone = 1;
-    ctx.emit("playSound", { clip: WV(CH2_WHISPER_LINE), volume: 0.85, bus: "Voice" }, { audience: { player: ctx.self.id } });
-    ctx.emit("uiEvent", { name: "caption", payload: { who: "???", text: CH2_WHISPER_LINE, ms: 4200 } }, { audience: { player: ctx.self.id } });
-    pushFeed(st, `A voice, distant but dry: "${CH2_WHISPER_LINE}"`, ctx.now(), "info");
+export function maybeUnlockStage4(ctx, st) {
+  if (!st || st.ch2Done || (st.ch2Q ?? 0) !== 3) return false;
+  if (!st.ch2SignalDecoded || !st.ch2Archive) {
+    syncCh2(st);
+    return false;
   }
+  return setCh2Step(ctx, st, 4, "Both halves match: IS LAB locked the carrier and Base Gamma named Mike Sunderland. Force the red hospital door in Level 11.");
+}
 
-  // Start Chapter 2 cleanly once Chapter 1 (dinaQ >= 9) is completed and player steps out of intake/tutorial.
+export function setCh2EchoStep(ctx, st, n, noteText) {
+  if (!st || st.ch2EchoDone) return false;
+  if (n <= (st.ch2EchoQ ?? 0) || !ECHO_STEP[n]) return false;
+  st.ch2EchoQ = n;
+  syncCh2Echo(st);
+  const info = ECHO_STEP[n](st);
+  questBanner(ctx, st, noteText || `${CH2_ECHO.name}: ${info.step}`);
+  return true;
+}
+
+export function setCh2ToneStep(ctx, st, n, noteText) {
+  if (!st || st.ch2ToneDone) return false;
+  if (n <= (st.ch2ToneQ ?? 0) || !TONE_STEP[n]) return false;
+  st.ch2ToneQ = n;
+  syncCh2Tone(st);
+  const info = TONE_STEP[n](st);
+  questBanner(ctx, st, noteText || `${CH2_TONE.name}: ${info.step}`);
+  return true;
+}
+
+export function completeCh2Echo(ctx, st, noteText) {
+  if (!st || st.ch2EchoDone || !payOnce(st, "ch2-echo")) return false;
+  st.ch2EchoDone = 1;
+  st.ch2EchoQ = 99;
+  st.ch2SignalDecoded = 1;
+  st.cents = (st.cents ?? 0) + 6500;
+  endQuest(st, CH2_ECHO.id, "Bypassed the shorted splitter on IS LAB's bench and locked the Level 11 carrier onto the red hospital signal.");
+  addPayout(st, { xp: 120, items: ["almond", "circuit"], text: noteText || "Frequency Lock Complete (+120 XP, +$65.00, +1 Almond Water, +1 Circuit)" });
+  questBanner(ctx, st, noteText || "Frequency Lock Complete: IS LAB bench locked (+120 XP, +$65.00)", FANFARE);
+  maybeUnlockStage4(ctx, st);
+  return true;
+}
+
+export function completeCh2Tone(ctx, st, noteText) {
+  if (!st || st.ch2ToneDone || !payOnce(st, "ch2-tone")) return false;
+  st.ch2ToneDone = 1;
+  st.ch2ToneQ = 99;
+  st.ch2Prep = 1;
+  st.knowsMike = 1;
+  endQuest(st, CH2_TONE.id, "Matched 11th Avenue's payphone click to Base Gamma Camera 4 and recovered Mike Sunderland's stride notes from the barricaded alley.");
+  addPayout(st, { xp: 135, items: ["almond", "almond", "bandage", "bandage", "firstaid"], text: noteText || "Wait for the Tone Complete (+135 XP, pre-run med kit, Runner's Cadence bonus)" });
+  questBanner(ctx, st, noteText || "Wait for the Tone Complete: Mike's pacing notes recovered (+135 XP, Runner's Cadence bonus)", FANFARE);
+  return true;
+}
+
+export function ch2Tick(ctx, ses, st, place) {
+  if (!st) return false;
+  let dirty = false;
+
   if (!st.ch2Q && !st.ch2Done && (st.dinaQ ?? 0) >= 9 && place !== "intake" && place !== "tutorial0" && place !== "bonus") {
     st.ch2Q = 1;
     syncCh2(st);
-    const note = "Chapter 2 Started: The Dead Signal";
-    st.notice = { text: note, at: ctx.now() };
-    pushFeed(st, note, ctx.now(), "info");
-    return false;
+    st.notice = { text: "New Lead: The Dead Signal (Dina's trail picks up past Level 11)", at: ctx.now() };
+    pushFeed(st, "Chapter 2 begun: follow Dina's trail to Level 11.", ctx.now(), "info");
+    dirty = true;
   }
 
-  // If the player already crossed into Level ! while at Stage 4, update objective to the chase.
+  if (st.ch2Done) return dirty;
+  if (st.ch2Q && !st.quests?.[CH2.id] && !st.qdone?.[CH2.id]) {
+    if (syncCh2(st)) dirty = true;
+  }
+  if (st.ch2EchoQ && !st.ch2EchoDone && !st.quests?.[CH2_ECHO.id] && !st.qdone?.[CH2_ECHO.id]) {
+    if (syncCh2Echo(st)) dirty = true;
+  }
+  if (st.ch2ToneQ && !st.ch2ToneDone && !st.quests?.[CH2_TONE.id] && !st.qdone?.[CH2_TONE.id]) {
+    if (syncCh2Tone(st)) dirty = true;
+  }
+  if (st.ch2Q === 3 && st.ch2SignalDecoded && st.ch2Archive) {
+    if (maybeUnlockStage4(ctx, st)) dirty = true;
+  }
   if (place === "levelrun" && !st.lrunRescued && !st.ch2Done && (st.ch2Q ?? 0) >= 4 && (st.ch2Q ?? 0) < 5) {
-    setCh2Step(ctx, st, 5);
+    if (setCh2Step(ctx, st, 5)) dirty = true;
   }
   if (st.lrunRescued && !st.ch2Done && (st.ch2Q ?? 0) < 6) {
-    setCh2Step(ctx, st, 6);
+    if (setCh2Step(ctx, st, 6)) dirty = true;
   }
-
-  syncCh2(st);
-  return false;
+  return dirty;
 }
 
-export function completeChapter2(ctx, player, stance) {
-  const s = player?.state;
-  if (!s || s.ch2Done) return false;
-  syncCh2(s);
-  if (stance) s.phoebeStance = stance;
+export function completeChapter2(ctx, s) {
+  if (!s || s.ch2Done || !payOnce(s, "ch2-main")) return false;
+  const now = ctx.now();
   s.ch2Done = 1;
   s.ch3Unlocked = 1;
   s.ch2Q = 99;
-  s.phoebeRescued = 1;
+  s.ch2DoneAt = now;
   s.lrunRescued = 1;
-  s.phoebeReaction ??= REPLIES.find((r) => r.stance === s.phoebeStance)?.id ?? "thanks";
-  // Chapter 3 waits quietly: conditions set, no title card. Chapter 3 owns ch3Q once it is written.
-  s.ch3Ready = { from: "levelrun", reaction: s.phoebeReaction, at: ctx.now() };
-  const stanceNote = REPLIES.find((r) => r.id === s.phoebeReaction)?.note ?? "She pulled you out to see what you'd do next.";
-
-  endQuest(s, CH2.id, `Survived Level ! and spoke with Phoebe. ${stanceNote}`, "completed");
+  s.lrunCut = null;
+  s.ch3Ready = { from: "levelrun", reaction: s.phoebeReaction, at: now };
+  endQuest(s, CH2.id, "Decoded IS LAB's dead signal, confirmed Mike Sunderland's intake log, survived Level !, and met Phoebe in the Safe Alcove.");
   pointCh3(s);
-  s.payout = { xp: 450 };
-  tellQuest(ctx, player, "Chapter 2 Complete: The Dead Signal · +450 XP");
-  pushFeed(s, "Chapter 2 Complete: The Dead Signal (+450 XP)", ctx.now(), "info");
+  addPayout(s, { xp: 450 });
+  questBanner(ctx, s, "Chapter 2 Complete: The Dead Signal (+450 XP) - Exit alcove open", FANFARE);
+  ctx.emit("milestone", { step: 2, name: "chapter-2" }, { audience: { player: ctx.self.id } });
   return true;
 }
 
-export function ch2Choices(_ctx, it, s) {
-  if (!it || !s || s.ch2Done) return [];
-  const id = short(it);
-  const q = s.ch2Q ?? 0;
+function relayChoices(id, s) {
   const out = [];
+  if (s.ch2Done) return out;
+  const echoQ = s.ch2EchoQ ?? 0;
+  const toneQ = s.ch2ToneQ ?? 0;
+  const ch2q = s.ch2Q ?? 0;
 
-  if (id === "l11-meg-agent-vance" && q >= 1) {
-    if (q === 1 && !megHostileCh2(s)) {
-      out.push({ text: "Base Beta flagged Dina's relay frequency on Level 11. Where did she go?", tag: "Main Quest" });
-    } else if (!s.ch2VanceDina && q >= 2) {
-      out.push({ text: "What did M.E.G. actually want from River's drive?", tag: "Dina" });
+  if (id === "l11-meg-agent-vance" && !s.ch2EchoDone) {
+    if (!echoQ && ch2q >= 1) {
+      out.push({ text: "You mentioned IS LAB next door to the clinic. Is their receiver still running?", tag: "Side Quest" });
+    } else if (echoQ === 1 || (echoQ === 2 && !s.ch2Relay)) {
+      out.push({ text: "Where would M.E.G. salvage a waterproof relay in Level 11?", tag: "Ask" });
     }
   }
 
-  if (id === "l11-trader-kael" && q >= 1) {
-    if (q === 1) {
-      out.push({ text: "You trade near the strip mall. Did a woman carrying field batteries pass through here?", tag: "Main Quest" });
-    } else if (!s.ch2KaelNote && q >= 2) {
-      out.push({ text: "Did Dina say anything to you before she headed toward the clinic?", tag: "Dina" });
+  if (id === "l11-trader-kael") {
+    if (!s.ch2EchoDone && !echoQ && ch2q >= 1) {
+      out.push({ text: "Anyone at IS LAB still keeping the signal bench alive?", tag: "Side Quest" });
+    }
+    if (!s.ch2ToneDone && !toneQ && ch2q >= 1) {
+      out.push({ text: "Why does the 11th Ave payphone keep clicking on the quarter-beat?", tag: "Side Quest" });
+    } else if (toneQ === 3 && s.ch2RunnerData && !s.ch2ToneDone) {
+      out.push({ text: "I pulled a runner's field satchel out of the barricaded alley. Name inside says Mike Sunderland.", tag: "Turn In" });
     }
   }
 
-  if ((id === "gamma-moss" || id === "gamma-vale") && q === 3) {
-    out.push({ text: "Dina's note mentioned an unmarked red threshold and someone matching old intake logs. Who came before?", tag: "Main Quest" });
-  }
-  if (id === "gamma-moss" && q >= 3 && s.knowsMike && !s.ch2MossFollow) {
-    out.push({ text: "What else is in Base Gamma's file on Mike Sunderland?", tag: "Ask" });
-  }
-  if (id === "hub-amber-jo" && q === 3 && megHostileCh2(s)) {
-    out.push({ text: "Dina left a warning on Level 11 about a red hospital door and an old runner. Do you know the name?", tag: "Main Quest" });
+  if (id === "l11-walker-2") {
+    if (!s.ch2EchoDone && !echoQ) {
+      out.push({ text: "You commute past IS LAB. What shorted out their radio bench?", tag: "Side Quest" });
+    }
+    if (!s.ch2ToneDone && !toneQ && ch2q >= 1) {
+      out.push({ text: "Heard that payphone outside clicking in four-four time. Any idea who timed it?", tag: "Side Quest" });
+    }
   }
 
-  if (id === "phoebe-lrun" && q >= 6 && !s.ch2Done) {
-    const knownMike = !!(s.knowsMike || s.heardMike);
-    if (!s.ch2StancePicked) {
-      for (const r of REPLIES) {
-        if (r.id === "mike" && !knownMike) continue;
-        out.push({ text: s.knowsMike && r.knownQ ? r.knownQ : r.q, tag: r.tag });
-      }
-    } else {
-      if (!s.ch2AskDina) out.push({ text: "What happens to Dina now? Did she get clear of Level 11?", tag: "Dina" });
-      if (!s.ch2AskWard) out.push({ text: "How did you stop those things at the door?", tag: "Ask" });
-      if (knownMike && !s.ch2AskMike && !s.ch2SaidMike) out.push({ text: "Did you know Mike?", tag: "Ask" });
-      out.push({ text: "Open the alcove threshold. I'm heading back to Level 11.", tag: "Finish Chapter 2" });
+  if (id === "l11-walker-3" && echoQ === 2 && !s.ch2Relay && !s.ch2EchoDone) {
+    out.push({ text: "I need a waterproof relay for IS LAB's bench. Still got a spare off your conduit cart? [Barter 35]", tag: "Barter 35", check: { skill: "barter", need: 35 } });
+    if ((s.cents ?? 0) >= 3000) {
+      out.push({ text: "Here's $30 for a spare waterproof relay off your maintenance cart.", tag: "Pay $30" });
+    }
+  }
+
+  if (id === "gamma-pip" && echoQ === 2 && !s.ch2Relay && !s.ch2EchoDone) {
+    out.push({ text: "IS LAB in Level 11 blew a splitter relay. Can we wire a waterproof bypass from Gamma parts? [Repair 35]", tag: "Repair 35", check: { skill: "repair", need: 35 } });
+    out.push({ text: "Can you calibrate a 400-hertz carrier relay from the Level 3 switchboard logs? [Science 35]", tag: "Science 35", check: { skill: "science", need: 35 } });
+    if ((s.batteries ?? 0) >= 1) {
+      out.push({ text: "Trade you a spare flashlight battery if you pull a sealed relay for IS LAB.", tag: "Give Battery" });
+    }
+    if ((s.scrap?.circuit ?? 0) >= 1) {
+      out.push({ text: "Here's a circuit board. Can you flash it into a Level 11 carrier relay?", tag: "Give Circuit" });
+    }
+  }
+
+  if (id === "gamma-ivy" && !s.ch2ToneDone) {
+    if (!toneQ && ch2q >= 1) {
+      out.push({ text: "Did Camera 4 pick up an audio bleed off Level 11's 11th Ave payphone?", tag: "Side Quest" });
+    } else if (toneQ === 2 && !s.ch2CamLogged) {
+      out.push({ text: "Cross-check Camera 4's timestamp bleed against the 11th Ave payphone click.", tag: "Camera 4" });
+    } else if (toneQ === 3 && s.ch2RunnerData && !s.ch2ToneDone) {
+      out.push({ text: "Found Mike Sunderland's field satchel by Level 11's barricaded alley.", tag: "Turn In" });
     }
   }
 
   return out;
 }
 
-export function handleDialogueCh2(ctx, player, npc, text) {
-  const s = player?.state;
-  if (!s || !npc || s.ch2Done) return null;
-  const id = short(npc);
-  const t = String(text ?? "").toLowerCase();
+export function ch2Choices(ctx, it, s) {
+  if (!it || !s) return [];
+  const id = shortId(it);
   const q = s.ch2Q ?? 0;
+  const out = [];
 
-  // Stage 1 -> 2 via M.E.G. Agent Vance (Level 11 Base Beta)
-  if (id === "l11-meg-agent-vance") {
-    if (q === 1 && !megHostileCh2(s) && t.includes("dina's relay frequency")) {
-      s.ch2Yellow = 1;
-      setCh2Step(ctx, s, 2, "Objective Updated: Search Dina's cache in the Level 11 clinic");
-      tellQuest(ctx, player, "Check the shuttered Centro Dermatologico clinic across the plaza.");
-      return {
-        reply: "She came through before dawn with two battery packs, wouldn't sign a manifest, and slipped into the shuttered clinic across the plaza. Weird part is there was an observer in yellow standing by the curb watching her go in.",
-        mood: "calm",
-      };
+  if (!s.ch2Done) {
+    if (q === 1) {
+      if (id === "l11-meg-agent-vance" && !megHostileCh2(s)) {
+        out.push({ text: "I followed Dina's relay frequency past The Hub. Any sight of her at Base Beta?", tag: "Main Quest" });
+      }
+      if (id === "l11-trader-kael") {
+        out.push({ text: "You sell supplies to M.E.G. patrols. Seen a runner carrying field batteries pass through?", tag: "Main Quest" });
+      }
+      if (id === "hub-amber-jo" && megHostileCh2(s)) {
+        out.push({ text: "M.E.G. cut off Base Beta's logs. Where did Dina drop her strip mall cache in Level 11?", tag: "Main Quest" });
+      }
     }
-    if (t.includes("river's drive") && !s.ch2VanceDina) {
-      s.ch2VanceDina = 1;
-      addRep(s, "meg", 1);
-      return {
-        reply: "Command wanted a reliable back-door index out of the upper levels. Dina told dispatch she'd deliver warnings to runners, not hand a tollbook to brass. Say what you want about her nerve, she kept three stragglers out of Level 6 last week.",
-        mood: "calm",
-      };
+
+    if (q === 3 && !s.ch2Archive) {
+      if (id === "gamma-moss" && !megHostileCh2(s)) {
+        out.push({ text: "I found Dina's note in Level 11. Did Base Gamma's old intake logs mention a red hospital hall?", tag: "Main Quest" });
+      }
+      if (id === "gamma-vale" && !megHostileCh2(s)) {
+        out.push({ text: "Dina mentioned Base Gamma's old intake sheets and a red hallway past Level 11.", tag: "Main Quest" });
+      }
+      if (id === "hub-amber-jo" && megHostileCh2(s)) {
+        out.push({ text: "M.E.G. locked me out of Base Gamma. Does Camp Amber know who survived that red hospital door?", tag: "Main Quest" });
+      }
     }
   }
 
-  // Stage 1 -> 2 (or lore beat) via Trader Kael (Level 11)
+  out.push(...relayChoices(id, s));
+
+  if (id === "phoebe-lrun" && q >= 6 && !s.ch2Done) {
+    if (!s.phoebeTalked) {
+      if (s.knowsMike) out.push({ text: "Did you really watch Mike Sunderland sprint down one of these halls?" });
+      if (s.heardMike && !s.knowsMike && !s.phoebeWhispered) out.push({ text: "Wait. You mentioned Mike earlier. Who is he?" });
+      out.push({ text: "If you're friendly, what were you waiting for?" });
+      out.push({ text: "Who are you? What do you want?" });
+      out.push({ text: "You could've helped sooner." });
+      out.push({ text: "Thanks, I think." });
+    } else {
+      if (s.heardMike && !s.knowsMike && !s.phoebeWhispered) out.push({ text: "Wait. You mentioned Mike earlier. Who is he?" });
+      if (s.phoebeReaction === "reminded" && !s.phoebeAskedMike) out.push({ text: "Did you know Mike well?" });
+      if (s.ch2Prep && !s.phoebeNotedPrep) out.push({ text: "Think those pacing notes from Level 11 actually kept me upright?" });
+      out.push({ text: "I'm heading back to Level 11." });
+    }
+  }
+
+  return out;
+}
+
+function handleRelayDialogue(ctx, st, npc, text, id) {
+  if (id === "l11-meg-agent-vance" && !st.ch2EchoDone) {
+    if (text.includes("IS LAB next door")) {
+      setCh2EchoStep(ctx, st, 1);
+      return { reply: "Their test rack still draws municipal power off the strip mall transformer, yeah. Tech walked out two days ago after the splitter relay popped trying to lock a 400-hertz hum. Look at the bench inside IS LAB if you want that signal decoded.", mood: "calm" };
+    }
+    if (text.includes("salvage a waterproof relay")) {
+      return { reply: "Not off Base Beta's perimeter wire. Storm-rated relays go down the 11th Street sewer grate into Level 34, otherwise talk to Pip back at Base Gamma or buy a spare off the night janitor hanging by the east block.", mood: "calm" };
+    }
+  }
+
   if (id === "l11-trader-kael") {
-    if (q === 1 && t.includes("carrying field batteries")) {
-      s.ch2Yellow = 1;
-      setCh2Step(ctx, s, 2, "Objective Updated: Search Dina's cache in the Level 11 clinic");
-      tellQuest(ctx, player, "Search the reception desk inside Centro Dermatologico.");
-      return {
-        reply: "Short jacket, scuffed bag, counted her change down to the cent. She traded two fuses for gauze and slipped into the Centro Dermatologico across the street. Nobody followed her inside, though somebody in a faded yellow coat stood under the streetlamp watching the door until she left. Eyes caught the light funny. White, like they were lit from inside.",
-        mood: "calm",
-      };
+    if (text.includes("signal bench alive") && !st.ch2EchoDone) {
+      setCh2EchoStep(ctx, st, 1);
+      return { reply: "Bench is intact, splitter relay is cooked black. Check IS LAB right next to Centro Dermatologico. You'll need a waterproof relay from down the 11th Street sewer or Base Gamma unless you can wire a bypass yourself.", mood: "calm" };
     }
-    if (t.includes("anything to you before she headed") && !s.ch2KaelNote) {
-      s.ch2KaelNote = 1;
-      return {
-        reply: "Only told me not to walk behind the clinic exam room after dusk. Said the hallway behind that wall didn't belong to the strip mall anymore, and she wasn't leaving River's drive anywhere near a shifting door.",
-        mood: "calm",
-      };
+    if (text.includes("payphone keep clicking") && !st.ch2ToneDone) {
+      setCh2ToneStep(ctx, st, 1);
+      return { reply: "Not random static. Hits the same four-four tempo every time it rings since last Tuesday. Answer the handset down 11th Ave, then ask Ivy at Base Gamma if Camera 4's timestamp bleed caught whoever set that pace.", mood: "calm" };
+    }
+    if (text.includes("Name inside says Mike Sunderland") && st.ch2ToneQ === 3 && st.ch2RunnerData && !st.ch2ToneDone) {
+      completeCh2Tone(ctx, st);
+      return { reply: "Sunderland. Right, he stopped through here before he got quiet up north. Keep his pace tape and take the spare almond water and bandages from my crate. If that red door pulls you in, keep your stride steady to his count.", mood: "friendly" };
     }
   }
 
-  // Stage 3 -> 4 via Base Gamma (Moss or Vale) or Camp Amber (Jo if M.E.G. hostile)
-  if ((id === "gamma-moss" || id === "gamma-vale") && q === 3 && t.includes("old intake logs")) {
-    s.knowsMike = 1;
-    s.ch2Archive = 1;
-    s.ch2Yellow = 1;
-    setCh2Step(ctx, s, 4, "Chapter 2 Finale Ready: Enter the red door behind Level 11's clinic");
-    tellQuest(ctx, player, "Return to Level 11 behind the Centro Dermatologico clinic.");
-    if (id === "gamma-vale") {
-      return {
-        reply: "Only one intake sheet matches a red hospital hallway cutting behind concrete. Mike Sunderland. River's brother, no rank, no special kit. He just read exits faster than anyone else around here, until a corridor like that pulled him off the grid. Dina found the same seam behind the Level 11 clinic and sealed it before moving on.",
-        mood: "calm",
-      };
+  if (id === "l11-walker-2") {
+    if (text.includes("shorted out their radio bench") && !st.ch2EchoDone) {
+      setCh2EchoStep(ctx, st, 1);
+      return { reply: "Splitter module burned straight through its resin casing when that clinic-side hum spiked. Examine the bench inside IS LAB. Somebody can bypass it with decent Science or Repair, or drop in a waterproof relay from the sewers.", mood: "calm" };
     }
-    return {
-      reply: "Mike Sunderland. River's brother. Plain gear, no rank, just quick on his feet and smart about which doors to skip. Scouts spotted somebody in yellow watching his runs before a red hospital hall swallowed him. If Dina marked that clinic door sealed, go in ready to run.",
-      mood: "calm",
-    };
+    if (text.includes("four-four time") && !st.ch2ToneDone) {
+      setCh2ToneStep(ctx, st, 1);
+      return { reply: "Same beat a guy in a wet jacket kept tapping against the curb before he went down the barricaded alley. Pick up the 11th Ave payphone yourself and listen to the click.", mood: "calm" };
+    }
   }
 
-  if (id === "gamma-moss" && s.knowsMike && !s.ch2MossFollow && t.includes("file on mike sunderland")) {
-    s.ch2MossFollow = 1;
-    return {
-      reply: "Thin folder. Boot tallies and water chits, mostly. What the debriefs noted was plain enough: he adapted faster than people with twice his training, right up until a shift caught him without a light.",
-      mood: "calm",
-    };
+  if (id === "l11-walker-3" && st.ch2EchoQ === 2 && !st.ch2Relay && !st.ch2EchoDone) {
+    if (text.includes("conduit cart")) {
+      const c = rollCheck(ctx, st, { skill: "barter", need: 35 });
+      ctx._lastCheck = c;
+      if (!c.ok) {
+        return { reply: "Union tag says thirty backdollars on sealed switchgear, pal. I don't write the sheet for free.", mood: "annoyed" };
+      }
+      st.ch2Relay = 1;
+      setCh2EchoStep(ctx, st, 3, "Talked Level 11's night janitor out of a waterproof relay for IS LAB");
+      return { reply: "Alright, alright, you sound like you actually wire boxes for a living. Keep this sealed relay off my manifest and slot it straight into IS LAB's bench.", mood: "calm" };
+    }
+    if (text.includes("$30 for a spare waterproof relay")) {
+      if ((st.cents ?? 0) < 3000) {
+        return { reply: "Short on scrip, friend. Thirty flat, or show me you know switchgear.", mood: "calm" };
+      }
+      st.cents -= 3000;
+      st.ch2Relay = 1;
+      setCh2EchoStep(ctx, st, 3, "Bought a waterproof relay ($30) from Level 11's night janitor for IS LAB");
+      return { reply: "Fair price for clean brass contacts. Dry it off before you snap it onto IS LAB's rack.", mood: "calm" };
+    }
   }
 
-  if (id === "hub-amber-jo" && q === 3 && megHostileCh2(s) && t.includes("red hospital door")) {
-    s.knowsMike = 1;
-    s.ch2Archive = 1;
-    setCh2Step(ctx, s, 4, "Chapter 2 Finale Ready: Enter the red door behind Level 11's clinic");
-    tellQuest(ctx, player, "Return to Level 11 behind the Centro Dermatologico clinic.");
-    return {
-      reply: "Mike Sunderland. People barely remember him unless they knew River. Just a lone runner who figured out floor rules twice as fast as M.E.G. scouts, until a red hospital seam took him. Dina left word not to open the one behind the Level 11 clinic unless you can sprint.",
-      mood: "calm",
-    };
+  if (id === "gamma-pip" && st.ch2EchoQ === 2 && !st.ch2Relay && !st.ch2EchoDone) {
+    if (text.includes("[Repair 35]")) {
+      const c = rollCheck(ctx, st, { skill: "repair", need: 35 });
+      ctx._lastCheck = c;
+      if (!c.ok) {
+        return { reply: "Your pinout calls are off by two rails. Bring me a spare flashlight battery or a clean circuit board if you don't want to crawl Level 34's East sewer.", mood: "calm" };
+      }
+      st.ch2Relay = 1;
+      setCh2EchoStep(ctx, st, 3, "Wired a waterproof relay with Pip at Base Gamma for IS LAB");
+      return { reply: "Clean bridge across the secondary lug. Here, sealed housing and all. Take it straight back to IS LAB's bench in Level 11.", mood: "friendly" };
+    }
+    if (text.includes("[Science 35]")) {
+      const c = rollCheck(ctx, st, { skill: "science", need: 35 });
+      ctx._lastCheck = c;
+      if (!c.ok) {
+        return { reply: "Harmonics aren't lining up off memory alone. Bring a battery or circuit board, or snag a sealed case down in Level 34.", mood: "calm" };
+      }
+      st.ch2Relay = 1;
+      setCh2EchoStep(ctx, st, 3, "Calibrated a 400 Hz carrier relay with Pip at Base Gamma for IS LAB");
+      return { reply: "Good ear for notch filters. I flashed a Gamma relay to lock 400 hertz cleanly. Plug it into IS LAB's bench in Level 11.", mood: "friendly" };
+    }
+    if (text.includes("spare flashlight battery")) {
+      if ((st.batteries ?? 0) < 1) return { reply: "Pockets look light on spare cells, runner.", mood: "calm" };
+      st.batteries -= 1;
+      st.ch2Relay = 1;
+      setCh2EchoStep(ctx, st, 3, "Traded a spare battery to Pip at Base Gamma for an IS LAB relay");
+      return { reply: "Nice fresh cell, saves my bench lamp. Swap is yours: sealed relay, tested up to ten amps. Take it back to IS LAB.", mood: "friendly" };
+    }
+    if (text.includes("flash it into a Level 11 carrier relay")) {
+      if ((st.scrap?.circuit ?? 0) < 1) return { reply: "You don't have a spare circuit board on you.", mood: "calm" };
+      st.scrap = { ...(st.scrap ?? {}), circuit: (st.scrap?.circuit ?? 1) - 1 };
+      st.ch2Relay = 1;
+      setCh2EchoStep(ctx, st, 3, "Flashed a circuit board into an IS LAB carrier relay with Pip at Base Gamma");
+      return { reply: "Half a minute on the soldering iron and that board is waterproofed. Go drop it into IS LAB's bench in Level 11.", mood: "friendly" };
+    }
   }
 
-  // Stage 6 -> Phoebe Post-Rescue Finale inside Level ! Safe Alcove
-  if (id === "phoebe-lrun" && q >= 6) {
-    if (!s.ch2StancePicked) {
-      const r = REPLIES.find((x) => t === x.q.toLowerCase() || (x.knownQ && t === x.knownQ.toLowerCase()) || t.includes(x.key));
-      if (r) {
-        s.ch2StancePicked = r.stance;
-        s.phoebeStance = r.stance;
-        s.phoebeReaction = r.id;
-        if (r.id === "mike") { s.knowsMike = 1; s.ch2SaidMike = 1; }
-        if (r.id === "reminded") { s.knowsMike = 1; }
-        return { reply: r.a, mood: "calm" };
+  if (id === "gamma-ivy" && !st.ch2ToneDone) {
+    if (text.includes("Camera 4 pick up an audio bleed")) {
+      st.ch2CamLogged = 1;
+      setCh2ToneStep(ctx, st, 3, "Ivy pulled Camera 4's bleed: search behind Level 11's barricaded alley pallets");
+      return { reply: "Yeah, logged it Tuesday at 04:12. Same 134 beats per minute we scraped off a runner's canvas bag near Level 11's barricaded alley before he noclipped out. Nobody retrieved the bag behind those pallets yet.", mood: "calm" };
+    }
+    if (text.includes("Cross-check Camera 4's timestamp bleed")) {
+      st.ch2CamLogged = 1;
+      setCh2ToneStep(ctx, st, 3, "Ivy matched Camera 4 to Level 11's barricaded alley: search the pallets for the dropped satchel");
+      return { reply: "Right there on tape: 134 beats a minute clicking under Camera 4's static, matching a guy sprinting along the west barricade in Level 11. He dropped his satchel behind the pallets before the alley went wild.", mood: "calm" };
+    }
+    if (text.includes("Found Mike Sunderland's field satchel") && st.ch2ToneQ === 3 && st.ch2RunnerData) {
+      completeCh2Tone(ctx, st);
+      return { reply: "Mike Sunderland's stride tables, intact! Half of Gamma's runners swore he never wrote down how he survived that red corridor. Take these meds from Camp stores, and keep his breath count in mind if that door ever opens on you.", mood: "friendly" };
+    }
+  }
+
+  return null;
+}
+
+export function handleDialogueCh2(ctx, player, npc, text) {
+  const st = player?.state;
+  if (!st || !npc || !text) return null;
+  const id = shortId(npc);
+  const q = st.ch2Q ?? 0;
+
+  if (!st.ch2Done) {
+    if (q === 1) {
+      if (id === "l11-meg-agent-vance" && !megHostileCh2(st) && text.includes("Dina's relay frequency")) {
+        st.ch2Yellow = 1;
+        setCh2Step(ctx, st, 2);
+        return { reply: REPLIES.vance_q1, mood: "calm" };
+      }
+      if (id === "l11-trader-kael" && text.includes("carrying field batteries")) {
+        st.ch2Yellow = 1;
+        setCh2Step(ctx, st, 2);
+        return { reply: REPLIES.kael_q1, mood: "calm" };
+      }
+      if (id === "hub-amber-jo" && megHostileCh2(st) && text.includes("Base Beta's logs")) {
+        st.ch2Yellow = 1;
+        setCh2Step(ctx, st, 2);
+        return { reply: REPLIES.jo_hostile_q1, mood: "guarded" };
       }
     }
 
-    if (s.ch2StancePicked) {
-      if (t.includes("what happens to dina")) {
-        s.ch2AskDina = 1;
-        return {
-          reply: "Dina reads her own notes. People who read their notes live. Mostly.",
-          mood: "calm",
-        };
+    if (q === 3 && !st.ch2Archive) {
+      if (id === "gamma-moss" && !megHostileCh2(st) && text.includes("red hospital hall")) {
+        st.ch2Archive = 1;
+        st.knowsMike = 1;
+        addRep(st, "meg", 6, "Followed Dina's archive lead to Base Gamma");
+        const ready = !!st.ch2SignalDecoded;
+        maybeUnlockStage4(ctx, st);
+        return { reply: ready ? REPLIES.moss_q3_ready : REPLIES.moss_q3_need_bench, mood: "calm" };
       }
-      if (t.includes("stop those things at the door")) {
-        s.ch2AskWard = 1;
-        return {
-          reply: "I didn't stop them. I moved the hallway. They're still back there, running at a wall that isn't.",
-          mood: "calm",
-        };
+      if (id === "gamma-vale" && !megHostileCh2(st) && text.includes("Base Gamma's old intake")) {
+        st.ch2Archive = 1;
+        st.knowsMike = 1;
+        addRep(st, "meg", 6, "Shared Dina's Level 11 telemetry with Base Gamma");
+        const ready = !!st.ch2SignalDecoded;
+        maybeUnlockStage4(ctx, st);
+        return { reply: ready ? REPLIES.vale_q3_ready : REPLIES.vale_q3_need_bench, mood: "calm" };
       }
-      if (t.includes("did you know mike")) {
-        s.ch2AskMike = 1;
-        s.knowsMike = 1;
-        s.ch2SaidMike = 1;
-        return {
-          reply: "Knew of him. River's brother. Learned fast. A red seam took him before I got a good look. You, I got a good look at.",
-          mood: "calm",
-        };
+      if (id === "hub-amber-jo" && !megHostileCh2(st)) {
+        // Guard unreachable when friendly
       }
-      if (t.includes("heading back to level 11")) {
-        completeChapter2(ctx, player, s.phoebeStance ?? s.ch2StancePicked);
-        npc.state.leaveAt = ctx.now() + 3500;
-        const agiNote = (s.ch2AgilityUsed ?? 0) >= 6 || (s.attr ? Number(String(s.attr).split(",")[1]) >= 7 : false)
-          ? "Good legs. Keep them."
-          : "Slow legs. Smart head. We'll see which wins.";
-        return {
-          reply: `Door's open. Clinic's on the other side. ${agiNote}`,
-          mood: "calm",
-        };
+      if (id === "hub-amber-jo" && megHostileCh2(st) && text.includes("red hospital door")) {
+        st.ch2Archive = 1;
+        st.knowsMike = 1;
+        addRep(st, "amber", 6, "Trusted Camp Amber over M.E.G. logs");
+        const ready = !!st.ch2SignalDecoded;
+        maybeUnlockStage4(ctx, st);
+        return { reply: ready ? REPLIES.jo_hostile_q3_ready : REPLIES.jo_hostile_q3_need_bench, mood: "friendly" };
+      }
+    }
+  }
+
+  const relayRes = handleRelayDialogue(ctx, st, npc, text, id);
+  if (relayRes) return relayRes;
+
+  if (id === "phoebe-lrun" && q >= 6 && !st.ch2Done) {
+    if (text.includes("mentioned Mike earlier")) {
+      st.knowsMike = 1;
+      st.phoebeWhispered = 1;
+      return { reply: REPLIES.phoebe_whisper, mood: "friendly" };
+    }
+    if (!st.phoebeTalked) {
+      if (text.includes("watch Mike Sunderland")) {
+        st.phoebeTalked = 1;
+        st.phoebeStance = "curious";
+        st.phoebeReaction = "mike";
+        return { reply: REPLIES.phoebe_mike, mood: "friendly" };
+      }
+      if (text.includes("what were you waiting for")) {
+        st.phoebeTalked = 1;
+        st.phoebeStance = "curious";
+        st.phoebeReaction = "reminded";
+        st.knowsMike = 1;
+        return { reply: REPLIES.phoebe_reminded, mood: "friendly" };
+      }
+      if (text.includes("What do you want")) {
+        st.phoebeTalked = 1;
+        st.phoebeStance = "suspicious";
+        st.phoebeReaction = "want";
+        return { reply: REPLIES.phoebe_want, mood: "guarded" };
+      }
+      if (text.includes("could've helped sooner")) {
+        st.phoebeTalked = 1;
+        st.phoebeStance = "frustrated";
+        st.phoebeReaction = "sooner";
+        return { reply: REPLIES.phoebe_sooner, mood: "annoyed" };
+      }
+      if (text.includes("Thanks, I think")) {
+        st.phoebeTalked = 1;
+        st.phoebeStance = "relieved";
+        st.phoebeReaction = "thanks";
+        return { reply: REPLIES.phoebe_thanks, mood: "warm" };
+      }
+    } else {
+      if (text.includes("mentioned Mike earlier")) {
+        st.knowsMike = 1;
+        return { reply: REPLIES.phoebe_whisper, mood: "friendly" };
+      }
+      if (text.includes("Did you know Mike")) {
+        st.knowsMike = 1;
+        st.phoebeAskedMike = 1;
+        return { reply: REPLIES.phoebe_whisper, mood: "friendly" };
+      }
+      if (text.includes("pacing notes from Level 11")) {
+        st.phoebeNotedPrep = 1;
+        return { reply: REPLIES.phoebe_prep, mood: "friendly" };
+      }
+      if (text.includes("heading back to Level 11")) {
+        completeChapter2(ctx, st);
+        npc.state.leaveAt = ctx.now() + 9000;
+        return { reply: REPLIES.phoebe_finish, mood: "friendly" };
       }
     }
   }
@@ -352,6 +652,6 @@ export function startCh3(ctx, player) {
   const s = player?.state; if (!s || s.ch3Q) return false;
   s.ch3Q = 1;
   setQuest(s, CH3.id, { name: CH3.name, main: true, step: "A clean hospital corridor with no end and no signs. Every door is shut for a reason. Find whoever keeps them that way.", mark: { place: "level109", id: "l109-halloran", at: { x: 432, y: 0, z: -88 } } });
-  tellQuest(ctx, player, "Chapter 3: The Neon Hospital");
+  questBanner(ctx, s, "Chapter 3: The Neon Hospital");
   return true;
 }

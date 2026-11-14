@@ -6,6 +6,7 @@
 import { heard } from "./lib/hear.js";
 import { setSedcoStep, setCraneStep, setMaintStep } from "./lib/level11-quests.js";
 import { setStep61 } from "./lib/level61-quests.js";
+import { setCh2ToneStep } from "./lib/ch2-quest.js";
 import { rollCheck } from "./lib/npc-talk.js";
 import { carryAcross } from "./lib/carry.js";
 
@@ -72,9 +73,6 @@ export const ears = {
       heard(ctx, { clip: PAYPHONE_LIFT, position: pos, volume: 0.9, maxDistance: 14 });
       heard(ctx, { clip: PAYPHONE_STATIC, position: pos, volume: 0.75, maxDistance: 10 });
 
-      s.msgIdx = ((s.msgIdx ?? -1) + 1) % PHONE_MESSAGES.length;
-      const msg = PHONE_MESSAGES[s.msgIdx];
-
       w.sanity = Math.min(100, (w.sanity ?? 80) + 15);
 
       ctx.emit("damageNumber", {
@@ -85,6 +83,21 @@ export const ears = {
       }, { audience: { player: who.id } });
 
       ctx.emit("screenFlash", { color: "#d0f0ff", duration: 0.35, intensity: 0.4 }, { audience: { player: who.id } });
+
+      if (!w.ch2ToneDone && !w.ch2TonePayphone && ((w.ch2Q ?? 0) >= 1 || (w.ch2ToneQ ?? 0) === 1)) {
+        w.ch2TonePayphone = 1;
+        setCh2ToneStep(ctx, w, 2, "Payphone matched a 134 BPM click off Base Gamma Camera 4");
+        w.sub = {
+          who: "PAYPHONE RECEIVER (TIMESTAMP BLEED)",
+          t: "Steady four-four boot clicks hammer under the static at 134 beats per minute, cutting to Base Gamma Camera 4 telemetry and an alley grate near the west barricade.",
+          at: now,
+          d: 6200,
+        };
+        return;
+      }
+
+      s.msgIdx = ((s.msgIdx ?? -1) + 1) % PHONE_MESSAGES.length;
+      const msg = PHONE_MESSAGES[s.msgIdx];
 
       if (w) {
         w.sub = { who: "PAYPHONE RECEIVER", t: msg, at: now, d: 5500 };

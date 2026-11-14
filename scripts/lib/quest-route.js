@@ -25,12 +25,14 @@ const EXITS = {
   level7: [{ to: "level6", id: "l7-back", label: "Stairs up" }, { to: "level8", id: "l7-diving-bell", label: "Diving bell" }],
   level8: [{ to: "level21", id: "l8-to-l21", label: "Cave tunnel" }, { to: "level9", id: "l8-to-l9", label: "Cave mouth with rain in it" }, { to: "level7", id: "l8-lake-back", label: "Underwater passage" }],
   level9: [{ to: "level8", id: "l9-to-l8", label: "The road back into the rock" }, { to: "level11", id: "l9-to-l11", label: "North road, toward the glow" }, { to: "level10", id: "l9-to-l10", label: "The gap in the fence" }],
+  level34: [{ to: "level11", id: "l34-up-l11", label: "Step irons to Level 11" }, { to: "level9", id: "l34-up-l9", label: "Step irons to Level 9" }, { to: "level7", id: "l34-pool-down", label: "Sewer pool" }],
   level10: [
     { to: "level11", id: "l10-road-north", label: "North road" }, { to: "level11", id: "l10-road-south", label: "South road" },
     { to: "level7", id: "l10-lake-deep", label: "Lake opening" }, { to: "level26", id: "l10-fun-poster", label: "Ship poster" },
   ],
   level11: [
     { to: "level61", id: "l11-to-l61" }, { to: "level10", id: "lv10-backroad", label: "Backroad" },
+    { to: "level34", id: "sewer11-grate", label: "11th St sewer grate" },
     { to: "level12", id: "l11-win12", label: "Lit window", needs: "know12" },
     { to: "levelrun", id: "l11-to-levelrun", label: "Red hospital door" },
   ],

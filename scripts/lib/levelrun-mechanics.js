@@ -45,12 +45,13 @@ export function agilityProfile(state) {
   const rawAgi = attrsOf(state).a ?? 5;
   const agi = Math.max(1, Math.min(10, rawAgi));
   const delta = agi - 5;
+  const prep = state?.ch2Prep ? 1 : 0;
   return {
     agi,
-    sprintDrainMul: Math.max(0.55, 1 - delta * 0.07),
+    sprintDrainMul: Math.max(0.48, (1 - delta * 0.07) * (prep ? 0.88 : 1)),
     speedMul: 1 + delta * 0.035,
     jumpMul: 1 + Math.max(-0.08, delta * 0.045),
-    stumbleMs: Math.max(220, Math.round(680 - delta * 75)),
+    stumbleMs: Math.max(180, Math.round((680 - delta * 75) * (prep ? 0.85 : 1))),
     stumbleSpeedKeep: Math.min(0.84, Math.max(0.36, 0.44 + delta * 0.06)),
     dodgeCooldownMs: Math.max(1100, Math.round(2500 - delta * 220)),
     dodgeSpeed: 10.2 + delta * 0.5,
