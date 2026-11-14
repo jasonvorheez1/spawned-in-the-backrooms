@@ -754,6 +754,7 @@ function lay(ctx) {
     model: { id: "/cdn/value.30784ee6955aebc443b97a0f317c07aa40a8aecd1ce385f2a5287c8cf9868bae.glb", forward: "+z" },
     layout: { box: { min: { x: -0.65, y: 0, z: -0.12 }, max: { x: 0.65, y: 0.96, z: 0.12 } } },
     castShadow: false,
+    audio: { clip: G("strong-air-suction-whistle-through-metal-vent-loop"), loop: true, gain: 0.14, spatial: true, maxDistance: 6 },
   });
   sp("l61-vent-in", { tags: ["door"], feetPosition: { x: HW - 0.4, y: 0, z: 8 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.5, height: 1.1, depth: 1.0 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level3#l3-from-l61" } });
 
