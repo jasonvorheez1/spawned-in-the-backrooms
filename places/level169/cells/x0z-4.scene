@@ -1,4 +1,11 @@
 # spawn-scene v2 yaml x0z-4
+l169-ferry-plan:
+  feetPosition: {x: 26.6, y: 0.3, z: -499.4}
+  id: l169-ferry-plan
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 0.8, height: 1.8, kind: box, width: 0.9}
+  tags: [blueprint]
 l169-house-plan:
   feetPosition: {x: 18, y: 0, z: -500}
   id: l169-house-plan
