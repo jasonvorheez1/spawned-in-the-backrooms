@@ -58,10 +58,10 @@ const ASK = [
   { step: "Find someone. Ask where you are.", mark: null },
   { step: "Something left you a name: Dina. Find people. Ask where you are, and who she is.", mark: null },
   { step: "Find out who Dina is. Somebody at the camp keeps a list of names.", mark: { place: "level1", id: "meg-callum" } },
-  { step: "Dina asked about ways out, then went down. Look for what she left on the levels below the camp.", mark: { place: "level3", id: "dina-handoff" } },
-  { step: "Dina's tape says she took a room at a hotel, a few levels down. Find it and ask the staff what she left behind.", mark: { place: "level5" } },
-  { step: "Dina left the hotel for a city, looking for a radio. Find the city and ask who ran one for her.", mark: { place: "level11" } },
-  { step: "The broadcast is real, and Dina booked passage on a ship. Find out which ship and where it boards.", mark: { place: "level11" } },
+  { step: "Dina asked about ways out, then went down. Look for what she left on the levels below the camp.", mark: { place: "level3", id: "dina-cassette" } },
+  { step: "Dina's tape says she took a room at a hotel, a few levels down. Find it and ask the staff what she left behind.", mark: { place: "level5", id: "l5-ambrose" } },
+  { step: "Dina left the hotel for a city, looking for a radio. Find the city and ask who ran one for her.", mark: { place: "level11", id: "l11-meg-agent-vance" } },
+  { step: "The broadcast is real, and Dina booked passage on a ship. Find out which ship and where it boards.", mark: { place: "level11", id: "l11-trader-kael" } },
 ];
 // the main quest's tracker row for a save: { step, mark }
 export function trailStep(st) {

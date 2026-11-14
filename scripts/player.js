@@ -4,6 +4,7 @@ import { startRescueCut } from './lib/levelrun-cut.js'
 import { layout as layout9, zoneAt as zoneAt9 } from './lib/level9.js'
 import { firstPersonGun, firstPersonTuning } from './lib/fp-gun.js'
 import { setQuest } from './lib/quests.js'
+import { learn } from './lib/dina-quest.js'
 import { assaulted, forgiveTick, hostileReason } from './lib/forgive.js'
 import { preloadTick } from './lib/preload-next.js'
 import { powerKnock } from './lib/knock.js'
@@ -917,6 +918,7 @@ function invAction(ctx, d) {
     if (ctx.self.session.holoSnd != null) ctx.emit('stopSound', { soundId: ctx.self.session.holoSnd })
     if (s.holoPlay?.id === id && ctx.now() - s.holoPlay.at < T.len * 1000) { ctx.self.session.holoSnd = null; s.holoPlay = null; return } // a second press stops it
     ctx.self.session.holoSnd = ctx.emit('playSound', { clip: T.clip ?? vo(T.who, T.line), volume: 0.9, bus: 'Voice' }) // dina4: her own voiced line
+    if (id === 'dina4') { learn(ctx, s, 'name', true); learn(ctx, s, 'tape') }
     s.holoPlay = { id, at: ctx.now() }; if (ctx.self.session.holoEnd) ctx.cancel(ctx.self.session.holoEnd); ctx.self.session.holoEnd = ctx.after(T.len, 'holoEnd', { at: s.holoPlay.at }); return
   }
   if (d.k === 'read') { if (s.ledgerOpen) s.ledgerOpen = 0; s.reading = parseInt(d.n) || null; s.invOpen = false; return }
