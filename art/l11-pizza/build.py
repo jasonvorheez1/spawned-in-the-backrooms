@@ -16,35 +16,39 @@ base = bmesh.new(); base.from_mesh(src.data); base.transform(src.matrix_world)
 for o in list(bpy.data.objects): bpy.data.objects.remove(o)
 bmesh.ops.remove_doubles(base, verts=base.verts, dist=0.0004)
 
-# jar caps -> centres (tops of the shakers on the back bar)
-def on_bar(c): return 0.08 < c.x < 0.44 and -0.13 < c.y < 0.92 and 0.172 < c.z < 0.34
-caps = [f.calc_center_median() for f in base.faces if on_bar(f.calc_center_median()) and f.normal.z > 0.85 and f.calc_center_median().z > 0.235 and f.calc_center_median().y > 0.6]
-cl = []
-for c in caps:
-    for k in cl:
-        if (Vector((k["x"], k["y"])) - Vector((c.x, c.y))).length < 0.018: k["p"].append(c); k["x"] = sum(p.x for p in k["p"]) / len(k["p"]); k["y"] = sum(p.y for p in k["p"]) / len(k["p"]); break
-    else: cl.append({"x": c.x, "y": c.y, "p": [c]})
-JARS = sorted([k for k in cl if len(k["p"]) >= 3], key=lambda k: -len(k["p"]))
-print("JARS", [(round(k["x"], 3), round(k["y"], 3), len(k["p"]), round(max(p.z for p in k["p"]), 3)) for k in JARS])
-
+# islands (welded): each loose piece is classed by its bounding-box centre, in source units
+base.faces.ensure_lookup_table()
+seen = set(); ISL = []
+for f in base.faces:
+    if f.index in seen: continue
+    st = [f]; comp = []; seen.add(f.index)
+    while st:
+        g = st.pop(); comp.append(g.index)
+        for e in g.edges:
+            for h in e.link_faces:
+                if h.index not in seen: seen.add(h.index); st.append(h)
+    ISL.append(comp)
+def near(c, x, y, r=0.02): return abs(c.x - x) < r and abs(c.y - y) < r
 def part_of(c):
     if c.z > 0.335 and c.x > 0.0 and c.y > -0.42: return "menu_board"
-    if c.x < 0.10 and c.y < -0.105 and c.z > 0.345: return "pizza_boxes"
+    if c.x < 0.10 and c.y < -0.105 and c.z > 0.345: return "pizza_box" if near(c, -0.165, -0.615) else None
     if c.x < 0.10 and c.y < -0.105 and c.z > -0.125: return "oven"
     if c.y < -0.585 and c.x < 0.06 and c.z <= -0.125:
-        if -0.29 < c.z < -0.165 and -0.27 < c.x < 0.03: return "plates"
-        return "rack"
-    if on_bar(c):
-        if c.y > 0.6:
-            d = [(Vector((k["x"], k["y"])) - Vector((c.x, c.y))).length for k in JARS]
-            return f"jar{d.index(min(d))}"
-        if 0.42 < c.y < 0.58: return "napkin_holder"
-        if c.y < 0.05: return "pan_stack"
-        return "jar_lone"
+        return "plates" if near(c, -0.168, -0.801, 0.03) and c.z > -0.29 else "rack"
+    if 0.08 < c.x < 0.44 and -0.13 < c.y < 0.92 and 0.172 < c.z < 0.34:   # the back bar's top shelf
+        if near(c, 0.275, 0.712): return "parmesan_shaker"
+        if near(c, 0.316, 0.663): return "chili_jar"
+        if 0.45 < c.y < 0.56: return "napkin_holder"
+        if c.y < 0.0: return "pan_stack"
+        return None                                                        # the other jars: copies of the two above in game
+    if c.x > 0.05 and -0.15 < c.y < 0.9 and -0.13 < c.z < 0.172: return "warmer"   # open steel warmer case + the pies in it
     return "counter"
-
 groups = {}
-for f in base.faces: groups.setdefault(part_of(f.calc_center_median()), []).append(f.index)
+for comp in ISL:
+    vs = [v.co for i in comp for v in base.faces[i].verts]
+    mn = Vector([min(v[i] for v in vs) for i in range(3)]); mx = Vector([max(v[i] for v in vs) for i in range(3)])
+    n = part_of((mn + mx) / 2)
+    if n: groups.setdefault(n, []).extend(comp)
 print({k: len(v) for k, v in groups.items()})
 
 def make(name, idx):
