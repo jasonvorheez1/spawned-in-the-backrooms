@@ -1,9 +1,13 @@
 // One pantry good on Ferry's shelves (Level 169): a tin or a jar, each its own takeable object. params: kind "tin" | "tall" | "jar", label (oklch), fill (jar contents)
-function lathe(ctx, prof, M) {
-  for (let j = 0; j < prof.length - 1; j++) for (let i = 0; i < M; i++) {
-    const a0 = (i / M) * 6.28318, a1 = ((i + 1) / M) * 6.28318, [r0, y0] = prof[j], [r1, y1] = prof[j + 1];
-    const p = (r, y, a) => [Math.cos(a) * r, y, Math.sin(a) * r];
-    ctx.quad ? ctx.quad(p(r0, y0, a0), p(r0, y0, a1), p(r1, y1, a1), p(r1, y1, a0)) : (ctx.triangle(p(r0, y0, a0), p(r1, y1, a1), p(r0, y0, a1)), ctx.triangle(p(r0, y0, a0), p(r1, y1, a0), p(r1, y1, a1)));
+import { face } from "./lib/shapes.js";
+function lathe(ctx, prof, M) { // outward normal from the profile's turn: (dy, -dr)
+  for (let j = 0; j < prof.length - 1; j++) {
+    const [r0, y0] = prof[j], [r1, y1] = prof[j + 1], nr = y1 - y0, ny = -(r1 - r0);
+    for (let i = 0; i < M; i++) {
+      const a0 = (i / M) * 6.28318, a1 = ((i + 1) / M) * 6.28318, am = (a0 + a1) / 2;
+      const p = (r, y, a) => [Math.cos(a) * r, y, Math.sin(a) * r];
+      face(ctx, p(r0, y0, a0), p(r0, y0, a1), p(r1, y1, a1), p(r1, y1, a0), [Math.cos(am) * nr, ny, Math.sin(am) * nr]);
+    }
   }
 }
 export function geometry(ctx) {
@@ -23,5 +27,5 @@ export function geometry(ctx) {
   lathe(ctx, [[R - 0.002, H - 0.016], [R, H - 0.012], [R, H - 0.004], [R - 0.004, H], [R - 0.008, H - 0.002], [0, H - 0.002]], M); // rim and lid
   ctx.metalness(0); ctx.roughness(0.75); ctx.color(P.label ?? "oklch(0.6 0.16 28)");
   lathe(ctx, [[R - 0.002, 0.016], [R + 0.001, 0.02], [R + 0.001, H - 0.016], [R - 0.002, H - 0.016]], M); // the paper label
-  ctx.color("oklch(0.95 0.02 90)"); for (let i = 0; i < M; i++) if (i % M < 3) { const a0 = (i / M) * 6.28318, a1 = ((i + 1) / M) * 6.28318, r = R + 0.0016, y0 = H * 0.42, y1 = H * 0.62; ctx.triangle([Math.cos(a0) * r, y0, Math.sin(a0) * r], [Math.cos(a1) * r, y1, Math.sin(a1) * r], [Math.cos(a1) * r, y0, Math.sin(a1) * r]); ctx.triangle([Math.cos(a0) * r, y0, Math.sin(a0) * r], [Math.cos(a0) * r, y1, Math.sin(a0) * r], [Math.cos(a1) * r, y1, Math.sin(a1) * r]); } // a pale name panel on the label's face
+  ctx.color("oklch(0.95 0.02 90)"); for (let i = 0; i < 3; i++) { const a0 = (i / M) * 6.28318, a1 = ((i + 1) / M) * 6.28318, am = (a0 + a1) / 2, r = R + 0.0016, y0 = H * 0.42, y1 = H * 0.62, p = (a, y) => [Math.cos(a) * r, y, Math.sin(a) * r]; face(ctx, p(a0, y0), p(a1, y0), p(a1, y1), p(a0, y1), [Math.cos(am), 0, Math.sin(am)]); } // a pale name panel on the label's face
 }
