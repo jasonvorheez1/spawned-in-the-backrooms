@@ -47,7 +47,7 @@ export function go(ctx, p, from, to, L) {
   ps.l169trip = { at: Math.round(ctx.now()), due: Math.round(ctx.now() + R.tripMs), to, km: q.km, name: q.name };
 }
 // ---- one site's pieces, ids l169-cp-<sid>-*
-function board(sid, x, z, L, yaw = 0) {
+function board(sid, x, z, L, yaw = 180) { // faces south, toward whoever walks up the track
   const i = ORDER.indexOf(sid);
   return [[`l169-cp-${sid}-board`, { tags: ["usable", "l169-board"], feetPosition: g(x, z), rotation: yaw, ...geo("boardposts"), physics: "static", behavior: TRAVEL,
     state: { kind: "board", site: sid, next: ORDER[i + 1] ?? null, prev: ORDER[i - 1] ?? null, name: "Route board", verb: "Read", info: "guided legs at night" },
@@ -98,7 +98,7 @@ function siteParts(sid, L) {
     add(readable(`l169-cp-edge-boots`, X + 1, Z - 24, "boots", "Boots", [R.texts.boots]));
     add(readable(`l169-cp-edge-sign`, X + 5, Z + 6, "logpost", "The edge", [R.texts.edge]));
   } else if (sid === "house") {
-    add(board("house", X + 4.5, Z - 2.5, L, 0));
+    add(board("house", X + 4.5, Z - 1.5, L));
   }
   return P;
 }
