@@ -286,6 +286,6 @@ describe("shared level quest progression and one-time payout", () => {
     expect(p.state.cents).toBe(2200);
 
     expect(finishQuest61(ctx, p, "bee", { cents: 1000 })).toBe(true);
-    expect(p.state.payout.xp).toBe(140);
+    expect(p.state.payout.xp).toBe(240);
   });
 });

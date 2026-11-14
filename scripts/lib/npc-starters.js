@@ -15,6 +15,7 @@ import { l10Choices } from './level10-quests.js'
 import { l11Choices } from './level11-quests.js'
 import { l8Choices } from './level8-quests.js'
 import { l61Choices } from './level61-quests.js'
+import { wireCount } from './level21-quests.js'
 
 const short = (it) => String(it?.id ?? '').split('/').pop()
 
@@ -41,8 +42,7 @@ export function questChoices(ctx, it, s) {
       if ((s?.saltineQ === 1 || s?.saltineQ === 2) && !s?.nedRepFailed) {
         qChoices.push({ text: "Let me at it. I can solder the bypass line myself.", tag: "Repair 35", check: { skill: "repair", difficulty: 35 } })
       }
-      const wireCount = String(s?.items ?? '').split(',').filter(x => x === 'wire' || x === 'copper').length + (s?.scrap?.wire ?? 0);
-      if (s?.saltineQ >= 1 && s?.saltineQ < 99 && wireCount >= 3) {
+      if (s?.saltineQ >= 1 && s?.saltineQ < 99 && wireCount(s) >= 3) {
         qChoices.push({ text: "Brought 3 copper wire coils. Clean ones.", tag: "Quest Turn-In" })
       }
       if (s?.saltineQ === 99) qChoices.push({ text: "Freezer still holding?", tag: "Talk" })

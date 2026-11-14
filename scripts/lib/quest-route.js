@@ -1,5 +1,6 @@
 // Directed crossings players can deliberately use. IDs point to the actual trigger or interactable.
 import { EXIT, HALF, cellCenter } from "./maze.js";
+import { hasKey } from "./hubkeys.js";
 
 const EXITS = {
   main: [
@@ -10,7 +11,7 @@ const EXITS = {
   level01: [{ to: "main", id: "l01-back", label: "Return hatch" }],
   level02: [{ to: "main", id: "l02-back", label: "Remodeling Co. exit" }],
   level1: [{ to: "thehub", id: "l1-to-hub", label: "Door to the Hub" }, { to: "main", id: "l1-back" }, { to: "level2", id: "l1-onward" }],
-  thehub: [{ to: "level1", id: "hd-t7-b1", label: "Seventh tunnel door" }, { to: "level11", id: "hd-t10-a3", label: "Tenth tunnel door" }],
+  thehub: [{ to: "level1", id: "hd-t7-b1", label: "Seventh tunnel door" }, { to: "level11", id: "hd-t10-a3", label: "Tenth tunnel door", needs: "key:level11" }],
   level2: [{ to: "level1", id: "l2-back" }, { to: "level3", id: "l2-to-l3" }, { to: "level21", id: "l2-to-l21", label: "Upper stairwell" }, { to: "level31", id: "l2-to-l31", label: "Plywood door" }],
   level31: [{ to: "level2", id: "l31-back", label: "Plywood door" }, { to: "level70", id: "l31-to-l70", label: "White door" }],
   level70: [{ to: "level31", id: "l70-back", label: "White door" }],
@@ -41,11 +42,14 @@ const EXITS = {
 
 const cache = new Map();
 const hasNightVision = (state) => !!state.nvg && ((state.battery ?? 0) > 1 || state.nvgSpare > 0);
-const canUse = (exit, state) => exit.needs === "l61Clearance"
-  ? hasNightVision(state)
-  : !exit.needs || !!state[exit.needs];
+const canUse = (exit, state) => {
+  if (!exit.needs) return true;
+  if (exit.needs === "l61Clearance") return hasNightVision(state);
+  if (exit.needs.startsWith("key:")) return hasKey(state, exit.needs.slice(4));
+  return !!state[exit.needs];
+};
 function distances(here, goal, state) {
-  const key = JSON.stringify([here, goal, !!state.zenKey, !!state.know12, hasNightVision(state)]);
+  const key = JSON.stringify([here, goal, !!state.zenKey, !!state.know12, hasNightVision(state), hasKey(state, "level11")]);
   if (cache.has(key)) return cache.get(key);
   const depth = new Map([[goal, 0]]);
   const queue = [goal];

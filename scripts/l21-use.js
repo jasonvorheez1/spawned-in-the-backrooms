@@ -142,9 +142,9 @@ export const ears = {
       if (repOf(w, "survivors") <= -35) { ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "THE BOARD IGNORES YOU (SURVIVORS HATE YOU)", color: "#e06050", size: 0.9 }, { audience: { player: who.id } }); return; }
       const Q = [
         { name: "Wire for the Compressors", need: { wire: 3 }, xp: 65, items: ["almond", "battery", "cash:1500"], text: "Ned needs 3 spools of copper wire to keep Refrigerator Paradise's freezers running." },
-        { name: "Steel for the Shutter Watch", need: { metal: 4 }, xp: 80, items: ["ammo", "bandage", "cash:2000"], text: "Goknar wants 4 scrap metal to reinforce the doors against the hounds." },
+        { name: "Steel for the Shutter Watch", need: { scrap_metal: 4 }, xp: 80, items: ["ammo", "bandage", "cash:2000"], text: "Goknar wants 4 scrap metal to reinforce the doors against the hounds." },
         { name: "Tape for the Steam Leaks", need: { tape: 3 }, xp: 70, items: ["almond", "almond", "cash:1800"], text: "Three rolls of duct tape to seal the scalding steam pipes in the halls." },
-        { name: "Relays for Base Alef", need: { electronics: 2 }, xp: 95, items: ["firstaid", "shells", "cash:2800"], text: "Two electronics modules to keep Base Alef's emergency beacons alive." },
+        { name: "Relays for Base Alef", need: { circuit: 2 }, xp: 95, items: ["firstaid", "shells", "cash:2800"], text: "Two circuit boards to keep Base Alef's emergency beacons alive." },
         { name: "Scout The Edges", need: null, xp: 140, items: ["firstaid", "ammo", "cash:4500"], text: "Venture past the white block rooms deep into The Edges (toward the Level 8 cave mouth) and report back." },
       ];
       const lap = Math.floor((w.l21q ?? 0) / Q.length), qi = (w.l21q ?? 0) % Q.length, q = Q[qi];
@@ -154,10 +154,11 @@ export const ears = {
         return;
       }
       const mul = 1 + lap, need = q.need ? Object.fromEntries(Object.entries(q.need).map(([k, n]) => [k, n * mul])) : null, sc = w.scrap ?? {};
-      const NAME = { wire: "copper wire", metal: "scrap metal", tape: "duct tape", electronics: "electronics" };
-      const have = need ? Object.entries(need).every(([k, n]) => (sc[k] ?? 0) >= n) : (w.l21Scouted ?? 0) >= 1;
+      const countOf = (k) => k === "tape" ? (w.tapes ?? 0) : k === "wire" ? (sc.wire ?? 0) + (sc.copper_wire ?? 0) : (sc[k] ?? 0);
+      const NAME = { wire: "copper wire", scrap_metal: "scrap metal", tape: "duct tape", circuit: "circuit boards" };
+      const have = need ? Object.entries(need).every(([k, n]) => countOf(k) >= n) : (w.l21Scouted ?? 0) >= 1;
       if (!have) {
-        const list = need ? Object.entries(need).map(([k, n]) => `${sc[k] ?? 0}/${n} ${NAME[k]}`).join(", ") : "explore further east";
+        const list = need ? Object.entries(need).map(([k, n]) => `${countOf(k)}/${n} ${NAME[k]}`).join(", ") : "explore further east";
         errandStep(w, "l21-" + q.name, q.name, need // the board's job in the journal, as an errand (scripts/lib/quests.js)
           ? `${q.text} Bring ${Object.entries(need).map(([k, n]) => `${n} ${NAME[k]}`).join(" and ")} back to the quartermaster's errand board in Refrigerator Paradise.`
           : `${q.text} Then press the quartermaster's errand board in Refrigerator Paradise.`, { place: "level21", id: ctx.self.id });
@@ -166,7 +167,17 @@ export const ears = {
         ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: `ERRAND: ${q.name.toUpperCase()} (${list.toUpperCase()})`, color: "#f2d870", size: 1.15 }, { audience: { player: who.id } });
         return;
       }
-      if (need) { const left = { ...sc }; for (const [k, n] of Object.entries(need)) left[k] = (left[k] ?? 0) - n; w.scrap = left; }
+      if (need) {
+        const left = { ...sc };
+        for (const [k, n] of Object.entries(need)) {
+          if (k === "tape") { w.tapes = Math.max(0, (w.tapes ?? 0) - n); }
+          else if (k === "wire") {
+            let rem = n;
+            for (const wk of ["wire", "copper_wire"]) { const take = Math.min(rem, left[wk] ?? 0); left[wk] = (left[wk] ?? 0) - take; rem -= take; }
+          } else left[k] = Math.max(0, (left[k] ?? 0) - n);
+        }
+        w.scrap = left;
+      }
       w.l21q = (w.l21q ?? 0) + 1; snd("pickup-ammo", 0.65);
       const xp = Math.round(q.xp * (1 + lap * 0.5));
       const sv = repOf(w, "survivors"), bonus = sv >= 35 ? 0.25 : sv >= 12 ? 0.1 : 0; // friends of the camp are paid better, as in every level

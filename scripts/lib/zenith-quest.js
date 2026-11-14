@@ -3,7 +3,7 @@
 // and the keycard comes mid-quest, once you've proved you can reach it (Shelly, Nov 9: "give you ACCESS to level 0.1 mid-way as in lore its locked up by bntg").
 // zenQ: 1 find the seal · 2 report back · 3 keycard in hand · 4 inside the station · 5 holding the drive · 99 paid. zenV 2 = this numbering.
 import { pushFeed } from "./feed.js";
-import { setQuest, endQuest, qid, claimReward } from "./quests.js";
+import { setQuest, endQuest, qid, claimReward, queuePayout } from "./quests.js";
 import { addRep, addKarma, repOf } from "./rep.js";
 import { rollCheck } from "./npc-talk.js";
 const NAME = "The Zenith Survey";
@@ -60,7 +60,7 @@ export function handleDialogueQuestZ(ctx, p, npc, text) {
   if (s.zenQ === 5 && s.zenDrive && t.includes("see what's on it") && !s.zenSci) {
     const c = rollCheck(ctx, s, { skill: "science", difficulty: 45 }); s.zenSci = c.ok ? 1 : -1;
     if (!c.ok) return { reply: "Don't. That casing's keyed. Crack it wrong and it wipes itself, and then neither of us gets paid.", mood: "annoyed" };
-    s.payout = { xp: 60, text: "Read the Zenith flight recorder before handing it over · +60 XP" };
+    queuePayout(s, { xp: 60, text: "Read the Zenith flight recorder before handing it over · +60 XP" });
     return { reply: "You got it open? ...Drone patrol routes, and the crew's last log. They set the drones to guard the gallery, then stopped answering. Close it up. That stays between us.", mood: "neutral" };
   }
   if (s.zenQ === 5 && s.zenDrive && t.includes("sixty is light") && !s.zenHaggle) {
@@ -79,9 +79,10 @@ export function handleDialogueQuestZ(ctx, p, npc, text) {
     const parts = [`Quest Completed: The Zenith Survey · +150 XP, +$${(cents / 100).toFixed(2)}, Almond Water`];
     if (extra) parts.push(`B.N.T.G. bonus +$${(extra / 100).toFixed(2)}`);
     parts.push(tier || "B.N.T.G. +12");
-    s.payout = { xp: 150, items: ["almond"], text: parts.join(" · ") };
-    s.notice = { text: s.payout.text, at: ctx.now() }; pushFeed(s, s.payout.text, ctx.now(), "good");
-    return { reply: "It's warm through the case. Set it down here. Here's your sixty. Keep the card. I've got more work in there if you want it.", mood: "happy" };
+    const summary = parts.join(" · ");
+    queuePayout(s, { xp: 150, items: ["almond"], text: summary });
+    s.notice = { text: summary, at: ctx.now() }; pushFeed(s, summary, ctx.now(), "good");
+    return { reply: `It's warm through the case. Set it down here. Here's your ${s.zenHaggle > 0 ? "hundred" : "sixty"}. Keep the card. I've got more work in there if you want it.`, mood: "happy" };
   }
   if ((s.zenQ === 3 || s.zenQ === 4 || s.zenQ === 5) && /zenith|station|where|how|drive|seal/.test(t)) return { reply: "Far east wall, through our seal. The recorder's at the very end, by the big window.", mood: "neutral" };
   return null;

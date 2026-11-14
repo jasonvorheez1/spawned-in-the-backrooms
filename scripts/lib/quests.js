@@ -97,6 +97,15 @@ export function advanceQuest(ctx, p, q, step, noteText) {
   return true;
 }
 
+export function queuePayout(s, { xp = 0, items = [], text = null } = {}) {
+  const prev = s.payout;
+  s.payout = {
+    xp: (prev?.xp ?? 0) + xp,
+    items: [...(prev?.items ?? []), ...items],
+    text: text ?? prev?.text ?? null,
+  };
+}
+
 // Shared quest completion payout (reputation bonus, karma/rep, cash, XP, feed, banner, fanfare, milestone)
 export function finishLevelQuest(ctx, p, qKey, q, { xp = 100, cents = 5000, items = [], text = "", rep = [], by = "survivors", payKey } = {}) {
   const s = p?.state;
@@ -112,7 +121,7 @@ export function finishLevelQuest(ctx, p, qKey, q, { xp = 100, cents = 5000, item
   }
   s.cents = (s.cents ?? 0) + cents;
   const summary = [text || `Quest Completed: ${q.name}! +${xp} XP · +$${(cents / 100).toFixed(2)}`, ...msgs].filter(Boolean).join(" · ");
-  s.payout = { xp, items, text: summary };
+  queuePayout(s, { xp, items, text: summary });
   const now = ctx.now();
   s.notice = { text: summary, at: now };
   pushFeed(s, summary, now, "good");
