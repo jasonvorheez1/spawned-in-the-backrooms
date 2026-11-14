@@ -1,4 +1,5 @@
 import { raycast } from "builtin/physics";
+import { rollLoot, rollCash } from "./lib/loot.js";
 import { navPath } from "./lib/nav.js";
 import { O } from "./lib/l109-b3.js";
 import { fire3, react3, aimPose, famOf } from "./lib/body3.js";
@@ -8,6 +9,8 @@ export function update(ctx) {
   if (s.dead || (s.hp ?? 0) <= 0) {
     if (!s.fallen) {
       s.fallen = true;
+      if (!s.items?.length) s.items = ["weapon:m72", "rockets", "rockets", "rockets", rollCash(ctx), "bandage", ...rollLoot(ctx, 1)]; // his body carries his launcher (Shelly Nov 14: "i killed the b3 survivor and i cant loot him")
+      s.verb = "Search"; s.kind = "body";
       ctx.place.state.b3BossDead = true;
       me.ragdoll = { settleSeconds: 2 };
 
