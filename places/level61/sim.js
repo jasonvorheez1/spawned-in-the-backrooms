@@ -20,7 +20,7 @@ const CIG = (k) => CIGS[k]?.model;
 export const cadence = "1s";
 const TOILET_GLB = "/cdn/value.584d89d495be90361b2f1c260e71cd5079b14f1e5d1b0a3346dd5bc4c808c0dc.glb";
 const VANITY_GLB = "/cdn/value.fc171ef1463c6b6014a17a934459781e7d541b202325257a5ddb0e02de9788c4.glb";
-const V = 89; // 89: Clippers revamped with scripted mahogany/brass architecture, pendants, sconces, footrail, barware & mirror (no blocky boxes). // 88: Gib coffee urn is the Tripo steel urn. // 87: tray returns are the Tripo steel cabinet. // 86: corner planters are the Tripo weeping fig. // 85: usable Seal 6.1-02 and service inspection tag. // 84: Clippers stools take a seat (they had no Sit). 83: packs reseated on the lowered bar. 82: Clippers bar and bentwood stools lowered to the 1.25 m patrons. 81: 81: cig packs set down to the raycast bar and desk tops. 80: cig packs on the Clippers bar and the M.E.G. desk. // 79: soda machines are Shelly's cola machine (fnv pack), cola crates by the food-court ones. // 78: liquorette tables carry real cigarette packs (art/cigs). // 77: every store till is the Tripo+Studio register (art/gib/build.py). // 76: every food-court stool is the Tripo+Studio diner stool; Gib counter carries pie case, brewer, condiments (art/gib/build.py). // 75: Gib's Grub, the greasy spoon in the south wall. // 74: supply-room overflow jam (stacked, tipped, wall-facing machines). // 73: bar tops, menus, tills, trays, candles and table drinks follow the lowered Liquorette and Clippers furniture down. // 71: bar counters, stools, chairs and tables in Liquorette and Clippers lowered to fit the 1.2 m critters (Shelly). 70: 70: liquorette tables carry pints, tumblers, ashtrays. 69: liquorette damask walls, tin ceiling, tin sign turned. // 68: toilet repainted white porcelain. 67: restroom toilet + vanity turned to their true front axis and sized to real fixtures. 66: restroom toilets + vanities are Tripo models (art/l61-rest). 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
+const V = 90; // 90: Gib pie stand is the Tripo cake stand under a glass cloche. // 89: Clippers revamped with scripted mahogany/brass architecture, pendants, sconces, footrail, barware & mirror (no blocky boxes). // 88: Gib coffee urn is the Tripo steel urn. // 87: tray returns are the Tripo steel cabinet. // 86: corner planters are the Tripo weeping fig. // 85: usable Seal 6.1-02 and service inspection tag. // 84: Clippers stools take a seat (they had no Sit). 83: packs reseated on the lowered bar. 82: Clippers bar and bentwood stools lowered to the 1.25 m patrons. 81: 81: cig packs set down to the raycast bar and desk tops. 80: cig packs on the Clippers bar and the M.E.G. desk. // 79: soda machines are Shelly's cola machine (fnv pack), cola crates by the food-court ones. // 78: liquorette tables carry real cigarette packs (art/cigs). // 77: every store till is the Tripo+Studio register (art/gib/build.py). // 76: every food-court stool is the Tripo+Studio diner stool; Gib counter carries pie case, brewer, condiments (art/gib/build.py). // 75: Gib's Grub, the greasy spoon in the south wall. // 74: supply-room overflow jam (stacked, tipped, wall-facing machines). // 73: bar tops, menus, tills, trays, candles and table drinks follow the lowered Liquorette and Clippers furniture down. // 71: bar counters, stools, chairs and tables in Liquorette and Clippers lowered to fit the 1.2 m critters (Shelly). 70: 70: liquorette tables carry pints, tumblers, ashtrays. 69: liquorette damask walls, tin ceiling, tin sign turned. // 68: toilet repainted white porcelain. 67: restroom toilet + vanity turned to their true front axis and sized to real fixtures. 66: restroom toilets + vanities are Tripo models (art/l61-rest). 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -597,9 +597,10 @@ function lay(ctx) {
     feetPosition: { x: 16.8, y: 1.05, z: -28.6 },
     tags: ["usable"],
     behavior: "scripts/l61-diner.js",
-    physics: "static",
-    primitive: { kind: "cylinder", radiusTop: 0.22, radiusBottom: 0.06, height: 0.14 },
-    material: STEEL,
+    physics: { body: "static", collider: "box" },
+    // Tripo cake stand (art/l61-pie): chrome pedestal, cherry lattice pie, one slice gone
+    model: { id: "/cdn/value.09cb9b28c5c0028c5ad69aaf329a01bb078056c31e8d2e1262ebbfec91336fc0.glb", forward: "-z" },
+    layout: { box: { min: { x: -0.2, y: 0, z: -0.2 }, max: { x: 0.2, y: 0.2, z: 0.2 } } },
     state: {
       kind: "pie",
       name: "Fresh Baked Pie & Donut Dome",
@@ -608,9 +609,8 @@ function lay(ctx) {
       tint: "#ff88a0",
     },
     children: [
-      { feetPosition: { x: 0, y: 0.14, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.18, radiusBottom: 0.18, height: 0.06 }, material: { color: "#c82030", roughness: 0.5 } },
-      { feetPosition: { x: 0, y: 0.22, z: 0 }, primitive: { kind: "sphere", radius: 0.22, sq: [1, 1.2, 1] }, material: { color: "#ffffff", opacity: 0.35, transparent: true, roughness: 0.1 } },
-      { feetPosition: { x: 0, y: 0.44, z: 0 }, primitive: { kind: "sphere", radius: 0.035 }, material: STEEL },
+      { feetPosition: { x: 0, y: 0.12, z: 0 }, primitive: { kind: "sphere", radius: 0.2, phiStart: 0, phiLength: 6.2832, thetaStart: 0, thetaLength: 1.5708 }, material: { color: "#f4f8ff", opacity: 0.18, transparent: true, roughness: 0.05, metalness: 0.1, side: "double" } },
+      { feetPosition: { x: 0, y: 0.31, z: 0 }, primitive: { kind: "sphere", radius: 0.028 }, material: { color: "#e8f0ff", opacity: 0.5, transparent: true, roughness: 0.05 } },
     ],
   });
 
