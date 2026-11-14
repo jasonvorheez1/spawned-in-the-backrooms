@@ -49,7 +49,7 @@ function bite(ctx, p, prey, dmg, snd) {
   ctx.emit("squash", { target: p.id, axis: "y", intensity: 0.15, duration: 0.2 })
 }
 export function update(ctx, dt) {
-  const players = ctx.place.players; if (!players.length) return ctx.sleep(1)
+  const players = ctx.place.players.filter((pl) => !pl.state?.l26cut); if (!players.length) return ctx.sleep(1) // nobody is touched during the arrival cutscene
   const now = ctx.now(), g = ctx.place.gravity?.y ?? -9.8
   const pack = ctx.query({ tags: ["partygoer"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })
   deckTick(ctx, pack, now)
