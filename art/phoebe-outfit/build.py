@@ -223,8 +223,9 @@ for az, w in ((-60, 0.07), (-10, 0.07), (10, 0.07), (60, 0.07), (150, 0.08), (21
 H_CLUMPS.append(hc([(-50, 62, 0.012), (-38, 40, 0.03), (-28, 24, 0.035), (-20, 17, 0.04)], 0.075))
 H_CLUMPS.append(hc([(-62, 55, 0.012), (-55, 35, 0.03), (-52, 18, 0.035), (-50, 8, 0.04)], 0.06))
 # the big side-swept bang: from the part across the forehead, falling over the RIGHT eye (+X)
-for (a0, e0, a1, a2, w) in ((-45, 64, 12, 22, 0.10), (-30, 68, 20, 30, 0.09), (-15, 70, 6, 12, 0.08), (-55, 60, 28, 38, 0.075)):
-    H_CLUMPS.append(hc([(a0, e0, 0.015), (lerp(a0, a1, 0.45), 52, 0.04), (a1, 32, 0.05), (lerp(a1, a2, 0.6), 8, 0.05), (a2, -14, 0.05), (a2 + 3, -32, 0.045)], w, thick=0.4, n=18, ring=10, root=0.8))
+# trimmed: it veils only the top of that eye and sweeps out past it, so both eyes and the muzzle read
+for (a0, e0, a1, a2, w) in ((-45, 64, 14, 40, 0.085), (-30, 68, 22, 48, 0.08), (-15, 70, 8, 30, 0.07), (-55, 60, 32, 56, 0.07)):
+    H_CLUMPS.append(hc([(a0, e0, 0.015), (lerp(a0, a1, 0.45), 52, 0.04), (a1, 36, 0.05), (lerp(a1, a2, 0.6), 22, 0.05), (a2, 10, 0.05), (a2 + 8, -4, 0.045)], w, thick=0.4, n=18, ring=10, root=0.8))
 # long side locks: in front of the cheeks, down to the shoulders, in front of the shoulder line
 for side in (1, -1):
     for dz, w, dy in ((0, 0.085, 0.0), (0.03, 0.06, -0.035)):
@@ -471,7 +472,7 @@ def pose(rots):
             pb = a.pose.bones[n]; R = a.data.bones[n].matrix_local.to_3x3()
             pb.rotation_mode = "QUATERNION"; pb.rotation_quaternion = (R.inverted() @ Matrix.Rotation(math.radians(deg), 3, ax) @ R).to_quaternion()
     bpy.context.view_layer.update()
-DOWN = {"LeftArm": ("Y", 62), "RightArm": ("Y", -62)}
+DOWN = {"LeftArm": ("Y", -62), "RightArm": ("Y", 62)}
 pose({**DOWN, "LeftUpLeg": ("X", 32), "RightUpLeg": ("X", -26), "RightLeg": ("X", 30)})
 shot("e_walk", (2.4, 2.4, 1.0), (0, 0, 0.75))
 pose(DOWN)
