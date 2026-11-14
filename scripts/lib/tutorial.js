@@ -32,7 +32,7 @@ export function tutJump(ctx, st, id) {
   const target = STEP_INDEX[id]
   if (target == null) return
   if (STEPS[target]?.halogen && !hasHalogen(st, ctx.self.place)) return
-  if (st.tut && st.tut.n >= target) return
+  if (st.tut && st.tut.n > target) return // equal: restart its clock, so a card the cut held is read, not skipped
   const p = ctx.self.feetPosition
   st.tut = { n: target, at: ctx.now(), x: p.x, z: p.z }
 }
