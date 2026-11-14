@@ -105,6 +105,13 @@ function icu(K) { const I = D.icu, dead = K.R.abandoned, per = I.beds[0] + (K.r(
   put(K, "desk", -12, 6, 90); put(K, "chair", -12.8, 6, 90, { solid: false });
   usePart(K, { part: "terminal", on: true }, -12, 5.7, 90, { kind: "terminal", mode: "wardlog", roomId: K.R.id, name: "ICU Nursing Log", verb: "Read Shift Log" }, { up: 0.76, lift: 0.22 });
   put(K, "crashcart", -4.5, 15, 30); put(K, "wheelchair", -12, 24, 200);
+  // the nurses' island down the aisle between the bed rows (gavi pass, Nov 14: the ICU middle stood bare)
+  put(K, "counter", 1.2, 15, 0); put(K, "counter", 3.6, 15, 0); put(K, "counter", 1.2, 15.7, 180); put(K, "counter", 3.6, 15.7, 180);
+  part(K, { part: "monitor", on: !dead }, 0.6, 15.2, 180, { up: 0.95 }); part(K, { part: "monitor", on: !dead }, 4.2, 15.5, 0, { up: 0.95 });
+  put(K, "chair", 1.6, 14.1, 170 + K.r() * 30, { solid: false }); put(K, "chair", 3.2, 16.6, K.r() * 30 - 15, { solid: false });
+  stash(K, "filing", 5.4, 15.35, -90, "Charting Cabinet", "desk"); put(K, "crashcart", -1.0, 15.35, 90);
+  put(K, "steeltable", 8.5, 15.3, 0); put(K, "box", 8.3, 15.3, 20, { up: 0.8, solid: false }); put(K, "wheelchair", 11.5, 15.5, 60 + K.r() * 40);
+  part(K, { part: "ivstand" }, 9.8, 14.4, K.r() * 360); put(K, "watercooler", 14.6, 8, -90);
 }
 function pharmacy(K) { const P = D.pharmacy, dead = K.R.abandoned, cw = D.models.counter.size[0], open0 = dead ? 0.55 : 0.12;
   for (let i = 0; i < 4; i++) put(K, "counter", -3 + i * cw, P.counterB, 0);
@@ -146,4 +153,12 @@ function ward(K) { const W = D.ward, dead = K.R.abandoned;
   usePart(K, { part: "curtain", len: 3, drawn: 0.3 }, -4.8, W.rowB[1], 90, { kind: "curtain", name: "Ward Curtain", verb: "Draw Curtain", stash: K.r() < 0.35 ? "almond" : "" }, { lift: 1.25 });
   usePart(K, { part: "cooler" }, 4.5, 4.2, 90, { kind: "cooler", name: "Water Cooler", verb: "Drink Water", info: "cold filtered" }, { solid: true, lift: 0.85 });
   put(K, "wheelchair", -12.5, 14, 100); put(K, "crashcart", -12.5, 25, 20); put(K, "stackchair", 9, 15, 40, { solid: false });
+  // every bed gets its own corner: a bedside cabinet and a visitor's chair (gavi pass, Nov 14: the ward floor read as cots on a parking lot)
+  W.rowB.forEach((b, row) => W.as.forEach((a) => { const side = row === 1 ? 1 : -1;
+    if (K.r() < 0.8) put(K, "cabinet", a + 1.25, b + side * 0.1, side > 0 ? 180 : 0, { solid: false });
+    if (K.r() < 0.55) put(K, "stackchair", a - 0.4 + K.r() * 0.8, b + side * 1.0, K.r() * 360, dead && K.r() < 0.3 ? { tip: true, solid: false } : { solid: false }); }));
+  // the dayroom corner: a table where patients ate, a water cooler, chairs pulled out and left
+  put(K, "steeltable", -11, 9, 90); put(K, "steeltable", -11, 10.3, 90);
+  for (const [a, b, y] of [[-11.9, 9, 90], [-11.9, 10.4, 80], [-10.1, 9.2, -90], [-10.1, 10.6, -110], [-11, 11.4, 200]]) put(K, "stackchair", a, b, y + K.r() * 20, { solid: false });
+  put(K, "watercooler", -14.6, 12, 90); put(K, "gurney", -11, 21, 90 + (dead ? 25 : 0)); stash(K, "lockbox", -11.6, 19.8, 0, "Patient Belongings", "bedside");
 }

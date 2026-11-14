@@ -21,6 +21,8 @@ models:
   boxes:     { id: /cdn/value.469d7ab5a6c17c49fb7e20242d5af7694814a5228e40972db7498d5d4e856acb.glb, size: [1.0, 1.0, 0.6], forward: "-z" }
   box:       { id: /cdn/value.53e0ce8cf1653565587b8af4ea844018efd9fca4715e183fc406ac3b099d1247.glb, size: [0.4, 0.3, 0.26], forward: "-z" }
   wetsign:   { id: /cdn/value.742c7982fd6cd877888746f4dc24cb56395f26e7d33b01a46d4455a0cdc6a39c.glb, size: [0.3, 0.62, 0.4] }
+  steeltable: { id: /cdn/value.0220fa9a17a95b1838cf7dad5c03e11a25a554151144cce3d53bff73a41df288.glb, size: [1.2, 0.8, 0.7], forward: "-z" }
+  watercooler: { id: /cdn/value.4b9822b4fb9587696acee9dc988cb94fe7e62817f66ee29771ff49a89b58bb3d.glb, size: [0.4, 1.3, 0.4], forward: "-z" }
   sink:      { id: /cdn/value.baa3abe1bdf4d846e75dd70e289be8631e7134fcc3b32d21aae0d06c24000d03.glb, size: [0.45, 0.86, 0.45], forward: "+z" }
 viewRange: 70          # props stop drawing past this (m)
 shelfBoxY: 0.98        # a box on a shelf's middle board
