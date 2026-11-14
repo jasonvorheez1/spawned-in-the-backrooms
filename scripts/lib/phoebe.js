@@ -3,7 +3,7 @@
 // Look from the creator's picture (/cdn/image-u2bhqzx6j.webp): ginger, mustard coat over black, a red tie at the collar.
 import { furrySpec, critterSpec, HUMAN, humanFace, setStyle } from "./critter-model.js"
 export const PHOEBE_LOOK = {
-  species: "cat", sex: "f", fur: "#d9824a", belly: "#f3d9c4", tip: "#f3d9c4", nose: "#c86f6a", 
+  species: "cat", sex: "f", hairc: "#c4602b", fur: "#d9824a", belly: "#f3d9c4", tip: "#f3d9c4", nose: "#c86f6a", 
   topw: "longsleeve", top: "#141216", botw: "skirt", bottom: "#17141a", shoes: "boots", shoec: "#121014",
   expr: "smug", pupil: "#ffffff", glowEye: 1.1, sclera: "#120d10", eye: "#0e0a0c", // coat, hair, bow, chain and banded boots ride on top as the Blender outfit (art/phoebe-outfit/build.py)
 }
@@ -27,7 +27,7 @@ export function phoebeSpec(ctx) {
   setStyle(ctx.world.state.bodyStyle) // this script's own copy of the BODIES switch reads the world's setting, not its boot default
   const human = ctx.world.state.bodyStyle === "human" && !!HUMAN
   const spec = human ? humanPhoebe() : furrySpec(PHOEBE_LOOK) // BODIES human: her human self; furry: the ginger cat in her fitted outfit
-  return { ...spec, human, children: [...(spec.children || []).filter((c) => human || !/cw-hair$/.test(c.id ?? "")), ...(human ? [] : [{ id: "phoebe-outfit", attachment: { skin: true }, model: OUTFIT }])] }
+  return { ...spec, human, children: [...(spec.children || []), ...(human ? [] : [{ id: "phoebe-outfit", attachment: { skin: true }, model: OUTFIT }])] }
 }
 export function spawnPhoebe(ctx, id, at, yaw, life, pose) {
   if (ctx.getObject(id)) return id
