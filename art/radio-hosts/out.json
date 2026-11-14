@@ -1,0 +1,134 @@
+{
+ "s0": {
+  "host": "Sprinkles",
+  "title": "Hiii",
+  "clip": "/cdn/value.dd89dc651daec61d00040235a69f3f4b668f4aa4ef45e78cd3ba82e7cdbb176e.mp3",
+  "dur": 10.2
+ },
+ "s1": {
+  "host": "Sprinkles",
+  "title": "MEG Clipboard",
+  "clip": "/cdn/value.3c556ca0c1a3ffdbe855f3bd46e405f6704346c68119bf7fc8d60a13afb63324.mp3",
+  "dur": 10.7
+ },
+ "s2": {
+  "host": "Sprinkles",
+  "title": "Counting",
+  "clip": "/cdn/value.fc3961d580c72bdb82668a3617a523cd2854edf6a164ff820c39fb72355d2480.mp3",
+  "dur": 10.5
+ },
+ "s3": {
+  "host": "Sprinkles",
+  "title": "Cake",
+  "clip": "/cdn/value.e077b6039725c90fb9c36c10b5bcd96731135f6c84c9ed39e0137090071501a1.mp3",
+  "dur": 10.5
+ },
+ "s4": {
+  "host": "Sprinkles",
+  "title": "MEG Stinks",
+  "clip": "/cdn/value.4b489bf4d5ad62604132935ad431841b1e131bbc5c11507e44acf8b427eb6994.mp3",
+  "dur": 11.3
+ },
+ "s5": {
+  "host": "Sprinkles",
+  "title": "Balloon Facts",
+  "clip": "/cdn/value.639d7b2c52f3fd3cf74bb913cab80e0b54b89837d0ae256a29231bec16379b28.mp3",
+  "dur": 12.8
+ },
+ "s6": {
+  "host": "Sprinkles",
+  "title": "Lost Again",
+  "clip": "/cdn/value.3513ccba3a3317581f744cc24a0cbf709273e6f475ea0ceb93bbe37d1f552f8d.mp3",
+  "dur": 9.9
+ },
+ "s7": {
+  "host": "Sprinkles",
+  "title": "Invitation",
+  "clip": "/cdn/value.a25af1a53bd813509c04e2c1985b0ff55acec5b24f0304d3901b55670b18f121.mp3",
+  "dur": 12.0
+ },
+ "s8": {
+  "host": "Sprinkles",
+  "title": "MEG Report",
+  "clip": "/cdn/value.f9632b5b31293c108d81fa7cd738d52e691b7bf67b965fe1739fb221dac1db7b.mp3",
+  "dur": 12.0
+ },
+ "s9": {
+  "host": "Sprinkles",
+  "title": "Shapes",
+  "clip": "/cdn/value.43df70961ad74ff82c59dcc035e805b6945eaf4cf97777d43f5b2887e73a5b12.mp3",
+  "dur": 10.1
+ },
+ "s10": {
+  "host": "Sprinkles",
+  "title": "Dance Break",
+  "clip": "/cdn/value.2f5f0e62176cf44c5969dc33e6254b8bdae6c9275dab2830c4854a2431f3307b.mp3",
+  "dur": 9.9
+ },
+ "s11": {
+  "host": "Sprinkles",
+  "title": "Smile",
+  "clip": "/cdn/value.a818893b58735c061472730d948ae4aaa4dfe10192369c5026237745656d59f5.mp3",
+  "dur": 11.2
+ },
+ "s12": {
+  "host": "Sprinkles",
+  "title": "MEG Party",
+  "clip": "/cdn/value.89d714d91075d0258c07cbedf63099eb99db8c3af83dbb597f22e9fe95a80787.mp3",
+  "dur": 12.6
+ },
+ "s13": {
+  "host": "Sprinkles",
+  "title": "Phone Call",
+  "clip": "/cdn/value.b167289b620ffabe1e6e0845769706fd0ac14ded98112c26fe4b5398bf738c6c.mp3",
+  "dur": 10.6
+ },
+ "s14": {
+  "host": "Sprinkles",
+  "title": "Snacks",
+  "clip": "/cdn/value.a6744e573588069b154b8a1604ec77ab7bfcf53596c4d76dd99a9c6003337799.mp3",
+  "dur": 10.0
+ },
+ "s15": {
+  "host": "Sprinkles",
+  "title": "Big Words",
+  "clip": "/cdn/value.9b64638e680ecdcb93282d035750d30de4b59df6dfb955434473da5bf3f7d6db.mp3",
+  "dur": 9.7
+ },
+ "s16": {
+  "host": "Sprinkles",
+  "title": "Sad Moment",
+  "clip": "/cdn/value.df3d9931c8ab67ac65c9def6d68d7461869a6afa942e0055f52aebf6879b48de.mp3",
+  "dur": 10.1
+ },
+ "s17": {
+  "host": "Sprinkles",
+  "title": "Game Show",
+  "clip": "/cdn/value.91cbc28c7fc27dd5e0b57e5ae981f0e17fc6f58c6836116961891be2c60ec9a3.mp3",
+  "dur": 13.6
+ },
+ "s18": {
+  "host": "Sprinkles",
+  "title": "MEG Agent",
+  "clip": "/cdn/value.7b8e1b7087e77f55ebe6a13ae7ff9b12ffacd085c707c94a938118485e0cbfff.mp3",
+  "dur": 9.6
+ },
+ "s19": {
+  "host": "Sprinkles",
+  "title": "Music Intro",
+  "clip": "/cdn/value.b38cfd5f259313bedcf1476b64e18aeb771433f632c590e5b679febdbc33019a.mp3",
+  "dur": 12.0
+ },
+ "s20": {
+  "host": "Sprinkles",
+  "title": "Station ID 2",
+  "clip": "/cdn/value.5fa1feb325d6c5adf55dce0b9f8b7ec09f84c3fc9cf2a0a7a988ad5f920fb310.mp3",
+  "dur": 10.5
+ },
+ "s21": {
+  "host": "Sprinkles",
+  "title": "Goodnight",
+  "clip": "/cdn/value.b2958fdc2dd2fdd913a9b53d0beb5c08dcb618af925206fdb5243cb410f51e67.mp3",
+  "dur": 12.2
+ }
+}
