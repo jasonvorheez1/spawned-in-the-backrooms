@@ -28,9 +28,17 @@ for name, (size, budget, largest, flat) in SPEC.items():
     parts = [p for p in bpy.context.scene.objects if p.type == "MESH"]
     def vol(p): a, b = bbox(p); d = b - a; return d.x * d.y * d.z
     big = max(parts, key=lambda p: (bbox(p)[1] - bbox(p)[0]).z)  # the bottle is the tallest piece
-    for p in parts:
-      if p is not big: bpy.data.objects.remove(p)
-    o = big; bpy.context.view_layer.objects.active = o; o.select_set(True)
+    ba, bb = bbox(big); pad = (bb - ba).x * 0.6
+    keep = []
+    for p in parts:  # every piece standing over the bottle's footprint stays (glass, label, cap); the cup beside it goes
+      a, b = bbox(p); cx, cy = (a.x + b.x) / 2, (a.y + b.y) / 2
+      if ba.x - pad <= cx <= bb.x + pad and ba.y - pad <= cy <= bb.y + pad: keep.append(p)
+      else: bpy.data.objects.remove(p)
+    bpy.ops.object.select_all(action="DESELECT")
+    for p in keep: p.select_set(True)
+    bpy.context.view_layer.objects.active = big
+    if len(keep) > 1: bpy.ops.object.join()
+    o = big
   a, b = bbox(o); d = b - a; print("RAW", name, [round(x, 3) for x in d])
   if flat:  # thinnest axis becomes up
     t = min(range(3), key=lambda i: d[i])
