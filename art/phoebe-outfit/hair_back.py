@@ -11,7 +11,7 @@ CAT = [o for o in bpy.data.objects if o.type == "ARMATURE"][0]
 catHead = CAT.matrix_world @ CAT.data.bones["mixamorig:Head"].head_local
 newHair = [o for o in bpy.data.objects if o.type == "MESH" and o.data.materials and o.data.materials[0].name.startswith("hair")]
 hv = [o.matrix_world @ v.co for o in newHair if o.name.startswith("hair") for v in o.data.vertices]
-newW = max(v.x for v in hv) - min(v.x for v in hv); newTop = max(v.z for v in hv)
+newW = max(v.x for v in hv) - min(v.x for v in hv); newD = max(v.y for v in hv) - min(v.y for v in hv); newCy = (max(v.y for v in hv) + min(v.y for v in hv)) / 2; newTop = max(v.z for v in hv)
 hairMat = newHair[0].data.materials[0]
 for o in newHair: bpy.data.objects.remove(o)
 before = set(bpy.data.objects)
@@ -36,7 +36,12 @@ print("FLIP", FLIP, "bowY", round(sum(bowY) / max(1, len(bowY)), 3), "headY", ro
 cap = [v for v in ov if v.z > oldHead.z + 0.05]
 oldW = max(v.x for v in cap) - min(v.x for v in cap)
 s = newW / oldW
-for v, w in zip(me.vertices, ov): v.co = catHead + (w - oldHead) * s
+oldD = max(v.y for v in cap) - min(v.y for v in cap); oldCy = (max(v.y for v in cap) + min(v.y for v in cap)) / 2
+sy = max(s, newD / oldD) * 1.04   # the cat skull runs deeper front to back than the human one: the back hair sat inside it
+for v, w in zip(me.vertices, ov):
+    d = w - Vector((oldHead.x, oldCy, oldHead.z))
+    v.co = Vector((catHead.x + d.x * s, newCy + d.y * sy, catHead.z + d.z * s))
+print("sy", round(sy, 3), "newD", round(newD, 3), "oldD", round(oldD, 3))
 top = max(v.co.z for v in me.vertices); dz = newTop - top
 for v in me.vertices: v.co.z += dz            # crown on the crown the cat cap sat on
 # the original fringe hung to a human chin; on her shorter muzzle it covered both eyes. Front strands below the brow are drawn
