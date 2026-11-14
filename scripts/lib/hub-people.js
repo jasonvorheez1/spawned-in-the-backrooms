@@ -46,7 +46,7 @@ export function layThings(ctx) {
     children: [{ id: "leaf", feetPosition: { x: 0, y: 0.2, z: 0.78 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/hub-door-geo.js", params: { part: "leaf" }, seed: 9001 }, material: { roughness: 0.9 } }] });
 }
 function spawnHubPhoebe(ctx) {
-  if (ctx.place.objects["hub-phoebe"]) return;
+  const old = ctx.place.objects["hub-phoebe"]; if (old && old.state?.phoebeV === 2) return; if (old) ctx.destroy("hub-phoebe");
   const { human, ...spec } = phoebeSpec(ctx);
   ctx.spawn("hub-phoebe", {
     tags: ["npc", "hub-npc", "phoebe"],
@@ -54,8 +54,8 @@ function spawnHubPhoebe(ctx) {
     rotation: { yaw: 90 },
     physics: "character",
     ...spec,
-    behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
-    state: { name: "Phoebe", role: "wanderer", faction: "none", dlg: "hub-phoebe", voice: "phoebe-lrun", faceYaw: 90, home: { x: -37.6, z: 3.7 } },
+    behavior: ["scripts/phoebe-npc.js"], // her own outfit only, no wardrobe re-dress or weapon (meg-agent did both); unkillable, shrugs off hits
+    state: { name: "Phoebe", role: "wanderer", faction: "none", dlg: "hub-phoebe", voice: "phoebe-lrun", faceYaw: 90, home: { x: -37.6, z: 3.7 }, hp: 100, maxHp: 100, essential: true, phoebeV: 2 },
   });
 }
 export function keepCrew(ctx) { // first walk-in lays everyone at once; after that the shared respawn clock keeps them
