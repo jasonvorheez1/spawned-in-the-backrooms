@@ -5,6 +5,7 @@ import { animate } from "builtin/tween"
 import { BEATS, SOFT, ENC, HALO, DRAWINGS, PACE } from "./tut0.js"
 import { dinaLead } from "./dina-quest.js"
 import { spawnPhoebe, dropPhoebe } from "./phoebe.js"
+import { tutJump } from "./tutorial.js"
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
 const SMILER_MODEL = { id: "/cdn/value.fb443f6a23bcd4977c437db42b3f9abe2510fcb6cf2076ee4956fb235d581b26.glb", forward: "+x" } // scripts/smilers.js
 export const LEN = { encounter: 16.5, smiler: 11, halogen: 6, drawings: 10, final: 23 }
@@ -55,6 +56,8 @@ export function t0Tick(ctx, ses, st) {
   if (!done) return true
   if (id === "halogen") me.bones.RightHand.reach = null
   if (id === "halogen") { st.creating = false; st.sheetOpen = false; dinaLead(ctx, st) }
+  const nextStep = { encounter: "combat", smiler: "crouch", halogen: "inv", drawings: "go" }[id]
+  if (nextStep) tutJump(ctx, st, nextStep)
   for (const k of ["smiler", "glint", "dust", "leg", "ent"]) if (c[k]) ctx.destroy(c[k]) // the knocked-down entity (c.ent) stays where it fell
   me.anim.cut = null; ctx.view.camera = null; me.hidden = (me.hidden || []).filter((i) => i !== me.id)
   st.t0n = (st.t0n ?? 0) + 1; st.t0cut = null; ses.t0 = null
