@@ -156,7 +156,7 @@ export function tokenWeight(token) {
 }
 // what the wanderer is carrying now: almond water 0.5 each, rounds 0.03 each, shells 0.07, every owned weapon
 export function inventoryWeight(s) {
-  let kg = ((s.almonds ?? 0) + (s.almondsG ?? 0) + (s.almondsR ?? 0) + (s.almondsB ?? 0)) * FIXED.almond + (s.ammo ?? 0) * 0.03 + (s.shells ?? 0) * 0.07 + (s.firesalt ?? 0) * FIXED.firesalt
+  let kg = ((s.almonds ?? 0) + (s.almondsG ?? 0) + (s.almondsR ?? 0) + (s.almondsB ?? 0)) * FIXED.almond + (s.ammo ?? 0) * 0.03 + (s.shells ?? 0) * 0.07 + (s.firesalt ?? 0) * FIXED.firesalt + (s.fsIngot ?? 0) * 0.1 + (s.repellent ?? 0) * 0.15
   for (const k of String(s.weapons ?? '').split(',').filter(Boolean)) kg += weaponWeight(k)
   for (const [t, n] of Object.entries(s.scrap ?? {})) kg += (BRK.scrap[t]?.kg ?? 0.2) * n // building scrap
   for (const t of String(s.clothes ?? '').split(',').filter(Boolean)) kg += tokenWeight(t) // spare clothes; what's worn weighs nothing

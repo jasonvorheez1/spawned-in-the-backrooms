@@ -6,7 +6,7 @@ export function quickItems(s) {
   const rows = [['grey','almonds'],['green','almondsG'],['red','almondsR'],['blue','almondsB']].map(([c,k]) => ({id:'almond:'+c,name:c+' almond water',count:s[k]??0,action:{k:'drink',c}}))
   for (const [c,v] of Object.entries(MEAT)) rows.push({id:'meat:'+c,name:v.name,count:s.meat?.[c]??0,action:{k:'eat',c}})
   for (const [c,v] of Object.entries(SNACKS)) rows.push({id:'snack:'+c,name:v.name,count:s.snacks?.[c]??0,action:{k:'snack',c}})
-  rows.push({id:'compass',name:'Old compass',count:s.compass??0,action:{k:'compass'}},{id:'firesalt',name:'Firesalt',count:s.firesalt??0,action:{k:'firesalt'}},{id:'soup',name:'Bowl of soup',count:s.equipped==='soup_bowl'?1:0,action:{k:'soupEat'}})
+  rows.push({id:'compass',name:'Old compass',count:s.compass??0,action:{k:'compass'}},{id:'firesalt',name:'Firesalt',count:s.firesalt??0,action:{k:'firesalt'}},{id:'fsThrow',name:'Firesalt (throw)',count:s.firesalt??0,action:{k:'fsThrow'}},{id:'fsIngot',name:'Firesalt ingot',count:s.fsIngot??0,action:{k:'fsIngot'}},{id:'repellent',name:'Smiler Repellent',count:s.repellent??0,action:{k:'repellent'}},{id:'soup',name:'Bowl of soup',count:s.equipped==='soup_bowl'?1:0,action:{k:'soupEat'}})
   const weapons=['fists',...(s.weapons??'').split(',').filter(Boolean)], bag=(s.clothes??'').split(',').filter(Boolean), worn=wornTokens(s.look)
   const saved=Object.values(s.quickSlots??{}).filter(x=>typeof x==='string')
   const weaponCounts=new Map(), clothCounts=new Map()

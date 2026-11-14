@@ -48,7 +48,7 @@ export function gateItems(ctx, items, level, pool = "l0") {
 }
 
 // ---- containers: a crate in the maze, or the remains of what you killed. Their contents are tokens (scripts/lib/items.js).
-const ITEM_WEIGHTS = [["lobby_wafer", 12], ["meat", 5], ["beans", 6], ["bar", 7], ["ration", 3], ["almond", 40], ["ammo", 16], ["shells", 7], ["weapon", 22], ["kit", 4], ["bobbypin", 10], ["molotov", 1.5], ["book", 3], ["cloth", CL.crateWeight]];
+const ITEM_WEIGHTS = [["lobby_wafer", 12], ["meat", 5], ["beans", 6], ["bar", 7], ["ration", 3], ["almond", 40], ["ammo", 16], ["shells", 7], ["weapon", 22], ["kit", 4], ["bobbypin", 10], ["molotov", 1.5], ["book", 3], ["firesalt", 2.5], ["repellent", 0.4], ["cloth", CL.crateWeight]];
 const bookOf = (ctx) => { const ks = SKILL_KEYS.filter((k) => k !== "energy" && k !== "explosives"); return "book:" + ks[Math.floor(ctx.random() * ks.length)]; };
 // some containers are locked, Fallout style: a Lockpick or Science level you need to have. Locked ones hold more.
 export function rollLock(ctx) {
@@ -100,7 +100,7 @@ export function dropLoot(ctx, pos, name = "Remains", luck = 1, clothMul = 1, poo
 }
 
 // Level 1's crates: rations, bandages and batteries join the roll. Weights are Savi's picks.
-const L1_WEIGHTS = [["bobbypin", 8], ["meat", 2.5], ["ration", 5], ["almond", 4], ["bandage", 3], ["battery", 3], ["ammo", 2], ["shells", 1], ["weapon", 1.2], ["kit", 1.6], ["book", 1.4], ["cloth", 2.2], ["compass", 1], ["molotov", 0.5]]; // cloth: Savi's pick
+const L1_WEIGHTS = [["bobbypin", 8], ["firesalt", 4], ["repellent", 0.5], ["meat", 2.5], ["ration", 5], ["almond", 4], ["bandage", 3], ["battery", 3], ["ammo", 2], ["shells", 1], ["weapon", 1.2], ["kit", 1.6], ["book", 1.4], ["cloth", 2.2], ["compass", 1], ["molotov", 0.5]]; // cloth: Savi's pick
 export function rollItemL1(ctx) {
   if (ctx.random() < 0.14) return rollCash(ctx);
   const total = L1_WEIGHTS.reduce((a, [, w]) => a + w, 0);
@@ -115,7 +115,7 @@ export function spawnCrateL1(ctx, p) {
   ctx.spawn({ tags: ["container", "crate", "breakable"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { mat: "wood", hp: 60, maxHp: 60, name: lk ? lk.name : ctx.random() < 0.25 ? "Rations crate" : "Wooden crate", items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
 }
 // Level 2: a tool depot. More batteries and ammo, fewer rations; its own tools.
-const L2_WEIGHTS = [["frag", 2], ["meat", 6], ["molotov", 3], ["almond", 14], ["bobbypin", 7], ["ammo", 18], ["shells", 9], ["battery", 14], ["bandage", 10], ["ration", 6], ["weapon", 20], ["kit", 5], ["book", 4], ["cloth", 8], ["tape", 6], ["fuse", 4], ["valve", 3], ["keycard", 2], ["beans", 5], ["bar", 6], ["firstaid", 3], ["compass", 2]]; // cloth: Savi's pick; the rest are Level 2's own finds
+const L2_WEIGHTS = [["frag", 2], ["firesalt", 5], ["repellent", 0.6], ["meat", 6], ["molotov", 3], ["almond", 14], ["bobbypin", 7], ["ammo", 18], ["shells", 9], ["battery", 14], ["bandage", 10], ["ration", 6], ["weapon", 20], ["kit", 5], ["book", 4], ["cloth", 8], ["tape", 6], ["fuse", 4], ["valve", 3], ["keycard", 2], ["beans", 5], ["bar", 6], ["firstaid", 3], ["compass", 2]]; // cloth: Savi's pick; the rest are Level 2's own finds
 export function rollItemL2(ctx) {
   if (ctx.random() < 0.14) return rollCash(ctx);
   const total = L2_WEIGHTS.reduce((a, [, w]) => a + w, 0);
