@@ -16,7 +16,7 @@ import { rbox } from "../../scripts/lib/rbox.js";
 import { layService } from "../../scripts/lib/level61-service.js";
 
 export const cadence = "1s";
-const V = 64; // 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
+const V = 65; // 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -448,24 +448,14 @@ function lay(ctx) {
 
   // 1. Clippers: Red 1950s bar, stools, back shelves, and the interactive Wurlitzer 80s Internet Radio Jukebox
   counter("l61-clip-bar", -21, -30.2, 180, M_BAR10, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "budweiser,budweiser,jackcoke,whiskey,smirnoffice,coke", name: "Clippers bar", verb: "Order what the menu shows", info: "Clippers drink counter." } });
-  for (const [k, x] of [-25, -23.4, -22, -18.3, -16.8].entries()) stool(`l61-clip-stool-${k}`, x, -29.12, "#6a2831");
+  const BACKBAR = "/cdn/value.83a6fae404fcf2bb72c4e11afec3b9c5712142e0d7fcfe9164abd539421f97dd.glb", BENT = "/cdn/value.ed5f76cd71ad691cd2fb8e8e8acbf1a9a69e62539e7a7f3cf6bb40bf0fbaa599.glb";
+  for (const [k, x] of [-25, -23.4, -22, -18.3, -16.8].entries()) sp(`l61-clip-stool-${k}`, { feetPosition: { x, y: 0, z: -29.05 }, rotation: { yaw: 180 + ((k * 37) % 23) - 11 }, tags: ["seat", "chair"], model: { id: BENT }, physics: { body: "static", collider: "cylinder" }, visibleRange: { max: 40 } });
   for (const [i, x] of [-24.8, -20.5, -17.2].entries()) tableSet(`l61-clip-table-${i}`, x, -25.9, 0);
   box("l61-clip-lambris", -27.81, 0, -27, 0.08, 1.03, 9.25, DARKWOOD, { physics: undefined });
   box("l61-clip-back-dado", -21, 0, -31.8, 13.6, 1.05, 0.12, DARKWOOD, { physics: undefined });
-  box("l61-clip-bottle-back", -21, 1.02, -31.78, 9.2, 1.54, 0.09, { color: "#827d6c", metalness: 0.7, roughness: 0.32 }, { physics: undefined });
+  // the carved back bar: two Tripo mahogany units with stained-glass crowns and a clock, bottles behind glass, flanking the doorway to the till
+  for (const [i, x] of [-23.6, -18.4].entries()) sp(`l61-clip-backbar-${i}`, { feetPosition: { x, y: 0, z: -31.2 }, rotation: { yaw: 90 }, model: { id: BACKBAR }, physics: "static", visibleRange: { max: 55 } });
   for (const [i, x] of [-25, -20.5, -16.4].entries()) light(`l61-clip-lamp-${i}`, x, 2.55, -28.1, "#ffcf9b", 2, 6);
-  for (const [n, y] of [[0, 1.4], [1, 2.0]]) {
-    sp(`l61-clip-shelf-${n}`, {
-      feetPosition: { x: -21, y, z: -31.6 },
-      primitive: { kind: "box", width: 9, height: 0.05, depth: 0.3 },
-      material: DARKWOOD,
-      children: Array.from({ length: 16 }, (_, i) => ({
-        feetPosition: { x: -4.2 + i * 0.56, y: 0.05, z: 0 },
-        primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.05, height: 0.3 + ((i * 7) % 3) * 0.05 },
-        material: { color: ["oklch(0.4 0.1 145)", "oklch(0.55 0.12 60)", "oklch(0.3 0.08 30)", "oklch(0.8 0.03 90)"][i % 4], roughness: 0.1, opacity: 0.85, transparent: true },
-      })),
-    });
-  }
 
   // THE WURLITZER 80s INTERNET RADIO JUKEBOX in Clippers
   sp("l61-clip-jukebox", {
