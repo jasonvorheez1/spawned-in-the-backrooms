@@ -2,7 +2,7 @@
 // place.state.lit: the switch. Lit: Smiler eyes glint under the bed and in the closet gap. Dark: a Smiler comes out after DARK_S.
 // Now and then a counterpart stands at the window. The void runs south; a lone door at z 62 lets you out (scripts/l114-use.js).
 export const cadence = "250ms";
-const V = 3, H = 2.5, W = 2, D = 2.25, DOOR = { x: 1.1, w: 0.9, h: 2.05 }, WIN = { x: -0.6, w: 1.1, y0: 0.9, y1: 1.9 };
+const V = 4, H = 2.5, W = 2, D = 2.25, DOOR = { x: 1.1, w: 0.9, h: 2.05 }, WIN = { x: -0.6, w: 1.1, y0: 0.9, y1: 1.9 };
 const DARK_S = 7, BITE = 18; // my picks: seconds of dark before a Smiler bites, and its bite
 const WALL = { texture: "cdn/texture-faded-pale-blue-childhood-wallpaper-tiny-yellow-stars-water-stained.png", wrap: "repeat", repeat: [1, 1], roughness: 0.9 };
 const CARPET = { texture: "cdn/texture-worn-beige-bedroom-carpet-fibres-faint-stains.png", wrap: "repeat", repeat: [1, 1], roughness: 1 };
@@ -49,7 +49,8 @@ function build(ctx) {
   put(ctx, "shelf", F("shelf"), 0.6, -D + 0.22, 180, { tags: ["l114", "container", "furniture"], state: { name: "Bookshelf", verb: "Search", kind: "home", items: "almond,bar,battery" } });
   put(ctx, "lamp", F("lamp"), -W + 0.3, D - 0.35, 0);
   ctx.spawn("switch", { tags: ["l114", "usable"], audience: "all", feetPosition: { x: DOOR.x - DOOR.w / 2 - 0.22, y: 1.15, z: D - 0.01 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 0.08, height: 0.12, depth: 0.015 }, material: { color: "oklch(0.95 0.01 90)", roughness: 0.4 }, behavior: "scripts/l114-use.js", state: { kind: "switch", name: "Light Switch", verb: "Switch Off", info: "on" } });
-  ctx.spawn("ceil-light", { tags: ["l114"], feetPosition: { x: 0, y: H - 0.12, z: 0 }, primitive: { kind: "sphere", radius: 0.2, widthSegments: 20, heightSegments: 10, thetaLength: 1.6 }, rotation: { pitch: 180 }, material: { color: "oklch(0.97 0.03 90)", emissive: "oklch(0.97 0.05 90)", emissiveIntensity: 1.6 }, light: { kind: "point", color: "oklch(0.92 0.07 85)", intensity: 2.2, distance: 9, shadow: { enabled: true } } });
+  ctx.spawn("ceil-light", { tags: ["l114"], feetPosition: { x: 0, y: H - 0.12, z: 0 }, primitive: { kind: "sphere", radius: 0.2, widthSegments: 20, heightSegments: 10, thetaLength: 1.6 }, rotation: { pitch: 180 }, material: { color: "oklch(0.97 0.03 90)", emissive: "oklch(0.97 0.05 90)", emissiveIntensity: 1.6 }, light: { kind: "point", color: "oklch(0.92 0.07 85)", intensity: 7, distance: 10, shadow: { enabled: true } } });
+  ctx.spawn("lamp-glow", { tags: ["l114"], feetPosition: { x: -W + 0.3, y: 1.6, z: D - 0.35 }, light: { kind: "point", color: "oklch(0.85 0.1 70)", intensity: 1.6, distance: 5 } });
   // stress mould in the corners (wiki: it creeps in with the room's mood)
   for (const [i, x, y, z, yaw, s] of [[0, -W + 0.006, 2.1, -1.9, 90, 0.9], [1, W - 0.006, 2.2, 1.7, -90, 1.1], [2, 1.6, 2.15, -D + 0.006, 0, 0.8], [3, -1.4, 0.35, D - 0.006, 180, 0.7]])
     ctx.spawn(`mould${i}`, { tags: ["l114"], feetPosition: { x, y, z }, rotation: { yaw }, primitive: { kind: "plane", width: s, height: s }, material: { texture: MOULD, transparent: true, alphaTest: 0.05, roughness: 1, depthWrite: false } });
@@ -65,7 +66,7 @@ export function tick(ctx) {
   if (s.v114 !== V) { build(ctx); s.v114 = V; s.lit = true; }
   const lit = s.lit !== false, room = ctx.place.players.filter((p) => Math.abs(p.feetPosition.x) < W && Math.abs(p.feetPosition.z) < D);
   const light = ctx.place.objects["ceil-light"];
-  if (light && light.state.on !== lit) { light.state.on = lit; light.light = lit ? { kind: "point", color: "oklch(0.92 0.07 85)", intensity: 2.2, distance: 9, shadow: { enabled: true } } : null; light.material = { color: lit ? "oklch(0.97 0.03 90)" : "oklch(0.5 0.01 90)", emissive: "oklch(0.97 0.05 90)", emissiveIntensity: lit ? 1.6 : 0 }; }
+  if (light && light.state.on !== lit) { light.state.on = lit; light.light = lit ? { kind: "point", color: "oklch(0.92 0.07 85)", intensity: 7, distance: 10, shadow: { enabled: true } } : null; const lg = ctx.place.objects["lamp-glow"]; if (lg) lg.light = lit ? { kind: "point", color: "oklch(0.85 0.1 70)", intensity: 1.6, distance: 5 } : null; light.material = { color: lit ? "oklch(0.97 0.03 90)" : "oklch(0.5 0.01 90)", emissive: "oklch(0.97 0.05 90)", emissiveIntensity: lit ? 1.6 : 0 }; }
   // lit: eyes glint in the dark gaps (under the bed, behind the dresser). dark: one comes out
   const glints = [["eyes-bed", -W + 0.55, 0.12, -0.4, 90], ["eyes-dresser", W - 0.62, 1.2, -1.32, -90]];
   for (const [id, x, y, z, yaw] of glints) { const want = lit; if (want && !ctx.place.objects[id]) ctx.spawn(id, { tags: ["l114"], feetPosition: { x, y, z }, rotation: { yaw }, vector: SMILE(0.55) }); if (!want && ctx.place.objects[id]) ctx.destroy(id); }
