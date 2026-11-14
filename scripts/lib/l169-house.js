@@ -55,7 +55,8 @@ export function layHouse(ctx, put, L) {
   { const [x, z] = mid("den"); part("cot-1", { part: "bed", cot: true }, x - 1.3, z - 0.6, F); part("cot-2", { part: "bed", cot: true }, x + 1.3, z - 0.6, F); }
   // living: rug, bench, the map table and the board of routes
   { const [x, z] = mid("living"); part("rug", { part: "rug", w: 3, d: 2.2 }, x, z + 0.5, F + 0.005); part("bench", { part: "bench" }, x, z + 2.2, F, { rotation: 180 });
-    part("maptable", { part: "maptable" }, x - 2.4, z - 1.2, F); part("mapboard", { part: "mapboard" }, x - 2.4, r.hall[3] + 0.12, F + 1, { rotation: 180, physics: undefined }); }
+    part("maptable", { part: "maptable" }, x - 2.4, z - 1.2, F); part("mapboard", { part: "mapboard" }, x - 2.4, r.hall[3] + 0.12, F + 1, { rotation: 180, physics: undefined });
+    put("l169-house-mapchart", { feetPosition: { x: x - 2.4, y: F + 1.36, z: r.hall[3] + 0.135 }, rotation: 180, castShadow: false, primitive: { kind: "box", width: 1.62, height: 1.08, depth: 0.004 }, material: { texture: "/cdn/value.d7956c7f61a315be19c315eee3cfe79c24db3fe050d9e25024d444673904d01e.png", repeat: [1, 1], roughness: 0.85 } }); }
   // the furniture you see: Tripo models (art pass, Nov 14); the scripted pieces stay as colliders, unseen
   const M = { bed: "/cdn/value.a80517cebda3855752e83ec0efa57adef4cd9ed8b993927ec4db5c6f7be3bc7c.glb", cot: "/cdn/value.8d3339a3fa5c283cf1251d0f11abb47f8b0388e7b576bfa7cef2560394e77bef.glb",
     kit: "/cdn/value.eca8c598b9635ca9dd37710d90c09c2a22fb1cd6c7bc4350026df9cf54ebf4b1.glb", bench: "/cdn/value.deb5057b345d8bf77d5e45c5b29111addfa13c16a2eccf25438e8967603bcce2.glb",
