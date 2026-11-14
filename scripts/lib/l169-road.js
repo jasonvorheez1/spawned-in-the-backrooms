@@ -50,7 +50,7 @@ function board(sid, x, z, L, yaw = 0) {
   const i = ORDER.indexOf(sid);
   return [[`l169-cp-${sid}-board`, { tags: ["usable", "l169-board"], feetPosition: g(x, z), rotation: yaw, ...geo("boardposts"), physics: "static", behavior: TRAVEL,
     state: { kind: "board", site: sid, next: ORDER[i + 1] ?? null, prev: ORDER[i - 1] ?? null, name: "Route board", verb: "Read", info: "guided legs at night" },
-    ui: `<div face="front" width="1.6m" offset="0.2m" style="font:700 52px monospace;color:#2a1c10;padding:18px 26px;margin-top:-1.1m;line-height:1.2">ROUTE<br><span style="font-size:34px;font-weight:400">${ORDER[i + 1] ? `${siteOf(ORDER[i + 1], L).name} &uarr; ${Math.round(siteOf(ORDER[i + 1], L).km - siteOf(sid, L).km)} km` : "nothing north"}<br>${ORDER[i - 1] ? `${siteOf(ORDER[i - 1], L).name} &darr;` : ""}</span></div>` }]];
+    ui: `<div face="front" width="1.6m" offset="0.2m" style="font:700 52px monospace;color:#2a1c10;padding:18px 26px;line-height:1.2">ROUTE<br><span style="font-size:34px;font-weight:400">${ORDER[i + 1] ? `${siteOf(ORDER[i + 1], L).name} &uarr; ${Math.round(siteOf(ORDER[i + 1], L).km - siteOf(sid, L).km)} km` : "nothing north"}<br>${ORDER[i - 1] ? `${siteOf(ORDER[i - 1], L).name} &darr;` : ""}</span></div>` }]];
 }
 function locker(sid, x, z, yaw = 0) {
   return [[`l169-cp-${sid}-locker`, { tags: ["usable"], feetPosition: g(x, z), rotation: yaw, ...geo("locker"), physics: "static", behavior: TRAVEL,
