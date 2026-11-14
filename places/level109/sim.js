@@ -93,7 +93,7 @@ function laySegFixtures(ctx, seed, c, k, key, um, info, dark, anyDead, kid) {
   if (rand(seed, 59, k, c.i) < 0.16 || (c.ax === "ew" && c.i === 0 && k === 25)) {
     const s = sidePick(51), p = toWorld(c, um + 3.4, s * (W / 2 - 0.22), 0);
     kid("clr", { tags: ["usable"], feetPosition: p, rotation: { yaw: wallYaw(s) }, physics: "static", castShadow: false, behavior: "scripts/l109-use.js", visibleRange: { max: 40 },
-      primitive: { kind: "scripted", script: MED, params: { part: "cooler" } },
+      ...medLook({ part: "cooler" }), // Tripo water cooler (Shelly Nov 14: blocky)
       state: { kind: "cooler", name: "Hospital Water Cooler", verb: "Drink Water", info: "cold filtered", c: { ...p, y: 0.9 } } });
   }
   if (rand(seed, 61, k, c.i) < 0.08 || (c.ax === "ew" && c.i === 0 && k === 24)) {
@@ -101,7 +101,7 @@ function laySegFixtures(ctx, seed, c, k, key, um, info, dark, anyDead, kid) {
     if (freeSides.length) {
       const s = freeSides[0], p = toWorld(c, um, s * (W / 2 - 0.48), 0);
       kid("vnd", { tags: ["usable"], feetPosition: p, rotation: { yaw: wallYaw(s) }, physics: { body: "static", collider: "box" }, castShadow: false, behavior: "scripts/l109-use.js", visibleRange: { max: 45 },
-        model: { id: VEND_GLB, forward: "-z" }, layout: { box: { min: { x: -0.6, y: 0, z: -0.475 }, max: { x: 0.6, y: 2.1, z: 0.475 } } },
+        model: { id: VEND_GLB, forward: "+x" }, layout: { box: { min: { x: -0.6, y: 0, z: -0.475 }, max: { x: 0.6, y: 2.1, z: 0.475 } } },
         state: { kind: "vending", uid: `seg-${key}-vnd`, name: "Hospital Vending Machine", verb: "Buy Drink ($1.00)", info: "or Lockpick 25 / Repair 20 when jammed", c: { ...p, y: 1.1 } } });
     }
   }

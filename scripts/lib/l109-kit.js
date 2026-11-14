@@ -12,6 +12,7 @@ export const KIT = {
   tray:     { id: C + "99451e590026b9da571c84ee9d02f5bea7838fe87ed38c7e8c39cb16ad371271.glb", min: [-0.27, 0, -0.21], max: [0.27, 1.02, 0.21] },
   terminal: { id: C + "e34cc1d9f7372ca63d2b282551192420c146db38efcf89c878263e2d3c5b52fc.glb", min: [-0.22, 0, -0.24], max: [0.22, 0.4, 0.16] },
   intercom: { id: C + "fe2c201f75c57783e3c55f8a618d0d81b05d619c58d31ede666f1b898babadd9.glb", min: [-0.11, -0.16, -0.05], max: [0.11, 0.16, 0] },
+  cooler:   { id: C + "b292cf9727abf8dcaf2aa0e70b682b4d29c8d43ad722c29420ca75bf8af578a7.glb", fwd: "+x", min: [-0.17, 0, -0.17], max: [0.17, 1.12, 0.17] },
   gas:      { id: C + "5666003cb6446bc93b8df5e1bfeffbe58e17e407d523e0881097415c02f38b85.glb", min: [-0.27, 0, -0.19], max: [0.39, 1.42, 0.21] },
 };
 const v = ([x, y, z]) => ({ x, y, z });
@@ -19,6 +20,6 @@ const v = ([x, y, z]) => ({ x, y, z });
 export function medLook(p, seed = 0) {
   const k = KIT[p.part];
   if (!k) return { primitive: { kind: "scripted", script: "scripts/l109-med-geo.js", params: p, seed } };
-  const h = k.max[1] - k.min[1], look = { model: { id: k.id, forward: "+z" }, layout: { box: { min: v([k.min[0], 0, k.min[2]]), max: v([k.max[0], h, k.max[2]]) } } };
+  const h = k.max[1] - k.min[1], look = { model: { id: k.id, forward: k.fwd ?? "+z" }, layout: { box: { min: v([k.min[0], 0, k.min[2]]), max: v([k.max[0], h, k.max[2]]) } } };
   return k.min[1] < 0 ? { children: [{ feetPosition: { x: 0, y: k.min[1], z: 0 }, ...look }] } : look;
 }
