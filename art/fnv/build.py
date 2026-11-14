@@ -1,7 +1,7 @@
 # picks.yml + nif2json output -> one glb per kept piece: real size, feet at bottom centre, welded, smooth, textured
 import bpy, bmesh, json, os, sys, math
-import yaml
-PICKS = yaml.safe_load(open("/workspace/world/art/fnv/picks.yml"))
+
+PICKS = json.load(open("/workspace/art/picks.json"))  # picks.yml as json (blender has no yaml): python3 -c "import yaml,json;..."
 ONLY = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 for pack, items in PICKS.items():
     J = f"/workspace/art/{pack}/json"; OUT = f"/workspace/art/{pack}/out"; os.makedirs(OUT, exist_ok=True)
