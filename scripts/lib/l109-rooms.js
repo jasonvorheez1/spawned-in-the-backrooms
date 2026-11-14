@@ -18,9 +18,9 @@ const pick = (K, arr) => arr[Math.min(arr.length - 1, Math.floor(K.r() * arr.len
 const between = (K, [lo, hi]) => lo + Math.min(hi - lo, Math.floor(K.r() * (hi - lo + 1)));
 function loot(K, pool) { const L = D.loot[pool], out = []; for (let i = between(K, L.n); i > 0; i--) out.push(pick(K, L.pool)); return out.join(","); }
 // a fitted model: a, b room metres, yaw degrees off the inward direction. o: { up, solid (default true), tip (lies on its side), tint, spec }
-function put(K, name, a, b, yaw = 0, o = {}) { const m = D.models[name], [w, h, d] = m.size, R = K.R;
+function put(K, name, a, b, yaw = 0, o = {}) { const m = D.models[name], [w, h, d] = m.size, R = K.R, sw = /x/.test(m.forward ?? ""), bx = (sw ? d : w) / 2, bz = (sw ? w : d) / 2; // the fit box is in the mesh's own frame, before forward turns it
   return R.sp(`${name}${K.n++}`, { feetPosition: R.at(a, b, (o.up ?? 0) + (o.tip ? d / 2 : 0)), rotation: o.tip ? { yaw: R.yawIn + yaw, pitch: 90, roll: 0 } : { yaw: R.yawIn + yaw, pitch: 0, roll: 0 },
-    model: { id: m.id, ...(m.forward ? { forward: m.forward } : {}) }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } },
+    model: { id: m.id, ...(m.forward ? { forward: m.forward } : {}) }, layout: { box: { min: { x: -bx, y: 0, z: -bz }, max: { x: bx, y: h, z: bz } } },
     material: o.tint ? { color: o.tint } : undefined, visibleRange: VR, castShadow: false, ...(o.solid === false ? {} : { physics: { body: "static", collider: "box" } }), ...(o.spec ?? {}) }); }
 // a searchable container: the world's "container" pattern (tags + state.items), read by the player's press
 function stash(K, name, a, b, yaw, label, pool, lock) { return put(K, name, a, b, yaw, { spec: { tags: ["container", "furniture"], state: { items: loot(K, pool), name: label, verb: "Search", kind: "medical", ...(lock ? { lock } : {}) } } }); }
