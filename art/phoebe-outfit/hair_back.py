@@ -2,7 +2,7 @@
 # /cdn/value.e43b3c86…glb, fetched as /workspace/phoebe/outfit-old.glb) back on the cat outfit (build_cat.py → outfit-cat.glb),
 # fitted to the cat skull: scaled by the two caps' widths, moved Head bone onto Head bone, weighted whole to the head.
 # blender -b --factory-startup --python-exit-code 1 --python art/phoebe-outfit/hair_back.py
-import bpy, bmesh
+import bpy, bmesh, sys
 from mathutils import Vector
 W = "/workspace/phoebe"; OUT = W + "/phoebe-outfit-cat-hair.glb"
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -33,6 +33,14 @@ s = newW / oldW
 for v, w in zip(me.vertices, ov): v.co = catHead + (w - oldHead) * s
 top = max(v.co.z for v in me.vertices); dz = newTop - top
 for v in me.vertices: v.co.z += dz            # crown on the crown the cat cap sat on
+# the original fringe hung to a human chin; on her shorter muzzle it covered both eyes. Front strands below the brow are drawn
+# up toward it, the left side (her right eye) kept longer so one eye stays half-hidden, the other eye and the mouth clear
+BROW = catHead.z + 0.42 * (newTop - catHead.z)
+for v in me.vertices:
+    c = v.co
+    if c.y < catHead.y - 0.02 and c.z < BROW:
+        k = 0.55 if c.x > catHead.x + 0.02 else 0.25
+        c.z = BROW + (c.z - BROW) * k
 me.materials.clear(); me.materials.append(hairMat)
 hair = bpy.data.objects.new("hair", me); bpy.context.scene.collection.objects.link(hair)
 g = hair.vertex_groups.new(name="mixamorig:Head"); g.add(list(range(len(me.vertices))), 1.0, "REPLACE")
@@ -43,11 +51,12 @@ for o in bpy.data.objects:
     if o.type == "MESH": o.data.shade_smooth() if hasattr(o.data, "shade_smooth") else None
 bpy.ops.object.select_all(action="SELECT")
 bpy.ops.export_scene.gltf(filepath=OUT, export_apply=False, export_skins=True)
-# proof: front and side of the head
+# proof: front and side of the head, on her body
+bpy.ops.import_scene.gltf(filepath=W + "/body_cat.glb")
 sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 16; sc.render.resolution_x = 600; sc.render.resolution_y = 600
 w = bpy.data.worlds.new("w"); w.color = (0.5, 0.5, 0.5); sc.world = w
 L = bpy.data.objects.new("L", bpy.data.lights.new("L", "SUN")); L.data.energy = 3; sc.collection.objects.link(L); L.rotation_euler = (0.6, 0, 0.3)
-for n, p in (("front", (0, -1.4, 0.75)), ("side", (1.4, 0, 0.75)), ("back", (0, 1.4, 0.75))):
+for n, p in (("front", (0, -0.9, 0.85)), ("side", (0.9, -0.3, 0.85)), ("back", (0, 1.2, 0.8))):
     cam = bpy.data.objects.new(n, bpy.data.cameras.new(n)); sc.collection.objects.link(cam); cam.location = p
-    d = Vector((0, 0, 0.7)) - Vector(p); cam.rotation_euler = d.to_track_quat("-Z", "Y").to_euler(); cam.data.lens = 50
+    d = Vector((0, 0, 0.8)) - Vector(p); cam.rotation_euler = d.to_track_quat("-Z", "Y").to_euler(); cam.data.lens = 50
     sc.camera = cam; sc.render.filepath = f"/tmp/phoebe/hair_{n}.png"; bpy.ops.render.render(write_still=True)
