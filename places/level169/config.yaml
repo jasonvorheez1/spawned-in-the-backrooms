@@ -14,6 +14,7 @@ terrain:
     - { id: wash, albedo: cdn/texture-terrain-dry-riverbed-cobbles-and-silt.png, tint: "oklch(0.66 0.04 70)", textureScale: 2.5 }
   marks:
     track-north: { kind: path, points: [[0, -14], [6, -120], [-10, -260], [14, -400], [18, -488]], width: 2.6, material: hardpan, edgeMaterial: gravel, noise: 0.35, grade: true }
+    house-basement: { kind: hole, points: [ [ 18.15, -499.9 ], [ 24.3, -499.9 ], [ 24.3, -501.4 ], [ 27.9, -501.4 ], [ 27.9, -493.15 ], [ 18.15, -493.15 ] ] }
   decorations:
     layers:
       scrub:
