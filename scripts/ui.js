@@ -414,10 +414,9 @@ function tarVeil(ctx, player) {
 
 // tab-out pause (Shelly, Nov 13: "the game should pause when i tab out only in single player"): the page tells the body when it hides and returns; main-menu.js holds time only while you're alone
 let _tabAway = null
-export function onMount() { _tabAway = () => sendAction('tabaway', { away: document.hidden }); document.addEventListener('visibilitychange', _tabAway); window.addEventListener('blur', _tabBlur); window.addEventListener('focus', _tabFocus) }
-function _tabBlur() { sendAction('tabaway', { away: true }) }
-function _tabFocus() { sendAction('tabaway', { away: false }) }
-export function onDestroy() { if (_tabAway) document.removeEventListener('visibilitychange', _tabAway); window.removeEventListener('blur', _tabBlur); window.removeEventListener('focus', _tabFocus) }
+// only a hidden page counts as away: a window blur also fires when you click the chat or the game takes focus from the UI frame, and its focus never came back, so the pause stuck (Shelly, Nov 14)
+export function onMount() { _tabAway = () => sendAction('tabaway', { away: document.hidden }); document.addEventListener('visibilitychange', _tabAway); _tabAway() } // the first call clears a pause left over from before
+export function onDestroy() { if (_tabAway) document.removeEventListener('visibilitychange', _tabAway) }
 
 // the Doorstep Carpet key ledger (Shelly, Nov 13: "opening the key ledger should not just be a notification"): the book itself, three hands, one row with no mark
 const LEDGER_ROWS = [
