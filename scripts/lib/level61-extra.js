@@ -123,28 +123,30 @@ export function layExtra(ctx, { HW, HD, HH }) {
     ui: `<div face="front" width="1.9m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:700;color:#f2d79a;text-align:center"><div style="font-size:120px;letter-spacing:6px">CAMP AMBER</div><div style="font-size:40px;color:#e8c890">new here? sit down, eat</div></div>` });
 
   // ---- a real restaurant's furniture: menu boards you flip through, a register, the "now serving" board, a tray return, condiments and a half-eaten tray on the tables, a wet-floor sign
-  const MENU_AT = { clip: [-24.4, 0.85, -30.2, 180], liq: [-12.2, 0.855, -24.3, -90], slice: [4.6, 1.48, -29.4, 180], burger: [17.6, 1.05, -28.4, 180] }; // each stands on its counter top (raycast tops: clip 1.05, liq 1.1, slice 1.48, burger 1.05)
-  const STORE_X = { clip: -21, liq: -7, slice: 7, burger: 21 }, MENUS = {
+  const MENU_AT = { clip: [-24.4, 0.85, -30.2, 180], liq: [-12.2, 0.855, -24.3, -90], slice: [4.6, 1.48, -29.4, 180], burger: [17.6, 1.05, -28.4, 180], gib: [3.7, 1.05, 28.4, 0] }; // each stands on its counter top (raycast tops: clip 1.05, liq 1.1, slice 1.48, burger 1.05)
+  const STORE_X = { clip: -21, liq: -7, slice: 7, burger: 21, gib: -6.8 }, STORE_S = { gib: 1 }, MENUS = {
     clip: [["Budweiser", "3.00"], ["Jack and Coke", "4.50"], ["Smirnoff Ice", "3.75"], ["Coca-Cola float", "2.25"], ["Chips and a Coke", "2.75"]],
     liq: [["Almond water", "3.00"], ["Corona with lime", "4.00"], ["Cuervo margarita", "5.50"], ["Miller Lite", "3.00"], ["Jim Beam, neat", "5.00"], ["Bar snacks", "2.50"]],
     slice: [["Pepperoni slice", "3.25"], ["2 cheese + Coke", "6.25"], ["Supreme slice", "5.00"]],
     burger: [["Cheeseburger", "4.50"], ["Bop meal", "7.95"], ["Fries + Coke", "3.25"]],
+    gib: [["Chili dog", "2.95"], ["Blue plate", "6.50"], ["Coffee", "0.85"], ["Dog + Coke", "3.75"]],
   };
-  const NAMES = { clip: "Clippers", liq: "Liquorette", slice: "Slice Palace", burger: "Burger Bop" };
+  const NAMES = { clip: "Clippers", liq: "Liquorette", slice: "Slice Palace", burger: "Burger Bop", gib: "Gib's Grub" };
   for (const key of Object.keys(MENUS)) {
     const [mx, my, mz, myaw] = MENU_AT[key], cx = STORE_X[key];
     sp(`l61-menu-${key}`, { tags: ["usable"], feetPosition: { x: mx, y: my, z: mz }, rotation: { yaw: myaw, pitch: -12 }, behavior: "scripts/l61-use.js", primitive: { kind: "box", width: 0.5, height: 0.66, depth: 0.04 }, material: { color: "oklch(0.2 0.02 250)", roughness: 0.6 },
       state: { kind: "menu", key, name: `${NAMES[key]} menu`, verb: "Flip the menu", info: "Press to see the next item. Everything is crossed out and free.", tint: "#ffd84a" },
       ui: `<div face="front" width="0.5m" style="width:100%;height:100%;box-sizing:border-box;padding:14px 12px;background:#161a1e;color:#f4f1ea;font-family:Georgia,serif;text-align:center"><div style="font-size:30px;letter-spacing:3px;color:#ffd84a;border-bottom:2px solid #ffd84a;padding-bottom:4px">${NAMES[key]}</div>${MENUS[key].map(([n, p]) => `<div style="font-size:21px;margin-top:10px;display:flex;justify-content:space-between"><span>${n}</span><span><s style="color:#aaa">$${p}</s> <b style="color:#7affb0">FREE</b></span></div>`).join("")}<div style="font-size:15px;margin-top:14px;color:#9fb8c8">please take a number</div></div>` });
     // the till: a little register with a bell
-    const [px, py, pz] = { clip: [-17.6, 0.85, -30.3], liq: [-12.2, 0.855, -29.6], slice: [9.4, 1.48, -29.5], burger: [18.6, 1.05, -28.6] }[key];
+    const [px, py, pz] = { clip: [-17.6, 0.85, -30.3], liq: [-12.2, 0.855, -29.6], slice: [9.4, 1.48, -29.5], burger: [18.6, 1.05, -28.6], gib: [2.7, 1.05, 28.6] }[key];
+    const sg = STORE_S[key] ?? -1; // which wall the store opens through: north -1, south +1
     sp(`l61-reg-${key}`, { feetPosition: { x: px, y: py, z: pz }, rotation: { yaw: myaw }, primitive: { kind: "box", width: 0.36, height: 0.24, depth: 0.34 }, material: { color: "oklch(0.7 0.03 80)", roughness: 0.5, metalness: 0.4 },
       children: [{ feetPosition: { x: 0, y: 0.24, z: 0.02 }, rotation: { pitch: -35 }, primitive: { kind: "box", width: 0.28, height: 0.16, depth: 0.02 }, material: { color: "#031", emissive: "#2bff80", emissiveIntensity: 0.6 }, ui: `<div face="front" width="0.28m" style="width:100%;height:100%;background:#031;color:#7affb0;font:700 40px 'Courier New',monospace;padding:6px;box-sizing:border-box;text-align:center;line-height:1.05">TOTAL<br>$0.00<br><span style="font-size:22px">THANK YOU</span></div>` },
         { feetPosition: { x: 0.2, y: 0.2, z: -0.1 }, primitive: { kind: "sphere", radius: 0.05 }, material: { color: "oklch(0.8 0.1 85)", metalness: 0.9, roughness: 0.2 } }] });
     // the "now serving" board high on the store front (the counter's tickets count up on it) and the tray return beside the store
-    sp(`l61-serve-${key}`, { feetPosition: { x: cx + 3.4, y: 2.7, z: -HD + 0.22 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 1.8, height: 1.0, depth: 0.06 }, material: { color: "oklch(0.1 0.01 250)" },
+    sp(`l61-serve-${key}`, { feetPosition: { x: cx + 3.4, y: 2.7, z: sg * (HD - 0.22) }, rotation: { yaw: sg < 0 ? 180 : 0 }, primitive: { kind: "box", width: 1.8, height: 1.0, depth: 0.06 }, material: { color: "oklch(0.1 0.01 250)" },
       ui: `<div face="front" width="1.8m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Courier New',monospace;background:#101418;color:#7affb0;text-align:center"><div style="font-size:54px;color:#ffd84a">NOW SERVING</div><div style="font-size:150px;font-weight:700;letter-spacing:6px;text-shadow:0 0 18px #3f9">040</div><div style="font-size:34px;color:#9fb8c8">${NAMES[key]}</div></div>` });
-    sp(`l61-ret-${key}`, { tags: ["usable"], feetPosition: { x: cx + 5.6, y: 0, z: -HD + 1.4 }, physics: { body: "static", collider: "box" }, behavior: "scripts/l61-use.js", primitive: { kind: "box", width: 0.7, height: 1.1, depth: 0.55 }, material: { color: "oklch(0.7 0.02 250)", metalness: 0.7, roughness: 0.4 },
+    sp(`l61-ret-${key}`, { tags: ["usable"], feetPosition: { x: cx + 5.6, y: 0, z: sg * (HD - 1.4) }, physics: { body: "static", collider: "box" }, behavior: "scripts/l61-use.js", primitive: { kind: "box", width: 0.7, height: 1.1, depth: 0.55 }, material: { color: "oklch(0.7 0.02 250)", metalness: 0.7, roughness: 0.4 },
       state: { kind: "return", name: "Tray return", verb: "Return your tray", info: "A rack for trays. Please be considerate.", tint: "#9fe8ff" },
       children: [{ feetPosition: { x: 0, y: 1.1, z: 0 }, primitive: { kind: "box", width: 0.7, height: 0.4, depth: 0.04 }, material: { color: "oklch(0.35 0.09 230)" }, ui: `<div face="front" width="0.7m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font:900 70px Arial,sans-serif;color:#fff">TRAYS</div>` }] });
   }
@@ -191,6 +193,7 @@ const FACELINGS = [
   { id: "l61-fc-liq", greet: "Evening. Almond water?", at: [-12.75, -27], face: -90, acts: ["wipe", "serve", "drink", "groove"] },
   { id: "l61-fc-slice", greet: "Slice Palace! Hot ones just out.", at: [7, -30.9], face: 180, acts: ["serve", "eat", "nod", "wipe"], gives: "pizza,pizza,coke" },
   { id: "l61-fc-burger", greet: "Welcome to Burger Bop!", at: [21, -30.1], face: 180, acts: ["grill", "serve", "wipe", "groove"], gives: "burger,burger,coke" },
+  { id: "l61-fc-gib", greet: "Gib's. Sit anywhere, hon.", at: [0.3, 30.1], face: 0, acts: ["grill", "serve", "wipe", "nod"], gives: "chilidog,diner_coffee" },
   { id: "l61-fc-a", hasTray: true, route: [[-21, -12, 3, "wipe"], [-15.2, -14.6, 3, "tray"], [-15, -18, 2.5, "groove"], [-21, -18, 3, "wipe"]] },
   { id: "l61-fc-b", hasTray: true, route: [[21, -12, 3, "wipe"], [15.2, -14.6, 3, "tray"], [15, -18, 2.5, "groove"], [21, -18, 3, "wipe"]] },
   { id: "l61-fc-c", route: [[-21, 12, 3, "wipe"], [-15.2, 14.6, 2.5, "groove"], [-15, 18, 3, "nod"], [-21, 18, 3, "wipe"]] },

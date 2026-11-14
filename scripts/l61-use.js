@@ -22,12 +22,13 @@ export const MENUS = {
   liq: [["Almond water", ["almond"], "3.00"], ["Corona with lime", ["corona"], "4.00"], ["Jose Cuervo margarita", ["margarita"], "5.50"], ["Miller Lite", ["millerlite"], "3.00"], ["Jim Beam, neat", ["whiskey"], "5.00"], ["Bar snacks", ["doritos", "coolranch"], "2.50"]],
   slice: [["Pepperoni slice", ["pizza"], "3.25"], ["Two cheese slices and a Coke", ["pizza", "coke"], "6.25"], ["Supreme slice", ["pizza", "pizza"], "5.00"]],
   burger: [["Cheeseburger", ["burger"], "4.50"], ["Bop meal: burger, chips, shake", ["burger", "doritos", "dew"], "7.95"], ["Fries and a Coke", ["doritos", "coke"], "3.25"]],
+  gib: [["Chili dog", ["chilidog"], "2.95"], ["Blue plate: meatloaf and mash", ["gibplate"], "6.50"], ["Bottomless coffee", ["diner_coffee"], "0.85"], ["Chili dog and a Coke", ["chilidog", "coke"], "3.75"]],
 };
 
-const KEYS = ["clip", "liq", "slice", "burger"];
+const KEYS = ["clip", "liq", "slice", "burger", "gib"];
 const keyOf = (id) => KEYS.find((k) => String(id).includes(`-${k}-`) || String(id).endsWith(`-${k}`));
-const PICKUP = { clip: [-19.2, 0.86, -29.65], liq: [-11.75, 0.865, -25.2], slice: [5.4, 1.49, -29.4], burger: [19.4, 1.065, -28.4] };
-const NAME = { clip: "Clippers", liq: "Liquorette", slice: "Slice Palace", burger: "Burger Bop" };
+const PICKUP = { clip: [-19.2, 0.86, -29.65], liq: [-11.75, 0.865, -25.2], slice: [5.4, 1.49, -29.4], burger: [19.4, 1.065, -28.4], gib: [1.9, 1.065, 28.4] };
+const NAME = { clip: "Clippers", liq: "Liquorette", slice: "Slice Palace", burger: "Burger Bop", gib: "Gib's Grub" };
 
 const board = (key, n) => `<div face="front" width="1.8m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Courier New',monospace;background:#101418;color:#7affb0;text-align:center"><div style="font-size:54px;color:#ffd84a">NOW SERVING</div><div style="font-size:150px;font-weight:700;letter-spacing:6px;text-shadow:0 0 18px #3f9">${String(n).padStart(3, "0")}</div><div style="font-size:34px;color:#9fb8c8">${NAME[key].toUpperCase()}</div></div>`;
 
