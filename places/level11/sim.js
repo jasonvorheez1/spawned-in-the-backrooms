@@ -28,7 +28,7 @@ const CIG = (k) => CIGS[k]?.model;
 export const cadence = "1s";
 const RENO_FLOOR = 0.32;
 const mallTrash = (i) => ({ x: -15.15 + i * 0.2, y: 0.33, z: 28.1 + i * 0.65 });
-const V = 171; // 171 (2026-11-14): strip mall lab + bakery furniture is fitted Tripo+Studio models (art/l11-mall), storefronts are bevelled aluminium extrusions, the clinic back door is the Tripo steel service door // 170: 170: Coca-Cola machine and crates in Sedco, a can on the apartment counter // 169: 169: cigarette packs on the apartment counter and Sedco till // 168: 168: Chapter 2 Clinic dead-drop and sealed Level ! hospital threshold // 167: stouter columns // 166: 166: riveted Tripo platform columns // 165: 165: ramp lip removed // 164: 164: stair mouth opened to z 63.8 (head room on the last steps) // 163: 163: subway stair ramp carries the feet, Tripo deposit wall // 162: 162: bin true size // // 161: band split at vault door // // 160: vault door fit // // 159: vault door scaled flat // // 158: Tripo vault door + bins // // 157: substation 4 Tripo pieces, vault wall opened (Shelly Nov 13) // // 154: newsbox out of the hot dog cart, printed cards // 148 laid a cut list (a throw mid-lay): 149 lays it whole again // the market court and the central pedestrian route
+const V = 172; // 172 (2026-11-14): lab sample counter is two Tripo+Studio reception counters, poster frame stands as its own row // 171 (2026-11-14): strip mall lab + bakery furniture is fitted Tripo+Studio models (art/l11-mall), storefronts are bevelled aluminium extrusions, the clinic back door is the Tripo steel service door // 170: 170: Coca-Cola machine and crates in Sedco, a can on the apartment counter // 169: 169: cigarette packs on the apartment counter and Sedco till // 168: 168: Chapter 2 Clinic dead-drop and sealed Level ! hospital threshold // 167: stouter columns // 166: 166: riveted Tripo platform columns // 165: 165: ramp lip removed // 164: 164: stair mouth opened to z 63.8 (head room on the last steps) // 163: 163: subway stair ramp carries the feet, Tripo deposit wall // 162: 162: bin true size // // 161: band split at vault door // // 160: vault door fit // // 159: vault door scaled flat // // 158: Tripo vault door + bins // // 157: substation 4 Tripo pieces, vault wall opened (Shelly Nov 13) // // 154: newsbox out of the hot dog cart, printed cards // 148 laid a cut list (a throw mid-lay): 149 lays it whole again // the market court and the central pedestrian route
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -622,7 +622,7 @@ function lay(ctx) {
       { // the interior mesh's own collider closed over the aisle; its counters stand as plain invisible blocks instead
         const X1 = MALL_X + (MALL_W - 1.0) / 2, X0 = MALL_X - (MALL_W - 1.0) / 2, hd = (w - 0.3) / 2, HIDE = { visible: false, castShadow: false };
         const blocks = k === "derma" ? [[MALL_X - 2.15, MALL_X - 0.85, -1.3, 1.3, 1.15]] // reception desk
-          : k === "islab" ? [[MALL_X - 1.6, MALL_X - 0.8, -2.3, 1.1, 1.1], [MALL_X - 5.3, MALL_X - 4.35, -3.0, -2.05, 1.75]] // sample counter, specimen fridge
+          : k === "islab" ? [[MALL_X - 1.56, MALL_X - 0.84, -2.15, 0.85, 1.0], [MALL_X - 5.3, MALL_X - 4.35, -3.0, -2.05, 1.75]] // sample counter, specimen fridge
           : [[MALL_X + 2.05, MALL_X + 3.95, -3.77, -2.93, 1.3], [MALL_X - 2.75, MALL_X - 1.4, -3.42, -2.7, 1.45]]; // pastry case, bread rack
         blocks.forEach(([a, b, z0, z1, h], i) => bx(`l11-mall-col-${k}-${i}`, (a + b) / 2, 0.52, zc + (z0 + z1) / 2, b - a, h, z1 - z0, null, HIDE));
       }
@@ -678,14 +678,16 @@ function lay(ctx) {
         { feetPosition: { x: 0, y: 2.38, z: 0.05 }, primitive: { kind: "box", width: 0.32, height: 0.14, depth: 0.08 }, material: { color: "#ff2525", emissive: "#ff1515", emissiveIntensity: 2.4 }, light: { kind: "point", color: "#ff2020", intensity: 1.1, distance: 4.2, shadow: { enabled: false } } },
       ],
     });
-    sp("l11-derma-poster", { feetPosition: { x: MALL_X - 5.1, y: 1.9, z: MALL_Z - 8.2 }, rotation: { yaw: 90 }, ui: `<div face="front" width="1.1m" style="width:1100px;height:1400px;background:#f7fbfa;border:18px solid #1b8a5a;font-family:Arial,sans-serif;color:#13324a;padding:60px;box-sizing:border-box"><div style="font-size:110px;font-weight:900;color:#1b8a5a">dermika</div><div style="font-size:60px;margin-top:40px">cuida tu piel</div><div style="font-size:46px;margin-top:80px;line-height:1.5">consultas · láser · cosmética</div></div>`, primitive: { kind: "box", width: 1.1, height: 1.4, depth: 0.02 }, material: { color: "#ffffff" }, children: [ // a slim brushed-aluminium snap frame round the print, rounded rails
+    sp("l11-derma-poster", { feetPosition: { x: MALL_X - 5.1, y: 1.9, z: MALL_Z - 8.2 }, rotation: { yaw: 90 }, ui: `<div face="front" width="1.1m" style="width:1100px;height:1400px;background:#f7fbfa;border:18px solid #1b8a5a;font-family:Arial,sans-serif;color:#13324a;padding:60px;box-sizing:border-box"><div style="font-size:110px;font-weight:900;color:#1b8a5a">dermika</div><div style="font-size:60px;margin-top:40px">cuida tu piel</div><div style="font-size:46px;margin-top:80px;line-height:1.5">consultas · láser · cosmética</div></div>`, primitive: { kind: "box", width: 1.1, height: 1.4, depth: 0.02 }, material: { color: "#ffffff" } });
+    sp("l11-derma-poster-frame", { feetPosition: { x: MALL_X - 5.1, y: 1.9, z: MALL_Z - 8.2 }, rotation: { yaw: 90 }, children: [ // a slim brushed-aluminium snap frame round the dermika print, rounded rails
       ...[1.4, -0.04].map((y) => ({ feetPosition: { x: 0, y, z: 0 }, primitive: { kind: "box", width: 1.18, height: 0.04, depth: 0.035 }, material: { color: "#c9ccd0", metalness: 0.8, roughness: 0.35 } })),
       ...[-0.57, 0.57].map((x) => ({ feetPosition: { x, y: 0, z: 0 }, primitive: { kind: "capsule", radius: 0.02, halfHeight: 0.7 }, material: { color: "#c9ccd0", metalness: 0.8, roughness: 0.35 } })),
     ] });
     // lab: a sample counter with a divider, two chairs, a plant
-    sp("l11-lab-counter", { feetPosition: { x: MALL_X - 1.2, y: Y0, z: MALL_Z - 0.6 }, rotation: { yaw: -90 }, model: { id: MODELS.lab_counter }, layout: { box: { min: { x: -1.7, y: 0, z: -0.4 }, max: { x: 1.7, y: 1.05, z: 0.4 } } }, physics: { body: "static", collider: "box" } }); // tripo lab base cabinet
-    bx("l11-lab-counter-top", MALL_X - 1.2, Y0 + 1.05, MALL_Z - 0.6, 0.95, 0.05, 3.55, { color: "oklch(0.45 0.12 250)", roughness: 0.3 }, { physics: undefined });
-    bx("l11-lab-glass", MALL_X - 1.35, Y0 + 1.1, MALL_Z - 0.6, 0.03, 0.7, 3.2, GLASS_TINT, { physics: undefined });
+    { // two Tripo+Studio lab reception counters (blue laminate top, glass sneeze guard; art/l11-mall), cabinet doors toward the staff side
+      const LABC = { id: "/cdn/value.69f05977367f2dac5282d4fe25984455001607d2274a20fc40c027e08dd4febf.glb", forward: "+x" };
+      for (const [id, z] of [["l11-lab-counter", MALL_Z - 1.4], ["l11-lab-counter-2", MALL_Z + 0.1]]) sp(id, { feetPosition: { x: MALL_X - 1.2, y: Y0, z }, rotation: { yaw: 90 }, model: LABC, layout: { box: { min: { x: -0.745, y: 0, z: -0.355 }, max: { x: 0.745, y: 1.45, z: 0.355 } } }, physics: { body: "static", collider: "box" } });
+    }
     fit("l11-lab-chair-1", CHAIR, FX - 1.2, MALL_Z - 1.6, -90, [0.75, 0.9, 0.75]);
     fit("l11-lab-chair-2", CHAIR, FX - 1.2, MALL_Z + 0.4, -90, [0.75, 0.9, 0.75]);
     { // lab: stools behind the counter, a specimen fridge and a blood-draw chair by the back wall (Tripo+Studio, art/l11-mall/build.py; fronts are +x in the file; yaw -90 turns a +x front toward the street)
