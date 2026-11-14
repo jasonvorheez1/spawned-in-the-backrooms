@@ -152,6 +152,7 @@ export function layExtra(ctx, { HW, HD, HH }) {
   // the dining room: ketchup, mustard and a napkin box on the tables, a tray with a plate and a cup on about half, steam off the hot ones
   // one setting per real food-court table (the same spots tableSet stands them in sim.js), on the 0.75 m top
   let ti = 0;
+  const lite = (cs) => cs.map((c) => ({ castShadow: false, receiveShadow: false, visibleRange: { max: 22 }, ...c })); // perf: table clutter casts no shadow and stops drawing past 22 m
   const TABLES = [
     [-16.5, -13.5], [-12.0, -8.5], [-16.5, -5.0], [-16.5, 5.0], [-12.0, 8.5], [-16.5, 13.5],
     [16.5, -13.5], [12.0, -8.5], [16.5, -5.0], [16.5, 5.0], [12.0, 8.5], [16.5, 13.5],
@@ -161,7 +162,7 @@ export function layExtra(ctx, { HW, HD, HH }) {
   for (const [x, z] of TABLES) {
     const tx = x, tz = z, r = Math.abs((Math.sin(x * 12.9898 + z * 78.233) * 43758.5453) % 1), hot = r < 0.18;
     sp(`l61-set-${ti++}`, { feetPosition: { x: tx, y: (x < 0 && z < -22) ? 0.622 : 0.752, z: tz }, ...(hot ? { fx: { script: SMOKE } } : {}), primitive: { kind: "sphere", radius: 0.001 }, material: { color: "oklch(0.5 0 0)" },
-      children: (x < 0 && z < -22) ? [ // Liquorette is a tavern: a half-drunk pint, a whiskey tumbler, a glass ashtray, a beer mat
+      children: lite((x < 0 && z < -22) ? [ // Liquorette is a tavern: a half-drunk pint, a whiskey tumbler, a glass ashtray, a beer mat
         { feetPosition: { x: 0.18, y: 0, z: 0.08 }, primitive: { kind: "cylinder", radiusTop: 0.045, radiusBottom: 0.036, height: 0.15 }, material: { color: "oklch(0.85 0.02 90 / 0.35)", transparent: true, opacity: 0.35, roughness: 0.05 } },
         { feetPosition: { x: 0.18, y: 0.004, z: 0.08 }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.033, height: 0.09 }, material: { color: "oklch(0.68 0.15 70)", roughness: 0.2 } },
         { feetPosition: { x: 0.18, y: -0.003, z: 0.08 }, primitive: { kind: "cylinder", radiusTop: 0.06, radiusBottom: 0.06, height: 0.004 }, material: { color: "oklch(0.45 0.13 28)", roughness: 0.9 } },
@@ -179,7 +180,7 @@ export function layExtra(ctx, { HW, HD, HH }) {
           { feetPosition: { x: -0.3, y: 0.04, z: -0.1 }, primitive: { kind: "sphere", radius: hot ? 0.065 : 0.04 }, material: { color: hot ? "oklch(0.58 0.12 55)" : "oklch(0.7 0.1 70)", roughness: 0.8 } },
           { feetPosition: { x: -0.14, y: 0.02, z: -0.04 }, primitive: { kind: "cylinder", radiusTop: 0.045, radiusBottom: 0.035, height: 0.12 }, material: { color: "oklch(0.55 0.2 25)" } },
         ]),
-      ] });
+      ]) });
   }
   // a faceling is mopping: wet-floor signs in the aisles, and the sound of a busy food court
   for (const [k, [x, z]] of [[9.3, 26.5], [-12.3, 32]].entries()) sp(`l61-wet-${k}`, { feetPosition: { x, y: 0, z }, rotation: { yaw: 30 + k * 40 }, primitive: { kind: "box", width: 0.34, height: 0.62, depth: 0.04 }, material: { color: "oklch(0.88 0.17 95)", roughness: 0.6 },
