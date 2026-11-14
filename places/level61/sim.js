@@ -18,7 +18,7 @@ import { layService } from "../../scripts/lib/level61-service.js";
 export const cadence = "1s";
 const TOILET_GLB = "/cdn/value.584d89d495be90361b2f1c260e71cd5079b14f1e5d1b0a3346dd5bc4c808c0dc.glb";
 const VANITY_GLB = "/cdn/value.fc171ef1463c6b6014a17a934459781e7d541b202325257a5ddb0e02de9788c4.glb";
-const V = 78; // 78: liquorette tables carry real cigarette packs (art/cigs). // 77: every store till is the Tripo+Studio register (art/gib/build.py). // 76: every food-court stool is the Tripo+Studio diner stool; Gib counter carries pie case, brewer, condiments (art/gib/build.py). // 75: Gib's Grub, the greasy spoon in the south wall. // 74: supply-room overflow jam (stacked, tipped, wall-facing machines). // 73: bar tops, menus, tills, trays, candles and table drinks follow the lowered Liquorette and Clippers furniture down. // 71: bar counters, stools, chairs and tables in Liquorette and Clippers lowered to fit the 1.2 m critters (Shelly). 70: 70: liquorette tables carry pints, tumblers, ashtrays. 69: liquorette damask walls, tin ceiling, tin sign turned. // 68: toilet repainted white porcelain. 67: restroom toilet + vanity turned to their true front axis and sized to real fixtures. 66: restroom toilets + vanities are Tripo models (art/l61-rest). 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
+const V = 79; // 79: soda machines are Shelly's cola machine (fnv pack), cola crates by the food-court ones. // 78: liquorette tables carry real cigarette packs (art/cigs). // 77: every store till is the Tripo+Studio register (art/gib/build.py). // 76: every food-court stool is the Tripo+Studio diner stool; Gib counter carries pie case, brewer, condiments (art/gib/build.py). // 75: Gib's Grub, the greasy spoon in the south wall. // 74: supply-room overflow jam (stacked, tipped, wall-facing machines). // 73: bar tops, menus, tills, trays, candles and table drinks follow the lowered Liquorette and Clippers furniture down. // 71: bar counters, stools, chairs and tables in Liquorette and Clippers lowered to fit the 1.2 m critters (Shelly). 70: 70: liquorette tables carry pints, tumblers, ashtrays. 69: liquorette damask walls, tin ceiling, tin sign turned. // 68: toilet repainted white porcelain. 67: restroom toilet + vanity turned to their true front axis and sized to real fixtures. 66: restroom toilets + vanities are Tripo models (art/l61-rest). 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -97,6 +97,7 @@ function lay(ctx) {
     ui: `<div face="front" width="${w}m" style="width:${w * 1000}px;height:${h * 1000}px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:Arial,sans-serif;font-weight:900;line-height:1.05">${html}</div>`,
   });
 
+  const COLA_MACHINE = "/cdn/value.d5ba29c10a389882b99ae5a0fbb6e2bff40cda295ddde1e97ba0d824e3f55f65.glb", COLA_CRATE = "/cdn/value.c65f1bf3fb1305109ac73110e57b3a2db7ad85f0d15f4453f6cfdf6a959dc4e3.glb"; // Shelly's cola pack (art/fnv/build.py): 0.9 x 1.83 x 0.71 m, feet origin, front +z
   const M_SNACK_TRIPO = "/cdn/value.e910998f3d141ef9157c86bec44859cff3389f2f4add5d4144e1142133161967.glb"; // tripo snack machine, re-seated in art/l61-vend/build.py: 1.83 m, feet origin, front +z
   const vend = (id, x, z, yaw, soda, extra = {}) => sp(id, {
     feetPosition: { x, y: extra.y ?? 0, z },
@@ -104,11 +105,11 @@ function lay(ctx) {
     physics: { body: "static", collider: "box" },
     visibleRange: { max: 45 },
     castShadow: false,
-    model: soda ? { id: M_VEND, forward: "+z", materials: { cabinet: { color: "oklch(0.5 0.2 27)", roughness: 0.4, metalness: 0.35 } } } : { id: M_SNACK_TRIPO, forward: "+z" },
+    model: soda && !extra.gives?.includes("purified_water") ? { id: COLA_MACHINE, forward: "+z" } : soda ? { id: M_VEND, forward: "+z", materials: { cabinet: { color: "oklch(0.5 0.2 27)", roughness: 0.4, metalness: 0.35 } } } : { id: M_SNACK_TRIPO, forward: "+z" },
     tags: extra.dead ? [] : ["usable"],
     behavior: extra.dead ? undefined : "scripts/l61-use.js",
     state: extra.dead ? {} : { kind: "vend", gives: extra.gives, weeklyStock: extra.weeklyStock, sells: soda ? "soda" : "snack", name: extra.gives?.includes("purified_water") ? "Water dispenser" : soda ? "Soda machine" : "Snack machine", verb: "Press a button", info: extra.gives?.includes("purified_water") ? "Free bottled drinking water." : soda ? "Chilled soda. No charge." : "Packaged snacks. No charge." },
-    children: soda ? [{ feetPosition: { x: 0.1, y: 0.38, z: -0.447 }, primitive: { kind: "box", width: 0.72, height: 1.32, depth: 0.01 }, material: extra.gives?.includes("purified_water") ? { color: "#457275", roughness: 0.6 } : { texture: SODA, roughness: 0.15, emissive: "oklch(0.35 0 0)", emissiveIntensity: 0.4 },
+    children: soda && extra.gives?.includes("purified_water") ? [{ feetPosition: { x: 0.1, y: 0.38, z: -0.447 }, primitive: { kind: "box", width: 0.72, height: 1.32, depth: 0.01 }, material: extra.gives?.includes("purified_water") ? { color: "#457275", roughness: 0.6 } : { texture: SODA, roughness: 0.15, emissive: "oklch(0.35 0 0)", emissiveIntensity: 0.4 },
       ...(extra.gives?.includes("purified_water") ? { children: [{
         feetPosition: { x: 0, y: 0.67, z: -0.012 },
         vector: "<svg viewBox='0 0 64 118' width='0.62m'><path d='M0 0h64v118H0z' fill='#467478'/><path d='M5 5h54v108H5z' fill='none' stroke='#97b6ae'/><path d='M28 20h8v9l5 8v27H23V37l5-8z' fill='#dfebdf'/><g text-anchor='middle' font-family='sans-serif' fill='#f0eee0'><text x='32' y='82' font-size='8' font-weight='bold'>WATER</text><text x='32' y='100' font-size='6'>NO CHARGE</text></g></svg>",
@@ -546,6 +547,7 @@ function lay(ctx) {
   counter("l61-burger-grill", 21, -31.3, 180, M_GRILL, { audio: { clip: "cdn/sfx-burgers-sizzling-on-flat-top-griddle-loop.mp3", loop: true, gain: 0.18, spatial: true, maxDistance: 11 } });
   for (let k = 0; k < 5; k++) stool(`l61-burger-stool-${k}`, 17 + k * 2.0, -27.5, "oklch(0.7 0.13 195)");
   vend("l61-burger-soda", 27.3, -25, 90, true);
+  for (const [i, [x, z, n]] of [[12.75, -23.95, 3], [27.25, -23.95, 2]].entries()) for (let k = 0; k < n; k++) sp(`l61-colacrate-${i}-${k}`, { feetPosition: { x: x + (k % 2) * 0.04, y: k * 0.27, z: z + (k % 2 ? 0.03 : 0) }, rotation: { yaw: 90 + (k % 2 ? 6 : -3) }, model: { id: COLA_CRATE, forward: "+z" }, physics: k ? "none" : { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 30 } }); // empties stacked by the machine
 
   // Fresh hot coffee urn on the counter
   sp("l61-coffee-urn", {
