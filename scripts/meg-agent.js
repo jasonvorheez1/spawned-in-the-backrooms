@@ -137,7 +137,11 @@ const chest = (p) => ({ x: p.x, y: p.y + 1.1, z: p.z });
 // sight on a creature, read twice a second per creature: seen now, or seen in the last 5 s (it ducked round a corner); one that stays unreachable is dropped for 20 s
 function inView(ctx, me, m, f, d) {
   const now = ctx.now(); m.vis ??= {}; m.ign ??= {};
-  if ((m.ign[f.id] ?? 0) > now) return false;
+  if ((m.ign[f.id] ?? 0) > now) { // given up on it as unreachable: but look again twice a second, and a clear line (the door it was behind just opened) ends the ignore at once (Shelly Nov 14: den wanderers took a while to attack after the lock was picked)
+    m.ignLook ??= {}; if (now - (m.ignLook[f.id] ?? 0) < 500) return false;
+    m.ignLook[f.id] = now; if (!seesIt(ctx, me, f)) return false;
+    delete m.ign[f.id];
+  }
   const v = m.vis[f.id] ??= { at: -Infinity, saw: null, near: d, since: now };
   if (now - v.at > 500) { v.at = now; v.clear=seesIt(ctx, me, f); if (v.clear) { v.saw = now; v.since = now; v.near = d; } }
   if (d < v.near - 1) { v.near = d; v.since = now; } // getting closer: the chase is working
