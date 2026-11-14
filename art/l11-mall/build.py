@@ -3,7 +3,7 @@ import bpy, sys, math
 from mathutils import Vector
 SRC = "/workspace/art/l11-mall/src/"; OUT = "/workspace/art/l11-mall/out/"
 PIECES = {  # name: (target height m, face budget tris)
-  "labstool": (0.62, 8000), "specfridge": (1.85, 8000), "drawchair": (1.15, 10000), "breadrack": (1.45, 12000), "backdoor": (2.10, 6000),
+  "labstool": (0.62, 8000), "specfridge": (1.85, 8000), "drawchair": (1.15, 10000), "breadrack": (1.45, 12000), "backdoor": (2.10, 6000), "labcounter": (1.45, 12000),
 }
 ONLY = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 def clear():
