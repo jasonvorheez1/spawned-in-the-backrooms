@@ -12,7 +12,7 @@ import { spawnFoe } from "../../scripts/lib/l109-foes.js";
 import { buildRoom, roomLook } from "../../scripts/lib/l109-rooms.js";
 import { wandererTick, denOf, denLock, denLoad, denWatch, denUnload } from "../../scripts/lib/l109-wanderers.js";
 import { inside } from "../../scripts/lib/containment.js";
-import { buildB3, placeLauncher, stairDoorAt, MORGUE, O as B3O, yawFor as yawB3 } from "../../scripts/lib/l109-b3.js";
+import { buildB3, dressB3, placeLauncher, stairDoorAt, MORGUE, O as B3O, yawFor as yawB3 } from "../../scripts/lib/l109-b3.js";
 import { heard } from "../../scripts/lib/hear.js";
 export const cadence = "500ms";
 const GEO = "scripts/levelrun-geo.js", MED = "scripts/l109-med-geo.js", VEND_GLB = "/cdn/value.841812d69f4307a900ce500187517702dc1f59e427eb8d7599f6c1f463642e54.glb";
@@ -162,6 +162,11 @@ export function tick(ctx) {
     ctx.spawn("b3-survivor", { tags: ["npc", "l8-hostile", "l109-b3"], feetPosition: { x: B3O.x + 6, y: B3O.y + 0.1, z: B3O.z + 45 }, physics: "character", ...furrySpec(look),
       behavior: ["scripts/humanoid-locomotion.js", "scripts/b3-survivor.js"], state: { name: "B3 survivor", hp: 260, maxHp: 260, attackOnSight: true, wear: look },
       children: [{ id: "launcher", parent: "b3-survivor", attachment: { bone: "RightHand" }, ...weaponBody("m72") }] });
+  }
+  if (s.b3DressV !== 1 && ctx.place.objects["b3-hall"]) { // Shelly Nov 14: board gone, the open armory lived in
+    for (const id of ["b3-rack", "b3-arm0.55", "b3-arm1.15", "b3-m72"]) if (ctx.getObject(id)) ctx.destroy(id);
+    for (const o of ctx.query({ tags: ["b3-dress"], radius: 1e6, center: B3O })) ctx.destroy(o.id);
+    dressB3(ctx); s.b3DressV = 1;
   }
   if (!s.b3gun) { s.b3gun = 1; placeLauncher(ctx); } // the M72 lies in the cage once in the room's life
   if (!ctx.place.objects["b3-stairdoor"]) { const d = stairDoorAt(seed); ctx.spawn("b3-stairdoor", { audience: "all", tags: ["usable", "l109-b3"], feetPosition: { x: d.x + 0.12, y: 0, z: d.z - DOOR_W / 2 }, rotation: { yaw: yawB3(0, 1) }, physics: { body: "static", collider: "box" }, material: { pbr: true }, behavior: "scripts/b3-use.js",

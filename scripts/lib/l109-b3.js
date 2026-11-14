@@ -73,8 +73,6 @@ export function buildB3(ctx, seed) {
   // the armory: chain-link cage across the back, rack, launcher, the rocket crate, the cache's last tape
   // Broken cage panels provide cover with a clear route through the middle.
   for (const [i, x] of [-6.7, 6.7].entries()) sp("cover" + i, { feetPosition: P(x, 0, 39), physics: "static", primitive: { kind: "box", width: 2.8, height: 1.2, depth: 0.35 }, material: { color: "#626b60", metalness: 0.55, roughness: 0.6 } });
-  sp("rack", { feetPosition: P(0, 0, 49.55), physics: "static", primitive: { kind: "box", width: 2.4, height: 1.9, depth: 0.5 }, material: { texture: "cdn/texture-scratched-olive-drab-painted-steel.png", color: "#6d7656", metalness: 0.5, roughness: 0.55 } });
-  for (const y of [0.55, 1.15]) sp("arm" + y, { feetPosition: P(0, y, 49.25), castShadow: false, primitive: { kind: "box", width: 2.2, height: 0.04, depth: 0.12 }, material: { color: "#3d4232", metalness: 0.6 } });
   sp("stencil2", { feetPosition: P(0, 1.95, 49.78), rotation: { yaw: yawFor(0, -1) }, castShadow: false, vector: "<svg viewBox='0 0 300 60' width='1.4m'><text x='150' y='46' text-anchor='middle' font-family='display' font-size='44' font-weight='900' fill='#e6e0c8' fill-opacity='0.85'>M.E.G. ARMORY 109</text></svg>" });
   sp("crate", { tags: ["container"], feetPosition: P(6.8, 0, 47.4), rotation: { yaw: 12 }, model: { id: CRATE }, layout: { box: { min: { x: -0.5, y: 0, z: -0.35 }, max: { x: 0.5, y: 0.65, z: 0.35 } } }, physics: "static",
     state: { items: "rockets,rockets,rockets,ammo", name: "M.E.G. munitions crate", verb: "Search", kind: "metal" } });
@@ -88,5 +86,53 @@ export function buildB3(ctx, seed) {
 }
 // the launcher itself rides apart: placed once in the room's life, gone for good once a hand lifts it
 export function placeLauncher(ctx) {
+  return; // Shelly Nov 14: the launcher board "isnt needed anymore"
   ctx.spawn("b3-m72", { audience: "all", tags: ["weapon", "l109-b3"], state: { kind: "m72" }, feetPosition: P(0, 1.2, 49.0), rotation: { yaw: yawFor(1, 0), roll: 0 }, castShadow: false, ...weaponBody("m72") });
+}
+
+
+// Shelly Nov 14: "i would like the big open space to feel more lively". M.E.G.'s last camp in the armory, the building still breathing around it.
+const COT = "/cdn/value.8bdde9f497a06819a0029f9df982d9a2a35c190e91291c4e23ac390e0b66af17.glb", WETSIGN = "/cdn/value.742c7982fd6cd877888746f4dc24cb56395f26e7d33b01a46d4455a0cdc6a39c.glb";
+const LANTERN = "/cdn/value.c10572b2de804fd98cf1690adb38d1337fc5d9a43e100401319716ff9611058b.glb", CANISTER = "/cdn/value.f6da85fb2964fae153be333cecccc61db1a0a412645c25de98f495b18824ec7b.glb";
+const DUST = `fx
+pop motes n=?mobile:40|90 on=box(3.5,1.2,3.5).c(1.3) life=6..10 v=sdir()*.03 size=.006..0.014 acc=curl(.15)*.05+drag(.5) col=<1.5,1.25,.9> a=0>.2:.55>.8:.55>0 r=sprite(mote,add)`;
+const DRIP = `fx
+pop drop rate=flick(.6,.5)*1.6 on=point() life=.76 v=up(-.2) size=.012..0.016 acc=grav() col=<.65,.7,.75> a=.85 r=sprite(droplet,alpha,velocity,.03)
+pop ring on=@drop life=.6..0.9 v=sdir()*.01 size=.06 sz=$size*(.4>3.4) col=<.55,.6,.65> a=.45>0 r=sprite(soft-disc,alpha)`;
+const STEAM = `fx
+pop jet rate=flick(.3,.5)*24 on=point() life=1..1.8 v=<-1,0,0>*(1.4..2.4)+sdir()*.2 size=.07..0.12 acc=buoy(.6)+curl(.4)+drag(1.4) sz=$size*(.5>5) col=<.82,.82,.8> a=0>.1:.32>.6:.12>0 rot=spin(.2) r=sprite(smoke-puff,alpha)`;
+const SPARK = `fx
+pop spit rate=flick(.35,1)*14 on=point() life=.3..0.7 v=up(-.4)+sdir()*(1..2.4) size=.01..0.02 acc=grav() col=hdr(6,3.6,1.3) a=1>0 r=sprite(ember,add,velocity,.03)
+pop arc n=1 at=point() r=light(<.6,.75,1>,1.6*flick(.35,1),3)`;
+const FLAME = `fx
+pop wick n=1 at=point() r=light(<1,.6,.3>,1.1*flick(3,.12),5)`;
+const TALLY = "<svg viewBox='0 0 420 200' width='1.6m'><g stroke='#2b2a24' stroke-width='6' stroke-linecap='round' opacity='0.85'>" +
+  Array.from({ length: 8 }, (_, g) => { const x = 14 + g * 50; return `<path d='M${x} 20 L${x} 90 M${x + 9} 22 L${x + 9} 92 M${x + 18} 20 L${x + 18} 88 M${x + 27} 21 L${x + 27} 90 M${x - 4} 80 L${x + 33} 30'/>`; }).join("") +
+  "<path d='M14 120 L14 186 M23 122 L23 184'/></g><text x='300' y='180' font-family='sans-serif' font-size='30' font-weight='700' fill='#2b2a24' fill-opacity='0.8'>DAY 42</text></svg>";
+const WARN = "<svg viewBox='0 0 520 120' width='2.4m'><text x='260' y='78' text-anchor='middle' font-family='display' font-size='62' font-weight='900' fill='#8a1d12' fill-opacity='0.82'>THEY HEAR THE DOORS</text></svg>";
+const MAP = "<svg viewBox='0 0 300 220' width='0.75m'><rect x='4' y='4' width='292' height='212' fill='#ddd5b8'/><g stroke='#3a4a6a' stroke-width='3' fill='none'><path d='M30 180 L30 40 L140 40 L140 110 L260 110'/><path d='M140 75 L200 75 L200 30'/><circle cx='200' cy='30' r='9'/></g><path d='M190 20 L210 40 M210 20 L190 40' stroke='#a01c12' stroke-width='4'/><text x='34' y='206' font-family='sans-serif' font-size='18' fill='#3a3a32'>B3 / ARMORY / EXIT?</text></svg>";
+export function dressB3(ctx) {
+  const sp = (id, spec) => ctx.spawn("b3-" + id, { audience: "all", ...spec, tags: ["l109-b3", "b3-dress", ...(spec.tags ?? [])] });
+  const m = (id, model, x, z, yaw, size, extra = {}) => sp(id, { feetPosition: P(x, extra.y ?? 0, z), rotation: { yaw }, model: { id: model }, layout: { box: { min: { x: -size[0] / 2, y: 0, z: -size[2] / 2 }, max: { x: size[0] / 2, y: size[1], z: size[2] / 2 } } }, physics: "static", ...extra, y: undefined });
+  // the camp against the west wall: two cots, a lantern still lit on the floor between them, the gas they cooked on
+  m("cot0", COT, -8.6, 43.6, 90, [1.9, 0.5, 0.68]); m("cot1", COT, -8.6, 41.2, 84, [1.9, 0.5, 0.68]);
+  m("lantern", LANTERN, -8.5, 42.4, 30, [0.2, 0.34, 0.2], { physics: "none", fx: { script: FLAME } });
+  m("can0", CANISTER, -9.4, 45.4, 0, [0.32, 0.6, 0.32]); m("can1", CANISTER, -9.1, 45.9, 40, [0.32, 0.6, 0.32]);
+  sp("tally", { feetPosition: P(-9.96, 1.5, 42.4), rotation: { yaw: yawFor(1, 0) }, castShadow: false, vector: TALLY });
+  sp("map", { feetPosition: P(-9.96, 1.55, 38.6), rotation: { yaw: yawFor(1, 0) }, castShadow: false, vector: MAP });
+  sp("warn", { feetPosition: P(9.96, 1.75, 40), rotation: { yaw: yawFor(-1, 0) }, castShadow: false, vector: WARN });
+  // the leak: water through the ceiling tiles into a spreading puddle, a wet-floor sign somebody still bothered with
+  sp("puddle", { feetPosition: P(2.2, 0.012, 45.2), rotation: { pitch: -90 }, castShadow: false, receiveShadow: false, primitive: { kind: "circle", radius: 1.15, segments: 40 }, material: { kind: "water", color: "#2c3134", opacity: 0.72, waveIntensity: 0.15 } });
+  sp("drip", { feetPosition: P(2.2, 2.86, 45.2), castShadow: false, fx: { script: DRIP }, audio: { clip: "cdn/sfx-slow-water-drips-into-shallow-puddle-on-concrete-echo-loop.mp3", loop: true, gain: 0.35, spatial: true, refDistance: 1.5, maxDistance: 14 } });
+  m("wet", WETSIGN, 3.6, 44.1, 205, [0.3, 0.62, 0.4]);
+  // a pipe run down the east wall, cracked at one flange and hissing
+  sp("pipe", { feetPosition: P(9.72, 2.5, 40), rotation: { pitch: 90 }, pivot: "center", castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 20, radialSegments: 14 }, material: { color: "#4f534c", metalness: 0.7, roughness: 0.45 } });
+  for (const z of [33, 38, 43.5, 48]) sp("flange" + z, { feetPosition: P(9.72, 2.5, z), rotation: { pitch: 90 }, pivot: "center", castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.1, radiusBottom: 0.1, height: 0.05, radialSegments: 14 }, material: { color: "#3e413b", metalness: 0.75, roughness: 0.4 } });
+  sp("steam", { feetPosition: P(9.62, 2.5, 43.5), castShadow: false, fx: { script: STEAM }, audio: { clip: "cdn/sfx-steam-hissing-from-cracked-pipe-flange-loop.mp3", loop: true, gain: 0.28, spatial: true, refDistance: 1.5, maxDistance: 16 } });
+  // a ceiling cable torn loose, still live
+  sp("cable", { feetPosition: P(-4, 2.2, 36.5), castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.012, radiusBottom: 0.012, height: 0.7, radialSegments: 6 }, material: { color: "#151515", roughness: 0.6 } });
+  sp("spark", { feetPosition: P(-4, 2.2, 36.5), castShadow: false, fx: { script: SPARK }, audio: { clip: "cdn/sfx-live-electrical-wire-crackle-and-buzz-short-arcs-loop.mp3", loop: true, gain: 0.22, spatial: true, refDistance: 1, maxDistance: 12 } });
+  // dust hanging in the work lamp's cone; the room's own bed: the building settling around a sub-basement
+  sp("dust", { feetPosition: P(2.6, 0.2, 39.4), castShadow: false, fx: { script: DUST } });
+  sp("bed", { feetPosition: P(0, 1.5, 40), castShadow: false, audio: { clip: "cdn/ambience-flooded-hospital-sub-basement-air-handler-drone-distant-pipe-groans-loop.mp3", loop: true, gain: 0.18, spatial: true, refDistance: 8, maxDistance: 26 } });
 }
