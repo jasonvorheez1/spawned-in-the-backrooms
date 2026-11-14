@@ -58,6 +58,9 @@ function act(ctx, s, d) {
   heard(ctx, { clip: SND(r.bench ? 'hammer-nail-wood-build' : 'bandage-wrap-cloth'), position: ctx.self.feetPosition, volume: 0.6, maxDistance: 14 })
 }
 
+// needs drain is per-second math on dt: twice a second is plenty (was every frame, ~19 ms/tick in level169)
+export const updateSchedule = { every: { seconds: 0.5 } }
+
 export function update(ctx, dt) {
   const s = ctx.self.state, m = (ctx.self.session.craft ??= { h: null, t: null, acc: 0 })
   if (s.level == null) return
