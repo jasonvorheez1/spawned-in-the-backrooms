@@ -2,7 +2,7 @@
 import bpy, mathutils, os, json
 SRC="/workspace/stall/stalla_seg.glb"; OUT="/workspace/stall/parts"; os.makedirs(OUT,exist_ok=True); os.makedirs("/tmp/stallp",exist_ok=True)
 S=2.6  # seg file is ~0.92 tall; the stall stands ~2.4 m
-G={"stall_frame":[1,2,3,4,6,13,17,24],"stall_tarp":[0],"stall_jars":[7,11,12,14,15,16,18,20,21,22,23],
+G={"stall_frame":[1,2,3,4,6,13,17,24],"stall_tarp":[0],"stall_jars":[7,14,15,18,20],"stall_cans":[11,12,16,21,22,23],
    "stall_sack":[5],"stall_can":[8],"stall_lantern":[9],"stall_boot":[10],"stall_bit":[19]}
 rep={}
 for name,ids in G.items():
