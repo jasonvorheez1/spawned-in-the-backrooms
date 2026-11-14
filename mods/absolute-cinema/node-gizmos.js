@@ -50,6 +50,8 @@ export function onDestroy(objectApi) {
   sweep(objectApi, null);
 }
 
+// the gizmos this machine spawned, so a frame never scans the whole world for them (a 100 km query cost 57 ms a call)
+const MINE = new Set();
 export function update(objectApi, dt) {
   const s = objectApi.getState() || {};
 
@@ -70,6 +72,7 @@ export function update(objectApi, dt) {
     const rot = { yaw: n.yaw || 0, pitch: n.pitch || 0 };
 
     if (!objectApi.getObject(gid)) {
+      MINE.add(gid);
       objectApi.spawn(gid, {
         tags: ['cinema-gizmo'],
         realm: 'client',
@@ -94,5 +97,6 @@ export function update(objectApi, dt) {
     objectApi.setObjectProperty(gid, 'rotation', rot);
   }
 
-  sweep(objectApi, keep);
+  for (const gid of MINE) if (!keep[gid]) { try { objectApi.destroy(gid); } catch (e) {} MINE.delete(gid); }
+  if (!nodes.length && !MINE.size && objectApi.sleep) objectApi.sleep(0.5); // editor closed: nothing to draw, check twice a second
 }
