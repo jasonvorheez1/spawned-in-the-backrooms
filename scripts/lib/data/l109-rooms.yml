@@ -35,10 +35,10 @@ loot:
   pharmacy: { n: [2, 3], pool: [bandage, firstaid, almond, almond, bar] }
   cage:     { n: [4, 5], pool: [firstaid, firstaid, firstaid, bandage, almond, almond, "cash:40"] }
   hot:      { n: [3, 4], pool: [firstaid, firstaid, bandage, almond, battery] }
-supply:   { rows: [-3, 1.5, 6, 10.5], perRow: 3, bFrom: [8, 14], containers: [3, 6] }
-icu:      { rowB: [9, 21], firstA: -2, askewDeg: 28, askewM: 0.5 }
+supply:   { aisles: [-13, -10, -6, -2.5, 1, 4.5, 8, 11.5], perAisle: 9, aisleB: 8.5, containers: [3, 6], cageLock: "lockpick:50" } # 8 aisles x 9 shelves fill the floor (gavi pass: the old 12 shelves left 900 m2 empty)
+icu:      { rowB: [9, 21], firstA: -5.5, beds: [4, 5], askewDeg: 28, askewM: 0.5 }
 pharmacy: { counterB: 6, aisles: [11, 12.8, 14.6, 16.4, 18.2], perAisle: 5, aisleA: 1, cageLock: "lockpick:75", boxLock: "lockpick:50" }
-ward:     { rowB: [10, 20], as: [-3, 0.5, 4, 7.5, 11], lockersOpen: 3 }
+ward:     { rowB: [9, 17, 25], as: [-6, -2.6, 0.8, 4.2, 7.6, 11], lockersOpen: 3 }
 # biohazard: past the tape line the air is wrong. Sanity only, it never kills.
 hazard:   { lineB: 19, sanityPerSecond: 0.6, noticeEveryS: 20, notice: "The air back here tastes wrong. Your head swims.", light: "#b9ff86" }
 # departments: how each room type reads the moment its door opens. light = its 4 ceiling troffers (colour, intensity, reach m);

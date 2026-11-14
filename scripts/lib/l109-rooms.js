@@ -36,15 +36,19 @@ function part(K, p, a, b, yaw = 0, o = {}) { const R = K.R;
 function litter(K) { for (let i = 0; i < 4; i++) part(K, { part: "paper", r: 1.6, n: 14 }, -11 + K.r() * 22, 4 + K.r() * 22, K.r() * 360);
   for (let i = 0; i < 2; i++) put(K, "stackchair", -5 + K.r() * 16, 3 + K.r() * 4, K.r() * 360, { tip: true, solid: false }); }
 
-function supply(K) { const S = D.supply, dead = K.R.abandoned;
-  S.rows.forEach((a, i) => { for (let j = 0; j < S.perRow; j++) { const b = S.bFrom[i % 2] + j * 1.45;
-      if (dead && K.r() < 0.18) { put(K, "shelf", a + 0.9, b, 90, { tip: true, solid: false }); continue; }
-      put(K, "shelf", a, b, 90); if (K.r() < 0.6) put(K, "box", a, b + (K.r() - 0.5) * 0.7, K.r() * 30, { up: D.shelfBoxY, solid: false }); }
-    put(K, "boxes", a, S.bFrom[i % 2] + S.perRow * 1.45 + 0.3, K.r() * 40 - 20); });
-  const spots = [[-13.6, 6, 90], [-13.6, 12, 90], [-4.5, 26.5, 0], [3.5, 28.6, 0], [13.6, 20, -90], [13.6, 5, -90]], kinds = [["cagecrate", "Supply Crate"], ["cabinet", "Medical Cabinet"], ["lockbox", "Dressing Box"]];
-  const n = between(K, S.containers); for (let i = 0; i < n; i++) { const [a, b, y] = spots[i], [m, label] = kinds[i % 3]; stash(K, m, a, b, y, label, "supply"); }
-  put(K, "crashcart", -4.5, 5, 20 + K.r() * 40); put(K, "crashcart", 8.3, 21 + K.r() * 3, K.r() * 360); put(K, "gurney", -12, 22, 90 + (dead ? 25 : 0));
-  put(K, "boxes", 12.5, 27.5, 15); put(K, "boxes", -12.8, 27.8, -10); put(K, "drum", 13.5, 12, 0, { solid: true });
+function supply(K) { const S = D.supply, R = K.R, dead = R.abandoned; // a real stockroom: receiving bay by the door, numbered aisles filling the floor, a locked cage at the back (gavi pass, Nov 14)
+  S.aisles.forEach((a, i) => { for (let j = 0; j < S.perAisle; j++) { const b = S.aisleB + j * 1.45;
+      if (dead && K.r() < 0.15) { put(K, "shelf", a + 0.9, b, 90, { tip: true, solid: false }); continue; }
+      put(K, "shelf", a, b, 90); if (K.r() < 0.55) put(K, "box", a, b + (K.r() - 0.5) * 0.7, K.r() * 30, { up: D.shelfBoxY, solid: false }); }
+    if (i < S.aisles.length - 1) R.sp(`aisle${i}`, { feetPosition: R.at((a + S.aisles[i + 1]) / 2, S.aisleB - 0.6, 2.35), rotation: { yaw: R.yawIn + 180, pitch: 0, roll: 0 }, visibleRange: VR,
+      vector: `<svg viewBox='0 0 120 50' width='0.6m'><rect x='2' y='2' width='116' height='46' rx='4' fill='#1d4f8c' stroke='#e8ecef' stroke-width='3'/><text x='60' y='35' text-anchor='middle' font-family='sans-serif' font-size='26' font-weight='700' fill='#f2f4f5'>AISLE ${i + 1}</text></svg>` }); });
+  part(K, { part: "cage", w: 8, d: 5, h: 2.5 }, 9, 26.8, 180, { solid: true }); // the high-value cage
+  const spots = [[-14.3, 4.5, 90, "cabinet", "Medical Cabinet"], [-6, 28.8, 0, "lockbox", "Dressing Box"], [14.4, 13, -90, "cabinet", "Medical Cabinet"], [-12, 28.5, 0, "cagecrate", "Supply Crate"], [7, 28, 180, "cagecrate", "Supply Crate"], [11, 28.2, 180, "lockbox", "Dressing Box"]];
+  const n = between(K, S.containers); for (let i = 0; i < n; i++) { const [a, b, y, m, label] = spots[i]; stash(K, m, a, b, y, label, "supply", i >= 4 ? S.cageLock : undefined); }
+  put(K, "desk", 3, 3.2, 180); put(K, "chair", 3, 4.1, K.r() * 40 - 20, { solid: false }); stash(K, "filing", 5, 3.3, 180, "Stock Ledgers", "desk");
+  put(K, "crashcart", -4.5, 4 + K.r(), 20 + K.r() * 40); put(K, "crashcart", 9, 4.5, K.r() * 360); put(K, "gurney", 12.5, 2.4, dead ? 115 : 90);
+  for (const [a, b] of [[-13, 2], [-12.6, 3.3], [13.2, 6.2], [-2, 27.5], [-3.2, 28.6], [1, 28.4]]) put(K, "boxes", a, b, K.r() * 40 - 20);
+  put(K, "drum", -13.5, 24, 0); put(K, "drum", -12.8, 24.6, 30); put(K, "wheelchair", 0, 5.5, 160 + K.r() * 40);
 }
 function theatre(K) { const dead = K.R.abandoned, A = 2, B = 15;
   part(K, { part: "tiles", w: 12, d: 12 }, A, B); part(K, { part: "tilewall", w: 9, h: 1.9 }, 14.93, B, 90); part(K, { part: "tilewall", w: 9, h: 1.9 }, 14.9, B, -90);
@@ -56,7 +60,7 @@ function theatre(K) { const dead = K.R.abandoned, A = 2, B = 15;
   stash(K, "cabinet", -6, 29.7, 180, "Instrument Cabinet", "theatre"); stash(K, "cabinet", -4.6, 29.7, 180, "Instrument Cabinet", "theatre"); stash(K, "lockbox", 9, 29.6, 180, "Sterile Box", "theatre");
   put(K, "locker", -14.6, 10, 90); put(K, "locker", -14.6, 10.6, 90); put(K, "locker", -14.6, 11.2, 90); put(K, "gurney", -12.5, 20, 90 + (dead ? 40 : 0)); put(K, "wheelchair", -3.5, 5, 140); put(K, "wetsign", -2, 8.5, 20, { solid: false });
 }
-function icu(K) { const I = D.icu, dead = K.R.abandoned, per = 3 + (K.r() < 0.5 ? 1 : 0);
+function icu(K) { const I = D.icu, dead = K.R.abandoned, per = I.beds[0] + (K.r() < 0.5 ? 1 : 0);
   I.rowB.forEach((b, row) => { const out = row ? -1 : 1; // heads to the outer side of each row, feet to the middle aisle
     for (let i = 0; i < per; i++) { const a = I.firstA + i * 4.4, sk = dead ? (K.r() - 0.5) * 2 : 0;
       put(K, "gurney", a + sk * I.askewM, b + sk * I.askewM, 90 + sk * I.askewDeg);
@@ -93,7 +97,7 @@ function biohazard(K) { const H = D.hazard, R = K.R, dead = R.abandoned;
     light: { kind: "point", color: H.light, intensity: dead ? 0.9 : 1.6, distance: 13, shadow: { enabled: false } } });
 }
 function ward(K) { const W = D.ward, dead = K.R.abandoned;
-  W.rowB.forEach((b, row) => W.as.forEach((a) => { const sk = dead ? (K.r() - 0.5) * 1.6 : 0;
+  W.rowB.forEach((b, row) => W.as.forEach((a) => { row = row % 2; const sk = dead ? (K.r() - 0.5) * 1.6 : 0;
     put(K, "cot", a + sk * 0.4, b + sk * 0.3, 90 + sk * 30); if (K.r() < 0.5) part(K, { part: "ivstand" }, a + 0.7, b + (row ? 0.8 : -0.8), K.r() * 360, dead && K.r() < 0.4 ? { tip: true } : {}); }));
   for (let i = 0; i < 8; i++) { const b = 9 + i * 0.52; if (i < W.lockersOpen) stash(K, "locker", 14.65, b, -90, "Patient Locker", "bedside"); else put(K, "locker", 14.65, b, -90); }
   put(K, "desk", -1, 4.2, 180); put(K, "desk", 0.4, 4.2, 180); put(K, "chair", -0.3, 5.1, 0, { solid: false }); stash(K, "filing", 1.6, 4.4, 180, "Nurses' Files", "desk");
