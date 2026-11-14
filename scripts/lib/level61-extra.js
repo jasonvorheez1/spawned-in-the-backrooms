@@ -190,7 +190,7 @@ export function layExtra(ctx, { HW, HD, HH }) {
 
 // ---- the people: Facelings, the staff, the guards and the pickets
 const FACELINGS = [
-  { id: "l61-fc-clip", greet: "Welcome to Clippers!", at: [-21, -31.4], face: 180, acts: ["wipe", "serve", "groove", "drink"] },
+  { id: "l61-fc-clip", greet: "Welcome to Clippers!", at: [-21, -30.98], face: 180, acts: ["wipe", "serve", "groove", "drink"] },
   { id: "l61-fc-liq", greet: "Evening. Almond water?", at: [-12.75, -27], face: -90, acts: ["wipe", "serve", "drink", "groove"] },
   { id: "l61-fc-slice", greet: "Slice Palace! Hot ones just out.", at: [7, -30.9], face: 180, acts: ["serve", "eat", "nod", "wipe"], gives: "pizza,pizza,coke" },
   { id: "l61-fc-burger", greet: "Welcome to Burger Bop!", at: [21, -30.1], face: 180, acts: ["grill", "serve", "wipe", "groove"], gives: "burger,burger,coke" },
