@@ -1,3 +1,6 @@
+import { furrySpec } from "../../scripts/lib/critter-model.js";
+import { npcLook } from "../../scripts/lib/clothes.js";
+import { weaponBody } from "../../scripts/lib/weapon-look.js";
 // Level 109 "The Neon Hospital": the referee. Rolls the seed once (place.state.l109seed, kept with the room, so a reload finds
 // the same halls, the same open doors and the same things loose in them), streams corridor segments and auditoriums around
 // whoever is here, and keeps the containment books (scripts/lib/containment.js). Layout math: scripts/lib/level109.js.
@@ -145,6 +148,21 @@ export function tick(ctx) {
   if (!players.length) return;
   if (ctx.now() > (s.wandTickAt ?? 0)) { s.wandTickAt = ctx.now() + 3000; wandererTick(ctx); } // random encounters: frenzied armed wanderers (scripts/lib/l109-wanderers.js)
   if (!ctx.place.objects["b3-hall"]) buildB3(ctx, seed); // B3: the sealed sub-basement (scripts/lib/l109-b3.js), once per room
+  if (s.b3ArenaV !== 1) {
+    const replacements = [];
+    buildB3({ spawn: (id, spec) => {
+      if (id === "b3-armory" || /^b3-c(4|5|14|15|16|17|18)$/.test(id) || /^b3-cover[01]$/.test(id)) replacements.push([id, spec]);
+    } }, seed);
+    for (const id of ["b3-cf", "b3-cl", "b3-cr", "b3-cgate", "b3-post-4.45", "b3-post4.45", "b3-post-0.6", "b3-post0.6"]) if (ctx.getObject(id)) ctx.destroy(id);
+    for (const [id, spec] of replacements) { if (ctx.getObject(id)) ctx.destroy(id); ctx.spawn(id, spec); }
+    s.b3ArenaV = 1;
+  }
+  if (!s.b3BossDead && !ctx.getObject("b3-survivor")) {
+    const look = npcLook("b3-survivor", { species: "cat", sex: "m", topw: "jacket", top: "#554d3e", botw: "cargo", bottom: "#373b32", shoes: "boots" }, "survivor", 12, "fighter");
+    ctx.spawn("b3-survivor", { tags: ["npc", "l8-hostile", "l109-b3"], feetPosition: { x: B3O.x + 6, y: B3O.y + 0.1, z: B3O.z + 45 }, physics: "character", ...furrySpec(look),
+      behavior: ["scripts/humanoid-locomotion.js", "scripts/b3-survivor.js"], state: { name: "B3 survivor", hp: 260, maxHp: 260, attackOnSight: true, wear: look },
+      children: [{ id: "launcher", parent: "b3-survivor", attachment: { bone: "RightHand" }, ...weaponBody("m72") }] });
+  }
   if (!s.b3gun) { s.b3gun = 1; placeLauncher(ctx); } // the M72 lies in the cage once in the room's life
   if (!ctx.place.objects["b3-stairdoor"]) { const d = stairDoorAt(seed); ctx.spawn("b3-stairdoor", { audience: "all", tags: ["usable", "l109-b3"], feetPosition: { x: d.x + 0.12, y: 0, z: d.z - DOOR_W / 2 }, rotation: { yaw: yawB3(0, 1) }, physics: { body: "static", collider: "box" }, material: { pbr: true }, behavior: "scripts/b3-use.js",
     primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: "metal", part: "leaf", w: DOOR_W, h: DOOR_H, hingeSide: "left", swing: 1, seed: 5 } }, state: { kind: "b3-down", name: "Stairwell", verb: "Go Down", info: "B3" } });

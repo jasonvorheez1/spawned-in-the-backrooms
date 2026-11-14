@@ -22,7 +22,7 @@ export const ears = {
       if (s.kind === "b3-down" && !w.b3Seen) { w.b3Seen = 1; w.sub = { who: "", t: "Three flights down. The hum stops. Something below is breathing slower than you.", at: now, d: 4200 }; }
       return;
     }
-    if (s.kind === "b3-order") { w.sub = { who: "M.E.G. NOTICE", t: "Sub-level B3 closed. Cache abandoned. Morgue door stays shut. Do not open it. Do not knock on it. Order 109-C.", at: now, d: 5200 }; return; }
+    if (s.kind === "b3-order") { w.sub = { who: "M.E.G. NOTICE", t: "Sub-level B3 closed. Armed survivor holding the cache. Use cover and keep the morgue door shut. Order 109-C.", at: now, d: 5200 }; return; }
     if (s.kind === "b3-tape") {
       heard(ctx, { clip: TAPE, position: pos, volume: 0.6, maxDistance: 8 });
       const i = (s.next ?? 0) % TAPE_LINES.length; s.next = i + 1; w.sub = { ...TAPE_LINES[i], at: now };
