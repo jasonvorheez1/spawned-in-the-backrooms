@@ -3,6 +3,9 @@
 // thread and kept the guns. They run on the shared NPC brain (scripts/meg-agent.js) with nerve "frenzied" and the hostile
 // tag, like Level 8's wretched. The sim calls wandererTick(ctx) every few seconds; numbers below are Savi's picks.
 import { raycast } from "builtin/physics";
+import { SPAWN } from "./level109.js";
+const SAFE = 45; // no wanderer stands within this of the arrival/respawn point (Savi's pick: a fresh arrival is never ambushed)
+const nearSpawn = (p, r = SAFE) => Math.hypot(p.x - SPAWN.x, p.z - SPAWN.z) < r;
 const T = { every: 70000, jitter: 50000, first: 45000, maxAlive: 4, far: 90, minAhead: 14, maxAhead: 26, packMin: 1, packMax: 3, hp: 85, returnMs: 3600000 }; // Savi's picks
 const GUNS = ["pistol", "pistol", "revolver", "revolver", "shotgun", "smg", "coach_gun", "carbine", "lever_rifle"]; // weighted: sidearms common, carbines rare
 const NAMES = ["Hollis", "Marta", "Dev", "Pike", "Rosalind", "Teo", "Agnes", "Wim", "Corinne", "Sal", "Odette", "Bram", "Juniper", "Nils"];
@@ -27,6 +30,7 @@ function spot(ctx, p) {
     if (free < T.minAhead + 2) continue;
     const d = Math.min(free - 2, T.minAhead + ctx.random() * (T.maxAhead - T.minAhead));
     const at = { x: p.x + dx * d, y: p.y + 1.2, z: p.z + dz * d };
+    if (nearSpawn(at)) continue;
     const down = raycast(ctx, at, { x: 0, y: -1, z: 0 }, { distance: 3, physicsOnly: true, excludeTags: ["player"] });
     if (!down) continue;
     return { x: at.x, y: down.position.y + 0.15, z: at.z, back: { x: -dx, z: -dz }, side: { x: dz, z: dx } };
@@ -42,6 +46,7 @@ export function wandererTick(ctx) {
     const dead = w.state?.dead || (w.state?.hp ?? 1) <= 0;
     if (dead) { w.state.diedAt ??= now; if (now - w.state.diedAt > T.returnMs || d > 160) ctx.destroy(w.id); }
     else if (d > T.far) ctx.destroy(w.id);
+    else if (nearSpawn(w.feetPosition, 30)) ctx.destroy(w.id); // a chase that reaches the arrival point ends there: respawn is never a death loop
   }
   if (!ps.length) return;
   if (s.wandNext == null) { s.wandNext = now + T.first; return; }
@@ -49,7 +54,9 @@ export function wandererTick(ctx) {
   const living = live.filter((w) => !w.state?.dead && (w.state?.hp ?? 1) > 0).length;
   s.wandNext = now + T.every + ctx.random() * T.jitter;
   if (living >= T.maxAlive) return;
-  const p = ps[Math.floor(ctx.random() * ps.length)], at = spot(ctx, p.feetPosition);
+  const pool = ps.filter((q) => !nearSpawn(q.feetPosition, SAFE - 10) && !q.state?.dead && (q.state?.hp ?? 1) > 0); // a player still at the arrival point is left alone
+  if (!pool.length) { s.wandNext = now + 8000; return; }
+  const p = pool[Math.floor(ctx.random() * pool.length)], at = spot(ctx, p.feetPosition);
   if (!at) { s.wandNext = now + 8000; return; }
   const n = Math.min(T.maxAlive - living, T.packMin + Math.floor(ctx.random() * (T.packMax - T.packMin + 1)));
   s.wandSeq = (s.wandSeq ?? 0) + 1;
