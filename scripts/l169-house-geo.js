@@ -283,10 +283,11 @@ function bench(ctx) {
   blanket(ctx, 0.5, 0.45, -0.02, "oklch(0.78 0.09 30)", 2, 0.2, 0.15);
 }
 function door(ctx, P) {
-  const w = P.w ?? 1, hh = P.h ?? DH - 0.02;
-  paint(ctx, "oak", P.col ?? "oklch(0.92 0.05 70)"); bx(ctx, 0.005, 0.01, -0.022, w - 0.005, hh, 0.022, 0.008);
-  for (const s of [-1, 1]) for (const [ya, yb] of [[0.15, 0.95], [1.1, hh - 0.15]]) bx(ctx, 0.13, ya, s * 0.02, w - 0.13, yb, s * 0.031, 0.01);
-  paint(ctx, null, "oklch(0.75 0.08 85)"); ctx.metalness(0.8); for (const s of [-1, 1]) { rod(ctx, [w - 0.08, 1.0, s * 0.02], [w - 0.08, 1.0, s * 0.06], 0.012, 6); sphere(ctx, [w - 0.08, 1.0, s * 0.075], 0.03, 10); } ctx.metalness(null);
+  // zo: the leaf sits off the wall's centre line toward its swing, so an open leaf clears the jamb's face instead of slicing through it (z-fight)
+  const w = P.w ?? 1, hh = P.h ?? DH - 0.02, zo = P.zo ?? 0;
+  paint(ctx, "oak", P.col ?? "oklch(0.92 0.05 70)"); bx(ctx, 0.005, 0.01, zo - 0.022, w - 0.005, hh, zo + 0.022, 0.008);
+  for (const s of [-1, 1]) for (const [ya, yb] of [[0.15, 0.95], [1.1, hh - 0.15]]) bx(ctx, 0.13, ya, zo + s * 0.02, w - 0.13, yb, zo + s * 0.031, 0.01);
+  paint(ctx, null, "oklch(0.75 0.08 85)"); ctx.metalness(0.8); for (const s of [-1, 1]) { rod(ctx, [w - 0.08, 1.0, zo + s * 0.02], [w - 0.08, 1.0, zo + s * 0.06], 0.012, 6); sphere(ctx, [w - 0.08, 1.0, zo + s * 0.075], 0.03, 10); } ctx.metalness(null);
 }
 function lamp(ctx, P) {
   const d = P.drop ?? 0.6; paint(ctx, null, "oklch(0.25 0.01 60)"); rod(ctx, [0, 0.1, 0], [0, d, 0], 0.008, 5); rings(ctx, 0, 0, [[0.05, d - 0.03], [0.05, d], [0, d]], 8);

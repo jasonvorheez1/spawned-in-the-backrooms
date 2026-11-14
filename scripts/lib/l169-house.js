@@ -41,7 +41,7 @@ export function layHouse(ctx, put, L) {
   const wallZ = { front: r.porch[2], living: r.hall[3], kitchen: r.hall[3], bed1: r.hall[2], bed2: r.hall[2], bed3: r.hall[2], den: r.hall[2] };
   for (const [k, [x0, x1]] of Object.entries(b.doors)) {
     const swing = k === "front" || k === "living" || k === "kitchen" ? -1 : 1; // into the room it guards
-    part(`door-${k}`, { part: "door", w: x1 - x0, col: k === "front" ? "oklch(0.75 0.08 200)" : undefined }, x0, wallZ[k], F,
+    part(`door-${k}`, { part: "door", w: x1 - x0, zo: 0.035 * swing, col: k === "front" ? "oklch(0.75 0.08 200)" : undefined }, x0, wallZ[k], F,
       { tags: ["usable"], rotation: 0, behavior: "scripts/l169-door.js", state: { yaw0: 0, swing, open: false, name: k === "front" ? "Front door" : "Door", verb: "Open" } });
   }
   // beds: three bedrooms and two cots in the den, kits at their feet
