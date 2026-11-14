@@ -40,7 +40,7 @@ for f in sorted(glob.glob(SRC + "/**/*.nif", recursive=True)):
         if type(b).__name__ not in ("NiTriShape", "NiTriStrips"): continue
         if b.flags & 1: continue  # hidden
         g = b.data
-        if g is None or not g.num_vertices or not g.has_uv: continue
+        if g is None or not g.num_vertices or not len(g.uv_sets) or not len(g.uv_sets[0]): continue
         M = mat(b); p = parent.get(id(b))
         while p is not None: M = M @ mat(p); p = parent.get(id(p))
         V = np.array([[v.x, v.y, v.z, 1] for v in g.vertices]) @ M
