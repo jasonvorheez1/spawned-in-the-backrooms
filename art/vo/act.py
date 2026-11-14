@@ -4,7 +4,7 @@
 import yaml, glob, re, subprocess, sys, os, json
 from concurrent.futures import ThreadPoolExecutor
 CAST = yaml.safe_load(open('scripts/lib/data/voice-cast.yml'))
-OUT = 'scripts/lib/data/voice-acted.yml'
+OUT = 'scripts/lib/data/voice-acted2.yml'  # Nov 14 retake: the first pass laughed on every line (its prompt asked for laughs); voices.js prefers this table
 done = yaml.safe_load(open(OUT)) if os.path.exists(OUT) else {}
 done = done or {}
 import base64
@@ -72,7 +72,9 @@ if dry_run: sys.exit(0)
 def rec(j):
     k, who, key, line = j; v, tag = CAST[who]; mood = MOOD.get(key, '')
     # Shelly Nov 14: emotion in every voice: sighs, laughs, stutters, chuckles where the line carries them
-    delivery = ('grounded' if mood else 'natural conversational') + ', emotional and human, with a sigh, chuckle, laugh, breath or stutter where the line calls for it'
+    # Shelly Nov 14 "fix the voice lines theyre laughing": no laugh unless the line itself laughs
+    laughs = re.search(r'\b(ha){2,}|\bheh|laugh|chuckl|giggl', line, re.I)
+    delivery = (mood or 'natural conversational') + ', emotional and human, a sigh, breath or stutter only where the words call for it' + ('' if laughs else ', no laughing, no chuckling, no giggling, straight delivery of the exact words')
     txt = f"[{', '.join(part for part in (delivery, tag, mood) if part)}] {line}"
     for _ in range(3):
         r = subprocess.run(['spawn', 'voice', txt, '--voice', v, '--name', 'vo ' + who + ' ' + slug(line, 40)], capture_output=True, text=True)
