@@ -11,3 +11,309 @@ l169-ferry-plan:
   state: {at: 672770117, food: 8, line: Bottles are up top., name: Ferry, note: 0, open: true, openAt: 672770117, pose: point, saidAt: 672770117, took: {}, water: 8}
   tags: [l169-ferry]
   visibleRange: {max: 450}
+l169-friend-bed-1:
+  castShadow: true
+  feetPosition: {x: 10.6, y: {terrain: 0.25}, z: -505}
+  id: l169-friend-bed-1
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {col: oklch(0.62 0.09 30), part: roll}, script: scripts/l169-house-geo.js}
+  receiveShadow: true
+  visibleRange: {max: 450}
+l169-friend-bed-2:
+  castShadow: true
+  feetPosition: {x: 16.025, y: {terrain: 0.25}, z: -505}
+  id: l169-friend-bed-2
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {col: oklch(0.6 0.07 250), part: roll}, script: scripts/l169-house-geo.js}
+  receiveShadow: true
+  visibleRange: {max: 450}
+l169-friend-bed-3:
+  castShadow: true
+  feetPosition: {x: 16.875, y: {terrain: 0.25}, z: -505}
+  id: l169-friend-bed-3
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {col: oklch(0.65 0.08 140), part: roll}, script: scripts/l169-house-geo.js}
+  receiveShadow: true
+  visibleRange: {max: 450}
+l169-friend-bed-4:
+  castShadow: true
+  feetPosition: {x: 21.025000000000002, y: {terrain: 0.25}, z: -505}
+  id: l169-friend-bed-4
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {col: oklch(0.66 0.08 80), part: roll}, script: scripts/l169-house-geo.js}
+  receiveShadow: true
+  visibleRange: {max: 450}
+l169-friend-bed-5:
+  castShadow: true
+  feetPosition: {x: 11.45, y: {terrain: 0.25}, z: -505}
+  id: l169-friend-bed-5
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {col: oklch(0.62 0.07 320), part: roll}, script: scripts/l169-house-geo.js}
+  receiveShadow: true
+  visibleRange: {max: 450}
+l169-friend-bed-6:
+  castShadow: true
+  feetPosition: {x: 21.875000000000004, y: {terrain: 0.25}, z: -505}
+  id: l169-friend-bed-6
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {col: oklch(0.55 0.03 250), part: roll}, script: scripts/l169-house-geo.js}
+  receiveShadow: true
+  visibleRange: {max: 450}
+l169-friend-bed-7:
+  castShadow: true
+  feetPosition: {x: 12.299999999999999, y: {terrain: 0.25}, z: -505}
+  id: l169-friend-bed-7
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {col: oklch(0.6 0.1 20), part: roll}, script: scripts/l169-house-geo.js}
+  receiveShadow: true
+  visibleRange: {max: 450}
+l169-friend-bench:
+  feetPosition: {x: 21.6, y: {terrain: 0.25}, z: -490.9}
+  id: l169-friend-bench
+  model: /cdn/value.1c61a9601443996e02b2b539989094cb02237777223d710cc63c3b508e9ec32f.glb
+  rotation: {yaw: 0}
+  visibleRange: {max: 450}
+l169-friend-cart-axle:
+  feetPosition: {x: 14.04, y: {terrain: 0.5900000000000001}, z: -491.5}
+  id: l169-friend-cart-axle
+  material: {color: oklch(0.62 0.04 70), roughness: 1, texture: cdn/texture-sun-bleached-grey-desert-timber.png}
+  pivot: center
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 8, radiusBottom: 0.03, radiusTop: 0.03}
+  rotation: {pitch: 90}
+  visibleRange: {max: 450}
+l169-friend-cart-bed:
+  feetPosition: {x: 14.04, y: {terrain: 0.61}, z: -491.5}
+  id: l169-friend-cart-bed
+  material: {color: oklch(0.62 0.04 70), roughness: 1, texture: cdn/texture-sun-bleached-grey-desert-timber.png}
+  physics: static
+  primitive: {height: 0.3, kind: cylinder, radialSegments: 24, radiusBottom: 0.42, radiusTop: 0.5}
+  scale: {x: 1.25, y: 1, z: 0.8}
+  visibleRange: {max: 450}
+l169-friend-cart-crate:
+  feetPosition: {x: 14.29, y: {terrain: 0.91}, z: -491.5}
+  id: l169-friend-cart-crate
+  model: /cdn/value.c65f1bf3fb1305109ac73110e57b3a2db7ad85f0d15f4453f6cfdf6a959dc4e3.glb
+  rotation: {yaw: 14}
+  visibleRange: {max: 450}
+l169-friend-cart-sack:
+  feetPosition: {x: 13.84, y: {terrain: 0.87}, z: -491.5}
+  id: l169-friend-cart-sack
+  material: {color: oklch(0.7 0.06 80), roughness: 1, texture: cdn/texture-coarse-burlap-sackcloth.png}
+  primitive: {heightSegments: 10, kind: sphere, radius: 0.24, widthSegments: 14}
+  scale: {x: 1.2, y: 0.6, z: 1}
+  visibleRange: {max: 450}
+l169-friend-cart-shaft-1:
+  feetPosition: {x: 14.989999999999998, y: {terrain: 0.77}, z: -491.8}
+  id: l169-friend-cart-shaft-1
+  material: {color: oklch(0.62 0.04 70), roughness: 1, texture: cdn/texture-sun-bleached-grey-desert-timber.png}
+  pivot: center
+  primitive: {height: 1, kind: cylinder, radialSegments: 8, radiusBottom: 0.028, radiusTop: 0.022}
+  rotation: {roll: 82}
+  visibleRange: {max: 450}
+l169-friend-cart-shaft1:
+  feetPosition: {x: 14.989999999999998, y: {terrain: 0.77}, z: -491.2}
+  id: l169-friend-cart-shaft1
+  material: {color: oklch(0.62 0.04 70), roughness: 1, texture: cdn/texture-sun-bleached-grey-desert-timber.png}
+  pivot: center
+  primitive: {height: 1, kind: cylinder, radialSegments: 8, radiusBottom: 0.028, radiusTop: 0.022}
+  rotation: {roll: 82}
+  visibleRange: {max: 450}
+l169-friend-cart-spoke-10:
+  feetPosition: {x: 14.04, y: {terrain: 0.5900000000000001}, z: -491.98}
+  id: l169-friend-cart-spoke-10
+  material: {color: oklch(0.62 0.04 70), roughness: 1, texture: cdn/texture-sun-bleached-grey-desert-timber.png}
+  pivot: center
+  primitive: {height: 0.58, kind: cylinder, radialSegments: 6, radiusBottom: 0.015, radiusTop: 0.015}
+  rotation: {roll: 0}
+  visibleRange: {max: 450}
+l169-friend-cart-spoke-11:
+  feetPosition: {x: 14.04, y: {terrain: 0.5900000000000001}, z: -491.98}
+  id: l169-friend-cart-spoke-11
+  material: {color: oklch(0.62 0.04 70), roughness: 1, texture: cdn/texture-sun-bleached-grey-desert-timber.png}
+  pivot: center
+  primitive: {height: 0.58, kind: cylinder, radialSegments: 6, radiusBottom: 0.015, radiusTop: 0.015}
+  rotation: {roll: 60}
+  visibleRange: {max: 450}
+l169-friend-cart-spoke-12:
+  feetPosition: {x: 14.04, y: {terrain: 0.5900000000000001}, z: -491.98}
+  id: l169-friend-cart-spoke-12
+  material: {color: oklch(0.62 0.04 70), roughness: 1, texture: cdn/texture-sun-bleached-grey-desert-timber.png}
+  pivot: center
+  primitive: {height: 0.58, kind: cylinder, radialSegments: 6, radiusBottom: 0.015, radiusTop: 0.015}
+  rotation: {roll: 120}
+  visibleRange: {max: 450}
+l169-friend-cart-spoke10:
+  feetPosition: {x: 14.04, y: {terrain: 0.5900000000000001}, z: -491.02}
+  id: l169-friend-cart-spoke10
+  material: {color: oklch(0.62 0.04 70), roughness: 1, texture: cdn/texture-sun-bleached-grey-desert-timber.png}
+  pivot: center
+  primitive: {height: 0.58, kind: cylinder, radialSegments: 6, radiusBottom: 0.015, radiusTop: 0.015}
+  rotation: {roll: 0}
+  visibleRange: {max: 450}
+l169-friend-cart-spoke11:
+  feetPosition: {x: 14.04, y: {terrain: 0.5900000000000001}, z: -491.02}
+  id: l169-friend-cart-spoke11
+  material: {color: oklch(0.62 0.04 70), roughness: 1, texture: cdn/texture-sun-bleached-grey-desert-timber.png}
+  pivot: center
+  primitive: {height: 0.58, kind: cylinder, radialSegments: 6, radiusBottom: 0.015, radiusTop: 0.015}
+  rotation: {roll: 60}
+  visibleRange: {max: 450}
+l169-friend-cart-spoke12:
+  feetPosition: {x: 14.04, y: {terrain: 0.5900000000000001}, z: -491.02}
+  id: l169-friend-cart-spoke12
+  material: {color: oklch(0.62 0.04 70), roughness: 1, texture: cdn/texture-sun-bleached-grey-desert-timber.png}
+  pivot: center
+  primitive: {height: 0.58, kind: cylinder, radialSegments: 6, radiusBottom: 0.015, radiusTop: 0.015}
+  rotation: {roll: 120}
+  visibleRange: {max: 450}
+l169-friend-cart-wheel-1:
+  feetPosition: {x: 14.04, y: {terrain: 0.5900000000000001}, z: -491.98}
+  id: l169-friend-cart-wheel-1
+  material: {color: oklch(0.62 0.04 70), roughness: 1, texture: cdn/texture-sun-bleached-grey-desert-timber.png}
+  primitive: {kind: torus, radialSegments: 8, radius: 0.3, tube: 0.04, tubularSegments: 24}
+  visibleRange: {max: 450}
+l169-friend-cart-wheel1:
+  feetPosition: {x: 14.04, y: {terrain: 0.5900000000000001}, z: -491.02}
+  id: l169-friend-cart-wheel1
+  material: {color: oklch(0.62 0.04 70), roughness: 1, texture: cdn/texture-sun-bleached-grey-desert-timber.png}
+  primitive: {kind: torus, radialSegments: 8, radius: 0.3, tube: 0.04, tubularSegments: 24}
+  visibleRange: {max: 450}
+l169-friend-chair-1:
+  feetPosition: {x: 21.15, y: {terrain: 0.25}, z: -496.85020000000003}
+  id: l169-friend-chair-1
+  model: /cdn/value.1c61a9601443996e02b2b539989094cb02237777223d710cc63c3b508e9ec32f.glb
+  rotation: {yaw: -180}
+  visibleRange: {max: 450}
+l169-friend-chair-2:
+  feetPosition: {x: 22, y: {terrain: 0.25}, z: -496.85020000000003}
+  id: l169-friend-chair-2
+  model: /cdn/value.1c61a9601443996e02b2b539989094cb02237777223d710cc63c3b508e9ec32f.glb
+  rotation: {yaw: -180}
+  visibleRange: {max: 450}
+l169-friend-chair-3:
+  feetPosition: {x: 22.85, y: {terrain: 0.25}, z: -496.85020000000003}
+  id: l169-friend-chair-3
+  model: /cdn/value.1c61a9601443996e02b2b539989094cb02237777223d710cc63c3b508e9ec32f.glb
+  rotation: {yaw: -180}
+  visibleRange: {max: 450}
+l169-friend-chair-4:
+  feetPosition: {x: 21.15, y: {terrain: 0.25}, z: -495.1502}
+  id: l169-friend-chair-4
+  model: /cdn/value.1c61a9601443996e02b2b539989094cb02237777223d710cc63c3b508e9ec32f.glb
+  rotation: {yaw: 0}
+  visibleRange: {max: 450}
+l169-friend-chair-5:
+  feetPosition: {x: 22, y: {terrain: 0.25}, z: -495.1502}
+  id: l169-friend-chair-5
+  model: /cdn/value.1c61a9601443996e02b2b539989094cb02237777223d710cc63c3b508e9ec32f.glb
+  rotation: {yaw: 0}
+  visibleRange: {max: 450}
+l169-friend-chair-6:
+  feetPosition: {x: 22.85, y: {terrain: 0.25}, z: -495.1502}
+  id: l169-friend-chair-6
+  model: /cdn/value.1c61a9601443996e02b2b539989094cb02237777223d710cc63c3b508e9ec32f.glb
+  rotation: {yaw: 0}
+  visibleRange: {max: 450}
+l169-friend-chair-7:
+  feetPosition: {x: 23.68, y: {terrain: 0.25}, z: -496.0002}
+  id: l169-friend-chair-7
+  model: /cdn/value.1c61a9601443996e02b2b539989094cb02237777223d710cc63c3b508e9ec32f.glb
+  rotation: {yaw: 90}
+  visibleRange: {max: 450}
+l169-friend-crate0:
+  feetPosition: {x: 27.4, y: {terrain: 0.25}, z: -506.45}
+  id: l169-friend-crate0
+  model: /cdn/value.c65f1bf3fb1305109ac73110e57b3a2db7ad85f0d15f4453f6cfdf6a959dc4e3.glb
+  rotation: {yaw: -8}
+  visibleRange: {max: 450}
+l169-friend-crate1:
+  feetPosition: {x: 26.95, y: {terrain: 0.25}, z: -506.45}
+  id: l169-friend-crate1
+  model: /cdn/value.c65f1bf3fb1305109ac73110e57b3a2db7ad85f0d15f4453f6cfdf6a959dc4e3.glb
+  rotation: {yaw: -1}
+  visibleRange: {max: 450}
+l169-friend-crate2:
+  feetPosition: {x: 27.4, y: {terrain: 0.52}, z: -506.45}
+  id: l169-friend-crate2
+  model: /cdn/value.c65f1bf3fb1305109ac73110e57b3a2db7ad85f0d15f4453f6cfdf6a959dc4e3.glb
+  rotation: {yaw: 6}
+  visibleRange: {max: 450}
+l169-friend-crate3:
+  feetPosition: {x: 26.95, y: {terrain: 0.52}, z: -506.45}
+  id: l169-friend-crate3
+  model: /cdn/value.c65f1bf3fb1305109ac73110e57b3a2db7ad85f0d15f4453f6cfdf6a959dc4e3.glb
+  rotation: {yaw: 13}
+  visibleRange: {max: 450}
+l169-friend-denlamp:
+  feetPosition: {x: 25.5, y: {terrain: 2.35}, z: -504.69}
+  id: l169-friend-denlamp
+  light: {color: oklch(0.85 0.09 75), distance: 7, intensity: 1.6, kind: point}
+l169-friend-map:
+  feetPosition: {x: 25.5, y: {terrain: 1.025}, z: -504.69}
+  id: l169-friend-map
+  material: {roughness: 1, side: double, texture: cdn/texture-hand-drawn-desert-route-map-on-old-paper.png}
+  primitive: {kind: circle, radius: 0.4, segments: 28}
+  rotation: {pitch: -90}
+  visibleRange: {max: 450}
+l169-friend-maptable:
+  feetPosition: {x: 25.5, y: {terrain: 0.25}, z: -504.69}
+  id: l169-friend-maptable
+  model: /cdn/value.e9f7840a7c258a02a184a57ee3e04ad1548e3915df342de6dde49271013f4640.glb
+  physics: static
+  visibleRange: {max: 450}
+l169-friend-pot:
+  castShadow: true
+  feetPosition: {x: 20.32, y: {terrain: 1.1800000000000002}, z: -499.40999999999997}
+  id: l169-friend-pot
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {part: pot}, script: scripts/l169-house-geo.js}
+  receiveShadow: true
+  visibleRange: {max: 450}
+l169-friend-stove:
+  feetPosition: {x: 20.5, y: {terrain: 0.25}, z: -499.51}
+  id: l169-friend-stove
+  model: /cdn/value.ebd02a7f9361940a5f20af8cee9920ead70988d5cef41f15fde3c2d4803bd4fd.glb
+  physics: static
+  visibleRange: {max: 450}
+l169-slate:
+  feetPosition: {x: 19.439999999999998, y: {terrain: 1.3}, z: -492.925}
+  id: l169-slate
+  material: {color: oklch(0.3 0.01 250), roughness: 1, texture: cdn/texture-dusty-black-chalkboard-slate.png}
+  primitive: {depth: 0.03, height: 0.66, kind: box, width: 1}
+  rotation: {yaw: 180}
+  state: {note: DAY. Hour 9 of 24. Stay in., prompt: Read the slate, sub: sunset in 16 h, text: DAY. Hour 9 of 24. Stay in.}
+  tags: [interact]
+  ui: "<div face=\"front\" width=\"1.0m\" style=\"font:700 78px 'Comic Sans MS',cursive;color:#eeeadc;padding:60px 40px;text-align:center;line-height:1.3\">{{ state.text }}<div style=\"font-size:44px;font-weight:400;opacity:.8;margin-top:30px\">{{ state.sub }}</div></div>"
+  visibleRange: {max: 450}
+l169-slate-frame-b:
+  feetPosition: {x: 19.439999999999998, y: {terrain: 1.3}, z: -492.925}
+  id: l169-slate-frame-b
+  material: {color: oklch(0.62 0.04 70), roughness: 1, texture: cdn/texture-sun-bleached-grey-desert-timber.png}
+  pivot: center
+  primitive: {height: 1.08, kind: cylinder, radialSegments: 8, radiusBottom: 0.03, radiusTop: 0.03}
+  rotation: {roll: 90}
+  visibleRange: {max: 450}
+l169-slate-frame-l:
+  feetPosition: {x: 18.919999999999998, y: {terrain: 1.6300000000000001}, z: -492.925}
+  id: l169-slate-frame-l
+  material: {color: oklch(0.62 0.04 70), roughness: 1, texture: cdn/texture-sun-bleached-grey-desert-timber.png}
+  pivot: center
+  primitive: {height: 0.72, kind: cylinder, radialSegments: 8, radiusBottom: 0.03, radiusTop: 0.03}
+  rotation: {roll: 0}
+  visibleRange: {max: 450}
+l169-slate-frame-r:
+  feetPosition: {x: 19.959999999999997, y: {terrain: 1.6300000000000001}, z: -492.925}
+  id: l169-slate-frame-r
+  material: {color: oklch(0.62 0.04 70), roughness: 1, texture: cdn/texture-sun-bleached-grey-desert-timber.png}
+  pivot: center
+  primitive: {height: 0.72, kind: cylinder, radialSegments: 8, radiusBottom: 0.03, radiusTop: 0.03}
+  rotation: {roll: 0}
+  visibleRange: {max: 450}
+l169-slate-frame-t:
+  feetPosition: {x: 19.439999999999998, y: {terrain: 1.96}, z: -492.925}
+  id: l169-slate-frame-t
+  material: {color: oklch(0.62 0.04 70), roughness: 1, texture: cdn/texture-sun-bleached-grey-desert-timber.png}
+  pivot: center
+  primitive: {height: 1.08, kind: cylinder, radialSegments: 8, radiusBottom: 0.03, radiusTop: 0.03}
+  rotation: {roll: 90}
+  visibleRange: {max: 450}
