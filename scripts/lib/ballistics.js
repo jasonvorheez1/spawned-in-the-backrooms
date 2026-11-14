@@ -69,11 +69,30 @@ export function fire(ctx, s, wp, w, eye, fwd, pitch, base) {
   const zero = (0.5 * G * P.zero) / (P.mv * P.mv) // the sights sit above the bore: it points a hair up so the drop meets the aim at `zero`
   const per = (wp.pellets ? (wp.pelletMul ?? 1.5) / n : 1) * base
   const hits = new Map(), bullets = []; let world = null
+  // balloons are thin skins a ray can miss: each is a sphere tested by hand (Shelly Nov 14: "impossible to pop a balloon with bullets")
+  const balls = []
+  for (const r of ctx.query({ anyTags: ['tied-balloon', 'l26-balloon'], radius: (wp.range ?? 30) * 1.5, center: eye })) {
+    const o = ctx.getObject(r.id); if (!o) continue
+    if (r.tags?.includes('l26-balloon')) { if ((o.state?.hp ?? 1) > 0) balls.push({ c: { x: o.feetPosition.x, y: o.feetPosition.y + 1.5, z: o.feetPosition.z }, r: 0.38, foe: o }); continue }
+    const w = o.worldFeetPosition ?? o.feetPosition, root = o.parent?.id ? ctx.getObject(o.parent.id) : null
+    if (root) balls.push({ c: { x: w.x, y: w.y + 0.3, z: w.z }, r: 0.3, root })
+  }
   for (let i = 0; i < n; i++) {
     const th = Math.tan(spread * RAD) * Math.sqrt(ctx.random()), ph = ctx.random() * 2 * Math.PI
     const d = norm({ x: dir0.x + right.x * (th * Math.cos(ph) + bx) + up.x * (th * Math.sin(ph) + by), y: dir0.y + right.y * (th * Math.cos(ph) + bx) + up.y * (th * Math.sin(ph) + by) + zero, z: dir0.z + right.z * (th * Math.cos(ph) + bx) + up.z * (th * Math.sin(ph) + by) })
     const f = fly(ctx, eye, d, wp, [ctx.self.id]), b = { d, pts: f.pts, hit: f.hit, travelled: f.travelled, t: f.t }
     bullets.push(b)
+    if (balls.length) { // the nearest balloon this pellet passes through before whatever it hit
+      const lim = f.hit ? Math.hypot(f.hit.position.x - eye.x, f.hit.position.y - eye.y, f.hit.position.z - eye.z) : (wp.range ?? 30) * 1.5
+      let best = null, bt = lim
+      for (const B of balls) { const ox = B.c.x - eye.x, oy = B.c.y - eye.y, oz = B.c.z - eye.z, t = ox * d.x + oy * d.y + oz * d.z; if (t < 0 || t > bt) continue; const q = ox * ox + oy * oy + oz * oz - t * t; if (q <= B.r * B.r) { best = B; bt = t } }
+      if (best) {
+        b.hit = { position: { x: eye.x + d.x * bt, y: eye.y + d.y * bt, z: eye.z + d.z * bt } }
+        if (best.foe) { const r = hits.get(best.foe.id) ?? { m: best.foe, dmg: 0, head: false, n: 0 }; r.dmg += per; r.n++; hits.set(best.foe.id, r) }
+        else { const r = hits.get(best.root.id) ?? { m: best.root, dmg: 0, head: false, n: 0 }; r.pop = true; hits.set(best.root.id, r) }
+        continue
+      }
+    }
     if (!f.hit) continue
     const e = f.hit.id ? rootOf(ctx, f.hit.id) : null
     const energy = Math.max(0.25, Math.min(1, (f.v / P.mv) ** 2)) * Math.max(0.35, 1 - Math.max(0, f.travelled - (wp.range ?? 30)) / ((wp.range ?? 30) * 0.5)) // a slowed bullet, or one past its range, hits softer
