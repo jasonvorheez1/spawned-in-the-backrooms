@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7959,
-  "updatedAt": "2026-11-14T12:25:48.393Z",
-  "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored lore destinations, with player.state carrying progression, gear, quests, faction standing and resume location. Shared player behaviors and generated place simulations connect authored spaces, while dialogue and quest handlers drive story arcs including Chapter 2's Level ! rescue and Safe Alcove conclusion.",
+  "basedOnSpecVersion": 7968,
+  "updatedAt": "2026-11-14T12:28:05.526Z",
+  "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored lore destinations, with player.state carrying progression, gear, quests, faction standing and resume location. Shared player behaviors and generated place simulations connect authored spaces; Chapter 2 now culminates in the Level ! chase, Phoebe's rescue and the Safe Alcove handoff.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes, anomalies and generated dressing; cells/objects.scene also places the invisible Bulk Data Manager object.",
     "places/bonus (3D) - vaporwave mall with shops, simulated staff, arcade, homes and salon; authored placements live in cells/.",
-    "places/thehub (3D) - tunnel crossroads, keyed destinations, Doorstep Carpet and Camp Amber crews; the west-end Level 1 door and its return marker live in x0z0.scene.",
+    "places/thehub (3D) - tunnel crossroads, keyed destinations, Doorstep Carpet and Camp Amber crews; Level 1 door and return marker live in x0z0.scene.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office, supplies, HALOGEN machine, encounters and story beats.",
     "places/level1 (3D) - far-west Level 1 halls and M.E.G. camp; sim builds camp and adds the Hub-arrival marker beside its return door.",
     "places/level9 + places/level11 (3D) - The Suburbs seeded streets and fitted houses; Level 11's Sedco Spotlight/city, Base Beta and generated quest locations.",
     "places/level61 (3D, The Snackrooms) - food court and M.E.G. checkpoint with storefronts, simulated staff/services and Clippers cocktail lounge.",
-    "places/level3 + places/level4 + places/level6 (3D) - Guild survey plate, vending-drop survey route and Relay 6-A quest endpoints."
+    "places/levelrun (3D) - Level ! chase corridor, Agility obstacles and horde pursuit, collapsing-floor rescue cutscene, Safe Alcove and post-rescue Phoebe."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input actions.",
@@ -20,8 +20,8 @@
     "scripts/main-menu.js + main-menu-ui.js + intake/tutorial scripts + scripts/ui.js - title/settings/pause, character creation and arrival; main-menu drives tutorial beats and lifecycle, tutorial-ui and composed HUD/menus.",
     "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, wake/resume, aiming, third-person view and HUD zone naming.",
     "places/main/sim.js + scripts/lib/maze.js + xmas-room.js + level0-moments.js - Level 0 layout and deterministic dressing/encounters.",
-    "places/thehub/sim.js + scripts/lib/thehub.js + hub-people.js + hub-dress.js + scripts/thehub-geo.js - Hub topology, doors, dressing and crew; Phoebe's Hub NPC uses scripts/lib/phoebe.js and scripts/phoebe-npc.js.",
-    "places/level1/sim.js + scripts/level-door.js + scripts/hub-door.js - Level 1 generated camp/arrival marker and threshold routing to/from the Hub.",
+    "places/thehub/sim.js + scripts/lib/thehub.js + hub-people.js + hub-dress.js + scripts/thehub-geo.js - Hub topology, doors, dressing and crew; Phoebe uses scripts/lib/phoebe.js and scripts/phoebe-npc.js.",
+    "places/levelrun/sim.js + scripts/lib/levelrun-mechanics.js + scripts/lib/levelrun-cut.js - chase geometry/triggers/horde, Agility mechanics and intro/rescue cinematics into the Safe Alcove.",
     "scripts/lib/level61-quests.js + scripts/talk.js + scripts/quest-marker.js - Level 6.1 cross-level quest definitions, dialogue handling and journal-marker registration."
   ],
   "shared": [
@@ -31,8 +31,8 @@
     "scripts/lib/ui-kit.js + scripts/lib/ui-theme.js - escaping, preference normalization/attributes, Escape handling, empty states, notice toasts and shared dialogue styling.",
     "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/lib/level3-hatch.js + scripts/lib/seat.js - parametric doors/motion, paired Level 3 hatches and tagged-seat placement/occupancy helpers.",
     "scripts/lib/data/l9-houses.yml + l9-props.yml + scripts/lib/level9.js - Level 9 house/model/door and prop catalogs plus pure seed-driven layout; consumed by places/level9/sim.js and zone lookup.",
-    "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js - fitted furniture catalog and common build placement/reconstruction; dining_set composes a table with two offset dining_chair children.",
-    "scripts/lib/skill-check.js + scripts/lib/npc-talk.js + scripts/lib/dialogue.js + scripts/lib/data/dlg-*.yml + npc-voices.yml - authored NPC choices/replies, checks and voice mappings reused by talk and quest handlers."
+    "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js - fitted furniture catalog and common build placement/reconstruction; dining_set composes a table with two separately fitted chairs.",
+    "scripts/lib/phoebe.js - common Phoebe look, model selection, spawn and dressPhoebe fitting for Hub, Level ! and cutscene appearances; dialogue/check helpers remain shared through scripts/lib/dialogue.js and data/dlg-*.yml."
   ],
   "notableExports": [
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/screen.js - WRIST, screen, hasHalogen, canOpen, openWrist; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
@@ -42,7 +42,7 @@
     "scripts/lib/level70-quest.js + scripts/terrain70.js - Level 70 quest, terrain and civic/life layer exports.",
     "scripts/lib/errands.js - ERRANDS, held, errandText, offerErrand, payErrand, tryAlt, deliberateErrands, turnInErrand, errandTick; scripts/lib/rep.js - faction and reputation helpers.",
     "scripts/lib/skill-check.js - SKILL_NAMES, parseCheck, checkOdds, formatCheckBanner, resolveCheck; scripts/lib/level61-quests.js - QUESTS61 and quest handlers; scripts/lib/dina-quest.js - TRAIL and trail helpers.",
-    "scripts/lib/thehub.js - PLACE, door topology and coordinate helpers; scripts/lib/hub-quest.js - hubChoices/handleDialogueQuestHub; scripts/lib/hub-route.js - ROUTE/hubRoute; scripts/lib/hub-people.js - CREW_IDS/layThings/keepCrew/keymaster."
+    "scripts/lib/levelrun-mechanics.js - CORRIDOR, OBSTACLES, agilityProfile, hitObstacle, stepHordeZ; scripts/lib/levelrun-cut.js - LRUN_INTRO_LEN, LRUN_RESCUE_LEN, PHO_RESCUE_LINE, startIntroCut, startRescueCut, finishRescueToAlcove, lrunCutTick, lrunUi; scripts/lib/phoebe.js - PHOEBE_LOOK, PHOEBE_HUMAN, phoebeSpec, dressPhoebe, spawnPhoebe, dropPhoebe."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved place/position, tapes, currency, karma/rep and homeKeep.",
@@ -50,32 +50,32 @@
     "scripts/critter.js - per-player look and creator/wardrobe/salon state; scripts/lib/seat.js - player.state.sit seating lifecycle; scripts/lib/body3.js - session.ready3 and transient melee-carry pose.",
     "scripts/lib/quests.js + scripts/lib/dina-quest.js - quests/qtrack/qdone/claimed; Dina trail keys, stages, diary/cut/clue fields and legacy migration.",
     "scripts/lib/errands.js - player.state.errands records, errHints and errand journal entries; completion updates currency, payout, reputation and hints; field-errands.js + hub-errands.js own confirmation maps.",
-    "scripts/lib/level31-quest.js + level70-quest.js + remodel-quest.js + level11-quests.js + level61-quests.js + ch2-quest.js - level-specific quest stages, routes and rewards; Chapter 2 owns ch2Q/ch2Done, clues/stance/unlock keys, Phoebe rescue/reaction fields, and the quiet ch3Ready handoff.",
+    "scripts/lib/level31-quest.js + level70-quest.js + remodel-quest.js + level11-quests.js + level61-quests.js + ch2-quest.js - level-specific quest stages/routes/rewards; Chapter 2 owns ch2Q/ch2Done, clues/stance/unlock keys and Phoebe rescue flags.",
     "scripts/lib/level61-quests.js - l61BeeQ/l61SealQ/l61GuildQ/l61SalQ stages and clue/survey/ruling/delivery/outcome flags; level11-quests.js owns craneQ and craneWaybill/craneGuildClear.",
-    "scripts/lib/rep.js - faction rep, karma and repHistory; scripts/player.js owns invFilter/invSort and Level ! session fields; scripts/quest-marker.js owns qfilter/qview; scripts/lib/tutorial.js owns player.state.tut."
+    "scripts/lib/rep.js - faction rep, karma and repHistory; scripts/player.js owns invFilter/invSort and Level ! session/cut/rescue fields; scripts/quest-marker.js owns qfilter/qview; scripts/lib/tutorial.js owns player.state.tut."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest and CCTV behaviors; scripts/interact.js handles tagged-seat selection and seatTick.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 tick3 uses camera aim + combat-anims.yml for third-person pose; zoneHere feeds maze/authored zone lookup.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; periodic saves exclude intake, bonus and tutorial0.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; toHub/toSolo cross to mall/home and maintain roomHop/save-place, separate from places/thehub; fresh visit → main-menu.js.",
-    "scripts/main-menu-ui.js settings → scripts/main-menu.js mmenu handler → player.state.uiPrefs; scripts/ui.js wraps composed UI with ui-kit preference attributes; menu actions update menu, inventory filter/sort and journal state.",
+    "scripts/main-menu-ui.js settings → scripts/main-menu.js mmenu handler → player.state.uiPrefs; scripts/ui.js wraps composed UI with ui-kit preference attributes; menu actions update inventory filters/sorts and journal state.",
     "scripts/player.js writes player.state.notice and scripts/stats.js forwards fresh notices into feed → scripts/ui.js renders ui-kit noticeToast; talk-ui and other panels use shared escaping and ui-theme styling.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js offers place-matched jobs; carried items/kills/world events advance errands → quests.js journal, player.state.errands/qtrack and payouts.",
-    "scripts/talk.js → dialogue.js rootChoices and quest handlers; authored dlg-*.yml dialogue and voiceKey mappings feed skill checks and journal/feed/reputation helpers; ch2-quest.js supplies Safe Alcove stance choices from REPLIES and handles Phoebe's Chapter 2 conclusion.",
-    "scripts/lib/dina-quest.js learns trail clues from talk, diary/cut, HALOGEN tapes and Dina's camp; trailStep/syncHome writes The Way Back journal step and Level 3/5/11 marker targets → scripts/quest-marker.js reads active quest markers.",
-    "scripts/main-menu.js arrival → tutStart; update/input call tutTick/tutInput → player.state.tut and tutorial-ui.js card; places/tutorial0/sim.js lays props; tut0-cut.js runs beats and Room D's HALOGEN beat calls dinaLead then advances tutorial.",
+    "scripts/talk.js → dialogue.js rootChoices and quest handlers; authored dlg-*.yml dialogue and voiceKey mappings feed skill checks and journal/feed/reputation helpers; ch2-quest.js supplies Safe Alcove stance choices and completion.",
+    "scripts/lib/dina-quest.js learns trail clues from talk, diary/cut, HALOGEN tapes and Dina's camp; trailStep/syncHome writes The Way Back journal step and Level 3/5/11 marker targets → scripts/quest-marker.js.",
+    "scripts/main-menu.js arrival → tutStart; update/input call tutTick/tutInput → player.state.tut and tutorial-ui.js card; tutorial0 sim lays props, while tut0-cut.js runs beats and Dina's HALOGEN handoff.",
     "scripts/lib/level61-quests.js stages → setStep61/finishQuest61 → shared quest journal, notice/feed, payout and reputation; l61-use.js and Level 3/6 use handlers feed stage changes.",
-    "Hub NPC interaction → hub-quest.js choices/handler update Hub quest/key flags; hub-to-l1 and hub-door thresholds → scripts/level-door.js/scripts/hub-door.js → level1#l1-from-hub (marker placed by level1/sim.js); l1-to-hub returns to thehub."
+    "Level ! player input/health and places/levelrun/sim.js triggers → levelrun-mechanics.js chase/obstacles and levelrun-cut.js intro/rescue; rescue sets lrunRescued and moves player to Safe Alcove, where sim spawns shared-body/talkable Phoebe → ch2-quest.js → quest journal and Chapter 2 completion."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; venue menus and staff vary by shop; Level 6.1 tables use lightweight separately placed fixtures.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; a dining_set composes a table with two separately fitted chairs.",
     "art/cigs/build.py + art/fnv/build.py and NIF converters → scripts/lib/data/cigs.yml + fnv-props.yml - creator assets become real-scale GLBs; catalogs supply decoration and fitted furniture/props across Levels 5, 9, 11 and 61.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
-    "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl, tight ceilings/tunnel mouths trigger automatic crawl; Level ! adds context-specific behavior.",
+    "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl, tight ceilings/tunnel mouths trigger automatic crawl; Level ! adds Agility chase/obstacle rules.",
     "Level 01/Zenith and Level 1 geometry builders - authored station and car park/service geometry; corridor materials, pipes, fixtures and lights vary deterministically per cell.",
-    "scripts/meg-agent.js + npc-temper.js + forgive.js + critter-model.js - NPC reactions, cover, barks, movement/fighting and companion following; faction, role, outfit and assault incidents vary by NPC; Hub Phoebe uses phoebe-npc.js and phoebe.js, while story Phoebe's cat outfit is fitted/generated by art/phoebe-outfit/build.py and attached via phoebe.js.",
+    "scripts/meg-agent.js + npc-temper.js + forgive.js + critter-model.js - NPC reactions, cover, barks, movement/fighting and companion following vary by faction/role/outfit; Hub and story Phoebes share scripts/lib/phoebe.js dressPhoebe and the fitted outfit model.",
     "scripts/lib/level61-quests.js + level11-quests.js + ch2-quest.js + talk/use handlers - quest stages and replies reuse shared journal/rep/feed helpers and skill-check resolution; scripts/lib/tutorial.js + tut0-cut.js coordinate prompts with timed beats."
   ],
   "probableOrphans": [
@@ -87,10 +87,10 @@
   ],
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
-    "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together when changing the shell or thresholds.",
-    "The Hub's place.state.hubV gates shell, door and plaque rebuilds; current v9 refreshes modeled doors and plaques for t10-a3 becoming keyed, so new geometry/state migrations must advance the version.",
+    "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together; place.state.hubV gates shell/door/plaque rebuilds (currently v9).",
     "Hub keyed doors consume the matching player.state.hubKeys key; t10-a3 maps to level11 and hubTenthCrossed is set only after a qualifying clue and successful crossing. The Level 1 route is a separate threshold pair.",
-    "Hub Phoebe's generated body/outfit is rebuilt by spawnHubPhoebe's phoebeV; current version is 7, and the fitted outfit supplies its own hair/skirt so cw-hair/cw-botw children are filtered out.",
-    "Chapter 2's Safe Alcove choices and completion live in scripts/lib/ch2-quest.js; completing it sets phoebeRescued/lrunRescued and a quiet ch3Ready handoff, leaving ch3Q to Chapter 3. The story Phoebe outfit asset is a separate GLB generated by art/phoebe-outfit/build.py and attached by scripts/lib/phoebe.js."
+    "Hub Phoebe remains rebuilt by spawnHubPhoebe's phoebeV (currently 7); scripts/lib/phoebe.js dressPhoebe now supplies the shared cat body/head/build/bones/bust/jiggle to Hub and cutscene Phoebes. The fitted GLB supplies its own hair/skirt, so cw-hair/cw-botw children stay filtered; art/phoebe-outfit/build.py produces the attached outfit asset.",
+    "Level ! rescue timing is shared: LRUN_RESCUE_LEN is 9s, levelrun-cut drives the collapse/barrier/fold cinematic and finishes in the Safe Alcove; stepHordeZ uses gap-sensitive pressure and clamps the horde beyond CORRIDOR.collapseZ + 3.",
+    "Chapter 2 Safe Alcove choices/completion live in scripts/lib/ch2-quest.js; completion sets phoebeRescued/lrunRescued and quiet ch3Ready handoff, leaving ch3Q to Chapter 3. Keep the rescue's alcove arrival and Phoebe dialogue target consistent with Level ! quest markers."
   ]
 }
