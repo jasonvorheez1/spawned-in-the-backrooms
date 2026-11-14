@@ -16,7 +16,7 @@ import { inside } from "../../scripts/lib/containment.js";
 import { buildB3, dressB3, placeLauncher, stairDoorAt, MORGUE, O as B3O, yawFor as yawB3 } from "../../scripts/lib/l109-b3.js";
 import { heard } from "../../scripts/lib/hear.js";
 export const cadence = "500ms";
-const GEO = "scripts/levelrun-geo.js", MED = "scripts/l109-med-geo.js", VEND_GLB = "/cdn/value.841812d69f4307a900ce500187517702dc1f59e427eb8d7599f6c1f463642e54.glb";
+const GEO = "scripts/levelrun-geo.js", MED = "scripts/l109-med-geo.js", VEND_GLB = "/cdn/value.8a9d2399c1b6727a80b77276fb4a597af79117ddbaabe1b3d97ff2c61c5e37e9.glb";
 const PLASTER = "cdn/texture-clean-smooth-cream-painted-plaster-wall.png", CARPET = "cdn/texture-light-grey-beige-office-carpet-tiles-worn.png";
 const KNOCK_SFX = "/cdn/moodboard-realistic-gritty/sfx-three-heavy-knocks-from-inside-hollow-stud-wall.mp3";
 const AHEAD = 88, KEEP = 124, ROOM_IN = 46, ROOM_OUT = 84;
