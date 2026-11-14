@@ -72,7 +72,7 @@ function side(ctx, p, route) {
   if (route === "rink") { rep.concession = -100; rep.rink = Math.max(rep.rink ?? 0, 60); }
   s.rep = rep;
   if (route === "bntg") addRep(s, "bntg", 10); if (route === "rink") addRep(s, "bntg", -15);
-  if (route === "dub") { addRep(s, "rink", 20); addRep(s, "concession", 20); }
+  if (route === "dub") { addRep(s, "rink", 20); addRep(s, "bntg", 20); }
 }
 function finish(ctx, p, payKey, text) {
   const s = p.state, pay = PAY[payKey]; if (!claimReward(s, QID)) { s.l31q = 99; return; } s.l31q = 99; s.l31tape = false; giveTape(s);

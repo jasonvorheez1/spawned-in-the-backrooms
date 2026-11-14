@@ -11,7 +11,6 @@ export const GROUPS = {
   surrender: { name: "Fort Surrender", info: "the shelter on Level 7" },
   lightless: { name: "The Lightless", info: "the cave's insane" },
   bntg: { name: "B.N.T.G.", info: "the Backrooms Nonaligned Trade Group" },
-  concession: { name: "B.N.T.G. Rink Concession", info: "Marlowe's table on Level 31" },
   rink: { name: "Rink Facelings", info: "the faces that run Level 31" },
   froid: { name: "Kingdom of Froidetown", info: "Level 70's parliament, its River Guard and its townsfolk" },
   gelu: { name: "Carnifices of Gelu", info: "the frost cult camped in Iceshed" },
@@ -19,7 +18,7 @@ export const GROUPS = {
 };
 // New Vegas reputation: fame and infamy are kept apart per faction (s.fame[g], s.infamy[g], 0..100); s.rep[g] stays the net (fame - infamy) every older reader uses.
 // Shelly Nov 13: helping one faction never hurts another. RIVALS is a record of who opposes whom, read by nothing that moves standing.
-export const RIVALS = { meg: ["bntg"], bntg: ["meg"], froid: ["gelu"], gelu: ["froid"], concession: ["rink"], rink: ["concession"] };
+export const RIVALS = { meg: ["bntg"], bntg: ["meg", "rink"], froid: ["gelu"], gelu: ["froid"], rink: ["bntg"] };
 const RIVAL_CUT = 1 / 3;
 const LV = (n) => (n >= 60 ? 3 : n >= 35 ? 2 : n >= 12 ? 1 : 0);
 // TITLE[fame level][infamy level], the game's own grid
@@ -38,7 +37,7 @@ export const infamyOf = (s, g) => Math.round(seed(s, g).i);
 export const titleOf = (s, g) => TITLE[LV(fameOf(s, g))][LV(infamyOf(s, g))];
 export const titleColor = (s, g) => { const f = LV(fameOf(s, g)), i = LV(infamyOf(s, g)); return i === 0 ? (f >= 2 ? "#9bd27a" : f ? "#c4d88a" : "#d8d0b0") : f === 0 ? (i >= 2 ? "#e06050" : "#e0a050") : "#d8b860" };
 const MAP = { meg: "meg", hk: "meg", guard: "meg", camp: "meg", survivor: "survivors", trader: "survivors", pilgrim: "survivors", wanderer: "survivors", scavenger: "survivors", alef: "survivors",
-  homely: "hotel", hotel: "hotel", orig: "hotel", surrender: "surrender", lightless: "lightless", bntg: "bntg", concession: "concession", rink: "rink", froid: "froid", gelu: "gelu" };
+  homely: "hotel", hotel: "hotel", orig: "hotel", surrender: "surrender", lightless: "lightless", bntg: "bntg", concession: "bntg", rink: "rink", froid: "froid", gelu: "gelu" };
 const PREFIX = { bntg: "bntg", meg: "meg", hk: "meg", surv: "survivors", omega: "survivors", l5: "hotel", homely: "hotel", tbd: "survivors", gamma: "meg", l61: "survivors" };
 export function groupOf(it) {
   if (String(it?.id ?? "").split("/").pop().startsWith("hub-amber")) return "amber";
