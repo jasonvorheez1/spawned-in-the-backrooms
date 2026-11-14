@@ -39,12 +39,12 @@ leveled:
     homely:   { rows: [] }   # Homely Hotel staff keep their bespoke uniforms
     orig:     { rows: [] }   # The Originals keep their vintage period clothing
     amor:     { rows: [dress, sweater, apron, longskirt, pants, boots, flower, cape, scarf], extra: { hat: 0.3, eyew: 0.05, neck: 0.6 } }
+    frenzied:  { rows: [l109gown, l109gown, l109scrubs, l109scrubs, l109strait, l109labcoat, l109scrubpants, l109scrubpants, pants, l109slippers, l109slippers, boots, l109cap, crackedglasses, l109band], extra: { hat: 0.5, eyew: 0.25, neck: 0.4 } }   # Level 109's frenzied wanderers
   # what a job wears (Shelly, Nov 7: "disperse clothes/armors to existing npcs and make sure they make sense"): a role's rows replace its
   # faction's for the slots they cover; pats: fabrics it leans to (60%). Savi's picks.
   roles:
     scout:     { rows: [jacket, padjacket, cargo, pants, boots, steeltoe, beanie, padbeanie, cap, shades, scarf, bntgvest, bntgcoat, bntgcap], pats: [camo, canvas], extra: { hat: 0.65, eyew: 0.35, neck: 0.3 } }
     guard:     { rows: [megjacket, wwplate, wwhelmet, padjacket, wirehood, cargo, steeltoe, boots, cap, padbeanie, shades, hazmat], pats: [camo, canvas, leather], extra: { hat: 0.85, eyew: 0.5, neck: 0.05 } }
-    frenzied:  { rows: [l109gown, l109gown, l109scrubs, l109scrubs, l109strait, l109labcoat, l109scrubpants, l109scrubpants, pants, l109slippers, l109slippers, boots, l109cap, crackedglasses, l109band], extra: { hat: 0.5, eyew: 0.25, neck: 0.4 } }   # Level 109's frenzied wanderers
     agent:     { rows: [megjacket, cpjacket, qmvest, padjacket, cargo, pants, boots, steeltoe, cap, shades, scarf, hazmat], pats: [camo, canvas], extra: { hat: 0.6, eyew: 0.45, neck: 0.15 } }
     captain:   { rows: [padjacket, jacket, cargo, slacks, steeltoe, boots, cap, shades, scarf], pats: [leather, canvas], extra: { hat: 0.9, eyew: 0.3, neck: 0.4 } }
     medic:     { rows: [lljacket, longsleeve, apron, slacks, pants, sneakers, boots, glasses, cap], pats: [weave, canvas], extra: { hat: 0.15, eyew: 0.6, neck: 0.05 } }
