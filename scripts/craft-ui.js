@@ -97,7 +97,7 @@ export function craftUi(ctx, player) {
       <div class="bt"><button ${st.ok ? '' : 'disabled'} onclick="sendAction('make',{k:'make',id:'${id}',n:1})">Craft</button>${st.ok && mx > 5 ? `<button class="s" onclick="sendAction('make',{k:'make',id:'${id}',n:5})">Make 5</button>` : ''}${st.ok && mx >= 2 ? `<button class="s" onclick="sendAction('make',{k:'make',id:'${id}',n:'max'})">Make ${mx}</button>` : ''}</div></div>`
   }
   if (!rows) rows = `<div class="em">${tab === 'ready' ? 'Nothing you can make yet. Check All for recipe requirements.' : 'Nothing here.'}</div>`
-  return out + `<div id="cr" data-modal><div class="hd"><h2>${bench ? ({ cook: 'Cooking fire', ammo: 'Reloading bench' }[station] ?? 'Workbench') : 'Crafting'}</h2><span class="md">${bench ? 'This station only' : 'Everything · stations (B) unlock the rest'}</span></div>
+  return out + `<div id="cr" data-modal tabindex="0" onkeydown="if(event.key==='Escape'){event.preventDefault();event.stopPropagation();sendAction('make',{k:'close'})}"><div class="hd"><h2>${bench ? ({ cook: 'Cooking fire', ammo: 'Reloading bench' }[station] ?? 'Workbench') : 'Crafting'}</h2><span class="md">${bench ? 'This station only' : 'Everything · stations (B) unlock the rest'}</span></div>
     ${wristNav('craft')}<div class="tb">${tabs}</div><details class="craft-stock"><summary>Materials on hand</summary><div class="sc">${stock}</div></details><div class="ls">${rows}</div>
     <div class="ft"><span>${ready} of ${all.length} recipes ready · Batch limit ${CRAFT_LIMIT}</span><button onclick="sendAction('make',{k:'close'})">Close · Y</button></div></div>`
 }
