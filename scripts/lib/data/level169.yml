@@ -56,3 +56,14 @@ friends:                        # Ferry's Friends (scripts/lib/l169-friends.js).
   bench: [porch, 0.8, 0.84]     # the newcomer's chair, turned north
   track: [[16, -478], [14, -455], [10, -430]]   # how far the road guide walks to look for arrivals
   basementDown: 3
+houseBuild:                     # Ferry's house, the builder's numbers (scripts/l169-house-geo.js, scripts/lib/l169-house.js). World x/z like the rooms
+  wallT: 0.2
+  doorH: 2.1
+  roof: { ridge: 1.3, eave: 1.0, side: 0.8, porchOut: 0.4 }
+  midWallTo: -496.6             # the living/kitchen wall runs from the hall to here; the rest is open
+  doors: { front: [17.4, 18.6], living: [14.5, 15.5], kitchen: [20.5, 21.5], bed1: [11, 12], bed2: [16, 17], bed3: [21, 22], den: [23.15, 24.15] }
+  windows: [[s, 14, 1.6], [s, 22, 1.6], [n, 10.5, 1.4], [n, 15.5, 1.4], [n, 20.5, 1.4], [n, 25.5, 1.4], [w, -496.5, 1.6], [w, -504.2, 1.2], [e, -496.5, 1.4]]
+  winY: [0.95, 2.15]            # sill and head above the floor
+  stair: { x0: 24.2, rise: 0.2, upN: 9, upRun: 0.3, turn: -500.3, lowN: 4, lowRun: 0.4 }   # 10 risers east down the hall, a landing, 5 south under the kitchen
+  porchPosts: [12.2, 16, 20, 23.8]
+  lamp: { intensity: 8, distance: 10, color: "oklch(0.86 0.09 75)" }
