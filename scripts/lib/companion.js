@@ -102,9 +102,10 @@ export function tick(ctx, pl) {
 }
 // when the player crosses a threshold, the companions near them cross with them
 export function bring(ctx, pl, link) {
+  if (!pl?.feetPosition) return;
   for (const o of followersOf(ctx, pl)) {
-    if (o.state.cmd === "wait" || flat(o.feetPosition, pl.feetPosition) > 16) continue;
+    if (!o.feetPosition || o.state.cmd === "wait" || flat(o.feetPosition, pl.feetPosition) > 16) continue;
     o.state.home = undefined; o.state.rounds = undefined; o.state.waitAt = undefined;
-    ctx.cross(o, link);
+    try { ctx.cross(o, link); } catch (e) { ctx.log("bring", o.id, String(e?.message ?? e)); }
   }
 }

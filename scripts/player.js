@@ -57,7 +57,41 @@ import { beastStruck } from './lib/l5-beast.js'
 import L3 from './lib/data/level3.yml'
 let L9 = null
 const zone9 = (ctx, x, z) => { const sd = ctx.place?.state?.l9seed; if (sd == null) return 'l9_street'; if (L9?.seed !== sd) L9 = layout9(sd); return zoneAt9(L9, x, z) }
-const zoneHere = (ctx, x, z) => ctx.self.place === 'thehub' ? (x > 505 ? 'hub_dark' : x > 2 && x < 30 && z < -4 && z > -16 ? 'hub_meg' : x > 174 && x < 196 && z > 4 && z < 13 ? 'hub_amber' : 'hub_road') : ctx.self.place === 'level02' ? (ctx.self.feetPosition.y < -1 ? 'l02_basement' : 'l02_remodel') : ctx.self.place === 'spamton' ? 'spam_arena' : ctx.self.place === 'level7' ? (Math.hypot(x - 46, z + 120) < 34 ? 'l7_seawatch' : Math.hypot(x + 70, z + 95) < 55 ? 'l7_fort' : z > -4 && Math.hypot(x, z) < 12 ? 'l7_room1' : z > -36 && Math.abs(x) < 10 ? 'l7_pier' : 'l7_sea') : ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : ctx.self.place === 'level2' ? 'l2_' + zoneAt2(x, z) : ctx.self.place === 'level3' ? 'l3_' + zoneAt3(x, z) : ctx.self.place === 'gamma' ? 'l3_gamma' : ctx.self.place === 'level4' ? 'l4_' + zoneAt4(x, z, ctx.self.state.home) : ctx.self.place === 'level5' ? 'l5_' + (zoneAt5(x, z)?.id ?? 'lobby') : ctx.self.place === 'level6' ? 'l6_halls' : ctx.self.place === 'level61' ? 'l61_court' : ctx.self.place === 'level12' ? 'l12_matrix' : ctx.self.place === 'level13' ? 'l13_halls' : ctx.self.place === 'level11' ? 'l11_city' : ctx.self.place === 'level10' ? 'l10_fields' : ctx.self.place === 'level8' ? 'l8_cave' : ctx.self.place === 'level9' ? zone9(ctx, x, z) : ctx.self.place === 'level21' ? 'l21_' + zoneAt21(x, z) : ctx.self.place === 'level70' ? 'l70_' + zoneAt70(x, z) : ctx.self.place === 'level31' ? 'l31_' + (ctx.self.feetPosition.y > 2.5 && x < -24.9 ? 'mezz' : zoneAt31(x, z)) : (ctx.place?.state?.moments?.manilaAt && Math.abs(x - ctx.place.state.moments.manilaAt.x) < 5.8 && Math.abs(z - ctx.place.state.moments.manilaAt.z) < 5.8 ? 'manila' : zoneAt(x, z))
+const ZONE_RESOLVERS = {
+  thehub: (ctx, x, z) => (x > 505 ? 'hub_dark' : x > 2 && x < 30 && z < -4 && z > -16 ? 'hub_meg' : x > 174 && x < 196 && z > 4 && z < 13 ? 'hub_amber' : 'hub_road'),
+  level02: (ctx) => (ctx.self.feetPosition.y < -1 ? 'l02_basement' : 'l02_remodel'),
+  spamton: () => 'spam_arena',
+  bonus: () => 'bonus',
+  intake: () => 'intake',
+  home11: () => 'home11',
+  testlab: () => 'testlab',
+  level01: () => 'l01_station',
+  level184: () => 'l184_field',
+  level26: () => 'l26_ship',
+  level27: () => 'l27_springs',
+  level34: () => 'l34_sewer',
+  levelrun: () => 'lrun_halls',
+  level7: (_ctx, x, z) => (Math.hypot(x - 46, z + 120) < 34 ? 'l7_seawatch' : Math.hypot(x + 70, z + 95) < 55 ? 'l7_fort' : z > -4 && Math.hypot(x, z) < 12 ? 'l7_room1' : z > -36 && Math.abs(x) < 10 ? 'l7_pier' : 'l7_sea'),
+  level1: (_ctx, x, z) => 'l1_' + zoneAt1(x, z),
+  level2: (_ctx, x, z) => 'l2_' + zoneAt2(x, z),
+  level3: (_ctx, x, z) => 'l3_' + zoneAt3(x, z),
+  gamma: () => 'l3_gamma',
+  level4: (ctx, x, z) => 'l4_' + zoneAt4(x, z, ctx.self.state.home),
+  level5: (_ctx, x, z) => 'l5_' + (zoneAt5(x, z)?.id ?? 'lobby'),
+  level6: () => 'l6_halls',
+  level61: () => 'l61_court',
+  level12: () => 'l12_matrix',
+  level13: () => 'l13_halls',
+  level11: () => 'l11_city',
+  level10: () => 'l10_fields',
+  level8: () => 'l8_cave',
+  level9: (ctx, x, z) => zone9(ctx, x, z),
+  level21: (_ctx, x, z) => 'l21_' + zoneAt21(x, z),
+  level70: (_ctx, x, z) => 'l70_' + zoneAt70(x, z),
+  level31: (ctx, x, z) => 'l31_' + (ctx.self.feetPosition.y > 2.5 && x < -24.9 ? 'mezz' : zoneAt31(x, z)),
+};
+const level0Zone = (ctx, x, z) => (ctx.place?.state?.moments?.manilaAt && Math.abs(x - ctx.place.state.moments.manilaAt.x) < 5.8 && Math.abs(z - ctx.place.state.moments.manilaAt.z) < 5.8 ? 'manila' : zoneAt(x, z));
+const zoneHere = (ctx, x, z) => (ZONE_RESOLVERS[ctx.self.place] ?? level0Zone)(ctx, x, z);
 
 import SOUNDS from './lib/data/sounds.yml'
 import THROW from './lib/data/throwables.yml'
@@ -1447,7 +1481,18 @@ function tickStats(ctx, t, moving) {
   if ((s.detect ?? null) !== det) s.detect = det
   if (!s.crouch && s.aware) s.aware = 0
   // sanity: the halls eat it, the dark eats it faster, the safe room gives it back
-  let drain = (ctx.self.place === 'level61' || ctx.self.place === 'level11' || ctx.self.place === 'level10' ? 0 : ctx.self.place === 'level7' ? (zone === 'l7_sea' || zone === 'l7_ocean' ? 0.75 : 0.22) : ctx.self.place === 'level6' ? (w.nvg ? 0.32 : 1.15) : ctx.self.place === 'level4' ? DRAIN4[zone.slice(3)] : ctx.self.place === 'level5' ? (DRAIN5[zone.slice(3)] ?? 0.8) / 60 * 4 : ctx.self.place === 'level2' ? L2.sanityDrain[zone.slice(3)] : (ctx.self.place === 'level3' || ctx.self.place === 'gamma') ? L3.sanityDrain[zone.slice(3)] : ctx.self.place === 'level8' ? 0.14 : ctx.self.place === 'level21' ? L21.sanityDrain[zone.slice(4)] : L.sanityDrain[zone]) ?? 0.12
+  let drain = ({
+    level61: 0, level11: 0, level10: 0, bonus: 0, intake: 0, home11: 0, thehub: 0, testlab: 0, level27: 0,
+    level7: zone === 'l7_sea' || zone === 'l7_ocean' ? 0.75 : 0.22,
+    level6: w.nvg ? 0.32 : 1.15,
+    level4: DRAIN4[zone.slice(3)],
+    level5: (DRAIN5[zone.slice(3)] ?? 0.8) / 60 * 4,
+    level2: L2.sanityDrain[zone.slice(3)],
+    level3: L3.sanityDrain[zone.slice(3)],
+    gamma: L3.sanityDrain[zone.slice(3)],
+    level8: 0.14,
+    level21: L21.sanityDrain[zone.slice(4)],
+  }[ctx.self.place] ?? L.sanityDrain[zone]) ?? 0.12
   if (w.light && (zone === 'dark' || zone === 'red' || zone === 'l3_dark')) drain *= 0.4
   if (drain > 0 && nearFresh(ctx)) drain = 0
   { const mb = musicNear(ctx); if (mb) drain = Math.min(drain, 0) - mb } // a playing music box steadies whoever stays near it // a set-down Reality Freshener holds the room still (scripts/lib/remodel-quest.js)

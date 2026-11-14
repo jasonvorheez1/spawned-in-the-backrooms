@@ -6,7 +6,6 @@ import { itemSpec } from "./lib/vend-item.js";
 import { handTray, mealKids, TRAY_MODEL } from "./lib/snacktray.js";
 import { errandStep, errandDone } from "./lib/quests.js";
 import { setStep61, BUS_TRAY as BUS } from "./lib/level61-quests.js";
-import { bring } from "./lib/companion.js";
 import { carryAcross } from "./lib/carry.js";
 import { rollCheck } from "./lib/npc-talk.js";
 import SNACKS from "./lib/data/snacks.yml";
@@ -92,6 +91,7 @@ export const ears = {
       w.l61ServiceAt = now;
       ctx.emit("screenFlash", { color: "#000000", duration: 0.55, intensity: 1 }, { audience: { player: who.id } });
       snd("heavy-metal-door-creak-open", 0.35, 9);
+      carryAcross(ctx, who, `level61#${s.to}`);
       ctx.cross(who, `level61#${s.to}`);
       return;
     }
@@ -101,7 +101,6 @@ export const ears = {
         return;
       }
       w.clipKind = "wall";
-      bring(ctx, who, LEVEL6);
       carryAcross(ctx, who, LEVEL6);
       ctx.emit("screenFlash", { color: "#000000", duration: 0.75, intensity: 1 }, { audience: { player: who.id } });
       ctx.cross(who, LEVEL6);

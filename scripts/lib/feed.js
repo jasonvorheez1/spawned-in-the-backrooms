@@ -2,8 +2,9 @@
 // "Location discovered: Level 1", "You are hungry", "Low on ammo"), each fading after a few seconds. Lines live on player.state.feed
 // = [{ t, at, k }]; scripts/feed-ui.js draws them. Every s.notice the game writes lands here too (scripts/stats.js copies each new one),
 // so all the old one-line messages become part of the feed; the status watcher below adds the FNV ones that were never messages.
+import { PLACE_LABELS } from "./places.js";
 export const LIFE = 7000, MAX = 6;
-export const PLACE_NAMES = { level9: "Level 9 · The Suburbs", main: "Level 0 · The Lobby", level01: "Level 0.1 · Zenith Station", level1: "Level 1 · Habitable Zone", level31: "Level 31 · The Roller Rink", level2: "Level 2 · Pipe Dreams", level3: "Level 3 · Electrical Station", level4: "Level 4 · Abandoned Office", level5: "Level 5 · Terror Hotel", level6: "Level 6 · Lights Out", level61: "Level 6.1 · The Snackrooms", level11: "Level 11 · The Infinite City", level10: "Level 10 · Bumper Crop", level7: "Level 7 · Thalassophobia", level8: "Level 8 · Cave System", level21: "Level 2.1 · Locked", gamma: "Base Gamma", level12: "Level 12 · Matrix", level26: "Level 26 · SS Fun =)", level184: "Level 184 · Field of Forgotten Forts", levelrun: "Level ! · Run for Your Life!" };
+export const PLACE_NAMES = PLACE_LABELS;
 const kindOf = (t) => (/\b(broken|jam|ruined|cannot|can'?t|not enough|too heavy|starv|dehydrat|badly hurt|vilified|hated|evil|out of ammo|low on ammo|walks away|overencumbered|losing your grip|poor condition)\b/i.test(t) ? "warn"
   : /\b(level up|xp|discovered|skill)\b/i.test(t) ? "xp"
   : /\b(repaired|patches|taped|mended|stitched|bought|sold|gave|liked|idolized|good|coming with you|added|picked up|took)\b/i.test(t) ? "good" : "info");

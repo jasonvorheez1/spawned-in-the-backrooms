@@ -1,7 +1,6 @@
 // A sewer grate you climb down through (Level 9's storm drain, Level 11's street grate) into Level 34, or a hatch that will not open.
 // Press E on it: state.to is where you come out; with no state.to it only tells you state.info.
 import { carryAcross } from "./lib/carry.js";
-import { bring } from "./lib/companion.js";
 export const ears = {
   press: (ctx, { by }) => {
     const who = ctx.getObject(by), w = who?.state; if (!w || w.level == null) return;
@@ -10,7 +9,7 @@ export const ears = {
     ctx.emit("screenFlash", { color: "#000000", duration: 0.9, intensity: 1 }, { audience: { player: who.id } });
     ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-heavy-iron-sewer-grate-lifted-scraping-on-concrete.mp3", position: ctx.self.feetPosition, volume: 0.8 });
     w.clipKind = "floor";
-    bring(ctx, who, to); carryAcross(ctx, who, to);
+    carryAcross(ctx, who, to);
     ctx.cross(who, to);
   },
 };
