@@ -16,7 +16,7 @@ import { rbox } from "../../scripts/lib/rbox.js";
 import { layService } from "../../scripts/lib/level61-service.js";
 
 export const cadence = "1s";
-const V = 63; // 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
+const V = 64; // 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -684,7 +684,7 @@ function lay(ctx) {
     // barrier arm: striped pole on a post, lowered half across
     // M.E.G. outpost props: Tripo meshes, refined in Blender (art/l61-meg/build.py), true scale
     const megM = (id, x, z, yaw, m, phys) => sp(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: m, forward: "+z" }, physics: phys, visibleRange: { max: 55 } });
-    megM("l61-meg-barrier", X + 4.2, -1.1, 0, "/cdn/value.4d0ea028923ad7904d198c35e088b99bc717bd6c4613a2f684f57394ed371c8b.glb", undefined);
+    megM("l61-meg-barrier", X + 4.2, -1.4, -90, "/cdn/value.4d0ea028923ad7904d198c35e088b99bc717bd6c4613a2f684f57394ed371c8b.glb", undefined);
     // guard booth: plywood, window band, roof, lamp inside
     const bx0 = X + 1.6, bz0 = -5.6;
     megM("l61-meg-booth", bx0, bz0, 180, "/cdn/value.3bc6f276d3c7f3381c9477fc9cc65c6b186ffc530b10af8a1dfb986e910d40d4.glb", { body: "static", collider: "box" });
@@ -693,7 +693,6 @@ function lay(ctx) {
     megM("l61-meg-desk", X + 2.4, 4.2, 180, "/cdn/value.d81d2b065dd48090432a15a38512d3a0cb226efecee1d6c6a54283e0fec92514.glb", { body: "static", collider: "box" });
     sp("l61-meg-radio", { feetPosition: { x: X + 2.9, y: 0.8, z: 4.0 },
       audio: { clip: G("military-handheld-radio-static-chatter-squelch-loop"), loop: true, gain: 0.08, spatial: true, maxDistance: 7 } });
-    box("l61-meg-chair-s", X + 2.4, 0.42, 4.95, 0.42, 0.04, 0.42, PAINT, nf); box("l61-meg-chair-b", X + 2.4, 0.46, 5.15, 0.42, 0.45, 0.04, PAINT, nf);
     // olive crates stacked by the wall
     megM("l61-meg-crates", X + 0.75, 3.6, 90, "/cdn/value.7c44079ccd25ace23036723308db44ce52d891d12cd6520e430f3ae61f8f1754.glb", { body: "static", collider: "box" });
     // corkboard with pinned notices
