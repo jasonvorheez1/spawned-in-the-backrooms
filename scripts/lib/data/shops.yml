@@ -281,6 +281,7 @@ shops:
     - [slap_bracelet, 8, 1.4]
     - [disposable_camera, 4, 6]
     - [walkman, 2, 14]
+    - [weapon:squirt_gun, 2, 22]   # the backpack squirt gun: a toy with a tank, 25 shots of plain water in it
     - ["cloth:topw:tee:e8232e", 3, 5.5]
     - ["cloth:topw:tee:1c1c20", 3, 5.5]
     - [vault, 6, 1.4]
