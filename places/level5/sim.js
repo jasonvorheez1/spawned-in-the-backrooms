@@ -406,12 +406,13 @@ export function tick(ctx) {
   }
   if (s.officeV !== OFFICE_V) { s.officeV = OFFICE_V; layOffice(ctx); } // Entity 18's office (scripts/lib/l5-beast.js)
   wrathTick(ctx);
-  if (s.washV !== 1) { // the creator's motel bathroom pieces: Housekeeping's staff corner (back wall z 23.85) and an old in-room washbasin in guest room s2 (east wall x -22.15)
-    s.washV = 1;
+  if (s.washV !== 2) { // the creator's motel bathroom pieces: Housekeeping's staff corner (back wall z 23.85) and an old in-room washbasin in guest room s2 (east wall x -22.15)
+    s.washV = 2;
+    for (const id of ["l5-hk-toilet", "l5-hk-sink", "l5-hk-tp"]) if (ctx.getObject(id)) ctx.destroy(id); // v1 faced the wall
     const M = { body: "static", collider: "box" };
-    if (FNV.jrtoiletaqua01 && !ctx.getObject("l5-hk-toilet")) ctx.spawn("l5-hk-toilet", { feetPosition: { x: 14.6, y: 0, z: 23.58 }, rotation: { yaw: 180 }, model: { id: FNV.jrtoiletaqua01, forward: "+z" }, physics: M });
-    if (FNV.jrsinkaqua01 && !ctx.getObject("l5-hk-sink")) ctx.spawn("l5-hk-sink", { feetPosition: { x: 13.3, y: 0, z: 23.58 }, rotation: { yaw: 180 }, model: { id: FNV.jrsinkaqua01, forward: "+z" }, physics: M });
-    if (FNV.jrtpdispenseraqua01 && !ctx.getObject("l5-hk-tp")) ctx.spawn("l5-hk-tp", { feetPosition: { x: 15.25, y: 0.62, z: 23.8 }, rotation: { yaw: 180 }, model: { id: FNV.jrtpdispenseraqua01, forward: "+z" }, castShadow: false, visibleRange: { max: 15 } });
+    if (FNV.jrtoiletaqua01 && !ctx.getObject("l5-hk-toilet")) ctx.spawn("l5-hk-toilet", { feetPosition: { x: 14.6, y: 0, z: 23.58 }, rotation: { yaw: 0 }, model: { id: FNV.jrtoiletaqua01, forward: "+z" }, physics: M });
+    if (FNV.jrsinkaqua01 && !ctx.getObject("l5-hk-sink")) ctx.spawn("l5-hk-sink", { feetPosition: { x: 13.3, y: 0, z: 23.58 }, rotation: { yaw: 0 }, model: { id: FNV.jrsinkaqua01, forward: "+z" }, physics: M });
+    if (FNV.jrtpdispenseraqua01 && !ctx.getObject("l5-hk-tp")) ctx.spawn("l5-hk-tp", { feetPosition: { x: 15.25, y: 0.62, z: 23.8 }, rotation: { yaw: 0 }, model: { id: FNV.jrtpdispenseraqua01, forward: "+z" }, castShadow: false, visibleRange: { max: 15 } });
     if (FNV.jrsinkaqua01 && !ctx.getObject("l5-s2-sink")) ctx.spawn("l5-s2-sink", { feetPosition: { x: -22.41, y: 0, z: 14.35 }, rotation: { yaw: 90 }, model: { id: FNV.jrsinkaqua01, forward: "+z" }, physics: M });
   }
   if (s.builtV !== V) {
