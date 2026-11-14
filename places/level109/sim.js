@@ -7,6 +7,7 @@ import { questTick } from "../../scripts/lib/level109-quest.js";
 import { penRoll, penLoad, penUnload, looseTick, doorOpen } from "../../scripts/lib/containment.js";
 import { spawnFoe } from "../../scripts/lib/l109-foes.js";
 import { buildRoom } from "../../scripts/lib/l109-rooms.js";
+import { wandererTick } from "../../scripts/lib/l109-wanderers.js";
 import { buildB3, placeLauncher, stairDoorAt, MORGUE, O as B3O, yawFor as yawB3 } from "../../scripts/lib/l109-b3.js";
 export const cadence = "500ms";
 const GEO = "scripts/levelrun-geo.js", PLASTER = "cdn/texture-clean-smooth-cream-painted-plaster-wall.png", CARPET = "cdn/texture-light-grey-beige-office-carpet-tiles-worn.png";
@@ -83,6 +84,7 @@ export function tick(ctx) {
   const seed = s.l109seed;
   if (!ctx.place.objects["l109-hum"]) ctx.spawn("l109-hum", { audience: "all", audio: { clip: "cdn/ambience-hospital-corridor-air-handler-ventilation-distant-loop.mp3", loop: true, gain: 0.1, spatial: false, bus: "Ambience" } });
   if (!players.length) return;
+  if (ctx.now() > (s.wandTickAt ?? 0)) { s.wandTickAt = ctx.now() + 3000; wandererTick(ctx); } // random encounters: frenzied armed wanderers (scripts/lib/l109-wanderers.js)
   if (!ctx.place.objects["b3-hall"]) buildB3(ctx, seed); // B3: the sealed sub-basement (scripts/lib/l109-b3.js), once per room
   if (!s.b3gun) { s.b3gun = 1; placeLauncher(ctx); } // the M72 lies in the cage once in the room's life
   if (!ctx.place.objects["b3-stairdoor"]) { const d = stairDoorAt(seed); ctx.spawn("b3-stairdoor", { audience: "all", tags: ["usable", "l109-b3"], feetPosition: { x: d.x + 0.12, y: 0, z: d.z - DOOR_W / 2 }, rotation: { yaw: yawB3(0, 1) }, physics: { body: "static", collider: "box" }, material: { pbr: true }, behavior: "scripts/b3-use.js",
