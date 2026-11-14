@@ -32,6 +32,7 @@ export const PLACES = {
   level70:   { name: "Level 70",       label: "Level 70 · Froidetown",                 title: ["LEVEL 70", "FROIDETOWN"] },
   level184:  { name: "Level 184",      label: "Level 184 · Field of Forgotten Forts",  title: ["LEVEL 184", "FIELD OF FORGOTTEN FORTS"] },
   level109:  { name: "Level 109",      label: "Level 109 · The Neon Hospital",         title: ["LEVEL 109", "THE NEON HOSPITAL"] },
+  level114:  { name: "Level 114",      label: "Level 114 · The Bedroom",               title: ["LEVEL 114", "THE BEDROOM"] },
   levelrun:  { name: "Level !",        label: "Level ! · Run for Your Life!",          title: ["LEVEL !", "RUN FOR YOUR LIFE!"] },
   spamton:   { name: "Spamton's Basement", label: "Spamton's Basement",                title: ["[[NOWHERE]]", "SPAMTON'S BASEMENT"] },
   testlab:   { name: "Test Range",     label: "The Test Range",                        title: ["TEST RANGE", "TRAINING FLOOR"] },

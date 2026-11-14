@@ -1,0 +1,23 @@
+# Level 114 (backrooms-wiki.wikidot.com/level-114): a childhood bedroom, a door ajar onto a black void.
+# The room is lit by one switch; Smilers live where the light doesn't reach. Walk the void long enough and you reach Level 9.
+mode: 3d
+terrain:
+  kind: "off"
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: -0.2, y: 0.1, z: 0.9 }
+defaultSpawnRotation: { yaw: 180 }
+worldBounds: { bottom: -25 }
+atmosphere:
+  look: { script: scripts/look-photo.js }
+  clouds: { enabled: false }
+  sky: { kind: color, color: "oklch(0.03 0 0)" }
+  fog: { kind: linear, near: 7, far: 34, color: "oklch(0.03 0 0)" }
+  moon: { enabled: false, intensity: 0 }
+  sun: { light: { intensity: 0 } }
+  stars: { enabled: false }
+  timeOfDay: 0
+  cycle: { frozen: 0 }
+  wind: { direction: 0, speed: 0 }
+  ambient: { light: { color: "oklch(0.8 0.03 80)", intensity: 0.06 } }
+  hemisphere: { skyColor: "oklch(0.6 0.02 80)", groundColor: "oklch(0.1 0 0)", intensity: 0.05 }
+acoustics: { reverb: 0.08 }
