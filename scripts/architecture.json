@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8602,
-  "updatedAt": "2026-11-14T22:46:27.471Z",
-  "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Shared registries and handlers coordinate global play, while per-place simulations, authored cell scenes and procedural builders compose local spaces and stories.",
+  "basedOnSpecVersion": 8606,
+  "updatedAt": "2026-11-14T22:51:27.446Z",
+  "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Shared registries and handlers coordinate global play, while per-place simulations, authored cell scenes and procedural builders compose local spaces and stories; NPC speech uses authored text and recorded voice clips where available.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes, anomalies and deterministic dressing; momentsV gates fitted wall moments and room-prop regeneration.",
@@ -18,7 +18,7 @@
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input actions; fall-guard runs before locomotion/player behavior and scripts/radio.js is on the player.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - local config, authored placements and place generation/tick behavior; selected sims compose shared helpers.",
     "places/level169/config.yaml + scripts/terrain169.js - seeded height/material generator and desert marks; config binds terrain and scrub dressing, while cell scenes hold placed flora models.",
-    "places/level169/sim.js + scripts/lib/data/level169.yml + scripts/lib/l169-house.js + scripts/lib/l169-ferry.js + scripts/lib/l169-friends.js + scripts/lib/l169-road.js - dynamic well/house/Ferry/Friends/trail/road composition; v9 lays setpieces and the sim ticks local actors, road, ship and quest.",
+    "places/level169/sim.js + scripts/lib/data/level169.yml + scripts/lib/l169-house.js + scripts/lib/l169-ferry.js + scripts/lib/l169-friends.js + scripts/lib/l169-road.js - dynamic well/house/Ferry/Friends/trail/road composition; v9 lays setpieces and ticks their systems.",
     "places/level13/cells/x0z0.scene + places/level13/sim.js - cell scene owns apartment shell and permanent architectural fixtures; sim handles lethargy and delegates furnishing, foes, people, dressing and tape.",
     "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js - title/settings, new-expedition choices, five-slot save manager and story/tutorial lifecycle; scripts/ui.js composes the in-game HUD and wrist panels.",
     "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, wake/resume, aiming, third-person view and per-place zone resolution.",
@@ -27,12 +27,12 @@
   "shared": [
     "scripts/lib/places.js - canonical per-place names, labels and HUD titles; consumed by feed, quest names and scripts/ui.js.",
     "scripts/lib/grid-path.js - configurable 4-neighbor grid BFS/caching/cell selection shared by Level 0, 1, 2, 2.1, 3, Boiler and 6 path adapters.",
-    "scripts/lib/ambush-smiler.js - common pursuit/lurk/wake/retreat/bite behavior configured by scripts/lib/l34-smiler.js and scripts/lib/l9-smiler.js.",
-    "scripts/lib/carry.js + scripts/lib/companion.js - threshold-crossing transfer of held props and nearby following companions; companion recruitment, orders, perks and lifecycle.",
+    "scripts/lib/ambush-smiler.js - common pursuit/lurk/wake/retreat/bite behavior configured by scripts/lib/l34-smiler.js and scripts/lib/l9-smiler.js; scripts/lib/carry.js + scripts/lib/companion.js transfer held props/followers and manage companion lifecycle.",
     "scripts/lib/hub.js + preload data/scripts and scripts/lib/thehub.js + scripts/lib/hubkeys.js - separate Bonus shared-room routing and The Hub tunnel/door/key registry.",
     "scripts/lib/containment.js - Level 109 persistent pen/loose-foe, open-door and remembered-door-position books; sim supplies room IDs/boxes and spawnFoe adapter.",
     "scripts/lib/pg-society.js + scripts/lib/data/pg-society.yml - Level 26 Partygoer role/routes, sight-bound relay and deck alert/search/recovery; scripts/partygoers.js reads rules and owns actor behavior/traps.",
-    "scripts/lib/npc-gear.js + scripts/lib/fresh-aura.js - shared NPC leveled gear/wear/pocket rolls and Reality Freshener radius check; meg-agent, hit squads, player and remodel quest reuse these helpers."
+    "scripts/lib/npc-gear.js + scripts/lib/fresh-aura.js - shared NPC leveled gear/wear/pocket rolls and Reality Freshener radius check; meg-agent, hit squads, player and remodel quest reuse these helpers.",
+    "scripts/lib/voices.js - authored NPC voice identity and recorded-clip lookup; dialogue, talk, meg-agent, interaction, chatter, social and place-specific speakers reuse it."
   ],
   "notableExports": [
     "scripts/lib/places.js - PLACES, PLACE_NAMES, PLACE_LABELS, LEVEL_TITLES.",
@@ -42,7 +42,7 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - shared journal/advancement/reward helpers; containment.js - containment state/pen/door operations; ch2-quest.js - Chapter 2 stages and dialogue helpers.",
     "scripts/lib/run-opts.js - OPTS, DEFAULTS, PICK_DEFAULTS, RATE, PRESETS, runOf, needsMul, sanityMul, noStory, noNpcs, cleanPick, KEEP, SKIP; scripts/main-menu.js - SLOTS.",
-    "scripts/lib/l169-ferry.js - DOOR, doorZ, geometry, collider, shelfSpot, layFerry; scripts/lib/l169-friends.js - stopsOf, planAt, slateText, layFriends, tickFriends; scripts/lib/l169-road.js - ORDER, hourOf, siteOf, quote, legsFrom, go, layRoad, tickRoad."
+    "scripts/lib/voices.js - hasVoice, voiceKey, throatOf, isVoiceClip, recordedDuration, hasCast, actedVoice, vo; scripts/lib/l169-ferry.js - DOOR, doorZ, geometry, collider, shelfSpot, layFerry; l169-friends.js/l169-road.js expose their composition and route helpers."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable player.state progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, saved place/position, currency and related player progress.",
@@ -52,30 +52,31 @@
     "scripts/lib/run-opts.js + scripts/main-menu.js - player.state.run owns expedition picks; run options determine story/NPC presence and hunger/thirst/sanity drain multipliers.",
     "scripts/db.js + scripts/main-menu.js - SQL saves table owns named save-slot snapshots by player owner and slot; player.state remains the live/current run state.",
     "scripts/radio.js - player.state.radioOn/radioSt retain tuned station and power; radioOpen is the current wrist-tab state, with stream/hush object IDs kept in session.",
-    "scripts/ferry.js owns Level 169 Ferry root stock/timestamps, open/door/note state and per-player taken tracking; taking its water/food mutates the interacting player's inventory/needs. NPC actors own their gear rolls; scripts/lib/remodel-quest.js owns Fresh Paint progress and turn-in flags."
+    "scripts/ferry.js owns Level 169 Ferry root stock/timestamps, open/door/note state and per-player taken tracking; taking its water/food mutates the interacting player's inventory/needs. NPC actors own their gear rolls; scripts/lib/remodel-quest.js owns remodel quest progress."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focusable tagged props and dispatches interaction.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focusable tagged props and dispatches their handlers.",
     "templates/player.js runs scripts/fall-guard.js update before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 uses camera aim + combat-anims.yml for third-person pose.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; periodic saves exclude intake, bonus and tutorial0.",
-    "scripts/main-menu-ui.js actions → scripts/main-menu.js → player.state.run or SQL saves; new-run reset uses run-opts KEEP/SKIP, and load resolves destination through wakePlace.",
+    "scripts/main-menu-ui.js actions → scripts/main-menu.js → player.state.run or SQL saves; new-run reset uses run-opts KEEP/SKIP and run options gate story/NPC presence and drain multipliers; load resolves destination through wakePlace.",
     "scripts/lib/run-opts.js → main-menu story gates Dina/Chapter 2/cutscenes; global sim.js removes tagged NPCs only when every player in a place chose noNpcs, and Phoebe only when every player chose noStory; needsMul feeds scripts/craft.js needs drain.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold door handlers call carryAcross → held props and nearby following companions cross; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone; scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles, markers and compass place names.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js place-matched jobs; carried items/kills/world events advance errands and quest dialogue handlers → journal, player.state.errands/qtrack, feed, reputation and rewards.",
-    "places/level169/config.yaml → scripts/terrain169.js heightAt/materialAt and cell-scene flora; places/level169/sim.js v9 lays level169.yml setpieces and ticks Friends/road/S.S. Fun/quest, and calls layFerry; scripts/ferry.js root update refills stock/greets players while piece ears.press → use handles door, food/water, cooling and notes.",
+    "places/level169/config.yaml → scripts/terrain169.js heightAt/materialAt and cell-scene flora; places/level169/sim.js v9 lays level169.yml setpieces and ticks Friends/road/S.S. Fun/quest, and calls layFerry; scripts/ferry.js root update refills stock and handles use.",
     "scripts/radio.js builds STATIONS from radio data YAML; scripts/world-radio.js carries shared station broadcast, with Radio Backrooms songs between Ralph segments and ads in the schedule.",
-    "scripts/lib/loot.js + scripts/lib/data/shops.yml → cashew item drops/B.N.T.G. stock → scripts/player.js owns s.cashew and action handlers; loot-ui.js offers drink/mix/fill actions, inventoryWeight counts bottles, and Squirt Gun cashew emission consumes its fill."
+    "scripts/lib/loot.js + scripts/lib/data/shops.yml → cashew item drops/B.N.T.G. stock → scripts/player.js owns s.cashew and action handlers; loot-ui.js offers drink/mix/fill actions, inventoryWeight counts bottles, and Squirt Gun cashew emissions consume the resource.",
+    "scripts/lib/data/dlg-*.yml and authored bark/chatter lines → talk.js, meg-agent.js and other NPC speakers → scripts/lib/voices.js looks up clips in voice-acted2.yml; missing takes leave subtitles without generated speech."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; menus/staff vary by venue and Level 6.1 fixtures are fitted separately.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes a table with separately fitted chairs.",
-    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js - weapon stats/variants share combat; per-weapon sound/rack/reload fields resolve through sounds.yml, with weapon-specific liquid effects alongside shared behavior.",
+    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js - weapon stats/variants share combat; per-weapon sound/rack/reload fields resolve through sounds.yml, with weapon-specific liquid effects and ammo.",
     "art/cigs/build.py + art/fnv/build.py + art/xmas-clean/build.py and NIF converters, plus art/cat-wardrobe/fit.py + tailclear.py + art/level70-stall/parts.py - fitted GLBs/prop catalogs and body-specific garment/prop fitting.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl and tight spaces trigger automatic crawl.",
-    "Level 01/Zenith and Level 1 geometry builders + scripts/l169-house-geo.js + scripts/lib/l169-house.js + scripts/lib/l169-ferry.js - authored station/house geometry; Level 169 room fittings share builders, while Ferry combines scripted interior parts with the split Tripo shell/leaf built by art/ferry-fridge/build.py.",
+    "Level 01/Zenith and Level 1 geometry builders + scripts/l169-house-geo.js + scripts/lib/l169-house.js + scripts/lib/l169-ferry.js - authored station/house geometry; Level 169 room fittings share builders, while Ferry combines scripted interactions.",
     "scripts/lib/npc-gear.js + scripts/lib/clothes.js + weapons/loot registries - NPC weapons, clothing and pockets scale by reference player level, role/faction/pool and stable per-NPC spread; meg-agent and hit squads consume the rolls."
   ],
   "probableOrphans": [
@@ -87,10 +88,10 @@
   ],
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
-    "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together. The Hub cells own fixed fixture/furniture IDs; keep matching scene placements with them.",
+    "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together. The Hub cells own fixed fixture/furniture IDs; keep matching scene placements with sim-generated doors.",
     "Level 13's building shell is authored in cells/x0z0.scene; sim.js returns if l13-floor is absent and no longer regenerates the shell. Preserve matching floor ID and scene wall/threshold geometry; LETH remains in player.state.leth13.",
-    "Level 169 uses x/z with north at -z and 1:10 map scale; terrain marks, track, house, road sites and ship berth must align. level169.yml holds tuned positions/rules; sim.js layout relay version is 9 and relays the fridge shell change.",
-    "Level 169's 48-hour desert day is 5,760,000 ms (96 real minutes); sun and water-to-sand rules are driven from player state by scripts/sun169.js. Ferry stock refill uses configured desert-hour intervals and preserves existing water/food/at stock when the setpiece is relaid.",
-    "In scripts/lib/l169-house.js, the bed model's long side is its x-axis: beds are rotated 90° and fitted at scale 1.03, 1.1, 0.68 for a 2.06-length bed; preserve this orientation/fit when changing the bedroom layout."
+    "Level 169 uses x/z with north at -z and 1:10 map scale; terrain marks, track, house, road sites and ship berth must align. level169.yml holds tuned positions/rules; sim.js layout relay version is 9; sun/water hazards use a 48-hour day of 5,760,000 ms, and Ferry stock refill uses desert-hour intervals.",
+    "In scripts/lib/l169-house.js, the bed model's long side is its x-axis: beds are rotated 90° and fitted at scale 1.03, 1.1, 0.68 for a 2.06-length bed; preserve this orientation/fit when changing the bedroom layout.",
+    "art/vo/act.py writes the clean retake table scripts/lib/data/voice-acted2.yml; scripts/lib/voices.js loads that table asynchronously instead of the laugh/repeat-prone voice-acted.yml. The current retake table is empty, and unrecorded lines remain subtitle-only."
   ]
 }
