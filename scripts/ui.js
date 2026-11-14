@@ -33,6 +33,7 @@ import { talkUi } from './talk-ui.js'
 import { buildUi } from './build-ui.js'
 import { statsUi } from './stats-ui.js'
 import { craftUi } from './craft-ui.js'
+import { roadUi } from './l169-road-ui.js'
 import { osUi } from './os-ui.js'
 import { arcadeUi } from './arcade-ui.js'
 import { smoothieUi } from './smoothie-ui.js'
@@ -562,7 +563,7 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
     <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('emote', 'T')}</kbd> face
   </div>`}
 
-</div>${ledgerUi(s)}${journalUi(s, player, ctx)}${feedUi(ctx, player)}${lootUi(ctx, player)}${pickUi(ctx, player)}${spamUi(ctx, player)}${spamArenaUi(ctx, player)}${talkUi(ctx, player)}${hubUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${arcadeUi(ctx, player)}${smoothieUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
+</div>${ledgerUi(s)}${journalUi(s, player, ctx)}${feedUi(ctx, player)}${lootUi(ctx, player)}${pickUi(ctx, player)}${spamUi(ctx, player)}${spamArenaUi(ctx, player)}${talkUi(ctx, player)}${hubUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${roadUi(ctx, player)}${osUi(ctx, player)}${arcadeUi(ctx, player)}${smoothieUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
 }
 
 // Sedco CCTV desk (scripts/cctv.js owns the view): the feed's frame over the live picture

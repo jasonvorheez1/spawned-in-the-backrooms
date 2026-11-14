@@ -1,0 +1,37 @@
+# The checkpoint road, expedition travel and the edge (scripts/lib/l169-road.js). Positions of the checkpoints themselves: level169.yml.
+streamIn: 700          # a site's objects exist while any player is this near
+streamOut: 1000        # and go when everyone is past this
+cairnEvery: 400
+houseKm: 5             # Ferry's house on the article's scale
+legSpeed: 5            # article km per desert hour on a guided leg
+bottleKm: 40           # 1 cold bottle per this many km
+foodKm: 80             # 1 food per this many km
+foodHunger: 30         # hunger one food stands for
+tripMs: 6000
+fallMs: 2000
+discover: 30
+arrive: { dx: 0, dz: 9 }   # where a guided leg sets you down, from the pad centre
+lockers:               # tins and cloth; never water
+  a: "ration,ration,ration,tape,tape"
+  apit: "ration,ration"
+  b: "ration,ration,ration,ration,tape,tape,battery"
+  bh: "ration,ration,tape"
+  c: "tape"
+landmarks:             # by seed: z along the track, x off it
+  - { id: mill,  kind: windmill, x: -46, z: -2600, roll: 9, yaw: 30 }
+  - { id: grove, kind: grove,    x: 38,  z: -9800, n: 7 }
+  - { id: rock,  kind: balanced, x: -30, z: -12600 }
+  - { id: grove2, kind: grove,   x: -42, z: -17200, n: 5 }
+  - { id: rock2, kind: balanced, x: 34,  z: -21400, yaw: 140 }
+logbook:
+  title: "Checkpoint A logbook"
+  lines:
+    - "Day 3. Got in an hour before sunrise. The pit keeps tins cool, not water. Don't bother trying. - Marta"
+    - "Day 11. Left two tins and a roll of cloth in the locker. Took one tin. Fair is fair. - Idris"
+    - "Day 19. B is 90 km on. Leave at dusk, not after. I left late and ran the last stretch. - no name"
+texts:
+  c: "20 km to the edge. Nothing after this."
+  edge: "People jump. They wake up in a city. Nobody has come back to say otherwise."
+  boots: "Boots, side by side, toes to the drop. Some are nearly new."
+  cairns: "A field of small stones. Everyone who got this far put one down."
+  pit: "Cool down there, even at noon. Tins keep. Water still turns."
