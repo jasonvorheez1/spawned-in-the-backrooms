@@ -20,3 +20,30 @@ hub-baylight-2:
   light: {color: oklch(0.88 0.09 82), distance: 11, intensity: 1.6, kind: point, shadow: {enabled: false}}
   material: {color: oklch(0.95 0.06 85), emissive: oklch(0.95 0.06 85), emissiveIntensity: 6}
   primitive: {kind: sphere, radius: 0.09}
+hub-l1-door:
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.2, z: 0.78}, id: leaf, material: {roughness: 0.9}, physics: {body: static, collider: mesh}, primitive: {kind: scripted, params: {part: leaf}, script: scripts/hub-door-geo.js, seed: 7101}}]
+  feetPosition: {x: -59.95, y: 0, z: 0}
+  id: hub-l1-door
+  material: {roughness: 0.9}
+  physics: {body: static, collider: mesh}
+  primitive: {kind: scripted, params: {part: frame}, script: scripts/hub-door-geo.js}
+  rotation: {yaw: -90}
+  tags: [hub-thing]
+hub-l1-lamp:
+  feetPosition: {x: -58.9, y: 3.4, z: 0}
+  id: hub-l1-lamp
+  light: {color: oklch(0.8 0.13 80), distance: 8, intensity: 2.4, kind: point, shadow: {enabled: false}}
+hub-l1-sign:
+  feetPosition: {x: -59.85, y: 3.05, z: 0}
+  id: hub-l1-sign
+  rotation: {yaw: 90}
+  vector: "<svg viewBox='0 0 200 40' width='1.4m'><text x='100' y='29' text-anchor='middle' font-family='sans-serif' font-size='26' fill='#d9c48a' letter-spacing='4'>LEVEL 1</text></svg>"
+hub-to-l1:
+  behavior: scripts/level-door.js
+  feetPosition: {x: -59.3, y: 0, z: 0}
+  id: hub-to-l1
+  physics: {body: static, trigger: true}
+  primitive: {depth: 2.2, height: 2.6, kind: box, width: 0.8}
+  state: {to: level1}
+  visible: false
