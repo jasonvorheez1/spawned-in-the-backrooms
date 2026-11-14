@@ -109,12 +109,17 @@ test('leaving a bench closes crafting even where hunger drain is disabled',()=>{
  for(const place of ['level6','bonus']){const s={...player(),craftBench:'old-bench',hunger:60,thirst:70},ctx=context(s);ctx.self.session={};ctx.self.place=place;run(ctx,.5);expect(s.craftOpen).toBe('');expect(s.craftBench).toBe('');expect(s.hunger).toBe(60);expect(s.thirst).toBe(70)}
 })
 
-test('recipes stay locked until the manual for their kind is read',()=>{
+test('recipes stay locked until a manual teaches them, one random recipe per manual',async()=>{
+ const{learnFromManual,unknownOfKind}=await import('../scripts/lib/manuals.js')
  const s=player({wire:1,nails:1});s.manuals=''
  const st=recipeStatus(s,'bobbypin')
  expect(st.ok).toBe(false);expect(st.known).toBe(false);expect(st.reason).toContain("Tinkerer")
- s.manuals='tools';expect(recipeStatus(s,'bobbypin').ok).toBe(true)
- s.manuals='tools,bogus';expect(recipeStatus(s,'kit').known).toBe(false)
+ s.recipes='bobbypin';expect(recipeStatus(s,'bobbypin').ok).toBe(true);expect(recipeStatus(s,'battery').known).toBe(false)
+ const tools=unknownOfKind(s,'tools').length,id=learnFromManual(s,'tools',()=>0.5)
+ expect(C.recipes[id].cat).toBe('tools');expect(unknownOfKind(s,'tools').length).toBe(tools-1)
+ for(let i=0;i<tools-1;i++)expect(learnFromManual(s,'tools',()=>0.99)).toBeTruthy()
+ expect(learnFromManual(s,'tools',()=>0)).toBeNull()
+ const old=player();old.manuals='aid';expect(recipeStatus(old,'kit').known).toBe(true) // read under the Nov 14 rule
 })
 test('every recipe belongs to a real manual and loot rolls only real manuals',async()=>{
  const{MANUALS,manualKind,rollManual}=await import('../scripts/lib/manuals.js')
@@ -136,5 +141,5 @@ test('locked recipes are refused by the action and marked in the menu',()=>{
  action(()=>{calls++;return{ok:true}})(ctx,s,{k:'make',id:'bobbypin',n:1})
  expect(calls).toBe(0);expect(s.scrap.wire).toBe(1);expect(s.notice.text).toContain('Tinkerer')
  const html=craftUi({},{state:{...s,craftOpen:'hand',hunger:100,thirst:100}})
- expect(html).toContain('LOCKED');expect(html).toContain('Manuals 0/6')
+ expect(html).toContain('LOCKED');expect(html).toContain('Recipes known 0/')
 })

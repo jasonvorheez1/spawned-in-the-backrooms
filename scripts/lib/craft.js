@@ -13,7 +13,7 @@ export function recipeStatus(s,id) {
   const r=Object.hasOwn(C.recipes,id)?C.recipes[id]:null
   if(!valid(r))return {ok:false,lack:[],skillOk:false,benchOk:false,roomOk:false,got:0,need:0,bonusChance:0,reason:'Recipe unavailable',known:false}
   const lack=Object.entries(r.in).filter(([k,n])=>scrapCount(s,k)<n).map(([k])=>k),sk=skillsOf(s),need=r.skill?.[1]??0,got=r.skill?(sk[r.skill[0]]??0):0,skillOk=got>=need,benchOk=!r.bench||(s.craftOpen==='bench'&&(s.craftStation??'bench')===stationOf(r)),w=weights(r)
-  const known=knowsRecipe(s,r),roomOk=w.output===0 || inventoryWeight(s)-w.input+w.output<=derived(s).carry+1e-6
+  const known=knowsRecipe(s,id,r),roomOk=w.output===0 || inventoryWeight(s)-w.input+w.output<=derived(s).carry+1e-6
   return {ok:known&&!lack.length&&skillOk&&benchOk&&roomOk,known,manual:manualKind(r),lack,skillOk,benchOk,roomOk,got,need,bonusChance:r.skill?Math.max(0,Math.min(1,(got-need)/100)):0,reason:!known?'Find the '+MANUALS[manualKind(r)].name:!benchOk?'Needs '+STATION_NAMES[stationOf(r)]:!skillOk?'Skill too low':lack.length?'Missing ingredients':!roomOk?'No room for the complete output':''}
 }
 export function maxMakes(s,id) {

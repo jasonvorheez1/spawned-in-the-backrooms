@@ -1,4 +1,7 @@
-// Crafting manuals: a recipe stays locked until you have read the manual for its kind (player.state.manuals, a comma list).
+// Crafting manuals: a recipe stays locked until a manual of its kind teaches it. Each manual read teaches ONE random recipe of
+// its kind you do not know yet (player.state.recipes, a comma list of recipe ids). player.state.manuals is the older rule
+// (a whole kind at once, Nov 14 only) and still counts for anyone who read one then.
+import C from './data/craft.yml'
 // Token "manual:<kind>" comes out of loot; each level's containers lean toward the manuals that fit what is stored there.
 // A recipe's kind is its `manual:` field in craft.yml, else its `cat`.
 export const MANUALS = {
@@ -12,7 +15,15 @@ export const MANUALS = {
 export const manualKind = (r) => (r?.manual && MANUALS[r.manual] ? r.manual : MANUALS[r?.cat] ? r.cat : 'tools')
 export const manualsOf = (s) => String(s?.manuals ?? '').split(',').filter((k) => MANUALS[k])
 export const knowsManual = (s, kind) => manualsOf(s).includes(kind)
-export const knowsRecipe = (s, r) => knowsManual(s, manualKind(r))
+export const recipesOf = (s) => String(s?.recipes ?? '').split(',').filter((id) => Object.hasOwn(C.recipes, id))
+export const knowsRecipe = (s, id, r = C.recipes[id]) => recipesOf(s).includes(id) || knowsManual(s, manualKind(r))
+export const unknownOfKind = (s, kind) => Object.entries(C.recipes).filter(([id, r]) => manualKind(r) === kind && !knowsRecipe(s, id, r)).map(([id]) => id)
+// read one manual: the recipe id it teaches, or null when you know every recipe of that kind
+export function learnFromManual(s, kind, random) {
+  const left = unknownOfKind(s, kind); if (!left.length) return null
+  const id = left[Math.min(left.length - 1, Math.floor(random() * left.length))]
+  s.recipes = [...recipesOf(s), id].join(','); return id
+}
 // pool -> manual weights: what a level's storage would plausibly hold (lobby: first aid and tinkering, garage: tools and arms, pipes: ammo and arms, …)
 const BY_POOL = {
   l0: { aid: 3, tools: 3, armor: 1, weapons: 1, food: 1, ammo: 0.5 },
