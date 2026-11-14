@@ -185,3 +185,111 @@ l169-flora-9:
   scale: 0.8446870337681319
   tags: [l169-flora]
   visibleRange: {max: 180}
+l169-yard-0:
+  feetPosition: {x: 33, y: {terrain: -0.05}, z: -508}
+  id: l169-yard-0
+  model: /cdn/value.436022d4fc62276a709010379b6167c7f346e6166fa2333e5d2f0bf51c960eb5.glb
+  physics: static
+  rotation: {yaw: 73}
+  scale: 2.6
+  tags: [l169-flora]
+  visibleRange: {max: 400}
+l169-yard-1:
+  feetPosition: {x: 3, y: {terrain: -0.05}, z: -511}
+  id: l169-yard-1
+  model: /cdn/value.436022d4fc62276a709010379b6167c7f346e6166fa2333e5d2f0bf51c960eb5.glb
+  physics: static
+  rotation: {yaw: 146}
+  scale: 3.1
+  tags: [l169-flora]
+  visibleRange: {max: 400}
+l169-yard-10:
+  feetPosition: {x: -1, y: {terrain: -0.05}, z: -506}
+  id: l169-yard-10
+  model: /cdn/value.b980609353285a03c5d756b506520a890529a2e3cd542624d5620ac06a4de6c1.glb
+  physics: static
+  rotation: {yaw: 83}
+  scale: 1.1
+  tags: [l169-flora]
+  visibleRange: {max: 400}
+l169-yard-11:
+  feetPosition: {x: 22, y: {terrain: -0.05}, z: -512}
+  id: l169-yard-11
+  model: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb
+  rotation: {yaw: 156}
+  scale: 0.7
+  tags: [l169-flora]
+  visibleRange: {max: 400}
+l169-yard-12:
+  feetPosition: {x: 14, y: {terrain: -0.05}, z: -513}
+  id: l169-yard-12
+  model: /cdn/value.c66c8c56c176265aa5b90fd48d0632ca2ea495b09b9c6931da5ddc9d05262586.glb
+  rotation: {yaw: 229}
+  scale: 1
+  tags: [l169-flora]
+  visibleRange: {max: 400}
+l169-yard-2:
+  feetPosition: {x: 30, y: {terrain: -0.05}, z: -492}
+  id: l169-yard-2
+  model: /cdn/value.c66c8c56c176265aa5b90fd48d0632ca2ea495b09b9c6931da5ddc9d05262586.glb
+  rotation: {yaw: 219}
+  scale: 1
+  tags: [l169-flora]
+  visibleRange: {max: 400}
+l169-yard-3:
+  feetPosition: {x: 6, y: {terrain: -0.05}, z: -489}
+  id: l169-yard-3
+  model: /cdn/value.c66c8c56c176265aa5b90fd48d0632ca2ea495b09b9c6931da5ddc9d05262586.glb
+  rotation: {yaw: 292}
+  scale: 0.9
+  tags: [l169-flora]
+  visibleRange: {max: 400}
+l169-yard-4:
+  feetPosition: {x: 25, y: {terrain: -0.05}, z: -487}
+  id: l169-yard-4
+  model: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb
+  rotation: {yaw: 5}
+  scale: 0.8
+  tags: [l169-flora]
+  visibleRange: {max: 400}
+l169-yard-5:
+  feetPosition: {x: 9, y: {terrain: -0.05}, z: -486}
+  id: l169-yard-5
+  model: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb
+  rotation: {yaw: 78}
+  scale: 0.7
+  tags: [l169-flora]
+  visibleRange: {max: 400}
+l169-yard-6:
+  feetPosition: {x: 29, y: {terrain: -0.05}, z: -505}
+  id: l169-yard-6
+  model: /cdn/value.2e7f0f943689bdbf3769ad122fed4c56274aaf8089fc3f44aca8f822776d6988.glb
+  rotation: {yaw: 151}
+  scale: 0.8
+  tags: [l169-flora]
+  visibleRange: {max: 400}
+l169-yard-7:
+  feetPosition: {x: 36, y: {terrain: -0.05}, z: -497}
+  id: l169-yard-7
+  model: /cdn/value.35eb169b9a424e39454e42d11abf9d50dff5a3c6626750517ab166bc5daa2684.glb
+  rotation: {yaw: 224}
+  scale: 0.9
+  tags: [l169-flora]
+  visibleRange: {max: 400}
+l169-yard-8:
+  feetPosition: {x: 1, y: {terrain: -0.05}, z: -498}
+  id: l169-yard-8
+  model: /cdn/value.35eb169b9a424e39454e42d11abf9d50dff5a3c6626750517ab166bc5daa2684.glb
+  rotation: {yaw: 297}
+  scale: 0.8
+  tags: [l169-flora]
+  visibleRange: {max: 400}
+l169-yard-9:
+  feetPosition: {x: 35, y: {terrain: -0.05}, z: -514}
+  id: l169-yard-9
+  model: /cdn/value.b980609353285a03c5d756b506520a890529a2e3cd542624d5620ac06a4de6c1.glb
+  physics: static
+  rotation: {yaw: 10}
+  scale: 1.4
+  tags: [l169-flora]
+  visibleRange: {max: 400}
