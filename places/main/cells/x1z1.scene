@@ -286,8 +286,8 @@ xmas-cane-4:
 xmas-clock:
   feetPosition: {x: 72.6, y: 0, z: 145.85}
   id: xmas-clock
-  layout: {box: {max: {x: 0.3, y: 2.42, z: 0.2}, min: {x: -0.3, y: 0, z: -0.2}}}
-  model: {forward: "-x", id: /cdn/value.5302c36736340dff22093ccb727df8c3248c71019ccf0b1f395779d29a35ef69.glb}
+  layout: {box: {max: {x: 0.275, y: 2.3, z: 0.315}, min: {x: -0.275, y: 0, z: -0.315}}}
+  model: {id: /cdn/value.71d4abfce5fc6f32270bd4f4a63d652234cbf80f9de63a8460cb1beeb407ca3e.glb}
   physics: {body: static, collider: box}
   rotation: {roll: -9, yaw: 90}
   tags: [xmas]
@@ -299,8 +299,8 @@ xmas-clock-light:
 xmas-cone:
   feetPosition: {x: 72.7, y: 0, z: 150.75}
   id: xmas-cone
-  layout: {box: {max: {x: 0.18, y: 0.7, z: 0.18}, min: {x: -0.18, y: 0, z: -0.18}}}
-  model: {id: /cdn/value.8f82a876c6f9b73fd0ec71337005ec8f5870e6c3ac2d69c5de76ce128238151c.glb}
+  layout: {box: {max: {x: 0.22, y: 0.7, z: 0.22}, min: {x: -0.22, y: 0, z: -0.22}}}
+  model: {id: /cdn/value.09de62b1e201304b36b84af8000ea9c145f4f0e5e3cdd95e886fb96ccd204414.glb}
   physics: {body: static, collider: cylinder}
   tags: [xmas]
 xmas-crook:
@@ -406,8 +406,8 @@ xmas-red-stray:
 xmas-sign:
   feetPosition: {x: 72.4, y: 0, z: 152.04999999999998}
   id: xmas-sign
-  layout: {box: {max: {x: 0.375, y: 2.3, z: 0.2}, min: {x: -0.375, y: 0, z: -0.2}}}
-  model: {id: /cdn/value.8a4b0105783b2d65717abedd0d0d187426a6e1e890db57cdfead97042b3a8ac0.glb}
+  layout: {box: {max: {x: 0.29, y: 0.85, z: 0.23}, min: {x: -0.29, y: 0, z: -0.23}}}
+  model: {id: /cdn/value.f0baaf9a150201f75112b77e87a4c05cd192270d3e2ec29c8a568398010463fa.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: -100}
   tags: [xmas]
@@ -434,8 +434,8 @@ xmas-tree:
   feetPosition: {x: 66, y: 0.02, z: 125.65}
   fx: {script: "fx\npop l1 n=?mobile:14|22 on=disc(.78).c(.62) tint=<2.6,.7,.25>..<2.4,1.9,.5> size=.05..0.08 col=$tint*flick(1.3,.7) a=.95 sz=$size r=sprite(soft-disc,add)\npop l2 n=?mobile:10|16 on=disc(.6).c(1.02) tint=<.4,2.2,.6>..<2.6,.4,.3> size=.05..0.08 col=$tint*flick(1.1,.7) a=.95 sz=$size r=sprite(soft-disc,add)\npop l3 n=?mobile:8|12 on=disc(.45).c(1.38) tint=<2.6,1.8,.5>..<.6,.8,2.6> size=.05..0.07 col=$tint*flick(1.5,.7) a=.95 sz=$size r=sprite(soft-disc,add)\npop l4 n=6 on=disc(.25).c(1.72) tint=<2.6,2,.8> size=.04..0.06 col=$tint*flick(1.7,.6) a=.95 sz=$size r=sprite(soft-disc,add)"}
   id: xmas-tree
-  layout: {box: {max: {x: 0.95, y: 1.95, z: 0.95}, min: {x: -0.95, y: 0, z: -0.95}}}
-  model: {id: /cdn/value.b8e231e346d844025a98e483441f85845923431c33f4eb75bcc4064ca44666a0.glb}
+  layout: {box: {max: {x: 0.86, y: 2.45, z: 0.83}, min: {x: -0.86, y: 0, z: -0.83}}}
+  model: {id: /cdn/value.e8e6a110133a8bc174c110b087d37e7f8b7e138fecf2459cc26a46bf61cd4b9d.glb}
   physics: {body: static, collider: cylinder}
   tags: [xmas]
 xmas-tree-light:

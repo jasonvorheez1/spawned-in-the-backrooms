@@ -788,8 +788,8 @@ xmas-floorlights-1:
 xmas-house:
   feetPosition: {x: 63.8, y: 0, z: 155.04999999999998}
   id: xmas-house
-  layout: {box: {max: {x: 0.33, y: 0.62, z: 0.25}, min: {x: -0.33, y: 0, z: -0.25}}}
-  model: {id: /cdn/value.cc08f89a04117dc5b8660b77ac2702671b1c250e3832b44bf10d0b529be96025.glb}
+  layout: {box: {max: {x: 0.21, y: 0.62, z: 0.25}, min: {x: -0.21, y: 0, z: -0.25}}}
+  model: {id: /cdn/value.99e79717fed5c6408f94a5f0d230769d4db7a52769c57d0923c8553dbaeaeb04.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: 10}
   state: {items: musicbox, name: Miniature house, verb: Open}
@@ -825,8 +825,8 @@ xmas-still-a:
 xmas-table:
   feetPosition: {x: 59, y: 0, z: 143.04999999999998}
   id: xmas-table
-  layout: {box: {max: {x: 0.3, y: 0.69, z: 0.3}, min: {x: -0.3, y: 0, z: -0.3}}}
-  model: {id: /cdn/value.e81e38b2fefa490111e61cd78b98309ece7e01aea4f2afedfd98283a72870610.glb}
+  layout: {box: {max: {x: 0.54, y: 0.84, z: 0.54}, min: {x: -0.54, y: 0, z: -0.54}}}
+  model: {id: /cdn/value.8834e1bd9471856bfca9f16098f3eb277b66d85f69c8c34b54ebf9f71ccf00e2.glb}
   physics: {body: static, collider: cylinder}
   tags: [xmas]
 xmas-thermos:
