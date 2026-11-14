@@ -12,6 +12,12 @@ export const ears = {
       else st.notice = { text: "You already have the interview tape.", at: ctx.now() };
       ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-cassette-tape-pickup-plastic-clack.mp3", position: pos, volume: 0.7 }, { audience: { player: by } });
       return; }
+    if (s.kind === "sleep" && who) { // the lore exit: drift off in your old bed, wake on a Level 9 street
+      who.state.notice = { text: "You curl up under the too-small blanket. The room hums. You drift off...", at: ctx.now() };
+      ctx.emit("screenFlash", { color: "#000000", duration: 3.2, intensity: 1 }, { audience: { player: by } });
+      ctx.emit("playSound", { clip: SFX + "sfx-blanket-rustle-settling-into-bed.mp3", position: pos, volume: 0.6 }, { audience: { player: by } });
+      ctx.after(1.6, "wake", { by }); return; }
     if (s.kind === "out" && who) { ctx.emit("playSound", { clip: SFX + "sfx-old-wooden-hotel-door-creak-open.mp3", position: pos, volume: 0.6 }); ctx.cross(who, "level9"); }
   },
 };
+export function wake(ctx, { by }) { const who = ctx.getObject(by); if (!who || who.place !== "level114") return; who.state.notice = { text: "You wake on cold asphalt. Streetlights. Level 9.", at: ctx.now() }; ctx.cross(who, "level9"); }

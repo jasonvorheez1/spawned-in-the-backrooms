@@ -2,7 +2,7 @@
 // place.state.lit: the switch. Lit: Smiler eyes glint under the bed and in the closet gap. Dark: a Smiler comes out after DARK_S.
 // Now and then a counterpart stands at the window. The void runs south; a lone door at z 62 lets you out (scripts/l114-use.js).
 export const cadence = "250ms";
-const V = 8, TAPE_TOP = 0.909, H = 2.5, W = 2, D = 2.25, DOOR = { x: 1.1, w: 0.9, h: 2.05 }, WIN = { x: -0.6, w: 1.1, y0: 0.9, y1: 1.9 };
+const V = 9, TAPE_TOP = 0.909, H = 2.5, W = 2, D = 2.25, DOOR = { x: 1.1, w: 0.9, h: 2.05 }, WIN = { x: -0.6, w: 1.1, y0: 0.9, y1: 1.9 };
 const DARK_S = 7, BITE = 18; // my picks: seconds of dark before a Smiler bites, and its bite
 const WALL = { texture: "cdn/texture-faded-pale-blue-childhood-wallpaper-tiny-yellow-stars-water-stained.png", wrap: "repeat", repeat: [1, 1], roughness: 0.9 };
 const CARPET = { texture: "cdn/texture-worn-beige-bedroom-carpet-fibres-faint-stains.png", wrap: "repeat", repeat: [1, 1], roughness: 1 };
@@ -46,7 +46,7 @@ function build(ctx) {
   // skirting
   for (const [id, x, z, w, d] of [["sk-w", -W + 0.01, 0, 0.02, 2 * D], ["sk-e", W - 0.01, 0, 0.02, 2 * D], ["sk-n", 0, -D + 0.01, 2 * W, 0.02]]) ctx.spawn(id, { tags: ["l114"], feetPosition: { x, y: 0, z }, primitive: { kind: "box", width: w, height: 0.09, depth: d }, material: { color: "oklch(0.93 0.01 90)", roughness: 0.5 } });
   // furniture: the bed against the west wall, head to the north
-  put(ctx, "bed", F("bed"), -W + 0.55, -0.85, 0, { tags: ["l114", "usable"], state: { name: "Bed", verb: "Look", info: "too small for you now" } });
+  put(ctx, "bed", F("bed"), -W + 0.55, -0.85, 0, { tags: ["l114", "usable"], behavior: "scripts/l114-use.js", state: { kind: "sleep", name: "Bed", verb: "Fall Asleep", info: "you will wake on Level 9" } }); // Wikidot: "Fall asleep in this room, and you will awake on a street on Level 9." (Shelly Nov 14)
   put(ctx, "nightstand", F("lava"), -W + 0.3, -D + 0.3, 90);
   put(ctx, "dresser", F("dresser"), W - 0.27, -1.45, -90, { tags: ["l114", "container", "furniture"], state: { name: "Dresser", verb: "Search", kind: "home", items: "almond,bandage" } });
   put(ctx, "desk", F("desk"), W - 0.26, -0.25, -90);
