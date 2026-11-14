@@ -44,6 +44,16 @@ dina-diary:
   rotation: {yaw: 25}
   state: {name: Dina's diary, verb: Read}
   tags: [usable]
+dina-freight-slip:
+  behavior: scripts/dina-record.js
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: -0.76, z: 0.05}, material: {color: "#51483f", roughness: 0.88}, primitive: {depth: 0.065, height: 0.76, kind: box, width: 0.065}}, {feetPosition: {x: 0, y: -0.76, z: 0.05}, material: {color: "#51483f", roughness: 0.88}, primitive: {height: 0.045, kind: cylinder, radialSegments: 12, radiusBottom: 0.18, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 0.15, z: -0.017}, vector: "<svg viewBox='0 0 220 150' width='0.40m'><rect width='220' height='150' rx='3' fill='#dbcca8'/><text x='110' y='32' text-anchor='middle' font-family='sans-serif' font-size='17' fill='#3c3128'>B.N.T.G. FREIGHT</text><path d='M23 53h174m-174 21h165m-165 21h174m-174 21h123' stroke='#766650' stroke-width='3'/></svg>"}]
+  feetPosition: {x: 14.14, y: 0.76, z: 3.65}
+  material: {color: "#524439", roughness: 0.85}
+  primitive: {depth: 0.025, height: 0.31, kind: box, width: 0.43}
+  rotation: {yaw: 180}
+  state: {kind: freight, name: Voss's freight slips, verb: Check slips}
+  tags: [usable]
 dina-lantern:
   castShadow: false
   children: [{feetPosition: {x: 0, y: 0.16, z: 0}, id: flame, light: {color: oklch(0.8 0.12 70), distance: 7, intensity: 1.4, kind: point, shadow: {enabled: false}}}]
@@ -52,13 +62,15 @@ dina-lantern:
   model: {id: /cdn/value.6573fa2f4f3f2dc585e4a4fd269849ea1f17585c7f9ca9ac2e934546acdd598f.glb}
   physics: none
 dina-radio:
-  audio: {clip: cdn/moodboard-realistic-gritty/sfx-shortwave-radio-static-hiss-with-faint-warbling-tones-loop.mp3, gain: 0.5, loop: true, maxDistance: 34, spatial: true}
+  audio: null
+  behavior: scripts/world-radio.js
   castShadow: false
   children: [{feetPosition: {x: 0, y: 0.34, z: -0.12}, id: glow, light: {color: oklch(0.78 0.14 65), distance: 2.5, intensity: 0.3, kind: point}}]
   feetPosition: {x: 21.55, y: 0, z: 37.2}
   id: dina-radio
   model: {id: /cdn/value.cfec526c4a998af568ac373df79772da89efb155e26028bfa6c96e3413e5fa8b.glb}
   physics: none
+  state: {gain: 0.5, hiss: cdn/moodboard-realistic-gritty/sfx-shortwave-radio-static-hiss-with-faint-warbling-tones-loop.mp3, reach: 30}
 dina-satchel:
   castShadow: false
   feetPosition: {x: 21.25, y: 0, z: 38.6}
@@ -143,21 +155,3 @@ meg-ortiz/object/xba5b309b4f070466/1:
   id: meg-ortiz/object/xba5b309b4f070466/1
   model: {id: /cdn/value.bd1a0ff99d2e34491523ee49853ebddcbe4ec10b685abfb66bab58f6db1cbb00.glb, offset: [0, -0.064, 0]}
   parent: meg-ortiz
-dina-freight-slip:
-  behavior: scripts/dina-record.js
-  feetPosition: {x: 14.14, y: 0.76, z: 3.65}
-  rotation: {yaw: 180}
-  castShadow: false
-  primitive: {kind: box, width: 0.43, height: 0.31, depth: 0.025}
-  material: {color: "#524439", roughness: 0.85}
-  state: {kind: freight, name: "Voss's freight slips", verb: "Check slips"}
-  tags: [usable]
-  children:
-    - feetPosition: {x: 0, y: -0.76, z: 0.05}
-      primitive: {kind: box, width: 0.065, height: 0.76, depth: 0.065}
-      material: {color: "#51483f", roughness: 0.88}
-    - feetPosition: {x: 0, y: -0.76, z: 0.05}
-      primitive: {kind: cylinder, radiusTop: 0.15, radiusBottom: 0.18, height: 0.045, radialSegments: 12}
-      material: {color: "#51483f", roughness: 0.88}
-    - feetPosition: {x: 0, y: 0.15, z: -0.017}
-      vector: "<svg viewBox='0 0 220 150' width='0.40m'><rect width='220' height='150' rx='3' fill='#dbcca8'/><text x='110' y='32' text-anchor='middle' font-family='sans-serif' font-size='17' fill='#3c3128'>B.N.T.G. FREIGHT</text><path d='M23 53h174m-174 21h165m-165 21h174m-174 21h123' stroke='#766650' stroke-width='3'/></svg>"
