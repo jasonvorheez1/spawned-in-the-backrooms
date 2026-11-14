@@ -1,7 +1,7 @@
 // Level ! dressing: the box shells stay as invisible colliders; real geometry and fitted models stand over them.
 // Gate: place.state.dressV. Bump DRESS_V to re-lay (tagged "lrun-dress" pieces are destroyed first).
 import { CORRIDOR, OBSTACLES } from "./levelrun-mechanics.js";
-export const DRESS_V = 1;
+export const DRESS_V = 2; // 2: dying cold fluorescent tubes break the red every 26 m
 const GEO = "scripts/levelrun-geo.js", DOOR = "scripts/door-geo.js";
 export const LRUN_MODELS = {
   gurney: "/cdn/value.ef9b88f3c37d37786b7fcc4a2101e8b527caf2d2e84876813f963730a5a2f334.glb", // Tripo
@@ -87,6 +87,15 @@ export function dressWorld(ctx) {
   const ex = objs["lrun-exit-door-frame"]; if (ex) { ex.visible = false;
     D("lrun-dress-exit", { feetPosition: { x: 0, y: 0, z: CORRIDOR.exitZ - 1.15 }, primitive: { kind: "scripted", script: DOOR, params: { style: "fire", part: "set", w: 1.7, h: 2.25, seed: 9 } }, material: { pbr: true, color: "oklch(0.55 0.08 150)" },
       light: { kind: "point", color: "#3dff8a", intensity: 2.2, distance: 7, shadow: { enabled: false } } }); }
+  // 6b. dying fluorescent tubes: one per chunk, cold white stutter against the red strobes so the run has contrast
+  for (let i = 0; i < 8; i++) {
+    const z = CORRIDOR.corridorStartZ - 6 - i * 26, x = (i % 2 ? 1 : -1) * 0.9;
+    D(`lrun-dress-tube-${i}`, { feetPosition: { x, y: 3.22, z }, rotation: { yaw: 90 },
+      primitive: { kind: "capsule", radius: 0.035, halfHeight: 0.55 }, pivot: "center",
+      material: { color: "#e8f4ff", emissive: "#cfe6ff", emissiveIntensity: 2.4 },
+      light: { kind: "point", color: "#cfe2ff", intensity: 2.2, distance: 9, shadow: { enabled: false } },
+      behavior: "scripts/lrun-strobe.js", state: { peak: 2.6, period: 0.23 + (i % 3) * 0.17, phase: i * 0.31 } });
+  }
   // 7. Safe Alcove: a lived-in room
   const AX = CORRIDOR.safePos.x;
   D("lrun-dress-alcove", { feetPosition: { x: AX, y: 0, z: 0 }, primitive: { kind: "scripted", script: GEO, params: { part: "hall", w: 11.75, d: 8.75, h: 3.6, ceil: 3.3, walls: "ewns", seed: 42, tone: "warm", conduit: true, gaps: [{ wall: "e", c: 4.375, w: 1.25, h: 2.3, kind: "open" }] } }, material: { pbr: true } });
