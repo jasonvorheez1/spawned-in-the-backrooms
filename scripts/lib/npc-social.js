@@ -44,7 +44,7 @@ const voiceOf = (o) => voiceKey(o);
 export function say(ctx, o, text, to) {
   const now = ctx.now(), st = o.state, p = o.feetPosition, d = 1500 + text.length * 62;
   st.line = { t: text, at: now, d }; st.talkAt = now; st.talkTo = to ?? null;
-  heard(ctx, { clip: vo(voiceOf(o), text), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 0.8, refDistance: 3, maxDistance: 16 }, { audience: { nearby: p, radius: 18 } });
+  heard(ctx, { clip: vo(voiceOf(o), text) ?? vo(String(o.id).split('/').pop(), text), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 0.8, refDistance: 3, maxDistance: 16 }, { audience: { nearby: p, radius: 18 } });
   return d;
 }
 const idleish = (o) => alive(o) && !own(o) && !o.state.follow && !o.state.mjguest && !(o.state.angry && Object.keys(o.state.angry).length) && !o.tags?.includes?.("l5staff") && !o.tags?.includes?.("faceling");

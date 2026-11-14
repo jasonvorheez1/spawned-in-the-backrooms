@@ -234,7 +234,7 @@ const VO = (who, line) => vo(who, line)
 function speak(ctx, it, who, line) {
   ctx.self.state.sub = { who: it.state.name.split(' ·')[0], t: line, at: ctx.now(), d: 1600 + line.length * 60 } // the subtitle strip shows it
   const p = it.feetPosition
-  heard(ctx, { clip: VO(who, line), position: { x: p.x, y: p.y + 1.6, z: p.z }, volume: 0.9, maxDistance: 14 }, { audience: { player: ctx.self.id } })
+  heard(ctx, { clip: VO(who, line) ?? VO(String(it.id).split('/').pop(), line), position: { x: p.x, y: p.y + 1.6, z: p.z }, volume: 0.9, maxDistance: 14 }, { audience: { player: ctx.self.id } })
 }
 export function talk(ctx, it) {
   const s = ctx.self.state, now = ctx.now(), role = it.state?.role

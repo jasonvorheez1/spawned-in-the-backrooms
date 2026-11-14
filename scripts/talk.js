@@ -171,7 +171,7 @@ function logLine(ctx, it, w, t) {
 // the reply: a voice at the npc everyone near hears, their speech bubble, your subtitle
 function say(ctx, it, line, mood) {
   const who = voiceOf(it), direct = ctx.self.state.talkWith === it.id
-  const take = actedVoice(who, line)
+  const take = actedVoice(who, line) ?? actedVoice(String(it.id).split('/').pop(), line) // a take recorded under the npc's own id wins when its cast key has none
   // The written line is the transcript for an existing take. Plain speech cleanup applies to fallbacks.
   if (!take) line = plain(line)
   const clip = take ?? (direct && hasCast(who) ? null : VO(who, line))
