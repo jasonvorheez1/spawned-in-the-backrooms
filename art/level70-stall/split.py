@@ -2,7 +2,7 @@
 import bpy, mathutils, sys, os, json
 OUT = "/workspace/stall/out"; os.makedirs(OUT, exist_ok=True)
 rep = {}
-for f in ["stalla", "stallb"]:
+for f in [sys.argv[-1]]:
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=f"/workspace/stall/{f}.glb")
     o = [o for o in bpy.context.scene.objects if o.type == "MESH"][0]
@@ -40,13 +40,13 @@ for f in ["stalla", "stallb"]:
     # the tarp is welded to the beams: carve it from the frame by face colour above the eave
     fr = objs["frame"]; me = fr.data
     img = next(n.image for m in me.materials for n in m.node_tree.nodes if n.type == "TEX_IMAGE")
-    W, Hh = img.size; px = list(img.pixels)
+    import numpy as np; W, Hh = img.size; px = np.empty(W*Hh*4, dtype=np.float32); img.pixels.foreach_get(px)
     uv = me.uv_layers.active.data
     import colorsys
     for p in me.polygons:
         z = (fr.matrix_world @ p.center).z
         u = sum(uv[l].uv[0] for l in p.loop_indices)/p.loop_total; v = sum(uv[l].uv[1] for l in p.loop_indices)/p.loop_total
-        i = (int((v % 1)*(Hh-1))*W + int((u % 1)*(W-1)))*4; r, g, b = px[i:i+3]
+        i = (int((v % 1)*(Hh-1))*W + int((u % 1)*(W-1)))*4; r, g, b = (float(x) for x in px[i:i+3])
         h, sat, val = colorsys.rgb_to_hsv(r, g, b)
         wood = 0.02 < h < 0.13 and sat > 0.3 and val < 0.55
         p.select = (z - zmin)/H > 0.62 and not wood
