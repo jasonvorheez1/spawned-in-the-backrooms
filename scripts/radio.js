@@ -21,13 +21,17 @@ export function update(ctx) {
   const s = me.state ?? {}, ses = ctx.self.session;
   const want = !!s.radioOn && !QUIET.has(screen(s, me.place));
   const has = ses.radioId && ctx.getObject(ses.radioId);
-  if (!want) { if (has) ctx.destroy(ses.radioId); ses.radioId = null; ses.seg = -1; return ctx.sleep(0.5); }
+  const hush = ses.hushId && ctx.getObject(ses.hushId);
+  if (!want) { if (has) ctx.destroy(ses.radioId); if (hush) ctx.destroy(ses.hushId); ses.radioId = ses.hushId = null; ses.seg = -1; return ctx.sleep(0.5); }
+  // the other music hushes for this listener while Ralph is on (scripts/music-hush.audio.js)
+  if (!hush) ses.hushId = ctx.spawn({ parent: me.id, audience: "local", scope: "session", tags: ["radio-hush"], feetPosition: { x: 0, y: 1, z: 0 },
+    audio: { kind: "program", script: "scripts/music-hush.audio.js", input: "Music", listeners: [me.id] } });
   const now = ctx.now(), air = onAir(now);
   if (!has) { ses.radioId = ctx.spawn({ parent: me.id, audience: "local", scope: "session", tags: ["halogen-radio"], feetPosition: { x: 0, y: 1.2, z: 0 } }); ses.seg = -1; }
   if (ses.seg !== air.i) {
     ses.seg = air.i;
     const o = ctx.getObject(ses.radioId);
-    if (o) o.audio = { clip: air.seg.clip, time: air.offset, timeAt: now, spatial: false, gain: STATION.gain, bus: "Music", priority: 85 };
+    if (o) o.audio = { clip: air.seg.clip, time: air.offset, timeAt: now, spatial: false, gain: STATION.gain, bus: "Radio", priority: 85 }; // its own group: the hush on Music leaves it alone
     if (s.radioSeg !== air.i) s.radioSeg = air.i; // the tab's "now playing" redraws once a segment
   }
   return ctx.sleep(Math.min(1, air.left + 0.05));
