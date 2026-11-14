@@ -314,7 +314,7 @@ function questTracker(s, player, ctx) {
     const placeBadge = destination ? `<span class="q-destination">${esc(destination)}</span>` : ''
     return `<div style="border-left:3px solid ${q.tint};padding:5px 12px 6px;background:linear-gradient(rgba(18,12,3,0.92),rgba(10,6,1,0.96));box-shadow:0 0 10px rgba(0,0,0,0.8)">
       <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:${q.tint};letter-spacing:.05em"><span style="font-size:9px">◆</span><span>${esc(q.name)}</span>${placeBadge}</div>
-      <div class="qs" style="font-size:12px;color:#fff2d4;opacity:.92;text-transform:none;letter-spacing:.02em;line-height:1.3;margin-top:2px">${esc(q.step)}</div>${route ? `<span class="q-next">▣ ${esc(route)}</span>` : ''} </div>`
+      <div class="qs" style="font-size:12px;color:#fff2d4;opacity:.92;text-transform:none;letter-spacing:.02em;line-height:1.3;margin-top:2px">${destination ? '' : esc(q.step)}</div>${route && !destination ? `<span class="q-next">▣ ${esc(route)}</span>` : ''} </div>` // a quest on another level folds to its name and where it is
   }
   return (Q_CACHE.html = `<style>@media (max-width:520px){#hud-quest{width:126px!important;font-size:10px}#hud-quest .qs{display:none}#hud-quest span{font-size:10px}}</style><div id="hud-quest" style="position:fixed;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);top:18px;width:min(340px,42vw);display:flex;flex-direction:column;gap:5px;font-family:inherit;text-shadow:0 1px 2px #000;pointer-events:auto;cursor:pointer;z-index:40;animation:hud-pop .3s ease-out" onclick="sendAction('journal')">${rows.map(row).join('')}</div>`)
 }
