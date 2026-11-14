@@ -60,13 +60,32 @@ pop moths n=?mobile:${Math.round(n * .55)}|${n} local on=sphere(.7) life=1.4..2.
 const VAR = {
   razorwing: { fx: VFX("oklch(.32 .06 25)..oklch(.45 .09 30)", 22), pitch: 1.2, scale: 1.1 },
   whisperwing: { fx: VFX("oklch(.82 .01 260)..oklch(.95 .01 260)", 26, "\npop glim n=6 local on=sphere(.6) size=.04 col=hdr(1.6,1.7,2) a=.6*flick(3,.5) r=sprite(soft-disc,add)"), pitch: 0.7, scale: 1.2,
-    clip: "/cdn/moodboard-gothic-horror/sfx-many-faint-overlapping-whispers-in-moth-wings-loop.mp3" },
+    clip: "/cdn/moodboard-gothic-horror/sfx-dry-moth-wings-with-wet-clicking-mandibles-loop.mp3" }, // the spitwing: id kept so saved swarms stay valid
   eyespot: { fx: VFX("oklch(.3 .04 60)..oklch(.4 .05 70)", 30, "\npop eye n=10 local on=sphere(.75) size=.06..0.09 col=hdr(2.6,2.2,.6)*flick(.5,.6) a=.9 sz=$size*flick(.3,.7) r=sprite(soft-disc,add)"), pitch: 0.55, scale: 1.4 },
   choir: { fx: VFX("oklch(.18 .01 20)..oklch(.28 .02 20)", 40, "\npop eye n=14 local on=sphere(.9) size=.05..0.08 col=hdr(3,.4,.3)*flick(.4,.6) a=.9 r=sprite(soft-disc,add)"), pitch: 0.4, scale: 1.7,
     clip: "/cdn/moodboard-gothic-horror/sfx-low-wordless-choir-hum-under-thick-moth-wings-loop.mp3" },
 };
 const EYES_SEEN = `fx follow=camera
 pop eye burst=26 on=box(.9,.5,.6) life=1.6..2.6 size=.03..0.07 col=hdr(2.4,2,.5) a=0>.9:.3>1:.8>0 sz=$size*(1>.2:1>.8:0) r=sprite(soft-disc,add)`;
+// Overhaul (Shelly Nov 14; numbers my picks): spitwing keeps its distance and spits; eyespot freezes while watched;
+// the choir calls nearby swarms; hurt swarms flee home; swarms on one player take turns diving.
+const R = { range: 14, keep: 7, every: 2.4, globSpeed: 9, hitR: 1.2, flee: 0.3, fleeFor: 4, call: 35, callFor: 15000, stare: 0.82 };
+const SPIT = `fx
+pop glob burst=1 life=%life|1 v=<%vel|0,0,1> size=.16 col=hdr(1.1,1.2,.45) a=1 sz=$size*flick(9,.3) r=sprite(soft-disc,add)
+pop drip on=@glob?.7 inh=p life=.3..0.6 v=sdir()*.25 size=.03..0.06 acc=grav()*.6 col=<.55,.6,.28> a=.9>0 r=sprite(soft-disc,alpha)`;
+const SPLAT = `fx
+pop goo burst=16..22 on=sphere(.15) life=.5..0.9 v=sdir()*(1..2.4)+up(.6) size=.03..0.07 acc=grav()*1.2+drag(1) col=<.6,.66,.3> a=1>.6:1>0 floor=stick r=sprite(soft-disc,alpha)
+pop dust burst=6 on=sphere(.25) life=.8..1.3 v=sdir()*(.3..0.7) size=.25..0.45 acc=drag(1.4)+buoy(.2) col=<.5,.5,.32> a=0>.35:.4>0 sz=$size*(.6>1.7) r=sprite(smoke-puff,alpha)`;
+const SPIT_SND = "/cdn/moodboard-gothic-horror/sfx-wet-insect-spit-glob-launched-through-air.mp3";
+const SPLAT_SND = "/cdn/moodboard-gothic-horror/sfx-wet-dusty-glob-splattering-on-cloth.mp3";
+const SNUFF_SND = "/cdn/moodboard-gothic-horror/sfx-moth-wings-smothering-a-flashlight-click-off.mp3";
+const headOf = (p) => ({ x: p.feetPosition.x, y: p.feetPosition.y + 1.5, z: p.feetPosition.z });
+function watching(p, pos) { // the player's camera points at it
+  const yaw = p.camera?.rotation?.yaw; if (yaw == null) return false;
+  const r = yaw * Math.PI / 180, fx = -Math.sin(r), fz = -Math.cos(r);
+  const dx = pos.x - p.feetPosition.x, dz = pos.z - p.feetPosition.z, d = Math.hypot(dx, dz) || 1;
+  return (fx * dx + fz * dz) / d > R.stare;
+}
 const kids = (ctx, id) => [0, 1, 2].map((i) => ctx.place.objects[`${id}/m${i}`]).filter(Boolean);
 
 function setSwarmClip(ctx, s, m, name, opt = {}) {
@@ -90,6 +109,27 @@ export function update(ctx, dt) {
       if (p) p.vignette = 0;
       delete blur[pid];
     }
+  }
+
+  const shots = (ctx.self.session.shots ??= []);
+  for (let i = shots.length - 1; i >= 0; i--) {
+    const sh = shots[i]; if (now < sh.hitAt) continue; shots.splice(i, 1);
+    const p = ctx.place.players.find((q) => q.id === sh.pid);
+    const h = p && headOf(p);
+    if (h && Math.hypot(h.x - sh.at.x, h.z - sh.at.z) < R.hitR && Math.abs(h.y - sh.at.y) < 1.4 && (p.state.hp ?? 0) > 0) {
+      const dmg = dmgAfterArmor(p.state.look, M.bite * 1.4 * sh.mul);
+      p.state.hp -= dmg; p.state.sanity = Math.max(0, (p.state.sanity ?? 100) - M.sanity * 3);
+      if (p.state.light) { p.state.light = false; ctx.emit("playSound", { clip: SNUFF_SND, volume: 0.8 }, { audience: { player: p.id } }); } // the glob clogs the lamp
+      ctx.emit("damageNumber", { position: h, value: dmg, color: "#b6c25a" });
+      ctx.emit("fx", { position: h, script: SPLAT });
+      ctx.emit("fx", { position: h, script: BLIND }, { audience: { player: p.id } });
+      ctx.emit("screenFlash", { color: "#7d8a3c", duration: 0.4, intensity: 0.3 }, { audience: { player: p.id } });
+      ctx.emit("cameraPunch", { direction: { x: h.x - sh.from.x, y: 0, z: h.z - sh.from.z }, intensity: 0.4 }, { audience: { player: p.id } });
+      p.vignette = 0.3; blur[p.id] = now + 1800;
+    } else {
+      ctx.emit("fx", { position: { x: sh.at.x, y: Math.max(0.1, sh.at.y - 1.2), z: sh.at.z }, script: SPLAT });
+    }
+    heard(ctx, { clip: SPLAT_SND, position: sh.at, volume: 0.8, maxDistance: 14 });
   }
 
   const players = ctx.place.players.filter(
@@ -165,6 +205,8 @@ export function update(ctx, dt) {
     }
 
     const home = st.home ?? (s.state.home = { x: pos.x, z: pos.z });
+    if (st.variant === "whisperwing" && st.title !== "Spitwing Swarm") s.state.title = "Spitwing Swarm";
+    m.hpMax = Math.max(m.hpMax ?? 0, st.hp);
     if (m.bleed && now >= m.bleed.next) { const bp = ctx.place.players.find((q) => q.id === m.bleed.pid);
       if (bp && (bp.state.hp ?? 0) > 0) { const b = Math.max(1, Math.round(M.bite * 0.6)); bp.state.hp -= b; ctx.emit("damageNumber", { position: { x: bp.feetPosition.x, y: bp.feetPosition.y + 1.2, z: bp.feetPosition.z }, value: b, color: "#a01818" }); ctx.emit("screenFlash", { color: "#5a0000", duration: 0.25, intensity: 0.25 }, { audience: { player: bp.id } }); }
       m.bleed.n--; m.bleed.next = now + 900; if (m.bleed.n <= 0 || !bp) m.bleed = null; }
@@ -191,22 +233,58 @@ export function update(ctx, dt) {
       }
     }
 
-    const t = (now - (m.at ?? 0)) / 1000;
+    if (m.call && now < m.call.until) { // the choir sang it here
+      const cp = players.find((q) => q.id === m.call.pid);
+      const cd = cp ? Math.hypot(cp.feetPosition.x - pos.x, cp.feetPosition.z - pos.z) : 1e9;
+      if (cp && cd < R.call + 10 && prey?.id !== cp.id) { prey = cp; best = cd; lit = true; }
+    }
+    if (st.hp < m.hpMax * R.flee && !m.fled && m.mode !== "dive") { // hurt: it breaks off and flees to its light
+      m.fled = true; m.mode = "flee"; m.at = now;
+      heard(ctx, { clip: SND("moth-wings-flurry-bite"), position: pos, volume: 0.6, pitch: 1.4, maxDistance: 14 });
+    }
+    let t = (now - (m.at ?? 0)) / 1000;
+    if (m.mode === "flee") { if (t > R.fleeFor) { m.mode = "cruise"; m.at = now; t = 0; } else prey = null; }
+    const ranged = st.variant === "whisperwing";
 
     // State machine transitions
-    if (!prey && m.mode !== "cruise" && m.mode !== "recover") {
+    if (!prey && m.mode !== "cruise" && m.mode !== "recover" && m.mode !== "flee") {
       m.mode = "cruise";
       m.at = now;
     }
 
-    if (prey && m.mode === "cruise" && best < D.diveFrom) {
+    if (ranged && prey && m.mode === "cruise" && best < R.range * vm.sight) {
+      m.mode = "range"; m.at = now; m.who = prey.id; m.shotAt = now + 900; m.strafe = ctx.random() < 0.5 ? 1 : -1;
+    }
+    if (m.mode === "range" && prey && best > R.range * vm.sight * 1.3) { m.mode = "cruise"; m.at = now; }
+    if (!ranged && prey && m.mode === "cruise" && best < D.diveFrom) {
+      if (st.variant === "choir" && now > (m.calledAt ?? 0)) { // it sings, and every swarm near comes to the song
+        m.calledAt = now + R.callFor;
+        for (const o of allSwarms) {
+          if (o.id === s.id || Math.hypot(o.feetPosition.x - pos.x, o.feetPosition.z - pos.z) > R.call) continue;
+          const om = (mem[o.id] ??= { bob: ctx.random() * 6, spin: ctx.random() * 360, mode: "cruise" });
+          om.call = { pid: prey.id, until: now + R.callFor };
+        }
+        heard(ctx, { clip: "/cdn/moodboard-gothic-horror/sfx-low-wordless-choir-hum-under-thick-moth-wings-loop.mp3", position: pos, volume: 1, pitch: 1.3, maxDistance: R.call });
+      }
+      m.off ??= ctx.random() * 6.283;
       m.mode = "circle";
       m.at = now;
       m.circleFor = D.circleFor[0] + ctx.random() * (D.circleFor[1] - D.circleFor[0]);
       m.who = prey.id;
     }
 
+    const stared = st.variant === "eyespot" && prey && m.mode === "circle" && watching(prey, pos);
+    if (stared) { // watched, it holds still and stares back; your nerve drains
+      m.circleFor = Math.max(m.circleFor, t + 0.3);
+      if (now > (m.drainAt ?? 0)) { m.drainAt = now + 1000; prey.state.sanity = Math.max(0, (prey.state.sanity ?? 100) - M.sanity * 1.5); }
+    } else if (st.variant === "eyespot" && m.mode === "circle" && m.wasStared) m.circleFor = Math.min(m.circleFor, t + 0.25); // look away and it comes
+    m.wasStared = stared;
+    const tok = (mem.tok ??= {});
+    if (m.mode === "circle" && prey && t > m.circleFor && tok[prey.id] && tok[prey.id].by !== s.id && now < tok[prey.id].until) {
+      m.circleFor = t + 0.5 + ctx.random(); // another swarm is diving: wait your turn
+    }
     if (m.mode === "circle" && prey && t > m.circleFor) {
+      tok[prey.id] = { by: s.id, until: now + D.diveFor * 1000 + 300 };
       m.mode = "dive";
       m.at = now;
       m.who = prey.id;
@@ -220,7 +298,7 @@ export function update(ctx, dt) {
       m.circleFor = 1.5 + ctx.random() * 2;
     }
 
-    if (m.mode === "cruise" || m.mode === "circle") {
+    if (m.mode === "cruise" || m.mode === "circle" || m.mode === "range" || m.mode === "flee") {
       setSwarmClip(ctx, s, m, "Flutter");
     }
 
@@ -232,7 +310,27 @@ export function update(ctx, dt) {
     let ny = FLY_Y + Math.sin(m.bob) * 0.18;
     const head = prey ? { x: prey.feetPosition.x, y: prey.feetPosition.y + 1.5, z: prey.feetPosition.z } : null;
 
-    if (m.mode === "circle" || m.mode === "dive" || (m.mode === "recover" && head)) {
+    if (m.mode === "range" && head) { // spitwing: hold a ring at range, strafe, spit when it sees you
+      const ax = pos.x - head.x, az = pos.z - head.z, al = Math.hypot(ax, az) || 1;
+      const ux = ax / al, uz = az / al;
+      const gx = head.x + ux * R.keep - uz * m.strafe * 3, gz = head.z + uz * R.keep + ux * m.strafe * 3;
+      const dx = gx - pos.x, dz = gz - pos.z, d = Math.hypot(dx, dz);
+      const sp = M.chase * vm.speed * (al < 3.5 ? 1.8 : 1);
+      if (d > 0.05) { const k = Math.min(d, sp * dt) / d; nx += dx * k; nz += dz * k; }
+      ny = pos.y + (2.6 + Math.sin(m.bob) * 0.25 - pos.y) * Math.min(1, dt * 3);
+      if (now > m.shotAt) {
+        const from = { x: pos.x, y: pos.y, z: pos.z };
+        if (canStrike(ctx, { x: from.x, y: from.y - 1, z: from.z }, prey, R.range * 1.4, [s.id, prey.id])) {
+          const L = Math.hypot(head.x - from.x, head.y - from.y, head.z - from.z) || 1, dur = L / R.globSpeed;
+          const vel = { x: (head.x - from.x) / dur, y: (head.y - from.y) / dur, z: (head.z - from.z) / dur };
+          ctx.emit("fx", { position: from, script: SPIT, params: { vel, life: dur } }, { audience: { nearby: from, radius: 40 } });
+          heard(ctx, { clip: SPIT_SND, position: from, volume: 0.9, maxDistance: 20 });
+          shots.push({ pid: prey.id, at: { ...head }, from, hitAt: now + dur * 1000, mul: vm.dmg });
+          m.shotAt = now + (R.every + ctx.random() * 0.8) * 1000;
+          if (ctx.random() < 0.35) m.strafe = -m.strafe;
+        } else m.shotAt = now + 400;
+      }
+    } else if (m.mode === "circle" || m.mode === "dive" || (m.mode === "recover" && head)) {
       // Close air combat around the player's head
       let gx;
       let gz;
@@ -240,16 +338,16 @@ export function update(ctx, dt) {
       let sp;
 
       if (m.mode === "circle") {
-        const a = (now / 1000) * 1.6 + (m.bob % 6);
+        const a = stared ? (m.frozenA ??= Math.atan2(pos.z - head.z, pos.x - head.x)) : (m.frozenA = undefined, (now / 1000) * 1.6 + (m.off ?? 0));
         gx = head.x + Math.cos(a) * D.circleR;
         gz = head.z + Math.sin(a) * D.circleR;
         gy = D.circleY + Math.sin(m.bob) * 0.2;
-        sp = (M.chase * vm.speed) * 1.4;
+        sp = stared ? 0.4 : (M.chase * vm.speed) * 1.4;
       } else if (m.mode === "dive") {
         gx = head.x;
         gz = head.z;
         gy = head.y;
-        sp = D.diveSpeed;
+        sp = D.diveSpeed * (st.variant === "eyespot" ? 1.4 : 1);
       } else {
         const ax = pos.x - head.x;
         const az = pos.z - head.z;
@@ -271,10 +369,6 @@ export function update(ctx, dt) {
       }
 
       ny = pos.y + (gy - pos.y) * Math.min(1, dt * (m.mode === "dive" ? 8 : 3));
-      if (blocked(nx, nz)) {
-        nx = pos.x;
-        nz = pos.z;
-      }
 
       if (m.mode === "dive") {
         const p = ctx.place.players.find((q) => q.id === m.who);
@@ -298,9 +392,10 @@ export function update(ctx, dt) {
           blur[p.id] = now + D.blurFor * 1000;
           const v = st.variant;
           if (v === "razorwing" || v === "choir") m.bleed = { pid: p.id, n: v === "choir" ? 5 : 3, next: now + 900 }; // cuts that keep bleeding
-          if (v === "whisperwing" || v === "eyespot" || v === "choir") { // it snuffs your light and leaves a whisper in your ear
-            p.state.light = false; p.state.sanity = Math.max(0, p.state.sanity - M.sanity * 4);
-            ctx.emit("playSound", { clip: "/cdn/moodboard-gothic-horror/sfx-close-breathy-whisper-saying-your-name-in-left-ear.mp3", volume: 0.9 }, { audience: { player: p.id } });
+          if (v === "eyespot" || v === "choir") { // its wings smother your light
+            if (p.state.light) p.state.light = false;
+            p.state.sanity = Math.max(0, p.state.sanity - M.sanity * 4);
+            ctx.emit("playSound", { clip: SNUFF_SND, volume: 0.9 }, { audience: { player: p.id } });
           }
           if (v === "eyespot" || v === "choir") { // the eyes on its wings stay on yours
             ctx.emit("fx", { position: at, script: EYES_SEEN }, { audience: { player: p.id } });
@@ -315,6 +410,8 @@ export function update(ctx, dt) {
           setSwarmClip(ctx, s, m, "Bite");
           m.mode = "recover";
           m.at = now;
+          if (v === "razorwing") { m.combo = !m.combo; if (m.combo) m.at = now - (D.recoverFor - 0.45) * 1000; } // a second cut right behind the first
+          if (tok[p.id]?.by === s.id) delete tok[p.id];
         } else if (t > D.diveFor) {
           setSwarmClip(ctx, s, m, "Flutter");
           m.mode = "recover";
@@ -325,7 +422,9 @@ export function update(ctx, dt) {
       let goal;
       let sp = (M.speed * vm.speed);
 
-      if (prey) {
+      if (m.mode === "flee") {
+        goal = home; sp = M.chase * vm.speed * 1.5;
+      } else if (prey) {
         goal = prey.feetPosition;
         sp = lit ? (M.chase * vm.speed) : (M.speed * vm.speed) * 1.2;
       } else {
@@ -342,7 +441,8 @@ export function update(ctx, dt) {
         goal = m.wander;
       }
 
-      if (!m.plan || now > m.planAt || m.planFor !== (prey?.id ?? "wander")) {
+      if (T9) m.plan = { cells: 0 }; // Level 9 is open street: steer straight, the slide below keeps it out of the houses
+      else if (!m.plan || now > m.planAt || m.planFor !== (prey?.id ?? "wander")) {
         m.plan = stepToward(pos.x, pos.z, goal.x, goal.z, M.giveUp);
         m.planAt = now + 500;
         m.planFor = prey?.id ?? "wander";
@@ -383,6 +483,12 @@ export function update(ctx, dt) {
       }
 
       ny = pos.y + (ny - pos.y) * Math.min(1, dt * 3);
+    }
+
+    if (blocked(nx, nz) && !blocked(pos.x, pos.z)) { // slide along a wall instead of sticking to it
+      if (!blocked(nx, pos.z)) nz = pos.z;
+      else if (!blocked(pos.x, nz)) nx = pos.x;
+      else { nx = pos.x; nz = pos.z; }
     }
 
     // Base Gamma boundary check
