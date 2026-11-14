@@ -38,6 +38,7 @@ export function geometry(ctx) {
     ctx.metalness(0);
     return;
   }
+  if (p.kind === "storefront") return storefront(ctx, ctx.params.w ?? 5.5, ctx.params.dw ?? 1.3, ctx.params.h ?? 2.9);
   if (p.kind === "interior") return interior(ctx, box, ctx.params.shop, ctx.params.w ?? 5, ctx.params.d ?? 10, lod);
   const { w, h, d } = p, X0 = -w / 2, X1 = w / 2, Z0 = -d / 2, Z1 = d / 2;
   ctx.albedo(STUCCO); ctx.color("oklch(0.95 0.012 90)");
@@ -116,25 +117,41 @@ function interior(ctx, box, shop, w, d, lod) {
   const X1 = w / 2, X0 = -w / 2, Z0 = -d / 2, Z1 = d / 2;
   ctx.albedo(null);
   if (shop === "derma") { // clinic furniture is placed as fitted Tripo models in places/level11/sim.js (desk, chairs, plant, cabinet, poster); only the room shell stays here
-  } else if (shop === "islab") { // lab: a white counter with a sample window, stools, a specimen fridge, blood-draw chair
-    ctx.color("oklch(0.97 0.005 165)"); rbox(box, X1 - 4.2, 0, Z0 + 0.3, X1 - 3.6, 1.05, Z1 - 0.3, 0.03);
-    ctx.color("oklch(0.55 0.11 165)"); box(X1 - 4.21, 0.15, Z0 + 0.3, X1 - 4.19, 0.9, Z1 - 0.3);
-    ctx.color("oklch(0.85 0.02 210)"); box(X1 - 3.95, 1.05, -0.6, X1 - 3.93, 1.9, 0.6); // sample window
-    ctx.color("oklch(0.75 0.01 250)"); for (const z of [-1, 0, 1]) { cyl(ctx, X1 - 3.0, 0, z * 0.9, 0.03, 0.6, 6); ctx.color("oklch(0.4 0.1 165)"); cyl(ctx, X1 - 3.0, 0.6, z * 0.9, 0.18, 0.06, 10); ctx.color("oklch(0.75 0.01 250)"); }
-    ctx.color("oklch(0.92 0.005 250)"); rbox(box, X0 + 0.3, 0, Z1 - 1.0, X0 + 0.9, 1.9, Z1 - 0.3, 0.03);
-    ctx.color("oklch(0.4 0.02 250)"); box(X0 + 0.91, 1.0, Z1 - 0.9, X0 + 0.93, 1.6, Z1 - 0.85);
-    chair(ctx, box, X0 + 1.4, Z0 + 0.8, 0, "oklch(0.45 0.1 165)");
-  } else { // bakery: a curved glass pastry case with cakes, wall shelves of bread, a register, two cafe tables
-    ctx.color("oklch(0.35 0.05 50)"); rbox(box, X1 - 3.6, 0, Z0 + 0.6, X1 - 3.0, 0.9, Z1 - 1.4, 0.03);
-    ctx.color("oklch(0.9 0.02 210)"); box(X1 - 3.0, 0.9, Z0 + 0.6, X1 - 2.98, 1.35, Z1 - 1.4); box(X1 - 3.6, 1.35, Z0 + 0.6, X1 - 2.98, 1.37, Z1 - 1.4);
-    const cakes = ["oklch(0.85 0.08 20)", "oklch(0.55 0.1 50)", "oklch(0.92 0.06 95)", "oklch(0.8 0.1 350)", "oklch(0.6 0.12 30)"];
-    for (let i = 0; i < 5; i++) { ctx.color(cakes[i]); cyl(ctx, X1 - 3.3, 0.9, Z0 + 1.0 + i * ((d - 2.4) / 5), 0.16, 0.14, 10); }
-    ctx.color("oklch(0.2 0.01 250)"); rbox(box, X1 - 3.55, 0.9, Z1 - 1.3, X1 - 3.1, 1.15, Z1 - 0.9, 0.02); // register
-    ctx.color("oklch(0.42 0.06 55)"); for (const y of [0.9, 1.5, 2.1]) box(X0 + 0.25, y, Z0 + 0.4, X0 + 0.7, y + 0.04, Z1 - 0.4);
-    ctx.color("oklch(0.68 0.11 70)"); for (const y of [0.94, 1.54, 2.14]) for (let z = Z0 + 0.7; z < Z1 - 0.6; z += 0.55) cyl(ctx, X0 + 0.48, y, z, 0.13, 0.12, 8);
-    for (const z of [Z0 + 1.4, Z1 - 1.0]) { ctx.color("oklch(0.3 0.01 60)"); cyl(ctx, X1 - 1.4, 0, z, 0.04, 0.72, 6); ctx.color("oklch(0.95 0.01 90)"); cyl(ctx, X1 - 1.4, 0.72, z, 0.36, 0.03, 12); chair(ctx, box, X1 - 0.85, z, Math.PI, "oklch(0.55 0.1 145)"); }
-  }
+  } // lab and bakery furniture: fitted Tripo+Studio models placed in places/level11/sim.js (counter, stools, specimen fridge, draw chair, pastry case, bread rack, register, cafe sets)
   // the ceiling troffers: emissive panels the room's light seems to come from
   ctx.color("oklch(0.98 0.01 95)"); ctx.emissive?.("oklch(0.95 0.02 95)");
   for (let x = X0 + 1.2; x < X1 - 0.5; x += 2.4) for (const z of [-d / 4, d / 4]) box(x - 0.3, 2.86, z - 0.6, x + 0.3, 2.88, z + 0.6);
+}
+
+// "storefront": a white aluminium shopfront frame, face at local x 0, width w along Z, from y 0 (sill) to h, a door opening dw in the middle.
+// Every member is an extruded profile with chamfered edges (a real extrusion reads as bevelled metal, never a block).
+function bar(ctx, axis, x, y, z, len, a, b, c = 0.012) { // axis "y" (vertical, from y up by len) or "z" (horizontal, centred on z); section a (x) by b
+  const sec = [[-a / 2 + c, -b / 2], [a / 2 - c, -b / 2], [a / 2, -b / 2 + c], [a / 2, b / 2 - c], [a / 2 - c, b / 2], [-a / 2 + c, b / 2], [-a / 2, b / 2 - c], [-a / 2, -b / 2 + c]];
+  const P = axis === "y" ? (u, v, t) => [x + u, y + t, z + v] : (u, v, t) => [x + u, y + v, z - len / 2 + t];
+  for (let i = 0; i < 8; i++) {
+    const [u0, v0] = sec[i], [u1, v1] = sec[(i + 1) % 8];
+    if (axis === "y") ctx.quad(...P(u0, v0, 0), ...P(u1, v1, 0), ...P(u1, v1, len), ...P(u0, v0, len));
+    else ctx.quad(...P(u0, v0, 0), ...P(u0, v0, len), ...P(u1, v1, len), ...P(u1, v1, 0));
+  }
+  for (let i = 1; i < 7; i++) { // end caps
+    if (axis === "y") { ctx.tri(...P(...sec[0], len), ...P(...sec[i], len), ...P(...sec[i + 1], len)); ctx.tri(...P(...sec[0], 0), ...P(...sec[i + 1], 0), ...P(...sec[i], 0)); }
+    else { ctx.tri(...P(...sec[0], 0), ...P(...sec[i], 0), ...P(...sec[i + 1], 0)); ctx.tri(...P(...sec[0], len), ...P(...sec[i + 1], len), ...P(...sec[i], len)); }
+  }
+}
+function storefront(ctx, w, dw, h) {
+  ctx.albedo(null); ctx.color("oklch(0.94 0.005 250)"); ctx.metalness?.(0.6); ctx.roughness?.(0.32);
+  const side = (w - dw) / 2, M = 0.075, D = 0.11;
+  const posts = [-w / 2 + M / 2, -dw / 2 - M / 2, dw / 2 + M / 2, w / 2 - M / 2];
+  if (side > 1.7) posts.push(-dw / 2 - side / 2, dw / 2 + side / 2); // a centre mullion in a wide pane
+  for (const z of posts) bar(ctx, "y", 0, 0, z, h, D, M);
+  bar(ctx, "z", 0, h - 0.06, 0, w, D + 0.02, 0.12); // head
+  bar(ctx, "z", 0, h - 0.75, 0, w, D, 0.06); // transom over door and panes
+  for (const sg of [-1, 1]) { // sills and a low kick rail each side
+    const zc = sg * (dw / 2 + side / 2), L = side - M;
+    bar(ctx, "z", 0.01, 0.05, zc, L, D + 0.03, 0.1, 0.018);
+    bar(ctx, "z", 0, 0.32, zc, L, D * 0.8, 0.045);
+  }
+  ctx.color("oklch(0.3 0.01 250)"); ctx.metalness?.(0.2); ctx.roughness?.(0.7); // black glazing gaskets where the glass meets the frame
+  for (const z of posts) bar(ctx, "y", -0.045, 0.1, z, h - 0.2, 0.012, M + 0.016, 0.003);
+  ctx.metalness?.(0);
 }
