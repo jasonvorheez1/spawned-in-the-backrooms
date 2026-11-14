@@ -33,7 +33,7 @@ function hurt(ctx, f, p, dmg) { // never more than a third of a full bar in one 
 
 export function update(ctx, dt) {
   const players = targetsOf(ctx, ctx.place.players).filter((p) => (p.state?.hp ?? 1) > 0);
-  const foes = ctx.query({ tags: ["clump-ai"], radius: 1e4 });
+  const foes = ctx.query({ tags: ["clump-ai"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
   if (!foes.length || !players.length) { ctx.sleep(1); return; }
   const now = ctx.now(), mem = (ctx.self.session.m ??= {}), g = ctx.place.gravity?.y ?? -9.8;
   for (const row of foes) {

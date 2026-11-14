@@ -177,7 +177,7 @@ export function update(ctx, dt) {
   const mem = (ctx.self.session.m ??= {});
   if (!mem.lurkersAt || now > mem.lurkersAt || !mem.allLurkers) {
     mem.lurkersAt = now + 1200;
-    mem.allLurkers = ctx.query({ tags: ["lurker"] });
+    mem.allLurkers = ctx.query({ tags: ["lurker"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
   }
   const objs = ctx.place.objects;
   const allLurkers = mem.allLurkers.filter((w) => w.id in objs);
@@ -200,7 +200,8 @@ export function update(ctx, dt) {
     if (!st.dead) dress(ctx, w, st.eyes);
     const EK = EYES[st.eyes] ?? EYES.white;
 
-    if (st.dead) {
+    if (st.dead || (st.hp ?? 1) <= 0) {
+      if (!st.dead) w.state.dead = true;
       if (!m.dying) {
         m.dying = now; undress(ctx, w); // the murk goes out with it
         w.velocity = { x: 0, y: 0, z: 0 };
@@ -275,7 +276,7 @@ export function update(ctx, dt) {
       if (m.stalkUntil && now >= m.stalkUntil && best) m.hunt = true; // trailed you long enough: it comes
       m.watched = now < (m.stun ?? 0);
       if (watched) {
-        watched.state.sanity = Math.max(0, watched.state.sanity - L.lurkerGaze * 0.2);
+        watched.state.sanity = Math.max(0, (watched.state.sanity ?? 100) - L.lurkerGaze * 0.2);
       }
 
       if (!best && !m.prey) {
@@ -458,7 +459,7 @@ export function update(ctx, dt) {
 
     const curVy = w.velocity?.y ?? 0;
     // jump: out of a floor hole, or when something low blocks the way (it wants to move, but barely does)
-    let vy = curVy + ctx.place.gravity.y * dt;
+    let vy = curVy + (ctx.place.gravity?.y ?? -9.8) * dt;
     const want = Math.hypot(vx, vz), got = Math.hypot(w.velocity?.x ?? 0, w.velocity?.z ?? 0), onGround = w.grounded ?? Math.abs(curVy) < 0.4;
     m.blocked = want > 0.8 && got < want * 0.3 ? (m.blocked ?? 0) + dt : 0;
     if (onGround && now >= (m.jumpAt ?? 0) && want > 0.3 && (pos.y < -0.4 || m.blocked > 0.35)) {

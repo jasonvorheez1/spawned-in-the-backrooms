@@ -88,7 +88,7 @@ export function update(ctx, dt) {
   const now = ctx.now();
   const mem = (ctx.self.session.m ??= {});
   const players = targetsOf(ctx, ctx.place.players).filter((p) => !(p.state?.downAt && now - p.state.downAt < 4500));
-  const smilers = ctx.query({ tags: ["l6-smiler"] });
+  const smilers = ctx.query({ tags: ["l6-smiler"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
 
   for (const w of smilers) {
     const m = (mem[w.id] ??= {}), st = w.state ?? {}, pos = w.feetPosition, mu = npcMul(st);

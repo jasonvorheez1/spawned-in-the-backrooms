@@ -43,7 +43,7 @@ function bite(ctx, p, prey, dmg, snd) {
 export function update(ctx, dt) {
   const players = ctx.place.players; if (!players.length) return ctx.sleep(1)
   const now = ctx.now(), g = ctx.place.gravity?.y ?? -9.8
-  const pack = ctx.query({ tags: ["partygoer"] })
+  const pack = ctx.query({ tags: ["partygoer"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })
   for (const p of pack) {
     const s = p.state
     if ((s.hp ?? T.hp) <= 0 && !s.dying) { // it folds and drops first: the body stays a beat on the deck
@@ -52,7 +52,7 @@ export function update(ctx, dt) {
       continue
     }
     if (s.dying) { // the body lies where it fell for an hour (rules: bodies removed after 1 h), then the black smoke takes it
-      if (now - s.dying < 3600000) { if (now - s.dying < 2200) p.velocity = { x: 0, y: p.velocity.y + g * dt, z: 0 }; else if (!s.corpse) { s.corpse = true; p.velocity = { x: 0, y: 0, z: 0 }; p.anim.act = { clip: "cdn/clip-die.glb", loop: false, weight: 1, clamp: true }; p.anim.base = null; p.anim.party = null } continue }
+      if (now - s.dying < 3600000) { if (now - s.dying < 2200) p.velocity = { x: 0, y: (p.velocity?.y ?? 0) + g * dt, z: 0 }; else if (!s.corpse) { s.corpse = true; p.velocity = { x: 0, y: 0, z: 0 }; p.anim.act = { clip: "cdn/clip-die.glb", loop: false, weight: 1, clamp: true }; p.anim.base = null; p.anim.party = null } continue }
       ctx.emit("fx", { position: { ...p.feetPosition, y: p.feetPosition.y + 1 }, script: `fx
 pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 acc=buoy(.6)+drag(1) sz=$size*(.6>2.2) col=<.05,.05,.05> a=0>.7:.5>.7:.3>0 r=sprite(smoke-puff,alpha)` })
       ctx.emit("playSound", { clip: SND("deflating-party-balloon-squeal-and-thud"), position: p.feetPosition, volume: 0.8 })
@@ -99,11 +99,11 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
     }
     if (!prey && s.hunting && !players.some((pl) => flat(pl.feetPosition, p.feetPosition) < T.sight * 2.5)) s.hunting = false
     party(ctx, p, !s.hunting)
-    const target = prey && s.hunting ? prey.feetPosition : (s.hunting ? players[0].feetPosition : s.home ?? p.feetPosition)
+    const target = prey && s.hunting ? prey.feetPosition : (s.hunting && players[0] ? players[0].feetPosition : s.home ?? p.feetPosition)
     const d = flat(target, p.feetPosition), speed = s.berserk ? T.rage : s.hunting ? T.hunt : T.walk
     const dx = d > 0.01 ? (target.x - p.feetPosition.x) / d : 0, dz = d > 0.01 ? (target.z - p.feetPosition.z) / d : 0
     const face = () => { p.rotation = { yaw: Math.atan2(-dx, -dz) * 180 / Math.PI } }
-    const vy = p.velocity.y + g * dt
+    const vy = (p.velocity?.y ?? 0) + g * dt
     if (knockedHold(ctx, p, now, dt)) continue
     if (s.down) { // kicked flat: flung, tipped onto its back, then it scrambles up
       if (s.down.fly && knocked(ctx, p, now, dt)) continue
@@ -193,7 +193,7 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
   }
   const gas = (ctx.self.session.gas ??= [])
   const bobbed = (ctx.self.session.bob ??= {})
-  for (const b of ctx.query({ tags: ["l26-balloon"] })) {
+  for (const b of ctx.query({ tags: ["l26-balloon"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
     if (!bobbed[b.id]) { // they ride the air currents (lore: no legs, only drafts): a slow bob and a lazy turn, each on its own beat
       bobbed[b.id] = 1; const ph = (b.id.length * 0.37) % 1
       animate(ctx, b.id, { "feetPosition.y": "+=0.18" }, { duration: 2.2 + ph, easing: "easeInOutSine", direction: "alternate", loop: true })
