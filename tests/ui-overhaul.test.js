@@ -104,7 +104,15 @@ test('mainMenu renders title, pause, settings, and controls views', () => {
   const titleHtml = mainMenu(ctx, { place: 'main', state: { ...baseState, menuOpen: true, menuKind: 'title', madeChar: true } })
   expect(titleHtml).toContain('Continue')
   expect(titleHtml).toContain('Settings')
-  expect(titleHtml).toContain('Controls & Guide')
+  expect(titleHtml).toContain('Controls &amp; Guide')
+
+  expect(titleHtml).toContain("k:'start'")
+  expect(titleHtml).toContain('aria-label="Main menu"')
+  const pauseHtml = mainMenu(ctx, { place: 'main', state: { ...baseState, menuKind: 'pause', uiPrefs: { motion: 'reduced' } } })
+  expect(pauseHtml).toContain('mm-reduced')
+  expect(pauseHtml).toContain("k:'resume'")
+  expect(pauseHtml).toContain('Return to Title')
+  expect(mainMenu(ctx, { place: 'main', state: {} })).toContain('New Expedition')
 
   const settingsHtml = mainMenu(ctx, { place: 'main', state: { ...baseState, menuOpen: true, menuKind: 'pause', menuView: 'settings' } })
   expect(settingsHtml).toContain('Interface Scale')
