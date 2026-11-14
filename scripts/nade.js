@@ -15,6 +15,18 @@ pop smoke burst=?mobile:8|14 life=2..3.5 v=sdir()*(1..2.5)+up(1) size=1..1.8 acc
 pop dirt burst=?mobile:10|20 life=.8..1.3 v=up(4..8)+sdir()*(2..4) size=.04..0.09 spin=-8..8 acc=grav() col=<.25,.2,.15> a=1 rot=$age*$spin floor=die r=sprite(stalk,alpha)
 pop ring burst=?mobile:14|28 on=disc(.6) life=.8..1.4 v=sdir()*<1,0,1>*(5..8)+up(.4) size=.4..0.8 acc=drag(2.5)+buoy(.2) sz=$size*(.6>2.2) col=<.42,.38,.3> a=0>.5:.15>.7:.4>0 rot=spin(.1) r=sprite(smoke-puff,alpha)
 pop glow burst=1 life=.3 r=light(<1,.6,.3>,80*(1>0),16)`;
+const ROCKET_BOOM = `fx
+pop flash burst=1 life=.2 size=7 col=hdr(12,8,4) a=1>0 sz=$size*(.4>1.4) r=sprite(soft-disc,add)
+pop core burst=?mobile:14|26 life=.4..0.8 v=sdir()*(2..5)+up(1.5) size=1..1.8 acc=drag(3)+buoy(1.6) sz=$size*(.5>1.8) col=hdr(7,3.6,1.1)>.5:hdr(3,1,.2)>hdr(.5,.15,.05) a=1>.6:1>0 rot=spin(.5) r=sprite(flame-wisp,add)
+pop fire burst=?mobile:20|40 life=.5..1 v=sdir()*(5..10)+up(2) size=.5..1.1 acc=drag(3.4)+buoy(1.2) sz=$size*(.6>1.7) col=hdr(5,2.6,.8)>hdr(1.4,.4,.1) a=1>0 rot=spin(.4) r=sprite(flame-wisp,add)
+pop sparks burst=?mobile:40|90 life=.5..1.3 v=sdir()*(10..22) size=.02..0.05 acc=grav()*.8+drag(.8) col=hdr(7,4,1.2)>hdr(1.6,.4,.1) a=1>0 floor=bounce(.35) r=sprite(ember,add,velocity,.035)
+pop chunks burst=?mobile:10|22 life=1.4..2.4 v=sdir()*(5..11)+up(4..7) size=.05..0.12 spin=-10..10 acc=grav()+drag(.3) col=<.22,.2,.17>..<.5,.46,.38> a=1 rot=$age*$spin floor=bounce(.25) r=mesh(box,1,.6,.8)
+pop trails on=@chunks?.5 life=.5..0.9 size=.08..0.14 acc=buoy(.3)+drag(1.2) sz=$size*(.6>2.2) col=<.3,.28,.26> a=0>.4:.25>.6:.15>0 r=sprite(smoke-puff,alpha)
+pop column burst=?mobile:8|14 life=3..5 v=up(2..3.5)+sdir()*(.4..1) size=1.2..2 acc=drag(.9)+buoy(.6)+curl(.25) sz=$size*(.6>3.2) col=<.16,.14,.12>><.3,.29,.28> a=0>.75:.1>.55:.6>0 rot=spin(.08) r=sprite(smoke-puff,alpha)
+pop smoke burst=?mobile:10|18 life=2.5..4 v=sdir()*(1.5..3.5)+up(.8) size=1..1.8 acc=drag(1.2)+buoy(.4)+curl(.3) sz=$size*(.6>2.8) col=<.2,.18,.16> a=0>.7:.1>.6:.6>0 rot=spin(.1) r=sprite(smoke-puff,alpha)
+pop ring burst=?mobile:18|36 on=disc(.8) life=.9..1.6 v=sdir()*<1,0,1>*(7..11)+up(.4) size=.5..1 acc=drag(2.6)+buoy(.2) sz=$size*(.6>2.6) col=<.44,.4,.33> a=0>.55:.15>.7:.4>0 rot=spin(.1) r=sprite(smoke-puff,alpha)
+pop embers burst=?mobile:12|26 life=1.5..3 v=sdir()*(1..3)+up(1.5..3) size=.02..0.04 acc=curl(.8)+grav()*.15+drag(.8) col=hdr(5,2.4,.6)>hdr(1.2,.3,.05) a=(1>.7:1>0)*flick(9,.4) r=sprite(ember,add,velocity,.02)
+pop glow burst=1 life=.55 r=light(<1,.58,.28>,160*(1>.4:.35>0),22)`;
 const FIRE = `fx
 pop bed n=?mobile:12|22 on=disc(%r|2.6) size=.25..0.5 tint=<2.6,1,.25>..<1.2,.35,.08> sz=$size*flick(.6,.15) col=$tint*flick(.9,.3) a=.75 r=sprite(soft-disc,add)
 pop flame rate=?mobile:34|64 on=disc(%r|2.6) life=.45..0.85 v=up(1.6..2.6)+cone(18)*(.2..0.6) size=.35..0.7 acc=curl(.5)*1.2+buoy(2.2)+drag(1.5)
@@ -90,7 +102,7 @@ function rocket(ctx, dt) { // the M.E.G. launcher's round: straight and fast, a 
   v.y += (ctx.place.gravity?.y ?? -9.8) * 0.06 * dt;
   if ((s.age = (s.age ?? 0) + dt) > 4) return explode(ctx);
   const hit = raycast(ctx, p, { x: v.x / sp, y: v.y / sp, z: v.z / sp }, { distance: sp * dt + 0.2, bodies: "all", ignoreEntities: [me.id, s.ownerId].filter(Boolean) });
-  if (hit) { me.feetPosition = { x: hit.position.x - v.x / sp * 0.15, y: hit.position.y - v.y / sp * 0.15, z: hit.position.z - v.z / sp * 0.15 }; return explode(ctx); }
+  if (hit) { s.hitN = hit.normal ?? null; me.feetPosition = { x: hit.position.x - v.x / sp * 0.15, y: hit.position.y - v.y / sp * 0.15, z: hit.position.z - v.z / sp * 0.15 }; return explode(ctx); }
   me.feetPosition = { x: p.x + v.x * dt, y: p.y + v.y * dt, z: p.z + v.z * dt }; s.vel = v;
 }
 function explode(ctx) {
@@ -99,12 +111,17 @@ function explode(ctx) {
   const hits = reached(ctx, c, F.radius, 0.2).map((h) => ({ id: h.id, d: Math.round(F.damage * (1 - h.flat / F.radius) + F.damage * 0.15), dir: h.dir, heavy: h.flat < F.radius * 0.5 ? 1 : 0.5 }));
   const self = ctx.place.players.find((p) => p.id === s.ownerId), sf = self?.feetPosition, sd = sf ? Math.hypot(sf.x - c.x, sf.z - c.z) : 99;
   if (s.ownerId) ctx.emit("blast", { hits, self: sd < F.radius ? Math.round(F.damage * 0.5 * (1 - sd / F.radius)) : 0, from: c }, { to: s.ownerId });
-  ctx.emit("fx", { position: { ...c, y: c.y + 0.2 }, script: BOOM });
-  ctx.emit("decal", { position: c, normal: { x: 0, y: 1, z: 0 }, texture: "cdn/texture-scorch-mark-blast-decal.png", size: 2.6, lifetime: 60, fade: 5 });
-  ctx.emit("shockwave", { position: { ...c, y: c.y + 0.3 }, speed: 30, thickness: 1.2, intensity: 0.6 });
+  const big = s.kind === "rocket", n = (big && s.hitN) || { x: 0, y: 1, z: 0 };
+  ctx.emit("fx", { position: { x: c.x + n.x * 0.2, y: c.y + 0.2, z: c.z + n.z * 0.2 }, script: big ? ROCKET_BOOM : BOOM });
+  ctx.emit("decal", { position: c, normal: n, texture: "cdn/texture-scorch-mark-blast-decal.png", size: big ? 4.2 : 2.6, lifetime: big ? 120 : 60, fade: 5 }); // the scorch lands on the wall or floor it hit
+  if (big) { // a rocket throws the loose things around it and the shooter feels it land
+    for (const o of ctx.query({ center: c, radius: F.radius * 1.4, excludeTags: ["player", "thrown"] })) { const h = ctx.getObject(o.id); if (!h || h.physics?.body !== "dynamic") continue; const dx = o.feetPosition.x - c.x, dz = o.feetPosition.z - c.z, d = Math.hypot(dx, dz) || 1, k = 900 * (1 - Math.min(1, d / (F.radius * 1.4))); ctx.emit("impulse", { target: o.id, impulse: { x: dx / d * k, y: k * 0.6, z: dz / d * k } }); }
+    if (s.ownerId) { ctx.emit("hitstop", { duration: 0.07 }, { audience: { player: s.ownerId } }); ctx.emit("playSound", { clip: SND + "sfx-rocket-detonation-huge-boom-with-glass-and-ceiling-debris-falling.mp3", position: c, volume: 1, maxDistance: 140 }); }
+  }
+  ctx.emit("shockwave", { position: { ...c, y: c.y + 0.3 }, speed: big ? 40 : 30, thickness: big ? 1.8 : 1.2, intensity: big ? 0.9 : 0.6 });
   ctx.emit("playSound", { clip: SND + "sfx-frag-grenade-explosion.mp3", position: c, volume: 1, maxDistance: 120 });
   ctx.emit("playSound", { clip: SND + "sfx-explosion-concussion-thump-with-debris-rattle-and-room-rumble-tail.mp3", position: c, volume: 0.8, maxDistance: 90 });
-  for (const pl of ctx.place.players) { const f = pl.feetPosition, dd = Math.hypot(f.x - c.x, f.y - c.y, f.z - c.z); if (dd < 16) ctx.emit("screenShake", { intensity: 0.9 * (1 - dd / 16), duration: 0.5 }, { audience: { player: pl.id } }); if (dd < 8) ctx.emit("screenFlash", { color: "oklch(0.95 0.08 70)", duration: 0.18, intensity: 0.14 * (1 - dd / 8) }, { audience: { player: pl.id } }); }
+  for (const pl of ctx.place.players) { const f = pl.feetPosition, dd = Math.hypot(f.x - c.x, f.y - c.y, f.z - c.z); if (dd < (big ? 24 : 16)) ctx.emit("screenShake", { intensity: (big ? 1.3 : 0.9) * (1 - dd / (big ? 24 : 16)), duration: big ? 0.7 : 0.5 }, { audience: { player: pl.id } }); if (dd < 8) ctx.emit("screenFlash", { color: "oklch(0.95 0.08 70)", duration: 0.18, intensity: 0.14 * (1 - dd / 8) }, { audience: { player: pl.id } }); }
   ctx.emit("noise", { position: c, radius: 60, kind: "explosion" }, { audience: { nearby: c, radius: 60 } });
   ctx.destroy(me.id);
 }

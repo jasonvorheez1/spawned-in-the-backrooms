@@ -136,12 +136,13 @@ pop smoke burst=4..6 life=.6..1 v=sdir()*(.3..0.7) size=.25..0.4 acc=buoy(.4)+dr
 
 const ROCKET_TRAIL = `fx
 pop flame rate=?mobile:40|80 at=point() life=.08..0.16 v=sdir()*.4 size=.1..0.18 sz=$size*(1>.3) col=hdr(5,3,1)>hdr(2,.6,.1) a=1>0 r=sprite(flame-wisp,add)
-pop smoke rate=?mobile:18|36 at=point() life=.9..1.6 v=sdir()*.25+up(.2) size=.12..0.2 acc=drag(1.2)+curl(.3)*.4 sz=$size*(.6>2.6) col=<.62,.6,.57> a=0>.08:.45>.5:.25>0 r=sprite(smoke-puff,alpha)
+pop smoke rate=?mobile:24|48 at=point() life=1.6..2.8 v=sdir()*.25+up(.15) size=.14..0.24 acc=drag(1.2)+curl(.3)*.4 sz=$size*(.6>2.6) col=<.62,.6,.57> a=0>.08:.45>.5:.25>0 r=sprite(smoke-puff,alpha)
 pop glow n=1 r=light(<1,.6,.25>,6,5)`
 const BACKBLAST = `fx
 pop blast burst=?mobile:14|26 life=.25..0.5 v=<%dx|0,0,%dz|0>*(4..8)+sdir()*1.2 size=.25..0.5 acc=drag(3) sz=$size*(.5>1.6) col=hdr(3,1.8,.6)>hdr(.5,.4,.35) a=1>0 r=sprite(smoke-puff,add)
 pop dust burst=?mobile:10|20 life=1..1.8 v=<%dx|0,0,%dz|0>*(2..4)+up(.4)+sdir()*.6 size=.3..0.6 acc=drag(1.6)+buoy(.3) sz=$size*(.6>2.4) col=<.55,.52,.48> a=0>.1:.4>.6:.2>0 r=sprite(smoke-puff,alpha)
-pop flash n=1 life=.12 r=light(<1,.7,.35>,30*(1>0),6)`
+pop flash burst=1 life=.14 r=light(<1,.7,.35>,40*(1>0),7)
+pop muzzle burst=1 life=.09 at=point() size=.9 col=hdr(8,5,2) a=1>0 sz=$size*(.5>1.4) r=sprite(soft-disc,add)`
 
 export const maxHp = (lv, s) => L.hp + (lv - 1) * L.perLevel.hp + (s?.attr ? derived(s).hpBonus : 0)
 export const maxSan = (lv, s) => L.sanity + (lv - 1) * L.perLevel.sanity + ((s?.snacks?.slap_bracelet ?? 0) > 0 ? 5 : 0) + (s?.attr ? derived(s).sanBonus : 0)
@@ -704,10 +705,13 @@ function swing(ctx, power = 0) {
     const dir = { x: fv.x * cp, y: sp, z: fv.z * cp }, from = { x: eye.x + dir.x * 1.0, y: eye.y + dir.y * 1.0 - 0.1, z: eye.z + dir.z * 1.0 }
     ctx.spawn({ tags: ['thrown'], lifetime: 6, feetPosition: from, rotation: { yaw: Math.atan2(-dir.x, -dir.z) * 57.2958, pitch: pv * 57.2958 }, pivot: 'center', castShadow: false,
       primitive: { kind: 'capsule', radius: 0.045, halfHeight: 0.16 }, material: { color: 'oklch(0.42 0.06 125)', roughness: 0.6, metalness: 0.3 },
-      fx: { script: ROCKET_TRAIL }, behavior: 'scripts/nade.js', state: { kind: 'rocket', vel: { x: dir.x * R.speed, y: dir.y * R.speed, z: dir.z * R.speed }, ownerId: ctx.self.id, dmg, radius: R.radius } })
+      fx: { script: ROCKET_TRAIL }, audio: { clip: '/cdn/moodboard-realistic-gritty/sfx-rocket-motor-burning-roar-and-hiss-in-flight-loop.mp3', gain: 0.55, loop: true, spatial: true, maxDistance: 45 }, behavior: 'scripts/nade.js', state: { kind: 'rocket', vel: { x: dir.x * R.speed, y: dir.y * R.speed, z: dir.z * R.speed }, ownerId: ctx.self.id, dmg, radius: R.radius } })
     const back = { x: eye.x - dir.x * 0.9, y: eye.y - 0.15, z: eye.z - dir.z * 0.9 }
     ctx.emit('fx', { position: back, script: BACKBLAST, params: { dx: -dir.x, dz: -dir.z } })
-    ctx.emit('screenShake', { intensity: 0.35, duration: 0.25 }, { audience: { player: ctx.self.id } })
+    ctx.emit('fx', { position: { x: eye.x + dir.x * 1.1, y: eye.y + dir.y * 1.1 - 0.1, z: eye.z + dir.z * 1.1 }, script: BACKBLAST, params: { dx: dir.x * 0.4, dz: dir.z * 0.4 } }) // a bloom of fire off the muzzle too
+    ctx.emit('screenShake', { intensity: 0.55, duration: 0.3 }, { audience: { player: ctx.self.id } })
+    ctx.emit('cameraPunch', { direction: { x: -dir.x * 0.3, y: 1, z: -dir.z * 0.3 }, intensity: 0.75 }, { audience: { player: ctx.self.id } }) // the tube shoves the shoulder back and up
+    ctx.emit('playSound', { clip: '/cdn/moodboard-realistic-gritty/sfx-rocket-launch-deep-thump-and-tube-ring.mp3', volume: 1, maxDistance: 80, position: eye })
     ctx.emit('noise', { position: eye, radius: 50, kind: 'gun' }, { audience: { nearby: eye, radius: 50 } })
     s.kick = Hd.recoil
     return
