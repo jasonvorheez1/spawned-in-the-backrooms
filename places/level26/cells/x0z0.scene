@@ -2465,6 +2465,13 @@ l26-table-5:
   model: {id: /cdn/value.30427e07710f89fc5d4ee4d1afeddf0682015a7e39017bd4d3065b5303373903.glb}
   physics: static
   rotation: {pitch: 0, roll: 0, yaw: 288.00647436641157}
+l26-ted-tape:
+  feetPosition: {x: 5.2, y: 0.5, z: -12.2}
+  id: l26-ted-tape
+  model: {id: /cdn/value.8b20b5e4d4ef7c5f5e3d7e1c5e8f4b2a7d9c6e3f1a0b2c4d6e8f0a1b3c5d7e9f.glb}
+  rotation: {yaw: 30}
+  state: {items: "holo:ted246", name: A cassette on the case, verb: Take tape}
+  tags: [container, l26x]
 l26x-bar-lamp:
   feetPosition: {x: -3, y: 5.6, z: -5.5}
   id: l26x-bar-lamp
