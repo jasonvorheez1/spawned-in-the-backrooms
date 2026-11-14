@@ -40,7 +40,9 @@ export function tutJump(ctx, st, id) {
 export function tutTick(ctx, st) {
   const tut = st.tut, step = tut && STEPS[tut.n]; if (!step) return
   if (ctx.self.place !== "main" && !ctx.self.place?.startsWith("tutorial0")) return
-  if (st.t0cut || st.sheetOpen || st.menuOpen) return
+  // a cut or an open screen holds the card's clock; on return it resumes where it stood, one write
+  if (st.t0cut || st.sheetOpen || st.menuOpen || st.invOpen || st.lootOpen) { ctx.session.tutHold ??= ctx.now(); return }
+  if (ctx.session.tutHold != null) { st.tut = { ...tut, at: tut.at + (ctx.now() - ctx.session.tutHold) }; ctx.session.tutHold = null; return }
   const age = (ctx.now() - tut.at) / 1000
   if (age < 1.2) return // a beat to read it
   if (step.walk) { const p = ctx.self.feetPosition; if (Math.hypot(p.x - tut.x, p.z - tut.z) >= step.walk) advance(ctx, st) }
