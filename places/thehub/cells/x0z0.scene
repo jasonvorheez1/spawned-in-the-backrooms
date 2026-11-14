@@ -1,25 +1,76 @@
 # spawn-scene v2 yaml x0z0
 hub-baylight-0:
   castShadow: false
-  feetPosition: {x: 9, y: 3.6, z: -10}
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 1.8392307692307692, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.88 0.09 82), distance: 11, intensity: 3.5, kind: point, shadow: {enabled: false}}}]
+  feetPosition: {x: 9, y: 3.25, z: -10}
   id: hub-baylight-0
-  light: {color: oklch(0.88 0.09 82), distance: 11, intensity: 3.5, kind: point, shadow: {enabled: false}}
-  material: {color: oklch(0.95 0.06 85), emissive: oklch(0.95 0.06 85), emissiveIntensity: 6}
-  primitive: {kind: sphere, radius: 0.09}
+  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
+  receiveShadow: true
+  scale: 1.3
 hub-baylight-1:
   castShadow: false
-  feetPosition: {x: 20, y: 3.6, z: -10}
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 1.8392307692307692, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.88 0.09 82), distance: 11, intensity: 3.5, kind: point, shadow: {enabled: false}}}]
+  feetPosition: {x: 20, y: 3.25, z: -10}
   id: hub-baylight-1
-  light: {color: oklch(0.88 0.09 82), distance: 11, intensity: 3.5, kind: point, shadow: {enabled: false}}
-  material: {color: oklch(0.95 0.06 85), emissive: oklch(0.95 0.06 85), emissiveIntensity: 6}
-  primitive: {kind: sphere, radius: 0.09}
+  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
+  receiveShadow: true
+  scale: 1.3
 hub-baylight-2:
   castShadow: false
-  feetPosition: {x: 27, y: 3, z: -6.5}
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 2.3007692307692307, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.88 0.09 82), distance: 11, intensity: 1.6, kind: point, shadow: {enabled: false}}}]
+  feetPosition: {x: 27, y: 2.65, z: -6.5}
   id: hub-baylight-2
-  light: {color: oklch(0.88 0.09 82), distance: 11, intensity: 1.6, kind: point, shadow: {enabled: false}}
-  material: {color: oklch(0.95 0.06 85), emissive: oklch(0.95 0.06 85), emissiveIntensity: 6}
-  primitive: {kind: sphere, radius: 0.09}
+  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
+  receiveShadow: true
+  scale: 1.3
+hub-doorlamp-t1-a0:
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 0.8776923076923077, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.8 0.13 68), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}}}]
+  feetPosition: {x: 35, y: 4.5, z: -19.5}
+  id: hub-doorlamp-t1-a0
+  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
+  receiveShadow: true
+  scale: 1.3
+hub-doorlamp-t1-a1:
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 0.8776923076923077, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.8 0.13 68), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}}}]
+  feetPosition: {x: 35, y: 4.5, z: -35.5}
+  id: hub-doorlamp-t1-a1
+  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
+  receiveShadow: true
+  scale: 1.3
+hub-doorlamp-t1-a2:
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 0.8776923076923077, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.8 0.13 68), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}}}]
+  feetPosition: {x: 35, y: 4.5, z: -51.5}
+  id: hub-doorlamp-t1-a2
+  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
+  receiveShadow: true
+  scale: 1.3
+hub-doorlamp-t1-b0:
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 0.8776923076923077, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.8 0.13 68), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}}}]
+  feetPosition: {x: 45, y: 4.5, z: -19.5}
+  id: hub-doorlamp-t1-b0
+  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
+  receiveShadow: true
+  scale: 1.3
+hub-doorlamp-t1-b1:
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 0.8776923076923077, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.8 0.13 68), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}}}]
+  feetPosition: {x: 45, y: 4.5, z: -35.5}
+  id: hub-doorlamp-t1-b1
+  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
+  receiveShadow: true
+  scale: 1.3
+hub-doorlamp-t1-b2:
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 0.8776923076923077, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.8 0.13 68), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}}}]
+  feetPosition: {x: 45, y: 4.5, z: -51.5}
+  id: hub-doorlamp-t1-b2
+  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
+  receiveShadow: true
+  scale: 1.3
 hub-l1-door:
   castShadow: false
   children: [{castShadow: false, feetPosition: {x: 0, y: 0.2, z: 0.78}, id: leaf, material: {roughness: 0.9}, physics: {body: static, collider: mesh}, primitive: {kind: scripted, params: {part: leaf}, script: scripts/hub-door-geo.js, seed: 7101}}]
