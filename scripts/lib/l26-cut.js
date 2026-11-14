@@ -37,6 +37,7 @@ export function l26Tick(ctx, ses, st) {
   const c = (ses.l26 ??= { p0: { ...me.feetPosition }, did: {} })
   const once = (k, fn) => { if (!c.did[k]) { c.did[k] = true; fn() } }
   me.feetPosition = c.p0; me.velocity = { x: 0, y: 0, z: 0 }
+  c.hp0 ??= st.hp; if (typeof c.hp0 === "number" && st.hp < c.hp0) st.hp = c.hp0 // Shelly, Nov 14: nothing hurts you while the cutscene owns the camera
   const skip = ses.l26skip && ctx.now() - ses.l26skip > 1200
   if (t >= L26_LEN || skip) {
     dropPhoebe(ctx, "phoebe-l26"); ctx.view.camera = null
