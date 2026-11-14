@@ -347,7 +347,7 @@ for side in (1, -1):
     cf = MB(); grid(cf, CPc, closeU=True); make("Cuff%d" % side, cf, "cuff", w_arm, solid=0.007)
 
 # ================= COLLAR, BOW, CHAIN =================
-def front(z): return prof(z, 0)
+def front(z): return hullr(z, 0) + 0.02
 col = MB(); CR = []
 for j in range(4):
     t = j / 3; z = lerp(1.035, 0.985, t)
