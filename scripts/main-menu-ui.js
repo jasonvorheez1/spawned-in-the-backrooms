@@ -8,6 +8,7 @@ const CORRIDOR = `<svg class="mm-scene" viewBox="0 0 1600 900" preserveAspectRat
   <linearGradient id="wall" x2="1" y2=".2"><stop stop-color="#a49a61"/><stop offset="1" stop-color="#514e32"/></linearGradient>
   <linearGradient id="floor" x2="0" y2="1"><stop stop-color="#55503a"/><stop offset="1" stop-color="#211f1a"/></linearGradient>
   <linearGradient id="ceiling" x2="0" y2="1"><stop stop-color="#332f25"/><stop offset="1" stop-color="#9b9060"/></linearGradient>
+  <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f6e9b1" stop-opacity=".22"/><stop offset="1" stop-color="#f6e9b1" stop-opacity="0"/></linearGradient>
   <radialGradient id="light"><stop stop-color="#e8dca1" stop-opacity=".45"/><stop offset="1" stop-color="#cab86e" stop-opacity="0"/></radialGradient>
   <pattern id="paper" width="22" height="22" patternUnits="userSpaceOnUse"><path d="M11 2v18M3 11h16M6 6l10 10M16 6L6 16" fill="none" stroke="#514b32" stroke-opacity=".12" stroke-width="1"/></pattern>
   <pattern id="grain" width="9" height="9" patternUnits="userSpaceOnUse"><path d="M1 2h1M5 7h2M8 3h1" stroke="#dbca91" stroke-opacity=".08"/></pattern>
@@ -21,12 +22,18 @@ const CORRIDOR = `<svg class="mm-scene" viewBox="0 0 1600 900" preserveAspectRat
 <path d="M0 210L670 325M0 425L670 366M1600 210L1010 325M1600 425L1010 366" stroke="#ddd1a0" stroke-opacity=".08" fill="none"/>
 <g fill="none" stroke="#d3c797" stroke-opacity=".20" stroke-width="3"><path d="M0 210H1600M0 60H1600M0 0L670 300M400 0L750 300M1200 0L930 300M1600 0L1010 300"/></g>
 <g class="mm-lights"><path d="M705 112h276l-50 53H744Z" fill="#ddd4ae"/><path d="M773 235h145l-17 17H790Z" fill="#ece0b8"/><ellipse cx="842" cy="160" rx="400" ry="280" fill="url(#light)"/></g>
+<path class="mm-beam" d="M730 145H955L1190 770H480Z" fill="url(#beam)"/>
+<g class="mm-dust" fill="#f3e7b6" opacity=".32"><circle cx="560" cy="312" r="2"/><circle cx="690" cy="475" r="1.5"/><circle cx="1060" cy="295" r="2"/><circle cx="1160" cy="510" r="1.3"/><circle cx="830" cy="391" r="1"/><circle cx="1350" cy="660" r="2"/><circle cx="982" cy="610" r="1.3"/><circle cx="430" cy="580" r="1"/></g>
+<g class="mm-dust mm-dust-back" fill="#efe0a5" opacity=".2"><circle cx="620" cy="550" r="1"/><circle cx="1020" cy="420" r="1.5"/><circle cx="1250" cy="260" r="1"/><circle cx="750" cy="260" r="1"/><circle cx="1400" cy="390" r="1.5"/></g>
 <path d="M0 900H1600L1010 560H670Z" fill="url(#grain)"/><path d="M0 720H1600M0 805H1600M420 900l320-340M1180 900L930 560" stroke="#d1bb81" stroke-opacity=".06" fill="none"/>
 </svg>`
 const CSS = `<style>
 #mm{--mm-gold:#e4d89d;position:fixed;inset:0;isolation:isolate;overflow:hidden;pointer-events:auto;color:#f2efd9;font-family:var(--ui-font,'Segoe UI',Arial,sans-serif);background:#171912}
-#mm .mm-scene{position:absolute;inset:-3%;width:106%;height:106%;z-index:-3;animation:mm-drift 38s ease-in-out infinite alternate}
-#mm .mm-lights{animation:mm-light 9s infinite}
+#mm .mm-scene{position:absolute;inset:-3%;width:106%;height:106%;z-index:-3;animation:mm-drift 24s ease-in-out infinite alternate}
+#mm .mm-lights{animation:mm-light 7s infinite}
+#mm .mm-beam{transform-origin:840px 145px;animation:mm-beam 11s ease-in-out infinite alternate}
+#mm .mm-dust{animation:mm-dust 16s ease-in-out infinite alternate}
+#mm .mm-dust-back{animation-duration:23s;animation-direction:alternate-reverse}
 #mm:before{content:'';position:absolute;inset:0;z-index:-2;pointer-events:none;background:linear-gradient(90deg,rgba(12,14,11,.96),rgba(12,14,11,.87) 28%,rgba(12,14,11,.36) 68%,rgba(12,14,11,.28)),linear-gradient(0deg,#0c0e0bd9,transparent 45%,#0c0e0b75)}
 #mm:after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.5;background:repeating-linear-gradient(0deg,transparent 0 3px,#f2e9bb09 4px);animation:mm-static 7s steps(2) infinite}
 #mm.mm-pause{background:rgba(10,12,10,.68)}
@@ -39,11 +46,14 @@ const CSS = `<style>
 #mm .col{box-sizing:border-box;width:min(470px,100%);flex:none;padding:16px 4px;animation:mm-enter .6s ease-out both}
 #mm .mm-eyebrow{display:flex;align-items:center;gap:12px;margin:0 0 16px;color:#c9be89;font-size:10px;font-weight:700;letter-spacing:.25em;text-transform:uppercase}
 #mm .mm-eyebrow:before{content:'';width:30px;height:1px;background:#c9be89}
-#mm h1{margin:0;color:#f7f2dd;font-family:var(--ui-font,'Segoe UI',Arial,sans-serif);font-weight:650;font-size:clamp(39px,5.4vw,74px);line-height:1.05;letter-spacing:-.045em;text-shadow:0 4px 30px #0009}
+#mm h1{margin:0;color:#f7f2dd;font-family:var(--ui-font,'Segoe UI',Arial,sans-serif);font-weight:650;font-size:clamp(42px,6vw,82px);line-height:1.05;letter-spacing:-.045em;text-shadow:0 4px 30px #0009}
 #mm h1 span{display:block}#mm .mm-pause-title{font-size:clamp(35px,4vw,54px);letter-spacing:-.035em}
 #mm .mm-subline{margin:16px 0 22px;color:#beb99e;font-size:11px;line-height:1.5;letter-spacing:.12em;text-transform:uppercase}
-#mm .mm-nav{width:min(340px,100%);display:grid;gap:3px}
+#mm .mm-nav{width:min(365px,100%);display:grid;gap:4px;margin-top:26px}
+#mm.mm-pause .mm-nav{margin-top:8px}
 #mm .mm-nav button{position:relative;display:flex;align-items:center;width:100%;min-height:42px;gap:12px;padding:9px 13px;border:1px solid transparent;background:#e7d9a608;color:#ddd9c8;text-align:left;font:600 14px var(--ui-font,'Segoe UI',Arial,sans-serif);cursor:pointer;transition:background .2s,color .2s,transform .2s,border-color .2s}
+#mm.mm-title .mm-nav button{animation:mm-arrive .7s both}
+#mm.mm-title .mm-nav button:nth-child(2){animation-delay:.08s}#mm.mm-title .mm-nav button:nth-child(3){animation-delay:.16s}#mm.mm-title .mm-nav button:nth-child(4){animation-delay:.24s}#mm.mm-title .mm-nav button:nth-child(5){animation-delay:.32s}
 #mm .mm-nav button:before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:2px;background:#e3d494;opacity:0;transition:opacity .2s}
 #mm .mm-nav button:hover,#mm .mm-nav button:focus-visible{background:#d9ca9224;border-color:#e0d4a13b;color:#fffbe8;transform:translateX(5px);outline:0}
 #mm .mm-nav button:hover:before,#mm .mm-nav button:focus-visible:before,#mm .mm-nav .mm-primary:before{opacity:1}
@@ -57,9 +67,12 @@ const CSS = `<style>
 #mm .mm-seg{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:4px}#mm .mm-seg button,#mm .mm-back{min-height:34px;padding:6px 10px;border:1px solid #998b5c70;background:#282c22;color:#ded9c7;font:600 12px var(--ui-font,'Segoe UI',Arial,sans-serif);cursor:pointer}#mm .mm-seg button.on{background:#d8ce96;border-color:#d8ce96;color:#171a12}#mm .mm-seg button:focus-visible,#mm .mm-back:focus-visible,#mm .mm-sub .mm-primary:focus-visible{outline:2px solid #f5d690;outline-offset:2px}#mm .mm-back{margin-top:18px;padding:8px 15px}
 #mm .mm-sub .mm-primary{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:44px;margin-top:18px;padding:10px 14px;border:0;background:#d8ce96;color:#171a12;font-weight:700;cursor:pointer}#mm .mm-meta{color:#aaa995;font-size:12px;line-height:1.5}
 @keyframes mm-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@keyframes mm-drift{from{transform:scale(1) translateX(0)}to{transform:scale(1.08) translateX(-1.2%)}}@keyframes mm-light{0%,91%,93%,100%{opacity:1}92%{opacity:.72}92.4%{opacity:.94}}@keyframes mm-static{50%{opacity:.32}}
+@keyframes mm-arrive{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:translateX(0)}}
+@keyframes mm-beam{from{opacity:.45;transform:scaleX(.92)}to{opacity:.95;transform:scaleX(1.08)}}
+@keyframes mm-dust{from{transform:translate(0,0);opacity:.18}to{transform:translate(-24px,-55px);opacity:.5}}
 @media(max-width:640px){#mm .mm-top span:last-child{display:none}#mm .mm-shell{right:var(--spawn-chrome-reservation-right-inset,50px)}#mm .mm-top,#mm .mm-main,#mm .mm-footer{padding-left:22px;padding-right:10px}#mm .mm-row{align-items:flex-start;flex-direction:column}#mm .mm-seg{justify-content:flex-start}#mm .mm-footer span:last-child{display:none}}
 @media(max-height:570px){#mm .mm-top{padding-top:12px;padding-bottom:4px}#mm .col{padding:6px 3px}#mm h1{font-size:38px}#mm .mm-eyebrow{margin-bottom:7px}#mm .mm-subline{margin:8px 0 12px}#mm .mm-nav{gap:1px}#mm .mm-nav button{min-height:34px;padding-top:5px;padding-bottom:5px}#mm .mm-footer{padding-top:5px;padding-bottom:10px}}
-@media(prefers-reduced-motion:reduce){#mm .mm-scene,#mm .mm-lights,#mm:after,#mm .col{animation:none}#mm button{transition:none}}#mm.mm-reduced .mm-scene,#mm.mm-reduced .mm-lights,#mm.mm-reduced:after,#mm.mm-reduced .col{animation:none}#mm.mm-reduced button{transition:none}
+@media(prefers-reduced-motion:reduce){#mm .mm-scene,#mm .mm-lights,#mm .mm-beam,#mm .mm-dust,#mm:after,#mm .col,#mm.mm-title .mm-nav button{animation:none}#mm button{transition:none}}#mm.mm-reduced .mm-scene,#mm.mm-reduced .mm-lights,#mm.mm-reduced .mm-beam,#mm.mm-reduced .mm-dust,#mm.mm-reduced:after,#mm.mm-reduced .col,#mm.mm-reduced.mm-title .mm-nav button{animation:none}#mm.mm-reduced button{transition:none}
 </style>`
 
 function settingsView(ctx, player, prefs) {
@@ -191,9 +204,8 @@ export function mainMenu(ctx, player, launch = false) {
     content = `<div class="col">${controlsView(ctx)}</div>`
   } else {
     content = `<div class="col">
-      <div class="mm-eyebrow">${pause ? 'Expedition' : 'Somewhere beyond the familiar'}</div>
       ${pause ? '<h1 class="mm-pause-title">Paused</h1>' : '<h1><span>The</span><span>Backrooms</span></h1>'}
-      <div class="mm-subline">${pause ? `${esc(placeName)} · Level ${esc(s.level ?? 1)}` : returning ? `Continue · ${esc(placeName)} · Level ${esc(s.level ?? 1)}` : 'Level 0 · The Lobby'}</div>
+      ${pause ? `<div class="mm-subline">${esc(placeName)} · Level ${esc(s.level ?? 1)}</div>` : ''}
       <nav class="mm-nav" aria-label="${pause ? 'Pause menu' : 'Main menu'}">
         <button class="mm-primary" onclick="sendAction('mmenu',{k:'${k}'},{relockPointer:true})"><span class="mm-number">01</span>${primaryLabel}<span class="mm-arrow" aria-hidden="true">→</span></button>
         ${pause ? '' : `<button onclick="sendAction('mmenu',{k:'view',v:'newgame'})"><span class="mm-number">02</span>${returning ? 'New Expedition' : 'Custom Expedition'}<span class="mm-arrow" aria-hidden="true">›</span></button>`}
@@ -205,5 +217,5 @@ export function mainMenu(ctx, player, launch = false) {
     </div>`
   }
 
-  return `${CSS}<div id="mm" class="${pause ? 'mm-pause' : 'mm-title'} ${prefs.motion === 'reduced' ? 'mm-reduced' : ''}" data-modal tabindex="0" ${kd ? `onkeydown="${kd}"` : ''}>${pause ? '' : CORRIDOR}<div class="mm-shell"><div class="mm-top"><span>${pause ? 'Paused' : 'The Backrooms'}</span><span>${pause ? esc(placeName) : 'Level 0 / The Lobby'}</span></div><div class="mm-main">${content}</div><div class="mm-footer"><span><b>●</b> ${view ? 'Escape to go back' : pause ? 'Escape to resume' : 'Progress saves automatically'}</span><span>${pause ? 'PAUSE' : 'THE LOBBY'}</span></div></div></div>`
+  return `${CSS}<div id="mm" class="${pause ? 'mm-pause' : 'mm-title'} ${prefs.motion === 'reduced' ? 'mm-reduced' : ''}" data-modal tabindex="0" ${kd ? `onkeydown="${kd}"` : ''}>${pause ? '' : CORRIDOR}<div class="mm-shell"><div class="mm-main">${content}</div>${view || pause ? `<div class="mm-footer"><span>${view ? 'Escape to go back' : 'Escape to resume'}</span></div>` : ''}</div></div>`
 }
