@@ -1397,8 +1397,8 @@ function sqTank(ctx, d) { // fill, drink from or empty the backpack tank
   if (c === 'almond') { if ((s.almonds ?? 0) <= 0) return say('No grey almond water to pour in'); s.almonds -= 1 }
   if (c === 'pyroil') { if ((s.firesalt ?? 0) <= 0) return say('Pyroil needs a firesalt shard to melt down'); s.firesalt -= 1 }
   if (c === 'repellent') { if ((s.repellent ?? 0) <= 0) return say('No Smiler Repellent'); s.repellent -= 1 }
-  if (c === 'water' && have >= L.cap) return say('The tank is already full of water')
-  s.sqLiq = c; s.sqfill = c === 'water' ? L.cap - (s.loaded_squirt_gun ?? 0) : (s.sqfill ?? 0) + L.per
+  if (c === 'water' && s.sqLiq === 'water' && (s.sqfill ?? 0) >= L.cap) return say('The tank is already full of water') // Nov 14, Shelly 'still cant fill my tank': the loaded gun's 26 shots counted as a full tank
+  s.sqLiq = c; s.sqfill = c === 'water' ? L.cap : (s.sqfill ?? 0) + L.per
   heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-pouring-liquid-into-plastic-tank-funnel-glug.mp3', position: ctx.self.feetPosition, volume: 0.5, maxDistance: 8 })
   say(`${L.per} shots of ${L.name} into the tank`)
 }
