@@ -1,0 +1,41 @@
+// Canonical registry of every destination place across the game so menus, HUD cards,
+// quest markers, compass pips, and discovery notifications always agree on every level.
+export const PLACES = {
+  main:      { name: "Level 0",        label: "Level 0 · The Lobby",                   title: ["LEVEL 0", "THE LOBBY"] },
+  tutorial0: { name: "Level 0",        label: "Level 0 · The Lobby",                   title: ["LEVEL 0", "THE LOBBY"] },
+  intake:    { name: "Intake Room",    label: "Intake Room",                           title: ["INTAKE", "GET READY"] },
+  bonus:     { name: "The Bonus Room", label: "The Bonus Room",                        title: ["THE BONUS ROOM", "THE BONUS ROOM"] },
+  thehub:    { name: "The Hub",        label: "The Hub",                               title: ["THE HUB", "CORRIDOR CROSSROADS"] },
+  level01:   { name: "Zenith Station", label: "Level 0.1 · Zenith Station",            title: ["LEVEL 0.1", "ZENITH STATION"] },
+  level02:   { name: "Level 0.2",      label: "Level 0.2 · Remodeled Mess",            title: ["LEVEL 0.2", "REMODELED MESS"] },
+  level1:    { name: "Level 1",        label: "Level 1 · Habitable Zone",              title: ["LEVEL 1", "HABITABLE ZONE"] },
+  level2:    { name: "Level 2",        label: "Level 2 · Pipe Dreams",                 title: ["LEVEL 2", "PIPE DREAMS"] },
+  level21:   { name: "Level 2.1",      label: "Level 2.1 · Locked",                    title: ["LEVEL 2.1", "LOCKED"] },
+  level3:    { name: "Level 3",        label: "Level 3 · Electrical Station",          title: ["LEVEL 3", "ELECTRICAL STATION"] },
+  gamma:     { name: "Base Gamma",     label: "Base Gamma",                            title: ["M.E.G.", "BASE GAMMA"] },
+  level4:    { name: "Level 4",        label: "Level 4 · Abandoned Office",            title: ["LEVEL 4", "ABANDONED OFFICE"] },
+  level5:    { name: "Level 5",        label: "Level 5 · Terror Hotel",                title: ["LEVEL 5", "TERROR HOTEL"] },
+  level6:    { name: "Level 6",        label: "Level 6 · Lights Out",                  title: ["LEVEL 6", "LIGHTS OUT"] },
+  level61:   { name: "Level 6.1",      label: "Level 6.1 · The Snackrooms",            title: ["LEVEL 6.1", "THE SNACKROOMS"] },
+  level7:    { name: "Level 7",        label: "Level 7 · Thalassophobia",              title: ["LEVEL 7", "THALASSOPHOBIA"] },
+  level8:    { name: "Level 8",        label: "Level 8 · Cave System",                 title: ["LEVEL 8", "CAVE SYSTEMS"] },
+  level9:    { name: "Level 9",        label: "Level 9 · The Suburbs",                 title: ["LEVEL 9", "THE SUBURBS"] },
+  level10:   { name: "Level 10",       label: "Level 10 · Bumper Crop",                title: ["LEVEL 10", "BUMPER CROP"] },
+  level11:   { name: "Level 11",       label: "Level 11 · The Infinite City",          title: ["LEVEL 11", "THE INFINITE CITY"] },
+  home11:    { name: "Your House",     label: "Level 11 · Your House",                 title: ["YOUR HOUSE", "THE INFINITE CITY"] },
+  level12:   { name: "Level 12",       label: "Level 12 · Matrix",                     title: ["LEVEL 12", "MATRIX"] },
+  level13:   { name: "Level 13",       label: "Level 13 · The Boiling Frogs",          title: ["LEVEL 13", "THE BOILING FROGS"] },
+  level26:   { name: "SS Fun",         label: "Level 26 · SS Fun =)",                  title: ["LEVEL 26", "THE SS FUN =)"] },
+  level27:   { name: "Level 27",       label: "Level 27 · The Bunker Springs",         title: ["LEVEL 27", "THE BUNKER SPRINGS"] },
+  level31:   { name: "Level 31",       label: "Level 31 · The Roller Rink",            title: ["LEVEL 31", "THE ROLLER RINK"] },
+  level34:   { name: "Level 34",       label: "Level 34 · Sewer System",               title: ["LEVEL 34", "SEWER SYSTEM"] },
+  level70:   { name: "Level 70",       label: "Level 70 · Froidetown",                 title: ["LEVEL 70", "FROIDETOWN"] },
+  level184:  { name: "Level 184",      label: "Level 184 · Field of Forgotten Forts",  title: ["LEVEL 184", "FIELD OF FORGOTTEN FORTS"] },
+  levelrun:  { name: "Level !",        label: "Level ! · Run for Your Life!",          title: ["LEVEL !", "RUN FOR YOUR LIFE!"] },
+  spamton:   { name: "Spamton's Basement", label: "Spamton's Basement",                title: ["[[NOWHERE]]", "SPAMTON'S BASEMENT"] },
+  testlab:   { name: "Test Range",     label: "The Test Range",                        title: ["TEST RANGE", "TRAINING FLOOR"] },
+};
+
+export const PLACE_NAMES = Object.fromEntries(Object.entries(PLACES).map(([k, v]) => [k, v.name]));
+export const PLACE_LABELS = Object.fromEntries(Object.entries(PLACES).map(([k, v]) => [k, v.label]));
+export const LEVEL_TITLES = Object.fromEntries(Object.entries(PLACES).map(([k, v]) => [k, v.title]));

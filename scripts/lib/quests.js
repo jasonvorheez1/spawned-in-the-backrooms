@@ -4,13 +4,10 @@
 // folds those in, so nothing a quest giver wrote is lost when a second quest starts.
 import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
+import { addRep, addKarma, repOf, GROUPS } from "./rep.js";
+export { PLACE_NAMES } from "./places.js";
 export const MAX_TRACK = 3; // her number
 export const TINT = ["#ffc44d", "#8fd8ff", "#a6f08e"]; // slot 1 amber, 2 pale blue, 3 pale green (my picks)
-export const PLACE_NAMES = {
-  main: "Level 0", level01: "Zenith Station", level02: "Level 0.2", level1: "Level 1", level2: "Level 2", level21: "Level 2.1", level31: "Level 31",
-  level3: "Level 3", gamma: "Base Gamma", level4: "Level 4", level5: "Level 5", level6: "Level 6",
-  level61: "Level 6.1", level7: "Level 7", level8: "Level 8", level9: "Level 9", level10: "Level 10", level11: "Level 11", level13: "Level 13", level26: "SS Fun", levelrun: "Level !", thehub: "The Hub", testlab: "Test Range",
-};
 export const qid = (name) => String(name ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 export function setQuest(s, id, q) {
   const cur = s.quests ?? {}, old = cur[id], mark = q.mark === undefined ? old?.mark ?? null : q.mark, main = !!(q.main ?? old?.main), kind = q.kind ?? old?.kind ?? null;
@@ -84,5 +81,46 @@ export function payOnce(s, id) {
   if (!s || !id) return false;
   if (s.paid?.[id]) return false;
   s.paid = { ...(s.paid ?? {}), [id]: 1 };
+  return true;
+}
+
+const FANFARE = "/cdn/moodboard-realistic-gritty/sfx-level-up-jingle-retro-terminal-chime-rising-three-notes.mp3";
+const repBonus = (s, g) => { const v = repOf(s, g); return v >= 35 ? 0.25 : v >= 12 ? 0.1 : 0; };
+
+// Shared forward-only quest step advancement used across level quest modules
+export function advanceQuest(ctx, p, q, step, noteText) {
+  const s = p?.state;
+  if (!s || !q || (s[q.key] ?? 0) >= step) return false;
+  s[q.key] = step;
+  questStep(s, q, step);
+  tellQuest(ctx, p, noteText || `${q.name} · ${q.tips?.[step] ?? ""}`);
+  return true;
+}
+
+// Shared quest completion payout (reputation bonus, karma/rep, cash, XP, feed, banner, fanfare, milestone)
+export function finishLevelQuest(ctx, p, qKey, q, { xp = 100, cents = 5000, items = [], text = "", rep = [], by = "survivors", payKey } = {}) {
+  const s = p?.state;
+  if (!s || !q || s[q.key] === 99 || !payOnce(s, payKey ?? q.key)) return false;
+  const b = repBonus(s, by), msgs = [];
+  if (b && cents) { const extra = Math.round(cents * b); cents += extra; msgs.push(`${GROUPS[by]?.name ?? by} bonus +$${(extra / 100).toFixed(2)}`); }
+  s[q.key] = 99;
+  questStep(s, q, 99, text || `Completed ${q.name}`);
+  for (const [g, d] of rep) {
+    if (!d) continue;
+    const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d, `Completed ${q.name}`);
+    msgs.push(tier || `${g === "karma" ? "Karma" : GROUPS[g]?.name ?? g} ${d > 0 ? "+" : ""}${d}`);
+  }
+  s.cents = (s.cents ?? 0) + cents;
+  const summary = [text || `Quest Completed: ${q.name}! +${xp} XP · +$${(cents / 100).toFixed(2)}`, ...msgs].filter(Boolean).join(" · ");
+  s.payout = { xp, items, text: summary };
+  const now = ctx.now();
+  s.notice = { text: summary, at: now };
+  pushFeed(s, summary, now, "good");
+  const pos = p.worldFeetPosition ?? p.feetPosition;
+  if (pos) {
+    heard(ctx, { clip: FANFARE, position: pos, volume: 0.85, maxDistance: 24 }, { audience: { player: p.id } });
+    ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.8, z: pos.z }, text: `QUEST COMPLETED: ${q.name.toUpperCase()}`, color: "#f1c40f", size: 1.2 }, { audience: { player: p.id } });
+  }
+  ctx.emit("milestone", { step: 1, name: `quest-${qKey}` }, { audience: { player: p.id } });
   return true;
 }

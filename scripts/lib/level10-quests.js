@@ -10,13 +10,10 @@
 // 3. "Cellar in the Shadows" (Cooper): the storm cellar rattles. It is a worm, boring in from the lake under the pantry.
 //    cellarQ 1 look · 2 tell Cooper · 99 done. Survival 30 in the cellar shores the shelving over the burrow (cellarSealed).
 // Rewards are paid at 99 only, and every turn-in line is offered only on the step before it, so nothing pays twice.
-import { pushFeed } from "./feed.js";
-import { heard } from "./hear.js";
-import { questStep, tellQuest } from "./quests.js";
-import { addRep, addKarma, repOf, GROUPS } from "./rep.js";
+import { advanceQuest, finishLevelQuest } from "./quests.js";
+import { repOf } from "./rep.js";
 import { rollCheck } from "./npc-talk.js";
 
-const FANFARE = "/cdn/moodboard-realistic-gritty/sfx-level-up-jingle-retro-terminal-chime-rising-three-notes.mp3";
 const MARK = (id) => ({ place: "level10", id });
 
 export const QUESTS10 = {
@@ -53,44 +50,12 @@ export const QUESTS10 = {
   },
 };
 
-function setStep(ctx, p, qKey, step, noteText) {
-  const s = p?.state, q = QUESTS10[qKey];
-  if (!s || !q || (s[q.key] ?? 0) >= step) return;
-  s[q.key] = step;
-  questStep(s, q, step);
-  if (noteText) tellQuest(ctx, p, noteText); else tellQuest(ctx, p, `${q.name} · ${q.tips[step] ?? ""}`);
-}
+const setStep = (ctx, p, qKey, step, noteText) => advanceQuest(ctx, p, QUESTS10[qKey], step, noteText);
 export const setWheatStep = (ctx, p, step, noteText) => setStep(ctx, p, "wheat", step, noteText);
 export const setWatcherStep = (ctx, p, step, noteText) => setStep(ctx, p, "watcher", step, noteText);
 export const setCellarStep = (ctx, p, step, noteText) => setStep(ctx, p, "cellar", step, noteText);
 
-const BONUS = (s, g) => { const v = repOf(s, g); return v >= 35 ? 0.25 : v >= 12 ? 0.1 : 0; };
-
-export function finishQuest(ctx, p, qKey, { xp = 100, cents = 5000, items = [], text = "", rep = [], by = "meg" } = {}) {
-  const s = p?.state, q = QUESTS10[qKey];
-  if (!s || !q || s[q.key] === 99) return false; // paid once
-  const b = BONUS(s, by), msgs = [];
-  if (b && cents) { const extra = Math.round(cents * b); cents += extra; msgs.push(`${GROUPS[by]?.name ?? by} bonus +$${(extra / 100).toFixed(2)}`); }
-  s[q.key] = 99;
-  questStep(s, q, 99, text || `Completed ${q.name}`);
-  for (const [g, d] of rep) {
-    if (!d) continue;
-    const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d, `Completed ${q.name}`);
-    msgs.push(tier || `${g === "karma" ? "Karma" : GROUPS[g]?.name ?? g} ${d > 0 ? "+" : ""}${d}`);
-  }
-  s.cents = (s.cents ?? 0) + cents;
-  const summary = [text || `Quest Completed: ${q.name} · +${xp} XP · +$${(cents / 100).toFixed(2)}`, ...msgs].filter(Boolean).join(" · ");
-  s.payout = { xp, items, text: summary };
-  const now = ctx.now();
-  s.notice = { text: summary, at: now };
-  pushFeed(s, summary, now, "good");
-  const pos = p.worldFeetPosition ?? p.feetPosition;
-  if (pos) {
-    heard(ctx, { clip: FANFARE, position: pos, volume: 0.85, maxDistance: 24 }, { audience: { player: p.id } });
-    ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.8, z: pos.z }, text: `QUEST COMPLETED: ${q.name.toUpperCase()}`, color: "#f1c40f", size: 1.2 }, { audience: { player: p.id } });
-  }
-  return true;
-}
+export const finishQuest = (ctx, p, qKey, opts = {}) => finishLevelQuest(ctx, p, qKey, QUESTS10[qKey], { by: "meg", ...opts });
 
 // what the talk card offers (scripts/lib/npc-starters.js questChoices); each line is answered by handleDialogueQuest10 below
 export function l10Choices(id, s) {

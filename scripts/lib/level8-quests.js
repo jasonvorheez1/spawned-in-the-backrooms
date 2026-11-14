@@ -1,13 +1,12 @@
 // Level 8 "The 9th Road" - Quests & Survival Camp Operations
 import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
-import { setQuest, endQuest, qid, questStep, payOnce } from "./quests.js";
-import { addRep, addKarma, repOf, GROUPS } from "./rep.js";
+import { advanceQuest, finishLevelQuest } from "./quests.js";
+import { repOf } from "./rep.js";
 import { rollCheck } from "./npc-talk.js";
 
 const CHIME = "cdn/sfx-soft-bright-two-note-success-chime.mp3";
 const FAIL = "cdn/sfx-dull-low-wooden-thunk-fail-buzz.mp3";
-const FANFARE = "/cdn/moodboard-realistic-gritty/sfx-level-up-jingle-retro-terminal-chime-rising-three-notes.mp3";
 const MARK = (id) => ({ place: "level8", id });
 
 export const QUESTS8 = {
@@ -43,87 +42,11 @@ export const QUESTS8 = {
   },
 };
 
-const syncHUD = (p, qKey, step, doneSummary) => questStep(p?.state, QUESTS8[qKey], step, doneSummary); // scripts/lib/quests.js, shared
+export const setCarlaStep = (ctx, p, step, noteText) => advanceQuest(ctx, p, QUESTS8.carla, step, noteText);
+export const setSpiderStep = (ctx, p, step, noteText) => advanceQuest(ctx, p, QUESTS8.spider, step, noteText);
+export const setKarstStep = (ctx, p, step, noteText) => advanceQuest(ctx, p, QUESTS8.karst, step, noteText);
 
-export function setCarlaStep(ctx, p, step, noteText) {
-  const s = p?.state;
-  if (!s || (s.carlaQ ?? 0) >= step) return;
-  s.carlaQ = step;
-  syncHUD(p, "carla", step);
-  const now = ctx.now();
-  if (noteText) {
-    s.notice = { text: noteText, at: now };
-    pushFeed(s, noteText, now, "info");
-  }
-  const pos = p.worldFeetPosition ?? p.feetPosition;
-  if (pos) heard(ctx, { clip: CHIME, position: pos, volume: 0.7, maxDistance: 16 }, { audience: { player: p.id } });
-}
-
-export function setSpiderStep(ctx, p, step, noteText) {
-  const s = p?.state;
-  if (!s || (s.spiderQ ?? 0) >= step) return;
-  s.spiderQ = step;
-  syncHUD(p, "spider", step);
-  const now = ctx.now();
-  if (noteText) {
-    s.notice = { text: noteText, at: now };
-    pushFeed(s, noteText, now, "info");
-  }
-  const pos = p.worldFeetPosition ?? p.feetPosition;
-  if (pos) heard(ctx, { clip: CHIME, position: pos, volume: 0.7, maxDistance: 16 }, { audience: { player: p.id } });
-}
-
-export function setKarstStep(ctx, p, step, noteText) {
-  const s = p?.state;
-  if (!s || (s.karstQ ?? 0) >= step) return;
-  s.karstQ = step;
-  syncHUD(p, "karst", step);
-  const now = ctx.now();
-  if (noteText) {
-    s.notice = { text: noteText, at: now };
-    pushFeed(s, noteText, now, "info");
-  }
-  const pos = p.worldFeetPosition ?? p.feetPosition;
-  if (pos) heard(ctx, { clip: CHIME, position: pos, volume: 0.7, maxDistance: 16 }, { audience: { player: p.id } });
-}
-
-const BONUS = (s, g) => { const v = repOf(s, g); return v >= 35 ? 0.25 : v >= 12 ? 0.1 : 0; };
-
-export function finishQuest8(ctx, p, qKey, { xp = 100, cents = 5000, items = [], text = "", rep = [], by = "survivors" } = {}) {
-  const s = p?.state;
-  if (!s) return;
-  const q = QUESTS8[qKey];
-  if (!q) return;
-  if (s[q.key] === 99 || !payOnce(s, "l8-" + qKey)) return; // paid once per save
-
-  const b = BONUS(s, by), msgs = [];
-  if (b && cents) { const extra = Math.round(cents * b); cents += extra; msgs.push(`${GROUPS[by]?.name ?? by} bonus +$${(extra / 100).toFixed(2)}`); }
-  s[q.key] = 99;
-  syncHUD(p, qKey, 99, text || `Completed ${q.name}`);
-  for (const [g, d] of rep) {
-    if (!d) continue;
-    const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d, `Completed ${q.name}`);
-    msgs.push(tier || `${g === "karma" ? "Karma" : GROUPS[g]?.name ?? g} ${d > 0 ? "+" : ""}${d}`);
-  }
-
-  s.cents = (s.cents ?? 0) + cents;
-  const summary = [text || `Quest Completed: ${q.name}! +${xp} XP · +$${(cents / 100).toFixed(2)}`, ...msgs].filter(Boolean).join(" · ");
-  s.payout = { xp, items, text: summary };
-  const now = ctx.now();
-  s.notice = { text: summary, at: now };
-  pushFeed(s, summary, now, "good");
-
-  const pos = p.worldFeetPosition ?? p.feetPosition;
-  if (pos) {
-    heard(ctx, { clip: FANFARE, position: pos, volume: 0.85, maxDistance: 24 }, { audience: { player: p.id } });
-    ctx.emit("damageNumber", {
-      position: { x: pos.x, y: pos.y + 1.8, z: pos.z },
-      text: `QUEST COMPLETED: ${q.name.toUpperCase()}`,
-      color: "#f1c40f",
-      size: 1.2,
-    }, { audience: { player: p.id } });
-  }
-}
+export const finishQuest8 = (ctx, p, qKey, opts = {}) => finishLevelQuest(ctx, p, qKey, QUESTS8[qKey], { payKey: "l8-" + qKey, ...opts });
 
 // ---- Dialogue: the choices each giver offers (scripts/lib/npc-starters.js) and what they do (talk.js sends the text here).
 // Every quest has a way through that needs no fight: Carla's whistle [Repair 35], Hobb's silk plates [Repair 35], Ivo's telemetry [Science 45].

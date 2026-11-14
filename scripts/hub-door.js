@@ -4,7 +4,6 @@
 import { animate } from "builtin/tween";
 import { doorById, KEY_NAMES, sealed } from "./lib/thehub.js";
 import { hasKey, spendKey, keysOf } from "./lib/hubkeys.js";
-import { bring } from "./lib/companion.js";
 import { carryAcross } from "./lib/carry.js";
 import { notify } from "./lib/notify.js";
 const SLIDE = 2.75, HOLD = 25;
@@ -44,7 +43,7 @@ export function onTriggerEnter(ctx, other) {
   ctx.emit("screenFlash", { color: "#000000", duration: 1.1, intensity: 1 }, { audience: { player: other.id } });
   other.state.clipKind = "wall"; other.state.hubFrom = d.id;
   other.state.notice = { text: to === "level1" ? "Level 1. The marked door behind you leads back to the Hub." : `${KEY_NAMES[to] ?? d.open?.name ?? "Somewhere"}. The door you came through is not behind you.`, at: ctx.now() };
-  bring(ctx, other, to); carryAcross(ctx, other, to);
+  carryAcross(ctx, other, to);
   const previous = other.state.hubTenthCrossed;
   if (d.id === "t10-a3" && (other.state.hubDinaAsk || other.state.hubLedger)) other.state.hubTenthCrossed = 1;
   const result = ctx.cross(other, to === "level1" ? "level1#l1-from-hub" : to); // Shelly Nov 14: Level 1 is the Hub's way in and out, you land beside its door back
