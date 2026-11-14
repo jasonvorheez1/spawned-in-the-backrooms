@@ -3,6 +3,7 @@
 // whoever is here, and keeps the containment books (scripts/lib/containment.js). Layout math: scripts/lib/level109.js.
 import { rotate } from "builtin/vec3";
 import { W, CEIL, H, SEG, ROOM, PITCH, WALL, DOOR_W, DOOR_H, corridor, corridorsAt, segInfo, segKey, toWorld, other, linesNear, roomPop, rand } from "../../scripts/lib/level109.js";
+import { questTick } from "../../scripts/lib/level109-quest.js";
 import { penRoll, penLoad, penUnload, looseTick, doorOpen } from "../../scripts/lib/containment.js";
 import { spawnFoe } from "../../scripts/lib/l109-foes.js";
 import { buildRoom } from "../../scripts/lib/l109-rooms.js";
@@ -75,6 +76,7 @@ function layRoom(ctx, seed, info) {
   ROOMS.set(info.id, { made, info });
 }
 export function tick(ctx) {
+  try { questTick(ctx); } catch (e) { ctx.log("l109 quest", String(e)); }
   const s = ctx.place.state, players = [...ctx.place.players, ...ctx.query({ tags: ["helper"] })].filter((p) => p.feetPosition);
   if (!s.l109seed) s.l109seed = 1 + Math.floor(ctx.random() * 2e9);
   const seed = s.l109seed;

@@ -16,11 +16,12 @@ import D7 from "./data/dlg-levels-7-8.yml";
 import D10 from "./data/dlg-levels-10-11.yml";
 import D13 from "./data/dlg-level13.yml";
 import D31 from "./data/dlg-level31.yml";
-import D70 from "./data/dlg-level70.yml"; // Level 70 Froidetown
+import D70 from "./data/dlg-level70.yml";
+import D109 from "./data/dlg-level109.yml"; // Level 109 Doctors // Level 70 Froidetown
 import DG from "./data/dlg-generic.yml";
 import DHUB from "./data/dlg-thehub.yml"; // The Hub
 import DLRUN from "./data/dlg-levelrun.yml"; // Level ! Safe Alcove
-const ALL = { ...DHUB, ...DLRUN, ...DG, ...D1, ...D4, ...D5, ...D7, ...D10, ...D13, ...D31, ...D70 };
+const ALL = { ...DHUB, ...DLRUN, ...DG, ...D1, ...D4, ...D5, ...D7, ...D10, ...D13, ...D31, ...D70, ...D109 };
 // people who share one script of lines (a pair of guards, a crew)
 for (const [k, v] of Object.entries({ "l61-guard-b": "l61-guard-a", "l61-amber-b": "l61-amber-a", "l61-guild-b": "l61-guild-a", "l61-guild-c": "l61-guild-a" })) ALL[k] ??= ALL[v];
 export const DLG = ALL;
@@ -39,7 +40,7 @@ export function archOf(it, place) {
   const rk = ["trader", "merchant", "quarter", "smith"].includes(role) ? "trader" : role === "medic" ? "medic" : ["scout", "guard"].includes(role) ? "scout" : "default";
   return ALL[`${fk}:${rk}`] ? `${fk}:${rk}` : ALL[`${fk}:default`] ? `${fk}:default` : "survivor:default";
 }
-export function entryOf(it, place) { const id = short(it); return ALL[id] ? { key: id, e: ALL[id] } : { key: archOf(it, place), e: ALL[archOf(it, place)] }; }
+export function entryOf(it, place) { const id = ALL[it?.state?.dlg] ? it.state.dlg : short(it); return ALL[id] ? { key: id, e: ALL[id] } : { key: archOf(it, place), e: ALL[archOf(it, place)] }; }
 // a roll written "speech 35"
 const skOf = (sk) => { const m = /^\s*([a-z]+)\s+(\d+)/i.exec(String(sk ?? "")); return m ? { skill: m[1].toLowerCase(), difficulty: +m[2] } : null; };
 // the choice tree, flattened once per entry: node ids "0", "0.1", "0.1.0"

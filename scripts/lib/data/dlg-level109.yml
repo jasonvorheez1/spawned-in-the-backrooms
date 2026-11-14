@@ -15,6 +15,10 @@ l109-halloran:
       a: "Which one. Oh. That one. Talk."
     - q: "Any way out of here?"
       a: "Not that I hand out to strangers. Earn a little trust first."
+    - q: "A wanderer opened it. Here's their note."
+      a: "Opened what? Start at the beginning."
+    - q: "Door was jammed. Nobody's fault."
+      a: "What door. You're rambling."
 l109-petra:
   hi: "Triage. Where does it hurt and can you pay."
   back: ["Back for more stitches?", "Sit. Arm out."]

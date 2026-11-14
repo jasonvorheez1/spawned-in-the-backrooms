@@ -29,6 +29,8 @@ import { handleDialogueQuest1 } from './lib/level1-quests.js'
 import { handleDialogueQuest02 } from './lib/remodel-quest.js'
 import { handleDialogueQuest13 } from './lib/level13-quest.js'
 import { handleDialogueQuest31 } from './lib/level31-quest.js'
+import { handleDialogueQuest109 } from './lib/level109-quest.js'
+import L109 from './lib/data/l109-outpost.yml'
 import { handleDialogueQuestBeast } from './lib/l5-beast.js'
 import { handleDialogueQuestHub } from './lib/hub-quest.js'
 import { handleDialogueQuest61 } from './lib/level61-quests.js'
@@ -254,7 +256,7 @@ function send(ctx, d) {
     const before = new Set(Object.keys(s.quests ?? {})) // a quest line: the quest's own handler answers it (scripts/lib/level*-quests.js, zenith-quest.js)
     ctx._lastCheck = null
     const qRes = handleDialogueQuest02(ctx, ctx.self, it, questText) ?? handleDialogueQuest13(ctx, ctx.self, it, questText) ?? handleDialogueQuest(ctx, ctx.self, it, questText) ?? handleDialogueQuest10(ctx, ctx.self, it, questText) ?? handleDialogueQuest8(ctx, ctx.self, it, questText)
-      ?? handleDialogueQuest21(ctx, ctx.self, it, questText) ?? handleDialogueQuestZ(ctx, ctx.self, it, questText) ?? handleDialogueQuest1(ctx, ctx.self, it, questText) ?? handleDialogueQuest31(ctx, ctx.self, it, questText) ?? handleDialogueQuestBeast(ctx, ctx.self, it, questText) ?? handleDialogueQuest70(ctx, ctx.self, it, questText) ?? handleDialogueQuestHub(ctx, ctx.self, it, questText) ?? handleDialogueQuest61(ctx, ctx.self, it, questText) ?? handleDialogueCh2(ctx, ctx.self, it, questText) ?? handleHubErrand(ctx, ctx.self, it, questText) ?? handleFieldErrand(ctx, ctx.self, it, questText) ?? factionReply(it, s, questText) ?? megAssignmentReply(it, s, questText)
+      ?? handleDialogueQuest21(ctx, ctx.self, it, questText) ?? handleDialogueQuestZ(ctx, ctx.self, it, questText) ?? handleDialogueQuest1(ctx, ctx.self, it, questText) ?? handleDialogueQuest31(ctx, ctx.self, it, questText) ?? handleDialogueQuest109(ctx, ctx.self, it, questText) ?? handleDialogueQuestBeast(ctx, ctx.self, it, questText) ?? handleDialogueQuest70(ctx, ctx.self, it, questText) ?? handleDialogueQuestHub(ctx, ctx.self, it, questText) ?? handleDialogueQuest61(ctx, ctx.self, it, questText) ?? handleDialogueCh2(ctx, ctx.self, it, questText) ?? handleHubErrand(ctx, ctx.self, it, questText) ?? handleFieldErrand(ctx, ctx.self, it, questText) ?? factionReply(it, s, questText) ?? megAssignmentReply(it, s, questText)
     const qChk = ctx._lastCheck
     ctx._lastCheck = null
     if (qChk && qRes) {
@@ -284,6 +286,13 @@ function send(ctx, d) {
   const reply = l31?.say ?? (passed ? pk(n.a) : (pk(n.fail) ?? 'No.'))
   say(ctx, it, reply, passed ? (n.mood ?? (n.do ? 'happy' : 'calm')) : 'annoyed'); logLine(ctx, it, 'n', reply)
   setRapport(ctx, it, clamp(rapportOf(ctx, it) + (passed ? (pc ? 6 : 2) : -4), -100, 100))
+  if (typeof n.do === 'string' && (n.do === 'l109heal' || n.do.startsWith('l109buy:'))) { // Nurse Petra: paid care and the supply cage (prices in l109-outpost.yml)
+    const item = n.do.startsWith('l109buy:') ? n.do.slice(8) : null, cost = item ? L109.shop[item] : L109.heal.cost
+    if ((s.cents ?? 0) < cost) { logLine(ctx, it, 'x', `Needs $${(cost / 100).toFixed(2)}`) }
+    else if (item) { s.cents -= cost; s.snacks = { ...(s.snacks ?? {}), [item]: (s.snacks?.[item] ?? 0) + 1 }; logLine(ctx, it, 'x', `Bought ${item} for $${(cost / 100).toFixed(2)}`) }
+    else { s.cents -= cost; s.hp = Math.min(s.maxHp ?? 100, (s.hp ?? 80) + L109.heal.hp); s.sanity = Math.min(100, (s.sanity ?? 80) + L109.heal.sanity); s.l109healed = (s.l109healed ?? 0) + 1
+      ctx.emit("damageNumber", { position: { x: it.feetPosition.x, y: it.feetPosition.y + 1.6, z: it.feetPosition.z }, text: `+${L109.heal.hp} HP  +${L109.heal.sanity} SANITY`, color: "#60ff90", size: 1.1 }, { audience: { player: ctx.self.id } }) }
+  }
   if (passed && n.do === 'heal') {
     s.hp = Math.min(s.maxHp ?? 100, (s.hp ?? 80) + 25); s.sanity = Math.min(100, (s.sanity ?? 80) + 15)
     hearAt(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-bandage-wrap-cloth.mp3", volume: 0.6 })

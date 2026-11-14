@@ -15,6 +15,7 @@ export const GROUPS = {
   froid: { name: "Kingdom of Froidetown", info: "Level 70's parliament, its River Guard and its townsfolk" },
   gelu: { name: "Carnifices of Gelu", info: "the frost cult camped in Iceshed" },
   amber: { name: "Camp Amber", info: "wanderers who keep supply stops in the Hub" },
+  doctors: { name: "The Doctors", info: "the medical group holding an outpost on Level 109" },
 };
 // New Vegas reputation: fame and infamy are kept apart per faction (s.fame[g], s.infamy[g], 0..100); s.rep[g] stays the net (fame - infamy) every older reader uses.
 // Shelly Nov 13: helping one faction never hurts another. RIVALS is a record of who opposes whom, read by nothing that moves standing.
