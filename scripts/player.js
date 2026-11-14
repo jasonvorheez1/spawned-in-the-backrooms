@@ -1238,14 +1238,14 @@ function viewmodel(ctx, moving, sprinting) {
   const cs = !hb && !l.modelUrl && !HUMAN && isNewCat(l) ? critterSpec(l) : null // cats (Shelly Nov 12: 'you didnt have to make an entirely new model'): the first-person arm IS her own cat body, its sleeve on it
   const ply = l.modelUrl || (hb ? hb.id + '#' + (hb.materials.Body_Skin.color ?? '') : '') || (cs ? 'cat2:' + JSON.stringify([l.sex, l.fur, l.topw, l.top, l.skin, l.pattern, l.heightS, l.buildS]) : '')
   // cats (Shelly Nov 12 "make the first person arms match the cat charcters"): her fur colour, a round paw with pink beans, her sleeve
-  const arm = hb || ply ? { hidden: true } : { species: l.species ?? 'cat', fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v37' + JSON.stringify(tune ?? null)
+  const arm = hb || ply ? { hidden: true } : { species: l.species ?? 'cat', fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v38' + JSON.stringify(tune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     if (w.plyObj) { ctx.destroy(w.plyObj); w.plyObj = null }
     w.plyRig = null; w.plySplit = !!cs
     const bk = baseOf(kind), g = HOLD[bk] ?? 0, wp = W[kind] ?? {}, gun = !!wp.ranged
     const fp = gun ? firstPersonGun(bk, wp.look) : null
-    const support = tune?.lat ?? (fp?.left ? point(fp.left) : wp.two ? { x: wp.two[3] ?? -0.01, y: wp.two[0], z: wp.two[1] } : null)
+    const support = fp?.shoulder && !tune?.lat ? null : tune?.lat ?? (fp?.left ? point(fp.left) : wp.two ? { x: wp.two[3] ?? -0.01, y: wp.two[0], z: wp.two[1] } : null)
     const child = kind === 'fists' ? [] : [gun
       ? { id: 'gun', feetPosition: tune?.at ?? point(fp?.at ?? [0, -.04, .14]), rotation: tune?.rot ?? tune?.q ?? (tune?.pitch != null || tune?.yaw != null ? eulerQ(tune?.yaw ?? 0, tune?.pitch ?? 0, tune?.roll ?? 0) : fp ? eulerQ(...fp.turn) : Q_GUN), castShadow: false, ...weaponBody(kind), audience: 'local' }
       : MESHGRIP[bk]
