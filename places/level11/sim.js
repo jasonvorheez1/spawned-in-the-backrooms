@@ -739,9 +739,9 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
 
   // tripo pastry display case against the divider, its glass toward the shop
   sp("l11-pizza-case", { feetPosition: { x: MALL_X + 3.0, y: 0.38, z: MALL_Z + 3.15 }, rotation: { yaw: 0 }, model: { id: "/cdn/value.a619c121b4e830206d2c59969fdebd9d2a47dac9189109031f381cc44c28a2b3.glb" }, layout: { box: { min: { x: -0.95, y: 0, z: -0.42 }, max: { x: 0.95, y: 1.3, z: 0.42 } } }, physics: { body: "static", collider: "box" } });
-  { // bakery: Tripo+Studio bread rack against the divider, the Gib register (reused) on the case, a second cafe set by the window
+  { // bakery: Tripo+Studio bread rack against the divider, the Gib register (reused) on the counter's flat end (raycast top 1.30), a second cafe set by the window
     sp("l11-pizza-breadrack", { feetPosition: { x: MALL_X - 2.1, y: 0.38, z: MALL_Z + 2.95 }, rotation: { yaw: 180 }, model: { id: "/cdn/value.7a211a783b6b22084edf58b9a2363e4c33dc577dbec049a9e421e05233154dc6.glb", forward: "+x" }, layout: { box: { min: { x: -0.82, y: 0, z: -0.35 }, max: { x: 0.82, y: 1.45, z: 0.35 } } }, physics: { body: "static", collider: "box" } });
-    sp("l11-pizza-register", { feetPosition: { x: MALL_X + 3.7, y: 1.68, z: MALL_Z + 3.15 }, rotation: { yaw: 180 }, model: { id: "/cdn/value.cc7ad41c978aa40ce95e650f2953b59f00f4f4abc70462c632cca85420472d75.glb", forward: "-z" }, layout: { box: { min: { x: -0.22, y: 0, z: -0.16 }, max: { x: 0.22, y: 0.32, z: 0.16 } } } });
+    sp("l11-pizza-register", { feetPosition: { x: MALL_X + 3.4, y: 1.3, z: MALL_Z + 8.3 }, rotation: { yaw: 90 }, model: { id: "/cdn/value.cc7ad41c978aa40ce95e650f2953b59f00f4f4abc70462c632cca85420472d75.glb", forward: "-z" }, layout: { box: { min: { x: -0.22, y: 0, z: -0.16 }, max: { x: 0.22, y: 0.32, z: 0.16 } } } });
     md("l11-pizza-table2", "bistro_table", MALL_X + 5.4, 0.38, MALL_Z + 5.0, undefined, "cylinder", { layout: { box: { min: { x: -0.45, y: 0, z: -0.45 }, max: { x: 0.45, y: 0.75, z: 0.45 } } } });
     md("l11-pizza-chair3", "bistro_chair", MALL_X + 5.4, 0.38, MALL_Z + 4.1, undefined, "box", { rotation: { yaw: 180 }, layout: { box: { min: { x: -0.25, y: 0, z: -0.26 }, max: { x: 0.25, y: 0.88, z: 0.26 } } } });
     md("l11-pizza-chair4", "bistro_chair", MALL_X + 4.5, 0.38, MALL_Z + 5.0, undefined, "box", { rotation: { yaw: 90 }, layout: { box: { min: { x: -0.25, y: 0, z: -0.26 }, max: { x: 0.25, y: 0.88, z: 0.26 } } } });
@@ -1880,7 +1880,7 @@ export function tick(ctx) {
     if (!ctx.place.objects?.["l11-from-levelrun"]) ctx.spawn("l11-from-levelrun", { feetPosition: { x: MALL_X - 3.6, y: Y0 + 0.1, z: MALL_Z - 5.0 }, rotation: { yaw: -90 } });
     if (!ctx.place.objects?.["l11-to-levelrun"]) ctx.spawn("l11-to-levelrun", {
       tags: ["usable"], feetPosition: { x: MALL_X - 5.25, y: Y0, z: MALL_Z - 5.0 }, rotation: { yaw: 90 },
-      primitive: { kind: "box", width: 1.15, height: 2.25, depth: 0.14 }, material: { color: "#3d1215", roughness: 0.55, metalness: 0.2 },
+      model: { id: "/cdn/value.72e3f02029b10b3d1151df1a966e7a7213e1c322410024ec00e19a8ea4005153.glb", forward: "+x" }, layout: { box: { min: { x: -0.6, y: 0, z: -0.13 }, max: { x: 0.6, y: 2.4, z: 0.13 } } },
       physics: { body: "static", collider: "box" }, behavior: "scripts/l11-ch2-drop.js",
       state: { kind: "levelrun-door", name: "Sealed Hospital Door", verb: "Open Threshold" },
     });
