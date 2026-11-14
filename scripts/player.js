@@ -947,7 +947,7 @@ function invAction(ctx, d) {
     if (cur) s.invSel = cur.startsWith('weapon:') ? cur.slice(7) : cur
     return
   }
-  if (d.k === 'close') { s.invOpen = false; return }
+  if (d.k === 'close') { s.invOpen = false; s.invFilter = ''; return } // a stray letter in the search box hid a looted coach gun (Shelly, Nov 14)
   if (d.k === 'dropItem') { // anything that isn't a weapon: taken out of the bag as its pickup token, into a canvas bag at your feet (looted back with E)
     const tok = pullToken(ctx, String(d.t || ''))
     if (!tok) return
