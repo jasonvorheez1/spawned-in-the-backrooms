@@ -64,7 +64,11 @@ export function buildB3(ctx, seed) {
     primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: "metal", part: "leaf", w: DOOR_W, h: DOOR_H, hingeSide: "left", swing: 1, seed: 9 } },
     state: { pen: "b3-morgue", open: false, baseYaw: yawFor(0, 1), openYaw: (() => { let d = yawFor(-1, 0) - yawFor(0, 1); if (d > 180) d -= 360; if (d < -180) d += 360; return d; })(), c: { x: md.x, y: O.y, z: md.z }, kind: "metal", name: "Morgue", verb: "Open Door" } });
   sp("mplate", { feetPosition: P(-1.38, 2.25, 14), rotation: { yaw: yawFor(0, -1) }, castShadow: false, vector: "<svg viewBox='0 0 220 50' width='0.55m'><rect x='2' y='2' width='216' height='46' rx='4' fill='#2a2f28' stroke='#9fa58f' stroke-width='3'/><text x='110' y='35' text-anchor='middle' font-family='sans-serif' font-size='26' font-weight='800' fill='#d8d4c0'>MORGUE</text></svg>" });
-  for (let r = 0; r < 3; r++) for (let c = 0; c < 4; c++) sp(`dr${r}_${c}`, { feetPosition: P(-8.42, 0.35 + r * 0.72, 11.2 + c * 0.82), castShadow: false, primitive: { kind: "box", width: 0.08, height: 0.64, depth: 0.74 }, material: { color: r === 1 && c === 2 ? "#5b5f5a" : "#9aa09a", metalness: 0.8, roughness: 0.35, ...(r === 1 && c === 2 ? {} : {}) }, ...(r === 1 && c === 2 ? { rotation: { yaw: 0, roll: 0 }, feetPosition: P(-8.0, 0.35 + r * 0.72, 11.2 + c * 0.82) } : {}) });
+  for (let r = 0; r < 3; r++) for (let c = 0; c < 4; c++) {
+    const openD = r === 1 && c === 2;
+    sp(`dr${r}_${c}`, { feetPosition: P(-8.42, 0.35 + r * 0.72, 11.2 + c * 0.82), castShadow: false, primitive: { kind: "box", width: 0.08, height: 0.64, depth: 0.74 }, material: { color: openD ? "#5b5f5a" : "#9aa09a", metalness: 0.8, roughness: 0.35 },
+      ...(openD ? { tags: ["container"], feetPosition: P(-8.0, 0.35 + r * 0.72, 11.2 + c * 0.82), state: { items: "bandage,battery,bobbypin,page:102,cash:25", name: "Open Morgue Drawer", verb: "Search", kind: "metal" } } : {}) });
+  }
   sp("slab", { feetPosition: P(-5, 0, 14), physics: "static", primitive: { kind: "box", width: 0.8, height: 0.9, depth: 2.0 }, material: { color: "#a7aca6", metalness: 0.85, roughness: 0.3 } });
   // the armory: chain-link cage across the back, rack, launcher, the rocket crate, the cache's last tape
   for (const [id, x0, x1, z0, z1] of [["cf", -4.5, 4.5, 34.4, 34.5], ["cl", -4.5, -4.4, 34.5, 40], ["cr", 4.4, 4.5, 34.5, 40]]) sp(id, { feetPosition: P((x0 + x1) / 2, 0, (z0 + z1) / 2), physics: "static", castShadow: false,
@@ -82,6 +86,9 @@ export function buildB3(ctx, seed) {
     state: { items: "bandage,battery,ration", name: "M.E.G. field crate", verb: "Search", kind: "metal" } });
   sp("tape", { tags: ["usable"], feetPosition: P(-2.4, 0.66, 36.0), castShadow: false, behavior: "scripts/b3-use.js", primitive: { kind: "box", width: 0.12, height: 0.03, depth: 0.08 }, material: { color: "#1b1b1b", roughness: 0.5 }, state: { kind: "b3-tape", name: "Tape", verb: "Play", info: "B3 cache log" } });
   sp("table", { feetPosition: P(-2.4, 0, 36.2), physics: "static", primitive: { kind: "box", width: 1.4, height: 0.66, depth: 0.7 }, material: { color: "#55594a", metalness: 0.4, roughness: 0.6 } });
+  sp("breaker", { tags: ["usable"], feetPosition: P(4.42, 1.35, 34.0), rotation: { yaw: yawFor(0, -1) }, castShadow: false, behavior: "scripts/b3-use.js",
+    primitive: { kind: "scripted", script: "scripts/l109-med-geo.js", params: { part: "breaker", on: false } },
+    state: { kind: "b3-breaker", name: "Armory Flood Switch", verb: "Restore Lights", info: "dead ceiling bank", on: false, c: P(4.35, 1.35, 34.0) } });
 }
 // the launcher itself rides apart: placed once in the room's life, gone for good once a hand lifts it
 export function placeLauncher(ctx) {

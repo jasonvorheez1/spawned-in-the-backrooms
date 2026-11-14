@@ -34,6 +34,19 @@ export const ears = {
       heard(ctx, { clip: GATE, position: pos, volume: 0.7, maxDistance: 20 });
       ctx.self.rotation = { yaw: (s.baseYaw ?? 0) + (s.open ? -100 : 0) };
       ctx.emit("noise", { position: pos, radius: 14, kind: "gate" }, { audience: { nearby: pos, radius: 14 } });
+      return;
+    }
+    if (s.kind === "b3-breaker") {
+      s.on = !s.on; s.verb = s.on ? "Cut Lights" : "Restore Lights"; s.info = s.on ? "armory lit" : "dead ceiling bank";
+      heard(ctx, { clip: SFX + "sfx-electrical-breaker-clunk-power-dies-hum-cuts-out.mp3", position: pos, volume: 0.7, maxDistance: 20 });
+      if (ctx.self.primitive?.params) ctx.self.primitive = { ...ctx.self.primitive, params: { ...ctx.self.primitive.params, on: s.on } };
+      for (const [x, z] of [[-3, 33], [3, 33], [-3, 37.5]]) {
+        const lt = ctx.getObject(`b3-at${x}_${z}`);
+        if (!lt) continue;
+        lt.material = s.on ? { color: "#fffbe8", emissive: "#fff3d0", emissiveIntensity: 1.8 } : { color: "#5f5d55" };
+        lt.light = s.on ? { kind: "point", color: "#ffe2b0", intensity: 1.4, distance: 9, shadow: { enabled: false } } : null;
+      }
+      w.notice = { text: s.on ? "Armory floodlights ON" : "Armory floodlights OFF", at: now };
     }
   },
 };
