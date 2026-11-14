@@ -34,7 +34,7 @@ function layPantry(ctx, put, L, C, F) {
     for (let x = 4.2 + 0.14; x < 7.4 - 0.12; ) {
       if (rnd() < 0.14) { x += 0.12; continue; } // a gap where something was already eaten
       const row = PANTRY[Math.floor(rnd() * PANTRY.length)], w = row[1] === "tall" ? 0.072 : 0.084;
-      put(`l169-pantry-${n++}`, { tags: ["usable", "l169-pantry"], behavior: "scripts/pantry-item.js", feetPosition: { x: C.x + x + w / 2, y: F + yy, z: C.z + zc - 0.05 + rnd() * 0.1 - (C.z - C.z) }, rotation: -90 + (rnd() - 0.5) * 40,
+      put(`l169-pantry-${n++}`, { tags: ["usable", "l169-pantry"], behavior: "scripts/pantry-item.js", feetPosition: { x: C.x + x + w / 2, y: F + yy, z: zc - 0.05 + rnd() * 0.1 }, rotation: -90 + (rnd() - 0.5) * 40,
         primitive: { kind: "scripted", script: "scripts/pantry-geo.js", params: row[1] === "jar" ? { kind: "jar", fill: row[2] } : { kind: row[1], label: row[2] } },
         physics: { body: "static", collider: "cylinder" }, visibleRange: { max: 40 },
         state: { name: row[3], verb: "Take", info: "Ferry's pantry", token: row[0], jar: row[1] === "jar", taken: false } });
