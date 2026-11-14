@@ -50,7 +50,6 @@ function laySeg(ctx, seed, c, k) {
 }
 function layDoor(ctx, c, info, made) {
   const exit = info.type === "exit", id = "l109d-" + info.id, hingeU = info.u - DOOR_W / 2, hinge = toWorld(c, hingeU, info.side * (W / 2 + WALL / 2));
-  if (look?.sound) sp("snd", { feetPosition: toWorld(c, um, vm - vNear + vNear, 1.5), audio: { clip: look.sound, loop: true, gain: look.gain, spatial: true, maxDistance: look.maxDist, bus: "Ambience" } }); // the department's own quiet loop
   const along = toWorld({ ...c, c: 0 }, 1, 0), inward = toWorld({ ...c, c: 0 }, 0, info.side), base = yawFor(along.x, along.z), swung = yawFor(inward.x, inward.z);
   let dy = swung - base; if (dy > 180) dy -= 360; if (dy < -180) dy += 360;
   const open = doorOpen(ctx, info.id);
@@ -75,6 +74,7 @@ function layRoom(ctx, seed, info) {
   sp("wc", { ...INVIS, ...uvBox(c, u0, u0 + ROOM, vNear + info.side * ROOM, vNear + info.side * (ROOM + WALL), 0, 3) });
   for (const [a, b] of [[-7.5, 7.5], [7.5, 7.5], [-7.5, 22.5], [7.5, 22.5]]) { const on = lit || rand(seed, 91, info.r * 4 + a + b, info.side) < 0.4; // an abandoned ward keeps a light or two
     sp(`l${a}_${b}`, { feetPosition: toWorld(c, um + a, vNear + info.side * b, 2.97), castShadow: false, primitive: { kind: "box", width: 1.2, height: 0.03, depth: 0.6 }, material: on ? TROFFER : { color: "#77756a" }, ...(on ? { light: { kind: "point", color: look?.light ?? "#fff6e0", intensity: (look?.intensity ?? 2.2) * (lit ? 1 : 0.5), distance: look?.reach ?? 15, shadow: { enabled: false } } } : {}) }); }
+  if (look?.sound) sp("snd", { feetPosition: toWorld(c, um, vm, 1.5), audio: { clip: look.sound, loop: true, gain: look.gain, spatial: true, maxDistance: look.maxDist, bus: "Ambience" } }); // the department's own quiet loop
   const along = toWorld({ ...c, c: 0 }, 1, 0), inward = toWorld({ ...c, c: 0 }, 0, info.side);
   buildRoom(ctx, { id: info.id, type: info.type, info, seed, sp, abandoned: !lit, pop, at: (a, b, up = 0) => toWorld(c, um + a, vNear + info.side * b, up), yawIn: yawFor(inward.x, inward.z), yawAlong: yawFor(along.x, along.z) });
   if (denOf(seed, info)) denLoad(ctx, seed, info, (a, b) => toWorld(c, um + a, vNear + info.side * b, 0.1), { x: -inward.x, z: -inward.z });
