@@ -522,7 +522,7 @@ function lay(ctx) {
   });
   cache("l8-cache-hall", P(64, 6.8, 0), "Harmouth Society cache", "A survey crate, lid pried and nailed back. Chalk on the lid: HALL 1.", "ration,bandage,bandage,almond,kit,battery");
   cache("l8-cache-lane", P(252, -6.4, 0), "Abandoned survey pack", "Left by someone who did not want to carry it any further.", "battery,battery,almond,cloth:hat:cap:3a302a,ration", "oklch(0.3 0.05 60)");
-  cache("l8-cache-nest", P(336, 7.2, 0), "Expedition locker", "A hard case. The spiders have not worked out the latch.", "ammo,ammo,shells,firstaid,bandage,kit", "oklch(0.32 0.03 250)");
+  cache("l8-cache-nest", P(336, 7.2, 0), "Expedition locker", "A hard case. The spiders have not worked out the latch.", "ubook:l8_caves_melee,ammo,ammo,shells,firstaid,bandage,kit", "oklch(0.32 0.03 250)");
   cache("l8-cache-camp", P(428, -6.0, 0), "M.E.G. supply locker", "Stencilled: M.E.G. Bettering Humanity. The padlock is a joke.", "ammo,ammo,ammo,shells,bandage,bandage,firstaid,battery,kit", "oklch(0.3 0.04 150)");
   const diveBag = P(14, 4.0, 0.1);
   sp("l8-cache-lake", {

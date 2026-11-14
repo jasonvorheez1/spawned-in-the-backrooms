@@ -1,4 +1,4 @@
-# Errands: small jobs people hand out when you talk to them (scripts/lib/errands.js runs them).
+  # Errands: small jobs people hand out when you talk to them (scripts/lib/errands.js runs them).
 # Written to design/story-spine.md: a job never names a place, a level or a person the player has not been told about.
 # stage kinds: fetch (hold <count> of item <target>), carry (talk to NPC <target> holding <count> of <item>; handed over),
 #   talk (talk to NPC <target>), clear (<count> kills from the moment the stage starts), find (walk up to object <target>),

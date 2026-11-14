@@ -89,6 +89,10 @@ export function tick(ctx) {
     for (let i = 0; i < 3; i++) spawnAlmond(ctx, { x: a.x + 2 + i * 0.4, z: a.z - 2 });
     ctx.spawn({ id: "meg-cloth", feetPosition: { x: a.x + 2.4, y: 0, z: a.z - 2.6 }, primitive: { kind: "box", width: 1.4, height: 0.02, depth: 0.9 }, material: { color: "oklch(0.85 0.2 125)" }, visibleRange: { max: 35 }, castShadow: false,
       ui: '<div face="top" width="1.3m" style="font-size:120px;font-weight:900;color:#1d2a10;text-align:center">M.E.G.</div>' });
+    ctx.spawn("l1-foreman-box", { tags: ["container", "breakable"], feetPosition: { x: a.x + 1.1, y: 0, z: a.z - 2.5 }, rotation: { yaw: 15 },
+      primitive: { kind: "box", width: 0.65, height: 0.34, depth: 0.42 }, material: { color: "oklch(0.32 0.04 140)", roughness: 0.6, metalness: 0.35 },
+      physics: { body: "static", collider: "box" }, visibleRange: { max: 40 }, castShadow: false,
+      state: { name: "M.E.G. Foreman's Lockbox", mat: "metal", hp: 80, maxHp: 80, lock: "lockpick:25", items: "ubook:l1_warehouse_repair,tape,battery,kit" } });
     // the thresholds: home to level 0
     ctx.spawn("l1-back", { feetPosition: { x: BACK.x + 0.5, y: 0, z: BACK.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.8, height: 2.4, depth: 2.2 }, visible: false, behavior: "scripts/level-door.js", state: { to: "main" } });
     ctx.spawn({ feetPosition: { x: BACK.x + 0.4, y: 0, z: BACK.z }, visibleRange: { max: 35 }, light: { kind: "point", color: "oklch(0.85 0.12 92)", intensity: 3, distance: 6, shadow: { enabled: false } } });

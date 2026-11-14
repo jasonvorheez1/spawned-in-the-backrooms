@@ -9,6 +9,7 @@ import W from './weapons.js'
 import { parseCloth, wornTokens } from './clothes.js'
 import { cndOf, armorCnd, vendorCost } from './condition.js'
 import { resolveCheck } from './skill-check.js'
+import { isBookToken, isMagToken, getBookSpec, getMagSpec } from './modifiers.js'
 
 export const TALK = T, SHOPS = SH
 export const nameOf = (it) => String(it?.state?.name ?? 'Stranger').split(' ·')[0]
@@ -35,10 +36,10 @@ export const SECTIONS = [['weapon', 'WEAPONS'], ['ammo', 'AMMO'], ['aid', 'MEDIC
 export function sectionOf(t) {
   if (t.startsWith('weapon:')) return 'weapon'
   if (t.startsWith('cloth:')) return 'cloth'
-  if (t === 'ammo' || t === 'shells') return 'ammo'
-  if (['bandage', 'firstaid', 'kit', 'tape'].includes(t)) return 'aid'
+  if (t === 'ammo' || t === 'shells' || t === 'cells') return 'ammo'
+  if (['bandage', 'firstaid', 'kit', 'tape', 'medkit', 'painkillers', 'antiseptic', 'splint', 'stim_shot', 'charcoal'].includes(t)) return 'aid'
   if (SNACKS[t] && (SNACKS[t].hunger || SNACKS[t].thirst)) return 'food' // any snack or drink, rink treats included
-  if (t.startsWith('meat:') || t === 'almond' || ['ration', 'royal_ration', 'beans', 'bar', 'lobby_wafer'].includes(t)) return 'food'
+  if (t.startsWith('meat:') || t === 'almond' || ['ration', 'royal_ration', 'beans', 'bar', 'lobby_wafer', 'stale_ration', 'cloudy_almond', 'warm_tea'].includes(t)) return 'food'
   return 'gear'
 }
 // what a trader will repair for you (Fallout: New Vegas): every worn-down weapon and garment you have, with its condition and base value in $
@@ -61,6 +62,9 @@ export function sellables(s) {
   for (const [k, n] of Object.entries(ws)) out.push(['weapon:' + k, n, P.weapon[W[k].rarity] ?? P.weapon.common])
   const cs = {}; for (const t of csv(s.clothes)) if (parseCloth(t)) cs[t] = (cs[t] ?? 0) + 1
   for (const [t, n] of Object.entries(cs)) out.push([t, n, P.cloth[parseCloth(t).row.rarity] ?? P.cloth.common])
+  for (const [t, n] of Object.entries(s.mags ?? {})) if (n > 0 && isMagToken(t)) out.push([t, n, getMagSpec(t)?.value ?? 28])
+  for (const [t, n] of Object.entries(s.books ?? {})) if (n > 0 && isBookToken(t)) out.push([t, n, getBookSpec(t)?.value ?? 140])
+  for (const k of ['medkit', 'painkillers', 'antiseptic', 'splint', 'stim_shot', 'charcoal', 'firstaid', 'bandage']) if ((s.snacks?.[k] ?? 0) > 0 && SNACKS[k]) out.push([k, s.snacks[k], SNACKS[k].value ?? 8])
   return out
 }
 // take one of a sellable out of the player's state; false if they don't have it
@@ -70,6 +74,9 @@ export function removeOne(s, token) {
   if (token === 'shells') { if ((s.shells ?? 0) < W.shells.perPickup) return false; s.shells -= W.shells.perPickup; return true }
   const F = { fuse: 'fuses', valve: 'valves', keycard: 'keycards', firesalt: 'firesalt' }[token]
   if (F) { if (!((s[F] ?? 0) > 0)) return false; s[F] -= 1; return true }
+  if (isMagToken(token)) { const n = s.mags?.[token] ?? 0; if (n <= 0) return false; s.mags = { ...s.mags }; if (n === 1) delete s.mags[token]; else s.mags[token] = n - 1; return true }
+  if (isBookToken(token)) { const n = s.books?.[token] ?? 0; if (n <= 0) return false; s.books = { ...s.books }; if (n === 1) delete s.books[token]; else s.books[token] = n - 1; return true }
+  if (SNACKS[token] && (s.snacks?.[token] ?? 0) > 0) { s.snacks = { ...s.snacks, [token]: s.snacks[token] - 1 }; return true }
   if (token.startsWith('weapon:')) {
     const k = token.slice(7), ws = csv(s.weapons), i = ws.indexOf(k); if (i < 0) return false
     ws.splice(i, 1); s.weapons = ws.join(',')

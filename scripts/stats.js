@@ -10,7 +10,8 @@ import { gain } from './player.js'
 import W from './lib/weapons.js'
 import { cndOf } from './lib/condition.js'
 import { getInputRay, raycast } from 'builtin/physics'
-import { ATTRS, SKILLS, ATTR_MAX, SKILL_MAX, START, attrsOf, spentOf, skillsOf, tagsOf, derived, packAttrs, npcMul } from './lib/stats.js'
+import { ATTRS, SKILLS, ATTR_MAX, SKILL_MAX, START, attrsOf, baseAttrsOf, permanentSkillsOf, spentOf, skillsOf, tagsOf, derived, packAttrs, npcMul } from './lib/stats.js'
+import { pruneEffects, clockNow } from './lib/modifiers.js'
 import L0 from './lib/data/level0.yml'
 import L1 from './lib/data/level1.yml'
 import G from './lib/data/meg.yml'
@@ -26,6 +27,9 @@ export function onInput(ctx, input) {
   const s = ctx.self.state, m = mem(ctx)
   const ray = getInputRay(ctx, input); if (ray) m.ray = ray
   if (s.level == null) return
+  const gNow = clockNow(ctx)
+  s._clockNow = gNow
+  if (pruneEffects(s, gNow)) pushFeed(s, 'An item effect wore off.', ctx.now())
   if (input.pressed?.sheet && s.creating) return
   if (input.pressed?.sheet && (s.sheetOpen || canOpen(s, ctx.self.place, 'sheet'))) { if (s.sheetOpen) s.sheetOpen = false; else { openWrist(s, 'sheet'); s.lvlPrompt = false } ctx.emit('playSound', { clip: s.sheetOpen ? 'cdn/moodboard-realistic-gritty/sfx-wrist-device-raise-click-crt-power-on-hum.mp3' : 'cdn/moodboard-realistic-gritty/sfx-wrist-device-lower-click-crt-power-off.mp3', volume: 0.55, bus: 'UI' }) }
   const d = input.actionData?.stat
@@ -38,11 +42,11 @@ export function spend(s, d) {
   const i = Number(d.i)
   if (!Number.isInteger(i)) return
   if (d.k === 'attr' && i >= 0 && i < ATTRS.length && (s.apts ?? 0) > 0) {
-    const a = attrsOf(s), key = ATTRS[i].k
+    const a = baseAttrsOf(s), key = ATTRS[i].k
     if (a[key] >= ATTR_MAX) return
     a[key] += 1; s.attr = packAttrs(a); s.apts -= 1
   } else if (d.k === 'attrDown' && s.creating && i >= 0 && i < ATTRS.length) { // only while choosing who you are (tutorial)
-    const a = attrsOf(s), key = ATTRS[i].k
+    const a = baseAttrsOf(s), key = ATTRS[i].k
     if (a[key] <= 1) return
     a[key] -= 1; s.attr = packAttrs(a); s.apts = (s.apts ?? 0) + 1
   } else if (d.k === 'untag' && s.creating && i >= 0 && i < SKILLS.length) {
@@ -51,7 +55,7 @@ export function spend(s, d) {
     s.tags = tg.filter((x) => x !== key).join(','); s.tagsLeft = (s.tagsLeft ?? 0) + 1
   } else if (d.k === 'skill' && i >= 0 && i < SKILLS.length && (s.spts ?? 0) > 0) {
     const sp = spentOf(s)
-    const room = SKILL_MAX - skillsOf(s)[SKILLS[i].k]
+    const room = SKILL_MAX - permanentSkillsOf(s)[SKILLS[i].k]
     const amount = Math.min(room, s.spts, d.amount === 5 ? 5 : 1)
     if (amount <= 0) return
     sp[i] += amount; s.skl = sp.join(','); s.spts -= amount
@@ -84,6 +88,9 @@ function look(ctx, ray) {
 export function update(ctx, dt) {
   const s = ctx.self.state, m = mem(ctx)
   if (s.level == null) return
+  const gNow = clockNow(ctx)
+  s._clockNow = gNow
+  if (pruneEffects(s, gNow)) pushFeed(s, 'An item effect wore off.', ctx.now())
   if (s.attr == null) Object.assign(s, START) // a new wanderer: 5 in everything, 5 points, three skills to tag
   else if (s.sver !== 2) { // an older sheet: attributes stay, skills become the thirteen Fallout-style ones with their points
     const n = attrsOf(s).n

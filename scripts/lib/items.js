@@ -6,6 +6,7 @@ import W from './weapons.js'
 import { tokenWeight, SKILLS, reqText } from './stats.js'
 import L1 from './data/level1.yml'
 import { parseCloth, CLOTHES } from './clothes.js'
+import { getBookSpec, getMagSpec, formatModsList, isBookToken, isMagToken } from './modifiers.js'
 
 export const itemsOf = (str) => (str ? String(str).split(',').filter(Boolean) : [])
 
@@ -15,7 +16,7 @@ export const tokenOf = (tag, o) => (tag === 'weapon' ? 'weapon:' + (o?.state?.ki
 // what a token is called and what it does, for the prompt and the loot menu
 export function describe(token) {
   const d = describe0(token)
-  const kg = token.startsWith('cash:') ? 0 : token.startsWith('meat:') ? 0.3 : ['ration', 'bandage', 'battery', 'kit', 'akit', 'bobbypin', 'compass', 'nvg', 'skates', 'royal_ration', ...L2_NOW].includes(token) || token.startsWith('book:') || token.startsWith('page:') ? 0 : token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : token === 'rockets' ? 1.8 : tokenWeight(token)
+  const kg = token.startsWith('cash:') ? 0 : token.startsWith('meat:') ? 0.3 : (['ration', 'bandage', 'battery', 'kit', 'akit', 'bobbypin', 'compass', 'nvg', 'skates', 'royal_ration', ...L2_NOW].includes(token) || token.startsWith('page:')) && !isBookToken(token) && !isMagToken(token) ? 0 : token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : token === 'rockets' ? 1.8 : tokenWeight(token)
   return kg ? { ...d, info: d.info + ` · ${kg.toFixed(1)} kg` } : d
 }
 // Level 2's finds: eaten, wrapped or taped on the spot, or keys you carry (fuse, valve wheel, keycard) that open its doors
@@ -26,11 +27,23 @@ import SNACKS from './data/snacks.yml'
 export const L2_NOW = ['lobby_wafer', 'beans', 'bar', 'firstaid', 'tape', ...Object.keys(SNACKS)]
 export const L2_KEYS = { fuse: 'fuses', valve: 'valves', keycard: 'keycards' }
 const L2_DESC = {
-  ...Object.fromEntries(Object.entries(SNACKS).map(([k, v]) => [k, () => ({ name: v.name, info: `${v.info} · ${v.drink ? `+${v.thirst} thirst` : `+${v.hunger} hunger`}`, color: v.color })])),
-  lobby_wafer: () => ({ name: 'Lobby Wafers', info: `A damp sleeve of yellow vanilla wafers. They taste like the wallpaper looks. +${L2.use.waferHp} HP · +${L2.use.waferSanity} sanity`, color: '#f2d36b' }),
-  beans: () => ({ name: 'Canned beans', info: `+${L2.use.beansHp} HP · +${L2.use.beansSanity} sanity`, color: '#d9a35a' }),
-  bar: () => ({ name: 'Energy bar', info: `+${L2.use.barHp} HP · stamina`, color: '#e8c44a' }),
-  firstaid: () => ({ name: 'First aid kit', info: `+${L2.use.firstaidHp} HP`, color: '#f05a4f' }),
+  ...Object.fromEntries(Object.entries(SNACKS).map(([k, v]) => [k, () => {
+    const bits = []
+    if (v.hp > 0) bits.push(`+${v.hp > 500 ? 'Full' : v.hp} HP`)
+    else if (v.hp < 0) bits.push(`${v.hp} HP`)
+    if (v.thirst) bits.push(`${v.thirst > 0 ? '+' : ''}${v.thirst} thirst`)
+    if (v.hunger) bits.push(`${v.hunger > 0 ? '+' : ''}${v.hunger} hunger`)
+    if (v.sanity) bits.push(`${v.sanity > 0 ? '+' : ''}${v.sanity} sanity`)
+    if (v.stopBleed) bits.push('Stops bleed')
+    if (v.clearDebuffs) bits.push('Cleanses toxins')
+    const modBits = formatModsList(v.mods)
+    if (modBits.length) bits.push(`${modBits.join(', ')}${v.durationGameMin ? ` (${v.durationGameMin}m)` : ''}`)
+    return { name: v.name, info: `${v.info}${bits.length ? ` · ${bits.join(' · ')}` : ''}`, color: v.color }
+  }])),
+  lobby_wafer: () => ({ name: 'Lobby Wafers', info: `Stale yellow wafers · +${L2.use.waferHp} HP · +${L2.use.waferSanity} sanity`, color: '#f2d36b' }),
+  beans: () => ({ name: 'Canned beans', info: `+${L2.use.beansHp} HP · +25 hunger · +${L2.use.beansSanity} sanity`, color: '#d9a35a' }),
+  bar: () => ({ name: 'Energy bar', info: `+${L2.use.barHp} HP · stamina · +10% Stam Regen (60m)`, color: '#e8c44a' }),
+  firstaid: () => ({ name: 'First aid kit', info: `+52 HP (Medicine scales) · Stops bleed`, color: '#f05a4f' }),
   tape: () => ({ name: 'Duct tape', info: 'Patches a weapon +15%, never past 45% (I menu > REPAIR)', color: '#b8c0c8' }),
   fuse: () => ({ name: 'Fuse', info: 'Opens an ELECTRICAL door', color: '#7fc8ff' }),
   valve: () => ({ name: 'Valve wheel', info: 'Opens a PUMP ROOM door', color: '#e05a3a' }),
@@ -94,13 +107,23 @@ function describe0(token) {
   if (token === 'bobbypin' || token === 'pin' || token === 'bobby_pin') return { name: 'Bobby pin', info: 'Picks locks · snaps under strain', color: '#c8c4b8' }
   if (token === 'kit') return { name: 'Weapon repair kit', info: 'Mends a weapon (I menu > REPAIR) · up to your Repair skill', color: '#d9b27a' }
   if (token === 'akit') return { name: 'Armor repair kit', info: 'Mends every piece you wear · up to your Repair skill', color: '#9fb89a' }
-  if (token.startsWith('book:')) { const k = SKILLS.find((x) => x.k === token.slice(5)); return { name: `Skill book: ${k?.name ?? '?'}`, info: `+3 ${k?.name ?? ''}`, color: '#7fd1a8' } }
+  if (isBookToken(token)) {
+    const b = getBookSpec(token)
+    if (b) return { name: b.title, info: `Skill Book (${b.kind === 'unique' ? 'Unique' : 'Rare'}) · Permanently +${b.bonus} ${b.skillName} (Read in I > Aid & Books)`, color: '#7fd1a8' }
+    const k = SKILLS.find((x) => x.k === token.slice(5))
+    return { name: `Skill book: ${k?.name ?? '?'}`, info: `Permanently +3 ${k?.name ?? ''}`, color: '#7fd1a8' }
+  }
+  if (isMagToken(token)) {
+    const m = getMagSpec(token)
+    if (m) return { name: m.title, info: `Skill Magazine · ${m.skillName} +${m.bonus} for ${m.durationMin} in-game min (Read in I > Aid & Books)`, color: m.color ?? '#9fd3ff' }
+  }
   if (token.startsWith('cloth:')) { // a garment: "cloth:<slot>:<kind>:<hex>"
     const p = parseCloth(token)
     if (!p) return { name: 'Rags', info: '', color: '#cccccc' }
     const r = CLOTHES.rarity[p.row.rarity] ?? {}
     const fab = p.pat && p.pat !== p.row.pats?.[0] ? CLOTHES.patterns?.[p.pat] : '' // a texture variant names its cloth: "Plaid Long-sleeve shirt"
-    return { name: fab ? `${fab} ${p.row.name}` : p.row.name, info: `${r.label ?? ''} · DR ${p.row.dr}`, color: r.color ?? '#cccccc' }
+    const mods = formatModsList(p.row.mods)
+    return { name: fab ? `${fab} ${p.row.name}` : p.row.name, info: `${r.label ?? ''} · DR ${p.row.dr}${mods.length ? ` · ${mods.join(' · ')}` : ''}`, color: r.color ?? '#cccccc' }
   }
   if (token.startsWith('weapon:')) {
     const k = token.slice(7), w = W[k]

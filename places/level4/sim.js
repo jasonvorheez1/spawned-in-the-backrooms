@@ -158,6 +158,14 @@ export function tick(ctx) {
       ["l4-omega-workbench", workbenchSpec({ x: -25.8, y: 0, z: -31.3 }, { yaw: 0, name: "Base Omega Workbench" })],
       ["l4-omega-ammobench", ammobenchSpec({ x: -31.3, y: 0, z: -27.2 }, { yaw: 90, name: "Base Omega Reloading Bench" })],
     ]);
+    if (!ctx.place.objects["l4-omega-binder-box"]) ctx.spawn("l4-omega-binder-box", { tags: ["container", "breakable"], feetPosition: { x: -26.8, y: 0, z: -29.8 }, rotation: { yaw: 0 },
+      primitive: { kind: "box", width: 0.55, height: 0.35, depth: 0.38 }, material: { color: "oklch(0.36 0.04 125)", roughness: 0.6, metalness: 0.3 },
+      physics: { body: "static", collider: "box" }, visibleRange: { max: 40 }, castShadow: false,
+      state: { name: "Base Omega Liaison Lockbox", mat: "metal", hp: 70, maxHp: 70, items: "ubook:l4_omega_speech,almond,warm_tea" } });
+    if (!ctx.place.objects["l4-office-science-box"]) ctx.spawn("l4-office-science-box", { tags: ["container", "breakable"], feetPosition: { x: 1.5, y: 0, z: 11.4 }, rotation: { yaw: 0 },
+      primitive: { kind: "box", width: 0.5, height: 0.5, depth: 0.45 }, material: { color: "oklch(0.45 0.02 90)", roughness: 0.55, metalness: 0.45 },
+      physics: { body: "static", collider: "box" }, visibleRange: { max: 40 }, castShadow: false,
+      state: { name: "Operator's Locked Terminal Case", mat: "metal", hp: 75, maxHp: 75, lock: "science:25", items: "ubook:l4_office_science,battery,mag:science" } });
   }
   // Level 4's people (scripts/lib/l4-people.js): homes, the floor's day and night, meetups, phones, greetings, the mold room
   if (s.peopleV !== 2) { s.peopleV = 2; settle(ctx, (id, g, rounds) => {

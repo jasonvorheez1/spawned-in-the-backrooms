@@ -198,8 +198,8 @@ export function update(ctx, dt) {
     const b = bleeds[pid];
     const p = ctx.place.players.find((q) => q.id === pid);
 
-    // Red almond water stops the bleeding
-    if (!p || now > b.until || (p.state?.hp ?? 0) <= 0 || (p.state?.redAt ?? 0) > b.from) {
+    // Red almond water or wound care stops the bleeding
+    if (!p || now > b.until || (p.state?.hp ?? 0) <= 0 || (p.state?.redAt ?? 0) > b.from || (p.state?.bleedStopAt ?? 0) > b.from) {
       delete bleeds[pid];
       continue;
     }

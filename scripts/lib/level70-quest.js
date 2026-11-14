@@ -13,6 +13,7 @@ import { heard } from "./hear.js";
 import { addRep } from "./rep.js";
 import { setQuest, endQuest, tellQuest, claimReward } from "./quests.js";
 import { rollCheck } from "./npc-talk.js";
+import { derived } from "./stats.js";
 import { SPOT, wildness } from "./level70.js";
 import * as TOWN from "./level70-town.js";
 import VALVES from "./data/l70-valves.yml";
@@ -132,8 +133,10 @@ export function press70(ctx, p, obj) {
   }
   if (id === LOCKER) {
     if (s.l70led) { s.notice = { text: "An open B.N.T.G. footlocker. Frozen socks, a dead walkie, a lot of nothing.", at: now }; return; }
-    const lead = s.l70led === 1; give(s, "ledger70"); s.l70led = 2; setQuest(s, LID, { name: LNAME, step: LTIPS[2], mark: M(INES) });
-    tell(ctx, p, `${lead ? "" : "Quest Started: Froston's Ledger · "}Got: Tape: B.N.T.G. Froston ledger · Forty thousand litres, pumped out from under the town`, CLUNK); return;
+    const lead = s.l70led === 1; give(s, "ledger70"); s.l70led = 2;
+    if (!s.l70FrostBook) { s.l70FrostBook = true; s.books = { ...(s.books ?? {}), "ubook:l70_frost_survival": (s.books?.["ubook:l70_frost_survival"] ?? 0) + 1 }; }
+    setQuest(s, LID, { name: LNAME, step: LTIPS[2], mark: M(INES) });
+    tell(ctx, p, `${lead ? "" : "Quest Started: Froston's Ledger · "}Got: Tape: B.N.T.G. Froston ledger & Sub-Zero Watchman's Almanack · Forty thousand litres, pumped out from under the town`, CLUNK); return;
   }
 }
 function resolve(ctx, p, route) {
@@ -327,6 +330,7 @@ export function tick(ctx) {
     const nearFire = fires.some((f) => Math.hypot(f.x - at.x, f.z - at.z) < COLD.fireR);
     let d = nearFire ? COLD.fire : indoors(at) ? COLD.indoor : COLD.rise + COLD.wildRise * wild(at);
     if (d > 0 && bag(s, "toque70")) d *= COLD.toque;
+    if (d > 0) { const cr = derived(s).coldResist ?? 0; if (cr > 0) d *= Math.max(0.2, 1 - cr / 100); }
     const cap = bag(s, "gelucharm70") ? COLD.charmCap : 100, prev = s.chill ?? 0;
     let acc = CH.get(p.id); if (acc == null || Math.abs(acc - prev) > 1.5) acc = prev; // someone else wrote chill (food, steam): take theirs
     acc = Math.max(0, Math.min(cap, acc + d)); CH.set(p.id, acc);

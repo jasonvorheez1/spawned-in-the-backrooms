@@ -32,13 +32,14 @@ const FMODEL = { desk: "/cdn/value.dc2f7ac92df4c08964be1ea4af5e520bbf4c12d506091
 const fmodel = (kind) => ({ id: FMODEL[kind], forward: "+z" });
 const FURN = { desk: ["wood", 80], chair: ["metal", 45], shelf: ["metal", 110], copier: ["machine", 110] };
 // what an office desk's drawers hold: office junk, snacks, a little cash, now and then a tool. Weights are Savi's picks; no ammo.
-const DESK = [["cash", 22], ["bobbypin", 16], ["lobby_wafer", 12], ["bar", 9], ["almond", 12], ["tape", 8], ["battery", 8], ["book", 4], ["bandage", 5], ["weapon", 3]];
+const DESK = [["cash", 20], ["bobbypin", 15], ["lobby_wafer", 12], ["bar", 8], ["almond", 11], ["warm_tea", 4], ["tape", 8], ["battery", 8], ["mag", 4], ["painkillers", 3], ["bandage", 4], ["weapon", 3]];
+const L0_MAGS = ["mag:lockpick", "mag:science", "mag:speech", "mag:barter"];
 function deskItems(ctx) {
   const n = ctx.random() < 0.15 ? 0 : 1 + Math.floor(ctx.random() * 3), out = [], tot = DESK.reduce((a, [, w]) => a + w, 0);
   for (let i = 0; i < n; i++) {
     let r = ctx.random() * tot, k = "almond";
     for (const [kk, w] of DESK) { r -= w; if (r <= 0) { k = kk; break; } }
-    out.push(k === "cash" ? rollCash(ctx) : k === "weapon" ? "weapon:" + rollWeapon(ctx) : k === "book" ? "book:lockpick" : k);
+    out.push(k === "cash" ? rollCash(ctx) : k === "weapon" ? "weapon:" + rollWeapon(ctx) : k === "mag" ? L0_MAGS[Math.floor(ctx.random() * L0_MAGS.length)] : k);
   }
   return out.join(",");
 }

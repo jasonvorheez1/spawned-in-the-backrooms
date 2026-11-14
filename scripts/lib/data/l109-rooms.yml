@@ -28,15 +28,15 @@ viewRange: 70          # props stop drawing past this (m)
 shelfBoxY: 0.98        # a box on a shelf's middle board
 tile: cdn/texture-white-square-ceramic-hospital-tiles.png
 drumTint: "#e3bd1c"
-# loot: item ids from scripts/lib/items.js. No painkiller item exists in the game yet: the first aid kit stands in.
+# loot: item ids from scripts/lib/items.js (contextual medical supplies, painkillers, trauma kits, and skill magazines).
 loot:
-  supply:   { n: [2, 4], pool: [bandage, bandage, bandage, almond, almond, firstaid, ration, bar, battery] }
-  theatre:  { n: [1, 3], pool: [bandage, bandage, firstaid, almond, bobbypin] }
-  bedside:  { n: [1, 2], pool: [almond, bandage, bar, ration, battery, "cash:6"] }
-  desk:     { n: [1, 3], pool: [bobbypin, battery, bar, "cash:12", almond, bandage] }
-  pharmacy: { n: [2, 3], pool: [bandage, firstaid, almond, almond, bar] }
-  cage:     { n: [4, 5], pool: [firstaid, firstaid, firstaid, bandage, almond, almond, "cash:40"] }
-  hot:      { n: [3, 4], pool: [firstaid, firstaid, bandage, almond, battery] }
+  supply:   { n: [2, 4], pool: [bandage, bandage, antiseptic, splint, painkillers, almond, firstaid, warm_tea, battery, "mag:medicine"] }
+  theatre:  { n: [2, 3], pool: [bandage, firstaid, medkit, painkillers, antiseptic, stim_shot, bobbypin, "mag:science"] }
+  bedside:  { n: [1, 3], pool: [almond, bandage, painkillers, warm_tea, stale_ration, battery, "cash:6"] }
+  desk:     { n: [1, 3], pool: [bobbypin, battery, painkillers, warm_tea, "cash:12", almond, bandage, "mag:lockpick"] }
+  pharmacy: { n: [2, 4], pool: [bandage, firstaid, medkit, painkillers, antiseptic, splint, stim_shot, charcoal, "mag:medicine"] }
+  cage:     { n: [4, 5], pool: [medkit, stim_shot, firstaid, firstaid, painkillers, antiseptic, bandage, almond, "cash:40", "mag:medicine"] }
+  hot:      { n: [3, 4], pool: [firstaid, medkit, antiseptic, charcoal, stim_shot, bandage, almond, battery, "mag:science"] }
 supply:   { aisles: [-13, -10, -6, -2.5, 1, 4.5, 8, 11.5], perAisle: 9, aisleB: 8.5, containers: [3, 6], cageLock: "lockpick:50" } # 8 aisles x 9 shelves fill the floor (gavi pass: the old 12 shelves left 900 m2 empty)
 icu:      { rowB: [9, 21], firstA: -5.5, beds: [4, 5], askewDeg: 28, askewM: 0.5 }
 pharmacy: { counterB: 6, aisles: [11, 12.8, 14.6, 16.4, 18.2], perAisle: 5, aisleA: 1, cageLock: "lockpick:75", boxLock: "lockpick:50" }

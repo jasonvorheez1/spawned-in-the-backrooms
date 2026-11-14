@@ -471,8 +471,10 @@ function lootAction(ctx, d) {
     items = keep
     snd(ctx, 'loot-take-all-rustle', 0.55)
   } else return
-  if (!c.tags?.includes('rubble') && !c.tags?.includes('npc') && !c.tags?.includes('storage') && !c.state.dead && items.join(',') !== String(c.state.items ?? '')) { // a looted container fills again in an hour
-    if (c.state.full == null) c.state.full = c.state.items ?? ''
+  if (!c.tags?.includes('rubble') && !c.tags?.includes('npc') && !c.tags?.includes('storage') && !c.state.dead && items.join(',') !== String(c.state.items ?? '')) { // a looted container fills again in an hour, minus one-time Skill Books
+    if (c.state.full == null) {
+      c.state.full = String(c.state.items ?? '').split(',').filter((x) => x && !x.startsWith('book:') && !x.startsWith('ubook:')).join(',')
+    }
     c.state.refillAt = ctx.now() + REFILL_MS
   }
   c.state.items = items.join(',')

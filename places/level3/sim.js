@@ -198,6 +198,10 @@ export function tick(ctx) {
     layLayout(ctx);
     for (const o of ctx.query({ tags: ["lootfurn"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id); // furniture backs onto walls that moved
     seedFurniture3(ctx);
+    if (GENS[0] && !ctx.place.objects["l3-energy-cabinet"]) ctx.spawn("l3-energy-cabinet", { tags: ["container", "breakable"], feetPosition: { x: GENS[0].x + 2.4, y: 0, z: GENS[0].z }, rotation: { yaw: -90 },
+      primitive: { kind: "box", width: 0.65, height: 1.1, depth: 0.45 }, material: { color: "oklch(0.32 0.04 220)", roughness: 0.5, metalness: 0.5 },
+      physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, castShadow: false,
+      state: { name: "High-Voltage Switchgear Cabinet", mat: "metal", hp: 90, maxHp: 90, lock: "science:40", items: "ubook:l3_station_energy,fuse,battery,cells" } });
     for (const t of ["almond", "weapon", "ammo", "shells", "crate"]) for (const o of ctx.query({ tags: [t], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { // loose loot inside a crawl hall's liner rolls to its centre line
       const k = cellAt(o.feetPosition.x, o.feetPosition.z); if (!k || zoneOf(k.cx, k.cz) !== "tight") continue; const c = cellCenter(k.cx, k.cz); o.feetPosition = { x: c.x, y: o.feetPosition.y, z: c.z };
     }
@@ -270,6 +274,10 @@ export function tick(ctx) {
     for (const l of LINES) ctx.spawn({ feetPosition: { x: (l.x0 + l.x1) / 2, y: 1.2, z: l.z }, audio: { clip: GRIT("factory-conveyor-clank-loop"), gain: 0.3, loop: true, spatial: true, maxDistance: 14 } });
     // supplies: crates in dead ends and rooms, almond water, the odd weapon on the floor
     seedFurniture3(ctx);
+    if (GENS[0] && !ctx.place.objects["l3-energy-cabinet"]) ctx.spawn("l3-energy-cabinet", { tags: ["container", "breakable"], feetPosition: { x: GENS[0].x + 2.4, y: 0, z: GENS[0].z }, rotation: { yaw: -90 },
+      primitive: { kind: "box", width: 0.65, height: 1.1, depth: 0.45 }, material: { color: "oklch(0.32 0.04 220)", roughness: 0.5, metalness: 0.5 },
+      physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, castShadow: false,
+      state: { name: "High-Voltage Switchgear Cabinet", mat: "metal", hp: 90, maxHp: 90, lock: "science:40", items: "ubook:l3_station_energy,fuse,battery,cells" } });
     const open = (cx, cz) => zoneOf(cx, cz) !== "vault" && zoneOf(cx, cz) !== "gamma";
     for (let i = 0, n = 0; n < L.floorWeapons && i < 400; i++) { const cx = 6 + Math.floor(ctx.random() * (N - 6)), cz = Math.floor(ctx.random() * N); if (!open(cx, cz)) continue; const c = cellCenter(cx, cz); spawnWeapon(ctx, { x: c.x - 0.6, z: c.z + 0.4 }, rollWeaponL3(ctx)); n++; }
     s.gen = {}; s.line = {}; s.gone = {};

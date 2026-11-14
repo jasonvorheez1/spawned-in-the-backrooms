@@ -53,12 +53,14 @@ function dressRooms(ctx, M) {
       ctx.albedo(WOOD); ctx.color("oklch(0.55 0.07 65)"); box(ctx, c.x - 2.2, c.x + 2.2, 1.1, 2.35, zN, zN + 0.05);
       ctx.albedo(null); ctx.color("oklch(0.9 0.02 95)"); box(ctx, c.x - 2.05, c.x + 0.4, 1.22, 2.22, zN + 0.05, zN + 0.065);
       ctx.color("oklch(0.65 0.16 30)"); box(ctx, c.x + 0.6, c.x + 1.9, 1.35, 2.1, zN + 0.05, zN + 0.065);
-      // Server/radio rack beside the comms desk on the south wall
+      // Server/radio rack beside the comms desk on the south wall (dead uplink: red fault LEDs)
       ctx.albedo(RUSTY); ctx.color("oklch(0.26 0.02 250)"); ctx.metalness(0.65); ctx.roughness(0.45);
       box(ctx, c.x + 2.5, c.x + 3.35, 0, 2.05, zS - 0.65, zS - 0.05);
       ctx.albedo(null); ctx.metalness(0);
       for (let k = 0; k < 5; k++) {
-        ctx.color(k === 2 ? "oklch(0.65 0.22 30)" : "oklch(0.75 0.18 145)"); ctx.emissive(k === 2 ? "oklch(0.65 0.22 30)" : "oklch(0.75 0.18 145)");
+        const alive = k === 1;
+        ctx.color(alive ? "oklch(0.75 0.16 75)" : k % 2 === 0 ? "oklch(0.6 0.24 25)" : "oklch(0.2 0.01 250)");
+        ctx.emissive(alive ? "oklch(0.75 0.16 75)" : k % 2 === 0 ? "oklch(0.55 0.22 25)" : null);
         box(ctx, c.x + 2.62 + k * 0.13, c.x + 2.68 + k * 0.13, 1.55, 1.6, zS - 0.67, zS - 0.64);
       }
       ctx.emissive(null);
@@ -66,7 +68,46 @@ function dressRooms(ctx, M) {
     } else if (r.type === "bunks") {
       // Quarters: 6 steel bunks are Blender models now (places/level21/sim.js, L21M.bunk)
     } else if (r.type === "explo") {
-      // Exploration Wing: its racks, bench and lanterns are Tripo props now (places/level21/sim.js, dress21)
+      // Quarantine perimeter striping painted on floor around Specimen #09 + open sample tray frame
+      ctx.albedo(null); ctx.metalness(0); ctx.roughness(0.85);
+      for (let k = 0; k < 4; k++) {
+        ctx.color(k % 2 ? "oklch(0.22 0.01 250)" : "oklch(0.78 0.16 82)");
+        box(ctx, c.x - 0.9 + k * 0.45, c.x - 0.45 + k * 0.45, 0.002, 0.008, c.z - 1.48, c.z - 1.38);
+        box(ctx, c.x - 0.9 + k * 0.45, c.x - 0.45 + k * 0.45, 0.002, 0.008, c.z + 0.18, c.z + 0.28);
+      }
+      ctx.color("oklch(0.78 0.16 82)");
+      box(ctx, c.x - 0.9, c.x - 0.8, 0.002, 0.008, c.z - 1.38, c.z + 0.18);
+      box(ctx, c.x + 0.8, c.x + 0.9, 0.002, 0.008, c.z - 1.38, c.z + 0.18);
+      // Expedition planning chalk/pin strip on east wall
+      ctx.albedo(WOOD); ctx.color("oklch(0.54 0.07 65)");
+      box(ctx, xE - 0.06, xE, 1.15, 2.2, c.z - 1.6, c.z + 1.6);
+      ctx.albedo(null); ctx.color("oklch(0.86 0.02 95)");
+      box(ctx, xE - 0.075, xE - 0.06, 1.24, 2.1, c.z - 1.45, c.z + 1.45);
+    } else if (r.type === "restroom") {
+      // Utility restroom: two steel-partition stalls along the east wall, porcelain toilets, dry sink counter & tarnished mirror on north wall (leaving NW doorway clear)
+      ctx.albedo(null); ctx.roughness(0.6); ctx.metalness(0.2);
+      for (const sz of [zN + 2.6, zN + 4.8]) {
+        ctx.color("oklch(0.45 0.04 165)"); // painted partition panels & ajar stall door
+        box(ctx, xE - 1.55, xE, 0.25, 2.05, sz - 0.03, sz + 0.03);
+        box(ctx, xE - 1.55, xE - 1.49, 0.25, 2.05, sz + 0.03, sz + 1.1);
+        ctx.color("oklch(0.9 0.006 95)"); ctx.roughness(0.35); ctx.metalness(0); // porcelain cistern & bowl
+        box(ctx, xE - 0.42, xE - 0.06, 0.42, 0.92, sz + 0.45, sz + 0.95);
+        box(ctx, xE - 0.85, xE - 0.35, 0.0, 0.42, sz + 0.5, sz + 0.9);
+      }
+      // East sink bank (south of the NW doorway at zN) with dry copper pipes and tarnished mirror
+      ctx.color("oklch(0.78 0.01 95)"); ctx.roughness(0.5);
+      box(ctx, xE - 2.3, xE - 0.2, 0.72, 0.82, zN + 0.05, zN + 0.62); // laminate counter
+      ctx.color("oklch(0.94 0.004 95)"); ctx.roughness(0.25);
+      for (const sx of [xE - 1.85, xE - 0.85]) {
+        box(ctx, sx - 0.26, sx + 0.26, 0.82, 0.86, zN + 0.14, zN + 0.52); // basin rim
+        ctx.color("oklch(0.68 0.03 80)"); ctx.metalness(0.75);
+        pipe(ctx, [sx, 0.86, zN + 0.12], [sx, 0.98, zN + 0.22], 0.016, 5); // dry faucet swan-neck
+        pipe(ctx, [sx, 0.0, zN + 0.3], [sx, 0.72, zN + 0.3], 0.025, 5); // dry drain trap
+        ctx.color("oklch(0.94 0.004 95)"); ctx.metalness(0);
+      }
+      ctx.color("oklch(0.45 0.01 230)"); ctx.metalness(0.82); ctx.roughness(0.22);
+      box(ctx, xE - 2.25, xE - 0.25, 1.05, 1.95, zN + 0.02, zN + 0.045); // tarnished mirror
+      ctx.metalness(0); ctx.roughness(0.85);
     } else if (r.type === "office") {
       // Administration: corkboard with memos on north wall, bookshelf of binders on west wall, scattered floor papers
       ctx.albedo(WOOD); ctx.color("oklch(0.58 0.08 62)"); ctx.metalness(0); ctx.roughness(0.85);
@@ -111,10 +152,12 @@ export function geometry(ctx) {
     else if (z === "fridges") {
       for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const a = x0 + i, b = z0 + j; ctx.color((i + j) % 2 ? "oklch(0.86 0.015 95)" : "oklch(0.76 0.025 195)"); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
     }
-    else { // bare vinyl tile in 1 m squares, two close tones with grime between them; some cells carry a threadbare teal carpet instead
-      ctx.albedo(null); const base = r < 0.18 ? [0.6, 0.04, 200] : r < 0.3 ? [0.7, 0.03, 60] : [0.86, 0.02, 85];
-      for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const a = x0 + i, b = z0 + j, tone = base[0] + (((i + j + cx * 3 + cz) % 2) ? 0.03 : -0.02) + (hash(cx * 4 + i, cz * 4 + j, 9) - 0.5) * 0.05; ctx.color(`oklch(${tone} ${base[1]} ${base[2]})`); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
-    } // a threadbare carpet, or bare grime
+    else { // grimy utility flooring (noticeably dirtier than the painted block walls); some rooms/corridors hold threadbare maintenance carpet
+      const carpet = r < 0.2;
+      ctx.albedo(carpet ? VINYL : FLOOR);
+      const base = carpet ? [0.54, 0.035, 195] : r < 0.34 ? [0.64, 0.028, 70] : [0.74, 0.02, 85];
+      for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const a = x0 + i, b = z0 + j, tone = base[0] + (((i + j + cx * 3 + cz) % 2) ? 0.025 : -0.025) + (hash(cx * 4 + i, cz * 4 + j, 9) - 0.5) * 0.06; ctx.color(`oklch(${tone} ${base[1]} ${base[2]})`); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
+    }
     ctx.roughness(0.88); ctx.albedo(z === "edge" ? null : isEdge(cx, cz) ? CEIL : TILE); ctx.color(isEdge(cx, cz) ? (z === "edge" ? "oklch(0.56 0.008 240)" : "oklch(0.38 0.01 150)") : z === "fridges" || z === "restroom" ? "oklch(0.95 0.01 90)" : "oklch(0.9 0.014 90)");
     if (z === "lockers") { // the locker room photo: off-white 2x2 ft drop tiles on a grey grid, a few water-stained
       ctx.albedo(null); ctx.roughness(0.9); const g = S / 6;
@@ -180,16 +223,26 @@ export function geometry(ctx) {
       }
     }
   }
-  // the world's edge: the stairwell door in the west wall (with blasted steel shutter remnants and hazard stripes), the cave mouth in the east wall
+  // the world's edge: the stairwell door in the west wall (pried steel lockout shutter, torch scorch marks, hazard header), the cave mouth in the east wall
   ctx.albedo(RUSTY); ctx.color("oklch(0.45 0.01 250)"); ctx.metalness(0.5); box(ctx, DOWN.x + T, DOWN.x + T + 0.06, 0, 2.4, DOWN.z - 0.85, DOWN.z + 0.85);
-  ctx.color("oklch(0.4 0.02 140)"); box(ctx, DOWN.x + T, DOWN.x + T + 0.1, 0, 2.25, DOWN.z - 0.68, DOWN.z + 0.68);
-  // Torn steel lockout shutter header over the Level 2 stairwell door
-  ctx.color("oklch(0.32 0.02 250)"); box(ctx, DOWN.x + T, DOWN.x + T + 0.24, 2.15, 2.55, DOWN.z - 0.95, DOWN.z + 0.95);
+  ctx.color("oklch(0.38 0.02 150)"); box(ctx, DOWN.x + T, DOWN.x + T + 0.1, 0, 2.25, DOWN.z - 0.68, DOWN.z + 0.68);
+  // Heavy shutter ribs & bent prying plate near the lower jamb (attempts to wedge it from Base Alef's side)
+  ctx.color("oklch(0.28 0.015 250)"); ctx.metalness(0.7);
+  for (const ry of [0.35, 0.9, 1.45, 2.0]) box(ctx, DOWN.x + T + 0.1, DOWN.x + T + 0.16, ry, ry + 0.07, DOWN.z - 0.72, DOWN.z + 0.72);
+  ctx.albedo(null); ctx.metalness(0);
+  ctx.color("oklch(0.14 0.01 40)"); // blowtorch soot/slag along the welded right track
+  box(ctx, DOWN.x + T + 0.1, DOWN.x + T + 0.13, 0.15, 1.4, DOWN.z + 0.58, DOWN.z + 0.74);
+  box(ctx, DOWN.x + T + 0.1, DOWN.x + T + 0.13, 0.0, 0.22, DOWN.z - 0.68, DOWN.z - 0.15);
+  // Torn steel lockout shutter header & emergency bulkhead bezel over the Level 2 stairwell door
+  ctx.albedo(RUSTY); ctx.color("oklch(0.32 0.02 250)"); ctx.metalness(0.6); box(ctx, DOWN.x + T, DOWN.x + T + 0.24, 2.15, 2.55, DOWN.z - 0.95, DOWN.z + 0.95);
   ctx.albedo(null); ctx.metalness(0);
   for (let i = 0; i < 6; i++) {
     ctx.color(i % 2 ? "oklch(0.18 0 0)" : "oklch(0.8 0.16 88)");
     box(ctx, DOWN.x + T + 0.11, DOWN.x + T + 0.12, 2.28, 2.44, DOWN.z - 0.84 + i * 0.28, DOWN.z - 0.56 + i * 0.28);
   }
+  ctx.color("oklch(0.55 0.25 25)"); ctx.emissive("oklch(0.55 0.25 25)");
+  box(ctx, DOWN.x + T + 0.12, DOWN.x + T + 0.22, 2.56, 2.68, DOWN.z - 0.12, DOWN.z + 0.12);
+  ctx.emissive(null);
   ctx.color("oklch(0.01 0 0)"); box(ctx, CAVE.x - 0.1, CAVE.x + 0.3, 0, 3.4, CAVE.z - 1.7, CAVE.z + 1.7); // the dark of the cave
 
   // ---- the ceiling: bundles of beige conduit down every hall, red sprinkler mains, cable trays, and big silver ducts with hangers over The Edges
@@ -322,8 +375,10 @@ export function geometry(ctx) {
       ctx.color("oklch(0.55 0.02 200)"); ctx.roughness(0.6); box(ctx, c.x - 0.48, c.x + 0.48, 0, 2.18, zf - 0.06, zf - 0.01);
     }
   }
-  // John Banks's dynamite blast site at the entrance to The Edges (cell EDGE_X, LANE.z0): scorched ceiling crater & fallen concrete rubble
+  // Jared Banks's dynamite blast site at the entrance to The Edges (cell EDGE_X, LANE.z0): scorched ceiling crater, soot floor halo & fallen concrete rubble
   const jb = cellCenter(EDGE_X, LANE.z0);
+  ctx.albedo(null); ctx.color("oklch(0.2 0.008 240)"); ctx.roughness(0.98);
+  prism(ctx, [[jb.x - 1.6, jb.z - 1.2], [jb.x + 0.2, jb.z - 1.5], [jb.x + 1.7, jb.z - 0.2], [jb.x + 1.1, jb.z + 1.4], [jb.x - 0.8, jb.z + 1.5], [jb.x - 1.7, jb.z + 0.3]], 0.002, 0.01);
   ctx.albedo(WALL); ctx.color("oklch(0.62 0.008 240)"); ctx.roughness(0.95);
   for (let k = 0; k < 6; k++) {
     const rx = jb.x - 0.8 + (k % 3) * 0.75, rz = jb.z - 0.7 + Math.floor(k / 3) * 0.85, rh = 0.22 + (k % 3) * 0.14;
@@ -340,6 +395,12 @@ export function geometry(ctx) {
     const a = hash(k, 3, 91) * 0.5, b = k < 4 ? -1.45 - a : 1.45 + a, y1 = 1.4 + hash(k, 4, 92) * 2.8;
     prism(ctx, [[CAVE.x - 0.95, CAVE.z + b - 0.32], [CAVE.x + 0.1, CAVE.z + b - 0.32], [CAVE.x + 0.1, CAVE.z + b + 0.32], [CAVE.x - 0.95, CAVE.z + b + 0.32]], 0, y1);
   }
+  // Anchor pitons & taut climbing rope disappearing into the fissure
+  ctx.albedo(null); ctx.color("oklch(0.38 0.02 250)"); ctx.metalness(0.7);
+  box(ctx, CAVE.x - 1.05, CAVE.x - 0.88, 1.02, 1.1, CAVE.z - 1.4, CAVE.z - 1.24);
+  ctx.color("oklch(0.68 0.08 75)"); ctx.metalness(0); ctx.roughness(0.95);
+  pipe(ctx, [CAVE.x - 0.96, 1.06, CAVE.z - 1.3], [CAVE.x - 0.2, 0.72, CAVE.z - 0.95], 0.016, 5);
+  pipe(ctx, [CAVE.x - 0.2, 0.72, CAVE.z - 0.95], [CAVE.x + 0.25, 0.2, CAVE.z - 0.65], 0.016, 5);
   // Hanging stalactite teeth over the Level 8 cave threshold
   for (let k = 0; k < 5; k++) {
     const sz = CAVE.z - 1.2 + k * 0.6;

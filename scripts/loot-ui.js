@@ -9,7 +9,8 @@ import { describe, itemsOf, MEAT } from './lib/items.js'
 import L from './lib/data/level0.yml'
 import W from './lib/weapons.js'
 import THROW from './lib/data/throwables.yml'
-import { derived, carried, handling, reqText } from './lib/stats.js'
+import { derived, carried, handling, reqText, permanentSkillsOf, tokenWeight } from './lib/stats.js'
+import { getBookSpec, getMagSpec, isBookToken, isMagToken, canReadBook, formatModsList, formatModPair } from './lib/modifiers.js'
 import { parseCloth, wornTokens, wornDR, fullLook, SLOTS, SLOT_NAME, rowOf, rowData, CLOTHES } from './lib/clothes.js'
 import { cndOf, armorCnd, band, bandColor, wMul, drMul, repairAmount, isBroken } from './lib/condition.js'
 import { penOf } from './lib/combat.js'
@@ -349,13 +350,56 @@ function itemVal(t) {
   }
   if (t.startsWith('cloth:')) {
     const p = parseCloth(t)
-    return p ? Math.max(3, Math.round(p.row.dr * 5 + 4)) : 6
+    const modCount = Object.keys(p?.row?.mods ?? {}).length
+    return p ? Math.max(3, Math.round(p.row.dr * 5 + 4 + modCount * 4)) : 6
+  }
+  if (isBookToken(t)) return getBookSpec(t)?.value ?? 85
+  if (isMagToken(t)) return getMagSpec(t)?.value ?? 28
+  if (t.startsWith('snack:')) {
+    const c = t.slice(6), v = SNACKS[c]
+    return v?.value ?? (v?.stopBleed || v?.clearDebuffs ? 16 : 6)
   }
   if (t.startsWith('almond')) return 6
   if (t === 'ammo') return 4
   if (t === 'shells') return 5
   if (t === 'bobbypin') return 2
   return 3
+}
+
+function snackCategory(v) {
+  if (!v) return 'AID'
+  if (v.stopBleed || v.clearDebuffs || (v.hp > 0 && !v.hunger && !v.drink) || (v.mods && !v.drink && !v.hunger)) return 'MEDICINE'
+  if (v.drink) return 'DRINK'
+  if (!v.hunger && !v.thirst && v.keep) return 'KEEPSAKE'
+  if (!v.hunger && !v.thirst) return 'AID'
+  return 'FOOD'
+}
+
+function snackEffectTags(v) {
+  const tags = []
+  if (v.hp) tags.push(`${v.hp > 0 ? '+' : ''}${v.hp} HP`)
+  if (v.sanity) tags.push(`${v.sanity > 0 ? '+' : ''}${v.sanity} SAN`)
+  if (v.hunger) tags.push(`${v.hunger > 0 ? '+' : ''}${v.hunger} HUNGER`)
+  if (v.thirst) tags.push(`${v.thirst > 0 ? '+' : ''}${v.thirst} THIRST`)
+  if (v.stopBleed) tags.push('STOPS BLEED')
+  if (v.clearDebuffs) tags.push('CLEARS TOXINS')
+  if (v.warm) tags.push(`WARM +${v.warm}`)
+  if (v.mods) tags.push(...formatModsList(v.mods))
+  return tags
+}
+
+function clothCompareHtml(p, cur) {
+  const nextMods = p.row.mods ?? {}, curMods = cur?.mods ?? {}
+  const keys = new Set([...Object.keys(nextMods), ...Object.keys(curMods)])
+  if (!keys.size) return cur ? (p.row.dr === cur.dr ? 'SAME DR' : p.row.dr > cur.dr ? '<i class="up" style="font-style:normal">HIGHER DR</i>' : '<i class="dn" style="font-style:normal">LOWER DR</i>') : 'NO ITEM WORN'
+  const parts = []
+  for (const k of keys) {
+    const a = Number(nextMods[k] ?? 0), b = Number(curMods[k] ?? 0), d = a - b
+    if (d === 0) continue
+    const txt = formatModPair(k, d)
+    if (txt) parts.push(`<i class="${d > 0 ? 'up' : 'dn'}" style="font-style:normal">${d > 0 ? '▲ ' : '▼ '}${esc(txt)}</i>`)
+  }
+  return parts.length ? parts.join(' · ') : 'EVEN STATS'
 }
 
 // Animated Vector Artwork SVGs
@@ -452,6 +496,7 @@ function detail(t, s, def) {
       if (btns.length) repHtml = `<div class="rep-box"><div class="rep-box-title"><span>ARMOR REPAIR</span><span>REQ: REPAIR</span></div>${btns.join('')}</div>`
     }
 
+    const modText = formatModsList(p.row.mods).join(' · ')
     return `<div class="${cls}">
       <div class="dt-header">
         <h4>${p.row.name}</h4>
@@ -465,9 +510,71 @@ function detail(t, s, def) {
         ${cell('WG', `${p.row.kg} KG`)}
         ${cell('VAL', `$${val}.00`)}
         ${cell('COLOR', `<span style="display:inline-block;width:12px;height:12px;background:#${p.colour};border:1px solid var(--ad);vertical-align:middle"></span>`)}
-        ${cell('WORN', cur ? `${cur.name} · DR ${cur.dr}` : 'NONE')}
+        ${cell('PASSIVES', modText ? esc(modText) : 'STANDARD', true)}
+        ${cell('WORN', cur ? `${cur.name} · DR ${cur.dr}` : 'NONE', true)}
+        ${cell('VS WORN', clothCompareHtml(p, cur), true)}
       </div>
       ${repHtml}
+    </div>`
+  }
+
+  if (isBookToken(t)) {
+    const spec = getBookSpec(t)
+    if (!spec) return ''
+    const permVal = permanentSkillsOf(s)[spec.skill] ?? 0
+    const chk = canReadBook(s, t, permVal)
+    const statusLabel = chk.ok ? 'UNREAD · READY' : chk.reason === 'already_read' ? 'ALREADY READ' : chk.reason === 'edition_limit' ? 'EDITION LIMIT REACHED' : 'SKILL AT MAX (100)'
+    return `<div class="${cls}">
+      <div class="dt-header"><h4>${esc(spec.title)}</h4><span class="dt-rarity" style="color:#ffcf6a">SKILL BOOK · ${esc(spec.rarity.toUpperCase())}</span></div>
+      ${spec.desc ? `<div style="opacity:.82;font-size:12px;margin:4px 0 8px">${esc(spec.desc)}</div>` : ''}
+      <div class="g">
+        ${cell('SKILL', esc(spec.skillName.toUpperCase()))}
+        ${cell('BONUS', `<b style="color:#8fd67c">+${spec.bonus} PERMANENT</b>`)}
+        ${cell('CURRENT BASE', `${permVal} / 100`)}
+        ${cell('STATUS', statusLabel)}
+        ${cell('WG', `${spec.kg.toFixed(1)} KG`)}
+        ${cell('VAL', `$${spec.value}.00`)}
+        ${cell('CARRIED', `${s.books?.[t] ?? 0}`, true)}
+      </div>
+    </div>`
+  }
+
+  if (isMagToken(t)) {
+    const spec = getMagSpec(t)
+    if (!spec) return ''
+    return `<div class="${cls}">
+      <div class="dt-header"><h4>${esc(spec.title)}</h4><span class="dt-rarity" style="color:${spec.color}">MAGAZINE</span></div>
+      ${spec.desc ? `<div style="opacity:.82;font-size:12px;margin:4px 0 8px">${esc(spec.desc)}</div>` : ''}
+      <div class="g">
+        ${cell('SKILL', esc(spec.skillName.toUpperCase()))}
+        ${cell('BONUS', `<b style="color:#8fd67c">+${spec.bonus} TEMP</b>`)}
+        ${cell('DURATION', `${spec.durationMin} IN-GAME MIN`)}
+        ${cell('WG', `${spec.kg.toFixed(1)} KG`)}
+        ${cell('VAL', `$${spec.value}.00`)}
+        ${cell('CARRIED', `${s.mags?.[t] ?? 0}`)}
+      </div>
+    </div>`
+  }
+
+  if (t.startsWith('snack:') && SNACKS[t.slice(6)]) {
+    const c = t.slice(6), v = SNACKS[c], cat = snackCategory(v)
+    const tags = snackEffectTags(v), dur = v.durationGameMin ? `${v.durationGameMin} IN-GAME MIN` : ''
+    return `<div class="${cls}">
+      <div class="dt-header"><h4>${esc(v.name)}</h4><span class="dt-rarity" style="color:${cat === 'MEDICINE' ? '#8fd67c' : cat === 'DRINK' ? '#7fc4e8' : '#d5b77b'}">${cat}</span></div>
+      ${v.info ? `<div style="opacity:.82;font-size:12px;margin:4px 0 8px">${esc(v.info)}</div>` : ''}
+      <div class="g">
+        ${v.hp ? cell('HP', `<b style="color:#8fd67c">+${v.hp}</b>`) : ''}
+        ${v.sanity ? cell('SANITY', `<b style="color:#8fd67c">+${v.sanity}</b>`) : ''}
+        ${v.hunger ? cell('HUNGER', `+${v.hunger}`) : ''}
+        ${v.thirst ? cell('THIRST', `+${v.thirst}`) : ''}
+        ${v.stopBleed ? cell('BLEEDING', '<b style="color:#8fd67c">STOPS BLEED</b>') : ''}
+        ${v.clearDebuffs ? cell('TOXINS', '<b style="color:#8fd67c">CLEARS DEBUFFS</b>') : ''}
+        ${dur ? cell('DURATION', dur) : ''}
+        ${cell('WG', `${tokenWeight(t).toFixed(1)} KG`)}
+        ${cell('VAL', `$${itemVal(t)}.00`)}
+        ${cell('CARRIED', `${s.snacks?.[c] ?? 0}`)}
+        ${tags.length ? cell('EFFECTS', esc(tags.join(' · ')), true) : ''}
+      </div>
     </div>`
   }
 
@@ -554,9 +661,20 @@ function pane(s, sel, eqKey) {
     acts.push(btn('EAT', { k: 'eat', c: sel.slice(5) }), btn('DROP ONE', { k: 'dropItem', t: sel }))
   } else if (sel.startsWith('snack:') && (s.snacks?.[sel.slice(6)] ?? 0) > 0 && SNACKS[sel.slice(6)]) {
     const v = SNACKS[sel.slice(6)]
-    const trinket = !v.drink && !v.hunger && !v.thirst   // a thing you use, not eat: the music box winds, the hum loop plays (Shelly: "eat a music box")
-    card = `<div class="dt def"><div class="dt-header"><h4>${v.name}</h4><span class="dt-rarity">${v.drink ? 'DRINK' : trinket ? (v.keep ? 'KEEPSAKE' : 'AID') : 'FOOD'}</span></div>${v.info ? `<div style="opacity:.75;font-size:12px;margin:4px 0 6px">${v.info}</div>` : ''}<div class="g">${v.drink ? cell('THIRST', '+' + v.thirst) : trinket ? cell('SANITY', '+' + (v.sanity ?? 0)) + (v.keep ? cell('USES', 'NEVER RUNS OUT') : '') : cell('HUNGER', '+' + v.hunger)}${cell('CARRIED', s.snacks[sel.slice(6)], true)}</div></div>`
+    const trinket = !v.drink && !v.hunger && !v.thirst
+    card = detail(sel, s, true)
     acts.push(btn(v.verb ?? (v.drink ? 'DRINK' : trinket ? 'USE' : 'EAT'), { k: 'snack', c: sel.slice(6) }), btn('DROP ONE', { k: 'dropItem', t: sel }))
+  } else if (isBookToken(sel) && (s.books?.[sel] ?? 0) > 0) {
+    const spec = getBookSpec(sel)
+    const chk = spec ? canReadBook(s, sel, permanentSkillsOf(s)[spec.skill] ?? 0) : { ok: false, reason: 'invalid' }
+    card = detail(sel, s, true)
+    if (chk.ok) acts.push(btn(`READ (+${spec.bonus} ${spec.skillName.toUpperCase()})`, { k: 'readBook', t: sel }))
+    else acts.push(`<button class="act" disabled>${chk.reason === 'maxed' ? 'SKILL MAXED (100)' : 'ALREADY READ'}</button>`)
+    acts.push(btn('DROP ONE', { k: 'dropItem', t: sel }))
+  } else if (isMagToken(sel) && (s.mags?.[sel] ?? 0) > 0) {
+    const spec = getMagSpec(sel)
+    card = detail(sel, s, true)
+    acts.push(btn(`READ (+${spec?.bonus ?? 10} · ${spec?.durationMin ?? 120}M)`, { k: 'readMag', t: sel }), btn('DROP ONE', { k: 'dropItem', t: sel }))
   } else if ((sel === 'ammo' || sel === 'shells' || sel === 'cells') && s[sel] > 0) { card = detail(sel, s, true); acts.push(btn('DROP A BOX', { k: 'dropItem', t: sel })) }
   else if (THROW[sel]?.key && s[THROW[sel].key] > 0) {
     card = detail(sel, s, true)
@@ -646,9 +764,11 @@ function inventory(s) {
 
   const snackRows = Object.entries(s.snacks ?? {}).filter(([c, n]) => n > 0 && SNACKS[c] && matchesFilter(SNACKS[c].name)).map(([c, n]) => {
     const v = SNACKS[c]
+    const tags = snackEffectTags(v)
+    const hint = tags.slice(0, 2).join(' · ') || (v.drink ? `THI +${v.thirst}` : `HUN +${v.hunger ?? 0}`)
     return `<button class="it${sel === 'snack:' + c ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'snack:${c}'})" ondblclick="sendAction('inv',{k:'snack',c:'${c}'})">
-      <span class="cur">&gt;</span><span class="nm">${v.name}</span>
-      <span class="stat-r"><span>×${n}</span><span>${v.drink ? `THI +${v.thirst}` : !v.hunger && v.sanity ? `SAN +${v.sanity}` : `HUN +${v.hunger}`}</span></span>
+      <span class="cur">&gt;</span><span class="nm">${esc(v.name)}</span>
+      <span class="stat-r"><span>×${n}</span><span>${esc(hint)}</span></span>
     </button>`
   }).join('')
 
@@ -665,21 +785,22 @@ function inventory(s) {
     return (x?.name ?? '').localeCompare(y?.name ?? '')
   }
 
+  const modHint = (row) => { const list = formatModsList(row?.mods); return list.length ? ` · ${list.slice(0, 2).join(', ')}` : '' }
   const app = on.sort(clothOrder).map((t) => {
     const p = parseCloth(t); if (!p) return ''
     const c = armorCnd(s.look, t)
     return `<button class="it on${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})" ondblclick="sendAction('inv',{k:'unwear',w:'${p.slot}'})">
       <span class="cur">&gt;</span><span class="eq-tag">EQ</span>
-      <span class="nm">${p.row.name}</span>
-      <span class="stat-r"><span>DR ${p.row.dr}</span>${cndMini(c)}</span>
+      <span class="nm">${esc(p.row.name)}</span>
+      <span class="stat-r"><span>DR ${p.row.dr}${esc(modHint(p.row))}</span>${cndMini(c)}</span>
 
     </button>`
   }).join('') + [...new Set(bag)].sort(clothOrder).map((t) => {
     const p = parseCloth(t); if (!p) return ''
     const n = bag.filter((x) => x === t).length, c = armorCnd(s.look, t)
     return `<button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})" ondblclick="sendAction('inv',{k:'wear',w:'${t}'})">
-      <span class="cur">&gt;</span><span class="nm">${p.row.name}${n > 1 ? ` ×${n}` : ''}</span>
-      <span class="stat-r"><span>DR ${p.row.dr}</span>${cndMini(c)}</span>
+      <span class="cur">&gt;</span><span class="nm">${esc(p.row.name)}${n > 1 ? ` ×${n}` : ''}</span>
+      <span class="stat-r"><span>DR ${p.row.dr}${esc(modHint(p.row))}</span>${cndMini(c)}</span>
 
     </button>`
   }).join('') || '<div class="em">No apparel carried.</div>'
@@ -698,8 +819,32 @@ function inventory(s) {
       <span class="cur">&gt;</span><span class="nm" style="color:${t === 'frag' ? '#b8c49a' : t === 'fresh' ? '#9fd8e6' : '#f0a050'}">${nm}</span>
       <span class="stat-r"><span>×${s[k]}</span></span>
     </button>`).join('')
-  // Misc list
-  const misc = `${s.skates ? `<div class="it"><span class="cur">&gt;</span><span class="nm" style="color:#ff9a4a">Roller skates</span><span class="stat-r">Level 31 rink</span></div>` : ''}${s.compass > 0 ? `<button class="it" onclick="sendAction('inv',{k:'compass'})"><span class="cur">&gt;</span><span class="nm" style="color:#d8b56a">Old compass</span><span class="stat-r">${s.compass} reads</span></button>` : ''}
+  // Skill Books & Magazines + Misc list
+  const bookRows = Object.entries(s.books ?? {}).filter(([t, n]) => {
+    if (n <= 0) return false
+    const sp = getBookSpec(t)
+    return sp && matchesFilter(sp.title + ' ' + sp.skillName + ' book')
+  }).map(([t, n]) => {
+    const sp = getBookSpec(t)
+    const chk = canReadBook(s, t, permanentSkillsOf(s)[sp.skill] ?? 0)
+    const tag = chk.ok ? `+${sp.bonus} ${sp.skillName.slice(0, 4).toUpperCase()} · PERM` : 'READ'
+    return `<button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${esc(t)}'})" ondblclick="sendAction('inv',{k:'readBook',t:'${esc(t)}'})">
+      <span class="cur">&gt;</span><span class="nm" style="color:#ffcf6a">${esc(sp.title)}${n > 1 ? ` ×${n}` : ''}</span>
+      <span class="stat-r"><span style="color:${chk.ok ? '#8fd67c' : '#888'}">${tag}</span></span>
+    </button>`
+  }).join('')
+  const magRows = Object.entries(s.mags ?? {}).filter(([t, n]) => {
+    if (n <= 0) return false
+    const sp = getMagSpec(t)
+    return sp && matchesFilter(sp.title + ' ' + sp.skillName + ' magazine')
+  }).map(([t, n]) => {
+    const sp = getMagSpec(t)
+    return `<button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${esc(t)}'})" ondblclick="sendAction('inv',{k:'readMag',t:'${esc(t)}'})">
+      <span class="cur">&gt;</span><span class="nm" style="color:${sp.color}">${esc(sp.title)}${n > 1 ? ` ×${n}` : ''}</span>
+      <span class="stat-r"><span style="color:#8fd67c">+${sp.bonus} ${sp.skillName.slice(0, 4).toUpperCase()} · ${sp.durationMin}M</span></span>
+    </button>`
+  }).join('')
+  const misc = `${bookRows}${magRows}${s.skates ? `<div class="it"><span class="cur">&gt;</span><span class="nm" style="color:#ff9a4a">Roller skates</span><span class="stat-r">Level 31 rink</span></div>` : ''}${s.compass > 0 ? `<button class="it" onclick="sendAction('inv',{k:'compass'})"><span class="cur">&gt;</span><span class="nm" style="color:#d8b56a">Old compass</span><span class="stat-r">${s.compass} reads</span></button>` : ''}
     ${s.firesalt > 0 ? `<button class="it" onclick="sendAction('inv',{k:'firesalt'})"><span class="cur">&gt;</span><span class="nm" style="color:#ff8a3a">Firesalt</span><span class="stat-r">${s.firesalt} shards · RUB</span></button><button class="it" onclick="sendAction('inv',{k:'fsThrow'})"><span class="cur">&gt;</span><span class="nm" style="color:#ff8a3a">Firesalt · throw a shard</span><span class="stat-r">sparks, burns</span></button><button class="it" onclick="sendAction('inv',{k:'fsMelt'})"><span class="cur">&gt;</span><span class="nm" style="color:#ff8a3a">Firesalt · melt 5 into an ingot</span><span class="stat-r">pyroil</span></button><button class="it" onclick="sendAction('inv',{k:'fsBoil'})"><span class="cur">&gt;</span><span class="nm" style="color:#ff8a3a">Firesalt · boil almond water</span><span class="stat-r">grey to clean</span></button>` : ''}
     ${String(s.weapons ?? '').split(',').some((w) => w.split('~')[0] === 'squirt_gun') ? `<div class="it"><span class="cur">&gt;</span><span class="nm" style="color:#5a8cff">Squirt Gun tank</span><span class="stat-r">${(s.sqfill ?? 25) + (s.loaded_squirt_gun ?? 0)} · ${({ water: 'water', almond: 'almond water', pyroil: 'pyroil', repellent: 'repellent' })[s.sqLiq ?? 'water']}</span></div><button class="it" onclick="sendAction('inv',{k:'sqFill',c:'water'})"><span class="cur">&gt;</span><span class="nm" style="color:#9cc8ff">Tank · top up with water</span><span class="stat-r">free, 25</span></button><button class="it" onclick="sendAction('inv',{k:'sqFill',c:'almond'})"><span class="cur">&gt;</span><span class="nm" style="color:#e8dcc0">Tank · pour in almond water</span><span class="stat-r">grey bottle, 15</span></button><button class="it" onclick="sendAction('inv',{k:'sqFill',c:'pyroil'})"><span class="cur">&gt;</span><span class="nm" style="color:#ff8a3a">Tank · melt in a firesalt shard</span><span class="stat-r">pyroil, 6</span></button><button class="it" onclick="sendAction('inv',{k:'sqFill',c:'repellent'})"><span class="cur">&gt;</span><span class="nm" style="color:#cfe8c8">Tank · pour in Smiler Repellent</span><span class="stat-r">10</span></button>${s.sqLiq === 'almond' ? `<button class="it" onclick="sendAction('inv',{k:'sqDrink'})"><span class="cur">&gt;</span><span class="nm" style="color:#e8dcc0">Tank · squirt into your mouth</span><span class="stat-r">+thirst</span></button>` : ''}<button class="it" onclick="sendAction('inv',{k:'sqEmpty'})"><span class="cur">&gt;</span><span class="nm" style="color:#8aa0c0">Tank · drain it</span><span class="stat-r"></span></button>` : ''}
     ${s.fsIngot > 0 ? `<button class="it" onclick="sendAction('inv',{k:'fsIngot'})"><span class="cur">&gt;</span><span class="nm" style="color:#c8261a">Firesalt ingot</span><span class="stat-r">${s.fsIngot} · THROW</span></button>` : ''}

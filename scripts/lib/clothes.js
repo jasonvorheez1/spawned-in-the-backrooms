@@ -73,7 +73,7 @@ export function wornDR(look) {
 export function wornRows(look) {
   if (!look) return []
   const l = fullLook(look), out = []
-  for (const slot of SLOTS) { const row = rowData(slot, l[slot], colourOf(l, slot)); if (row) { const token = tokOf(l, slot); out.push({ token, slot, dr: row.dr, cnd: armorCnd(look, token) }) } }
+  for (const slot of SLOTS) { const row = rowData(slot, l[slot], colourOf(l, slot)); if (row) { const token = tokOf(l, slot); out.push({ token, slot, name: row.name, dr: row.dr, cnd: armorCnd(look, token), mods: row.mods ?? null }) } }
   return out
 }
 // the damage that gets through: Fallout NV threshold, a hit always keeps `floor` of itself and at least 1

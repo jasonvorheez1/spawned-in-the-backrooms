@@ -39,7 +39,8 @@ import { isVilified, repKill } from './lib/rep.js'
 import { questKill1 } from './lib/level1-quests.js'
 import D from './lib/data/difficulty.yml'
 import { penOf, vary } from './lib/combat.js'
-import { derived, canCarry, burden, npcMul, START, dmgMul, handling, skillsOf, spentOf, SKILLS, SKILL_MAX, dmgAfterArmor, lookOfNpc } from './lib/stats.js'
+import { derived, canCarry, burden, npcMul, START, dmgMul, handling, skillsOf, permanentSkillsOf, spentOf, SKILLS, SKILL_MAX, dmgAfterArmor, lookOfNpc } from './lib/stats.js'
+import { applyEffect, clearEffects, readSkillBook, getBookSpec, getMagSpec, isBookToken, isMagToken, clockNow, formatModsList } from './lib/modifiers.js'
 import { parseCloth, wear, takeOff, wornRows, fullLook } from './lib/clothes.js'
 import { wMul, jamChance, isBroken, useWear, armorWearFor, cndOf, repairAmount, armorCnd, band } from './lib/condition.js'
 import { weaponBody, HOLD, MESHGRIP } from './lib/weapon-look.js'
@@ -336,12 +337,6 @@ function takeToken0(ctx, token, opts) {
     sound(ctx, 'pickup-ammo', 0.7, true)
     return { ok: true }
   }
-  if (token === 'royal_ration') { // Level 3's rare tin: eaten on the spot, all of it
-    s.hp = maxHp(s.level, s); s.sanity = Math.min(maxSan(s.level, s), (s.sanity ?? 0) + L3I.royal_ration.sanity)
-    s.pickedAt = now; if (opts?.xp !== false) gain(ctx, L.xpAlmond); s.notice = { text: 'You eat the royal ration. You feel whole again', at: now }
-    sound(ctx, 'plastic-bottle-pickup-rattle', 0.7, true)
-    return { ok: true }
-  }
   if (token === 'bobbypin' || token === 'pin' || token === 'bobby_pin') { s.bobbypins = (s.bobbypins ?? 0) + 1; s.pickedAt = now; s.notice = { text: `Bobby pin (${s.bobbypins} carried)`, at: now }; sound(ctx, 'pickup-ammo', 0.5, true); return { ok: true } }
   if (token === 'repellent') { s.repellent = (s.repellent ?? 0) + 1; s.pickedAt = now; s.notice = { text: 'Smiler Repellent. A few drops, clear as almond water. Rare', at: now }; sound(ctx, 'plastic-bottle-pickup-rattle', 0.6, true); return { ok: true } }
   if (token === 'fs_ingot') { s.fsIngot = (s.fsIngot ?? 0) + 1; s.pickedAt = now; sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true } }
@@ -359,23 +354,6 @@ function takeToken0(ctx, token, opts) {
     sound(ctx, 'gun-raise-cloth-rustle', 0.5, true)
     return { ok: true }
   }
-  if (token === 'ration' || token === 'bandage') { // eaten or wrapped on the spot
-    const mh = maxHp(s.level, s), ms = maxSan(s.level, s)
-    s.hp = Math.min(mh, (s.hp ?? mh) + (token === 'ration' ? L1.rationHp * derived(s).heal : L1.bandageHp * derived(s).healMed))
-    if (token === 'ration') s.sanity = Math.min(ms, (s.sanity ?? ms) + L1.rationSanity)
-    s.pickedAt = now; if (opts?.xp !== false) gain(ctx, L.xpAlmond)
-    sound(ctx, token === 'ration' ? 'plastic-bottle-pickup-rattle' : 'pickup-ammo', 0.7, true)
-    return { ok: true }
-  }
-  if (token === 'bread') {
-    const mh = maxHp(s.level, s), ms = maxSan(s.level, s)
-    s.hp = Math.min(mh, (s.hp ?? mh) + 40 * derived(s).heal)
-    s.sanity = Math.min(ms, (s.sanity ?? ms) + 25)
-    s.pickedAt = now; if (opts?.xp !== false) gain(ctx, 30)
-    s.notice = { text: 'Warm Homestead Loaf. Delicious fresh bread restores +40 HP and +25 Sanity!', at: now }
-    sound(ctx, 'plastic-bottle-pickup-rattle', 0.7, true)
-    return { ok: true }
-  }
   if (token === 'wheat_sheaf') {
     s.wheat = (s.wheat ?? 0) + 1; s.pickedAt = now
     s.notice = { text: `Golden Wheat Sheaf (${s.wheat} carried) · Grind at the Windmill Quern`, at: now }
@@ -388,14 +366,23 @@ function takeToken0(ctx, token, opts) {
     sound(ctx, 'pickup-ammo', 0.6, true)
     return { ok: true }
   }
-  if (token === 'lobby_wafer') { // Level 0's own snack: stale yellow wafers in every third desk drawer (Savi made it up)
-    const mh = maxHp(s.level, s), ms = maxSan(s.level, s), U = L2.use
-    s.hp = Math.min(mh, (s.hp ?? mh) + U.waferHp * derived(s).heal); s.sanity = Math.min(ms, (s.sanity ?? ms) + U.waferSanity)
-    s.pickedAt = now; s.notice = { text: 'Lobby Wafers. Crunchy, somehow damp.', at: now }
-    sound(ctx, 'plastic-bottle-pickup-rattle', 0.6, true)
+  if (isBookToken(token)) {
+    const spec = getBookSpec(token)
+    if (!spec) return { ok: false, msg: '' }
+    s.books = { ...(s.books ?? {}), [token]: (s.books?.[token] ?? 0) + 1 }; s.pickedAt = now
+    s.notice = { text: `${spec.title} · in your bag (I > Aid to read)`, at: now }
+    sound(ctx, 'gun-raise-cloth-rustle', 0.5, true)
     return { ok: true }
   }
-  if (SNACKS[token]) { // Level 6.1's real snacks: into the bag (player.state.snacks); the inventory eats or drinks them
+  if (isMagToken(token)) {
+    const mag = getMagSpec(token)
+    if (!mag) return { ok: false, msg: '' }
+    s.mags = { ...(s.mags ?? {}), [token]: (s.mags?.[token] ?? 0) + 1 }; s.pickedAt = now
+    s.notice = { text: `${mag.title} · in your bag (+${mag.bonus} ${mag.skillName}, ${mag.durationMin}m)`, at: now }
+    sound(ctx, 'loot-take-all-rustle', 0.5, true)
+    return { ok: true }
+  }
+  if (SNACKS[token]) { // carried food, drinks, and medical aid: consumed deliberately from I > Aid
     const v = SNACKS[token]
     s.snacks = { ...(s.snacks ?? {}), [token]: (s.snacks?.[token] ?? 0) + 1 }; s.pickedAt = now
     const prev = s.notice && now - s.notice.at < 400 && /in your bag$/.test(s.notice.text) ? s.notice.text.replace(/ · in your bag$/, '') + ', ' : ''
@@ -404,6 +391,49 @@ function takeToken0(ctx, token, opts) {
     return { ok: true }
   }
   return takeToken1(ctx, token, opts)
+}
+export function readBookAction(ctx, token) {
+  const s = ctx.self.state, now = ctx.now()
+  if ((s.books?.[token] ?? 0) <= 0) return { ok: false, msg: 'No copy in bag.' }
+  const spec = getBookSpec(token)
+  if (!spec) return { ok: false, msg: 'Unknown book.' }
+  const curPerm = permanentSkillsOf(s)[spec.skill] ?? 0
+  const res = readSkillBook(s, token, curPerm, clockNow(ctx))
+  if (!res.ok) { s.notice = { text: res.msg, at: now }; return res }
+  const nextCount = (s.books[token] ?? 1) - 1
+  const nextBooks = { ...(s.books ?? {}) }
+  if (nextCount > 0) nextBooks[token] = nextCount; else delete nextBooks[token]
+  s.books = nextBooks
+  s.pickedAt = now
+  s.notice = { text: `${res.spec.skillName} permanently increased by ${res.gained} (${res.spec.title})`, at: now }
+  gain(ctx, L.xpAlmond * 2)
+  sound(ctx, 'pickup-weapon', 0.5, true)
+  return res
+}
+export function readMagAction(ctx, token) {
+  const s = ctx.self.state, now = ctx.now()
+  if ((s.mags?.[token] ?? 0) <= 0) return { ok: false, msg: 'No magazine in bag.' }
+  const mag = getMagSpec(token)
+  if (!mag) return { ok: false, msg: 'Unknown magazine.' }
+  const nextCount = (s.mags[token] ?? 1) - 1
+  const nextMags = { ...(s.mags ?? {}) }
+  if (nextCount > 0) nextMags[token] = nextCount; else delete nextMags[token]
+  s.mags = nextMags
+  applyEffect(ctx, s, {
+    sourceItemId: token,
+    name: mag.title,
+    kind: 'magazine',
+    mods: { [mag.skill]: mag.bonus },
+    durationGameMin: mag.durationMin,
+    stackingGroup: mag.stackingGroup,
+    policy: 'refresh',
+    positive: true,
+    nowMs: clockNow(ctx),
+  })
+  s.pickedAt = now
+  s.notice = { text: `${mag.title}: ${mag.skillName} +${mag.bonus} for ${mag.durationMin} in-game min`, at: now }
+  sound(ctx, 'gun-raise-cloth-rustle', 0.45, true)
+  return { ok: true, mag }
 }
 export function useSnack(ctx, token) { // consume one from the bag
   const s = ctx.self.state, now = ctx.now(), n = s.snacks?.[token] ?? 0
@@ -419,27 +449,39 @@ export function useSnack(ctx, token) { // consume one from the bag
   }
   s.snacks = { ...s.snacks, [token]: n - 1 }
   {
-    const v = SNACKS[token], mh = maxHp(s.level, s), ms = maxSan(s.level, s)
-    s.hp = Math.min(mh, (s.hp ?? mh) + v.hp * (v.aid ? derived(s).healMed : derived(s).heal)); s.sanity = Math.min(ms, (s.sanity ?? ms) + v.sanity)
-    s.hunger = Math.max(0, Math.min(100, (s.hunger ?? 100) + v.hunger)); s.thirst = Math.max(0, Math.min(100, (s.thirst ?? 100) + v.thirst))
+    const v = SNACKS[token], dv = derived(s), mh = maxHp(s.level, s), ms = maxSan(s.level, s)
+    const hpMul = v.aid ? dv.healMed : dv.heal
+    if ((v.hp ?? 0) > 0) s.hp = Math.min(mh, (s.hp ?? mh) + v.hp * hpMul)
+    else if ((v.hp ?? 0) < 0) s.hp = Math.max(1, (s.hp ?? mh) + v.hp)
+    if (v.sanity) s.sanity = Math.max(0, Math.min(ms, (s.sanity ?? ms) + v.sanity))
+    s.hunger = Math.max(0, Math.min(100, (s.hunger ?? 100) + (v.hunger ?? 0)))
+    s.thirst = Math.max(0, Math.min(100, (s.thirst ?? 100) + (v.thirst ?? 0)))
     if (v.warm) s.chill = Math.max(0, (s.chill ?? 0) - v.warm) // Level 70 cold (scripts/lib/level70-quest.js)
     if (v.drunk) { s.drunk = Math.min(100, (s.drunk ?? 0) + v.drunk); s.drunkAt = now }
     if (v.stamina) { const w = walkOf(ctx); w.stamina = Math.min(L.stamina * 2, (w.stamina ?? s.stamina ?? 0) + v.stamina) }
-    s.pickedAt = now; s.notice = { text: `${v.name}. ${v.drink ? `Thirst +${v.thirst}` : `Hunger +${v.hunger}`}`, at: now }
-    sound(ctx, v.drink ? 'drinking-gulp-swallow' : 'eating-chewing-food', 0.7, true)
+    if (v.stopBleed) s.bleedStopAt = now
+    if (v.clearDebuffs) clearEffects(s, (e) => e.positive === false)
+    if (v.mods && v.durationGameMin) {
+      applyEffect(ctx, s, {
+        sourceItemId: token,
+        name: v.name,
+        kind: v.aid ? 'medicine' : (v.drink ? 'drink' : 'food'),
+        mods: v.mods,
+        durationGameMin: v.durationGameMin,
+        stackingGroup: v.stackingGroup ?? `snack_${token}`,
+        policy: 'refresh',
+        positive: v.positive ?? true,
+        nowMs: clockNow(ctx),
+      })
+    }
+    const modBits = formatModsList(v.mods)
+    const tag = v.stopBleed ? 'Bleeding stopped' : modBits.length ? modBits.join(', ') : v.drink ? `Thirst +${v.thirst}` : v.hunger ? `Hunger +${v.hunger}` : `HP +${Math.round((v.hp ?? 0) * hpMul)}`
+    s.pickedAt = now; s.notice = { text: `${v.name}: ${tag}`, at: now }
+    sound(ctx, v.drink ? 'drinking-gulp-swallow' : v.aid ? 'pickup-ammo' : 'eating-chewing-food', 0.7, true)
   }
 }
 function takeToken1(ctx, token, opts) {
   const s = ctx.self.state, now = ctx.now()
-  if (token === 'beans' || token === 'bar' || token === 'firstaid') { // Level 2 food and first aid, used on the spot
-    const mh = maxHp(s.level, s), ms = maxSan(s.level, s), U = L2.use
-    s.hp = Math.min(mh, (s.hp ?? mh) + (token === 'beans' ? U.beansHp * derived(s).heal : token === 'bar' ? U.barHp * derived(s).heal : U.firstaidHp * derived(s).healMed))
-    if (token === 'beans') s.sanity = Math.min(ms, (s.sanity ?? ms) + U.beansSanity)
-    if (token === 'bar') { const w = walkOf(ctx); w.stamina = Math.min(L.stamina * 2, (w.stamina ?? s.stamina ?? 0) + U.barStamina) }
-    s.pickedAt = now; if (opts?.xp !== false) gain(ctx, L.xpAlmond)
-    sound(ctx, token === 'firstaid' ? 'pickup-ammo' : 'plastic-bottle-pickup-rattle', 0.7, true)
-    return { ok: true }
-  }
   if (token === 'tape' || token === 'kit' || token === 'akit') { // repair items are carried (I menu > REPAIR): weapon kit, armor kit, duct tape
     const key = { tape: 'tapes', kit: 'kits', akit: 'akits' }[token]
     s[key] = (s[key] ?? 0) + 1; s.pickedAt = now
@@ -479,15 +521,6 @@ function takeToken1(ctx, token, opts) {
   if (token === 'battery') { // carried, not spent on pickup (Shelly Nov 13: "no way to recharge it even though i have batteries"): the flashlight swaps one in when it runs dry
     s.batteries = (s.batteries ?? 0) + 1; s.pickedAt = now; s.notice = { text: `Battery · ${s.batteries} spare`, at: now }
     sound(ctx, 'pickup-ammo', 0.7, true)
-    return { ok: true }
-  }
-  if (token.startsWith('book:')) { // a skill book: +3 to that skill, read on the spot
-    const i = SKILLS.findIndex((k) => k.k === token.slice(5))
-    if (i < 0) return { ok: false, msg: '' }
-    if (skillsOf(s)[SKILLS[i].k] >= SKILL_MAX) return { ok: false, msg: `${SKILLS[i].name} is already 100` }
-    const added = Math.min(3, SKILL_MAX - skillsOf(s)[SKILLS[i].k]); const sp = spentOf(s); sp[i] += added; s.skl = sp.join(',')
-    s.pickedAt = now; s.notice = { text: `You read the book: ${SKILLS[i].name} +${added}`, at: now }; if (opts?.xp !== false) gain(ctx, L.xpAlmond)
-    sound(ctx, 'pickup-weapon', 0.5, true)
     return { ok: true }
   }
   if (token.startsWith('weapon:')) {
@@ -972,6 +1005,8 @@ export function pullToken(ctx, t) { // one carried thing out of the bag as its p
     else if (t === 'frag' || t === 'molotov' || t === 'bauble') { const k = THROW[t].key; if ((s[k] ?? 0) > 0) { s[k] -= 1; tok = t } }
     else if (t === 'ammo' || t === 'shells' || t === 'cells' || t === 'rockets' || t === 'latex') { const per = W[t]?.perPickup ?? 1; if ((s[t] ?? 0) >= per) { s[t] -= per; tok = t } else s.notice = { text: `Need a full box (${per})`, at: ctx.now() } }
     else if (t === 'bobbypin') { if (s.bobbypins > 0) { s.bobbypins -= 1; tok = 'bobbypin' } }
+    else if (isBookToken(t)) { const cur = s.books?.[t] ?? 0; if (cur > 0) { const next = { ...s.books }; if (cur > 1) next[t] = cur - 1; else delete next[t]; s.books = next; tok = t } }
+    else if (isMagToken(t)) { const cur = s.mags?.[t] ?? 0; if (cur > 0) { const next = { ...s.mags }; if (cur > 1) next[t] = cur - 1; else delete next[t]; s.mags = next; tok = t } }
   return tok
 }
 
@@ -1022,6 +1057,8 @@ function invAction(ctx, d) {
   if (d.k === 'splash') { s.invOpen = false; splash(ctx); return }
   if (d.k === 'soupEat') { soupEat(ctx); return }
   if (d.k === 'snack') { useSnack(ctx, String(d.c || '')); return }
+  if (d.k === 'readBook') { readBookAction(ctx, String(d.t || '')); return }
+  if (d.k === 'readMag') { readMagAction(ctx, String(d.t || '')); return }
   if (d.k === 'soupThrow') { s.invOpen = false; soupThrow(ctx); return }
   if (d.k === 'sqFill' || d.k === 'sqDrink' || d.k === 'sqEmpty') { sqTank(ctx, d); return }
   if (d.k === 'repellent') { s.invOpen = false; useRepellent(ctx); return }
@@ -1580,16 +1617,18 @@ export function update(ctx, dt) {
   {
     const s0 = ctx.self.state, ses = ctx.self.session; const pl = ctx.self.place
     const zx = fp.x, zz = fp.z, inRoom = (cx) => pl === 'level01' && Math.abs(zx - cx) < 5 && zz > -43 && zz < -35 // Zenith's failing climate rooms (Shelly, Nov 9)
-    const zHot = inRoom(7.6), zCold = inRoom(-7.6)
+    const zHot = inRoom(7.6), zCold = inRoom(-7.6), dvC = derived(s0)
+    const cMul = Math.max(0.15, 1 - (dvC.coldResist ?? 0) / 100), hMul = Math.max(0.15, 1 - (dvC.heatResist ?? 0) / 100)
     { // cold: the frozen wash room. 0..100 on player.state.cold, eased in session, written per whole degree; it thaws 6°/s outside
-      const want = zCold ? 85 : 0, c0 = ses.coldF ?? s0.cold ?? 0
+      const want = zCold ? Math.round(85 * cMul) : 0, c0 = ses.coldF ?? s0.cold ?? 0
       if (want > 0 || c0 > 0) { const c = want > c0 ? Math.min(want, c0 + 3 * dt) : Math.max(0, c0 - 6 * dt); ses.coldF = c; const n = Math.round(c); if (n !== Math.round(s0.cold ?? 0)) s0.cold = n }
     }
     if ((zHot && (s0.heat ?? 0) >= 70) || (zCold && (s0.cold ?? 0) >= 70)) { // past 70 it bites: 2 hp every 2 s (Savi's pick)
       const nowH = ctx.now(); if (nowH - (ses.climateHurtAt ?? 0) > 2000) { ses.climateHurtAt = nowH; s0.hp -= 2; ctx.emit('screenFlash', { color: zHot ? '#ff6a2a' : '#9fd8ff', duration: 0.3, intensity: 0.15 }, { audience: { player: ctx.self.id } }) }
       if (nowH - (ses.climateSayAt ?? 0) > 30000) { ses.climateSayAt = nowH; s0.notice = { text: zHot ? 'The air burns your lungs. Get out of the heat.' : 'Your fingers stop working. Get out of the cold.', at: nowH } }
     }
-    const hot = zHot ? 85 : pl === 'level2' ? (fz === 'l2_pipes' ? 75 : fz === 'l2_hall' ? 55 : 30) : pl === 'level21' ? (fz === 'l21_edge' || fz === 'l21_edgecave' ? 0 : fz === 'l21_fridges' ? 0 : 45) : pl === 'level3' || pl === 'gamma' ? 35 : 0 // how hot each place runs, in degrees on the meter
+    const baseHot = zHot ? 85 : pl === 'level2' ? (fz === 'l2_pipes' ? 75 : fz === 'l2_hall' ? 55 : 30) : pl === 'level21' ? (fz === 'l21_edge' || fz === 'l21_edgecave' ? 0 : fz === 'l21_fridges' ? 0 : 45) : pl === 'level3' || pl === 'gamma' ? 35 : 0 // how hot each place runs, in degrees on the meter
+    const hot = baseHot > 0 ? Math.round(baseHot * hMul) : 0
     if (hot > 0) { ses.heatF = (ses.heatF ?? s0.heat ?? 0) + Math.sign(hot - (ses.heatF ?? s0.heat ?? 0)) * Math.min(Math.abs(hot - (ses.heatF ?? s0.heat ?? 0)), 2 * dt); const n = Math.round(ses.heatF); if (n !== Math.round(s0.heat ?? 0)) s0.heat = n }
     else if ((s0.heat ?? 0) > 0 && pl !== 'level5') { ses.heatF = Math.max(0, (ses.heatF ?? s0.heat) - 5 * dt); const n = Math.round(ses.heatF); if (n !== Math.round(s0.heat)) s0.heat = n } else ses.heatF = undefined
   } // heat only lives in the Boiler Room: carried out of Level 5 it cools 5°/s (eased in session, written per whole degree)
