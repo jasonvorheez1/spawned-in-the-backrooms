@@ -23,7 +23,7 @@ const pick = (K, arr) => arr[Math.min(arr.length - 1, Math.floor(K.r() * arr.len
 const between = (K, [lo, hi]) => lo + Math.min(hi - lo, Math.floor(K.r() * (hi - lo + 1)));
 function loot(K, pool) { const L = D.loot[pool], out = []; for (let i = between(K, L.n); i > 0; i--) out.push(pick(K, L.pool)); return out.join(","); }
 // a fitted model: a, b room metres, yaw degrees off the inward direction. o: { up, solid (default true), tip (lies on its side), tint, spec }
-function put(K, name, a, b, yaw = 0, o = {}) { const m = D.models[name], [w, h, d] = m.size, R = K.R, sw = /x/.test(m.forward ?? ""), bx = (sw ? d : w) / 2, bz = (sw ? w : d) / 2; // the fit box is in the mesh's own frame, before forward turns it
+function put(K, name, a, b, yaw = 0, o = {}) { const m = D.models[name], [w, h, d] = m.size, R = K.R, bx = Math.max(w, d) / 2, bz = bx; // fit by height and longest side: the old per-axis box landed on the mesh's wrong axes and shrank desks to 0.37 m, so everything on them floated (Shelly Nov 14)
   return R.sp(`${name}${K.n++}`, { feetPosition: R.at(a, b, (o.up ?? 0) + (o.tip ? d / 2 : 0)), rotation: o.tip ? { yaw: R.yawIn + yaw, pitch: 90, roll: 0 } : { yaw: R.yawIn + yaw, pitch: 0, roll: 0 },
     model: { id: m.id, ...(m.forward ? { forward: m.forward } : {}) }, layout: { box: { min: { x: -bx, y: 0, z: -bz }, max: { x: bx, y: h, z: bz } } },
     material: o.tint ? { color: o.tint } : undefined, visibleRange: VR, castShadow: false, ...(o.solid === false ? {} : { physics: { body: "static", collider: "box" } }), ...(o.spec ?? {}) }); }
@@ -110,7 +110,7 @@ function icu(K) { const I = D.icu, dead = K.R.abandoned, per = I.beds[0] + (K.r(
   put(K, "crashcart", -4.5, 15, 30); put(K, "wheelchair", -12, 24, 200);
   // the nurses' island down the aisle between the bed rows (gavi pass, Nov 14: the ICU middle stood bare)
   put(K, "counter", 1.2, 15, 0); put(K, "counter", 3.6, 15, 0); put(K, "counter", 1.2, 15.7, 180); put(K, "counter", 3.6, 15.7, 180);
-  part(K, { part: "monitor", on: !dead }, 0.6, 15.2, 180, { up: 0.95 }); part(K, { part: "monitor", on: !dead }, 4.2, 15.5, 0, { up: 0.95 });
+  part(K, { part: "monitor", on: !dead }, -0.2, 14.4, 160); part(K, { part: "monitor", on: !dead }, 5.0, 16.4, 20); // rolling stands on the floor beside the island, not perched on the counter
   put(K, "chair", 1.6, 14.1, 170 + K.r() * 30, { solid: false }); put(K, "chair", 3.2, 16.6, K.r() * 30 - 15, { solid: false });
   stash(K, "filing", 5.4, 15.35, -90, "Charting Cabinet", "desk"); put(K, "crashcart", -1.0, 15.35, 90);
   put(K, "steeltable", 8.5, 15.3, 0); put(K, "box", 8.3, 15.3, 20, { up: 0.8, solid: false }); put(K, "wheelchair", 11.5, 15.5, 60 + K.r() * 40);
