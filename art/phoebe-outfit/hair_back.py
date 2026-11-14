@@ -27,6 +27,12 @@ bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.material_index != hi], conte
 bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
 me = bpy.data.meshes.new("hair"); bm.to_mesh(me); bm.free()
 ov = [src.matrix_world @ v.co for v in me.vertices]
+# which way the old outfit faces: its bow sits on the chest. The cat outfit faces -Y; if the old one faces +Y the hair turns 180
+bi = [i for i, m in enumerate(src.data.materials) if m.name.startswith("bow")]
+bowY = [ (src.matrix_world @ src.data.vertices[vi].co).y for p in src.data.polygons if p.material_index in bi for vi in p.vertices ]
+FLIP = bool(bowY) and sum(bowY) / len(bowY) > oldHead.y
+if FLIP: ov = [Vector((2 * oldHead.x - w.x, 2 * oldHead.y - w.y, w.z)) for w in ov]
+print("FLIP", FLIP, "bowY", round(sum(bowY) / max(1, len(bowY)), 3), "headY", round(oldHead.y, 3))
 cap = [v for v in ov if v.z > oldHead.z + 0.05]
 oldW = max(v.x for v in cap) - min(v.x for v in cap)
 s = newW / oldW
@@ -35,10 +41,11 @@ top = max(v.co.z for v in me.vertices); dz = newTop - top
 for v in me.vertices: v.co.z += dz            # crown on the crown the cat cap sat on
 # the original fringe hung to a human chin; on her shorter muzzle it covered both eyes. Front strands below the brow are drawn
 # up toward it, the left side (her right eye) kept longer so one eye stays half-hidden, the other eye and the mouth clear
+TRIM = False  # set True only if the fringe still hides both eyes
 BROW = catHead.z + 0.56 * (newTop - catHead.z)
 for v in me.vertices:
     c = v.co
-    if c.y < catHead.y - 0.02 and c.z < BROW:
+    if TRIM and c.y < catHead.y - 0.02 and c.z < BROW:
         k = 0.6 if c.x > catHead.x + 0.03 else 0.12
         c.z = BROW + (c.z - BROW) * k
 me.materials.clear(); me.materials.append(hairMat)
