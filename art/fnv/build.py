@@ -20,6 +20,7 @@ for pack, items in PICKS.items():
                 except ValueError: continue
                 for lp, k in zip(f.loops, t): lp[uvl].uv = s["uv"][k]
             bm.to_mesh(me); bm.free()
+            if s["png"] and not s["png"].startswith("/"): s["png"] = "/workspace/art/" + s["png"]  # nif2json ran from /workspace/art
             key = s["tex"] or "plain"
             if key not in mats:
                 m = bpy.data.materials.new(os.path.splitext(key)[0]); m.use_nodes = True
