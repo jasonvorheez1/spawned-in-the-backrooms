@@ -61,6 +61,18 @@ const SHELL_CYCLE = [
   [0.92, 0.0, 0.006, 0.006, -2, 0, 0],
   [1.00, 0, 0, 0, 0, 0, 0],
 ]
+// the M72 off the shoulder: it drops and tips its muzzle up, the back of the tube swings toward you, a rocket slides in, and it heaves back up
+const LAUNCHER_RELOAD = [
+  [0.00, 0, 0, 0, 0, 0, 0],
+  [0.16, -0.04, -0.16, -0.02, 22, -14, 18],   // off the shoulder, muzzle up
+  [0.30, -0.06, -0.2, -0.05, 34, -22, 26],    // the breech comes round to the free hand
+  [0.52, -0.06, -0.21, -0.05, 36, -22, 27],   // the rocket goes in
+  [0.62, -0.05, -0.19, -0.08, 30, -20, 24],   // pushed home: a shove
+  [0.70, -0.06, -0.2, -0.04, 33, -21, 26],
+  [0.86, -0.01, -0.05, 0.02, 6, -4, 5],       // heaved back up
+  [0.93, 0, 0.012, 0.0, -2, 1, -1],           // settles on the shoulder
+  [1.00, 0, 0, 0, 0, 0, 0],
+]
 const SHOTGUN_LOAD = [-0.045, 0.03, -0.02, 14, -9, 27] // loading port rolled up
 const PUMP = [
   [0.00, 0, 0, 0, 0, 0, 0],
@@ -251,6 +263,7 @@ export function poseViewmodel(ctx, dt) {
       if (ph < 0) { const k = ease(Math.max(0, m.relT / start)); const LP = wp.loadPose ?? SHOTGUN_LOAD; for (let i = 0; i < 6; i++) SAMPLE_BUF[i] = LP[i] * k; target = SAMPLE_BUF; rate = 14 }
       else { const c = sample(SHELL_CYCLE, ph - Math.floor(ph), PUMP_BUF); const LP = wp.loadPose ?? SHOTGUN_LOAD; for (let i = 0; i < 6; i++) SAMPLE_BUF[i] = LP[i] + c[i]; target = SAMPLE_BUF; rate = 22 }
     }
+    else if (wp.rocket) { target = sample(LAUNCHER_RELOAD, m.relT / (ps.reloadDur || wp.reloadTime || 2.8), SAMPLE_BUF); rate = 12 } // heavy: it eases, it never snaps
     else { target = sample(m.relEmpty ? PISTOL_RELOAD_EMPTY : PISTOL_RELOAD, m.relT / (ps.reloadDur || wp.reloadTime || 1.7), SAMPLE_BUF); rate = 30 }
   }
   const fr = Math.min(1, dt * rate)
@@ -265,12 +278,13 @@ export function poseViewmodel(ctx, dt) {
   const run = m.run
   m.bob += dt * (7.5 + 3.5 * run) * (0.3 + 0.7 * Math.min(1, speed / 4))
   const amp = 0.003 + (0.009 + 0.01 * run) * walk
-  const bobX = Math.sin(m.bob) * amp, bobY = -Math.abs(Math.cos(m.bob)) * amp
+  const bobX = Math.sin(m.bob) * amp * (wp.rocket ? 1.5 : 1), bobY = -Math.abs(Math.cos(m.bob)) * amp * (wp.rocket ? 1.6 : 1)
   let lateral = 0
   if (view) lateral = vel.x * Math.cos(view.yaw) - vel.z * Math.sin(view.yaw)
   m.lean += (lateral - m.lean) * Math.min(1, dt * 6)
+  const heavyTube = wp.rocket ? 1.8 : 1 // a 7 kg tube on the shoulder bobs and breathes wider than a pistol
   const still = 1 - Math.min(1, speed / 1.5), bre = (1 - 0.8 * m.ads) * still
-  const brY = Math.sin(m.breath * 1.7) * 0.0025 * bre, brP = Math.sin(m.breath * 1.7 + 0.6) * 0.5 * bre, brYaw = Math.sin(m.breath * 0.9) * 0.35 * bre
+  const brY = Math.sin(m.breath * 1.7) * 0.0025 * bre * heavyTube, brP = Math.sin(m.breath * 1.7 + 0.6) * 0.5 * bre, brYaw = Math.sin(m.breath * 0.9) * 0.35 * bre
 
   // ---- compose: position
   const fp = gun ? firstPersonGun(baseOf(kind), wp.look) : null
