@@ -904,7 +904,7 @@ export function reloadStep(ctx, p) {
     s.reloadN = (s.reloadN ?? 0) + 1
     sound(ctx, GS(wp, 'shell', 'shotgun-shell-insert-click'), 0.7, true)
   }
-  if ((s['loaded_' + p.k] ?? 0) < wp.magSize && (s[rk] ?? 0) > 0) later(ctx, wp.reloadShell ?? 0.55, 'reloadStep', p)
+  if ((s['loaded_' + p.k] ?? 0) < wp.magSize && (s.god || (s[rk] ?? 0) > 0)) later(ctx, wp.reloadShell ?? 0.55, 'reloadStep', p)
   else if (wp.wheel || wp.breech) { s.reloading = ''; sound(ctx, GS(wp, 'done', 'shotgun-break-action-close-snap'), 0.75, true) } // the cylinder snaps shut, the barrels close: nothing to rack
   else { s.reloading = ''; later(ctx, 0.25, 'pumpRack', {}) }
 }
