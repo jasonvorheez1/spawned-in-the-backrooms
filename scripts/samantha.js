@@ -7,7 +7,7 @@ import { incidentOf } from "./lib/forgive.js";
 // no meat or a refusal is warned once, then claws. She never kills (hp floors at 1) and cannot be killed (she blinks away).
 // Numbers and lines: scripts/lib/data/samantha.yml.
 import { heard } from "./lib/hear.js";
-import { findPath } from 'builtin/nav'
+import { navPath } from './lib/nav.js'
 import { EXITS, ZONES, zoneAt, ZONE_NAMES } from './lib/level5.js'
 import { describe } from './lib/items.js'
 import S from './lib/data/samantha.yml'
@@ -279,10 +279,10 @@ export function update(ctx, dt) {
   }
   if (ses.mode === 'walk') {
     if (!ses.path) {
-      const r = findPath(ctx, me.feetPosition, ses.goal, { radius: 0.2 })
+      const r = navPath(ctx, me.feetPosition, ses.goal, { radius: 0.2 })
       if (r?.points?.length) {
         ses.path = r.points; ses.pi = 0
-      } else if (!r?.partial) {
+      } else if (r && !r.wait && !r.loading && !r.partial && r.ok) {
         ses.path = [ses.goal]; ses.pi = 0
       } else {
         rest(ctx, now, 'sit'); return
