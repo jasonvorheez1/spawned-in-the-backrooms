@@ -80,9 +80,11 @@ export function hitObstacle(pos, yOffset = 0) {
 export function stepHordeZ(playerZ, hordeZ, dt, state) {
   const p = agilityProfile(state);
   const gap = hordeZ - playerZ; // positive means horde is behind the player (along +Z)
-  let chaseSpeed = 7.7;
-  if (gap > 20) chaseSpeed = 8.95; // catch up smoothly if way behind
-  else if (gap > 13) chaseSpeed = 8.25;
-  else if (gap < 3.5) chaseSpeed = Math.min(7.5, 7.0 + Math.max(0, p.agi - 5) * 0.05);
+  // Pressure, not a wall: far back it closes fast; right behind you it breathes down your neck
+  // just under walking pace, so a winded low-Agility runner still crawls ahead. Sprinters gain ground.
+  let chaseSpeed = 7.0;
+  if (gap > 20) chaseSpeed = 8.95;
+  else if (gap > 13) chaseSpeed = 8.0;
+  else if (gap < 4) chaseSpeed = 4.2 + Math.max(0, p.agi - 5) * 0.08;
   return Math.max(CORRIDOR.collapseZ + 3, hordeZ - chaseSpeed * dt);
 }
