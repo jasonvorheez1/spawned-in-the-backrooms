@@ -53,7 +53,7 @@ export const ears = {
         w.notice = { text: `Sack of Fresh Flour (${w.flour} carried) · Bake at the Farmhouse Hearth`, at: now };
         ctx.emit("damageNumber", {
           position: { x: pos.x, y: pos.y + 0.8, z: pos.z },
-          text: "+1 SACK OF FLOUR (+15 XP)",
+          text: "+1 SACK OF FLOUR",
           color: "#f5f6fa",
           size: 1.05,
         }, { audience: { player: who.id } });
@@ -91,7 +91,7 @@ export const ears = {
 
         ctx.emit("damageNumber", {
           position: { x: pos.x, y: pos.y + 0.8, z: pos.z },
-          text: "+1 HOMESTEAD LOAF (+30 XP)",
+          text: "+1 HOMESTEAD LOAF",
           color: "#ffd36a",
           size: 1.1,
         }, { audience: { player: who.id } });

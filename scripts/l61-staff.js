@@ -191,7 +191,7 @@ export const ears = {
     playGesture(me, me.session.m, now, [SERVE_PLATE, 2000, 0.95]);
 
     heard(ctx, { clip: G("paper-plate-slid-across-counter"), position: { x: pos.x, y: pos.y + 1, z: pos.z }, volume: 0.7, maxDistance: 12 });
-    who.state.payout = { xp: 2, items: [tok] };
+    who.state.payout = { xp: 0, items: [tok] };
     tell("+" + tok.toUpperCase(), "#9fffb0");
   },
 };
@@ -403,7 +403,7 @@ export function update(ctx, dt) {
         const trayInfo = tray?.state?.info; // "Order #43: Chili dog": the label rides into the patron's hands
         ctx.destroy(D.tray);
         handTray(ctx, who, D.n, trayInfo, tray?.state?.items ?? D.items); // the patron takes a real tray (scripts/lib/snacktray.js)
-        who.state.payout = { xp: 2, items: D.items };
+        who.state.payout = { xp: 0, items: D.items };
         errandStep(who.state, ...BUS_TRAY); // the food court's odd job (scripts/l61-use.js)
         ctx.emit(
           "damageNumber",

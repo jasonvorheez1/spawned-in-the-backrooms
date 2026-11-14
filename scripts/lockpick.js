@@ -24,6 +24,35 @@ export function onInput(ctx, input) {
   }
 }
 
+function finishPick(ctx, target, pk, ratio, noteFn) {
+  const s = ctx.self.state
+  if (pk.kind !== 'boiler' && !target.state?.lock) return end(ctx, '')
+  if (pk.kind === 'boiler') {
+    const xp = !s.l5boilerPick ? Math.round(pk.lv * ratio) : 0
+    if (xp) gain(ctx, xp)
+    snd(ctx, 'lock-picking-click', 0.8)
+    note(ctx, noteFn(xp))
+    s.pick = null; s.pickP = null; s.pickR = null
+    s.l5boilerPick = ctx.now()
+    ctx.emit('press', { by: ctx.self.id }, { to: target.id })
+    return
+  }
+  target.state.lock = ''
+  const xp = Math.round(pk.lv * ratio)
+  gain(ctx, xp)
+  snd(ctx, 'lock-picking-click', 0.8)
+  note(ctx, noteFn(xp))
+  s.pick = null; s.pickP = null; s.pickR = null
+  if (pk.kind === 'hinge') ctx.emit('press', { by: ctx.self.id }, { to: target.id }) // a house door swings in on its own hinge
+  else if (pk.kind === 'door') {
+    target.state.open = true
+    heard(ctx, { clip: SND('heavy-metal-door-creak-open'), position: target.state.c ?? target.feetPosition, volume: 0.7, maxDistance: 16 }, { audience: { nearby: target.feetPosition, radius: 18 } })
+  } else {
+    target.state.name = 'Opened crate'
+    openLoot(ctx, target)
+  }
+}
+
 function handlePickAction(ctx, d) {
   const s = ctx.self.state, pk = s.pick
   if (!pk) return
@@ -40,20 +69,7 @@ function handlePickAction(ctx, d) {
   if (d.k === 'force') {
     const chance = Math.min(0.95, Math.max(0.12, 0.2 + (sk - pk.lv) * 0.012 + luck * 0.02))
     if (ctx.random() < chance) {
-      target.state.lock = ''
-      const xp = Math.round(pk.lv * 0.5)
-      gain(ctx, xp)
-      snd(ctx, 'lock-picking-click', 0.8)
-      note(ctx, `[Force Lock ${Math.round(chance * 100)}%] The lock pops open! +${xp} XP`)
-      s.pick = null; s.pickP = null; s.pickR = null
-      if (pk.kind === 'hinge') ctx.emit('press', { by: ctx.self.id }, { to: target.id }) // a house door swings in on its own hinge
-      else if (pk.kind === 'door') {
-        target.state.open = true
-        heard(ctx, { clip: SND('heavy-metal-door-creak-open'), position: target.state.c ?? target.feetPosition, volume: 0.7, maxDistance: 16 }, { audience: { nearby: target.feetPosition, radius: 18 } })
-      } else {
-        target.state.name = 'Opened crate'
-        openLoot(ctx, target)
-      }
+      finishPick(ctx, target, pk, 0.5, (xp) => `[Force Lock ${Math.round(chance * 100)}%] The lock pops open!${xp ? ` +${xp} XP` : ''}`)
     } else {
       s.bobbypins = Math.max(0, (s.bobbypins ?? 0) - 1)
       s.pickSnap = ctx.now()
@@ -67,19 +83,7 @@ function handlePickAction(ctx, d) {
 
   if (d.k === 'auto') {
     if (sk >= pk.lv + 25) {
-      target.state.lock = ''
-      const xp = Math.round(pk.lv * 0.6)
-      gain(ctx, xp)
-      snd(ctx, 'lock-picking-click', 0.8)
-      note(ctx, `[Master Lockpick] Cylinder unlatched. +${xp} XP`)
-      s.pick = null; s.pickP = null; s.pickR = null
-      if (pk.kind === 'door') {
-        target.state.open = true
-        heard(ctx, { clip: SND('heavy-metal-door-creak-open'), position: target.state.c ?? target.feetPosition, volume: 0.7, maxDistance: 16 }, { audience: { nearby: target.feetPosition, radius: 18 } })
-      } else {
-        target.state.name = 'Opened crate'
-        openLoot(ctx, target)
-      }
+      finishPick(ctx, target, pk, 0.6, (xp) => `[Master Lockpick] Cylinder unlatched.${xp ? ` +${xp} XP` : ''}`)
     }
     return
   }
@@ -94,19 +98,7 @@ function handlePickAction(ctx, d) {
   }
 
   if (d.k === 'success') {
-    target.state.lock = ''
-    const xp = Math.round(pk.lv * 0.8)
-    gain(ctx, xp)
-    snd(ctx, 'lock-picking-click', 0.8)
-    note(ctx, `[Lockpick ${pk.lv}] Picked successfully! +${xp} XP`)
-    s.pick = null; s.pickP = null; s.pickR = null
-    if (pk.kind === 'door') {
-      target.state.open = true
-      heard(ctx, { clip: SND('heavy-metal-door-creak-open'), position: target.state.c ?? target.feetPosition, volume: 0.7, maxDistance: 16 }, { audience: { nearby: target.feetPosition, radius: 18 } })
-    } else {
-      target.state.name = 'Opened crate'
-      openLoot(ctx, target)
-    }
+    finishPick(ctx, target, pk, 0.8, (xp) => `[Lockpick ${pk.lv}] Picked successfully!${xp ? ` +${xp} XP` : ''}`)
     return
   }
 }
@@ -116,7 +108,7 @@ export function update(ctx, dt) {
   if (!pk) { ctx.sleep(0.25); return }
   const m = ctx.self.session, now = ctx.now()
   const target = ctx.getObject(pk.id)
-  if (!target || !target.state?.lock) return end(ctx, '')
+  if (!target || (pk.kind !== 'boiler' && !target.state?.lock)) return end(ctx, '')
 
   // Proximity check: walk away and it closes
   const p = ctx.self.feetPosition, tp = target.feetPosition ?? target.state?.c
@@ -134,15 +126,7 @@ export function update(ctx, dt) {
   if (turning) {
     m.r = Math.min(maxR, m.r + 140 * dt)
     if (m.r >= 89.5) { // open
-      const it = target; if (pk.kind === 'boiler') { const xp = Math.round(pk.lv * 0.8); gain(ctx, xp); snd(ctx, 'lock-picking-click', 0.8); note(ctx, `[Lockpick ${pk.lv}] The padlock gives! +${xp} XP`); s.pick = null; s.pickP = null; s.pickR = null; s.l5boilerPick = ctx.now(); ctx.emit('press', { by: ctx.self.id }, { to: it.id }); return }
-      it.state.lock = ''
-      const xp = Math.round(pk.lv * 0.8)
-      gain(ctx, xp)
-      snd(ctx, 'lock-picking-click', 0.8); note(ctx, `[Lockpick ${pk.lv}] The lock gives! +${xp} XP`)
-      s.pick = null; s.pickP = null; s.pickR = null
-      if (pk.kind === 'hinge') ctx.emit('press', { by: ctx.self.id }, { to: it.id })
-      else if (pk.kind === 'door') { it.state.open = true; heard(ctx, { clip: SND('heavy-metal-door-creak-open'), position: it.state.c ?? it.feetPosition, volume: 0.7, maxDistance: 16 }, { audience: { nearby: it.feetPosition, radius: 18 } }) }
-      else { it.state.name = 'Opened crate'; openLoot(ctx, it) }
+      finishPick(ctx, target, pk, 0.8, (xp) => `[Lockpick ${pk.lv}] The ${pk.kind === 'boiler' ? 'padlock' : 'lock'} gives!${xp ? ` +${xp} XP` : ''}`)
       return
     }
     if (m.r >= maxR - 0.5) { // straining against the pins

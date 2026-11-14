@@ -20,7 +20,7 @@ import { getInputRay, raycast } from 'builtin/physics'
 import { stripTo, SLOTS } from './lib/clothes.js'
 import { rewear } from './lib/critter-model.js'
 import { tokenOf, describe, itemsOf } from './lib/items.js'
-import { takeToken, maxHp, maxSan, pullToken } from './player.js'
+import { takeToken, maxHp, maxSan, pullToken, gain } from './player.js'
 import { derived, skillsOf, attrsOf } from './lib/stats.js'
 import { SKILL_NAMES as SKN } from './lib/skill-check.js'
 import { rollItem, rollItemL1, rollItemL2, spotCloth, poolOf, gateItems } from './lib/loot.js'
@@ -243,11 +243,11 @@ export function talk(ctx, it) {
   }
   if (role === 'quarter') {
     if (now - (s.megQmAt ?? -1e9) < 180000) { speak(ctx, it, v ?? 'callum', "rations are counted. come back after the next patrol."); return }
-    s.megQmAt = now; takeToken(ctx, 'almond'); takeToken(ctx, 'almond'); takeToken(ctx, 'ration')
+    s.megQmAt = now; takeToken(ctx, 'almond', { xp: false }); takeToken(ctx, 'almond', { xp: false }); takeToken(ctx, 'ration', { xp: false })
     speak(ctx, it, v ?? 'callum', "two almond waters and a ration. don't waste them.")
     const sk = skillsOf(s), extra = []
-    if (sk.barter >= 40) { takeToken(ctx, 'almond'); extra.push(`[Barter 40] +1 almond water`) }
-    if (sk.speech >= 50) { takeToken(ctx, 'bandage'); extra.push(`[Speech 50] +1 bandage`) }
+    if (sk.barter >= 40) { takeToken(ctx, 'almond', { xp: false }); extra.push(`[Barter 40] +1 almond water`) }
+    if (sk.speech >= 50) { takeToken(ctx, 'bandage', { xp: false }); extra.push(`[Speech 50] +1 bandage`) }
     if (extra.length) note(ctx, `Callum: "two almond waters and a ration." ${extra.join(' · ')}`)
     return
   }
@@ -332,7 +332,7 @@ function liftOne(ctx, it, i) {
     note(ctx, `Lifted ${describe(t).name} from ${who}`)
     questLift1(ctx, ctx.self, it)
     snd(ctx, 'loot-take-all-rustle', 0.25)
-    s.xp = (s.xp ?? 0) + 8
+    gain(ctx, 8)
     if (!items.length) closeLoot(ctx)
     return
   }
@@ -408,7 +408,7 @@ function press(ctx) {
   if (f.tag === 'bench') { s.craftOpen = 'bench'; s.craftBench = f.id; s.craftStation = it.state?.station ?? 'bench'; return }
   if (f.tag === 'container') { openLoot(ctx, it); return }
   if (f.tag === 'door') { useDoor(ctx, it); m.key = ''; refocus(ctx, true); return }
-  const r = takeToken(ctx, tokenOf(f.tag, it))
+  const r = takeToken(ctx, tokenOf(f.tag, it), it.state?.dropped ? { xp: false } : undefined)
   if (r.ok) { it.state.taken = true; ctx.destroy(f.id); s.focus = null; m.key = ''; m.focus = null } else if (r.msg) { note(ctx, r.msg); snd(ctx, 'ui-denied-click', 0.35) }
 }
 
@@ -457,14 +457,15 @@ function lootAction(ctx, d) {
     }
     caught(ctx, own, who) // second time: you get it, and they come for you
   }
+  const xpOpt = (c.tags?.includes('storage') || (c.tags?.includes('remains') && c.state?.name === 'Dropped bag')) ? { xp: false } : undefined
   if (d.k === 'take') {
     const i = Number(d.i)
     if (!(i >= 0 && i < items.length)) return
-    const r = takeToken(ctx, items[i])
+    const r = takeToken(ctx, items[i], xpOpt)
     if (r.ok) items.splice(i, 1); else { fail = r.msg || ''; snd(ctx, 'ui-denied-click', 0.35) }
   } else if (d.k === 'all') {
     const keep = []
-    for (const t of items) { const r = takeToken(ctx, t); if (!r.ok) { keep.push(t); fail = r.msg || fail } }
+    for (const t of items) { const r = takeToken(ctx, t, xpOpt); if (!r.ok) { keep.push(t); fail = r.msg || fail } }
     items = keep
     snd(ctx, 'loot-take-all-rustle', 0.55)
   } else return

@@ -170,7 +170,7 @@ export const ears = {
       }
       snd("paper-plate-slid-across-counter", 0.85, 12);
       handTray(ctx, who, s.n, s.info, s.items); // a real tray in their hands (l61Hold + l61Tray)
-      w.payout = { xp: 2, items: s.items }; errandStep(w, ...BUS);
+      w.payout = { xp: 0, items: s.items }; errandStep(w, ...BUS);
       tell(s.items.map((t) => "+" + t.toUpperCase()).join(" "), "#9fffb0");
       ctx.destroy(ctx.self.id);
       return;
@@ -188,8 +188,9 @@ export const ears = {
       w.l61Tray = 0; w.l61Hold = null;
       snd("plastic-tray-slid-into-rack-clatter", 0.8, 12);
       w.sanity = Math.min(100, (w.sanity ?? 80) + 3);
+      const firstReturn = !(w.l61TraysReturned ?? 0);
       w.l61TraysReturned = (w.l61TraysReturned ?? 0) + 1;
-      w.payout = { xp: 3, items: [] }; errandDone(w, BUS[0], BUS[1], "Returned the tray to the rack. Sal and the nearest faceling nodded at you. (+3 XP, +3 Sanity)");
+      w.payout = { xp: firstReturn ? 3 : 0, items: [] }; errandDone(w, BUS[0], BUS[1], "Returned the tray to the rack. Sal and the nearest faceling nodded at you. (+3 XP, +3 Sanity)");
       tell("+3 SANITY (TRAY RETURNED)", "#9fe8ff");
 
       // Nearest faceling acknowledges with a nod
@@ -238,7 +239,7 @@ export const ears = {
       w.grab = { at: now, tok: tray.tok };
       ctx.after(0.45, "takeItem", { id: tray.item });
       snd("plastic-bottle-pickup-rattle", 0.6, 8);
-      w.payout = { xp: 1, items: [tray.tok] };
+      w.payout = { xp: 0, items: [tray.tok] };
       tell(SNACKS[tray.tok]?.name ?? (tray.tok === "almond" ? "Almond water" : tray.tok), "#9fffb0");
       return;
     }
@@ -274,7 +275,7 @@ export const ears = {
     }
 
     snd("paper-plate-slid-across-counter", 0.75);
-    who.state.payout = { xp: 1, items: [tok] };
+    who.state.payout = { xp: 0, items: [tok] };
     tell("+" + tok.toUpperCase(), "#9fffb0");
   },
 };

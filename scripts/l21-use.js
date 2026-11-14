@@ -51,7 +51,7 @@ export const ears = {
       w.hunger = Math.min(100, (w.hunger ?? 100) + 38);
       w.sanity = Math.min(100, (w.sanity ?? 80) + 8);
       w.thirst = Math.max(5, (w.thirst ?? 100) - 4);
-      w.payout = { xp: 10, items: ["bar"] };
+      w.payout = { xp: 0, items: ["bar"] };
       ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.5, z: pos.z }, text: "+38 HUNGER", color: "#60f090", size: 1.1 }, { audience: { player: who.id } });
       ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "+8 SANITY", color: "#80ffaa", size: 0.9 }, { audience: { player: who.id } });
       ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 0.9, z: pos.z }, text: "+RATION BAR", color: "#f2d870", size: 1.0 }, { audience: { player: who.id } });
@@ -99,23 +99,21 @@ export const ears = {
         w.hunger = Math.min(100, (w.hunger ?? 80) + 40);
         w.thirst = Math.min(100, (w.thirst ?? 80) + 40);
         w.sanity = Math.min(100, (w.sanity ?? 80) + 10);
-        w.payout = { xp: 20, items: ["almond"] };
+        w.payout = { xp: 0, items: ["almond"] };
         ctx.emit("screenFlash", { color: "#ff2060", duration: 0.6, intensity: 0.7 }, { audience: { player: who.id } });
         heard(ctx, { clip: G("level-up-jingle-retro-terminal-chime-rising-three-notes"), position: pos, volume: 0.75, maxDistance: 12 });
         ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.7, z: pos.z }, text: "+40 HP & RESTORE", color: "#60ff90", size: 1.2 }, { audience: { player: who.id } });
         ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.4, z: pos.z }, text: "+ALMOND WATER", color: "#60d0ff", size: 1.0 }, { audience: { player: who.id } });
-        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.1, z: pos.z }, text: "+20 XP", color: "#ffd700", size: 1.1 }, { audience: { player: who.id } });
       } else {
         // Show, don't tell: toxic hallucinogenic distortion with purple screen warping, camera punch, and whispers
         w.sanity = Math.max(5, (w.sanity ?? 80) - 12);
-        w.payout = { xp: 18, items: ["battery", "bandage"] };
+        w.payout = { xp: 0, items: ["battery", "bandage"] };
         ctx.emit("screenFlash", { color: "#8010c0", duration: 1.2, intensity: 0.8 }, { audience: { player: who.id } });
         ctx.emit("cameraPunch", { direction: { x: 0.35, y: -0.2, z: 0.25 }, intensity: 0.45 }, { audience: { player: who.id } });
         heard(ctx, { clip: G("low-whisper-breath-swell-unsettling"), position: pos, volume: 0.85, maxDistance: 14 }, { audience: { player: who.id } });
         heard(ctx, { clip: G("static-burst-glitch-threshold"), position: pos, volume: 0.6, maxDistance: 12 });
         ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.5, z: pos.z }, text: "-12 SANITY", color: "#c060ff", size: 1.1 }, { audience: { player: who.id } });
         ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "+BATTERY & BANDAGE", color: "#f2d870", size: 1.0 }, { audience: { player: who.id } });
-        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 0.9, z: pos.z }, text: "+18 XP", color: "#ffd700", size: 1.0 }, { audience: { player: who.id } });
       }
       return;
     }
@@ -135,9 +133,8 @@ export const ears = {
       ctx.emit("screenShake", { intensity: 0.4, duration: 0.6 }, { audience: { player: who.id } });
       ctx.emit("cameraPunch", { direction: { x: 0, y: -0.3, z: 0.2 }, intensity: 0.4 }, { audience: { player: who.id } });
       const pick = ["ammo", "shells", "battery", "kit"][Math.floor(ctx.random() * 4)];
-      w.payout = { xp: 15, items: [pick, "bandage"] };
+      w.payout = { xp: 0, items: [pick, "bandage"] };
       ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.3, z: pos.z }, text: `+${pick.toUpperCase()} & BANDAGE`, color: "#f2d870", size: 1.1 }, { audience: { player: who.id } });
-      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.0, z: pos.z }, text: "+15 XP", color: "#ffd700", size: 1.2 }, { audience: { player: who.id } });
       return;
     }
 
@@ -151,7 +148,7 @@ export const ears = {
         { name: "Scout The Edges", need: null, xp: 140, items: ["firstaid", "ammo", "cash:4500"], text: "Venture past the white block rooms deep into The Edges (toward the Level 8 cave mouth) and report back." },
       ];
       const lap = Math.floor((w.l21q ?? 0) / Q.length), qi = (w.l21q ?? 0) % Q.length, q = Q[qi];
-      if (!q.need && (w.l21Scouted ?? 0) < 1 && lap > 0) {
+      if (!q.need && lap > 0) {
         w.l21q = (w.l21q ?? 0) + 1;
         ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "ALREADY LOGGED", color: "#e8c070", size: 0.9 }, { audience: { player: who.id } });
         return;
