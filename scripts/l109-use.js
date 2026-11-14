@@ -65,7 +65,7 @@ export const ears = {
     const s = ctx.self.state, who = ctx.getObject(by), w = who?.state;
     if (!s || !w) return;
     const now = ctx.now(), pos = ctx.self.worldFeetPosition ?? ctx.self.feetPosition;
-    const sk = skillsOf(w), ses = (who.session ??= {});
+    const sk = skillsOf(w), ses = ((ctx.self.session.by ??= {})[who.id] ??= {}); // cooldowns per presser, kept on this fixture's own session (another body's session is not ours to write)
 
     if (s.kind === "intercom") {
       heard(ctx, { clip: SFX + "sfx-payphone-handset-lifted-off-metal-hook-clunk.mp3", position: pos, volume: 0.6, maxDistance: 14 });
