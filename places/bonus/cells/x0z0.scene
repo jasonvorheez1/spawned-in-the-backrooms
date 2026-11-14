@@ -1265,7 +1265,7 @@ bd-counter-1:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: -90}
-  scale: {x: 0.979, y: 1.3125, z: 0.98}
+  scale: {x: 0.979, y: 0.98, z: 0.98}
   tags: [bonus-diner]
 bd-counter-2:
   castShadow: true
@@ -1275,7 +1275,7 @@ bd-counter-2:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: -90}
-  scale: {x: 0.979, y: 1.3125, z: 0.98}
+  scale: {x: 0.979, y: 0.98, z: 0.98}
   tags: [bonus-diner]
 bd-counter-3:
   castShadow: true
@@ -1285,7 +1285,7 @@ bd-counter-3:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: -90}
-  scale: {x: 0.979, y: 1.3125, z: 0.98}
+  scale: {x: 0.979, y: 0.98, z: 0.98}
   tags: [bonus-diner]
 bd-counter-4:
   castShadow: true
@@ -1295,7 +1295,7 @@ bd-counter-4:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: -90}
-  scale: {x: 0.979, y: 1.3125, z: 0.98}
+  scale: {x: 0.979, y: 0.98, z: 0.98}
   tags: [bonus-diner]
 bd-diner:
   castShadow: false
