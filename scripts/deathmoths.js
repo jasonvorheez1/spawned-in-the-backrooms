@@ -143,6 +143,7 @@ export function update(ctx, dt) {
   const allSwarms = mem.allSwarms;
 
   for (const s of allSwarms) {
+    if (!(s.id in ctx.place.objects)) { delete mem[s.id]; mem.mothsAt = 0; continue; } // destroyed since the census: drop it, recount next tick
     const m = (mem[s.id] ??= {
       bob: ctx.random() * 6,
       spin: ctx.random() * 360,
