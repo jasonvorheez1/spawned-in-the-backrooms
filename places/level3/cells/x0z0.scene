@@ -76,208 +76,234 @@ l3-gate-photo/object/x4f6bec14938f21a7/6:
 object/xd97c3a78408835bb/0:
   feetPosition: {x: -31.564999999999998, y: 0.71, z: -46.65456432066858}
   id: object/xd97c3a78408835bb/0
+  layout: {box: {max: {x: 0.35, y: 0.95, z: 0.12}, min: {x: -0.35, y: 0, z: -0.12}}}
+  model: {forward: "+x", id: /cdn/value.2268805ae5f337235de318b92236f96c3475a7caaea724697c13e30c88a27545.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: fuse, seed: 610}, script: scripts/loot-bags-geo.js}
   rotation: {yaw: -90}
   state: {hp: 80, items: "battery,almond", kind: fuse, mat: metal, maxHp: 80, name: Fuse cabinet}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/1:
   feetPosition: {x: -29.814835309730842, y: 0.01, z: 3.435}
   id: object/xd97c3a78408835bb/1
+  layout: {box: {max: {x: 0.45, y: 0.42, z: 0.25}, min: {x: -0.45, y: 0, z: -0.25}}}
+  model: {id: /cdn/value.85c1a4c9b8614aea0cadd349eec3f759acb4db38f648b3d2ea5471b90552f062.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: satchel, seed: 887}, script: scripts/loot-bags-geo.js}
   rotation: {yaw: 0}
   state: {hp: 35, items: "tape,kit,page:6,shells", kind: satchel, lock: "science:75", mat: wood, maxHp: 35, name: Dead worker's satchel (locked)}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/10:
   feetPosition: {x: -13.879140745908954, y: 0.71, z: 28.435000000000002}
   id: object/xd97c3a78408835bb/10
+  layout: {box: {max: {x: 0.35, y: 0.95, z: 0.12}, min: {x: -0.35, y: 0, z: -0.12}}}
+  model: {forward: "+x", id: /cdn/value.2268805ae5f337235de318b92236f96c3475a7caaea724697c13e30c88a27545.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: fuse, seed: 867}, script: scripts/loot-bags-geo.js}
   rotation: {yaw: 180}
   state: {hp: 80, items: "fuse,almond", kind: fuse, mat: metal, maxHp: 80, name: Fuse cabinet}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/11:
   feetPosition: {x: -8.465, y: 0.01, z: 6.31083547626622}
   id: object/xd97c3a78408835bb/11
+  layout: {box: {max: {x: 0.31, y: 0.32, z: 0.15}, min: {x: -0.31, y: 0, z: -0.15}}}
+  model: {forward: "+x", id: /cdn/value.640efdfdc0471d4dbd9936a5653206c0de9e1f2ed28e5103776aa5ef987e37af.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: toolbox, seed: 658}, script: scripts/l2-props-geo.js}
   rotation: {yaw: 90}
   state: {hp: 80, items: "page:8", kind: toolbox, mat: metal, maxHp: 80, name: Toolbox}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/12:
   feetPosition: {x: -7.4350000000000005, y: 0.01, z: -44.907048152377826}
   id: object/xd97c3a78408835bb/12
+  layout: {box: {max: {x: 0.45, y: 0.42, z: 0.25}, min: {x: -0.45, y: 0, z: -0.25}}}
+  model: {id: /cdn/value.85c1a4c9b8614aea0cadd349eec3f759acb4db38f648b3d2ea5471b90552f062.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: satchel, seed: 777}, script: scripts/loot-bags-geo.js}
   rotation: {yaw: -90}
   state: {hp: 35, items: "almond,almond,ammo", kind: satchel, mat: wood, maxHp: 35, name: Dead worker's satchel}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/13:
   feetPosition: {x: -1.5589275173330681, y: 0.01, z: -24.565}
   id: object/xd97c3a78408835bb/13
+  layout: {box: {max: {x: 0.45, y: 0.42, z: 0.25}, min: {x: -0.45, y: 0, z: -0.25}}}
+  model: {id: /cdn/value.85c1a4c9b8614aea0cadd349eec3f759acb4db38f648b3d2ea5471b90552f062.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: satchel, seed: 356}, script: scripts/loot-bags-geo.js}
   rotation: {yaw: 0}
   state: {hp: 35, items: "battery,beans,fuse", kind: satchel, lock: "lockpick:50", mat: wood, maxHp: 35, name: Dead worker's satchel (locked)}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/14:
   feetPosition: {x: -0.5650000000000001, y: 0.01, z: 11.077870716452598}
   id: object/xd97c3a78408835bb/14
+  layout: {box: {max: {x: 0.25, y: 1.9, z: 0.25}, min: {x: -0.25, y: 0, z: -0.25}}}
+  model: {forward: "+x", id: /cdn/value.46194c321486159b82a5dc79a0f592e1c5c4c2670c21d94bda46986638c4c126.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: locker, seed: 870}, script: scripts/l2-props-geo.js}
   rotation: {yaw: 90}
   state: {hp: 80, items: "page:1,shells", kind: locker, mat: metal, maxHp: 80, name: Locker}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/15:
   feetPosition: {x: -2.8215136237442495, y: 0.71, z: 40.434999999999995}
   id: object/xd97c3a78408835bb/15
+  layout: {box: {max: {x: 0.35, y: 0.95, z: 0.12}, min: {x: -0.35, y: 0, z: -0.12}}}
+  model: {forward: "+x", id: /cdn/value.2268805ae5f337235de318b92236f96c3475a7caaea724697c13e30c88a27545.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: fuse, seed: 319}, script: scripts/loot-bags-geo.js}
   rotation: {yaw: 180}
   state: {hp: 80, items: "fuse,almond", kind: fuse, mat: metal, maxHp: 80, name: Fuse cabinet}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/16:
   feetPosition: {x: 3.435, y: 0.01, z: -24.927330666794443}
   id: object/xd97c3a78408835bb/16
+  layout: {box: {max: {x: 0.45, y: 0.42, z: 0.25}, min: {x: -0.45, y: 0, z: -0.25}}}
+  model: {id: /cdn/value.85c1a4c9b8614aea0cadd349eec3f759acb4db38f648b3d2ea5471b90552f062.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: satchel, seed: 261}, script: scripts/loot-bags-geo.js}
   rotation: {yaw: 90}
   state: {hp: 35, items: "fuse,page:2", kind: satchel, mat: wood, maxHp: 35, name: Dead worker's satchel}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/17:
   feetPosition: {x: 2.797852024785243, y: 0.71, z: -8.435}
   id: object/xd97c3a78408835bb/17
+  layout: {box: {max: {x: 0.35, y: 0.95, z: 0.12}, min: {x: -0.35, y: 0, z: -0.12}}}
+  model: {forward: "+x", id: /cdn/value.2268805ae5f337235de318b92236f96c3475a7caaea724697c13e30c88a27545.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: fuse, seed: 7}, script: scripts/loot-bags-geo.js}
   rotation: {yaw: 0}
   state: {hp: 80, items: "battery,firesalt,battery", kind: fuse, lock: "lockpick:25", mat: metal, maxHp: 80, name: Fuse cabinet (locked)}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/18:
   feetPosition: {x: 3.5650000000000004, y: 0.71, z: 5.521980980318039}
   id: object/xd97c3a78408835bb/18
+  layout: {box: {max: {x: 0.35, y: 0.95, z: 0.12}, min: {x: -0.35, y: 0, z: -0.12}}}
+  model: {forward: "+x", id: /cdn/value.2268805ae5f337235de318b92236f96c3475a7caaea724697c13e30c88a27545.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: fuse, seed: 899}, script: scripts/loot-bags-geo.js}
   rotation: {yaw: 90}
   state: {hp: 80, items: firesalt, kind: fuse, mat: metal, maxHp: 80, name: Fuse cabinet}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/19:
   feetPosition: {x: 4.5649999999999995, y: 0.01, z: -41.73909962227103}
   id: object/xd97c3a78408835bb/19
+  layout: {box: {max: {x: 0.25, y: 1.9, z: 0.25}, min: {x: -0.25, y: 0, z: -0.25}}}
+  model: {forward: "+x", id: /cdn/value.46194c321486159b82a5dc79a0f592e1c5c4c2670c21d94bda46986638c4c126.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: locker, seed: 349}, script: scripts/l2-props-geo.js}
   rotation: {yaw: -90}
   state: {hp: 80, items: "page:4,ammo,almond,ammo,almond", kind: locker, lock: "science:75", mat: metal, maxHp: 80, name: Locker (locked)}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/2:
   feetPosition: {x: -29.720071882205083, y: 0.01, z: 27.435}
   id: object/xd97c3a78408835bb/2
+  layout: {box: {max: {x: 0.45, y: 0.42, z: 0.25}, min: {x: -0.45, y: 0, z: -0.25}}}
+  model: {id: /cdn/value.85c1a4c9b8614aea0cadd349eec3f759acb4db38f648b3d2ea5471b90552f062.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: satchel, seed: 515}, script: scripts/loot-bags-geo.js}
   rotation: {yaw: 0}
   state: {hp: 35, items: "firstaid,shells,tape,firstaid", kind: satchel, lock: "science:25", mat: wood, maxHp: 35, name: Dead worker's satchel (locked)}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/20:
   feetPosition: {x: 4.435, y: 0.71, z: -1.1195993224717675}
   id: object/xd97c3a78408835bb/20
+  layout: {box: {max: {x: 0.35, y: 0.95, z: 0.12}, min: {x: -0.35, y: 0, z: -0.12}}}
+  model: {forward: "+x", id: /cdn/value.2268805ae5f337235de318b92236f96c3475a7caaea724697c13e30c88a27545.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: fuse, seed: 998}, script: scripts/loot-bags-geo.js}
   rotation: {yaw: -90}
   state: {hp: 80, items: "fuse,firesalt,almond", kind: fuse, mat: metal, maxHp: 80, name: Fuse cabinet}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/21:
   feetPosition: {x: 10.7983170003118, y: 0.71, z: -47.565000000000005}
   id: object/xd97c3a78408835bb/21
+  layout: {box: {max: {x: 0.35, y: 0.95, z: 0.12}, min: {x: -0.35, y: 0, z: -0.12}}}
+  model: {forward: "+x", id: /cdn/value.2268805ae5f337235de318b92236f96c3475a7caaea724697c13e30c88a27545.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: fuse, seed: 76}, script: scripts/loot-bags-geo.js}
   rotation: {yaw: 180}
   state: {hp: 80, items: "firesalt,battery,ammo", kind: fuse, lock: "science:25", mat: metal, maxHp: 80, name: Fuse cabinet (locked)}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/22:
   feetPosition: {x: 8.465, y: 0.01, z: -42.35265351830516}
   id: object/xd97c3a78408835bb/22
+  layout: {box: {max: {x: 0.31, y: 0.32, z: 0.15}, min: {x: -0.31, y: 0, z: -0.15}}}
+  model: {forward: "+x", id: /cdn/value.640efdfdc0471d4dbd9936a5653206c0de9e1f2ed28e5103776aa5ef987e37af.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: toolbox, seed: 869}, script: scripts/l2-props-geo.js}
   rotation: {yaw: -90}
   state: {hp: 80, items: "firstaid,beans", kind: toolbox, mat: metal, maxHp: 80, name: Toolbox}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/23:
   feetPosition: {x: 8.565000000000001, y: 0.01, z: 41.024898490104825}
   id: object/xd97c3a78408835bb/23
+  layout: {box: {max: {x: 0.25, y: 1.9, z: 0.25}, min: {x: -0.25, y: 0, z: -0.25}}}
+  model: {forward: "+x", id: /cdn/value.46194c321486159b82a5dc79a0f592e1c5c4c2670c21d94bda46986638c4c126.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: locker, seed: 547}, script: scripts/l2-props-geo.js}
   rotation: {yaw: -90}
   state: {hp: 80, items: "tape,cloth:shoes:sneakers:e85d75", kind: locker, mat: metal, maxHp: 80, name: Locker}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/24:
   feetPosition: {x: 15.535, y: 0.01, z: -41.83991372670513}
   id: object/xd97c3a78408835bb/24
+  layout: {box: {max: {x: 0.31, y: 0.32, z: 0.15}, min: {x: -0.31, y: 0, z: -0.15}}}
+  model: {forward: "+x", id: /cdn/value.640efdfdc0471d4dbd9936a5653206c0de9e1f2ed28e5103776aa5ef987e37af.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: toolbox, seed: 816}, script: scripts/l2-props-geo.js}
   rotation: {yaw: 90}
   state: {hp: 80, items: "weapon:pipe_scrap", kind: toolbox, mat: metal, maxHp: 80, name: Toolbox}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/25:
   feetPosition: {x: 15.565, y: 0.71, z: -26.390400288444944}
   id: object/xd97c3a78408835bb/25
+  layout: {box: {max: {x: 0.35, y: 0.95, z: 0.12}, min: {x: -0.35, y: 0, z: -0.12}}}
+  model: {forward: "+x", id: /cdn/value.2268805ae5f337235de318b92236f96c3475a7caaea724697c13e30c88a27545.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: fuse, seed: 361}, script: scripts/loot-bags-geo.js}
   rotation: {yaw: 90}
   state: {hp: 80, items: "almond,battery", kind: fuse, lock: "lockpick:25", mat: metal, maxHp: 80, name: Fuse cabinet (locked)}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/3:
   feetPosition: {x: -27.213236328228376, y: 0.01, z: 36.464999999999996}
   id: object/xd97c3a78408835bb/3
+  layout: {box: {max: {x: 0.31, y: 0.32, z: 0.15}, min: {x: -0.31, y: 0, z: -0.15}}}
+  model: {forward: "+x", id: /cdn/value.640efdfdc0471d4dbd9936a5653206c0de9e1f2ed28e5103776aa5ef987e37af.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: toolbox, seed: 878}, script: scripts/l2-props-geo.js}
   rotation: {yaw: 180}
   state: {hp: 80, items: "kit,ammo,almond,almond", kind: toolbox, lock: "science:75", mat: metal, maxHp: 80, name: Toolbox (locked)}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/4:
   feetPosition: {x: -23.12797546672169, y: 0.71, z: -48.434999999999995}
   id: object/xd97c3a78408835bb/4
+  layout: {box: {max: {x: 0.35, y: 0.95, z: 0.12}, min: {x: -0.35, y: 0, z: -0.12}}}
+  model: {forward: "+x", id: /cdn/value.2268805ae5f337235de318b92236f96c3475a7caaea724697c13e30c88a27545.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: fuse, seed: 969}, script: scripts/loot-bags-geo.js}
   rotation: {yaw: 0}
   state: {hp: 80, items: "ammo,kit,battery", kind: fuse, mat: metal, maxHp: 80, name: Fuse cabinet}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/5:
   feetPosition: {x: -23.564999999999998, y: 0.71, z: 2.2300609028339387}
   id: object/xd97c3a78408835bb/5
+  layout: {box: {max: {x: 0.35, y: 0.95, z: 0.12}, min: {x: -0.35, y: 0, z: -0.12}}}
+  model: {forward: "+x", id: /cdn/value.2268805ae5f337235de318b92236f96c3475a7caaea724697c13e30c88a27545.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: fuse, seed: 893}, script: scripts/loot-bags-geo.js}
   rotation: {yaw: -90}
   state: {hp: 80, items: "battery,kit", kind: fuse, mat: metal, maxHp: 80, name: Fuse cabinet}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/6:
   feetPosition: {x: -23.435, y: 0.01, z: 47.28539769253228}
   id: object/xd97c3a78408835bb/6
+  layout: {box: {max: {x: 0.25, y: 1.9, z: 0.25}, min: {x: -0.25, y: 0, z: -0.25}}}
+  model: {forward: "+x", id: /cdn/value.46194c321486159b82a5dc79a0f592e1c5c4c2670c21d94bda46986638c4c126.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: locker, seed: 854}, script: scripts/l2-props-geo.js}
   rotation: {yaw: -90}
   state: {hp: 80, items: "page:5,tape,battery", kind: locker, lock: "lockpick:50", mat: metal, maxHp: 80, name: Locker (locked)}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/7:
   feetPosition: {x: -16.565, y: 0.01, z: -24.65333831175696}
   id: object/xd97c3a78408835bb/7
+  layout: {box: {max: {x: 0.25, y: 1.9, z: 0.25}, min: {x: -0.25, y: 0, z: -0.25}}}
+  model: {forward: "+x", id: /cdn/value.46194c321486159b82a5dc79a0f592e1c5c4c2670c21d94bda46986638c4c126.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: locker, seed: 304}, script: scripts/l2-props-geo.js}
   rotation: {yaw: 90}
   state: {hp: 80, items: "almond,ammo,almond", kind: locker, mat: metal, maxHp: 80, name: Locker}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/8:
   feetPosition: {x: -12.465, y: 0.01, z: 15.104286796655506}
   id: object/xd97c3a78408835bb/8
+  layout: {box: {max: {x: 0.31, y: 0.32, z: 0.15}, min: {x: -0.31, y: 0, z: -0.15}}}
+  model: {forward: "+x", id: /cdn/value.640efdfdc0471d4dbd9936a5653206c0de9e1f2ed28e5103776aa5ef987e37af.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: toolbox, seed: 959}, script: scripts/l2-props-geo.js}
   rotation: {yaw: 90}
   state: {hp: 80, items: "weapon:crowbar~rusty,battery,almond,shells,almond", kind: toolbox, lock: "science:75", mat: metal, maxHp: 80, name: Toolbox (locked)}
   tags: [container, furniture, lootfurn, breakable]
 object/xd97c3a78408835bb/9:
   feetPosition: {x: -12.9110380603699, y: 0.01, z: 19.435}
   id: object/xd97c3a78408835bb/9
+  layout: {box: {max: {x: 0.45, y: 0.42, z: 0.25}, min: {x: -0.45, y: 0, z: -0.25}}}
+  model: {id: /cdn/value.85c1a4c9b8614aea0cadd349eec3f759acb4db38f648b3d2ea5471b90552f062.glb}
   physics: {body: static, collider: box}
-  primitive: {kind: scripted, params: {kind: satchel, seed: 514}, script: scripts/loot-bags-geo.js}
   rotation: {yaw: 0}
   state: {hp: 35, items: "battery,kit", kind: satchel, mat: wood, maxHp: 35, name: Dead worker's satchel}
   tags: [container, furniture, lootfurn, breakable]
