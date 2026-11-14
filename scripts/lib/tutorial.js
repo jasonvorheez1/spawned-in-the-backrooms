@@ -6,7 +6,7 @@ import { hasHalogen } from "./screen.js"
 export const STEPS = [
   { id: "move", key: "W A S D", text: "Walk. Get your bearings.", walk: 3.5 },
   { id: "sprint", key: "SHIFT", text: "Hold to sprint. Watch your stamina.", input: "sprint" },
-  { id: "tp", key: "MIDDLE MOUSE", text: "Hold to look at yourself. Drag to orbit.", input: "thirdPerson", skip: 10 },
+  { id: "tp", key: "MIDDLE MOUSE", text: "Tap to see yourself. Hold and drag to look around. Tap again to come back.", input: "thirdPerson", skip: 10 },
   { id: "use", key: "E", text: "Look at items or cartons and press E to take or search. Press R to take all.", input: "interact", skip: 16 },
   { id: "light", key: "F", text: "Toggle your flashlight when the lights go out.", input: "flashlight", skip: 12 },
   { id: "combat", key: "LEFT CLICK", text: "Tap to swing. Hold to wind up a heavy hit. X swaps weapons.", input: "attack", skip: 14 },

@@ -739,7 +739,7 @@ function inventory(s) {
   }).join('')
   const qHint = selQ ? `<b>${esc(selQ.name)}</b>: click a slot or press its number` : 'Pick an item below, then click a slot or press 0–9'
 
-  return `<div class="pbw pb"><div class="pbp inv hg" data-modal tabindex="0" onkeydown="if(event.key==='Escape'&&event.target.tagName!=='INPUT'){event.preventDefault();event.stopPropagation();sendAction('inv',{k:'close'})}">
+  return `<div class="pbw pb"><div class="pbp inv hg" data-modal tabindex="0" onkeydown="if(event.target.tagName!=='INPUT'&&!event.repeat&&(event.key==='Escape'||event.key==='i'||event.key==='I'||event.key==='y'||event.key==='Y'||event.key==='Tab')){event.preventDefault();event.stopPropagation();sendAction('inv',{k:'close'})}">
     <div class="hg-top">
       <div class="hg-brand"><h2>Inventory</h2></div>
       <div class="hg-vit">
