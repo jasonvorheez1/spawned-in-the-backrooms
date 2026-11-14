@@ -16,12 +16,11 @@ function refill(pl) {
 const npcSweep = new Map(); // place id -> last sweep ms (this machine's)
 // Shelly Nov 14: an expedition started with NPCs off clears people (tag "npc") from the places its player stands in; monsters stay
 function sweepNpcs(ctx, id, pl) {
-  const ps = pl.players ?? [], npcs = ps.some((p) => noNpcs(p.state)), story = ps.some((p) => noStory(p.state));
+  const ps = pl.players ?? [], npcs = ps.length > 0 && ps.every((p) => noNpcs(p.state)), story = ps.length > 0 && ps.every((p) => noStory(p.state)); // shared places: only when everyone there picked it
   if (!npcs && !story) return;
   const now = ctx.now(); if (now - (npcSweep.get(id) ?? 0) < 1500) return; npcSweep.set(id, now);
   // story off: Phoebe only lives in the story (cutscenes, the Hub), so she isn't there at all
   for (const r of ctx.query({ tags: [npcs ? "npc" : "phoebe"], place: id })) if (!r.id.startsWith("player/")) ctx.destroy(r.id);
-  if (npcs && story) for (const r of ctx.query({ tags: ["phoebe"], place: id })) if (!r.id.startsWith("player/")) ctx.destroy(r.id);
 }
 export function tick(ctx) {
   setStyle(ctx.world.state.bodyStyle); // this machine's spawns follow the BODIES pick
