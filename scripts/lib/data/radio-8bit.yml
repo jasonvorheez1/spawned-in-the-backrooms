@@ -1,0 +1,87 @@
+# 8 Bit Hits: Ole'hba the smiler's station on the HALOGEN (Shelly, Nov 14). Songs are Shelly's uploads; titles and Ole'hba's script are Savi's.
+# His voice: a monster read, pitched down with a basement echo. Ralph from Radio Backrooms guests (g1-g5) and Ole'hba tries to kill him.
+name: 8 Bit Hits
+freq: "88.8 FM"
+host: Ole'hba
+gain: 0.5
+static: /cdn/moodboard-realistic-gritty/sfx-old-radio-tuning-static-sweep-short.mp3
+segments:
+  - { kind: host, title: "Station ID", dur: 10.48, clip: "/cdn/value.ce0270229fe2c9128a6508c3c2be63504a01dfbe58e367c4df91674ab1455ba8.mp3" }
+  - { kind: host, title: "How I Got to the Basement", dur: 15.54, clip: "/cdn/value.9b093bb70af411e7ec0bdf668a54a8de5eeae78feb44d626c74f4747fc044c96.mp3" }
+  - { kind: song, title: "Pixel Panic", dur: 194.14, clip: "/cdn/music-8-bit-arcade-theme-gjlotxnm.mp3" }
+  - { kind: host, title: "Thoughts on Humans", dur: 19.12, clip: "/cdn/value.da603804214fac4e8a211c2cf241b4bb23119edf98a0a674d8a7180db7c38a4d.mp3" }
+  - { kind: song, title: "Coin Door", dur: 86.52, clip: "/cdn/music-8-bit-retro-arcade-1hn1wm4p.mp3" }
+  - { kind: host, title: "Yo Mama", dur: 12.04, clip: "/cdn/value.064f9d1409eb939824b55588b7c2b473e76d1b52c8a7dcf6058039414e96314d.mp3" }
+  - { kind: song, title: "Respawn Rag", dur: 140.54, clip: "/cdn/music-chiptune-8bit-arcade-level-png6msxk.mp3" }
+  - { kind: host, title: "Ole'hba Can't Be Bothered", dur: 6.3, clip: "/cdn/value.9ea49df721be8c7a477fef839315fa7249cb4cbd05a829b6e83fb3570c954a58.mp3" }
+  - { kind: host, title: "Station ID", dur: 10.42, clip: "/cdn/value.18d1da8ca02115230ac7eda76e5f21752ccd392f9758d3c2a2efbd98711d9e7f.mp3" }
+  - { kind: host, title: "How I Got to the Basement", dur: 20.85, clip: "/cdn/value.9605167e8ccea263efbd0e6b135fee08fcd38a799a6982f21e75a40a5950a1b8.mp3" }
+  - { kind: song, title: "Hallway Warp", dur: 146.57, clip: "/cdn/music-chiptune-8bit-retro-loop-fwrmrjrp.mp3" }
+  - { kind: host, title: "Thoughts on Humans", dur: 12.67, clip: "/cdn/value.bc8340c4ee23dd72d24f1cf4d12da0b03e1d8f494d3c1eec28296860c09fb4c2.mp3" }
+  - { kind: song, title: "Bonk Boogie", dur: 128.71, clip: "/cdn/music-chiptune-adventure-retro-arcade-wlhk2fz9.mp3" }
+  - { kind: host, title: "Yo Mama", dur: 8.33, clip: "/cdn/value.2dcb8bc7b32fbc89210fe268dc4e3275a1cd9115c877b61b1a9a1876d3a483fa.mp3" }
+  - { kind: host, title: "Basement Notes", dur: 12.56, clip: "/cdn/value.4f1eb36b3674bc144af20dbd4fad080ade289e492495520397803e6eca083c76.mp3" }
+  - { kind: song, title: "Lobby Level 1-1", dur: 349.83, clip: "/cdn/music-chiptune-arcade-retro-game-5xmigav1.mp3" }
+  - { kind: host, title: "Ole'hba Can't Be Bothered", dur: 7.52, clip: "/cdn/value.f7887a791b39c782390bc3aed0724900a3b63e6860db8cbaec80b2a368c646cc.mp3" }
+  - { kind: song, title: "Almond Rush", dur: 142.94, clip: "/cdn/music-chiptune-battle-retro-8bit-zihs6hj9.mp3" }
+  - { kind: host, title: "How I Got to the Basement", dur: 25.94, clip: "/cdn/value.b7173aa18e5339cfc6a19ec736b9c88c9261614f79d85d9e53bf8fb1e3dbe2cc.mp3" }
+  - { kind: song, title: "Noclip Hop", dur: 92.92, clip: "/cdn/music-chiptune-retro-arcade-fast-vdw9xz4f.mp3" }
+  - { kind: host, title: "Thoughts on Humans", dur: 19.2, clip: "/cdn/value.03b0a78c7e89c0edabcdc996af132a3646a1c5b9b94367a77310e160adc9ad2f.mp3" }
+  - { kind: song, title: "Fluorescent Boss", dur: 56.84, clip: "/cdn/music-chiptune-retro-arcade-game-15uoxiqf.mp3" }
+  - { kind: host, title: "Yo Mama", dur: 11.47, clip: "/cdn/value.a9567964f808979cf6e4369a2af0a022adaff7ce48460b7e72d7bd86a82f8ce5.mp3" }
+  - { kind: song, title: "Carpet Crawl", dur: 90.78, clip: "/cdn/music-chiptune-retro-arcade-game-r82emobc.mp3" }
+  - { kind: host, title: "Waking Up", dur: 8.49, clip: "/cdn/value.88f6096bbe5f196401717f56c3ff8650322c69696df1ade594f17f42983b244c.mp3" }
+  - { kind: song, title: "Basement Blip", dur: 372.14, clip: "/cdn/music-chiptune-retro-arcade-game-xoaobhw4.mp3" }
+  - { kind: host, title: "Station ID", dur: 8.39, clip: "/cdn/value.359dfd62359d40caa7929ee5675637033ef02a39b616482f3aa76fa29fb6fd25.mp3" }
+  - { kind: host, title: "Guest: Ralph from Radio Backrooms", dur: 42.68, clip: "/cdn/value.71849c2435983c11d5587a1a223ad95404a64b4e23d907e31bffe80aaa7a869f.mp3" }
+  - { kind: song, title: "Smile Run", dur: 120.11, clip: "/cdn/music-chiptune-retro-arcade-groove-stxcn888.mp3" }
+  - { kind: host, title: "Guest: Ralph from Radio Backrooms", dur: 17.68, clip: "/cdn/value.78f57638ac957bd82a4d1f0a2f80ea8e1af07f86c6e75777acd0f4d9a821e5ce.mp3" }
+  - { kind: song, title: "Exit Not Found", dur: 59.19, clip: "/cdn/music-chiptune-retro-arcade-level-19c9334b.mp3" }
+  - { kind: host, title: "Guest: Ralph from Radio Backrooms", dur: 26.25, clip: "/cdn/value.e1856976d51c2ea62232e7aa870a1726f18f9d89b8a47edcc98e29270892c68c.mp3" }
+  - { kind: song, title: "Yellow Sprite", dur: 58.75, clip: "/cdn/music-chiptune-retro-arcade-level-488peloa.mp3" }
+  - { kind: host, title: "Guest: Ralph from Radio Backrooms", dur: 22.31, clip: "/cdn/value.40512087593c2f9edb05917a46d0f9fa6bc17ea423b1df862b4e8f3e05046c36.mp3" }
+  - { kind: song, title: "Pipe Dream", dur: 343.9, clip: "/cdn/music-chiptune-retro-arcade-level-n5x7bzgm.mp3" }
+  - { kind: host, title: "Guest: Ralph from Radio Backrooms", dur: 11.7, clip: "/cdn/value.a23c5edbeba89f321862bf25396de4a74636c191d8aa48f10254129f722b0322.mp3" }
+  - { kind: song, title: "Turntable Turbo", dur: 68.49, clip: "/cdn/music-chiptune-retro-arcade-level-tpleq41o.mp3" }
+  - { kind: host, title: "How I Got to the Basement", dur: 23.04, clip: "/cdn/value.c0f056e79e8b372c0dd18137698940d554a5d680a797d3ace185ad396282695e.mp3" }
+  - { kind: song, title: "Hound Chase", dur: 74.03, clip: "/cdn/music-chiptune-retro-arcade-loop-c6urle1v.mp3" }
+  - { kind: host, title: "Thoughts on Humans", dur: 10.84, clip: "/cdn/value.a4fa3621c780b0c07d23318079c3f335ce4958266ed6a7aa58a9bb6fcb3c887c.mp3" }
+  - { kind: song, title: "Save Point Blues", dur: 71.29, clip: "/cdn/music-chiptune-retro-arcade-loop-pe48sne6.mp3" }
+  - { kind: host, title: "Yo Mama", dur: 9.43, clip: "/cdn/value.af103331668554a07601d197ce52d08c94c885cc2fc1963609223d77f87af2be.mp3" }
+  - { kind: song, title: "Elevator Dash", dur: 389.17, clip: "/cdn/music-chiptune-retro-level-arcade-z9bmdju7.mp3" }
+  - { kind: host, title: "Ole'hba Can't Be Bothered", dur: 6.4, clip: "/cdn/value.466ccf8a52d1c275be39cc0bffbcf7e69d7951b2602616b430f5fabb3b3f45f2.mp3" }
+  - { kind: song, title: "Lazy Loop", dur: 104.41, clip: "/cdn/music-chiptune-retro-level-loop-8jzhn2qu.mp3" }
+  - { kind: host, title: "Basement Notes", dur: 9.46, clip: "/cdn/value.dd3a8ab0a06750ed16476a19c29c7fde93832b9ded03440267b8df3331112911.mp3" }
+  - { kind: song, title: "Vending Bonk", dur: 128.89, clip: "/cdn/music-chiptune-retro-melody-8bit-xbf9479w.mp3" }
+  - { kind: host, title: "How I Got to the Basement", dur: 27.56, clip: "/cdn/value.964cb6d90e626dd3467fd94f8f3590ac78354862942573cc9b4c7e8c41e85144.mp3" }
+  - { kind: song, title: "Snack Attack", dur: 252.79, clip: "/cdn/music-retro-8-bit-arcade-loop-z32uq3xj.mp3" }
+  - { kind: host, title: "Thoughts on Humans", dur: 15.99, clip: "/cdn/value.223eeebd6e7e10e2ea653afb6252adf5bd5d9cbadfb27fd04d0135f8002c4b19.mp3" }
+  - { kind: song, title: "Damp Data", dur: 229.17, clip: "/cdn/music-retro-8bit-arcade-game-52tgqjq9.mp3" }
+  - { kind: host, title: "Yo Mama", dur: 7.71, clip: "/cdn/value.035062dc3c2a2a61b0e2664102c02f4410d3c2b956b0f8a2c8d2ccc5ef29cb58.mp3" }
+  - { kind: song, title: "Glitch Gallery", dur: 72.33, clip: "/cdn/music-retro-8bit-arcade-theme-mt4rbjpg.mp3" }
+  - { kind: host, title: "Ole'hba Can't Be Bothered", dur: 11.62, clip: "/cdn/value.f7e3dbdae0660ecb92173bf71a54946b26af0d8f6c5de7313e1e8dc148a42bc6.mp3" }
+  - { kind: song, title: "Wall Clip Waltz", dur: 126.35, clip: "/cdn/music-retro-arcade-chiptune-melody-sgs2twj0.mp3" }
+  - { kind: host, title: "How I Got to the Basement", dur: 14.08, clip: "/cdn/value.5696cb949b88f828dbfa067f2832895f24d44ce4cc56f8fdf8d999535fdfcab6.mp3" }
+  - { kind: song, title: "Hub Highscore", dur: 54.86, clip: "/cdn/music-retro-arcade-chiptune-track-ismgpwlk.mp3" }
+  - { kind: host, title: "Thoughts on Humans", dur: 12.83, clip: "/cdn/value.52c74bd87a75340bf6bc36c679ee1c288cc63ef233d7a8550bd4006298924776.mp3" }
+  - { kind: song, title: "Static Stomp", dur: 163.97, clip: "/cdn/music-retro-chip-tune-beat-m1j3cnch.mp3" }
+  - { kind: host, title: "Yo Mama", dur: 10.32, clip: "/cdn/value.6825a8579c502a7bb06c51fe54d51091618f0228201d5681153ad5f137e0bdd5.mp3" }
+  - { kind: song, title: "Basement Bit", dur: 238.81, clip: "/cdn/music-retro-chip-tune-beat-vpvl5u6e.mp3" }
+  - { kind: host, title: "Basement Notes", dur: 10.4, clip: "/cdn/value.6acd9bfa183b2c3a582433da5803c2b34a412abd237e799ec1c60840226b8a8a.mp3" }
+  - { kind: song, title: "Level Up (Ugh)", dur: 85.45, clip: "/cdn/music-retro-chiptune-arcade-beat-mw0q6wbf.mp3" }
+  - { kind: host, title: "Ole'hba Can't Be Bothered", dur: 6.84, clip: "/cdn/value.452ae80c1c798dd5d811fdb2e193caca98f9ae019e6561246df8ab5bf15f21d5.mp3" }
+  - { kind: song, title: "Monster Mash 8", dur: 250.59, clip: "/cdn/music-retro-chiptune-arcade-beat-yurhkuag.mp3" }
+  - { kind: host, title: "How I Got to the Basement", dur: 18.05, clip: "/cdn/value.15fa1cf63a7fff14ff5b49302ca52f06c03bb5e45befa4ec56569008ed783f6b.mp3" }
+  - { kind: song, title: "Couch Quest", dur: 194.85, clip: "/cdn/music-retro-chiptune-arcade-groove-c9d5gnqe.mp3" }
+  - { kind: host, title: "Thoughts on Humans", dur: 16.07, clip: "/cdn/value.5b2a1462267f707d579e6f2d9e69ffbd1ee86cbaa914f8b34fce5c2f944a4400.mp3" }
+  - { kind: song, title: "One More Life", dur: 30.56, clip: "/cdn/music-retro-chiptune-fast-beat-bwae1dlq.mp3" }
+  - { kind: host, title: "Yo Mama", dur: 9.27, clip: "/cdn/value.0b53837f3e06d2ddd04218c06e264350ef7d9f74b2b4bb2d5f93ca264c9de077.mp3" }
+  - { kind: song, title: "Insert Coin", dur: 204.12, clip: "/cdn/music-retro-chiptune-game-loop-2gns4wbl.mp3" }
+  - { kind: host, title: "Ole'hba Can't Be Bothered", dur: 10.5, clip: "/cdn/value.f227c242be29744e209b1480f321d74e9668a010119c12662241f471b1b7f794.mp3" }
+  - { kind: song, title: "Ole's Lullaby", dur: 186.78, clip: "/cdn/music-retro-chiptune-level-action-tty30n6m.mp3" }
+  - { kind: host, title: "Basement Notes", dur: 8.31, clip: "/cdn/value.94c39f4ce86520b9c799536632eaf463d8d90b51e1d1a13a47ffc6e4ab58c9b4.mp3" }
+  - { kind: song, title: "Game Over Groove", dur: 143.62, clip: "/cdn/music-synth-arcade-chiptune-loop-z0ce5199.mp3" }
+  - { kind: host, title: "How I Got to the Basement", dur: 10.84, clip: "/cdn/value.62b2fe0a3a9be1f563a9f28f148ec2ec4d746529041f5beeaeb3f568000b09d3.mp3" }
+  - { kind: host, title: "Thoughts on Humans", dur: 10.32, clip: "/cdn/value.e1cd5bfa14e7f3eec4ef0724aa136a289b838bebf7ecffb40650e1077f31bd78.mp3" }
+  - { kind: host, title: "Yo Mama", dur: 10.66, clip: "/cdn/value.4f8c6907724fe7a26ff414e39297a64e35ed1816248b0bf5bb0eb373acfaca0b.mp3" }
+  - { kind: host, title: "Signing Off", dur: 11.21, clip: "/cdn/value.81f06dca3b41738b1c50d637e3b5dac73f210cdace643ce94418e4a100c346e3.mp3" }
