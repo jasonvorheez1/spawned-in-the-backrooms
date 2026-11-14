@@ -69,18 +69,21 @@ export function wandererTick(ctx) {
 }
 export function spawnWanderer(ctx, id, pos, face, extra = {}) {
   const r = (a) => a[Math.floor(ctx.random() * a.length)];
-  const gun = r(GUNS), name = r(NAMES), sex = ctx.random() < 0.5 ? "m" : "f", torn = ctx.random() < 0.5;
-  Promise.all([import("./critter-model.js"), import("./clothes.js"), import("./stats.js"), import("./weapon-look.js")]).then(([{ critterSpec }, { npcLook }, { npcState }, { weaponBody }]) => {
+  const name = r(NAMES), sex = ctx.random() < 0.5 ? "m" : "f";
+  Promise.all([import("./critter-model.js"), import("./clothes.js"), import("./stats.js"), import("./weapon-look.js"), import("./npc-gear.js")]).then(([{ critterSpec }, { npcLook }, { npcState }, { weaponBody }, { npcGearLevel, rollNpcWeapon }]) => {
     if (ctx.place.objects[id]) return;
     const look = { species: r(SPECIES), sex, eye: "#e8e4d0" }; // clothes come from the "frenzied" wardrobe (data/clothes.yml): gowns, scrubs, straitjackets
+    const stub = { id, tags: ["l109-wanderer"], state: { role: "survivor", faction: "frenzied", nerve: "frenzied" } };
+    const lv = npcGearLevel(ctx, stub);
+    const arm = extra.arm ?? rollNpcWeapon(ctx, stub, { gearLevel: lv, allowRanged: true, forceArmed: true });
     const yaw = Math.atan2(face.x, face.z) * 180 / Math.PI + 180;
     ctx.spawn(id, {
-      audience: "all", tags: ["npc", "l109-wanderer", "l8-hostile", "wretched"], feetPosition: pos, rotation: { yaw }, physics: "character", ...critterSpec(npcLook(id, look, "frenzied", 20)),
+      audience: "all", tags: ["npc", "l109-wanderer", "l8-hostile", "wretched"], feetPosition: pos, rotation: { yaw }, physics: "character", ...critterSpec(npcLook(id, look, "frenzied", lv)),
       behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
-      state: { ...npcState(ctx, "agent", T.hp), name: `${name} · frenzied wanderer`, role: "survivor", faction: "lightless", factionName: "frenzied wanderers: people Level 109's hum got into", nerve: "frenzied", arm: gun, barks: BARKS,
+      state: { ...npcState(ctx, "agent", T.hp), gearLevel: lv, name: `${name} · frenzied wanderer`, role: "survivor", faction: "lightless", factionName: "frenzied wanderers: people Level 109's hum got into", nerve: "frenzied", arm, barks: BARKS,
         rounds: [{ x: pos.x, y: pos.y, z: pos.z, dwell: 20, act: null, look: { x: pos.x + face.x * 10, z: pos.z + face.z * 10 } }], ri: 0, home: { x: pos.x, z: pos.z }, ...extra },
     });
-    ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: gun }, ...weaponBody(gun) });
+    ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: arm }, ...weaponBody(arm) });
     if (!extra.den) ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-distant-hospital-corridor-man-laughing-hysterically-echo.mp3", position: pos, volume: 0.8, maxDistance: 45 });
   });
 }

@@ -1,54 +1,148 @@
 # spawn-scene v2 yaml x1z0
 l70-pylon:
-  feetPosition: {x: 172, y: {terrain: -0.5}, z: -34}
+  feetPosition:
+    x: 172
+    y:
+      terrain: -0.5
+    z: -34
   id: l70-pylon
-  layout: {box: {max: {y: 44}, min: {y: 0}}}
-  model: {id: /cdn/value.ace8e24a92be32a5081e99121e369b5871066b57a0c284e52ba70451b16c2ffa.glb}
-  rotation: {roll: 2.5, yaw: 78}
-  tags: [l70-wild]
-  visibleRange: {max: 700}
+  layout:
+    box:
+      max:
+        y: 44
+      min:
+        y: 0
+  model:
+    id: /cdn/value.ace8e24a92be32a5081e99121e369b5871066b57a0c284e52ba70451b16c2ffa.glb
+  rotation:
+    roll: 2.5
+    yaw: 78
+  tags:
+  - l70-wild
+  visibleRange:
+    max: 700
 l70-rock14:
-  feetPosition: {x: 133.32060605840556, y: {terrain: -0.12780493787869443}, z: -60.35198588819826}
+  feetPosition:
+    x: 133.32060605840556
+    y:
+      terrain: -0.12780493787869443
+    z: -60.35198588819826
   id: l70-rock14
-  layout: {box: {max: {y: 0.7100274326594136}, min: {y: 0}}}
-  model: {id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 74.27776096388698}
-  tags: [l70-wild, l70-rock]
-  visibleRange: {max: 260}
+  layout:
+    box:
+      max:
+        y: 0.7100274326594136
+      min:
+        y: 0
+  model:
+    id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 74.27776096388698
+  tags:
+  - l70-wild
+  - l70-rock
+  visibleRange:
+    max: 260
 l70-rock2:
-  feetPosition: {x: 98.95406695119941, y: {terrain: -0.1340675011523482}, z: 4.99315986439851}
+  feetPosition:
+    x: 98.95406695119941
+    y:
+      terrain: -0.1340675011523482
+    z: 4.99315986439851
   id: l70-rock2
-  layout: {box: {max: {y: 0.7448194508463789}, min: {y: 0}}}
-  model: {id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 319.3471232894808}
-  tags: [l70-wild, l70-rock]
-  visibleRange: {max: 260}
+  layout:
+    box:
+      max:
+        y: 0.7448194508463789
+      min:
+        y: 0
+  model:
+    id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 319.3471232894808
+  tags:
+  - l70-wild
+  - l70-rock
+  visibleRange:
+    max: 260
 l70-rock3:
-  feetPosition: {x: 139.5525345656197, y: {terrain: -0.30014030406150205}, z: -22.964146931733197}
+  feetPosition:
+    x: 139.5525345656197
+    y:
+      terrain: -0.30014030406150205
+    z: -22.964146931733197
   id: l70-rock3
-  layout: {box: {max: {y: 1.6674461336750115}, min: {y: 0}}}
-  model: {id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 138.86046714149415}
-  tags: [l70-wild, l70-rock]
-  visibleRange: {max: 260}
+  layout:
+    box:
+      max:
+        y: 1.6674461336750115
+      min:
+        y: 0
+  model:
+    id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 138.86046714149415
+  tags:
+  - l70-wild
+  - l70-rock
+  visibleRange:
+    max: 260
 l70-rock6:
-  feetPosition: {x: 96.98836915154361, y: {terrain: -0.2526649730105268}, z: -52.43551448074553}
+  feetPosition:
+    x: 96.98836915154361
+    y:
+      terrain: -0.2526649730105268
+    z: -52.43551448074553
   id: l70-rock6
-  layout: {box: {max: {y: 1.403694294502927}, min: {y: 0}}}
-  model: {id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 80.65678808838129}
-  tags: [l70-wild, l70-rock]
-  visibleRange: {max: 260}
+  layout:
+    box:
+      max:
+        y: 1.403694294502927
+      min:
+        y: 0
+  model:
+    id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 80.65678808838129
+  tags:
+  - l70-wild
+  - l70-rock
+  visibleRange:
+    max: 260
 l70-rock7:
-  feetPosition: {x: 102.50845320866561, y: {terrain: -0.21472119216694271}, z: -44.984870053265304}
+  feetPosition:
+    x: 102.50845320866561
+    y:
+      terrain: -0.21472119216694271
+    z: -44.984870053265304
   id: l70-rock7
-  layout: {box: {max: {y: 1.1928955120385707}, min: {y: 0}}}
-  model: {id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 119.31862031109631}
-  tags: [l70-wild, l70-rock]
-  visibleRange: {max: 260}
+  layout:
+    box:
+      max:
+        y: 1.1928955120385707
+      min:
+        y: 0
+  model:
+    id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 119.31862031109631
+  tags:
+  - l70-wild
+  - l70-rock
+  visibleRange:
+    max: 260

@@ -1,4 +1,4 @@
-import {interactiveSpec} from './prop-interactions.js'
+import { interactiveSpec } from './prop-interactions.js'
 // Loot: one place that knows how almond water and weapons appear in the maze, whether from the
 // floor spawner (places/main/sim.js) or from a smiler that just died (scripts/player.js).
 import L from "./data/level0.yml";
@@ -114,21 +114,46 @@ export const LOOT_CATEGORIES = {
     ["mag:guns", 3], ["mag:medicine", 3], ["mag:science", 2.5], ["mag:lockpick", 2.5],
   ],
 };
-// Weighted pick over every found weapon this pool can hold; rarer ones carry a smaller weight in weapons.yml.
-export function rollWeapon(ctx, pool = "l0", cap = 3) {
-  const kinds = W.order.slice(1).filter((k) => !W[k].unique && (W[k].weight ?? 1) > 0 && !W[k].level1 && !W[k].level2 && !W[k].level3 && (!W[k].pools?.length || W[k].pools.includes(pool)) && rarityIdx(k) <= cap), total = kinds.reduce((a, k) => a + (W[k].weight ?? 1), 0);
+const POOL_TIER = { l0: 1, l01: 6, l02: 7, l1: 4, l2: 8, l21: 9, l3: 12, l4: 10, l5: 14, l6: 15, l7: 16, l8: 17, l9: 13, l10: 11, l11: 12, l12: 14, l13: 15, l26: 9, l27: 13, l31: 7, l34: 11, l61: 14, l70: 15, l109: 11, l114: 15, l169: 14, l184: 16, gamma: 12 };
+export function effectiveLootLevel(ctx, cap, level, pool = "l0") {
+  if (level != null) return Math.max(1, Number(level) || 1);
+  if (ctx?.self?.state?.level != null) return Math.max(1, Number(ctx.self.state.level) || 1);
+  if (ctx?.place?.players?.length) return Math.max(1, ...ctx.place.players.map((p) => Number(p?.state?.level) || 1));
+  const tier = CL.leveled.placeTier[ctx?.self?.place ?? ctx?.place?.id] ?? POOL_TIER[pool] ?? 1;
+  return cap != null ? Math.max(tier, cap === 0 ? 2 : cap === 1 ? 5 : cap === 2 ? 9 : 14) : Math.max(1, tier);
+}
+export function leveledWeaponScale(k, lv) {
+  const w = W[k]; if (!w) return 1;
+  const ml = w.minLevel ?? 1, ri = rarityIdx(k), above = Math.max(0, lv - ml);
+  if (ml <= 2 && ri === 0) return lv <= 4 ? 1 : Math.max(0.22, 1 - (lv - 4) * 0.065);
+  const debut = (above === 0 && ml >= 5) ? 0.75 : 1;
+  return debut * (1 + Math.min(2.8, above * 0.28) + ri * (lv >= 8 ? 0.5 : 0));
+}
+// Weighted pick over every found weapon this pool and level can hold; higher levels unlock better tiers and fade starter junk.
+export function rollWeapon(ctx, pool = "l0", cap, level) {
+  const lv = effectiveLootLevel(ctx, cap, level, pool), effCap = cap ?? rarityCap(lv);
+  const baseFilter = (k) => !W[k].unique && !W[k].level1 && !W[k].level2 && !W[k].level3 && (!W[k].pools?.length || W[k].pools.includes(pool));
+  let kinds = W.order.slice(1).filter((k) => baseFilter(k) && rarityIdx(k) <= effCap && (W[k].minLevel ?? 1) <= lv);
+  if (!kinds.length) kinds = W.order.slice(1).filter((k) => baseFilter(k) && rarityIdx(k) <= effCap);
+  if (!kinds.length) kinds = W.order.slice(1).filter(baseFilter);
+  const weighted = kinds.map((k) => [k, (W[k].weight ?? 1) * leveledWeaponScale(k, lv)]);
+  const total = weighted.reduce((a, [, wt]) => a + wt, 0);
   let r = ctx.random() * total;
-  for (const k of kinds) { r -= W[k].weight ?? 1; if (r <= 0) { const v = rollVariant(ctx, k); return rarityIdx(v) <= cap ? v : k; } }
+  for (const [k, wt] of weighted) { r -= wt; if (r <= 0) { const v = rollVariant(ctx, k, lv); return rarityIdx(v) <= effCap ? v : k; } }
   return kinds[0] ?? "table_leg";
 }
-// A found thing too good for this player's level becomes a fitting one (weapon tokens only; the rest is level-free).
+// A found thing too good for this player's level steps down; at higher levels, starter junk has a chance to roll up into fitting gear.
 export function gateItems(ctx, items, level, pool = "l0") {
-  const cap = rarityCap(level);
+  const lv = Math.max(1, Number(level) || 1), cap = rarityCap(lv);
   return String(items ?? "").split(",").filter(Boolean).map((t) => {
     if (!t.startsWith("weapon:")) return t;
     const k = t.slice(7);
-    if (W[k]?.unique || authoredVariant(k)) return t; // a one-of-a-kind (the R-55) is never rerolled
-    return rarityIdx(k) <= cap ? t : "weapon:" + rollWeapon(ctx, pool, cap);
+    if (W[k]?.unique || authoredVariant(k)) return t; // a one-of-a-kind is never rerolled
+    if (rarityIdx(k) > cap || (W[k]?.minLevel ?? 1) > lv) return "weapon:" + rollWeapon(ctx, pool, cap, lv);
+    if (lv >= 7 && (W[k]?.minLevel ?? 1) <= 2 && rarityIdx(k) === 0 && ctx.random() < Math.min(0.65, (lv - 5) * 0.08)) {
+      return "weapon:" + rollWeapon(ctx, pool, cap, lv);
+    }
+    return t;
   }).join(",");
 }
 
@@ -213,13 +238,24 @@ export function dropLoot(ctx, pos, name = "Remains", luck = 1, clothMul = 1, poo
   if (items.length) spawnRemains(ctx, pos, items, name);
 }
 
-// Level 1's crates: rations, bandages, field mags and batteries join the roll.
+// Level 1's crates: rations, bandages, field mags, manuals and batteries join the roll.
 const L1_WEIGHTS = [["bobbypin", 8], ["firesalt", 4], ["repellent", 0.5], ["meat", 2.5], ["ration", 4], ["stale_ration", 2], ["almond", 3.5], ["warm_tea", 1], ["bandage", 2.5], ["painkillers", 1], ["splint", 0.8], ["battery", 3], ["ammo", 2], ["shells", 1], ["weapon", 1.2], ["kit", 1.6], ["mag", 1.4], ["manual", 1.6], ["cloth", 2.2], ["compass", 1], ["molotov", 0.5]];
+const L1_WEPS = [["rebar", 5], ["wrench", 4]];
+export function rollWeaponL1(ctx, level) {
+  const lv = effectiveLootLevel(ctx, undefined, level, "l1"), cap = rarityCap(lv);
+  const elig = L1_WEPS.filter(([k]) => rarityIdx(k) <= cap && (W[k]?.minLevel ?? 1) <= lv);
+  if (elig.length && ctx.random() < 0.55) {
+    const weighted = elig.map(([k, w]) => [k, w * leveledWeaponScale(k, lv)]);
+    let r = ctx.random() * weighted.reduce((a, [, w]) => a + w, 0);
+    for (const [k, w] of weighted) if ((r -= w) <= 0) { const v = rollVariant(ctx, k, lv); return rarityIdx(v) <= cap ? v : k; }
+  }
+  return rollWeapon(ctx, "l1", cap, lv);
+}
 export function rollItemL1(ctx) {
   if (ctx.random() < 0.14) return rollCash(ctx);
   const total = L1_WEIGHTS.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
-  for (const [k, w] of L1_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + (ctx.random() < 0.6 ? rollVariant(ctx, ctx.random() < 0.55 ? "rebar" : "wrench") : rollWeapon(ctx, "l1")) : k === "manual" ? rollManual(ctx, "l1") : k === "mag" ? magOf(ctx, "l1") : k === "cloth" ? rollCloth(ctx) : k === "meat" ? rollMeat(ctx) : k; }
+  for (const [k, w] of L1_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL1(ctx) : k === "manual" ? rollManual(ctx, "l1") : k === "mag" ? magOf(ctx, "l1") : k === "cloth" ? rollCloth(ctx) : k === "meat" ? rollMeat(ctx) : k; }
   return "ration";
 }
 export function spawnCrateL1(ctx, p) {
@@ -237,7 +273,17 @@ export function rollItemL2(ctx) {
   for (const [k, w] of L2_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL2(ctx) : k === "manual" ? rollManual(ctx, "l2") : k === "mag" ? magOf(ctx, "l2") : k === "cloth" ? rollCloth(ctx) : k === "meat" ? rollMeat(ctx) : k; }
   return "battery";
 }
-export function rollWeaponL2(ctx) { const r = ctx.random(); return r < 0.4 ? rollVariant(ctx, "screwdriver") : r < 0.55 ? rollVariant(ctx, "sledgehammer") : r < 0.75 ? rollVariant(ctx, "wrench") : rollWeapon(ctx, "l2"); }
+const L2_WEPS = [["screwdriver", 6], ["table_leg", 3], ["pipe_scrap", 4], ["crowbar", 5], ["wrench", 5], ["sledgehammer", 3]];
+export function rollWeaponL2(ctx, level) {
+  const lv = effectiveLootLevel(ctx, undefined, level, "l2"), cap = rarityCap(lv);
+  const elig = L2_WEPS.filter(([k]) => rarityIdx(k) <= cap && (W[k]?.minLevel ?? 1) <= lv);
+  if (elig.length && ctx.random() < 0.72) {
+    const weighted = elig.map(([k, w]) => [k, w * leveledWeaponScale(k, lv)]);
+    let r = ctx.random() * weighted.reduce((a, [, w]) => a + w, 0);
+    for (const [k, w] of weighted) if ((r -= w) <= 0) { const v = rollVariant(ctx, k, lv); return rarityIdx(v) <= cap ? v : k; }
+  }
+  return rollWeapon(ctx, "l2", cap, lv);
+}
 export function spawnCrateL2(ctx, p) {
   const n = 2 + Math.floor(ctx.random() * 3), items = [];
   for (let i = 0; i < n; i++) items.push(rollItemL2(ctx));
@@ -277,16 +323,28 @@ export function spawnContainerL2(ctx, kind, p, yaw, opts = {}) {
   const C0 = L2C.containers[kind], C = opts.size ? { ...C0, size: opts.size } : C0, lk = opts.noLock ? null : rollLock(ctx), M = opts.model ?? L2MODEL[kind] ?? (containerModel(kind) ? { id: containerModel(kind), tripo: true } : null), seed = Math.floor(ctx.random() * 1000);
   const items = opts.items !== undefined ? opts.items : fillContainerL2(ctx, kind, (opts.bonus ?? 0) + (lk ? lk.bonus : 0));
   const name = opts.name ?? (lk ? `${C.name} (locked)` : C.name);
-  return ctx.spawn(interactiveSpec({ tags: ["container", "l2box"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: { yaw }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, castShadow: false,
+  return ctx.spawn(interactiveSpec({
+    tags: ["container", "l2box"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: { yaw }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, castShadow: false,
     ...(M ? { model: M.tripo ? { id: M.id, forward: PROPS.forward } : { id: M.id, materials: { paint: { color: M.paints[seed % M.paints.length], roughness: 0.55, metalness: 0.15 } } }, layout: { box: { min: { x: -C.size[0] / 2, y: 0, z: -C.size[2] / 2 }, max: { x: C.size[0] / 2, y: C.size[1], z: C.size[2] / 2 } } } } : { primitive: { kind: "scripted", script: "scripts/l2-props-geo.js", params: { kind, seed } } }),
-    state: { name, kind, items, ...(lk ? { lock: lk.lock } : {}), room: opts.room ?? -1 } }));
+    state: { name, kind, items, ...(lk ? { lock: lk.lock } : {}), room: opts.room ?? -1 }
+  }));
 }
 
 // ---- Level 5 (Terror Hotel): what a hotel room's dresser, wardrobe or kitchen holds. Meat feeds Samantha; the SMG and knife are this floor's guns.
 export const L5_WEIGHTS = [["almond", 22], ["warm_tea", 4], ["ammo", 17], ["meat", 20], ["ration", 5], ["stale_ration", 3], ["bandage", 5], ["painkillers", 3], ["antiseptic", 2], ["battery", 5], ["bobbypin", 8], ["weapon", 6], ["mag", 2.5], ["manual", 2], ["cloth", 6], ["royal_ration", 1]] // nvg: Ines's quest only (scripts/l5-goggles.js);
 export const MEAT5 = [["steak", 3], ["fish", 4], ["chicken", 6], ["spam", 8], ["sardines", 8], ["jerky", 7], ["hotdog", 4], ["rat", 6]];
 export function rollMeat(ctx) { const t = MEAT5.reduce((a, [, w]) => a + w, 0); let r = ctx.random() * t; for (const [k, w] of MEAT5) { r -= w; if (r <= 0) return "meat:" + k; } return "meat:rat"; }
-export function rollWeaponL5(ctx) { const q = ctx.random(); return q < 0.3 ? rollVariant(ctx, "smg") : q < 0.65 ? rollVariant(ctx, "knife") : rollWeapon(ctx, "l5"); }
+const L5_WEPS = [["knife", 5], ["cleaver", 4], ["revolver", 4], ["coach_gun", 3], ["smg", 4]];
+export function rollWeaponL5(ctx, level) {
+  const lv = effectiveLootLevel(ctx, undefined, level, "l5"), cap = rarityCap(lv);
+  const elig = L5_WEPS.filter(([k]) => rarityIdx(k) <= cap && (W[k]?.minLevel ?? 1) <= lv);
+  if (elig.length && ctx.random() < 0.7) {
+    const weighted = elig.map(([k, w]) => [k, w * leveledWeaponScale(k, lv)]);
+    let r = ctx.random() * weighted.reduce((a, [, w]) => a + w, 0);
+    for (const [k, w] of weighted) if ((r -= w) <= 0) { const v = rollVariant(ctx, k, lv); return rarityIdx(v) <= cap ? v : k; }
+  }
+  return rollWeapon(ctx, "l5", cap, lv);
+}
 export function rollItemL5(ctx) {
   if (ctx.random() < 0.14) return rollCash(ctx);
   const total = L5_WEIGHTS.reduce((a, [, w]) => a + w, 0);

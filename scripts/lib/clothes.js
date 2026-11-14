@@ -129,7 +129,19 @@ export function rollLevel(ctx) {
 const rowLevel = (r) => Math.max(r.level ?? 1, CL.leveled.rarityAt[r.rarity] ?? 1)
 // the leveled list at a level: every row it can roll, each with its weight
 export function leveledRows(level, filter = () => true) {
-  return CL.rows.filter((r) => filter(r) && rowLevel(r) <= level).map((r) => [r, (CL.rarity[r.rarity]?.weight ?? 1) * (r.rarity === 'common' ? 1 : 1 + CL.leveled.lift * (level - rowLevel(r)))])
+  const lv = Math.max(1, Number(level) || 1)
+  const lift = CL.leveled.lift ?? 0.04
+  return CL.rows.filter((r) => filter(r) && rowLevel(r) <= lv).map((r) => {
+    const base = CL.rarity[r.rarity]?.weight ?? 1
+    const minLv = rowLevel(r)
+    if (r.rarity === 'common') {
+      const taper = lv <= 4 ? 1 : Math.max(0.28, 1 - (lv - 4) * (r.regular ? 0.065 : 0.035))
+      return [r, base * taper]
+    }
+    const tierMul = r.rarity === 'agency' ? 2.4 : r.rarity === 'rare' ? 1.5 : 1
+    const boost = 1 + Math.min(4.0, lift * 3.5 * tierMul * (lv - minLv)) + (lv >= minLv + 2 ? 0.6 * tierMul : 0)
+    return [r, base * boost]
+  })
 }
 const pickPat = (row, u, lean) => { const ps = patsOf(row); if (!ps.length) return null; const fav = lean ? ps.filter((x) => lean.includes(x)) : []; return fav.length && u() < 0.6 ? fav[Math.floor(u() * fav.length)] : ps[Math.floor(u() * ps.length)] }
 const pickW = (list, u) => { let x = u * list.reduce((a, [, w]) => a + w, 0); for (const [r, w] of list) { x -= w; if (x <= 0) return r } return list[list.length - 1]?.[0] }
@@ -137,7 +149,7 @@ const pickW = (list, u) => { let x = u * list.reduce((a, [, w]) => a + w, 0); fo
 export function rollCloth(ctx, regular = false, level) {
   const lv = level ?? rollLevel(ctx)
   const here = ctx?.self?.place, inSpecial = here === 'level5' || here === 'level7'
-  const list = leveledRows(regular ? 1 : lv, (r) => (r.places ? r.places.includes(here) && !regular : regular ? r.regular : true))
+  const list = leveledRows(regular ? 1 : lv, (r) => !r.shop && (r.places ? r.places.includes(here) && !regular : regular ? r.regular : true))
   if (inSpecial && !regular && ctx.random() < 0.65) { const h = list.filter(([r]) => r.places); if (h.length) { const row = pickW(h, ctx.random()); return clothToken(row.slot, row.id, row.colours[Math.floor(ctx.random() * row.colours.length)], pickPat(row, () => ctx.random())) } } // Level 5 & Level 7 mostly turn up their own wardrobe
   const row = pickW(list, ctx.random()) ?? CL.rows[0]
   return clothToken(row.slot, row.id, row.colours[Math.floor(ctx.random() * row.colours.length)], pickPat(row, () => ctx.random()))
@@ -178,6 +190,7 @@ export function npcLook(id, look, faction, level, role) {
 
   const keepTop = rowData('topw', base.topw, base.top)?.rarity === 'agency'
   const keepClothes = look?.clothesOwn || look?.wearOwn
+  const npcLv = Math.max(1, Number(level) || CL.leveled.placeTier[look?.place] || 6)
 
   for (const slot of SLOTS) {
     if (keepClothes) continue
@@ -186,8 +199,11 @@ export function npcLook(id, look, faction, level, role) {
     if (slot === 'topw' && keepTop) continue
     const extra = J?.extra?.[slot] ?? F.extra?.[slot]
     if (extra !== undefined && u() > extra) { l[slot] = 'none'; continue }
-    const jl = J ? leveledRows(Math.max(level, 14), (r) => r.slot === slot && J.rows.includes(r.id) && !r.places) : []
-    const list = jl.length ? jl : leveledRows(level, (r) => r.slot === slot && F.rows.includes(r.id))
+    const jl0 = J ? leveledRows(npcLv, (r) => r.slot === slot && J.rows.includes(r.id) && !r.places && !r.shop) : []
+    const fl0 = leveledRows(npcLv, (r) => r.slot === slot && F.rows.includes(r.id) && !r.shop)
+    const jLow = J && !jl0.length && !fl0.length ? leveledRows(Math.max(npcLv, 8), (r) => r.slot === slot && J.rows.includes(r.id) && !r.places && !r.shop && r.dr <= 4) : []
+    const fLow = !jl0.length && !fl0.length && !jLow.length ? leveledRows(Math.max(npcLv, 8), (r) => r.slot === slot && F.rows.includes(r.id) && !r.shop && r.dr <= 4) : []
+    const list = jl0.length ? jl0 : fl0.length ? fl0 : jLow.length ? jLow : fLow
     if (!list.length) { if (CL.patKey[slot] && l[slot] && l[slot] !== 'none') { const r0 = rowData(slot, l[slot], l[CL.colourKey[slot]]); if (r0 && !l[CL.patKey[slot]]) l[CL.patKey[slot]] = pickPat(r0, u) ?? '' } continue }
     const row = pickW(list, u())
     l[slot] = row.id; if (CL.colourKey[slot]) { const cu = u(), own = row.colours[Math.floor(u() * row.colours.length)] // the top wears the accent, legs and feet go neutral, small pieces echo the accent now and then

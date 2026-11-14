@@ -1,73 +1,646 @@
 # spawn-scene v2 yaml x-1z-1
 l70-bp-camp:
-  children: [{feetPosition: {x: 4.670000000000002, y: 0, z: 4.670000000000002}, id: tent0, layout: {box: {max: {y: 3.2}, min: {y: 0}}}, model: {id: /cdn/value.8d7b3d9f2b7478726087d5f40b053afa15b33f6c3704fbe04f35a44f595e0cca.glb}, physics: {body: static, collider: mesh}, rotation: {yaw: 47.41158562479541}, tags: [l70-tent]}, {feetPosition: {x: 6.631400000000002, y: 0, z: 6.631400000000002}, id: tentheap0, layout: {box: {max: {y: 1.0343784149736166}, min: {y: 0}}}, model: {id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb}, rotation: {yaw: 269.8777631018311}}, {feetPosition: {x: -4.670000000000002, y: 0, z: 4.670000000000002}, id: tent1, layout: {box: {max: {y: 3.45}, min: {y: 0}}}, model: {id: /cdn/value.8d7b3d9f2b7478726087d5f40b053afa15b33f6c3704fbe04f35a44f595e0cca.glb}, physics: {body: static, collider: mesh}, rotation: {yaw: -51.315160064492375}, tags: [l70-tent]}, {feetPosition: {x: -6.631400000000002, y: 0, z: 6.631400000000002}, id: tentheap1, layout: {box: {max: {y: 0.8666957326233387}, min: {y: 0}}}, model: {id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb}, rotation: {yaw: 124.42599822767079}}, {feetPosition: {x: -4.670000000000002, y: 0, z: -4.670000000000002}, id: tent2, layout: {box: {max: {y: 3.2}, min: {y: 0}}}, model: {id: /cdn/value.8d7b3d9f2b7478726087d5f40b053afa15b33f6c3704fbe04f35a44f595e0cca.glb}, physics: {body: static, collider: mesh}, rotation: {yaw: -140.94647539965808}, tags: [l70-tent]}, {feetPosition: {x: -6.631400000000002, y: 0, z: -6.631400000000002}, id: tentheap2, layout: {box: {max: {y: 1.0726161911152303}, min: {y: 0}}}, model: {id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb}, rotation: {yaw: 292.4899051710963}}, {feetPosition: {x: 4.670000000000002, y: 0, z: -4.670000000000002}, id: tent3, layout: {box: {max: {y: 3.45}, min: {y: 0}}}, model: {id: /cdn/value.8d7b3d9f2b7478726087d5f40b053afa15b33f6c3704fbe04f35a44f595e0cca.glb}, physics: {body: static, collider: mesh}, rotation: {yaw: 137.29001788794994}, tags: [l70-tent]}, {feetPosition: {x: 6.631400000000002, y: 0, z: -6.631400000000002}, id: tentheap3, layout: {box: {max: {y: 0.8281695743091404}, min: {y: 0}}}, model: {id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb}, rotation: {yaw: 262.88590310141444}}, {feetPosition: {x: 0.6878422721704363, y: -0.05, z: 0.21277454879616448}, id: pit0, layout: {box: {max: {y: 0.3687228123564273}, min: {y: 0}}}, model: {id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb}, rotation: {yaw: 151.86778519302607}}, {feetPosition: {x: 0.2625265491559489, y: -0.05, z: 0.6704325551375538}, id: pit1, layout: {box: {max: {y: 0.38630352837033566}, min: {y: 0}}}, model: {id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb}, rotation: {yaw: 17.110920986160636}}, {feetPosition: {x: -0.3604661530303503, y: -0.05, z: 0.6232689247182953}, id: pit2, layout: {box: {max: {y: 0.3856727780867368}, min: {y: 0}}}, model: {id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb}, rotation: {yaw: 273.71930935420096}}, {feetPosition: {x: -0.7120354107923849, y: -0.05, z: 0.10679688093628847}, id: pit3, layout: {box: {max: {y: 0.4013511954154819}, min: {y: 0}}}, model: {id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb}, rotation: {yaw: 102.09278225898743}}, {feetPosition: {x: -0.5274569550323595, y: -0.05, z: -0.4900909717470743}, id: pit4, layout: {box: {max: {y: 0.40556557109579444}, min: {y: 0}}}, model: {id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb}, rotation: {yaw: 299.9498381372541}}, {feetPosition: {x: 0.05428551270735232, y: -0.05, z: -0.7179506132806768}, id: pit5, layout: {box: {max: {y: 0.3926800062227994}, min: {y: 0}}}, model: {id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb}, rotation: {yaw: 289.3757721595466}}, {feetPosition: {x: 0.5951521292263636, y: -0.05, z: -0.4052085180216794}, id: pit6, layout: {box: {max: {y: 0.4148387104924768}, min: {y: 0}}}, model: {id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb}, rotation: {yaw: 235.80321572721004}}, {feetPosition: {x: 0, y: 0, z: -4.6}, id: altar, layout: {box: {max: {y: 1.35}, min: {y: 0}}}, model: {id: /cdn/value.4437b5c2fb6c0ee74cca0b675a5670affa4d220433b2e68039eea3eb93372672.glb}, physics: {body: static, collider: mesh}, rotation: {yaw: 0}, tags: [l70-altar]}, {feetPosition: {x: 0, y: 1.7, z: -4.2}, id: altarglow, light: {color: oklch(0.85 0.09 230), distance: 7, intensity: 5, kind: point}}, {feetPosition: {x: 0.6, y: 0, z: 4.9}, id: rack, layout: {box: {max: {y: 1.75}, min: {y: 0}}}, model: {id: /cdn/value.5ad22535100f27ec3d9663ed54416b2079e850f15adc7dcc84affd713efb117e.glb}, physics: {body: static, collider: mesh}, rotation: {yaw: 90}}, {feetPosition: {x: 9.2, y: -0.15, z: -3.4}, id: totem0, layout: {box: {max: {y: 3.4}, min: {y: 0}}}, model: {id: /cdn/value.614ecd5ceb48c5e547fb4c0a607a859f98b93dffa2e76b97d29a19e7b97ee057.glb}, rotation: {roll: 1.0782880187034607, yaw: 290.2825590889166}, tags: [l70-totem]}, {feetPosition: {x: 9.2, y: -0.15, z: 3.6}, id: totem1, layout: {box: {max: {y: 2.9}, min: {y: 0}}}, model: {id: /cdn/value.614ecd5ceb48c5e547fb4c0a607a859f98b93dffa2e76b97d29a19e7b97ee057.glb}, rotation: {roll: -3.720242466777563, yaw: 248.6293777306568}, tags: [l70-totem]}, {feetPosition: {x: -9.4, y: -0.15, z: 0.8}, id: totem2, layout: {box: {max: {y: 3.7}, min: {y: 0}}}, model: {id: /cdn/value.614ecd5ceb48c5e547fb4c0a607a859f98b93dffa2e76b97d29a19e7b97ee057.glb}, rotation: {roll: -2.6161857042461634, yaw: 94.86451443776052}, tags: [l70-totem]}, {feetPosition: {x: -2.6, y: -0.15, z: -8.6}, id: totem3, layout: {box: {max: {y: 2.6}, min: {y: 0}}}, model: {id: /cdn/value.614ecd5ceb48c5e547fb4c0a607a859f98b93dffa2e76b97d29a19e7b97ee057.glb}, rotation: {roll: -2.564197789877653, yaw: 16.821409890040826}, tags: [l70-totem]}, {feetPosition: {x: 4.8, y: 0, z: -1.6}, id: heapA, layout: {box: {max: {y: 0.5}, min: {y: 0}}}, model: {id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb}, rotation: {yaw: 40}}, {feetPosition: {x: -3.6, y: 0, z: 7.6}, id: heapB, layout: {box: {max: {y: 0.8}, min: {y: 0}}}, model: {id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb}, rotation: {yaw: 200}}, {feetPosition: {x: 0, y: 1.1, z: 0}, id: firelight, light: {color: oklch(0.86 0.1 235), distance: 20, intensity: 26, kind: point}}, {audio: {bus: ambience, clip: /cdn/moodboard-realistic-gritty/sfx-wind-through-frozen-pine-forest-creaking-boughs-loop.mp3, gain: 0.16, loop: true, maxDistance: 75, spatial: true}, feetPosition: {x: 0, y: 4, z: 0}, id: pines}]
-  feetPosition: {x: -96, y: 0, z: -82}
-  fx: {script: "fx\npop coals n=8 on=disc(.3) size=.07..0.15 tint=<.5,1.3,2.6>..<.3,.7,1.6> sz=$size*flick(.5,.12) col=$tint*flick(.8,.3) a=.9 r=sprite(soft-disc,add)\npop flame rate=flick(.45,.2)*46 on=disc(.26) life=.6..1.1 v=up(1.2)+cone(18)*(.2..0.6) size=.22..0.42 acc=curl(.5)*1.1+buoy(1.7)+drag(1.5)\n  sz=$size*(.5>.25:1>.7:.7>.14) col=hdr(3.2,4.2,5)>.3:hdr(1.2,2.6,4.4)>.65:hdr(.4,1,2.6)>hdr(.1,.25,.9) a=0>.12:1>.75:.8>0 rot=spin(.2) r=sprite(flame-wisp,add)\npop motes rate=5 on=disc(.25) life=1..2 v=up(1.4)+cone(30)*(.3..0.9) size=.02..0.045 acc=curl(.8)+drag(.5) sz=$size col=hdr(2.5,4,5)>hdr(.4,1,2) a=(0>.08:1>.65:.9>0)*flick(11,.35) r=sprite(ember,add,velocity,.02)\npop frost on=@flame?.18 inh=p;v:$v*.3 life=2..3.2 size=.2..0.3 acc=buoy(.35)+curl(.3)*.5+drag(.8) sz=$size*(.7>3) col=<.8,.9,1> a=0>.2:.16>.7:.1>0 rot=spin(.15) r=sprite(smoke-puff,alpha)"}
+  children:
+  - feetPosition:
+      x: 4.670000000000002
+      y: 0
+      z: 4.670000000000002
+    id: tent0
+    layout:
+      box:
+        max:
+          y: 3.2
+        min:
+          y: 0
+    model:
+      id: /cdn/value.8d7b3d9f2b7478726087d5f40b053afa15b33f6c3704fbe04f35a44f595e0cca.glb
+    physics:
+      body: static
+      collider: mesh
+    rotation:
+      yaw: 47.41158562479541
+    tags:
+    - l70-tent
+  - feetPosition:
+      x: 6.631400000000002
+      y: 0
+      z: 6.631400000000002
+    id: tentheap0
+    layout:
+      box:
+        max:
+          y: 1.0343784149736166
+        min:
+          y: 0
+    model:
+      id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb
+    rotation:
+      yaw: 269.8777631018311
+  - feetPosition:
+      x: -4.670000000000002
+      y: 0
+      z: 4.670000000000002
+    id: tent1
+    layout:
+      box:
+        max:
+          y: 3.45
+        min:
+          y: 0
+    model:
+      id: /cdn/value.8d7b3d9f2b7478726087d5f40b053afa15b33f6c3704fbe04f35a44f595e0cca.glb
+    physics:
+      body: static
+      collider: mesh
+    rotation:
+      yaw: -51.315160064492375
+    tags:
+    - l70-tent
+  - feetPosition:
+      x: -6.631400000000002
+      y: 0
+      z: 6.631400000000002
+    id: tentheap1
+    layout:
+      box:
+        max:
+          y: 0.8666957326233387
+        min:
+          y: 0
+    model:
+      id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb
+    rotation:
+      yaw: 124.42599822767079
+  - feetPosition:
+      x: -4.670000000000002
+      y: 0
+      z: -4.670000000000002
+    id: tent2
+    layout:
+      box:
+        max:
+          y: 3.2
+        min:
+          y: 0
+    model:
+      id: /cdn/value.8d7b3d9f2b7478726087d5f40b053afa15b33f6c3704fbe04f35a44f595e0cca.glb
+    physics:
+      body: static
+      collider: mesh
+    rotation:
+      yaw: -140.94647539965808
+    tags:
+    - l70-tent
+  - feetPosition:
+      x: -6.631400000000002
+      y: 0
+      z: -6.631400000000002
+    id: tentheap2
+    layout:
+      box:
+        max:
+          y: 1.0726161911152303
+        min:
+          y: 0
+    model:
+      id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb
+    rotation:
+      yaw: 292.4899051710963
+  - feetPosition:
+      x: 4.670000000000002
+      y: 0
+      z: -4.670000000000002
+    id: tent3
+    layout:
+      box:
+        max:
+          y: 3.45
+        min:
+          y: 0
+    model:
+      id: /cdn/value.8d7b3d9f2b7478726087d5f40b053afa15b33f6c3704fbe04f35a44f595e0cca.glb
+    physics:
+      body: static
+      collider: mesh
+    rotation:
+      yaw: 137.29001788794994
+    tags:
+    - l70-tent
+  - feetPosition:
+      x: 6.631400000000002
+      y: 0
+      z: -6.631400000000002
+    id: tentheap3
+    layout:
+      box:
+        max:
+          y: 0.8281695743091404
+        min:
+          y: 0
+    model:
+      id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb
+    rotation:
+      yaw: 262.88590310141444
+  - feetPosition:
+      x: 0.6878422721704363
+      y: -0.05
+      z: 0.21277454879616448
+    id: pit0
+    layout:
+      box:
+        max:
+          y: 0.3687228123564273
+        min:
+          y: 0
+    model:
+      id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb
+    rotation:
+      yaw: 151.86778519302607
+  - feetPosition:
+      x: 0.2625265491559489
+      y: -0.05
+      z: 0.6704325551375538
+    id: pit1
+    layout:
+      box:
+        max:
+          y: 0.38630352837033566
+        min:
+          y: 0
+    model:
+      id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb
+    rotation:
+      yaw: 17.110920986160636
+  - feetPosition:
+      x: -0.3604661530303503
+      y: -0.05
+      z: 0.6232689247182953
+    id: pit2
+    layout:
+      box:
+        max:
+          y: 0.3856727780867368
+        min:
+          y: 0
+    model:
+      id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb
+    rotation:
+      yaw: 273.71930935420096
+  - feetPosition:
+      x: -0.7120354107923849
+      y: -0.05
+      z: 0.10679688093628847
+    id: pit3
+    layout:
+      box:
+        max:
+          y: 0.4013511954154819
+        min:
+          y: 0
+    model:
+      id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb
+    rotation:
+      yaw: 102.09278225898743
+  - feetPosition:
+      x: -0.5274569550323595
+      y: -0.05
+      z: -0.4900909717470743
+    id: pit4
+    layout:
+      box:
+        max:
+          y: 0.40556557109579444
+        min:
+          y: 0
+    model:
+      id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb
+    rotation:
+      yaw: 299.9498381372541
+  - feetPosition:
+      x: 0.05428551270735232
+      y: -0.05
+      z: -0.7179506132806768
+    id: pit5
+    layout:
+      box:
+        max:
+          y: 0.3926800062227994
+        min:
+          y: 0
+    model:
+      id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb
+    rotation:
+      yaw: 289.3757721595466
+  - feetPosition:
+      x: 0.5951521292263636
+      y: -0.05
+      z: -0.4052085180216794
+    id: pit6
+    layout:
+      box:
+        max:
+          y: 0.4148387104924768
+        min:
+          y: 0
+    model:
+      id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb
+    rotation:
+      yaw: 235.80321572721004
+  - feetPosition:
+      x: 0
+      y: 0
+      z: -4.6
+    id: altar
+    layout:
+      box:
+        max:
+          y: 1.35
+        min:
+          y: 0
+    model:
+      id: /cdn/value.4437b5c2fb6c0ee74cca0b675a5670affa4d220433b2e68039eea3eb93372672.glb
+    physics:
+      body: static
+      collider: mesh
+    rotation:
+      yaw: 0
+    tags:
+    - l70-altar
+  - feetPosition:
+      x: 0
+      y: 1.7
+      z: -4.2
+    id: altarglow
+    light:
+      color: oklch(0.85 0.09 230)
+      distance: 7
+      intensity: 5
+      kind: point
+  - feetPosition:
+      x: 0.6
+      y: 0
+      z: 4.9
+    id: rack
+    layout:
+      box:
+        max:
+          y: 1.75
+        min:
+          y: 0
+    model:
+      id: /cdn/value.5ad22535100f27ec3d9663ed54416b2079e850f15adc7dcc84affd713efb117e.glb
+    physics:
+      body: static
+      collider: mesh
+    rotation:
+      yaw: 90
+  - feetPosition:
+      x: 9.2
+      y: -0.15
+      z: -3.4
+    id: totem0
+    layout:
+      box:
+        max:
+          y: 3.4
+        min:
+          y: 0
+    model:
+      id: /cdn/value.614ecd5ceb48c5e547fb4c0a607a859f98b93dffa2e76b97d29a19e7b97ee057.glb
+    rotation:
+      roll: 1.0782880187034607
+      yaw: 290.2825590889166
+    tags:
+    - l70-totem
+  - feetPosition:
+      x: 9.2
+      y: -0.15
+      z: 3.6
+    id: totem1
+    layout:
+      box:
+        max:
+          y: 2.9
+        min:
+          y: 0
+    model:
+      id: /cdn/value.614ecd5ceb48c5e547fb4c0a607a859f98b93dffa2e76b97d29a19e7b97ee057.glb
+    rotation:
+      roll: -3.720242466777563
+      yaw: 248.6293777306568
+    tags:
+    - l70-totem
+  - feetPosition:
+      x: -9.4
+      y: -0.15
+      z: 0.8
+    id: totem2
+    layout:
+      box:
+        max:
+          y: 3.7
+        min:
+          y: 0
+    model:
+      id: /cdn/value.614ecd5ceb48c5e547fb4c0a607a859f98b93dffa2e76b97d29a19e7b97ee057.glb
+    rotation:
+      roll: -2.6161857042461634
+      yaw: 94.86451443776052
+    tags:
+    - l70-totem
+  - feetPosition:
+      x: -2.6
+      y: -0.15
+      z: -8.6
+    id: totem3
+    layout:
+      box:
+        max:
+          y: 2.6
+        min:
+          y: 0
+    model:
+      id: /cdn/value.614ecd5ceb48c5e547fb4c0a607a859f98b93dffa2e76b97d29a19e7b97ee057.glb
+    rotation:
+      roll: -2.564197789877653
+      yaw: 16.821409890040826
+    tags:
+    - l70-totem
+  - feetPosition:
+      x: 4.8
+      y: 0
+      z: -1.6
+    id: heapA
+    layout:
+      box:
+        max:
+          y: 0.5
+        min:
+          y: 0
+    model:
+      id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb
+    rotation:
+      yaw: 40
+  - feetPosition:
+      x: -3.6
+      y: 0
+      z: 7.6
+    id: heapB
+    layout:
+      box:
+        max:
+          y: 0.8
+        min:
+          y: 0
+    model:
+      id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb
+    rotation:
+      yaw: 200
+  - feetPosition:
+      x: 0
+      y: 1.1
+      z: 0
+    id: firelight
+    light:
+      color: oklch(0.86 0.1 235)
+      distance: 20
+      intensity: 26
+      kind: point
+  - audio:
+      bus: ambience
+      clip: /cdn/moodboard-realistic-gritty/sfx-wind-through-frozen-pine-forest-creaking-boughs-loop.mp3
+      gain: 0.16
+      loop: true
+      maxDistance: 75
+      spatial: true
+    feetPosition:
+      x: 0
+      y: 4
+      z: 0
+    id: pines
+  feetPosition:
+    x: -96
+    y: 0
+    z: -82
+  fx:
+    script: "fx\npop coals n=8 on=disc(.3) size=.07..0.15 tint=<.5,1.3,2.6>..<.3,.7,1.6>\
+      \ sz=$size*flick(.5,.12) col=$tint*flick(.8,.3) a=.9 r=sprite(soft-disc,add)\n\
+      pop flame rate=flick(.45,.2)*46 on=disc(.26) life=.6..1.1 v=up(1.2)+cone(18)*(.2..0.6)\
+      \ size=.22..0.42 acc=curl(.5)*1.1+buoy(1.7)+drag(1.5)\n  sz=$size*(.5>.25:1>.7:.7>.14)\
+      \ col=hdr(3.2,4.2,5)>.3:hdr(1.2,2.6,4.4)>.65:hdr(.4,1,2.6)>hdr(.1,.25,.9) a=0>.12:1>.75:.8>0\
+      \ rot=spin(.2) r=sprite(flame-wisp,add)\npop motes rate=5 on=disc(.25) life=1..2\
+      \ v=up(1.4)+cone(30)*(.3..0.9) size=.02..0.045 acc=curl(.8)+drag(.5) sz=$size\
+      \ col=hdr(2.5,4,5)>hdr(.4,1,2) a=(0>.08:1>.65:.9>0)*flick(11,.35) r=sprite(ember,add,velocity,.02)\n\
+      pop frost on=@flame?.18 inh=p;v:$v*.3 life=2..3.2 size=.2..0.3 acc=buoy(.35)+curl(.3)*.5+drag(.8)\
+      \ sz=$size*(.7>3) col=<.8,.9,1> a=0>.2:.16>.7:.1>0 rot=spin(.15) r=sprite(smoke-puff,alpha)"
   id: l70-bp-camp
-  tags: [l70-wild, l70-campfire]
+  tags:
+  - l70-wild
+  - l70-campfire
 l70-path-camp-heap11:
   castShadow: false
-  feetPosition: {x: -65.29363900386528, y: {terrain: -0.06}, z: -75.986453567703}
+  feetPosition:
+    x: -65.29363900386528
+    y:
+      terrain: -0.06
+    z: -75.986453567703
   id: l70-path-camp-heap11
-  layout: {box: {max: {x: 1.4399810814484866, y: 0.6810179523569615, z: 0.8639886488690919}, min: {x: -1.4399810814484866, y: 0, z: -0.8639886488690919}}}
+  layout:
+    box:
+      max:
+        x: 1.4399810814484866
+        y: 0.6810179523569615
+        z: 0.8639886488690919
+      min:
+        x: -1.4399810814484866
+        y: 0
+        z: -0.8639886488690919
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: -10.007483302420379}
+  rotation:
+    yaw: -10.007483302420379
+  visibleRange:
+    max: 65
 l70-path-camp-heap12:
   castShadow: false
-  feetPosition: {x: -70.93459105197118, y: {terrain: -0.06}, z: -81.02989826692944}
+  feetPosition:
+    x: -70.93459105197118
+    y:
+      terrain: -0.06
+    z: -81.02989826692944
   id: l70-path-camp-heap12
-  layout: {box: {max: {x: 1.293065670082842, y: 0.5273585411614545, z: 0.7758394020497051}, min: {x: -1.293065670082842, y: 0, z: -0.7758394020497051}}}
+  layout:
+    box:
+      max:
+        x: 1.293065670082842
+        y: 0.5273585411614545
+        z: 0.7758394020497051
+      min:
+        x: -1.293065670082842
+        y: 0
+        z: -0.7758394020497051
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: -1.7552515498029866}
+  rotation:
+    yaw: -1.7552515498029866
+  visibleRange:
+    max: 65
 l70-path-camp-heap13:
   castShadow: false
-  feetPosition: {x: -77.2213036175115, y: {terrain: -0.06}, z: -78.24839096608008}
+  feetPosition:
+    x: -77.2213036175115
+    y:
+      terrain: -0.06
+    z: -78.24839096608008
   id: l70-path-camp-heap13
-  layout: {box: {max: {x: 1.1091854098761387, y: 0.5395918941309638, z: 0.6655112459256832}, min: {x: -1.1091854098761387, y: 0, z: -0.6655112459256832}}}
+  layout:
+    box:
+      max:
+        x: 1.1091854098761387
+        y: 0.5395918941309638
+        z: 0.6655112459256832
+      min:
+        x: -1.1091854098761387
+        y: 0
+        z: -0.6655112459256832
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: -17.455338456946187}
+  rotation:
+    yaw: -17.455338456946187
+  visibleRange:
+    max: 65
 l70-path-camp-heap14:
   castShadow: false
-  feetPosition: {x: -76.68873852541442, y: {terrain: -0.06}, z: -81.79882491339389}
+  feetPosition:
+    x: -76.68873852541442
+    y:
+      terrain: -0.06
+    z: -81.79882491339389
   id: l70-path-camp-heap14
-  layout: {box: {max: {x: 1.065000398673583, y: 0.5808502534548055, z: 0.6390002392041497}, min: {x: -1.065000398673583, y: 0, z: -0.6390002392041497}}}
+  layout:
+    box:
+      max:
+        x: 1.065000398673583
+        y: 0.5808502534548055
+        z: 0.6390002392041497
+      min:
+        x: -1.065000398673583
+        y: 0
+        z: -0.6390002392041497
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: -10.66289653061193}
+  rotation:
+    yaw: -10.66289653061193
+  visibleRange:
+    max: 65
 l70-path-camp-heap15:
   castShadow: false
-  feetPosition: {x: -86.676842519825, y: {terrain: -0.06}, z: -83.62280002694489}
+  feetPosition:
+    x: -86.676842519825
+    y:
+      terrain: -0.06
+    z: -83.62280002694489
   id: l70-path-camp-heap15
-  layout: {box: {max: {x: 1.3766330232269284, y: 0.6856106874931653, z: 0.825979813936157}, min: {x: -1.3766330232269284, y: 0, z: -0.825979813936157}}}
+  layout:
+    box:
+      max:
+        x: 1.3766330232269284
+        y: 0.6856106874931653
+        z: 0.825979813936157
+      min:
+        x: -1.3766330232269284
+        y: 0
+        z: -0.825979813936157
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: -21.845429671952758}
+  rotation:
+    yaw: -21.845429671952758
+  visibleRange:
+    max: 65
 l70-path-glow-camp-b:
-  feetPosition: {x: -74, y: 2.2, z: -81}
+  feetPosition:
+    x: -74
+    y: 2.2
+    z: -81
   id: l70-path-glow-camp-b
-  light: {color: "#ffb36b", distance: 11, intensity: 1.6, kind: point}
+  light:
+    color: '#ffb36b'
+    distance: 11
+    intensity: 1.6
+    kind: point
+  visibleRange:
+    max: 65
 l70-rock0:
-  feetPosition: {x: -116.49095859188989, y: {terrain: -0.3963272990233844}, z: -159.01990084086097}
+  feetPosition:
+    x: -116.49095859188989
+    y:
+      terrain: -0.3963272990233844
+    z: -159.01990084086097
   id: l70-rock0
-  layout: {box: {max: {y: 2.2018183279076915}, min: {y: 0}}}
-  model: {id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 318.10348724015057}
-  tags: [l70-wild, l70-rock]
-  visibleRange: {max: 260}
+  layout:
+    box:
+      max:
+        y: 2.2018183279076915
+      min:
+        y: 0
+  model:
+    id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 318.10348724015057
+  tags:
+  - l70-wild
+  - l70-rock
+  visibleRange:
+    max: 260
 l70-skyline0:
   castShadow: false
-  feetPosition: {x: -150, y: {terrain: -1}, z: -178}
+  feetPosition:
+    x: -150
+    y:
+      terrain: -1
+    z: -178
   id: l70-skyline0
-  layout: {box: {max: {y: 52}, min: {y: 0}}}
-  model: {id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb, materials: {tripo_material_05692072-2f16-4333-a2ec-e88663003b42: {color: oklch(0.32 0.03 250), roughness: 0.55}}}
-  rotation: {yaw: 0}
-  tags: [l70-wild, l70-skyline]
-  visibleRange: {max: 900}
+  layout:
+    box:
+      max:
+        y: 52
+      min:
+        y: 0
+  model:
+    id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb
+    materials:
+      tripo_material_05692072-2f16-4333-a2ec-e88663003b42:
+        color: oklch(0.32 0.03 250)
+        roughness: 0.55
+  rotation:
+    yaw: 0
+  tags:
+  - l70-wild
+  - l70-skyline
+  visibleRange:
+    max: 900
 l70-skyline1:
   castShadow: false
-  feetPosition: {x: -88, y: {terrain: -1}, z: -190}
+  feetPosition:
+    x: -88
+    y:
+      terrain: -1
+    z: -190
   id: l70-skyline1
-  layout: {box: {max: {y: 44}, min: {y: 0}}}
-  model: {id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb, materials: {tripo_material_05692072-2f16-4333-a2ec-e88663003b42: {color: oklch(0.32 0.03 250), roughness: 0.55}}}
-  rotation: {yaw: 90}
-  tags: [l70-wild, l70-skyline]
-  visibleRange: {max: 900}
+  layout:
+    box:
+      max:
+        y: 44
+      min:
+        y: 0
+  model:
+    id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb
+    materials:
+      tripo_material_05692072-2f16-4333-a2ec-e88663003b42:
+        color: oklch(0.32 0.03 250)
+        roughness: 0.55
+  rotation:
+    yaw: 90
+  tags:
+  - l70-wild
+  - l70-skyline
+  visibleRange:
+    max: 900

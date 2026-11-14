@@ -3,12 +3,19 @@ export { xpNeed } from './lib/progression.js'
 import { migrate, wakePlace, wakeLog, canSaveHere } from "./lib/save.js"
 import { sanityMul } from "./lib/run-opts.js"
 import { CORRIDOR, agilityProfile, hitObstacle } from './lib/levelrun-mechanics.js'
-import { startRescueCut } from './lib/levelrun-cut.js'
 import { layout as layout9, zoneAt as zoneAt9 } from './lib/level9.js'
 import { firstPersonGun, firstPersonTuning } from './lib/fp-gun.js'
 import { setQuest } from './lib/quests.js'
-import { learn } from './lib/dina-quest.js'
 import { assaulted, forgiveTick, hostileReason } from './lib/forgive.js'
+
+const MODS = Object.create(null), MOD_WAIT = Object.create(null)
+const lazy = (k, load) => {
+  if (k in MODS) return MODS[k]
+  if (!MOD_WAIT[k]) MOD_WAIT[k] = load().then((m) => (MODS[k] = m)).catch(() => (MOD_WAIT[k] = null))
+  return null
+}
+const callLazy = (k, load, fn, ...args) => (MODS[k]?.[fn] ? MODS[k][fn](...args) : (MOD_WAIT[k] ??= load().then((m) => (MODS[k] = m))).then((m) => m?.[fn]?.(...args)))
+const loadFish = () => import('./lib/fishing.js')
 import { preloadTick } from './lib/preload-next.js'
 import { powerKnock } from './lib/knock.js'
 import SNK from "./lib/data/sneak.yml"
@@ -30,14 +37,11 @@ import { BLAST, feelBlast } from './lib/blast-fx.js'
 import { animate } from 'builtin/tween'
 import BRK from './lib/data/breakables.yml'
 import { strike } from './lib/breakables.js'
-import { startFishing, handleFishingClick, onFishNibble, onFishBite, finishFishingCatch, cancelFishing } from './lib/fishing.js'
 import { fire as fireBullets, show as showBullets } from './lib/ballistics.js'
 import { swing3, fire3, stagger3, tick3 } from './lib/body3.js'
 import { dropLoot, rollLoot, spawnWeapon, poolOf, spawnRemains } from './lib/loot.js'
-import { becomeCorpse } from './lib/l5-hostile.js'
 import { markKill } from './lib/witness.js'
 import { isVilified, repKill } from './lib/rep.js'
-import { questKill1 } from './lib/level1-quests.js'
 import D from './lib/data/difficulty.yml'
 import { penOf, vary } from './lib/combat.js'
 import { derived, canCarry, burden, npcMul, START, dmgMul, handling, skillsOf, permanentSkillsOf, spentOf, SKILLS, SKILL_MAX, dmgAfterArmor, lookOfNpc } from './lib/stats.js'
@@ -58,7 +62,6 @@ import L2 from './lib/data/level2.yml'
 import { zoneAt as zoneAt3 } from './lib/level3.js'
 import { zoneAt as zoneAt4, DRAIN4 } from './lib/level4.js'
 import { zoneAt as zoneAt5, DRAIN5 } from './lib/level5.js'
-import { beastStruck } from './lib/l5-beast.js'
 import L3 from './lib/data/level3.yml'
 let L9 = null
 const zone9 = (ctx, x, z) => { const sd = ctx.place?.state?.l9seed; if (sd == null) return 'l9_street'; if (L9?.seed !== sd) L9 = layout9(sd); return zoneAt9(L9, x, z) }
@@ -104,7 +107,7 @@ import THROW from './lib/data/throwables.yml'
 import { RAG } from './nade.js'
 import { stepTick } from './lib/footsteps.js'
 import { useCompass, COMPASS } from './lib/compass.js'
-import { placeFreshener, nearFresh, FRESH_BODY } from './lib/remodel-quest.js'
+import { nearFresh, FRESH_BODY } from './lib/fresh-aura.js'
 import { placeMusicBox, musicNear, kneel } from './lib/musicbox.js'
 import L3I from './lib/data/l3items.yml'
 import CR from './lib/data/craft.yml'
@@ -112,7 +115,6 @@ import { MANUALS, learnFromManual } from './lib/manuals.js'
 import AW from './lib/data/almond.yml'
 import { MEAT } from './lib/items.js'
 import SNACKS from './lib/data/snacks.yml'
-import { useGadget } from './lib/rink-items.js'
 import { carryAcross } from "./lib/carry.js";
 import { onRink, SKATE, skateStep } from './lib/level31.js'
 const sndTurn = {}
@@ -450,7 +452,7 @@ export function readMagAction(ctx, token) {
 export function useSnack(ctx, token) { // consume one from the bag
   const s = ctx.self.state, now = ctx.now(), n = s.snacks?.[token] ?? 0
   if (n <= 0 || !SNACKS[token]) return
-  if (SNACKS[token].use) { useGadget(ctx, token, SNACKS[token], n); return } // Level 31 gadgets (scripts/lib/rink-items.js)
+  if (SNACKS[token].use) { const row = SNACKS[token]; callLazy('rink', () => import('./lib/rink-items.js'), 'useGadget', ctx, token, row, n); return } // Level 31 gadgets (scripts/lib/rink-items.js)
   if (token === 'musicbox') { s.invOpen = false; placeMusicBox(ctx); return } // set down, not eaten (scripts/lib/musicbox.js)
   if (SNACKS[token].quest) { s.notice = { text: SNACKS[token].name + ': ' + SNACKS[token].info, at: now }; return } // Level 70 quest goods: looked at, kept
   if (SNACKS[token].keep) { // a keepsake: used, not eaten, once per cooldown
@@ -609,7 +611,7 @@ export function onInput(ctx, input) {
     if (sv.invOpen || sv.lootOpen) { if (sv.chargeAt) sv.chargeAt = 0 } // a click on a menu is no swing
     else if (ctx.self.state.building) { if (sv.chargeAt) sv.chargeAt = 0 }
     else if (ctx.self.state.sheathed) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack) { toggleHolster(ctx); walkOf(ctx).nextSwing = ctx.now() + 450 } } // holstered: a click draws (fallout), it never hits
-    else if (sv.fishingState) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack) handleFishingClick(ctx, sv, walkOf(ctx)) }
+    else if (sv.fishingState) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack) callLazy('fish', loadFish, 'handleFishingClick', ctx, sv, walkOf(ctx)) }
     else if (sv.equipped === 'soup_bowl') { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack) soupThrow(ctx) } // the bowl: a click throws it
     else if (aw.ranged) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack || (aw.auto && input.held.attack)) swing(ctx) }
     else {
@@ -678,7 +680,7 @@ export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pe
     return
   }
   if (npc) dmg = pellets > 1 ? pellets * dmgAfterArmor(lookOfNpc(m), dmg / pellets, false, pen) : dmgAfterArmor(lookOfNpc(m), dmg, false, pen) // an agent's or survivor's clothes soak the hit like yours do: a shotgun's pellets one by one, and a hit's armor penetration takes some of it off
-  if (m.tags?.includes('l5-beast')) { beastStruck(ctx, m); return } // the Gentleman takes no damage: he stops letting you see him (scripts/lib/l5-beast.js)
+  if (m.tags?.includes('l5-beast')) { callLazy('l5beast', () => import('./lib/l5-beast.js'), 'beastStruck', ctx, m); return } // the Gentleman takes no damage: he stops letting you see him (scripts/lib/l5-beast.js)
   const defending = npc && (isVilified(s, m) || hostileReason(ctx, m, ctx.self) === "hostile");
   m.state.hp -= dmg
   if (!npc && !m.tags?.includes('l61fc')) { const sp0 = ctx.self.feetPosition, v0 = ctx.self.velocity ?? {}; m.state.shot = { x: sp0.x, z: sp0.z, vx: v0.x ?? 0, vz: v0.z ?? 0, at: ctx.now() } } // a creature that is hit knows where from, however far: smilers, lurkers and hounds go to the spot (hunt.js shotAt)
@@ -708,12 +710,12 @@ export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pe
   if (m.state.hp <= 0 && !m.state.dead) {
     m.state.dead = true
     if (W[s.equipped]?.vaporize) vaporize(ctx, m, hit, npc) // the R-55: the thing burns to light and ash where it stood
-    { const seen = markKill(ctx, m, ctx.self); if ((m.tags ?? []).includes('npc')) { repKill(ctx, m, ctx.self, seen, defending); questKill1(ctx, ctx.self, m) } if (npc && !seen.length && s.crouch) s.notice = { text: 'Nobody saw that', at: ctx.now() } } // witnesses: scripts/lib/witness.js
+    { const seen = markKill(ctx, m, ctx.self); if ((m.tags ?? []).includes('npc')) { repKill(ctx, m, ctx.self, seen, defending); if (ctx.self.place === 'level1' || ['meg-ale', 'meg-callum', 'meg-ortiz'].includes(m.id)) callLazy('l1q', () => import('./lib/level1-quests.js'), 'questKill1', ctx, ctx.self, m) } if (npc && !seen.length && s.crouch) s.notice = { text: 'Nobody saw that', at: ctx.now() } } // witnesses: scripts/lib/witness.js
     s.kills += 1
     gain(ctx, m.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
     const tg = m.tags ?? [], ent = tg.includes('smiler') || tg.includes('lurker')
     if (ent) dropLoot(ctx, m.feetPosition, tg.includes('lurker') ? 'Lurker remains' : 'Smiler remains', npcMul(m.state).loot, derived(s).clothFind, poolOf(ctx.self.place)) // only smilers and lurkers leave smiler/lurker remains
-    else if (!npc && !tg.some((g) => g === 'zdrone' || g === 'l5staff' || g === 'l5rat' || g === 'l10worm' || g === 'l7beast' || g === 'l11foe' || g === 'remains' || g === 'spamboss')) becomeCorpse(ctx, m, (m.state?.name ?? 'Body').split(' ·')[0] + "'s body", rollLoot(ctx, npcMul(m.state).loot, derived(s).clothFind, poolOf(ctx.self.place)), ctx.self.feetPosition) // anything else stays its own body, limp and searchable // an agent's own body is searched (scripts/meg-agent.js)
+    else if (!npc && !tg.some((g) => g === 'zdrone' || g === 'l5staff' || g === 'l5rat' || g === 'l10worm' || g === 'l7beast' || g === 'l11foe' || g === 'remains' || g === 'spamboss')) callLazy('l5h', () => import('./lib/l5-hostile.js'), 'becomeCorpse', ctx, m, (m.state?.name ?? 'Body').split(' ·')[0] + "'s body", rollLoot(ctx, npcMul(m.state).loot, derived(s).clothFind, poolOf(ctx.self.place)), ctx.self.feetPosition) // anything else stays its own body, limp and searchable // an agent's own body is searched (scripts/meg-agent.js)
   }
 }
 
@@ -863,7 +865,7 @@ function swing(ctx, power = 0) {
   if (!wp.ranged) sound(ctx, wp.whoosh ?? 'pipe-whoosh-swing', wp.quiet ? 0.3 : power ? 0.9 : 0.55)
   if (!found.length) { // nothing alive in reach: the swing or shot lands on the world (walls, furniture, crates, what was built)
     let pc = ctx.self.camera?.rotation?.pitch ?? 0; if (Math.abs(pc) > 1.6) pc = pc * Math.PI / 180
-    if (baseOf(s.equipped) === 'fishing_rod' && startFishing(ctx, s, w, p, f, pc, power)) return
+    if (baseOf(s.equipped) === 'fishing_rod') { const fm = lazy('fish', loadFish); if (fm?.startFishing(ctx, s, w, p, f, pc, power)) return; if (!fm) { callLazy('fish', loadFish, 'startFishing', ctx, s, w, p, f, pc, power); return } }
     const sb = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * wMul(cndOf(s, s.equipped))
     strike(ctx, s, wp, s.equipped, sb, f, pc)
     return
@@ -891,24 +893,24 @@ function swing(ctx, power = 0) {
 }
 
 export function fishNibble(ctx, d) {
-  onFishNibble(ctx, d?.id)
+  callLazy('fish', loadFish, 'onFishNibble', ctx, d?.id)
 }
 
 export function fishBite(ctx, d) {
-  onFishBite(ctx, d?.id)
+  callLazy('fish', loadFish, 'onFishBite', ctx, d?.id)
 }
 
 export function fishAutoCatch(ctx, d) {
   const s = ctx.self.state
   if (s?.fishingState && s.fishingState.id === d?.id) {
-    finishFishingCatch(ctx, s, s.fishingState, false)
+    callLazy('fish', loadFish, 'finishFishingCatch', ctx, s, s.fishingState, false)
   }
 }
 
 export function fishCatch(ctx, d) {
   const s = ctx.self.state
   if (s?.fishingState) {
-    finishFishingCatch(ctx, s, s.fishingState, false)
+    callLazy('fish', loadFish, 'finishFishingCatch', ctx, s, s.fishingState, false)
   }
 }
 
@@ -1089,13 +1091,13 @@ function invAction(ctx, d) {
     if (ctx.self.session.holoSnd != null) ctx.emit('stopSound', { soundId: ctx.self.session.holoSnd })
     if (s.holoPlay?.id === id && ctx.now() - s.holoPlay.at < T.len * 1000) { ctx.self.session.holoSnd = null; s.holoPlay = null; return } // a second press stops it
     ctx.self.session.holoSnd = ctx.emit('playSound', { clip: T.clip ?? vo(T.who, T.line), volume: 0.9, bus: 'Voice' }) // dina4: her own voiced line
-    if (id === 'dina4') { learn(ctx, s, 'name', true); learn(ctx, s, 'tape') }
+    if (id === 'dina4') { import('./lib/dina-quest.js').then((dq) => { dq.learn(ctx, s, 'name', true); dq.learn(ctx, s, 'tape') }) }
     s.holoPlay = { id, at: ctx.now() }; if (ctx.self.session.holoEnd) ctx.cancel(ctx.self.session.holoEnd); ctx.self.session.holoEnd = ctx.after(T.len, 'holoEnd', { at: s.holoPlay.at }); return
   }
   if (d.k === 'read') { if (s.ledgerOpen) s.ledgerOpen = 0; s.reading = parseInt(d.n) || null; s.invOpen = false; return }
   if (d.k === 'repair') { repairAction(ctx, d); return }
   if (d.k === 'compass') { s.invOpen = false; useCompass(ctx); return }
-  if (d.k === 'fresh') { s.invOpen = false; if (s.fresh > 0) kneel(ctx); placeFreshener(ctx); return }
+  if (d.k === 'fresh') { s.invOpen = false; if (s.fresh > 0) kneel(ctx); callLazy('remod', () => import('./lib/remodel-quest.js'), 'placeFreshener', ctx); return }
   const k = String(d.w || '')
   if (d.k === 'wear' || d.k === 'unwear') { // clothes: wearing one swaps out what was in that slot (back into the bag); unwear strips it
     const bag = s.clothes ? s.clothes.split(',').filter(Boolean) : []
@@ -1727,7 +1729,7 @@ export function update(ctx, dt) {
   w.acc = (w.acc ?? 0) + dt
   if (s.fishingState) {
     const fs = s.fishingState, dist = Math.hypot(ctx.self.feetPosition.x - fs.bx, ctx.self.feetPosition.z - fs.bz)
-    if (dist > 22 || s.sheathed || baseOf(s.equipped) !== 'fishing_rod' || s.dead || s.downAt) cancelFishing(ctx, s, 'lost')
+    if (dist > 22 || s.sheathed || baseOf(s.equipped) !== 'fishing_rod' || s.dead || s.downAt) callLazy('fish', loadFish, 'cancelFishing', ctx, s, 'lost')
   }
   if (w.acc >= 0.25) { w.dv = derived(s); w.bur = burden(s); w.vmCheck = true; tickStats(ctx, w.acc, moving); w.acc = 0 }
 }
@@ -1961,7 +1963,7 @@ function tickStats(ctx, t, moving) {
   if (s.hp <= 0) {
     if (ctx.self.place === 'levelrun' && (p.z ?? 0) <= CORRIDOR.collapseZ + 5 && !s.lrunRescued) {
       s.hp = 6
-      startRescueCut(ctx, ctx.self)
+      callLazy('lrun', () => import('./lib/levelrun-cut.js'), 'startRescueCut', ctx, ctx.self)
       return
     }
     s.deaths += 1; s.downAt = now

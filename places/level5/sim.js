@@ -378,11 +378,11 @@ function keepOut(ctx) {
   }
 }
 export function tick(ctx) {
-  if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
+  if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
+  sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level5"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.session.l5Tuned) { retuneL5(ctx); ctx.session.l5Tuned = true; }
-  if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   homesBack(ctx);
   breakablesOnce(ctx);
   const s = ctx.place.state;

@@ -1,11 +1,31 @@
 # spawn-scene v2 yaml x0z-2
 l70-cityglow0:
-  feetPosition: {x: -60, y: 30, z: -200}
+  feetPosition:
+    x: -60
+    y: 30
+    z: -200
   id: l70-cityglow0
-  light: {color: oklch(0.78 0.15 65), distance: 90, intensity: 900, kind: point}
-  tags: [l70-wild]
+  light:
+    color: oklch(0.78 0.15 65)
+    distance: 90
+    intensity: 900
+    kind: point
+  tags:
+  - l70-wild
+  visibleRange:
+    max: 65
 l70-cityglow1:
-  feetPosition: {x: 60, y: 26, z: -200}
+  feetPosition:
+    x: 60
+    y: 26
+    z: -200
   id: l70-cityglow1
-  light: {color: oklch(0.78 0.15 65), distance: 90, intensity: 900, kind: point}
-  tags: [l70-wild]
+  light:
+    color: oklch(0.78 0.15 65)
+    distance: 90
+    intensity: 900
+    kind: point
+  tags:
+  - l70-wild
+  visibleRange:
+    max: 65

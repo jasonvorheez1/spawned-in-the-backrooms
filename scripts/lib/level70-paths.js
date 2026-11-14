@@ -6,7 +6,7 @@
 import { HOUSE_DOOR, IGLOO_DOOR } from "./level70-town.js";
 import { GARAGE_DOOR, HOTEL_DOOR } from "./level70-civic.js";
 import { CAMP_FIRE, RIG, DOCK_POST, TREES } from "./level70-wild.js";
-export const V = 7;
+export const V = 8;
 const TEX = "cdn/texture-trampled-packed-snow-path-with-boot-prints-and-slush.png";
 const HEAPS = ["/cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb", "/cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb"];
 export const WALKS = [
@@ -60,7 +60,7 @@ export function lay(ctx) {
           if (nearTree(x, z, 1.8) || ctx.query({ center: { x, y: 0, z }, radius: 1.7 }).some((o) => !/^l70-path-/.test(o.id))) continue;
           const hx = 0.9 + r() * 0.7, hy = 0.35 + r() * 0.35;
           sp(`l70-path-${w.id}-heap${n++}`, { feetPosition: { x, z, y: { terrain: -0.06 } }, rotation: { yaw: Math.atan2(tx, tz) * 57.3 + 90 + (r() - 0.5) * 30 },
-            model: HEAPS[n % 2], layout: { box: { min: { x: -hx, y: 0, z: -hx * 0.6 }, max: { x: hx, y: hy, z: hx * 0.6 } } }, castShadow: false });
+            model: HEAPS[n % 2], layout: { box: { min: { x: -hx, y: 0, z: -hx * 0.6 }, max: { x: hx, y: hy, z: hx * 0.6 } } }, castShadow: false, visibleRange: { max: 70 } });
         }
       }
     }

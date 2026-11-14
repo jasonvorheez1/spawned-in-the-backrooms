@@ -5,6 +5,7 @@ import { infamyOf, fameOf, GROUPS } from "./rep.js";
 import { critterSpec } from "./critter-model.js";
 import { npcLook } from "./clothes.js";
 import { weaponBody } from "./weapon-look.js";
+import { npcGearLevel, rollNpcWeapon } from "./npc-gear.js";
 
 const SAFE = new Set(["intake", "tutorial0", "bonus", "home11", "level5", "spamton", "testlab", "levelrun"]);
 const CHECK_MS = 60000, CHANCE = 0.3, COOLDOWN_MS = 20 * 60000, LIFE_S = 600, TRAIL_MS = 4000;
@@ -37,12 +38,17 @@ export function squadTick(ctx, ses, st, place) {
 export const SQUAD_KEYS = Object.keys(SQUADS);
 export function sendSquad(ctx, g, from, hunter, home, n = 3) {
   const S = SQUADS[g], now = ctx.now();
+  const playerLevel = Number(ctx.self?.state?.level) || 8;
   for (let i = 0; i < n; i++) {
-    const id = `squad-${g}-${Math.round(now)}-${i}`, gun = S.guns[i % S.guns.length], x = from.x + (i - n / 2) * 0.9, z = from.z + (i % 2) * 0.9;
-    const look = npcLook(id, S.top ? { topw: "jacket", top: S.top } : {}, S.look, 8, S.role);
+    const id = `squad-${g}-${Math.round(now)}-${i}`, x = from.x + (i - n / 2) * 0.9, z = from.z + (i % 2) * 0.9;
+    const stub = { id, tags: ["npc", "hit-squad"], state: { role: S.role, faction: g } };
+    const lv = npcGearLevel(ctx, stub, { playerLevel });
+    const gun = lv >= 8 && S.guns.length && i === 0 ? rollNpcWeapon(ctx, stub, { playerLevel, gearLevel: lv, forceArmed: true, forceRanged: true }) : rollNpcWeapon(ctx, stub, { playerLevel, gearLevel: lv, forceArmed: true, forceRanged: g !== "gelu" || i % 2 === 0 });
+    const hp = Math.round(95 + lv * 7);
+    const look = npcLook(id, S.top ? { topw: "jacket", top: S.top } : {}, S.look, lv, S.role);
     ctx.spawn(id, { tags: ["npc", "hit-squad"], feetPosition: { x, y: from.y + 0.25, z }, physics: "character", lifetime: LIFE_S,
       ...critterSpec(look), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
-      state: { name: S.name, role: S.role, faction: g, attackOnSight: true, hunting: hunter, home: { x: home.x, y: home.y, z: home.z }, hp: 140, maxHp: 140 } });
+      state: { name: S.name, role: S.role, faction: g, gearLevel: lv, arm: gun, attackOnSight: true, hunting: hunter, home: { x: home.x, y: home.y, z: home.z }, hp, maxHp: hp } });
     ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: gun }, ...weaponBody(gun) });
   }
   return S.name;

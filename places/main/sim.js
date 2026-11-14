@@ -234,6 +234,7 @@ function dressPlan(ctx) {
   }
   return { plan, count };
 }
+const DRESS_PLANS = new WeakMap();
 export function dress(ctx, step) {
   if (step === 0 && DR.darkRim) { // the blackout's edge: the lamps that reach into it are dead or failing, never dimmer copies
     let i = 0; for (const id of Object.keys(ctx.place.objects)) { if (!id.startsWith("level0-lights/")) continue; const o = ctx.place.objects[id], f = o?.feetPosition; if (!f || !o.light) continue; const { cx, cz } = cellAt(f.x, f.z), r = DR.darkRim.reach ?? 1;
@@ -242,9 +243,13 @@ export function dress(ctx, step) {
       o.light = { ...o.light, intensity: h < DR.darkRim.dead ? 0 : DR.darkRim.failing, color: h < DR.darkRim.dead ? o.light.color : DR.darkRim.color }; }
     ctx.place.state.darkRimLights = i; }
   if (step === 0) for (const o of ctx.query({ tags: ["l0dress"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id);
-  const { plan } = dressPlan(ctx), B = DR.batch ?? 200, part = plan.slice(step * B, step * B + B);
+  let plan = step > 0 ? DRESS_PLANS.get(ctx.place) : null;
+  if (!plan) { plan = dressPlan(ctx).plan; DRESS_PLANS.set(ctx.place, plan); }
+  const B = DR.batch ?? 200, part = plan.slice(step * B, step * B + B);
   for (const spec of part) { if (spec.tags.includes("desk")) spec.state.items = deskItems(ctx); ctx.spawn(spec); }
-  return part.length === B; // more to lay next tick
+  if (part.length === B) return true; // more to lay next tick
+  DRESS_PLANS.delete(ctx.place);
+  return false;
 }
 function furnish(ctx) {
   let n = 0;
@@ -341,10 +346,11 @@ function shift(ctx, s, now) {
 // the flickering wall out to Level 1 isn't a door object (scripts/player.js crosses at it): the dresser gets it by hand
 const l0Ways = () => [{ id: "l0-exit", at: { x: -HALF + 0.15, y: 0, z: cellCenter(EXIT.cx, EXIT.cz).z }, fwd: { x: 1, z: 0 } }];
 export function tick(ctx) {
+  if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   restyleSigns(ctx, "main"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx, l0Ways()); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
-  if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state, now = ctx.now();
+  const heavyInit = s.momentsV !== 15 || !s.furnished || s.sunkV !== 1;
   layXmas(ctx); // the Christmas Area off the north rim (scripts/lib/xmas-room.js)
   layL02Door(ctx); // Level 0.2: the half-built Remodeling Co. door (scripts/lib/level02.js)
   layZenithEntry(ctx); // Level 0.1: Kade and the B.N.T.G. bulkhead in the safe room
@@ -396,11 +402,10 @@ export function tick(ctx) {
     s.deskV = 1;
   }
   if (s.sunkV !== 1) { s.sunkV = 1; sink(ctx); }
-  if (s.dressV !== DR.v && DR.models.partition) { const st = s.dressStep ?? 0; if (dress(ctx, st)) s.dressStep = st + 1; else { s.dressV = DR.v; s.dressStep = 0; } } // Tripo pieces and the modeled kit (l0-dress.yml), DR.batch a tick
+  if (!heavyInit && s.dressV !== DR.v && DR.models.partition) { const st = s.dressStep ?? 0; if (dress(ctx, st)) s.dressStep = st + 1; else { s.dressV = DR.v; s.dressStep = 0; } } // Tripo pieces and the modeled kit (l0-dress.yml), DR.batch a tick
   regrow(ctx, s, now);
   syncLevel0(ctx);
-  const weapons = ctx.query({ tags: ["weapon"] }).length;
-  if (false && weapons < W.pickups && now >= (s.nextWeapon ?? 0)) {
+  if (false && now >= (s.nextWeapon ?? 0)) {
     const fill = s.weaponsSeeded ? 1 : W.pickups - weapons;
     for (let i = 0; i < fill; i++) {
       const c = cell(ctx);

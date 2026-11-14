@@ -7,7 +7,7 @@ import { barkOf } from "./lib/dialogue.js";
 import { explainHostility, hostileReason, incidentOf, faction } from "./lib/forgive.js";
 import { heard } from "./lib/hear.js";
 import { seatFor } from "./lib/seat.js";
-import { rollLoot, garmentsOf } from "./lib/loot.js";
+import { rollNpcWeapon, rollNpcPocketLoot, npcGearLevel, adaptNpcWear } from "./lib/npc-gear.js";
 import { stripTo, SLOTS } from "./lib/clothes.js";
 import { lifeOf, FEAR_TAGS, FEAR_LINES, WANT_LINES } from "./lib/npc-life.js";
 import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, isNewCat, CAT_JIGGLE, speciesFor, buildFor, critterSpec, faceMorph, baseBones, HUMAN, humanFace, mouthAt, setStyle, bodyModel, seatCat, refitBody } from "./lib/critter-model.js";
@@ -21,26 +21,23 @@ import { swing3, fire3, aimPose, aimMode, longHands, famOf, tick3, heldRot, stag
 import G from "./lib/data/meg.yml";
 import WP from "./lib/data/weapons.yml";
 import { weaponBody } from "./lib/weapon-look.js";
-// what each kind of person carries (Savi's picks, weights): fighters a real spread of guns and melee, medics small blades, traders shop tools and shotguns, hotel civilians whatever was to hand
-const ARMS = {
-  fight: [["pistol", 3], ["shotgun", 2], ["smg", 1], ["crowbar", 2], ["bat", 2], ["lineman_machete", 2], ["fire_axe", 1], ["stun_baton", 2], ["hatchet", 1], ["knife", 1], ["rebar", 1], ["sledgehammer", 1]],
-  medic: [["knife", 2], ["screwdriver", 2], ["pistol", 2], ["stun_baton", 1]],
-  trade: [["shotgun", 2], ["pistol", 2], ["wrench", 2], ["crowbar", 1], ["bat", 1]],
-  civ: [["bat", 2], ["knife", 2], ["table_leg", 1], ["crowbar", 1], ["pipe_scrap", 2], ["hatchet", 1], ["pistol", 1]],
-};
-const poolOf = (s) => s.role === "medic" ? ARMS.medic : ["trader", "quarter", "clerk", "concierge"].includes(s.role) ? ARMS.trade : (s.faction5 === "orig" || ["socialite", "maid", "bellhop", "cook", "guide"].includes(s.role) && s.faction5 !== "hk") ? ARMS.civ : ARMS.fight;
-function rollArm(id, pool) { let h = 2166136261; for (const c of String(id)) h = Math.imul(h ^ c.charCodeAt(0), 16777619); const tot = pool.reduce((a, [, w]) => a + w, 0); let r = ((h >>> 0) % 1000) / 1000 * tot; for (const [k, w] of pool) { if ((r -= w) < 0) return k; } return pool[0][0]; }
-const weaponsOf = (ctx, me) => sharedWeapons(ctx, me, HEAD_ID), heldOf = (ctx, me) => weaponsOf(ctx, me)[0]; // scripts/lib/npc-temper.js: every level
-// once per agent: keep what its spawner handed it unless that was the stock pistol, else roll from its kind's rack and swap the held body
+// once per agent: keep what its spawner handed it unless that was the stock pistol, else roll from leveled role/faction tables compared to player level
 // nerve (Shelly's confidence system): brave hold their ground, steady fight until hurt, cowards run, frenzied (rare) go for anyone. Savi's odds: 24/50/23/3
 const hashN = (id, salt) => { let h = 2166136261 ^ salt; for (const c of String(id)) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return ((h >>> 0) % 1000) / 1000; };
 export const nerveOf = (id) => { const r = hashN(id, 77); return r < 0.24 ? "brave" : r < 0.74 ? "steady" : r < 0.97 ? "coward" : "frenzied"; };
-const UNARMED = { brave: 0, steady: 0.1, coward: 0.25, frenzied: 0 }; // chance they carry nothing at all (most people in the halls are armed and fight back)
+const weaponsOf = (ctx, me) => sharedWeapons(ctx, me, HEAD_ID), heldOf = (ctx, me) => weaponsOf(ctx, me)[0]; // scripts/lib/npc-temper.js: every level
 const FLEE = { coward: ["nope. nope nope nope.", "not my fight!", "somebody else do it!", "i'm out, i'm out!"], steady: ["fall back! fall back!", "i'm hit, i'm getting out!", "can't hold it!"], brave: ["just a scratch... ugh, back!", "regroup! i'll be back!"] };
 function arm(ctx, me, m) {
   const s = me.state; s.nerve ??= nerveOf(me.id); if (s.mjguest) { m.armed = true; return; }
   const held = heldOf(ctx, me), given = held?.state?.kind;
-  if (!s.arm) s.arm = given && given !== "pistol" ? given : hashN(me.id, 31) < UNARMED[s.nerve] ? "fists" : s.nerve === "frenzied" ? rollArm(me.id, ARMS.civ.filter(([k]) => !WP[k]?.ranged)) : rollArm(me.id, poolOf(s));
+  const lv = s.gearLevel ??= npcGearLevel(ctx, me);
+  if (!s.arm) s.arm = given && given !== "pistol" ? given : rollNpcWeapon(ctx, me, { gearLevel: lv });
+  const armor = adaptNpcWear(me, lv);
+  if (armor) {
+    rewear(ctx, me, armor);
+    if (!me.primitive) s.wear = armor;
+    if (s.look) s.look = armor;
+  }
   const all = weaponsOf(ctx, me), keep = s.arm === "fists" ? null : all.find((w) => w.state.kind === s.arm);
   for (const w of all) if (w !== keep) ctx.destroy(w.id); // one weapon a body: spares that piled up over reloads go
   if (s.arm === "fists") { m.armed = true; m.drawn = undefined; return; }
@@ -427,7 +424,7 @@ export function update(ctx, dt) {
       // a ragdoll: the body drops where it was hit, in its own fur and jacket, knocked back off its feet
       const yaw = ((typeof me.rotation === "number" ? me.rotation : me.rotation?.yaw) ?? 0) * Math.PI / 180;
       me.ragdoll = { impulse: { x: Math.sin(yaw) * 60, y: 25, z: Math.cos(yaw) * 60 }, settleSeconds: 2 };
-      if (s.items === undefined) s.items = [...(s.arm && s.arm !== "fists" && WP[s.arm] ? ["weapon:" + s.arm] : []), "ammo", ...rollLoot(ctx, 1.4, 1, "l3"), ...garmentsOf(lookOfNpc(me))].join(","); // the weapon in their hand stays on the body (Shelly, Nov 14: search the body to take it) // what they carried (always a box of rounds) and every garment they wore
+      if (s.items === undefined) s.items = rollNpcPocketLoot(ctx, me).join(","); // held weapon, matching ammo, place-leveled pockets, and worn garments
       if (!s.look) s.look = lookOfNpc(me); // the body's look as it fell; looting a garment strips it off
       if (!/'s body$/.test(s.name ?? "")) s.name = (s.name ?? "Agent") + "'s body"; // a hand-off re-runs this: name it once
       ctx.after(90, "vanish", {});
