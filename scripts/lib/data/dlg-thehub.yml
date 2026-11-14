@@ -127,15 +127,27 @@ hub-keymaster:
 hub-phoebe:
   hi: "You made it through Level 1. Most people turn back at the dark stairs."
   back: ["Still here?", "Tunnels haven't moved."]
-  warm: "Good to see you vertical."
+  warm: "Good to see you vertical. Most people I watch don't last this long."
   cold: "Keep it short."
-  bye: "Watch the corners."
+  bye: "Watch the corners. I'll be around."
   walk: "Right."
   ask:
+    - q: "Are you a Partygoer?"
+      a: "Because of the coat? No. Partygoers don't hold a conversation, and they don't let you walk away with your skin on."
+      then:
+        - q: "Then what are you?"
+          a: "A Mimic. Last one of my kind still walking around down here, far as I can tell. The others either went quiet or walked into worse parties than this one."
+          then:
+            - q: "So I shouldn't trust you?"
+              a: "You can trust me or not. I might warn you, I might pull you out of a bad hall, or I might just watch and see what you do. Controlling you wouldn't be any fun."
+        - q: "Why wear their coat?"
+          a: "Picked up the look from them, same way I picked up making balloons. Doesn't mean I'm in the club. And don't confuse me with a Smiler either, those things try way too hard."
     - q: "Who are you?"
-      a: "Phoebe. I walk the lower levels, trade what's worth trading, and keep track of who actually makes it out."
+      a: "Phoebe. M.E.G. sticks a number on me in their logs, Entity 607, like that means anything. I just walk the levels, keep an eye on who survives, and never stay in one place long."
     - q: "What is this place?"
       a: "The Hub. One long road, side tunnels off it, and a lot of locked concrete doors. M.E.G. has a post up the road. Camp Amber sits further down."
+    - q: "You know Level 11?"
+      a: "Been there. Quiet city, lots of empty blocks. Had a friend there once, the kind M.E.G. likes to shoot on sight. Wonder how she's doing."
   barks:
-    idle: ["Quiet down here.", "Count the tunnels if you get turned around."]
+    idle: ["Quiet down here.", "Count the tunnels if you get turned around.", "Never stay in one place long."]
     hi: ["You.", "Mind the kerb."]
