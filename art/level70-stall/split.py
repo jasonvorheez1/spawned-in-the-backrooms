@@ -9,7 +9,7 @@ for f in [sys.argv[-1]]:
     bpy.ops.object.select_all(action="DESELECT"); o.select_set(True); bpy.context.view_layer.objects.active = o
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     o.parent = None
-    bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT"); bpy.ops.mesh.separate(type="LOOSE"); bpy.ops.object.mode_set(mode="OBJECT")
+    bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT"); bpy.ops.mesh.remove_doubles(threshold=0.0008); bpy.ops.mesh.separate(type="LOOSE"); bpy.ops.object.mode_set(mode="OBJECT")
     parts = [p for p in bpy.context.scene.objects if p.type == "MESH"]
     def bb(p):
         vs = [p.matrix_world @ v.co for v in p.data.vertices]
