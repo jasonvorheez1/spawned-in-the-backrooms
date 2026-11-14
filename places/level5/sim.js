@@ -84,8 +84,8 @@ export function lay(ctx) {
     const track = { clip: POLONAISE, gain: 0.55, loop: true, spatial: true, refDistance: 2, maxDistance: 16, bus: "music" };
     ctx.spawn(r.id, { tags: ["usable", "l5-radio"], feetPosition: { x: r.x, y: r.y, z: r.z }, rotation: { yaw: r.yaw }, physics: "static", visibleRange: { max: 40 }, castShadow: false,
       primitive: { kind: "box", width: 0.46, height: 0.34, depth: 0.24 }, material: { color: "oklch(0.42 0.08 50)", texture: "cdn/texture-worn-hardwood-grain.png", roughness: 0.4 },
-      behavior: "scripts/l5-door.js", audio: track,
-      state: { kind: "radio", on: true, track, name: "Valve radio", verb: "Switch off", info: `A polonaise, from ${r.where}. Nobody tuned it.`, tint: "#e8c983" } });
+      behavior: ["scripts/l5-door.js", "scripts/world-radio.js"],
+      state: { kind: "radio", on: true, reach: 16, name: "Valve radio", verb: "Switch off", info: `Radio Backrooms, barely, from ${r.where}. Nobody tuned it.`, tint: "#e8c983" } });
   }
 
   // Exits

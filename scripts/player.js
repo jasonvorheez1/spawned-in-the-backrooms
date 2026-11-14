@@ -1,6 +1,7 @@
 import { xpNeed, migrateXp } from './lib/progression.js'
 export { xpNeed } from './lib/progression.js'
 import { migrate, wakePlace, wakeLog, canSaveHere } from "./lib/save.js"
+import { sanityMul } from "./lib/run-opts.js"
 import { CORRIDOR, agilityProfile, hitObstacle } from './lib/levelrun-mechanics.js'
 import { layout as layout9, zoneAt as zoneAt9 } from './lib/level9.js'
 import { firstPersonGun, firstPersonTuning } from './lib/fp-gun.js'
@@ -110,6 +111,7 @@ import { nearFresh, FRESH_BODY } from './lib/fresh-aura.js'
 import { placeMusicBox, musicNear, kneel } from './lib/musicbox.js'
 import L3I from './lib/data/l3items.yml'
 import CR from './lib/data/craft.yml'
+import { MANUALS, learnFromManual } from './lib/manuals.js'
 import AW from './lib/data/almond.yml'
 import { MEAT } from './lib/items.js'
 import SNACKS from './lib/data/snacks.yml'
@@ -366,6 +368,16 @@ function takeToken0(ctx, token, opts) {
     s.flour = (s.flour ?? 0) + 1; s.pickedAt = now
     s.notice = { text: `Sack of Fresh Flour (${s.flour} carried) · Bake at the Farmhouse Hearth`, at: now }
     sound(ctx, 'pickup-ammo', 0.6, true)
+    return { ok: true }
+  }
+  if (token.startsWith('manual:')) { // a crafting manual: teaches one random recipe of its kind you lack (scripts/lib/manuals.js)
+    const k = token.slice(7), m = MANUALS[k]
+    if (!m) return { ok: false, msg: '' }
+    const id = learnFromManual(s, k, () => ctx.random())
+    if (!id) return { ok: false, msg: `You already know every recipe in the ${m.name}` }
+    s.pickedAt = now
+    s.notice = { text: `You read the ${m.name}: learned ${CR.recipes[id].name} (Y to craft)`, at: now }; gain(ctx, L.xpAlmond)
+    sound(ctx, 'pickup-weapon', 0.5, true)
     return { ok: true }
   }
   if (isBookToken(token)) {
@@ -1795,7 +1807,7 @@ function tickStats(ctx, t, moving) {
   { const mb = musicNear(ctx); if (mb) drain = Math.min(drain, 0) - mb } // a playing music box steadies whoever stays near it // a set-down Reality Freshener holds the room still (scripts/lib/remodel-quest.js)
   if (ctx.self.place === 'level5' && s.l5room && zone.slice(3) === s.l5room && ctx.now() < (s.l5until ?? 0)) drain = -0.6 // a rented Homely Hotel suite: your own room, the hotel can't reach you (scripts/l5-resident.js)
   if (drain > 0 && ctx.now() < (s.blueUntil ?? 0)) drain = 0 // blue almond water: the halls can't get in
-  s.sanity -= drain * (drain > 0 ? derived(s).drain : 1) * t
+  s.sanity -= drain * (drain > 0 ? derived(s).drain * sanityMul(s) : 1) * t // sanityMul: the expedition's Sanity Drain pick
   if (w.ledge) s.sanity += L.ledgeRest.sanity * t
   const rest = !!w.ledge, wet = !!w.wet
   if (s.onLedge !== rest) s.onLedge = rest

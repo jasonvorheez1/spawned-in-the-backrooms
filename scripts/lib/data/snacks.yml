@@ -48,6 +48,15 @@ stale_ration: { name: "Expired M.E.G. tin", info: "Dented old ration. Fills hung
 cloudy_almond: { name: "Unfiltered almond water", info: "Cloudy bottle. Quenches thirst, clouds thinking (-1 NOU, -5 Sanity)", hunger: 0, thirst: 32, sanity: -5, hp: 4, color: "#a8a28c", drink: true, durationGameMin: 60, stackingGroup: "sickness_gut", mods: { n: -1 }, positive: false }
 warm_tea: { name: "Thermos herbal tea", info: "Hot steep that cuts the chill (+20% Cold Resist, +1 NOU · chill -20)", hunger: 2, thirst: 28, sanity: 12, hp: 8, color: "#c88a4a", drink: true, warm: 20, durationGameMin: 120, stackingGroup: "drink_tea", mods: { n: 1, coldResist: 20 } }
 royal_ration: { name: "Royal ration", info: "Level 3's rare tin. Full health, +60 sanity, sustained combat composure", hunger: 60, thirst: 0, sanity: 60, hp: 999, color: "#e8c83a", durationGameMin: 180, stackingGroup: "well_fed", mods: { h: 1, e: 1, n: 1, dr: 3 } }
+# cooked at a fire from raw meat and carried food (craft.yml food tab, 2026-11-14)
+rat_skewer: { name: "Spit-roast rat", info: "Two rats on a stick, charred black. Better than it sounds, barely", hunger: 26, thirst: -4, sanity: -2, hp: 12, color: "#7a4a2a", meat: true }
+hotdog_roast: { name: "Fire-roasted hot dog", info: "Blistered on a wire over the coals", hunger: 24, thirst: -4, sanity: 6, hp: 10, color: "#b8502a", meat: true }
+seared_steak: { name: "Salt-seared steak", info: "Spring salt pressed in, seared on hot steel · hearty", hunger: 48, thirst: -6, sanity: 10, hp: 24, color: "#8a3a2a", meat: true, durationGameMin: 150, stackingGroup: "well_fed", mods: { maxHp: 12, h: 1 } }
+fish_chowder: { name: "Glow-cap fish chowder", info: "Fish and caps simmered thick. Warms you and steadies your nerves", hunger: 36, thirst: 8, sanity: 14, hp: 18, color: "#d8d0a8", meat: true, warm: 20, durationGameMin: 120, stackingGroup: "well_fed", mods: { coldResist: 15, n: 1 } }
+spam_hash: { name: "Spam and bean hash", info: "A tin of each, fried together in the tin", hunger: 42, thirst: -6, sanity: 8, hp: 20, color: "#c86a4a", meat: true, durationGameMin: 120, stackingGroup: "well_fed", mods: { e: 1 } }
+chicken_broth: { name: "Chicken broth", info: "Bones and clean water, boiled long. Easy on a sick stomach", hunger: 18, thirst: 26, sanity: 10, hp: 16, color: "#e8c878", drink: true, warm: 15, clearDebuffs: true }
+trail_pack: { name: "Jerky trail pack", info: "Jerky and an energy bar wrapped tight for the road · stamina", hunger: 30, thirst: -6, sanity: 4, hp: 10, color: "#8a5a3a", stamina: 50, durationGameMin: 90, stackingGroup: "electrolyte", mods: { stamRegen: 0.12 } }
+sardine_toast: { name: "Sardine wafer stack", info: "Sardines on Lobby Wafers. The wafers finally have a purpose", hunger: 28, thirst: -5, sanity: 7, hp: 12, color: "#a8a070", meat: true }
 # crafted (craft.yml humloop): Level 13 tape and glass, Level 0.2 putty. Savi's picks
 humloop: { name: "Hum loop", verb: "PLAY", info: "A cassette ring, puttied shut. It plays the Lobby's hum, and the hum is somehow a comfort", hunger: 0, thirst: 0, sanity: 40, hp: 0, color: "#d4b96a", aid: true }
 

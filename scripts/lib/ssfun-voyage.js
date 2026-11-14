@@ -66,16 +66,25 @@ function layLitter(ctx, B) {
   spawnAt(ctx, "ssfun-hat", { tags: ["ssfun-litter"], feetPosition: { x: B.foot.x, z: B.foot.z, y: { terrain: 0 } }, rotation: { yaw: 33 }, primitive: { kind: "scripted", script: HULL, params: { part: "hat" } }, material: { pbr: true }, lifetime: V.debrisSec, visibleRange: { max: 60 } });
 }
 
+// one ship: whichever place ticks clears a hull left standing in a place the ship has left (its sim may be asleep with nobody there)
+function sweep(ctx, v, here) {
+  for (const k of Object.keys(V.sites)) {
+    if (k === v.at || k === here) continue;
+    try { const objs = ctx.world.places[k]?.objects; if (!objs) continue; for (const id of ["ssfun-hull", "ssfun-gangway", "ssfun-board", "ssfun-music"]) if (id in objs) delete objs[id]; } catch (e) {}
+  }
+}
 export function shipTick(ctx, put, placeKey, site) {
   const v = voyage(ctx), now = ctx.now(), ps = ctx.place.state;
+  sweep(ctx, v, placeKey);
   if (placeKey === "level26") return deckTick(ctx, v);
   const B = berth(ctx, placeKey, site);
+  { const lo = ctx.place.objects["ssfun-landing"]?.feetPosition; if (lo && Math.hypot(lo.x - B.land.x, lo.z - B.land.z) > 3) ctx.destroy("ssfun-landing"); } // a stale landing from another berth sends players ashore off the gangway
   if (!has(ctx, "ssfun-landing")) spawnAt(ctx, "ssfun-landing", { feetPosition: { x: B.land.x, y: B.foot.y + 0.2, z: B.land.z }, rotation: { yaw: B.S.yaw + 90 } });
   if (has(ctx, "ssfun-hull-plan")) ctx.destroy("ssfun-hull-plan");
   const here = v.at === placeKey, t = (now - v.since) / 1000, left = (v.next - now) / 1000;
   if (here) {
     if (t < V.fogSec) { layFog(ctx, B, "ssfun-fog", V.fogSec - t + V.fogLinger); return; }
-    if (!has(ctx, "ssfun-hull") || ps.ssfunAt !== v.since) {
+    if (!has(ctx, "ssfun-hull") || !has(ctx, "ssfun-board") || !has(ctx, "ssfun-gangway") || ps.ssfunAt !== v.since) { // any part gone (a sweep, a save) re-lays the whole ship
       if (ps.ssfunAt !== v.since && t < V.fogSec + V.fogLinger) layFog(ctx, B, "ssfun-fog", V.fogSec + V.fogLinger - t);
       layShip(ctx, B);
       if (ps.ssfunAt !== v.since) {

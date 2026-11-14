@@ -103,7 +103,7 @@ function liftFur(hex) {
 const NOSE_KIND = { Button: 1, Heart: 2, Big: 3, Wide: 4 }
 function noseParams(look) {
   const o = { noseK: NOSE_KIND[look?.nshape] ?? 0 }
-  const m = /^#?([0-9a-f]{6})$/i.exec(look?.nose || '')
+  const m = /^#?([0-9a-f]{6})$/i.exec(look?.nose || '#2e2226')   // no pick = a fixed dark nose of its own, never the fur's
   if (m) { const n = parseInt(m[1], 16); o.noseR = ((n >> 16) & 255) / 255; o.noseG = ((n >> 8) & 255) / 255; o.noseB = (n & 255) / 255 }
   return o
 }

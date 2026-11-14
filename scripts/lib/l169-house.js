@@ -3,7 +3,25 @@
 // Every number comes from scripts/lib/data/level169.yml (house, houseBuild). Ids: l169-house-*.
 const GEO = "scripts/l169-house-geo.js";
 const SHELL_GLB = "/cdn/value.150c87b478df0c8f2ab37379e19a56d85bda160aaaadbb1080ce0a3d3b1a23a7.glb";
+const ROAD_GEO = "scripts/l169-road-geo.js";
+export function layTrail(ctx, put, L) { // cairns every T.every m up the track mark, arrows facing the walker, and the yard's wind pump
+  const T = L.trail; if (!T) return;
+  const pts = ctx.place.terrain?.marks?.[T.mark]?.points ?? [[0, -14], [6, -120], [-10, -260], [14, -400], [18, -488]];
+  let i = 0, carry = 0;
+  for (let s = 0; s < pts.length - 1; s++) {
+    const [ax, az] = pts[s], [bx, bz] = pts[s + 1], len = Math.hypot(bx - ax, bz - az), dx = (bx - ax) / len, dz = (bz - az) / len;
+    for (let d = carry; d < len; d += T.every, i++) {
+      const side = i % 2 ? T.side : -T.side, x = ax + dx * d - dz * side, z = az + dz * d + dx * side;
+      put(`l169-trail-${i}`, { feetPosition: { x, z, y: { terrain: -0.05 } }, rotation: (Math.atan2(-dx, -dz) * 180) / Math.PI, physics: "static", visibleRange: { max: 320 }, castShadow: true,
+        primitive: { kind: "scripted", script: ROAD_GEO, params: { kind: "cairn", n: T.stones, sd: i + 3, arrow: true } } });
+      carry = d + T.every - len;
+    }
+  }
+  const m = T.mill; put("l169-trail-mill", { feetPosition: { x: m.x, z: m.z, y: { terrain: 0 } }, rotation: m.yaw, physics: "static", visibleRange: { max: 900 }, castShadow: true,
+    primitive: { kind: "scripted", script: ROAD_GEO, params: { kind: "windmill", roll: 0 } } });
+}
 export function layHouse(ctx, put, L) {
+  layTrail(ctx, put, L);
   const h = L.house, b = L.houseBuild, C = h.center, r = h.rooms;
   const ground = ctx.place.terrain?.heightAt?.(C.x, C.z) ?? 0, F = ground + h.floorUp;
   const part = (id, p, x, z, y, extra = {}) => put(`l169-house-${id}`, { feetPosition: { x, y, z }, primitive: { kind: "scripted", script: GEO, params: p }, physics: "static", ...extra });
@@ -11,7 +29,7 @@ export function layHouse(ctx, put, L) {
   // the shell you see is the Blender build (art/ferry-house/build.py); the scripted shell stays as its collider, unseen
   const getO = ctx.getObject?.("l169-house-shell"); if (getO) getO.visible = false;
   const tx = (t, rep, extra = {}) => ({ texture: t, repeat: rep, wrap: "repeat", ...extra });
-  put("l169-house-look", { feetPosition: { x: C.x, y: ground, z: C.z }, castShadow: true, receiveShadow: true, visibleRange: { max: 900 },
+  put("l169-house-look", { feetPosition: { x: C.x, y: ground - 2.9, z: C.z + (b.lookDz ?? 0) } /* the model's lowest point is the basement slab, 2.9 m under the yard */, castShadow: true, receiveShadow: true, visibleRange: { max: 900 },
     model: { id: SHELL_GLB, materials: {
       stucco: tx("cdn/texture-pale-adobe-stucco.png", [0.5, 0.5], { color: "oklch(0.95 0.03 70)" }), plaster: tx("cdn/texture-limewash-plaster.png", [0.5, 0.5]),
       floor: tx("cdn/texture-swept-wood-plank-floor.png", [0.5, 0.5]), concrete: tx("cdn/texture-smooth-poured-concrete.png", [0.5, 0.5]),
@@ -38,6 +56,22 @@ export function layHouse(ctx, put, L) {
   // living: rug, bench, the map table and the board of routes
   { const [x, z] = mid("living"); part("rug", { part: "rug", w: 3, d: 2.2 }, x, z + 0.5, F + 0.005); part("bench", { part: "bench" }, x, z + 2.2, F, { rotation: 180 });
     part("maptable", { part: "maptable" }, x - 2.4, z - 1.2, F); part("mapboard", { part: "mapboard" }, x - 2.4, r.hall[3] + 0.12, F + 1, { rotation: 180, physics: undefined }); }
+  // the furniture you see: Tripo models (art pass, Nov 14); the scripted pieces stay as colliders, unseen
+  const M = { bed: "/cdn/value.a80517cebda3855752e83ec0efa57adef4cd9ed8b993927ec4db5c6f7be3bc7c.glb", cot: "/cdn/value.8d3339a3fa5c283cf1251d0f11abb47f8b0388e7b576bfa7cef2560394e77bef.glb",
+    kit: "/cdn/value.eca8c598b9635ca9dd37710d90c09c2a22fb1cd6c7bc4350026df9cf54ebf4b1.glb", bench: "/cdn/value.deb5057b345d8bf77d5e45c5b29111addfa13c16a2eccf25438e8967603bcce2.glb",
+    table: "/cdn/value.d58e97357089082f01e8258e9db20ea148a8af7714637429c16482e89e92ac99.glb", counter: "/cdn/value.8afef9eb454fce97b4c7a21956c2213dc0c80e905f95988d8bdab1793861121d.glb" };
+  const look = (id, m, x, z, yaw, hx, hy, hz) => put(`l169-house-m-${id}`, { feetPosition: { x, y: F, z }, rotation: yaw, castShadow: true, receiveShadow: true, model: { id: m }, layout: { box: { min: { x: -hx, y: 0, z: -hz }, max: { x: hx, y: hy, z: hz } } } });
+  const hide = (id) => { const o = ctx.getObject?.(`l169-house-${id}`); if (o) o.visible = false; };
+  for (const k of ["bed1", "bed2", "bed3"]) {
+    const [x, z] = mid(k); hide(`bed-${k}`); hide(`kit-${k}`);
+    look(`bed-${k}`, M.bed, x - 1.2, z - 0.6, 0, 0.5, 1.0, 1.03);
+    look(`kit-${k}-a`, M.kit, x + 0.8 - 0.95, z - 2.4, 0, 0.24, 0.8, 0.28); look(`kit-${k}-b`, M.kit, x + 0.8 + 0.95, z - 2.4, 0, 0.24, 0.8, 0.28);
+  }
+  { const [x, z] = mid("den"); hide("cot-1"); hide("cot-2"); look("cot-1", M.cot, x - 1.3, z - 0.6, 0, 0.38, 0.5, 0.97); look("cot-2", M.cot, x + 1.3, z - 0.6, 0, 0.38, 0.5, 0.97); }
+  { const [x, z] = mid("living"); hide("bench"); hide("maptable"); look("bench", M.bench, x, z + 2.2, 180, 0.8, 0.47, 0.22); look("maptable", M.table, x - 2.4, z - 1.2, 90, 0.46, 0.8, 0.8); }
+  { hide("kitchen"); const kx = r.kitchen[1] - b.wallT - 0.34;
+    look("counter-a", M.counter, kx, -497.55 + (C.z + 500), 0, 0.34, 0.93, 0.86); look("counter-b", M.counter, kx, -495.8 + (C.z + 500), 0, 0.34, 0.93, 0.86);
+    look("table", M.table, C.x + 4, C.z + 4, 90, 0.5, 0.8, 1.3); }
   // lamps: one per room, hung under the ceiling
   for (const k of ["living", "kitchen", "hall", "bed1", "bed2", "bed3", "den", "porch"]) {
     const [x, z] = mid(k), y = F + h.wallH - 0.62;

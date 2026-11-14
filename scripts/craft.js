@@ -5,11 +5,12 @@
 import { canOpen, openWrist } from './lib/screen.js'
 import { heard } from "./lib/hear.js";
 import C from './lib/data/craft.yml'
+import { needsMul } from './lib/run-opts.js'
 import L21H from './lib/data/level21.yml'
 import B from './lib/data/breakables.yml'
 import { SKILL_NAMES as SKN } from './lib/skill-check.js'
 import { takeToken, gain } from './player.js'
-import { recipeStatus, maxMakes, craftOne, benchAvailable, CRAFT_LIMIT, CATS } from './lib/craft.js'
+import { recipeStatus, maxMakes, craftOne, benchAvailable, scrapCount, inputName, CRAFT_LIMIT, CATS } from './lib/craft.js'
 import {raycast} from 'builtin/physics'
 
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
@@ -33,19 +34,20 @@ function act(ctx, s, d) {
   if(s.dead || !canOpen(s,ctx.self.place,'craft'))return
   if(s.craftOpen==='bench' && !liveBench(ctx,s)){s.craftOpen='';s.craftBench='';return deny('Workstation is out of reach or blocked')}
   const st=recipeStatus(s,id)
-  if(st.reason==='Recipe unavailable')return deny(st.reason)
+  if(st.reason==='Recipe unavailable'||!st.known)return deny(st.reason)
   if(!st.benchOk)return deny(st.reason)
   if(!st.skillOk)return deny(`Needs ${SKN[r.skill[0]]} ${r.skill[1]}`)
-  if(st.lack.length)return deny(`Missing ${st.lack.map(k=>`${B.scrap[k]?.name??k} ×${r.in[k]-(Number(s.scrap?.[k])||0)}`).join(', ')}`)
+  if(st.lack.length)return deny(`Missing ${st.lack.map(k=>`${inputName(k)} ×${r.in[k]-scrapCount(s,k)}`).join(', ')}`)
   if(!st.roomOk)return deny(st.reason)
   const raw=Number(d.n),requested=Number.isFinite(raw)?Math.max(1,Math.min(CRAFT_LIMIT,Math.floor(raw))):1,want=d.n==='max'?maxMakes(s,id):Math.min(requested,maxMakes(s,id))
   let made=0,extra=0,why=''
   const sounds=new Set()
   for(let i=0;i<want;i++){
-    const effects=[],draftContext=(draft)=>({self:{id:ctx.self.id,state:draft,feetPosition:ctx.self.feetPosition,session:{}},now:()=>ctx.now(),random:()=>ctx.random(),emit:(...args)=>effects.push(args)})
+    const effects=[],walk=ctx.self.session?.['player.js'],dwalk={battery:walk?.battery??s.battery},draftContext=(draft)=>({self:{id:ctx.self.id,state:draft,feetPosition:ctx.self.feetPosition,session:{'player.js':dwalk}},now:()=>ctx.now(),random:()=>ctx.random(),emit:(...args)=>effects.push(args)})
     const result=craftOne(s,id,(draft,token)=>{const mark=effects.length,k=token.startsWith('weapon:')?token.slice(7):null,had=k&&String(draft.weapons??'').split(',').includes(k),result=takeToken(draftContext(draft),token,{xp:false});if(result?.ok&&k&&!had&&r.skill)draft['cnd_'+k]=Math.round(Math.max(60,Math.min(100,60+st.got-st.need)));if(!result?.ok)effects.length=mark;return result},ctx.random()<st.bonusChance)
     if(!result.ok){why=result.msg;break}
     for(const [key,value]of Object.entries(result.state))if(value!==s[key])s[key]=value
+    if(walk&&dwalk.battery!==walk.battery)walk.battery=dwalk.battery // crafted charge reaches the real flashlight (it used to land on a throwaway copy and be overwritten next frame)
     for(const args of effects){if(args[0]==='playSound'){const clip=args[1]?.clip;if(sounds.has(clip))continue;sounds.add(clip)}ctx.emit(...args)}
     made++;extra+=result.extra
   }
@@ -64,7 +66,7 @@ export function update(ctx, dt) {
   const poll=m.acc>=.5
   if(poll){m.acc=0;if(s.craftOpen==='bench'&&!liveBench(ctx,s)){s.craftOpen='';s.craftBench=''}}
   if (ctx.self.place === 'level6' || ctx.self.place === 'bonus') { m.h = s.hunger ?? m.h; m.t = s.thirst ?? m.t; return } // Shelly: no hunger or thirst drain in Level 6
-  const mul = (s.sprinting ? N.sprintMul : 1) * (ctx.self.place === 'level21' ? L21H.heat : 1) // Level 2.1 is hot and humid
+  const mul = needsMul(s) * (s.sprinting ? N.sprintMul : 1) * (ctx.self.place === 'level21' ? L21H.heat : 1) // Level 2.1 is hot and humid · needsMul: the expedition's Hunger & Thirst pick
   // the bars follow the state (eating and drinking write it from scripts/player.js)
   if (s.hunger != null && Math.abs(s.hunger - Math.round(m.h)) > 1) m.h = s.hunger
   if (s.thirst != null && Math.abs(s.thirst - Math.round(m.t)) > 1) m.t = s.thirst

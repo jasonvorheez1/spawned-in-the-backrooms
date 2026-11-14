@@ -48,12 +48,12 @@ containers:
   fridge:    { name: "Break-room fridge", size: [0.8, 1.85, 0.75], n: [2, 3], table: food }
   cagecrate: { name: "Caged supply crate", size: [0.9, 0.7, 0.7],  n: [2, 4], table: cage }
   lockbox:   { name: "Foreman's lockbox", size: [0.7, 0.45, 0.45], n: [3, 4], table: cage }
-# loot tables: token weights. "weapon" rolls a Level 2 weapon, "book" a skill book
+# loot tables: token weights. "weapon" rolls a Level 2 weapon, "book" a skill book, "manual" a crafting manual (scripts/lib/manuals.js)
 tables:
-  tools:  { bobbypin: 4, tape: 8, fuse: 5, valve: 3, battery: 8, kit: 4, ammo: 4, shells: 2, weapon: 4, almond: 2, mag: 1 }
-  locker: { bobbypin: 4, bar: 4, stale_ration: 2, almond: 4, warm_tea: 1, firstaid: 3, painkillers: 2, splint: 1, tape: 4, battery: 4, keycard: 2, ammo: 4, shells: 2, weapon: 4, mag: 1.5 }
-  office: { bobbypin: 4, keycard: 5, battery: 4, bar: 3, warm_tea: 2, painkillers: 2, mag: 3, almond: 3, ammo: 2, fuse: 2, beans: 2 }
+  tools:  { bobbypin: 4, tape: 8, fuse: 5, valve: 3, battery: 8, kit: 4, ammo: 4, shells: 2, weapon: 4, almond: 2, mag: 1, manual: 2 }
+  locker: { bobbypin: 4, bar: 4, stale_ration: 2, almond: 4, warm_tea: 1, firstaid: 3, painkillers: 2, splint: 1, tape: 4, battery: 4, keycard: 2, ammo: 4, shells: 2, weapon: 4, mag: 1.5, manual: 1 }
+  office: { bobbypin: 4, keycard: 5, battery: 4, bar: 3, warm_tea: 2, painkillers: 2, mag: 3, almond: 3, ammo: 2, fuse: 2, beans: 2, manual: 3 }
   food:   { beans: 7, bar: 8, almond: 6, cloudy_almond: 2, warm_tea: 2, ration: 2, stale_ration: 3, charcoal: 2, keycard: 1, mag: 1 }
-  cage:   { bobbypin: 4, firstaid: 4, medkit: 2, stim_shot: 2, ammo: 6, shells: 4, weapon: 7, kit: 4, mag: 2.5, battery: 3, almond: 2 }
+  cage:   { bobbypin: 4, firstaid: 4, medkit: 2, stim_shot: 2, ammo: 6, shells: 4, weapon: 7, kit: 4, mag: 2.5, battery: 3, almond: 2, manual: 2 }
 # what the new items do
 use: { waferHp: 8, waferSanity: 5, beansHp: 22, beansSanity: 6, barHp: 9, barStamina: 40, firstaidHp: 52, tapeRepair: 18 }

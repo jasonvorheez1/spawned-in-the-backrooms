@@ -77,9 +77,11 @@ l7sw-net:
   material: {alphaTest: 0.4, color: "#9a9070", side: double, texture: cdn/texture-knotted-fishing-net-transparent.png}
   primitive: {height: 1.6, kind: plane, width: 1.4}
 l7sw-radio-snd:
-  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-shortwave-radio-static-with-faint-morse-code-loop.mp3, gain: 0.18, loop: true, maxDistance: 12, spatial: true}
+  audio: null
+  behavior: scripts/world-radio.js
   feetPosition: {x: 45.2, y: {terrain: 1}, z: -122.2}
   id: l7sw-radio-snd
+  state: {gain: 0.3, hiss: /cdn/moodboard-realistic-gritty/sfx-shortwave-radio-static-with-faint-morse-code-loop.mp3, reach: 12}
 l7sw-roof:
   feetPosition: {x: 45.2, y: {terrain: 2.35}, z: -121.5}
   id: l7sw-roof

@@ -12,12 +12,13 @@
 //   inventory s.invOpen                      scripts/player.js    │ the wrist panels: one swaps for another
 //   craft     s.craftOpen                    scripts/craft.js     │
 //   rest      s.waitOpen                     scripts/rest.js      │
-//   journal   s.jrnOpen                      scripts/quest-marker.js ┘
+//   journal   s.jrnOpen                      scripts/quest-marker.js │
+//   radio     s.radioOpen                    scripts/radio.js        ┘
 //   play      none of the above
 //
 // Rule: a panel opens only from "play", or from another wrist panel (it replaces it). Closing is always allowed.
 // Nothing here is written to state: it is read fresh from the flags, so no save or network cost and no drift.
-export const WRIST = { sheet: "sheetOpen", inventory: "invOpen", craft: "craftOpen", rest: "waitOpen", journal: "jrnOpen" }
+export const WRIST = { sheet: "sheetOpen", inventory: "invOpen", craft: "craftOpen", rest: "waitOpen", journal: "jrnOpen", radio: "radioOpen" }
 
 export function screen(s, place) {
   if (!s) return "play"
@@ -32,6 +33,7 @@ export function screen(s, place) {
   if (s.craftOpen) return "craft"
   if (s.waitOpen) return "rest"
   if (s.jrnOpen) return "journal"
+  if (s.radioOpen) return "radio"
   return "play"
 }
 

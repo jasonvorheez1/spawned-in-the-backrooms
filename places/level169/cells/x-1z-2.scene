@@ -1,9 +1,1 @@
 # spawn-scene v2 yaml x-1z-2
-ssfun-hull-plan:
-  feetPosition: {x: -170, y: 0, z: -300}
-  id: ssfun-hull-plan
-  material: {kind: scripted, script: engine/blueprint}
-  physics: none
-  primitive: {depth: 150, height: 22, kind: box, width: 18}
-  rotation: {yaw: 20}
-  tags: [blueprint]

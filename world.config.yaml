@@ -139,6 +139,7 @@ inputs:
     craft:
       keys:
         - y
+    radio: {}
     make: {}
     os: {}
     wardrobe:

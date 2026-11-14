@@ -76,6 +76,15 @@ export function salon(ctx, player) {
       + row('Mouth', l.mtype || 'classic') + pk('catmouth', ['classic', 'fang', 'grin', 'smirk', 'open', 'line'], l.mtype || 'classic')
       + row('Eyeshadow', l.shadow || 'none') + pk('catshadow', ['none', 'pink', 'plum', 'lilac', 'peach', 'gold', 'teal', 'smoky', 'red'], l.shadow || 'none')
       + row('Resting face', CF[l.expr] || 'calm') + pk('catface', Object.keys(CF), CF[l.expr] ? l.expr : 'neutral', CF)
+      + row('Nose', l.nshape || 'classic') + pk('nshape', ['classic', 'Button', 'Heart', 'Big', 'Wide'], l.nshape || 'classic', { Button: 'button', Heart: 'heart', Big: 'big', Wide: 'wide' })
+      + row('Nose colour', '') + dots('nose', (C.nose || []).filter(Boolean))
+  } else if (!human && tab === 'model') {   // Shelly Nov 14: the custom tab wears the new cat clothing, not the old slot list
+    const under = (grp) => Object.keys(CW.models || {}).filter((k) => CW.models[k].under && Object.keys(CW[grp] || {}).includes(CW.models[k].under))
+    const card = (t, k, list, ck) => `<div class="card">${row(t, nice(l[k] || 'none'))}${pk('cw-' + k, list, l[k] || 'none', {})}${ck && l[k] && l[k] !== 'none' ? `<div style="margin-top:7px">${dots(ck, C.cloth)}</div>` : ''}</div>`
+    body = card('Top', 'topw', ['none', ...Object.keys(CW.tops || {}), ...under('tops')], 'top') + card('Bottom', 'botw', ['none', ...Object.keys(CW.bottoms || {}), ...under('bottoms')], 'bottom')
+      + card('Shoes', 'shoes', ['none', ...Object.keys(CW.feet || {}), ...under('feet')], 'shoec') + card('Hat', 'hat', ['none', ...Object.keys(CW.models || {}).filter((k) => CW.models[k].hat), ...Object.keys(CW.masks || {})], CW.models?.[l.hat]?.hat ? 'hatc' : null)
+      + row('Custom model', l.modelUrl ? 'your plymodel' : l.model ? (C.models?.[l.model]?.name ?? '') : 'none')
+      + `<div class="card"><div class="chips" style="margin-top:8px"><button class="${!l.model && !l.modelUrl ? 'on' : ''}" onclick="${act('model', '')}">critter</button>${Object.entries(C.models || {}).map(([k, m]) => `<button class="${l.model === k ? 'on' : ''}" onclick="${act('model', k)}">${m.name}</button>`).join('')}</div></div>`
   } else if (!human && tab === 'body') {
     const cp = Math.round(Number(l.chest ?? 0.5) * 100)
     const bust = `<div class="sl"><span>Bust</span><button onclick="${act('chest', '-')}">−</button><div class="bar" onclick="(function(el,ev){const r=el.getBoundingClientRect(),p=Math.max(0,Math.min(1,(ev.clientX-r.left)/r.width));sendAction('dress',{k:'chest',v:p.toFixed(2)})})(this,event)"><i style="width:${cp}%"></i></div><button onclick="${act('chest', '+')}">+</button><span class="v">${cp}%</span></div>`

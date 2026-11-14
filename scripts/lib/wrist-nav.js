@@ -1,4 +1,4 @@
-const PAGES = [['sheet', 'Character'], ['inventory', 'Inventory'], ['journal', 'Journal'], ['craft', 'Crafting']]
+const PAGES = [['sheet', 'Character'], ['inventory', 'Inventory'], ['journal', 'Journal'], ['craft', 'Crafting'], ['radio', 'Radio']]
 
 export function wristNav(active) {
   const tabs = PAGES.map(([page, label]) => page === active

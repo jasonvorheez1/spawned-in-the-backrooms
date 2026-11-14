@@ -6,9 +6,10 @@ import C from './lib/data/craft.yml'
 import B from './lib/data/breakables.yml'
 import { skillsOf } from './lib/stats.js'
 import { SKILL_NAMES as SKN } from './lib/skill-check.js'
-import { recipeStatus, maxMakes, scrapCount, CRAFT_LIMIT, CATS, stationOf } from './lib/craft.js'
+import { recipeStatus, maxMakes, scrapCount, inputName, CRAFT_LIMIT, CATS, stationOf } from './lib/craft.js'
 
 import {describe} from './lib/items.js'
+import { MANUALS } from './lib/manuals.js'
 import W from './lib/weapons.js'
 import { parseCloth } from './lib/clothes.js'
 // what a recipe makes, in a line: a weapon's numbers, a garment's armor, or how many of the thing you carry already
@@ -84,20 +85,20 @@ export function craftUi(ctx, player) {
   const stock = Object.entries(B.scrap).filter(([k]) => scrapCount(s,k) > 0).map(([k, v]) => `<span>${esc(v.name)} <b>${scrapCount(s,k)}</b></span>`).join('') || '<span>No scrap yet. Break walls, furniture and machines down.</span>'
   const shown = all.filter((x) => tab === 'all' || (tab === 'ready' ? x.st.ok : x.cat === tab))
   // ready first, then the ones you only lack scrap for, then the ones a skill or the bench locks
-  const rank = (x) => (x.st.ok ? 0 : x.st.skillOk && x.st.benchOk ? 1 : 2)
+  const rank = (x) => (x.st.ok ? 0 : !x.st.known ? 3 : x.st.skillOk && x.st.benchOk ? 1 : 2) // locked (no manual) last
   shown.sort((a, b) => (ORDER[a.cat] - ORDER[b.cat]) || rank(a) - rank(b) || a.r.name.localeCompare(b.r.name))
   let last = '', rows = ''
   for (const { id, r, st, mx, cat } of shown) {
     if (tab === 'all' || tab === 'ready') { if (cat !== last) { rows += `<div class="sh">${TITLE[cat] ?? cat.toUpperCase()}</div>`; last = cat } }
-    const ins = Object.entries(r.in).map(([k,n])=>{const have=scrapCount(s,k);return `<i class="${have<n?'lack':''}">${esc(B.scrap[k]?.name??k)} ${have}/${n}${have<n?' · '+(n-have)+' short':''}</i>`}).join('')
-    const req = [r.skill ? `<span class="${st.skillOk ? '' : 'bad'}">${SKN[r.skill[0]]} ${r.skill[1]} (you ${sk[r.skill[0]] ?? 0})</span>` : '', r.bench ? `<span class="${st.benchOk ? '' : 'bad'}">${stationOf(r) === 'cook' ? 'COOKING FIRE' : stationOf(r) === 'ammo' ? 'RELOADING BENCH' : 'WORKBENCH'}</span>` : ''].filter(Boolean).join(' · ')
+    const ins = Object.entries(r.in).map(([k,n])=>{const have=scrapCount(s,k);return `<i class="${have<n?'lack':''}">${esc(inputName(k))} ${have}/${n}${have<n?' · '+(n-have)+' short':''}</i>`}).join('')
+    const req = [!st.known ? `<span class="bad">LOCKED · learn it from a ${esc(MANUALS[st.manual]?.name ?? 'manual')}</span>` : '', r.skill ? `<span class="${st.skillOk ? '' : 'bad'}">${SKN[r.skill[0]]} ${r.skill[1]} (you ${sk[r.skill[0]] ?? 0})</span>` : '', r.bench ? `<span class="${st.benchOk ? '' : 'bad'}">${stationOf(r) === 'cook' ? 'COOKING FIRE' : stationOf(r) === 'ammo' ? 'RELOADING BENCH' : 'WORKBENCH'}</span>` : ''].filter(Boolean).join(' · ')
     const per = st.bonusChance>0 ? `<em>${Math.round(st.bonusChance*100)}% bonus chance</em>` : ''
-    const cls = st.ok ? '' : st.skillOk && st.benchOk ? 'no' : 'lk'
+    const cls = st.ok ? '' : st.known && st.skillOk && st.benchOk ? 'no' : 'lk'
     rows += `<div class="row ${cls}"><div class="n">${esc(r.name)}${per}<small>${esc(r.desc)}</small><div class="result">Makes ${outputs(r)}</div>${makes(s,r)?`<small class="mk">${esc(makes(s,r))}</small>`:''}<div class="in">${ins}</div>${req ? `<div class="rq">${req}</div>` : ''}${!st.roomOk?'<div class="rq"><span class="bad">No room for the complete output</span></div>':''}</div>
       <div class="bt"><button ${st.ok ? '' : 'disabled'} onclick="sendAction('make',{k:'make',id:'${id}',n:1})">Craft</button>${st.ok && mx > 5 ? `<button class="s" onclick="sendAction('make',{k:'make',id:'${id}',n:5})">Make 5</button>` : ''}${st.ok && mx >= 2 ? `<button class="s" onclick="sendAction('make',{k:'make',id:'${id}',n:'max'})">Make ${mx}</button>` : ''}</div></div>`
   }
   if (!rows) rows = `<div class="em">${tab === 'ready' ? 'Nothing you can make yet. Check All for recipe requirements.' : 'Nothing here.'}</div>`
-  return out + `<div id="cr" data-modal tabindex="0" onkeydown="if(event.key==='Escape'){event.preventDefault();event.stopPropagation();sendAction('make',{k:'close'})}"><div class="hd"><h2>${bench ? ({ cook: 'Cooking fire', ammo: 'Reloading bench' }[station] ?? 'Workbench') : 'Crafting'}</h2><span class="md">${bench ? 'This station only' : 'Everything · stations (B) unlock the rest'}</span></div>
+  return out + `<div id="cr" data-modal tabindex="0" onkeydown="if(event.key==='Escape'){event.preventDefault();event.stopPropagation();sendAction('make',{k:'close'})}"><div class="hd"><h2>${bench ? ({ cook: 'Cooking fire', ammo: 'Reloading bench' }[station] ?? 'Workbench') : 'Crafting'}</h2><span class="md">${bench ? 'This station only' : 'Everything · stations (B) unlock the rest'} · Recipes known ${all.filter((x) => x.st.known).length}/${all.length}</span></div>
     ${wristNav('craft')}<div class="tb">${tabs}</div><details class="craft-stock"><summary>Materials on hand</summary><div class="sc">${stock}</div></details><div class="ls">${rows}</div>
-    <div class="ft"><span>${ready} of ${all.length} recipes ready · Batch limit ${CRAFT_LIMIT}</span><button onclick="sendAction('make',{k:'close'})">Close · Y</button></div></div>`
+    <div class="ft"><span>${ready} of ${all.length} recipes ready · ${all.filter((x) => x.st.known).length} known · Batch limit ${CRAFT_LIMIT}</span><button onclick="sendAction('make',{k:'close'})">Close · Y</button></div></div>`
 }
