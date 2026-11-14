@@ -138,30 +138,30 @@ export function handleDialogueQuestHub(ctx, p, npc, text) {
     if (t.includes("hand it over") && s.hubPhoebeTalk && !s.hubPhoebeDeal && !s.hubPhoebeSpeechFail) {
       if (!rollCheck(ctx, s, { skill: "speech", difficulty: 40 }).ok) {
         s.hubPhoebeSpeechFail = 1;
-        return { reply: "Nice try. Doesn't work like that down here. Pay for it, earn it, or try another way.", mood: "annoyed" };
+        return { reply: "Nice try. I've been watching people talk their way out of things longer than you've been down here. Pay for it, earn it, or try another way.", mood: "annoyed" };
       }
       s.hubPhoebeDeal = "persuaded"; s.hubPhoebeOutcome = "persuaded"; s.hubDinaAsk = 1; giveKey(ctx, p, "level11");
-      return { reply: "Fair enough. You've got more spine than most who wash up here. Take it. Tenth tunnel from this end, third door on the left.", mood: "happy" };
+      return { reply: "Fair enough. You've got more spine than most who wash up here, and I like seeing who actually makes it through. Take the key. Tenth tunnel from this end, third door on the left.", mood: "happy" };
     }
     if (t.includes("name your price for the level 11 key") && s.hubPhoebeTalk && !s.hubPhoebeDeal) {
       if ((s.cents ?? 0) < 15000) return { reply: "You're short. Hundred and fifty, or do me a favor instead.", mood: "calm" };
       s.cents -= 15000; s.hubPhoebeDeal = "bought"; s.hubPhoebeOutcome = "bought"; s.hubDinaAsk = 1; giveKey(ctx, p, "level11");
-      return { reply: "Hundred and fifty. Clean and simple. Don't lose it before the tenth tunnel, it only opens once.", mood: "calm" };
+      return { reply: "Hundred and fifty. Clean and simple. Don't lose it before the tenth tunnel, it only opens once. Try not to bore me in Level 11.", mood: "calm" };
     }
     if (t.includes("what do you want for it") && s.hubPhoebeTalk && !s.hubPhoebeDeal) {
       s.hubPhoebeDeal = "favor_pending";
-      return { reply: "M.E.G. keeps a key ledger on their desk up the road. Read who signed out the last key and tell me. Do that and the Level 11 key is yours.", mood: "calm" };
+      return { reply: "M.E.G. keeps a key ledger on their desk up the road. They're so proud of their neat little forms. Go read who signed out the last key and tell me. Do that and the Level 11 key is yours.", mood: "calm" };
     }
     if (t.includes("remind me what you wanted") && s.hubPhoebeDeal === "favor_pending") {
       return { reply: "The key ledger on M.E.G.'s desk up the road. Check who took the last key and bring me the name.", mood: "calm" };
     }
     if (t.includes("checked the m.e.g. ledger") && s.hubPhoebeDeal === "favor_pending" && s.hubLedger) {
       s.hubPhoebeDeal = "favor"; s.hubPhoebeOutcome = "favor"; s.hubDinaAsk = 1; addRep(s, "amber", 2); giveKey(ctx, p, "level11");
-      return { reply: "Pell. Good to know who's still moving keys around. A deal's a deal. Here's your Level 11 key.", mood: "happy" };
+      return { reply: "Pell. Good to know who's still moving keys around. A deal's a deal. Here's your Level 11 key. See you on the other side, maybe.", mood: "happy" };
     }
     if (t.includes("give me the key. now.") && s.hubPhoebeTalk && !s.hubPhoebeDeal) {
       s.hubPhoebeDeal = "hostile"; s.hubPhoebeOutcome = "hostile";
-      return { reply: "Bad call. Ask Okafor at the M.E.G. post or Jo at Camp Amber if they've got a spare. We're done.", mood: "annoyed" };
+      return { reply: "Bad call. I'm not one of your scared wanderers, and I'm not handing you anything at gunpoint. Ask Okafor at the M.E.G. post or Jo at Camp Amber for a spare. We're done.", mood: "annoyed" };
     }
   }
   if (id === "hub-keymaster") {
