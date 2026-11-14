@@ -21,7 +21,8 @@ export function penLoad(ctx, id, box, spawnFoe) {
   for (const f of foes(ctx)) if (f.state.pen === id) { const i = list.indexOf(f.state.penKind); if (i >= 0) list.splice(i, 1); } // already standing in there (a machine handover re-laid the room): never twice
   list.forEach((k) => {
     const pos = { x: box.x0 + 3 + ctx.random() * (box.x1 - box.x0 - 6), y: 0.1, z: box.z0 + 3 + ctx.random() * (box.z1 - box.z0 - 6) };
-    const made = spawnFoe(ctx, k, pos, { pen: id, penKind: k, penBox: box });
+    const open = doorOpen(ctx, id); // a door already standing open: what walks in is out, not shut in (the books and the door agree)
+    const made = spawnFoe(ctx, k, pos, open ? { pen: null, penFrom: id, penKind: k, penBox: box } : { pen: id, penKind: k, penBox: box });
     if (!made) left.push(k); // the level has no body for this kind yet: it stays on the books
   });
   book(ctx, "pens", id, left);
@@ -31,8 +32,9 @@ export function penUnload(ctx, id, box) {
   const s = ctx.place.state, back = [...(s.pens?.[id] ?? [])];
   for (const f of foes(ctx)) {
     if (f.state.pen !== id && f.state.penFrom !== id) continue;
-    if (inside(box, f.feetPosition, 0.5)) { back.push(f.state.penKind); ctx.destroy(f.id); }
-    else if (f.state.pen === id) { f.state.pen = null; f.state.penFrom = id; } // out in the hall: it is loose now, kept live while someone is near
+    if (inside(box, f.feetPosition, 0.5) && !doorOpen(ctx, id)) { back.push(f.state.penKind); ctx.destroy(f.id); }
+    else if (f.state.pen === id) { f.state.pen = null; f.state.penFrom = id; }
+    else if (doorOpen(ctx, id) && f.state.penFrom === id) { s.loose = [...(s.loose ?? []), { k: f.state.penKind, x: Math.round(f.feetPosition.x * 10) / 10, y: 0, z: Math.round(f.feetPosition.z * 10) / 10, from: id }]; ctx.destroy(f.id); } // out behind an open door: kept on the loose list, never back in the pen // out in the hall: it is loose now, kept live while someone is near
   }
   book(ctx, "pens", id, back);
 }
@@ -48,6 +50,7 @@ export function looseTick(ctx, spawnFoe, near = 70, far = 120) {
 // a pen door moved: the ones inside hear it and come to look (their own AI reads state.lure for a few seconds)
 export function doorMoved(ctx, id, open, pos) {
   setDoor(ctx, id, open);
+  if (open && penCount(ctx, id)) { const s = ctx.place.state, b = s.pens[id], c = { x: pos.x, z: pos.z }; s.loose = [...(s.loose ?? []), ...b.map((k) => ({ k, x: c.x, y: 0, z: c.z, from: id }))]; book(ctx, "pens", id, []); } // opened while the room is not loaded: its books move to loose
   if (open) for (const f of foes(ctx)) if (f.state.pen === id) f.state.lure = { x: pos.x, z: pos.z, at: ctx.now() };
 }
 // how many are out of their rooms right now, loaded or not (quests read this)
