@@ -1,7 +1,7 @@
 # The S.S. Fun =) voyage: Level 26's ship no-clips between its own sea, Level 10 and Level 169, arriving and leaving in green fog.
 # Every number here is Savi's pick unless marked otherwise.
-seaMin: 20            # minutes at sea between calls (pick)
-visitMin: 12          # minutes moored at a level (pick)
+seaMin: 2             # minutes at sea between calls (pick; Shelly Nov 14: 20 was too long a wait)
+visitMin: 8           # minutes moored at a level (pick)
 order: [level10, level169]   # visits alternate in this order, off ctx.now() (pick)
 fogSec: 40            # green fog rolls in this long before the hull stands, and again before it leaves (brief)
 fogLinger: 10         # the fog thins this many seconds after the hull appears or goes (pick)
