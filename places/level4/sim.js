@@ -36,7 +36,7 @@ const FITM = { // reused fitted models (Level 5 office kit) for Level 4's open f
 };
 // an island's fabric walls as real panels: the spine (two 1.65 m) and six wings (0.82 m), local to the partition object
 const PANELS = [[-0.825, 0, 0, 1.65, 1.25, 0.22], [0.825, 0, 0, 1.65, 1.25, 0.22], ...[-1.65, 0, 1.65].flatMap((x) => [[x, 0.44, 90, 0.82, 1.15, 0.14], [x, -0.44, 90, 0.82, 1.15, 0.14]])];
-const panelKids = () => PANELS.map(([x, z, yaw, w, h, d]) => ({ feetPosition: { x, y: 0, z }, rotation: { yaw }, castShadow: false, visibleRange: { max: 50 }, model: { id: FITM.panel, forward: "+x" }, layout: box(w, h, d), physics: { body: "static", collider: "box" } }));
+const panelKids = () => PANELS.map(([x, z, yaw, w, h, d]) => ({ feetPosition: { x, y: 0, z }, rotation: { yaw }, castShadow: false, visibleRange: { max: 50 }, model: { id: FITM.panel, forward: "+x" }, layout: box(1.173, 1.2, 0.542), scale: { x: w / 1.173, y: h / 1.2, z: d / 0.542 }, physics: { body: "static", collider: "box" } }));
 const FIT = {
   desk: { model: { id: FITM.desk, forward: "-x" }, layout: box(1.5, 0.75, 0.74), physics: { body: "static", collider: "box" } }, // the steel desk is built along its z: "-x" lays it long across the island with its drawers and knee gap to the user (+z); "+z" had squeezed it into a chest
 
@@ -198,8 +198,8 @@ export function tick(ctx) {
       else if (k === "desk") { wear(o.id, { ...FIT.desk }); ctx.spawn({ parent: o.id, feetPosition: { x: 0.18, y: 0.75, z: -0.14 }, rotation: { yaw: 180 }, castShadow: false, visibleRange: { max: 35 }, model: { id: FITM.crt }, layout: box(0.42, 0.38, 0.4) }); } }
     for (const o of all("l4-printer")) wear(o.id, { ...FIT.printer });
     if (ctx.place.objects["dina-carbon-copy"]) { wear("dina-carbon-copy", { ...FIT.cabinet }); ctx.spawn({ parent: "dina-carbon-copy", feetPosition: { x: 0, y: 1.3, z: 0 }, primitive: { kind: "box", width: 0.3, height: 0.03, depth: 0.22 }, material: { color: "oklch(0.9 0.02 90)", roughness: 0.9 } }); }
-  }  if ((s.fitV ?? 0) === 3) { // 2026-11-14 v4 (Shelly: nothing blocky): the island desks turn long-ways with drawers and knee gap to the user; partitions become fabric panel models, same ids and tags
-    s.fitV = 4;
+  }  if ((s.fitV ?? 0) === 3 || s.fitV === 4) { // 2026-11-14 v5: panels stretched by scale (layout fits uniformly). v4 (Shelly: nothing blocky): the island desks turn long-ways with drawers and knee gap to the user; partitions become fabric panel models, same ids and tags
+    s.fitV = 5;
     for (const o of ctx.query({ tags: ["l4-desk"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const h = ctx.place.objects[o.id]; if (h) { h.model = { ...FIT.desk.model }; h.layout = FIT.desk.layout; } }
     for (const o of ctx.query({ tags: ["l4-partition"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const h = ctx.place.objects[o.id]; if (!h) continue;
       for (const c of [...(h.children ?? [])]) ctx.destroy(c.id); h.primitive = null; h.material = null; h.physics = { body: "static", collider: "box" };
