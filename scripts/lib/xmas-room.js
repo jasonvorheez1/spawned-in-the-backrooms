@@ -11,11 +11,11 @@ const CEIL = { texture: "cdn/texture-acoustic-drop-ceiling-tiles-grid-stained.pn
 const TROF = { color: "oklch(0.15 0.01 90)", roughness: 0.5, metalness: 0.3 };
 const STILL_FACE = "/cdn/value.8f23419441b7dc3c4dbbbbae28daf9a8f16965a76f0bbb6fa4acc620f4829593.png";
 const geo = (kind, p = {}) => ({ kind: "scripted", script: GEO, params: { kind, ...p } });
-// 2026-11-14 Tripo props (nothing blocky): model fitted to the old scripted piece's footprint, feet at y 0
-const XM = { tree: ["b8e231e346d844025a98e483441f85845923431c33f4eb75bcc4064ca44666a0", 1.9, 1.95, 1.9], clock: ["5302c36736340dff22093ccb727df8c3248c71019ccf0b1f395779d29a35ef69", 0.6, 2.42, 0.4],
-  cone: ["8f82a876c6f9b73fd0ec71337005ec8f5870e6c3ac2d69c5de76ce128238151c", 0.36, 0.7, 0.36], sign: ["8a4b0105783b2d65717abedd0d0d187426a6e1e890db57cdfead97042b3a8ac0", 0.75, 2.3, 0.4],
-  table: ["e81e38b2fefa490111e61cd78b98309ece7e01aea4f2afedfd98283a72870610", 0.6, 0.69, 0.6], house: ["cc08f89a04117dc5b8660b77ac2702671b1c250e3832b44bf10d0b529be96025", 0.66, 0.62, 0.5] };
-const XF = { clock: "-x" }; // the clock mesh's dial faces its -x
+// 2026-11-14 Studio pass (art/xmas-clean/build.py): welded, decimated, smoothed, front baked to -Z, feet at y 0; boxes at the meshes' own aspect, true scale
+const XM = { tree: ["e8e6a110133a8bc174c110b087d37e7f8b7e138fecf2459cc26a46bf61cd4b9d", 1.72, 2.45, 1.66], clock: ["71d4abfce5fc6f32270bd4f4a63d652234cbf80f9de63a8460cb1beeb407ca3e", 0.55, 2.3, 0.63],
+  cone: ["09de62b1e201304b36b84af8000ea9c145f4f0e5e3cdd95e886fb96ccd204414", 0.44, 0.7, 0.44], sign: ["f0baaf9a150201f75112b77e87a4c05cd192270d3e2ec29c8a568398010463fa", 0.58, 0.85, 0.46],
+  table: ["8834e1bd9471856bfca9f16098f3eb277b66d85f69c8c34b54ebf9f71ccf00e2", 1.08, 0.84, 1.08], house: ["99e79717fed5c6408f94a5f0d230769d4db7a52769c57d0923c8553dbaeaeb04", 0.42, 0.62, 0.5] };
+const XF = {}; // fronts baked to -Z in the cleanup
 const mdl = (k) => { const [h, w, y, d] = XM[k]; return { model: { id: `/cdn/value.${h}.glb`, ...(XF[k] ? { forward: XF[k] } : {}) }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y, z: d / 2 } } } }; };
 // a wall slab between two corners (axis-aligned), y0..y1
 const wall = (x0, z0, x1, z1, mat, y0 = 0, y1 = 3, t = 0.2) => ({ feetPosition: { x: (x0 + x1) / 2, y: y0, z: (z0 + z1) / 2 }, primitive: { kind: "box", width: Math.max(t, Math.abs(x1 - x0)), height: y1 - y0, depth: Math.max(t, Math.abs(z1 - z0)) }, material: mat, physics: "static" });

@@ -1,5 +1,5 @@
 # The Christmas Area (Kane Pixels): a pocket off Level 0's north edge. Savi's picks.
-v: 11   # bump to re-lay (2026-11-14: Tripo tree/clock/cone/sign/table/house; 11: clock faces room)
+v: 12   # 12: Studio-cleaned models at true scale; bump to re-lay (2026-11-14: Tripo tree/clock/cone/sign/table/house; 11: clock faces room)
 cell: { cx: 44 }            # the maze cell on the north rim whose outer wall opens (maze.js XMAS_CELL)
 bounds: { x0: 51.8, x1: 80.2, z0: 112.1, z1: 160.2 }   # inside here: no yellow hum
 treeLight: 4
