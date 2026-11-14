@@ -103,6 +103,7 @@ export function layFriends(ctx, put, L) {
 export function tickFriends(ctx, L) {
   const hour = ctx.place.atmosphere?.timeOfDay ?? 12, S = stopsOf(L), ps = ctx.place.state, fu = L.house.floorUp;
   const day = hour >= L.day.sunrise && hour < L.day.sunset;
+  if (!ctx.getObject(ID(1))) layFriends(ctx, (id, spec) => { const old = ctx.getObject(id); if (old && spec.tags?.includes("npc")) return; if (old) ctx.destroy(id); if ((spec.primitive || spec.model) && !spec.visibleRange) spec.visibleRange = { max: 450 }; if (spec.light) spec.light.shadow = { enabled: false }; return ctx.spawn(id, spec); }, L); // a room laid before the seven existed gets them now
   for (const p of F.people) {
     const o = ctx.getObject(ID(p.n)); if (!o) continue;
     const s = o.state, [, block] = blockAt(p, hour);
