@@ -42,7 +42,9 @@ for v, w in zip(me.vertices, ov):
     d = w - Vector((oldHead.x, oldCy, oldHead.z))
     v.co = Vector((catHead.x + d.x * s, newCy + d.y * sy, catHead.z + d.z * s))
 print("sy", round(sy, 3), "newD", round(newD, 3), "oldD", round(oldD, 3))
-top = max(v.co.z for v in me.vertices); dz = newTop - top
+HC = Vector((catHead.x, newCy, catHead.z + 0.5 * (newTop - catHead.z)))
+for v in me.vertices: v.co = HC + (v.co - HC) * 1.1   # a shell clear of the cat skull: its crown poked through the old cap
+top = max(v.co.z for v in me.vertices); dz = newTop + 0.02 - top
 for v in me.vertices: v.co.z += dz            # crown on the crown the cat cap sat on
 # the original fringe hung to a human chin; on her shorter muzzle it covered both eyes. Front strands below the brow are drawn
 # up toward it, the left side (her right eye) kept longer so one eye stays half-hidden, the other eye and the mouth clear
