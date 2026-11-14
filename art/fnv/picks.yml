@@ -1,0 +1,43 @@
+# which pieces of the creator's FNV packs the game keeps, and each one's real height in metres (or len: its longest side)
+coke:
+  colacan: 0.122
+  colacanbb: 0.122
+  colacancherry: 0.122
+  colacandiet: 0.122
+  colacanzero: 0.122
+  cocacolabottle: 0.24
+  heinekenbottle: 0.25
+  campellstomato: 0.1
+  cocacolacrate: 0.27
+  colamachine: 1.83
+  watermachine: 1.83
+  heinekenfridge: 1.6
+  colaclock: 0.42
+  mspacman: 1.75
+  qbert: 1.75
+  comfychair: 0.9
+  blackloungecouch: 0.82
+  retvmounted: 0.62
+  colabannerclassic: 1.1
+  ccold: 0.9
+  ccbearsun: 0.9
+  ccsanta: 0.9
+  ccrobot: 0.9
+  lightswitch: 0.12
+motel:
+  jrbathtubaqua01: 0.62
+  jrsinkaqua01: 0.86
+  jrtoiletaqua01: 0.8
+  jrtpdispenseraqua01: 0.15
+  jrdarkwoodrndtablet01: 0.76
+  jrburgundyfloralcouch01: 0.85
+  jrburgundyfloralqueenbed01: { len: 2.1 }
+  jrredtuftedleathersidechair01: 0.9
+  jrburgundycloralchair03: 0.95
+  jrwoodbar02: 1.05
+  jrcabinet01: 1.9
+  pinionchandelier: 0.8
+  jrmochafridge: 1.75
+  jrmocharange01: 0.95
+  crsbrownfloorlamp: 1.6
+  jrbeigepatterndrape01: 2.3
