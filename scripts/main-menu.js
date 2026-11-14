@@ -3,21 +3,18 @@
 // to the place you came from. Backspace mid-game opens the same screen as a pause with RESUME.
 // The title theme plays on this machine alone through the title and the intake room, and fades when you step out.
 import { screen } from "./lib/screen.js"
-import { cutTick } from "./lib/intro-cut.js"
-import { arriveTick } from "./lib/arrive-cut.js"
-import { tutStart, tutTick, tutInput } from "./lib/tutorial.js"
-import { t0Tick } from "./lib/tut0-cut.js"
-import { l26Tick } from "./lib/l26-cut.js"
-import { dinaTick } from "./lib/dina-quest.js"
-import { lrunCutTick } from "./lib/levelrun-cut.js"
-import { ch2Tick } from "./lib/ch2-quest.js"
-import { errandTick } from "./lib/errands.js"
-import { squadTick, squadFollow } from "./lib/hit-squad.js"
 import { animate } from "builtin/tween";
-import { toHub } from "./lib/hub.js"
 const MUSIC = "/cdn/moodboard-lowpoly-cozy/music-soft-mellow-fingerpicked-acoustic-guitar-and-warm-rhodes-early-2000s-bedroom-calm-loop.mp3"; // the drone was exhausting (johnadams2): soft and quiet instead
 const CLICK = "/cdn/moodboard-realistic-gritty/sfx-old-crt-tv-power-on-click-thunk.mp3";
 const MUSIC_GAIN = 0.12; // her pick
+
+// Heavy quest/cutscene modules load on demand after leaving the menu or entering their trigger states.
+const MODS = Object.create(null), MOD_WAIT = Object.create(null)
+const lazy = (k, load) => {
+  if (k in MODS) return MODS[k]
+  if (!MOD_WAIT[k]) MOD_WAIT[k] = load().then((m) => (MODS[k] = m)).catch(() => (MODS[k] = {}))
+  return null
+}
 
 function music(ctx, want) {
   const ses = ctx.session, have = ses.mmMusic && ctx.getObject(ses.mmMusic)
@@ -44,30 +41,40 @@ export function update(ctx) {
   if (place === "intake") {
     if (!ses.inIntake) { ses.inIntake = true; ses.leftIntake = false; if (st.cut) { st.cut = null; ses.cut = null; ctx.view.camera = null }; st.menuOpen = false; st.wardrobeOpen = true; st.wrMenu = true; st.wrTab = "body" }
     else if (!st.wardrobeOpen && !ses.leftIntake && !st.cut) { ses.leftIntake = true; st.madeChar = true; st.cut = ctx.now(); ses.cut = null } // the intro plays first (scripts/lib/intro-cut.js)
-    if (st.cut && cutTick(ctx, ses, st)) { music(ctx, false); ctx.cross(ctx.self, st.t0Done ? "main" : "tutorial0"); return } // the intro lands you in the tutorial Level 0 the first time, the real one after
+    if (st.cut && lazy("intro", () => import("./lib/intro-cut.js"))?.cutTick?.(ctx, ses, st)) { music(ctx, false); ctx.cross(ctx.self, st.t0Done ? "main" : "tutorial0"); return } // the intro lands you in the tutorial Level 0 the first time, the real one after
   } else ses.inIntake = false
   // Level 0 after the intro: the ceiling drop (scripts/lib/arrive-cut.js), then the tutorial (scripts/lib/tutorial.js)
   const l0 = place === "main" || place === "tutorial0"
   if (l0 && st.arrivePending && !st.menuOpen) { st.arrivePending = false; st.arrive = ctx.now(); ses.arr = null; if (place === "tutorial0") { st.t0n = 0; st.t0cut = null } }
-  if (st.arrive) { if (!l0) { st.arrive = null; ses.arr = null; ctx.view.camera = null; return } if (arriveTick(ctx, ses, st)) tutStart(ctx, st); return }
-  if (place === "tutorial0" && !st.t0cut) dinaTick(ctx, ses, st, place)
+  if (st.arrive) {
+    if (!l0) { st.arrive = null; ses.arr = null; ctx.view.camera = null; return }
+    const tut = lazy("tut", () => import("./lib/tutorial.js"))
+    if (lazy("arr", () => import("./lib/arrive-cut.js"))?.arriveTick?.(ctx, ses, st)) tut?.tutStart?.(ctx, st)
+    return
+  }
+  if (!st.menuOpen && place === "tutorial0" && !st.t0cut) lazy("dina", () => import("./lib/dina-quest.js"))?.dinaTick?.(ctx, ses, st, place)
   // the tutorial Level 0's beats (scripts/lib/tut0-cut.js): a fresh visit there without the drop starts the route over
   if (ses.t0Last !== ctx.self.place) { if (place === "tutorial0" && !st.arrive) { st.t0n = 0; st.t0cut = null; ses.t0 = null; ses.inT0 = true } ses.t0Last = ctx.self.place } // every walk into the tutorial starts at the first beat, whatever a past run left
   if (place === "tutorial0" && !st.menuOpen) {
     if (!ses.inT0) { ses.inT0 = true; if (!st.arrive) { st.t0n = 0; st.t0cut = null } }
-    const r = t0Tick(ctx, ses, st)
+    const r = lazy("t0", () => import("./lib/tut0-cut.js"))?.t0Tick?.(ctx, ses, st)
     if (r === "level1") { st.tut = null; ctx.cross(ctx.self, "level1"); return }
     if (r) return
   } else ses.inT0 = false
   // Level 26: the first time aboard, the ship in the fog and Phoebe at the rail (scripts/lib/l26-cut.js)
-  if (place === "level26" && !st.menuOpen && (st.l26cut || !st.l26seen)) { if (l26Tick(ctx, ses, st)) return ctx.sleep(0) }
+  if (place === "level26" && !st.menuOpen && (st.l26cut || !st.l26seen)) { if (lazy("l26", () => import("./lib/l26-cut.js"))?.l26Tick?.(ctx, ses, st)) return ctx.sleep(0) }
   if (st.hubcut) st.hubcut = null
-  if (lrunCutTick(ctx, ses, st, place)) return ctx.sleep(0)
-  if (place !== "tutorial0" && dinaTick(ctx, ses, st, place)) return ctx.sleep(0)
-  if (place !== "tutorial0" && ch2Tick(ctx, ses, st, place)) return ctx.sleep(0)
-  squadTick(ctx, ses, st, place); if (ctx.now() - (ses.sqFollowAt ?? 0) > 3000) { ses.sqFollowAt = ctx.now(); squadFollow(ctx) } // factions that hate you send people (scripts/lib/hit-squad.js)
-  errandTick(ctx, ses, st, place) // odd jobs people hand out (scripts/lib/errands.js)
-  if (st.tut) tutTick(ctx, st)
+  if (!st.menuOpen && (place === "levelrun" || st.lrunCut)) { if (lazy("lrun", () => import("./lib/levelrun-cut.js"))?.lrunCutTick?.(ctx, ses, st, place)) return ctx.sleep(0) }
+  if (!st.menuOpen && place !== "tutorial0" && place !== "intake") {
+    if (lazy("dina", () => import("./lib/dina-quest.js"))?.dinaTick?.(ctx, ses, st, place)) return ctx.sleep(0)
+    if (lazy("ch2", () => import("./lib/ch2-quest.js"))?.ch2Tick?.(ctx, ses, st, place)) return ctx.sleep(0)
+    if (st.rep || st.squadAt) {
+      const sq = lazy("squad", () => import("./lib/hit-squad.js"))
+      if (sq) { sq.squadTick?.(ctx, ses, st, place); if (ctx.now() - (ses.sqFollowAt ?? 0) > 3000) { ses.sqFollowAt = ctx.now(); sq.squadFollow?.(ctx) } }
+    }
+    lazy("err", () => import("./lib/errands.js"))?.errandTick?.(ctx, ses, st, place) // odd jobs people hand out (scripts/lib/errands.js)
+  }
+  if (st.tut) lazy("tut", () => import("./lib/tutorial.js"))?.tutTick?.(ctx, st)
   const playing = music(ctx, place !== "bonus" && ((st.menuOpen && st.menuKind === "title") || (place === "intake" && !st.cut))) // the mall has its own track: the title theme never plays over it (shelly, Nov 12)
   // behind the title the camera slowly looks around the halls from head height; gone the moment it closes
   if (st.menuOpen) {
@@ -88,7 +95,7 @@ export function update(ctx) {
 
 export function onInput(ctx, input) {
   const st = ctx.self.state
-  if (st.tut) tutInput(ctx, st, input)
+  if (st.tut) lazy("tut", () => import("./lib/tutorial.js"))?.tutInput?.(ctx, st, input)
   if (st.dcut) { const ss = ctx.session; if (input.held?.jump) ss.dskip ??= ctx.now(); else ss.dskip = null } // hold jump 1.2 s skips the diary cutscene
   if (st.l26cut) { const ss = ctx.session; if (input.held?.jump) ss.l26skip ??= ctx.now(); else ss.l26skip = null }
   if (st.lrunCut?.phase === "intro") { const ss = ctx.session; if (input.held?.jump) ss.lrunskip ??= ctx.now(); else ss.lrunskip = null } // hold jump 1.2 s skips Level 26's cutscene
@@ -107,7 +114,7 @@ export function onInput(ctx, input) {
   if (input.pressed?.mmenu && d) {
     ctx.emit("playSound", { clip: CLICK, volume: 0.5 }, { audience: { player: ctx.self.id } })
     if (st.bodyStyle && ctx.world.state.bodyStyle !== st.bodyStyle) ctx.world.state.bodyStyle = st.bodyStyle // their saved pick rides into whichever room they wake in
-    if (d.k === "start") { st.menuOpen = false; st.menuView = ""; if (st.t0Done && st.madeChar && ctx.self.place !== "bonus") toHub(ctx); else if (ctx.self.place !== "bonus") { st.introFrom = ctx.self.place; ctx.cross(ctx.self, "intake") } } // after the tutorial, launch lands in the Bonus Room (johnadams2)
+    if (d.k === "start") { st.menuOpen = false; st.menuView = ""; if (st.t0Done && st.madeChar && ctx.self.place !== "bonus") (lazy("hub", () => import("./lib/hub.js"))?.toHub?.(ctx) ?? import("./lib/hub.js").then((m) => { MODS.hub = m; m.toHub(ctx) })); else if (ctx.self.place !== "bonus") { st.introFrom = ctx.self.place; ctx.cross(ctx.self, "intake") } } // after the tutorial, launch lands in the Bonus Room (johnadams2)
     if (d.k === "resume") { st.menuOpen = false; st.menuView = "" }
     if (d.k === "title") { st.menuKind = "title"; st.menuView = "" }
     if (d.k === "view") { st.menuView = ["settings", "controls"].includes(d.v) ? d.v : "" }

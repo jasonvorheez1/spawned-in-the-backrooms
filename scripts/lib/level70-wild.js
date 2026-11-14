@@ -52,7 +52,8 @@ export const TREES = (() => {
 const yawTo = (x, z, tx, tz) => Math.atan2(-(tx - x), -(tz - z)) * 180 / Math.PI;
 const fit = (h) => ({ box: { min: { y: 0 }, max: { y: h } } });
 const MESH = { body: "static", collider: "mesh" };
-const m = (glb, x, y, z, h, yaw = 0, extra = {}) => ({ feetPosition: { x, y, z }, rotation: { yaw }, model: { id: GLB[glb] }, layout: fit(h), ...extra });
+const BOX = { body: "static", collider: "box" };
+const m = (glb, x, y, z, h, yaw = 0, extra = {}) => ({ feetPosition: { x, y, z }, rotation: { yaw }, model: { id: GLB[glb] }, layout: fit(h), castShadow: h > 3.5, visibleRange: { max: h > 3.5 ? 160 : 70 }, ...extra });
 const COLD_FIRE = `fx
 pop coals n=8 on=disc(.3) size=.07..0.15 tint=<.5,1.3,2.6>..<.3,.7,1.6> sz=$size*flick(.5,.12) col=$tint*flick(.8,.3) a=.9 r=sprite(soft-disc,add)
 pop flame rate=flick(.45,.2)*46 on=disc(.26) life=.6..1.1 v=up(1.2)+cone(18)*(.2..0.6) size=.22..0.42 acc=curl(.5)*1.1+buoy(1.7)+drag(1.5)
@@ -127,10 +128,10 @@ export function lay(ctx) {
   for (let i = 0; n < 16 && i < 600; i++) {
     const a = r() * 6.283, d = 30 + r() * 170, x = Math.cos(a) * d, z = Math.sin(a) * d, h = 0.7 + r() * r() * 2.2;
     if (wildness(x, z) <= 0.3 || !clear(x, z, 4) || Math.abs(z - RIVER.z) < 14) continue;
-    sp("l70-rock" + n++, { tags: ["l70-wild", "l70-rock"], feetPosition: g(x, z, -h * 0.18), rotation: { yaw: r() * 360 }, model: { id: GLB.rock }, layout: fit(h), physics: MESH, visibleRange: { max: 260 } });
+    sp("l70-rock" + n++, { tags: ["l70-wild", "l70-rock"], feetPosition: g(x, z, -h * 0.18), rotation: { yaw: r() * 360 }, model: { id: GLB.rock }, layout: fit(h), physics: BOX, castShadow: h > 1.8, visibleRange: { max: 140 } });
   }
   [[-17, 30, 90], [-17, 21.3, 90], [-17.4, 12.6, 94], [19, 34, 90], [19.3, 25.2, 86], [-24, -112, 12], [-32.5, -113.8, 12]].forEach(([x, z, yaw], i) =>
-    sp("l70-fence" + i, { tags: ["l70-wild"], feetPosition: g(x, z, -0.45 - (i % 3) * 0.12), rotation: { yaw, roll: (i % 2 ? 3 : -2) }, model: { id: GLB.fence }, layout: fit(1.68), physics: MESH }));
+    sp("l70-fence" + i, { tags: ["l70-wild"], feetPosition: g(x, z, -0.45 - (i % 3) * 0.12), rotation: { yaw, roll: (i % 2 ? 3 : -2) }, model: { id: GLB.fence }, layout: fit(1.68), physics: BOX, castShadow: false, visibleRange: { max: 100 } }));
   sp("l70-sign-speed", { tags: ["l70-wild"], feetPosition: g(8.2, 24, -1.05), rotation: { yaw: 172, roll: 7 }, model: { id: GLB.signSpeed }, layout: fit(3), physics: "static" });
   sp("l70-sign-moose", { tags: ["l70-wild"], feetPosition: g(-8.4, -104, -1.25), rotation: { yaw: 12, roll: -9 }, model: { id: GLB.signMoose }, layout: fit(3), physics: "static" });
   sp("l70-sign-heap0", { tags: ["l70-wild"], feetPosition: g(8.9, 24.6, -0.05), model: { id: GLB.heap }, layout: fit(0.6) });

@@ -1,51 +1,65 @@
 import { xpNeedFor } from './lib/progression.js'
-import { CAMS as CCTV_CAMS } from './lib/l11-cctv.js'
 import { questBriefing, questProgress } from './lib/quest-dialogue.js'
 import { wristNav } from './lib/wrist-nav.js'
 import { quickBar } from './lib/hud-quickbar.js'
 import { UI_THEME } from './lib/ui-theme.js'
 import { uiPrefsAttrs, uiPrefsOf, noticeToast, escKeyHandler } from './lib/ui-kit.js'
 import { screen, hasHalogen } from './lib/screen.js'
-import { overlay as lagscopeOverlay } from '../mods/lagscope/panel.js'
-import cinemaPanel from '../mods/absolute-cinema/lib/ui-cinema.js'
-import { renderCinemaOverlays } from '../mods/absolute-cinema/lib/ui-cinema-overlays.js'
-import * as modelingStudio from '../mods/modeling-studio/hud.js'
-export { m3dPvDown, m3dPvWheel, m3dPvReset, m3dPvTool, m3dPvDraft, m3dPvEdit, m3dPvClear, m3dTkMeasure, m3dTkDown, m3dTkWheel, m3dTkReset, m3dMpvMove, m3dMpvSize, m3dDraft, m3dPose, m3dPick, m3dPreview, m3dUpload, m3dAsk, m3dClearRefs, m3dGuide } from '../mods/modeling-studio/hud.js'
+// Rare/modal UI panels, debug overlays, and level data are loaded on demand via lazy()/lazyFn().
+const MODS = Object.create(null), MOD_WAIT = Object.create(null)
+const lazy = (k, load) => {
+  if (k in MODS) return MODS[k]
+  if (!MOD_WAIT[k]) MOD_WAIT[k] = load().then((m) => (MODS[k] = m)).catch(() => (MODS[k] = {}))
+  return null
+}
+const lazyFn = (k, load, fn) => (...a) => {
+  const m = MODS[k]
+  if (m?.[fn]) return m[fn](...a)
+  return (MOD_WAIT[k] ??= load().then((mod) => (MODS[k] = mod)).catch(() => (MODS[k] = {}))).then((mod) => mod[fn]?.(...a))
+}
+const loadM3d = () => import('../mods/modeling-studio/hud.js')
+export const m3dPvDown = lazyFn('m3d', loadM3d, 'm3dPvDown')
+export const m3dPvWheel = lazyFn('m3d', loadM3d, 'm3dPvWheel')
+export const m3dPvReset = lazyFn('m3d', loadM3d, 'm3dPvReset')
+export const m3dPvTool = lazyFn('m3d', loadM3d, 'm3dPvTool')
+export const m3dPvDraft = lazyFn('m3d', loadM3d, 'm3dPvDraft')
+export const m3dPvEdit = lazyFn('m3d', loadM3d, 'm3dPvEdit')
+export const m3dPvClear = lazyFn('m3d', loadM3d, 'm3dPvClear')
+export const m3dTkMeasure = lazyFn('m3d', loadM3d, 'm3dTkMeasure')
+export const m3dTkDown = lazyFn('m3d', loadM3d, 'm3dTkDown')
+export const m3dTkWheel = lazyFn('m3d', loadM3d, 'm3dTkWheel')
+export const m3dTkReset = lazyFn('m3d', loadM3d, 'm3dTkReset')
+export const m3dMpvMove = lazyFn('m3d', loadM3d, 'm3dMpvMove')
+export const m3dMpvSize = lazyFn('m3d', loadM3d, 'm3dMpvSize')
+export const m3dDraft = lazyFn('m3d', loadM3d, 'm3dDraft')
+export const m3dPose = lazyFn('m3d', loadM3d, 'm3dPose')
+export const m3dPick = lazyFn('m3d', loadM3d, 'm3dPick')
+export const m3dPreview = lazyFn('m3d', loadM3d, 'm3dPreview')
+export const m3dUpload = lazyFn('m3d', loadM3d, 'm3dUpload')
+export const m3dAsk = lazyFn('m3d', loadM3d, 'm3dAsk')
+export const m3dClearRefs = lazyFn('m3d', loadM3d, 'm3dClearRefs')
+export const m3dGuide = lazyFn('m3d', loadM3d, 'm3dGuide')
 // HUD and screen composition. Shared panel styling lives in lib/ui-theme.js.
 import L from './lib/data/level0.yml'
-import R12 from './lib/data/level12.yml'
 import W from './lib/weapons.js'
 import { ZONE_NAMES } from './lib/maze.js'
 import { questMark, yawTo } from './lib/quest-mark.js'
 import { quickItems } from './lib/quick-items.js'
 import { tracked, MAX_TRACK, PLACE_NAMES } from './lib/quests.js'
 import { LEVEL_TITLES as LEVEL_NAMES } from './lib/places.js'
-import { wardrobe } from './wardrobe-ui.js'
-import { salon } from './salon-ui.js'
 import { mainMenu } from './main-menu-ui.js'
-import { hubUi } from './hub-ui.js'
-import { cutUi, t0Fade } from './cutscene-ui.js'
 import { tutUi } from './tutorial-ui.js'
-import { pickUi } from './lockpick-ui.js'
-import { spamUi } from './spamton-ui.js'
-import { spamArenaUi } from './spamton-arena-ui.js'
-import { lootUi } from './loot-ui.js'
-import { talkUi } from './talk-ui.js'
-import { buildUi } from './build-ui.js'
-import { statsUi } from './stats-ui.js'
-import { craftUi } from './craft-ui.js'
-import { roadUi } from './l169-road-ui.js'
-import { osUi } from './os-ui.js'
-import { arcadeUi } from './arcade-ui.js'
-import { smoothieUi } from './smoothie-ui.js'
-import { hordeUi } from './horde-ui.js'
 import { derived, carried as _kg } from './lib/stats.js'
-import { noclipUi, clipCard } from './noclip-ui.js'
-import { feedUi } from './feed-ui.js'
-import PAGES from './lib/data/pages.yml'
 import { cndOf, band, bandColor, isBroken } from './lib/condition.js'
 // the .plymodel converter is read on the first upload press, not at boot
 export async function plyUpload(input) { const m = await import('./lib/plyimport.js'); return m.plyUpload(input) }
+
+const NEEDS_CSS = `<style>#tk{position:fixed;left:22px;bottom:192px;max-width:300px;pointer-events:none;font-size:11px;letter-spacing:.08em;color:#f2c14e;text-shadow:0 1px 3px #000}#tk b{color:#fff3d6}#nd{position:fixed;left:22px;bottom:192px;width:150px;pointer-events:none;font-size:10.5px;letter-spacing:.14em;color:#ffcf87;text-shadow:0 1px 3px #000}#nd .r{display:flex;align-items:center;gap:6px;margin-top:3px}#nd .r span{width:34px}#nd .b{flex:1;height:5px;background:#0009;border:1px solid #ffb34755}#nd .b u{display:block;height:100%;background:#7fc4e8}#nd .r.h .b u{background:#d9a35a}#nd .r.lo{color:#ff7a5a}#nd .r.lo .b u{background:#e0644f}</style>`
+function needsHud(s) {
+  if (s.level == null || s.hunger == null) return ''
+  const lo = 25
+  return NEEDS_CSS + `<div id="nd"><div class="r h ${s.hunger < lo ? 'lo' : ''}"><span>FOOD</span><div class="b"><u style="width:${s.hunger}%"></u></div></div><div class="r ${s.thirst < lo ? 'lo' : ''}"><span>WATER</span><div class="b"><u style="width:${s.thirst}%"></u></div></div>${(s.l169sun ?? 0) > 0 || s.l169lit ? `<div class="r ${s.l169sun >= 50 ? 'lo' : ''}"><span>SUN</span><div class="b"><u style="width:${Math.min(100, s.l169sun ?? 0)}%"></u></div></div>` : ''}${(s.l169chill ?? 0) > 5 ? `<div class="r ${s.l169chill >= 50 ? 'lo' : ''}"><span>COLD</span><div class="b"><u style="width:${s.l169chill}%"></u></div></div>` : ''}</div>` + (s.l4task ? `<div id="tk">TASK · ${esc(s.l4task.text)} <b>${s.l4task.have ?? 0}/${s.l4task.need}</b></div>` : '')
+}
 
 const THEME = `<style>@keyframes hud-pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 #hud { --a: #ffb642; --ad: rgba(255,182,66,0.35); color: var(--a); font-family: 'Monofonto','Share Tech Mono','Geist Pixel',ui-monospace,monospace; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; user-select: none; text-shadow: 0 0 4px rgba(255,170,40,0.7), 0 1px 2px rgba(0,0,0,0.9) }
@@ -202,7 +216,7 @@ function sniperScope(s, wp) {
 function xferCard(s, now) {
   const x = s.xfer; if (!x || now - x.at > 2600) return ''
   const to = String(x.to ?? '').startsWith('tutorial0') ? 'main' : x.to // a solo tutorial copy is still Level 0
-  if (x.kind) return clipCard({ ...x, to }, now, LEVEL_NAMES) // the noclip between levels (scripts/noclip-ui.js)
+  if (x.kind) return lazy('noclip', () => import('./noclip-ui.js'))?.clipCard?.({ ...x, to }, now, LEVEL_NAMES) ?? '' // the noclip between levels (scripts/noclip-ui.js)
   const [a, b] = LEVEL_NAMES[to] ?? [String(to).toUpperCase(), '']
   return `<style>@keyframes xferOut{0%,45%{opacity:1}100%{opacity:0;visibility:hidden}}</style><div id="xfer${x.at}" style="position:absolute;inset:0;background:#050403;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:xferOut 2.4s forwards;color:#f2c14e;text-shadow:2px 2px #000"><div style="font-size:44px;letter-spacing:.2em">${a}</div><div style="font-size:18px;letter-spacing:.3em;opacity:.75;margin-top:6px">${b}</div></div>`
 }
@@ -283,7 +297,6 @@ function restUi(ctx, s) {
   return out
 }
 const LIVE = `<style>@keyframes hudBreath{0%,100%{opacity:.92}50%{opacity:1}}@keyframes hudIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}#hud .bl,#hud .br{animation:hudIn .5s ease-out both,hudBreath 3.2s ease-in-out .5s infinite;filter:drop-shadow(0 0 4px rgba(255,170,40,.35))}</style>`
-import { mahjongPanel } from './mahjong-ui.js'
 // under the water's skin: murky green-blue, the edges darker, the light swimming overhead, and the breath you have left
 function underwater(s) {
   if (!s.underwater) return ''
@@ -393,6 +406,8 @@ function unlock12(ctx, player) { // shows once as Harris's tape ends: Level 12's
 }
 function ritual12(ctx, player) { // Level 12: Harris's ritual as a checklist that ticks off as it's done
   if (player.place !== 'level12') return ""
+  const R12 = lazy('r12', () => import('./lib/data/level12.yml'))?.default
+  if (!R12) return ""
   const r = player.state.r12 ?? {}, now = ctx.now(), sat = r.sat ?? 0
   const satDone = sat >= R12.sit, back = r.back ? (now - r.back) / 1000 : null
   const min = back == null ? 0 : Math.floor(back / R12.hour * 60), early = back != null && back < R12.hour - R12.tol, open = back != null && Math.abs(back - R12.hour) <= R12.tol, late = back != null && back > R12.hour + R12.tol
@@ -438,17 +453,21 @@ function ledgerUi(s) {
     <div style="text-align:right;margin-top:10px"><button onclick="sendAction('inv',{k:'read',n:0})" style="background:#2a241a;color:#e4d7b6;border:0;padding:5px 14px;font-family:Georgia,serif;cursor:pointer">close the ledger</button></div>
   </div></div>`
 }
-export default function render(ctx, player) { return `<div class="ui-root" ${uiPrefsAttrs(player?.state)}>${tarVeil(ctx, player) + renderHud(ctx, player) + unlock12(ctx, player) + ritual12(ctx, player) + lagscopeOverlay(ctx, player) + renderCinemaOverlays(player) + (player.state?.cinemaOpen ? cinemaPanel(player) : '') + UI_THEME}</div>` } // the 3D studio button is off the HUD (Shelly, Nov 9: bothersome)
+export default function render(ctx, player) {
+  const cs = player?.state
+  const hasCinemaOv = cs && (cs.cinemaOpen || cs.cinemaPlaying || cs.cinemaPlayback?.playing || (cs._cinemaFadeOpacity ?? 0) > 0.001 || (cs._cinemaWashOpacity ?? 0) > 0.001 || (cs._cinemaTextOpacity ?? 0) > 0.001)
+  return `<div class="ui-root" ${uiPrefsAttrs(cs)}>${tarVeil(ctx, player) + renderHud(ctx, player) + unlock12(ctx, player) + ritual12(ctx, player) + (player?.isEditor && ctx?.session?.lsOpen ? (lazy('lagscope', () => import('../mods/lagscope/panel.js'))?.overlay?.(ctx, player) ?? '') : '') + (hasCinemaOv ? (lazy('cinemaOv', () => import('../mods/absolute-cinema/lib/ui-cinema-overlays.js'))?.renderCinemaOverlays?.(player) ?? '') : '') + (cs?.cinemaOpen ? (lazy('cinema', () => import('../mods/absolute-cinema/lib/ui-cinema.js'))?.default?.(player) ?? '') : '') + UI_THEME}</div>`
+} // the 3D studio button is off the HUD (Shelly, Nov 9: bothersome)
 function renderHud(ctx, player) {
   const s = player.state ?? {}
   const quick = !s.building && screen(s,player.place)==='play' && Object.keys(s.quickSlots??{}).length ? quickItems(s) : []
   if (s.level == null) return ''
   if (s.cctv) return cctvUi(ctx, player)
-  if (s.cut || s.dcut || s.l26cut || s.lrunCut || s.arrive || s.arrivePending || (s.t0cut && !s.sheetOpen)) return cutUi(ctx, player)
+  if (s.cut || s.dcut || s.l26cut || s.lrunCut || s.arrive || s.arrivePending || (s.t0cut && !s.sheetOpen)) return lazy('cut', () => import('./cutscene-ui.js'))?.cutUi?.(ctx, player) ?? ''
   if (s.menuOpen) return mainMenu(ctx, player)
-  if (s.wardrobeOpen && s.salonOpen && !s.wrMenu) return `<div id="hud" style="position:fixed;inset:0;pointer-events:none">${salon(ctx, player)}</div>`
-  if (s.wardrobeOpen) return `${THEME}<div id="hud" style="position:fixed;inset:0;pointer-events:none">${wardrobe(ctx, player)}</div>`
-  if (s.mj?.seats) return `${THEME}${LIVE}<div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">${mahjongPanel(s, ctx.now())}${chatBubbles(ctx, ctx.now(), player)}</div>` // at the mahjong table: only the game and who's talking
+  if (s.wardrobeOpen && s.salonOpen && !s.wrMenu) return `<div id="hud" style="position:fixed;inset:0;pointer-events:none">${lazy('salon', () => import('./salon-ui.js'))?.salon?.(ctx, player) ?? ''}</div>`
+  if (s.wardrobeOpen) return `${THEME}<div id="hud" style="position:fixed;inset:0;pointer-events:none">${lazy('wardrobe', () => import('./wardrobe-ui.js'))?.wardrobe?.(ctx, player) ?? ''}</div>`
+  if (s.mj?.seats) return `${THEME}${LIVE}<div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">${lazy('mahjong', () => import('./mahjong-ui.js'))?.mahjongPanel?.(s, ctx.now()) ?? ''}${chatBubbles(ctx, ctx.now(), player)}</div>` // at the mahjong table: only the game and who's talking
   const now = ctx.now(), lv = s.level, mh = maxHp(lv, s), ms = maxSan(lv, s)
   const hpF = Math.max(0, s.hp / mh), sanF = Math.max(0, s.sanity / ms)
   const zone = player.place === 'bonus' ? 'bonus' : (s.zone ?? 'hub')
@@ -469,7 +488,7 @@ function renderHud(ctx, player) {
 ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','journal'].includes(screen(s,player.place))}" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
   ${halogen ? questTracker(s, player, ctx) : ''}
   ${halogen && !s.building && screen(s,player.place)==='play' ? quickBar(s,quick) : ''}
-  ${s.nvgOn ? `<div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,oklch(0.75 0.2 145 / .10) 35%,oklch(0.08 0.05 145 / .92) 78%);mix-blend-mode:normal"></div><div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,oklch(0.6 0.2 145 / .08) 0 1px,transparent 1px 3px)"></div><div style="position:absolute;top:18px;left:50%;transform:translateX(-50%);color:#7cf08a;font-size:12px;letter-spacing:.3em;opacity:.8">NV · ${Math.round(s.battery)}%</div>` : ''}${xferCard(s, now)}${tutUi(s, now, player.place)}${t0Fade(ctx, player)}${restUi(ctx, s)}${mahjongPanel(s, now)}
+  ${s.nvgOn ? `<div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,oklch(0.75 0.2 145 / .10) 35%,oklch(0.08 0.05 145 / .92) 78%);mix-blend-mode:normal"></div><div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,oklch(0.6 0.2 145 / .08) 0 1px,transparent 1px 3px)"></div><div style="position:absolute;top:18px;left:50%;transform:translateX(-50%);color:#7cf08a;font-size:12px;letter-spacing:.3em;opacity:.8">NV · ${Math.round(s.battery)}%</div>` : ''}${xferCard(s, now)}${tutUi(s, now, player.place)}${s.t0fade && now - s.t0fade <= 3000 ? (lazy('cut', () => import('./cutscene-ui.js'))?.t0Fade?.(ctx, player) ?? '') : ''}${restUi(ctx, s)}${s.mj?.seats ? (lazy('mahjong', () => import('./mahjong-ui.js'))?.mahjongPanel?.(s, now) ?? '') : ''}
   ${chatBubbles(ctx, now, player)}
   ${sniperScope(s, wp)}
   <!-- Center Point (hidden during ADS for true ironsights aiming) -->
@@ -550,12 +569,12 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
   </div>` : ''}
 
   ${(s.firesaltUntil ?? 0) > now ? `<div style="position:absolute;left:0;right:0;text-align:center;bottom:150px;font-size:13px;color:#ff9a4a;text-shadow:0 0 6px rgba(255,120,30,.6)">Firesalt on your weapon · x1.4 melee · ${Math.ceil((s.firesaltUntil - now) / 1000)}s</div>` : ''}
-  ${s.reading && PAGES[s.reading] ? `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);pointer-events:auto" data-modal>
+  ${s.reading ? (() => { const PAGES = lazy('pages', () => import('./lib/data/pages.yml'))?.default; return PAGES?.[s.reading] ? `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);pointer-events:auto" data-modal>
     <div style="width:min(440px,88vw);background:#e9dfc4;color:#2a241a;padding:22px 26px 16px;font-family:'Courier New',monospace;font-size:14px;line-height:1.5;box-shadow:0 8px 30px rgba(0,0,0,.6);transform:rotate(-1.2deg);border-left:3px dashed #b9ab88">
       <div style="font-size:11px;color:#7a6c50;margin-bottom:8px">${s.reading >= 101 && s.reading <= 104 ? 'Level 109 · Neon Hospital record · ' + (s.reading - 100) + ' of 4' : s.reading === 24 ? 'Level 10 field observation · Entity 17' : s.reading >= 21 && s.reading <= 23 ? 'Level 0 field document · ' + (s.reading - 20) + ' of 3' : s.reading >= 11 && s.reading <= 17 ? 'Base Alef papers · ' + (s.reading - 10) + ' of 7' : 'torn page · ' + s.reading + ' of 8'}</div>
       <div style="white-space:pre-wrap">${String(PAGES[s.reading]).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/~~(.+?)~~/g, '<s style="text-decoration-thickness:3px">$1</s>')}</div>
       <div style="text-align:right;margin-top:12px"><button onclick="sendAction('inv',{k:'read',n:0})" style="background:#2a241a;color:#e9dfc4;border:0;padding:5px 14px;font-family:inherit;cursor:pointer">put it away</button></div>
-    </div></div>` : ''}
+    </div></div>` : '' })() : ''}
   ${subtitles(ctx, player, now)}
   ${halogen ? compassRead(s, ((player.camera?.rotation?.yaw ?? 0) % 360 + 360) % 360, now) : ''}
   ${noticeToast(s, now)}
@@ -564,11 +583,13 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
     <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('emote', 'T')}</kbd> face
   </div>`}
 
-</div>${ledgerUi(s)}${journalUi(s, player, ctx)}${feedUi(ctx, player)}${lootUi(ctx, player)}${pickUi(ctx, player)}${spamUi(ctx, player)}${spamArenaUi(ctx, player)}${talkUi(ctx, player)}${hubUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${roadUi(ctx, player)}${osUi(ctx, player)}${arcadeUi(ctx, player)}${smoothieUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
+</div>${ledgerUi(s)}${journalUi(s, player, ctx)}${s.feed?.length ? (lazy('feed', () => import('./feed-ui.js'))?.feedUi?.(ctx, player) ?? '') : ''}${s.lootOpen || s.invOpen || (s.focus && screen(s, player.place) === 'play') ? (lazy('loot', () => import('./loot-ui.js'))?.lootUi?.(ctx, player) ?? '') : ''}${s.pick ? (lazy('pick', () => import('./lockpick-ui.js'))?.pickUi?.(ctx, player) ?? '') : ''}${s.spam?.on ? (lazy('spam', () => import('./spamton-ui.js'))?.spamUi?.(ctx, player) ?? '') : ''}${player?.place === 'spamton' && ctx.place?.state?.spam ? (lazy('spamArena', () => import('./spamton-arena-ui.js'))?.spamArenaUi?.(ctx, player) ?? '') : ''}${s.talkWith || s.shopOpen ? (lazy('talk', () => import('./talk-ui.js'))?.talkUi?.(ctx, player) ?? '') : ''}${s.hubShop || (s.hubOffer && ctx.self?.place !== 'bonus') ? (lazy('hub', () => import('./hub-ui.js'))?.hubUi?.(ctx, player) ?? '') : ''}${s.building ? (lazy('build', () => import('./build-ui.js'))?.buildUi?.(ctx, player) ?? '') : ''}${s.sheetOpen ? (lazy('stats', () => import('./stats-ui.js'))?.statsUi?.(ctx, player) ?? '') : ''}${s.craftOpen ? (lazy('craft', () => import('./craft-ui.js'))?.craftUi?.(ctx, player) ?? needsHud(s)) : needsHud(s)}${(ctx.self?.place ?? player.place) === 'level169' && (s.l169trip || s.l169fall || s.l169board || s.l169read) ? (lazy('road', () => import('./l169-road-ui.js'))?.roadUi?.(ctx, player) ?? '') : ''}${s.os ? (lazy('os', () => import('./os-ui.js'))?.osUi?.(ctx, player) ?? '') : ''}${s.arcade ? (lazy('arcade', () => import('./arcade-ui.js'))?.arcadeUi?.(ctx, player) ?? '') : ''}${s.smoothieOpen || s.sCut ? (lazy('smoothie', () => import('./smoothie-ui.js'))?.smoothieUi?.(ctx, player) ?? '') : ''}${s.horde || (s.hordeResult && now - s.hordeResult.at < 7000) ? (lazy('horde', () => import('./horde-ui.js'))?.hordeUi?.(ctx, player) ?? '') : ''}${s.noclipIn != null || s.exitAt ? (lazy('noclip', () => import('./noclip-ui.js'))?.noclipUi?.(ctx, player) ?? '') : ''}`
 }
 
 // Sedco CCTV desk (scripts/cctv.js owns the view): the feed's frame over the live picture
 function cctvUi(ctx, player) {
+  const CCTV_CAMS = lazy('cctv', () => import('./lib/l11-cctv.js'))?.CAMS
+  if (!CCTV_CAMS) return ''
   const c = player.state.cctv, i = c.i ?? 0, cam = CCTV_CAMS[i] ?? CCTV_CAMS[0], now = ctx.now()
   const t = new Date(Date.UTC(2009, 2, 14, 3, 12, 0) + now), pad = (n) => String(n).padStart(2, '0')
   const stamp = `03/14/2009 ${pad(t.getUTCHours())}:${pad(t.getUTCMinutes())}:${pad(t.getUTCSeconds())}`

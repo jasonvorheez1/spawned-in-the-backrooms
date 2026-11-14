@@ -1,28 +1,78 @@
 # spawn-scene v2 yaml x-1z1
 l70-rock11:
-  feetPosition: {x: -66.28088199256347, y: {terrain: -0.1957284448886843}, z: 116.1269295832195}
+  feetPosition:
+    x: -66.28088199256347
+    y:
+      terrain: -0.1957284448886843
+    z: 116.1269295832195
   id: l70-rock11
-  layout: {box: {max: {y: 1.0873802493815794}, min: {y: 0}}}
-  model: {id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 38.76921035349369}
-  tags: [l70-wild, l70-rock]
-  visibleRange: {max: 260}
+  layout:
+    box:
+      max:
+        y: 1.0873802493815794
+      min:
+        y: 0
+  model:
+    id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 38.76921035349369
+  tags:
+  - l70-wild
+  - l70-rock
+  visibleRange:
+    max: 260
 l70-rock13:
-  feetPosition: {x: -145.73253850023477, y: {terrain: -0.24070049548683664}, z: 122.21460060678763}
+  feetPosition:
+    x: -145.73253850023477
+    y:
+      terrain: -0.24070049548683664
+    z: 122.21460060678763
   id: l70-rock13
-  layout: {box: {max: {y: 1.3372249749268703}, min: {y: 0}}}
-  model: {id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 125.20047040656209}
-  tags: [l70-wild, l70-rock]
-  visibleRange: {max: 260}
+  layout:
+    box:
+      max:
+        y: 1.3372249749268703
+      min:
+        y: 0
+  model:
+    id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 125.20047040656209
+  tags:
+  - l70-wild
+  - l70-rock
+  visibleRange:
+    max: 260
 l70-skyline6:
   castShadow: false
-  feetPosition: {x: -120, y: {terrain: -1}, z: 158}
+  feetPosition:
+    x: -120
+    y:
+      terrain: -1
+    z: 158
   id: l70-skyline6
-  layout: {box: {max: {y: 46}, min: {y: 0}}}
-  model: {id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb, materials: {tripo_material_05692072-2f16-4333-a2ec-e88663003b42: {color: oklch(0.32 0.03 250), roughness: 0.55}}}
-  rotation: {yaw: 180}
-  tags: [l70-wild, l70-skyline]
-  visibleRange: {max: 900}
+  layout:
+    box:
+      max:
+        y: 46
+      min:
+        y: 0
+  model:
+    id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb
+    materials:
+      tripo_material_05692072-2f16-4333-a2ec-e88663003b42:
+        color: oklch(0.32 0.03 250)
+        roughness: 0.55
+  rotation:
+    yaw: 180
+  tags:
+  - l70-wild
+  - l70-skyline
+  visibleRange:
+    max: 900

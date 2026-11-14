@@ -1,857 +1,2747 @@
 # spawn-scene v2 yaml x0z-1
 l70-bank-16:
-  castShadow: true
-  feetPosition: {x: -6.916390582907479, y: -0.06, z: -91.36584444067557}
+  castShadow: false
+  feetPosition:
+    x: -6.916390582907479
+    y: -0.06
+    z: -91.36584444067557
   id: l70-bank-16
-  layout: {box: {max: {y: 1.1107668068747443}, min: {y: 0}}}
-  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb, materials: {tripo_material_961a531c-67ef-4089-8b70-70766e70f68a: {color: oklch(0.99 0.015 240), roughness: 0.95}}}
-  physics: {body: static, collider: mesh}
-  rotation: {pitch: 0, roll: 0, yaw: -1.0311402468942106}
+  layout:
+    box:
+      max:
+        y: 1.1107668068747443
+      min:
+        y: 0
+  model:
+    id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb
+    materials:
+      tripo_material_961a531c-67ef-4089-8b70-70766e70f68a:
+        color: oklch(0.99 0.015 240)
+        roughness: 0.95
+  physics:
+    body: static
+    collider: box
+  rotation:
+    pitch: 0
+    roll: 0
+    yaw: -1.0311402468942106
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 65
 l70-bank-17:
-  castShadow: true
-  feetPosition: {x: -7.126815270224324, y: -0.06, z: -99.31198695371131}
+  castShadow: false
+  feetPosition:
+    x: -7.126815270224324
+    y: -0.06
+    z: -99.31198695371131
   id: l70-bank-17
-  layout: {box: {max: {y: 1.2426905289998103}, min: {y: 0}}}
-  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb, materials: {tripo_material_961a531c-67ef-4089-8b70-70766e70f68a: {color: oklch(0.99 0.015 240), roughness: 0.95}}}
-  physics: {body: static, collider: mesh}
-  rotation: {pitch: 0, roll: 0, yaw: 174.85009584357613}
+  layout:
+    box:
+      max:
+        y: 1.2426905289998103
+      min:
+        y: 0
+  model:
+    id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb
+    materials:
+      tripo_material_961a531c-67ef-4089-8b70-70766e70f68a:
+        color: oklch(0.99 0.015 240)
+        roughness: 0.95
+  physics:
+    body: static
+    collider: box
+  rotation:
+    pitch: 0
+    roll: 0
+    yaw: 174.85009584357613
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 65
 l70-bank-18:
-  castShadow: true
-  feetPosition: {x: -6.9107668068747445, y: -0.06, z: -107.62889253086178}
+  castShadow: false
+  feetPosition:
+    x: -6.9107668068747445
+    y: -0.06
+    z: -107.62889253086178
   id: l70-bank-18
-  layout: {box: {max: {y: 0.9339319347713172}, min: {y: 0}}}
-  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb, materials: {tripo_material_961a531c-67ef-4089-8b70-70766e70f68a: {color: oklch(0.99 0.015 240), roughness: 0.95}}}
-  physics: {body: static, collider: mesh}
-  rotation: {pitch: 0, roll: 0, yaw: 0.8408884509699419}
+  layout:
+    box:
+      max:
+        y: 0.9339319347713172
+      min:
+        y: 0
+  model:
+    id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb
+    materials:
+      tripo_material_961a531c-67ef-4089-8b70-70766e70f68a:
+        color: oklch(0.99 0.015 240)
+        roughness: 0.95
+  physics:
+    body: static
+    collider: box
+  rotation:
+    pitch: 0
+    roll: 0
+    yaw: 0.8408884509699419
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 65
 l70-bank-19:
-  castShadow: true
-  feetPosition: {x: -7.0426905289998105, y: -0.06, z: -116.64373801955298}
+  castShadow: false
+  feetPosition:
+    x: -7.0426905289998105
+    y: -0.06
+    z: -116.64373801955298
   id: l70-bank-19
-  layout: {box: {max: {y: 0.9335388898311067}, min: {y: 0}}}
-  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb, materials: {tripo_material_961a531c-67ef-4089-8b70-70766e70f68a: {color: oklch(0.99 0.015 240), roughness: 0.95}}}
-  physics: {body: static, collider: mesh}
-  rotation: {pitch: 0, roll: 0, yaw: 178.01956366484956}
+  layout:
+    box:
+      max:
+        y: 0.9335388898311067
+      min:
+        y: 0
+  model:
+    id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb
+    materials:
+      tripo_material_961a531c-67ef-4089-8b70-70766e70f68a:
+        color: oklch(0.99 0.015 240)
+        roughness: 0.95
+  physics:
+    body: static
+    collider: box
+  rotation:
+    pitch: 0
+    roll: 0
+    yaw: 178.01956366484956
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 65
 l70-bank-35:
-  castShadow: true
-  feetPosition: {x: 7.05692814774302, y: -0.06, z: -90.05348112754291}
+  castShadow: false
+  feetPosition:
+    x: 7.05692814774302
+    y: -0.06
+    z: -90.05348112754291
   id: l70-bank-35
-  layout: {box: {max: {y: 1.1647051559492296}, min: {y: 0}}}
-  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb, materials: {tripo_material_961a531c-67ef-4089-8b70-70766e70f68a: {color: oklch(0.99 0.015 240), roughness: 0.95}}}
-  physics: {body: static, collider: mesh}
-  rotation: {pitch: 0, roll: 0, yaw: 181.59828858578112}
+  layout:
+    box:
+      max:
+        y: 1.1647051559492296
+      min:
+        y: 0
+  model:
+    id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb
+    materials:
+      tripo_material_961a531c-67ef-4089-8b70-70766e70f68a:
+        color: oklch(0.99 0.015 240)
+        roughness: 0.95
+  physics:
+    body: static
+    collider: box
+  rotation:
+    pitch: 0
+    roll: 0
+    yaw: 181.59828858578112
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 65
 l70-bank-36:
-  castShadow: true
-  feetPosition: {x: 6.785529372827296, y: -0.06, z: -99.92434763816709}
+  castShadow: false
+  feetPosition:
+    x: 6.785529372827296
+    y: -0.06
+    z: -99.92434763816709
   id: l70-bank-36
-  layout: {box: {max: {y: 1.2208194126927991}, min: {y: 0}}}
-  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb, materials: {tripo_material_961a531c-67ef-4089-8b70-70766e70f68a: {color: oklch(0.99 0.015 240), roughness: 0.95}}}
-  physics: {body: static, collider: mesh}
-  rotation: {pitch: 0, roll: 0, yaw: -6.877097035408951}
+  layout:
+    box:
+      max:
+        y: 1.2208194126927991
+      min:
+        y: 0
+  model:
+    id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb
+    materials:
+      tripo_material_961a531c-67ef-4089-8b70-70766e70f68a:
+        color: oklch(0.99 0.015 240)
+        roughness: 0.95
+  physics:
+    body: static
+    collider: box
+  rotation:
+    pitch: 0
+    roll: 0
+    yaw: -6.877097035408951
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 65
 l70-bank-37:
-  castShadow: true
-  feetPosition: {x: 6.96470515594923, y: -0.06, z: -107.30021392677736}
+  castShadow: false
+  feetPosition:
+    x: 6.96470515594923
+    y: -0.06
+    z: -107.30021392677736
   id: l70-bank-37
-  layout: {box: {max: {y: 1.2438758458441952}, min: {y: 0}}}
-  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb, materials: {tripo_material_961a531c-67ef-4089-8b70-70766e70f68a: {color: oklch(0.99 0.015 240), roughness: 0.95}}}
-  physics: {body: static, collider: mesh}
-  rotation: {pitch: 0, roll: 0, yaw: 179.35404046438634}
+  layout:
+    box:
+      max:
+        y: 1.2438758458441952
+      min:
+        y: 0
+  model:
+    id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb
+    materials:
+      tripo_material_961a531c-67ef-4089-8b70-70766e70f68a:
+        color: oklch(0.99 0.015 240)
+        roughness: 0.95
+  physics:
+    body: static
+    collider: box
+  rotation:
+    pitch: 0
+    roll: 0
+    yaw: 179.35404046438634
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 65
 l70-bank-38:
-  castShadow: true
-  feetPosition: {x: 7.020819412692799, y: -0.06, z: -116.85963712942612}
+  castShadow: false
+  feetPosition:
+    x: 7.020819412692799
+    y: -0.06
+    z: -116.85963712942612
   id: l70-bank-38
-  layout: {box: {max: {y: 1.2616297181142726}, min: {y: 0}}}
-  model: {id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb, materials: {tripo_material_961a531c-67ef-4089-8b70-70766e70f68a: {color: oklch(0.99 0.015 240), roughness: 0.95}}}
-  physics: {body: static, collider: mesh}
-  rotation: {pitch: 0, roll: 0, yaw: -2.6207406498724595}
+  layout:
+    box:
+      max:
+        y: 1.2616297181142726
+      min:
+        y: 0
+  model:
+    id: /cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb
+    materials:
+      tripo_material_961a531c-67ef-4089-8b70-70766e70f68a:
+        color: oklch(0.99 0.015 240)
+        roughness: 0.95
+  physics:
+    body: static
+    collider: box
+  rotation:
+    pitch: 0
+    roll: 0
+    yaw: -2.6207406498724595
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 65
 l70-bp-dock:
-  children: [{feetPosition: {x: -4.2, y: 0, z: 3.6}, id: hut, layout: {box: {max: {y: 3.4}, min: {y: 0}}}, model: {id: /cdn/value.87db01036896a2e01375996d8cbfc98d6ef1e2940c640ac3ddd2ad6fc3af45c0.glb}, physics: {body: static, collider: mesh}, rotation: {yaw: 180}, tags: [l70-hut]}, {children: [{feetPosition: {x: 0, y: 1.3, z: 0}, light: {color: oklch(0.8 0.14 60), distance: 16, intensity: 22, kind: point}}], feetPosition: {x: 2, y: 0, z: 1.6}, fx: {script: "fx\npop flame rate=flick(.45,.2)*34 on=disc(.16) life=.4..0.8 v=up(1.3)+cone(20)*(.2..0.6) size=.16..0.3 acc=curl(.5)+buoy(2)+drag(1.5)\n  sz=$size*(.5>.25:1>.7:.7>.14) col=hdr(4.6,3.4,1.4)>.3:hdr(3.2,1.4,.3)>.65:hdr(1.8,.5,.1)>hdr(.6,.12,.03) a=0>.12:1>.75:.85>0 rot=spin(.2) r=sprite(flame-wisp,add)\npop embers rate=3 on=disc(.15) life=.7..1.4 v=up(2)+cone(30)*(.4..1) size=.02..0.04 acc=curl(.8)+grav()*.4+drag(.5) sz=$size col=hdr(5,2.8,.8)>hdr(1,.22,.04) a=(0>.08:1>.65:.9>0)*flick(11,.35) r=sprite(ember,add,velocity,.02)"}, id: brazier, layout: {box: {max: {y: 0.95}, min: {y: 0}}}, model: {id: /cdn/value.f9480030aeb78abf6f6f50b8f2a655d8ca77540fbddc0301e23d8b2fe1ee82ef.glb}, physics: static, rotation: {yaw: 0}}, {feetPosition: {x: 4.6, y: 0, z: 4.2}, id: bags0, layout: {box: {max: {y: 0.95}, min: {y: 0}}}, model: {id: /cdn/value.3ef438addb021fb2564e48689de4b5281d9464d3a65b502624bd0244ce8cad87.glb}, physics: {body: static, collider: mesh}, rotation: {yaw: 8}}, {feetPosition: {x: 7.3, y: 0, z: 3.2}, id: bags1, layout: {box: {max: {y: 0.95}, min: {y: 0}}}, model: {id: /cdn/value.3ef438addb021fb2564e48689de4b5281d9464d3a65b502624bd0244ce8cad87.glb}, physics: {body: static, collider: mesh}, rotation: {yaw: 38}}, {feetPosition: {x: 2.2, y: 0, z: -5.4}, id: jetty, layout: {box: {max: {y: 1.56}, min: {y: 0}}}, model: {id: /cdn/value.910ea79be78abe13a4fd43986924310ab3f762c4cc3472107bdb95004addd3b6.glb}, physics: {body: static, collider: mesh}, rotation: {yaw: 0}}, {feetPosition: {x: -3.2, y: 0, z: -8}, id: hole, layout: {box: {max: {y: 1.04}, min: {y: 0}}}, model: {id: /cdn/value.99d9ecaabafd0ec53f68d3eb38d1084e15ec58de5167600564b087f35e0b594d.glb}, rotation: {yaw: 30}}, {feetPosition: {x: -2.2, y: 0, z: -7.2}, id: stool, layout: {box: {max: {y: 0.46}, min: {y: 0}}}, model: {id: /cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb}, physics: static, rotation: {yaw: 60}}, {feetPosition: {x: 7.6, y: -0.16, z: -6.2}, id: boat, layout: {box: {max: {y: 0.72}, min: {y: 0}}}, model: {id: /cdn/value.a8149ca591b3615ade17735a3a0a1e972028c35be8f1351899565924f9d32a16.glb}, physics: {body: static, collider: mesh}, rotation: {yaw: 62}}, {feetPosition: {x: -5.6, y: 0, z: 1.2}, id: heap0, layout: {box: {max: {y: 0.8}, min: {y: 0}}}, model: {id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb}, rotation: {yaw: 0}}, {feetPosition: {x: 8.4, y: -0.05, z: -5.2}, id: heap1, layout: {box: {max: {y: 0.5}, min: {y: 0}}}, model: {id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb}, rotation: {yaw: 120}}, {feetPosition: {x: 0.4, y: 0, z: 5.8}, id: heap2, layout: {box: {max: {y: 0.45}, min: {y: 0}}}, model: {id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb}, rotation: {yaw: 210}}, {audio: {bus: ambience, clip: /cdn/moodboard-realistic-gritty/sfx-frozen-river-ice-creaking-and-groaning-deep-loop.mp3, gain: 0.13, loop: true, maxDistance: 48, spatial: true}, feetPosition: {x: 0, y: 1, z: -12}, id: creak}]
-  feetPosition: {x: 6, y: 0, z: -128}
+  children:
+  - feetPosition:
+      x: -4.2
+      y: 0
+      z: 3.6
+    id: hut
+    layout:
+      box:
+        max:
+          y: 3.4
+        min:
+          y: 0
+    model:
+      id: /cdn/value.87db01036896a2e01375996d8cbfc98d6ef1e2940c640ac3ddd2ad6fc3af45c0.glb
+    physics:
+      body: static
+      collider: mesh
+    rotation:
+      yaw: 180
+    tags:
+    - l70-hut
+  - children:
+    - feetPosition:
+        x: 0
+        y: 1.3
+        z: 0
+      light:
+        color: oklch(0.8 0.14 60)
+        distance: 16
+        intensity: 22
+        kind: point
+    feetPosition:
+      x: 2
+      y: 0
+      z: 1.6
+    fx:
+      script: "fx\npop flame rate=flick(.45,.2)*34 on=disc(.16) life=.4..0.8 v=up(1.3)+cone(20)*(.2..0.6)\
+        \ size=.16..0.3 acc=curl(.5)+buoy(2)+drag(1.5)\n  sz=$size*(.5>.25:1>.7:.7>.14)\
+        \ col=hdr(4.6,3.4,1.4)>.3:hdr(3.2,1.4,.3)>.65:hdr(1.8,.5,.1)>hdr(.6,.12,.03)\
+        \ a=0>.12:1>.75:.85>0 rot=spin(.2) r=sprite(flame-wisp,add)\npop embers rate=3\
+        \ on=disc(.15) life=.7..1.4 v=up(2)+cone(30)*(.4..1) size=.02..0.04 acc=curl(.8)+grav()*.4+drag(.5)\
+        \ sz=$size col=hdr(5,2.8,.8)>hdr(1,.22,.04) a=(0>.08:1>.65:.9>0)*flick(11,.35)\
+        \ r=sprite(ember,add,velocity,.02)"
+    id: brazier
+    layout:
+      box:
+        max:
+          y: 0.95
+        min:
+          y: 0
+    model:
+      id: /cdn/value.f9480030aeb78abf6f6f50b8f2a655d8ca77540fbddc0301e23d8b2fe1ee82ef.glb
+    physics: static
+    rotation:
+      yaw: 0
+  - feetPosition:
+      x: 4.6
+      y: 0
+      z: 4.2
+    id: bags0
+    layout:
+      box:
+        max:
+          y: 0.95
+        min:
+          y: 0
+    model:
+      id: /cdn/value.3ef438addb021fb2564e48689de4b5281d9464d3a65b502624bd0244ce8cad87.glb
+    physics:
+      body: static
+      collider: mesh
+    rotation:
+      yaw: 8
+  - feetPosition:
+      x: 7.3
+      y: 0
+      z: 3.2
+    id: bags1
+    layout:
+      box:
+        max:
+          y: 0.95
+        min:
+          y: 0
+    model:
+      id: /cdn/value.3ef438addb021fb2564e48689de4b5281d9464d3a65b502624bd0244ce8cad87.glb
+    physics:
+      body: static
+      collider: mesh
+    rotation:
+      yaw: 38
+  - feetPosition:
+      x: 2.2
+      y: 0
+      z: -5.4
+    id: jetty
+    layout:
+      box:
+        max:
+          y: 1.56
+        min:
+          y: 0
+    model:
+      id: /cdn/value.910ea79be78abe13a4fd43986924310ab3f762c4cc3472107bdb95004addd3b6.glb
+    physics:
+      body: static
+      collider: mesh
+    rotation:
+      yaw: 0
+  - feetPosition:
+      x: -3.2
+      y: 0
+      z: -8
+    id: hole
+    layout:
+      box:
+        max:
+          y: 1.04
+        min:
+          y: 0
+    model:
+      id: /cdn/value.99d9ecaabafd0ec53f68d3eb38d1084e15ec58de5167600564b087f35e0b594d.glb
+    rotation:
+      yaw: 30
+  - feetPosition:
+      x: -2.2
+      y: 0
+      z: -7.2
+    id: stool
+    layout:
+      box:
+        max:
+          y: 0.46
+        min:
+          y: 0
+    model:
+      id: /cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb
+    physics: static
+    rotation:
+      yaw: 60
+  - feetPosition:
+      x: 7.6
+      y: -0.16
+      z: -6.2
+    id: boat
+    layout:
+      box:
+        max:
+          y: 0.72
+        min:
+          y: 0
+    model:
+      id: /cdn/value.a8149ca591b3615ade17735a3a0a1e972028c35be8f1351899565924f9d32a16.glb
+    physics:
+      body: static
+      collider: mesh
+    rotation:
+      yaw: 62
+  - feetPosition:
+      x: -5.6
+      y: 0
+      z: 1.2
+    id: heap0
+    layout:
+      box:
+        max:
+          y: 0.8
+        min:
+          y: 0
+    model:
+      id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb
+    rotation:
+      yaw: 0
+  - feetPosition:
+      x: 8.4
+      y: -0.05
+      z: -5.2
+    id: heap1
+    layout:
+      box:
+        max:
+          y: 0.5
+        min:
+          y: 0
+    model:
+      id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb
+    rotation:
+      yaw: 120
+  - feetPosition:
+      x: 0.4
+      y: 0
+      z: 5.8
+    id: heap2
+    layout:
+      box:
+        max:
+          y: 0.45
+        min:
+          y: 0
+    model:
+      id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb
+    rotation:
+      yaw: 210
+  - audio:
+      bus: ambience
+      clip: /cdn/moodboard-realistic-gritty/sfx-frozen-river-ice-creaking-and-groaning-deep-loop.mp3
+      gain: 0.13
+      loop: true
+      maxDistance: 48
+      spatial: true
+    feetPosition:
+      x: 0
+      y: 1
+      z: -12
+    id: creak
+  feetPosition:
+    x: 6
+    y: 0
+    z: -128
   id: l70-bp-dock
-  tags: [l70-wild, l70-dock]
+  tags:
+  - l70-wild
+  - l70-dock
 l70-bp-hotel:
-  feetPosition: {x: 34, y: 0, z: -80}
+  feetPosition:
+    x: 34
+    y: 0
+    z: -80
   id: l70-bp-hotel
   model: /cdn/value.d65eb95495c0ce9cf8463384f0d0526e56a0661e9c73eaf49beadc6d1e0aed9a.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 0}
-  tags: [l70-civic]
+  physics:
+    body: static
+    collider: mesh
+  rotation:
+    yaw: 0
+  tags:
+  - l70-civic
+  visibleRange:
+    max: 140
 l70-bp-market:
-  feetPosition: {x: 0, y: 0, z: -72}
+  feetPosition:
+    x: 0
+    y: 0
+    z: -72
   id: l70-bp-market
   model: /cdn/value.3fc9c3fd400394d9c7add056d11697b647ac6207f9d7e0c339ef30b1704ffde6.glb
-  rotation: {yaw: 0}
-  tags: [l70-civic]
+  rotation:
+    yaw: 0
+  tags:
+  - l70-civic
+  visibleRange:
+    max: 65
 l70-c-barrellight:
-  feetPosition: {x: 22.6, y: 1.3, z: -82.4}
+  feetPosition:
+    x: 22.6
+    y: 1.3
+    z: -82.4
   id: l70-c-barrellight
-  light: {color: oklch(0.78 0.16 50), distance: 8, intensity: 4, kind: point}
+  light:
+    color: oklch(0.78 0.16 50)
+    distance: 8
+    intensity: 4
+    kind: point
+  visibleRange:
+    max: 65
 l70-c-bench-00:
-  feetPosition: {x: -5.1, y: 0, z: -70.5}
+  feetPosition:
+    x: -5.1
+    y: 0
+    z: -70.5
   id: l70-c-bench-00
   model: /cdn/value.9516cd89c5d8fb10afca59dfa6da7ee03080244ea56105c1d27eb5adac65d832.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: -90}
-  state: {seat: {d: 0, gap: 0.55, w: 3, y: 0.47}}
-  tags: [seat, usable]
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: -90
+  state:
+    seat:
+      d: 0
+      gap: 0.55
+      w: 3
+      y: 0.47
+  tags:
+  - seat
+  - usable
+  visibleRange:
+    max: 65
 l70-c-bench-01:
-  feetPosition: {x: -3.2, y: 0, z: -68.5}
+  feetPosition:
+    x: -3.2
+    y: 0
+    z: -68.5
   id: l70-c-bench-01
   model: /cdn/value.9516cd89c5d8fb10afca59dfa6da7ee03080244ea56105c1d27eb5adac65d832.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 0}
-  state: {seat: {d: 0, gap: 0.55, w: 3, y: 0.47}}
-  tags: [seat, usable]
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 0
+  state:
+    seat:
+      d: 0
+      gap: 0.55
+      w: 3
+      y: 0.47
+  tags:
+  - seat
+  - usable
+  visibleRange:
+    max: 65
 l70-c-bench-10:
-  feetPosition: {x: 5.1, y: 0, z: -73.5}
+  feetPosition:
+    x: 5.1
+    y: 0
+    z: -73.5
   id: l70-c-bench-10
   model: /cdn/value.9516cd89c5d8fb10afca59dfa6da7ee03080244ea56105c1d27eb5adac65d832.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 90}
-  state: {seat: {d: 0, gap: 0.55, w: 3, y: 0.47}}
-  tags: [seat, usable]
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 90
+  state:
+    seat:
+      d: 0
+      gap: 0.55
+      w: 3
+      y: 0.47
+  tags:
+  - seat
+  - usable
+  visibleRange:
+    max: 65
 l70-c-bench-11:
-  feetPosition: {x: 3.2, y: 0, z: -75.5}
+  feetPosition:
+    x: 3.2
+    y: 0
+    z: -75.5
   id: l70-c-bench-11
   model: /cdn/value.9516cd89c5d8fb10afca59dfa6da7ee03080244ea56105c1d27eb5adac65d832.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 180}
-  state: {seat: {d: 0, gap: 0.55, w: 3, y: 0.47}}
-  tags: [seat, usable]
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 180
+  state:
+    seat:
+      d: 0
+      gap: 0.55
+      w: 3
+      y: 0.47
+  tags:
+  - seat
+  - usable
+  visibleRange:
+    max: 65
 l70-c-candles-0:
-  feetPosition: {x: 35.1, y: 0.04, z: -76.6}
+  feetPosition:
+    x: 35.1
+    y: 0.04
+    z: -76.6
   id: l70-c-candles-0
-  layout: {box: {max: {y: 0.35}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.35
+      min:
+        y: 0
   model: /cdn/value.ae97d51c608e349cb357872bed72fbce88260ee166074c5136c36932f1639fca.glb
-  rotation: {yaw: 0}
+  rotation:
+    yaw: 0
+  visibleRange:
+    max: 65
 l70-c-candles-1:
-  feetPosition: {x: 36.6, y: 0.04, z: -78.9}
+  feetPosition:
+    x: 36.6
+    y: 0.04
+    z: -78.9
   id: l70-c-candles-1
-  layout: {box: {max: {y: 0.35}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.35
+      min:
+        y: 0
   model: /cdn/value.ae97d51c608e349cb357872bed72fbce88260ee166074c5136c36932f1639fca.glb
-  rotation: {yaw: 40}
+  rotation:
+    yaw: 40
+  visibleRange:
+    max: 65
 l70-c-candles-2:
-  feetPosition: {x: 27, y: 0.04, z: -75}
+  feetPosition:
+    x: 27
+    y: 0.04
+    z: -75
   id: l70-c-candles-2
-  layout: {box: {max: {y: 0.35}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.35
+      min:
+        y: 0
   model: /cdn/value.ae97d51c608e349cb357872bed72fbce88260ee166074c5136c36932f1639fca.glb
-  rotation: {yaw: 80}
+  rotation:
+    yaw: 80
+  visibleRange:
+    max: 65
 l70-c-chair-0:
-  feetPosition: {x: 31.368860661799456, y: 0.04, z: -77.95765640131187}
+  feetPosition:
+    x: 31.368860661799456
+    y: 0.04
+    z: -77.95765640131187
   id: l70-c-chair-0
-  layout: {box: {max: {y: 0.95}, min: {y: 0}}}
-  model: {forward: "+z", id: /cdn/value.3f03c5a041552a2699cd8fe8fcd2d9a220328ba5440dbb226a8375df048fd4cc.glb}
+  layout:
+    box:
+      max:
+        y: 0.95
+      min:
+        y: 0
+  model:
+    forward: +z
+    id: /cdn/value.3f03c5a041552a2699cd8fe8fcd2d9a220328ba5440dbb226a8375df048fd4cc.glb
   physics: static
-  rotation: {yaw: -118.99999999999986}
-  state: {seat: {d: 0, gap: 0.5, w: 1}}
-  tags: [seat, usable]
+  rotation:
+    yaw: -118.99999999999986
+  state:
+    seat:
+      d: 0
+      gap: 0.5
+      w: 1
+  tags:
+  - seat
+  - usable
+  visibleRange:
+    max: 65
 l70-c-chair-1:
-  feetPosition: {x: 31.968951761165595, y: 0.04, z: -78.92739281194251}
+  feetPosition:
+    x: 31.968951761165595
+    y: 0.04
+    z: -78.92739281194251
   id: l70-c-chair-1
-  layout: {box: {max: {y: 0.95}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.95
+      min:
+        y: 0
   model: /cdn/value.e02cceb0c66d902fced411a31f21de9e9584de3272263a09e20b85c9455411be.glb
   physics: static
-  rotation: {yaw: -126.5}
-  state: {seat: {d: 0, gap: 0.5, w: 1}}
-  tags: [seat, usable]
+  rotation:
+    yaw: -126.5
+  state:
+    seat:
+      d: 0
+      gap: 0.5
+      w: 1
+  tags:
+  - seat
+  - usable
+  visibleRange:
+    max: 65
 l70-c-chair-2:
-  feetPosition: {x: 32.905952840230036, y: 0.04, z: -79.57741358966683}
+  feetPosition:
+    x: 32.905952840230036
+    y: 0.04
+    z: -79.57741358966683
   id: l70-c-chair-2
-  layout: {box: {max: {y: 0.9}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.9
+      min:
+        y: 0
   model: /cdn/value.324d9a05c6aca4bc72f791c510f751bee89cfbbc0e2104e59ad075531e70a750.glb
   physics: static
-  rotation: {yaw: -166.00000000000003}
-  state: {seat: {d: 0, gap: 0.5, w: 1}}
-  tags: [seat, usable]
+  rotation:
+    yaw: -166.00000000000003
+  state:
+    seat:
+      d: 0
+      gap: 0.5
+      w: 1
+  tags:
+  - seat
+  - usable
+  visibleRange:
+    max: 65
 l70-c-chair-3:
-  feetPosition: {x: 34.024434299395445, y: 0.04, z: -79.79989338457968}
+  feetPosition:
+    x: 34.024434299395445
+    y: 0.04
+    z: -79.79989338457968
   id: l70-c-chair-3
-  layout: {box: {max: {y: 0.95}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.95
+      min:
+        y: 0
   model: /cdn/value.b8d82a3ce214d0d151b9535237651d29ad5503bd098b052ed99e95be8d0fd779.glb
   physics: static
-  rotation: {yaw: 186.50000000000006}
-  state: {seat: {d: 0, gap: 0.5, w: 1}}
-  tags: [seat, usable]
+  rotation:
+    yaw: 186.50000000000006
+  state:
+    seat:
+      d: 0
+      gap: 0.5
+      w: 1
+  tags:
+  - seat
+  - usable
+  visibleRange:
+    max: 65
 l70-c-chair-4:
-  feetPosition: {x: 35.13886260061224, y: 0.04, z: -79.55792728139929}
+  feetPosition:
+    x: 35.13886260061224
+    y: 0.04
+    z: -79.55792728139929
   id: l70-c-chair-4
-  layout: {box: {max: {y: 0.95}, min: {y: 0}}}
-  model: {forward: "+z", id: /cdn/value.3f03c5a041552a2699cd8fe8fcd2d9a220328ba5440dbb226a8375df048fd4cc.glb}
+  layout:
+    box:
+      max:
+        y: 0.95
+      min:
+        y: 0
+  model:
+    forward: +z
+    id: /cdn/value.3f03c5a041552a2699cd8fe8fcd2d9a220328ba5440dbb226a8375df048fd4cc.glb
   physics: static
-  rotation: {yaw: 147}
-  state: {seat: {d: 0, gap: 0.5, w: 1}}
-  tags: [seat, usable]
+  rotation:
+    yaw: 147
+  state:
+    seat:
+      d: 0
+      gap: 0.5
+      w: 1
+  tags:
+  - seat
+  - usable
+  visibleRange:
+    max: 65
 l70-c-chair-5:
-  feetPosition: {x: 36.06437654306835, y: 0.04, z: -78.89165258132385}
+  feetPosition:
+    x: 36.06437654306835
+    y: 0.04
+    z: -78.89165258132385
   id: l70-c-chair-5
-  layout: {box: {max: {y: 0.9}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.9
+      min:
+        y: 0
   model: /cdn/value.324d9a05c6aca4bc72f791c510f751bee89cfbbc0e2104e59ad075531e70a750.glb
   physics: static
-  rotation: {yaw: 139.50000000000006}
-  state: {seat: {d: 0, gap: 0.5, w: 1}}
-  tags: [seat, usable]
+  rotation:
+    yaw: 139.50000000000006
+  state:
+    seat:
+      d: 0
+      gap: 0.5
+      w: 1
+  tags:
+  - seat
+  - usable
+  visibleRange:
+    max: 65
 l70-c-chair-6:
-  feetPosition: {x: 36.647452011678084, y: 0.04, z: -77.91159083248004}
+  feetPosition:
+    x: 36.647452011678084
+    y: 0.04
+    z: -77.91159083248004
   id: l70-c-chair-6
-  layout: {box: {max: {y: 0.95}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.95
+      min:
+        y: 0
   model: /cdn/value.e02cceb0c66d902fced411a31f21de9e9584de3272263a09e20b85c9455411be.glb
   physics: static
-  rotation: {yaw: 100.00000000000014}
-  state: {seat: {d: 0, gap: 0.5, w: 1}}
-  tags: [seat, usable]
+  rotation:
+    yaw: 100.00000000000014
+  state:
+    seat:
+      d: 0
+      gap: 0.5
+      w: 1
+  tags:
+  - seat
+  - usable
+  visibleRange:
+    max: 65
 l70-c-chandelier:
-  feetPosition: {x: 31.5, y: 2.35, z: -80}
+  feetPosition:
+    x: 31.5
+    y: 2.35
+    z: -80
   id: l70-c-chandelier
-  layout: {box: {max: {y: 1.45}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 1.45
+      min:
+        y: 0
   model: /cdn/value.31ca981b457c1721057600f5d92e7dd6dd5d1102c518a566ebd99075b47c78f1.glb
-  rotation: {yaw: 0}
+  rotation:
+    yaw: 0
+  visibleRange:
+    max: 65
 l70-c-corrlight:
-  feetPosition: {x: 39.5, y: 2.2, z: -80}
+  feetPosition:
+    x: 39.5
+    y: 2.2
+    z: -80
   id: l70-c-corrlight
-  light: {color: oklch(0.7 0.12 55), distance: 7, intensity: 2.5, kind: point}
+  light:
+    color: oklch(0.7 0.12 55)
+    distance: 7
+    intensity: 2.5
+    kind: point
+  visibleRange:
+    max: 65
 l70-c-crate-k:
-  feetPosition: {x: 7.6, y: 0, z: -65.2}
+  feetPosition:
+    x: 7.6
+    y: 0
+    z: -65.2
   id: l70-c-crate-k
-  layout: {box: {max: {y: 0.62}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.62
+      min:
+        y: 0
   model: /cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 10}
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 10
+  visibleRange:
+    max: 65
 l70-c-desk:
-  feetPosition: {x: 29.5, y: 0.04, z: -84.4}
+  feetPosition:
+    x: 29.5
+    y: 0.04
+    z: -84.4
   id: l70-c-desk
-  layout: {box: {max: {y: 1.1}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 1.1
+      min:
+        y: 0
   model: /cdn/value.2c088503b2d0bc2059170d8cfd3c309ff0c962ab60e22a79372dd44229ef85be.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 0}
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 0
+  visibleRange:
+    max: 65
 l70-c-desklight:
-  feetPosition: {x: 29.5, y: 1.8, z: -83.2}
+  feetPosition:
+    x: 29.5
+    y: 1.8
+    z: -83.2
   id: l70-c-desklight
-  light: {color: oklch(0.8 0.13 62), distance: 8, intensity: 4, kind: point}
+  light:
+    color: oklch(0.8 0.13 62)
+    distance: 8
+    intensity: 4
+    kind: point
+  visibleRange:
+    max: 65
 l70-c-doorbarrel:
-  feetPosition: {x: 22.6, y: 0, z: -82.4}
+  feetPosition:
+    x: 22.6
+    y: 0
+    z: -82.4
   id: l70-c-doorbarrel
-  layout: {box: {max: {y: 0.95}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.95
+      min:
+        y: 0
   model: /cdn/value.f9480030aeb78abf6f6f50b8f2a655d8ca77540fbddc0301e23d8b2fe1ee82ef.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 0}
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 0
+  visibleRange:
+    max: 65
 l70-c-doorheap:
-  feetPosition: {x: 22.2, y: 0, z: -77.4}
+  feetPosition:
+    x: 22.2
+    y: 0
+    z: -77.4
   id: l70-c-doorheap
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: 140}
+  rotation:
+    yaw: 140
   scale: 0.8
+  visibleRange:
+    max: 65
 l70-c-doorlight:
-  feetPosition: {x: 24.3, y: 2.6, z: -80}
+  feetPosition:
+    x: 24.3
+    y: 2.6
+    z: -80
   id: l70-c-doorlight
-  light: {color: oklch(0.8 0.13 62), distance: 9, intensity: 4, kind: point}
+  light:
+    color: oklch(0.8 0.13 62)
+    distance: 9
+    intensity: 4
+    kind: point
+  visibleRange:
+    max: 65
 l70-c-drum-0:
-  feetPosition: {x: -3.2, y: 0, z: -70.5}
+  feetPosition:
+    x: -3.2
+    y: 0
+    z: -70.5
   id: l70-c-drum-0
-  layout: {box: {max: {y: 0.95}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.95
+      min:
+        y: 0
   model: /cdn/value.f9480030aeb78abf6f6f50b8f2a655d8ca77540fbddc0301e23d8b2fe1ee82ef.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 0}
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 0
+  visibleRange:
+    max: 65
 l70-c-drum-1:
-  feetPosition: {x: 3.2, y: 0, z: -73.5}
+  feetPosition:
+    x: 3.2
+    y: 0
+    z: -73.5
   id: l70-c-drum-1
-  layout: {box: {max: {y: 0.95}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.95
+      min:
+        y: 0
   model: /cdn/value.f9480030aeb78abf6f6f50b8f2a655d8ca77540fbddc0301e23d8b2fe1ee82ef.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 50}
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 50
+  visibleRange:
+    max: 65
 l70-c-fire-0:
-  audio: {clip: cdn/moodboard-realistic-gritty/sfx-oil-drum-fire-crackle-loop.mp3, gain: 0.5, loop: true, maxDistance: 26, spatial: true}
-  feetPosition: {x: -3.2, y: 0.9, z: -70.5}
-  fx: {script: "fx\npop coals n=8 on=disc(.16) size=.06..0.12 tint=<2.4,.9,.25>..<1.1,.3,.08> sz=$size*flick(.5,.12) col=$tint*flick(.8,.3) a=.9 r=sprite(soft-disc,add)\npop flame rate=flick(.45,.2)*?mobile:16|26 on=disc(.17) life=.35..0.6 v=up(.9)+cone(18)*(.2..0.5) size=.14..0.26 acc=curl(.5)*1.2+buoy(1.3)+drag(1.8)\n  sz=$size*(.5>.25:1>.7:.7>.14) col=hdr(2.6,1.7,.6)>.3:hdr(2,.8,.16)>.65:hdr(1.2,.32,.06)>hdr(.4,.08,.02) a=0>.12:1>.75:.85>0 rot=spin(.2) r=sprite(flame-wisp,add)\npop embers rate=4 on=disc(.16) life=.8..1.6 v=up(2.4)+cone(30)*(.4..1.2) size=.02..0.05 acc=curl(.8)+grav()*.4+drag(.5) sz=$size*(1>.7:.8>.3) col=hdr(5,2.8,.8)>.6:hdr(2.4,.8,.15)>hdr(1,.22,.04) a=(0>.08:1>.65:.9>0)*flick(11,.35) r=sprite(ember,add,velocity,.02)\npop smoke on=@flame?.2 inh=p;v:$v*.4 life=1.8..3 size=.16..0.26 acc=buoy(.9)+curl(.35)*.5+drag(.8) sz=$size*(.7>3.2) col=<.3,.28,.26>><.15,.15,.16> a=0>.22:.3>.7:.18>0 rot=spin(.15) r=sprite(smoke-puff,alpha)"}
+  audio:
+    clip: cdn/moodboard-realistic-gritty/sfx-oil-drum-fire-crackle-loop.mp3
+    gain: 0.5
+    loop: true
+    maxDistance: 26
+    spatial: true
+  feetPosition:
+    x: -3.2
+    y: 0.9
+    z: -70.5
+  fx:
+    script: "fx\npop coals n=8 on=disc(.16) size=.06..0.12 tint=<2.4,.9,.25>..<1.1,.3,.08>\
+      \ sz=$size*flick(.5,.12) col=$tint*flick(.8,.3) a=.9 r=sprite(soft-disc,add)\n\
+      pop flame rate=flick(.45,.2)*?mobile:16|26 on=disc(.17) life=.35..0.6 v=up(.9)+cone(18)*(.2..0.5)\
+      \ size=.14..0.26 acc=curl(.5)*1.2+buoy(1.3)+drag(1.8)\n  sz=$size*(.5>.25:1>.7:.7>.14)\
+      \ col=hdr(2.6,1.7,.6)>.3:hdr(2,.8,.16)>.65:hdr(1.2,.32,.06)>hdr(.4,.08,.02)\
+      \ a=0>.12:1>.75:.85>0 rot=spin(.2) r=sprite(flame-wisp,add)\npop embers rate=4\
+      \ on=disc(.16) life=.8..1.6 v=up(2.4)+cone(30)*(.4..1.2) size=.02..0.05 acc=curl(.8)+grav()*.4+drag(.5)\
+      \ sz=$size*(1>.7:.8>.3) col=hdr(5,2.8,.8)>.6:hdr(2.4,.8,.15)>hdr(1,.22,.04)\
+      \ a=(0>.08:1>.65:.9>0)*flick(11,.35) r=sprite(ember,add,velocity,.02)\npop smoke\
+      \ on=@flame?.2 inh=p;v:$v*.4 life=1.8..3 size=.16..0.26 acc=buoy(.9)+curl(.35)*.5+drag(.8)\
+      \ sz=$size*(.7>3.2) col=<.3,.28,.26>><.15,.15,.16> a=0>.22:.3>.7:.18>0 rot=spin(.15)\
+      \ r=sprite(smoke-puff,alpha)"
   id: l70-c-fire-0
-  light: {color: oklch(0.78 0.16 55), distance: 16, intensity: 28, kind: point}
+  light:
+    color: oklch(0.78 0.16 55)
+    distance: 16
+    intensity: 28
+    kind: point
+  visibleRange:
+    max: 65
 l70-c-fire-1:
-  audio: {clip: cdn/moodboard-realistic-gritty/sfx-oil-drum-fire-crackle-loop.mp3, gain: 0.5, loop: true, maxDistance: 26, spatial: true}
-  feetPosition: {x: 3.2, y: 0.9, z: -73.5}
-  fx: {script: "fx\npop coals n=8 on=disc(.16) size=.06..0.12 tint=<2.4,.9,.25>..<1.1,.3,.08> sz=$size*flick(.5,.12) col=$tint*flick(.8,.3) a=.9 r=sprite(soft-disc,add)\npop flame rate=flick(.45,.2)*?mobile:16|26 on=disc(.17) life=.35..0.6 v=up(.9)+cone(18)*(.2..0.5) size=.14..0.26 acc=curl(.5)*1.2+buoy(1.3)+drag(1.8)\n  sz=$size*(.5>.25:1>.7:.7>.14) col=hdr(2.6,1.7,.6)>.3:hdr(2,.8,.16)>.65:hdr(1.2,.32,.06)>hdr(.4,.08,.02) a=0>.12:1>.75:.85>0 rot=spin(.2) r=sprite(flame-wisp,add)\npop embers rate=4 on=disc(.16) life=.8..1.6 v=up(2.4)+cone(30)*(.4..1.2) size=.02..0.05 acc=curl(.8)+grav()*.4+drag(.5) sz=$size*(1>.7:.8>.3) col=hdr(5,2.8,.8)>.6:hdr(2.4,.8,.15)>hdr(1,.22,.04) a=(0>.08:1>.65:.9>0)*flick(11,.35) r=sprite(ember,add,velocity,.02)\npop smoke on=@flame?.2 inh=p;v:$v*.4 life=1.8..3 size=.16..0.26 acc=buoy(.9)+curl(.35)*.5+drag(.8) sz=$size*(.7>3.2) col=<.3,.28,.26>><.15,.15,.16> a=0>.22:.3>.7:.18>0 rot=spin(.15) r=sprite(smoke-puff,alpha)"}
+  audio:
+    clip: cdn/moodboard-realistic-gritty/sfx-oil-drum-fire-crackle-loop.mp3
+    gain: 0.5
+    loop: true
+    maxDistance: 26
+    spatial: true
+  feetPosition:
+    x: 3.2
+    y: 0.9
+    z: -73.5
+  fx:
+    script: "fx\npop coals n=8 on=disc(.16) size=.06..0.12 tint=<2.4,.9,.25>..<1.1,.3,.08>\
+      \ sz=$size*flick(.5,.12) col=$tint*flick(.8,.3) a=.9 r=sprite(soft-disc,add)\n\
+      pop flame rate=flick(.45,.2)*?mobile:16|26 on=disc(.17) life=.35..0.6 v=up(.9)+cone(18)*(.2..0.5)\
+      \ size=.14..0.26 acc=curl(.5)*1.2+buoy(1.3)+drag(1.8)\n  sz=$size*(.5>.25:1>.7:.7>.14)\
+      \ col=hdr(2.6,1.7,.6)>.3:hdr(2,.8,.16)>.65:hdr(1.2,.32,.06)>hdr(.4,.08,.02)\
+      \ a=0>.12:1>.75:.85>0 rot=spin(.2) r=sprite(flame-wisp,add)\npop embers rate=4\
+      \ on=disc(.16) life=.8..1.6 v=up(2.4)+cone(30)*(.4..1.2) size=.02..0.05 acc=curl(.8)+grav()*.4+drag(.5)\
+      \ sz=$size*(1>.7:.8>.3) col=hdr(5,2.8,.8)>.6:hdr(2.4,.8,.15)>hdr(1,.22,.04)\
+      \ a=(0>.08:1>.65:.9>0)*flick(11,.35) r=sprite(ember,add,velocity,.02)\npop smoke\
+      \ on=@flame?.2 inh=p;v:$v*.4 life=1.8..3 size=.16..0.26 acc=buoy(.9)+curl(.35)*.5+drag(.8)\
+      \ sz=$size*(.7>3.2) col=<.3,.28,.26>><.15,.15,.16> a=0>.22:.3>.7:.18>0 rot=spin(.15)\
+      \ r=sprite(smoke-puff,alpha)"
   id: l70-c-fire-1
-  light: {color: oklch(0.78 0.16 55), distance: 16, intensity: 28, kind: point}
+  light:
+    color: oklch(0.78 0.16 55)
+    distance: 16
+    intensity: 28
+    kind: point
+  visibleRange:
+    max: 65
 l70-c-heap-0:
-  feetPosition: {x: -10.5, y: 0, z: -66}
+  feetPosition:
+    x: -10.5
+    y: 0
+    z: -66
   id: l70-c-heap-0
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: 0}
+  rotation:
+    yaw: 0
   scale: 1.3
+  visibleRange:
+    max: 65
 l70-c-heap-1:
-  feetPosition: {x: 10.8, y: 0, z: -68}
+  feetPosition:
+    x: 10.8
+    y: 0
+    z: -68
   id: l70-c-heap-1
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: 53}
+  rotation:
+    yaw: 53
   scale: 1.1
+  visibleRange:
+    max: 65
 l70-c-heap-2:
-  feetPosition: {x: -10, y: 0, z: -78}
+  feetPosition:
+    x: -10
+    y: 0
+    z: -78
   id: l70-c-heap-2
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: 106}
+  rotation:
+    yaw: 106
   scale: 1.5
+  visibleRange:
+    max: 65
 l70-c-heap-3:
-  feetPosition: {x: 9.5, y: 0, z: -79}
+  feetPosition:
+    x: 9.5
+    y: 0
+    z: -79
   id: l70-c-heap-3
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: 159}
+  rotation:
+    yaw: 159
   scale: 0.9
+  visibleRange:
+    max: 65
 l70-c-heap-6:
-  feetPosition: {x: 2.2, y: 0, z: -83}
+  feetPosition:
+    x: 2.2
+    y: 0
+    z: -83
   id: l70-c-heap-6
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: 318}
+  rotation:
+    yaw: 318
   scale: 0.7
+  visibleRange:
+    max: 65
 l70-c-ice-hotel:
-  feetPosition: {x: 24.25, y: 2, z: -80}
+  feetPosition:
+    x: 24.25
+    y: 2
+    z: -80
   id: l70-c-ice-hotel
   model: /cdn/value.b05c80a9b51d43b51e05f663eadb3050b2f40992c56b85489856160bbb2717e6.glb
-  rotation: {yaw: 90}
+  rotation:
+    yaw: 90
+  visibleRange:
+    max: 65
 l70-c-lant-0:
-  feetPosition: {x: 28.2, y: 0.04, z: -83.6}
+  feetPosition:
+    x: 28.2
+    y: 0.04
+    z: -83.6
   id: l70-c-lant-0
-  layout: {box: {max: {y: 0.45}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.45
+      min:
+        y: 0
   model: /cdn/value.4c87f2d28b86fe9703caf37d92b67726f5d8598e312f590bcfb50bfc5ac15971.glb
-  rotation: {yaw: 20}
+  rotation:
+    yaw: 20
+  visibleRange:
+    max: 65
 l70-c-lant-1:
-  feetPosition: {x: 37.2, y: 0.04, z: -75.4}
+  feetPosition:
+    x: 37.2
+    y: 0.04
+    z: -75.4
   id: l70-c-lant-1
-  layout: {box: {max: {y: 0.45}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.45
+      min:
+        y: 0
   model: /cdn/value.4c87f2d28b86fe9703caf37d92b67726f5d8598e312f590bcfb50bfc5ac15971.glb
-  rotation: {yaw: 70}
+  rotation:
+    yaw: 70
+  visibleRange:
+    max: 65
 l70-c-lant-2:
-  feetPosition: {x: 26.4, y: 0.04, z: -77.2}
+  feetPosition:
+    x: 26.4
+    y: 0.04
+    z: -77.2
   id: l70-c-lant-2
-  layout: {box: {max: {y: 0.45}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.45
+      min:
+        y: 0
   model: /cdn/value.4c87f2d28b86fe9703caf37d92b67726f5d8598e312f590bcfb50bfc5ac15971.glb
-  rotation: {yaw: 0}
+  rotation:
+    yaw: 0
+  visibleRange:
+    max: 65
 l70-c-lantlight-0:
-  feetPosition: {x: 28.2, y: 0.6, z: -83.6}
+  feetPosition:
+    x: 28.2
+    y: 0.6
+    z: -83.6
   id: l70-c-lantlight-0
-  light: {color: oklch(0.8 0.13 62), distance: 6, intensity: 2.2, kind: point}
+  light:
+    color: oklch(0.8 0.13 62)
+    distance: 6
+    intensity: 2.2
+    kind: point
+  visibleRange:
+    max: 65
 l70-c-lantlight-1:
-  feetPosition: {x: 37.2, y: 0.6, z: -75.4}
+  feetPosition:
+    x: 37.2
+    y: 0.6
+    z: -75.4
   id: l70-c-lantlight-1
-  light: {color: oklch(0.8 0.13 62), distance: 6, intensity: 2.2, kind: point}
+  light:
+    color: oklch(0.8 0.13 62)
+    distance: 6
+    intensity: 2.2
+    kind: point
+  visibleRange:
+    max: 65
 l70-c-lantlight-2:
-  feetPosition: {x: 26.4, y: 0.6, z: -77.2}
+  feetPosition:
+    x: 26.4
+    y: 0.6
+    z: -77.2
   id: l70-c-lantlight-2
-  light: {color: oklch(0.8 0.13 62), distance: 5, intensity: 1.8, kind: point}
+  light:
+    color: oklch(0.8 0.13 62)
+    distance: 5
+    intensity: 1.8
+    kind: point
+  visibleRange:
+    max: 65
 l70-c-lbag:
-  feetPosition: {x: 31.4, y: 0.04, z: -85.6}
+  feetPosition:
+    x: 31.4
+    y: 0.04
+    z: -85.6
   id: l70-c-lbag
-  layout: {box: {max: {y: 0.6}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.6
+      min:
+        y: 0
   model: /cdn/value.995feda9ff8f26806fc11b84645a37bf2ae5bd8cb1bcfe8a8146d20b5aba877a.glb
-  rotation: {yaw: 33}
+  rotation:
+    yaw: 33
+  visibleRange:
+    max: 65
 l70-c-lbench:
-  feetPosition: {x: 27.2, y: 0.04, z: -86.2}
+  feetPosition:
+    x: 27.2
+    y: 0.04
+    z: -86.2
   id: l70-c-lbench
-  layout: {box: {max: {y: 0.9}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.9
+      min:
+        y: 0
   model: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 0}
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 0
+  visibleRange:
+    max: 65
 l70-c-lectern:
-  feetPosition: {x: 34, y: 0.04, z: -77}
+  feetPosition:
+    x: 34
+    y: 0.04
+    z: -77
   id: l70-c-lectern
-  layout: {box: {max: {y: 1.9}, min: {y: 0}}}
-  model: {forward: "+x", id: /cdn/value.956a6800bd9fd9e304d895d54df3fe8be38b48cbbf72767cb1d1d2e2ae616e02.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 0}
+  layout:
+    box:
+      max:
+        y: 1.9
+      min:
+        y: 0
+  model:
+    forward: +x
+    id: /cdn/value.956a6800bd9fd9e304d895d54df3fe8be38b48cbbf72767cb1d1d2e2ae616e02.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 0
+  visibleRange:
+    max: 65
 l70-c-lecternlight:
-  feetPosition: {x: 34.4, y: 1.9, z: -77.6}
+  feetPosition:
+    x: 34.4
+    y: 1.9
+    z: -77.6
   id: l70-c-lecternlight
-  light: {color: oklch(0.8 0.13 62), distance: 9, intensity: 5, kind: point}
+  light:
+    color: oklch(0.8 0.13 62)
+    distance: 9
+    intensity: 5
+    kind: point
+  visibleRange:
+    max: 65
 l70-c-lobbyfill:
-  feetPosition: {x: 36.5, y: 2.4, z: -82.5}
+  feetPosition:
+    x: 36.5
+    y: 2.4
+    z: -82.5
   id: l70-c-lobbyfill
-  light: {color: oklch(0.8 0.09 70), distance: 12, intensity: 4, kind: point}
+  light:
+    color: oklch(0.8 0.09 70)
+    distance: 12
+    intensity: 4
+    kind: point
+  visibleRange:
+    max: 65
 l70-c-lobbylight:
-  feetPosition: {x: 31.5, y: 2.2, z: -80}
+  feetPosition:
+    x: 31.5
+    y: 2.2
+    z: -80
   id: l70-c-lobbylight
-  light: {color: oklch(0.82 0.12 65), distance: 16, intensity: 9, kind: point}
+  light:
+    color: oklch(0.82 0.12 65)
+    distance: 16
+    intensity: 9
+    kind: point
+  visibleRange:
+    max: 65
 l70-c-notice:
-  feetPosition: {x: 4, y: 0, z: -80.5}
+  feetPosition:
+    x: 4
+    y: 0
+    z: -80.5
   id: l70-c-notice
   model: /cdn/value.4bdc3899162211807dfe16cb602e0861364f4b1e68b394edaa4061ae0a09761b.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 154.79887635452494}
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 154.79887635452494
+  visibleRange:
+    max: 65
 l70-c-noticelamp:
-  feetPosition: {x: 3.6, y: 2.2, z: -79.6}
+  feetPosition:
+    x: 3.6
+    y: 2.2
+    z: -79.6
   id: l70-c-noticelamp
-  light: {color: oklch(0.8 0.13 62), distance: 6, intensity: 2.5, kind: point}
+  light:
+    color: oklch(0.8 0.13 62)
+    distance: 6
+    intensity: 2.5
+    kind: point
+  visibleRange:
+    max: 65
 l70-c-pallet:
-  feetPosition: {x: -5, y: 0, z: -75.5}
+  feetPosition:
+    x: -5
+    y: 0
+    z: -75.5
   id: l70-c-pallet
-  layout: {box: {max: {y: 0.7}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.7
+      min:
+        y: 0
   model: /cdn/value.54dc26df7dc70e622aeb7df92fe86d9ace1a4c0ebd461dc8835643e5798a0dac.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 15}
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 15
+  visibleRange:
+    max: 65
 l70-c-rug:
-  feetPosition: {x: 33.4, y: 0.01, z: -77.6}
+  feetPosition:
+    x: 33.4
+    y: 0.01
+    z: -77.6
   id: l70-c-rug
   model: /cdn/value.7a52a205e6005afc81d4fb66c6bd697f8b8a470cb14e2d812ee207660fd6a48c.glb
-  rotation: {yaw: 12}
-  scale: {x: 0.18, y: 0.025, z: 0.135}
+  rotation:
+    yaw: 12
+  scale:
+    x: 0.18
+    y: 0.025
+    z: 0.135
+  visibleRange:
+    max: 65
 l70-c-sled-1:
-  feetPosition: {x: 4.8, y: 0, z: -78}
+  feetPosition:
+    x: 4.8
+    y: 0
+    z: -78
   id: l70-c-sled-1
   model: /cdn/value.6915653bca3fbcf61f38d869818195b028ab539769c1d7539e9df055de3139a0.glb
-  rotation: {yaw: -70}
+  rotation:
+    yaw: -70
+  visibleRange:
+    max: 65
 l70-c-stall-0:
-  feetPosition: {x: -7.5, y: 0, z: -76.5}
+  feetPosition:
+    x: -7.5
+    y: 0
+    z: -76.5
   id: l70-c-stall-0
-  layout: {box: {max: {y: 2.6}, min: {y: 0}}}
-  model: {forward: "+x", id: /cdn/value.5d69a7477ebf01d638933b9fc1c4a2d3170f7cf7d8a90785062ced159f4dbe5f.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: -125.96375653207352}
+  layout:
+    box:
+      max:
+        y: 2.6
+      min:
+        y: 0
+  model:
+    forward: +x
+    id: /cdn/value.5d69a7477ebf01d638933b9fc1c4a2d3170f7cf7d8a90785062ced159f4dbe5f.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: -125.96375653207352
+  visibleRange:
+    max: 65
 l70-c-stall-1:
-  feetPosition: {x: -8.5, y: 0, z: -70.5}
+  feetPosition:
+    x: -8.5
+    y: 0
+    z: -70.5
   id: l70-c-stall-1
-  layout: {box: {max: {y: 2.7}, min: {y: 0}}}
-  model: {forward: "+x", id: /cdn/value.889e6c7023f8f41389ed28a5cd911f8333f6065d8ceeb6dce3b8c8d095a579ba.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: -73.99202019855866}
+  layout:
+    box:
+      max:
+        y: 2.7
+      min:
+        y: 0
+  model:
+    forward: +x
+    id: /cdn/value.889e6c7023f8f41389ed28a5cd911f8333f6065d8ceeb6dce3b8c8d095a579ba.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: -73.99202019855866
+  visibleRange:
+    max: 65
 l70-c-stall-2:
-  feetPosition: {x: -6, y: 0, z: -65}
+  feetPosition:
+    x: -6
+    y: 0
+    z: -65
   id: l70-c-stall-2
-  layout: {box: {max: {y: 2.84}, min: {y: 0}}}
-  model: {forward: "+x", id: /cdn/value.5d69a7477ebf01d638933b9fc1c4a2d3170f7cf7d8a90785062ced159f4dbe5f.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: -45.60129464500447}
+  layout:
+    box:
+      max:
+        y: 2.84
+      min:
+        y: 0
+  model:
+    forward: +x
+    id: /cdn/value.5d69a7477ebf01d638933b9fc1c4a2d3170f7cf7d8a90785062ced159f4dbe5f.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: -45.60129464500447
+  visibleRange:
+    max: 65
 l70-c-stall-3:
-  feetPosition: {x: 7.5, y: 0, z: -75.5}
+  feetPosition:
+    x: 7.5
+    y: 0
+    z: -75.5
   id: l70-c-stall-3
-  layout: {box: {max: {y: 2.7}, min: {y: 0}}}
-  model: {forward: "+x", id: /cdn/value.889e6c7023f8f41389ed28a5cd911f8333f6065d8ceeb6dce3b8c8d095a579ba.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 121.01689347810002}
+  layout:
+    box:
+      max:
+        y: 2.7
+      min:
+        y: 0
+  model:
+    forward: +x
+    id: /cdn/value.889e6c7023f8f41389ed28a5cd911f8333f6065d8ceeb6dce3b8c8d095a579ba.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 121.01689347810002
+  visibleRange:
+    max: 65
 l70-c-stall-4:
-  feetPosition: {x: 8, y: 0, z: -68.5}
+  feetPosition:
+    x: 8
+    y: 0
+    z: -68.5
   id: l70-c-stall-4
-  layout: {box: {max: {y: 2.72}, min: {y: 0}}}
-  model: {forward: "+x", id: /cdn/value.5d69a7477ebf01d638933b9fc1c4a2d3170f7cf7d8a90785062ced159f4dbe5f.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 61.37062226934319}
+  layout:
+    box:
+      max:
+        y: 2.72
+      min:
+        y: 0
+  model:
+    forward: +x
+    id: /cdn/value.5d69a7477ebf01d638933b9fc1c4a2d3170f7cf7d8a90785062ced159f4dbe5f.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 61.37062226934319
+  visibleRange:
+    max: 65
 l70-c-stallcrate-0:
-  feetPosition: {x: -5.15, y: 0, z: -76.97}
+  feetPosition:
+    x: -5.15
+    y: 0
+    z: -76.97
   id: l70-c-stallcrate-0
-  layout: {box: {max: {y: 0.62}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.62
+      min:
+        y: 0
   model: /cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 0}
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 0
+  visibleRange:
+    max: 65
 l70-c-stallcrate-1:
-  feetPosition: {x: -6.01, y: 0, z: -71.80999999999999}
+  feetPosition:
+    x: -6.01
+    y: 0
+    z: -71.80999999999999
   id: l70-c-stallcrate-1
-  layout: {box: {max: {y: 0.62}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.62
+      min:
+        y: 0
   model: /cdn/value.65b1cf4b647cedc952ad4a7628071e0fbbf64952b6cd06bb3ae156a729b11eb6.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 37}
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 37
+  visibleRange:
+    max: 65
 l70-c-stallcrate-2:
-  feetPosition: {x: -3.8600000000000003, y: 0, z: -67.08}
+  feetPosition:
+    x: -3.8600000000000003
+    y: 0
+    z: -67.08
   id: l70-c-stallcrate-2
-  layout: {box: {max: {y: 0.62}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.62
+      min:
+        y: 0
   model: /cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 74}
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 74
+  visibleRange:
+    max: 65
 l70-c-stallcrate-3:
-  feetPosition: {x: 7.75, y: 0, z: -76.11}
+  feetPosition:
+    x: 7.75
+    y: 0
+    z: -76.11
   id: l70-c-stallcrate-3
-  layout: {box: {max: {y: 0.62}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.62
+      min:
+        y: 0
   model: /cdn/value.65b1cf4b647cedc952ad4a7628071e0fbbf64952b6cd06bb3ae156a729b11eb6.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 111}
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 111
+  visibleRange:
+    max: 65
 l70-c-stallcrate-4:
-  feetPosition: {x: 8.18, y: 0, z: -70.08999999999999}
+  feetPosition:
+    x: 8.18
+    y: 0
+    z: -70.08999999999999
   id: l70-c-stallcrate-4
-  layout: {box: {max: {y: 0.62}, min: {y: 0}}}
+  layout:
+    box:
+      max:
+        y: 0.62
+      min:
+        y: 0
   model: /cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 148}
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 148
+  visibleRange:
+    max: 65
 l70-c-stalllamp-0:
-  feetPosition: {x: -6.75, y: 2.1, z: -76.05}
+  feetPosition:
+    x: -6.75
+    y: 2.1
+    z: -76.05
   id: l70-c-stalllamp-0
-  light: {color: oklch(0.8 0.13 62), distance: 7, intensity: 3, kind: point}
+  light:
+    color: oklch(0.8 0.13 62)
+    distance: 7
+    intensity: 3
+    kind: point
+  visibleRange:
+    max: 65
 l70-c-stalllamp-1:
-  feetPosition: {x: -7.65, y: 2.1, z: -70.65}
+  feetPosition:
+    x: -7.65
+    y: 2.1
+    z: -70.65
   id: l70-c-stalllamp-1
-  light: {color: oklch(0.8 0.13 62), distance: 7, intensity: 3, kind: point}
+  light:
+    color: oklch(0.8 0.13 62)
+    distance: 7
+    intensity: 3
+    kind: point
+  visibleRange:
+    max: 65
 l70-c-stalllamp-2:
-  feetPosition: {x: -5.4, y: 2.1, z: -65.7}
+  feetPosition:
+    x: -5.4
+    y: 2.1
+    z: -65.7
   id: l70-c-stalllamp-2
-  light: {color: oklch(0.8 0.13 62), distance: 7, intensity: 3, kind: point}
+  light:
+    color: oklch(0.8 0.13 62)
+    distance: 7
+    intensity: 3
+    kind: point
+  visibleRange:
+    max: 65
 l70-c-stalllamp-3:
-  feetPosition: {x: 6.75, y: 2.1, z: -75.15}
+  feetPosition:
+    x: 6.75
+    y: 2.1
+    z: -75.15
   id: l70-c-stalllamp-3
-  light: {color: oklch(0.8 0.13 62), distance: 7, intensity: 3, kind: point}
+  light:
+    color: oklch(0.8 0.13 62)
+    distance: 7
+    intensity: 3
+    kind: point
+  visibleRange:
+    max: 65
 l70-c-stalllamp-4:
-  feetPosition: {x: 7.2, y: 2.1, z: -68.85}
+  feetPosition:
+    x: 7.2
+    y: 2.1
+    z: -68.85
   id: l70-c-stalllamp-4
-  light: {color: oklch(0.8 0.13 62), distance: 7, intensity: 3, kind: point}
+  light:
+    color: oklch(0.8 0.13 62)
+    distance: 7
+    intensity: 3
+    kind: point
+  visibleRange:
+    max: 65
 l70-c-stallsnow-0:
-  feetPosition: {x: -9.15, y: 0, z: -76.28999999999999}
+  feetPosition:
+    x: -9.15
+    y: 0
+    z: -76.28999999999999
   id: l70-c-stallsnow-0
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: 0}
+  rotation:
+    yaw: 0
   scale: 0.7
+  visibleRange:
+    max: 65
 l70-c-stallsnow-1:
-  feetPosition: {x: -10.37, y: 0, z: -68.97}
+  feetPosition:
+    x: -10.37
+    y: 0
+    z: -68.97
   id: l70-c-stallsnow-1
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: 70}
+  rotation:
+    yaw: 70
   scale: 0.8999999999999999
+  visibleRange:
+    max: 65
 l70-c-stallsnow-3:
-  feetPosition: {x: 9.15, y: 0, z: -75.07}
+  feetPosition:
+    x: 9.15
+    y: 0
+    z: -75.07
   id: l70-c-stallsnow-3
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: 210}
+  rotation:
+    yaw: 210
   scale: 0.7
+  visibleRange:
+    max: 65
 l70-c-stallsnow-4:
-  feetPosition: {x: 9.76, y: 0, z: -66.53}
+  feetPosition:
+    x: 9.76
+    y: 0
+    z: -66.53
   id: l70-c-stallsnow-4
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: 280}
+  rotation:
+    yaw: 280
   scale: 0.8999999999999999
+  visibleRange:
+    max: 65
 l70-c-wood-0:
-  feetPosition: {x: -4.5, y: 0, z: -80.5}
+  feetPosition:
+    x: -4.5
+    y: 0
+    z: -80.5
   id: l70-c-wood-0
   model: /cdn/value.a8269d471ada83554f083b37b4036d3cf8dc5f4626a48ff4cf8fa2116ea229fe.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 20}
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 20
+  visibleRange:
+    max: 65
 l70-c-wood-1:
-  feetPosition: {x: 9.6, y: 0, z: -72}
+  feetPosition:
+    x: 9.6
+    y: 0
+    z: -72
   id: l70-c-wood-1
   model: /cdn/value.a8269d471ada83554f083b37b4036d3cf8dc5f4626a48ff4cf8fa2116ea229fe.glb
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 95}
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 95
+  visibleRange:
+    max: 65
 l70-car-4:
-  castShadow: true
-  feetPosition: {x: 4.5, y: 0, z: -96}
+  castShadow: false
+  feetPosition:
+    x: 4.5
+    y: 0
+    z: -96
   id: l70-car-4
-  layout: {box: {max: {y: 2.25}, min: {y: 0}}}
-  model: {id: /cdn/value.077bedb487349a0148196019451d1bd4543792c89251898bc5e1cc6e8777b37d.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {pitch: 0, roll: 0, yaw: 186}
+  layout:
+    box:
+      max:
+        y: 2.25
+      min:
+        y: 0
+  model:
+    id: /cdn/value.077bedb487349a0148196019451d1bd4543792c89251898bc5e1cc6e8777b37d.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    pitch: 0
+    roll: 0
+    yaw: 186
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 65
 l70-car-4-snow:
-  castShadow: true
-  feetPosition: {x: 6, y: -0.05, z: -94.8}
+  castShadow: false
+  feetPosition:
+    x: 6
+    y: -0.05
+    z: -94.8
   id: l70-car-4-snow
-  layout: {box: {max: {y: 0.7}, min: {y: 0}}}
-  model: {id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb}
-  rotation: {pitch: 0, roll: 0, yaw: 200}
+  layout:
+    box:
+      max:
+        y: 0.7
+      min:
+        y: 0
+  model:
+    id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb
+  rotation:
+    pitch: 0
+    roll: 0
+    yaw: 200
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 65
 l70-car-4-snow2:
-  castShadow: true
-  feetPosition: {x: 4.1, y: -0.05, z: -98.6}
+  castShadow: false
+  feetPosition:
+    x: 4.1
+    y: -0.05
+    z: -98.6
   id: l70-car-4-snow2
-  layout: {box: {max: {y: 0.5}, min: {y: 0}}}
-  model: {id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb}
-  rotation: {pitch: 0, roll: 0, yaw: 440}
+  layout:
+    box:
+      max:
+        y: 0.5
+      min:
+        y: 0
+  model:
+    id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb
+  rotation:
+    pitch: 0
+    roll: 0
+    yaw: 440
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 65
 l70-fence5:
-  feetPosition: {x: -24, y: {terrain: -0.69}, z: -112}
+  feetPosition:
+    x: -24
+    y:
+      terrain: -0.69
+    z: -112
   id: l70-fence5
-  layout: {box: {max: {y: 1.68}, min: {y: 0}}}
-  model: {id: /cdn/value.ee923ef0e1da164ba64409cc7e7acf8977e2ce6c28cf1d0ff42a691dc4da8f19.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {roll: 3, yaw: 12}
-  tags: [l70-wild]
+  layout:
+    box:
+      max:
+        y: 1.68
+      min:
+        y: 0
+  model:
+    id: /cdn/value.ee923ef0e1da164ba64409cc7e7acf8977e2ce6c28cf1d0ff42a691dc4da8f19.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    roll: 3
+    yaw: 12
+  tags:
+  - l70-wild
+  visibleRange:
+    max: 65
 l70-fence6:
-  feetPosition: {x: -32.5, y: {terrain: -0.45}, z: -113.8}
+  feetPosition:
+    x: -32.5
+    y:
+      terrain: -0.45
+    z: -113.8
   id: l70-fence6
-  layout: {box: {max: {y: 1.68}, min: {y: 0}}}
-  model: {id: /cdn/value.ee923ef0e1da164ba64409cc7e7acf8977e2ce6c28cf1d0ff42a691dc4da8f19.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {roll: -2, yaw: 12}
-  tags: [l70-wild]
+  layout:
+    box:
+      max:
+        y: 1.68
+      min:
+        y: 0
+  model:
+    id: /cdn/value.ee923ef0e1da164ba64409cc7e7acf8977e2ce6c28cf1d0ff42a691dc4da8f19.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    roll: -2
+    yaw: 12
+  tags:
+  - l70-wild
+  visibleRange:
+    max: 65
 l70-lamp-5:
   castShadow: true
-  feetPosition: {x: -5.5, y: 0, z: -80}
+  feetPosition:
+    x: -5.5
+    y: 0
+    z: -80
   id: l70-lamp-5
-  layout: {box: {max: {y: 6.4}, min: {y: 0}}}
-  model: {id: /cdn/value.df187005a34dd410bd5de07e4253a96b988c4a12840d62b14ec6248dd28cfc52.glb}
-  physics: {body: static, collider: box}
-  rotation: {pitch: 0, roll: 0.1941926005674759, yaw: 180}
+  layout:
+    box:
+      max:
+        y: 6.4
+      min:
+        y: 0
+  model:
+    id: /cdn/value.df187005a34dd410bd5de07e4253a96b988c4a12840d62b14ec6248dd28cfc52.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    pitch: 0
+    roll: 0.1941926005674759
+    yaw: 180
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 140
 l70-lamp-5-light:
-  feetPosition: {x: -4, y: 5.6, z: -80}
+  feetPosition:
+    x: -4
+    y: 5.6
+    z: -80
   id: l70-lamp-5-light
-  light: {color: oklch(0.8 0.13 70), distance: 22, intensity: 2.5, kind: point, shadow: {enabled: false}}
-  tags: [l70, l70-town, l70-light]
+  light:
+    color: oklch(0.8 0.13 70)
+    distance: 22
+    intensity: 2.5
+    kind: point
+    shadow:
+      enabled: false
+  tags:
+  - l70
+  - l70-town
+  - l70-light
+  visibleRange:
+    max: 140
 l70-lamp-5-snow:
   castShadow: true
-  feetPosition: {x: -5.8, y: -0.05, z: -79.5}
+  feetPosition:
+    x: -5.8
+    y: -0.05
+    z: -79.5
   id: l70-lamp-5-snow
-  layout: {box: {max: {y: 0.5}, min: {y: 0}}}
-  model: {id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb}
-  rotation: {pitch: 0, roll: 0, yaw: 350}
+  layout:
+    box:
+      max:
+        y: 0.5
+      min:
+        y: 0
+  model:
+    id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb
+  rotation:
+    pitch: 0
+    roll: 0
+    yaw: 350
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 140
 l70-lamp-6:
   castShadow: true
-  feetPosition: {x: 5.5, y: 0, z: -102}
+  feetPosition:
+    x: 5.5
+    y: 0
+    z: -102
   id: l70-lamp-6
-  layout: {box: {max: {y: 6.4}, min: {y: 0}}}
-  model: {id: /cdn/value.df187005a34dd410bd5de07e4253a96b988c4a12840d62b14ec6248dd28cfc52.glb}
-  physics: {body: static, collider: box}
-  rotation: {pitch: 0, roll: -0.2911462847550865, yaw: 0}
+  layout:
+    box:
+      max:
+        y: 6.4
+      min:
+        y: 0
+  model:
+    id: /cdn/value.df187005a34dd410bd5de07e4253a96b988c4a12840d62b14ec6248dd28cfc52.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    pitch: 0
+    roll: -0.2911462847550865
+    yaw: 0
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 140
 l70-lamp-6-light:
-  feetPosition: {x: 4, y: 5.6, z: -102}
+  feetPosition:
+    x: 4
+    y: 5.6
+    z: -102
   id: l70-lamp-6-light
-  light: {color: oklch(0.8 0.13 70), distance: 22, intensity: 2.5, kind: point, shadow: {enabled: false}}
-  tags: [l70, l70-town, l70-light]
+  light:
+    color: oklch(0.8 0.13 70)
+    distance: 22
+    intensity: 2.5
+    kind: point
+    shadow:
+      enabled: false
+  tags:
+  - l70
+  - l70-town
+  - l70-light
+  visibleRange:
+    max: 140
 l70-lamp-6-snow:
   castShadow: true
-  feetPosition: {x: 5.8, y: -0.05, z: -101.5}
+  feetPosition:
+    x: 5.8
+    y: -0.05
+    z: -101.5
   id: l70-lamp-6-snow
-  layout: {box: {max: {y: 0.5}, min: {y: 0}}}
-  model: {id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb}
-  rotation: {pitch: 0, roll: 0, yaw: 420}
+  layout:
+    box:
+      max:
+        y: 0.5
+      min:
+        y: 0
+  model:
+    id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb
+  rotation:
+    pitch: 0
+    roll: 0
+    yaw: 420
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 140
 l70-line-2a:
-  feetPosition: {x: -8.001597904648952, y: 0, z: -65}
+  feetPosition:
+    x: -8.001597904648952
+    y: 0
+    z: -65
   id: l70-line-2a
-  spline: {kind: powerline, points: [[0, 8.3, 0], [-0.006023416002153725, 7.643750000000001, -5.625], [-0.01204683200430745, 7.175000000000001, -11.25], [-0.018070248006461176, 6.893750000000001, -16.875], [-0.0240936640086149, 6.800000000000001, -22.5], [-0.030117080010768627, 6.893750000000001, -28.125], [-0.03614049601292235, 7.175000000000001, -33.75], [-0.04216391201507608, 7.643750000000001, -39.375], [-0.0481873280172298, 8.3, -45]], width: 0.03}
-  tags: [l70, l70-town]
+  spline:
+    kind: powerline
+    points:
+    - - 0
+      - 8.3
+      - 0
+    - - -0.006023416002153725
+      - 7.643750000000001
+      - -5.625
+    - - -0.01204683200430745
+      - 7.175000000000001
+      - -11.25
+    - - -0.018070248006461176
+      - 6.893750000000001
+      - -16.875
+    - - -0.0240936640086149
+      - 6.800000000000001
+      - -22.5
+    - - -0.030117080010768627
+      - 6.893750000000001
+      - -28.125
+    - - -0.03614049601292235
+      - 7.175000000000001
+      - -33.75
+    - - -0.04216391201507608
+      - 7.643750000000001
+      - -39.375
+    - - -0.0481873280172298
+      - 8.3
+      - -45
+    width: 0.03
+  tags:
+  - l70
+  - l70-town
 l70-line-2b:
-  feetPosition: {x: -6.601597904648951, y: 0, z: -65}
+  feetPosition:
+    x: -6.601597904648951
+    y: 0
+    z: -65
   id: l70-line-2b
-  spline: {kind: powerline, points: [[0, 8.3, 0], [-0.006023416002153725, 7.643750000000001, -5.625], [-0.01204683200430745, 7.175000000000001, -11.25], [-0.018070248006461176, 6.893750000000001, -16.875], [-0.0240936640086149, 6.800000000000001, -22.5], [-0.030117080010768627, 6.893750000000001, -28.125], [-0.03614049601292235, 7.175000000000001, -33.75], [-0.04216391201507608, 7.643750000000001, -39.375], [-0.0481873280172298, 8.3, -45]], width: 0.03}
-  tags: [l70, l70-town]
+  spline:
+    kind: powerline
+    points:
+    - - 0
+      - 8.3
+      - 0
+    - - -0.006023416002153725
+      - 7.643750000000001
+      - -5.625
+    - - -0.01204683200430745
+      - 7.175000000000001
+      - -11.25
+    - - -0.018070248006461176
+      - 6.893750000000001
+      - -16.875
+    - - -0.0240936640086149
+      - 6.800000000000001
+      - -22.5
+    - - -0.030117080010768627
+      - 6.893750000000001
+      - -28.125
+    - - -0.03614049601292235
+      - 7.175000000000001
+      - -33.75
+    - - -0.04216391201507608
+      - 7.643750000000001
+      - -39.375
+    - - -0.0481873280172298
+      - 8.3
+      - -45
+    width: 0.03
+  tags:
+  - l70
+  - l70-town
 l70-path-camp-heap0:
   castShadow: false
-  feetPosition: {x: -25.179065321011365, y: {terrain: -0.06}, z: -70.48897935121805}
+  feetPosition:
+    x: -25.179065321011365
+    y:
+      terrain: -0.06
+    z: -70.48897935121805
   id: l70-path-camp-heap0
-  layout: {box: {max: {x: 1.1617615275838233, y: 0.662997050659264, z: 0.697056916550294}, min: {x: -1.1617615275838233, y: 0, z: -0.697056916550294}}}
+  layout:
+    box:
+      max:
+        x: 1.1617615275838233
+        y: 0.662997050659264
+        z: 0.697056916550294
+      min:
+        x: -1.1617615275838233
+        y: 0
+        z: -0.697056916550294
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: -17.571403832430704}
+  rotation:
+    yaw: -17.571403832430704
+  visibleRange:
+    max: 65
 l70-path-camp-heap1:
   castShadow: false
-  feetPosition: {x: -24.801631324003736, y: {terrain: -0.06}, z: -74.01169665662258}
+  feetPosition:
+    x: -24.801631324003736
+    y:
+      terrain: -0.06
+    z: -74.01169665662258
   id: l70-path-camp-heap1
-  layout: {box: {max: {x: 1.5390935831885288, y: 0.5729263248028822, z: 0.9234561499131173}, min: {x: -1.5390935831885288, y: 0, z: -0.9234561499131173}}}
+  layout:
+    box:
+      max:
+        x: 1.5390935831885288
+        y: 0.5729263248028822
+        z: 0.9234561499131173
+      min:
+        x: -1.5390935831885288
+        y: 0
+        z: -0.9234561499131173
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: 6.540927463938884}
+  rotation:
+    yaw: 6.540927463938884
+  visibleRange:
+    max: 65
 l70-path-camp-heap10:
   castShadow: false
-  feetPosition: {x: -59.28779067729549, y: {terrain: -0.06}, z: -79.20600768538404}
+  feetPosition:
+    x: -59.28779067729549
+    y:
+      terrain: -0.06
+    z: -79.20600768538404
   id: l70-path-camp-heap10
-  layout: {box: {max: {x: 1.5428238041898346, y: 0.4198385092755027, z: 0.9256942825139007}, min: {x: -1.5428238041898346, y: 0, z: -0.9256942825139007}}}
+  layout:
+    box:
+      max:
+        x: 1.5428238041898346
+        y: 0.4198385092755027
+        z: 0.9256942825139007
+      min:
+        x: -1.5428238041898346
+        y: 0
+        z: -0.9256942825139007
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: -7.419323036641691}
+  rotation:
+    yaw: -7.419323036641691
+  visibleRange:
+    max: 65
 l70-path-camp-heap2:
   castShadow: false
-  feetPosition: {x: -30.686515052022116, y: {terrain: -0.06}, z: -71.10744174897448}
+  feetPosition:
+    x: -30.686515052022116
+    y:
+      terrain: -0.06
+    z: -71.10744174897448
   id: l70-path-camp-heap2
-  layout: {box: {max: {x: 1.5781160050435532, y: 0.5478483834992388, z: 0.9468696030261319}, min: {x: -1.5781160050435532, y: 0, z: -0.9468696030261319}}}
+  layout:
+    box:
+      max:
+        x: 1.5781160050435532
+        y: 0.5478483834992388
+        z: 0.9468696030261319
+      min:
+        x: -1.5781160050435532
+        y: 0
+        z: -0.9468696030261319
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: -0.7413145647008799}
+  rotation:
+    yaw: -0.7413145647008799
+  visibleRange:
+    max: 65
 l70-path-camp-heap3:
   castShadow: false
-  feetPosition: {x: -30.298037065577134, y: {terrain: -0.06}, z: -74.73323628912765}
+  feetPosition:
+    x: -30.298037065577134
+    y:
+      terrain: -0.06
+    z: -74.73323628912765
   id: l70-path-camp-heap3
-  layout: {box: {max: {x: 1.0462542445148595, y: 0.5475437806209287, z: 0.6277525467089157}, min: {x: -1.0462542445148595, y: 0, z: -0.6277525467089157}}}
+  layout:
+    box:
+      max:
+        x: 1.0462542445148595
+        y: 0.5475437806209287
+        z: 0.6277525467089157
+      min:
+        x: -1.0462542445148595
+        y: 0
+        z: -0.6277525467089157
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: -19.552221058183484}
+  rotation:
+    yaw: -19.552221058183484
+  visibleRange:
+    max: 65
 l70-path-camp-heap4:
   castShadow: false
-  feetPosition: {x: -39.20967750693535, y: {terrain: -0.06}, z: -71.70326561592756}
+  feetPosition:
+    x: -39.20967750693535
+    y:
+      terrain: -0.06
+    z: -71.70326561592756
   id: l70-path-camp-heap4
-  layout: {box: {max: {x: 1.2487310591846383, y: 0.36145585810833414, z: 0.749238635510783}, min: {x: -1.2487310591846383, y: 0, z: -0.749238635510783}}}
+  layout:
+    box:
+      max:
+        x: 1.2487310591846383
+        y: 0.36145585810833414
+        z: 0.749238635510783
+      min:
+        x: -1.2487310591846383
+        y: 0
+        z: -0.749238635510783
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: -17.81339270192732}
+  rotation:
+    yaw: -17.81339270192732
+  visibleRange:
+    max: 65
 l70-path-camp-heap5:
   castShadow: false
-  feetPosition: {x: -38.79346297156015, y: {terrain: -0.06}, z: -75.58793461276275}
+  feetPosition:
+    x: -38.79346297156015
+    y:
+      terrain: -0.06
+    z: -75.58793461276275
   id: l70-path-camp-heap5
-  layout: {box: {max: {x: 1.3815032496030923, y: 0.6625580395863195, z: 0.8289019497618554}, min: {x: -1.3815032496030923, y: 0, z: -0.8289019497618554}}}
+  layout:
+    box:
+      max:
+        x: 1.3815032496030923
+        y: 0.6625580395863195
+        z: 0.8289019497618554
+      min:
+        x: -1.3815032496030923
+        y: 0
+        z: -0.8289019497618554
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: -20.01075551611782}
+  rotation:
+    yaw: -20.01075551611782
+  visibleRange:
+    max: 65
 l70-path-camp-heap6:
   castShadow: false
-  feetPosition: {x: -46.45240961286374, y: {terrain: -0.06}, z: -72.31111906709623}
+  feetPosition:
+    x: -46.45240961286374
+    y:
+      terrain: -0.06
+    z: -72.31111906709623
   id: l70-path-camp-heap6
-  layout: {box: {max: {x: 1.5680035353954898, y: 0.617709695998444, z: 0.9408021212372938}, min: {x: -1.5680035353954898, y: 0, z: -0.9408021212372938}}}
+  layout:
+    box:
+      max:
+        x: 1.5680035353954898
+        y: 0.617709695998444
+        z: 0.9408021212372938
+      min:
+        x: -1.5680035353954898
+        y: 0
+        z: -0.9408021212372938
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: -8.534528209600873}
+  rotation:
+    yaw: -8.534528209600873
+  visibleRange:
+    max: 65
 l70-path-camp-heap7:
   castShadow: false
-  feetPosition: {x: -53.332404527253246, y: {terrain: -0.06}, z: -73.71363907574195}
+  feetPosition:
+    x: -53.332404527253246
+    y:
+      terrain: -0.06
+    z: -73.71363907574195
   id: l70-path-camp-heap7
-  layout: {box: {max: {x: 1.0643234020864234, y: 0.4917094332593071, z: 0.638594041251854}, min: {x: -1.0643234020864234, y: 0, z: -0.638594041251854}}}
+  layout:
+    box:
+      max:
+        x: 1.0643234020864234
+        y: 0.4917094332593071
+        z: 0.638594041251854
+      min:
+        x: -1.0643234020864234
+        y: 0
+        z: -0.638594041251854
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: -0.16623196805112528}
+  rotation:
+    yaw: -0.16623196805112528
+  visibleRange:
+    max: 65
 l70-path-camp-heap8:
   castShadow: false
-  feetPosition: {x: -52.54721263995787, y: {terrain: -0.06}, z: -77.48256013475975}
+  feetPosition:
+    x: -52.54721263995787
+    y:
+      terrain: -0.06
+    z: -77.48256013475975
   id: l70-path-camp-heap8
-  layout: {box: {max: {x: 1.3350576798129163, y: 0.6072123078430128, z: 0.8010346078877498}, min: {x: -1.3350576798129163, y: 0, z: -0.8010346078877498}}}
+  layout:
+    box:
+      max:
+        x: 1.3350576798129163
+        y: 0.6072123078430128
+        z: 0.8010346078877498
+      min:
+        x: -1.3350576798129163
+        y: 0
+        z: -0.8010346078877498
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: -16.725106681568327}
+  rotation:
+    yaw: -16.725106681568327
+  visibleRange:
+    max: 65
 l70-path-camp-heap9:
   castShadow: false
-  feetPosition: {x: -60.11227381424744, y: {terrain: -0.06}, z: -75.24848862801468}
+  feetPosition:
+    x: -60.11227381424744
+    y:
+      terrain: -0.06
+    z: -75.24848862801468
   id: l70-path-camp-heap9
-  layout: {box: {max: {x: 1.1182001450183803, y: 0.6949186619580344, z: 0.6709200870110281}, min: {x: -1.1182001450183803, y: 0, z: -0.6709200870110281}}}
+  layout:
+    box:
+      max:
+        x: 1.1182001450183803
+        y: 0.6949186619580344
+        z: 0.6709200870110281
+      min:
+        x: -1.1182001450183803
+        y: 0
+        z: -0.6709200870110281
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: 3.0486314185197543}
+  rotation:
+    yaw: 3.0486314185197543
+  visibleRange:
+    max: 65
 l70-path-glow-camp-a:
-  feetPosition: {x: -50, y: 2.2, z: -76.4}
+  feetPosition:
+    x: -50
+    y: 2.2
+    z: -76.4
   id: l70-path-glow-camp-a
-  light: {color: "#ffb36b", distance: 11, intensity: 1.6, kind: point}
+  light:
+    color: '#ffb36b'
+    distance: 11
+    intensity: 1.6
+    kind: point
+  visibleRange:
+    max: 65
 l70-path-glow-dock:
-  feetPosition: {x: -1.6, y: 2.2, z: -121.4}
+  feetPosition:
+    x: -1.6
+    y: 2.2
+    z: -121.4
   id: l70-path-glow-dock
-  light: {color: "#ffb36b", distance: 11, intensity: 1.6, kind: point}
+  light:
+    color: '#ffb36b'
+    distance: 11
+    intensity: 1.6
+    kind: point
+  visibleRange:
+    max: 65
 l70-path-hotel-heap0:
   castShadow: false
-  feetPosition: {x: 7.0956215873111095, y: {terrain: -0.06}, z: -79.45271091827638}
+  feetPosition:
+    x: 7.0956215873111095
+    y:
+      terrain: -0.06
+    z: -79.45271091827638
   id: l70-path-hotel-heap0
-  layout: {box: {max: {x: 1.3426549043239349, y: 0.40048848618776, z: 0.8055929425943609}, min: {x: -1.3426549043239349, y: 0, z: -0.8055929425943609}}}
+  layout:
+    box:
+      max:
+        x: 1.3426549043239349
+        y: 0.40048848618776
+        z: 0.8055929425943609
+      min:
+        x: -1.3426549043239349
+        y: 0
+        z: -0.8055929425943609
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: 168.005919446069}
+  rotation:
+    yaw: 168.005919446069
+  visibleRange:
+    max: 65
 l70-path-hotel-heap1:
   castShadow: false
-  feetPosition: {x: 19, y: {terrain: -0.06}, z: -77.1692607636886}
+  feetPosition:
+    x: 19
+    y:
+      terrain: -0.06
+    z: -77.1692607636886
   id: l70-path-hotel-heap1
-  layout: {box: {max: {x: 1.5234021333155232, y: 0.6598273169993549, z: 0.9140412799893138}, min: {x: -1.5234021333155232, y: 0, z: -0.9140412799893138}}}
+  layout:
+    box:
+      max:
+        x: 1.5234021333155232
+        y: 0.6598273169993549
+        z: 0.9140412799893138
+      min:
+        x: -1.5234021333155232
+        y: 0
+        z: -0.9140412799893138
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: 192.2394987961793}
+  rotation:
+    yaw: 192.2394987961793
+  visibleRange:
+    max: 65
 l70-path-market-heap0:
   castShadow: false
-  feetPosition: {x: -15.091081154167716, y: {terrain: -0.06}, z: -74.61705283501202}
+  feetPosition:
+    x: -15.091081154167716
+    y:
+      terrain: -0.06
+    z: -74.61705283501202
   id: l70-path-market-heap0
-  layout: {box: {max: {x: 1.4188042216090504, y: 0.5212762916559708, z: 0.8512825329654302}, min: {x: -1.4188042216090504, y: 0, z: -0.8512825329654302}}}
+  layout:
+    box:
+      max:
+        x: 1.4188042216090504
+        y: 0.5212762916559708
+        z: 0.8512825329654302
+      min:
+        x: -1.4188042216090504
+        y: 0
+        z: -0.8512825329654302
   model: /cdn/value.652183159aeb2aed35418c3c00070f3548523a47bf0459a44ca542e79acb5457.glb
-  rotation: {yaw: 7.9099088384568415}
+  rotation:
+    yaw: 7.9099088384568415
+  visibleRange:
+    max: 65
 l70-path-polecol-2:
-  feetPosition: {x: -7.301597904648951, y: 0, z: -65}
+  feetPosition:
+    x: -7.301597904648951
+    y: 0
+    z: -65
   id: l70-path-polecol-2
-  physics: {body: static, collider: cylinder}
-  primitive: {height: 9, kind: cylinder, radius: 0.2}
+  physics:
+    body: static
+    collider: cylinder
+  primitive:
+    height: 9
+    kind: cylinder
+    radius: 0.2
   visible: false
+  visibleRange:
+    max: 65
 l70-path-polecol-3:
-  feetPosition: {x: -7.349785232666181, y: 0, z: -110}
+  feetPosition:
+    x: -7.349785232666181
+    y: 0
+    z: -110
   id: l70-path-polecol-3
-  physics: {body: static, collider: cylinder}
-  primitive: {height: 9, kind: cylinder, radius: 0.2}
+  physics:
+    body: static
+    collider: cylinder
+  primitive:
+    height: 9
+    kind: cylinder
+    radius: 0.2
   visible: false
+  visibleRange:
+    max: 65
 l70-pole-2:
   castShadow: true
-  feetPosition: {x: -7.301597904648951, y: 0, z: -65}
+  feetPosition:
+    x: -7.301597904648951
+    y: 0
+    z: -65
   id: l70-pole-2
-  layout: {box: {max: {y: 9}, min: {y: 0}}}
-  model: {id: /cdn/value.76853fda663d318c17f12d0d8b66410e8ba2b131260ef1a373fe11a2a1629d1e.glb}
-  physics: {body: static, collider: box}
-  rotation: {pitch: 0, roll: 2.2238667025536416, yaw: 2.965841676771106}
+  layout:
+    box:
+      max:
+        y: 9
+      min:
+        y: 0
+  model:
+    id: /cdn/value.76853fda663d318c17f12d0d8b66410e8ba2b131260ef1a373fe11a2a1629d1e.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    pitch: 0
+    roll: 2.2238667025536416
+    yaw: 2.965841676771106
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 140
 l70-pole-2-snow:
   castShadow: true
-  feetPosition: {x: -7.601597904648951, y: -0.05, z: -64.6}
+  feetPosition:
+    x: -7.601597904648951
+    y: -0.05
+    z: -64.6
   id: l70-pole-2-snow
-  layout: {box: {max: {y: 0.6}, min: {y: 0}}}
-  model: {id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb}
-  rotation: {pitch: 0, roll: 0, yaw: 190}
+  layout:
+    box:
+      max:
+        y: 0.6
+      min:
+        y: 0
+  model:
+    id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb
+  rotation:
+    pitch: 0
+    roll: 0
+    yaw: 190
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 140
 l70-pole-3:
   castShadow: true
-  feetPosition: {x: -7.349785232666181, y: 0, z: -110}
+  feetPosition:
+    x: -7.349785232666181
+    y: 0
+    z: -110
   id: l70-pole-3
-  layout: {box: {max: {y: 9}, min: {y: 0}}}
-  model: {id: /cdn/value.76853fda663d318c17f12d0d8b66410e8ba2b131260ef1a373fe11a2a1629d1e.glb}
-  physics: {body: static, collider: box}
-  rotation: {pitch: 0, roll: 0.03984171860211083, yaw: -6.39871806561132}
+  layout:
+    box:
+      max:
+        y: 9
+      min:
+        y: 0
+  model:
+    id: /cdn/value.76853fda663d318c17f12d0d8b66410e8ba2b131260ef1a373fe11a2a1629d1e.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    pitch: 0
+    roll: 0.03984171860211083
+    yaw: -6.39871806561132
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 140
 l70-pole-3-snow:
   castShadow: true
-  feetPosition: {x: -7.649785232666181, y: -0.05, z: -109.6}
+  feetPosition:
+    x: -7.649785232666181
+    y: -0.05
+    z: -109.6
   id: l70-pole-3-snow
-  layout: {box: {max: {y: 0.6}, min: {y: 0}}}
-  model: {id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb}
-  rotation: {pitch: 0, roll: 0, yaw: 285}
+  layout:
+    box:
+      max:
+        y: 0.6
+      min:
+        y: 0
+  model:
+    id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb
+  rotation:
+    pitch: 0
+    roll: 0
+    yaw: 285
   scale: 1
-  tags: [l70, l70-town]
+  tags:
+  - l70
+  - l70-town
   visible: true
+  visibleRange:
+    max: 140
 l70-rock15:
-  feetPosition: {x: 59.4608947771142, y: {terrain: -0.24014040246722496}, z: -97.07145970657272}
+  feetPosition:
+    x: 59.4608947771142
+    y:
+      terrain: -0.24014040246722496
+    z: -97.07145970657272
   id: l70-rock15
-  layout: {box: {max: {y: 1.3341133470401387}, min: {y: 0}}}
-  model: {id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb}
-  physics: {body: static, collider: mesh}
-  rotation: {yaw: 96.12264063209295}
-  tags: [l70-wild, l70-rock]
-  visibleRange: {max: 260}
+  layout:
+    box:
+      max:
+        y: 1.3341133470401387
+      min:
+        y: 0
+  model:
+    id: /cdn/value.1f476b4b6a563130114293a25d61a70f2e36523fad4fbf44162549689161da92.glb
+  physics:
+    body: static
+    collider: box
+  rotation:
+    yaw: 96.12264063209295
+  tags:
+  - l70-wild
+  - l70-rock
+  visibleRange:
+    max: 260
 l70-sign-heap1:
-  feetPosition: {x: -9, y: {terrain: -0.05}, z: -103.4}
+  feetPosition:
+    x: -9
+    y:
+      terrain: -0.05
+    z: -103.4
   id: l70-sign-heap1
-  layout: {box: {max: {y: 0.7}, min: {y: 0}}}
-  model: {id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb}
-  rotation: {yaw: 80}
-  tags: [l70-wild]
+  layout:
+    box:
+      max:
+        y: 0.7
+      min:
+        y: 0
+  model:
+    id: /cdn/value.d50ad70cf192d658a3f668642719d22be936237c3da32fcb52ffa2223bd57af4.glb
+  rotation:
+    yaw: 80
+  tags:
+  - l70-wild
+  visibleRange:
+    max: 65
 l70-sign-moose:
-  feetPosition: {x: -8.4, y: {terrain: -1.25}, z: -104}
+  feetPosition:
+    x: -8.4
+    y:
+      terrain: -1.25
+    z: -104
   id: l70-sign-moose
-  layout: {box: {max: {y: 3}, min: {y: 0}}}
-  model: {id: /cdn/value.26c7fed346858a62a72b5c65c5ba7662c121f7ad91002a14fcae7c5bcf17a24c.glb}
+  layout:
+    box:
+      max:
+        y: 3
+      min:
+        y: 0
+  model:
+    id: /cdn/value.26c7fed346858a62a72b5c65c5ba7662c121f7ad91002a14fcae7c5bcf17a24c.glb
   physics: static
-  rotation: {roll: -9, yaw: 12}
-  tags: [l70-wild]
+  rotation:
+    roll: -9
+    yaw: 12
+  tags:
+  - l70-wild
+  visibleRange:
+    max: 65
 l70-skyline2:
   castShadow: false
-  feetPosition: {x: -30, y: {terrain: -1}, z: -184}
+  feetPosition:
+    x: -30
+    y:
+      terrain: -1
+    z: -184
   id: l70-skyline2
-  layout: {box: {max: {y: 60}, min: {y: 0}}}
-  model: {id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb, materials: {tripo_material_05692072-2f16-4333-a2ec-e88663003b42: {color: oklch(0.32 0.03 250), roughness: 0.55}}}
-  rotation: {yaw: 180}
-  tags: [l70-wild, l70-skyline]
-  visibleRange: {max: 900}
+  layout:
+    box:
+      max:
+        y: 60
+      min:
+        y: 0
+  model:
+    id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb
+    materials:
+      tripo_material_05692072-2f16-4333-a2ec-e88663003b42:
+        color: oklch(0.32 0.03 250)
+        roughness: 0.55
+  rotation:
+    yaw: 180
+  tags:
+  - l70-wild
+  - l70-skyline
+  visibleRange:
+    max: 900
 l70-skyline3:
   castShadow: false
-  feetPosition: {x: 34, y: {terrain: -1}, z: -192}
+  feetPosition:
+    x: 34
+    y:
+      terrain: -1
+    z: -192
   id: l70-skyline3
-  layout: {box: {max: {y: 47}, min: {y: 0}}}
-  model: {id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb, materials: {tripo_material_05692072-2f16-4333-a2ec-e88663003b42: {color: oklch(0.32 0.03 250), roughness: 0.55}}}
-  rotation: {yaw: 270}
-  tags: [l70-wild, l70-skyline]
-  visibleRange: {max: 900}
+  layout:
+    box:
+      max:
+        y: 47
+      min:
+        y: 0
+  model:
+    id: /cdn/value.cef9cf5cf3a27ed533697f71c4c9b8797fdde6d5138e96cac33391deda27a534.glb
+    materials:
+      tripo_material_05692072-2f16-4333-a2ec-e88663003b42:
+        color: oklch(0.32 0.03 250)
+        roughness: 0.55
+  rotation:
+    yaw: 270
+  tags:
+  - l70-wild
+  - l70-skyline
+  visibleRange:
+    max: 900

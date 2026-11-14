@@ -29,12 +29,12 @@ const CAMP = [
 ];
 // work lights strung over the bays: [x, y, z, intensity]
 export const BAYLIGHTS = [[9, 3.6, -10, 3.5], [20, 3.6, -10, 3.5], [27, 3.0, -6.5, 1.6], [190, 2.6, 8.5, 1.8]];
-const M = (spec, extra = {}) => ({ model: { ...spec }, castShadow: false, receiveShadow: true, ...extra });
+const M = (spec, extra = {}) => ({ model: { ...spec }, castShadow: false, receiveShadow: true, visibleRange: { max: 90 }, ...extra });
 export function layLampModels(ctx) {
   for (const l of lamps()) {
     if (ctx.place.objects["hub-lamp-" + l.k]) ctx.destroy("hub-lamp-" + l.k);
-    ctx.spawn("hub-lamp-" + l.k, { tags: ["hub-lamp"], feetPosition: { x: l.x, y: l.y, z: l.z }, rotation: { yaw: l.yaw }, ...M(FX.lamp),
-      children: [{ id: "glow", feetPosition: { x: 0, y: -0.12, z: -0.38 }, light: { kind: "point", color: SODIUM, intensity: 9, distance: 19, shadow: { enabled: false } } }] });
+    ctx.spawn("hub-lamp-" + l.k, { tags: ["hub-lamp"], feetPosition: { x: l.x, y: l.y, z: l.z }, rotation: { yaw: l.yaw }, ...M(FX.lamp, { visibleRange: { max: 120 } }),
+      children: [{ id: "glow", feetPosition: { x: 0, y: -0.12, z: -0.38 }, visibleRange: { max: 90 }, light: { kind: "point", color: SODIUM, intensity: 9, distance: 19, shadow: { enabled: false } } }] });
   }
 }
 export function layDress(ctx) {
@@ -56,17 +56,17 @@ export function layDress(ctx) {
   CAMP.forEach(([k, x, z, yaw, lamp], i) => {
     const y = x > 500 ? 0 : CURB;
     ctx.spawn(`hub-camp-${i}-${k}`, { tags: ["hub-camp"], feetPosition: { x, y, z }, rotation: { yaw }, physics: { body: "static", collider: "box" }, ...M(OP[k]) });
-    if (lamp) ctx.spawn(`hub-camp-${i}-light`, { feetPosition: { x: lamp[0], y: lamp[1], z: lamp[2] }, light: { kind: "point", color: "oklch(0.82 0.12 72)", intensity: lamp[3], distance: 7, shadow: { enabled: false } } });
+    if (lamp) ctx.spawn(`hub-camp-${i}-light`, { feetPosition: { x: lamp[0], y: lamp[1], z: lamp[2] }, visibleRange: { max: 65 }, light: { kind: "point", color: "oklch(0.82 0.12 72)", intensity: lamp[3], distance: 7, shadow: { enabled: false } } });
   });
 }
 // a caged bulkhead lamp hung on a conduit drop: the work lights over the bays and the lamp over every door (hubV 10)
 export function cageLamp(ctx, id, x, y, z, intensity, distance, color = "oklch(0.88 0.09 82)", top = 6.2, scale = 1.3) {
   if (ctx.place.objects[id]) ctx.destroy(id);
   const h = 0.43 * scale, drop = Math.max(0, top - (y + h));
-  ctx.spawn(id, { feetPosition: { x, y, z }, scale, ...M(FX.cage),
+  ctx.spawn(id, { feetPosition: { x, y, z }, scale, ...M(FX.cage, { visibleRange: { max: 95 } }),
     children: [
       ...(drop > 0.05 ? [{ id: "drop", feetPosition: { x: 0, y: 0.43, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.012, radiusBottom: 0.012, height: drop / scale }, material: { color: "oklch(0.3 0.01 80)", metalness: 0.8, roughness: 0.5 }, castShadow: false }] : []),
-      { id: "glow", feetPosition: { x: 0, y: 0.1, z: 0 }, light: { kind: "point", color, intensity, distance, shadow: { enabled: false } } }] });
+      { id: "glow", feetPosition: { x: 0, y: 0.1, z: 0 }, visibleRange: { max: 75 }, light: { kind: "point", color, intensity, distance, shadow: { enabled: false } } }] });
 }
 export function layBayLights(ctx) {
   BAYLIGHTS.forEach(([x, y, z, i], k) => cageLamp(ctx, `hub-baylight-${k}`, x, y - 0.35, z, i, 11));

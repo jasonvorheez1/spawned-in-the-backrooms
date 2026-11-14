@@ -11,16 +11,16 @@ const DOOR = { frame: { url: "/cdn/value.86c9f9f6e66d057fda78af73bde7c72cea84386
 const PANEL = "cdn/texture-smooth-cast-concrete-lintel-panel-clean-fine-pores.png"; // the frame's lintel panel came mottled: a clean cast face for the carved mark
 const SODIUM = "oklch(0.8 0.15 68)";
 function layShell(ctx) {
-  for (const r of RUNS) ctx.spawn("hub-run-" + r.id, { tags: ["hub-shell"], feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/thehub-geo.js", params: { run: r.id } }, material: { roughness: 0.88, pbr: true } });
+  for (const r of RUNS) ctx.spawn("hub-run-" + r.id, { tags: ["hub-shell"], feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, visibleRange: { max: 220 }, primitive: { kind: "scripted", script: "scripts/thehub-geo.js", params: { run: r.id } }, material: { roughness: 0.88, pbr: true } });
 }
 function layLamps(ctx) {
-  for (const l of lamps()) ctx.spawn("hub-lamp-" + l.k, { tags: ["hub-lamp"], feetPosition: { x: l.x, y: l.y, z: l.z }, rotation: { yaw: l.yaw }, primitive: { kind: "box", width: 0.9, height: 0.2, depth: 0.25 }, material: { color: SODIUM, emissive: SODIUM, emissiveIntensity: 4 },
+  for (const l of lamps()) ctx.spawn("hub-lamp-" + l.k, { tags: ["hub-lamp"], feetPosition: { x: l.x, y: l.y, z: l.z }, rotation: { yaw: l.yaw }, castShadow: false, visibleRange: { max: 120 }, primitive: { kind: "box", width: 0.9, height: 0.2, depth: 0.25 }, material: { color: SODIUM, emissive: SODIUM, emissiveIntensity: 4 },
     light: { kind: "point", color: SODIUM, intensity: 9, distance: 19, shadow: { enabled: false } } });
 }
 function layDoors(ctx) {
   for (const d of DOORS) {
     const always = !!d.open;
-    ctx.spawn(d.obj, { tags: ["usable", "hub-door"], feetPosition: { x: d.x, y: 0, z: d.z }, rotation: { yaw: d.yaw }, physics: { body: "static", collider: "mesh" }, castShadow: false, receiveShadow: true,
+    ctx.spawn(d.obj, { tags: ["usable", "hub-door"], feetPosition: { x: d.x, y: 0, z: d.z }, rotation: { yaw: d.yaw }, physics: { body: "static", collider: "mesh" }, castShadow: false, receiveShadow: true, visibleRange: { max: 110 },
       state: { name: always ? "Open door" : "Concrete door", verb: "Try", open: always, always, c: { ...doorFront(d, -0.6), y: 1.2 } }, behavior: "scripts/hub-door.js",
       primitive: { kind: "scripted", script: "scripts/hub-door-geo.js", params: { part: "back" } }, material: { roughness: 0.9 }, // the dark past the slab and its track; the surround is the modeled cast (art/hub/doors.yml)
       children: [
@@ -88,7 +88,7 @@ function layPlaques(ctx) {
     const shut = d.to && sealed(ctx, d.to), canon = !!d.open;
     const line = name ? name.toUpperCase() : "UNCHARTED", sub = canon ? "ALWAYS OPEN" : shut ? "SEALED" : name ? "KEY REQUIRED" : "NO SURVEY";
     const ink = shut ? "#8a2a1c" : canon ? "#2e5a2a" : name ? "#1d1a14" : "#5b5346";
-    ctx.spawn(id, { parent: d.obj, feetPosition: { x: 2.75, y: 1.2, z: -0.12 }, castShadow: false, primitive: { kind: "box", width: 1.1, height: 0.7, depth: 0.03 }, material: { color: "oklch(0.78 0.04 85)", metalness: 0.5, roughness: 0.6 },
+    ctx.spawn(id, { parent: d.obj, feetPosition: { x: 2.75, y: 1.2, z: -0.12 }, castShadow: false, visibleRange: { max: 45 }, primitive: { kind: "box", width: 1.1, height: 0.7, depth: 0.03 }, material: { color: "oklch(0.78 0.04 85)", metalness: 0.5, roughness: 0.6 },
       ui: `<div face="front" class="w-full h-full flex flex-col items-center justify-center" style="font-family:monospace;color:${ink};border:14px solid ${ink};box-sizing:border-box;background:rgba(235,225,190,.92)"><div style="font-size:62px;letter-spacing:6px">M.E.G. SURVEY</div><div style="font-size:190px;font-weight:700;line-height:1">${line}</div><div style="font-size:70px;letter-spacing:8px">${sub}</div></div>` });
   }
 }

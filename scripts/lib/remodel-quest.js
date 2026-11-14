@@ -7,6 +7,8 @@ import { heard } from "./hear.js";
 import { addRep, addKarma } from "./rep.js";
 import { rollCheck } from "./npc-talk.js";
 import { setQuest, endQuest, qid, tellQuest, payOnce, queuePayout } from "./quests.js";
+import { FRESH_BODY, nearFresh } from "./fresh-aura.js";
+export { FRESH_BODY, nearFresh };
 const CHIME = "cdn/sfx-soft-bright-two-note-success-chime.mp3";
 const FANFARE = "/cdn/moodboard-realistic-gritty/sfx-level-up-jingle-retro-terminal-chime-rising-three-notes.mp3";
 const HISS = "cdn/sfx-aerosol-can-short-hiss-click-plastic-cap.mp3";
@@ -152,14 +154,6 @@ export function freshenerAt(ctx, at) {
     children: [...FRESH_BODY.children, { feetPosition: { x: 0, y: 0.01, z: 0 }, rotation: { pitch: -90 }, primitive: { kind: "ring", innerRadius: 5.85, outerRadius: 6, thetaSegments: 64 }, material: { color: "oklch(0.85 0.1 210 / 0.35)", transparent: true, emissive: "oklch(0.8 0.12 210)", emissiveIntensity: 0.8, side: "double" } }] });
   ctx.emit("playSound", { clip: HISS, position: at, volume: 0.8, maxDistance: 20 });
 }
-export const FRESH_BODY = {
-  primitive: { kind: "cylinder", radiusTop: 0.045, radiusBottom: 0.05, height: 0.2, radialSegments: 20 }, material: { color: "oklch(0.95 0.01 230)", roughness: 0.35, metalness: 0.1 },
-  children: [
-    { feetPosition: { x: 0, y: 0.2, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.04, height: 0.04, radialSegments: 16 }, material: { color: "oklch(0.75 0.13 200)", emissive: "oklch(0.75 0.13 200)", emissiveIntensity: 1.6 } },
-    { feetPosition: { x: 0, y: 0.08, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.052, radiusBottom: 0.052, height: 0.03, radialSegments: 20 }, material: { color: "oklch(0.55 0.15 25)" } },
-    { feetPosition: { x: 0, y: 0.3, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.1 200)", intensity: 0.5, distance: 3 } },
-  ],
-};
 // a Fresh Paint can from the shifting rooms (places/level02 grid): three bring Cap'n round
 export function gotPaint(ctx, p, id) {
   const s = p.state, have = [...(s.l02paint ?? [])];
@@ -171,9 +165,3 @@ export function gotPaint(ctx, p, id) {
   if (s.remodQ === 2) syncHUD(s, p.place, ctx.place.state);
 }
 export function pickPlaced(ctx, p, id) { p.state.fresh = (p.state.fresh ?? 0) + 1; ctx.destroy(id); tell(ctx, p, `Reality Freshener picked up (${p.state.fresh} carried)`, HISS); }
-// the sanity bubble: any set-down freshener within 6 m (scripts/player.js), read once a second
-export function nearFresh(ctx) {
-  const ses = ctx.self.session, now = ctx.now();
-  if (now - (ses.freshAt ?? -1e9) > 1000) { ses.freshAt = now; ses.freshNear = ctx.query({ tags: ["freshener"], radius: 6 }).length > 0; }
-  return ses.freshNear;
-}
