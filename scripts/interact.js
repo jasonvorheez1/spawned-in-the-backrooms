@@ -21,8 +21,8 @@ import { stripTo, SLOTS } from './lib/clothes.js'
 import { rewear } from './lib/critter-model.js'
 import { tokenOf, describe, itemsOf } from './lib/items.js'
 import { takeToken, maxHp, maxSan, pullToken } from './player.js'
-import { derived, skillsOf, attrsOf, SKILLS } from './lib/stats.js'
-const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
+import { derived, skillsOf, attrsOf } from './lib/stats.js'
+import { SKILL_NAMES as SKN } from './lib/skill-check.js'
 import { rollItem, rollItemL1, rollItemL2, spotCloth, poolOf, gateItems } from './lib/loot.js'
 // a corpse is named by what it was (Shelly Nov 12: "search (thing) not search body or search dead (thing)"): the shown name drops Dead/Wrecked and 's body; the stored name keeps them for the scripts that read it
 const plainName = (n) => String(n ?? 'Container').replace(/^(Dead|Wrecked) /i, '').replace(/'s (body|remains|corpse)$/i, '')

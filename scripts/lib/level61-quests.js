@@ -13,6 +13,7 @@ import { rollCheck } from "./npc-talk.js";
 import { addRep, addKarma, repOf, GROUPS } from "./rep.js";
 
 const FANFARE = "/cdn/moodboard-realistic-gritty/sfx-level-up-jingle-retro-terminal-chime-rising-three-notes.mp3";
+export const BUS_TRAY = ["l61-tray", "Bus Your Tray", "Finish your food, then slide the tray into the tray return rack in the Level 6.1 food court. Sal at Burger Bop and the facelings notice who cleans up."];
 const M61 = (id) => ({ place: "level61", id });
 const BONUS = (s, g) => { const v = repOf(s, g); return v >= 35 ? 0.25 : v >= 12 ? 0.1 : 0; };
 

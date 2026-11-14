@@ -5,11 +5,10 @@ import { animate } from "builtin/tween";
 import { itemSpec } from "./lib/vend-item.js";
 import { handTray, mealKids, TRAY_MODEL } from "./lib/snacktray.js";
 import { errandStep, errandDone } from "./lib/quests.js";
-const BUS = ["l61-tray", "Bus Your Tray", "Finish your food, then slide the tray into the tray return rack in the Level 6.1 food court. Sal at Burger Bop and the facelings notice who cleans up."]; // the food court's odd job (scripts/lib/quests.js errands)
+import { setStep61, BUS_TRAY as BUS } from "./lib/level61-quests.js";
 import { bring } from "./lib/companion.js";
 import { carryAcross } from "./lib/carry.js";
 import { rollCheck } from "./lib/npc-talk.js";
-import { setStep61 } from "./lib/level61-quests.js";
 import SNACKS from "./lib/data/snacks.yml";
 
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;

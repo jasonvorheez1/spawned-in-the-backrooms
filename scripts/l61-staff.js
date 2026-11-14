@@ -1,5 +1,6 @@
 import { explainHostility, hostileReason, incidentOf } from "./lib/forgive.js";
 import { clearSight } from "./lib/sight.js";
+import { BUS_TRAY } from "./lib/level61-quests.js";
 // Level 6.1 "The Snackrooms": its natural entities, the Facelings (Entity 9), and the Snackrooms staff who work beside them.
 // The wiki: friendly, they cook, clean and serve and give food without payment.
 // Custom Level 6.1 animations: counter wiping, plate serving, burger flipping, tray carrying, 80s jukebox grooving, coffee sipping, and diner lounging.
@@ -403,7 +404,7 @@ export function update(ctx, dt) {
         ctx.destroy(D.tray);
         handTray(ctx, who, D.n, trayInfo, tray?.state?.items ?? D.items); // the patron takes a real tray (scripts/lib/snacktray.js)
         who.state.payout = { xp: 2, items: D.items };
-        errandStep(who.state, "l61-tray", "Bus Your Tray", "Finish your food, then slide the tray into the tray return rack in the Level 6.1 food court. Sal at Burger Bop and the facelings notice who cleans up."); // the food court's odd job (scripts/l61-use.js)
+        errandStep(who.state, ...BUS_TRAY); // the food court's odd job (scripts/l61-use.js)
         ctx.emit(
           "damageNumber",
           { position: { x: p.x, y: p.y + 2.1, z: p.z }, text: `ORDER #${D.n} SERVED!`, color: "#9fffb0", size: 0.95 },

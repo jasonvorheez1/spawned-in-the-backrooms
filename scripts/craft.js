@@ -7,12 +7,11 @@ import { heard } from "./lib/hear.js";
 import C from './lib/data/craft.yml'
 import L21H from './lib/data/level21.yml'
 import B from './lib/data/breakables.yml'
-import { SKILLS } from './lib/stats.js'
+import { SKILL_NAMES as SKN } from './lib/skill-check.js'
 import { takeToken, gain } from './player.js'
 import { recipeStatus, maxMakes, craftOne, benchAvailable, CRAFT_LIMIT, CATS } from './lib/craft.js'
 import {raycast} from 'builtin/physics'
 
-const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
 const note = (s, ctx, text) => { s.notice = { text, at: ctx.now() } }
 

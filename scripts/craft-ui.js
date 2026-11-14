@@ -4,7 +4,8 @@ import { wristNav } from './lib/wrist-nav.js'
 // Layout: tabs across the top, the scrap you carry as chips, then recipes, the ones you can make first.
 import C from './lib/data/craft.yml'
 import B from './lib/data/breakables.yml'
-import { skillsOf, SKILLS } from './lib/stats.js'
+import { skillsOf } from './lib/stats.js'
+import { SKILL_NAMES as SKN } from './lib/skill-check.js'
 import { recipeStatus, maxMakes, scrapCount, CRAFT_LIMIT, CATS, stationOf } from './lib/craft.js'
 
 import {describe} from './lib/items.js'
@@ -21,7 +22,6 @@ function makes(s, r) {
 
 const esc=(text)=>String(text??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))
 const outputs=(r)=>{const counts=new Map();for(const t of r.out)counts.set(t,(counts.get(t)??0)+1);return [...counts].map(([t,n])=>esc(t==='ammo'?`${n*W.ammo.perPickup} pistol rounds`:t==='shells'?`${n*W.shells.perPickup} shotgun shells`:`${describe(t).name}${n>1?' ×'+n:''}`)).join(' · ')}
-const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
 const CSS = `<style>
 #tk{position:fixed;left:22px;bottom:192px;max-width:300px;pointer-events:none;font-size:11px;letter-spacing:.08em;color:#f2c14e;text-shadow:0 1px 3px #000}
 #tk b{color:#fff3d6}
