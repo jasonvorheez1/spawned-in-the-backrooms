@@ -49,8 +49,8 @@ function snd(ctx, name, volume = 0.6) {
 function note(ctx, text) { ctx.self.state.notice = { text, at: ctx.now() } }
 
 // the thing in the middle of the screen, if any: close enough, nearly on the look ray, with nothing solid between
-function findFocus(ctx, ray) {
-  const o = ray.origin, d = ray.direction
+function findFocus(ctx, ray, reach = REACH) {
+  const o = ray.origin, d = ray.direction, seatId = ctx.self.state.sit?.id
   let best = null, bestAng = 1e9
   for (const it of ctx.query({ anyTags: KINDS, radius: REACH + 1 })) {
     if (it.state?.taken) continue
@@ -82,10 +82,10 @@ function findFocus(ctx, ray) {
     }
     const vx = p.x - o.x, vy = p.y + lift - o.y, vz = p.z - o.z
     const dist = Math.hypot(vx, vy, vz)
-    if (dist > REACH || dist < 0.05) continue
+    if (dist > reach || dist < 0.05) continue
     const ang = Math.acos(Math.max(-1, Math.min(1, (vx * d.x + vy * d.y + vz * d.z) / dist)))
     if (ang > Math.max(0.075, Math.atan(reachR / dist)) || ang >= bestAng) continue
-    let wall = raycast(ctx, o, { x: vx / dist, y: vy / dist, z: vz / dist }, { distance: dist - 0.05, physicsOnly: true, ignoreEntities: [it.id, ctx.self.id], bodies: 'static' })
+    let wall = raycast(ctx, o, { x: vx / dist, y: vy / dist, z: vz / dist }, { distance: dist - 0.05, physicsOnly: true, ignoreEntities: seatId ? [it.id, ctx.self.id, seatId] : [it.id, ctx.self.id], bodies: 'static' })
     if (wall && tag === 'npc' && Math.hypot(wall.position.x - p.x, wall.position.z - p.z) < 0.8) wall = null // the chair they sit in or the counter they lean on never hides them
     if (wall && tag === 'npc') { // someone behind a desk or counter: their head clears it, so the look reaches them over the top
       const hy = p.y + (it.state?.seated ? 1.2 : Math.max(1.1, (it.state?.build?.h ?? 1) * 1.45)) - o.y, hdist = Math.hypot(vx, hy, vz)
@@ -105,9 +105,9 @@ function refocus(ctx, force = false) {
   if (!m.ray || (!force && now - m.last < 70)) return
   m.last = now
   if (s.lootOpen) { if (s.focus) s.focus = null; m.focus = null; return }
-  const me = ctx.self.feetPosition, ro = m.ray.origin
-  if (Math.hypot(ro.x - me.x, ro.z - me.z) > 2.5) { m.ray = null; m.focus = null; if (s.focus) s.focus = null; m.key = ''; return } // a look ray left from where you stood a moment ago: no prompt, no outline until a fresh one
-  const f = findFocus(ctx, m.ray)
+  const me = (s.sit ? ctx.self.worldFeetPosition : null) ?? ctx.self.feetPosition, ro = m.ray.origin, back = Math.hypot(ro.x - me.x, ro.z - me.z)
+  if (back > (s.sit ? 6 : 2.5)) { m.ray = null; m.focus = null; if (s.focus) s.focus = null; m.key = ''; return } // a look ray left from where you stood a moment ago: no prompt, no outline until a fresh one
+  const f = findFocus(ctx, m.ray, s.sit ? REACH + back : REACH) // seated, the eye rides the third-person camera: reach is measured from the body, not the lens
   m.focus = f
   let info = null
   if (f) {
@@ -372,7 +372,8 @@ function caught(ctx, it, who) {
 function press(ctx) {
   const m = mem(ctx), s = ctx.self.state
   if (s.lootOpen) { closeLoot(ctx); return }
-  if (s.sit) { if (s.salonOpen) { s.salonOpen = false; s.wardrobeOpen = false } standUp(ctx); m.key = ''; return }
+  if (s.sit && m.focus && m.focus.tag !== 'seat' && (m.focus.tag === 'npc' || m.focus.tag === 'usable')) { /* seated at a bar or desk: E talks or orders, a move key stands */ }
+  else if (s.sit) { if (s.salonOpen) { s.salonOpen = false; s.wardrobeOpen = false } standUp(ctx); m.key = ''; return }
   const f = m.focus
   if (!f) return
   const it = ctx.getObject(f.id)
