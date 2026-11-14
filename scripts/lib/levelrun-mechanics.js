@@ -86,5 +86,6 @@ export function stepHordeZ(playerZ, hordeZ, dt, state) {
   if (gap > 20) chaseSpeed = 8.95;
   else if (gap > 13) chaseSpeed = 8.0;
   else if (gap < 4) chaseSpeed = 4.2 + Math.max(0, p.agi - 5) * 0.08;
-  return Math.max(CORRIDOR.collapseZ + 3, hordeZ - chaseSpeed * dt);
+  // never past the runner: the pack piles up 1.2 m behind whoever stops, biting
+  return Math.max(CORRIDOR.collapseZ + 3, playerZ + 1.2, hordeZ - chaseSpeed * dt);
 }
