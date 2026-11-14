@@ -1,5 +1,5 @@
 // Level 169 road pieces: one scripted geometry, params.kind picks the piece. Entrances face +Z (south, where walkers come from).
-// shade | container | house | leanto | cairn | cairnfield | balanced | windmill | grove | boardposts | locker | hatch | stove | wall | boots | logpost | bedroll | bench
+// shade | container | house | leanto | cairn | cairnfield | balanced | windmill | grove | boardposts | locker | locker-door | log-cover | hatch | stove | wall | boots | logpost | bedroll | bench
 const T = {
   wood: "cdn/texture-sun-bleached-grey-desert-timber.png", tin: "cdn/texture-rusty-corrugated-tin-roof-sheet.png",
   steel: "cdn/texture-scuffed-olive-painted-steel.png", rust: "cdn/texture-rusted-red-shipping-container-steel.png",
@@ -100,7 +100,6 @@ const K = {
     sheet([-2.7, 2.52, 2.2], [5.4, 0, 0], [0, -0.3, 1.9], [0, 1, 0.15], 18, 0.028);
     paint(T.wood, WOODC);
     for (const x of [-2.3, 2.3]) tube([x, 0.2, 3.7], [x, 2.26, 3.7], 0.07, 0.06, 8);
-    bbox(-0.66, 0.2, 0.7, -0.6, 2.28, 1.8, 0.012); // the door, stood open inward
     if (COL) return;
     tube([-2.6, 2.26, 3.7], [2.6, 2.26, 3.7], 0.055, 0.055, 6); tube([-2.95, 3.6, 0], [2.95, 3.6, 0], 0.05, 0.05, 6);
     for (const s of [-1, 1]) { const x = s * 2.5; for (const z of [-1.03, 0.53]) { bbox(Math.min(x, x + s * 0.05), 1.05, z, Math.max(x, x + s * 0.05), 2.05, z + 0.5, 0.01); for (const y of [1.25, 1.85]) bbox(Math.min(x + s * 0.05, x + s * 0.07), y, z + 0.03, Math.max(x + s * 0.05, x + s * 0.07), y + 0.07, z + 0.47, 0.005); }
@@ -149,12 +148,20 @@ const K = {
     for (let i = 0; i < n; i++) { const a = hash(i * 9.1) * 6.2832, d = 2 + hash(i * 5.3) * 11, fallen = i % 4 === 3; branch([Math.cos(a) * d, fallen ? 0.2 : -0.1, Math.sin(a) * d], fallen ? nrm([Math.cos(a * 3), 0.08, Math.sin(a * 3)]) : nrm([hash(i) * 0.2 - 0.1, 1, hash(i + 5) * 0.2 - 0.1]), 1.5 + hash(i * 2.2) * 0.9, 0.2, fallen ? 1 : 2, i * 31.3); }
   },
   boardposts(P) { paint(T.wood, WOODC); for (const x of [-0.82, 0.82]) tube([x, 0, 0], [x, 2.4, 0], 0.055, 0.045, 8); if (COL) return; bbox(-0.95, 2.3, -0.12, 0.95, 2.35, 0.16, 0.012); bbox(-0.8, 0.95, -0.035, 0.8, 1.0, 0.035, 0.01); },
-  locker(P) { // a steel supply locker
-    paint(T.steel, "oklch(0.92 0.04 130)"); bbox(-0.45, 0.06, -0.25, 0.45, 1.8, 0.25, 0.025); if (COL) return;
+  locker(P) {
+    paint(T.steel, "oklch(0.92 0.04 130)");
+    if (COL) return bbox(-0.45, 0, -0.25, 0.45, 1.8, 0.25, 0);
+    bbox(-0.45, 0.06, -0.25, 0.45, 1.8, -0.21, 0.008);
+    for (const x of [-0.45, 0.41]) bbox(x, 0.06, -0.22, x + 0.04, 1.8, 0.25, 0.008);
+    for (const y of [0.06, 0.62, 1.16, 1.76]) bbox(-0.42, y, -0.22, 0.42, y + 0.04, 0.25, 0.008);
     for (const x of [-0.4, 0.4]) for (const z of [-0.2, 0.2]) tube([x, 0, z], [x, 0.07, z], 0.03, 0.03, 6);
-    paint(T.steel, "oklch(0.86 0.04 130)"); bbox(-0.42, 0.1, 0.25, -0.01, 1.76, 0.262, 0.008); bbox(0.01, 0.1, 0.25, 0.42, 1.76, 0.262, 0.008);
-    paint(null, "oklch(0.15 0.01 100)"); for (const x of [-0.215, 0.215]) for (let i = 0; i < 4; i++) bbox(x - 0.12, 1.5 + i * 0.05, 0.26, x + 0.12, 1.52 + i * 0.05, 0.265, 0);
-    paint(null, "oklch(0.7 0.01 250)"); C.metalness(0.8); for (const x of [-0.05, 0.05]) tube([x, 0.9, 0.28], [x, 1.05, 0.28], 0.012, 0.012, 5); C.metalness(0);
+  },
+  "locker-door"() {
+    if (COL) return;
+    paint(T.steel, "oklch(0.86 0.04 130)"); bbox(0, 0, 0, 0.84, 1.66, 0.018, 0.008);
+    paint(null, "oklch(0.15 0.01 100)");
+    for (const x of [0.21, 0.63]) for (let i = 0; i < 4; i++) bbox(x - 0.12, 1.4 + i * 0.05, 0.018, x + 0.12, 1.42 + i * 0.05, 0.023, 0);
+    paint(null, "oklch(0.7 0.01 250)"); tube([0.76, 0.8, 0.036], [0.76, 0.95, 0.036], 0.012, 0.012, 6);
   },
   hatch(P) { // the cool store: a stone curb round the dug pit, a plank lid propped open
     paint(T.stone, "oklch(0.9 0.05 55)"); for (let i = 0; i < 14; i++) { const a = (i / 14) * 6.2832; lump(Math.cos(a) * 0.95, 0.18, Math.sin(a) * 0.95, 0.28, 0.26, 0.22, i * 1.9, 7, 5, 0.18); }
@@ -184,10 +191,22 @@ const K = {
   },
   logpost(P) { // a post with a tin-lidded shelf and the logbook on it
     paint(T.wood, WOODC); tube([0, 0, 0], [0, 1.25, 0], 0.06, 0.05, 8); if (COL) return;
-    XF = rotX(18, [0, 1.15, 0]); bbox(-0.22, 1.13, -0.16, 0.22, 1.16, 0.2, 0.008); paint(null, "oklch(0.35 0.07 30)"); bbox(-0.15, 1.16, -0.1, 0.15, 1.2, 0.14, 0.008); paint(null, "oklch(0.9 0.03 90)"); bbox(-0.14, 1.165, -0.095, 0.14, 1.195, 0.145, 0);
+    bbox(-0.22, 1.13, -0.16, 0.22, 1.16, 0.2, 0.008);
+    paint(null, "oklch(0.35 0.07 30)"); bbox(-0.15, 1.16, -0.11, 0.15, 1.2, 0.13, 0.008);
+    paint(null, "oklch(0.9 0.03 90)"); bbox(-0.14, 1.169, -0.102, 0.14, 1.204, 0.123, 0.003);
     XF = rotX(-25, [0, 1.42, -0.16]); paint(T.tin, TINC); bbox(-0.26, 1.42, -0.18, 0.26, 1.43, 0.24, 0); XF = null; paint(T.wood, WOODC); tube([0, 1.2, -0.05], [0, 1.45, -0.12], 0.02, 0.02, 5);
   },
-  bedroll(P) { if (COL) return; paint(T.canvas, "oklch(0.75 0.05 140)"); bbox(-0.35, 0, -0.9, 0.35, 0.07, 0.9, 0.03); paint(T.canvas, "oklch(0.85 0.04 60)"); tube([-0.3, 0.14, -0.78], [0.3, 0.14, -0.78], 0.11, 0.11, 10); },
+  "log-cover"() {
+    if (COL) return;
+    paint(null, "oklch(0.42 0.07 40)"); bbox(-0.155, 0, 0, 0.155, 0.016, 0.24, 0.006);
+  },
+  bedroll(P) {
+    if (COL) return;
+    paint(T.canvas, P.blanket ?? "oklch(0.75 0.05 140)");
+    bbox(-0.35, 0, -0.9, 0.35, 0.07, 0.9, 0.03);
+    paint(T.canvas, "oklch(0.64 0.04 68)");
+    tube([-0.3, 0.14, -0.78], [0.3, 0.14, -0.78], 0.11, 0.11, 10);
+  },
   bench(P) { paint(T.wood, WOODC); bbox(-0.9, 0.42, -0.18, 0.9, 0.48, 0.18, 0.015); if (COL) return; for (const x of [-0.7, 0.7]) tube([x, 0, 0], [x, 0.42, 0], 0.1, 0.09, 8); },
 };
 function run(ctx, col) { C = ctx; COL = col; XF = null; const P = ctx.params ?? {}; (K[P.kind] ?? K.cairn)(P); if (!col) { ctx.albedo(null); ctx.color(null); } }

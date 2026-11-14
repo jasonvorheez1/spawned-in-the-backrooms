@@ -11,27 +11,47 @@ tripMs: 6000
 fallMs: 2000
 discover: 30
 arrive: { dx: 0, dz: 9 }   # where a guided leg sets you down, from the pad centre
-lockers:               # tins and cloth; never water
-  a: "ration,ration,ration,tape,tape"
+lockers:               # portions of food; never water
+  a: "ration,ration,ration"
   apit: "ration,ration"
-  b: "ration,ration,ration,ration,tape,tape,battery"
-  bh: "ration,ration,tape"
-  c: "tape"
+  b: "ration,ration,ration,ration"
+  bh: "ration,ration"
+  c: "ration"
 landmarks:             # by seed: z along the track, x off it
   - { id: mill,  kind: windmill, x: -46, z: -2600, roll: 9, yaw: 30 }
   - { id: grove, kind: grove,    x: 38,  z: -9800, n: 7 }
   - { id: rock,  kind: balanced, x: -30, z: -12600 }
   - { id: grove2, kind: grove,   x: -42, z: -17200, n: 5 }
   - { id: rock2, kind: balanced, x: 34,  z: -21400, yaw: 140 }
-logbook:
-  title: "Checkpoint A logbook"
-  lines:
-    - "Day 3. Got in an hour before sunrise. The pit keeps tins cool, not water. Don't bother trying. - Marta"
-    - "Day 11. Left two tins and a roll of cloth in the locker. Took one tin. Fair is fair. - Idris"
-    - "Day 19. B is 90 km on. Leave at dusk, not after. I left late and ran the last stretch. - no name"
+logs:
+  house:
+    title: "Porch sign-out book"
+    lines:
+      - "Marta, dusk. Cart wheel is patched. I took the red blanket from the hall. I'll leave it at B½ if I get that far."
+      - "Please sign out before you go. If you turn back, cross out your own name so we know to stop looking. — Senna"
+  a:
+    title: "Checkpoint A logbook"
+    lines:
+      - "Marta. The bottle I lowered into the pit came up full of sand. The tins are fine."
+      - "I left the blanket on the bench to dry and woke up with frost on the corners. Taking it with me."
+      - "Idris. The pit's for food. If you find a bottle down there, tip it out before you pack it."
+  b:
+    title: "Checkpoint B stove log"
+    lines:
+      - "Marta. Knocked the sand out of the flue. Open the draft before you light it or this box fills with smoke."
+      - "The cart axle's bent. Leaving the cart and walking the last part to B½."
+  bh:
+    title: "B½ guest book"
+    lines:
+      - "Marta. Left the red blanket like I said I would. The coat is mine too. It makes a better pillow than a boot."
+      - "Pull the door to when you leave. Senna found sand on both sides of the blanket last time."
+  c:
+    title: "Checkpoint C register"
+    lines:
+      - "Marta. Twenty kilometres from here to the edge. I can see where the ground stops."
+      - "If you're reading this back at the house, cross my name off the porch book."
 texts:
-  c: "20 km to the edge. Nothing after this."
-  edge: "People jump. They wake up in a city. Nobody has come back to say otherwise."
-  boots: "Boots, side by side, toes to the drop. Some are nearly new."
-  cairns: "A field of small stones. Everyone who got this far put one down."
+  edge: "Somebody scratched CITY under the north arrow. Somebody else tried to scrape it off."
+  boots: "Boots, side by side, toes to the drop. One pair has red cloth stuffed into the split heel."
+  cairns: "A field of small stones. Some stacks have loose notes tucked beneath the top stone."
   pit: "Cool down there, even at noon. Tins keep. Water still turns."

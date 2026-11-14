@@ -6,6 +6,8 @@ import R from "./data/l169-road.yml";
 import { giveKey, hasKey } from "./hubkeys.js";
 export const ORDER = ["house", "a", "b", "bh", "c", "edge"];
 const GEO = "scripts/l169-road-geo.js", TRAVEL = "scripts/l169-travel.js";
+const SITE_VERSION = 1;
+const WATER = ["almonds", "almondsG", "almondsR", "almondsB"];
 const NAMES = { house: "Ferry's house", edge: "The edge" };
 const g = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const geo = (kind, extra = {}) => ({ primitive: { kind: "scripted", script: GEO, params: { kind, ...extra } } });
@@ -21,6 +23,8 @@ export const quote = (sid) => R.texts?.[sid] ?? "";
 // ---- the legs a route board offers: one back, one on. Guided legs run at night, cost cold bottles and food; a known way costs half.
 export function legsFrom(ctx, ps, site, L) {
   const i = ORDER.indexOf(site), out = [], h = hourOf(ctx, L), known = ps?.l169cps ?? [];
+  if (i < 0) return out;
+  const cold = Math.min(ps?.l169cold ?? 0, WATER.reduce((n, key) => n + (ps?.[key] ?? 0), 0));
   for (const to of [ORDER[i + 1], ORDER[i - 1]]) {
     if (!to) continue;
     const a = siteOf(site, L), b = siteOf(to, L), km = Math.round(Math.abs(b.km - a.km)), kn = known.includes(to);
@@ -30,7 +34,7 @@ export function legsFrom(ctx, ps, site, L) {
     let why = "";
     if (to === "edge" && !known.includes("c")) why = "The guide's notes stop at C. Reach C first.";
     else if (!isNight(h, L)) why = `Daylight. The guide walks at night: leave after ${L.day.sunset}:00.`;
-    else if ((ps?.l169cold ?? 0) < bottles) why = `You need ${bottles} cold bottle${bottles > 1 ? "s" : ""} of Ferry's water. You have ${ps?.l169cold ?? 0}.`;
+    else if (cold < bottles) why = `You need ${bottles} cold bottle${bottles > 1 ? "s" : ""} of Ferry's water. You have ${cold}.`;
     else if ((ps?.hunger ?? 100) - food * R.foodHunger < 10) why = "You're too hungry to set out. Eat first.";
     out.push({ to, name: b.name, km, dir: ORDER.indexOf(to) > i ? "north" : "south", hours, bottles, food, known: kn, chill: 0, sun: 0, why });
   }
@@ -41,7 +45,13 @@ export function go(ctx, p, from, to, L) {
   const q = legsFrom(ctx, ps, from, L).find((x) => x.to === to); if (!q) return;
   if (q.why) { if (ps.l169board) ps.l169board = { ...ps.l169board, msg: q.why }; return; }
   ps.l169cold = Math.max(0, (ps.l169cold ?? 0) - q.bottles);
-  ps.almonds = Math.max(0, (ps.almonds ?? 0) - q.bottles);
+  let remaining = q.bottles;
+  for (const key of WATER) {
+    const count = Math.min(remaining, ps[key] ?? 0);
+    if (count) ps[key] -= count;
+    remaining -= count;
+    if (!remaining) break;
+  }
   ps.hunger = Math.max(0, (ps.hunger ?? 100) - q.food * R.foodHunger);
   ps.l169board = null; ps.l169read = null;
   ps.l169trip = { at: Math.round(ctx.now()), due: Math.round(ctx.now() + R.tripMs), to, km: q.km, name: q.name };
@@ -53,52 +63,70 @@ function board(sid, x, z, L, yaw = 180) { // faces south, toward whoever walks u
     state: { kind: "board", site: sid, next: ORDER[i + 1] ?? null, prev: ORDER[i - 1] ?? null, name: "Route board", verb: "Read", info: "guided legs at night" },
     ui: `<div face="front" width="1.6m" offset="0.2m" style="font:700 52px monospace;color:#2a1c10;padding:18px 26px;line-height:1.2">ROUTE<br><span style="font-size:34px;font-weight:400">${ORDER[i + 1] ? `${siteOf(ORDER[i + 1], L).name} &uarr; ${Math.round(siteOf(ORDER[i + 1], L).km - siteOf(sid, L).km)} km` : "nothing north"}<br>${ORDER[i - 1] ? `${siteOf(ORDER[i - 1], L).name} &darr;` : ""}</span></div>` }]];
 }
-function locker(sid, x, z, yaw = 0) {
-  return [[`l169-cp-${sid}-locker`, { tags: ["usable"], feetPosition: g(x, z), rotation: yaw, ...geo("locker"), physics: "static", behavior: TRAVEL,
-    state: { kind: "locker", site: sid, name: "Supply locker", verb: "Open", info: "tins and cloth, never water" } }]];
+function locker(sid, x, z, up = 0) {
+  return [[`l169-cp-${sid}-locker`, { tags: ["usable"], feetPosition: g(x, z, up), ...geo("locker"), physics: "static", behavior: TRAVEL,
+    children: [{ id: "leaf", feetPosition: { x: -0.42, y: 0.1, z: 0.25 }, pivot: [0, 0, 0], rotation: { yaw: 0 }, ...geo("locker-door") }],
+    state: { kind: "locker", site: sid, motion: "door", name: "Supply locker", verb: "Open", info: "Rations only. Water won't keep here." } }]];
 }
-function readable(id, x, z, kind, title, lines, yaw = 0) {
-  return [[id, { tags: ["usable"], feetPosition: g(x, z), rotation: yaw, ...geo(kind), physics: kind === "cairnfield" || kind === "boots" ? undefined : "static", behavior: TRAVEL,
-    state: { kind: "read", title, lines, name: title, verb: "Look" } }]];
+function readable(id, x, z, kind, title, lines, up = 0) {
+  const book = kind === "logpost";
+  return [[id, { tags: ["usable"], feetPosition: g(x, z, up), ...geo(kind), physics: book ? "static" : undefined, behavior: TRAVEL,
+    ...(book ? { children: [{ id: "leaf", feetPosition: { x: 0, y: 1.205, z: -0.11 }, pivot: [0.5, 0, 0], rotation: { pitch: 0 }, ...geo("log-cover") }] } : {}),
+    state: { kind: "read", title, lines, name: title, verb: book ? "Read" : "Look", ...(book ? { motion: "cover" } : {}) } }]];
+}
+function logAt(sid, x, z, up = 0) {
+  const { title, lines } = R.logs[sid];
+  return readable(sid === "c" ? "l169-cp-c-sign" : `l169-cp-${sid}-log`, x, z, "logpost", title, lines, up);
 }
 const lamp = (id, x, z, up, color = "oklch(0.85 0.12 70)") => [[id, { feetPosition: g(x, z, up), light: { kind: "point", color, intensity: 1.6, distance: 14, shadow: { enabled: false } } }]];
 function siteParts(sid, L) {
   const s = siteOf(sid, L); if (!s) return [];
   const X = s.x, Z = s.z, P = [];
   const add = (rows) => P.push(...rows);
-  P.push([`l169-cp-${sid}-m`, { feetPosition: g(X, Z), state: { site: sid } }]); // the site's root marker
+  P.push([`l169-cp-${sid}-m`, { feetPosition: g(X, Z), state: { site: sid, roadV: SITE_VERSION } }]); // the site's root marker
   if (sid === "a") {
     add([[`l169-cp-a-shade`, { feetPosition: g(X, Z), ...geo("shade"), physics: "static" }]]);
-    add(board("a", X - 4, Z + 3, L)); add(locker("a", X + 2.2, Z - 1.2, 180));
+    add(board("a", X - 4, Z + 3, L)); add(locker("a", X + 1.85, Z - 1.45));
     add([[`l169-cp-a-hatch`, { feetPosition: g(X + 5, Z + 1), ...geo("hatch"), physics: "static" }]]);
     add([[`l169-cp-a-pit`, { tags: ["usable"], feetPosition: g(X + 5, Z + 1, 0.3), behavior: TRAVEL, state: { kind: "locker", site: "apit", name: "Cool pit", verb: "Reach in", info: R.texts.pit } }]]);
-    add(readable(`l169-cp-a-log`, X - 1.5, Z + 2.5, "logpost", R.logbook.title, R.logbook.lines));
+    add(logAt("a", X - 1.7, Z + 1.5));
     add(lamp(`l169-cp-a-light`, X, Z - 0.5, 2.3));
   } else if (sid === "b") {
     add([[`l169-cp-b-box`, { feetPosition: g(X, Z), ...geo("container"), physics: "static" }]]);
-    add(board("b", X - 5, Z + 4, L)); add(locker("b", X + 1.6, Z - 0.6, 180));
-    add([[`l169-cp-b-stove`, { feetPosition: g(X - 1.6, Z - 0.6), ...geo("stove"), physics: "static" }]]);
+    add(board("b", X - 5, Z + 4, L)); add(locker("b", X + 1.95, Z - 0.82, 0.15));
+    add([[`l169-cp-b-stove`, { feetPosition: g(X - 2.22, Z - 0.65, 0.15), ...geo("stove"), physics: "static" }]]);
+    add(logAt("b", X + 0.8, Z + 0.72, 0.15));
+    add([[`l169-cp-b-cart`, { feetPosition: g(X + 3.95, Z + 1.5), rotation: { yaw: -26 }, physics: { body: "static", collider: "box" },
+      model: "/cdn/value.a8986029efe64649020725f8bd9fa3aea5ed4a79f007fb85d360decefe7e7a83.glb", visibleRange: { max: 75 },
+      tags: ["usable"], behavior: TRAVEL, state: { kind: "read", title: "Marta's handcart", name: "Handcart", verb: "Inspect",
+        lines: ["The cart is wedged beside the shelter. Drag marks end at the wheel on the downhill side."] } }]]);
     add(lamp(`l169-cp-b-light`, X, Z, 2.1));
   } else if (sid === "bh") {
     add([[`l169-cp-bh-house`, { feetPosition: g(X, Z), ...geo("house"), physics: "static" }]]);
-    add(board("bh", X - 5.5, Z + 5, L)); add(locker("bh", X + 2, Z - 2, 180));
-    add([[`l169-cp-bh-bed`, { tags: ["usable"], feetPosition: g(X - 1.6, Z - 1.4, 0.05), ...geo("bedroll"), behavior: TRAVEL,
-      state: { kind: "bed", site: "bh", name: "Bed at B½", verb: "Sleep", info: "a real bed, made up" } }]]);
-    add([[`l169-cp-bh-stove`, { feetPosition: g(X + 1.8, Z + 0.6), ...geo("stove"), physics: "static" }]]);
-    add([[`l169-cp-bh-bench`, { feetPosition: g(X + 2, Z + 4.2), rotation: 180, ...geo("bench"), physics: "static" }]]);
+    add(board("bh", X - 5.5, Z + 5, L)); add(locker("bh", X + 1.78, Z - 1.48, 0.2));
+    add([[`l169-cp-bh-bed`, { tags: ["usable"], feetPosition: g(X - 1.64, Z - 0.8, 0.2), ...geo("bedroll", { blanket: "oklch(0.45 0.13 28)" }), behavior: TRAVEL,
+      state: { kind: "bed", site: "bh", name: "Bed at B½", verb: "Sleep", info: "A rolled coat for a pillow. Rest here to recover from sun and cold." } }]]);
+    add([[`l169-cp-bh-stove`, { feetPosition: g(X + 1.8, Z + 0.6, 0.2), ...geo("stove"), physics: "static" }]]);
+    add([[`l169-cp-bh-bench`, { feetPosition: g(X + 1.5, Z + 3.2, 0.2), rotation: 180, ...geo("bench"), physics: "static" }]]);
+    add([[`l169-cp-bh-door`, { tags: ["usable"], feetPosition: g(X - 0.6, Z + 2.02, 0.2), rotation: { yaw: 0 },
+      primitive: { kind: "scripted", script: "scripts/l169-house-geo.js", params: { part: "door", w: 1.2, h: 2.07 } },
+      physics: "static", behavior: "scripts/l169-door.js", state: { open: false, swing: -1, name: "Shelter door", verb: "Open" } }]]);
+    add(logAt("bh", X + 1.32, Z + 2.48, 0.2));
+    add([[`l169-cp-bh-boots`, { feetPosition: g(X - 1.35, Z + 2.56, 0.2), rotation: { yaw: 24 }, ...geo("boots", { n: 1 }) }]]);
     add(lamp(`l169-cp-bh-light`, X, Z, 2.2, "oklch(0.8 0.13 60)"));
   } else if (sid === "c") {
     add([[`l169-cp-c-wall`, { feetPosition: g(X, Z - 2), ...geo("wall"), physics: "static" }]]);
     add([[`l169-cp-c-leanto`, { feetPosition: g(X + 1.5, Z), ...geo("leanto"), physics: "static" }]]);
-    add(board("c", X - 4, Z + 3, L)); add(locker("c", X - 1, Z - 0.6, 180));
-    add(readable(`l169-cp-c-sign`, X + 4, Z + 3, "logpost", "Checkpoint C", [R.texts.c]));
+    add(board("c", X - 4, Z + 3, L)); add(locker("c", X + 2.55, Z - 0.65));
+    add(logAt("c", X + 0.25, Z + 0.85));
   } else if (sid === "edge") {
     add(board("edge", X - 6, Z + 8, L));
     add(readable(`l169-cp-edge-field`, X - 8, Z + 2, "cairnfield", "Cairns", [R.texts.cairns]));
     add(readable(`l169-cp-edge-boots`, X + 1, Z - 24, "boots", "Boots", [R.texts.boots]));
     add(readable(`l169-cp-edge-sign`, X + 5, Z + 6, "logpost", "The edge", [R.texts.edge]));
   } else if (sid === "house") {
-    add(board("house", X + 4.5, Z - 1.5, L));
+    add(board("house", X + 3.9, Z - 1.5, L));
+    add(logAt("house", X - 2.15, L.house.door.z + 1.45, L.house.floorUp));
   }
   return P;
 }
@@ -121,7 +149,11 @@ function allSites(L) {
   return sitesCache;
 }
 const lastSpot = new Map(); // player id -> "x,z" rounded to 2 m: discovery runs only after they move
-export function layRoad(ctx, put, L) { for (const k of Object.keys(built)) delete built[k]; tickRoad(ctx, put, L, true); }
+export function layRoad(ctx, put, L) {
+  for (const k of Object.keys(built)) delete built[k];
+  pending.length = 0;
+  tickRoad(ctx, put, L, true);
+}
 let nextStream = 0;
 const pending = []; // [siteId, id, spec]: a streamed-in site lands a few dozen rows a pass, never one burst
 const PER_PASS = 40; // my pick: ~40 rows a second keeps a big site to a few seconds of pop-in
@@ -132,13 +164,18 @@ export function tickRoad(ctx, put, L, force = false) {
     for (const site of allSites(L)) {
       let near = Infinity;
       for (const p of players) { const f = p.feetPosition; if (f) near = Math.min(near, Math.hypot(f.x - site.x, f.z - site.z)); }
-      const have = !!built[site.id] || (!force && !!ctx.getObject(`l169-cp-${site.id}-m`) && site.id !== "house");
-      if (near < R.streamIn && !built[site.id] && have) { // already standing (a new machine took over): adopt it, never rebuild
-        built[site.id] = (site.big ? siteParts(site.id, L) : smallParts(site)).map((r) => r[0]);
-      } else if (near < R.streamIn && !built[site.id]) {
+      const marker = ctx.getObject(`l169-cp-${site.id}-m`);
+      if (near < R.streamIn && !built[site.id]) {
         const rows = site.big ? siteParts(site.id, L) : smallParts(site);
-        built[site.id] = rows.map(([id, spec]) => { if (spec.primitive && !spec.visibleRange) spec.visibleRange = { max: 600 }; if (force) put(id, spec); else pending.push([site.id, id, spec]); return id; });
-      } else if (near > R.streamOut && (built[site.id] || have)) {
+        const current = marker && (!site.big || marker.state?.roadV === SITE_VERSION);
+        built[site.id] = rows.map(([id, spec]) => {
+          if (!current || !ctx.getObject(id)) {
+            if (spec.primitive && !spec.visibleRange) spec.visibleRange = { max: 600 };
+            pending.push([site.id, id, spec]);
+          }
+          return id;
+        });
+      } else if (near > R.streamOut && (built[site.id] || marker)) {
         const ids = built[site.id] ?? (site.big ? siteParts(site.id, L) : smallParts(site)).map((r) => r[0]);
         for (const id of ids) if (ctx.getObject(id)) ctx.destroy(id);
         for (let i = pending.length - 1; i >= 0; i--) if (pending[i][0] === site.id) pending.splice(i, 1);
@@ -153,6 +190,7 @@ export function tickRoad(ctx, put, L, force = false) {
   for (const k of Object.keys(R.lockers)) {
     const row = s.l169cp[k], full = String(R.lockers[k]).split(",").filter(Boolean).length;
     if (!row) s.l169cp[k] = { boxes: full, at: Math.round(now) };
+    else if (row.boxes > full) s.l169cp[k] = { ...row, boxes: full };
     else if (row.boxes < full && now - row.at > hourMs) s.l169cp[k] = { boxes: row.boxes + 1, at: Math.round(now) };
   }
   for (const p of players) {
@@ -199,5 +237,5 @@ export function takeLocker(ctx, p, sid, L) {
 export function sleepBed(ctx, p, L) {
   const ps = p?.state; if (!ps) return;
   ps.l169rest = Math.round(ctx.now()); // scripts/sun169.js reads the stamp and clears its sun and cold
-  ps.notice = { text: "You sleep under a roof for the first time in days. The heat and the cold both leave you.", at: ctx.now() };
+  ps.notice = { text: "You shake the sand out of the blanket and rest until your hands are steady.", at: ctx.now() };
 }

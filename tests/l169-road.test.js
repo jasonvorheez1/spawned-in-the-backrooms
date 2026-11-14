@@ -49,3 +49,31 @@ test("jumping the north edge wakes in level11 with a key", () => {
   expect(w.crossed).toEqual(["level11"]); expect(p.state.l169jumped).toBe(true);
   console.log("keys", JSON.stringify(p.state.hubKeys));
 });
+test("older checkpoint markers migrate once and support props sit on the shelters' floors", () => {
+  const w = world(21), half = siteOf("bh", L), p = player(half.x, half.z);
+  w.ctx.place.players = [p];
+  w.objs["l169-cp-bh-m"] = { state: { site: "bh" } };
+  w.objs["l169-cp-bh-locker"] = { state: { kind: "locker" } };
+  layRoad(w.ctx, w.put, L);
+  expect(w.objs["l169-cp-bh-m"].state.roadV).toBeGreaterThan(0);
+  expect(w.objs["l169-cp-bh-locker"].children[0].id).toBe("leaf");
+  expect(w.objs["l169-cp-bh-bed"].feetPosition.y.terrain).toBe(0.2);
+  expect(w.objs["l169-cp-bh-door"].behavior).toBe("scripts/l169-door.js");
+  expect(w.objs["l169-cp-bh-log"].state.lines[0]).toContain("red blanket");
+  const locker = w.objs["l169-cp-bh-locker"];
+  w.step(3100);
+  tickRoad(w.ctx, w.put, L);
+  expect(w.objs["l169-cp-bh-locker"]).toBe(locker);
+});
+
+test("a route board spends actual cold bottles, including flavored almond water", () => {
+  const w = world(21), p = player(0, 0, { l169cold: 3 });
+  expect(legsFrom(w.ctx, p.state, "bad-site", L)).toEqual([]);
+  go(w.ctx, p, "house", "a", L);
+  expect(p.state.l169trip).toBeUndefined();
+  p.state.almonds = 1;
+  p.state.almondsG = 1;
+  go(w.ctx, p, "house", "a", L);
+  expect(p.state.l169trip.to).toBe("a");
+  expect(p.state.almonds + p.state.almondsG).toBe(0);
+});

@@ -42,7 +42,7 @@ export function questTick(ctx, L) {
     }
     if (r === 1) { const a = siteOf("a", L);
       if (near(f, a, Q.reach.site)) { const e = siteOf("edge", L);
-        step(ctx, p, R, 2, "Keep north to the edge of the desert", mk(e, "The edge"), `The logbook: "${Q.logA?.none ?? ""}"`); }
+        step(ctx, p, R, 2, "Follow the checkpoint road to the edge. Use the route boards at night and rest under cover at B½.", mk(e, "The edge"), "Checkpoint A. The logbook is under the shelter if you want to see who came through."); }
       continue;
     }
     if (r === 2 && near(f, siteOf("edge", L), Q.reach.edge)) {

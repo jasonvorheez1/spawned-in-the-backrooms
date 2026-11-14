@@ -33,7 +33,11 @@ function layWell(ctx, sp) { // the way in: you climb out of a dry well in the mi
   // somebody left a marker for the next arrival: a cairn and a board pointing north
   for (let i = 0; i < 4; i++) sp("l169-cairn" + i, { feetPosition: g(4.2, -5, i * 0.26), primitive: { kind: "sphere", radius: 0.34 - i * 0.06, widthSegments: 9, heightSegments: 6 }, scale: { x: 1, y: 0.6, z: 0.9 }, rotation: { yaw: i * 47 }, material: { color: "oklch(0.52 0.07 45)", roughness: 1 }, physics: i ? "none" : "static" });
   sp("l169-sign-post", { feetPosition: g(-3.2, -6, 0), primitive: { kind: "cylinder", radiusTop: 0.05, radiusBottom: 0.06, height: 2, radialSegments: 8 }, material: WOOD, physics: "static" });
-  sp("l169-sign", { feetPosition: g(-3.2, -6, 1.45), rotation: { yaw: 180 }, primitive: { kind: "box", width: 1.5, height: 0.5, depth: 0.04 }, material: WOOD,
+  sp("l169-sign", { tags: ["usable"], behavior: "scripts/l169-travel.js", feetPosition: g(-3.2, -6, 1.45), rotation: { yaw: 180 }, primitive: { kind: "box", width: 1.5, height: 0.5, depth: 0.04 }, material: WOOD,
+    state: { kind: "read", name: "Waypost", verb: "Read", title: "Scratched into the waypost", lines: [
+      "The bucket came up dripping. By the time I got it over the rim, it was full of sand.",
+      "If you can still see your shadow, wait. Follow the stones north when the sun goes down. Leave the bucket for the next person. — Marta",
+    ] },
     ui: `<div face="front" width="1.5m" style="font:700 64px Georgia,serif;color:#2a1c10;padding:24px 30px;line-height:1.25">HOUSE 5 km &uarr;<br><span style="font-size:40px;font-weight:400">walk at night. keep under cover by day.<br>your water won't keep. ours will, a while.</span></div>` });
   sp("l169-amb-wind", { feetPosition: g(0, 0, 2), audio: { clip: "cdn/moodboard-realistic-gritty/sfx-dry-desert-wind-over-open-sand-low-steady-loop.mp3", gain: 0.16, loop: true, spatial: false } });
 }
@@ -41,9 +45,10 @@ export function tick(ctx) {
   const s = ctx.place.state;
   if (!ctx.place.players?.length) return;
   const put = (id, spec) => sp(ctx, id, spec);
+  if (s.l169WellV !== 1) { layWell(ctx, put); s.l169WellV = 1; }
   if (s.l169V !== V) {
     s.l169V = V;
-    layWell(ctx, put); layHouse(ctx, put, L); layFerry(ctx, put, L); layFriends(ctx, put, L); layRoad(ctx, put, L);
+    layHouse(ctx, put, L); layFerry(ctx, put, L); layFriends(ctx, put, L); layRoad(ctx, put, L);
   }
   tickFriends(ctx, L); tickRoad(ctx, put, L); shipTick(ctx, put, "level169", L.ship); questTick(ctx, L);
 }

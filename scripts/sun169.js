@@ -46,7 +46,11 @@ export function update(ctx) {
   if (k.chill >= 80) { const floor = (s.maxHp ?? 100) * L.cold.hpFloor; if ((s.hp ?? 0) > floor) s.hp = Math.max(floor, s.hp - 0.5); }
   // ---- 3 water to sand
   let cold = s.l169cold ?? 0;
-  if (cold > 0 && !roofed) { const left = (s.l169coldLeft ?? 0) - (day ? 1 : L.water.coldHoursDay / L.water.coldHoursNight); if (left <= 0) { cold = 0; s.l169cold = 0; s.l169coldLeft = 0; } else if (Math.floor(left / 10) !== Math.floor((s.l169coldLeft ?? 0) / 10) || left < 1) s.l169coldLeft = left; else k.coldLeft = left; }
+  if (cold > 0 && !roofed) {
+    const left = Math.max(0, (s.l169coldLeft ?? 0) - (day ? 1 : L.water.coldHoursDay / L.water.coldHoursNight));
+    s.l169coldLeft = left;
+    if (!left) { cold = 0; s.l169cold = 0; }
+  }
   let total = 0; for (const key of KEYS) total += s[key] ?? 0;
   if (cold > total) { cold = total; s.l169cold = total; } // you drank some of Ferry's
   if (total > cold) {
