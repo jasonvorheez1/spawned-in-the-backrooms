@@ -42,7 +42,7 @@ export function penUnload(ctx, id, box) {
 export function looseTick(ctx, spawnFoe, near = 70, far = 120) {
   const s = ctx.place.state, ps = ctx.place.players.map((p) => p.feetPosition).filter(Boolean), d = (a) => Math.min(...ps.map((p) => Math.hypot(p.x - a.x, p.z - a.z)), Infinity);
   let loose = s.loose ?? [], changed = false;
-  for (const id of Object.keys(s.pdoors ?? {})) if (s.pens?.[id]?.length && !foes(ctx).some((f) => f.state.pen === id)) { loose = [...loose, ...s.pens[id].map((k) => ({ k, x: (s.pdoorAt?.[id] ?? {}).x ?? NaN, y: 0, z: (s.pdoorAt?.[id] ?? {}).z ?? NaN, from: id }))].filter((l) => Number.isFinite(l.x)); book(ctx, "pens", id, []); changed = true; } // an open door with an unloaded room: its books go out with it
+  for (const id of Object.keys(s.pdoors ?? {})) if (s.pens?.[id]?.length && s.pdoorAt?.[id] && !foes(ctx).some((f) => f.state.pen === id)) { loose = [...loose, ...s.pens[id].map((k) => ({ k, x: s.pdoorAt[id].x, y: 0, z: s.pdoorAt[id].z, from: id }))]; book(ctx, "pens", id, []); changed = true; } // an open door with an unloaded room: its books go out with it
   for (const f of foes(ctx)) { if (f.state.pen) continue; if (d(f.feetPosition) > far) { loose = [...loose, { k: f.state.penKind, x: Math.round(f.feetPosition.x * 10) / 10, y: Math.round(f.feetPosition.y * 10) / 10, z: Math.round(f.feetPosition.z * 10) / 10, from: f.state.penFrom ?? null }]; ctx.destroy(f.id); changed = true; } }
   const keep = [];
   for (const l of loose) { if (ps.length && d(l) < near && spawnFoe(ctx, l.k, { x: l.x, y: (l.y ?? 0) + 0.1, z: l.z }, { pen: null, penKind: l.k, penFrom: l.from })) changed = true; else keep.push(l); }
@@ -50,7 +50,7 @@ export function looseTick(ctx, spawnFoe, near = 70, far = 120) {
 }
 // a pen door moved: the ones inside hear it and come to look (their own AI reads state.lure for a few seconds)
 export function doorMoved(ctx, id, open, pos) {
-  setDoor(ctx, id, open);
+  setDoor(ctx, id, open); if (pos && !ctx.place.state.pdoorAt?.[id]) book(ctx, "pdoorAt", id, { x: Math.round(pos.x * 10) / 10, z: Math.round(pos.z * 10) / 10 });
   if (open && penCount(ctx, id)) { const s = ctx.place.state, b = s.pens[id], c = { x: pos.x, z: pos.z }; s.loose = [...(s.loose ?? []), ...b.map((k) => ({ k, x: c.x, y: 0, z: c.z, from: id }))]; book(ctx, "pens", id, []); } // opened while the room is not loaded: its books move to loose
   if (open) for (const f of foes(ctx)) if (f.state.pen === id) f.state.lure = { x: pos.x, z: pos.z, at: ctx.now() };
 }
