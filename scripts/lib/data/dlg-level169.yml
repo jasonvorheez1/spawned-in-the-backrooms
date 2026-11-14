@@ -1,1 +1,136 @@
-{}
+# Level 169 "Welcome to the Desert": Ferry's Friends, the seven people of the house. Plain talk. They disagree on one thing: taking more people in.
+
+l169-friend-1:   # Odalys Brandt, cook
+  hi: "Come in out of it. Sit anywhere that isn't the stove. I'm Odalys, I cook."
+  back: ["You again. Have you eaten?", "Kitchen's open. It's always open."]
+  bye: "Eat before you walk. Walk after dark."
+  ask:
+    - q: "When do you eat here?"
+      a: "Sunrise and sunset, all seven of us at the one table. Everybody sleeps at a different time, so those two meals are when we see each other."
+    - q: "My water turned to sand."
+      a: "Everybody's does. Whatever you carried in, water or almond water, it goes to sand out here. Only what comes out of Ferry stays water, and only while it's cold."
+    - q: "How long does Ferry's water stay cold?"
+      a: "About three hours if you're out in the sun. All night if you walk at night. Under a roof it keeps as long as you like. Once it's warm it's sand like the rest."
+    - q: "Is anything dangerous out here?"
+      a: "The sun. That's the whole list. Nothing out here hunts you. No animals, no people with knives. Just the daylight."
+    - q: "Would you take more people in?"
+      a: "Yes. Every time. Nobody gets turned away from my table. Tobin will show you his arithmetic. I'll show you a pot that has never once come up empty."
+  barks:
+    idle: ["Needs salt.", "Who moved my ladle?", "Beans are on."]
+    hi: ["Hello, love.", "Come in, come in."]
+
+l169-friend-2:   # Tobin Achterberg, quartermaster
+  hi: "Tobin. I keep the count. If you take something off a shelf, tell me, so the count stays right."
+  back: ["Need a number?", "Shelves are counted. Go on."]
+  bye: "Bring the empties back if you can."
+  ask:
+    - q: "How does Ferry work?"
+      a: "Ferry is the refrigerator in the kitchen. About once an hour it's full again, eight bottles. Nobody fills it. I've stopped asking how and started counting."
+    - q: "Can I take bottles for the road?"
+      a: "Ask Ferry, not me. Take what's there and come back in an hour if you want more. They stay water while they're cold. Warm, they turn to sand."
+    - q: "What's in the basement?"
+      a: "Shelves. Tins, blankets, lamp oil, spare wraps. It's the coolest room in the house, so it's also where I'd put you at noon if the bedrooms were full."
+    - q: "Why does my own water turn to sand?"
+      a: "I don't know why. I know it does. The sun does the same to a body if you stand in it long enough. Six, seven hours of direct sun and that's the end of you."
+    - q: "Would you take more people in?"
+      a: "No. Eight bottles an hour and seven of us, plus what goes north to the checkpoints. One more is fine. Ten more and somebody goes thirsty. Odalys thinks I'm being hard. I'm being accurate."
+  barks:
+    idle: ["Forty-one. Forty-two.", "Who took a blanket?", "That's the wrong shelf."]
+    hi: ["Morning. Or evening.", "Yes?"]
+
+l169-friend-3:   # Senna Okoro, road guide
+  hi: "Senna. I walk the track. You came up from the well, so you've already done the first five kilometres."
+  back: ["Still here. Good, it's still light.", "Ready to walk?"]
+  bye: "Go at night. Stop before the sky goes grey."
+  ask:
+    - q: "How do I cross the desert?"
+      a: "Walk at night. Only at night. When the sky starts to lighten you find shade and you stay in it until dark. The day here is twenty-four hours long, so pack for a long sit."
+    - q: "What counts as shade?"
+      a: "Something solid between you and the sun. A roof, a big rock, a canyon wall. A bush doesn't count. Your hat doesn't count. If you can see the sun, it can see you."
+    - q: "Where are the checkpoints?"
+      a: "All due north on the track. A is at 60 kilometres. B is at 150. B and a half is at 190, that one is a proper house with a bed. C is at 230. Each has a roof and a crate."
+    - q: "What's past Checkpoint C?"
+      a: "The edge, at 250. The ground just stops. People jump, and they wake up in Level 11, the city. Nobody's come back to complain."
+    - q: "Why do you walk south at dusk?"
+      a: "To look for whoever climbed out of the well that day. Some of them sit down half way. I'd rather find them at dusk than at dawn."
+    - q: "Would you take more people in?"
+      a: "I'm the one who brings them, so yes. I'm not going to walk past someone on the track because Tobin's shelf is tight."
+  barks:
+    idle: ["Wheel's pulling left.", "Dark in a few hours.", "Wraps, lamp, bottles."]
+    hi: ["Evening.", "You made it up."]
+
+l169-friend-4:   # Halvard Pruitt, checkpoint keeper
+  hi: "Halvard. I keep the checkpoints stocked. Have a look at the map if you're going north."
+  back: ["Map's on the table.", "Going north yet?"]
+  bye: "Leave the crates how you found them."
+  ask:
+    - q: "Show me the route."
+      a: "One track, straight north. Checkpoint A at 60 kilometres, B at 150, B and a half at 190, C at 230, the edge at 250. From this house, take five off each. We're five north of the well."
+    - q: "What's at a checkpoint?"
+      a: "A roof, a wall on the sun side, and a crate. Enough to sit out a day. B and a half is better: it's a furnished house and it has a bed. Sleep there if you sleep anywhere."
+    - q: "The gap from A to B is 90 kilometres."
+      a: "It is, and it's the one that catches people. You won't make it in one night. There are rocks and a canyon on the way. Pick your shade before dawn, not at dawn."
+    - q: "What happens at the edge?"
+      a: "Cliffs, then nothing. You jump. You wake up on a street in Level 11. I've sent enough people that way to believe it."
+    - q: "Would you take more people in?"
+      a: "I'd rather stock the road so they don't need us. A house fills up. A road doesn't. Tobin and I agree on that much."
+  barks:
+    idle: ["B needs a lid.", "Twenty-nine. Or thirty-one.", "Where's my pencil?"]
+    hi: ["Hello.", "Mind the map."]
+
+l169-friend-5:   # Ines Varga, weather keeper
+  hi: "Ines. I keep the slate by the door. If you read one thing in this house, read that before you go out."
+  back: ["Did you read the slate?", "Check the hour first."]
+  bye: "Slate first, then the door."
+  ask:
+    - q: "What does the slate say?"
+      a: "Whether it's day or night, and the hour. A full day here is forty-eight hours. Twenty-four of sun, twenty-four of dark. If it says DAY, stay in."
+    - q: "How bad is the sun?"
+      a: "It dries you out from the inside. First you're uncomfortable, then you're dizzy, then you see things. Six or seven hours of it in total and you're sand. Shade lets you recover, slowly. A roof is faster."
+    - q: "And the night?"
+      a: "Cold, about one degree. A coat sorts it. The cold won't kill you. It's the safe half, and it's when you walk."
+    - q: "Is a wrap enough to walk by day?"
+      a: "No. A wrap buys you time. It doesn't make it safe. Wear it for the last hour before you reach cover, not as a plan."
+    - q: "Would you take more people in?"
+      a: "I don't have a side. I write down the hour. Ask me again after Odalys and Tobin have had it out over supper."
+  barks:
+    idle: ["Light's changing.", "Chalk, chalk...", "An hour yet."]
+    hi: ["Oh, hello.", "Read the slate?"]
+
+l169-friend-6:   # Dov Kessler, fixer
+  hi: "Dov. If it squeaks, leaks or sticks, that's me. Shut the door behind you, the cool gets out."
+  back: ["Door. Shut.", "What's broken?"]
+  bye: "Mind the hinge on your way out."
+  ask:
+    - q: "What do you fix?"
+      a: "The roof, the swamp cooler, the shutters, every hinge in the place. Shutters go closed at sunrise and open at sunset. That's the difference between a house and an oven."
+    - q: "Why does a roof matter so much?"
+      a: "Because the sun here has to actually reach you to hurt you. A real roof stops it. So does a rock or a canyon wall. Under a roof you recover, and Ferry's bottles stay cold as long as you sit there."
+    - q: "Can I shelter anywhere on the road?"
+      a: "Anywhere solid. Each checkpoint has a roof I've patched at least once. Between them, rocks and the canyon. Check where the shade will be at noon, not where it is when you sit down."
+    - q: "Does anything come to the house at night?"
+      a: "No. Nothing lives out here but us. Nothing hunts you. If you hear a noise, it's the cooler belt, and I know about it."
+    - q: "Would you take more people in?"
+      a: "This house was built for four. There are seven of us and I'm the one who keeps it standing. I'm with Tobin. Feed them, water them, point them north."
+  barks:
+    idle: ["That belt's going.", "Who slammed this?", "Oil. Where's the oil."]
+    hi: ["Door.", "Yeah?"]
+
+l169-friend-7:   # Pim Laurier, newcomer
+  hi: "Hi. I'm Pim. I'm new too, sort of. Two weeks. I still knock before I come into the kitchen."
+  back: ["Oh, hey.", "Hi again."]
+  bye: "See you. Probably."
+  ask:
+    - q: "How did you get here?"
+      a: "Same as you, I think. Up out of the well with a full bottle. It was sand before I'd gone a kilometre. Senna found me sitting on the track at dusk."
+    - q: "What did they tell you first?"
+      a: "Walk at night. Get under something real before the sun's up. Drink Ferry's water, not your own. That's most of it, honestly."
+    - q: "Why do you sit out here at night?"
+      a: "North is that way. Checkpoints at 60, 150, 190 and 230, then the edge at 250. You jump and you wake up in a city. I keep thinking I should go and see."
+    - q: "What's stopping you?"
+      a: "It's a long way to do by myself. And they've been kind. But half of them think the house is too full already, and I can hear them not saying it."
+    - q: "Do they want you here?"
+      a: "Odalys and Senna do. Tobin and Dov count bottles when I walk in. Nobody's been unkind. I just know I'm the eighth mouth if anyone else turns up."
+  barks:
+    idle: ["Lot of stars.", "North's that way.", "Two weeks."]
+    hi: ["Oh. Hi.", "Hey."]
