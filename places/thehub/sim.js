@@ -1,21 +1,14 @@
-// The Hub: lays the tunnels, lamps, doors and camps once per room (place.state.hubV), then keeps its people.
-import { RUNS, lamps, DOORS, CURB, symbolSvg, doorFront, KEY_NAMES, sealed } from "../../scripts/lib/thehub.js";
+// The Hub: fixed fixtures and furniture live in the cells. The sim builds tunnels and doors and keeps the camps staffed.
+import { RUNS, DOORS, CURB, symbolSvg, doorFront, KEY_NAMES, sealed } from "../../scripts/lib/thehub.js";
 import { keysOf, keyDoor } from "../../scripts/lib/hubkeys.js";
 import { layThings, keepCrew, keymaster } from "../../scripts/lib/hub-people.js";
-import { ARRIVE } from "../../scripts/lib/thehub.js";
-import { layLampModels, layDress, layBayLights, cageLamp } from "../../scripts/lib/hub-dress.js";
 import { workbenchSpec, ammobenchSpec, ensureBenches } from "../../scripts/lib/benches.js";
 export const cadence = "1s";
 const V = 11; // v11: plaques re-laid for the Level 169 door (ringn-a1). v10: caged bulkhead lamp models over doors and bays (was cylinders/spheres)
 const DOOR = { frame: { url: "/cdn/value.86c9f9f6e66d057fda78af73bde7c72cea84386e49891e45ea0ed3cddadb3e70.glb", offset: [0, 0, 0.432] }, leaf: { url: "/cdn/value.9437304a5bfa3c822e8830c3d88d9e6310980e867ff78651d84fc6dc5b01035c.glb" } }; // art/hub/doors.yml
 const PANEL = "cdn/texture-smooth-cast-concrete-lintel-panel-clean-fine-pores.png"; // the frame's lintel panel came mottled: a clean cast face for the carved mark
-const SODIUM = "oklch(0.8 0.15 68)";
 function layShell(ctx) {
   for (const r of RUNS) ctx.spawn("hub-run-" + r.id, { tags: ["hub-shell"], feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, visibleRange: { max: 220 }, primitive: { kind: "scripted", script: "scripts/thehub-geo.js", params: { run: r.id } }, material: { roughness: 0.88, pbr: true } });
-}
-function layLamps(ctx) {
-  for (const l of lamps()) ctx.spawn("hub-lamp-" + l.k, { tags: ["hub-lamp"], feetPosition: { x: l.x, y: l.y, z: l.z }, rotation: { yaw: l.yaw }, castShadow: false, visibleRange: { max: 120 }, primitive: { kind: "box", width: 0.9, height: 0.2, depth: 0.25 }, material: { color: SODIUM, emissive: SODIUM, emissiveIntensity: 4 },
-    light: { kind: "point", color: SODIUM, intensity: 9, distance: 19, shadow: { enabled: false } } });
 }
 function layDoors(ctx) {
   for (const d of DOORS) {
@@ -46,13 +39,10 @@ function resonance(ctx) {
 }
 export function tick(ctx) {
   const s = ctx.place.state;
-  if ((s.hubV ?? 0) < 1) { layShell(ctx); layLamps(ctx); }
+  if ((s.hubV ?? 0) < 1) layShell(ctx);
   if ((s.hubV ?? 0) < 9) { if ((s.hubV ?? 0) >= 2) for (const d of DOORS) { if (ctx.place.objects[d.obj]) ctx.destroy(d.obj); if (ctx.place.objects[d.obj + "-t"]) ctx.destroy(d.obj + "-t"); } layDoors(ctx); } // v9: Level 11 door (t10-a3) is locked behind a key
   if ((s.hubV ?? 0) < 3) { layThings(ctx); if (!ctx.place.objects["hub-from-l1"]) ctx.spawn("hub-from-l1", { feetPosition: { x: -39.2, y: 0.2, z: 2.8 }, rotation: { yaw: 0 } }); }
-  if ((s.hubV ?? 0) < 6) layDoorLamps(ctx);
   if ((s.hubV ?? 0) < 11) layPlaques(ctx); // v11: Level 169 plaque; v9: refresh plaques for Level 11 key requirement
-  if ((s.hubV ?? 0) < 5) { layLampModels(ctx); layDress(ctx); } // v5: modeled lamps, fans, tray, gutters, barriers, camp furniture
-  if ((s.hubV ?? 0) >= 5 && (s.hubV ?? 0) < 10) { layDoorLamps(ctx); layBayLights(ctx); } // v10: re-lay the caged lamps
   if ((s.campBenchV ?? 0) < 1) {
     s.campBenchV = 1;
     ensureBenches(ctx, [
@@ -68,15 +58,6 @@ export function tick(ctx) {
   if (key && (key.visible === false || !key.tags?.includes("usable"))) { key.visible = true; key.tags = ["usable", "hub-thing"]; }
   keepCrew(ctx); keymaster(ctx);
   resonance(ctx);
-}
-
-// a caged sodium lamp over every door, so the carved mark reads from down the tunnel; the dark road past the barricade stays dark
-function layDoorLamps(ctx) {
-  for (const d of DOORS) {
-    const f = doorFront(d, 0.5), id = `hub-doorlamp-${d.id}`;
-    if (f.x > 500) continue;
-    cageLamp(ctx, id, f.x, 4.5, f.z, 5, 9, "oklch(0.8 0.13 68)");
-  }
 }
 
 // a M.E.G. survey plaque bolted beside each door: the level it was logged to, sealed ones marked, the rest uncharted
