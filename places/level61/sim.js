@@ -18,7 +18,7 @@ import { layService } from "../../scripts/lib/level61-service.js";
 export const cadence = "1s";
 const TOILET_GLB = "/cdn/value.75a5c2ad3f0bdbda1e0f3670d5d87bc2a496a0b7231b0c092f395b41d479fa61.glb";
 const VANITY_GLB = "/cdn/value.fc171ef1463c6b6014a17a934459781e7d541b202325257a5ddb0e02de9788c4.glb";
-const V = 66; // 66: restroom toilets + vanities are Tripo models (art/l61-rest). 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
+const V = 67; // 67: restroom toilet + vanity turned to their true front axis and sized to real fixtures. 66: restroom toilets + vanities are Tripo models (art/l61-rest). 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -626,15 +626,15 @@ function lay(ctx) {
   for (const [i, x] of [12.68, 14.43, 15.88].entries()) {
     box(`l61-rest-door-${i}`, x + 0.26, 0.12, rz1 - 2.07, 1.06, 1.88, 0.04, partition, { physics: undefined, rotation: { yaw: -72 } });
     sp(`l61-rest-toilet-${i}`, { // Tripo model (art/l61-rest), Studio item m-l61-toilet
-      feetPosition: { x, y: 0.012, z: rz1 - 0.5 },
-      model: { id: TOILET_GLB, forward: "-z" }, layout: { box: { min: { x: -0.21, y: 0, z: -0.34 }, max: { x: 0.21, y: 1.12, z: 0.34 } } },
+      feetPosition: { x, y: 0.012, z: rz1 - 0.52 },
+      model: { id: TOILET_GLB, forward: "-x" }, layout: { box: { min: { x: -0.2, y: 0, z: -0.36 }, max: { x: 0.2, y: 1.0, z: 0.36 } } }, // the GLB's bowl runs along its x: about 0.39 w × 0.76 h × 0.72 d
       physics: { body: "static", collider: "box" },
     });
   }
   for (const [i, z] of [HD + 3.2, HD + 5.4].entries()) {
     sp(`l61-rest-vanity-${i}`, { // Tripo model (art/l61-rest), Studio item m-l61-vanity: two basins each
       feetPosition: { x: 8.47, y: 0.012, z }, rotation: { yaw: 90 },
-      model: { id: VANITY_GLB, forward: "-z" }, layout: { box: { min: { x: -1.08, y: 0, z: -0.3 }, max: { x: 1.08, y: 0.92, z: 0.3 } } },
+      model: { id: VANITY_GLB, forward: "-x" }, layout: { box: { min: { x: -1.08, y: 0, z: -0.31 }, max: { x: 1.08, y: 0.92, z: 0.31 } } }, scale: { x: 1, y: 1.3, z: 1 }, // long axis along the wall, counter lifted to about 0.82 m
       physics: { body: "static", collider: "box" },
     });
   }
