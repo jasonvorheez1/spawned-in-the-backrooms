@@ -16,7 +16,7 @@ import { rbox } from "../../scripts/lib/rbox.js";
 import { layService } from "../../scripts/lib/level61-service.js";
 
 export const cadence = "1s";
-const V = 62;
+const V = 63; // 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -682,26 +682,20 @@ function lay(ctx) {
       sp(`l61-meg-bag-${sd}-${r}-${i}`, { feetPosition: { x: X + 3.1 + (r % 2) * 0.04, y: 0.12 + r * 0.21, z }, rotation: { pitch: 90, yaw: 4 * Math.sin(i * 3 + r) }, primitive: { kind: "capsule", radius: 0.12, halfHeight: 0.16 }, scale: { x: 1.5, y: 1, z: 0.85 }, material: SAND, physics: r === 0 ? { body: "static", collider: "box" } : undefined });
     }
     // barrier arm: striped pole on a post, lowered half across
-    box("l61-meg-armpost", X + 4.2, 0, -1.6, 0.18, 1.0, 0.18, PAINT);
-    for (let i = 0; i < 6; i++) box(`l61-meg-arm-${i}`, X + 4.2, 0.92, -1.35 + i * 0.25, 0.07, 0.07, 0.25, { color: i % 2 ? "oklch(0.95 0.01 90)" : "oklch(0.5 0.2 27)", roughness: 0.5 }, nf);
+    // M.E.G. outpost props: Tripo meshes, refined in Blender (art/l61-meg/build.py), true scale
+    const megM = (id, x, z, yaw, m, phys) => sp(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: m, forward: "+z" }, physics: phys, visibleRange: { max: 55 } });
+    megM("l61-meg-barrier", X + 4.2, -1.1, 0, "/cdn/value.4d0ea028923ad7904d198c35e088b99bc717bd6c4613a2f684f57394ed371c8b.glb", undefined);
     // guard booth: plywood, window band, roof, lamp inside
     const bx0 = X + 1.6, bz0 = -5.6;
-    box("l61-meg-booth-b", bx0, 0, bz0 - 0.9, 2.2, 2.3, 0.08, PLY); box("l61-meg-booth-l", bx0 - 1.1, 0, bz0, 0.08, 2.3, 1.8, PLY); box("l61-meg-booth-r", bx0 + 1.1, 0, bz0, 0.08, 2.3, 1.8, PLY);
-    box("l61-meg-booth-f", bx0, 0, bz0 + 0.9, 2.2, 1.05, 0.08, PLY); box("l61-meg-booth-ft", bx0, 1.95, bz0 + 0.9, 2.2, 0.35, 0.08, PLY);
-    box("l61-meg-booth-glass", bx0, 1.05, bz0 + 0.9, 2.1, 0.9, 0.02, { color: "oklch(0.85 0.02 200 / 0.25)", transparent: true, opacity: 0.25, roughness: 0.05, metalness: 0.1 }, nf);
-    box("l61-meg-booth-roof", bx0, 2.3, bz0, 2.4, 0.08, 2.0, PAINT);
-    box("l61-meg-booth-sill", bx0, 1.02, bz0 + 0.98, 2.2, 0.04, 0.22, PLY, nf);
+    megM("l61-meg-booth", bx0, bz0, 180, "/cdn/value.3bc6f276d3c7f3381c9477fc9cc65c6b186ffc530b10af8a1dfb986e910d40d4.glb", { body: "static", collider: "box" });
     sp("l61-meg-booth-lamp", { feetPosition: { x: bx0, y: 2.1, z: bz0 }, light: { kind: "point", color: "oklch(0.9 0.06 80)", intensity: 2, distance: 5 } });
     // desk: logbook, clipboard, radio crackling, mug, folding chair
-    box("l61-meg-desk", X + 2.4, 0, 4.2, 1.4, 0.74, 0.7, { color: "oklch(0.5 0.01 250)", metalness: 0.6, roughness: 0.5 });
-    box("l61-meg-log", X + 2.2, 0.74, 4.1, 0.32, 0.03, 0.24, { color: "oklch(0.35 0.08 25)", roughness: 0.8 }, nf);
-    box("l61-meg-clip", X + 2.7, 0.74, 4.3, 0.22, 0.012, 0.3, { color: "oklch(0.55 0.05 60)" }, nf);
-    sp("l61-meg-radio", { feetPosition: { x: X + 2.9, y: 0.74, z: 4.0 }, primitive: { kind: "box", width: 0.18, height: 0.24, depth: 0.08 }, material: { color: "oklch(0.18 0 0)", roughness: 0.6 },
+    megM("l61-meg-desk", X + 2.4, 4.2, 180, "/cdn/value.d81d2b065dd48090432a15a38512d3a0cb226efecee1d6c6a54283e0fec92514.glb", { body: "static", collider: "box" });
+    sp("l61-meg-radio", { feetPosition: { x: X + 2.9, y: 0.8, z: 4.0 },
       audio: { clip: G("military-handheld-radio-static-chatter-squelch-loop"), loop: true, gain: 0.08, spatial: true, maxDistance: 7 } });
-    box("l61-meg-mug", X + 1.9, 0.74, 4.35, 0.08, 0.1, 0.08, { color: "oklch(0.9 0.01 90)" }, nf);
     box("l61-meg-chair-s", X + 2.4, 0.42, 4.95, 0.42, 0.04, 0.42, PAINT, nf); box("l61-meg-chair-b", X + 2.4, 0.46, 5.15, 0.42, 0.45, 0.04, PAINT, nf);
     // olive crates stacked by the wall
-    box("l61-meg-crate-0", X + 0.6, 0, 3.2, 0.9, 0.55, 0.6, OLIVE); box("l61-meg-crate-1", X + 0.6, 0.55, 3.25, 0.8, 0.5, 0.55, OLIVE); box("l61-meg-crate-2", X + 0.6, 0, 4.0, 0.9, 0.55, 0.6, OLIVE);
+    megM("l61-meg-crates", X + 0.75, 3.6, 90, "/cdn/value.7c44079ccd25ace23036723308db44ce52d891d12cd6520e430f3ae61f8f1754.glb", { body: "static", collider: "box" });
     // corkboard with pinned notices
     box("l61-meg-cork", X + 0.17, 1.3, 3.6, 0.03, 0.8, 1.1, { color: "oklch(0.55 0.07 60)", roughness: 1 }, nf);
     [[3.3, 1.75, "CLEARANCE LIST"], [3.75, 1.65, "ESCORT ONLY"], [3.5, 1.4, "MISSING"], [3.9, 1.4, "SHIFT ROTA"]].forEach(([z, y, t], k) =>
