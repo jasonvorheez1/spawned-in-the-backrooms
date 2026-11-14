@@ -58,6 +58,7 @@ friends:                        # Ferry's Friends (scripts/lib/l169-friends.js).
   basementDown: 3
 houseBuild:                     # Ferry's house, the builder's numbers (scripts/l169-house-geo.js, scripts/lib/l169-house.js). World x/z like the rooms
   wallT: 0.2
+  lookDz: 0.98                  # the Blender shell's origin sits 0.98 m north of the collider shell; this lines its walls and doors up with the colliders
   doorH: 2.1
   roof: { ridge: 1.3, eave: 1.0, side: 0.8, porchOut: 0.4 }
   midWallTo: -496.6             # the living/kitchen wall runs from the hall to here; the rest is open
