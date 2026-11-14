@@ -28,7 +28,7 @@ const CIG = (k) => CIGS[k]?.model;
 export const cadence = "1s";
 const RENO_FLOOR = 0.32;
 const mallTrash = (i) => ({ x: -15.15 + i * 0.2, y: 0.33, z: 28.1 + i * 0.65 });
-const V = 172; // 172 (2026-11-14): lab sample counter is two Tripo+Studio reception counters, poster frame stands as its own row // 171 (2026-11-14): strip mall lab + bakery furniture is fitted Tripo+Studio models (art/l11-mall), storefronts are bevelled aluminium extrusions, the clinic back door is the Tripo steel service door // 170: 170: Coca-Cola machine and crates in Sedco, a can on the apartment counter // 169: 169: cigarette packs on the apartment counter and Sedco till // 168: 168: Chapter 2 Clinic dead-drop and sealed Level ! hospital threshold // 167: stouter columns // 166: 166: riveted Tripo platform columns // 165: 165: ramp lip removed // 164: 164: stair mouth opened to z 63.8 (head room on the last steps) // 163: 163: subway stair ramp carries the feet, Tripo deposit wall // 162: 162: bin true size // // 161: band split at vault door // // 160: vault door fit // // 159: vault door scaled flat // // 158: Tripo vault door + bins // // 157: substation 4 Tripo pieces, vault wall opened (Shelly Nov 13) // // 154: newsbox out of the hot dog cart, printed cards // 148 laid a cut list (a throw mid-lay): 149 lays it whole again // the market court and the central pedestrian route
+const V = 173; // 173 (2026-11-14): reno tool chest and market counter are fitted Tripo models // 172 (2026-11-14): lab sample counter is two Tripo+Studio reception counters, poster frame stands as its own row // 171 (2026-11-14): strip mall lab + bakery furniture is fitted Tripo+Studio models (art/l11-mall), storefronts are bevelled aluminium extrusions, the clinic back door is the Tripo steel service door // 170: 170: Coca-Cola machine and crates in Sedco, a can on the apartment counter // 169: 169: cigarette packs on the apartment counter and Sedco till // 168: 168: Chapter 2 Clinic dead-drop and sealed Level ! hospital threshold // 167: stouter columns // 166: 166: riveted Tripo platform columns // 165: 165: ramp lip removed // 164: 164: stair mouth opened to z 63.8 (head room on the last steps) // 163: 163: subway stair ramp carries the feet, Tripo deposit wall // 162: 162: bin true size // // 161: band split at vault door // // 160: vault door fit // // 159: vault door scaled flat // // 158: Tripo vault door + bins // // 157: substation 4 Tripo pieces, vault wall opened (Shelly Nov 13) // // 154: newsbox out of the hot dog cart, printed cards // 148 laid a cut list (a throw mid-lay): 149 lays it whole again // the market court and the central pedestrian route
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -922,8 +922,8 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
   sp("l11-reno-chest", {
     tags: ["usable"],
     feetPosition: { x: -28.5, y: RENO_FLOOR, z: 3 },
-    primitive: { kind: "box", width: 0.9, height: 0.55, depth: 0.5 },
-    material: { color: "oklch(0.45 0.15 25)", metalness: 0.8, roughness: 0.35 },
+    model: { id: MODELS.red_toolbox, forward: "-z" }, physics: { body: "static", collider: "box" },
+    layout: { box: { min: { x: -0.45, y: 0, z: -0.25 }, max: { x: 0.45, y: 0.55, z: 0.25 } } }, // 173: the fitted Tripo tool chest, not a red box
     behavior: "scripts/level11-use.js",
     state: { kind: "supply-chest", name: "Contractor Heavy Tool Chest", verb: "Open Tool Chest" },
   });
@@ -1593,8 +1593,8 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   // Keep the produce display clear of the walkable counter apron.
   md("l11-market-stall", "market_stall", MKT_X, MKT_FLOOR, MKT_Z, undefined, "box", { physics: undefined,
     rotation: { yaw: 0 }, layout: { box: { min: { x: -6, y: 0, z: -6 }, max: { x: 6, y: 3.3, z: 6 } } } });
-  sp("l11-market-counter", { feetPosition: { x: COUNTER, y: MKT_FLOOR + 0.77, z: MKT_Z }, primitive: { kind: "box", width: 0.68, height: 0.08, depth: 3.25, bevel: 0.025 }, material: WOOD, physics: "static",
-    children: [-1.37, 1.37].flatMap((z) => [-0.23, 0.23].map((x) => ({ feetPosition: { x, y: -0.77, z }, primitive: { kind: "box", width: 0.085, height: 0.77, depth: 0.085 }, material: IRON_RAIL, physics: "static" }))) });
+  sp("l11-market-counter", { feetPosition: { x: COUNTER, y: MKT_FLOOR, z: MKT_Z }, rotation: { yaw: -90 }, model: { id: MODELS.pizza_counter, forward: "-z" }, physics: { body: "static", collider: "box" },
+    layout: { box: { min: { x: -1.62, y: 0, z: -0.34 }, max: { x: 1.62, y: 0.85, z: 0.34 } } } }); // 173: a fitted Tripo serving counter, 0.85 m top, front to the court
   sp("l11-market-sign", { feetPosition: { x: MKT_X + 0.95, y: 2.63, z: MKT_Z }, rotation: { yaw: 90 },
     vector: '<svg viewBox="0 0 510 122" width="3.2m"><rect x="3" y="3" width="504" height="116" rx="7" fill="#243c37" stroke="#e8c786" stroke-width="6"/><g fill="#f4e7c2" font-family="serif" text-anchor="middle"><text x="255" y="54" font-size="43" font-weight="bold">CENTRAL MARKET</text><text x="255" y="95" font-family="sans-serif" font-size="23" letter-spacing="2">B.N.T.G. PROVISIONS</text></g></svg>' });
   sp("l11-market-produce-crate", {
