@@ -21,7 +21,7 @@
     "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js - title/settings, new-expedition choices, five-slot save manager and story/tutorial lifecycle; scripts/ui.js composes the in-game HUD and wrist panels.",
     "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, wake/resume, aiming, third-person view and per-place zone resolution.",
     "places/main/sim.js + scripts/lib/maze.js + xmas-room.js + level0-moments.js - Level 0 layout and deterministic maze dressing/encounters; moments version gates rebuilds.",
-    "places/thehub/sim.js + scripts/lib/thehub.js + hub-people.js + hub-dress.js + scripts/thehub-geo.js - Hub topology, doors, dressing and crew; Phoebe shares scripts/lib/phoebe.js dressing.",
+    "places/thehub/sim.js + scripts/lib/thehub.js + hub-people.js + scripts/thehub-geo.js + places/thehub/cells - Hub topology, doors, dressing and crew; Phoebe shares scripts/lib/phoebe.js dressing.",
     "places/level109/sim.js + scripts/lib/level109.js + l109-b3.js + l109-rooms.js + l109-outpost.js + l109-life.js - seeded hospital, room dressing, B3 and outpost actors/behavior; places/level114/sim.js owns Sweet Dreams."
   ],
   "shared": [

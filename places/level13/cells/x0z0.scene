@@ -82,3 +82,2022 @@ l13t-tally:
   rotation: {yaw: 180}
   tags: [l13t]
   vector: "<svg viewBox='0 0 200 120' width='0.9m'><g stroke='#3a3328' stroke-width='2.4' stroke-linecap='round' fill='none'>\n<path d='M14 20 v26 M22 20 v26 M30 20 v26 M38 20 v26 M8 40 L46 26'/><path d='M60 20 v26 M68 20 v26 M76 20 v26 M84 20 v26'/>\n<text x='100' y='42' font-family='sans-serif' font-size='16' fill='#3a3328' stroke='none'>9</text>\n<path d='M14 70 v26 M22 70 v26 M30 70 v26 M38 70 v26 M8 90 L46 76 M60 70 v26 M68 70 v26 M76 70 v26 M84 70 v26 M54 90 L92 76 M106 70 v26 M114 70 v26 M122 70 v26 M130 70 v26'/>\n<text x='146' y='92' font-family='sans-serif' font-size='16' fill='#3a3328' stroke='none'>14?</text>\n<path d='M140 44 Q170 30 186 52' stroke='#7a2a22' stroke-width='1.6'/></g></svg>"
+# Fixed Level 13 shell: baked from its authored apartment plan.
+"l13-floor":
+  "id": "l13-floor"
+  "feetPosition": {"x": 0, "y": -0.3, "z": 5}
+  "primitive": {"kind": "box", "width": 90, "height": 0.3, "depth": 36}
+  "material": {"texture": "cdn/texture-worn-brown-laminate-wood-hallway-floor.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.6 0.05 65)", "roughness": 0.55}
+  "physics": "static"
+  "receiveShadow": true
+  "castShadow": false
+"l13-ceil":
+  "id": "l13-ceil"
+  "feetPosition": {"x": 0, "y": 2.6, "z": 5}
+  "primitive": {"kind": "box", "width": 90, "height": 0.2, "depth": 36}
+  "material": {"texture": "cdn/texture-white-popcorn-stipple-apartment-ceiling.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.9 0.01 90)", "roughness": 1}
+  "physics": "static"
+  "castShadow": false
+"l13-w0":
+  "id": "l13-w0"
+  "feetPosition": {"x": -37.25, "y": 0, "z": -1.2}
+  "primitive": {"kind": "box", "width": 9.5, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.86 0.035 88)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-skirt-1":
+  "id": "l13-skirt-1"
+  "feetPosition": {"x": -37.25, "y": 0, "z": -1.14}
+  "primitive": {"kind": "box", "width": 9.5, "height": 0.12, "depth": 0.035}
+  "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}
+  "castShadow": false
+"l13-w1":
+  "id": "l13-w1"
+  "feetPosition": {"x": -32, "y": 2.1, "z": -1.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.86 0.035 88)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-w2":
+  "id": "l13-w2"
+  "feetPosition": {"x": -28, "y": 0, "z": -1.2}
+  "primitive": {"kind": "box", "width": 7, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.86 0.035 88)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-skirt-3":
+  "id": "l13-skirt-3"
+  "feetPosition": {"x": -28, "y": 0, "z": -1.14}
+  "primitive": {"kind": "box", "width": 7, "height": 0.12, "depth": 0.035}
+  "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}
+  "castShadow": false
+"l13-w3":
+  "id": "l13-w3"
+  "feetPosition": {"x": -24, "y": 2.1, "z": -1.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.86 0.035 88)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-w4":
+  "id": "l13-w4"
+  "feetPosition": {"x": -16, "y": 0, "z": -1.2}
+  "primitive": {"kind": "box", "width": 15, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.86 0.035 88)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-skirt-5":
+  "id": "l13-skirt-5"
+  "feetPosition": {"x": -16, "y": 0, "z": -1.14}
+  "primitive": {"kind": "box", "width": 15, "height": 0.12, "depth": 0.035}
+  "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}
+  "castShadow": false
+"l13-w5":
+  "id": "l13-w5"
+  "feetPosition": {"x": -8, "y": 2.1, "z": -1.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.86 0.035 88)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-w6":
+  "id": "l13-w6"
+  "feetPosition": {"x": -3.15, "y": 0, "z": -1.2}
+  "primitive": {"kind": "box", "width": 8.7, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.86 0.035 88)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-skirt-7":
+  "id": "l13-skirt-7"
+  "feetPosition": {"x": -3.15, "y": 0, "z": -1.14}
+  "primitive": {"kind": "box", "width": 8.7, "height": 0.12, "depth": 0.035}
+  "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}
+  "castShadow": false
+"l13-w7":
+  "id": "l13-w7"
+  "feetPosition": {"x": -41.25, "y": 0, "z": 1.2}
+  "primitive": {"kind": "box", "width": 1.5, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.86 0.035 88)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-skirt-8":
+  "id": "l13-skirt-8"
+  "feetPosition": {"x": -41.25, "y": 0, "z": 1.14}
+  "primitive": {"kind": "box", "width": 1.5, "height": 0.12, "depth": 0.035}
+  "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}
+  "castShadow": false
+"l13-w8":
+  "id": "l13-w8"
+  "feetPosition": {"x": -40, "y": 2.1, "z": 1.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.86 0.035 88)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-w9":
+  "id": "l13-w9"
+  "feetPosition": {"x": -32, "y": 0, "z": 1.2}
+  "primitive": {"kind": "box", "width": 15, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.86 0.035 88)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-skirt-10":
+  "id": "l13-skirt-10"
+  "feetPosition": {"x": -32, "y": 0, "z": 1.14}
+  "primitive": {"kind": "box", "width": 15, "height": 0.12, "depth": 0.035}
+  "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}
+  "castShadow": false
+"l13-w10":
+  "id": "l13-w10"
+  "feetPosition": {"x": -24, "y": 2.1, "z": 1.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.86 0.035 88)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-w11":
+  "id": "l13-w11"
+  "feetPosition": {"x": -20, "y": 0, "z": 1.2}
+  "primitive": {"kind": "box", "width": 7, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.86 0.035 88)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-skirt-12":
+  "id": "l13-skirt-12"
+  "feetPosition": {"x": -20, "y": 0, "z": 1.14}
+  "primitive": {"kind": "box", "width": 7, "height": 0.12, "depth": 0.035}
+  "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}
+  "castShadow": false
+"l13-w12":
+  "id": "l13-w12"
+  "feetPosition": {"x": -16, "y": 2.1, "z": 1.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.86 0.035 88)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-w13":
+  "id": "l13-w13"
+  "feetPosition": {"x": -8.35, "y": 0, "z": 1.2}
+  "primitive": {"kind": "box", "width": 14.3, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.86 0.035 88)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-skirt-14":
+  "id": "l13-skirt-14"
+  "feetPosition": {"x": -8.35, "y": 0, "z": 1.14}
+  "primitive": {"kind": "box", "width": 14.3, "height": 0.12, "depth": 0.035}
+  "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}
+  "castShadow": false
+"l13-w14":
+  "id": "l13-w14"
+  "feetPosition": {"x": 2.35, "y": 0, "z": 8.8}
+  "primitive": {"kind": "box", "width": 2.3, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.84 0.04 133)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-skirt-15":
+  "id": "l13-skirt-15"
+  "feetPosition": {"x": 2.35, "y": 0, "z": 8.860000000000001}
+  "primitive": {"kind": "box", "width": 2.3, "height": 0.12, "depth": 0.035}
+  "material": {"color": "#536452", "roughness": 0.75}
+  "castShadow": false
+"l13-w15":
+  "id": "l13-w15"
+  "feetPosition": {"x": 4, "y": 2.1, "z": 8.8}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.84 0.04 133)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-w16":
+  "id": "l13-w16"
+  "feetPosition": {"x": 8, "y": 0, "z": 8.8}
+  "primitive": {"kind": "box", "width": 7, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.84 0.04 133)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-skirt-17":
+  "id": "l13-skirt-17"
+  "feetPosition": {"x": 8, "y": 0, "z": 8.860000000000001}
+  "primitive": {"kind": "box", "width": 7, "height": 0.12, "depth": 0.035}
+  "material": {"color": "#536452", "roughness": 0.75}
+  "castShadow": false
+"l13-w17":
+  "id": "l13-w17"
+  "feetPosition": {"x": 12, "y": 2.1, "z": 8.8}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.84 0.04 133)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-w18":
+  "id": "l13-w18"
+  "feetPosition": {"x": 20, "y": 0, "z": 8.8}
+  "primitive": {"kind": "box", "width": 15, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.84 0.04 133)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-skirt-19":
+  "id": "l13-skirt-19"
+  "feetPosition": {"x": 20, "y": 0, "z": 8.860000000000001}
+  "primitive": {"kind": "box", "width": 15, "height": 0.12, "depth": 0.035}
+  "material": {"color": "#536452", "roughness": 0.75}
+  "castShadow": false
+"l13-w19":
+  "id": "l13-w19"
+  "feetPosition": {"x": 28, "y": 2.1, "z": 8.8}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.84 0.04 133)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-w20":
+  "id": "l13-w20"
+  "feetPosition": {"x": 35.25, "y": 0, "z": 8.8}
+  "primitive": {"kind": "box", "width": 13.5, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.84 0.04 133)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-skirt-21":
+  "id": "l13-skirt-21"
+  "feetPosition": {"x": 35.25, "y": 0, "z": 8.860000000000001}
+  "primitive": {"kind": "box", "width": 13.5, "height": 0.12, "depth": 0.035}
+  "material": {"color": "#536452", "roughness": 0.75}
+  "castShadow": false
+"l13-w21":
+  "id": "l13-w21"
+  "feetPosition": {"x": -1.075, "y": 0, "z": 11.2}
+  "primitive": {"kind": "box", "width": 0.25, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.84 0.04 133)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-skirt-22":
+  "id": "l13-skirt-22"
+  "feetPosition": {"x": -1.075, "y": 0, "z": 11.139999999999999}
+  "primitive": {"kind": "box", "width": 0.25, "height": 0.12, "depth": 0.035}
+  "material": {"color": "#536452", "roughness": 0.75}
+  "castShadow": false
+"l13-w22":
+  "id": "l13-w22"
+  "feetPosition": {"x": 2.625, "y": 0, "z": 11.2}
+  "primitive": {"kind": "box", "width": 1.75, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.84 0.04 133)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-skirt-23":
+  "id": "l13-skirt-23"
+  "feetPosition": {"x": 2.625, "y": 0, "z": 11.139999999999999}
+  "primitive": {"kind": "box", "width": 1.75, "height": 0.12, "depth": 0.035}
+  "material": {"color": "#536452", "roughness": 0.75}
+  "castShadow": false
+"l13-w23":
+  "id": "l13-w23"
+  "feetPosition": {"x": 4, "y": 2.1, "z": 11.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.84 0.04 133)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-w24":
+  "id": "l13-w24"
+  "feetPosition": {"x": 12, "y": 0, "z": 11.2}
+  "primitive": {"kind": "box", "width": 15, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.84 0.04 133)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-skirt-25":
+  "id": "l13-skirt-25"
+  "feetPosition": {"x": 12, "y": 0, "z": 11.139999999999999}
+  "primitive": {"kind": "box", "width": 15, "height": 0.12, "depth": 0.035}
+  "material": {"color": "#536452", "roughness": 0.75}
+  "castShadow": false
+"l13-w25":
+  "id": "l13-w25"
+  "feetPosition": {"x": 20, "y": 2.1, "z": 11.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.84 0.04 133)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-w26":
+  "id": "l13-w26"
+  "feetPosition": {"x": 31.25, "y": 0, "z": 11.2}
+  "primitive": {"kind": "box", "width": 21.5, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.84 0.04 133)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-skirt-27":
+  "id": "l13-skirt-27"
+  "feetPosition": {"x": 31.25, "y": 0, "z": 11.139999999999999}
+  "primitive": {"kind": "box", "width": 21.5, "height": 0.12, "depth": 0.035}
+  "material": {"color": "#536452", "roughness": 0.75}
+  "castShadow": false
+"l13-w27":
+  "id": "l13-w27"
+  "feetPosition": {"x": -0.95, "y": 0, "z": 12.25}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 2.1000000000000014}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.84 0.04 133)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-skirt-28":
+  "id": "l13-skirt-28"
+  "feetPosition": {"x": -0.8899999999999999, "y": 0, "z": 12.25}
+  "primitive": {"kind": "box", "width": 0.035, "height": 0.12, "depth": 2.1000000000000014}
+  "material": {"color": "#536452", "roughness": 0.75}
+  "castShadow": false
+"l13-w28":
+  "id": "l13-w28"
+  "feetPosition": {"x": 1.75, "y": 0, "z": 12.25}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 2.1000000000000014}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.84 0.04 133)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-skirt-29":
+  "id": "l13-skirt-29"
+  "feetPosition": {"x": 1.69, "y": 0, "z": 12.25}
+  "primitive": {"kind": "box", "width": 0.035, "height": 0.12, "depth": 2.1000000000000014}
+  "material": {"color": "#536452", "roughness": 0.75}
+  "castShadow": false
+"l13-w29":
+  "id": "l13-w29"
+  "feetPosition": {"x": 0.4, "y": 0, "z": 13.3}
+  "primitive": {"kind": "box", "width": 2.7, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.84 0.04 133)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-skirt-30":
+  "id": "l13-skirt-30"
+  "feetPosition": {"x": 0.4, "y": 0, "z": 13.24}
+  "primitive": {"kind": "box", "width": 2.7, "height": 0.12, "depth": 0.035}
+  "material": {"color": "#536452", "roughness": 0.75}
+  "castShadow": false
+"l13-reception-floor":
+  "id": "l13-reception-floor"
+  "feetPosition": {"x": 0.4, "y": 0, "z": 12.25}
+  "primitive": {"kind": "box", "width": 2.58, "height": 0.012, "depth": 2.1000000000000014}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-reception-light":
+  "id": "l13-reception-light"
+  "feetPosition": {"x": 0.4, "y": 2.35, "z": 12.049999999999999}
+  "light": {"kind": "point", "color": "#ffebc0", "intensity": 1.5, "distance": 5}
+"l13-w30":
+  "id": "l13-w30"
+  "feetPosition": {"x": -42, "y": 0, "z": 0}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 2.4}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.86 0.035 88)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-w31":
+  "id": "l13-w31"
+  "feetPosition": {"x": 1.2, "y": 0, "z": 3.8000000000000003}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 10}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.86 0.035 88)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-w32":
+  "id": "l13-w32"
+  "feetPosition": {"x": -1.2, "y": 0, "z": 6.199999999999999}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 10}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.86 0.035 88)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-w33":
+  "id": "l13-w33"
+  "feetPosition": {"x": 42, "y": 0, "z": 10}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 2.3999999999999986}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.86 0.035 88)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-w34":
+  "id": "l13-w34"
+  "feetPosition": {"x": -22, "y": 0, "z": -10.2}
+  "primitive": {"kind": "box", "width": 40, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w35":
+  "id": "l13-w35"
+  "feetPosition": {"x": -42, "y": 0, "z": -5.699999999999999}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w36":
+  "id": "l13-w36"
+  "feetPosition": {"x": -34, "y": 0, "z": -5.699999999999999}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w37":
+  "id": "l13-w37"
+  "feetPosition": {"x": -26, "y": 0, "z": -5.699999999999999}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w38":
+  "id": "l13-w38"
+  "feetPosition": {"x": -18, "y": 0, "z": -5.699999999999999}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w39":
+  "id": "l13-w39"
+  "feetPosition": {"x": -10, "y": 0, "z": -5.699999999999999}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w40":
+  "id": "l13-w40"
+  "feetPosition": {"x": -2, "y": 0, "z": -5.699999999999999}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w41":
+  "id": "l13-w41"
+  "feetPosition": {"x": -22, "y": 0, "z": 10.2}
+  "primitive": {"kind": "box", "width": 40, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w42":
+  "id": "l13-w42"
+  "feetPosition": {"x": -42, "y": 0, "z": 5.699999999999999}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w43":
+  "id": "l13-w43"
+  "feetPosition": {"x": -34, "y": 0, "z": 5.699999999999999}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w44":
+  "id": "l13-w44"
+  "feetPosition": {"x": -26, "y": 0, "z": 5.699999999999999}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w45":
+  "id": "l13-w45"
+  "feetPosition": {"x": -18, "y": 0, "z": 5.699999999999999}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w46":
+  "id": "l13-w46"
+  "feetPosition": {"x": -10, "y": 0, "z": 5.699999999999999}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w47":
+  "id": "l13-w47"
+  "feetPosition": {"x": -2, "y": 0, "z": 5.699999999999999}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w48":
+  "id": "l13-w48"
+  "feetPosition": {"x": 22, "y": 0, "z": -0.1999999999999993}
+  "primitive": {"kind": "box", "width": 40, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w49":
+  "id": "l13-w49"
+  "feetPosition": {"x": 2, "y": 0, "z": 4.300000000000001}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w50":
+  "id": "l13-w50"
+  "feetPosition": {"x": 10, "y": 0, "z": 4.300000000000001}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w51":
+  "id": "l13-w51"
+  "feetPosition": {"x": 18, "y": 0, "z": 4.300000000000001}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w52":
+  "id": "l13-w52"
+  "feetPosition": {"x": 26, "y": 0, "z": 4.300000000000001}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w53":
+  "id": "l13-w53"
+  "feetPosition": {"x": 34, "y": 0, "z": 4.300000000000001}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w54":
+  "id": "l13-w54"
+  "feetPosition": {"x": 42, "y": 0, "z": 4.300000000000001}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w55":
+  "id": "l13-w55"
+  "feetPosition": {"x": 22, "y": 0, "z": 20.2}
+  "primitive": {"kind": "box", "width": 40, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w56":
+  "id": "l13-w56"
+  "feetPosition": {"x": 2, "y": 0, "z": 15.7}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w57":
+  "id": "l13-w57"
+  "feetPosition": {"x": 10, "y": 0, "z": 15.7}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w58":
+  "id": "l13-w58"
+  "feetPosition": {"x": 18, "y": 0, "z": 15.7}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w59":
+  "id": "l13-w59"
+  "feetPosition": {"x": 26, "y": 0, "z": 15.7}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w60":
+  "id": "l13-w60"
+  "feetPosition": {"x": 34, "y": 0, "z": 15.7}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w61":
+  "id": "l13-w61"
+  "feetPosition": {"x": 42, "y": 0, "z": 15.7}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 9}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-num-a1":
+  "id": "l13-num-a1"
+  "feetPosition": {"x": -39.25, "y": 1.55, "z": -1.128}
+  "rotation": {"yaw": 180}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>101</text></svg>"
+"l13-shut-a1":
+  "id": "l13-shut-a1"
+  "feetPosition": {"x": -40, "y": 0, "z": -1.148}
+  "primitive": {"kind": "box", "width": 1, "height": 2.1, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "castShadow": false
+  "state": {"name": "Flat 101", "info": "Locked from inside. A television is on."}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": 0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}, {"feetPosition": {"x": 0, "y": 2.1, "z": 0}, "primitive": {"kind": "box", "width": 1.16, "height": 0.08, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}, {"feetPosition": {"x": -0.54, "y": 0, "z": 0}, "primitive": {"kind": "box", "width": 0.08, "height": 2.1, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}, {"feetPosition": {"x": 0.54, "y": 0, "z": 0}, "primitive": {"kind": "box", "width": 0.08, "height": 2.1, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}]
+"l13-num-a2":
+  "id": "l13-num-a2"
+  "feetPosition": {"x": -31.25, "y": 1.55, "z": -1.128}
+  "rotation": {"yaw": 180}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>103</text></svg>"
+"l13-w62":
+  "id": "l13-w62"
+  "feetPosition": {"x": -33.1, "y": 0, "z": -6.2}
+  "primitive": {"kind": "box", "width": 1.7999999999999972, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w63":
+  "id": "l13-w63"
+  "feetPosition": {"x": -31.700000000000003, "y": 2.1, "z": -6.2}
+  "primitive": {"kind": "box", "width": 1.0000000000000036, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w64":
+  "id": "l13-w64"
+  "feetPosition": {"x": -29.7, "y": 0, "z": -6.2}
+  "primitive": {"kind": "box", "width": 3, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w65":
+  "id": "l13-w65"
+  "feetPosition": {"x": -27.7, "y": 2.1, "z": -6.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w66":
+  "id": "l13-w66"
+  "feetPosition": {"x": -26.6, "y": 0, "z": -6.2}
+  "primitive": {"kind": "box", "width": 1.1999999999999993, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w67":
+  "id": "l13-w67"
+  "feetPosition": {"x": -29.4, "y": 0, "z": -8.2}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 3.999999999999999}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-fl-a2-main":
+  "id": "l13-fl-a2-main"
+  "feetPosition": {"x": -31.689999999999998, "y": 0, "z": -3.7}
+  "primitive": {"kind": "box", "width": 4.500000000000001, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-a2-kitchen":
+  "id": "l13-fl-a2-kitchen"
+  "feetPosition": {"x": -27.75, "y": 0, "z": -3.7}
+  "primitive": {"kind": "box", "width": 3.38, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-a2-bed":
+  "id": "l13-fl-a2-bed"
+  "feetPosition": {"x": -31.7, "y": 0, "z": -8.2}
+  "primitive": {"kind": "box", "width": 4.480000000000001, "height": 0.012, "depth": 3.879999999999999}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-a2-bath":
+  "id": "l13-fl-a2-bath"
+  "feetPosition": {"x": -27.7, "y": 0, "z": -8.2}
+  "primitive": {"kind": "box", "width": 3.2799999999999985, "height": 0.012, "depth": 3.879999999999999}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-door-a2":
+  "id": "l13-door-a2"
+  "feetPosition": {"x": -32.5, "y": 0, "z": -1.28}
+  "rotation": {"yaw": 78}
+  "pivot": [0, 0, 0.5]
+  "primitive": {"kind": "box", "width": 0.96, "height": 2.0700000000000003, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": 0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}]
+"l13-lamp-a2":
+  "id": "l13-lamp-a2"
+  "feetPosition": {"x": -30, "y": 2.35, "z": -3.7}
+  "light": {"kind": "point", "color": "oklch(0.9 0.06 80)", "intensity": 1.1, "distance": 8}
+  "children": [{"feetPosition": {"x": 0, "y": 0.1, "z": 0}, "primitive": {"kind": "sphere", "radius": 0.16, "widthSegments": 20, "heightSegments": 12}, "material": {"color": "oklch(0.95 0.04 85)", "emissive": "oklch(0.92 0.06 80)", "emissiveIntensity": 1.6}}]
+"l13-lampb-a2":
+  "id": "l13-lampb-a2"
+  "feetPosition": {"x": -31.7, "y": 2.3000000000000003, "z": -8.2}
+  "light": {"kind": "point", "color": "oklch(0.86 0.07 75)", "intensity": 0.55, "distance": 6}
+"l13-num-a3":
+  "id": "l13-num-a3"
+  "feetPosition": {"x": -23.25, "y": 1.55, "z": -1.128}
+  "rotation": {"yaw": 180}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>105</text></svg>"
+"l13-w68":
+  "id": "l13-w68"
+  "feetPosition": {"x": -25.1, "y": 0, "z": -6.2}
+  "primitive": {"kind": "box", "width": 1.8000000000000007, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w69":
+  "id": "l13-w69"
+  "feetPosition": {"x": -23.7, "y": 2.1, "z": -6.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w70":
+  "id": "l13-w70"
+  "feetPosition": {"x": -21.7, "y": 0, "z": -6.2}
+  "primitive": {"kind": "box", "width": 3, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w71":
+  "id": "l13-w71"
+  "feetPosition": {"x": -19.7, "y": 2.1, "z": -6.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w72":
+  "id": "l13-w72"
+  "feetPosition": {"x": -18.6, "y": 0, "z": -6.2}
+  "primitive": {"kind": "box", "width": 1.1999999999999993, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w73":
+  "id": "l13-w73"
+  "feetPosition": {"x": -21.4, "y": 0, "z": -8.2}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 3.999999999999999}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-fl-a3-main":
+  "id": "l13-fl-a3-main"
+  "feetPosition": {"x": -23.689999999999998, "y": 0, "z": -3.7}
+  "primitive": {"kind": "box", "width": 4.500000000000001, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-a3-kitchen":
+  "id": "l13-fl-a3-kitchen"
+  "feetPosition": {"x": -19.75, "y": 0, "z": -3.7}
+  "primitive": {"kind": "box", "width": 3.38, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-a3-bed":
+  "id": "l13-fl-a3-bed"
+  "feetPosition": {"x": -23.7, "y": 0, "z": -8.2}
+  "primitive": {"kind": "box", "width": 4.480000000000001, "height": 0.012, "depth": 3.879999999999999}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-a3-bath":
+  "id": "l13-fl-a3-bath"
+  "feetPosition": {"x": -19.7, "y": 0, "z": -8.2}
+  "primitive": {"kind": "box", "width": 3.2799999999999985, "height": 0.012, "depth": 3.879999999999999}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-door-a3":
+  "id": "l13-door-a3"
+  "feetPosition": {"x": -24.5, "y": 0, "z": -1.28}
+  "rotation": {"yaw": 78}
+  "pivot": [0, 0, 0.5]
+  "primitive": {"kind": "box", "width": 0.96, "height": 2.0700000000000003, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": 0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}]
+"l13-lamp-a3":
+  "id": "l13-lamp-a3"
+  "feetPosition": {"x": -22, "y": 2.35, "z": -3.7}
+  "light": {"kind": "point", "color": "oklch(0.9 0.06 80)", "intensity": 1.1, "distance": 8}
+  "children": [{"feetPosition": {"x": 0, "y": 0.1, "z": 0}, "primitive": {"kind": "sphere", "radius": 0.16, "widthSegments": 20, "heightSegments": 12}, "material": {"color": "oklch(0.95 0.04 85)", "emissive": "oklch(0.92 0.06 80)", "emissiveIntensity": 1.6}}]
+"l13-lampb-a3":
+  "id": "l13-lampb-a3"
+  "feetPosition": {"x": -23.7, "y": 2.3000000000000003, "z": -8.2}
+  "light": {"kind": "point", "color": "oklch(0.86 0.07 75)", "intensity": 0.55, "distance": 6}
+"l13-num-a4":
+  "id": "l13-num-a4"
+  "feetPosition": {"x": -15.25, "y": 1.55, "z": -1.128}
+  "rotation": {"yaw": 180}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>107</text></svg>"
+"l13-shut-a4":
+  "id": "l13-shut-a4"
+  "feetPosition": {"x": -16, "y": 0, "z": -1.148}
+  "primitive": {"kind": "box", "width": 1, "height": 2.1, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "castShadow": false
+  "state": {"name": "Flat 107", "info": "Locked from inside. A television is on."}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": 0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}, {"feetPosition": {"x": 0, "y": 2.1, "z": 0}, "primitive": {"kind": "box", "width": 1.16, "height": 0.08, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}, {"feetPosition": {"x": -0.54, "y": 0, "z": 0}, "primitive": {"kind": "box", "width": 0.08, "height": 2.1, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}, {"feetPosition": {"x": 0.54, "y": 0, "z": 0}, "primitive": {"kind": "box", "width": 0.08, "height": 2.1, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}]
+"l13-num-a5":
+  "id": "l13-num-a5"
+  "feetPosition": {"x": -7.25, "y": 1.55, "z": -1.128}
+  "rotation": {"yaw": 180}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>109</text></svg>"
+"l13-w74":
+  "id": "l13-w74"
+  "feetPosition": {"x": -9.1, "y": 0, "z": -6.2}
+  "primitive": {"kind": "box", "width": 1.8000000000000007, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w75":
+  "id": "l13-w75"
+  "feetPosition": {"x": -7.699999999999999, "y": 2.1, "z": -6.2}
+  "primitive": {"kind": "box", "width": 0.9999999999999991, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w76":
+  "id": "l13-w76"
+  "feetPosition": {"x": -5.7, "y": 0, "z": -6.2}
+  "primitive": {"kind": "box", "width": 3, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w77":
+  "id": "l13-w77"
+  "feetPosition": {"x": -3.7, "y": 2.1, "z": -6.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w78":
+  "id": "l13-w78"
+  "feetPosition": {"x": -2.6, "y": 0, "z": -6.2}
+  "primitive": {"kind": "box", "width": 1.2000000000000002, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w79":
+  "id": "l13-w79"
+  "feetPosition": {"x": -5.4, "y": 0, "z": -8.2}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 3.999999999999999}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-fl-a5-main":
+  "id": "l13-fl-a5-main"
+  "feetPosition": {"x": -6, "y": 0, "z": -3.7}
+  "primitive": {"kind": "box", "width": 7.88, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-a5-bed":
+  "id": "l13-fl-a5-bed"
+  "feetPosition": {"x": -7.7, "y": 0, "z": -8.2}
+  "primitive": {"kind": "box", "width": 4.4799999999999995, "height": 0.012, "depth": 3.879999999999999}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-a5-bath":
+  "id": "l13-fl-a5-bath"
+  "feetPosition": {"x": -3.7, "y": 0, "z": -8.2}
+  "primitive": {"kind": "box", "width": 3.2800000000000002, "height": 0.012, "depth": 3.879999999999999}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-door-a5":
+  "id": "l13-door-a5"
+  "feetPosition": {"x": -8.5, "y": 0, "z": -1.28}
+  "rotation": {"yaw": 78}
+  "pivot": [0, 0, 0.5]
+  "primitive": {"kind": "box", "width": 0.96, "height": 2.0700000000000003, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": 0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}]
+"l13-lamp-a5":
+  "id": "l13-lamp-a5"
+  "feetPosition": {"x": -6, "y": 2.35, "z": -3.7}
+  "light": {"kind": "point", "color": "oklch(0.9 0.06 80)", "intensity": 0.35, "distance": 8}
+  "children": [{"feetPosition": {"x": 0, "y": 0.1, "z": 0}, "primitive": {"kind": "sphere", "radius": 0.16, "widthSegments": 20, "heightSegments": 12}, "material": {"color": "oklch(0.95 0.04 85)", "emissive": "oklch(0.92 0.06 80)", "emissiveIntensity": 0.4}}]
+"l13-lampb-a5":
+  "id": "l13-lampb-a5"
+  "feetPosition": {"x": -7.7, "y": 2.3000000000000003, "z": -8.2}
+  "light": {"kind": "point", "color": "oklch(0.86 0.07 75)", "intensity": 0.55, "distance": 6}
+"l13-num-a6":
+  "id": "l13-num-a6"
+  "feetPosition": {"x": -39.25, "y": 1.55, "z": 1.128}
+  "rotation": {"yaw": 0}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>102</text></svg>"
+"l13-w80":
+  "id": "l13-w80"
+  "feetPosition": {"x": -41.1, "y": 0, "z": 6.2}
+  "primitive": {"kind": "box", "width": 1.7999999999999972, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w81":
+  "id": "l13-w81"
+  "feetPosition": {"x": -39.7, "y": 2.1, "z": 6.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w82":
+  "id": "l13-w82"
+  "feetPosition": {"x": -37.7, "y": 0, "z": 6.2}
+  "primitive": {"kind": "box", "width": 3, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w83":
+  "id": "l13-w83"
+  "feetPosition": {"x": -35.7, "y": 2.1, "z": 6.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w84":
+  "id": "l13-w84"
+  "feetPosition": {"x": -34.6, "y": 0, "z": 6.2}
+  "primitive": {"kind": "box", "width": 1.2000000000000028, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w85":
+  "id": "l13-w85"
+  "feetPosition": {"x": -37.4, "y": 0, "z": 8.2}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 3.999999999999999}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-fl-a6-main":
+  "id": "l13-fl-a6-main"
+  "feetPosition": {"x": -39.69, "y": 0, "z": 3.7}
+  "primitive": {"kind": "box", "width": 4.499999999999997, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-a6-kitchen":
+  "id": "l13-fl-a6-kitchen"
+  "feetPosition": {"x": -35.75, "y": 0, "z": 3.7}
+  "primitive": {"kind": "box", "width": 3.38, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-a6-bed":
+  "id": "l13-fl-a6-bed"
+  "feetPosition": {"x": -39.7, "y": 0, "z": 8.2}
+  "primitive": {"kind": "box", "width": 4.480000000000001, "height": 0.012, "depth": 3.879999999999999}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-a6-bath":
+  "id": "l13-fl-a6-bath"
+  "feetPosition": {"x": -35.7, "y": 0, "z": 8.2}
+  "primitive": {"kind": "box", "width": 3.2799999999999985, "height": 0.012, "depth": 3.879999999999999}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-door-a6":
+  "id": "l13-door-a6"
+  "feetPosition": {"x": -40.5, "y": 0, "z": 1.28}
+  "rotation": {"yaw": -78}
+  "pivot": [0, 0, 0.5]
+  "primitive": {"kind": "box", "width": 0.96, "height": 2.0700000000000003, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": 0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}]
+"l13-lamp-a6":
+  "id": "l13-lamp-a6"
+  "feetPosition": {"x": -38, "y": 2.35, "z": 3.7}
+  "light": {"kind": "point", "color": "oklch(0.9 0.06 80)", "intensity": 1.1, "distance": 8}
+  "children": [{"feetPosition": {"x": 0, "y": 0.1, "z": 0}, "primitive": {"kind": "sphere", "radius": 0.16, "widthSegments": 20, "heightSegments": 12}, "material": {"color": "oklch(0.95 0.04 85)", "emissive": "oklch(0.92 0.06 80)", "emissiveIntensity": 1.6}}]
+"l13-lampb-a6":
+  "id": "l13-lampb-a6"
+  "feetPosition": {"x": -39.7, "y": 2.3000000000000003, "z": 8.2}
+  "light": {"kind": "point", "color": "oklch(0.86 0.07 75)", "intensity": 0.55, "distance": 6}
+"l13-num-a7":
+  "id": "l13-num-a7"
+  "feetPosition": {"x": -31.25, "y": 1.55, "z": 1.128}
+  "rotation": {"yaw": 0}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>104</text></svg>"
+"l13-shut-a7":
+  "id": "l13-shut-a7"
+  "feetPosition": {"x": -32, "y": 0, "z": 1.148}
+  "primitive": {"kind": "box", "width": 1, "height": 2.1, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "castShadow": false
+  "state": {"name": "Flat 104", "info": "Locked from inside. A television is on."}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": -0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}, {"feetPosition": {"x": 0, "y": 2.1, "z": 0}, "primitive": {"kind": "box", "width": 1.16, "height": 0.08, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}, {"feetPosition": {"x": -0.54, "y": 0, "z": 0}, "primitive": {"kind": "box", "width": 0.08, "height": 2.1, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}, {"feetPosition": {"x": 0.54, "y": 0, "z": 0}, "primitive": {"kind": "box", "width": 0.08, "height": 2.1, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}]
+"l13-num-a8":
+  "id": "l13-num-a8"
+  "feetPosition": {"x": -23.25, "y": 1.55, "z": 1.128}
+  "rotation": {"yaw": 0}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>106</text></svg>"
+"l13-w86":
+  "id": "l13-w86"
+  "feetPosition": {"x": -25.1, "y": 0, "z": 6.2}
+  "primitive": {"kind": "box", "width": 1.8000000000000007, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w87":
+  "id": "l13-w87"
+  "feetPosition": {"x": -23.7, "y": 2.1, "z": 6.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w88":
+  "id": "l13-w88"
+  "feetPosition": {"x": -21.7, "y": 0, "z": 6.2}
+  "primitive": {"kind": "box", "width": 3, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w89":
+  "id": "l13-w89"
+  "feetPosition": {"x": -19.7, "y": 2.1, "z": 6.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w90":
+  "id": "l13-w90"
+  "feetPosition": {"x": -18.6, "y": 0, "z": 6.2}
+  "primitive": {"kind": "box", "width": 1.1999999999999993, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w91":
+  "id": "l13-w91"
+  "feetPosition": {"x": -21.4, "y": 0, "z": 8.2}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 3.999999999999999}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-fl-a8-main":
+  "id": "l13-fl-a8-main"
+  "feetPosition": {"x": -23.689999999999998, "y": 0, "z": 3.7}
+  "primitive": {"kind": "box", "width": 4.500000000000001, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-a8-kitchen":
+  "id": "l13-fl-a8-kitchen"
+  "feetPosition": {"x": -19.75, "y": 0, "z": 3.7}
+  "primitive": {"kind": "box", "width": 3.38, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-a8-bed":
+  "id": "l13-fl-a8-bed"
+  "feetPosition": {"x": -23.7, "y": 0, "z": 8.2}
+  "primitive": {"kind": "box", "width": 4.480000000000001, "height": 0.012, "depth": 3.879999999999999}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-a8-bath":
+  "id": "l13-fl-a8-bath"
+  "feetPosition": {"x": -19.7, "y": 0, "z": 8.2}
+  "primitive": {"kind": "box", "width": 3.2799999999999985, "height": 0.012, "depth": 3.879999999999999}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-door-a8":
+  "id": "l13-door-a8"
+  "feetPosition": {"x": -24.5, "y": 0, "z": 1.28}
+  "rotation": {"yaw": -78}
+  "pivot": [0, 0, 0.5]
+  "primitive": {"kind": "box", "width": 0.96, "height": 2.0700000000000003, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": 0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}]
+"l13-lamp-a8":
+  "id": "l13-lamp-a8"
+  "feetPosition": {"x": -22, "y": 2.35, "z": 3.7}
+  "light": {"kind": "point", "color": "oklch(0.9 0.06 80)", "intensity": 1.1, "distance": 8}
+  "children": [{"feetPosition": {"x": 0, "y": 0.1, "z": 0}, "primitive": {"kind": "sphere", "radius": 0.16, "widthSegments": 20, "heightSegments": 12}, "material": {"color": "oklch(0.95 0.04 85)", "emissive": "oklch(0.92 0.06 80)", "emissiveIntensity": 1.6}}]
+"l13-lampb-a8":
+  "id": "l13-lampb-a8"
+  "feetPosition": {"x": -23.7, "y": 2.3000000000000003, "z": 8.2}
+  "light": {"kind": "point", "color": "oklch(0.86 0.07 75)", "intensity": 0.55, "distance": 6}
+"l13-num-a9":
+  "id": "l13-num-a9"
+  "feetPosition": {"x": -15.25, "y": 1.55, "z": 1.128}
+  "rotation": {"yaw": 0}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>108</text></svg>"
+"l13-w92":
+  "id": "l13-w92"
+  "feetPosition": {"x": -17.1, "y": 0, "z": 6.2}
+  "primitive": {"kind": "box", "width": 1.8000000000000007, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w93":
+  "id": "l13-w93"
+  "feetPosition": {"x": -15.7, "y": 2.1, "z": 6.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w94":
+  "id": "l13-w94"
+  "feetPosition": {"x": -13.7, "y": 0, "z": 6.2}
+  "primitive": {"kind": "box", "width": 3, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w95":
+  "id": "l13-w95"
+  "feetPosition": {"x": -11.7, "y": 2.1, "z": 6.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w96":
+  "id": "l13-w96"
+  "feetPosition": {"x": -10.6, "y": 0, "z": 6.2}
+  "primitive": {"kind": "box", "width": 1.1999999999999993, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w97":
+  "id": "l13-w97"
+  "feetPosition": {"x": -13.4, "y": 0, "z": 8.2}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 3.999999999999999}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-fl-a9-main":
+  "id": "l13-fl-a9-main"
+  "feetPosition": {"x": -15.69, "y": 0, "z": 3.7}
+  "primitive": {"kind": "box", "width": 4.500000000000001, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-a9-kitchen":
+  "id": "l13-fl-a9-kitchen"
+  "feetPosition": {"x": -11.75, "y": 0, "z": 3.7}
+  "primitive": {"kind": "box", "width": 3.379999999999998, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-a9-bed":
+  "id": "l13-fl-a9-bed"
+  "feetPosition": {"x": -15.7, "y": 0, "z": 8.2}
+  "primitive": {"kind": "box", "width": 4.4799999999999995, "height": 0.012, "depth": 3.879999999999999}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-a9-bath":
+  "id": "l13-fl-a9-bath"
+  "feetPosition": {"x": -11.7, "y": 0, "z": 8.2}
+  "primitive": {"kind": "box", "width": 3.2800000000000002, "height": 0.012, "depth": 3.879999999999999}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-door-a9":
+  "id": "l13-door-a9"
+  "feetPosition": {"x": -16.5, "y": 0, "z": 1.28}
+  "rotation": {"yaw": -78}
+  "pivot": [0, 0, 0.5]
+  "primitive": {"kind": "box", "width": 0.96, "height": 2.0700000000000003, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": 0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}]
+"l13-lamp-a9":
+  "id": "l13-lamp-a9"
+  "feetPosition": {"x": -14, "y": 2.35, "z": 3.7}
+  "light": {"kind": "point", "color": "oklch(0.9 0.06 80)", "intensity": 1.1, "distance": 8}
+  "children": [{"feetPosition": {"x": 0, "y": 0.1, "z": 0}, "primitive": {"kind": "sphere", "radius": 0.16, "widthSegments": 20, "heightSegments": 12}, "material": {"color": "oklch(0.95 0.04 85)", "emissive": "oklch(0.92 0.06 80)", "emissiveIntensity": 1.6}}]
+"l13-lampb-a9":
+  "id": "l13-lampb-a9"
+  "feetPosition": {"x": -15.7, "y": 2.3000000000000003, "z": 8.2}
+  "light": {"kind": "point", "color": "oklch(0.86 0.07 75)", "intensity": 0.55, "distance": 6}
+"l13-num-a10":
+  "id": "l13-num-a10"
+  "feetPosition": {"x": -7.25, "y": 1.55, "z": 1.128}
+  "rotation": {"yaw": 0}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>110</text></svg>"
+"l13-shut-a10":
+  "id": "l13-shut-a10"
+  "feetPosition": {"x": -8, "y": 0, "z": 1.148}
+  "primitive": {"kind": "box", "width": 1, "height": 2.1, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "castShadow": false
+  "state": {"name": "Flat 110", "info": "Locked from inside. A television is on."}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": -0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}, {"feetPosition": {"x": 0, "y": 2.1, "z": 0}, "primitive": {"kind": "box", "width": 1.16, "height": 0.08, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}, {"feetPosition": {"x": -0.54, "y": 0, "z": 0}, "primitive": {"kind": "box", "width": 0.08, "height": 2.1, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}, {"feetPosition": {"x": 0.54, "y": 0, "z": 0}, "primitive": {"kind": "box", "width": 0.08, "height": 2.1, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}]
+"l13-num-b1":
+  "id": "l13-num-b1"
+  "feetPosition": {"x": 4.75, "y": 1.55, "z": 8.872}
+  "rotation": {"yaw": 180}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>28301</text></svg>"
+"l13-w98":
+  "id": "l13-w98"
+  "feetPosition": {"x": 2.9, "y": 0, "z": 3.8000000000000007}
+  "primitive": {"kind": "box", "width": 1.7999999999999998, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w99":
+  "id": "l13-w99"
+  "feetPosition": {"x": 4.3, "y": 2.1, "z": 3.8000000000000007}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w100":
+  "id": "l13-w100"
+  "feetPosition": {"x": 6.300000000000001, "y": 0, "z": 3.8000000000000007}
+  "primitive": {"kind": "box", "width": 3.000000000000001, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w101":
+  "id": "l13-w101"
+  "feetPosition": {"x": 8.3, "y": 2.1, "z": 3.8000000000000007}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w102":
+  "id": "l13-w102"
+  "feetPosition": {"x": 9.4, "y": 0, "z": 3.8000000000000007}
+  "primitive": {"kind": "box", "width": 1.1999999999999993, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w103":
+  "id": "l13-w103"
+  "feetPosition": {"x": 6.6, "y": 0, "z": 1.8000000000000007}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 4}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-fl-b1-main":
+  "id": "l13-fl-b1-main"
+  "feetPosition": {"x": 4.3100000000000005, "y": 0, "z": 6.300000000000001}
+  "primitive": {"kind": "box", "width": 4.5, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-b1-kitchen":
+  "id": "l13-fl-b1-kitchen"
+  "feetPosition": {"x": 8.25, "y": 0, "z": 6.300000000000001}
+  "primitive": {"kind": "box", "width": 3.38, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-b1-bed":
+  "id": "l13-fl-b1-bed"
+  "feetPosition": {"x": 4.3, "y": 0, "z": 1.8000000000000007}
+  "primitive": {"kind": "box", "width": 4.4799999999999995, "height": 0.012, "depth": 3.88}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-b1-bath":
+  "id": "l13-fl-b1-bath"
+  "feetPosition": {"x": 8.3, "y": 0, "z": 1.8000000000000007}
+  "primitive": {"kind": "box", "width": 3.2800000000000002, "height": 0.012, "depth": 3.88}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-door-b1":
+  "id": "l13-door-b1"
+  "feetPosition": {"x": 3.5, "y": 0, "z": 8.72}
+  "rotation": {"yaw": 78}
+  "pivot": [0, 0, 0.5]
+  "primitive": {"kind": "box", "width": 0.96, "height": 2.0700000000000003, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": 0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}]
+"l13-lamp-b1":
+  "id": "l13-lamp-b1"
+  "feetPosition": {"x": 6, "y": 2.35, "z": 6.300000000000001}
+  "light": {"kind": "point", "color": "oklch(0.9 0.06 80)", "intensity": 1.1, "distance": 8}
+  "children": [{"feetPosition": {"x": 0, "y": 0.1, "z": 0}, "primitive": {"kind": "sphere", "radius": 0.16, "widthSegments": 20, "heightSegments": 12}, "material": {"color": "oklch(0.95 0.04 85)", "emissive": "oklch(0.92 0.06 80)", "emissiveIntensity": 1.6}}]
+"l13-lampb-b1":
+  "id": "l13-lampb-b1"
+  "feetPosition": {"x": 4.3, "y": 2.3000000000000003, "z": 1.8000000000000007}
+  "light": {"kind": "point", "color": "oklch(0.86 0.07 75)", "intensity": 0.55, "distance": 6}
+"l13-num-b2":
+  "id": "l13-num-b2"
+  "feetPosition": {"x": 12.75, "y": 1.55, "z": 8.872}
+  "rotation": {"yaw": 180}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>28303</text></svg>"
+"l13-w104":
+  "id": "l13-w104"
+  "feetPosition": {"x": 10.9, "y": 0, "z": 3.8000000000000007}
+  "primitive": {"kind": "box", "width": 1.8000000000000007, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w105":
+  "id": "l13-w105"
+  "feetPosition": {"x": 12.3, "y": 2.1, "z": 3.8000000000000007}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w106":
+  "id": "l13-w106"
+  "feetPosition": {"x": 14.3, "y": 0, "z": 3.8000000000000007}
+  "primitive": {"kind": "box", "width": 3, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w107":
+  "id": "l13-w107"
+  "feetPosition": {"x": 16.3, "y": 2.1, "z": 3.8000000000000007}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w108":
+  "id": "l13-w108"
+  "feetPosition": {"x": 17.4, "y": 0, "z": 3.8000000000000007}
+  "primitive": {"kind": "box", "width": 1.1999999999999993, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w109":
+  "id": "l13-w109"
+  "feetPosition": {"x": 14.6, "y": 0, "z": 1.8000000000000007}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 4}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-fl-b2-main":
+  "id": "l13-fl-b2-main"
+  "feetPosition": {"x": 12.31, "y": 0, "z": 6.300000000000001}
+  "primitive": {"kind": "box", "width": 4.500000000000001, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-b2-kitchen":
+  "id": "l13-fl-b2-kitchen"
+  "feetPosition": {"x": 16.25, "y": 0, "z": 6.300000000000001}
+  "primitive": {"kind": "box", "width": 3.379999999999998, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-b2-bed":
+  "id": "l13-fl-b2-bed"
+  "feetPosition": {"x": 12.3, "y": 0, "z": 1.8000000000000007}
+  "primitive": {"kind": "box", "width": 4.4799999999999995, "height": 0.012, "depth": 3.88}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-b2-bath":
+  "id": "l13-fl-b2-bath"
+  "feetPosition": {"x": 16.3, "y": 0, "z": 1.8000000000000007}
+  "primitive": {"kind": "box", "width": 3.2800000000000002, "height": 0.012, "depth": 3.88}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-door-b2":
+  "id": "l13-door-b2"
+  "feetPosition": {"x": 11.5, "y": 0, "z": 8.72}
+  "rotation": {"yaw": 78}
+  "pivot": [0, 0, 0.5]
+  "primitive": {"kind": "box", "width": 0.96, "height": 2.0700000000000003, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": 0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}]
+"l13-lamp-b2":
+  "id": "l13-lamp-b2"
+  "feetPosition": {"x": 14, "y": 2.35, "z": 6.300000000000001}
+  "light": {"kind": "point", "color": "oklch(0.9 0.06 80)", "intensity": 1.1, "distance": 8}
+  "children": [{"feetPosition": {"x": 0, "y": 0.1, "z": 0}, "primitive": {"kind": "sphere", "radius": 0.16, "widthSegments": 20, "heightSegments": 12}, "material": {"color": "oklch(0.95 0.04 85)", "emissive": "oklch(0.92 0.06 80)", "emissiveIntensity": 1.6}}]
+"l13-lampb-b2":
+  "id": "l13-lampb-b2"
+  "feetPosition": {"x": 12.3, "y": 2.3000000000000003, "z": 1.8000000000000007}
+  "light": {"kind": "point", "color": "oklch(0.86 0.07 75)", "intensity": 0.55, "distance": 6}
+"l13-num-b3":
+  "id": "l13-num-b3"
+  "feetPosition": {"x": 20.75, "y": 1.55, "z": 8.872}
+  "rotation": {"yaw": 180}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>28305</text></svg>"
+"l13-shut-b3":
+  "id": "l13-shut-b3"
+  "feetPosition": {"x": 20, "y": 0, "z": 8.852}
+  "primitive": {"kind": "box", "width": 1, "height": 2.1, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "castShadow": false
+  "state": {"name": "Flat 28305", "info": "Locked from inside. A television is on."}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": 0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}, {"feetPosition": {"x": 0, "y": 2.1, "z": 0}, "primitive": {"kind": "box", "width": 1.16, "height": 0.08, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}, {"feetPosition": {"x": -0.54, "y": 0, "z": 0}, "primitive": {"kind": "box", "width": 0.08, "height": 2.1, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}, {"feetPosition": {"x": 0.54, "y": 0, "z": 0}, "primitive": {"kind": "box", "width": 0.08, "height": 2.1, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}]
+"l13-num-b4":
+  "id": "l13-num-b4"
+  "feetPosition": {"x": 28.75, "y": 1.55, "z": 8.872}
+  "rotation": {"yaw": 180}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>28307</text></svg>"
+"l13-w110":
+  "id": "l13-w110"
+  "feetPosition": {"x": 26.9, "y": 0, "z": 3.8000000000000007}
+  "primitive": {"kind": "box", "width": 1.8000000000000007, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w111":
+  "id": "l13-w111"
+  "feetPosition": {"x": 28.3, "y": 2.1, "z": 3.8000000000000007}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w112":
+  "id": "l13-w112"
+  "feetPosition": {"x": 30.299999999999997, "y": 0, "z": 3.8000000000000007}
+  "primitive": {"kind": "box", "width": 2.9999999999999964, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w113":
+  "id": "l13-w113"
+  "feetPosition": {"x": 32.3, "y": 2.1, "z": 3.8000000000000007}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w114":
+  "id": "l13-w114"
+  "feetPosition": {"x": 33.4, "y": 0, "z": 3.8000000000000007}
+  "primitive": {"kind": "box", "width": 1.2000000000000028, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w115":
+  "id": "l13-w115"
+  "feetPosition": {"x": 30.6, "y": 0, "z": 1.8000000000000007}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 4}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-fl-b4-main":
+  "id": "l13-fl-b4-main"
+  "feetPosition": {"x": 28.310000000000002, "y": 0, "z": 6.300000000000001}
+  "primitive": {"kind": "box", "width": 4.500000000000001, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-b4-kitchen":
+  "id": "l13-fl-b4-kitchen"
+  "feetPosition": {"x": 32.25, "y": 0, "z": 6.300000000000001}
+  "primitive": {"kind": "box", "width": 3.38, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-b4-bed":
+  "id": "l13-fl-b4-bed"
+  "feetPosition": {"x": 28.3, "y": 0, "z": 1.8000000000000007}
+  "primitive": {"kind": "box", "width": 4.480000000000001, "height": 0.012, "depth": 3.88}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-b4-bath":
+  "id": "l13-fl-b4-bath"
+  "feetPosition": {"x": 32.3, "y": 0, "z": 1.8000000000000007}
+  "primitive": {"kind": "box", "width": 3.2799999999999985, "height": 0.012, "depth": 3.88}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-door-b4":
+  "id": "l13-door-b4"
+  "feetPosition": {"x": 27.5, "y": 0, "z": 8.72}
+  "rotation": {"yaw": 78}
+  "pivot": [0, 0, 0.5]
+  "primitive": {"kind": "box", "width": 0.96, "height": 2.0700000000000003, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": 0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}]
+"l13-lamp-b4":
+  "id": "l13-lamp-b4"
+  "feetPosition": {"x": 30, "y": 2.35, "z": 6.300000000000001}
+  "light": {"kind": "point", "color": "oklch(0.9 0.06 80)", "intensity": 1.1, "distance": 8}
+  "children": [{"feetPosition": {"x": 0, "y": 0.1, "z": 0}, "primitive": {"kind": "sphere", "radius": 0.16, "widthSegments": 20, "heightSegments": 12}, "material": {"color": "oklch(0.95 0.04 85)", "emissive": "oklch(0.92 0.06 80)", "emissiveIntensity": 1.6}}]
+"l13-lampb-b4":
+  "id": "l13-lampb-b4"
+  "feetPosition": {"x": 28.3, "y": 2.3000000000000003, "z": 1.8000000000000007}
+  "light": {"kind": "point", "color": "oklch(0.86 0.07 75)", "intensity": 0.55, "distance": 6}
+"l13-num-b5":
+  "id": "l13-num-b5"
+  "feetPosition": {"x": 36.75, "y": 1.55, "z": 8.872}
+  "rotation": {"yaw": 180}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>28309</text></svg>"
+"l13-shut-b5":
+  "id": "l13-shut-b5"
+  "feetPosition": {"x": 36, "y": 0, "z": 8.852}
+  "primitive": {"kind": "box", "width": 1, "height": 2.1, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "castShadow": false
+  "state": {"name": "Flat 28309", "info": "Locked from inside. A television is on."}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": 0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}, {"feetPosition": {"x": 0, "y": 2.1, "z": 0}, "primitive": {"kind": "box", "width": 1.16, "height": 0.08, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}, {"feetPosition": {"x": -0.54, "y": 0, "z": 0}, "primitive": {"kind": "box", "width": 0.08, "height": 2.1, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}, {"feetPosition": {"x": 0.54, "y": 0, "z": 0}, "primitive": {"kind": "box", "width": 0.08, "height": 2.1, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}]
+"l13-num-b6":
+  "id": "l13-num-b6"
+  "feetPosition": {"x": 4.75, "y": 1.55, "z": 11.128}
+  "rotation": {"yaw": 0}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>28302</text></svg>"
+"l13-w116":
+  "id": "l13-w116"
+  "feetPosition": {"x": 2.9, "y": 0, "z": 16.2}
+  "primitive": {"kind": "box", "width": 1.7999999999999998, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w117":
+  "id": "l13-w117"
+  "feetPosition": {"x": 4.3, "y": 2.1, "z": 16.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w118":
+  "id": "l13-w118"
+  "feetPosition": {"x": 6.300000000000001, "y": 0, "z": 16.2}
+  "primitive": {"kind": "box", "width": 3.000000000000001, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w119":
+  "id": "l13-w119"
+  "feetPosition": {"x": 8.3, "y": 2.1, "z": 16.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w120":
+  "id": "l13-w120"
+  "feetPosition": {"x": 9.4, "y": 0, "z": 16.2}
+  "primitive": {"kind": "box", "width": 1.1999999999999993, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w121":
+  "id": "l13-w121"
+  "feetPosition": {"x": 6.6, "y": 0, "z": 18.2}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 4}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-fl-b6-main":
+  "id": "l13-fl-b6-main"
+  "feetPosition": {"x": 4.3100000000000005, "y": 0, "z": 13.7}
+  "primitive": {"kind": "box", "width": 4.5, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-b6-kitchen":
+  "id": "l13-fl-b6-kitchen"
+  "feetPosition": {"x": 8.25, "y": 0, "z": 13.7}
+  "primitive": {"kind": "box", "width": 3.38, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-b6-bed":
+  "id": "l13-fl-b6-bed"
+  "feetPosition": {"x": 4.3, "y": 0, "z": 18.2}
+  "primitive": {"kind": "box", "width": 4.4799999999999995, "height": 0.012, "depth": 3.88}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-b6-bath":
+  "id": "l13-fl-b6-bath"
+  "feetPosition": {"x": 8.3, "y": 0, "z": 18.2}
+  "primitive": {"kind": "box", "width": 3.2800000000000002, "height": 0.012, "depth": 3.88}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-door-b6":
+  "id": "l13-door-b6"
+  "feetPosition": {"x": 3.5, "y": 0, "z": 11.28}
+  "rotation": {"yaw": -78}
+  "pivot": [0, 0, 0.5]
+  "primitive": {"kind": "box", "width": 0.96, "height": 2.0700000000000003, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": 0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}]
+"l13-lamp-b6":
+  "id": "l13-lamp-b6"
+  "feetPosition": {"x": 6, "y": 2.35, "z": 13.7}
+  "light": {"kind": "point", "color": "oklch(0.9 0.06 80)", "intensity": 1.1, "distance": 8}
+  "children": [{"feetPosition": {"x": 0, "y": 0.1, "z": 0}, "primitive": {"kind": "sphere", "radius": 0.16, "widthSegments": 20, "heightSegments": 12}, "material": {"color": "oklch(0.95 0.04 85)", "emissive": "oklch(0.92 0.06 80)", "emissiveIntensity": 1.6}}]
+"l13-lampb-b6":
+  "id": "l13-lampb-b6"
+  "feetPosition": {"x": 4.3, "y": 2.3000000000000003, "z": 18.2}
+  "light": {"kind": "point", "color": "oklch(0.86 0.07 75)", "intensity": 0.55, "distance": 6}
+"l13-num-b7":
+  "id": "l13-num-b7"
+  "feetPosition": {"x": 12.75, "y": 1.55, "z": 11.128}
+  "rotation": {"yaw": 0}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>28304</text></svg>"
+"l13-shut-b7":
+  "id": "l13-shut-b7"
+  "feetPosition": {"x": 12, "y": 0, "z": 11.148}
+  "primitive": {"kind": "box", "width": 1, "height": 2.1, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "castShadow": false
+  "state": {"name": "Flat 28304", "info": "Locked from inside. A television is on."}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": -0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}, {"feetPosition": {"x": 0, "y": 2.1, "z": 0}, "primitive": {"kind": "box", "width": 1.16, "height": 0.08, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}, {"feetPosition": {"x": -0.54, "y": 0, "z": 0}, "primitive": {"kind": "box", "width": 0.08, "height": 2.1, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}, {"feetPosition": {"x": 0.54, "y": 0, "z": 0}, "primitive": {"kind": "box", "width": 0.08, "height": 2.1, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}]
+"l13-num-b8":
+  "id": "l13-num-b8"
+  "feetPosition": {"x": 20.75, "y": 1.55, "z": 11.128}
+  "rotation": {"yaw": 0}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>28306</text></svg>"
+"l13-w122":
+  "id": "l13-w122"
+  "feetPosition": {"x": 18.9, "y": 0, "z": 16.2}
+  "primitive": {"kind": "box", "width": 1.8000000000000007, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w123":
+  "id": "l13-w123"
+  "feetPosition": {"x": 20.3, "y": 2.1, "z": 16.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w124":
+  "id": "l13-w124"
+  "feetPosition": {"x": 22.3, "y": 0, "z": 16.2}
+  "primitive": {"kind": "box", "width": 3, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w125":
+  "id": "l13-w125"
+  "feetPosition": {"x": 24.3, "y": 2.1, "z": 16.2}
+  "primitive": {"kind": "box", "width": 1, "height": 0.5, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+"l13-w126":
+  "id": "l13-w126"
+  "feetPosition": {"x": 25.4, "y": 0, "z": 16.2}
+  "primitive": {"kind": "box", "width": 1.1999999999999993, "height": 2.6, "depth": 0.12}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-w127":
+  "id": "l13-w127"
+  "feetPosition": {"x": 22.6, "y": 0, "z": 18.2}
+  "primitive": {"kind": "box", "width": 0.12, "height": 2.6, "depth": 4}
+  "material": {"texture": "cdn/texture-flat-white-painted-plaster-wall-faint-roller-marks.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.93 0.012 90)", "roughness": 0.92}
+  "physics": "static"
+  "castShadow": false
+  "tags": ["breakable"]
+  "state": {"mat": "drywall", "hp": 150, "maxHp": 150}
+"l13-fl-b8-main":
+  "id": "l13-fl-b8-main"
+  "feetPosition": {"x": 20.310000000000002, "y": 0, "z": 13.7}
+  "primitive": {"kind": "box", "width": 4.500000000000001, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-b8-kitchen":
+  "id": "l13-fl-b8-kitchen"
+  "feetPosition": {"x": 24.25, "y": 0, "z": 13.7}
+  "primitive": {"kind": "box", "width": 3.38, "height": 0.012, "depth": 4.88}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-b8-bed":
+  "id": "l13-fl-b8-bed"
+  "feetPosition": {"x": 20.3, "y": 0, "z": 18.2}
+  "primitive": {"kind": "box", "width": 4.480000000000001, "height": 0.012, "depth": 3.88}
+  "material": {"texture": "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.68 0.025 80)", "roughness": 0.97}
+  "receiveShadow": true
+  "castShadow": false
+"l13-fl-b8-bath":
+  "id": "l13-fl-b8-bath"
+  "feetPosition": {"x": 24.3, "y": 0, "z": 18.2}
+  "primitive": {"kind": "box", "width": 3.2799999999999985, "height": 0.012, "depth": 3.88}
+  "material": {"texture": "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", "wrap": "repeat", "repeat": [0.8, 0.8], "color": "oklch(0.86 0.025 90)", "roughness": 0.5}
+  "receiveShadow": true
+  "castShadow": false
+"l13-door-b8":
+  "id": "l13-door-b8"
+  "feetPosition": {"x": 19.5, "y": 0, "z": 11.28}
+  "rotation": {"yaw": -78}
+  "pivot": [0, 0, 0.5]
+  "primitive": {"kind": "box", "width": 0.96, "height": 2.0700000000000003, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": 0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}]
+"l13-lamp-b8":
+  "id": "l13-lamp-b8"
+  "feetPosition": {"x": 22, "y": 2.35, "z": 13.7}
+  "light": {"kind": "point", "color": "oklch(0.9 0.06 80)", "intensity": 1.1, "distance": 8}
+  "children": [{"feetPosition": {"x": 0, "y": 0.1, "z": 0}, "primitive": {"kind": "sphere", "radius": 0.16, "widthSegments": 20, "heightSegments": 12}, "material": {"color": "oklch(0.95 0.04 85)", "emissive": "oklch(0.92 0.06 80)", "emissiveIntensity": 1.6}}]
+"l13-lampb-b8":
+  "id": "l13-lampb-b8"
+  "feetPosition": {"x": 20.3, "y": 2.3000000000000003, "z": 18.2}
+  "light": {"kind": "point", "color": "oklch(0.86 0.07 75)", "intensity": 0.55, "distance": 6}
+"l13-num-b9":
+  "id": "l13-num-b9"
+  "feetPosition": {"x": 28.75, "y": 1.55, "z": 11.128}
+  "rotation": {"yaw": 0}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>28308</text></svg>"
+"l13-shut-b9":
+  "id": "l13-shut-b9"
+  "feetPosition": {"x": 28, "y": 0, "z": 11.148}
+  "primitive": {"kind": "box", "width": 1, "height": 2.1, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "castShadow": false
+  "state": {"name": "Flat 28308", "info": "Locked from inside. A television is on."}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": -0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}, {"feetPosition": {"x": 0, "y": 2.1, "z": 0}, "primitive": {"kind": "box", "width": 1.16, "height": 0.08, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}, {"feetPosition": {"x": -0.54, "y": 0, "z": 0}, "primitive": {"kind": "box", "width": 0.08, "height": 2.1, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}, {"feetPosition": {"x": 0.54, "y": 0, "z": 0}, "primitive": {"kind": "box", "width": 0.08, "height": 2.1, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}]
+"l13-num-b10":
+  "id": "l13-num-b10"
+  "feetPosition": {"x": 36.75, "y": 1.55, "z": 11.128}
+  "rotation": {"yaw": 0}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 80 40' width='0.28m'><rect width='80' height='40' rx='4' fill='#3a3128'/><text x='40' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#d8c59a'>28310</text></svg>"
+"l13-shut-b10":
+  "id": "l13-shut-b10"
+  "feetPosition": {"x": 36, "y": 0, "z": 11.148}
+  "primitive": {"kind": "box", "width": 1, "height": 2.1, "depth": 0.045}
+  "material": {"texture": "cdn/texture-brown-laminate-flat-apartment-door-veneer.png", "color": "oklch(0.55 0.06 60)", "roughness": 0.6}
+  "castShadow": false
+  "state": {"name": "Flat 28310", "info": "Locked from inside. A television is on."}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": -0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.7 0.08 85)", "metalness": 0.9, "roughness": 0.35}}, {"feetPosition": {"x": 0, "y": 2.1, "z": 0}, "primitive": {"kind": "box", "width": 1.16, "height": 0.08, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}, {"feetPosition": {"x": -0.54, "y": 0, "z": 0}, "primitive": {"kind": "box", "width": 0.08, "height": 2.1, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}, {"feetPosition": {"x": 0.54, "y": 0, "z": 0}, "primitive": {"kind": "box", "width": 0.08, "height": 2.1, "depth": 0.07}, "material": {"color": "oklch(0.72 0.04 75)", "roughness": 0.7}}]
+"l13-trof-0":
+  "id": "l13-trof-0"
+  "feetPosition": {"x": -38, "y": 2.5, "z": 0}
+  "rotation": {"yaw": 0}
+  "model": {"id": "/cdn/value.58b51cca7f40157addada9eb9837b9beb764f7aed2c56d77270ea9dbd66bcf1b.glb"}
+  "layout": {"box": {"min": {"x": -0.6, "y": 0, "z": -0.3}, "max": {"x": 0.6, "y": 0.1, "z": 0.3}}}
+  "castShadow": false
+  "children": [{"feetPosition": {"x": 0, "y": -0.004, "z": 0}, "rotation": {"pitch": 90}, "primitive": {"kind": "plane", "width": 1.02, "height": 0.46}, "material": {"color": "#fffdf0", "emissive": "#fff6d8", "emissiveIntensity": 1.8}, "castShadow": false}]
+"l13-hl-0":
+  "id": "l13-hl-0"
+  "feetPosition": {"x": -38, "y": 2.2, "z": 0}
+  "light": {"kind": "point", "color": "oklch(0.92 0.05 88)", "intensity": 0.9, "distance": 9}
+"l13-trof-1":
+  "id": "l13-trof-1"
+  "feetPosition": {"x": -29, "y": 2.5, "z": 0}
+  "rotation": {"yaw": 0}
+  "model": {"id": "/cdn/value.58b51cca7f40157addada9eb9837b9beb764f7aed2c56d77270ea9dbd66bcf1b.glb"}
+  "layout": {"box": {"min": {"x": -0.6, "y": 0, "z": -0.3}, "max": {"x": 0.6, "y": 0.1, "z": 0.3}}}
+  "castShadow": false
+  "children": [{"feetPosition": {"x": 0, "y": -0.004, "z": 0}, "rotation": {"pitch": 90}, "primitive": {"kind": "plane", "width": 1.02, "height": 0.46}, "material": {"color": "#fffdf0", "emissive": "#fff6d8", "emissiveIntensity": 1.8}, "castShadow": false}]
+"l13-hl-1":
+  "id": "l13-hl-1"
+  "feetPosition": {"x": -29, "y": 2.2, "z": 0}
+  "light": {"kind": "point", "color": "oklch(0.92 0.05 88)", "intensity": 0.9, "distance": 9}
+"l13-trof-2":
+  "id": "l13-trof-2"
+  "feetPosition": {"x": -20, "y": 2.5, "z": 0}
+  "rotation": {"yaw": 0}
+  "model": {"id": "/cdn/value.58b51cca7f40157addada9eb9837b9beb764f7aed2c56d77270ea9dbd66bcf1b.glb"}
+  "layout": {"box": {"min": {"x": -0.6, "y": 0, "z": -0.3}, "max": {"x": 0.6, "y": 0.1, "z": 0.3}}}
+  "castShadow": false
+  "children": [{"feetPosition": {"x": 0, "y": -0.004, "z": 0}, "rotation": {"pitch": 90}, "primitive": {"kind": "plane", "width": 1.02, "height": 0.46}, "material": {"color": "#fffdf0", "emissive": "#fff6d8", "emissiveIntensity": 0.05}, "castShadow": false}]
+"l13-trof-3":
+  "id": "l13-trof-3"
+  "feetPosition": {"x": -11, "y": 2.5, "z": 0}
+  "rotation": {"yaw": 0}
+  "model": {"id": "/cdn/value.58b51cca7f40157addada9eb9837b9beb764f7aed2c56d77270ea9dbd66bcf1b.glb"}
+  "layout": {"box": {"min": {"x": -0.6, "y": 0, "z": -0.3}, "max": {"x": 0.6, "y": 0.1, "z": 0.3}}}
+  "castShadow": false
+  "children": [{"feetPosition": {"x": 0, "y": -0.004, "z": 0}, "rotation": {"pitch": 90}, "primitive": {"kind": "plane", "width": 1.02, "height": 0.46}, "material": {"color": "#fffdf0", "emissive": "#fff6d8", "emissiveIntensity": 1.8}, "castShadow": false}]
+"l13-hl-3":
+  "id": "l13-hl-3"
+  "feetPosition": {"x": -11, "y": 2.2, "z": 0}
+  "light": {"kind": "point", "color": "oklch(0.92 0.05 88)", "intensity": 0.9, "distance": 9}
+"l13-trof-4":
+  "id": "l13-trof-4"
+  "feetPosition": {"x": -2, "y": 2.5, "z": 0}
+  "rotation": {"yaw": 0}
+  "model": {"id": "/cdn/value.58b51cca7f40157addada9eb9837b9beb764f7aed2c56d77270ea9dbd66bcf1b.glb"}
+  "layout": {"box": {"min": {"x": -0.6, "y": 0, "z": -0.3}, "max": {"x": 0.6, "y": 0.1, "z": 0.3}}}
+  "castShadow": false
+  "children": [{"feetPosition": {"x": 0, "y": -0.004, "z": 0}, "rotation": {"pitch": 90}, "primitive": {"kind": "plane", "width": 1.02, "height": 0.46}, "material": {"color": "#fffdf0", "emissive": "#fff6d8", "emissiveIntensity": 1.8}, "castShadow": false}]
+"l13-hl-4":
+  "id": "l13-hl-4"
+  "feetPosition": {"x": -2, "y": 2.2, "z": 0}
+  "light": {"kind": "point", "color": "oklch(0.92 0.05 88)", "intensity": 0.9, "distance": 9}
+"l13-trof-5":
+  "id": "l13-trof-5"
+  "feetPosition": {"x": 0, "y": 2.5, "z": 5}
+  "rotation": {"yaw": 90}
+  "model": {"id": "/cdn/value.58b51cca7f40157addada9eb9837b9beb764f7aed2c56d77270ea9dbd66bcf1b.glb"}
+  "layout": {"box": {"min": {"x": -0.6, "y": 0, "z": -0.3}, "max": {"x": 0.6, "y": 0.1, "z": 0.3}}}
+  "castShadow": false
+  "children": [{"feetPosition": {"x": 0, "y": -0.004, "z": 0}, "rotation": {"pitch": 90}, "primitive": {"kind": "plane", "width": 1.02, "height": 0.46}, "material": {"color": "#fffdf0", "emissive": "#fff6d8", "emissiveIntensity": 0.05}, "castShadow": false}]
+"l13-trof-6":
+  "id": "l13-trof-6"
+  "feetPosition": {"x": 4, "y": 2.5, "z": 10}
+  "rotation": {"yaw": 0}
+  "model": {"id": "/cdn/value.58b51cca7f40157addada9eb9837b9beb764f7aed2c56d77270ea9dbd66bcf1b.glb"}
+  "layout": {"box": {"min": {"x": -0.6, "y": 0, "z": -0.3}, "max": {"x": 0.6, "y": 0.1, "z": 0.3}}}
+  "castShadow": false
+  "children": [{"feetPosition": {"x": 0, "y": -0.004, "z": 0}, "rotation": {"pitch": 90}, "primitive": {"kind": "plane", "width": 1.02, "height": 0.46}, "material": {"color": "#fffdf0", "emissive": "#fff6d8", "emissiveIntensity": 1.8}, "castShadow": false}]
+"l13-hl-6":
+  "id": "l13-hl-6"
+  "feetPosition": {"x": 4, "y": 2.2, "z": 10}
+  "light": {"kind": "point", "color": "oklch(0.92 0.05 88)", "intensity": 0.9, "distance": 9}
+"l13-trof-7":
+  "id": "l13-trof-7"
+  "feetPosition": {"x": 13, "y": 2.5, "z": 10}
+  "rotation": {"yaw": 0}
+  "model": {"id": "/cdn/value.58b51cca7f40157addada9eb9837b9beb764f7aed2c56d77270ea9dbd66bcf1b.glb"}
+  "layout": {"box": {"min": {"x": -0.6, "y": 0, "z": -0.3}, "max": {"x": 0.6, "y": 0.1, "z": 0.3}}}
+  "castShadow": false
+  "children": [{"feetPosition": {"x": 0, "y": -0.004, "z": 0}, "rotation": {"pitch": 90}, "primitive": {"kind": "plane", "width": 1.02, "height": 0.46}, "material": {"color": "#fffdf0", "emissive": "#fff6d8", "emissiveIntensity": 1.8}, "castShadow": false}]
+"l13-hl-7":
+  "id": "l13-hl-7"
+  "feetPosition": {"x": 13, "y": 2.2, "z": 10}
+  "light": {"kind": "point", "color": "oklch(0.92 0.05 88)", "intensity": 0.9, "distance": 9}
+"l13-trof-8":
+  "id": "l13-trof-8"
+  "feetPosition": {"x": 22, "y": 2.5, "z": 10}
+  "rotation": {"yaw": 0}
+  "model": {"id": "/cdn/value.58b51cca7f40157addada9eb9837b9beb764f7aed2c56d77270ea9dbd66bcf1b.glb"}
+  "layout": {"box": {"min": {"x": -0.6, "y": 0, "z": -0.3}, "max": {"x": 0.6, "y": 0.1, "z": 0.3}}}
+  "castShadow": false
+  "children": [{"feetPosition": {"x": 0, "y": -0.004, "z": 0}, "rotation": {"pitch": 90}, "primitive": {"kind": "plane", "width": 1.02, "height": 0.46}, "material": {"color": "#fffdf0", "emissive": "#fff6d8", "emissiveIntensity": 0.05}, "castShadow": false}]
+"l13-trof-9":
+  "id": "l13-trof-9"
+  "feetPosition": {"x": 31, "y": 2.5, "z": 10}
+  "rotation": {"yaw": 0}
+  "model": {"id": "/cdn/value.58b51cca7f40157addada9eb9837b9beb764f7aed2c56d77270ea9dbd66bcf1b.glb"}
+  "layout": {"box": {"min": {"x": -0.6, "y": 0, "z": -0.3}, "max": {"x": 0.6, "y": 0.1, "z": 0.3}}}
+  "castShadow": false
+  "children": [{"feetPosition": {"x": 0, "y": -0.004, "z": 0}, "rotation": {"pitch": 90}, "primitive": {"kind": "plane", "width": 1.02, "height": 0.46}, "material": {"color": "#fffdf0", "emissive": "#fff6d8", "emissiveIntensity": 1.8}, "castShadow": false}]
+"l13-hl-9":
+  "id": "l13-hl-9"
+  "feetPosition": {"x": 31, "y": 2.2, "z": 10}
+  "light": {"kind": "point", "color": "oklch(0.92 0.05 88)", "intensity": 0.9, "distance": 9}
+"l13-trof-10":
+  "id": "l13-trof-10"
+  "feetPosition": {"x": 40, "y": 2.5, "z": 10}
+  "rotation": {"yaw": 0}
+  "model": {"id": "/cdn/value.58b51cca7f40157addada9eb9837b9beb764f7aed2c56d77270ea9dbd66bcf1b.glb"}
+  "layout": {"box": {"min": {"x": -0.6, "y": 0, "z": -0.3}, "max": {"x": 0.6, "y": 0.1, "z": 0.3}}}
+  "castShadow": false
+  "children": [{"feetPosition": {"x": 0, "y": -0.004, "z": 0}, "rotation": {"pitch": 90}, "primitive": {"kind": "plane", "width": 1.02, "height": 0.46}, "material": {"color": "#fffdf0", "emissive": "#fff6d8", "emissiveIntensity": 1.8}, "castShadow": false}]
+"l13-hl-10":
+  "id": "l13-hl-10"
+  "feetPosition": {"x": 40, "y": 2.2, "z": 10}
+  "light": {"kind": "point", "color": "oklch(0.92 0.05 88)", "intensity": 0.9, "distance": 9}
+"l13-reception-header":
+  "id": "l13-reception-header"
+  "feetPosition": {"x": 0.4, "y": 2.13, "z": 11.26}
+  "primitive": {"kind": "box", "width": 2.7, "height": 0.4700000000000002, "depth": 0.12}
+  "material": {"texture": "cdn/texture-dull-beige-painted-plaster-apartment-hallway-wall.png", "wrap": "repeat", "repeat": [0.5, 0.5], "color": "oklch(0.84 0.04 133)", "roughness": 0.9}
+  "physics": "static"
+  "castShadow": false
+"l13-283":
+  "id": "l13-283"
+  "feetPosition": {"x": 0.4, "y": 2.36, "z": 11.184999999999999}
+  "castShadow": false
+  "vector": "<svg viewBox='0 0 360 120' width='1.2m'><rect x='2' y='2' width='356' height='116' rx='6' fill='#efe6cf' stroke='#b0572a' stroke-width='4'/><text x='180' y='50' text-anchor='middle' font-family='sans-serif' font-size='34' font-weight='bold' fill='#b0572a'>FLOOR 283</text><text x='180' y='90' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#4a3b2c'>FLATS 28301 – 28310 →</text></svg>"
+"l13-from-l12":
+  "id": "l13-from-l12"
+  "feetPosition": {"x": -40.4, "y": 0.05, "z": 0}
+  "rotation": {"yaw": -90}
+"l13-exit-door":
+  "id": "l13-exit-door"
+  "feetPosition": {"x": 41.82, "y": 0, "z": 10}
+  "rotation": {"yaw": 90}
+  "primitive": {"kind": "box", "width": 1, "height": 2.1, "depth": 0.05}
+  "material": {"color": "oklch(0.8 0.09 95)", "roughness": 0.75}
+  "castShadow": false
+  "state": {"name": "Door", "info": "Plainer than the others. A yellower beige. The hum behind it is familiar."}
+  "children": [{"feetPosition": {"x": 0.4, "y": 1, "z": -0.04}, "primitive": {"kind": "sphere", "radius": 0.03}, "material": {"color": "oklch(0.6 0.02 90)", "metalness": 0.9, "roughness": 0.4}}]
+"l13-to-l0":
+  "id": "l13-to-l0"
+  "tags": ["door"]
+  "feetPosition": {"x": 41.5, "y": 0, "z": 10}
+  "physics": {"body": "static", "trigger": true}
+  "primitive": {"kind": "box", "width": 0.5, "height": 2.2, "depth": 1.2}
+  "visible": false
+  "behavior": "scripts/level-door.js"
+  "state": {"to": "main"}
+"l13-hum":
+  "id": "l13-hum"
+  "feetPosition": {"x": 0, "y": 1.5, "z": 5}
+  "audio": {"clip": "/cdn/moodboard-realistic-gritty/ambience-quiet-apartment-hallway-distant-tv-murmur-and-pipe-tick-loop.mp3", "loop": true, "gain": 0.13, "spatial": false}

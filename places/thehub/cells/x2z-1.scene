@@ -1,49 +1,176 @@
 # spawn-scene v2 yaml x2z-1
-hub-doorlamp-ringn-a4:
-  castShadow: false
-  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 0.8776923076923077, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.8 0.13 68), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}}}]
-  feetPosition: {x: 224.5, y: 4.5, z: -100}
-  id: hub-doorlamp-ringn-a4
-  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
-  receiveShadow: true
-  scale: 1.3
-hub-doorlamp-ringn-a5:
-  castShadow: false
-  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 0.8776923076923077, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.8 0.13 68), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}}}]
-  feetPosition: {x: 264.5, y: 4.5, z: -100}
-  id: hub-doorlamp-ringn-a5
-  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
-  receiveShadow: true
-  scale: 1.3
-hub-doorlamp-t5-a3:
-  castShadow: false
-  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 0.8776923076923077, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.8 0.13 68), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}}}]
-  feetPosition: {x: 195, y: 4.5, z: -67.5}
-  id: hub-doorlamp-t5-a3
-  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
-  receiveShadow: true
-  scale: 1.3
-hub-doorlamp-t5-b3:
-  castShadow: false
-  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 0.8776923076923077, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.8 0.13 68), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}}}]
-  feetPosition: {x: 205, y: 4.5, z: -67.5}
-  id: hub-doorlamp-t5-b3
-  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
-  receiveShadow: true
-  scale: 1.3
-hub-doorlamp-t7-a3:
-  castShadow: false
-  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 0.8776923076923077, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.8 0.13 68), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}}}]
-  feetPosition: {x: 275, y: 4.5, z: -67.5}
-  id: hub-doorlamp-t7-a3
-  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
-  receiveShadow: true
-  scale: 1.3
-hub-doorlamp-t7-b3:
-  castShadow: false
-  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 0.8776923076923077, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.8 0.13 68), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}}}]
-  feetPosition: {x: 285, y: 4.5, z: -67.5}
-  id: hub-doorlamp-t7-b3
-  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
-  receiveShadow: true
-  scale: 1.3
+# Fixed tunnel fixtures and camp furniture.
+"hub-doorlamp-ringn-a4":
+  "id": "hub-doorlamp-ringn-a4"
+  "feetPosition": {"x": 224.5, "y": 4.5, "z": -100}
+  "scale": 1.3
+  "model": {"id": "/cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb", "materials": {"glow": {"color": "oklch(0.95 0.06 85)", "emissive": "oklch(0.88 0.12 75)", "emissiveIntensity": 5}}}
+  "castShadow": false
+  "receiveShadow": true
+  "visibleRange": {"max": 95}
+  "children": [{"id": "drop", "feetPosition": {"x": 0, "y": 0.43, "z": 0}, "primitive": {"kind": "cylinder", "radiusTop": 0.012, "radiusBottom": 0.012, "height": 0.8776923076923077}, "material": {"color": "oklch(0.3 0.01 80)", "metalness": 0.8, "roughness": 0.5}, "castShadow": false}, {"id": "glow", "feetPosition": {"x": 0, "y": 0.1, "z": 0}, "visibleRange": {"max": 75}, "light": {"kind": "point", "color": "oklch(0.8 0.13 68)", "intensity": 5, "distance": 9, "shadow": {"enabled": false}, "visibleRange": {"max": 22}}}]
+"hub-doorlamp-ringn-a5":
+  "id": "hub-doorlamp-ringn-a5"
+  "feetPosition": {"x": 264.5, "y": 4.5, "z": -100}
+  "scale": 1.3
+  "model": {"id": "/cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb", "materials": {"glow": {"color": "oklch(0.95 0.06 85)", "emissive": "oklch(0.88 0.12 75)", "emissiveIntensity": 5}}}
+  "castShadow": false
+  "receiveShadow": true
+  "visibleRange": {"max": 95}
+  "children": [{"id": "drop", "feetPosition": {"x": 0, "y": 0.43, "z": 0}, "primitive": {"kind": "cylinder", "radiusTop": 0.012, "radiusBottom": 0.012, "height": 0.8776923076923077}, "material": {"color": "oklch(0.3 0.01 80)", "metalness": 0.8, "roughness": 0.5}, "castShadow": false}, {"id": "glow", "feetPosition": {"x": 0, "y": 0.1, "z": 0}, "visibleRange": {"max": 75}, "light": {"kind": "point", "color": "oklch(0.8 0.13 68)", "intensity": 5, "distance": 9, "shadow": {"enabled": false}, "visibleRange": {"max": 22}}}]
+"hub-doorlamp-t5-a3":
+  "id": "hub-doorlamp-t5-a3"
+  "feetPosition": {"x": 195, "y": 4.5, "z": -67.5}
+  "scale": 1.3
+  "model": {"id": "/cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb", "materials": {"glow": {"color": "oklch(0.95 0.06 85)", "emissive": "oklch(0.88 0.12 75)", "emissiveIntensity": 5}}}
+  "castShadow": false
+  "receiveShadow": true
+  "visibleRange": {"max": 95}
+  "children": [{"id": "drop", "feetPosition": {"x": 0, "y": 0.43, "z": 0}, "primitive": {"kind": "cylinder", "radiusTop": 0.012, "radiusBottom": 0.012, "height": 0.8776923076923077}, "material": {"color": "oklch(0.3 0.01 80)", "metalness": 0.8, "roughness": 0.5}, "castShadow": false}, {"id": "glow", "feetPosition": {"x": 0, "y": 0.1, "z": 0}, "visibleRange": {"max": 75}, "light": {"kind": "point", "color": "oklch(0.8 0.13 68)", "intensity": 5, "distance": 9, "shadow": {"enabled": false}, "visibleRange": {"max": 22}}}]
+"hub-doorlamp-t5-b3":
+  "id": "hub-doorlamp-t5-b3"
+  "feetPosition": {"x": 205, "y": 4.5, "z": -67.5}
+  "scale": 1.3
+  "model": {"id": "/cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb", "materials": {"glow": {"color": "oklch(0.95 0.06 85)", "emissive": "oklch(0.88 0.12 75)", "emissiveIntensity": 5}}}
+  "castShadow": false
+  "receiveShadow": true
+  "visibleRange": {"max": 95}
+  "children": [{"id": "drop", "feetPosition": {"x": 0, "y": 0.43, "z": 0}, "primitive": {"kind": "cylinder", "radiusTop": 0.012, "radiusBottom": 0.012, "height": 0.8776923076923077}, "material": {"color": "oklch(0.3 0.01 80)", "metalness": 0.8, "roughness": 0.5}, "castShadow": false}, {"id": "glow", "feetPosition": {"x": 0, "y": 0.1, "z": 0}, "visibleRange": {"max": 75}, "light": {"kind": "point", "color": "oklch(0.8 0.13 68)", "intensity": 5, "distance": 9, "shadow": {"enabled": false}, "visibleRange": {"max": 22}}}]
+"hub-doorlamp-t7-a3":
+  "id": "hub-doorlamp-t7-a3"
+  "feetPosition": {"x": 275, "y": 4.5, "z": -67.5}
+  "scale": 1.3
+  "model": {"id": "/cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb", "materials": {"glow": {"color": "oklch(0.95 0.06 85)", "emissive": "oklch(0.88 0.12 75)", "emissiveIntensity": 5}}}
+  "castShadow": false
+  "receiveShadow": true
+  "visibleRange": {"max": 95}
+  "children": [{"id": "drop", "feetPosition": {"x": 0, "y": 0.43, "z": 0}, "primitive": {"kind": "cylinder", "radiusTop": 0.012, "radiusBottom": 0.012, "height": 0.8776923076923077}, "material": {"color": "oklch(0.3 0.01 80)", "metalness": 0.8, "roughness": 0.5}, "castShadow": false}, {"id": "glow", "feetPosition": {"x": 0, "y": 0.1, "z": 0}, "visibleRange": {"max": 75}, "light": {"kind": "point", "color": "oklch(0.8 0.13 68)", "intensity": 5, "distance": 9, "shadow": {"enabled": false}, "visibleRange": {"max": 22}}}]
+"hub-doorlamp-t7-b3":
+  "id": "hub-doorlamp-t7-b3"
+  "feetPosition": {"x": 285, "y": 4.5, "z": -67.5}
+  "scale": 1.3
+  "model": {"id": "/cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb", "materials": {"glow": {"color": "oklch(0.95 0.06 85)", "emissive": "oklch(0.88 0.12 75)", "emissiveIntensity": 5}}}
+  "castShadow": false
+  "receiveShadow": true
+  "visibleRange": {"max": 95}
+  "children": [{"id": "drop", "feetPosition": {"x": 0, "y": 0.43, "z": 0}, "primitive": {"kind": "cylinder", "radiusTop": 0.012, "radiusBottom": 0.012, "height": 0.8776923076923077}, "material": {"color": "oklch(0.3 0.01 80)", "metalness": 0.8, "roughness": 0.5}, "castShadow": false}, {"id": "glow", "feetPosition": {"x": 0, "y": 0.1, "z": 0}, "visibleRange": {"max": 75}, "light": {"kind": "point", "color": "oklch(0.8 0.13 68)", "intensity": 5, "distance": 9, "shadow": {"enabled": false}, "visibleRange": {"max": 22}}}]
+"hub-lamp-132":
+  "id": "hub-lamp-132"
+  "tags": ["hub-lamp"]
+  "feetPosition": {"x": 196.5, "y": 4.45, "z": -100.45}
+  "rotation": {"yaw": 180}
+  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
+  "castShadow": false
+  "receiveShadow": true
+  "visibleRange": {"max": 120}
+  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
+"hub-lamp-133":
+  "id": "hub-lamp-133"
+  "tags": ["hub-lamp"]
+  "feetPosition": {"x": 208.5, "y": 4.45, "z": -100.45}
+  "rotation": {"yaw": 180}
+  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
+  "castShadow": false
+  "receiveShadow": true
+  "visibleRange": {"max": 120}
+  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
+"hub-lamp-134":
+  "id": "hub-lamp-134"
+  "tags": ["hub-lamp"]
+  "feetPosition": {"x": 220.5, "y": 4.45, "z": -89.55}
+  "rotation": {"yaw": 0}
+  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
+  "castShadow": false
+  "receiveShadow": true
+  "visibleRange": {"max": 120}
+  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
+"hub-lamp-135":
+  "id": "hub-lamp-135"
+  "tags": ["hub-lamp"]
+  "feetPosition": {"x": 232.5, "y": 4.45, "z": -100.45}
+  "rotation": {"yaw": 180}
+  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
+  "castShadow": false
+  "receiveShadow": true
+  "visibleRange": {"max": 120}
+  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
+"hub-lamp-136":
+  "id": "hub-lamp-136"
+  "tags": ["hub-lamp"]
+  "feetPosition": {"x": 244.5, "y": 4.45, "z": -89.55}
+  "rotation": {"yaw": 0}
+  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
+  "castShadow": false
+  "receiveShadow": true
+  "visibleRange": {"max": 120}
+  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
+"hub-lamp-137":
+  "id": "hub-lamp-137"
+  "tags": ["hub-lamp"]
+  "feetPosition": {"x": 256.5, "y": 4.45, "z": -100.45}
+  "rotation": {"yaw": 180}
+  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
+  "castShadow": false
+  "receiveShadow": true
+  "visibleRange": {"max": 120}
+  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
+"hub-lamp-138":
+  "id": "hub-lamp-138"
+  "tags": ["hub-lamp"]
+  "feetPosition": {"x": 268.5, "y": 4.45, "z": -89.55}
+  "rotation": {"yaw": 0}
+  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
+  "castShadow": false
+  "receiveShadow": true
+  "visibleRange": {"max": 120}
+  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
+"hub-lamp-139":
+  "id": "hub-lamp-139"
+  "tags": ["hub-lamp"]
+  "feetPosition": {"x": 280.5, "y": 4.45, "z": -100.45}
+  "rotation": {"yaw": 180}
+  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
+  "castShadow": false
+  "receiveShadow": true
+  "visibleRange": {"max": 120}
+  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
+"hub-lamp-75":
+  "id": "hub-lamp-75"
+  "tags": ["hub-lamp"]
+  "feetPosition": {"x": 205.45, "y": 4.45, "z": -71.5}
+  "rotation": {"yaw": 90}
+  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
+  "castShadow": false
+  "receiveShadow": true
+  "visibleRange": {"max": 120}
+  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
+"hub-lamp-76":
+  "id": "hub-lamp-76"
+  "tags": ["hub-lamp"]
+  "feetPosition": {"x": 194.55, "y": 4.45, "z": -83.5}
+  "rotation": {"yaw": -90}
+  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
+  "castShadow": false
+  "receiveShadow": true
+  "visibleRange": {"max": 120}
+  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
+"hub-lamp-87":
+  "id": "hub-lamp-87"
+  "tags": ["hub-lamp"]
+  "feetPosition": {"x": 285.45, "y": 4.45, "z": -71.5}
+  "rotation": {"yaw": 90}
+  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
+  "castShadow": false
+  "receiveShadow": true
+  "visibleRange": {"max": 120}
+  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
+"hub-lamp-88":
+  "id": "hub-lamp-88"
+  "tags": ["hub-lamp"]
+  "feetPosition": {"x": 274.55, "y": 4.45, "z": -83.5}
+  "rotation": {"yaw": -90}
+  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
+  "castShadow": false
+  "receiveShadow": true
+  "visibleRange": {"max": 120}
+  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
