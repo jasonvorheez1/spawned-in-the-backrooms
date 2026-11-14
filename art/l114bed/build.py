@@ -43,7 +43,7 @@ def soft(name, sx, sy, sz, loc, m, sub=3, sag=0.0, rumple=0.0, nscale=4.0):
     # a flat-cut slab (not a subsurf blob): cube, even grid cuts, rounded edges, then the sag and the rumple
     bpy.ops.mesh.primitive_cube_add(size=1, location=loc); o = bpy.context.object; o.name = name; o.scale = (sx, sy, sz); bpy.ops.object.transform_apply(scale=True)
     bv = o.modifiers.new("bv", "BEVEL"); bv.width = min(sz * 0.45, 0.05); bv.segments = 4; bpy.ops.object.modifier_apply(modifier="bv")
-    bm = bmesh.new(); bm.from_mesh(o.data); bmesh.ops.subdivide_edges(bm, edges=bm.edges[:], cuts=6, use_grid_fill=True); bm.to_mesh(o.data); bm.free()
+    bm = bmesh.new(); bm.from_mesh(o.data); bmesh.ops.subdivide_edges(bm, edges=bm.edges[:], cuts=3, use_grid_fill=True); bm.to_mesh(o.data); bm.free()
     for v in o.data.vertices:
         c = v.co; u = max(-1, min(1, c.x / (sx / 2))); t = max(-1, min(1, c.y / (sy / 2)))
         if c.z > 0: c.z -= sag * (1 - u * u) * (1 - t * t)
@@ -53,7 +53,7 @@ parts.append(soft("mattress", W - 0.1, L - 0.14, 0.2, (0, 0, 0.47), SHEET, sub=3
 # duvet: thin sheet over the lower 60 %, thrown back fold at the head end, drapes over the sides
 bpy.ops.mesh.primitive_grid_add(x_subdivisions=40, y_subdivisions=60, size=1, location=(0, 0, 0)); d = bpy.context.object; d.name = "duvet"
 for v in d.data.vertices:
-    x = v.co.x * (W + 0.1); y = v.co.y * 1.25 - 0.32; ax = abs(x); top = 0.585
+    x = v.co.x * (W + 0.1); y = v.co.y * 1.25 - 0.32; ax = abs(x); top = 0.62
     z = top if ax < (W - 0.1) / 2 else top - (ax - (W - 0.1) / 2) * 3.2   # drape over the edges
     z = max(z, 0.40)
     if y > 0.22: yy = y - 0.22; y = 0.22 - yy * 0.35; z = top + 0.05 + 0.03 * math.sin(yy * 9)   # folded back on itself
