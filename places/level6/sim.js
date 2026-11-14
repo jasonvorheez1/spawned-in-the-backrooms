@@ -227,18 +227,18 @@ function laySnack(ctx) {
 }
 function layRelay(ctx) {
   const { ends } = plan(), e = ends[NOTES.length + 3] ?? ends[ends.length - 1]; if (!e) return;
-  const x = cx(e.i) - e.dx * 1.15 + e.dz * 1.0, z = cz(e.j) - e.dz * 1.15 - e.dx * 1.0;
-  if (!ctx.place.objects["l6-meg-relay"]) {
-    ctx.spawn("l6-meg-relay", {
-      tags: ["usable"],
-      feetPosition: { x, y: 0, z },
-      primitive: { kind: "box", width: 0.42, height: 0.34, depth: 0.28 },
-      material: { color: "oklch(0.32 0.03 145)", metalness: 0.5, roughness: 0.55 },
-      behavior: "scripts/quest-prop-use.js",
-      state: { kind: "l6-meg-relay", name: "M.E.G. Relay Box 6-A", verb: "Pull relay tape", info: "A battery-backed acoustic monitor near the Level 6.1 wire.", tint: "#8fd8ff" },
-      children: [{ feetPosition: { x: 0, y: 0.36, z: 0 }, primitive: { kind: "sphere", radius: 0.035 }, material: { color: "#4dff88", emissive: "#4dff88", emissiveIntensity: 3 } }],
-    });
-  }
+  const x = cx(e.i) - e.dx * 0.9 + e.dz * 0.55, z = cz(e.j) - e.dz * 0.9 - e.dx * 0.55;
+  const existing = ctx.place.objects["l6-meg-relay"];
+  if (existing) { existing.feetPosition = { x, y: 0, z }; return; }
+  ctx.spawn("l6-meg-relay", {
+    tags: ["usable"],
+    feetPosition: { x, y: 0, z },
+    primitive: { kind: "box", width: 0.42, height: 0.34, depth: 0.28 },
+    material: { color: "oklch(0.32 0.03 145)", metalness: 0.5, roughness: 0.55 },
+    behavior: "scripts/quest-prop-use.js",
+    state: { kind: "l6-meg-relay", name: "M.E.G. Relay Box 6-A", verb: "Pull relay tape", info: "A battery-backed acoustic monitor near the Level 6.1 wire.", tint: "#8fd8ff" },
+    children: [{ feetPosition: { x: 0, y: 0.36, z: 0 }, primitive: { kind: "sphere", radius: 0.035 }, material: { color: "#4dff88", emissive: "#4dff88", emissiveIntensity: 3 } }],
+  });
 }
 export function tick(ctx) {
   if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
@@ -250,7 +250,7 @@ export function tick(ctx) {
   if ((st.builtV ?? 0) < 2) lay2(ctx);
   if ((st.builtV ?? 0) < 3) { lay3(ctx); st.builtV = V; }
   if ((st.snackV ?? 0) < 1) { laySnack(ctx); st.snackV = 1; }
-  if ((st.snackV ?? 0) < 2) { layRelay(ctx); st.snackV = 2; }
+  if ((st.snackV ?? 0) < 3) { layRelay(ctx); st.snackV = 3; }
   // "this changed overnight?": the wall moves only while nobody stands near enough to see it go
   const w = ctx.place.objects["l6-shift"];
   if (w && ctx.now() > (st.shiftAt ?? 0)) {

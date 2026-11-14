@@ -260,3 +260,22 @@ test('nextQuestExit resolves valid cross-level exit routes out of Level 6.1', ()
   expect(nextQuestExit(routeCtx, pl(), 'level10').via).toBe('level11')
   expect(nextQuestExit(routeCtx, pl({ nvg: 1, battery: 10 }), 'level6').via).toBe('level6')
 })
+
+test('barter failure on Wren or Kael does not silently deduct full price, and guard-b has post-quest talk', () => {
+  const low = { skl: loSkills, cents: 2500, l61SalQ: 1, l61SealQ: 99, craneQ: 4, craneWaybill: 1 }
+  const wBarter = l61Choices('l10-meg-wren', low).find((c) => c.tag === 'Barter 35')
+  say61(mkCtx(0), low, 'l10-meg-wren', wBarter.text)
+  expect(low.cents).toBe(2500)
+  expect(low.l61SalQ).toBe(1)
+
+  low.l61SalQ = 2
+  const kBarter = l61Choices('l11-trader-kael', low).find((c) => c.tag === 'Barter 35')
+  say61(mkCtx(0), low, 'l11-trader-kael', kBarter.text)
+  expect(low.cents).toBe(2500)
+  expect(low.l61SalQ).toBe(2)
+
+  expect(l61Choices('l61-guard-b', low).some((c) => c.tag === 'Talk' && c.text.includes('Seal 6.1-02'))).toBe(true)
+  const kTurnIns = l11Choices('l11-trader-kael', low).filter((c) => c.tag === 'Quest Turn-In')
+  expect(kTurnIns.length).toBe(1)
+  expect(kTurnIns[0].text).toContain('customs waybill')
+})

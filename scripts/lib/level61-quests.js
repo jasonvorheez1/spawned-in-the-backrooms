@@ -341,7 +341,9 @@ export function handleDialogueQuest61(ctx, p, npc, text) {
       return { reply: "Feeding kids who tripped out of Level 6 blind? Okay, yeah, take the double-stitched sack off the wagon and tell Sal to send back clean wax paper next caravan.", mood: "happy" };
     }
     if (t.includes("stone-ground flour")) {
-      const cheap = t.includes("barter") ? rollCheck(ctx, s, { skill: "barter", difficulty: 35 }).ok : false;
+      const barter = t.includes("barter");
+      const cheap = barter ? rollCheck(ctx, s, { skill: "barter", difficulty: 35 }).ok : false;
+      if (barter && !cheap) return { reply: "Nice try, traveller, but Cooper's ledger says fifteen flat for a sack. Pay fifteen or talk me into a charity crate.", mood: "calm" };
       const cost = cheap ? 800 : 1500;
       if ((s.cents ?? 0) < cost) return { reply: `Cooper's tariff's $${(cost / 100).toFixed(2)} for a full sack unless you want to talk me into a charity crate.`, mood: "calm" };
       s.cents -= cost;
@@ -356,7 +358,9 @@ export function handleDialogueQuest61(ctx, p, npc, text) {
       setStep61(ctx, p, "sal", 3, "Two Menus Short · Carry the flour and coffee back through the glass doors to Sal in Level 6.1");
       return { reply: "You cleared the lock so that Guild barge could dock, boss — remember 'first pot off her is yours'? Take this sealed roast tin straight through the glass doors to Sal, zero charge.", mood: "happy" };
     }
-    const deal = t.includes("half off") ? rollCheck(ctx, s, { skill: "barter", difficulty: 35 }).ok : false;
+    const haggle = t.includes("half off");
+    const deal = haggle ? rollCheck(ctx, s, { skill: "barter", difficulty: 35 }).ok : false;
+    if (haggle && !deal) return { reply: "Half off? Beans don't grow in the canal, boss. Twenty straight, or go unlock my canal barge first.", mood: "calm" };
     const cost = deal ? 1000 : 2000;
     if ((s.cents ?? 0) < cost) return { reply: `Channel beans aren't cheap while the lock's cranky, boss — $${(cost / 100).toFixed(2)}, or go unlock my canal barge first.`, mood: "calm" };
     s.cents -= cost;
@@ -382,7 +386,9 @@ export function l61Choices(id, s) {
     if (q === 99) out.push({ text: "Is Seal 6.1-02 staying quiet?", tag: "Talk" });
     if ((s?.l61GuildQ ?? 0) === 3) out.push({ text: "Here's the unguarded vent telemetry from my Level 3 and 4 survey.", tag: "Quest Turn-In" });
   } else if (id === "l61-guard-b") {
-    if ((s?.l61SealQ ?? 0) === 3 && s?.l61SealRuling) out.push({ text: "I brought Vale's diagnostics on Seal 6.1-02.", tag: "Quest Turn-In" });
+    const q = s?.l61SealQ ?? 0;
+    if (q === 3 && s?.l61SealRuling) out.push({ text: "I brought Vale's diagnostics on Seal 6.1-02.", tag: "Quest Turn-In" });
+    if (q === 99) out.push({ text: "Is Seal 6.1-02 staying quiet?", tag: "Talk" });
   } else if (id === "l61-guild-a") {
     const q = s?.l61GuildQ ?? 0;
     if (!q && repOf(s, "survivors") > -35) out.push({ text: "If 412 ways are written, what belongs on Page 413?", tag: "Quest Start" });

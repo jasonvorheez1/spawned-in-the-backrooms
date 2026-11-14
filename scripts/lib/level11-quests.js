@@ -301,9 +301,9 @@ export function l11Choices(id, s) {
     const q = s?.craneQ ?? 0;
     if (!q && repOf(s, "bntg") > -35) out.push({ text: "Docks are dead quiet. Something wrong with the canal?", tag: "Quest Start" });
     if (q === 4) {
-      out.push({ text: "Valve's free. I cleared the canal lock myself.", tag: "Quest Turn-In" });
       if (s?.craneWaybill) out.push({ text: "I brought the Guild of Many's customs waybill from 6.1 and cleared the canal lock.", tag: "Quest Turn-In" });
-      if (!s?.kaelHaggle) out.push({ text: "I cleared the canal lock. I want a cut of the cargo.", tag: "Barter 40" });
+      else out.push({ text: "Valve's free. I cleared the canal lock myself.", tag: "Quest Turn-In" });
+      if (!s?.kaelHaggle && !s?.craneWaybill) out.push({ text: "I cleared the canal lock. I want a cut of the cargo.", tag: "Barter 40" });
     }
     if (q === 99) out.push({ text: "Did the barge come in all right?", tag: "Talk" });
   } else if (id === "l11-walker-3") {
