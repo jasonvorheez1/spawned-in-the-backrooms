@@ -38,6 +38,7 @@ function makeCtx(player, objects = {}) {
     _t: 10000,
     random: () => 0.4,
     view: { camera: null },
+    world: { state: {} },
     place: { id: player.place, objects, state: placeState },
     emit: (name, payload, opts) => emits.push({ name, payload, opts }),
     getObject: (id) => (id === player.id ? player : objects[id] ?? null),
@@ -207,12 +208,13 @@ describe("Level ! intro, near-death rescue non-repeatability, and Phoebe conclus
     expect(p.feetPosition.x).toBe(CORRIDOR.safePos.x);
   });
 
-  test("supports all 4 Phoebe stances with curiosity motivation and completes Chapter 2 without Chapter 3 card", () => {
-    for (const [snippet, expectedStance] of [
-      ["Why did you pull me out", "suspicious"],
-      ["waited until the corridor collapsed", "frustrated"],
-      ["Mike Sunderland", "curious"],
-      ["thank you", "relieved"],
+  test("supports all 5 replies to Phoebe with curiosity motivation and completes Chapter 2 without Chapter 3 card", () => {
+    for (const [snippet, expectedStance, reaction] of [
+      ["Who is Mike", "curious", "mike"],
+      ["reminded you of someone", "curious", "reminded"],
+      ["What do you want", "suspicious", "want"],
+      ["could've helped sooner", "frustrated", "sooner"],
+      ["Thanks, I think", "relieved", "thanks"],
     ]) {
       const p = makePlayer({ ch2Q: 6, lrunRescued: 1 });
       p.place = "levelrun";
@@ -225,6 +227,8 @@ describe("Level ! intro, near-death rescue non-repeatability, and Phoebe conclus
 
       const res = handleDialogueCh2(ctx, p, phoebe, chosen.text);
       expect(p.state.phoebeStance).toBe(expectedStance);
+      expect(p.state.phoebeReaction).toBe(reaction);
+      expect(res.reply).not.toContain("—");
       expect(res.reply.length).toBeGreaterThan(20);
 
       // Exit requires speaking + finishing Chapter 2 cleanly

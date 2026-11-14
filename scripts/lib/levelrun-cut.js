@@ -269,5 +269,5 @@ export function lrunUi(ctx, player) {
 .lrb{position:fixed;left:0;right:0;height:12vh;background:#040107;z-index:50;animation:lrb .5s ease-out both,lrbo .8s ease-in both;animation-delay:0ms,${d(LRUN_RESCUE_LEN - 0.8)}}
 .lrv{position:fixed;inset:0;pointer-events:none;z-index:48;box-shadow:inset 0 0 140px rgba(170,10,20,.8)}
 .lrp{position:fixed;left:6vw;right:6vw;bottom:14vh;text-align:center;z-index:54;color:#efe6ff;font:400 18px/1.4 Georgia,serif;text-shadow:1px 1px 5px #000;opacity:0;animation:lrp 2.6s ease both;animation-delay:${d(4.3)}}
-</style><div class="lrv"></div><div class="lrb" style="top:0"></div><div class="lrb" style="bottom:0"></div><div class="lrp">${PHO_RESCUE_LINE}</div>`;
+</style><div class="lrv"></div><div class="lrb" style="top:0"></div><div class="lrb" style="bottom:0"></div><div class="lrp">Phoebe: "${PHO_RESCUE_LINE}"</div>`;
 }
