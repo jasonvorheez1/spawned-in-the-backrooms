@@ -13,7 +13,7 @@ ir-bed:
   layout: {box: {max: {x: 0.825, y: 1.1, z: 1.05}, min: {x: -0.825, y: 0, z: -1.05}}}
   model: {id: /cdn/value.4c61843b2bcb94ee80364a2a654397ea5d979690794ce7e085addb70cfb31aae.glb}
   physics: {body: static, collider: box}
-  rotation: 270
+  rotation: 90
 ir-blowup:
   feetPosition: {x: -2.2, y: 0, z: -2.35}
   id: ir-blowup
