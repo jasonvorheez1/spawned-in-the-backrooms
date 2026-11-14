@@ -31,7 +31,11 @@ function moveTo(ctx, o, m, goal, speed, dt, now) {
   const pos = o.feetPosition;
   if (!m.path || now > m.pathAt || flat(m.pathGoal, goal) > 2) {
     const r = navPath(ctx, pos, goal);
-    if (!r.wait) { m.path = r.points?.length ? r.points.map((p) => ({ x: p.x, z: p.z })) : [{ x: goal.x, z: goal.z }]; m.pathAt = now + 700; m.pathGoal = { x: goal.x, z: goal.z }; }
+    if (r && !r.wait && !r.loading) {
+      if (r.points?.length) { m.path = r.points.map((p) => ({ x: p.x, z: p.z })); m.pathAt = now + (r.partial ? 250 : 700); m.pathGoal = { x: goal.x, z: goal.z }; }
+      else if (!r.partial && r.ok) { m.path = [{ x: goal.x, z: goal.z }]; m.pathAt = now + 700; m.pathGoal = { x: goal.x, z: goal.z }; }
+      else { m.path = null; m.pathAt = now + 250; m.pathGoal = { x: goal.x, z: goal.z }; }
+    }
   }
   if (m.path) while (m.path.length > 1 && flat(pos, m.path[0]) < 0.6) m.path.shift();
   const next = m.path?.[0] ?? goal, dx = next.x - pos.x, dz = next.z - pos.z, d = Math.hypot(dx, dz);

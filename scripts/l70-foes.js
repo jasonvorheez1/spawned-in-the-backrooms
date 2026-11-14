@@ -88,7 +88,11 @@ export function update(ctx, dt) {
 // at ease: potter round the nest; far from it, walk home on the nav graph
 function stroll(ctx, r, m, st, pos, now, speed, reach) {
   const h = st.home ?? pos, dh = flat(h, pos);
-  if (dh > 30 && (!m.path || now > (m.pathAt ?? 0))) { m.path = route(ctx, pos, h).points.slice(1); m.pathAt = now + 20000; }
+  if (dh > 30 && (!m.path || now > (m.pathAt ?? 0))) {
+    const res = route(ctx, pos, h);
+    m.path = res?.points?.length > 1 ? res.points.slice(1) : null;
+    m.pathAt = now + (!res?.ok || res?.partial ? 2000 : 20000);
+  }
   if (m.path?.length) { const t = m.path[0], dd = flat(t, pos); if (dd < 1.2) { m.path.shift(); return [0, 0]; } return [((t.x - pos.x) / dd) * speed * 2, ((t.z - pos.z) / dd) * speed * 2]; }
   if (!m.to || now > m.toAt) { const a = ctx.random() * 6.283, rr = ctx.random() * reach; m.to = ctx.random() < 0.35 ? null : { x: h.x + Math.cos(a) * rr, z: h.z + Math.sin(a) * rr }; m.toAt = now + 2500 + ctx.random() * 4000; }
   if (!m.to) return [0, 0];

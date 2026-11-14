@@ -4,7 +4,7 @@
 // flashlight off immediately, look down, and wait"). Light off and look down (or crawl still, light off) and it sinks and slides away
 // for a while: "if you think it's gone, it's gone". Every number is Savi's pick.
 import { raycast } from "builtin/physics";
-import { findPath } from "builtin/nav";
+import { navPath } from "./lib/nav.js";
 import { knocked } from "./lib/knock.js";
 import { heard } from "./lib/hear.js";
 import { dmgAfterArmor } from "./lib/stats.js";
@@ -76,8 +76,8 @@ export function update(ctx, dt) {
   // pathing: a walked path over the sewer's colliders, re-asked when the goal moves a metre or every 0.8 s; it steers at the next corner
   const P = (m.path ??= { pts: null, i: 0, at: 0, gx: 1e9, gz: 1e9 });
   if (now >= P.at || Math.hypot(goal.x - P.gx, goal.z - P.gz) > 1) {
-    const r = findPath(ctx, pos, { x: goal.x, y: pos.y, z: goal.z }, { radius: 0.35, height: 1.1 });
-    if (!r.partial) { P.pts = r.points?.length ? r.points : null; P.i = 0; P.at = now + 800; P.gx = goal.x; P.gz = goal.z; }
+    const r = navPath(ctx, pos, { x: goal.x, y: pos.y, z: goal.z }, { radius: 0.35, height: 1.1 });
+    if (r && !r.wait && (!r.partial || r.points?.length)) { P.pts = r.points?.length ? r.points : null; P.i = 0; P.at = now + (r.partial ? 250 : 800); P.gx = goal.x; P.gz = goal.z; }
   }
   let aim = goal;
   if (P.pts) { while (P.i < P.pts.length - 1 && Math.hypot(P.pts[P.i].x - pos.x, P.pts[P.i].z - pos.z) < 0.4) P.i++; aim = P.pts[P.i]; }

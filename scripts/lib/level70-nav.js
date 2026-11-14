@@ -2,8 +2,9 @@
 // An edge is proven by builtin/nav the first time it is used and cached in place.state.l70nav; the cache drops when a building layer's version moves.
 import { findPath } from "builtin/nav";
 import { traverseCheck } from "builtin/physics";
+import { isNavLoading } from "./nav.js";
 import { ARRIVE, ZONES, SPOT } from "./level70.js";
-export const NODES = {}; export const ADJ = {}; export const NAV_V = 4;
+export const NODES = {}; export const ADJ = {}; export const NAV_V = 5;
 const add = (id, x, z) => { NODES[id] = { x, y: 0, z }; ADJ[id] = ADJ[id] ?? []; };
 const link = (a, b) => { ADJ[a].push(b); ADJ[b].push(a); };
 add("arrive", ARRIVE.x, ARRIVE.z);
@@ -53,28 +54,81 @@ function dijkstra(a, b, bad) {
 // the node chain between two points, no validation: used to lay a resident's round along the graph
 export function legs(from, to) { return (dijkstra(nearest(from), nearest(to)) ?? []).map((id) => ({ ...NODES[id] })); }
 const r1 = (v) => Math.round(v * 10) / 10;
-function prove(ctx, A, B) {
-  try { const r = findPath(ctx, A, B, { radius: 0.32 }); if (r?.ok && r.points?.length) { const st = Math.max(1, Math.ceil(r.points.length / 24)); return r.points.filter((_, i) => i % st === 0 || i === r.points.length - 1).map((p) => [r1(p.x), r1(p.y ?? 0), r1(p.z)]); } if (r?.partial) return null; }
-  catch (e) { try { if (traverseCheck(ctx, A, B)?.traversable) return [[A.x, 0, A.z], [B.x, 0, B.z]]; } catch (e2) { return null; } }
+const BLOCKED_RETRY_MS = 15000;
+const PROVES_PER_TICK = 12;
+let proveAt = -1, proveN = 0;
+function proveBudget(now) {
+  if (now !== proveAt) { proveAt = now; proveN = 0; }
+  if (proveN >= PROVES_PER_TICK) return false;
+  proveN++;
+  return true;
+}
+function isBlockedEntry(v, now) {
+  if (v === 0) return true;
+  return v != null && typeof v === "object" && !Array.isArray(v) && now < (v.until ?? 0);
+}
+function checkTraverse(ctx, A, B) {
+  try {
+    const t = traverseCheck(ctx, A, B);
+    if (t?.traversable) return [[r1(A.x), r1(A.y ?? 0), r1(A.z)], [r1(B.x), r1(B.y ?? 0), r1(B.z)]];
+    if (t == null || t.loading || t.ready === false) return null;
+  } catch (e) { return null; }
   return 0;
 }
+function prove(ctx, A, B) {
+  let r = null, threw = false;
+  try { r = findPath(ctx, A, B, { radius: 0.32 }); }
+  catch (e) { threw = true; }
+  if (r && !threw) {
+    if (r.ok && r.points?.length) {
+      const st = Math.max(1, Math.ceil(r.points.length / 24));
+      return r.points.filter((_, i) => i % st === 0 || i === r.points.length - 1).map((p) => [r1(p.x), r1(p.y ?? 0), r1(p.z)]);
+    }
+    if (isNavLoading(r) || r.partial) return null;
+    return checkTraverse(ctx, A, B);
+  }
+  return checkTraverse(ctx, A, B);
+}
 export function route(ctx, from, to) {
-  const ps = ctx.place.state, ver = [ps.v70town, ps.v70civic, ps.v70wild, ps.v70paths, NAV_V].join("|");
+  if (!from || !to || !Number.isFinite(from.x) || !Number.isFinite(from.z) || !Number.isFinite(to.x) || !Number.isFinite(to.z)) {
+    return { ok: false, partial: false, points: [] };
+  }
+  const ps = ctx.place?.state ?? {}, now = ctx.now?.() ?? Date.now();
+  const ver = [ps.v70town, ps.v70civic, ps.v70wild, ps.v70paths, NAV_V].join("|");
   let st = ps.l70nav; if (!st || st.ver !== ver) st = { ver, e: {} };
   const e = { ...st.e }; let dirty = st !== ps.l70nav, partial = false;
-  const a = nearest(from), b = nearest(to), bad = new Set(Object.keys(e).filter((k) => e[k] === 0));
+  const a = nearest(from), b = nearest(to), bad = new Set(Object.keys(e).filter((k) => isBlockedEntry(e[k], now)));
   let chain = null;
   for (let tries = 0; tries < 5; tries++) {
     chain = dijkstra(a, b, bad); if (!chain) break; let fail = false;
-    for (let i = 1; i < chain.length; i++) { const k = key(chain[i - 1], chain[i]); if (k in e) continue; const [lo, hi] = k.split(">"); const r = prove(ctx, NODES[lo], NODES[hi]); if (r === null) { partial = true; continue; } e[k] = r; dirty = true; if (r === 0) { bad.add(k); fail = true; break; } }
+    for (let i = 1; i < chain.length; i++) {
+      const k = key(chain[i - 1], chain[i]);
+      if (Array.isArray(e[k]) || isBlockedEntry(e[k], now)) continue;
+      if (!proveBudget(now)) { partial = true; continue; }
+      const [lo, hi] = k.split(">"), r = prove(ctx, NODES[lo], NODES[hi]);
+      if (r === null) { partial = true; continue; }
+      if (r === 0) { e[k] = { until: now + BLOCKED_RETRY_MS }; dirty = true; bad.add(k); fail = true; break; }
+      e[k] = r; dirty = true;
+    }
     if (!fail) break; chain = null;
   }
-  if (dirty) ps.l70nav = { ver, e };
+  if (dirty && ctx.place?.state) ps.l70nav = { ver, e };
   const y = from.y ?? 0, pts = [{ x: from.x, y, z: from.z }];
   if (!chain) return { ok: false, partial, points: [...pts, { x: to.x, y: to.y ?? 0, z: to.z }] };
-  for (let i = 1; i < chain.length; i++) { const k = key(chain[i - 1], chain[i]), seg = e[k], fwd = chain[i - 1] < chain[i]; if (seg) { const s = fwd ? seg : [...seg].reverse(); for (const p of s) pts.push({ x: p[0], y: p[1], z: p[2] }); } else pts.push({ ...NODES[chain[i]] }); }
+  for (let i = 1; i < chain.length; i++) {
+    const k = key(chain[i - 1], chain[i]), seg = Array.isArray(e[k]) ? e[k] : null, fwd = chain[i - 1] < chain[i];
+    if (seg) { const s = fwd ? seg : [...seg].reverse(); for (const p of s) pts.push({ x: p[0], y: p[1], z: p[2] }); }
+    else pts.push({ ...NODES[chain[i]] });
+  }
   if (chain.length === 1) pts.push({ ...NODES[a] });
   const last = NODES[b]; let ok = true, snapped = false; // snapped: the anchor itself stands inside furniture or a mesh; the walk ends at its node beside it
-  if (D(last, to) > 1.5) { let r = null; try { r = findPath(ctx, last, { x: to.x, y: to.y ?? 0, z: to.z }, { radius: 0.32 }); } catch (err) { r = null; } if (r?.ok && r.points?.length) for (const p of r.points) pts.push({ x: p.x, y: p.y ?? 0, z: p.z }); else if (r?.partial) { partial = true; pts.push({ x: to.x, y: to.y ?? 0, z: to.z }); } else if (D(last, to) < 8) snapped = true; else { ok = false; pts.push({ x: to.x, y: to.y ?? 0, z: to.z }); } }
+  if (D(last, to) > 1.5) {
+    let r = null, threw = false;
+    try { r = findPath(ctx, last, { x: to.x, y: to.y ?? 0, z: to.z }, { radius: 0.32 }); } catch (err) { threw = true; }
+    if (r?.ok && r.points?.length) for (const p of r.points) pts.push({ x: p.x, y: p.y ?? 0, z: p.z });
+    else if (threw || isNavLoading(r) || r?.partial) { partial = true; pts.push({ x: to.x, y: to.y ?? 0, z: to.z }); }
+    else if (D(last, to) < 8) snapped = true;
+    else { ok = false; pts.push({ x: to.x, y: to.y ?? 0, z: to.z }); }
+  }
   return { ok, partial, snapped, points: pts, nodes: chain };
 }
