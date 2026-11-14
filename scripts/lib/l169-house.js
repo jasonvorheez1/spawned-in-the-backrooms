@@ -72,6 +72,17 @@ export function layHouse(ctx, put, L) {
   { hide("kitchen"); const kx = r.kitchen[1] - b.wallT - 0.34;
     look("counter-a", M.counter, kx, -497.55 + (C.z + 500), 0, 0.34, 0.93, 0.86); look("counter-b", M.counter, kx, -495.8 + (C.z + 500), 0, 0.34, 0.93, 0.86);
     look("table", M.table, C.x + 4, C.z + 4, 90, 0.5, 0.8, 1.3); }
+  // the hall: a runner down its length, a bench under the family photo wall, pictures between the doors (painted Nov 14)
+  { const hz = (r.hall[2] + r.hall[3]) / 2, nW = r.hall[2] + b.wallT / 2 + 0.012, sW = r.hall[3] - b.wallT / 2 - 0.012, PY = F + 1.22;
+    part("runner-a", { part: "rug", w: 7.2, d: 0.78 }, 12.2, hz, F + 0.006, { physics: undefined }); part("runner-b", { part: "rug", w: 7.2, d: 0.78 }, 19.8, hz, F + 0.006, { physics: undefined });
+    part("bench-hall", { part: "bench" }, 14, nW + 0.24, F); hide("bench-hall"); look("bench-hall", M.bench, 14, nW + 0.24, 0, 0.8, 0.47, 0.22);
+    for (const [id, tex, x, wall, w, hh] of [
+      ["family", "/cdn/value.0b63423a8a18a5ad62a92fed1a2174a298f8a5d442d9080abafddcb2be3b8e6d.png", 14, "n", 0.86, 0.645],
+      ["map", "/cdn/value.b153a0ff6ed8d6b17054dbca88bfbd5832d6f582893a90b333dce335ad9dd5ed.png", 9.5, "n", 0.72, 0.54],
+      ["mesa", "/cdn/value.2ef798fa20295d10074278acb94e961f53f0fec2477eb4ec82b6cd1658cbcf6e.png", 11.5, "s", 0.64, 0.48],
+      ["well", "/cdn/value.93d50b65d189242b23f3a496a94c717f8925c2e1cdd44e23bd7b6e7f74a15956.png", 18, "s", 0.8, 0.6],
+      ["mesa-2", "/cdn/value.2ef798fa20295d10074278acb94e961f53f0fec2477eb4ec82b6cd1658cbcf6e.png", 19, "n", 0.48, 0.36] ])
+      part(`pic-${id}`, { part: "picture", tex, w, h: hh, frame: id === "map" ? "oklch(0.4 0.05 50)" : undefined }, x, wall === "n" ? nW : sW, PY + (id === "mesa-2" ? 0.12 : 0), { physics: undefined, rotation: wall === "n" ? 180 : 0, castShadow: false }); }
   // lamps: one per room, hung under the ceiling
   for (const k of ["living", "kitchen", "hall", "bed1", "bed2", "bed3", "den", "porch"]) {
     const [x, z] = mid(k), y = F + h.wallH - 0.62;
