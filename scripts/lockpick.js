@@ -46,7 +46,8 @@ function handlePickAction(ctx, d) {
       snd(ctx, 'lock-picking-click', 0.8)
       note(ctx, `[Force Lock ${Math.round(chance * 100)}%] The lock pops open! +${xp} XP`)
       s.pick = null; s.pickP = null; s.pickR = null
-      if (pk.kind === 'door') {
+      if (pk.kind === 'hinge') ctx.emit('press', { by: ctx.self.id }, { to: it.id }) // a house door swings in on its own hinge
+      else if (pk.kind === 'door') {
         target.state.open = true
         heard(ctx, { clip: SND('heavy-metal-door-creak-open'), position: target.state.c ?? target.feetPosition, volume: 0.7, maxDistance: 16 }, { audience: { nearby: target.feetPosition, radius: 18 } })
       } else {

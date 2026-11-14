@@ -120,6 +120,7 @@ function refocus(ctx, force = false) {
         else if (lk) { const [sk, lv] = lk.split(':'), ok = (skillsOf(ctx.self.state)[sk] ?? 0) >= Number(lv); info.info = `Locked · ${SKN[sk]} ${lv}`; info.verb = sk === 'lockpick' ? 'Pick Lock' : (ok ? 'Unlock' : 'Locked:'); info.color = ok ? '#f2c14e' : '#e0644f' }
       } else if (f.tag === 'usable') {
         info = { id: f.id, name: it.state?.name ?? 'Thing', info: it.state?.info ?? '', verb: it.state?.verb ?? 'Use', color: it.state?.tint ?? '#d9d3b8' }
+        const hl = hingeLock(ctx, it); if (hl) { const lv = Number(hl.lock.split(':')[1]), ok = (skillsOf(ctx.self.state).lockpick ?? 0) >= lv; info.info = `Locked · Lockpick ${lv}`; info.verb = ok ? 'Pick Lock' : 'Locked:'; info.color = ok ? '#f2c14e' : '#e0644f' }
       } else if (f.tag === 'seat') {
         const full = spotsOf(it).every((sp) => { const h = holder(ctx, it, sp.i); return h && h !== ctx.self.id })
         info = { id: f.id, name: it.state?.name ?? 'Chair', info: full ? (it.state?.salon ? 'taken · try another chair' : 'taken') : '', verb: full ? 'Taken:' : 'Sit', color: full ? '#e0644f' : '#d9d3b8' }
@@ -252,6 +253,13 @@ export function talk(ctx, it) {
   }
 }
 
+// a swinging door (scripts/home11-door.js) keeps its lock on the hinge; the leaf you look at points to it
+function hingeLock(ctx, it) {
+  if (it.state?.kind !== 'door') return null
+  const h = it.state.hinge && it.state.hinge !== it.id ? ctx.getObject(it.state.hinge) : it
+  const lk = h?.state?.lock
+  return lk && lk.startsWith('lockpick:') && !h.state.open ? { obj: h, lock: lk } : null
+}
 // Level 2 doors: E opens and shuts; a locked one takes the key item it names (fuse, valve wheel, keycard) or a skill
 const DOORKEY = { fuse: { f: 'fuses', n: 'fuse' }, valve: { f: 'valves', n: 'valve wheel' }, keycard: { f: 'keycards', n: 'keycard' } }
 function useDoor(ctx, it) {
@@ -388,6 +396,11 @@ function press(ctx) {
   }
   if (f.tag === 'usable' && it.state?.kind === 'salon') { s.salonOpen = true; s.salonTab = s.salonTab || 'hair'; s.wrMenu = false; s.wardrobeOpen = true; m.key = ''; return } // Glow Up Salon: its own makeover menu (scripts/salon-ui.js)
   if(f.tag==='usable'&&it.state.propLamp){toggleLamp(ctx,it);m.key='';refocus(ctx,true);return}
+  if (f.tag === 'usable' && hingeLock(ctx, it)) { // a locked house door: pick it, or it rattles
+    const h = hingeLock(ctx, it), lv = Number(h.lock.split(':')[1]), have = skillsOf(s).lockpick ?? 0
+    if (have < lv) { note(ctx, `Locked · needs Lockpick ${lv} (you have ${Math.floor(have)})`); snd(ctx, 'door-handle-locked-rattle', 0.5) } else startPick(ctx, h.obj, lv, 'hinge')
+    m.key = ''; return
+  }
   if (f.tag === 'usable') { ctx.emit('press', { by: ctx.self.id }, { to: f.id }); if (it.tags?.includes?.('l5-elev-panel')) s.elevPanel = f.id; m.key = ''; return } // an elevator plate opens a clickable floor list (ui.js)
   if (f.tag === 'seat' && it.state?.salon) { if (spotsOf(it).every((sp) => { const h = holder(ctx, it, sp.i); return h && h !== ctx.self.id })) { note(ctx, 'That chair is taken'); m.key = ''; return } if (sitDown(ctx, it)) { s.salonOpen = true; s.salonTab = s.salonTab || 'hair'; s.wrMenu = false; s.wardrobeOpen = true } m.key = ''; return } // a salon chair at the mirrors: sit and the stylist comes over (scripts/salon-stylist.js)
   if (f.tag === 'seat') { if (sitDown(ctx, it) && it.state?.boat) ctx.emit('press', { by: ctx.self.id }, { to: it.id }); m.key = ''; return } // a boat's seat also takes the oars

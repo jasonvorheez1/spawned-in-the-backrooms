@@ -7,7 +7,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import FURN from "../../scripts/lib/data/furniture.yml";
 import { layout, hashStr, HOUSES, PAINTS, PROPS, TUNE, FWD, ROAD_W, WALK } from "../../scripts/lib/level9.js";
 export const cadence = "1s";
-const V = 15; // 14: dining set split into table + chairs, dresser + kitchen cabinet, only storage is searchable; // 3: Tripo house models on the lots; 6: plaster insides; 7: wallpaper box-mapped, a bedroom wall, furniture and loot inside; 5 (4 hung them on the back): door holes cut, a hinged front door and a stoop on each (keeps seed and loot)
+const V = 16; // 16: per-house interior styles (paper, floor, rug, layout, ransacked) and picklable front doors; // 14: dining set split into table + chairs, dresser + kitchen cabinet, only storage is searchable; // 3: Tripo house models on the lots; 6: plaster insides; 7: wallpaper box-mapped, a bedroom wall, furniture and loot inside; 5 (4 hung them on the back): door holes cut, a hinged front door and a stoop on each (keeps seed and loot)
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BLUE = { kind: "scripted", script: "engine/blueprint" };
 const ASPHALT = { texture: "cdn/texture-worn-dark-grey-asphalt-road-coarse-aggregate-damp-patches-cracks.png", wrap: "repeat", repeat: [0.3, 0.3], color: "oklch(0.42 0.01 250)", roughness: 0.62, metalness: 0 }; // Shelly "why are level 9 roads water": 0.16 roughness mirrored the sky; damp, not a puddle
@@ -26,18 +26,33 @@ const LOOT = { lava_lamp: "Nightstand drawer", dresser: "Dresser drawers", kitch
 // what every piece breaks as (scripts/lib/breakables.js: tag "breakable" + state { mat, hp, maxHp }; numbers in data/breakables.yml)
 const MAT = { floor_lamp: ["fixture", 25], lava_lamp: ["fixture", 25], crt_tv: ["machine", 60], fiddle_plant: ["wood", 20] };
 const FLOOR = { texture: "cdn/texture-dusty-worn-oak-hardwood-floor-planks.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.55 0.05 60)", roughness: 0.8 };
+// interior variety (Shelly Nov 14; picks mine): each house rolls its paper, floor, rug, layout and how it was left
+const PAPERS = [WALLPAPER,
+  { texture: "cdn/texture-mustard-1970s-geometric-wallpaper-peeling-seams.png", wrap: "repeat", repeat: [0.7, 0.7], color: "oklch(0.86 0.04 85)", roughness: 0.92 },
+  { texture: "cdn/texture-dusty-blue-pinstripe-wallpaper-faded-stained.png", wrap: "repeat", repeat: [0.7, 0.7], color: "oklch(0.86 0.02 240)", roughness: 0.92 },
+  { texture: "cdn/texture-green-damask-wallpaper-water-damaged.png", wrap: "repeat", repeat: [0.7, 0.7], color: "oklch(0.84 0.03 140)", roughness: 0.92 },
+  { texture: "cdn/texture-dark-wood-veneer-wall-paneling-1970s-grooves.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.8 0.03 60)", roughness: 0.75 }];
+const FLOORS = [null, // the oak
+  { texture: "cdn/texture-flat-grey-beige-apartment-carpet-low-pile.png", wrap: "repeat", repeat: [0.6, 0.6], color: "oklch(0.7 0.02 80)", roughness: 1 },
+  { texture: "cdn/texture-soaked-brown-beige-berber-office-carpet.png", wrap: "repeat", repeat: [0.6, 0.6], color: "oklch(0.68 0.03 70)", roughness: 1 },
+  { texture: "cdn/texture-burnt-orange-shag-carpet-matted-worn.png", wrap: "repeat", repeat: [0.6, 0.6], color: "oklch(0.7 0.06 55)", roughness: 1 },
+  { texture: "cdn/texture-cream-speckled-linoleum-kitchen-floor.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.82 0.02 85)", roughness: 0.5 }];
+const RUGS = [null, null, { texture: "cdn/texture-braided-oval-rag-rug-faded-blue-and-brown.png", color: "oklch(0.75 0.03 60)", roughness: 1 }]; // null + the persian (index 1 swapped in below)
+const roll = (seed, k, n) => { let h = (seed * 2654435761 + k * 40503) >>> 0; h ^= h >>> 15; h = Math.imul(h, 2246822519) >>> 0; return h % n; };
 const ROOM_H = 2.35, IN = { visibleRange: { max: 40 }, castShadow: false };
 function furnish(ctx, sp, l, H, D, Y) {
+  const sd = l.seed ?? 1, PAPER = PAPERS[roll(sd, 1, PAPERS.length)], FL = FLOORS[roll(sd, 2, FLOORS.length)] ?? FLOOR, RG = [null, RUG, RUGS[2]][roll(sd, 3, 3)];
+  const plan = roll(sd, 4, 3), wrecked = roll(sd, 5, 4) === 0, gone = (k) => wrecked && roll(sd, 20 + k.length * 7 + k.charCodeAt(0), 3) === 0; // a ransacked house lost a third of its things
   const R = H.inside ?? { x0: -H.w / 2 + 0.9, x1: H.w / 2 - 0.9, z0: -D.z + 0.4, z1: D.z - 0.15 }, fy = D.y + 0.07; // a hair above the shell's own lumpy floor, so it never pokes through
   const x0 = R.x0 + 0.2, x1 = R.x1 - 0.2, z0 = R.z0 + 0.2, z1 = Math.min(R.z1, D.z - 0.12);
   const at = (x, z, up = 0) => { const r = rotate({ yaw: Y }, { x, y: 0, z }); return T(l.x + r.x, l.z + r.z, fy + up); };
   const box = (k, x, z, w, d, h, mat, up = 0, phys = "static") => sp(`l9-${l.id}-${k}`, { ...IN, feetPosition: at(x, z, up), rotation: { yaw: Y }, primitive: { kind: "box", width: w, height: h, depth: d }, physics: phys, material: mat });
   const wall = (k, ax, az, bx, bz) => { const w = Math.max(0.1, Math.abs(bx - ax)), d = Math.max(0.1, Math.abs(bz - az)), x = (ax + bx) / 2, z = (az + bz) / 2;
-    box(`w${k}`, x, z, w, d, ROOM_H, WALLPAPER); box(`b${k}`, x, z, w + 0.03, d + 0.03, 0.11, BASE, 0, "none"); };
+    box(`w${k}`, x, z, w, d, ROOM_H, PAPER); box(`b${k}`, x, z, w + 0.03, d + 0.03, 0.11, BASE, 0, "none"); };
   // the room's skin, just inside the shell: back, sides, the front split round the door
   wall("bk", x0, z0 - 0.05, x1, z0 - 0.05); wall("l", x0 - 0.05, z0, x0 - 0.05, z1); wall("r", x1 + 0.05, z0, x1 + 0.05, z1);
   wall("f1", x0, z1 + 0.05, D.x - 0.58, z1 + 0.05); wall("f2", D.x + 0.58, z1 + 0.05, x1, z1 + 0.05);
-  box("floor", (x0 + x1) / 2, (z0 + z1) / 2, x1 - x0 + 0.2, z1 - z0 + 0.2, 0.03, FLOOR, -0.03);
+  box("floor", (x0 + x1) / 2, (z0 + z1) / 2, x1 - x0 + 0.2, z1 - z0 + 0.2, 0.03, FL, -0.03);
   box("ceil", (x0 + x1) / 2, (z0 + z1) / 2, x1 - x0 + 0.2, z1 - z0 + 0.2, 0.06, PLASTER, ROOM_H);
   // the bedroom: the end away from the door, behind a wall with a doorway toward the front
   const toR = D.x < (x0 + x1) / 2, bw = Math.min(3.8, Math.max(3, (x1 - x0) * 0.4)), P = toR ? x1 - bw : x0 + bw, s = toR ? 1 : -1;
@@ -46,12 +61,20 @@ function furnish(ctx, sp, l, H, D, Y) {
   for (const [k, x] of [["liv", Lc], ["bed", Bc]]) sp(`l9-${l.id}-dome${k}`, { ...IN, feetPosition: at(x, (z0 + z1) / 2, ROOM_H - 0.09), primitive: { kind: "sphere", radius: 0.22, widthSegments: 20, heightSegments: 8, thetaLength: 1.6 }, rotation: { yaw: Y, pitch: 180 }, material: { color: "#fff3d8", emissive: "#ffd9a0", emissiveIntensity: 2.2 }, physics: "none",
     children: [{ id: "glow", feetPosition: { x: 0, y: -0.3, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.07 78)", intensity: 2.6, distance: 9, shadow: { enabled: false } } }] });
   const piece = (k, x, z, yaw, tag = k) => { const F = FURN.pieces[k]; if (!F) return; const [w, h, d] = F.size, [mat, hp] = MAT[k] ?? ["wood", 45];
-    sp(`l9-${l.id}-${tag}`, { ...IN, tags: LOOT[k] ? ["l9furn", "container", "breakable"] : ["l9furn", "breakable"], feetPosition: at(x, z), rotation: { yaw: Y + yaw }, model: { id: F.model, forward: F.forward ?? "-z" }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, physics: { body: "static", collider: "box" },
+    if (!LOOT[k] && gone(tag)) return;
+    const tip = wrecked && (k === "floor_lamp" || k === "dining_chair") && roll(sd, 40 + tag.length, 2) === 0; // knocked over where it stood
+    sp(`l9-${l.id}-${tag}`, { ...IN, tags: LOOT[k] ? ["l9furn", "container", "breakable"] : ["l9furn", "breakable"], feetPosition: at(x, z, tip ? Math.min(w, d) / 2 : 0), rotation: tip ? { yaw: Y + yaw, roll: 88 } : { yaw: Y + yaw }, model: { id: F.model, forward: F.forward ?? "-z" }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, physics: { body: "static", collider: "box" },
       state: { mat, hp, maxHp: hp, ...(LOOT[k] ? { name: LOOT[k], verb: "Search", items: rollLoot(ctx, 1, 1, "l5").join(",") } : { name: F.name }) } }); };
   // living room: sofa on the back wall, rug and table before it, the TV facing it, a shelf on the outer wall, dining by the front
-  piece("sofa", Lc, z0 + 0.55, 180); box("rug", Lc, z0 + 1.75, 2.2, 1.6, 0.012, RUG, 0, "none"); piece("coffee_table", Lc, z0 + 1.7, 0);
+  if (plan === 1) { // armchairs round the set instead of a sofa, a second shelf on the back wall
+    piece("armchair", Lc - 0.8, z0 + 0.6, 180, "armA"); piece("armchair", Lc + 0.8, z0 + 0.6, 180, "armB");
+    piece("bookshelf", Lc + 1.8 > lv1 - 0.4 ? Lc - 1.8 : Lc + 1.8, z0 + 0.25, 180, "shelfB");
+  } else piece("sofa", Lc, z0 + 0.55, 180);
+  if (RG) box("rug", Lc, z0 + 1.75, 2.2, 1.6, 0.012, RG, 0, "none");
+  if (plan !== 2) piece("coffee_table", Lc, z0 + 1.7, 0);
   if (z1 - z0 > 4.6) piece("crt_tv", Lc, z0 + 3.2, 0);
-  piece("floor_lamp", Lc + 1.45, z0 + 0.35, 0);
+  piece("floor_lamp", Lc + (plan === 1 ? -1.6 : 1.45), z0 + 0.35, 0);
+  if (plan === 2) { piece("fiddle_plant", Lc - 1.3, z0 + 0.35, 0, "plantB"); piece("armchair", Lc + 1.1, z0 + 1.9, -120, "armA"); } // a reading corner, no table
   piece("bookshelf", outer + os * 0.28, z0 + 1.6, os > 0 ? 90 : -90);
   if (lv1 - lv0 > 4.4 && z1 - z0 > 5.2) { const tx = outer + os * 1.2, tz = z1 - 1.1; piece("dining_table", tx, tz, 0); piece("dining_chair", tx - 0.78, tz, CH.l, "chairA"); piece("dining_chair", tx + 0.78, tz, CH.r, "chairB"); }
   piece("kitchen_cabinet", P - s * 0.34, z0 + 1.0, CAB(s));
@@ -60,6 +83,10 @@ function furnish(ctx, sp, l, H, D, Y) {
   piece("double_bed", Bc, z0 + 1.05, 180); piece("lava_lamp", Bc + s * 1.3 > (toR ? x1 - 0.3 : x0 + 0.3) === toR ? Bc - s * 1.3 : Bc + s * 1.3, z0 + 0.3, 180);
   if (z1 - z0 > 5) piece("armchair", Bc + s * 0.9, z1 - 0.6, 180);
   piece("dresser", (toR ? x1 : x0) - s * 0.28, (z0 + z1) / 2 + 0.7, DRS(s));
+  if (wrecked) for (let i = 0; i < 6; i++) { // torn paper and pulled drawers' junk on the floor
+    const px = x0 + 0.4 + (roll(sd, 60 + i, 100) / 100) * (x1 - x0 - 0.8), pz = z0 + 0.4 + (roll(sd, 70 + i, 100) / 100) * (z1 - z0 - 0.8);
+    sp(`l9-${l.id}-junk${i}`, { ...IN, feetPosition: at(px, pz), rotation: { yaw: Y + roll(sd, 80 + i, 360) }, primitive: { kind: "box", width: 0.21, height: 0.004, depth: 0.29 }, material: { color: i % 2 ? "oklch(0.88 0.02 90)" : "oklch(0.8 0.03 80)", roughness: 1 } });
+  }
 }
 
 const CH = { l: 90, r: -90 }, CAB = (s) => (s > 0 ? -90 : 90), DRS = (s) => (s > 0 ? -90 : 90); // facings, checked by eye
@@ -96,7 +123,8 @@ function lay(ctx, L) {
     if (H.model && H.door) { // the front door: a kinematic hinge at the left jamb, the leaf its child; E swings it inward (scripts/home11-door.js "door")
       const D = H.door, W = 0.96, Y = l.yaw + 180, at = (lx, lz) => { const r = rotate({ yaw: Y }, { x: lx, y: 0, z: lz }); return T(l.x + r.x, l.z + r.z, 0.02 + D.y); };
       const dp = { style: "wood", w: W, h: 2.05, hingeSide: "left", swing: 1, d: 0.08, seed: l.seed % 97 };
-      sp(`l9-${l.id}-door`, { feetPosition: at(D.x - W / 2, D.z - 0.04), rotation: { yaw: Y }, physics: "kinematic", tags: ["usable"], behavior: "scripts/home11-door.js", state: { open: false, closedYaw: Y, openYaw: Y - 95, kind: "door", name: "Front Door", verb: "Open", hinge: `l9-${l.id}-door` },
+      const LV = [0, 0, 15, 25, 40, 60][roll(l.seed ?? 1, 9, 6)]; // a third of the doors locked, Lockpick 15..60 (picks mine)
+      sp(`l9-${l.id}-door`, { feetPosition: at(D.x - W / 2, D.z - 0.04), rotation: { yaw: Y }, physics: "kinematic", tags: ["usable"], behavior: "scripts/home11-door.js", state: { ...(LV ? { lock: `lockpick:${LV}` } : {}), open: false, closedYaw: Y, openYaw: Y - 95, kind: "door", name: "Front Door", verb: "Open", hinge: `l9-${l.id}-door` },
         children: [{ id: "leaf", tags: ["usable"], feetPosition: { x: 0, y: 0, z: 0 }, primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { ...dp, part: "leaf" } }, material: { pbr: true }, physics: "static", behavior: "scripts/home11-door.js", state: { kind: "door", name: "Front Door", verb: "Open", hinge: `l9-${l.id}-door` } }] });
       sp(`l9-${l.id}-jamb`, { feetPosition: at(D.x, D.z - 0.04), rotation: { yaw: Y }, physics: { body: "static", collider: "auto" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { ...dp, part: "frame" } }, material: { pbr: true } });
       for (let i = 0; i < 3; i++) { const h = D.y * (i + 1) / 3, r = rotate({ yaw: Y }, { x: D.x, y: 0, z: D.z + 0.9 - i * 0.3 });  // a stoop: three concrete steps up to the threshold, flush with the floor inside
