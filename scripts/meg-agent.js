@@ -422,7 +422,7 @@ export function update(ctx, dt) {
       // a ragdoll: the body drops where it was hit, in its own fur and jacket, knocked back off its feet
       const yaw = ((typeof me.rotation === "number" ? me.rotation : me.rotation?.yaw) ?? 0) * Math.PI / 180;
       me.ragdoll = { impulse: { x: Math.sin(yaw) * 60, y: 25, z: Math.cos(yaw) * 60 }, settleSeconds: 2 };
-      if (s.items === undefined) s.items = ["ammo", ...rollLoot(ctx, 1.4, 1, "l3"), ...garmentsOf(lookOfNpc(me))].join(","); // what they carried (always a box of rounds) and every garment they wore
+      if (s.items === undefined) s.items = [...(s.arm && s.arm !== "fists" && WP[s.arm] ? ["weapon:" + s.arm] : []), "ammo", ...rollLoot(ctx, 1.4, 1, "l3"), ...garmentsOf(lookOfNpc(me))].join(","); // the weapon in their hand stays on the body (Shelly, Nov 14: search the body to take it) // what they carried (always a box of rounds) and every garment they wore
       if (!s.look) s.look = lookOfNpc(me); // the body's look as it fell; looting a garment strips it off
       if (!/'s body$/.test(s.name ?? "")) s.name = (s.name ?? "Agent") + "'s body"; // a hand-off re-runs this: name it once
       ctx.after(90, "vanish", {});
