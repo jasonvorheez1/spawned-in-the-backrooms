@@ -1,4 +1,5 @@
 // The player's critter body: wears player.state.look as the cute Blender critter (art/critter-cute: body per sex with its own Idle/Walk/Run/Sprint/Sit, head per species and sex) when critter-models.yml mesh is on, else the scripted critter (scripts/critter2-geo.js); swaps the face on T,
+const SQTANK = { model: { id: '/cdn/value.0c7d93248f7cd97742d51baf7b71f32f7cd6661aa10bb4e688c5e94767e3d8b6.glb' }, layout: { box: { min: { x: -0.17, y: 0, z: -0.11 }, max: { x: 0.17, y: 0.36, z: 0.11 } } }, feetPosition: { x: 0, y: -0.12, z: 0.16 }, rotation: { yaw: 180 } } // Tripo tank (Water Heroes), +z of Spine2 is the back; the logo faces out
 // opens the wardrobe on C (a turning preview of you stands in front while it's open), and lets the
 // game's moods show on the face: a hit makes you wince, low hp is sad, low sanity is scared.
 import { plainLook, honest, wornTokens, parseCloth } from './lib/clothes.js'
@@ -360,6 +361,14 @@ export function update(ctx) {
         ...heldRot(eq, heldHuman),
       })
     }
+  }
+
+  // the Squirt Gun's backpack tank (Shelly Nov 14: "i dont see the tank"): on the back while a squirt gun is out
+  const wantTank = baseOf(eq) === 'squirt_gun'
+  if (wantTank !== !!(ses.tankObj && ctx.getObject(ses.tankObj))) {
+    if (ses.tankObj) { try { ctx.destroy(ses.tankObj) } catch (e) {} ses.tankObj = null }
+    for (const r of ctx.query({ tags: ['sqtank'], radius: 4 })) if (r.id.startsWith(ctx.self.id + '/')) { try { ctx.destroy(r.id) } catch (e) {} }
+    if (wantTank) ses.tankObj = ctx.spawn({ parent: ctx.self.id, tags: ['sqtank'], attachment: { bone: 'Spine2' }, ...SQTANK, visibleInFirstPerson: false, castShadow: true })
   }
 
   // the wardrobe mirror: only on this player's own screen
