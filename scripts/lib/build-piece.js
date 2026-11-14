@@ -12,7 +12,9 @@ export function pieceOf(kind) {
 export function tabsFor(s) { const own = furnOrder().filter((k) => (s.furn?.[k] ?? 0) > 0).map((k) => 'furn_' + k); return own.length ? [...B.tabs, { name: 'Furniture', pieces: own }] : B.tabs }
 export const furnOrder = () => F.order ?? Object.keys(F.pieces ?? {})
 const TV_AT = { x: 0, y: 0.78, z: -0.01, w: 0.66, h: 0.48 } // the tube's face on the crt_tv model: centre x, height share, inset from the front, size (m)
-export function furnModel(pc) { const [w, h, d] = pc.size; return { model: { id: pc.model, ...(pc.forward ? { forward: pc.forward } : {}) }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } } } }
+const fitOf = (m, fw, [w, h, d]) => ({ model: { id: m, ...(fw ? { forward: fw } : {}) }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } } })
+// a set (the round dining set) is its own separate pieces: the table is the root, each chair a child standing beside it
+export function furnModel(pc) { const f = F.pieces?.[pc.furn] ?? pc; const out = fitOf(pc.model, pc.forward, pc.size); if (f.set) out.children = f.set.map(([k, x, z, yaw], i) => { const c = F.pieces?.[k]; return c ? { id: `${k}-${i}`, feetPosition: { x, y: 0, z }, rotation: { yaw }, ...fitOf(c.model, c.forward, c.size), physics: { body: 'static', collider: 'box' }, castShadow: true } : null }).filter(Boolean); return out }
 const rad = (d) => d * Math.PI / 180
 export function hingeOf(at) { const r = rad(at.rot ?? 0); return { x: at.x - 0.5 * Math.cos(r), y: at.y, z: at.z + 0.5 * Math.sin(r) } } // the leaf's left edge on the wall line
 // a built door's leaf: scripts/door-geo.js, origin its bottom hinge corner (= hingeOf(slot)), running +x, opening toward -z (build-door.js swings +100)
