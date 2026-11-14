@@ -64,6 +64,7 @@ function describe0(token) {
   if (token === 'royal_ration') return { name: 'Royal ration', info: `Full HP · +${L3I.royal_ration.sanity} sanity · rare`, color: '#ffd36a' }
   if (token === 'firesalt') return { name: 'Firesalt', info: `Rub on a melee weapon: x${L3I.firesalt.damage} damage for ${L3I.firesalt.seconds}s`, color: '#ff8a3a' }
   if (token === 'holo:matrix') return { name: 'Tape: "Expedition Log: Matrix"', info: 'Cmdr. Harris, his own voice. Play it on HALOGEN (I > Tapes)', color: '#ff9a6a' }
+  if (token === 'holo:janine') return { name: 'Tape: "M.E.G. Interview Log 10328"', info: 'Archivist Lake Kesler interviews Janine Brown about Level 114. Play it on HALOGEN (I > Tapes)', color: '#ff9a6a' }
   if (token === 'holo:dina4') return { name: 'Tape: "Dina, Tape Four"', info: 'A cassette in Dina\'s handwriting, left at the checkpoint. Play it on HALOGEN (I > Misc)', color: '#ff9a6a' }
   if (token === 'holo:b8') return { name: 'Tape: "B8, Night Forty"', info: 'A cassette with a hallway count written on the label, crossed out and rewritten. Play it on HALOGEN (I > Tapes)', color: '#ff9a6a' }
   if (token === 'holo:walt41') return { name: 'Tape: "Field Test 41"', info: 'A reel labelled in pencil: KESSLER, R-55, TEST 41. Play it on HALOGEN (I > Misc)', color: '#ff9a6a' }

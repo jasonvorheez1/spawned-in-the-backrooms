@@ -1,8 +1,9 @@
+import { JANINE_TAPE } from "../../scripts/lib/janine-tape.js";
 // Level 114: one bedroom (x -2..2, z -2.25..2.25, 2.5 m high), the door on the south wall ajar onto the void.
 // place.state.lit: the switch. Lit: Smiler eyes glint under the bed and in the closet gap. Dark: a Smiler comes out after DARK_S.
 // Now and then a counterpart stands at the window. The void runs south; a lone door at z 62 lets you out (scripts/l114-use.js).
 export const cadence = "250ms";
-const V = 8, H = 2.5, W = 2, D = 2.25, DOOR = { x: 1.1, w: 0.9, h: 2.05 }, WIN = { x: -0.6, w: 1.1, y0: 0.9, y1: 1.9 };
+const V = 8, TAPE_TOP = 0.76, H = 2.5, W = 2, D = 2.25, DOOR = { x: 1.1, w: 0.9, h: 2.05 }, WIN = { x: -0.6, w: 1.1, y0: 0.9, y1: 1.9 };
 const DARK_S = 7, BITE = 18; // my picks: seconds of dark before a Smiler bites, and its bite
 const WALL = { texture: "cdn/texture-faded-pale-blue-childhood-wallpaper-tiny-yellow-stars-water-stained.png", wrap: "repeat", repeat: [1, 1], roughness: 0.9 };
 const CARPET = { texture: "cdn/texture-worn-beige-bedroom-carpet-fibres-faint-stains.png", wrap: "repeat", repeat: [1, 1], roughness: 1 };
@@ -50,6 +51,7 @@ function build(ctx) {
   put(ctx, "nightstand", F("lava"), -W + 0.3, -D + 0.3, 90);
   put(ctx, "dresser", F("dresser"), W - 0.27, -1.45, -90, { tags: ["l114", "container", "furniture"], state: { name: "Dresser", verb: "Search", kind: "home", items: "almond,bandage" } });
   put(ctx, "desk", F("desk"), W - 0.26, -0.25, -90);
+  ctx.spawn("janine-tape", { ...JANINE_TAPE, feetPosition: { x: W - 0.3, y: TAPE_TOP, z: -0.05 } }); // her interview, left on her own desk
   put(ctx, "chair", F("chair"), W - 0.72, -0.2, 90, { physics: undefined });
   put(ctx, "toychest", F("chest"), -W + 0.55, 0.62, 180, { tags: ["l114", "container", "furniture"], state: { name: "Toy Chest", verb: "Search", kind: "home", items: "battery,almond" } });
   put(ctx, "rug", F("rug"), 0.1, 0.4, 8, { physics: undefined });
