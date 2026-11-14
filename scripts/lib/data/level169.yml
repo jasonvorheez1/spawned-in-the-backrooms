@@ -50,7 +50,7 @@ friends:                        # Ferry's Friends (scripts/lib/l169-friends.js).
   table: [kitchen, 0.4, 0.5714]  # the house's long table (l169-house-m-table, 2.6 x 1.0 at house-local 4,4); seven chairs round it
   seats: [[-0.85, -0.85, 0, 1], [0, -0.85, 0, 1], [0.85, -0.85, 0, 1], [-0.85, 0.85, 0, -1], [0, 0.85, 0, -1], [0.85, 0.85, 0, -1], [1.68, 0, -1, 0]]   # [dx, dz, faceX, faceZ] from the table centre
   rolls: { x0: 2.6, gap: 0.85, dz: 2.0 }   # bedrolls: first at room x0 + 2.6 (east of the house bed), 0.85 apart, 2 m in from the north wall
-  stove: [kitchen, 0.7, 0.07]  # was 0.25: stood in the kitchen door's swing
+  stove: [kitchen, 0.738, 0.07]  # Nov 14: snug beside Ferry (fridge west edge x 26.19); was 0.25, stood in the door swing
   mapTable: [den, 0.5, 0.42]
   crates: [den, 0.88, 0.1]
   slate: [porch, 0.62, 0.03]    # on the wall east of the front door, faces south
