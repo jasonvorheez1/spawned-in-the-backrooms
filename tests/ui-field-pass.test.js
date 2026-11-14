@@ -5,12 +5,12 @@ const base={level:5,hp:100,attr:'5,5,5,5,5,5,5',skl:'30,30,30,30,30,30,30,30,30,
 function dialogue(patch={},npcPatch={}){
  const npc={id:'npc/kade',tags:['npc'],state:{name:'Kade',role:'survivor',factionName:'The B.N.T.G.',rapport:{tester:8},...npcPatch}},s={...base,talkWith:npc.id,talks:{kade:[['p','The drive is intact.'],['x','Speech check SUCCEEDED'],['n','Good. Keep the card.']]},talkChoices:[{text:'What next?',tag:'reply'}],...patch},player={id:'tester',userId:'tester',state:s,place:'main'},ctx={self:player,place:{id:'main',objects:{[npc.id]:npc}},getObject:id=>id===npc.id?npc:null};return talkUi(ctx,player)
 }
-test('dialogue prioritizes current speech and offers optional custom input',()=>{
- const html=dialogue();expect(html).toContain('Good. Keep the card.');expect(html).toContain('tc-check-current');expect(html).toContain('Speech check SUCCEEDED');expect(html).toContain('<details class="tc-inquiry tc-extra"  data-interactive>');expect(html).not.toContain('(+8)');expect(html).not.toContain('Dance');expect(html).not.toContain('tc-ch-tag tc-tag-lore">reply')
- const noChoices=dialogue({talkChoices:[]});expect(noChoices).toContain('<details class="tc-inquiry tc-extra" open');const nextTurn=dialogue({talks:{kade:[['p','First'],['x','SUCCEEDED'],['n','First answer'],['p','Next'],['n','Next answer']]}});expect(nextTurn).not.toContain('tc-check-current')
+test('dialogue prioritizes current speech cleanly without cluttered headers or extra drawers',()=>{
+ const html=dialogue();expect(html).toContain('Good. Keep the card.');expect(html).toContain('tc-check-current');expect(html).toContain('Speech check SUCCEEDED');expect(html).not.toContain('tc-hdr');expect(html).not.toContain('tc-inquiry');expect(html).not.toContain('tc-you');expect(html).not.toContain('(+8)');expect(html).not.toContain('Dance');expect(html).not.toContain('tc-ch-tag tc-tag-lore">reply')
+ const nextTurn=dialogue({talks:{kade:[['p','First'],['x','SUCCEEDED'],['n','First answer'],['p','Next'],['n','Next answer']]}});expect(nextTurn).not.toContain('tc-check-current')
 })
-test('busy dialogue prevents duplicate choice and text submission while keeping Leave available',()=>{
- const html=dialogue({talkBusy:true});expect(html).toContain('Waiting for a response');expect(html).toContain('class="tc-choice" data-interactive disabled');expect(html).toContain('class="tc-prompt-inp" data-interactive disabled');expect(html).toContain('class="tc-send-btn" data-interactive disabled');expect(html).toContain('aria-label="Leave conversation"')
+test('busy dialogue prevents duplicate choice submission while keeping Leave available',()=>{
+ const html=dialogue({talkBusy:true});expect(html).toContain('Waiting for a response');expect(html).toContain('class="tc-choice" data-interactive disabled');expect(html).toContain('aria-label="Leave conversation"')
 })
 test('dialogue escapes remote text and preserves skill check payloads',()=>{
  const html=dialogue({talks:{kade:[['p','ok'],['x','<script>FAILED</script>'],['n','<img src=x onerror=alert(1)>']]},talkChoices:[{text:'"<hello>"',check:{skill:'speech',difficulty:35}}]});expect(html).toContain('&lt;img');expect(html).toContain('&lt;script&gt;FAILED');expect(html).not.toContain('<img');expect(html).toContain("check:{skill:'speech',difficulty:35}")

@@ -1,9 +1,9 @@
 // The conversation card and the trader's shop (scripts/talk.js writes the state they read).
 import T from './lib/data/talk.yml'
-import { nameOf, keyOf, isTrader, faction, buyPrice, sellPrice, sellables, repairables, repairPrice, SECTIONS, sectionOf, money } from './lib/npc-talk.js'
+import { nameOf, keyOf, isTrader, buyPrice, sellPrice, sellables, repairables, repairPrice, SECTIONS, sectionOf, money } from './lib/npc-talk.js'
 import { band, bandColor } from './lib/condition.js'
 import { repDisc, titleOf, titleColor, groupOf } from './lib/rep.js'
-import { PERKS, perkOf, isMine } from './lib/companion.js'
+import { isMine } from './lib/companion.js'
 import { describe } from './lib/items.js'
 import { skillsOf } from './lib/stats.js'
 import { esc, jsStr as q } from './lib/ui-kit.js'
@@ -13,13 +13,13 @@ function checkBanner(text, isCurrent = false) {
   const kind = lower.includes('succeeded') || lower.includes('passed') ? 'pass' : lower.includes('failed') ? 'fail' : 'info'
   return `<div class="tc-chk-banner tc-chk-${kind}${isCurrent ? ' tc-check-current' : ''}">${esc(text)}</div>`
 }
-const feel = (r) => (r <= -60 ? 'HOSTILE' : r <= -25 ? 'COLD' : r < 10 ? 'WARY' : r < 40 ? 'OKAY' : r < 70 ? 'FRIENDLY' : 'TRUSTS YOU')
-const SVC = { scout: 'Ask for tactical tips', medic: 'Medical triage & healing', quarter: 'Collect ration supplies', smith: 'Repair damaged gear' }
+const SVC = { scout: 'Tactical tips', medic: 'Medical triage', quarter: 'Collect rations', smith: 'Repair gear' }
 
 // Minimal fallback styles; primary visual system lives in scripts/lib/ui-theme.js
 const CSS = `<style>
-.tkw{position:fixed;inset:0;display:flex;align-items:flex-end;justify-content:center;padding:24px calc(var(--spawn-chrome-reservation-right-inset,50px) + 24px) 28px;pointer-events:none;z-index:90}
-.tc-chassis{pointer-events:auto;width:min(820px,100%);display:flex;flex-direction:column}
+.tkw{position:fixed;inset:0;display:flex;align-items:flex-end;justify-content:center;padding:16px calc(var(--spawn-chrome-reservation-right-inset,50px) + 20px) 22px;pointer-events:none;z-index:90}
+.tc-chassis{pointer-events:none;width:min(660px,100%);display:flex;flex-direction:column;gap:12px}
+.tc-speech-region,.tc-responses-region{pointer-events:auto}
 .tc-waiting span{animation:tcPulse 1.1s infinite}.tc-waiting span:nth-child(2){animation-delay:.18s}.tc-waiting span:nth-child(3){animation-delay:.36s}
 @keyframes tcPulse{0%,100%{opacity:.35}50%{opacity:1}}
 .tkp{display:flex;flex-direction:column;gap:8px;width:min(860px,100%);max-height:80dvh}
@@ -93,19 +93,13 @@ export function talkUi(ctx, player) {
   }
 
   const role = it.state?.role ?? 'survivor'
-  const key = player.userId ?? player.id
-  const r = it.state?.rapport?.[key] ?? 0
   const who = esc(nameOf(it))
-  const feelStatus = feel(r)
-
   const isCompanion = isMine(it, player)
-  const perk = isCompanion ? PERKS[perkOf(it)] : null
 
-  // Process conversation history log
+  // Current conversation turn (latest check + active NPC line)
   const rawLog = s.talks?.[String(it.id).split('/').pop()] ?? []
   const log = rawLog.slice(-Math.max(6, T.log ?? 8))
 
-  // Find latest active NPC line and preceding history
   let lastNpcIndex = -1
   for (let i = log.length - 1; i >= 0; i--) {
     if (log[i][0] === 'n') {
@@ -116,36 +110,26 @@ export function talkUi(ctx, player) {
 
   const activeIdx = (!s.talkBusy && lastNpcIndex >= 0) ? lastNpcIndex : -1
   const activeLine = activeIdx >= 0 ? log[activeIdx][1] : null
-  const historyLines = log.filter((_, idx) => idx !== activeIdx).slice(-5)
-
-  const histHtml = historyLines.map(([kind, text]) => {
-    if (kind === 'p') return `<div class="tc-hist-line p"><b>YOU:</b> ${esc(text)}</div>`
-    if (kind === 'x') return checkBanner(text, false)
-    return `<div class="tc-hist-line n"><b>${who}:</b> ${esc(text)}</div>`
-  }).join('')
-
   const lastPlayer = log.map((row) => row[0]).lastIndexOf('p')
   const latestCheck = log.slice(lastPlayer + 1).find(([kind]) => kind === 'x')
+  const speakerLabel = `${who}${isCompanion ? ' · Companion' : ''}`
 
-  // Upper region: NPC dialogue only
+  // Upper region: subtle floating Fallout-style NPC subtitle over open world
   let nowHtml = ''
   if (s.talkBusy) {
     nowHtml = `<div class="tc-speech-region" role="status" aria-live="polite">
-      <div class="tc-speaker-tag">${who}</div>
+      <div class="tc-speaker-tag">${speakerLabel}</div>
       <div class="tc-now-txt tc-waiting">Waiting for a response<span>.</span><span>.</span><span>.</span></div>
     </div>`
   } else if (activeLine) {
-    const asked = activeIdx > 0 && log[activeIdx - 1][0] === 'p' ? log[activeIdx - 1][1] : null
     nowHtml = `<div class="tc-speech-region" id="tcl${activeIdx}-${String(activeLine).length}" aria-live="polite" aria-atomic="true">
-      <div class="tc-speaker-tag">${who}</div>
-      ${asked ? `<div class="tc-you"><b>YOU:</b> ${esc(asked)}</div>` : ''}
+      <div class="tc-speaker-tag">${speakerLabel}</div>
       ${latestCheck ? checkBanner(latestCheck[1], true) : ''}
       <div class="tc-now-txt">${esc(activeLine)}</div>
     </div>`
   } else {
-    nowHtml = `<div class="tc-speech-region">
-      <div class="tc-speaker-tag">${who}</div>
-      <div class="tc-now-txt" style="opacity:.65">...</div>
+    nowHtml = `<div class="tc-speech-region tc-speech-empty">
+      <div class="tc-speaker-tag">${speakerLabel}</div>
     </div>`
   }
 
@@ -194,7 +178,7 @@ export function talkUi(ctx, player) {
     </button>`
   }).join('')
 
-  // Contextual system actions
+  // Minimal contextual actions (only shown when relevant)
   const sysActions = []
   if (isTrader(it)) {
     sysActions.push(`<button class="tc-act-btn gold" data-interactive onclick="sendAction('talkdo',{k:'trade'})">Trade</button>`)
@@ -205,13 +189,14 @@ export function talkUi(ctx, player) {
   if (isCompanion) {
     const isWaiting = it.state.cmd === 'wait'
     const isHoldFire = it.state.cstance === 'hold'
-    sysActions.push(`<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'${isWaiting ? 'cfollow' : 'cwait'}'})">${isWaiting ? 'Follow Me' : 'Wait Here'}</button>`)
-    sysActions.push(`<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'${isHoldFire ? 'cfree' : 'chold'}'})">${isHoldFire ? 'Free Fire' : 'Hold Fire'}</button>`)
-    sysActions.push(`<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'cgive'})">Give Weapon</button>`)
-    if (it.state.gaveArm) {
-      sysActions.push(`<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'ctake'})">Take Weapon</button>`)
-    }
-    sysActions.push(`<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'cdismiss'})">Dismiss</button>`)
+    const orderBtns = [
+      `<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'${isWaiting ? 'cfollow' : 'cwait'}'})">${isWaiting ? 'Follow Me' : 'Wait Here'}</button>`,
+      `<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'${isHoldFire ? 'cfree' : 'chold'}'})">${isHoldFire ? 'Free Fire' : 'Hold Fire'}</button>`,
+      `<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'cgive'})">Give Weapon</button>`,
+      it.state.gaveArm ? `<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'ctake'})">Take Weapon</button>` : '',
+      `<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'cdismiss'})">Dismiss</button>`,
+    ].join('')
+    sysActions.push(`<details class="tc-orders" data-interactive><summary class="tc-act-btn">Orders</summary><div class="tc-orders-list">${orderBtns}</div></details>`)
   } else if (!isTrader(it) && !['smith', 'quarter'].includes(role) && !it.tags?.includes?.('faceling')) {
     sysActions.push(`<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'crecruit'})">Recruit</button>`)
   }
@@ -222,42 +207,19 @@ export function talkUi(ctx, player) {
     }
   }
 
-  const factionName = esc(it.state?.factionName ?? faction(it, ctx.self?.place ?? ''))
-  const roleName = esc(it.state?.role ?? 'wanderer').toUpperCase()
-  const inquiryOpen = choices.length ? '' : 'open'
-  const sendPrompt = `const inp=this.parentElement.querySelector('#tkin');const v=inp?.value?.trim();if(v){sendAction('talk',{id:'${q(it.id)}',text:v});inp.value=''}`
-
-  const kd = `if(event.key==='Escape'){event.preventDefault();event.stopPropagation();sendAction('talkdo',{k:'leave'})}else if(event.target.tagName!=='INPUT'&&(event.key==='ArrowDown'||event.key==='ArrowUp')){const c=Array.from(this.querySelectorAll('.tc-choice:not(:disabled)'));const down=event.key==='ArrowDown';let i=c.indexOf(event.target.closest('.tc-choice'));i=i<0?(down?0:c.length-1):Math.max(0,Math.min(c.length-1,i+(down?1:-1)));if(c[i])c[i].focus();event.preventDefault();event.stopPropagation()}else if(event.target.id!=='tkin'&&event.key>='1'&&event.key<='5'){const c=this.querySelectorAll('.tc-choice:not(:disabled)');const b=c[parseInt(event.key)-1];if(b)b.click()}`
+  const kd = `if(event.key==='Escape'){event.preventDefault();event.stopPropagation();sendAction('talkdo',{k:'leave'})}else if(event.key==='ArrowDown'||event.key==='ArrowUp'){const c=Array.from(this.querySelectorAll('.tc-choice:not(:disabled)'));const down=event.key==='ArrowDown';let i=c.indexOf(event.target.closest('.tc-choice'));i=i<0?(down?0:c.length-1):Math.max(0,Math.min(c.length-1,i+(down?1:-1)));if(c[i])c[i].focus();event.preventDefault();event.stopPropagation()}else if(event.key>='1'&&event.key<='5'){const c=this.querySelectorAll('.tc-choice:not(:disabled)');const b=c[parseInt(event.key)-1];if(b)b.click()}`
 
   return `${CSS}
   <div class="tkw" data-modal tabindex="0" onkeydown="${kd}">
     <section class="tc-chassis" aria-label="Conversation with ${who}">
-      <header class="tc-hdr">
-        <div class="tc-hdr-main">
-          <h2 class="tc-name">${who}</h2>
-          <div class="tc-subhead"><span class="tc-badge">${factionName}</span><span class="tc-badge">${roleName}</span>${isCompanion ? `<span class="tc-badge" style="color:#8fd175">${esc(perk?.name ?? 'Companion')} · ${Math.round(it.state.loyal ?? 50)}%</span>` : ''}</div>
-        </div>
-        <span class="tc-stance-pill" data-stance="${feelStatus}">${feelStatus}</span>
-      </header>
       ${nowHtml}
       <div class="tc-responses-region" data-interactive>
-        <div class="tc-responses-hdr"><span>Player responses</span><span>1–5 · ↑↓ · Esc</span></div>
         <div class="tc-choices-list${activeIdx > 0 && log[activeIdx - 1][0] === 'p' ? ' tc-seq-choices' : ''}" id="tcc${activeIdx}-${String(activeLine ?? '').length}" data-interactive>
-          ${choiceItems || '<div class="ui-empty">No preset responses.</div>'}
-        </div>
-        <div class="tc-optional">
-          <details class="tc-inquiry tc-extra" ${inquiryOpen} data-interactive>
-            <summary>Ask something else</summary>
-            <div class="tc-prompt-bar">
-              <input id="tkin" class="tc-prompt-inp" data-interactive ${s.talkBusy ? 'disabled' : ''} type="text" maxlength="180" placeholder="Ask ${who} a question..." onkeydown="if(event.key==='Enter'){event.preventDefault();event.stopPropagation();${sendPrompt}}">
-              <button class="tc-send-btn" data-interactive ${s.talkBusy ? 'disabled' : ''} onclick="${sendPrompt}">Ask</button>
-            </div>
-          </details>
-          ${histHtml ? `<details class="tc-extra" data-interactive><summary>Log</summary><div class="tc-stream">${histHtml}</div></details>` : ''}
+          ${choiceItems || '<div class="ui-empty">...</div>'}
         </div>
         <div class="tc-foot" data-interactive>
           ${sysActions.join('')}
-          <button class="tc-close-btn" data-interactive onclick="sendAction('talkdo',{k:'leave'})" aria-label="Leave conversation">Goodbye · Esc</button>
+          <button class="tc-close-btn" data-interactive onclick="sendAction('talkdo',{k:'leave'})" aria-label="Leave conversation">Esc · Leave</button>
         </div>
       </div>
     </section>

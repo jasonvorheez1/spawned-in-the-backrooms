@@ -63,7 +63,6 @@ test('talkUi separates upper NPC speech region from lower player responses regio
   expect(html).toContain('tc-chassis')
   expect(html).toContain('tc-speech-region')
   expect(html).toContain('tc-responses-region')
-  expect(html).toContain('Player responses')
   expect(html).toContain('M.E.G. Expedition Guard')
   expect(html).toContain('SPEECH 40')
   expect(html.indexOf('tc-speech-region')).toBeLessThan(html.indexOf('tc-responses-region'))
