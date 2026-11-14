@@ -248,4 +248,33 @@ describe("Level ! intro, near-death rescue non-repeatability, and Phoebe conclus
       expect(ctx.crossed).toEqual([{ who: "player/1", dest: "level11#l11-from-levelrun" }]);
     }
   });
+
+  test("places/levelrun/sim.js lays corridor, runs chase, triggers collapse rescue, and spawns/despawns Phoebe cleanly", async () => {
+    const sim = await import("../places/levelrun/sim.js");
+    const p = makePlayer({ ch2Q: 5, lrunIntroDone: 1 });
+    p.place = "levelrun";
+    p.feetPosition = { x: 0, y: 0.1, z: -25 };
+    const objects = {};
+    const ctx = makeCtx(p, objects);
+    ctx.place.players = [p];
+    ctx.place.state = {};
+
+    sim.tick(ctx);
+    expect(objects["lrun-start"]).toBeDefined();
+    expect(objects["lrun-alcove"]).toBeDefined();
+    expect(objects["lrun-pursuer-1"]).toBeDefined();
+    expect(ctx.place.state.chase.active).toBe(true);
+
+    // Reach collapse zone
+    p.feetPosition = { x: 0, y: 0.1, z: CORRIDOR.collapseZ };
+    ctx._t += 200;
+    sim.tick(ctx);
+    expect(p.state.lrunCut?.phase).toBe("rescue");
+
+    // Finish rescue -> Phoebe spawns in alcove
+    finishRescueToAlcove(ctx, p, ctx.session);
+    ctx._t += 200;
+    sim.tick(ctx);
+    expect(objects["phoebe-lrun"]).toBeDefined();
+  });
 });
