@@ -44,6 +44,7 @@ const TX = {
 };
 const TONE = {
   red: { floor: "oklch(0.86 0.03 20)", lower: "oklch(0.72 0.1 22)", upper: "oklch(0.92 0.03 25)", tile: "oklch(0.94 0.01 60)", rail: "oklch(0.55 0.04 20)", trim: "oklch(0.42 0.05 20)" },
+  l109: { floor: "oklch(0.6 0.035 75)", lower: "oklch(0.9 0.045 92)", upper: "oklch(0.9 0.045 92)", tile: "oklch(0.93 0.012 90)", rail: "oklch(0.5 0.05 60)", trim: "oklch(0.42 0.045 55)" }, // Level 109: cream plaster, brown skirt and frames, carpet
   warm: { floor: "oklch(0.93 0.02 75)", lower: "oklch(0.9 0.03 160)", upper: "oklch(0.96 0.02 85)", tile: "oklch(0.96 0.01 80)", rail: "oklch(0.7 0.03 160)", trim: "oklch(0.6 0.03 80)" },
 };
 // a wall frame: origin, tangent, inward normal, length
@@ -68,10 +69,10 @@ function hall(p) {
   seedS = Math.max(1, Math.floor((p.seed ?? 7) * 9973) % 2147483646);
   const WS = wallsOf(w, d), walls = (p.walls ?? "ew").split("");
   // floor
-  C.albedo(TX.floor); C.color(T.floor); C.roughness(0.38);
+  C.albedo(p.floorTex ?? TX.floor); C.color(T.floor); C.roughness(p.floorTex ? 0.95 : 0.38);
   quad([-w / 2, 0, -d / 2], [w / 2, 0, -d / 2], [w / 2, 0, d / 2], [-w / 2, 0, d / 2], [0, 1, 0]);
   C.albedo(null); C.roughness(0.9);
-  if (L <= 2) { // scuffs: dark heel marks and cart tracks
+  if (L <= 2 && !p.clean) { // scuffs: dark heel marks and cart tracks
     for (let i = 0; i < d * 1.6; i++) { const x = (rnd() - 0.5) * (w - 0.6), z = (rnd() - 0.5) * d, a = rnd() * 3.14, l = 0.1 + rnd() * 0.5, t = 0.02 + rnd() * 0.03;
       const cx = Math.cos(a), sz = Math.sin(a); C.color("oklch(0.12 0.02 20)", 0.25 + rnd() * 0.35);
       quad([x - cx * l, 0.002, z - sz * l], [x + cx * l, 0.002, z + sz * l], [x + cx * l - sz * t, 0.002, z + sz * l + cx * t], [x - cx * l - sz * t, 0.002, z - sz * l + cx * t], [0, 1, 0]); }
@@ -82,24 +83,26 @@ function hall(p) {
   for (const k of walls) {
     const W = WS[k], gs = (p.gaps ?? []).filter((g) => g.wall === k);
     for (const [s0, s1] of spans(W.len, gs)) {
-      C.albedo(TX.lower); C.color(T.lower); C.roughness(0.55); wq(W, s0, s1, 0, 1.15, 0);
+      C.albedo(p.clean ? TX.upper : TX.lower); C.color(T.lower); C.roughness(p.clean ? 0.85 : 0.55); wq(W, s0, s1, 0, 1.15, 0);
       C.albedo(TX.upper); C.color(T.upper); C.roughness(0.85); wq(W, s0, s1, 1.15, ch, 0);
       C.albedo(TX.steel); C.color(T.rail); C.metalness(0.4); C.roughness(0.4);
-      if (L <= 3) { wbox(W, s0, s1, 0, 0.12, 0, 0.018, 0.006); wbox(W, s0, s1, 1.13, 1.17, 0, 0.012, 0.004); // skirt, panel cap
+      if (L <= 3 && p.clean) wbox(W, s0, s1, 0, 0.11, 0, 0.014, 0.004); // a plain skirting board
+      else if (L <= 3) { wbox(W, s0, s1, 0, 0.12, 0, 0.018, 0.006); wbox(W, s0, s1, 1.13, 1.17, 0, 0.012, 0.004); // skirt, panel cap
         wbox(W, s0 + 0.05, s1 - 0.05, 0.86, 1.0, 0.045, 0.085, 0.018); // crash rail
         if (L <= 2) for (let s = s0 + 0.25; s < s1 - 0.2; s += 1.6) wbox(W, s - 0.03, s + 0.03, 0.88, 0.98, 0, 0.05, 0.008); }
       C.metalness(0); C.albedo(null);
-      if (L <= 2) for (let s = s0 + 0.6; s < s1 - 0.6; s += 0.4 + rnd() * 1.6) { if (rnd() > 0.35) continue; // smears and drips
+      if (L <= 2 && !p.clean) for (let s = s0 + 0.6; s < s1 - 0.6; s += 0.4 + rnd() * 1.6) { if (rnd() > 0.35) continue; // smears and drips
         const y0 = 0.2 + rnd() * 1.4, hh = 0.2 + rnd() * 0.9, ww = 0.1 + rnd() * 0.35; C.color("oklch(0.17 0.06 25)", 0.35 + rnd() * 0.35);
         quad(P(W, s, y0, 0.004), P(W, s + ww, y0 + hh * 0.2, 0.004), P(W, s + ww * 0.7, y0 + hh, 0.004), P(W, s - ww * 0.2, y0 + hh * 0.8, 0.004), W.n); }
     }
     for (const g of gs) { // door frames, ward plates, ajar voids
       const a = g.c - g.w / 2, b = g.c + g.w / 2, gh = g.h ?? 2.25;
       wq(W, a - 0.09, b + 0.09, gh + 0.09, ch, 0); C.albedo(TX.upper); C.color(T.upper); wq(W, a - 0.09, b + 0.09, gh + 0.09, ch, 0); C.albedo(null);
-      if (g.kind !== "open") { C.albedo(TX.steel); C.color(T.trim); C.metalness(0.5); C.roughness(0.45);
+      if (g.kind !== "open" && g.kind !== "pass") { C.albedo(TX.steel); C.color(T.trim); C.metalness(0.5); C.roughness(0.45);
         wbox(W, a - 0.09, a, 0, gh + 0.09, -0.02, 0.06, 0.012); wbox(W, b, b + 0.09, 0, gh + 0.09, -0.02, 0.06, 0.012); wbox(W, a, b, gh, gh + 0.09, -0.02, 0.06, 0.012);
         C.metalness(0); C.albedo(null);
         if (L <= 2) { C.color("oklch(0.8 0.02 90)"); wbox(W, b + 0.16, b + 0.42, 1.55, 1.71, 0, 0.012, 0.004); } }
+      if (g.kind === "thru" || g.kind === "pass") continue; // a real doorway: you see and walk through it
       C.color("oklch(0.03 0.005 20)"); C.roughness(1); // the dark room beyond
       wq(W, a, b, 0, gh, -0.24); quad(P(W, a, 0, 0), P(W, a, gh, 0), P(W, a, gh, -0.24), P(W, a, 0, -0.24), W.t); quad(P(W, b, 0, 0), P(W, b, gh, 0), P(W, b, gh, -0.24), P(W, b, 0, -0.24), W.t.map((v) => -v));
       quad(P(W, a, gh, 0), P(W, b, gh, 0), P(W, b, gh, -0.24), P(W, a, gh, -0.24), [0, -1, 0]); quad(P(W, a, 0.001, 0), P(W, b, 0.001, 0), P(W, b, 0.001, -0.24), P(W, a, 0.001, -0.24), [0, 1, 0]);
@@ -123,6 +126,7 @@ function hall(p) {
   C.color("oklch(0.04 0 0)"); quad([-w / 2, h - 0.01, -d / 2], [w / 2, h - 0.01, -d / 2], [w / 2, h - 0.01, d / 2], [-w / 2, h - 0.01, d / 2], [0, -1, 0]); // the plenum dark
   for (let i = 0; i < nx; i++) for (let j = 0; j < nz; j++) {
     const x0 = -w / 2 + i * tw, z0 = -d / 2 + j * td, r = rnd();
+    if (p.clean && r < 0.09) { C.albedo(TX.tile); C.color(T.tile); C.roughness(0.95); quad([x0, ch, z0], [x0 + tw, ch, z0], [x0 + tw, ch, z0 + td], [x0, ch, z0 + td], [0, -1, 0]); continue; }
     if (r < 0.05) continue; // missing
     C.albedo(TX.tile); C.color(T.tile); C.roughness(0.95);
     if (r < 0.09 && L <= 3) { const dr = 0.3 + rnd() * 0.5; // hanging from one edge
