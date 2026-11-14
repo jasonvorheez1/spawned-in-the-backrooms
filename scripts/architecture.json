@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8352,
-  "updatedAt": "2026-11-14T17:15:28.980Z",
+  "basedOnSpecVersion": 8365,
+  "updatedAt": "2026-11-14T17:45:11.071Z",
   "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations, with player state carrying progression, gear, quests and resume location. Per-place simulations build local spaces while shared registries and interaction handlers coordinate navigation, NPCs, combat, inventory and story routes; Level 109's streamed hospital/B3 holds Janine's tape and Level 114 is Sweet Dreams.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes, anomalies and deterministic dressing; momentsV gates fitted wall moments and room-prop regeneration.",
-    "places/bonus (3D) - vaporwave mall with shops, simulated staff, arcade, homes and salon; authored placements live in cells/.",
+    "places/bonus (3D) - vaporwave mall with shops, simulated staff, arcade, homes and salon; authored placements live in cells. places/testlab (3D) - Test Range with loot/enemy bays and HIT SQUAD pad; sim dispatches rotating faction squads.",
     "places/thehub (3D) - tunnel crossroads, keyed destinations, Doorstep Carpet and Camp Amber crews; distinct from Bonus room routing.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office, supplies, encounters and story beats.",
     "places/level1 + places/level4 (3D) - M.E.G. camps and authored office mazes; sims dress facilities and spawn foes, with benches at the Level 1 camp.",
     "places/level9 + places/level11 + places/level61 (3D) - seeded Suburbs, Level 11 city/Base Beta/strip mall/clinic and Chapter 2 entry trail, and Snackrooms food court/M.E.G. checkpoint with simulated staff and Clippers lounge.",
-    "places/level109 + places/level114 (3D) - seeded hospital/B3 generation and Janine's interview tape on the camp cot; Sweet Dreams is a switch-lit Smiler-threatened bedroom with a far door to Level 9.",
-    "places/testlab (3D) - Test Range with loot and enemy bays plus faction HIT SQUAD pad; its sim dispatches a rotating test squad down the firing lane."
+    "places/level70 (3D) - winter market/civic town, stalls, hotel, office, pump and Dry Pipes landmarks; sim composes civic, wild and life systems.",
+    "places/level109 + places/level114 (3D) - seeded hospital/B3 generation and Janine's interview tape on the camp cot; Sweet Dreams is a switch-lit Smiler-threatened bedroom with a far door to Level 9."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input actions; fall-guard runs before locomotion/player behavior.",
-    "places/<place>/config.yaml + cells/*.scene + sim.js - local config, authored placements and place generation/tick behavior; shared helpers dress selected places, including the Test Range in places/testlab/sim.js.",
+    "places/<place>/config.yaml + cells/*.scene + sim.js - local config, authored placements and place generation/tick behavior; selected sims compose shared helpers, including Level 70 civic layout/tick.",
     "scripts/main-menu.js + main-menu-ui.js + intake/tutorial scripts + scripts/ui.js - title/settings/pause, character creation and arrival; lifecycle/tutorial beats and composed HUD/menus.",
     "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, wake/resume, aiming, third-person view and per-place zone resolution.",
     "places/main/sim.js + scripts/lib/maze.js + xmas-room.js + level0-moments.js - Level 0 layout and deterministic maze dressing/encounters; moments version gates rebuilds.",
@@ -42,17 +42,17 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - shared journal/advancement/reward helpers; containment.js - containment state/pen/door operations; ch2-quest.js - Chapter 2 stages and dialogue helpers.",
     "scripts/lib/level109-quest.js - QID, QNAME, BREACH, Q, questTick, dialogue handler/choices; scripts/lib/level109.js - seeded corridor/room layout helpers.",
-    "scripts/lib/l109-kit.js - KIT, medLook; scripts/lib/janine-tape.js - JANINE_TAPE; scripts/player.js - HOLO, holoEnd; scripts/lib/fp-gun.js - FP_GUN, firstPersonGun, firstPersonTuning; scripts/lib/hit-squad.js - SQUAD_KEYS, sendSquad."
+    "scripts/lib/l109-kit.js - KIT, medLook; scripts/lib/janine-tape.js - JANINE_TAPE; scripts/player.js - HOLO, holoEnd; scripts/lib/fp-gun.js - FP_GUN, firstPersonGun, firstPersonTuning; scripts/lib/hit-squad.js - SQUAD_KEYS, sendSquad; scripts/lib/level70-civic.js - V, STALL, FIRE, LECTERN, HOTEL_DOOR, GARAGE_DOOR, VALVE_POS, GAUGE, PUMP, BREAKER, STALL_KIT, lay, tick."
   ],
   "ownership": [
-    "scripts/player.js + scripts/lib/save.js - durable player.state progression, XP/level, health/sanity, inventory/equipment and ammo, needs, combat, access, appearance, saved place/position, currency, karma/rep and homeKeep; player.js also owns Squirt Gun tank/liquid state.",
+    "scripts/player.js + scripts/lib/save.js - durable player.state progression, XP/level, health/sanity, inventory/equipment and ammo, needs, combat, access, appearance, saved place/position, currency, karma/rep and homeKeep; player.js also owns transient action/combat state.",
     "scripts/lib/stats.js - derived attributes, skills and combat/carry stats; scripts/stats-ui.js formats derived stats.",
-    "scripts/critter.js - per-player look and creator/wardrobe/salon state; owns the transient attached Squirt Gun backpack tank visual while that weapon is equipped, and clears expired groove/gesture animation channels.",
+    "scripts/critter.js - player look and creator/wardrobe/salon state; owns the transient attached Squirt Gun backpack tank visual while equipped, and clears expired groove/gesture animation channels.",
     "scripts/lib/seat.js - player.state.sit; scripts/lib/body3.js - session.ready3 and transient melee-carry pose.",
     "scripts/lib/quests.js + scripts/lib/dina-quest.js - player quest journal/tracking/completion/claim keys; Dina trail stages, diary/cut/clue fields and migration.",
     "scripts/lib/errands.js - player.state.errands, errHints and journal entries; completion updates currency, payout, reputation and hints; field-errands.js + hub-errands.js own confirmation maps.",
     "Level quest modules (including level8/10/11/21/61, level31, level70, remodel, ch2 and zenith) - level-specific stages/routes/outcomes; ch2-quest.js owns Chapter 2 progress and clues.",
-    "scripts/lib/companion.js - NPC follow/loyalty/perk/order/weapon state plus player.state.crew; scripts/lib/carry.js records player.state.xferTo and coordinates transfer on threshold links; Level 109 sim/containment own hospital seed, B3 and containment state."
+    "scripts/lib/companion.js - NPC follow/loyalty/perk/order/weapon state plus player.state.crew; scripts/lib/carry.js records player.state.xferTo and coordinates transfer on threshold links; Level 109 sim/containment own hospital seed, B3 and containment books."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest and CCTV behaviors; scripts/interact.js handles tagged-seat selection and seatTick.",
@@ -63,20 +63,20 @@
     "scripts/player.js zone resolver → player.state.zone; scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles, markers and compass place names.",
     "scripts/main-menu-ui.js settings → scripts/main-menu.js handler → player.state.uiPrefs; scripts/ui.js composes preferences and quest/feed/HUD panels; scripts/player.js notices → scripts/stats.js feed presentation.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js offers place-matched jobs; carried items/kills/world events advance errands → journal, player.state.errands/qtrack and payouts.",
-    "scripts/talk.js → dialogue.js rootChoices and quest handlers; level quest modules call scripts/lib/quests.js → journal/feed/reputation/reward state; scripts/lib/data/dlg-*.yml supplies character-specific ask choices/barks; Hub route/quest logic consumes thehub door registry and visit/clue flags.",
+    "scripts/talk.js → dialogue.js rootChoices and quest handlers; level quest modules call scripts/lib/quests.js → journal/feed/reputation/reward state; scripts/lib/data/dlg-*.yml supplies character-specific choices and barks.",
     "scripts/lib/ch2-quest.js stages/markers → Level 11 clues, Gamma/IS LAB routes and Level !; Level ! rescue + Phoebe completion unlock Chapter 3/lrun-to-l109; Level 109 EXIT → Level 114 Sweet Dreams, whose far door exits to Level 9.",
-    "scripts/player.js attack → weapons.yml weapon SFX resolved through sounds.yml and ranged fireBullets/showBullets → ballistics; loot-ui actions → player sqTank fill/drink/empty and liquid-specific fire/repellent effects; scripts/critter.js attaches the Squirt Gun tank visual while equipped.",
-    "scripts/testlab-pad.js squad action → places/testlab/sim.js consumes place.state.want_squad, clears previous squad and rotates SQUAD_KEYS → scripts/lib/hit-squad.js sendSquad spawns a faction team hunting the pressing player down the lane."
+    "scripts/player.js attack → weapons.yml weapon SFX resolved through sounds.yml and ranged fireBullets/showBullets → ballistics; loot-ui actions → player sqTank fill/drink/empty and liquid-specific fire/repellent effects; scripts/critter.js attaches the tank visual to the critter rig.",
+    "places/level70/sim.js → scripts/lib/level70-civic.js lay/tick; V gates civic rebuilds, and the blue-tarp STALL_KIT parts are spawned as children at metre offsets under each stall root."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; menus/staff vary by venue and Level 6.1 fixtures are fitted separately.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes a table with separately fitted chairs.",
-    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js - weapon stats/variants share combat; per-weapon sound/rack/reload fields resolve through sounds.yml, with Squirt Gun liquid effects and ballistic integration.",
-    "art/cigs/build.py + art/fnv/build.py + art/xmas-clean/build.py and NIF converters, plus art/cat-wardrobe/fit.py + tailclear.py and art/level70-stall/split.py - fitted GLBs/prop catalogs, body-specific cat garments with tail clearance, and Level 70 stall parts split around a shared origin.",
+    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js - weapon stats/variants share combat; per-weapon sound/rack/reload fields resolve through sounds.yml, with Squirt Gun liquid effects and ballistic variants.",
+    "art/cigs/build.py + art/fnv/build.py + art/xmas-clean/build.py and NIF converters, plus art/cat-wardrobe/fit.py + tailclear.py and art/level70-stall/parts.py - fitted GLBs/prop catalogs, body-specific cat garments with tail clearance, and Level 70 stall segmentation into independently placeable props.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "Level 01/Zenith and Level 1 geometry builders - authored station and car park/service geometry; corridor materials, pipes, fixtures and lights vary deterministically per cell.",
-    "scripts/meg-agent.js + npc-temper.js + forgive.js + critter-model.js + companion.js + clothes.yml/cat-wardrobe.yml - NPC reactions, cover, barks, combat and following vary by faction/role/outfit/perk; role/faction clothing rows select models and layering."
+    "scripts/meg-agent.js + npc-temper.js + forgive.js + critter-model.js + companion.js + clothes.yml/cat-wardrobe.yml - NPC reactions, cover, barks, combat and following vary by faction/role/outfit/perk; wardrobe rows select gendered fitted faction garments and appearances include seeded nose shapes."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -90,7 +90,7 @@
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together; place.state.hubV gates shell/door/plaque rebuilds.",
     "Hub keyed doors consume the matching player.state.hubKeys key; t10-a3 maps to level11 and hubTenthCrossed is set only after a qualifying clue and successful crossing; Level 1's route is a separate threshold pair.",
     "Level 109's place.state.l109seed fixes irregular corridor/room rolls across reloads; keep arrival room-pop and den safe radii coupled to scripts/lib/level109.js SPAWN; containment books are keyed by room ID and remember pen-door positions.",
-    "Ballistic balloon collision supplements the per-leg ray with manual sphere tests for tied-balloon and l26-balloon tags; balloon rounds are short-lived visuals animated to computed endpoints. Squirt Gun state is sqLiq/sqfill plus loaded_squirt_gun; loaded rounds count in the fluid-switch check, water has 25 tank shots, and critter.js mounts its tank on the back while equipped.",
-    "Level 109 B3 dressing uses place.state.b3DressV and Janine's tape is built into B3; Level 114 rebuilds remove legacy janine-tape instances. Level 9 seeded house interiors use sim V=19; preserve stable lot selection and furniture dimensions."
+    "Ballistic balloon collision supplements the per-leg ray with manual sphere tests for tied-balloon and l26-balloon tags; balloon rounds are short-lived visuals animated to computed endpoints. Squirt Gun fill/liquid state is distinct from its attached visual; critter.js seats the tank on Spine2 with negative Z as the rig's back.",
+    "Level 70 civic layout rebuild is gated by scripts/lib/level70-civic.js V; split stall part offsets are bottom-centres in its local frame, rotated/parented under a scaled root, with coordinates in metres. Level 9 seeded house interiors use sim V=19; preserve stable lot selection and furniture dimensions."
   ]
 }
