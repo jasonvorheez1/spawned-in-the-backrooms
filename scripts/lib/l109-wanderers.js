@@ -55,7 +55,7 @@ export function wandererTick(ctx) {
   s.wandSeq = (s.wandSeq ?? 0) + 1;
   for (let i = 0; i < n; i++) spawnWanderer(ctx, `l109w-${s.wandSeq}-${i}`, { x: at.x + at.side.x * (i - (n - 1) / 2) * 1.1 + at.back.x * -i * 1.2, y: at.y, z: at.z + at.side.z * (i - (n - 1) / 2) * 1.1 + at.back.z * -i * 1.2 }, at.back);
 }
-function spawnWanderer(ctx, id, pos, face) {
+export function spawnWanderer(ctx, id, pos, face) {
   const r = (a) => a[Math.floor(ctx.random() * a.length)];
   const gun = r(GUNS), name = r(NAMES), sex = ctx.random() < 0.5 ? "m" : "f", torn = ctx.random() < 0.5;
   Promise.all([import("./critter-model.js"), import("./clothes.js"), import("./stats.js"), import("./weapon-look.js")]).then(([{ critterSpec }, { npcLook }, { npcState }, { weaponBody }]) => {
