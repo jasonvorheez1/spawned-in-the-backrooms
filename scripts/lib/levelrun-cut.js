@@ -212,7 +212,7 @@ export function lrunCutTick(ctx, ses, st, place = ctx.self?.place) {
         ctx.emit("shockwave", { position: { x: 0, y: 1, z: cz + 1.1 }, speed: 8, thickness: 0.6, intensity: 0.6 }, { audience: { player: me.id } });
         ctx.spawn("lrun-ward-burst", { audience: "local", feetPosition: { x: 0.4, y: 0.15, z: cz - 1.6 }, lifetime: 3000, fx: { script: WARD_FX } });
         ctx.spawn("lrun-ward-wall", { audience: "local", feetPosition: { x: 0, y: 0, z: cz + 1.1 }, lifetime: 4500, fx: { script: BARRIER_FX } });
-        spawnPhoebe(ctx, "lrun-phoebe-cut", { x: 0.85, y: 0.1, z: cz - 1.9 }, 15, 4800);
+        spawnPhoebe(ctx, "lrun-phoebe-cut", { x: 0.85, y: 0.1, z: cz - 1.9 }, 15, 4.8);
       });
       if (t > 5.0) once("displace", () => { snd(ctx, me.id, CLIP_FOLD, 0.85, { x: 0, y: 1.2, z: cz + 3 }); placeHorde(cz + 18); });
       if (t < 5.0) placeHorde(cz + 1.8 + Math.sin(t * 30) * 0.08); // pressed against the barrier
