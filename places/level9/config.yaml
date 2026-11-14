@@ -14,12 +14,14 @@ terrain:
     layers:
       lawn:
         items:
-          - { kind: scripted, script: scripts/grass.js, scale: [0.25, 0.5], randomRotation: true, useTerrainColor: true, wind: { force: 0.03, scale: 5, speed: 0.8 } }
-        density: 14
+          - { kind: scripted, script: mods/awakening/grass-blades.js, params: { kind: meadow }, scale: [0.35, 0.55], randomRotation: true, useTerrainColor: true, wind: { force: 0.05, scale: 5, speed: 0.8 } }
+        material: { kind: scripted, script: mods/awakening/grass-look.js }
+        density: 12
       rough:
         items:
-          - { kind: scripted, script: scripts/grass.js, scale: [0.6, 1.1], randomRotation: true, useTerrainColor: true, wind: { force: 0.04, scale: 5, speed: 0.8 } }
-        density: 18
+          - { kind: scripted, script: mods/awakening/grass-blades.js, params: { kind: dry }, scale: [0.8, 1.3], randomRotation: true, useTerrainColor: true, wind: { force: 0.08, scale: 5, speed: 0.8 } }
+        material: { kind: scripted, script: mods/awakening/grass-look.js }
+        density: 14
     bindings: { lawn: [lawn], rough: [rough] }
     settings: { maxDistance: 70, fadeDistance: 20 }
 gravity: { x: 0, y: -24, z: 0 }
