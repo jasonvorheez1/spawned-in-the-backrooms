@@ -315,7 +315,7 @@ function pot(ctx) { // a stock pot with a lid and two handles
 }
 export function geometry(ctx) {
   const P = ctx.params ?? {};
-  ({ shell, yard, kitchen, basement, bench, maptable, mapboard, bed: () => bed(ctx, P), kit: () => kit(ctx, P.n ?? 0), door: () => door(ctx, P), lamp: () => lamp(ctx, P), rug: () => rug(ctx, P), roll: () => roll(ctx, P), pot })[P.part]?.(ctx);
+  const parts = { shell, yard, kitchen, basement, bench, maptable, mapboard, bed: () => bed(ctx, P), kit: () => kit(ctx, P.n ?? 0), door: () => door(ctx, P), lamp: () => lamp(ctx, P), rug: () => rug(ctx, P), roll: () => roll(ctx, P), pot }; (parts[P.part] ?? pot)(ctx); // no part named (a bare preview): the stock pot, never an empty mesh
 }
 const box = (x0, y0, z0, x1, y1, z1) => ({ kind: "box", width: x1 - x0, height: y1 - y0, depth: z1 - z0, center: [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2] });
 export function collider(ctx) {
