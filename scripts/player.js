@@ -672,14 +672,13 @@ function swing(ctx, power = 0) {
       if (perRound(wp) && (s[loadedKey] ?? 0) > 0) cancelReload(ctx)
       else return
     }
-    if (s.god && (s[loadedKey] ?? 0) <= 0) s[loadedKey] = wp.magSize ?? 30 // an empty gun in god mode comes back full
     if ((s[loadedKey] ?? 0) <= 0) {
       w.nextSwing = now + 350
-      if ((s[ammoKey] ?? 0) > 0) startReload(ctx)
+      if (s.god || (s[ammoKey] ?? 0) > 0) startReload(ctx)
       else { sound(ctx, GS(wp, 'dry', 'gun-dry-fire-click'), 0.6, true); s.dryAt = now }
       return
     }
-    if (!s.god) s[loadedKey] -= 1 // god mode spends no rounds (Shelly, Nov 13)
+    s[loadedKey] -= 1 // god mode empties the magazine and reloads like anyone, its reserve never runs out (Shelly, Nov 14: 'let me test reloading')
     sound(ctx, wp.sound ?? (wp.pellets ? 'shotgun-blast-boom' : 'pistol-gunshot-echo'), 0.95)
     ctx.emit('screenFlash', { color: wp.beam ? '#d6f2ff' : '#fff1c8', duration: 0.06, intensity: wp.pellets ? 0.45 : wp.auto ? 0.12 : 0.25 }, { audience: { player: ctx.self.id } })
     if (wp.spread) { // full auto: the barrel climbs and the cone opens the longer the trigger stays down; heat bleeds off between bursts
@@ -858,7 +857,7 @@ const reloadLive = (ctx, p) => { const s = ctx.self.state; return s.reloading ==
 function startReload(ctx) {
   const s = ctx.self.state, wp = weaponOf(s), k = s.equipped, w = walkOf(ctx)
   if (!wp.ranged || !wp.magSize || s.reloading || s.lootOpen) return
-  if ((s['loaded_' + k] ?? 0) >= wp.magSize || (s[wp.ammoType ?? 'ammo'] ?? 0) <= 0) return
+  if ((s['loaded_' + k] ?? 0) >= wp.magSize || (!s.god && (s[wp.ammoType ?? 'ammo'] ?? 0) <= 0)) return
   const tok = (s.reloadTok ?? 0) + 1
   s.reloadTok = tok; s.reloadAt = ctx.now() // the token lives in state, so a page reload or a machine change never strands a reload
   s.reloading = k; s.ads = false; s.reloadDur = (wp.reloadTime ?? 1.7) * derived(s).reload // the viewmodel plays its timeline over the real length
@@ -888,9 +887,9 @@ export function reloadDone(ctx, p) {
   if (!reloadLive(ctx, p)) return
   const s = ctx.self.state, wp = W[p.k], rk = wp.ammoType ?? 'ammo'
   const chambered = wp.chamber && (s['loaded_' + p.k] ?? 0) > 0 ? 1 : 0 // a round left in the chamber: the magazine and one more
-  const take = Math.min(wp.magSize + chambered - (s['loaded_' + p.k] ?? 0), s[rk] ?? 0)
+  const need = wp.magSize + chambered - (s['loaded_' + p.k] ?? 0), take = s.god ? need : Math.min(need, s[rk] ?? 0) // god mode: the reserve is endless
   s['loaded_' + p.k] = (s['loaded_' + p.k] ?? 0) + take
-  s[rk] = (s[rk] ?? 0) - take
+  if (!s.god) s[rk] = (s[rk] ?? 0) - take
   s.reloading = ''
   s.reloadN = (s.reloadN ?? 0) + 1
   sound(ctx, GS(wp, 'done', 'pistol-slide-rack'), 0.7, true)
@@ -899,9 +898,9 @@ export function reloadDone(ctx, p) {
 export function reloadStep(ctx, p) {
   if (!reloadLive(ctx, p)) return
   const s = ctx.self.state, wp = W[p.k], rk = wp.ammoType ?? 'ammo'
-  if ((s['loaded_' + p.k] ?? 0) < wp.magSize && (s[rk] ?? 0) > 0) {
+  if ((s['loaded_' + p.k] ?? 0) < wp.magSize && (s.god || (s[rk] ?? 0) > 0)) {
     s['loaded_' + p.k] = (s['loaded_' + p.k] ?? 0) + 1
-    s[rk] -= 1
+    if (!s.god) s[rk] -= 1
     s.reloadN = (s.reloadN ?? 0) + 1
     sound(ctx, GS(wp, 'shell', 'shotgun-shell-insert-click'), 0.7, true)
   }
