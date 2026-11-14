@@ -487,6 +487,10 @@ export function faceFill(l) {
     const n = pickOf(FACES.nose, u)
     o.nose = n || (own ? '' : o.nose)
   }
+  if (own || o.nshape == null) { // Nov 14, Shelly: "add new nose types": a nose SHAPE beside the colour; '' keeps the species' own
+    const NS = ['', '', 'Button', 'Heart', 'Big', 'Wide']
+    o.nshape = own || o.nshape == null ? NS[Math.floor(u() * NS.length) % NS.length] : o.nshape
+  }
 
   // Eye shape harmonized with trait
   if (own || !o.eyes) {
@@ -524,6 +528,7 @@ export function faceMorph(expr, blink, isFemale, look) {
   if (tr) for (const [k, v] of Object.entries(tr)) if (k !== 'w') f[k] = Math.min(1, (f[k] ?? 0) + v * ts)
   const fty = ff ? FACES.types[ff.ftype] : null, fs = ff?.ftstr ?? 1 // the head's own shape: FT_ keys
   if (fty) for (const [k, v] of Object.entries(fty)) if (k !== 'w') f[k] = Math.min(1, v * fs)
+  if (ff?.nshape) f['Nose_' + ff.nshape] = 0.9 // the nose shape keys live on the heads baked Nov 14
 
   // --- Dynamic Speech Viseme Technology (phonetic mouth shapes during dialogue) ---
   if (Array.isArray(look?.mouth)) { // the line's own letters (mouthAt): open, wide, round per syllable, shut on punctuation and after the last word
