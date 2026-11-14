@@ -63,7 +63,7 @@ export function layout(seed) {
 export const zoneAt = (L, x, z) => {
   for (const l of L.lots) {
     const h = HOUSES[l.kind];
-    if (!h?.model || !h.rooms?.length) continue; // unfinished shells cannot shelter anyone
+    if (!h?.model || !h.door) continue; // a fitted house with a front door shelters (was rooms?.length: every house has rooms: [], so none sheltered)
     const dx = x - l.x, dz = z - l.z, u = dx * -l.fz + dz * l.fx, v = dx * l.fx + dz * l.fz;
     if (Math.abs(u) < h.w / 2 && Math.abs(v) < h.d / 2) return "l9_house";
   }

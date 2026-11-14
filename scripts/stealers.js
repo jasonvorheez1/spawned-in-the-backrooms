@@ -9,7 +9,7 @@ import { knocked } from "./lib/knock.js";
 import { heard } from "./lib/hear.js";
 import L from "./lib/data/level1.yml";
 import { zoneAt as zoneAt1, safeZone } from "./lib/level1.js";
-import { layout as layout9, zoneAt as zoneAt9 } from "./lib/level9.js";
+import { layout as layout9, zoneAt as zoneAt9, HOUSES as HOUSES9 } from "./lib/level9.js";
 // Level 9: no maze; a house is shelter, the street is theirs
 let LAY9 = null, T9 = null; const town9 = (seed) => (LAY9 && LAY9.seed === seed ? LAY9 : (LAY9 = layout9(seed)));
 const zoneAt = (x, z) => T9 ? (zoneAt9(T9, x, z) === "l9_street" ? "halls" : "l9_house") : zoneAt1(x, z);
@@ -64,14 +64,18 @@ function shedSkin(ctx, e) {
   if (ctx.getObject(id)) ctx.destroy(id);
 }
 
-const MIMIC = (n) => [
-  [`${n}?`, null],
-  [`${n}. ${n}. come here, ${n}.`, null],
+// words it heard someone say once, never your name (Shelly: a thing saying your name "shouldnt be a thing")
+const MIMIC = [
   ["hello? is someone there?", 0],
   ["wait, don't go. i need help.", 1],
   ["over here, friend.", 2],
-  [`h-hello, ${n}. hello. hel-lo.`, null],
+  ["i live here. i live here. i live here.", 3],
+  ["it's okay. it's safe out here.", 4],
+  ["have you seen my family?", 5],
+  ["h-hello. hello. hel-lo.", null],
+  ["come outside.", null],
 ];
+const KNOCK_LINES = [["let me in.", 6], ["it's cold out here.", 7], ["i know you're in there.", 8], ["open the door. please.", null]];
 
 const HUNGER_S = 150; // seconds of wandering before it gets hungry
 const T = {
@@ -94,7 +98,38 @@ const CALL = [
   "/cdn/voice-skinstealer-saying-hello-is-someone-there.mp3",
   "/cdn/voice-skinstealer-saying-wait-dont-go-i-need-help.mp3",
   "/cdn/voice-skinstealer-saying-over-here-friend.mp3",
+  "/cdn/voice-skinstealer-saying-i-live-here-i-live-here-i-live-here.mp3",
+  "/cdn/voice-skinstealer-saying-its-okay-its-safe-out-here.mp3",
+  "/cdn/voice-skinstealer-saying-have-you-seen-my-family.mp3",
+  "/cdn/voice-skinstealer-saying-let-me-in.mp3",
+  "/cdn/voice-skinstealer-saying-its-cold-out-here.mp3",
+  "/cdn/voice-skinstealer-saying-i-know-youre-in-there.mp3",
 ];
+const KNOCK = "/cdn/moodboard-gothic-horror/sfx-three-slow-heavy-knocks-on-wooden-front-door.mp3";
+const CRACK = "/cdn/moodboard-gothic-horror/sfx-wet-neck-bone-crack-pop.mp3";
+// the house a point stands in, and a spot on the walk outside its front door (Level 9)
+function houseAt(L, x, z) {
+  for (const l of L.lots) {
+    const h = HOUSES9[l.kind]; if (!h?.model || !h.door) continue;
+    const dx = x - l.x, dz = z - l.z, u = dx * -l.fz + dz * l.fx, v = dx * l.fx + dz * l.fz;
+    if (Math.abs(u) < h.w / 2 && Math.abs(v) < h.d / 2) return l;
+  }
+  return null;
+}
+function stoopOf(L, l) {
+  const D = HOUSES9[l.kind].door, Y = (l.yaw + 180) / 57.2958;
+  for (let out = 1.8; out < 6; out += 0.5) { // rotate({ yaw: Y }, { x: D.x, z: D.z + out }) as places/level9/sim.js hangs the door
+    const lx = D.x, lz = D.z + out, x = l.x + lx * Math.cos(Y) + lz * Math.sin(Y), z = l.z - lx * Math.sin(Y) + lz * Math.cos(Y);
+    if (zoneAt9(L, x, z) === "l9_street") return { x, z, door: { x: l.x + lx * Math.cos(Y) + D.z * Math.sin(Y), z: l.z - lx * Math.sin(Y) + D.z * Math.cos(Y) } };
+  }
+  return null;
+}
+// is this player looking at p (camera yaw within ~28 degrees of it)?
+function watching(p, pos) {
+  const yaw = p.camera?.rotation?.yaw; if (yaw == null) return false;
+  const r = yaw / 57.2958, fx = -Math.sin(r), fz = -Math.cos(r), dx = pos.x - p.feetPosition.x, dz = pos.z - p.feetPosition.z, d = Math.hypot(dx, dz) || 1;
+  return (fx * dx + fz * dz) / d > 0.88;
+}
 
 const SPLIT = `fx
 pop gore burst=26..34 on=box(.25,.5,.1).c(1.25) life=.5..0.9 v=<0,0,-1>*(.5..1.6)+sdir()*(1..2.4)+up(1) size=.03..0.07 acc=grav()+drag(.6) col=oklch(.9 .03 30)..oklch(.82 .05 20) a=.45 sz=$size floor=stick r=sprite(soft-disc,alpha)
@@ -312,11 +347,43 @@ export function update(ctx, dt) {
       play(e, m, "act", null);
     }
 
+    // Level 9: you hid in a house. Hungry, it walks up to that front door and knocks, and asks to be let in
+    if (T9 && !prey && m.ph === "skin" && ((m.hunger ?? 0) >= 0.5 || m.angry) && now >= (m.siegeCool ?? 0)) {
+      if (!m.siege) {
+        for (const p of ctx.place.players) {
+          if (Math.hypot(p.feetPosition.x - pos.x, p.feetPosition.z - pos.z) > 32) continue;
+          const lot = houseAt(T9, p.feetPosition.x, p.feetPosition.z), sp0 = lot && stoopOf(T9, lot);
+          if (sp0) { m.siege = { ...sp0, lot: lot.id, who: p.id, until: now + 45000 }; break; }
+        }
+      } else {
+        const p = ctx.place.players.find((q) => q.id === m.siege.who);
+        const still = p && houseAt(T9, p.feetPosition.x, p.feetPosition.z)?.id === m.siege.lot;
+        if (!still || now > m.siege.until) { m.siege = null; m.siegeCool = now + 60000; }
+        else if (Math.hypot(m.siege.x - pos.x, m.siege.z - pos.z) < 1.2 && now >= (m.knockAt ?? 0)) {
+          m.knockAt = now + 7000 + ctx.random() * 4000;
+          const door = { x: m.siege.door.x, y: pos.y + 1.2, z: m.siege.door.z };
+          heard(ctx, { clip: KNOCK, position: door, volume: 1, maxDistance: 26, refDistance: 4 });
+          const [lineText, ci] = KNOCK_LINES[Math.floor(ctx.random() * KNOCK_LINES.length)];
+          p.state.sub = { who: "???", t: lineText, at: now + 1400, d: 3200 };
+          if (ci != null) heard(ctx, { clip: CALL[ci], position: door, volume: 0.85, pitch: 0.88, maxDistance: 22 });
+          e.rotation = { yaw: Math.atan2(-(m.siege.door.x - pos.x), -(m.siege.door.z - pos.z)) * 57.2958 };
+        }
+      }
+    } else if (m.siege && (prey || m.ph !== "skin")) m.siege = null;
+
+    // Disguised tells: a twitch now and then, the skin's walk stuttering, a wet crack in its neck
+    if (m.ph === "skin" && prey && best < 18 && now >= (m.twitchAt ?? now + 1)) {
+      m.twitchAt = now + 5000 + ctx.random() * 6000; m.twitchEnd = now + 420;
+      const sk = ctx.getObject(e.id + "/skin"); if (sk?.anim?.base) sk.anim.base = { ...sk.anim.base, timeScale: 2.6 };
+      heard(ctx, { clip: CRACK, position: { x: pos.x, y: pos.y + 1.6, z: pos.z }, volume: 0.45, maxDistance: 12, refDistance: 2, pitch: 0.85 + ctx.random() * 0.3 });
+    }
+    m.twitchAt ??= now + 3000;
+    if (m.twitchEnd && now > m.twitchEnd) { m.twitchEnd = 0; m.gait = undefined; } // hands the gait back below
+
     // Parrots voice lines
     if (m.ph === "skin" && prey && now >= (m.call ?? 0)) {
       m.call = now + 6000 + ctx.random() * 6000;
-      const lines = MIMIC(String(prey.displayName ?? "friend").toLowerCase());
-      const [lineText, ci] = lines[Math.floor(ctx.random() * lines.length)];
+      const [lineText, ci] = MIMIC[Math.floor(ctx.random() * MIMIC.length)];
       prey.state.sub = { who: "???", t: lineText, at: now, d: 3200 };
       if (ci != null) {
         heard(ctx, {
@@ -393,7 +460,13 @@ export function update(ctx, dt) {
 
     // Navigation and pathfinding
     let goal;
-    if (prey && m.ph === "skin" && !hungry) {
+    const seen = prey && m.ph === "skin" && best < 16 && watching(prey, pos);
+    if (m.siege) goal = m.siege;
+    else if (prey && m.ph === "skin" && seen && best > T.reveal + 0.5) {
+      // you look at it: it stops dead and stares back. look away and it is closer
+      goal = pos;
+      e.rotation = { yaw: Math.atan2(-(prey.feetPosition.x - pos.x), -(prey.feetPosition.z - pos.z)) * 57.2958 };
+    } else if (prey && m.ph === "skin" && !hungry) {
       const pd = best;
       goal = pd > 4.5 ? prey.feetPosition : pos;
       if (pd <= 4.5) {
@@ -492,13 +565,13 @@ export function update(ctx, dt) {
     const moving = d > near && sp > 0;
     e.velocity = { x: moving ? ux * sp : 0, y: (e.velocity?.y ?? 0) - 20 * dt, z: moving ? uz * sp : 0 };
 
-    if (moving || prey) {
+    if ((moving || prey) && !(seen && !moving)) {
       e.rotation = { yaw: Math.atan2(-ux, -uz) * 57.2958 };
     }
 
     play(e, m, "base", rev ? (moving ? "Run" : "Hunt") : moving ? "Walk" : "Idle", { loop: true });
 
-    if (!rev && m.gait !== moving) {
+    if (!rev && m.gait !== moving && !m.twitchEnd) {
       m.gait = moving;
       const sk = ctx.getObject(e.id + "/skin");
       if (sk) {
