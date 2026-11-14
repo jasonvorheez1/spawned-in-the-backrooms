@@ -164,7 +164,7 @@ export function tick(ctx) {
       behavior: ["scripts/humanoid-locomotion.js", "scripts/b3-survivor.js"], state: { name: "B3 survivor", hp: 260, maxHp: 260, attackOnSight: true, wear: look },
       children: [{ id: "launcher", parent: "b3-survivor", attachment: { bone: "RightHand" }, ...weaponBody("m72") }] });
   }
-  if (s.b3DressV !== 2 && ctx.place.objects["b3-hall"]) { // Shelly Nov 14: board gone, the open armory lived in
+  if (s.b3DressV !== 3 && ctx.place.objects["b3-hall"]) { // Shelly Nov 14: board gone, the open armory lived in
     for (const id of ["b3-rack", "b3-arm0.55", "b3-arm1.15", "b3-m72"]) if (ctx.getObject(id)) ctx.destroy(id);
     for (const o of ctx.query({ tags: ["b3-dress"], radius: 1e6, center: B3O })) ctx.destroy(o.id);
     for (const id of ["b3-cover0", "b3-cover1"]) if (ctx.getObject(id)) ctx.destroy(id);
