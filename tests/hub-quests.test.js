@@ -218,8 +218,8 @@ test('Phoebe offers branching dialogue choices with different outcomes for the L
 })
 
 test('Phoebe dialogue lets the player ask if she is a Partygoer and reveals she is the last Mimic', async () => {
-  const { DIALOGUE } = await import('../scripts/lib/dialogue.js')
-  const ask = DIALOGUE['hub-phoebe']?.ask ?? []
+  const { DLG } = await import('../scripts/lib/dialogue.js')
+  const ask = DLG['hub-phoebe']?.ask ?? []
   const pg = ask.find(x => /partygoer/i.test(x.q))
   expect(pg).toBeTruthy()
   const mimic = pg.then?.find(x => /what are you/i.test(x.q))
