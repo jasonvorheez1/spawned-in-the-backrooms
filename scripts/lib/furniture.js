@@ -40,9 +40,9 @@ export function spawnFurniture(ctx, level, kind, spot, opts = {}) {
 
 // the fitted Tripo mesh a kind wears (the l2props containers: filing, desk, cabinet, locker, toolbox), at its real size; null keeps the scripted look
 export function furnLook(kind) {
-  const id = D.kinds[kind]?.geo === "l2" ? containerModel(kind) : null; if (!id) return null;
-  const [w, h, d] = sizeOf(kind);
-  return { model: { id, forward: PROPS.forward }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } } };
+  const K = D.kinds[kind], id = K?.geo === "l2" ? containerModel(kind) : K?.model; if (!id) return null;
+  const [w, h, d] = sizeOf(kind), forward = K.geo === "l2" ? PROPS.forward : K.forward;
+  return { model: { id, ...(forward ? { forward } : {}) }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } } };
 }
 // 2026-11-14: furniture already standing as scripted boxes swaps to its fitted mesh in place (same id, collider, state, tags); gated by place.state.furnModelV
 export const FURN_MODEL_V = 1;

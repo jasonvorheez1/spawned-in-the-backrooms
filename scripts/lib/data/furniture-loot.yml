@@ -1,5 +1,6 @@
 # Searchable furniture that replaces the old loot crates on Levels 0, 1 and 3 (Level 2 keeps level2.yml containers).
 # geo: l2 = scripts/l2-props-geo.js (its size from level2.yml), bags = scripts/loot-bags-geo.js (size here).
+# model/forward (2026-11-14): a fitted Tripo mesh the bags kind wears at its size (furniture.js furnLook); none = scripted look.
 # n: rolls [min, max]; w: how often it is picked; table: Level 3 loot3.yml table; mat: what breaking it hits.
 kinds:
   filing:   { name: "Filing cabinet",        geo: l2,   n: [1, 3], mat: metal }
@@ -7,11 +8,11 @@ kinds:
   cabinet:  { name: "Office supply cabinet", geo: l2,   n: [2, 3], mat: metal }
   locker:   { name: "Locker",                geo: l2,   n: [2, 3], mat: metal }
   toolbox:  { name: "Toolbox",               geo: l2,   n: [1, 3], mat: metal }
-  backpack: { name: "Dropped backpack",      geo: bags, size: [0.38, 0.5, 0.26], n: [1, 3], mat: wood }
-  duffel:   { name: "Duffel bag",            geo: bags, size: [0.8, 0.34, 0.36], n: [2, 4], mat: wood }
-  satchel:  { name: "Dead worker's satchel", geo: bags, size: [0.9, 0.42, 0.5],  n: [2, 3], mat: wood }
+  backpack: { name: "Dropped backpack",      geo: bags, model: /cdn/value.7d6ce57264bea91bdbdd2292f791291660b752ba473d32350f36411d5048fdf1.glb, size: [0.38, 0.5, 0.26], n: [1, 3], mat: wood }
+  duffel:   { name: "Duffel bag",            geo: bags, model: /cdn/value.85c1a4c9b8614aea0cadd349eec3f759acb4db38f648b3d2ea5471b90552f062.glb, size: [0.8, 0.34, 0.36], n: [2, 4], mat: wood }
+  satchel:  { name: "Dead worker's satchel", geo: bags, model: /cdn/value.85c1a4c9b8614aea0cadd349eec3f759acb4db38f648b3d2ea5471b90552f062.glb, size: [0.9, 0.42, 0.5],  n: [2, 3], mat: wood }
   shelfbin: { name: "Shelving bin",          geo: bags, size: [0.62, 0.3, 0.42], n: [2, 4], mat: metal }
-  fuse:     { name: "Fuse cabinet",          geo: bags, size: [0.7, 0.95, 0.24], n: [1, 3], mat: metal, y: 0.7 }
+  fuse:     { name: "Fuse cabinet",          geo: bags, model: /cdn/value.2268805ae5f337235de318b92236f96c3475a7caaea724697c13e30c88a27545.glb, forward: "+x", size: [0.7, 0.95, 0.24], n: [1, 3], mat: metal, y: 0.7 }
 levels:
   main:   { filing: 3, desk: 3, backpack: 2, cabinet: 2 }
   level1: { shelfbin: 4, toolbox: 2, locker: 2, duffel: 2 }
