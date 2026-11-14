@@ -26,7 +26,7 @@ export const MENUS = {
 
 const KEYS = ["clip", "liq", "slice", "burger"];
 const keyOf = (id) => KEYS.find((k) => String(id).includes(`-${k}-`) || String(id).endsWith(`-${k}`));
-const PICKUP = { clip: [-19.2, 1.12, -29.65], liq: [-11.75, 1.1, -25.2], slice: [5.4, 1.49, -29.4], burger: [19.4, 1.065, -28.4] };
+const PICKUP = { clip: [-19.2, 0.86, -29.65], liq: [-11.75, 0.865, -25.2], slice: [5.4, 1.49, -29.4], burger: [19.4, 1.065, -28.4] };
 const NAME = { clip: "Clippers", liq: "Liquorette", slice: "Slice Palace", burger: "Burger Bop" };
 
 const board = (key, n) => `<div face="front" width="1.8m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Courier New',monospace;background:#101418;color:#7affb0;text-align:center"><div style="font-size:54px;color:#ffd84a">NOW SERVING</div><div style="font-size:150px;font-weight:700;letter-spacing:6px;text-shadow:0 0 18px #3f9">${String(n).padStart(3, "0")}</div><div style="font-size:34px;color:#9fb8c8">${NAME[key].toUpperCase()}</div></div>`;
