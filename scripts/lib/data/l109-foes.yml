@@ -1,0 +1,24 @@
+# Level 109: what is shut in the rooms. Bodies, hp and bite come from each creature's own level; these are the hospital's own numbers.
+# Savi's pick on every number, tune freely.
+lureSec: 8          # seconds an opened door keeps pulling the ones inside
+noiseSec: 6         # seconds a noise keeps one at its door
+thumpEvery: [1.4, 3.2]   # seconds between scratches/thumps at a shut door
+thumpHear: 22       # metres the thump carries
+doorHear: 7         # a wanderer walking (not crouched) this close to a shut door is heard inside
+doorIn: 1.3         # metres inside the doorway they stand to scratch
+doorOut: 1.5        # metres past the doorway before they turn into the corridor
+doorPass: 0.9       # half width of the gap they may cross the room's edge through
+wander: [4, 9]      # seconds between wander picks
+lostSec: 10         # seconds a loose one keeps heading for where it last knew you
+prowlLook: 12       # metres a prowling one looks down each way at a wall
+mgrFollow: 150      # the keeper moves to the nearest wanderer past this
+kinds:
+  hound:       { hp: 90,  walk: 1.6, run: 5.0, sight: 26, hear: 9,  dmg: 11, reach: 1.5, cd: 0.9, xp: 35 }
+  skinstealer: { hp: 120, walk: 1.2, run: 4.2, sight: 22, hear: 7,  dmg: 18, reach: 1.6, cd: 1.3, xp: 60 }
+  clump:       { hp: 160, walk: 0.9, run: 3.2, sight: 18, hear: 8,  dmg: 18, reach: 1.7, cd: 1.3, xp: 60 }
+  deathmoth:   { hp: 45,  walk: 1.2, run: 3.5, sight: 20, hear: 6,  dmg: 6,  reach: 1.3, cd: 0.8, xp: 30, sanity: 3, hover: 1.2 }
+sounds:
+  hound:       { loop: /cdn/moodboard-gothic-horror/sfx-low-wet-animal-growl-breathing-loop.mp3, thump: /cdn/moodboard-gothic-horror/sfx-claws-scratching-on-the-inside-of-a-wooden-door.mp3, hit: /cdn/moodboard-gothic-horror/sfx-hound-bite-tearing-cloth.mp3, cry: /cdn/moodboard-gothic-horror/sfx-hound-snarl-and-bark-echoing.mp3 }
+  skinstealer: { thump: /cdn/moodboard-gothic-horror/sfx-three-slow-heavy-knocks-on-wooden-front-door.mp3, hit: /cdn/moodboard-gothic-horror/sfx-hound-bite-tearing-cloth.mp3, cry: /cdn/moodboard-gothic-horror/sfx-wet-neck-bone-crack-pop.mp3 }
+  clump:       { loop: /cdn/moodboard-gothic-horror/sfx-many-fingers-knuckles-cracking-and-skin-dragging-on-concrete-loop.mp3, thump: /cdn/moodboard-gothic-horror/sfx-heavy-body-thumping-against-a-closed-door-from-inside.mp3, hit: /cdn/moodboard-gothic-horror/sfx-dozens-of-hands-grabbing-and-slapping.mp3, cry: /cdn/moodboard-gothic-horror/sfx-chorus-of-moaning-voices-and-snapping-fingers.mp3 }
+  deathmoth:   { thump: /cdn/moodboard-gothic-horror/sfx-many-moth-wings-batting-against-a-closed-door.mp3, hit: /cdn/moodboard-realistic-gritty/sfx-wet-dusty-glob-splattering-on-cloth.mp3, cry: /cdn/moodboard-realistic-gritty/sfx-wordless-choir-swell-into-tearing-wings.mp3 }

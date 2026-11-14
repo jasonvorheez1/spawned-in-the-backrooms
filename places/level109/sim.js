@@ -71,7 +71,7 @@ function layRoom(ctx, seed, info) {
     sp(`l${a}_${b}`, { feetPosition: toWorld(c, um + a, vNear + info.side * b, 2.97), castShadow: false, primitive: { kind: "box", width: 1.2, height: 0.03, depth: 0.6 }, material: on ? TROFFER : { color: "#77756a" }, ...(on ? { light: { kind: "point", color: lit ? "#fff6e0" : "#e9e2c4", intensity: lit ? 2.2 : 1.1, distance: 15, shadow: { enabled: false } } } : {}) }); }
   const along = toWorld({ ...c, c: 0 }, 1, 0), inward = toWorld({ ...c, c: 0 }, 0, info.side);
   buildRoom(ctx, { id: info.id, type: info.type, info, seed, sp, abandoned: !lit, pop, at: (a, b, up = 0) => toWorld(c, um + a, vNear + info.side * b, up), yawIn: yawFor(inward.x, inward.z), yawAlong: yawFor(along.x, along.z) });
-  penLoad(ctx, info.id, info.box, spawnFoe);
+  penLoad(ctx, info.id, info.box, (c, k, pos, st) => spawnFoe(c, k, pos, { ...st, penDoor: { x: info.door.x, z: info.door.z } })); // the foes' keeper needs the doorway
   ROOMS.set(info.id, { made, info });
 }
 export function tick(ctx) {
