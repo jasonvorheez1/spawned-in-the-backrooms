@@ -26,6 +26,19 @@ const KITROW = {
   phone: { model: { id: KIT.phone }, layout: box(0.24, 0.1, 0.2), physics: { body: "static", collider: "box" } },
   table: { model: { id: KIT.table }, layout: box(1.2, 0.74, 1.2), physics: { body: "static", collider: "box" } },
 };
+const FITM = { // reused fitted models (Level 5 office kit) for Level 4's open floor
+  desk: "/cdn/value.fa5feab7b39ab2f4d61900132fde5cae8b1f7bb2a8eb9fecc442a5f854209765.glb",
+  chair: "/cdn/value.07a9798f6eec6c10157142da7130514ee8c8301290fe16d553f43818e8103796.glb",
+  printer: "/cdn/value.761b50dce26eee795c80dff616b78a4c7951f584c809768ccfe77f3bb50ccafa.glb",
+  cabinet: "/cdn/value.4a56fcfeb8b5614f78843431da5fd4ef6eb6b8549c86a730ecd317049e04c05b.glb",
+  crt: "/cdn/value.30ae8e4fd0c2e307d21943aa6fa38f3f816fcc7a10335f5a15ff865b00b84ce4.glb",
+};
+const FIT = {
+  desk: { model: { id: FITM.desk, forward: "+z" }, layout: box(1.5, 0.75, 0.74), physics: { body: "static", collider: "box" } },
+  chair: { model: { id: FITM.chair }, layout: box(0.62, 1.0, 0.62) },
+  printer: { model: { id: FITM.printer }, layout: box(0.8, 1.0, 0.6), physics: { body: "static", collider: "box" } },
+  cabinet: { model: { id: FITM.cabinet }, layout: box(0.5, 1.3, 0.6), physics: { body: "static", collider: "box" } },
+};
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const OMEGA = {
   "omega-okafor": { name: "Sgt. Okafor · M.E.G. Base Omega", role: "scout", voice: "reyes", gun: "shotgun", at: [-25.5, -22.6], yaw: 180, look: { species: "human", sex: "m", eye: "#7a4820", topw: "jacket", top: "#b8d040", botw: "pants", bottom: "#3a3a32", shoes: "boots", shoec: "#22201c", hat: "cap", hatc: "#4a5a2a", expr: "wary" } },
@@ -170,6 +183,16 @@ export function tick(ctx) {
       let seed = 0;
       for (const face of [-1, 1]) for (const cx of [-0.82, 0.82]) ctx.spawn({ tags: ["l4-island", "l4-desk"], feetPosition: { x: x + cx, y: 0, z: z + face * 0.45 }, rotation: { yaw: face > 0 ? 0 : 180 }, physics: { body: "static", collider: "mesh" }, visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/l4-office-geo.js", params: { kind: "desk", seed: seed++ } } });
     }
+  }
+  if ((s.officeV ?? 0) >= 3 && s.islandSplit && s.fitV !== 1) { // 2026-11-14 (Shelly: nothing blocky): island desks, chairs, printers and the carbon-copy cabinet wear fitted models, same ids, tags and behaviors
+    s.fitV = 1;
+    const all = (t) => ctx.query({ tags: [t], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
+    const wear = (id, row) => { const h = ctx.place.objects[id]; if (!h) return null; for (const c of [...(h.children ?? [])]) ctx.destroy(c.id); h.primitive = null; h.material = null; Object.assign(h, row); return h; };
+    for (const o of all("l4-island")) { const h = ctx.getObject(o.id), k = h?.primitive?.params?.kind;
+      if (k === "chair") wear(o.id, { ...FIT.chair });
+      else if (k === "desk") { wear(o.id, { ...FIT.desk }); ctx.spawn({ parent: o.id, feetPosition: { x: 0.18, y: 0.75, z: -0.14 }, rotation: { yaw: 180 }, castShadow: false, visibleRange: { max: 35 }, model: { id: FITM.crt }, layout: box(0.42, 0.38, 0.4) }); } }
+    for (const o of all("l4-printer")) wear(o.id, { ...FIT.printer });
+    if (ctx.place.objects["dina-carbon-copy"]) { wear("dina-carbon-copy", { ...FIT.cabinet }); ctx.spawn({ parent: "dina-carbon-copy", feetPosition: { x: 0, y: 1.3, z: 0 }, primitive: { kind: "box", width: 0.3, height: 0.03, depth: 0.22 }, material: { color: "oklch(0.9 0.02 90)", roughness: 0.9 } }); }
   }
   if (s.officeV < 2) { // the shift board: a corkboard on legs by the north desks, handing out office tasks (scripts/l4-office.js)
     s.officeV = 2;
