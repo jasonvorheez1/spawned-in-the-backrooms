@@ -100,6 +100,7 @@ function lay(ctx) {
   });
 
   const COLA_MACHINE = "/cdn/value.d5ba29c10a389882b99ae5a0fbb6e2bff40cda295ddde1e97ba0d824e3f55f65.glb", COLA_CRATE = "/cdn/value.c65f1bf3fb1305109ac73110e57b3a2db7ad85f0d15f4453f6cfdf6a959dc4e3.glb"; // Shelly's cola pack (art/fnv/build.py): 0.9 x 1.83 x 0.71 m, feet origin, front +z
+  const M_WATER_TRIPO = "/cdn/value.71fc6a79f1190c4cbafb47ae09d498409286c6f5aba8613419fdbec843944bba.glb"; // tripo bottled-water machine, fitted in art/l61-tripo-fit/build.py: 1.83 m, feet origin
   const M_SNACK_TRIPO = "/cdn/value.e910998f3d141ef9157c86bec44859cff3389f2f4add5d4144e1142133161967.glb"; // tripo snack machine, re-seated in art/l61-vend/build.py: 1.83 m, feet origin, front +z
   const vend = (id, x, z, yaw, soda, extra = {}) => sp(id, {
     feetPosition: { x, y: extra.y ?? 0, z },
@@ -107,15 +108,10 @@ function lay(ctx) {
     physics: { body: "static", collider: "box" },
     visibleRange: { max: 45 },
     castShadow: false,
-    model: soda && !extra.gives?.includes("purified_water") ? { id: COLA_MACHINE, forward: "+z" } : soda ? { id: M_VEND, forward: "+z", materials: { cabinet: { color: "oklch(0.5 0.2 27)", roughness: 0.4, metalness: 0.35 } } } : { id: M_SNACK_TRIPO, forward: "+z" },
+    model: soda && !extra.gives?.includes("purified_water") ? { id: COLA_MACHINE, forward: "+z" } : soda ? { id: M_WATER_TRIPO, forward: "+z" } : { id: M_SNACK_TRIPO, forward: "+z" },
     tags: extra.dead ? [] : ["usable"],
     behavior: extra.dead ? undefined : "scripts/l61-use.js",
     state: extra.dead ? {} : { kind: "vend", gives: extra.gives, weeklyStock: extra.weeklyStock, sells: soda ? "soda" : "snack", name: extra.gives?.includes("purified_water") ? "Water dispenser" : soda ? "Soda machine" : "Snack machine", verb: "Press a button", info: extra.gives?.includes("purified_water") ? "Free bottled drinking water." : soda ? "Chilled soda. No charge." : "Packaged snacks. No charge." },
-    children: soda && extra.gives?.includes("purified_water") ? [{ feetPosition: { x: 0.1, y: 0.38, z: -0.447 }, primitive: { kind: "box", width: 0.72, height: 1.32, depth: 0.01 }, material: extra.gives?.includes("purified_water") ? { color: "#457275", roughness: 0.6 } : { texture: SODA, roughness: 0.15, emissive: "oklch(0.35 0 0)", emissiveIntensity: 0.4 },
-      ...(extra.gives?.includes("purified_water") ? { children: [{
-        feetPosition: { x: 0, y: 0.67, z: -0.012 },
-        vector: "<svg viewBox='0 0 64 118' width='0.62m'><path d='M0 0h64v118H0z' fill='#467478'/><path d='M5 5h54v108H5z' fill='none' stroke='#97b6ae'/><path d='M28 20h8v9l5 8v27H23V37l5-8z' fill='#dfebdf'/><g text-anchor='middle' font-family='sans-serif' fill='#f0eee0'><text x='32' y='82' font-size='8' font-weight='bold'>WATER</text><text x='32' y='100' font-size='6'>NO CHARGE</text></g></svg>",
-      }] } : {}) }] : [],
   });
 
   const tableSet = (id, x, z, yaw) => sp(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, physics: { body: "static", collider: "mesh" }, visibleRange: { max: 45 }, castShadow: false, model: { id: M_TABLE, forward: "+z" } });

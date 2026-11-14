@@ -3,7 +3,7 @@
 import { heard } from "./lib/hear.js";
 import { animate } from "builtin/tween";
 import { itemSpec } from "./lib/vend-item.js";
-import { handTray } from "./lib/snacktray.js";
+import { handTray, mealKids, TRAY_MODEL } from "./lib/snacktray.js";
 import { errandStep, errandDone } from "./lib/quests.js";
 const BUS = ["l61-tray", "Bus Your Tray", "Finish your food, then slide the tray into the tray return rack in the Level 6.1 food court. The facelings notice who does."]; // the food court's odd job (scripts/lib/quests.js errands)
 import { bring } from "./lib/companion.js";
@@ -142,7 +142,7 @@ export const ears = {
         return;
       }
       snd("paper-plate-slid-across-counter", 0.85, 12);
-      handTray(ctx, who, s.n, s.info); // a real tray in their hands (l61Hold + l61Tray)
+      handTray(ctx, who, s.n, s.info, s.items); // a real tray in their hands (l61Hold + l61Tray)
       w.payout = { xp: 2, items: s.items }; errandStep(w, ...BUS);
       tell(s.items.map((t) => "+" + t.toUpperCase()).join(" "), "#9fffb0");
       ctx.destroy(ctx.self.id);
@@ -282,16 +282,10 @@ export function ready(ctx, p) {
     tags: ["usable"],
     feetPosition: { x: pk[0], y: pk[1], z: pk[2] },
     behavior: "scripts/l61-use.js",
-    primitive: { kind: "box", width: 0.46, height: 0.03, depth: 0.32 },
-    material: { color: "oklch(0.62 0.17 30)", roughness: 0.5 },
+    model: { id: TRAY_MODEL },
     state: { kind: "tray", owner: p.uid, n: p.n, items: o.gives, name: `Tray · order #${p.n}`, verb: "Take your tray", info: `Order #${p.n}: ${o.nm}`, tint: "#ffd84a" },
     fx: { script: `fx\npop steam rate=6 on=disc(.12) life=1..1.6 v=up(.3) size=.06..0.12 col=<.9,.9,.88> a=0>.35:.4>.35:.8>0 sz=$size*(.6>1.8) r=sprite(smoke-puff,alpha)` },
-    children: [
-      { feetPosition: { x: -0.1, y: 0.03, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.11, radiusBottom: 0.1, height: 0.02 }, material: { color: "oklch(0.97 0.005 90)" } },
-      { feetPosition: { x: -0.1, y: 0.05, z: 0 }, primitive: { kind: "sphere", radius: 0.07 }, material: { color: "oklch(0.58 0.12 55)", roughness: 0.8 } },
-      { feetPosition: { x: 0.14, y: 0.03, z: 0.05 }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.035, height: 0.13 }, material: { color: "oklch(0.35 0.15 25)" } },
-      { feetPosition: { x: 0.12, y: 0.03, z: -0.09 }, primitive: { kind: "box", width: 0.1, height: 0.005, depth: 0.07 }, material: { color: "oklch(0.95 0.01 90)" } },
-    ],
+    children: mealKids(o.gives),
   });
 
   // Table service: the nearest faceling waiter walks the tray over
