@@ -48,6 +48,9 @@ for name, (size, budget, largest, flat) in SPEC.items():
     if d.y > d.x:  # long side along x
       R = mathutils.Matrix.Rotation(math.pi / 2, 3, "Z")
       for v in o.data.vertices: v.co = R @ v.co
+  if name == "waterv":  # Tripo stood its glass door and keypad on +X: turn them to Blender front (-Y = glTF +z)
+    R = mathutils.Matrix.Rotation(-math.pi / 2, 3, "Z")
+    for v in o.data.vertices: v.co = R @ v.co
   tris = sum(len(p.vertices) - 2 for p in o.data.polygons)
   if tris > budget:
     m = o.modifiers.new("d", "DECIMATE"); m.ratio = budget / tris; bpy.ops.object.modifier_apply(modifier="d")

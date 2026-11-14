@@ -100,7 +100,7 @@ function lay(ctx) {
   });
 
   const COLA_MACHINE = "/cdn/value.d5ba29c10a389882b99ae5a0fbb6e2bff40cda295ddde1e97ba0d824e3f55f65.glb", COLA_CRATE = "/cdn/value.c65f1bf3fb1305109ac73110e57b3a2db7ad85f0d15f4453f6cfdf6a959dc4e3.glb"; // Shelly's cola pack (art/fnv/build.py): 0.9 x 1.83 x 0.71 m, feet origin, front +z
-  const M_WATER_TRIPO = "/cdn/value.71fc6a79f1190c4cbafb47ae09d498409286c6f5aba8613419fdbec843944bba.glb"; // tripo bottled-water machine, fitted in art/l61-tripo-fit/build.py: 1.83 m, feet origin
+  const M_WATER_TRIPO = "/cdn/value.cf5d8a9c408cc4a2d5fa26f365e9455c49b9607551b96c710da37d6bd8500e92.glb"; // tripo bottled-water machine, fitted in art/l61-tripo-fit/build.py: 1.83 m, feet origin
   const M_SNACK_TRIPO = "/cdn/value.e910998f3d141ef9157c86bec44859cff3389f2f4add5d4144e1142133161967.glb"; // tripo snack machine, re-seated in art/l61-vend/build.py: 1.83 m, feet origin, front +z
   const vend = (id, x, z, yaw, soda, extra = {}) => sp(id, {
     feetPosition: { x, y: extra.y ?? 0, z },
