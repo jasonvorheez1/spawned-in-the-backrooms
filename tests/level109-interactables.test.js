@@ -27,6 +27,8 @@ mock.module("builtin/tsl", () => ({
 
 const medGeo = await import("../scripts/l109-med-geo.js");
 const { ears: useEars } = await import("../scripts/l109-use.js");
+const { hospitalControl } = await import("../scripts/lib/l109-os.js");
+const { controlOf, CTRL, canUseControl, filesOf } = await import("../scripts/lib/os.js");
 const hazard = await import("../scripts/l109-hazard.js");
 const { buildRoom } = await import("../scripts/lib/l109-rooms.js");
 const { buildOutpost } = await import("../scripts/lib/l109-outpost.js");
@@ -67,6 +69,8 @@ function makeCtx(seed = {}, now = 100000) {
     }),
     emitted,
   };
+  let currentSelf;
+  Object.defineProperty(ctx, "self", { get: () => currentSelf, set: (o) => { currentSelf = o; if (o && !o.session) o.session = {}; } });
   return ctx;
 }
 
@@ -174,13 +178,32 @@ describe("Level 109 enrichment & interactables", () => {
       "l109o-sup1-c1": { id: "l109o-sup1-c1", tags: ["container"], feetPosition: { x: 2, y: 0, z: 2 }, state: { lock: "lockpick:40" } },
     });
 
-    ctx.self = { id: "termSup", feetPosition: { x: 0, y: 0, z: 0 }, state: { kind: "terminal", mode: "supply", roomId: "sup1" } };
+    const player = ctx.getObject("p1"); player.place = "level109";
+    ctx.self = ctx.place.objects.termSup = { id: "termSup", feetPosition: { x: 0, y: 0, z: 0 }, state: { kind: "terminal", mode: "supply", roomId: "sup1" } };
     useEars.press(ctx, { by: "p1" });
+    expect(player.state.os.app).toBe("boot");
+    expect(controlOf(player.state.os.host)).toBe("l109stock");
+    expect(filesOf(player.state.os.host).some(f => f.name === "stock_manifest.txt")).toBe(true);
+    ctx.self = player;
+    expect(canUseControl(player.state, player.state.os, CTRL.l109stock.rows[0])).toBe(true);
+    expect(hospitalControl(ctx, player.state, "l109stock", "release")).toBe(true);
     expect(ctx.getObject("l109o-sup1-c1").state.lock).toBe("");
+    expect(ctx.place.state.l109StockUnlocked.sup1).toBe(true);
+    player.state.os = null;
 
-    ctx.self = { id: "termOut", feetPosition: { x: 0, y: 0, z: 0 }, state: { kind: "terminal", mode: "outpost" } };
+    ctx.self = ctx.place.objects.termOut = { id: "termOut", feetPosition: { x: 0, y: 0, z: 0 }, state: { kind: "terminal", mode: "outpost" } };
     useEars.press(ctx, { by: "p1" });
-    expect(ctx.getObject("p1").state.payout?.items).toContain("page:101");
+    expect(controlOf(player.state.os.host)).toBe("l109triage");
+    ctx.self = player; hospitalControl(ctx, player.state, "l109triage", "print");
+    hospitalControl(ctx, player.state, "l109triage", "print");
+    expect(player.state.payout?.items.filter(x => x === "page:101")).toHaveLength(1);
+    player.state.os = null;
+    ctx.self = ctx.place.objects.termWard = { id: "termWard", feetPosition: { x: 0, y: 0, z: 0 }, state: { kind: "terminal", mode: "wardlog", roomId: "ward1" } };
+    useEars.press(ctx, { by: "p1" });
+    expect(controlOf(player.state.os.host)).toBe("l109ward");
+    ctx.self = player; hospitalControl(ctx, player.state, "l109ward", "print");
+    expect(player.state.payout.items).toContain("page:103");
+    player.state.os = null;
 
     ctx.self = { id: "sh1", feetPosition: { x: 0, y: 0, z: 0 }, primitive: { kind: "scripted", params: { part: "shutter", open: 0.12 } }, state: { kind: "shutter", lock: "lockpick:35" } };
     useEars.press(ctx, { by: "p1" });

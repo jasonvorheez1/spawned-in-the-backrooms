@@ -20,7 +20,11 @@ profiles:
   beta:    { prefix: "BETA", level: "Level 11 · Base Beta Outpost", owner: "M.E.G. Base Beta · Tactical Operations", motd: "Base Beta. The only outdoor M.E.G. base. Keep watch on the grid." }
   hosp:    { prefix: "HOSP", level: "Level 109 · The Hospital Dimension (evacuated · contamination level 5)", owner: "Hospital Dimension · Culture lab & wards", motd: "LEVEL 5 CONTAMINATION ALERT. THIS IS NOT A DRILL. If you are flushed red, stay where you are." }
   sedco:   { prefix: "SEDCO", level: "Level 11 · Sedco Spotlight Commercial", owner: "Sedco Security · Closed Circuit", motd: "Municipal security monitor. Feeds nominal. Do not tamper." }
-passwords: { omega: "overseerb", gamma: "minerva2015", alef: "keisha", beta: "pegasus11", sedco: "spotlight" }
+  l109triage: { prefix: "L109-TRIAGE-", level: "Level 109 · Doctors' outpost", owner: "Doctors · Triage", motd: "Record arrivals before moving them into the ward." }
+  l109stock:  { prefix: "L109-STOCK-", level: "Level 109 · Stockroom", owner: "Hospital stores", motd: "Count stock at handover. Report a broken cage latch." }
+  l109lore:   { prefix: "L109-LORE-", level: "Level 109 · Hospital", owner: "Hospital archive", motd: "Recovered records available on this terminal." }
+  l109ward:   { prefix: "L109-WARD-", level: "Level 109 · Ward", owner: "Nursing station", motd: "The shift log is stored locally." }
+passwords: { omega: "overseerb", gamma: "minerva2015", alef: "keisha", beta: "pegasus11", sedco: "spotlight", l109stock: "dressings" }
 # the database. restricted entries and every "weak" line are admin only. studied: reading it sharpens you against that creature (+10% damage)
 entries:
   - { id: l0, cat: Levels, title: "Level 0 · The Lobby", sc: "Class 2", text: "Endless yellow rooms, damp carpet, a hum that gets into your teeth. Smilers and lurkers wander the maze. The only way on is the flickering wall on the west edge. Sanity drains everywhere except the safe room.", weak: "Red rooms and dark rooms drain sanity several times faster. Walk, do not run, when the hum spikes. A lit flashlight is seen from forty metres; a dark one from eleven." }
@@ -100,6 +104,10 @@ mails:
   - { where: beta, from: "Tech Morales (IS LAB)", subj: "IS LAB splitter relay fault", body: "Left the clinic-wall frequency trace hooked to our rear test rack before clocking out. Splitter module blew at 400 Hz trying to pin the bleeding threshold noise behind Centro Dermatologico. Storm-grade replacement relays sit down Level 34's East sewer if nobody here has a spare, or a good tech can bypass it at the bench.", tip: "" }
   - { where: sedco, from: "Municipal Security", subj: "CCTV Camera Status", body: "All 4 camera feeds active. Cam 01 (11th Ave) clear. Cam 02 (Grand Canal) clear. Cam 03 (Strip Mall) clear. Cam 04 (Grand Tower Skydeck) reporting clear skies. Spotlight sign transformer humming normally.", tip: "" }
   - { where: sedco, from: "Sedco Management", subj: "Keycard & Vault Access", body: "Security terminal locked for non-staff. Passcode is spotlight. Master keycard for the rear storage locker is logged in security log sedco_cctv_log.txt.", tip: "key" }
+  - { where: l109triage, from: "Dr. Halloran", subj: "Intake and the breach", body: "Log every arrival, even if they cannot tell us where they came from. Keep the western exit route clear and do not open the doors marked on the ward board. The triage panel can print a blank intake sheet.", tip: "" }
+  - { where: l109stock, from: "Stores", subj: "Cage latches", body: "The stockroom panel controls this room only. The old mechanical bypass still works if the network is down: ask someone with Repair 25. Admin password for this terminal is dressings.", tip: "" }
+  - { where: l109ward, from: "Night shift", subj: "Empty theatre", body: "03:40. Someone knocked from inside the empty operating room. We counted everyone on the ward and moved the patients toward East Crossing. Leave that door shut.", tip: "" }
+
 forum:
   - { title: "Anyone else hear the phone in 4-09?", by: "late_shift", replies: ["yes. do not answer it twice", "I answered it once. nothing happened. that is the worst part", "it knew my name"] }
   - { title: "Best way to carry almond water", by: "carry_weight_gang", replies: ["bag, obviously", "Hardiness 8 and no regrets", "I got the Hardiness. I regret it now, I never rest"] }
@@ -137,6 +145,10 @@ files:
   - { where: beta, name: "city_grid_map.txt", text: "LEVEL 11 SECTOR MAP\nNorth: Grand Canal promenade, stone balustrades, arched bridges.\nNortheast: M.E.G. Base Beta outpost.\nWest: Strip Mall (Marroka Pizzeria, Centro Dermatologico, ISLA Lab).\nEast: Sedco Spotlight commercial block, parking lot, transition zone.\nSoutheast: Grand Neoclassical Tower (Skydeck, Floor 14 observation elevator).\nCenter: 11th Avenue Central Boulevard, traffic signals, payphones, ATMs." }
   - { where: beta, name: "incident_11_607b.txt", text: "M.E.G. BASE BETA INCIDENT REPORT #11-607B\nSubject: Unregistered Skin-Stealer (known locally as 'Halliel')\nStatus: PRESUMED DEAD\nSummary: Subject lived peacefully near 14th Ave for several months under the Level 11 Effect. Pursued by Patrol 4 during a routine sweep. Heavy blood loss observed on scene; torn wool cap and coat sleeve logged into evidence. Body unrecovered due to nearby noclip shear. Case closed." }
   - { where: sedco, name: "sedco_cctv_log.txt", text: "SEDCO COMMERCIAL SECURITY LOG\n08:00 - Transformer inspection: 120V nominal.\n12:30 - Pedestrian traffic light cycled normally.\n16:15 - Street sweeper noclip anomaly observed on 11th Ave (vanished when turn was completed).\n21:00 - Spotlight lamps set to dusk luminescence." }
+
+  - { where: l109triage, name: "intake_procedure.txt", text: "DOCTORS' OUTPOST — INTAKE\nCheck breathing and injuries. Record the arrival point and any missing companions. Keep the main corridor clear. Print an intake sheet from the Triage panel." }
+  - { where: l109stock, name: "stock_manifest.txt", text: "STORES MANIFEST\nAisles 1-7: dressings, saline, bandages.\nRear cage: first aid and sealed crates.\nThe Stockroom panel controls the local cage latches." }
+  - { where: l109ward, name: "nursing_shift.txt", text: "03:40 — Knocking inside the empty operating room. Did not open it. Counted patients and moved them toward East Crossing.\nPrint a copy from the Nursing panel." }
 
 # System Properties (the About page): what this machine says about itself. Written in-world, by whoever had it last.
 about:

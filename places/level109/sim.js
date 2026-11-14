@@ -218,5 +218,5 @@ function knockTick(ctx, players, rooms) {
 const ROOM_STEP = 30; // Savi's pick: room pieces laid per tick (the walls/floor come first, they were queued first)
 function flushRooms(ctx) {
   let n = ROOM_STEP;
-  for (const r of ROOMS.values()) { const q = r.pend; while (q?.length && n-- > 0) { const [i, spec] = q.shift(); ctx.spawn(i, spec); } if (n <= 0) break; }
+  for (const r of ROOMS.values()) { const q = r.pend; while (q?.length && n-- > 0) { const [i, spec] = q.shift(); if (ctx.place.state.l109StockUnlocked?.[r.info.id] && spec.tags?.includes("container") && spec.state?.lock) spec.state.lock = ""; ctx.spawn(i, spec); } if (n <= 0) break; }
 }

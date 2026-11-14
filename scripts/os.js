@@ -1,5 +1,6 @@
 // Back OS(tm): the player's side of a computer (player.state.os = { id, host, lock, user: guest | admin, app, at, sel, term }).
-import { CTRL, OPENS } from './lib/os.js'
+import { CTRL, controlOf, canUseControl } from './lib/os.js'
+import { hospitalControl } from './lib/l109-os.js'
 // The screen is scripts/os-ui.js; the machine is scripts/computer.js; what it holds is scripts/lib/os.js + data/os.yml.
 // 'os' action: {k:'close'} {k:'app', v} {k:'mail', id} {k:'entry', id} {k:'file', v} {k:'cat', v} {k:'cmd', v} {k:'pw', v} {k:'hack'} {k:'login'}
 import { takeToken, gain } from './player.js'
@@ -26,7 +27,7 @@ const shutdown = (ctx, s) => { if (s.os && s.os.app !== 'off') s.os = { ...s.os,
 // The security panel holds a row of switches; one releases the door, the harmless ones just do their thing, the alarm locks you out.
 function unlock(ctx, s) {
   const c = ctx.getObject(s.os.id); if (c) c.state.unlocked = true
-  const opens = OPENS[s.os.host], uk = s.os.host || s.os.id
+  const opens = controlOf(s.os.host), uk = s.os.host || s.os.id
   const first = uk ? !seen(s, 'osUnlock', uk) : true
   if (first && uk) mark(s, 'osUnlock', uk)
   s.os = { ...s.os, user: 'admin', lock: '', app: opens ? 'ctrl' : 'desktop' }
@@ -34,8 +35,9 @@ function unlock(ctx, s) {
   note(ctx, s, opens ? 'Admin access. The security panel is open.' : 'Access gained. Restricted files are open.')
 }
 function ctrl(ctx, s, id) {
-  const os = s.os, key = OPENS[os.host], C = CTRL[key], r = C?.rows.find((x) => x.id === id)
-  if (!r || os.user !== 'admin') return
+  const os = s.os, key = controlOf(os.host), C = CTRL[key], r = C?.rows.find((x) => x.id === id)
+  if (!r || !canUseControl(s, os, r)) return
+  if (key?.startsWith('l109')) return hospitalControl(ctx, s, key, id)
   if (r.ok) {
     const g = r.grant ?? key
     if (!String(s.l11Access ?? '').split(',').includes(g)) { s.l11Access = [s.l11Access, g].filter(Boolean).join(','); gain(ctx, 40) }

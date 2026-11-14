@@ -258,3 +258,15 @@ test('Storage/drop/shop item transfers and repeat Level 0 exits grant 0 XP', () 
   expect(exitState.escapes).toBe(2)
   expect(exitState.xp).toBe(xpAfterExit1)
 })
+test('Level 109 BackOS controls respect skills and release only the terminal room', () => {
+  const term = { id: 'term109', feetPosition: { x: 0, y: 0, z: 0 }, state: { kind: 'terminal', mode: 'supply', roomId: 'room-a', host: 'L109-STOCK-room-a', lock: 'science:25' } }
+  const here = { id: 'l109o-room-a-crate', tags: ['container'], state: { lock: 'lockpick:50' } }
+  const elsewhere = { id: 'l109o-room-b-crate', tags: ['container'], state: { lock: 'lockpick:50' } }
+  const s = baseState({ attr: '1,1,1,1,1,1,1', skl: Array(13).fill(0).join(','), os: { id: term.id, host: term.state.host, user: 'guest', app: 'ctrl' } })
+  const ctx = makePlayerCtx(s, { [term.id]: term }, { place: 'level109' }); ctx.query = () => [here, elsewhere]
+  const action = { pressed: { os: true }, actionData: { os: { k: 'ctrl', v: 'release' } } }
+  os.onInput(ctx, action); expect(here.state.lock).toBe('lockpick:50')
+  s.skl = Array(13).fill(60).join(','); os.onInput(ctx, action)
+  expect(here.state.lock).toBe(''); expect(elsewhere.state.lock).toBe('lockpick:50')
+  expect(ctx.place.state.l109StockUnlocked['room-a']).toBe(true)
+})

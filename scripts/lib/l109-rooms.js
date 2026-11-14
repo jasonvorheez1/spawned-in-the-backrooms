@@ -38,7 +38,7 @@ function put(K, name, a, b, yaw = 0, o = {}) { const m = D.models[name], [w, h, 
     model: { id: m.id, ...(m.forward ? { forward: m.forward } : {}) }, layout: { box: { min: { x: -bx, y: 0, z: -bz }, max: { x: bx, y: h, z: bz } } },
     material: o.tint ? { color: o.tint } : undefined, visibleRange: VR, castShadow: false, ...(o.solid === false ? {} : { physics: { body: "static", collider: "box" } }), ...(o.spec ?? {}) }); }
 // a searchable container: the world's "container" pattern (tags + state.items), read by the player's press
-function stash(K, name, a, b, yaw, label, pool, lock) { return put(K, name, a, b, yaw, { spec: { tags: ["container", "furniture"], state: { items: loot(K, pool), name: label, verb: "Search", kind: "medical", ...(lock ? { lock } : {}) } } }); }
+function stash(K, name, a, b, yaw, label, pool, lock) { return put(K, name, a, b, yaw, { spec: { tags: ["container", "furniture"], state: { items: loot(K, pool), name: label, verb: "Search", kind: "medical", ...(lock && !K.ctx.place.state?.l109StockUnlocked?.[K.R.id] ? { lock } : {}) } } }); }
 // interactive medical hardware backed by scripts/l109-use.js
 function usePart(K, p, a, b, yaw = 0, st = {}, o = {}) {
   const uid = `r-${K.R.id}-${p.part}-${Math.round(a * 10)}_${Math.round(b * 10)}`;
@@ -85,7 +85,7 @@ function supply(K) { const S = D.supply, R = K.R, dead = R.abandoned; // a real 
   const spots = [[-14.3, 4.5, 90, "cabinet", "Medical Cabinet"], [-6, 28.8, 0, "lockbox", "Dressing Box"], [14.4, 13, -90, "cabinet", "Medical Cabinet"], [-12, 28.5, 0, "cagecrate", "Supply Crate"], [7, 28, 180, "cagecrate", "Supply Crate"], [11, 28.2, 180, "lockbox", "Dressing Box"]];
   const n = between(K, S.containers); for (let i = 0; i < n; i++) { const [a, b, y, m, label] = spots[i]; stash(K, m, a, b, y, label, "supply", i >= 4 ? S.cageLock : undefined); }
   put(K, "desk", 3, 3.2, 180); put(K, "chair", 3, 4.1, K.r() * 40 - 20, { solid: false }); stash(K, "filing", 5, 3.3, 180, "Stock Ledgers", "desk");
-  usePart(K, { part: "terminal", on: true }, 2.7, 3.05, 90, { kind: "terminal", mode: "supply", roomId: R.id, name: "Stockroom Terminal", verb: "Check Manifest", info: "inventory & cage lock" }, { up: 0.76, lift: 0.22 });
+  usePart(K, { part: "terminal", on: true }, 2.7, 3.05, 90, { kind: "terminal", mode: "supply", roomId: R.id, name: "Stockroom Terminal", verb: "Use Computer", info: "BackOS · inventory & cage controls" }, { up: 0.76, lift: 0.22 });
   put(K, "crashcart", -4.5, 4 + K.r(), 20 + K.r() * 40); put(K, "crashcart", 9, 4.5, K.r() * 360); put(K, "gurney", 12.5, 2.4, dead ? 115 : 90);
   for (const [a, b] of [[-13, 2], [-12.6, 3.3], [13.2, 6.2], [-2, 27.5], [-3.2, 28.6], [1, 28.4]]) put(K, "boxes", a, b, K.r() * 40 - 20);
   put(K, "drum", -13.5, 24, 0); put(K, "drum", -12.8, 24.6, 30); put(K, "wheelchair", 0, 5.5, 160 + K.r() * 40);
@@ -124,7 +124,7 @@ function icu(K) { const I = D.icu, dead = K.R.abandoned, per = I.beds[0] + (K.r(
     } });
   stash(K, "cabinet", 14.6, 15, -90, "Ward Cabinet", "bedside"); stash(K, "lockbox", -13, 15, 90, "Bedside Box", "bedside");
   put(K, "desk", -12, 6, 90); put(K, "chair", -12.8, 6, 90, { solid: false });
-  usePart(K, { part: "terminal", on: true }, -12, 5.7, 90, { kind: "terminal", mode: "wardlog", roomId: K.R.id, name: "ICU Nursing Log", verb: "Read Shift Log" }, { up: 0.76, lift: 0.22 });
+  usePart(K, { part: "terminal", on: true }, -12, 5.7, 90, { kind: "terminal", mode: "wardlog", roomId: K.R.id, name: "ICU Nursing Log", verb: "Use Computer", info: "BackOS · nursing log" }, { up: 0.76, lift: 0.22 });
   put(K, "crashcart", -4.5, 15, 30); put(K, "wheelchair", -12, 24, 200);
   // the nurses' island down the aisle between the bed rows (gavi pass, Nov 14: the ICU middle stood bare)
   put(K, "counter", 1.2, 15, 0); put(K, "counter", 3.6, 15, 0); put(K, "counter", 1.2, 15.7, 180); put(K, "counter", 3.6, 15.7, 180);
@@ -169,7 +169,7 @@ function ward(K) { const W = D.ward, dead = K.R.abandoned;
     put(K, "cot", a + sk * 0.4, b + sk * 0.3, 90 + sk * 30); if (K.r() < 0.5) part(K, { part: "ivstand" }, a + 0.7, b + (row ? 0.8 : -0.8), K.r() * 360, dead && K.r() < 0.4 ? { tip: true } : {}); }));
   for (let i = 0; i < 8; i++) { const b = 9 + i * 0.52; if (i < W.lockersOpen) stash(K, "locker", 14.65, b, -90, "Patient Locker", "bedside"); else put(K, "locker", 14.65, b, -90); }
   put(K, "desk", -1, 4.2, 180); put(K, "desk", 0.4, 4.2, 180); put(K, "chair", -0.3, 5.1, 0, { solid: false }); stash(K, "filing", 1.6, 4.4, 180, "Nurses' Files", "desk");
-  usePart(K, { part: "terminal", on: !dead }, -0.8, 4.1, 90, { kind: "terminal", mode: "wardlog", roomId: K.R.id, name: "Nurses' Station Log", verb: "Read Shift Log" }, { up: 0.76, lift: 0.22 });
+  usePart(K, { part: "terminal", on: true }, -0.8, 4.1, 90, { kind: "terminal", mode: "wardlog", roomId: K.R.id, name: "Nurses' Station Log", verb: "Use Computer", info: "BackOS · nursing log" }, { up: 0.76, lift: 0.22 });
   usePart(K, { part: "curtain", len: 3, drawn: 0.5 }, -4.8, W.rowB[0], 90, { kind: "curtain", name: "Ward Curtain", verb: "Open Curtain", stash: K.r() < 0.4 ? "bandage" : "" }, { lift: 1.25 });
   usePart(K, { part: "curtain", len: 3, drawn: 0.3 }, -4.8, W.rowB[1], 90, { kind: "curtain", name: "Ward Curtain", verb: "Draw Curtain", stash: K.r() < 0.35 ? "almond" : "" }, { lift: 1.25 });
   usePart(K, { part: "cooler" }, 4.5, 4.2, 90, { kind: "cooler", name: "Water Cooler", verb: "Drink Water", info: "cold filtered" }, { solid: true, lift: 0.85 });

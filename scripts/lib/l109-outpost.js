@@ -52,7 +52,7 @@ export function buildOutpost(ctx, R) {
   if (R.type === "doctors") {
     lights(R, C.lights.extra.doctors); // the room's own 4 troffers already burn: 6 lights total
     prop(R, "desk0", "barrier", -10.5, 3.2); prop(R, "desk1", "crashcart", -12, 3.4); // reception by the door
-    kit(R, "term0", { part: "terminal", on: true }, -12, 3.4, 90, { kind: "terminal", mode: "outpost", roomId: R.id, name: "Doctors' Triage Terminal", verb: "Check Roster", info: "status & intake record" }, { up: 1.0, lift: 0.22 });
+    kit(R, "term0", { part: "terminal", on: true }, -12, 3.4, 90, { kind: "terminal", mode: "outpost", roomId: R.id, name: "Doctors' Triage Terminal", verb: "Use Computer", info: "BackOS · status & intake record" }, { up: 1.0, lift: 0.22 });
     [[-6, 9], [-6, 17], [-2, 9], [-2, 17]].forEach(([a, b], i) => prop(R, "bed" + i, "gurney", a, b, 90)); // triage, 4 beds
     kit(R, "mon0", { part: "monitor", on: true }, -6.9, 10.1, 0, { kind: "monitor", on: true, name: "Triage Monitor", verb: "Check Vitals", info: "stable baseline" }, { lift: 1.25 });
     { const [ba, bb] = C.care.bed, [ma, mb] = C.care.mon; // bed two holds the patient the triage scene is about (scripts/lib/l109-life.js)

@@ -1,3 +1,4 @@
+import { ears as computer } from "./computer.js";
 // Level 109 shared interactables: corridor switches/intercoms/coolers/vending and department equipment.
 import { heard } from "./lib/hear.js";
 import { skillsOf } from "./lib/stats.js";
@@ -64,6 +65,12 @@ export const ears = {
   press: (ctx, { by }) => {
     const s = ctx.self.state, who = ctx.getObject(by), w = who?.state;
     if (!s || !w) return;
+    if (s.kind === "terminal") {
+      const prefix = s.mode === "outpost" ? "L109-TRIAGE-" : s.mode === "supply" ? "L109-STOCK-" : s.mode === "lore" ? "L109-LORE-" : "L109-WARD-";
+      s.host ??= prefix + (s.roomId ?? "OUTPOST");
+      if (s.mode === "supply") s.lock ??= "science:25";
+      return computer.press(ctx, { by });
+    }
     const now = ctx.now(), pos = ctx.self.worldFeetPosition ?? ctx.self.feetPosition;
     const sk = skillsOf(w), ses = ((ctx.self.session.by ??= {})[who.id] ??= {}); // cooldowns per presser, kept on this fixture's own session (another body's session is not ours to write)
 
@@ -299,37 +306,6 @@ export const ears = {
       return;
     }
 
-    if (s.kind === "terminal") {
-      heard(ctx, { clip: SFX + "sfx-computer-terminal-beep-confirm.mp3", position: pos, volume: 0.6, maxDistance: 10 });
-      const LORE = { 110: "EMAIL · Thursday patient", 111: "EMAIL · Re: Thursday patient", 112: "INCIDENT REPORT · Room 245", 113: "EMAIL · Unknown disease?", 114: "EVACUATION ALERT · Level 5", 115: "JOURNAL · D. Sutton", 116: "[BACKDOOR] ARCHIVED CHAT" };
-      const lorePage = s.page ?? { supply: 114, outpost: 116 }[s.mode] ?? (/ICU/.test(s.name ?? "") ? 110 : 112);
-      const printLore = () => { if (!PAGES_RE(w, lorePage)) queuePayout(w, { xp: 5, items: ["page:" + lorePage], text: "Printed " + LORE[lorePage] + " (read it in your pages)" }); };
-      if (s.mode === "lore") { sub(who, s.name ?? "HOSPITAL TERMINAL", LORE[lorePage] + " · printed to your pages", 4200, now); printLore(); return; }
-      printLore();
-      if (s.mode === "outpost") {
-        const purgedN = Object.keys(ctx.place.state.l109Purged ?? {}).length;
-        const q = w.l109q ?? 0;
-        const status = q >= 99 ? "BREACH CLOSED · EXIT 1.3km W" : q > 0 ? `ACTIVE BREACH STAGE ${q}` : "UNASSIGNED · Speak to Dr. Halloran";
-        sub(who, "DOCTORS' TRIAGE TERMINAL", `OUTPOST EAST · ${status} · Biohazard suites scrubbed: ${purgedN}`, 5500, now);
-        if (!PAGES_RE(w, 101)) queuePayout(w, { xp: 0, items: ["page:101"], text: "Printed Intake Sheet #109-01" });
-        return;
-      }
-      if (s.mode === "supply") {
-        if ((sk.science ?? 0) >= 25 || (sk.repair ?? 0) >= 25) {
-          let unlocked = 0;
-          for (const o of ctx.query({ center: pos, radius: 34 })) {
-            if (o.id?.startsWith(`l109o-${s.roomId}-`) && o.state?.lock && o.tags?.includes("container")) { o.state.lock = ""; unlocked++; }
-          }
-          sub(who, "STOCKROOM MANIFEST", unlocked ? "Electric cage latches released remotely. Back cage containers unlocked." : "Inventory reconciled: all stock cages already unlatched.", 4800, now);
-          toast(ctx, who, unlocked ? `Released ${unlocked} locked supply container(s)` : "Supply manifest logged", "sfx-soft-bright-two-note-success-chime.mp3", pos, 0.55);
-          return;
-        }
-        sub(who, "STOCKROOM MANIFEST", "AISLES 1-7: Dressings, saline, bandages · REAR CAGE (Locked): First aid & sealed crates (Science 25 / Repair 25 bypasses latch).", 5200, now);
-        return;
-      }
-      // "wardlog"
-      sub(who, "NURSING SHIFT LOG", "Last entry: '03:40 - Heard knocking inside empty OR. Did not open it. Moving patients toward East Crossing.'", 5200, now);
-      if (!PAGES_RE(w, 103)) queuePayout(w, { xp: 0, items: ["page:103"], text: "Recovered ICU Nursing Chart" });
-    }
+
   },
 };

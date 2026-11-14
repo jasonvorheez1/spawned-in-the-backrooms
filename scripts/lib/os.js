@@ -64,6 +64,17 @@ export function runCmd(os, line, who) {
 
 // Level 11 security panels (scripts/os.js ctrl, scripts/os-ui.js)
 export const CTRL = {
+  l109lore: { title: "Hospital Records", rows: [{ id: 'lore', label: 'Recovered hospital record', act: 'PRINT', public: true }] },
+  l109triage: { title: "Doctors' Triage", rows: [
+    { id: 'status', label: 'Outpost status and breach', act: 'VIEW', public: true },
+    { id: 'print', label: 'Intake sheet #109-01', act: 'PRINT', public: true },
+    { id: 'lore', label: 'Recovered hospital record', act: 'PRINT', public: true } ] },
+  l109stock: { title: 'Stockroom Cage Control', rows: [
+    { id: 'release', label: 'Local cage latches · Science 25 / Repair 25 or admin', act: 'RELEASE', skills: { science: 25, repair: 25 } },
+    { id: 'lore', label: 'Recovered hospital record', act: 'PRINT', public: true } ] },
+  l109ward: { title: 'Nursing Station', rows: [
+    { id: 'print', label: 'Nursing chart #109-03', act: 'PRINT', public: true },
+    { id: 'lore', label: 'Recovered hospital record', act: 'PRINT', public: true } ] },
   sub: { title: 'MTA Station Control · Gate 07', rows: [
     { id: 'light', label: 'Platform lighting', act: 'CYCLE', say: 'The platform lights stutter off and on. Nothing else moves.' },
     { id: 'fare', label: 'Fare gates', act: 'FREE ENTRY', say: 'Turnstiles click to free entry. The steel gate stays shut.' },
@@ -78,3 +89,10 @@ export const CTRL = {
     { id: 'silent', label: 'Silent alarm', act: 'ARM', alarm: true } ] },
 }
 export const OPENS = { 'MTA-GATE-07': 'sub', 'SEDCO-SEC-01': 'sedco', 'BETA-DISPATCH-01': 'sub' }
+
+export const controlOf = host => host?.startsWith('L109-LORE-') ? 'l109lore' : host?.startsWith('L109-TRIAGE-') ? 'l109triage' : host?.startsWith('L109-STOCK-') ? 'l109stock' : host?.startsWith('L109-WARD-') ? 'l109ward' : OPENS[host];
+export function canUseControl(s, os, row) {
+  if (os.user === 'admin' || row.public) return true;
+  const skills = skillsOf(s ?? {});
+  return Object.entries(row.skills ?? {}).some(([key, need]) => (skills[key] ?? 0) >= need);
+}
