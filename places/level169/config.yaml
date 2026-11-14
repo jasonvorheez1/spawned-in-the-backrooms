@@ -1,0 +1,41 @@
+# Level 169 "Welcome to the Desert" (archived Wikidot version, Shelly's brief Nov 14): a finite desert with a 48-hour day,
+# deadly sun, water that turns to sand, Ferry the refrigerator and Ferry's Friends. Built by places/level169/sim.js.
+mode: 3d
+terrain:
+  kind: heightmap
+  seed: 169
+  generator: scripts/terrain169.js
+  materials:
+    - { id: sand, albedo: cdn/texture-terrain-wind-rippled-pale-desert-sand.png, tint: "oklch(0.78 0.06 70)", textureScale: 3 }
+    - { id: hardpan, albedo: cdn/texture-terrain-cracked-dry-desert-hardpan-clay.png, tint: "oklch(0.7 0.05 60)", textureScale: 3 }
+    - { id: gravel, albedo: cdn/texture-terrain-desert-pavement-small-pebbles-gravel.png, tint: "oklch(0.62 0.04 55)", textureScale: 2.5 }
+    - { id: redrock, albedo: cdn/texture-terrain-layered-red-sandstone-cliff-strata.png, tint: "oklch(0.55 0.1 40)", textureScale: 6 }
+    - { id: rubble, albedo: cdn/texture-terrain-broken-red-sandstone-scree-rubble.png, tint: "oklch(0.58 0.08 45)", textureScale: 3 }
+    - { id: wash, albedo: cdn/texture-terrain-dry-riverbed-cobbles-and-silt.png, tint: "oklch(0.66 0.04 70)", textureScale: 2.5 }
+  marks:
+    track-north: { kind: path, points: [[0, -14], [6, -120], [-10, -260], [14, -400], [6, -520], [18, -595]], width: 2.6, material: hardpan, edgeMaterial: gravel, noise: 0.35, grade: true }
+  decorations:
+    layers:
+      scrub:
+        items:
+          - { kind: scripted, script: scripts/grass.js, scale: [0.3, 0.6], randomRotation: true, useTerrainColor: true, wind: { force: 0.04, scale: 5, speed: 1.4 } }
+        density: 1.2
+    bindings: { scrub: [sand, hardpan] }
+    settings: { maxDistance: 90, fadeDistance: 25 }
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: 2.5, z: 3, y: { terrain: 0 } }
+defaultSpawnRotation: { yaw: 0 }
+worldBounds: { bottom: -80 }
+atmosphere:
+  look: { script: scripts/look-photo.js }
+  timeOfDay: 10.5
+  cycle: { periodMs: 5760000, epoch: 0 } # Savi's pick: one 48-hour desert day lasts 96 real minutes (twice any other level's)
+  clouds: { enabled: true, density: 0.08, speed: 0.4 }
+  fog: { kind: linear, near: 180, far: 1400, color: oklch(0.86 0.04 75) }
+  sun: { light: { intensity: 2.3, color: oklch(0.97 0.05 85), shadow: { enabled: true, bias: 0.001 } } }
+  moon: { enabled: true }
+  stars: { enabled: true }
+  ambient: { light: { color: oklch(0.85 0.03 70), intensity: 0.55 } }
+  hemisphere: { skyColor: oklch(0.8 0.08 235), groundColor: oklch(0.6 0.07 55), intensity: 0.75 }
+  wind: { direction: 250, speed: 3.5 }
+acoustics: { reverb: 0.05 }
