@@ -374,6 +374,10 @@ export function tick(ctx) {
         chase.active = false;
         const beam = ctx.place.objects?.["lrun-collapse-beam"];
         if (beam) beam.feetPosition = { x: 0, y: 0.72, z: CORRIDOR.collapseZ - 0.5 };
+        // the ceiling gives: steel beam slam over a long concrete rumble, the hall shakes
+        heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-steel-beam-crashes-onto-concrete-floor-clang.mp3", position: { x: 0, y: 1.5, z: CORRIDOR.collapseZ }, volume: 1, maxDistance: 60 });
+        heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-concrete-ceiling-collapse-deep-rumble-debris.mp3", position: { x: 0, y: 2.5, z: CORRIDOR.collapseZ - 1 }, volume: 0.95, maxDistance: 80 });
+        ctx.emit("screenShake", { intensity: 0.7, duration: 0.9 }, { audience: { player: p.id } });
         startRescueCut(ctx, p);
         continue;
       }
@@ -382,7 +386,13 @@ export function tick(ctx) {
         chase.active = true;
         chase.gateOpen = true;
         chase.hordeZ = Math.max(p.feetPosition.z + 11.5, 0.5);
+        // the bulkhead rips up and the horde roars through it
+        heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-heavy-metal-fire-door-slam-echo.mp3", position: { x: 0, y: 1.5, z: -5.45 }, volume: 1, maxDistance: 60 });
+        heard(ctx, { clip: "/cdn/moodboard-gothic-horror/sfx-crowd-of-monsters-roaring-together-in-a-corridor.mp3", position: { x: 0, y: 1.4, z: chase.hordeZ }, volume: 1, maxDistance: 70 });
       }
+      // a stampede of feet on wet tile, carried by the horde itself
+      const lead = ctx.place.objects?.[HORDE_MEMBERS[0]?.id];
+      if (lead && !lead.audio) lead.audio = { clip: "/cdn/moodboard-gothic-horror/sfx-many-heavy-feet-stampeding-on-wet-tile-corridor-loop.mp3", loop: true, gain: 0.5, spatial: true, maxDistance: 40 };
 
       chase.hordeZ = stepHordeZ(p.feetPosition.z, chase.hordeZ, dt, ps);
       ensureHorde(ctx, chase.hordeZ);
