@@ -154,6 +154,7 @@ rows:
   - { id: l109gown,     slot: topw,  kind: dress,      name: Patient gown,          dr: 0, kg: 0.3, rarity: uncommon, places: [level109], strict: true, colours: [a9c6c9, c9d6d2, b7c4d8, d9cfb8], pats: [gingham, weave] }
   - { id: l109scrubs,   slot: topw,  kind: tee,        name: Stained scrubs top,    dr: 1, kg: 0.3, rarity: uncommon, places: [level109], strict: true, colours: [5c7a74, 4d6a86, 6b8f8a, 7a5c6e], pats: [weave] }
   - { id: l109strait,   slot: topw,  kind: jacket,     name: Torn straitjacket,     dr: 3, kg: 1.2, rarity: rare,     places: [level109], strict: true, colours: [e8e2d0, cfc6ad], pats: [canvas] }
+  - { id: doccoat,      slot: topw,  kind: jacket,     name: Doctor's white coat,   dr: 2, kg: 0.9, rarity: agency, strict: true, level: 6, colours: [f1efe8], pats: [weave] }    # hospital staff (Shelly #362085)
   - { id: l109labcoat,  slot: topw,  kind: jacket,     name: Scorched lab coat,     dr: 2, kg: 0.8, rarity: uncommon, places: [level109], strict: true, colours: [ece9e0, d6d0c0], pats: [weave] }
   - { id: l109scrubpants, slot: botw, kind: pants,     name: Scrub pants,           dr: 1, kg: 0.3, rarity: uncommon, places: [level109], strict: true, colours: [5c7a74, 4d6a86, 6b8f8a, 3a4a48], pats: [weave] }
   - { id: l109slippers, slot: shoes, kind: slippers,   name: Ward slippers,         dr: 0, kg: 0.2, rarity: common,   places: [level109], strict: true, colours: [d8d6cc, a9c6c9] }

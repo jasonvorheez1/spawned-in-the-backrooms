@@ -53,6 +53,7 @@ models:
   qmvest: { under: tee, tint: false, f: /cdn/value.0d0a3c1906a2e803784a80ec9952077570b13d9303ebf1136150540d986ce8b0.glb, m: /cdn/value.ab81057ae22248b12bcc404e1636bf8ba574543e6969f5b0fac764bdd1a376f5.glb }   # Nov 13 Tripo, fitted by art/cat-wardrobe/fit.py
   wwplate: { under: tee, tint: false, f: /cdn/value.69cc6a3d6b3b4ece8529b72e573cab4b56f32d869b4914960252ec3a37876acd.glb, m: /cdn/value.73daeaf1c30a6af7546c347e4d3b4492894dbb58b0194bc48e0d46ad1c232849.glb }   # Nov 13 Tripo, fitted by art/cat-wardrobe/fit.py
   bntgcoat: { under: longsleeve, tint: false, f: /cdn/value.5a51c36f395ddbf4b9e1f83925b0e6e2253ce530e268fe29c6b8003265bfb3c8.glb, m: /cdn/value.a2d24a64a3b5378e13b5f899e867ed999159199c7934c0b0cadeaa7daaab23ce.glb }   # Nov 13 Tripo, fitted by art/cat-wardrobe/fit.py
+  doccoat: { under: longsleeve, tint: false, f: /cdn/value.f7d89d0b44be44894b737f3421995b3c5fa21a0fd0b2a209b8914e55e94c535f.glb, m: /cdn/value.98fad9a3fc680e8f6fa9855aa7f5e04a4c6db3fa4d62fcf3b8c85dc52639fcc5.glb }   # Nov 14 white doctor's coat for hospital levels (Shelly #362085), Tripo, fit.py top
   bntgguard: { under: tee, tint: false, f: /cdn/value.3fd72adf52394ab0eba0b6f229b27904edc31adf085dfdde294062205faeac1e.glb, m: /cdn/value.452d2e088213e42175a26299d234879ea0fa55b71faf23950f80d99bdc29d442.glb }   # Nov 13 Tripo, fitted by art/cat-wardrobe/fit.py
   wwhelmet: { hat: true, tint: false, f: /cdn/value.b281961ebce4e32369ec42a86038e9e2fba7d745826c5ac1b00a628a860eccba.glb, m: /cdn/value.3fe3c8a879172733a34402d24a09f570e620fd9fc66ab0cfefc635a6b1ef162d.glb }   # Nov 13 Tripo, fitted by art/cat-wardrobe/hats.py
   bntgcap: { hat: true, tint: false, f: /cdn/value.6e6dbca5d1b6666ad8a8ba8d51025840ae1e720b39f84b0a686e7cca41860fc2.glb, m: /cdn/value.13fddbf996057a80764204f17d4abe5e70826992fa4ad31c6439056bee8305cd.glb }   # Nov 13 Tripo, fitted by art/cat-wardrobe/hats.py
@@ -148,7 +149,7 @@ from:
           tailcoat: jacket, gown: longsleeve, maidapron: tee, hotelrobe: pajamas, seawatchsuit: jacket, oilskin: hoodie, abysshauberk: longsleeve,
           chitinplate: tank, pgcoat: jacket, jerrytee: tee, pphoodie: hoodie, pghoodie: hoodie, gmhoodie: hoodie, vest: tank, blazer: jacket,
           shirt: breton, crop: crop, breton: breton, hazmat: hazmat, bntgvest: bntgvest, tarpponcho: tarpponcho,
-          cpjacket: cpjacket, lljacket: lljacket, qmvest: qmvest, wwplate: wwplate, bntgcoat: bntgcoat, bntgguard: bntgguard }   # M.E.G. team gear (Nov 13): stand-in cuts until their own Tripo pieces   # lore pieces: their own Tripo models replace these stand-ins once fitted
+          cpjacket: cpjacket, lljacket: lljacket, qmvest: qmvest, wwplate: wwplate, bntgcoat: bntgcoat, bntgguard: bntgguard, doccoat: doccoat, l109labcoat: doccoat }   # M.E.G. team gear (Nov 13): stand-in cuts until their own Tripo pieces   # lore pieces: their own Tripo models replace these stand-ins once fitted
   botw: { pants: pants, shorts: shorts, pjpants: pjpants, skirt: skirt, longskirt: skirt, overalls: pants, slacks: pants, cargo: pants,
           canvasskirt: skirt, pinstripe: pants, velvetskirt: skirt, tarwaders: pants, jeans: pants, briefs: briefs, leggings: leggings }
   shoes: { sneakers: socks, slippers: socks, boots: boots, steeltoe: boots, hotelslip: socks, ballastboots: boots, pitchboots: boots, heels: socks, socks: socks }

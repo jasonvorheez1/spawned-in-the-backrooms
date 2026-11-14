@@ -24,7 +24,8 @@ function kit(R, key, p, a, b, yaw = 0, st = {}, o = {}) {
 function lights(R, n) { C.lights.spots.slice(0, n).forEach(([a, b], i) => R.sp("lt" + i, { feetPosition: R.at(a, b, C.lights.height), light: { kind: "point", color: C.lights.color, intensity: C.lights.intensity, distance: C.lights.distance } })); }
 function person(R, g) {
   const f = R.at(g.a, g.b, 0.05), route = (g.route ?? []).map(([a, b]) => R.at(a, b, 0));
-  const spec = critterSpec(npcLook(`l109-${R.id}-${g.key}`, null, g.faction, 8, g.role));
+  const DOC = g.role === "medic" ? { topw: "doccoat", top: "#f1efe8", botw: "l109scrubpants", bottom: "#4d6a86" } : null; // hospital staff wear the white coat over scrub pants (Shelly #362085)
+  const spec = critterSpec(npcLook(`l109-${R.id}-${g.key}`, DOC, g.faction, 8, g.role));
   return R.sp(g.key, { ...spec, tags: [...new Set([...(spec.tags ?? []), "npc", "l109-npc"])], feetPosition: f, rotation: { yaw: R.yawIn + (g.yaw ?? 0) },
     behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
     state: { ...(spec.state ?? {}), name: g.name, role: g.role, faction: g.faction, dlg: g.dlg, home: f, post: f, ...(route.length ? { route, routine: route.map((p) => ({ ...p, dwell: 6 })) } : {}) } });
