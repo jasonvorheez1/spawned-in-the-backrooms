@@ -5,6 +5,7 @@
 //   weapons.yml: mv (muzzle velocity m/s), drag (1/m: v falls by e^-drag per metre), acc [hip, ads] (half-angle of the spread cone in
 //   degrees at rest), zero (the range the sights are set for, m), req { h: Hardiness, guns: skill } (scripts/lib/stats.js handling).
 import { raycast } from 'builtin/physics'
+import { animate } from 'builtin/tween'
 import { attrsOf, skillsOf, handling } from './stats.js'
 import { steady, headMul } from './combat.js'
 
@@ -120,7 +121,31 @@ pop hole burst=1 life=40 on=point() size=.05 col=<.035,.035,.04> a=.95>.9:.9>0 r
 pop ring burst=1 life=40 on=point() size=.085 col=<.12,.11,.1> a=.35>.3:.3>0 r=sprite(soft-disc,alpha)`
 const BEAMS = {} // an energy weapon's bolt flies in its own colour (weapons.yml beam)
 const tracerOf = (wp) => wp.beam ? (BEAMS[wp.beam] ??= TRACER.replace('hdr(7,5,2)', `hdr(${wp.beam})`).replace('size=.028', 'size=.04')) : TRACER
+// balloon guns (Shelly Nov 14: "improve balloon bullets"): each round is a real balloon that wobbles to where it lands and bursts in confetti
+const BALLOON_GLB = "/cdn/value.bbcd28912111e39613cec71f06224b7742148d3493106c89a76f739e3003f366.glb"
+const BTINT = ["oklch(0.66 0.22 25)", "oklch(0.74 0.19 140)", "oklch(0.7 0.17 250)", "oklch(0.86 0.17 95)", "oklch(0.7 0.2 330)"]
+const BURST = `fx
+pop conf burst=22..34 delay=%t|0 life=.9..1.6 v=sdir()*(1.5..3.5)+up(.6) size=.035..0.06 spin=-10..10 tint=oklch(.72 .2 25)..oklch(.8 .18 140) acc=grav()*.35+drag(2.4) col=$tint a=1>.75:1>0 sz=$size rot=$age*$spin floor=stick r=sprite(chip,alpha,velocity,.01)
+pop skin burst=5..7 delay=%t|0 life=.4..0.7 v=sdir()*(2..4) size=.06..0.1 spin=-14..14 col=%c|<1,.3,.25> acc=grav()+drag(1.5) a=1>.6:1>0 sz=$size rot=$age*$spin r=sprite(shard,alpha)
+pop puff burst=1 delay=%t|0 life=.25 size=.5 col=hdr(2,1.9,1.7) a=.5>0 sz=$size*(.4>1.3) r=sprite(soft-disc,add)`
+function showBalloons(ctx, res, muzzle) {
+  const list = res.bullets.slice(0, 4)
+  for (let i = 0; i < list.length; i++) {
+    const b = list[i], end = b.hit?.position ?? b.pts[b.pts.length - 1]
+    const dist = Math.hypot(end.x - muzzle.x, end.y - muzzle.y, end.z - muzzle.z), t = Math.max(0.12, Math.min(0.9, dist / 30))
+    const tint = BTINT[(ctx.random() * BTINT.length) | 0]
+    const id = ctx.spawn({ audience: 'near', lifetime: t, physics: 'none', castShadow: false, tags: ['balloon-round'], feetPosition: { x: muzzle.x, y: muzzle.y - 0.12, z: muzzle.z },
+      model: { id: BALLOON_GLB, materials: { '*': { color: tint } } }, layout: { box: { min: { x: -0.11, y: 0, z: -0.11 }, max: { x: 0.11, y: 0.32, z: 0.11 } } } })
+    if (!id) continue
+    const w = 0.15 + ctx.random() * 0.2
+    animate(ctx, id, { 'feetPosition.x': end.x, 'feetPosition.y': end.y - 0.12, 'feetPosition.z': end.z }, { duration: t, easing: 'easeOutQuad' })
+    animate(ctx, id, { 'rotation.roll': [0, 25 * (i % 2 ? 1 : -1), -20, 15], 'rotation.yaw': [0, 120 + 200 * w] }, { duration: t, easing: 'linear' })
+    ctx.emit('fx', { position: end, script: BURST, params: { t } })
+    ctx.emit('playSound', { clip: '/cdn/moodboard-realistic-gritty/sfx-loud-balloon-pop-bang.mp3', position: end, volume: 0.55, pitch: 0.9 + ctx.random() * 0.3, delay: t })
+  }
+}
 export function show(ctx, res, wp, muzzle) {
+  if (wp.balloon) return showBalloons(ctx, res, muzzle)
   for (const b of res.bullets) {
     const end = b.pts[b.pts.length - 1], dx = end.x - muzzle.x, dy = end.y - muzzle.y, dz = end.z - muzzle.z, dist = Math.hypot(dx, dy, dz) || 1, speed = dist / 0.12 // the streak crosses its whole path in its short life
     if (dist > 1.2) ctx.emit('fx', { position: muzzle, script: tracerOf(wp), params: { vx: dx / dist * speed, vy: dy / dist * speed, vz: dz / dist * speed } })
