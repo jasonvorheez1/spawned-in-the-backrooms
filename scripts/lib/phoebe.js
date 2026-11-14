@@ -35,6 +35,7 @@ export function dressPhoebe(ctx, me) {
   if (!me) return
   me.state.wear = PHOEBE_LOOK
   seatHead(ctx, me, PHOEBE_LOOK)
+  for (const k of ["cw-hair", "cw-botw"]) if (ctx.getObject(me.id + "/" + k)) ctx.destroy(me.id + "/" + k) // the head seat re-dresses the wardrobe's hair and skirt; hers are the outfit's own (the stacked orange hair hid her face)
   const b = buildFor("hub-phoebe", "f"); me.state.build = b; me.scale = { x: b.w, y: b.h, z: b.w }
   me.bones = baseBones(b, PHOEBE_LOOK); me.morph = { ...(me.morph ?? {}), Bust: b.bust }; me.jiggle = CAT_JIGGLE
 }
