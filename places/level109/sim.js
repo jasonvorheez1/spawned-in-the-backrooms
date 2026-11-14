@@ -182,6 +182,7 @@ export function tick(ctx) {
   let budget = SEGS.size ? 4 : 14; // the first lay puts the floor under an arrival at once
   for (const w of [...want.entries()].sort((a, b) => a[1].d - b[1].d)) { if (SEGS.has(w[0])) continue; if (budget-- <= 0) break; laySeg(ctx, seed, w[1].c, w[1].k); }
   for (const [key, made] of SEGS) if (!keep.has(key)) { for (const id of made) ctx.destroy(id); SEGS.delete(key); }
+  for (const [id, r] of ROOMS) if (!r.pend?.length && !ctx.place.objects['l109r-' + id]) { for (const o of r.made) ctx.destroy(o); ROOMS.delete(id); } // a room whose shell went missing (cleared for a rebuild) lays again
   for (const [id, r] of rooms) if (!ROOMS.has(id) && r.d < ROOM_IN) { layRoom(ctx, seed, r.info); break; } // one room a tick
   denWatch(ctx, [...ROOMS.keys()]);
   knockTick(ctx, players, rooms);
