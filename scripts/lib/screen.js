@@ -35,8 +35,15 @@ export function screen(s, place) {
   return "play"
 }
 
+// does the player have their HALOGEN wrist unit yet? (in tutorial0, only once Room D's machine clamps it on)
+export function hasHalogen(s, place) {
+  if (!String(place ?? "").startsWith("tutorial0")) return true
+  return Boolean(s?.t0Done || s?.trail?.name || (s?.t0n ?? 0) >= 3)
+}
+
 // may this wrist panel open now? (true from play or from another wrist panel)
 export function canOpen(s, place, want) {
+  if (!hasHalogen(s, place) && !(want === "sheet" && s?.creating)) return false
   const cur = screen(s, place)
   return cur === "play" || cur === want || cur in WRIST
 }

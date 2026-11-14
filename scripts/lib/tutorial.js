@@ -1,3 +1,4 @@
+import { hasHalogen } from "./screen.js"
 // The first-run tutorial after the Level 0 arrival (johnadams2: "afterwards there should be a tutorial").
 // state.tut = { n, at, x, z }: the step, when it started, where they stood. Steps finish on the real action
 // (scripts/main-menu.js onInput marks presses) or by walking; the HUD card is scripts/tutorial-ui.js.
@@ -10,8 +11,8 @@ export const STEPS = [
   { id: "light", key: "F", text: "Toggle your flashlight when the lights go out.", input: "flashlight", skip: 12 },
   { id: "combat", key: "LEFT CLICK", text: "Tap to swing. Hold to wind up a heavy hit. X swaps weapons.", input: "attack", skip: 14 },
   { id: "crouch", key: "C", text: "Crouch to move quietly and stay harder to spot in the dark.", input: "crouch", skip: 14 },
-  { id: "inv", key: "I", text: "Open your HALOGEN unit for gear, aid, and notes. P opens your journal.", input: ["inventory", "journal"], skip: 14 },
-  { id: "craft", key: "Y / E", text: "Press Y to craft by hand, or E at a Workbench for heavier gear and repairs.", input: ["craft", "interact"], skip: 18 },
+  { id: "inv", key: "I", text: "Open your HALOGEN unit for gear, aid, and notes. P opens your journal.", input: ["inventory", "journal"], skip: 14, halogen: true },
+  { id: "craft", key: "Y / E", text: "Press Y to craft by hand, or E at a Workbench for heavier gear and repairs.", input: ["craft", "interact"], skip: 18, halogen: true },
   { id: "go", key: "", text: "Follow the drawings down the hall. Find a way out.", skip: 10 },
 ]
 const STEP_INDEX = Object.fromEntries(STEPS.map((s, i) => [s.id, i]))
@@ -20,6 +21,8 @@ function advance(ctx, st) {
   const p = ctx.self.feetPosition, n = st.tut.n + 1
   ctx.emit("playSound", { clip: TICK, volume: 0.45 }, { audience: { player: ctx.self.id } })
   if (n >= STEPS.length) { st.tut = null; st.tutDone = true; return }
+  // Wait for Room D's HALOGEN machine before showing any HALOGEN-unit prompts
+  if (STEPS[n]?.halogen && !hasHalogen(st, ctx.self.place)) { st.tut = null; return }
   st.tut = { n, at: ctx.now(), x: p.x, z: p.z }
 }
 export function tutStart(ctx, st) { const p = ctx.self.feetPosition; st.tut = { n: 0, at: ctx.now(), x: p.x, z: p.z } }
@@ -28,6 +31,7 @@ export function tutJump(ctx, st, id) {
   if (st.tutDone) return
   const target = STEP_INDEX[id]
   if (target == null) return
+  if (STEPS[target]?.halogen && !hasHalogen(st, ctx.self.place)) return
   if (st.tut && st.tut.n >= target) return
   const p = ctx.self.feetPosition
   st.tut = { n: target, at: ctx.now(), x: p.x, z: p.z }
