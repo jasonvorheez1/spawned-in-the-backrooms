@@ -1,4 +1,4 @@
-// Level ! ("Run for Your Life!") — Chapter 2 Finale.
+// Level ! ("Run for Your Life!") Chapter 2 Finale.
 // Intake room (door slam + chained door horde breach) -> 200m crimson corridor with Agility obstacles & chasing wave
 // -> collapse at z <= -198 -> Phoebe's spatial ward rescue into the quiet Safe Alcove (x: 80, z: 0).
 import { CORRIDOR, OBSTACLES, stepHordeZ } from "../../scripts/lib/levelrun-mechanics.js";
