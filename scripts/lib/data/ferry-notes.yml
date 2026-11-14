@@ -1,0 +1,49 @@
+# Ferry, the refrigerator of Level 169. It never speaks: it slides magnets and sticky notes. Every line is 2 to 6 words, plain and kind.
+# on: what happened. time: day | night | noon | dusk (omitted = any). stage: [min, max] of the player's sun stage 0..4. hungry: hunger under 40.
+# The most specific matching line wins; ties are picked at random, never the same line twice running. pose: how the magnets settle.
+hungryUnder: 40
+tinHunger: 35
+near: 3            # metres: a player this close gets a greeting
+closeAt: 4.5       # nobody this close: the door swings shut by itself
+openYaw: 108       # degrees the door swings
+note: { size: 0.13, grow: 1.7, center: [0.36, 0.86], slots: [[0.13, 1.39], [0.31, 1.41], [0.50, 1.39], [0.15, 0.52]] }
+lines:
+  - { on: greet, time: day,   text: "Hello. Water's inside.", pose: smile }
+  - { on: greet, time: day,   text: "Come in. Cool off.", pose: smile }
+  - { on: greet, time: noon,  text: "It's noon. Stay in.", pose: wall }
+  - { on: greet, time: noon,  text: "Too hot out. Wait.", pose: wall }
+  - { on: greet, time: dusk,  text: "Sun's nearly down.", pose: smile }
+  - { on: greet, time: night, text: "Cold out. Take a coat.", pose: smile }
+  - { on: greet, time: night, text: "Night is good for walking.", pose: point }
+  - { on: greet, stage: [1, 1], text: "You look hot. Drink.", pose: point }
+  - { on: greet, stage: [2, 2], text: "Sit down. Drink slowly.", pose: point }
+  - { on: greet, stage: [3, 4], text: "Sit. Don't go out.", pose: wall }
+  - { on: greet, hungry: true,  text: "Sit. Eat first.", pose: point }
+  - { on: open,  text: "Take some for the road.", pose: point }
+  - { on: open,  text: "Help yourself.", pose: point }
+  - { on: open,  text: "Bottles are up top.", pose: point }
+  - { on: close, text: "Thanks. Keeps the cold in.", pose: home }
+  - { on: close, text: "Door's shut. Good.", pose: home }
+  - { on: water, time: day,   text: "Keep it out of sun.", pose: heart }
+  - { on: water, time: day,   text: "Good for three hours.", pose: heart }
+  - { on: water, time: night, text: "Lasts longer at night.", pose: heart }
+  - { on: water, text: "That one's cold.", pose: heart }
+  - { on: food,  text: "Peaches. They're good.", pose: heart }
+  - { on: food,  text: "Eat it all.", pose: heart }
+  - { on: empty, text: "Give me an hour.", pose: sorry }
+  - { on: leave, text: "Come back.", pose: home }
+  - { on: leave, time: noon, text: "Wait for dark.", pose: wall }
+  - { on: leave, time: night, text: "Take water next time.", pose: home }
+  - { on: bye,   text: "Bye.", pose: droop }
+  - { on: sand,  text: "Can't fix sand. Sorry.", pose: sorry }
+  - { on: chill, text: "Cold again.", pose: heart }
+  - { on: nochill, text: "Nothing to cool yet.", pose: home }
+# magnets in order: F E R R Y heart star sun triangle. Each [across from the hinge, up the door, roll degrees], metres on the door face.
+poses:
+  home:  [[0.14, 1.25, 0], [0.21, 1.25, 0], [0.28, 1.25, 0], [0.35, 1.25, 0], [0.42, 1.25, 0], [0.55, 1.27, 8], [0.10, 0.70, -10], [0.56, 0.66, 0], [0.30, 0.40, 12]]
+  smile: [[0.14, 1.26, -6], [0.21, 1.25, 4], [0.28, 1.26, -4], [0.35, 1.25, 5], [0.42, 1.26, -5], [0.17, 0.78, 0], [0.28, 0.72, 0], [0.42, 0.72, 0], [0.53, 0.78, 0]]
+  point: [[0.14, 1.25, 0], [0.21, 1.25, 0], [0.28, 1.25, 0], [0.35, 1.25, 0], [0.42, 1.25, 0], [0.52, 0.78, 0], [0.57, 0.78, 0], [0.62, 0.78, 0], [0.665, 0.78, -90]]
+  wall:  [[0.08, 0.76, 0], [0.20, 0.76, 0], [0.32, 0.76, 0], [0.44, 0.76, 0], [0.56, 0.76, 0], [0.10, 1.14, 0], [0.10, 0.92, 0], [0.60, 1.20, 0], [0.60, 0.66, 0]]
+  heart: [[0.14, 1.25, 0], [0.21, 1.25, 0], [0.28, 1.25, 0], [0.35, 1.25, 0], [0.42, 1.25, 0], [0.36, 1.12, 0], [0.17, 0.82, -8], [0.55, 0.82, 0], [0.36, 0.74, 0]]
+  sorry: [[0.15, 1.23, 9], [0.21, 1.22, -7], [0.28, 1.23, 6], [0.35, 1.22, -8], [0.41, 1.23, 10], [0.24, 0.74, 18], [0.33, 0.72, -14], [0.42, 0.72, 10], [0.50, 0.74, -16]]
+  droop: [[0.14, 1.20, 14], [0.21, 1.19, -12], [0.28, 1.21, 10], [0.35, 1.19, -14], [0.42, 1.20, 12], [0.55, 1.22, 24], [0.10, 0.65, -22], [0.56, 0.61, 0], [0.30, 0.35, 26]]
