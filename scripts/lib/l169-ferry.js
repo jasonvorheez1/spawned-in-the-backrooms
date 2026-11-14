@@ -204,6 +204,6 @@ export function layFerry(ctx, put, L) {
   for (let i = 0; i < cap; i++) { const [x, y, z] = shelfSpot("food", i); children.push(kid("food", { id: "f" + i, tags: ["usable", "interact"], feetPosition: at(x, y, z), rotation: { yaw: i * 53 }, primitive: part({ part: "tin", col: TINS[i % TINS.length] }), material: mats, state: { name: "tinned peaches", verb: "Eat", prompt: "Eat tinned peaches", info: "Hunger +35", taken: true } })); }
   children.push(kid("chill", { id: "dial", tags: ["usable", "interact"], feetPosition: at(0.2, 1.49, 0.2), primitive: part({ part: "dial" }), material: mats, state: { name: "", verb: "Hold the door open and cool your bottles", prompt: "Hold the door open and cool your bottles", info: "", taken: true } }));
   children.push({ id: "cold", feetPosition: at(0, 1.3, 0.12) });
-  children.push({ id: "shell", feetPosition: { x: 0, y: 0, z: 0 }, model: { id: SHELL }, castShadow: true, receiveShadow: true }); // carries the inside light and the compressor's hum while the door is open
+  children.push({ id: "shell", feetPosition: { x: 0, y: 0, z: 0 }, rotation: { yaw: 180 }, model: { id: SHELL }, castShadow: true, receiveShadow: true }); // carries the inside light and the compressor's hum while the door is open
   put(id, { tags: ["l169-ferry"], feetPosition: { x: F.x, z: F.z, y: { terrain: L.house.floorUp } }, rotation: { yaw: F.yaw }, primitive: part({ inner: true }), material: mats, physics: "static", behavior: BEHAVIOR, state: { ...keep, open: false, name: "Ferry" }, children });
 }
