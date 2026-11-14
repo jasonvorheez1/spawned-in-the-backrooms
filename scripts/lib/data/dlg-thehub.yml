@@ -13,10 +13,10 @@ hub-meg-okafor:
         - q: "None come back?"
           a: "You step through, you turn round, there's a wall. I've lost two good mugs testing that. Plan your trip before you take it."
     - q: "How do I get out?"
-      a: "Out of the Hub, easy. Three doors stand open and never shut. Fifth tunnel, seventh, tenth. Out of all of it? If I knew that I'd not be sleeping on a cot beside a road."
+      a: "Out of the Hub, easy. Two doors stand open and never shut. Fifth tunnel and seventh. Tenth used to, until it locked down. That one takes a key now. Out of all of it? If I knew that I'd not be sleeping on a cot beside a road."
       then:
-        - q: "Where do the three go?"
-          a: "Seventh goes back to the car park, the one with our waypoint. Tenth goes to a city, quiet one. The fifth we keep a rope across. Nobody we sent through it ever radioed."
+        - q: "Where do those three go?"
+          a: "Seventh goes back to the car park, the one with our waypoint. Tenth goes to a city, quiet one, if you have the key. The fifth we keep a rope across. Nobody we sent through it ever radioed."
     - q: "What are the marks over the doors?"
       a: "Nobody knows. Not letters, not numbers. Sato has drawn four hundred of them and gone a bit strange. You learn your door by its mark or you don't learn it."
     - q: "How do the locked ones open?"
@@ -24,7 +24,7 @@ hub-meg-okafor:
     - q: "What's down the dark end?"
       a: "Past our barrier the lamps stop. We found more road in there in 2019 and we still haven't found the end of it. Dace watches the line. Ask him, he loves company. That's a joke."
   barks:
-    idle: ["Fifth, seventh, tenth. Fifth, seventh, tenth.", "Who moved the kettle.", "Quiet tonight. It's always tonight."]
+    idle: ["Fifth and seventh stay open.", "Who moved the kettle.", "Quiet tonight. It's always tonight."]
     hi: ["Traveller.", "Mind the cables."]
 hub-meg-lin:
   hi: "Hands off the cabinet, visitor. I count those hooks every hour and I am very good at counting."
@@ -124,3 +124,18 @@ hub-keymaster:
       a: "Yes."
   barks:
     idle: ["..."]
+hub-phoebe:
+  hi: "You made it through Level 1. Most people turn back at the dark stairs."
+  back: ["Still here?", "Tunnels haven't moved."]
+  warm: "Good to see you vertical."
+  cold: "Keep it short."
+  bye: "Watch the corners."
+  walk: "Right."
+  ask:
+    - q: "Who are you?"
+      a: "Phoebe. I walk the lower levels, trade what's worth trading, and keep track of who actually makes it out."
+    - q: "What is this place?"
+      a: "The Hub. One long road, side tunnels off it, and a lot of locked concrete doors. M.E.G. has a post up the road. Camp Amber sits further down."
+  barks:
+    idle: ["Quiet down here.", "Count the tunnels if you get turned around."]
+    hi: ["You.", "Mind the kerb."]

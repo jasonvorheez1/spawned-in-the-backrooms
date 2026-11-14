@@ -167,3 +167,53 @@ test('Lin gives directions for each held key independently', () => {
  expect(say(c,s,'hub-meg-lin',thirteen.text).reply).toContain('back road')
 })
 
+test('Level 11 door (t10-a3) is locked behind a key rather than always open', async () => {
+  const { OPEN, KEYED } = await import('../scripts/lib/thehub.js')
+  expect(OPEN['t10-a3']).toBeUndefined()
+  expect(KEYED['t10-a3']).toBe('level11')
+})
+
+test('Phoebe offers branching dialogue choices with different outcomes for the Level 11 key', () => {
+  const ask = "I'm looking for Dina. Did she come through here?"
+
+  // 1. Speech 40 persuasion outcome
+  const s1 = { skl: Array(20).fill(50).join(',') }
+  expect(hubChoices(ctx(), { id: 'hub-phoebe' }, s1).some(x => x.text === ask)).toBe(true)
+  say(ctx(), s1, 'hub-phoebe', ask)
+  const sp = hubChoices(ctx(), { id: 'hub-phoebe' }, s1).find(x => x.tag === 'speech')
+  expect(sp).toBeTruthy()
+  say(ctx(0.99), s1, 'hub-phoebe', sp.text)
+  expect(s1.hubPhoebeDeal).toBe('persuaded'); expect(s1.hubKeys.level11).toBe(1)
+
+  // 2. Buy for $150 outcome
+  const s2 = { cents: 20000 }
+  say(ctx(), s2, 'hub-phoebe', ask)
+  const buy = hubChoices(ctx(), { id: 'hub-phoebe' }, s2).find(x => x.text.includes('$150'))
+  say(ctx(), s2, 'hub-phoebe', buy.text)
+  expect(s2.hubPhoebeDeal).toBe('bought'); expect(s2.cents).toBe(5000); expect(s2.hubKeys.level11).toBe(1)
+
+  // 3. Favor (M.E.G. ledger) outcome
+  const s3 = { dinaQ: 9 }
+  say(ctx(), s3, 'hub-phoebe', ask)
+  const fav = hubChoices(ctx(), { id: 'hub-phoebe' }, s3).find(x => x.text.includes('What do you want for it'))
+  say(ctx(), s3, 'hub-phoebe', fav.text)
+  expect(s3.hubPhoebeDeal).toBe('favor_pending')
+  hubRoute(ctx(), s3, 'thehub'); expect(s3.quests['the-tenth-tunnel'].mark.id).toBe('hub-ledger')
+  s3.hubLedger = 1
+  const turnIn = hubChoices(ctx(), { id: 'hub-phoebe' }, s3).find(x => x.tag === 'Quest Turn-In')
+  say(ctx(), s3, 'hub-phoebe', turnIn.text)
+  expect(s3.hubPhoebeDeal).toBe('favor'); expect(s3.hubKeys.level11).toBe(1)
+  hubRoute(ctx(), s3, 'thehub'); expect(s3.quests['the-tenth-tunnel'].mark.id).toBe('hd-t10-a3')
+
+  // 4. Hostile demand cuts off Phoebe and opens M.E.G. / Camp Amber backup key
+  const s4 = { cents: 25000 }
+  say(ctx(), s4, 'hub-phoebe', ask)
+  const dem = hubChoices(ctx(), { id: 'hub-phoebe' }, s4).find(x => x.tag === 'Demand')
+  say(ctx(), s4, 'hub-phoebe', dem.text)
+  expect(s4.hubPhoebeDeal).toBe('hostile'); expect(s4.hubKeys).toBeUndefined()
+  const okOffer = hubChoices(ctx(), { id: 'hub-meg-okafor' }, s4).find(x => x.text.includes('Level 11 key'))
+  expect(okOffer).toBeTruthy()
+  say(ctx(), s4, 'hub-meg-okafor', okOffer.text)
+  expect(s4.hubKeys.level11).toBe(1); expect(s4.cents).toBe(5000)
+})
+

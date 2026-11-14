@@ -48,10 +48,28 @@ export function hubChoices(ctx, it, s) {
   if (id === "hub-amber-pip" && lr === 99 && s.hubLRsold && !up) out.push(s.hubUPask ? { text: "I'll go and find that door.", tag: "Quest Start" } : { text: "Anything good on those tapes?", tag: "Ask" }); // sold the tapes: Sato never heard them, so Pip has the blank door
   if (id === "hub-meg-okafor") {
     if (up === 2) out.push({ text: "There's an unmarked door past your barrier.", tag: "Quest" });
+    if (s.hubPhoebeDeal === "hostile" && !hasKey(s, "level11") && !s.hubTenthCrossed) out.push({ text: "I need a Level 11 key for the tenth tunnel. [$200]", tag: "Key" });
     if (s.hubLedger && !s.hubDinaAsk) out.push({ text: "Your ledger has a Dina A. in it.", tag: "Ask" });
-    else if ((s.hubDinaLead || s.trail?.name || (s.dinaQ ?? 0) >= 9) && !s.hubLedger && !s.hubDinaAsk) out.push({ text: "Did a Dina come through here? Somebody said you wrote her down.", tag: "Ask" }); // Phoebe's lead (scripts/lib/hub-cut.js)
+    else if ((s.hubDinaLead || s.trail?.name || (s.dinaQ ?? 0) >= 9) && !s.hubLedger && !s.hubDinaAsk) out.push({ text: "Did a Dina come through here? Somebody said you wrote her down.", tag: "Ask" });
   }
-  if (id === "hub-amber-jo" && megHostile(s) && !s.hubDinaAsk && !s.hubLedger && (s.hubDinaLead || s.trail?.name || (s.dinaQ ?? 0) >= 9)) out.push({ text: "The uniforms won't talk to me. Did a Dina come through?", tag: "Ask" });
+  if (id === "hub-amber-jo") {
+    if (megHostile(s) && !s.hubDinaAsk && !s.hubLedger && (s.hubDinaLead || s.trail?.name || (s.dinaQ ?? 0) >= 9)) out.push({ text: "The uniforms won't talk to me. Did a Dina come through?", tag: "Ask" });
+    if (s.hubPhoebeDeal === "hostile" && !hasKey(s, "level11") && !s.hubTenthCrossed) out.push({ text: "Phoebe cut me off. Can Camp Amber spare a Level 11 key? [$180]", tag: "Key" });
+  }
+  if (id === "hub-phoebe") {
+    if (!s.hubPhoebeTalk) out.push({ text: "I'm looking for Dina. Did she come through here?", tag: "Ask" });
+    else if (!hasKey(s, "level11") && !s.hubTenthCrossed) {
+      if (s.hubPhoebeDeal === "favor_pending") {
+        if (s.hubLedger) out.push({ text: "I checked the M.E.G. ledger. Pell took the last key, K-9.", tag: "Quest Turn-In" });
+        else out.push({ text: "Remind me what you wanted from the M.E.G. ledger.", tag: "Ask" });
+      } else if (!s.hubPhoebeDeal) {
+        if (!s.hubPhoebeSpeechFail) out.push({ text: "[Speech 40] Dina's trail goes cold without that key. Hand it over.", tag: "speech", check: { skill: "speech", difficulty: 40 } });
+        out.push({ text: "Name your price for the Level 11 key. [$150]", tag: "Key" });
+        out.push({ text: "I don't have the cash. What do you want for it?", tag: "Quest" });
+        out.push({ text: "Give me the key. Now.", tag: "Demand" });
+      }
+    }
+  }
   if (id === "hub-keymaster") {
     if (!s.hubKmKey) out.push({ text: "Would you spare a key? Please.", tag: "Ask" }, { text: "Hand over a key.", tag: "Demand" });
     if (keysOf(s).length) out.push({ text: "Which door does my key want?", tag: "Ask" });
@@ -95,6 +113,11 @@ export function handleDialogueQuestHub(ctx, p, npc, text) {
   }
   if (id === "hub-meg-okafor") {
     if (t.includes("unmarked door past your barrier") && up === 2) return finishUP(ctx, p, "okafor");
+    if (t.includes("need a level 11 key") && s.hubPhoebeDeal === "hostile" && !hasKey(s, "level11")) {
+      if ((s.cents ?? 0) < 20000) return { reply: "A Level 11 key isn't cheap. Two hundred, or come back when you have it.", mood: "calm" };
+      s.cents -= 20000; s.hubDinaAsk = 1; giveKey(ctx, p, "level11");
+      return { reply: "Two hundred. One trip through the tenth tunnel, and stay out of trouble.", mood: "calm" };
+    }
     if ((t.includes("dina a.") && s.hubLedger) || (t.includes("did a dina come through") && (s.hubDinaLead || s.trail?.name || (s.dinaQ ?? 0) >= 9))) { s.hubDinaAsk = 1; return { reply: "I remember her. Didn't want a key. Wanted the tenth tunnel and a radio, in that order. I told her the city past that door is quiet and she said quiet was fine. She walked. Nobody walks the tenth alone. She did.", mood: "calm" }; }
   }
   if (id === "hub-amber-pip" && t.includes("unmarked door you wanted") && up === 2) return finishUP(ctx, p, "pip");
@@ -102,6 +125,45 @@ export function handleDialogueQuestHub(ctx, p, npc, text) {
   if (id === "hub-amber-pip" && t.includes("go and find that door") && lr === 99 && s.hubLRsold && !up && s.hubUPask) { s.hubUP = 1; setQuest(s, UP, { name: N[UP], step: "Jo's tape mentions a door with no mark at the end of the dark road. Find it, then report to Pip, Sato, or Okafor at the barrier.", mark: M("hub-blank") }); tellQuest(ctx, p, `Quest Started: ${N[UP]}`); return { reply: "Go on then! Hand on it, see if it's warm. Then tell the uniforms, they pay better than us. Don't say where you heard it.", mood: "happy" }; }
   if (id === "hub-amber-pip" && t.includes("buy some m.e.g. recorders") && lr === 2) { s.hubLR = 99; s.hubLRsold = 1; delete s.hubRec; pay(s, 260); addRep(s, "meg", -6, "Sold the M.E.G. survey tapes to Camp Amber"); endQuest(s, LR, "You sold the 2019 team's tapes to Camp Amber. Sato never heard them."); tellQuest(ctx, p, `Quest Completed: ${N[LR]} · +$260`); return { reply: "Uniform tapes? Yes! Jo trades those back to the uniforms for stove gas. Everybody wins! Except whoever asked you to get them. Sorry, them.", mood: "happy" }; }
   if (id === "hub-amber-jo" && t.includes("uniforms won't talk to me") && megHostile(s) && !s.hubDinaAsk) { s.hubDinaAsk = 1; s.hubDinaVia = "amber"; addRep(s, "amber", 1); return { reply: "Small woman, big bag, asked for the tenth tunnel like she was ordering lunch. I walked her halfway. She didn't want tea. Rude, honestly. Tenth tunnel, pilgrim. Keep your head down near the post.", mood: "calm" }; }
+  if (id === "hub-amber-jo" && t.includes("spare a level 11 key") && s.hubPhoebeDeal === "hostile" && !hasKey(s, "level11")) {
+    if ((s.cents ?? 0) < 18000) return { reply: "Hundred and eighty, pilgrim. We don't run a charity on Level 11 keys.", mood: "calm" };
+    s.cents -= 18000; s.hubDinaAsk = 1; giveKey(ctx, p, "level11");
+    return { reply: "Hundred and eighty. Don't pick fights with Phoebe next time. Tenth tunnel's down the road.", mood: "calm" };
+  }
+  if (id === "hub-phoebe") {
+    if (t.includes("looking for dina") && !s.hubPhoebeTalk) {
+      s.hubPhoebe = true; s.hubDinaLead = 1; s.hubPhoebeTalk = 1;
+      return { reply: "She came through. Asked the M.E.G. post about the tenth tunnel and a radio, then went through before that door locked down. Takes a Level 11 key now, and Lin won't stock one. Lucky for you, I've got one.", mood: "calm" };
+    }
+    if (t.includes("hand it over") && s.hubPhoebeTalk && !s.hubPhoebeDeal && !s.hubPhoebeSpeechFail) {
+      if (!rollCheck(ctx, s, { skill: "speech", difficulty: 40 }).ok) {
+        s.hubPhoebeSpeechFail = 1;
+        return { reply: "Nice try. Doesn't work like that down here. Pay for it, earn it, or try another way.", mood: "annoyed" };
+      }
+      s.hubPhoebeDeal = "persuaded"; s.hubPhoebeOutcome = "persuaded"; s.hubDinaAsk = 1; giveKey(ctx, p, "level11");
+      return { reply: "Fair enough. You've got more spine than most who wash up here. Take it. Tenth tunnel from this end, third door on the left.", mood: "happy" };
+    }
+    if (t.includes("name your price for the level 11 key") && s.hubPhoebeTalk && !s.hubPhoebeDeal) {
+      if ((s.cents ?? 0) < 15000) return { reply: "You're short. Hundred and fifty, or do me a favor instead.", mood: "calm" };
+      s.cents -= 15000; s.hubPhoebeDeal = "bought"; s.hubPhoebeOutcome = "bought"; s.hubDinaAsk = 1; giveKey(ctx, p, "level11");
+      return { reply: "Hundred and fifty. Clean and simple. Don't lose it before the tenth tunnel, it only opens once.", mood: "calm" };
+    }
+    if (t.includes("what do you want for it") && s.hubPhoebeTalk && !s.hubPhoebeDeal) {
+      s.hubPhoebeDeal = "favor_pending";
+      return { reply: "M.E.G. keeps a key ledger on their desk up the road. Read who signed out the last key and tell me. Do that and the Level 11 key is yours.", mood: "calm" };
+    }
+    if (t.includes("remind me what you wanted") && s.hubPhoebeDeal === "favor_pending") {
+      return { reply: "The key ledger on M.E.G.'s desk up the road. Check who took the last key and bring me the name.", mood: "calm" };
+    }
+    if (t.includes("checked the m.e.g. ledger") && s.hubPhoebeDeal === "favor_pending" && s.hubLedger) {
+      s.hubPhoebeDeal = "favor"; s.hubPhoebeOutcome = "favor"; s.hubDinaAsk = 1; addRep(s, "amber", 2); giveKey(ctx, p, "level11");
+      return { reply: "Pell. Good to know who's still moving keys around. A deal's a deal. Here's your Level 11 key.", mood: "happy" };
+    }
+    if (t.includes("give me the key. now.") && s.hubPhoebeTalk && !s.hubPhoebeDeal) {
+      s.hubPhoebeDeal = "hostile"; s.hubPhoebeOutcome = "hostile";
+      return { reply: "Bad call. Ask Okafor at the M.E.G. post or Jo at Camp Amber if they've got a spare. We're done.", mood: "annoyed" };
+    }
+  }
   if (id === "hub-keymaster") {
     if (t.includes("spare a key") && !s.hubKmKey) {
       const pool = Object.values(KEYED).filter((pl) => !hasKey(s, pl) && ctx.world.places?.[pl] !== undefined), pl = pool[Math.floor(ctx.random() * pool.length)];

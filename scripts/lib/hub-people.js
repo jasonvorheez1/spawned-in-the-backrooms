@@ -5,6 +5,7 @@ import { npcLook } from "./clothes.js";
 import { weaponBody } from "./weapon-look.js";
 import { keepPeople } from "./level-kit.js";
 import { BRANCHES, HW, DARK_X } from "./thehub.js";
+import { phoebeSpec } from "./phoebe.js";
 // at: [x, z]; face: yaw. Doorstep Carpet's bay is x 4..28, z -5.5..-14.5 (north of the road); Camp Amber's x 176..194, z 5.5..11.5.
 const CREW = {
   "hub-meg-okafor": { name: "Okafor · Post Lead", faction: "meg", role: "captain", gun: "carbine", at: [14.5, -9.2], face: 180, look: { species: "human", sex: "f", topw: "padjacket", top: "#4a5a3a", botw: "cargo", bottom: "#3a3a30", shoes: "boots", hat: "cap", hatc: "#b6e04a", expr: "calm" } },
@@ -44,8 +45,22 @@ export function layThings(ctx) {
     state: { kind: "blank", name: "Door with no mark", verb: "Touch", info: "No keyhole.", c: { x: 558.6, y: 1.2, z: 0 } },
     children: [{ id: "leaf", feetPosition: { x: 0, y: 0.2, z: 0.78 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/hub-door-geo.js", params: { part: "leaf" }, seed: 9001 }, material: { roughness: 0.9 } }] });
 }
+function spawnHubPhoebe(ctx) {
+  if (ctx.place.objects["hub-phoebe"]) return;
+  const { human, ...spec } = phoebeSpec(ctx);
+  ctx.spawn("hub-phoebe", {
+    tags: ["npc", "hub-npc", "phoebe"],
+    feetPosition: { x: -37.6, y: 0.25, z: 3.7 },
+    rotation: { yaw: 90 },
+    physics: "character",
+    ...spec,
+    behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
+    state: { name: "Phoebe", role: "wanderer", faction: "none", dlg: "hub-phoebe", voice: "phoebe-lrun", faceYaw: 90, home: { x: -37.6, z: 3.7 } },
+  });
+}
 export function keepCrew(ctx) { // first walk-in lays everyone at once; after that the shared respawn clock keeps them
   const st = ctx.place.state;
+  spawnHubPhoebe(ctx);
   if (!st.crewLaid) { st.crewLaid = true; for (const id of CREW_IDS) if (!ctx.place.objects[id]) person(ctx, id); return; }
   keepPeople(ctx, CREW_IDS, person);
 }
