@@ -14,7 +14,7 @@ import MEG from "../../scripts/lib/data/meg.yml";
 import { N, H, TH, S, HALF, zoneOf, zoneAt, cellCenter, cellAt, openings, hash, ARRIVE, BACK, LIFT, SLUDGE, SPARKS, GENS, LINES, ceilingAt, OOB, BLOCKS, inGamma } from "../../scripts/lib/level3.js";
 import { spawnAlmond, spawnWeapon } from "../../scripts/lib/loot.js";
 import { rollWeaponL3 } from "../../scripts/lib/loot3.js";
-import { spawnFurniture, pickKind, wallSpot3 } from "../../scripts/lib/furniture.js";
+import { spawnFurniture, pickKind, wallSpot3, furnLook } from "../../scripts/lib/furniture.js";
 import { npcState, dmgAfterArmor } from "../../scripts/lib/stats.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import { layLore } from "../../scripts/lib/level3-lore.js";
@@ -185,6 +185,7 @@ export function tick(ctx) {
   if (s.seeded && s.gammaExtV !== 1) layGammaExterior(ctx);
   if (s.seeded && s.jboxV !== 1) { s.jboxV = 1; for (const o of ctx.query({ tags: ["live-box"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const b = ctx.getObject(o.id); if (!b) continue; const h = SPARKS.find((q) => Math.hypot(q.wx - D4[q.d][0] * 0.1 - o.feetPosition.x, q.wz - D4[q.d][1] * 0.1 - o.feetPosition.z) < 0.3); b.primitive = null; b.material = null; b.model = JBOX.model; b.layout = JBOX.layout; if (h) b.rotation = { yaw: Math.atan2(D4[h.d][0], D4[h.d][1]) * 180 / Math.PI }; } } // grey boxes become the real junction box
   if (s.seeded && s.genTripoV !== 1) { s.genTripoV = 1; for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id]; if ((o.model?.id ?? o.model) === "/cdn/value.f2cc96cb814887e44442e010f610a0890537af8e6f7f6965290304f2f4b81c85.glb") { o.scale = 1; o.model = "/cdn/value.7868138caa40f6f5e3f59d0f34f03a7019f6a39fafc581e4534f0752a76e5167.glb"; o.layout = { box: { min: { x: -1.5, y: 0, z: -0.9 }, max: { x: 1.5, y: 2.1, z: 0.9 } } }; } } } // the transformer rooms' generator: the rusted Tripo model (Shelly: less blocky)
+  if (s.seeded && s.furnLookV !== 1) { s.furnLookV = 1; for (const o of ctx.query({ tags: ["lootfurn"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const L = furnLook(o.state?.kind); const b = ctx.getObject(o.id); if (!L || !b || b.model) continue; b.primitive = null; b.model = L.model; b.layout = L.layout; } } // 2026-11-14: scripted fuse cabinets/satchels/lockers/toolboxes wear their fitted Tripo meshes; loot, tags, collider kept
   if (s.seeded && s.signsV !== 1) { s.signsV = 1; layGammaSignage(ctx); }
   if (s.furnitureSeeded !== 2) { // loot moved from crates into fuse cabinets, toolboxes, lockers and satchels: clear the old crates once
     for (const o of ctx.query({ tags: ["crate"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (o.tags?.includes("container")) ctx.destroy(o.id);
