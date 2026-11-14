@@ -3,7 +3,25 @@
 // Every number comes from scripts/lib/data/level169.yml (house, houseBuild). Ids: l169-house-*.
 const GEO = "scripts/l169-house-geo.js";
 const SHELL_GLB = "/cdn/value.150c87b478df0c8f2ab37379e19a56d85bda160aaaadbb1080ce0a3d3b1a23a7.glb";
+const ROAD_GEO = "scripts/l169-road-geo.js";
+export function layTrail(ctx, put, L) { // cairns every T.every m up the track mark, arrows facing the walker, and the yard's wind pump
+  const T = L.trail; if (!T) return;
+  const pts = ctx.place.terrain?.marks?.[T.mark]?.points ?? [[0, -14], [6, -120], [-10, -260], [14, -400], [18, -488]];
+  let i = 0, carry = 0;
+  for (let s = 0; s < pts.length - 1; s++) {
+    const [ax, az] = pts[s], [bx, bz] = pts[s + 1], len = Math.hypot(bx - ax, bz - az), dx = (bx - ax) / len, dz = (bz - az) / len;
+    for (let d = carry; d < len; d += T.every, i++) {
+      const side = i % 2 ? T.side : -T.side, x = ax + dx * d - dz * side, z = az + dz * d + dx * side;
+      put(`l169-trail-${i}`, { feetPosition: { x, z, y: { terrain: -0.05 } }, rotation: (Math.atan2(-dx, -dz) * 180) / Math.PI, physics: "static", visibleRange: { max: 320 }, castShadow: true,
+        primitive: { kind: "scripted", script: ROAD_GEO, params: { kind: "cairn", n: T.stones, sd: i + 3, arrow: true } } });
+      carry = d + T.every - len;
+    }
+  }
+  const m = T.mill; put("l169-trail-mill", { feetPosition: { x: m.x, z: m.z, y: { terrain: 0 } }, rotation: m.yaw, physics: "static", visibleRange: { max: 900 }, castShadow: true,
+    primitive: { kind: "scripted", script: ROAD_GEO, params: { kind: "windmill", roll: 0 } } });
+}
 export function layHouse(ctx, put, L) {
+  layTrail(ctx, put, L);
   const h = L.house, b = L.houseBuild, C = h.center, r = h.rooms;
   const ground = ctx.place.terrain?.heightAt?.(C.x, C.z) ?? 0, F = ground + h.floorUp;
   const part = (id, p, x, z, y, extra = {}) => put(`l169-house-${id}`, { feetPosition: { x, y, z }, primitive: { kind: "scripted", script: GEO, params: p }, physics: "static", ...extra });

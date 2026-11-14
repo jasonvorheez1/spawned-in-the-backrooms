@@ -67,3 +67,9 @@ houseBuild:                     # Ferry's house, the builder's numbers (scripts/
   stair: { x0: 24.2, rise: 0.2, upN: 9, upRun: 0.3, turn: -500.3, lowN: 4, lowRun: 0.4 }   # 10 risers east down the hall, a landing, 5 south under the kitchen
   porchPosts: [12.2, 16, 20, 23.8]
   lamp: { intensity: 8, distance: 10, color: "oklch(0.86 0.09 75)" }
+trail:                          # the arrival lane: stacked cairns up the track from the well to Ferry's house, so the way reads by eye (scripts/lib/l169-house.js layTrail)
+  mark: track-north             # the terrain path mark they follow
+  every: 32                     # metres between cairns
+  side: 2.4                     # off the track's centre, alternating sides
+  stones: 6
+  mill: { x: 33, z: -504, yaw: 200 }   # a wind pump in Ferry's yard: 7 m tall, the first thing you see over the last rise
