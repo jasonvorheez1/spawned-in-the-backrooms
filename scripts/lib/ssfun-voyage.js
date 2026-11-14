@@ -37,7 +37,7 @@ export function berth(ctx, placeKey, site) {
 }
 
 const FOG = `fx
-pop fog rate=?mobile:5|11 on=box(115,2.5,115) life=10..16 v=<1.2,0,.4>*(.6..1.4)+sdir()*.4 size=16..30 acc=curl(.08)*.4+drag(.3) col=<.42,.86,.5>><.3,.7,.42> a=0>.25:.42>.75:.38>0 sz=$size*(.7>1.25) rot=spin(.02) r=sprite(smoke-puff,alpha)
+pop fog rate=?mobile:7|16 on=box(115,2.5,115) life=10..16 v=<1.2,0,.4>*(.6..1.4)+sdir()*.4 size=16..30 acc=curl(.08)*.4+drag(.3) col=<.42,.86,.5>><.3,.7,.42> a=0>.25:.55>.75:.48>0 sz=$size*(.7>1.25) rot=spin(.02) r=sprite(smoke-puff,alpha)
 pop veil rate=?mobile:1.5|3 on=box(70,6,70).c(8) life=8..12 v=up(.3)+sdir()*.5 size=26..40 acc=drag(.4) col=<.5,.95,.58> a=0>.3:.2>.7:.14>0 sz=$size*(.8>1.3) rot=spin(.015) r=sprite(smoke-puff,alpha)
 pop glow n=1 at=point().c(10) r=light(<.45,1,.55>,%glow|45,150)`;
 
