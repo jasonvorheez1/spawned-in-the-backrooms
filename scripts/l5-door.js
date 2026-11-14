@@ -9,11 +9,11 @@ export const ears = {
   press: (ctx, { by }) => {
     const s = ctx.self.state, who = ctx.getObject(by);
     if (s.kind === "radio") {
-      s.on = !s.on;
-      ctx.self.audio = s.on ? { ...s.track } : null;
+      s.on = !s.on; // the sound itself is scripts/world-radio.js: Radio Backrooms through bad reception (Shelly Nov 14)
+      if (ctx.self.audio) ctx.self.audio = null;
       heard(ctx, { clip: G("radio-dial-click-static"), position: { ...ctx.self.worldFeetPosition, y: 1 }, volume: 0.6, maxDistance: 10 });
       s.verb = s.on ? "Switch off" : "Switch on";
-      say(who, s.on ? "The valves glow. The violins come back mid-bar, as if they never stopped." : "Click. The room is suddenly very large and very quiet.", ctx);
+      say(who, s.on ? "The valves glow. Ralph's station crackles back in, mid-song." : "Click. The room is suddenly very large and very quiet.", ctx);
       return;
     }
     if (s.kind === "sealed") {
