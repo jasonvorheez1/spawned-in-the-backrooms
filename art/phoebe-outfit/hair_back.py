@@ -35,11 +35,11 @@ top = max(v.co.z for v in me.vertices); dz = newTop - top
 for v in me.vertices: v.co.z += dz            # crown on the crown the cat cap sat on
 # the original fringe hung to a human chin; on her shorter muzzle it covered both eyes. Front strands below the brow are drawn
 # up toward it, the left side (her right eye) kept longer so one eye stays half-hidden, the other eye and the mouth clear
-BROW = catHead.z + 0.42 * (newTop - catHead.z)
+BROW = catHead.z + 0.56 * (newTop - catHead.z)
 for v in me.vertices:
     c = v.co
     if c.y < catHead.y - 0.02 and c.z < BROW:
-        k = 0.55 if c.x > catHead.x + 0.02 else 0.25
+        k = 0.6 if c.x > catHead.x + 0.03 else 0.12
         c.z = BROW + (c.z - BROW) * k
 me.materials.clear(); me.materials.append(hairMat)
 hair = bpy.data.objects.new("hair", me); bpy.context.scene.collection.objects.link(hair)
@@ -56,7 +56,7 @@ bpy.ops.import_scene.gltf(filepath=W + "/body_cat.glb")
 sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 16; sc.render.resolution_x = 600; sc.render.resolution_y = 600
 w = bpy.data.worlds.new("w"); w.color = (0.5, 0.5, 0.5); sc.world = w
 L = bpy.data.objects.new("L", bpy.data.lights.new("L", "SUN")); L.data.energy = 3; sc.collection.objects.link(L); L.rotation_euler = (0.6, 0, 0.3)
-for n, p in (("front", (0, -0.9, 0.85)), ("side", (0.9, -0.3, 0.85)), ("back", (0, 1.2, 0.8))):
+for n, p in (("front", (0, -0.9, 0.78)), ("side", (-0.7, -0.6, 0.78)), ("back", (0, 1.2, 0.8))):
     cam = bpy.data.objects.new(n, bpy.data.cameras.new(n)); sc.collection.objects.link(cam); cam.location = p
-    d = Vector((0, 0, 0.8)) - Vector(p); cam.rotation_euler = d.to_track_quat("-Z", "Y").to_euler(); cam.data.lens = 50
+    d = Vector((0, 0, 0.76)) - Vector(p); cam.rotation_euler = d.to_track_quat("-Z", "Y").to_euler(); cam.data.lens = 50
     sc.camera = cam; sc.render.filepath = f"/tmp/phoebe/hair_{n}.png"; bpy.ops.render.render(write_still=True)
