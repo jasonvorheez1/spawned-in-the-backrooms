@@ -40,13 +40,15 @@ for sy, top in ((1, 0.86), (-1, 0.64)):
         parts.append(box("slat", 0.045, 0.022, top - 0.45 - 0.035, x, y, (top + 0.45) / 2 - 0.0, PINE, 0.005))
 # mattress: subdivided slab, centre sagging
 def soft(name, sx, sy, sz, loc, m, sub=3, sag=0.0, rumple=0.0, nscale=4.0):
+    # a flat-cut slab (not a subsurf blob): cube, even grid cuts, rounded edges, then the sag and the rumple
     bpy.ops.mesh.primitive_cube_add(size=1, location=loc); o = bpy.context.object; o.name = name; o.scale = (sx, sy, sz); bpy.ops.object.transform_apply(scale=True)
-    s = o.modifiers.new("s", "SUBSURF"); s.levels = sub; s.render_levels = sub; bpy.ops.object.modifier_apply(modifier="s")
+    bv = o.modifiers.new("bv", "BEVEL"); bv.width = min(sz * 0.45, 0.05); bv.segments = 4; bpy.ops.object.modifier_apply(modifier="bv")
+    bm = bmesh.new(); bm.from_mesh(o.data); bmesh.ops.subdivide_edges(bm, edges=bm.edges[:], cuts=6, use_grid_fill=True); bm.to_mesh(o.data); bm.free()
     for v in o.data.vertices:
-        c = v.co; u = c.x / (sx / 2); t = c.y / (sy / 2)
+        c = v.co; u = max(-1, min(1, c.x / (sx / 2))); t = max(-1, min(1, c.y / (sy / 2)))
         if c.z > 0: c.z -= sag * (1 - u * u) * (1 - t * t)
-        if rumple: n = noise.noise(Vector((c.x * nscale, c.y * nscale, c.z * nscale + 3))); c += v.normal * n * rumple
-    o.data.materials.append(m); bpy.ops.object.shade_smooth(); return o
+        if rumple: c.z += noise.noise(Vector((c.x * nscale, c.y * nscale, 3.0))) * rumple * (1 if c.z > 0 else 0.3)
+    o.data.materials.append(m); bpy.ops.object.shade_smooth(); print("part", name, tuple(round(x, 3) for x in o.dimensions)); return o
 parts.append(soft("mattress", W - 0.1, L - 0.14, 0.2, (0, 0, 0.47), SHEET, sub=3, sag=0.03, rumple=0.006))
 # duvet: thin sheet over the lower 60 %, thrown back fold at the head end, drapes over the sides
 bpy.ops.mesh.primitive_grid_add(x_subdivisions=40, y_subdivisions=60, size=1, location=(0, 0, 0)); d = bpy.context.object; d.name = "duvet"
@@ -58,9 +60,9 @@ for v in d.data.vertices:
     n = noise.noise(Vector((x * 3, y * 3, 1.7))); z += n * 0.035 + 0.015 * math.sin(x * 14 + y * 5)
     v.co = Vector((x, y, z))
 sol = d.modifiers.new("t", "SOLIDIFY"); sol.thickness = 0.03; s = d.modifiers.new("s", "SUBSURF"); s.levels = 1; s.render_levels = 1
-d.data.materials.append(DUVET); bpy.ops.object.shade_smooth(); parts.append(d)
+d.data.materials.append(DUVET); bpy.ops.object.shade_smooth(); parts.append(d); print("part duvet", tuple(round(x, 3) for x in d.dimensions))
 pl = soft("pillow", 0.62, 0.36, 0.13, (0, L / 2 - 0.3, 0.62), PILLOW, sub=3, sag=0.035, rumple=0.012, nscale=6)
-for v in pl.data.vertices: v.co.z *= 1 - 0.35 * (abs(v.co.x) / 0.31) ** 2   # pillow ears thinner
+for v in pl.data.vertices: v.co.z *= 1 - 0.35 * min(1, abs(v.co.x) / 0.31) ** 2   # pillow ears thinner
 parts.append(pl)
 for o in parts:
     bpy.context.view_layer.objects.active = o
