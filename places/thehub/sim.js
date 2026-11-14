@@ -47,7 +47,7 @@ export function tick(ctx) {
   const s = ctx.place.state;
   if ((s.hubV ?? 0) < 1) { layShell(ctx); layLamps(ctx); }
   if ((s.hubV ?? 0) < 9) { if ((s.hubV ?? 0) >= 2) for (const d of DOORS) { if (ctx.place.objects[d.obj]) ctx.destroy(d.obj); if (ctx.place.objects[d.obj + "-t"]) ctx.destroy(d.obj + "-t"); } layDoors(ctx); } // v9: Level 11 door (t10-a3) is locked behind a key
-  if ((s.hubV ?? 0) < 3) { layThings(ctx); if (!ctx.place.objects["hub-from-l1"]) ctx.spawn("hub-from-l1", { feetPosition: { x: ARRIVE.x + 1, y: ARRIVE.y, z: ARRIVE.z }, rotation: { yaw: -90 } }); }
+  if ((s.hubV ?? 0) < 3) { layThings(ctx); if (!ctx.place.objects["hub-from-l1"]) ctx.spawn("hub-from-l1", { feetPosition: { x: -39.2, y: 0.2, z: 2.8 }, rotation: { yaw: 0 } }); }
   if ((s.hubV ?? 0) < 6) layDoorLamps(ctx);
   if ((s.hubV ?? 0) < 9) layPlaques(ctx); // v9: refresh plaques for Level 11 key requirement
   if ((s.hubV ?? 0) < 5) { layLampModels(ctx); layDress(ctx); } // v5: modeled lamps, fans, tray, gutters, barriers, camp furniture
