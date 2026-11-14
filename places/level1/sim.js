@@ -14,7 +14,7 @@ import { RACK } from "../../scripts/lib/level1.js";
 import { rollItemL1 } from "../../scripts/lib/loot.js";
 import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, BACK_OLD, DROP, ONWARD, ARRIVE, hash, S, HALF, hasPillar, DECK, RAMPS, rampBox, rampCell, inHole } from "../../scripts/lib/level1.js";
 import { spawnAlmond } from "../../scripts/lib/loot.js";
-import { spawnFurniture, pickKind, wallSpot1, sizeOf } from "../../scripts/lib/furniture.js";
+import { spawnFurniture, pickKind, wallSpot1, sizeOf, remodelFurniture } from "../../scripts/lib/furniture.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import { symbolSvg } from "../../scripts/lib/thehub.js";
 const symbolSvgL1 = (w) => symbolSvg(77, w);

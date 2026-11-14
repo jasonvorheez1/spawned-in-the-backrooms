@@ -423,6 +423,7 @@ export function tick(ctx) {
     for (const o of ctx.query({ tags: ["crate"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (o.tags?.includes("container")) ctx.destroy(o.id);
     s.furnitureSeeded = true; s.cratesSeeded = false; s.nextCrate = 0;
   }
+  remodelFurniture(ctx); // 2026-11-14 furnModelV 1: standing filing/desk/cabinet boxes wear their fitted Tripo meshes
   const crates = ctx.query({ tags: ["lootfurn"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).length;
   if (crates < W.crates.count && now >= (s.nextCrate ?? 0)) {
     const fill = s.cratesSeeded ? 1 : W.crates.count - crates;
