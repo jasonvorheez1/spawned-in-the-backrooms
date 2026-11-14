@@ -1,0 +1,27 @@
+# the creator's FNV cigarette mod, converted at real size (art/cigs/build.py). kind: pack 6x3x8.8 cm standing, carton 26x9x5 cm lying
+blackdeath-carton: { model: "/cdn/value.6cc21392f7539e0bd22184187f5aaaca9619245a1e7af2d897bec206d862421d.glb", kind: carton }
+blackdeath-pack: { model: "/cdn/value.64cc2f3150f8a91e89ea2f8449cff153e68ab4a7152b7b8da8c05a86d16ffe38.glb", kind: pack }
+camel-camelcarton: { model: "/cdn/value.a39db5415370f07dda45d9096638e8b85091ce26086c5ebc29fd87425bdaa492.glb", kind: carton }
+camel-camelpack: { model: "/cdn/value.c0989a6bf1130bdf29ebf1c74b624e470109b2cba44ae60d469a1849e037c7d8.glb", kind: pack }
+cigars-carton: { model: "/cdn/value.e6212d2cf3ac2a6d68dba79cc459d364322ad9ff7be5cfdfca216d90326b63ec.glb", kind: carton }
+jinling-carton: { model: "/cdn/value.621af9dcb8b59a161b42f50266520258034c0db6ef8703279b7f4bd8fbeb9ece.glb", kind: carton }
+jinling-pack: { model: "/cdn/value.52af15d7b74fb80357bf3235618d54b5f4b5e0e266d24269fc2a2e287f4b15dc.glb", kind: pack }
+ls-carton: { model: "/cdn/value.32f0d2b06a897dd32bb931cf289676b050528386fd605a472e4f587c04b9c4f2.glb", kind: carton }
+ls-pack: { model: "/cdn/value.f2b444118f1846f79df403e40816d18d6b3375c5eb43e449f6b4a94954547971.glb", kind: pack }
+lsgreen-carton: { model: "/cdn/value.471986aa3b90b741f85cd5788776e3e09d8c94f91ed6674d511af0e722b69688.glb", kind: carton }
+lsgreen-pack: { model: "/cdn/value.25453e528ec68a6676d7c7019443a57bca19681273ceb0680e3c73fff6409fa4.glb", kind: pack }
+lsretro-carton: { model: "/cdn/value.2030f79a9d7883c610a9fe8abfc9d870c9ea0da8c0c58f0a76c1b1cc8351103b.glb", kind: carton }
+lsretro-pack: { model: "/cdn/value.d482fa1d5139e5d4cd06bd8fb223a11cd86b0354ffbd270b68abefaafc905bd4.glb", kind: pack }
+marlboro-marlborocart: { model: "/cdn/value.b9ad83888972d1b08e0c04fedce8f8c77ba874c22d540727baacb4f35b49d1cf.glb", kind: carton }
+marlboro-marlboropack: { model: "/cdn/value.ec1d88da6621fa5ee82920a62a7873438be524ef58a7b2aa1205a8e5f54d4667.glb", kind: pack }
+marlborolight-pack: { model: "/cdn/value.87450222e1e00935c50284f8050dd520db89478e15761f71f7f0d586235c9c55.glb", kind: pack }
+marlboromenthol-carton: { model: "/cdn/value.ffc4f4f9c33b7e3de6afcb5bad0f182e7a7c367f97e330181f9e4605eda846ae.glb", kind: carton }
+marlboromenthol-marlboroskylinecart: { model: "/cdn/value.0161d01b2948db8a52ec9e27f9441f21d50b2d38aa3d883df8961db9369a4b88.glb", kind: carton }
+marlboromenthol-marlboroskylinepack: { model: "/cdn/value.40c171c24aaa891444daa3f280b5a7cfc73ca0a7fdc46ada8f921c88f6b03b8e.glb", kind: pack }
+marlboromenthol-pack: { model: "/cdn/value.d3722e7450f3df09c60b5a50c00114cd6ed64792005293044dbf5e837ec74e39.glb", kind: pack }
+newports-pack: { model: "/cdn/value.a3ba315439522f55d0eb4a208e1b366ebd1ac270072dd26765c4ef922f24ccda.glb", kind: pack }
+newports-packreds: { model: "/cdn/value.a6d7bb50961bb9f2d7530317d9d9f7463b438957ee1d255da5f6cba839dcb052.glb", kind: pack }
+oldgold-oldgoldcarton: { model: "/cdn/value.4da8d9847ed01a561c69db0ad75bad5dcb59be87ace8ba0577fcbcb5e541bc7c.glb", kind: carton }
+oldgold-oldgoldpack: { model: "/cdn/value.073d3fb8f9aca1668c87dc40ec0eec0775e6737d9b8c00b34c64fc2beddcea1b.glb", kind: pack }
+playersnavy-carton: { model: "/cdn/value.37b0b80b87bb47a89356a36d2634554a3cedbd40aeb8be0f602be705e602a0b3.glb", kind: carton }
+playersnavy-pack: { model: "/cdn/value.719b25913041f211e426867a7c848a85591a94ab46fe9d448ae6e59df90c4ff5.glb", kind: pack }
