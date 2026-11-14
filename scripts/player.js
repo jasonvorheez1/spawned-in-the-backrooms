@@ -339,6 +339,8 @@ function takeToken0(ctx, token, opts) {
     return { ok: true }
   }
   if (token === 'bobbypin' || token === 'pin' || token === 'bobby_pin') { s.bobbypins = (s.bobbypins ?? 0) + 1; s.pickedAt = now; s.notice = { text: `Bobby pin (${s.bobbypins} carried)`, at: now }; sound(ctx, 'pickup-ammo', 0.5, true); return { ok: true } }
+  if (token === 'repellent') { s.repellent = (s.repellent ?? 0) + 1; s.pickedAt = now; s.notice = { text: 'Smiler Repellent. A few drops, clear as almond water. Rare', at: now }; sound(ctx, 'plastic-bottle-pickup-rattle', 0.6, true); return { ok: true } }
+  if (token === 'fs_ingot') { s.fsIngot = (s.fsIngot ?? 0) + 1; s.pickedAt = now; sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true } }
   if (token === 'firesalt') { s.firesalt = (s.firesalt ?? 0) + 1; s.pickedAt = now; sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true } }
   if (token.startsWith('holo:')) { // a tape: kept, played on HALOGEN (I > Misc > PLAY)
     const id = token.slice(5), have = String(s.holotapes ?? '').split(',').filter(Boolean)
@@ -1015,6 +1017,11 @@ function invAction(ctx, d) {
   if (d.k === 'soupEat') { soupEat(ctx); return }
   if (d.k === 'snack') { useSnack(ctx, String(d.c || '')); return }
   if (d.k === 'soupThrow') { s.invOpen = false; soupThrow(ctx); return }
+  if (d.k === 'repellent') { s.invOpen = false; useRepellent(ctx); return }
+  if (d.k === 'fsThrow') { s.invOpen = false; fsThrow(ctx); return }
+  if (d.k === 'fsMelt') { fsMelt(ctx); return }
+  if (d.k === 'fsIngot') { s.invOpen = false; fsIngot(ctx); return }
+  if (d.k === 'fsBoil') { fsBoil(ctx); return }
   if (d.k === 'firesalt') { // rub a pinch on the blade or head: melee hits burn harder for a while
     if ((s.firesalt ?? 0) <= 0 || W[s.equipped]?.ranged || s.equipped === 'fists') { s.notice = { text: 'Hold a melee weapon to rub firesalt on it', at: ctx.now() }; return }
     s.firesalt -= 1; s.firesaltUntil = ctx.now() + L3I.firesalt.seconds * 1000
@@ -1223,6 +1230,100 @@ function soupThrow(ctx) {
     primitive: { kind: 'circle', radius: 1.3, segments: 20 }, pivot: 'center', castShadow: false,
     material: { color: 'oklch(0.45 0.1 60 / 0.85)', roughness: 0.05, metalness: 0, transparent: true }
   })
+}
+
+// Object 3 "Smiler Repellent" (Wikidot): a drop clears smilers within ~20 m; on contact a smiler vanishes and never returns.
+const REPEL_R = 20 // the lore's 20 metres
+const REPEL_MIST = `fx
+pop mist burst=?mobile:40|90 life=1.6..2.8 v=<%dx|0,0,%dz|0>*(3..6)+sdir()*(.6..1.4)+up(.3) size=.25..0.5 acc=drag(1.8)+buoy(.15)+curl(.3) sz=$size*(.4>3.2) col=<.86,.92,.84> a=0>.08:.5>.6:.25>0 rot=spin(.15) r=sprite(smoke-puff,alpha)
+pop drops burst=?mobile:30|70 life=.5..1.1 v=<%dx|0,0,%dz|0>*(4..8)+sdir()*(.5..1.2)+up(.6) size=.015..0.03 acc=grav()+drag(.6) col=<.85,.95,1> a=1>0 floor=die r=sprite(droplet,alpha,velocity,.02)
+pop ring burst=?mobile:24|48 on=disc(1) life=1.4..2.2 v=sdir()*<1,0,1>*(6..10)+up(.2) size=.4..0.8 acc=drag(1.6) sz=$size*(.6>2.6) col=<.8,.9,.78> a=0>.3:.2>.6:.12>0 r=sprite(smoke-puff,alpha)`
+const SMILER_GONE = `fx
+pop smoke burst=?mobile:16|36 on=sphere(.4).c(1.2) life=1..1.8 v=up(.6..1.4)+sdir()*(.4..1) size=.3..0.6 acc=buoy(.6)+drag(1.4)+curl(.4) sz=$size*(.5>2.6) col=<.05,.05,.06> a=0>.1:.8>.6:.4>0 r=sprite(smoke-puff,alpha)
+pop teeth burst=?mobile:10|22 on=sphere(.3).c(1.4) life=.4..0.9 v=sdir()*(1..3) size=.03..0.06 acc=drag(1.5) col=hdr(2.4,2.4,2.2)>hdr(.4,.4,.4) a=1>0 r=sprite(ember,add,velocity,.03)`
+function useRepellent(ctx) {
+  const s = ctx.self.state, now = ctx.now()
+  if ((s.repellent ?? 0) <= 0) { s.notice = { text: 'No Smiler Repellent left', at: now }; return }
+  s.repellent -= 1
+  const p = ctx.self.feetPosition, f = walkOf(ctx).fwd ?? { x: 0, z: -1 }
+  ctx.emit('fx', { position: { x: p.x + f.x * 0.4, y: p.y + 1.35, z: p.z + f.z * 0.4 }, script: REPEL_MIST, params: { dx: f.x, dz: f.z } })
+  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-glass-atomizer-bottle-fine-mist-spray-two-pumps-hiss.mp3', position: p, volume: 0.8, maxDistance: 14 })
+  let gone = 0
+  for (const m of ctx.query({ tags: ['smiler'], radius: REPEL_R })) {
+    const at = { x: m.feetPosition.x, y: m.feetPosition.y, z: m.feetPosition.z }
+    ctx.emit('fx', { position: at, script: SMILER_GONE })
+    heard(ctx, { clip: '/cdn/moodboard-gothic-horror/sfx-smiler-grin-collapses-into-shrieking-static-and-fades-to-nothing.mp3', position: at, volume: 0.9, maxDistance: 30 })
+    ctx.destroy(m.id); gone++
+  }
+  s.repelUntil = now + 60000 // smilers keep clear of the scent for a minute (the lore: weaker for extended periods)
+  s.notice = { text: gone ? `The mist hits and ${gone === 1 ? 'the grin' : gone + ' grins'} come apart into nothing` : 'A fine mist hangs in the air. Nothing grins back.', at: now }
+}
+
+// Firesalt (Wikidot): orange shards shatter on impact into burning sparks; 50 g+ ingots melted from shards blow like half a dynamite stick.
+const FS = { throwDmg: 22, burnR: 2.4, meltCost: 5, ingotDmg: 140, ingotR: 7 } // Savi's picks: a shard stings like a hatchet, an ingot clears a hallway
+const FS_SPARK = `fx
+pop flash burst=1 life=.18 size=1.2 sz=$size*(1>.2) col=hdr(5,3,1.2) a=1>0 r=sprite(soft-disc,add)
+pop sparks burst=?mobile:60|140 life=.5..1.4 v=sdir()*(5..12)+up(2..4) size=.015..0.04 acc=grav()*.7+drag(.8) col=hdr(6,3.2,.9)>hdr(2,.6,.1) a=(1>.6:1>0)*flick(9,.3) floor=bounce(.4) r=sprite(ember,add,velocity,.04)
+pop shards burst=?mobile:8|16 life=.8..1.4 v=sdir()*(2..5)+up(2..3) size=.02..0.05 spin=-12..12 acc=grav()+drag(.3) col=<1,.5,.15>..<.9,.35,.08> a=.85 rot=$age*$spin floor=stick r=sprite(shard,alpha)
+pop smoke burst=?mobile:6|12 life=1.5..2.5 v=up(.6..1.2) size=.3..0.5 acc=buoy(.5)+drag(1)+curl(.3) sz=$size*(.5>2.5) col=<.3,.27,.25> a=0>.1:.5>.6:.2>0 r=sprite(smoke-puff,alpha)
+pop incense on=@sparks?.06 life=1.2..2 size=.1..0.2 acc=buoy(.4)+drag(1) sz=$size*(.6>2) col=<.55,.5,.6> a=0>.25:.2>0 r=sprite(smoke-puff,alpha)
+pop glow burst=1 life=.9 r=light(<1,.55,.2>,40*(1>.1:.5>0),9)`
+function fsLand(ctx, f) {
+  const p = ctx.self.feetPosition, o = { x: p.x, y: p.y + 1.4, z: p.z }
+  const r = raycast(ctx, o, { x: f.x * 0.97, y: -0.22, z: f.z * 0.97 }, { distance: 16, ignoreEntities: [ctx.self.id] })
+  return r ? { x: r.position.x, y: r.position.y, z: r.position.z, id: r.id } : { x: p.x + f.x * 12, y: p.y, z: p.z + f.z * 12 }
+}
+const FS_FOES = ['smiler', 'lurker', 'hound', 'stealer', 'moths', 'l8spider', 'l8-hostile', 'npc', 'clump', 'foe', 'hostile']
+function fsBurst(ctx, s, at, R, dmg, f) {
+  let n = 0
+  for (const m of ctx.query({ anyTags: FS_FOES, radius: R, center: at })) {
+    if (m.id === ctx.self.id || m.state?.dead || (m.state?.hp ?? 1) <= 0) continue
+    const d = Math.hypot(m.feetPosition.x - at.x, m.feetPosition.z - at.z), k = 1 - 0.6 * d / R
+    hitTarget(ctx, s, m, Math.round(dmg * k), f, true); m.state.stunUntil = ctx.now() + 900; n++
+  }
+  return n
+}
+function fsThrow(ctx) {
+  const s = ctx.self.state, now = ctx.now()
+  if ((s.firesalt ?? 0) <= 0) { s.notice = { text: 'No firesalt', at: now }; return }
+  if (now < (walkOf(ctx).nextSwing ?? 0)) return
+  walkOf(ctx).nextSwing = now + 700; s.firesalt -= 1
+  const f = walkOf(ctx).fwd ?? { x: 0, z: -1 }, at = fsLand(ctx, f)
+  sound(ctx, 'pipe-whoosh-swing', 0.5)
+  ctx.emit('fx', { position: { x: at.x, y: at.y + 0.1, z: at.z }, script: FS_SPARK })
+  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-brittle-crystal-shatters-with-crackling-firework-spark-burst-and-sizzle.mp3', position: at, volume: 1, maxDistance: 34 })
+  const n = fsBurst(ctx, s, at, FS.burnR, FS.throwDmg, f)
+  s.notice = { text: n ? `The shard bursts in a spray of burning sparks · ${n} hit` : 'The shard bursts in a spray of burning sparks', at: now }
+}
+function fsMelt(ctx) {
+  const s = ctx.self.state, now = ctx.now()
+  if ((s.firesalt ?? 0) < FS.meltCost) { s.notice = { text: `Melting an ingot takes ${FS.meltCost} shards (you have ${s.firesalt ?? 0})`, at: now }; return }
+  s.firesalt -= FS.meltCost; s.fsIngot = (s.fsIngot ?? 0) + 1
+  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-crystals-melting-in-tin-cup-hiss-and-bubbling-then-cooling-crackle.mp3', position: ctx.self.feetPosition, volume: 0.6, maxDistance: 8 })
+  s.notice = { text: `${FS.meltCost} shards melt into clear pyroil, smelling of incense. It cools into a dark red ingot`, at: now }
+}
+function fsIngot(ctx) {
+  const s = ctx.self.state, now = ctx.now()
+  if ((s.fsIngot ?? 0) <= 0) { s.notice = { text: 'No firesalt ingot', at: now }; return }
+  if (now < (walkOf(ctx).nextSwing ?? 0)) return
+  walkOf(ctx).nextSwing = now + 1200; s.fsIngot -= 1
+  const f = walkOf(ctx).fwd ?? { x: 0, z: -1 }, at = fsLand(ctx, f), c = { x: at.x, y: at.y + 0.3, z: at.z }
+  sound(ctx, 'pipe-whoosh-swing', 0.6)
+  ctx.emit('fx', { position: c, script: BLAST, params: { s: 1.3 } })
+  ctx.emit('fx', { position: c, script: FS_SPARK })
+  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-dynamite-explosion-huge-boom-with-crystal-shatter-and-falling-debris.mp3', position: c, volume: 1, maxDistance: 120 })
+  feelBlast(ctx, c, 1.3)
+  const me = ctx.self.feetPosition, dd = Math.hypot(me.x - c.x, me.z - c.z)
+  if (dd < FS.ingotR) { s.hp = Math.max(1, (s.hp ?? 100) - Math.round(60 * (1 - dd / FS.ingotR))); s.notice = { text: 'Too close. The blast throws heat across you', at: now } }
+  const n = fsBurst(ctx, s, c, FS.ingotR, FS.ingotDmg, f)
+  if (dd >= FS.ingotR) s.notice = { text: n ? `The ingot goes off like dynamite · ${n} caught` : 'The ingot goes off like dynamite', at: now }
+}
+function fsBoil(ctx) { // a shard dissolved in almond water heats it: boiled clean of the Disease, it restores more
+  const s = ctx.self.state, now = ctx.now()
+  if ((s.firesalt ?? 0) <= 0 || (s.almonds ?? 0) <= 0) { s.notice = { text: 'Boiling needs a firesalt shard and a grey almond water', at: now }; return }
+  s.firesalt -= 1; s.almonds -= 1; s.almondsB = (s.almondsB ?? 0) + 1
+  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-crystal-dissolving-fizz-in-bottle-water-heating-to-rolling-boil.mp3', position: ctx.self.feetPosition, volume: 0.6, maxDistance: 8 })
+  s.notice = { text: 'The shard fizzes away and the bottle boils. Clean, warm almond water', at: now }
 }
 
 function toggleLight(ctx) {
