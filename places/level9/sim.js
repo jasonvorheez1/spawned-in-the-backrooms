@@ -25,7 +25,7 @@ const BASE = { color: "oklch(0.42 0.05 55)", roughness: 0.6 };
 const RUG = { texture: "cdn/texture-faded-persian-rug-worn-red-and-cream.png", color: "oklch(0.75 0.04 40)", roughness: 1 };
 const LOOT = { lava_lamp: "Nightstand drawer", dresser: "Dresser drawers", kitchen_cabinet: "Kitchen cabinet" }; // Shelly: only real storage gets searched
 // what every piece breaks as (scripts/lib/breakables.js: tag "breakable" + state { mat, hp, maxHp }; numbers in data/breakables.yml)
-const MAT = { floor_lamp: ["fixture", 25], lava_lamp: ["fixture", 25], crt_tv: ["machine", 60], fiddle_plant: ["wood", 20] };
+const MAT = { floor_lamp: ["fixture", 25], lava_lamp: ["fixture", 25], crt_tv: ["machine", 60], tv_console: ["wood", 50], tv_silver: ["machine", 50], tv_portable: ["machine", 30], fiddle_plant: ["wood", 20] };
 const FLOOR = { texture: "cdn/texture-dusty-worn-oak-hardwood-floor-planks.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.55 0.05 60)", roughness: 0.8 };
 // interior variety (Shelly Nov 14; picks mine): each house rolls its paper, floor, rug, layout and how it was left
 const PAPERS = [WALLPAPER,
@@ -74,7 +74,7 @@ function furnish(ctx, sp, l, H, D, Y) {
   } else piece("sofa", Lc, z0 + 0.55, 180);
   if (RG) box("rug", Lc, z0 + 1.75, 2.2, 1.6, 0.012, RG, 0, "none");
   if (plan !== 2) piece("coffee_table", Lc, z0 + 1.7, 0);
-  if (z1 - z0 > 4.6) piece("crt_tv", Lc, z0 + 3.2, 0);
+  if (z1 - z0 > 4.6) piece(["crt_tv", "tv_console", "tv_silver", "tv_console"][Math.abs(Math.round(Lc * 7 + z0 * 13)) % 4], Lc, z0 + 3.2, 0, "crt_tv"); // each house its own set (Shelly Nov 14: tv variants)
   piece("floor_lamp", Lc + (plan === 1 ? -1.6 : 1.45), z0 + 0.35, 0);
   if (plan === 2) { piece("fiddle_plant", Lc - 1.3, z0 + 0.35, 0, "plantB"); piece("armchair", Lc + 1.1, z0 + 1.9, -120, "armA"); } // a reading corner, no table
   piece("bookshelf", outer + os * 0.28, z0 + 1.6, os > 0 ? 90 : -90);
