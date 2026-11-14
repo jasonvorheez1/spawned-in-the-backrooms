@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8510,
-  "updatedAt": "2026-11-14T20:27:59.482Z",
-  "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Per-place simulations and generators build local spaces while shared registries and handlers coordinate navigation, NPCs, combat, inventory, story, crafting and the shared Radio Backrooms broadcast. Level 169 is a desert survival route with Ferry's house, a checkpoint road and questline; the S.S. Fun follows shared timetable state between Level 10 and 169.",
+  "basedOnSpecVersion": 8524,
+  "updatedAt": "2026-11-14T20:44:50.323Z",
+  "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Per-place simulations and generators build local spaces while shared registries and handlers coordinate navigation, NPCs, combat, inventory, story, crafting and four synchronized HALOGEN radio stations. Level 169 is a desert survival route with Ferry's house, a checkpoint road and questline; the S.S. Fun follows shared timetable state between Level 10 and 169.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes, anomalies and deterministic dressing; momentsV gates fitted wall moments and room-prop regeneration.",
@@ -11,7 +11,7 @@
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office, supplies, encounters and story beats.",
     "places/level1 + places/level4 + places/level26 (3D) - M.E.G. camps and authored office mazes; Level 26's S.S. Fun has cabin 23, Partygoer decks/lockdown and aboard gate; Level 1 includes Dina's radio.",
     "places/level9 + places/level11 + places/level61 (3D) - seeded Suburbs, Level 11 city/Base Beta/strip mall/clinic and Chapter 2 trail, and Snackrooms food court/M.E.G. checkpoint with simulated staff and Clippers lounge.",
-    "places/level70 (3D) - winter market/civic town, stalls, hotel, office, pump and Dry Pipes landmarks; sim composes civic, wild and life systems.",
+    "places/level70 (3D) - winter market/civic town, stalls, hotel, office, pump and Dry Pipes landmarks; sim composes civic, wild and life systems with town/path builders.",
     "places/level169 (3D) - seeded desert hazards, well arrival, Ferry's modeled house/yard/trail, friends, checkpoint road and questline; hosts S.S. Fun landings. places/level10 hosts its other port; Level 5 and Level 7 have world radios."
   ],
   "roots": [
@@ -32,7 +32,7 @@
     "scripts/lib/hub.js + preload data/scripts and scripts/lib/thehub.js + scripts/lib/hubkeys.js - separate Bonus shared-room routing and The Hub tunnel/door/key registry.",
     "scripts/lib/containment.js - Level 109 persistent pen/loose-foe, open-door and remembered-door-position books; sim supplies room IDs/boxes and spawnFoe adapter.",
     "scripts/lib/pg-society.js + scripts/lib/data/pg-society.yml - Level 26 Partygoer role/routes, sight-bound relay and deck alert/search/recovery; scripts/partygoers.js reads rules and owns actor behavior/traps.",
-    "scripts/lib/radio.js + scripts/lib/data/radio.yml - room-clock Radio Backrooms segment/offset shared by HALOGEN and world radios; scripts/lib/screen.js and wrist-nav.js share panel arbitration/navigation."
+    "scripts/lib/npc-gear.js + scripts/lib/fresh-aura.js - shared NPC leveled gear/wear/pocket rolls and Reality Freshener radius check; meg-agent, hit squads, player and remodel quest reuse these helpers."
   ],
   "notableExports": [
     "scripts/lib/places.js - PLACES, PLACE_NAMES, PLACE_LABELS, LEVEL_TITLES.",
@@ -41,21 +41,21 @@
     "scripts/lib/companion.js - PERKS, perkOf, isMine, followersOf, loyaltyScale, whyNot, recruit/adopt/dismiss/order, weapon handoff, tick, bring; carry.js - carryAcross.",
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - shared journal/advancement/reward helpers; containment.js - containment state/pen/door operations; ch2-quest.js - Chapter 2 stages and dialogue helpers.",
-    "scripts/lib/run-opts.js - OPTS, DEFAULTS, PICK_DEFAULTS, RATE, PRESETS, runOf, needsMul, sanityMul, noStory, noNpcs, cleanPick, KEEP, SKIP; scripts/main-menu.js exports SLOTS; scripts/l169-quest-use.js exports ears.press.",
-    "scripts/lib/radio.js - STATION, onAir; scripts/lib/screen.js - WRIST, screen, hasHalogen, canOpen, openWrist; scripts/lib/ssfun-voyage.js - schedule, voyage, berth, shipTick, ears, where; scripts/music-hush.audio.js - setup."
+    "scripts/lib/run-opts.js - OPTS, DEFAULTS, PICK_DEFAULTS, RATE, PRESETS, runOf, needsMul, sanityMul, noStory, noNpcs, cleanPick, KEEP, SKIP; scripts/main-menu.js exports SLOTS.",
+    "scripts/lib/radio.js - STATIONS, STATION, stationOf, onAir; scripts/lib/npc-gear.js - NPC_POOLS, refPlayerLevel, npcSpread, npcGearLevel, npcPoolKey, rollNpcWeapon, adaptNpcWear, rollNpcPocketLoot; fresh-aura.js - FRESH_BODY, nearFresh."
   ],
   "ownership": [
-    "scripts/player.js + scripts/lib/save.js - durable player.state progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, saved place/position, currency, karma/rep and homeKeep; player.js owns player actions and transient session behavior.",
+    "scripts/player.js + scripts/lib/save.js - durable player.state progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, saved place/position, currency, karma/rep and homeKeep; player.js owns player actions and session-local runtime.",
     "scripts/lib/stats.js - derived attributes, skills and combat/carry stats; scripts/stats-ui.js formats derived stats; scripts/lib/progression.js migrates the xpCurve progression model.",
     "scripts/lib/modifiers.js - player.state bookBonuses/readBooks/genericBooksRead/effects and modifier derivation; scripts/lib/clothes.js owns worn gear records whose passive modifiers feed the modifier engine.",
     "scripts/lib/manuals.js + scripts/player.js - player.state.recipes stores learned recipe IDs; legacy player.state.manuals still grants all recipes of those kinds. Using a manual token learns one unknown recipe of its kind.",
     "scripts/lib/run-opts.js + scripts/main-menu.js - player.state.run owns expedition picks; run options determine story/NPC presence and hunger/thirst/sanity drain multipliers.",
     "scripts/db.js + scripts/main-menu.js - SQL saves table owns named save-slot snapshots by player owner and slot; player.state remains the live/current run state.",
-    "scripts/critter.js + scripts/lib/cat-wardrobe.js - player look and creator/wardrobe/salon state, including model, nose shape and nose colour; transient Squirt Gun backpack tank is parented to player body root and expired groove/gesture changes are session state.",
-    "scripts/lib/quests.js + route quest modules - player quest journal/tracking/completion/claim keys; scripts/lib/level169-quest.js owns player.state.l169q/l169r/l169met/l169pkg; scripts/lib/l169-road.js owns per-player route/trip/cold-water state."
+    "scripts/radio.js - player.state.radioOn/radioSt retain tuned station and power; radioOpen is the current wrist-tab state, with stream/hush object IDs kept in session.",
+    "scripts/lib/npc-gear.js + NPC actors - NPC state.gearLevel/arm and clothing/pocket rolls; scripts/lib/remodel-quest.js owns player Fresh Paint progress (remodQ, l02got, fresh and related turn-in flags)."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js handles tagged-seat selection and seat interactions.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js handles tagged-seat selection and script actions.",
     "templates/player.js runs scripts/fall-guard.js update before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 uses camera aim + combat-anims.yml for third-person pose.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; periodic saves exclude intake, bonus and tutorial0.",
@@ -66,17 +66,17 @@
     "scripts/player.js zone resolver → player.state.zone; scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles, markers and compass place names.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js offers place-matched jobs; carried items/kills/world events advance errands → journal, player.state.errands/qtrack and payouts.",
     "scripts/talk.js → dialogue.js rootChoices and quest handlers; level quest modules call scripts/lib/quests.js → journal/feed/reputation/reward state; scripts/lib/data/dlg-*.yml supplies character-specific choices and barks.",
-    "scripts/radio.js input → player.state.radioOn and radioOpen, with scripts/lib/screen.js arbitrating HALOGEN panels; radio.js seeks scripts/lib/radio.js onAir into a local Radio-bus child, while a local scripts/music-hush.audio.js child fades the listener's Music bus only during playback (including rink, Bonus OST and jukeboxes). scripts/radio-ui.js reads onAir; scripts/world-radio.js makes local children seek the same station clock."
+    "scripts/radio.js action → player.state.radioOn/radioSt and scripts/radio-ui.js; scripts/lib/radio.js selects synchronized segments from radio*.yml, HALOGEN seeks the tuned station on Radio bus and hushes Music locally, while scripts/world-radio.js carries Radio Backrooms."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; menus/staff vary by venue and Level 6.1 fixtures are fitted separately.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes a table with separately fitted chairs.",
-    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js - weapon stats/variants share combat; per-weapon sound/rack/reload fields resolve through sounds.yml, with Squirt Gun liquid effects and variant-specific handling.",
+    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js - weapon stats/variants share combat; per-weapon sound/rack/reload fields resolve through sounds.yml, with Squirt Gun liquid effects and variants.",
     "art/cigs/build.py + art/fnv/build.py + art/xmas-clean/build.py and NIF converters, plus art/cat-wardrobe/fit.py + tailclear.py + art/level70-stall/parts.py - fitted GLBs/prop catalogs and body-specific garment/prop fitting.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "Level 01/Zenith and Level 1 geometry builders + scripts/l169-house-geo.js - authored station/car park and Level 169 house geometry; materials, fixtures and house furniture parts vary by configured params.",
-    "scripts/lib/craft.js + craft.yml + snacks.yml - crafting shares recipe checks, ingredient lookup, weight accounting and output transaction; ingredients vary between scrap, raw meat and carried food, with recipes gated by manual and station."
+    "scripts/lib/npc-gear.js + scripts/lib/clothes.js + weapons/loot registries - NPC weapons, clothing and pockets scale by reference player level, role/faction/pool and stable per-NPC spread; scripts/meg-agent.js and hit squads consume the rolls."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -90,7 +90,7 @@
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together. Keyed doors consume player.state.hubKeys.",
     "Level 109 place.state.l109seed fixes irregular corridor/room rolls; containment books are keyed by room ID and remember pen-door positions. Local terminal host/mode and roomId must stay aligned.",
     "Level 26 society state is split by deck in place.state.pgAlert; Partygoer social memory is session-local, bait records are keyed by route stop, and pgLiftLocked controls only the lower lift.",
-    "Level 169 uses x/z with north at -z and terrain scale 1:10; keep terrain marks, house/trail geometry, road sites and ship berths aligned. Residents' furniture is laid by scripts/lib/l169-friends.js from level169.yml stops/seats/rolls rather than cells.",
-    "Radio Backrooms timing is global room-clock time: keep each YAML segment duration aligned to its clip and let HALOGEN and world radios seek onAir offsets. HALOGEN sends its stream through Radio, not Music; its per-listener Music-bus hush ramps down only while playback is active, leaving the Radio group untouched."
+    "Level 169 uses x/z with north at -z and terrain scale 1:10; keep terrain marks, house/trail geometry, road sites and ship berths aligned. Residents' furniture is laid by scripts/lib/l169-friends.js from level169.yml stops/seats/rolls rather than cell placements.",
+    "Radio Backrooms timing is global room-clock time: keep each YAML segment duration aligned to its clip and let HALOGEN and world radios seek onAir offsets. STATIONS order defines the persisted radioSt dial; HALOGEN sends its stream through Radio, not Music, with per-listener Music-bus hush."
   ]
 }
