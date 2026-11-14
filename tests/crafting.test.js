@@ -1,8 +1,8 @@
 import{test,expect}from'bun:test'
 import C from'../scripts/lib/data/craft.yml'
-import{recipeStatus,maxMakes,craftOne,benchAvailable,CRAFT_LIMIT}from'../scripts/lib/craft.js'
+import{recipeStatus,maxMakes,craftOne,benchAvailable,scrapCount,CRAFT_LIMIT}from'../scripts/lib/craft.js'
 import{canCarry,inventoryWeight,derived,pickupWeight,carried}from'../scripts/lib/stats.js'
-const player=(scrap={})=>({level:1,xp:0,skl:Array(13).fill(100).join(','),attr:'5,5,5,5,5,5,5',scrap,craftOpen:'bench',ammo:0,shells:0,weapons:''})
+const player=(scrap={})=>({level:1,xp:0,skl:Array(13).fill(100).join(','),attr:'5,5,5,5,5,5,5',scrap,manuals:'weapons,ammo,aid,tools,armor,food',craftOpen:'bench',ammo:0,shells:0,weapons:''})
 const give=(draft,t)=>{const ok=canCarry(draft,t);if(!ok.ok)return ok;if(t==='scrap_metal'||t==='bolts'||t==='nails')draft.scrap={...draft.scrap,[t]:(draft.scrap[t]??0)+1};else draft.snacks={...draft.snacks,[t]:(draft.snacks[t]??0)+1};return{ok:true}}
 test('complete outputs are committed only when every grant succeeds',()=>{
  const s=player({wire:3,nails:3}),before=JSON.stringify(s);let n=0
@@ -53,8 +53,8 @@ import {CATS} from '../scripts/lib/craft.js'
 const source=readFileSync(new URL('../scripts/craft.js',import.meta.url),'utf8')
 const actionSource=source.slice(source.indexOf('function act('),source.indexOf('export function update('))
 function action(grant,reachable=true){
- return Function('C','CATS','recipeStatus','maxMakes','craftOne','CRAFT_LIMIT','canOpen','liveBench','note','heard','SND','SKN','B','takeToken','gain',actionSource+';return act')(
- C,CATS,recipeStatus,maxMakes,craftOne,CRAFT_LIMIT,canOpen,()=>reachable,(s,ctx,text)=>s.notice={text},()=>{},n=>n,{}, {scrap:{}},grant,ctx=>ctx.self.state.craftXp=true)
+ return Function('C','CATS','recipeStatus','maxMakes','craftOne','CRAFT_LIMIT','canOpen','liveBench','note','heard','SND','SKN','B','takeToken','gain','scrapCount',actionSource+';return act')(
+ C,CATS,recipeStatus,maxMakes,craftOne,CRAFT_LIMIT,canOpen,()=>reachable,(s,ctx,text)=>s.notice={text},()=>{},n=>n,{}, {scrap:{}},grant,ctx=>ctx.self.state.craftXp=true,scrapCount)
 }
 function context(s){const events=[];return {self:{id:'tester',state:s,feetPosition:{x:0,y:0,z:0},place:'main'},now:()=>1000,random:()=>1,emit:(...args)=>events.push(args),events}}
 test('action rolls back rejected output, including queued effects and XP',()=>{
@@ -85,7 +85,7 @@ test('craft menu explains exact outputs, shortages, and supports narrow screens'
 })
 
 test('crafted weapons retain the maker skill-based condition',()=>{
- const [id,r]=Object.entries(C.recipes).find(([id,r])=>r.out[0].startsWith('weapon:')&&r.skill),s=player(r.in),ctx=context(s),key=r.out[0].slice(7)
+ const [id,r]=Object.entries(C.recipes).find(([id,r])=>r.out[0].startsWith('weapon:')&&r.skill&&!r.bench),s=player(r.in),ctx=context(s),key=r.out[0].slice(7)
  action((draftCtx,t)=>{draftCtx.self.state.weapons=t.slice(7);return{ok:true}})(ctx,s,{k:'make',id,n:1})
  expect(s['cnd_'+key]).toBe(100)
  s.scrap={...r.in};s['cnd_'+key]=71
@@ -107,4 +107,34 @@ test('prototype names and malformed recipe definitions cannot crash crafting act
 test('leaving a bench closes crafting even where hunger drain is disabled',()=>{
  const run=Function('C','liveBench','L21H','gain','takeToken',source.slice(source.indexOf('export function update('),source.indexOf('function liveBench(')).replace('export function','function')+';return update')(C,()=>false,{},()=>{},()=>{})
  for(const place of ['level6','bonus']){const s={...player(),craftBench:'old-bench',hunger:60,thirst:70},ctx=context(s);ctx.self.session={};ctx.self.place=place;run(ctx,.5);expect(s.craftOpen).toBe('');expect(s.craftBench).toBe('');expect(s.hunger).toBe(60);expect(s.thirst).toBe(70)}
+})
+
+test('recipes stay locked until the manual for their kind is read',()=>{
+ const s=player({wire:1,nails:1});s.manuals=''
+ const st=recipeStatus(s,'bobbypin')
+ expect(st.ok).toBe(false);expect(st.known).toBe(false);expect(st.reason).toContain("Tinkerer")
+ s.manuals='tools';expect(recipeStatus(s,'bobbypin').ok).toBe(true)
+ s.manuals='tools,bogus';expect(recipeStatus(s,'kit').known).toBe(false)
+})
+test('every recipe belongs to a real manual and loot rolls only real manuals',async()=>{
+ const{MANUALS,manualKind,rollManual}=await import('../scripts/lib/manuals.js')
+ for(const r of Object.values(C.recipes))expect(MANUALS[manualKind(r)]).toBeTruthy()
+ let i=0;const ctx={random:()=>((i++*0.137)%1)}
+ for(const pool of['l0','l1','l2','l3','l4','l5','l7','nope'])for(let n=0;n<20;n++)expect(MANUALS[rollManual(ctx,pool).slice(7)]).toBeTruthy()
+})
+
+test('crafted battery charge lands on the live flashlight, and loose baubles count in shortage notes',()=>{
+ const s=player({copper_coil:1,scrap_metal:1,bolts:1});s.battery=10;const ctx=context(s);ctx.self.session={'player.js':{battery:10}}
+ action((d,t)=>{const w=d.self.session['player.js'];w.battery=Math.min(100,w.battery+50);d.self.state.battery=Math.round(w.battery);return{ok:true}})(ctx,s,{k:'make',id:'battery',n:1})
+ expect(ctx.self.session['player.js'].battery).toBe(60);expect(s.battery).toBe(60)
+ const b=player({stuffing:1,wire:2});b.baubles=1;const bc=context(b)
+ action(()=>({ok:true}))(bc,b,{k:'make',id:'bobette',n:1})
+ expect(b.notice.text).toContain('×3')
+})
+test('locked recipes are refused by the action and marked in the menu',()=>{
+ const s=player({wire:1,nails:1});s.manuals='';const ctx=context(s);let calls=0
+ action(()=>{calls++;return{ok:true}})(ctx,s,{k:'make',id:'bobbypin',n:1})
+ expect(calls).toBe(0);expect(s.scrap.wire).toBe(1);expect(s.notice.text).toContain('Tinkerer')
+ const html=craftUi({},{state:{...s,craftOpen:'hand',hunger:100,thirst:100}})
+ expect(html).toContain('LOCKED');expect(html).toContain('Manuals 0/6')
 })

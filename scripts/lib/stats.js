@@ -193,7 +193,7 @@ export function inventoryWeight(s) {
 export const carried = (s) => Math.round(inventoryWeight(s) * 10) / 10
 // The amount one pickup adds; crafting uses this same rule for complete recipe outputs.
 export function pickupWeight(token) {
-  if (['ration', 'bandage', 'battery', 'kit', 'akit', 'beans', 'bar', 'firstaid', 'tape', 'fuse', 'valve', 'keycard', 'royal_ration', 'bobbypin', 'compass', 'nvg', 'skates'].includes(token) || token.startsWith('page:')) return 0
+  if (['ration', 'bandage', 'battery', 'kit', 'akit', 'beans', 'bar', 'firstaid', 'tape', 'fuse', 'valve', 'keycard', 'royal_ration', 'bobbypin', 'compass', 'nvg', 'skates'].includes(token) || token.startsWith('page:') || token.startsWith('manual:')) return 0
   return token === 'ammo' ? W.ammo.perPickup * .03 : token === 'shells' ? W.shells.perPickup * .07 : tokenWeight(token)
 }
 export function canCarry(s, token) {

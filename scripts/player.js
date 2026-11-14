@@ -107,6 +107,7 @@ import { placeFreshener, nearFresh, FRESH_BODY } from './lib/remodel-quest.js'
 import { placeMusicBox, musicNear, kneel } from './lib/musicbox.js'
 import L3I from './lib/data/l3items.yml'
 import CR from './lib/data/craft.yml'
+import { MANUALS, knowsManual, manualsOf } from './lib/manuals.js'
 import AW from './lib/data/almond.yml'
 import { MEAT } from './lib/items.js'
 import SNACKS from './lib/data/snacks.yml'
@@ -364,6 +365,15 @@ function takeToken0(ctx, token, opts) {
     s.flour = (s.flour ?? 0) + 1; s.pickedAt = now
     s.notice = { text: `Sack of Fresh Flour (${s.flour} carried) · Bake at the Farmhouse Hearth`, at: now }
     sound(ctx, 'pickup-ammo', 0.6, true)
+    return { ok: true }
+  }
+  if (token.startsWith('manual:')) { // a crafting manual: unlocks that kind of recipe for good (scripts/lib/manuals.js)
+    const k = token.slice(7), m = MANUALS[k]
+    if (!m) return { ok: false, msg: '' }
+    if (knowsManual(s, k)) return { ok: false, msg: `You already know the ${m.name}` }
+    s.manuals = [...manualsOf(s), k].join(','); s.pickedAt = now
+    s.notice = { text: `You read the ${m.name}: new recipes in the crafting menu (Y)`, at: now }; gain(ctx, L.xpAlmond)
+    sound(ctx, 'pickup-weapon', 0.5, true)
     return { ok: true }
   }
   if (isBookToken(token)) {

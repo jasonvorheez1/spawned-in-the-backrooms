@@ -4,6 +4,7 @@ import { rollWeapon, rollLock, magOf } from "./loot.js";
 import { rollVariant } from "./weapons.js";
 import P from "./data/l3items.yml";
 import { rollCloth } from "./clothes.js";
+import { rollManual } from "./manuals.js";
 const L3_MAGS = {
   crate: ["mag:repair", "mag:energy", "mag:explosives", "mag:lockpick"],
   gen: ["mag:energy", "mag:repair", "mag:science"],
@@ -15,7 +16,7 @@ export function rollWeaponL3(ctx) { const q = ctx.random(); if (q < 0.06) return
 export function rollTableL3(ctx, table = "crate") {
   const E = Object.entries(T.tables[table] ?? T.tables.crate), total = E.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
-  for (const [k, w] of E) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL3(ctx) : k === "mag" ? pickMag3(ctx, table) : k === "cloth" ? rollCloth(ctx) : k === "page" ? "page:" + (1 + Math.floor(ctx.random() * (P.pages ?? 8))) : k; }
+  for (const [k, w] of E) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL3(ctx) : k === "manual" ? rollManual(ctx, "l3") : k === "mag" ? pickMag3(ctx, table) : k === "cloth" ? rollCloth(ctx) : k === "page" ? "page:" + (1 + Math.floor(ctx.random() * (P.pages ?? 8))) : k; }
   return "almond";
 }
 export const rollItemL3 = (ctx) => rollTableL3(ctx, "crate");

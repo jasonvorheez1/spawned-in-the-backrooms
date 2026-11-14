@@ -6,6 +6,7 @@ import W from './weapons.js'
 import { tokenWeight, SKILLS, reqText } from './stats.js'
 import L1 from './data/level1.yml'
 import { parseCloth, CLOTHES } from './clothes.js'
+import { MANUALS } from './manuals.js'
 import { getBookSpec, getMagSpec, formatModsList, isBookToken, isMagToken } from './modifiers.js'
 
 export const itemsOf = (str) => (str ? String(str).split(',').filter(Boolean) : [])
@@ -16,7 +17,7 @@ export const tokenOf = (tag, o) => (tag === 'weapon' ? 'weapon:' + (o?.state?.ki
 // what a token is called and what it does, for the prompt and the loot menu
 export function describe(token) {
   const d = describe0(token)
-  const kg = token.startsWith('cash:') ? 0 : token.startsWith('meat:') ? 0.3 : (['ration', 'bandage', 'battery', 'kit', 'akit', 'bobbypin', 'compass', 'nvg', 'skates', 'royal_ration', ...L2_NOW].includes(token) || token.startsWith('page:')) && !isBookToken(token) && !isMagToken(token) ? 0 : token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : token === 'rockets' ? 1.8 : tokenWeight(token)
+  const kg = token.startsWith('cash:') || token.startsWith('manual:') ? 0 : token.startsWith('meat:') ? 0.3 : (['ration', 'bandage', 'battery', 'kit', 'akit', 'bobbypin', 'compass', 'nvg', 'skates', 'royal_ration', ...L2_NOW].includes(token) || token.startsWith('page:')) && !isBookToken(token) && !isMagToken(token) ? 0 : token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : token === 'rockets' ? 1.8 : tokenWeight(token)
   return kg ? { ...d, info: d.info + ` · ${kg.toFixed(1)} kg` } : d
 }
 // Level 2's finds: eaten, wrapped or taped on the spot, or keys you carry (fuse, valve wheel, keycard) that open its doors
@@ -85,6 +86,7 @@ function describe0(token) {
   if (token === 'holo:b8') return { name: 'Tape: "B8, Night Forty"', info: 'A cassette with a hallway count written on the label, crossed out and rewritten. Play it on HALOGEN (I > Tapes)', color: '#ff9a6a' }
   if (token === 'holo:walt41') return { name: 'Tape: "Field Test 41"', info: 'A reel labelled in pencil: KESSLER, R-55, TEST 41. Play it on HALOGEN (I > Misc)', color: '#ff9a6a' }
   if (token.startsWith('holo:')) return { name: 'Tape: "Atomic Age Defender"', info: 'A scuffed 1950s Backrooms Robotics ad reel. Play it on HALOGEN (I > Misc)', color: '#ff9a6a' }
+  if (token.startsWith('manual:')) { const m = MANUALS[token.slice(7)]; return { name: m?.name ?? 'Crafting manual', info: m?.info ?? 'Unlocks recipes', color: '#e8b45a' } }
   if (token.startsWith('page:')) { const n = +token.slice(5); return n >= 101 && n <= 104 ? { name: `Neon Hospital record (${n - 100})`, info: 'Medical chart or M.E.G. hospital memo from Level 109', color: '#a8e6cf' } : n === 24 ? { name: `Level 10 field log (${n})`, info: 'M.E.G. Scarecrow observation report from Level 10', color: '#ffd36a' } : n >= 21 && n <= 23 ? { name: `Level 0 field document (${n - 20})`, info: 'Survey report & survivor notes from Level 0', color: '#ded3a0' } : n >= 11 && n <= 17 ? { name: `Base Alef papers (${n - 10})`, info: 'Written by someone locked in Level 2.1', color: '#e8e0a8' } : { name: `Torn notebook page (${token.slice(5)})`, info: 'Someone wrote this in a hurry', color: '#e8dcc0' } }
   if (token === 'wheat_sheaf') return { name: 'Golden Wheat Sheaf', info: 'Reaped from Level 10 fields · Grind at the Windmill Quern', color: '#ffd36a' }
   if (token === 'flour_sack') return { name: 'Sack of Fresh Flour', info: 'Ground Backrooms grain · Bake at the Farmhouse Hearth', color: '#f5f6fa' }
