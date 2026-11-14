@@ -75,12 +75,12 @@ function layRoom(ctx, seed, info) {
   ROOMS.set(info.id, { made, info });
 }
 export function tick(ctx) {
-  const s = ctx.place.state, players = ctx.place.players.filter((p) => p.feetPosition);
+  const s = ctx.place.state, players = [...ctx.place.players, ...ctx.query({ tags: ["helper"] })].filter((p) => p.feetPosition);
   if (!s.l109seed) s.l109seed = 1 + Math.floor(ctx.random() * 2e9);
   const seed = s.l109seed;
   if (!ctx.place.objects["l109-hum"]) ctx.spawn("l109-hum", { audience: "all", audio: { clip: "cdn/ambience-hospital-corridor-air-handler-ventilation-distant-loop.mp3", loop: true, gain: 0.1, spatial: false, bus: "Ambience" } });
   if (!players.length) return;
-  if (!SEGS.size && !s._fresh) for (const o of ctx.query({ anyTags: ["l109-seg", "l109-room"] })) ctx.destroy(o.id); // a fresh machine: clear what an earlier one laid, then lay again
+  if (!SEGS.size) for (const o of ctx.query({ anyTags: ["l109-seg", "l109-room"] })) ctx.destroy(o.id); // a fresh machine: clear what an earlier one laid, then lay again
   const want = new Map(), keep = new Set(), rooms = new Map();
   const reach = (c, u, span, keepSpan) => { for (let k = Math.floor((u - keepSpan) / SEG); k <= Math.floor((u + keepSpan) / SEG); k++) { const key = segKey(c, k); keep.add(key); if (Math.abs(k * SEG + SEG / 2 - u) <= span && !want.has(key)) want.set(key, { c, k, d: Math.abs(k * SEG + SEG / 2 - u) }); } };
   for (const p of players) for (const at of corridorsAt(seed, p.feetPosition)) {
