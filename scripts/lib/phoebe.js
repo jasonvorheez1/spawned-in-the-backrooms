@@ -26,8 +26,8 @@ const OUTFIT = "/cdn/value.e43b3c8653d59ec8a87df263e493204dce99174142ce49d7deb6f
 export function phoebeSpec(ctx) {
   setStyle(ctx.world.state.bodyStyle) // this script's own copy of the BODIES switch reads the world's setting, not its boot default
   const human = ctx.world.state.bodyStyle === "human" && !!HUMAN
-  const spec = human ? humanPhoebe() : furrySpec(PHOEBE_LOOK) // BODIES human: her human self; furry: the ginger cat in her fitted outfit
-  return { ...spec, human, children: [...(spec.children || []), ...(human ? [] : [{ id: "phoebe-outfit", attachment: { skin: true }, model: OUTFIT }])] }
+  const spec = human ? humanPhoebe() : furrySpec(PHOEBE_LOOK) // BODIES human: her human self; furry: the ginger cat in her fitted outfit. Its hair and skirt are the outfit's own, so the wardrobe's hair and skirt stay off (Shelly Nov 14: two hairs stacked)
+  return { ...spec, human, children: [...(spec.children || []).filter((c) => human || !["cw-hair", "cw-botw"].includes(c.id)), ...(human ? [] : [{ id: "phoebe-outfit", attachment: { skin: true }, model: OUTFIT }])] }
 }
 export function spawnPhoebe(ctx, id, at, yaw, life, pose) {
   if (ctx.getObject(id)) return id
