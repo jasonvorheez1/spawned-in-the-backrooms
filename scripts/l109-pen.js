@@ -67,7 +67,7 @@ export function update(ctx, dt) {
     const m = (mem[f.id] ??= { senseAt: now + ctx.random() * 200 }), pos = f.feetPosition, S = D.sounds[kind], moth = kind === "deathmoth";
     if (f.state.dead || f.state.hp <= 0) { if (!m.died) die(ctx, f, m, kind, now); else if (moth && now - m.died > 1500) ctx.destroy(f.id); continue; }
     if (moth && !m.wings) { m.wings = 1; for (let i = 0; i < 3; i++) { const k = ctx.getObject(`${f.id}/m${i}`); if (k) k.anim.main = { clip: "Flutter", loop: true }; } }
-    if (!moth && pos.y < D.floorY - D.sinkLimit) { f.velocity = { x: 0, y: 0, z: 0 }; f.feetPosition = { x: pos.x, y: D.floorY + 0.1, z: pos.z }; continue; } // never under the hospital floor
+    if (!moth && !f.state.b3 && pos.y < D.floorY - D.sinkLimit) { f.velocity = { x: 0, y: 0, z: 0 }; f.feetPosition = { x: pos.x, y: D.floorY + 0.1, z: pos.z }; continue; } // never under the hospital floor
     if (now >= m.senseAt) { m.senseAt = now + 220; m.prey = sense(ctx, f, K, pos, players); if (m.prey) m.last = { x: m.prey.p.feetPosition.x, z: m.prey.p.feetPosition.z, at: now }; }
     const shot = shotAt(f.state, now); if (shot && !m.prey) m.last = { x: shot.x, z: shot.z, at: now };
     const prey = m.prey && ctx.place.players.includes(m.prey.p) ? m.prey : null;
