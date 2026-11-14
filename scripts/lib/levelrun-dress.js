@@ -1,7 +1,7 @@
 // Level ! dressing: the box shells stay as invisible colliders; real geometry and fitted models stand over them.
 // Gate: place.state.dressV. Bump DRESS_V to re-lay (tagged "lrun-dress" pieces are destroyed first).
 import { CORRIDOR, OBSTACLES } from "./levelrun-mechanics.js";
-export const DRESS_V = 3; // 3: studio-cleaned models, cot with mattress, posters dimmed to paper; 2: 2: dying cold fluorescent tubes break the red every 26 m
+export const DRESS_V = 3; // 3: studio-cleaned models, cot with mattress, posters dimmed to paper; 2: dying cold fluorescent tubes break the red every 26 m
 const GEO = "scripts/levelrun-geo.js", DOOR = "scripts/door-geo.js";
 export const LRUN_MODELS = {
   gurney: "/cdn/value.b1dc5ac5f129a0ca27a2aa8cf1add8087d64608161472c14347ebd5d390680e2.glb", // Tripo + studio clean (weld, smooth, slim, -Z)
@@ -103,7 +103,7 @@ export function dressWorld(ctx) {
   D("lrun-dress-lamp", { feetPosition: { x: AX + 0.15, y: 0, z: -3.85 }, model: { id: M.lamp, forward: "+x" }, layout: fit(0.26, 1.8, 0.26),
     light: { kind: "point", color: "#ffc98a", intensity: 2.2, distance: 8, shadow: { enabled: false } },
     audio: { clip: "cdn/sfx-quiet-electrical-mains-hum-small-room-loop.mp3", loop: true, gain: 0.14, spatial: true, maxDistance: 11 } });
-  D("lrun-dress-cot", { feetPosition: { x: AX - 4.9, y: 0, z: 1.7 }, rotation: { yaw: 90 }, model: M.cot, layout: fit(1.9, 0.56, 0.8) });
+  D("lrun-dress-cot", { feetPosition: { x: AX - 4.9, y: 0, z: 1.7 }, rotation: { yaw: 90 }, model: M.cot, layout: fit(0.95, 0.5, 0.34) });
   D("lrun-dress-crate", { feetPosition: { x: AX - 4.8, y: 0, z: -3.4 }, rotation: { yaw: 12 }, model: M.megcrate, layout: fit(0.5, 0.56, 0.41) });
   D("lrun-dress-kettle", { feetPosition: { x: AX - 4.7, y: 0.56, z: -3.35 }, rotation: { yaw: 40 }, model: M.kettle, layout: fit(0.12, 0.24, 0.12) });
   D("lrun-dress-poster-a", { feetPosition: { x: AX + 2.4, y: 1.05, z: -4.36 }, vector: "<svg viewBox='0 0 120 170' width='0.6m'><rect width='120' height='170' fill='#9d9784'/><rect x='6' y='6' width='108' height='158' fill='none' stroke='#16293f' stroke-width='3'/><text x='60' y='44' text-anchor='middle' font-family='display' font-size='26' font-weight='bold' fill='#16293f'>M.E.G.</text><text x='60' y='78' text-anchor='middle' font-family='sans-serif' font-size='11' fill='#2a2a2a'>IF YOU CAN READ THIS</text><text x='60' y='94' text-anchor='middle' font-family='sans-serif' font-size='11' fill='#2a2a2a'>YOU ARE SAFE.</text><text x='60' y='118' text-anchor='middle' font-family='sans-serif' font-size='10' fill='#7a1a1a'>DRINK WATER. SLEEP.</text><text x='60' y='150' text-anchor='middle' font-family='sans-serif' font-size='8' fill='#555'>Outpost notice 7-B</text></svg>" });
