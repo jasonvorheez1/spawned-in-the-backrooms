@@ -116,3 +116,8 @@ export const ears = {
     ctx.cross(other, dest);
   },
 };
+// where(now): { place: the visited place or null at sea, next: the next place it calls at, left: ms till it moves }
+export function where(now) {
+  const s = schedule(now), sea = V.seaMin * 60000, cyc = sea + V.visitMin * 60000, i = Math.floor(now / cyc);
+  return { place: s.at === "sea" ? null : s.at, next: s.at === "sea" ? V.order[i % V.order.length] : V.order[(i + 1) % V.order.length], left: s.next - now };
+}
