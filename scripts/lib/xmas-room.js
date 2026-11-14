@@ -15,7 +15,7 @@ const geo = (kind, p = {}) => ({ kind: "scripted", script: GEO, params: { kind, 
 const XM = { tree: ["e8e6a110133a8bc174c110b087d37e7f8b7e138fecf2459cc26a46bf61cd4b9d", 1.72, 2.45, 1.66], clock: ["71d4abfce5fc6f32270bd4f4a63d652234cbf80f9de63a8460cb1beeb407ca3e", 0.55, 2.3, 0.63],
   cone: ["09de62b1e201304b36b84af8000ea9c145f4f0e5e3cdd95e886fb96ccd204414", 0.44, 0.7, 0.44], sign: ["f0baaf9a150201f75112b77e87a4c05cd192270d3e2ec29c8a568398010463fa", 0.58, 0.85, 0.46],
   table: ["8834e1bd9471856bfca9f16098f3eb277b66d85f69c8c34b54ebf9f71ccf00e2", 1.08, 0.84, 1.08], house: ["99e79717fed5c6408f94a5f0d230769d4db7a52769c57d0923c8553dbaeaeb04", 0.42, 0.62, 0.5] };
-const XF = {}; // fronts baked to -Z in the cleanup
+const XF = {}; // the cleaned clock mesh faces +X: placed yaw 180 to look into the room
 const mdl = (k) => { const [h, w, y, d] = XM[k]; return { model: { id: `/cdn/value.${h}.glb`, ...(XF[k] ? { forward: XF[k] } : {}) }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y, z: d / 2 } } } }; };
 // a wall slab between two corners (axis-aligned), y0..y1
 const wall = (x0, z0, x1, z1, mat, y0 = 0, y1 = 3, t = 0.2) => ({ feetPosition: { x: (x0 + x1) / 2, y: y0, z: (z0 + z1) / 2 }, primitive: { kind: "box", width: Math.max(t, Math.abs(x1 - x0)), height: y1 - y0, depth: Math.max(t, Math.abs(z1 - z0)) }, material: mat, physics: "static" });
@@ -74,7 +74,7 @@ export function layXmas(ctx) {
   [[R.x0 + 0.3, R.z0 + 0.35, 0, 15.4], [R.x0 + 0.35, R.z0 + 0.6, -90, 13], [R.x1 - 0.35, R.z0 + 0.6, -90, 13]].forEach(([x, z, yw, len], i) => ctx.spawn(`xmas-floorlights-${i}`, { tags: ["xmas"], feetPosition: { x, y: 0.01, z }, rotation: { yaw: yw }, primitive: geo("string", { len }) }));
   lit("xmas-floor-light", dx, 0.3, R.z0 + 7, "#ff3a2a", X.floorLight, 12);
   const ck = { x: R.x1 - 1.4, z: R.z0 + 4 };
-  ctx.spawn("xmas-clock", { tags: ["xmas"], feetPosition: { x: ck.x, y: 0, z: ck.z }, rotation: { yaw: -90, roll: 9 }, ...mdl("clock"), physics: { body: "static", collider: "box" } });
+  ctx.spawn("xmas-clock", { tags: ["xmas"], feetPosition: { x: ck.x, y: 0, z: ck.z }, rotation: { yaw: 180, roll: 9 }, ...mdl("clock"), physics: { body: "static", collider: "box" } });
   lit("xmas-clock-light", ck.x - 0.6, 1.9, ck.z, "#ffbe70", X.clockLight, 4);
   ctx.spawn("xmas-crook", { tags: ["xmas", "container"], feetPosition: { x: ck.x - 0.15, y: 0, z: ck.z + 0.45 }, rotation: { yaw: 90, roll: 14 }, model: { id: "/cdn/value.e1c8a7a67bb1f12a8209b6c5232dcc822b30ee56bb39bd1f1247bd0fc2dad60d.glb" }, physics: { body: "static", collider: "box" }, state: { name: "Candy cane, oddly heavy", verb: "Take", items: "weapon:crook" } });
   [[R.x0 + 2, R.z0 + 2.5, 2.1, true], [R.x0 + 3.2, R.z1 - 2, 1.7, false], [R.x1 - 2.4, R.z1 - 2.5, 2.3, true], [dx - 3, R.z0 + 8, 1.5, true], [dx + 3.4, R.z0 + 2.2, 1.9, false], [R.x0 + 1.2, R.z0 + 9, 2.0, false]].forEach(([x, z, h, hk], i) =>
