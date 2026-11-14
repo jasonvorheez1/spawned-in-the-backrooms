@@ -1,27 +1,27 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8392,
-  "updatedAt": "2026-11-14T18:30:08.138Z",
-  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations, with player state carrying progression, gear, quests and resume location. Per-place simulations build and tick local spaces while shared registries and handlers coordinate navigation, NPCs, combat, inventory and story routes; Level 109 combines seeded hospital rooms and records with a living Doctors' outpost and its Keep It Closed breach story.",
+  "basedOnSpecVersion": 8403,
+  "updatedAt": "2026-11-14T18:46:46.615Z",
+  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations, with player.state carrying progression, gear, quests and resume location. Per-place simulations and terrain generators build local spaces while shared registries and handlers coordinate navigation, NPCs, combat, inventory and story; Level 109's hospital records and Level 26's S.S. Fun society now have room-specific interactive systems, and Level 169 adds a seeded desert terrain destination.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes, anomalies and deterministic dressing; momentsV gates fitted wall moments and room-prop regeneration.",
     "places/bonus (3D) - vaporwave mall with shops, simulated staff, arcade, homes and salon; authored placements live in cells. places/testlab (3D) - Test Range with loot/enemy bays and HIT SQUAD pad.",
     "places/thehub (3D) - tunnel crossroads, keyed destinations, Doorstep Carpet and Camp Amber crews; distinct from Bonus room routing.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office, supplies, encounters and story beats.",
-    "places/level1 + places/level4 + places/level26 (3D) - M.E.G. camps and authored office mazes; Level 26's SS Fun holds cabin 23 and Ted Kowalski's collectible voiced tape.",
+    "places/level1 + places/level4 + places/level26 (3D) - M.E.G. camps and authored office mazes; Level 26's S.S. Fun holds cabin 23 and the Partygoer decks, roles and lockdown system.",
     "places/level9 + places/level11 + places/level61 (3D) - seeded Suburbs, Level 11 city/Base Beta/strip mall/clinic and Chapter 2 entry trail, and Snackrooms food court/M.E.G. checkpoint with simulated staff and Clippers lounge.",
     "places/level70 (3D) - winter market/civic town, stalls, hotel, office, pump and Dry Pipes landmarks; sim composes civic, wild and life systems.",
-    "places/level109 + places/level114 (3D) - seeded hospital/B3 with Entity 19 exposure, Back OS record terminals, Doctors' outpost rounds/triage/alerts and Keep It Closed; Sweet Dreams is a switch-lit Smiler-threatened bedroom routing sleeper."
+    "places/level109 + places/level114 (3D) - seeded hospital/B3 with Entity 19 exposure, Back OS room terminals, Doctors' outpost rounds/triage/alerts and Keep It Closed; Sweet Dreams is a switch-lit Smiler-threatened bedroom routing sleeper. places/level169 (3D) - heightmapped desert terrain, north-running wash track and 48-hour day."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input actions; fall-guard runs before locomotion/player behavior and scripts/e19.js updates player disease state.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - local config, authored placements and place generation/tick behavior; selected sims compose shared helpers, including Level 70 civic layout/tick.",
+    "places/level169/config.yaml + scripts/terrain169.js - seeded heightmap, terrain materials, desert atmosphere and default spawn; generator exports height/material functions and the Ferry's-house landmark coordinate.",
     "scripts/main-menu.js + main-menu-ui.js + intake/tutorial scripts + scripts/ui.js - title/settings/pause, character creation and arrival; lifecycle/tutorial beats and composed HUD/menus.",
     "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, wake/resume, aiming, third-person view and per-place zone resolution.",
     "places/main/sim.js + scripts/lib/maze.js + xmas-room.js + level0-moments.js - Level 0 layout and deterministic maze dressing/encounters; moments version gates rebuilds.",
     "places/thehub/sim.js + scripts/lib/thehub.js + hub-people.js + hub-dress.js + scripts/thehub-geo.js - Hub topology, doors, dressing and crew; Phoebe shares scripts/lib/phoebe.js dressing.",
-    "scripts/talk.js + scripts/quest-marker.js + scripts/lib/quests.js and level quest modules - dialogue, quest journal/markers and shared advancement/reward rules.",
     "places/level109/sim.js + scripts/lib/level109.js + l109-b3.js + l109-rooms.js + l109-outpost.js + l109-life.js - seeded hospital, room dressing, B3 and outpost actors/behavior; places/level114/sim.js owns Sweet Dreams."
   ],
   "shared": [
@@ -31,8 +31,8 @@
     "scripts/lib/carry.js + scripts/lib/companion.js - threshold-crossing transfer of held props and nearby following companions; companion recruitment, orders, perks and lifecycle.",
     "scripts/lib/hub.js + preload data/scripts and scripts/lib/thehub.js + scripts/lib/hubkeys.js - separate Bonus shared-room routing and The Hub tunnel/door/key registry.",
     "scripts/lib/containment.js - Level 109 persistent pen/loose-foe, open-door and remembered-door-position books; sim supplies room IDs/boxes and spawnFoe adapter.",
-    "scripts/lib/blast-fx.js - shared scaled blast effects/feel for scripts/nade.js, scripts/b3-explosive.js and Firesalt ingot detonation in scripts/player.js.",
-    "scripts/lib/hit-squad.js - faction squad definitions and shared sendSquad spawner, used by the player infamy response and places/testlab/sim.js HIT SQUAD pad."
+    "scripts/lib/pg-society.js + scripts/lib/data/pg-society.yml - Level 26 Partygoer role/routes, sight-bound relay and deck alert/search/recovery; scripts/partygoers.js reads the rules and owns actor behavior and bait traps.",
+    "scripts/lib/os.js + scripts/lib/l109-os.js - shared Back OS control registry/permissions and Level 109 terminal-specific actions; scripts/os.js dispatches controls and os-ui.js renders them."
   ],
   "notableExports": [
     "scripts/lib/places.js - PLACES, PLACE_NAMES, PLACE_LABELS, LEVEL_TITLES.",
@@ -41,21 +41,21 @@
     "scripts/lib/companion.js - PERKS, perkOf, isMine, followersOf, loyaltyScale, whyNot, recruit/adopt/dismiss/order, weapon handoff, tick, bring; carry.js - carryAcross.",
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - shared journal/advancement/reward helpers; containment.js - containment state/pen/door operations; ch2-quest.js - Chapter 2 stages and dialogue helpers.",
-    "scripts/lib/level109-quest.js - QID, QNAME, BREACH, Q, questTick, dialogue handler/choices; scripts/lib/l109-life.js - outpostLife; scripts/lib/l109-outpost.js - stopsOf.",
-    "scripts/lib/l109-kit.js - KIT, medLook; scripts/lib/janine-tape.js - JANINE_TAPE; scripts/player.js - HOLO (including ted246), holoEnd; scripts/lib/fp-gun.js - FP_GUN, firstPersonGun, firstPersonTuning; scripts/lib/hit-squad.js - SQUAD_KEYS, sendSquad."
+    "scripts/lib/level109-quest.js - QID, QNAME, BREACH, Q, questTick, dialogue handler/choices; scripts/lib/l109-life.js - outpostLife; scripts/lib/l109-outpost.js - stopsOf; scripts/lib/l109-os.js - hospitalControl.",
+    "scripts/lib/pg-society.js - deckOf, yawOf, roleOf, deck, lockedDown, relay, suspect, deckTick, think; scripts/terrain169.js - HOUSE, heightAt, materialAt; scripts/lib/os.js - CTRL, OPENS, controlOf, canUseControl."
   ],
   "ownership": [
-    "scripts/player.js + scripts/lib/save.js - durable player.state progression, XP/level, health/sanity, inventory/equipment and ammo, needs, combat, access, appearance, saved place/position, currency, karma/rep and homeKeep; player.js also owns carried holotapes and active holoPlay.",
+    "scripts/player.js + scripts/lib/save.js - durable player.state progression, XP/level, health/sanity, inventory/equipment and ammo, needs, combat, access, appearance, saved place/position, currency, karma/rep and homeKeep; player.js owns player action dispatch.",
     "scripts/lib/stats.js - derived attributes, skills and combat/carry stats; scripts/stats-ui.js formats derived stats.",
-    "scripts/critter.js - player look and creator/wardrobe/salon state; owns the transient Squirt Gun backpack tank visual parented to the player body root, and clears expired groove/gesture animation channels.",
+    "scripts/critter.js - player look and creator/wardrobe/salon state; owns the transient Squirt Gun backpack tank visual parented to the player body root and clears expired groove/gesture animation channels.",
     "scripts/lib/seat.js - player.state.sit; scripts/lib/body3.js - session.ready3 and transient melee-carry pose.",
-    "scripts/lib/quests.js + scripts/lib/dina-quest.js - player quest journal/tracking/completion/claim keys; Dina trail stages, diary/cut/clue fields and migration.",
+    "scripts/lib/quests.js + scripts/lib/dina-quest.js - player quest journal/tracking/completion/claim keys; Dina trail stages, diary/cut/clue fields and migration; level quest modules own their route-specific stages/outcomes.",
     "scripts/lib/errands.js - player.state.errands, errHints and journal entries; completion updates currency, payout, reputation and hints; field-errands.js + hub-errands.js own confirmation maps.",
-    "Level quest modules (including level8/10/11/21/61, level31, level70, remodel, ch2 and zenith) - level-specific stages/routes/outcomes; ch2-quest.js owns Chapter 2 progress and clues.",
-    "scripts/lib/companion.js - NPC follow/loyalty/perk/order/weapon state plus player.state.crew; scripts/lib/carry.js records player.state.xferTo; Level 109 sim/containment own hospital seed, B3 and pen state, l109-life owns session.l109life, and outpost breach outcome is place.state.l109breachEnd."
+    "scripts/lib/companion.js - NPC follow/loyalty/perk/order/weapon state plus player.state.crew; scripts/lib/carry.js records player.state.xferTo.",
+    "Level 109 sim/containment own hospital seed, B3 and pen state; l109-life owns session.l109life; l109-os writes place.state.l109StockUnlocked and player terminal notices/payouts. pg-society owns place.state.pgAlert/pgLiftLocked/pgTraps and per-Partygoer session memory; terrain169 functions are stateless seeded terrain outputs."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest and CCTV behaviors; scripts/interact.js handles tagged-seat selection and seatTick. places/level26/cells/x0z0.scene container items holo:ted246 → scripts/player.js takeToken adds player.state.holotapes; loot-ui HALOGEN Tapes action → HOLO.ted246 CDN audio playback and holoEnd.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest and CCTV behaviors; scripts/interact.js handles tagged-seat selection and seatTick.",
     "templates/player.js runs scripts/fall-guard.js update before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 uses camera aim + combat-anims.yml for third-person pose.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; periodic saves exclude intake, bonus and tutorial0.",
@@ -64,19 +64,19 @@
     "scripts/main-menu-ui.js settings → scripts/main-menu.js handler → player.state.uiPrefs; scripts/ui.js composes preferences and quest/feed/HUD panels; scripts/player.js notices → scripts/stats.js feed presentation.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js offers place-matched jobs; carried items/kills/world events advance errands → journal, player.state.errands/qtrack and payouts.",
     "scripts/talk.js → dialogue.js rootChoices and quest handlers; level quest modules call scripts/lib/quests.js → journal/feed/reputation/reward state; scripts/lib/data/dlg-*.yml supplies character-specific choices and barks.",
-    "scripts/lib/ch2-quest.js stages/markers → Level 11 clues, Gamma/IS LAB routes and Level !; Level ! rescue + Phoebe completion unlock Chapter 3/lrun-to-l109; Level 109 EXIT → Level 114 Sweet Dreams, and the bedroom far door or bed-sleep wakes to Level 0.",
-    "places/level109/sim.js 500ms tick → scripts/lib/l109-life.js outpostLife; l109-outpost.yml rounds/alert stops feed existing scripts/meg-agent.js NPC brains, while local triage, loose-threat alerts, post-alert aftercare, opened-pen-door checks and chatter use shared life state.",
-    "scripts/lib/level109-quest.js writes player quest route and place.state.l109breachEnd → l109-outpost.js rebuilds the whiteboard and l109-life.js selects chatter.yml open/clear/lure/stable exchanges; l109-rooms.js HOSP terminals → scripts/containment.js."
+    "scripts/lib/ch2-quest.js stages/markers → Level 11 clues, Gamma/IS LAB routes and Level !; Level ! rescue + Phoebe completion unlock Chapter 3/lrun-to-l109; Level 109 EXIT → Level 114 Sweet Dreams, and the bedroom far door or bed-sleep wakes onward.",
+    "places/level109/sim.js 500ms tick → scripts/lib/l109-life.js outpostLife; l109-outpost.yml rounds/alert stops feed scripts/meg-agent.js NPC brains, while triage, loose-threat alerts, aftercare and pen-door checks update local scenes and chatter.",
+    "Level 109 terminal interaction in scripts/l109-use.js → computer.press → scripts/os.js controlOf/permissions and scripts/lib/l109-os.js hospitalControl; host + terminal mode scope actions to local room stock, triage status and printed pages, with l109-rooms applying persisted stock unlocks as rooms spawn."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; menus/staff vary by venue and Level 6.1 fixtures are fitted separately.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes a table with separately fitted chairs.",
-    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js - weapon stats/variants share combat; per-weapon sound/rack/reload fields resolve through sounds.yml, with Squirt Gun liquid effects and ballistic/melee behavior varying by weapon.",
-    "art/cigs/build.py + art/fnv/build.py + art/xmas-clean/build.py and NIF converters, plus art/cat-wardrobe/fit.py + tailclear.py and art/level70-stall/parts.py - fitted GLBs/prop catalogs, body-specific cat garments with tail clearance, and custom stall parts.",
+    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js - weapon stats/variants share combat; per-weapon sound/rack/reload fields resolve through sounds.yml, with Squirt Gun liquid effects and ballistic/melee variants.",
+    "art/cigs/build.py + art/fnv/build.py + art/xmas-clean/build.py and NIF converters, plus art/cat-wardrobe/fit.py + tailclear.py + art/level70-stall/parts.py - fitted GLBs/prop catalogs, body-specific cat garments with tail clearance, and stall parts.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "Level 01/Zenith and Level 1 geometry builders - authored station and car park/service geometry; corridor materials, pipes, fixtures and lights vary deterministically per cell.",
-    "scripts/lib/l109-rooms.js + l109-outpost.js + l109-life.js - Level 109 rooms use seeded per-room dressing and abandoned-room last-shift props; the Doctors' cast shares round/alert schedules with behavior varying by role, triage, threats, dialogue and aftercare."
+    "scripts/lib/l109-rooms.js + l109-outpost.js + l109-life.js, and scripts/partygoers.js + pg-society.js - Level 109 seeded room dressing/last-shift props and role-based Doctors' schedules; Level 26 Partygoers vary by deck role/route, alert phase and traps."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -89,8 +89,8 @@
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together; place.state.hubV gates shell/door/plaque rebuilds.",
     "Hub keyed doors consume the matching player.state.hubKeys key; t10-a3 maps to level11 and hubTenthCrossed is set only after a qualifying clue and successful crossing; Level 1's route is a separate threshold pair.",
-    "Level 109 place.state.l109seed fixes irregular corridor/room rolls across reloads; containment books are keyed by room ID and remember pen-door positions. Entity 19 rises in player.state.e19 only in unpurged hazard boxes, persists outside them and decays when clean.",
+    "Level 109 place.state.l109seed fixes irregular corridor/room rolls; containment books are keyed by room ID and remember pen-door positions. Local terminal host/mode and roomId must stay aligned: stock unlock state is keyed by room ID and also unlocks containers spawned later.",
     "Level 109 outpost life is gated to streamed outpost geometry and nearby players; l109life is session-local, while breach outcome is place.state.l109breachEnd. Staff rounds use room-local metres converted by stopsOf, then shared NPC route handling.",
-    "Level 109 relay can leave players without floor briefly: sim lays a temporary invisible static slab under players when rebuilding segments; scripts/player.js updates savePlace/savePos only while grounded, so mid-fall coordinates do not become resume positions."
+    "Level 26 society state is split by deck in place.state.pgAlert; Partygoer social memory is session-local, bait records are keyed by route stop, and pgLiftLocked controls only the lower lift. Level 169's terrain generator and config use x/z metres and deterministic seed offsets; HOUSE is at (18, -620), with its wiki-scale travel distance compressed."
   ]
 }
