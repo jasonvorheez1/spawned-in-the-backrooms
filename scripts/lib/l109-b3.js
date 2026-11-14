@@ -72,7 +72,8 @@ export function buildB3(ctx, seed) {
   sp("slab", { feetPosition: P(-5, 0, 14), physics: "static", primitive: { kind: "box", width: 0.8, height: 0.9, depth: 2.0 }, material: { color: "#a7aca6", metalness: 0.85, roughness: 0.3 } });
   // the armory: chain-link cage across the back, rack, launcher, the rocket crate, the cache's last tape
   // Broken cage panels provide cover with a clear route through the middle.
-  for (const [i, x] of [-6.7, 6.7].entries()) sp("cover" + i, { feetPosition: P(x, 0, 39), physics: "static", primitive: { kind: "box", width: 2.8, height: 1.2, depth: 0.35 }, material: { color: "#626b60", metalness: 0.55, roughness: 0.6 } });
+  // cover: road barriers M.E.G. dragged down here, two per side (Shelly: nothing blocky)
+  for (const [i, x] of [-6.7, 6.7].entries()) for (const k of [0, 1]) sp("cover" + i + (k ? "b" : ""), { feetPosition: P(x + (k ? 0.95 : -0.95), 0, 39 + (k ? 0.15 : -0.1)), rotation: { yaw: k ? 6 : -4 }, model: { id: BARRIER }, layout: { box: { min: { x: -0.95, y: 0, z: -0.25 }, max: { x: 0.95, y: 1.0, z: 0.25 } } }, physics: "static" });
   sp("stencil2", { feetPosition: P(0, 1.95, 49.78), rotation: { yaw: yawFor(0, -1) }, castShadow: false, vector: "<svg viewBox='0 0 300 60' width='1.4m'><text x='150' y='46' text-anchor='middle' font-family='display' font-size='44' font-weight='900' fill='#e6e0c8' fill-opacity='0.85'>M.E.G. ARMORY 109</text></svg>" });
   sp("crate", { tags: ["container"], feetPosition: P(6.8, 0, 47.4), rotation: { yaw: 12 }, model: { id: CRATE }, layout: { box: { min: { x: -0.5, y: 0, z: -0.35 }, max: { x: 0.5, y: 0.65, z: 0.35 } } }, physics: "static",
     state: { items: "rockets,rockets,rockets,ammo", name: "M.E.G. munitions crate", verb: "Search", kind: "metal" } });

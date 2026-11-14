@@ -163,10 +163,12 @@ export function tick(ctx) {
       behavior: ["scripts/humanoid-locomotion.js", "scripts/b3-survivor.js"], state: { name: "B3 survivor", hp: 260, maxHp: 260, attackOnSight: true, wear: look },
       children: [{ id: "launcher", parent: "b3-survivor", attachment: { bone: "RightHand" }, ...weaponBody("m72") }] });
   }
-  if (s.b3DressV !== 1 && ctx.place.objects["b3-hall"]) { // Shelly Nov 14: board gone, the open armory lived in
+  if (s.b3DressV !== 2 && ctx.place.objects["b3-hall"]) { // Shelly Nov 14: board gone, the open armory lived in
     for (const id of ["b3-rack", "b3-arm0.55", "b3-arm1.15", "b3-m72"]) if (ctx.getObject(id)) ctx.destroy(id);
     for (const o of ctx.query({ tags: ["b3-dress"], radius: 1e6, center: B3O })) ctx.destroy(o.id);
-    dressB3(ctx); s.b3DressV = 1;
+    for (const id of ["b3-cover0", "b3-cover1"]) if (ctx.getObject(id)) ctx.destroy(id);
+    buildB3({ spawn: (id, spec) => { if (/^b3-cover[01]b?$/.test(id)) ctx.spawn(id, spec); } }, seed);
+    dressB3(ctx); s.b3DressV = 2;
   }
   if (!s.b3gun) { s.b3gun = 1; placeLauncher(ctx); } // the M72 lies in the cage once in the room's life
   if (!ctx.place.objects["b3-stairdoor"]) { const d = stairDoorAt(seed); ctx.spawn("b3-stairdoor", { audience: "all", tags: ["usable", "l109-b3"], feetPosition: { x: d.x + 0.12, y: 0, z: d.z - DOOR_W / 2 }, rotation: { yaw: yawB3(0, 1) }, physics: { body: "static", collider: "box" }, material: { pbr: true }, behavior: "scripts/b3-use.js",
