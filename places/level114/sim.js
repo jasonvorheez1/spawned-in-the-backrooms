@@ -2,14 +2,14 @@
 // place.state.lit: the switch. Lit: Smiler eyes glint under the bed and in the closet gap. Dark: a Smiler comes out after DARK_S.
 // Now and then a counterpart stands at the window. The void runs south; a lone door at z 62 lets you out (scripts/l114-use.js).
 export const cadence = "250ms";
-const V = 4, H = 2.5, W = 2, D = 2.25, DOOR = { x: 1.1, w: 0.9, h: 2.05 }, WIN = { x: -0.6, w: 1.1, y0: 0.9, y1: 1.9 };
+const V = 5, H = 2.5, W = 2, D = 2.25, DOOR = { x: 1.1, w: 0.9, h: 2.05 }, WIN = { x: -0.6, w: 1.1, y0: 0.9, y1: 1.9 };
 const DARK_S = 7, BITE = 18; // my picks: seconds of dark before a Smiler bites, and its bite
 const WALL = { texture: "cdn/texture-faded-pale-blue-childhood-wallpaper-tiny-yellow-stars-water-stained.png", wrap: "repeat", repeat: [1, 1], roughness: 0.9 };
 const CARPET = { texture: "cdn/texture-worn-beige-bedroom-carpet-fibres-faint-stains.png", wrap: "repeat", repeat: [1, 1], roughness: 1 };
 const CEIL = { texture: "cdn/texture-white-popcorn-ceiling-stippled-plaster-yellowed.png", wrap: "repeat", repeat: [1, 1], roughness: 1 };
 const MOULD = "/cdn/value.422c28d69f13a7cfa68cefd16f1721d1a2098da79925a424cfbf24473e4d4b66.png";
 const F = (id) => ({ // furniture.yml rows reused (Shelly: every asset is free to reuse)
-  bed: { id: "/cdn/value.24ed070918486558801bbbd9e5e4ced359d39ee50d561bc0fb2430030a04bdef.glb", size: [1.0, 0.95, 2.0] },
+  bed: { id: "/cdn/value.5239b8cb68fc99fcb25ade25a8076a2a7c4e9dcd392b70416cd1e3417b0a320d.glb", size: [1.1, 0.95, 2.02] }, // art/l114bed/build.py,
   dresser: { id: "/cdn/value.e231c093c2aceb9bfda1e65b5a29ffad0b450c23783d96cfe12892823a42a328.glb", forward: "-z", size: [1.2, 0.8, 0.48] },
   tv: { id: "/cdn/value.30ae8e4fd0c2e307d21943aa6fa38f3f816fcc7a10335f5a15ff865b00b84ce4.glb", forward: "+x", size: [0.9, 1.0, 0.5] },
   shelf: { id: "/cdn/value.918584eed8336eda888580753019763471fcce0adcaf2bc66def78f53ae3fad0.glb", forward: "+x", size: [0.8, 1.7, 0.38] },
