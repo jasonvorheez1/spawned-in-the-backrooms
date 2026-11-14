@@ -10,6 +10,7 @@ import { heard } from './lib/hear.js'
 import { skillsOf } from './lib/stats.js'
 import { initHacking, guessPassword, activateBracket } from './lib/fallout-hack.js'
 import { setSedcoStep } from './lib/level11-quests.js'
+import { maybeUnlockStage4 } from './lib/ch2-quest.js'
 
 const BOOT_MS = 3200
 const APPS = ['ctrl', 'desktop', 'mail', 'db', 'files', 'forum', 'term', 'about', 'notes', 'bin', 'hack']
@@ -139,7 +140,17 @@ function act(ctx, s, d) {
     }
     return
   }
-  if (d.k === 'file') { s.os = { ...os, sel: String(d.v || '') }; return }
+  if (d.k === 'file') {
+    const fname = String(d.v || '')
+    s.os = { ...os, sel: fname }
+    if (fname === 'sunderland_intake.txt' && os.user === 'admin' && (s.ch2Q ?? 0) === 3 && !s.ch2Archive) {
+      s.ch2Archive = 1
+      s.knowsMike = 1
+      maybeUnlockStage4(ctx, s)
+      note(ctx, s, s.ch2SignalDecoded ? 'Base Gamma intake record confirmed: red hospital door unlocked.' : 'Gamma intake record confirmed (Mike Sunderland). Decode IS LAB bench in Level 11.')
+    }
+    return
+  }
   if (d.k === 'bin') { s.os = { ...os, sel: String(d.id || '') }; return }
   if (d.k === 'note') { s.osNote = String(d.v ?? '').slice(0, 800); s.os = { ...os, saved: ctx.now() }; return }
   if (d.k === 'cmd') {

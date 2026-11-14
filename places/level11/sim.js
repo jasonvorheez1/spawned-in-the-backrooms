@@ -1898,12 +1898,24 @@ export function tick(ctx) {
   restyleSigns(ctx, "level11"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return;
-  if (!ctx.place.objects?.["l11-dina-cache"] || !ctx.place.objects?.["l11-to-levelrun"]) {
+  if (!ctx.place.objects?.["l11-dina-cache"] || !ctx.place.objects?.["l11-to-levelrun"] || !ctx.place.objects?.["l11-lab-bench"] || !ctx.place.objects?.["l11-sunderland-satchel"]) {
     const MALL_X = -24, MALL_Z = 36, Y0 = 0.36;
+    const BARRICADE_X = -32, BARRICADE_Z = 12;
     if (!ctx.place.objects?.["l11-dina-cache"]) ctx.spawn("l11-dina-cache", {
       tags: ["usable"], feetPosition: { x: MALL_X - 1.45, y: Y0 + 1.05, z: MALL_Z - 7.1 }, rotation: { yaw: 20 },
       primitive: { kind: "box", width: 0.42, height: 0.18, depth: 0.28 }, material: { color: "#4e5642", roughness: 0.7 },
       behavior: "scripts/l11-ch2-drop.js", state: { kind: "dina-clinic-cache", name: "Dina's Sealed Clinic Pouch", verb: "Inspect Dead-Drop" },
+    });
+    if (!ctx.place.objects?.["l11-lab-bench"]) ctx.spawn("l11-lab-bench", {
+      tags: ["usable"], feetPosition: { x: MALL_X - 1.2, y: 1.02, z: MALL_Z - 1.15 }, rotation: { yaw: 180 },
+      primitive: { kind: "box", width: 0.56, height: 0.3, depth: 0.36 }, material: { color: "#3d464d", roughness: 0.45, metalness: 0.35 },
+      behavior: "scripts/l11-ch2-drop.js", state: { kind: "lab-signal-bench", name: "IS LAB Carrier Receiver", verb: "Inspect Bench" },
+      children: [{ offset: { x: 0.18, y: 0.17, z: 0.14 }, primitive: { kind: "box", width: 0.08, height: 0.05, depth: 0.04 }, material: { color: "#7fe0b0", emissive: "#48c78e", emissiveIntensity: 1.3 } }],
+    });
+    if (!ctx.place.objects?.["l11-sunderland-satchel"]) ctx.spawn("l11-sunderland-satchel", {
+      tags: ["usable"], feetPosition: { x: BARRICADE_X + 1.1, y: 0.1, z: BARRICADE_Z - 3.3 }, rotation: { yaw: -35 },
+      primitive: { kind: "box", width: 0.48, height: 0.22, depth: 0.34 }, material: { color: "#5c4d3c", roughness: 0.85 },
+      behavior: "scripts/l11-ch2-drop.js", state: { kind: "sunderland-satchel", name: "Wedged Field Satchel", verb: "Search Satchel" },
     });
     if (!ctx.place.objects?.["l11-from-levelrun"]) ctx.spawn("l11-from-levelrun", { feetPosition: { x: MALL_X - 3.6, y: Y0 + 0.1, z: MALL_Z - 5.0 }, rotation: { yaw: -90 } });
     if (!ctx.place.objects?.["l11-to-levelrun"]) ctx.spawn("l11-to-levelrun", {

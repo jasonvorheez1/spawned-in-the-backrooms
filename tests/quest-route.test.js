@@ -38,3 +38,8 @@ test('Snackrooms guidance points to the Level 6 checkpoint only with working nig
   expect(mark('level61', 'level6', exits, { nvg: true, battery: 80 })).toMatchObject({ exit: 'l61-to-l6' })
   expect(mark('level61', 'level6', exits, { nvg: true, battery: 0, nvgSpare: 1 })).toMatchObject({ exit: 'l61-to-l6' })
 })
+
+test('Level 34 sewer routing connects Level 11, Level 9, and Level 7', () => {
+  expect(mark('level11', 'level34', objects('sewer11-grate'))).toMatchObject({ exit: 'sewer11-grate', via: 'level34' })
+  expect(mark('level34', 'level11', objects('l34-up-l11'))).toMatchObject({ exit: 'l34-up-l11', via: 'level11' })
+})
