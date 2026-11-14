@@ -44,7 +44,7 @@ function usePart(K, p, a, b, yaw = 0, st = {}, o = {}) {
   });
 }
 // a lore terminal on its own desk: prints one of the Doctors' Entity 19 records (pages.yml 110-116, Shelly Nov 14)
-function loreTerm(K, a, b, yaw, page, name) { put(K, "desk", a, b, yaw); usePart(K, { part: "terminal", on: !K.R.abandoned }, a, b, yaw, { kind: "terminal", mode: "lore", page, roomId: K.R.id, name, verb: "Read Records", info: "recovered email & logs" }, { up: 0.76, lift: 0.22 }); }
+function loreTerm(K, a, b, yaw, page, name) { put(K, "desk", a, b, yaw); usePart(K, { part: "terminal", on: !K.R.abandoned }, a, b, yaw, { kind: "computer", host: `HOSP-${K.R.id}-${page}`.toUpperCase(), lock: "", name, verb: "Log in", info: "Back OS · Backmail & recovered records" }, { up: 0.76, lift: 0.22, spec: { tags: ["usable", "computer"], behavior: "scripts/computer.js" } }); } // Back OS (Shelly Nov 14): the HOSP profile in data/os.yml
 // a piece of the medical kit (scripts/l109-med-geo.js)
 const TIP_LIFT = 0.32; // tuned: a tipped stand turns about its feet, so its rolling base (r 0.26-0.3) swings under the floor; lift it by that radius
 function part(K, p, a, b, yaw = 0, o = {}) { const R = K.R;
