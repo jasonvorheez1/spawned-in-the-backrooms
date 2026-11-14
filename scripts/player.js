@@ -71,6 +71,7 @@ const ZONE_RESOLVERS = {
   level27: () => 'l27_springs',
   level34: () => 'l34_sewer',
   levelrun: () => 'lrun_halls',
+  level109: () => 'l109_halls',
   level7: (_ctx, x, z) => (Math.hypot(x - 46, z + 120) < 34 ? 'l7_seawatch' : Math.hypot(x + 70, z + 95) < 55 ? 'l7_fort' : z > -4 && Math.hypot(x, z) < 12 ? 'l7_room1' : z > -36 && Math.abs(x) < 10 ? 'l7_pier' : 'l7_sea'),
   level1: (_ctx, x, z) => 'l1_' + zoneAt1(x, z),
   level2: (_ctx, x, z) => 'l2_' + zoneAt2(x, z),
@@ -156,6 +157,7 @@ const DOWN_MS = 3200 // how long you watch yourself lie there (Savi's pick); cam
 // checkpoints: each place's safe spawn plus every doorway's arrival marker; you wake at the nearest one
 const CHECKS = { main: ['main-from-l1'], level1: ['l1-from-main', 'l1-from-l2'], level2: ['l2-from-l1', 'l2-from-l3', 'l2-from-l21'], level21: ['l21-from-l2', 'l21-from-l8'], level3: ['l3-from-l2', 'l3-gamma-door', 'l3-lift-arrive', 'l3-from-l5'], level4: ['l4-lift-arrive', 'l4-from-l5'], level5: ['l5-from-l3', 'l5-from-l4', 'l5-from-l6', 'l5-lobby'], level6: ['l6-from-l5', 'l6-from-l7', 'l6-from-l61'], level61: ['l61-from-l6', 'l61-from-l4', 'l61-arrive'], level11: ['l11-from-l61', 'l11-spawn'], level7: ['l7-from-l6', 'l7-seawatch-spawn', 'l7-fort-spawn'], level8: ['l8-from-l7', 'l8-from-camp', 'l8-from-l21'], level9: ['l9-from-l8', 'l9-from-hub'], gamma: [] }
 import { slotInfo as l109Slot, corridor as l109Cor } from './lib/level109.js'
+const L109_DRAIN = { arrival: 0, arrivalR: 60, halls: 0.035 } // sanity per second in Level 109: none near the arrival corridor, slow elsewhere (review: 47% to 9% in 5 min was too fast)
 const L109_WAKE = { in: 3.5, along: 0.8 } // metres in from the safe supply room's door (ns0_n1p): where a Level 109 death wakes you
 function nearestCheckpoint(ctx, at) {
   if (ctx.self.place === 'level109') { const seed = ctx.place.state?.l109seed; if (seed != null) { const i = l109Slot(seed, l109Cor(seed, 'ns', 0), -1, 1); return { pos: { x: i.door.x + L109_WAKE.in, y: 0.1, z: i.door.z + L109_WAKE.along }, rot: -90 } } }
@@ -1522,6 +1524,7 @@ function tickStats(ctx, t, moving) {
     level3: L3.sanityDrain[zone.slice(3)],
     gamma: L3.sanityDrain[zone.slice(3)],
     level8: 0.14,
+    level109: Math.hypot(p.x - 8, p.z - 20) < L109_DRAIN.arrivalR ? L109_DRAIN.arrival : L109_DRAIN.halls,
     level21: L21.sanityDrain[zone.slice(4)],
   }[ctx.self.place] ?? L.sanityDrain[zone]) ?? 0.12
   if (w.light && (zone === 'dark' || zone === 'red' || zone === 'l3_dark')) drain *= 0.4
