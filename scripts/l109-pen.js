@@ -57,7 +57,7 @@ export function update(ctx, dt) {
   const players = ctx.place.players.filter((p) => p.feetPosition);
   const foes = ctx.query({ tags: ["pen-foe"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
   if (!players.length) return;
-  { const me = ctx.self.feetPosition; let best = null, bd = 1e9; for (const p of players) { const d = flat(p.feetPosition, me); if (d < bd) { bd = d; best = p; } }
+  if (now > (ses.followAt ?? 0)) { ses.followAt = now + 1000; const me = ctx.self.feetPosition; let best = null, bd = 1e9; for (const p of players) { const d = flat(p.feetPosition, me); if (d < bd) { bd = d; best = p; } }
     if (best && bd > D.mgrFollow) ctx.self.feetPosition = { x: best.feetPosition.x, y: 0, z: best.feetPosition.z }; } // stay where the world ticks
   const noise = ses.noise && now - ses.noise.at < 1500 ? ses.noise : null;
   const live = new Set();
