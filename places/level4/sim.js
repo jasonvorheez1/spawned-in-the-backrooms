@@ -32,9 +32,14 @@ const FITM = { // reused fitted models (Level 5 office kit) for Level 4's open f
   printer: "/cdn/value.761b50dce26eee795c80dff616b78a4c7951f584c809768ccfe77f3bb50ccafa.glb",
   cabinet: "/cdn/value.4a56fcfeb8b5614f78843431da5fd4ef6eb6b8549c86a730ecd317049e04c05b.glb",
   crt: "/cdn/value.30ae8e4fd0c2e307d21943aa6fa38f3f816fcc7a10335f5a15ff865b00b84ce4.glb",
+  panel: "/cdn/value.d591f5cb3377610f5d5845dfb1a3c32e6e7dbe3d839654e08d35730a88f341d1.glb", // fabric cubicle panel on steel feet (l0-dress.yml), built along its z
 };
+// an island's fabric walls as real panels: the spine (two 1.65 m) and six wings (0.82 m), local to the partition object
+const PANELS = [[-0.825, 0, 0, 1.65, 1.25, 0.22], [0.825, 0, 0, 1.65, 1.25, 0.22], ...[-1.65, 0, 1.65].flatMap((x) => [[x, 0.44, 90, 0.82, 1.15, 0.14], [x, -0.44, 90, 0.82, 1.15, 0.14]])];
+const panelKids = () => PANELS.map(([x, z, yaw, w, h, d]) => ({ feetPosition: { x, y: 0, z }, rotation: { yaw }, castShadow: false, visibleRange: { max: 50 }, model: { id: FITM.panel, forward: "+x" }, layout: box(w, h, d), physics: { body: "static", collider: "box" } }));
 const FIT = {
-  desk: { model: { id: FITM.desk, forward: "+z" }, layout: box(1.5, 0.75, 0.74), physics: { body: "static", collider: "box" } },
+  desk: { model: { id: FITM.desk, forward: "-x" }, layout: box(1.5, 0.75, 0.74), physics: { body: "static", collider: "box" } }, // the steel desk is built along its z: "-x" lays it long across the island with its drawers and knee gap to the user (+z); "+z" had squeezed it into a chest
+
   chair: { model: { id: FITM.chair, forward: "+z" }, layout: box(0.62, 1.0, 0.62) },
   printer: { model: { id: FITM.printer }, layout: box(0.8, 1.0, 0.6), physics: { body: "static", collider: "box" } },
   cabinet: { model: { id: FITM.cabinet }, layout: box(0.5, 1.3, 0.6), physics: { body: "static", collider: "box" } },
@@ -184,7 +189,7 @@ export function tick(ctx) {
       for (const face of [-1, 1]) for (const cx of [-0.82, 0.82]) ctx.spawn({ tags: ["l4-island", "l4-desk"], feetPosition: { x: x + cx, y: 0, z: z + face * 0.45 }, rotation: { yaw: face > 0 ? 0 : 180 }, physics: { body: "static", collider: "mesh" }, visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/l4-office-geo.js", params: { kind: "desk", seed: seed++ } } });
     }
   }
-  if ((s.officeV ?? 0) >= 3 && s.islandSplit && s.fitV !== 3) { // 2026-11-14 v3: armchairs caught by model string too. v2: the armchairs became swivel chairs. (Shelly: nothing blocky): island desks, chairs, printers and the carbon-copy cabinet wear fitted models, same ids, tags and behaviors
+  if ((s.officeV ?? 0) >= 3 && s.islandSplit && (s.fitV ?? 0) < 3) { // 2026-11-14 v3: armchairs caught by model string too. v2: the armchairs became swivel chairs. (Shelly: nothing blocky): island desks, chairs, printers and the carbon-copy cabinet wear fitted models, same ids, tags and behaviors
     s.fitV = 3;
     const all = (t) => ctx.query({ tags: [t], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
     const wear = (id, row) => { const h = ctx.place.objects[id]; if (!h) return null; for (const c of [...(h.children ?? [])]) ctx.destroy(c.id); h.primitive = null; h.material = null; Object.assign(h, row); return h; };
@@ -193,7 +198,14 @@ export function tick(ctx) {
       else if (k === "desk") { wear(o.id, { ...FIT.desk }); ctx.spawn({ parent: o.id, feetPosition: { x: 0.18, y: 0.75, z: -0.14 }, rotation: { yaw: 180 }, castShadow: false, visibleRange: { max: 35 }, model: { id: FITM.crt }, layout: box(0.42, 0.38, 0.4) }); } }
     for (const o of all("l4-printer")) wear(o.id, { ...FIT.printer });
     if (ctx.place.objects["dina-carbon-copy"]) { wear("dina-carbon-copy", { ...FIT.cabinet }); ctx.spawn({ parent: "dina-carbon-copy", feetPosition: { x: 0, y: 1.3, z: 0 }, primitive: { kind: "box", width: 0.3, height: 0.03, depth: 0.22 }, material: { color: "oklch(0.9 0.02 90)", roughness: 0.9 } }); }
+  }  if ((s.fitV ?? 0) === 3) { // 2026-11-14 v4 (Shelly: nothing blocky): the island desks turn long-ways with drawers and knee gap to the user; partitions become fabric panel models, same ids and tags
+    s.fitV = 4;
+    for (const o of ctx.query({ tags: ["l4-desk"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const h = ctx.place.objects[o.id]; if (h) { h.model = { ...FIT.desk.model }; h.layout = FIT.desk.layout; } }
+    for (const o of ctx.query({ tags: ["l4-partition"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const h = ctx.place.objects[o.id]; if (!h) continue;
+      for (const c of [...(h.children ?? [])]) ctx.destroy(c.id); h.primitive = null; h.material = null; h.physics = { body: "static", collider: "box" };
+      for (const k of panelKids()) ctx.spawn({ parent: o.id, ...k }); }
   }
+
   if (s.officeV < 2) { // the shift board: a corkboard on legs by the north desks, handing out office tasks (scripts/l4-office.js)
     s.officeV = 2;
     ctx.spawn("l4-shift-board", { tags: ["usable", "l4-board"], feetPosition: { x: -3.2, y: 0, z: 13 }, rotation: { yaw: 90 }, physics: "static", behavior: "scripts/l4-office.js",
