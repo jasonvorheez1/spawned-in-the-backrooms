@@ -876,7 +876,8 @@ function invAction(ctx, d) {
   if (d.k === 'nadePick') { s.nadePick = d.t === 'molotov' ? 'molotov' : d.t === 'bauble' ? 'bauble' : d.t === 'fresh' ? 'fresh' : 'frag'; s.notice = { text: `G throws: ${THROW[s.nadePick].name}`, at: ctx.now() }; return }
   if (d.k === 'sel') { s.invSel = String(d.t || '').slice(0, 80); return }
   if (d.k === 'tab') { s.invTab = ['all', 'weapons', 'repair', 'aid', 'apparel', 'ammo', 'misc', 'tapes', 'key', 'throw'].includes(d.t) ? d.t : 'all'; return }
-  if (d.k === 'sort') { s.invSort = ['name', 'dam', 'wg', 'cnd'].includes(d.s) ? d.s : 'name'; return }
+  if (d.k === 'sort') { s.invSort = ['name', 'dam', 'wg', 'cnd', 'val'].includes(d.s) ? d.s : 'name'; return }
+  if (d.k === 'filter') { s.invFilter = String(d.q ?? '').slice(0, 40); return }
   if (d.k === 'sheet') { s.invOpen = false; s.sheetOpen = true; return }
   if (d.k === 'quests') { s.invOpen = false; s.jrnOpen = true; return } // HALOGEN's QUESTS tab: the journal (scripts/quest-marker.js)
   if (d.k === 'drink') { drink(ctx, d.c); return }

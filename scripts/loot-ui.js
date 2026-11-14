@@ -375,6 +375,11 @@ function detail(t, s, def) {
     const r = W.rarities?.[w.rarity], cur = W[s.equipped] ?? W.fists, d = w.damage - cur.damage
     const cmp = k !== (s.equipped ?? 'fists') && d ? ` <i class="${d > 0 ? 'up' : 'dn'}" style="font-style:normal">${d > 0 ? '▲+' : '▼'}${d}</i>` : ''
     const c = cndOf(s, k), dps = Math.round(w.damage / w.cooldown)
+    const curDps = Math.round(cur.damage / (cur.cooldown || 1)), dpsDiff = dps - curDps
+    const wgDiff = (w.kg ?? 1) - (cur.kg ?? 1)
+    const cmpBox = k !== (s.equipped ?? 'fists')
+      ? `<div class="inv-cmp"><div class="inv-cmp-title">VS EQUIPPED (${esc(cur.name)})</div><div>DAM ${d >= 0 ? '+' : ''}${d} · DPS ${dpsDiff >= 0 ? '+' : ''}${dpsDiff} · WG ${wgDiff >= 0 ? '+' : ''}${wgDiff.toFixed(1)} kg</div></div>`
+      : ''
     const val = itemVal(k)
 
     // Direct contextual repair options
@@ -409,6 +414,7 @@ function detail(t, s, def) {
         ${w.pellets ? cell('PELLETS', `${w.pellets} BUCKSHOT`, true) : ''}
       </div>
       ${passivesOf(w).length ? `<div class="rep-box"><div class="rep-box-title"><span>PASSIVES</span></div>${passivesOf(w).map(([n, d]) => `<div style="display:flex;justify-content:space-between;gap:8px;padding:2px 0"><span>${n}</span><b style="font-weight:normal;opacity:.8">${d}</b></div>`).join('')}</div>` : ''}
+      ${cmpBox}
       ${repHtml}
     </div>`
   }
@@ -589,12 +595,16 @@ function repairSec(s) {
 function inventory(s) {
   const lv = s.level ?? 1, eqKey = s.equipped ?? 'fists'
   const sortMode = s.invSort ?? 'name', sel = s.invSel || eqKey
+  const filterQ = String(s.invFilter ?? '').trim().toLowerCase()
+  const matchesFilter = (name) => !filterQ || String(name ?? '').toLowerCase().includes(filterQ)
 
   // Weapons list
   let weaponKeys = [...new Set([...(W.order ?? []).filter((k) => owned(s).includes(k)), ...owned(s).filter((k) => W[k] && !(W.order ?? []).includes(k))])] // variant keys (revolver~lucky13) aren't in W.order
+    .filter((k) => matchesFilter(W[k]?.name))
   if (sortMode === 'dam') weaponKeys.sort((a, b) => (W[b]?.damage ?? 0) - (W[a]?.damage ?? 0))
   else if (sortMode === 'wg') weaponKeys.sort((a, b) => (W[b]?.kg ?? 1) - (W[a]?.kg ?? 1))
   else if (sortMode === 'cnd') weaponKeys.sort((a, b) => cndOf(s, a) - cndOf(s, b))
+  else if (sortMode === 'val') weaponKeys.sort((a, b) => itemVal(b) - itemVal(a))
   else weaponKeys.sort((a, b) => (W[a]?.name ?? '').localeCompare(W[b]?.name ?? ''))
 
   const weapons = weaponKeys.map((k) => {
@@ -613,20 +623,20 @@ function inventory(s) {
     ['blue', 'almondsB', 'Blue almond water', '#6f9be0']
   ]
   const anyAw = AWK.some(([, k]) => s[k])
-  const aid0 = anyAw ? AWK.filter(([, k]) => s[k]).map(([c, k, nm, col]) => `
+  const aid0 = anyAw ? AWK.filter(([, k, nm]) => s[k] && matchesFilter(nm)).map(([c, k, nm, col]) => `
     <button class="it${sel === 'almond:' + c ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'almond:${c}'})" ondblclick="sendAction('inv',{k:'drink',c:'${c}'})">
       <span class="cur">&gt;</span><span class="nm" style="color:${col}">${nm}</span>
       <span class="stat-r"><span>×${s[k]}</span><span style="color:#9ee08a">+${AW[c]?.hp ?? 25} HP</span></span>
 
     </button>`).join('') + `` : ''
 
-  const meatRows = Object.entries(s.meat ?? {}).filter(([c, n]) => n > 0 && MEAT[c]).map(([c, n]) => `
+  const meatRows = Object.entries(s.meat ?? {}).filter(([c, n]) => n > 0 && MEAT[c] && matchesFilter(MEAT[c].name)).map(([c, n]) => `
     <button class="it${sel === 'meat:' + c ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'meat:${c}'})" ondblclick="sendAction('inv',{k:'eat',c:'${c}'})">
       <span class="cur">&gt;</span><span class="nm" style="color:${MEAT[c].color}">${MEAT[c].name}</span>
       <span class="stat-r"><span>×${n}</span><span style="color:#9ee08a">+${MEAT[c].hp} HP</span></span>
     </button>`).join('')
 
-  const snackRows = Object.entries(s.snacks ?? {}).filter(([c, n]) => n > 0 && SNACKS[c]).map(([c, n]) => {
+  const snackRows = Object.entries(s.snacks ?? {}).filter(([c, n]) => n > 0 && SNACKS[c] && matchesFilter(SNACKS[c].name)).map(([c, n]) => {
     const v = SNACKS[c]
     return `<button class="it${sel === 'snack:' + c ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'snack:${c}'})" ondblclick="sendAction('inv',{k:'snack',c:'${c}'})">
       <span class="cur">&gt;</span><span class="nm">${v.name}</span>
@@ -637,12 +647,13 @@ function inventory(s) {
   const aid = aid0 + meatRows + snackRows || '<div class="em">No aid supplies carried.</div>'
 
   // Apparel list
-  const on = wornTokens(s.look), bag = (s.clothes ? s.clothes.split(',').filter(Boolean) : [])
+  const on = wornTokens(s.look).filter((t) => matchesFilter(parseCloth(t)?.row?.name)), bag = (s.clothes ? s.clothes.split(',').filter(Boolean) : []).filter((t) => matchesFilter(parseCloth(t)?.row?.name))
   const clothOrder = (a, b) => {
     const x = parseCloth(a)?.row, y = parseCloth(b)?.row
     if (sortMode === 'dam') return (y?.dr ?? 0) - (x?.dr ?? 0)
     if (sortMode === 'wg') return (y?.kg ?? 0) - (x?.kg ?? 0)
     if (sortMode === 'cnd') return armorCnd(s.look, a) - armorCnd(s.look, b)
+    if (sortMode === 'val') return itemVal(b) - itemVal(a)
     return (x?.name ?? '').localeCompare(y?.name ?? '')
   }
 
@@ -728,7 +739,7 @@ function inventory(s) {
   }).join('')
   const qHint = selQ ? `<b>${esc(selQ.name)}</b>: click a slot or press its number` : 'Pick an item below, then click a slot or press 0–9'
 
-  return `<div class="pbw pb"><div class="pbp inv hg" data-modal>
+  return `<div class="pbw pb"><div class="pbp inv hg" data-modal tabindex="0" onkeydown="if(event.key==='Escape'&&event.target.tagName!=='INPUT'){event.preventDefault();event.stopPropagation();sendAction('inv',{k:'close'})}">
     <div class="hg-top">
       <div class="hg-brand"><h2>Inventory</h2></div>
       <div class="hg-vit">
@@ -745,8 +756,12 @@ function inventory(s) {
     <div class="hg-bd">
       <nav class="hg-rail">${rail}</nav>
       <div class="hg-mid">
+        <div class="inv-search-row">
+          <input class="inv-search" type="search" value="${esc(s.invFilter ?? '')}" placeholder="Filter items..." aria-label="Filter inventory items" onchange="sendAction('inv',{k:'filter',q:this.value})" onkeydown="if(event.key==='Enter'){event.preventDefault();sendAction('inv',{k:'filter',q:this.value})}else if(event.key==='Escape'){event.preventDefault();event.stopPropagation();if(this.value){this.value='';sendAction('inv',{k:'filter',q:''})}else{sendAction('inv',{k:'close'})}}">
+          ${filterQ ? `<button class="sort-btn" onclick="sendAction('inv',{k:'filter',q:''})">Clear</button>` : ''}
+        </div>
         <div class="hg-sort"><span>${tab === 'all' ? 'All items' : SECS[tab][0].toUpperCase()}</span><span class="sp"></span>
-          ${[['name', 'A–Z'], ['dam', tab === 'apparel' ? 'Protection' : tab === 'all' ? 'Damage / DR' : 'Damage'], ['wg', 'Weight'], ['cnd', 'Condition']].map(([k, l]) => `<button class="${sortMode === k ? 'on' : ''}" onclick="sendAction('inv',{k:'sort',s:'${k}'})">${l}</button>`).join('')}
+          ${[['name', 'A–Z'], ['dam', tab === 'apparel' ? 'Protection' : tab === 'all' ? 'Damage / DR' : 'Damage'], ['wg', 'Weight'], ['val', 'Value'], ['cnd', 'Condition']].map(([k, l]) => `<button class="${sortMode === k ? 'on' : ''}" onclick="sendAction('inv',{k:'sort',s:'${k}'})">${l}</button>`).join('')}
         </div>
         <div class="ls" onkeydown="if(event.key==='ArrowDown'||event.key==='ArrowUp'){const rows=Array.from(this.querySelectorAll('button.it:not(:disabled)'));const i=rows.indexOf(event.target);if(i>=0){event.preventDefault();event.stopPropagation();rows[i+(event.key==='ArrowDown'?1:-1)]?.focus()}}">${list}</div>
       </div>
@@ -776,8 +791,8 @@ function storage(s, key) { // your fridge: two sides, one press moves one thing
   const left = Object.values(groups).map((g) => row(nameOf(g.t), g.n, `{k:'take',i:${g.i}}`, 'TAKE')).join('') || '<div class="em">Empty.</div>'
   const right = bagRows(s).map(([t, nm, n]) => row(nm, n, `{k:'store',t:'${t}'}`, 'PUT IN')).join('') || (s.lootName === 'Steamer trunk' ? '<div class="em">Nothing to stow.</div>' : '<div class="em">No food or drinks on you.</div>')
   const col = (title, body) => `<div style="flex:1;min-width:0"><div style="opacity:.7;letter-spacing:.15em;margin-bottom:6px">${title}</div><div style="max-height:46vh;overflow:auto">${body}</div></div>`
-  return `<div class="pbw pb"><div class="pbp" data-modal>
-    <div class="nv-top"><div class="nv-top-left"><h2>${(s.lootName || 'STORAGE').toUpperCase()}</h2></div><div class="nv-vitals"><span><b>SPACE</b>${items.length}/30</span></div></div>
+  return `<div class="pbw pb"><div class="pbp" data-modal tabindex="0" onkeydown="if(event.key==='Escape'){event.preventDefault();event.stopPropagation();sendAction('loot',{k:'close'})}">
+    <div class="nv-top"><div class="nv-top-left"><h2>${esc(s.lootName || 'STORAGE')}</h2></div><div class="nv-vitals"><span><b>SPACE</b>${items.length}/30</span></div></div>
     <div style="display:flex;gap:28px;margin-top:10px">${col('INSIDE', left)}${col('YOUR BAG', right)}</div>
     <div class="ft">
       ${items.length ? `<button onclick="sendAction('loot',{k:'all'})"><kbd>R</kbd>Take all</button>` : ''}
@@ -807,8 +822,8 @@ function container(s, key) {
   const col = (title, body) => `<div style="flex:0 0 44%;min-width:0;display:flex;flex-direction:column"><div style="font-size:11px;letter-spacing:.2em;opacity:.7;border-bottom:1px solid currentColor;padding-bottom:4px;margin-bottom:6px;white-space:nowrap">${title}</div><div class="ls" style="display:block;flex:1 1 auto;max-height:340px;overflow-y:auto;overflow-x:hidden">${body}</div></div>`
   const left = col(`INSIDE · ${items.length}`, rows.replace(/<span class="stat-r">/g, '<span class="stat-r"><span style="opacity:.6">TAKE&nbsp;</span>') || '<div class="em">Empty.</div>')
   const right = items[0] ? detail(items[0], s, true) : ''
-  return `<div class="pbw pb"><div class="pbp" data-modal>
-    <div class="nv-top"><div class="nv-top-left"><h2>${(s.lootName || 'CONTAINER').toUpperCase()}</h2></div></div>
+  return `<div class="pbw pb"><div class="pbp" data-modal tabindex="0" onkeydown="if(event.key==='Escape'){event.preventDefault();event.stopPropagation();sendAction('loot',{k:'close'})}">
+    <div class="nv-top"><div class="nv-top-left"><h2>${esc(s.lootName || 'CONTAINER')}</h2></div></div>
     <div style="display:flex;gap:18px;margin-top:8px;min-height:0;flex:1 1 auto;overflow:hidden">${left}<div style="flex:1 1 0;min-width:0;display:flex;overflow:hidden">${right}</div></div>
     <div class="ft">
       <span class="c">${carry}</span>
@@ -833,7 +848,6 @@ export function lootUi(ctx, player) {
   if (s.lootOpen) out += s.lootStore ? storage(s, key) : container(s, key)
   else if (s.invOpen) out += inventory(s)
   else if (s.focus && screen(s,player.place)==='play') out+=interactPrompt(s.focus,key)
-  if (false && s.notice && ctx.now() - s.notice.at < 2200) out += `<div id="ln" class="pb"><span>${s.notice.text}</span></div>`
   return out
 }
 

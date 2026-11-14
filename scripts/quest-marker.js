@@ -36,7 +36,9 @@ export function onInput(ctx, input) {
     ctx.emit("playSound", { clip: "cdn/moodboard-realistic-gritty/sfx-paper-notebook-page-flip.mp3", volume: 0.5 }, { audience: { player: ctx.self.id } });
   }
   if (input.pressed?.qselect && s.jrnOpen) {
-    const id = input.actionData?.qselect?.id;
+    const d = input.actionData?.qselect
+    if (d?.f && ['all', 'active', 'completed', 'failed'].includes(d.f)) s.qfilter = d.f
+    const id = d?.id;
     if (typeof id === "string" && (Object.hasOwn(s.quests ?? {}, id) || Object.hasOwn(s.qdone ?? {}, id))) s.qview = id;
   }
   if (input.pressed?.qtrack) {

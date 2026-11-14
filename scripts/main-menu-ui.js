@@ -1,21 +1,112 @@
-// the title (johnadams2, Nov 8): the name and one START over the live halls. Nothing else.
-// one setting under it: BODIES flips every character between humans and furries (Shelly, Nov 8)
-// Backspace mid-game shows the same screen as a pause, its one button RESUME.
+import { esc, uiPrefsOf, SCALE_LABELS } from './lib/ui-kit.js'
+import { PLACE_NAMES } from './lib/quests.js'
+
 const CSS = `<style>
-#mm{position:fixed;inset:0;pointer-events:auto;background:linear-gradient(0deg,rgba(6,5,2,.78) 0,rgba(6,5,2,.35) 38%,rgba(6,5,2,0) 62%),radial-gradient(ellipse 110% 90% at 50% 45%,rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%);font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#f3eedf;animation:mm-in 1.4s ease-out both}
-#mm .col{position:absolute;left:7vw;bottom:12vh}
-#mm h1{margin:0;font-weight:700;font-size:clamp(44px,6.4vw,92px);line-height:.95;letter-spacing:-.02em;text-shadow:0 2px 18px rgba(0,0,0,.45)}
-#mm button{margin-top:3.2vh;background:none;border:0;padding:6px 0;color:#f3eedf;font:inherit;font-size:clamp(17px,1.5vw,22px);font-weight:500;letter-spacing:.32em;cursor:pointer;opacity:.82;border-bottom:1px solid rgba(243,238,223,0);transition:opacity .15s,border-color .15s}
-#mm button:hover{opacity:1;border-bottom-color:rgba(243,238,223,.8)}
-@keyframes mm-in{from{opacity:0}to{opacity:1}}
+#mm{position:fixed;inset:0;pointer-events:auto;background:linear-gradient(90deg,#0b0e0be8 0%,#0b0e0b70 48%,#0b0e0b00 82%),linear-gradient(0deg,#0b0e0bbd,transparent 46%);font-family:var(--ui-font,'Segoe UI',Arial,sans-serif);color:#eeeadd}
+#mm .col{position:absolute;left:7vw;bottom:10vh;max-width:min(460px,calc(100vw - var(--spawn-chrome-reservation-right-inset,50px) - 10vw))}
+#mm h1{margin:0;font-weight:500;font-size:clamp(40px,5.8vw,82px);line-height:1.04;letter-spacing:-.04em;padding-bottom:16px;border-bottom:1px solid #b8b69578;text-wrap:balance}
+#mm .mm-subline{margin:10px 0 6px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#aab09f}
+#mm .col>button{display:flex;align-items:center;justify-content:space-between;width:min(280px,100%);gap:12px;margin-top:10px;background:none;border:0;padding:8px 2px;color:#eeeadd;font:inherit;font-size:16px;cursor:pointer;text-align:left;border-bottom:1px solid #b8b69538}
+#mm .col>button:hover,#mm .col>button:focus-visible{color:#fff;border-bottom-color:#d5b77b}
+#mm .mm-primary{margin-top:20px!important;background:#d5b77b!important;color:#171a12!important;padding:10px 16px!important;min-height:48px;font-weight:650;border:0!important;border-radius:2px}
+#mm .mm-primary:hover{background:#f0d49a!important}
+#mm .mm-primary span{font-size:21px}
 </style>`
+
+function settingsView(ctx, player, prefs) {
+  const body = (player.state?.bodyStyle ?? ctx.world.state?.bodyStyle) === 'human' ? 'human' : 'furry'
+  const seg = (label, active, action) => `<button class="${active ? 'on' : ''}" onclick="sendAction('mmenu',${action})">${label}</button>`
+  return `<div class="mm-sub" role="region" aria-label="Settings">
+    <h2>Settings</h2>
+    <div class="mm-row">
+      <div><strong>Character Body Style</strong><small>Applies to characters across the world</small></div>
+      <div class="mm-seg">
+        ${seg('Human', body === 'human', "{k:'style',v:'human'}")}
+        ${seg('Furry', body === 'furry', "{k:'style',v:'furry'}")}
+      </div>
+    </div>
+    <div class="mm-row">
+      <div><strong>Interface Scale</strong><small>Adjust menu and dialogue text size</small></div>
+      <div class="mm-seg">
+        ${Object.entries(SCALE_LABELS).map(([k, lbl]) => seg(lbl.split(' ')[0], prefs.scale === k, `{k:'pref',key:'scale',val:'${k}'}`)).join('')}
+      </div>
+    </div>
+    <div class="mm-row">
+      <div><strong>High Contrast</strong><small>Sharper borders and higher text contrast</small></div>
+      <div class="mm-seg">
+        ${seg('Standard', prefs.contrast === 'standard', "{k:'pref',key:'contrast',val:'standard'}")}
+        ${seg('High', prefs.contrast === 'high', "{k:'pref',key:'contrast',val:'high'}")}
+      </div>
+    </div>
+    <div class="mm-row">
+      <div><strong>Motion</strong><small>Disable UI transition animations</small></div>
+      <div class="mm-seg">
+        ${seg('System', prefs.motion === 'system', "{k:'pref',key:'motion',val:'system'}")}
+        ${seg('Reduced', prefs.motion === 'reduced', "{k:'pref',key:'motion',val:'reduced'}")}
+      </div>
+    </div>
+    <div class="mm-row">
+      <div><strong>HUD Density</strong><small>Hide secondary HUD hints during exploration</small></div>
+      <div class="mm-seg">
+        ${seg('Full', !prefs.hudMinimal, "{k:'pref',key:'hudMinimal',val:false}")}
+        ${seg('Minimal', prefs.hudMinimal, "{k:'pref',key:'hudMinimal',val:true}")}
+      </div>
+    </div>
+    <button class="mm-back" onclick="sendAction('mmenu',{k:'view',v:''})">← Back</button>
+  </div>`
+}
+
+function controlsView(ctx) {
+  const acts = ctx.world?.inputs?.actions ?? {}
+  const key = (n, d) => esc(String(acts[n]?.label ?? acts[n]?.keys?.[0] ?? d).toUpperCase())
+  const rows = [
+    ['Move / Sprint / Crouch', `WASD · ${key('sprint', 'Shift')} · ${key('crouch', 'C')}`],
+    ['Interact / Loot / Talk', key('interact', 'E')],
+    ['Attack / Aim / Reload', `LMB · RMB · ${key('reload', 'R')}`],
+    ['Flashlight / Cycle Weapon', `${key('flashlight', 'F')} · ${key('cycleWeapon', 'X')}`],
+    ['Inventory / Character / Journal / Craft', `${key('inv', 'I')} · ${key('sheet', 'K')} · ${key('journal', 'P')} · ${key('craft', 'Y')}`],
+    ['Quick Slots', '0–9'],
+    ['Pause Menu', key('mainmenu', 'Backspace')],
+  ]
+  return `<div class="mm-sub" role="region" aria-label="Controls and Guide">
+    <h2>Controls & Field Guide</h2>
+    ${rows.map(([lbl, k]) => `<div class="mm-row"><span>${esc(lbl)}</span><strong>${k}</strong></div>`).join('')}
+    <p class="mm-meta">Your progress, inventory, and quests are saved automatically per expedition.</p>
+    <button class="mm-back" onclick="sendAction('mmenu',{k:'view',v:''})">← Back</button>
+  </div>`
+}
+
 export function mainMenu(ctx, player, launch = false) {
-  const pause = !launch && player.state?.menuKind === "pause"
-  const k = pause ? "resume" : "start"
-  const body = (player.state?.bodyStyle ?? ctx.world.state?.bodyStyle) === "human" ? "Human" : "Furry"
-  return `${CSS}<div id="mm" data-modal><div class="col">
-    <h1>The Backrooms</h1>
-    <button class="mm-primary" onclick="sendAction('mmenu',{k:'${k}'},{relockPointer:true})">${pause ? "Resume" : "Start"}<span aria-hidden="true">→</span></button>
-    <button class="mm-setting" onclick="sendAction('mmenu',{k:'style'})"><span>Body style</span><strong>${body}</strong></button>
-  </div></div>`
+  const s = player?.state ?? {}
+  const pause = !launch && s.menuKind === 'pause'
+  const k = pause ? 'resume' : 'start'
+  const view = s.menuView ?? ''
+  const prefs = uiPrefsOf(s)
+  const returning = !!(s.madeChar || s.t0Done || (s.level ?? 1) > 1 || (s.xp ?? 0) > 0)
+  const placeName = PLACE_NAMES[player?.place] ?? (player?.place ? String(player.place) : 'Level 0')
+  const primaryLabel = pause ? 'Resume' : returning ? 'Continue' : 'New Expedition'
+
+  const kd = view
+    ? "if(event.key==='Escape'){event.preventDefault();event.stopPropagation();sendAction('mmenu',{k:'view',v:''})}"
+    : pause
+      ? "if(event.key==='Escape'){event.preventDefault();event.stopPropagation();sendAction('mmenu',{k:'resume'},{relockPointer:true})}"
+      : ''
+
+  let content = ''
+  if (view === 'settings') {
+    content = `<div class="col">${settingsView(ctx, player, prefs)}</div>`
+  } else if (view === 'controls') {
+    content = `<div class="col">${controlsView(ctx)}</div>`
+  } else {
+    content = `<div class="col">
+      <h1>The Backrooms</h1>
+      <div class="mm-subline">${pause ? `Paused · ${esc(placeName)} · Level ${s.level ?? 1}` : returning ? `Level ${s.level ?? 1} · ${esc(placeName)}` : 'Level 0 — The Lobby'}</div>
+      <button class="mm-primary" onclick="sendAction('mmenu',{k:'${k}'},{relockPointer:true})">${primaryLabel}<span aria-hidden="true">→</span></button>
+      <button onclick="sendAction('mmenu',{k:'view',v:'settings'})">Settings</button>
+      <button onclick="sendAction('mmenu',{k:'view',v:'controls'})">Controls & Guide</button>
+      ${pause ? `<button onclick="sendAction('mmenu',{k:'title'})">Return to Title</button>` : ''}
+    </div>`
+  }
+
+  return `${CSS}<div id="mm" data-modal tabindex="0" ${kd ? `onkeydown="${kd}"` : ''}>${content}</div>`
 }

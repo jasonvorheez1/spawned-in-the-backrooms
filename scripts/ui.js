@@ -3,6 +3,7 @@ import { questBriefing, questProgress } from './lib/quest-dialogue.js'
 import { wristNav } from './lib/wrist-nav.js'
 import { quickBar } from './lib/hud-quickbar.js'
 import { UI_THEME } from './lib/ui-theme.js'
+import { uiPrefsAttrs, uiPrefsOf, noticeToast, escKeyHandler } from './lib/ui-kit.js'
 import { screen } from './lib/screen.js'
 import { overlay as lagscopeOverlay } from '../mods/lagscope/panel.js'
 import cinemaPanel from '../mods/absolute-cinema/lib/ui-cinema.js'
@@ -326,7 +327,12 @@ function journalUi(s, player, ctx) {
     .sort((a, b) => Number(!!b.main) - Number(!!a.main) || errandLast(a, b) || recent(a, b))
   const archive = Object.entries(s.qdone ?? {}).filter(([id]) => !Object.hasOwn(s.quests ?? {}, id))
     .map(([id, q]) => ({ ...q, id, status: q.outcome === 'failed' || (!q.outcome && /\bfailed\b/i.test(q.text ?? '')) ? 'Failed' : 'Completed' })).sort((a, b) => errandLast(a, b) || recent(a, b))
-  const list = [...open, ...archive], tr = tracked(s)
+  const completed = archive.filter((q) => q.status === 'Completed')
+  const failed = archive.filter((q) => q.status === 'Failed')
+  const qf = ['all', 'active', 'completed', 'failed'].includes(s.qfilter) ? s.qfilter : 'all'
+  const allList = [...open, ...archive]
+  const list = qf === 'active' ? open : qf === 'completed' ? completed : qf === 'failed' ? failed : allList
+  const tr = tracked(s)
   const selected = list.find((q) => q.id === s.qview) ?? list.find((q) => q.id === tr[0]?.id) ?? list[0]
   const row = (q) => {
     const marker = tr.find((t) => t.id === q.id)
@@ -363,9 +369,11 @@ function journalUi(s, player, ctx) {
       ${history?.length ? `<div class="quest-history"><h3>Previous objectives</h3><ul>${history.slice().reverse().map((line) => `<li>${esc(line)}</li>`).join('')}</ul></div>` : ''}
     </div>`
   }
-  return `<div id="journal" data-modal><section class="journal-panel" aria-labelledby="journal-title">
+  const fbtn = (k, lbl, n) => `<button class="${qf === k ? 'on' : ''}" onclick="sendAction('qselect',{f:'${k}'})">${lbl} (${n})</button>`
+  return `<div id="journal" data-modal tabindex="0" onkeydown="${escKeyHandler("sendAction('journal')")}"><section class="journal-panel" aria-labelledby="journal-title">
     <header class="journal-header"><h1 id="journal-title">Quests</h1><span>${tr.length} of ${MAX_TRACK} tracked</span><button class="journal-close" onclick="sendAction('journal')">Close <kbd>P</kbd></button></header>
     ${wristNav('journal')}
+    <div class="journal-filters" role="tablist" aria-label="Quest status filter">${fbtn('all', 'All', allList.length)}${fbtn('active', 'Active', open.length)}${fbtn('completed', 'Completed', completed.length)}${fbtn('failed', 'Failed', failed.length)}</div>
     <div class="quest-layout">
       <div class="quest-list" role="group" aria-label="Quest list" onkeydown="if(event.key==='ArrowUp'||event.key==='ArrowDown'){const next=event.target[event.key==='ArrowDown'?'nextElementSibling':'previousElementSibling'];if(event.target.matches('.quest-entry')&&next?.matches('.quest-entry')){event.preventDefault();event.stopPropagation();next.focus();next.click()}}">
         ${list.map(row).join('') || '<p class="quest-empty">No quests yet.</p>'}
@@ -429,7 +437,7 @@ function ledgerUi(s) {
     <div style="text-align:right;margin-top:10px"><button onclick="sendAction('inv',{k:'read',n:0})" style="background:#2a241a;color:#e4d7b6;border:0;padding:5px 14px;font-family:Georgia,serif;cursor:pointer">close the ledger</button></div>
   </div></div>`
 }
-export default function render(ctx, player) { return tarVeil(ctx, player) + renderHud(ctx, player) + unlock12(ctx, player) + ritual12(ctx, player) + lagscopeOverlay(ctx, player) + renderCinemaOverlays(player) + (player.state?.cinemaOpen ? cinemaPanel(player) : '') + UI_THEME } // the 3D studio button is off the HUD (Shelly, Nov 9: bothersome)
+export default function render(ctx, player) { return `<div class="ui-root" ${uiPrefsAttrs(player?.state)}>${tarVeil(ctx, player) + renderHud(ctx, player) + unlock12(ctx, player) + ritual12(ctx, player) + lagscopeOverlay(ctx, player) + renderCinemaOverlays(player) + (player.state?.cinemaOpen ? cinemaPanel(player) : '') + UI_THEME}</div>` } // the 3D studio button is off the HUD (Shelly, Nov 9: bothersome)
 function renderHud(ctx, player) {
   const s = player.state ?? {}
   const quick = !s.building && screen(s,player.place)==='play' && Object.keys(s.quickSlots??{}).length ? quickItems(s) : []
@@ -548,10 +556,11 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
     </div></div>` : ''}
   ${subtitles(ctx, player, now)}
   ${compassRead(s, ((player.camera?.rotation?.yaw ?? 0) % 360 + 360) % 360, now)}
+  ${noticeToast(s, now)}
   <!-- Subdued Initial Hint -->
-  <div id="hint" style="position:absolute;left:0;right:0;text-align:center;bottom:180px;font-size:12px;color:rgba(232,228,216,0.45);animation:hud-fade 7s 1s forwards;opacity:0">
+  ${uiPrefsOf(s).hudMinimal ? '' : `<div id="hint" style="position:absolute;left:0;right:0;text-align:center;bottom:180px;font-size:12px;color:rgba(232,228,216,0.45);animation:hud-fade 7s 1s forwards;opacity:0">
     <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('emote', 'T')}</kbd> face
-  </div>
+  </div>`}
 
 </div>${ledgerUi(s)}${journalUi(s, player, ctx)}${feedUi(ctx, player)}${lootUi(ctx, player)}${pickUi(ctx, player)}${spamUi(ctx, player)}${spamArenaUi(ctx, player)}${talkUi(ctx, player)}${hubUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${arcadeUi(ctx, player)}${smoothieUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
 }
