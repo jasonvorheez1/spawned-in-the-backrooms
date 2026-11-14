@@ -81,6 +81,7 @@ export function fire(ctx, s, wp, w, eye, fwd, pitch, base) {
       const H0 = (e.tags?.includes?.('zdrone') ? HEADS.zdrone : e.tags?.includes?.('hound') ? HEADS.hound : e.tags?.includes?.('smiler') ? HEADS.smiler : 1.9) * (e.scale?.y ?? 1)
       const head = f.hit.position.y - (e.feetPosition?.y ?? 0) > 0.78 * H0
       b.body = true
+      if (e.state?.lift && f.hit.position.y - (e.feetPosition?.y ?? 0) > 1.02 * H0) { const r0 = hits.get(e.id) ?? { m: e, dmg: 0, head: false, n: 0 }; r0.pop = true; hits.set(e.id, r0); continue } // a tied balloon over its head: the shot pops it, no damage (Shelly Nov 14)
       const r = hits.get(e.id) ?? { m: e, dmg: 0, head: false, n: 0 }; r.dmg += per * energy * (head ? headMul(n) : 1); r.head ||= head; r.n++; hits.set(e.id, r)
     } else if (!world) world = { hit: f.hit, dir: d }
   }

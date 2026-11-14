@@ -609,6 +609,15 @@ function tieBalloons(ctx, m, n, wp) {
   if (tied >= 2) ctx.emit('damageNumber', { position: { ...at, y: at.y + 0.6 }, text: 'AIRBORNE', color: '#c8ff60', size: 1.1 })
 }
 
+function popBalloons(ctx, m) { // shot the balloons holding it up: they burst and it falls
+  if (!m.state?.lift) return
+  m.state.lift = null
+  for (const c of ctx.query({ tags: ['tied-balloon'], radius: 4, center: m.feetPosition })) if (ctx.getObject(c.id)?.parent?.id === m.id) ctx.destroy(c.id)
+  const at = { x: m.feetPosition.x, y: m.feetPosition.y + 2.1, z: m.feetPosition.z }
+  ctx.emit('playSound', { clip: SND('loud-balloon-pop-bang'), position: at, volume: 1 })
+  ctx.emit('fx', { position: at, script: "fx\npop bits burst=16..24 life=.6..1.1 v=sdir()*(2..4) size=.05..0.1 spin=-8..8 tint=oklch(.7 .2 25)..oklch(.75 .18 140) acc=grav()*.5+drag(2) col=$tint a=1>.7:1>0 sz=$size rot=$age*$spin r=sprite(chip,alpha,velocity,.02)" })
+}
+
 export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pellets = 1) {
   dmg = Math.max(1, Math.round(vary(ctx, dmg))) // every hit rolls its own 90% to 110% (data/combat.yml)
   if (s.studied && m.tags?.some((tg) => s.studied.split(',').some((k) => tg.includes(k)))) dmg = Math.round(dmg * 1.1) // read its Database page
@@ -774,6 +783,8 @@ function swing(ctx, power = 0) {
       const m = t.m
       if (t.head) ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2.2, z: m.feetPosition.z }, text: 'HEADSHOT', color: '#ffd23a', size: 1.2 })
       else if (crit) ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2, z: m.feetPosition.z }, text: 'CRIT', color: '#ff5a3a', size: 1.2 })
+      if (t.pop) popBalloons(ctx, m)
+      if (!t.n) continue
       hitTarget(ctx, s, m, Math.max(1, Math.round(t.dmg)), f, !wp.quiet, 0, penOf(wp, s.equipped), t.n ?? 1)
       if (wp.balloon && !m.tags?.includes('l5-beast')) tieBalloons(ctx, m, t.n ?? 1, wp)
     }
