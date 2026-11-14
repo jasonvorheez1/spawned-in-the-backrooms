@@ -1323,7 +1323,7 @@ export function update(ctx, dt) {
   const sprinting = w.sprint && moving && w.stamina > 1 && !w.winded && !s.ads && !crouched && !over
   const dv = w.dv ??= derived(s) // the sheet's numbers, re-derived 4x a second in the stats beat, not three times a tick
   const nowS = ctx.now(), green = nowS < (s.greenUntil ?? 0), tired = nowS < (s.tiredUntil ?? 0) // green almond water: sprint longer; red: heavy limbs
-  const lrunLive = pl === 'levelrun' && !s.lrunRescued && !s.lrunCut
+  const lrunLive = ctx.self.place === 'levelrun' && !s.lrunRescued && !s.lrunCut
   const lrAgi = lrunLive ? agilityProfile(s) : null
   if (lrAgi && fp.z <= CORRIDOR.corridorStartZ && fp.z > CORRIDOR.collapseZ) {
     const obsHit = hitObstacle(fp, Math.max(0, (fp.y ?? 0) - 0.1))
