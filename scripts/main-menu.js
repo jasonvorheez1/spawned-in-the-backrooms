@@ -110,7 +110,7 @@ export function onInput(ctx, input) {
   if (input.pressed?.mmenu && d) {
     ctx.emit("playSound", { clip: CLICK, volume: 0.5 }, { audience: { player: ctx.self.id } })
     if (st.bodyStyle && ctx.world.state.bodyStyle !== st.bodyStyle) ctx.world.state.bodyStyle = st.bodyStyle // their saved pick rides into whichever room they wake in
-    if (d.k === "start") { st.menuOpen = false; st.menuView = ""; if (st.t0Done && st.madeChar && ctx.self.place !== "bonus") toHub(ctx); else if (ctx.self.place !== "bonus") { st.introFrom = ctx.self.place; ctx.cross(ctx.self, "intake") } } // after the tutorial, launch lands in the Bonus Room (johnadams2)
+    if (d.k === "start") { st.menuOpen = false; st.menuView = ""; if (!st.run && !st.madeChar) st.run = cleanPick(null); if (st.t0Done && st.madeChar && ctx.self.place !== "bonus") toHub(ctx); else if (ctx.self.place !== "bonus") { st.introFrom = ctx.self.place; ctx.cross(ctx.self, "intake") } } // after the tutorial, launch lands in the Bonus Room (johnadams2)
     if (d.k === "resume") { st.menuOpen = false; st.menuView = "" }
     if (d.k === "title") { st.menuKind = "title"; st.menuView = "" }
     if (d.k === "view") { st.menuView = ["settings", "controls", "newgame", "saves"].includes(d.v) ? d.v : ""; if (d.v === "newgame") st.newRun = { ...cleanPick(st.newRun), confirm: false }; if (d.v === "saves") listSaves(ctx) }

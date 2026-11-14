@@ -4,7 +4,7 @@
 // Now each occupied place keeps a queue of ids, refilled when it runs dry, and a tick restyles a few.
 export const cadence = "250ms";
 import { setStyle, restyle } from "./scripts/lib/critter-model.js";
-import { noNpcs } from "./scripts/lib/run-opts.js";
+import { noNpcs, noStory } from "./scripts/lib/run-opts.js";
 const PER_TICK = 40; // objects looked at per tick across all places (her pick: ~160/s, a 550-thing level in ~4 s)
 const queues = new Map(); // place id -> { ids, ward } ; this machine's working memory, not shared state
 function refill(pl) {
@@ -16,9 +16,12 @@ function refill(pl) {
 const npcSweep = new Map(); // place id -> last sweep ms (this machine's)
 // Shelly Nov 14: an expedition started with NPCs off clears people (tag "npc") from the places its player stands in; monsters stay
 function sweepNpcs(ctx, id, pl) {
-  if (!(pl.players ?? []).some((p) => noNpcs(p.state))) return;
+  const ps = pl.players ?? [], npcs = ps.some((p) => noNpcs(p.state)), story = ps.some((p) => noStory(p.state));
+  if (!npcs && !story) return;
   const now = ctx.now(); if (now - (npcSweep.get(id) ?? 0) < 1500) return; npcSweep.set(id, now);
-  for (const r of ctx.query({ tags: ["npc"], place: id })) if (!r.id.startsWith("player/")) ctx.destroy(r.id);
+  // story off: Phoebe only lives in the story (cutscenes, the Hub), so she isn't there at all
+  for (const r of ctx.query({ tags: [npcs ? "npc" : "phoebe"], place: id })) if (!r.id.startsWith("player/")) ctx.destroy(r.id);
+  if (npcs && story) for (const r of ctx.query({ tags: ["phoebe"], place: id })) if (!r.id.startsWith("player/")) ctx.destroy(r.id);
 }
 export function tick(ctx) {
   setStyle(ctx.world.state.bodyStyle); // this machine's spawns follow the BODIES pick
