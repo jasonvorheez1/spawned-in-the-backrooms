@@ -29,13 +29,15 @@ export function phoebeSpec(ctx) {
   const spec = human ? humanPhoebe() : furrySpec(PHOEBE_LOOK) // BODIES human: her human self; furry: the ginger cat in her fitted outfit. Its hair and skirt are the outfit's own, so the wardrobe's hair and skirt stay off (Shelly Nov 14: two hairs stacked)
   return { ...spec, human, children: [...(spec.children || []).filter((c) => human || !["cw-hair", "cw-botw"].includes(c.id)), ...(human ? [] : [{ id: "phoebe-outfit", attachment: { skin: true }, model: OUTFIT }])] }
 }
-export function spawnPhoebe(ctx, id, at, yaw, life, pose) {
+// extra: fields laid over the cut defaults (a talking NPC Phoebe passes audience, tags, physics, behavior, state); same body either way
+export function spawnPhoebe(ctx, id, at, yaw, life, pose, extra) {
   if (ctx.getObject(id)) return id
   const { human, ...spec } = phoebeSpec(ctx)
   return ctx.spawn(id, {
     tags: ["phoebe"], audience: "local", lifetime: life, feetPosition: at, rotation: { yaw },
     ...spec,
     state: { cutPose: true },
+    ...(extra ?? {}),
     anim: { pose: { clip: pose ?? (human ? "cdn/clip-idle-female-loop.glb" : "cdn/clip-idle-loop.glb"), loop: "loop", weight: 1 } }, // never a bind pose: a clip from her first frame (Shelly: "t posing phoebe")
   })
   return id

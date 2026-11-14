@@ -7,6 +7,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 import { heard } from "../../scripts/lib/hear.js";
+import { spawnPhoebe } from "../../scripts/lib/phoebe.js";
 
 export const cadence = "100ms";
 
@@ -290,12 +291,12 @@ function syncAlcovePhoebe(ctx, players) {
     return;
   }
   if (!existing) {
-    ctx.spawn("phoebe-lrun", {
+    // the same Phoebe body every cut uses (scripts/lib/phoebe.js), here shared and talkable
+    spawnPhoebe(ctx, "phoebe-lrun", { x: CORRIDOR.safePos.x + 2.8, y: 0.1, z: -1.1 }, 65, undefined, undefined, {
+      audience: "near",
+      lifetime: undefined,
       tags: ["npc", "phoebe"],
-      feetPosition: { x: CORRIDOR.safePos.x + 2.8, y: 0.1, z: -1.1 },
-      rotation: { yaw: 65 },
       physics: "character",
-      ...critterSpec(PHOEBE_LOOK),
       behavior: ["scripts/talk.js"],
       state: {
         name: "Phoebe",
@@ -303,7 +304,7 @@ function syncAlcovePhoebe(ctx, players) {
         voice: "phoebe-lrun",
         role: "wanderer",
         faction: "none",
-        wear: PHOEBE_LOOK,
+        essential: true,
         ...npcState(ctx, "wanderer", 220),
       },
     });
