@@ -300,9 +300,22 @@ function maptable(ctx) {
 }
 function mapboard(ctx) { paint(ctx, "oak", "oklch(0.85 0.06 60)"); bx(ctx, -0.95, 0, 0, 0.95, 1.3, 0.035, 0.012); paint(ctx, null, "oklch(0.93 0.04 88)"); slab(ctx, [0, 0.65, -0.002], [0.88, 0.58, 0.004]); }
 function rug(ctx, P) { paint(ctx, "rug", null); bx(ctx, -(P.w ?? 2.6) / 2, 0, -(P.d ?? 1.8) / 2, (P.w ?? 2.6) / 2, 0.015, (P.d ?? 1.8) / 2, 0.006); }
+function roll(ctx, P) { // a bedroll on the floor: ticking pad, the quilt over it, a pillow, a blanket rolled at the foot
+  paint(ctx, "cdn/texture-striped-cotton-mattress-ticking.png", "oklch(0.95 0.02 85)"); bx(ctx, -0.38, 0, -0.95, 0.38, 0.075, 0.95, 0.03);
+  paint(ctx, "cdn/texture-patchwork-quilt-wool-blanket.png", P.col ?? "oklch(0.62 0.09 30)"); bx(ctx, -0.39, 0.055, -0.45, 0.39, 0.1, 0.8, 0.035); bx(ctx, -0.39, 0.075, -0.52, 0.39, 0.115, -0.4, 0.03);
+  paint(ctx, "linen", "oklch(0.97 0.01 90)"); sphere(ctx, [0, 0.13, -0.74], 0.22, 14, [1.15, 0.32, 0.6]);
+  paint(ctx, "linen", P.col ?? "oklch(0.62 0.09 30)"); rod(ctx, [-0.34, 0.15, 0.82], [0.34, 0.15, 0.82], 0.07, 12); ctx.color("oklch(0.4 0.03 60)"); for (const x of [-0.2, 0.2]) rod(ctx, [x, 0.15, 0.82], [x + 0.03, 0.15, 0.82], 0.075, 12);
+}
+function pot(ctx) { // a stock pot with a lid and two handles
+  paint(ctx, null, "oklch(0.55 0.01 250)"); ctx.metalness(0.85); ctx.roughness(0.35);
+  rings(ctx, 0, 0, [[0, 0], [0.12, 0], [0.13, 0.01], [0.13, 0.15], [0.138, 0.16], [0.12, 0.16], [0.118, 0.02], [0, 0.02]], 22);
+  rings(ctx, 0, 0, [[0.132, 0.155], [0.1, 0.175], [0.03, 0.19], [0, 0.19]], 22); paint(ctx, null, "oklch(0.25 0.01 60)"); ctx.metalness(0.2); rings(ctx, 0, 0, [[0.025, 0.19], [0.025, 0.215], [0.03, 0.225], [0, 0.23]], 10);
+  ctx.metalness(0.85); paint(ctx, null, "oklch(0.5 0.01 250)"); for (const s of [-1, 1]) { rod(ctx, [s * 0.13, 0.12, -0.03], [s * 0.17, 0.125, -0.03], 0.008, 6); rod(ctx, [s * 0.17, 0.125, -0.03], [s * 0.17, 0.125, 0.03], 0.008, 6); rod(ctx, [s * 0.17, 0.125, 0.03], [s * 0.13, 0.12, 0.03], 0.008, 6); }
+  ctx.metalness(null); ctx.roughness(null);
+}
 export function geometry(ctx) {
   const P = ctx.params ?? {};
-  ({ shell, yard, kitchen, basement, bench, maptable, mapboard, bed: () => bed(ctx, P), kit: () => kit(ctx, P.n ?? 0), door: () => door(ctx, P), lamp: () => lamp(ctx, P), rug: () => rug(ctx, P) })[P.part]?.(ctx);
+  ({ shell, yard, kitchen, basement, bench, maptable, mapboard, bed: () => bed(ctx, P), kit: () => kit(ctx, P.n ?? 0), door: () => door(ctx, P), lamp: () => lamp(ctx, P), rug: () => rug(ctx, P), roll: () => roll(ctx, P), pot })[P.part]?.(ctx);
 }
 const box = (x0, y0, z0, x1, y1, z1) => ({ kind: "box", width: x1 - x0, height: y1 - y0, depth: z1 - z0, center: [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2] });
 export function collider(ctx) {

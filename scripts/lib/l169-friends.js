@@ -19,11 +19,11 @@ export function stopsOf(L) {
   const S = {}, fu = L.house.floorUp;
   for (const [k, [room, u, v, fx, fz, out]] of Object.entries(F.stops)) S[k] = { ...at(L, [room, u, v]), up: room === "basement" ? fu - L.friends.basementDown : fu, fx, fz, out: !!out };
   const t = at(L, L.friends.table);
-  const seats = [[-0.8, -0.85, 0, 1], [0, -0.85, 0, 1], [0.8, -0.85, 0, 1], [-0.8, 0.85, 0, -1], [0, 0.85, 0, -1], [0.8, 0.85, 0, -1], [1.75, 0, -1, 0]];
+  const seats = L.friends.seats;
   seats.forEach(([dx, dz, fx, fz], i) => { S["seat-" + (i + 1)] = { x: t.x + dx, z: t.z + dz, up: fu, fx, fz, seat: true }; });
   const per = {};
   for (const p of F.people) { const r = L.house.rooms[p.bedroom], i = (per[p.bedroom] = (per[p.bedroom] ?? 0) + 1), n = F.people.filter((q) => q.bedroom === p.bedroom).length;
-    S["bed-" + p.n] = { x: r[0] + (i - 0.5) * (r[1] - r[0]) / n, z: r[2] + 1.5, up: fu, fx: 0, fz: 1, seat: true }; }
+    const B = L.friends.rolls; S["bed-" + p.n] = { x: r[0] + B.x0 + (i - 1) * B.gap + (3 - n) * B.gap / 2, z: r[2] + B.dz, up: fu, fx: 0, fz: 1, seat: true }; } // bedrolls beside the house bed, clear of the kits and the door
   L.friends.track.forEach(([x, z], i) => { S["track" + i] = { x, z, up: 0, fx: 0, fz: 1, out: true }; });
   if (S.bench) S.bench.seat = true;
   return S;
@@ -50,19 +50,17 @@ export const slateText = (hour, L) => {
 
 export function layFriends(ctx, put, L) {
   const S = stopsOf(L), fu = L.house.floorUp, g = (x, z, up = 0) => ({ x, z, y: { terrain: up } }), hour = ctx.place.atmosphere?.timeOfDay ?? 12;
-  // the kitchen table: two tables end to end and seven chairs (chairs have no collider: people walk into them to sit)
-  const t = at(L, L.friends.table);
-  for (const s of [-0.55, 0.55]) put("l169-friend-table" + (s < 0 ? "a" : "b"), { feetPosition: g(t.x + s, t.z, fu), model: model("dining_table"), physics: "static" });
+  // the kitchen table is the house's own long table (l169-house-m-table); seven chairs round it (no collider: people walk into them to sit)
+  for (const k of ["l169-friend-tablea", "l169-friend-tableb"]) if (ctx.getObject(k)) ctx.destroy(k);
   for (let i = 1; i <= 7; i++) { const c = S["seat-" + i]; put("l169-friend-chair-" + i, { feetPosition: g(c.x, c.z, fu), rotation: { yaw: yawOf(c.fx, c.fz) }, model: model("dining_chair") }); }
-  const st = at(L, L.friends.stove);
+  const st = at(L, L.friends.stove), GEO = (part, extra) => ({ primitive: { kind: "scripted", script: "scripts/l169-house-geo.js", params: { part, ...extra } }, material: { pbr: true }, castShadow: true, receiveShadow: true });
   put("l169-friend-stove", { feetPosition: g(st.x, st.z, fu), model: model("mocha_range"), physics: "static" });
-  put("l169-friend-pot", { feetPosition: g(st.x - 0.18, st.z + 0.1, fu + 0.93), primitive: { kind: "cylinder", radiusTop: 0.14, radiusBottom: 0.12, height: 0.16, radialSegments: 18 }, material: { color: "oklch(0.35 0.01 250)", metalness: 0.8, roughness: 0.45 } });
+  put("l169-friend-pot", { feetPosition: g(st.x - 0.18, st.z + 0.1, fu + 0.93), ...GEO("pot") });
   // bedrolls: one each, in the three bedrooms
-  const QUILT = ["oklch(0.5 0.09 30)", "oklch(0.5 0.07 250)", "oklch(0.55 0.08 140)", "oklch(0.5 0.08 80)", "oklch(0.55 0.07 320)", "oklch(0.42 0.03 250)", "oklch(0.5 0.1 20)"];
+  const QUILT = ["oklch(0.62 0.09 30)", "oklch(0.6 0.07 250)", "oklch(0.65 0.08 140)", "oklch(0.66 0.08 80)", "oklch(0.62 0.07 320)", "oklch(0.55 0.03 250)", "oklch(0.6 0.1 20)"];
   for (const p of F.people) { const b = S["bed-" + p.n], k = "l169-friend-bed-" + p.n;
-    put(k, { feetPosition: g(b.x, b.z, fu), scale: { x: 0.85, y: 1, z: 2 }, primitive: { kind: "cylinder", radiusTop: 0.5, radiusBottom: 0.52, height: 0.07, radialSegments: 28 }, material: { texture: "cdn/texture-striped-cotton-mattress-ticking.png", color: "oklch(0.85 0.02 85)", roughness: 1 } });
-    put(k + "-quilt", { feetPosition: g(b.x, b.z + 0.42, fu + 0.06), scale: { x: 0.8, y: 1, z: 1.1 }, primitive: { kind: "cylinder", radiusTop: 0.48, radiusBottom: 0.5, height: 0.035, radialSegments: 28 }, material: { texture: "cdn/texture-patchwork-quilt-wool-blanket.png", color: QUILT[p.n - 1], roughness: 1 } });
-    put(k + "-pillow", { feetPosition: g(b.x, b.z - 0.72, fu + 0.06), scale: { x: 1, y: 0.32, z: 0.6 }, primitive: { kind: "sphere", radius: 0.3, widthSegments: 16, heightSegments: 10 }, material: { color: "oklch(0.9 0.015 90)", roughness: 1 } }); }
+    for (const x of ["-quilt", "-pillow"]) if (ctx.getObject(k + x)) ctx.destroy(k + x);
+    put(k, { feetPosition: g(b.x, b.z, fu), ...GEO("roll", { col: QUILT[p.n - 1] }) }); }
   // the den: map table and the checkpoint crates
   const mt = at(L, L.friends.mapTable), cr = at(L, L.friends.crates);
   put("l169-friend-maptable", { feetPosition: g(mt.x, mt.z, fu), model: model("pedestal_table"), physics: "static" });
