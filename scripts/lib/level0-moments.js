@@ -18,7 +18,7 @@ const MM = {
   chair: { id: "/cdn/value.e02cceb0c66d902fced411a31f21de9e9584de3272263a09e20b85c9455411be.glb", forward: "+x", box: [0.62, 1.0, 0.62] },
 };
 const ALMOND = "/cdn/value.d74570d765a2d43f965fc8756878f7bf22f833db5feaf4c335d84d8dc4ba5b62.glb";
-const wallModel = (k) => { const m = MM[k], [w, h, d] = m.box, y0 = m.y ?? 0; return { primitive: null, model: { id: m.id, forward: m.forward }, layout: { box: { min: { x: -w / 2, y: y0, z: -d - 0.02 }, max: { x: w / 2, y: y0 + h, z: -0.02 } } } }; }; // stands off the wall face, front into the room (-z)
+const wallModel = (k) => { const m = MM[k], [w, h, d] = m.box, y0 = 0; return { primitive: null, model: { id: m.id, forward: m.forward }, layout: { box: { min: { x: -w / 2, y: y0, z: -d - 0.02 }, max: { x: w / 2, y: y0 + h, z: -0.02 } } } }; }; // stands off the wall face, front into the room (-z)
 const lo = (c) => c * S - HALF;
 const hasWall = (cx, cz, d) => d === 0 ? wallX(cx, cz) && !isArchWall(cx, cz, "x") : d === 1 ? wallZ(cx, cz) && !isArchWall(cx, cz, "z") : d === 2 ? wallX(cx - 1, cz) && !isArchWall(cx - 1, cz, "x") : wallZ(cx, cz - 1) && !isArchWall(cx, cz - 1, "z");
 const YAW = [90, 0, -90, 180];
@@ -84,7 +84,7 @@ const mirror = (svg) => svg.replace(/<svg ([^>]*)>/, "<svg $1><g transform='tran
 export function layMoments(ctx) {
   const used = new Set(), pick = picker(used), out = {}, put = (kind, spec) => { out[kind] = (out[kind] ?? 0) + 1; return ctx.spawn({ ...spec, tags: [...new Set(["moment", "m-" + kind, ...(spec.tags ?? [])])] }); }; // every piece keeps "moment", so a re-lay clears it (the almond used to drop it and stack up)
   const geo = (kind, params = {}) => ({ kind: "scripted", script: GEO, params: { kind, ...params } });
-  const onWall = (kind, cx, cz, d, along, extra = {}) => { const w = wallPose(cx, cz, d, along); return put(kind, { feetPosition: { x: w.x, y: 0, z: w.z }, rotation: w.yaw, primitive: geo(kind), ...extra }); };
+  const onWall = (kind, cx, cz, d, along, extra = {}) => { const w = wallPose(cx, cz, d, along); return put(kind, { feetPosition: { x: w.x, y: MM[kind]?.y ?? 0, z: w.z }, rotation: w.yaw, primitive: geo(kind), ...extra }); };
   const scrib = (key, cx, cz, d, along, y, svg = SCRIBBLE[key]) => { const w = wallPose(cx, cz, d, along, 0.012); return put("message", { feetPosition: { x: w.x, y, z: w.z }, rotation: w.yaw + 180, vector: svg, state: { msg: key } }); };
 
   // 1 · the Manila Room: a 3×3 patch of bare folder-yellow walls
