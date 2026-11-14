@@ -75,6 +75,6 @@ export function layHouse(ctx, put, L) {
   // lamps: one per room, hung under the ceiling
   for (const k of ["living", "kitchen", "hall", "bed1", "bed2", "bed3", "den", "porch"]) {
     const [x, z] = mid(k), y = F + h.wallH - 0.62;
-    part(`lamp-${k}`, { part: "lamp", drop: 0.5 }, x, z, y, { physics: undefined, children: [{ feetPosition: { x: 0, y: -0.05, z: 0 }, light: { kind: "point", color: b.lamp.color, intensity: b.lamp.intensity * 0.12, distance: b.lamp.distance, shadow: { enabled: k === "living" || k === "kitchen" } } }] });
+    part(`lamp-${k}`, { part: "lamp", drop: 0.5 }, x, z, y, { physics: undefined, children: [{ feetPosition: { x: 0, y: -0.05, z: 0 }, light: { kind: "point", color: b.lamp.color, intensity: b.lamp.intensity * 0.12, distance: b.lamp.distance, shadow: { enabled: false } } }] });
   }
 }
