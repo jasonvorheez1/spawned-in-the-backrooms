@@ -849,32 +849,32 @@ gamma-otto:
   gest: { wave: "Hello.", gift: "Thank you.", dance: "Ha. Okay.", nodance: "Crates.", insult: "Fine." }
 
 gamma-ivy:
-  hi: "...Hi. Sorry. I do the screens. I'm not good at talking."
-  back: ["Hi.", "...You were on camera six."]
+  hi: "Hi. Sorry. I do the screens. I'm not good at talking."
+  back: ["Hi.", "You were on camera six."]
   warm: "Hi. I watched you come in. Camera seven. You looked alright."
   cold: "..."
-  bye: "...Bye."
+  bye: "Bye."
   walk: "..."
   ask:
     - q: "Where am I?"
-      a: "...Camera room. Nine screens. That's nine halls. I don't know what's past where the cameras stop."
+      a: "Camera room. Nine screens. That's nine halls. I don't know what's past where the cameras stop."
     - q: "How do I get out?"
-      a: "...Not on my screens. I'd have seen it."
+      a: "Not on my screens. I'd have seen it."
     - q: "What's on the screens?"
       a: "Halls. Moths. Hounds. A man on camera four who stands still for an hour. Only I see him. I quit telling people."
     - q: "Ever hear the name Dina?"
-      a: "...I don't get names. There was a woman on camera three. East hall. She looked up and waved at the lens. Nobody waves. I waved back. That was dumb. She couldn't see."
+      a: "I don't get names. There was a woman on camera three. East hall. She looked up and waved at the lens. Nobody waves. I waved back. That was dumb. She couldn't see."
     - q: "Why the red jacket?"
       a: "So if I show up on a camera one day, they know it's me."
   barks:
-    idle: ["Camera four.", "...A moth.", "He's back."]
-    hi: ["...Hi.", "Hi."]
+    idle: ["Camera four.", "A moth.", "He's back."]
+    hi: ["Hi."]
     spot: ["Movement. Camera two. It's here."]
-    hostile: ["...Why?"]
+    hostile: ["Why?"]
     hit: ["Ah."]
     flee: ["..."]
     death: ["Four..."]
-  gest: { wave: "...Hi.", gift: "...Thanks.", dance: "...Okay. Slow.", nodance: "...No.", insult: "..." }
+  gest: { wave: "Hi.", gift: "Thanks.", dance: "Okay. Slow.", nodance: "No.", insult: "..." }
 
 gamma-moss:
   hi: "Welcome to Base Gamma, traveller. All are welcome here until they prove otherwise. My name is Moss. I command it, God forgive me."

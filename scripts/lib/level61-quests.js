@@ -52,7 +52,7 @@ export const QUESTS61 = {
     tips: {
       1: "Take the east suction vent out of Level 6.1 and inspect the Guild chalk plate under the Level 3 arrival grille.",
       2: "Take the lift from Level 3 up to Level 4, test a break-room vending machine (or ask Sgt. Okafor at Base Omega) to log the one-way drop into Level 6.1.",
-      3: "Bring the completed survey back to the Guild of Many in Level 6.1 — or hand the unguarded vent telemetry to the M.E.G. Guard.",
+      3: "Bring the completed survey back to the Guild of Many in Level 6.1, or hand the unguarded vent telemetry to the M.E.G. Guard.",
     },
     marks: {
       1: { place: "level3", id: "l3-guild-plate" },
@@ -144,7 +144,7 @@ export function handleDialogueQuest61(ctx, p, npc, text) {
       });
       return med
         ? { reply: "She made it through the tenth tunnel and Jo got those frostbitten fingers wrapped in time? Bless you, sweetie. I'll pull her card off the board right now and tuck Jo's note under the thermos. Take the good kits and sixty for the miles.", mood: "happy" }
-        : { reply: "She's pouring kettle water for Jo at the Hub camp? Oh, thank goodness. Half the cards on this corkboard never come down. I'll cross her off tonight and leave her pin with our kit. Forty-five and a spare aid pack — you earned it.", mood: "happy" };
+        : { reply: "She's pouring kettle water for Jo at the Hub camp? Thank goodness. Half the cards on this corkboard never come down. I'll cross her off tonight and leave her pin with our kit. Forty-five and a spare aid pack, earned fair.", mood: "happy" };
     }
     if (t.includes("bee settling in") && q === 99) {
       return { reply: "Jo sent a tally slip back down the line with an orange-jacket runner: Bee swapped shifts with Pip twice already and refused to let anyone throw out her torn red sleeve. We kept the pin on the corkboard for luck.", mood: "happy" };
@@ -153,7 +153,7 @@ export function handleDialogueQuest61(ctx, p, npc, text) {
   if (id === "l11-commuter-faceling" && s.l61BeeQ === 1 && t.includes("red wool coat")) {
     if (t.includes("remember which tunnel")) {
       const c = rollCheck(ctx, s, { skill: "speech", difficulty: 30 });
-      if (!c.ok) return { reply: "Oh, so many coats at eight fifteen. Red ones, grey ones. Perhaps check by the corner bench where people tie their boots.", mood: "calm" };
+      if (!c.ok) return { reply: "So many coats at eight fifteen. Red ones, grey ones. Try checking by the corner bench where people tie their boots.", mood: "calm" };
       s.l61BeeClue = 1;
       setStep61(ctx, p, "bee", 2, "Coat of Red · The commuter pointed you toward Camp Amber in The Hub");
       return { reply: "Why yes! She adjusted a torn cuff on the corner bench and asked which avenue met the tenth tunnel to Camp Amber in the Hub. A bright coat like that stays in one's paper.", mood: "happy" };
@@ -170,8 +170,8 @@ export function handleDialogueQuest61(ctx, p, npc, text) {
       s.l61BeeSafe = 1;
       setStep61(ctx, p, "bee", 3, "Coat of Red · Bee is safe at Camp Amber in The Hub · Tell Wren in Level 6.1");
       return s.l61BeeMed
-        ? { reply: "Good hands, pilgrim — warm saline, loose gauze, no rubbing. Bee's asleep by the stove now in a dry parka. Tell Wren in 6.1 she's off the road and keeping both feet warm.", mood: "happy" }
-        : { reply: "Bee? Aye, she walked out of the tenth tunnel three nights ago wearing half a red sleeve. Traded it for a dry wool parka and took the second kettle shift. Tell Wren in 6.1 we've got her — safe and stubborn.", mood: "happy" };
+        ? { reply: "Good hands, pilgrim. Warm saline, loose gauze, no rubbing. Bee's asleep by the stove now in a dry parka. Tell Wren in 6.1 she's off the road and keeping both feet warm.", mood: "happy" }
+        : { reply: "Bee? Aye, she walked out of the tenth tunnel three nights ago wearing half a red sleeve. Traded it for a dry wool parka and took the second kettle shift. Tell Wren in 6.1 we've got her, safe and stubborn.", mood: "happy" };
     }
   }
   if ((id === "hub-amber-jo" || id === "hub-amber-pip") && s.l61BeeQ === 99 && t.includes("how's bee doing")) {
@@ -197,8 +197,8 @@ export function handleDialogueQuest61(ctx, p, npc, text) {
         text: `Quest Completed: Sealed 6.1-02 (${best ? "Verified Harmonic Clear" : "Caution Protocol"}) · +${best ? 185 : 145} XP, +$${best ? "80.00" : "55.00"}`,
       });
       return best
-        ? { reply: "Flooded relay bleed off Level 6's wire — and you already clamped Vale's harmonic dampener onto the studs? Best news I've logged all shift. That beats swinging at cake hallucinations at three in the morning. Eighty bucks, cells, rounds, and a kit from the locker.", mood: "happy" }
-        : { reply: "Gamma flagged it caution-only until someone walks the Level 6 relay side, huh? Fair enough — Vale's clamp spec goes straight into the shift binder. Fifty-five, a spare cell, and a box of rounds. Keep your eyes off that drywall after three.", mood: "calm" };
+        ? { reply: "Flooded relay bleed off Level 6's wire, and you already clamped Vale's harmonic dampener onto the studs? Best news I've logged all shift. Beats swinging at cake hallucinations at three in the morning. Eighty bucks, cells, rounds, and a kit from the locker.", mood: "happy" }
+        : { reply: "Gamma flagged it caution-only until someone walks the Level 6 relay side, huh? Fair enough. Vale's clamp spec goes straight into the shift binder. Fifty-five, a spare cell, and a box of rounds. Keep your eyes off that drywall after three.", mood: "calm" };
     }
     if (t.includes("seal 6.1-02 staying quiet") && q === 99) {
       return s.l61SealRuling === "verified" || s.l61SealClamped
@@ -210,7 +210,7 @@ export function handleDialogueQuest61(ctx, p, npc, text) {
     if (t.includes("harmonic") || t.includes("relay tape from level 6") || t.includes("readings from seal 6.1-02")) {
       if (t.includes("harmonic")) {
         const c = rollCheck(ctx, s, { skill: "science", difficulty: 40 });
-        if (!c.ok) return { reply: "Steady on — your chalkboard scribble's missing half the phase curve. Either walk through the Level 6 checkpoint for Relay 6-A's actual tape, or take my standard caution dampener.", mood: "calm" };
+        if (!c.ok) return { reply: "Slow down. Your chalkboard scribble's missing half the phase curve. Either walk through the Level 6 checkpoint for Relay 6-A's actual tape, or take my standard caution dampener.", mood: "calm" };
         s.l61SealRuling = "verified";
       } else if (t.includes("relay tape") && s.l61RelayTape) {
         s.l61SealRuling = "verified";
@@ -219,8 +219,8 @@ export function handleDialogueQuest61(ctx, p, npc, text) {
       }
       setStep61(ctx, p, "seal", 3, "Sealed 6.1-02 · Return Vale's dampener ruling to the M.E.G. Guard in Level 6.1");
       return s.l61SealRuling === "verified"
-        ? { reply: "Aha! Look at that waveform — 60-hertz ballast buzz modulated by a wet transformer loop off Level 6's wire, not a Partygoer breach at all. Take this frequency dampener clamp back to 6.1; bolt it onto Seal 6.1-02 or hand it straight to the post guard.", mood: "happy" }
-        : { reply: "No relay blackbox to cross-check? Grand, I'll mark it 'Caution — Acoustic Anomaly' and lend you a spare harmonic bolt anyway. Tell the Level 6 door guard to double-brace 6.1-02 unless someone grabs the Level 6 tape.", mood: "calm" };
+        ? { reply: "Aha! Look at that waveform: 60-hertz ballast buzz modulated by a wet transformer loop off Level 6's wire, not a Partygoer breach at all. Take this frequency dampener clamp back to 6.1; bolt it onto Seal 6.1-02 or hand it straight to the post guard.", mood: "happy" }
+        : { reply: "No relay blackbox to cross-check? Grand, I'll mark it 'Caution: Acoustic Anomaly' and lend you a spare harmonic bolt anyway. Tell the Level 6 door guard to double-brace 6.1-02 unless someone grabs the Level 6 tape.", mood: "calm" };
     }
   }
   if (id === "gamma-vale" && s.l61SealQ === 99 && t.includes("seal 6.1-02")) {
@@ -252,7 +252,7 @@ export function handleDialogueQuest61(ctx, p, npc, text) {
         text: `Quest Completed: Four Hundred and Thirteen (${hazard ? "Marked Hazard Route" : "Guild Archive"}) · +${hazard ? 180 : 150} XP, +$${hazard ? "75.00" : "55.00"}`,
       });
       return hazard
-        ? { reply: "Red ink for one-way glass — a mercy for every hungry soul in Level 4's break room. Page 413 enters the Book, and Camp Amber will carry copies to the hubs. Take our reserve ration and seventy-five.", mood: "happy" }
+        ? { reply: "Red ink for one-way glass: a mercy for every hungry soul in Level 4's break room. Page 413 enters the Book, and Camp Amber will carry copies to the hubs. Take our reserve ration and seventy-five.", mood: "happy" }
         : { reply: "Level 3 suction below, Level 4 glass above. Page 413 is dry and bound. Dina once tore margins from pages just like this; we will copy it twice so nothing is lost. Fifty-five and travel stores, traveller.", mood: "happy" };
     }
     if (t.includes("413 holding up") && q === 99) {
@@ -269,14 +269,14 @@ export function handleDialogueQuest61(ctx, p, npc, text) {
         if (c.ok) s.craneSci = 1;
       }
       return { reply: s.craneSci
-        ? "Aha, Kael's coffee barge! The pilot won't risk dirty water in the lock. Take our signed Guild Barge Waybill back through the glass doors — and note the canal gate builds vacuum behind folded paper. Ease the bypass bleed before forcing the wheel."
+        ? "Aha, Kael's coffee barge! The pilot won't risk dirty water in the lock. Take our signed Guild Barge Waybill back through the glass doors, and note the canal gate builds vacuum behind folded paper. Ease the bypass bleed before forcing the wheel."
         : "That's our barge waiting outside Kael's canal lock. Carry this stamped Guild Barge Waybill back to Trader Kael on Level 11 so both piers can unload once the almond water runs clear.", mood: "happy" };
     }
     if (s.craneQ === 99 && s.craneGuildClear && !s.craneGuildPaid && t.includes("customs waybill cleared") && claimReward(s, "crane-guild-bonus")) {
       s.craneGuildPaid = 1;
       s.payout = { xp: 45, items: ["almond", "battery", "ration"], text: "Guild Barge Dividend: +45 XP · Almond Water, Battery, Ration" };
       addRep(s, "survivors", 4, "Cleared Guild barge customs between Level 6.1 and Level 11");
-      return { reply: "Word already reached the glass doors: our barge docked with every sack of beans dry. Kael isn't the only trader who keeps his books — take a pilgrim dividend from the forward crate.", mood: "happy" };
+      return { reply: "Word already reached the glass doors: our barge docked with every sack of beans dry. Kael isn't the only trader who keeps his books. Take a pilgrim dividend from the forward crate.", mood: "happy" };
     }
   }
   if (id === "l61-guard-a" && s.l61GuildQ === 3 && t.includes("unguarded vent telemetry")) {
@@ -311,12 +311,12 @@ export function handleDialogueQuest61(ctx, p, npc, text) {
       if (repOf(s, "survivors") <= -35) return { reply: "Facelings might wipe down your booth, kid, but my kitchen isn't hiring someone the camps don't trust.", mood: "angry" };
       const fastWarm = (s.l61TraysReturned ?? 0) >= 2;
       setStep61(ctx, p, "sal", 1, "Quest Started: Two Menus Short · Head through Level 11 out Farm Road to Level 10 and trade Wren for flour");
-      return { reply: (fastWarm ? "You actually bused your trays, kid — that puts you ahead of ninety percent of the room. " : "") + "Here's the secret: the facelings can press patties forever, but real stone-ground flour has to come up Farm Road from Level 10's Outpost Bountiful, and real roasted coffee sits at Trader Kael's stall in Level 11. Grab one sack from Wren on the farm, swing by Kael on the way back, and bring them to my counter.", mood: "happy" };
+      return { reply: (fastWarm ? "You actually bused your trays, kid. That puts you ahead of ninety percent of the room. " : "") + "Here's the secret: the facelings can press patties forever, but real stone-ground flour has to come up Farm Road from Level 10's Outpost Bountiful, and real roasted coffee sits at Trader Kael's stall in Level 11. Grab one sack from Wren on the farm, swing by Kael on the way back, and bring them to my counter.", mood: "happy" };
     }
     if (t.includes("bus your tray") && (s.l61TraysReturned ?? 0) >= 1 && !s.l61TrayBonus && claimReward(s, "l61-tray-master")) {
       s.l61TrayBonus = 1;
       s.payout = { xp: 25, items: ["burger", "coke"], text: "Sal's Counter Regular: +25 XP · Cheeseburger & Coca-Cola" };
-      return { reply: "See? You stack a plastic tray like a civil human being and the whole kitchen puts extra pickles on yours. Here — one off the hot plate, and don't tell the Liquorette.", mood: "happy" };
+      return { reply: "See? You stack a plastic tray like a civil human being and the whole kitchen puts extra pickles on yours. Here, one off the hot plate, and don't tell the Liquorette.", mood: "happy" };
     }
     if ((t.includes("flour and coffee") || (t.includes("flour") && t.includes("coffee"))) && q === 3 && s.l61SalFlour && s.l61SalCoffee) {
       finishQuest61(ctx, p, "sal", {
@@ -327,7 +327,7 @@ export function handleDialogueQuest61(ctx, p, npc, text) {
         rep: [["survivors", 10], ["amber", 4], ["karma", 3]],
         text: "Quest Completed: Two Menus Short · Real flour and coffee reached Burger Bop (+165 XP, +$65.00)",
       });
-      return { reply: "Smell that — real wheat, real dark roast! Even the faceling on the deep fryer paused for a second when I popped the tin. Sixty-five bucks, two hot burgers, a loaf off the rack, and almond water for the road. You keep folks sane in here, kid.", mood: "happy" };
+      return { reply: "Smell that: real wheat, real dark roast! Even the faceling on the deep fryer paused for a second when I popped the tin. Sixty-five bucks, two hot burgers, a loaf off the rack, and almond water for the road. You keep folks sane in here, kid.", mood: "happy" };
     }
     if (t.includes("new batches turning out") && q === 99) {
       return { reply: "Best biscuits this side of the wire. Camp Amber's taking a tray over to Clippers every dusk now, and I stopped worrying why the soda fountain never runs dry.", mood: "happy" };
@@ -350,20 +350,20 @@ export function handleDialogueQuest61(ctx, p, npc, text) {
       s.cents -= cost;
       s.l61SalFlour = 1;
       setStep61(ctx, p, "sal", 2, "Two Menus Short · Bought Level 10 flour · Pick up roasted coffee from Kael in Level 11");
-      return { reply: cheap ? "All right, sharp tongue — eight bucks it is. Heft it before Cooper asks why the wagon's lighter." : "Fifteen straight for the stew fund. Good wheat, zero purple kernels. Tell Kael I said stop hoarding all the mugs.", mood: "happy" };
+      return { reply: cheap ? "All right, sharp tongue, eight bucks it is. Heft it before Cooper asks why the wagon's lighter." : "Fifteen straight for the stew fund. Good wheat, zero purple kernels. Tell Kael I said stop hoarding all the mugs.", mood: "happy" };
     }
   }
   if (id === "l11-trader-kael" && s.l61SalQ === 2 && t.includes("tin of roasted coffee for sal")) {
     if (s.craneQ === 99) {
       s.l61SalCoffee = 1;
       setStep61(ctx, p, "sal", 3, "Two Menus Short · Carry the flour and coffee back through the glass doors to Sal in Level 6.1");
-      return { reply: "You cleared the lock so that Guild barge could dock, boss — remember 'first pot off her is yours'? Take this sealed roast tin straight through the glass doors to Sal, zero charge.", mood: "happy" };
+      return { reply: "You cleared the lock so that Guild barge could dock, boss. Remember 'first pot off her is yours'? Take this sealed roast tin straight through the glass doors to Sal, zero charge.", mood: "happy" };
     }
     const haggle = t.includes("half off");
     const deal = haggle ? rollCheck(ctx, s, { skill: "barter", difficulty: 35 }).ok : false;
     if (haggle && !deal) return { reply: "Half off? Beans don't grow in the canal, boss. Twenty straight, or go unlock my canal barge first.", mood: "calm" };
     const cost = deal ? 1000 : 2000;
-    if ((s.cents ?? 0) < cost) return { reply: `Channel beans aren't cheap while the lock's cranky, boss — $${(cost / 100).toFixed(2)}, or go unlock my canal barge first.`, mood: "calm" };
+    if ((s.cents ?? 0) < cost) return { reply: `Channel beans aren't cheap while the lock's cranky, boss: $${(cost / 100).toFixed(2)}, or go unlock my canal barge first.`, mood: "calm" };
     s.cents -= cost;
     s.l61SalCoffee = 1;
     setStep61(ctx, p, "sal", 3, "Two Menus Short · Carry the flour and coffee back through the glass doors to Sal in Level 6.1");
@@ -400,9 +400,9 @@ export function l61Choices(id, s) {
     if (q === 99) out.push({ text: "How's Page 413 holding up in the Book?", tag: "Talk" });
     if (hasQuest(s, "craneQ") && !s?.craneWaybill) {
       out.push({ text: "Kael says your barge from 6.1 is stuck outside Level 11's canal lock.", tag: "Quest" });
-      out.push({ text: "Kael's barge is stuck — does the Guild know anything about that spillway head?", tag: "Science 35", check: { skill: "science", difficulty: 35 } });
+      out.push({ text: "Kael's barge is stuck. Does the Guild know anything about that spillway head?", tag: "Science 35", check: { skill: "science", difficulty: 35 } });
     }
-    if (s?.craneQ === 99 && s?.craneGuildClear && !s?.craneGuildPaid) out.push({ text: "Kael signed off — your barge's customs waybill cleared the lock.", tag: "Quest" });
+    if (s?.craneQ === 99 && s?.craneGuildClear && !s?.craneGuildPaid) out.push({ text: "Kael signed off: your barge's customs waybill cleared the lock.", tag: "Quest" });
   } else if (id === "l61-sal") {
     const q = s?.l61SalQ ?? 0;
     if (!q && repOf(s, "survivors") > -35) out.push({ text: "Can a faceling burger ever run on real supplies?", tag: "Quest Start" });
@@ -411,10 +411,10 @@ export function l61Choices(id, s) {
     if (q === 99) out.push({ text: "How are the new batches turning out?", tag: "Talk" });
   } else if (id === "l11-commuter-faceling" && s?.l61BeeQ === 1) {
     out.push({ text: "Did you see a tall woman in a red wool coat come off the 8:15 bus?", tag: "Quest" });
-    out.push({ text: "Please — about the red wool coat, do you remember which tunnel she asked about?", tag: "Speech 30", check: { skill: "speech", difficulty: 30 } });
+    out.push({ text: "About the red wool coat, do you remember which tunnel she asked about?", tag: "Speech 30", check: { skill: "speech", difficulty: 30 } });
   } else if ((id === "hub-amber-jo" || id === "hub-amber-pip")) {
     if (s?.l61BeeQ === 2) {
-      out.push({ text: "Camp Amber in 6.1 sent me — did a woman in a red coat from 6.1 make it here?", tag: "Quest" });
+      out.push({ text: "Camp Amber in 6.1 sent me. Did a woman in a red coat from 6.1 make it here?", tag: "Quest" });
       if (id === "hub-amber-jo") out.push({ text: "If she picked up frostbite from the tenth tunnel, let me check and wrap her hands.", tag: "Medicine 35", check: { skill: "medicine", difficulty: 35 } });
     }
     if (s?.l61BeeQ === 99) out.push({ text: "How's Bee doing since I checked in?", tag: "Talk" });
@@ -426,10 +426,10 @@ export function l61Choices(id, s) {
     }
     if (s?.l61SealQ === 99) out.push({ text: "Any stray signals from Seal 6.1-02 lately?", tag: "Talk" });
   } else if (id === "omega-okafor" && s?.l61GuildQ === 2) {
-    out.push({ text: "Logging the B4 vending drop into 6.1 for the Guild — any incident slips?", tag: "Speech 30", check: { skill: "speech", difficulty: 30 } });
+    out.push({ text: "Logging the B4 vending drop into 6.1 for the Guild. Any incident slips?", tag: "Speech 30", check: { skill: "speech", difficulty: 30 } });
     out.push({ text: "Cross-check your sensor telemetry from Base Omega on that south break room.", tag: "Science 35", check: { skill: "science", difficulty: 35 } });
   } else if (id === "l10-meg-wren" && s?.l61SalQ === 1) {
-    out.push({ text: "Sal's feeding stragglers out of Level 6 at Burger Bop — spare one sack of wheat?", tag: "Speech 35", check: { skill: "speech", difficulty: 35 } });
+    out.push({ text: "Sal's feeding stragglers out of Level 6 at Burger Bop. Spare one sack of wheat?", tag: "Speech 35", check: { skill: "speech", difficulty: 35 } });
     out.push({ text: "How much for a sack of stone-ground flour? [$15]", tag: "Quest" });
     out.push({ text: "Call it $8 on a barter slip for a sack of stone-ground flour?", tag: "Barter 35", check: { skill: "barter", difficulty: 35 } });
   } else if (id === "l11-trader-kael" && s?.l61SalQ === 2) {
@@ -437,7 +437,7 @@ export function l61Choices(id, s) {
       text: s?.craneQ === 99 ? "Need a tin of roasted coffee for Sal back in 6.1 (on that lock favor?)." : "Need a tin of roasted coffee for Sal back in 6.1 [$20].",
       tag: "Quest",
     });
-    if (s?.craneQ !== 99) out.push({ text: "Give me half off that tin of roasted coffee for Sal — he clears your crates [$10].", tag: "Barter 35", check: { skill: "barter", difficulty: 35 } });
+    if (s?.craneQ !== 99) out.push({ text: "Give me half off that tin of roasted coffee for Sal. He clears your crates [$10].", tag: "Barter 35", check: { skill: "barter", difficulty: 35 } });
   }
   return out;
 }

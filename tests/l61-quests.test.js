@@ -59,11 +59,11 @@ test('Coat of Red, Bus to Nowhere: Wren -> Level 11 commuter -> Hub Jo [Medicine
 
   // Fail Speech 30 stays stage 1
   const low = { l61BeeQ: 1, skl: loSkills }
-  say61(mkCtx(0), low, 'l11-commuter-faceling', 'Please — about the red wool coat, do you remember which tunnel she asked about?')
+  say61(mkCtx(0), low, 'l11-commuter-faceling', 'About the red wool coat, do you remember which tunnel she asked about?')
   expect(low.l61BeeQ).toBe(1)
 
   // Pass Speech 30 -> stage 2
-  const c2 = say61(mkCtx(), s, 'l11-commuter-faceling', 'Please — about the red wool coat, do you remember which tunnel she asked about?')
+  const c2 = say61(mkCtx(), s, 'l11-commuter-faceling', 'About the red wool coat, do you remember which tunnel she asked about?')
   expect(c2.mood).toBe('happy')
   expect(s.l61BeeQ).toBe(2)
 
