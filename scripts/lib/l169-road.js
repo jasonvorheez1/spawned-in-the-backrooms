@@ -120,6 +120,8 @@ function allSites(L) {
 }
 export function layRoad(ctx, put, L) { for (const k of Object.keys(built)) delete built[k]; tickRoad(ctx, put, L, true); }
 let nextStream = 0;
+const pending = []; // [siteId, id, spec]: a streamed-in site lands a few dozen rows a pass, never one burst
+const PER_PASS = 40; // my pick: ~40 rows a second keeps a big site to a few seconds of pop-in
 export function tickRoad(ctx, put, L, force = false) {
   const players = ctx.place.players ?? [], now = ctx.now(), s = ctx.place.state;
   if (force || now >= nextStream) {
@@ -132,14 +134,16 @@ export function tickRoad(ctx, put, L, force = false) {
         built[site.id] = (site.big ? siteParts(site.id, L) : smallParts(site)).map((r) => r[0]);
       } else if (near < R.streamIn && !built[site.id]) {
         const rows = site.big ? siteParts(site.id, L) : smallParts(site);
-        built[site.id] = rows.map(([id, spec]) => { if (spec.primitive && !spec.visibleRange) spec.visibleRange = { max: 600 }; put(id, spec); return id; });
+        built[site.id] = rows.map(([id, spec]) => { if (spec.primitive && !spec.visibleRange) spec.visibleRange = { max: 600 }; if (force) put(id, spec); else pending.push([site.id, id, spec]); return id; });
       } else if (near > R.streamOut && (built[site.id] || have)) {
         const ids = built[site.id] ?? (site.big ? siteParts(site.id, L) : smallParts(site)).map((r) => r[0]);
         for (const id of ids) if (ctx.getObject(id)) ctx.destroy(id);
+        for (let i = pending.length - 1; i >= 0; i--) if (pending[i][0] === site.id) pending.splice(i, 1);
         delete built[site.id];
       }
     }
   }
+  for (let n = 0; n < PER_PASS && pending.length; n++) { const [, id, spec] = pending.shift(); put(id, spec); }
   // lockers restock hourly (residents keep them up)
   s.l169cp ??= {};
   const hourMs = HOUR_S(L) * 1000;
