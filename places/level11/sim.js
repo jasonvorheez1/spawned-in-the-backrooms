@@ -25,7 +25,7 @@ import MODELS from "../../scripts/lib/data/level11-models.yml";
 export const cadence = "1s";
 const RENO_FLOOR = 0.32;
 const mallTrash = (i) => ({ x: -15.15 + i * 0.2, y: 0.33, z: 28.1 + i * 0.65 });
-const V = 167; // 167: stouter columns // 166: 166: riveted Tripo platform columns // 165: 165: ramp lip removed // 164: 164: stair mouth opened to z 63.8 (head room on the last steps) // 163: 163: subway stair ramp carries the feet, Tripo deposit wall // 162: 162: bin true size // // 161: band split at vault door // // 160: vault door fit // // 159: vault door scaled flat // // 158: Tripo vault door + bins // // 157: substation 4 Tripo pieces, vault wall opened (Shelly Nov 13) // // 154: newsbox out of the hot dog cart, printed cards // 148 laid a cut list (a throw mid-lay): 149 lays it whole again // the market court and the central pedestrian route
+const V = 168; // 168: Chapter 2 Clinic dead-drop and sealed Level ! hospital threshold // 167: stouter columns // 166: 166: riveted Tripo platform columns // 165: 165: ramp lip removed // 164: 164: stair mouth opened to z 63.8 (head room on the last steps) // 163: 163: subway stair ramp carries the feet, Tripo deposit wall // 162: 162: bin true size // // 161: band split at vault door // // 160: vault door fit // // 159: vault door scaled flat // // 158: Tripo vault door + bins // // 157: substation 4 Tripo pieces, vault wall opened (Shelly Nov 13) // // 154: newsbox out of the hot dog cart, printed cards // 148 laid a cut list (a throw mid-lay): 149 lays it whole again // the market court and the central pedestrian route
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
