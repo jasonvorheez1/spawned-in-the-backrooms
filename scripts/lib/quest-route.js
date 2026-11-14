@@ -39,7 +39,10 @@ const EXITS = {
   level12: [{ to: "level13", id: "l12-to-l13", label: "Blank door" }],
   level13: [{ to: "main", id: "l13-to-l0", label: "Plain door" }],
   level26: [{ to: "level4", id: "l26-exit", label: "Ship exit" }],
-  levelrun: [{ to: "level11", id: "lrun-to-l11", label: "Clinic service door" }],
+  levelrun: [
+    { to: "level109", id: "lrun-to-l109", label: "Unmarked cream door" },
+    { to: "level11", id: "lrun-to-l11", label: "Clinic service door" },
+  ],
 };
 
 const cache = new Map();

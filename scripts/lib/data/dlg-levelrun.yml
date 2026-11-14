@@ -7,13 +7,13 @@
     - "You made it down to the last six meters before your legs quit. Most people don't get half that far."
   back:
     - "Still catching your breath?"
-    - "The door on the east wall opens behind the clinic. Don't stay in here too long."
+    - "The cream door on the south wall leads deeper into Level 109. The east door still opens back behind Level 11's clinic."
   warm:
     - "Still upright. Good."
   cold:
     - "Save the glare for whatever chased you."
   bye:
-    - "Watch yourself back in Level 11."
+    - "Keep your eyes open in Level 109."
     - "Try not to get cornered in the next hallway."
   walk:
     - "Fine. Try not to waste the second chance."

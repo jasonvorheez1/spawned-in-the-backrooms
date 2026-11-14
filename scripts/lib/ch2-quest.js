@@ -49,7 +49,7 @@ export const REPLIES = {
   phoebe_thanks: "You're welcome. Don't make it weird. Honestly, most people who survive the sprint spend the first five minutes checking if I have teeth in my sleeves before they say thanks. You handled the turn alright once I waved you into the alcove.",
   phoebe_whisper: "Still got good ears, I see. Yeah, that's the Mike I meant. Ran a red hall, kept his jacket mostly together, talked nonstop about going fishing once he got out of the city. Strange taste in hobbies, if you ask me.",
   phoebe_prep: "You kept a steady cadence on that run instead of blowing your legs out before the third turn. Looks like somebody found Mike's old pacing notes before stepping through the red door.",
-  phoebe_finish: "Door at the back of the alcove pushes right back out to Level 11's strip mall block. Watch the step on the far side, it drops two inches onto wet asphalt. Oh, and if you keep chasing Dina's signal north, stay out of the flooded drains at night.",
+  phoebe_finish: "That unmarked cream door on the south wall runs straight out of this ward into Level 109. Clean tiles, bright bulbs, and people in scrubs who keep every ward door shut. If you're still chasing Dina's signal forward, go through there. The east door back to Level 11's strip mall stays open if you need supplies first.",
 };
 
 function shortId(it) {
@@ -283,7 +283,7 @@ export function completeChapter2(ctx, s) {
   endQuest(s, CH2.id, "Decoded IS LAB's dead signal, confirmed Mike Sunderland's intake log, survived Level !, and met Phoebe in the Safe Alcove.");
   pointCh3(s);
   addPayout(s, { xp: 450 });
-  questBanner(ctx, s, "Chapter 2 Complete: The Dead Signal (+450 XP) - Exit alcove open", FANFARE);
+  questBanner(ctx, s, "Chapter 2 Complete: The Dead Signal (+450 XP) - South hospital door to Level 109 open", FANFARE);
   ctx.emit("milestone", { step: 2, name: "chapter-2" }, { audience: { player: ctx.self.id } });
   return true;
 }
@@ -428,7 +428,7 @@ export function ch2Choices(ctx, it, s) {
       if (s.heardMike && !s.knowsMike && !s.phoebeWhispered) out.push({ text: "Wait. You mentioned Mike earlier. Who is he?" });
       if (s.phoebeReaction === "reminded" && !s.phoebeAskedMike) out.push({ text: "Did you know Mike well?" });
       if (s.ch2Prep && !s.phoebeNotedPrep) out.push({ text: "Think those pacing notes from Level 11 actually kept me upright?" });
-      out.push({ text: "I'm heading back to Level 11." });
+      out.push({ text: "Where does that cream hospital door go?" });
     }
   }
 
@@ -725,7 +725,7 @@ export function handleDialogueCh2(ctx, player, npc, text) {
         st.phoebeNotedPrep = 1;
         return { reply: REPLIES.phoebe_prep, mood: "friendly" };
       }
-      if (text.includes("heading back to Level 11")) {
+      if (text.includes("cream hospital door") || text.includes("heading back to Level 11")) {
         completeChapter2(ctx, st);
         npc.state.leaveAt = ctx.now() + 9000;
         return { reply: REPLIES.phoebe_finish, mood: "friendly" };
@@ -740,7 +740,7 @@ export function handleDialogueCh2(ctx, player, npc, text) {
 export const CH3 = { id: "the-neon-hospital", name: "The Neon Hospital" };
 export function pointCh3(s) {
   if (!s || s.ch3Q) return false;
-  return setQuest(s, CH3.id, { name: CH3.name, main: true, step: "There is a second door in the alcove, cream paint, no sign. Phoebe keeps glancing at it. Go through.", mark: { place: "levelrun", id: "lrun-to-l109" } });
+  return setQuest(s, CH3.id, { name: CH3.name, main: true, step: "Step through the unmarked cream door on the alcove's south wall into Level 109.", mark: { place: "levelrun", id: "lrun-to-l109" } });
 }
 export function startCh3(ctx, player) {
   const s = player?.state; if (!s || s.ch3Q) return false;

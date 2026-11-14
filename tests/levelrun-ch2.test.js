@@ -4,7 +4,7 @@ mock.module("builtin/tween", () => ({ animate: () => {} }));
 mock.module("builtin/nav", () => ({ findPath: () => null }));
 mock.module("../scripts/mat-cloth.js", () => ({ PRINTS: {} }));
 const { CORRIDOR, OBSTACLES, agilityProfile, hitObstacle, stepHordeZ } = await import("../scripts/lib/levelrun-mechanics.js");
-const { CH2, CH2_TONE, ch2Tick, ch2Choices, handleDialogueCh2, setCh2Step, megHostileCh2 } = await import("../scripts/lib/ch2-quest.js");
+const { CH2, CH2_TONE, CH3, ch2Tick, ch2Choices, handleDialogueCh2, setCh2Step, megHostileCh2 } = await import("../scripts/lib/ch2-quest.js");
 const { startIntroCut, startRescueCut, finishRescueToAlcove, lrunCutTick, lrunUi } = await import("../scripts/lib/levelrun-cut.js");
 const { ears: dropEars } = await import("../scripts/l11-ch2-drop.js");
 
@@ -246,7 +246,7 @@ describe("Level ! intro, near-death rescue non-repeatability, and Phoebe conclus
     expect(wChoices.some((c) => c.text.includes("mentioned Mike earlier"))).toBe(true);
   });
 
-  test("supports all 5 replies to Phoebe with male Mike pronouns and completes Chapter 2 without Chapter 3 card", () => {
+  test("supports all 5 replies to Phoebe with male Mike pronouns and points Chapter 2 end to Level 109", () => {
     for (const [snippet, expectedStance, reaction, extra] of [
       ["watch Mike Sunderland", "curious", "mike", { knowsMike: 1 }],
       ["what were you waiting for", "curious", "reminded", {}],
@@ -270,9 +270,11 @@ describe("Level ! intro, near-death rescue non-repeatability, and Phoebe conclus
       expect(res.reply).not.toMatch(/sister|\bshe\b|\bher\b/i);
       expect(res.reply.length).toBeGreaterThan(20);
 
-      // Exit requires speaking + finishing Chapter 2 cleanly
+      // Both exits require finishing Chapter 2 dialogue with Phoebe first
       const exitObj = { id: "lrun-to-l11", feetPosition: { x: 85, y: 0, z: 0 }, state: { kind: "levelrun-exit" } };
+      const to109Obj = { id: "lrun-to-l109", feetPosition: { x: 78, y: 0, z: 4.34 }, state: { kind: "levelrun-to-109" } };
       dropEars.press({ ...ctx, self: exitObj }, { by: p.id });
+      dropEars.press({ ...ctx, self: to109Obj }, { by: p.id });
       expect(ctx.crossed.length).toBe(0);
 
       const followUps = ch2Choices(ctx, phoebe, p.state);
@@ -280,11 +282,16 @@ describe("Level ! intro, near-death rescue non-repeatability, and Phoebe conclus
         // Phoebe just named Mike in her reply, unlocking the follow-up naturally
         expect(followUps.some((c) => c.text.includes("Did you know Mike"))).toBe(true);
       }
-      const finishChoice = followUps.find((c) => c.text.includes("heading back to Level 11"));
-      handleDialogueCh2(ctx, p, phoebe, finishChoice.text);
+      const finishChoice = followUps.find((c) => c.text.includes("cream hospital door"));
+      expect(finishChoice).toBeDefined();
+      const fin = handleDialogueCh2(ctx, p, phoebe, finishChoice.text);
+      expect(fin.reply).toContain("Level 109");
+      expect(fin.reply).toContain("south wall");
 
       expect(p.state.ch2Done).toBe(1);
       expect(p.state.ch3Unlocked).toBe(1);
+      expect(p.state.quests[CH3.id].mark).toEqual({ place: "levelrun", id: "lrun-to-l109" });
+      expect(p.state.ch3Q).toBeUndefined();
       if (reaction === "mike" || reaction === "reminded") expect(p.state.knowsMike).toBe(1);
       else expect(p.state.knowsMike).toBeUndefined();
       expect(p.state.payout).toEqual({ xp: 450 });
@@ -292,8 +299,9 @@ describe("Level ! intro, near-death rescue non-repeatability, and Phoebe conclus
       expect(p.state.qdone[CH2.id].outcome).toBe("completed");
       expect(phoebe.state.leaveAt).toBeGreaterThan(ctx.now());
 
-      dropEars.press({ ...ctx, self: exitObj }, { by: p.id });
-      expect(ctx.crossed).toEqual([{ who: "player/1", dest: "level11#l11-from-levelrun" }]);
+      dropEars.press({ ...ctx, self: to109Obj }, { by: p.id });
+      expect(p.state.ch3Q).toBe(1);
+      expect(ctx.crossed).toEqual([{ who: "player/1", dest: "level109" }]);
     }
   });
 
