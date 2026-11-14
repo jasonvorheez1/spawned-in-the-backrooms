@@ -11,7 +11,7 @@ export function layHouse(ctx, put, L) {
   // the shell you see is the Blender build (art/ferry-house/build.py); the scripted shell stays as its collider, unseen
   const getO = ctx.getObject?.("l169-house-shell"); if (getO) getO.visible = false;
   const tx = (t, rep, extra = {}) => ({ texture: t, repeat: rep, wrap: "repeat", ...extra });
-  put("l169-house-look", { feetPosition: { x: C.x, y: ground, z: C.z }, castShadow: true, receiveShadow: true, visibleRange: { max: 900 },
+  put("l169-house-look", { feetPosition: { x: C.x, y: ground - 2.9, z: C.z } /* the model's lowest point is the basement slab, 2.9 m under the yard */, castShadow: true, receiveShadow: true, visibleRange: { max: 900 },
     model: { id: SHELL_GLB, materials: {
       stucco: tx("cdn/texture-pale-adobe-stucco.png", [0.5, 0.5], { color: "oklch(0.95 0.03 70)" }), plaster: tx("cdn/texture-limewash-plaster.png", [0.5, 0.5]),
       floor: tx("cdn/texture-swept-wood-plank-floor.png", [0.5, 0.5]), concrete: tx("cdn/texture-smooth-poured-concrete.png", [0.5, 0.5]),
