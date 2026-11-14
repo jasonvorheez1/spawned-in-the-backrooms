@@ -3,6 +3,7 @@
 // landmarks to steer by, route boards with guided night legs, lockers of tins (never water), and the jump into the void that wakes you in Level 11.
 // Positions: scripts/lib/data/level169.yml; road numbers: scripts/lib/data/l169-road.yml. Sites stream in near players and go when everyone is far.
 import R from "./data/l169-road.yml";
+import { giveKey, hasKey } from "./hubkeys.js";
 export const ORDER = ["house", "a", "b", "bh", "c", "edge"];
 const GEO = "scripts/l169-road-geo.js", TRAVEL = "scripts/l169-travel.js";
 const NAMES = { house: "Ferry's house", edge: "The edge" };
@@ -169,8 +170,9 @@ export function tickRoad(ctx, put, L, force = false) {
       if (f.y < rim - 12) ps.l169fall = { at: Math.round(now) };
     }
     if (ps.l169fall && now - ps.l169fall.at >= R.fallMs) {
+      if (!ps.l169jumped && !hasKey(ps, "level169")) giveKey(ctx, p, "level169"); // A Reason to Return: the Hub door back to the desert
       ps.l169fall = null; ps.l169jumped = true; ps.l169board = null; ps.l169read = null;
-      ps.notice = { text: "You fall a long time. Then pavement, rain, and a city that goes on forever.", at: now };
+      ps.notice = { text: "You fall a long time. Then pavement, rain, and a city that goes on forever. A key you never picked up is warm in your pocket.", at: now };
       ctx.cross(p, "level11");
     }
   }
