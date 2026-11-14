@@ -13,7 +13,7 @@ export function roadUi(ctx, player) {
     if (s.l169fall) out += `<div id="l169f${Math.round(s.l169fall.at)}" class="l169bk" style="animation:l169fall 2s forwards"></div>`;
     const b = s.l169board, r = s.l169read;
     if (b && !s.l169trip) out += `<div id="l169p" data-modal><h2>ROUTE BOARD</h2><div class="ok">Walk the leg with the guide's notes. Night only. Walking it yourself always works.</div>${(b.legs ?? []).map((q) => `<div class="leg"><b>${esc(q.name)}</b> &middot; ${q.km} km ${q.dir} &middot; ${q.hours} h<br>
-<span class="ok">Costs ${q.bottles} cold bottle${q.bottles > 1 ? "s" : ""}, ${q.food} food${q.known ? " (half: you know the way)" : ""}. Cold +${q.chill}${q.sun ? `, sun +${q.sun}` : ""}.</span><br>${q.why ? `<span class="why">${esc(q.why)}</span><br>` : ""}
+<span class="ok">Costs ${q.bottles} cold bottle${q.bottles > 1 ? "s" : ""}, ${q.food} food${q.known ? " (half: you know the way)" : ""}. ${q.chill ? `Cold +${q.chill}. ` : ""}${q.sun ? `Sun +${q.sun}.` : ""}</span><br>${q.why ? `<span class="why">${esc(q.why)}</span><br>` : ""}
 <button ${q.why ? "disabled" : ""} onclick="sendAction('make',{k:'l169go',to:'${q.to}'})">Walk the leg</button></div>`).join("")}${b.msg ? `<div class="why">${esc(b.msg)}</div>` : ""}<button class="x" onclick="sendAction('make',{k:'l169close'})">Close</button></div>`;
     else if (r) out += `<div id="l169p" data-modal><h2>${esc(r.title)}</h2>${(r.lines ?? []).map((l) => `<div class="leg ok">${esc(l)}</div>`).join("")}<button class="x" onclick="sendAction('make',{k:'l169close'})">Close</button></div>`;
     return out ? CSS + out : "";
