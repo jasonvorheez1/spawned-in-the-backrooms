@@ -8,7 +8,7 @@ import { layRoad, tickRoad } from "../../scripts/lib/l169-road.js";
 import { shipTick } from "../../scripts/lib/ssfun-voyage.js";
 import { questTick } from "../../scripts/lib/level169-quest.js";
 export const cadence = "1s";
-const V = 8; // bump to relay everything (v3: Blender shell for Ferry's house; v6: doors clear the jambs; v7: the hall dressed; v8: hall prints as boards)
+const V = 9; // bump to relay everything (v9: Ferry wears the Tripo shell; v3: Blender shell for Ferry's house; v6: doors clear the jambs; v7: the hall dressed; v8: hall prints as boards)
 const STONE = { texture: "cdn/texture-rough-stacked-sandstone-well-masonry.png", color: "oklch(0.7 0.05 65)", repeat: [4, 1], roughness: 1 };
 const WOOD = { texture: "cdn/texture-sun-bleached-grey-desert-timber.png", color: "oklch(0.62 0.04 70)", roughness: 1 };
 function sp(ctx, id, spec) {
