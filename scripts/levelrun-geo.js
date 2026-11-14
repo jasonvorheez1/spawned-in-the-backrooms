@@ -45,6 +45,7 @@ const TX = {
 const TONE = {
   red: { floor: "oklch(0.86 0.03 20)", lower: "oklch(0.72 0.1 22)", upper: "oklch(0.92 0.03 25)", tile: "oklch(0.94 0.01 60)", rail: "oklch(0.55 0.04 20)", trim: "oklch(0.42 0.05 20)" },
   l109: { floor: "oklch(0.6 0.035 75)", lower: "oklch(0.9 0.045 92)", upper: "oklch(0.9 0.045 92)", tile: "oklch(0.93 0.012 90)", rail: "oklch(0.5 0.05 60)", trim: "oklch(0.42 0.045 55)" }, // Level 109: cream plaster, brown skirt and frames, carpet
+  b3: { floor: "oklch(0.55 0.01 90)", lower: "oklch(0.6 0.012 95)", upper: "oklch(0.66 0.012 95)", tile: "oklch(0.7 0.01 90)", rail: "oklch(0.42 0.02 60)", trim: "oklch(0.36 0.03 140)" }, // Level 109 B3: raw poured concrete, M.E.G. green trim
   warm: { floor: "oklch(0.93 0.02 75)", lower: "oklch(0.9 0.03 160)", upper: "oklch(0.96 0.02 85)", tile: "oklch(0.96 0.01 80)", rail: "oklch(0.7 0.03 160)", trim: "oklch(0.6 0.03 80)" },
 };
 // a wall frame: origin, tangent, inward normal, length

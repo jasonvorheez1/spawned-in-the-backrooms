@@ -40,9 +40,9 @@ export function penUnload(ctx, id, box) {
 export function looseTick(ctx, spawnFoe, near = 70, far = 120) {
   const s = ctx.place.state, ps = ctx.place.players.map((p) => p.feetPosition).filter(Boolean), d = (a) => Math.min(...ps.map((p) => Math.hypot(p.x - a.x, p.z - a.z)), Infinity);
   let loose = s.loose ?? [], changed = false;
-  for (const f of foes(ctx)) { if (f.state.pen) continue; if (d(f.feetPosition) > far) { loose = [...loose, { k: f.state.penKind, x: Math.round(f.feetPosition.x * 10) / 10, z: Math.round(f.feetPosition.z * 10) / 10, from: f.state.penFrom ?? null }]; ctx.destroy(f.id); changed = true; } }
+  for (const f of foes(ctx)) { if (f.state.pen) continue; if (d(f.feetPosition) > far) { loose = [...loose, { k: f.state.penKind, x: Math.round(f.feetPosition.x * 10) / 10, y: Math.round(f.feetPosition.y * 10) / 10, z: Math.round(f.feetPosition.z * 10) / 10, from: f.state.penFrom ?? null }]; ctx.destroy(f.id); changed = true; } }
   const keep = [];
-  for (const l of loose) { if (ps.length && d(l) < near && spawnFoe(ctx, l.k, { x: l.x, y: 0.1, z: l.z }, { pen: null, penKind: l.k, penFrom: l.from })) changed = true; else keep.push(l); }
+  for (const l of loose) { if (ps.length && d(l) < near && spawnFoe(ctx, l.k, { x: l.x, y: (l.y ?? 0) + 0.1, z: l.z }, { pen: null, penKind: l.k, penFrom: l.from })) changed = true; else keep.push(l); }
   if (changed) s.loose = keep;
 }
 // a pen door moved: the ones inside hear it and come to look (their own AI reads state.lure for a few seconds)

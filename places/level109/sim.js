@@ -7,6 +7,7 @@ import { questTick } from "../../scripts/lib/level109-quest.js";
 import { penRoll, penLoad, penUnload, looseTick, doorOpen } from "../../scripts/lib/containment.js";
 import { spawnFoe } from "../../scripts/lib/l109-foes.js";
 import { buildRoom } from "../../scripts/lib/l109-rooms.js";
+import { buildB3, placeLauncher, stairDoorAt, MORGUE, O as B3O, yawFor as yawB3 } from "../../scripts/lib/l109-b3.js";
 export const cadence = "500ms";
 const GEO = "scripts/levelrun-geo.js", PLASTER = "cdn/texture-clean-smooth-cream-painted-plaster-wall.png", CARPET = "cdn/texture-light-grey-beige-office-carpet-tiles-worn.png";
 const AHEAD = 88, KEEP = 124, ROOM_IN = 46, ROOM_OUT = 84;
@@ -82,6 +83,15 @@ export function tick(ctx) {
   const seed = s.l109seed;
   if (!ctx.place.objects["l109-hum"]) ctx.spawn("l109-hum", { audience: "all", audio: { clip: "cdn/ambience-hospital-corridor-air-handler-ventilation-distant-loop.mp3", loop: true, gain: 0.1, spatial: false, bus: "Ambience" } });
   if (!players.length) return;
+  if (!ctx.place.objects["b3-hall"]) buildB3(ctx, seed); // B3: the sealed sub-basement (scripts/lib/l109-b3.js), once per room
+  if (!s.b3gun) { s.b3gun = 1; placeLauncher(ctx); } // the M72 lies in the cage once in the room's life
+  if (!ctx.place.objects["b3-stairdoor"]) { const d = stairDoorAt(seed); ctx.spawn("b3-stairdoor", { audience: "all", tags: ["usable", "l109-b3"], feetPosition: { x: d.x + 0.12, y: 0, z: d.z - DOOR_W / 2 }, rotation: { yaw: yawB3(0, 1) }, physics: { body: "static", collider: "box" }, material: { pbr: true }, behavior: "scripts/b3-use.js",
+    primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: "metal", part: "leaf", w: DOOR_W, h: DOOR_H, hingeSide: "left", swing: 1, seed: 5 } }, state: { kind: "b3-down", name: "Stairwell", verb: "Go Down", info: "B3" } });
+    ctx.spawn("b3-stairsign", { audience: "all", tags: ["l109-b3"], feetPosition: { x: d.x + 0.14, y: DOOR_H + 0.1, z: d.z }, rotation: { yaw: yawB3(1, 0) }, castShadow: false, vector: "<svg viewBox='0 0 220 70' width='0.5m'><rect x='3' y='3' width='214' height='64' rx='4' fill='#1f2a20' stroke='#8fa57f' stroke-width='3'/><text x='110' y='48' text-anchor='middle' font-family='sans-serif' font-size='34' font-weight='900' fill='#d8e4c8'>STAIRS B3</text></svg>" }); }
+  if (!ctx.query({ tags: ["pen-foe"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).some((f) => f.state?.b3) && ctx.now() > (s.b3foesAt ?? 0)) { // the morgue's hounds: back an hour after the last one fell
+    s.b3foesAt = ctx.now() + 3600000;
+    for (const [dx, dz] of [[-6.5, 12], [-3.5, 16.5]]) spawnFoe(ctx, "hound", { x: B3O.x + dx, y: B3O.y + 0.1, z: B3O.z + dz }, { pen: "b3-morgue", penKind: "hound", penBox: MORGUE, penDoor: { x: B3O.x - 1.5, z: B3O.z + 14 }, b3: 1 });
+  }
   if (!SEGS.size) for (const o of ctx.query({ anyTags: ["l109-seg", "l109-room"] })) ctx.destroy(o.id); // a fresh machine: clear what an earlier one laid, then lay again
   const want = new Map(), keep = new Set(), rooms = new Map();
   const reach = (c, u, span, keepSpan) => { for (let k = Math.floor((u - keepSpan) / SEG); k <= Math.floor((u + keepSpan) / SEG); k++) { const key = segKey(c, k); keep.add(key); if (Math.abs(k * SEG + SEG / 2 - u) <= span && !want.has(key)) want.set(key, { c, k, d: Math.abs(k * SEG + SEG / 2 - u) }); } };
