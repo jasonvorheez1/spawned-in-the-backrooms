@@ -78,6 +78,7 @@ export function shipTick(ctx, put, placeKey, site) {
   sweep(ctx, v, placeKey);
   if (placeKey === "level26") return deckTick(ctx, v);
   const B = berth(ctx, placeKey, site);
+  { const lo = ctx.place.objects["ssfun-landing"]?.feetPosition; if (lo && Math.hypot(lo.x - B.land.x, lo.z - B.land.z) > 3) ctx.destroy("ssfun-landing"); } // a stale landing from another berth sends players ashore off the gangway
   if (!has(ctx, "ssfun-landing")) spawnAt(ctx, "ssfun-landing", { feetPosition: { x: B.land.x, y: B.foot.y + 0.2, z: B.land.z }, rotation: { yaw: B.S.yaw + 90 } });
   if (has(ctx, "ssfun-hull-plan")) ctx.destroy("ssfun-hull-plan");
   const here = v.at === placeKey, t = (now - v.since) / 1000, left = (v.next - now) / 1000;
