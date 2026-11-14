@@ -215,12 +215,12 @@ function swapBattery(ctx) { // a fresh cell into the flashlight from the bag; tr
   s.notice = { text: `Fresh battery in · ${s.batteries} spare`, at: ctx.now() }; sound(ctx, 'pickup-ammo', 0.6, true)
   return true
 }
-export function takeToken(ctx, token) {
-  const r = takeToken0(ctx, token), f = CR.food[token]
+export function takeToken(ctx, token, opts) {
+  const r = takeToken0(ctx, token, opts), f = CR.food[token]
   if (r.ok && f && !SNACKS[token]) { const s = ctx.self.state; s.hunger = Math.min(100, (s.hunger ?? 100) + f) }
   return r
 }
-function takeToken0(ctx, token) {
+function takeToken0(ctx, token, opts) {
   const s = ctx.self.state, now = ctx.now()
   if (token.startsWith('furn:')) { const k = token.slice(5); s.furn = { ...(s.furn ?? {}), [k]: (s.furn?.[k] ?? 0) + 1 }; sound(ctx, 'loot-take-all-rustle', 0.35, true); return { ok: true } } // furniture back into your build menu
   if (token.startsWith('cash:')) { s.cents = (s.cents ?? 0) + (+token.slice(5) || 1); sound(ctx, 'loot-take-all-rustle', 0.35, true); return { ok: true } } // Backdollars: a wallet, no weight
@@ -247,7 +247,7 @@ function takeToken0(ctx, token) {
   if (token === 'almond' || token.startsWith('almond:')) { // a found bottle rolls its colour; grey stays s.almonds (the barter currency)
     let c = token.slice(7)
     if (!AW[c]) { let r = ctx.random() * Object.values(AW.weights).reduce((a, b) => a + b, 0); c = 'grey'; for (const [k, wt] of Object.entries(AW.weights)) { if ((r -= wt) < 0) { c = k; break } } }
-    const key = AW_KEY[c]; s[key] = (s[key] ?? 0) + 1; gain(ctx, L.xpAlmond); s.pickedAt = now
+    const key = AW_KEY[c]; s[key] = (s[key] ?? 0) + 1; if (opts?.xp !== false) gain(ctx, L.xpAlmond); s.pickedAt = now
     if (c !== 'grey') s.notice = { text: `${AW[c].name}`, at: now }
     sound(ctx, 'plastic-bottle-pickup-rattle', 0.75, true)
     return { ok: true }
@@ -275,7 +275,7 @@ function takeToken0(ctx, token) {
   }
   if (token === 'royal_ration') { // Level 3's rare tin: eaten on the spot, all of it
     s.hp = maxHp(s.level, s); s.sanity = Math.min(maxSan(s.level, s), (s.sanity ?? 0) + L3I.royal_ration.sanity)
-    s.pickedAt = now; gain(ctx, L.xpAlmond); s.notice = { text: 'You eat the royal ration. You feel whole again', at: now }
+    s.pickedAt = now; if (opts?.xp !== false) gain(ctx, L.xpAlmond); s.notice = { text: 'You eat the royal ration. You feel whole again', at: now }
     sound(ctx, 'plastic-bottle-pickup-rattle', 0.7, true)
     return { ok: true }
   }
@@ -298,7 +298,7 @@ function takeToken0(ctx, token) {
     const mh = maxHp(s.level, s), ms = maxSan(s.level, s)
     s.hp = Math.min(mh, (s.hp ?? mh) + (token === 'ration' ? L1.rationHp * derived(s).heal : L1.bandageHp * derived(s).healMed))
     if (token === 'ration') s.sanity = Math.min(ms, (s.sanity ?? ms) + L1.rationSanity)
-    s.pickedAt = now; gain(ctx, L.xpAlmond)
+    s.pickedAt = now; if (opts?.xp !== false) gain(ctx, L.xpAlmond)
     sound(ctx, token === 'ration' ? 'plastic-bottle-pickup-rattle' : 'pickup-ammo', 0.7, true)
     return { ok: true }
   }
@@ -306,7 +306,7 @@ function takeToken0(ctx, token) {
     const mh = maxHp(s.level, s), ms = maxSan(s.level, s)
     s.hp = Math.min(mh, (s.hp ?? mh) + 40 * derived(s).heal)
     s.sanity = Math.min(ms, (s.sanity ?? ms) + 25)
-    s.pickedAt = now; gain(ctx, 30)
+    s.pickedAt = now; if (opts?.xp !== false) gain(ctx, 30)
     s.notice = { text: 'Warm Homestead Loaf. Delicious fresh bread restores +40 HP and +25 Sanity!', at: now }
     sound(ctx, 'plastic-bottle-pickup-rattle', 0.7, true)
     return { ok: true }
@@ -338,7 +338,7 @@ function takeToken0(ctx, token) {
     sound(ctx, v.drink ? 'plastic-bottle-pickup-rattle' : 'loot-take-all-rustle', 0.6, true)
     return { ok: true }
   }
-  return takeToken1(ctx, token)
+  return takeToken1(ctx, token, opts)
 }
 export function useSnack(ctx, token) { // consume one from the bag
   const s = ctx.self.state, now = ctx.now(), n = s.snacks?.[token] ?? 0
@@ -364,14 +364,14 @@ export function useSnack(ctx, token) { // consume one from the bag
     sound(ctx, v.drink ? 'drinking-gulp-swallow' : 'eating-chewing-food', 0.7, true)
   }
 }
-function takeToken1(ctx, token) {
+function takeToken1(ctx, token, opts) {
   const s = ctx.self.state, now = ctx.now()
   if (token === 'beans' || token === 'bar' || token === 'firstaid') { // Level 2 food and first aid, used on the spot
     const mh = maxHp(s.level, s), ms = maxSan(s.level, s), U = L2.use
     s.hp = Math.min(mh, (s.hp ?? mh) + (token === 'beans' ? U.beansHp * derived(s).heal : token === 'bar' ? U.barHp * derived(s).heal : U.firstaidHp * derived(s).healMed))
     if (token === 'beans') s.sanity = Math.min(ms, (s.sanity ?? ms) + U.beansSanity)
     if (token === 'bar') { const w = walkOf(ctx); w.stamina = Math.min(L.stamina * 2, (w.stamina ?? s.stamina ?? 0) + U.barStamina) }
-    s.pickedAt = now; gain(ctx, L.xpAlmond)
+    s.pickedAt = now; if (opts?.xp !== false) gain(ctx, L.xpAlmond)
     sound(ctx, token === 'firstaid' ? 'pickup-ammo' : 'plastic-bottle-pickup-rattle', 0.7, true)
     return { ok: true }
   }
@@ -421,7 +421,7 @@ function takeToken1(ctx, token) {
     if (i < 0) return { ok: false, msg: '' }
     if (skillsOf(s)[SKILLS[i].k] >= SKILL_MAX) return { ok: false, msg: `${SKILLS[i].name} is already 100` }
     const sp = spentOf(s); sp[i] += 3; s.skl = sp.join(',')
-    s.pickedAt = now; s.notice = { text: `You read the book: ${SKILLS[i].name} +3`, at: now }; gain(ctx, L.xpAlmond)
+    s.pickedAt = now; s.notice = { text: `You read the book: ${SKILLS[i].name} +3`, at: now }; if (opts?.xp !== false) gain(ctx, L.xpAlmond)
     sound(ctx, 'pickup-weapon', 0.5, true)
     return { ok: true }
   }
@@ -434,7 +434,7 @@ function takeToken1(ctx, token) {
     if (usable(s, k) && W[k].damage > weaponOf(s).damage) s.equipped = k
     s.pickedAt = now; s.gotWeapon = W[k].name
     if (baseOf(k) === 'fishing_rod') s.notice = { text: 'Salvaged fishing rod · Cast into Level 10\'s lake, Level 11\'s canal, or Level 7\'s sea to fish!', at: now }
-    gain(ctx, W[k].xp ?? L.xpAlmond)
+    if (opts?.xp !== false) gain(ctx, W[k].xp ?? L.xpAlmond)
     sound(ctx, 'pickup-weapon', 0.7, true)
     return { ok: true }
   }
@@ -943,7 +943,7 @@ function invAction(ctx, d) {
     { const list = owned(s).slice(1), i = list.indexOf(k); if (i >= 0) list.splice(i, 1); s.weapons = list.join(',') } // drop one, keep the rest
     if (owned(s).includes(k) && s.equipped === 'fists') { s.equipped = k } // still holding a spare
     const f = ctx.self.feetPosition, fw = walkOf(ctx).fwd ?? { x: 0, z: -1 }
-    spawnWeapon(ctx, { x: f.x + fw.x * 0.9, z: f.z + fw.z * 0.9 }, k)
+    spawnWeapon(ctx, { x: f.x + fw.x * 0.9, z: f.z + fw.z * 0.9 }, k, { dropped: true })
     sound(ctx, 'pickup-weapon', 0.5, true)
   }
 }
@@ -1598,7 +1598,7 @@ function tickStats(ctx, t, moving) {
   const ex = cellCenter(EXIT.cx, EXIT.cz)
   if (ctx.self.place === 'main' && p.x < -HALF + 1.3 && Math.abs(p.z - ex.z) < 1.8) {
     s.escapes += 1; s.exitAt = now
-    gain(ctx, L.xpExit)
+    if (s.escapes === 1) gain(ctx, L.xpExit)
     sound(ctx, 'static-burst-glitch', 0.95, true)
     ctx.emit('screenFlash', { color: '#000000', duration: 0.9, intensity: 1 }, { audience: { player: ctx.self.id } })
     carryAcross(ctx, ctx.self, 'level1#l1-from-main') // what you hold comes too (scripts/lib/carry.js)

@@ -384,7 +384,7 @@ function shop(ctx, d) {
     const cents = price * 100 // Backdollars only: traders don't take almond water as money any more
     if ((s.cents ?? 0) < cents) { note(ctx, `Not enough Backdollars: $${price}.00`); return }
     s.cents -= cents
-    const got = takeToken(ctx, t)
+    const got = takeToken(ctx, t, { xp: false })
     if (!got?.ok) { s.cents += cents; note(ctx, got?.msg ?? (got?.why ? `Can't take it: ${got.why}` : "You can't carry that.")); return }
     stock[t] = [row[0] - 1, row[1]]; it.state.stock = stock
     repTrade(ctx, ctx.self, it); note(ctx, `Bought ${describe(t).name} for $${price}.00.`)

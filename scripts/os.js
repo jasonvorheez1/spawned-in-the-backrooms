@@ -25,9 +25,12 @@ const shutdown = (ctx, s) => { if (s.os && s.os.app !== 'off') s.os = { ...s.os,
 // The security panel holds a row of switches; one releases the door, the harmless ones just do their thing, the alarm locks you out.
 function unlock(ctx, s) {
   const c = ctx.getObject(s.os.id); if (c) c.state.unlocked = true
-  const opens = OPENS[s.os.host]
+  const opens = OPENS[s.os.host], uk = s.os.host || s.os.id
+  const first = uk ? !seen(s, 'osUnlock', uk) : true
+  if (first && uk) mark(s, 'osUnlock', uk)
   s.os = { ...s.os, user: 'admin', lock: '', app: opens ? 'ctrl' : 'desktop' }
-  gain(ctx, 30); note(ctx, s, opens ? 'Admin access. The security panel is open.' : 'Access gained. Restricted files are open.')
+  if (first) gain(ctx, 30)
+  note(ctx, s, opens ? 'Admin access. The security panel is open.' : 'Access gained. Restricted files are open.')
 }
 function ctrl(ctx, s, id) {
   const os = s.os, key = OPENS[os.host], C = CTRL[key], r = C?.rows.find((x) => x.id === id)

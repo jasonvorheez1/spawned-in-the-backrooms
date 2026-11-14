@@ -13,8 +13,8 @@ export function spawnAlmond(ctx, c) {
   ctx.spawn({ tags: ["almond"], feetPosition: scatter(ctx, c), rotation: ctx.random() * 360, visibleRange: { max: 35 }, castShadow: false, model: "/cdn/value.d74570d765a2d43f965fc8756878f7bf22f833db5feaf4c335d84d8dc4ba5b62.glb", layout: { box: { min: { x: -0.07, y: 0, z: -0.07 }, max: { x: 0.07, y: 0.32, z: 0.07 } } } });
 }
 
-export function spawnWeapon(ctx, c, kind) {
-  ctx.spawn({ tags: ["weapon"], state: { kind }, feetPosition: scatter(ctx, c), rotation: ctx.random() * 360, visibleRange: { max: 40 }, castShadow: false, ...weaponBody(kind) });
+export function spawnWeapon(ctx, c, kind, extra) {
+  ctx.spawn({ tags: ["weapon"], state: extra ? { kind, ...extra } : { kind }, feetPosition: scatter(ctx, c), rotation: ctx.random() * 360, visibleRange: { max: 40 }, castShadow: false, ...weaponBody(kind) });
 }
 
 export function spawnAmmo(ctx, c) {

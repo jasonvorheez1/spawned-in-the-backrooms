@@ -59,12 +59,18 @@ export const ears = {
       return;
     }
 
+    const now = ctx.now(), uid = who?.userId ?? by ?? who?.id ?? "p", cool = (s.cool ??= {});
     // 3. Almond Water Vending Machine
     if (s.kind === "vending-almond") {
+      if (now - (cool[uid] ?? -1e9) < 45000) {
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.1, z: pos.z }, text: "COIL RESETTING...", color: "#80b8d8", size: 0.9 }, { audience: { player: who.id } });
+        return;
+      }
+      cool[uid] = now;
       heard(ctx, { clip: G("container-open-rustle"), position: { x: pos.x, y: pos.y + 0.8, z: pos.z }, volume: 0.7, maxDistance: 12 });
       w.thirst = Math.min(100, (w.thirst ?? 80) + 40);
       w.sanity = Math.min(100, (w.sanity ?? 80) + 15);
-      w.payout = { xp: 15, items: ["almond"] };
+      w.payout = { xp: 0, items: ["almond"] };
 
       if (who?.anim) {
         who.anim.gest = { clip: SIP_DRINK, loop: "once", weight: 0.85, blendIn: 0.25, blendOut: 0.35, mask: { from: "Spine" } };
@@ -76,9 +82,14 @@ export const ears = {
 
     // 4. Retro Snack Vending Machine
     if (s.kind === "vending-snack") {
+      if (now - (cool[uid] ?? -1e9) < 45000) {
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.1, z: pos.z }, text: "COIL RESETTING...", color: "#d8b870", size: 0.9 }, { audience: { player: who.id } });
+        return;
+      }
+      cool[uid] = now;
       heard(ctx, { clip: G("container-open-rustle"), position: { x: pos.x, y: pos.y + 0.8, z: pos.z }, volume: 0.7, maxDistance: 12 });
       w.hunger = Math.min(100, (w.hunger ?? 80) + 40);
-      w.payout = { xp: 15, items: ["bar", "chips"] };
+      w.payout = { xp: 0, items: ["bar", "chips"] };
 
       if (who?.anim) {
         who.anim.gest = { clip: EAT_SNACK, loop: "once", weight: 0.85, blendIn: 0.25, blendOut: 0.35, mask: { from: "Spine" } };

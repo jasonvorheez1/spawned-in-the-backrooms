@@ -134,12 +134,12 @@ export const ears = {
       ctx.emit("screenFlash", { color: "#40d8ff", duration: 0.45, intensity: 0.3 }, { audience: { player: by } });
       who.state.thirst = Math.min(100, (who.state.thirst ?? 80) + 30);
       who.state.payout = {
-        xp: 15,
+        xp: 0,
         items: ["almond"],
       };
       ctx.emit("damageNumber", {
         position: { x: pos.x, y: pos.y + 1.3, z: pos.z },
-        text: "+ALMOND WATER  +30 THIRST  +15 XP",
+        text: "+ALMOND WATER  +30 THIRST",
         color: "#60e0ff",
         size: 1.25,
       }, { audience: { player: by } });
@@ -231,7 +231,7 @@ export const ears = {
       ctx.emit("screenFlash", { color: "#d4a040", duration: 0.3, intensity: 0.25 }, { audience: { player: by } });
       ctx.emit("damageNumber", {
         position: { x: pos.x, y: pos.y + 1.2, z: pos.z },
-        text: "SEARCHED BUREAU DRAWERS (+25 XP)",
+        text: "SEARCHED BUREAU DRAWERS",
         color: "#ffd700",
         size: 1.2,
       }, { audience: { player: by } });
@@ -244,7 +244,7 @@ export const ears = {
       ctx.emit("screenFlash", { color: "#60d0e0", duration: 0.4, intensity: 0.3 }, { audience: { player: by } });
       ctx.emit("damageNumber", {
         position: { x: pos.x, y: pos.y + 1.4, z: pos.z },
-        text: "SEARCHED ANTIQUE ARMOIRE (+35 XP)",
+        text: "SEARCHED ANTIQUE ARMOIRE",
         color: "#74d4f8",
         size: 1.25,
       }, { audience: { player: by } });

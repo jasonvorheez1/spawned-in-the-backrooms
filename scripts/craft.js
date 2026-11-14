@@ -43,7 +43,7 @@ function act(ctx, s, d) {
   const sounds=new Set()
   for(let i=0;i<want;i++){
     const effects=[],draftContext=(draft)=>({self:{id:ctx.self.id,state:draft,feetPosition:ctx.self.feetPosition,session:{}},now:()=>ctx.now(),random:()=>ctx.random(),emit:(...args)=>effects.push(args)})
-    const result=craftOne(s,id,(draft,token)=>{const mark=effects.length,k=token.startsWith('weapon:')?token.slice(7):null,had=k&&String(draft.weapons??'').split(',').includes(k),result=takeToken(draftContext(draft),token);if(result?.ok&&k&&!had&&r.skill)draft['cnd_'+k]=Math.round(Math.max(60,Math.min(100,60+st.got-st.need)));if(!result?.ok)effects.length=mark;return result},ctx.random()<st.bonusChance)
+    const result=craftOne(s,id,(draft,token)=>{const mark=effects.length,k=token.startsWith('weapon:')?token.slice(7):null,had=k&&String(draft.weapons??'').split(',').includes(k),result=takeToken(draftContext(draft),token,{xp:false});if(result?.ok&&k&&!had&&r.skill)draft['cnd_'+k]=Math.round(Math.max(60,Math.min(100,60+st.got-st.need)));if(!result?.ok)effects.length=mark;return result},ctx.random()<st.bonusChance)
     if(!result.ok){why=result.msg;break}
     for(const [key,value]of Object.entries(result.state))if(value!==s[key])s[key]=value
     for(const args of effects){if(args[0]==='playSound'){const clip=args[1]?.clip;if(sounds.has(clip))continue;sounds.add(clip)}ctx.emit(...args)}
@@ -75,7 +75,7 @@ export function update(ctx, dt) {
   if ((m.h <= 0 || m.t <= 0) && s.hp > 1) s.hp = Math.max(1, s.hp - N.starveHp * dt)
   if (m.h < N.low || m.t < N.low) s.sanity = Math.max(0, (s.sanity ?? 0) - N.lowSanity * dt)
   if (poll) {
-    if (s.payout) { const p = s.payout; s.payout = null; gain(ctx, p.xp ?? 0); for (const t of p.items ?? []) takeToken(ctx, t); if (p.text) s.notice = { text: p.text, at: ctx.now() } } // rewards other things owe you (Level 4's office tasks)
+    if (s.payout) { const p = s.payout; s.payout = null; gain(ctx, p.xp ?? 0); const itemOpt = (p.noItemXp || p.xp === 0) ? { xp: false } : undefined; for (const t of p.items ?? []) takeToken(ctx, t, itemOpt); if (p.text) s.notice = { text: p.text, at: ctx.now() } } // rewards other things owe you (Level 4's office tasks)
   }
 }
 

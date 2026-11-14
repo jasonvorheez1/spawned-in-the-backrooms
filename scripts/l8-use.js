@@ -123,7 +123,7 @@ export const ears = {
         slap = " A tar hand lunged up and scorched your wrist!";
         ctx.emit("cameraPunch", { direction: { x: 0, y: 0.4, z: -0.4 }, intensity: 0.35 }, { audience: { player: who.id } });
       }
-      w.payout = { xp: 16, items: ["pitch", extra], text: `Dredge hauled: ${label}.${slap}` };
+      w.payout = { xp: 0, items: ["pitch", extra], text: `Dredge hauled: ${label}.${slap}` };
       ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "+TAR DREDGE", color: "#f0c040", size: 1.1 }, { audience: { player: who.id } });
       return;
     }
@@ -167,7 +167,7 @@ export const ears = {
         { name: "The Road's End", need: null, xp: 150, items: ["firstaid", "cash:5000"], text: "Walk the whole 9th Road to the asphalt and the glow, and come back. Tell us what is there." },
       ];
       const lap = Math.floor((w.l8q ?? 0) / Q.length), qi = (w.l8q ?? 0) % Q.length; let q = Q[qi];
-      if (!q.need && (w.l8Exits ?? 0) < 1 && lap > 0) { w.l8q = (w.l8q ?? 0) + 1; return say(who, "Board: 'The Road's End' is done: the glow is the end of the Road, and not the end of the story.", ctx); }
+      if (!q.need && lap > 0) { w.l8q = (w.l8q ?? 0) + 1; return say(who, "Board: 'The Road's End' is done: the glow is the end of the Road, and not the end of the story.", ctx); }
       const mul = 1 + lap, need = q.need ? Object.fromEntries(Object.entries(q.need).map(([k, n]) => [k, n * mul])) : null, sc = w.scrap ?? {};
       const NAME = { glow_cap: "glow caps", chitin: "chitin plates", pitch: "tar pitch", flowstone: "flowstone shards", ironstone: "ironstone ore" };
       const have = need ? Object.entries(need).every(([k, n]) => (sc[k] ?? 0) >= n) : (w.l8Exits ?? 0) >= 1;

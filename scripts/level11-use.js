@@ -374,9 +374,9 @@ export const ears = {
       s.opened = true;
       heard(ctx, { clip: CHEST_OPEN, position: pos, volume: 0.9, maxDistance: 14 });
       if (ctx.self.id === "l11-vault-crate-sedco") {
-        w.cents = (w.cents ?? 0) + 5000; w.sedcoVault = 1;
-        w.payout = { xp: 20, items: ["firstaid"] };
-        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "+$50.00 CASH & FIRST AID", color: "#00d2d3", size: 1.15 }, { audience: { player: who.id } });
+        const first = !w.sedcoVault; w.sedcoVault = 1;
+        if (first) { w.cents = (w.cents ?? 0) + 5000; w.payout = { xp: 20, items: ["firstaid"] }; }
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: first ? "+$50.00 CASH & FIRST AID" : "VAULT ALREADY SALVAGED", color: "#00d2d3", size: 1.15 }, { audience: { player: who.id } });
         return;
       }
       w.payout = {
@@ -508,10 +508,15 @@ export const ears = {
 
     // 18. Capital Market Produce Crate (Perpetually Noclipping Supplies)
     if (s.kind === "market-produce") {
+      const uid = who?.userId ?? by ?? who?.id ?? "p", cool = (s.cool ??= {});
+      if (now - (cool[uid] ?? -1e9) < 30000) {
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.0, z: pos.z }, text: "CRATE RESTOCKING...", color: "#d8a860", size: 0.9 }, { audience: { player: who.id } });
+        return;
+      }
+      cool[uid] = now;
       heard(ctx, { clip: G("container-open-rustle"), position: pos, volume: 0.8, maxDistance: 10 });
       w.hunger = Math.min(100, (w.hunger ?? 70) + 30);
       w.sanity = Math.min(100, (w.sanity ?? 80) + 15);
-      w.payout = { xp: 15 };
 
       ctx.emit("damageNumber", {
         position: { x: pos.x, y: pos.y + 1.0, z: pos.z },
