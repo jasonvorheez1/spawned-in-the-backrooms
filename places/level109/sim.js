@@ -32,6 +32,7 @@ function uvBox(c, u0, u1, v0, v1, y0, y1) { const a = toWorld(c, u0, v0), b = to
 const wallName = (c, side) => (c.ax === "ns" ? (side > 0 ? "e" : "w") : side > 0 ? "s" : "n");
 // where along the hall kit's wall a corridor-frame offset du (from the segment centre) falls
 const wallS = (c, side, du, len) => { const n = wallName(c, side); return n === "e" || n === "n" ? du + len / 2 : len / 2 - du; };
+const BREAKER_GLB = "/cdn/value.98cc7a5e38b998052fe8227c519a305f173d1ae956e559356ebe72214dccef4c.glb";
 const TROFFER = { color: "#fffdf2", emissive: "#fff6dc", emissiveIntensity: 2.4 };
 function laySeg(ctx, seed, c, k) {
   const key = segKey(c, k), id = "l109s-" + key, info = segInfo(seed, c, k), u0 = k * SEG, um = u0 + SEG / 2, mid = toWorld(c, um, 0), made = [id];
@@ -72,9 +73,9 @@ function laySegFixtures(ctx, seed, c, k, key, um, info, dark, anyDead, kid) {
     return;
   }
   if (anyDead || k % 5 === 0 || (c.ax === "ns" && c.i === 0 && k === 2)) {
-    const s = sidePick(41), p = toWorld(c, um + 4.4, s * (W / 2 - 0.01), 1.3);
+    const s = sidePick(41), p = toWorld(c, um + 4.4, s * (W / 2 - 0.01), 1.02);
     kid("brk", { tags: ["usable"], feetPosition: p, rotation: { yaw: wallYaw(s) }, castShadow: false, behavior: "scripts/l109-use.js", visibleRange: { max: 40 },
-      primitive: { kind: "scripted", script: MED, params: { part: "breaker", on: !dark && !anyDead, tripped: anyDead } },
+      model: { id: BREAKER_GLB, forward: "+z" }, layout: { box: { min: { x: -0.22, y: 0, z: -0.12 }, max: { x: 0.22, y: 0.56, z: 0 } } }, // Tripo breaker panel (Shelly Nov 14: the box-built one was blocky)
       state: { kind: "breaker", seg: key, tripped: anyDead, name: "Wing Power Breaker", verb: anyDead ? "Reset Circuit" : dark ? "Restore Lights" : "Cut Lights", info: anyDead ? "tripped · Repair 20 / Science 25" : dark ? "lights cut" : "power on", c: p } });
   }
   if (k % 4 === 1 || (c.ax === "ns" && c.i === 0 && k === 1)) {
