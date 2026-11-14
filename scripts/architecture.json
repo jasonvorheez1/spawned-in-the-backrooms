@@ -1,24 +1,24 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8613,
-  "updatedAt": "2026-11-14T23:07:41.065Z",
+  "basedOnSpecVersion": 8641,
+  "updatedAt": "2026-11-14T23:52:04.060Z",
   "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Shared registries and handlers coordinate global play, while per-place simulations, authored cell scenes and procedural builders compose local spaces and stories; NPC speech uses authored text and recorded voice clips where available.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes, anomalies and deterministic dressing; momentsV gates fitted wall moments and room-prop regeneration.",
     "places/bonus (3D) - vaporwave mall with shops, simulated staff, arcade, homes and salon; authored placements live in cells. places/testlab is the Test Range with loot/enemy bays and HIT SQUAD pad.",
     "places/thehub (3D) - tunnel crossroads, keyed destinations and Camp Amber crews; fixed tunnel fixtures/furniture are in cell scenes, while sim builds shells/doors and keeps camps staffed.",
-    "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office, supplies, encounters and story beats; places/home11 is a furnished green-house bedroom with usable boombox.",
+    "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office, supplies, encounters and story beats.",
     "places/level1 + places/level4 + places/level26 (3D) - M.E.G. camps and authored office mazes; Level 26's S.S. Fun has cabin 23, Partygoer decks/lockdown and aboard gate; Level 1 includes Dina's radio.",
     "places/level9 + places/level11 + places/level61 (3D) - seeded Suburbs, Level 11 city/Base Beta/strip mall/clinic and Chapter 2 trail, and Snackrooms food court/M.E.G. checkpoint with simulated staff and Clippers lounge.",
     "places/level70 (3D) - winter market/civic town, stalls, hotel, office, pump and Dry Pipes landmarks; sim composes civic, wild and life systems with town/path builders.",
-    "places/level169 (3D, 'Welcome to the Desert') - seeded desert, Ferry's house/trail, Ferry and Friends, checkpoint road with route boards, ration lockers, readable trail logs and a usable B½ shelter; sun/water hazards, quests and S.S. Fun landing are composed by its sim and shared builders."
+    "places/level169 (3D, 'Welcome to the Desert') - seeded desert, Ferry's house/trail and pantry, Ferry and Friends, checkpoint road, B½ shelter, sun/water hazards, quests and S.S. Fun links."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input actions; fall-guard runs before locomotion/player behavior and scripts/radio.js is on the player.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - local config, authored placements and place generation/tick behavior; selected sims compose shared helpers.",
     "places/level169/config.yaml + scripts/terrain169.js - seeded height/material generator and desert marks; config binds terrain and scrub dressing, while cell scenes hold placed flora models.",
-    "places/level169/sim.js + scripts/lib/data/level169.yml + scripts/lib/l169-house.js + scripts/lib/l169-ferry.js + scripts/lib/l169-friends.js + scripts/lib/l169-road.js - dynamic well/house/Ferry/Friends/trail/road composition; sim ticks these systems and the quest/ship.",
+    "places/level169/sim.js + scripts/lib/data/level169.yml + scripts/lib/l169-house.js + scripts/lib/l169-ferry.js + scripts/lib/l169-friends.js + scripts/lib/l169-road.js - dynamic well/house/pantry/Ferry/Friends/trail/road composition; sim ticks Friends, road, S.S. Fun and quests.",
     "places/level13/cells/x0z0.scene + places/level13/sim.js - cell scene owns apartment shell and permanent architectural fixtures; sim handles lethargy and delegates furnishing, foes, people, dressing and tape.",
     "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js - title/settings, new-expedition choices, five-slot save manager and story/tutorial lifecycle; scripts/ui.js composes the in-game HUD and wrist panels.",
     "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, wake/resume, aiming, third-person view and per-place zone resolution.",
@@ -52,21 +52,22 @@
     "scripts/lib/run-opts.js + scripts/main-menu.js - player.state.run owns expedition picks; run options determine story/NPC presence and hunger/thirst/sanity drain multipliers.",
     "scripts/db.js + scripts/main-menu.js - SQL saves table owns named save-slot snapshots by player owner and slot; player.state remains the live/current run state.",
     "scripts/radio.js - player.state.radioOn/radioSt retain tuned station and power; radioOpen is the current wrist-tab state, with stream/hush object IDs kept in session.",
-    "scripts/ferry.js owns Level 169 Ferry root stock/timestamps, open/door/note state and per-player taken tracking; l169-road.js mutates player travel/read state, cold-water bottle counts and hunger, while sun169.js owns desert exposure, sand conversion and cold-water expiry."
+    "scripts/ferry.js owns Level 169 Ferry root stock/timestamps, open/door/note state and per-player taken tracking; l169-road.js mutates player travel/read state and cold-water bottle counts; scripts/pantry-item.js adds pantry goods to player.state.snacks and owns each placed tin/jar's taken/restock state."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focusable tagged props and dispatches their interaction handlers.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focusable tagged props and dispatches their behavior handlers.",
     "templates/player.js runs scripts/fall-guard.js update before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 uses camera aim + combat-anims.yml for third-person pose.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; periodic saves exclude intake, bonus and tutorial0.",
     "scripts/main-menu-ui.js actions → scripts/main-menu.js → player.state.run or SQL saves; new-run reset uses run-opts KEEP/SKIP and run options gate story/NPC presence and drain multipliers; load resolves destination through wakePlace.",
-    "scripts/lib/run-opts.js → main-menu story gates Dina/Chapter 2/cutscenes; global sim.js removes tagged NPCs only when every player in a place chose noNpcs, and Phoebe only when every player chose noStory; needsMul feeds scripts/craft.js needs drains.",
+    "scripts/lib/run-opts.js → main-menu story gates Dina/Chapter 2/cutscenes; global sim.js removes tagged NPCs only when every player in a place chose noNpcs, and Phoebe only when every player chose noStory; needsMul feeds crafting and survival drain.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold door handlers call carryAcross → held props and nearby following companions cross; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone; scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles, markers and compass place names.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js place-matched jobs; carried items/kills/world events advance errands and quest dialogue handlers → journal, player.state.errands/qtrack, feed, reputation and rewards.",
+    "scripts/lib/data/craft.yml food recipes consume raw meat or carried snack IDs and produce IDs defined in snacks.yml; scripts/lib/manuals.js gates recipe learning through player.state.recipes.",
     "places/level169/config.yaml → scripts/terrain169.js heightAt/materialAt and cell-scene flora; places/level169/sim.js lays the well once and versioned level169.yml setpieces, then ticks Friends/road/S.S. Fun/quest and Ferry.",
-    "scripts/lib/l169-road.js lays/streams checkpoint props from l169-road.yml and handles route-board costs, lockers and beds; E on props → scripts/l169-travel.js ears → l169board/l169read or guided trip, while make actions from scripts/l169-road-ui.js start/close the trip panel; travel also animates locker/logbook leaves and scripts/l169-door.js handles the B½ door.",
-    "scripts/sun169.js applies the Level 169 sun/water rules on player state (cold water expires outdoors and becomes sand); art/vo/act.py uses art/vo/emotion.py and duration screening to write voice-acted2.yml → scripts/lib/voices.js actedVoice/vo; scripts/radio.js builds STATIONS from radio data."
+    "scripts/lib/l169-house.js lays Ferry's house and shelf goods via pantry-geo.js; E dispatches to scripts/pantry-item.js, which increments the taker's player.state.snacks[token], hides that object and schedules its restock after an hour.",
+    "scripts/lib/l169-road.js lays/streams checkpoint props from l169-road.yml and handles route-board costs, lockers and beds; E on props → scripts/l169-travel.js ears → l169board/l169read or guided trip; scripts/sun169.js applies desert exposure and water rules; art/vo/act.py produces voice-acted2.yml for scripts/lib/voices.js."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; menus/staff vary by venue and Level 6.1 fixtures are fitted separately.",
@@ -75,8 +76,8 @@
     "art/cigs/build.py + art/fnv/build.py + art/xmas-clean/build.py and NIF converters, plus art/cat-wardrobe/fit.py + tailclear.py + art/level70-stall/parts.py - fitted GLBs/prop catalogs and body-specific garment/prop fitting.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl and tight spaces trigger automatic crawl.",
-    "scripts/lib/l169-road.js + scripts/l169-road-geo.js + scripts/l169-travel.js + scripts/l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include animated locker/logbook leaves, ration storage and the shelter door.",
-    "scripts/lib/npc-gear.js + scripts/lib/clothes.js + weapons/loot registries - NPC weapons, clothing and pockets scale by reference player level, role/faction/pool and stable per-NPC spread; meg-agent and hit squads consume the rolls."
+    "scripts/lib/l169-road.js + scripts/l169-road-geo.js + scripts/l169-travel.js + scripts/l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards facing their approach, animated locker/logbook leaves and shelter fixtures.",
+    "scripts/lib/l169-house.js PANTRY + scripts/pantry-geo.js + scripts/pantry-item.js - Ferry's shelf tins/jars share take-and-hourly-restock behavior with varied food tokens, container shape, label/fill and procedural shelf placement."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -87,10 +88,10 @@
   ],
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
-    "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together. The Hub cells own fixed fixture/furniture IDs; keep matching scene placements when editing sim-built spaces.",
+    "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together. The Hub cells own fixed fixture/furniture IDs; keep matching scene placements with their sim-created counterparts.",
     "Level 13's building shell is authored in cells/x0z0.scene; sim.js returns if l13-floor is absent and no longer regenerates the shell. Preserve matching floor ID and scene wall/threshold geometry; LETH remains in player.state.leth13.",
-    "Level 169 uses x/z with north at -z and 1:10 map scale; terrain marks, track, house, road sites and ship berth must align. level169.yml holds tuned positions/rules; sim's well has independent l169WellV migration and checkpoint roots carry roadV for site geometry migration.",
-    "In scripts/lib/l169-house.js, the bed model's long side is its x-axis: beds are rotated 90° and fitted at scale 1.03, 1.1, 0.68 for a 2.06-length bed; preserve this orientation/fit when changing the bedroom layout.",
-    "art/vo/act.py imports emotion(key, line) from art/vo/emotion.py: the first matching text rule overrides dialogue-key emotion, then key/fallback checks apply; prompts put feeling before cast tags. It tries up to three takes, accepts takes within a word/emotion-based duration cap, and may keep the shortest near-cap take."
+    "Level 169 uses x/z with north at -z and 1:10 map scale; terrain marks, track, house, road sites and ship berth must align. level169.yml holds tuned positions/rules; sim's well has independent l169WellV and house/road rebuilds use separate version gates.",
+    "Ferry's pantry goods are individually spawned using stable l169-pantry-* IDs and shelf coordinates derived from level169.yml house geometry; pantry-item.js sets taken per object and restocks after 3600 seconds, while each take increments player.state.snacks by its token.",
+    "art/vo/act.py imports emotion(key, line) from art/vo/emotion.py: the first matching text rule overrides dialogue-key emotion, then key/fallback checks apply; prompts put feeling before cast tags. It tries up to three takes and screens accepted takes by duration."
   ]
 }
