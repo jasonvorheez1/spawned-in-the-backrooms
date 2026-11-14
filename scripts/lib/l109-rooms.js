@@ -25,8 +25,9 @@ function put(K, name, a, b, yaw = 0, o = {}) { const m = D.models[name], [w, h, 
 // a searchable container: the world's "container" pattern (tags + state.items), read by the player's press
 function stash(K, name, a, b, yaw, label, pool, lock) { return put(K, name, a, b, yaw, { spec: { tags: ["container", "furniture"], state: { items: loot(K, pool), name: label, verb: "Search", kind: "medical", ...(lock ? { lock } : {}) } } }); }
 // a piece of the medical kit (scripts/l109-med-geo.js)
+const TIP_LIFT = 0.32; // tuned: a tipped stand turns about its feet, so its rolling base (r 0.26-0.3) swings under the floor; lift it by that radius
 function part(K, p, a, b, yaw = 0, o = {}) { const R = K.R;
-  return R.sp(`${p.part}${K.n++}`, { feetPosition: R.at(a, b, o.up ?? 0), rotation: o.tip ? { yaw: R.yawIn + yaw, pitch: 88, roll: 0 } : { yaw: R.yawIn + yaw, pitch: 0, roll: 0 }, primitive: { kind: "scripted", script: GEO, params: p, seed: K.n },
+  return R.sp(`${p.part}${K.n++}`, { feetPosition: R.at(a, b, (o.up ?? 0) + (o.tip ? TIP_LIFT : 0)), rotation: o.tip ? { yaw: R.yawIn + yaw, pitch: 88, roll: 0 } : { yaw: R.yawIn + yaw, pitch: 0, roll: 0 }, primitive: { kind: "scripted", script: GEO, params: p, seed: K.n },
     visibleRange: VR, castShadow: false, ...(o.solid ? { physics: "static" } : {}), ...(o.spec ?? {}) }); }
 function litter(K) { for (let i = 0; i < 4; i++) part(K, { part: "paper", r: 1.6, n: 14 }, -11 + K.r() * 22, 4 + K.r() * 22, K.r() * 360);
   for (let i = 0; i < 2; i++) put(K, "stackchair", -5 + K.r() * 16, 3 + K.r() * 4, K.r() * 360, { tip: true, solid: false }); }
