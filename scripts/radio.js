@@ -40,6 +40,9 @@ export function update(ctx) {
     const o = ctx.getObject(ses.radioId);
     if (o) o.audio = { clip: air.seg.clip, time: air.offset, timeAt: now, spatial: false, gain: st.gain, bus: "Radio", priority: 85 }; // its own group: the hush on Music leaves it alone
     if (s.radioSeg !== air.i) s.radioSeg = air.i; // the tab's "now playing" redraws once a segment
+    // warm the next two segments: a host line seeks to the station clock, so a clip still downloading when its turn came lost its first seconds (Shelly: "skips his voice a lot")
+    const S = st.segments, refs = [1, 2].map((k) => S[(air.i + k) % S.length].clip).filter(Boolean);
+    if (refs.length) ctx.emit("preload", { refs }, { audience: { player: me.id } });
   }
   return ctx.sleep(Math.min(1, air.left + 0.05));
 }
