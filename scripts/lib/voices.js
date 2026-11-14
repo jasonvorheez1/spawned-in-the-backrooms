@@ -74,6 +74,6 @@ export function actedVoice(who, line) {
 export function vo(who, line, n) {
   const clip = actedVoice(who, line)
   if (clip) return clip
-  const sl = slug(line, n)
-  return real(sl) ? `/cdn/voice-${throatOf(who)}-saying-${sl}.mp3` : null
+  // Shelly Nov 14: "turn off ai generated voice lines": a line with no recorded take stays a subtitle, nothing is made on the fly
+  return null
 }
