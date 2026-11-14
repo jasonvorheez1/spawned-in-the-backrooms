@@ -73,7 +73,7 @@ export function update(ctx) {
   if (st.tut) tutTick(ctx, st)
   const playing = music(ctx, place !== "bonus" && ((st.menuOpen && st.menuKind === "title") || (place === "intake" && !st.cut))) // the mall has its own track: the title theme never plays over it (shelly, Nov 12)
   // behind the title the camera slowly looks around the halls from head height; gone the moment it closes
-  if (st.menuOpen) {
+  if (st.menuOpen && st.menuKind === "title") {
     const p = ctx.self.feetPosition, t = ctx.now() / 1000
     if (!ses.mmCam) { ses.mmCam = { x: p.x, y: p.y, z: p.z, t0: t }; ctx.self.hidden = [...(ctx.self.hidden || []).filter((i) => i !== ctx.self.id), ctx.self.id] }
     const c = ses.mmCam, a = (t - c.t0) * 0.07 + 0.6, bob = Math.sin((t - c.t0) * 0.21) * 0.05
