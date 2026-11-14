@@ -72,10 +72,10 @@ export function spawnWanderer(ctx, id, pos, face, extra = {}) {
   const gun = r(GUNS), name = r(NAMES), sex = ctx.random() < 0.5 ? "m" : "f", torn = ctx.random() < 0.5;
   Promise.all([import("./critter-model.js"), import("./clothes.js"), import("./stats.js"), import("./weapon-look.js")]).then(([{ critterSpec }, { npcLook }, { npcState }, { weaponBody }]) => {
     if (ctx.place.objects[id]) return;
-    const look = { species: r(SPECIES), sex, eye: "#e8e4d0", topw: torn ? "sweater" : "tshirt", top: r(SCRUBS), botw: "pants", bottom: r(["#3a4a48", "#2a2a30", "#4a4036"]), shoes: "boots", shoec: "#141414" };
+    const look = { species: r(SPECIES), sex, eye: "#e8e4d0" }; // clothes come from the "frenzied" wardrobe (data/clothes.yml): gowns, scrubs, straitjackets
     const yaw = Math.atan2(face.x, face.z) * 180 / Math.PI + 180;
     ctx.spawn(id, {
-      audience: "all", tags: ["npc", "l109-wanderer", "l8-hostile", "wretched"], feetPosition: pos, rotation: { yaw }, physics: "character", ...critterSpec(npcLook(id, look, "survivor", 109)),
+      audience: "all", tags: ["npc", "l109-wanderer", "l8-hostile", "wretched"], feetPosition: pos, rotation: { yaw }, physics: "character", ...critterSpec(npcLook(id, look, "frenzied", 20)),
       behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
       state: { ...npcState(ctx, "agent", T.hp), name: `${name} · frenzied wanderer`, role: "survivor", faction: "lightless", factionName: "frenzied wanderers: people Level 109's hum got into", nerve: "frenzied", arm: gun, barks: BARKS,
         rounds: [{ x: pos.x, y: pos.y, z: pos.z, dwell: 20, act: null, look: { x: pos.x + face.x * 10, z: pos.z + face.z * 10 } }], ri: 0, home: { x: pos.x, z: pos.z }, ...extra },

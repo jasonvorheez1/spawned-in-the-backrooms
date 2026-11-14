@@ -44,6 +44,7 @@ leveled:
   roles:
     scout:     { rows: [jacket, padjacket, cargo, pants, boots, steeltoe, beanie, padbeanie, cap, shades, scarf, bntgvest, bntgcoat, bntgcap], pats: [camo, canvas], extra: { hat: 0.65, eyew: 0.35, neck: 0.3 } }
     guard:     { rows: [megjacket, wwplate, wwhelmet, padjacket, wirehood, cargo, steeltoe, boots, cap, padbeanie, shades, hazmat], pats: [camo, canvas, leather], extra: { hat: 0.85, eyew: 0.5, neck: 0.05 } }
+    frenzied:  { rows: [l109gown, l109gown, l109scrubs, l109scrubs, l109strait, l109labcoat, l109scrubpants, l109scrubpants, pants, l109slippers, l109slippers, boots, l109cap, crackedglasses, l109band], extra: { hat: 0.5, eyew: 0.25, neck: 0.4 } }   # Level 109's frenzied wanderers
     agent:     { rows: [megjacket, cpjacket, qmvest, padjacket, cargo, pants, boots, steeltoe, cap, shades, scarf, hazmat], pats: [camo, canvas], extra: { hat: 0.6, eyew: 0.45, neck: 0.15 } }
     captain:   { rows: [padjacket, jacket, cargo, slacks, steeltoe, boots, cap, shades, scarf], pats: [leather, canvas], extra: { hat: 0.9, eyew: 0.3, neck: 0.4 } }
     medic:     { rows: [lljacket, longsleeve, apron, slacks, pants, sneakers, boots, glasses, cap], pats: [weave, canvas], extra: { hat: 0.15, eyew: 0.6, neck: 0.05 } }
@@ -149,6 +150,15 @@ rows:
   - { id: silkcloak,   slot: neck, kind: cape,       name: "Silk caving cloak",  dr: 3, kg: 0.6, rarity: uncommon, places: [level8], strict: true, colours: [dfe6ea], crafted: true, pats: [canvas] }
   - { id: lifemantle,  slot: neck, kind: cape,       name: "Cork lifebelt mantle",  dr: 3, kg: 1.1, rarity: rare, places: [level7], strict: true, colours: [c85a28, 3a4e54], pats: [canvas] }
   # the Level 11 clothing shop's own stock (scripts/lib/level11-shop.js): sold by its clerk only, in no faction, role or loot list
+  # Level 109's frenzied wanderers (Shelly, Nov 14: "give the frenzied wanderers unique outfits"): what the hospital put on them, worn too long. Savi's picks.
+  - { id: l109gown,     slot: topw,  kind: dress,      name: Patient gown,          dr: 0, kg: 0.3, rarity: uncommon, places: [level109], strict: true, colours: [a9c6c9, c9d6d2, b7c4d8, d9cfb8], pats: [gingham, weave] }
+  - { id: l109scrubs,   slot: topw,  kind: tee,        name: Stained scrubs top,    dr: 1, kg: 0.3, rarity: uncommon, places: [level109], strict: true, colours: [5c7a74, 4d6a86, 6b8f8a, 7a5c6e], pats: [weave] }
+  - { id: l109strait,   slot: topw,  kind: jacket,     name: Torn straitjacket,     dr: 3, kg: 1.2, rarity: rare,     places: [level109], strict: true, colours: [e8e2d0, cfc6ad], pats: [canvas] }
+  - { id: l109labcoat,  slot: topw,  kind: jacket,     name: Scorched lab coat,     dr: 2, kg: 0.8, rarity: uncommon, places: [level109], strict: true, colours: [ece9e0, d6d0c0], pats: [weave] }
+  - { id: l109scrubpants, slot: botw, kind: pants,     name: Scrub pants,           dr: 1, kg: 0.3, rarity: uncommon, places: [level109], strict: true, colours: [5c7a74, 4d6a86, 6b8f8a, 3a4a48], pats: [weave] }
+  - { id: l109slippers, slot: shoes, kind: slippers,   name: Ward slippers,         dr: 0, kg: 0.2, rarity: common,   places: [level109], strict: true, colours: [d8d6cc, a9c6c9] }
+  - { id: l109cap,      slot: hat,   kind: beanie,     name: Surgical cap,          dr: 0, kg: 0.1, rarity: uncommon, places: [level109], strict: true, colours: [5c7a74, 4d6a86, 7fa3c4] }
+  - { id: l109band,     slot: neck,  kind: necklace,   name: Staff ID lanyard,      dr: 0, kg: 0.05,rarity: uncommon, places: [level109], strict: true, colours: [3a6ea5, c23a3a] }
   - { id: pgmask,      slot: hat,  kind: bagmask,    name: Partygoer mask,       dr: 1, kg: 0.2, rarity: rare, strict: true, shop: true, colours: [c4a46a], mask: /cdn/value.5f5897c1fc70b33b855b53254e2071094b84b6fec7b8eceabf63578dba0f3d07.glb }
   - { id: ppmask,      slot: hat,  kind: shellmask,  name: Partypooper mask,     dr: 3, kg: 0.6, rarity: rare, strict: true, shop: true, colours: [3a3878], mask: /cdn/value.4089c36c6bec1ba705d995d5f0d898aed3c53e7d554e15425904e8e098a1cc5b.glb }
   - { id: pgcoat,      slot: topw, kind: jacket,     name: Partygoer coat,       dr: 3, kg: 1.4, rarity: rare, strict: true, shop: true, colours: [b8975c], pats: [pgcoat] }
