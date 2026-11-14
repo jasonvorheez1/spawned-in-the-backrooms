@@ -70,7 +70,9 @@ function litter(K) { for (let i = 0; i < 4; i++) part(K, { part: "paper", r: 1.6
 function supply(K) { const S = D.supply, R = K.R, dead = R.abandoned; // a real stockroom: receiving bay by the door, numbered aisles filling the floor, a locked cage at the back (gavi pass, Nov 14)
   S.aisles.forEach((a, i) => { for (let j = 0; j < S.perAisle; j++) { const b = S.aisleB + j * 1.45;
       if (dead && K.r() < 0.15) { put(K, "shelf", a + 0.9, b, 90, { tip: true, solid: false }); continue; }
-      put(K, "shelf", a, b, 90); if (K.r() < 0.55) put(K, "box", a, b + (K.r() - 0.5) * 0.7, K.r() * 30, { up: D.shelfBoxY, solid: false }); }
+      put(K, "shelf", a + (K.r() - 0.5) * 0.14, b, 90 + (K.r() - 0.5) * 5); // gavi round 1 (Nov 14): a ruler-straight grid read as a render, not a used stockroom: each rack sits a hand off true
+      if (K.r() < 0.18) put(K, "box", a + 0.7 + K.r() * 0.2, b + (K.r() - 0.5) * 0.5, K.r() * 40, { solid: false }); // a carton left in the aisle, on the floor
+      if (K.r() < 0.55) put(K, "box", a, b + (K.r() - 0.5) * 0.7, K.r() * 30, { up: D.shelfBoxY, solid: false }); }
     if (i < S.aisles.length - 1) R.sp(`aisle${i}`, { feetPosition: R.at((a + S.aisles[i + 1]) / 2, S.aisleB - 0.6, 2.35), rotation: { yaw: R.yawIn + 180, pitch: 0, roll: 0 }, visibleRange: VR,
       vector: `<svg viewBox='0 0 120 50' width='0.6m'><rect x='2' y='2' width='116' height='46' rx='4' fill='#1d4f8c' stroke='#e8ecef' stroke-width='3'/><text x='60' y='35' text-anchor='middle' font-family='sans-serif' font-size='26' font-weight='700' fill='#f2f4f5'>AISLE ${i + 1}</text></svg>` }); });
   part(K, { part: "cage", w: 8, d: 5, h: 2.5 }, 9, 26.8, 180, { solid: true }); // the high-value cage
