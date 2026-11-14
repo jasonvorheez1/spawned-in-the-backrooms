@@ -10,7 +10,11 @@ const CEIL = { texture: "cdn/texture-white-popcorn-ceiling-stippled-plaster-yell
 const MOULD = "/cdn/value.422c28d69f13a7cfa68cefd16f1721d1a2098da79925a424cfbf24473e4d4b66.png";
 const F = (id) => ({ // furniture.yml rows reused (Shelly: every asset is free to reuse)
   bed: { id: "/cdn/value.5239b8cb68fc99fcb25ade25a8076a2a7c4e9dcd392b70416cd1e3417b0a320d.glb", size: [1.1, 0.95, 2.02], materials: { pine: { texture: "cdn/texture-honey-pine-wood-grain-kids-furniture-varnished.png", color: "oklch(0.78 0.09 70)", roughness: 0.5 }, duvet: { texture: "cdn/texture-faded-navy-cotton-duvet-fabric-weave.png", roughness: 0.9 } } }, // art/l114bed/build.py
-  dresser: { id: "/cdn/value.e231c093c2aceb9bfda1e65b5a29ffad0b450c23783d96cfe12892823a42a328.glb", forward: "-z", size: [1.2, 0.8, 0.48] },
+  dresser: { id: "/cdn/value.bb3939a43cee08fce2ee3eacb328aa17e9663ae9bdd67bd5af7fef33e784ab16.glb", forward: "+z", size: [1.0, 0.86, 0.5] },
+  desk: { id: "/cdn/value.202a497933c27d973c6cfb05b920e2259912960d83c01b7c7c263fe7743d1f83.glb", forward: "+z", size: [0.9, 0.91, 0.5] },
+  chair: { id: "/cdn/value.012994b24535ab7a403b5c508017a4802106b1e87e6fd78d121427ebee10b24f.glb", forward: "+z", size: [0.38, 0.86, 0.36] },
+  chest: { id: "/cdn/value.e545a647de69516e61f67b087f3963e9a7b11fc6ecb6f60b465ab87f9fb7a0d4.glb", forward: "+z", size: [0.72, 0.43, 0.43] },
+  rug: { id: "/cdn/value.54d55c312978863b7bd69030a8c670f4e2d3313700e01b64ca90bc35a3cae46c.glb", forward: "+z", size: [1.59, 0.07, 1.06] },
   tv: { id: "/cdn/value.30ae8e4fd0c2e307d21943aa6fa38f3f816fcc7a10335f5a15ff865b00b84ce4.glb", forward: "+x", size: [0.9, 1.0, 0.5] },
   shelf: { id: "/cdn/value.918584eed8336eda888580753019763471fcce0adcaf2bc66def78f53ae3fad0.glb", forward: "+x", size: [0.8, 1.7, 0.38] },
   lava: { id: "/cdn/value.2f0eae283b6ebd13603b9891c607686c47f142b2e36b43e6148b098ac56a24af.glb", forward: "+x", size: [0.42, 0.9, 0.42] },
