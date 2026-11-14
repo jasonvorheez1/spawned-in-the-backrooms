@@ -43,6 +43,8 @@ function usePart(K, p, a, b, yaw = 0, st = {}, o = {}) {
     },
   });
 }
+// a lore terminal on its own desk: prints one of the Doctors' Entity 19 records (pages.yml 110-116, Shelly Nov 14)
+function loreTerm(K, a, b, yaw, page, name) { put(K, "desk", a, b, yaw); usePart(K, { part: "terminal", on: !K.R.abandoned }, a, b, yaw, { kind: "terminal", mode: "lore", page, roomId: K.R.id, name, verb: "Read Records", info: "recovered email & logs" }, { up: 0.76, lift: 0.22 }); }
 // a piece of the medical kit (scripts/l109-med-geo.js)
 const TIP_LIFT = 0.32; // tuned: a tipped stand turns about its feet, so its rolling base (r 0.26-0.3) swings under the floor; lift it by that radius
 function part(K, p, a, b, yaw = 0, o = {}) { const R = K.R;
@@ -79,7 +81,7 @@ function theatre(K) { const dead = K.R.abandoned, A = 2, B = 15, R = K.R;
   usePart(K, { part: "gas" }, A - 0.9, B + 1.7, 150, { kind: "gas", name: "Anesthesia Manifold", verb: "Breathe O2", info: "stamina · Repair/Science 25 harvests" }, { solid: true, lift: 1.0 });
   put(K, "crashcart", A + 2.2, B - 1.6, 30); part(K, { part: "ivstand" }, A + 0.8, B - 1.3, 0, dead ? { tip: true } : {});
   usePart(K, { part: "monitor", on: !dead }, A + 1.5, B + 2.0, 200, { kind: "monitor", on: !dead, name: "Patient Monitor", verb: dead ? "Inspect Housing" : "Silence Monitor", info: dead ? "Medicine/Repair 20 salvages" : "vitals active" }, { lift: 1.25 });
-  put(K, "stackchair", A - 2.2, B + 0.4, 100, { solid: false });
+  put(K, "stackchair", A - 2.2, B + 0.4, 100, { solid: false }); loreTerm(K, -12, 4, 90, 113, "Surgical Records Terminal");
   for (let i = 0; i < 4; i++) {
     const sb = B - 2.7 + i * 1.8;
     put(K, "sink", 14.55, sb, -90, i === 1 ? { spec: { tags: ["usable"], behavior: "scripts/l109-use.js", state: { kind: "sink", name: "Scrub Sink", verb: "Wash Hands", info: "+sanity · +stamina", c: R.at(14.55, sb, 0.95) } } } : {});
@@ -125,7 +127,7 @@ function pharmacy(K) { const P = D.pharmacy, dead = K.R.abandoned, cw = D.models
   stash(K, "fridge", 13, 27.6, 180, "Drug Fridge", "cage", P.cageLock); stash(K, "lockbox", 10.5, 27.8, 180, "Controlled Drugs Box", "cage", P.boxLock);
   stash(K, "cabinet", -2, P.counterB + 1.6, 180, "Dispensary Cabinet", "pharmacy"); stash(K, "filing", 5.5, P.counterB + 1.6, 180, "Prescription Files", "desk");
   usePart(K, { part: "cooler" }, -11.5, 4.0, 90, { kind: "cooler", name: "Water Cooler", verb: "Drink Water", info: "cold filtered" }, { solid: true, lift: 0.85 });
-  put(K, "stackchair", -5, 3, 200, { solid: false }); put(K, "stackchair", -4.3, 3, 170, { solid: false }); put(K, "boxes", -12.5, 20, 30); put(K, "boxes", 9, 13, -10); put(K, "wetsign", -5.5, 9, 0, { solid: false });
+  put(K, "stackchair", -5, 3, 200, { solid: false }); put(K, "stackchair", -4.3, 3, 170, { solid: false }); put(K, "boxes", -12.5, 20, 30); put(K, "boxes", 9, 13, -10); put(K, "wetsign", -5.5, 9, 0, { solid: false }); loreTerm(K, -11.5, 12, 90, 111, "Lab Results Terminal");
 }
 function placard(K, a, b, yaw) { const R = K.R; R.sp(`plc${K.n++}`, { feetPosition: R.at(a, b, 1.55), rotation: { yaw: R.yawIn + yaw, pitch: 0, roll: 0 }, visibleRange: VR,
   vector: "<svg viewBox='0 0 100 120' width='0.5m'><rect x='2' y='2' width='96' height='116' rx='5' fill='#e8c21a' stroke='#17150f' stroke-width='4'/><path d='M50 14 L88 78 L12 78 Z' fill='none' stroke='#17150f' stroke-width='6'/><rect x='46' y='36' width='8' height='24' fill='#17150f'/><circle cx='50' cy='68' r='4.5' fill='#17150f'/><text x='50' y='104' text-anchor='middle' font-size='15' font-family='sans-serif' fill='#17150f'>BIOHAZARD</text></svg>" }); }
@@ -139,9 +141,9 @@ function biohazard(K) { const H = D.hazard, R = K.R, dead = R.abandoned, purged 
     put(K, "drum", a, b, K.r() * 360, { tint: D.drumTint, tip, solid: !tip }); }
   put(K, "barrier", -8, H.lineB - 0.6, 0); put(K, "barrier", 1, H.lineB - 0.6, 6); put(K, "barrier", -2.5, 8, 80);
   stash(K, "cagecrate", 11, 27.5, 180, "Sealed Crate", "hot"); stash(K, "lockbox", -12, 28, 180, "Sample Box", "hot"); stash(K, "cabinet", -13, 9.5, 90, "Decon Cabinet", "bedside");
-  put(K, "gurney", 0, 25, 30); put(K, "wetsign", -8, 8, 0, { solid: false }); put(K, "locker", 14.6, 4, -90); put(K, "locker", 14.6, 4.6, -90);
+  put(K, "gurney", 0, 25, 30); loreTerm(K, 8, 2.5, 0, 115, "Quarantine Desk Terminal"); put(K, "wetsign", -8, 8, 0, { solid: false }); put(K, "locker", 14.6, 4, -90); put(K, "locker", 14.6, 4.6, -90);
   const p = R.at(-15, H.lineB), q = R.at(15, 30);
-  R.sp("hz", { feetPosition: R.at(0, 25, 2.4), behavior: "scripts/l109-hazard.js", audience: "all", state: { roomId: R.id, purged, box: { x0: Math.min(p.x, q.x), x1: Math.max(p.x, q.x), z0: Math.min(p.z, q.z), z1: Math.max(p.z, q.z) } },
+  R.sp("hz", { tags: ["l109-hz"], feetPosition: R.at(0, 25, 2.4), behavior: "scripts/l109-hazard.js", audience: "all", state: { roomId: R.id, purged, box: { x0: Math.min(p.x, q.x), x1: Math.max(p.x, q.x), z0: Math.min(p.z, q.z), z1: Math.max(p.z, q.z) } },
     light: { kind: "point", color: purged ? "#eef8ff" : H.light, intensity: purged ? 1.8 : dead ? 0.9 : 1.6, distance: 15, shadow: { enabled: false } } });
 }
 function ward(K) { const W = D.ward, dead = K.R.abandoned;

@@ -259,6 +259,7 @@ export const ears = {
         if (now < (ses.l109EyeAt ?? 0)) { toast(ctx, who, "Air clean · eyewash resetting.", "sfx-ui-denied-click.mp3", pos, 0.4); return; }
         ses.l109EyeAt = now + 45000;
         w.sanity = Math.min(100, (w.sanity ?? 80) + 8);
+        if ((w.e19 ?? 0) > 0) { w.e19 = 0; toast(ctx, who, "Decon shower · the red fades. Entity 19 cleared", "sfx-shower-water-running-then-turned-off-squeak.mp3", pos, 0.55); return; }
         toast(ctx, who, "Eyewash rinse · +8 Sanity", "sfx-shower-water-running-then-turned-off-squeak.mp3", pos, 0.55);
         return;
       }
@@ -300,6 +301,11 @@ export const ears = {
 
     if (s.kind === "terminal") {
       heard(ctx, { clip: SFX + "sfx-computer-terminal-beep-confirm.mp3", position: pos, volume: 0.6, maxDistance: 10 });
+      const LORE = { 110: "EMAIL · Thursday patient", 111: "EMAIL · Re: Thursday patient", 112: "INCIDENT REPORT · Room 245", 113: "EMAIL · Unknown disease?", 114: "EVACUATION ALERT · Level 5", 115: "JOURNAL · D. Sutton", 116: "[BACKDOOR] ARCHIVED CHAT" };
+      const lorePage = s.page ?? { supply: 114, outpost: 116 }[s.mode] ?? (/ICU/.test(s.name ?? "") ? 110 : 112);
+      const printLore = () => { if (!PAGES_RE(w, lorePage)) queuePayout(w, { xp: 5, items: ["page:" + lorePage], text: "Printed " + LORE[lorePage] + " (read it in your pages)" }); };
+      if (s.mode === "lore") { sub(who, s.name ?? "HOSPITAL TERMINAL", LORE[lorePage] + " · printed to your pages", 4200, now); printLore(); return; }
+      printLore();
       if (s.mode === "outpost") {
         const purgedN = Object.keys(ctx.place.state.l109Purged ?? {}).length;
         const q = w.l109q ?? 0;
