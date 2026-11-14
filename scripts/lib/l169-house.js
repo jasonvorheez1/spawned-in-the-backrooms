@@ -70,6 +70,13 @@ export function layHouse(ctx, put, L) {
   }
   { const [x, z] = mid("den"); hide("cot-1"); hide("cot-2"); look("cot-1", M.cot, x - 1.3, z - 0.6, 0, 0.38, 0.5, 0.97); look("cot-2", M.cot, x + 1.3, z - 0.6, 0, 0.38, 0.5, 0.97); }
   { const [x, z] = mid("living"); hide("bench"); hide("maptable"); look("bench", M.bench, x, z + 2.2, 180, 0.8, 0.47, 0.22); look("maptable", M.table, x - 2.4, z - 1.2, 90, 0.46, 0.8, 0.8); }
+  // the sitting corner (Nov 14 house pass): sofa against the kitchen wall facing the window, recliner across a coffee table, shelf and lamp behind
+  { const sit = (id, m, fwd, x, z, yaw, s) => put(`l169-house-m-${id}`, { feetPosition: { x: x + (C.x - 18), y: F, z: z + (C.z + 500) }, rotation: yaw, castShadow: true, receiveShadow: true, physics: "static", model: { id: m, forward: fwd }, layout: { box: { min: { x: -s[0] / 2, y: 0, z: -s[2] / 2 }, max: { x: s[0] / 2, y: s[1], z: s[2] / 2 } } } });
+    sit("sofa", "/cdn/value.ff13bc205536a957826e2f7fed75554c07ffe7848198e50e1d65f257cabacdd9.glb", "+x", 17.3, -496.4, 90, [2.1, 1.05, 1.01]);
+    sit("coffee", "/cdn/value.b59b6a4d3115b48b5e3e42462530bbb5364e66607ba416592c80166a6cdd6483.glb", undefined, 15.6, -496.4, 90, [1.15, 0.46, 0.59]);
+    sit("armchair", "/cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb", "+x", 13.9, -497.3, 250, [1.04, 1.05, 0.95]);
+    sit("shelf", "/cdn/value.918584eed8336eda888580753019763471fcce0adcaf2bc66def78f53ae3fad0.glb", "+x", 16.7, -499.55, 180, [0.93, 1.85, 0.45]);
+    sit("flamp", "/cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb", "+x", 17.45, -494.7, 0, [0.51, 1.8, 0.51]); }
   { hide("kitchen"); const kx = r.kitchen[1] - b.wallT - 0.34;
     look("counter-a", M.counter, kx, -497.55 + (C.z + 500), 0, 0.34, 0.93, 0.86); look("counter-b", M.counter, kx, -495.8 + (C.z + 500), 0, 0.34, 0.93, 0.86);
     look("table", M.table, C.x + 4, C.z + 4, 90, 0.5, 0.8, 1.3); }
