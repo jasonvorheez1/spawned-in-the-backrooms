@@ -189,7 +189,7 @@ l169-house-mapchart:
   castShadow: false
   feetPosition: {x: 10.6, y: 1.36, z: -499.865}
   id: l169-house-mapchart
-  material: {repeat: [1, 1], roughness: 0.85, texture: /cdn/value.d7956c7f61a315be19c315eee3cfe79c24db3fe050d9e25024d444673904d01e.png}
+  material: {alphaTest: 0.5, repeat: [1, 1], roughness: 0.85, texture: /cdn/value.09c60272c011fe4220138ed9ce018805d3b1f67967b51a56c0ef026eb0415450.png, transparent: true}
   primitive: {depth: 0.004, height: 1.08, kind: box, width: 1.62}
   rotation: 180
 l169-yard-0:
