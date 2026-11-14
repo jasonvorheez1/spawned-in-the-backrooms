@@ -23,15 +23,18 @@ function humanPhoebe() {
 }
 // a local, unsaved watcher: spawned on the viewer's own machine for one beat, gone after `life` seconds
 const OUTFIT = "/cdn/value.e43b3c8653d59ec8a87df263e493204dce99174142ce49d7deb6f7ae68473092.glb"
-export function spawnPhoebe(ctx, id, at, yaw, life, pose) {
-  if (ctx.getObject(id)) return id
+export function phoebeSpec(ctx) {
   setStyle(ctx.world.state.bodyStyle) // this script's own copy of the BODIES switch reads the world's setting, not its boot default
   const human = ctx.world.state.bodyStyle === "human" && !!HUMAN
   const spec = human ? humanPhoebe() : furrySpec(PHOEBE_LOOK) // BODIES human: her human self; furry: the ginger cat in her fitted outfit
+  return { ...spec, human, children: [...(spec.children || []), ...(human ? [] : [{ id: "phoebe-outfit", attachment: { skin: true }, model: OUTFIT }])] }
+}
+export function spawnPhoebe(ctx, id, at, yaw, life, pose) {
+  if (ctx.getObject(id)) return id
+  const { human, ...spec } = phoebeSpec(ctx)
   return ctx.spawn(id, {
     tags: ["phoebe"], audience: "local", lifetime: life, feetPosition: at, rotation: { yaw },
     ...spec,
-    children: [...(spec.children || []), ...(human ? [] : [{ id: "phoebe-outfit", attachment: { skin: true }, model: OUTFIT }])],
     state: { cutPose: true },
     anim: { pose: { clip: pose ?? (human ? "cdn/clip-idle-female-loop.glb" : "cdn/clip-idle-loop.glb"), loop: "loop", weight: 1 } }, // never a bind pose: a clip from her first frame (Shelly: "t posing phoebe")
   })

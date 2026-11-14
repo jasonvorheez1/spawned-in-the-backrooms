@@ -37,11 +37,11 @@ export function wallYaw(r, s) {
 }
 const h32 = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
 export const rnd = (seed, k = 0) => { let t = (seed + 0x6d2b79f5 * (k + 1)) | 0; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
-// what stands behind which door. Three stand open for good (canon); the rest take a Level Key, once.
+// what stands behind which door. Two stand open for good; the rest take a Level Key, once.
 // `place` null = a level nobody has reached from here yet: the door says so and never fakes a trip.
-export const OPEN = { "t5-a2": { place: null, name: "Level 178" }, "t7-b1": { place: "level1", name: "Level 1" }, "t10-a3": { place: "level11", name: "Level 11" } };
+export const OPEN = { "t5-a2": { place: null, name: "Level 178" }, "t7-b1": { place: "level1", name: "Level 1" } };
 export const KEYED = { // door id -> the place its key belongs to (my picks: scattered, never in level order). Shelly Nov 13: Levels 0 to 20; a level not built yet is a sealed door (SEALED below)
-  "t1-b2": "level4", "t2-a0": "level8", "t3-a3": "level5", "t4-b1": "level02", "t6-a1": "level3", "t8-b3": "level7", "t9-a0": "level12",
+  "t1-b2": "level4", "t2-a0": "level8", "t3-a3": "level5", "t4-b1": "level02", "t6-a1": "level3", "t8-b3": "level7", "t9-a0": "level12", "t10-a3": "level11",
   "t11-b2": "level10", "t12-a1": "level6", "ringn-a2": "level2", "ringn-a4": "level21", "rings-b1": "level9", "rings-b4": "level13", "t2-b3": "main", "t9-b2": "level61", "t11-a0": "level14",
   "t3-b0": "level15", "t6-b2": "level16", "t8-a1": "level17", "t10-b1": "level18", "t12-b3": "level19", "ringn-a0": "level20",
 };
