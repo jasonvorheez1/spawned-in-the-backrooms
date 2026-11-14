@@ -35,6 +35,9 @@ lobby_wafer: { name: "Lobby Wafers", info: "Stale yellow wafers from a desk draw
 ration:  { name: "M.E.G. ration", info: "Foil-wrapped field ration · sustains stamina and resilience", hunger: 30, thirst: 0, sanity: 8, hp: 32, color: "#8a8a5a", durationGameMin: 120, stackingGroup: "well_fed", mods: { e: 1 } }
 bandage: { name: "Bandage", info: "Sterile gauze wrap: light wound healing (Medicine scales) & stops bleeding", hunger: 0, thirst: 0, sanity: 0, hp: 18, color: "#e8e0d0", aid: true, stopBleed: true }
 bread:   { name: "Warm Homestead Loaf", info: "Fresh bread from Level 10 ovens", hunger: 30, thirst: -3, sanity: 25, hp: 40, color: "#c8963a", warm: 15, durationGameMin: 150, stackingGroup: "well_fed", mods: { e: 1, maxSan: 10 } }
+tomato_soup: { name: "Tin of tomato soup", info: "Ferry's shelf. Thick, salty, fine cold", hunger: 20, thirst: 4, sanity: 5, hp: 12, color: "#c0503a" }
+peach_jar: { name: "Jar of peaches", info: "Ferry's own, put up in syrup", hunger: 18, thirst: 10, sanity: 10, hp: 8, color: "#e09a4a" }
+pickle_jar: { name: "Jar of pickles", info: "Sour, crunchy, keeps forever", hunger: 10, thirst: -4, sanity: 7, hp: 4, color: "#7a9a3a" }
 beans:   { name: "Can of beans", info: "Cold, filling tin", hunger: 25, thirst: -2, sanity: 6, hp: 22, color: "#a85a3a" }
 bar:     { name: "Energy bar", info: "Chalky and sweet · instant stamina & short sprint recovery", hunger: 12, thirst: -2, sanity: 0, hp: 9, color: "#c8a03a", stamina: 40, durationGameMin: 60, stackingGroup: "electrolyte", mods: { stamRegen: 0.1 } }
 firstaid: { name: "First aid kit", info: "Field trauma kit: strong healing (Medicine scales) & stops bleeding", hunger: 0, thirst: 0, sanity: 0, hp: 52, color: "#e83a3a", aid: true, stopBleed: true }

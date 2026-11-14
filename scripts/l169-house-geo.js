@@ -175,7 +175,7 @@ function shelfUnit(ctx, x0, x1, y0, zb, dir, rnd, kinds = "cans") {
   const ys = [0.12, 0.58, 1.02, 1.46, 1.88];
   for (const yy of ys) bx(ctx, x0, y0 + yy - 0.03, za, x1, y0 + yy, ze, 0.008);
   const lab = ["oklch(0.6 0.16 28)", "oklch(0.85 0.12 95)", "oklch(0.6 0.12 150)", "oklch(0.92 0.02 90)", "oklch(0.55 0.1 250)", "oklch(0.7 0.13 55)"];
-  for (let s = 0; s < 4; s++) {
+  for (let s = 0; s < 4 && kinds !== "empty"; s++) {
     const y = y0 + ys[s];
     for (let x = x0 + 0.12; x < x1 - 0.1; ) {
       const t = rnd();
@@ -210,7 +210,7 @@ function kit(ctx, n) {
 }
 const KX = X1 - T - 0.62, KZ0 = 1.6, KZ1 = 5.6, SHX = [4.2, 7.4], TB = [4, 4, 2.6, 1.0]; // counter, can shelves, table (house-local)
 function kitchen(ctx, P) {
-  shelfUnit(ctx, SHX[0], SHX[1], F, ZH1 + T / 2, 1, ctx.random);
+  shelfUnit(ctx, SHX[0], SHX[1], F, ZH1 + T / 2, 1, ctx.random, P.goods === false ? "empty" : "cans"); // goods: false = bare shelves; the tins and jars stand as their own takeable props (l169-house.js layPantry)
   if (P.shelfOnly) return;
   const x1 = X1 - T, y = F;
   paint(ctx, "plaster", "oklch(0.9 0.05 150)"); bx(ctx, KX + 0.05, y + 0.1, KZ0, x1, y + 0.86, KZ1, 0.012); paint(ctx, null, "oklch(0.3 0.01 80)"); slab(ctx, [(KX + 0.08 + x1) / 2, y + 0.05, (KZ0 + KZ1) / 2], [(x1 - KX - 0.08) / 2, 0.05, (KZ1 - KZ0) / 2 - 0.01]);

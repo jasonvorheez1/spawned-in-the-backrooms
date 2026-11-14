@@ -20,13 +20,36 @@ export function layTrail(ctx, put, L) { // cairns every T.every m up the track m
   const m = T.mill; put("l169-trail-mill", { feetPosition: { x: m.x, z: m.z, y: { terrain: 0 } }, rotation: m.yaw, physics: "static", visibleRange: { max: 900 }, castShadow: true,
     primitive: { kind: "scripted", script: ROAD_GEO, params: { kind: "windmill", roll: 0 } } });
 }
+// Ferry's pantry: every tin and jar its own prop on the bare shelves (shelfUnit in l169-house-geo.js: x 4.2..7.4 house-local, shelf tops 0.12/0.58/1.02/1.46 m, front 0.32 m out of the hall wall)
+const PANTRY = [ // token, shape, label or fill, name
+  ["beans", "tin", "oklch(0.6 0.16 28)", "Can of beans"], ["beans", "tall", "oklch(0.55 0.1 250)", "Can of beans"], ["tomato_soup", "tin", "oklch(0.62 0.17 30)", "Tin of tomato soup"],
+  ["tomato_soup", "tall", "oklch(0.85 0.12 95)", "Tin of tomato soup"], ["stale_ration", "tin", "oklch(0.6 0.12 150)", "Expired M.E.G. tin"], ["beans", "tin", "oklch(0.7 0.13 55)", "Can of beans"],
+  ["peach_jar", "jar", "oklch(0.74 0.14 65)", "Jar of peaches"], ["pickle_jar", "jar", "oklch(0.6 0.11 125)", "Jar of pickles"], ["peach_jar", "jar", "oklch(0.7 0.15 50)", "Jar of peaches"],
+];
+function layPantry(ctx, put, L, C, F) {
+  const r = L.house.rooms, T = L.houseBuild.wallT, zc = r.hall[3] + T / 2 + 0.16;
+  let seed = 169; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  let n = 0;
+  for (const [s, yy] of [0.12, 0.58, 1.02, 1.46].entries()) {
+    for (let x = 4.2 + 0.14; x < 7.4 - 0.12; ) {
+      if (rnd() < 0.14) { x += 0.12; continue; } // a gap where something was already eaten
+      const row = PANTRY[Math.floor(rnd() * PANTRY.length)], w = row[1] === "tall" ? 0.072 : 0.084;
+      put(`l169-pantry-${n++}`, { tags: ["usable", "l169-pantry"], behavior: "scripts/pantry-item.js", feetPosition: { x: C.x + x + w / 2, y: F + yy, z: C.z + zc - 0.05 + rnd() * 0.1 - (C.z - C.z) }, rotation: -90 + (rnd() - 0.5) * 40,
+        primitive: { kind: "scripted", script: "scripts/pantry-geo.js", params: row[1] === "jar" ? { kind: "jar", fill: row[2] } : { kind: row[1], label: row[2] } },
+        physics: { body: "static", collider: "cylinder" }, visibleRange: { max: 40 },
+        state: { name: row[3], verb: "Take", info: "Ferry's pantry", token: row[0], jar: row[1] === "jar", taken: false } });
+      x += w + 0.012;
+    }
+  }
+}
 export function layHouse(ctx, put, L) {
   layTrail(ctx, put, L);
   const h = L.house, b = L.houseBuild, C = h.center, r = h.rooms;
   const ground = ctx.place.terrain?.heightAt?.(C.x, C.z) ?? 0, F = ground + h.floorUp;
   const part = (id, p, x, z, y, extra = {}) => put(`l169-house-${id}`, { feetPosition: { x, y, z }, primitive: { kind: "scripted", script: GEO, params: p }, physics: "static", ...extra });
   for (const p of ["shell", "yard", "basement"]) part(p, { part: p }, C.x, C.z, ground);
-  part("kitchen", { part: "kitchen", shelfOnly: true }, C.x, C.z, ground);
+  part("kitchen", { part: "kitchen", shelfOnly: true, goods: false }, C.x, C.z, ground);
+  layPantry(ctx, put, L, C, ground + h.floorUp);
   // the shell you see is the Blender build (art/ferry-house/build.py); the scripted shell stays as its collider, unseen
   const getO = ctx.getObject?.("l169-house-shell"); if (getO) getO.visible = false;
   const tx = (t, rep, extra = {}) => ({ texture: t, repeat: rep, wrap: "repeat", ...extra });
