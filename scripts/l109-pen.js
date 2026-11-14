@@ -37,7 +37,7 @@ function sense(ctx, f, K, pos, players) { // the nearest wanderer it sees (clear
 }
 function setClip(f, m, kind, name) {
   if (m.clip === name) return; m.clip = name;
-  if (kind === "hound") f.anim.main = { clip: name, loop: name !== "maul" && name !== "pounce", weight: 1, blend: 0.2 };
+  if (kind === "hound") f.anim.main = { clip: name === "run" ? "prowl" : name, loop: name !== "maul" && name !== "pounce", weight: 1, blend: 0.2 };
   else if (kind === "clump") f.anim.main = name === "maul" ? { clip: MAW, loop: false, weight: 1, blend: 0.1 } : { clip: name === "idle" ? FIDGET : CRAWL, loop: true, weight: 1, blend: 0.2 };
   else if (kind === "skinstealer") {
     if (name === "maul") f.anim.act = { clip: "Slash", weight: 4, loop: false };
