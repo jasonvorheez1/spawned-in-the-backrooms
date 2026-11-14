@@ -1332,7 +1332,7 @@ function fsBoil(ctx) { // a shard dissolved in almond water heats it: boiled cle
 
 // The Squirt Gun (Wikidot object): one liquid in the backpack tank at a time, each with its own effect. Savi's numbers.
 const SQ = {
-  water:     { name: 'water',            col: '<.72,.86,1>',   dmg: 0 },
+  water:     { name: 'water',            col: '<.72,.86,1>',   dmg: 0, per: 25, cap: 25 },
   almond:    { name: 'almond water',     col: '<.96,.93,.84>', dmg: 4, per: 15 },
   pyroil:    { name: 'pyroil',           col: '<1,.62,.3>',    dmg: 5, per: 6, burn: 4 },
   repellent: { name: 'Smiler Repellent', col: '<.86,.96,.86>', dmg: 0, per: 10 },
@@ -1393,11 +1393,12 @@ function sqTank(ctx, d) { // fill, drink from or empty the backpack tank
   }
   const c = String(d.c || ''), L = SQ[c]; if (!L?.per) return
   if (have > 0 && s.sqLiq !== c && s.sqLiq !== 'water') return say(`The tank holds ${SQ[s.sqLiq].name}. They won't mix, they'd settle in layers: empty it first`)
-  if (s.sqLiq !== c) { s.sqfill = 0; s.loaded_squirt_gun = 0 } // tap water just gets tipped out
+  if (s.sqLiq !== c && c !== 'water') { s.sqfill = 0; s.loaded_squirt_gun = 0 } // tap water just gets tipped out
   if (c === 'almond') { if ((s.almonds ?? 0) <= 0) return say('No grey almond water to pour in'); s.almonds -= 1 }
   if (c === 'pyroil') { if ((s.firesalt ?? 0) <= 0) return say('Pyroil needs a firesalt shard to melt down'); s.firesalt -= 1 }
   if (c === 'repellent') { if ((s.repellent ?? 0) <= 0) return say('No Smiler Repellent'); s.repellent -= 1 }
-  s.sqLiq = c; s.sqfill = (s.sqfill ?? 0) + L.per
+  if (c === 'water' && have >= L.cap) return say('The tank is already full of water')
+  s.sqLiq = c; s.sqfill = c === 'water' ? L.cap - (s.loaded_squirt_gun ?? 0) : (s.sqfill ?? 0) + L.per
   heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-pouring-liquid-into-plastic-tank-funnel-glug.mp3', position: ctx.self.feetPosition, volume: 0.5, maxDistance: 8 })
   say(`${L.per} shots of ${L.name} into the tank`)
 }
