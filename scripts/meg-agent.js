@@ -101,7 +101,8 @@ export function onSpawn(ctx) {
   shapeTemper(me);
   me.state.hp ??= G.hp;
   me.state.home ??= { x: me.feetPosition.x, y: me.feetPosition.y, z: me.feetPosition.z };
-  dress(ctx, me);
+  // Shelly Nov 14 "fix level 70's lag": 17 folk waking at once each re-dressed in the same tick (a 140 ms hitch); now each dresses on its own beat over ~1.2 s
+  ctx.after(0.05 + ctx.random() * 1.2, "dressLater", {});
   me.state.turnTo ??= "movement"; // humanoid-locomotion picks Idle/Walk/Run off the speed the body really moved, each clip at its measured pace, and faces the walk
 }
 // every agent wears the cute Blender critter: an old scripted body swaps in place, and the look it wears is kept in state.wear (garments to loot, redress)
@@ -689,6 +690,7 @@ function work(me, m, clip) {
   if (m.work === clip) return; m.work = clip;
   me.anim.work = clip ? { clip, loop: /loop/.test(clip) ? "loop" : "once", weight: 1, blendIn: 0.4, blendOut: 0.4 } : null;
 }
+export function dressLater(ctx) { dress(ctx, ctx.self); }
 export function vanish(ctx) { const s = ctx.self.state; if (!s.dead && (s.hp ?? 1) > 0) return; ctx.destroy(ctx.self.id); } // a body that got back up stays
 
 // ---- a gun pointed at them (Shelly Nov 12: "depending on the bravery of the npc + stats/special stats they should either raise their hand up, pull their gun out or flee")
