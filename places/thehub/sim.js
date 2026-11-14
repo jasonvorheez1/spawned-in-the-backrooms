@@ -6,7 +6,7 @@ import { ARRIVE } from "../../scripts/lib/thehub.js";
 import { layLampModels, layDress, layBayLights, cageLamp } from "../../scripts/lib/hub-dress.js";
 import { workbenchSpec, ammobenchSpec, ensureBenches } from "../../scripts/lib/benches.js";
 export const cadence = "1s";
-const V = 10; // v10: caged bulkhead lamp models over doors and bays (was cylinders/spheres)
+const V = 11; // v11: plaques re-laid for the Level 169 door (ringn-a1). v10: caged bulkhead lamp models over doors and bays (was cylinders/spheres)
 const DOOR = { frame: { url: "/cdn/value.86c9f9f6e66d057fda78af73bde7c72cea84386e49891e45ea0ed3cddadb3e70.glb", offset: [0, 0, 0.432] }, leaf: { url: "/cdn/value.9437304a5bfa3c822e8830c3d88d9e6310980e867ff78651d84fc6dc5b01035c.glb" } }; // art/hub/doors.yml
 const PANEL = "cdn/texture-smooth-cast-concrete-lintel-panel-clean-fine-pores.png"; // the frame's lintel panel came mottled: a clean cast face for the carved mark
 const SODIUM = "oklch(0.8 0.15 68)";
@@ -50,7 +50,7 @@ export function tick(ctx) {
   if ((s.hubV ?? 0) < 9) { if ((s.hubV ?? 0) >= 2) for (const d of DOORS) { if (ctx.place.objects[d.obj]) ctx.destroy(d.obj); if (ctx.place.objects[d.obj + "-t"]) ctx.destroy(d.obj + "-t"); } layDoors(ctx); } // v9: Level 11 door (t10-a3) is locked behind a key
   if ((s.hubV ?? 0) < 3) { layThings(ctx); if (!ctx.place.objects["hub-from-l1"]) ctx.spawn("hub-from-l1", { feetPosition: { x: -39.2, y: 0.2, z: 2.8 }, rotation: { yaw: 0 } }); }
   if ((s.hubV ?? 0) < 6) layDoorLamps(ctx);
-  if ((s.hubV ?? 0) < 9) layPlaques(ctx); // v9: refresh plaques for Level 11 key requirement
+  if ((s.hubV ?? 0) < 11) layPlaques(ctx); // v11: Level 169 plaque; v9: refresh plaques for Level 11 key requirement
   if ((s.hubV ?? 0) < 5) { layLampModels(ctx); layDress(ctx); } // v5: modeled lamps, fans, tray, gutters, barriers, camp furniture
   if ((s.hubV ?? 0) >= 5 && (s.hubV ?? 0) < 10) { layDoorLamps(ctx); layBayLights(ctx); } // v10: re-lay the caged lamps
   if ((s.campBenchV ?? 0) < 1) {
