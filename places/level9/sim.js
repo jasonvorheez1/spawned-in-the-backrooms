@@ -7,7 +7,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import FURN from "../../scripts/lib/data/furniture.yml";
 import { layout, hashStr, HOUSES, PAINTS, PROPS, TUNE, FWD, ROAD_W, WALK } from "../../scripts/lib/level9.js";
 export const cadence = "1s";
-const V = 16; // 16: per-house interior styles (paper, floor, rug, layout, ransacked) and picklable front doors; // 14: dining set split into table + chairs, dresser + kitchen cabinet, only storage is searchable; // 3: Tripo house models on the lots; 6: plaster insides; 7: wallpaper box-mapped, a bedroom wall, furniture and loot inside; 5 (4 hung them on the back): door holes cut, a hinged front door and a stoop on each (keeps seed and loot)
+const V = 17; // 17: lit houses (lot.lit) get the window lamp and a porch bulb, a third of doors locked; // 16: 16: per-house interior styles (paper, floor, rug, layout, ransacked) and picklable front doors; // 14: dining set split into table + chairs, dresser + kitchen cabinet, only storage is searchable; // 3: Tripo house models on the lots; 6: plaster insides; 7: wallpaper box-mapped, a bedroom wall, furniture and loot inside; 5 (4 hung them on the back): door holes cut, a hinged front door and a stoop on each (keeps seed and loot)
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BLUE = { kind: "scripted", script: "engine/blueprint" };
 const ASPHALT = { texture: "cdn/texture-worn-dark-grey-asphalt-road-coarse-aggregate-damp-patches-cracks.png", wrap: "repeat", repeat: [0.3, 0.3], color: "oklch(0.42 0.01 250)", roughness: 0.62, metalness: 0 }; // Shelly "why are level 9 roads water": 0.16 roughness mirrored the sky; damp, not a puddle
@@ -123,13 +123,15 @@ function lay(ctx, L) {
     if (H.model && H.door) { // the front door: a kinematic hinge at the left jamb, the leaf its child; E swings it inward (scripts/home11-door.js "door")
       const D = H.door, W = 0.96, Y = l.yaw + 180, at = (lx, lz) => { const r = rotate({ yaw: Y }, { x: lx, y: 0, z: lz }); return T(l.x + r.x, l.z + r.z, 0.02 + D.y); };
       const dp = { style: "wood", w: W, h: 2.05, hingeSide: "left", swing: 1, d: 0.08, seed: l.seed % 97 };
-      const LV = [0, 0, 15, 25, 40, 60][roll(l.seed ?? 1, 9, 6)]; // a third of the doors locked, Lockpick 15..60 (picks mine)
+      const LV = [0, 0, 0, 0, 25, 50][roll(l.seed ?? 1, 9, 6)]; // a third of the doors locked (2 of 6 rolls), Lockpick 25 or 50 (picks mine)
       sp(`l9-${l.id}-door`, { feetPosition: at(D.x - W / 2, D.z - 0.04), rotation: { yaw: Y }, physics: "kinematic", tags: ["usable"], behavior: "scripts/home11-door.js", state: { ...(LV ? { lock: `lockpick:${LV}` } : {}), open: false, closedYaw: Y, openYaw: Y - 95, kind: "door", name: "Front Door", verb: "Open", hinge: `l9-${l.id}-door` },
         children: [{ id: "leaf", tags: ["usable"], feetPosition: { x: 0, y: 0, z: 0 }, primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { ...dp, part: "leaf" } }, material: { pbr: true }, physics: "static", behavior: "scripts/home11-door.js", state: { kind: "door", name: "Front Door", verb: "Open", hinge: `l9-${l.id}-door` } }] });
       sp(`l9-${l.id}-jamb`, { feetPosition: at(D.x, D.z - 0.04), rotation: { yaw: Y }, physics: { body: "static", collider: "auto" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { ...dp, part: "frame" } }, material: { pbr: true } });
       for (let i = 0; i < 3; i++) { const h = D.y * (i + 1) / 3, r = rotate({ yaw: Y }, { x: D.x, y: 0, z: D.z + 0.9 - i * 0.3 });  // a stoop: three concrete steps up to the threshold, flush with the floor inside
         sp(`l9-${l.id}-step${i}`, { feetPosition: T(l.x + r.x, l.z + r.z, 0), rotation: { yaw: Y }, primitive: { kind: "box", width: 1.5, height: h + 0.05, depth: 0.32 }, physics: "static", material: { texture: "cdn/texture-weathered-poured-concrete-stoop-hairline-cracks.png", color: "oklch(0.62 0.01 80)", roughness: 0.9 } }); }
-      if (l.seed % 4 === 0) { const c = rotate({ yaw: Y }, { x: 0, y: 0, z: 0 }); sp(`l9-${l.id}-lamp`, { feetPosition: T(l.x + c.x, l.z + c.z, D.y + 2.3), light: { kind: "point", color: "oklch(0.85 0.09 75)", intensity: 1.2, distance: 9 } }); } // someone left a lamp on: a warm window down the street, a lit room to walk into
+      if (l.lit) { const c = rotate({ yaw: Y }, { x: 0, y: 0, z: 0 }), po = rotate({ yaw: Y }, { x: D.x, y: 0, z: D.z + 0.55 }); // someone left a lamp on: a warm window down the street and a porch bulb; smilers only take the dark houses (lot.lit)
+        sp(`l9-${l.id}-lamp`, { feetPosition: T(l.x + c.x, l.z + c.z, D.y + 2.0), light: { kind: "point", color: "oklch(0.85 0.09 75)", intensity: 2.4, distance: 11 } });
+        sp(`l9-${l.id}-porch`, { feetPosition: T(l.x + po.x, l.z + po.z, D.y + 2.35), visibleRange: { max: 220 }, light: { kind: "point", color: "oklch(0.86 0.1 80)", intensity: 0.9, distance: 7 } }); }
       furnish(ctx, sp, l, H, D, Y);
     }
     else if (!H.model) sp(`l9-${l.id}`, { tags: ["l9house"], feetPosition: T(l.x, l.z), rotation: { yaw: l.yaw }, primitive: { kind: "box", width: H.w, height: H.stories * 2.9 + 1.2, depth: H.d }, material: BLUE, physics: "none", state: { kind: l.kind, seed: l.seed } });

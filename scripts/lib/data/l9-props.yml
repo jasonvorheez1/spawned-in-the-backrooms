@@ -36,7 +36,7 @@ props:
 tune:
   lampSpacing: 38        # m between streetlights
   lampLit: 0.28          # share of streetlights that still burn
-  windowLit: 0.12        # share of houses with a light on inside
+  windowLit: 0.2         # share of houses with a light on inside
   fogEvery: [240, 420]   # s between fog banks
   fogLasts: [70, 110]    # s a bank stays
   hounds: 6              # hounds kept on the streets, in packs of 3 (my pick)
