@@ -17,7 +17,7 @@ pop dirt burst=?mobile:10|20 life=.8..1.3 v=up(4..8)+sdir()*(2..4) size=.04..0.0
 pop ring burst=?mobile:14|28 on=disc(.6) life=.8..1.4 v=sdir()*<1,0,1>*(5..8)+up(.4) size=.4..0.8 acc=drag(2.5)+buoy(.2) sz=$size*(.6>2.2) col=<.42,.38,.3> a=0>.5:.15>.7:.4>0 rot=spin(.1) r=sprite(smoke-puff,alpha)
 pop glow burst=1 life=.3 r=light(<1,.6,.3>,80*(1>0),16)`;
 const ROCKET_BOOM = `fx
-pop flash burst=1 life=.2 size=7 col=hdr(12,8,4) a=1>0 sz=$size*(.4>1.4) r=sprite(soft-disc,add)
+pop flash burst=1 life=.14 size=4.5 col=hdr(5,3.4,1.8) a=.8>0 sz=$size*(.4>1.3) r=sprite(soft-disc,add)
 pop core burst=?mobile:14|26 life=.4..0.8 v=sdir()*(2..5)+up(1.5) size=1..1.8 acc=drag(3)+buoy(1.6) sz=$size*(.5>1.8) col=hdr(7,3.6,1.1)>.5:hdr(3,1,.2)>hdr(.5,.15,.05) a=1>.6:1>0 rot=spin(.5) r=sprite(flame-wisp,add)
 pop fire burst=?mobile:20|40 life=.5..1 v=sdir()*(5..10)+up(2) size=.5..1.1 acc=drag(3.4)+buoy(1.2) sz=$size*(.6>1.7) col=hdr(5,2.6,.8)>hdr(1.4,.4,.1) a=1>0 rot=spin(.4) r=sprite(flame-wisp,add)
 pop sparks burst=?mobile:40|90 life=.5..1.3 v=sdir()*(10..22) size=.02..0.05 acc=grav()*.8+drag(.8) col=hdr(7,4,1.2)>hdr(1.6,.4,.1) a=1>0 floor=bounce(.35) r=sprite(ember,add,velocity,.035)
@@ -27,7 +27,7 @@ pop column burst=?mobile:8|14 life=3..5 v=up(2..3.5)+sdir()*(.4..1) size=1.2..2 
 pop smoke burst=?mobile:10|18 life=2.5..4 v=sdir()*(1.5..3.5)+up(.8) size=1..1.8 acc=drag(1.2)+buoy(.4)+curl(.3) sz=$size*(.6>2.8) col=<.2,.18,.16> a=0>.7:.1>.6:.6>0 rot=spin(.1) r=sprite(smoke-puff,alpha)
 pop ring burst=?mobile:18|36 on=disc(.8) life=.9..1.6 v=sdir()*<1,0,1>*(7..11)+up(.4) size=.5..1 acc=drag(2.6)+buoy(.2) sz=$size*(.6>2.6) col=<.44,.4,.33> a=0>.55:.15>.7:.4>0 rot=spin(.1) r=sprite(smoke-puff,alpha)
 pop embers burst=?mobile:12|26 life=1.5..3 v=sdir()*(1..3)+up(1.5..3) size=.02..0.04 acc=curl(.8)+grav()*.15+drag(.8) col=hdr(5,2.4,.6)>hdr(1.2,.3,.05) a=(1>.7:1>0)*flick(9,.4) r=sprite(ember,add,velocity,.02)
-pop glow burst=1 life=.55 r=light(<1,.58,.28>,160*(1>.4:.35>0),22)`;
+pop glow burst=1 life=.45 r=light(<1,.58,.28>,55*(1>.4:.3>0),16)`;
 const FIRE = `fx
 pop bed n=?mobile:12|22 on=disc(%r|2.6) size=.25..0.5 tint=<2.6,1,.25>..<1.2,.35,.08> sz=$size*flick(.6,.15) col=$tint*flick(.9,.3) a=.75 r=sprite(soft-disc,add)
 pop flame rate=?mobile:34|64 on=disc(%r|2.6) life=.45..0.85 v=up(1.6..2.6)+cone(18)*(.2..0.6) size=.35..0.7 acc=curl(.5)*1.2+buoy(2.2)+drag(1.5)

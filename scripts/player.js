@@ -141,8 +141,8 @@ pop glow n=1 r=light(<1,.6,.25>,6,5)`
 const BACKBLAST = `fx
 pop blast burst=?mobile:14|26 life=.25..0.5 v=<%dx|0,0,%dz|0>*(4..8)+sdir()*1.2 size=.25..0.5 acc=drag(3) sz=$size*(.5>1.6) col=hdr(3,1.8,.6)>hdr(.5,.4,.35) a=1>0 r=sprite(smoke-puff,add)
 pop dust burst=?mobile:10|20 life=1..1.8 v=<%dx|0,0,%dz|0>*(2..4)+up(.4)+sdir()*.6 size=.3..0.6 acc=drag(1.6)+buoy(.3) sz=$size*(.6>2.4) col=<.55,.52,.48> a=0>.1:.4>.6:.2>0 r=sprite(smoke-puff,alpha)
-pop flash burst=1 life=.14 r=light(<1,.7,.35>,40*(1>0),7)
-pop muzzle burst=1 life=.09 at=point() size=.9 col=hdr(8,5,2) a=1>0 sz=$size*(.5>1.4) r=sprite(soft-disc,add)`
+pop flash burst=1 life=.1 r=light(<1,.7,.35>,14*(1>0),5)
+pop muzzle burst=1 life=.07 at=point() size=.6 col=hdr(3.5,2.4,1.1) a=.8>0 sz=$size*(.5>1.4) r=sprite(soft-disc,add)`
 
 export const maxHp = (lv, s) => L.hp + (lv - 1) * L.perLevel.hp + (s?.attr ? derived(s).hpBonus : 0)
 export const maxSan = (lv, s) => L.sanity + (lv - 1) * L.perLevel.sanity + ((s?.snacks?.slap_bracelet ?? 0) > 0 ? 5 : 0) + (s?.attr ? derived(s).sanBonus : 0)
