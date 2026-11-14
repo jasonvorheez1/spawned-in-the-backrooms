@@ -231,7 +231,7 @@ export function handleDialogueCh2(ctx, player, npc, text) {
       setCh2Step(ctx, s, 2, "Objective Updated: Search Dina's cache in the Level 11 clinic");
       tellQuest(ctx, player, "Search the reception desk inside Centro Dermatologico.");
       return {
-        reply: "Short jacket, scuffed bag, counted her change down to the cent. She traded two fuses for gauze and slipped into the Centro Dermatologico across the street. Nobody followed her inside, though somebody in a faded yellow coat stood under the streetlamp watching the door until she left. Eyes caught the light funny. White, like a cat's.",
+        reply: "Short jacket, scuffed bag, counted her change down to the cent. She traded two fuses for gauze and slipped into the Centro Dermatologico across the street. Nobody followed her inside, though somebody in a faded yellow coat stood under the streetlamp watching the door until she left. Eyes caught the light funny. White, like they were lit from inside.",
         mood: "calm",
       };
     }
