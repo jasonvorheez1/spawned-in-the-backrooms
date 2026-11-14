@@ -1,3 +1,4 @@
+import { stealerModel } from "../../scripts/lib/stealer-body.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import { keepPeople } from "../../scripts/lib/level-kit.js";
@@ -343,7 +344,7 @@ export function tick(ctx) {
       const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N);
       if (zoneOf(cx, cz) !== "halls" || Math.abs(cx - ARRIVE.cx) + Math.abs(cz - ARRIVE.cz) < 5) continue;
       const c = cellCenter(cx, cz);
-      ctx.spawn({ tags: ["stealer"], feetPosition: { x: c.x, y: 0.05, z: c.z }, physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/stealer-geo.js", params: { revealed: false } }, state: npcState(ctx, "stealer", L.stealerHp, { xp: L.xpStealer }) });
+      ctx.spawn({ tags: ["stealer"], feetPosition: { x: c.x, y: 0.05, z: c.z }, physics: { body: "character" }, model: stealerModel(false), state: npcState(ctx, "stealer", L.stealerHp, { xp: L.xpStealer }) });
       break;
     }
     if (stealers + 1 >= L.stealers) s.stealersSeeded = true;

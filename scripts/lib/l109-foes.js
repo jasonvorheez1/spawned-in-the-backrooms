@@ -1,3 +1,4 @@
+import { stealerModel } from "./stealer-body.js";
 // Level 109's bodies for the containment books (scripts/lib/containment.js spawnFoe contract).
 // spawnFoe(ctx, kind, pos, state): kind is "hound" | "skinstealer" | "clump" | "deathmoth". Returns the spawned id, or null.
 // The bodies are the world's own (Level 11's hound and clump, the skin-stealer, the deathmoth swarm); one keeper,
@@ -16,6 +17,6 @@ export function spawnFoe(ctx, kind, pos, state) {
   const loop = S.loop ? { audio: { clip: S.loop, loop: true, gain: 0.22, spatial: true, maxDistance: 12 } } : {};
   if (kind === "hound") return ctx.spawn({ tags: ["pen-foe", "l8-hostile", "hound"], feetPosition: feet, physics: { body: "character" }, model: { id: HOUND }, scale: 1, state: st, ...loop });
   if (kind === "clump") return ctx.spawn({ tags: ["pen-foe", "l8-hostile"], feetPosition: feet, physics: { body: "character" }, model: { id: CLUMP, forward: "+x" }, layout: { box: { min: { x: -0.8, y: 0, z: -0.8 }, max: { x: 0.8, y: 1.2, z: 0.8 } } }, scale: 1, state: st, ...loop });
-  if (kind === "skinstealer") return ctx.spawn({ tags: ["pen-foe", "stealer"], feetPosition: feet, physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/stealer-geo.js", params: { revealed: true } }, state: { ...npcState(ctx, "stealer", K.hp, { xp: K.xp }), ...st } });
+  if (kind === "skinstealer") return ctx.spawn({ tags: ["pen-foe", "stealer"], feetPosition: feet, physics: { body: "character" }, model: stealerModel(true), state: { ...npcState(ctx, "stealer", K.hp, { xp: K.xp }), ...st } });
   return ctx.spawn({ template: "templates/deathmoths.js#swarm", tags: ["pen-foe", "moths"], physics: { body: "character", collider: "sphere" }, feetPosition: { ...feet, y: K.hover }, state: st });
 }

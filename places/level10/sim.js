@@ -1,3 +1,4 @@
+import { stealerModel } from "../../scripts/lib/stealer-body.js";
 import { sweepProps } from "../../scripts/lib/breakables.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
@@ -380,7 +381,7 @@ pop glow n=1 at=disc(.2).c(.45) glo=fire()*(#flame/35)~ r=light(<1,.55,.24>,$glo
     tags: ["stealer"],
     feetPosition: T(95, -60, 0.05),
     physics: { body: "character" },
-    primitive: { kind: "scripted", script: "scripts/stealer-geo.js", params: { revealed: false } },
+    model: stealerModel(false),
     state: npcState(ctx, "stealer", 90, { xp: 45 }),
   });
 

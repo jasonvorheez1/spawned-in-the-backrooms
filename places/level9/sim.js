@@ -1,3 +1,4 @@
+import { stealerModel } from "../../scripts/lib/stealer-body.js";
 // Level 9 "The Suburbs": the referee. Rolls the room's seed once (place.state.l9seed: kept with everything looted here, so a reload
 // finds the same streets and the same emptied drawers; another room rolls its own), lays the streets, houses and lamps from it,
 // and runs the fog banks. Layout: scripts/lib/level9.js. House kit: scripts/lib/data/l9-houses.yml. Props: l9-props.yml.
@@ -217,7 +218,7 @@ function hounds(ctx, s, L) {
   // skin-stealers (Wikidot: Level 9): a critter on the pavement, until it is close
   if (!s.stealMgr || !(s.stealMgr in ctx.place.objects)) s.stealMgr = ctx.spawn({ behavior: "scripts/stealers.js" });
   const sh = ctx.query({ tags: ["stealer"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((e) => !e.state?.dead).length;
-  for (let i = sh; i < TUNE.stealers; i++) { const c = far(); if (!c) break; ctx.spawn({ tags: ["stealer"], feetPosition: T(c.x, c.z, 0.05), physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/stealer-geo.js", params: { revealed: false } }, state: npcState(ctx, "stealer", TUNE.stealerHp, { xp: 60 }) }); }
+  for (let i = sh; i < TUNE.stealers; i++) { const c = far(); if (!c) break; ctx.spawn({ tags: ["stealer"], feetPosition: T(c.x, c.z, 0.05), physics: { body: "character" }, model: stealerModel(false), state: npcState(ctx, "stealer", TUNE.stealerHp, { xp: 60 }) }); }
   for (let i = have, c = null; i < TUNE.hounds; i++) {
     if (i % 3 === 0 || !c) c = far(); if (!c) break;
     ctx.spawn({ tags: ["hound"], feetPosition: T(c.x + (i % 3) * 0.9, c.z + (i % 3) * 0.5, 0.05), physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/hound-geo.js" }, state: npcState(ctx, "hound", TUNE.houndHp, { xp: 45 }) });

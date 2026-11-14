@@ -1,3 +1,4 @@
+import { stealerModel } from "./lib/stealer-body.js";
 import { canStrike } from "./lib/hunt.js";
 // Level 1's skin-stealers (Wikidot lore + Shelly's sheet): it wears a critter it killed, a skin a little too tall and
 // too thin, walking stiff. Docile: it wanders and parrots words it has heard (your name) without understanding them,
@@ -21,12 +22,7 @@ import { stepToward as stepToward1 } from "./lib/maze1path.js";
 import { wallSteer, wedged, shotAt } from "./lib/hunt.js";
 import { raycast } from "builtin/physics";
 
-const GLB = "/cdn/value.6cc392a43a5cb12b4557b1fb35e23d329ad01c9d707b4267d923bdc14abcde2d.glb";
-const MODEL = (rev) => ({
-  id: GLB,
-  forward: "+z",
-  parts: { disguise: { visible: false }, creature: { visible: rev }, shed: { visible: false } },
-});
+const MODEL = stealerModel;
 
 const SPECIES = ["cat", "dog", "fox", "bunny", "bear", "deer", "mouse", "wolf", "raccoon", "panda", "pig"];
 
