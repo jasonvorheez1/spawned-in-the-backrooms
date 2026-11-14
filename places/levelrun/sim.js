@@ -9,6 +9,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { heard } from "../../scripts/lib/hear.js";
 import { spawnPhoebe } from "../../scripts/lib/phoebe.js";
 
+import { dressWorld } from "../../scripts/lib/levelrun-dress.js";
 export const cadence = "100ms";
 
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
@@ -271,12 +272,10 @@ function ensureHorde(ctx, z0) {
         tags: ["lrun-horde"],
         feetPosition: at,
         rotation: { yaw: 0 },
-        primitive: box(0.7, 2.0, 0.55),
+        primitive: { kind: "scripted", script: "scripts/levelrun-geo.js", params: { part: "smiler" } },
         material: { color: "#050203", roughness: 1 },
         physics: "none",
         children: [
-          { feetPosition: { x: -0.14, y: 1.65, z: -0.29 }, primitive: { kind: "sphere", radius: 0.05 }, material: { color: "#ffffff", emissive: "#ffe6e6", emissiveIntensity: 3 } },
-          { feetPosition: { x: 0.14, y: 1.65, z: -0.29 }, primitive: { kind: "sphere", radius: 0.05 }, material: { color: "#ffffff", emissive: "#ffe6e6", emissiveIntensity: 3 } },
         ],
       });
     }
@@ -320,6 +319,7 @@ export function tick(ctx) {
     st.chase = { active: false, hordeZ: 4.5, gateOpen: false, lastHitAt: 0, roarAt: 0 };
     layWorld(ctx);
   }
+  dressWorld(ctx);
 
   const players = ctx.place.players ?? [];
   if (!players.length) return;

@@ -27,7 +27,7 @@ export function dressWorld(ctx) {
   const st = ctx.place.state, objs = ctx.place.objects ?? {};
   if (st.dressV === DRESS_V) return;
   for (const r of ctx.query({ tags: ["lrun-dress"] })) ctx.destroy(r.id);
-  for (const id of HIDE) { const o = objs[id]; if (o) o.render = false; }
+  for (const id of HIDE) { const o = objs[id]; if (o) o.visible = false; }
   const D = (id, spec) => ctx.spawn(id, { tags: ["lrun-dress"], castShadow: false, receiveShadow: true, ...spec });
   const W = CORRIDOR.width, HW = CORRIDOR.halfW;
 
@@ -45,26 +45,29 @@ export function dressWorld(ctx) {
     D(`lrun-dress-charts-${i}`, { feetPosition: { x: cx, y: 0.003, z: cz }, rotation: { yaw: r() * 360 },
       children: [0, 1, 2, 3, 4].map((n) => ({ feetPosition: { x: (r() - 0.5) * 0.9, y: n * 0.002, z: (r() - 0.5) * 0.9 }, rotation: { yaw: r() * 360 }, primitive: { kind: "box", width: 0.22, height: 0.002, depth: 0.29 }, material: { color: n % 3 ? "oklch(0.86 0.02 90)" : "oklch(0.7 0.06 75)", roughness: 0.95 } })) });
   }
-  // 2. ward doors: real leaves in the hall's frames; some ajar onto a dark room
+  // 2. ward doors: the same rows wear real leaves; some ajar onto a dark room
   for (let k = 0; k < 15; k++) {
+    const h = objs[`lrun-sidedoor-${k}`]; if (!h) continue;
     const z = doorZ(k), s = doorSide(k), a = ajar(k);
-    ctx.destroy(`lrun-sidedoor-${k}`);
-    ctx.spawn(`lrun-sidedoor-${k}`, { feetPosition: { x: s * 2.93, y: 0, z: z - s * 0.525 * -1 * (s < 0 ? -1 : 1) * -1 }, rotation: { yaw: s < 0 ? (a ? 104 : 90) : (a ? -76 : -90) }, castShadow: false,
-      primitive: { kind: "scripted", script: DOOR, params: { style: "office", part: "leaf", w: 1.05, h: 2.25, hingeSide: "left", vision: true, seed: k } }, material: { pbr: true, color: "oklch(0.62 0.05 25)" } });
+    h.feetPosition = { x: s * (HW - 0.03), y: 0, z: z + s * 0.525 * (s < 0 ? 1 : -1) * -1 };
+    h.rotation = { yaw: s < 0 ? (a ? 120 : 90) : (a ? -60 : -90) };
+    h.primitive = { kind: "scripted", script: DOOR, params: { style: "office", part: "leaf", w: 1.05, h: 2.25, hingeSide: "left", vision: true, seed: k } };
+    h.material = { pbr: true, color: "oklch(0.62 0.05 25)" };
   }
-  // 3. caged red strobes, pulsing on a tween
+  // 3. caged red strobes on the same rows, pulsing on a tween
   for (let k = 0; k < 15; k++) {
-    const z = doorZ(k);
-    ctx.destroy(`lrun-strobe-${k}`);
-    ctx.spawn(`lrun-strobe-${k}`, { feetPosition: { x: 0, y: 3.3, z }, castShadow: false, visibleRange: { max: 48 }, behavior: "scripts/lrun-strobe.js", state: { peak: k % 3 === 1 ? 6 : 5, period: 1.1 + (k % 4) * 0.13, phase: (k * 0.37) % 1 },
-      primitive: { kind: "scripted", script: GEO, params: { part: "strobe" } }, material: { pbr: true },
-      light: { kind: "point", color: k % 3 === 1 ? "#ff4020" : "#ff1515", intensity: 4.0, distance: 17, shadow: { enabled: false } } });
+    const h = objs[`lrun-strobe-${k}`]; if (!h) continue;
+    for (const c of h.children ?? []) c.visible = false;
+    h.feetPosition = { x: 0, y: 3.3, z: doorZ(k) };
+    h.primitive = { kind: "scripted", script: GEO, params: { part: "strobe" } }; h.material = { pbr: true };
+    h.state = { peak: k % 3 === 1 ? 6 : 5, period: 1.1 + (k % 4) * 0.13, phase: (k * 0.37) % 1 };
+    h.behavior = "scripts/lrun-strobe.js";
   }
   // 4. obstacles: hitboxes stay, invisible; fitted models stand in them
   for (const o of OBSTACLES) {
     const h = objs[o.id]; if (!h) continue;
-    if (o.kind === "spill") { h.render = false; D(`${o.id}-look`, { feetPosition: { x: o.x, y: 0.004, z: o.z }, primitive: { kind: "scripted", script: GEO, params: { part: "spill", w: o.w, d: o.d, seed: o.z } }, material: { pbr: true } }); continue; }
-    h.render = false; for (const c of h.children ?? []) c.render = false;
+    if (o.kind === "spill") { h.visible = false; D(`${o.id}-look`, { feetPosition: { x: o.x, y: 0.004, z: o.z }, primitive: { kind: "scripted", script: GEO, params: { part: "spill", w: o.w, d: o.d, seed: o.z } }, material: { pbr: true } }); continue; }
+    h.visible = false; for (const c of h.children ?? []) c.visible = false;
     if (o.kind === "gurney") D(`${o.id}-look`, { feetPosition: { x: o.x, y: 0, z: o.z }, model: M.gurney, layout: fit(o.w / 2, 1.15, o.d / 2) });
     else if (o.kind === "cart") for (const q of [-1, 1]) D(`${o.id}-look${q}`, { feetPosition: { x: o.x + q * o.w / 4, y: 0, z: o.z }, rotation: { yaw: q * 8 }, model: M.crashcart, layout: fit(o.w / 4, o.h, o.d / 2) });
     else for (const q of [-1, 1]) D(`${o.id}-look${q}`, { feetPosition: { x: o.x + q * o.w / 4, y: 0, z: o.z }, rotation: { yaw: q * 4 }, model: M.barrier, layout: fit(o.w / 4, o.h, o.d / 2) });
@@ -72,16 +75,16 @@ export function dressWorld(ctx) {
   // 5. intake shell, doors with chain and padlock
   D("lrun-dress-intake", { feetPosition: { x: 0, y: 0, z: -0.35 }, primitive: { kind: "scripted", script: GEO, params: { part: "hall", w: 8.15, d: 10.25, h: 3.7, ceil: 3.3, walls: "ewns", seed: 99, tone: "red", conduit: true,
     gaps: [{ wall: "n", c: 4.075, w: 5.8, h: 3.2, kind: "open" }, { wall: "s", c: 4.075, w: 2.5, h: 2.55, kind: "open" }, { wall: "w", c: 3.275, w: 1.3, h: 2.35, kind: "door" }] } }, material: { pbr: true } });
-  for (const id of ["lrun-entry-door", "lrun-chain-door"]) { const h = objs[id]; if (h) { h.render = false; for (const c of h.children ?? []) c.render = false; } }
+  for (const id of ["lrun-entry-door", "lrun-chain-door"]) { const h = objs[id]; if (h) { h.visible = false; for (const c of h.children ?? []) c.visible = false; } }
   D("lrun-dress-entry-leaf", { parent: "lrun-entry-door", feetPosition: { x: 0, y: 0, z: 0.6 }, rotation: { yaw: 90 }, primitive: { kind: "scripted", script: DOOR, params: { style: "metal", part: "leaf", w: 1.2, h: 2.3, hingeSide: "left", seed: 3 } }, material: { pbr: true } });
   for (const q of [-1, 1]) D(`lrun-dress-chain-leaf${q}`, { parent: "lrun-chain-door", feetPosition: { x: q * 0.62, y: 0, z: 0 }, primitive: { kind: "scripted", script: DOOR, params: { style: "fire", part: "set", w: 1.18, h: 2.45, seed: 5 + q } }, material: { pbr: true } });
   D("lrun-dress-chain-a", { parent: "lrun-chain-door", primitive: { kind: "scripted", script: GEO, params: { part: "chain", a: [-0.95, 1.55, -0.12], b: [0.95, 1.1, -0.12], sag: 0.08, n: 30 } }, material: { pbr: true } });
   D("lrun-dress-chain-b", { parent: "lrun-chain-door", primitive: { kind: "scripted", script: GEO, params: { part: "chain", a: [-0.95, 1.1, -0.13], b: [0.95, 1.55, -0.13], sag: 0.08, n: 30 } }, material: { pbr: true } });
   D("lrun-dress-padlock", { parent: "lrun-chain-door", feetPosition: { x: 0.02, y: 1.28, z: -0.16 }, primitive: { kind: "scripted", script: GEO, params: { part: "padlock" } }, material: { pbr: true } });
   // 6. collapse I-beam and the fire exit
-  const beam = objs["lrun-collapse-beam"]; if (beam) { beam.render = false;
+  const beam = objs["lrun-collapse-beam"]; if (beam) { beam.visible = false;
     D("lrun-dress-beam", { parent: "lrun-collapse-beam", primitive: { kind: "scripted", script: GEO, params: { part: "ibeam", len: W - 0.4 } }, material: { pbr: true } }); }
-  const ex = objs["lrun-exit-door-frame"]; if (ex) { ex.render = false;
+  const ex = objs["lrun-exit-door-frame"]; if (ex) { ex.visible = false;
     D("lrun-dress-exit", { feetPosition: { x: 0, y: 0, z: CORRIDOR.exitZ - 1.15 }, primitive: { kind: "scripted", script: DOOR, params: { style: "fire", part: "set", w: 1.7, h: 2.25, seed: 9 } }, material: { pbr: true, color: "oklch(0.55 0.08 150)" },
       light: { kind: "point", color: "#3dff8a", intensity: 2.2, distance: 7, shadow: { enabled: false } } }); }
   // 7. Safe Alcove: a lived-in room
@@ -98,10 +101,8 @@ export function dressWorld(ctx) {
   D("lrun-dress-poster-b", { feetPosition: { x: AX - 5.86, y: 1.1, z: -1.2 }, rotation: { yaw: 90 }, vector: "<svg viewBox='0 0 150 100' width='0.75m'><rect width='150' height='100' fill='#d8cfb2'/><path d='M10 80 L40 30 L70 60 L95 20 L140 80 Z' fill='#6f8a6a'/><circle cx='118' cy='28' r='10' fill='#e2b048'/><text x='75' y='95' text-anchor='middle' font-family='serif' font-size='9' fill='#333'>somewhere with a sky</text></svg>" });
   // the Level 11 door keeps its id, behavior and state; it wears a real metal door
   const l11 = objs["lrun-to-l11"];
-  if (l11) { const keep = { ...(l11.state ?? {}) }; ctx.destroy("lrun-to-l11");
-    ctx.spawn("lrun-to-l11", { tags: ["usable"], feetPosition: { x: AX + 5.85, y: 0, z: 0 }, rotation: { yaw: 90 }, physics: "static", behavior: "scripts/l11-ch2-drop.js", state: keep,
-      primitive: { kind: "scripted", script: DOOR, params: { style: "metal", part: "set", w: 1.2, h: 2.3, seed: 11 } }, material: { pbr: true, color: "oklch(0.86 0.02 150)" } }); }
+  if (l11) { for (const c of l11.children ?? []) c.visible = false;
+    l11.primitive = { kind: "scripted", script: DOOR, params: { style: "metal", part: "set", w: 1.2, h: 2.3, seed: 11 } }; l11.material = { pbr: true, color: "oklch(0.86 0.02 150)" }; }
   const al = objs["lrun-alcove-light"]; if (al) al.feetPosition = { x: AX + 1.2, y: 2.95, z: 0 };
-  ctx.destroy("lrun-pursuer-5"); // re-spawned as the shadow body by ensureHorde
   st.dressV = DRESS_V;
 }
