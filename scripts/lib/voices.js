@@ -68,8 +68,12 @@ export const isVoiceClip = (clip) => recorded.has(clip) || String(clip).includes
 export const recordedDuration = (clip) => recorded.get(clip) || 0
 export const hasCast = (who) => Object.hasOwn(CAST, actorId(who))
 export function actedVoice(who, line) {
-  const sha = ACTED[hash(actorId(who) + '|' + slug(line)).toString(36)]
-  return sha ? asset(sha) : null
+  const key = hash(actorId(who) + '|' + slug(line)).toString(36), sha = ACTED[key]
+  if (!sha) return null
+  // a take far longer than its words is a bad take (the voice maker padded a short line with laughs and repeats): silent, the subtitle stays
+  const ms = (TIMING[key] ?? 0) * 100, words = String(line).split(/\s+/).filter(Boolean).length
+  if (ms && ms > 2 * (1200 + words * 550)) return null
+  return asset(sha)
 }
 export function vo(who, line, n) {
   const clip = actedVoice(who, line)
