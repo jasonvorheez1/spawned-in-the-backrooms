@@ -46,3 +46,13 @@ water:                          # ordinary and almond water turn to sand here. G
 ferry:
   refillHours: 1                # the article: about once an hour
   capacity: 8
+friends:                        # Ferry's Friends (scripts/lib/l169-friends.js). [room, u, v]: u across the room's x (0 = west), v across its z (0 = north)
+  table: [kitchen, 0.35, 0.54]  # two dining tables end to end, seven chairs
+  stove: [kitchen, 0.25, 0.07]
+  mapTable: [den, 0.5, 0.42]
+  crates: [den, 0.88, 0.1]
+  slate: [porch, 0.62, 0.03]    # on the wall east of the front door, faces south
+  cart: [porch, 0.17, 0.6]
+  bench: [porch, 0.8, 0.84]     # the newcomer's chair, turned north
+  track: [[16, -478], [14, -455], [10, -430]]   # how far the road guide walks to look for arrivals
+  basementDown: 3

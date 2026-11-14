@@ -1,0 +1,94 @@
+# Ferry's Friends: the seven people of the house on Level 169. Game-original names. All numbers Savi's picks.
+# hour = atmosphere.timeOfDay 0..24 (one unit = two of the article's hours). Day 6..18. Nobody is outdoors 8..16.
+acts:
+  eat: cdn/clip-sitting-eating-loop.glb
+  sit: cdn/clip-sit-loop.glb
+  sleep: cdn/clip-sleep-loop.glb
+  stir: cdn/clip-stirring-a-pot-loop.glb
+  write: cdn/clip-writing-on-a-wall-loop.glb
+  pick: cdn/clip-pickup.glb
+  point: cdn/clip-point.glb
+  crouch: cdn/clip-crouch-idle-loop.glb
+  talk: cdn/clip-talk-loop.glb
+# name: [room, u, v, faceX, faceZ, out?]   (seat-N and bed-N are made in code from the table and the bedrooms)
+stops:
+  stove:    [kitchen, 0.25, 0.2, 0, -1]
+  serve:    [kitchen, 0.13, 0.54, 1, 0]
+  sink:     [kitchen, 0.5, 0.9, 0, 1]
+  ferry:    [kitchen, 0.86, 0.3, 0, -1]
+  window:   [living, 0.1, 0.5, -1, 0]
+  couch:    [living, 0.5, 0.5, 0, 1]
+  mend:     [living, 0.7, 0.25, 0, -1]
+  shutA:    [living, 0.3, 0.9, 0, 1]
+  shutB:    [living, 0.1, 0.3, -1, 0]
+  shutC:    [kitchen, 0.7, 0.9, 0, 1]
+  hingeA:   [hall, 0.15, 0.5, 0, -1]
+  hingeB:   [hall, 0.6, 0.5, 0, -1]
+  cooler:   [hall, 0.4, 0.5, 0, 1]
+  map:      [den, 0.5, 0.62, 0, -1]
+  crates:   [den, 0.74, 0.2, 1, -1]
+  shelfA:   [basement, 0.2, 0.3, 0, -1]
+  shelfB:   [basement, 0.7, 0.7, 0, 1]
+  cart:     [porch, 0.25, 0.6, -1, 0, out]
+  slate:    [porch, 0.62, 0.35, 0, -1, out]
+  rail:     [porch, 0.4, 0.8, 0, 1, out]
+  ladder:   [porch, 0.95, 0.5, 1, -1, out]
+  bench:    [porch, 0.8, 0.84, 0, -1, out]
+# block: stops in order, each [stop, dwell seconds, act?]
+blocks:
+  meal:     [[seat, 900, eat]]
+  sleep:    [[bed, 900, sleep]]
+  cook:     [[stove, 40, stir], [sink, 12, pick], [stove, 30, stir]]
+  plates:   [[stove, 6, pick], [serve, 6, pick]]
+  dishes:   [[sink, 45, pick], [stove, 10]]
+  rest:     [[couch, 60, talk], [window, 30]]
+  count:    [[shelfA, 30, point], [shelfB, 30, point]]
+  bottles:  [[ferry, 12, pick], [couch, 10, point], [map, 10, point], [hingeB, 8], [ferry, 12, pick]]
+  pack:     [[cart, 30, pick], [rail, 12]]
+  gear:     [[mend, 50, pick], [window, 20]]
+  lookout:  [[track0, 30], [track1, 40], [track2, 120], [track1, 40]]
+  maps:     [[map, 60, point], [crates, 20, pick]]
+  restock:  [[crates, 30, pick], [shelfB, 30, pick], [map, 20, point]]
+  sunwatch: [[rail, 30], [slate, 30, write]]
+  slate:    [[slate, 40, write], [rail, 20]]
+  indoors:  [[window, 60], [couch, 40, talk]]
+  shutters: [[shutA, 14, pick], [shutB, 14, pick], [shutC, 14, pick]]
+  hinges:   [[hingeA, 40, crouch], [hingeB, 40, crouch]]
+  cooler:   [[cooler, 60, point], [hingeA, 20, crouch]]
+  roof:     [[ladder, 60, point], [rail, 20]]
+  help:     [[sink, 30, pick], [couch, 30]]
+  north:    [[bench, 900, sit]]
+people:
+  - { n: 1, name: "Odalys Brandt", job: "Cook", voice: mags, bedroom: bed1,
+      look: { species: bear, sex: f, fur: "#8a5a3c", topw: apron, top: "#e8dcc0", botw: longskirt, bottom: "#7a3b2e", shoes: slippers, neck: none, hat: flower, expr: smile },
+      day: [[0, sleep], [4, cook], [5.5, plates], [6, meal], [7, dishes], [8, rest], [10, cook], [12, rest], [16, cook], [17.5, plates], [18, meal], [19, dishes], [20, rest], [22, sleep]] }
+  - { n: 2, name: "Tobin Achterberg", job: "Quartermaster", voice: hollis, bedroom: bed2,
+      look: { species: dog, sex: m, fur: "#c9a36a", topw: longsleeve, top: "#4d6a5a", botw: overalls, bottom: "#39424e", shoes: boots, eyew: glasses, expr: neutral },
+      day: [[0, sleep], [4, count], [6, meal], [7, bottles], [9, count], [12, bottles], [14, count], [16, bottles], [18, meal], [19, count], [20, bottles], [22, sleep]] }
+  - { n: 3, name: "Senna Okoro", job: "Road guide", voice: wren, bedroom: bed2,
+      look: { species: fox, sex: f, fur: "#c8622e", topw: jacket, top: "#b89a5e", botw: pants, bottom: "#5a4a36", shoes: boots, neck: scarf, hat: cap, expr: determined },
+      day: [[0, lookout], [5, pack], [6, meal], [7, gear], [9, sleep], [15, gear], [16.5, pack], [18, meal], [19, lookout]] }
+  - { n: 4, name: "Halvard Pruitt", job: "Checkpoint keeper", voice: reyes, bedroom: bed3,
+      look: { species: deer, sex: m, fur: "#a9825a", topw: sweater, top: "#7b4a2a", botw: pants, bottom: "#2f3b34", shoes: boots, hat: beanie, expr: pensive },
+      day: [[0, sleep], [4, maps], [6, meal], [7, restock], [11, maps], [15, restock], [18, meal], [19, maps], [22, sleep]] }
+  - { n: 5, name: "Ines Varga", job: "Weather keeper", voice: mags, bedroom: bed1,
+      look: { species: bunny, sex: f, fur: "#e9e2d4", topw: dress, top: "#3f5f86", botw: none, shoes: sneakers, neck: scarf, eyew: glasses, expr: curious },
+      day: [[0, slate], [2, indoors], [5, sunwatch], [6, meal], [7, slate], [7.8, indoors], [9, sleep], [15, indoors], [17, sunwatch], [18, meal], [19, slate], [20, indoors], [23, slate]] }
+  - { n: 6, name: "Dov Kessler", job: "Fixer", voice: hollis, bedroom: bed3,
+      look: { species: wolf, sex: m, fur: "#6f7480", topw: tank, top: "#c9c2b0", botw: overalls, bottom: "#5b4a3a", shoes: boots, hat: none, expr: unimpressed },
+      day: [[0, sleep], [4, hinges], [5.5, shutters], [6, meal], [7, shutters], [7.5, hinges], [10, cooler], [14, hinges], [17.5, shutters], [18, meal], [19, shutters], [19.5, roof], [22, sleep]] }
+  - { n: 7, name: "Pim Laurier", job: "Newcomer", voice: wren, bedroom: bed1,
+      look: { species: cat, sex: m, fur: "#3a3a44", topw: hoodie, top: "#8c3b3b", botw: shorts, bottom: "#3d4a5c", shoes: sneakers, expr: wistful },
+      day: [[0, north], [5, help], [6, meal], [7, help], [9, sleep], [15, help], [18, meal], [19, north]] }
+# the house talks among itself. Never about the player.
+chatter:
+  - [[l169-friend-1, "whose turn is the dishes?"], [l169-friend-6, "tobin's."], [l169-friend-2, "i did them tuesday."], [l169-friend-1, "there is no tuesday out here."], [l169-friend-2, "then i did them last."]]
+  - [[l169-friend-5, "the pantry door squeaks again."], [l169-friend-6, "i oiled it."], [l169-friend-5, "it squeaks in a new place."], [l169-friend-6, "then i'll oil the new place."]]
+  - [[l169-friend-4, "how many bottles went north this week?"], [l169-friend-2, "thirty-one."], [l169-friend-4, "i logged twenty-nine."], [l169-friend-2, "senna took two on the cart."], [l169-friend-3, "they were for my own walk."]]
+  - [[l169-friend-3, "cart wheel's pulling left."], [l169-friend-6, "it's the axle pin. after supper."], [l169-friend-3, "you said that before supper."]]
+  - [[l169-friend-1, "we're short two plates."], [l169-friend-7, "one's on the porch. sorry."], [l169-friend-1, "and the other?"], [l169-friend-7, "also the porch."]]
+  - [[l169-friend-5, "sunrise in under an hour."], [l169-friend-6, "shutters are next on my list."], [l169-friend-5, "they were next yesterday too."]]
+  - [[l169-friend-2, "ferry's light flickered when i opened the door."], [l169-friend-6, "bulb or wiring?"], [l169-friend-2, "it stopped when i said good morning."], [l169-friend-6, "bulb, then."]]
+  - [[l169-friend-4, "crate at b needs a new lid."], [l169-friend-3, "i'll carry one up next walk."], [l169-friend-4, "it's ninety kilometres past a."], [l169-friend-3, "then it's a light lid."]]
+  - [[l169-friend-1, "beans again tonight."], [l169-friend-7, "i like the beans."], [l169-friend-1, "you've been here two weeks. give it time."]]
+  - [[l169-friend-2, "seven people, eight bottles an hour. that's the whole sum."], [l169-friend-1, "and we've never once run dry."], [l169-friend-2, "because i count."]]
