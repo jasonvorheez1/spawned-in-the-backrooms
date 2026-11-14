@@ -14,6 +14,25 @@ export const megHostileCh2 = (s) => isVilified(s, { id: "l11-meg-agent-vance", s
 const CH2_WHISPER_LINE = "Same pace. Do not waste it on a locked door.";
 const WV = (w) => `/cdn/voice-soft-breathy-young-woman-whispering-amused-saying-${encodeURIComponent(w)}.mp3`;
 
+// Phoebe's five answers in the Safe Alcove. She is curious, not fond. Mike is only what others told you.
+export const REPLIES = [
+  { id: "mike", stance: "curious", tag: "Ask", key: "who is mike", q: "Who is Mike?",
+    a: "River's sister. Quick learner. A red hospital seam took her. I wanted to see if you'd go the same way.",
+    note: "You asked about Mike. Phoebe compared you to her, and didn't say who came out ahead." },
+  { id: "reminded", stance: "curious", tag: "Ask", key: "reminded you of someone", q: "I reminded you of someone.",
+    a: "You run like her. Same bad habits. I wanted to see if the ending changed.",
+    note: "Phoebe admitted you reminded her of Mike. Not sentiment. A rerun." },
+  { id: "want", stance: "suspicious", tag: "Suspicious", key: "what do you want", q: "What do you want from me?",
+    a: "Nothing yet. I like watching what people do when a room wants them dead.",
+    note: "You asked what she wants. She wants to keep watching." },
+  { id: "sooner", stance: "frustrated", tag: "Angry", key: "could've helped sooner", q: "You could've helped sooner.",
+    a: "Sure. Then I'd never know how far you get. Now I do. Six meters short.",
+    note: "You called her out for waiting. She didn't deny it was a test." },
+  { id: "thanks", stance: "relieved", tag: "Grateful", key: "thanks, i think", q: "Thanks, I think.",
+    a: "Don't. I was curious. You were interesting. Stay that way.",
+    note: "You thanked her. She said curiosity saved you, not kindness." },
+];
+
 const STEP = {
   1: (s) => ({
     step: megHostileCh2(s)
@@ -117,14 +136,14 @@ export function completeChapter2(ctx, player, stance) {
   s.ch3Unlocked = 1;
   s.knowsMike = 1;
   s.ch2Q = 99;
-  const stanceNote = {
-    suspicious: "You pushed back on why she waited. She admitted she wanted to see how you handled a bad hall before stepping in.",
-    frustrated: "You called her out for letting the corridor collapse first. She did not deny using it as a test.",
-    curious: "You asked about Mike Sunderland. She admitted she watched River's sister once too, before Mike died on a run.",
-    relieved: "You thanked her, and she brushed it off. Curiosity kept you alive, not kindness.",
-  }[s.phoebeStance] ?? "Phoebe pulled you out of Level ! because she wanted to see how far you make it.";
+  s.phoebeRescued = 1;
+  s.lrunRescued = 1;
+  s.phoebeReaction ??= REPLIES.find((r) => r.stance === s.phoebeStance)?.id ?? "thanks";
+  // Chapter 3 waits quietly: conditions set, no title card. Chapter 3 owns ch3Q once it is written.
+  s.ch3Ready = { from: "levelrun", reaction: s.phoebeReaction, at: ctx.now() };
+  const stanceNote = REPLIES.find((r) => r.id === s.phoebeReaction)?.note ?? "She pulled you out to see what you'd do next.";
 
-  endQuest(s, CH2.id, `Survived Level ! and spoke with Phoebe. ${stanceNote} Chapter 3 awaits on the other side of Level 11.`, "completed");
+  endQuest(s, CH2.id, `Survived Level ! and spoke with Phoebe. ${stanceNote}`, "completed");
   s.payout = { xp: 450 };
   tellQuest(ctx, player, "Chapter 2 Complete: The Dead Signal · +450 XP");
   pushFeed(s, "Chapter 2 Complete: The Dead Signal (+450 XP)", ctx.now(), "info");
@@ -165,14 +184,11 @@ export function ch2Choices(_ctx, it, s) {
 
   if (id === "phoebe-lrun" && q >= 6 && !s.ch2Done) {
     if (!s.ch2StancePicked) {
-      out.push({ text: "Why did you pull me out of there?", tag: "Suspicious" });
-      out.push({ text: "You stood by and waited until the corridor collapsed on me.", tag: "Frustrated" });
-      out.push({ text: "Is this about Mike Sunderland? You mentioned River's sister back on the ship.", tag: "Curious" });
-      out.push({ text: "I shouldn't be breathing right now. Thank you.", tag: "Relieved" });
+      for (const r of REPLIES) out.push({ text: r.q, tag: r.tag });
     } else {
       if (!s.ch2AskDina) out.push({ text: "What happens to Dina now? Did she get clear of Level 11?", tag: "Dina" });
       if (!s.ch2AskWard) out.push({ text: "How did you stop those things at the door?", tag: "Ask" });
-      if (!s.ch2AskMike && !s.ch2SaidMike) out.push({ text: "Who was Mike Sunderland to you?", tag: "Ask" });
+      if (!s.ch2AskMike && !s.ch2SaidMike) out.push({ text: "Did you know Mike?", tag: "Ask" });
       out.push({ text: "Open the alcove threshold. I'm heading back to Level 11.", tag: "Finish Chapter 2" });
     }
   }
@@ -269,39 +285,13 @@ export function handleDialogueCh2(ctx, player, npc, text) {
   // Stage 6 -> Phoebe Post-Rescue Finale inside Level ! Safe Alcove
   if (id === "phoebe-lrun" && q >= 6) {
     if (!s.ch2StancePicked) {
-      if (t.includes("why did you pull me out")) {
-        s.ch2StancePicked = "suspicious";
-        s.phoebeStance = "suspicious";
-        return {
-          reply: "I wanted to see if you'd make it. You didn't freeze when the chains snapped, you cleared the gurneys at full speed, and you kept moving after your legs gave out. Most people with triple your gear die thirty meters past that sign.",
-          mood: "calm",
-        };
-      }
-      if (t.includes("waited until the corridor collapsed")) {
-        s.ch2StancePicked = "frustrated";
-        s.phoebeStance = "frustrated";
-        return {
-          reply: "If I pulled you out at the first siren, I wouldn't know what you do when a hallway goes bad. You lasted to the last six meters on your own. Now I know.",
-          mood: "calm",
-        };
-      }
-      if (t.includes("mike sunderland")) {
-        s.ch2StancePicked = "curious";
-        s.phoebeStance = "curious";
-        s.knowsMike = 1;
-        s.ch2SaidMike = 1;
-        return {
-          reply: "Yes. Mike was River's sister. Plain gear, quick eyes, learned how a level works before anyone else caught on. One door caught up to her before I saw how far she'd get. You've got the same knack for bad odds, and I'd rather not lose two interesting runners early.",
-          mood: "calm",
-        };
-      }
-      if (t.includes("thank you")) {
-        s.ch2StancePicked = "relieved";
-        s.phoebeStance = "relieved";
-        return {
-          reply: "Save it. I didn't step in out of kindness, and you don't owe me anything. Stay alive and keep paying attention.",
-          mood: "calm",
-        };
+      const r = REPLIES.find((x) => t === x.q.toLowerCase() || t.includes(x.key));
+      if (r) {
+        s.ch2StancePicked = r.stance;
+        s.phoebeStance = r.stance;
+        s.phoebeReaction = r.id;
+        if (r.id === "mike") { s.knowsMike = 1; s.ch2SaidMike = 1; }
+        return { reply: r.a, mood: "calm" };
       }
     }
 
@@ -309,23 +299,23 @@ export function handleDialogueCh2(ctx, player, npc, text) {
       if (t.includes("what happens to dina")) {
         s.ch2AskDina = 1;
         return {
-          reply: "Dina stayed out of that hall because she trusted her own notes instead of chasing noises behind drywall. If she keeps her head on straight with River's drive, she'll keep walking.",
+          reply: "Dina reads her own notes. People who read their notes live. Mostly.",
           mood: "calm",
         };
       }
       if (t.includes("stop those things at the door")) {
         s.ch2AskWard = 1;
         return {
-          reply: "Pulled a fold shut around the doorframe. Good enough to stop two seconds of trouble, not an army. Getting you out cost plenty as it is.",
+          reply: "I didn't stop them. I moved the hallway. They're still back there, running at a wall that isn't.",
           mood: "calm",
         };
       }
-      if (t.includes("who was mike sunderland")) {
+      if (t.includes("did you know mike")) {
         s.ch2AskMike = 1;
         s.knowsMike = 1;
         s.ch2SaidMike = 1;
         return {
-          reply: "River's sister. Worn coat, stubbed boots, fast at reading exits. She got farther than anyone expected with half-empty pockets and died on a bad run. That's the whole story.",
+          reply: "Knew of her. River's sister. Learned fast. A red seam took her before I got a good look. You, I got a good look at.",
           mood: "calm",
         };
       }
@@ -333,10 +323,10 @@ export function handleDialogueCh2(ctx, player, npc, text) {
         completeChapter2(ctx, player, s.phoebeStance ?? s.ch2StancePicked);
         npc.state.leaveAt = ctx.now() + 3500;
         const agiNote = (s.ch2AgilityUsed ?? 0) >= 6 || (s.attr ? Number(String(s.attr).split(",")[1]) >= 7 : false)
-          ? "Good pace back there. Keep your head up on the street."
-          : "Catch your breath before you walk through the next locked door. Try not to die carelessly.";
+          ? "Good legs. Keep them."
+          : "Slow legs. Smart head. We'll see which wins.";
         return {
-          reply: `The alcove door opens behind the clinic in Level 11. ${agiNote}`,
+          reply: `Door's open. Clinic's on the other side. ${agiNote}`,
           mood: "calm",
         };
       }
