@@ -76,7 +76,7 @@ function life(ctx, face) {
 // happy wags quick and perky, sad droops slow, scared tucks the tail and flattens the ears, angry lashes. Degrees.
 const FLAIR = {
   happy:  { d: 0.7, tail: { yaw: [-28, 28, -28], pitch: [20, 26, 20] }, ear: { roll: [0, 8, 0, -4, 0] } },
-  calm:   { d: 2.4, tail: { yaw: [-12, 12, -12], pitch: [8, 12, 8] }, ear: { roll: [0, 0, 14, 0, 0] } },
+  calm:   { d: 3.2, tail: { yaw: [-12, 12, -12], pitch: [8, 12, 8] }, ear: { roll: [0, 0, 14, 0, 0] } },
   sad:    { d: 3.2, tail: { yaw: [-5, 5, -5], pitch: [-35, -32, -35] }, ear: { roll: [-32, -28, -32] } },
   scared: { d: 0.25, tail: { yaw: [-4, 4, -4], pitch: [-55, -55, -55] }, ear: { roll: [-50, -46, -50] } },
   angry:  { d: 0.9, tail: { yaw: [-40, 10, 40, -10, -40], pitch: [25, 30, 25] }, ear: { roll: [-22, -22, -22] } },
@@ -84,7 +84,7 @@ const FLAIR = {
 const MOOD = { grin: 'happy', joy: 'happy', love: 'happy', wink: 'happy', smug: 'calm', smile: 'calm', sleepy: 'sad', sad: 'sad', scared: 'scared', surprised: 'scared', angry: 'angry' }
 // Shelly Nov 12 "animate the tails too and make them cute as hell": the mesh body's tail is three bones (Tail1..Tail3), so the swish is a
 // travelling wave down them, each joint a beat behind the one before, the tip curling up and flicking widest. Tail is the scripted body's root joint.
-const TAIL_SEG = [['Tail', 0.8, 0], ['Tail1', 1.0, 0], ['Tail2', 1.35, 0.6], ['Tail3', 1.8, 1.2]], TAIL_N = 13, TAIL_LAG = 0.85, TAIL_MIN = 22 // Shelly 'sure' to a bigger swish: calm never swings under 22 deg a joint
+const TAIL_SEG = [['Tail', 0.6, 0], ['Tail1', 0.8, 0], ['Tail2', 0.95, 0.5], ['Tail3', 1.1, 0.9]], TAIL_N = 17, TAIL_LAG = 0.55, TAIL_MIN = 10 // Shelly Nov 14 'my tail is wagging oddly': the tip whipped ~40 deg on top of the jiggle, so the wave is smaller and smoother now // Shelly 'sure' to a bigger swish: calm never swings under 22 deg a joint
 const TAIL_CURL = { happy: 16, calm: 12, sad: -4, scared: -2, angry: 4 } // how far each joint toward the tip lifts: a question-mark hook when happy
 function flairClip(face) {
   const mood = MOOD[face] || 'calm', f = FLAIR[mood], amp = Math.max(TAIL_MIN, ...f.tail.yaw.map(Math.abs)), pit = f.tail.pitch.reduce((a, b) => a + b, 0) / f.tail.pitch.length
@@ -94,14 +94,14 @@ function flairClip(face) {
     for (let k = 0; k < TAIL_N; k++) {
       const t = (k / (TAIL_N - 1)) * Math.PI * 2 - i * TAIL_LAG
       yaw.push(+(amp * w * Math.sin(t)).toFixed(2))
-      pitch.push(+((i === 0 ? pit : pit * 0.35) + c * (TAIL_CURL[mood] ?? 0) + amp * 0.18 * Math.sin(2 * t)).toFixed(2)) // a little bob twice a swing: the bounce that sells it
+      pitch.push(+((i === 0 ? pit : pit * 0.35) + c * (TAIL_CURL[mood] ?? 0) + amp * 0.08 * Math.sin(2 * t)).toFixed(2)) // a little bob twice a swing: the bounce that sells it
     }
     tracks[bone] = { roll: yaw, pitch } // the mesh tail's bones run along their own Y, so yaw only twisted it in place: roll is the side-to-side swing
   })
   tracks.EarL = { roll: f.ear.roll.map((v) => -v) }; tracks.EarR = { roll: f.ear.roll }
   return { duration: f.d, tracks }
 }
-const FLAIR_V = 'w4'
+const FLAIR_V = 'w5'
 function flair(obj, face) { obj.anim.flair = { clip: flairClip(face), loop: 'loop', weight: 1, blendIn: 0.3 } }
 
 // an old look (one outfit + one accessory) reads into the clothing slots

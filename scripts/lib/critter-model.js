@@ -877,7 +877,7 @@ export const ARM_SPLAY = 20
 // the cat rig's runtime fixes (Nov 12, Shelly: "fix rigs for the critter characters"): the tail swings on a spring and is
 // pushed off the hips and thighs instead of standing rigid through the legs and the floor; both upper arms sit 8 degrees
 // further forward so clips made for long human arms put short cat hands in front of the chest, not inside it
-export const CAT_JIGGLE = { bones: ['mixamorig:Tail1', 'mixamorig:Tail2', 'mixamorig:Tail3'], amount: 0.55, bounce: 0.5, gravity: 0.6, limit: 50,
+export const CAT_JIGGLE = { bones: ['mixamorig:Tail1', 'mixamorig:Tail2', 'mixamorig:Tail3'], amount: 0.4, bounce: 0.3, gravity: 0.6, limit: 35,
   colliders: [{ bone: 'mixamorig:Hips', radius: 0.13 }, { bone: 'mixamorig:LeftUpLeg', tail: [0, -0.3, 0], radius: 0.08 }, { bone: 'mixamorig:RightUpLeg', tail: [0, -0.3, 0], radius: 0.08 }] }
 export const CAT_ARMS = { 'mixamorig:LeftArm': { rotate: [-8, 0, 0] }, 'mixamorig:RightArm': { rotate: [-8, 0, 0] } }
 // crouched: the crouch clip (made for a human) folds the cat nearly double with its head at its knees and spikes a jacket hem; the back and
