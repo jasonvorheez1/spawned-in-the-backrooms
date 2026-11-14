@@ -27,7 +27,7 @@ for name, (size, budget, largest, flat) in SPEC.items():
     bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT"); bpy.ops.mesh.separate(type="LOOSE"); bpy.ops.object.mode_set(mode="OBJECT")
     parts = [p for p in bpy.context.scene.objects if p.type == "MESH"]
     def vol(p): a, b = bbox(p); d = b - a; return d.x * d.y * d.z
-    big = max(parts, key=vol)
+    big = max(parts, key=lambda p: (bbox(p)[1] - bbox(p)[0]).z)  # the bottle is the tallest piece
     for p in parts:
       if p is not big: bpy.data.objects.remove(p)
     o = big; bpy.context.view_layer.objects.active = o; o.select_set(True)
