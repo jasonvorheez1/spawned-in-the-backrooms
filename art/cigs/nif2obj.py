@@ -4,7 +4,7 @@ import glob, os, subprocess, json
 from pyffi.formats.nif import NifFormat
 SRC = "/workspace/art/cigs/src"; OUT = "/workspace/art/cigs/obj"; os.makedirs(OUT, exist_ok=True)
 dds = {os.path.basename(p).lower(): p for p in glob.glob(SRC + "/**/*.dds", recursive=True)}
-FIX = {"oldgoldpack_n.dds": "oldgoldcarton.dds", "oldgoldcarton_n.dds": "oldgoldpack.dds"}  # the mod's two old gold slots point at normal maps, swapped
+FIX = {}  # the mod names its old gold diffuse maps _n and its normal maps plain; the nif slots are right as they stand
 items = []
 for f in sorted(glob.glob(SRC + "/**/*.nif", recursive=True)):
     rel = f.split("Cigarettes/")[1][:-4]
