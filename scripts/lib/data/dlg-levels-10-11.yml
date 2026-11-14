@@ -194,6 +194,11 @@ l11-meg-agent-vance:
           a: "The apple seller on the corner. He books passage on the side. Don't tell him a uniform sent you. He'll charge double."
         - q: "What did the voice say?"
           a: "The date. A time check. Then a song I knew from before. I wrote the date in the log and my hand shook doing it."
+    - q: "Heard someone named Halliel used to stay near here."
+      a: "Halliel. Incident 11-607B. Before I rotated in, an unregistered Skin-Stealer lived off Fourteenth without bothering anyone. Two fresh transfers decided Level 11 docility rules didn't apply to her, cornered her in an alley, and emptied half a magazine. Only dragged back a torn sleeve and a lot of blood."
+      then:
+        - q: "So she's dead?"
+          a: "No body in the gutter, just wet pavement and a wool cap. Command closed the file as presumed dead. Nobody's seen her since, and we have standing notes to log it if a girl in a yellow coat comes asking after her."
   barks:
     idle: ["Street's clear.", "Boulevard's quiet.", "Hound. Sit. Good."]
     hi: ["Citizen.", "Afternoon, citizen."]
@@ -236,6 +241,8 @@ l11-trader-kael:
     - q: "Ever hear the name Dina?"
       do: "trail:name"
       a: "I don't do names, boss. I do faces and what they owe. If she bought off the back of the stall, she paid in full. Those I forget on purpose."
+    - q: "Know anyone named Halliel?"
+      a: "Quiet girl, tall, wore winter parkas in mild weather. Used to pay exact change for two bottles of Almond Water every third day, never made eye contact, always said thank you. Base Beta swept the block east of here last spring and I found her scarf by the drain next morning. Nobody settles a tab after that, so I crossed her off as dead."
   barks:
     idle: ["Apples! Free!", "Coffee, fresh!", "Batteries. Not free."]
     hi: ["Afternoon, boss!", "Boss!"]
@@ -423,6 +430,8 @@ l11-tm-clerk:
     - q: "Ever hear the name Dina?"
       do: "trail:name"
       a: "Names, no. But a woman traded me a good coat for a bag of sandwiches and said she wouldn't need it at sea. At sea, shopper. From here. I thought she was joking."
+    - q: "Did a regular named Halliel shop here?"
+      a: "Size large coats, cotton gloves in seventy-degree air, tipped in quarters. Real polite, never tried anything on in front of the mirror. Stopped coming in after the M.E.G. boys got jumpy on Fourteenth. Word is they dropped her behind the brick lot, though nobody showed me a grave."
   barks:
     idle: ["Sandwiches accepted.", "Bin the smile shirt.", "Who folded that?"]
     hi: ["Welcome, shopper.", "Hey."]
