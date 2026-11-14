@@ -1335,11 +1335,13 @@ export function update(ctx, dt) {
         w.lrunVaultUntil = nowS + 320
         s.ch2AgilityUsed = (s.ch2AgilityUsed ?? 0) + 1
         sound(ctx, 'gun-raise-cloth-rustle', 0.4, true)
+        ctx.emit('damageNumber', { position: { x: fp.x, y: (fp.y ?? 0) + 2, z: fp.z - 1 }, text: 'VAULT', color: '#9cf2a8', size: 0.8 }, { audience: { player: ctx.self.id } })
       } else if (nowS >= (w.lrunDodgeUntil ?? 0) && nowS > (w.lrunStumbleUntil ?? 0)) {
         w.lrunStumbleUntil = nowS + lrAgi.stumbleMs
         w.lrunStumbleMul = lrAgi.stumbleSpeedKeep
         ctx.emit('cameraPunch', { direction: { x: 0, y: -0.4, z: 0.6 }, intensity: 0.25 }, { audience: { player: ctx.self.id } })
         sound(ctx, 'footstep-damp-carpet-run', 0.55, true)
+        ctx.emit('damageNumber', { position: { x: fp.x, y: (fp.y ?? 0) + 2, z: fp.z - 1 }, text: lrAgi.agi >= 7 ? 'STUMBLE, caught it' : 'STUMBLE', color: '#ffb066', size: 0.8 }, { audience: { player: ctx.self.id } })
       }
     }
   }
