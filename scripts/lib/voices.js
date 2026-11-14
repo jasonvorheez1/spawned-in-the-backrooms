@@ -1,7 +1,7 @@
 import V from './data/npc-voices.yml'
 import CAST from './data/voice-cast.yml'
 import TIMING from './data/voice-timing.yml'
-let ACTED = {} // recorded performances (art/vo/act.py, the tape method): key: hash('<id>|<slug>') base36, value: the clip's sha
+let ACTED = {}, RETAKE = false // recorded performances (art/vo/act.py, the tape method): key: hash('<id>|<slug>') base36, value: the clip's sha
 // One throat per character: the voice file's name is its prompt, so each character's words below ARE their voice.
 // Every speaking helper builds its clip through vo(who, line); a new who falls back to a throat picked from its name.
 const T = {
@@ -63,7 +63,8 @@ const unpack = (s) => { s = String(s); if (s.length === 64) return s; let bits =
 const asset = (sha) => `/cdn/value.${unpack(sha)}.mp3`
 let recorded = new Map(Object.entries(ACTED).map(([key, sha]) => [asset(sha), (TIMING[key] ?? 0) * 100]))
 // the table (214 KB) is read after the player stands, not before: every level's boot is that much lighter
-import('./data/voice-acted.yml').then((m) => { ACTED = m?.default ?? m ?? {}; recorded = new Map(Object.entries(ACTED).map(([key, sha]) => [asset(sha), (TIMING[key] ?? 0) * 100])) }).catch(() => {})
+// Shelly Nov 14 "fix the voice lines theyre laughing": the first takes (voice-acted.yml) laughed and repeated lines; only the clean retakes (voice-acted2.yml, art/vo/act.py) play
+import('./data/voice-acted2.yml').then((m) => { ACTED = m?.default ?? m ?? {}; RETAKE = true; recorded = new Map(Object.entries(ACTED).map(([key, sha]) => [asset(sha), 0])) }).catch(() => {})
 export const isVoiceClip = (clip) => recorded.has(clip) || String(clip).includes('/voice-')
 export const recordedDuration = (clip) => recorded.get(clip) || 0
 export const hasCast = (who) => Object.hasOwn(CAST, actorId(who))
@@ -72,7 +73,7 @@ export function actedVoice(who, line) {
   if (!sha) return null
   // a take far longer than its words is a bad take (the voice maker padded a short line with laughs and repeats): silent, the subtitle stays
   const ms = (TIMING[key] ?? 0) * 100, words = String(line).split(/\s+/).filter(Boolean).length
-  if (ms && ms > 2 * (1200 + words * 550)) return null
+  if (!RETAKE && ms && ms > 2 * (1200 + words * 550)) return null
   return asset(sha)
 }
 export function vo(who, line, n) {
