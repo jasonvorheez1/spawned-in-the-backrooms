@@ -22,28 +22,7 @@ terrain:
           - { kind: scripted, script: scripts/grass.js, scale: [0.3, 0.6], randomRotation: true, useTerrainColor: true, wind: { force: 0.04, scale: 5, speed: 1.4 } }
         density: 0.8
         noise: { scale: 18, threshold: 0.35, seed: 3 }
-      brush:
-        items:
-          - { kind: scripted, script: scripts/desert-flora.js, params: { kind: sage }, weight: 5, scale: [0.7, 1.4], randomRotation: true, wind: { force: 0.015, scale: 4, speed: 1 }, maxDistance: 140 }
-          - { kind: scripted, script: scripts/desert-flora.js, params: { kind: yucca }, weight: 2, scale: [0.7, 1.3], randomRotation: true, wind: { force: 0.02, scale: 4, speed: 1.2 }, maxDistance: 140 }
-          - { kind: scripted, script: scripts/desert-flora.js, params: { kind: dead }, weight: 2, scale: [0.8, 1.5], randomRotation: true, maxDistance: 120 }
-          - { kind: scripted, script: scripts/desert-flora.js, params: { kind: barrel }, weight: 1, scale: [0.8, 1.4], randomRotation: true, maxDistance: 100 }
-        density: 0.06
-      cactus:
-        items:
-          - { kind: scripted, script: scripts/desert-flora.js, params: { kind: saguaro }, weight: 1, scale: [0.85, 1.2], randomRotation: true, sink: 0.1, maxDistance: 400 }
-        density: 0.004
-      stones:
-        items:
-          - { kind: scripted, script: scripts/desert-flora.js, params: { kind: pebbles }, weight: 4, scale: [0.8, 1.4], randomRotation: true, maxDistance: 60 }
-          - { kind: scripted, script: scripts/desert-flora.js, params: { kind: boulder }, weight: 1, scale: [0.6, 2.2], randomRotation: true, sink: 0.15, maxDistance: 260 }
-        density: 0.04
-      talus:
-        items:
-          - { kind: scripted, script: scripts/desert-flora.js, params: { kind: boulder }, weight: 3, scale: [0.8, 3.2], randomRotation: true, sink: 0.25, up: local, maxDistance: 320 }
-          - { kind: scripted, script: scripts/desert-flora.js, params: { kind: pebbles }, weight: 2, scale: [1, 1.8], randomRotation: true, maxDistance: 60 }
-        density: 0.09
-    bindings: { sand: [scrub, brush, cactus], hardpan: [scrub, brush, stones, cactus], gravel: [brush, stones, cactus], wash: [stones, brush], rubble: [talus] }
+    bindings: { sand: [scrub], hardpan: [scrub] }
     settings: { maxDistance: 320, fadeDistance: 40 }
 gravity: { x: 0, y: -24, z: 0 }
 defaultSpawnPoint: { x: 2.5, z: 3, y: { terrain: 0 } }
