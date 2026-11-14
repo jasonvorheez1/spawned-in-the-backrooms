@@ -11,6 +11,14 @@ const FMODEL = {
   shelf: "/cdn/value.9f3b838cc1b4403a54d96e1b80372c75c9a440c1d4e61a4760f60de82133526b.glb",
   copier: "/cdn/value.5489a9397b8e52f5ea0f528a387d0449d0787726d6bc65bd041ec8faf80f9362.glb",
 };
+// reused Tripo meshes for the wall moments (2026-11-14: nothing blocky): rusty vending + office chair from l2props (forward +x), street payphone from level11-models (forward -x)
+const MM = {
+  vending: { id: "/cdn/value.b5e982116d78ae3868f9b9db3ccbd35f5d24d5d57451cfbb6122f9d28f2e2b53.glb", forward: "+x", box: [0.92, 1.9, 0.8] },
+  payphone: { id: "/cdn/value.3f1d4bfdace9e0a5bab2fd07823e1022063a15ec0ffc77e118074a8f2df30836.glb", forward: "-x", box: [0.6, 1.95, 0.45] },
+  chair: { id: "/cdn/value.e02cceb0c66d902fced411a31f21de9e9584de3272263a09e20b85c9455411be.glb", forward: "+x", box: [0.62, 1.0, 0.62] },
+};
+const ALMOND = "/cdn/value.d74570d765a2d43f965fc8756878f7bf22f833db5feaf4c335d84d8dc4ba5b62.glb";
+const wallModel = (k) => { const m = MM[k], [w, h, d] = m.box; return { primitive: null, model: { id: m.id, forward: m.forward }, layout: { box: { min: { x: -w / 2, y: 0, z: -d - 0.02 }, max: { x: w / 2, y: h, z: -0.02 } } } }; }; // stands off the wall face, front into the room (-z)
 const lo = (c) => c * S - HALF;
 const hasWall = (cx, cz, d) => d === 0 ? wallX(cx, cz) && !isArchWall(cx, cz, "x") : d === 1 ? wallZ(cx, cz) && !isArchWall(cx, cz, "z") : d === 2 ? wallX(cx - 1, cz) && !isArchWall(cx - 1, cz, "x") : wallZ(cx, cz - 1) && !isArchWall(cx, cz - 1, "z");
 const YAW = [90, 0, -90, 180];
@@ -151,11 +159,11 @@ pop buzz n=1 at=point().c(2.92) size=.9 col=hdr(1.6,1.4,.9) a=.35+.4*flick(.9,.5
   const any = () => true;
   one(501, any, (cx, cz, d) => onWall("outlet", cx, cz, d, 0.6));
   one(502, any, (cx, cz, d) => onWall("falsedoor", cx, cz, d, 0, { physics: { body: "static", collider: "auto" } }));
-  one(503, any, (cx, cz, d) => onWall("vending", cx, cz, d, -0.6, { physics: { body: "static", collider: "auto" } }));
-  const ph = one(504, (cx, cz) => hasLight(cx, cz), (cx, cz, d) => onWall("payphone", cx, cz, d, 0.5, { physics: { body: "static", collider: "auto" }, behavior: "scripts/moments.js", tags: ["moment", "m-payphone", "usable"], state: { kind: "payphone", name: "Payphone", verb: "Answer", info: "it's ringing", tint: "#f2c14e" } }), 3, 9);
+  one(503, any, (cx, cz, d) => onWall("vending", cx, cz, d, -0.6, { ...wallModel("vending"), physics: { body: "static", collider: "box" } }));
+  const ph = one(504, (cx, cz) => hasLight(cx, cz), (cx, cz, d) => onWall("payphone", cx, cz, d, 0.5, { ...wallModel("payphone"), physics: { body: "static", collider: "box" }, behavior: "scripts/moments.js", tags: ["moment", "m-payphone", "usable"], state: { kind: "payphone", name: "Payphone", verb: "Answer", info: "it's ringing", tint: "#f2c14e" } }), 3, 9);
   if (ph) out.phoneAt = cellCenter(ph.cx, ph.cz);
   const ch = pick(505, (cx, cz) => corner(cx, cz) && plainZone(cx, cz));
-  if (ch) { const [a, b] = corner(ch.cx, ch.cz), c = cellCenter(ch.cx, ch.cz), dx = -(NRM[a][0] + NRM[b][0]), dz = -(NRM[a][1] + NRM[b][1]); put("chair", { feetPosition: { x: c.x + dx * 1.1, y: 0, z: c.z + dz * 1.1 }, rotation: (Math.atan2(-dx, -dz) * 180) / Math.PI, primitive: geo("chair"), physics: { body: "static", collider: "auto" } }); }
+  if (ch) { const [a, b] = corner(ch.cx, ch.cz), c = cellCenter(ch.cx, ch.cz), dx = -(NRM[a][0] + NRM[b][0]), dz = -(NRM[a][1] + NRM[b][1]); put("chair", { feetPosition: { x: c.x + dx * 1.1, y: 0, z: c.z + dz * 1.1 }, rotation: (Math.atan2(-dx, -dz) * 180) / Math.PI, model: { id: MM.chair.id, forward: MM.chair.forward }, layout: { box: { min: { x: -0.31, y: 0, z: -0.31 }, max: { x: 0.31, y: 1.0, z: 0.31 } } }, physics: { body: "static", collider: "box" } }); }
   for (const seed of [506, 507]) { const p = pick(seed, (cx, cz) => plainZone(cx, cz)); if (p) { const c = cellCenter(p.cx, p.cz); put("holetile", { feetPosition: { x: c.x + 0.6, y: 0, z: c.z - 0.6 }, primitive: geo("holetile") }); } }
   const st = pick(508, (cx, cz) => plainZone(cx, cz)); if (st) { const c = cellCenter(st.cx, st.cz); put("stain", { feetPosition: { x: c.x - 0.5, y: 0, z: c.z + 0.4 }, primitive: geo("stain", { seed: 8 }) }); }
   // scribbles on walls
@@ -165,7 +173,8 @@ pop buzz n=1 at=point().c(2.92) size=.9 col=hdr(1.6,1.4,.9) a=.35+.4*flick(.9,.5
   const cp = pick(601, (cx, cz) => corner(cx, cz) && plainZone(cx, cz) && hasLight(cx, cz), 4, 13);
   if (cp) {
     const [a, b, yw] = corner(cp.cx, cp.cz), xs = [a, b].includes(0) ? lo(cp.cx + 1) - 0.1 : lo(cp.cx) + 0.1, zs = [a, b].includes(1) ? lo(cp.cz + 1) - 0.1 : lo(cp.cz) + 0.1;
-    put("camp", { feetPosition: { x: xs, y: 0, z: zs }, rotation: yw, primitive: geo("camp"), physics: { body: "static", collider: "auto" } });
+    put("camp", { feetPosition: { x: xs, y: 0, z: zs }, rotation: yw, model: { id: KM.models.sleepingbag, forward: "-z" }, layout: { box: { min: { x: 0.1, y: 0, z: -1.9 }, max: { x: 0.9, y: 0.12, z: 0 } } }, physics: { body: "static", collider: "box" }, castShadow: false, // the Tripo sleeping bag along the back wall, empties around it (was a scripted box camp)
+      children: [[1.3, -0.9, 0, 0], [1.42, -0.98, 0, 0], [0.95, -2.1, 90, 30], [1.4, -1.6, 90, 110], [1.7, -0.4, 90, 70]].map(([x, z, rl, yaw]) => ({ feetPosition: { x, y: rl ? 0.04 : 0, z }, rotation: { yaw, roll: rl }, pivot: "center", model: ALMOND, layout: { box: { min: { x: -0.04, y: 0, z: -0.04 }, max: { x: 0.04, y: 0.2, z: 0.04 } } }, castShadow: false, visibleRange: { max: 18 } })) });
     const r = (yw * Math.PI) / 180, lx = 1.05, lz = -1.05, nx = xs + lx * Math.cos(r) + lz * Math.sin(r), nz = zs - lx * Math.sin(r) + lz * Math.cos(r);
     put("note", { feetPosition: { x: nx, y: 0, z: nz }, tags: ["moment", "m-note", "usable", "container"], primitive: { kind: "box", width: 0.22, height: 0.02, depth: 0.3 }, visible: false, behavior: "scripts/moments.js", state: { kind: "note", name: "Wanderer's note", verb: "Read", info: "pencil, smudged", text: "Day 31? Ran out of the water. The lights hum louder when they're close. Follow the chalk west, it's still there, it HAS to be., R.", items: "page:23" } });
     // the modeled camp kit (l0-kit-camp.yml) beside the camp, in the corner's free stretch along its first wall (local x 2.05..3.6, z 0..-1.7), clear of the camp's 1.9 x 2.3 footprint and the note
