@@ -11,6 +11,11 @@ const CEIL = { texture: "cdn/texture-acoustic-drop-ceiling-tiles-grid-stained.pn
 const TROF = { color: "oklch(0.15 0.01 90)", roughness: 0.5, metalness: 0.3 };
 const STILL_FACE = "/cdn/value.8f23419441b7dc3c4dbbbbae28daf9a8f16965a76f0bbb6fa4acc620f4829593.png";
 const geo = (kind, p = {}) => ({ kind: "scripted", script: GEO, params: { kind, ...p } });
+// 2026-11-14 Tripo props (nothing blocky): model fitted to the old scripted piece's footprint, feet at y 0
+const XM = { tree: ["b8e231e346d844025a98e483441f85845923431c33f4eb75bcc4064ca44666a0", 1.9, 1.95, 1.9], clock: ["5302c36736340dff22093ccb727df8c3248c71019ccf0b1f395779d29a35ef69", 0.6, 2.42, 0.4],
+  cone: ["8f82a876c6f9b73fd0ec71337005ec8f5870e6c3ac2d69c5de76ce128238151c", 0.36, 0.7, 0.36], sign: ["8a4b0105783b2d65717abedd0d0d187426a6e1e890db57cdfead97042b3a8ac0", 0.75, 2.3, 0.4],
+  table: ["e81e38b2fefa490111e61cd78b98309ece7e01aea4f2afedfd98283a72870610", 0.6, 0.69, 0.6], house: ["cc08f89a04117dc5b8660b77ac2702671b1c250e3832b44bf10d0b529be96025", 0.66, 0.62, 0.5] };
+const mdl = (k) => { const [h, w, y, d] = XM[k]; return { model: { id: `/cdn/value.${h}.glb` }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y, z: d / 2 } } } }; };
 // a wall slab between two corners (axis-aligned), y0..y1
 const wall = (x0, z0, x1, z1, mat, y0 = 0, y1 = 3, t = 0.2) => ({ feetPosition: { x: (x0 + x1) / 2, y: y0, z: (z0 + z1) / 2 }, primitive: { kind: "box", width: Math.max(t, Math.abs(x1 - x0)), height: y1 - y0, depth: Math.max(t, Math.abs(z1 - z0)) }, material: mat, physics: "static" });
 // a wall along x at z with door gaps [[a,b],…]
@@ -46,7 +51,7 @@ export function layXmas(ctx) {
   // ── Entrance Room: one tree, one light
   const tx = dx, tz = zr + 13.5, TW = "fx\npop l1 n=?mobile:14|22 on=disc(.78).c(.62) tint=<2.6,.7,.25>..<2.4,1.9,.5> size=.05..0.08 col=$tint*flick(1.3,.7) a=.95 sz=$size r=sprite(soft-disc,add)\npop l2 n=?mobile:10|16 on=disc(.6).c(1.02) tint=<.4,2.2,.6>..<2.6,.4,.3> size=.05..0.08 col=$tint*flick(1.1,.7) a=.95 sz=$size r=sprite(soft-disc,add)\npop l3 n=?mobile:8|12 on=disc(.45).c(1.38) tint=<2.6,1.8,.5>..<.6,.8,2.6> size=.05..0.07 col=$tint*flick(1.5,.7) a=.95 sz=$size r=sprite(soft-disc,add)\npop l4 n=6 on=disc(.25).c(1.72) tint=<2.6,2,.8> size=.04..0.06 col=$tint*flick(1.7,.6) a=.95 sz=$size r=sprite(soft-disc,add)";
   ctx.spawn("xmas-skirt", { tags: ["xmas"], feetPosition: { x: tx, y: 0.01, z: tz }, primitive: geo("skirt") });
-  ctx.spawn("xmas-tree", { tags: ["xmas"], feetPosition: { x: tx, y: 0.02, z: tz }, primitive: geo("tree"), physics: { body: "static", collider: "cylinder" }, fx: { script: TW },
+  ctx.spawn("xmas-tree", { tags: ["xmas"], feetPosition: { x: tx, y: 0.02, z: tz }, ...mdl("tree"), physics: { body: "static", collider: "cylinder" }, fx: { script: TW },
     audio: { clip: "/cdn/moodboard-gothic-horror/ambience-distant-detuned-music-box-carol-in-empty-dark-room-loop.mp3", gain: X.carol.gain, loop: true, spatial: true, maxDistance: X.carol.maxDistance } });
   ctx.spawn("xmas-tree-light", { tags: ["xmas"], feetPosition: { x: tx, y: 1.5, z: tz }, light: { kind: "point", color: "#ffa255", intensity: X.treeLight, distance: X.treeLightRange, shadow: { enabled: true } } });
   ctx.spawn("xmas-present-tag", { tags: ["xmas", "container"], feetPosition: { x: tx + 0.75, y: 0.02, z: tz - 0.55 }, rotation: { yaw: 20 }, primitive: geo("present", { w: 0.42, h: 0.28, d: 0.36, col: "#1f6a3a", rib: "#d8b040" }), physics: { body: "static", collider: "box" }, state: { name: "Present, your name on the tag", items: "bauble,bauble,bauble,bauble" } });
@@ -68,7 +73,7 @@ export function layXmas(ctx) {
   [[R.x0 + 0.3, R.z0 + 0.35, 0, 15.4], [R.x0 + 0.35, R.z0 + 0.6, -90, 13], [R.x1 - 0.35, R.z0 + 0.6, -90, 13]].forEach(([x, z, yw, len], i) => ctx.spawn(`xmas-floorlights-${i}`, { tags: ["xmas"], feetPosition: { x, y: 0.01, z }, rotation: { yaw: yw }, primitive: geo("string", { len }) }));
   lit("xmas-floor-light", dx, 0.3, R.z0 + 7, "#ff3a2a", X.floorLight, 12);
   const ck = { x: R.x1 - 1.4, z: R.z0 + 4 };
-  ctx.spawn("xmas-clock", { tags: ["xmas"], feetPosition: { x: ck.x, y: 0, z: ck.z }, rotation: { yaw: 90, roll: -9 }, primitive: geo("clock"), physics: { body: "static", collider: "box" } });
+  ctx.spawn("xmas-clock", { tags: ["xmas"], feetPosition: { x: ck.x, y: 0, z: ck.z }, rotation: { yaw: 90, roll: -9 }, ...mdl("clock"), physics: { body: "static", collider: "box" } });
   lit("xmas-clock-light", ck.x - 0.6, 1.9, ck.z, "#ffbe70", X.clockLight, 4);
   ctx.spawn("xmas-crook", { tags: ["xmas", "container"], feetPosition: { x: ck.x - 0.15, y: 0, z: ck.z + 0.45 }, rotation: { yaw: 90, roll: 14 }, model: { id: "/cdn/value.e1c8a7a67bb1f12a8209b6c5232dcc822b30ee56bb39bd1f1247bd0fc2dad60d.glb" }, physics: { body: "static", collider: "box" }, state: { name: "Candy cane, oddly heavy", verb: "Take", items: "weapon:crook" } });
   [[R.x0 + 2, R.z0 + 2.5, 2.1, true], [R.x0 + 3.2, R.z1 - 2, 1.7, false], [R.x1 - 2.4, R.z1 - 2.5, 2.3, true], [dx - 3, R.z0 + 8, 1.5, true], [dx + 3.4, R.z0 + 2.2, 1.9, false], [R.x0 + 1.2, R.z0 + 9, 2.0, false]].forEach(([x, z, h, hk], i) =>
@@ -78,11 +83,11 @@ export function layXmas(ctx) {
   const wz = R.z0 + 9.5;
   ctx.spawn("xmas-window", { tags: ["xmas"], feetPosition: { x: R.x1 - 0.12, y: 0.95, z: wz }, rotation: { yaw: 90 }, primitive: geo("window", { w: 2.2, h: 1.3 }) });
   lit("xmas-window-light", R.x1 - 0.8, 1.6, wz, "#fff2dc", X.windowLight, 6);
-  ctx.spawn("xmas-cone", { tags: ["xmas"], feetPosition: { x: R.x1 - 1.3, y: 0, z: wz - 0.6 }, primitive: geo("cone"), physics: { body: "static", collider: "cylinder" } });
-  ctx.spawn("xmas-sign", { tags: ["xmas"], feetPosition: { x: R.x1 - 1.6, y: 0, z: wz + 0.7 }, rotation: { yaw: -100 }, primitive: geo("sign"), physics: { body: "static", collider: "box" } });
-  ctx.spawn("xmas-table", { tags: ["xmas"], feetPosition: { x: R.x0 + 1, y: 0, z: R.z0 + 1.2 }, primitive: geo("table"), physics: { body: "static", collider: "cylinder" } });
+  ctx.spawn("xmas-cone", { tags: ["xmas"], feetPosition: { x: R.x1 - 1.3, y: 0, z: wz - 0.6 }, ...mdl("cone"), physics: { body: "static", collider: "cylinder" } });
+  ctx.spawn("xmas-sign", { tags: ["xmas"], feetPosition: { x: R.x1 - 1.6, y: 0, z: wz + 0.7 }, rotation: { yaw: -100 }, ...mdl("sign"), physics: { body: "static", collider: "box" } });
+  ctx.spawn("xmas-table", { tags: ["xmas"], feetPosition: { x: R.x0 + 1, y: 0, z: R.z0 + 1.2 }, ...mdl("table"), physics: { body: "static", collider: "cylinder" } });
   ctx.spawn("xmas-thermos", { tags: ["xmas", "container"], feetPosition: { x: R.x0 + 1.05, y: 0.69, z: R.z0 + 1.15 }, primitive: geo("thermos"), physics: { body: "static", collider: "box" }, state: { name: "Thermos, still warm", verb: "Take", items: "eggnog" } });
-  ctx.spawn("xmas-house", { tags: ["xmas", "container"], feetPosition: { x: dx - 2.2, y: 0, z: R.z1 - 0.8 }, rotation: { yaw: 10 }, primitive: geo("house"), physics: { body: "static", collider: "box" }, state: { name: "Miniature house", verb: "Open", items: "musicbox" } });
+  ctx.spawn("xmas-house", { tags: ["xmas", "container"], feetPosition: { x: dx - 2.2, y: 0, z: R.z1 - 0.8 }, rotation: { yaw: 10 }, ...mdl("house"), physics: { body: "static", collider: "box" }, state: { name: "Miniature house", verb: "Open", items: "musicbox" } });
   // (d) the Watcher: faces the corner of the red room. turn away and it is closer, and facing you
   const wt = { x: R.x1 - 1.1, z: R.z0 + 0.9 }, ws = stillLook("f", "#e9e2d6");
   ctx.spawn("xmas-watcher", { ...ws, tags: ["xmas", "still-life", "container"], feetPosition: { x: wt.x, y: 0, z: wt.z }, rotation: { yaw: 20 }, physics: { body: "static", collider: "box" }, behavior: "scripts/xmas-still.js", children: [...(ws.children ?? []), seam(1.1, 0.1), seam(0.7, -0.12)],
