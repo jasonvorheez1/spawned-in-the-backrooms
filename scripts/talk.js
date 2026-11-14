@@ -205,7 +205,7 @@ export function openDialogue(ctx, it) {
 // questions you haven't asked this visit), and always a way out. Nothing typed, nothing generated.
 function offer(ctx, it, s, next) {
   const place = ctx.self.place, ses = ctx.self.session, asked = new Set(ses.askedNow ?? [])
-  let list = next?.length ? [...next, { text: 'Back to something else.', tag: 'Back', node: 'root' }] : rootChoices(it, place, asked).filter((c) => c.node !== 'bye')
+  let list = next?.length ? [...next, { text: 'Back to something else.', tag: 'Back', node: 'root' }] : rootChoices(it, place, asked, s).filter((c) => c.node !== 'bye')
   if (!next?.length) {
     list = [...questChoices(ctx, it, s), ...list]
     list = l1Choice(ctx, it, s, zenithChoice(ctx, it, s, realtyChoice(ctx, it, s, list))) ?? list

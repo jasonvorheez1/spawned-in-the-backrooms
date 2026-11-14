@@ -52,9 +52,14 @@ function nodes(key) {
 const asChoice = (key, id, n) => { const ck = skOf(n.sk); return { text: n.q, tag: n.tag ?? (ck ? ck.skill : n.do === "recruit" ? "Recruit" : n.do === "heal" ? "Help" : n.do === "discount" ? "Barter" : "Ask"), check: ck ?? undefined, node: `${key}|${id}` }; };
 export const BYE_CHOICE = { text: "That's all for now.", tag: "Leave", node: "bye" };
 // the choices at the top of a talk: every root question not yet asked this visit, then the way out
-export function rootChoices(it, place, askedSet) {
+export function rootChoices(it, place, askedSet, st) {
   const { key } = entryOf(it, place), N = nodes(key), out = [];
-  for (const [id, n] of Object.entries(N)) if (!id.includes(".") && !askedSet?.has(n.q)) out.push(asChoice(key, id, n));
+  const knowsDina = !st || !!st.trail?.name;
+  for (const [id, n] of Object.entries(N)) {
+    if (id.includes(".") || askedSet?.has(n.q)) continue;
+    if (!knowsDina && /\bdina\b/i.test(n.q ?? "")) continue;
+    out.push(asChoice(key, id, n));
+  }
   return [...out, BYE_CHOICE];
 }
 export function childChoices(nodeRef) { const [key, id] = String(nodeRef).split("|"), N = nodes(key), n = N[id]; return (n?.then ?? []).map((c, i) => asChoice(key, `${id}.${i}`, c)); }
