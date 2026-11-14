@@ -533,7 +533,7 @@ export function update(ctx, dt) {
   if (s.focus && ctx.getObject(s.focus.id)?.place !== ctx.self.place) { s.focus = null; m.focus = null; m.key = '' } // a prompt left behind in another level (or a thing gone) clears
   seatTick(ctx)
   { // the look outline: one thing at a time; the old one is cleared the moment the focus moves, loot opens or the level changes
-    const want = (s.level == null || s.lootOpen || s.sit || s.building || screen(s, ctx.self.place) !== 'play') ? null : (m.focus?.id && ctx.getObject(m.focus.id) ? m.focus.id : null) // no outline under a menu, a talk, a cutscene or build mode (which outlines its own target), nor on something already gone
+    const want = (s.level == null || s.lootOpen || (s.sit && m.focus?.tag !== 'npc' && m.focus?.tag !== 'usable') || s.building || screen(s, ctx.self.place) !== 'play') ? null : (m.focus?.id && ctx.getObject(m.focus.id) ? m.focus.id : null) // no outline under a menu, a talk, a cutscene or build mode (which outlines its own target), nor on something already gone
     if (m.lit && m.lit !== want) { ctx.emit('highlightClear', { target: m.lit }, { audience: { player: ctx.self.id } }); m.lit = null }
     if (want && m.lit !== want) { m.lit = want; m.litAt = 0 }
   }
