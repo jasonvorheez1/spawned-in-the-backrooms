@@ -183,7 +183,7 @@ function shelfUnit(ctx, x0, x1, y0, zb, dir, rnd, kinds = "cans") {
       if (t < 0.12) { x += 0.14; continue; }
       if (t < 0.3) { paint(ctx, null); ctx.color("oklch(0.85 0.06 85)", 0.55); rings(ctx, x + 0.05, zc, [[0, y], [0.05, y], [0.05, y + 0.13], [0.035, y + 0.15]], 8); paint(ctx, null, "oklch(0.75 0.08 80)"); rod(ctx, [x + 0.05, y + 0.15, zc], [x + 0.05, y + 0.17, zc], 0.038, 8); x += 0.13; continue; }
       const rr = 0.038 + rnd() * 0.012, hh = 0.1 + rnd() * 0.04, c = lab[Math.floor(rnd() * lab.length)], stack = rnd() < 0.3 ? 2 : 1;
-      for (let q = 0; q < stack; q++) { paint(ctx, null, "oklch(0.8 0.01 240)"); ctx.metalness(0.7); rod(ctx, [x + rr, y + q * hh, zc], [x + rr, y + (q + 1) * hh - 0.002, zc], rr, 8); ctx.metalness(null); paint(ctx, null, c); rod(ctx, [x + rr, y + q * hh + 0.012, zc], [x + rr, y + (q + 1) * hh - 0.014, zc], rr + 0.002, 8); }
+      if ((ctx.lod ?? 1) > 1) { paint(ctx, null, c); rod(ctx, [x + rr, y, zc], [x + rr, y + stack * hh - 0.002, zc], rr, 6); } else for (let q = 0; q < stack; q++) { paint(ctx, null, "oklch(0.8 0.01 240)"); ctx.metalness(0.7); rod(ctx, [x + rr, y + q * hh, zc], [x + rr, y + (q + 1) * hh - 0.002, zc], rr, 8); ctx.metalness(null); paint(ctx, null, c); rod(ctx, [x + rr, y + q * hh + 0.012, zc], [x + rr, y + (q + 1) * hh - 0.014, zc], rr + 0.002, 8); }
       x += rr * 2 + 0.012;
     }
   }
