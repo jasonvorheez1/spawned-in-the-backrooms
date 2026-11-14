@@ -12,6 +12,7 @@ R = {
   "bell":     dict(w=1.25, at="neck", dz=0.000, tall=None),
   "bowtie":   dict(w=0.75, at="neck", dz=0.012, dy=-0.035, front=True),
   "cape":     dict(w=1.10, at="shoulders", dz=-0.015, back=True),
+  "bandana":  dict(w=1.45, at="neck", dz=0.030, tall=None),
 }
 only = sys.argv[sys.argv.index("--")+1:] if "--" in sys.argv else list(R)
 CLEAR = 0.008
