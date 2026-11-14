@@ -35,7 +35,7 @@ export function dressPhoebe(ctx, me) {
   if (!me) return
   me.state.wear = PHOEBE_LOOK; me.state.look = PHOEBE_LOOK // an authored look: the NPC refit keeps it whole instead of rolling green eyes and a sidetail
   seatHead(ctx, me, PHOEBE_LOOK)
-  for (const k of ["cw-hair", "cw-botw"]) { try { ctx.destroy(me.id + "/" + k) } catch (e) {} } // the head seat re-dresses the wardrobe's hair and skirt; hers are the outfit's own (the stacked orange hair hid her face)
+  for (const k of ["cw-hair", "cw-botw"]) { const id = me.id + "/" + k; if (ctx.getObject(id)) ctx.destroy(id) } // the head seat re-dresses the wardrobe's hair and skirt; hers are the outfit's own (the stacked orange hair hid her face)
   const b = buildFor("hub-phoebe", "f"); me.state.build = b; me.scale = { x: b.w, y: b.h, z: b.w }
   me.bones = baseBones(b, PHOEBE_LOOK); me.morph = { ...(me.morph ?? {}), Bust: b.bust }; me.jiggle = CAT_JIGGLE
 }
