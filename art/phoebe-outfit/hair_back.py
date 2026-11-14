@@ -62,6 +62,17 @@ hair = bpy.data.objects.new("hair", me); bpy.context.scene.collection.objects.li
 g = hair.vertex_groups.new(name="mixamorig:Head"); g.add(list(range(len(me.vertices))), 1.0, "REPLACE")
 hair.parent = CAT; hair.modifiers.new("skin", "ARMATURE").object = CAT
 for o in olds: bpy.data.objects.remove(o)
+# a hair-coloured cap under the strands: the old cut was parted for a human skull, and on the rounder cat crown the part opened onto fur
+bm = bmesh.new(); bmesh.ops.create_uvsphere(bm, u_segments=32, v_segments=20, radius=1.0)
+cz = HC.z; rz = (newTop - cz) * 1.0
+for v in bm.verts: v.co = Vector((catHead.x + v.co.x * newW / 2 * 1.05, newCy + v.co.y * newD / 2 * 1.05, cz + v.co.z * rz))
+cut = [v for v in bm.verts if (v.co.z < cz + (0.38 if v.co.y < newCy - newD * 0.2 else 0.0) * rz)]
+bmesh.ops.delete(bm, geom=cut, context="VERTS")
+cm = bpy.data.meshes.new("cap"); bm.to_mesh(cm); bm.free(); cm.materials.append(hairMat)
+cap = bpy.data.objects.new("hair_cap", cm); bpy.context.scene.collection.objects.link(cap)
+cg = cap.vertex_groups.new(name="mixamorig:Head"); cg.add(list(range(len(cm.vertices))), 1.0, "REPLACE")
+cap.parent = CAT; cap.modifiers.new("skin", "ARMATURE").object = CAT
+print("cap verts", len(cm.vertices))
 print("scale", round(s, 3), "dz", round(dz, 3), "verts", len(me.vertices), "newW", round(newW, 3), "oldW", round(oldW, 3))
 for o in bpy.data.objects:
     if o.type == "MESH": o.data.shade_smooth() if hasattr(o.data, "shade_smooth") else None
