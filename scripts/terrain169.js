@@ -33,13 +33,22 @@ export function heightAt(ctx) {
   return h;
 }
 export function materialAt(ctx) {
+  // weights ramp across a band, never a threshold: a hard `if` here draws a straight seam on the ground
   const { x, z, noise, seedOffset } = ctx;
-  const n = noise.fbm2({ x, z, frequency: 1 / 35, octaves: 2, seed: seedOffset(7) });
+  const ss = (a, b, v) => { const t = Math.min(1, Math.max(0, (v - a) / (b - a))); return t * t * (3 - 2 * t); };
+  const n = noise.fbm2({ x, z, frequency: 1 / 35, octaves: 3, seed: seedOffset(7) });
   const m = noise.fbm2({ x, z, frequency: 1 / 300, octaves: 3, seed: seedOffset(2) });
-  if (m > 0.2) return { redrock: 0.8, rubble: 0.2 + Math.max(0, n) * 0.3 };
-  if (washDist(x, z) < 5 && z < 40) return { wash: 0.85, gravel: 0.15 };
-  if (Math.hypot(x, z) < 20 || Math.hypot(x - HOUSE.x, z - HOUSE.z) < 26) return { hardpan: 0.7, gravel: 0.3 };
-  if (n > 0.25) return { sand: 1 };
-  if (n < -0.3) return { gravel: 0.6, hardpan: 0.4 };
-  return { hardpan: 0.55, sand: 0.45 };
+  const rock = ss(0.12, 0.28, m);
+  const wash = z < 40 ? 1 - ss(3, 9, washDist(x, z)) : 0;
+  const yard = Math.max(1 - ss(12, 26, Math.hypot(x, z)), 1 - ss(18, 34, Math.hypot(x - HOUSE.x, z - HOUSE.z)));
+  const dune = ss(0.05, 0.4, n), stony = ss(-0.1, -0.45, n);
+  const rest = (1 - rock) * (1 - wash);
+  return {
+    redrock: rock * 0.8,
+    rubble: rock * (0.2 + Math.max(0, n) * 0.3),
+    wash: (1 - rock) * wash * 0.85,
+    gravel: (1 - rock) * wash * 0.15 + rest * (yard * 0.3 + (1 - yard) * stony * 0.6),
+    hardpan: rest * (yard * 0.7 + (1 - yard) * (1 - dune) * (0.55 - stony * 0.15)),
+    sand: rest * (1 - yard) * (dune + (1 - dune) * (1 - stony) * 0.45),
+  };
 }
