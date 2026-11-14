@@ -38,6 +38,22 @@ export function layHouse(ctx, put, L) {
   // living: rug, bench, the map table and the board of routes
   { const [x, z] = mid("living"); part("rug", { part: "rug", w: 3, d: 2.2 }, x, z + 0.5, F + 0.005); part("bench", { part: "bench" }, x, z + 2.2, F, { rotation: 180 });
     part("maptable", { part: "maptable" }, x - 2.4, z - 1.2, F); part("mapboard", { part: "mapboard" }, x - 2.4, r.hall[3] + 0.12, F + 1, { rotation: 180, physics: undefined }); }
+  // the furniture you see: Tripo models (art pass, Nov 14); the scripted pieces stay as colliders, unseen
+  const M = { bed: "/cdn/value.a80517cebda3855752e83ec0efa57adef4cd9ed8b993927ec4db5c6f7be3bc7c.glb", cot: "/cdn/value.8d3339a3fa5c283cf1251d0f11abb47f8b0388e7b576bfa7cef2560394e77bef.glb",
+    kit: "/cdn/value.eca8c598b9635ca9dd37710d90c09c2a22fb1cd6c7bc4350026df9cf54ebf4b1.glb", bench: "/cdn/value.deb5057b345d8bf77d5e45c5b29111addfa13c16a2eccf25438e8967603bcce2.glb",
+    table: "/cdn/value.d58e97357089082f01e8258e9db20ea148a8af7714637429c16482e89e92ac99.glb", counter: "/cdn/value.8afef9eb454fce97b4c7a21956c2213dc0c80e905f95988d8bdab1793861121d.glb" };
+  const look = (id, m, x, z, yaw, hx, hy, hz) => put(`l169-house-m-${id}`, { feetPosition: { x, y: F, z }, rotation: yaw, castShadow: true, receiveShadow: true, model: { id: m }, layout: { box: { min: { x: -hx, y: 0, z: -hz }, max: { x: hx, y: hy, z: hz } } } });
+  const hide = (id) => { const o = ctx.getObject?.(`l169-house-${id}`); if (o) o.visible = false; };
+  for (const k of ["bed1", "bed2", "bed3"]) {
+    const [x, z] = mid(k); hide(`bed-${k}`); hide(`kit-${k}`);
+    look(`bed-${k}`, M.bed, x - 1.2, z - 0.6, 0, 0.5, 1.0, 1.03);
+    look(`kit-${k}-a`, M.kit, x + 0.8 - 0.95, z - 2.4, 0, 0.24, 0.8, 0.28); look(`kit-${k}-b`, M.kit, x + 0.8 + 0.95, z - 2.4, 0, 0.24, 0.8, 0.28);
+  }
+  { const [x, z] = mid("den"); hide("cot-1"); hide("cot-2"); look("cot-1", M.cot, x - 1.3, z - 0.6, 0, 0.38, 0.5, 0.97); look("cot-2", M.cot, x + 1.3, z - 0.6, 0, 0.38, 0.5, 0.97); }
+  { const [x, z] = mid("living"); hide("bench"); hide("maptable"); look("bench", M.bench, x, z + 2.2, 180, 0.8, 0.47, 0.22); look("maptable", M.table, x - 2.4, z - 1.2, 90, 0.46, 0.8, 0.8); }
+  { hide("kitchen"); const kx = r.kitchen[1] - b.wallT - 0.34;
+    look("counter-a", M.counter, kx, -497.55 + (C.z + 500), 0, 0.34, 0.93, 0.86); look("counter-b", M.counter, kx, -495.8 + (C.z + 500), 0, 0.34, 0.93, 0.86);
+    look("table", M.table, C.x + 4, C.z + 4, 90, 0.5, 0.8, 1.3); }
   // lamps: one per room, hung under the ceiling
   for (const k of ["living", "kitchen", "hall", "bed1", "bed2", "bed3", "den", "porch"]) {
     const [x, z] = mid(k), y = F + h.wallH - 0.62;
