@@ -54,7 +54,9 @@ export function slotInfo(seed, c, r, side) {
 }
 // who is shut in a room, rolled once from the seed: an array of kinds. The wiki: about three to ten where there are any, far more is rare.
 const FOES = ["hound", "skinstealer", "clump", "deathmoth"];
+export const EARLY_SAFE = 75; // m from arrival: rooms with a door this close hold nobody, except ns0_0m, the one shut ICU that teaches the door (review: too much danger too early)
 export function roomPop(seed, info) {
+  if (info.id !== "ns0_0m" && info.type !== "breach" && Math.hypot(info.door.x - SPAWN.x, info.door.z - SPAWN.z) < EARLY_SAFE) return [];
   const q = (k) => h3(seed, 31 + k, info.r * 131 + info.c.i, info.side + (info.c.ax === "ns" ? 0 : 9));
   let n = 0;
   if (info.id === "ns0_0m") n = 4; else if (info.type === "breach") n = 5;
