@@ -12,7 +12,7 @@ export function knocked(ctx, e, now, dt) {
   const d = s.down
   if (d && d.rag) { // a power hit: the body goes limp for real, lies a beat, then gets up where it landed
     const t = now - d.at
-    if (t > d.ms + 500) { s.down = null; e.ragdoll = null; e.rotation = { yaw, pitch: 0 }; return false }
+    if (!(t <= d.ms + 500)) { s.down = null; e.ragdoll = null; e.rotation = { yaw, pitch: 0 }; return false }
     if (!d.on) { s.down = { ...d, on: 1 }; e.ragdoll = { impulse: { x: d.x * d.kg * 0.5, y: d.kg * 0.35, z: d.z * d.kg * 0.5 }, settleFreeze: false, blendSeconds: 0.4 } }
     return true
   }
@@ -20,7 +20,7 @@ export function knocked(ctx, e, now, dt) {
     const t = now - d.at
     if (d.y0 != null && e.feetPosition.y < d.y0 - 8) { s.hp = 0; s.dead = true; s.overboard = true; s.down = null; return false } // thrown off a ledge: gone, and no xp (Shelly)
     if (d.fly && !(t > 250 && e.grounded) && t < 4000) { e.velocity = { x: d.x, y: vy, z: d.z }; e.rotation = { yaw, pitch: -80 }; d.at = now - 250; return true } // still airborne: keeps its throw
-    if (t > d.ms + 450) { s.down = null; e.rotation = { yaw, pitch: 0 }; return false }
+    if (!(t <= d.ms + 450)) { s.down = null; e.rotation = { yaw, pitch: 0 }; return false }
     const k = Math.max(0, 1 - t / 450)
     e.velocity = { x: d.x * k, y: vy, z: d.z * k }
     e.rotation = { yaw, pitch: t < 250 ? -80 * t / 250 : t < d.ms ? -80 : -80 * (1 - (t - d.ms) / 450) }
@@ -29,7 +29,7 @@ export function knocked(ctx, e, now, dt) {
   const kb = s.kb
   if (kb) {
     const t = now - kb.at
-    if (t > kb.ms) { s.kb = null; return false }
+    if (!(t <= kb.ms)) { s.kb = null; return false }
     const k = 1 - t / kb.ms
     e.velocity = { x: kb.x * k, y: vy, z: kb.z * k }
     return true
@@ -72,6 +72,6 @@ export function powerKnock(ctx, e, f, power, atk) {
 // the killing blow's push, for a body that dies as a ragdoll
 export function deathRag(e) {
   const h = e.state?.hitDir ?? { x: 0, z: 0, p: 0 }, kg = e.state?.kg ?? 90, k = kg * (0.25 + (h.p ?? 0) * 0.4)
-  e.anim.body = null
+  if (e.anim) e.anim.body = null
   e.ragdoll = { impulse: { x: h.x * k * 4, y: kg * 0.3, z: h.z * k * 4 }, settleSeconds: 1.5, settleFreeze: false } // stays loose: a kick shoves it (Shelly, Nov 10)
 }

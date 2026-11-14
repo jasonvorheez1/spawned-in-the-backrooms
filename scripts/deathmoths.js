@@ -140,10 +140,17 @@ export function update(ctx, dt) {
     mem.mothsAt = now + 1200;
     mem.allSwarms = ctx.query({ tags: ["moths"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
   }
-  const allSwarms = mem.allSwarms;
+  const objs = ctx.place.objects;
+  const allSwarms = [];
+  let dropped = false;
+  for (const s of mem.allSwarms) {
+    if (s.id in objs) allSwarms.push(s);
+    else { delete mem[s.id]; dropped = true; }
+  }
+  if (dropped) mem.allSwarms = allSwarms;
 
   for (const s of allSwarms) {
-    if (!(s.id in ctx.place.objects)) { delete mem[s.id]; mem.mothsAt = 0; continue; } // destroyed since the census: drop it, recount next tick
+    if (!(s.id in objs)) { delete mem[s.id]; mem.allSwarms = null; continue; } // destroyed since the census: drop it, recount next tick
     const m = (mem[s.id] ??= {
       bob: ctx.random() * 6,
       spin: ctx.random() * 360,
@@ -201,6 +208,7 @@ export function update(ctx, dt) {
       } else if (now - m.deadAt > 2600 && !m.gone && now > (st.inspectUntil ?? 0)) {
         m.gone = true;
         ctx.destroy(s.id);
+        mem.allSwarms = null;
       }
       continue;
     }
@@ -395,17 +403,18 @@ export function update(ctx, dt) {
           if (v === "razorwing" || v === "choir") m.bleed = { pid: p.id, n: v === "choir" ? 5 : 3, next: now + 900 }; // cuts that keep bleeding
           if (v === "eyespot" || v === "choir") { // its wings smother your light
             if (p.state.light) p.state.light = false;
-            p.state.sanity = Math.max(0, p.state.sanity - M.sanity * 4);
+            p.state.sanity = Math.max(0, (p.state.sanity ?? 100) - M.sanity * 4);
             ctx.emit("playSound", { clip: SNUFF_SND, volume: 0.9 }, { audience: { player: p.id } });
           }
           if (v === "eyespot" || v === "choir") { // the eyes on its wings stay on yours
             ctx.emit("fx", { position: at, script: EYES_SEEN }, { audience: { player: p.id } });
             ctx.emit("screenShake", { intensity: 0.35, duration: 0.6 }, { audience: { player: p.id } });
-            p.state.sanity = Math.max(0, p.state.sanity - M.sanity * 6); p.vignette = 0.6; blur[p.id] = now + 4500;
+            p.state.sanity = Math.max(0, (p.state.sanity ?? 100) - M.sanity * 6); p.vignette = 0.6; blur[p.id] = now + 4500;
           }
           if (v === "choir" && !st.split && ctx.query({ tags: ["moths"], radius: 30, center: pos }).length < 6) { // bitten, it sings and splits in two
             s.state.split = true;
             ctx.spawn({ template: "templates/deathmoths.js#swarm", feetPosition: { x: pos.x + 1, y: pos.y, z: pos.z }, state: { home: { ...home }, variant: "eyespot", split: true } });
+            mem.allSwarms = null;
             heard(ctx, { clip: "/cdn/moodboard-gothic-horror/sfx-wordless-choir-swell-into-tearing-wings.mp3", position: pos, volume: 1, maxDistance: 22 });
           }
           setSwarmClip(ctx, s, m, "Bite");

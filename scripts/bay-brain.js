@@ -11,7 +11,7 @@ const SMOKE = `fx
 pop smoke burst=24 on=sphere(.4) life=1.2..2.2 v=up(1)+sdir()*.5 size=.25..0.5 acc=buoy(.6)+drag(1) sz=$size*(.6>2) col=<.06,.06,.06> a=0>.6:.5>.6:.3>0 r=sprite(smoke-puff,alpha)`;
 export function update(ctx, dt) {
   const players = targetsOf(ctx, ctx.place.players).filter((p) => p.feetPosition.x > BAY.x0 && p.feetPosition.x < BAY.x1 && p.feetPosition.z > BAY.z0 && p.feetPosition.z < BAY.z1 && !(p.state?.hp <= 0));
-  const foes = ctx.query({ tags: ["baybrain"], radius: 1e4 });
+  const foes = ctx.query({ tags: ["baybrain"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
   if (!foes.length) return ctx.sleep(1);
   const now = ctx.now(), g = ctx.place.gravity?.y ?? -9.8, seen = (ctx.self.session.gait ??= {});
   for (const f of foes) {
@@ -19,7 +19,7 @@ export function update(ctx, dt) {
     if (!B) continue;
     if ((s.hp ?? 1) <= 0) {
       if (!s.dead) { s.dead = now; ctx.emit("playSound", { clip: SND(B.die ?? "wet-creature-death-gurgle"), position: f.feetPosition, volume: 0.8 }); if (B.rig) f.anim.base = { clip: "cdn/clip-die.glb", loop: false, weight: 1, blend: 0.15 }; }
-      if (!B.fly) f.velocity = { x: 0, y: f.velocity.y + g * dt, z: 0 };
+      if (!B.fly) f.velocity = { x: 0, y: (f.velocity?.y ?? 0) + g * dt, z: 0 };
       if (now - s.dead > 2500) { ctx.emit("fx", { position: { ...f.feetPosition, y: f.feetPosition.y + 0.6 }, script: SMOKE }); ctx.destroy(f.id); }
       continue;
     }
@@ -33,7 +33,7 @@ export function update(ctx, dt) {
     if (B.fly) { // a swarm hangs at head height and drifts in
       const y = (prey ? prey.feetPosition.y : 0) + 1.4 + Math.sin(now / 300) * 0.15;
       f.feetPosition = { x: f.feetPosition.x + vx * dt, y: f.feetPosition.y + (y - f.feetPosition.y) * Math.min(1, dt * 3), z: f.feetPosition.z + vz * dt };
-    } else f.velocity = { x: vx, y: f.grounded ? 0 : f.velocity.y + g * dt, z: vz };
+    } else f.velocity = { x: vx, y: f.grounded ? 0 : (f.velocity?.y ?? 0) + g * dt, z: vz };
     if (B.rig) { const k = moving ? (B.speed > 3 ? "run" : "walk") : "idle"; if (seen[f.id] !== k) { seen[f.id] = k; f.anim.base = { clip: `cdn/clip-${k}-loop.glb`, loop: true, weight: 1, blend: 0.25 }; } }
     if (prey && B.range && best <= B.range && now >= (s.nextBite ?? 0)) { // a Custodian fires a bolt (bursts for the Suppressor); a bolt can miss a moving target
       s.shots = B.burst ? ((s.shots ?? 0) + 1) % B.burst : 0; s.nextBite = now + (s.shots ? B.burstGap : B.cd * (0.85 + ctx.random() * 0.3)) * 1000;

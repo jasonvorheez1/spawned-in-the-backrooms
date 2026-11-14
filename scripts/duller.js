@@ -26,7 +26,7 @@ function face(o, m, dx, dz, now) { // its stance never settles: a slow drunken r
   if (dx || dz) m.yaw = (Math.atan2(-dx, -dz) * 180) / Math.PI;
   o.rotation = { yaw: m.yaw ?? 0, roll: Math.sin(now / 260) * 5 + Math.sin(now / 97) * 1.5 };
 }
-function stand(ctx, o, dt) { o.velocity = { x: 0, y: (o.velocity?.y ?? 0) + ctx.place.gravity.y * dt, z: 0 }; }
+function stand(ctx, o, dt) { o.velocity = { x: 0, y: (o.velocity?.y ?? 0) + (ctx.place.gravity?.y ?? -9.8) * dt, z: 0 }; }
 function moveTo(ctx, o, m, goal, speed, dt, now) {
   const pos = o.feetPosition;
   if (!m.path || now > m.pathAt || flat(m.pathGoal, goal) > 2) {
@@ -39,7 +39,7 @@ function moveTo(ctx, o, m, goal, speed, dt, now) {
   }
   if (m.path) while (m.path.length > 1 && flat(pos, m.path[0]) < 0.6) m.path.shift();
   const next = m.path?.[0] ?? goal, dx = next.x - pos.x, dz = next.z - pos.z, d = Math.hypot(dx, dz);
-  const vy = (o.velocity?.y ?? 0) + ctx.place.gravity.y * dt;
+  const vy = (o.velocity?.y ?? 0) + (ctx.place.gravity?.y ?? -9.8) * dt;
   if (d < 0.3) { o.velocity = { x: 0, y: vy, z: 0 }; face(o, m, 0, 0, now); return 0; }
   o.velocity = { x: (dx / d) * speed, y: vy, z: (dz / d) * speed };
   face(o, m, dx, dz, now);

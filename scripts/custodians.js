@@ -19,7 +19,7 @@ function speak(ctx, f, m, ev, now, gap = 6000) {
   ctx.emit("playSound", { clip: SAY(pool[Math.floor(ctx.random() * pool.length)]), position: f.feetPosition, bus: "Voice", volume: 1, refDistance: 4, maxDistance: 30, follow: f.id, mode: "restart" });
 }
 export function update(ctx, dt) {
-  const foes = ctx.query({ tags: ["custodian-ai"], radius: 1e4 });
+  const foes = ctx.query({ tags: ["custodian-ai"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
   if (!foes.length) { ctx.sleep(1); return; }
   const now = ctx.now(), mem = (ctx.self.session.m ??= {}), g = ctx.place.gravity?.y ?? -9.8;
   const players = targetsOf(ctx, ctx.place.players).filter((p) => (p.state?.hp ?? 1) > 0);

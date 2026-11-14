@@ -48,7 +48,7 @@ export function update(ctx, dt) {
   const now = ctx.now(), st = ctx.self.state, gy = (x, z) => ctx.place.terrain?.heightAt?.(x, z) ?? 0;
   st.next ??= {};
   const players = ctx.place.players.filter((p) => exposed(ctx, p));
-  const worms = ctx.query({ tags: ["l10worm"], radius: 600, center: ctx.self.feetPosition });
+  const worms = ctx.query({ tags: ["l10worm"], radius: 600, center: ctx.self.feetPosition ?? { x: 0, y: 0, z: 0 } });
 
   // a new stalker for someone out in the crop
   for (const p of players) {

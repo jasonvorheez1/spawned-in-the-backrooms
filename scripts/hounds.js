@@ -61,9 +61,18 @@ export function update(ctx, dt) {
     mem.houndsAt = now + 1200;
     mem.allHounds = ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
   }
-  const allHounds = mem.allHounds;
-  const lead = allHounds.reduce((a, h) => (!a || String(h.id) < String(a.id) ? h : a), null); // one hound steps the whole pack; the rest stand down
-  if (lead && lead.id !== ctx.self.id && String(ctx.self.id) > String(lead.id)) { ctx.sleep(1); return; }
+  const objs = ctx.place.objects;
+  const allHounds = [];
+  let dropped = false;
+  for (const h of mem.allHounds) {
+    if (h.id in objs) allHounds.push(h);
+    else { delete mem[h.id]; dropped = true; }
+  }
+  if (dropped) mem.allHounds = allHounds;
+  if (ctx.self.tags?.includes("hound")) {
+    const lead = allHounds.filter((h) => h.behavior === "scripts/hounds.js").reduce((a, h) => (!a || String(h.id) < String(a.id) ? h : a), null); // only another hound running this script yields to a lower-ID peer; dedicated pack managers never sleep
+    if (lead && lead.id !== ctx.self.id && String(ctx.self.id) > String(lead.id)) { ctx.sleep(1); return; }
+  }
   for (const h of allHounds) {
     if (!(h.id in ctx.place.objects)) { mem.allHounds = null; delete mem[h.id]; continue; } // gone since the census: re-count next tick
     const m = (mem[h.id] ??= {}), pos = h.feetPosition, st = h.state ?? {}, mu = npcMul(st);
@@ -202,7 +211,7 @@ export function update(ctx, dt) {
     const mauling = now < (m.maulUntil ?? 0);
     const gait = d > near ? sp : 0; // the legs follow the speed it is actually given, never a run on the spot
     anim(h, m, mauling ? "maul" : gait <= 0.1 ? "idle" : gait > 3.5 ? "sprint" : "prowl", true);
-    if (mauling) h.velocity = { x: 0, y: h.velocity.y, z: 0 };
+    if (mauling) h.velocity = { x: 0, y: h.velocity?.y ?? 0, z: 0 };
     if (prey && !m.hunting) { m.hunting = true; heard(ctx, { clip: SND("hound-snarl-growl"), position: pos, volume: 0.9, maxDistance: 35 }); }
     if (!prey && m.hunting) { m.hunting = false; m.howled = false; }
     if (prey && best < 1.6 && now >= (m.next ?? 0) && !safeAt(prey.feetPosition.x, prey.feetPosition.z) && sees(ctx, h, prey)) { // no bite through a door or a wall

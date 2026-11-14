@@ -107,7 +107,7 @@ export function update(ctx, dt) {
   const mem = (ctx.self.session.m ??= {});
   if (!mem.smilersAt || now > mem.smilersAt || !mem.allSmilers) {
     mem.smilersAt = now + 1200;
-    mem.allSmilers = ctx.query({ tags: ["smiler"] });
+    mem.allSmilers = ctx.query({ tags: ["smiler"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
   }
   const objs = ctx.place.objects;
   const allSmilers = mem.allSmilers.filter((w) => w.id in objs); // one destroyed since the last census is skipped, never written to
@@ -131,7 +131,8 @@ export function update(ctx, dt) {
 
     if (knocked(ctx, w, now, dt)) { if (st.sneakTarget) st.sneakTarget = null; continue; } // kicked or power-hit flat: down a beat, no AI till it's up
     // Death: drops as a ragdoll along the killing blow, then its shade dissolves
-    if (st.dead) {
+    if (st.dead || (st.hp ?? 1) <= 0) {
+      if (!st.dead) w.state.dead = true;
       if (!m.dieAt) {
         m.dieAt = now;
         w.velocity = { x: 0, y: 0, z: 0 };
@@ -400,7 +401,7 @@ export function update(ctx, dt) {
 
     const curVy = w.velocity?.y ?? 0;
     // jump: out of a floor hole, or when something low blocks the way (it wants to move, but barely does)
-    let vy = curVy + ctx.place.gravity.y * dt;
+    let vy = curVy + (ctx.place.gravity?.y ?? -9.8) * dt;
     const want = Math.hypot(vx, vz), got = Math.hypot(w.velocity?.x ?? 0, w.velocity?.z ?? 0), onGround = w.grounded ?? Math.abs(curVy) < 0.4;
     m.blocked = want > 0.8 && got < want * 0.3 ? (m.blocked ?? 0) + dt : 0;
     if (onGround && now >= (m.jumpAt ?? 0) && want > 0.3 && (pos.y < -0.4 || m.blocked > 0.35)) {
@@ -433,7 +434,7 @@ export function update(ctx, dt) {
       m.lunge.hit = true;
       const dmg = Math.round(L.biteDamage * mu.dmg);
       prey.state.hp -= dmgAfterArmor(prey.state.look, dmg);
-      prey.state.sanity -= L.biteSanity;
+      prey.state.sanity = Math.max(0, (prey.state.sanity ?? 100) - L.biteSanity);
 
       const at = { x: prey.feetPosition.x, y: prey.feetPosition.y + 1.4, z: prey.feetPosition.z };
       const to = { x: -m.lunge.x, y: 0, z: -m.lunge.z };

@@ -221,16 +221,23 @@ export function update(ctx, dt) {
     mem.stealersAt = now + 1200;
     mem.allStealers = ctx.query({ tags: ["stealer"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
   }
-  const allStealers = mem.allStealers;
+  const objs = ctx.place.objects;
+  const allStealers = [];
+  let dropped = false;
+  for (const e of mem.allStealers) {
+    if (e.id in objs) allStealers.push(e);
+    else { delete mem[e.id]; dropped = true; }
+  }
+  if (dropped) mem.allStealers = allStealers;
 
   for (const e of allStealers) {
+    const o = objs[e.id];
+    if (!o) continue;
     const m = (mem[e.id] ??= { ph: "skin" });
     const pos = e.feetPosition;
     const st = e.state ?? {};
     if (knocked(ctx, e, now, dt)) continue;
     const mu = npcMul(st);
-    const o = ctx.place.objects[e.id];
-    if (!o) continue;
 
     if (!st.mesh || st.mesh < 2) {
       o.primitive = null;
@@ -266,6 +273,7 @@ export function update(ctx, dt) {
         ctx.emit("fx", { position: pos, script: POOF });
         heard(ctx, { maxDistance: 24, refDistance: 4, clip: SND("shadow-creature-dissolve-hiss"), position: pos, volume: 0.9 });
         ctx.destroy(e.id);
+        mem.allStealers = null;
       }
       continue;
     }

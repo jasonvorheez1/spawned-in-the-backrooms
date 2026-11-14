@@ -86,7 +86,7 @@ export function update(ctx, dt) {
   const gd = Math.hypot(goal.x - pos.x, goal.z - pos.z);
   let dx = aim.x - pos.x, dz = aim.z - pos.z;
   if (now < (m.side ?? 0)) { const t = dx; dx = -dz; dz = t; }
-  const d = Math.max(Math.hypot(dx, dz), gd < 0.25 ? 0 : 0.21), vy = (w.velocity?.y ?? 0) + ctx.place.gravity.y * dt;
+  const d = Math.max(Math.hypot(dx, dz), gd < 0.25 ? 0 : 0.21), vy = (w.velocity?.y ?? 0) + (ctx.place.gravity?.y ?? -9.8) * dt;
   if (prey && gd < T.bite) {
     w.velocity = { x: 0, y: vy, z: 0 }; play(w, m, "idle");
     if (now - (m.bit ?? 0) > T.biteCd) {
