@@ -63,7 +63,7 @@ export function layDress(ctx) {
 export function cageLamp(ctx, id, x, y, z, intensity, distance, color = "oklch(0.88 0.09 82)", top = 6.2, scale = 1.3) {
   if (ctx.place.objects[id]) ctx.destroy(id);
   const h = 0.43 * scale, drop = Math.max(0, top - (y + h));
-  ctx.spawn(id, { feetPosition: { x, y, z }, scale, layout: undefined, ...M(FX.cage),
+  ctx.spawn(id, { feetPosition: { x, y, z }, scale, ...M(FX.cage),
     children: [
       ...(drop > 0.05 ? [{ id: "drop", feetPosition: { x: 0, y: 0.43, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.012, radiusBottom: 0.012, height: drop / scale }, material: { color: "oklch(0.3 0.01 80)", metalness: 0.8, roughness: 0.5 }, castShadow: false }] : []),
       { id: "glow", feetPosition: { x: 0, y: 0.1, z: 0 }, light: { kind: "point", color, intensity, distance, shadow: { enabled: false } } }] });
