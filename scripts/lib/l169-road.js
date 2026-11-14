@@ -128,7 +128,9 @@ export function tickRoad(ctx, put, L, force = false) {
       let near = Infinity;
       for (const p of players) { const f = p.feetPosition; if (f) near = Math.min(near, Math.hypot(f.x - site.x, f.z - site.z)); }
       const have = !!built[site.id] || (!force && !!ctx.getObject(`l169-cp-${site.id}-m`) && site.id !== "house");
-      if (near < R.streamIn && !built[site.id]) {
+      if (near < R.streamIn && !built[site.id] && have) { // already standing (a new machine took over): adopt it, never rebuild
+        built[site.id] = (site.big ? siteParts(site.id, L) : smallParts(site)).map((r) => r[0]);
+      } else if (near < R.streamIn && !built[site.id]) {
         const rows = site.big ? siteParts(site.id, L) : smallParts(site);
         built[site.id] = rows.map(([id, spec]) => { if (spec.primitive && !spec.visibleRange) spec.visibleRange = { max: 600 }; put(id, spec); return id; });
       } else if (near > R.streamOut && (built[site.id] || have)) {
