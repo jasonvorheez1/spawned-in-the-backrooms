@@ -3,7 +3,7 @@ import { JANINE_TAPE } from "../../scripts/lib/janine-tape.js";
 // place.state.lit: the switch. Lit: Smiler eyes glint under the bed and in the closet gap. Dark: a Smiler comes out after DARK_S.
 // Now and then a counterpart stands at the window. The void runs south; a lone door at z 62 lets you out (scripts/l114-use.js).
 export const cadence = "250ms";
-const V = 8, TAPE_TOP = 0.76, H = 2.5, W = 2, D = 2.25, DOOR = { x: 1.1, w: 0.9, h: 2.05 }, WIN = { x: -0.6, w: 1.1, y0: 0.9, y1: 1.9 };
+const V = 8, TAPE_TOP = 0.909, H = 2.5, W = 2, D = 2.25, DOOR = { x: 1.1, w: 0.9, h: 2.05 }, WIN = { x: -0.6, w: 1.1, y0: 0.9, y1: 1.9 };
 const DARK_S = 7, BITE = 18; // my picks: seconds of dark before a Smiler bites, and its bite
 const WALL = { texture: "cdn/texture-faded-pale-blue-childhood-wallpaper-tiny-yellow-stars-water-stained.png", wrap: "repeat", repeat: [1, 1], roughness: 0.9 };
 const CARPET = { texture: "cdn/texture-worn-beige-bedroom-carpet-fibres-faint-stains.png", wrap: "repeat", repeat: [1, 1], roughness: 1 };
