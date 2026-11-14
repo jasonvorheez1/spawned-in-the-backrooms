@@ -15,6 +15,8 @@ import { errandTick } from "./lib/errands.js"
 import { squadTick, squadFollow } from "./lib/hit-squad.js"
 import { animate } from "builtin/tween";
 import { toHub } from "./lib/hub.js"
+import { cleanPick, PRESETS, KEEP, SKIP, noStory, runOf } from "./lib/run-opts.js"
+import { wakePlace } from "./lib/save.js"
 const MUSIC = "/cdn/moodboard-lowpoly-cozy/music-soft-mellow-fingerpicked-acoustic-guitar-and-warm-rhodes-early-2000s-bedroom-calm-loop.mp3"; // the drone was exhausting (johnadams2): soft and quiet instead
 const CLICK = "/cdn/moodboard-realistic-gritty/sfx-old-crt-tv-power-on-click-thunk.mp3";
 const MUSIC_GAIN = 0.12; // her pick
@@ -50,7 +52,7 @@ export function update(ctx) {
   const l0 = place === "main" || place === "tutorial0"
   if (l0 && st.arrivePending && !st.menuOpen) { st.arrivePending = false; st.arrive = ctx.now(); ses.arr = null; if (place === "tutorial0") { st.t0n = 0; st.t0cut = null } }
   if (st.arrive) { if (!l0) { st.arrive = null; ses.arr = null; ctx.view.camera = null; return } if (arriveTick(ctx, ses, st)) tutStart(ctx, st); return }
-  if (place === "tutorial0" && !st.t0cut) dinaTick(ctx, ses, st, place)
+  if (story && place === "tutorial0" && !st.t0cut) dinaTick(ctx, ses, st, place)
   // the tutorial Level 0's beats (scripts/lib/tut0-cut.js): a fresh visit there without the drop starts the route over
   if (ses.t0Last !== ctx.self.place) { if (place === "tutorial0" && !st.arrive) { st.t0n = 0; st.t0cut = null; ses.t0 = null; ses.inT0 = true } ses.t0Last = ctx.self.place } // every walk into the tutorial starts at the first beat, whatever a past run left
   if (place === "tutorial0" && !st.menuOpen) {
@@ -60,11 +62,12 @@ export function update(ctx) {
     if (r) return
   } else ses.inT0 = false
   // Level 26: the first time aboard, the ship in the fog and Phoebe at the rail (scripts/lib/l26-cut.js)
-  if (place === "level26" && !st.menuOpen && (st.l26cut || !st.l26seen)) { if (l26Tick(ctx, ses, st)) return ctx.sleep(0) }
+  const story = !noStory(st) // Shelly Nov 14: a run with the main story off skips its cutscenes and trail
+  if (story && place === "level26" && !st.menuOpen && (st.l26cut || !st.l26seen)) { if (l26Tick(ctx, ses, st)) return ctx.sleep(0) }
   if (st.hubcut) st.hubcut = null
-  if (lrunCutTick(ctx, ses, st, place)) return ctx.sleep(0)
-  if (place !== "tutorial0" && dinaTick(ctx, ses, st, place)) return ctx.sleep(0)
-  if (place !== "tutorial0" && ch2Tick(ctx, ses, st, place)) return ctx.sleep(0)
+  if (story && lrunCutTick(ctx, ses, st, place)) return ctx.sleep(0)
+  if (story && place !== "tutorial0" && dinaTick(ctx, ses, st, place)) return ctx.sleep(0)
+  if (story && place !== "tutorial0" && ch2Tick(ctx, ses, st, place)) return ctx.sleep(0)
   squadTick(ctx, ses, st, place); if (ctx.now() - (ses.sqFollowAt ?? 0) > 3000) { ses.sqFollowAt = ctx.now(); squadFollow(ctx) } // factions that hate you send people (scripts/lib/hit-squad.js)
   errandTick(ctx, ses, st, place) // odd jobs people hand out (scripts/lib/errands.js)
   if (st.tut) tutTick(ctx, st)
@@ -110,7 +113,13 @@ export function onInput(ctx, input) {
     if (d.k === "start") { st.menuOpen = false; st.menuView = ""; if (st.t0Done && st.madeChar && ctx.self.place !== "bonus") toHub(ctx); else if (ctx.self.place !== "bonus") { st.introFrom = ctx.self.place; ctx.cross(ctx.self, "intake") } } // after the tutorial, launch lands in the Bonus Room (johnadams2)
     if (d.k === "resume") { st.menuOpen = false; st.menuView = "" }
     if (d.k === "title") { st.menuKind = "title"; st.menuView = "" }
-    if (d.k === "view") { st.menuView = ["settings", "controls"].includes(d.v) ? d.v : "" }
+    if (d.k === "view") { st.menuView = ["settings", "controls", "newgame", "saves"].includes(d.v) ? d.v : ""; if (d.v === "newgame") st.newRun = { ...cleanPick(st.newRun), confirm: false }; if (d.v === "saves") listSaves(ctx) }
+    if (d.k === "opt" && d.key) st.newRun = { ...cleanPick({ ...st.newRun, [d.key]: d.v }), confirm: false }
+    if (d.k === "preset" && PRESETS[d.v]) st.newRun = { ...PRESETS[d.v].v, confirm: false }
+    if (d.k === "begin") beginRun(ctx, st, !!d.sure)
+    if (d.k === "save" && d.slot >= 1 && d.slot <= SLOTS) saveSlot(ctx, d.slot | 0)
+    if (d.k === "load" && d.slot >= 1 && d.slot <= SLOTS) loadSlot(ctx, d.slot | 0)
+    if (d.k === "del" && d.slot >= 1 && d.slot <= SLOTS) delSlot(ctx, d.slot | 0)
     if (d.k === "pref" && d.key) {
       const p = { ...(st.uiPrefs ?? {}) }
       if (d.key === "scale" && ["compact", "normal", "large"].includes(d.val)) p.scale = d.val
@@ -133,3 +142,55 @@ function holdTime(ctx, st) {
   const want = ((st.menuOpen && st.menuKind === "pause") || (ctx.session.tabAway && !(ctx.self.tags ?? []).includes("helper"))) && solo ? 0 : 1 // a hidden tab holds a solo place too
   if ((ctx.place.timeScale ?? 1) !== want) ctx.place.timeScale = want
 }
+
+// ---- new expedition with options (Shelly Nov 14) ----
+const returningRun = (st) => !!(st.madeChar || st.t0Done || (st.level ?? 1) > 1 || (st.xp ?? 0) > 0)
+function beginRun(ctx, st, sure) {
+  const pick = cleanPick(st.newRun)
+  if (returningRun(st) && !sure) { st.newRun = { ...pick, confirm: true }; return } // the menu asks once: this replaces the current expedition
+  for (const k of Object.keys(st)) if (!KEEP.includes(k)) delete st[k]
+  st.run = pick; st.saveV = undefined
+  if (pick.god === "on") st.god = true
+  if (pick.tutorial === "skip") st.t0Done = true
+  st.menuOpen = false; st.menuView = ""; st.newRun = null; st.menuKind = "title"
+  if (ctx.self.place === "bonus") return
+  if (!st.madeChar || pick.tutorial !== "skip") { st.introFrom = ctx.self.place; ctx.cross(ctx.self, "intake") } // the critter room, then the intro; skip lands you in Level 0 after it
+  else { st.arrivePending = true; ctx.cross(ctx.self, "main") }
+}
+// ---- save manager: five named slots per player in the game's SQL (scripts/db.js) ----
+const SLOTS = 5
+function owner(ctx) { return ctx.self.userId ?? ctx.self.id }
+function note(me, text) { me.state.saveMsg = { text, at: Date.now() } }
+function listSaves(ctx) {
+  const me = ctx.self, who = owner(ctx)
+  ctx.sql`SELECT slot, name, place, level, at FROM saves WHERE owner = ${who} ORDER BY slot`.then((r) => {
+    me.state.saveList = (r?.rows ?? []).map((x) => ({ slot: x.slot, name: x.name, place: x.place, level: x.level, at: x.at }))
+  }).catch(() => note(me, "Couldn't read your saves."))
+}
+function snapshot(st) { const o = {}; for (const [k, v] of Object.entries(st)) if (!SKIP.has(k) && v !== undefined) o[k] = v; return o }
+function saveSlot(ctx, slot) {
+  const me = ctx.self, st = me.state, who = owner(ctx), data = snapshot(st)
+  const place = st.savePlace ?? (String(me.place).startsWith("tutorial0") ? "main" : me.place)
+  if (place && !String(place).startsWith("tutorial0") && place !== "intake" && place !== "bonus") { data.savePlace = place; if (me.place === place) data.savePos = { ...me.feetPosition } }
+  const name = `Level ${st.level ?? 1} · ${place ?? "Level 0"}`, at = new Date().toISOString()
+  ctx.sql`INSERT INTO saves (owner, slot, name, place, level, at, data) VALUES (${who}, ${slot}, ${name}, ${place}, ${st.level ?? 1}, ${at}, ${JSON.stringify(data)}) ON CONFLICT (owner, slot) DO UPDATE SET name = excluded.name, place = excluded.place, level = excluded.level, at = excluded.at, data = excluded.data`
+    .then(() => { note(me, `Saved to slot ${slot}.`); listSaves(ctx) }).catch(() => note(me, "That save didn't go through."))
+}
+function loadSlot(ctx, slot) {
+  const me = ctx.self, who = owner(ctx)
+  ctx.sql`SELECT data FROM saves WHERE owner = ${who} AND slot = ${slot}`.then((r) => {
+    const row = r?.rows?.[0]; if (!row) return note(me, `Slot ${slot} is empty.`)
+    let data; try { data = JSON.parse(row.data) } catch { return note(me, "That save is damaged.") }
+    const st = me.state
+    for (const k of Object.keys(st)) if (!KEEP.includes(k)) delete st[k]
+    for (const [k, v] of Object.entries(data)) if (!KEEP.includes(k) || k === "look") st[k] = v
+    st.menuOpen = false; st.menuView = ""; st.saveMsg = null
+    const to = wakePlace(ctx, st) ?? "main"
+    if (to !== me.place) ctx.cross(me, to); else if (st.savePos) me.feetPosition = st.savePos
+  }).catch(() => note(me, "Couldn't load that save."))
+}
+function delSlot(ctx, slot) {
+  const me = ctx.self, who = owner(ctx)
+  ctx.sql`DELETE FROM saves WHERE owner = ${who} AND slot = ${slot}`.then(() => { note(me, `Slot ${slot} cleared.`); listSaves(ctx) }).catch(() => note(me, "Couldn't clear that slot."))
+}
+export { SLOTS }
