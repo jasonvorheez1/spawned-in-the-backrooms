@@ -4,6 +4,7 @@ import { freshenerAt } from "./lib/remodel-quest.js";
 // thrower a "blast" with every foe it reached, and the thrower's scripts/player.js lands each through hitTarget (XP, loot, ragdoll).
 import { raycast } from "builtin/physics";
 import T from "./lib/data/throwables.yml";
+import { damageEntity } from "./lib/breakables.js";
 const SND = "/cdn/moodboard-realistic-gritty/";
 const FOES = ["smiler", "lurker", "hound", "stealer", "moths", "l8spider", "l8-hostile", "npc", "l61fc", "spamboss", "zdrone", "l11foe", "l5rat", "l7beast", "l10worm"];
 const dot = (a, b) => a.x * b.x + a.y * b.y + a.z * b.z;
@@ -102,7 +103,7 @@ function rocket(ctx, dt) { // the M.E.G. launcher's round: straight and fast, a 
   v.y += (ctx.place.gravity?.y ?? -9.8) * 0.06 * dt;
   if ((s.age = (s.age ?? 0) + dt) > 4) return explode(ctx);
   const hit = raycast(ctx, p, { x: v.x / sp, y: v.y / sp, z: v.z / sp }, { distance: sp * dt + 0.2, bodies: "all", ignoreEntities: [me.id, s.ownerId].filter(Boolean) });
-  if (hit) { s.hitN = hit.normal ?? null; me.feetPosition = { x: hit.position.x - v.x / sp * 0.15, y: hit.position.y - v.y / sp * 0.15, z: hit.position.z - v.z / sp * 0.15 }; return explode(ctx); }
+  if (hit) { s.hitN = hit.normal ?? null; s.hitId = hit.id ?? null; me.feetPosition = { x: hit.position.x - v.x / sp * 0.15, y: hit.position.y - v.y / sp * 0.15, z: hit.position.z - v.z / sp * 0.15 }; return explode(ctx); }
   me.feetPosition = { x: p.x + v.x * dt, y: p.y + v.y * dt, z: p.z + v.z * dt }; s.vel = v;
 }
 function explode(ctx) {
@@ -114,6 +115,7 @@ function explode(ctx) {
   const big = s.kind === "rocket", n = (big && s.hitN) || { x: 0, y: 1, z: 0 };
   ctx.emit("fx", { position: { x: c.x + n.x * 0.2, y: c.y + 0.2, z: c.z + n.z * 0.2 }, script: big ? ROCKET_BOOM : BOOM });
   ctx.emit("decal", { position: c, normal: n, texture: "cdn/texture-scorch-mark-blast-decal.png", size: big ? 4.2 : 2.6, lifetime: big ? 120 : 60, fade: 5 }); // the scorch lands on the wall or floor it hit
+  if (big) smashAround(ctx, c, F.radius, n, s.hitId);
   if (big) { // a rocket throws the loose things around it and the shooter feels it land
     for (const o of ctx.query({ center: c, radius: F.radius * 1.4, excludeTags: ["player", "thrown"] })) { const h = ctx.getObject(o.id); if (!h || h.physics?.body !== "dynamic") continue; const dx = o.feetPosition.x - c.x, dz = o.feetPosition.z - c.z, d = Math.hypot(dx, dz) || 1, k = 900 * (1 - Math.min(1, d / (F.radius * 1.4))); ctx.emit("impulse", { target: o.id, impulse: { x: dx / d * k, y: k * 0.6, z: dz / d * k } }); }
     if (s.ownerId) { ctx.emit("hitstop", { duration: 0.07 }, { audience: { player: s.ownerId } }); ctx.emit("playSound", { clip: SND + "sfx-rocket-detonation-huge-boom-with-glass-and-ceiling-debris-falling.mp3", position: c, volume: 1, maxDistance: 140 }); }
@@ -124,6 +126,15 @@ function explode(ctx) {
   for (const pl of ctx.place.players) { const f = pl.feetPosition, dd = Math.hypot(f.x - c.x, f.y - c.y, f.z - c.z); if (dd < (big ? 24 : 16)) ctx.emit("screenShake", { intensity: (big ? 1.3 : 0.9) * (1 - dd / (big ? 24 : 16)), duration: big ? 0.7 : 0.5 }, { audience: { player: pl.id } }); if (dd < 8) ctx.emit("screenFlash", { color: "oklch(0.95 0.08 70)", duration: 0.18, intensity: 0.14 * (1 - dd / 8) }, { audience: { player: pl.id } }); }
   ctx.emit("noise", { position: c, radius: 60, kind: "explosion" }, { audience: { nearby: c, radius: 60 } });
   ctx.destroy(me.id);
+}
+
+const KEEP = ["npc", "player", "critter", "enemy", "door", "wall", "thrown", "l5-sealed", "l5-elev-panel"];
+function smashAround(ctx, c, radius, n, hitId) { // a rocket breaks what it lands on outright and wrecks what stands near (Shelly: "rockets dont instantly destroy objects")
+  const done = new Set();
+  const hurt = (h, dmg) => { if (!h || done.has(h.id) || h.parent || KEEP.some((t) => h.tags?.includes(t))) return; done.add(h.id); try { damageEntity(ctx, h, dmg, c, n, "explosion"); } catch (e) { ctx.log("rocket smash", h.id, e.message); } };
+  const direct = hitId ? ctx.getObject(hitId) : null, sz = direct?.bounds?.size;
+  if (direct && (direct.tags?.includes("breakable") || (sz && Math.max(sz.x, sz.y, sz.z) < 2.6))) { if (!direct.tags.includes("breakable") && !KEEP.some((t) => direct.tags?.includes(t))) { direct.tags = [...direct.tags, "breakable"]; direct.state.mat ??= "fixture"; } hurt(direct, 9999); }
+  for (const r of ctx.query({ anyTags: ["breakable"], center: c, radius: radius * 1.3 })) { const f = r.feetPosition, d = Math.hypot(f.x - c.x, f.z - c.z); hurt(ctx.getObject(r.id), d < radius * 0.6 ? 9999 : Math.round(400 * (1 - Math.min(1, d / (radius * 1.3))))); } // the inner blast flattens, the edge cracks
 }
 
 function settle(ctx, at) { // a Reality Freshener: lands upright, hisses, the room holds still around it
