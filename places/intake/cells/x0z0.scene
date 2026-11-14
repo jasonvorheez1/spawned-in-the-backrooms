@@ -13,7 +13,7 @@ ir-bed:
   layout: {box: {max: {x: 0.825, y: 1.1, z: 1.05}, min: {x: -0.825, y: 0, z: -1.05}}}
   model: {id: /cdn/value.4c61843b2bcb94ee80364a2a654397ea5d979690794ce7e085addb70cfb31aae.glb}
   physics: {body: static, collider: box}
-  rotation: 90
+  rotation: 270
 ir-blowup:
   feetPosition: {x: -2.2, y: 0, z: -2.35}
   id: ir-blowup
@@ -81,7 +81,7 @@ ir-ipod:
   model: {id: /cdn/value.d4492ec79dc96b8f287d8aad99b6b5ea0866070d9e08500ba2b9bf5d30e73875.glb}
   rotation: 0
 ir-kitty:
-  feetPosition: {x: -2.55, y: 0.52, z: 0.75}
+  feetPosition: {x: -2.5, y: 0.56, z: 0.75}
   id: ir-kitty
   layout: {box: {max: {x: 0.15, y: 0.32, z: 0.13}, min: {x: -0.15, y: 0, z: -0.13}}}
   model: {id: /cdn/value.a9f9d3c6172c17966216abe7310be269dde6da0bf1b828779638c4c7152f6575.glb}
