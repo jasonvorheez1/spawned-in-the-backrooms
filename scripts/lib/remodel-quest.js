@@ -6,7 +6,7 @@ import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
 import { addRep, addKarma } from "./rep.js";
 import { rollCheck } from "./npc-talk.js";
-import { setQuest, endQuest, qid, tellQuest, payOnce } from "./quests.js";
+import { setQuest, endQuest, qid, tellQuest, payOnce, queuePayout } from "./quests.js";
 const CHIME = "cdn/sfx-soft-bright-two-note-success-chime.mp3";
 const FANFARE = "/cdn/moodboard-realistic-gritty/sfx-level-up-jingle-retro-terminal-chime-rising-three-notes.mp3";
 const HISS = "cdn/sfx-aerosol-can-short-hiss-click-plastic-cap.mp3";
@@ -63,7 +63,7 @@ function finish(ctx, p, { xp, cents, rep, text }) {
   const msgs = [];
   for (const [g, d] of rep) { const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d, "Completed Fresh Paint"); msgs.push(tier || `${g === "karma" ? "Karma" : g === "bntg" ? "B.N.T.G." : g} +${d}`); }
   const summary = [text, ...msgs].join(" · ");
-  s.payout = { xp, items: [], text: summary }; s.notice = { text: summary, at: ctx.now() }; pushFeed(s, summary, ctx.now(), "good");
+  queuePayout(s, { xp, items: [], text: summary }); s.notice = { text: summary, at: ctx.now() }; pushFeed(s, summary, ctx.now(), "good");
   const pos = posOf(p);
   if (pos) {
     heard(ctx, { clip: FANFARE, position: pos, volume: 0.85, maxDistance: 24 }, { audience: { player: p.id } });

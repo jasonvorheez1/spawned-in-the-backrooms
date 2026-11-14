@@ -1,4 +1,5 @@
 // Briefings are shown before accepting a job. Keys include the NPC, because two people may ask the same question.
+import { wireCount } from './level21-quests.js'
 const OFFERS = {
   'meg-callum': ["Seven cans are missing from my crates. Ask the doctor or look around the stores, and find out where they went. Can you do that?", "Callum is missing seven cans. Ask Dr. Ortiz, examine the crates, or find someone else who knows the camp."],
   'meg-ortiz': ["A runner drank bad water. Callum has the only tin of purification tablets, and I need it for the patient. Will you speak to him?", "Dr. Ortiz needs Callum's purification tablets for a sick runner. Talk, bargain, or find another way to get them."],
@@ -66,8 +67,7 @@ export function questProgress(id, s) {
   if (id === 'the-golden-bumper' && s.wheatQ === 2) return `Golden wheat: ${Math.min(3, s.wheat ?? 0)}/3`
   if (id === 'plate-for-the-perimeter' && s.spiderQ === 2) return `Chitin plates: ${Math.min(3, s.scrap?.chitin ?? 0)}/3`
   if (id === 'the-saltine-quota' && s.saltineQ === 2) {
-    const wire = String(s.items ?? '').split(',').filter((x) => x === 'wire' || x === 'copper').length + (s.scrap?.wire ?? 0)
-    return `Copper wire: ${Math.min(3, wire)}/3`
+    return `Copper wire: ${Math.min(3, wireCount(s))}/3`
   }
   return ''
 }

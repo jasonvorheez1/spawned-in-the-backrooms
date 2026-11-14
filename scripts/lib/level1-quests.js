@@ -6,7 +6,7 @@
 import { rollCheck, keyOf } from "./npc-talk.js";
 import { addRep, addKarma, GROUPS, repOf } from "./rep.js";
 const NAMES = Object.fromEntries(Object.entries(GROUPS).map(([k, v]) => [k, v.name]));
-import { setQuest, endQuest, payOnce } from "./quests.js";
+import { setQuest, endQuest, payOnce, queuePayout } from "./quests.js";
 import { pushFeed } from "./feed.js";
 import { setDinaStep } from "./dina-quest.js";
 import { heard } from "./hear.js";
@@ -73,7 +73,7 @@ export function l1Choice(ctx, it, s, list) {
   if (!Array.isArray(list) || !s) return list;
   const id = who(it), r = s.rationsQ ?? 0, w = s.waterQ ?? 0, add = [], failed = s.l1Fail ?? {};
   if (id === "meg-callum") {
-    if (!r && (s.rep?.meg ?? 0) > -35) add.push(opt("rStart", "Quest Start"));
+    if (!r && repOf(s, "meg") > -35) add.push(opt("rStart", "Quest Start"));
     if (r === 1 && !s.rTracked) add.push(opt("rTrack"));
     if (r === 3) { add.push(opt(s.rAleDead ? "rKilled" : "rTruth", "Quest")); if (!s.rAleDead) { if (s.rAleTalked === "rAid") add.push(opt("rResolve", "Quest")); add.push(opt("rCover")); } }
     if (r === 4) add.push(opt(s.rAleDead ? "rKilled" : "rTruth", "Quest"));
@@ -90,8 +90,7 @@ export function l1Choice(ctx, it, s, list) {
   if (id === "bntg-voss" && s.dinaQ === 6) { // The Undelivered step 6 (dina-quest.js): who bought the chit. Talk, pay, or lean on him; or lift his ledger (questLift1)
     add.push(opt("dVossAsk", "Quest")); if ((s.cents ?? 0) >= 5000) add.push(opt("dVossPay", "$50")); add.push(opt("dVossLean"));
   }
-  if (false) {
-  } else if (id === "meg-ale") {
+  if (id === "meg-ale") {
     if (r === 2) { add.push(opt("rAleSpeech")); if ((s.cents ?? 0) >= 2000) add.push(opt("rAleBarter")); add.push(opt("rAleThreat")); if ((s.almonds ?? 0) >= 2) add.push(opt("rAid", "2 almond water")); }
   }
   for (let i = add.length - 1; i >= 0; i--) if (failed[Object.keys(C).find((k) => C[k] === add[i].text)]) add.splice(i, 1);
@@ -120,7 +119,7 @@ function finish(ctx, p, q, { xp = 100, cents = 0, items = [], text, rep = [], by
   setStep1(ctx, p, q, 99, null, text);
   for (const [g, d] of rep) { if (!d) continue; const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d, `Completed ${QUESTS1[q].name}`); msgs.push(tier || `${g === "karma" ? "Karma" : NAMES[g] ?? g} ${d > 0 ? "+" : ""}${d}`); }
   s.cents = (s.cents ?? 0) + cents;
-  s.payout = { xp, items, text }; // scripts/craft.js hands these over on the player's own machine
+  queuePayout(s, { xp, items, text }); // scripts/craft.js hands these over on the player's own machine
   note(ctx, p, msgs.filter(Boolean).join(" · "), "good"); ding(ctx, p, FANFARE, 0.85);
   const pos = p.worldFeetPosition ?? p.feetPosition;
   if (pos) ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.8, z: pos.z }, text: `+${xp} XP`, color: "#ffc44d", size: 1.1 }, { audience: { player: p.id } });

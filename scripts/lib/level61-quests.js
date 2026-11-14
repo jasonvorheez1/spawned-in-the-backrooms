@@ -6,7 +6,7 @@
 //   4. "Two Menus Short" (Sal at Burger Bop -> Level 10 Outpost Bountiful Wren -> Level 11 Kael -> Level 6.1)
 //   5. Cross-level Guild customs & spillway clearance for Level 11's "The Paper Bird's Blessing" (craneQ).
 
-import { setQuest, tellQuest, claimReward, advanceQuest, finishLevelQuest } from "./quests.js";
+import { setQuest, tellQuest, claimReward, advanceQuest, finishLevelQuest, queuePayout } from "./quests.js";
 import { rollCheck } from "./npc-talk.js";
 import { addRep, repOf } from "./rep.js";
 
@@ -234,7 +234,7 @@ export function handleDialogueQuest61(ctx, p, npc, text) {
     }
     if (s.craneQ === 99 && s.craneGuildClear && !s.craneGuildPaid && t.includes("customs waybill cleared") && claimReward(s, "crane-guild-bonus")) {
       s.craneGuildPaid = 1;
-      s.payout = { xp: 45, items: ["almond", "battery", "ration"], text: "Guild Barge Dividend: +45 XP · Almond Water, Battery, Ration" };
+      queuePayout(s, { xp: 45, items: ["almond", "battery", "ration"], text: "Guild Barge Dividend: +45 XP · Almond Water, Battery, Ration" });
       addRep(s, "survivors", 4, "Cleared Guild barge customs between Level 6.1 and Level 11");
       return { reply: "Word already reached the glass doors: our barge docked with every sack of beans dry. Kael isn't the only trader who keeps his books. Take a pilgrim dividend from the forward crate.", mood: "happy" };
     }
@@ -275,7 +275,7 @@ export function handleDialogueQuest61(ctx, p, npc, text) {
     }
     if (t.includes("bus your tray") && (s.l61TraysReturned ?? 0) >= 1 && !s.l61TrayBonus && claimReward(s, "l61-tray-master")) {
       s.l61TrayBonus = 1;
-      s.payout = { xp: 25, items: ["burger", "coke"], text: "Sal's Counter Regular: +25 XP · Cheeseburger & Coca-Cola" };
+      queuePayout(s, { xp: 25, items: ["burger", "coke"], text: "Sal's Counter Regular: +25 XP · Cheeseburger & Coca-Cola" });
       return { reply: "See? You stack a plastic tray like a civil human being and the whole kitchen puts extra pickles on yours. Here, one off the hot plate, and don't tell the Liquorette.", mood: "happy" };
     }
     if ((t.includes("flour and coffee") || (t.includes("flour") && t.includes("coffee"))) && q === 3 && s.l61SalFlour && s.l61SalCoffee) {

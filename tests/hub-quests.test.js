@@ -113,7 +113,9 @@ test('Hub routes identify the real crossings', async () => {
   const p = { place: 'level1', state: {}, feetPosition: { x: 0, y: 0, z: 0 } }
   const c = { place: { id: 'level1', objects: { 'l1-to-hub': { feetPosition: { x: 5, y: 0, z: 0 } } } } }
   expect(nextQuestExit(c, p, 'thehub')).toMatchObject({ exit: 'l1-to-hub', via: 'thehub' })
-  p.place = 'thehub'; c.place = { id: 'thehub', objects: { 'hd-t10-a3': { feetPosition: { x: 8, y: 0, z: 0 } } } }
+  p.place = 'thehub'; c.place = { id: 'thehub', objects: { 'hd-t7-b1': { feetPosition: { x: 12, y: 0, z: 0 } }, 'hd-t10-a3': { feetPosition: { x: 8, y: 0, z: 0 } } } }
+  expect(nextQuestExit(c, p, 'level11')).toMatchObject({ exit: 'hd-t7-b1', via: 'level1' })
+  p.state = { hubKeys: { level11: 1 } }
   expect(nextQuestExit(c, p, 'level11')).toMatchObject({ exit: 'hd-t10-a3', via: 'level11' })
 })
 

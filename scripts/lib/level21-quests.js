@@ -45,6 +45,11 @@ export const setEdgesStep = (ctx, p, step, noteText) => advanceQuest(ctx, p, QUE
 
 export const finishQuest21 = (ctx, p, qKey, opts = {}) => finishLevelQuest(ctx, p, qKey, QUESTS21[qKey], { payKey: "l21-" + qKey, ...opts });
 
+export function wireCount(s) {
+  const legacy = String(s?.items ?? "").split(",").filter((x) => x === "wire" || x === "copper").length;
+  return legacy + (s?.scrap?.wire ?? 0) + (s?.scrap?.copper_wire ?? 0);
+}
+
 // Dialogue quest triggers & turn-ins for Level 2.1
 export function handleDialogueQuest21(ctx, p, npc, text) {
   const t = String(text ?? "").toLowerCase();
@@ -59,9 +64,7 @@ export function handleDialogueQuest21(ctx, p, npc, text) {
     if (t.includes("condenser") || t.includes("copper wire") || t.includes("errand board") || t.includes("help with supplies")) {
       if (!s.saltineQ) {
         if (repOf(s, "survivors") <= -35) return { reply: "Rules. Enemies of the camp don't go near the food.", mood: "angry" };
-        const items = String(s.items ?? "").split(",").filter(Boolean);
-        const wireCount = items.filter((x) => x === "wire" || x === "copper").length + (s.scrap?.wire ?? 0);
-        setSaltineStep(ctx, p, wireCount >= 3 ? 3 : 2, "Quest Started: The Saltine Quota · Search the Exploration Wing for 3 Copper Wire coils");
+        setSaltineStep(ctx, p, wireCount(s) >= 3 ? 3 : 2, "Quest Started: The Saltine Quota · Search the Exploration Wing for 3 Copper Wire coils");
         return {
           reply: "Third freezer bank's weeping coolant. Coil freezes over, we lose forty sleeves to damp. Three coils of clean copper wire, from the toolboxes in the Exploration Wing. Bring them to my bench.",
           mood: "calm",
@@ -95,12 +98,9 @@ export function handleDialogueQuest21(ctx, p, npc, text) {
     // 1c. Turn in Saltine Quota quest
     if (t.includes("brought 3 copper wire") || t.includes("brought the copper wire") || t.includes("fix the condenser water tubes") || t.includes("copper wire coils to fix")) {
       const items = String(s.items ?? "").split(",").filter(Boolean);
-      const wireCount = items.filter((x) => x === "wire" || x === "copper").length;
-      const sc = s.scrap ?? {};
-      const wireScrap = sc.wire ?? 0;
-      const totalWire = wireCount + wireScrap;
+      const totalWire = wireCount(s);
       if ((s.saltineQ === 1 || s.saltineQ === 2 || s.saltineQ === 3) && totalWire >= 3) {
-        // Deduct 3 wires
+        // Deduct 3 wires (legacy tokens first, then wire, then copper_wire)
         let rem = 3;
         const nextItems = [];
         for (const it of items) {
@@ -108,7 +108,14 @@ export function handleDialogueQuest21(ctx, p, npc, text) {
           else nextItems.push(it);
         }
         s.items = nextItems.join(",");
-        if (rem > 0) { sc.wire = Math.max(0, (sc.wire ?? 0) - rem); s.scrap = sc; }
+        if (rem > 0) {
+          const sc = { ...(s.scrap ?? {}) };
+          for (const key of ["wire", "copper_wire"]) {
+            const take = Math.min(rem, sc[key] ?? 0);
+            if (take > 0) { sc[key] -= take; rem -= take; }
+          }
+          s.scrap = sc;
+        }
         finishQuest21(ctx, p, "saltine", {
           xp: 110,
           cents: 5000,
