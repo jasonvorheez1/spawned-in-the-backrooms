@@ -184,12 +184,12 @@ export function tick(ctx) {
       for (const face of [-1, 1]) for (const cx of [-0.82, 0.82]) ctx.spawn({ tags: ["l4-island", "l4-desk"], feetPosition: { x: x + cx, y: 0, z: z + face * 0.45 }, rotation: { yaw: face > 0 ? 0 : 180 }, physics: { body: "static", collider: "mesh" }, visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/l4-office-geo.js", params: { kind: "desk", seed: seed++ } } });
     }
   }
-  if ((s.officeV ?? 0) >= 3 && s.islandSplit && s.fitV !== 2) { // 2026-11-14 v2: the armchairs became swivel chairs. (Shelly: nothing blocky): island desks, chairs, printers and the carbon-copy cabinet wear fitted models, same ids, tags and behaviors
-    s.fitV = 2;
+  if ((s.officeV ?? 0) >= 3 && s.islandSplit && s.fitV !== 3) { // 2026-11-14 v3: armchairs caught by model string too. v2: the armchairs became swivel chairs. (Shelly: nothing blocky): island desks, chairs, printers and the carbon-copy cabinet wear fitted models, same ids, tags and behaviors
+    s.fitV = 3;
     const all = (t) => ctx.query({ tags: [t], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
     const wear = (id, row) => { const h = ctx.place.objects[id]; if (!h) return null; for (const c of [...(h.children ?? [])]) ctx.destroy(c.id); h.primitive = null; h.material = null; Object.assign(h, row); return h; };
     for (const o of all("l4-island")) { const h = ctx.getObject(o.id), k = h?.primitive?.params?.kind;
-      if (k === "chair" || /07a9798f6eec/.test(h?.model?.id ?? "")) wear(o.id, { ...FIT.chair });
+      if (k === "chair" || /07a9798f6eec/.test(String(h?.model?.id ?? h?.model ?? ""))) wear(o.id, { ...FIT.chair });
       else if (k === "desk") { wear(o.id, { ...FIT.desk }); ctx.spawn({ parent: o.id, feetPosition: { x: 0.18, y: 0.75, z: -0.14 }, rotation: { yaw: 180 }, castShadow: false, visibleRange: { max: 35 }, model: { id: FITM.crt }, layout: box(0.42, 0.38, 0.4) }); } }
     for (const o of all("l4-printer")) wear(o.id, { ...FIT.printer });
     if (ctx.place.objects["dina-carbon-copy"]) { wear("dina-carbon-copy", { ...FIT.cabinet }); ctx.spawn({ parent: "dina-carbon-copy", feetPosition: { x: 0, y: 1.3, z: 0 }, primitive: { kind: "box", width: 0.3, height: 0.03, depth: 0.22 }, material: { color: "oklch(0.9 0.02 90)", roughness: 0.9 } }); }
