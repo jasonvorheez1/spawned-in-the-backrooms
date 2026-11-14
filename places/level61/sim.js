@@ -20,7 +20,7 @@ const CIG = (k) => CIGS[k]?.model;
 export const cadence = "1s";
 const TOILET_GLB = "/cdn/value.584d89d495be90361b2f1c260e71cd5079b14f1e5d1b0a3346dd5bc4c808c0dc.glb";
 const VANITY_GLB = "/cdn/value.fc171ef1463c6b6014a17a934459781e7d541b202325257a5ddb0e02de9788c4.glb";
-const V = 93; // 93: Burger Bop pie wears the Tripo+Studio clear glass cloche (art/cloche). // 92: Level 3 vent is the Tripo louvered grille. // 91: payphone bank is the Tripo brass payphone pair. // 90: Gib pie stand is the Tripo cake stand under a glass cloche. // 89: Clippers revamped with scripted mahogany/brass architecture, pendants, sconces, footrail, barware & mirror (no blocky boxes). // 88: Gib coffee urn is the Tripo steel urn. // 87: tray returns are the Tripo steel cabinet. // 86: corner planters are the Tripo weeping fig. // 85: usable Seal 6.1-02 and service inspection tag. // 84: Clippers stools take a seat (they had no Sit). 83: packs reseated on the lowered bar. 82: Clippers bar and bentwood stools lowered to the 1.25 m patrons. 81: 81: cig packs set down to the raycast bar and desk tops. 80: cig packs on the Clippers bar and the M.E.G. desk. // 79: soda machines are Shelly's cola machine (fnv pack), cola crates by the food-court ones. // 78: liquorette tables carry real cigarette packs (art/cigs). // 77: every store till is the Tripo+Studio register (art/gib/build.py). // 76: every food-court stool is the Tripo+Studio diner stool; Gib counter carries pie case, brewer, condiments (art/gib/build.py). // 75: Gib's Grub, the greasy spoon in the south wall. // 74: supply-room overflow jam (stacked, tipped, wall-facing machines). // 73: bar tops, menus, tills, trays, candles and table drinks follow the lowered Liquorette and Clippers furniture down. // 71: bar counters, stools, chairs and tables in Liquorette and Clippers lowered to fit the 1.2 m critters (Shelly). 70: 70: liquorette tables carry pints, tumblers, ashtrays. 69: liquorette damask walls, tin ceiling, tin sign turned. // 68: toilet repainted white porcelain. 67: restroom toilet + vanity turned to their true front axis and sized to real fixtures. 66: restroom toilets + vanities are Tripo models (art/l61-rest). 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
+const V = 94; // 94: payphones, east vent, Gib coffee urn, planters, tray-return cabinets re-cut through Tripo + studio pass (art/l61-pass). // 93: Burger Bop pie wears the Tripo+Studio clear glass cloche (art/cloche). // 92: Level 3 vent is the Tripo louvered grille. // 91: payphone bank is the Tripo brass payphone pair. // 90: Gib pie stand is the Tripo cake stand under a glass cloche. // 89: Clippers revamped with scripted mahogany/brass architecture, pendants, sconces, footrail, barware & mirror (no blocky boxes). // 88: Gib coffee urn is the Tripo steel urn. // 87: tray returns are the Tripo steel cabinet. // 86: corner planters are the Tripo weeping fig. // 85: usable Seal 6.1-02 and service inspection tag. // 84: Clippers stools take a seat (they had no Sit). 83: packs reseated on the lowered bar. 82: Clippers bar and bentwood stools lowered to the 1.25 m patrons. 81: 81: cig packs set down to the raycast bar and desk tops. 80: cig packs on the Clippers bar and the M.E.G. desk. // 79: soda machines are Shelly's cola machine (fnv pack), cola crates by the food-court ones. // 78: liquorette tables carry real cigarette packs (art/cigs). // 77: every store till is the Tripo+Studio register (art/gib/build.py). // 76: every food-court stool is the Tripo+Studio diner stool; Gib counter carries pie case, brewer, condiments (art/gib/build.py). // 75: Gib's Grub, the greasy spoon in the south wall. // 74: supply-room overflow jam (stacked, tipped, wall-facing machines). // 73: bar tops, menus, tills, trays, candles and table drinks follow the lowered Liquorette and Clippers furniture down. // 71: bar counters, stools, chairs and tables in Liquorette and Clippers lowered to fit the 1.2 m critters (Shelly). 70: 70: liquorette tables carry pints, tumblers, ashtrays. 69: liquorette damask walls, tin ceiling, tin sign turned. // 68: toilet repainted white porcelain. 67: restroom toilet + vanity turned to their true front axis and sized to real fixtures. 66: restroom toilets + vanities are Tripo models (art/l61-rest). 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -366,18 +366,18 @@ function lay(ctx) {
 
   // 3. Retro South Wall Chrome Payphone Bank at (5.0, HD - 0.25)
   sp("l61-payphone-bank", {
-    feetPosition: { x: 5.0, y: 0.45, z: HD - 0.25 },
+    feetPosition: { x: 5.0, y: 0.78, z: HD - 0.16 },
     rotation: { yaw: 0 },
     physics: { body: "static", collider: "box" },
     // Tripo payphone pair (art/l61-phone): brass panel, two 25c phones, side baffles
-    model: { id: "/cdn/value.18ee533716f27e0c27140367e02ca8308cfbf9f7a84dc6794b0cac7b6d95cc12.glb", forward: "+z" },
-    layout: { box: { min: { x: -1.3, y: 0, z: -0.25 }, max: { x: 1.3, y: 1.75, z: 0.25 } } },
+    model: { id: "/cdn/value.87b3b6e927dff076e1eaad84a88c9243ec9e44fbc67866b80413161b66272ccc.glb", forward: "+x" }, // art/l61-pass: two steel payphones, 0.95 m units
+    layout: { box: { min: { x: -0.56, y: 0, z: -0.16 }, max: { x: 0.56, y: 0.95, z: 0.16 } } },
     tags: ["usable"],
     behavior: "scripts/l61-use.js",
     state: { kind: "payphone", name: "Public Payphones", verb: "Pick up receiver", tint: "#9fe8ff" },
     audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-walkie-talkie-radio-click-static-burst.mp3", gain: 0.04, loop: true, spatial: true, maxDistance: 4 },
     children: [
-      { feetPosition: { x: 0, y: 1.82, z: 0.1 }, primitive: { kind: "box", width: 2.5, height: 0.3, depth: 0.06 }, material: { color: "oklch(0.2 0.08 240)" },
+      { feetPosition: { x: 0, y: 1.12, z: 0.05 }, primitive: { kind: "box", width: 2.5, height: 0.3, depth: 0.06 }, material: { color: "oklch(0.2 0.08 240)" },
         ui: `<div face="front" width="2.5m" style="width:2500px;height:300px;display:flex;align-items:center;justify-content:center;background:#0c1e38;color:#9fe8ff;font-family:Arial,sans-serif;font-weight:900;letter-spacing:6px"><span style="font-size:110px">PUBLIC PHONES</span></div>` },
     ],
   });
@@ -388,8 +388,8 @@ function lay(ctx) {
       feetPosition: { x, y: 0, z },
       rotation: { yaw: k * 57 },
       physics: { body: "static", collider: "cylinder" },
-      model: { id: "/cdn/value.c04470b5b4fe264f28760aa765b72fd8bee83d6c44722bb8e932d080626310ec.glb", forward: "-z" },
-      layout: { box: { min: { x: -0.75, y: 0, z: -0.75 }, max: { x: 0.75, y: 2.7, z: 0.75 } } },
+      model: { id: "/cdn/value.492d60454d303b71259eb6305d3a5d1dd7bcab46e44e95f97563c0cde3f71163.glb", forward: "+x" }, // art/l61-pass: ficus in a terracotta pot
+      layout: { box: { min: { x: -0.82, y: 0, z: -0.8 }, max: { x: 0.82, y: 2.6, z: 0.8 } } },
     });
   }
 
@@ -571,8 +571,8 @@ function lay(ctx) {
     rotation: { yaw: 180 },
     physics: { body: "static", collider: "box" },
     // Tripo urn (art/l61-urn): brushed steel, sight gauge, spigot to the customer side
-    model: { id: "/cdn/value.d752aa57d21e73bbb0ed1bc82bab6bf0cf26d1dc7827659f53653d0ace52db51.glb", forward: "+x" },
-    layout: { box: { min: { x: -0.2, y: 0, z: -0.2 }, max: { x: 0.2, y: 0.55, z: 0.2 } } },
+    model: { id: "/cdn/value.4b45de4b5549a46e9c8d552f7b701384201dcedc8f1a3d88a0e6321c97c6bcfb.glb", forward: "+x" }, // art/l61-pass: steel urn, sight glass, spigot out front
+    layout: { box: { min: { x: -0.14, y: 0, z: -0.16 }, max: { x: 0.14, y: 0.55, z: 0.16 } } },
     state: {
       kind: "coffee",
       name: "Fresh Diner Coffee Urn",
@@ -755,11 +755,11 @@ function lay(ctx) {
 
   // East suction vent to Level 3
   sp("l61-vent", {
-    feetPosition: { x: HW - 0.12, y: 0.1, z: 8 },
+    feetPosition: { x: HW - 0.28, y: 0, z: 8 },
     rotation: { yaw: 90 },
     // Tripo louvered grille (art/l61-vent): rusted frame, five slats, corner bolts
-    model: { id: "/cdn/value.30784ee6955aebc443b97a0f317c07aa40a8aecd1ce385f2a5287c8cf9868bae.glb", forward: "+z" },
-    layout: { box: { min: { x: -0.65, y: 0, z: -0.12 }, max: { x: 0.65, y: 0.96, z: 0.12 } } },
+    model: { id: "/cdn/value.7555f9f5d9bdf0a3ec68a9184f9de7f27b641e3e548385814d4ec1b24965ec3a.glb", forward: "+x" }, // art/l61-pass: rusted louvred grille on floor feet
+    layout: { box: { min: { x: -0.7, y: 0, z: -0.27 }, max: { x: 0.7, y: 0.96, z: 0.27 } } },
     castShadow: false,
     audio: { clip: G("strong-air-suction-whistle-through-metal-vent-loop"), loop: true, gain: 0.14, spatial: true, maxDistance: 6 },
   });
