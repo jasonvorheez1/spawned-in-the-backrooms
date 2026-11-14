@@ -1,6 +1,5 @@
 # Level 4, the Abandoned Office: Base Omega (M.E.G.), the office wanderers, T.B.D., Amor Incrementum.
-# Written by hand. Nov 13 pass to design/story-spine.md: the player knows nothing, so no choice assumes a name or a place;
-# everyone answers "Where am I?", "How do I get out?" and "Ever hear the name Dina?" their own way, partly, sometimes wrong.
+# Dace handles camp orientation, stairs, and his ledger at Base Omega; everyone else talks about patrols, fountains, phones, break rooms, and their factions.
 # Each has their own word for the player: Dace "walker", Lin "stray", Okafor "wanderer", Rhea "mate", Moss "dear",
 # Gus "pal", Penny "um, you", Bram "stranger", Quill "customer", Nib "shiny-friend", Vell "child", Hask "friend".
 
@@ -57,12 +56,6 @@ omega-lin:
   bye: "Skip the cracked fountains."
   walk: "Sure."
   ask:
-    - q: "Where am I?"
-      a: "An office. Four hundred and twelve doors on my lap, forty fountains, three window rooms. I can give you numbers. I can't give you a street address."
-    - q: "How do I get out?"
-      a: "I've opened every door on this floor. Supply closet, office, office, stairs down. Not one of them is a front door. I keep checking."
-    - q: "Ever hear the name Dina?"
-      a: "No names. But a woman walked half a lap with me, writing down my fountains. She asked which doors I hadn't tried. I said none. She looked disappointed."
     - q: "Which fountains are safe?"
       sk: survival 30
       a: "Cold steel, no hum, runs clear for a count of ten. If it tastes like coins, or you hear crying close by, keep walking."
@@ -71,6 +64,8 @@ omega-lin:
       a: "There was one outside office nineteen. Now there's a wall. Nobody remembers it except me. I've stopped bringing it up at dinner."
     - q: "Why are the windows taped?"
       a: "They show a street. It isn't a way out, it's just a view, and the view looks back. Don't stand there."
+    - q: "Find anything odd besides the fountains on your lap?"
+      a: "Four hundred and twelve doors, three window rooms, and a copy room where the toner keeps filling itself. Same count every morning."
   barks:
     idle: ["Thirty-nine. Forty. Yep.", "Tape's peeling on the second window.", "Left at the copier. Always left."]
     hi: ["Stray.", "On patrol."]
@@ -94,12 +89,8 @@ omega-okafor:
   bye: "Go well. Go politely."
   walk: "Walk, then."
   ask:
-    - q: "Where am I?"
-      a: "My checkpoint. Around it, offices, more than anyone has counted. Past me is the stairwell down. Before me is everything you already walked through."
     - q: "How do I get out?"
       a: "If I knew that, my friend, I would be in Lagos eating my sister's rice. I know the way down. Down has a hotel. A hotel has a front door, no? I have not gone to see."
-    - q: "Ever hear the name Dina?"
-      a: "Many pass. I look at hands, not names. Ask Dace at the water counter. That man writes down everybody."
     - q: "Come with me. I could use the muscle."
       sk: speech 45
       do: recruit
@@ -137,14 +128,10 @@ omega-rhea:
     - q: "Can you patch me up?"
       do: heal
       a: "Yep. Hold this. Press. Harder than that, mate. There. Now a tablet, a drink, and out of my chair."
-    - q: "Where am I?"
-      a: "My clinic. Which is a photocopier room with a sheet over the copier. The rest is offices forever. I don't have time to be amazed by it."
-    - q: "How do I get out?"
-      a: "No idea, mate. I do the bit where you don't die of thirst on the way. Somebody else can do the map."
-    - q: "Ever hear the name Dina?"
-      a: "Didn't get a name. Had a woman in with feet blistered raw. Talked into a little recorder the whole time I worked. Asked what was downstairs. Could be yours."
     - q: "What's wrong with the fountains?"
       a: "Some of them make you thirsty. So you drink more. So you're thirstier. I've carried people away from those. Take the tablets."
+    - q: "What kind of injuries do you treat in this office?"
+      a: "Carpet burns, glass off the photocopiers, and folks coming in stiff from drinking bad fountain water."
     - q: "Do you ever slow down?"
       a: "Did once. Brisbane, park bench, quick nap. Woke up here. So no."
   barks:
@@ -168,12 +155,6 @@ l4-moss:
   bye: "If one rings near you, let it go three times first."
   walk: "Oh. All right."
   ask:
-    - q: "Where am I?"
-      a: "An office, dear. I worked in one for thirty years, I know one when I see it. This one just forgot to have a street outside."
-    - q: "How do I get out?"
-      a: "I'm waiting on the phone for that. One of these days it'll be somebody who knows. I'd hate to be out when they call."
-    - q: "Ever hear the name Dina?"
-      a: "The phone asked for her once. A man. 'Is Dina there?' Polite as you like. I said wrong number, dear. Then I wondered how you get a wrong number in here."
     - q: "What about the phone?"
       a: "It rings. Mostly nobody's there. Sometimes breathing. Once it was me, saying something I hadn't said yet."
       then:
@@ -183,6 +164,8 @@ l4-moss:
       a: "Long enough to put a plant on the desk. It's plastic. I water it anyway. It's doing very well."
     - q: "Who else lives around here?"
       a: "Gus talks. Penny sleeps. Bram's been leaving tomorrow for about a year. And there's a room with a garden in it. Don't go in the garden room, dear."
+    - q: "Anyone strange ever ask for someone on the line?"
+      a: "Once a polite man asked for a name I didn't know. I said wrong number, dear. Then I wondered how you get a wrong number in a building with no outside."
   barks:
     idle: ["Any minute now.", "Drink up, little plant.", "Hush. Was that a ring?"]
     hi: ["Oh. Hello, dear.", "Have a chair."]
@@ -204,12 +187,6 @@ l4-gus:
   bye: "Stay outta the window rooms, pal!"
   walk: "Aw, come on, I was mid story!"
   ask:
-    - q: "Where am I?"
-      a: "Pal, you're in the biggest office in the world. I walked four days one direction looking for the lobby. Found another break room. Worse chips."
-    - q: "How do I get out?"
-      a: "There's an EXIT sign by office thirty. Lit up and everything! I followed the arrows two days. Came out right here at my own machine. So that's a no. Or I walked it wrong."
-    - q: "Ever hear the name Dina?"
-      a: "Knew a Deena back in Quincy. Ran the deli. This ain't her, is it? No. Then no, pal, sorry. I'd remember, I talk to everybody."
     - q: "Want to come along?"
       sk: speech 25
       do: recruit
@@ -217,6 +194,8 @@ l4-gus:
       fail: "Love to, pal, but somebody's gotta watch the good machine."
     - q: "What's in the window rooms?"
       a: "I looked out one. One time. There's a street down there. People on it. Every one of them looking up at me. Same second. I'm not scared, I'm careful."
+    - q: "What's the trick to the snack machine?"
+      a: "Smack the left seam right below the coin return before you pull B-four. Gives you two bags. Three if the coil's feeling friendly."
     - q: "How'd you end up here?"
       a: "Dozed off in a break room in Quincy. Woke up in a break room that don't end. Took me a week to notice the difference."
   barks:
@@ -243,16 +222,12 @@ l4-penny:
     - q: "I feel awful. Can you help?"
       do: heal
       a: "Here. Take my blanket. Drink this. Lie down for a minute. Things are better after a minute. I've tested a lot of minutes."
-    - q: "Where am I?"
-      a: "Um. The office with the soft carpet? I went to bed at home and woke up under a desk here. I think I'm still a little bit in bed."
-    - q: "How do I get out?"
-      a: "I think you fall asleep the right way. That's how I got in. I try every night. So far I just wake up here with a sore neck."
-    - q: "Ever hear the name Dina?"
-      a: "Mm. No. But I sleep through most people. If she was quiet, I missed her. Sorry."
     - q: "Are those pajamas?"
       a: "Yeah. They're all I had on. The duck ones. If it had to be one pair forever, I'm glad it was the ducks."
     - q: "Do you miss home?"
       a: "Every day. I can't remember the way to my room anymore. I remember the ducks on the curtains, though."
+    - q: "Why sleep under a desk instead of a bed?"
+      a: "The ceiling lights never turn off out here. Under a desk it stays darker, and nobody steps on your knees."
   barks:
     idle: ["Mmh. Comfy.", "Just five more minutes.", "Quack. Hm. Nothing."]
     hi: ["Oh. Hi, um, you.", "Mm. Hello."]
@@ -274,12 +249,6 @@ l4-bram:
   bye: "Aye."
   walk: "Aye. Go on."
   ask:
-    - q: "Where am I?"
-      a: "Office. Too much of it. That's all I've needed to know."
-    - q: "How do I get out?"
-      a: "Not from here. Stairs go down to a hotel. Past the hotel, I'm told, there's a city, and in a city somebody always knows something. That's my road. When I take it."
-    - q: "Ever hear the name Dina?"
-      a: "Didn't ask her name. A woman drew me the way down on a napkin. Said come along. She went. I've still got the napkin."
     - q: "Come with me. Two's safer."
       sk: speech 40
       do: recruit
@@ -291,7 +260,9 @@ l4-bram:
       a: "Fair enough. Bit less, for you."
       fail: "No."
     - q: "When are you going?"
-      a: "Soon. Got the route. Got the boots. Short on nerve. It'll come."
+      a: "Soon. Got the route down on a napkin. Got the boots. Stairs go down to a hotel, and past that a city. Short on nerve, is all. It'll come."
+    - q: "Why insist on folks carrying water?"
+      a: "A man without water starts drinking from office fountains inside two days. Then I'm hauling him instead of watching my corners."
   barks:
     idle: ["Soon enough.", "Route. Boots. The other thing.", "Could do with a drink."]
     hi: ["Stranger.", "Any water on you?"]
@@ -313,12 +284,6 @@ tbd-quill:
   bye: "Bring me nothing. Good nothing."
   walk: "Typical customer."
   ask:
-    - q: "Where am I?"
-      a: "In my shop. Mind the display. Outside the shop? Offices. Full of staplers and chairs. Useful things. Dreadful."
-    - q: "How do I get out?"
-      a: "With a key that fits no lock. Think about it. Every lock in here opens onto more of here. So the door out wants the other sort of key. I have nine. None have worked. Yet."
-    - q: "Ever hear the name Dina?"
-      a: "She tried to sell me a map. A map! Maps are for using. I told her to come back when it was wrong. She laughed. I was not joking."
     - q: "Give me a better rate?"
       sk: barter 40
       do: discount
@@ -328,6 +293,8 @@ tbd-quill:
       a: "Useful things get used. Used things run out. Everything here runs out, customer. My things can't. They never started."
     - q: "What's your strangest piece?"
       a: "A doorknob. Warm. Always warm, like a hand just let go of it. No door attached. I'm in no hurry to find the door."
+    - q: "Have any of your keys ever fit anything?"
+      a: "Nine keys, and not one opens a filing cabinet or a broom closet. Thank goodness. The day one turns, I'll have to throw it out as hardware."
   barks:
     idle: ["Does nothing. Lovely.", "Still warm. Of course it is.", "No. No. Oh! No."]
     hi: ["Customer?", "Show me what you've got."]
@@ -348,12 +315,6 @@ tbd-nib:
   bye: "Bring shinies!"
   walk: "Hee. Bye."
   ask:
-    - q: "Where am I?"
-      a: "Nib's spot! Under the big desk. Hee. Oh, the whole place? Drawers. Thousands of drawers. Nobody locks them."
-    - q: "How do I get out?"
-      a: "Out? Hee. Why? Out has cops. In has drawers. Nib's staying."
-    - q: "Ever hear the name Dina?"
-      a: "Nib doesn't keep names. Names aren't shiny. Was she the one with the clicky talking box? Wouldn't trade it. Nib asked four times."
     - q: "Trade me something?"
       sk: barter 25
       do: discount
@@ -361,6 +322,8 @@ tbd-nib:
       fail: "Nope nope. Hee."
     - q: "What's in the bag?"
       a: "Stuff. Spoons. A watch that says eleven, always eleven. A tooth. Not Nib's. Hee. Leave the tooth alone."
+    - q: "Why hide under the big desk?"
+      a: "Drawers! Thousands of drawers, nobody locks them, nobody drops staplers on Nib's head down here. Hee."
   barks:
     idle: ["Shiny, shiny, mine.", "Hee hee.", "Eyes off the bag."]
     hi: ["Hee! Shiny-friend!", "Got a shiny?"]
@@ -384,17 +347,15 @@ amor-vell:
     - q: "Can you heal me?"
       do: heal
       a: "Kneel, child. One breath in. There. The hurt goes quiet. It always does. Do not come for this too often."
-    - q: "Where am I?"
-      a: "In the garden. Before us it was a room with desks. The bloom came up through the carpet where someone had prayed. We stayed to tend it."
-    - q: "How do I get out?"
-      a: "Why would a seed ask to leave the soil? Everyone who came to us wanted out, child. Then they stopped wanting. That is the only out I have seen work."
-    - q: "Ever hear the name Dina?"
-      a: "She stood where you are standing. She would not breathe with us. She asked what lay below, wrote my answer down, and thanked me. The bloom did not turn toward her. It was strange."
+    - q: "How did this garden take over an office?"
+      a: "Before us it was a room with desks. The bloom came up through the carpet where someone had prayed. We stayed to tend it."
     - q: "Will you trade with me?"
       sk: speech 40
       do: discount
       a: "You speak like one who could believe. The garden is generous to those. Take. Bring it something holy, one day."
       fail: "The garden does not trade with the unwilling."
+    - q: "What happens if someone fights the bloom?"
+      a: "Then the spores find them sooner or later. Better to kneel, breathe once, and leave politely before dusk."
   barks:
     idle: ["Breathe. Slowly.", "It grew a little today.", "Hush. It is listening."]
     hi: ["Child.", "Softly, now."]
@@ -417,12 +378,6 @@ amor-hask:
   bye: "It'll be here when you're ready, friend!"
   walk: "Oh. All right. It'll wait."
   ask:
-    - q: "Where am I?"
-      a: "The best room on the floor, friend! Everything else out there is desks. I had a desk for a year. Desks don't love you back."
-    - q: "How do I get out?"
-      a: "I looked for a year. Doors, vents, I even tried the ceiling. Then I found this room and I stopped looking. Best day of my life. So, honestly? Stop looking."
-    - q: "Ever hear the name Dina?"
-      a: "Oh! The one with the notebook? I told her all about the bloom and she wrote it down, friend. Nobody writes it down! Then she went downstairs. I thought she'd come back."
     - q: "What's so good about mold?"
       a: "It stays. Nothing stays in here, friend. People go, lights go, whole doors go. The bloom stays. It holds on to you. Don't you want that?"
       then:
@@ -430,6 +385,8 @@ amor-hask:
           a: "That's what I said! Word for word! Then it held me, and I wasn't scared. I wasn't a lot of things, after."
     - q: "Why did you join?"
       a: "A year alone in an office. Then Sister Vell knocked on my door. A knock, friend. I'd forgotten the sound."
+    - q: "Don't the camp folks across the hall try to clear this room?"
+      a: "They leave the carpet alone and we keep our doors shut. Plenty of offices for everyone, friend."
   barks:
     idle: ["It holds on to you.", "Has anybody told you about the bloom?", "So close. You're all so close."]
     hi: ["Friend!", "You're here!"]

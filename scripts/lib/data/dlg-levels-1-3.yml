@@ -1,7 +1,5 @@
 # Levels 1, 2, 2.1 and 3: who says what (scripts/lib/dialogue.js reads it; the format is described there).
-# Rewritten by hand, Nov 13, to design/story-spine.md: the player knows nothing, so no choice (q:) uses a word they
-# may not have heard. Everyone answers the three questions (where am I, how do I get out, the name Dina) their own way.
-# The Dina question has no condition field to hide behind, so it is worded to be safe before the name is learned.
+# Guides and trail contacts answer orientation/exit or Dina; specialists, guards and vendors talk their own trade.
 
 # ===== Level 1, the camp. Ale gives the word, Callum keeps the list =====
 meg-ale:
@@ -78,16 +76,14 @@ meg-ortiz:
     - q: "Can you patch me up?"
       do: heal
       a: "Bring the lamp here. First I clean it. Tell me if the fingers go numb. Do not be brave about it."
-    - q: "Where am I?"
-      a: "In my clinic. It is two cots and a lamp, but it is a clinic. Past that curtain is the camp. Past the camp, concrete. For the big answer ask Ale. She enjoys telling it."
-    - q: "How do I get out?"
-      a: "I am a nurse, patient, not a map. I can tell you this. Everyone I ever treated is still down here, or they are in Callum's book. I have not signed one discharge."
+    - q: "What injuries come through here most?"
+      a: "Hound bites, rusted concrete scrapes, and steam burns from the pipes below. Most folk wait too long to wash them out."
     - q: "My head's not right. What do I do?"
       sk: medicine 30
       a: "Sleep with a wall at your back. Drink before the thirst comes. When the humming gets inside, say your own name out loud. It sounds foolish. It works."
       fail: "First, do not tell people your head is not right. Second, drink this. Third, lie down."
-    - q: "Ever hear the name Dina?"
-      a: "Dina. Yes. I wrapped her hand. Burn, from a hot pipe, so she had already been below once. She did not rest it like I told her. She kept asking people about doors."
+    - q: "You look worn out. Anyone help you here?"
+      a: "Ale keeps folk off the floor, Callum keeps the soap and thread stocked. When three wounded roll in together, though, there is only me."
     - q: "How long have you been here?"
       a: "I filled two notebooks counting days, then I stopped. I was a nurse in Valencia. Now I stitch people under a lamp that buzzes. Same work. Worse coffee."
       then:
@@ -173,10 +169,8 @@ bntg-voss:
   bye: "Send your friends to me. Only the ones who pay."
   walk: "No manners. I will live."
   ask:
-    - q: "Where am I?"
-      a: "At the best blanket on this floor, friend. Also the only blanket. The soldiers call the floor Level 1. I call it a market with bad lighting."
-    - q: "How do I get out?"
-      a: "Out I do not sell. If I had out, I would be a rich man somewhere with a sky. But I sell what you need for the trip. Batteries, mostly."
+    - q: "What are you trading?"
+      a: "Batteries, wire, bandages, dry socks. Whatever the soldiers downstairs leave behind and whatever Ale won't touch. Show me chits or good scrap."
     - q: "What's B.N.T.G.?"
       a: "We trade. We carry things from where they sit to where they are wanted. The M.E.G. people count everything. We put a price on it."
     - q: "Ever hear the name Dina?"
@@ -220,8 +214,8 @@ surv-wren:
       a: "Am not. The floor's bumpy. Hollis says I twisted it. Hollis says tons of stuff."
     - q: "What's past all this?"
       a: "Pipes. Then more pipes. Then pipes that burn you. And a barred door with a three on it. It kind of breathes at night. I don't go there."
-    - q: "Ever hear the name Dina?"
-      a: "The tape lady? She talked into a little box the whole time, like it was a friend. She let me say hi into it. She went off toward the hot pipes. I told her not to."
+    - q: "How do you stand the noise down here?"
+      a: "You stop hearing the drip after a week. It's when the pipes go dead quiet that you start watching the dark."
     - q: "Want to come with me?"
       sk: speech 30
       do: recruit
@@ -259,8 +253,6 @@ surv-hollis:
     - q: "Can you fix me up?"
       do: heal
       a: "Let me see. Mm hm. I've seen worse. I've seen a good deal worse. Hold this here. There. Good as new. Well, good as secondhand."
-    - q: "Where am I?"
-      a: "Among friends, first of all. The rest is boiler pipe, far as anybody's walked. I worked power lines thirty years and I never saw plumbing with no building on the end of it. But here we sit."
     - q: "How do I get out?"
       a: "I don't rightly know, neighbor. I'll tell you what I hold onto. That radio picks up a woman singing. Singing comes from somewhere. Somewhere means there's a line to follow."
     - q: "What's the radio saying?"
@@ -303,10 +295,6 @@ surv-mags:
   bye: "Come back with more money."
   walk: "You'll be back, sweetheart."
   ask:
-    - q: "Where am I?"
-      a: "Mags's. Finest store between that boiler and that other boiler. You want the big picture, ask Hollis. I do retail."
-    - q: "How do I get out?"
-      a: "Honey, if there was an out I'd be selling tickets at the door. There's no out. There's just deeper, and a few spots that are nicer than others. This is one of the nicer ones. Sad, right?"
     - q: "What are you selling?"
       a: "Shells, tape, batteries, and a can opener I'm in love with. It all has a price. So do I, but honey, not on your budget."
     - q: "Bit steep, isn't it?"
@@ -314,8 +302,8 @@ surv-mags:
       do: discount
       a: "Ooh, look at you. Okay. A little off. That's for the face, not the argument."
       fail: "Steep's on purpose, honey. Keeps out the tourists."
-    - q: "Ever hear the name Dina?"
-      a: "The one with the tape recorder. Sure. Traded me a real nice wristwatch for rubber boots and didn't even argue. You only want rubber boots for one place, honey. The barred door."
+    - q: "Ever seen folks come back from that barred door?"
+      a: "Some. Half-limping and deaf in one ear from the buzz. A woman traded me a wristwatch for rubber boots once and never even came back for change."
     - q: "Where's all this from?"
       a: "Pockets of people who quit needing pockets. Oh, don't look at me like that. They're done with it. You're not."
     - q: "What do you charge for the barred door?"
@@ -347,12 +335,10 @@ l21-ned:
   bye: "Take a carton. Go on. Take two, do me a favor."
   walk: "Ayuh."
   ask:
-    - q: "Where am I?"
-      a: "Alef. It's a warehouse and some walk-in fridges, off the side of the pipes. Fella at the door calls it a base. It's a pantry with a guard."
-    - q: "How do I get out?"
-      a: "Door you came in. That's the one I know. If you mean out for good, bub, I gave that up and took up counting. Counting you can finish."
     - q: "Why so many crackers?"
       a: "Warehouse was full of them when we got here. Fridges were cold. Turns out a person can go a long while on crackers and fridge water. Wouldn't wish it on you."
+    - q: "Where does the water in Alef come from?"
+      a: "Condenser drip trays mostly. Tastes like copper and frost, but it keeps you on your feet when the pipes run dry."
     - q: "Need anything?"
       a: "Copper wire. Condenser's got a leak and the water tastes like a pocketful of change. Talk to me proper if you want the job."
     - q: "Cut me a deal?"
@@ -360,8 +346,8 @@ l21-ned:
       do: discount
       a: "Ayuh. Everybody gets a deal on saltines. You get one on the rest, too."
       fail: "It's crackers, bub. It can't get cheaper."
-    - q: "Ever hear the name Dina?"
-      a: "Can't say so. I know faces by what they take. Anybody who came through took saltines. So that's no help to you, is it."
+    - q: "Who else stays out in the cold rooms?"
+      a: "Just me and Goknar at the door now. Rest drifted back to the warm pipes when the saltine cartons started looking identical."
   barks:
     idle: ["Four thousand and eight. Nine.", "Condenser's spitting again.", "Anybody want a saltine. Anybody."]
     hi: ["Saltine?", "Hey, bub."]
@@ -396,8 +382,8 @@ l21-goknar:
       sk: survival 30
       a: "You see teeth in the dark and no face. Do not turn. Do not run. Step back slow until light is behind you."
       fail: "Stay inside Alef. That is the advice."
-    - q: "Ever hear the name Dina?"
-      a: "No names at this door. Only hands and faces. A woman went out to the Edges with a lamp and a recorder once. She came back, so I remember. Most do not."
+    - q: "How do you keep the lights from dying?"
+      a: "Spare bulbs from the back warehouse, heavy fuse wire, and checking the breaker before the hum changes."
   barks:
     idle: ["Lights steady.", "Scratching again.", "Clean the pistol. Then clean it again."]
     hi: ["Go in.", "You."]
@@ -432,8 +418,6 @@ gamma-reyes:
       fail: "Run fast and pray. That is the cowboy plan. You look like a cowboy."
     - q: "What's behind the gate?"
       a: "Walls, a scanner, hot food. People who will shoot a hound off your back. Down here that is a palace."
-    - q: "Ever hear the name Dina?"
-      a: "Dina. One night at the gate, months back. She had a hand-drawn map with doors marked on it. Good work, better than ours. She asked my patrol about a hotel. I told her that is a campfire story."
     - q: "Want another gun on patrol?"
       sk: speech 40
       do: recruit
@@ -441,6 +425,8 @@ gamma-reyes:
       fail: "Nothing personal. You would get the both of us killed."
     - q: "Where are you from?"
       a: "Monterrey. Twenty years in the army. I used to think a desert was the worst place there is. I miss the desert now."
+    - q: "How do hounds hunt in these halls?"
+      a: "By sound and voltage hum. If a junction box sparks, two come running inside a minute. Shoot low or put a wall between you."
   barks:
     idle: ["Generator four has that cough again.", "Lap done. Next lap.", "Hum is loud today."]
     hi: ["Civilian.", "You. Good."]
@@ -466,10 +452,6 @@ gamma-pell:
   bye: "Mind the wire on your way out. Don't touch it."
   walk: "The ledger shall note that."
   ask:
-    - q: "Where am I?"
-      a: "Stores, Base Gamma, third shelf from the door, standing on my clean floor. If you want it larger than that, Commander Moss has the maps. I have the receipts."
-    - q: "How do I get out?"
-      a: "There is no entry for 'out', Visitor. I have checked. If someone had found it, they would have needed supplies for the trip, and they would have signed for them."
     - q: "What's for trade?"
       a: "Wire, water, filters, shells, batteries. Every item counted. If it is not in the ledger, it does not exist, and you may not have it."
     - q: "A better price?"
@@ -477,8 +459,8 @@ gamma-pell:
       do: discount
       a: "Very well. You pay when you say you will. That is scarcer than bullets. Ten off."
       fail: "The prices are written down. That is why one writes them down."
-    - q: "Ever hear the name Dina?"
-      a: "One moment. D. Here. 'Dina, visitor. Six batteries, one roll of tape. Paid in full.' Lovely handwriting. Under destination she wrote 'the hotel'. I put a question mark beside it. I still would."
+    - q: "Ever get strange requests in the ledger?"
+      a: "A visitor signed for six batteries, one roll of tape, and wrote 'the hotel' under destination. Neat handwriting. I still keep a question mark beside it."
     - q: "Where's the wire going?"
       a: "Two crates come in, one goes out. Reyes blames moths. Moths do not sign for things. Somebody is signing for things."
   barks:
@@ -506,18 +488,14 @@ gamma-ito:
     - q: "Patch me up?"
       do: heal
       a: "Burn. Bruise. One bite. Be quiet. This one first. Now this. Done. Drink the tea. It is part of the treatment."
-    - q: "Where am I?"
-      a: "In the sick room of a base, inside a power station that powers nothing. That is the honest answer. The others will give you a number. The number does not help you sleep."
-    - q: "How do I get out?"
-      a: "I do not know. I know what happens to the ones who think about it all day. They stop eating, then they walk toward the big cables. So think about it a little. Then eat."
     - q: "What does the hum do?"
       a: "First your head hurts. Then you hum with it and do not notice. Then you go and stand by the big cables and you do not come back. If you hear yourself humming, come to me."
     - q: "Does anything help?"
       sk: medicine 35
       a: "Wax in the ears. Talk when you walk, even alone. Count things out loud. The hum does not like counting."
       fail: "Leaving this place helps. Do that."
-    - q: "Ever hear the name Dina?"
-      a: "Yes. She did not hum. She kept one earphone in, listening to her own voice on a tape. Clever. I asked what she recorded. She said every door she found, so the next person would not start from nothing."
+    - q: "What's in the tea?"
+      a: "Boiled water, pine bark from an old crate, and crushed mint someone found upstairs. It tastes bad so you remember you are still waking up."
   barks:
     idle: ["Water.", "Somebody is humming. Stop.", "Count it out loud. Good."]
     hi: ["Sit. Tea.", "Eyes. Show me."]
@@ -541,18 +519,14 @@ gamma-hask:
   bye: "Stay off the hoses."
   walk: "Yup."
   ask:
-    - q: "Where am I?"
-      a: "Gate. Base Gamma's behind it. I'm in front of it. That's about all I got."
-    - q: "How do I get out?"
-      a: "Beats me, buddy. If I knew, you think I'd be counting bolts?"
     - q: "Liquid pain?"
       a: "It's in the red hoses, all over the station. Burns you deep and doesn't quit. Every month some genius drinks it on a dare."
     - q: "Long shift?"
       a: "All of them. I count ceiling bolts. Four hundred and six. Last week I got four hundred and five."
     - q: "Anything get past this gate?"
       a: "One time. We don't bring it up. Duke brings it up. Don't listen to Duke."
-    - q: "Ever hear the name Dina?"
-      a: "Nope. Lot of people through here. Ask Vale at the scanner. She looks in everybody's bag and remembers all of it."
+    - q: "Wait. You lost a ceiling bolt?"
+      a: "Yeah, or the ceiling grew one. Either way I keep an eye on the corners now instead of just the door."
   barks:
     idle: ["Four hundred and six.", "Dull. The good kind.", "Hands off the hoses."]
     hi: ["Yup.", "Go ahead."]
@@ -574,16 +548,12 @@ gamma-vale:
   bye: "Go round the alarm on your way out. It's dead loud and I'm dead tired."
   walk: "That scan's not finished. Rude."
   ask:
-    - q: "Where am I?"
-      a: "In a doorway with a machine in it. Past me is Base Gamma, which is beds and stew. Behind you is the station, which is neither. So well done, you picked the right side."
-    - q: "How do I get out?"
-      a: "Of the frame? Step forward. Of the whole place? Ah, now. I've scanned a thousand bags and not one had a ticket home in it. I do check. Every time."
     - q: "What are you scanning for?"
       a: "Metal, mould, and anything that isn't you but says it is. The machine shrieks at all three. It shrieked at a sandwich once."
     - q: "Catch anything bad?"
       a: "A fella came through with a face a bit too smooth. The machine didn't shriek. It went silent. Silent's worse, trust me."
-    - q: "Ever hear the name Dina?"
-      a: "I'm awful with names. Bags, though. Tape recorder, a pile of tapes, a map drawn in biro, no weapon at all. That her? Came in from the station on her own. Not many do that with no weapon."
+    - q: "Find anything odd in folks' bags lately?"
+      a: "Tape recorder, stacks of blank cassettes, a map drawn in biro, no weapon at all. One woman packed lighter than a postman and walked out east anyway."
   barks:
     idle: ["Beep. Beep. Sandwich again.", "Next blip!", "Arms out, thanks."]
     hi: ["Ooh, blip.", "Next!"]
@@ -604,16 +574,12 @@ gamma-duke:
   bye: "I'll keep an eye on you. Friendly eye."
   walk: "Fine. I got a door to watch."
   ask:
-    - q: "Where am I?"
-      a: "Under the best shot in Base Gamma. Rest of it's hallways and hum, far as the glass can see. And I can see real far, ground floor."
-    - q: "How do I get out?"
-      a: "Easy. You find the door home, I'll cover you while you walk through it. Finding it's your half. I did my half already."
     - q: "Eighty yards? Really?"
       a: "Eighty-two. Dark. Hum in my ear. Best shot I ever made and every soul in here was asleep."
     - q: "Worst thing you've seen?"
       a: "Something walked up on two legs with Hask's face on. Hask was standing next to me at the time. I held fire. Still can't tell you if that was right."
-    - q: "Ever hear the name Dina?"
-      a: "Don't get names up here. Got a lady who walked out the east hall alone, no gun, looking at a map. I kept the glass on her till the corner. Nothing touched her. That one bugs me."
+    - q: "Why shoot from up on the catwalk?"
+      a: "Because a hound can't climb an iron ladder and my knees hate stairs. Down here, elevation is half your armour."
   barks:
     idle: ["Eighty-two yards.", "Nothing sneaks by Duke.", "No wind. Never any wind. Easy money."]
     hi: ["Ground floor!", "Hey now."]
@@ -636,10 +602,6 @@ gamma-marlo:
   bye: "Keep her oiled!"
   walk: "Alright, alright."
   ask:
-    - q: "Where am I?"
-      a: "Marlo's bench, mate. Only gunsmith in Base Gamma. Only gunsmith I know of anywhere, which makes me the best in the world. Lovely feeling."
-    - q: "How do I get out?"
-      a: "Couldn't tell you, mate. Not my trade. What I can do is make sure whatever's standing between you and the way out has a very bad day."
     - q: "What've you got?"
       a: "Rounds, parts, one revolver that's not for sale, one revolver that is. Spitting image of each other. That's the game."
     - q: "Do me a deal?"
@@ -649,8 +611,8 @@ gamma-marlo:
       fail: "It costs what it costs, mate. Springs don't grow on sofas. Well. They do. Still."
     - q: "Where'd you learn this?"
       a: "Grandad's shed, Croydon. Fixing lawnmowers. Now I fix things that drop hounds. He'd be chuffed. Then appalled. Then chuffed."
-    - q: "Ever hear the name Dina?"
-      a: "Dina? Don't think so. Hang on. Woman who wouldn't buy a gun? Offered her a cracking little pistol at cost and she said it'd only slow her down. Slow her down! I think about that."
+    - q: "Wait. A gun spring off a sofa?"
+      a: "Tempered wire's tempered wire, mate. Cut it down, anneal the curl with a lighter, and a broken pistol snaps back like it came off an assembly line."
   barks:
     idle: ["Shouldn't work. Does, though.", "Who's had my little screwdriver.", "Spring, spring, spring."]
     hi: ["Customer!", "Hands! Lovely."]
@@ -674,16 +636,12 @@ gamma-june:
     - q: "Got a drink? I'm in bad shape."
       do: heal
       a: "Here, love. Cold almond water and a bowl of stew. Don't ask what's in it. Eat. There you go, you've got your colour back."
-    - q: "Where am I?"
-      a: "June's. It's four stools and a pot, love, but it's the only bar I've heard of down here. The base is called Gamma. I never asked why. Sounds official, doesn't it?"
-    - q: "How do I get out?"
-      a: "I hear a new way out every week at this bar, love. None of the tellers ever went and used theirs. I don't think that means there isn't one. I think it means people are scared."
     - q: "Heard any good stories?"
       a: "A runner swore he found a door onto a beach. Sand, waves, all of it. Went to fetch his mate and came back to a wall. He drinks here every night, facing that way."
-    - q: "Ever hear the name Dina?"
-      a: "Oh, her! Lovely manners. Sat on that stool and asked every runner one thing. Had they heard of a hotel. They all had, love. A few floors down, real beds, they say. Not one had seen it."
     - q: "What's the best thing here?"
       a: "Someone saying thank you. You would not believe how few do."
+    - q: "Wait. You actually run a bar in here?"
+      a: "Four stools, a pot, and three shelves of almond water, love. Base Gamma would starve on dry rations if nobody warmed the water."
   barks:
     idle: ["Stew's on!", "Top up, anybody?", "Somebody give me good news."]
     hi: ["Hi, love!", "Sit down, sit down."]
@@ -705,16 +663,12 @@ gamma-tess:
   bye: "Do not catch it on a nail."
   walk: "Pff."
   ask:
-    - q: "Where am I?"
-      a: "In the one corner of this ugly station where things are made and not broken. The rest is grey halls. I do not look at the rest."
-    - q: "How do I get out?"
-      a: "I do not know, and I will say something terrible. I am not sure I want it. At home I sewed for an empty theatre. Here, what I sew keeps someone alive. Go ask a braver person."
     - q: "What do you make?"
       a: "Coats that stop teeth. Bags that do not split. All from what people leave behind them. Nothing wasted. Fashion has one rule, and that is it."
     - q: "Where'd you learn to sew?"
       a: "Lyon. A theatre. Costumes for operas with no audience. Now I have an audience. It is hounds."
-    - q: "Ever hear the name Dina?"
-      a: "Names, no. Coats, yes. A woman asked me for one inside pocket, this big, lined so it stays dry. For her tapes. She cared more for the tapes than for the coat. I respected it. A little."
+    - q: "Can you reinforce a pocket for dry gear?"
+      a: "Double wax, tight stitch, storm flap inside the lining. Keeps tapes and matches dry even if the ceiling leaks."
   barks:
     idle: ["This seam. Awful.", "My needle. Where is my needle.", "Wool. More wool. Always wool."]
     hi: ["Mm. Yes?", "That jacket again."]
@@ -735,18 +689,12 @@ gamma-bo:
   bye: "See you, friend!"
   walk: "Oh. Okay, bye!"
   ask:
-    - q: "Where am I?"
-      a: "Gamma! It's the good part. There's a gate and stew. Everything else out there is the bad part. That's how I split it up."
-    - q: "How do I get out?"
-      a: "Out of the tunnels, you turn left a lot. Out of here here? I don't know, friend. I looked for two weeks and all I found was stew. So I stayed with the stew."
     - q: "What happened in the tunnels?"
       a: "Nothing. Well. I ate a battery. Don't do that. And a voice knew my mum's name. That's it. Ask a different one."
     - q: "What's the pipe for?"
       a: "Bonking. And if you swing it just so, it whistles. Listen. Hear it? Whoo."
     - q: "Like it here?"
       a: "Stew! Walls! And nobody asks about the tunnels. Just you. You're alright, though."
-    - q: "Ever hear the name Dina?"
-      a: "Is she nice? I don't know her. I don't know lots of people. I know you now, though! That's one more."
   barks:
     idle: ["Whoo. Whoo. Hear the pipe?", "Is it stew time?", "Not thinking about tunnels. Nope."]
     hi: ["Hey hey, friend!", "Friend!"]
@@ -767,16 +715,12 @@ gamma-nell:
   bye: "Ta-ra, lovely! Keep that dry!"
   walk: "Oh. Right you are!"
   ask:
-    - q: "Where am I?"
-      a: "The sick room, lovely! Well, the hall outside it. I'm not allowed to do bandages in there till I stop dropping them. It's all part of Base Gamma."
-    - q: "How do I get out?"
-      a: "Ooh, I've a plan for that. I get good at this, I keep everybody alive, and one of them finds it and tells me. It's a slow plan. I think it's a good one, though."
     - q: "You work here?"
       a: "I hand Ito things and she says not that one. I'm improving, mind. She's down to twice a shift."
     - q: "Best part of the job?"
       a: "Somebody comes in grey and goes out pink. Pink's my favourite colour now."
-    - q: "Ever hear the name Dina?"
-      a: "Doesn't ring a bell, lovely, sorry. Ito would know. She remembers every single patient. She says she doesn't. She does."
+    - q: "How did you end up assisting Ito?"
+      a: "She patched my ribs when I first fell through and made me hold the lamp. Never handed the lamp back, so now I fetch bandages."
   barks:
     idle: ["Bandages, bandages, bandages.", "Not that one, Nell.", "Clean hands, clean table, clean everything."]
     hi: ["Hiya, lovely!", "You hurt?"]
@@ -797,14 +741,10 @@ gamma-pip:
   bye: "Bring news next time!"
   walk: "Aw, man."
   ask:
-    - q: "Where am I?"
-      a: "Level 3! Base Gamma, the workshop bit. Up from here's the pipes, then the big concrete one, then the yellow one. I drew it. It's a stack. I don't know what's under us yet."
-    - q: "How do I get out?"
-      a: "Okay, so. My idea. Radios work down here. Radio has to come from somewhere, right? So you don't look for a door. You look for where the signal's loudest. Nobody listens to me. I'm sixteen."
     - q: "What are you building?"
       a: "A radio that picks up other floors. I think. It picks up something. Last night it said stop listening, super clear. So I'm definitely not stopping."
-    - q: "Ever hear the name Dina?"
-      a: "The tape lady! She played me a tape of a song off the old guy's radio. She said it sounded like home. I'm trying to tune my set to it. She said if I find it, say hi."
+    - q: "Ever catch that woman singing on the radio?"
+      a: "The tape lady played me a recording of a song off the old guy's radio upstairs. She said it sounded like home. I'm trying to tune my set to it."
     - q: "How old are you?"
       a: "Sixteen. Probably. Nobody does birthdays. I did one on my own once. It was pretty sad, so I quit."
   barks:
@@ -827,16 +767,12 @@ gamma-otto:
   bye: "Ja. Goodbye."
   walk: "Okay."
   ask:
-    - q: "Where am I?"
-      a: "Loading floor. Base Gamma. Before this I was three years up in the pipes. Before that, Rotterdam. Each time I go down one. It is not the direction I wanted."
-    - q: "How do I get out?"
-      a: "I do not know. I know everything goes down. Crates, people, me. Maybe out is at the bottom. Maybe that is only a thing I tell myself."
     - q: "Been here long?"
       a: "Here, one year. In the pipes, three. Hollis fixed my leg two times. Mags sold me my own boots. I came down for the walls. They are good walls."
     - q: "What's the job?"
       a: "Crate in. Crate up. Crate down. Crate out. It is a good job. A crate does not surprise you."
-    - q: "Ever hear the name Dina?"
-      a: "No. I am sorry. I know crates."
+    - q: "You never get tired of hauling crates?"
+      a: "A crate goes where you put it. Nothing else down here behaves like that."
   barks:
     idle: ["Crate in. Crate out.", "Heavy. That is good.", "Use the legs. Not the back."]
     hi: ["Hello.", "Hm."]
@@ -856,14 +792,10 @@ gamma-ivy:
   bye: "Bye."
   walk: "..."
   ask:
-    - q: "Where am I?"
-      a: "Camera room. Nine screens. That's nine halls. I don't know what's past where the cameras stop."
-    - q: "How do I get out?"
-      a: "Not on my screens. I'd have seen it."
     - q: "What's on the screens?"
       a: "Halls. Moths. Hounds. A man on camera four who stands still for an hour. Only I see him. I quit telling people."
-    - q: "Ever hear the name Dina?"
-      a: "I don't get names. There was a woman on camera three. East hall. She looked up and waved at the lens. Nobody waves. I waved back. That was dumb. She couldn't see."
+    - q: "See anything strange pass by?"
+      a: "A woman on camera three looked straight up and waved at the lens. Nobody waves. I waved back, even though she couldn't see."
     - q: "Why the red jacket?"
       a: "So if I show up on a camera one day, they know it's me."
   barks:

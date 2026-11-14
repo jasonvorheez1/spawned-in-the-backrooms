@@ -1,5 +1,5 @@
 # Level 31, the Roller Rink. Recorded lines are keyed to the transcript.
-# Written to design/story-spine.md: the player knows nothing, each person answers the three questions their own way.
+# Coach handles orientation and exits at the skate counter; concessions, DJ booth, and regulars talk about the rink.
 
 l31-coach:
   hi: "Hey, champ. Come on in. Catch your breath, nobody here is on a clock. You skating or just having a look?"
@@ -9,13 +9,6 @@ l31-coach:
   bye: "Go easy out there. And hey. Don't stay too long."
   walk: "No hurry. I'll be right here."
   ask:
-    - q: "Where am I?"
-      a: "A roller rink, champ. Rink, snack bar, arcade, a little cinema up north. What it's attached to, I couldn't tell you. I walked in off a wet hallway and there was a counter with nobody behind it."
-    - q: "How do I get out?"
-      a: "Plywood door, south-west corner. Looks like somebody quit halfway through building it. Push and you're in the pipes and the steam. You're welcome back any time."
-      then:
-        - q: "I mean home."
-          a: "Ah. That one I don't have, champ. I've watched a lot of folks go out that plywood door looking for it. I hand them their shoes and I hope."
     - q: "Rent skates."
       a: "Five bucks a pair. Keep them as long as you're in the building. Give me a size and I'll take them off the wall."
     - q: "Free lesson?"
@@ -25,13 +18,18 @@ l31-coach:
           a: "Good. In shoes you slip on the wood, so lace up first. On skates, W pushes off. Then stop pushing and glide. Steer wide, this floor likes a big lazy turn. S is your brake. The gates are the gaps in the rail. You'll wobble. Everybody wobbles. Go wobble."
         - q: "Maybe later."
           a: "Hah. That's fine. Come find me if you change your mind."
+    - q: "Where am I?"
+      a: "A roller rink, champ. Rink, snack bar, arcade, a little cinema up north. What it's attached to, I couldn't tell you. I walked in off a wet hallway and there was a counter with nobody behind it."
+    - q: "How do I get out?"
+      a: "Plywood door, south-west corner. Looks like somebody quit halfway through building it. Push and you're in the pipes and the steam. You're welcome back any time."
+      then:
+        - q: "I mean home."
+          a: "Ah. That one I don't have, champ. I've watched a lot of folks go out that plywood door looking for it. I hand them their shoes and I hope."
     - q: "Tell me about this place."
       a: "It loops. Skate out one side and the rink hands you back in the other. Same songs, same lights. If your head gets loud, the cinema up north is dark and quiet. Nobody bothers you in there."
       then:
         - q: "How long have you been here?"
           a: "Long enough to know better. A place this easy will keep you if you let it. Skate a while, feel good, then go be where somebody needs you. I'm not kicking you out. I'm saying it because I like you."
-    - q: "Ever hear the name Dina?"
-      a: "Can't place it. Had a woman rent a pair once just to cross the floor faster. Asked me where every door went. Returned the skates, too. You remember the ones who return the skates."
   barks:
     idle: ["Knees bent. It's always the knees.", "All out of nines. Of course.", "This song again. I don't mind it."]
     hi: ["Hey, {u}.", "Good seeing you, {u}."]
@@ -48,18 +46,17 @@ l31-q-marlowe:
   bye: "Go make somebody rich. Me, if you can manage it."
   walk: "The table stays. So do I. It's in my contract."
   ask:
-    - q: "Where am I?"
-      a: "Prime retail, pal. Foot traffic, wheel traffic, one song, no competition. If you mean the big picture, my company sells the maps and I'm not cleared to give samples."
-    - q: "How do I get out?"
-      a: "Plywood door in the corner, free of charge. Getting out of the whole arrangement, pal, nobody's put that on a shelf. Believe me, I'd have a price on it by lunch."
     - q: "What's B.N.T.G.?"
       a: "The Backrooms Nomadic Trade Group. Traders. We set up a table wherever people end up. That first word is just what folks call all this. The rooms. Nobody picked it, it stuck."
     - q: "Why sell at a roller rink?"
       a: "Same reason we sell anywhere. People want things. In here they all want to be twelve again. I haven't worked out how to bottle that. Yet."
     - q: "Who's the one by the door?"
       a: "Dez. My associate. He stands there and frowns at things. Very good at it. Trained frowner."
-    - q: "Ever hear the name Dina?"
-      a: "No sale on record. There's talk of a woman going table to table asking after exits and buying nothing. I remember people who buy nothing. It hurts me personally."
+    - q: "Cut me a break on prices?"
+      sk: barter 35
+      do: discount
+      a: "Alright, pal. Just this table, and don't tell Guard One I softened."
+      fail: "Price is inked on the crate, pal."
   barks:
     idle: ["Batteries, almond water, a little hope.", "It's all legal somewhere.", "Music's free. For now."]
     hi: ["Hey, {u}. You buying?", "{u}. Talk to me."]
@@ -73,14 +70,12 @@ l31-q-dez:
   bye: "Yep."
   walk: "I don't go anywhere. That's the job."
   ask:
-    - q: "Where am I?"
-      a: "By a door. In a rink. I don't look further than that. Gets you in trouble."
-    - q: "How do I get out?"
-      a: "You're looking at it. Plywood. Goes to hot pipes. Further than that you'd have to pay Marlowe to guess, and he'd guess."
     - q: "Why stand by the door?"
       a: "Because when this goes bad, Marlowe wants a body between him and the one way out. I'm the body."
-    - q: "Ever hear the name Dina?"
-      a: "No. I see who goes through this door. They don't give names. I don't ask."
+    - q: "Where does that door actually go?"
+      a: "Hot pipes and steam. Past that, you'd have to pay Marlowe to guess, and he'd guess."
+    - q: "Get any trouble from the skaters?"
+      a: "They mostly glare from the rail. Keep your elbows in and nobody starts swinging."
   barks:
     idle: ["This song. Again.", "I don't skate. Don't ask.", "Smells like pizza and regret."]
     hi: ["Yep.", "{u}."]
@@ -93,16 +88,12 @@ l31-q-guard1:
   bye: "Mm."
   walk: "Good talk."
   ask:
-    - q: "Where am I?"
-      a: "Roller rink. Before this I worked a hotel, and before that a street with weather. Don't ask me how the three connect. I just showed up for the shift."
-    - q: "How do I get out?"
-      a: "Plywood door. Or the white one by the gift shop, if you like snow. Neither one's home. I count who goes out. I've never counted one back in saying they made it."
     - q: "What did you do before this?"
       a: "Counted stock at the hotel. Here I count who comes in and who leaves. It never adds up even."
     - q: "You like working for Marlowe?"
       a: "He pays on time and talks enough for two. Best job since the hotel."
-    - q: "Ever hear the name Dina?"
-      a: "Rings something. The hotel kept a guest book and I used to read it on nights. Could be in there. Could be I'm thinking of Dinah, room service. Ask at the hotel, not me."
+    - q: "Do many folks try both doors?"
+      a: "Plywood door takes you to hot pipes; white door by the gift shop goes out to snow. Neither puts anyone back on their own block."
   barks:
     idle: ["My feet hate this carpet.", "Twenty minutes, this song. I timed it.", "Nobody skates by the table. I notice things."]
     hi: ["Hey.", "{u}."]
@@ -122,16 +113,12 @@ l31-q-guard2:
   bye: "See ya, buddy."
   walk: "Okay then."
   ask:
-    - q: "Where am I?"
-      a: "The fun one! That's what I call it. I've been in the wet one and the dark one, buddy, and this one has hot dogs. Somebody told me they all have numbers. I never learned mine."
-    - q: "How do I get out?"
-      a: "Out of the rink, there's a plywood door. Out out? Marlowe says there's no such thing and to quit asking customers. So I quit. Mostly."
     - q: "Can you skate?"
       a: "I can stand on skates. Then me and the floor have a talk. The floor wins every time."
     - q: "The faceless ones bother you?"
       a: "They just watch the table. Not like customers do. Like it's in their living room. Which I guess it is."
-    - q: "Ever hear the name Dina?"
-      a: "Don't think so. Oh, wait, is that the exit lady? Guys on the supply run talk about a lady who asks everybody the way out. I figured they made her up to be nice."
+    - q: "Why take a guard shift inside a roller rink?"
+      a: "Because the wet tunnels smelled like rust and this place serves free foot-longs. Easiest contract I ever signed."
   barks:
     idle: ["I could eat a hot dog.", "Is it me, or did this song get longer?", "Nobody buys the batteries. Ever."]
     hi: ["Hey, {u}.", "Oh, hey."]
@@ -151,16 +138,12 @@ l31-dj:
   bye: "Okay. Skate good."
   walk: "The music's still going. It always is."
   ask:
-    - q: "Where am I?"
-      a: "The booth. You can see all of it from up here. The floor, the lights, everyone going round. That's all there is. I checked."
-    - q: "How do I get out?"
-      a: "There's a door that isn't finished. When someone opens it the song gets thin for a second. I don't like that. I don't know where they go."
     - q: "Can you change the record?"
       a: "I try. Every new record I put on plays this. I stopped minding. It's a good song."
     - q: "How long have you been the DJ?"
       a: "Since the lights came on. Someone had to. No one else wanted to sit still."
-    - q: "Ever hear the name Dina?"
-      a: "No one tells me names. People ask for songs. One lady asked for something from home. I played this. She cried a little, then she left."
+    - q: "Ever get an unusual song request?"
+      a: "One lady asked for something from home. I dropped the needle and it played this anyway. She cried a little, then she left."
   barks:
     idle: ["This one goes out to the couples.", "Everybody off the floor. I'm kidding.", "Okay. Same song. Once more."]
     hi: ["Hi.", "Hi, {u}."]
@@ -176,16 +159,12 @@ l31-q-face1:
   bye: "Bye. Have a good skate."
   walk: "Oh. Okay."
   ask:
-    - q: "Where am I?"
-      a: "Saturday. At the rink. It's always Saturday at the rink. My mom drops me off, I think. I don't remember the car."
-    - q: "How do I get out?"
-      a: "Why? The couples skate hasn't even happened. You wait out front when it's over and someone picks you up. It isn't over yet."
     - q: "What's your name?"
       a: "I don't remember. I remember my skate size. Seven. That seems more use."
     - q: "Do you like the music?"
       a: "I love it. It's the song from my first time here. It's the song from every time."
-    - q: "Ever hear the name Dina?"
-      a: "Is she your couple? If she comes in I'll tell her you're here. I'm good at waiting for people."
+    - q: "Why wait so hard for the couples skate?"
+      a: "It's always right after this song, my mom says. She dropped me off out front, I think, so I keep waiting by the floor."
   barks:
     idle: ["When's the couples skate?", "I like this bit.", "The lights are pretty tonight."]
     hi: ["Hi.", "Oh. Hi."]
@@ -202,16 +181,12 @@ l31-q-face2:
   bye: "Later."
   walk: "Rude. Kinda cool, though."
   ask:
-    - q: "Where am I?"
-      a: "The rink, dude. Best floor anywhere. I haven't been anywhere. Still the best."
-    - q: "How do I get out?"
-      a: "Skate at the wall real fast. Kidding, you just come out the other side. There's a busted door in the corner. I'm not allowed. I think. Nobody said. It just feels like not allowed."
     - q: "How long have you practiced?"
       a: "Since I got here. I'm really good at falling now. Like, pro level."
     - q: "Who's in charge here?"
       a: "Coach, sort of. And the DJ. And the song. Mostly the song."
-    - q: "Ever hear the name Dina?"
-      a: "Nah. Is she good? Can she go backwards? Then nah."
+    - q: "Watch out for the traders over there?"
+      a: "They take up half the corner and never buy skates. Still, nobody argues with the guy by the exit door."
   barks:
     idle: ["Backwards. Backwards.", "Okay, that one counts.", "Who put a rail there?"]
     hi: ["Yo.", "Hey, {u}."]
@@ -228,14 +203,12 @@ l31-q-face3:
   bye: "Okay. Watch the lights."
   walk: "Fine."
   ask:
-    - q: "Where am I?"
-      a: "Under the pink light. Two steps left is the blue one. That's where you want to be later."
-    - q: "How do I get out?"
-      a: "I tried the plywood door once. The music went quiet. I didn't like it, so I came back in. I wouldn't."
     - q: "How do you know it's the slow skate?"
       a: "The lights go blue and everybody holds hands. Well. Everybody who's here. That's me."
-    - q: "Ever hear the name Dina?"
-      a: "Shh. No. Someone stood in your spot once and asked a lot of questions over the good part. Maybe her."
+    - q: "Why stand right under the pink lamp?"
+      a: "Two steps left is the blue one. You have to save your spot early or you miss the change."
+    - q: "Ever look through that plywood door?"
+      a: "Once. The music went quiet. I didn't like it, so I came back in."
   barks:
     idle: ["Blue next. I think blue is next.", "Hm. Pink again.", "Shh. Listen."]
     hi: ["Hi.", "Shh. Hi."]

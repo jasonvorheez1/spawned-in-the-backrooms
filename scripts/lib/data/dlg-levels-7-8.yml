@@ -1,6 +1,5 @@
 # Level 7 (Outpost Seawatch, Fort Surrender) and Level 8 (the 9th Road camp, the Lightless). Written by hand.
-# Rewritten Nov 13 to design/story-spine.md: the player knows nothing, everyone can be asked the three questions,
-# nobody knows more than their life explains, and each person has their own word for the player.
+# Camp guides answer orientation/exit; cultists, watchmen and specialists ask and answer from their own lives.
 
 l7-vance:
   hi: "Mind the wet boards, landsman. Name's Vance. I keep this hut and that screen. See the big smudge on it? That's why nobody swims."
@@ -30,8 +29,6 @@ l7-vance:
       fail: "Diving gear isn't cheap. Neither is drowning."
     - q: "What's that singing?"
       a: "The fort across the water. Every night. Don't listen long. Brother Jude started out just listening."
-    - q: "Ever hear the name Dina?"
-      a: "Not in my log, and I log everyone. Mind, I only log who lands here. People hunting for somebody tend to end up in the city. Somebody there keeps a radio, I hear."
   barks:
     idle: ["Ping. Ping. There's the big one.", "Tiny's restless tonight.", "Kettle. Where's my kettle."]
     hi: ["Aye, landsman.", "Mind the boards."]
@@ -54,23 +51,20 @@ l7-jude:
   bye: "The tide comes for us all. Gently, I hope."
   walk: "The water will wait for you."
   ask:
-    - q: "Where am I?"
-      a: "At the surface, child. Everyone asks where. The better question is how deep. We call our house Fort Surrender. The rest is water."
-    - q: "How do I get out?"
-      a: "Down. The sea is a door. Everyone you meet will tell you to climb, and none of them have left, have they?"
-      then:
-        - q: "That sounds like drowning."
-          a: "Everything sounds like drowning at first."
+    - q: "Why call this Fort Surrender?"
+      a: "Because every person here washed up trying to hold onto a shore that wasn't there. You surrender to the water, and the fighting stops."
     - q: "What do you believe?"
       a: "That fear is the only thing holding the door shut. There is the daylight water, then the twilight, then the midnight. We go down. We are welcomed."
       then:
         - q: "Welcomed by what?"
           a: "By it. It turns beneath us. It has never harmed one who went willingly. The unwilling I cannot speak for."
+        - q: "Sounds like drowning."
+          a: "Everything sounds like drowning at first. Everyone climbs, and none of them have left, have they?"
+    - q: "Why do you all sing at night?"
+      a: "To answer the turning below the rock. You crossed the water and still haven't heard it? Sit by the wall at dusk. You will."
     - q: "I need rest. Can you help?"
       do: heal
       a: "Lie here. Hear the swell. Breathe when it breathes. There. You have been holding your breath for weeks."
-    - q: "Ever hear the name Dina?"
-      a: "We leave our names on the shore, child. If she came to us she is not Dina now. If she did not, she is still running. I hope someone is kind to her."
   barks:
     idle: ["Listen.", "It turns. It always turns.", "Daylight. Twilight. Midnight."]
     hi: ["Peace, child.", "Be welcome."]
@@ -92,21 +86,17 @@ l7-mara:
   bye: "Don't fall in."
   walk: "Yep."
   ask:
-    - q: "Where am I?"
-      a: "Fort Surrender. Wardrobes and tar on a rock, ocean every direction. Folks across the water have a number for it. I've got chores."
-    - q: "How do I get out?"
-      a: "Couldn't tell you, bub. I rowed two days once looking for a coast. Came back to the same rock from the other side. So I built a still instead."
     - q: "What's for trade?"
       sk: barter 35
       do: discount
       a: "Fair. You're no believer and no fool. Good price."
       fail: "Price is the price. Copper's hard to come by out here."
+    - q: "Any coast out beyond this rock?"
+      a: "Couldn't tell you, bub. I rowed two days once looking for a coast. Came back to the same rock from the other side. So I built a still instead."
     - q: "You don't believe what he preaches?"
       a: "I believe in walls, tar and fresh water. If that thing down there wanted us, it'd have us. Doesn't mean I go jumping in."
     - q: "How does the still work?"
       a: "Seawater in, fire under, copper coil, clean drops out the end. All day for one bucket. Every drop's earned."
-    - q: "Ever hear the name Dina?"
-      a: "Nope. Traded with a woman once who paid in pencils and wouldn't sit down. Kept asking which way the boats go. Never gave a name. Didn't stay for the singing either. Smart."
   barks:
     idle: ["More tar. Always more tar.", "Drip. Drip. Come on.", "Jude, you're in my light."]
     hi: ["Hey, bub.", "Trading?"]
@@ -127,14 +117,12 @@ l7-ezra:
   bye: "Eyes on the water."
   walk: "Mm."
   ask:
-    - q: "Where am I?"
-      a: "The wall. Behind me, the fort. In front, water. I don't look behind me much."
-    - q: "How do I get out?"
-      a: "I watch what comes in. Nobody ever asked me to watch what goes out. Never seen it, anyway."
     - q: "What are you watching for?"
       a: "Lights under the water. When they come close we light the brazier and sing. Jude says it's a welcome. I say it's a warning."
-    - q: "Ever hear the name Dina?"
-      a: "No. I know faces off a boat. Not names."
+    - q: "Seen any boats or ships out there?"
+      a: "Once in a while, driftwood and wardrobe doors. Never a hull with a living hand on it."
+    - q: "Don't you get tired standing here alone?"
+      a: "Better than listening behind me. The fort's safe enough by daylight, so long as somebody keeps eyes on the dark side of the tide."
   barks:
     idle: ["Nothing.", "Something.", "Lights. No. Not yet."]
     hi: ["Who goes.", "Oh. Walker."]
@@ -154,15 +142,13 @@ l7-ines:
   bye: "Watch your feet."
   walk: "Fine. Slowly, though."
   ask:
-    - q: "Where am I?"
-      a: "Standing a foot from my pit, which is the part that matters. Past that, it's the fort. Past that, sea. I've never needed more map than that."
-    - q: "How do I get out?"
-      a: "Of the tar? You don't. Of here? There was a boat, and Mara's got it under a tarp. Where a boat goes from here, nobody's come back to say."
     - q: "What's the tar for?"
       a: "Everything. Walls, roof, boats, cuts. We haul furniture out of the sea and it comes up rotten. Tar holds it. The whole fort is wardrobes and tar."
       then:
         - q: "Where does it come from?"
           a: "The pit. It rises a little every night. Jude says the sea gives it. I say it's coming up from somewhere, and I'd like to know where before it stops."
+    - q: "Why's there a boat under that tarp?"
+      a: "Mara hauled it ashore and caulked it twice. Nobody's taken it far since the last two rowers didn't bring back any good news."
     - q: "You don't sound like a believer."
       a: "I believe the pit's hot and the wall needs patching. Jude can do the singing. Somebody has to do the work."
     - q: "Can you patch me up?"
@@ -170,8 +156,6 @@ l7-ines:
       do: heal
       a: "Hold still. Bit of tar on the cut, cloth over it. Stings a minute, then it seals. Don't pick."
       fail: "You'd only pick at it. Ask Jude."
-    - q: "Ever hear the name Dina?"
-      a: "No. Somebody scratched a D in my skimming pole once. I blamed Tobit. He cried. So probably not him."
   barks:
     idle: ["Skim it. Skim it again.", "Hot tonight.", "Need more rope."]
     hi: ["Watch your feet, boots.", "Mm. Hello."]
@@ -193,20 +177,16 @@ l7-tobit:
   bye: "Don't turn your back on the sea."
   walk: "Stay close. No. Closer."
   ask:
-    - q: "Where am I?"
-      a: "You don't know? You crossed all that water and you don't know? That's exactly what one of them would say. It's the fort. The fort! Don't ask me again."
-    - q: "How do I get out?"
-      a: "Why? Who's asking? ...There's no out. I checked. I checked the whole wall twice. There's in, and there's under."
     - q: "Why so jumpy?"
       a: "Because I've seen the lights come right up under the pier. Ezra watches. I listen. You can hear them. Like something knocking on the bottom of a boat."
     - q: "What's the wrench for?"
       a: "Fixing things. And hitting things that climb the wall at night. Lately it's mostly the second one."
+    - q: "Why stay here if the knocking scares you?"
+      a: "Because I checked the whole wall twice. There's only out into the water or under it, and at least here the boards dry by noon."
     - q: "Can I come through?"
       sk: speech 40
       a: "Fine. You don't smell like the deep. Yet. Keep to the boards, don't touch the brazier, don't talk to Jude for long."
       fail: "No. Maybe. Ask Mara. She decides who's trouble."
-    - q: "Ever hear the name Dina?"
-      a: "Is that who sent you? No. No, I don't know any Dina. If I did I wouldn't say. I don't, though. Stop looking at me."
   barks:
     idle: ["Knocking. You hear it?", "Count them. Count them again.", "Not tonight. Not tonight."]
     hi: ["Stop. Oh. You.", "Hands!"]
@@ -243,8 +223,6 @@ l8-hobb:
       do: discount
       a: "Go on, then. You've been decent to the girl. Bit off."
       fail: "Price is lamps and time, butty. No."
-    - q: "Ever hear the name Dina?"
-      a: "Can't say I have. I knew a Dinah in Swansea, kept pigeons. Not her, I shouldn't think. Ask the trader. She remembers every face that owes her."
   barks:
     idle: ["Fire's low.", "Carla, stir the pot, love.", "One lamp is four hours. Count them."]
     hi: ["Sit, butty.", "Get warm."]
@@ -267,12 +245,10 @@ l8-wen:
   bye: "Follow the blue ones."
   walk: "Rude."
   ask:
-    - q: "Where am I?"
-      a: "My shop. Free answer. The long answer is a cave with a road in it, and that one's also free because it's useless."
-    - q: "How do I get out?"
-      a: "If I knew that I'd be selling tickets, not mushrooms. Blue lamps take you back to camp. That's as far as my business goes."
     - q: "What's for sale?"
       a: "Spider silk, strong as wire. Cave caps, glow for a week. Tar-stone, burns slow. All fair. Mostly fair."
+    - q: "Where do those blue lamps lead?"
+      a: "Back to Hobb's fire. Beyond the last one you're buying your own light from me, customer."
     - q: "Cheaper?"
       sk: barter 40
       do: discount
@@ -280,8 +256,6 @@ l8-wen:
       fail: "Nope. Not today."
     - q: "What makes the silk?"
       a: "Spiders. Big ones, and one very big one. The silk's getting thicker and the webs are higher up the walls. Either she's growing or she's getting ideas."
-    - q: "Ever hear the name Dina?"
-      a: "Names are free so I don't keep them. A woman came through with a tape recorder, though. Bought six caps, asked where the road ends. I said ask someone who's been. She laughed. Paid in full."
   barks:
     idle: ["Silk, caps, stone.", "Who moved my lamps?", "Cash only. Yes, still."]
     hi: ["Buying?", "Hey, customer."]
@@ -303,10 +277,10 @@ l8-ivo:
   bye: "Mark your turns!"
   walk: "Oh."
   ask:
-    - q: "Where am I?"
+    - q: "How did Harmouth Society end up here?"
       a: "A limestone system, I thought. We came in by rope at Harmouth on a Sunday. Then the rope was g-gone and there was a road. So. Not Harmouth. I am still working on it."
-    - q: "How do I get out?"
-      a: "By survey! One maps until one finds the entrance. That is the method. I have four hundred pages and no entrance. The method is sound. P-probably."
+    - q: "Ever find an entrance on your survey?"
+      a: "Not yet. One maps until one finds the entrance. That is the method. I have four hundred pages and no entrance. The method is sound. P-probably."
     - q: "Where's your team?"
       a: "Dell drowned in the flooded cavern. I keep her notebook. The others went on down the road and did not write back. I am still writing to them."
     - q: "Who built the road?"
@@ -338,19 +312,15 @@ l8-marit:
   bye: "Keep the lamp on."
   walk: "Hm."
   ask:
-    - q: "Where am I?"
-      a: "My tent. Outside the tent, a camp. Outside the camp, dark. You want more than that, ask the one with the notebooks. He will talk until your lamp dies."
-    - q: "How do I get out?"
-      a: "I stopped asking. It made the days longer. Now I count bandages. Bandages run out. That at least is honest."
     - q: "Patch me up?"
       do: heal
       a: "Spider. Hold still. It burns. Good, it should. There. Do not scratch."
     - q: "You know the ones who sing?"
       a: "One. Lull. A medic, like me. Good hands. She went into the dark to fetch a child and came back singing. Now she asks me to put my lamp out."
+    - q: "How do you treat cave blindness or smoke lung?"
+      a: "Clean air from the draught tunnels and damp linen over the eyes. Half the job down here is keeping the grease off people's bandages."
     - q: "How do you sleep down here?"
       a: "Sitting up. Lamp on. One eye. You get used to it. No. You do not."
-    - q: "Ever hear the name Dina?"
-      a: "I treat arms and legs. They do not come with names. One woman, I asked her to rest two days. She left in two hours. That kind are always looking for someone."
   barks:
     idle: ["Bites. More bites.", "Lamp is on.", "Lull? No. Nothing."]
     hi: ["Sit.", "Hm."]
@@ -371,19 +341,15 @@ l8-carla-kid:
   bye: "Bye! Don't let the singers sing at you!"
   walk: "Oh. Bye!"
   ask:
-    - q: "Where am I?"
-      a: "At the soup. That's the fire, that's Hobb, that's the road. Don't you know where you are? I always know where I am. I'm here."
-    - q: "How do I get out?"
-      a: "Mum went down the road to find out. She's coming back to tell us. So you can wait here if you want. Waiting is three Backbucks. I'm joking. It's free."
     - q: "Can I have some soup?"
       do: heal
       a: "Here. Blow on it, it's hot. Is it good? It's good. Hobb says it's good. Three Backbucks, but you can pay later. Hobb says don't say that."
+    - q: "Why does soup cost three Backbucks?"
+      a: "Hobb says four is greedy and two won't buy lamp oil. Three is easy to count on fingers too."
     - q: "You're not scared of spiders?"
       a: "No. They're just big bugs. The singing's scary. The singing knows my name. Hobb says it doesn't. It does."
     - q: "Where's your mum?"
       a: "Down the road. She's coming back. Hobb says so too. He says it slower every time."
-    - q: "Ever hear the name Dina?"
-      a: "No. Is she lost? I can ask Mum when she's back. Mum's seen the whole road by now."
   barks:
     idle: ["Soup! Three Backbucks!", "Stir, stir, stir.", "Not scared. Not scared."]
     hi: ["Hi!", "Soup?"]
@@ -401,12 +367,12 @@ l8x-choir-1:
   hi: "Light! A light in the house of the dark! Put it out, light-bearer. Put it out and sing."
   bye: "Go. Come back without it."
   ask:
-    - q: "Where am I?"
-      a: "In the dark, light-bearer, where everyone is. You only carry that so you can pretend otherwise."
-    - q: "How do I get out?"
-      a: "Out is a thing eyes made up. Put the light down and there is no in or out. Only the song."
-    - q: "Ever hear the name Dina?"
-      a: "We sing no names. Names are small lights. We put those out first."
+    - q: "Why do you hate lamps so much?"
+      a: "Because flame makes edges and fear lives in edges. Put the light down and the stone breathes with you."
+    - q: "What is it you're all singing?"
+      a: "The only song with no start and no end. Give up the flame, light-bearer, and your throat already knows the note."
+    - q: "Did you used to be from the camp?"
+      a: "We sing no old names. Names are small lights. We put those out first."
   barks:
     idle: ["Out, out, little candle...", "Hold no light, hold no light...", "Mmmmmm."]
     hi: ["Light-bearer...", "Put it out."]
@@ -421,12 +387,12 @@ l8x-choir-2:
   hi: "Oh. Hello, little one. That light must be so heavy. Wouldn't it be easier to set it down? Stay. Stay with us."
   bye: "Come back without the light, little one."
   ask:
-    - q: "Where am I?"
-      a: "Somewhere safe, little one. Shh. It only looks frightening because you keep looking."
-    - q: "How do I get out?"
-      a: "Oh, you don't want out. You're tired. I can always tell. I used to check for fever just like this. Hold still."
-    - q: "Ever hear the name Dina?"
-      a: "Is she little? I went in for a little one once. I found her. I think I found her. Hush now."
+    - q: "Are you Lull? Marit sent word."
+      a: "Shh. Marit still holds that bright hot lamp. Tell her to set it down and come rest her hands."
+    - q: "You aren't hungry or cold out here?"
+      a: "No, little one. It only looks frightening because you keep looking. Close your eyes and let the dark check your fever."
+    - q: "Did you find the child you went in for?"
+      a: "I went in for a little one once. I found her. I think I found her. Hush now."
   barks:
     idle: ["Hush now...", "Stay, little one...", "Marit? Is that you?"]
     hi: ["Hello, little one.", "Set it down."]
@@ -441,11 +407,11 @@ l8x-choir-3:
   hi: "...Light."
   bye: "...Go."
   ask:
-    - q: "Where am I?"
+    - q: "Can you still talk?"
       a: "...Dark."
-    - q: "How do I get out?"
-      a: "...No."
-    - q: "Ever hear the name Dina?"
+    - q: "Where did the others go?"
+      a: "...Deep."
+    - q: "Wait. Who were you before?"
       a: "...Hm. ...No."
   barks:
     idle: ["...", "...Dark.", "...Hm."]
@@ -461,12 +427,12 @@ l8x-tar-1:
   hi: "Eyes. You still use eyes. Look at mine. Black. Don't need them. Drink from the pit and you won't either."
   bye: "Come back thirsty, Eyes."
   ask:
-    - q: "Where am I?"
-      a: "At the pit, Eyes. Best seat there is. You'd know it if you'd stop looking and start drinking."
-    - q: "How do I get out?"
-      a: "Hah. I got out. Got out of needing to. One cup. Black teeth, clear mind."
-    - q: "Ever hear the name Dina?"
-      a: "Did she drink? No? Then she's nobody."
+    - q: "What did drinking from the pit do to you?"
+      a: "Took away the blinking. Best trade I ever made. One cup, black teeth, clear mind."
+    - q: "Why aren't your eyes scarred over?"
+      a: "Because I stopped looking and started drinking. You'd do the same if you tasted the bottom."
+    - q: "Who dug this pit?"
+      a: "Did somebody dig the sea, Eyes? It sits where it sits and waits for the thirsty."
   barks:
     idle: ["Drink.", "Black teeth, clear mind.", "Hah."]
     hi: ["Eyes.", "Thirsty?"]
@@ -481,12 +447,12 @@ l8x-tar-2:
   hi: "Shh! Don't step there! That's my sister! In the tar! See her hand? You see it? Don't you touch her!"
   bye: "Don't tell them I talked to you!"
   ask:
-    - q: "Where am I?"
-      a: "On my family! You're standing on my family! Left foot. LEFT foot. There. Hee. Now you're only on my uncle."
-    - q: "How do I get out?"
-      a: "Shh! They hear that word. Nobody leaves, they all just lie down. See? All lying down. Hee hee."
-    - q: "Ever hear the name Dina?"
-      a: "Is she in the tar? I'll ask. Sister? Sister? ...She says no. She says go away."
+    - q: "Whose hands are those in the tar?"
+      a: "My family! Left foot. LEFT foot, don't press there. Now you're only on my uncle."
+    - q: "Can your sister still hear you?"
+      a: "Sister? Sister? ...She says yes. She says stop staring at her fingers."
+    - q: "Why don't you pull them out?"
+      a: "Shh! They hear that word. Nobody pulls anyone up here, they all just lie down. See? All lying down. Hee hee."
   barks:
     idle: ["Sister? Sister?", "Hee hee hee.", "They're watching. Always watching."]
     hi: ["Who's that? WHO'S THAT?", "Hee."]
@@ -501,12 +467,12 @@ l8x-tar-3:
   hi: "Ha! Look at it. Look at its little light. Blackjaw, look. Can I? Can I?"
   bye: "Run along, little light."
   ask:
-    - q: "Where am I?"
-      a: "Ha! It doesn't know! Blackjaw, it doesn't know! You're in OUR bit. That's where."
-    - q: "How do I get out?"
-      a: "Fast. Ha! That's how. Fast, before Blackjaw says yes."
-    - q: "Ever hear the name Dina?"
-      a: "Is that your name? Ha. Stupid name. Mine's better. I forgot it."
+    - q: "Who's Blackjaw?"
+      a: "Ha! He's the biggest throat in OUR bit. If Blackjaw says yes, you don't keep your boots."
+    - q: "What happens if I just run?"
+      a: "Fast. Ha! Better be fast, before Blackjaw says yes."
+    - q: "What did they call you before the pit?"
+      a: "Ha. Stupid question. Mine's a better name now. I forgot the old one."
   barks:
     idle: ["Can I? Can I?", "Ha.", "Blackjaw says wait."]
     hi: ["Ha! Look!", "Little light."]

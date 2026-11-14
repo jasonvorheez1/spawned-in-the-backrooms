@@ -1,7 +1,6 @@
 # Level 10 (Outpost Bountiful), Level 11 (the city), Level 0's B.N.T.G. man, Level 6.1 (the Snackrooms) and the Bonus Room.
-# Rewritten to design/story-spine.md, Nov 13. Everyone answers the three questions in their own way.
 # In the city the soldier on the radio set holds trail:radio and the apple seller holds trail:pass.
-# Other city people carry do: "trail:name" on the Dina question so asking them teaches nothing new.
+# Other locals keep questions to their own beat, camp, or trade.
 
 l10-meg-cooper:
   hi: "Well, look what the rain washed in. Get under the roof, hon. Bread's warm and nobody's counting slices."
@@ -25,8 +24,6 @@ l10-meg-cooper:
       a: "Bountiful. Fields, a barn, a lake, and rain that never quits. The uniforms call it by a number. I call it the farm."
     - q: "How do I get out?"
       a: "Out of the rain? That door. Out of all of it? Hon, if I knew, I'd have gone home and checked on my own oven."
-    - q: "Ever hear the name Dina?"
-      a: "Dina. Could be I fed her. I feed everybody and I don't ask names. Did she like the crust? I'd remember that."
   barks:
     idle: ["Rain's good for the crop.", "Oven's hot.", "Who hasn't eaten?"]
     hi: ["Hey there, hon.", "Come in, come in."]
@@ -55,12 +52,10 @@ l10-meg-hale:
       do: discount
       a: "You've never shorted me. That's worth a margin. A small one."
       fail: "The scale doesn't do favours. I learned from the scale."
-    - q: "Where am I?"
-      a: "Outpost Bountiful, stores shed. Past that I don't speculate. I have a book of what's here and a book of what's gone. Neither has a map."
-    - q: "How do I get out?"
-      a: "Not in my books. Bread goes out. Carriers go out. None of it's come back stamped 'home'."
-    - q: "Ever hear the name Dina?"
-      a: "I'd need a date and a load. I log weight, carrier. A name with no weight beside it means nothing to me."
+    - q: "Seen anyone skulking by the grain bins?"
+      a: "Never a figure. Just wet footprints ending halfway to the shed door and sacks nine pounds lighter by morning."
+    - q: "Where does all the bread go?"
+      a: "Packers carry loaves up to the Snackrooms or east toward the city docks. Mostly what walks out of here doesn't come back on a ledger."
   barks:
     idle: ["Eleven loaves.", "One in nine. Every time.", "Short again."]
     hi: ["On the scale.", "Carrier."]
@@ -91,12 +86,10 @@ l10-meg-wren:
       do: recruit
       a: "Past the fields? Heck yes. Hold this. No, the other way up."
       fail: "Harvest's on. Ask me when it's off. It's never off."
-    - q: "Where am I?"
-      a: "The farm! It's got a number too but I mix them up. All I know is I fell through a floor at work and landed in wheat."
-    - q: "How do I get out?"
-      a: "There's a hole in the lake that goes somewhere wetter. And a poster on the barn you shouldn't lean on. Neither one's home though. I checked one of them."
-    - q: "Ever hear the name Dina?"
-      a: "Ooh. Maybe? Somebody asked me a hundred questions about that barn poster once. Didn't help with a single row. Might've been her."
+    - q: "What's up with that barn poster?"
+      a: "Do not lean on it. Somebody went right through the paper once and all we heard was gulls. Nobody else volunteered to check."
+    - q: "Anything down in the lake?"
+      a: "Worms under the mud, mostly. Old well pipe sticks up near the west reeds too, if you like wet shoes."
   barks:
     idle: ["Swish, swish.", "Not looking at the scarecrow.", "Purple wheat, nope."]
     hi: ["Hi!", "New hands!"]
@@ -121,12 +114,10 @@ l10-meg-sully:
       a: "The aerial points at the ground. Don't ask. Shortwave comes up out of the dirt. Weather, for towns I can't find. Rain tomorrow, every one of them."
     - q: "What was the last thing you heard?"
       a: "A man reading a shopping list. Slow. Eggs, milk, the boy, bread. I wrote it down. Didn't enjoy writing it down."
-    - q: "Where am I?"
-      a: "Radio shack. On a farm. Under rain. Past that, the set says we're nowhere. No station ever gives a place I know."
-    - q: "How do I get out?"
-      a: "Wrong man. I listen, I don't go. But a voice that reads the weather has to be standing somewhere. Find where, I suppose."
-    - q: "Ever hear the name Dina?"
-      a: "Not on the air. A woman did sit where you're sitting, asked what I pick up. I said rain. She said the big set in the city hears further. She's right. I was sore about it."
+    - q: "Why point the aerial at the dirt?"
+      a: "Sky's only rain and cloud. The ground carries hums clearer than the air ever did, like copper cable buried miles down."
+    - q: "Any real signal ever cut through?"
+      a: "Once in a blue moon, numbers or weather. Somebody swore the big set in the city pulls voices clear across levels. Still sore she was right."
   barks:
     idle: ["Shh.", "Rain tomorrow.", "Tea's stewed. Good."]
     hi: ["Shh. Hello.", "Mm."]
@@ -149,12 +140,10 @@ l10-meg-maeve:
       a: "Three metres long, live under the lake, come up for the wheat on nights the rain stops. The rain never stops. Except then."
     - q: "Is the wheat normal?"
       a: "Every grain is the same grain. Identical, down to the smallest part. Fields don't do that. This wasn't grown. It was copied."
-    - q: "Where am I?"
-      a: "A field that behaves like a field and isn't one. People here say 'the Backrooms' and count levels. I don't have a better word. I'm collecting evidence for one."
-    - q: "How do I get out?"
-      a: "Unknown. I've tested soil from four places. All of it is the same age, and that age is none. You can't dig out of something with no outside. That's a guess. I hope it's wrong."
-    - q: "Ever hear the name Dina?"
-      a: "No. I label samples, not visitors. If she stood on a row, I told her to get off it. That's all I'd have said."
+    - q: "Tested the soil or rain too?"
+      a: "Yes. Four cores, zero mineral variation, no spores older than yesterday. It holds moisture like blotting paper and never goes sour."
+    - q: "Why stay out here collecting numbers?"
+      a: "Because if something repeats itself to twelve decimal places, sooner or later a rounding error shows up. That's what I'm looking for."
   barks:
     idle: ["Same grain. Every one.", "Sample twelve.", "Who stood here?"]
     hi: ["Mm.", "Off the row."]
@@ -231,10 +220,8 @@ l11-trader-kael:
       fail: "My prices are honest, boss. Mostly."
     - q: "How's business?"
       a: "Slow. There's a barge waiting outside the lock with my coffee on it, and the valve won't move. I've got supplies to trade while I wait."
-    - q: "Where am I?"
-      a: "Best corner in the city, boss. Foot traffic, shade, a drain that works. What city? The only one. I never needed a second name for it."
-    - q: "How do I get out?"
-      a: "Ha. Depends what you're paying, boss. I sell apples at the front of the stall and other things at the back. Ask me straight."
+    - q: "What's stuck at the lock?"
+      a: "Gate gear sheared its pin two days back. Guild clerks swore a barge with real dark roast could clear once somebody twists the auxiliary valve."
     - q: "People say you sell things nobody else has."
       do: "trail:pass"
       a: "Quiet, boss. One berth. The ship's the SS Fun. You don't walk up a plank to her. You find her cruise poster, the offices have one, the farm barn has one, and you put your hand flat on it. Tell the purser Cabin 23. That's booked under River."
@@ -267,13 +254,10 @@ l11-commuter-faceling:
       a: "Eleven years. Same train. Same paper. The headlines change a little. Only the names."
     - q: "What's your name?"
       a: "Oh. I don't think I was given one. People say 'excuse me'. I like that one."
-    - q: "Where am I?"
-      a: "On the corner by the crossing. It is morning. It is the city. Is there another one? Nobody on my train has said."
-    - q: "How do I get out?"
-      a: "The train leaves at eight fifteen. It arrives here at eight fifteen. I have always found that convenient."
-    - q: "Ever hear the name Dina?"
-      do: "trail:name"
-      a: "Not in the paper. But a lady waited at this crossing every night for a week. She was watching the soldier's window. The one where the radio is on late."
+    - q: "Who prints that newspaper?"
+      a: "It sits folded on every bench before eight. Same crossword every Thursday, though I still fill it in."
+    - q: "Ever miss the eight-fifteen train?"
+      a: "Oh, no. It leaves at eight fifteen and arrives at eight fifteen. Very convenient for all of us."
   barks:
     idle: ["Lovely weather.", "Wait for the little man.", "Same train."]
     hi: ["Good morning.", "Hello."]
@@ -297,10 +281,8 @@ l11-walker-1:
       a: "Third alley off the canal, through the laundromat, out the back. Saves twenty minutes. Some days an hour. Some days it costs one. Roll the dice."
     - q: "That's a lot of parcels."
       a: "Delivery slips. The ones I need are locked inside Sedco, and without them I can't prove I ran the route. I could use help getting them back."
-    - q: "Where am I?"
-      a: "Canal side, north end. Whole city's a grid till it isn't. I know every street, chief, and I couldn't tell you what's past the last one."
-    - q: "How do I get out?"
-      a: "Not my route, chief. But I run sealed envelopes to the apple stall, cash only, and people who pick them up don't come back for seconds. Draw your own map."
+    - q: "Which blocks do you run?"
+      a: "Canal wharf to the tower lobby, dodging the roadworks crews. I run sealed envelopes to the apple stall too, cash up front."
     - q: "Ever hear the name Dina?"
       do: "trail:name"
       a: "I don't read labels, chief. Well. One. 'Hold for D.' at the apple stall, paid up front. Guy who paid was in uniform. The radio one. Weird tip, that."
@@ -328,13 +310,10 @@ l11-walker-2:
       a: "Oh no! I have a first aid kit at my desk, it came with the desk. Hold this. Okay! You look better. Do you want a coffee?"
     - q: "What's the catch here?"
       a: "Catch? It's perfect! Well. I can't look up at the towers, I get dizzy. And my desk has a nameplate I didn't order. But they spelled it right!"
-    - q: "Where am I?"
-      a: "Downtown! I think. I asked at work and my manager said 'the office', and I asked where the office was and she said 'downtown'. So!"
-    - q: "How do I get out?"
-      a: "Why would you? Oh. You mean OUT out. I stopped asking. I got a desk and the asking sort of went away. Is that bad? Don't tell me."
-    - q: "Ever hear the name Dina?"
-      do: "trail:name"
-      a: "No, sorry! But if you're looking for somebody, try the soldier who does the radio at night. He let me say hi into it once. Nobody said hi back. Still!"
+    - q: "What happens if you look up at the towers?"
+      a: "The tops keep going until your neck pops and the clouds move sideways. Better to stare at spreadsheets and drink almond coffee."
+    - q: "Do folks in the office ever leave downtown?"
+      a: "Why would anyone leave when lunch is free? Wait. Somebody asked me that last week and never came back from break."
   barks:
     idle: ["Coffee!", "Don't look up, don't look up.", "Data entry, yay."]
     hi: ["Hi!", "Oh, hi!"]
@@ -359,13 +338,10 @@ l11-walker-3:
       a: "Nobody. Cones, signs, a hole, a little digger with no keys. Overnight. Like the city's fixing a pipe it doesn't have."
     - q: "Need a hand with the work?"
       a: "The compressor's feeding steam into the wrong main. There's a tenant in 11-B with no heat. I can't leave the rest of the route long enough to fix both."
-    - q: "Where am I?"
-      a: "Over a steam main, pal, so step left. Past that it's the city. I've been under every street of it. There's no bottom. Just more pipe."
-    - q: "How do I get out?"
-      a: "Every way I know goes down, and down isn't out. I'd say the canal, but the locks are jammed. Fella at the apple stall's been sore about it all week. Wonder why a fruit man needs a canal."
-    - q: "Ever hear the name Dina?"
-      do: "trail:name"
-      a: "Nope. I learn names off work orders, and nobody's put in an order for a Dina."
+    - q: "What's jammed the canal locks?"
+      a: "Main valve gear sheared off a bronze tooth. Fruit man at the corner stall has been sore about his barge all week."
+    - q: "Why keep fixing pipes nobody owns?"
+      a: "Somebody has to keep 11-B warm, pal. Besides, let a steam main overpressure and the whole block drops into sub-basement."
   barks:
     idle: ["Steam, steam.", "Who ordered that hole.", "Thermos coffee. Ugh."]
     hi: ["Yeah.", "Hm. Pal."]
@@ -390,13 +366,10 @@ l11-realty-agent:
       a: "Two beds, a tub, a fridge that stays cold, a lock that works. On a street where nothing has ever happened. Twenty-five hundred, keys today."
     - q: "Who owned it before?"
       a: "Nobody. They come up empty with the lights on and the papers in order. I don't ask. I sell."
-    - q: "Where am I?"
-      a: "The only market worth owning in, client. Running water, quiet nights, neighbours with manners. People call it the city. I call it inventory."
-    - q: "How do I get out?"
-      a: "Out? I sell reasons to stay. I lost a sale last month to a berth, of all things. She bought from the fruit stall instead of me. A fruit stall."
-    - q: "Ever hear the name Dina?"
-      do: "trail:name"
-      a: "If she'd signed, I'd know her shoe size. She didn't sign. So no, client. And I hold that against her."
+    - q: "Anyone actually buy a house from you?"
+      a: "Two M.E.G. retirees last spring, one Guild clerk, and a faceling who paid in rolled pennies. Quiet neighbours, zero noise complaints."
+    - q: "Why push houses when nobody wants to stay?"
+      a: "You say that after three nights on concrete, client. Lost one closing last month to a berth sold off a fruit stall, of all things. A fruit stall."
   barks:
     idle: ["Keys today.", "Location, location.", "Still available."]
     hi: ["Hello, client!", "Buying?"]
@@ -423,13 +396,10 @@ l11-tm-clerk:
       do: discount
       a: "Good argument. Also you smell like a sandwich. Deal."
       fail: "Store policy. I made it up just now."
-    - q: "Where am I?"
-      a: "Thrift Mode. Second-hand everything. Outside's the city. I don't go out much, shopper. The stock comes to me."
-    - q: "How do I get out?"
-      a: "Door's behind you. Oh, big out. No clue. But people about to leave town sell me everything they own first. Coats, boots, the lot. So somebody's going somewhere."
-    - q: "Ever hear the name Dina?"
-      do: "trail:name"
-      a: "Names, no. But a woman traded me a good coat for a bag of sandwiches and said she wouldn't need it at sea. At sea, shopper. From here. I thought she was joking."
+    - q: "Why trade clothes for sandwiches?"
+      a: "Because sandwiches don't grow on racks, shopper. Coats keep showing up by themselves, and a person can't chew leather."
+    - q: "Get many travellers offloading heavy winter gear?"
+      a: "Funny you ask. A woman dumped a prime heavy coat here for a bag of sandwiches and swore she wouldn't need sleeves at sea. From downtown, shopper."
     - q: "Did a regular named Halliel shop here?"
       a: "Size large coats, cotton gloves in seventy-degree air, tipped in quarters. Real polite, never tried anything on in front of the mirror. Stopped coming in after the M.E.G. boys got jumpy on Fourteenth. Word is they dropped her behind the brick lot, though nobody showed me a grave."
   barks:
@@ -455,12 +425,10 @@ l0-bntg-kade:
       a: "Whatever's lying around. There's a station behind that bulkhead with more working machines than anyone alive can claim. So I'm claiming."
     - q: "What's behind the bulkhead?"
       a: "A station. Drones still walking their rounds. Machines still humming. People, once. Not my department."
-    - q: "Where am I?"
-      a: "Yellow rooms. Bad carpet. The firm's file says Level 0. It goes on further than my budget for finding out."
-    - q: "How do I get out?"
-      a: "If I had that, runner, I wouldn't sell it to you. I'd sell it to everybody. Nobody's brought me one. I check."
-    - q: "Ever hear the name Dina?"
-      a: "Not on my payroll. If she isn't owed and doesn't owe, I don't keep her."
+    - q: "What happened to your previous runner?"
+      a: "Didn't swipe cleanly at the junction and tried to outrun a patrol drone in wet boots. Don't make the same accounting error."
+    - q: "How's the pay if I bring salvage back?"
+      a: "Half the street price in B.N.T.G. chits, clean lamps on the card, and nobody asking how you spent the other half."
   barks:
     idle: ["Numbers.", "Cards cost money.", "Somebody's going in today."]
     hi: ["Runner.", "Working?"]
@@ -489,8 +457,6 @@ l61-sal:
       a: "The Snackrooms, or Level 6.1 if you use M.E.G. numbers. East glass doors go straight onto Level 11 concrete. Back wall smells like Level 3 and Level 6."
     - q: "How do I get out?"
       a: "Same glass doors you came in, or the service vent if M.E.G. clears you. Just leave while you're still a little hungry. Full people get lazy."
-    - q: "Ever hear the name Dina?"
-      a: "I know orders, not names. Once a woman drank three coffees black without touching a fry and wrote numbers on the salt shaker. Ask Wren by the board. Camp Amber keeps track of folks."
   barks:
     idle: ["Grill's hot!", "Fries up!", "Who had the shake?"]
     hi: ["Hey.", "Hungry?"]
@@ -510,12 +476,10 @@ l61-guard-a:
   ask:
     - q: "What's through the door?"
       a: "Dark, wall to wall. Straight into Level 6, with a bad splice down the suction vent to Level 3. That's why we bolted Seal 6.1-02 and sent the sensor feed to Base Gamma."
-    - q: "Where am I?"
-      a: "The diner side of Level 6.1. M.E.G. holds the stockroom bulkhead while B.N.T.G. argues with Guild pilots over freight. I just guard this door."
-    - q: "How do I get out?"
-      a: "Not through Seal 6.1-02. East doors put you in Level 11. The suction vent east of the booths drops toward Level 3 if you carry spares."
-    - q: "Ever hear the name Dina?"
-      a: "I log who goes through the stockroom. Short list. No Dina on it, though someone matching her description dropped down the east vent toward Level 3 without asking."
+    - q: "Why bolt Seal 6.1-02 from this side?"
+      a: "Because if something walks up out of Level 6 while the dining room is full of hungry folks, you want steel between the grill and the dark."
+    - q: "Anything ever push against that bulkhead?"
+      a: "Not yet, unless you count cold air tasting like ozone. East doors stay safe out to Level 11, though."
   barks:
     idle: ["Door's quiet.", "Check your lamps.", "Nothing moving."]
     hi: ["Hold it.", "State your business."]
@@ -536,10 +500,6 @@ l61-amber-a:
       a: "Pinned by the fryer. Names, coat colors, bus-stop sightings. 'Tall, red coat, goes by Bee', last seen toward 11th Avenue in Level 11. Folks find each other through it sometimes."
     - q: "Why help people?"
       a: "Someone fed me when I first got here and didn't charge for it. Jo in The Hub runs the infirmary and Pip handles routes. I watch this end."
-    - q: "Where am I?"
-      a: "The Snackrooms, Level 6.1. Sal keeps the grill going and the Facelings bus every tray fast enough to spook newcomers, but this corner's safe."
-    - q: "How do I get out?"
-      a: "East glass doors step onto Level 11, and Pip's runners know the route back to The Hub from there. Watch your step if you use the metal vent to Level 3."
     - q: "Ever hear the name Dina?"
       a: "There's an old card on the board: 'DINA, wait here if you see this.' Unsigned. Bee thought she saw someone like her heading toward the Guild's corner. That pin's been up awhile."
   barks:
@@ -559,10 +519,8 @@ l61-guild-a:
   ask:
     - q: "What is the Guild?"
       a: "Pilgrims and barge clerks. Our main ledger stays at Level 11's wharf by Kael's crane, and our runners log grates from Level 3 up to Level 4's vending wall. Put enough pages in the Book of Ways and maybe somebody pieces together a way home."
-    - q: "Where am I?"
-      a: "Level 6.1. Its grease traps drop into Level 3's electrical tunnels near our old redoubt plate, and pressing the wrong button on a Level 4 dispenser drops you back on these tiles."
-    - q: "How do I get out?"
-      a: "Four hundred and twelve ways are inked in the Book of Ways: out to Level 11, down the east vent to Level 3, or back toward Level 4. None of them go home. Maybe Page 413 changes that."
+    - q: "What makes Page 413 worth finding?"
+      a: "Four hundred and twelve ways are already inked: out to Level 11, down the east vent to Level 3, back toward Level 4. Nobody has inked a crossing that holds still twice."
     - q: "Ever hear the name Dina?"
       a: "A woman copied pages from our Book of Ways and gave the name Dina. She only copied routes marked uncertain, especially the seam joining Level 6.1, Level 3, and Level 4."
   barks:
@@ -583,12 +541,10 @@ bonus-tom:
   ask:
     - q: "How's business?"
       a: "Everybody ends up at the mall sooner or later, sugar. And everybody eats pie. That's the whole plan."
-    - q: "Where am I?"
-      a: "Tom's Diner, in the mall. Don't ask me where the mall is. I've never found the car park."
-    - q: "How do I get out?"
-      a: "Take the train, sugar. Goes back where you came from. If you mean further than that, eat first. Nobody thinks straight hungry."
-    - q: "Ever hear the name Dina?"
-      a: "Can't say so. I know folks by their pie. Tell me what she ordered and I'll tell you her whole life."
+    - q: "What kind of pie do you serve?"
+      a: "Cherry, pecan, and whatever canned peaches the train brings in. Yesterday's slice is always best once the crust settles."
+    - q: "How'd a diner end up inside a mall?"
+      a: "Same way the furniture store and clothing rack did, sugar. You walk off the platform hungry, there's a booth waiting."
   barks: { idle: ["Pie's up!", "Coffee, hot!", "Booth four's free."], hi: ["Welcome, sugar!", "Hey!"] }
   gest: { wave: "Hey, sugar!", gift: "Next slice is on me.", dance: "Jukebox! Go on!", nodance: "Orders up, sugar!", insult: "No pie for you." }
 bonus-andrew:
@@ -598,12 +554,10 @@ bonus-andrew:
   ask:
     - q: "Where's the furniture from?"
       a: "Offices, mostly. There's a floor of them with more chairs than people. I wipe them down and sell them. I call that recycling."
-    - q: "Where am I?"
-      a: "The showroom, friend! In the mall. It's a mall with no outside. Great for couches. No weather."
-    - q: "How do I get out?"
-      a: "I looked for a year. Then I sat down. Honestly, friend, a good chair takes the edge right off the question."
-    - q: "Ever hear the name Dina?"
-      a: "Hm. No. Did she buy a recliner? I remember recliner people."
+    - q: "Anyone ever drag a sofa onto the train?"
+      a: "Twice. Both times Rico made them pay double fare and wedge it across two benches. Looks cozy while you ride, though."
+    - q: "Which chair in the showroom is the best one?"
+      a: "The green recliner near the window. Well, wall. You sit in that ten minutes and you stop worrying which floor you left your keys on."
   barks: { idle: ["Comfy, comfy.", "Try the green one.", "I sat on every couch here."], hi: ["Hello, friend!", "Hi there!"] }
   gest: { wave: "Hi there!", gift: "Oh! Thanks, friend!", dance: "On the showroom floor? Sure!", nodance: "Customers!", insult: "Okay then. Stand, see if I care." }
 bonus-dawn:
@@ -613,12 +567,10 @@ bonus-dawn:
   ask:
     - q: "What do people wear here?"
       a: "Layers. Pockets. Nothing that rustles. The things with teeth hate rustling. So do I."
-    - q: "Where am I?"
-      a: "My shop, babe. In a mall. In something bigger nobody's seen the edge of. Don't think about it. Think about sleeves."
-    - q: "How do I get out?"
-      a: "No idea. But if you find it, don't go dressed like that."
-    - q: "Ever hear the name Dina?"
-      a: "No. Cute name though. Sounds like someone who'd buy the good boots and actually use them."
+    - q: "Why do they care about rustling?"
+      a: "Sound carries down concrete hallways like a dinner bell, babe. Give me quiet wool over loud nylon any day."
+    - q: "How do you restock sizes nobody asked for?"
+      a: "Racks fill themselves between shifts. Good heavy boots go first, so grab yours before the next platform stop."
   barks: { idle: ["Layers.", "No rustling.", "That's the look."], hi: ["Hey, babe.", "Hi."] }
   gest: { wave: "Hey.", gift: "Ooh. Okay, I like you.", dance: "Runway. Go.", nodance: "Folding.", insult: "Your outfit already said it, babe." }
 bonus-rico:
@@ -643,16 +595,12 @@ bonus-rico:
       sk: speech 40
       fail: "Ha! No. Kiosk's right there. Marigold has bills. I assume."
       do: discount
+    - q: "Where does this train go?"
+      a: "Marigold only goes back where you've been. I asked her for somewhere new once. We sat in the tunnel forty minutes. I think that was a no."
     - q: "Seen anything strange?"
       a: "A guy got off who never got on. Same coat as you. I punched his ticket anyway. It was blank."
       sk: survival 30
       fail: "Strange? Rider, it's a train in a mall. Pick something."
-    - q: "Where am I?"
-      a: "Platform one! Of one. It's a mall with a train in it. I didn't design it, rider, I just mind the line."
-    - q: "How do I get out?"
-      a: "Marigold only goes back where you've been. I asked her for somewhere new once. We sat in the tunnel forty minutes. I think that was a no."
-    - q: "Ever hear the name Dina?"
-      a: "I punch tickets, rider, I don't read them. Half of them are blank anyway."
   barks:
     idle: ["Platform one!", "Mind the yellow.", "Marigold's warm today.", "Tickets, tickets."]
     hi: ["Hey! Riding?", "Rider!", "Where to?"]
@@ -682,12 +630,10 @@ l02-capn:
       a: "A first-class remodel. Red carpet, white walls, sockets that work. Then somebody touched it. Possibly me."
     - q: "Who else is on your crew?"
       a: "Penelope runs errands. Grunt lifts things. Toaster is a toaster. On paper we are a very good team."
-    - q: "Where am I?"
-      a: "On site. The site has no address. I filed for one. The form came back remodelled."
-    - q: "How do I get out?"
-      a: "Exits are not in our scope. We do floors, walls and regret. I can offer you a very level corridor."
-    - q: "Ever hear the name Dina?"
-      a: "No visitor of that name signed the sheet. In fairness, I ate the sheet. It was a difficult week."
+    - q: "Who is Major Took?"
+      a: "The officer who signed the work order for red carpet, white walls, and working sockets. Nobody has seen the Major since the ceiling complained."
+    - q: "Why keep remodelling if touching it ruins the work?"
+      a: "Because leaving an unfinished corridor is against code. Even if code occasionally bursts into flames."
   barks:
     idle: ["Sorry for the inconvenience.", "True order comes through furniture.", "Measure twice.", "Please leave a light on in there. The crew do not like being watched at work."]
     hi: ["Ah. Hello.", "Mind the carpet."]
@@ -723,9 +669,7 @@ l31-shop-keeper:
       do: discount
       a: "All right, hon. Help me get something out of that case for once."
       fail: "I'll give you a fresh battery. The price stays."
-    - q: "Where am I?"
-      a: "Gift shop at the roller rink, hon. The music's the same year every night. I've stopped guessing which."
-    - q: "How do I get out for good?"
-      a: "I've only the two doors, the plywood one and a white one that's cold to touch. Neither's the way I came in. That one's gone."
-    - q: "Ever hear the name Dina?"
-      a: "No, hon. I'd know. I write every sale in the book and there's four names in it."
+    - q: "What's behind that white door?"
+      a: "Cold to the touch and quieter than the rink. Folks who test the handle never come back past the counter, so I keep the key hung behind the postcards."
+    - q: "Still carry film for those old cameras?"
+      a: "Check the drawer under the keychains, hon. Half the exposures turn out black, half show someone standing near the concession stand."

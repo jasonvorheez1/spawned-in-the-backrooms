@@ -1,5 +1,5 @@
 # Level 13 "The Boiling Frogs", Floor 283 (scripts/lib/level13-people.js). Written lines only, per skills/npc-dialogue.md.
-# Written to design/story-spine.md: the player knows nothing, each person answers the three questions their own way.
+# Written to design/story-spine.md: no pre-knowledge assumed; Oona handles orientation & exits at reception, while residents speak from their own lives.
 l13p-oona:
   hi: "Welcome to Floor 283! Oona Pell, Free Home Project. You've got the look of an applicant. Everybody who comes up to this desk does."
   back: ["Applicant! Still upright. Lovely.", "Back at the desk. Is it a flat today, or snacks?"]
@@ -32,8 +32,6 @@ l13p-oona:
       do: discount
       a: "Oh, you're good at this. Fine. Applicant rate. Not a word to the first hall."
       fail: "Future residents pay full price. That's how I tell they mean it."
-    - q: "Ever hear the name Dina?"
-      a: "Not on my board, and I know my board. There was a woman through a while back who wouldn't take a key. Kept asking about doors. I gave her a pamphlet."
   barks:
     idle: ["Flats going. Flats always going.", "Key for 14. Where did I put 14.", "Free means free, folks."]
     hi: ["Applicant!", "Welcome home. Pending paperwork."]
@@ -55,10 +53,6 @@ l13p-gus:
   bye: "Okay. Get the door on your... leave it. It's fine."
   walk: "Out there? Maybe when this one's over."
   ask:
-    - q: "Where am I?"
-      a: "My place. It's a good place. There's a number on the door but that's on the outside, and I'm on the inside."
-    - q: "How do I get out?"
-      a: "Out the door, I guess. Then there's the hall. Then... I used to know this one. Ask the desk lady. She's got the keys."
     - q: "How long have you lived here?"
       a: "Three weeks. Maybe eight. I moved in on a Tuesday. There's been a lot of Tuesdays since."
       then:
@@ -72,8 +66,6 @@ l13p-gus:
       sk: speech 40
       a: "A walk. Yeah. You know, my legs remember walks. Give me a minute. I'll get up at the next ad. Thanks, neighbour. I mean it."
       fail: "I will. After this one. It's nearly done. It's been nearly done for a while."
-    - q: "Ever hear the name Dina?"
-      a: "Is she on the show? There's a lady on the show. No, that's Diane. Or the dog. Sorry, neighbour."
   barks:
     idle: ["Mm.", "Didn't I see this one.", "Fridge is humming again.", "I ought to get up."]
     hi: ["Oh. Hi.", "Hey, neighbour."]
@@ -95,10 +87,6 @@ l13p-noor:
   bye: "Stay on your feet."
   walk: "I'm leaving tonight. One person moves faster than two."
   ask:
-    - q: "Where am I?"
-      a: "A floor of free flats, and every one of them is a trap with a sofa in it. Past that I only know the rooms I walked through to get here. Yellow ones. Wet ones."
-    - q: "How do I get out?"
-      a: "Off this floor? Plain door, far end of the second hall. Out of all of it? I've never met anyone who did. I've quit asking and started walking."
     - q: "Why can't I sit down?"
       a: "Because it's comfortable. Stay in one flat and you slow down. Then you stop going out. Then your door's shut and your TV's on and that's all anyone knows about you."
       then:
@@ -111,9 +99,7 @@ l13p-noor:
     - q: "And the dark flat?"
       a: "First hall, lights off, door open. Something stands in there. Look at it when you go by. Walk past with your head turned and you'll hear it step out after you."
     - q: "Where will you go?"
-      a: "Through the plain door. Damp carpet, yellow walls, nothing to sit on. Never thought I'd miss a place like that."
-    - q: "Ever hear the name Dina?"
-      a: "No. But a woman came through before me asking everyone about ways out. Didn't sit down once, they said. That's how I know it can be done."
+      a: "Through the plain door at the end of the second hall. Damp carpet, yellow walls, nothing to sit on. Never thought I'd miss a place like that."
   barks:
     idle: ["Socks. Where are my socks.", "Not sitting. Not sitting.", "One bag in, one bag out."]
     hi: ["Standing. Good.", "Walker."]
@@ -135,13 +121,6 @@ l13p-hale:
   bye: "Hands off the board on your way out."
   walk: "And leave her alone with it? She cheats."
   ask:
-    - q: "Where am I?"
-      a: "Floor 283. Don't ask me 283 of what, I never counted the other ones. You walk long enough in the yellow rooms, you end up at a door, and here's what's behind it."
-    - q: "How do I get out?"
-      a: "Second hall, all the way down. Dull yellowish door, no number. Puts you back in the damp rooms. We've been through it. We came back. The chess is here."
-      then:
-        - q: "I mean out for good."
-          a: "Kid, if I knew that I'd be losing at chess in a real kitchen. Every door I ever found went to more rooms."
     - q: "How long's this game been going?"
       a: "A year. About. I'm winning."
       then:
@@ -151,8 +130,8 @@ l13p-hale:
       a: "We were here before the desk, the mat and the smile. Nobody handed us a flat. We just never signed. A man thinks clearer when he doesn't owe."
     - q: "Why haven't you gone slow?"
       a: "Because once an hour she says something so dumb I have to get up and walk the hall. Turns out you can't nod off angry."
-    - q: "Ever hear the name Dina?"
-      a: "No. Had a woman lean over this board once and ask where the doors go. I told her mine goes to my kitchen. She didn't laugh. Dot did."
+    - q: "Ever tried leaving this floor?"
+      a: "We walked down to that dull yellow door at the end of the hall once. Puts you right back in wet rooms. We came back. The chess is here."
   barks:
     idle: ["Hmm.", "Bishop. No.", "Don't rush me.", "It's not off."]
     hi: ["Shh.", "Kid."]
@@ -174,10 +153,6 @@ l13p-dot:
   bye: "Off you go. I'll be here. He'll be thinking."
   walk: "The minute I'm gone he nudges a rook. No."
   ask:
-    - q: "Where am I?"
-      a: "My front room, sunshine, and you didn't wipe your feet. The building's all flats. What the building's in, I gave up on. I had a street once. It had a bakery."
-    - q: "How do I get out?"
-      a: "Plain door at the end of 283. Yellowish. So dull you'd walk past it. Smells of wet carpet when you open it, that's how you know. Out out? Oh, sunshine. I'd have gone to the bakery."
     - q: "Nine days for one move?"
       a: "His record's twenty. I knitted a scarf. This is the scarf."
       then:
@@ -187,8 +162,8 @@ l13p-dot:
       a: "That knight went under the fridge in June. The fridge puts back everything in this flat but his knight. I call that a ruling."
     - q: "Is it true about people who stay in?"
       a: "True as carpet. We had a neighbour, Bea, lovely girl. Stopped coming for tea. Now there's banging in her flat and I don't knock. Keep moving, sunshine. Pick a fight with someone. It helps."
-    - q: "Ever hear the name Dina?"
-      a: "Dina. No. There was a girl asked Hale about doors and he made his kitchen joke. She had a little recorder going the whole time. I told her to cut that part."
+    - q: "Do you miss home?"
+      a: "I miss a real street and a bakery down the corner. Out here, at least someone lets me play black without tipping the table."
   barks:
     idle: ["Any day now.", "Your move, Hale.", "Tick tock.", "Under the fridge, it went."]
     hi: ["Sunshine!", "A witness!"]

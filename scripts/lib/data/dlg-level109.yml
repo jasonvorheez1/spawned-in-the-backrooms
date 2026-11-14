@@ -46,7 +46,7 @@ l109-doctor:
     - q: "What's behind the other doors?"
       a: "Check the whiteboard. If it says do not open, I mean it in capital letters."
     - q: "Any tips for surviving the deep wings?"
-      a: "Biohazard suites have green decon purge switches outside the yellow tape — hit them before going deep. Pharmacies still run live pneumatic tubes behind the shutters, too."
+      a: "Biohazard suites have green decon purge switches outside the yellow tape; hit them before going deep. Pharmacies still run live pneumatic tubes behind the shutters, too."
 l109-guard:
   hi: "M.E.G. Keep moving, keep it calm."
   back: ["Still walking around? Bold.", "Hey. You good?"]

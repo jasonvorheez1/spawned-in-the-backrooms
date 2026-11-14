@@ -1,6 +1,5 @@
 # Level 5, the Terror Hotel: the Homely Hotel staff, Outpost Housekeeping (M.E.G.), the Originals' salon, and Samantha.
-# Written by hand. Nov 13 pass to design/story-spine.md: the player knows nothing, so no choice assumes a name or a place;
-# everyone answers "Where am I?", "How do I get out?" and "Ever hear the name Dina?" their own way, partly, sometimes wrong.
+# Ambrose handles hotel orientation & exits; Ambrose, Odette, and Samantha hold the main Dina / room 307 leads. Everyone else talks shop, history, and hazards.
 # The hotel's lore is hinted, never explained: nobody has checked out, the old staff have no faces and only move when
 # unwatched, the Beast is in the boiler room, lifts past twelve don't come back.
 # Main quest (trail.room): Dina kept room three-oh-seven. Nobody here knew her; they know the room and her habits
@@ -63,16 +62,12 @@ l5-dolores:
     - q: "I'm hurt. Can you feed me up?"
       do: heal
       a: "Broth first. Small sips. You keep that down, I bring the real food."
-    - q: "Where am I?"
-      a: "My kitchen! Best room in the hotel. Out there is carpet and bad manners. In here is garlic."
-    - q: "How do I get out?"
-      a: "On an empty stomach? Nowhere. Eat, then ask the desk. Me, I came in the back with the deliveries twenty years ago. Never saw that door again. Didn't look hard. The kitchen's good."
-    - q: "Ever hear the name Dina?"
-      a: "I know rooms, not names. Ask me a room. Three-oh-seven? Black coffee, bread, tray left at the door. Never once my stew. A woman who eats standing up is running from something or to it."
     - q: "Lost something?"
       a: "My ladle! The big one. The maid has it. She says no. I've known that ladle longer than I've known her. One of them is lying and it isn't the ladle."
     - q: "Where's the food from?"
       a: "The dumbwaiter goes down full and comes back full. Meat. Good meat. That's the end of the question, skinny. Eat."
+    - q: "How did you end up cooking in this kitchen?"
+      a: "Twenty years back I walked in the back door with deliveries and never bothered hunting for that door again. Carpet outside, garlic in here. Easy choice."
   barks:
     idle: ["Where is my ladle!", "Stew's ready! Who's sitting!", "The salon sent it back. AGAIN."]
     hi: ["Sit, skinny! Eat!", "Look at you. Bones."]
@@ -94,15 +89,6 @@ l5-pip:
   bye: "Only the floors with buttons, chief!"
   walk: "Oh. Right. Bye, chief!"
   ask:
-    - q: "Where am I?"
-      a: "The Homely Hotel, chief! Lobby level. Twelve floors of rooms. Twelve. If anybody tells you a higher number they're mistaken, and so is the lift."
-    - q: "How do I get out?"
-      a: "The front doors, I suppose? I've never tried them. Mr. Ambrose says those are for guests who are leaving, and nobody's been leaving, so I've never had to hold them."
-    - q: "Ever hear the name Dina?"
-      a: "I do bags, chief, not names. Was she three-oh-seven? One bag, really heavy, and it clicked. She asked which floor was highest. For reception, she said. I told her twelve. I told her twice."
-      then:
-        - q: "Did she go higher?"
-          a: "I don't know. I didn't look at the dial. I never look at the dial. But she came back down, chief, I carried the same bag out. So. That's something."
     - q: "What's wrong with the lift?"
       a: "Nothing! Lovely lift. Twelve lovely floors. Then thirteen. Then fourteen, and they keep coming, and the buttons are warm. Mr. Ambrose says not to bring it up."
       then:
@@ -110,6 +96,8 @@ l5-pip:
           a: "Bells. Room service bells from floors we don't have. I don't answer them. I'm a bellhop, I'm not, I'm not whatever answers those."
     - q: "Do you like it here?"
       a: "Mr. Ambrose says I've got a future here. A long one. A really, really long one. That's good. Isn't that good?"
+    - q: "Any strange luggage lately?"
+      a: "One guest in three-oh-seven had a bag so heavy it clicked inside. She rode up asking where reception ended, came right back down, and carried it back out herself."
   barks:
     idle: ["Any bags? No bags.", "Twelve floors. Just the twelve.", "Mr. Ambrose? Are you there, Mr. Ambrose?"]
     hi: ["Oh! Hi, chief!", "W-welcome to the hotel!"]
@@ -130,15 +118,6 @@ l5-odette:
   bye: "Feet. Wipe them."
   walk: "Rude. So, normal."
   ask:
-    - q: "Where am I?"
-      a: "Third floor, east. Or the lobby, if that is where I am when you ask. I know this hotel by its stains, new one. Outside of it, nothing. I have never needed the outside."
-    - q: "How do I get out?"
-      a: "I clean rooms. Rooms have one door and it goes to the corridor. The corridor goes to more rooms. You want a different answer, ask someone who does not push a cart."
-    - q: "Ever hear the name Dina?"
-      a: "I know doors. Three-oh-seven had the do-not-disturb sign up for weeks. So, I disturbed. Maps pinned in my wallpaper. A wire out the window. A little machine she talked to. Then one morning, empty. Bed made. She made it herself. Nobody does that."
-      then:
-        - q: "Did she leave anything?"
-          a: "Pin holes. Forty-one of them, I counted, I had to fill them. And a note for the desk. I do not read notes. It said she went to the city to find a radio."
     - q: "Cut me a deal?"
       sk: speech 35
       do: discount
@@ -153,6 +132,11 @@ l5-odette:
           a: "Exactly."
     - q: "Seen anything odd?"
       a: "Beds made that I did not make. A bath run, still warm. A set of false teeth in a glass in four-oh-nine. Nobody is booked in four-oh-nine."
+    - q: "Ever hear the name Dina?"
+      a: "I know doors. Three-oh-seven had the do-not-disturb sign up for weeks. So, I disturbed. Maps pinned in my wallpaper. A wire out the window. A little machine she talked to. Then one morning, empty. Bed made. She made it herself. Nobody does that."
+      then:
+        - q: "Did she leave anything?"
+          a: "Pin holes. Forty-one of them, I counted, I had to fill them. And a note for the desk. I do not read notes. It said she went to the city to find a radio."
   barks:
     idle: ["I do not do the ballroom.", "Who drops a towel right there.", "Mm. I heard something good about the second floor."]
     hi: ["Mm. New one.", "You. Feet."]
@@ -177,14 +161,10 @@ homely-barnaby:
     - q: "Rough day. Can you help?"
       do: heal
       a: "Sit, my dear guest. A hot towel. A cup of something. A minute's quiet. There. We look after our guests. We always look after our guests."
-    - q: "Where am I?"
-      a: "The front hall of the Homely Hotel, my dear guest. I hold this door. It is nineteen thirty-one, the weather is mild, and you are most welcome."
-    - q: "How do I get out?"
-      a: "Through my door, of course. I hold it for anyone. Though I confess I mostly hold it for people coming in. It has been some time since I held it the other way."
-    - q: "Ever hear the name Dina?"
-      a: "I am poor with names and good with luggage. A lady went out through my door with one bag, quite early. She said 'the city', and I said 'which one', and she said that was a fair question."
     - q: "How long have you worked here?"
       a: "Since nineteen thirty-one. Or it has been nineteen thirty-one since I started. One stops checking, in good service."
+    - q: "Do many guests walk back out the front door?"
+      a: "I hold it for anyone, of course. Though I confess I mostly hold it for arrivals. One lady went out with one bag toward the city quite early; aside from that, the street has been remarkably quiet."
   barks:
     idle: ["At your service, as ever.", "A hot towel, anyone?", "The good chair is free just now."]
     hi: ["Good evening, my dear guest.", "Welcome, welcome."]
@@ -207,14 +187,10 @@ homely-auguste:
     - q: "I'm hurt and starving."
       do: heal
       a: "Then you found the right kitchen! Broth, bread, meat. Slowly. No, faster. There. You live. I am a genius."
-    - q: "Where am I?"
-      a: "The second kitchen, mon ami. The first kitchen is that loud woman's. Mine is smaller and better. Around us, a hotel. I am told it is nice. I am busy."
-    - q: "How do I get out?"
-      a: "The dumbwaiter! It goes down, something is at the bottom, voila, a way. I would not fit. You, maybe. No. Forget I said it. Things come up that shaft. Nothing should go down."
-    - q: "Ever hear the name Dina?"
-      a: "A name, no. An order, yes. Three-oh-seven. Coffee and bread, sent up by the dumbwaiter, every day. Never my veal. I sent the veal anyway. It came back with a thank-you note. A polite insult is still an insult."
     - q: "What are you cooking?"
       a: "What comes up the dumbwaiter. Today, something like veal. Tomorrow, something like veal. I have stopped asking it questions."
+    - q: "Why keep a second kitchen in the same hotel?"
+      a: "Because that loud woman in the other kitchen would rather stir boiled cabbage than taste a sauce! Mine is smaller and vastly superior, mon ami."
   barks:
     idle: ["Something like veal, coming up!", "Taste it. Salt. More salt.", "Bread! Who has not had bread!"]
     hi: ["Ah! Mon ami!", "You are hungry. I can tell. Sit!"]
@@ -235,12 +211,6 @@ l5-harlan:
   bye: "Keep clear of the boiler."
   walk: "Right."
   ask:
-    - q: "Where am I?"
-      a: "A hotel. Staff run the upstairs. My lot hold the basement side and keep the vermin down. We call ourselves Housekeeping. It's a joke. Nobody laughs."
-    - q: "How do I get out?"
-      a: "Don't know one. I know ways off this floor of the world, and every one of them is worse than a warm bed here. People work that out and stay. Then they buy from me."
-    - q: "Ever hear the name Dina?"
-      a: "I do receipts by room. Three-oh-seven bought batteries. Twelve. And all the copper wire I had, sixty feet. Paid full price, didn't haggle. I remember the ones who don't haggle."
     - q: "I need the boiler room key."
       sk: speech 25
       do: boilerkey
@@ -276,12 +246,6 @@ l5-vesna:
   bye: "Try not to come back cooked."
   walk: "So go."
   ask:
-    - q: "Where am I?"
-      a: "Under a hotel. Upstairs there are towels and mints. Down here there are pipes and me. I think you had the better half and left it."
-    - q: "How do I get out?"
-      a: "Everybody asks at this door. As if the worst room must hide the exit. It is only a way in, tourist. I checked. It cost me a partner to check."
-    - q: "Ever hear the name Dina?"
-      a: "I do not take names until they come back. One woman asked me your same question, about a way out through the boiler. I said no. She believed me. First one who ever did. She went upstairs and I did not have to count her."
     - q: "What do you do here?"
       a: "I walk them down. I count them in. I wait. I count them out. The numbers do not always agree."
       then:
@@ -293,6 +257,8 @@ l5-vesna:
       fail: "There is no safe way. There is the way."
     - q: "Do people come back?"
       a: "Some. I make them tea. They do not drink it. They hold the cup until it is cold."
+    - q: "Does the boiler room lead out of the hotel?"
+      a: "Everybody asks at this door, as if the worst room must hide the exit. It is only a way deeper in, tourist. I checked. It cost me a partner to check."
   barks:
     idle: ["Count them in. Count them out.", "Hot today. Hot every day.", "Keep to the left wall."]
     hi: ["Tourist.", "So. You."]
@@ -313,12 +279,6 @@ l5-tobias:
   bye: "Count the rats twice!"
   walk: "Oh. Okay. Sure."
   ask:
-    - q: "Where am I?"
-      a: "A hotel. Basement office of a hotel. I say 'hotel'. It has a pulse and it gets longer at night, so I don't know what the right word is. 'Hotel' is the polite one."
-    - q: "How do I get out?"
-      a: "Okay, so, theory. You don't walk out of something alive. It has to let you out. Like a sneeze. I haven't worked out how you make a hotel sneeze. I've got a list. It's mostly pepper."
-    - q: "Ever hear the name Dina?"
-      a: "Three-oh-seven? With the recorder? She's the only one who didn't laugh! She held the microphone on the wallpaper for a full minute. She got seventy-one beats. I get seventy. We argued about it. Best afternoon I've had here."
     - q: "Got any work?"
       a: "Rats. Big ones, five, by the boiler. Bring proof. Tails are fine. Just the tails. Please, just the tails."
     - q: "You seem jumpy."
@@ -326,6 +286,8 @@ l5-tobias:
       then:
         - q: "Maybe get some sleep."
           a: "I sleep! Four hours. Same room every night. Except twice."
+    - q: "What was that theory you wanted to run past me?"
+      a: "You don't walk out of something alive, new person! It has to sneeze you out. Like dust. I've got a list of ideas. It's mostly pepper."
     - q: "Calm down. It's okay."
       a: "I'm calm. This is me calm. You haven't seen the other one."
   barks:
@@ -347,16 +309,12 @@ l5-imani:
   bye: "Be decent to the staff."
   walk: "As you like."
   ask:
-    - q: "Where am I?"
-      a: "A hotel with more hallway than it should have. I've walked rounds here two years and the round still comes out a different length. I've made my peace with it."
-    - q: "How do I get out?"
-      a: "I was sent here to hold a post, not find a door. If my people had found a way home, traveller, believe me, I would not be guarding bellhops."
-    - q: "Ever hear the name Dina?"
-      a: "Not the name. A room, maybe. Three-oh-seven. Light under the door all night, every round, and a voice in there talking to itself. I knocked once to check. She said, 'I'm fine, I'm just taking notes out loud.' That light's been off a while."
     - q: "Who's in the salon?"
       a: "Old money. They fell in here a long time back, off ships and out of the sky, and they still think somebody owes them a table. They tip in buttons."
     - q: "Why guard the staff?"
       a: "They don't hurt anybody. In here that's rare enough to put a guard on."
+    - q: "How do the corridors behave on your rounds?"
+      a: "Same loop comes out a different length every shift. After two years patrolling here, you stop counting paces and just watch the corners."
   barks:
     idle: ["Quiet round. I'll take it.", "Be decent, people.", "The salon's loud again."]
     hi: ["Evening, traveller.", "On my round."]
@@ -377,12 +335,6 @@ hk-constance:
   bye: "If you hear a waltz, cheri, walk the other way."
   walk: "Bon."
   ask:
-    - q: "Where am I?"
-      a: "A hotel, cheri. An old one, and well kept, I will give them that. We rent the back rooms from the staff and pay in work. It is not the worst arrangement I have had."
-    - q: "How do I get out?"
-      a: "I stopped asking. That is not the same as giving up, cheri. I simply found I sleep better on a clean sheet than on a question."
-    - q: "Ever hear the name Dina?"
-      a: "Three-oh-seven, I think. The maid complained to me. The guest would not let her change the bed. But she came to me for one extra sheet. I asked why. She said to hang over the window, so nobody saw her wire. I did not ask what wire."
     - q: "Trade me something?"
       sk: barter 35
       do: discount
@@ -390,6 +342,8 @@ hk-constance:
       fail: "Non. The price is the price."
     - q: "What should I avoid?"
       a: "The ballroom when the waltz is on. You will want to stay. Everybody wants to stay. And the boiler. Nobody wants to stay there, and some do anyway."
+    - q: "How does Housekeeping get along with the hotel staff?"
+      a: "We rent the back rooms and pay in honest work. Keep the linen dry, stay clear of their guests, and they leave a kettle on for us."
   barks:
     idle: ["Sheets, towels, sheets.", "There is that waltz again.", "Corner to corner. Fold. Again."]
     hi: ["Bonsoir, cheri.", "Ah. Hello."]
@@ -410,18 +364,14 @@ hk-vance:
   bye: "Keep off the hot side."
   walk: "Aye, off you pop."
   ask:
-    - q: "Where am I?"
-      a: "Boiler works. Under a hotel. I was a heating engineer in Leeds, so of all the daft places to wake up, this is the one I can actually do something about."
-    - q: "How do I get out?"
-      a: "Follow the pipes, I thought. Pipes always come from somewhere. I traced the main feed for a week, sunshine. It goes in a circle. Feeds itself. Put me right off my tea."
-    - q: "Ever hear the name Dina?"
-      a: "Never caught a name. Lass from upstairs borrowed me wire cutters. Brought them back same day, cleaned. Nobody brings a tool back cleaned. I'd have lent her the wrench."
     - q: "What are you watching?"
       a: "That needle. If she goes red, the boiler vents, and the corridor fills with steam hot enough to cook you in your boots. So I watch her. Somebody has to."
     - q: "Anything hunting in the halls?"
       sk: survival 35
       a: "Staff with no faces. They only move when you're not looking. So you look. Back out of the room, don't turn round. Feels daft. Do it anyway."
       fail: "All sorts, sunshine. Stop in the lobby."
+    - q: "Ever try tracing where all these pipes lead?"
+      a: "I worked boilers in Leeds, so I followed the main feed for a week. Comes straight back round in a loop and feeds itself. Put me right off my tea."
   barks:
     idle: ["Needle's steady. Good lass.", "Where've I put me wrench.", "Warm one. They're all warm ones."]
     hi: ["Aye aye, sunshine.", "Mind the pipes."]
@@ -442,24 +392,17 @@ l5-millie:
   bye: "Nose up, ace!"
   walk: "Rude. I like that in a person."
   ask:
-    - q: "Where am I?"
-      a: "The salon of a very decent hotel. Before this I was over the Pacific with two dead engines. So wherever it is, ace, it's a step up from wet."
-    - q: "How do I get out?"
-      a: "I'd say fly, but I've checked the windows. Corridor, corridor, brick. No sky anywhere in the building. You can't take off without sky. Believe me, I've thought about the lobby."
-    - q: "Ever hear the name Dina?"
-      a: "The wireless girl? Didn't get her name, we weren't introduced. She asked me how far a radio signal carries. I said you need height and a proper set, and there's no proper set in this hotel. The only ones I've heard of are in the city."
-      then:
-        - q: "What city?"
-          a: "Search me, ace. Guests talk about it. Tall buildings, nobody home. Sounds like a place you'd put an aerial, though. I told her so."
+    - q: "What happened to you?"
+      a: "Pacific, nineteen thirty-seven. Engines quit, sky went white, and I set her down on carpet. Smoothest landing I ever made and not one witness."
+    - q: "What is this club?"
+      a: "House rule. Nobody born after the Hindenburg. I didn't write it, the baron did. I just enjoy it."
     - q: "Trade me something?"
       sk: barter 35
       do: discount
       a: "You've got moxie. Here, a family heirloom, half off. Somebody's family. Don't tell the baron."
       fail: "Not on your life, ace."
-    - q: "What happened to you?"
-      a: "Pacific, nineteen thirty-seven. Engines quit, sky went white, and I set her down on carpet. Smoothest landing I ever made and not one witness."
-    - q: "What is this club?"
-      a: "House rule. Nobody born after the Hindenburg. I didn't write it, the baron did. I just enjoy it."
+    - q: "Ever see any sky out the hotel windows?"
+      a: "Corridor, corridor, brick. No sky anywhere in the building. You can't take off without sky, though guests keep talking about some endless city where a proper aerial might catch."
   barks:
     idle: ["Deal me in, boys.", "Whose turn is it to feed the cat?", "What I'd give for a tailwind."]
     hi: ["Hiya, ace.", "Well, look what blew in."]
@@ -480,12 +423,6 @@ l5-whitlock:
   bye: "Good day to you."
   walk: "Insolence."
   ask:
-    - q: "Where am I?"
-      a: "Ashore, landsman. Regrettably. A hotel of some size, without a harbour. I have asked the desk for the harbour repeatedly."
-    - q: "How do I get out?"
-      a: "By sea. It is the only honest way out of anywhere. There is no sea here. You see the difficulty."
-    - q: "Ever hear the name Dina?"
-      a: "A young woman of this era put a question to me. Did I know of a ship that takes passengers. I told her the only ship I know took hers to the bottom. She wrote that down. I cannot think why."
     - q: "What ship was yours?"
       a: "The finest liner afloat. She went down inside three hours. I stayed on the bridge, as one does. I did not expect to arrive anywhere."
     - q: "Anything here you like?"
@@ -512,12 +449,6 @@ l5-vanderholt:
   bye: "Good day. Remember the name."
   walk: "Hmph. No breeding."
   ask:
-    - q: "Where am I?"
-      a: "In a hotel I do not own. I have made three offers. The man at the desk says it is not for sale. Everything is for sale, upstart. That is what frightens me about this place."
-    - q: "How do I get out?"
-      a: "One buys one's way out of anything. I simply have not found who to pay. When I do, I shall go first, and you may apply to my secretary."
-    - q: "Ever hear the name Dina?"
-      a: "I do not retain the names of debtors, there are too many. A young woman from the third floor borrowed forty from me for a fare. A fare to where, I asked. 'The city, and then a boat.' Nobody in this hotel has ever repaid me. She left an envelope at the desk with forty in it. I was quite upset."
     - q: "Trade me an heirloom?"
       sk: barter 40
       do: discount
@@ -527,6 +458,8 @@ l5-vanderholt:
       a: "Naturally. Twelve percent, compounded hourly. I jest. I'll never see it again. I keep a ledger of what this hotel owes me. It is thicker than theirs."
     - q: "What was your railway like?"
       a: "Four thousand miles of steel. I put towns where there was only dust. Now I cannot buy one hotel. It is galling."
+    - q: "Have you tried buying out the hotel?"
+      a: "I have made three offers. The man at the desk says it is not for sale. Everything is for sale, upstart. That is what unsettles me about this place."
   barks:
     idle: ["Four thousand miles of it.", "Pass the port, would you.", "Not for sale. Preposterous."]
     hi: ["Upstart.", "Hm. It's you."]
@@ -547,18 +480,14 @@ l5-zelda:
   bye: "Toodle-oo, darling!"
   walk: "Well! Of all the nerve!"
   ask:
-    - q: "Where am I?"
-      a: "At the party, darling! Well. After the party. Well. There was a yacht, and champagne, and I fell off the back of one into the other, and I came up here. It's a hotel. The band never stops. Isn't it heaven?"
-    - q: "How do I get out?"
-      a: "Out? Darling, why would you leave before the end? Nobody's called the end yet. I've been waiting to see who does."
-    - q: "Ever hear the name Dina?"
-      a: "Is that her name? The girl in three-oh-seven? Darling, the scandal of it. Weeks in the house and she never came to one single party. Not one! She had a wire hanging out her window. I thought it was for a gentleman to climb. It was not. I checked every night."
     - q: "Got any gossip?"
       a: "The Captain cheats at whist. The baron is broke, darling, BROKE, and nobody's had the heart to tell him. And Millie's sweet on a pilot who has not written since nineteen thirty-seven."
     - q: "What year is it?"
       a: "Oh, darling, who's counting? Last I heard the Kaiser was being perfectly beastly. Is he still at it?"
     - q: "Can I join your party?"
       a: "You were born after all the good ones, darling. It isn't your fault. It's only tragic."
+    - q: "How did you wind up in a lounge like this?"
+      a: "There was a yacht, and champagne, and I fell off the back of one into the other! The band never stops here. Isn't it heaven?"
   barks:
     idle: ["Whist, anybody? Anybody?", "Darling. Darling! DARLING.", "Isn't it all just too, too much?"]
     hi: ["Darling!", "Oh, hello, you!"]
@@ -581,14 +510,10 @@ l5-wat:
     - q: "I'm hurt. Can you help?"
       do: heal
       a: "Kneel, pilgrim. I have herbs, from the garden that grows in the bath. Chew. Bitter, aye. There. God heals. The herbs help Him."
-    - q: "Where am I?"
-      a: "Purgatory, I think. Or an abbey the size of England. There is meat at every meal and no man fasts. By that I know it is not Heaven."
-    - q: "How do I get out?"
-      a: "By prayer, pilgrim, and a clean soul. I have prayed here longer than I can reckon. So either the way is long, or my soul is not so clean as I was told."
-    - q: "Ever hear the name Dina?"
-      a: "I know not the name. There was a woman who spake into a small box, and the box spake back in her own voice. I crossed myself. She smiled, and let me hear my own voice from it. I have not slept well since."
     - q: "What year was it for you?"
       a: "The year of our Lord thirteen hundred and forty-eight. A great sickness was on the land. I hid in the abbey cellar. I came up the stair into this."
+    - q: "What do you make of this place?"
+      a: "Purgatory, or an abbey the size of England. There is meat at every meal and no man fasts, and the candles burn without flame. By that I know it is not Heaven."
   barks:
     idle: ["Ave Maria, gratia plena...", "No flame in them. Not one.", "Where is the Abbot gone?"]
     hi: ["God keep thee, pilgrim.", "Peace be on thee."]
@@ -612,21 +537,17 @@ l5-samantha:
     - q: "I feel awful. Can you help?"
       do: heal
       a: "Come here. Look at me. Not the teeth. The eyes. There. Better? The mind is a door. I only opened a window."
-    - q: "Where am I?"
-      a: "On my rug. Around the rug there is a hotel. Around the hotel there is a great deal more indoors. I am told there is an outdoors somewhere. I am a cat. I have never trusted it."
-    - q: "How do I get out?"
-      a: "You are asking a cat how doors work. We sit in front of them until somebody opens one. It has never failed me. It may take you longer."
-    - q: "Ever hear the name Dina?"
-      a: "She brought me tinned fish. Real fish, visitor, do you know how rare that is? She asked if the voice on her radio was real. I said yes. I did not say whose. She did not ask, and I answer what I am asked."
-      then:
-        - q: "Whose voice was it?"
-          a: "Now you ask. I don't know. I only know real from not real. It is a smaller gift than people expect. Go and look at the book on the front desk. She wrote in it before she left."
     - q: "Can you read my future?"
       a: "There are stairs in it. A door you leave shut and one you do not. Shall I say which is which? No. That would spoil my evening."
     - q: "What are you?"
       a: "A very small cat with very good manners. Somebody upstairs gave me a number. Twenty-six, I believe. I prefer Samantha."
     - q: "Do you ever lie?"
       a: "Only when the truth would be dull."
+    - q: "Ever hear the name Dina?"
+      a: "She brought me tinned fish. Real fish, visitor, do you know how rare that is? She asked if the voice on her radio was real. I said yes. I did not say whose. She did not ask, and I answer what I am asked."
+      then:
+        - q: "Whose voice was it?"
+          a: "Now you ask. I don't know. I only know real from not real. It is a smaller gift than people expect. Go and look at the book on the front desk. She wrote in it before she left."
   barks:
     idle: ["Someone is on the stairs. Oh. Only you.", "They have forgotten my dinner again.", "I can wait. I am very good at it."]
     hi: ["Ah. The visitor.", "Sit down."]

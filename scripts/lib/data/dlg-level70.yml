@@ -1,5 +1,5 @@
 # Level 70 Froidetown people, written by hand. Quest lines live in scripts/lib/level70-quest.js (l70Choices).
-# Written to design/story-spine.md: the player knows nothing, each person answers the three questions their own way.
+# Marinerson and Prime Minister Larsson orient newcomers; townsfolk, guards and Gelu keepers talk Froidetown life.
 # Froidlings is what the townspeople call themselves. The things in the woods are snow hounds.
 l70-npc-marinerson:
   hi: ["Pull up some snow, friend. Sorry about the chair. There isn't one."]
@@ -27,8 +27,6 @@ l70-npc-marinerson:
       sk: survival 25
       a: ["Snow hounds run in threes. Put a fire at your back and they lose heart. And don't go after the robed folk into the Iceshed. They don't walk you back out."]
       fail: ["The cold. Mostly the cold. Sorry, friend, that's no help at all."]
-    - q: "Ever hear the name Dina?"
-      a: ["No, sorry. A woman sat at this fire a while back, mind. Asked me where the town ends. I told her about my dad. She wrote it down like it mattered."]
   barks:
     idle: ["When the pipes sang you could skate to work.", "My knees say minus forty. They don't lie.", "Sit a while. Fire doesn't charge."]
     hi: ["Hello, friend.", "Cold one, eh?", "Evening."]
@@ -65,8 +63,6 @@ l70-npc-larsson:
       a: ["The Carnifices of Gelu. They pray to the frost out at the Iceshed and they don't care for our plumbing. We've passed several firm motions about them."]
     - q: "What's past the river?"
       a: ["Froston. A trading outfit camped there, pumped something up out of the ground, then left in a hurry. Nobody has volunteered to go see what."]
-    - q: "Ever hear the name Dina?"
-      a: ["Not a constituent. A woman did petition this office once, from away. She wanted every door in the Kingdom listed. I told her we have the one. She was not pleased with my government."]
   barks:
     idle: ["Order. Sorry. Order, please.", "The pipes are a file on my desk. A cold file.", "All in favour of warm? Carried."]
     hi: ["Honourable guest.", "The house says hello."]
@@ -92,21 +88,17 @@ l70-npc-odell:
   bye: ["Bring scrap next time.", "No refunds. I like you, though."]
   walk: ["Walk away, that's fine. Price goes up.", "You'll be back. I've got the only boot."]
   ask:
-    - q: "Where am I?"
-      a: ["Noahtown market, chief. Best table in Froidetown. Only table in Froidetown. Don't check."]
-    - q: "How do I get out?"
-      a: ["White door on Kelpie Street, no charge. There's a camp past the river where a trading company packed up overnight. They got out some way, and they didn't use the white door. I've looked for how. I found boots."]
     - q: "What are you selling?"
       a: ["Scrap, wire, a mitten, a boot. Everything on this table fell off something better."]
     - q: "Where's your stock from?"
       a: ["Froston, mostly. The camp past the river. Those traders left fast. I tidy up after them. For a fee."]
+    - q: "What happened to the Froston traders?"
+      a: ["Packed overnight and didn't use the white door on Kelpie Street. I searched the sheds for how they left. Only found boots and spare relays."]
     - q: "Any discount for a new face?"
       sk: barter 35
       do: discount
       a: ["Oh, fine. It's an honest face. Under the frost."]
       fail: ["Sorry, chief. A price is a price. I'd feel bad about it and I'd still charge you."]
-    - q: "Ever hear the name Dina?"
-      a: ["No. But somebody bought a hand radio off me a while back and paid without haggling. A woman. Asked about ways out the whole time I was counting. People who don't haggle scare me, chief."]
   barks:
     idle: ["Scrap, wire, one good boot. Just the one.", "It all fell off something nicer.", "No refunds. I'll feel terrible, though."]
     hi: ["Chief.", "Buying or browsing?"]
@@ -132,21 +124,17 @@ l70-npc-ines:
   bye: ["Keep off the thin ice.", "If it howls, shout."]
   walk: ["Dismissed, I guess.", "Fine. I've a river to watch."]
   ask:
-    - q: "Where am I?"
-      a: ["Burns River post, east side of Froidetown. Town's behind me, woods are in front of me. That's the whole map I'm paid to care about."]
-    - q: "How do I get out?"
-      a: ["White door, Kelpie Street. I've a man who stands near it. Past that, not my jurisdiction, civilian. I've walked the woods end to end and they bring you back to town. I don't like it either."]
     - q: "What does the River Guard do?"
       a: ["Watch the river. Keep the hounds out of town. Say sorry to whoever we tackle by mistake."]
     - q: "What's out in the woods?"
       a: ["Snow hounds. White, lean, hungry. Packs of three. They circle, then they rush the second you turn your back. Fire puts them off."]
+    - q: "Is the ice safe to cross?"
+      a: ["Thick near the main bridge, sketchy downstream by the old Froston huts. One wrong crack and your boots fill with black water."]
     - q: "Want to come with me?"
       sk: speech 45
       do: recruit
       a: ["One patrol. Then I'm back on the river."]
       fail: ["I'm on shift, civilian. Have been for years."]
-    - q: "Ever hear the name Dina?"
-      a: ["Not on my blotter. One of my people logged a woman crossing the ice alone, asking where the river lets out. It doesn't let out. It's on the report somewhere. No name taken. I had words with him."]
   barks:
     idle: ["River's holding. Ice is thick as a ministry report.", "Eyes on the treeline.", "If it howls, that's hounds. If it sings, that's worse."]
     hi: ["Civilian.", "State your business. Kidding. Mostly."]
@@ -172,23 +160,16 @@ l70-npc-vael:
   bye: ["Go. Leave your fire behind.", "The frost goes with you."]
   walk: ["You turn your back on the cold. It does not mind.", "Run to your fire."]
   ask:
-    - q: "Where am I?"
-      a: ["The Iceshed. The one honest place. The town down the hill calls itself a kingdom. It is a campfire with opinions."]
-    - q: "How do I get out?"
-      a: ["Out. Every warm one says out. There is no out, only colder and less cold. Stop wanting the door and you are already gone from here."]
-      then:
-        - q: "That's not an answer."
-          a: ["No. It is the only one I have. I walked for a door once, a long time, before the robe. I found snow. I am at peace with snow."]
     - q: "What do you pray to?"
       a: ["Gelu. The cold that was here before the city. It does not ask. It keeps."]
     - q: "What's your quarrel with the town?"
       a: ["Water that runs is water that thaws. The town borrows warmth and never pays it back."]
+    - q: "Why call this the Iceshed?"
+      a: ["Because Froidetown is only a campfire with opinions, and up here we stopped pretending a wooden roof makes winter polite."]
     - q: "Can I join you?"
       sk: speech 50
       a: ["Sit in the snow until you stop shaking. Then come back."]
       fail: ["You still love your fire. Go."]
-    - q: "Ever hear the name Dina?"
-      a: ["Names melt. A woman came up the hill and asked what lies under the ice. I told her: more ice. She thanked me. No one thanks me. I have thought about it since."]
   barks:
     idle: ["Gelu keeps what it takes.", "Warmth is a loan. The frost collects.", "You shiver. Good. You're listening."]
     hi: ["Warm one.", "You're still warm. Pity."]
@@ -214,18 +195,14 @@ l70-npc-pierrette:
   bye: ["Stay warm, hon.", "Bye now. Sorry. Bye."]
   walk: ["Oh. Okay. Mind the pile.", "Bye, then. Sorry."]
   ask:
-    - q: "Where am I?"
-      a: ["Kelpie Street, hon. I'd know it blind. I've lifted every inch of it and put it over there."]
-    - q: "How do I get out?"
-      a: ["Out of the snow? There's the hotel, it's got a lobby. Oh, you mean away. I don't know, hon. I keep the way clear to the white door, if that helps. People do go through it."]
     - q: "Out here clearing the walks by hand?"
       a: ["It snows, I shovel. It snows again. That's the whole job, hon."]
     - q: "How's life along Kelpie Street?"
       a: ["Cold. Then you get a hot drink and it's lovely for a minute. Then cold. I don't mind. I've got good mitts."]
     - q: "See anything under the snow on your rounds?"
       a: ["Paw prints round the bins at night. Three sets. I shovel them over so the little ones don't see."]
-    - q: "Ever hear the name Dina?"
-      a: ["No, sorry, hon. I mostly see boots. There was a pair once, city boots, no good for here. Went up the street and back four times like she was counting doors."]
+    - q: "Do you ever take the shovel as far as the woods?"
+      a: ["Oh no, hon. Just the walks to the white door and the hotel steps. Past the last lamp the snow packs hard enough for hounds."]
   barks:
     idle: ["Sorry. Just shovelling. Again.", "It snows, I shovel. The snow never says thanks.", "Mind your step there, hon."]
     hi: ["Hi, hon!", "Oh, hello!"]
@@ -251,18 +228,14 @@ l70-npc-gord:
   bye: ["Keep it lit, bud.", "Yep."]
   walk: ["Yep. Okay.", "Wood's here if you want it."]
   ask:
-    - q: "Where am I?"
-      a: ["My woodpile. Town's that way, trees are that way. I go between."]
-    - q: "How do I get out?"
-      a: ["Couldn't tell you, bud. I've walked the woods far as the trees go. They quit, then they start over, and you're looking at town again. So I stopped walking and started chopping."]
     - q: "You split all the firewood for town?"
       a: ["Split logs for every fire in town. Birch for heat. Spruce for spite."]
     - q: "How are folks treating you out by the woodpile?"
       a: ["Fine. Wood's wood. Folks are nice. Too nice. Takes ten minutes to buy a log."]
     - q: "Find anything weird out in the timber?"
       a: ["Trees marked out past the river. Cut with a blade, not an axe. Robed lot, I figure. They don't take the wood. That's the strange part."]
-    - q: "Ever hear the name Dina?"
-      a: ["Nope. Sold an armload to a woman going out past the river once. Told her nobody goes out there. She said that's why. Didn't bring my sled back."]
+    - q: "Where do all these birch trees grow?"
+      a: ["Right past the edge of the yard, bud. Walk till they stop, then they start over and you're staring back at town. Best not to overthink timber."]
   barks:
     idle: ["Birch burns hot. Spruce burns rude.", "Coming through. Log.", "Wood's free. Carrying it costs."]
     hi: ["Bud.", "Yep. Hi."]
@@ -288,18 +261,14 @@ l70-npc-maple:
   bye: ["Stay warm, love!", "Come back when it thaws. So, never. Come back anyway."]
   walk: ["Oh! Bye, then, love.", "It'll keep. It's frozen."]
   ask:
-    - q: "Where am I?"
-      a: ["Maple's tea stall, love, Noahtown. Froidetown's the whole place. You must be from away. Nobody from here asks. Nobody from here has a tan, either."]
-    - q: "How do I get out?"
-      a: ["You only just got here! There's the white door you'll have come in by. Folk from away always leave by it in the end. They never say where it goes. Somewhere with wheels, I heard."]
     - q: "Still serving tea with the pipes frozen?"
       a: ["I run the tea stall. Iced tea stall, since the taps quit. Not my idea, love."]
     - q: "How's Noahtown holding up without running water?"
       a: ["Lovely, when there's water. Three days without and everyone's still saying please. Give it a week. Then you'll see a Froidling get short."]
     - q: "Anybody acting odd around your counter?"
       a: ["Bev from Parliament bought six teas and no cups. That's strange. Oh, and something's been at the bins. Three sets of prints."]
-    - q: "Ever hear the name Dina?"
-      a: ["No, love. A woman from away had a tea here once and asked me which way was out. I said out of what? She laughed, but not the fun kind."]
+    - q: "Get many strangers wandering into Noahtown?"
+      a: ["Most come through the white door shivering in town coats, looking for warm water. Half thaw out and open a bench stall; the rest walk right back out."]
   barks:
     idle: ["Tea's frozen. It's a tea popsicle now. Two backdollars.", "Take a mitt, love. I only found the one.", "Everybody looks cold. Still."]
     hi: ["Hello, love!", "Tea? It's crunchy."]
@@ -325,18 +294,14 @@ l70-npc-doug:
   bye: ["Tight lines, fella.", "Step soft. Ice talks."]
   walk: ["Yep. Fish do that too.", "See you."]
   ask:
-    - q: "Where am I?"
-      a: ["On the Burns River, fella. On top of it. Don't stomp."]
-    - q: "How do I get out?"
-      a: ["Follow the river. Rivers go somewhere, that's the point of them. I dropped a bottle with a note down the hole once. Found it in the same hole next spring. So. Maybe not the river."]
     - q: "Ever actually pull a fish out of that hole?"
       a: ["Fish the river through a hole. Mostly I catch cold."]
     - q: "Why sit out on the river instead of in town?"
       a: ["Loud. Everybody saying sorry at once. Out here it's just me and the hole."]
     - q: "Notice anything under the ice down here?"
       a: ["Lights under the ice, some nights. Down by the old camp. I don't fish that end."]
-    - q: "Ever hear the name Dina?"
-      a: ["Nope. Lady stood over my hole once and asked how deep it goes. Never measured. She lowered a line with a little tin box on it. Listening for something. Didn't catch anything either."]
+    - q: "Ever see where the river current actually flows?"
+      a: ["Hard to tell under two feet of ice. I dropped a bottle with a note once and found it in the same hole next spring."]
   barks:
     idle: ["Nothing biting. Fish are polite that way.", "Caught a boot once. Odell bought it.", "Shh. Sorry. Shh."]
     hi: ["Fella.", "Shh. Hi."]
@@ -362,18 +327,14 @@ l70-npc-bev:
   bye: ["Vote early, constituent.", "I'll raise it in the house. Whatever it was."]
   walk: ["The member notes your exit.", "Fine. I'll put it in writing."]
   ask:
-    - q: "Where am I?"
-      a: ["Kelpie North, my riding. Six doors, a lamp post and a bin. I got all four votes."]
-    - q: "How do I get out?"
-      a: ["There's a committee. I'm on it. We meet Thursdays and agree it's a hard question. If you learn anything, constituent, I'd take it as a kindness. I'd like to have something to read out."]
     - q: "What does a Member of Parliament actually do here?"
       a: ["I sit in Parliament. Mostly I sit by the radiator that doesn't work."]
     - q: "Off the record, how's Froidetown actually doing?"
       a: ["On the record? Thriving. Off it? Three days dry and the Prime Minister's answer was a speech."]
     - q: "Anything odd come up in Parliament lately?"
       a: ["The Prime Minister was brief on Tuesday. Two sentences. I've asked for an inquiry."]
-    - q: "Ever hear the name Dina?"
-      a: ["It's not in the minutes. A woman from away did address the committee once. She knew more than we did after an hour. We voted to thank her. She'd already left."]
+    - q: "Why carry all six of Maple's teas without cups?"
+      a: ["Budgetary demonstration, constituent. If a riding can't drink, the House shouldn't pour."]
   barks:
     idle: ["I'd like to table a motion about my toes.", "Point of order. It's cold.", "With respect, and I do mean it, brr."]
     hi: ["Constituent!", "Member for Kelpie North. Hello."]
@@ -399,16 +360,12 @@ l70-guard-1:
   bye: ["Keep to the street after dark, eh."]
   walk: ["Carry on, then.", "Evening."]
   ask:
-    - q: "Where am I?"
-      a: ["Kelpie Street, Froidetown. That's the hotel, that's the office block, that's a snowbank. I've memorized it."]
-    - q: "How do I get out?"
-      a: ["White door, end of the street. My post, most nights. I've opened it. There's music behind it. I shut it again. A Froidling's got no business past music like that."]
+    - q: "What's behind that white door at the end of Kelpie Street?"
+      a: ["My post, most nights. I've cracked it once. There's music behind it, so I shut it again. A Froidling's got no business past music like that."]
     - q: "River patrol quiet tonight?"
       a: ["Tracks by the river. Paw prints. Three sets."]
     - q: "What kind of trouble comes off the river?"
       a: ["Hounds, rats, and the robed lot from the Iceshed. In that order. Usually."]
-    - q: "Ever hear the name Dina?"
-      a: ["No, citizen. A woman did come through my door once and went straight back out the same hour. Asked if it was the only one. I said it's the only one I guard."]
   barks:
     idle: ["Patrol's a patrol.", "Hood up, citizen.", "Hounds hate a fire. Remember it."]
     hi: ["Evening, citizen.", "Citizen."]
@@ -434,16 +391,12 @@ l70-guard-2:
   bye: ["Mind the dark, traveller."]
   walk: ["Okay. I'll look at somebody else.", "Bye, then."]
   ask:
-    - q: "Where am I?"
-      a: ["Froidetown. Are you lost? You look lost. Everybody from away looks lost. I think it's the shoes."]
-    - q: "How do I get out?"
-      a: ["Sarge says there's no out past the woods, just more town. I think there's a hatch under the old camp. I've no proof. I've a feeling. Sarge says feelings aren't a report."]
     - q: "Your sergeant keeping you busy?"
       a: ["Something knocked over the bins. Sarge says hounds. I say big hounds."]
     - q: "What are you supposed to keep out of town?"
       a: ["Hounds, mostly. And the robed ones. They stand at the trees and just look. I look back. So far it's a tie."]
-    - q: "Ever hear the name Dina?"
-      a: ["Was that her name? I saw a woman cross the river ice alone and didn't stop her. Didn't get a name. Sarge was sore about it for a week."]
+    - q: "Think anything's buried under the old Froston camp?"
+      a: ["Sarge says there's nothing past the woods, just more town. I think there's a hatch under those sheds, though Sarge says hunches aren't a report."]
   barks:
     idle: ["Left boot's rubbing.", "Is that a hound or a bin? Bin.", "Sarge says watch. So I'm watching."]
     hi: ["Hi, traveller.", "Oh, hey."]
@@ -469,19 +422,12 @@ l70-guard-3:
   bye: ["Keep to the lit side."]
   walk: ["Suit yourself.", "Mm."]
   ask:
-    - q: "Where am I?"
-      a: ["Froidetown. Same as yesterday. Same as twenty-two years of yesterdays."]
-    - q: "How do I get out?"
-      a: ["You don't. You get used to it. I came in through that white door myself, way back. Went to go home after a week and it opened on a skating rink. Wasn't a rink I came from. So I took the job."]
-      then:
-        - q: "Where did you come from?"
-          a: ["A stairwell in a parking garage. Missed a step. That's all I've got. Don't make a face. Yours is no better, I'd bet."]
     - q: "Twenty-two years on Kelpie Street. Anything new today?"
       a: ["Taps are dry. Tracks by the river. Prime Minister made a speech. So, nothing."]
+    - q: "Ever walk back through that white door yourself?"
+      a: ["Tried once after a week, way back. Opened onto a skating rink. Wasn't the parking garage I came from, so I stayed and took the Guard coat."]
     - q: "Who still gives the River Guard trouble?"
       a: ["Hounds. Rats in the garage under the office block. The robed lot. And people from away with questions."]
-    - q: "Ever hear the name Dina?"
-      a: ["No. Had one from away ask me the same things you're asking. A woman. I told her what I told you. She didn't take the job."]
   barks:
     idle: ["Twenty-two years.", "Lamp's out on the corner. Again.", "Seen worse winters. Seen this exact one, too."]
     hi: ["Mm.", "You."]
@@ -507,14 +453,12 @@ l70-gelu-1:
   bye: ["Go."]
   walk: ["Yes. Leave.", "Go to your fire."]
   ask:
-    - q: "Where am I?"
-      a: ["On kept ground. Walk on."]
-    - q: "How do I get out?"
-      a: ["Walk until you fall. That is out. Ask the Hierophant if you want it said kindly."]
     - q: "Why stand watch out in this wind?"
       a: ["Keeping the frost. Ask Vael. Go."]
-    - q: "Ever hear the name Dina?"
-      a: ["I keep no names. Not even mine. Go."]
+    - q: "What do the robes mean?"
+      a: ["Wind breaks around frozen wool better than town coats. Less breath wasted."]
+    - q: "Why call folks from town embers?"
+      a: ["Because you carry little fires and burn yourselves down fighting the dark. Leave."]
   barks:
     idle: ["The thaw is a lie.", "Blades hold an edge in the cold.", "Leave the fire alone."]
     hi: ["Ember.", "You."]
@@ -540,17 +484,15 @@ l70-gelu-2:
   bye: ["Go. Sorry. I mean, just go."]
   walk: ["Yeah. Best you do.", "Okay."]
   ask:
-    - q: "Where am I?"
-      a: ["The woods above the town. Froidetown's down there, with the lamps. I can see my mum's street from the big rock. I don't look. Much."]
-    - q: "How do I get out?"
-      a: ["Vael says wanting out is the warm talking. But there's a white door in town that folk from away use. I used to dare my brother to touch it."]
     - q: "Why join the folks up on this hill?"
       a: ["Keeping the frost. That's what we say. Mostly it's standing. Ask Vael, he says it better."]
       then:
         - q: "You don't sound sure."
           a: ["I'm sure. I'm cold and I'm sure. I just miss soup, is all. You're allowed to miss soup. I asked."]
-    - q: "Ever hear the name Dina?"
-      a: ["No. A woman came up to see Vael once. From away, like you. He talked to her a long time. He doesn't do that. I wasn't close enough to hear, and I tried."]
+    - q: "Can you still see Froidetown from here?"
+      a: ["Down below, all yellow lamps by Kelpie Street. I can see my mum's roof from the big rock. Try not to look much."]
+    - q: "Do the robes even keep the cold out?"
+      a: ["No. That's sort of the point, except nobody mentions how bad your toes get by noon."]
   barks:
     idle: ["Cold's good. Cold's good.", "Can't feel my toes. That's the idea.", "Is that soup? No. Snow."]
     hi: ["Oh. Hi. Shh.", "Town-sider."]
@@ -576,14 +518,12 @@ l70-gelu-3:
   bye: ["Go and breathe elsewhere."]
   walk: ["Forty words. You left at forty.", "Counted."]
   ask:
-    - q: "Where am I?"
-      a: ["Three hundred and twelve paces from the Iceshed. Nine hundred from the river. The rest is not worth the number."]
-    - q: "How do I get out?"
-      a: ["I walked north once. Two thousand paces of trees, then the town's own lamps in front of me. The count came back to nothing. That was the day I took the robe."]
     - q: "Why keep count of days out in the frost?"
       a: ["Keeping the frost, and the count. The Hierophant has the words. I have the numbers. Go and bother him."]
-    - q: "Ever hear the name Dina?"
-      a: ["No name. One woman, one visit, up the hill and down. Two hundred and six paces each way. She was counting too. I respected that."]
+    - q: "What started the count in the first place?"
+      a: ["Two thousand paces north through the trees brought me straight back to town lamps. When distance stops making sense, you count mornings instead."]
+    - q: "Ever lose track of what day it is?"
+      a: ["Never. Notches in oak bark don't melt, breather."]
   barks:
     idle: ["Eleven hundred and seven.", "Four crows. Yesterday five.", "The thaw is a miscount."]
     hi: ["Breather.", "One visitor."]
@@ -609,14 +549,12 @@ l70-gelu-4:
   bye: ["Go quietly."]
   walk: ["I can still hear you.", "Softer next time."]
   ask:
-    - q: "Where am I?"
-      a: ["Where it's quiet. Listen. Nothing. That's the address."]
-    - q: "How do I get out?"
-      a: ["Lie down in the snow and listen. Under the ice, far down, something hums. Like a light left on in an empty room. That's your out, little candle. It's a long way under."]
     - q: "Why stay out in the trees listening?"
       a: ["Listening to the frost. Vael tells it better. Go up the hill. Softly."]
-    - q: "Ever hear the name Dina?"
-      a: ["I hear everything but names. A woman knelt on the river and held a little box to the ice. She heard the hum too. She smiled. I didn't like that she smiled."]
+    - q: "What can you actually hear under the ice?"
+      a: ["Far down beneath the river, something hums like a fluorescent light left on in an empty hallway. Loudest on quiet nights."]
+    - q: "Why call me little candle?"
+      a: ["Because I hear your pulse and your sleeve dragging across the air before you ever reach the hill."]
   barks:
     idle: ["Shh.", "The ice is talking tonight.", "Gelu sees your breath. I hear it."]
     hi: ["Little candle.", "Shh. Hello."]

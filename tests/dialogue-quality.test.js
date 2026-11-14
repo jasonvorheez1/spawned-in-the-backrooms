@@ -10,9 +10,12 @@ import dlg13 from "../scripts/lib/data/dlg-levels-1-3.yml";
 import dlg4 from "../scripts/lib/data/dlg-level4.yml";
 import dlg5 from "../scripts/lib/data/dlg-level5.yml";
 import dlg78 from "../scripts/lib/data/dlg-levels-7-8.yml";
+import dlg1011 from "../scripts/lib/data/dlg-levels-10-11.yml";
 import dlgLv13 from "../scripts/lib/data/dlg-level13.yml";
 import dlg31 from "../scripts/lib/data/dlg-level31.yml";
 import dlg70 from "../scripts/lib/data/dlg-level70.yml";
+import dlg109 from "../scripts/lib/data/dlg-level109.yml";
+import dlgTiny from "../scripts/lib/data/dlg-tiny.yml";
 import samantha from "../scripts/lib/data/samantha.yml";
 import chatter from "../scripts/lib/data/chatter.yml";
 import canned from "../scripts/lib/data/canned-talk.yml";
@@ -27,9 +30,12 @@ const DLG_FILES = {
   "dlg-level4.yml": dlg4,
   "dlg-level5.yml": dlg5,
   "dlg-levels-7-8.yml": dlg78,
+  "dlg-levels-10-11.yml": dlg1011,
   "dlg-level13.yml": dlgLv13,
   "dlg-level31.yml": dlg31,
   "dlg-level70.yml": dlg70,
+  "dlg-level109.yml": dlg109,
+  "dlg-tiny.yml": dlgTiny,
 };
 
 const SLOP_RX = /\b(perhaps|chosen one|destiny|nothing is ever|more than just|not ready for the truth|you'll understand eventually|some things are better left|answers have always been|things aren't what they seem|what you become|tapestry of)\b/i;
@@ -100,6 +106,25 @@ test("all NPC ask trees have non-empty prompts/replies, valid skill checks, and 
 
   expect(badNodes).toEqual([]);
   expect(dupQuestions).toEqual([]);
+});
+
+test("orientation and Dina questions remain scoped to guides and trail contacts rather than spammed across NPCs", () => {
+  const counts = { "Where am I?": 0, "How do I get out?": 0, "Ever hear the name Dina?": 0 };
+  const noDinaFiles = ["dlg-generic.yml", "dlg-thehub.yml", "dlg-level13.yml", "dlg-level31.yml", "dlg-level70.yml"];
+  for (const [file, tree] of Object.entries(DLG_FILES)) {
+    let fileDina = 0;
+    for (const npc of Object.values(tree)) {
+      if (!npc || typeof npc !== "object" || !Array.isArray(npc.ask)) continue;
+      for (const node of npc.ask) {
+        if (node?.q in counts) counts[node.q] += 1;
+        if (node?.q === "Ever hear the name Dina?") fileDina += 1;
+      }
+    }
+    if (noDinaFiles.includes(file)) expect(fileDina).toBe(0);
+  }
+  expect(counts["Where am I?"]).toBeLessThanOrEqual(25);
+  expect(counts["How do I get out?"]).toBeLessThanOrEqual(27);
+  expect(counts["Ever hear the name Dina?"]).toBeLessThanOrEqual(16);
 });
 
 test("quest dialogue modules avoid em-dashes and AI-slop phrasing in player-facing strings", () => {
