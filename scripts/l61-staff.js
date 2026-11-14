@@ -399,8 +399,9 @@ export function update(ctx, dt) {
         playGesture(me, m, now, ACT.serve);
         applyRest(me, dt);
         me.rotation = { yaw: yawOf(dx, dz) };
+        const trayInfo = tray?.state?.info; // "Order #43: Chili dog": the label rides into the patron's hands
         ctx.destroy(D.tray);
-        handTray(ctx, who, D.n); // the patron takes a real tray (scripts/lib/snacktray.js)
+        handTray(ctx, who, D.n, trayInfo); // the patron takes a real tray (scripts/lib/snacktray.js)
         who.state.payout = { xp: 2, items: D.items };
         errandStep(who.state, "l61-tray", "Bus Your Tray", "Finish your food, then slide the tray into the tray return rack in the Level 6.1 food court. The facelings notice who does."); // the food court's odd job (scripts/l61-use.js)
         ctx.emit(

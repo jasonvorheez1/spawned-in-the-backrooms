@@ -15,7 +15,7 @@ export function handTray(ctx, who, n, info) {
     model: { id: TRAY_MODEL },
     behavior: "scripts/l61-use.js",
     lifetime: TRAY_LIFE,
-    state: { kind: "snacktray", name: "Food tray", verb: "Pick up", info: info ?? "Burger Bop tray", tint: "#ffd84a", carryKg: TRAY_KG, mat: "plastic", hp: 999, maxHp: 999 },
+    state: { kind: "snacktray", name: "Food tray", verb: "Pick up", info: info ?? "Snackrooms food tray", tint: "#ffd84a", carryKg: TRAY_KG, mat: "plastic", hp: 999, maxHp: 999 },
   });
   who.state.l61Hold = id; who.state.l61Tray = ctx.now();
   return id;
