@@ -54,7 +54,7 @@ export function buildOutpost(ctx, R) {
     return true;
   }
   if (R.type === "breach") {
-    if (!ctx.place.state.l109breachSet) { ctx.place.state.l109breachSet = 1; setDoor(ctx, R.id, true); } // opened once, by the wanderer; only a player shuts it
+    if (!ctx.place.state.l109breachSet) { ctx.place.state.l109breachSet = 1; setDoor(ctx, R.id, true); const d = ctx.getObject("l109d-" + R.id); if (d?.state) { d.state.open = true; d.state.verb = "Close Door"; } } // opened once, by the wanderer; only a player shuts it
     lights(R, C.lights.extra.breach);
     prop(R, "pack", "megcrate", 3, 10, 25); prop(R, "wc", "wheelchair", -4, 16, 160); // the wanderer's dropped pack
     const note = R.at(3.8, 10.8, 0);
