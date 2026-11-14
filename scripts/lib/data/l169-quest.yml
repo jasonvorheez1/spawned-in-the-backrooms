@@ -1,0 +1,20 @@
+# Level 169 questline numbers (scripts/lib/level169-quest.js). Savi's picks unless noted.
+reach: { site: 30, porch: 4, edge: 60, use: 3 }     # metres: arrive at a checkpoint pad / porch box slack / near the edge
+meet: 4                                              # residents to meet for "A Place to Stay"
+canteen: 1.5                                         # Expedition Canteen: cold time x this when filled at Ferry (brief)
+coatHot: 1.15                                        # Insulated Travel Coat: sun gain x this in direct sun (read by the sun script later)
+expedition:
+  leaveHour: 16                                      # the walkers' plan: full sun
+  check: { skill: survival, difficulty: 35 }
+  packs:
+    light:  { bottles: 4, tins: 2, blankets: 0 }
+    even:   { bottles: 8, tins: 4, blankets: 2 }
+    heavy:  { bottles: 12, tins: 6, blankets: 4 }
+  needBottles: 8                                     # fewer than this and they turn back even if they wait
+cpA: { repair: { skill: repair, difficulty: 30 }, stockBottles: 2 }
+pim: { speech: { skill: speech, difficulty: 40 }, giveBottles: 2 }
+package: { bottles: 2, tins: 1 }                     # Ferry's Supply Package, once per desert day (L.day.periodMs)
+logA:
+  made-it: "Day 3. Two of Senna's walkers came through at night with a full cart. Slept here, went on north. Left two bottles."
+  turned-back: "Day 3. Two walkers from Ferry's came in at noon, burnt, cart half empty. Rested two nights. Went home."
+  none: "Nobody's signed in for a while. Locker's low."
