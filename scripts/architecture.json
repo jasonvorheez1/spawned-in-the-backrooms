@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7762,
-  "updatedAt": "2026-11-13T23:49:08.989Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG across Level 0, the mall, The Hub and authored lore destinations; player.state carries progression, gear, quests, faction standing and resume location. Shared player behaviors and place simulations connect authored spaces with generated layouts and encounters, while Slate and Bulk Data Manager add creator-facing studio and registry tools.",
+  "basedOnSpecVersion": 7774,
+  "updatedAt": "2026-11-14T00:31:44.227Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, the mall, The Hub and authored lore destinations; player.state carries progression, gear, quests, faction standing and resume location. Shared player behaviors connect authored spaces to generated layouts and encounters, while Slate and Bulk Data Manager provide creator-facing studio and registry tools.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes, anomalies and generated dressing; cells/objects.scene also places the invisible Bulk Data Manager object.",
     "places/bonus (3D) - vaporwave mall with shops, simulated staff, arcade, homes and salon; authored placements live in cells/.",
     "places/thehub (3D) - tunnel crossroads, keyed destination doors, camps, crew and quest props; distinct from Bonus room routing.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation, waking, staged tutorial and HALOGEN handoff to Dina's lead.",
-    "places/level9 (3D, The Suburbs) - room-seeded streets and fitted houses with furnished searchable interiors; street hounds, stealers and deathmoths, plus smilers in dark houses.",
+    "places/level9 (3D, The Suburbs) - seeded streets and fitted, individually styled furnished houses; about a fifth are lit (smilers use dark houses), some front doors are pick-locked, and the sim grows meadow/dry grass with Awakening assets.",
     "places/level11 (3D) - Sedco Spotlight and city blocks; sim.js uses shared city and vault/depth builders for the subway, Sedco vault and Robotics crawl/storeroom.",
     "places/level01, level02, level1-7, level10-13, level21, level26-27, level31, level70 (3D) - authored lore destinations; Level 11 includes Sedco CCTV and street-grate access.",
     "places/gamma, spamton, testlab (3D) - additional authored destinations and test space."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input actions.",
-    "places/<place>/config.yaml + cells/*.scene + sim.js - local config, authored placements and place generation/tick behavior.",
+    "places/<place>/config.yaml + cells/*.scene + sim.js - local configuration, authored placements and place generation/tick behavior.",
     "sim.js - global tick for body-style propagation and bounded incremental restyling in occupied places.",
     "scripts/main-menu.js + main-menu-ui.js + intake/tutorial scripts + scripts/ui.js - title, character creation, arrival/tutorial, Dina routing and composed HUD/menus.",
     "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, wake/resume, aiming, third-person view and HUD zone naming.",
@@ -27,7 +27,7 @@
   "shared": [
     "scripts/lib/hub.js + preload data/scripts - Bonus shared-room routing, solo IDs, home destinations, labels and proximity preload; distinct from places/thehub.",
     "scripts/lib/thehub.js + scripts/lib/hubkeys.js - canonical Hub tunnels, door/key registry and position helpers; shared by geometry, simulation, quests, doors and UI.",
-    "scripts/lib/loot.js + items.js + weapons.js/data/weapons.yml + scripts/lib/weapon-look.js - common loot/items and weapon variants; weapon-look selects fitted meshes or scripted geometry. scripts/lib/data/cat-wardrobe.yml catalogs cat looks and wearable options.",
+    "scripts/lib/loot.js + items.js + weapons.js/data/weapons.yml + scripts/lib/weapon-look.js - common loot/items and weapon variants; weapon-look selects fitted meshes or scripted geometry; cat-wardrobe.yml catalogs clothing models.",
     "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/lib/level3-hatch.js - parametric doors/motion and deterministic paired Level 3 hatches.",
     "scripts/lib/data/l9-houses.yml + l9-props.yml + scripts/lib/level9.js - Level 9 house/model/door and prop catalogs plus pure seed-driven layout; consumed by places/level9/sim.js and zone lookup.",
     "scripts/lib/data/l02-props.yml + l02-remodel.yml + l02-grid.js; breakables.js + breakable data + wallgrid.js - Level 0.2 remodel and shared prop/generated-wall damage and regrowth.",
@@ -52,31 +52,31 @@
     "scripts/lib/errands.js - player.state.errands records, errHints and errand journal entries; completion updates currency, payout, reputation and hints; scripts/lib/field-errands.js + hub-errands.js own confirmation maps.",
     "scripts/lib/level31-quest.js + level70-quest.js + remodel-quest.js + scripts/lib/level11-quests.js - their level-specific quest stages, routes and rewards; Level 11 progress is stored under player.state.quests/qdone and related quest keys.",
     "scripts/lib/rep.js - player.state.fame/infamy by faction, compatibility net rep for legacy readers, karma and bounded repHistory; fame/infamy drive faction titles/ranks and hostility checks.",
-    "places/level9/sim.js - per-room l9seed, generated house/street layout, fog, l9DressV curb dressing and encounter manager/spawn cadence; creature behaviors own their per-foe state. Bulk Data Manager owns collection metadata/records, while Slate writes shared world plans."
+    "places/level9/sim.js - per-room l9seed, layout, fog, l9DressV curb dressing, V=17 generated interiors/doors and encounter cadence; creature behaviors own per-foe state. Bulk Data Manager owns collection metadata/records."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest and CCTV behaviors; arcade-play.js and smoothie-player.js add game-specific play.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera; camera writes aimPt/aimPitch → ballistics/weaponAim; zoneHere → maze and authored level labels, including Level 9 zoneAt.",
     "scripts/lib/body3.js tick3 → third-person body pose: camera rotation supplies aim yaw/pitch; combat-anims.yml family rows drive gun/melee clips, and session.ready3 selects a ready melee carry except during swings or disabled states.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; periodic saves exclude intake, bonus and tutorial0.",
-    "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; toHub/toSolo cross to mall/home and maintain roomHop/save-place, separate from places/thehub; fresh visit → main-menu.js, START routes to intake or Bonus, and salon UI can be opened through the character menu.",
+    "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; toHub/toSolo cross to mall/home and maintain roomHop/save-place, separate from places/thehub; fresh visit → main-menu.js, START routes to intake or Bonus.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js offers place-matched jobs; carried items/kills/world events advance errands → quests.js journal, player.state.errands/qtrack and payouts.",
     "talk.js openDialogue → npc-starters.js questChoices (including faction and M.E.G. assignment choices); selected text → level-specific/Hub/errand handlers, factionReply or megAssignmentReply.",
     "tutorial0 HALOGEN cut → tut0-cut.js + dina-quest.js; diaries/cuts/clues across Level 26, Level 1, Level 3 and Gamma advance player.state.dinaQ; Dina quest tick routes to The Tenth Tunnel at dinaQ 9 or hubPhoebe.",
     "places/level1/sim.js l1-to-hub → scripts/level-door.js crossing → thehub; hub-from-l1 returns to arrival position; Level 1 zoneAt classifies KEEP bounds and labels.",
     "places/thehub/sim.js → lib/thehub.js and hub-people.js/hub-dress.js versioned shell, doors, props, crew and camps; hub-door-geo.js renders doors, hub-door.js handles use/crossing, plaques label destinations.",
-    "places/level9/sim.js reads scripts/lib/level9.js layout, l9-houses.yml, furniture.yml and l9-props.yml → houses/interiors and street spawn managers; hounds, stealers and moths stay on streets, smilers occupy unlit houses; scripts/lib/foe-variant.js/data selects deathmoth kinds.",
-    "scripts/interact.js press on a salon usable or salon seat → player.state.salonOpen/wardrobeOpen and salon-ui.js; scripts/critter.js + scripts/lib/critter-model.js render and apply the look, with interact/input closing the menu when appropriate."
+    "places/level9/sim.js reads scripts/lib/level9.js + l9-houses.yml, furniture.yml and l9-props.yml → seeded houses/interiors, lit windows and street spawns; zoneAt9 routes dark-house smilers and street hounds/stealers/moths. scripts/interact.js finds a locked door's hinge → scripts/lockpick.js picks it → press reaches home11-door.js to swing it open.",
+    "scripts/deathmoths.js uses foe-variants.yml + hunt.js: moth swarm state drives close dives or spitwing projectiles, eyespot stare, choir calls and damage effects; players' camera yaw feeds watched/stare checks."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon scripts - authored shops/props and simulated staff; Block Panic and Squeeze Play are separate playable counters.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; home11 and Level 5 use separate buckets.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
-    "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates a crawl, tight ceilings/tunnel mouths trigger automatic crawl, and it auto-recovers when headroom clears.",
+    "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates a crawl, tight ceilings/tunnel mouths trigger automatic crawl.",
     "Level 01/Zenith and Level 1 geometry builders - authored station and car park/service geometry; corridor materials, pipes, fixtures and lights vary deterministically per cell.",
     "scripts/meg-agent.js + npc-temper.js + forgive.js + critter-model.js - NPC reactions, cover, barks, movement/fighting and companion following; faction, role, outfit and assault incidents vary by NPC.",
     "scripts/duller-spawn.js + duller-spec.js + scripts/lib/data/dullers.yml - shared Duller spec for ambient spawn and Foe Bay; per-place caps/chances and 240-second per-player rolls tune its rarity.",
-    "places/level9/sim.js + scripts/lib/data/l9-houses.yml + art/l9-houses/fit.py + plan.py - five fitted house types share seeded wallpaper, bedroom, furnishing, breakage/search and street encounter placement; furniture and creature kind/location vary by catalog and lot."
+    "places/level9/sim.js + l9-houses.yml + art/l9-houses/fit.py + plan.py - fitted house types share deterministic interiors/furnishing/search and street encounter placement; per-seed paper, floor, rug, living-room plan and ransacking vary; l9-props tunes street dressing/lights."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -87,10 +87,10 @@
   ],
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
-    "The Hub run frame/coordinates are centralized in scripts/lib/thehub.js; u follows a run, v spans its width, +X trunk, side tunnels alternate north/south. Preserve door IDs, mappings and coordinates together; Hub place.state.hubV versions its generated shell.",
-    "Level 9 keeps l9seed, fog and looted contents across generated rebuilds. places/level9/sim.js layout V=15 rebuilds furnished houses but preserves existing containers' items/scavved/lock; l9DressV independently versions curbside details.",
-    "Level 9 house contract: fitted models are grounded and centred in catalog w×d footprints, with front at file +Z; keep each l9-houses.yml interior dimensions and door x/z/y aligned to the 1 m × 2.1 m hole and rotated sim hinge/stoop. l9-props zones distinguish l9_street from houses and lit lots.",
-    "Level 9 creatures use layout-derived zones: hounds, stealers and moth navigation are street-only, while smilers are spawned in dark-house interiors; moths additionally require street cells. Keep zoneAt/layout and spawn/behavior assumptions aligned.",
-    "Weapon meshes fitted by art/weapons/build.py and art/weapons/fit.json must stay in scripts/lib/weapon-look.js's scripted frame: mesh offsets and hand-grip transforms determine placement; body3's hand offsets and carry poses are coupled to it."
+    "The Hub run frame/coordinates are centralized in scripts/lib/thehub.js; u follows a run, v spans its width, +X trunk, side tunnels alternate north/south. Preserve door IDs, mappings and coordinates together; Hub place.state.hubV versions its shell.",
+    "Level 9 keeps l9seed, fog and looted contents across generated rebuilds. places/level9/sim.js V=17 rebuilds house interiors and lock/lit dressing but preserves existing containers' items/scavved/lock; l9DressV independently versions curbside details.",
+    "Level 9 house contract: fitted models are grounded and centred in catalog w×d footprints, front at file +Z; keep l9-houses.yml interior dimensions and door x/z/y aligned to the 1 m × 2.1 m hole and rotated sim hinge/stoop. Locked front-door lockpick state lives on the home11-door hinge object; successful picking emits press to that door behavior.",
+    "Level 9 zoneAt/layout drives shelter and creature placement: fitted houses with a model and front door count as l9_house; hounds, stealers and moth navigation stay street-side, while smilers use unlit house interiors. Keep these zone/spawn assumptions coupled.",
+    "Weapon meshes fitted by art/weapons/build.py and art/weapons/fit.json must stay in scripts/lib/weapon-look.js's scripted frame: mesh offsets and hand-grip transforms determine placement; body3's hand offsets and carry poses are coupled to that frame."
   ]
 }
