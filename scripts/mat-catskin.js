@@ -109,7 +109,7 @@ export function material(ctx) {
     const shine = smoothstep(0.24, 0.07, nx.add(0.32).mul(nx.add(0.3)).add(ny.sub(0.4).mul(ny.sub(0.4))).sqrt());
     if (!ctx.params.faceless) col = mix(col, vec3(0.07, 0.045, 0.045), noseM);   // the crew: no nose   // matte, no shine (Shelly Nov 12)
     m.colorNode = col;
-    m.emissiveNode = col.mul(0.06).add(eye.mul(irisAmt.mul(pic.a).mul(inside).mul(front).mul(0.35)));   // a little glow so the iris reads in the dim yellow light
+    m.emissiveNode = col.mul(0.06).add(eye.mul(irisAmt.mul(pic.a).mul(inside).mul(front).mul(P("eyeGlow", 0).mul(3).add(0.35))));   // eyeGlow: an eye that shines on its own (Phoebe's white)   // a little glow so the iris reads in the dim yellow light
     m.roughness = 0.68;
     return m;
   }

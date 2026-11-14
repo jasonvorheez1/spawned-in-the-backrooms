@@ -119,7 +119,7 @@ export function catModel(sex, look) {
       fur: skin(fur), fur2: skin('#ffffff'),
       headFur: {
         kind: 'scripted', script: 'scripts/mat-catskin.js', color: fur,
-        params: { ...(blank ? { faceless: 1 } : { face }), ...(mouth && !blank ? { mouth } : {}), ...faceLife(sk, look, face, faces), ...(crew ? { faceless: 1 } : {}), faceVScale: projection[0], faceVBias: projection[1], faceNear: projection[2], ...(sex === 'm' ? { noseCutV: 0.40, noseY: 0.855, noseZ: 0.315, noseS: 1.2 } : { noseCutV: 0.39, noseY: 0.797, noseZ: 0.249, noseS: 1 }), ...eyeRGB(look?.eyes), ...shadowRGB(look?.shadow) }
+        params: { ...(blank ? { faceless: 1 } : { face }), ...(mouth && !blank ? { mouth } : {}), ...faceLife(sk, look, face, faces), ...(crew ? { faceless: 1 } : {}), faceVScale: projection[0], faceVBias: projection[1], faceNear: projection[2], ...(sex === 'm' ? { noseCutV: 0.40, noseY: 0.855, noseZ: 0.315, noseS: 1.2 } : { noseCutV: 0.39, noseY: 0.797, noseZ: 0.249, noseS: 1 }), ...eyeRGB(look?.eyes), ...shadowRGB(look?.shadow), ...(look?.glowEye ? { eyeGlow: look.glowEye } : {}) }
       },
       innerEar: { color: look?.inner || '#d58e8a', roughness: 0.74 }
     }

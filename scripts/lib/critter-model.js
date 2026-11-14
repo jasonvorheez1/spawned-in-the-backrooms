@@ -1032,6 +1032,7 @@ export function catLook(l) {
   o.fluff = Array.isArray(l?.fluff) ? l.fluff : l?.fluff ? [l.fluff] : ['cheeks']
   if (l?.chest != null) o.chest = l.chest; else if (sex === 'f' && Number(l?.bustS)) o.chest = Math.max(0, Math.min(1, 0.5 * Number(l.bustS)))
   if (l?.species === 'faceling') { o.etype = 'faceling'; const SK = ['#ebd4c2', '#f3cfad', '#fae1dc', '#dfa273', '#c68652', '#8d5524']; if (!SK.includes(String(l?.fur).toLowerCase())) o.fur = hashPick(`${l?.fseed ?? ''}|${l?.top}|${l?.sex}|skin`, ['#ebd4c2', '#f3cfad', '#fae1dc', '#dfa273', '#c68652', '#8d5524']) } // a faceling's skin is a person's, never the orange default
+  if (Number(l?.glowEye) > 0) o.glowEye = Number(l.glowEye)   // Phoebe: her eyes glow white (Shelly Nov 14)
   if (!o.hair) delete o.hair
   return o
 }

@@ -5,7 +5,7 @@ import { furrySpec, critterSpec, HUMAN, humanFace, setStyle, seatHead, buildFor,
 export const PHOEBE_LOOK = {
   species: "cat", sex: "f", hairc: "#c4602b", fur: "#d9824a", belly: "#f3d9c4", tip: "#f3d9c4", nose: "#c86f6a", 
   topw: "longsleeve", top: "#141216", botw: "skirt", bottom: "#17141a", shoes: "boots", shoec: "#121014",
-  expr: "smug", pupil: "#ffffff", glowEye: 1.1, sclera: "#120d10", eye: "#0e0a0c", // coat, hair, bow, chain and banded boots ride on top as the Blender outfit (art/phoebe-outfit/build.py)
+  expr: "neutral", etype: "sleepy", pupil: "#ffffff", glowEye: 1.1, sclera: "#120d10", eye: "#ffffff", // Shelly Nov 14: no grin, eyes glowing white; half-lidded calm reads smug // coat, hair, bow, chain and banded boots ride on top as the Blender outfit (art/phoebe-outfit/build.py)
 }
 // her human self (Shelly, Nov 9: "model phoebe too since she doesnt have a human equivalent"): the same girl on the human body,
 // ginger hair, the Partygoer coat over black, smug and half-lidded, the white eyes glowing (rules: phoebe-always-looks-smug, white pupils glow)
