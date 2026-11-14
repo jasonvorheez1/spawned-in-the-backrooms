@@ -657,6 +657,10 @@ function lay(ctx) {
     for (const [i, z] of [[1, -8.5], [2, -7.4], [3, -5.0]]) fit(`l11-derma-chair-${i}`, CHAIR, FX - 1.2, MALL_Z + z, -90, [0.75, 0.9, 0.75]);
     fit("l11-derma-plant", PLANT, FX - 1.0, MALL_Z - 4.0, 0, [0.55, 1.2, 0.55]);
     fit("l11-derma-cab", CAB, MALL_X - 4.6, MALL_Z - 6.5, 90, [1.6, 0.85, 0.45]);
+    sp("l11-clinic-medbox", { tags: ["container", "breakable"], feetPosition: { x: MALL_X - 4.4, y: Y0 + 0.85, z: MALL_Z - 6.5 }, rotation: { yaw: 90 },
+      primitive: { kind: "box", width: 0.42, height: 0.24, depth: 0.32 }, material: { color: "#d8e6df", roughness: 0.45 },
+      physics: { body: "static", collider: "box" }, visibleRange: { max: 35 },
+      state: { name: "Clinic Trauma Reference Box", mat: "metal", hp: 60, maxHp: 60, lock: "lockpick:35", items: "ubook:l11_clinic_medicine,medkit,antiseptic,painkillers" } });
     // Dina's Chapter 2 clinic dead-drop + anomalous Level ! threshold on the clinic back wall
     sp("l11-dina-cache", {
       tags: ["usable"],
@@ -1328,6 +1332,15 @@ pop steam rate=?mobile:6|12 on=disc(.2) life=1.6..2.6 v=up(.7..1.1)+sdir()*.15 s
     physics: { body: "static", collider: "box" },
     behavior: "scripts/level11-use.js",
     state: { kind: "supply-chest", name: "M.E.G. Emergency Rations Crate", verb: "Salvage Supplies" },
+  });
+  sp("l11-base-armory-box", {
+    tags: ["container", "breakable"],
+    feetPosition: { x: OUTPOST_X + 2.5, y: 0.33, z: OUTPOST_Z + 1.8 },
+    rotation: { yaw: 0 },
+    primitive: { kind: "box", width: 0.62, height: 0.36, depth: 0.42 },
+    material: { color: "oklch(0.32 0.04 140)", roughness: 0.55, metalness: 0.4 },
+    physics: { body: "static", collider: "box" }, visibleRange: { max: 40 },
+    state: { name: "Base Beta Armory Strongbox", mat: "metal", hp: 90, maxHp: 90, lock: "lockpick:50", items: "ubook:l11_mall_guns,ammo,shells,medkit" },
   });
 
   sp("l11-meg-agent-vance", {

@@ -742,6 +742,10 @@ function lay(ctx) {
       audio: { clip: G("military-handheld-radio-static-chatter-squelch-loop"), loop: true, gain: 0.08, spatial: true, maxDistance: 7 } });
     // olive crates stacked by the wall
     megM("l61-meg-crates", X + 0.75, 3.6, 90, "/cdn/value.7c44079ccd25ace23036723308db44ce52d891d12cd6520e430f3ae61f8f1754.glb", { body: "static", collider: "box" });
+    sp("l61-commissary-safe", { tags: ["container", "breakable"], feetPosition: { x: X + 2.4, y: 0, z: 5.2 }, rotation: { yaw: 180 },
+      primitive: { kind: "box", width: 0.55, height: 0.42, depth: 0.42 }, material: { color: "oklch(0.32 0.04 140)", roughness: 0.55, metalness: 0.45 },
+      physics: { body: "static", collider: "box" }, visibleRange: { max: 40 },
+      state: { name: "Commissary Strongbox", mat: "metal", hp: 85, maxHp: 85, lock: "lockpick:25", items: "ubook:l61_snack_barter,cash:25,warm_tea" } });
     // corkboard with pinned notices
     box("l61-meg-cork", X + 0.17, 1.3, 3.6, 0.03, 0.8, 1.1, { color: "oklch(0.55 0.07 60)", roughness: 1 }, nf);
     [[3.3, 1.75, "CLEARANCE LIST"], [3.75, 1.65, "ESCORT ONLY"], [3.5, 1.4, "MISSING"], [3.9, 1.4, "SHIFT ROTA"]].forEach(([z, y, t], k) =>

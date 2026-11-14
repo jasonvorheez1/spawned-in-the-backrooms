@@ -79,6 +79,7 @@ function lay(ctx) {
   // the sound of it: water dripping into water, a trickle, the hush of a long brick throat
   sp("l34-bed", { feetPosition: { x: 0, y: 1, z: 25 }, audio: { clip: "cdn/ambience-sewer-tunnel-dripping-water-echo-slow-trickle-loop.mp3", loop: true, gain: 0.16, spatial: false, bus: "Ambience" } });
   sp("l34-pool-drip", { feetPosition: { x: 0, y: 0.5, z: 25 }, audio: { clip: "cdn/sfx-water-drops-falling-into-deep-pool-echo-loop.mp3", loop: true, gain: 0.3, spatial: true, maxDistance: 14 } });
+  sp("l34-courier-bag", { tags: ["container"], feetPosition: { x: -2.4, y: 0, z: 25 }, rotation: { yaw: 25 }, primitive: { kind: "box", width: 0.52, height: 0.28, depth: 0.34 }, material: { color: "oklch(0.28 0.04 160)", roughness: 0.7 }, physics: "static", visibleRange: { max: 35 }, state: { name: "Waterproof Courier Drybag", verb: "Search", info: "Wedged behind a drainage pipe.", items: "ubook:l34_sewer_sneak,bandage,battery" } });
 }
 
 function feed(ctx, s) {

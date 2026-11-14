@@ -1,0 +1,360 @@
+# Fallout: New Vegas-style Skill Books (permanent +3, one-time per unique placed edition, capped at SKILL_MAX)
+# and Skill Magazines (temporary +10 for 120 in-game minutes via clock.js gameNow, non-stacking per skill).
+# Strictly mapped to the 13 real skills in scripts/lib/stats.js SKILLS.
+
+bookBonusDefault: 3
+bookCapPerGeneric: 2        # legacy generic book:<skill> cannot be read more than twice per skill
+magazineBonusDefault: 10
+magazineDurationGameMin: 120
+
+books:
+  medicine:
+    title: First Aid Fundamentals
+    desc: "Illustrated M.E.G. trauma field primer covering splinting, tourniquets, and dosage limits. Permanently increases Medicine by +3."
+    value: 140
+    kg: 0.3
+    rarity: rare
+  lockpick:
+    title: Practical Lock Mechanisms
+    desc: "Battered locksmith workbook with cutaway pin-tumbler diagrams and tension wrench notes. Permanently increases Lockpicking by +3."
+    value: 140
+    kg: 0.3
+    rarity: rare
+  repair:
+    title: Field Repair Handbook
+    desc: "Dog-eared technician binder for patching pipework, receivers, and worn harnesses with scrap. Permanently increases Repair by +3."
+    value: 140
+    kg: 0.3
+    rarity: rare
+  survival:
+    title: Improvised Survival Guide
+    desc: "Field notes on boiling suspect water, layering damp wool, and rationing under flicker-light fatigue. Permanently increases Survival by +3."
+    value: 140
+    kg: 0.3
+    rarity: rare
+  speech:
+    title: Principles of Persuasion
+    desc: "Practical manual on de-escalation, quartermaster bargaining etiquette, and steady negotiation. Permanently increases Speech by +3."
+    value: 140
+    kg: 0.3
+    rarity: rare
+  guns:
+    title: Basic Firearms Training
+    desc: "Marksman fundamentals handbook covering sight alignment, recoil management, and malfunction drills. Permanently increases Guns by +3."
+    value: 150
+    kg: 0.3
+    rarity: rare
+  science:
+    title: Introduction to Electronics
+    desc: "Lab primer on relay logic, ballast transformers, Back OS terminal shells, and battery diagnostics. Permanently increases Science by +3."
+    value: 150
+    kg: 0.3
+    rarity: rare
+  sneak:
+    title: Silent Movement Techniques
+    desc: "Scout pamphlet detailing weight transfer on damp carpet, acoustic shadows, and breaking sightlines. Permanently increases Sneak by +3."
+    value: 140
+    kg: 0.3
+    rarity: rare
+  melee:
+    title: Close Combat Training
+    desc: "Heavy-grip guard stances and reach timing for crowbars, pipe wrenches, and corridor corners. Permanently increases Melee Weapons by +3."
+    value: 140
+    kg: 0.3
+    rarity: rare
+  unarmed:
+    title: Boxing & Clinch Manual
+    desc: "Worn gym notebook on footwork, knuckle alignment, and breaking an entity lunge at arm's length. Permanently increases Unarmed by +3."
+    value: 135
+    kg: 0.3
+    rarity: rare
+  barter:
+    title: B.N.T.G. Ledger & Valuation
+    desc: "Annotated merchant handbook on assaying scrap, weighing almond water lots, and reading markups. Permanently increases Barter by +3."
+    value: 140
+    kg: 0.3
+    rarity: rare
+  explosives:
+    title: Demolitions & Ordnance Notes
+    desc: "M.E.G. Sapper booklet on firesalt stabilization, improvised fuses, and blast radius discipline. Permanently increases Explosives by +3."
+    value: 155
+    kg: 0.3
+    rarity: rare
+  energy:
+    title: Cell & Arc Systems Primer
+    desc: "Technical monograph on high-draw capacitors, overcharged batteries, and thermal insulation sleeves. Permanently increases Energy Weapons by +3."
+    value: 155
+    kg: 0.3
+    rarity: rare
+
+# Unique hand-placed skill book editions (token "ubook:<id>"). Each ID can only grant its bonus once per character.
+uniqueBooks:
+  l1_warehouse_repair:
+    skill: repair
+    bonus: 3
+    title: "Habitable Zone Maintenance Manual (Ch. II)"
+    desc: "Grease-smudged forkliftbay binder recovered from Level 1 crate racks. Permanently increases Repair by +3."
+    place: level1
+    value: 150
+    kg: 0.3
+  l2_pipes_survival:
+    skill: survival
+    bonus: 3
+    title: "Pipework Heat & Dehydration Protocol"
+    desc: "Sealed tin booklet left beside a frozen valve wheel on Level 2. Permanently increases Survival by +3."
+    place: level2
+    value: 150
+    kg: 0.3
+  l21_alef_repair:
+    skill: repair
+    bonus: 3
+    title: "Base Alef Lockout Rigging Log"
+    desc: "Typed maintenance appendix by Technician Halden on bypassing jammed storage latches. Permanently increases Repair by +3."
+    place: level21
+    value: 165
+    kg: 0.3
+  l21_alef_science:
+    skill: science
+    bonus: 3
+    title: "Alef Fuse & Generator Diagnostics"
+    desc: "Margin-annotated schematics retrieved from Base Alef's dark wing. Permanently increases Science by +3."
+    place: level21
+    value: 165
+    kg: 0.3
+  l3_station_energy:
+    skill: energy
+    bonus: 3
+    title: "Electrical Station High-Voltage Primer"
+    desc: "Laminated switchgear handbook kept dry inside a Level 3 breaker cabinet. Permanently increases Energy Weapons by +3."
+    place: level3
+    value: 170
+    kg: 0.3
+  l4_omega_speech:
+    skill: speech
+    bonus: 3
+    title: "Base Omega Intake & Negotiation Binder"
+    desc: "M.E.G. diplomatic liaison notes stored near the vacant Level 4 offices. Permanently increases Speech by +3."
+    place: level4
+    value: 155
+    kg: 0.3
+  l4_office_science:
+    skill: science
+    bonus: 3
+    title: "Back OS Operator's Quick Reference"
+    desc: "Spiral-bound workstation booklet abandoned beside a blinking terminal on Level 4. Permanently increases Science by +3."
+    place: level4
+    value: 155
+    kg: 0.3
+  l5_hotel_sneak:
+    skill: sneak
+    bonus: 3
+    title: "Concierge Night-Round Ledger"
+    desc: "Notes on quiet carpets and blind corridors inside the Terror Hotel. Permanently increases Sneak by +3."
+    place: level5
+    value: 165
+    kg: 0.3
+  l61_snack_barter:
+    skill: barter
+    bonus: 3
+    title: "Snackrooms Commissary Price Index"
+    desc: "B.N.T.G. trade conversion sheets tucked under a diner booth cushion on Level 6.1. Permanently increases Barter by +3."
+    place: level61
+    value: 155
+    kg: 0.3
+  l7_seawatch_explosives:
+    skill: explosives
+    bonus: 3
+    title: "Seawatch Flare & Charge Manual"
+    desc: "Waterproof M.E.G. ordnance booklet for wet-air fuses and underwater flares. Permanently increases Explosives by +3."
+    place: level7
+    value: 175
+    kg: 0.3
+  l8_caves_melee:
+    skill: melee
+    bonus: 3
+    title: "Close-Quarter Caving & Pickwork"
+    desc: "Weighted leather manual detailing choked handles in narrow tunnels. Permanently increases Melee Weapons by +3."
+    place: level8
+    value: 165
+    kg: 0.3
+  l9_suburbs_survival:
+    skill: survival
+    bonus: 3
+    title: "Fogbank Overnight Survival Notes"
+    desc: "Pencil-written checklist left in an abandoned Suburbs nightstand. Permanently increases Survival by +3."
+    place: level9
+    value: 155
+    kg: 0.3
+  l10_harvest_unarmed:
+    skill: unarmed
+    bonus: 3
+    title: "Farmhand Conditioning & Clinch Drill"
+    desc: "Weathered pocket manual found in Level 10's barnloft. Permanently increases Unarmed by +3."
+    place: level10
+    value: 150
+    kg: 0.3
+  l11_mall_guns:
+    skill: guns
+    bonus: 3
+    title: "Municipal Range & Carbine Drills"
+    desc: "Clean 1990s range instruction manual stored behind a Strip Mall counter on Level 11. Permanently increases Guns by +3."
+    place: level11
+    value: 175
+    kg: 0.3
+  l11_clinic_medicine:
+    skill: medicine
+    bonus: 3
+    title: "Centro Dermatologico Trauma Compendium"
+    desc: "Bound clinical manual on burn salves, septic wounds, and shock triage. Permanently increases Medicine by +3."
+    place: level11
+    value: 175
+    kg: 0.3
+  l26_cabin_lockpick:
+    skill: lockpick
+    bonus: 3
+    title: "Purser's Master Brass-Lock Manual"
+    desc: "Salt-warped shipwright book on warded cabin locks and bent pick picks on Level 26. Permanently increases Lockpicking by +3."
+    place: level26
+    value: 165
+    kg: 0.3
+  l34_sewer_sneak:
+    skill: sneak
+    bonus: 3
+    title: "Blind-Water & Grate Evasion Notes"
+    desc: "Waterproof courier strip on moving silently under Smiler earshot in Level 34. Permanently increases Sneak by +3."
+    place: level34
+    value: 170
+    kg: 0.3
+  l109_triage_medicine:
+    skill: medicine
+    bonus: 3
+    title: "Ward 4 Acute Triage Manual"
+    desc: "Sterile surgical ring-binder rescued from a locked Neon Hospital pharmacy cage. Permanently increases Medicine by +3."
+    place: level109
+    value: 185
+    kg: 0.3
+  l109_surgical_science:
+    skill: science
+    bonus: 3
+    title: "Negative-Pressure Diagnostics Guide"
+    desc: "Clinical bio-containment circuitry handbook from Level 109's operating theatre. Permanently increases Science by +3."
+    place: level109
+    value: 185
+    kg: 0.3
+  l70_frost_survival:
+    skill: survival
+    bonus: 3
+    title: "Sub-Zero Watchman's Almanack"
+    desc: "Fur-lined pocket guide to preventing frostbite in Froidetown. Permanently increases Survival by +3."
+    place: level70
+    value: 165
+    kg: 0.3
+
+# Temporary Skill Magazines (token "mag:<skill>"): +10 for 120 in-game minutes.
+# Magazines use stackingGroup "mag_<skill>" with policy "refresh" so multiple different skills can stay active,
+# while reading the same skill magazine twice refreshes duration instead of stacking infinitely.
+magazines:
+  medicine:
+    title: "Medical Review"
+    desc: "Crisp triage digest: Medicine +10 for 120 in-game minutes."
+    bonus: 10
+    durationMin: 120
+    value: 28
+    kg: 0.1
+    color: "#ff8a8a"
+  lockpick:
+    title: "Locksmith Monthly"
+    desc: "Illustrated cylinder & shim issue: Lockpicking +10 for 120 in-game minutes."
+    bonus: 10
+    durationMin: 120
+    value: 28
+    kg: 0.1
+    color: "#e6c86e"
+  repair:
+    title: "Repair Digest"
+    desc: "Shop-floor fixes and weld tolerances: Repair +10 for 120 in-game minutes."
+    bonus: 10
+    durationMin: 120
+    value: 26
+    kg: 0.1
+    color: "#d9a06a"
+  survival:
+    title: "Backcountry Field Weekly"
+    desc: "Rationing, shelter, and clean-water checklists: Survival +10 for 120 in-game minutes."
+    bonus: 10
+    durationMin: 120
+    value: 24
+    kg: 0.1
+    color: "#8fd07a"
+  speech:
+    title: "Diplomat's Quarterly"
+    desc: "Persuasion, framing, and faction protocol: Speech +10 for 120 in-game minutes."
+    bonus: 10
+    durationMin: 120
+    value: 26
+    kg: 0.1
+    color: "#7fc8ff"
+  guns:
+    title: "Range & Ballistics Issue"
+    desc: "Zeroing tables and trigger discipline: Guns +10 for 120 in-game minutes."
+    bonus: 10
+    durationMin: 120
+    value: 32
+    kg: 0.1
+    color: "#e9c46a"
+  science:
+    title: "Applied Circuitry Journal"
+    desc: "Back OS security tables and relay pinouts: Science +10 for 120 in-game minutes."
+    bonus: 10
+    durationMin: 120
+    value: 30
+    kg: 0.1
+    color: "#80e5d8"
+  sneak:
+    title: "Ghosting & Fieldcraft"
+    desc: "Footfall pacing and corridor cover issue: Sneak +10 for 120 in-game minutes."
+    bonus: 10
+    durationMin: 120
+    value: 28
+    kg: 0.1
+    color: "#b0b8d8"
+  melee:
+    title: "Edge & Haft Digest"
+    desc: "Leverage, edge geometry, and corridor swings: Melee Weapons +10 for 120 in-game minutes."
+    bonus: 10
+    durationMin: 120
+    value: 26
+    kg: 0.1
+    color: "#e09a78"
+  unarmed:
+    title: "Ring & Mat Magazine"
+    desc: "Combatives feature on slips, hooks, and clinch breaks: Unarmed +10 for 120 in-game minutes."
+    bonus: 10
+    durationMin: 120
+    value: 24
+    kg: 0.1
+    color: "#e0b08a"
+  barter:
+    title: "B.N.T.G. Market Gazette"
+    desc: "Weekly commodity spreads and trader markups: Barter +10 for 120 in-game minutes."
+    bonus: 10
+    durationMin: 120
+    value: 24
+    kg: 0.1
+    color: "#c8e08a"
+  explosives:
+    title: "Blast & Primer Monthly"
+    desc: "Fuse timing and improvised casing ratios: Explosives +10 for 120 in-game minutes."
+    bonus: 10
+    durationMin: 120
+    value: 32
+    kg: 0.1
+    color: "#ff9a5a"
+  energy:
+    title: "Cell & Filament Review"
+    desc: "Capacitance curves and discharge safety: Energy Weapons +10 for 120 in-game minutes."
+    bonus: 10
+    durationMin: 120
+    value: 32
+    kg: 0.1
+    color: "#6fe8ff"

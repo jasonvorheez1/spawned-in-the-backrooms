@@ -217,8 +217,12 @@ export function update(ctx, dt) {
     if (st.variant === "whisperwing" && st.title !== "Spitwing Swarm") s.state.title = "Spitwing Swarm";
     m.hpMax = Math.max(m.hpMax ?? 0, st.hp);
     if (m.bleed && now >= m.bleed.next) { const bp = ctx.place.players.find((q) => q.id === m.bleed.pid);
-      if (bp && (bp.state.hp ?? 0) > 0) { const b = Math.max(1, Math.round(M.bite * 0.6)); bp.state.hp -= b; ctx.emit("damageNumber", { position: { x: bp.feetPosition.x, y: bp.feetPosition.y + 1.2, z: bp.feetPosition.z }, value: b, color: "#a01818" }); ctx.emit("screenFlash", { color: "#5a0000", duration: 0.25, intensity: 0.25 }, { audience: { player: bp.id } }); }
-      m.bleed.n--; m.bleed.next = now + 900; if (m.bleed.n <= 0 || !bp) m.bleed = null; }
+      if (bp && (((bp.state?.bleedStopAt ?? 0) >= (m.bleed.at ?? 0)) || ((bp.state?.redAt ?? 0) >= (m.bleed.at ?? 0)))) { m.bleed = null; }
+      else {
+        if (bp && (bp.state.hp ?? 0) > 0) { const b = Math.max(1, Math.round(M.bite * 0.6)); bp.state.hp -= b; ctx.emit("damageNumber", { position: { x: bp.feetPosition.x, y: bp.feetPosition.y + 1.2, z: bp.feetPosition.z }, value: b, color: "#a01818" }); ctx.emit("screenFlash", { color: "#5a0000", duration: 0.25, intensity: 0.25 }, { audience: { player: bp.id } }); }
+        m.bleed.n--; m.bleed.next = now + 900; if (m.bleed.n <= 0 || !bp) m.bleed = null;
+      }
+    }
 
     // Target selection: lit flashlight takes priority over unlit nearby players
     let prey = null;
@@ -400,7 +404,7 @@ export function update(ctx, dt) {
           p.vignette = 0.3;
           blur[p.id] = now + D.blurFor * 1000;
           const v = st.variant;
-          if (v === "razorwing" || v === "choir") m.bleed = { pid: p.id, n: v === "choir" ? 5 : 3, next: now + 900 }; // cuts that keep bleeding
+          if (v === "razorwing" || v === "choir") m.bleed = { pid: p.id, n: v === "choir" ? 5 : 3, next: now + 900, at: now }; // cuts that keep bleeding
           if (v === "eyespot" || v === "choir") { // its wings smother your light
             if (p.state.light) p.state.light = false;
             p.state.sanity = Math.max(0, (p.state.sanity ?? 100) - M.sanity * 4);

@@ -38,7 +38,10 @@ function put(K, name, a, b, yaw = 0, o = {}) { const m = D.models[name], [w, h, 
     model: { id: m.id, ...(m.forward ? { forward: m.forward } : {}) }, layout: { box: { min: { x: -bx, y: 0, z: -bz }, max: { x: bx, y: h, z: bz } } },
     material: o.tint ? { color: o.tint } : undefined, visibleRange: VR, castShadow: false, ...(o.solid === false ? {} : { physics: { body: "static", collider: "box" } }), ...(o.spec ?? {}) }); }
 // a searchable container: the world's "container" pattern (tags + state.items), read by the player's press
-function stash(K, name, a, b, yaw, label, pool, lock) { return put(K, name, a, b, yaw, { spec: { tags: ["container", "furniture"], state: { items: loot(K, pool), name: label, verb: "Search", kind: "medical", ...(lock && !K.ctx.place.state?.l109StockUnlocked?.[K.R.id] ? { lock } : {}) } } }); }
+function stash(K, name, a, b, yaw, label, pool, lock, extraItem) {
+  const base = loot(K, pool), items = [extraItem, base].filter(Boolean).join(",");
+  return put(K, name, a, b, yaw, { spec: { tags: ["container", "furniture"], state: { items, name: label, verb: "Search", kind: "medical", ...(lock && !K.ctx.place.state?.l109StockUnlocked?.[K.R.id] ? { lock } : {}) } } });
+}
 // interactive medical hardware backed by scripts/l109-use.js
 function usePart(K, p, a, b, yaw = 0, st = {}, o = {}) {
   const uid = `r-${K.R.id}-${p.part}-${Math.round(a * 10)}_${Math.round(b * 10)}`;
@@ -104,7 +107,9 @@ function theatre(K) { const dead = K.R.abandoned, A = 2, B = 15, R = K.R;
     const sb = B - 2.7 + i * 1.8;
     put(K, "sink", 14.55, sb, -90, i === 1 ? { spec: { tags: ["usable"], behavior: "scripts/l109-use.js", state: { kind: "sink", name: "Scrub Sink", verb: "Wash Hands", info: "+sanity · +stamina", c: R.at(14.55, sb, 0.95) } } } : {});
   }
-  stash(K, "cabinet", -6, 29.7, 180, "Instrument Cabinet", "theatre"); stash(K, "cabinet", -4.6, 29.7, 180, "Instrument Cabinet", "theatre"); stash(K, "lockbox", 9, 29.6, 180, "Sterile Box", "theatre");
+  const ps = K.ctx.place.state ?? {};
+  const takeSurg = !ps.surgBookPlaced; if (takeSurg) ps.surgBookPlaced = true;
+  stash(K, "cabinet", -6, 29.7, 180, "Instrument Cabinet", "theatre"); stash(K, "cabinet", -4.6, 29.7, 180, "Instrument Cabinet", "theatre"); stash(K, "lockbox", 9, 29.6, 180, "Sterile Box", "theatre", undefined, takeSurg ? "ubook:l109_surgical_science" : "");
   put(K, "locker", -14.6, 10, 90); put(K, "locker", -14.6, 10.6, 90); put(K, "locker", -14.6, 11.2, 90); put(K, "gurney", -12.5, 20, 90 + (dead ? 40 : 0)); put(K, "wheelchair", -3.5, 5, 140); put(K, "wetsign", -2, 8.5, 20, { solid: false });
 }
 function icu(K) { const I = D.icu, dead = K.R.abandoned, per = I.beds[0] + (K.r() < 0.5 ? 1 : 0);
@@ -142,7 +147,9 @@ function pharmacy(K) { const P = D.pharmacy, dead = K.R.abandoned, cw = D.models
   P.aisles.forEach((b, r) => { for (let i = 0; i < P.perAisle; i++) { const a = P.aisleA + (i - (P.perAisle - 1) / 2) * 1.45;
       if (dead && K.r() < 0.12) continue; put(K, "shelf", a, b, r % 2 ? 180 : 0); } });
   part(K, { part: "cage", w: 5, d: 4.5, h: 2.5 }, 11.5, 26.5, 180, { solid: true });
-  stash(K, "fridge", 13, 27.6, 180, "Drug Fridge", "cage", P.cageLock); stash(K, "lockbox", 10.5, 27.8, 180, "Controlled Drugs Box", "cage", P.boxLock);
+  const ps = K.ctx.place.state ?? {};
+  const takeTriage = !ps.triageBookPlaced; if (takeTriage) ps.triageBookPlaced = true;
+  stash(K, "fridge", 13, 27.6, 180, "Drug Fridge", "cage", P.cageLock); stash(K, "lockbox", 10.5, 27.8, 180, "Controlled Drugs Box", "cage", P.boxLock, takeTriage ? "ubook:l109_triage_medicine" : "");
   stash(K, "cabinet", -2, P.counterB + 1.6, 180, "Dispensary Cabinet", "pharmacy"); stash(K, "filing", 5.5, P.counterB + 1.6, 180, "Prescription Files", "desk");
   usePart(K, { part: "cooler" }, -11.5, 4.0, 90, { kind: "cooler", name: "Water Cooler", verb: "Drink Water", info: "cold filtered" }, { solid: true, lift: 0.85 });
   put(K, "stackchair", -5, 3, 200, { solid: false }); put(K, "stackchair", -4.3, 3, 170, { solid: false }); put(K, "boxes", -12.5, 20, 30); put(K, "boxes", 9, 13, -10); put(K, "wetsign", -5.5, 9, 0, { solid: false }); loreTerm(K, -11.5, 12, 90, 111, "Lab Results Terminal");

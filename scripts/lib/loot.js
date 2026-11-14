@@ -27,8 +27,92 @@ export function spawnShells(ctx, c) {
 
 // Loot pools: a weapon with `pools: [l4, l5]` in weapons.yml turns up only where its pool is rolled (l0 lobby, l1 garage, l2 pipes, l3 station and Gamma,
 // l4 offices, l5 hotel); a weapon with none is a base weapon rolled everywhere. poolOf maps a place id to its pool.
-export const POOL = { main: "l0", level1: "l1", level2: "l2", level3: "l3", gamma: "l3", level4: "l4", level5: "l5", level7: "l7", level8: "l2", level9: "l5", level21: "l2", level70: "l70", level01: "l01", level10: "l10", level11: "l11", level26: "l26", level31: "l31", level109: "l109" };
+export const POOL = {
+  main: "l0", level01: "l01", level02: "l0",
+  level1: "l1", level2: "l2", level21: "l2",
+  level3: "l3", gamma: "l3", level4: "l4",
+  level5: "l5", level6: "l5", level61: "l5",
+  level7: "l7", level8: "l2", level9: "l5",
+  level10: "l10", level11: "l11", level26: "l26",
+  level31: "l31", level34: "l2", level70: "l70", level109: "l109",
+};
 export const poolOf = (place) => POOL[place] ?? "l0";
+export const PLACE_CATEGORY = {
+  main: "office", level01: "office", level02: "hazardous",
+  level1: "industrial", level2: "maintenance", level21: "abandoned_settlement",
+  level3: "industrial", gamma: "expedition", level4: "office",
+  level5: "residential", level6: "hazardous", level61: "food_service",
+  level7: "expedition", level8: "hazardous", level9: "residential",
+  level10: "abandoned_settlement", level11: "security", level26: "residential",
+  level31: "residential", level34: "maintenance", level70: "expedition", level109: "medical",
+};
+
+// Contextual category tables: weighted items & matched temporary skill magazines (never infini-respawning permanent Skill Books).
+export const LOOT_CATEGORIES = {
+  office: [
+    ["almond", 24], ["cloudy_almond", 7], ["warm_tea", 7], ["lobby_wafer", 14], ["bar", 9],
+    ["bobbypin", 12], ["battery", 9], ["tape", 6], ["keycard", 4], ["painkillers", 5],
+    ["bandage", 5], ["weapon", 9], ["cloth", 6], ["mag:science", 2.5], ["mag:speech", 2.5],
+    ["mag:lockpick", 2], ["mag:barter", 2],
+  ],
+  residential: [
+    ["almond", 18], ["cloudy_almond", 7], ["warm_tea", 8], ["beans", 9], ["bar", 9],
+    ["stale_ration", 8], ["meat", 12], ["bandage", 7], ["painkillers", 6], ["antiseptic", 4],
+    ["bobbypin", 9], ["cloth", 9], ["weapon", 9], ["ammo", 7],
+    ["mag:survival", 2.5], ["mag:sneak", 2.5], ["mag:melee", 2], ["mag:unarmed", 2],
+  ],
+  medical: [
+    ["almond", 18], ["bandage", 20], ["firstaid", 14], ["medkit", 7], ["painkillers", 14],
+    ["antiseptic", 12], ["splint", 9], ["stim_shot", 5], ["charcoal", 7], ["warm_tea", 6],
+    ["cloth", 3], ["mag:medicine", 4], ["mag:science", 2],
+  ],
+  industrial: [
+    ["battery", 16], ["tape", 14], ["kit", 10], ["fuse", 8], ["valve", 6],
+    ["bobbypin", 9], ["ammo", 12], ["shells", 6], ["weapon", 14], ["cloth", 6],
+    ["ration", 6], ["stale_ration", 6], ["painkillers", 5], ["splint", 4], ["firesalt", 4],
+    ["mag:repair", 3], ["mag:energy", 2], ["mag:explosives", 2],
+  ],
+  maintenance: [
+    ["tape", 16], ["battery", 15], ["kit", 9], ["fuse", 9], ["valve", 8],
+    ["bobbypin", 10], ["almond", 10], ["cloudy_almond", 6], ["warm_tea", 5],
+    ["bandage", 6], ["antiseptic", 5], ["charcoal", 4], ["weapon", 12], ["cloth", 5],
+    ["mag:repair", 3.5], ["mag:lockpick", 2.5], ["mag:science", 2],
+  ],
+  food_service: [
+    ["almond", 22], ["warm_tea", 14], ["cloudy_almond", 10], ["bar", 14], ["beans", 14],
+    ["ration", 10], ["stale_ration", 9], ["meat", 16], ["charcoal", 6], ["painkillers", 4],
+    ["bandage", 4], ["cloth", 4], ["mag:survival", 2.5], ["mag:barter", 2.5],
+  ],
+  expedition: [
+    ["almond", 16], ["warm_tea", 9], ["ration", 12], ["bandage", 10], ["firstaid", 8],
+    ["medkit", 4], ["ammo", 12], ["shells", 7], ["battery", 9], ["kit", 6],
+    ["bobbypin", 7], ["compass", 3], ["repellent", 2], ["weapon", 12], ["cloth", 8],
+    ["mag:survival", 3], ["mag:guns", 2.5], ["mag:medicine", 2], ["mag:sneak", 2],
+  ],
+  security: [
+    ["ammo", 20], ["shells", 11], ["weapon", 18], ["kit", 8], ["firstaid", 8],
+    ["medkit", 5], ["stim_shot", 5], ["painkillers", 6], ["bandage", 7], ["bobbypin", 9],
+    ["keycard", 4], ["cloth", 7], ["molotov", 3], ["frag", 3],
+    ["mag:guns", 3], ["mag:explosives", 2.5], ["mag:melee", 2], ["mag:lockpick", 2],
+  ],
+  abandoned_settlement: [
+    ["stale_ration", 16], ["cloudy_almond", 12], ["ration", 7], ["beans", 8], ["bar", 7],
+    ["meat", 8], ["bandage", 8], ["antiseptic", 6], ["splint", 5], ["painkillers", 6],
+    ["bobbypin", 9], ["battery", 8], ["cloth", 7], ["weapon", 10],
+    ["mag:survival", 2.5], ["mag:repair", 2.5], ["mag:sneak", 2],
+  ],
+  hazardous: [
+    ["almond", 14], ["cloudy_almond", 8], ["charcoal", 12], ["antiseptic", 10], ["bandage", 9],
+    ["firstaid", 6], ["stim_shot", 5], ["firesalt", 8], ["repellent", 4], ["battery", 9],
+    ["ammo", 8], ["weapon", 9], ["cloth", 4],
+    ["mag:medicine", 2.5], ["mag:explosives", 2.5], ["mag:energy", 2],
+  ],
+  rare_cache: [
+    ["medkit", 10], ["stim_shot", 9], ["royal_ration", 6], ["firstaid", 10], ["ammo", 14],
+    ["shells", 9], ["weapon", 18], ["cloth", 10], ["kit", 8], ["molotov", 5], ["frag", 5],
+    ["mag:guns", 3], ["mag:medicine", 3], ["mag:science", 2.5], ["mag:lockpick", 2.5],
+  ],
+};
 // Weighted pick over every found weapon this pool can hold; rarer ones carry a smaller weight in weapons.yml.
 export function rollWeapon(ctx, pool = "l0", cap = 3) {
   const kinds = W.order.slice(1).filter((k) => !W[k].unique && (W[k].weight ?? 1) > 0 && !W[k].level1 && !W[k].level2 && !W[k].level3 && (!W[k].pools?.length || W[k].pools.includes(pool)) && rarityIdx(k) <= cap), total = kinds.reduce((a, k) => a + (W[k].weight ?? 1), 0);
@@ -48,8 +132,27 @@ export function gateItems(ctx, items, level, pool = "l0") {
 }
 
 // ---- containers: a crate in the maze, or the remains of what you killed. Their contents are tokens (scripts/lib/items.js).
-const ITEM_WEIGHTS = [["lobby_wafer", 12], ["meat", 5], ["beans", 6], ["bar", 7], ["ration", 3], ["almond", 40], ["ammo", 16], ["shells", 7], ["weapon", 10], ["kit", 4], ["bobbypin", 10], ["molotov", 1.5], ["book", 3], ["firesalt", 2.5], ["repellent", 0.4], ["cloth", CL.crateWeight]];
-const bookOf = (ctx) => { const ks = SKILL_KEYS.filter((k) => k !== "energy" && k !== "explosives"); return "book:" + ks[Math.floor(ctx.random() * ks.length)]; };
+const MAG_BY_POOL = {
+  l0: ["mag:science", "mag:speech", "mag:lockpick", "mag:barter"],
+  l01: ["mag:science", "mag:speech", "mag:lockpick", "mag:barter"],
+  l1: ["mag:repair", "mag:survival", "mag:melee", "mag:unarmed"],
+  l2: ["mag:repair", "mag:lockpick", "mag:explosives", "mag:science"],
+  l3: ["mag:energy", "mag:science", "mag:repair", "mag:explosives"],
+  l4: ["mag:science", "mag:speech", "mag:barter", "mag:lockpick"],
+  l5: ["mag:sneak", "mag:medicine", "mag:guns", "mag:survival"],
+  l7: ["mag:survival", "mag:explosives", "mag:guns", "mag:medicine"],
+  l10: ["mag:survival", "mag:unarmed", "mag:repair", "mag:barter"],
+  l11: ["mag:guns", "mag:medicine", "mag:barter", "mag:lockpick"],
+  l26: ["mag:lockpick", "mag:sneak", "mag:speech", "mag:barter"],
+  l31: ["mag:sneak", "mag:barter", "mag:unarmed", "mag:speech"],
+  l70: ["mag:survival", "mag:medicine", "mag:guns", "mag:repair"],
+  l109: ["mag:medicine", "mag:science", "mag:lockpick", "mag:sneak"],
+};
+export function magOf(ctx, pool = "l0") {
+  const list = MAG_BY_POOL[pool] ?? MAG_BY_POOL.l0;
+  return list[Math.floor(ctx.random() * list.length)];
+}
+const ITEM_WEIGHTS = [["lobby_wafer", 11], ["warm_tea", 3], ["cloudy_almond", 3], ["painkillers", 3], ["antiseptic", 2], ["meat", 5], ["beans", 6], ["bar", 7], ["ration", 3], ["almond", 34], ["ammo", 15], ["shells", 7], ["weapon", 10], ["kit", 4], ["bobbypin", 10], ["molotov", 1.5], ["mag", 3], ["firesalt", 2.5], ["repellent", 0.4], ["cloth", CL.crateWeight]];
 // some containers are locked, Fallout style: a Lockpick or Science level you need to have. Locked ones hold more.
 export function rollLock(ctx) {
   const r = ctx.random(); if (r > 0.3) return null;
@@ -58,11 +161,21 @@ export function rollLock(ctx) {
 }
 // money found loose: mostly coins, sometimes a bill or a wad (Savi's picks)
 export function rollCash(ctx) { const r = ctx.random(); return r < 0.3 ? 'cash:1' : r < 0.5 ? 'cash:5' : r < 0.72 ? 'cash:25' : r < 0.92 ? 'cash:100' : 'cash:' + (100 * (2 + Math.floor(ctx.random() * 9))); }
+export function rollCategoryItem(ctx, category = "office", pool = "l0") {
+  if (ctx.random() < 0.12) return rollCash(ctx);
+  const table = LOOT_CATEGORIES[category] ?? LOOT_CATEGORIES.office;
+  const total = table.reduce((a, [, w]) => a + w, 0);
+  let r = ctx.random() * total;
+  for (const [k, w] of table) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeapon(ctx, pool) : k === "mag" ? magOf(ctx, pool) : k === "cloth" ? rollCloth(ctx) : k === "meat" ? rollMeat(ctx) : k; }
+  return "almond";
+}
 export function rollItem(ctx, pool = "l0") {
+  const cat = Object.entries(POOL).find(([, p]) => p === pool)?.[0];
+  if (cat && PLACE_CATEGORY[cat] && pool !== "l0") return rollCategoryItem(ctx, PLACE_CATEGORY[cat], pool);
   if (ctx.random() < 0.14) return rollCash(ctx);
   const total = ITEM_WEIGHTS.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
-  for (const [k, w] of ITEM_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeapon(ctx, pool) : k === "book" ? bookOf(ctx) : k === "cloth" ? rollCloth(ctx) : k === "meat" ? rollMeat(ctx) : k; }
+  for (const [k, w] of ITEM_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeapon(ctx, pool) : k === "mag" ? magOf(ctx, pool) : k === "cloth" ? rollCloth(ctx) : k === "meat" ? rollMeat(ctx) : k; }
   return "almond";
 }
 
@@ -99,13 +212,13 @@ export function dropLoot(ctx, pos, name = "Remains", luck = 1, clothMul = 1, poo
   if (items.length) spawnRemains(ctx, pos, items, name);
 }
 
-// Level 1's crates: rations, bandages and batteries join the roll. Weights are Savi's picks.
-const L1_WEIGHTS = [["bobbypin", 8], ["firesalt", 4], ["repellent", 0.5], ["meat", 2.5], ["ration", 5], ["almond", 4], ["bandage", 3], ["battery", 3], ["ammo", 2], ["shells", 1], ["weapon", 1.2], ["kit", 1.6], ["book", 1.4], ["cloth", 2.2], ["compass", 1], ["molotov", 0.5]]; // cloth: Savi's pick
+// Level 1's crates: rations, bandages, field mags and batteries join the roll.
+const L1_WEIGHTS = [["bobbypin", 8], ["firesalt", 4], ["repellent", 0.5], ["meat", 2.5], ["ration", 4], ["stale_ration", 2], ["almond", 3.5], ["warm_tea", 1], ["bandage", 2.5], ["painkillers", 1], ["splint", 0.8], ["battery", 3], ["ammo", 2], ["shells", 1], ["weapon", 1.2], ["kit", 1.6], ["mag", 1.4], ["cloth", 2.2], ["compass", 1], ["molotov", 0.5]];
 export function rollItemL1(ctx) {
   if (ctx.random() < 0.14) return rollCash(ctx);
   const total = L1_WEIGHTS.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
-  for (const [k, w] of L1_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + (ctx.random() < 0.6 ? rollVariant(ctx, ctx.random() < 0.55 ? "rebar" : "wrench") : rollWeapon(ctx, "l1")) : k === "book" ? bookOf(ctx) : k === "cloth" ? rollCloth(ctx) : k === "meat" ? rollMeat(ctx) : k; }
+  for (const [k, w] of L1_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + (ctx.random() < 0.6 ? rollVariant(ctx, ctx.random() < 0.55 ? "rebar" : "wrench") : rollWeapon(ctx, "l1")) : k === "mag" ? magOf(ctx, "l1") : k === "cloth" ? rollCloth(ctx) : k === "meat" ? rollMeat(ctx) : k; }
   return "ration";
 }
 export function spawnCrateL1(ctx, p) {
@@ -114,13 +227,13 @@ export function spawnCrateL1(ctx, p) {
   const lk = rollLock(ctx); if (lk) for (let i = 0; i < lk.bonus; i++) items.push(rollItemL1(ctx));
   ctx.spawn({ tags: ["container", "crate", "breakable"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { mat: "wood", hp: 60, maxHp: 60, name: lk ? lk.name : ctx.random() < 0.25 ? "Rations crate" : "Wooden crate", items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
 }
-// Level 2: a tool depot. More batteries and ammo, fewer rations; its own tools.
-const L2_WEIGHTS = [["frag", 2], ["firesalt", 5], ["repellent", 0.6], ["meat", 6], ["molotov", 3], ["almond", 14], ["bobbypin", 7], ["ammo", 18], ["shells", 9], ["battery", 14], ["bandage", 10], ["ration", 6], ["weapon", 10], ["kit", 5], ["book", 4], ["cloth", 8], ["tape", 6], ["fuse", 4], ["valve", 3], ["keycard", 2], ["beans", 5], ["bar", 6], ["firstaid", 3], ["compass", 2]]; // cloth: Savi's pick; the rest are Level 2's own finds
+// Level 2: a tool depot. More batteries and ammo, fewer rations; maintenance magazines and trauma triage.
+const L2_WEIGHTS = [["frag", 2], ["firesalt", 5], ["repellent", 0.6], ["meat", 5], ["molotov", 3], ["almond", 12], ["cloudy_almond", 3], ["bobbypin", 7], ["ammo", 17], ["shells", 9], ["battery", 14], ["bandage", 8], ["antiseptic", 3], ["splint", 2], ["painkillers", 2], ["ration", 5], ["stale_ration", 2], ["weapon", 10], ["kit", 5], ["mag", 4], ["cloth", 8], ["tape", 6], ["fuse", 4], ["valve", 3], ["keycard", 2], ["beans", 5], ["bar", 6], ["firstaid", 3], ["compass", 2]];
 export function rollItemL2(ctx) {
   if (ctx.random() < 0.14) return rollCash(ctx);
   const total = L2_WEIGHTS.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
-  for (const [k, w] of L2_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL2(ctx) : k === "book" ? bookOf(ctx) : k === "cloth" ? rollCloth(ctx) : k === "meat" ? rollMeat(ctx) : k; }
+  for (const [k, w] of L2_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL2(ctx) : k === "mag" ? magOf(ctx, "l2") : k === "cloth" ? rollCloth(ctx) : k === "meat" ? rollMeat(ctx) : k; }
   return "battery";
 }
 export function rollWeaponL2(ctx) { const r = ctx.random(); return r < 0.4 ? rollVariant(ctx, "screwdriver") : r < 0.55 ? rollVariant(ctx, "sledgehammer") : r < 0.75 ? rollVariant(ctx, "wrench") : rollWeapon(ctx, "l2"); }
@@ -135,10 +248,18 @@ export function spawnCrateL2(ctx, p) {
 // Level 2 side-room containers: a kind from level2.yml containers (locker, toolbox, vending …), rolled from its own loot table
 import L2C from "./data/level2.yml";
 import { PROPS, fitBox, containerModel, crateModel } from "./l2props.js";
+const L2_TABLE_MAGS = {
+  office: ["mag:science", "mag:lockpick", "mag:speech"],
+  locker: ["mag:survival", "mag:sneak", "mag:melee"],
+  tools: ["mag:repair", "mag:explosives", "mag:energy"],
+  food: ["mag:survival", "mag:barter"],
+  cage: ["mag:guns", "mag:explosives", "mag:lockpick"],
+};
 export function rollTableL2(ctx, table) {
   const T = Object.entries(L2C.tables[table] ?? {}), total = T.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
-  for (const [k, w] of T) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL2(ctx) : k === "book" ? bookOf(ctx) : k; }
+  const pickMag = () => { const list = L2_TABLE_MAGS[table] ?? MAG_BY_POOL.l2; return list[Math.floor(ctx.random() * list.length)]; };
+  for (const [k, w] of T) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL2(ctx) : k === "mag" ? pickMag() : k; }
   return rollItemL2(ctx);
 }
 export function fillContainerL2(ctx, kind, bonus = 0) {
@@ -153,13 +274,15 @@ const L2MODEL = {
 };
 export function spawnContainerL2(ctx, kind, p, yaw, opts = {}) {
   const C0 = L2C.containers[kind], C = opts.size ? { ...C0, size: opts.size } : C0, lk = opts.noLock ? null : rollLock(ctx), M = opts.model ?? L2MODEL[kind] ?? (containerModel(kind) ? { id: containerModel(kind), tripo: true } : null), seed = Math.floor(ctx.random() * 1000);
+  const items = opts.items !== undefined ? opts.items : fillContainerL2(ctx, kind, (opts.bonus ?? 0) + (lk ? lk.bonus : 0));
+  const name = opts.name ?? (lk ? `${C.name} (locked)` : C.name);
   return ctx.spawn(interactiveSpec({ tags: ["container", "l2box"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: { yaw }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, castShadow: false,
     ...(M ? { model: M.tripo ? { id: M.id, forward: PROPS.forward } : { id: M.id, materials: { paint: { color: M.paints[seed % M.paints.length], roughness: 0.55, metalness: 0.15 } } }, layout: { box: { min: { x: -C.size[0] / 2, y: 0, z: -C.size[2] / 2 }, max: { x: C.size[0] / 2, y: C.size[1], z: C.size[2] / 2 } } } } : { primitive: { kind: "scripted", script: "scripts/l2-props-geo.js", params: { kind, seed } } }),
-    state: { name: lk ? `${C.name} (locked)` : C.name, kind, items: fillContainerL2(ctx, kind, (opts.bonus ?? 0) + (lk ? lk.bonus : 0)), ...(lk ? { lock: lk.lock } : {}), room: opts.room ?? -1 } }));
+    state: { name, kind, items, ...(lk ? { lock: lk.lock } : {}), room: opts.room ?? -1 } }));
 }
 
 // ---- Level 5 (Terror Hotel): what a hotel room's dresser, wardrobe or kitchen holds. Meat feeds Samantha; the SMG and knife are this floor's guns.
-export const L5_WEIGHTS = [["almond", 26], ["ammo", 18], ["meat", 22], ["ration", 6], ["bandage", 6], ["battery", 5], ["bobbypin", 8], ["weapon", 6], ["book", 2], ["cloth", 6], ["royal_ration", 1]] // nvg: Ines's quest only (scripts/l5-goggles.js);
+export const L5_WEIGHTS = [["almond", 22], ["warm_tea", 4], ["ammo", 17], ["meat", 20], ["ration", 5], ["stale_ration", 3], ["bandage", 5], ["painkillers", 3], ["antiseptic", 2], ["battery", 5], ["bobbypin", 8], ["weapon", 6], ["mag", 2.5], ["cloth", 6], ["royal_ration", 1]] // nvg: Ines's quest only (scripts/l5-goggles.js);
 export const MEAT5 = [["steak", 3], ["fish", 4], ["chicken", 6], ["spam", 8], ["sardines", 8], ["jerky", 7], ["hotdog", 4], ["rat", 6]];
 export function rollMeat(ctx) { const t = MEAT5.reduce((a, [, w]) => a + w, 0); let r = ctx.random() * t; for (const [k, w] of MEAT5) { r -= w; if (r <= 0) return "meat:" + k; } return "meat:rat"; }
 export function rollWeaponL5(ctx) { const q = ctx.random(); return q < 0.3 ? rollVariant(ctx, "smg") : q < 0.65 ? rollVariant(ctx, "knife") : rollWeapon(ctx, "l5"); }
@@ -167,6 +290,6 @@ export function rollItemL5(ctx) {
   if (ctx.random() < 0.14) return rollCash(ctx);
   const total = L5_WEIGHTS.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
-  for (const [k, w] of L5_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL5(ctx) : k === "meat" ? rollMeat(ctx) : k === "book" ? bookOf(ctx) : k === "cloth" ? rollCloth(ctx) : k === "meat" ? rollMeat(ctx) : k; }
+  for (const [k, w] of L5_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL5(ctx) : k === "meat" ? rollMeat(ctx) : k === "mag" ? magOf(ctx, "l5") : k === "cloth" ? rollCloth(ctx) : k; }
   return "almond";
 }

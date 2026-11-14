@@ -366,7 +366,7 @@ pop glow n=1 at=disc(.2).c(.45) glo=fire()*(#flame/35)~ r=light(<1,.55,.24>,$glo
     state: { name, items, ...BRK("wood", 40) },
   });
   crate("l10-barn-bin", -54, -57, "Grain feed bin", "wheat_sheaf,wheat_sheaf,ration,almond", 10);
-  crate("l10-barn-chest", -42, -52, "Agrarian tool chest", "weapon:crowbar,tape,battery,bobbypin", -8);
+  crate("l10-barn-chest", -42, -52, "Agrarian tool chest", "ubook:l10_harvest_unarmed,weapon:crowbar,tape,battery,bobbypin", -8);
   crate("l10-stable-bin", -58, -103, "Tack box", "bandage,ration,cloth:topw:jacket:5a4630", 90);
   crate("l10-shed-a-box", 36, -150, "Nail box", "wire,tape,bobbypin", 0);
   crate("l10-cellar-chest", -31.7, -55.5, "Cellar reserve cache", "ration,ration,battery,almond", 0);

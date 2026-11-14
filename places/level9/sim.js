@@ -65,8 +65,11 @@ function furnish(ctx, sp, l, H, D, Y) {
   const piece = (k0, x, z, yaw, tag = k0) => { const k = motel && MOTEL[k0] ? MOTEL[k0] : k0, F = FURN.pieces[k]; if (!F) return; const [w, h, d] = F.size, [mat, hp] = MAT[k] ?? ["wood", 45];
     if (!LOOT[k] && gone(tag)) return;
     const tip = wrecked && (k === "floor_lamp" || k === "dining_chair") && roll(sd, 40 + tag.length, 2) === 0; // knocked over where it stood
+    const takeBook = k0 === "lava_lamp" && !ctx.place.state.suburbsBookPlaced;
+    if (takeBook) ctx.place.state.suburbsBookPlaced = true;
+    const items = LOOT[k] ? [takeBook ? "ubook:l9_suburbs_survival" : "", ...rollLoot(ctx, 1, 1, "l5")].filter(Boolean).join(",") : "";
     sp(`l9-${l.id}-${tag}`, { ...IN, tags: LOOT[k] ? ["l9furn", "container", "breakable"] : ["l9furn", "breakable"], feetPosition: at(x, z, tip ? Math.min(w, d) / 2 : 0), rotation: tip ? { yaw: Y + yaw, roll: 88 } : { yaw: Y + yaw }, model: { id: F.model, forward: F.forward ?? "-z" }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, physics: { body: "static", collider: "box" },
-      state: { mat, hp, maxHp: hp, ...(LOOT[k] ? { name: LOOT[k], verb: "Search", items: rollLoot(ctx, 1, 1, "l5").join(",") } : { name: F.name }) } }); };
+      state: { mat, hp, maxHp: hp, ...(LOOT[k] ? { name: LOOT[k], verb: "Search", items } : { name: F.name }) } }); };
   // living room: sofa on the back wall, rug and table before it, the TV facing it, a shelf on the outer wall, dining by the front
   if (plan === 1) { // armchairs round the set instead of a sofa, a second shelf on the back wall
     piece("armchair", Lc - 0.8, z0 + 0.6, 180, "armA"); piece("armchair", Lc + 0.8, z0 + 0.6, 180, "armB");

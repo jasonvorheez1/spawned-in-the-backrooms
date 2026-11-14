@@ -29,7 +29,7 @@ export const QUESTS21 = {
     name: "The Edges Sentry",
     tips: {
       1: "Speak to Goknar at the corridor doorway post",
-      2: "Walk the dark corridor past John Banks's blast site until the lights give out at The Edges",
+      2: "Walk the dark corridor past Jared Banks's blast site until the lights give out at The Edges",
       3: "Report the perimeter status back to Goknar",
     },
     marks: {

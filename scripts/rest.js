@@ -2,7 +2,8 @@
 // On or beside a bed it's sleep: HP and sanity come back with the hours. Either way you get hungry and thirsty.
 // Refused with a hostile close by. Residents read the same clock, so a wait into night sends them to bed.
 import { canOpen, openWrist } from "./lib/screen.js";
-import { HOUR_MS, clockOf } from "./lib/clock.js";
+import { HOUR_MS, clockOf, gameNow } from "./lib/clock.js";
+import { pruneEffects } from "./lib/modifiers.js";
 const HOSTILE = ["l5-hostile", "hound", "smiler", "lurker", "stealer", "enemy", "faceling", "deathmoth"];
 const bedNear = (ctx) => ctx.query({ radius: 2.6 }).find((r) => /bed|cot|bunk|mattress/i.test(r.id + " " + (r.state?.name ?? "")));
 export function onInput(ctx, input) {
@@ -15,6 +16,8 @@ function rest(ctx, h) {
   if (ctx.query({ anyTags: HOSTILE, radius: 18 }).some((r) => !r.state?.dead && !(r.tags ?? []).includes("remains"))) { s.notice = { text: "You can't rest with enemies nearby.", at: ctx.now() }; return; }
   const bed = !!bedNear(ctx);
   ctx.world.state.clockSkip = (ctx.world.state.clockSkip ?? 0) + h * HOUR_MS;
+  s._clockNow = gameNow(ctx);
+  pruneEffects(s, s._clockNow);
   const l4 = ctx.place.state.l4clock; if (l4 && Number.isFinite(l4.until)) ctx.place.state.l4clock = { ...l4, until: l4.until - h * HOUR_MS }; // Level 4 keeps its own shift clock
   if (bed) {
     const mh = s.maxHp ?? s.hpMax ?? 100;

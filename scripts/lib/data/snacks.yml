@@ -2,44 +2,52 @@
 # hunger / thirst / sanity / hp are what one gives back (Savi's picks). Drinks quench, chips fill.
 coke:    { name: "Coca-Cola (glass bottle)", info: "Classic. Cold. 2003 contour bottle", hunger: 4,  thirst: 30, sanity: 6, hp: 3, color: "#e8302a", drink: true }
 pepsi:   { name: "Pepsi", info: "The blue globe can. Sweeter than you remember", hunger: 4, thirst: 28, sanity: 6, hp: 3, color: "#2a6ae8", drink: true }
-dew:     { name: "Mountain Dew", info: "Do the Dew. Neon green, wildly caffeinated · stamina", hunger: 3, thirst: 26, sanity: 4, hp: 2, color: "#7ae83a", drink: true, stamina: 40 }
+dew:     { name: "Mountain Dew", info: "Do the Dew. Neon green, wildly caffeinated · stamina + AGI surge", hunger: 3, thirst: 26, sanity: 4, hp: 2, color: "#7ae83a", drink: true, stamina: 40, durationGameMin: 75, stackingGroup: "caffeine", mods: { stamRegen: 0.18, a: 1, n: -1 } }
 doritos: { name: "Doritos Nacho Cheese", info: "Orange dust on your fingers for an hour", hunger: 22, thirst: -6, sanity: 5, hp: 6, color: "#ff6a2a" }
 coolranch: { name: "Doritos Cool Ranch", info: "The blue bag. Nobody knows what ranch is cool about it", hunger: 22, thirst: -6, sanity: 5, hp: 6, color: "#3a9ae8" }
-pizza:   { name: "Slice of pepperoni pizza", info: "Hot from Slice Palace. Free, like everything here", hunger: 34, thirst: -4, sanity: 8, hp: 10, color: "#e8a03a", meat: true }
-burger:  { name: "Burger Bop cheeseburger", info: "Wrapped in waxed paper. A faceling made it with care", hunger: 45, thirst: -5, sanity: 8, hp: 14, color: "#c87a3a", meat: true }
-chilidog: { name: "Gib's chili dog", info: "Ballpark frank under a ladle of chili and raw onion. Gib's Grub", hunger: 38, thirst: -6, sanity: 7, hp: 12, color: "#a8442a", meat: true }
-gibplate: { name: "Gib's blue plate", info: "Meatloaf, mashed potatoes, gravy, three green beans. Somebody's mother made this", hunger: 55, thirst: -3, sanity: 14, hp: 20, color: "#8a5a3a", meat: true }
-diner_coffee: { name: "Diner coffee (bottomless)", info: "Thick white mug, burnt and perfect · stamina", hunger: 2, thirst: 22, sanity: 9, hp: 2, color: "#5a3a22", drink: true, stamina: 25 }
+pizza:   { name: "Slice of pepperoni pizza", info: "Hot from Slice Palace. Hearty meal", hunger: 34, thirst: -4, sanity: 8, hp: 10, color: "#e8a03a", meat: true, durationGameMin: 120, stackingGroup: "well_fed", mods: { maxHp: 8 } }
+burger:  { name: "Burger Bop cheeseburger", info: "Wrapped in waxed paper. A faceling made it with care", hunger: 45, thirst: -5, sanity: 8, hp: 14, color: "#c87a3a", meat: true, durationGameMin: 150, stackingGroup: "well_fed", mods: { e: 1, maxHp: 10 } }
+chilidog: { name: "Gib's chili dog", info: "Ballpark frank under a ladle of chili and raw onion. Gib's Grub", hunger: 38, thirst: -6, sanity: 7, hp: 12, color: "#a8442a", meat: true, durationGameMin: 120, stackingGroup: "well_fed", mods: { h: 1 } }
+gibplate: { name: "Gib's blue plate", info: "Meatloaf, mashed potatoes, gravy, three green beans. Somebody's mother made this", hunger: 55, thirst: -3, sanity: 14, hp: 20, color: "#8a5a3a", meat: true, durationGameMin: 180, stackingGroup: "well_fed", mods: { e: 1, maxHp: 15, coldResist: 15 } }
+diner_coffee: { name: "Diner coffee (bottomless)", info: "Thick white mug, burnt and perfect · sharpens focus & stamina", hunger: 2, thirst: 22, sanity: 9, hp: 2, color: "#5a3a22", drink: true, stamina: 25, durationGameMin: 90, stackingGroup: "caffeine", mods: { o: 1, stamRegen: 0.15 } }
 # more 2000s sodas and drinks (Shelly: "the drinks should be real world based")
 sprite:  { name: "Sprite", info: "Green bottle, lemon-lime. Obey your thirst", hunger: 3, thirst: 30, sanity: 5, hp: 2, color: "#3ac86a", drink: true }
 drpepper: { name: "Dr Pepper", info: "23 flavors. Maroon can, 2002", hunger: 4, thirst: 27, sanity: 6, hp: 3, color: "#8a1a2a", drink: true }
-vault:   { name: "Vault", info: "Drinks like a soda, kicks like an energy drink. Gone by 2011 · stamina", hunger: 3, thirst: 25, sanity: 4, hp: 2, color: "#5ad83a", drink: true, stamina: 35 }
-redbull: { name: "Red Bull (8.4 oz)", info: "The skinny silver-blue can · stamina", hunger: 2, thirst: 18, sanity: 3, hp: 2, color: "#3a5ae8", drink: true, stamina: 55 }
+vault:   { name: "Vault", info: "Drinks like a soda, kicks like an energy drink · stamina + speed surge", hunger: 3, thirst: 25, sanity: 4, hp: 2, color: "#5ad83a", drink: true, stamina: 35, durationGameMin: 75, stackingGroup: "caffeine", mods: { stamRegen: 0.18, moveSpeed: 0.05 } }
+redbull: { name: "Red Bull (8.4 oz)", info: "High-caffeine boost · +AGI, faster sprint regen, mild jitters", hunger: -2, thirst: 18, sanity: 1, hp: 2, color: "#3a5ae8", drink: true, stamina: 55, durationGameMin: 75, stackingGroup: "caffeine", mods: { a: 1, stamRegen: 0.25, moveSpeed: 0.06, n: -1 } }
 snapple: { name: "Snapple Peach Iced Tea", info: "Glass bottle. Read the cap fact: it is wrong", hunger: 4, thirst: 32, sanity: 7, hp: 3, color: "#f0a050", drink: true }
-gatorade: { name: "Gatorade Fruit Punch", info: "Is it in you? Red, salty-sweet", hunger: 3, thirst: 40, sanity: 4, hp: 4, color: "#e83a4a", drink: true }
-sobe:    { name: "SoBe Lizard Fuel", info: "Lizard on the bottle, ginseng on the label", hunger: 5, thirst: 28, sanity: 6, hp: 3, color: "#e8c83a", drink: true }
+gatorade: { name: "Gatorade Fruit Punch", info: "Electrolytes replace what the heat steals", hunger: 3, thirst: 40, sanity: 4, hp: 4, color: "#e83a4a", drink: true, durationGameMin: 90, stackingGroup: "electrolyte", mods: { stamRegen: 0.12, heatResist: 15 } }
+sobe:    { name: "SoBe Lizard Fuel", info: "Lizard on the bottle, ginseng on the label", hunger: 5, thirst: 28, sanity: 6, hp: 3, color: "#e8c83a", drink: true, durationGameMin: 90, stackingGroup: "electrolyte", mods: { o: 1, stamRegen: 0.1 } }
 cherrycoke: { name: "Cherry Coke", info: "The red-and-purple can", hunger: 4, thirst: 28, sanity: 6, hp: 3, color: "#a01a3a", drink: true }
-# alcohol (Shelly: "alchohol too"): calms the nerves, then the floor tilts. drunk = how much it adds (Savi's pick)
-budweiser: { name: "Budweiser (longneck)", info: "King of Beers. Brown bottle, red label", hunger: 6, thirst: 14, sanity: 12, hp: 0, color: "#c8302a", drink: true, drunk: 18 }
-corona:  { name: "Corona Extra", info: "Clear bottle. A lime wedge someone pushed in", hunger: 5, thirst: 16, sanity: 12, hp: 0, color: "#f0d870", drink: true, drunk: 18 }
-millerlite: { name: "Miller Lite", info: "Great taste, less filling. Blue and white can", hunger: 4, thirst: 16, sanity: 10, hp: 0, color: "#3a6ad8", drink: true, drunk: 14 }
-smirnoffice: { name: "Smirnoff Ice", info: "Malt, lemon, 2004 in a bottle", hunger: 4, thirst: 14, sanity: 12, hp: 0, color: "#c8d8e8", drink: true, drunk: 16 }
-jackcoke: { name: "Jack and Coke", info: "Jack Daniel's Old No. 7 over ice, a splash of Coca-Cola", hunger: 3, thirst: 10, sanity: 18, hp: -2, color: "#8a4a1a", drink: true, drunk: 30 }
-whiskey: { name: "Jim Beam (a neat pour)", info: "Bourbon, poured by a faceling who does not blink", hunger: 0, thirst: -4, sanity: 22, hp: -4, color: "#b8702a", drink: true, drunk: 40 }
-margarita: { name: "Jose Cuervo margarita", info: "Salt rim, too much tequila", hunger: 3, thirst: 12, sanity: 16, hp: -2, color: "#c8e870", drink: true, drunk: 30 }
-# found loot that used to be eaten on pickup: now carried, eaten or used from I > Aid (johnadams2: "no item should be instantly used from loot"). Values kept from the old pickup effects.
-# crafted food and water (scripts/lib/data/craft.yml, FOOD tab): carried, eaten or drunk from I > Aid like any snack
-stew:    { name: "Glow-cap stew", info: "Caps and spring salt simmered in a tin. Tastes of wet pennies, warms you through", hunger: 28, thirst: 4, sanity: 8, hp: 14, color: "#6fe8d8" }
+# alcohol: boosts HAR & GAB + calms nerves, at the cost of OBS/NOU & wobble
+budweiser: { name: "Budweiser (longneck)", info: "King of Beers. Steadies nerves & swagger (+HAR +GAB, -NOU)", hunger: 6, thirst: 14, sanity: 12, hp: 0, color: "#c8302a", drink: true, drunk: 18, durationGameMin: 90, stackingGroup: "alcohol", mods: { h: 1, g: 1, n: -1 } }
+corona:  { name: "Corona Extra", info: "Clear bottle. Lime wedge included (+HAR +GAB, -NOU)", hunger: 5, thirst: 16, sanity: 12, hp: 0, color: "#f0d870", drink: true, drunk: 18, durationGameMin: 90, stackingGroup: "alcohol", mods: { h: 1, g: 1, n: -1 } }
+millerlite: { name: "Miller Lite", info: "Cold pilsner (+GAB, -NOU)", hunger: 4, thirst: 16, sanity: 10, hp: 0, color: "#3a6ad8", drink: true, drunk: 14, durationGameMin: 75, stackingGroup: "alcohol", mods: { g: 1, n: -1 } }
+smirnoffice: { name: "Smirnoff Ice", info: "Malt, lemon, 2004 in a bottle (+GAB, -OBS)", hunger: 4, thirst: 14, sanity: 12, hp: 0, color: "#c8d8e8", drink: true, drunk: 16, durationGameMin: 75, stackingGroup: "alcohol", mods: { g: 1, o: -1 } }
+jackcoke: { name: "Jack and Coke", info: "Bourbon over ice (+HAR +GAB +DR, -OBS -NOU)", hunger: 3, thirst: 10, sanity: 18, hp: -2, color: "#8a4a1a", drink: true, drunk: 30, durationGameMin: 90, stackingGroup: "alcohol", mods: { h: 1, g: 2, dr: 1, o: -1, n: -1 } }
+whiskey: { name: "Jim Beam (a neat pour)", info: "Hard liquor (+2 HAR +2 GAB +2 DR, -2 NOU -1 OBS)", hunger: 0, thirst: -4, sanity: 22, hp: -4, color: "#b8702a", drink: true, drunk: 40, durationGameMin: 105, stackingGroup: "alcohol", mods: { h: 2, g: 2, dr: 2, o: -1, n: -2 } }
+margarita: { name: "Jose Cuervo margarita", info: "Salt rim, heavy tequila (+HAR +GAB, -OBS -NOU)", hunger: 3, thirst: 12, sanity: 16, hp: -2, color: "#c8e870", drink: true, drunk: 30, durationGameMin: 90, stackingGroup: "alcohol", mods: { h: 1, g: 2, o: -1, n: -1 } }
+# carried rations, meals, and distinct medical consumables
+stew:    { name: "Glow-cap stew", info: "Caps and spring salt simmered in a tin. Warms you through", hunger: 28, thirst: 4, sanity: 8, hp: 14, color: "#6fe8d8", warm: 15, durationGameMin: 120, stackingGroup: "well_fed", mods: { coldResist: 15, maxHp: 10 } }
 stillwater: { name: "Distilled water", info: "Condensed off a pipe still. Flat, clean, safe", hunger: 0, thirst: 40, sanity: 3, hp: 2, color: "#cfe8f0", drink: true }
-mineralwater: { name: "Spring mineral water", info: "Bottled where the springs run, with the salt and chalk left in", hunger: 0, thirst: 36, sanity: 4, hp: 4, color: "#dfe8e4", drink: true }
+mineralwater: { name: "Spring mineral water", info: "Bottled where the springs run, with salt and chalk left in", hunger: 0, thirst: 36, sanity: 4, hp: 4, color: "#dfe8e4", drink: true, durationGameMin: 90, stackingGroup: "electrolyte", mods: { coldResist: 10, heatResist: 10 } }
 lobby_wafer: { name: "Lobby Wafers", info: "Stale yellow wafers from a desk drawer. Crunchy, somehow damp", hunger: 18, thirst: -3, sanity: 5, hp: 8, color: "#d4b96a" }
-ration:  { name: "M.E.G. ration", info: "A foil-wrapped field ration", hunger: 30, thirst: 0, sanity: 8, hp: 32, color: "#8a8a5a" }
-bandage: { name: "Bandage", info: "Wrap a wound. Medicine helps", hunger: 0, thirst: 0, sanity: 0, hp: 18, color: "#e8e0d0", aid: true }
-bread:   { name: "Warm Homestead Loaf", info: "Fresh bread", hunger: 30, thirst: -3, sanity: 25, hp: 40, color: "#c8963a" }
-beans:   { name: "Can of beans", info: "Cold, filling", hunger: 25, thirst: -2, sanity: 6, hp: 22, color: "#a85a3a" }
-bar:     { name: "Energy bar", info: "Chalky and sweet · stamina", hunger: 12, thirst: -2, sanity: 0, hp: 9, color: "#c8a03a", stamina: 40 }
-firstaid: { name: "First aid kit", info: "Patches you up properly. Medicine helps", hunger: 0, thirst: 0, sanity: 0, hp: 52, color: "#e83a3a", aid: true }
-royal_ration: { name: "Royal ration", info: "Level 3's rare tin. Full health, a clear head", hunger: 60, thirst: 0, sanity: 60, hp: 999, color: "#e8c83a" }
+ration:  { name: "M.E.G. ration", info: "Foil-wrapped field ration · sustains stamina and resilience", hunger: 30, thirst: 0, sanity: 8, hp: 32, color: "#8a8a5a", durationGameMin: 120, stackingGroup: "well_fed", mods: { e: 1 } }
+bandage: { name: "Bandage", info: "Sterile gauze wrap: light wound healing (Medicine scales) & stops bleeding", hunger: 0, thirst: 0, sanity: 0, hp: 18, color: "#e8e0d0", aid: true, stopBleed: true }
+bread:   { name: "Warm Homestead Loaf", info: "Fresh bread from Level 10 ovens", hunger: 30, thirst: -3, sanity: 25, hp: 40, color: "#c8963a", warm: 15, durationGameMin: 150, stackingGroup: "well_fed", mods: { e: 1, maxSan: 10 } }
+beans:   { name: "Can of beans", info: "Cold, filling tin", hunger: 25, thirst: -2, sanity: 6, hp: 22, color: "#a85a3a" }
+bar:     { name: "Energy bar", info: "Chalky and sweet · instant stamina & short sprint recovery", hunger: 12, thirst: -2, sanity: 0, hp: 9, color: "#c8a03a", stamina: 40, durationGameMin: 60, stackingGroup: "electrolyte", mods: { stamRegen: 0.1 } }
+firstaid: { name: "First aid kit", info: "Field trauma kit: strong healing (Medicine scales) & stops bleeding", hunger: 0, thirst: 0, sanity: 0, hp: 52, color: "#e83a3a", aid: true, stopBleed: true }
+medkit:  { name: "Surgical trauma medkit", info: "Hospital-grade kit: heavy heal, stops bleeding, +15 Max HP & +1 END", hunger: 0, thirst: 0, sanity: 10, hp: 85, color: "#ff4f64", aid: true, stopBleed: true, durationGameMin: 120, stackingGroup: "med_trauma", mods: { maxHp: 15, e: 1 } }
+painkillers: { name: "Hospital painkillers", info: "Blister pack of clinical analgesics (+4 DR, +1 END · -1 OBS drowsy haze)", hunger: 0, thirst: -4, sanity: 4, hp: 12, color: "#f4f2e8", aid: true, durationGameMin: 120, stackingGroup: "med_pain", mods: { dr: 4, e: 1, o: -1 } }
+antiseptic: { name: "Clinical antiseptic", info: "Cleanses wounds & contaminated food/water sickness; stops bleeding", hunger: 0, thirst: 0, sanity: 4, hp: 16, color: "#7ce8d0", aid: true, stopBleed: true, clearDebuffs: true }
+splint:  { name: "Aluminum field splint", info: "Braces joints under heavy gear (+6 kg Carry, +8% Move Speed, +1 HAR)", hunger: 0, thirst: 0, sanity: 0, hp: 10, color: "#b8c8d8", aid: true, durationGameMin: 150, stackingGroup: "med_splint", mods: { carryMax: 6, moveSpeed: 0.08, h: 1 } }
+stim_shot: { name: "Epinephrine auto-injector", info: "Combat stim (+2 AGI, +1 HAR, +15% DMG, +12% Speed · -12 Sanity, -1 NOU -1 GAB)", hunger: -4, thirst: -8, sanity: -12, hp: 22, color: "#ff9a3a", aid: true, stamina: 75, durationGameMin: 75, stackingGroup: "med_stim", mods: { a: 2, h: 1, dmgMul: 0.15, moveSpeed: 0.12, stamRegen: 0.35, n: -1, g: -1 } }
+charcoal: { name: "Activated charcoal tabs", info: "Absorbs spoiled rations and tainted almond water toxins", hunger: 0, thirst: -6, sanity: 6, hp: 4, color: "#6a6e76", aid: true, clearDebuffs: true }
+stale_ration: { name: "Expired M.E.G. tin", info: "Dented old ration. Fills hunger in a pinch, upsets stomach (-1 END, -4 Sanity)", hunger: 22, thirst: -4, sanity: -4, hp: 4, color: "#7a7054", durationGameMin: 60, stackingGroup: "sickness_gut", mods: { e: -1 }, positive: false }
+cloudy_almond: { name: "Unfiltered almond water", info: "Cloudy bottle. Quenches thirst, clouds thinking (-1 NOU, -5 Sanity)", hunger: 0, thirst: 32, sanity: -5, hp: 4, color: "#a8a28c", drink: true, durationGameMin: 60, stackingGroup: "sickness_gut", mods: { n: -1 }, positive: false }
+warm_tea: { name: "Thermos herbal tea", info: "Hot steep that cuts the chill (+20% Cold Resist, +1 NOU · chill -20)", hunger: 2, thirst: 28, sanity: 12, hp: 8, color: "#c88a4a", drink: true, warm: 20, durationGameMin: 120, stackingGroup: "drink_tea", mods: { n: 1, coldResist: 20 } }
+royal_ration: { name: "Royal ration", info: "Level 3's rare tin. Full health, +60 sanity, sustained combat composure", hunger: 60, thirst: 0, sanity: 60, hp: 999, color: "#e8c83a", durationGameMin: 180, stackingGroup: "well_fed", mods: { h: 1, e: 1, n: 1, dr: 3 } }
 # crafted (craft.yml humloop): Level 13 tape and glass, Level 0.2 putty. Savi's picks
 humloop: { name: "Hum loop", verb: "PLAY", info: "A cassette ring, puttied shut. It plays the Lobby's hum, and the hum is somehow a comfort", hunger: 0, thirst: 0, sanity: 40, hp: 0, color: "#d4b96a", aid: true }
 

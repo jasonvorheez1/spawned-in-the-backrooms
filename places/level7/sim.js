@@ -87,7 +87,7 @@ export function breakables(FY, PY) {
     "l7-flotsam-crate-1": { tags: ["container", "breakable"], feetPosition: { x: 25.5, y: 0.22, z: -69.5 }, rotation: { yaw: -40 }, model: GLB.crate, layout: fit(0.7, 0.7, 0.7), physics: { body: "static", collider: "box" }, state: { name: "Barnacled cargo box", items: "ration,shells,bandage,cloth:botw:overalls:28322c", ...brk("wood", 40) } },
 
     // ---- Near Island (M.E.G. Outpost Seawatch, y = 7.0) ----
-    "l7-meg-locker": { tags: ["container", "breakable"], feetPosition: { x: 42.5, y: 7.0, z: -117.5 }, rotation: { yaw: 25 }, model: GLB.crate, layout: fit(0.85, 0.85, 0.85), physics: { body: "static", collider: "box" }, state: { name: "M.E.G. Waterproof Dive Locker", lock: "lockpick:35", items: "weapon:revolver,cloth:topw:jacket:2b4c5e,cloth:shoes:boots:1c1e22,ammo,kit,blue,battery", ...brk("wood", 95) } },
+    "l7-meg-locker": { tags: ["container", "breakable"], feetPosition: { x: 42.5, y: 7.0, z: -117.5 }, rotation: { yaw: 25 }, model: GLB.crate, layout: fit(0.85, 0.85, 0.85), physics: { body: "static", collider: "box" }, state: { name: "M.E.G. Waterproof Dive Locker", lock: "lockpick:35", items: "ubook:l7_seawatch_explosives,weapon:revolver,cloth:topw:jacket:2b4c5e,cloth:shoes:boots:1c1e22,ammo,kit,blue,battery", ...brk("wood", 95) } },
     "l7-seawatch-boxes": { tags: ["container", "breakable"], feetPosition: { x: 48.2, y: 7.0, z: -116.5 }, rotation: { yaw: -15 }, model: GLB.boxes, layout: fit(0.8, 1.0, 0.8), physics: { body: "static", collider: "box" }, state: { name: "Seawatch supply cartons", items: "almond,tape,fuse,ration", ...brk("wood", 30) } },
 
     // ---- Far Island (Fort Surrender, y = 11.0) ----

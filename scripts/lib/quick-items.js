@@ -2,6 +2,7 @@ import W from './weapons.js'
 import { parseCloth, wornTokens } from './clothes.js'
 import SNACKS from './data/snacks.yml'
 import { MEAT } from './items.js'
+import { getBookSpec, getMagSpec, isBookToken, isMagToken } from './modifiers.js'
 export function quickItems(s) {
   const rows = [['grey','almonds'],['green','almondsG'],['red','almondsR'],['blue','almondsB']].map(([c,k]) => ({id:'almond:'+c,name:c+' almond water',count:s[k]??0,action:{k:'drink',c}}))
   for (const [c,v] of Object.entries(MEAT)) rows.push({id:'meat:'+c,name:v.name,count:s.meat?.[c]??0,action:{k:'eat',c}})
@@ -19,6 +20,14 @@ export function quickItems(s) {
   for(const token of new Set([...bag,...worn,...saved.filter(x=>x.startsWith('cloth:'))])) {
     const p=parseCloth(token)
     if(p?.row) rows.push({id:token,name:p.row.name,count:clothCounts.get(token)??0,action:{k:'wear',w:token}})
+  }
+  for(const token of new Set([...Object.keys(s.mags??{}),...saved.filter(x=>isMagToken(x))])) {
+    const spec=getMagSpec(token)
+    if(spec) rows.push({id:token,name:spec.title,count:s.mags?.[token]??0,action:{k:'readMag',t:token}})
+  }
+  for(const token of new Set([...Object.keys(s.books??{}),...saved.filter(x=>isBookToken(x))])) {
+    const spec=getBookSpec(token)
+    if(spec) rows.push({id:token,name:spec.title,count:s.books?.[token]??0,action:{k:'readBook',t:token}})
   }
   return rows
 }

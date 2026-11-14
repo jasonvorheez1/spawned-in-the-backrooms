@@ -207,7 +207,7 @@ export function lay(ctx) {
       model: { id: "/cdn/value.8df9a0a088d4df2df92c0a316e9feb3b3439886bf6251649db4b3e95cf159a34.glb" }, layout: { box: { min: { x: -0.5, y: 0, z: -0.3 }, max: { x: 0.5, y: 1.6, z: 0.3 } } },
       state: {
         name: "Archival filing cabinet",
-        items: "book:science,book:lockpick,page:7,almond,ammo",
+        items: "ubook:l5_hotel_sneak,mag:science,mag:lockpick,page:7,almond,ammo",
         lock: "lockpick:50",
       },
     });

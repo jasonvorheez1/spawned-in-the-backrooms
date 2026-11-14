@@ -15,6 +15,7 @@
 import W from './weapons.js'
 import D from './data/difficulty.yml'
 import { wornDR, afterDR, parseCloth } from './clothes.js'
+import { collectModifiers, getBookSpec, getMagSpec, isBookToken, isMagToken } from './modifiers.js'
 
 export const ATTRS = [
   { k: 'h', name: 'Hardiness', short: 'HAR', info: 'Carry weight, melee and unarmed damage' },
@@ -47,10 +48,20 @@ export const START = { attr: '5,5,5,5,5,5,5', apts: 5, skl: SKILLS.map(() => 0).
 
 const nums = (str, n, d) => { const a = String(str ?? '').split(',').map(Number); return Array.from({ length: n }, (_, i) => (Number.isFinite(a[i]) ? a[i] : d)) }
 
-// { h, a, l, o, g, e, n } of a state that has `attr`
-export function attrsOf(s) {
+// raw stored { h, a, l, o, g, e, n } without temporary/gear modifiers
+export function baseAttrsOf(s) {
   const v = nums(s?.attr, ATTRS.length, 5), o = {}
   ATTRS.forEach((a, i) => { o[a.k] = v[i] })
+  return o
+}
+// effective { h, a, l, o, g, e, n } including active gear and consumable modifiers
+export function attrsOf(s, nowMs) {
+  const o = baseAttrsOf(s)
+  const mod = collectModifiers(s, nowMs)
+  for (const a of ATTRS) {
+    const d = mod.attrs[a.k] ?? 0
+    if (d) o[a.k] = Math.max(ATTR_MIN, Math.min(15, o[a.k] + d))
+  }
   return o
 }
 export const packAttrs = (o) => ATTRS.map((a) => o[a.k]).join(',')
@@ -58,9 +69,18 @@ export const tagsOf = (s) => String(s?.tags ?? '').split(',').filter(Boolean)
 export const spentOf = (s) => nums(s?.skl, SKILLS.length, 0)
 // a skill's start: 2 + 2 x attribute + half your Luck (rounded up), as in Fallout: New Vegas
 export const baseSkill = (at, k) => 2 + 2 * at[k.attr] + Math.ceil(at.l / 2)
-export function skillsOf(s) {
-  const at = attrsOf(s), sp = spentOf(s), tg = tagsOf(s), o = {}
-  SKILLS.forEach((k, i) => { o[k.k] = Math.min(SKILL_MAX, baseSkill(at, k) + sp[i] + (tg.includes(k.k) ? TAG_BONUS : 0)) })
+// Permanent skill rating (base attributes + spent points + tags + permanent Skill Books), unaffected by temporary buffs
+export function permanentSkillsOf(s) {
+  const at = baseAttrsOf(s), sp = spentOf(s), tg = tagsOf(s), bk = s?.bookBonuses ?? {}, o = {}
+  SKILLS.forEach((k, i) => { o[k.k] = Math.min(SKILL_MAX, baseSkill(at, k) + sp[i] + (tg.includes(k.k) ? TAG_BONUS : 0) + (bk[k.k] ?? 0)) })
+  return o
+}
+export function skillsOf(s, nowMs) {
+  const at = attrsOf(s, nowMs), sp = spentOf(s), tg = tagsOf(s), mod = collectModifiers(s, nowMs), o = {}
+  SKILLS.forEach((k, i) => {
+    const raw = baseSkill(at, k) + sp[i] + (tg.includes(k.k) ? TAG_BONUS : 0) + (mod.totalSkills[k.k] ?? 0)
+    o[k.k] = Math.max(1, Math.min(SKILL_MAX, raw))
+  })
   return o
 }
 export const wclass = (w) => {
@@ -73,7 +93,9 @@ const skillMul = (v) => 0.94 + v / 250 // 15 is about the old balance, 100 is +3
 // the damage multiplier for a weapon: its skill and the attribute behind it
 export function dmgMul(s, w) {
   const a = attrsOf(s), k = skillsOf(s), c = wclass(w), hd = handling(s, w).dmg
-  return hd * ((w?.ranged || w?.throwable) ? (1 + (a.o - 5) * 0.04) * skillMul(k[c]) : c === 'melee' ? (1 + (a.h - 5) * 0.06) * skillMul(k.melee) : (1 + (a.h - 5) * 0.05) * skillMul(k.unarmed))
+  const mod = collectModifiers(s)
+  const extra = Math.max(0.5, 1 + (mod.derived.dmgMul ?? 0))
+  return extra * hd * ((w?.ranged || w?.throwable) ? (1 + (a.o - 5) * 0.04) * skillMul(k[c]) : c === 'melee' ? (1 + (a.h - 5) * 0.06) * skillMul(k.melee) : (1 + (a.h - 5) * 0.05) * skillMul(k.unarmed))
 }
 const REQ_SKILL = { guns: 'Guns', melee: 'Melee', energy: 'Energy Weapons', explosives: 'Explosives', unarmed: 'Unarmed' }
 
@@ -113,25 +135,28 @@ export const isBroken = (s) => s?.sanity != null && s.sanity <= 0
 function shaken(a, s) { if (!isBroken(s)) return a; const o = { ...a }; for (const k of Object.keys(o)) if (k !== 'l') o[k] = Math.max(1, o[k] - 2); return o }
 const sneakFromSkill = (skill) => Math.max(0.35, 1 - (skill - 15) * 0.0065)
 export const sneakMul = (s) => sneakFromSkill(skillsOf(s).sneak)
-export function derived(s) {
-  const raw = attrsOf(s), a = shaken(raw, s), k = skillsOf(s)
+export function derived(s, nowMs) {
+  const raw = attrsOf(s, nowMs), a = shaken(raw, s), k = skillsOf(s, nowMs), mod = collectModifiers(s, nowMs), dv = mod.derived
   return {
-    hpBonus: (a.e - 5) * 10,
-    sanBonus: (a.n - 5) * 8,
-    staMax: 100 + (a.a - 5) * 8,
-    staRegen: 1 + (a.a - 5) * 0.05,
+    hpBonus: (a.e - 5) * 10 + (dv.maxHp ?? 0),
+    sanBonus: (a.n - 5) * 8 + (dv.maxSan ?? 0),
+    staMax: Math.max(40, 100 + (a.a - 5) * 8),
+    staRegen: Math.max(0.25, (1 + (a.a - 5) * 0.05) * (1 + (dv.stamRegen ?? 0))),
     hpRegen: Math.max(0, (a.e - 4) * 0.12), // hp per second out of a fight
-    carry: s?.god ? Infinity : D.carryBase + a.h * D.carryPerH + (s?.carryBonus ?? 0) + (s?.carryExtra ?? 0), // carryExtra: a fixed per-player grant (Shelly asked 999999)
-    speed: 1 + (a.a - 5) * 0.025,
+    carry: s?.god ? Infinity : D.carryBase + a.h * D.carryPerH + (s?.carryBonus ?? 0) + (s?.carryExtra ?? 0) + (dv.carryMax ?? 0), // carryExtra: a fixed per-player grant (Shelly asked 999999)
+    speed: Math.max(0.55, (1 + (a.a - 5) * 0.025) * (1 + (dv.moveSpeed ?? 0))),
     swing: 1 - (a.a - 5) * 0.03 - (k.unarmed - 15) * 0.0015,
     reload: Math.max(0.5, 1 - (a.a - 5) * 0.03 - (k.guns - 15) * 0.002),
     // These baseline weapons have no handling requirements; reuse the sheet already calculated.
     melee: (1 + (raw.h - 5) * 0.06) * skillMul(k.melee),
     gun: (1 + (raw.o - 5) * 0.04) * skillMul(k.guns),
-    crit: 0.03 + a.l * 0.012,
+    crit: Math.max(0.01, 0.03 + a.l * 0.012 + (dv.crit ?? 0)),
     scav: Math.min(0.5, a.l * 0.012), // the chance of one extra find in a container
     clothFind: 0.5 + a.o * 0.07 + a.l * 0.03, // Observation (Perception) spots the wearable, Luck helps: x1 at O5 L5, x1.35 at O10 (Savi's pick)
-    dr: wornDR(s?.look), // damage resistance from worn clothes (scripts/lib/data/clothes.yml)
+    dr: wornDR(s?.look) + (dv.dr ?? 0), // damage resistance from worn clothes + active meds
+    coldResist: Math.min(85, Math.max(-25, dv.coldResist ?? 0)),
+    heatResist: Math.min(85, Math.max(-25, dv.heatResist ?? 0)),
+    bleedImmune: (dv.bleedImmune ?? 0) > 0,
     sneak: sneakFromSkill(k.sneak),
     heal: D.healMul * (1 + (k.survival - 15) * 0.006), // almond water, rations
     healMed: D.healMul * (1 + (k.medicine - 15) * 0.008), // bandages and the medic
@@ -144,13 +169,14 @@ export function derived(s) {
 }
 
 // ---- carry weight, in kilograms
-const FIXED = { almond: 0.5, ammo: 0.4, shells: 0.5, ration: 0.4, bandage: 0.1, battery: 0.3, kit: 1.0, book: 0.3, firesalt: 0.3 }
+const FIXED = { almond: 0.5, ammo: 0.4, shells: 0.5, ration: 0.4, bandage: 0.1, battery: 0.3, kit: 1.0, book: 0.3, mag: 0.1, firesalt: 0.3 }
 export function weaponWeight(k) { const w = W[k]; return w ? (w.kg ?? w.weight ?? (w.ranged ? 2.8 : w.damage > 30 ? 3.2 : 1.6)) : 0 }
 import BRK from './data/breakables.yml'
 export function tokenWeight(token) {
   if (BRK.scrap[token]) return BRK.scrap[token].kg
   if (token.startsWith('weapon:')) return weaponWeight(token.slice(7))
-  if (token.startsWith('book:')) return FIXED.book
+  if (isBookToken(token)) return getBookSpec(token)?.kg ?? FIXED.book
+  if (isMagToken(token)) return getMagSpec(token)?.kg ?? FIXED.mag
   if (token.startsWith('cloth:')) return parseCloth(token)?.row.kg ?? 0.3
   return FIXED[token] ?? 0.2
 }
@@ -159,13 +185,15 @@ export function inventoryWeight(s) {
   let kg = ((s.almonds ?? 0) + (s.almondsG ?? 0) + (s.almondsR ?? 0) + (s.almondsB ?? 0)) * FIXED.almond + (s.ammo ?? 0) * 0.03 + (s.shells ?? 0) * 0.07 + (s.firesalt ?? 0) * FIXED.firesalt + (s.fsIngot ?? 0) * 0.1 + (s.repellent ?? 0) * 0.15
   for (const k of String(s.weapons ?? '').split(',').filter(Boolean)) kg += weaponWeight(k)
   for (const [t, n] of Object.entries(s.scrap ?? {})) kg += (BRK.scrap[t]?.kg ?? 0.2) * n // building scrap
+  for (const [t, n] of Object.entries(s.books ?? {})) kg += (getBookSpec(t)?.kg ?? FIXED.book) * n
+  for (const [t, n] of Object.entries(s.mags ?? {})) kg += (getMagSpec(t)?.kg ?? FIXED.mag) * n
   for (const t of String(s.clothes ?? '').split(',').filter(Boolean)) kg += tokenWeight(t) // spare clothes; what's worn weighs nothing
   return kg
 }
 export const carried = (s) => Math.round(inventoryWeight(s) * 10) / 10
 // The amount one pickup adds; crafting uses this same rule for complete recipe outputs.
 export function pickupWeight(token) {
-  if (['ration', 'bandage', 'battery', 'kit', 'akit', 'beans', 'bar', 'firstaid', 'tape', 'fuse', 'valve', 'keycard', 'royal_ration', 'bobbypin', 'compass', 'nvg', 'skates'].includes(token) || token.startsWith('book:') || token.startsWith('page:')) return 0
+  if (['ration', 'bandage', 'battery', 'kit', 'akit', 'beans', 'bar', 'firstaid', 'tape', 'fuse', 'valve', 'keycard', 'royal_ration', 'bobbypin', 'compass', 'nvg', 'skates'].includes(token) || token.startsWith('page:')) return 0
   return token === 'ammo' ? W.ammo.perPickup * .03 : token === 'shells' ? W.shells.perPickup * .07 : tokenWeight(token)
 }
 export function canCarry(s, token) {

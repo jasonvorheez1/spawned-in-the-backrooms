@@ -1,5 +1,5 @@
-// Level 2.1 "Locked": interactive set-pieces (Saltine stockpile, freezer-coil water collector, Base Alef lockout terminal, Exploration Wing forbidden berries,
-// John Banks's blasting plunger, Quartermaster errand board) and the Smilers that prowl The Edges (places/level21/sim.js).
+// Level 2.1 "Locked": interactive set-pieces (Saltine stockpile, freezer-coil water collector, sealed stairwell shutter, Exploration Wing forbidden berries,
+// Jared Banks's blasting plunger, dry utilities, Quartermaster errand board) and the Smilers that prowl The Edges (places/level21/sim.js).
 import { heard } from "./lib/hear.js";
 import { vo } from "./lib/voices.js";
 import { raycast } from "builtin/physics";
@@ -25,14 +25,6 @@ const NED = [
   "Saltines on the table. Take some. Take more. Please.",
   "Freezer coils sweat clean water. Cup's on the hook.",
   "Errand board's by the door. Copper wire, mostly. Always copper wire."
-];
-
-const ALEF_LOGS = [
-  "ALEF LOG [11 JUL 2020 · 03:18]: \"Wilson here. A solid steel shutter just dropped across the Level 2 stairwell. Blowtorches barely scratch it. All 53 of us are sealed in.\"",
-  "ALEF LOG [14 JUL 2020 · 19:04]: \"Rations are down to quarter-shares. The heat from the lower pipes is 98°F and there's no running water in the halls. People are eyeing the specimen berries in Exploration.\"",
-  "ALEF LOG [19 JUL 2020 · 11:42]: \"Connor found a room north of the checkered lockers. Banks of humming refrigerators packed floor-to-ceiling with Saltines. He calls it 'Refrigerator Paradise'. Half the base is moving there.\"",
-  "ALEF LOG [27 JUL 2020 · 22:15]: \"John Banks took six sticks of dynamite and a plunger box east into The Edges. He thinks the concrete roof is only five meters thick. If he blows a hole, maybe we reach the surface.\"",
-  "ALEF LOG [02 AUG 2020 · 04:50]: \"Banks's blast only brought down rock and woke the Smilers in the east caverns. But the last survey team found a cold karst fissure at the far end of the lane. It leads down to Level 8.\"",
 ];
 
 export const ears = {
@@ -73,16 +65,27 @@ export const ears = {
       return;
     }
 
-    if (s.kind === "comms") {
-      heard(ctx, { clip: G("old-computer-boot-startup-chime"), position: pos, volume: 0.65, maxDistance: 12 });
-      heard(ctx, { clip: G("walkie-talkie-radio-click-static-burst"), position: pos, volume: 0.45, maxDistance: 8 });
-      const n = (s.said ??= {})[uid] = ((s.said ?? {})[uid] ?? -1) + 1;
-      const log = ALEF_LOGS[n % ALEF_LOGS.length];
-      const header = log.match(/ALEF LOG \[[^\]]+\]/)?.[0] ?? "ALEF LOG";
-      const body = log.replace(/^ALEF LOG \[[^\]]+\]:\s*"/, '').replace(/"$/, '');
-      // Show, don't tell: physically update the CRT terminal screen UI in 3D space
-      ctx.self.ui = `<div face="front" width="0.9m" style="font-family:monospace;color:#7aff9a;font-size:24px;text-align:left;line-height:1.2;padding:10px;background:rgba(2,18,5,0.92);border:2px solid #3fa860"><div style="font-size:26px;color:#afffca;border-bottom:1px solid #3fa860;margin-bottom:6px;font-weight:bold">${header}</div>${body}</div>`;
-      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 0.6, z: pos.z }, text: `LOG #${n % ALEF_LOGS.length + 1} READ`, color: "#7aff9a", size: 0.9 }, { audience: { player: who.id } });
+    if (s.kind === "lockout_shutter") {
+      if (now - (cool[uid] ?? -1e9) < 1800) return;
+      cool[uid] = now;
+      snd("heavy-steel-door-latch-clunk-and-rattle", 0.75);
+      w.notice = { text: "Solid steel across the stairwell tracks. Pry scars and torch slag along both jambs.", at: now };
+      return;
+    }
+
+    if (s.kind === "dry_faucet") {
+      if (now - (cool[uid] ?? -1e9) < 1800) return;
+      cool[uid] = now;
+      heard(ctx, { clip: "/cdn/sfx-shower-water-running-then-turned-off-squeak.mp3", position: pos, volume: 0.45, maxDistance: 10 }, { audience: { player: who.id } });
+      w.notice = { text: "Valve turns dry with a thin rasp of stale air. Zero line pressure.", at: now };
+      return;
+    }
+
+    if (s.kind === "dead_radio") {
+      if (now - (cool[uid] ?? -1e9) < 2200) return;
+      cool[uid] = now;
+      heard(ctx, { clip: "/cdn/sfx-walkie-talkie-radio-squelch-burst-then-static.mp3", position: pos, volume: 0.65, maxDistance: 14 });
+      w.notice = { text: "Base Alef relay loop: carrier dead since 11 JUL.", at: now };
       return;
     }
 
@@ -197,7 +200,7 @@ export const ears = {
       const n = (s.said ??= {})[uid] = ((s.said ?? {})[uid] ?? -1) + 1;
       const line = GOKNAR[n % GOKNAR.length];
       heard(ctx, { clip: vo("l21-goknar", line), position: pos, volume: 1.0, maxDistance: 14 });
-      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.9, z: pos.z }, text: `"${line}"`, color: "#7aff9a", size: 1.05 });
+      w.sub = { t: `Goknar: "${line}"`, at: now };
       return;
     }
 
@@ -205,7 +208,7 @@ export const ears = {
       const n = (s.said ??= {})[uid] = ((s.said ?? {})[uid] ?? -1) + 1;
       const line = NED[n % NED.length];
       heard(ctx, { clip: vo("l21-ned", line), position: pos, volume: 1.0, maxDistance: 14 });
-      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.9, z: pos.z }, text: `"${line}"`, color: "#ffd460", size: 1.05 });
+      w.sub = { t: `Ned: "${line}"`, at: now };
       return;
     }
   },
@@ -257,13 +260,13 @@ export function update(ctx, dt) {
   const now = ctx.now(), mem = (ctx.self.session.m ??= { respawnAt: 0 });
   const players = ctx.place.players.filter((p) => (p.state?.hp ?? 1) > 0 && !(p.state?.downAt && now - p.state.downAt < 4500));
 
-  // Show, don't tell: discovery chime and golden floating badge when entering deep uncharted caves
+  // Subtle environmental shift when crossing deep into uncharted rock tunnels
   for (const p of players) {
     const { cx } = cellAt(p.feetPosition.x, p.feetPosition.z);
     if (cx >= EDGE_X + 4 && !p.state.l21Scouted) {
       p.state.l21Scouted = 1;
-      heard(ctx, { clip: G("eerie-low-chime-level-up"), position: p.feetPosition, volume: 0.85, maxDistance: 20 }, { audience: { player: p.id } });
-      ctx.emit("damageNumber", { position: { x: p.feetPosition.x, y: p.feetPosition.y + 1.8, z: p.feetPosition.z }, text: "THE EDGES: SCOUTED", color: "#ffd700", size: 1.3 }, { audience: { player: p.id } });
+      heard(ctx, { clip: G("wind-draft-cold-abyss-loop"), position: p.feetPosition, volume: 0.55, maxDistance: 16 }, { audience: { player: p.id } });
+      p.state.notice = { text: "The corridor heat gives way to cool damp stone. Overhead tubes end behind you.", at: now };
       if ((p.state.edgesQ ?? 0) >= 1 && (p.state.edgesQ ?? 0) < 3) {
         setEdgesStep(ctx, p, 3, "The Edges threshold scouted! Report the status back to Goknar at the doorway post.");
       }
