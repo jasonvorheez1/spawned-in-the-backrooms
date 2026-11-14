@@ -2,11 +2,23 @@
 // Ferry's house: the shell and the hand-built rooms from scripts/l169-house-geo.js (params.part), laid at the house's centre, plus doors that swing and the lamps.
 // Every number comes from scripts/lib/data/level169.yml (house, houseBuild). Ids: l169-house-*.
 const GEO = "scripts/l169-house-geo.js";
+const SHELL_GLB = "/cdn/value.150c87b478df0c8f2ab37379e19a56d85bda160aaaadbb1080ce0a3d3b1a23a7.glb";
 export function layHouse(ctx, put, L) {
   const h = L.house, b = L.houseBuild, C = h.center, r = h.rooms;
   const ground = ctx.place.terrain?.heightAt?.(C.x, C.z) ?? 0, F = ground + h.floorUp;
   const part = (id, p, x, z, y, extra = {}) => put(`l169-house-${id}`, { feetPosition: { x, y, z }, primitive: { kind: "scripted", script: GEO, params: p }, physics: "static", ...extra });
   for (const p of ["shell", "yard", "kitchen", "basement"]) part(p, { part: p }, C.x, C.z, ground);
+  // the shell you see is the Blender build (art/ferry-house/build.py); the scripted shell stays as its collider, unseen
+  const getO = ctx.getObject?.("l169-house-shell"); if (getO) getO.visible = false;
+  const tx = (t, rep, extra = {}) => ({ texture: t, repeat: rep, wrap: "repeat", ...extra });
+  put("l169-house-look", { feetPosition: { x: C.x, y: ground, z: C.z }, castShadow: true, receiveShadow: true, visibleRange: { max: 900 },
+    model: { id: SHELL_GLB, materials: {
+      stucco: tx("cdn/texture-pale-adobe-stucco.png", [0.5, 0.5], { color: "oklch(0.95 0.03 70)" }), plaster: tx("cdn/texture-limewash-plaster.png", [0.5, 0.5]),
+      floor: tx("cdn/texture-swept-wood-plank-floor.png", [0.5, 0.5]), concrete: tx("cdn/texture-smooth-poured-concrete.png", [0.5, 0.5]),
+      timber: tx("cdn/texture-weathered-timber-planks.png", [0.7, 0.7]), trim: tx("cdn/texture-weathered-timber-planks.png", [1, 1], { color: "oklch(0.93 0.04 75)" }),
+      shutter: tx("cdn/texture-chipped-sage-green-painted-wood.png", [1, 1]), roof: tx("cdn/texture-galvanized-corrugated-steel-sheet-weathered.png", [0.5, 0.5], { metalness: 0.6, roughness: 0.5 }),
+      rust: tx("cdn/texture-rusty-corrugated-tin-roof-sheet.png", [1, 1]), brick: tx("cdn/texture-sun-faded-red-brick-wall.png", [1, 1]),
+      glass: { color: "oklch(0.85 0.04 220 / 0.3)", roughness: 0.08, opacity: 0.3, transparent: true } } } });
   // doors: front on the south face, living and kitchen off the hall's south wall, the bedrooms and den off its north wall
   const wallZ = { front: r.porch[2], living: r.hall[3], kitchen: r.hall[3], bed1: r.hall[2], bed2: r.hall[2], bed3: r.hall[2], den: r.hall[2] };
   for (const [k, [x0, x1]] of Object.entries(b.doors)) {
