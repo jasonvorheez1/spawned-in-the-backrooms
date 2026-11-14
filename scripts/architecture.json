@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8096,
-  "updatedAt": "2026-11-14T12:59:43.744Z",
+  "basedOnSpecVersion": 8099,
+  "updatedAt": "2026-11-14T13:02:10.226Z",
   "summary": "The Backrooms is a shared multiplayer survival RPG across the Level 0 maze, mall, The Hub and authored destinations. Player state carries progression, gear, quests and resume location; shared scripts and place simulations provide common player behavior, world dressing and story systems.",
   "scriptPaths": [],
   "places": [
@@ -66,17 +66,17 @@
     "scripts/talk.js → dialogue.js rootChoices and quest handlers; authored dlg-*.yml dialogue and voiceKey mappings feed skill checks and journal/feed/reputation helpers; ch2-quest.js supplies Safe Alcove stance choices and completion.",
     "scripts/main-menu.js arrival → scripts/lib/tutorial.js tutStart; update/input call tutTick/tutInput → player.state.tut and tutorial-ui.js card; tutorial0 sim lays props, while tut0-cut.js runs beats and Dina's HALOGEN handoff.",
     "places/main/sim.js compares place.state.momentsV and calls layMoments → deterministic Level 0 wall/camp placements; v15 destroys tagged moments before relaying the wall-hung payphone pair.",
-    "places/levelrun/sim.js runs levelrun-mechanics chase/cut handlers and calls levelrun-dress.js dressWorld; dressV gates replacement of tagged decor while invisible box shells retain collision, and lrun-strobe.js animates fixture light."
+    "places/levelrun/sim.js runs levelrun-mechanics chase/cut handlers and calls levelrun-dress.js dressWorld; dressV gates replacement of tagged decor while invisible box shells retain collision, and lrun-strobe.js animates fixture light. Chase slam/collapse/bite events emit spatial heard clips, a lead-horde loop, and player-targeted screenShake/flash feedback."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; venue menus and staff vary by shop; Level 6.1 fixture models are fitted separately.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; a dining_set composes a table with two separately fitted chairs.",
     "art/cigs/build.py + art/fnv/build.py and NIF converters → scripts/lib/data/cigs.yml + fnv-props.yml - creator assets become real-scale GLBs; catalogs supply decoration and fitted furniture/props across Levels 5, 9, 11 and 61.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
-    "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl, tight ceilings/tunnel mouths trigger automatic crawl; Level ! also has its authored agility obstacles.",
+    "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl, tight ceilings/tunnel mouths trigger automatic crawl; Level ! also has its chase-specific crawl handling.",
     "Level 01/Zenith and Level 1 geometry builders - authored station and car park/service geometry; corridor materials, pipes, fixtures and lights vary deterministically per cell.",
     "scripts/meg-agent.js + npc-temper.js + forgive.js + critter-model.js - NPC reactions, cover, barks, movement/fighting and companion following vary by faction/role/outfit; Hub and story Phoebes share scripts/lib/phoebe.js dressing.",
-    "scripts/lib/level61-quests.js + level11-quests.js + ch2-quest.js + talk/use handlers - level quest stages and replies reuse shared journal/rep/feed helpers and skill-check resolution; scripts/lib/tutorial.js + tut0-cut.js coordinate tutorial beats. Enemy hunt/attack scripts share recovery/targeting fixes across levels (tests/enemy-ai.test.js); Level 70 residents route on level70-nav graph."
+    "scripts/lib/level61-quests.js + level11-quests.js + ch2-quest.js + talk/use handlers - level quest stages and replies reuse shared journal/rep/feed helpers and skill-check resolution; scripts/lib/tutorial.js + tut0-cut.js coordinate tutorial beats."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
