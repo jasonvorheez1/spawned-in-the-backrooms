@@ -110,6 +110,8 @@ l10-meg-sully:
   bye: "Shh. Go on."
   walk: "Mm."
   ask:
+    - q: "Anything strange on the airwaves?"
+      a: "Join Us Radio. Comes in on any set, any band, when it wants to. Kids' choir songs about balloons and no exits. A host who can barely say words. We log every time it gets loud. It gets loud before somebody goes missing."
     - q: "What are you listening to?"
       a: "The aerial points at the ground. Don't ask. Shortwave comes up out of the dirt. Weather, for towns I can't find. Rain tomorrow, every one of them."
     - q: "What was the last thing you heard?"
@@ -211,6 +213,8 @@ l11-trader-kael:
   bye: "Come back thirsty!"
   walk: "Your loss, boss!"
   ask:
+    - q: "Anything worth listening to on Eleven?"
+      a: "The ad station. Five-forty. Swear half the stuff I stock I first heard about in a jingle. Almond Water, almond water, good for every son and daughter. It's in my head for good now. Thanks for asking."
     - q: "The apples just appear?"
       a: "Every dawn. Crate's empty at night, full by morning. So I sell the crate. The crate's mine. The apples are the city's."
     - q: "Deal on supplies?"

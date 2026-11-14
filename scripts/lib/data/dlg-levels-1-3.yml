@@ -169,6 +169,8 @@ bntg-voss:
   bye: "Send your friends to me. Only the ones who pay."
   walk: "No manners. I will live."
   ask:
+    - q: "Do you advertise?"
+      a: "On Ad Nauseam? Five-forty AM, wall to wall commercials, no host. Half of them are from places that closed forty years ago. Half are from places that don't exist yet. We bought a slot. Frank's left shoes. Nobody called."
     - q: "What are you trading?"
       a: "Batteries, wire, bandages, dry socks. Whatever the soldiers downstairs leave behind and whatever Ale won't touch. Show me chits or good scrap."
     - q: "What's B.N.T.G.?"
@@ -206,6 +208,8 @@ surv-wren:
   bye: "Don't die. Okay? Okay."
   walk: "Oh. Bye, I guess."
   ask:
+    - q: "What keeps you sane out here?"
+      a: "Radio Backrooms. Ralph's voice. I don't care what he plays, it's a person talking. Some nights the dial drifts and I catch the one with the smiling guy shouting about his basement. Even that helps, a little."
     - q: "Where am I?"
       a: "The pipes. Our camp's the warm bit. Hollis says the soldiers upstairs call it a number, but it's just the pipes. I've lived here since I was eleven so I get to name it."
     - q: "How do I get out?"

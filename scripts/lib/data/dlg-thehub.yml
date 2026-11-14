@@ -7,6 +7,8 @@ hub-meg-okafor:
   bye: "Count the tunnels on your way. Out loud helps."
   walk: "Right. Mind the kerb."
   ask:
+    - q: "Hear anything on the radio lately?"
+      a: "Ralph, mostly. Radio Backrooms, twenty-nine four. Half static, but he reads the warnings out and twice that's saved a patrol. If you ever hear a cheerful girl on a station with no number, turn it off. That's not a girl."
     - q: "Where am I?"
       a: "Under everything, as far as we can tell. We call it the Hub. One long road, side tunnels off it, and doors. A lot of doors. Each one goes somewhere else and none of them come back."
       then:
@@ -102,6 +104,8 @@ hub-amber-pip:
   bye: "Remember your mark! Draw it on your hand!"
   walk: "Okay bye!"
   ask:
+    - q: "You listen to the radio?"
+      a: "Eight Bit Hits! The host's a Smiler called Ole'hba. He's been telling the same story about how he got to his basement for a year. Never finished it once. Someone always calls in. I think he's funny. Jo says I'm not allowed to think that."
     - q: "What do you do here?"
       a: "I walk people to their doors! For free! Mostly because I get lost on the way back and it's exciting."
     - q: "Any place I shouldn't go?"
