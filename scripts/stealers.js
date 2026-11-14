@@ -53,8 +53,8 @@ function wearSkin(ctx, e) {
   ctx.spawn("skin", {
     parent: e.id,
     feetPosition: { x: 0, y: 0, z: 0 },
-    scale: 1.05, // even: a stretched skin dragged its fitted clothes off the body (Shelly, Nov 13)
     ...critterSpec(look),
+    scale: 1.05, // after the spec: its own uneven body scale stretched the skin and left the fitted clothes hanging (Shelly, Nov 13)
     state: { fur: look.fur ?? null },
   });
 }
