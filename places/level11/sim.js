@@ -669,7 +669,7 @@ function lay(ctx) {
       tags: ["usable"],
       feetPosition: { x: MALL_X - 5.25, y: Y0, z: MALL_Z - 5.0 },
       rotation: { yaw: 90 },
-      model: { id: "/cdn/value.72e3f02029b10b3d1151df1a966e7a7213e1c322410024ec00e19a8ea4005153.glb", forward: "+x" }, // Tripo+Studio dark-red steel service door, push bar, wired glass (art/l11-mall)
+      model: { id: "/cdn/value.72e3f02029b10b3d1151df1a966e7a7213e1c322410024ec00e19a8ea4005153.glb", forward: "-x" }, // Tripo+Studio dark-red steel service door, push bar, wired glass (art/l11-mall)
       layout: { box: { min: { x: -0.6, y: 0, z: -0.13 }, max: { x: 0.6, y: 2.4, z: 0.13 } } },
       physics: { body: "static", collider: "box" },
       behavior: "scripts/l11-ch2-drop.js",
@@ -685,13 +685,13 @@ function lay(ctx) {
     bx("l11-lab-glass", MALL_X - 1.35, Y0 + 1.1, MALL_Z - 0.6, 0.03, 0.7, 3.2, GLASS_TINT, { physics: undefined });
     fit("l11-lab-chair-1", CHAIR, FX - 1.2, MALL_Z - 1.6, -90, [0.75, 0.9, 0.75]);
     fit("l11-lab-chair-2", CHAIR, FX - 1.2, MALL_Z + 0.4, -90, [0.75, 0.9, 0.75]);
-    { // lab: stools behind the counter, a specimen fridge and a blood-draw chair by the back wall (Tripo+Studio, art/l11-mall/build.py; fronts are +x in the file)
+    { // lab: stools behind the counter, a specimen fridge and a blood-draw chair by the back wall (Tripo+Studio, art/l11-mall/build.py; fronts are +x in the file; yaw -90 turns a +x front toward the street)
       const L11M = { stool: "/cdn/value.667e360343948eba1fa76d5da065401a90a434835b07f2e6f61c215210453d43.glb", fridge: "/cdn/value.ec23d51d3c5c37071a4f62ea3c1848cb8c3eefd34bd1458dada2fcb177c285c2.glb", draw: "/cdn/value.2262935cd385b11621765d83356d11eb63bc45aba1e0a28cc1bea41ed71fa408.glb" };
       const fx = (id, m, x, z, yaw, size) => sp(id, { feetPosition: { x, y: Y0, z }, rotation: { yaw }, model: { id: m, forward: "+x" }, layout: { box: { min: { x: -size[0] / 2, y: 0, z: -size[2] / 2 }, max: { x: size[0] / 2, y: size[1], z: size[2] / 2 } } }, physics: { body: "static", collider: "box" } });
       fx("l11-lab-stool-1", L11M.stool, MALL_X - 2.3, MALL_Z - 1.6, 0, [0.5, 0.62, 0.5]);
       fx("l11-lab-stool-2", L11M.stool, MALL_X - 2.3, MALL_Z + 0.2, 40, [0.5, 0.62, 0.5]);
-      fx("l11-lab-fridge", L11M.fridge, MALL_X - 4.8, MALL_Z - 2.5, 90, [0.98, 1.75, 0.94]);
-      fx("l11-lab-drawchair", L11M.draw, MALL_X - 4.3, MALL_Z - 0.2, 90, [0.77, 1.0, 1.0]);
+      fx("l11-lab-fridge", L11M.fridge, MALL_X - 4.8, MALL_Z - 2.5, -90, [0.98, 1.75, 0.94]);
+      fx("l11-lab-drawchair", L11M.draw, MALL_X - 4.3, MALL_Z - 0.2, -90, [0.77, 1.0, 1.0]);
     }
     fit("l11-lab-plant", PLANT, MALL_X - 4.5, MALL_Z + 1.6, 30, [0.5, 1.1, 0.5]);
     sp("l11-lab-hum", { feetPosition: { x: MALL_X, y: 3, z: MALL_Z - 3.5 }, audio: { clip: "cdn/sfx-quiet-office-air-vent-hvac-room-tone-loop.mp3", loop: true, gain: 0.08, spatial: true, maxDistance: 10 } });
@@ -1880,7 +1880,7 @@ export function tick(ctx) {
     if (!ctx.place.objects?.["l11-from-levelrun"]) ctx.spawn("l11-from-levelrun", { feetPosition: { x: MALL_X - 3.6, y: Y0 + 0.1, z: MALL_Z - 5.0 }, rotation: { yaw: -90 } });
     if (!ctx.place.objects?.["l11-to-levelrun"]) ctx.spawn("l11-to-levelrun", {
       tags: ["usable"], feetPosition: { x: MALL_X - 5.25, y: Y0, z: MALL_Z - 5.0 }, rotation: { yaw: 90 },
-      model: { id: "/cdn/value.72e3f02029b10b3d1151df1a966e7a7213e1c322410024ec00e19a8ea4005153.glb", forward: "+x" }, layout: { box: { min: { x: -0.6, y: 0, z: -0.13 }, max: { x: 0.6, y: 2.4, z: 0.13 } } },
+      model: { id: "/cdn/value.72e3f02029b10b3d1151df1a966e7a7213e1c322410024ec00e19a8ea4005153.glb", forward: "-x" }, layout: { box: { min: { x: -0.6, y: 0, z: -0.13 }, max: { x: 0.6, y: 2.4, z: 0.13 } } },
       physics: { body: "static", collider: "box" }, behavior: "scripts/l11-ch2-drop.js",
       state: { kind: "levelrun-door", name: "Sealed Hospital Door", verb: "Open Threshold" },
     });
