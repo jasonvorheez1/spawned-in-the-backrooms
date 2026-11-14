@@ -23,9 +23,11 @@ function humanPhoebe() {
 }
 // a local, unsaved watcher: spawned on the viewer's own machine for one beat, gone after `life` seconds
 const OUTFIT = "/cdn/value.e43b3c8653d59ec8a87df263e493204dce99174142ce49d7deb6f7ae68473092.glb"
-export const PHOEBE_MODEL = "/cdn/value.4ea517e3919fe5429ff04cfed9a767e60b52b327259ff54e1d332d3099b0467f.glb" // Shelly Nov 14 ("fix phoebe", her reference /cdn/image-u287ap8tv.webp): one whole Tripo body, mixamo rig, coat/hair/boots/face built in; no stacked wardrobe parts
 export function phoebeSpec(ctx) {
-  return { human: false, model: { id: PHOEBE_MODEL, forward: "+x" }, layout: { box: { min: { x: -0.45, y: 0, z: -0.45 }, max: { x: 0.45, y: 1.62, z: 0.45 } } }, children: [] }
+  setStyle(ctx.world.state.bodyStyle) // this script's own copy of the BODIES switch reads the world's setting, not its boot default
+  const human = ctx.world.state.bodyStyle === "human" && !!HUMAN
+  const spec = human ? humanPhoebe() : furrySpec(PHOEBE_LOOK) // BODIES human: her human self; furry: the ginger cat in her fitted outfit
+  return { ...spec, human, children: [...(spec.children || []), ...(human ? [] : [{ id: "phoebe-outfit", attachment: { skin: true }, model: OUTFIT }])] }
 }
 export function spawnPhoebe(ctx, id, at, yaw, life, pose) {
   if (ctx.getObject(id)) return id
@@ -34,7 +36,7 @@ export function spawnPhoebe(ctx, id, at, yaw, life, pose) {
     tags: ["phoebe"], audience: "local", lifetime: life, feetPosition: at, rotation: { yaw },
     ...spec,
     state: { cutPose: true },
-    anim: { pose: { clip: pose ?? "cdn/clip-idle-female-loop.glb", loop: "loop", weight: 1 } }, // never a bind pose: a clip from her first frame (Shelly: "t posing phoebe")
+    anim: { pose: { clip: pose ?? (human ? "cdn/clip-idle-female-loop.glb" : "cdn/clip-idle-loop.glb"), loop: "loop", weight: 1 } }, // never a bind pose: a clip from her first frame (Shelly: "t posing phoebe")
   })
   return id
 }
