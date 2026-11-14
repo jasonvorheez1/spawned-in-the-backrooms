@@ -7,7 +7,7 @@ import { SPAWN } from "./level109.js";
 const SAFE = 65; const GRACE_MS = 35000; // review: wanderers stay >60 m from arrival/respawn, and none come within 35 s of anyone arriving
 const SAFE_OLD = 45; // no wanderer stands within this of the arrival/respawn point (Savi's pick: a fresh arrival is never ambushed)
 const nearSpawn = (p, r = SAFE) => Math.hypot(p.x - SPAWN.x, p.z - SPAWN.z) < r;
-const T = { every: 70000, jitter: 50000, first: 45000, maxAlive: 4, far: 90, minAhead: 14, maxAhead: 26, packMin: 1, packMax: 3, hp: 85, returnMs: 3600000 }; // Savi's picks
+const T = { corridor: false, every: 70000, jitter: 50000, first: 45000, maxAlive: 4, far: 90, minAhead: 14, maxAhead: 26, packMin: 1, packMax: 3, hp: 85, returnMs: 3600000 }; // Savi's picks
 const GUNS = ["pistol", "pistol", "revolver", "revolver", "shotgun", "smg", "coach_gun", "carbine", "lever_rifle"]; // weighted: sidearms common, carbines rare
 const NAMES = ["Hollis", "Marta", "Dev", "Pike", "Rosalind", "Teo", "Agnes", "Wim", "Corinne", "Sal", "Odette", "Bram", "Juniper", "Nils"];
 const SPECIES = ["bear", "dog", "fox", "wolf", "rabbit", "raccoon", "deer", "otter"];
@@ -49,7 +49,7 @@ export function wandererTick(ctx) {
     else if (d > T.far) ctx.destroy(w.id);
     else if (nearSpawn(w.feetPosition, SAFE - 5)) ctx.destroy(w.id); // a chase that reaches the arrival point ends there: respawn is never a death loop
   }
-  if (!ps.length) return;
+  if (!ps.length || !T.corridor) return; // Shelly, Nov 14: they live behind lockpickable doors now (dens below), not out of thin air
   const seen = s.wandSeen ?? {}; let fresh = false; const ids = {};
   for (const p of ps) { ids[p.id] = 1; if (!seen[p.id]) fresh = true; }
   if (fresh || Object.keys(seen).length !== ps.length) s.wandSeen = ids;
@@ -67,7 +67,7 @@ export function wandererTick(ctx) {
   s.wandSeq = (s.wandSeq ?? 0) + 1;
   for (let i = 0; i < n; i++) spawnWanderer(ctx, `l109w-${s.wandSeq}-${i}`, { x: at.x + at.side.x * (i - (n - 1) / 2) * 1.1 + at.back.x * -i * 1.2, y: at.y, z: at.z + at.side.z * (i - (n - 1) / 2) * 1.1 + at.back.z * -i * 1.2 }, at.back);
 }
-export function spawnWanderer(ctx, id, pos, face) {
+export function spawnWanderer(ctx, id, pos, face, extra = {}) {
   const r = (a) => a[Math.floor(ctx.random() * a.length)];
   const gun = r(GUNS), name = r(NAMES), sex = ctx.random() < 0.5 ? "m" : "f", torn = ctx.random() < 0.5;
   Promise.all([import("./critter-model.js"), import("./clothes.js"), import("./stats.js"), import("./weapon-look.js")]).then(([{ critterSpec }, { npcLook }, { npcState }, { weaponBody }]) => {
@@ -78,9 +78,44 @@ export function spawnWanderer(ctx, id, pos, face) {
       audience: "all", tags: ["npc", "l109-wanderer", "l8-hostile", "wretched"], feetPosition: pos, rotation: { yaw }, physics: "character", ...critterSpec(npcLook(id, look, "survivor", 109)),
       behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
       state: { ...npcState(ctx, "agent", T.hp), name: `${name} · frenzied wanderer`, role: "survivor", faction: "lightless", factionName: "frenzied wanderers: people Level 109's hum got into", nerve: "frenzied", arm: gun, barks: BARKS,
-        rounds: [{ x: pos.x, y: pos.y, z: pos.z, dwell: 20, act: null, look: { x: pos.x + face.x * 10, z: pos.z + face.z * 10 } }], ri: 0, home: { x: pos.x, z: pos.z } },
+        rounds: [{ x: pos.x, y: pos.y, z: pos.z, dwell: 20, act: null, look: { x: pos.x + face.x * 10, z: pos.z + face.z * 10 } }], ri: 0, home: { x: pos.x, z: pos.z }, ...extra },
     });
     ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: gun }, ...weaponBody(gun) });
-    ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-distant-hospital-corridor-man-laughing-hysterically-echo.mp3", position: pos, volume: 0.8, maxDistance: 45 });
+    if (!extra.den) ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-distant-hospital-corridor-man-laughing-hysterically-echo.mp3", position: pos, volume: 0.8, maxDistance: 45 });
   });
+}
+
+// ── Dens (Shelly, Nov 14: "the frenzied wanderers should spawn in doors that can be unlocked via lockpick") ──
+// A den is a ward, OR, ICU or pharmacy locked from inside. 1-3 armed wanderers wait in it; the door takes a lockpick; once
+// picked they see you and come out. A picked den stays open, then fills and locks again an hour later (the world's respawn
+// rule). place.state.dens[id] = when it was picked. Numbers are Savi's picks.
+export const DEN = { chance: 0.24, types: ["ward", "or", "icu", "pharmacy"], locks: [25, 25, 50, 50, 75], packMin: 1, packMax: 3, refill: 3600000, keepClear: 45 };
+const hh = (str, salt) => { let x = (2166136261 ^ salt) >>> 0; for (let i = 0; i < str.length; i++) { x ^= str.charCodeAt(i); x = Math.imul(x, 16777619); } return ((x >>> 0) % 100000) / 100000; };
+export function denOf(seed, info) {
+  if (!info || !DEN.types.includes(info.type) || info.id === "ns0_0m" || !info.door || nearSpawn(info.door, DEN.keepClear)) return null;
+  if (hh(info.id, seed) >= DEN.chance) return null;
+  return { lock: DEN.locks[Math.floor(hh(info.id, seed + 7) * DEN.locks.length)], n: DEN.packMin + Math.floor(hh(info.id, seed + 13) * (DEN.packMax - DEN.packMin + 1)) };
+}
+const bookDen = (ctx, id, v) => { const s = ctx.place.state, b = { ...(s.dens ?? {}) }; if (v === undefined) delete b[id]; else b[id] = v; s.dens = b; };
+// the door's lock as it should stand now: "lockpick:N" on a den nobody has picked (or picked over an hour ago), else ""
+export function denLock(ctx, seed, info, open) {
+  const d = denOf(seed, info); if (!d || open) return "";
+  const at = ctx.place.state.dens?.[info.id];
+  return at && ctx.now() - at < DEN.refill ? "" : `lockpick:${d.lock}`;
+}
+// a den room loads: a locked den gets its pack inside, facing the door
+export function denLoad(ctx, seed, info, at, faceDoor) {
+  const d = denOf(seed, info); if (!d) return;
+  const at0 = ctx.place.state.dens?.[info.id];
+  if (at0 && ctx.now() - at0 < DEN.refill) return; // picked: whoever was in it is out, or dead
+  if (at0) bookDen(ctx, info.id, undefined); // an hour on: it fills and locks again
+  for (let i = 0; i < d.n; i++) { const id = `l109w-den-${info.id}-${i}`; if (!ctx.place.objects[id]) spawnWanderer(ctx, id, at(-2 + i * 2.2, 10 + (i % 2) * 3), faceDoor, { den: info.id }); }
+}
+// each tick: a den door that lost its lock was picked; book it
+export function denWatch(ctx, ids) {
+  for (const id of ids) { const door = ctx.place.objects["l109d-" + id]; if (door?.state?.denLocked && !door.state.lock) { door.state.denLocked = false; bookDen(ctx, id, ctx.now()); } }
+}
+// a den room unloads: the pack still shut inside goes with it (and comes back with the room); ones that got out stay out
+export function denUnload(ctx, info, insideBox) {
+  for (const w of alive(ctx)) if (w.state?.den === info.id && !w.state?.dead && (w.state?.hp ?? 1) > 0 && insideBox(w.feetPosition)) ctx.destroy(w.id);
 }

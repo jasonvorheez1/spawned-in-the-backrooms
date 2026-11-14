@@ -7,7 +7,8 @@ import { questTick } from "../../scripts/lib/level109-quest.js";
 import { penRoll, penLoad, penUnload, looseTick, doorOpen } from "../../scripts/lib/containment.js";
 import { spawnFoe } from "../../scripts/lib/l109-foes.js";
 import { buildRoom } from "../../scripts/lib/l109-rooms.js";
-import { wandererTick } from "../../scripts/lib/l109-wanderers.js";
+import { wandererTick, denOf, denLock, denLoad, denWatch, denUnload } from "../../scripts/lib/l109-wanderers.js";
+import { inside } from "../../scripts/lib/containment.js";
 import { buildB3, placeLauncher, stairDoorAt, MORGUE, O as B3O, yawFor as yawB3 } from "../../scripts/lib/l109-b3.js";
 export const cadence = "500ms";
 const GEO = "scripts/levelrun-geo.js", PLASTER = "cdn/texture-clean-smooth-cream-painted-plaster-wall.png", CARPET = "cdn/texture-light-grey-beige-office-carpet-tiles-worn.png";
@@ -52,9 +53,10 @@ function layDoor(ctx, c, info, made) {
   const along = toWorld({ ...c, c: 0 }, 1, 0), inward = toWorld({ ...c, c: 0 }, 0, info.side), base = yawFor(along.x, along.z), swung = yawFor(inward.x, inward.z);
   let dy = swung - base; if (dy > 180) dy -= 360; if (dy < -180) dy += 360;
   const open = doorOpen(ctx, info.id);
+  const lock = exit ? "" : denLock(ctx, ctx.place.state.l109seed, info, open); // a den is locked from inside (scripts/lib/l109-wanderers.js)
   ctx.spawn(id, { tags: ["usable", "pen-door", "l109-seg"], feetPosition: hinge, rotation: { yaw: base + (open ? dy : 0) }, physics: { body: "kinematic", collider: "box" },
     primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: exit ? "metal" : "office", part: "leaf", w: DOOR_W, h: DOOR_H, hingeSide: "left", swing: 1, seed: info.r } }, material: { pbr: true }, behavior: exit ? "scripts/l109-exit.js" : "scripts/pen-door.js",
-    state: { pen: info.id, open, baseYaw: base, openYaw: dy, c: info.door, kind: exit ? "metal" : "wood", name: exit ? "Exit" : "Door", verb: exit ? "Go Through" : open ? "Close Door" : "Open Door" } });
+    state: { pen: info.id, open, baseYaw: base, openYaw: dy, c: info.door, kind: exit ? "metal" : "wood", name: exit ? "Exit" : lock ? "Locked door" : "Door", verb: exit ? "Go Through" : open ? "Close Door" : "Open Door", ...(lock ? { lock, denLocked: true } : {}) } });
   made.push(id);
   if (exit) { const p = toWorld(c, info.u, info.side * (W / 2 - 0.04), DOOR_H + 0.12), sid = id + "-sign"; // the only marked doors on the level
     ctx.spawn(sid, { tags: ["l109-seg"], feetPosition: p, rotation: { yaw: yawFor(-along.x * info.side, -along.z * info.side) }, castShadow: false, light: { kind: "point", color: "#ff5a48", intensity: 0.5, distance: 4, shadow: { enabled: false } },
@@ -74,6 +76,7 @@ function layRoom(ctx, seed, info) {
     sp(`l${a}_${b}`, { feetPosition: toWorld(c, um + a, vNear + info.side * b, 2.97), castShadow: false, primitive: { kind: "box", width: 1.2, height: 0.03, depth: 0.6 }, material: on ? TROFFER : { color: "#77756a" }, ...(on ? { light: { kind: "point", color: lit ? "#fff6e0" : "#e9e2c4", intensity: lit ? 2.2 : 1.1, distance: 15, shadow: { enabled: false } } } : {}) }); }
   const along = toWorld({ ...c, c: 0 }, 1, 0), inward = toWorld({ ...c, c: 0 }, 0, info.side);
   buildRoom(ctx, { id: info.id, type: info.type, info, seed, sp, abandoned: !lit, pop, at: (a, b, up = 0) => toWorld(c, um + a, vNear + info.side * b, up), yawIn: yawFor(inward.x, inward.z), yawAlong: yawFor(along.x, along.z) });
+  if (denOf(seed, info)) denLoad(ctx, seed, info, (a, b) => toWorld(c, um + a, vNear + info.side * b, 0.1), { x: -inward.x, z: -inward.z });
   penLoad(ctx, info.id, info.box, (c, k, pos, st) => spawnFoe(c, k, pos, { ...st, penDoor: { x: info.door.x, z: info.door.z } })); // the foes' keeper needs the doorway
   ROOMS.set(info.id, { made, info });
 }
@@ -106,6 +109,7 @@ export function tick(ctx) {
   for (const w of [...want.entries()].sort((a, b) => a[1].d - b[1].d)) { if (SEGS.has(w[0])) continue; if (budget-- <= 0) break; laySeg(ctx, seed, w[1].c, w[1].k); }
   for (const [key, made] of SEGS) if (!keep.has(key)) { for (const id of made) ctx.destroy(id); SEGS.delete(key); }
   for (const [id, r] of rooms) if (!ROOMS.has(id) && r.d < ROOM_IN) { layRoom(ctx, seed, r.info); break; } // one room a tick
-  for (const [id, r] of ROOMS) if (!rooms.has(id) || rooms.get(id).d > ROOM_OUT) { penUnload(ctx, id, r.info.box); for (const o of r.made) ctx.destroy(o); ROOMS.delete(id); }
+  denWatch(ctx, [...ROOMS.keys()]);
+  for (const [id, r] of ROOMS) if (!rooms.has(id) || rooms.get(id).d > ROOM_OUT) { denUnload(ctx, r.info, (p) => inside(r.info.box, p)); penUnload(ctx, id, r.info.box); for (const o of r.made) ctx.destroy(o); ROOMS.delete(id); }
   looseTick(ctx, spawnFoe);
 }
