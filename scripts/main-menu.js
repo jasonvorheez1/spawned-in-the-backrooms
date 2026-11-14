@@ -49,6 +49,7 @@ export function update(ctx) {
     if (st.cut && cutTick(ctx, ses, st)) { music(ctx, false); ctx.cross(ctx.self, st.t0Done ? "main" : "tutorial0"); return } // the intro lands you in the tutorial Level 0 the first time, the real one after
   } else ses.inIntake = false
   // Level 0 after the intro: the ceiling drop (scripts/lib/arrive-cut.js), then the tutorial (scripts/lib/tutorial.js)
+  const story = !noStory(st) // Shelly Nov 14: a run with the main story off skips its cutscenes and trail
   const l0 = place === "main" || place === "tutorial0"
   if (l0 && st.arrivePending && !st.menuOpen) { st.arrivePending = false; st.arrive = ctx.now(); ses.arr = null; if (place === "tutorial0") { st.t0n = 0; st.t0cut = null } }
   if (st.arrive) { if (!l0) { st.arrive = null; ses.arr = null; ctx.view.camera = null; return } if (arriveTick(ctx, ses, st)) tutStart(ctx, st); return }
@@ -62,7 +63,6 @@ export function update(ctx) {
     if (r) return
   } else ses.inT0 = false
   // Level 26: the first time aboard, the ship in the fog and Phoebe at the rail (scripts/lib/l26-cut.js)
-  const story = !noStory(st) // Shelly Nov 14: a run with the main story off skips its cutscenes and trail
   if (story && place === "level26" && !st.menuOpen && (st.l26cut || !st.l26seen)) { if (l26Tick(ctx, ses, st)) return ctx.sleep(0) }
   if (st.hubcut) st.hubcut = null
   if (story && lrunCutTick(ctx, ses, st, place)) return ctx.sleep(0)
