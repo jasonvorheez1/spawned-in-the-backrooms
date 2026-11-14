@@ -45,6 +45,10 @@ function usePart(K, p, a, b, yaw = 0, st = {}, o = {}) {
 // a piece of the medical kit (scripts/l109-med-geo.js)
 const TIP_LIFT = 0.32; // tuned: a tipped stand turns about its feet, so its rolling base (r 0.26-0.3) swings under the floor; lift it by that radius
 function part(K, p, a, b, yaw = 0, o = {}) { const R = K.R;
+  if (p.part === "decon") return R.sp(`decon${K.n++}`, { feetPosition: R.at(a, b, 0), rotation: { yaw: R.yawIn + yaw, pitch: 0, roll: 0 }, visibleRange: VR, physics: "static", ...(o.spec ?? {}), // Shelly Nov 14: "this model is blocky and floating": the purge box stands on its own steel post, a real model
+    primitive: { kind: "cylinder", radiusTop: 0.035, radiusBottom: 0.035, height: 1.12 }, material: { color: "oklch(0.62 0.01 250)", metalness: 0.8, roughness: 0.4 },
+    children: [{ feetPosition: { x: 0, y: -0.01, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.17, radiusBottom: 0.19, height: 0.025 }, material: { color: "oklch(0.45 0.01 250)", metalness: 0.7, roughness: 0.55 } },
+      { feetPosition: { x: 0, y: 1.08, z: 0.06 }, model: { id: "/cdn/value.c7be48b31c2cd67c9450ab65e5aefb0247347daa37708c20c6553c25dc2d94bb.glb", forward: "+z" }, layout: { box: { min: { x: -0.17, y: 0, z: -0.11 }, max: { x: 0.17, y: 0.44, z: 0.11 } } } }] });
   return R.sp(`${p.part}${K.n++}`, { feetPosition: R.at(a, b, (o.up ?? 0) + (o.tip ? TIP_LIFT : 0)), rotation: o.tip ? { yaw: R.yawIn + yaw, pitch: 88, roll: 0 } : { yaw: R.yawIn + yaw, pitch: 0, roll: 0 }, primitive: { kind: "scripted", script: GEO, params: p, seed: K.n },
     visibleRange: VR, castShadow: false, ...(o.solid ? { physics: "static" } : {}), ...(o.spec ?? {}) }); }
 function litter(K) { for (let i = 0; i < 4; i++) part(K, { part: "paper", r: 1.6, n: 14 }, -11 + K.r() * 22, 4 + K.r() * 22, K.r() * 360);
@@ -122,7 +126,7 @@ function biohazard(K) { const H = D.hazard, R = K.R, dead = R.abandoned, purged 
   part(K, { part: "sheet", w: 9, h: 2.5 }, 3, 12, 90, { solid: true }); part(K, { part: "sheet", w: 8, h: 2.5, strips: true }, 8, H.lineB - 1.5, 0);
   part(K, { part: "tape", w: 29.6 }, 0, H.lineB, 0);
   placard(K, -4.47, 2.5, 90); placard(K, -4.53, 2.5, -90); placard(K, -8, 5.46, 0); placard(K, -8, 5.54, 180);
-  usePart(K, { part: "decon", purged }, -5.4, 5.38, 90, { kind: "decon", roomId: R.id, purged, name: "Decon Purge Switch", verb: purged ? "Use Eyewash" : "Run Air Purge", info: purged ? "scrubbers running · safe" : "clears airborne toxin" }, { up: 1.3, lift: 0 });
+  usePart(K, { part: "decon", purged }, -5.4, 5.75, 0, { kind: "decon", roomId: R.id, purged, name: "Decon Purge Switch", verb: purged ? "Use Eyewash" : "Run Air Purge", info: purged ? "scrubbers running · safe" : "clears airborne toxin" }, { up: 0, lift: 1.3 });
   for (let i = 0; i < 12; i++) { const back = i < 7, a = back ? -13 + K.r() * 26 : (i % 2 ? 6 + K.r() * 7 : -14 + K.r() * 2.5), b = back ? H.lineB + 2 + K.r() * 8 : 8 + K.r() * 8, tip = (dead || back) && K.r() < 0.25;
     put(K, "drum", a, b, K.r() * 360, { tint: D.drumTint, tip, solid: !tip }); }
   put(K, "barrier", -8, H.lineB - 0.6, 0); put(K, "barrier", 1, H.lineB - 0.6, 6); put(K, "barrier", -2.5, 8, 80);
