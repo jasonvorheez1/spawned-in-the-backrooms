@@ -28,7 +28,7 @@ const CIG = (k) => CIGS[k]?.model;
 export const cadence = "1s";
 const RENO_FLOOR = 0.32;
 const mallTrash = (i) => ({ x: -15.15 + i * 0.2, y: 0.33, z: 28.1 + i * 0.65 });
-const V = 173; // 173 (2026-11-14): reno tool chest and market counter are fitted Tripo models // 172 (2026-11-14): lab sample counter is two Tripo+Studio reception counters, poster frame stands as its own row // 171 (2026-11-14): strip mall lab + bakery furniture is fitted Tripo+Studio models (art/l11-mall), storefronts are bevelled aluminium extrusions, the clinic back door is the Tripo steel service door // 170: 170: Coca-Cola machine and crates in Sedco, a can on the apartment counter // 169: 169: cigarette packs on the apartment counter and Sedco till // 168: 168: Chapter 2 Clinic dead-drop and sealed Level ! hospital threshold // 167: stouter columns // 166: 166: riveted Tripo platform columns // 165: 165: ramp lip removed // 164: 164: stair mouth opened to z 63.8 (head room on the last steps) // 163: 163: subway stair ramp carries the feet, Tripo deposit wall // 162: 162: bin true size // // 161: band split at vault door // // 160: vault door fit // // 159: vault door scaled flat // // 158: Tripo vault door + bins // // 157: substation 4 Tripo pieces, vault wall opened (Shelly Nov 13) // // 154: newsbox out of the hot dog cart, printed cards // 148 laid a cut list (a throw mid-lay): 149 lays it whole again // the market court and the central pedestrian route
+const V = 174; // 174 (2026-11-14): pizza counter split into its own props (art/l11-pizza) // 173: 173 (2026-11-14): reno tool chest and market counter are fitted Tripo models // 172 (2026-11-14): lab sample counter is two Tripo+Studio reception counters, poster frame stands as its own row // 171 (2026-11-14): strip mall lab + bakery furniture is fitted Tripo+Studio models (art/l11-mall), storefronts are bevelled aluminium extrusions, the clinic back door is the Tripo steel service door // 170: 170: Coca-Cola machine and crates in Sedco, a can on the apartment counter // 169: 169: cigarette packs on the apartment counter and Sedco till // 168: 168: Chapter 2 Clinic dead-drop and sealed Level ! hospital threshold // 167: stouter columns // 166: 166: riveted Tripo platform columns // 165: 165: ramp lip removed // 164: 164: stair mouth opened to z 63.8 (head room on the last steps) // 163: 163: subway stair ramp carries the feet, Tripo deposit wall // 162: 162: bin true size // // 161: band split at vault door // // 160: vault door fit // // 159: vault door scaled flat // // 158: Tripo vault door + bins // // 157: substation 4 Tripo pieces, vault wall opened (Shelly Nov 13) // // 154: newsbox out of the hot dog cart, printed cards // 148 laid a cut list (a throw mid-lay): 149 lays it whole again // the market court and the central pedestrian route
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -727,7 +727,30 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
   });
 
   // Pizza Service Counter & Cutting Board
-  md("l11-pizza-counter", "pizza_counter", MALL_X + 2.8, 0.38, MALL_Z + 7.5, undefined, "box", { rotation: { yaw: 0 }, layout: { box: { min: { x: -6, y: 0, z: -6 }, max: { x: 6, y: 2.4, z: 6 } } } });
+  // the Tripo pizza counter cut into its own props (art/l11-pizza/build.py): true metres, worktop 0.97 m, each piece where it stood in the one mesh
+  { const PZ = { counter: "/cdn/value.a583116ff21c697cd51f24d8ab5569438bb157b3102a24740adf9acd67a4d832.glb", menu: "/cdn/value.14c271418b3b5d0cda0902a3ffea68923191803786e01cc4a8fa30f112351a78.glb", warmer: "/cdn/value.ffd1111f8f3bf8aa78e3d5c9bf2e3d3e93fc6366b234ab8997fe6fe726a084ed.glb", oven: "/cdn/value.1dad1c036e7559891ccdbf86a75ee24e61398ce74ff179bf9ee7e911bd7678fc.glb", rack: "/cdn/value.d98965aeaa3c970e42bc7d68998b5fd62bebbbd2ff0b16fce86295835de9f63b.glb", box: "/cdn/value.61986dde193733fdf14732ca2e66d357f38f34f9c3780d4f77590b7e318af3a6.glb", parm: "/cdn/value.0e5b5223d9f92c6b950a5831f8d141dfde43e06b1d059163eee8bc0be8ac3517.glb", chili: "/cdn/value.57018f9556052ee84503a1f89f2cfc27e649c7c23ab82f759fdcaab02ee61605.glb", napkin: "/cdn/value.4a75c72cdf616cf42891ff27b27f32104dde39f7586c42bf880edf5e11c69f03.glb", plates: "/cdn/value.ff12ba248f98551d37ef3595aa8dd617c3239303d34f7e0cec321601903d51fc.glb", pans: "/cdn/value.7ef05126ec5fa1efc4e1237987569a24d27ad1c24b4f9e77fed9ef25636f1c71.glb" };
+    const PX = MALL_X + 2.8, PZZ = MALL_Z + 7.5, PY = 0.38; // the old single counter's centre; a part's Blender (x, y, z0) lands at (PX + x, PY + z0, PZZ - y)
+    const at = (id, m, x, y, z0, physics, extra = {}) => sp(id, { feetPosition: { x: PX + x, y: PY + z0, z: PZZ - y }, model: { id: PZ[m], forward: "-z" }, ...(physics ? { physics } : {}), ...extra });
+    const loose = (id, m, x, y, z0, extra = {}) => at(id, m, x, y, z0, { body: "static", collider: "box" }, { tags: ["l11-pizza-prop"], ...extra }); // Z picks it up (scripts/grab.js), set down where you like
+    const fixed = { body: "static", collider: "box" };
+    at("l11-pizza-counter", "counter", 0, 0.331, 0, fixed);
+    at("l11-pizza-menu", "menu", 0.096, 0.442, 1.585, null);
+    at("l11-pizza-warmer", "warmer", 0.581, 0.781, 0.953, fixed);
+    at("l11-pizza-rack", "rack", -0.499, -1.557, 0.055, fixed);
+    at("l11-pizza-deck-oven", "oven", -0.497, -0.991, 0.96, fixed);
+    const BOX = { behavior: "scripts/level11-use.js", state: { kind: "food-pizza", name: "Pizza box", verb: "Eat a Slice from the Box" } };
+    loose("l11-pizza-box1", "box", -0.344, -1.282, 1.959, { tags: ["l11-pizza-prop", "usable"], ...BOX });
+    loose("l11-pizza-box2", "box", -0.344, -1.282, 2.062, { tags: ["l11-pizza-prop", "usable"], rotation: { yaw: 4 }, ...BOX });
+    loose("l11-pizza-plates", "plates", -0.351, -1.67, 0.66);
+    loose("l11-pizza-pans", "pans", 0.6, -0.077, 1.622);
+    loose("l11-pizza-napkins", "napkin", 0.535, 1.044, 1.622);
+    loose("l11-pizza-parmesan1", "parm", 0.573, 1.484, 1.62);
+    loose("l11-pizza-parmesan2", "parm", 0.34, 1.565, 1.62);
+    loose("l11-pizza-parmesan3", "parm", 0.386, 1.729, 1.62);
+    loose("l11-pizza-chili1", "chili", 0.659, 1.382, 1.622);
+    loose("l11-pizza-chili2", "chili", 0.642, 1.769, 1.622);
+    loose("l11-pizza-chili3", "chili", 0.657, 1.64, 1.622);
+  }
 
   // Interactive Fresh Slice of Marroka Pizza
   sp("l11-pizza-slice", {
@@ -746,7 +769,7 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
   sp("l11-pizza-case", { feetPosition: { x: MALL_X + 3.0, y: 0.38, z: MALL_Z + 3.15 }, rotation: { yaw: 0 }, model: { id: "/cdn/value.a619c121b4e830206d2c59969fdebd9d2a47dac9189109031f381cc44c28a2b3.glb" }, layout: { box: { min: { x: -0.95, y: 0, z: -0.42 }, max: { x: 0.95, y: 1.3, z: 0.42 } } }, physics: { body: "static", collider: "box" } });
   { // bakery: Tripo+Studio bread rack against the divider, the Gib register (reused) on the counter's flat end (raycast top 1.30), a second cafe set by the window
     sp("l11-pizza-breadrack", { feetPosition: { x: MALL_X - 2.1, y: 0.38, z: MALL_Z + 2.95 }, rotation: { yaw: 180 }, model: { id: "/cdn/value.7a211a783b6b22084edf58b9a2363e4c33dc577dbec049a9e421e05233154dc6.glb", forward: "+x" }, layout: { box: { min: { x: -0.82, y: 0, z: -0.35 }, max: { x: 0.82, y: 1.45, z: 0.35 } } }, physics: { body: "static", collider: "box" } });
-    sp("l11-pizza-register", { feetPosition: { x: MALL_X + 3.4, y: 1.3, z: MALL_Z + 8.3 }, rotation: { yaw: 90 }, model: { id: "/cdn/value.cc7ad41c978aa40ce95e650f2953b59f00f4f4abc70462c632cca85420472d75.glb", forward: "-z" }, layout: { box: { min: { x: -0.22, y: 0, z: -0.16 }, max: { x: 0.22, y: 0.32, z: 0.16 } } } });
+    sp("l11-pizza-register", { feetPosition: { x: MALL_X + 3.4, y: 1.35, z: MALL_Z + 8.3 }, rotation: { yaw: 90 }, model: { id: "/cdn/value.cc7ad41c978aa40ce95e650f2953b59f00f4f4abc70462c632cca85420472d75.glb", forward: "-z" }, layout: { box: { min: { x: -0.22, y: 0, z: -0.16 }, max: { x: 0.22, y: 0.32, z: 0.16 } } } });
     md("l11-pizza-table2", "bistro_table", MALL_X + 5.4, 0.38, MALL_Z + 5.0, undefined, "cylinder", { layout: { box: { min: { x: -0.45, y: 0, z: -0.45 }, max: { x: 0.45, y: 0.75, z: 0.45 } } } });
     md("l11-pizza-chair3", "bistro_chair", MALL_X + 5.4, 0.38, MALL_Z + 4.1, undefined, "box", { rotation: { yaw: 180 }, layout: { box: { min: { x: -0.25, y: 0, z: -0.26 }, max: { x: 0.25, y: 0.88, z: 0.26 } } } });
     md("l11-pizza-chair4", "bistro_chair", MALL_X + 4.5, 0.38, MALL_Z + 5.0, undefined, "box", { rotation: { yaw: 90 }, layout: { box: { min: { x: -0.25, y: 0, z: -0.26 }, max: { x: 0.25, y: 0.88, z: 0.26 } } } });
