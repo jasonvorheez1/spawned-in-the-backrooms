@@ -99,6 +99,14 @@ function liftFur(hex) {
   const k = Math.min(1, (DARK_FLOOR - Y) / DARK_FLOOR) * 0.55, tint = [0.55, 0.46, 0.4] // toward a warm mid brown, keeping the fur's own cast
   return '#' + c.map((v, i) => Math.round(255 * (v + (tint[i] - v) * k)).toString(16).padStart(2, '0')).join('')
 }
+// Nov 14 (Shelly 'add new nose types (including a pink nose)'): the drawn nose's shape and colour
+const NOSE_KIND = { Button: 1, Heart: 2, Big: 3, Wide: 4 }
+function noseParams(look) {
+  const o = { noseK: NOSE_KIND[look?.nshape] ?? 0 }
+  const m = /^#?([0-9a-f]{6})$/i.exec(look?.nose || '')
+  if (m) { const n = parseInt(m[1], 16); o.noseR = ((n >> 16) & 255) / 255; o.noseG = ((n >> 8) & 255) / 255; o.noseB = (n & 255) / 255 }
+  return o
+}
 export function catModel(sex, look) {
   const params = skinParams(sex, look)
   const fur = liftFur(look?.fur || '#f3c98a')
@@ -119,7 +127,7 @@ export function catModel(sex, look) {
       fur: skin(fur), fur2: skin('#ffffff'),
       headFur: {
         kind: 'scripted', script: 'scripts/mat-catskin.js', color: fur,
-        params: { ...(blank ? { faceless: 1 } : { face }), ...(mouth && !blank ? { mouth } : {}), ...faceLife(sk, look, face, faces), ...(crew ? { faceless: 1 } : {}), faceVScale: projection[0], faceVBias: projection[1], faceNear: projection[2], ...(sex === 'm' ? { noseCutV: 0.40, noseY: 0.855, noseZ: 0.315, noseS: 1.2 } : { noseCutV: 0.39, noseY: 0.797, noseZ: 0.249, noseS: 1 }), ...eyeRGB(look?.eyes), ...shadowRGB(look?.shadow), ...(look?.glowEye ? { eyeGlow: look.glowEye } : {}) }
+        params: { ...noseParams(look), ...(blank ? { faceless: 1 } : { face }), ...(mouth && !blank ? { mouth } : {}), ...faceLife(sk, look, face, faces), ...(crew ? { faceless: 1 } : {}), faceVScale: projection[0], faceVBias: projection[1], faceNear: projection[2], ...(sex === 'm' ? { noseCutV: 0.40, noseY: 0.855, noseZ: 0.315, noseS: 1.2 } : { noseCutV: 0.39, noseY: 0.797, noseZ: 0.249, noseS: 1 }), ...eyeRGB(look?.eyes), ...shadowRGB(look?.shadow), ...(look?.glowEye ? { eyeGlow: look.glowEye } : {}) }
       },
       innerEar: { color: look?.inner || '#d58e8a', roughness: 0.74 }
     }

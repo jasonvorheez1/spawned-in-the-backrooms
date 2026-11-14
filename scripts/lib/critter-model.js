@@ -1024,6 +1024,7 @@ export function catLook(l) {
   for (const k of ['fur', 'topw', 'botw', 'shoes', 'hat', 'neck', 'eyew', 'top', 'bottom', 'shoec', 'hatc', 'neckc', 'eyewc', 'topp', 'hairc', 'fluffc', 'inner']) if (l?.[k] != null && l[k] !== '') o[k] = l[k]
   o.fur = o.fur || M.species[l?.species]?.fur || '#f2a65a'   // an old species look keeps its fur colour on the new body   // orange cat by default (Shelly: cat back orange, not cream)
   o.expression = CAT_FACE[l?.expression ?? l?.expr] ?? 'neutral'
+  { const ff = faceFill(l) || {}; if (ff.nose) o.nose = ff.nose; if (ff.nshape) o.nshape = ff.nshape }   // Nov 14, Shelly 'new nose types (including a pink nose)': the drawn nose takes its shape and colour
   if (l?.talk) o.talk = true
   if (typeof l?.shadow === 'string' && l.shadow && l.shadow !== 'none') o.shadow = l.shadow   // eyeshadow
   for (const k of ['etype', 'mtype']) if (typeof l?.[k] === 'string' && l[k] && l[k] !== 'classic') o[k] = l[k]   // eye and mouth type picks (critter-faces.yml eyes/mouths)

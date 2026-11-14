@@ -101,13 +101,21 @@ export function material(ctx) {
       col = mix(col, mix(C("sh").mul(col.add(0.5)).min(vec3(1, 1, 1)), C("sh"), 0.4), wash);
     }
     // one nose, on the sculpted snout tip itself (bind space). Shelly Nov 12 "more cutesy anime than sonic": small, a soft rounded triangle wide on top, dusky rose, one tiny shine
-    const ns = P("noseS", 1), ny = q.y.sub(P("noseY", 0.797)).div(0.0078).div(ns);
-    const nx = q.x.div(float(0.0112).mul(ns)).div(float(1).add(ny.mul(0.55)).max(0.25));
-    const nDist = nx.mul(nx).add(ny.mul(ny)).sqrt();
+    const nk = Number(ctx.params.noseK ?? 0);   // Nov 14 nose types: 0 classic triangle, 1 button, 2 heart, 3 big, 4 wide
+    const ns = P("noseS", 1) * [1, 0.8, 1.1, 1.4, 1][nk], sx = [1, 0.85, 1, 1, 1.6][nk], sy = [1, 0.85, 1, 1, 0.8][nk];
+    const ny = q.y.sub(P("noseY", 0.797)).div(0.0078 * sy).div(ns);
+    const nxRaw = q.x.div(float(0.0112 * sx).mul(ns));
+    const nx = nk === 1 ? nxRaw : nxRaw.div(float(1).add(ny.mul(0.55)).max(0.25));
+    let nDist = nx.mul(nx).add(ny.mul(ny)).sqrt();
+    if (nk === 2) {   // heart: two round lobes on top and a point below
+      const lobe = (cx) => nxRaw.sub(cx).mul(nxRaw.sub(cx)).add(ny.sub(0.3).mul(ny.sub(0.3))).sqrt().div(0.58);
+      const point = abs(nxRaw).div(ny.add(1).mul(0.62).max(0.05)).max(ny.mul(-1).div(1.0)).max(ny.sub(0.35).div(0.4));
+      nDist = min(min(lobe(-0.42), lobe(0.42)), point);
+    }
     const onTip = smoothstep(-0.065, -0.048, q.z.sub(P("noseZ", 0.249)));   // wide enough for the flat snout key (tip 4 cm back)
     const noseM = smoothstep(1.0, 0.82, nDist).mul(onTip);
     const shine = smoothstep(0.24, 0.07, nx.add(0.32).mul(nx.add(0.3)).add(ny.sub(0.4).mul(ny.sub(0.4))).sqrt());
-    if (!ctx.params.faceless) col = mix(col, vec3(0.07, 0.045, 0.045), noseM);   // the crew: no nose   // matte, no shine (Shelly Nov 12)
+    if (!ctx.params.faceless) col = mix(col, ctx.params.noseR != null ? C("nose").mul(0.85) : vec3(0.07, 0.045, 0.045), noseM);   // the crew: no nose   // matte, no shine (Shelly Nov 12)
     m.colorNode = col;
     m.emissiveNode = col.mul(0.06).add(eye.mul(irisAmt.mul(pic.a).mul(inside).mul(front).mul(P("eyeGlow", 0).mul(3).add(0.35))));   // eyeGlow: an eye that shines on its own (Phoebe's white)   // a little glow so the iris reads in the dim yellow light
     m.roughness = 0.68;
