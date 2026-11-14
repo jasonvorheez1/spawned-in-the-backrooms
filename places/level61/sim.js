@@ -118,21 +118,16 @@ function lay(ctx) {
   const tableSet = (id, x, z, yaw) => sp(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, physics: { body: "static", collider: "mesh" }, visibleRange: { max: 45 }, castShadow: false, model: { id: M_TABLE, forward: "+z" } });
   const counter = (id, x, z, yaw, m, extra) => sp(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, castShadow: false, model: { id: m, forward: "+z" }, ...extra });
 
-  // Chrome pedestal bar stool with circular padded leather seat and footrest
-  const stool = (id, x, z, vinyl) => sp(id, {
+  // Chrome pedestal bar stool: art/gib/build.py (Tripo source, Studio pass: 0.76 m tall, feet origin, 4.6k tris); stretched to the old 0.88 m seat top so seat targets hold
+  const M_STOOL = "/cdn/value.f9859610a742a99e3988eaa674624b8dd141771e798e02ce4b37826b7e2b2074.glb";
+  const stool = (id, x, z) => sp(id, {
     feetPosition: { x, y: 0, z },
     tags: ["seat", "chair"],
     physics: { body: "static", collider: "cylinder" },
     visibleRange: { max: 40 },
     castShadow: false,
-    primitive: { kind: "cylinder", radiusTop: 0.24, radiusBottom: 0.26, height: 0.12 },
-    material: STEEL,
-    children: [
-      { feetPosition: { x: 0, y: 0.1, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.035, radiusBottom: 0.035, height: 0.68 }, material: STEEL },
-      { feetPosition: { x: 0, y: 0.28, z: 0 }, primitive: { kind: "torus", radius: 0.18, tube: 0.016 }, rotation: { pitch: 90 }, material: STEEL },
-      { feetPosition: { x: 0, y: 0.72, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.26, radiusBottom: 0.26, height: 0.04 }, material: STEEL },
-      { feetPosition: { x: 0, y: 0.76, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.27, radiusBottom: 0.25, height: 0.12 }, material: { color: vinyl, roughness: 0.4 } },
-    ],
+    scale: { x: 1, y: 1.158, z: 1 },
+    model: { id: M_STOOL, forward: "+z" },
   });
 
   // Curved 1980s diner booth with red leather banquettes, formica table with chrome edging, and condiments
@@ -629,6 +624,12 @@ function lay(ctx) {
     sign("l61-gib-photo", 5.95, 1.9, zm + 1, -90, 0.8, 1.0, `<div style="font-size:64px;color:#e8d8b0;font-family:Georgia,serif;font-style:italic">Gib</div><div style="font-size:30px;color:#b8a888;font-family:Georgia,serif;margin-top:12px">first cook<br>never left</div>`, "oklch(0.2 0.03 50)");
     counter("l61-gib-counter", gx, HD + 6.6, 0, M_DINER, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "chilidog", name: "Gib's Grub counter", verb: "Order what the menu shows", info: "Gib's Grub, a greasy spoon." } });
     counter("l61-gib-grill", gx, HD + 9.3, 0, M_GRILL, { audio: { clip: "cdn/sfx-burgers-sizzling-on-flat-top-griddle-loop.mp3", loop: true, gain: 0.16, spatial: true, maxDistance: 10 } });
+    // counter dressing, art/gib/build.py: pie case, two-pot brewer, condiment caddies (Tripo, then the Studio pass)
+    const prop = (id, x, z, m, yaw = 0) => sp(id, { feetPosition: { x, y: 1.05, z }, rotation: { yaw }, physics: { body: "static", collider: "box" }, visibleRange: { max: 30 }, castShadow: false, model: { id: m, forward: "+z" } });
+    prop("l61-gib-pie", gx - 2.6, HD + 6.6, "/cdn/value.b4f8791dde3409fcf9985f53987ae7d2e98950c1b50d8dd84a7cc561db825d28.glb");
+    prop("l61-gib-coffee", gx + 4.4, HD + 6.75, "/cdn/value.6a84ce01bc2607736c4bdaa10614932e3a029547c0eea61ac74cd1b1ea382830.glb", 180);
+    prop("l61-gib-cond-0", gx - 1.0, HD + 6.45, "/cdn/value.de0c60e738984b67db5f74fff206bc1dc9880dab33fd91c69cd27b5d19c34d07.glb", 180);
+    prop("l61-gib-cond-1", gx + 3.0, HD + 6.45, "/cdn/value.de0c60e738984b67db5f74fff206bc1dc9880dab33fd91c69cd27b5d19c34d07.glb", 180);
     for (let k = 0; k < 4; k++) stool(`l61-gib-stool-${k}`, -3.2 + k * 2.0, HD + 5.5, "oklch(0.55 0.13 50)");
     tableSet("l61-gib-table-0", -3.8, HD + 2.4, 0);
     tableSet("l61-gib-table-1", 4.4, HD + 2.4, 0);
