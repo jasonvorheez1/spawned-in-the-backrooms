@@ -5,6 +5,7 @@
 // Numbers: scripts/lib/data/l109-foes.yml.
 import D from "./lib/data/l109-foes.yml";
 import { raycast } from "builtin/physics";
+import { navPath } from "./lib/nav.js";
 import { inside, doorOpen } from "./lib/containment.js";
 import { heard } from "./lib/hear.js";
 import { wallSteer, wedged, canStrike, shotAt } from "./lib/hunt.js";
@@ -28,7 +29,7 @@ function sense(ctx, f, K, pos, players) { // the nearest wanderer it sees (clear
   let out = null;
   const eye = { x: pos.x, y: pos.y + 0.7, z: pos.z };
   for (const p of players) {
-    const t = p.feetPosition, d = flat(t, pos); if (d > K.sight || (p.state?.hp ?? 1) <= 0 || p.state?.god && p.state?.ghost) continue;
+    const t = p.feetPosition, d = flat(t, pos); if (Math.abs(t.y - pos.y) > 3 || d > K.sight || (p.state?.hp ?? 1) <= 0 || p.state?.god && p.state?.ghost) continue;
     const seen = clearSight(ctx, eye, { x: t.x, y: t.y + 1.2, z: t.z }, [f.id, p.id]);
     const v = p.velocity ?? {}, loud = !p.state?.crouch && Math.hypot(v.x ?? 0, v.z ?? 0) > 1.5;
     if ((seen || (loud && d < K.hear)) && (!out || d < out.d)) out = { p, d, seen };
@@ -121,8 +122,18 @@ export function update(ctx, dt) {
       if (!doorOpen(ctx, pen)) { f.feetPosition = { x: m.sq.fx, y: pos.y, z: m.sq.fz }; m.sq = null; }
       else { m.sq.t = Math.min(1, m.sq.t + dt / 1.1); f.feetPosition = { x: m.sq.fx + (out.x - m.sq.fx) * m.sq.t, y: pos.y, z: m.sq.fz + (out.z - m.sq.fz) * m.sq.t }; if (m.sq.t >= 1) m.sq = null; }
     } else if (goal) {
-      const dx = goal.x - pos.x, dz = goal.z - pos.z, n = Math.hypot(dx, dz) || 1;
-      const [ux, uz] = pen ? [dx / n, dz / n] : wallSteer(ctx, m, now, pos, dx / n, dz / n, f.id);
+      let next = goal;
+      if (f.state.b3 && !pen) {
+        if (now >= (m.navAt ?? 0)) {
+          m.navAt = now + 800;
+          const result = navPath(ctx, pos, { x: goal.x, y: pos.y, z: goal.z }, { radius: 0.35, height: 1.2, maxDrop: 0.6, ignore: [f.id] });
+          if (!result.wait) m.navPoints = result.ok && !result.partial ? result.points.filter(p => Math.abs(p.y - pos.y) < 1.5) : null;
+        }
+        while (m.navPoints?.length && flat(pos, m.navPoints[0]) < 0.5) m.navPoints.shift();
+        next = m.navPoints?.[0] ?? null;
+      }
+      const dx = next ? next.x - pos.x : 0, dz = next ? next.z - pos.z : 0, n = Math.hypot(dx, dz) || 1;
+      const [ux, uz] = pen || f.state.b3 ? [dx / n, dz / n] : wallSteer(ctx, m, now, pos, dx / n, dz / n, f.id);
       vx = ux * speed; vz = uz * speed;
       if (now > (m.wedgeAt ?? 0)) { m.wedgeAt = now + 800; if (wedged(m, flat(pos, m.was ?? pos), true)) { m.wp = null; m.h = null; m.last = null; } m.was = { x: pos.x, z: pos.z }; }
     }

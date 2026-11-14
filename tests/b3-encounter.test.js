@@ -1,5 +1,8 @@
 import { test, expect, mock } from "bun:test";
+mock.module("../scripts/lib/body3.js", () => ({ fire3: () => {}, react3: () => {}, aimPose: () => {}, famOf: () => "rifle" }));
 let blocked = false;
+let navCalls = 0;
+mock.module("builtin/nav", () => ({ findPath: (_ctx, from, to) => { navCalls++; return { ok: true, points: [from, to] }; } }));
 mock.module("builtin/physics", () => ({ raycast: () => blocked ? { id: "cover", position: { x: 8, y: -13, z: 80 } } : null }));
 mock.module("builtin/vec3", () => ({ rotate: () => ({ x: 1, y: 0, z: 0 }) }));
 const survivor = await import("../scripts/b3-survivor.js");
@@ -8,8 +11,8 @@ const explosive = await import("../scripts/b3-explosive.js");
 test("survivor alternates rockets and grenades and stops after defeat", () => {
   let now = 10000;
   const launched = [], player = { id: "p", state: { hp: 100 }, feetPosition: { x: 8, y: -14, z: 76 } };
-  const ctx = { self: { id: "boss", state: { hp: 100 }, feetPosition: { x: 14, y: -14, z: 85 } }, place: { players: [player], state: {} }, now: () => now, spawn: spec => launched.push(spec), emit: () => {} };
-  blocked = true; survivor.update(ctx); expect(launched).toHaveLength(0);
+  const ctx = { self: { id: "boss", session: {}, state: { hp: 100 }, feetPosition: { x: 14, y: -14, z: 85 } }, place: { players: [player], state: {} }, now: () => now, spawn: spec => launched.push(spec), emit: () => {} };
+  blocked = true; survivor.update(ctx); expect(launched).toHaveLength(0); expect(navCalls).toBeGreaterThan(0); expect(ctx.self.velocity.x !== 0 || ctx.self.velocity.z !== 0).toBe(true);
   blocked = false; survivor.update(ctx); now += 4201; survivor.update(ctx); now += 4201; survivor.update(ctx);
   expect(launched.map(x => x.state.grenade)).toEqual([false, false, true]);
   ctx.self.state.hp = 0; survivor.update(ctx); expect(ctx.place.state.b3BossDead).toBe(true);

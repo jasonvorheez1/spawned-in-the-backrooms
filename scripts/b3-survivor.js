@@ -1,4 +1,5 @@
 import { raycast } from "builtin/physics";
+import { navPath } from "./lib/nav.js";
 import { O } from "./lib/l109-b3.js";
 import { fire3, react3, aimPose, famOf } from "./lib/body3.js";
 
@@ -14,12 +15,33 @@ export function update(ctx) {
     return;
   }
   const target = ctx.place.players.filter(p => !p.state?.dead && (p.state?.hp ?? 1) > 0 && p.feetPosition.y < O.y + 3 && p.feetPosition.z > O.z + 29 && p.feetPosition.z < O.z + 50).sort((a, b) => Math.hypot(a.feetPosition.x-me.feetPosition.x,a.feetPosition.z-me.feetPosition.z)-Math.hypot(b.feetPosition.x-me.feetPosition.x,b.feetPosition.z-me.feetPosition.z))[0];
-  if (!target) { if (me.session.aiming) { me.session.aiming = false; aimPose(me, famOf("m72"), null); } return; }
-  if (!me.session.aiming) { me.session.aiming = true; aimPose(me, famOf("m72"), "aim"); } // shoulders the tube while he has you in sight
+  const mem = (me.session.b3nav ??= {});
+  if (!target) {
+    if (me.session.aiming) { me.session.aiming = false; aimPose(me, famOf("m72"), null); }
+    if (me.velocity) me.velocity = { x: 0, y: me.velocity.y ?? 0, z: 0 };
+    mem.points = null;
+    return;
+  }
+  if (!me.session.aiming) { me.session.aiming = true; aimPose(me, famOf("m72"), "aim"); }
   const p = me.feetPosition, q = target.feetPosition, dx = q.x-p.x, dz = q.z-p.z, distance = Math.hypot(dx,dz) || 1;
   me.rotation = { yaw: Math.atan2(-dx,-dz) * 180 / Math.PI };
   const origin = { x: p.x, y: p.y+1.3, z: p.z }, aim = { x: q.x, y: q.y+0.8, z: q.z }, dy=aim.y-origin.y, length=Math.hypot(dx,dy,dz);
   const obstruction=raycast(ctx, origin, { x:dx/length,y:dy/length,z:dz/length }, { distance: length, bodies:"all", physicsOnly:true, ignoreEntities:[me.id,target.id] });
+  const shouldMove = !!obstruction || distance < 5;
+  if (shouldMove && now >= (mem.nextPath ?? 0)) {
+    mem.nextPath = now + 700;
+    const goal = distance < 5 && !obstruction
+      ? { x: Math.max(O.x - 9, Math.min(O.x + 9, p.x - dx / distance * 4)), y: p.y, z: Math.max(O.z + 31, Math.min(O.z + 49, p.z - dz / distance * 4)) }
+      : { x: q.x, y: p.y, z: q.z };
+    const route = navPath(ctx, p, goal, { radius: 0.35, height: 1.7, maxDrop: 0.6, ignore: [me.id, target.id] });
+    if (!route.wait) mem.points = route.ok && !route.partial ? route.points.filter(point => Math.abs(point.y - p.y) < 1.5) : null;
+  }
+  if (!shouldMove) mem.points = null;
+  while (mem.points?.length && Math.hypot(mem.points[0].x - p.x, mem.points[0].z - p.z) < 0.55) mem.points.shift();
+  const waypoint = shouldMove && mem.points?.[0];
+  const moveX = waypoint ? waypoint.x - p.x : 0, moveZ = waypoint ? waypoint.z - p.z : 0;
+  const moveLength = Math.hypot(moveX, moveZ) || 1;
+  me.velocity = { x: moveX / moveLength * 1.7, y: me.velocity?.y ?? 0, z: moveZ / moveLength * 1.7 };
   if (obstruction || now < (s.nextAttack ?? 0)) return;
   const grenade = (s.shots ?? 0) % 3 === 2;
   s.shots = (s.shots ?? 0) + 1;
