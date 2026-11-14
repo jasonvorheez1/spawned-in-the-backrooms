@@ -2,7 +2,7 @@
 // place.state.lit: the switch. Lit: Smiler eyes glint under the bed and in the closet gap. Dark: a Smiler comes out after DARK_S.
 // Now and then a counterpart stands at the window. The void runs south; a lone door at z 62 lets you out (scripts/l114-use.js).
 export const cadence = "250ms";
-const V = 7, H = 2.5, W = 2, D = 2.25, DOOR = { x: 1.1, w: 0.9, h: 2.05 }, WIN = { x: -0.6, w: 1.1, y0: 0.9, y1: 1.9 };
+const V = 8, H = 2.5, W = 2, D = 2.25, DOOR = { x: 1.1, w: 0.9, h: 2.05 }, WIN = { x: -0.6, w: 1.1, y0: 0.9, y1: 1.9 };
 const DARK_S = 7, BITE = 18; // my picks: seconds of dark before a Smiler bites, and its bite
 const WALL = { texture: "cdn/texture-faded-pale-blue-childhood-wallpaper-tiny-yellow-stars-water-stained.png", wrap: "repeat", repeat: [1, 1], roughness: 0.9 };
 const CARPET = { texture: "cdn/texture-worn-beige-bedroom-carpet-fibres-faint-stains.png", wrap: "repeat", repeat: [1, 1], roughness: 1 };
@@ -10,19 +10,14 @@ const CEIL = { texture: "cdn/texture-white-popcorn-ceiling-stippled-plaster-yell
 const MOULD = "/cdn/value.422c28d69f13a7cfa68cefd16f1721d1a2098da79925a424cfbf24473e4d4b66.png";
 const F = (id) => ({ // furniture.yml rows reused (Shelly: every asset is free to reuse)
   bed: { id: "/cdn/value.5239b8cb68fc99fcb25ade25a8076a2a7c4e9dcd392b70416cd1e3417b0a320d.glb", size: [1.1, 0.95, 2.02], materials: { pine: { texture: "cdn/texture-honey-pine-wood-grain-kids-furniture-varnished.png", color: "oklch(0.78 0.09 70)", roughness: 0.5 }, duvet: { texture: "cdn/texture-faded-navy-cotton-duvet-fabric-weave.png", roughness: 0.9 } } }, // art/l114bed/build.py
-  dresser: { id: "/cdn/value.bb3939a43cee08fce2ee3eacb328aa17e9663ae9bdd67bd5af7fef33e784ab16.glb", forward: "+z", size: [1.0, 0.86, 0.5] },
-  desk: { id: "/cdn/value.202a497933c27d973c6cfb05b920e2259912960d83c01b7c7c263fe7743d1f83.glb", forward: "+z", size: [0.9, 0.91, 0.5] },
-  chair: { id: "/cdn/value.012994b24535ab7a403b5c508017a4802106b1e87e6fd78d121427ebee10b24f.glb", forward: "+z", size: [0.38, 0.86, 0.36] },
-  chest: { id: "/cdn/value.e545a647de69516e61f67b087f3963e9a7b11fc6ecb6f60b465ab87f9fb7a0d4.glb", forward: "+z", size: [0.72, 0.43, 0.43] },
+  dresser: { id: "/cdn/value.bb3939a43cee08fce2ee3eacb328aa17e9663ae9bdd67bd5af7fef33e784ab16.glb", forward: "-z", materials: { pine: { texture: "cdn/texture-honey-pine-wood-grain-kids-furniture-varnished.png", color: "oklch(0.8 0.08 70)", roughness: 0.55 } }, size: [1.0, 0.86, 0.5] },
+  desk: { id: "/cdn/value.202a497933c27d973c6cfb05b920e2259912960d83c01b7c7c263fe7743d1f83.glb", forward: "-z", materials: { pine: { texture: "cdn/texture-honey-pine-wood-grain-kids-furniture-varnished.png", color: "oklch(0.8 0.08 70)", roughness: 0.55 } }, size: [0.9, 0.91, 0.5] },
+  chair: { id: "/cdn/value.012994b24535ab7a403b5c508017a4802106b1e87e6fd78d121427ebee10b24f.glb", forward: "-z", materials: { pine: { texture: "cdn/texture-honey-pine-wood-grain-kids-furniture-varnished.png", color: "oklch(0.8 0.08 70)", roughness: 0.55 } }, size: [0.38, 0.86, 0.36] },
+  chest: { id: "/cdn/value.e545a647de69516e61f67b087f3963e9a7b11fc6ecb6f60b465ab87f9fb7a0d4.glb", forward: "-z", materials: { paint: { texture: "cdn/texture-chipped-faded-blue-painted-wood-toy-chest-scuffed.png", roughness: 0.7 } }, size: [0.72, 0.43, 0.43] },
   rug: { id: "/cdn/value.54d55c312978863b7bd69030a8c670f4e2d3313700e01b64ca90bc35a3cae46c.glb", forward: "+z", size: [1.59, 0.07, 1.06] },
   tv: { id: "/cdn/value.30ae8e4fd0c2e307d21943aa6fa38f3f816fcc7a10335f5a15ff865b00b84ce4.glb", forward: "+x", size: [0.9, 1.0, 0.5] },
   shelf: { id: "/cdn/value.918584eed8336eda888580753019763471fcce0adcaf2bc66def78f53ae3fad0.glb", forward: "+x", size: [0.8, 1.7, 0.38] },
   lava: { id: "/cdn/value.2f0eae283b6ebd13603b9891c607686c47f142b2e36b43e6148b098ac56a24af.glb", forward: "+x", size: [0.42, 0.9, 0.42] },
-  dresser2: { id: "/cdn/value.bb3939a43cee08fce2ee3eacb328aa17e9663ae9bdd67bd5af7fef33e784ab16.glb", forward: "+z", size: [1.0, 0.86, 0.53] }, // art/l114kit (blender)
-  desk: { id: "/cdn/value.202a497933c27d973c6cfb05b920e2259912960d83c01b7c7c263fe7743d1f83.glb", forward: "+z", size: [0.9, 0.91, 0.5] },
-  chair: { id: "/cdn/value.012994b24535ab7a403b5c508017a4802106b1e87e6fd78d121427ebee10b24f.glb", forward: "+z", size: [0.38, 0.86, 0.36] },
-  chest: { id: "/cdn/value.e545a647de69516e61f67b087f3963e9a7b11fc6ecb6f60b465ab87f9fb7a0d4.glb", forward: "+z", size: [0.72, 0.43, 0.43] },
-  rug: { id: "/cdn/value.54d55c312978863b7bd69030a8c670f4e2d3313700e01b64ca90bc35a3cae46c.glb", size: [1.59, 0.07, 1.06] },
   lamp: { id: "/cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb", forward: "+x", size: [0.45, 1.7, 0.45] },
 }[id]);
 const SMILE = (op) => `<svg viewBox='0 0 120 60' width='${op < 0.6 ? 0.26 : 0.42}m'><g filter='drop-shadow(0 0 4px #fff)' opacity='${op}'><ellipse cx='32' cy='16' rx='9' ry='6' fill='#fffbe8'/><ellipse cx='88' cy='16' rx='9' ry='6' fill='#fffbe8'/><path d='M14 34 Q60 64 106 34 Q60 50 14 34 Z' fill='#fffbe8'/><path d='M24 38 L28 46 M36 42 L38 51 M48 44 L49 54 M60 45 L60 55 M72 44 L71 54 M84 42 L82 51 M96 38 L92 46' stroke='#222' stroke-width='2.4'/></g></svg>`;
@@ -53,10 +48,10 @@ function build(ctx) {
   // furniture: the bed against the west wall, head to the north
   put(ctx, "bed", F("bed"), -W + 0.55, -0.85, 0, { tags: ["l114", "usable"], state: { name: "Bed", verb: "Look", info: "too small for you now" } });
   put(ctx, "nightstand", F("lava"), -W + 0.3, -D + 0.3, 90);
-  put(ctx, "dresser", F("dresser2"), W - 0.28, -1.6, -90, { tags: ["l114", "container", "furniture"], state: { name: "Dresser", verb: "Search", kind: "home", items: "almond,bandage" } });
-  put(ctx, "desk", F("desk"), W - 0.26, -0.3, -90);
-  put(ctx, "chair", F("chair"), W - 0.8, -0.3, 90, { physics: undefined });
-  put(ctx, "toychest", F("chest"), -W + 0.55, 0.55, 0, { tags: ["l114", "container", "furniture"], state: { name: "Toy Chest", verb: "Search", kind: "home", items: "battery,almond" } });
+  put(ctx, "dresser", F("dresser"), W - 0.27, -1.45, -90, { tags: ["l114", "container", "furniture"], state: { name: "Dresser", verb: "Search", kind: "home", items: "almond,bandage" } });
+  put(ctx, "desk", F("desk"), W - 0.26, -0.25, -90);
+  put(ctx, "chair", F("chair"), W - 0.72, -0.2, 90, { physics: undefined });
+  put(ctx, "toychest", F("chest"), -W + 0.55, 0.62, 180, { tags: ["l114", "container", "furniture"], state: { name: "Toy Chest", verb: "Search", kind: "home", items: "battery,almond" } });
   put(ctx, "rug", F("rug"), 0.1, 0.4, 8, { physics: undefined });
   put(ctx, "tv", F("tv"), W - 0.32, 0.9, -90, { tags: ["l114", "usable"], state: { name: "Television", verb: "Turn On", info: "nothing happens" } });
   put(ctx, "shelf", F("shelf"), 0.6, -D + 0.22, 180, { tags: ["l114", "container", "furniture"], state: { name: "Bookshelf", verb: "Search", kind: "home", items: "almond,bar,battery" } });
