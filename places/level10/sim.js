@@ -1,3 +1,4 @@
+import { shipTick } from "../../scripts/lib/ssfun-voyage.js";
 import { stealerModel } from "../../scripts/lib/stealer-body.js";
 import { sweepProps } from "../../scripts/lib/breakables.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
@@ -465,6 +466,7 @@ pop glow n=1 at=disc(.2).c(.45) glo=fire()*(#flame/35)~ r=light(<1,.55,.24>,$glo
 export function tick(ctx) {
   if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level10"); // every sign dressed as its own board (scripts/lib/sign-style.js)
+  if (ctx.place.players?.length) shipTick(ctx, null, "level10"); // the S.S. Fun calls here some hours (scripts/lib/ssfun-voyage.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   const s = ctx.place.state;
   if ((s.builtV ?? 0) < V) {
