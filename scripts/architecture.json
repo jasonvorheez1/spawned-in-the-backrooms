@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7918,
-  "updatedAt": "2026-11-14T11:35:37.894Z",
+  "basedOnSpecVersion": 7920,
+  "updatedAt": "2026-11-14T11:38:45.978Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, the mall, The Hub and authored lore destinations; player.state carries progression, gear, quests, faction standing and resume location. Shared player behaviors connect authored spaces to generated layouts and encounters, while the common field-kit UI serves the HUD, menus, dialogue, inventory and journal.",
   "scriptPaths": [],
   "places": [
@@ -11,7 +11,7 @@
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation, waking, staged tutorial and HALOGEN handoff to Dina's lead.",
     "places/level9 (3D, The Suburbs) - seeded streets and fitted houses; motel-liquidation furniture substitutes in about a third of house interiors.",
     "places/level11 (3D) - Sedco Spotlight and city blocks; sim builds subway, vault, Robotics crawl and Chapter 2 props; cross-level quest hooks use Bee's 11th Avenue clue, Kael's canal spillway and market stall.",
-    "places/level61 (3D, The Snackrooms) - food court and M.E.G. checkpoint with storefronts, simulated staff and usable services; Clippers is a 1950s mahogany/brass cocktail lounge; sim lays scripted fixtures and wet-floor signs, while x0z0.scene places two static wet-sign props.",
+    "places/level61 (3D, The Snackrooms) - food court and M.E.G. checkpoint with storefronts, simulated staff and usable services; Clippers is a 1950s mahogany/brass cocktail lounge; sim lays fixtures/signs and a separate Tripo+Studio glass cloche over the Burger Bop pie.",
     "places/level3 + places/level4 + places/level6 (3D) - Level 3 Guild survey plate, Level 4 vending-drop survey route, and Level 6 Relay 6-A; quest endpoints, with Level 6 sim relocating the relay on layout rebuilds."
   ],
   "roots": [
@@ -66,17 +66,17 @@
     "scripts/talk.js → quest handlers (including level61-quests.js and level11-quests.js); scripted dialogue/use checks share skill-check.resolveCheck, write transient ctx._lastCheck and feed percentage banners/chimes to dialogue or player noti…",
     "Level 6.1 quest stages → setStep61/finishQuest61 → shared quest journal, notice/feed, payout and reputation; l61-use.js handles Seal inspection and venue interactions, Level 3 Guild plate and Level 6 Relay use handlers feed stage changes; …",
     "Level 11 Kael's Paper Bird quest ↔ Level 6.1 Guild: Guild waybill sets craneWaybill and eases spillway repair; Level 6.1 Sal quest consumes Level 10 flour and Level 11 coffee, with Kael's barge completion yielding provisions.",
-    "places/level61/sim.js lays Clippers scripted fixtures through scripts/l61-clippers-geo.js geometry/collider and fitted vendor models; its usable counters, stools and services link to l61-use.js, seats to scripts/lib/seat.js, and staff simu…"
+    "places/level61/sim.js lays Clippers fixtures through scripts/l61-clippers-geo.js geometry/collider and fitted vendor models; Burger Bop's pie stand and independently placed glass-cloche GLB share x/z with a small vertical offset; usable counters/services link to l61-use.js and seats to scripts/lib/seat.js."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff; venue menus/staff vary by shop; Level 6.1 table settings share a light child treatment (no s…",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; a dining_set composes a table with two independently fitted chairs; …",
-    "art/cigs/build.py + art/fnv/build.py and nif converters → scripts/lib/data/cigs.yml + fnv-props.yml - creator assets become real-scale GLBs; catalogs supply decoration and fitted furniture/props across Levels 5, 9, 11 and 61; art/wetsign/build.py produces the cleaned sign mesh used by two Level 6.1 scene props, and art/cloche/build.py exports a studio cloche model.",
+    "art/cigs/build.py + art/fnv/build.py and nif converters → scripts/lib/data/cigs.yml + fnv-props.yml - creator assets become real-scale GLBs; catalogs supply decoration and fitted furniture/props across Levels 5, 9, 11 and 61; art/wetsign/b…",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl, tight ceilings/tunnel mouths trigger automatic crawl; Level ! adds c…",
     "Level 01/Zenith and Level 1 geometry builders - authored station and car park/service geometry; corridor materials, pipes, fixtures and lights vary deterministically per cell.",
     "scripts/meg-agent.js + npc-temper.js + forgive.js + critter-model.js - NPC reactions, cover, barks, movement/fighting and companion following; faction, role, outfit and assault incidents vary by NPC; cat-wardrobe data supplies fitted cloth.",
-    "scripts/lib/level61-quests.js + level11-quests.js + talk.js/use handlers - quest stages and rewards reuse shared journal/rep/feed helpers and skill-check odds/resolution while variations select destinations, checks, items and faction outcomes."
+    "scripts/lib/level61-quests.js + level11-quests.js + talk.js/use handlers - quest stages and rewards reuse shared journal/rep/feed helpers and skill-check odds/resolution while variations select destinations, checks, items and faction outco…"
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -91,6 +91,6 @@
     "Level 9 keeps l9seed, fog and looted contents across generated rebuilds; motel furniture choice is seed-deterministic, uses furniture.yml's declared dimensions and preserves existing searchable contents.",
     "Weapon meshes fitted by art/weapons/build.py and art/weapons/fit.json must stay in scripts/lib/weapon-look.js's scripted frame; mesh offsets and hand-grip transforms couple to body3 hand offsets and carry poses.",
     "Level ! coordinates are coupled across CORRIDOR, places/levelrun/sim.js and player physics: run proceeds down -Z from -5.5 to collapseZ -198, Safe Alcove is offset to x=80; preserve lrunRescued/checkpoint and cut recovery semantics.",
-    "Level 6.1 scripted Clippers geometry and collision proxy come from the same l61-clippers-geo.js kind parameters; keep fixture local origins, placements/yaws and collider dimensions aligned. Furniture set children are separate fitted models; x0z0's two wet signs use fixed 0.44×0.62×0.4 m static boxes independent of the replacement mesh, so preserve their feet positions, yaws and collider bounds."
+    "Level 6.1 scripted Clippers geometry and collision proxy come from the same l61-clippers-geo.js kind parameters; keep fixture local origins, placements/yaws and collider dimensions aligned. Furniture set children are separate fitted models…"
   ]
 }
