@@ -316,7 +316,7 @@ idx_rows = {v: (j, i) for j, r in enumerate(crow) for i, v in enumerate(r)}
 coat.f = [f for f in coat.f if not (all(idx_rows[v][1] in cut | {mid + 2} for v in f) and min(idx_rows[v][1] for v in f) in cut and max(ZS[idx_rows[v][0]] for v in f) < 0.64)]
 make("Coat", coat, "coat", w_coat, solid=0.008)
 # the black dress skirt under the coat: hips to mid-thigh, 1 cm off the skin, straight hang
-dress = MB(); DZ = [0.40 + (0.74 - 0.40) * j / 12 for j in range(13)]; NUD = 40
+dress = MB(); DZ = [0.40 + (1.0 - 0.40) * j / 22 for j in range(23)]; NUD = 40
 grid(dress, [[Vector(((wrap(z, 360 * i / NUD, 0.009) + 0.006 * ss(zh, 0.4, z)) * math.sin(math.radians(360 * i / NUD)), (wrap(z, 360 * i / NUD, 0.009) + 0.006 * ss(zh, 0.4, z)) * math.cos(math.radians(360 * i / NUD)), z)) for i in range(NUD)] for z in DZ], closeU=True)
 make("Dress", dress, "dress", w_coat, solid=0.004)
 # sleeves: follow the arm, 2 cm off it, a slight bell into the white cuff
