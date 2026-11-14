@@ -65,7 +65,7 @@ export function layHouse(ctx, put, L) {
   const hide = (id) => { const o = ctx.getObject?.(`l169-house-${id}`); if (o) o.visible = false; };
   for (const k of ["bed1", "bed2", "bed3"]) {
     const [x, z] = mid(k); hide(`bed-${k}`); hide(`kit-${k}`);
-    look(`bed-${k}`, M.bed, x - 1.2, z - 0.6, 0, 0.5, 1.0, 1.03);
+    look(`bed-${k}`, M.bed, x - 1.2, z - 0.6, 90, 1.03, 1.0, 0.5); // the model's long side is its x: turned 90 and fit 2.06 long (Nov 14, it stood doll-sized)
     look(`kit-${k}-a`, M.kit, x + 0.8 - 0.95, z - 2.4, 0, 0.24, 0.8, 0.28); look(`kit-${k}-b`, M.kit, x + 0.8 + 0.95, z - 2.4, 0, 0.24, 0.8, 0.28);
   }
   { const [x, z] = mid("den"); hide("cot-1"); hide("cot-2"); look("cot-1", M.cot, x - 1.3, z - 0.6, 0, 0.38, 0.5, 0.97); look("cot-2", M.cot, x + 1.3, z - 0.6, 0, 0.38, 0.5, 0.97); }
