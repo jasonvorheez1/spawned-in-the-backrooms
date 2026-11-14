@@ -28,7 +28,7 @@ export function update(ctx) {
     audio: { kind: "program", script: "scripts/music-hush.audio.js", input: "Music", listeners: [me.id] } });
   const now = ctx.now(), air = onAir(now);
   if (!has) { ses.radioId = ctx.spawn({ parent: me.id, audience: "local", scope: "session", tags: ["halogen-radio"], feetPosition: { x: 0, y: 1.2, z: 0 } }); ses.seg = -1; }
-  if (ses.seg !== air.i) {
+  if (ses.seg !== air.i || ctx.getObject(ses.radioId)?.audio?.bus !== "Radio") { // a stream from before the hush moves to its own group
     ses.seg = air.i;
     const o = ctx.getObject(ses.radioId);
     if (o) o.audio = { clip: air.seg.clip, time: air.offset, timeAt: now, spatial: false, gain: STATION.gain, bus: "Radio", priority: 85 }; // its own group: the hush on Music leaves it alone
