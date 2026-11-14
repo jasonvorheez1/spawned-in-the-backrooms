@@ -70,8 +70,10 @@ export function spend(s, d) {
 function look(ctx, ray) {
   const o = ray.origin, dir = ray.direction
   let best = null, bestAng = 1e9
+  const hd0 = Math.hypot(dir.x, dir.z) || 1e-3, dx0 = dir.x / hd0, dz0 = dir.z / hd0, flat = hd0 < 0.25
   for (const c of ctx.query({ anyTags: FOE_TAGS, radius: 30 })) {
     if (c.state?.dead) continue
+    if (!flat) { const ax = c.feetPosition.x - o.x, az = c.feetPosition.z - o.z, along = ax * dx0 + az * dz0; if (along < 0.3 || Math.abs(ax * dz0 - az * dx0) > 0.9 + along * 0.06) continue } // behind you or well off the crosshair: skip before the angle maths and the wall ray
     const tag = c.tags?.find((t) => FOE_MAP[t])
     if (!tag) continue
     const label = FOE_MAP[tag]
@@ -120,7 +122,7 @@ export function update(ctx, dt) {
     if (s.hp < cap) s.hp = Math.min(cap, s.hp + dv.hpRegen * dt)
   }
   m.acc += dt
-  if (m.acc < 0.25) return
+  if (m.acc < 0.35) return
   m.acc = 0
   let tgt = null
   if (m.ray && !s.sheetOpen && !s.lootOpen) {
