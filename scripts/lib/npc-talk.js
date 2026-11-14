@@ -15,6 +15,7 @@ import W from './weapons.js'
 import { parseCloth, wornTokens } from './clothes.js'
 import { cndOf, armorCnd, vendorCost } from './condition.js'
 import { skillsOf } from './stats.js'
+import { resolveCheck } from './skill-check.js'
 
 export const TALK = T, SHOPS = SH
 export const CHECKS = ['speech', 'barter', 'melee', 'unarmed', 'medicine', 'survival', 'guns', 'sneak']
@@ -87,8 +88,7 @@ export function parseReply(text) {
 
 // a skill roll: skill + 1..roll against difficulty, judged here, never by the model
 export function rollCheck(ctx, s, check) {
-  const v = skillsOf(s)[check.skill] ?? 0, r = 1 + Math.floor(ctx.random() * T.roll)
-  return { ok: v + r >= check.difficulty, v, r }
+  return resolveCheck(ctx, s, check)
 }
 
 // ---- trading ----

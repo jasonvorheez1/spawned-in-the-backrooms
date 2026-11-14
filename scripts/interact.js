@@ -21,7 +21,7 @@ import { stripTo, SLOTS } from './lib/clothes.js'
 import { rewear } from './lib/critter-model.js'
 import { tokenOf, describe, itemsOf } from './lib/items.js'
 import { takeToken, maxHp, maxSan, pullToken } from './player.js'
-import { derived, skillsOf, SKILLS } from './lib/stats.js'
+import { derived, skillsOf, attrsOf, SKILLS } from './lib/stats.js'
 const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
 import { rollItem, rollItemL1, rollItemL2, spotCloth, poolOf, gateItems } from './lib/loot.js'
 // a corpse is named by what it was (Shelly Nov 12: "search (thing) not search body or search dead (thing)"): the shown name drops Dead/Wrecked and 's body; the stored name keeps them for the scripts that read it
@@ -294,7 +294,7 @@ function pickChance(ctx, it) {
   const s = ctx.self.state, st = it.state ?? {}
   if (!s.crouch || st.dead || hostileReason(ctx, it, ctx.self) || st.follow === ctx.self.id || s.talkWith) return null
   const f = facingAway(ctx, it) // seen or not, you can try; being watched just makes it much harder
-  const sk = skillsOf(s).sneak ?? 0, agi = Number(String(s.attr ?? '5,5,5,5,5,5,5').split(',')[5]) || 5
+  const sk = skillsOf(s).sneak ?? 0, agi = attrsOf(s).a ?? 5
   const lifted = st.picked?.[ctx.self.id] ?? 0
   return Math.max(0.05, Math.min(0.95, 0.3 + sk / 160 + (agi - 5) * 0.03 + (0.35 - f) * 0.2 - (f > 0.35 ? 0.2 : 0) - (s.detect === 'danger' ? 0.1 : 0) - lifted * 0.12))
 }

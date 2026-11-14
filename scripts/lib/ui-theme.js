@@ -255,7 +255,12 @@ body:has(.field-shade) :is(#nd,#wt,#tg,#tk){visibility:hidden}
 .tc-ch-num{min-width:18px;color:var(--ui-accent);font-family:var(--ui-display);font-weight:600;font-variant-numeric:tabular-nums}
 .tc-ch-tag{font-size:12px;font-weight:600;white-space:nowrap;color:var(--ui-accent)}
 .tc-ch-tag.tc-tag-quest{color:#f0c465}
+.tc-ch-tag.tc-tag-pass{color:#9fe07a}
 .tc-ch-tag.tc-tag-fail{color:#dfa48d}
+.tc-ch-tag.tc-tag-speech,.tc-ch-tag.tc-tag-barter{color:#a8dc98}
+.tc-ch-tag.tc-tag-med,.tc-ch-tag.tc-tag-sci{color:#8fd8ff}
+.tc-ch-tag.tc-tag-surv,.tc-ch-tag.tc-tag-repair,.tc-ch-tag.tc-tag-lockpick{color:#f0c465}
+.tc-ch-tag.tc-tag-guns,.tc-ch-tag.tc-tag-sneak{color:#d8b8ff}
 .tc-ch-txt{flex:1;min-width:0;overflow-wrap:anywhere}
 .tc-foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px;padding-top:6px;border-top:1px solid #353d31}
 .tc-act-btn{background:#20261e;border:1px solid var(--ui-line);color:var(--ui-text);padding:3px 9px;min-height:24px!important;font-size:11px;border-radius:2px;cursor:pointer;list-style:none}

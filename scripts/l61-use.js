@@ -71,13 +71,15 @@ export const ears = {
         const c = rollCheck(ctx, w, { skill: "repair", difficulty: 40 });
         if (!c.ok) {
           snd("heavy-metal-door-creak-open", 0.4, 8);
-          w.notice = { text: "Seal 6.1-02 · Couldn't torque Vale's harmonic clamp onto the stud [Repair 40]. You can still report straight to the M.E.G. Guard.", at: now };
+          heard(ctx, { clip: "cdn/sfx-dull-low-wooden-thunk-fail-buzz.mp3", position: pos, volume: 0.45, maxDistance: 10 }, { audience: { player: who.id } });
+          w.notice = { text: `[Repair ${c.pct}%] FAILED · Couldn't torque Vale's harmonic clamp onto the stud. You can still report straight to the M.E.G. Guard.`, at: now };
           return;
         }
         w.l61SealClamped = 1;
         w.payout = { xp: 35, items: [] };
         snd("keys-jingle-door-unlock-click", 0.7, 10);
-        w.notice = { text: "Seal 6.1-02 · Clamped Vale's harmonic dampener onto the studs (+35 XP). The 03:14 hum drops dead. Report to the M.E.G. Guard.", at: now };
+        heard(ctx, { clip: "cdn/sfx-soft-bright-two-note-success-chime.mp3", position: pos, volume: 0.45, maxDistance: 10 }, { audience: { player: who.id } });
+        w.notice = { text: `[Repair ${c.pct}%] SUCCEEDED · Clamped Vale's harmonic dampener onto the studs (+35 XP). The 03:14 hum drops dead. Report to the M.E.G. Guard.`, at: now };
         return;
       }
       w.notice = { text: w.l61SealClamped ? "M.E.G. Seal 6.1-02 · Braced with Base Gamma's harmonic dampener. Dead silent." : s.line, at: now };

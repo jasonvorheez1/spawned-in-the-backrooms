@@ -6,6 +6,7 @@ import { repDisc, titleOf, titleColor, groupOf } from './lib/rep.js'
 import { isMine } from './lib/companion.js'
 import { describe } from './lib/items.js'
 import { skillsOf } from './lib/stats.js'
+import { parseCheck, checkOdds } from './lib/skill-check.js'
 import { esc, jsStr as q } from './lib/ui-kit.js'
 
 function checkBanner(text, isCurrent = false) {
@@ -137,8 +138,9 @@ export function talkUi(ctx, player) {
   const choices = Array.isArray(s.talkChoices) ? s.talkChoices.slice(0, 5) : []
   const choiceItems = choices.map((c, i) => {
     const txt = typeof c === 'string' ? c : c.text
-    const ck = typeof c === 'object' && c.check?.skill ? c.check : null
-    const pct = ck ? Math.max(0, Math.min(100, Math.round((T.roll - (ck.difficulty - (skillsOf(s)[ck.skill] ?? 0)) + 1) / T.roll * 100))) : null
+    const ck = typeof c === 'object' ? parseCheck(c) : null
+    const odds = ck ? checkOdds(s, ck, T.roll) : null
+    const pct = odds ? odds.pct : null
     let tag = ''
     let tagCls = 'tc-tag-lore'
 
@@ -159,6 +161,7 @@ export function talkUi(ctx, player) {
     if (ck) {
       const sk = ck.skill.toLowerCase()
       if (pct < 35) tagCls = 'tc-tag-fail'
+      else if (pct === 100) tagCls = 'tc-tag-pass'
       else if (sk === 'speech') tagCls = 'tc-tag-speech'
       else if (sk === 'barter') tagCls = 'tc-tag-barter'
       else if (sk === 'medicine') tagCls = 'tc-tag-med'
@@ -166,6 +169,8 @@ export function talkUi(ctx, player) {
       else if (sk === 'guns') tagCls = 'tc-tag-guns'
       else if (sk === 'science') tagCls = 'tc-tag-sci'
       else if (sk === 'sneak') tagCls = 'tc-tag-sneak'
+      else if (sk === 'repair') tagCls = 'tc-tag-repair'
+      else if (sk === 'lockpick') tagCls = 'tc-tag-lockpick'
     }
 
     const clickAction = `sendAction('talk',{id:'${q(it.id)}',text:'${q(txt)}'${ck ? `,check:{skill:'${q(ck.skill)}',difficulty:${Number(ck.difficulty) || 50}}` : ''}})`

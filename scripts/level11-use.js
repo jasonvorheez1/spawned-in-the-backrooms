@@ -685,10 +685,11 @@ export const ears = {
       if (w.craneQ === 2) {
         const easy = w.craneBlessed || w.craneWaybill;
         const c = rollCheck(ctx, w, { skill: "repair", difficulty: easy ? 25 : 35 });
+        heard(ctx, { clip: c.ok ? "cdn/sfx-soft-bright-two-note-success-chime.mp3" : "cdn/sfx-dull-low-wooden-thunk-fail-buzz.mp3", position: pos, volume: 0.45, maxDistance: 10 }, { audience: { player: who.id } });
         if (!c.ok) { w.hp = Math.max(1, (w.hp ?? 100) - 15); ctx.emit("screenShake", { intensity: 0.4, duration: 0.3 }, { audience: { player: who.id } }); }
         setCraneStep(ctx, who, 3, c.ok
-          ? "The Paper Bird's Blessing · You found the paper wedged in the gate and worked it free · Press the valve again to draw a sample"
-          : "The Paper Bird's Blessing · You forced the wheel and it kicked back (-15 HP), but the lock is filling · Press the valve again to draw a sample");
+          ? `[Repair ${c.pct}%] SUCCEEDED · You found the paper wedged in the gate and worked it free · Press the valve again to draw a sample`
+          : `[Repair ${c.pct}%] FAILED · You forced the wheel and it kicked back (-15 HP), but the lock is filling · Press the valve again to draw a sample`);
         return;
       }
       if (w.craneQ === 3) {

@@ -13,6 +13,7 @@ import { takeToken, weaponAim } from './player.js'
 import W from './lib/weapons.js'
 import { talk as service } from './interact.js'
 import { skillsOf, SKILLS } from './lib/stats.js'
+import { parseCheck } from './lib/skill-check.js'
 import { describe } from './lib/items.js'
 import { repDisc, isHated, repKind, repTrade, fameOf, groupOf } from './lib/rep.js'
 import { recruit, adopt, dismiss, order, giveWeapon, takeWeapon, PERKS, perkOf } from './lib/companion.js'
@@ -210,7 +211,10 @@ function offer(ctx, it, s, next) {
     list = [...questChoices(ctx, it, s), ...list]
     list = l1Choice(ctx, it, s, zenithChoice(ctx, it, s, realtyChoice(ctx, it, s, list))) ?? list
   }
-  ses.talkPageList = list.filter(Boolean)
+  ses.talkPageList = list.filter(Boolean).map((c) => {
+    const ck = parseCheck(c)
+    return ck && !c.check ? { ...c, check: ck } : c
+  })
   ses.talkPage = 0
   return choicePage(ses.talkPageList, 0, BYE_CHOICE)
 }
@@ -249,8 +253,15 @@ function send(ctx, d) {
   logLine(ctx, it, 'p', text)
   if (!choice.node || choice.node === 'job-accept') {
     const before = new Set(Object.keys(s.quests ?? {})) // a quest line: the quest's own handler answers it (scripts/lib/level*-quests.js, zenith-quest.js)
+    ctx._lastCheck = null
     const qRes = handleDialogueQuest02(ctx, ctx.self, it, questText) ?? handleDialogueQuest13(ctx, ctx.self, it, questText) ?? handleDialogueQuest(ctx, ctx.self, it, questText) ?? handleDialogueQuest10(ctx, ctx.self, it, questText) ?? handleDialogueQuest8(ctx, ctx.self, it, questText)
       ?? handleDialogueQuest21(ctx, ctx.self, it, questText) ?? handleDialogueQuestZ(ctx, ctx.self, it, questText) ?? handleDialogueQuest1(ctx, ctx.self, it, questText) ?? handleDialogueQuest31(ctx, ctx.self, it, questText) ?? handleDialogueQuestBeast(ctx, ctx.self, it, questText) ?? handleDialogueQuest70(ctx, ctx.self, it, questText) ?? handleDialogueQuestHub(ctx, ctx.self, it, questText) ?? handleDialogueQuest61(ctx, ctx.self, it, questText) ?? handleDialogueCh2(ctx, ctx.self, it, questText) ?? handleHubErrand(ctx, ctx.self, it, questText) ?? handleFieldErrand(ctx, ctx.self, it, questText) ?? factionReply(it, s, questText) ?? megAssignmentReply(it, s, questText)
+    const qChk = ctx._lastCheck
+    ctx._lastCheck = null
+    if (qChk && qRes) {
+      logLine(ctx, it, 'x', qChk.banner)
+      hearAt(ctx, { clip: qChk.ok ? 'cdn/sfx-soft-bright-two-note-success-chime.mp3' : 'cdn/sfx-dull-low-wooden-thunk-fail-buzz.mp3', volume: 0.5 })
+    }
     if (briefing) for (const [id, q] of Object.entries(s.quests ?? {})) if (!before.has(id)) s.quests = { ...s.quests, [id]: { ...q, briefing } }
     const line = qRes?.reply ?? lineOf(it, place, 'back', 1) ?? 'Hm.'
     say(ctx, it, line, qRes?.mood ?? 'calm'); logLine(ctx, it, 'n', line)
@@ -262,11 +273,11 @@ function send(ctx, d) {
   let passed = true
   const pc = choice.check && SKILLS.some((x) => x.k === choice.check.skill) ? choice.check : null
   if (pc) {
-    const c = rollCheck(ctx, s, pc), v = skillsOf(s)[pc.skill] ?? 0
+    const c = rollCheck(ctx, s, pc)
+    ctx._lastCheck = null
     passed = c.ok
     if (!passed) { const a = ses.askedNow ?? []; const i = a.lastIndexOf(n.q); if (i >= 0) a.splice(i, 1) } // a failed check stays on the card: try it again
-    const pct = Math.max(0, Math.min(100, Math.round((T.roll - (pc.difficulty - v) + 1) / T.roll * 100)))
-    logLine(ctx, it, 'x', `[${skn(pc.skill)} ${pct}%] ${passed ? 'SUCCEEDED' : 'FAILED'}`)
+    logLine(ctx, it, 'x', c.banner)
     hearAt(ctx, { clip: passed ? 'cdn/sfx-soft-bright-two-note-success-chime.mp3' : 'cdn/sfx-dull-low-wooden-thunk-fail-buzz.mp3', volume: 0.5 })
   }
   const seed = Math.floor(ctx.random() * 1e9), pk = (v) => Array.isArray(v) ? v[seed % v.length] : v
