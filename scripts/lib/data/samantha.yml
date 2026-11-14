@@ -42,7 +42,7 @@ lines:
   route: "The city? Through the boiler room, cara, past the bulkhead and into the pipes of Six. Watch the floor for a wire and let it trip you. You will land somewhere that smells of fried food. Their glass doors open onto the streets. Bring me something from a street cart."
   return: "Where was I? Ah yes. Everywhere."
 poorReadings:
-  - "I see... a door. Possibly several. You will walk through one of them, eventually, badly."
+  - "I see a door. Possibly several. You will walk through one of them, eventually, badly."
   - "Your future smells like this tin. Cheap, salty, and over too quickly. Merci for nothing."
   - "Something is behind you. It is always behind you. Bring me steak and I might say what."
   - "You will be hungry soon. So am I. Funny how that works, cara."

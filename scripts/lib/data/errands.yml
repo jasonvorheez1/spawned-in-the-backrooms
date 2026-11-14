@@ -33,7 +33,7 @@
 - id: callum-quiet
   giver: meg-callum
   place: level1
-  needs: { group: meg, fame: 6, text: "Not yet. Help the M.E.G. out with something smaller first." }
+  needs: { group: meg, fame: 6, text: "Callum shakes his head. \"Show me you can keep a camp stocked first, then I'll trust you with live work.\"" }
   title: "Thin the Herd"
   stages:
     - { text: "Put down whatever is prowling near camp", kind: clear, target: hostile, count: 3 }
@@ -55,7 +55,7 @@
 - id: hollis-lamps
   giver: surv-hollis
   place: level2
-  needs: { group: survivors, fame: 6, text: "Not yet. Help the survivors here out with something smaller first." }
+  needs: { group: survivors, fame: 6, text: "Hollis rubs his temples. \"Fix something small around here first. I'm not sending a stranger down a dead tunnel.\"" }
   title: "Lights in the Tunnel"
   stages:
     - { text: "Find a fuse", kind: fetch, target: fuse, count: 2 }
@@ -124,7 +124,7 @@
 - id: otto-gears
   giver: gamma-otto
   place: gamma
-  needs: { group: meg, fame: 6, text: "Not yet. Help the M.E.G. out with something smaller first." }
+  needs: { group: meg, fame: 6, text: "Otto taps the bench. \"I don't hand brass work to someone nobody at Gamma vouches for. Do a favor or two around camp.\"" }
   title: "Otto's Clock"
   stages:
     - { text: "Find gears", kind: fetch, target: gears, count: 3 }
@@ -147,7 +147,7 @@
 - id: hask-lift
   giver: amor-hask
   place: level4
-  needs: { group: survivors, fame: 6, text: "Not yet. Help the survivors here out with something smaller first." }
+  needs: { group: survivors, fame: 6, text: "Hask glances up from the elevator shaft. \"Help the floor out with a small run first. I can't babysit anyone near the winch.\"" }
   title: "Stuck Lift"
   stages:
     - { text: "Find a motor", kind: fetch, target: motor, count: 1 }
@@ -250,7 +250,7 @@
 - id: marit-crawl
   giver: l8-marit
   place: level8
-  needs: { group: survivors, fame: 6, text: "Not yet. Help the survivors here out with something smaller first." }
+  needs: { group: survivors, fame: 6, text: "Marit shakes her head. \"Keep folks fed and dry around camp first. If I send you after crawlers now, I'm the one stitching you up.\"" }
   title: "Something in the Dark"
   stages:
     - { text: "Clear the crawlers near the cave camp", kind: clear, target: hostile, count: 5 }
@@ -262,7 +262,7 @@
 - id: hale-silo
   giver: l10-meg-hale
   place: level10
-  needs: { group: meg, fame: 6, text: "Not yet. Help the M.E.G. out with something smaller first." }
+  needs: { group: meg, fame: 6, text: "Hale taps his ledger. \"Help Cooper or the farm crew out with something smaller first, then I'll put your name on the silo sheet.\"" }
   title: "The Silo Ladder"
   stages:
     - { text: "Check the silo ladder", kind: find, target: l10-ladder-silo, count: 1 }

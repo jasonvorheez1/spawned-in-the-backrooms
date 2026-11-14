@@ -118,11 +118,11 @@ export function completeChapter2(ctx, player, stance) {
   s.knowsMike = 1;
   s.ch2Q = 99;
   const stanceNote = {
-    suspicious: "You pushed back against her motives. She admitted she only intervened to keep watching what you might become.",
-    frustrated: "You called out her waiting until collapse. She did not deny treating your near-death as a filter.",
-    curious: "You pressed her on Mike Sunderland. She confirmed she watched River's sister once too, before losing the answer she wanted.",
-    relieved: "You thanked her, and she cut it flat. Curiosity, not loyalty, kept you alive.",
-  }[s.phoebeStance] ?? "Phoebe pulled you out of Level ! out of cold curiosity about how far you can adapt.";
+    suspicious: "You pushed back on why she waited. She admitted she wanted to see how you handled a bad hall before stepping in.",
+    frustrated: "You called her out for letting the corridor collapse first. She did not deny using it as a test.",
+    curious: "You asked about Mike Sunderland. She admitted she watched River's sister once too, before Mike died on a run.",
+    relieved: "You thanked her, and she brushed it off. Curiosity kept you alive, not kindness.",
+  }[s.phoebeStance] ?? "Phoebe pulled you out of Level ! because she wanted to see how far you make it.";
 
   endQuest(s, CH2.id, `Survived Level ! and spoke with Phoebe. ${stanceNote} Chapter 3 awaits on the other side of Level 11.`, "completed");
   s.payout = { xp: 450 };
@@ -194,7 +194,7 @@ export function handleDialogueCh2(ctx, player, npc, text) {
       setCh2Step(ctx, s, 2, "Objective Updated: Search Dina's cache in the Level 11 clinic");
       tellQuest(ctx, player, "Check the shuttered Centro Dermatologico clinic across the plaza.");
       return {
-        reply: "She came through before dawn with two battery packs and refused to sign her manifest. Told me if Base Beta wanted River's routes, we could chart them ourselves instead of buying salvage off ships. Saw her duck into the shuttered clinic across from the café, and some quiet observer in yellow was watching from the curb ten seconds later.",
+        reply: "She came through before dawn with two battery packs, wouldn't sign a manifest, and slipped into the shuttered clinic across the plaza. Weird part is there was an observer in yellow standing by the curb watching her go in.",
         mood: "calm",
       };
     }
@@ -202,7 +202,7 @@ export function handleDialogueCh2(ctx, player, npc, text) {
       s.ch2VanceDina = 1;
       addRep(s, "meg", 1);
       return {
-        reply: "Command wanted a reliable back-door index out of the upper levels. Dina told the dispatcher she'd hand-deliver warnings to runners, not hand a tollbook to brass. Say what you want about her nerve, she kept three stragglers out of Level 6 last week.",
+        reply: "Command wanted a reliable back-door index out of the upper levels. Dina told dispatch she'd deliver warnings to runners, not hand a tollbook to brass. Say what you want about her nerve, she kept three stragglers out of Level 6 last week.",
         mood: "calm",
       };
     }
@@ -215,14 +215,14 @@ export function handleDialogueCh2(ctx, player, npc, text) {
       setCh2Step(ctx, s, 2, "Objective Updated: Search Dina's cache in the Level 11 clinic");
       tellQuest(ctx, player, "Search the reception desk inside Centro Dermatologico.");
       return {
-        reply: "Short jacket, scuffed satchel, counted her change down to the cent. She traded two fuses for sterile gauze and slipped behind the Centro Dermatologico glass across the asphalt. Funny part? Nobody followed her inside, yet someone in a faded yellow coat waited by the streetlamp reading nothing until she left.",
+        reply: "Short jacket, scuffed bag, counted her change down to the cent. She traded two fuses for gauze and slipped into the Centro Dermatologico across the street. Nobody followed her inside, though somebody in a faded yellow coat stood under the streetlamp watching the door until she left.",
         mood: "calm",
       };
     }
     if (t.includes("anything to you before she headed") && !s.ch2KaelNote) {
       s.ch2KaelNote = 1;
       return {
-        reply: "Only told me not to walk behind the clinic exam room after dusk. Said the hallway behind the dry concrete wall didn't belong to the strip mall anymore, and she wasn't leaving River's drive anywhere near a shifting door.",
+        reply: "Only told me not to walk behind the clinic exam room after dusk. Said the hallway behind that wall didn't belong to the strip mall anymore, and she wasn't leaving River's drive anywhere near a shifting door.",
         mood: "calm",
       };
     }
@@ -237,12 +237,12 @@ export function handleDialogueCh2(ctx, player, npc, text) {
     tellQuest(ctx, player, "Return to Level 11 behind the Centro Dermatologico clinic.");
     if (id === "gamma-vale") {
       return {
-        reply: "Only one intake sheet matches that kind of sudden red hallway behind concrete. Mike Sunderland. River's sister, not an officer, not anyone with special kit. Just kept reading exits before anyone else spotted them, until a hospital corridor pulled her off the grid. Dina found the same seam behind that Level 11 clinic and sealed it before moving on.",
+        reply: "Only one intake sheet matches a red hospital hallway cutting behind concrete. Mike Sunderland. River's sister, no rank, no special kit. She just read exits faster than anyone else around here, until a corridor like that pulled her off the grid. Dina found the same seam behind the Level 11 clinic and sealed it before moving on.",
         mood: "calm",
       };
     }
     return {
-      reply: "Mike Sunderland. River's sister. Ordinary gear, no rank, no tricks, just fast to read a bad room and stubborn enough to outlast veterans who froze. Before she vanished into an emergency hall like the one behind your Level 11 clinic, lookouts logged an unaffiliated observer in yellow watching her runs from afar. If Dina marked that door sealed, do not step through it unprepared.",
+      reply: "Mike Sunderland. River's sister. Plain gear, no rank, just quick on her feet and smart about which doors to skip. Scouts spotted somebody in yellow watching her runs before a red hospital hall swallowed her. If Dina marked that clinic door sealed, go in ready to run.",
       mood: "calm",
     };
   }
@@ -250,7 +250,7 @@ export function handleDialogueCh2(ctx, player, npc, text) {
   if (id === "gamma-moss" && s.knowsMike && !s.ch2MossFollow && t.includes("file on mike sunderland")) {
     s.ch2MossFollow = 1;
     return {
-      reply: "Thin ledger, mostly boot tallies and water chits. No legends, no anomalies tied to her name. What stood out in debriefs was simple: she adapted faster than people twice her training, right up until a shift caught her without daylight.",
+      reply: "Thin folder. Boot tallies and water chits, mostly. What the debriefs noted was plain enough: she adapted faster than people with twice her training, right up until a shift caught her without a light.",
       mood: "calm",
     };
   }
@@ -261,7 +261,7 @@ export function handleDialogueCh2(ctx, player, npc, text) {
     setCh2Step(ctx, s, 4, "Chapter 2 Finale Ready: Enter the red door behind Level 11's clinic");
     tellQuest(ctx, player, "Return to Level 11 behind the Centro Dermatologico clinic.");
     return {
-      reply: "Mike Sunderland. People barely remember her unless they knew River. Just another lone runner who learned the floor rules twice as fast as anyone on M.E.G. payroll, until a red hospital seam swallowed her cold. Dina left word not to open the one behind the Level 11 clinic unless you can sprint.",
+      reply: "Mike Sunderland. People barely remember her unless they knew River. Just a lone runner who figured out floor rules twice as fast as M.E.G. scouts, until a red hospital seam took her. Dina left word not to open the one behind the Level 11 clinic unless you can sprint.",
       mood: "calm",
     };
   }
@@ -273,7 +273,7 @@ export function handleDialogueCh2(ctx, player, npc, text) {
         s.ch2StancePicked = "suspicious";
         s.phoebeStance = "suspicious";
         return {
-          reply: "Because a corpse stops giving me data. You didn't freeze when the chains snapped, you read the gurneys at full tilt, and you kept moving even when your lungs gave out. Most people with triple your gear die thirty meters past that sign.",
+          reply: "I wanted to see if you'd make it. You didn't freeze when the chains snapped, you cleared the gurneys at full speed, and you kept moving after your legs gave out. Most people with triple your gear die thirty meters past that sign.",
           mood: "calm",
         };
       }
@@ -281,7 +281,7 @@ export function handleDialogueCh2(ctx, player, npc, text) {
         s.ch2StancePicked = "frustrated";
         s.phoebeStance = "frustrated";
         return {
-          reply: "If I pulled you out at the first siren, I would never know whether you could run through an ambush or only talk your way past clerks. You lasted to the final six meters. Now I know what you actually do when the margin hits zero.",
+          reply: "If I pulled you out at the first siren, I wouldn't know what you do when a hallway goes bad. You lasted to the last six meters on your own. Now I know.",
           mood: "calm",
         };
       }
@@ -291,7 +291,7 @@ export function handleDialogueCh2(ctx, player, npc, text) {
         s.knowsMike = 1;
         s.ch2SaidMike = 1;
         return {
-          reply: "Yes. Mike was River's sister. No bloodline secret, no hidden gift, nobody at all on paper. She just learned faster than the rooms changed, until one door beat her before I saw how far she could go. You have the same habit of surviving thin odds. I want to see what you become.",
+          reply: "Yes. Mike was River's sister. Plain gear, quick eyes, learned how a level works before anyone else caught on. One door caught up to her before I saw how far she'd get. You've got the same knack for bad odds, and I'd rather not lose two interesting runners early.",
           mood: "calm",
         };
       }
@@ -299,7 +299,7 @@ export function handleDialogueCh2(ctx, player, npc, text) {
         s.ch2StancePicked = "relieved";
         s.phoebeStance = "relieved";
         return {
-          reply: "Keep your thanks. I did not step in out of loyalty or kindness, and you do not owe me a song. Stay alive long enough to stay interesting. That is the whole exchange.",
+          reply: "Save it. I didn't step in out of kindness, and you don't owe me anything. Stay alive and keep paying attention.",
           mood: "calm",
         };
       }
@@ -309,14 +309,14 @@ export function handleDialogueCh2(ctx, player, npc, text) {
       if (t.includes("what happens to dina")) {
         s.ch2AskDina = 1;
         return {
-          reply: "Dina kept out of the red hall by listening to her own notes instead of chasing ghosts behind concrete. If she stays as careful with River's drive as she was with your trail on Level 11, she will still be walking tomorrow.",
+          reply: "Dina stayed out of that hall because she trusted her own notes instead of chasing noises behind drywall. If she keeps her head on straight with River's drive, she'll keep walking.",
           mood: "calm",
         };
       }
       if (t.includes("stop those things at the door")) {
         s.ch2AskWard = 1;
         return {
-          reply: "A local fold around the threshold, nothing grand enough to clear a horde. Hold a corridor seam open for two seconds, pull one stubborn runner through, let the wards bruise instead of breaking. Try standing there yourself and you will see what it costs.",
+          reply: "Pulled a fold shut around the doorframe. Good enough to stop two seconds of trouble, not an army. Getting you out cost plenty as it is.",
           mood: "calm",
         };
       }
@@ -325,7 +325,7 @@ export function handleDialogueCh2(ctx, player, npc, text) {
         s.knowsMike = 1;
         s.ch2SaidMike = 1;
         return {
-          reply: "River's sister. Plain coat, worn boots, sharp eyes for exit patterns. She got farther than anyone expected with half-empty pockets and died before I had my answer. Don't confuse recognition with destiny. You are only yourself.",
+          reply: "River's sister. Worn coat, stubbed boots, fast at reading exits. She got farther than anyone expected with half-empty pockets and died on a bad run. That's the whole story.",
           mood: "calm",
         };
       }
@@ -333,10 +333,10 @@ export function handleDialogueCh2(ctx, player, npc, text) {
         completeChapter2(ctx, player, s.phoebeStance ?? s.ch2StancePicked);
         npc.state.leaveAt = ctx.now() + 3500;
         const agiNote = (s.ch2AgilityUsed ?? 0) >= 6 || (s.attr ? Number(String(s.attr).split(",")[1]) >= 7 : false)
-          ? "You kept your stride clean under pressure. Keep that habit when the next door opens."
-          : "Catch your breath before you take another blind corridor. I will be watching to see what you grow into.";
+          ? "Good pace back there. Keep your head up on the street."
+          : "Catch your breath before you walk through the next locked door. Try not to die carelessly.";
         return {
-          reply: `The alcove door leads back onto the clinic alley in Level 11. ${agiNote}`,
+          reply: `The alcove door opens behind the clinic in Level 11. ${agiNote}`,
           mood: "calm",
         };
       }

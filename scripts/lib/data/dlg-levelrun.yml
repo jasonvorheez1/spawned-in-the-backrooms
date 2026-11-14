@@ -3,24 +3,27 @@
 
 "phoebe-lrun":
   hi:
-    - "Breathe first. The ward holds for another minute, not forever."
-    - "You made it down to the last six meters before your legs gave. Better than most."
+    - "Catch your breath first. This alcove holds for a couple minutes, not forever."
+    - "You made it down to the last six meters before your legs quit. Most people don't get half that far."
   back:
     - "Still catching your breath?"
-    - "The door on the east wall opens back behind the clinic. Do not linger once we finish."
+    - "The door on the east wall opens behind the clinic. Don't stay in here too long."
   warm:
-    - "Still on your feet. Good."
+    - "Still upright. Good."
   cold:
     - "Save the glare for whatever chased you."
   bye:
-    - "Walk carefully when you step back onto Level 11."
-    - "Keep surviving. I would hate to lose another interesting case early."
+    - "Watch yourself back in Level 11."
+    - "Try not to get cornered in the next hallway."
   walk:
-    - "Fine. Do not waste what you learned in there."
+    - "Fine. Try not to waste the second chance."
   ask:
     - q: "Are you following me from level to level?"
       a:
-        - "Following implies I only walk one corridor at a time. I keep track of people who do not shatter on first contact with a shift."
-    - q: "Will we meet again?"
+        - "I walk a lot of levels, and I pay attention to people who don't fall apart the first time a room tries to kill them. Don't flatter yourself."
+    - q: "You're a Mimic. Why help a human at all?"
       a:
-        - "If you keep adapting as fast as you did between Level 0 and that red hall, yes. If you stop paying attention, there will not be anything left to check."
+        - "Last one of my kind left out here, and none of the things screaming down that hall hold much of a conversation. You're more interesting alive than splattered on red tile."
+    - q: "Will we run into each other again?"
+      a:
+        - "Probably. You keep moving from floor to floor and I keep checking in. Just keep paying attention."

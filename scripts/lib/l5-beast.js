@@ -71,7 +71,7 @@ export function handleDialogueQuestBeast(ctx, p, npc, text) {
     tellQuest(ctx, p, `Quest Started: ${QNAME} · +$100 · Sanity restored`);
     return { reply: "Don't be afraid to shake my hand now. A deal is a deal. There, isn't that better? Your first errand: Mr. Ambrose keeps a guest register at the front desk. I'd like it on my desk. He won't miss it. He never does.", mood: "happy" }; }
   if (t.includes("why should i trust you") && !st) { wrath(ctx, p);
-    return { reply: "Why are you doubting me? ...Oh. Hm? I thought I made it clear not to doubt me.", mood: "annoyed" }; }
+    return { reply: "Why are you doubting me? I thought I made it clear not to doubt me.", mood: "annoyed" }; }
   if (t.includes("what the last one said") && !st) { s.l5bOffer = 1;
     return { reply: "Ah. Them. They wrote a great deal and finished very little. They didn't finish their end, you see. You will. You have a much kinder face.", mood: "calm" }; }
   if (t.includes("where do i find the register") && st === 1) return { reply: "The front desk, friend. The big book by the bell. Every name ever written in it is still checked in.", mood: "calm" };
@@ -95,7 +95,7 @@ export function handleDialogueQuestBeast(ctx, p, npc, text) {
     s.l5t = 2; setQuest(s, TQID, { name: TQNAME, ...TSTEP[2] }); tellQuest(ctx, p, `${TQNAME} · He let Tobias go · Tell Tobias`);
     return { reply: "Hm. You've got a spine now. I gave you that, you know. Fine. The clerk's debt is yours to worry about, not mine. Don't make me regret liking you.", mood: "calm" }; }
   if (t.includes("i want out of this deal") && (st === 1 || st === 2)) { wrath(ctx, p);
-    return { reply: "Out? We shook on it. Why are you doubting me? ...I thought I made it clear.", mood: "annoyed" }; }
+    return { reply: "Out? We shook on it. Why are you doubting me? I thought I made it clear.", mood: "annoyed" }; }
   if (t.includes("contract's void") && (st === 1 || st === 2)) {
     const c = rollCheck(ctx, s, { skill: "speech", difficulty: 55 });
     if (!c.ok) return { reply: "A tape. Recorded by someone who was scared. You're not scared anymore, are you? I saw to that. Let's say no more about it.", mood: "calm" };

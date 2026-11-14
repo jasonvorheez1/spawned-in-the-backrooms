@@ -224,7 +224,7 @@ export function handleDialogueQuest(ctx, p, npc, text) {
     if (t.includes("wrong with the canal") && !s.craneQ) {
       if (repOf(s, "bntg") <= -35) return { reply: "The B.N.T.G.'s got your name on a blacklist, boss. Step away from my stall.", mood: "angry" };
       setCraneStep(ctx, p, 1, "Quest Started: The Paper Bird's Blessing · Find the paper crane on the canal wall");
-      return { reply: "Spillway valve's jammed, boss, so the lock won't fill, and the Guild of Many barge from Level 6.1 is sitting outside it with my coffee on board. The pilot won't bring her in till someone draws a sample proving the lock water's still almond water — and checking in with the Guild back through the glass doors speeds up customs too. Canal folk say the paper crane on the wall roosts by whatever's broken.", mood: "calm" };
+      return { reply: "Spillway valve's jammed, boss, so the lock won't fill, and the Guild barge from Level 6.1 is sitting outside with my coffee on board. The pilot won't bring her in till someone draws a sample proving the water's clean. Talking to the Guild back through the glass doors speeds up customs too. Folks say the paper crane on the wall roosts by whatever's broken.", mood: "calm" };
     }
     if ((t.includes("cleared the canal lock") || t.includes("customs waybill from 6.1")) && s.craneQ === 4) {
       const guildClear = t.includes("customs waybill from 6.1") && !!s.craneWaybill;
@@ -241,7 +241,7 @@ export function handleDialogueQuest(ctx, p, npc, text) {
         text: `Quest Completed: The Paper Bird's Blessing${guildClear ? " (Joint Guild Customs)" : ""} · +${guildClear ? 130 : 95} XP, +$${(cents / 100).toFixed(2)}, Fresh Provisions`,
       });
       if (guildClear) {
-        return { reply: "Signed straight from the Guild chronicler in 6.1? That cuts an hour off pier tallying! Hear the lock filling? Seventy-five, rations, sealed bottles — and tell the Guild in 6.1 their customs dividend is open whenever you head back through.", mood: "happy" };
+        return { reply: "Signed straight from the Guild chronicler in 6.1? That cuts an hour off pier tallying. Hear the lock filling? Seventy-five, rations, sealed bottles, and tell the Guild in 6.1 their customs dividend is open whenever you head back.", mood: "happy" };
       }
       return s.kaelHaggle === 1
         ? { reply: "Hear the lock filling? Fine, fine, a cut. Sixty-five, the rations and two sealed bottles. You'd make a good Guild trader, boss. That's not a compliment.", mood: "happy" }

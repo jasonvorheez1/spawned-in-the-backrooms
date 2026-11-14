@@ -1,7 +1,7 @@
 # Level 5 · "Terror Hotel" (Wikidot, as Shelly handed it, condensed for the builders)
 Survival difficulty: Class 2-3 (unsafe, mostly secure; entities rare in the halls, common in the Boiler Room).
 A grand 1920s-30s hotel with no outside: art-deco and Victorian rooms, damask wallpaper, brass and mahogany, chandeliers,
-an endless sense of being watched. The air smells of old perfume and cigars. Time feels wrong: clocks disagree.
+an endless sense of being watched. The air smells of old perfume and cigars. Clocks disagree down here.
 Wanderers report growing paranoia and dread the longer they stay (sanity drain), worst in the Boiler Room.
 
 ## Areas
