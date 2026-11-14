@@ -68,7 +68,7 @@ function giveTape(s) { s.snacks = { ...(s.snacks ?? {}), mixtape: (s.snacks?.mix
 function side(ctx, p, route) {
   const s = p.state; s.l31route = route; s.l31tape = route === "dub";
   const rep = { ...(s.rep ?? {}) };
-  if (route === "bntg") { rep.rink = -100; rep.concession = Math.max(rep.concession ?? 0, 40); }
+  if (route === "bntg") { rep.rink = -100; rep.bntg = Math.max(rep.bntg ?? 0, 40); }
   if (route === "rink") { rep.concession = -100; rep.rink = Math.max(rep.rink ?? 0, 60); }
   s.rep = rep;
   if (route === "bntg") addRep(s, "bntg", 10); if (route === "rink") addRep(s, "bntg", -15);
