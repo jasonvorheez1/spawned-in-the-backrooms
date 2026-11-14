@@ -3,9 +3,9 @@ import { RUNS, lamps, DOORS, CURB, symbolSvg, doorFront, KEY_NAMES, sealed } fro
 import { keysOf, keyDoor } from "../../scripts/lib/hubkeys.js";
 import { layThings, keepCrew, keymaster } from "../../scripts/lib/hub-people.js";
 import { ARRIVE } from "../../scripts/lib/thehub.js";
-import { layLampModels, layDress } from "../../scripts/lib/hub-dress.js";
+import { layLampModels, layDress, layBayLights, cageLamp } from "../../scripts/lib/hub-dress.js";
 export const cadence = "1s";
-const V = 9;
+const V = 10; // v10: caged bulkhead lamp models over doors and bays (was cylinders/spheres)
 const DOOR = { frame: { url: "/cdn/value.86c9f9f6e66d057fda78af73bde7c72cea84386e49891e45ea0ed3cddadb3e70.glb", offset: [0, 0, 0.432] }, leaf: { url: "/cdn/value.9437304a5bfa3c822e8830c3d88d9e6310980e867ff78651d84fc6dc5b01035c.glb" } }; // art/hub/doors.yml
 const PANEL = "cdn/texture-smooth-cast-concrete-lintel-panel-clean-fine-pores.png"; // the frame's lintel panel came mottled: a clean cast face for the carved mark
 const SODIUM = "oklch(0.8 0.15 68)";
@@ -51,6 +51,7 @@ export function tick(ctx) {
   if ((s.hubV ?? 0) < 6) layDoorLamps(ctx);
   if ((s.hubV ?? 0) < 9) layPlaques(ctx); // v9: refresh plaques for Level 11 key requirement
   if ((s.hubV ?? 0) < 5) { layLampModels(ctx); layDress(ctx); } // v5: modeled lamps, fans, tray, gutters, barriers, camp furniture
+  if ((s.hubV ?? 0) >= 5 && (s.hubV ?? 0) < 10) { layDoorLamps(ctx); layBayLights(ctx); } // v10: re-lay the caged lamps
   s.hubV = V;
   if (!ctx.place.players?.length) return;
   const key = ctx.place.objects["hub-keytag"];
@@ -64,9 +65,7 @@ function layDoorLamps(ctx) {
   for (const d of DOORS) {
     const f = doorFront(d, 0.5), id = `hub-doorlamp-${d.id}`;
     if (f.x > 500) continue;
-    if (ctx.place.objects[id]) ctx.destroy(id);
-    ctx.spawn(id, { feetPosition: { x: f.x, y: 4.95, z: f.z }, primitive: { kind: "cylinder", radiusTop: 0.16, radiusBottom: 0.2, height: 0.14 }, material: { color: "oklch(0.92 0.09 75)", emissive: "oklch(0.8 0.14 65)", emissiveIntensity: 3 }, castShadow: false,
-      light: { kind: "point", color: "oklch(0.8 0.13 68)", intensity: 5, distance: 9, shadow: { enabled: false } } });
+    cageLamp(ctx, id, f.x, 4.5, f.z, 5, 9, "oklch(0.8 0.13 68)");
   }
 }
 

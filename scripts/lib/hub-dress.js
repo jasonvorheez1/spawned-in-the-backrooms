@@ -7,6 +7,7 @@ export const FX = {
   lamp: { id: "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", offset: [-0.102, -0.182, -0.219], materials: { lens: { color: SODIUM, emissive: SODIUM, emissiveIntensity: 5 } } },
   tray: { id: "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", offset: [0, -0.34, -0.245] },
   drain: { id: "/cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb" },
+  cage: { id: "/cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb", materials: { glow: { color: "oklch(0.95 0.06 85)", emissive: "oklch(0.88 0.12 75)", emissiveIntensity: 5 } } }, // caged bulkhead lamp, 0.27 x 0.43 m, glow slot = bulb (l11-crawl-kit)
   barrier: { id: "/cdn/value.efba5bc2dd8deab26fc3c767bca2bf91ee1cd30b33522ced5fdd83959daa330f.glb" },
 };
 const OP = {
@@ -51,11 +52,22 @@ export function layDress(ctx) {
   }
   // the dark line: a chicane of jersey barriers past Dace's post
   for (const [i, x, z] of [[0, DARK_X - 4, -3.6], [1, DARK_X - 4, 3.6], [2, DARK_X - 1.5, 0]]) ctx.spawn(`hub-barrier-${i}`, { feetPosition: { x, y: 0, z }, rotation: { yaw: 90 }, physics: { body: "static", collider: "box" }, ...M(FX.barrier) });
-  BAYLIGHTS.forEach(([x, y, z, i], k) => ctx.spawn(`hub-baylight-${k}`, { feetPosition: { x, y, z }, primitive: { kind: "sphere", radius: 0.09 }, material: { color: "oklch(0.95 0.06 85)", emissive: "oklch(0.95 0.06 85)", emissiveIntensity: 6 }, castShadow: false,
-    light: { kind: "point", color: "oklch(0.88 0.09 82)", intensity: i, distance: 11, shadow: { enabled: false } } }));
+  layBayLights(ctx);
   CAMP.forEach(([k, x, z, yaw, lamp], i) => {
     const y = x > 500 ? 0 : CURB;
     ctx.spawn(`hub-camp-${i}-${k}`, { tags: ["hub-camp"], feetPosition: { x, y, z }, rotation: { yaw }, physics: { body: "static", collider: "box" }, ...M(OP[k]) });
     if (lamp) ctx.spawn(`hub-camp-${i}-light`, { feetPosition: { x: lamp[0], y: lamp[1], z: lamp[2] }, light: { kind: "point", color: "oklch(0.82 0.12 72)", intensity: lamp[3], distance: 7, shadow: { enabled: false } } });
   });
+}
+// a caged bulkhead lamp hung on a conduit drop: the work lights over the bays and the lamp over every door (hubV 10)
+export function cageLamp(ctx, id, x, y, z, intensity, distance, color = "oklch(0.88 0.09 82)", top = 6.2, scale = 1.3) {
+  if (ctx.place.objects[id]) ctx.destroy(id);
+  const h = 0.43 * scale, drop = Math.max(0, top - (y + h));
+  ctx.spawn(id, { feetPosition: { x, y, z }, scale, layout: undefined, ...M(FX.cage),
+    children: [
+      ...(drop > 0.05 ? [{ id: "drop", feetPosition: { x: 0, y: 0.43, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.012, radiusBottom: 0.012, height: drop / scale }, material: { color: "oklch(0.3 0.01 80)", metalness: 0.8, roughness: 0.5 }, castShadow: false }] : []),
+      { id: "glow", feetPosition: { x: 0, y: 0.1, z: 0 }, light: { kind: "point", color, intensity, distance, shadow: { enabled: false } } }] });
+}
+export function layBayLights(ctx) {
+  BAYLIGHTS.forEach(([x, y, z, i], k) => cageLamp(ctx, `hub-baylight-${k}`, x, y - 0.35, z, i, 11));
 }
