@@ -20,7 +20,11 @@ for o in list(sc.objects):
 bpy.context.view_layer.update()
 dg = bpy.context.evaluated_depsgraph_get()
 def bvh(n): return BVHTree.FromObject(bpy.data.objects[n], dg)
-HB = bvh("Head_cat"); CLOTH = [bvh(n) for n in ("Body", "Top_jacket", "Bot_longskirt")]
+HB = bvh("Head_cat"); BODY = bpy.data.objects["Body"]; BB = bvh("Body"); CLOTH = [BB]
+BV = [BODY.matrix_world @ v.co for v in BODY.data.vertices]          # rest pose, world
+BG = {g.index: g.name for g in BODY.vertex_groups}
+_kb = BODY.data.shape_keys.key_blocks if BODY.data.shape_keys else None
+BUST = [(_kb["Bust"].data[i].co - _kb["Basis"].data[i].co) for i in range(len(BV))] if _kb and "Bust" in _kb else None
 
 def ss(a, b, x):
     t = max(0.0, min(1.0, (x - a) / (b - a))); return t * t * (3 - 2 * t)
@@ -83,7 +87,7 @@ def grid(mb, P, closeU=False):
             i2 = (i + 1) % U; mb.f.append((rows[j][i], rows[j][i2], rows[j + 1][i2], rows[j + 1][i]))
     return rows
 
-MATS = {"hair": ("#e9a07e", 0.0, 0.6), "coat": ("#d29a2c", 0.0, 0.8), "cuff": ("#f2efe8", 0.0, 0.7), "bow": ("#b8202a", 0.0, 0.5),
+MATS = {"hair": ("#e9a07e", 0.0, 0.6), "coat": ("#b8975c", 0.0, 0.8), "dress": ("#17141a", 0.0, 0.7), "cuff": ("#f2efe8", 0.0, 0.7), "bow": ("#b8202a", 0.0, 0.5),
         "chain": ("#d8dadf", 1.0, 0.25), "boot": ("#141216", 0.0, 0.38), "band": ("#a8562a", 0.0, 0.55)}
 def hexc(h): return tuple(((int(h[i:i + 2], 16) / 255) ** 2.2) for i in (1, 3, 5)) + (1,)
 def mat(name):
@@ -147,24 +151,28 @@ def w_coat(p):
         sR = ss(-0.10, 0.10, p.x); w = {k: v * (1 - leg) for k, v in w.items()}
         w["RightUpLeg"] = leg * sR; w["LeftUpLeg"] = leg * (1 - sR)
     return w
-SK = bpy.data.objects["Bot_longskirt"]; SKB = CLOTH[2]
-SKG = {g.index: g.name for g in SK.vertex_groups}
-def skirt_w(p):
-    loc, nrm, fi, dist = SKB.find_nearest(p)
-    poly = SK.data.polygons[fi]; acc = {}; tw = 0
+def body_w(p):                                            # the body's own weights at the nearest skin point
+    loc, nrm, fi, dist = BB.find_nearest(p)
+    poly = BODY.data.polygons[fi]; acc = {}; tw = 0
     for vi in poly.vertices:
-        v = SK.data.vertices[vi]; w = 1.0 / (0.01 + (SK.matrix_world @ v.co - loc).length); tw += w
-        for g in v.groups: acc[SKG[g.group]] = acc.get(SKG[g.group], 0) + g.weight * w
-    return {k: v / tw for k, v in acc.items()}
-_w_coat0 = w_coat
-def w_coat(p):
-    if abs(p.x) > 0.17 and p.z > 0.9: return _w_coat0(p)
-    t = ss(0.72, 0.6, p.z)
-    if t <= 0: return _w_coat0(p)
-    a = spine_w(p.z); b = skirt_w(p); out = {}
-    for k, v in a.items(): out[k] = out.get(k, 0) + v * (1 - t)
-    for k, v in b.items(): out[k] = out.get(k, 0) + v * t
+        w = 1.0 / (0.005 + (BV[vi] - loc).length); tw += w
+        for g in BODY.data.vertices[vi].groups: acc[BG[g.group]] = acc.get(BG[g.group], 0) + g.weight * w
+    return {k: v / tw for k, v in acc.items() if v / tw > 0.01}
+def hang_w(p):                                           # a hanging skirt: hips carry it, both thighs swing it, never one leg alone
+    w = spine_w(max(p.z, 0.6)); leg = 0.62 * ss(0.64, 0.32, p.z)
+    sR = ss(-0.13, 0.13, p.x)
+    out = {k: v * (1 - leg) for k, v in w.items()}
+    out["RightUpLeg"] = leg * sR; out["LeftUpLeg"] = leg * (1 - sR)
     return out
+def w_coat(p):
+    if p.z > 0.74: return body_w(p)
+    if p.z > 0.66:
+        t = ss(0.74, 0.66, p.z); A = body_w(p); B = hang_w(p); out = {}
+        for k, v in A.items(): out[k] = out.get(k, 0) + v * (1 - t)
+        for k, v in B.items(): out[k] = out.get(k, 0) + v * t
+        return out
+    return hang_w(p)
+def w_arm(p): return body_w(p)
 def w_chest(p): return spine_w(min(p.z, 0.99)) if p.z < 0.95 else {"Spine02": 0.8, "neck": 0.2}
 def w_boot(p):
     s = "Left" if p.x < 0 else "Right"
@@ -242,80 +250,101 @@ loop = MB(); pts = [bc - up * 0.045 + ax * (0.085 * math.cos(2 * math.pi * k / 2
 sweep(loop, pts, [0.022] * 24, [0.016] * 24, lambda p: up, ring=8, closed=True)
 make("BunWrap", loop, "hair", w_head)
 
-# ================= COAT =================
-def prof(z, a):
-    d = Vector((math.sin(math.radians(a)), math.cos(math.radians(a)), 0)); best = 0.0
-    for dz in (-0.025, 0.0, 0.025):
-        o = Vector((0, 0, z + dz))
-        for T in CLOTH:
-            r = T.ray_cast(o + d * 0.7, -d, 0.7)
-            if r[0]: best = max(best, (r[0] - o).length)
+# ================= COAT (fitted: wraps the body's own cross-section, 2 cm off the skin, hangs straight from the hips) =================
+TORSO_X = 0.165
+def _hull(P):
+    P = sorted(set(P))
+    if len(P) < 3: return P
+    def cr(o, a, b): return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+    lo, up = [], []
+    for p in P:
+        while len(lo) >= 2 and cr(lo[-2], lo[-1], p) <= 0: lo.pop()
+        lo.append(p)
+    for p in reversed(P):
+        while len(up) >= 2 and cr(up[-2], up[-1], p) <= 0: up.pop()
+        up.append(p)
+    return lo[:-1] + up[:-1]
+_hc = {}
+def hull_at(z):
+    k = round(z, 3)
+    if k not in _hc:
+        pts = [(round(v.x, 4), round(v.y, 4)) for v in BV if abs(v.z - z) < 0.016 and not (v.z > 0.80 and abs(v.x) > TORSO_X)]
+        _hc[k] = _hull(pts)
+    return _hc[k]
+def hullr(z, a):                       # distance from the body axis to the slice's hull along azimuth a (0 = front, +Y)
+    H_ = hull_at(z); A = math.radians(a); dx, dy = math.sin(A), math.cos(A); best = 0.05
+    n = len(H_)
+    for i in range(n):
+        x0, y0 = H_[i]; x1, y1 = H_[(i + 1) % n]
+        ex, ey = x1 - x0, y1 - y0; den = dx * ey - dy * ex
+        if abs(den) < 1e-9: continue
+        t = (x0 * ey - y0 * ex) / den; u = (x0 * dy - y0 * dx) / den
+        if t > 0 and -1e-6 <= u <= 1 + 1e-6: best = max(best, t)
     return best
-ZS = [0.17 + (1.03 - 0.17) * j / 30 for j in range(31)]           # hem to neck
+HEM, NECK = 0.25, 1.03
+ZS = [HEM + (NECK - HEM) * j / 31 for j in range(32)]
 NU = 49
-def openA(z): return lerp(lerp(27, 21, ss(0.17, 0.62, z)), 34, ss(0.86, 1.02, z))
+zh = max([z for z in ZS if 0.5 < z < 0.7], key=lambda z: sum(hullr(z, a) for a in range(0, 360, 30)))
+print("HIPZ", round(zh, 3))
+def openA(z): return lerp(lerp(27, 21, ss(HEM, 0.62, z)), 34, ss(0.86, 1.02, z))
+def wrap(z, a, gap):
+    r = hullr(z, a)
+    if z < zh: r = max(r, hullr(zh, a))          # straight down from the widest hip, never in round the thighs
+    return r + gap
+def chest_gap(z, a): return 0.02 + 0.005 * ss(0.78, 0.86, z) * ss(0.97, 0.9, z) * max(0.0, math.cos(math.radians(a)))
 RAW = []
 for z in ZS:
-    row = []
     oa = openA(z)
-    for i in range(NU):
-        a = oa + (360 - 2 * oa) * i / (NU - 1); s = abs(math.sin(math.radians(a)))
-        r = prof(z, a)
-        if z > 0.86 and s > 0.6: r = min(r, lerp(0.19, 0.15, ss(0.86, 1.0, z)))
-        row.append(r)
-    RAW.append(row)
-RAW = [[max(RAW[jj][ii] for jj in range(max(j - 1, 0), min(j + 2, len(RAW))) for ii in range(max(i - 2, 0), min(i + 3, NU))) for i in range(NU)] for j in range(len(RAW))]
-for _ in range(2):   # smooth around and up
+    RAW.append([wrap(z, oa + (360 - 2 * oa) * i / (NU - 1), chest_gap(z, oa + (360 - 2 * oa) * i / (NU - 1))) for i in range(NU)])
+for _ in range(2):
     RAW = [[(r[max(i - 1, 0)] + 2 * r[i] + r[min(i + 1, NU - 1)]) / 4 for i in range(NU)] for r in RAW]
     RAW = [[(RAW[max(j - 1, 0)][i] + 2 * RAW[j][i] + RAW[min(j + 1, len(RAW) - 1)][i]) / 4 for i in range(NU)] for j in range(len(RAW))]
-jw = ZS.index(min(ZS, key=lambda z: abs(z - 0.66)))
-for j in range(jw - 1, -1, -1):                     # A-line from the hips down
-    RAW[j] = [max(RAW[j][i], RAW[j + 1][i] + 0.004) for i in range(NU)]
 CP = []
 for j, z in enumerate(ZS):
     row = []; oa = openA(z)
     for i in range(NU):
-        a = oa + (360 - 2 * oa) * i / (NU - 1)
-        r = RAW[j][i] + lerp(0.035, 0.022, ss(0.55, 0.75, z)) + 0.07 * ss(0.5, 0.17, z) ** 1.4
-        r += 0.012 * math.sin(math.radians(a) * 7) * ss(0.55, 0.2, z)          # folds in the skirt
-        if z > 0.98: r = lerp(r, 0.12, ss(0.98, 1.03, z))
-        edge = min(i, NU - 1 - i)
-        if edge == 0: r += 0.006
-        A = math.radians(a)
-        row.append(Vector((r * math.sin(A), r * math.cos(A), z - 0.012 * ss(0.4, 0.17, z) * (1 + math.cos(A)))))
+        a = oa + (360 - 2 * oa) * i / (NU - 1); A = math.radians(a)
+        r = RAW[j][i] + 0.012 * ss(zh, HEM, z)                              # a hint of hang at the hem, no flare
+        r += 0.005 * math.sin(A * 7) * ss(0.55, 0.3, z)                     # soft folds low in the skirt
+        if min(i, NU - 1 - i) == 0: r += 0.004
+        row.append(Vector((r * math.sin(A), r * math.cos(A), z - 0.008 * ss(0.4, HEM, z) * (1 - math.cos(A)) * 0.5)))
     CP.append(row)
 coat = MB(); crow = grid(coat, CP)
 mid = NU // 2; cut = {mid - 2, mid - 1, mid, mid + 1}        # back vent for the tail
 idx_rows = {v: (j, i) for j, r in enumerate(crow) for i, v in enumerate(r)}
-coat.f = [f for f in coat.f if not (all(idx_rows[v][1] in cut | {mid + 2} for v in f) and min(idx_rows[v][1] for v in f) in cut and max(ZS[idx_rows[v][0]] for v in f) < 0.74)]
-make("Coat", coat, "coat", w_coat, solid=0.009)
-# sleeves: wide, hanging, wrist-length
+coat.f = [f for f in coat.f if not (all(idx_rows[v][1] in cut | {mid + 2} for v in f) and min(idx_rows[v][1] for v in f) in cut and max(ZS[idx_rows[v][0]] for v in f) < 0.64)]
+make("Coat", coat, "coat", w_coat, solid=0.008)
+# the black dress skirt under the coat: hips to mid-thigh, 1 cm off the skin, straight hang
+dress = MB(); DZ = [0.40 + (0.74 - 0.40) * j / 12 for j in range(13)]; NUD = 40
+grid(dress, [[Vector(((wrap(z, 360 * i / NUD, 0.009) + 0.006 * ss(zh, 0.4, z)) * math.sin(math.radians(360 * i / NUD)), (wrap(z, 360 * i / NUD, 0.009) + 0.006 * ss(zh, 0.4, z)) * math.cos(math.radians(360 * i / NUD)), z)) for i in range(NUD)] for z in DZ], closeU=True)
+make("Dress", dress, "dress", w_coat, solid=0.004)
+# sleeves: follow the arm, 2 cm off it, a slight bell into the white cuff
+def armr(side, x, th):
+    c = Vector((side * x, 0, 0.955)); d = Vector((0, math.cos(th), math.sin(th)))
+    h = BB.ray_cast(c + d * 0.2, -d, 0.2)
+    return max(0.03, (h[0] - c).length) if h[0] else 0.04
+X0, X1, NS, RS = 0.12, 0.445, 18, 24
 for side in (1, -1):
-    sl = MB(); SP = []; X0, X1, NS, RS = 0.10, 0.50, 16, 28
+    SP = []; RR = []
     for j in range(NS + 1):
-        t = j / NS; x = lerp(X0, X1, t)
-        rt = lerp(0.075, 0.085, t); drop = lerp(0.08, 0.155, ss(0.0, 1.0, t)); wy = lerp(0.075, 0.098, t)
+        x = lerp(X0, X1, j / NS); RR.append([armr(side, x, 2 * math.pi * k / RS) for k in range(RS)])
+    for _ in range(2):
+        RR = [[(r[k - 1] + 2 * r[k] + r[(k + 1) % RS]) / 4 for k in range(RS)] for r in RR]
+        RR = [[(RR[max(j - 1, 0)][k] + 2 * RR[j][k] + RR[min(j + 1, NS)][k]) / 4 for k in range(RS)] for j in range(NS + 1)]
+    for j in range(NS + 1):
+        t = j / NS; x = lerp(X0, X1, t); bell = 0.016 * ss(0.55, 1.0, t)
         row = []
         for k in range(RS):
-            th = 2 * math.pi * k / RS; c, s = math.cos(th), math.sin(th)
-            zz = rt * s if s >= 0 else -drop * (-s) ** 0.75
-            yy = wy * c * (1 + 0.15 * max(0.0, -s))
-            row.append(Vector((side * x, yy, 0.955 + zz)))
+            th = 2 * math.pi * k / RS; r = RR[j][k] + 0.02 + bell * (1 + 0.6 * max(0.0, -math.sin(th)))
+            row.append(Vector((side * x, r * math.cos(th), 0.955 + r * math.sin(th))))
         SP.append(row)
     if side < 0: SP = [r[::-1] for r in SP]
-    grid(sl, SP, closeU=True); make("Sleeve%d" % side, sl, "coat", w_sleeve, solid=0.008)
-    cf = MB(); CPc = []
+    sl = MB(); grid(sl, SP, closeU=True); make("Sleeve%d" % side, sl, "coat", w_arm, solid=0.007)
+    end = SP[-1]; cen = Vector((side * X1, 0, 0.955)); CPc = []
     for j in range(5):
-        t = j / 4; x = lerp(0.435, 0.512, t); bulge = 0.008 * math.sin(math.pi * t) + 0.004
-        row = []
-        for k in range(RS):
-            th = 2 * math.pi * k / RS; c, s = math.cos(th), math.sin(th)
-            zz = (0.085 + bulge) * s if s >= 0 else -(0.155 + bulge) * (-s) ** 0.75
-            yy = (0.098 + bulge) * c * (1 + 0.15 * max(0.0, -s))
-            row.append(Vector((side * x, yy, 0.955 + zz)))
-        CPc.append(row)
-    if side < 0: CPc = [r[::-1] for r in CPc]
-    grid(cf, CPc, closeU=True); make("Cuff%d" % side, cf, "cuff", w_sleeve, solid=0.008)
+        t = j / 4; x = lerp(X1 - 0.022, X1 + 0.016, t); g = 1.0 + 0.10 + 0.04 * math.sin(math.pi * t)
+        CPc.append([Vector((side * x, (p.y - cen.y) * g, 0.955 + (p.z - cen.z) * g)) for p in end])
+    cf = MB(); grid(cf, CPc, closeU=True); make("Cuff%d" % side, cf, "cuff", w_arm, solid=0.007)
 
 # ================= COLLAR, BOW, CHAIN =================
 def front(z): return prof(z, 0)
@@ -387,6 +416,21 @@ for p in OUTF.data.polygons: p.use_smooth = True
 dm = OUTF.modifiers.new("dec", "DECIMATE"); dm.ratio = 0.72; dm.use_collapse_triangulate = True
 bpy.ops.object.modifier_apply(modifier="dec")
 OUTF.parent = ARM; m = OUTF.modifiers.new("Armature", "ARMATURE"); m.object = ARM
+# the body's Bust shape key, carried onto what lies on the chest, so the coat follows her bust morph
+if BUST:
+    from mathutils.kdtree import KDTree
+    kd = KDTree(len(BV))
+    for i, v in enumerate(BV): kd.insert(v, i)
+    kd.balance()
+    OUTF.shape_key_add(name="Basis"); kb = OUTF.shape_key_add(name="Bust")
+    for v in OUTF.data.vertices:
+        p = OUTF.matrix_world @ v.co
+        if p.z < 0.7 or abs(p.x) > 0.25: continue
+        acc = Vector(); tw = 0
+        for co, i, d in kd.find_n(p, 6):
+            w = 1 / (0.005 + d); acc += BUST[i] * w; tw += w
+        d0 = kd.find(p)[2]; f = ss(0.07, 0.03, d0)
+        kb.data[v.index].co = v.co + acc / tw * f
 # normalize
 for v in OUTF.data.vertices:
     t = sum(g.weight for g in v.groups)
@@ -419,11 +463,18 @@ shot("a_front", (0, 3.6, 0.85), (0, 0, 0.85))
 shot("b_34", (2.2, 2.6, 1.2), (0, 0, 0.85))
 shot("c_face", (0.35, 1.5, 1.35), (0, 0, 1.3))
 shot("d_back", (-1.6, -2.8, 1.2), (0, 0, 0.85))
-act = bpy.data.actions.get("Walk")
-for a in (ARM, ARM2):
-    a.animation_data_create(); a.animation_data.action = act
-fr = act.frame_range; sc.frame_set(int(fr[0] + (fr[1] - fr[0]) * 0.25))
+def pose(rots):
+    for a in (ARM, ARM2):
+        for pb in a.pose.bones: pb.matrix_basis.identity()
+        for n, (ax, deg) in rots.items():
+            if n not in a.pose.bones: continue
+            pb = a.pose.bones[n]; R = a.data.bones[n].matrix_local.to_3x3()
+            pb.rotation_mode = "QUATERNION"; pb.rotation_quaternion = (R.inverted() @ Matrix.Rotation(math.radians(deg), 3, ax) @ R).to_quaternion()
+    bpy.context.view_layer.update()
+DOWN = {"LeftArm": ("Y", 62), "RightArm": ("Y", -62)}
+pose({**DOWN, "LeftUpLeg": ("X", 32), "RightUpLeg": ("X", -26), "RightLeg": ("X", 30)})
 shot("e_walk", (2.4, 2.4, 1.0), (0, 0, 0.75))
-act = bpy.data.actions.get("Idle"); ARM.animation_data.action = act; sc.frame_set(int(act.frame_range[0]))
-shot("f_idle", (1.2, 3.0, 1.0), (0, 0, 0.8))
-shot("g_idlecu", (0.9, 1.6, 0.85), (0, 0, 0.75))
+pose(DOWN)
+shot("f_idle", (0, 3.0, 0.9), (0, 0, 0.8))
+shot("g_back", (0, -3.0, 0.9), (0, 0, 0.8))
+shot("h_side", (3.0, 0, 0.9), (0, 0, 0.8))
