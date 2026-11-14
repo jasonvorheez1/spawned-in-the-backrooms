@@ -108,7 +108,7 @@ function cairnSites(L) { // stacked stones up the track from the house to the ed
   return out;
 }
 function smallParts(m) {
-  return [[`l169-cp-${m.id}-m`, { feetPosition: g(m.x, m.z, m.kind === "windmill" ? 0 : -0.05), rotation: m.yaw ?? 0, ...geo(m.kind, { roll: m.roll ?? 0, n: m.n ?? 0, arrow: !!m.arrow }), physics: m.kind === "grove" ? undefined : "static",
+  return [[`l169-cp-${m.id}-m`, { feetPosition: g(m.x, m.z, m.kind === "windmill" ? 0 : -0.05), rotation: m.yaw ?? 0, ...geo(m.kind, { roll: m.roll ?? 0, arrow: !!m.arrow, sd: (m.z % 97) + 1, ...(m.n ? { n: m.n } : {}) }), physics: m.kind === "grove" ? undefined : "static",
     visibleRange: { max: m.kind === "cairn" ? 260 : 900 } }]];
 }
 // ---- streaming
