@@ -4,10 +4,13 @@ from mathutils import Vector
 SRC = "/workspace/art/gib/"; OUT = "/workspace/art/gib/out/"
 PIECES = {  # name: (target height m, face budget tris)
   "stool": (0.76, 9000), "coffee": (0.56, 9000), "pie": (0.34, 6000), "condiments": (0.19, 6000),
+  "register": (0.40, 7000),
 }
+ONLY = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 def clear():
   bpy.ops.wm.read_factory_settings(use_empty=True)
 for name, (h, budget) in PIECES.items():
+  if ONLY and name not in ONLY: continue
   clear()
   bpy.ops.import_scene.gltf(filepath=SRC + name + ".glb")
   meshes = [o for o in bpy.context.scene.objects if o.type == "MESH"]
