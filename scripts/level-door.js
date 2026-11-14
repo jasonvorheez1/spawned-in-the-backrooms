@@ -6,7 +6,7 @@ import { bring } from "./lib/companion.js";
 import { carryAcross } from "./lib/carry.js";
 import { funGate } from "./lib/dina-quest.js";
 const PAIR = {
-  "l1-back": "main#main-from-l1", "l1-to-hub": "thehub#hub-from-l1", "l12-to-l13": "level13#l13-from-l12", "l0-to-l02": "level02#l02-from-l0", "l02-back": "main#main-from-l02", "l1-onward": "level2#l2-from-l1",
+  "l1-back": "main#main-from-l1", "l1-to-hub": "thehub#hub-from-l1", "hub-to-l1": "level1#l1-from-hub", "l12-to-l13": "level13#l13-from-l12", "l0-to-l02": "level02#l02-from-l0", "l02-back": "main#main-from-l02", "l1-onward": "level2#l2-from-l1",
   "l2-back": "level1#l1-from-l2", "l2-to-l3": "level3#l3-from-l2",
   "l3-back": "level2#l2-from-l3", "l3-lift5": "level5#l5-from-l3", "l4-stairs-down": "level5#l5-from-l4",
   "l5-lift3": "level3#l3-from-l5", "l5-stairs-up": "level4#l4-from-l5",
@@ -20,7 +20,7 @@ const PAIR = {
 };
 // how each threshold noclips (scripts/noclip-ui.js clipCard): you fall through the floor, clip through a wall, or just glitch across
 const KIND = {
-  "l1-to-hub": "glitch",
+  "l1-to-hub": "glitch", "hub-to-l1": "glitch",
   "l1-onward": "floor", "l2-to-l3": "floor", "l6-to-l7": "floor", "l6-to-l61": "floor", "l6-wire-trip": "floor", "l21-cave": "floor",
   "l2-back": "wall", "l3-back": "wall", "l6-back": "wall", "l7-back": "wall", "l61-to-l6": "wall", "l8-to-l21": "wall", "l21-down": "wall", "l5-to-l6": "wall",
   "l61-to-l11": "wall", "l11-to-l61": "wall", "l61-vent-in": "floor", "l10-lake-deep": "water", "l10-canola-in": "glitch",
