@@ -3,6 +3,8 @@ import { critterSpec } from "./critter-model.js";
 import { npcLook } from "./clothes.js";
 import { npcState } from "./stats.js";
 import { weaponBody } from "./weapon-look.js";
+import CIGS from "./data/cigs.yml";
+const PACKS = Object.values(CIGS).filter((c) => c.kind === "pack").map((c) => c.model);
 const A = "scripts/ambient-anim.js";
 const INK = { color: "#060606", roughness: 1, metalness: 0 };
 const faceless = (spec) => { const h = spec.children?.[0]; if (h?.model) { if (typeof h.model === "string") h.model = { id: h.model }; h.model.materials = { fur: INK, ...h.model.materials, pupil: INK, eyewhite: INK, eyeink: INK, mouth: INK, blush: INK, tongue: INK, nose: INK, tip: INK, mark: INK }; h.morph = undefined; } return spec; };
@@ -167,6 +169,7 @@ export function layExtra(ctx, { HW, HD, HH }) {
         { feetPosition: { x: -0.2, y: 0, z: -0.12 }, primitive: { kind: "cylinder", radiusTop: 0.038, radiusBottom: 0.034, height: 0.08 }, material: { color: "oklch(0.88 0.02 90 / 0.4)", transparent: true, opacity: 0.4, roughness: 0.05 } },
         { feetPosition: { x: -0.2, y: 0.004, z: -0.12 }, primitive: { kind: "cylinder", radiusTop: 0.032, radiusBottom: 0.03, height: 0.025 }, material: { color: "oklch(0.55 0.13 55)", roughness: 0.15 } },
         { feetPosition: { x: 0.02, y: 0, z: 0.2 }, primitive: { kind: "cylinder", radiusTop: 0.065, radiusBottom: 0.055, height: 0.03 }, material: { color: "oklch(0.75 0.03 200 / 0.6)", transparent: true, opacity: 0.6, roughness: 0.1 } },
+        { feetPosition: { x: -0.08, y: 0.001, z: 0.24 }, rotation: { yaw: r * 300, pitch: -90 }, pivot: "center", castShadow: false, visibleRange: { max: 25 }, model: { id: PACKS[ti % PACKS.length], forward: "+z" } }, // a pack lying by the ashtray (the creator's cigarette mod)
       ] : [
         { feetPosition: { x: 0.12, y: 0, z: 0.1 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.035, height: 0.17 }, material: { color: "oklch(0.5 0.22 28)", roughness: 0.4 } },
         { feetPosition: { x: 0.2, y: 0, z: 0.05 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.035, height: 0.17 }, material: { color: "oklch(0.85 0.17 95)", roughness: 0.4 } },
