@@ -22,7 +22,7 @@ export function close(ctx) { if (!ctx.self.state.open || ctx.self.state.always) 
 export const ears = {
   press(ctx, { by }) {
     const d = doorById(ctx.self.id), who = ctx.getObject(by), st = ctx.self.state; if (!d || !who) return;
-    if (st.open) return notify(ctx, who, d.open && !d.open.place ? "Cold air. No floor you can see past the sill. Nobody has come back to say what Level 178 does with people." : "It stands open. Whatever is past it, the way back will not be this one.");
+    if (st.open) return notify(ctx, who, d.open && !d.open.place ? "Cold air. No floor you can see past the sill. Nobody has come back to say what Level 178 does with people." : (d.open?.place === "level1" ? "It stands open. Level 1 past the sill, and a marked door there that leads back here." : "It stands open. Whatever is past it, the way back will not be this one."));
     if (d.to && sealed(ctx, d.to)) { ctx.emit("playSound", { clip: DEAD, position: mid(ctx.self), volume: 0.6, maxDistance: 20 }); return notify(ctx, who, "Sealed. The keyhole is filled with set concrete. Whatever is past this one is not ready for anyone yet."); }
     if (d.to && hasKey(who.state, d.to)) {
       spendKey(who, d.to); st.open = true; st.name = "Open door"; slide(ctx, true); ctx.after(HOLD, "close");
@@ -43,10 +43,10 @@ export function onTriggerEnter(ctx, other) {
   if (!to) return notify(ctx, other, "You put a foot over the sill and there is nothing under it. Not this door. Not yet.");
   ctx.emit("screenFlash", { color: "#000000", duration: 1.1, intensity: 1 }, { audience: { player: other.id } });
   other.state.clipKind = "wall"; other.state.hubFrom = d.id;
-  other.state.notice = { text: `${KEY_NAMES[to] ?? d.open?.name ?? "Somewhere"}. The door you came through is not behind you.`, at: ctx.now() };
+  other.state.notice = { text: to === "level1" ? "Level 1. The marked door behind you leads back to the Hub." : `${KEY_NAMES[to] ?? d.open?.name ?? "Somewhere"}. The door you came through is not behind you.`, at: ctx.now() };
   bring(ctx, other, to); carryAcross(ctx, other, to);
   const previous = other.state.hubTenthCrossed;
   if (d.id === "t10-a3" && (other.state.hubDinaAsk || other.state.hubLedger)) other.state.hubTenthCrossed = 1;
-  const result = ctx.cross(other, to);
+  const result = ctx.cross(other, to === "level1" ? "level1#l1-from-hub" : to); // Shelly Nov 14: Level 1 is the Hub's way in and out, you land beside its door back
   if (result?.crossed === false) other.state.hubTenthCrossed = previous;
 }

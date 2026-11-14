@@ -130,6 +130,10 @@ export function tick(ctx) {
     ctx.spawn("l1-hub-mark", { feetPosition: { x: hx - 0.3, y: 2.75, z: hz }, rotation: { yaw: 90 }, vector: symbolSvgL1(0.9), visibleRange: { max: 30 } });
     ctx.spawn("l1-hub-lamp", { feetPosition: { x: hx - 1.2, y: 3.2, z: hz }, visibleRange: { max: 40 }, light: { kind: "point", color: "oklch(0.78 0.15 68)", intensity: 2.2, distance: 7, shadow: { enabled: false } } });
   }
+  if (s.seeded && !s.hubArrive) { s.hubArrive = true; // Shelly Nov 14: arriving from the Hub you stand beside its door, facing into the halls
+    const hz = cellCenter(N - 1, 28).z, hx = HALF;
+    ctx.spawn("l1-from-hub", { feetPosition: { x: hx - 2.6, y: 0.1, z: hz }, rotation: { yaw: 90 } });
+  }
   if (!s.megCamp) { s.megCamp = true; // the M.E.G. waypoint: the camp, its fire, its lamps, and three agents
     if (ctx.place.objects["meg-cloth"]) ctx.destroy("meg-cloth");
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz);
