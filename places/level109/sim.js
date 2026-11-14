@@ -67,7 +67,7 @@ function layRoom(ctx, seed, info) {
   const pop = penRoll(ctx, info.id, () => roomPop(seed, info));
   const look = roomLook(seed, info), lit = look ? !look.abandoned : true, back = wallName(c, -info.side); // the room's wall that faces the corridor
   ctx.spawn(id, { tags: ["l109-room"], feetPosition: mid, castShadow: false, physics: "none", primitive: { kind: "scripted", script: GEO, params: { part: "hall", w: ROOM, d: ROOM, h: 3.4, ceil: 3.0, walls: "nsew", gaps: [{ wall: back, c: wallS(c, -info.side, info.u - um, ROOM), w: DOOR_W, h: DOOR_H, kind: "thru" }], seed: Math.abs(info.r) % 89 + 5, tone: info.type === "biohazard" ? "warm" : "l109", clean: lit, ...(lit ? { wallTex: PLASTER } : {}) } }, material: { pbr: true } });
-  const sp = (key, spec) => { const i = `l109o-${info.id}-${key}`; ctx.spawn(i, { ...spec, tags: [...(spec.tags ?? []), "l109-room"] }); made.push(i); return i; };
+  const pend = [], sp = (key, spec) => { const i = `l109o-${info.id}-${key}`; pend.push([i, { ...spec, tags: [...(spec.tags ?? []), "l109-room"] }]); made.push(i); return i; }; // queued: flushRooms lays ROOM_STEP a tick, so a room never lands in one hitch (gavi pass, Nov 14)
   sp("f", { ...INVIS, ...uvBox(c, u0, u0 + ROOM, vNear, vNear + info.side * ROOM, -0.3, 0) });
   sp("c", { ...INVIS, ...uvBox(c, u0, u0 + ROOM, vNear, vNear + info.side * ROOM, 3.0, 3.2) });
   sp("wa", { ...INVIS, ...uvBox(c, u0 - WALL, u0, vNear, vNear + info.side * ROOM, 0, 3) }); sp("wb", { ...INVIS, ...uvBox(c, u0 + ROOM, u0 + ROOM + WALL, vNear, vNear + info.side * ROOM, 0, 3) });
@@ -79,7 +79,7 @@ function layRoom(ctx, seed, info) {
   buildRoom(ctx, { id: info.id, type: info.type, info, seed, sp, abandoned: !lit, pop, at: (a, b, up = 0) => toWorld(c, um + a, vNear + info.side * b, up), yawIn: yawFor(inward.x, inward.z), yawAlong: yawFor(along.x, along.z) });
   if (denOf(seed, info)) denLoad(ctx, seed, info, (a, b) => toWorld(c, um + a, vNear + info.side * b, 0.1), { x: -inward.x, z: -inward.z });
   penLoad(ctx, info.id, info.box, (c, k, pos, st) => spawnFoe(c, k, pos, { ...st, penDoor: { x: info.door.x, z: info.door.z } })); // the foes' keeper needs the doorway
-  ROOMS.set(info.id, { made, info });
+  ROOMS.set(info.id, { made, info, pend });
 }
 export function tick(ctx) {
   try { questTick(ctx); } catch (e) { ctx.log("l109 quest", String(e)); }
@@ -113,4 +113,10 @@ export function tick(ctx) {
   denWatch(ctx, [...ROOMS.keys()]);
   for (const [id, r] of ROOMS) if (!rooms.has(id) || rooms.get(id).d > ROOM_OUT) { denUnload(ctx, r.info, (p) => inside(r.info.box, p)); penUnload(ctx, id, r.info.box); for (const o of r.made) ctx.destroy(o); ROOMS.delete(id); }
   looseTick(ctx, spawnFoe);
+  flushRooms(ctx);
+}
+const ROOM_STEP = 30; // Savi's pick: room pieces laid per tick (the walls/floor come first, they were queued first)
+function flushRooms(ctx) {
+  let n = ROOM_STEP;
+  for (const r of ROOMS.values()) { const q = r.pend; while (q?.length && n-- > 0) { const [i, spec] = q.shift(); ctx.spawn(i, spec); } if (n <= 0) break; }
 }
