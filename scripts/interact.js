@@ -52,8 +52,13 @@ function note(ctx, text) { ctx.self.state.notice = { text, at: ctx.now() } }
 function findFocus(ctx, ray, reach = REACH) {
   const o = ray.origin, d = ray.direction, seatId = ctx.self.state.sit?.id
   let best = null, bestAng = 1e9
-  for (const it of ctx.query({ anyTags: KINDS, radius: REACH + 1 })) {
+  const hd0 = Math.hypot(d.x, d.z) || 1e-3, dx0 = d.x / hd0, dz0 = d.z / hd0, flat = hd0 < 0.25 // looking nearly straight up or down: keep every candidate
+  for (const it of ctx.query({ anyTags: KINDS, radius: reach + 1 })) {
     if (it.state?.taken) continue
+    if (!flat) { // cheap cull before any bounds read or raycast: behind the look, or more than 1.6 m off its line, can never be the focus
+      const q = it.state?.c ?? it.feetPosition, ax = q.x - o.x, az = q.z - o.z, along = ax * dx0 + az * dz0
+      if (along < -0.8 || Math.abs(ax * dz0 - az * dx0) > 1.6) continue
+    }
     const tag = kindOf(it.tags)
     if (!tag) continue
     if (tag === 'usable' && it.tags?.includes?.('seat')) continue // a seat that's also usable is sat in, never pressed
@@ -102,7 +107,7 @@ function findFocus(ctx, ray, reach = REACH) {
 // write the focus to player.state only when it changes (the HUD reads it)
 function refocus(ctx, force = false) {
   const m = mem(ctx), s = ctx.self.state, now = ctx.now()
-  if (!m.ray || (!force && now - m.last < 70)) return
+  if (!m.ray || (!force && now - m.last < 110)) return
   m.last = now
   if (s.lootOpen) { if (s.focus) s.focus = null; m.focus = null; return }
   const me = (s.sit ? ctx.self.worldFeetPosition : null) ?? ctx.self.feetPosition, ro = m.ray.origin, back = Math.hypot(ro.x - me.x, ro.z - me.z)

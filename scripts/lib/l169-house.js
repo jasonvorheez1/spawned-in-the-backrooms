@@ -82,7 +82,9 @@ export function layHouse(ctx, put, L) {
       ["mesa", "/cdn/value.2ef798fa20295d10074278acb94e961f53f0fec2477eb4ec82b6cd1658cbcf6e.png", 11.5, "s", 0.64, 0.48],
       ["well", "/cdn/value.93d50b65d189242b23f3a496a94c717f8925c2e1cdd44e23bd7b6e7f74a15956.png", 18, "s", 0.8, 0.6],
       ["mesa-2", "/cdn/value.2ef798fa20295d10074278acb94e961f53f0fec2477eb4ec82b6cd1658cbcf6e.png", 19, "n", 0.48, 0.36] ])
-      part(`pic-${id}`, { part: "picture", tex, w, h: hh, frame: id === "map" ? "oklch(0.4 0.05 50)" : undefined }, x, wall === "n" ? nW : sW, PY + (id === "mesa-2" ? 0.12 : 0), { physics: undefined, rotation: wall === "n" ? 180 : 0, castShadow: false }); }
+    { const y0 = PY + (id === "mesa-2" ? 0.12 : 0), wz = wall === "n" ? nW : sW, out = wall === "n" ? 1 : -1;
+      part(`pic-${id}`, { part: "picture", w, h: hh, frame: id === "map" ? "oklch(0.4 0.05 50)" : undefined }, x, wz, y0, { physics: undefined, rotation: wall === "n" ? 180 : 0, castShadow: false });
+      put(`l169-house-print-${id}`, { feetPosition: { x, y: y0 + 0.055 + 0.03, z: wz + out * 0.016 }, rotation: wall === "n" ? 0 : 180, castShadow: false, primitive: { kind: "box", width: w - 0.06, height: hh - 0.06, depth: 0.004 }, material: { texture: tex, repeat: [1, 1], roughness: 0.35 } }); } }
   // lamps: one per room, hung under the ceiling
   for (const k of ["living", "kitchen", "hall", "bed1", "bed2", "bed3", "den", "porch"]) {
     const [x, z] = mid(k), y = F + h.wallH - 0.62;

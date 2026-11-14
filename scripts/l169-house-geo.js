@@ -307,9 +307,8 @@ function picture(ctx, P) { // a framed picture hung flat on a wall: back at z 0,
   bx(ctx, -w / 2 - f, 0, -d, w / 2 + f, f, 0, 0.008); bx(ctx, -w / 2 - f, hh + f, -d, w / 2 + f, hh + 2 * f, 0, 0.008);
   bx(ctx, -w / 2 - f, f, -d, -w / 2, hh + f, 0, 0.008); bx(ctx, w / 2, f, -d, w / 2 + f, hh + f, 0, 0.008);
   paint(ctx, null, "oklch(0.9 0.02 85)"); ctx.roughness(0.9); bx(ctx, -w / 2, f, -0.012, w / 2, hh + f, -0.004, 0.002); // the mat behind the print
-  ctx.albedo(P.tex); ctx.color(null); ctx.roughness(0.35);
-  const m = 0.03, z = -0.014; face(ctx, [w / 2 - m, f + m, z], [-w / 2 + m, f + m, z], [-w / 2 + m, hh + f - m, z], [w / 2 - m, hh + f - m, z], [0, 0, -1]);
-  ctx.roughness(null);
+  ctx.roughness(null); // the print itself is its own thin board (scripts/lib/l169-house.js), textured once across its face
+
 }
 function roll(ctx, P) { // a bedroll on the floor: ticking pad, the quilt over it, a pillow, a blanket rolled at the foot
   paint(ctx, "cdn/texture-striped-cotton-mattress-ticking.png", "oklch(0.95 0.02 85)"); bx(ctx, -0.38, 0, -0.95, 0.38, 0.075, 0.95, 0.03);
