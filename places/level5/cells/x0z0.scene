@@ -4301,8 +4301,8 @@ l5-play-lib-fill:
   light: {color: oklch(0.85 0.09 70), distance: 11, intensity: 7, kind: point}
   tags: [l5-play]
 l5-radio-ball:
-  audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
-  behavior: scripts/l5-door.js
+  audio: null
+  behavior: [scripts/l5-door.js, scripts/world-radio.js]
   castShadow: false
   feetPosition: {x: 15.5, y: 0.95, z: -10.6}
   id: l5-radio-ball
@@ -4310,12 +4310,12 @@ l5-radio-ball:
   physics: static
   primitive: {kind: scripted, params: {kind: radio}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: 0}
-  state: {info: "A polonaise, from the Beverly Room's bandstand. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
+  state: {info: "Radio Backrooms, barely, from the Beverly Room's bandstand. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, reach: 16, tint: "#e8c983", verb: Switch off}
   tags: [usable, l5-radio]
   visibleRange: {max: 40, min: 0}
 l5-radio-boiler:
-  audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
-  behavior: scripts/l5-door.js
+  audio: null
+  behavior: [scripts/l5-door.js, scripts/world-radio.js]
   castShadow: false
   feetPosition: {x: 20, y: 1.2, z: 23.5}
   id: l5-radio-boiler
@@ -4323,12 +4323,12 @@ l5-radio-boiler:
   physics: static
   primitive: {kind: scripted, params: {kind: radio}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: -90}
-  state: {info: "A polonaise, from the Boiler Room's foreman's desk. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
+  state: {info: "Radio Backrooms, barely, from the Boiler Room's foreman's desk. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, reach: 16, tint: "#e8c983", verb: Switch off}
   tags: [usable, l5-radio]
   visibleRange: {max: 40, min: 0}
 l5-radio-desk:
-  audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
-  behavior: scripts/l5-door.js
+  audio: null
+  behavior: [scripts/l5-door.js, scripts/world-radio.js]
   castShadow: false
   feetPosition: {x: -42.6, y: 0.95, z: 3.2}
   id: l5-radio-desk
@@ -4336,12 +4336,12 @@ l5-radio-desk:
   physics: static
   primitive: {kind: scripted, params: {kind: radio}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: -90}
-  state: {info: "A polonaise, from the front desk. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
+  state: {info: "Radio Backrooms, barely, from the front desk. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, reach: 16, tint: "#e8c983", verb: Switch off}
   tags: [usable, l5-radio]
   visibleRange: {max: 40, min: 0}
 l5-radio-hk:
-  audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
-  behavior: scripts/l5-door.js
+  audio: null
+  behavior: [scripts/l5-door.js, scripts/world-radio.js]
   castShadow: false
   feetPosition: {x: 16.8, y: 0.95, z: 22.8}
   id: l5-radio-hk
@@ -4349,12 +4349,12 @@ l5-radio-hk:
   physics: static
   primitive: {kind: scripted, params: {kind: radio}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: 180}
-  state: {info: "A polonaise, from Housekeeping. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
+  state: {info: "Radio Backrooms, barely, from Housekeeping. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, reach: 16, tint: "#e8c983", verb: Switch off}
   tags: [usable, l5-radio]
   visibleRange: {max: 40, min: 0}
 l5-radio-kitchen:
-  audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
-  behavior: scripts/l5-door.js
+  audio: null
+  behavior: [scripts/l5-door.js, scripts/world-radio.js]
   castShadow: false
   feetPosition: {x: -7, y: 1, z: 20.4}
   id: l5-radio-kitchen
@@ -4362,12 +4362,12 @@ l5-radio-kitchen:
   physics: static
   primitive: {kind: scripted, params: {kind: radio}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: 180}
-  state: {info: "A polonaise, from Homely Hotel's dining room. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
+  state: {info: "Radio Backrooms, barely, from Homely Hotel's dining room. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, reach: 16, tint: "#e8c983", verb: Switch off}
   tags: [usable, l5-radio]
   visibleRange: {max: 40, min: 0}
 l5-radio-room:
-  audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
-  behavior: scripts/l5-door.js
+  audio: null
+  behavior: [scripts/l5-door.js, scripts/world-radio.js]
   castShadow: false
   feetPosition: {x: -15, y: 0.7, z: -20.4}
   id: l5-radio-room
@@ -4375,12 +4375,12 @@ l5-radio-room:
   physics: static
   primitive: {kind: scripted, params: {kind: radio}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: 0}
-  state: {info: "A polonaise, from Room 1408. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
+  state: {info: "Radio Backrooms, barely, from Room 1408. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, reach: 16, tint: "#e8c983", verb: Switch off}
   tags: [usable, l5-radio]
   visibleRange: {max: 40, min: 0}
 l5-radio-salon:
-  audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
-  behavior: scripts/l5-door.js
+  audio: null
+  behavior: [scripts/l5-door.js, scripts/world-radio.js]
   castShadow: false
   feetPosition: {x: 0.2, y: 0.8, z: -22.6}
   id: l5-radio-salon
@@ -4388,7 +4388,7 @@ l5-radio-salon:
   physics: static
   primitive: {kind: scripted, params: {kind: radio}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: 0}
-  state: {info: "A polonaise, from the Originals' salon. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
+  state: {info: "Radio Backrooms, barely, from the Originals' salon. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, reach: 16, tint: "#e8c983", verb: Switch off}
   tags: [usable, l5-radio]
   visibleRange: {max: 40, min: 0}
 l5-rats:
