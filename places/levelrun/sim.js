@@ -2,7 +2,7 @@
 // Intake room (door slam + chained door horde breach) -> 200m crimson corridor with Agility obstacles & chasing wave
 // -> collapse at z <= -198 -> Phoebe's spatial ward rescue into the quiet Safe Alcove (x: 80, z: 0).
 import { CORRIDOR, OBSTACLES, stepHordeZ } from "../../scripts/lib/levelrun-mechanics.js";
-import { startIntroCut, startRescueCut } from "../../scripts/lib/levelrun-cut.js";
+import { LRUN_RESCUE_LEN, startIntroCut, startRescueCut, finishRescueToAlcove } from "../../scripts/lib/levelrun-cut.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
@@ -343,7 +343,12 @@ export function tick(ctx) {
   // Trigger intro once for fresh runners arriving in intake
   for (const p of players) {
     const ps = p.state ?? {};
-    if (ps.menuOpen || ps.dead) continue;
+    if (ps.dead) continue;
+    if (ps.lrunCut?.phase === "rescue" && now - (ps.lrunCut.at ?? 0) >= LRUN_RESCUE_LEN * 1000 + 600) {
+      finishRescueToAlcove(ctx, p, null);
+      continue;
+    }
+    if (ps.menuOpen) continue;
     if (ps.lrunRescued) {
       // If somehow reloaded on corridor floor instead of Safe Alcove, move cleanly to alcove
       if ((p.feetPosition?.x ?? 0) < 40) {

@@ -1852,6 +1852,21 @@ export function tick(ctx) {
   restyleSigns(ctx, "level11"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return;
+  if (!ctx.place.objects?.["l11-dina-cache"] || !ctx.place.objects?.["l11-to-levelrun"]) {
+    const MALL_X = -24, MALL_Z = 36, Y0 = 0.36;
+    if (!ctx.place.objects?.["l11-dina-cache"]) ctx.spawn("l11-dina-cache", {
+      tags: ["usable"], feetPosition: { x: MALL_X - 1.45, y: Y0 + 1.05, z: MALL_Z - 7.1 }, rotation: { yaw: 20 },
+      primitive: { kind: "box", width: 0.42, height: 0.18, depth: 0.28 }, material: { color: "#4e5642", roughness: 0.7 },
+      behavior: "scripts/l11-ch2-drop.js", state: { kind: "dina-clinic-cache", name: "Dina's Sealed Clinic Pouch", verb: "Inspect Dead-Drop" },
+    });
+    if (!ctx.place.objects?.["l11-from-levelrun"]) ctx.spawn("l11-from-levelrun", { feetPosition: { x: MALL_X - 3.6, y: Y0 + 0.1, z: MALL_Z - 5.0 }, rotation: { yaw: -90 } });
+    if (!ctx.place.objects?.["l11-to-levelrun"]) ctx.spawn("l11-to-levelrun", {
+      tags: ["usable"], feetPosition: { x: MALL_X - 5.25, y: Y0, z: MALL_Z - 5.0 }, rotation: { yaw: 90 },
+      primitive: { kind: "box", width: 1.15, height: 2.25, depth: 0.14 }, material: { color: "#3d1215", roughness: 0.55, metalness: 0.2 },
+      physics: { body: "static", collider: "box" }, behavior: "scripts/l11-ch2-drop.js",
+      state: { kind: "levelrun-door", name: "Sealed Hospital Door", verb: "Open Threshold" },
+    });
+  }
   const st = ctx.place.state, now = ctx.now();
   if ((st.builtV ?? 0) < V && !st.lq) lay(ctx);
   const lq = st.lq;

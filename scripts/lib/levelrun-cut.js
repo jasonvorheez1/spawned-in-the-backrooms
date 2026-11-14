@@ -18,13 +18,13 @@ pop ward rate=24 on=disc(1.3) life=0.6..1.1 v=up(0.8..1.6)+sdir()*0.3 size=0.1..
 
 const L = (a, b, u) => ({ x: a.x + (b.x - a.x) * u, y: a.y + (b.y - a.y) * u, z: a.z + (b.z - a.z) * u });
 const ss = (a, b, t) => { const u = Math.max(0, Math.min(1, (t - a) / (b - a))); return u * u * (3 - 2 * u); };
-const snd = (ctx, clip, volume = 0.85, pos = null) =>
-  ctx.emit("playSound", { clip, volume, ...(pos ? { position: pos, spatial: true, maxDistance: 45 } : {}) }, { audience: { player: ctx.self.id } });
+const snd = (ctx, pid, clip, volume = 0.85, pos = null) =>
+  ctx.emit("playSound", { clip, volume, ...(pos ? { position: pos, spatial: true, maxDistance: 45 } : {}) }, pid ? { audience: { player: pid } } : undefined);
 
-export function startIntroCut(ctx, player) {
+export function startIntroCut(_ctx, player) {
   const s = player?.state;
   if (!s || s.lrunIntroDone || s.lrunRescued || s.lrunCut) return false;
-  s.lrunCut = { phase: "intro", at: ctx.now() };
+  s.lrunCut = { phase: "intro", at: _ctx.now() };
   if (player.feetPosition) {
     player.feetPosition = { x: 0, y: 0.1, z: 1.5 };
     player.velocity = { x: 0, y: 0, z: 0 };
@@ -38,13 +38,13 @@ export function startRescueCut(ctx, player) {
   s.lrunCut = { phase: "rescue", at: ctx.now() };
   s.hp = Math.max(4, Math.min(8, Math.round(s.hp ?? 6)));
   ctx.emit("screenFlash", { color: "#9c0000", duration: 0.65, intensity: 0.85 }, { audience: { player: player.id } });
-  snd(ctx, CLIP_SLAM, 0.95);
+  snd(ctx, player.id, CLIP_SLAM, 0.95);
   return true;
 }
 
 export function finishRescueToAlcove(ctx, player, ses) {
   const s = player.state;
-  ctx.view.camera = null;
+  if (ctx.view) ctx.view.camera = null;
   dropPhoebe(ctx, "lrun-phoebe-cut");
   s.lrunCut = null;
   if (ses) ses.lruncut = null;
@@ -113,7 +113,7 @@ export function lrunCutTick(ctx, ses, st, place = ctx.self?.place) {
     if (t < 2.2) {
       if (t > 0.55) {
         once("slam", () => {
-          snd(ctx, CLIP_SLAM, 1.0);
+          snd(ctx, me.id, CLIP_SLAM, 1.0);
           ctx.emit("screenFlash", { color: "#450000", duration: 0.4, intensity: 0.55 }, { audience: { player: me.id } });
           if (entryDoor) entryDoor.rotation = { yaw: 0 };
         });
@@ -124,15 +124,15 @@ export function lrunCutTick(ctx, ses, st, place = ctx.self?.place) {
     }
     if (t < 4.8) {
       once("siren", () => {
-        snd(ctx, "/cdn/moodboard-realistic-gritty/sfx-distant-industrial-siren-drone-loop.mp3", 0.65);
+        snd(ctx, me.id, "/cdn/moodboard-realistic-gritty/sfx-distant-industrial-siren-drone-loop.mp3", 0.65);
       });
       const u = ss(2.2, 4.8, t);
       ctx.view.camera = { eye: L({ x: -0.9, y: 1.35, z: 0.5 }, { x: 0.0, y: 1.85, z: -1.2 }, u), aim: { x: 0, y: 2.75, z: -5.2 }, fov: 46 };
       return true;
     }
     if (t < 7.2) {
-      once("rattle", () => snd(ctx, CLIP_CHAIN, 1.0, { x: 0, y: 1.3, z: 4.5 }));
-      if (t > 5.7) once("roar", () => snd(ctx, CLIP_ROAR, 1.0, { x: 0, y: 1.3, z: 4.8 }));
+      once("rattle", () => snd(ctx, me.id, CLIP_CHAIN, 1.0, { x: 0, y: 1.3, z: 4.5 }));
+      if (t > 5.7) once("roar", () => snd(ctx, me.id, CLIP_ROAR, 1.0, { x: 0, y: 1.3, z: 4.8 }));
       if (chainDoor) {
         const jiggle = Math.sin(t * 42) * 3.2;
         chainDoor.rotation = { yaw: jiggle };
@@ -144,7 +144,7 @@ export function lrunCutTick(ctx, ses, st, place = ctx.self?.place) {
     once("gate", () => {
       if (chainDoor) chainDoor.rotation = { yaw: 0 };
       if (ctx.place.state?.chase) ctx.place.state.chase.gateOpen = true;
-      snd(ctx, CLIP_CHAIN, 0.85, { x: 0, y: 1.5, z: -5.2 });
+      snd(ctx, me.id, CLIP_CHAIN, 0.85, { x: 0, y: 1.5, z: -5.2 });
     });
     const u = ss(7.2, LRUN_INTRO_LEN, t);
     ctx.view.camera = { eye: L({ x: 0.1, y: 1.55, z: 1.8 }, { x: 0, y: 1.65, z: 2.5 }, u), aim: { x: 0, y: 1.5, z: -18 }, fov: 56 };
@@ -160,7 +160,7 @@ export function lrunCutTick(ctx, ses, st, place = ctx.self?.place) {
     }
 
     if (t < 2.6) {
-      once("lunge", () => snd(ctx, CLIP_ROAR, 1.0, { x: 0, y: 1.2, z: cz + 3.0 }));
+      once("lunge", () => snd(ctx, me.id, CLIP_ROAR, 1.0, { x: 0, y: 1.2, z: cz + 3.0 }));
       const u = ss(0, 2.6, t);
       ctx.view.camera = {
         eye: L({ x: 0.15, y: 0.5, z: cz - 1.4 }, { x: -0.1, y: 0.42, z: cz - 1.1 }, u),
@@ -172,8 +172,8 @@ export function lrunCutTick(ctx, ses, st, place = ctx.self?.place) {
 
     if (t < 5.4) {
       once("ward", () => {
-        snd(ctx, CLIP_WARD, 0.95);
-        snd(ctx, CLIP_PHO_LINE, 0.9);
+        snd(ctx, me.id, CLIP_WARD, 0.95);
+        snd(ctx, me.id, CLIP_PHO_LINE, 0.9);
         ctx.emit("screenFlash", { color: "#b694ff", duration: 0.55, intensity: 0.65 }, { audience: { player: me.id } });
         ctx.spawn("lrun-ward-burst", {
           feetPosition: { x: 0.4, y: 0.15, z: cz - 1.6 },

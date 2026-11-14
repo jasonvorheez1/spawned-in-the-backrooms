@@ -259,22 +259,23 @@ describe("Level ! intro, near-death rescue non-repeatability, and Phoebe conclus
     ctx.place.players = [p];
     ctx.place.state = {};
 
-    sim.tick(ctx);
+    const simCtx = { ...ctx, self: undefined };
+    sim.tick(simCtx);
     expect(objects["lrun-start"]).toBeDefined();
     expect(objects["lrun-alcove"]).toBeDefined();
     expect(objects["lrun-pursuer-1"]).toBeDefined();
     expect(ctx.place.state.chase.active).toBe(true);
 
-    // Reach collapse zone
+    // Reach collapse zone (with ctx.self undefined as on the real place tick)
     p.feetPosition = { x: 0, y: 0.1, z: CORRIDOR.collapseZ };
     ctx._t += 200;
-    sim.tick(ctx);
+    sim.tick(simCtx);
     expect(p.state.lrunCut?.phase).toBe("rescue");
 
     // Finish rescue -> Phoebe spawns in alcove
     finishRescueToAlcove(ctx, p, ctx.session);
     ctx._t += 200;
-    sim.tick(ctx);
+    sim.tick(simCtx);
     expect(objects["phoebe-lrun"]).toBeDefined();
   });
 });
