@@ -655,6 +655,34 @@ function lay(ctx) {
     for (const [i, z] of [[1, -8.5], [2, -7.4], [3, -5.0]]) fit(`l11-derma-chair-${i}`, CHAIR, FX - 1.2, MALL_Z + z, -90, [0.75, 0.9, 0.75]);
     fit("l11-derma-plant", PLANT, FX - 1.0, MALL_Z - 4.0, 0, [0.55, 1.2, 0.55]);
     fit("l11-derma-cab", CAB, MALL_X - 4.6, MALL_Z - 6.5, 90, [1.6, 0.85, 0.45]);
+    // Dina's Chapter 2 clinic dead-drop + anomalous Level ! threshold on the clinic back wall
+    sp("l11-dina-cache", {
+      tags: ["usable"],
+      feetPosition: { x: MALL_X - 1.45, y: Y0 + 1.05, z: MALL_Z - 7.1 },
+      rotation: { yaw: 20 },
+      primitive: { kind: "box", width: 0.42, height: 0.18, depth: 0.28 },
+      material: { color: "#4e5642", roughness: 0.7 },
+      behavior: "scripts/l11-ch2-drop.js",
+      state: { kind: "dina-clinic-cache", name: "Dina's Sealed Clinic Pouch", verb: "Inspect Dead-Drop" },
+      children: [
+        { feetPosition: { x: 0, y: 0.18, z: 0 }, primitive: { kind: "box", width: 0.28, height: 0.02, depth: 0.18 }, material: { color: "#d8cfa8", roughness: 0.9 } },
+      ],
+    });
+    sp("l11-from-levelrun", { feetPosition: { x: MALL_X - 3.6, y: Y0 + 0.1, z: MALL_Z - 5.0 }, rotation: { yaw: -90 } });
+    sp("l11-to-levelrun", {
+      tags: ["usable"],
+      feetPosition: { x: MALL_X - 5.25, y: Y0, z: MALL_Z - 5.0 },
+      rotation: { yaw: 90 },
+      primitive: { kind: "box", width: 1.15, height: 2.25, depth: 0.14 },
+      material: { color: "#3d1215", roughness: 0.55, metalness: 0.2 },
+      physics: { body: "static", collider: "box" },
+      behavior: "scripts/l11-ch2-drop.js",
+      state: { kind: "levelrun-door", name: "Sealed Hospital Door", verb: "Open Threshold" },
+      children: [
+        { feetPosition: { x: 0.35, y: 1.02, z: 0.09 }, primitive: { kind: "box", width: 0.58, height: 0.06, depth: 0.05 }, material: { color: "#a5acb3", metalness: 0.75, roughness: 0.3 } },
+        { feetPosition: { x: 0, y: 2.38, z: 0.05 }, primitive: { kind: "box", width: 0.32, height: 0.14, depth: 0.08 }, material: { color: "#ff2525", emissive: "#ff1515", emissiveIntensity: 2.4 }, light: { kind: "point", color: "#ff2020", intensity: 1.1, distance: 4.2, shadow: { enabled: false } } },
+      ],
+    });
     sp("l11-derma-poster", { feetPosition: { x: MALL_X - 5.1, y: 1.9, z: MALL_Z - 8.2 }, rotation: { yaw: 90 }, ui: `<div face="front" width="1.1m" style="width:1100px;height:1400px;background:#f7fbfa;border:18px solid #1b8a5a;font-family:Arial,sans-serif;color:#13324a;padding:60px;box-sizing:border-box"><div style="font-size:110px;font-weight:900;color:#1b8a5a">dermika</div><div style="font-size:60px;margin-top:40px">cuida tu piel</div><div style="font-size:46px;margin-top:80px;line-height:1.5">consultas · láser · cosmética</div></div>`, primitive: { kind: "box", width: 1.1, height: 1.4, depth: 0.02 }, material: { color: "#ffffff" } });
     // lab: a sample counter with a divider, two chairs, a plant
     sp("l11-lab-counter", { feetPosition: { x: MALL_X - 1.2, y: Y0, z: MALL_Z - 0.6 }, rotation: { yaw: -90 }, model: { id: MODELS.lab_counter }, layout: { box: { min: { x: -1.7, y: 0, z: -0.4 }, max: { x: 1.7, y: 1.05, z: 0.4 } } }, physics: { body: "static", collider: "box" } }); // tripo lab base cabinet

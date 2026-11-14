@@ -1,4 +1,6 @@
 import { migrate, wakePlace, wakeLog, canSaveHere } from "./lib/save.js"
+import { CORRIDOR, agilityProfile, hitObstacle } from './lib/levelrun-mechanics.js'
+import { startRescueCut } from './lib/levelrun-cut.js'
 import { layout as layout9, zoneAt as zoneAt9 } from './lib/level9.js'
 import { firstPersonGun, firstPersonTuning } from './lib/fp-gun.js'
 import { setQuest } from './lib/quests.js'
@@ -110,6 +112,7 @@ const DOWN_MS = 3200 // how long you watch yourself lie there (Savi's pick); cam
 // checkpoints: each place's safe spawn plus every doorway's arrival marker; you wake at the nearest one
 const CHECKS = { main: ['main-from-l1'], level1: ['l1-from-main', 'l1-from-l2'], level2: ['l2-from-l1', 'l2-from-l3', 'l2-from-l21'], level21: ['l21-from-l2', 'l21-from-l8'], level3: ['l3-from-l2', 'l3-gamma-door', 'l3-lift-arrive', 'l3-from-l5'], level4: ['l4-lift-arrive', 'l4-from-l5'], level5: ['l5-from-l3', 'l5-from-l4', 'l5-from-l6', 'l5-lobby'], level6: ['l6-from-l5', 'l6-from-l7', 'l6-from-l61'], level61: ['l61-from-l6', 'l61-from-l4', 'l61-arrive'], level11: ['l11-from-l61', 'l11-spawn'], level7: ['l7-from-l6', 'l7-seawatch-spawn', 'l7-fort-spawn'], level8: ['l8-from-l7', 'l8-from-camp', 'l8-from-l21'], level9: ['l9-from-l8', 'l9-from-hub'], gamma: [] }
 function nearestCheckpoint(ctx, at) {
+  if (ctx.self.place === 'levelrun') return ctx.self.state?.lrunRescued ? { pos: { ...CORRIDOR.safePos }, rot: CORRIDOR.safeYaw } : { pos: { x: 0, y: 0.1, z: 1.5 }, rot: 0 }
   const sp = ctx.place.defaultSpawnPoint ?? {}, yaw0 = ctx.place.defaultSpawnRotation?.yaw
   let best = { pos: { x: sp.x ?? 0, y: 0.1, z: sp.z ?? 0 }, rot: yaw0 }, bd = Math.hypot(best.pos.x - at.x, best.pos.z - at.z)
   for (const id of CHECKS[ctx.self.place] ?? []) {
@@ -464,11 +467,24 @@ export function onInput(ctx, input) {
   // on a phone, pushing the stick all the way runs: no sprint button to hold beside it
   if (input.pressed.walk) w.walkMode = !w.walkMode // caps lock: a slow, steady walk until pressed again
   w.sprint = !!input.held.sprint || (input.axes.touchActive === 1 && Math.hypot(input.axes.moveX ?? 0, input.axes.moveZ ?? 0) > 0.95)
-  if (input.pressed.crouch) ctx.self.state.crouch = !ctx.self.state.crouch // ctrl toggles a crouch: slow, quiet, low
+  if (input.pressed.crouch) {
+    if (ctx.self.place === 'levelrun' && !ctx.self.state.lrunRescued && !ctx.self.state.lrunCut) {
+      const nowD = ctx.now(), agiP = agilityProfile(ctx.self.state)
+      if (nowD >= (w.lrunDodgeCd ?? 0) && (w.stamina ?? 0) >= agiP.dodgeStaminaCost) {
+        w.stamina = Math.max(0, (w.stamina ?? 0) - agiP.dodgeStaminaCost)
+        w.lrunDodgeUntil = nowD + 220
+        w.lrunDodgeCd = nowD + agiP.dodgeCooldownMs
+        w.lrunDodgeDir = mag > 0.1 ? { ...w.dir } : { ...w.fwd }
+        ctx.self.state.ch2AgilityUsed = (ctx.self.state.ch2AgilityUsed ?? 0) + 1
+        sound(ctx, 'gun-raise-cloth-rustle', 0.45, true)
+      }
+    } else ctx.self.state.crouch = !ctx.self.state.crouch // ctrl toggles a crouch: slow, quiet, low
+  }
   if (ctx.self.state.crouch && (input.pressed.jump || (w.sprint && Math.hypot(mx, mz) > 0.1))) ctx.self.state.crouch = false // jumping or running stands you up
   if (input.pressed.jump && ctx.self.grounded && !ctx.self.parent) {
     const v = ctx.self.velocity
-    ctx.self.velocity = { x: v.x, y: PLAYER.jumpSpeed, z: v.z }
+    const jMul = ctx.self.place === 'levelrun' && !ctx.self.state.lrunRescued ? agilityProfile(ctx.self.state).jumpMul : 1
+    ctx.self.velocity = { x: v.x, y: PLAYER.jumpSpeed * jMul, z: v.z }
     sound(ctx, (STEPS[floorOf(ctx)] ?? Object.values(STEPS)[0]).walk, 0.4, true)
   }
   { // update aim before firing, including when both buttons change on the same tick
@@ -1307,20 +1323,42 @@ export function update(ctx, dt) {
   const sprinting = w.sprint && moving && w.stamina > 1 && !w.winded && !s.ads && !crouched && !over
   const dv = w.dv ??= derived(s) // the sheet's numbers, re-derived 4x a second in the stats beat, not three times a tick
   const nowS = ctx.now(), green = nowS < (s.greenUntil ?? 0), tired = nowS < (s.tiredUntil ?? 0) // green almond water: sprint longer; red: heavy limbs
+  const lrunLive = pl === 'levelrun' && !s.lrunRescued && !s.lrunCut
+  const lrAgi = lrunLive ? agilityProfile(s) : null
+  if (lrAgi && fp.z <= CORRIDOR.corridorStartZ && fp.z > CORRIDOR.collapseZ) {
+    const obsHit = hitObstacle(fp, Math.max(0, (fp.y ?? 0) - 0.1))
+    if (obsHit && w.lrunObsId !== obsHit.obs.id) {
+      w.lrunObsId = obsHit.obs.id
+      if (obsHit.vaulted) {
+        w.lrunVaultUntil = nowS + 320
+        s.ch2AgilityUsed = (s.ch2AgilityUsed ?? 0) + 1
+        sound(ctx, 'gun-raise-cloth-rustle', 0.4, true)
+      } else if (nowS >= (w.lrunDodgeUntil ?? 0) && nowS > (w.lrunStumbleUntil ?? 0)) {
+        w.lrunStumbleUntil = nowS + lrAgi.stumbleMs
+        w.lrunStumbleMul = lrAgi.stumbleSpeedKeep
+        ctx.emit('cameraPunch', { direction: { x: 0, y: -0.4, z: 0.6 }, intensity: 0.25 }, { audience: { player: ctx.self.id } })
+        sound(ctx, 'footstep-damp-carpet-run', 0.55, true)
+      }
+    }
+  }
   const l2Hot = ctx.self.place === 'level2' && (fz === 'l2_pipes' || fz === 'l2_hall')
   if (l2Hot && nowS - (s.heatWarnAt ?? 0) > 45000) {
     s.heatWarnAt = nowS
     s.notice = { text: 'Suffocating heat (110°F) comes off the pipes. You tire faster here.', at: nowS }
   }
-  w.stamina = Math.max(0, Math.min(dv.staMax, w.stamina + (sprinting ? -L.staminaDrain * (green ? AW.green.staminaMul : 1) * (l2Hot ? 1.25 : 1) : L.staminaRegen * dv.staRegen * (tired ? 0.3 : 1) * (w.winded ? (L.windedRegen ?? 0.6) : 1) * (l2Hot ? 0.68 : 1) * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
+  w.stamina = Math.max(0, Math.min(dv.staMax, w.stamina + (sprinting ? -L.staminaDrain * (green ? AW.green.staminaMul : 1) * (l2Hot ? 1.25 : 1) * (lrAgi ? lrAgi.sprintDrainMul : 1) : L.staminaRegen * dv.staRegen * (tired ? 0.3 : 1) * (w.winded ? (L.windedRegen ?? 0.6) : 1) * (l2Hot ? 0.68 : 1) * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
   const inArch = fz === 'arches' && (ctx.self.place === 'main' || ctx.self.place === 'tutorial0') // the flooded arches are Level 0's alone: other places without their own zones fall through to Level 0's map
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
-  const speed = (w.walkMode && !sprinting ? 0.5 : 1) * (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * (s.carryMul ?? 1) * (1 - 0.55 * (s.leth13 ?? 0)) * (crouched ? L.crouchSpeed ?? 0.45 : 1) * (s.crawl ? 0.72 : 1) * dv.speed * (w.bur ??= burden(s))
+  const lrStumble = lrAgi && nowS < (w.lrunStumbleUntil ?? 0) ? (w.lrunStumbleMul ?? 0.5) : 1
+  const lrDodge = lrAgi && nowS < (w.lrunDodgeUntil ?? 0)
+  const lrVault = lrAgi && nowS < (w.lrunVaultUntil ?? 0) ? lrAgi.vaultBoost : 0
+  const speed = ((w.walkMode && !sprinting ? 0.5 : 1) * (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * (s.carryMul ?? 1) * (1 - 0.55 * (s.leth13 ?? 0)) * (crouched ? L.crouchSpeed ?? 0.45 : 1) * (s.crawl ? 0.72 : 1) * dv.speed * (w.bur ??= burden(s)) * (lrAgi ? lrAgi.speedMul : 1) * lrStumble) + lrVault
   const drunk = Math.max(0, (s.drunk ?? 0) - (nowS - (s.drunkAt ?? nowS)) * 0.4) // sobers 0.4 a second
   if (s.drunk && drunk <= 0) s.drunk = 0
   const sway = drunk > 15 && moving ? Math.sin(nowS * 1.3) * Math.min(0.5, drunk / 160) : 0 // past a couple of drinks the walk drifts
   if (sway) dir = { x: dir.x * Math.cos(sway) - dir.z * Math.sin(sway), y: dir.y, z: dir.x * Math.sin(sway) + dir.z * Math.cos(sway) }
-  const intent = { x: dir.x * speed * (moving || !pressing ? 1 : 0.35), z: dir.z * speed * (moving || !pressing ? 1 : 0.35) } // stuck on a wall: a gentle lean, still enough to slide off a corner
+  const dDir = lrDodge && w.lrunDodgeDir ? w.lrunDodgeDir : dir
+  const intent = lrDodge ? { x: dDir.x * lrAgi.dodgeSpeed, z: dDir.z * lrAgi.dodgeSpeed } : { x: dir.x * speed * (moving || !pressing ? 1 : 0.35), z: dir.z * speed * (moving || !pressing ? 1 : 0.35) } // stuck on a wall: a gentle lean, still enough to slide off a corner
   viewmodel(ctx, moving, sprinting)
   const v = ctx.self.velocity
   const along = intent.x * v.x + intent.z * v.z > 0 || (v.x === 0 && v.z === 0 && moving)
@@ -1565,6 +1603,11 @@ function tickStats(ctx, t, moving) {
   }
   // taken
   if (s.hp <= 0) {
+    if (ctx.self.place === 'levelrun' && (p.z ?? 0) <= CORRIDOR.collapseZ + 5 && !s.lrunRescued) {
+      s.hp = 6
+      startRescueCut(ctx, ctx.self)
+      return
+    }
     s.deaths += 1; s.downAt = now
     for (const n of ctx.query({ tags: ['npc'] })) { // dying wipes the slate: every npc here drops its grudge and warning on you (creator's rule)
       const id = ctx.self.id

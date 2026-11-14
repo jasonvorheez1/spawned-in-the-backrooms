@@ -21,7 +21,7 @@ export const WRIST = { sheet: "sheetOpen", inventory: "invOpen", craft: "craftOp
 
 export function screen(s, place) {
   if (!s) return "play"
-  if (s.cut || s.dcut || s.arrive || s.arrivePending || (s.t0cut && !s.sheetOpen)) return "cutscene"
+  if (s.cut || s.dcut || s.lrunCut || s.arrive || s.arrivePending || (s.t0cut && !s.sheetOpen)) return "cutscene"
   if (s.menuOpen) return "menu"
   if (s.wardrobeOpen || place === "intake") return "wardrobe"
   if (s.mj?.seats) return "mahjong"

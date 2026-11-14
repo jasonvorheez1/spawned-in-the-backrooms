@@ -1,6 +1,8 @@
 import { PACE } from "./lib/tut0.js"
+import { lrunUi } from "./lib/levelrun-cut.js"
 // letterbox and fades over the intro (scripts/lib/intro-cut.js); timed off state.cut so a re-render picks up where it was
 export function cutUi(ctx, player) {
+  if (player.state.lrunCut) return lrunUi(ctx, player)
   if (player.state.dcut) return dUi(ctx, player)
   if (player.state.l26cut) return l26Ui(ctx, player)
   if (player.state.hubcut) return hubUi(ctx, player)

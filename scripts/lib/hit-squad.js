@@ -6,7 +6,7 @@ import { critterSpec } from "./critter-model.js";
 import { npcLook } from "./clothes.js";
 import { weaponBody } from "./weapon-look.js";
 
-const SAFE = new Set(["intake", "tutorial0", "bonus", "home11", "level5", "spamton", "testlab"]);
+const SAFE = new Set(["intake", "tutorial0", "bonus", "home11", "level5", "spamton", "testlab", "levelrun"]);
 const CHECK_MS = 60000, CHANCE = 0.3, COOLDOWN_MS = 20 * 60000, LIFE_S = 600, TRAIL_MS = 4000;
 const SQUADS = {
   meg: { look: "agent", role: "guard", guns: ["carbine", "pistol", "shotgun"], name: "M.E.G. retrieval team", top: "#b6e04a" },
@@ -18,7 +18,7 @@ const SQUADS = {
 const hates = (st, g) => infamyOf(st, g) >= 35 && fameOf(st, g) < 35;
 
 export function squadTick(ctx, ses, st, place) {
-  if (SAFE.has(place) || st.menuOpen || st.cut || st.hubcut) return;
+  if (SAFE.has(place) || st.menuOpen || st.cut || st.hubcut || st.lrunCut) return;
   const now = ctx.now(), p = ctx.self.feetPosition;
   if (ses.sqPlace !== place) { ses.sqPlace = place; ses.trail = []; ses.sqAt = now; }
   if (now - (ses.trailAt ?? 0) > TRAIL_MS) { ses.trailAt = now; (ses.trail ??= []).push({ x: p.x, y: p.y, z: p.z, at: now }); if (ses.trail.length > 12) ses.trail.shift(); }

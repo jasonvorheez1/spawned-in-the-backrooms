@@ -1,0 +1,19 @@
+mode: 3d
+terrain:
+  kind: "off"
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: 0, y: 0.1, z: 1.5 }
+defaultSpawnRotation: { yaw: 0 }
+worldBounds: { bottom: -25 }
+atmosphere:
+  look: { script: scripts/look-photo.js }
+  clouds: { enabled: false }
+  fog: { kind: linear, near: 7, far: 52, color: "#1a0204" }
+  moon: { enabled: false, intensity: 0 }
+  sky: { kind: color, color: "#080002" }
+  stars: { enabled: false }
+  timeOfDay: 0
+  wind: { direction: 0, speed: 0 }
+  ambient: { light: { color: "#5c1118", intensity: 0.32 } }
+  hemisphere: { skyColor: "#400a0e", groundColor: "#0e0204", intensity: 0.16 }
+acoustics: { reverb: 0.35 }

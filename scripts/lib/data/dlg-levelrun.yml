@@ -1,0 +1,26 @@
+# Phoebe's Safe Alcove lines at the end of Level ! (Chapter 2 Finale).
+# Main Chapter 2 stance choices & completion live dynamically in scripts/lib/ch2-quest.js.
+
+"phoebe-lrun":
+  hi:
+    - "Breathe first. The ward holds for another minute, not forever."
+    - "You made it down to the last six meters before your legs gave. Better than most."
+  back:
+    - "Still catching your breath?"
+    - "The door on the east wall opens back behind the clinic. Do not linger once we finish."
+  warm:
+    - "Still on your feet. Good."
+  cold:
+    - "Save the glare for whatever chased you."
+  bye:
+    - "Walk carefully when you step back onto Level 11."
+    - "Keep surviving. I would hate to lose another interesting case early."
+  walk:
+    - "Fine. Do not waste what you learned in there."
+  ask:
+    - q: "Are you following me from level to level?"
+      a:
+        - "Following implies I only walk one corridor at a time. I keep track of people who do not shatter on first contact with a shift."
+    - q: "Will we meet again?"
+      a:
+        - "If you keep adapting as fast as you did between Level 0 and that red hall, yes. If you stop paying attention, there will not be anything left to check."

@@ -10,6 +10,8 @@ import { t0Tick } from "./lib/tut0-cut.js"
 import { l26Tick } from "./lib/l26-cut.js"
 import { hubCutTick } from "./lib/hub-cut.js"
 import { dinaTick } from "./lib/dina-quest.js"
+import { lrunCutTick } from "./lib/levelrun-cut.js"
+import { ch2Tick } from "./lib/ch2-quest.js"
 import { errandTick } from "./lib/errands.js"
 import { squadTick, squadFollow } from "./lib/hit-squad.js"
 import { animate } from "builtin/tween";
@@ -63,7 +65,9 @@ export function update(ctx) {
   // The Hub: the first time you stand in it, Phoebe at the dead end (scripts/lib/hub-cut.js)
   if (place === "thehub" && !st.menuOpen && (st.hubcut || !st.hubPhoebe)) { if (hubCutTick(ctx, ses, st)) return ctx.sleep(0); if (!st.hubPhoebe) return ctx.sleep(0.5) }
   else ses.hubIn = null
+  if (lrunCutTick(ctx, ses, st, place)) return ctx.sleep(0)
   if (place !== "tutorial0" && dinaTick(ctx, ses, st, place)) return ctx.sleep(0)
+  if (place !== "tutorial0" && ch2Tick(ctx, ses, st, place)) return ctx.sleep(0)
   squadTick(ctx, ses, st, place); if (ctx.now() - (ses.sqFollowAt ?? 0) > 3000) { ses.sqFollowAt = ctx.now(); squadFollow(ctx) } // factions that hate you send people (scripts/lib/hit-squad.js)
   errandTick(ctx, ses, st, place) // odd jobs people hand out (scripts/lib/errands.js)
   if (st.tut) tutTick(ctx, st)
@@ -90,7 +94,8 @@ export function onInput(ctx, input) {
   if (st.tut) tutInput(ctx, st, input)
   if (st.dcut) { const ss = ctx.session; if (input.held?.jump) ss.dskip ??= ctx.now(); else ss.dskip = null } // hold jump 1.2 s skips the diary cutscene
   if (st.l26cut) { const ss = ctx.session; if (input.held?.jump) ss.l26skip ??= ctx.now(); else ss.l26skip = null }
-  if (st.hubcut) { const ss = ctx.session; if (input.held?.jump) ss.hcskip ??= ctx.now(); else ss.hcskip = null } // hold jump 1.2 s skips the Hub's Phoebe scene // hold jump 1.2 s skips Level 26's cutscene
+  if (st.hubcut) { const ss = ctx.session; if (input.held?.jump) ss.hcskip ??= ctx.now(); else ss.hcskip = null }
+  if (st.lrunCut?.phase === "intro") { const ss = ctx.session; if (input.held?.jump) ss.lrunskip ??= ctx.now(); else ss.lrunskip = null } // hold jump 1.2 s skips the Hub's Phoebe scene // hold jump 1.2 s skips Level 26's cutscene
   if (input.pressed?.mainmenu && ctx.self.place !== "intake" && (st.menuOpen || !['talk', 'mahjong', 'cutscene'].includes(screen(st, ctx.self.place)))) { // pause never stacks on a talk, the mahjong table or a cutscene it couldn't draw over
     st.menuOpen = !st.menuOpen
     if (st.menuOpen) { st.menuKind = "pause"; st.wardrobeOpen = false; st.wrMenu = false }
