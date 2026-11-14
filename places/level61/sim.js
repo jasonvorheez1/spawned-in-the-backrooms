@@ -18,7 +18,7 @@ import { layService } from "../../scripts/lib/level61-service.js";
 export const cadence = "1s";
 const TOILET_GLB = "/cdn/value.584d89d495be90361b2f1c260e71cd5079b14f1e5d1b0a3346dd5bc4c808c0dc.glb";
 const VANITY_GLB = "/cdn/value.fc171ef1463c6b6014a17a934459781e7d541b202325257a5ddb0e02de9788c4.glb";
-const V = 74; // 74: supply-room overflow jam (stacked, tipped, wall-facing machines). // 73: bar tops, menus, tills, trays, candles and table drinks follow the lowered Liquorette and Clippers furniture down. // 71: bar counters, stools, chairs and tables in Liquorette and Clippers lowered to fit the 1.2 m critters (Shelly). 70: 70: liquorette tables carry pints, tumblers, ashtrays. 69: liquorette damask walls, tin ceiling, tin sign turned. // 68: toilet repainted white porcelain. 67: restroom toilet + vanity turned to their true front axis and sized to real fixtures. 66: restroom toilets + vanities are Tripo models (art/l61-rest). 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
+const V = 75; // 75: Gib's Grub, the greasy spoon in the south wall. // 74: supply-room overflow jam (stacked, tipped, wall-facing machines). // 73: bar tops, menus, tills, trays, candles and table drinks follow the lowered Liquorette and Clippers furniture down. // 71: bar counters, stools, chairs and tables in Liquorette and Clippers lowered to fit the 1.2 m critters (Shelly). 70: 70: liquorette tables carry pints, tumblers, ashtrays. 69: liquorette damask walls, tin ceiling, tin sign turned. // 68: toilet repainted white porcelain. 67: restroom toilet + vanity turned to their true front axis and sized to real fixtures. 66: restroom toilets + vanities are Tripo models (art/l61-rest). 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -178,7 +178,7 @@ function lay(ctx) {
   }
 
   wallZ("l61-wn", -HD, -HW, HW, [[-21, 4, 3.2], [-7, 4, 3.2], [7, 4, 3.2], [21, 4, 3.2]], HH, PLASTER);
-  wallZ("l61-ws", HD, -HW, HW, [[-14, 3, 3], [14, 2.2, 2.6]], HH, PLASTER);
+  wallZ("l61-ws", HD, -HW, HW, [[-14, 3, 3], [0, 4, 2.8], [14, 2.2, 2.6]], HH, PLASTER);
   wallX("l61-ww", -HW, -HD, HD, [[0, 1.6, 2.3]], HH, PLASTER);
   wallX("l61-we", HW, -HD, HD, [[-9, 2.2, 2.7]], HH, PLASTER);
 
@@ -190,7 +190,7 @@ function lay(ctx) {
     function seg(u, v) { const m = (u + v) / 2, len = v - u; box(`${id}-${k++}`, along === "x" ? m : fixed, 0, along === "x" ? fixed : m, along === "x" ? len : 0.05, 1.0, along === "x" ? 0.05 : len, WAINSCOT, { physics: undefined }); }
   };
   wain("l61-wain-n", "x", -HD + 0.19, -HW + 0.2, HW - 0.2, [[-21, 4], [-7, 4], [7, 4], [21, 4]]);
-  wain("l61-wain-s", "x", HD - 0.19, -HW + 0.2, HW - 0.2, [[-14, 3], [14, 2.2]]);
+  wain("l61-wain-s", "x", HD - 0.19, -HW + 0.2, HW - 0.2, [[-14, 3], [0, 4], [14, 2.2]]);
   wain("l61-wain-w", "z", -HW + 0.19, -HD + 0.2, HD - 0.2, [[0, 1.6], [-21, 0.01]]);
   wain("l61-wain-e", "z", HW - 0.19, -HD + 0.2, HD - 0.2, [[-9, 2.2]]);
   let bs = 0;
@@ -198,7 +198,7 @@ function lay(ctx) {
   for (let z = -16; z <= 16; z += 8) for (const [x0, x1] of (Math.abs(z) < 5.8 ? [[-HW, -6.2], [6.2, HW]] : [[-HW, HW]])) box(`l61-brass-${bs++}`, (x0 + x1) / 2, -0.003, z, x1 - x0, 0.006, 0.035, BRASS, { physics: undefined, receiveShadow: true });
 
   // The trim band follows the wainscot and breaks at each doorway., never across one
-  const DOORS = { "z-1": [[-21, 4], [-7, 4], [7, 4], [21, 4]], "z1": [[-14, 3], [14, 2.2]], "x-1": [[0, 1.6]], "x1": [[-9, 2.2]] };
+  const DOORS = { "z-1": [[-21, 4], [-7, 4], [7, 4], [21, 4]], "z1": [[-14, 3], [0, 4], [14, 2.2]], "x-1": [[0, 1.6]], "x1": [[-9, 2.2]] };
   for (const [n, y, c] of [[0, 1.0, "#6f8077"]]) {
     for (const [ax, sg] of [["z", -1], ["z", 1], ["x", -1], ["x", 1]]) {
       const half = ax === "z" ? HW : HD, fixed = sg * ((ax === "z" ? HD : HW) - 0.17);
@@ -610,6 +610,32 @@ function lay(ctx) {
       ...npcState(ctx, "survivor", 120),
     },
   });
+
+  // 5. Gib's Grub: a 1970s greasy spoon through the south wall, facing the four stores across the court.
+  // Wood-panel walls, brown linoleum, a long diner counter with the flat-top behind it, four stools, two tables by the door.
+  // The room is 12 x 9.85 (x -5.7..6.3, z 22.15..32): the vending room's wall stands at x -6, the restrooms at x 8.
+  {
+    const gx = 0.3, z0 = HD + 0.15, z1 = HD + 10, zm = (z0 + z1) / 2;
+    const PANEL = { ...WOOD, color: "oklch(0.45 0.07 50)", roughness: 0.7 }, LINO = { ...TERRAZZO, color: "oklch(0.52 0.07 55)", roughness: 0.5 };
+    box("l61-gib-floor", gx, -0.29, zm, 12, 0.3, 10, LINO);
+    box("l61-gib-roof", gx, 3.4, zm, 12, 0.3, 10, { ...CEIL, color: "oklch(0.86 0.03 85)" });
+    box("l61-gib-back", gx, 0, z1, 12, 3.4, 0.3, PANEL);
+    box("l61-gib-wl", -5.7, 0, zm, 0.3, 3.4, 10, PANEL);
+    box("l61-gib-wr", 6.3, 0, zm, 0.3, 3.4, 10, PANEL);
+    box("l61-gib-dado", gx, 1.0, z1 - 0.17, 11.6, 0.08, 0.04, { color: "oklch(0.62 0.13 60)", roughness: 0.4 }, { physics: undefined });
+    for (const dx of [-2.14, 2.14]) box(`l61-gib-jamb-${dx}`, dx, 0, HD - 0.08, 0.23, 2.94, 0.31, { color: "oklch(0.36 0.08 45)", roughness: 0.55 }, { physics: undefined });
+    sign("l61-gib-sign", 0, 2.88, HD - 0.2, 0, 3.6, 0.52, `<div style="font-size:300px;color:#ffb347;font-family:Georgia,serif;font-style:italic;text-shadow:0 0 30px #ff7a1a">Gib's Grub</div>`, "oklch(0.24 0.05 45)");
+    sign("l61-gib-board", gx - 2.4, 2.2, z1 - 0.2, 0, 3.0, 1.0, `<div style="font-size:110px;color:#ffd27a;font-family:Georgia,serif">HOT PLATES</div><div style="font-size:64px;color:#f4ead0">CHILI DOGS · MEATLOAF · COFFEE</div><div style="font-size:50px;color:#9fd08a">NO CHARGE · GIB WOULD WANT IT THAT WAY</div>`, "oklch(0.18 0.03 45)");
+    sign("l61-gib-photo", 5.95, 1.9, zm + 1, -90, 0.8, 1.0, `<div style="font-size:64px;color:#e8d8b0;font-family:Georgia,serif;font-style:italic">Gib</div><div style="font-size:30px;color:#b8a888;font-family:Georgia,serif;margin-top:12px">first cook<br>never left</div>`, "oklch(0.2 0.03 50)");
+    counter("l61-gib-counter", gx, HD + 6.6, 0, M_DINER, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "chilidog", name: "Gib's Grub counter", verb: "Order what the menu shows", info: "Gib's Grub, a greasy spoon." } });
+    counter("l61-gib-grill", gx, HD + 9.3, 0, M_GRILL, { audio: { clip: "cdn/sfx-burgers-sizzling-on-flat-top-griddle-loop.mp3", loop: true, gain: 0.16, spatial: true, maxDistance: 10 } });
+    for (let k = 0; k < 4; k++) stool(`l61-gib-stool-${k}`, -3.2 + k * 2.0, HD + 5.5, "oklch(0.55 0.13 50)");
+    tableSet("l61-gib-table-0", -3.8, HD + 2.4, 0);
+    tableSet("l61-gib-table-1", 4.4, HD + 2.4, 0);
+    light("l61-gib-l0", gx - 3, 3.1, zm, "oklch(0.86 0.1 70)", 3.5, 10);
+    light("l61-gib-l1", gx + 3, 3.1, zm, "oklch(0.86 0.1 70)", 3.5, 10);
+    sp("l61-gib-radio", { feetPosition: { x: 5.2, y: 1.5, z: z1 - 0.6 }, audio: { clip: "cdn/sfx-tinny-am-radio-playing-old-country-song-in-a-diner-kitchen-loop.mp3", loop: true, gain: 0.08, spatial: true, maxDistance: 9 } });
+  }
 
   layService(ctx, { box, wallZ, light, vend, PLASTER, CEIL, WAINSCOT });
 
