@@ -1,5 +1,5 @@
-# Shelly Nov 14: "phoebe's hair isnt using the model from before". Puts the earlier outfit's hair (build.py's cap, clumps, bun:
-# /cdn/value.43c00ffe…glb, fetched as /workspace/phoebe/outfit-old.glb) back on the cat outfit (build_cat.py → outfit-cat.glb),
+# Shelly Nov 14: "phoebe's hair isnt using the model from before". Puts the earlier outfit's hair (the Nov 8 original johnadams2 built, peach fringe over one eye and the bun:
+# /cdn/value.e43b3c86…glb, fetched as /workspace/phoebe/outfit-old.glb) back on the cat outfit (build_cat.py → outfit-cat.glb),
 # fitted to the cat skull: scaled by the two caps' widths, moved Head bone onto Head bone, weighted whole to the head.
 # blender -b --factory-startup --python-exit-code 1 --python art/phoebe-outfit/hair_back.py
 import bpy, bmesh
