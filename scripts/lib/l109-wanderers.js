@@ -4,7 +4,8 @@
 // tag, like Level 8's wretched. The sim calls wandererTick(ctx) every few seconds; numbers below are Savi's picks.
 import { raycast } from "builtin/physics";
 import { SPAWN } from "./level109.js";
-const SAFE = 45; // no wanderer stands within this of the arrival/respawn point (Savi's pick: a fresh arrival is never ambushed)
+const SAFE = 65; const GRACE_MS = 35000; // review: wanderers stay >60 m from arrival/respawn, and none come within 35 s of anyone arriving
+const SAFE_OLD = 45; // no wanderer stands within this of the arrival/respawn point (Savi's pick: a fresh arrival is never ambushed)
 const nearSpawn = (p, r = SAFE) => Math.hypot(p.x - SPAWN.x, p.z - SPAWN.z) < r;
 const T = { every: 70000, jitter: 50000, first: 45000, maxAlive: 4, far: 90, minAhead: 14, maxAhead: 26, packMin: 1, packMax: 3, hp: 85, returnMs: 3600000 }; // Savi's picks
 const GUNS = ["pistol", "pistol", "revolver", "revolver", "shotgun", "smg", "coach_gun", "carbine", "lever_rifle"]; // weighted: sidearms common, carbines rare
@@ -46,15 +47,19 @@ export function wandererTick(ctx) {
     const dead = w.state?.dead || (w.state?.hp ?? 1) <= 0;
     if (dead) { w.state.diedAt ??= now; if (now - w.state.diedAt > T.returnMs || d > 160) ctx.destroy(w.id); }
     else if (d > T.far) ctx.destroy(w.id);
-    else if (nearSpawn(w.feetPosition, 30)) ctx.destroy(w.id); // a chase that reaches the arrival point ends there: respawn is never a death loop
+    else if (nearSpawn(w.feetPosition, SAFE - 5)) ctx.destroy(w.id); // a chase that reaches the arrival point ends there: respawn is never a death loop
   }
   if (!ps.length) return;
+  const seen = s.wandSeen ?? {}; let fresh = false; const ids = {};
+  for (const p of ps) { ids[p.id] = 1; if (!seen[p.id]) fresh = true; }
+  if (fresh || Object.keys(seen).length !== ps.length) s.wandSeen = ids;
+  if (fresh) s.wandNext = Math.max(s.wandNext ?? 0, now + GRACE_MS); // a new arrival gets a quiet grace
   if (s.wandNext == null) { s.wandNext = now + T.first; return; }
   if (now < s.wandNext) return;
   const living = live.filter((w) => !w.state?.dead && (w.state?.hp ?? 1) > 0).length;
   s.wandNext = now + T.every + ctx.random() * T.jitter;
   if (living >= T.maxAlive) return;
-  const pool = ps.filter((q) => !nearSpawn(q.feetPosition, SAFE - 10) && !q.state?.dead && (q.state?.hp ?? 1) > 0); // a player still at the arrival point is left alone
+  const pool = ps.filter((q) => !nearSpawn(q.feetPosition, SAFE) && !q.state?.dead && (q.state?.hp ?? 1) > 0); // a player still at the arrival point is left alone
   if (!pool.length) { s.wandNext = now + 8000; return; }
   const p = pool[Math.floor(ctx.random() * pool.length)], at = spot(ctx, p.feetPosition);
   if (!at) { s.wandNext = now + 8000; return; }
