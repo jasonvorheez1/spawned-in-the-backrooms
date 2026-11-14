@@ -376,10 +376,13 @@ function lay(ctx) {
     behavior: "scripts/l61-use.js",
     state: { kind: "payphone", name: "Public Payphones", verb: "Pick up receiver", tint: "#9fe8ff" },
     audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-walkie-talkie-radio-click-static-burst.mp3", gain: 0.04, loop: true, spatial: true, maxDistance: 4 },
-    children: [
-      { feetPosition: { x: 0, y: 1.12, z: 0.05 }, primitive: { kind: "box", width: 2.5, height: 0.3, depth: 0.06 }, material: { color: "oklch(0.2 0.08 240)" },
-        ui: `<div face="front" width="2.5m" style="width:2500px;height:300px;display:flex;align-items:center;justify-content:center;background:#0c1e38;color:#9fe8ff;font-family:Arial,sans-serif;font-weight:900;letter-spacing:6px"><span style="font-size:110px">PUBLIC PHONES</span></div>` },
-    ],
+  });
+
+  // the sign is its own row: as a child of the fitted payphone model it was scaled with the model and never showed
+  sp("l61-payphone-sign", {
+    feetPosition: { x: 5.0, y: 2.05, z: HD - 0.12 },
+    primitive: { kind: "box", width: 1.6, height: 0.26, depth: 0.05 }, material: { color: "oklch(0.2 0.08 240)", emissive: "#0c1e38" },
+    ui: `<div face="front" emissive width="1.6m" style="width:1600px;height:260px;display:flex;align-items:center;justify-content:center;background:#0c1e38;color:#9fe8ff;font-family:Arial,sans-serif;font-weight:900;letter-spacing:6px"><span style="font-size:120px">PUBLIC PHONES</span></div>`,
   });
 
   // Corner Planters: Tripo weeping fig in a fluted clay pot (l61-planter), replaces the code pot + tree61
