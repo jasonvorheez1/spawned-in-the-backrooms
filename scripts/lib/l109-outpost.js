@@ -30,7 +30,7 @@ function board(R) { // whiteboard of checked rooms
 }
 export function buildOutpost(ctx, R) {
   if (R.type === "doctors") {
-    lights(R, 4);
+    lights(R, C.lights.extra.doctors); // the room's own 4 troffers already burn: 6 lights total
     prop(R, "desk0", "barrier", -10.5, 3.2); prop(R, "desk1", "crashcart", -12, 3.4); // reception by the door
     [[-6, 9], [-6, 17], [-2, 9], [-2, 17]].forEach(([a, b], i) => prop(R, "bed" + i, "gurney", a, b, 90)); // triage, 4 beds
     prop(R, "cart0", "crashcart", -4, 13); prop(R, "wc0", "wheelchair", -8.5, 7, 30);
@@ -46,7 +46,7 @@ export function buildOutpost(ctx, R) {
   }
   if (R.type === "or_active" || R.type === "icu_active") {
     const or = R.type === "or_active";
-    lights(R, 2);
+    lights(R, C.lights.extra.ward);
     patient(R, 0, 12, or ? "Patient, bed one" : "Patient, bay two");
     prop(R, "cart", "crashcart", 2, 12); prop(R, "lamp", "lamp", -2, 12);
     if (!or) { prop(R, "b1", "gurney", 6, 12, 90); prop(R, "b2", "gurney", -6, 12, 90); }
@@ -55,7 +55,7 @@ export function buildOutpost(ctx, R) {
   }
   if (R.type === "breach") {
     if (!ctx.place.state.l109breachSet) { ctx.place.state.l109breachSet = 1; setDoor(ctx, R.id, true); } // opened once, by the wanderer; only a player shuts it
-    lights(R, 2);
+    lights(R, C.lights.extra.breach);
     prop(R, "pack", "megcrate", 3, 10, 25); prop(R, "wc", "wheelchair", -4, 16, 160); // the wanderer's dropped pack
     const note = R.at(3.8, 10.8, 0);
     R.sp("note", { feetPosition: { ...note, y: note.y + 0.62 }, rotation: { yaw: R.yawIn + 15, pitch: -90 }, tags: ["l109-note"],

@@ -1,5 +1,5 @@
 # Level 109 Doctors' outpost: every tuned number. a = metres along the door wall from room centre, b = metres in.
-lights: { color: "oklch(0.97 0.02 95)", intensity: 2.2, distance: 16, height: 2.8, spots: [[-6, 6], [6, 6], [-6, 20], [6, 20]] }
+lights: { color: "oklch(0.97 0.02 95)", intensity: 2.2, distance: 16, height: 2.8, spots: [[-6, 6], [6, 6], [-6, 20], [6, 20]], extra: { doctors: 2, ward: 2, breach: 2 } }
 heal: { cost: 1500, hp: 40, sanity: 25 }
 shop: { firstaid: 2000, bandage: 600 }
 quest: { reachRadius: 4, noteRadius: 2.2, cents: 6000, xp: 200, items: [["firstaid", 2], ["bandage", 3]], repTruth: 12, repCover: 8, karmaTruth: 0, karmaCover: 3 }

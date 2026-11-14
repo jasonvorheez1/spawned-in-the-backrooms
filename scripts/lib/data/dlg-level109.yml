@@ -9,16 +9,6 @@ l109-halloran:
   ask:
     - q: "What is this place?"
       a: "A hospital nobody built. Clean halls, unmarked doors, and something behind half of them. We patch people up and keep the lids on."
-    - q: "Need a hand with anything?"
-      a: "Ask me again in a minute, I'm counting gauze."
-    - q: "About the open door."
-      a: "Which one. Oh. That one. Talk."
-    - q: "Any way out of here?"
-      a: "Not that I hand out to strangers. Earn a little trust first."
-    - q: "A wanderer opened it. Here's their note."
-      a: "Opened what? Start at the beginning."
-    - q: "Door was jammed. Nobody's fault."
-      a: "What door. You're rambling."
 l109-petra:
   hi: "Triage. Where does it hurt and can you pay."
   back: ["Back for more stitches?", "Sit. Arm out."]
@@ -60,7 +50,7 @@ l109-guard:
     - q: "Why is M.E.G. here?"
       a: "Doctors heal, we watch the doors. Fair trade."
     - q: "Seen anything loose?"
-      a: "Down the hall west, six doors in. Somebody got curious. We heard it from here."
+      a: "Down the hall west, a couple hundred metres. Somebody got curious. We heard it from here."
 l109-patient:
   hi: "Mm. Is it morning?"
   bye: "Sleep sounds good."

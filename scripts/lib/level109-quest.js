@@ -50,25 +50,34 @@ export function questTick(ctx) {
     } else if (q === 3 && Math.hypot(f.x - g.note.x, f.z - g.note.z) < C.quest.noteRadius) { p.state.l109note = 1; step(ctx, p, 4, "A note: \"Sorry. I heard someone crying in there. It wasn't someone. Tell them I'm sorry. M.\""); }
   }
 }
+export const ASK = { take: "Need a hand with anything?", status: "About the open door.", exit: "Any way out of here?" };
+const say = (reply, mood = "calm") => ({ reply, mood });
 export function handleDialogueQuest109(ctx, p, npc, text) {
   const s = p?.state; if (!s || npc?.state?.dlg !== "l109-halloran") return null;
   const t = String(text ?? ""), q = s.l109q ?? 0;
-  if (q === 0 && (t === "Need a hand with anything?" || t === CHOICES.take)) { step(ctx, p, 1, "New quest: Keep It Closed"); return "Yes. Six doors west on this corridor someone opened a room. Five things walked out. Kill them or walk them home, I don't care which. Then shut the door."; }
-  if (t === "About the open door.") {
-    if (q === 0) return "You heard. Ask me if I need a hand and I'll tell you.";
-    if (q < 4) return ["", "Still open. Go.", "Shut it. Whatever it takes.", "Shut. Good. Someone opened it, though. Look around in there."][q];
-    if (q === 4) return "So? Who was it? Tell me straight or tell me something.";
+  if (q === 0 && (t === ASK.take || t === CHOICES.take)) { step(ctx, p, 1, "New quest: Keep It Closed"); return say("Yes. Down this corridor west, about two hundred metres, someone opened a room. Five things walked out. Kill them or walk them home, I don't care which. Then shut the door."); }
+  if (t === ASK.status) {
+    if (q === 0) return say("You heard. Ask me if I need a hand and I'll tell you.");
+    if (q < 4) return say(["", "Still open. Go.", "Shut it. Whatever it takes.", "Shut. Good. Someone opened it, though. Look around in there."][q]);
+    if (q === 4) return say("So? Who was it? Tell me straight or tell me something.");
   }
   if (q === 4 && (t === CHOICES.truth || t === CHOICES.cover)) {
     const truth = t === CHOICES.truth; s.l109tell = truth ? "truth" : "cover";
-    finishLevelQuest(ctx, p, Q.key, Q, { xp: C.quest.xp, cents: C.quest.cents, items: C.quest.items.flatMap(([id, n]) => Array(n).fill(id)), by: "doctors",
-      rep: [["doctors", truth ? C.quest.repTruth : C.quest.repCover], ["karma", truth ? C.quest.karmaTruth : C.quest.karmaCover]], text: "Quest Completed: Keep It Closed" });
+    if (!finishLevelQuest(ctx, p, Q.key, Q, { xp: C.quest.xp, cents: C.quest.cents, items: C.quest.items.flatMap(([id, n]) => Array(n).fill(id)), by: "doctors",
+      rep: [["doctors", truth ? C.quest.repTruth : C.quest.repCover], ["karma", truth ? C.quest.karmaTruth : C.quest.karmaCover]], text: "Quest Completed: Keep It Closed" })) return say("We settled up already. Go easy.");
     s.l109exit = 1;
-    return (truth ? "Poor kid. I'll put their name on the board, not as a culprit. " : "Jammed. Sure. I'll pretend I believe that. ")
-      + "Here, supplies and pay. And since you earned it: the EXIT door, metal, about 1.3 km west on this same corridor. Level 114 on the other side. Go easy.";
+    return say((truth ? "Poor kid. I'll put the name on the board, not as a culprit. " : "Jammed. Sure. I'll pretend I believe that. ")
+      + "Here, supplies and pay. And since you earned it: the EXIT door, metal, about 1.3 km west on this same corridor. Level 114 on the other side. Go easy.", truth ? "sad" : "annoyed");
   }
-  if (t === "Any way out of here?" && (s.l109q ?? 0) === 99) return "Metal door marked EXIT, 1.3 km west down this corridor. Level 114. Don't open anything on the way.";
+  if (t === ASK.exit) return q === 99 ? say("Metal door marked EXIT, 1.3 km west down this corridor. Level 114. Don't open anything on the way.") : say("Not that I hand out to strangers. Earn a little trust first.");
   return null;
 }
-// rows the dialogue card shows (appended by talk.js)
-export function questChoices109(p, npc) { const q = p?.state?.l109q ?? 0; if (npc?.state?.dlg !== "l109-halloran") return []; return q === 4 ? [CHOICES.truth, CHOICES.cover] : []; }
+// rows Halloran's card shows (scripts/lib/npc-starters.js questChoices); no node, so talk.js hands them to the handler above
+export function l109Choices(npc, s) {
+  if (npc?.state?.dlg !== "l109-halloran") return [];
+  const q = s?.l109q ?? 0;
+  if (q === 0) return [{ text: ASK.take, tag: "Quest Start" }, { text: ASK.exit, tag: "Talk" }];
+  if (q < 4) return [{ text: ASK.status, tag: "Talk" }];
+  if (q === 4) return [{ text: CHOICES.truth, tag: "Quest Turn-In" }, { text: CHOICES.cover, tag: "Quest Turn-In" }];
+  return [{ text: ASK.exit, tag: "Talk" }];
+}
