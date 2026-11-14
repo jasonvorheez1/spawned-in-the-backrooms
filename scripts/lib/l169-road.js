@@ -114,10 +114,13 @@ function smallParts(m) {
 }
 // ---- streaming
 const built = {}; // sid -> ids alive on this machine
+let sitesCache = null, sitesFor = null; // the road never moves: work its sites out once per rules table, not every pass
 function allSites(L) {
-  const S = ORDER.map((sid) => ({ id: sid, ...siteOf(sid, L), big: true }));
-  return S.concat(cairnSites(L));
+  if (sitesCache && sitesFor === L) return sitesCache;
+  sitesFor = L; sitesCache = ORDER.map((sid) => ({ id: sid, ...siteOf(sid, L), big: true })).concat(cairnSites(L));
+  return sitesCache;
 }
+const lastSpot = new Map(); // player id -> "x,z" rounded to 2 m: discovery runs only after they move
 export function layRoad(ctx, put, L) { for (const k of Object.keys(built)) delete built[k]; tickRoad(ctx, put, L, true); }
 let nextStream = 0;
 const pending = []; // [siteId, id, spec]: a streamed-in site lands a few dozen rows a pass, never one burst
@@ -154,8 +157,10 @@ export function tickRoad(ctx, put, L, force = false) {
   }
   for (const p of players) {
     const ps = p.state, f = p.feetPosition; if (!ps || !f) continue;
-    // discovery: standing at a site learns it
-    for (const sid of ORDER) {
+    // discovery: standing at a site learns it (only re-checked once they've moved 2 m)
+    const spot = Math.round(f.x / 2) + "," + Math.round(f.z / 2);
+    const moved = lastSpot.get(p.id) !== spot; if (moved) lastSpot.set(p.id, spot);
+    if (moved) for (const sid of ORDER) {
       const st = siteOf(sid, L); if (Math.hypot(f.x - st.x, f.z - st.z) > R.discover + (sid === "edge" ? 30 : 0)) continue;
       const cps = ps.l169cps ?? [];
       if (!cps.includes(sid)) { ps.l169cps = [...cps, sid]; if (sid !== "house") ps.notice = { text: `${st.name}. ${st.km} km from the well. The board here knows the way back.`, at: now }; }
