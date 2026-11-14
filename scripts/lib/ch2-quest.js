@@ -14,13 +14,14 @@ export const megHostileCh2 = (s) => isVilified(s, { id: "l11-meg-agent-vance", s
 const CH2_WHISPER_LINE = "Same pace. Do not waste it on a locked door.";
 const WV = (w) => `/cdn/voice-soft-breathy-young-woman-whispering-amused-saying-${encodeURIComponent(w)}.mp3`;
 
-// Phoebe's five answers in the Safe Alcove. She is curious, not fond. Mike is only what others told you.
+// Phoebe's five answers in the Safe Alcove. She is curious, not fond. Mike is only brought up if already heard or Phoebe names him first.
 export const REPLIES = [
-  { id: "mike", stance: "curious", tag: "Ask", key: "who is mike", q: "Who is Mike?",
-    a: "River's sister. Quick learner. A red hospital seam took her. I wanted to see if you'd go the same way.",
-    note: "You asked about Mike. Phoebe compared you to her, and didn't say who came out ahead." },
-  { id: "reminded", stance: "curious", tag: "Ask", key: "reminded you of someone", q: "I reminded you of someone.",
-    a: "You run like her. Same bad habits. I wanted to see if the ending changed.",
+  { id: "mike", stance: "curious", tag: "Ask", key: "mike", q: "You mentioned Mike earlier. Who is he?",
+    knownQ: "Did you watch Mike Sunderland run a hall like this too?",
+    a: "River's brother. Quick learner. A red hospital seam took him. I wanted to see if you'd go the same way.",
+    note: "You asked about Mike. Phoebe compared you to him, and didn't say who came out ahead." },
+  { id: "reminded", stance: "curious", tag: "Ask", key: "what were you waiting for", q: "Why pull me out at the end? What were you waiting for?",
+    a: "You run like an old runner I watched once. Mike. Same bad habits. I wanted to see if the ending changed.",
     note: "Phoebe admitted you reminded her of Mike. Not sentiment. A rerun." },
   { id: "want", stance: "suspicious", tag: "Suspicious", key: "what do you want", q: "What do you want from me?",
     a: "Nothing yet. I like watching what people do when a room wants them dead.",
@@ -49,7 +50,7 @@ const STEP = {
     mark: { place: "gamma", id: "gamma-moss" },
   }),
   4: () => ({
-    step: "Moss and Vale tied the doorway cadence to Mike Sunderland, River's sister, and a silent observer in yellow. Return to Level 11 and step through the anomalous hospital door behind the clinic.",
+    step: "Moss and Vale tied the doorway cadence to Mike Sunderland, River's brother, and a silent observer in yellow. Return to Level 11 and step through the anomalous hospital door behind the clinic.",
     mark: { place: "level11", id: "l11-to-levelrun" },
   }),
   5: () => ({
@@ -134,7 +135,6 @@ export function completeChapter2(ctx, player, stance) {
   if (stance) s.phoebeStance = stance;
   s.ch2Done = 1;
   s.ch3Unlocked = 1;
-  s.knowsMike = 1;
   s.ch2Q = 99;
   s.phoebeRescued = 1;
   s.lrunRescued = 1;
@@ -183,12 +183,16 @@ export function ch2Choices(_ctx, it, s) {
   }
 
   if (id === "phoebe-lrun" && q >= 6 && !s.ch2Done) {
+    const knownMike = !!(s.knowsMike || s.heardMike);
     if (!s.ch2StancePicked) {
-      for (const r of REPLIES) out.push({ text: r.q, tag: r.tag });
+      for (const r of REPLIES) {
+        if (r.id === "mike" && !knownMike) continue;
+        out.push({ text: s.knowsMike && r.knownQ ? r.knownQ : r.q, tag: r.tag });
+      }
     } else {
       if (!s.ch2AskDina) out.push({ text: "What happens to Dina now? Did she get clear of Level 11?", tag: "Dina" });
       if (!s.ch2AskWard) out.push({ text: "How did you stop those things at the door?", tag: "Ask" });
-      if (!s.ch2AskMike && !s.ch2SaidMike) out.push({ text: "Did you know Mike?", tag: "Ask" });
+      if (knownMike && !s.ch2AskMike && !s.ch2SaidMike) out.push({ text: "Did you know Mike?", tag: "Ask" });
       out.push({ text: "Open the alcove threshold. I'm heading back to Level 11.", tag: "Finish Chapter 2" });
     }
   }
@@ -253,12 +257,12 @@ export function handleDialogueCh2(ctx, player, npc, text) {
     tellQuest(ctx, player, "Return to Level 11 behind the Centro Dermatologico clinic.");
     if (id === "gamma-vale") {
       return {
-        reply: "Only one intake sheet matches a red hospital hallway cutting behind concrete. Mike Sunderland. River's sister, no rank, no special kit. She just read exits faster than anyone else around here, until a corridor like that pulled her off the grid. Dina found the same seam behind the Level 11 clinic and sealed it before moving on.",
+        reply: "Only one intake sheet matches a red hospital hallway cutting behind concrete. Mike Sunderland. River's brother, no rank, no special kit. He just read exits faster than anyone else around here, until a corridor like that pulled him off the grid. Dina found the same seam behind the Level 11 clinic and sealed it before moving on.",
         mood: "calm",
       };
     }
     return {
-      reply: "Mike Sunderland. River's sister. Plain gear, no rank, just quick on her feet and smart about which doors to skip. Scouts spotted somebody in yellow watching her runs before a red hospital hall swallowed her. If Dina marked that clinic door sealed, go in ready to run.",
+      reply: "Mike Sunderland. River's brother. Plain gear, no rank, just quick on his feet and smart about which doors to skip. Scouts spotted somebody in yellow watching his runs before a red hospital hall swallowed him. If Dina marked that clinic door sealed, go in ready to run.",
       mood: "calm",
     };
   }
@@ -266,7 +270,7 @@ export function handleDialogueCh2(ctx, player, npc, text) {
   if (id === "gamma-moss" && s.knowsMike && !s.ch2MossFollow && t.includes("file on mike sunderland")) {
     s.ch2MossFollow = 1;
     return {
-      reply: "Thin folder. Boot tallies and water chits, mostly. What the debriefs noted was plain enough: she adapted faster than people with twice her training, right up until a shift caught her without a light.",
+      reply: "Thin folder. Boot tallies and water chits, mostly. What the debriefs noted was plain enough: he adapted faster than people with twice his training, right up until a shift caught him without a light.",
       mood: "calm",
     };
   }
@@ -277,7 +281,7 @@ export function handleDialogueCh2(ctx, player, npc, text) {
     setCh2Step(ctx, s, 4, "Chapter 2 Finale Ready: Enter the red door behind Level 11's clinic");
     tellQuest(ctx, player, "Return to Level 11 behind the Centro Dermatologico clinic.");
     return {
-      reply: "Mike Sunderland. People barely remember her unless they knew River. Just a lone runner who figured out floor rules twice as fast as M.E.G. scouts, until a red hospital seam took her. Dina left word not to open the one behind the Level 11 clinic unless you can sprint.",
+      reply: "Mike Sunderland. People barely remember him unless they knew River. Just a lone runner who figured out floor rules twice as fast as M.E.G. scouts, until a red hospital seam took him. Dina left word not to open the one behind the Level 11 clinic unless you can sprint.",
       mood: "calm",
     };
   }
@@ -285,12 +289,13 @@ export function handleDialogueCh2(ctx, player, npc, text) {
   // Stage 6 -> Phoebe Post-Rescue Finale inside Level ! Safe Alcove
   if (id === "phoebe-lrun" && q >= 6) {
     if (!s.ch2StancePicked) {
-      const r = REPLIES.find((x) => t === x.q.toLowerCase() || t.includes(x.key));
+      const r = REPLIES.find((x) => t === x.q.toLowerCase() || (x.knownQ && t === x.knownQ.toLowerCase()) || t.includes(x.key));
       if (r) {
         s.ch2StancePicked = r.stance;
         s.phoebeStance = r.stance;
         s.phoebeReaction = r.id;
         if (r.id === "mike") { s.knowsMike = 1; s.ch2SaidMike = 1; }
+        if (r.id === "reminded") { s.knowsMike = 1; }
         return { reply: r.a, mood: "calm" };
       }
     }
@@ -315,7 +320,7 @@ export function handleDialogueCh2(ctx, player, npc, text) {
         s.knowsMike = 1;
         s.ch2SaidMike = 1;
         return {
-          reply: "Knew of her. River's sister. Learned fast. A red seam took her before I got a good look. You, I got a good look at.",
+          reply: "Knew of him. River's brother. Learned fast. A red seam took him before I got a good look. You, I got a good look at.",
           mood: "calm",
         };
       }
