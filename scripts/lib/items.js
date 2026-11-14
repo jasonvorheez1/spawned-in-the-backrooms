@@ -76,6 +76,7 @@ function describe0(token) {
   if (BRK.scrap[token]) return { name: BRK.scrap[token].name, info: 'Building scrap · B to build', color: BRK.scrap[token].color }
   if (L2_DESC[token]) return L2_DESC[token]()
   if (token === 'royal_ration') return { name: 'Royal ration', info: `Full HP · +${L3I.royal_ration.sanity} sanity · rare`, color: '#ffd36a' }
+  if (token === 'cashew') return { name: 'Cashew Water', info: 'Object 44. Smells strongly of cashews. Burns skin, starves the drinker, draws entities. Almond water turns it to plain water. Squirt Gun liquid', color: '#e8d2b0' }
   if (token === 'repellent') return { name: 'Smiler Repellent', info: 'Object 3. Spray it: every smiler within 20 m comes apart. Rare', color: '#cfe8c8' }
   if (token === 'fs_ingot') return { name: 'Firesalt ingot', info: 'Dark red, 100 g. Throw it: blows like half a stick of dynamite', color: '#c8261a' }
   if (token === 'firesalt') return { name: 'Firesalt', info: `Orange shard. Rub on a blade (x${L3I.firesalt.damage}), throw for burning sparks, melt 5 into an ingot`, color: '#ff8a3a' }

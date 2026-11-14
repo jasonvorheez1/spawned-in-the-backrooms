@@ -292,6 +292,7 @@ shops:
     - ["cloth:topw:tank:8a7a55", 1, 26, 12]
     - ["cloth:topw:jacket:6b6440", 1, 60, 25]
     - ["cloth:topw:apron:8a6a3c", 1, 110, 55]
+    - [cashew, 3, 20, 12]   # Object 44, sold sealed (lore: 20 B.N.T.G. bucks a bottle); Savi's fame gate
     - [weapon:pistol~bntgissue, 1, 52, 25]
     - [weapon:carbine~vaultissue, 1, 120, 55]
   default:
@@ -337,5 +338,6 @@ sell:
   keycard: 6
   compass: 6
   firesalt: 4
+  cashew: 8          # Savi's pick
   weapon: { common: 4, uncommon: 9, rare: 20, elite: 55, legendary: 125 }
   cloth: { common: 3, uncommon: 6, rare: 10, agency: 14, elite: 25 }

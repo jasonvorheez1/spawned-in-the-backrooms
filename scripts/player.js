@@ -342,6 +342,7 @@ function takeToken0(ctx, token, opts) {
     return { ok: true }
   }
   if (token === 'bobbypin' || token === 'pin' || token === 'bobby_pin') { s.bobbypins = (s.bobbypins ?? 0) + 1; s.pickedAt = now; s.notice = { text: `Bobby pin (${s.bobbypins} carried)`, at: now }; sound(ctx, 'pickup-ammo', 0.5, true); return { ok: true } }
+  if (token === 'cashew') { s.cashew = (s.cashew ?? 0) + 1; s.pickedAt = now; s.notice = { text: 'Cashew Water. Sealed tight. You can smell the cashews through the cap', at: now }; sound(ctx, 'plastic-bottle-pickup-rattle', 0.6, true); return { ok: true } }
   if (token === 'repellent') { s.repellent = (s.repellent ?? 0) + 1; s.pickedAt = now; s.notice = { text: 'Smiler Repellent. A few drops, clear as almond water. Rare', at: now }; sound(ctx, 'plastic-bottle-pickup-rattle', 0.6, true); return { ok: true } }
   if (token === 'fs_ingot') { s.fsIngot = (s.fsIngot ?? 0) + 1; s.pickedAt = now; sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true } }
   if (token === 'firesalt') { s.firesalt = (s.firesalt ?? 0) + 1; s.pickedAt = now; sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true } }
@@ -1075,6 +1076,8 @@ function invAction(ctx, d) {
   if (d.k === 'readMag') { readMagAction(ctx, String(d.t || '')); return }
   if (d.k === 'soupThrow') { s.invOpen = false; soupThrow(ctx); return }
   if (d.k === 'sqFill' || d.k === 'sqDrink' || d.k === 'sqEmpty') { sqTank(ctx, d); return }
+  if (d.k === 'cashewDrink') { cashewDrink(ctx); return }
+  if (d.k === 'cashewMix') { cashewMix(ctx); return }
   if (d.k === 'repellent') { s.invOpen = false; useRepellent(ctx); return }
   if (d.k === 'fsThrow') { s.invOpen = false; fsThrow(ctx); return }
   if (d.k === 'fsMelt') { fsMelt(ctx); return }
@@ -1390,6 +1393,7 @@ const SQ = {
   almond:    { name: 'almond water',     col: '<.96,.93,.84>', dmg: 4, per: 15 },
   pyroil:    { name: 'pyroil',           col: '<1,.62,.3>',    dmg: 5, per: 6, burn: 4 },
   repellent: { name: 'Smiler Repellent', col: '<.86,.96,.86>', dmg: 0, per: 10 },
+  cashew:    { name: 'Cashew Water',     col: '<.93,.82,.66>', dmg: 7, per: 12 }, // Object 44 (Shelly, Nov 14): hurts people, baits entities. Savi's numbers
 }
 const SQ_ENT = ['smiler', 'lurker', 'hound', 'stealer', 'moths', 'l8spider', 'l8-hostile', 'clump', 'foe', 'hostile', 'beast', 'deathmoth']
 const SQ_JET = `fx
@@ -1414,9 +1418,15 @@ function squirtFire(ctx, s, wp) {
   if (!r) return
   const at = r.position, nrm = r.normal ?? { x: 0, y: 1, z: 0 }
   if (s.sqLiq === 'pyroil') ctx.emit('fx', { position: at, script: SQ_FIRE }) // pyroil ignites on contact
+  if (s.sqLiq === 'cashew' && now - (s.cashewLureAt ?? 0) > 1500) { s.cashewLureAt = now; ctx.emit('noise', { position: at, radius: 25, kind: 'cashew' }, { audience: { nearby: at, radius: 25 } }) } // the smell carries: a sprayed wall is bait
   else ctx.emit('fx', { position: at, script: SQ_SPLASH, params: { nx: nrm.x, ny: nrm.y, nz: nrm.z, col: L.col } })
   if (!m || m.state?.dead || (m.state?.hp ?? 1) <= 0) return
   const ent = SQ_ENT.some((t) => m.tags?.includes(t))
+  if (s.sqLiq === 'cashew') { // Object 44: numbs then burns a person; an entity smells it and comes for the spot
+    if (ent) { ctx.emit('noise', { position: at, radius: 30, kind: 'cashew' }, { audience: { nearby: at, radius: 30 } }); if (now - (s.cashewSaidAt ?? 0) > 4000) { s.cashewSaidAt = now; s.notice = { text: 'It lifts its head at the smell of cashews', at: now } } return }
+    if (human) { hitTarget(ctx, s, m, L.dmg, f, false); heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-man-sharp-pained-gasp-hiss-through-teeth.mp3', position: at, volume: 0.6, maxDistance: 14 }) }
+    return
+  }
   if (s.sqLiq === 'repellent') {
     if (!m.tags?.includes('smiler')) return
     ctx.emit('fx', { position: m.feetPosition, script: SMILER_GONE })
@@ -1435,6 +1445,19 @@ export function sqBurn(ctx, p) { // pyroil keeps burning on what it hit, once a 
   ctx.emit('fx', { position: m.feetPosition, script: SQ_FIRE })
   if (p.n > 1) ctx.after(1, 'sqBurn', { id: p.id, n: p.n - 1 })
 }
+function cashewDrink(ctx) { // Object 44 drunk: the opposite of almond water. A small dose starves you and hurts; Savi's numbers, never lethal here
+  const s = ctx.self.state, now = ctx.now(); if ((s.cashew ?? 0) <= 0) return
+  s.cashew -= 1; s.hunger = Math.max(0, (s.hunger ?? 100) - 40); s.hp = Math.max(1, (s.hp ?? 1) - 18); s.sanity = Math.max(0, (s.sanity ?? 0) - 8)
+  sound(ctx, 'gulping-water-from-plastic-bottle', 0.5, true); ctx.emit('screenFlash', { color: 'oklch(0.75 0.12 70)', duration: 0.5, intensity: 0.35 }, { audience: { player: ctx.self.id } })
+  s.notice = { text: 'Tastes like almond water. Then your stomach goes hollow and your hands go cold', at: now }
+}
+function cashewMix(ctx) { // a bottle of each poured together: bubbles, steam, and plain water you can drink
+  const s = ctx.self.state, now = ctx.now()
+  if ((s.cashew ?? 0) <= 0 || (s.almonds ?? 0) <= 0) { s.notice = { text: 'Neutralizing needs a Cashew Water and a grey almond water', at: now }; return }
+  s.cashew -= 1; s.almonds -= 1; s.thirst = Math.min(100, (s.thirst ?? 100) + 10)
+  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-liquid-fizzing-bubbling-hiss-in-plastic-tank.mp3', position: ctx.self.feetPosition, volume: 0.6, maxDistance: 8 })
+  s.notice = { text: 'Both bottles foam and steam like a science fair. You drink what is left: just water', at: now }
+}
 function sqTank(ctx, d) { // fill, drink from or empty the backpack tank
   const s = ctx.self.state, now = ctx.now(), say = (text) => { s.notice = { text, at: now } }
   const have = (s.sqfill ?? 0) + (s.loaded_squirt_gun ?? 0)
@@ -1446,11 +1469,19 @@ function sqTank(ctx, d) { // fill, drink from or empty the backpack tank
     sound(ctx, 'gulping-water-from-plastic-bottle', 0.5, true); return say('A squirt of almond water, straight into your mouth')
   }
   const c = String(d.c || ''), L = SQ[c]; if (!L?.per) return
+  if (have > 0 && ((s.sqLiq === 'cashew' && c === 'almond') || (s.sqLiq === 'almond' && c === 'cashew'))) { // Object 44 + almond water = plain water, fizzing
+    if (c === 'almond') { if ((s.almonds ?? 0) <= 0) return say('No grey almond water to pour in'); s.almonds -= 1 } else { if ((s.cashew ?? 0) <= 0) return say('No Cashew Water'); s.cashew -= 1 }
+    s.sqLiq = 'water'; s.sqfill = Math.min(SQ.water.cap, have); s.loaded_squirt_gun = 0
+    heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-liquid-fizzing-bubbling-hiss-in-plastic-tank.mp3', position: ctx.self.feetPosition, volume: 0.6, maxDistance: 8 })
+    ctx.emit('fx', { position: { ...ctx.self.feetPosition, y: ctx.self.feetPosition.y + 1.2 }, script: SQ_SPLASH, params: { nx: 0, ny: 1, nz: 0, col: '<.95,.95,.95>' } })
+    return say('The tank fizzes and steams. It all settles into plain water')
+  }
   if (have > 0 && s.sqLiq !== c && s.sqLiq !== 'water') return say(`The tank holds ${SQ[s.sqLiq].name}. They won't mix, they'd settle in layers: empty it first`)
   if (s.sqLiq !== c && c !== 'water') { s.sqfill = 0; s.loaded_squirt_gun = 0 } // tap water just gets tipped out
   if (c === 'almond') { if ((s.almonds ?? 0) <= 0) return say('No grey almond water to pour in'); s.almonds -= 1 }
   if (c === 'pyroil') { if ((s.firesalt ?? 0) <= 0) return say('Pyroil needs a firesalt shard to melt down'); s.firesalt -= 1 }
   if (c === 'repellent') { if ((s.repellent ?? 0) <= 0) return say('No Smiler Repellent'); s.repellent -= 1 }
+  if (c === 'cashew') { if ((s.cashew ?? 0) <= 0) return say('No Cashew Water'); s.cashew -= 1 }
   if (c === 'water' && s.sqLiq === 'water' && (s.sqfill ?? 0) >= L.cap) return say('The tank is already full of water') // Nov 14, Shelly 'still cant fill my tank': the loaded gun's 26 shots counted as a full tank
   s.sqLiq = c; s.sqfill = c === 'water' ? L.cap : (s.sqfill ?? 0) + L.per
   heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-pouring-liquid-into-plastic-tank-funnel-glug.mp3', position: ctx.self.feetPosition, volume: 0.5, maxDistance: 8 })

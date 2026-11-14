@@ -87,7 +87,7 @@ export const LOOT_CATEGORIES = {
   expedition: [
     ["almond", 16], ["warm_tea", 9], ["ration", 12], ["bandage", 10], ["firstaid", 8],
     ["medkit", 4], ["ammo", 12], ["shells", 7], ["battery", 9], ["kit", 6],
-    ["bobbypin", 7], ["compass", 3], ["repellent", 2], ["weapon", 12], ["cloth", 8],
+    ["bobbypin", 7], ["compass", 3], ["repellent", 2], ["cashew", 1.5], ["weapon", 12], ["cloth", 8],
     ["mag:survival", 3], ["mag:guns", 2.5], ["mag:medicine", 2], ["mag:sneak", 2], ["manual:food", 1.5], ["manual:armor", 1.5], ["manual:weapons", 1],
   ],
   security: [
@@ -104,7 +104,7 @@ export const LOOT_CATEGORIES = {
   ],
   hazardous: [
     ["almond", 14], ["cloudy_almond", 8], ["charcoal", 12], ["antiseptic", 10], ["bandage", 9],
-    ["firstaid", 6], ["stim_shot", 5], ["firesalt", 8], ["repellent", 4], ["battery", 9],
+    ["firstaid", 6], ["stim_shot", 5], ["firesalt", 8], ["repellent", 4], ["cashew", 2], ["battery", 9],
     ["ammo", 8], ["weapon", 9], ["cloth", 4],
     ["mag:medicine", 2.5], ["mag:explosives", 2.5], ["mag:energy", 2],
   ],
@@ -239,7 +239,7 @@ export function dropLoot(ctx, pos, name = "Remains", luck = 1, clothMul = 1, poo
 }
 
 // Level 1's crates: rations, bandages, field mags, manuals and batteries join the roll.
-const L1_WEIGHTS = [["bobbypin", 8], ["firesalt", 4], ["repellent", 0.5], ["meat", 2.5], ["ration", 4], ["stale_ration", 2], ["almond", 3.5], ["warm_tea", 1], ["bandage", 2.5], ["painkillers", 1], ["splint", 0.8], ["battery", 3], ["ammo", 2], ["shells", 1], ["weapon", 1.2], ["kit", 1.6], ["mag", 1.4], ["manual", 1.6], ["cloth", 2.2], ["compass", 1], ["molotov", 0.5]];
+const L1_WEIGHTS = [["bobbypin", 8], ["firesalt", 4], ["repellent", 0.5], ["cashew", 1], ["meat", 2.5], ["ration", 4], ["stale_ration", 2], ["almond", 3.5], ["warm_tea", 1], ["bandage", 2.5], ["painkillers", 1], ["splint", 0.8], ["battery", 3], ["ammo", 2], ["shells", 1], ["weapon", 1.2], ["kit", 1.6], ["mag", 1.4], ["manual", 1.6], ["cloth", 2.2], ["compass", 1], ["molotov", 0.5]];
 const L1_WEPS = [["rebar", 5], ["wrench", 4]];
 export function rollWeaponL1(ctx, level) {
   const lv = effectiveLootLevel(ctx, undefined, level, "l1"), cap = rarityCap(lv);
@@ -265,7 +265,7 @@ export function spawnCrateL1(ctx, p) {
   ctx.spawn({ tags: ["container", "crate", "breakable"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { mat: "wood", hp: 60, maxHp: 60, name: lk ? lk.name : ctx.random() < 0.25 ? "Rations crate" : "Wooden crate", items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
 }
 // Level 2: a tool depot. More batteries and ammo, fewer rations; maintenance magazines and trauma triage.
-const L2_WEIGHTS = [["frag", 2], ["firesalt", 5], ["repellent", 0.6], ["meat", 5], ["molotov", 3], ["almond", 12], ["cloudy_almond", 3], ["bobbypin", 7], ["ammo", 17], ["shells", 9], ["battery", 14], ["bandage", 8], ["antiseptic", 3], ["splint", 2], ["painkillers", 2], ["ration", 5], ["stale_ration", 2], ["weapon", 10], ["kit", 5], ["mag", 4], ["manual", 4], ["cloth", 8], ["tape", 6], ["fuse", 4], ["valve", 3], ["keycard", 2], ["beans", 5], ["bar", 6], ["firstaid", 3], ["compass", 2]];
+const L2_WEIGHTS = [["frag", 2], ["firesalt", 5], ["repellent", 0.6], ["cashew", 0.6], ["meat", 5], ["molotov", 3], ["almond", 12], ["cloudy_almond", 3], ["bobbypin", 7], ["ammo", 17], ["shells", 9], ["battery", 14], ["bandage", 8], ["antiseptic", 3], ["splint", 2], ["painkillers", 2], ["ration", 5], ["stale_ration", 2], ["weapon", 10], ["kit", 5], ["mag", 4], ["manual", 4], ["cloth", 8], ["tape", 6], ["fuse", 4], ["valve", 3], ["keycard", 2], ["beans", 5], ["bar", 6], ["firstaid", 3], ["compass", 2]];
 export function rollItemL2(ctx) {
   if (ctx.random() < 0.14) return rollCash(ctx);
   const total = L2_WEIGHTS.reduce((a, [, w]) => a + w, 0);
