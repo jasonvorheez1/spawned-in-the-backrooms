@@ -9,21 +9,25 @@ segments:
   - { kind: ad, title: "Partygoer Hotline (1998)", dur: 16.94, clip: "/cdn/value.2721ff02964cedd31ca3499d7073f5d8f6d0a3eb0a8edc55d75a79a02f969a80.mp3" }
   - { kind: ad, title: "Ringtone Club (2006)", dur: 17.42, clip: "/cdn/value.f5dbe50d02e40cd43328cfcd0d27822ffc8057247985a171f23535c2a997dc76.mp3" }
   - { kind: ad, title: "B.N.T.G. Trading Post (1993)", dur: 19.49, clip: "/cdn/value.68575841f709133507b8c34e82b008db62c2dd502707ae4192f7785d471c1ceb.mp3" }
+  - { kind: ad, title: "Backrooms Robotics Custodian (1956)", dur: 27.36, clip: "/cdn/value.92002c8434be05b72e6121fff0333701f5da087177416b78ecb9f45902ee3025.mp3" }
   - { kind: ad, title: "Smiler-B-Gone (1970)", dur: 16.3, clip: "/cdn/value.326c09c207eac511047efd0e9fcea83d616dc8eb013a404b07ad8a6bcf7f83c6.mp3" }
   - { kind: song, title: "Wi-Fi Jingle (2005)", dur: 20.04, clip: "/cdn/music-2000s-cell-phone-commercial-jingle-pop-rnb-female-singer-catchy-short.mp3?lyrics=One%20bar%20in%20the%20lobby%0ATwo%20bars%20on%20Level%20Three%0ANo%20bars%20on%20Level%20Fun%0ABut%20you%27re%20still%20talking%20to%20me" }
   - { kind: ad, title: "Cashews Of Level 9 (1999)", dur: 13.49, clip: "/cdn/value.039a780f9f8fab0485963c4a9c21a3cccfb452a46d2c1a48f88b7c2a87685c52.mp3" }
   - { kind: ad, title: "Pool Rooms Getaway (2004)", dur: 20.14, clip: "/cdn/value.0a4e05790b410c0d5b91f3f30d8b5327d1fe3dba718259031bcd71beff2eb47e.mp3" }
   - { kind: song, title: "Almond Water Jingle (1957)", dur: 25.03, clip: "/cdn/music-1950s-radio-commercial-jingle-barbershop-quartet-close-harmony-cheerful-short.mp3?lyrics=Almond%20water%2C%20almond%20water%0AGood%20for%20every%20son%20and%20daughter%0ALost%20in%20halls%20of%20yellow%20light%0AOne%20sip%20and%20you%27ll%20feel%20all%20right" }
+  - { kind: ad, title: "Visit Level 70 (1964)", dur: 23.54, clip: "/cdn/value.710089a7b673b6681c3da83ae6b2d013e396d86ecdb74551b39b68ece31a1099.mp3" }
   - { kind: ad, title: "Level Run Shoes (2009)", dur: 17.9, clip: "/cdn/value.dc4fc5f225b4caa1d3c4eb5825aa02954d9d70a122b5503e59e7f7116f371c2d.mp3" }
   - { kind: ad, title: "Level 11 Real Estate (1983)", dur: 23.04, clip: "/cdn/value.5f48037df5a637d499f436c5b221f623617f6cfab9bc5afbf4d59d8c6f8d0543.mp3" }
   - { kind: ad, title: "The Frontrooms Experience (1996)", dur: 20.69, clip: "/cdn/value.62de7ebd0445fde2dd75c0644f7c13f4fddce367c1a3430a4bef66a72c82653d.mp3" }
   - { kind: ad, title: "Firesalt Cookware (1974)", dur: 21.02, clip: "/cdn/value.cb998ea9b7fec161d6476167bed5ab7d3db1c3d28583181164a0ead469189cd2.mp3" }
   - { kind: ad, title: "Entity Dating (2008)", dur: 21.5, clip: "/cdn/value.690c7899664e72d8ff591b6727e45ff2f36c1ff24013a88c1cd7711904a524b0.mp3" }
+  - { kind: ad, title: "Squirt Gun Super Tank (1991)", dur: 21.14, clip: "/cdn/value.78071e545e17993c0d3a26f4a2f9d4b12d11cc722344eab3d29e13ae2c19b40c.mp3" }
   - { kind: ad, title: "Exit Sign Insurance (1962)", dur: 23.38, clip: "/cdn/value.18f6c28d704a2af4e6d65d709df2218867052b94ac5e61d089e203897827cddc.mp3" }
   - { kind: ad, title: "Hound Whistle (1988)", dur: 14.78, clip: "/cdn/value.2b9d99a2e0abcaf948bc6c64b2b4529090373785b1bd990c76acaae8887d50d0.mp3" }
   - { kind: song, title: "Funsoda Jingle (1977)", dur: 20.04, clip: "/cdn/music-1970s-radio-commercial-jingle-disco-funk-female-singers-brass-short.mp3?lyrics=Funsoda%2C%20Funsoda%0AThe%20fizz%20you%20can%27t%20escape%0AFunsoda%2C%20Funsoda%0ANow%20in%20Level%20Grape" }
   - { kind: ad, title: "M.E.G. Recruitment (1986)", dur: 21.74, clip: "/cdn/value.b6f0516763b82658e18e2bcbc2308e0614160b1551172de63311b23f0b7f4b23.mp3" }
   - { kind: song, title: "Backrooms Burger Jingle (1994)", dur: 20.04, clip: "/cdn/music-1990s-fast-food-commercial-jingle-pop-punk-guitar-energetic-short.mp3?lyrics=Backrooms%20Burger%2C%20hot%20and%20fast%0AEvery%20meal%20could%20be%20your%20last%0AExtra%20cheese%20and%20extra%20fries%0ADon%27t%20ask%20what%27s%20inside%2C%20surprise" }
+  - { kind: ad, title: "Level ! Run For Your Life (2003)", dur: 23.64, clip: "/cdn/value.87e6c262a8f2723a436568b9fdb44940bcccf8ffffbce0b7818a313307075078.mp3" }
   - { kind: ad, title: "Almond Water (1955)", dur: 22.01, clip: "/cdn/value.5e4b74dd5a5bef0f1ce82c54e87eaf68a591219e4f990e9cc9ce401fb78d083f.mp3" }
   - { kind: song, title: "Hub Mall Jingle (1985)", dur: 45.02, clip: "/cdn/music-1980s-tv-commercial-jingle-synth-pop-male-singer-upbeat-short.mp3?lyrics=Come%20on%20down%20to%20the%20Hub%20tonight%0AEvery%20door%2C%20every%20light%0AThirty%20levels%2C%20one%20great%20price%0AYou%27ll%20never%20leave%20and%20that%27s%20so%20nice" }
   - { kind: ad, title: "Wretch Rehab (2002)", dur: 23.57, clip: "/cdn/value.f794ac72a5b8c9a0defe1d0675fec00d47c23f037b313a68c8b0ee7b9ec0c606.mp3" }
