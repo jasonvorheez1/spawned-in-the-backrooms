@@ -1,0 +1,19 @@
+# spawn-scene v2 yaml x0z0
+l61-wetsign-a:
+  feetPosition: {x: -14, y: 0, z: -6}
+  id: l61-wetsign-a
+  layout: {box: {max: {x: 0.22, y: 0.62, z: 0.2}, min: {x: -0.22, y: 0, z: -0.2}}}
+  model: {id: /cdn/value.74196cf01a5e8ff66694774b6989cd3635353aa6ec4ee77bd56d8a04d45a0bbd.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 200}
+  tags: [prop]
+  visibleRange: {max: 40}
+l61-wetsign-b:
+  feetPosition: {x: -12.6, y: 0, z: -5.2}
+  id: l61-wetsign-b
+  layout: {box: {max: {x: 0.22, y: 0.62, z: 0.2}, min: {x: -0.22, y: 0, z: -0.2}}}
+  model: {id: /cdn/value.74196cf01a5e8ff66694774b6989cd3635353aa6ec4ee77bd56d8a04d45a0bbd.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 165}
+  tags: [prop]
+  visibleRange: {max: 40}
