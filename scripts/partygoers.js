@@ -1,3 +1,4 @@
+const BALLOON_GLB = "/cdn/value.bbcd28912111e39613cec71f06224b7742148d3493106c89a76f739e3003f366.glb"; // the balloon foe's own model (foe-bay.js)
 import { clearSight } from './lib/sight.js'
 const walled = (ctx, a, b, ids) => !clearSight(ctx, { x: a.x, y: a.y + 1, z: a.z }, { x: b.x, y: b.y + 1, z: b.z }, ids) // Shelly: no hits through walls
 // Level 26 (Shelly's Entity 67 + 110 lore): one manager steps every Partygoer and every Carnivorous Balloon on the ship.

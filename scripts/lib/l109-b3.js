@@ -1,3 +1,4 @@
+import { JANINE_TAPE } from "./janine-tape.js";
 import { medLook } from "./l109-kit.js";
 // Level 109 "B3": the sealed sub-basement under the arrival hall (Shelly, Nov 14: a small dungeon with a rocket launcher, in tune with the lore).
 // The story it tells: M.E.G. ran a forward cache down here while they mapped the hospital, lost the floor to hounds breeding
@@ -119,6 +120,7 @@ export function dressB3(ctx) {
   // the camp against the west wall: two cots, a lantern still lit on the floor between them, the gas they cooked on
   m("cot0", COT, -8.6, 43.6, 90, [1.9, 0.5, 0.68]); m("cot1", COT, -8.6, 41.2, 84, [1.9, 0.5, 0.68]);
   m("lantern", LANTERN, -8.5, 42.4, 30, [0.2, 0.34, 0.2], { physics: "none", fx: { script: FLAME } });
+  sp("janine-tape", { ...JANINE_TAPE, feetPosition: P(-8.6, 0.52, 43.4), tags: ["usable"] }); // her interview, left on the camp cot (Shelly Nov 14: out of the bedroom)
   m("can0", CANISTER, -9.4, 45.4, 0, [0.32, 0.6, 0.32]); m("can1", CANISTER, -9.1, 45.9, 40, [0.32, 0.6, 0.32]);
   sp("tally", { feetPosition: P(-9.96, 1.5, 42.4), rotation: { yaw: yawFor(1, 0) }, castShadow: false, vector: TALLY });
   sp("map", { feetPosition: P(-9.96, 1.55, 38.6), rotation: { yaw: yawFor(1, 0) }, castShadow: false, vector: MAP });
