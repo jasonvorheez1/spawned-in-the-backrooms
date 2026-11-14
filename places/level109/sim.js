@@ -56,7 +56,8 @@ function layDoor(ctx, c, info, made) {
   const lock = exit ? "" : denLock(ctx, ctx.place.state.l109seed, info, open); // a den is locked from inside (scripts/lib/l109-wanderers.js)
   ctx.spawn(id, { tags: ["usable", "pen-door", "l109-seg"], feetPosition: hinge, rotation: { yaw: base + (open ? dy : 0) }, physics: { body: "kinematic", collider: "box" },
     primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: exit ? "metal" : "office", part: "leaf", w: DOOR_W, h: DOOR_H, hingeSide: "left", swing: 1, seed: info.r } }, material: { pbr: true }, behavior: exit ? "scripts/l109-exit.js" : "scripts/pen-door.js",
-    state: { pen: info.id, open, baseYaw: base, openYaw: dy, c: info.door, kind: exit ? "metal" : "wood", name: exit ? "Exit" : lock ? "Locked door" : "Door", verb: exit ? "Go Through" : open ? "Close Door" : "Open Door", ...(lock ? { lock, denLocked: true } : {}) } });
+    state: { pen: info.id, open, baseYaw: base, openYaw: dy, c: { ...info.door, y: (info.door.y ?? 0) + 1.05 }, // c at door mid-height: the look picks a door by its c, and c on the floor meant aiming at your feet (Nov 14)
+      kind: exit ? "metal" : "wood", name: exit ? "Exit" : lock ? "Locked door" : "Door", verb: exit ? "Go Through" : open ? "Close Door" : "Open Door", ...(lock ? { lock, denLocked: true } : {}) } });
   made.push(id);
   if (exit) { const p = toWorld(c, info.u, info.side * (W / 2 - 0.04), DOOR_H + 0.12), sid = id + "-sign"; // the only marked doors on the level
     ctx.spawn(sid, { tags: ["l109-seg"], feetPosition: p, rotation: { yaw: yawFor(-along.x * info.side, -along.z * info.side) }, castShadow: false, light: { kind: "point", color: "#ff5a48", intensity: 0.5, distance: 4, shadow: { enabled: false } },
