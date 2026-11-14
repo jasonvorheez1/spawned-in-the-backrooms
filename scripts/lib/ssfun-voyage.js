@@ -97,7 +97,7 @@ function deckTick(ctx, v) {
   const txt = v.at === "sea" ? "AT SEA" : `NOW CALLING AT: ${NAMES[v.at]}`;
   if (!has(ctx, "ssfun-ashore")) ctx.spawn("ssfun-ashore", { tags: ["usable", "interact", "ssfun-gate"], feetPosition: { x: G.x, y: 0, z: G.z }, rotation: { yaw: 90 }, primitive: { kind: "scripted", script: HULL, params: { part: "gate" } }, material: { pbr: true }, physics: "static", behavior: "scripts/lib/ssfun-voyage.js", state: {} });
   if (!has(ctx, "ssfun-sign")) ctx.spawn("ssfun-sign", { tags: ["ssfun-gate"], feetPosition: { x: G.x + 0.5, y: 0, z: G.signZ }, rotation: { yaw: 90 }, primitive: { kind: "scripted", script: HULL, params: { part: "sign" } }, material: { pbr: true }, physics: "static", state: { text: txt },
-    ui: `<div face="front" width="0.92m" emissive class="text-center font-bold" style="font-size:44px;line-height:1.1;color:#fde68a;margin-top:-300px">GANGWAY<br><span style="font-size:58px;color:#fff6c8">{{ state.text }}</span></div>` });
+    ui: `<div face="front" width="0.92m" emissive class="text-center font-bold" style="font-size:44px;line-height:1.05;color:#fde68a">GANGWAY<br><span style="font-size:40px;color:#fff6c8">{{ state.text }}</span></div>` });
   const gate = ctx.getObject("ssfun-ashore"), sign = ctx.getObject("ssfun-sign");
   const want = open ? { name: "Gangway gate", verb: "Go ashore", prompt: "Go ashore", info: NAMES[v.at] } : { name: "Gangway gate", verb: "Closed", prompt: "Open water.", info: v.at === "sea" ? "Open water." : "Coming in through the fog." };
   if (gate && gate.state.prompt !== want.prompt) gate.state = want;
