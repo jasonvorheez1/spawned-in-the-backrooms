@@ -14,11 +14,13 @@ import { npcState } from "../../scripts/lib/stats.js";
 
 import { rbox } from "../../scripts/lib/rbox.js";
 import { layService } from "../../scripts/lib/level61-service.js";
+import CIGS from "../../scripts/lib/data/cigs.yml";
+const CIG = (k) => CIGS[k]?.model;
 
 export const cadence = "1s";
 const TOILET_GLB = "/cdn/value.584d89d495be90361b2f1c260e71cd5079b14f1e5d1b0a3346dd5bc4c808c0dc.glb";
 const VANITY_GLB = "/cdn/value.fc171ef1463c6b6014a17a934459781e7d541b202325257a5ddb0e02de9788c4.glb";
-const V = 79; // 79: soda machines are Shelly's cola machine (fnv pack), cola crates by the food-court ones. // 78: liquorette tables carry real cigarette packs (art/cigs). // 77: every store till is the Tripo+Studio register (art/gib/build.py). // 76: every food-court stool is the Tripo+Studio diner stool; Gib counter carries pie case, brewer, condiments (art/gib/build.py). // 75: Gib's Grub, the greasy spoon in the south wall. // 74: supply-room overflow jam (stacked, tipped, wall-facing machines). // 73: bar tops, menus, tills, trays, candles and table drinks follow the lowered Liquorette and Clippers furniture down. // 71: bar counters, stools, chairs and tables in Liquorette and Clippers lowered to fit the 1.2 m critters (Shelly). 70: 70: liquorette tables carry pints, tumblers, ashtrays. 69: liquorette damask walls, tin ceiling, tin sign turned. // 68: toilet repainted white porcelain. 67: restroom toilet + vanity turned to their true front axis and sized to real fixtures. 66: restroom toilets + vanities are Tripo models (art/l61-rest). 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
+const V = 80; // 80: cig packs on the Clippers bar and the M.E.G. desk. // 79: soda machines are Shelly's cola machine (fnv pack), cola crates by the food-court ones. // 78: liquorette tables carry real cigarette packs (art/cigs). // 77: every store till is the Tripo+Studio register (art/gib/build.py). // 76: every food-court stool is the Tripo+Studio diner stool; Gib counter carries pie case, brewer, condiments (art/gib/build.py). // 75: Gib's Grub, the greasy spoon in the south wall. // 74: supply-room overflow jam (stacked, tipped, wall-facing machines). // 73: bar tops, menus, tills, trays, candles and table drinks follow the lowered Liquorette and Clippers furniture down. // 71: bar counters, stools, chairs and tables in Liquorette and Clippers lowered to fit the 1.2 m critters (Shelly). 70: 70: liquorette tables carry pints, tumblers, ashtrays. 69: liquorette damask walls, tin ceiling, tin sign turned. // 68: toilet repainted white porcelain. 67: restroom toilet + vanity turned to their true front axis and sized to real fixtures. 66: restroom toilets + vanities are Tripo models (art/l61-rest). 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -453,6 +455,8 @@ function lay(ctx) {
   box("l61-clip-back-dado", -21, 0, -31.8, 13.6, 1.05, 0.12, DARKWOOD, { physics: undefined });
   // the carved back bar: two Tripo mahogany units with stained-glass crowns and a clock, bottles behind glass, flanking the doorway to the till
   for (const [i, x] of [-23.6, -18.4].entries()) sp(`l61-clip-backbar-${i}`, { feetPosition: { x, y: 0, z: -31.2 }, rotation: { yaw: 90 }, model: { id: BACKBAR }, physics: "static", visibleRange: { max: 55 } });
+  // the creator's cigarette mod on the Clippers bar top (y 1.05): packs a regular left by the stools, a carton by the till end
+  for (const [i, [x, z, yaw, k]] of [[-24.6, -30.05, 30, "camel-camelpack"], [-22.3, -30.0, -70, "ls-pack"], [-18.0, -30.1, 115, "blackdeath-pack"], [-16.6, -30.35, 5, "camel-camelcarton"]].entries()) if (CIG(k)) sp(`l61-clip-cig-${i}`, { feetPosition: { x, y: 1.051, z }, rotation: { yaw, pitch: -90 }, pivot: "center", castShadow: false, visibleRange: { max: 25 }, model: { id: CIG(k), forward: "+z" } });
   for (const [i, x] of [-25, -20.5, -16.4].entries()) light(`l61-clip-lamp-${i}`, x, 2.55, -28.1, "#ffcf9b", 2, 6);
 
   // THE WURLITZER 80s INTERNET RADIO JUKEBOX in Clippers
@@ -710,6 +714,8 @@ function lay(ctx) {
     sp("l61-meg-booth-lamp", { feetPosition: { x: bx0, y: 2.1, z: bz0 }, light: { kind: "point", color: "oklch(0.9 0.06 80)", intensity: 2, distance: 5 } });
     // desk: logbook, clipboard, radio crackling, mug, folding chair
     megM("l61-meg-desk", X + 2.4, 4.2, 180, "/cdn/value.d81d2b065dd48090432a15a38512d3a0cb226efecee1d6c6a54283e0fec92514.glb", { body: "static", collider: "box" });
+    // a guard's smokes on the desk top (y 0.95): an open pack and a carton
+    for (const [i, [dx, dz, yaw, k]] of [[2.1, 4.3, 20, "jinling-pack"], [2.65, 4.35, -8, "jinling-carton"]].entries()) if (CIG(k)) sp(`l61-meg-cig-${i}`, { feetPosition: { x: X + dx, y: 0.951, z: dz }, rotation: { yaw, pitch: -90 }, pivot: "center", castShadow: false, visibleRange: { max: 25 }, model: { id: CIG(k), forward: "+z" } });
     sp("l61-meg-radio", { feetPosition: { x: X + 2.9, y: 0.8, z: 4.0 },
       audio: { clip: G("military-handheld-radio-static-chatter-squelch-loop"), loop: true, gain: 0.08, spatial: true, maxDistance: 7 } });
     // olive crates stacked by the wall
