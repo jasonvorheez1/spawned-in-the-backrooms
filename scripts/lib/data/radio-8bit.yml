@@ -9,52 +9,74 @@ segments:
   - { kind: host, title: "Station ID", dur: 10.48, clip: "/cdn/value.ce0270229fe2c9128a6508c3c2be63504a01dfbe58e367c4df91674ab1455ba8.mp3" }
   - { kind: host, title: "How I Got to the Basement", dur: 15.54, clip: "/cdn/value.9b093bb70af411e7ec0bdf668a54a8de5eeae78feb44d626c74f4747fc044c96.mp3" }
   - { kind: song, title: "Pixel Panic", dur: 194.14, clip: "/cdn/music-8-bit-arcade-theme-gjlotxnm.mp3" }
+  - { kind: host, title: "The Story, Again", dur: 20.32, clip: "/cdn/value.dbaa67f11998002499520f1f3991a73440297ecfa4b3701f09a6e2167e5dd989.mp3" } # new-lines-386892
   - { kind: host, title: "Thoughts on Humans", dur: 19.12, clip: "/cdn/value.da603804214fac4e8a211c2cf241b4bb23119edf98a0a674d8a7180db7c38a4d.mp3" }
   - { kind: song, title: "Coin Door", dur: 86.52, clip: "/cdn/music-8-bit-retro-arcade-1hn1wm4p.mp3" }
+  - { kind: host, title: "Fart", dur: 14.21, clip: "/cdn/value.4afec1764b10ff87ac5cdae27011c3d60724f0de12866d3479cf1b46446cc82c.mp3" } # new-lines-386892
   - { kind: host, title: "Yo Mama", dur: 12.04, clip: "/cdn/value.064f9d1409eb939824b55588b7c2b473e76d1b52c8a7dcf6058039414e96314d.mp3" }
   - { kind: song, title: "Respawn Rag", dur: 140.54, clip: "/cdn/music-chiptune-8bit-arcade-level-png6msxk.mp3" }
+  - { kind: host, title: "Cashew Water", dur: 21.79, clip: "/cdn/value.e7b5ba8c954e4acf97adab8c20ab7485da7d851662b0824fb7aa1ff16d907247.mp3" } # new-lines-386892
   - { kind: host, title: "Ole'hba Can't Be Bothered", dur: 6.3, clip: "/cdn/value.9ea49df721be8c7a477fef839315fa7249cb4cbd05a829b6e83fb3570c954a58.mp3" }
   - { kind: host, title: "Station ID", dur: 10.42, clip: "/cdn/value.18d1da8ca02115230ac7eda76e5f21752ccd392f9758d3c2a2efbd98711d9e7f.mp3" }
   - { kind: host, title: "How I Got to the Basement", dur: 20.85, clip: "/cdn/value.9605167e8ccea263efbd0e6b135fee08fcd38a799a6982f21e75a40a5950a1b8.mp3" }
   - { kind: song, title: "Hallway Warp", dur: 146.57, clip: "/cdn/music-chiptune-8bit-retro-loop-fwrmrjrp.mp3" }
+  - { kind: host, title: "Threat", dur: 14.11, clip: "/cdn/value.9889e3ca2928cf619d8c7dee3e1c29db9e1a28323a3c0aecb8748b37520af3dd.mp3" } # new-lines-386892
   - { kind: host, title: "Thoughts on Humans", dur: 12.67, clip: "/cdn/value.bc8340c4ee23dd72d24f1cf4d12da0b03e1d8f494d3c1eec28296860c09fb4c2.mp3" }
   - { kind: song, title: "Bonk Boogie", dur: 128.71, clip: "/cdn/music-chiptune-adventure-retro-arcade-wlhk2fz9.mp3" }
+  - { kind: host, title: "Wikidot Lore: Smilers", dur: 18.49, clip: "/cdn/value.f1aaf3107f2b68d423dc8ebae0bc4e0794aaedfa35edfee2ca371445d494ae9f.mp3" } # new-lines-386892
   - { kind: host, title: "Yo Mama", dur: 8.33, clip: "/cdn/value.2dcb8bc7b32fbc89210fe268dc4e3275a1cd9115c877b61b1a9a1876d3a483fa.mp3" }
   - { kind: host, title: "Basement Notes", dur: 12.56, clip: "/cdn/value.4f1eb36b3674bc144af20dbd4fad080ade289e492495520397803e6eca083c76.mp3" }
   - { kind: song, title: "Lobby Level 1-1", dur: 349.83, clip: "/cdn/music-chiptune-arcade-retro-game-5xmigav1.mp3" }
+  - { kind: host, title: "The Story, Part Two", dur: 19.36, clip: "/cdn/value.d4b17ef52e4f6be39fe53593758c3ebfb43f913b4799937bbe670c3e2a5466ad.mp3" } # new-lines-386892
   - { kind: host, title: "Ole'hba Can't Be Bothered", dur: 7.52, clip: "/cdn/value.f7887a791b39c782390bc3aed0724900a3b63e6860db8cbaec80b2a368c646cc.mp3" }
   - { kind: song, title: "Almond Rush", dur: 142.94, clip: "/cdn/music-chiptune-battle-retro-8bit-zihs6hj9.mp3" }
+  - { kind: host, title: "Lore: Level 6", dur: 15.28, clip: "/cdn/value.ffb00eb6d78900760d78062aeb93f0332e4e37ece960f41ccfd27924c2965b6e.mp3" } # new-lines-386892
   - { kind: host, title: "How I Got to the Basement", dur: 25.94, clip: "/cdn/value.b7173aa18e5339cfc6a19ec736b9c88c9261614f79d85d9e53bf8fb1e3dbe2cc.mp3" }
   - { kind: song, title: "Noclip Hop", dur: 92.92, clip: "/cdn/music-chiptune-retro-arcade-fast-vdw9xz4f.mp3" }
+  - { kind: host, title: "Threat Two", dur: 11.21, clip: "/cdn/value.710c1de312c74b074fbd040fd227c7b2ba6baa15fa6ab6e8dbd3deaa7b2e2752.mp3" } # new-lines-386892
   - { kind: host, title: "Thoughts on Humans", dur: 19.2, clip: "/cdn/value.03b0a78c7e89c0edabcdc996af132a3646a1c5b9b94367a77310e160adc9ad2f.mp3" }
   - { kind: song, title: "Fluorescent Boss", dur: 56.84, clip: "/cdn/music-chiptune-retro-arcade-game-15uoxiqf.mp3" }
+  - { kind: host, title: "Fart Two", dur: 11.78, clip: "/cdn/value.0a26932e300775a17b6017c310e89d27b4763d10dda18347e155f442073fd9a8.mp3" } # new-lines-386892
   - { kind: host, title: "Yo Mama", dur: 11.47, clip: "/cdn/value.a9567964f808979cf6e4369a2af0a022adaff7ce48460b7e72d7bd86a82f8ce5.mp3" }
   - { kind: song, title: "Carpet Crawl", dur: 90.78, clip: "/cdn/music-chiptune-retro-arcade-game-r82emobc.mp3" }
+  - { kind: host, title: "Lore: Hounds", dur: 17.5, clip: "/cdn/value.2118ece358105ad12a8a7bb21ec29b2c5195ffe3dc80861e75727c747b6976eb.mp3" } # new-lines-386892
   - { kind: host, title: "Waking Up", dur: 8.49, clip: "/cdn/value.88f6096bbe5f196401717f56c3ff8650322c69696df1ade594f17f42983b244c.mp3" }
   - { kind: song, title: "Basement Blip", dur: 372.14, clip: "/cdn/music-chiptune-retro-arcade-game-xoaobhw4.mp3" }
+  - { kind: host, title: "The Story, Part Three", dur: 16.85, clip: "/cdn/value.64779f5532d368236011904a0df02c25290a769b1d57be6ae6fa8fa805631e9c.mp3" } # new-lines-386892
   - { kind: host, title: "Station ID", dur: 8.39, clip: "/cdn/value.359dfd62359d40caa7929ee5675637033ef02a39b616482f3aa76fa29fb6fd25.mp3" }
   - { kind: host, title: "Guest: Ralph from Radio Backrooms", dur: 42.68, clip: "/cdn/value.71849c2435983c11d5587a1a223ad95404a64b4e23d907e31bffe80aaa7a869f.mp3" }
   - { kind: song, title: "Smile Run", dur: 120.11, clip: "/cdn/music-chiptune-retro-arcade-groove-stxcn888.mp3" }
+  - { kind: host, title: "Cashew Water Two", dur: 19.44, clip: "/cdn/value.f266f9f2a255963180dfd992d40fd469f71fc5d1978433e3f342851272e0b0df.mp3" } # new-lines-386892
   - { kind: host, title: "Guest: Ralph from Radio Backrooms", dur: 17.68, clip: "/cdn/value.78f57638ac957bd82a4d1f0a2f80ea8e1af07f86c6e75777acd0f4d9a821e5ce.mp3" }
   - { kind: song, title: "Exit Not Found", dur: 59.19, clip: "/cdn/music-chiptune-retro-arcade-level-19c9334b.mp3" }
+  - { kind: host, title: "Lore: Level 37", dur: 17.61, clip: "/cdn/value.bcf1d29f6faa1eadd6e0d38e4222e0c565664860b78702189d537f0df7ada0aa.mp3" } # new-lines-386892
   - { kind: host, title: "Guest: Ralph from Radio Backrooms", dur: 26.25, clip: "/cdn/value.e1856976d51c2ea62232e7aa870a1726f18f9d89b8a47edcc98e29270892c68c.mp3" }
   - { kind: song, title: "Yellow Sprite", dur: 58.75, clip: "/cdn/music-chiptune-retro-arcade-level-488peloa.mp3" }
+  - { kind: host, title: "Lore: Partygoers", dur: 16.82, clip: "/cdn/value.7b7664b6e295bc0c3e79b7aa8adb92ad98b14b33cd126c9767f741aa6df32d9c.mp3" } # new-lines-386892
   - { kind: host, title: "Guest: Ralph from Radio Backrooms", dur: 22.31, clip: "/cdn/value.40512087593c2f9edb05917a46d0f9fa6bc17ea423b1df862b4e8f3e05046c36.mp3" }
   - { kind: song, title: "Pipe Dream", dur: 343.9, clip: "/cdn/music-chiptune-retro-arcade-level-n5x7bzgm.mp3" }
+  - { kind: host, title: "Threat Three", dur: 12.64, clip: "/cdn/value.f1a6b60d7942e2f3af8f06f182c2194aa8ed62cc5d228e9e43c23e0015d451e5.mp3" } # new-lines-386892
   - { kind: host, title: "Guest: Ralph from Radio Backrooms", dur: 11.7, clip: "/cdn/value.a23c5edbeba89f321862bf25396de4a74636c191d8aa48f10254129f722b0322.mp3" }
   - { kind: song, title: "Turntable Turbo", dur: 68.49, clip: "/cdn/music-chiptune-retro-arcade-level-tpleq41o.mp3" }
+  - { kind: host, title: "Lore: Almond Water", dur: 15.96, clip: "/cdn/value.2c48c078e7380054d3d3d0206cfa630d2d4015fe90a334855fe389cf1857646a.mp3" } # new-lines-386892
   - { kind: host, title: "How I Got to the Basement", dur: 23.04, clip: "/cdn/value.c0f056e79e8b372c0dd18137698940d554a5d680a797d3ace185ad396282695e.mp3" }
   - { kind: song, title: "Hound Chase", dur: 74.03, clip: "/cdn/music-chiptune-retro-arcade-loop-c6urle1v.mp3" }
+  - { kind: host, title: "Lore: No-clipping", dur: 14.97, clip: "/cdn/value.92e1a5fde4e6ebb1181360fb34b65a91b566ce4efcc94696819dae474ebe35e8.mp3" } # new-lines-386892
   - { kind: host, title: "Thoughts on Humans", dur: 10.84, clip: "/cdn/value.a4fa3621c780b0c07d23318079c3f335ce4958266ed6a7aa58a9bb6fcb3c887c.mp3" }
   - { kind: song, title: "Save Point Blues", dur: 71.29, clip: "/cdn/music-chiptune-retro-arcade-loop-pe48sne6.mp3" }
+  - { kind: host, title: "The Story, Part Four", dur: 17.03, clip: "/cdn/value.89a88135bd19c887018b23a7bee3308cde68565bcda68fa134c7ac4ebad97ba9.mp3" } # new-lines-386892
   - { kind: host, title: "Yo Mama", dur: 9.43, clip: "/cdn/value.af103331668554a07601d197ce52d08c94c885cc2fc1963609223d77f87af2be.mp3" }
   - { kind: song, title: "Elevator Dash", dur: 389.17, clip: "/cdn/music-chiptune-retro-level-arcade-z9bmdju7.mp3" }
+  - { kind: host, title: "Snack Break", dur: 10.42, clip: "/cdn/value.50efce54e46ed4bc0eae181b9ec0df81247e62ac9c6df32de5037f2ebf620477.mp3" } # new-lines-386892
   - { kind: host, title: "Ole'hba Can't Be Bothered", dur: 6.4, clip: "/cdn/value.466ccf8a52d1c275be39cc0bffbcf7e69d7951b2602616b430f5fabb3b3f45f2.mp3" }
   - { kind: song, title: "Lazy Loop", dur: 104.41, clip: "/cdn/music-chiptune-retro-level-loop-8jzhn2qu.mp3" }
+  - { kind: host, title: "Lore: Level 0", dur: 19.17, clip: "/cdn/value.7e335ccfeb8342040b161a9d9a37bd7415702712e5368194e4e89d053c399789.mp3" } # new-lines-386892
   - { kind: host, title: "Basement Notes", dur: 9.46, clip: "/cdn/value.dd3a8ab0a06750ed16476a19c29c7fde93832b9ded03440267b8df3331112911.mp3" }
   - { kind: song, title: "Vending Bonk", dur: 128.89, clip: "/cdn/music-chiptune-retro-melody-8bit-xbf9479w.mp3" }
+  - { kind: host, title: "Threat Four", dur: 12.64, clip: "/cdn/value.138f9cd6245ad3e17b0253dfb159d425d18fffa80f9ffba077b03fa20aaf346f.mp3" } # new-lines-386892
   - { kind: host, title: "How I Got to the Basement", dur: 27.56, clip: "/cdn/value.964cb6d90e626dd3467fd94f8f3590ac78354862942573cc9b4c7e8c41e85144.mp3" }
   - { kind: song, title: "Snack Attack", dur: 252.79, clip: "/cdn/music-retro-8-bit-arcade-loop-z32uq3xj.mp3" }
+  - { kind: host, title: "Station ID 3", dur: 12.36, clip: "/cdn/value.6e5d7abf8c32b216f59fc3987c1e7773da8b7979662bf405a4afdf1270d29221.mp3" } # new-lines-386892
   - { kind: host, title: "Thoughts on Humans", dur: 15.99, clip: "/cdn/value.223eeebd6e7e10e2ea653afb6252adf5bd5d9cbadfb27fd04d0135f8002c4b19.mp3" }
   - { kind: song, title: "Damp Data", dur: 229.17, clip: "/cdn/music-retro-8bit-arcade-game-52tgqjq9.mp3" }
   - { kind: host, title: "Yo Mama", dur: 7.71, clip: "/cdn/value.035062dc3c2a2a61b0e2664102c02f4410d3c2b956b0f8a2c8d2ccc5ef29cb58.mp3" }
