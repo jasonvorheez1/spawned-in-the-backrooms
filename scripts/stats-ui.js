@@ -1,10 +1,11 @@
+import { xpNeedFor } from './lib/progression.js'
 import { wristNav } from './lib/wrist-nav.js'
 // The character sheet (K), the carry-weight chip and the creature read-out. All from player.state
 // (written by scripts/stats.js): attr, skl, apts, spts, sheetOpen, target. Buttons send the 'stat' action.
 import { GROUPS, karmaOf, karmaTitle, karmaColor, titleOf, titleColor, fameOf, infamyOf, megRank } from './lib/rep.js'
 import L from './lib/data/level0.yml'
 import W from './lib/weapons.js'
-import { ATTRS, SKILLS, ATTR_MAX, SKILL_MAX, attrsOf, skillsOf, tagsOf, dmgMul, derived, carried, burden, handling, reqText } from './lib/stats.js'
+import { ATTRS, SKILLS, ATTR_MAX, SKILL_MAX, attrsOf, skillsOf, tagsOf, spentOf, baseSkill, dmgMul, derived, carried, burden, handling, reqText } from './lib/stats.js'
 import { esc as escT, escKeyHandler } from './lib/ui-kit.js'
 
 const FIG = `<svg viewBox="0 0 120 180" fill="none" stroke="#d5b77b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -55,6 +56,16 @@ const CSS = `<style>
 #sh .row .n{flex:1;min-width:0}
 #sh .row .n small{display:block;font-size:11px;color:#aab09f;margin-top:2px;line-height:1.4}
 #sh .row .v{width:44px;text-align:right;font-size:18px;font-variant-numeric:tabular-nums}
+#sh .skill-meter{height:4px;margin-top:6px;max-width:220px;background:#30372b;overflow:hidden}
+#sh .skill-meter i{display:block;height:100%;background:var(--ui-accent,#d5b77b);transition:width .25s ease}
+#sh .skill-meta{font-size:10px;color:#aab09f;letter-spacing:.04em}
+#sh .xp-wrap{display:flex;align-items:center;gap:12px;min-width:0}
+#sh .xp-bar{width:110px;height:5px;background:#30372b;overflow:hidden}
+#sh .xp-bar i{display:block;height:100%;background:var(--ui-accent,#d5b77b);transition:width .3s ease}
+#sh button:focus-visible{outline:2px solid #ffe2a8;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){#sh .skill-meter i,#sh .xp-bar i{transition:none}}
+@media (max-width:680px){#sh .xp-bar{width:50px}#sh .row{gap:6px}#sh .skill-meta{font-size:9px}}
+
 #sh .pips{display:flex;gap:2px}
 #sh .pips i{width:7px;height:11px;background:#3e4637}
 #sh .pips i.on{background:#d5b77b}
@@ -94,7 +105,12 @@ export function statsUi(ctx, player) {
   const at = attrsOf(s), sk = skillsOf(s), d = derived(s), apts = s.apts ?? 0, spts = s.spts ?? 0
   const tg = tagsOf(s), tl = s.tagsLeft ?? 0
   const attrRows = ATTRS.map((a, i) => `<div class="row"><div class="n">${a.name}<small>${a.info}</small></div><div class="pips">${Array.from({ length: ATTR_MAX }, (_, q) => `<i class="${q < at[a.k] ? 'on' : ''}"></i>`).join('')}</div><div class="v">${at[a.k]}</div>${s.creating ? `<button ${at[a.k] > 1 ? '' : 'disabled'} onclick="sendAction('stat',{k:'attrDown',i:${i}})">&minus;</button>` : ''}<button ${apts > 0 && at[a.k] < ATTR_MAX ? '' : 'disabled'} onclick="sendAction('stat',{k:'attr',i:${i}})">+</button></div>`).join('')
-  const skillRows = SKILLS.map((k, i) => `<div class="row"><div class="n">${tg.includes(k.k) ? '<b style="color:#d5b77b">★ </b>' : ''}${k.name}<small>${k.info}</small></div><div class="v">${sk[k.k]}</div>${tl > 0 && !tg.includes(k.k) ? `<button style="width:40px;font-size:10px" onclick="sendAction('stat',{k:'tag',i:${i}})">TAG</button>` : ''}<button ${spts > 0 && sk[k.k] < SKILL_MAX ? '' : 'disabled'} onclick="sendAction('stat',{k:'skill',i:${i}})">+</button></div>`).join('')
+  const spent = spentOf(s)
+  const skillRows = SKILLS.map((k, i) => {
+    const tagged = tg.includes(k.k), available = spts > 0 && sk[k.k] < SKILL_MAX
+    const tagButton = s.creating && tagged ? `<button aria-label="Remove ${k.name} tag" onclick="sendAction('stat',{k:'untag',i:${i}})">★</button>` : tl > 0 && !tagged ? `<button aria-label="Tag ${k.name}" onclick="sendAction('stat',{k:'tag',i:${i}})">TAG</button>` : ''
+    return `<div class="row"><div class="n">${tagged ? '<b style="color:#d5b77b">★ </b>' : ''}${k.name}<small>${k.info}</small><div class="skill-meter" aria-hidden="true"><i style="width:${sk[k.k]}%"></i></div><div class="skill-meta">Base ${baseSkill(at, k)}${tagged ? ' · Tag +15' : ''} · Invested ${spent[i]}</div></div><div class="v">${sk[k.k]}<small style="font-size:10px;color:#aab09f">/100</small></div>${tagButton}${s.creating ? '' : `<button aria-label="Add one point to ${k.name}" ${available ? '' : 'disabled'} onclick="sendAction('stat',{k:'skill',i:${i}})">+1</button><button aria-label="Add up to five points to ${k.name}" ${available ? '' : 'disabled'} onclick="sendAction('stat',{k:'skill',i:${i},amount:5})">+5</button>`}</div>`
+  }).join('')
 
   const slow = burden(s) < 1
   const wp = W[s.equipped] ?? W.fists
@@ -129,7 +145,7 @@ export function statsUi(ctx, player) {
         </div>
       </div>`
     } else if (tab === 'skills') {
-      bodyHtml = `${tabsBar}<div class="sh-panel"><div class="sec">SKILLS · ★ TAGGED (+15)</div>${skillRows}</div>`
+      bodyHtml = `${tabsBar}<div class="sh-panel"><div class="sec">SKILLS · ★ TAGGED (+15) · ${spts} POINTS AVAILABLE</div><p class="skill-meta">Gain ${d.skillPerLevel} points per level · +5 spends only what you have room for.</p>${skillRows}</div>`
     } else if (tab === 'status') {
       bodyHtml = `${tabsBar}<div class="sh-panel">${statusPanel(s, mh, ms)}</div>`
     } else {
@@ -164,7 +180,7 @@ export function statsUi(ctx, player) {
     ${s.creating ? '' : wristNav('sheet')}
     ${bodyHtml}
     <div class="ft">
-      <span>${s.creating ? 'Allocate all Attribute & Tag points to begin' : `XP ${s.xp ?? 0} / ${L.xpBase * (s.level ?? 1)}`}</span>
+      <span class="xp-wrap">${s.creating ? 'Allocate all Attribute & Tag points to begin' : `<span>XP ${s.xp ?? 0} / ${xpNeedFor(s)} · ${Math.max(0, xpNeedFor(s) - (s.xp ?? 0))} to next level</span><span class="xp-bar" aria-hidden="true"><i style="width:${pct(s.xp ?? 0, xpNeedFor(s))}%"></i></span>`}</span>
       <button ${s.creating && (apts > 0 || (s.tagsLeft ?? 0) > 0) ? 'disabled' : ''} onclick="sendAction('stat',{k:'close'})">${s.creating ? 'Done' : 'Close · Esc'}</button>
     </div>
   </div>`

@@ -1,3 +1,5 @@
+import { xpNeed, migrateXp } from './lib/progression.js'
+export { xpNeed } from './lib/progression.js'
 import { migrate, wakePlace, wakeLog, canSaveHere } from "./lib/save.js"
 import { CORRIDOR, agilityProfile, hitObstacle } from './lib/levelrun-mechanics.js'
 import { startRescueCut } from './lib/levelrun-cut.js'
@@ -147,7 +149,6 @@ pop muzzle burst=1 life=.07 at=point() size=.6 col=hdr(3.5,2.4,1.1) a=.8>0 sz=$s
 
 export const maxHp = (lv, s) => L.hp + (lv - 1) * L.perLevel.hp + (s?.attr ? derived(s).hpBonus : 0)
 export const maxSan = (lv, s) => L.sanity + (lv - 1) * L.perLevel.sanity + ((s?.snacks?.slap_bracelet ?? 0) > 0 ? 5 : 0) + (s?.attr ? derived(s).sanBonus : 0)
-export const xpNeed = (lv) => L.xpBase * lv
 
 const owned = (s) => ['fists', ...(s.weapons ? s.weapons.split(',') : [])]
 const usable = (s, k) => !!W[k] // no level lock on weapons (Shelly, #37: any weapon you hold works)
@@ -178,6 +179,7 @@ function walkOf(ctx) { return (ctx.self.session['player.js'] ??= {}) }
 function ensure(ctx) {
   const s = ctx.self.state
   if (s.level == null) Object.assign(s, { level: 1, xp: 0, hp: L.hp, sanity: L.sanity, stamina: L.stamina, battery: L.battery, almonds: 2, visited: '', kills: 0, escapes: 0, deaths: 0, weapons: '', equipped: 'fists', ...START })
+  migrateXp(s)
 }
 
 function decode(hex) { const v = new Uint8Array(N * N); for (let i = 0; i < hex.length; i++) { const n = parseInt(hex[i], 16); for (let b = 0; b < 4; b++) if (n & (1 << b)) v[i * 4 + b] = 1 } return v }
@@ -226,6 +228,7 @@ function sound(ctx, name, volume = 0.7, mine = false) {
 const nowMsg = (ctx) => ctx.now()
 export function gain(ctx, n) {
   const s = ctx.self.state
+  migrateXp(s)
   const got = Math.round(n * derived(s).xp)
   if (got <= 0) return
   s.xp += got
@@ -482,8 +485,8 @@ function takeToken1(ctx, token, opts) {
     const i = SKILLS.findIndex((k) => k.k === token.slice(5))
     if (i < 0) return { ok: false, msg: '' }
     if (skillsOf(s)[SKILLS[i].k] >= SKILL_MAX) return { ok: false, msg: `${SKILLS[i].name} is already 100` }
-    const sp = spentOf(s); sp[i] += 3; s.skl = sp.join(',')
-    s.pickedAt = now; s.notice = { text: `You read the book: ${SKILLS[i].name} +3`, at: now }; if (opts?.xp !== false) gain(ctx, L.xpAlmond)
+    const added = Math.min(3, SKILL_MAX - skillsOf(s)[SKILLS[i].k]); const sp = spentOf(s); sp[i] += added; s.skl = sp.join(',')
+    s.pickedAt = now; s.notice = { text: `You read the book: ${SKILLS[i].name} +${added}`, at: now }; if (opts?.xp !== false) gain(ctx, L.xpAlmond)
     sound(ctx, 'pickup-weapon', 0.5, true)
     return { ok: true }
   }

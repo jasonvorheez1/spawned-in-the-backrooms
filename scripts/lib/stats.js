@@ -1,6 +1,6 @@
 // HALOGEN: the seven attributes every wanderer and every creature has, and thirteen skills that work like
 // Fallout: New Vegas: a skill starts at 2 + 2 x its attribute + half your Luck, three skills are tagged (+15),
-// each level gives 10 + half your Nous in skill points, and a skill tops out at 100. Pure data and arithmetic,
+// each level gives 9 + half your Nous in skill points, and a skill tops out at 100. Pure data and arithmetic,
 // shared by the player (scripts/player.js), the creatures, the character sheet (scripts/stats-ui.js), the loot
 // rules (scripts/lib/items.js) and the locks on containers (scripts/interact.js).
 //   H Hardiness   (Strength)     carry weight, melee and unarmed damage
@@ -139,7 +139,7 @@ export function derived(s) {
     wear: Math.max(0.5, 1.2 - k.repair * 0.007), // weapon wear per use
     repairCap: Math.min(100, 50 + k.repair / 2), // a kit cannot repair past this condition
     xp: 1,
-    skillPerLevel: 10 + Math.floor(a.n / 2),
+    skillPerLevel: 9 + Math.floor(raw.n / 2),
   }
 }
 

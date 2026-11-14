@@ -36,6 +36,7 @@ export function spend(s, d) {
   if (d.k === 'close') { if (s.creating && ((s.apts ?? 0) > 0 || (s.tagsLeft ?? 0) > 0)) return; s.sheetOpen = false; return }
   if (d.k === 'tab') { s.sheetTab = ['stats', 'skills', 'status', 'rep'].includes(d.t) ? d.t : 'stats'; return }
   const i = Number(d.i)
+  if (!Number.isInteger(i)) return
   if (d.k === 'attr' && i >= 0 && i < ATTRS.length && (s.apts ?? 0) > 0) {
     const a = attrsOf(s), key = ATTRS[i].k
     if (a[key] >= ATTR_MAX) return
@@ -50,8 +51,10 @@ export function spend(s, d) {
     s.tags = tg.filter((x) => x !== key).join(','); s.tagsLeft = (s.tagsLeft ?? 0) + 1
   } else if (d.k === 'skill' && i >= 0 && i < SKILLS.length && (s.spts ?? 0) > 0) {
     const sp = spentOf(s)
-    if (skillsOf(s)[SKILLS[i].k] >= SKILL_MAX) return
-    sp[i] += 1; s.skl = sp.join(','); s.spts -= 1
+    const room = SKILL_MAX - skillsOf(s)[SKILLS[i].k]
+    const amount = Math.min(room, s.spts, d.amount === 5 ? 5 : 1)
+    if (amount <= 0) return
+    sp[i] += amount; s.skl = sp.join(','); s.spts -= amount
   } else if (d.k === 'tag' && i >= 0 && i < SKILLS.length && (s.tagsLeft ?? 0) > 0) { // tag a skill, once: +15
     const tg = tagsOf(s), key = SKILLS[i].k
     if (tg.includes(key)) return

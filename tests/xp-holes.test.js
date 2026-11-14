@@ -270,3 +270,11 @@ test('Level 109 BackOS controls respect skills and release only the terminal roo
   expect(here.state.lock).toBe(''); expect(elsewhere.state.lock).toBe('lockpick:50')
   expect(ctx.place.state.l109StockUnlocked['room-a']).toBe(true)
 })
+test('level-up awards points once per level and carries excess XP forward', () => {
+  const s = baseState({ level: 1, xp: 190, xpCurve: 1, spts: 0, sanity: 0 })
+  const ctx = makePlayerCtx(s)
+  player.gain(ctx, 20)
+  expect(s.level).toBe(2); expect(s.xp).toBe(10); expect(s.spts).toBe(11)
+  player.gain(ctx, 1000)
+  expect(s.level).toBe(4); expect(s.xp).toBe(355); expect(s.spts).toBe(33)
+})

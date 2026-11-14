@@ -28,7 +28,7 @@ xpCellsPer: 10
 xpAlmond: 5
 xpKill: 36
 xpExit: 150
-xpBase: 72         # xp to next level = xpBase * level
+xpBase: 72         # legacy XP curve, used to preserve older saves when migrating
 perLevel: { hp: 10, sanity: 6, damage: 1.6 }   # Nov 8 hard: damage was 3 a level; levels made you a god
 damage: 14
 swingCooldown: 0.55

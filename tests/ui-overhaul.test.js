@@ -144,3 +144,30 @@ test('renderHud applies accessibility prefs, renders journal filters, and shows 
   expect(html).toContain('ui-toast')
   expect(html).toContain('Saved progress')
 })
+const { xpNeed, xpNeedFor, migrateXp } = await import('../scripts/lib/progression.js')
+const { derived, skillsOf, SKILLS } = await import('../scripts/lib/stats.js')
+
+test('experience curve preserves existing level progress exactly once', () => {
+  expect(xpNeed(1)).toBe(200); expect(xpNeed(10)).toBe(965)
+  const s = { level: 4, xp: 144, spts: 8, skl: '3,0,0,0,0,0,0,0,0,0,0,0,0' }
+  expect(xpNeedFor(s)).toBe(288); migrateXp(s)
+  expect(s.xp).toBe(Math.round(xpNeed(4) / 2)); expect(s.spts).toBe(8); expect(s.skl.startsWith('3,')).toBe(true)
+  const once = s.xp; migrateXp(s); expect(s.xp).toBe(once)
+})
+test('skill spending is bounded, tagged choices can be revised, and sanity cannot reduce earned points', () => {
+  const s = { attr:'5,5,5,5,5,5,5', skl:Array(13).fill(0).join(','), tags:'', tagsLeft:3, creating:true, spts:0 }
+  spend(s, { k:'tag', i:3 }); expect(s.tags).toBe('guns')
+  spend(s, { k:'untag', i:3 }); expect(s.tags).toBe(''); expect(s.tagsLeft).toBe(3)
+  s.creating = false; s.spts = 2; const before = skillsOf(s).guns
+  spend(s, { k:'skill', i:3, amount:5 }); expect(skillsOf(s).guns).toBe(before + 2); expect(s.spts).toBe(0)
+  s.spts = 5; const snapshot = s.skl; spend(s, { k:'skill', i:3.5, amount:5 }); expect(s.skl).toBe(snapshot)
+  s.skl = SKILLS.map((_, i) => i === 3 ? 84 : 0).join(','); spend(s, { k:'skill', i:3, amount:5 })
+  expect(skillsOf(s).guns).toBe(100); expect(s.spts).toBe(4)
+  expect(derived({ ...s, sanity:0 }).skillPerLevel).toBe(derived({ ...s, sanity:100 }).skillPerLevel)
+})
+test('character skills show useful allocation and progress controls', () => {
+  const s = { ...baseState, xpCurve:1, sheetOpen:true, sheetTab:'skills', spts:7 }
+  const html = statsUi({now:()=>1000}, {state:s})
+  expect(html).toContain('7 POINTS AVAILABLE'); expect(html).toContain('Add up to five points to Guns')
+  expect(html).toContain(`XP 120 / ${xpNeed(4)}`); expect(html).toContain('to next level')
+})
