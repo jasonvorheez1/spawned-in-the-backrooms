@@ -7,7 +7,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import FURN from "../../scripts/lib/data/furniture.yml";
 import { layout, hashStr, HOUSES, PAINTS, PROPS, TUNE, FWD, ROAD_W, WALK } from "../../scripts/lib/level9.js";
 export const cadence = "1s";
-const V = 17; // 17: lit houses (lot.lit) get the window lamp and a porch bulb, a third of doors locked; // 16: 16: per-house interior styles (paper, floor, rug, layout, ransacked) and picklable front doors; // 14: dining set split into table + chairs, dresser + kitchen cabinet, only storage is searchable; // 3: Tripo house models on the lots; 6: plaster insides; 7: wallpaper box-mapped, a bedroom wall, furniture and loot inside; 5 (4 hung them on the back): door holes cut, a hinged front door and a stoop on each (keeps seed and loot)
+const V = 18; // 18: motel-pack variants furnish about a third of houses (Shelly Nov 14); 17: 17: lit houses (lot.lit) get the window lamp and a porch bulb, a third of doors locked; // 16: 16: per-house interior styles (paper, floor, rug, layout, ransacked) and picklable front doors; // 14: dining set split into table + chairs, dresser + kitchen cabinet, only storage is searchable; // 3: Tripo house models on the lots; 6: plaster insides; 7: wallpaper box-mapped, a bedroom wall, furniture and loot inside; 5 (4 hung them on the back): door holes cut, a hinged front door and a stoop on each (keeps seed and loot)
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BLUE = { kind: "scripted", script: "engine/blueprint" };
 const ASPHALT = { texture: "cdn/texture-worn-dark-grey-asphalt-road-coarse-aggregate-damp-patches-cracks.png", wrap: "repeat", repeat: [0.3, 0.3], color: "oklch(0.42 0.01 250)", roughness: 0.62, metalness: 0 }; // Shelly "why are level 9 roads water": 0.16 roughness mirrored the sky; damp, not a puddle
@@ -60,7 +60,8 @@ function furnish(ctx, sp, l, H, D, Y) {
   wall("pa", P, z0, P, z1 - 1.7); wall("pb", P, z1 - 0.65, P, z1);
   for (const [k, x] of [["liv", Lc], ["bed", Bc]]) sp(`l9-${l.id}-dome${k}`, { ...IN, feetPosition: at(x, (z0 + z1) / 2, ROOM_H - 0.09), primitive: { kind: "sphere", radius: 0.22, widthSegments: 20, heightSegments: 8, thetaLength: 1.6 }, rotation: { yaw: Y, pitch: 180 }, material: { color: "#fff3d8", emissive: "#ffd9a0", emissiveIntensity: 2.2 }, physics: "none",
     children: [{ id: "glow", feetPosition: { x: 0, y: -0.3, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.07 78)", intensity: 2.6, distance: 9, shadow: { enabled: false } } }] });
-  const piece = (k, x, z, yaw, tag = k) => { const F = FURN.pieces[k]; if (!F) return; const [w, h, d] = F.size, [mat, hp] = MAT[k] ?? ["wood", 45];
+  const motel = roll(sd, 9, 3) === 0; // a third of houses were furnished from the same motel liquidation (Shelly's pack)
+  const piece = (k0, x, z, yaw, tag = k0) => { const k = motel && MOTEL[k0] ? MOTEL[k0] : k0, F = FURN.pieces[k]; if (!F) return; const [w, h, d] = F.size, [mat, hp] = MAT[k] ?? ["wood", 45];
     if (!LOOT[k] && gone(tag)) return;
     const tip = wrecked && (k === "floor_lamp" || k === "dining_chair") && roll(sd, 40 + tag.length, 2) === 0; // knocked over where it stood
     sp(`l9-${l.id}-${tag}`, { ...IN, tags: LOOT[k] ? ["l9furn", "container", "breakable"] : ["l9furn", "breakable"], feetPosition: at(x, z, tip ? Math.min(w, d) / 2 : 0), rotation: tip ? { yaw: Y + yaw, roll: 88 } : { yaw: Y + yaw }, model: { id: F.model, forward: F.forward ?? "-z" }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, physics: { body: "static", collider: "box" },
@@ -89,6 +90,7 @@ function furnish(ctx, sp, l, H, D, Y) {
   }
 }
 
+const MOTEL = { sofa: "motel_couch", double_bed: "motel_bed", armchair: "wingback_chair", floor_lamp: "bulb_lamp", dining_table: "pedestal_table", dining_chair: "leather_chair" };
 const CH = { l: 90, r: -90 }, CAB = (s) => (s > 0 ? -90 : 90), DRS = (s) => (s > 0 ? -90 : 90); // facings, checked by eye
 function lay(ctx, L) {
   const keep = {};
