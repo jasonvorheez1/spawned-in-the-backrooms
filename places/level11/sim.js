@@ -679,7 +679,7 @@ function lay(ctx) {
       ],
     });
     sp("l11-derma-poster", { feetPosition: { x: MALL_X - 5.1, y: 1.9, z: MALL_Z - 8.2 }, rotation: { yaw: 90 }, ui: `<div face="front" width="1.1m" style="width:1100px;height:1400px;background:#f7fbfa;border:18px solid #1b8a5a;font-family:Arial,sans-serif;color:#13324a;padding:60px;box-sizing:border-box"><div style="font-size:110px;font-weight:900;color:#1b8a5a">dermika</div><div style="font-size:60px;margin-top:40px">cuida tu piel</div><div style="font-size:46px;margin-top:80px;line-height:1.5">consultas · láser · cosmética</div></div>`, primitive: { kind: "box", width: 1.1, height: 1.4, depth: 0.02 }, material: { color: "#ffffff" }, children: [ // a slim brushed-aluminium snap frame round the print, rounded rails
-      ...[[0, 1.42, 1.18, 0.04], [0, -0.02, 1.18, 0.04]].map(([x, y, w, h]) => ({ feetPosition: { x, y, z: 0 }, pivot: "center", primitive: { kind: "capsule", radius: 0.02, halfHeight: w / 2 - 0.02 }, rotation: { roll: 90 }, material: { color: "#c9ccd0", metalness: 0.8, roughness: 0.35 } })),
+      ...[1.4, -0.04].map((y) => ({ feetPosition: { x: 0, y, z: 0 }, primitive: { kind: "box", width: 1.18, height: 0.04, depth: 0.035 }, material: { color: "#c9ccd0", metalness: 0.8, roughness: 0.35 } })),
       ...[-0.57, 0.57].map((x) => ({ feetPosition: { x, y: 0, z: 0 }, primitive: { kind: "capsule", radius: 0.02, halfHeight: 0.7 }, material: { color: "#c9ccd0", metalness: 0.8, roughness: 0.35 } })),
     ] });
     // lab: a sample counter with a divider, two chairs, a plant
