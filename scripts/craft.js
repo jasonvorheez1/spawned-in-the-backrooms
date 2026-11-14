@@ -9,7 +9,7 @@ import L21H from './lib/data/level21.yml'
 import B from './lib/data/breakables.yml'
 import { SKILL_NAMES as SKN } from './lib/skill-check.js'
 import { takeToken, gain } from './player.js'
-import { recipeStatus, maxMakes, craftOne, benchAvailable, scrapCount, CRAFT_LIMIT, CATS } from './lib/craft.js'
+import { recipeStatus, maxMakes, craftOne, benchAvailable, scrapCount, inputName, CRAFT_LIMIT, CATS } from './lib/craft.js'
 import {raycast} from 'builtin/physics'
 
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
@@ -36,7 +36,7 @@ function act(ctx, s, d) {
   if(st.reason==='Recipe unavailable'||!st.known)return deny(st.reason)
   if(!st.benchOk)return deny(st.reason)
   if(!st.skillOk)return deny(`Needs ${SKN[r.skill[0]]} ${r.skill[1]}`)
-  if(st.lack.length)return deny(`Missing ${st.lack.map(k=>`${B.scrap[k]?.name??k} ×${r.in[k]-scrapCount(s,k)}`).join(', ')}`)
+  if(st.lack.length)return deny(`Missing ${st.lack.map(k=>`${inputName(k)} ×${r.in[k]-scrapCount(s,k)}`).join(', ')}`)
   if(!st.roomOk)return deny(st.reason)
   const raw=Number(d.n),requested=Number.isFinite(raw)?Math.max(1,Math.min(CRAFT_LIMIT,Math.floor(raw))):1,want=d.n==='max'?maxMakes(s,id):Math.min(requested,maxMakes(s,id))
   let made=0,extra=0,why=''

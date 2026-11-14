@@ -1,6 +1,6 @@
 import{test,expect}from'bun:test'
 import C from'../scripts/lib/data/craft.yml'
-import{recipeStatus,maxMakes,craftOne,benchAvailable,scrapCount,CRAFT_LIMIT}from'../scripts/lib/craft.js'
+import{recipeStatus,maxMakes,craftOne,benchAvailable,scrapCount,inputName,CRAFT_LIMIT}from'../scripts/lib/craft.js'
 import{canCarry,inventoryWeight,derived,pickupWeight,carried}from'../scripts/lib/stats.js'
 const player=(scrap={})=>({level:1,xp:0,skl:Array(13).fill(100).join(','),attr:'5,5,5,5,5,5,5',scrap,manuals:'weapons,ammo,aid,tools,armor,food',craftOpen:'bench',ammo:0,shells:0,weapons:''})
 const give=(draft,t)=>{const ok=canCarry(draft,t);if(!ok.ok)return ok;if(t==='scrap_metal'||t==='bolts'||t==='nails')draft.scrap={...draft.scrap,[t]:(draft.scrap[t]??0)+1};else draft.snacks={...draft.snacks,[t]:(draft.snacks[t]??0)+1};return{ok:true}}
@@ -53,8 +53,8 @@ import {CATS} from '../scripts/lib/craft.js'
 const source=readFileSync(new URL('../scripts/craft.js',import.meta.url),'utf8')
 const actionSource=source.slice(source.indexOf('function act('),source.indexOf('export function update('))
 function action(grant,reachable=true){
- return Function('C','CATS','recipeStatus','maxMakes','craftOne','CRAFT_LIMIT','canOpen','liveBench','note','heard','SND','SKN','B','takeToken','gain','scrapCount',actionSource+';return act')(
- C,CATS,recipeStatus,maxMakes,craftOne,CRAFT_LIMIT,canOpen,()=>reachable,(s,ctx,text)=>s.notice={text},()=>{},n=>n,{}, {scrap:{}},grant,ctx=>ctx.self.state.craftXp=true,scrapCount)
+ return Function('C','CATS','recipeStatus','maxMakes','craftOne','CRAFT_LIMIT','canOpen','liveBench','note','heard','SND','SKN','B','takeToken','gain','scrapCount','inputName',actionSource+';return act')(
+ C,CATS,recipeStatus,maxMakes,craftOne,CRAFT_LIMIT,canOpen,()=>reachable,(s,ctx,text)=>s.notice={text},()=>{},n=>n,{}, {scrap:{}},grant,ctx=>ctx.self.state.craftXp=true,scrapCount,inputName)
 }
 function context(s){const events=[];return {self:{id:'tester',state:s,feetPosition:{x:0,y:0,z:0},place:'main'},now:()=>1000,random:()=>1,emit:(...args)=>events.push(args),events}}
 test('action rolls back rejected output, including queued effects and XP',()=>{
@@ -142,4 +142,14 @@ test('locked recipes are refused by the action and marked in the menu',()=>{
  expect(calls).toBe(0);expect(s.scrap.wire).toBe(1);expect(s.notice.text).toContain('Tinkerer')
  const html=craftUi({},{state:{...s,craftOpen:'hand',hunger:100,thirst:100}})
  expect(html).toContain('LOCKED');expect(html).toContain('Recipes known 0/')
+})
+test('cooked meals take raw meat and carried food as ingredients',()=>{
+ const s=player();s.craftStation='cook';s.meat={spam:1,rat:1};s.snacks={beans:2}
+ expect(recipeStatus(s,'spamhash').ok).toBe(true);expect(recipeStatus(s,'ratskewer').lack).toEqual(['meat:rat','scrap_wood'])
+ const r=craftOne(s,'spamhash',(d,t)=>{d.snacks={...d.snacks,[t]:(d.snacks[t]??0)+1};return{ok:true}})
+ expect(r.ok).toBe(true);expect(r.state.meat.spam).toBe(0);expect(r.state.snacks.beans).toBe(1);expect(r.state.snacks.spam_hash).toBe(1);expect(s.meat.spam).toBe(1)
+})
+test('every recipe input and food output is a real item',async()=>{
+ const SN=(await import('../scripts/lib/data/snacks.yml')).default,B=(await import('../scripts/lib/data/breakables.yml')).default
+ for(const [id,r] of Object.entries(C.recipes)){for(const k of Object.keys(r.in))expect(!!(B.scrap[k]||SN[k]||k.startsWith('meat:')||k==='baubles')).toBe(true);if(r.cat==='food')for(const t of r.out)expect(SN[t]).toBeTruthy()}
 })

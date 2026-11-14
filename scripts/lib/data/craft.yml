@@ -38,6 +38,16 @@ recipes:
   stew:       { cat: food, name: Glow-cap stew,       in: { glow_cap: 3, spring_salt: 1 },                out: [stew],            skill: [survival, 10], bench: cook, desc: "Hunger +28 · cooked at a fire, eaten from I > Aid" }
   stillwater: { cat: food, name: Pipe-still water,    in: { steel_pipe: 1, scrap_metal: 1, wire: 1 },     out: [stillwater, stillwater], skill: [survival, 15], bench: cook, desc: "Condensed off hot pipe: two safe drinks" }
   mineralwater: { cat: food, name: Spring mineral water, in: { spring_salt: 2, travertine: 1 },         out: [mineralwater],     skill: [survival, 8],  desc: "A bottle of the spring, salt and chalk left in" }
+  # cooked meals (2026-11-14): raw meat (meat:<kind>) and carried food (snacks.yml ids) are ingredients too
+  ratskewer:  { cat: food, name: Spit-roast rat,      in: { "meat:rat": 2, scrap_wood: 1 },               out: [rat_skewer],      skill: [survival, 5],  bench: cook, desc: "Hunger +26 · two rats and a stick" }
+  hotdogroast: { cat: food, name: Fire-roasted hot dog, in: { "meat:hotdog": 1, wire: 1 },                out: [hotdog_roast],    skill: [survival, 5],  bench: cook, desc: "Hunger +24 · on a bent wire over the coals" }
+  searedsteak: { cat: food, name: Salt-seared steak,  in: { "meat:steak": 1, spring_salt: 1 },            out: [seared_steak],    skill: [survival, 20], bench: cook, desc: "Hunger +48 · Max HP +12 for a while" }
+  chowder:    { cat: food, name: Glow-cap fish chowder, in: { "meat:fish": 1, glow_cap: 2, stillwater: 1 }, out: [fish_chowder], skill: [survival, 25], bench: cook, desc: "Hunger +36 · warms you, cold resist" }
+  spamhash:   { cat: food, name: Spam and bean hash,  in: { "meat:spam": 1, beans: 1 },                    out: [spam_hash],       skill: [survival, 15], bench: cook, desc: "Hunger +42 · fried in the tin" }
+  broth:      { cat: food, name: Chicken broth,       in: { "meat:chicken": 1, stillwater: 1 },            out: [chicken_broth, chicken_broth], skill: [survival, 20], bench: cook, desc: "Two mugs · thirst +26, settles a sick stomach" }
+  trailpack:  { cat: food, name: Jerky trail pack,    in: { "meat:jerky": 2, bar: 1 },                     out: [trail_pack],      skill: [survival, 10], desc: "Hunger +30 · stamina for the road, by hand" }
+  sardinestack: { cat: food, name: Sardine wafer stack, in: { "meat:sardines": 1, lobby_wafer: 1 },        out: [sardine_toast],   skill: [survival, 5],  desc: "Hunger +28 · by hand" }
+  boilwater:  { cat: food, name: Boiled almond water,  in: { cloudy_almond: 2 },                            out: [purified_water],  skill: [survival, 10], bench: cook, desc: "Boil two cloudy bottles down to one clean one" }
   # improvised firearms (Shelly: "you can't craft firearms"): weak, worn and few rounds, so a found gun stays worth finding
   zipgun:     { cat: weapons, name: Improvised pistol, in: { steel_pipe: 1, springs: 2, nails: 2, scrap_wood: 1 }, out: ["weapon:pistol~zip"],  skill: [guns, 25], bench: ammo, desc: "A pipe, a spring and a firing pin · two rounds, jams when worn" }
   pipeshotgun: { cat: weapons, name: Pipe shotgun,    in: { steel_pipe: 2, springs: 2, bolts: 2, scrap_wood: 2 }, out: ["weapon:shotgun~pipe"], skill: [guns, 35], bench: ammo, desc: "A length of pipe and a hammer · one shell, short and wide" }

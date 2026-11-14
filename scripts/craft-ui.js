@@ -6,7 +6,7 @@ import C from './lib/data/craft.yml'
 import B from './lib/data/breakables.yml'
 import { skillsOf } from './lib/stats.js'
 import { SKILL_NAMES as SKN } from './lib/skill-check.js'
-import { recipeStatus, maxMakes, scrapCount, CRAFT_LIMIT, CATS, stationOf } from './lib/craft.js'
+import { recipeStatus, maxMakes, scrapCount, inputName, CRAFT_LIMIT, CATS, stationOf } from './lib/craft.js'
 
 import {describe} from './lib/items.js'
 import { MANUALS } from './lib/manuals.js'
@@ -90,7 +90,7 @@ export function craftUi(ctx, player) {
   let last = '', rows = ''
   for (const { id, r, st, mx, cat } of shown) {
     if (tab === 'all' || tab === 'ready') { if (cat !== last) { rows += `<div class="sh">${TITLE[cat] ?? cat.toUpperCase()}</div>`; last = cat } }
-    const ins = Object.entries(r.in).map(([k,n])=>{const have=scrapCount(s,k);return `<i class="${have<n?'lack':''}">${esc(B.scrap[k]?.name??k)} ${have}/${n}${have<n?' · '+(n-have)+' short':''}</i>`}).join('')
+    const ins = Object.entries(r.in).map(([k,n])=>{const have=scrapCount(s,k);return `<i class="${have<n?'lack':''}">${esc(inputName(k))} ${have}/${n}${have<n?' · '+(n-have)+' short':''}</i>`}).join('')
     const req = [!st.known ? `<span class="bad">LOCKED · learn it from a ${esc(MANUALS[st.manual]?.name ?? 'manual')}</span>` : '', r.skill ? `<span class="${st.skillOk ? '' : 'bad'}">${SKN[r.skill[0]]} ${r.skill[1]} (you ${sk[r.skill[0]] ?? 0})</span>` : '', r.bench ? `<span class="${st.benchOk ? '' : 'bad'}">${stationOf(r) === 'cook' ? 'COOKING FIRE' : stationOf(r) === 'ammo' ? 'RELOADING BENCH' : 'WORKBENCH'}</span>` : ''].filter(Boolean).join(' · ')
     const per = st.bonusChance>0 ? `<em>${Math.round(st.bonusChance*100)}% bonus chance</em>` : ''
     const cls = st.ok ? '' : st.known && st.skillOk && st.benchOk ? 'no' : 'lk'

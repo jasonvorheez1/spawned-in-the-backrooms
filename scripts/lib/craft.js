@@ -4,9 +4,15 @@ import {skillsOf,derived,inventoryWeight,pickupWeight,tokenWeight} from './stats
 import {knowsRecipe,manualKind,MANUALS} from './manuals.js'
 export const CRAFT_LIMIT=100
 const LOOSE={baubles:1} // counted at the top of player.state, not in scrap: the Glass Bauble (Shelly: the ornament weapons are made of ornaments)
-export const scrapCount=(s,k)=>{const n=Number((LOOSE[k]?s[k]:s.scrap?.[k])??0);return Number.isFinite(n)&&n>0?Math.floor(n):0}
+import B from './data/breakables.yml'
+import SN from './data/snacks.yml'
+// where an ingredient is kept: scrap (the default), loose at the top of state, raw meat ("meat:<kind>", player.state.meat) or carried food (a snacks.yml id, player.state.snacks)
+const slot=(k)=>LOOSE[k]?['',k]:k.startsWith('meat:')?['meat',k.slice(5)]:!B.scrap[k]&&SN[k]?['snacks',k]:['scrap',k]
+export const scrapCount=(s,k)=>{const [b,key]=slot(k),n=Number((b?s[b]?.[key]:s[key])??0);return Number.isFinite(n)&&n>0?Math.floor(n):0}
+export const inputName=(k)=>{const [b,key]=slot(k);return b==='meat'?'Raw '+key:b==='snacks'?SN[key].name:B.scrap[key]?.name??key}
+const inputWeight=(k)=>{const [b]=slot(k);return b==='meat'?.3:b==='snacks'?pickupWeight(k):tokenWeight(k)}
 const valid=(r)=>r && Array.isArray(r.out) && r.out.length && r.out.every(t=>typeof t==='string'&&t.length) && Object.keys(r.in??{}).length && Object.values(r.in).every(n=>Number.isInteger(n)&&n>0)
-const weights=(r)=>({input:Object.entries(r.in).reduce((kg,[k,n])=>kg+tokenWeight(k)*n,0),output:r.out.reduce((kg,t)=>kg+pickupWeight(t),0)})
+const weights=(r)=>({input:Object.entries(r.in).reduce((kg,[k,n])=>kg+inputWeight(k)*n,0),output:r.out.reduce((kg,t)=>kg+pickupWeight(t),0)})
 export const stationOf=(r)=>!r.bench?'hand':r.bench===true?'bench':r.bench
 export const STATION_NAMES={hand:'your hands',bench:'a workbench',cook:'a cooking fire',ammo:'a reloading bench'}
 export function recipeStatus(s,id) {
@@ -35,7 +41,7 @@ export function craftOne(s,id,give,bonus=false) {
   if(!status.ok)return {ok:false,msg:status.reason}
   // Inventory grants use copy-on-write state; nothing reaches the live player until the whole recipe succeeds.
   let draft={...s,scrap:{...(s.scrap??{})},snacks:{...(s.snacks??{})},meat:{...(s.meat??{})}}
-  for(const [k,n]of Object.entries(r.in)){if(LOOSE[k])draft[k]=scrapCount(s,k)-n;else draft.scrap[k]=scrapCount(s,k)-n}
+  for(const [k,n]of Object.entries(r.in)){const [b,key]=slot(k);if(!b)draft[key]=scrapCount(s,k)-n;else draft[b][key]=scrapCount(s,k)-n}
   for(const token of r.out){const result=give(draft,token);if(!result?.ok)return {ok:false,msg:result?.msg||result?.why||'Output could not be stored'}}
   let extra=0
   if(bonus){const candidate={...draft,scrap:{...draft.scrap},snacks:{...draft.snacks},meat:{...draft.meat}};if(give(candidate,r.out[0])?.ok){draft=candidate;extra=1}}
