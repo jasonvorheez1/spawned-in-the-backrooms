@@ -79,7 +79,7 @@ export function layHouse(ctx, put, L) {
     sit("shelf", "/cdn/value.918584eed8336eda888580753019763471fcce0adcaf2bc66def78f53ae3fad0.glb", "+x", 16.7, -499.55, 180, [0.93, 1.85, 0.45]);
     sit("flamp", "/cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb", "+x", 17.45, -494.7, 0, [0.51, 1.8, 0.51]); }
   { const kx = r.kitchen[1] - b.wallT - 0.31;
-    look("counter-a", M.counter, kx, C.z + 2.6, 0, 0.31, 0.9, 1); look("counter-b", M.counter, kx, C.z + 4.6, 0, 0.31, 0.9, 1);
+    look("counter-a", M.counter, kx, C.z + 2.6, 90, 1, 0.9, 0.31); look("counter-b", M.counter, kx, C.z + 4.6, 90, 1, 0.9, 0.31); // the model is long on its x with the doors on -z: turned 90 its doors face the room (west), never squashed into a box
     look("table", M.table, C.x + 4, C.z + 4, 90, 0.5, 0.76, 1.3); }
   // the hall: a runner down its length, a bench under the family photo wall, pictures between the doors (painted Nov 14)
   { const hz = (r.hall[2] + r.hall[3]) / 2, nW = r.hall[2] + b.wallT / 2 + 0.012, sW = r.hall[3] - b.wallT / 2 - 0.012, PY = F + 1.22;
