@@ -71,15 +71,13 @@ print('lines to record:', len(todo), 'already:', len(done), flush=True)
 if dry_run: sys.exit(0)
 def rec(j):
     k, who, key, line = j; v, tag = CAST[who]; mood = MOOD.get(key, '')
-    # Shelly Nov 14: emotion in every voice: sighs, laughs, stutters, chuckles where the line carries them
-    # Shelly Nov 14 "fix the voice lines theyre laughing": no laugh unless the line itself laughs
-    laughs = re.search(r'\b(ha){2,}|\bheh|laugh|chuckl|giggl', line, re.I)
-    delivery = (mood or 'natural conversational') + ', emotional and human, a sigh, breath or stutter only where the words call for it' + ('' if laughs else ', no laughing, no chuckling, no giggling, straight delivery of the exact words')
-    txt = f"[{', '.join(part for part in (delivery, tag, mood) if part)}] {line}"
+    # Shelly Nov 14 "fix the voice lines theyre laughing": a long direction in the brackets made the voice maker laugh and repeat the line; two or three words only
+    txt = f"[{', '.join(part for part in (tag, mood) if part)}] {line}" if (tag or mood) else line
     for _ in range(3):
         r = subprocess.run(['spawn', 'voice', txt, '--voice', v, '--name', 'vo ' + who + ' ' + slug(line, 40)], capture_output=True, text=True)
         m = re.search(r'/cdn/value\.([0-9a-f]+)\.mp3', r.stdout)
-        if m: return k, m.group(1)
+        d = re.search(r'([0-9.]+) s mp3', r.stdout); words = len(line.split())
+        if m and (not d or float(d.group(1)) <= 1.5 + words * 0.6): return k, m.group(1)
     print('FAIL', who, line[:50], r.stdout[-200:], r.stderr[-200:], flush=True); return k, None
 n = 0
 with ThreadPoolExecutor(8) as ex:
