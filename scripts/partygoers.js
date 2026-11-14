@@ -2,13 +2,15 @@ const BALLOON_GLB = "/cdn/value.bbcd28912111e39613cec71f06224b7742148d3493106c89
 import { clearSight } from './lib/sight.js'
 const walled = (ctx, a, b, ids) => !clearSight(ctx, { x: a.x, y: a.y + 1, z: a.z }, { x: b.x, y: b.y + 1, z: b.z }, ids) // Shelly: no hits through walls
 // Level 26 (Shelly's Entity 67 + 110 lore): one manager steps every Partygoer and every Carnivorous Balloon on the ship.
-// Partygoers: nearsighted (they see 9 m), slow, and never alone: the one that sees you calls the pack within 16 m.
+// Partygoers (Nov 14 society pass): each has a role and a route of jobs (scripts/lib/data/pg-society.yml); they see in a cone, crouching halves it,
+// and the call passes only Partygoer to Partygoer by line of sight. Lose them and they search where you were last seen.
 // Their arms end in toothed mouths: a bite every 1.3 s. Tagged l8-hostile so every weapon and kick hits them.
 // Balloons: stationary. Step within reach of the ribbon and it stings: damage, and you're rooted a beat.
 import { knocked } from "./lib/knock.js";
 const knockedHold = (ctx, p, now, dt) => !!p.state?.heldBy && knocked(ctx, p, now, dt);
 import { dmgAfterArmor } from "./lib/stats.js"
 import { animate } from "builtin/tween"
+import { think, suspect, deckTick } from "./lib/pg-society.js"
 const T = { sight: 14, call: 22, walk: 1.4, hunt: 3.4, reach: 1.7, biteDmg: 16, biteMs: 1000, hp: 220, // her picks: tough enough to need a mag
   berserkAt: 100, rage: 4.6, clawReach: 2.2, clawDmg: 24, clawMs: 700, hatchOpen: 2200, hatchShut: 3200, glance: 0.8, // berserker: arms tuck in, chest snaps open; shut hatch turns 80% of a hit
   lungeMin: 3, lungeMax: 7, lungeWind: 450, lungeDash: 380, lungeSpeed: 10, lungeDmg: 26, lungeCd: 4200, // the pounce: a crouch tell, then a dash that knocks you back
@@ -26,6 +28,11 @@ function gait(ctx, p, name, rate = 1) { // the body's legs follow its speed; one
   p.anim.base = { clip: CLIP[name], loop: true, weight: 1, speed: rate, blend: 0.25 }
 }
 function once(p, clip, weight = 1) { p.anim.act = { clip, loop: false, weight, blend: 0.1 } }
+function work(ctx, p, clip) { // the job's loop on its own channel (a dance, a crouch over a trap, hands at the lift panel); null between jobs
+  const seen = (ctx.self.session.party ??= {}), k = clip ?? ""
+  if (seen[p.id] === k) return; seen[p.id] = k
+  p.anim.party = clip ? { clip, loop: true, weight: 1, blend: 0.4 } : null
+}
 function party(ctx, p, on) { // a loop on its own channel: the pack dances and claps until it smells you
   const seen = (ctx.self.session.party ??= {}), k = on ? PARTY[(p.id.length + Math.floor(ctx.now() / 9000)) % PARTY.length] : ""
   if (seen[p.id] === k) return; seen[p.id] = k
@@ -45,10 +52,13 @@ export function update(ctx, dt) {
   const players = ctx.place.players; if (!players.length) return ctx.sleep(1)
   const now = ctx.now(), g = ctx.place.gravity?.y ?? -9.8
   const pack = ctx.query({ tags: ["partygoer"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })
+  deckTick(ctx, pack, now)
+  baitTick(ctx, pack, players, now)
   for (const p of pack) {
     const s = p.state
     if ((s.hp ?? T.hp) <= 0 && !s.dying) { // it folds and drops first: the body stays a beat on the deck
-      s.dying = now; p.velocity = { x: 0, y: 0, z: 0 }; once(p, "cdn/clip-die.glb"); gait(ctx, p, "idle")
+      s.dying = now; p.velocity = { x: 0, y: 0, z: 0 }; once(p, "cdn/clip-die.glb"); gait(ctx, p, "idle"); if (s.prey) s.prey = null
+      suspect(ctx, pack, p.feetPosition, now, "body")
       ctx.emit("playSound", { clip: SND("inhuman-shriek-in-a-dead-relatives-voice"), position: p.feetPosition, volume: 0.7 })
       continue
     }
@@ -78,6 +88,10 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
       ctx.emit("playSound", { clip: SND("chitin-carapace-cracking-open"), position: p.feetPosition, volume: 0.9 })
       ctx.emit("highlightSet", { target: p.id, color: "#ff3030", style: "pulse", duration: T.hatchOpen / 1000 })
     }
+    if (s.lastHp != null && (s.hp ?? T.hp) < s.lastHp && !s.hunting) { // shot from the dark: the deck turns suspicious around the nearest shooter, give or take
+      let src = null, bd = 60; for (const pl of players) { const dd = flat(pl.feetPosition, p.feetPosition); if (dd < bd) { bd = dd; src = pl } }
+      if (src) suspect(ctx, pack, { x: src.feetPosition.x + (ctx.random() - 0.5) * 5, y: src.feetPosition.y, z: src.feetPosition.z + (ctx.random() - 0.5) * 5 }, now, "shot")
+    }
     if (s.lastHp != null && (s.hp ?? T.hp) < s.lastHp) {
       if (s.hunting && now >= (s.dodgeAt ?? 0) && ctx.random() < T.dodgeChance && !s.move) { // a sidestep roll out of your line of fire
         s.dodgeAt = now + T.dodgeCd; s.move = "dodge"; s.moveUntil = now + 450; s.dodgeDir = ctx.random() < 0.5 ? -1 : 1
@@ -86,22 +100,22 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
       } else { once(p, "cdn/clip-hit-react.glb", 0.8); s.stunUntil = Math.max(s.stunUntil ?? 0, now + 200) }
     }
     s.lastHp = s.hp ?? T.hp
-    let prey = null, best = s.hunting ? T.sight * 1.8 : T.sight
-    for (const pl of players) { if ((pl.state.hp ?? 1) <= 0) continue; const d = flat(pl.feetPosition, p.feetPosition); if (d < best) { best = d; prey = pl } }
-    if (prey && !s.hunting) { // seen: it screams, the pack hears it in its head and turns as one
-      s.hunting = true; s.move = "scream"; s.moveUntil = now + 900
+    const k = think(ctx, p, pack, players, now) // the society's read: who it sees, where its job or the search takes it (scripts/lib/pg-society.js)
+    const prey = k.prey, best = k.best
+    if (k.spotted) { // seen: it screams; the call passes to every Partygoer that can see this one, and on down the line
+      s.move = "scream"; s.moveUntil = now + 900
       once(p, "cdn/clip-angry.glb")
       p.rotation = { yaw: Math.atan2(-(prey.feetPosition.x - p.feetPosition.x), -(prey.feetPosition.z - p.feetPosition.z)) * 180 / Math.PI }
       ctx.emit("playSound", { clip: SND("inhuman-shriek-in-a-dead-relatives-voice"), position: p.feetPosition, volume: 1 })
       ctx.emit("playSound", { clip: SND("distorted-party-blower-and-giggle"), position: p.feetPosition, volume: 0.9 })
       if (best < T.sight) { prey.state.stungUntil = Math.max(prey.state.stungUntil ?? 0, now + T.screamSlow); if (typeof prey.state.san === "number") prey.state.san -= T.screamSan
         ctx.emit("screenShake", { intensity: 0.25, duration: 0.5 }, { audience: { player: prey.id } }) }
-      for (const o of pack) if (o.id !== p.id && flat(o.feetPosition, p.feetPosition) < T.call) o.state.hunting = true
     }
-    if (!prey && s.hunting && !players.some((pl) => flat(pl.feetPosition, p.feetPosition) < T.sight * 2.5)) s.hunting = false
-    party(ctx, p, !s.hunting)
-    const target = prey && s.hunting ? prey.feetPosition : (s.hunting && players[0] ? players[0].feetPosition : s.home ?? p.feetPosition)
-    const d = flat(target, p.feetPosition), speed = s.berserk ? T.rage : s.hunting ? T.hunt : T.walk
+    work(ctx, p, s.hunting ? null : k.loop)
+    if (k.once && !s.hunting) once(p, k.once)
+    if (k.task === "trap") armBait(ctx, p, k, now)
+    const target = k.target ?? p.feetPosition
+    const d = flat(target, p.feetPosition), speed = s.berserk && s.hunting ? T.rage : (k.speed ?? (s.hunting ? T.hunt : T.walk))
     const dx = d > 0.01 ? (target.x - p.feetPosition.x) / d : 0, dz = d > 0.01 ? (target.z - p.feetPosition.z) / d : 0
     const face = () => { p.rotation = { yaw: Math.atan2(-dx, -dz) * 180 / Math.PI } }
     const vy = (p.velocity?.y ?? 0) + g * dt
@@ -165,7 +179,7 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
       ctx.emit("playSound", { clip: SND("distorted-party-blower-and-giggle"), position: p.feetPosition, volume: 1 })
       continue
     }
-    if (now < (s.stunUntil ?? 0) || d < (prey ? T.reach * 0.8 : 0.5)) { p.velocity = { x: 0, y: vy, z: 0 }; gait(ctx, p, "idle"); if (prey) face() }
+    if (now < (s.stunUntil ?? 0) || d < (prey ? T.reach * 0.8 : 0.5)) { p.velocity = { x: 0, y: vy, z: 0 }; gait(ctx, p, "idle"); if (prey) face(); else if (k.faceYaw != null && (ctx.self.session.yaw ??= {})[p.id] !== k.faceYaw) { ctx.self.session.yaw[p.id] = k.faceYaw; p.rotation = { yaw: k.faceYaw } } }
     else {
       gait(ctx, p, speed > 2 ? "run" : "walk", speed > 2 ? speed / 3.4 : 0.8)
       const weave = s.hunting && d > 2.5 ? Math.sin(now / 380 + p.id.length) * 0.45 : 0 // closes in on a zig-zag, harder to line up
@@ -202,6 +216,7 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
     }
     if ((b.state.hp ?? 10) <= 0) { // popped: the ammonia sac goes up in a choking cloud for 6 s
       gas.push({ x: b.feetPosition.x, y: b.feetPosition.y, z: b.feetPosition.z, until: now + 6000 })
+      suspect(ctx, pack, b.feetPosition, now, "pop")
       ctx.emit("fx", { position: { ...b.feetPosition, y: b.feetPosition.y + 1.1 }, script: GAS })
       ctx.emit("playSound", { clip: SND("balloon-pop-then-hissing-gas"), position: b.feetPosition, volume: 1 })
       const it = ["latex"]; if (ctx.random() < 0.55) it.push("latex"); if (ctx.random() < 0.06) it.push(ctx.random() < 0.6 ? "weapon:balloon_pistol" : "weapon:balloon_shotgun") // salvage (Shelly Nov 14): the skin is the ammo
@@ -240,3 +255,60 @@ pop smoke burst=12 on=sphere(.3) life=1.2..2 v=up(.8)+sdir()*.4 size=.3..0.5 acc
 const POP = `fx
 pop confetti burst=45 on=sphere(.2) life=1..1.8 v=sdir()*(2.5..5)+up(2) size=.04..0.08 spin=-8..8 acc=grav()*.35+drag(1.8) col=<1,.3,.4>..<.3,.8,1> a=1>.8:1>0 rot=$age*$spin floor=stick r=sprite(soft-disc,alpha)
 pop ring burst=1 life=.25 size=1.6 sz=$size*(.3>1) col=<1,.95,.7> a=.8>0 r=sprite(soft-disc,add)`
+
+// ── trappers' bait (Shelly's brief: traps with tells): a gift too fresh for this ship, its paper glossy, a hiss under the bow,
+// a thread of green seeping out. Walk into it and it bursts and the deck comes looking; shoot it from range and it only fizzles.
+const BAIT = { reach: 1.1, dmg: 14 }
+const SEEP = `fx
+pop seep rate=3 on=disc(.06) life=1.6..2.4 v=up(.25..0.45)+sdir()*.05 size=.05..0.09 acc=curl(.4)*.3+buoy(.1)+drag(.8) sz=$size*(.6>2.4) col=<.6,.85,.3> a=0>.25:.22>0 r=sprite(smoke-puff,alpha)`
+function giftSpec(at, yaw, key) {
+  const paper = ["oklch(0.62 0.2 25)", "oklch(0.6 0.16 300)", "oklch(0.66 0.15 220)"][key.length % 3]
+  return { tags: ["l26-bait", "l8-hostile"], feetPosition: at, rotation: { yaw }, physics: { body: "static", collider: "box" }, state: { hp: 4, key },
+    primitive: { kind: "box", width: 0.46, height: 0.34, depth: 0.46 }, material: { color: paper, roughness: 0.18, metalness: 0.05, clearcoat: 1 },
+    audio: { clip: "/cdn/moodboard-gothic-horror/sfx-faint-gas-hiss-leaking-from-a-wrapped-gift-loop.mp3", gain: 0.22, loop: true, spatial: true, maxDistance: 6 },
+    fx: { script: SEEP },
+    children: [
+      { feetPosition: { x: 0, y: -0.003, z: 0 }, primitive: { kind: "box", width: 0.08, height: 0.346, depth: 0.466 }, material: { color: "oklch(0.92 0.06 95)", roughness: 0.3, metalness: 0.2 } },
+      { feetPosition: { x: 0, y: -0.003, z: 0 }, primitive: { kind: "box", width: 0.466, height: 0.346, depth: 0.08 }, material: { color: "oklch(0.92 0.06 95)", roughness: 0.3, metalness: 0.2 } },
+      { feetPosition: { x: -0.06, y: 0.37, z: 0 }, rotation: { yaw: 0, roll: 70 }, primitive: { kind: "torus", radius: 0.06, tube: 0.016 }, material: { color: "oklch(0.92 0.06 95)", roughness: 0.3 } },
+      { feetPosition: { x: 0.06, y: 0.37, z: 0 }, rotation: { yaw: 0, roll: -70 }, primitive: { kind: "torus", radius: 0.06, tube: 0.016 }, material: { color: "oklch(0.92 0.06 95)", roughness: 0.3 } },
+      { feetPosition: { x: 0.17, y: 0.2, z: 0.235 }, rotation: { yaw: 0, roll: -12 }, vector: "<svg viewBox='0 0 120 60' width='0.13m'><rect x='2' y='2' width='116' height='56' rx='6' fill='#f4efe0' stroke='#7a6a50' stroke-width='3'/><text x='60' y='40' text-anchor='middle' font-family='display' font-size='24' fill='#c0304a'>FOR YOU =)</text></svg>" }
+    ] }
+}
+function armBait(ctx, p, k, now) {
+  const traps = ctx.place.state.pgTraps ?? {}, t = traps[k.stopKey]
+  if (t?.id && ctx.getObject(t.id)) return
+  if (t?.offAt && now - t.offAt < (ctx.self.session.rearmMs ?? 300000)) return
+  const y = (k.faceYaw ?? 0) * Math.PI / 180, at = { x: k.atStop.x - Math.sin(y) * 0.9, y: k.atStop.y, z: k.atStop.z - Math.cos(y) * 0.9 }
+  const id = ctx.spawn(giftSpec(at, k.faceYaw ?? 0, k.stopKey))
+  ctx.place.state.pgTraps = { ...traps, [k.stopKey]: { id, at: now, by: p.id } }
+  once(p, "cdn/clip-pickup.glb")
+}
+function baitTick(ctx, pack, players, now) {
+  for (const g of ctx.query({ tags: ["l26-bait"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
+    const key = g.state.key, pos = g.feetPosition, done = (why) => {
+      const traps = ctx.place.state.pgTraps ?? {}
+      ctx.place.state.pgTraps = { ...traps, [key]: { offAt: now, why, disarmed: (traps[key]?.disarmed ?? 0) + (why === "shot" ? 1 : 0) } }
+      ctx.destroy(g.id)
+    }
+    if ((g.state.hp ?? 4) <= 0) { // shot from range: the charge fizzles in the box, harmless; the trapper will notice a gap on its round
+      ctx.emit("fx", { position: { ...pos, y: pos.y + 0.3 }, script: SPLIT })
+      ctx.emit("playSound", { clip: SND("balloon-pop-then-hissing-gas"), position: pos, volume: 0.5 })
+      ctx.emit("damageNumber", { position: { ...pos, y: pos.y + 0.8 }, text: "TRAP DISARMED", color: "#ffd84a" })
+      done("shot"); suspect(ctx, pack, pos, now, "bait"); continue
+    }
+    for (const pl of players) {
+      if (flat(pl.feetPosition, pos) > BAIT.reach || Math.abs(pl.feetPosition.y - pos.y) > 2) continue
+      pl.state.hp -= dmgAfterArmor(pl.state.look, BAIT.dmg); pl.state.stungUntil = now + 1800
+      if (typeof pl.state.san === "number") pl.state.san -= 4
+      ctx.emit("fx", { position: { ...pos, y: pos.y + 0.4 }, script: GAS })
+      ctx.emit("fx", { position: { ...pos, y: pos.y + 0.4 }, script: POP })
+      ctx.emit("playSound", { clip: SND("loud-balloon-pop-bang"), position: pos, volume: 1 })
+      ctx.emit("playSound", { clip: SND("distorted-party-blower-and-giggle"), position: pos, volume: 1 })
+      ctx.emit("damageNumber", { position: { ...pl.feetPosition, y: pl.feetPosition.y + 1.2 }, value: BAIT.dmg, color: "#c8ff60" })
+      ctx.emit("screenFlash", { color: "#b8ff70", duration: 0.5, intensity: 0.5 }, { audience: { player: pl.id } })
+      ctx.emit("screenShake", { intensity: 0.5, duration: 0.4 }, { audience: { player: pl.id } })
+      done("sprung"); suspect(ctx, pack, pl.feetPosition, now, "bait"); break
+    }
+  }
+}
