@@ -191,6 +191,10 @@ level11:
   - - ["l11-tm-clerk", "Everything on the rack, hand washed. Mostly. Don't sniff the jerry shirt."]
   - - ["l11-walker-1", "Left at the hydrant, right at the cart, straight through... no wait, that's 6.1."]
   - - ["l11-commuter-faceling", "The paper says it's Tuesday. It said that yesterday too."]
+  - - ["l11-walker-3", "They finally hosed down that alley off Fourteenth."]
+    - ["l11-trader-kael", "Took them long enough. Smelled like rust for weeks after Halliel vanished."]
+    - ["l11-walker-3", "Think she made it out? Beta called her dead."]
+    - ["l11-trader-kael", "No body, no funeral. Still wouldn't bet on it."]
 # combat barks: what anyone in a camp shouts mid-fight, picked at random per moment
 barks:
   move: ["right. back to it.", "where was i.", "okay. next thing.", "legs, don't fail me now.", "one more lap.", "hm. what was i doing.", "coffee would be nice.", "that's a lap.", "feet hurt.", "next stop.", "where'd i leave that wrench."]
