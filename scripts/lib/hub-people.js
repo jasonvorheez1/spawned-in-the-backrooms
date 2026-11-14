@@ -5,7 +5,7 @@ import { npcLook } from "./clothes.js";
 import { weaponBody } from "./weapon-look.js";
 import { keepPeople } from "./level-kit.js";
 import { BRANCHES, HW, DARK_X } from "./thehub.js";
-import { phoebeSpec } from "./phoebe.js";
+import { phoebeSpec, PHOEBE_LOOK } from "./phoebe.js";
 // at: [x, z]; face: yaw. Doorstep Carpet's bay is x 4..28, z -5.5..-14.5 (north of the road); Camp Amber's x 176..194, z 5.5..11.5.
 const CREW = {
   "hub-meg-okafor": { name: "Okafor · Post Lead", faction: "meg", role: "captain", gun: "carbine", at: [14.5, -9.2], face: 180, look: { species: "human", sex: "f", topw: "padjacket", top: "#4a5a3a", botw: "cargo", bottom: "#3a3a30", shoes: "boots", hat: "cap", hatc: "#b6e04a", expr: "calm" } },
