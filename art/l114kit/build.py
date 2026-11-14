@@ -72,11 +72,7 @@ finish("chair114", P)
 # toy chest: 0.7 x 0.4 x 0.42, lid slightly open, painted blue with a stripe
 reset(); BLUE = mat("paint", (0.18, 0.3, 0.55), 0.6); WH = mat("stripe", (0.85, 0.8, 0.65), 0.6); BR = mat("brass", (0.75, 0.6, 0.3), 0.3, metal=0.9)
 P = [box(0.7, 0.4, 0.38, 0, 0, 0.19, BLUE, 0.015), box(0.71, 0.405, 0.05, 0, 0, 0.27, WH, 0.01)]
-bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0, 0.405)); lid = bpy.context.object; lid.scale = (0.72, 0.42, 0.05); bpy.ops.object.transform_apply(scale=True)
-lid.data.materials.append(BLUE); b = lid.modifiers.new("b", "BEVEL"); b.width = 0.015; b.segments = 3
-lid.location = (0, 0.2, 0.38); bpy.ops.object.transform_apply(location=True)
-for v in lid.data.vertices: v.co -= Vector((0, 0.2, 0.0))
-lid.location = (0, 0.2, 0.38); lid.rotation_euler.x = math.radians(-9); bpy.ops.object.transform_apply(location=True, rotation=True); P.append(lid)
+P.append(box(0.72, 0.42, 0.05, 0, 0, 0.405, BLUE, 0.015))
 P.append(knob(0, -0.21, 0.31, BR, 0.022))
 finish("toychest114", P)
 
