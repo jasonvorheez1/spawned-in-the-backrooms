@@ -62,16 +62,6 @@ l169-flora-131:
   scale: 1.125098969845613
   tags: [l169-flora]
   visibleRange: {max: 180}
-l169-flora-138:
-  castShadow: true
-  feetPosition: {x: -21.385576478850837, y: 2.7462810358645133, z: -467.1301464667219}
-  id: l169-flora-138
-  layout: {box: {max: {x: 0.6, y: 0.9, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
-  model: {id: /cdn/value.35eb169b9a424e39454e42d11abf9d50dff5a3c6626750517ab166bc5daa2684.glb}
-  rotation: 41.93207074046697
-  scale: 0.9695849385902215
-  tags: [l169-flora]
-  visibleRange: {max: 180}
 l169-flora-142:
   castShadow: false
   feetPosition: {x: 34.50157911167554, y: 0.08132447381848122, z: -468.4688755844109}
