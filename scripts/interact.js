@@ -129,7 +129,8 @@ function refocus(ctx, force = false) {
       } else if (f.tag === 'npc') {
         const fac = it.state?.faction5 === 'hotel' ? 'Homely Hotel' : it.state?.faction5 === 'orig' ? 'The Originals' : it.state?.faction5 === 'hk' ? 'M.E.G.' : (it.state?.faction ?? 'M.E.G.')
         info = { id: f.id, name: it.state?.name ?? 'Stranger', info: fac, verb: 'Talk', color: '#c6f060' }
-        const pc = pickChance(ctx, it)
+        if (it.state?.dead) { const n = itemsOf(it.state?.items).length; info = { id: f.id, name: plainName(it.state?.name ?? 'Stranger'), info: n ? `${n} item${n > 1 ? 's' : ''}` : 'empty', verb: 'Search', color: '#d9d3b8' } } // a body is searched, not talked to
+        const pc = it.state?.dead ? null : pickChance(ctx, it)
         if (pc != null) info = { id: f.id, name: it.state?.name ?? 'Stranger', info: `${Math.round(pc * 100)}% · Sneak`, verb: 'Pickpocket', color: pc >= 0.6 ? '#c6f060' : pc >= 0.35 ? '#f2c14e' : '#e0644f' }
       } else if (f.tag === 'container') {
         refill(ctx, it)
@@ -255,6 +256,7 @@ export function talk(ctx, it) {
 
 // a swinging door (scripts/home11-door.js) keeps its lock on the hinge; the leaf you look at points to it
 function hingeLock(ctx, it) {
+  if (it.tags?.includes?.('pen-door')) { const lk = it.state?.lock; return lk && String(lk).startsWith('lockpick:') && !it.state.open ? { obj: it, lock: lk } : null } // Level 109's locked dens: the pick clears the lock, then the door's own press swings it
   if (it.state?.kind !== 'door') return null
   const h = it.state.hinge && it.state.hinge !== it.id ? ctx.getObject(it.state.hinge) : it
   const lk = h?.state?.lock
