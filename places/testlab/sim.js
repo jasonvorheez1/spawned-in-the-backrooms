@@ -12,6 +12,7 @@ import { LURKER_MODEL, LURKER_SCALE } from "../../scripts/lurkers.js";
 import { MODEL as SMILER_MODEL, SCALE as SMILER_SCALE } from "../../scripts/smilers.js";
 import { stepQuest } from "../../scripts/testlab-use.js";
 import { labBuild, labTick } from "../../scripts/lib/loot-lab.js";
+import { sendSquad, SQUAD_KEYS } from "../../scripts/lib/hit-squad.js";
 import { BAY_V, foeBayBuild, foeBayTick } from "../../scripts/lib/foe-bay.js";
 export const cadence = "250ms";
 const V = 2, REFILL = 4000; // ms before a taken thing comes back (my pick)
@@ -123,8 +124,14 @@ export function tick(ctx) {
   if (s.builtV !== V) { build(ctx); s.builtV = V; s.seeded = false; s.labV = 0; s.bayV = 0; }
   if (s.labV !== 2) { labBuild(ctx, pad, sign); s.labV = 2; } // the Loot Lab lays itself beside the hall, never rebuilding the rest
   if (s.bayV !== BAY_V) { foeBayBuild(ctx, pad, sign); s.bayV = BAY_V; } // the Enemy Bay east of the hall (scripts/lib/foe-bay.js)
+  if (s.squadPadV !== 1) { pad(ctx, "tl-pad-squad", "squad", "HIT SQUAD", 0, -12, "oklch(0.55 0.2 300)"); s.squadPadV = 1; } // Shelly Nov 14: "allow me to test hitsquads"
   if (!ctx.place.players?.length) return;
   foeBayTick(ctx);
+  if (s.want_squad) { const w = s.want_squad; s.want_squad = 0; // each press sends the next faction's squad from the far end of the lane
+    for (const id of Object.keys(ctx.place.objects)) if (id.startsWith("squad-")) ctx.destroy(id);
+    const g = SQUAD_KEYS[(s.squadIdx = ((s.squadIdx ?? -1) + 1) % SQUAD_KEYS.length)], who = ctx.place.players.find((p) => p.id === w.by);
+    const name = sendSquad(ctx, g, { x: 0, y: 0, z: -22 }, w.by, who?.feetPosition ?? { x: 0, y: 0, z: -12 }, 3);
+    if (who) who.state.notice = { text: `${name}s sent after you`, at: now }; }
   // refills: weapons, containers, physics on request, foes on request
   const R = (s.refill ??= {});
   WEAPONS.forEach((k, i) => { const id = "tl-w-" + k; if (ctx.place.objects[id]) { delete R[id]; return; } if (s.seeded && !due(R, id, now)) return; ctx.spawn(id, weaponSpec(k, i)); });

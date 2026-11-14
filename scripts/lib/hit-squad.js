@@ -29,17 +29,23 @@ export function squadTick(ctx, ses, st, place) {
   const from = (ses.trail ?? []).find((t) => now - t.at > 25000 && Math.hypot(t.x - p.x, t.z - p.z) > 14 && Math.hypot(t.x - p.x, t.z - p.z) < 70);
   if (!from) return;
   st.squadAt = { ...(st.squadAt ?? {}), [g]: now };
-  const n = infamyOf(st, g) >= 60 ? 4 : 3;
+  sendSquad(ctx, g, from, ctx.self.id, p, infamyOf(st, g) >= 60 ? 4 : 3);
+  st.notice = { text: `${GROUPS[g]?.name ?? g} sent people after you.`, at: now };
+  ctx.emit("playSound", { clip: "cdn/sfx-walkie-talkie-radio-squelch-burst-then-static.mp3", volume: 0.6 });
+}
+// spawns one squad at `from`, hunting `hunter`: used by the timer above and the Test Range pad (places/testlab/sim.js)
+export const SQUAD_KEYS = Object.keys(SQUADS);
+export function sendSquad(ctx, g, from, hunter, home, n = 3) {
+  const S = SQUADS[g], now = ctx.now();
   for (let i = 0; i < n; i++) {
     const id = `squad-${g}-${Math.round(now)}-${i}`, gun = S.guns[i % S.guns.length], x = from.x + (i - n / 2) * 0.9, z = from.z + (i % 2) * 0.9;
     const look = npcLook(id, S.top ? { topw: "jacket", top: S.top } : {}, S.look, 8, S.role);
     ctx.spawn(id, { tags: ["npc", "hit-squad"], feetPosition: { x, y: from.y + 0.25, z }, physics: "character", lifetime: LIFE_S,
       ...critterSpec(look), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
-      state: { name: S.name, role: S.role, faction: g, attackOnSight: true, hunting: ctx.self.id, home: { x: p.x, y: p.y, z: p.z }, hp: 140, maxHp: 140 } });
+      state: { name: S.name, role: S.role, faction: g, attackOnSight: true, hunting: hunter, home: { x: home.x, y: home.y, z: home.z }, hp: 140, maxHp: 140 } });
     ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: gun }, ...weaponBody(gun) });
   }
-  st.notice = { text: `${GROUPS[g]?.name ?? g} sent people after you.`, at: now };
-  ctx.emit("playSound", { clip: "cdn/sfx-walkie-talkie-radio-squelch-burst-then-static.mp3", volume: 0.6 });
+  return S.name;
 }
 // keep each squad's home on the player it hunts, so the leash pulls them along; called from the same tick
 export function squadFollow(ctx) {
