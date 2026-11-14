@@ -16,7 +16,7 @@ const F = (id) => ({ // furniture.yml rows reused (Shelly: every asset is free t
   lava: { id: "/cdn/value.2f0eae283b6ebd13603b9891c607686c47f142b2e36b43e6148b098ac56a24af.glb", forward: "+x", size: [0.42, 0.9, 0.42] },
   lamp: { id: "/cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb", forward: "+x", size: [0.45, 1.7, 0.45] },
 }[id]);
-const SMILE = (op) => `<svg viewBox='0 0 120 60' width='0.42m'><g filter='drop-shadow(0 0 4px #fff)' opacity='${op}'><ellipse cx='32' cy='16' rx='9' ry='6' fill='#fffbe8'/><ellipse cx='88' cy='16' rx='9' ry='6' fill='#fffbe8'/><path d='M14 34 Q60 64 106 34 Q60 50 14 34 Z' fill='#fffbe8'/><path d='M24 38 L28 46 M36 42 L38 51 M48 44 L49 54 M60 45 L60 55 M72 44 L71 54 M84 42 L82 51 M96 38 L92 46' stroke='#222' stroke-width='2.4'/></g></svg>`;
+const SMILE = (op) => `<svg viewBox='0 0 120 60' width='${op < 0.6 ? 0.26 : 0.42}m'><g filter='drop-shadow(0 0 4px #fff)' opacity='${op}'><ellipse cx='32' cy='16' rx='9' ry='6' fill='#fffbe8'/><ellipse cx='88' cy='16' rx='9' ry='6' fill='#fffbe8'/><path d='M14 34 Q60 64 106 34 Q60 50 14 34 Z' fill='#fffbe8'/><path d='M24 38 L28 46 M36 42 L38 51 M48 44 L49 54 M60 45 L60 55 M72 44 L71 54 M84 42 L82 51 M96 38 L92 46' stroke='#222' stroke-width='2.4'/></g></svg>`;
 const FIGURE = `<svg viewBox='0 0 60 140' width='0.7m'><path d='M30 6 C42 6 46 20 42 30 C54 36 56 60 54 84 L50 140 L10 140 L6 84 C4 60 6 36 18 30 C14 20 18 6 30 6 Z' fill='#050505'/><circle cx='24' cy='20' r='1.6' fill='#d8d2b0'/><circle cx='36' cy='20' r='1.6' fill='#d8d2b0'/></svg>`;
 function box(ctx, id, x0, y0, z0, x1, y1, z1, mat, solid = true) {
   const w = x1 - x0, h = y1 - y0, d = z1 - z0, rep = [Math.max(1, Math.max(w, d) / 1.2), Math.max(1, h / 1.2)];
@@ -68,8 +68,9 @@ export function tick(ctx) {
   const light = ctx.place.objects["ceil-light"];
   if (light && light.state.on !== lit) { light.state.on = lit; light.light = lit ? { kind: "point", color: "oklch(0.92 0.07 85)", intensity: 7, distance: 10, shadow: { enabled: true } } : null; const lg = ctx.place.objects["lamp-glow"]; if (lg) lg.light = lit ? { kind: "point", color: "oklch(0.85 0.1 70)", intensity: 1.6, distance: 5 } : null; light.material = { color: lit ? "oklch(0.97 0.03 90)" : "oklch(0.5 0.01 90)", emissive: "oklch(0.97 0.05 90)", emissiveIntensity: lit ? 1.6 : 0 }; }
   // lit: eyes glint in the dark gaps (under the bed, behind the dresser). dark: one comes out
-  const glints = [["eyes-bed", -W + 0.55, 0.12, -0.4, 90], ["eyes-dresser", W - 0.62, 1.2, -1.32, -90]];
-  for (const [id, x, y, z, yaw] of glints) { const want = lit; if (want && !ctx.place.objects[id]) ctx.spawn(id, { tags: ["l114"], feetPosition: { x, y, z }, rotation: { yaw }, vector: SMILE(0.55) }); if (!want && ctx.place.objects[id]) ctx.destroy(id); }
+  const glints = [["eyes-bed", -W + 0.75, 0.06, -0.85, 90], ["eyes-window", WIN.x + 0.2, 1.25, -D - 0.35, 0]];
+  if (ctx.place.objects["eyes-dresser"]) ctx.destroy("eyes-dresser");
+  for (const [id, x, y, z, yaw] of glints) { const want = lit; if (want && !ctx.place.objects[id]) ctx.spawn(id, { tags: ["l114"], feetPosition: { x, y, z }, rotation: { yaw }, vector: SMILE(id === "eyes-bed" ? 0.5 : 0.8) }); if (!want && ctx.place.objects[id]) ctx.destroy(id); }
   if (!lit && room.length) { s.darkSince ??= now;
     const sm = ctx.place.objects["smiler"];
     if (now - s.darkSince > DARK_S * 1000) { const p = room[0];
