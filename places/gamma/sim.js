@@ -11,6 +11,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import { LIGHTS } from "../../scripts/lib/gamma-layout.js";
 import { SHOPS } from "../../scripts/gamma-public-geo.js";
+import { workbenchSpec, ammobenchSpec, ensureBenches } from "../../scripts/lib/benches.js";
 export const cadence = "1s";
 const V = 3;
 const GRIT = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
@@ -103,6 +104,13 @@ export function tick(ctx) {
   const s = ctx.place.state;
   if (s.builtV !== V) { s.builtV = V; lay(ctx); }
   if (s.osV !== 1) { s.osV = 1; layComputers(ctx); }
+  if ((s.campBenchV ?? 0) < 1) {
+    s.campBenchV = 1;
+    ensureBenches(ctx, [
+      ["gamma-workshop-bench", workbenchSpec({ x: -5.5, y: 0, z: -11.3 }, { yaw: 0, name: "Base Gamma Workshop Bench" })],
+      ["gamma-marlo-ammobench", ammobenchSpec({ x: -20.6, y: 0, z: 14.8 }, { yaw: 90, name: "Marlo's Reloading Bench" })],
+    ]);
+  }
   if (every(ctx, "people", 5000)) keepPeople(ctx, Object.keys(PEOPLE), person); // the fallen come back after an hour
   if (s.doorV !== 1) { const d = ctx.getObject("gamma-out"); if (d) d.state = { ...d.state, to: "level3#l3-gamma-door" }; s.doorV = 1; } // rooms built before the gate door existed
 }

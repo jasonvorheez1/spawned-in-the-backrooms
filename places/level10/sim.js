@@ -17,6 +17,7 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
+import { workbenchSpec, ammobenchSpec, ensureBenches } from "../../scripts/lib/benches.js";
 
 export const cadence = "1s";
 const V = 21;
@@ -472,6 +473,13 @@ export function tick(ctx) {
     }
     lay(ctx);
     s.builtV = V;
+  }
+  if ((s.campBenchV ?? 0) < 1) {
+    s.campBenchV = 1;
+    ensureBenches(ctx, [
+      ["l10-bountiful-workbench", workbenchSpec(T(-17.5, -43.0, 0), { yaw: 180, name: "Outpost Bountiful Workbench" })],
+      ["l10-bountiful-ammobench", ammobenchSpec(T(-42.0, -56.5, 0), { yaw: 0, name: "Outpost Bountiful Reloading Bench", light: true })],
+    ]);
   }
   if (ctx.place.players?.length) tickChatter(ctx, CHATTER.level10 ?? [], { "l10-meg-cooper": "reyes", "l10-meg-maeve": "elena", "l10-meg-hale": "hollis", "l10-meg-wren": "mags", "l10-meg-sully": "reyes" }); // the outpost talks among itself
 }

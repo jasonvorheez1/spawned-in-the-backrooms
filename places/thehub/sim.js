@@ -4,6 +4,7 @@ import { keysOf, keyDoor } from "../../scripts/lib/hubkeys.js";
 import { layThings, keepCrew, keymaster } from "../../scripts/lib/hub-people.js";
 import { ARRIVE } from "../../scripts/lib/thehub.js";
 import { layLampModels, layDress, layBayLights, cageLamp } from "../../scripts/lib/hub-dress.js";
+import { workbenchSpec, ammobenchSpec, ensureBenches } from "../../scripts/lib/benches.js";
 export const cadence = "1s";
 const V = 10; // v10: caged bulkhead lamp models over doors and bays (was cylinders/spheres)
 const DOOR = { frame: { url: "/cdn/value.86c9f9f6e66d057fda78af73bde7c72cea84386e49891e45ea0ed3cddadb3e70.glb", offset: [0, 0, 0.432] }, leaf: { url: "/cdn/value.9437304a5bfa3c822e8830c3d88d9e6310980e867ff78651d84fc6dc5b01035c.glb" } }; // art/hub/doors.yml
@@ -52,6 +53,15 @@ export function tick(ctx) {
   if ((s.hubV ?? 0) < 9) layPlaques(ctx); // v9: refresh plaques for Level 11 key requirement
   if ((s.hubV ?? 0) < 5) { layLampModels(ctx); layDress(ctx); } // v5: modeled lamps, fans, tray, gutters, barriers, camp furniture
   if ((s.hubV ?? 0) >= 5 && (s.hubV ?? 0) < 10) { layDoorLamps(ctx); layBayLights(ctx); } // v10: re-lay the caged lamps
+  if ((s.campBenchV ?? 0) < 1) {
+    s.campBenchV = 1;
+    ensureBenches(ctx, [
+      ["hub-meg-workbench", workbenchSpec({ x: 15.2, y: CURB, z: -13.9 }, { yaw: 0, name: "Doorstep Carpet Workbench" })],
+      ["hub-meg-ammobench", ammobenchSpec({ x: 22.3, y: CURB, z: -13.9 }, { yaw: 0, name: "Doorstep Carpet Reloading Bench" })],
+      ["hub-amber-workbench", workbenchSpec({ x: 188.8, y: CURB, z: 10.7 }, { yaw: 180, name: "Camp Amber Workbench" })],
+      ["hub-amber-ammobench", ammobenchSpec({ x: 191.5, y: CURB, z: 10.7 }, { yaw: 180, name: "Camp Amber Reloading Bench" })],
+    ]);
+  }
   s.hubV = V;
   if (!ctx.place.players?.length) return;
   const key = ctx.place.objects["hub-keytag"];

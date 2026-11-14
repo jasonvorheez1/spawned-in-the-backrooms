@@ -6,6 +6,7 @@ import { LRUN_MODELS as M } from "./levelrun-dress.js";
 import { critterSpec } from "./critter-model.js";
 import { npcLook } from "./clothes.js";
 import { setDoor } from "./containment.js";
+import { workbenchSpec, ammobenchSpec } from "./benches.js";
 const fit = (hx, y1, hz) => ({ box: { min: { x: -hx, y: 0, z: -hz }, max: { x: hx, y: y1, z: hz } } });
 // fitted models at true scale (metres): half width x, height, half depth
 const PROP = { gurney: [0.4, 0.95, 1.0], crashcart: [0.35, 1.0, 0.3], kettle: [0.1, 0.24, 0.1], megcrate: [0.5, 0.6, 0.35], sofa: [0.45, 0.85, 0.45], lamp: [0.2, 1.6, 0.2], barrier: [0.9, 1.05, 0.15], wheelchair: [0.32, 0.95, 0.45], extinguisher: [0.1, 0.5, 0.1] };
@@ -36,6 +37,8 @@ export function buildOutpost(ctx, R) {
     prop(R, "cart0", "crashcart", -4, 13); prop(R, "wc0", "wheelchair", -8.5, 7, 30);
     [[10, 4], [11.2, 4], [12.4, 4], [10, 4], [11.2, 4]].forEach(([a, b], i) => prop(R, "cage" + i, "megcrate", a, b, 0, i > 2 ? 0.6 : 0)); // supply cage
     prop(R, "cagefence", "barrier", 11.2, 5.2);
+    R.sp("workbench", workbenchSpec(R.at(6.4, 1.0, 0), { yaw: R.yawIn, name: "Doctors' Outpost Workbench" }));
+    R.sp("ammobench", ammobenchSpec(R.at(8.8, 1.0, 0), { yaw: R.yawIn, name: "Doctors' Outpost Reloading Bench" }));
     prop(R, "chair0", "sofa", 11, 22, 180); prop(R, "chair1", "sofa", 12.5, 22, 180); prop(R, "kcart", "crashcart", 12.4, 24.2); prop(R, "kettle0", "kettle", 12.4, 24.2, 0, 1.0, false);
     prop(R, "lamp0", "lamp", 13.8, 23.5); prop(R, "ext0", "extinguisher", -14.6, 1.2);
     board(R);

@@ -17,6 +17,7 @@ import { fan, fanHousing, cable, DRIP, DUST, MIST } from "../../scripts/lib/ambi
 import { terminalSpec } from "../../scripts/lib/terminal.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import { spawnProp } from "../../scripts/lib/l2props.js";
+import { workbenchSpec, ammobenchSpec, ensureBenches } from "../../scripts/lib/benches.js";
 export const cadence = "500ms";
 const V = 30; // 30: EXIT signs read the right way from both ends; 29: Blender props for the bunks, sorting table, locker benches, sandbags, coil cooler, plunger, specimen case, saltines; 28: locker room and restroom lamps dimmed to 2.2; // 27: restroom + back hall off the lockers; // 26: locker vents; // 18: locker room floor and mat to the ref photo, The Edges lit bright down every lane cell; // 17: Tripo props dress the rooms and halls (dress21), DANGER signs at dead ends; // 7: modeled cots, bunks and workbench; 8: stairwell props; 9: memo13, blast crater, survivor chatter; 10: fans, swinging cables and lamps, drips, dust and mist; 14: survey road flares, freezer frost, blast sparks, sandbags, show-don't-tell
 const COT = { id: "/cdn/value.66bddc7e8f06c294092289342cca8265ad492304cd8e1df9cef66e01e9b94c72.glb", forward: "-z" }, BENCH = { id: "/cdn/value.79f1d7e5cb9f66321063c5449edeb0e169c6f6223a0bac5e89d7067905636e1e.glb", forward: "-z" };
@@ -415,6 +416,14 @@ function dress21(ctx) {
 }
 const PROPS_SIZE = (k) => ({ mop: 0.45, drum: 0.6, canister: 0.32, shelf: 0.45, stackchair: 0.5, fuse: 0.24 })[k] ?? 0.6;
 
+const l21CampBenches = () => {
+  const L1 = rm("base")[0], bc = center(L1), fr = rm("fridges")[0], fc = center(fr);
+  return [
+    ["l21-alef-workbench", workbenchSpec({ x: bc.x - 2.2, y: 0, z: edgeOf(L1, 1) - 0.85 }, { yaw: 180, name: "Base Alef Workbench" })],
+    ["l21-ammobench", ammobenchSpec({ x: edgeOf(fr, 2) + 0.65, y: 0, z: fc.z + 3.0 }, { yaw: 90, name: "Quartermaster's Reloading Bench", light: true })],
+  ];
+};
+
 export function tick(ctx) {
   if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level21"); // every sign dressed as its own board (scripts/lib/sign-style.js)
@@ -422,6 +431,7 @@ export function tick(ctx) {
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state, now = ctx.now();
   if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); dress21(ctx); s.peopleV = 0; }
+  if ((s.campBenchV ?? 0) < 1) { s.campBenchV = 1; ensureBenches(ctx, l21CampBenches()); }
   if ((s.vaultTintV ?? 0) < 6) { s.vaultTintV = 6; for (let k = 0; k < 4; k++) { const o = ctx.place.objects[`l21-vault-${k}`]; const m = o?.model; const rock = m?.parts?.rock ?? m?.materials?.rock; if (rock) { const { parts, materials, ...rest } = m; o.model = { ...rest, parts: { rock: { ...rock, color: "oklch(0.80 0.012 80)" } } }; o.scale = { x: 1.06, y: 1, z: 1 }; } } } // the Edges stone: neutral grey, vault slimmer over the walkway, in rooms already built (a model reads its slots back as parts)
   if (!ctx.getObject("l21-life")) ctx.spawn("l21-life", { behavior: "scripts/l21-use.js" });
   if (!s.peopleV || s.peopleV < 2) {

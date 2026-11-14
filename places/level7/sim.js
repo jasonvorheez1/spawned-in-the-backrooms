@@ -19,6 +19,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import { layExtras } from "../../scripts/lib/level7-extras.js";
 import { layFort2, FORT_MATS } from "../../scripts/lib/level7-fort2.js";
 import { layHouse } from "../../scripts/lib/level7-house.js";
+import { ammobenchSpec, ensureBenches } from "../../scripts/lib/benches.js";
 export const cadence = "2s";
 
 // Tripo models for the props (Savi, Nov 7): each fits a layout box; breakables take tag + { mat, hp, maxHp } (lib/breakables.js)
@@ -1176,6 +1177,12 @@ export function tick(ctx) {
 
   // Tiny swims himself now (scripts/l7-tiny.js)
   if ((s.tinyV ?? 0) < 2 && ctx.place.objects["l7-tiny"]) { ctx.destroy("l7-tiny"); ctx.spawn("l7-tiny", TINY()); s.tinyV = 2; }
+  if ((s.campBenchV ?? 0) < 1) {
+    s.campBenchV = 1;
+    ensureBenches(ctx, [
+      ["l7-ammobench", ammobenchSpec({ x: 43.8, y: 7.0, z: -122.4 }, { yaw: 90, name: "Seawatch Reloading Bench", light: true })],
+    ]);
+  }
 
   // 3. PERIODIC DISTANT WHALE GROAN FROM THE DEEP
   if (ctx.place.playerCount && now > (s.groanAt ?? 0)) {

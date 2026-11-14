@@ -10,6 +10,7 @@ import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import L8 from "../../scripts/lib/data/level8.yml";
 import { DRIP, RIPPLE } from "../../scripts/lib/ambient.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
+import { ammobenchSpec, ensureBenches } from "../../scripts/lib/benches.js";
 export const cadence = "1s";
 const V = 19;
 const GLB = {
@@ -576,6 +577,13 @@ export function tick(ctx) {
   const s = ctx.place.state;
   if (s.lakeDoorV !== 2) { const d = ctx.place.objects["l8-lake-back"]; if (d) { s.lakeDoorV = 2; d.primitive = { kind: "box", width: 6, height: 0.7, depth: 6 }; d.feetPosition = { ...d.feetPosition, y: -2.65 }; } } // the lake swims; only its bed's middle leads down to 7
   if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); }
+  if ((s.campBenchV ?? 0) < 1) {
+    s.campBenchV = 1;
+    const ab = P(425.5, 5.4, 0.05);
+    ensureBenches(ctx, [
+      ["l8-ammobench", ammobenchSpec({ x: ab.x, y: ab.y, z: ab.z }, { yaw: ab.yaw + 180, name: "9th Road Reloading Bench", light: true })],
+    ]);
+  }
   if (!s.roadPlacementV) {
     for (const [id, y] of [["l8-flow-22", ASPHALT_TOP - 0.01], ["l8-worklamp-31", ASPHALT_TOP + 0.02]]) {
       const o = ctx.place.objects[id]; if (o) o.feetPosition = { ...o.feetPosition, y };

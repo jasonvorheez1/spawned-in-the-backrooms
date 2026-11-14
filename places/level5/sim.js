@@ -14,6 +14,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import { builtSpec } from "../../scripts/lib/build-piece.js";
 import FNV from "../../scripts/lib/data/fnv-props.yml";
+import { ammobenchSpec, ensureBenches } from "../../scripts/lib/benches.js";
 
 export const cadence = "1s";
 const V = 3;
@@ -418,6 +419,12 @@ export function tick(ctx) {
   if (s.builtV !== V) {
     s.builtV = V;
     lay(ctx);
+  }
+  if ((s.campBenchV ?? 0) < 1) {
+    s.campBenchV = 1;
+    ensureBenches(ctx, [
+      ["l5-hk-ammobench", ammobenchSpec({ x: 7.4, y: 0, z: 22.8 }, { yaw: 180, name: "M.E.G. Housekeeping Reloading Bench" })],
+    ]);
   }
   if (s.doorDedupV !== 1) { // one leaf per doorway: the old one hands its lock (picked or not) to the hall leaf, then goes
     let all = true

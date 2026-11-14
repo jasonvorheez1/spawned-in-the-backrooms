@@ -14,6 +14,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 
 import { rbox } from "../../scripts/lib/rbox.js";
 import { layService } from "../../scripts/lib/level61-service.js";
+import { workbenchSpec, ammobenchSpec, ensureBenches } from "../../scripts/lib/benches.js";
 import CIGS from "../../scripts/lib/data/cigs.yml";
 const CIG = (k) => CIGS[k]?.model;
 
@@ -773,11 +774,17 @@ function lay(ctx) {
   sp("l61-from-l4", { feetPosition: { x: -14, y: 0.1, z: 25.4 }, rotation: { yaw: 180 } });
 
   // Exits, outposts, and service counters.
+  for (const [id, spec] of l61Benches()) sp(id, spec);
   layExtra(ctx, { HW, HD, HH });
 
   sp("l61-welcome", { feetPosition: { x: 0, y: 3.8, z: HD - 0.2 }, castShadow: false,
     vector: "<svg viewBox='0 0 440 72' width='4.4m'><rect width='440' height='72' fill='#293f43'/><path d='M5 5h430v62H5z' fill='none' stroke='#91a39a'/><text x='220' y='47' text-anchor='middle' font-family='serif' font-size='35' fill='#e9dfc2'>The Snackrooms</text></svg>" });
 }
+
+const l61Benches = () => [
+  ["l61-meg-workbench", workbenchSpec({ x: -29.1, y: 0, z: 11.2 }, { yaw: 90, name: "M.E.G. Checkpoint Workbench" })],
+  ["l61-meg-ammobench", ammobenchSpec({ x: -29.1, y: 0, z: 8.8 }, { yaw: 90, name: "M.E.G. Checkpoint Reloading Bench" })],
+];
 
 // perf: a rebuild is queued and laid ~250 rows a tick (cadence 1s). Each row replaces its old self in place (same id),
 // so the old mall stands until its new piece lands; the leftovers are cleared at the end. One pass of ~1100 froze ~100-250 ms.
@@ -843,6 +850,7 @@ export function tick(ctx) {
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const st = ctx.place.state;
   if ((st.builtV ?? 0) < V) { if (layStep(ctx)) { st.builtV = V; st.crewV = 0; } else return; }
+  if ((st.campBenchV ?? 0) < 1) { st.campBenchV = 1; ensureBenches(ctx, l61Benches()); }
   if ((st.crewV ?? 0) < 2) { // 2: facelings learn names, mimic, keep a temper (scripts/l61-staff.js)
     st.crewV = 2;
     for (const id of FACELING_IDS) faceling(ctx, id);

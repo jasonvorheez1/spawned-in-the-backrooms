@@ -11,6 +11,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import { settle, tickPeople } from "../../scripts/lib/l4-people.js";
 import { tickWalls, B as BRK } from "../../scripts/lib/breakables.js";
+import { workbenchSpec, ammobenchSpec, ensureBenches } from "../../scripts/lib/benches.js";
 export const cadence = "1s";
 const V = 2;
 const KIT = { // real models at the old boxes' size (Shelly: never blocky)
@@ -151,6 +152,13 @@ export function tick(ctx) {
   }
   const s = ctx.place.state;
   if (s.builtV !== V) { s.builtV = V; lay(ctx); }
+  if ((s.campBenchV ?? 0) < 1) {
+    s.campBenchV = 1;
+    ensureBenches(ctx, [
+      ["l4-omega-workbench", workbenchSpec({ x: -25.8, y: 0, z: -31.3 }, { yaw: 0, name: "Base Omega Workbench" })],
+      ["l4-omega-ammobench", ammobenchSpec({ x: -31.3, y: 0, z: -27.2 }, { yaw: 90, name: "Base Omega Reloading Bench" })],
+    ]);
+  }
   // Level 4's people (scripts/lib/l4-people.js): homes, the floor's day and night, meetups, phones, greetings, the mold room
   if (s.peopleV !== 2) { s.peopleV = 2; settle(ctx, (id, g, rounds) => {
     const home = rounds[0] ?? { x: 0, z: 0 };

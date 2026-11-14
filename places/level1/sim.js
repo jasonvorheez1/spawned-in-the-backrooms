@@ -17,6 +17,7 @@ import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, BACK_OLD, DROP, ONW
 import { spawnAlmond } from "../../scripts/lib/loot.js";
 import { spawnFurniture, pickKind, wallSpot1, sizeOf, remodelFurniture } from "../../scripts/lib/furniture.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
+import { workbenchSpec, ammobenchSpec, ensureBenches } from "../../scripts/lib/benches.js";
 import { symbolSvg } from "../../scripts/lib/thehub.js";
 const symbolSvgL1 = (w) => symbolSvg(77, w);
 const DECKS = [0.17, 0.69, 1.165, 1.72]; // the Tripo rack's wire floor and three boards, measured from the glb at its placed size
@@ -144,6 +145,14 @@ export function tick(ctx) {
     ctx.spawn("meg-radio", { feetPosition: { x: a.x + 6.9, y: 1, z: a.z - 0.6 }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-radio-static-chatter-loop.mp3", gain: 0.1, loop: true, spatial: true, refDistance: 1, maxDistance: 6 } });
     for (const [dx, dz, col] of [[6, 4.2, "oklch(0.85 0.12 75)"], [6, -4.2, "oklch(0.85 0.12 75)"], [13, 0, "oklch(0.92 0.04 220)"]]) ctx.spawn({ feetPosition: { x: a.x + dx, y: 2.3, z: a.z + dz }, visibleRange: { max: 42 }, light: { kind: "point", color: col, intensity: 2.5, distance: 9, shadow: { enabled: false } } });
     for (const [id, dx, dz] of AGENTS) ctx.spawn(id, agentSpec(a, id, dx, dz));
+  }
+  if (s.megCamp && (s.campBenchV ?? 0) < 1) {
+    s.campBenchV = 1;
+    const a = cellCenter(ARRIVE.cx, ARRIVE.cz);
+    ensureBenches(ctx, [
+      ["l1-meg-workbench", workbenchSpec({ x: a.x + 1.5, y: 0, z: a.z + 5.8 }, { yaw: 180, name: "M.E.G. Outpost Alpha Workbench" })],
+      ["l1-meg-ammobench", ammobenchSpec({ x: a.x + 1.5, y: 0, z: a.z - 5.8 }, { yaw: 0, name: "M.E.G. Outpost Alpha Reloading Bench" })],
+    ]);
   }
   if (s.megCamp && s.megTripo !== 3) { s.megTripo = 3; // the camp's tents, cots, table, stove, sandbags and pallets as real models (Shelly: less blocky)
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz), camp = ctx.place.objects["meg-camp"]

@@ -20,6 +20,7 @@ import { terminalSpec } from "../../scripts/lib/terminal.js";
 import { layVaults } from "../../scripts/lib/level11-vaults.js";
 import { layShop } from "../../scripts/lib/level11-shop.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
+import { workbenchSpec, ammobenchSpec, ensureBenches } from "../../scripts/lib/benches.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 import CIGS from "../../scripts/lib/data/cigs.yml";
 import FNV from "../../scripts/lib/data/fnv-props.yml";
@@ -97,6 +98,11 @@ export function l11Lean(id, spec) {
 // every rebuild). Now it only writes a queue; tick() lays LAY_STEP a tick, solids first so nobody falls, each id replacing
 // its old self in place, and the stale roots go once the queue is empty.
 const LAY_STEP = 60;
+const L11_BENCHES = () => [
+  ["l11-meg-workbench", workbenchSpec({ x: 21.8, y: 0.33, z: -10.2 }, { yaw: 180, name: "M.E.G. Base Beta Workbench" })],
+  ["l11-meg-ammobench", ammobenchSpec({ x: 24.1, y: 0.33, z: -10.2 }, { yaw: 180, name: "M.E.G. Base Beta Reloading Bench" })],
+  ["l11-market-workbench", workbenchSpec({ x: -17.2, y: 0.33, z: 47.4 }, { yaw: 0, name: "Central Market Workbench" })],
+];
 function lay(ctx) {
   const st = ctx.place.state;
   // the rows themselves stay on the machine laying them (ctx.session): only the cursor rides place.state, which every player downloads
@@ -1342,6 +1348,7 @@ pop steam rate=?mobile:6|12 on=disc(.2) life=1.6..2.6 v=up(.7..1.1)+sdir()*.15 s
       ...npcState(ctx, "agent", 120),
     },
   });
+  for (const [id, spec] of L11_BENCHES()) sp(id, spec);
 
   // ==========================================
   // 16. DOCILE LEVEL 11 ENTITIES (Level 11 Effect)
@@ -1954,6 +1961,7 @@ export function tick(ctx) {
     }
     return;
   }
+  if ((st.campBenchV ?? 0) < 1) { st.campBenchV = 1; ensureBenches(ctx, L11_BENCHES()); }
   if (!st.propPlacementV) {
     for (const id of ["l11-reno-toolbox", "l11-reno-jackhammer", "l11-reno-chest"]) {
       const o = ctx.place.objects[id];
