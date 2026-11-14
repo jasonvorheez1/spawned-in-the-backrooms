@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8195,
-  "updatedAt": "2026-11-14T13:45:34.356Z",
-  "summary": "The Backrooms is a shared multiplayer survival RPG spanning the Level 0 maze, mall, The Hub and authored destinations. Player state carries progression, gear, quests and resume location; shared registries/helpers and per-place simulations supply navigation, NPCs, story and world dressing. Chapter 2 crosses Level 11, Gamma and Level 34 before Level !; Level 109 is a seeded, streamed Neon Hospital with persistent containment and a sealed B3 dungeon.",
+  "basedOnSpecVersion": 8209,
+  "updatedAt": "2026-11-14T13:50:55.001Z",
+  "summary": "The Backrooms is a shared multiplayer survival RPG spanning the Level 0 maze, mall, The Hub and authored destinations. Player state carries progression, gear, quests and resume location; shared registries/helpers and per-place simulations supply navigation, NPCs, story and world dressing. Chapter 2's Level ! rescue now points through the Safe Alcove's south door into Level 109, whose seeded streamed Neon Hospital leads into a separate sealed B3 dungeon.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes, anomalies and deterministic dressing; momentsV gates fitted wall moments and room-prop regeneration.",
@@ -10,9 +10,9 @@
     "places/thehub (3D) - expanded tunnel crossroads, keyed destinations, Doorstep Carpet and Camp Amber crews; separate from Bonus room routing.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office, supplies, HALOGEN machine, encounters and story beats.",
     "places/level1 + places/level4 (3D) - M.E.G. camps and authored office mazes; sims dress story props and facilities.",
-    "places/level9 + places/level11 (3D) - The Suburbs seeded streets and Level 11's city/Base Beta/strip mall/clinic, IS LAB signal bench, payphone and Chapter 2 interactions.",
+    "places/level9 + places/level11 (3D) - The Suburbs seeded streets and Level 11's city/Base Beta/strip mall/clinic, IS LAB signal bench, payphone and Chapter 2 entry trail.",
     "places/level61 (3D, The Snackrooms) - food court and M.E.G. checkpoint with storefronts, simulated staff/services and Clippers cocktail lounge.",
-    "places/level109 + places/levelrun (3D) - seeded, streamed Neon Hospital with departments, containment, Doctors' outpost and B3 armory dungeon; Level ! runs the chase, horde and Phoebe rescue into its Safe Alcove."
+    "places/level109 + places/levelrun (3D) - Level ! chase/rescue ends in Phoebe's Safe Alcove, whose south cream door enters the seeded streamed Neon Hospital; hospital has quiet department-specific rooms, containment and sealed B3 dungeon."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input actions; fall-guard runs before locomotion/player behavior.",
@@ -22,7 +22,7 @@
     "places/main/sim.js + scripts/lib/maze.js + xmas-room.js + level0-moments.js - Level 0 layout and deterministic maze dressing/encounters; moments version gates rebuilds.",
     "places/thehub/sim.js + scripts/lib/thehub.js + hub-people.js + hub-dress.js + scripts/thehub-geo.js - Hub topology, doors, dressing and crew; Phoebe shares scripts/lib/phoebe.js dressing.",
     "scripts/talk.js + scripts/quest-marker.js + scripts/lib/quests.js and level quest modules - dialogue, quest journal/markers and shared advancement/reward rules.",
-    "places/level109/sim.js + scripts/lib/level109.js - seeded corridor/room streaming, department/outpost builders, containment, wanderers and B3; scripts/lib/levelrun-quest.js remains the separate Level ! chase entry."
+    "places/level109/sim.js + scripts/lib/level109.js - seeded corridor/room streaming, per-department dressing, wanderer dens, containment and B3; scripts/lib/levelrun-quest.js remains the separate Level ! chase entry."
   ],
   "shared": [
     "scripts/lib/places.js - canonical per-place names, labels and HUD titles; consumed by feed, quest names and scripts/ui.js.",
@@ -40,9 +40,9 @@
     "scripts/lib/ambush-smiler.js - stepAmbushSmiler; l34-smiler.js and l9-smiler.js expose update with separate configurations.",
     "scripts/lib/companion.js - PERKS, perkOf, isMine, followersOf, loyaltyScale, whyNot, recruit/adopt/dismiss/order, weapon handoff, tick, bring; carry.js - carryAcross.",
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
-    "scripts/lib/quests.js - shared journal, advancement and reward helpers; scripts/lib/containment.js - containment state and pen/door operations; scripts/lib/ch2-quest.js - CH2, CH2_ECHO, CH2_TONE, syncCh2 variants and quest stage/dialogue helpers.",
+    "scripts/lib/quests.js - shared journal, advancement and reward helpers; scripts/lib/containment.js - containment state and pen/door operations; scripts/lib/ch2-quest.js - CH2, CH2_ECHO, CH2_TONE, syncCh2 variants and quest stages/dialogue handlers.",
     "scripts/lib/levelrun-mechanics.js - CORRIDOR, OBSTACLES, agilityProfile, hitObstacle, stepHordeZ; scripts/lib/level109.js - seeded corridor/room layout math and coordinate helpers.",
-    "scripts/lib/level109-quest.js - QID, QNAME, BREACH, Q, questTick, dialogue handler/choices; l109-b3.js - B3 origin/room geometry, stairDoorAt, buildB3 and placeLauncher; l109-foes.js - MGR, spawnFoe."
+    "scripts/lib/level109-quest.js - QID, QNAME, BREACH, Q, questTick, dialogue handler/choices; l109-b3.js - B3 origin/room geometry, stairDoorAt, buildB3 and placeLauncher; l109-foes.js - MGR, spawnFoe; l109-wanderers.js - BARKS, DEN, denOf/denLock/load/watch/unload, wandererTick and spawnWanderer."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable player.state progression, XP/level, health/sanity, inventory/equipment, needs, combat, access, appearance, saved place/position, currency, karma/rep and homeKeep.",
@@ -52,7 +52,7 @@
     "scripts/lib/errands.js - player.state.errands, errHints and journal entries; completion updates currency, payout, reputation and hints; field-errands.js + hub-errands.js own confirmation maps.",
     "Level quest modules (including level8/10/11/21/61, level31, level70, remodel, ch2 and zenith) - level-specific stages/routes/outcomes; ch2-quest.js owns Chapter 2 main/echo/tone progress, clues, alternate-path flags and payouts.",
     "scripts/lib/companion.js - NPC follow/loyalty/perk/order/weapon state plus player.state.crew; scripts/lib/carry.js records player.state.xferTo and coordinates transfer on threshold links.",
-    "places/level109/sim.js owns place.state.l109seed and B3 spawn timing; containment.js writes place.state.pens/loose/pdoors; Level 109 quest progress is player.state.l109q; Level ! sim owns chase state, dressV and player session/cut/rescue state."
+    "places/level109/sim.js owns place.state.l109seed and B3 spawn timing; containment.js writes place.state.pens/loose/pdoors; l109-wanderers.js books den refill timestamps in place.state.dens; Level 109 quest progress is player.state.l109q; Level ! sim owns chase state, dressV and player session/cut/rescue state."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest and CCTV behaviors; scripts/interact.js handles tagged-seat selection and seatTick.",
@@ -65,8 +65,8 @@
     "scripts/player.js writes player.state.notice and scripts/stats.js forwards fresh notices into feed → scripts/ui.js renders ui-kit noticeToast; feed status watcher uses canonical place labels.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js offers place-matched jobs; carried items/kills/world events advance errands → journal, player.state.errands/qtrack and payouts.",
     "scripts/talk.js → dialogue.js rootChoices and quest handlers; level quest modules call scripts/lib/quests.js → journal/feed/reputation/reward state; Hub route/quest logic consumes thehub door registry and visit/clue flags.",
-    "scripts/lib/ch2-quest.js stages/markers → scripts/l11-ch2-drop.js props, NPC dialogue and scripts/os.js GAMMA-DB-01 file reads; clues and alternate checks/items advance player.state main/echo/tone progress and unlock Level !.",
-    "Level ! entry → places/levelrun/sim.js intro cut before active corridor chase; once lrunIntroDone, movement through obstacles/horde reaches collapse/rescue and Phoebe in the Safe Alcove."
+    "scripts/lib/ch2-quest.js stages/markers → Level 11 clues, Gamma/IS LAB routes and Level !; Level ! rescue + Phoebe completion unlock Chapter 3 and mark lrun-to-l109, the south cream door to Level 109.",
+    "places/level109/sim.js tick → seeded streamed halls/rooms, roomLook and buildRoom, den and containment adapters, and Level 109 questTick; room loading populates deterministic contents and unload persists pen state."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; menus/staff vary by venue and Level 6.1 fixtures are fitted separately.",
@@ -76,7 +76,7 @@
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "Level 01/Zenith and Level 1 geometry builders - authored station and car park/service geometry; corridor materials, pipes, fixtures and lights vary deterministically per cell.",
     "scripts/meg-agent.js + npc-temper.js + forgive.js + critter-model.js + companion.js - NPC reactions, cover, barks, combat and following vary by faction/role/outfit/perk; Hub and story Phoebes share phoebe.js dressing.",
-    "Level quest modules + talk/use handlers - quest stages and replies reuse shared journal, skill-check, reputation/feed and one-time reward helpers; Chapter 2 uses alternate NPC, OS, skill/item and prop-interaction routes."
+    "scripts/lib/level109.js + l109-rooms.js + data/l109-rooms.yml - seeded department rooms share fitted room/loot builders, varying by room type, clean/abandoned roll, light colour, ambience loop and contents; l109-wanderers adds deterministic locked dens."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -89,8 +89,8 @@
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together; place.state.hubV gates shell/door/plaque rebuilds.",
     "Hub keyed doors consume the matching player.state.hubKeys key; t10-a3 maps to level11 and hubTenthCrossed is set only after a qualifying clue and successful crossing; Level 1's route is a separate threshold pair.",
-    "Level 109's place.state.l109seed fixes the irregular corridor layout across reloads; containment is keyed by room ID in pens, loose and pdoors and must survive streamed unload/reload; pen doors are player-operated, not AI-opened.",
-    "Level 109 B3 is below the hospital floor (origin y=-14); keep B3 room/foe positions and colliders in that frame, and preserve the one-per-world launcher placement and b3-morgue pen bounds together.",
-    "Level ! intro must still trigger even if a player is already past corridorStartZ; the chase activates only after lrunIntroDone. Chapter 2 archive/signal clues can arrive out of stage order, so retain the auto-unlock when both prerequisites are present and keep alternate paths' checks/items and markers aligned."
+    "Level 109's place.state.l109seed fixes the irregular corridor/room rolls across reloads; keep arrival room-pop and den safe radii coupled to scripts/lib/level109.js SPAWN; dens refill on a one-hour place.state.dens timestamp after their lock is picked.",
+    "Level 109 containment is keyed by room ID in pens, loose and pdoors and must survive streamed unload/reload; pen doors are player-operated, not AI-opened. B3 is below the hospital floor (origin y=-14); keep B3 positions/colliders and b3-morgue pen bounds together.",
+    "Level ! intro must still trigger even if a player is already past corridorStartZ; the chase activates only after lrunIntroDone. Chapter 2 archive/signal clues can arrive out of stage order; Phoebe's south cream door ID lrun-to-l109 and quest-route destination level109 must agree."
   ]
 }
