@@ -44,6 +44,8 @@ for name,(H,tris) in SET.items():
     cam.location=(2.6*max(1,dims.z),-3.4*max(1,dims.z),1.7); dv=mathutils.Vector((0,0,dims.z/2))-cam.location; cam.rotation_euler=dv.to_track_quat('-Z','Y').to_euler()
     sc.render.filepath=f"/tmp/clip_{name}.png"; bpy.ops.render.render(write_still=True)
     bpy.data.objects.remove(sc.objects["Cylinder"]); bpy.data.objects.remove(cam); bpy.data.objects.remove(L)
+    for im in bpy.data.images:
+        if im.size[0]>1024: im.scale(1024,1024)
     bpy.ops.object.select_all(action='SELECT')
     bpy.ops.export_scene.gltf(filepath=f"{OUT}/{name}.glb",export_apply=True,use_selection=True)
 # textures to 1024 so the bar loads light
