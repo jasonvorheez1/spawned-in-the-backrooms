@@ -66,8 +66,16 @@ function layLitter(ctx, B) {
   spawnAt(ctx, "ssfun-hat", { tags: ["ssfun-litter"], feetPosition: { x: B.foot.x, z: B.foot.z, y: { terrain: 0 } }, rotation: { yaw: 33 }, primitive: { kind: "scripted", script: HULL, params: { part: "hat" } }, material: { pbr: true }, lifetime: V.debrisSec, visibleRange: { max: 60 } });
 }
 
+// one ship: whichever place ticks clears a hull left standing in a place the ship has left (its sim may be asleep with nobody there)
+function sweep(ctx, v) {
+  for (const k of Object.keys(V.sites)) {
+    if (k === v.at || k === ctx.place.id) continue;
+    try { const objs = ctx.world.places[k]?.objects; if (!objs) continue; for (const id of ["ssfun-hull", "ssfun-gangway", "ssfun-board", "ssfun-music"]) if (id in objs) delete objs[id]; } catch (e) {}
+  }
+}
 export function shipTick(ctx, put, placeKey, site) {
   const v = voyage(ctx), now = ctx.now(), ps = ctx.place.state;
+  sweep(ctx, v);
   if (placeKey === "level26") return deckTick(ctx, v);
   const B = berth(ctx, placeKey, site);
   if (!has(ctx, "ssfun-landing")) spawnAt(ctx, "ssfun-landing", { feetPosition: { x: B.land.x, y: B.foot.y + 0.2, z: B.land.z }, rotation: { yaw: B.S.yaw + 90 } });
