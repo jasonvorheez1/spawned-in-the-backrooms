@@ -179,7 +179,10 @@ export function tick(ctx) {
     s.b3foesAt = ctx.now() + 3600000;
     for (const [dx, dz] of [[-6.5, 12], [-3.5, 16.5]]) spawnFoe(ctx, "hound", { x: B3O.x + dx, y: B3O.y + 0.1, z: B3O.z + dz }, { pen: "b3-morgue", penKind: "hound", penBox: MORGUE, penDoor: { x: B3O.x - 1.5, z: B3O.z + 14 }, b3: 1 });
   }
-  if (!SEGS.size) for (const o of ctx.query({ anyTags: ["l109-seg", "l109-room"] })) ctx.destroy(o.id); // a fresh machine: clear what an earlier one laid, then lay again
+  if (!SEGS.size) { // a fresh machine (or a code save): clear what an earlier one laid, then lay again
+    for (const o of ctx.query({ anyTags: ["l109-seg", "l109-room"] })) ctx.destroy(o.id);
+    for (const p of players) ctx.spawn({ feetPosition: { x: p.feetPosition.x, y: Math.min(p.feetPosition.y, 0) - 0.3, z: p.feetPosition.z }, primitive: { kind: "box", width: 40, height: 0.3, depth: 40 }, visible: false, physics: "static", lifetime: 8 }); // Nov 14: the relay left a player standing in a room with no floor for a few ticks; Shelly fell to the void twice. A held slab carries them till the room is back
+  }
   const want = new Map(), keep = new Set(), rooms = new Map();
   const reach = (c, u, span, keepSpan) => { for (let k = Math.floor((u - keepSpan) / SEG); k <= Math.floor((u + keepSpan) / SEG); k++) { const key = segKey(c, k); keep.add(key); if (Math.abs(k * SEG + SEG / 2 - u) <= span && !want.has(key)) want.set(key, { c, k, d: Math.abs(k * SEG + SEG / 2 - u) }); } };
   for (const p of players) for (const at of corridorsAt(seed, p.feetPosition)) {
