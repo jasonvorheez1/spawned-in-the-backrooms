@@ -4,7 +4,8 @@
 import R from "./data/radio.yml";
 import B from "./data/radio-8bit.yml";
 import P from "./data/radio-party.yml";
-export const STATIONS = [R, B, P].map((s, i) => ({ ...s, key: i, total: s.segments.reduce((a, x) => a + x.dur, 0) }));
+import A from "./data/radio-ads.yml";
+export const STATIONS = [R, B, P, A].map((s, i) => ({ ...s, key: i, total: s.segments.reduce((a, x) => a + x.dur, 0) }));
 export const STATION = STATIONS[0];
 export function stationOf(i) { return STATIONS[i | 0] ?? STATIONS[0]; }
 export function onAir(nowMs, st = STATION) {
