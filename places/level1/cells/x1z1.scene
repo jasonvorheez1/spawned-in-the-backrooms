@@ -1,0 +1,5 @@
+# spawn-scene v2 yaml x1z1
+l1-from-hub:
+  feetPosition: {x: 117.39999999999999, y: 0.1, z: 108}
+  id: l1-from-hub
+  rotation: {yaw: 90}
