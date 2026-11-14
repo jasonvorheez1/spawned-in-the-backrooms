@@ -115,14 +115,7 @@ function plant(ctx, box, x, z) {
 function interior(ctx, box, shop, w, d, lod) {
   const X1 = w / 2, X0 = -w / 2, Z0 = -d / 2, Z1 = d / 2;
   ctx.albedo(null);
-  if (shop === "derma") { // clinic: a mint reception desk, a row of waiting chairs, posters, a plant, a back hall door
-    ctx.color("oklch(0.93 0.02 160)"); rbox(box, X1 - 4.6, 0, -1.4, X1 - 3.9, 1.05, 1.4, 0.03);
-    ctx.color("oklch(0.98 0.005 95)"); rbox(box, X1 - 4.75, 1.05, -1.5, X1 - 3.8, 1.1, 1.5, 0.02);
-    ctx.color("oklch(0.2 0.01 250)"); box(X1 - 4.5, 1.1, -0.3, X1 - 4.45, 1.4, 0.15); // monitor
-    for (let i = 0; i < 4; i++) chair(ctx, box, X1 - 1.5, Z0 + 0.6 + i * 0.6, Math.PI / 2, "oklch(0.55 0.12 250)");
-    plant(ctx, box, X1 - 1.0, Z1 - 0.6);
-    ctx.color("oklch(0.62 0.13 160)"); box(X0 + 0.02, 0.9, -0.9, X0 + 0.04, 2.0, -0.1); ctx.color("oklch(0.72 0.1 30)"); box(X0 + 0.02, 0.9, 0.3, X0 + 0.04, 2.0, 1.1);
-    ctx.color("oklch(0.5 0.04 60)"); box(X0 + 0.02, 0, Z1 - 1.6, X0 + 0.06, 2.1, Z1 - 0.7); // back hall door
+  if (shop === "derma") { // clinic furniture is placed as fitted Tripo models in places/level11/sim.js (desk, chairs, plant, cabinet, poster); only the room shell stays here
   } else if (shop === "islab") { // lab: a white counter with a sample window, stools, a specimen fridge, blood-draw chair
     ctx.color("oklch(0.97 0.005 165)"); rbox(box, X1 - 4.2, 0, Z0 + 0.3, X1 - 3.6, 1.05, Z1 - 0.3, 0.03);
     ctx.color("oklch(0.55 0.11 165)"); box(X1 - 4.21, 0.15, Z0 + 0.3, X1 - 4.19, 0.9, Z1 - 0.3);
