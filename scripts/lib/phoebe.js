@@ -4,7 +4,7 @@
 import { furrySpec, critterSpec, HUMAN, humanFace, setStyle, seatHead, buildFor, baseBones, CAT_JIGGLE } from "./critter-model.js"
 export const PHOEBE_LOOK = {
   species: "cat", sex: "f", hairc: "#c4602b", fur: "#d9824a", belly: "#f3d9c4", tip: "#f3d9c4", nose: "#c86f6a", 
-  topw: "longsleeve", top: "#141216", botw: "skirt", bottom: "#17141a", shoes: "boots", shoec: "#121014",
+  hair: "none", topw: "longsleeve", top: "#141216", botw: "", bottom: "#17141a", shoes: "boots", shoec: "#121014",
   expr: "neutral", etype: "sleepy", pupil: "#ffffff", glowEye: 1.1, sclera: "#120d10", eye: "#ffffff", // Shelly Nov 14: no grin, eyes glowing white; half-lidded calm reads smug // coat, hair, bow, chain and banded boots ride on top as the Blender outfit (art/phoebe-outfit/build.py)
 }
 // her human self (Shelly, Nov 9: "model phoebe too since she doesnt have a human equivalent"): the same girl on the human body,
@@ -22,7 +22,7 @@ function humanPhoebe() {
   return { ...spec, model: { ...spec.model, materials: { ...spec.model.materials, Iris: EYES } }, morph: { ...spec.morph, ...face } }
 }
 // a local, unsaved watcher: spawned on the viewer's own machine for one beat, gone after `life` seconds
-const OUTFIT = "/cdn/value.ec9273851fed51e12858742c0581c952b1b91db6cee081f45c56619ed09b06a8.glb"
+const OUTFIT = "/cdn/value.79298a18ec7de9993a4751a73c74df7d5db6f26284df69a3a5d3113fc41be488.glb" // the cat outfit wearing her original Nov 8 hair (art/phoebe-outfit/hair_back.py; Shelly Nov 14 "isnt using the model from before")
 export function phoebeSpec(ctx) {
   setStyle(ctx.world.state.bodyStyle) // this script's own copy of the BODIES switch reads the world's setting, not its boot default
   const human = ctx.world.state.bodyStyle === "human" && !!HUMAN
