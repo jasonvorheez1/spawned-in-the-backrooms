@@ -28,7 +28,7 @@ const CIG = (k) => CIGS[k]?.model;
 export const cadence = "1s";
 const RENO_FLOOR = 0.32;
 const mallTrash = (i) => ({ x: -15.15 + i * 0.2, y: 0.33, z: 28.1 + i * 0.65 });
-const V = 170; // 170: Coca-Cola machine and crates in Sedco, a can on the apartment counter // 169: 169: cigarette packs on the apartment counter and Sedco till // 168: 168: Chapter 2 Clinic dead-drop and sealed Level ! hospital threshold // 167: stouter columns // 166: 166: riveted Tripo platform columns // 165: 165: ramp lip removed // 164: 164: stair mouth opened to z 63.8 (head room on the last steps) // 163: 163: subway stair ramp carries the feet, Tripo deposit wall // 162: 162: bin true size // // 161: band split at vault door // // 160: vault door fit // // 159: vault door scaled flat // // 158: Tripo vault door + bins // // 157: substation 4 Tripo pieces, vault wall opened (Shelly Nov 13) // // 154: newsbox out of the hot dog cart, printed cards // 148 laid a cut list (a throw mid-lay): 149 lays it whole again // the market court and the central pedestrian route
+const V = 171; // 171 (2026-11-14): strip mall lab + bakery furniture is fitted Tripo+Studio models (art/l11-mall), storefronts are bevelled aluminium extrusions, the clinic back door is the Tripo steel service door // 170: 170: Coca-Cola machine and crates in Sedco, a can on the apartment counter // 169: 169: cigarette packs on the apartment counter and Sedco till // 168: 168: Chapter 2 Clinic dead-drop and sealed Level ! hospital threshold // 167: stouter columns // 166: 166: riveted Tripo platform columns // 165: 165: ramp lip removed // 164: 164: stair mouth opened to z 63.8 (head room on the last steps) // 163: 163: subway stair ramp carries the feet, Tripo deposit wall // 162: 162: bin true size // // 161: band split at vault door // // 160: vault door fit // // 159: vault door scaled flat // // 158: Tripo vault door + bins // // 157: substation 4 Tripo pieces, vault wall opened (Shelly Nov 13) // // 154: newsbox out of the hot dog cart, printed cards // 148 laid a cut list (a throw mid-lay): 149 lays it whole again // the market court and the central pedestrian route
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -617,23 +617,16 @@ function lay(ctx) {
       const DW = 1.3, side = (w - DW) / 2; // two panes either side of an open doorway
       bx(`l11-mall-pane-${k}`, FX - 0.04, 0.5, zc - DW / 2 - side / 2, 0.03, 2.8, side, glass);
       bx(`l11-mall-pane-${k}-b`, FX - 0.04, 0.5, zc + DW / 2 + side / 2, 0.03, 2.8, side, glass);
-      bx(`l11-mall-door-${k}-l`, FX, 0.5, zc - DW / 2, 0.09, 2.3, 0.07, AL, { physics: undefined });
-      bx(`l11-mall-door-${k}-r`, FX, 0.5, zc + DW / 2, 0.09, 2.3, 0.07, AL, { physics: undefined });
-      bx(`l11-mall-door-${k}-head`, FX, 2.8, zc, 0.09, 0.07, DW, AL, { physics: undefined });
+      sp(`l11-mall-frame-${k}`, { feetPosition: { x: FX, y: 0.4, z: zc }, primitive: { kind: "scripted", script: "scripts/l11-mall.js", params: { kind: "storefront", w, dw: DW, h: 2.95 } }, physics: "none" }); // bevelled white aluminium storefront (jambs, mullions, head, transom, sills) around the open doorway
       sp(`l11-mall-int-${k}`, { feetPosition: { x: MALL_X, y: 0.52, z: zc }, primitive: { kind: "scripted", script: "scripts/l11-mall.js", params: { kind: "interior", shop: k, w: MALL_W - 1.0, d: w - 0.3 } }, physics: "none" });
       { // the interior mesh's own collider closed over the aisle; its counters stand as plain invisible blocks instead
         const X1 = MALL_X + (MALL_W - 1.0) / 2, X0 = MALL_X - (MALL_W - 1.0) / 2, hd = (w - 0.3) / 2, HIDE = { visible: false, castShadow: false };
-        const blocks = k === "derma" ? [[X1 - 4.75, X1 - 3.8, -1.5, 1.5, 1.1]]
-          : k === "islab" ? [[X1 - 4.2, X1 - 3.6, -hd + 0.3, hd - 0.3, 1.05], [X0 + 0.3, X0 + 0.9, hd - 1.0, hd - 0.3, 1.9]]
-          : [[X1 - 3.6, X1 - 2.98, -hd + 0.6, hd - 1.4, 1.37], [X0 + 0.25, X0 + 0.7, -hd + 0.4, hd - 0.4, 2.2]];
+        const blocks = k === "derma" ? [[MALL_X - 2.15, MALL_X - 0.85, -1.3, 1.3, 1.15]] // reception desk
+          : k === "islab" ? [[MALL_X - 1.6, MALL_X - 0.8, -2.3, 1.1, 1.1], [MALL_X - 5.3, MALL_X - 4.35, -3.0, -2.05, 1.75]] // sample counter, specimen fridge
+          : [[MALL_X + 2.05, MALL_X + 3.95, -3.77, -2.93, 1.3], [MALL_X - 2.75, MALL_X - 1.4, -3.42, -2.7, 1.45]]; // pastry case, bread rack
         blocks.forEach(([a, b, z0, z1, h], i) => bx(`l11-mall-col-${k}-${i}`, (a + b) / 2, 0.52, zc + (z0 + z1) / 2, b - a, h, z1 - z0, null, HIDE));
       }
       sp(`l11-mall-light-${k}`, { feetPosition: { x: MALL_X + 3, y: 3.1, z: zc }, light: { kind: "point", color: k === "pizza" ? "oklch(0.9 0.08 80)" : "oklch(0.96 0.02 220)", intensity: 2.2, distance: 11 } });
-      bx(`l11-mall-frame-${k}-top`, FX, 3.3, zc, 0.08, 0.1, w, AL, { physics: undefined });
-      for (const sgn of [-1, 1]) bx(`l11-mall-frame-${k}-sill${sgn}`, FX, 0.46, zc + sgn * (0.65 + (w - 1.3) / 4), 0.1, 0.06, (w - 1.3) / 2, AL, { physics: undefined });
-      bx(`l11-mall-frame-${k}-transom`, FX, 2.55, zc, 0.07, 0.06, w, AL, { physics: undefined });
-      const n = Math.round(w / 1.4);
-      for (let i = 0; i <= n; i++) if (Math.abs(-w / 2 + (w * i) / n) > 0.75) bx(`l11-mall-frame-${k}-m${i}`, FX, 0.4, zc - w / 2 + (w * i) / n, 0.08, 2.9, 0.07, AL, { physics: undefined });
     }
     bx("l11-mall-frost-islab", FX - 0.02, 1.0, MALL_Z, 0.02, 0.35, 4.1, { color: "oklch(0.9 0.02 165)", opacity: 0.7, transparent: true, roughness: 0.6 }, { physics: undefined });
   }
@@ -676,13 +669,12 @@ function lay(ctx) {
       tags: ["usable"],
       feetPosition: { x: MALL_X - 5.25, y: Y0, z: MALL_Z - 5.0 },
       rotation: { yaw: 90 },
-      primitive: { kind: "box", width: 1.15, height: 2.25, depth: 0.14 },
-      material: { color: "#3d1215", roughness: 0.55, metalness: 0.2 },
+      model: { id: "/cdn/value.72e3f02029b10b3d1151df1a966e7a7213e1c322410024ec00e19a8ea4005153.glb", forward: "+x" }, // Tripo+Studio dark-red steel service door, push bar, wired glass (art/l11-mall)
+      layout: { box: { min: { x: -0.6, y: 0, z: -0.13 }, max: { x: 0.6, y: 2.4, z: 0.13 } } },
       physics: { body: "static", collider: "box" },
       behavior: "scripts/l11-ch2-drop.js",
       state: { kind: "levelrun-door", name: "Sealed Hospital Door", verb: "Open Threshold" },
       children: [
-        { feetPosition: { x: 0.35, y: 1.02, z: 0.09 }, primitive: { kind: "box", width: 0.58, height: 0.06, depth: 0.05 }, material: { color: "#a5acb3", metalness: 0.75, roughness: 0.3 } },
         { feetPosition: { x: 0, y: 2.38, z: 0.05 }, primitive: { kind: "box", width: 0.32, height: 0.14, depth: 0.08 }, material: { color: "#ff2525", emissive: "#ff1515", emissiveIntensity: 2.4 }, light: { kind: "point", color: "#ff2020", intensity: 1.1, distance: 4.2, shadow: { enabled: false } } },
       ],
     });
@@ -693,6 +685,14 @@ function lay(ctx) {
     bx("l11-lab-glass", MALL_X - 1.35, Y0 + 1.1, MALL_Z - 0.6, 0.03, 0.7, 3.2, GLASS_TINT, { physics: undefined });
     fit("l11-lab-chair-1", CHAIR, FX - 1.2, MALL_Z - 1.6, -90, [0.75, 0.9, 0.75]);
     fit("l11-lab-chair-2", CHAIR, FX - 1.2, MALL_Z + 0.4, -90, [0.75, 0.9, 0.75]);
+    { // lab: stools behind the counter, a specimen fridge and a blood-draw chair by the back wall (Tripo+Studio, art/l11-mall/build.py; fronts are +x in the file)
+      const L11M = { stool: "/cdn/value.667e360343948eba1fa76d5da065401a90a434835b07f2e6f61c215210453d43.glb", fridge: "/cdn/value.ec23d51d3c5c37071a4f62ea3c1848cb8c3eefd34bd1458dada2fcb177c285c2.glb", draw: "/cdn/value.2262935cd385b11621765d83356d11eb63bc45aba1e0a28cc1bea41ed71fa408.glb" };
+      const fx = (id, m, x, z, yaw, size) => sp(id, { feetPosition: { x, y: Y0, z }, rotation: { yaw }, model: { id: m, forward: "+x" }, layout: { box: { min: { x: -size[0] / 2, y: 0, z: -size[2] / 2 }, max: { x: size[0] / 2, y: size[1], z: size[2] / 2 } } }, physics: { body: "static", collider: "box" } });
+      fx("l11-lab-stool-1", L11M.stool, MALL_X - 2.3, MALL_Z - 1.6, 0, [0.5, 0.62, 0.5]);
+      fx("l11-lab-stool-2", L11M.stool, MALL_X - 2.3, MALL_Z + 0.2, 40, [0.5, 0.62, 0.5]);
+      fx("l11-lab-fridge", L11M.fridge, MALL_X - 4.8, MALL_Z - 2.5, 90, [0.98, 1.75, 0.94]);
+      fx("l11-lab-drawchair", L11M.draw, MALL_X - 4.3, MALL_Z - 0.2, 90, [0.77, 1.0, 1.0]);
+    }
     fit("l11-lab-plant", PLANT, MALL_X - 4.5, MALL_Z + 1.6, 30, [0.5, 1.1, 0.5]);
     sp("l11-lab-hum", { feetPosition: { x: MALL_X, y: 3, z: MALL_Z - 3.5 }, audio: { clip: "cdn/sfx-quiet-office-air-vent-hvac-room-tone-loop.mp3", loop: true, gain: 0.08, spatial: true, maxDistance: 10 } });
   }
@@ -739,6 +739,13 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
 
   // tripo pastry display case against the divider, its glass toward the shop
   sp("l11-pizza-case", { feetPosition: { x: MALL_X + 3.0, y: 0.38, z: MALL_Z + 3.15 }, rotation: { yaw: 0 }, model: { id: "/cdn/value.a619c121b4e830206d2c59969fdebd9d2a47dac9189109031f381cc44c28a2b3.glb" }, layout: { box: { min: { x: -0.95, y: 0, z: -0.42 }, max: { x: 0.95, y: 1.3, z: 0.42 } } }, physics: { body: "static", collider: "box" } });
+  { // bakery: Tripo+Studio bread rack against the divider, the Gib register (reused) on the case, a second cafe set by the window
+    sp("l11-pizza-breadrack", { feetPosition: { x: MALL_X - 2.1, y: 0.38, z: MALL_Z + 2.95 }, rotation: { yaw: 180 }, model: { id: "/cdn/value.7a211a783b6b22084edf58b9a2363e4c33dc577dbec049a9e421e05233154dc6.glb", forward: "+x" }, layout: { box: { min: { x: -0.82, y: 0, z: -0.35 }, max: { x: 0.82, y: 1.45, z: 0.35 } } }, physics: { body: "static", collider: "box" } });
+    sp("l11-pizza-register", { feetPosition: { x: MALL_X + 3.7, y: 1.68, z: MALL_Z + 3.15 }, rotation: { yaw: 180 }, model: { id: "/cdn/value.cc7ad41c978aa40ce95e650f2953b59f00f4f4abc70462c632cca85420472d75.glb", forward: "-z" }, layout: { box: { min: { x: -0.22, y: 0, z: -0.16 }, max: { x: 0.22, y: 0.32, z: 0.16 } } } });
+    md("l11-pizza-table2", "bistro_table", MALL_X + 5.4, 0.38, MALL_Z + 5.0, undefined, "cylinder", { layout: { box: { min: { x: -0.45, y: 0, z: -0.45 }, max: { x: 0.45, y: 0.75, z: 0.45 } } } });
+    md("l11-pizza-chair3", "bistro_chair", MALL_X + 5.4, 0.38, MALL_Z + 4.1, undefined, "box", { rotation: { yaw: 180 }, layout: { box: { min: { x: -0.25, y: 0, z: -0.26 }, max: { x: 0.25, y: 0.88, z: 0.26 } } } });
+    md("l11-pizza-chair4", "bistro_chair", MALL_X + 4.5, 0.38, MALL_Z + 5.0, undefined, "box", { rotation: { yaw: 90 }, layout: { box: { min: { x: -0.25, y: 0, z: -0.26 }, max: { x: 0.25, y: 0.88, z: 0.26 } } } });
+  }
   sp("l11-pizza-case-light", { feetPosition: { x: MALL_X + 3.0, y: 1.25, z: MALL_Z + 3.4 }, light: { kind: "point", color: "oklch(0.95 0.04 85)", intensity: 0.6, distance: 2.5 } });
 
   // Dining Bistro Table & Chairs
