@@ -177,13 +177,14 @@ const snd = (ctx, clip, v, at) => ctx.emit("playSound", { clip, position: at ?? 
 export const WHISPER = {
   6: "Voss sells to anyone, stray. He sold to me once.",
   7: "Batteries. Somebody wanted that drive kept powered. Walk faster.",
-  8: "Mike read that same page, you know. She didn't like it either.",
+  8: "Mike read that same page, you know. He didn't like it either.",
   9: "A voice on the line isn't a door. Keep looking for the drive, stray. So will I.",
 };
 const WV = (w) => `/cdn/voice-soft-breathy-young-woman-whispering-amused-saying-${encodeURIComponent(w)}.mp3`;
 function whisperTick(ctx, st) {
   const w = st.whisper; if (!w || ctx.now() < w.at || st.cut || st.menuOpen || st.dcut) return;
   st.whisper = null; const line = WHISPER[w.n]; if (!line) return;
+  if (w.n === 8) st.heardMike = 1;
   ctx.emit("playSound", { clip: WV(line), volume: 0.9, bus: "Voice" }, { audience: { player: ctx.self.id } });
   ctx.emit("uiEvent", { name: "caption", payload: { who: "???", text: line, ms: 4200 } }, { audience: { player: ctx.self.id } });
   pushFeed(st, `A voice, close by: "${line}"`, ctx.now(), "info");

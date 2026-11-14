@@ -92,7 +92,8 @@ describe("Chapter 2 quest progression and Mike Sunderland lore", () => {
     expect(c3.some((c) => c.text.includes("old intake logs"))).toBe(true);
     const r3 = handleDialogueCh2(ctx, p, moss, c3[0].text);
     expect(r3.reply).toContain("Mike Sunderland");
-    expect(r3.reply).toContain("River's sister");
+    expect(r3.reply).toContain("River's brother");
+    expect(r3.reply).not.toMatch(/sister|\bshe\b|\bher\b/i);
     expect(r3.reply).not.toMatch(/reincarnat|chosen|secret power/i);
     expect(p.state.knowsMike).toBe(1);
     expect(p.state.ch2Q).toBe(4);
@@ -208,15 +209,36 @@ describe("Level ! intro, near-death rescue non-repeatability, and Phoebe conclus
     expect(p.feetPosition.x).toBe(CORRIDOR.safePos.x);
   });
 
-  test("supports all 5 replies to Phoebe with curiosity motivation and completes Chapter 2 without Chapter 3 card", () => {
-    for (const [snippet, expectedStance, reaction] of [
-      ["Who is Mike", "curious", "mike"],
-      ["reminded you of someone", "curious", "reminded"],
-      ["What do you want", "suspicious", "want"],
-      ["could've helped sooner", "frustrated", "sooner"],
-      ["Thanks, I think", "relieved", "thanks"],
+  test("never assumes Mike is known beforehand in Phoebe dialogue", () => {
+    const phoebe = { id: "npc/phoebe-lrun", state: {} };
+
+    // Fresh arrival without Stage 3 or Whisper 8: no Mike options before Phoebe names him
+    const pCold = makePlayer({ ch2Q: 6, lrunRescued: 1 });
+    pCold.place = "levelrun";
+    const ctxCold = makeCtx(pCold);
+    const coldChoices = ch2Choices(ctxCold, phoebe, pCold.state);
+    expect(coldChoices.some((c) => /mike/i.test(c.text))).toBe(false);
+
+    const pickWant = coldChoices.find((c) => c.text.includes("What do you want"));
+    handleDialogueCh2(ctxCold, pCold, phoebe, pickWant.text);
+    expect(ch2Choices(ctxCold, phoebe, pCold.state).some((c) => /mike/i.test(c.text))).toBe(false);
+
+    // Whisper 8 alone unlocks "Who is he?" referencing Phoebe's earlier whisper
+    const pWhisper = makePlayer({ ch2Q: 6, lrunRescued: 1, heardMike: 1 });
+    pWhisper.place = "levelrun";
+    const wChoices = ch2Choices(makeCtx(pWhisper), phoebe, pWhisper.state);
+    expect(wChoices.some((c) => c.text.includes("mentioned Mike earlier"))).toBe(true);
+  });
+
+  test("supports all 5 replies to Phoebe with male Mike pronouns and completes Chapter 2 without Chapter 3 card", () => {
+    for (const [snippet, expectedStance, reaction, extra] of [
+      ["watch Mike Sunderland", "curious", "mike", { knowsMike: 1 }],
+      ["what were you waiting for", "curious", "reminded", {}],
+      ["What do you want", "suspicious", "want", {}],
+      ["could've helped sooner", "frustrated", "sooner", {}],
+      ["Thanks, I think", "relieved", "thanks", {}],
     ]) {
-      const p = makePlayer({ ch2Q: 6, lrunRescued: 1 });
+      const p = makePlayer({ ch2Q: 6, lrunRescued: 1, ...extra });
       p.place = "levelrun";
       const ctx = makeCtx(p);
       const phoebe = { id: "npc/phoebe-lrun", state: {} };
@@ -229,6 +251,7 @@ describe("Level ! intro, near-death rescue non-repeatability, and Phoebe conclus
       expect(p.state.phoebeStance).toBe(expectedStance);
       expect(p.state.phoebeReaction).toBe(reaction);
       expect(res.reply).not.toContain("—");
+      expect(res.reply).not.toMatch(/sister|\bshe\b|\bher\b/i);
       expect(res.reply.length).toBeGreaterThan(20);
 
       // Exit requires speaking + finishing Chapter 2 cleanly
@@ -237,12 +260,17 @@ describe("Level ! intro, near-death rescue non-repeatability, and Phoebe conclus
       expect(ctx.crossed.length).toBe(0);
 
       const followUps = ch2Choices(ctx, phoebe, p.state);
+      if (reaction === "reminded") {
+        // Phoebe just named Mike in her reply, unlocking the follow-up naturally
+        expect(followUps.some((c) => c.text.includes("Did you know Mike"))).toBe(true);
+      }
       const finishChoice = followUps.find((c) => c.text.includes("heading back to Level 11"));
       handleDialogueCh2(ctx, p, phoebe, finishChoice.text);
 
       expect(p.state.ch2Done).toBe(1);
       expect(p.state.ch3Unlocked).toBe(1);
-      expect(p.state.knowsMike).toBe(1);
+      if (reaction === "mike" || reaction === "reminded") expect(p.state.knowsMike).toBe(1);
+      else expect(p.state.knowsMike).toBeUndefined();
       expect(p.state.payout).toEqual({ xp: 450 });
       expect(p.state.quests[CH2.id]).toBeUndefined();
       expect(p.state.qdone[CH2.id].outcome).toBe("completed");
