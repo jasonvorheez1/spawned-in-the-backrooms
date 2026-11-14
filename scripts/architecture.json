@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8194,
-  "updatedAt": "2026-11-14T13:44:36.157Z",
-  "summary": "The Backrooms is a shared multiplayer survival RPG spanning the Level 0 maze, mall, The Hub and authored destinations. Player state carries progression, gear, quests and resume location; shared registries/helpers and per-place simulations supply navigation, NPCs, story and world dressing. Level 109 is a seeded, streamed Neon Hospital with persistent containment, the Doctors' outpost quest and a sealed B3 dungeon; Chapter 2 crosses Level 11, Gamma and Level 34 before Level !.",
+  "basedOnSpecVersion": 8195,
+  "updatedAt": "2026-11-14T13:45:34.356Z",
+  "summary": "The Backrooms is a shared multiplayer survival RPG spanning the Level 0 maze, mall, The Hub and authored destinations. Player state carries progression, gear, quests and resume location; shared registries/helpers and per-place simulations supply navigation, NPCs, story and world dressing. Chapter 2 crosses Level 11, Gamma and Level 34 before Level !; Level 109 is a seeded, streamed Neon Hospital with persistent containment and a sealed B3 dungeon.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes, anomalies and deterministic dressing; momentsV gates fitted wall moments and room-prop regeneration.",
@@ -40,7 +40,7 @@
     "scripts/lib/ambush-smiler.js - stepAmbushSmiler; l34-smiler.js and l9-smiler.js expose update with separate configurations.",
     "scripts/lib/companion.js - PERKS, perkOf, isMine, followersOf, loyaltyScale, whyNot, recruit/adopt/dismiss/order, weapon handoff, tick, bring; carry.js - carryAcross.",
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
-    "scripts/lib/quests.js - shared journal, advancement and reward helpers; level quest modules export level-specific definitions/progression; scripts/lib/containment.js exports inside, penRoll/Count, doorOpen/setDoor, penLoad/Unload, looseTick, doorMoved and looseCount.",
+    "scripts/lib/quests.js - shared journal, advancement and reward helpers; scripts/lib/containment.js - containment state and pen/door operations; scripts/lib/ch2-quest.js - CH2, CH2_ECHO, CH2_TONE, syncCh2 variants and quest stage/dialogue helpers.",
     "scripts/lib/levelrun-mechanics.js - CORRIDOR, OBSTACLES, agilityProfile, hitObstacle, stepHordeZ; scripts/lib/level109.js - seeded corridor/room layout math and coordinate helpers.",
     "scripts/lib/level109-quest.js - QID, QNAME, BREACH, Q, questTick, dialogue handler/choices; l109-b3.js - B3 origin/room geometry, stairDoorAt, buildB3 and placeLauncher; l109-foes.js - MGR, spawnFoe."
   ],
@@ -50,7 +50,7 @@
     "scripts/critter.js - per-player look and creator/wardrobe/salon state; scripts/lib/seat.js - player.state.sit; scripts/lib/body3.js - session.ready3 and transient melee-carry pose.",
     "scripts/lib/quests.js + scripts/lib/dina-quest.js - player quest journal/tracking/completion/claim keys; Dina trail stages, diary/cut/clue fields and migration.",
     "scripts/lib/errands.js - player.state.errands, errHints and journal entries; completion updates currency, payout, reputation and hints; field-errands.js + hub-errands.js own confirmation maps.",
-    "Level quest modules (including level8/10/11/21/61, level31, level70, remodel, ch2 and zenith) - their level-specific stages, routes and outcomes; ch2-quest.js owns Chapter 2 main/echo/tone progress and payouts, quests.js centralizes shared journal/reward fields.",
+    "Level quest modules (including level8/10/11/21/61, level31, level70, remodel, ch2 and zenith) - level-specific stages/routes/outcomes; ch2-quest.js owns Chapter 2 main/echo/tone progress, clues, alternate-path flags and payouts.",
     "scripts/lib/companion.js - NPC follow/loyalty/perk/order/weapon state plus player.state.crew; scripts/lib/carry.js records player.state.xferTo and coordinates transfer on threshold links.",
     "places/level109/sim.js owns place.state.l109seed and B3 spawn timing; containment.js writes place.state.pens/loose/pdoors; Level 109 quest progress is player.state.l109q; Level ! sim owns chase state, dressV and player session/cut/rescue state."
   ],
@@ -65,8 +65,8 @@
     "scripts/player.js writes player.state.notice and scripts/stats.js forwards fresh notices into feed → scripts/ui.js renders ui-kit noticeToast; feed status watcher uses canonical place labels.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js offers place-matched jobs; carried items/kills/world events advance errands → journal, player.state.errands/qtrack and payouts.",
     "scripts/talk.js → dialogue.js rootChoices and quest handlers; level quest modules call scripts/lib/quests.js → journal/feed/reputation/reward state; Hub route/quest logic consumes thehub door registry and visit/clue flags.",
-    "Maze path adapters → scripts/lib/grid-path.js BFS; creature handlers consume level-specific routes; l34-smiler.js/l9-smiler.js → ambush-smiler.js configured pursuit and place.state.deadAt.",
-    "places/level109/sim.js → level109.js seeded layout and streamed l109-rooms.js/l109-outpost.js; penLoad/Unload/looseTick and pen-door/l109-pen coordinate persistent inmates, open-door escapes and player-operated containment."
+    "scripts/lib/ch2-quest.js stages/markers → scripts/l11-ch2-drop.js props, NPC dialogue and scripts/os.js GAMMA-DB-01 file reads; clues and alternate checks/items advance player.state main/echo/tone progress and unlock Level !.",
+    "Level ! entry → places/levelrun/sim.js intro cut before active corridor chase; once lrunIntroDone, movement through obstacles/horde reaches collapse/rescue and Phoebe in the Safe Alcove."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; menus/staff vary by venue and Level 6.1 fixtures are fitted separately.",
@@ -76,7 +76,7 @@
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "Level 01/Zenith and Level 1 geometry builders - authored station and car park/service geometry; corridor materials, pipes, fixtures and lights vary deterministically per cell.",
     "scripts/meg-agent.js + npc-temper.js + forgive.js + critter-model.js + companion.js - NPC reactions, cover, barks, combat and following vary by faction/role/outfit/perk; Hub and story Phoebes share phoebe.js dressing.",
-    "Level quest modules + talk/use handlers - quest stages and replies reuse shared journal, skill-check, reputation/feed and one-time reward helpers; Chapter 2 location interactions, maze path adapters, ambush smilers and Level 109 containment use configurable cores."
+    "Level quest modules + talk/use handlers - quest stages and replies reuse shared journal, skill-check, reputation/feed and one-time reward helpers; Chapter 2 uses alternate NPC, OS, skill/item and prop-interaction routes."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -91,6 +91,6 @@
     "Hub keyed doors consume the matching player.state.hubKeys key; t10-a3 maps to level11 and hubTenthCrossed is set only after a qualifying clue and successful crossing; Level 1's route is a separate threshold pair.",
     "Level 109's place.state.l109seed fixes the irregular corridor layout across reloads; containment is keyed by room ID in pens, loose and pdoors and must survive streamed unload/reload; pen doors are player-operated, not AI-opened.",
     "Level 109 B3 is below the hospital floor (origin y=-14); keep B3 room/foe positions and colliders in that frame, and preserve the one-per-world launcher placement and b3-morgue pen bounds together.",
-    "Shared grid pathfinding preserves adapter-specific cell coordinates, bounds, blocked-cell rules, step restrictions and cache limits; Level 0 momentsV and Level ! dressV gate their own rebuilds, with invisible collider shells kept in sync with visual dressing."
+    "Level ! intro must still trigger even if a player is already past corridorStartZ; the chase activates only after lrunIntroDone. Chapter 2 archive/signal clues can arrive out of stage order, so retain the auto-unlock when both prerequisites are present and keep alternate paths' checks/items and markers aligned."
   ]
 }
