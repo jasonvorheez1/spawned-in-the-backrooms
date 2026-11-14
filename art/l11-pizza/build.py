@@ -13,6 +13,7 @@ bpy.ops.import_scene.gltf(filepath=SRC)
 src = [o for o in bpy.data.objects if o.type == "MESH"][0]
 MAT = src.data.materials[0]; MAT.name = "pizza_counter"
 base = bmesh.new(); base.from_mesh(src.data); base.transform(src.matrix_world)
+for o in list(bpy.data.objects): bpy.data.objects.remove(o)
 bmesh.ops.remove_doubles(base, verts=base.verts, dist=0.0004)
 
 # jar caps -> centres (tops of the shakers on the back bar)
@@ -91,8 +92,8 @@ json.dump(parts, open(f"{OUT}/parts.json", "w"), indent=1)
 print(json.dumps(parts, indent=1))
 
 # proofs: each part alone, 3/4 from +X (the drawer side) lit from the camera
-sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 16
-sc.render.resolution_x = sc.render.resolution_y = 400; sc.view_settings.view_transform = "Standard"
+sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 8
+sc.render.resolution_x = sc.render.resolution_y = 300; sc.view_settings.view_transform = "Standard"
 w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True; w.node_tree.nodes["Background"].inputs[1].default_value = 3.5
 cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam")); sc.collection.objects.link(cam); sc.camera = cam
 sun = bpy.data.objects.new("sun", bpy.data.lights.new("sun", "SUN")); sun.data.energy = 3; sc.collection.objects.link(sun)
