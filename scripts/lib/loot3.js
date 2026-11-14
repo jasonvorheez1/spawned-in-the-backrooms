@@ -1,7 +1,7 @@
 // Level 3 loot: crates, generator-room caches, assembly-line output. Tables in data/loot3.yml.
 import T from "./data/loot3.yml";
-import { rollWeapon, rollLock, magOf } from "./loot.js";
-import { rollVariant } from "./weapons.js";
+import { rollWeapon, rollLock, magOf, effectiveLootLevel, leveledWeaponScale } from "./loot.js";
+import W, { rollVariant, rarityIdx, rarityCap } from "./weapons.js";
 import P from "./data/l3items.yml";
 import { rollCloth } from "./clothes.js";
 const L3_MAGS = {
@@ -11,7 +11,17 @@ const L3_MAGS = {
   gamma: ["mag:medicine", "mag:science", "mag:survival"],
 };
 const pickMag3 = (ctx, table) => { const list = L3_MAGS[table]; return list ? list[Math.floor(ctx.random() * list.length)] : magOf(ctx, "l3"); };
-export function rollWeaponL3(ctx) { const q = ctx.random(); if (q < 0.06) return rollVariant(ctx, "smg"); if (q < 0.16) return rollVariant(ctx, "knife"); return ctx.random() < (T.weaponL3 ?? 0.45) ? rollVariant(ctx, ctx.random() < 0.5 ? "stun_baton" : "lineman_machete") : rollWeapon(ctx, "l3"); }
+const L3_WEPS = [["knife", 3], ["stun_baton", 5], ["lineman_machete", 5], ["smg", 3]];
+export function rollWeaponL3(ctx, level) {
+  const lv = effectiveLootLevel(ctx, undefined, level, "l3"), cap = rarityCap(lv);
+  const elig = L3_WEPS.filter(([k]) => rarityIdx(k) <= cap && (W[k]?.minLevel ?? 1) <= lv);
+  if (ctx.random() < (T.weaponL3 ?? 0.45) && elig.length) {
+    const weighted = elig.map(([k, w]) => [k, w * leveledWeaponScale(k, lv)]);
+    let r = ctx.random() * weighted.reduce((a, [, w]) => a + w, 0);
+    for (const [k, w] of weighted) if ((r -= w) <= 0) { const v = rollVariant(ctx, k, lv); return rarityIdx(v) <= cap ? v : k; }
+  }
+  return rollWeapon(ctx, "l3", cap, lv);
+}
 export function rollTableL3(ctx, table = "crate") {
   const E = Object.entries(T.tables[table] ?? T.tables.crate), total = E.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;

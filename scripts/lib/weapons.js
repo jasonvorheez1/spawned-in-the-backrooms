@@ -35,13 +35,48 @@ for (const k of Y.order.slice(1)) {
     if (w.ranged && v.cone != null) W[k + '~' + vk].cone = +(1 - (1 - w.cone) * (v.look === 'sawn' ? 1 / v.cone : v.cone)).toFixed(4)
   }
 }
-// the variants a kind can roll, with their weights
-export function rollVariant(ctx, k) {
-  const opts = [[k, Y.variantPlain ?? 50]]
-  for (const [vk, v] of Object.entries(Y.variants ?? {})) if (W[k + '~' + vk] && !v.unique && (v.chance ?? 5) > 0) opts.push([k + '~' + vk, v.chance ?? 5])
-  let r = ctx.random() * opts.reduce((a, o) => a + o[1], 0)
-  for (const [key, c] of opts) { r -= c; if (r <= 0) return key }
-  return k
+const FACTION_VARIANTS = {
+  meg: { scout: 'cpissue', agent: 'qmissue', medic: 'qmissue', quarter: 'qmissue', guard: 'wwissue', captain: 'wwissue', default: 'qmissue' },
+  bntg: { guard: 'vaultissue', captain: 'vaultissue', default: 'bntgissue' },
+  trader: { guard: 'vaultissue', captain: 'vaultissue', default: 'bntgissue' },
+  vault: { default: 'vaultissue' },
+  surrender: { default: 'wwissue' },
+  froid: { default: 'cpissue' },
+}
+function variantWeight(vk, v, lv, opts) {
+  const f = opts?.faction
+  if (f && FACTION_VARIANTS[f]) {
+    const map = FACTION_VARIANTS[f], target = map[opts?.role] ?? map.default
+    if (vk === target) return lv == null ? 14 : lv < 5 ? 0 : Math.min(36, 8 + (lv - 5) * 2.8)
+  }
+  if (v.unique || !(v.chance > 0)) return 0
+  const base = v.chance ?? 5
+  if (lv == null) return base
+  const dr = v.rarity ?? 0
+  if (dr < 0) return base * (lv <= 3 ? 1.45 : Math.max(0.22, 1.45 - (lv - 3) * 0.1))
+  if (dr === 0) return base * (lv < 2 ? 0.65 : Math.min(1.25, 0.75 + (lv - 2) * 0.08))
+  if (dr === 1) return lv < 3 ? 0 : base * (lv < 5 ? 0.55 : Math.min(2.1, 0.75 + (lv - 5) * 0.14))
+  return lv < 6 ? 0 : base * Math.min(2.2, 0.5 + (lv - 6) * 0.18)
+}
+// the variants a kind can roll, with their weights scaled by level and optional faction affiliation
+export function rollVariant(ctx, k, level, opts = {}) {
+  const base = baseOf(k)
+  if (!W[base] || W[base].unique) return k
+  const lv = level != null ? Number(level) : opts?.level != null ? Number(opts.level) : (ctx?.self?.state?.level != null ? Number(ctx.self.state.level) : null)
+  const cap = opts?.cap ?? (lv != null ? rarityCap(lv) : 3)
+  const plainScale = lv == null ? 1 : lv <= 2 ? 1.15 : lv >= 10 ? 0.85 : 1
+  const optsList = [[base, (Y.variantPlain ?? 50) * plainScale]]
+  for (const [vk, v] of Object.entries(Y.variants ?? {})) {
+    const full = base + '~' + vk
+    if (!W[full]) continue
+    const wt = variantWeight(vk, v, lv, opts)
+    if (wt <= 0) continue
+    if (lv != null && rarityIdx(full) > cap && !(opts?.faction && !v.unique && (v.chance ?? 0) === 0)) continue
+    optsList.push([full, wt])
+  }
+  let r = ctx.random() * optsList.reduce((a, o) => a + o[1], 0)
+  for (const [key, c] of optsList) { r -= c; if (r <= 0) return key }
+  return base
 }
 // What a player of this level may find (the creator, 2026-11-08: no rare+ finds at level 1). Savi's picks:
 // levels 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite. Applies to found loot only; anything you own still works.
