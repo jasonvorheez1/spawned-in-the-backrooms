@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8305,
-  "updatedAt": "2026-11-14T15:26:53.909Z",
-  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations, with player state carrying progression, gear, quests and resume location. Per-place simulations build local spaces while shared registries and interaction handlers coordinate navigation, NPCs, combat and story routes; Level 109's streamed hospital/B3 holds Janine's tape and Level 114 is Sweet Dreams.",
+  "basedOnSpecVersion": 8317,
+  "updatedAt": "2026-11-14T15:49:31.122Z",
+  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations, with player state carrying progression, gear, quests and resume location. Per-place simulations build local spaces while shared registries and interaction handlers coordinate navigation, NPCs, combat, inventory and story routes; Level 109's streamed hospital/B3 holds Janine's tape and Level 114 is Sweet Dreams.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes, anomalies and deterministic dressing; momentsV gates fitted wall moments and room-prop regeneration.",
@@ -31,7 +31,7 @@
     "scripts/lib/carry.js + scripts/lib/companion.js - threshold-crossing transfer of held props and nearby following companions; companion recruitment, orders, perks and lifecycle.",
     "scripts/lib/hub.js + preload data/scripts and scripts/lib/thehub.js + scripts/lib/hubkeys.js - separate Bonus shared-room routing and The Hub tunnel/door/key registry.",
     "scripts/lib/containment.js - Level 109 persistent pen/loose-foe, open-door and remembered-door-position books; sim supplies room IDs/boxes and spawnFoe adapter.",
-    "scripts/lib/blast-fx.js - shared scaled blast effects/feel for scripts/nade.js and scripts/b3-explosive.js; reused by player grenades and B3 projectiles.",
+    "scripts/lib/blast-fx.js - shared scaled blast effects/feel for scripts/nade.js, scripts/b3-explosive.js and Firesalt ingot detonation in scripts/player.js.",
     "scripts/lib/l109-kit.js - KIT model-fit registry and medLook fallback, reused by Level 109 sim, room/outpost builders and B3 fixtures."
   ],
   "notableExports": [
@@ -45,14 +45,14 @@
     "scripts/lib/l109-kit.js - KIT, medLook; scripts/lib/janine-tape.js - JANINE_TAPE; scripts/player.js - HOLO, holoEnd; scripts/lib/fp-gun.js - FP_GUN, firstPersonGun, firstPersonTuning."
   ],
   "ownership": [
-    "scripts/player.js + scripts/lib/save.js - durable player.state progression, XP/level, health/sanity, inventory/equipment and ammo (including latex), needs, combat, access, appearance, saved place/position, currency, karma/rep and homeKeep.",
+    "scripts/player.js + scripts/lib/save.js - durable player.state progression, XP/level, health/sanity, inventory/equipment and ammo, needs, combat, access, appearance, saved place/position, currency, karma/rep and homeKeep; player.js also mutates firesalt/fsIngot/repellent and Squirt Gun tank fields sqLiq/sqfill/loaded_squirt_gun.",
     "scripts/lib/stats.js - derived attributes, skills and combat/carry stats; scripts/stats-ui.js formats derived stats.",
     "scripts/critter.js - per-player look and creator/wardrobe/salon state; also clears expired groove/gesture animation channels and grooveEnd so transient poses settle.",
     "scripts/lib/seat.js - player.state.sit; scripts/lib/body3.js - session.ready3 and transient melee-carry pose.",
     "scripts/lib/quests.js + scripts/lib/dina-quest.js - player quest journal/tracking/completion/claim keys; Dina trail stages, diary/cut/clue fields and migration.",
     "scripts/lib/errands.js - player.state.errands, errHints and journal entries; completion updates currency, payout, reputation and hints; field-errands.js + hub-errands.js own confirmation maps.",
     "Level quest modules (including level8/10/11/21/61, level31, level70, remodel, ch2 and zenith) - level-specific stages/routes/outcomes; ch2-quest.js owns Chapter 2 progress and clues.",
-    "scripts/lib/companion.js - NPC follow/loyalty/perk/order/weapon state plus player.state.crew; scripts/lib/carry.js records player.state.xferTo and coordinates transfer on threshold links; Level 109 sim/containment own hospital seed, B3 and containment state."
+    "scripts/lib/companion.js - NPC follow/loyalty/perk/order/weapon state plus player.state.crew; scripts/lib/carry.js records player.state.xferTo and coordinates transfer on threshold links; Level 109 sim/containment own hospital seed, B3 and containment books."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest and CCTV behaviors; scripts/interact.js handles tagged-seat selection and seatTick.",
@@ -61,17 +61,17 @@
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; periodic saves exclude intake, bonus and tutorial0.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold door handlers call carryAcross → held props and nearby following companions cross; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone; scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles, markers and compass place names.",
-    "scripts/main-menu-ui.js settings → scripts/main-menu.js handler → player.state.uiPrefs; scripts/ui.js composes UI preferences and quest/feed/HUD panels; scripts/player.js notices → scripts/stats.js feed presentation.",
+    "scripts/main-menu-ui.js settings → scripts/main-menu.js handler → player.state.uiPrefs; scripts/ui.js composes preferences and quest/feed/HUD panels; scripts/player.js notices → scripts/stats.js feed presentation.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js offers place-matched jobs; carried items/kills/world events advance errands → journal, player.state.errands/qtrack and payouts.",
     "scripts/talk.js → dialogue.js rootChoices and quest handlers; level quest modules call scripts/lib/quests.js → journal/feed/reputation/reward state; Hub route/quest logic consumes thehub door registry and visit/clue flags.",
     "scripts/lib/ch2-quest.js stages/markers → Level 11 clues, Gamma/IS LAB routes and Level !; Level ! rescue + Phoebe completion unlock Chapter 3/lrun-to-l109; Level 109 EXIT → Level 114 Sweet Dreams, whose far door exits to Level 9.",
-    "scripts/player.js attack → weapons.yml weapon-specific whoosh/hit and gun sound/rack/reload SFX (fallback sounds where unset); ranged fireBullets/showBullets → scripts/lib/ballistics.js, while balloon rounds animate to shot endpoints and sphere-test tied and Level 26 balloons before ordinary ray impacts; hit handling ties lifting balloons or pops them.",
-    "places/level109/sim.js + scripts/lib/l109-b3.js place JANINE_TAPE on the B3 camp cot → scripts/l114-use.js adds janine to player.state.holotapes → HALOGEN action in scripts/player.js HOLO plays the clip privately and holoEnd clears playback."
+    "scripts/player.js attack → weapons.yml per-weapon sound/rack/reload SFX resolved through sounds.yml (including the Fallout weapon clip sets); ranged fireBullets/showBullets → scripts/lib/ballistics.js, with balloon rounds animated to shot endpoints.",
+    "Loot tokens/items.js and inventory/quick-slot actions in loot-ui.js → scripts/player.js handlers: firesalt throw/melt/boil, Repellent spray, and Squirt Gun tank fill/drink/empty or liquid-specific firing; Dottie's Level 31 shop sells squirt_gun."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; menus/staff vary by venue and Level 6.1 fixtures are fitted separately.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes a table with separately fitted chairs.",
-    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js - weapon stats/variants drive shared ranged combat; weapons.yml whoosh/hit/sound/rack/sfx fields supply per-weapon audio through player.js with stock fallbacks; balloon pistol/shotgun use fitted Tripo models and animated balloon rounds; scripts/lib/fp-gun.js fits viewmodels and sights per gun.",
+    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js - weapon stats/variants share combat; per-weapon sound/rack/reload fields resolve through sounds.yml, with Squirt Gun liquid effects and balloon rounds as special paths.",
     "art/cigs/build.py + art/fnv/build.py + art/xmas-clean/build.py and NIF converters → fitted GLBs and prop catalogs; xmas-clean prepares Tripo Christmas models with canonical facing, floor origin and reduced meshes/textures.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl and tight spaces trigger automatic crawl.",
@@ -90,7 +90,7 @@
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together; place.state.hubV gates shell/door/plaque rebuilds.",
     "Hub keyed doors consume the matching player.state.hubKeys key; t10-a3 maps to level11 and hubTenthCrossed is set only after a qualifying clue and successful crossing; Level 1's route is a separate threshold pair.",
     "Level 109's place.state.l109seed fixes irregular corridor/room rolls across reloads; keep arrival room-pop and den safe radii coupled to scripts/lib/level109.js SPAWN; containment books are keyed by room ID and remember pen-door positions.",
-    "Ballistic balloon collision supplements the per-leg ray with manual sphere tests for tied-balloon and l26-balloon tags; balloon rounds are short-lived visuals animated to the computed hit/end position, not physics projectiles. Weapon audio IDs in weapons.yml are consumed by player.js with fallback SFX; scripts/lib/fp-gun.js owns per-gun ADS/hand/muzzle offsets.",
+    "Ballistic balloon collision supplements the per-leg ray with manual sphere tests for tied-balloon and l26-balloon tags; balloon rounds are short-lived visuals animated to computed endpoints. Squirt Gun tank fill is sqfill plus loaded_squirt_gun, with one sqLiq at a time; liquid swaps/draining reset both stores, so UI counts both.",
     "Level 109 B3 dressing uses place.state.b3DressV and Janine's tape is built into B3; Level 114 rebuilds remove legacy janine-tape instances. Level 9 seeded house interiors use sim V=19; preserve stable lot selection and furniture dimensions."
   ]
 }
