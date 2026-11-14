@@ -204,11 +204,11 @@ export function update(ctx, dt) {
       if (st.revealed) m.ph = "hunt";
     }
 
-    if (!st.revealed && !m.skinOn) {
+    if (!st.revealed && (!m.skinOn || !ctx.place.objects[o.id + "/skin"])) {
+      const first = !m.skinOn;
       m.skinOn = true;
       wearSkin(ctx, o);
-      m.hunger ??= ctx.random() * 0.6;
-      m.hp0 = st.hp;
+      if (first) { m.hunger ??= ctx.random() * 0.6; m.hp0 = st.hp; }
     }
 
     if (m.ph === "skin") {
