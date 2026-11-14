@@ -42,6 +42,7 @@ export function update(ctx, dt) {
     me.fx = s.kind === "frag" ? { script: FUSE } : { script: GLINT, params: { tint: s.tint } };
   }
   if (s.kind === "frag" && ctx.now() >= (s.fuseAt ?? 0)) return explode(ctx);
+  if (s.kind === "rocket") return rocket(ctx, dt);
   if (s.rest) return ctx.sleep((s.fuseAt - ctx.now()) / 1000);
   const g = ctx.place.gravity?.y ?? -9.8, v = { ...(s.vel ?? { x: 0, y: 0, z: 0 }) };
   v.y += g * dt;
@@ -84,8 +85,16 @@ function reached(ctx, c, radius, lift) { // foes in reach with a clear line from
   return out;
 }
 
+function rocket(ctx, dt) { // the M.E.G. launcher's round: straight and fast, a little drop, bursts on the first thing it meets
+  const me = ctx.self, s = me.state, v = s.vel, p = me.feetPosition, sp = Math.hypot(v.x, v.y, v.z) || 1;
+  v.y += (ctx.place.gravity?.y ?? -9.8) * 0.06 * dt;
+  if ((s.age = (s.age ?? 0) + dt) > 4) return explode(ctx);
+  const hit = raycast(ctx, p, { x: v.x / sp, y: v.y / sp, z: v.z / sp }, { distance: sp * dt + 0.2, bodies: "all", ignoreEntities: [me.id, s.ownerId].filter(Boolean) });
+  if (hit) { me.feetPosition = { x: hit.position.x - v.x / sp * 0.15, y: hit.position.y - v.y / sp * 0.15, z: hit.position.z - v.z / sp * 0.15 }; return explode(ctx); }
+  me.feetPosition = { x: p.x + v.x * dt, y: p.y + v.y * dt, z: p.z + v.z * dt }; s.vel = v;
+}
 function explode(ctx) {
-  const me = ctx.self, s = me.state, c = { ...me.feetPosition }, F = T.frag;
+  const me = ctx.self, s = me.state, c = { ...me.feetPosition }, F = s.kind === "rocket" ? { ...T.frag, damage: s.dmg ?? T.frag.damage, radius: s.radius ?? T.frag.radius } : T.frag;
   s.done = true;
   const hits = reached(ctx, c, F.radius, 0.2).map((h) => ({ id: h.id, d: Math.round(F.damage * (1 - h.flat / F.radius) + F.damage * 0.15), dir: h.dir, heavy: h.flat < F.radius * 0.5 ? 1 : 0.5 }));
   const self = ctx.place.players.find((p) => p.id === s.ownerId), sf = self?.feetPosition, sd = sf ? Math.hypot(sf.x - c.x, sf.z - c.z) : 99;

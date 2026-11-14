@@ -133,6 +133,15 @@ const ICHOR = `fx
 pop ichor burst=18..26 life=.5..0.9 v=sdir()*(1.5..3.2)+up(1) size=.04..0.09 acc=grav()*.8+drag(1.2) col=<.04,.03,.05> a=1>.6:1>0 sz=$size floor=stick r=sprite(soft-disc,alpha)
 pop smoke burst=4..6 life=.6..1 v=sdir()*(.3..0.7) size=.25..0.4 acc=buoy(.4)+drag(1.5) col=<.06,.05,.07> a=0>.15:.5>0 sz=$size*(.6>1.6) r=sprite(smoke-puff,alpha)`
 
+const ROCKET_TRAIL = `fx
+pop flame rate=?mobile:40|80 at=point() life=.08..0.16 v=sdir()*.4 size=.1..0.18 sz=$size*(1>.3) col=hdr(5,3,1)>hdr(2,.6,.1) a=1>0 r=sprite(flame-wisp,add)
+pop smoke rate=?mobile:18|36 at=point() life=.9..1.6 v=sdir()*.25+up(.2) size=.12..0.2 acc=drag(1.2)+curl(.3)*.4 sz=$size*(.6>2.6) col=<.62,.6,.57> a=0>.08:.45>.5:.25>0 r=sprite(smoke-puff,alpha)
+pop glow n=1 r=light(<1,.6,.25>,6,5)`
+const BACKBLAST = `fx
+pop blast burst=?mobile:14|26 life=.25..0.5 v=<%dx|0,0,%dz|0>*(4..8)+sdir()*1.2 size=.25..0.5 acc=drag(3) sz=$size*(.5>1.6) col=hdr(3,1.8,.6)>hdr(.5,.4,.35) a=1>0 r=sprite(smoke-puff,add)
+pop dust burst=?mobile:10|20 life=1..1.8 v=<%dx|0,0,%dz|0>*(2..4)+up(.4)+sdir()*.6 size=.3..0.6 acc=drag(1.6)+buoy(.3) sz=$size*(.6>2.4) col=<.55,.52,.48> a=0>.1:.4>.6:.2>0 r=sprite(smoke-puff,alpha)
+pop flash n=1 life=.12 r=light(<1,.7,.35>,30*(1>0),6)`
+
 export const maxHp = (lv, s) => L.hp + (lv - 1) * L.perLevel.hp + (s?.attr ? derived(s).hpBonus : 0)
 export const maxSan = (lv, s) => L.sanity + (lv - 1) * L.perLevel.sanity + ((s?.snacks?.slap_bracelet ?? 0) > 0 ? 5 : 0) + (s?.attr ? derived(s).sanBonus : 0)
 export const xpNeed = (lv) => L.xpBase * lv
@@ -294,6 +303,11 @@ function takeToken0(ctx, token, opts) {
   }
   if (token === 'ammo') {
     s.ammo = (s.ammo ?? 0) + W.ammo.perPickup; s.pickedAt = now
+    sound(ctx, 'pickup-ammo', 0.7, true)
+    return { ok: true }
+  }
+  if (token === 'rockets') { // the B3 armory's 84 mm rounds (Level 109)
+    s.rockets = (s.rockets ?? 0) + 1; s.pickedAt = now
     sound(ctx, 'pickup-ammo', 0.7, true)
     return { ok: true }
   }
@@ -679,6 +693,20 @@ function swing(ctx, power = 0) {
   { const st = (w.combo3 ??= { n: 0, at: 0 }); st.n = now - st.at > 1100 ? 0 : st.n + 1; st.at = now; if (wp.ranged) fire3(ctx); else swing3(ctx, s.equipped, power, st.n) } // the body's own swing, for the third-person camera and everyone else
   if (s.equipped !== 'fists') s['cnd_' + s.equipped] = Math.max(0, (s['cnd_' + s.equipped] ?? 100) - useWear(wp) * derived(s).wear) // weapons wear with use; Repair slows it
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
+  if (wp.ranged && wp.rocket) { // the M.E.G. launcher: one rocket flies straight and bursts on what it meets (scripts/nade.js rocket)
+    const { eye, fwd: fv, pitch: pv } = weaponAim(ctx), R = wp.rocket, cp = Math.cos(pv), sp = Math.sin(pv)
+    const dmg = Math.round((wp.damage + (s.level - 1) * L_PER(s) * wp.levelScale) * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)))
+    const dir = { x: fv.x * cp, y: sp, z: fv.z * cp }, from = { x: eye.x + dir.x * 1.0, y: eye.y + dir.y * 1.0 - 0.1, z: eye.z + dir.z * 1.0 }
+    ctx.spawn({ tags: ['thrown'], lifetime: 6, feetPosition: from, rotation: { yaw: Math.atan2(-dir.x, -dir.z) * 57.2958, pitch: pv * 57.2958 }, pivot: 'center', castShadow: false,
+      primitive: { kind: 'capsule', radius: 0.045, halfHeight: 0.16 }, material: { color: 'oklch(0.42 0.06 125)', roughness: 0.6, metalness: 0.3 },
+      fx: { script: ROCKET_TRAIL }, behavior: 'scripts/nade.js', state: { kind: 'rocket', vel: { x: dir.x * R.speed, y: dir.y * R.speed, z: dir.z * R.speed }, ownerId: ctx.self.id, dmg, radius: R.radius } })
+    const back = { x: eye.x - dir.x * 0.9, y: eye.y - 0.15, z: eye.z - dir.z * 0.9 }
+    ctx.emit('fx', { position: back, script: BACKBLAST, params: { dx: -dir.x, dz: -dir.z } })
+    ctx.emit('screenShake', { intensity: 0.35, duration: 0.25 }, { audience: { player: ctx.self.id } })
+    ctx.emit('noise', { position: eye, radius: 50, kind: 'gun' }, { audience: { nearby: eye, radius: 50 } })
+    s.kick = Hd.recoil
+    return
+  }
   if (wp.ranged && wp.lob) { // the Carolynne: a festive grenade launcher, each shot one of the Glass Baubles you throw, arcing out and shattering where it lands (scripts/nade.js bauble)
     const { eye, fwd: fv, pitch: pv } = weaponAim(ctx), L = wp.lob, cp = Math.cos(pv), sp = Math.sin(pv)
     const dmg = Math.round((wp.damage + (s.level - 1) * L_PER(s) * wp.levelScale) * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)))
@@ -888,7 +916,7 @@ export function pullToken(ctx, t) { // one carried thing out of the bag as its p
     else if (t.startsWith('meat:')) { const c = t.slice(5); if ((s.meat?.[c] ?? 0) > 0) { s.meat = { ...s.meat, [c]: s.meat[c] - 1 }; tok = t } }
     else if (t.startsWith('snack:')) { const c = t.slice(6); if ((s.snacks?.[c] ?? 0) > 0) { s.snacks = { ...s.snacks, [c]: s.snacks[c] - 1 }; tok = c } }
     else if (t === 'frag' || t === 'molotov' || t === 'bauble') { const k = THROW[t].key; if ((s[k] ?? 0) > 0) { s[k] -= 1; tok = t } }
-    else if (t === 'ammo' || t === 'shells' || t === 'cells') { const per = W[t]?.perPickup ?? 1; if ((s[t] ?? 0) >= per) { s[t] -= per; tok = t } else s.notice = { text: `Need a full box (${per})`, at: ctx.now() } }
+    else if (t === 'ammo' || t === 'shells' || t === 'cells' || t === 'rockets') { const per = W[t]?.perPickup ?? 1; if ((s[t] ?? 0) >= per) { s[t] -= per; tok = t } else s.notice = { text: `Need a full box (${per})`, at: ctx.now() } }
     else if (t === 'bobbypin') { if (s.bobbypins > 0) { s.bobbypins -= 1; tok = 'bobbypin' } }
   return tok
 }

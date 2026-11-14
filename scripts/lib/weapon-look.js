@@ -44,6 +44,7 @@ const MESH = { // kind: [model, offset y, scale, the mesh's material slot]
   bat:        ["/cdn/value.b9230b65f07cc34951b4d05d221181af8b81a9c9ff633c17ee867660dc01d4a1.glb", 0.0, 0, "tripo_material_ed96b284-b120-41ec-a6e8-b5a6c27428df"],
   crook:      ["/cdn/value.e1c8a7a67bb1f12a8209b6c5232dcc822b30ee56bb39bd1f1247bd0fc2dad60d.glb", 0.0, 0, "", "+z"], // Tripo candy cane crook (Shelly: "improve the candy cane crook model"), fitted by art/weapons/build.py
   bobette:    ["/cdn/value.a10b82e72faac45fc3b41e6ee758e9fadc5b099e166032e697292ff348e993bb.glb", 0.0, 0, "", "+z"], // Tripo ornament knuckles (Shelly: the Bobette), fitted by art/weapons/build.py
+  m72:        ["/cdn/value.bb66d3c4b6a15492ce37b279bdd8d956063d96a29e35f7d7e58e9fc0b77ea9f1.glb", -0.094, 0, "tripo_material_e34c95b6-f99b-4968-be9c-70a8f6efbce2"], // Tripo M.E.G. launcher, fitted by art/l109-dungeon/build.py: muzzle -z, grip at the origin
   carolynne:  ["/cdn/value.25923b866d3963ca40cae6caa7be344b5ef3cd2cac065f33b93be4b1d7bf75c2.glb", 0.0, 0, "", "+z"], // Tripo ornament launcher (Shelly: the Carolynne)
   hatchet:    ["/cdn/value.d5b03aa12f7ca58bef143468cf20432b163cb8a0b43a9d4d72190c9228502761.glb", 0.012, 0, "tripo_material_be6f1bf1-a677-4411-ad71-24b6df60e92c"],
   fire_axe:   ["/cdn/value.4cfc50ea098875687d7a11fbd93a6b8adc191957807e0b002f30007a8eead02e.glb", 0.008, 0.62, "tripo_material_3cfa6f0b-ba20-4b5f-9185-3a08bf3967ed"],
