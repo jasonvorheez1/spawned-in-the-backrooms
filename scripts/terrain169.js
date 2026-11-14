@@ -13,10 +13,16 @@ export function heightAt(ctx) {
   const { x, z, noise, seedOffset } = ctx;
   const n = (f, o, s) => noise.fbm2({ x, z, frequency: f, octaves: o, seed: seedOffset(s) });
   let h = 4 * n(1 / 420, 3, 0) + 1.2 * n(1 / 60, 2, 1); // the rolling pan
-  // mesas: flat-topped buttes stepped into terraces
+  // dunes: long wind-ridged swells lying across the 250° wind, sharper on the lee side; fade out under the mesas
+  const dn = n(1 / 260, 2, 4), along = x * 0.34 + z * 0.94, wob = n(1 / 90, 2, 5) * 18;
+  const ph = ((along + wob) / 46) % 1, crest = ph < 0 ? ph + 1 : ph, dshape = crest < 0.75 ? crest / 0.75 : (1 - crest) / 0.25;
+  const duneAmt = ss(-0.05, 0.35, dn);
+  // mesas: flat-topped buttes, each wall a cliff band over a long talus apron, never a sheer smeared sheet
   const m = n(1 / 300, 3, 2);
-  const mesa = ss(0.18, 0.26, m) * 34 + ss(0.32, 0.36, m) * 18;
-  h += Math.round(mesa / 6) * 6 * 0.35 + mesa * 0.65;
+  const apron = ss(0.04, 0.2, m) * 9, wall = ss(0.19, 0.25, m) * 22, cap = ss(0.3, 0.37, m) * 14;
+  const mesa = apron + wall + cap;
+  h += mesa + 1.2 * n(1 / 22, 2, 6) * ss(0.1, 0.25, m); // weathered ledges on the walls
+  h += duneAmt * (1 - ss(0.04, 0.16, m)) * (dshape * dshape * (3 - 2 * dshape)) * 3.2;
   // a long canyon cutting east-west north of the house
   const cz = -900 + Math.sin(x / 110) * 40;
   h -= ss(42, 8, Math.abs(z - cz)) * 26;
@@ -38,14 +44,16 @@ export function materialAt(ctx) {
   const ss = (a, b, v) => { const t = Math.min(1, Math.max(0, (v - a) / (b - a))); return t * t * (3 - 2 * t); };
   const n = noise.fbm2({ x, z, frequency: 1 / 35, octaves: 3, seed: seedOffset(7) });
   const m = noise.fbm2({ x, z, frequency: 1 / 300, octaves: 3, seed: seedOffset(2) });
-  const rock = ss(0.12, 0.28, m);
+  const slope = ctx.slope ?? 0;
+  const rock = Math.max(ss(0.17, 0.24, m), ss(0.12, 0.3, slope + n * 0.05) * ss(0.02, 0.1, m)); // cliff band and steep ledges
+  const talus = ss(0.03, 0.12, m) * (1 - rock);
   const wash = z < 40 ? 1 - ss(3, 9, washDist(x, z)) : 0;
   const yard = Math.max(1 - ss(12, 26, Math.hypot(x, z)), 1 - ss(18, 34, Math.hypot(x - HOUSE.x, z - HOUSE.z)));
   const dune = ss(0.05, 0.4, n), stony = ss(-0.1, -0.45, n);
-  const rest = (1 - rock) * (1 - wash);
+  const rest = (1 - rock) * (1 - talus * 0.9) * (1 - wash);
   return {
     redrock: rock * 0.8,
-    rubble: rock * (0.2 + Math.max(0, n) * 0.3),
+    rubble: rock * (0.2 + Math.max(0, n) * 0.3) + talus * 0.9,
     wash: (1 - rock) * wash * 0.85,
     gravel: (1 - rock) * wash * 0.15 + rest * (yard * 0.3 + (1 - yard) * stony * 0.6),
     hardpan: rest * (yard * 0.7 + (1 - yard) * (1 - dune) * (0.55 - stony * 0.15)),
