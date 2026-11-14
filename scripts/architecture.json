@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8284,
-  "updatedAt": "2026-11-14T15:06:11.966Z",
-  "summary": "The Backrooms is a shared multiplayer survival RPG across Level 0, the mall, The Hub and authored destinations, with player state carrying progression, gear, quests and resume location. Per-place simulations build local spaces while shared registries and interaction handlers coordinate navigation, NPCs and story routes; Level 109's streamed hospital and B3 use fitted medical models, and Level 114 adds Janine's voiced interview tape to the HALOGEN tape system.",
+  "basedOnSpecVersion": 8296,
+  "updatedAt": "2026-11-14T15:17:45.175Z",
+  "summary": "The Backrooms is a shared multiplayer survival RPG across Level 0, the mall, The Hub and authored destinations, with player state carrying progression, gear, quests and resume location. Per-place simulations build local spaces while shared registries and interaction handlers coordinate navigation, NPCs and story routes; Level 109's streamed hospital/B3 now holds Janine's interview tape, and Level 114 is Sweet Dreams.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes, anomalies and deterministic dressing; momentsV gates fitted wall moments and room-prop regeneration.",
@@ -10,9 +10,9 @@
     "places/thehub (3D) - tunnel crossroads, keyed destinations, Doorstep Carpet and Camp Amber crews; distinct from Bonus room routing.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office, supplies, encounters and story beats.",
     "places/level1 + places/level4 (3D) - M.E.G. camps and authored office mazes; sims dress facilities and spawn foes, with benches at the Level 1 camp.",
-    "places/level9 + places/level11 (3D) - The Suburbs seeded streets and Level 11 city/Base Beta/strip mall/clinic and Chapter 2 entry trail.",
+    "places/level9 + places/level11 (3D) - The Suburbs seeded streets/houses (house interiors deterministically vary furniture and TV models) and Level 11 city/Base Beta/strip mall/clinic and Chapter 2 entry trail.",
     "places/level61 (3D, The Snackrooms) - food court and M.E.G. checkpoint with storefronts, simulated staff/services and Clippers cocktail lounge.",
-    "places/level109 + places/level114 (3D) - Level 109 streams seeded hospital rooms, interactables and B3; Level 114 is a switch-lit Smiler-threatened bedroom with Janine's tape on the desk and a far door to Level 9."
+    "places/level109 + places/level114 (3D) - Level 109 streams seeded hospital rooms and B3, with Janine's interview tape on a camp cot; Level 114, titled Sweet Dreams, is a switch-lit Smiler-threatened bedroom with a far door to Level 9."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input actions; fall-guard runs before locomotion/player behavior.",
@@ -22,10 +22,10 @@
     "places/main/sim.js + scripts/lib/maze.js + xmas-room.js + level0-moments.js - Level 0 layout and deterministic maze dressing/encounters; moments version gates rebuilds.",
     "places/thehub/sim.js + scripts/lib/thehub.js + hub-people.js + hub-dress.js + scripts/thehub-geo.js - Hub topology, doors, dressing and crew; Phoebe shares scripts/lib/phoebe.js dressing.",
     "scripts/talk.js + scripts/quest-marker.js + scripts/lib/quests.js and level quest modules - dialogue, quest journal/markers and shared advancement/reward rules.",
-    "places/level109/sim.js + scripts/lib/level109.js and places/level114/sim.js - streamed hospital/B3 generation and the Level 114 bedroom, tape placement, lighting and void encounter."
+    "places/level109/sim.js + scripts/lib/level109.js + scripts/lib/l109-b3.js and places/level114/sim.js - seeded hospital/B3 generation and Sweet Dreams bedroom/void encounter."
   ],
   "shared": [
-    "scripts/lib/places.js - canonical per-place names, labels and HUD titles; consumed by feed, quest names and scripts/ui.js.",
+    "scripts/lib/places.js - canonical per-place names, labels and HUD titles; consumed by feed, quest names and scripts/ui.js (Level 114 is Sweet Dreams).",
     "scripts/lib/grid-path.js - configurable 4-neighbor grid BFS/caching/cell selection shared by Level 0, 1, 2, 2.1, 3, Boiler and 6 path adapters.",
     "scripts/lib/ambush-smiler.js - common pursuit/lurk/wake/retreat/bite behavior configured by scripts/lib/l34-smiler.js and scripts/lib/l9-smiler.js.",
     "scripts/lib/carry.js + scripts/lib/companion.js - threshold-crossing transfer of held props and nearby following companions; companion recruitment, orders, perks and lifecycle.",
@@ -45,7 +45,7 @@
     "scripts/lib/l109-kit.js - KIT, medLook; scripts/lib/janine-tape.js - JANINE_TAPE; scripts/player.js - HOLO, holoEnd."
   ],
   "ownership": [
-    "scripts/player.js + scripts/lib/save.js - durable player.state progression, XP/level, health/sanity, inventory/equipment, needs, combat, access, appearance, saved place/position, currency, karma/rep and homeKeep.",
+    "scripts/player.js + scripts/lib/save.js - durable player.state progression, XP/level, health/sanity, inventory/equipment and ammo (including latex), needs, combat, access, appearance, saved place/position, currency, karma/rep and homeKeep.",
     "scripts/lib/stats.js - derived attributes, skills and combat/carry stats; scripts/stats-ui.js formats derived stats.",
     "scripts/critter.js - per-player look and creator/wardrobe/salon state; scripts/lib/seat.js - player.state.sit; scripts/lib/body3.js - session.ready3 and transient melee-carry pose.",
     "scripts/lib/quests.js + scripts/lib/dina-quest.js - player quest journal/tracking/completion/claim keys; Dina trail stages, diary/cut/clue fields and migration.",
@@ -61,22 +61,22 @@
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; periodic saves exclude intake, bonus and tutorial0.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold door handlers call carryAcross → held props and nearby following companions cross; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone; scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles, markers and compass place names.",
-    "scripts/main-menu-ui.js settings → scripts/main-menu.js handler → player.state.uiPrefs; scripts/ui.js wraps composed UI with ui-kit preference attributes and renders quest/feed/HUD panels.",
-    "scripts/player.js writes player.state.notice and scripts/stats.js forwards fresh notices into feed → scripts/ui.js renders ui-kit noticeToast; feed status watcher uses canonical place labels.",
+    "scripts/main-menu-ui.js settings → scripts/main-menu.js handler → player.state.uiPrefs; scripts/ui.js wraps composed UI with ui-kit preference attributes and renders quest/feed/HUD panels; scripts/player.js notices → scripts/stats.js feed → ui-kit noticeToast.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js offers place-matched jobs; carried items/kills/world events advance errands → journal, player.state.errands/qtrack and payouts.",
     "scripts/talk.js → dialogue.js rootChoices and quest handlers; level quest modules call scripts/lib/quests.js → journal/feed/reputation/reward state; Hub route/quest logic consumes thehub door registry and visit/clue flags.",
-    "scripts/lib/ch2-quest.js stages/markers → Level 11 clues, Gamma/IS LAB routes and Level !; Level ! rescue + Phoebe completion unlock Chapter 3/lrun-to-l109; Level 109 EXIT → Level 114, whose far door exits to Level 9.",
-    "places/level114/sim.js places JANINE_TAPE → scripts/l114-use.js adds janine to player.state.holotapes → HALOGEN action in scripts/player.js HOLO plays the clip privately and holoEnd clears playback; scripts/lib/items.js describes carried holo tokens."
+    "scripts/lib/ch2-quest.js stages/markers → Level 11 clues, Gamma/IS LAB routes and Level !; Level ! rescue + Phoebe completion unlock Chapter 3/lrun-to-l109; Level 109 EXIT → Level 114 Sweet Dreams, whose far door exits to Level 9.",
+    "scripts/partygoers.js destroys popped Level 26 balloon foes and spawns searchable latex/weapon salvage → scripts/player.js pickup handler updates inventory; scripts/lib/data/weapons.yml defines balloon guns/ammo, scripts/player.js ties balloons, scripts/lib/knock.js lifts/bobs targets, scripts/lib/ballistics.js pops tied balloons.",
+    "places/level109/sim.js + scripts/lib/l109-b3.js place JANINE_TAPE on the B3 camp cot → scripts/l114-use.js adds janine to player.state.holotapes → HALOGEN action in scripts/player.js HOLO plays the clip privately and holoEnd clears playback."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; menus/staff vary by venue and Level 6.1 fixtures are fitted separately.",
-    "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes a table with two separately fitted chairs.",
+    "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes a table with two separately fitted chairs; Level 9 houses select TV variants.",
+    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js - weapon stats/variants drive shared ranged combat; balloon pistol/shotgun tie, lift and pop targets, while latex is salvage ammo.",
     "art/cigs/build.py + art/fnv/build.py + art/xmas-clean/build.py and NIF converters → fitted GLBs and prop catalogs; xmas-clean prepares Tripo Christmas models with canonical facing, floor origin and reduced meshes/textures.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "Level 01/Zenith and Level 1 geometry builders - authored station and car park/service geometry; corridor materials, pipes, fixtures and lights vary deterministically per cell.",
-    "scripts/meg-agent.js + npc-temper.js + forgive.js + critter-model.js + companion.js - NPC reactions, cover, barks, combat and following vary by faction/role/outfit/perk; Level 109 medic roles wear doccoat over scrub pants.",
-    "scripts/lib/l109-kit.js medLook fits selected model-backed Level 109 fixtures across corridors, rooms, outposts and B3; unsupported parts retain l109-med-geo geometry, while department/seed controls room dressing."
+    "scripts/meg-agent.js + npc-temper.js + forgive.js + critter-model.js + companion.js - NPC reactions, cover, barks, combat and following vary by faction/role/outfit/perk; Level 109 medic roles wear doccoat over scrub pants."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -90,7 +90,7 @@
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together; place.state.hubV gates shell/door/plaque rebuilds.",
     "Hub keyed doors consume the matching player.state.hubKeys key; t10-a3 maps to level11 and hubTenthCrossed is set only after a qualifying clue and successful crossing; Level 1's route is a separate threshold pair.",
     "Level 109's place.state.l109seed fixes irregular corridor/room rolls across reloads; keep arrival room-pop and den safe radii coupled to scripts/lib/level109.js SPAWN; containment books are keyed by room ID and remember pen-door positions.",
-    "Level 109 fixture model bounds in l109-kit.js are fitted into each part's legacy geometry frame; preserve per-part bounds/orientation and medLook's scripted fallback for parts without a model. B3 arena/dress version migrations replace selected IDs.",
-    "Level ! intro must trigger even when a player is past corridorStartZ; Chapter 2 clues can arrive out of order. Level 109 EXIT leads to Level 114, whose place.state.v114 gates room rebuild; janine-tape pickup adds persistent holotapes and HALOGEN playback is per-player session audio."
+    "Level 109 B3 dressing uses place.state.b3DressV (currently 3) and Janine's tape is built into B3; Level 114's rebuild must remove any legacy janine-tape instance so the bedroom stays hers.",
+    "Level 9's seeded house interiors use sim version V=19 for TV variant rebuilds; preserve the stable per-lot selection and existing furniture model dimensions/forward axes. Chapter 2 clues can arrive out of order; Level 109 EXIT leads to Sweet Dreams and its far door to Level 9."
   ]
 }
