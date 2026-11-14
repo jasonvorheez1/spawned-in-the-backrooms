@@ -11,7 +11,7 @@ bpy.context.view_layer.objects.active = src; src.select_set(True)
 bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 me = src.data
 # face +Y (exports as engine -Z) and mirror x: rot 180 about z then x -> -x  == just y -> -y
-M = Matrix.Diagonal((1, -1, 1, 1)); me.transform(M); me.flip_normals()
+M = Matrix.Diagonal((-1, -1, 1, 1)); me.transform(M)  # turn 180: front to +Y (engine -Z... front faces viewer at +Y)
 vs = [v.co for v in me.vertices]
 mn = [min(v[i] for v in vs) for i in range(3)]; mx = [max(v[i] for v in vs) for i in range(3)]
 sx, sy, sz = W / (mx[0]-mn[0]), (FRONT-BACK) / (mx[1]-mn[1]), H / (mx[2]-mn[2])
