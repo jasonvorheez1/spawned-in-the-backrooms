@@ -160,7 +160,14 @@ export function layExtra(ctx, { HW, HD, HH }) {
   for (const [x, z] of TABLES) {
     const tx = x, tz = z, r = Math.abs((Math.sin(x * 12.9898 + z * 78.233) * 43758.5453) % 1), hot = r < 0.18;
     sp(`l61-set-${ti++}`, { feetPosition: { x: tx, y: 0.752, z: tz }, ...(hot ? { fx: { script: SMOKE } } : {}), primitive: { kind: "sphere", radius: 0.001 }, material: { color: "oklch(0.5 0 0)" },
-      children: [
+      children: (x < 0 && z < -22) ? [ // Liquorette is a tavern: a half-drunk pint, a whiskey tumbler, a glass ashtray, a beer mat
+        { feetPosition: { x: 0.18, y: 0, z: 0.08 }, primitive: { kind: "cylinder", radiusTop: 0.045, radiusBottom: 0.036, height: 0.15 }, material: { color: "oklch(0.85 0.02 90 / 0.35)", transparent: true, opacity: 0.35, roughness: 0.05 } },
+        { feetPosition: { x: 0.18, y: 0.004, z: 0.08 }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.033, height: 0.09 }, material: { color: "oklch(0.68 0.15 70)", roughness: 0.2 } },
+        { feetPosition: { x: 0.18, y: -0.003, z: 0.08 }, primitive: { kind: "cylinder", radiusTop: 0.06, radiusBottom: 0.06, height: 0.004 }, material: { color: "oklch(0.45 0.13 28)", roughness: 0.9 } },
+        { feetPosition: { x: -0.2, y: 0, z: -0.12 }, primitive: { kind: "cylinder", radiusTop: 0.038, radiusBottom: 0.034, height: 0.08 }, material: { color: "oklch(0.88 0.02 90 / 0.4)", transparent: true, opacity: 0.4, roughness: 0.05 } },
+        { feetPosition: { x: -0.2, y: 0.004, z: -0.12 }, primitive: { kind: "cylinder", radiusTop: 0.032, radiusBottom: 0.03, height: 0.025 }, material: { color: "oklch(0.55 0.13 55)", roughness: 0.15 } },
+        { feetPosition: { x: 0.02, y: 0, z: 0.2 }, primitive: { kind: "cylinder", radiusTop: 0.065, radiusBottom: 0.055, height: 0.03 }, material: { color: "oklch(0.75 0.03 200 / 0.6)", transparent: true, opacity: 0.6, roughness: 0.1 } },
+      ] : [
         { feetPosition: { x: 0.12, y: 0, z: 0.1 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.035, height: 0.17 }, material: { color: "oklch(0.5 0.22 28)", roughness: 0.4 } },
         { feetPosition: { x: 0.2, y: 0, z: 0.05 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.035, height: 0.17 }, material: { color: "oklch(0.85 0.17 95)", roughness: 0.4 } },
         { feetPosition: { x: 0.04, y: 0, z: 0.14 }, primitive: { kind: "box", width: 0.1, height: 0.1, depth: 0.07 }, material: { color: "oklch(0.78 0.01 250)", metalness: 0.7 } },
