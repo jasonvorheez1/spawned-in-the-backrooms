@@ -11,7 +11,7 @@ doorPass: 0.9       # half width of the gap they may cross the room's edge throu
 wander: [4, 9]      # seconds between wander picks
 lostSec: 10         # seconds a loose one keeps heading for where it last knew you
 prowlLook: 12       # metres a prowling one looks down each way at a wall
-mgrFollow: 150      # the keeper moves to the nearest wanderer past this
+mgrFollow: 12       # the keeper stays this close to the nearest wanderer, so a noise heard near them reaches it
 floorY: 0           # the hospital floor
 sinkLimit: 0.25     # a body this far under the floor is set back on it
 kinds:

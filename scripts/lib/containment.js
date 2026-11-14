@@ -9,29 +9,32 @@
 export const inside = (b, p, pad = 0) => p.x > b.x0 - pad && p.x < b.x1 + pad && p.z > b.z0 - pad && p.z < b.z1 + pad;
 const alive = (f) => !f.state?.dead && (f.state?.hp ?? 1) > 0;
 const foes = (ctx) => ctx.query({ tags: ["pen-foe"] }).filter(alive);
-export function penRoll(ctx, id, roll) { const s = ctx.place.state; if (!s.pens?.[id]) s.pens = { ...(s.pens ?? {}), [id]: roll() }; return s.pens[id]; }
+// each room's row is written at its own path, never the whole book: two machines handing the sim over never clobber each other's rooms
+function book(ctx, key, id, v) { const s = ctx.place.state; if (!s[key]) s[key] = { [id]: v }; else s[key][id] = v; }
+export function penRoll(ctx, id, roll) { const s = ctx.place.state; if (!s.pens?.[id]) book(ctx, "pens", id, roll()); return s.pens[id]; }
 export const penCount = (ctx, id) => ctx.place.state.pens?.[id]?.length ?? 0;
 export const doorOpen = (ctx, id) => !!ctx.place.state.pdoors?.[id];
-export function setDoor(ctx, id, open) { const s = ctx.place.state, d = { ...(s.pdoors ?? {}) }; if (open) d[id] = 1; else delete d[id]; s.pdoors = d; }
+export function setDoor(ctx, id, open) { const s = ctx.place.state; if (open) book(ctx, "pdoors", id, 1); else if (s.pdoors?.[id]) delete s.pdoors[id]; }
 // the room loads: everyone on its books walks in for real
 export function penLoad(ctx, id, box, spawnFoe) {
-  const s = ctx.place.state, list = s.pens?.[id] ?? [], left = [];
-  list.forEach((k, i) => {
+  const s = ctx.place.state, list = [...(s.pens?.[id] ?? [])], left = [];
+  for (const f of foes(ctx)) if (f.state.pen === id) { const i = list.indexOf(f.state.penKind); if (i >= 0) list.splice(i, 1); } // already standing in there (a machine handover re-laid the room): never twice
+  list.forEach((k) => {
     const pos = { x: box.x0 + 3 + ctx.random() * (box.x1 - box.x0 - 6), y: 0.1, z: box.z0 + 3 + ctx.random() * (box.z1 - box.z0 - 6) };
     const made = spawnFoe(ctx, k, pos, { pen: id, penKind: k, penBox: box });
     if (!made) left.push(k); // the level has no body for this kind yet: it stays on the books
   });
-  s.pens = { ...(s.pens ?? {}), [id]: left };
+  book(ctx, "pens", id, left);
 }
 // the room unloads: whoever is still inside goes back on its books, whoever got out goes on the loose list
 export function penUnload(ctx, id, box) {
-  const s = ctx.place.state, back = [...(s.pens?.[id] ?? [])], loose = [...(s.loose ?? [])];
+  const s = ctx.place.state, back = [...(s.pens?.[id] ?? [])];
   for (const f of foes(ctx)) {
     if (f.state.pen !== id && f.state.penFrom !== id) continue;
     if (inside(box, f.feetPosition, 0.5)) { back.push(f.state.penKind); ctx.destroy(f.id); }
     else if (f.state.pen === id) { f.state.pen = null; f.state.penFrom = id; } // out in the hall: it is loose now, kept live while someone is near
   }
-  s.pens = { ...(s.pens ?? {}), [id]: back }; s.loose = loose;
+  book(ctx, "pens", id, back);
 }
 // every tick or so: loose foes far from everyone are written down and removed; written-down ones near someone come back
 export function looseTick(ctx, spawnFoe, near = 70, far = 120) {
