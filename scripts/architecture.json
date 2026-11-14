@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8461,
-  "updatedAt": "2026-11-14T19:33:54.092Z",
-  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests and resume location. Per-place simulations and terrain generators build local spaces while shared registries and handlers coordinate navigation, NPCs, combat, inventory and story. Level 169 is a desert survival route with Ferry's house and road stops, while the S.S. Fun travels between Level 10 and 169 on a world timetable and crafting/RPG modifiers are shared player systems.",
+  "basedOnSpecVersion": 8463,
+  "updatedAt": "2026-11-14T19:35:17.460Z",
+  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests and resume location. Per-place simulations and terrain generators build local spaces while shared registries and handlers coordinate navigation, NPCs, combat, inventory, story and crafting. Level 169 is a desert survival route with Ferry's house and road stops, while the S.S. Fun travels between Level 10 and 169 on a world timetable.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes, anomalies and deterministic dressing; momentsV gates fitted wall moments and room-prop regeneration.",
@@ -12,7 +12,7 @@
     "places/level1 + places/level4 + places/level26 (3D) - M.E.G. camps and authored office mazes; Level 26's S.S. Fun holds cabin 23 and Partygoer decks/lockdown, and provides the ship's aboard gate.",
     "places/level9 + places/level11 + places/level61 (3D) - seeded Suburbs, Level 11 city/Base Beta/strip mall/clinic and Chapter 2 entry trail, and Snackrooms food court/M.E.G. checkpoint with simulated staff and Clippers lounge.",
     "places/level70 (3D) - winter market/civic town, stalls, hotel, office, pump and Dry Pipes landmarks; sim composes civic, wild and life systems.",
-    "places/level169 (3D) - seeded desert, sun/cold/water hazards, well arrival, Ferry's modeled house and friends, checkpoint road/route boards/lockers/bed and Level 11 edge route; also hosts S.S. Fun landings. places/level10 hosts its other landing; places/level109 + level114 are Neon Hospital and Sweet Dreams."
+    "places/level169 (3D) - seeded desert, sun/cold/water hazards, well arrival, Ferry's modeled house and friends, checkpoint road/route boards/lockers/bed and Level 11 edge route; also hosts S.S. Fun landings. places/level10 hosts its other landing."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input actions; fall-guard runs before locomotion/player behavior and scripts/e19.js updates player disease state.",
@@ -32,7 +32,7 @@
     "scripts/lib/hub.js + preload data/scripts and scripts/lib/thehub.js + scripts/lib/hubkeys.js - separate Bonus shared-room routing and The Hub tunnel/door/key registry.",
     "scripts/lib/containment.js - Level 109 persistent pen/loose-foe, open-door and remembered-door-position books; sim supplies room IDs/boxes and spawnFoe adapter.",
     "scripts/lib/pg-society.js + scripts/lib/data/pg-society.yml - Level 26 Partygoer role/routes, sight-bound relay and deck alert/search/recovery; scripts/partygoers.js reads rules and owns actor behavior/traps.",
-    "scripts/lib/modifiers.js + books-magazines.yml, manuals.js + craft.yml, and ssfun-voyage.js + ssfun-voyage.yml - shared RPG effects/recipe learning and single-timetable ship behavior; player and Level 10/26/169 sims consume them."
+    "scripts/lib/manuals.js + scripts/lib/data/craft.yml + scripts/lib/craft.js - shared manual-kind recipe registry and per-player learning/status rules; player item use and crafting menu consume it."
   ],
   "notableExports": [
     "scripts/lib/places.js - PLACES, PLACE_NAMES, PLACE_LABELS, LEVEL_TITLES.",
@@ -41,14 +41,14 @@
     "scripts/lib/companion.js - PERKS, perkOf, isMine, followersOf, loyaltyScale, whyNot, recruit/adopt/dismiss/order, weapon handoff, tick, bring; carry.js - carryAcross.",
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - shared journal/advancement/reward helpers; containment.js - containment state/pen/door operations; ch2-quest.js - Chapter 2 stages and dialogue helpers.",
-    "scripts/lib/modifiers.js - book/magazine specs, read/apply/prune and collectModifiers/collectGearModifiers; scripts/lib/manuals.js - MANUALS, manualKind, knowsManual/knowsRecipe, learnFromManual, rollManual.",
+    "scripts/lib/modifiers.js - book/magazine specs, read/apply/prune and collectModifiers/collectGearModifiers; scripts/lib/manuals.js - MANUALS, manualKind, manualsOf, knowsManual, recipesOf, knowsRecipe, unknownOfKind, learnFromManual, rollManual.",
     "scripts/lib/ssfun-voyage.js - schedule, voyage, berth, shipTick, ears, where; scripts/lib/l169-road.js - ORDER, siteOf, legsFrom, go, layRoad, tickRoad, takeLocker, sleepBed; scripts/lib/progression.js - xpNeed, xpNeedFor, migrateXp."
   ],
   "ownership": [
-    "scripts/player.js + scripts/lib/save.js - durable player.state progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, saved place/position, currency, karma/rep and homeKeep; player.js owns player actions and item-use mutations.",
+    "scripts/player.js + scripts/lib/save.js - durable player.state progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, saved place/position, currency, karma/rep and homeKeep; player.js owns player action handlers.",
     "scripts/lib/stats.js - derived attributes, skills and combat/carry stats; scripts/stats-ui.js formats derived stats; scripts/lib/progression.js migrates the xpCurve progression model.",
     "scripts/lib/modifiers.js - player.state bookBonuses/readBooks/genericBooksRead/effects and modifier derivation; scripts/lib/clothes.js owns worn gear records whose passive modifiers feed the modifier engine.",
-    "scripts/lib/manuals.js + scripts/player.js - player.state.manuals and recipes track learned craft categories/recipe IDs; craft item use teaches one unknown recipe of the manual's kind.",
+    "scripts/lib/manuals.js + scripts/player.js - player.state.recipes stores learned recipe IDs; legacy player.state.manuals still grants all recipes of those kinds. Using a manual token learns one unknown recipe of its kind.",
     "scripts/critter.js - player look and creator/wardrobe/salon state; owns transient Squirt Gun backpack tank visual parented to the player body root and clears expired groove/gesture animation channels.",
     "scripts/lib/seat.js - player.state.sit; scripts/lib/body3.js - session.ready3 and transient melee-carry pose; scripts/sun169.js - player.state.l169sun/l169st/l169lit, l169chill and carried-water cold timers in Level 169.",
     "scripts/lib/quests.js + scripts/lib/dina-quest.js - player quest journal/tracking/completion/claim keys; Dina trail stages/diary/cut/clue fields and migration; level quest modules own route-specific stages/outcomes.",
@@ -66,17 +66,17 @@
     "scripts/talk.js → dialogue.js rootChoices and quest handlers; level quest modules call scripts/lib/quests.js → journal/feed/reputation/reward state; scripts/lib/data/dlg-*.yml supplies character-specific choices and barks.",
     "scripts/lib/ch2-quest.js stages/markers → Level 11 clues, Gamma/IS LAB routes and Level !; Level ! rescue + Phoebe completion unlock Chapter 3/lrun-to-l109; Level 109 EXIT → Level 114 Sweet Dreams and its bedroom far door/bed routes back.",
     "places/level109/sim.js 500ms tick → scripts/lib/l109-life.js outpostLife and scripts/lib/containment.js; l109-outpost.yml drives scripts/meg-agent.js, while triage, alerts, pen-door checks and terminal interactions update local scene/state.",
-    "Level 169 sim → sun169 player hazard timers, road/friends/house ticks and questTick; Level 10, 26 and 169 sims call ssfun-voyage shipTick → world.state.ssfun timetable drives a single hull/fog/gangway, while Level 26's gate handler boards to its current landing."
+    "Level 169 sim → sun169 player hazard timers, road/friends/house ticks and questTick; Level 10, 26 and 169 sims call ssfun-voyage shipTick → world.state.ssfun timetable drives a single hull/fog/gangway, while Level 26's gate handler boards the ship."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; menus/staff vary by venue and Level 6.1 fixtures are fitted separately.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes a table with separately fitted chairs.",
-    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js - weapon stats/variants share combat; per-weapon sound/rack/reload fields resolve through sounds.yml, with Squirt Gun liquid effects and variants configured in data.",
+    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js - weapon stats/variants share combat; per-weapon sound/rack/reload fields resolve through sounds.yml, with Squirt Gun liquid effects and variants.",
     "art/cigs/build.py + art/fnv/build.py + art/xmas-clean/build.py and NIF converters, plus art/cat-wardrobe/fit.py + tailclear.py + art/level70-stall/parts.py - fitted GLBs/prop catalogs, body-specific cat garments with tail clearance, and stall parts.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "Level 01/Zenith and Level 1 geometry builders - authored station and car park/service geometry; corridor materials, pipes, fixtures and lights vary deterministically per cell.",
-    "scripts/lib/modifiers.js + books-magazines.yml and worn clothes/data - permanent skill book bonuses, timed magazine/consumable effects and equipment passives share one modifier collection; manual-based crafting separately shares recipes across benches and loot pools."
+    "scripts/lib/modifiers.js + books-magazines.yml and worn clothes/data - permanent skill book bonuses, timed magazine/consumable effects and equipment passives share one modifier collection; crafting manual/recipe learning uses a separate registry."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -87,10 +87,10 @@
   ],
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
-    "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together; place.state.hubV gates shell/door/plaque rebuilds.",
-    "Hub keyed doors consume the matching player.state.hubKeys key; t10-a3 maps to level11 and hubTenthCrossed is set only after a qualifying clue and successful crossing; the Level 169 threshold/key is handled by l169-road and hub registry separately.",
+    "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together. Keyed doors consume player.state.hubKeys; t10-a3 maps to level11 and hubTenthCrossed changes only after qualifying clue and successful crossing; Level 169 threshold/key is handled by l169-road and hub registry.",
     "Level 109 place.state.l109seed fixes irregular corridor/room rolls; containment books are keyed by room ID and remember pen-door positions. Local terminal host/mode and roomId must stay aligned: stock unlock state is keyed by room ID.",
     "Level 26 society state is split by deck in place.state.pgAlert; Partygoer social memory is session-local, bait records are keyed by route stop, and pgLiftLocked controls only the lower lift.",
-    "Level 169 coordinates use x/z with north at -z and terrain scale is 1:10; keep world-space house/road/ship sites and local house geometry offsets aligned. S.S. Fun schedule is world.state.ssfun, so each place tick must use the same voyage state and sweep departed hulls even across sleeping places."
+    "Level 169 coordinates use x/z with north at -z and terrain scale is 1:10; keep world-space house/road/ship sites and local house geometry offsets aligned. S.S. Fun schedule is world.state.ssfun, so each place tick must use the same voyage timetable.",
+    "Crafting knowledge is per-player: player.state.recipes contains recipe IDs and each manual token teaches one random unknown recipe of its kind; preserve player.state.manuals as legacy whole-kind unlocks for existing readers."
   ]
 }
