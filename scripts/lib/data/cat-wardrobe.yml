@@ -29,7 +29,7 @@ feet:
   socks: { top: 0.55 }      # share of the shin, ankle up
 # Tripo garments: glb per body (f/m), under = the painted layer hidden beneath it
 models:
-  hoodie: { under: longsleeve, pat: weave, f: /cdn/value.cb6fcfc40ed77bb0a258c9f61609b08dec21313b1ebb074a4c055339556dd0ec.glb, m: /cdn/value.766e54ff7c3d1c55cd2f99404edb4d3d9058c1a75e0c78df8b2004266ee5a0fe.glb }   # Nov 13 v2 (Shelly "hoodies dont look like real hoodies"): hood, drawstrings, pocket, ribbed cuffs
+  hoodie: { under: longsleeve, pat: weave, f: /cdn/value.c6183929f2af87d1c589f400b95f77614f04f665d1d9b126fd6dcfb028df2f79.glb, m: /cdn/value.fe1d3cff7ff424fab576c6ee2440a60eac0a8b2f6a25168348fb664b31ef2bef.glb }   # Nov 13 v2 (Shelly "hoodies dont look like real hoodies"): hood, drawstrings, pocket, ribbed cuffs
   jacket: { under: longsleeve, pat: weave, f: /cdn/value.750657edb6877022f3d0358d32a1624fcbde33153bc6af7d4009af196aa5e393.glb, m: /cdn/value.12a4fd805c6d6e5f9eccc2ce6ba8d858a7c3bc81126f7187757c1fc53bcc74f7.glb }   # Nov 11 Taubin-smoothed: the Tripo crumple ironed out, 4 mm off the body; skin and Chest key kept
   skirt:  { under: briefs, pat: weave, f: /cdn/value.7c0c768e115bf4c6ae259541103871e7856ac866e30af738501b1148637c1cb8.glb, m: /cdn/value.fe5c437244d03e9e1aae31ae56a9ab87f1b33d398329fcf496610269f5f99807.glb }
   boots:  { under: socks, pat: weave, f: /cdn/value.3f9b0636806b0ebabcd12d5037ca8aecf54984a63ea3e5b5c979c1f61c9c9983.glb, m: /cdn/value.dcfebd4370d0c0aa932157cae6acd02db2afb18e59cc83e6ef34261ed69176f2.glb }
