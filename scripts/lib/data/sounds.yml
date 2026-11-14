@@ -115,3 +115,88 @@ gulping-water-from-plastic-bottle:
   - "/cdn/value.d460f9b454f6c721db897d6eee92ed8a3b4edbf1ca315b56efde69704ea2f1c4.mp3"
   - "/cdn/value.0f194c80d1026e275431363d51fc95c63e4abb4585becb766e8bc0a93523061d.mp3"
   - "/cdn/value.8b38f37a15e5175d992937fb8723fd02e866b571e58c7e82e6a5c96c270473f8.mp3"
+
+# Shelly's FNV/FO3 weapon pack, on the guns it fits (Nov 14). Everything else keeps its own sound.
+9mm-service-pistol-gunshot-crisp-snap-concrete-room:
+  - "/cdn/value.851b38629f8902c174a420638dc3c74cce21467f9af87b4005240a1d4e2dce9a.mp3"
+  - "/cdn/value.c01e0ac79b48aa6c878923a5818272ba7d036443d6dd8402d452c5ab05c48936.mp3"
+  - "/cdn/value.c2d202c65d2b41d4b93d87a9626d1b6621a7ba9f505be7fdaabeccc2daf8e8b5.mp3"
+  - "/cdn/value.48d1658a6b7827638ec6d0c91457be95ed69bb1a70a2a6f4e3cf00693863e711.mp3"
+subcompact-9mm-pistol-gunshot-sharp-snappy-crack:
+  - "/cdn/value.777f88c549983cc9e73bf756f1a3b5e42b5d5d61ebd9e462723d1b45aa7de4c6.mp3"
+  - "/cdn/value.c32b5c0bc462852df14b7b5872aa7a5890a1ec4106a856efd5e58058adcb72a6.mp3"
+22-rimfire-target-pistol-gunshot-light-pop:
+  - "/cdn/value.be8a7d1a1ef49edae9efb9a72695934ffd24bf6f923cc8f2648c705e6084b7d3.mp3"
+  - "/cdn/value.1d2a51c2fae0e03ae783da9d04bd079e26bbf6b99e4570fe3ea7db9927583951.mp3"
+service-pistol-magazine-release-drop-clatter:
+  - "/cdn/value.0fa8e8153c419ae9965c0d25368cb9ebecce43d6d46888d7c6b9f53b48e50cb5.mp3"
+service-pistol-magazine-slap-home-click:
+  - "/cdn/value.7a5d43b5b3daa5b2fe7cf4cba562f51cfc2006ad07fc4e6a20c22941dda9479a.mp3"
+service-pistol-slide-release-snap-forward:
+  - "/cdn/value.e4bff2d5ccf03ed4f4cd05c45b611c715ca82d1f931f42f400d8f6455068856c.mp3"
+service-pistol-hammer-dry-click:
+  - "/cdn/value.6ea0976559075fc68a125f1eefc3a87f99244c81721369380959c91d7257161f.mp3"
+revolver-cylinder-swing-open-click-ejector-rattle:
+  - "/cdn/value.fdf386fce85ee9c02e2ae065232e97a81c44d2d858fcf070c2c16cf645de2fb4.mp3"
+revolver-cartridge-click-into-chamber:
+  - "/cdn/value.de038748d160765c0fc0236e6a91a6717357733875151d242b01773b86632dab.mp3"
+revolver-cylinder-snap-shut-click:
+  - "/cdn/value.baf757337587f294b2ddb8bc2d4afe2f201c8847f497bfb4341b4fbf8f30c09c.mp3"
+12-gauge-pump-shotgun-blast-deep-boom-room-tail:
+  - "/cdn/value.3cb47ef023cc395e056e8301fe8ff20f7c3da46330830bca7dfbc6aef3794651.mp3"
+  - "/cdn/value.19ddad7e60d5032864f793f9360969312e1e5a1f6746c0835bf47e147c8ef99d.mp3"
+  - "/cdn/value.d66b7177cc2400e56a1f211d99c1f64efd2efa7283ac9433f198d644fb4f87a5.mp3"
+  - "/cdn/value.a8ee084d52db8ad472c837113bc7700c1812e0f5cbb6e9c35399df48729f53a5.mp3"
+pump-shotgun-shell-thumb-into-tube-click:
+  - "/cdn/value.9f96145a8f9764b1631cc711035ba467beaf12a07cf780efbe509feff7d9b548.mp3"
+  - "/cdn/value.75b73066495337e15aacff0b62dd3b9374d454ed24eb23af209f0dc33afb520c.mp3"
+  - "/cdn/value.c3e064416826652d6a7efa2a0c413593c3bdc9fdb66c3293dc6f88f06df1f1be.mp3"
+pump-shotgun-slide-rack-chunk-chunk:
+  - "/cdn/value.4227a79f5b01379bceb96e0789c53133d0f0b768c841cd2466b686cbf590343c.mp3"
+  - "/cdn/value.068fd6011a06071a33f8c963a7675e4d7879afd69b8924c5e7a73715fc70cbd4.mp3"
+double-barrel-12-gauge-shotgun-blast-twin-boom-echo:
+  - "/cdn/value.280839c879b04d2f08e4774065bef46e30827db2b93c4cdc83ca8d50785994c7.mp3"
+  - "/cdn/value.27edf884203723bc21355284d8f23a90ac0b91bdd2df2f8a776a1dcfe1d2e1d3.mp3"
+  - "/cdn/value.2e17ee20491e6fc7b910a1d0b62d382ae177772cb79aa69ed17983947356583b.mp3"
+  - "/cdn/value.d75336d3ac7827682469112bb52ab702740134bdd4882919cb3aa3c2ceb45f6e.mp3"
+rifle-cartridge-slide-into-tube-click:
+  - "/cdn/value.3b234ada6ef9b092f6f7b9da1a8132815544fb18fd3ed572fa8e9ab612877c81.mp3"
+  - "/cdn/value.f1c9a1aa860217190f032386fc72ff6369ae658fb142c9659de53a598fc12872.mp3"
+  - "/cdn/value.0f41c1a8e16faa7bfaacfe77586963e2d4ddfa7ec035890ee1a6ca551c91d034.mp3"
+  - "/cdn/value.22c6612bed29488cb9efb0f2e78756a2bd55f38041618ccb795ec057c6032ae8.mp3"
+rifle-gunshot-heavy-crack-echo:
+  - "/cdn/value.51f39dd8b76471a21d04968338decc122fa9d384c12048f4c75a0c9ef42bd63e.mp3"
+  - "/cdn/value.d669abef1c25a04a807c19db91d1b0139e5adb4f10f212fd573e1814efd5694f.mp3"
+  - "/cdn/value.84e4fcb05b7b0535d619465fbacdb2b10ea3c46782576929be9d01f3089d1894.mp3"
+  - "/cdn/value.76ef60228f07f2a0b70d21ef060e3c3577bdfe2e721b8335ef8a8b24ab49d409.mp3"
+bolt-action-rifle-bolt-cycle-clack:
+  - "/cdn/value.958faeae6795443d297f4fb7b890fb4958db0042fa4a2f1c206927f96df7c2cf.mp3"
+carbine-rifle-gunshot-sharp-burst:
+  - "/cdn/value.a35813d3242cdf3a89372a0a224313e7a3d821502e131c238b36fbaf962c8789.mp3"
+  - "/cdn/value.6ebbce59008ceccae38bc49272ad81d6b66cb39b10df7ada26123a1f0f4d4384.mp3"
+  - "/cdn/value.7ad34bb9961afbdedf82616fe0611d32bbd5b52683013307a8aa47e8ef997152.mp3"
+  - "/cdn/value.1b944d350570ce55731ae6556cb44469de0fac54f663e6e39834ab5938517641.mp3"
+rifle-magazine-release-drop-thunk:
+  - "/cdn/value.fb9cc58dc7fe01d23ea74d137ef50c70536e7a19b6b2815787c27a724f9c8d5b.mp3"
+rifle-magazine-seat-click:
+  - "/cdn/value.70c391b20c2072d2f41194e2e7a8d4415e87938bfc4c9084d7cc402e97d62eeb.mp3"
+rifle-charging-handle-rack-clack:
+  - "/cdn/value.b2f42aa3545ec463d93033b618bf687399785afd6207d353a58852965b4229fa.mp3"
+smg-tommy-gun-loud-rattle-shot:
+  - "/cdn/value.fb3327b8f67bdff9083027bee2d4ef33feb0b17300ad9bd3d980043782042613.mp3"
+  - "/cdn/value.7d5230fb7371c7a264a68fa3f23109dae1a80cd9b95a035ceb16aa0f4455b90a.mp3"
+  - "/cdn/value.7e97d98e3e489cd7257dd88f18bbb1fa3ead1fd315f5e9a35fd5b914fe6cf658.mp3"
+  - "/cdn/value.eaa115b860a7616c50b1ce776046a703ae73a52d91678930220db7825089b3c7.mp3"
+fist-punch-swish-air:
+  - "/cdn/value.d044b4cec402111dcdda8972f413538a5335a8cf1d64207f1f85ab2f1c9736f1.mp3"
+  - "/cdn/value.5bc4d87e5ddf8eaadbde34b6ecf4f717c54dc1942c9fdc86468c3f24592fb2f8.mp3"
+  - "/cdn/value.f3f4556de61ce21831446d22845ffa47c549628c72a2aa4fc65eb9c4fac842ff.mp3"
+fist-punch-flesh-smack:
+  - "/cdn/value.82c6d9fbed8e1bf1ebf6c39c7fe5b242c8530d7ff0ea03c03d931de11450240a.mp3"
+  - "/cdn/value.0255cdb3567c4b3753d41930e8f04e59276091c9efcd0f151fe4764f3f95e076.mp3"
+  - "/cdn/value.1591960bbbb116b2026a271614ae9e65bcc27aa443cacfd218fa7dfbfec36e33.mp3"
+  - "/cdn/value.ced193b38305b791661a1c750848248a9536c9fd4a5f89617440f65407d7be0b.mp3"
+golf-club-swing-whistle:
+  - "/cdn/value.3e8de2dbd455349f2ac95cac28bb5755619f8d19fc7d3474fec2c309ad24dbd9.mp3"
+  - "/cdn/value.33d6619318aa08286e5b956a5433b9c5960b33e6aea7ca01de5e156976fb11b5.mp3"
+  - "/cdn/value.06146c854d2262b1b5003c71790acc735105b2c5671f90f7d0a402ac7834ffd3.mp3"
