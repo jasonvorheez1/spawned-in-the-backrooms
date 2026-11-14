@@ -4,7 +4,7 @@ mock.module("builtin/tween", () => ({ animate: () => {} }));
 mock.module("builtin/nav", () => ({ findPath: () => null }));
 mock.module("../scripts/mat-cloth.js", () => ({ PRINTS: {} }));
 const { CORRIDOR, OBSTACLES, agilityProfile, hitObstacle, stepHordeZ } = await import("../scripts/lib/levelrun-mechanics.js");
-const { CH2, ch2Tick, ch2Choices, handleDialogueCh2, setCh2Step, megHostileCh2 } = await import("../scripts/lib/ch2-quest.js");
+const { CH2, CH2_TONE, ch2Tick, ch2Choices, handleDialogueCh2, setCh2Step, megHostileCh2 } = await import("../scripts/lib/ch2-quest.js");
 const { startIntroCut, startRescueCut, finishRescueToAlcove, lrunCutTick, lrunUi } = await import("../scripts/lib/levelrun-cut.js");
 const { ears: dropEars } = await import("../scripts/l11-ch2-drop.js");
 
@@ -450,5 +450,209 @@ describe("Chapter 2 side quests (Frequency Lock & Wait for the Tone) and Level 3
     expect(p.state.ch2Archive).toBe(1);
     expect(p.state.knowsMike).toBe(1);
     expect(p.state.ch2Q).toBe(4);
+  });
+
+  test("map markers point to verified live places and entity coordinates", () => {
+    const p1 = makePlayer({ ch2Q: 1 });
+    const ctx1 = makeCtx(p1);
+    ch2Tick(ctx1, ctx1.session, p1.state, "level11");
+    expect(p1.state.quests[CH2.id].mark).toEqual({ place: "level11", x: 19.35, z: -13.15, label: "Base Beta (Vance)" });
+
+    const p2 = makePlayer({ ch2Q: 2 });
+    ch2Tick(makeCtx(p2), {}, p2.state, "level11");
+    expect(p2.state.quests[CH2.id].mark).toEqual({ place: "level11", x: -25.45, z: 28.9, label: "Strip Mall Clinic" });
+
+    const p3g = makePlayer({ ch2Q: 3, ch2SignalDecoded: 1 });
+    ch2Tick(makeCtx(p3g), {}, p3g.state, "level11");
+    expect(p3g.state.quests[CH2.id].mark).toEqual({ place: "gamma", x: 15, z: 29.5, label: "Base Gamma (Moss / Archive)" });
+
+    const p3h = makePlayer({ ch2Q: 3, ch2SignalDecoded: 1, rep: { meg: -40 } });
+    ch2Tick(makeCtx(p3h), {}, p3h.state, "level11");
+    expect(p3h.state.quests[CH2.id].mark).toEqual({ place: "thehub", x: 0, z: -18, label: "Camp Amber (The Hub)" });
+
+    const p3b = makePlayer({ ch2Q: 3, ch2Archive: 1 });
+    ch2Tick(makeCtx(p3b), {}, p3b.state, "level11");
+    expect(p3b.state.quests[CH2.id].mark).toEqual({ place: "level11", x: -25.2, z: 34.85, label: "IS LAB Bench" });
+
+    const p4 = makePlayer({ ch2Q: 4 });
+    ch2Tick(makeCtx(p4), {}, p4.state, "level11");
+    expect(p4.state.quests[CH2.id].mark).toEqual({ place: "level11", x: -29.25, z: 31, label: "Red Hospital Door" });
+
+    const pti = makePlayer({ ch2ToneQ: 2 });
+    ch2Tick(makeCtx(pti), {}, pti.state, "level11");
+    expect(pti.state.quests[CH2_TONE.id].mark).toEqual({ place: "gamma", x: -26, z: 2, label: "Base Gamma (Ivy)" });
+
+    const pt = makePlayer({ ch2ToneQ: 3, ch2RunnerData: 1 });
+    ch2Tick(makeCtx(pt), {}, pt.state, "level11");
+    expect(pt.state.quests[CH2_TONE.id].mark).toEqual({ place: "level11", x: -17.06, z: 53.73, label: "Central Market (Trader Kael)" });
+  });
+
+  test("Stage 1 alternate route via Sedco courier and Stage 3 out-of-order completion auto-unlocks Stage 4", async () => {
+    const { onInput } = await import("../scripts/os.js");
+    // Stage 1 alternate route: Sedco courier l11-walker-1
+    const p1 = makePlayer({ ch2Q: 1 });
+    const ctx1 = makeCtx(p1);
+    const courier = { id: "npc/l11-walker-1", state: {} };
+    const c1 = ch2Choices(ctx1, courier, p1.state);
+    const leadChoice = c1.find((c) => c.text.includes("strip mall clinic"));
+    expect(leadChoice).toBeDefined();
+    handleDialogueCh2(ctx1, p1, courier, leadChoice.text);
+    expect(p1.state.ch2Q).toBe(2);
+    expect(p1.state.ch2Yellow).toBe(1);
+
+    // Out-of-order Stage 3 completion: Gamma OS archive at Stage 1 + IS LAB decode + clinic note
+    const p = makePlayer({ ch2Q: 1, skl: Array(13).fill(35).join(",") });
+    p.state.os = { id: "GAMMA-DB-01", host: "GAMMA-DB-01", user: "admin", app: "files", sel: "" };
+    const ctx = makeCtx(p, { "GAMMA-DB-01": { id: "GAMMA-DB-01", feetPosition: { x: 0, y: 0, z: 0 }, state: {} } });
+    onInput(ctx, { pressed: { os: true }, actionData: { os: { k: "file", v: "sunderland_intake.txt" } } });
+    expect(p.state.ch2Archive).toBe(1);
+    expect(p.state.knowsMike).toBe(1);
+    expect(p.state.ch2Q).toBe(1);
+
+    const bench = { id: "l11-lab-bench", feetPosition: { x: -25.2, y: 1.02, z: 34.85 }, state: { kind: "lab-signal-bench" } };
+    dropEars.press({ ...ctx, self: bench }, { by: p.id });
+    expect(p.state.ch2SignalDecoded).toBe(1);
+
+    // Now picking up Dina's clinic note advances straight past Stage 3 to Stage 4
+    setCh2Step(ctx, p.state, 3, "Recovered Dina's clinic dead-drop");
+    expect(p.state.ch2Q).toBe(4);
+  });
+
+  test("Stage 3 new alternate archive routes via Vance [Speech 45] and Jo [Speech 40 / $25] with M.E.G. neutral", () => {
+    // Vance [Speech 45] mirrored intake index
+    const pv = makePlayer({ ch2Q: 3, ch2SignalDecoded: 1, skl: Array(13).fill(35).join(",") });
+    const ctxv = makeCtx(pv);
+    ctxv.random = () => 0;
+    const vance = { id: "npc/l11-meg-agent-vance", state: {} };
+    const vc = ch2Choices(ctxv, vance, pv.state).find((c) => c.text.includes("[Speech 45]"));
+    expect(vc).toBeDefined();
+    handleDialogueCh2(ctxv, pv, vance, vc.text);
+    expect(pv.state.ch2Archive).toBe(1);
+    expect(pv.state.knowsMike).toBe(1);
+    expect(pv.state.ch2Q).toBe(4);
+
+    // Jo [Speech 40] and $25 bribe when M.E.G. is neutral
+    const pj = makePlayer({ ch2Q: 3, skl: Array(13).fill(35).join(","), cents: 3000 });
+    const ctxj = makeCtx(pj);
+    ctxj.random = () => 0;
+    const jo = { id: "npc/hub-amber-jo", state: {} };
+    const jcList = ch2Choices(ctxj, jo, pj.state);
+    expect(jcList.some((c) => c.text.includes("[Speech 40]"))).toBe(true);
+    const payChoice = jcList.find((c) => c.text.includes("$25"));
+    expect(payChoice).toBeDefined();
+    handleDialogueCh2(ctxj, pj, jo, payChoice.text);
+    expect(pj.state.cents).toBe(500);
+    expect(pj.state.ch2Archive).toBe(1);
+    expect(pj.state.knowsMike).toBe(1);
+  });
+
+  test("failed RNG skill checks lock out retry scumming while preserving deterministic fallbacks", () => {
+    // Pip [Repair 35] failure locks Retry while leaving Science 35 open
+    const pPip = makePlayer({ ch2Q: 3, ch2EchoQ: 2 });
+    const ctxPip = makeCtx(pPip);
+    ctxPip.random = () => 0.1;
+    const pip = { id: "npc/gamma-pip", state: {} };
+    const pipRep = ch2Choices(ctxPip, pip, pPip.state).find((c) => c.text.includes("[Repair 35]"));
+    expect(pipRep).toBeDefined();
+    handleDialogueCh2(ctxPip, pPip, pip, pipRep.text);
+    expect(pPip.state.ch2PipRepTried).toBe(1);
+    expect(pPip.state.ch2Relay).toBeUndefined();
+    const afterPip = ch2Choices(ctxPip, pip, pPip.state);
+    expect(afterPip.some((c) => c.text.includes("[Repair 35]"))).toBe(false);
+    expect(afterPip.some((c) => c.text.includes("[Science 35]"))).toBe(true);
+
+    // Janitor (l11-walker-3) [Barter 35] failure locks Retry while leaving $30 cash buy open
+    const pJan = makePlayer({ ch2EchoQ: 2, cents: 4000 });
+    const ctxJan = makeCtx(pJan);
+    ctxJan.random = () => 0.1;
+    const jan = { id: "npc/l11-walker-3", state: {} };
+    const janBar = ch2Choices(ctxJan, jan, pJan.state).find((c) => c.text.includes("[Barter 35]"));
+    expect(janBar).toBeDefined();
+    handleDialogueCh2(ctxJan, pJan, jan, janBar.text);
+    expect(pJan.state.ch2JanBarTried).toBe(1);
+    const afterJan = ch2Choices(ctxJan, jan, pJan.state);
+    expect(afterJan.some((c) => c.text.includes("[Barter 35]"))).toBe(false);
+    expect(afterJan.some((c) => c.text.includes("$30"))).toBe(true);
+
+    // IS LAB temp [Speech 40] failure locks Retry
+    const pW2 = makePlayer({ ch2EchoQ: 2 });
+    const ctxW2 = makeCtx(pW2);
+    ctxW2.random = () => 0.1;
+    const w2 = { id: "npc/l11-walker-2", state: {} };
+    const w2Choice = ch2Choices(ctxW2, w2, pW2.state).find((c) => c.text.includes("[Speech 40]"));
+    expect(w2Choice).toBeDefined();
+    handleDialogueCh2(ctxW2, pW2, w2, w2Choice.text);
+    expect(pW2.state.ch2Walker2Tried).toBe(1);
+    expect(ch2Choices(ctxW2, w2, pW2.state).some((c) => c.text.includes("[Speech 40]"))).toBe(false);
+
+    // Vance [Speech 45] failure locks Retry
+    const pVan = makePlayer({ ch2Q: 3 });
+    const ctxVan = makeCtx(pVan);
+    ctxVan.random = () => 0.1;
+    const van = { id: "npc/l11-meg-agent-vance", state: {} };
+    const vanChoice = ch2Choices(ctxVan, van, pVan.state).find((c) => c.text.includes("[Speech 45]"));
+    expect(vanChoice).toBeDefined();
+    handleDialogueCh2(ctxVan, pVan, van, vanChoice.text);
+    expect(pVan.state.ch2VanceArchiveTried).toBe(1);
+    expect(ch2Choices(ctxVan, van, pVan.state).some((c) => c.text.includes("[Speech 45]"))).toBe(false);
+  });
+
+  test("Frequency Lock alternates: IS LAB temp locker relay and Repair 20 + Fuse/Wire jumper", () => {
+    // l11-walker-2 spare locker relay
+    const p1 = makePlayer({ ch2Q: 3, ch2EchoQ: 2, skl: Array(13).fill(35).join(",") });
+    const ctx1 = makeCtx(p1);
+    ctx1.random = () => 0;
+    const w2 = { id: "npc/l11-walker-2", state: {} };
+    const w2Choice = ch2Choices(ctx1, w2, p1.state).find((c) => c.text.includes("[Speech 40]"));
+    expect(w2Choice).toBeDefined();
+    handleDialogueCh2(ctx1, p1, w2, w2Choice.text);
+    expect(p1.state.ch2Relay).toBe(1);
+    expect(p1.state.ch2EchoQ).toBe(3);
+
+    // Manual field jumper [Repair 20 + 1 Fuse, 2 Wire]
+    const p2 = makePlayer({ ch2Q: 3, ch2EchoQ: 2, skl: "0,0,0,0,0,0,0,5,0,0,0,0,0", scrap: { fuse: 1, wire: 3 } });
+    const ctx2 = makeCtx(p2);
+    const bench = { id: "l11-lab-bench", feetPosition: { x: -25.2, y: 1.02, z: 34.85 }, state: { kind: "lab-signal-bench" } };
+    dropEars.press({ ...ctx2, self: bench }, { by: p2.id });
+    expect(p2.state.ch2SignalDecoded).toBe(1);
+    expect(p2.state.ch2EchoDone).toBe(1);
+    expect(p2.state.scrap.fuse).toBeUndefined();
+    expect(p2.state.scrap.wire).toBe(1);
+  });
+
+  test("Wait for the Tone alternates: Survival 30 / Hardiness 6 satchel bypass and Vance turn-in", () => {
+    const satchelObj = { id: "l11-sunderland-satchel", feetPosition: { x: -30.9, y: 0.1, z: 8.7 }, state: { kind: "sunderland-satchel" } };
+
+    // Survival 30 bypass (15 base + 20 = 35 survival)
+    const pSurv = makePlayer({ skl: "0,0,0,0,0,0,0,0,0,0,0,20,0" });
+    dropEars.press({ ...makeCtx(pSurv), self: satchelObj }, { by: pSurv.id });
+    expect(pSurv.state.ch2RunnerData).toBe(1);
+    expect(pSurv.state.ch2ToneQ).toBe(3);
+
+    // Hardiness 6 pry + turn-in at Vance
+    const pHard = makePlayer({ attr: "6,5,5,5,5,5,5" });
+    const ctxHard = makeCtx(pHard);
+    dropEars.press({ ...ctxHard, self: satchelObj }, { by: pHard.id });
+    expect(pHard.state.ch2RunnerData).toBe(1);
+    expect(pHard.state.ch2ToneQ).toBe(3);
+
+    const vance = { id: "npc/l11-meg-agent-vance", state: {} };
+    const turnIn = ch2Choices(ctxHard, vance, pHard.state).find((c) => c.text.includes("stride log"));
+    expect(turnIn).toBeDefined();
+    handleDialogueCh2(ctxHard, pHard, vance, turnIn.text);
+    expect(pHard.state.ch2ToneDone).toBe(1);
+    expect(pHard.state.ch2Prep).toBe(1);
+  });
+
+  test("Level ! corridor clip past corridorStartZ without lrunIntroDone forces intro instead of skipping", async () => {
+    const { tick: lrunSimTick } = await import("../places/levelrun/sim.js");
+    const p = makePlayer({ ch2Q: 5 });
+    p.feetPosition = { x: 0, y: 0.1, z: -10 }; // Past CORRIDOR.corridorStartZ (-5.5) without lrunIntroDone
+    const ctx = makeCtx(p, { "lrun-intake-floor": { id: "lrun-intake-floor" } });
+    ctx.place.state.seeded = 1;
+    ctx.place.players = [p];
+    lrunSimTick(ctx);
+    expect(p.state.lrunCut?.phase).toBe("intro");
+    expect(ctx.place.state.chase.active).toBe(false);
   });
 });

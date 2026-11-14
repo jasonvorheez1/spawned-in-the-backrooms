@@ -366,7 +366,7 @@ export function tick(ctx) {
       continue;
     }
 
-    if (!ps.lrunIntroDone && !ps.lrunCut && (p.feetPosition?.z ?? 0) > CORRIDOR.corridorStartZ) {
+    if (!ps.lrunIntroDone && !ps.lrunCut) {
       chase.active = false;
       chase.gateOpen = false;
       chase.hordeZ = 4.5;
@@ -375,7 +375,7 @@ export function tick(ctx) {
     }
 
     // Active runner in corridor
-    if (!ps.lrunCut && (p.feetPosition?.z ?? 0) <= CORRIDOR.corridorStartZ) {
+    if (!ps.lrunCut && ps.lrunIntroDone && (p.feetPosition?.z ?? 0) <= CORRIDOR.corridorStartZ) {
       // Final collapse & Phoebe rescue threshold
       if (p.feetPosition.z <= CORRIDOR.collapseZ) {
         chase.active = false;

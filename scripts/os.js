@@ -143,11 +143,16 @@ function act(ctx, s, d) {
   if (d.k === 'file') {
     const fname = String(d.v || '')
     s.os = { ...os, sel: fname }
-    if (fname === 'sunderland_intake.txt' && os.user === 'admin' && (s.ch2Q ?? 0) === 3 && !s.ch2Archive) {
+    if (fname === 'sunderland_intake.txt' && os.user === 'admin' && !s.ch2Done && !s.ch2Archive) {
       s.ch2Archive = 1
       s.knowsMike = 1
       maybeUnlockStage4(ctx, s)
-      note(ctx, s, s.ch2SignalDecoded ? 'Base Gamma intake record confirmed: red hospital door unlocked.' : 'Gamma intake record confirmed (Mike Sunderland). Decode IS LAB bench in Level 11.')
+      const msg = (s.ch2Q ?? 0) >= 4
+        ? 'Base Gamma intake record confirmed: red hospital door unlocked.'
+        : (s.ch2Q ?? 0) === 3
+          ? 'Gamma intake record confirmed (Mike Sunderland). Decode IS LAB bench in Level 11.'
+          : 'Gamma intake record logged early (Mike Sunderland).'
+      note(ctx, s, msg)
     }
     return
   }

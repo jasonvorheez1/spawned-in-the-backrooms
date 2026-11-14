@@ -103,13 +103,28 @@ export const ears = {
         };
         return;
       }
+      if ((sk.repair ?? 0) >= 20 && (w.scrap?.fuse ?? 0) >= 1 && (w.scrap?.wire ?? 0) >= 2) {
+        w.scrap.fuse = Math.max(0, (w.scrap.fuse ?? 0) - 1);
+        w.scrap.wire = Math.max(0, (w.scrap.wire ?? 0) - 2);
+        if (!w.scrap.fuse) delete w.scrap.fuse;
+        if (!w.scrap.wire) delete w.scrap.wire;
+        ctx.emit("screenFlash", { color: "#b6ffd8", duration: 0.35, intensity: 0.45 }, { audience: { player: who.id } });
+        completeCh2Echo(ctx, w, "Jumper-wired IS LAB bench [Repair 20 + 1 Fuse, 2 Wire]: 400 Hz carrier locked (+120 XP, +$65.00)");
+        w.sub = {
+          who: "IS LAB SIGNAL BENCH",
+          t: "[Repair 20 + 1 Fuse, 2 Wire] You clip a fresh fuse across the scorched terminal and bridge the bus with two strips of salvage wire. The needle jumps to 400 hertz and pins the red door behind the strip mall.",
+          at: now,
+          d: 5800,
+        };
+        return;
+      }
       heard(ctx, { clip: CLIP_LOCKED, position: pos, volume: 0.75, maxDistance: 10 });
-      setCh2EchoStep(ctx, w, 2, "IS LAB bench shorted: need a waterproof relay or [Science 40 / Repair 35]");
+      setCh2EchoStep(ctx, w, 2, "IS LAB bench shorted: need a relay, [Science 40 / Repair 35], or [Repair 20 + 1 Fuse, 2 Wire]");
       w.sub = {
         who: "IS LAB SIGNAL BENCH",
-        t: "The splitter relay is scorched black inside its resin sleeve. Bypass needs [Science 40] or [Repair 35], otherwise grab a waterproof relay from Level 34's East sewer, Pip at Base Gamma, or Level 11's night janitor.",
+        t: "The splitter relay is scorched black inside its resin sleeve. Bypass needs [Science 40], [Repair 35], or [Repair 20] with 1 Fuse and 2 Wire; otherwise get a waterproof relay from Level 34's East sewer, Pip, the night janitor, or IS LAB's spare locker.",
         at: now,
-        d: 6200,
+        d: 6400,
       };
       return;
     }
@@ -153,25 +168,37 @@ export const ears = {
         };
         return;
       }
-      const obs = attrsOf(w).l ?? 5;
-      const lockpick = skillsOf(w).lockpick ?? 0;
-      if (!w.ch2CamLogged && obs < 6 && lockpick < 30) {
+      const obs = attrsOf(w).o ?? 5;
+      const hard = attrsOf(w).h ?? 5;
+      const sk = skillsOf(w);
+      const lockpick = sk.lockpick ?? 0;
+      const survival = sk.survival ?? 0;
+      if (!w.ch2CamLogged && obs < 6 && lockpick < 30 && survival < 30 && hard < 6) {
         heard(ctx, { clip: CLIP_LOCKED, position: pos, volume: 0.65, maxDistance: 10 });
         w.sub = {
           who: "WEDGED CANVAS SATCHEL",
-          t: "A canvas courier bag is jammed deep behind the wet alley pallets with a rusted buckle clasp. Needs [Observation 6], [Lockpick 30], or Ivy's Camera 4 log at Base Gamma to know what to pull out.",
+          t: "A canvas courier bag is jammed deep behind the wet alley pallets with a rusted buckle clasp. Needs [Observation 6], [Lockpick 30], [Survival 30], [Hardiness 6], or Ivy's Camera 4 log at Base Gamma.",
           at: now,
           d: 5800,
         };
         return;
       }
+      const methodTag = w.ch2CamLogged
+        ? "Camera 4 Log"
+        : obs >= 6
+          ? "Observation 6"
+          : lockpick >= 30
+            ? "Lockpick 30"
+            : survival >= 30
+              ? "Survival 30"
+              : "Hardiness 6";
       heard(ctx, { clip: CLIP_CACHE, position: pos, volume: 0.85, maxDistance: 12 });
       ctx.emit("screenFlash", { color: "#d8f0ff", duration: 0.3, intensity: 0.35 }, { audience: { player: who.id } });
       w.ch2RunnerData = 1;
       w.knowsMike = 1;
       w.sub = {
         who: "MIKE SUNDERLAND'S FIELD SATCHEL",
-        t: "Sewn luggage tag reads 'M. SUNDERLAND'. Inside sits a sweat-stained tally sheet marking a steady 134 BPM breath count, gurney heights, and taped spare dressings.",
+        t: `[${methodTag}] Sewn luggage tag reads 'M. SUNDERLAND'. Inside sits a sweat-stained tally sheet marking a steady 134 BPM breath count, gurney heights, and taped spare dressings.`,
         at: now,
         d: 6200,
       };
@@ -179,7 +206,7 @@ export const ears = {
         completeCh2Tone(ctx, w);
       } else {
         if (!w.ch2ToneQ) w.ch2ToneQ = 2;
-        setCh2ToneStep(ctx, w, 3, "Recovered Mike Sunderland's field satchel: take the pacing log to Ivy at Base Gamma or Kael on 11th Ave");
+        setCh2ToneStep(ctx, w, 3, `[${methodTag}] Recovered Mike Sunderland's satchel: take the pacing log to Ivy, Kael, or Vance`);
       }
       return;
     }
