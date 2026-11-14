@@ -1,0 +1,65 @@
+# Level 109, The Doctors' outpost. Short, human. Nobody knows your name.
+l109-halloran:
+  hi: "Another walk-in. Sit if you're bleeding, stand if you're not."
+  back: ["You again. Still in one piece, good.", "Back. Wipe your feet."]
+  warm: "Our favourite stranger. Don't let it go to your head."
+  cold: "Clinic's open. That's about all the warmth I have."
+  bye: "Keep the doors shut behind you."
+  walk: "I'll be here. I'm always here."
+  ask:
+    - q: "What is this place?"
+      a: "A hospital nobody built. Clean halls, unmarked doors, and something behind half of them. We patch people up and keep the lids on."
+    - q: "Need a hand with anything?"
+      a: "Ask me again in a minute, I'm counting gauze."
+    - q: "About the open door."
+      a: "Which one. Oh. That one. Talk."
+    - q: "Any way out of here?"
+      a: "Not that I hand out to strangers. Earn a little trust first."
+l109-petra:
+  hi: "Triage. Where does it hurt and can you pay."
+  back: ["Back for more stitches?", "Sit. Arm out."]
+  warm: "You. Fine. You get the good tape."
+  cold: "Cash first, sympathy never."
+  bye: "Don't pick at it."
+  walk: "Next."
+  ask:
+    - q: "Patch me up. (15 backdollars)"
+      a: "Hold still. There. Breathe slower, you're scaring the beds."
+      fail: "Fifteen. Come back with fifteen."
+      do: l109heal
+    - q: "Buy a first aid kit. (20 backdollars)"
+      a: "One kit. Don't waste it on splinters."
+      fail: "You're short. Cage stays locked."
+      do: l109buy:firstaid
+    - q: "Buy a bandage. (6 backdollars)"
+      a: "Bandage. Wrap it tight, not pretty."
+      fail: "Six. Not five. Six."
+      do: l109buy:bandage
+    - q: "Who are you people?"
+      a: "The Doctors. Medical group. We stayed when everyone else walked."
+l109-doctor:
+  hi: "Mind the bed rails, they bite."
+  back: ["Rounds. Always rounds.", "You look better than bed three."]
+  bye: "Wash your hands."
+  walk: "Don't block the aisle."
+  ask:
+    - q: "How are the patients?"
+      a: "Stable. Boring. Boring is my favourite word."
+    - q: "What's behind the other doors?"
+      a: "Check the whiteboard. If it says do not open, I mean it in capital letters."
+l109-guard:
+  hi: "M.E.G. Keep moving, keep it calm."
+  back: ["Still walking around? Bold.", "Hey. You good?"]
+  bye: "Stay out of the red rooms."
+  walk: "Move along."
+  ask:
+    - q: "Why is M.E.G. here?"
+      a: "Doctors heal, we watch the doors. Fair trade."
+    - q: "Seen anything loose?"
+      a: "Down the hall west, six doors in. Somebody got curious. We heard it from here."
+l109-patient:
+  hi: "Mm. Is it morning?"
+  bye: "Sleep sounds good."
+  ask:
+    - q: "How are you feeling?"
+      a: "Like a tray table. They said I'll walk tomorrow."
