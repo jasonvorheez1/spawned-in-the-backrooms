@@ -1,5 +1,6 @@
 import { esc, uiPrefsOf, SCALE_LABELS } from './lib/ui-kit.js'
 import { PLACE_NAMES } from './lib/quests.js'
+import { OPTS, PRESETS, cleanPick } from './lib/run-opts.js'
 
 const CSS = `<style>
 #mm{position:fixed;inset:0;pointer-events:auto;background:linear-gradient(90deg,#0b0e0be8 0%,#0b0e0b70 48%,#0b0e0b00 82%),linear-gradient(0deg,#0b0e0bbd,transparent 46%);font-family:var(--ui-font,'Segoe UI',Arial,sans-serif);color:#eeeadd}
@@ -76,6 +77,45 @@ function controlsView(ctx) {
   </div>`
 }
 
+// New Expedition setup (Shelly Nov 14): presets, then every option row
+function newGameView(ctx, player) {
+  const s = player.state ?? {}, pick = cleanPick(s.newRun), confirm = !!s.newRun?.confirm
+  const btn = (label, on, act) => `<button class="${on ? 'on' : ''}" onclick="sendAction('mmenu',${act})">${esc(label)}</button>`
+  const presetOn = (v) => OPTS.every((o) => v[o.key] === pick[o.key])
+  return `<div class="mm-sub" role="region" aria-label="New Expedition">
+    <h2>New Expedition</h2>
+    <div class="mm-row"><div><strong>Preset</strong><small>Start from one, then change anything below</small></div>
+      <div class="mm-seg">${Object.entries(PRESETS).map(([k, p]) => btn(p.label, presetOn(p.v), `{k:'preset',v:'${k}'}`)).join('')}</div></div>
+    ${OPTS.map((o) => `<div class="mm-row"><div><strong>${esc(o.label)}</strong><small>${esc(o.hint)}</small></div>
+      <div class="mm-seg">${o.vals.map(([v, lbl]) => btn(lbl, pick[o.key] === v, `{k:'opt',key:'${o.key}',v:'${v}'}`)).join('')}</div></div>`).join('')}
+    ${confirm ? `<p class="mm-meta" style="color:#e8b46a">This replaces your current expedition. Save it in the Save Manager first if you want it back.</p>
+      <button class="mm-primary" onclick="sendAction('mmenu',{k:'begin',sure:true},{relockPointer:true})">Replace and begin<span aria-hidden="true">→</span></button>`
+      : `<button class="mm-primary" onclick="sendAction('mmenu',{k:'begin'},{relockPointer:true})">Begin<span aria-hidden="true">→</span></button>`}
+    <button class="mm-back" onclick="sendAction('mmenu',{k:'view',v:''})">← Back</button>
+  </div>`
+}
+
+// Save Manager: five slots in the game's database
+function savesView(ctx, player) {
+  const s = player.state ?? {}, list = s.saveList ?? [], by = Object.fromEntries(list.map((r) => [r.slot, r]))
+  const when = (at) => { try { return new Date(at).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) } catch { return '' } }
+  const rows = [1, 2, 3, 4, 5].map((n) => {
+    const r = by[n]
+    const name = r ? `${esc(PLACE_NAMES[r.place] ?? r.place ?? 'Level 0')} · Level ${r.level ?? 1}` : 'Empty'
+    return `<div class="mm-row"><div><strong>Slot ${n} · ${name}</strong><small>${r ? esc(when(r.at)) : 'Nothing saved here yet'}</small></div>
+      <div class="mm-seg">
+        <button onclick="sendAction('mmenu',{k:'save',slot:${n}})">Save</button>
+        ${r ? `<button onclick="sendAction('mmenu',{k:'load',slot:${n}},{relockPointer:true})">Load</button><button onclick="sendAction('mmenu',{k:'del',slot:${n}})">Delete</button>` : ''}
+      </div></div>`
+  }).join('')
+  return `<div class="mm-sub" role="region" aria-label="Save Manager">
+    <h2>Save Manager</h2>
+    ${rows}
+    <p class="mm-meta">${s.saveMsg?.text ? esc(s.saveMsg.text) : 'Your current expedition also saves itself as you play.'}</p>
+    <button class="mm-back" onclick="sendAction('mmenu',{k:'view',v:''})">← Back</button>
+  </div>`
+}
+
 export function mainMenu(ctx, player, launch = false) {
   const s = player?.state ?? {}
   const pause = !launch && s.menuKind === 'pause'
@@ -95,6 +135,10 @@ export function mainMenu(ctx, player, launch = false) {
   let content = ''
   if (view === 'settings') {
     content = `<div class="col">${settingsView(ctx, player, prefs)}</div>`
+  } else if (view === 'newgame') {
+    content = `<div class="col">${newGameView(ctx, player)}</div>`
+  } else if (view === 'saves') {
+    content = `<div class="col">${savesView(ctx, player)}</div>`
   } else if (view === 'controls') {
     content = `<div class="col">${controlsView(ctx)}</div>`
   } else {
@@ -102,6 +146,8 @@ export function mainMenu(ctx, player, launch = false) {
       <h1>The Backrooms</h1>
       <div class="mm-subline">${pause ? `Paused · ${esc(placeName)} · Level ${s.level ?? 1}` : returning ? `Level ${s.level ?? 1} · ${esc(placeName)}` : 'Level 0 — The Lobby'}</div>
       <button class="mm-primary" onclick="sendAction('mmenu',{k:'${k}'},{relockPointer:true})">${primaryLabel}<span aria-hidden="true">→</span></button>
+      ${pause ? '' : `<button onclick="sendAction('mmenu',{k:'view',v:'newgame'})">${returning ? 'New Expedition' : 'Custom Expedition'}</button>`}
+      <button onclick="sendAction('mmenu',{k:'view',v:'saves'})">Save Manager</button>
       <button onclick="sendAction('mmenu',{k:'view',v:'settings'})">Settings</button>
       <button onclick="sendAction('mmenu',{k:'view',v:'controls'})">Controls & Guide</button>
       ${pause ? `<button onclick="sendAction('mmenu',{k:'title'})">Return to Title</button>` : ''}

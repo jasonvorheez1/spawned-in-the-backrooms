@@ -4,6 +4,7 @@
 // Now each occupied place keeps a queue of ids, refilled when it runs dry, and a tick restyles a few.
 export const cadence = "250ms";
 import { setStyle, restyle } from "./scripts/lib/critter-model.js";
+import { noNpcs } from "./scripts/lib/run-opts.js";
 const PER_TICK = 40; // objects looked at per tick across all places (her pick: ~160/s, a 550-thing level in ~4 s)
 const queues = new Map(); // place id -> { ids, ward } ; this machine's working memory, not shared state
 function refill(pl) {
@@ -11,6 +12,13 @@ function refill(pl) {
   const all = Object.keys(pl.objects ?? {}), ward = new Set();
   for (const k of all) { const i = k.indexOf("/critter-ward-"); if (i > 0) ward.add(k.slice(0, i)); }
   return { ids: all.filter((id) => !skip.has(id) && !id.startsWith("player/")), ward };
+}
+const npcSweep = new Map(); // place id -> last sweep ms (this machine's)
+// Shelly Nov 14: an expedition started with NPCs off clears people (tag "npc") from the places its player stands in; monsters stay
+function sweepNpcs(ctx, id, pl) {
+  if (!(pl.players ?? []).some((p) => noNpcs(p.state))) return;
+  const now = ctx.now(); if (now - (npcSweep.get(id) ?? 0) < 1500) return; npcSweep.set(id, now);
+  for (const r of ctx.query({ tags: ["npc"], place: id })) if (!r.id.startsWith("player/")) ctx.destroy(r.id);
 }
 export function tick(ctx) {
   setStyle(ctx.world.state.bodyStyle); // this machine's spawns follow the BODIES pick
@@ -20,6 +28,7 @@ export function tick(ctx) {
   let budget = PER_TICK, n = 0;
   for (const id of live) {
     const pl = ctx.world.places[id]; if (!pl) continue;
+    sweepNpcs(ctx, id, pl);
     let q = queues.get(id);
     if (!q || !q.ids.length) { q = refill(pl); queues.set(id, q); }
     while (q.ids.length && budget > 0) {

@@ -1,6 +1,7 @@
 import { xpNeed, migrateXp } from './lib/progression.js'
 export { xpNeed } from './lib/progression.js'
 import { migrate, wakePlace, wakeLog, canSaveHere } from "./lib/save.js"
+import { sanityMul } from "./lib/run-opts.js"
 import { CORRIDOR, agilityProfile, hitObstacle } from './lib/levelrun-mechanics.js'
 import { startRescueCut } from './lib/levelrun-cut.js'
 import { layout as layout9, zoneAt as zoneAt9 } from './lib/level9.js'
@@ -1804,7 +1805,7 @@ function tickStats(ctx, t, moving) {
   { const mb = musicNear(ctx); if (mb) drain = Math.min(drain, 0) - mb } // a playing music box steadies whoever stays near it // a set-down Reality Freshener holds the room still (scripts/lib/remodel-quest.js)
   if (ctx.self.place === 'level5' && s.l5room && zone.slice(3) === s.l5room && ctx.now() < (s.l5until ?? 0)) drain = -0.6 // a rented Homely Hotel suite: your own room, the hotel can't reach you (scripts/l5-resident.js)
   if (drain > 0 && ctx.now() < (s.blueUntil ?? 0)) drain = 0 // blue almond water: the halls can't get in
-  s.sanity -= drain * (drain > 0 ? derived(s).drain : 1) * t
+  s.sanity -= drain * (drain > 0 ? derived(s).drain * sanityMul(s) : 1) * t // sanityMul: the expedition's Sanity Drain pick
   if (w.ledge) s.sanity += L.ledgeRest.sanity * t
   const rest = !!w.ledge, wet = !!w.wet
   if (s.onLedge !== rest) s.onLedge = rest

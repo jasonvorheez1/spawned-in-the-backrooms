@@ -5,6 +5,7 @@
 import { canOpen, openWrist } from './lib/screen.js'
 import { heard } from "./lib/hear.js";
 import C from './lib/data/craft.yml'
+import { needsMul } from './lib/run-opts.js'
 import L21H from './lib/data/level21.yml'
 import B from './lib/data/breakables.yml'
 import { SKILL_NAMES as SKN } from './lib/skill-check.js'
@@ -65,7 +66,7 @@ export function update(ctx, dt) {
   const poll=m.acc>=.5
   if(poll){m.acc=0;if(s.craftOpen==='bench'&&!liveBench(ctx,s)){s.craftOpen='';s.craftBench=''}}
   if (ctx.self.place === 'level6' || ctx.self.place === 'bonus') { m.h = s.hunger ?? m.h; m.t = s.thirst ?? m.t; return } // Shelly: no hunger or thirst drain in Level 6
-  const mul = (s.sprinting ? N.sprintMul : 1) * (ctx.self.place === 'level21' ? L21H.heat : 1) // Level 2.1 is hot and humid
+  const mul = needsMul(s) * (s.sprinting ? N.sprintMul : 1) * (ctx.self.place === 'level21' ? L21H.heat : 1) // Level 2.1 is hot and humid · needsMul: the expedition's Hunger & Thirst pick
   // the bars follow the state (eating and drinking write it from scripts/player.js)
   if (s.hunger != null && Math.abs(s.hunger - Math.round(m.h)) > 1) m.h = s.hunger
   if (s.thirst != null && Math.abs(s.thirst - Math.round(m.t)) > 1) m.t = s.thirst
