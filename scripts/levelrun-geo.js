@@ -83,8 +83,8 @@ function hall(p) {
   for (const k of walls) {
     const W = WS[k], gs = (p.gaps ?? []).filter((g) => g.wall === k);
     for (const [s0, s1] of spans(W.len, gs)) {
-      C.albedo(p.clean ? TX.upper : TX.lower); C.color(T.lower); C.roughness(p.clean ? 0.85 : 0.55); wq(W, s0, s1, 0, 1.15, 0);
-      C.albedo(TX.upper); C.color(T.upper); C.roughness(0.85); wq(W, s0, s1, 1.15, ch, 0);
+      C.albedo(p.clean ? (p.wallTex ?? TX.upper) : TX.lower); C.color(T.lower); C.roughness(p.clean ? 0.85 : 0.55); wq(W, s0, s1, 0, 1.15, 0);
+      C.albedo(p.wallTex ?? TX.upper); C.color(T.upper); C.roughness(0.85); wq(W, s0, s1, 1.15, ch, 0);
       C.albedo(TX.steel); C.color(T.rail); C.metalness(0.4); C.roughness(0.4);
       if (L <= 3 && p.clean) wbox(W, s0, s1, 0, 0.11, 0, 0.014, 0.004); // a plain skirting board
       else if (L <= 3) { wbox(W, s0, s1, 0, 0.12, 0, 0.018, 0.006); wbox(W, s0, s1, 1.13, 1.17, 0, 0.012, 0.004); // skirt, panel cap
@@ -97,7 +97,7 @@ function hall(p) {
     }
     for (const g of gs) { // door frames, ward plates, ajar voids
       const a = g.c - g.w / 2, b = g.c + g.w / 2, gh = g.h ?? 2.25;
-      wq(W, a - 0.09, b + 0.09, gh + 0.09, ch, 0); C.albedo(TX.upper); C.color(T.upper); wq(W, a - 0.09, b + 0.09, gh + 0.09, ch, 0); C.albedo(null);
+      wq(W, a - 0.09, b + 0.09, gh + 0.09, ch, 0); C.albedo(p.wallTex ?? TX.upper); C.color(T.upper); wq(W, a - 0.09, b + 0.09, gh + 0.09, ch, 0); C.albedo(null);
       if (g.kind !== "open" && g.kind !== "pass") { C.albedo(TX.steel); C.color(T.trim); C.metalness(0.5); C.roughness(0.45);
         wbox(W, a - 0.09, a, 0, gh + 0.09, -0.02, 0.06, 0.012); wbox(W, b, b + 0.09, 0, gh + 0.09, -0.02, 0.06, 0.012); wbox(W, a, b, gh, gh + 0.09, -0.02, 0.06, 0.012);
         C.metalness(0); C.albedo(null);

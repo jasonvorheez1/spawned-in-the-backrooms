@@ -7,7 +7,7 @@ import { penRoll, penLoad, penUnload, looseTick, doorOpen } from "../../scripts/
 import { spawnFoe } from "../../scripts/lib/l109-foes.js";
 import { buildRoom } from "../../scripts/lib/l109-rooms.js";
 export const cadence = "500ms";
-const GEO = "scripts/levelrun-geo.js", CARPET = "cdn/texture-light-grey-beige-office-carpet-tiles-worn.png";
+const GEO = "scripts/levelrun-geo.js", PLASTER = "cdn/texture-clean-smooth-cream-painted-plaster-wall.png", CARPET = "cdn/texture-light-grey-beige-office-carpet-tiles-worn.png";
 const AHEAD = 88, KEEP = 124, ROOM_IN = 46, ROOM_OUT = 84;
 const SEGS = new Map(), ROOMS = new Map(); // key -> what this machine laid
 let YAW = null; // the yaw that points a thing's local +X along world +x, +z, -x, -z (asked of the engine once, never assumed)
@@ -26,7 +26,7 @@ function laySeg(ctx, seed, c, k) {
   const key = segKey(c, k), id = "l109s-" + key, info = segInfo(seed, c, k), u0 = k * SEG, um = u0 + SEG / 2, mid = toWorld(c, um, 0), made = [id];
   const gaps = info.gaps.map((g) => ({ wall: wallName(c, g.side), c: wallS(c, g.side, 0, SEG), w: g.kind === "pass" ? W : DOOR_W, h: g.kind === "pass" ? CEIL : DOOR_H, kind: g.kind === "pass" ? "pass" : "thru" }));
   ctx.spawn(id, { tags: ["l109-seg"], feetPosition: mid, castShadow: false, physics: "none",
-    primitive: { kind: "scripted", script: GEO, params: { part: "hall", w: c.ax === "ns" ? W : SEG, d: c.ax === "ns" ? SEG : W, h: H, ceil: CEIL, walls: c.ax === "ns" ? "ew" : "ns", gaps, seed: (Math.abs(k) % 97) + 3 + c.i * 0.37, tone: "l109", clean: true, floorTex: CARPET } }, material: { pbr: true } });
+    primitive: { kind: "scripted", script: GEO, params: { part: "hall", w: c.ax === "ns" ? W : SEG, d: c.ax === "ns" ? SEG : W, h: H, ceil: CEIL, walls: c.ax === "ns" ? "ew" : "ns", gaps, seed: (Math.abs(k) % 97) + 3 + c.i * 0.37, tone: "l109", clean: true, floorTex: CARPET, wallTex: PLASTER } }, material: { pbr: true } });
   const kid = (n, spec) => { const i = `${id}-${n}`; ctx.spawn(i, { tags: ["l109-seg"], ...spec }); made.push(i); };
   kid("f", { ...INVIS, ...uvBox(c, u0, u0 + SEG, -W / 2 - (info.cross ? 0.4 : 0), W / 2 + (info.cross ? 0.4 : 0), -0.3, 0) });
   kid("c", { ...INVIS, ...uvBox(c, u0, u0 + SEG, -W / 2, W / 2, CEIL, CEIL + 0.2) });
@@ -40,7 +40,7 @@ function laySeg(ctx, seed, c, k) {
   for (const du of [-4, 4]) { // two troffers a segment; a dead one now and then
     const dead = rand(seed, 71, k * 2 + (du > 0 ? 1 : 0), c.i) < 0.06, p = toWorld(c, um + du, 0, CEIL - 0.03);
     kid("l" + du, { feetPosition: p, castShadow: false, primitive: { kind: "box", width: c.ax === "ns" ? 0.6 : 1.2, height: 0.03, depth: c.ax === "ns" ? 1.2 : 0.6 }, material: dead ? { color: "#8a887c" } : TROFFER,
-      ...(dead ? {} : { light: { kind: "point", color: "#fff3d6", intensity: 1.5, distance: 9, shadow: { enabled: false } } }) });
+      ...(dead ? {} : { light: { kind: "point", color: "#fff3d6", intensity: 2.2, distance: 11, shadow: { enabled: false } } }) });
   }
   SEGS.set(key, made);
 }
@@ -61,7 +61,7 @@ function layRoom(ctx, seed, info) {
   const c = info.c, id = "l109r-" + info.id, u0 = info.r * PITCH + 1, um = u0 + ROOM / 2, vNear = info.side * (W / 2 + WALL), vm = vNear + info.side * ROOM / 2, mid = toWorld(c, um, vm), made = [id];
   const pop = penRoll(ctx, info.id, () => roomPop(seed, info));
   const lit = info.type === "doctors" || info.type === "or_active" || info.type === "icu_active" || info.type === "supply", back = wallName(c, -info.side); // the room's wall that faces the corridor
-  ctx.spawn(id, { tags: ["l109-room"], feetPosition: mid, castShadow: false, physics: "none", primitive: { kind: "scripted", script: GEO, params: { part: "hall", w: ROOM, d: ROOM, h: 3.4, ceil: 3.0, walls: "nsew", gaps: [{ wall: back, c: wallS(c, -info.side, info.u - um, ROOM), w: DOOR_W, h: DOOR_H, kind: "thru" }], seed: Math.abs(info.r) % 89 + 5, tone: info.type === "biohazard" ? "warm" : "l109", clean: lit } }, material: { pbr: true } });
+  ctx.spawn(id, { tags: ["l109-room"], feetPosition: mid, castShadow: false, physics: "none", primitive: { kind: "scripted", script: GEO, params: { part: "hall", w: ROOM, d: ROOM, h: 3.4, ceil: 3.0, walls: "nsew", gaps: [{ wall: back, c: wallS(c, -info.side, info.u - um, ROOM), w: DOOR_W, h: DOOR_H, kind: "thru" }], seed: Math.abs(info.r) % 89 + 5, tone: info.type === "biohazard" ? "warm" : "l109", clean: lit, ...(lit ? { wallTex: PLASTER } : {}) } }, material: { pbr: true } });
   const sp = (key, spec) => { const i = `l109o-${info.id}-${key}`; ctx.spawn(i, { ...spec, tags: [...(spec.tags ?? []), "l109-room"] }); made.push(i); return i; };
   sp("f", { ...INVIS, ...uvBox(c, u0, u0 + ROOM, vNear, vNear + info.side * ROOM, -0.3, 0) });
   sp("c", { ...INVIS, ...uvBox(c, u0, u0 + ROOM, vNear, vNear + info.side * ROOM, 3.0, 3.2) });
