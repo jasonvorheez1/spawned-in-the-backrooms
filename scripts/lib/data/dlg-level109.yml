@@ -12,7 +12,7 @@ l109-halloran:
     - q: "What's behind the stairwell door back toward arrival?"
       a: "Sub-level B3. Old M.E.G. cache they walled off when things started climbing out of the morgue drawers. If you go down there, watch the metal door on your right."
     - q: "Why do I hear knocking on shut doors?"
-      a: "Because whatever's inside learned what a patient sounds like. Never open a door that knocks. Everything alive on this floor is already in our wards."
+      a: "Because whatever's inside learned what a patient sounds like. Never open a door that knocks."
 l109-petra:
   hi: "Triage. Where does it hurt and can you pay."
   back: ["Back for more stitches?", "Sit. Arm out."]
@@ -42,7 +42,7 @@ l109-doctor:
   walk: "Don't block the aisle."
   ask:
     - q: "How are the patients?"
-      a: "Stable. Boring. Boring is my favourite word."
+      a: "Bed two keeps dropping on us. The rest are boring. Boring is my favourite word."
     - q: "What's behind the other doors?"
       a: "Check the whiteboard. If it says do not open, I mean it in capital letters."
     - q: "Any tips for surviving the deep wings?"
@@ -56,7 +56,7 @@ l109-guard:
     - q: "Why is M.E.G. here?"
       a: "Doctors heal, we watch the doors. Fair trade."
     - q: "Seen anything loose?"
-      a: "Down the hall west, a couple hundred metres. Somebody got curious. We heard it from here."
+      a: "Heard a door go, west, a while back. Then nothing. Nobody's been to look and I can't leave this post."
     - q: "How do I deal with wanderers locked inside the wards?"
       a: "If a door's lockpicked open, they come out swinging. Trip a red corridor alarm or throw a wing breaker first if you need them looking the other way."
 l109-patient:
@@ -65,3 +65,9 @@ l109-patient:
   ask:
     - q: "How are you feeling?"
       a: "Like a tray table. They said I'll walk tomorrow."
+l109-triage:
+  hi: "...can't... get a breath..."
+  bye: "...don't go..."
+  ask:
+    - q: "Hang on. They're coming."
+      a: "...okay... okay..."

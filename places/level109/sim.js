@@ -15,6 +15,7 @@ import { wandererTick, denOf, denLock, denLoad, denWatch, denUnload } from "../.
 import { inside } from "../../scripts/lib/containment.js";
 import { buildB3, dressB3, placeLauncher, stairDoorAt, MORGUE, O as B3O, yawFor as yawB3 } from "../../scripts/lib/l109-b3.js";
 import { heard } from "../../scripts/lib/hear.js";
+import { outpostLife } from "../../scripts/lib/l109-life.js";
 export const cadence = "500ms";
 const GEO = "scripts/levelrun-geo.js", MED = "scripts/l109-med-geo.js", VEND_GLB = "/cdn/value.8a9d2399c1b6727a80b77276fb4a597af79117ddbaabe1b3d97ff2c61c5e37e9.glb";
 const PLASTER = "cdn/texture-clean-smooth-cream-painted-plaster-wall.png", CARPET = "cdn/texture-light-grey-beige-office-carpet-tiles-worn.png";
@@ -199,6 +200,7 @@ export function tick(ctx) {
   knockTick(ctx, players, rooms);
   for (const [id, r] of ROOMS) if (!rooms.has(id) || rooms.get(id).d > ROOM_OUT) { denUnload(ctx, r.info, (p) => inside(r.info.box, p)); penUnload(ctx, id, r.info.box); for (const o of r.made) ctx.destroy(o); ROOMS.delete(id); }
   looseTick(ctx, spawnFoe);
+  try { outpostLife(ctx); } catch (e) { ctx.log("l109 life", String(e)); } // the outpost's day: rounds, triage, alerts, door checks, chatter
   flushRooms(ctx);
 }
 function knockTick(ctx, players, rooms) {

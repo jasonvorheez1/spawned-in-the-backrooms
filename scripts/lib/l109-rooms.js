@@ -17,7 +17,7 @@ export function buildRoom(ctx, R) { if (["doctors", "or_active", "icu_active", "
   const f = BUILD[R.type]; if (!f) return;
   let h = 7; for (const ch of String(R.id)) h = (h * 31 + ch.charCodeAt(0)) % 100003;
   let n = 0; const K = { ctx, R, r: () => rand(R.seed, h, ++n, 5), n: 0 };
-  f(K); walls(K); if (R.abandoned) litter(K); else part(K, { part: "paper", r: 0.9, n: 6 }, -6 + K.r() * 12, 6 + K.r() * 18, K.r() * 360);
+  f(K); walls(K); if (R.abandoned) { litter(K); lastShift(K); } else part(K, { part: "paper", r: 0.9, n: 6 }, -6 + K.r() * 12, 6 + K.r() * 18, K.r() * 360);
 }
 // every room's walls say people worked here (Shelly Nov 14, "make the rooms more believable"): a clock stopped when the alarm went, a corkboard of memos about the outbreak
 const MEMOS = [["HAND HYGIENE", "saves lives. Wash 30 s."], ["ROOM 245", "ISOLATION. Do not enter."], ["RED SKIN? FEVER?", "Report to Dr. Fisher at once."], ["CULTURE LAB", "Samples to D. Sutton by 10:00"], ["SHIFT SWAP", "Brian, take my Thursday? -T"], ["NO-CLIP DRILL", "Nearest point: Flooded Cave."], ["LOST", "blue lanyard, ward 3"], ["LEVEL 5 ALERT", "Proceed to no-clip. Not a drill."]];
@@ -64,6 +64,10 @@ function part(K, p, a, b, yaw = 0, o = {}) { const R = K.R;
       { feetPosition: { x: 0, y: 1.08, z: 0.06 }, model: { id: "/cdn/value.c7be48b31c2cd67c9450ab65e5aefb0247347daa37708c20c6553c25dc2d94bb.glb", forward: "+z" }, layout: { box: { min: { x: -0.17, y: 0, z: -0.11 }, max: { x: 0.17, y: 0.44, z: 0.11 } } } }] });
   return R.sp(`${p.part}${K.n++}`, { feetPosition: R.at(a, b, (o.up ?? 0) + (o.tip ? TIP_LIFT : 0)), rotation: o.tip ? { yaw: R.yawIn + yaw, pitch: 88, roll: 0 } : { yaw: R.yawIn + yaw, pitch: 0, roll: 0 }, ...medLook(p, K.n),
     visibleRange: VR, castShadow: false, ...(o.solid ? { physics: "static" } : {}), ...(o.spec ?? {}) }); }
+// an abandoned department's last hour, told by its own furniture: the gurney they had wedged against the door, dragged aside when someone got out
+// (left of the door lane, never in it), the crash cart abandoned halfway to it, and its contents spilled where it was let go
+function lastShift(K) { put(K, "gurney", -12.6, 1.7, 8 + K.r() * 10); put(K, "crashcart", -4.6, 5.5 + K.r() * 3, 30 + K.r() * 40);
+  put(K, "box", -4.0, 7.4, K.r() * 360, { tip: true, solid: false }); part(K, { part: "paper", r: 1.2, n: 10 }, -5, 7.6, K.r() * 360); }
 function litter(K) { for (let i = 0; i < 4; i++) part(K, { part: "paper", r: 1.6, n: 14 }, -11 + K.r() * 22, 4 + K.r() * 22, K.r() * 360);
   for (let i = 0; i < 2; i++) put(K, "stackchair", -5 + K.r() * 16, 3 + K.r() * 4, K.r() * 360, { tip: true, solid: false }); }
 

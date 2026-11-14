@@ -10,9 +10,10 @@ export const QID = "keep-it-closed", QNAME = "Keep It Closed", BREACH = "ew0_6p"
 export const CHOICES = { take: "I'll deal with the breach.", truth: "A wanderer opened it. Here's their note.", cover: "Door was jammed. Nobody's fault." };
 // markers carry world points so they stand when the room is not streamed in
 export const Q = { key: "l109q", name: QNAME,
-  tips: { 1: "Find the open door about 220 m west along the outpost corridor", 2: "Kill what got out, or lure it back inside, then shut the door", 3: "Look inside for whoever opened it", 4: "Tell Dr. Halloran what happened" },
+  tips: { 1: "Corporal Ruiz heard a door go, west along the outpost corridor. Find it", 2: "Deal with what got out, or lead it back inside, then shut the door", 3: "Look inside for whoever opened it", 4: "Tell Dr. Halloran what happened" },
   marks: {} };
 const posOf = (p) => p?.feetPosition;
+const g0 = (ctx) => ctx.place.state.l109geo?.breachDoor;
 function geo(ctx) { // the breach room writes its own points when it loads; before that they come from the layout
   const st = ctx.place.state, g = st.l109geo ?? {};
   if (g.breachDoor && g.note && g.box) return g;
@@ -42,11 +43,15 @@ export function questTick(ctx) {
   const g = geo(ctx); if (!g) return;
   for (const p of ctx.place.players) {
     const q = p.state?.l109q ?? 0, f = posOf(p); if (!q || q >= 4 || !f) continue;
-    if (q === 1 && Math.hypot(f.x - g.breachDoor.x, f.z - g.breachDoor.z) < C.quest.reachRadius) step(ctx, p, 2, "The door stands open. Something got out.");
+    if (q === 1 && Math.hypot(f.x - g.breachDoor.x, f.z - g.breachDoor.z) < C.quest.reachRadius) {
+      const n = looseCount(ctx, BREACH); // the journal says what is actually out, counted from the books
+      step(ctx, p, 2, n ? "The door hangs open. Claw marks on the inside of the frame, and the room is quiet." : "The door hangs open. Whatever was in there isn't moving.");
+      if (n) { setQuest(p.state, QID, { name: QNAME, step: `${Q.tips[2]} (${n} still loose)`, mark: Q.marks[2] ?? null }); }
+    }
     else if (q === 2 && st.l109breachSet && st.pens?.[BREACH] && !doorOpen(ctx, BREACH)) {
       const r = route(ctx, g);
-      if (r === "clear") { p.state.l109route = "clear"; step(ctx, p, 3, "Door shut. Nothing left to put back."); }
-      else if (r === "lure") { p.state.l109route = "lure"; step(ctx, p, 3, "Door shut on them. They're back where they belong."); }
+      if (r === "clear") { p.state.l109route = "clear"; st.l109breachEnd = { route: "clear" }; step(ctx, p, 3, "Door shut. Nothing left to put back."); }
+      else if (r === "lure") { p.state.l109route = "lure"; st.l109breachEnd = { route: "lure" }; step(ctx, p, 3, "Door shut on them. Something thumps the inside, once."); }
     } else if (q === 3 && Math.hypot(f.x - g.note.x, f.z - g.note.z) < C.quest.noteRadius) { p.state.l109note = 1; step(ctx, p, 4, "A note: \"Sorry. I heard someone crying in there. It wasn't someone. Tell them I'm sorry. M.\""); }
   }
 }
@@ -55,7 +60,10 @@ const say = (reply, mood = "calm") => ({ reply, mood });
 export function handleDialogueQuest109(ctx, p, npc, text) {
   const s = p?.state; if (!s || npc?.state?.dlg !== "l109-halloran") return null;
   const t = String(text ?? ""), q = s.l109q ?? 0;
-  if (q === 0 && (t === ASK.take || t === CHOICES.take)) { step(ctx, p, 1, "New quest: Keep It Closed"); return say("Yes. Down this corridor west, about two hundred metres, someone opened a room. Five things walked out. Kill them or walk them home, I don't care which. Then shut the door."); }
+  if (q === 0 && (t === ASK.take || t === CHOICES.take)) { step(ctx, p, 1, "New quest: Keep It Closed");
+    const ruiz = ctx.getObject("l109o-ew0_13m-guard0"), w = ctx.place.state.l109geo?.outpost?.care?.west; // Ruiz shows you, rather than Halloran telling you
+    if (ruiz?.state && w && !ruiz.state.dead) { ruiz.state.rounds = [{ x: w.x, y: 0, z: w.z, dwell: 3600, act: null, look: g0(ctx) ? { x: g0(ctx).x, z: g0(ctx).z } : { x: w.x, z: w.z } }]; ruiz.state.ri = 0; ruiz.state.l109restoreAt = ctx.now() + 20000; ruiz.state.line = { t: "that way. heard it go about an hour ago. nobody's come back from looking because nobody's looked.", at: ctx.now(), d: 5200 }; ruiz.state.talkAt = ctx.now(); }
+    return say("Ruiz heard a door go west of here and nobody's been to look. I can't spare him. Go see. If it's open, it doesn't stay open."); }
   if (t === ASK.status) {
     if (q === 0) return say("You heard. Ask me if I need a hand and I'll tell you.");
     if (q < 4) return say(["", "Still open. Go.", "Shut it. Whatever it takes.", "Shut. Good. Someone opened it, though. Look around in there."][q]);
@@ -63,6 +71,7 @@ export function handleDialogueQuest109(ctx, p, npc, text) {
   }
   if (q === 4 && (t === CHOICES.truth || t === CHOICES.cover)) {
     const truth = t === CHOICES.truth; s.l109tell = truth ? "truth" : "cover";
+    ctx.place.state.l109breachEnd = { route: s.l109route ?? ctx.place.state.l109breachEnd?.route ?? "clear", tell: s.l109tell }; // the outpost's whiteboard and talk follow this
     if (!finishLevelQuest(ctx, p, Q.key, Q, { xp: C.quest.xp, cents: C.quest.cents, items: C.quest.items.flatMap(([id, n]) => Array(n).fill(id)), by: "doctors",
       rep: [["doctors", truth ? C.quest.repTruth : C.quest.repCover], ["karma", truth ? C.quest.karmaTruth : C.quest.karmaCover]], text: "Quest Completed: Keep It Closed" })) return say("We settled up already. Go easy.");
     s.l109exit = 1;

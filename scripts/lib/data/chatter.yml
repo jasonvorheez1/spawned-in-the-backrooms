@@ -217,3 +217,27 @@ barks:
   lowSanity: ["hey, look at me. breathe. don't listen to the walls.", "you've got that thousand-yard stare. drink some water, quick.", "hold it together. don't let the whispers in.", "eyes on me. you're still here."]
   relief: ["everybody still in one piece?", "hands are shaking. good to be alive.", "that was way too close.", "catch your breath, folks."]
   ambientIdle: ["boots are holding up, barely.", "quiet shift so far.", "wonder what the sky looks like today.", "need to check that latch later."]
+
+# Level 109, the Doctors' outpost (room ew0_13m). Picked by scripts/lib/l109-life.js from what has happened: _open while the west door
+# ew0_6p stands open, _clear/_lure once Keep It Closed ended that way, _stable for a few minutes after the triage scene settles.
+level109:
+  - [[l109o-ew0_13m-petra, "did someone move the supplies from ward c?"], [l109o-ew0_13m-guard1, "m.e.g. took them this morning."], [l109o-ew0_13m-petra, "all of them?"], [l109o-ew0_13m-guard1, "all the gauze. it's signed for, before you ask."]]
+  - [[l109o-ew0_13m-doc1, "bed two dropped again overnight."], [l109o-ew0_13m-doc2, "third time this week."], [l109o-ew0_13m-doc1, "i'm not writing 'third time' on a chart."], [l109o-ew0_13m-doc2, "write it anyway."]]
+  - [[l109o-ew0_13m-guard0, "you hear that? west end."], [l109o-ew0_13m-guard2, "the knocking?"], [l109o-ew0_13m-guard0, "it stopped."], [l109o-ew0_13m-guard2, "that's worse."]]
+  - [[l109o-ew0_13m-halloran, "who's on the kettle?"], [l109o-ew0_13m-petra, "you are. you always are."]]
+  - [[l109o-ew0_13m-doc2, "we're down to four kits in the cage."], [l109o-ew0_13m-halloran, "then nobody gets a kit for a splinter."]]
+  - [[l109o-ew0_13m-guard1, "corporal. the stairwell door by arrival."], [l109o-ew0_13m-guard0, "still welded?"], [l109o-ew0_13m-guard1, "still welded."], [l109o-ew0_13m-guard0, "then it's still not our problem."]]
+  - [[l109o-ew0_13m-doc1, "the ward across the hall had its lights go again."], [l109o-ew0_13m-guard2, "we're not walking over there in the dark."], [l109o-ew0_13m-doc1, "i wasn't asking you to."], [l109o-ew0_13m-guard2, "you were about to."]]
+  - [[l109o-ew0_13m-petra, "somebody drank the almond water out of the cooler."], [l109o-ew0_13m-guard0, "it's a cooler. that's what it's for."], [l109o-ew0_13m-petra, "that was the patients' cooler."]]
+level109_open:
+  - [[l109o-ew0_13m-guard1, "door count?"], [l109o-ew0_13m-guard0, "same as yesterday. all shut but one."], [l109o-ew0_13m-guard1, "the west one's still open?"], [l109o-ew0_13m-guard0, "nobody's volunteered."]]
+  - [[l109o-ew0_13m-doc2, "are we sending anyone west?"], [l109o-ew0_13m-halloran, "with what? two privates and a corporal?"], [l109o-ew0_13m-doc2, "so we wait."], [l109o-ew0_13m-halloran, "we wait and we keep ours shut."]]
+level109_clear:
+  - [[l109o-ew0_13m-guard2, "no knocking from the west door."], [l109o-ew0_13m-guard0, "the stranger cleared it out."], [l109o-ew0_13m-guard2, "all of it?"], [l109o-ew0_13m-guard0, "i went and looked. all of it."]]
+  - [[l109o-ew0_13m-halloran, "ruiz. the west room."], [l109o-ew0_13m-guard0, "shut. empty."], [l109o-ew0_13m-halloran, "good. take the red off the board."]]
+level109_lure:
+  - [[l109o-ew0_13m-guard2, "west door's knocking again."], [l109o-ew0_13m-guard0, "means they're still in there."], [l109o-ew0_13m-guard2, "the stranger walked them home."], [l109o-ew0_13m-guard0, "brave or stupid."], [l109o-ew0_13m-guard2, "both, probably."]]
+  - [[l109o-ew0_13m-petra, "is the west room empty now?"], [l109o-ew0_13m-guard1, "no. just shut."], [l109o-ew0_13m-petra, "i'd rather empty."], [l109o-ew0_13m-guard1, "so would i."]]
+level109_stable:
+  - [[l109o-ew0_13m-doc1, "bed two's holding."], [l109o-ew0_13m-petra, "for now."], [l109o-ew0_13m-doc1, "for now is what we do here."]]
+  - [[l109o-ew0_13m-halloran, "what was it, bed two?"], [l109o-ew0_13m-doc1, "pressure. same as before."], [l109o-ew0_13m-halloran, "write it down. all of it."]]

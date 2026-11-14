@@ -3,11 +3,22 @@ lights: { color: "oklch(0.97 0.02 95)", intensity: 2.2, distance: 16, height: 2.
 heal: { cost: 1500, hp: 40, sanity: 25 }
 shop: { firstaid: 2000, bandage: 600 }
 quest: { reachRadius: 4, noteRadius: 2.2, cents: 6000, xp: 200, items: [["firstaid", 2], ["bandage", 3]], repTruth: 12, repCover: 8, karmaTruth: 0, karmaCover: 3 }
+# rounds: [a, b, dwell s, act, lookA, lookB] (act: idle | talk | sit | crouch | pickup); alert: [a, b, lookA, lookB], where they stand while something is loose near the outpost
+# (scripts/lib/l109-life.js swaps rounds <-> alert and runs the triage scene). Beds: (-6,9) (-6,17) (-2,9) (-2,17); supply cage front (11.2,6.4); kettle (12.4,24.2); whiteboard (14.85,18).
 people:
-  - { key: halloran, name: "Dr. Halloran", dlg: l109-halloran, role: medic, faction: doctors, a: 4, b: 25, yaw: 0 }
-  - { key: petra, name: "Nurse Petra", dlg: l109-petra, role: medic, faction: doctors, a: -10, b: 13, yaw: 90 }
-  - { key: doc1, name: "Dr. Osei", dlg: l109-doctor, role: medic, faction: doctors, a: -6, b: 11, yaw: 0, route: [[-6, 11], [-6, 17], [-2, 17], [-2, 11]] }
-  - { key: doc2, name: "Dr. Vance", dlg: l109-doctor, role: medic, faction: doctors, a: -2, b: 14, yaw: 180, route: [[-2, 14], [6, 14], [6, 9]] }
-  - { key: guard0, name: "Corporal Ruiz", dlg: l109-guard, role: guard, faction: meg, a: -6.4, b: -1.5, yaw: 0, outside: true }
-  - { key: guard1, name: "Private Lam", dlg: l109-guard, role: guard, faction: meg, a: -10, b: 3, yaw: 0 }
-  - { key: guard2, name: "Private Okafor", dlg: l109-guard, role: guard, faction: meg, a: 10, b: 27, yaw: 180 }
+  - { key: halloran, name: "Dr. Halloran", dlg: l109-halloran, role: medic, faction: doctors, a: 4, b: 25, yaw: 0,
+      rounds: [[4, 25, 70, idle, 4, 18], [13.6, 18, 12, idle, 14.85, 18], [12, 23.3, 25, idle, 12.4, 24.2], [-4, 13, 10, idle, -6, 13]], alert: [6, 27.5, -8, 0] }
+  - { key: petra, name: "Nurse Petra", dlg: l109-petra, role: medic, faction: doctors, a: -10, b: 13, yaw: 90,
+      rounds: [[-10, 13, 45, idle, -6, 13], [11.2, 6.4, 5, pickup, 11.2, 4], [-10, 13, 45, idle, -6, 13], [-11.4, 4.6, 12, idle, -12, 3.4]], alert: [8, 28, -8, 0] }
+  - { key: doc1, name: "Dr. Osei", dlg: l109-doctor, role: medic, faction: doctors, a: -6, b: 11, yaw: 0,
+      rounds: [[-4, 9, 9, idle, -6, 9], [-4, 17, 9, idle, -6, 17], [11.2, 6.4, 5, pickup, 11.2, 4], [-4, 17, 7, crouch, -2, 17], [-11.4, 4.6, 10, idle, -12, 3.4], [12, 23.2, 28, idle, 12.4, 24.2]], alert: [10, 28.5, -8, 0] }
+  - { key: doc2, name: "Dr. Vance", dlg: l109-doctor, role: medic, faction: doctors, a: -2, b: 14, yaw: 180,
+      rounds: [[-4, 9, 8, crouch, -2, 9], [13.6, 18, 9, idle, 14.85, 18], [-4, 13, 7, idle, -6, 13], [12.6, 23.2, 32, idle, 12.4, 24.2], [-4, 17, 8, idle, -2, 17]], alert: [4, 28.5, -8, 0] }
+  - { key: guard0, name: "Corporal Ruiz", dlg: l109-guard, role: guard, faction: meg, a: -6.4, b: -1.5, yaw: 0, outside: true,
+      rounds: [[-6.4, -1.5, 30, idle, -40, -1.5], [-6.4, -1.5, 25, idle, 30, -1.5]], alert: [-8.6, -1.5, -40, -1.5] }
+  - { key: guard1, name: "Private Lam", dlg: l109-guard, role: guard, faction: meg, a: -10, b: 3, yaw: 0,
+      rounds: [[-10, 3, 14, idle, -8, 0], [-8, -1.5, 3, idle, -30, -1.5], [-22, -1.5, 10, idle, -45, -1.5], [-8, -1.5, 3, idle, 20, -1.5], [6, -1.5, 8, idle, 25, -1.5], [-8, -1.5, 3, idle, -8, 5]], alert: [-9.6, 1.6, -8, 0] }
+  - { key: guard2, name: "Private Okafor", dlg: l109-guard, role: guard, faction: meg, a: 10, b: 27, yaw: 180,
+      rounds: [[10, 27, 40, idle, 0, 15], [0, 27, 20, idle, -6, 15]], alert: [-3, 21, -8, 0] }
+# the triage scene you can stand and watch (no quest): bed two crashes, a doctor holds it, the nurse runs to the cage and back, it settles
+care: { bed: [-6, 17], mon: [-6.9, 18.1], doc: [-4.6, 17, -6, 17], nurse: [-4.6, 18.4, -6, 17.4], cage: [11.2, 6.4, 11.2, 4], calm: [100, 170], firstCalm: 25, treat: 12, alarmClip: /cdn/moodboard-realistic-gritty/sfx-icu-heart-monitor-slow-beeps-distant-loop.mp3 }
