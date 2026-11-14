@@ -71,7 +71,8 @@ print('lines to record:', len(todo), 'already:', len(done), flush=True)
 if dry_run: sys.exit(0)
 def rec(j):
     k, who, key, line = j; v, tag = CAST[who]; mood = MOOD.get(key, '')
-    delivery = 'grounded' if mood else 'natural conversational'
+    # Shelly Nov 14: emotion in every voice: sighs, laughs, stutters, chuckles where the line carries them
+    delivery = ('grounded' if mood else 'natural conversational') + ', emotional and human, with a sigh, chuckle, laugh, breath or stutter where the line calls for it'
     txt = f"[{', '.join(part for part in (delivery, tag, mood) if part)}] {line}"
     for _ in range(3):
         r = subprocess.run(['spawn', 'voice', txt, '--voice', v, '--name', 'vo ' + who + ' ' + slug(line, 40)], capture_output=True, text=True)
