@@ -2,7 +2,9 @@
 // on a level gravel pan; north (-z) a dry wash runs toward Ferry's house; mesas, a canyon and eroded ridges all round.
 const c01 = (v) => Math.min(1, Math.max(0, v));
 const ss = (a, b, v) => { const t = c01((v - a) / (b - a)); return t * t * (3 - 2 * t); };
-export const HOUSE = { x: 18, z: -620 }; // Savi's pick: 620 m north stands in for the article's 5 km; travel time is what's compressed
+export const HOUSE = { x: 18, z: -500 }; // Savi's pick: the whole desert is laid out at 1:10 (1 km of the article = 100 m here), so the house is 500 m north
+export const SITES = [[0, -6000], [0, -15000], [0, -19000], [0, -23000], [-170, -300]]; // checkpoints A, B, B 1/2, C and the dry lakebed where the ship grounds: level pads
+export const EDGE = 25000; // the boundary cliffs: 250 km at 1:10
 function washDist(x, z) { // the dry wash's centre line, wandering north from the well toward the house
   const cx = Math.sin(z / 140) * 30 + Math.sin(z / 47) * 6;
   return Math.abs(x - cx);
@@ -16,7 +18,7 @@ export function heightAt(ctx) {
   const mesa = ss(0.18, 0.26, m) * 34 + ss(0.32, 0.36, m) * 18;
   h += Math.round(mesa / 6) * 6 * 0.35 + mesa * 0.65;
   // a long canyon cutting east-west north of the house
-  const cz = -820 + Math.sin(x / 110) * 40;
+  const cz = -900 + Math.sin(x / 110) * 40;
   h -= ss(42, 8, Math.abs(z - cz)) * 26;
   // the wash
   const w = washDist(x, z);
@@ -24,6 +26,10 @@ export function heightAt(ctx) {
   // flat ground at the well and the house
   const dW = Math.hypot(x, z), dH = Math.hypot(x - HOUSE.x, z - HOUSE.z);
   h *= ss(22, 70, dW) ; h = h * ss(28, 70, dH) + 0 * (1 - ss(28, 70, dH));
+  for (const [sx, sz] of SITES) { const d = Math.hypot(x - sx, z - sz); if (d < 90) h *= ss(30, 90, d); }
+  const r = Math.hypot(x, z);
+  if (r > EDGE - 400) h += ss(EDGE - 400, EDGE - 40, r) * 22; // the land climbs to a rim
+  if (r > EDGE) h -= ss(EDGE, EDGE + 6, r) * 400; // then drops into the void
   return h;
 }
 export function materialAt(ctx) {

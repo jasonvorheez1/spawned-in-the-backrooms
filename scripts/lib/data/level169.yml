@@ -1,0 +1,48 @@
+# Level 169 "Welcome to the Desert": every tuned number and every fixed position. North is -z. Ground at each site is level (y = terrain).
+# SCALE (Savi's pick): 1 km of the article = 100 m here. The article's distances are what signs and the journal say; feet walk a tenth.
+scale: 0.1
+well: { x: 0, z: 0 }            # the entrance well; players arrive at (2.5, 3)
+house:                          # Ferry's house, "5 km north"
+  center: { x: 18, z: -500 }
+  floorUp: 0.25                 # floor slab top above terrain
+  wallH: 2.8
+  door: { x: 18, z: -493 }      # front door, south face, looks back down the track to the well
+  rooms:                        # world rects [x0, x1, z0, z1]
+    porch:   [12, 24, -493, -490.5]
+    living:  [8, 18, -500, -493]
+    kitchen: [18, 28, -500, -493]
+    hall:    [8, 28, -501.5, -500]
+    bed1:    [8, 13, -507, -501.5]
+    bed2:    [13, 18, -507, -501.5]
+    bed3:    [18, 23, -507, -501.5]
+    den:     [23, 28, -507, -501.5]
+    basement: [18, 28, -500, -493]   # under the kitchen, floor 3 m down, stairs from the hall's east end
+  ferry: { x: 26.6, z: -499.4, yaw: 180 }   # against the kitchen's north wall, door facing south into the room
+checkpoints:                    # id, the article's km, where it stands
+  a:  { km: 60,  x: 0, z: -6000,  name: "Checkpoint A" }
+  b:  { km: 150, x: 0, z: -15000, name: "Checkpoint B" }
+  bh: { km: 190, x: 0, z: -19000, name: "Checkpoint B½" }   # the furnished house with a bed
+  c:  { km: 230, x: 0, z: -23000, name: "Checkpoint C" }
+edge: 25000                     # the boundary cliffs (250 km); past them the land drops into the void; jumping wakes you in Level 11
+ship: { x: -170, z: -300, yaw: 20 }   # where the S.S. Fun grounds in the dry lakebed when it appears here
+day:
+  periodMs: 5760000             # one 48-hour day = 96 real minutes (Savi's pick); 1 desert hour = 2 real minutes
+  sunrise: 6
+  sunset: 18
+sun:                            # the anomaly: direct sun turns the water in a body to sand. The article: fatal after 6 to 7 hours of it
+  lethalHours: 6.5              # desert hours of DIRECT sun, cumulative; 6.5 h = 13 real minutes in the open
+  shadeRecover: 0.35            # exposure shed per hour in shade, as a share of what an hour of sun adds
+  indoorRecover: 1.2
+  wrap: 0.6                     # a Desert Wrap worn: sun counts this much
+  stages: [25, 50, 75, 100]     # discomfort / heat stress / hallucination / the sand takes you
+  fatalDps: 6                   # hp per second once past 100 (about 30 s to get under cover)
+cold:                           # night near 1 C: not arctic
+  perHour: 14                   # chill gained per hour outdoors at night with no coat
+  coat: 0.25
+  hpFloor: 0.3                  # cold never takes you below this share of max hp
+water:                          # ordinary and almond water turn to sand here. GAME-ORIGINAL reading of the article's contradiction:
+  coldHoursDay: 3               # what Ferry hands out stays water while it stays cold: this many hours in daylight outdoors,
+  coldHoursNight: 12            # longer at night, and for as long as you stay under a roof. Warm, it goes to sand like the rest
+ferry:
+  refillHours: 1                # the article: about once an hour
+  capacity: 8
