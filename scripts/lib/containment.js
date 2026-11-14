@@ -9,12 +9,12 @@
 export const inside = (b, p, pad = 0) => p.x > b.x0 - pad && p.x < b.x1 + pad && p.z > b.z0 - pad && p.z < b.z1 + pad;
 const alive = (f) => !f.state?.dead && (f.state?.hp ?? 1) > 0;
 const foes = (ctx) => ctx.query({ tags: ["pen-foe"] }).filter(alive);
-// each room's row is written at its own path, never the whole book: two machines handing the sim over never clobber each other's rooms
-function book(ctx, key, id, v) { const s = ctx.place.state; if (!s[key]) s[key] = { [id]: v }; else s[key][id] = v; }
+// one room's row of a book, written as the whole book (a nested write from a sim does not save)
+function book(ctx, key, id, v) { const s = ctx.place.state, b = { ...(s[key] ?? {}) }; if (v === undefined) delete b[id]; else b[id] = v; s[key] = b; }
 export function penRoll(ctx, id, roll) { const s = ctx.place.state; if (!s.pens?.[id]) book(ctx, "pens", id, roll()); return s.pens[id]; }
 export const penCount = (ctx, id) => ctx.place.state.pens?.[id]?.length ?? 0;
 export const doorOpen = (ctx, id) => !!ctx.place.state.pdoors?.[id];
-export function setDoor(ctx, id, open) { const s = ctx.place.state; if (open) book(ctx, "pdoors", id, 1); else if (s.pdoors?.[id]) delete s.pdoors[id]; }
+export function setDoor(ctx, id, open) { const s = ctx.place.state; if (open) book(ctx, "pdoors", id, 1); else if (s.pdoors?.[id]) book(ctx, "pdoors", id, undefined); }
 // the room loads: everyone on its books walks in for real
 export function penLoad(ctx, id, box, spawnFoe) {
   const s = ctx.place.state, list = [...(s.pens?.[id] ?? [])], left = [];
