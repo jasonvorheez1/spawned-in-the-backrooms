@@ -6,7 +6,7 @@ import R from "./data/l169-road.yml";
 import { giveKey, hasKey } from "./hubkeys.js";
 export const ORDER = ["house", "a", "b", "bh", "c", "edge"];
 const GEO = "scripts/l169-road-geo.js", TRAVEL = "scripts/l169-travel.js";
-const SITE_VERSION = 1;
+const SITE_VERSION = 2;
 const WATER = ["almonds", "almondsG", "almondsR", "almondsB"];
 const NAMES = { house: "Ferry's house", edge: "The edge" };
 const g = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
@@ -57,14 +57,16 @@ export function go(ctx, p, from, to, L) {
   ps.l169trip = { at: Math.round(ctx.now()), due: Math.round(ctx.now() + R.tripMs), to, km: q.km, name: q.name };
 }
 // ---- one site's pieces, ids l169-cp-<sid>-*
-function board(sid, x, z, L, yaw = 180) { // faces south, toward whoever walks up the track
+function board(sid, x, z, L) {
   const i = ORDER.indexOf(sid);
-  return [[`l169-cp-${sid}-board`, { tags: ["usable", "l169-board"], feetPosition: g(x, z), rotation: yaw, ...geo("boardposts"), physics: "static", behavior: TRAVEL,
+  const site = siteOf(sid, L);
+  const yaw = Math.atan2(x - site.x - R.arrive.dx, z - site.z - R.arrive.dz) * 180 / Math.PI;
+  return [[`l169-cp-${sid}-board`, { tags: ["usable", "l169-board"], feetPosition: g(x, z), rotation: { yaw }, ...geo("boardposts"), physics: "static", behavior: TRAVEL,
     state: { kind: "board", site: sid, next: ORDER[i + 1] ?? null, prev: ORDER[i - 1] ?? null, name: "Route board", verb: "Read", info: "guided legs at night" },
     ui: `<div face="front" width="1.6m" offset="0.2m" style="font:700 52px monospace;color:#2a1c10;padding:18px 26px;line-height:1.2">ROUTE<br><span style="font-size:34px;font-weight:400">${ORDER[i + 1] ? `${siteOf(ORDER[i + 1], L).name} &uarr; ${Math.round(siteOf(ORDER[i + 1], L).km - siteOf(sid, L).km)} km` : "nothing north"}<br>${ORDER[i - 1] ? `${siteOf(ORDER[i - 1], L).name} &darr;` : ""}</span></div>` }]];
 }
-function locker(sid, x, z, up = 0) {
-  return [[`l169-cp-${sid}-locker`, { tags: ["usable"], feetPosition: g(x, z, up), ...geo("locker"), physics: "static", behavior: TRAVEL,
+function locker(sid, x, z, up = 0, yaw = 0) {
+  return [[`l169-cp-${sid}-locker`, { tags: ["usable"], feetPosition: g(x, z, up), rotation: { yaw }, ...geo("locker"), physics: "static", behavior: TRAVEL,
     children: [{ id: "leaf", feetPosition: { x: -0.42, y: 0.1, z: 0.25 }, pivot: [0, 0, 0], rotation: { yaw: 0 }, ...geo("locker-door") }],
     state: { kind: "locker", site: sid, motion: "door", name: "Supply locker", verb: "Open", info: "Rations only. Water won't keep here." } }]];
 }
@@ -94,7 +96,7 @@ function siteParts(sid, L) {
   } else if (sid === "b") {
     add([[`l169-cp-b-box`, { feetPosition: g(X, Z), ...geo("container"), physics: "static" }]]);
     add(board("b", X - 5, Z + 4, L)); add(locker("b", X + 1.95, Z - 0.82, 0.15));
-    add([[`l169-cp-b-stove`, { feetPosition: g(X - 2.22, Z - 0.65, 0.15), ...geo("stove"), physics: "static" }]]);
+    add([[`l169-cp-b-stove`, { feetPosition: g(X - 2.22, Z - 0.65, 0.15), rotation: { yaw: 55 }, ...geo("stove"), physics: "static" }]]);
     add(logAt("b", X + 0.8, Z + 0.72, 0.15));
     add([[`l169-cp-b-cart`, { feetPosition: g(X + 3.95, Z + 1.5), rotation: { yaw: -26 }, physics: { body: "static", collider: "box" },
       model: "/cdn/value.a8986029efe64649020725f8bd9fa3aea5ed4a79f007fb85d360decefe7e7a83.glb", visibleRange: { max: 75 },
@@ -103,21 +105,21 @@ function siteParts(sid, L) {
     add(lamp(`l169-cp-b-light`, X, Z, 2.1));
   } else if (sid === "bh") {
     add([[`l169-cp-bh-house`, { feetPosition: g(X, Z), ...geo("house"), physics: "static" }]]);
-    add(board("bh", X - 5.5, Z + 5, L)); add(locker("bh", X + 1.78, Z - 1.48, 0.2));
+    add(board("bh", X - 5.5, Z + 5, L)); add(locker("bh", X + 1.95, Z + 0.8, 0.2, -90));
     add([[`l169-cp-bh-bed`, { tags: ["usable"], feetPosition: g(X - 1.64, Z - 0.8, 0.2), ...geo("bedroll", { blanket: "oklch(0.45 0.13 28)" }), behavior: TRAVEL,
       state: { kind: "bed", site: "bh", name: "Bed at B½", verb: "Sleep", info: "A rolled coat for a pillow. Rest here to recover from sun and cold." } }]]);
-    add([[`l169-cp-bh-stove`, { feetPosition: g(X + 1.8, Z + 0.6, 0.2), ...geo("stove"), physics: "static" }]]);
-    add([[`l169-cp-bh-bench`, { feetPosition: g(X + 1.5, Z + 3.2, 0.2), rotation: 180, ...geo("bench"), physics: "static" }]]);
+    add([[`l169-cp-bh-stove`, { feetPosition: g(X + 1.75, Z - 1.35, 0.2), rotation: { yaw: -90 }, ...geo("stove"), physics: "static" }]]);
+    add([[`l169-cp-bh-bench`, { feetPosition: g(X + 1.92, Z + 2.88, 0.2), rotation: { yaw: 90 }, ...geo("bench"), physics: "static" }]]);
     add([[`l169-cp-bh-door`, { tags: ["usable"], feetPosition: g(X - 0.6, Z + 2.02, 0.2), rotation: { yaw: 0 },
       primitive: { kind: "scripted", script: "scripts/l169-house-geo.js", params: { part: "door", w: 1.2, h: 2.07 } },
       physics: "static", behavior: "scripts/l169-door.js", state: { open: false, swing: -1, name: "Shelter door", verb: "Open" } }]]);
     add(logAt("bh", X + 1.32, Z + 2.48, 0.2));
-    add([[`l169-cp-bh-boots`, { feetPosition: g(X - 1.35, Z + 2.56, 0.2), rotation: { yaw: 24 }, ...geo("boots", { n: 1 }) }]]);
+    add([[`l169-cp-bh-boots`, { feetPosition: g(X - 1.35, Z + 2.56, 0.2), rotation: { yaw: -25 }, ...geo("boots", { n: 1 }) }]]);
     add(lamp(`l169-cp-bh-light`, X, Z, 2.2, "oklch(0.8 0.13 60)"));
   } else if (sid === "c") {
-    add([[`l169-cp-c-wall`, { feetPosition: g(X, Z - 2), ...geo("wall"), physics: "static" }]]);
+    add([[`l169-cp-c-wall`, { feetPosition: g(X - 5.4, Z - 2.7), rotation: { yaw: -8 }, ...geo("wall", { len: 5.5 }), physics: "static" }]]);
     add([[`l169-cp-c-leanto`, { feetPosition: g(X + 1.5, Z), ...geo("leanto"), physics: "static" }]]);
-    add(board("c", X - 4, Z + 3, L)); add(locker("c", X + 2.55, Z - 0.65));
+    add(board("c", X - 4, Z + 3, L)); add(locker("c", X + 2.55, Z - 0.1));
     add(logAt("c", X + 0.25, Z + 0.85));
   } else if (sid === "edge") {
     add(board("edge", X - 6, Z + 8, L));
@@ -126,7 +128,7 @@ function siteParts(sid, L) {
     add(readable(`l169-cp-edge-sign`, X + 5, Z + 6, "logpost", "The edge", [R.texts.edge]));
   } else if (sid === "house") {
     add(board("house", X + 3.9, Z - 1.5, L));
-    add(logAt("house", X - 2.15, L.house.door.z + 1.45, L.house.floorUp));
+    add(logAt("house", X - 2.15, L.house.door.z + 1.45, L.house.porchUp));
   }
   return P;
 }

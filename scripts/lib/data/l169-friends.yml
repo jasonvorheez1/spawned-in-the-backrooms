@@ -12,9 +12,9 @@ acts:
   talk: cdn/clip-talk-loop.glb
 # name: [room, u, v, faceX, faceZ, out?]   (seat-N and bed-N are made in code from the table and the bedrooms)
 stops:
-  stove:    [kitchen, 0.25, 0.2, 0, -1]
+  stove:    [kitchen, 0.78, 0.2, 0, -1]
   serve:    [kitchen, 0.13, 0.54, 1, 0]
-  sink:     [kitchen, 0.5, 0.9, 0, 1]
+  sink:     [kitchen, 0.87, 0.5, 1, 0]
   ferry:    [kitchen, 0.86, 0.3, 0, -1]
   window:   [living, 0.1, 0.5, -1, 0]
   couch:    [living, 0.5, 0.5, 0, 1]
@@ -33,7 +33,7 @@ stops:
   slate:    [porch, 0.62, 0.35, 0, -1, out]
   rail:     [porch, 0.4, 0.8, 0, 1, out]
   ladder:   [porch, 0.95, 0.5, 1, -1, out]
-  bench:    [porch, 0.8, 0.84, 0, -1, out]
+  bench:    [porch, 0.8, 0.76, 0, -1, out]
 # block: stops in order, each [stop, dwell seconds, act?]
 blocks:
   meal:     [[seat, 900, eat]]

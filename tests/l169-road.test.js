@@ -2,6 +2,8 @@ import { test, expect } from "bun:test";
 import L from "../scripts/lib/data/level169.yml";
 import R from "../scripts/lib/data/l169-road.yml";
 import { legsFrom, go, layRoad, tickRoad, siteOf, takeLocker, sleepBed, ORDER } from "../scripts/lib/l169-road.js";
+import { layHouse } from "../scripts/lib/l169-house.js";
+import { collider } from "../scripts/l169-house-geo.js";
 function world(hour) {
   let t = 1e6; const objs = {}, crossed = [];
   const ctx = { now: () => t, place: { atmosphere: { timeOfDay: hour }, state: {}, players: [], terrain: { heightAt: (x, z) => (Math.hypot(x, z) > L.edge ? -200 : 0) } },
@@ -33,12 +35,14 @@ test("walking 800 m up the track streams cairns in and out", () => {
   console.log("cairns before", before.join(","), "after", after.join(","));
   expect(after.length).toBeGreaterThan(0); expect(after.join()).not.toBe(before.join());
 });
-test("B, B½ bed, C stand with boards, lockers and bed", () => {
-  for (const sid of ["a", "b", "bh", "c", "edge"]) {
+test("route boards face the approach and shelters have usable supplies", () => {
+  for (const sid of ORDER) {
     const w = world(21), s = siteOf(sid, L), p = player(s.x, s.z); w.ctx.place.players = [p]; layRoad(w.ctx, w.put, L);
-    expect(w.objs[`l169-cp-${sid}-board`]).toBeTruthy();
+    const { feetPosition: f, rotation: { yaw } } = w.objs[`l169-cp-${sid}-board`];
+    const a = yaw * Math.PI / 180, dx = s.x + R.arrive.dx - f.x, dz = s.z + R.arrive.dz - f.z;
+    expect((-Math.sin(a) * dx - Math.cos(a) * dz) / Math.hypot(dx, dz)).toBeCloseTo(1);
     expect(p.state.l169cps).toContain(sid);
-    if (sid !== "edge") { takeLocker(w.ctx, p, sid, L); expect(p.state.notice.text).toMatch(/Hunger|Empty/); }
+    if (R.lockers[sid]) { takeLocker(w.ctx, p, sid, L); expect(p.state.notice.text).toMatch(/Hunger|Empty/); }
     if (sid === "bh") { expect(w.objs["l169-cp-bh-bed"]).toBeTruthy(); sleepBed(w.ctx, p, L); expect(p.state.l169rest).toBeGreaterThan(0); }
   }
 });
@@ -52,18 +56,40 @@ test("jumping the north edge wakes in level11 with a key", () => {
 test("older checkpoint markers migrate once and support props sit on the shelters' floors", () => {
   const w = world(21), half = siteOf("bh", L), p = player(half.x, half.z);
   w.ctx.place.players = [p];
-  w.objs["l169-cp-bh-m"] = { state: { site: "bh" } };
+  w.objs["l169-cp-bh-m"] = { state: { site: "bh", roadV: 1 } };
   w.objs["l169-cp-bh-locker"] = { state: { kind: "locker" } };
   layRoad(w.ctx, w.put, L);
-  expect(w.objs["l169-cp-bh-m"].state.roadV).toBeGreaterThan(0);
+  expect(w.objs["l169-cp-bh-m"].state.roadV).toBeGreaterThan(1);
   expect(w.objs["l169-cp-bh-locker"].children[0].id).toBe("leaf");
   expect(w.objs["l169-cp-bh-bed"].feetPosition.y.terrain).toBe(0.2);
   expect(w.objs["l169-cp-bh-door"].behavior).toBe("scripts/l169-door.js");
   expect(w.objs["l169-cp-bh-log"].state.lines[0]).toContain("red blanket");
   const locker = w.objs["l169-cp-bh-locker"];
+  const stove = w.objs["l169-cp-bh-stove"];
+  expect(stove.rotation.yaw).toBe(-90);
+  expect(stove.feetPosition.x + 0.1 - half.x).toBeCloseTo(1.85);
+  expect(stove.feetPosition.z - half.z).toBeCloseTo(-1.35);
+  expect(locker.rotation.yaw).toBe(-90);
+  expect(locker.feetPosition.z - stove.feetPosition.z).toBeGreaterThan(1);
   w.step(3100);
   tickRoad(w.ctx, w.put, L);
   expect(w.objs["l169-cp-bh-locker"]).toBe(locker);
+});
+
+test("Ferry's visible counters meet at the seam and cover the full collider", () => {
+  const w = world(21);
+  layHouse(w.ctx, w.put, L);
+  const kitchen = w.objs["l169-house-kitchen"];
+  const [counter] = collider({ params: kitchen.primitive.params });
+  const a = w.objs["l169-house-m-counter-a"], b = w.objs["l169-house-m-counter-b"];
+  const x = kitchen.feetPosition.x + counter.center[0], z = kitchen.feetPosition.z + counter.center[2];
+  expect(a.feetPosition.x).toBeCloseTo(x);
+  expect(b.feetPosition.x).toBeCloseTo(x);
+  expect(a.layout.box.max.x - a.layout.box.min.x).toBeCloseTo(counter.width);
+  expect(a.feetPosition.z + a.layout.box.min.z).toBeCloseTo(z - counter.depth / 2);
+  expect(a.feetPosition.z + a.layout.box.max.z).toBeCloseTo(b.feetPosition.z + b.layout.box.min.z);
+  expect(b.feetPosition.z + b.layout.box.max.z).toBeCloseTo(z + counter.depth / 2);
+  expect(kitchen.visible).not.toBe(false);
 });
 
 test("a route board spends actual cold bottles, including flavored almond water", () => {

@@ -8,7 +8,7 @@ import { layRoad, tickRoad } from "../../scripts/lib/l169-road.js";
 import { shipTick } from "../../scripts/lib/ssfun-voyage.js";
 import { questTick } from "../../scripts/lib/level169-quest.js";
 export const cadence = "1s";
-const V = 9; // bump to relay everything (v9: Ferry wears the Tripo shell; v3: Blender shell for Ferry's house; v6: doors clear the jambs; v7: the hall dressed; v8: hall prints as boards)
+const V = 10; // bump to lay out the house and recheck streamed checkpoint placements
 const STONE = { texture: "cdn/texture-rough-stacked-sandstone-well-masonry.png", color: "oklch(0.7 0.05 65)", repeat: [4, 1], roughness: 1 };
 const WOOD = { texture: "cdn/texture-sun-bleached-grey-desert-timber.png", color: "oklch(0.62 0.04 70)", roughness: 1 };
 function sp(ctx, id, spec) {
@@ -21,19 +21,24 @@ function sp(ctx, id, spec) {
 }
 function layWell(ctx, sp) { // the way in: you climb out of a dry well in the middle of nowhere
   const g = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
-  for (let i = 0; i < 3; i++) sp("l169-well-ring" + i, { feetPosition: g(0, 0, 0.18 + i * 0.3), rotation: { pitch: 90 }, primitive: { kind: "torus", radius: 1.15, tube: 0.2, radialSegments: 10, tubularSegments: 28 }, material: STONE });
+  for (let i = 0; i < 3; i++) sp("l169-well-ring" + i, { feetPosition: g(0, 0, 0.18 + i * 0.3), pivot: "center", rotation: { pitch: 90 }, primitive: { kind: "torus", radius: 1.15, tube: 0.2, radialSegments: 10, tubularSegments: 28 }, material: STONE });
   sp("l169-well-wall", { feetPosition: g(0, 0, 0), primitive: { kind: "cylinder", radiusTop: 1.3, radiusBottom: 1.36, height: 0.95, radialSegments: 24, openEnded: true }, material: { ...STONE, side: "double" }, physics: "static" });
   sp("l169-well-dark", { feetPosition: g(0, 0, 0.5), rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 1.02, segments: 24 }, material: { color: "oklch(0.08 0.01 60)", roughness: 1 } });
   for (const s of [-1, 1]) sp("l169-well-post" + s, { feetPosition: g(s * 1.32, 0, 0), primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.09, height: 2.5, radialSegments: 8 }, material: WOOD });
   sp("l169-well-beam", { feetPosition: g(0, 0, 2.4), rotation: { roll: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 3, radialSegments: 8 }, material: WOOD });
-  sp("l169-well-rope", { feetPosition: g(0.2, 0, 0.9), primitive: { kind: "cylinder", radiusTop: 0.015, radiusBottom: 0.015, height: 1.5, radialSegments: 5 }, material: { color: "oklch(0.6 0.06 80)", roughness: 1 } });
+  sp("l169-well-rope", { feetPosition: g(0.36, 0, 0.9), primitive: { kind: "cylinder", radiusTop: 0.015, radiusBottom: 0.015, height: 1.5, radialSegments: 5 }, material: { color: "oklch(0.6 0.06 80)", roughness: 1 } });
   sp("l169-well-bucket", { tags: ["interact"], feetPosition: g(0.2, 0, 0.62), primitive: { kind: "cylinder", radiusTop: 0.17, radiusBottom: 0.13, height: 0.3, radialSegments: 14, openEnded: true }, material: { color: "oklch(0.45 0.02 250)", metalness: 0.7, roughness: 0.5, side: "double" },
     state: { prompt: "Look in the bucket", note: "Sand. Fine and dry, right to the brim. The rope is still damp." } });
   sp("l169-well-sandpile", { feetPosition: g(1.9, 0.6, -0.08), primitive: { kind: "sphere", radius: 0.5, widthSegments: 12, heightSegments: 8 }, scale: { x: 1.3, y: 0.35, z: 1 }, material: { color: "oklch(0.8 0.06 75)", roughness: 1 } });
   // somebody left a marker for the next arrival: a cairn and a board pointing north
-  for (let i = 0; i < 4; i++) sp("l169-cairn" + i, { feetPosition: g(4.2, -5, i * 0.26), primitive: { kind: "sphere", radius: 0.34 - i * 0.06, widthSegments: 9, heightSegments: 6 }, scale: { x: 1, y: 0.6, z: 0.9 }, rotation: { yaw: i * 47 }, material: { color: "oklch(0.52 0.07 45)", roughness: 1 }, physics: i ? "none" : "static" });
-  sp("l169-sign-post", { feetPosition: g(-3.2, -6, 0), primitive: { kind: "cylinder", radiusTop: 0.05, radiusBottom: 0.06, height: 2, radialSegments: 8 }, material: WOOD, physics: "static" });
-  sp("l169-sign", { tags: ["usable"], behavior: "scripts/l169-travel.js", feetPosition: g(-3.2, -6, 1.45), rotation: { yaw: 180 }, primitive: { kind: "box", width: 1.5, height: 0.5, depth: 0.04 }, material: WOOD,
+  let stoneBase = -0.025;
+  for (let i = 0; i < 4; i++) {
+    const radius = 0.34 - i * 0.06, halfHeight = radius * 0.6;
+    sp("l169-cairn" + i, { feetPosition: g(2.4, -11, stoneBase + halfHeight), pivot: "center", primitive: { kind: "sphere", radius, widthSegments: 9, heightSegments: 6 }, scale: { x: 1, y: 0.6, z: 0.9 }, rotation: { yaw: i * 47 }, material: { color: "oklch(0.52 0.07 45)", roughness: 1 }, physics: i ? "none" : "static" });
+    stoneBase += 2 * halfHeight - 0.025;
+  }
+  sp("l169-sign-post", { feetPosition: g(-1.9, -5.8), primitive: { kind: "cylinder", radiusTop: 0.05, radiusBottom: 0.06, height: 2, radialSegments: 8 }, material: WOOD, physics: "static" });
+  sp("l169-sign", { tags: ["usable"], behavior: "scripts/l169-travel.js", feetPosition: g(-1.9, -5.8, 1.45), rotation: { yaw: 206 }, primitive: { kind: "box", width: 1.5, height: 0.5, depth: 0.04 }, material: WOOD,
     state: { kind: "read", name: "Waypost", verb: "Read", title: "Scratched into the waypost", lines: [
       "The bucket came up dripping. By the time I got it over the rim, it was full of sand.",
       "If you can still see your shadow, wait. Follow the stones north when the sun goes down. Leave the bucket for the next person. — Marta",
@@ -45,10 +50,10 @@ export function tick(ctx) {
   const s = ctx.place.state;
   if (!ctx.place.players?.length) return;
   const put = (id, spec) => sp(ctx, id, spec);
-  if (s.l169WellV !== 1) { layWell(ctx, put); s.l169WellV = 1; }
+  if (s.l169WellV !== 2) { layWell(ctx, put); s.l169WellV = 2; }
   if (s.l169V !== V) {
-    s.l169V = V;
     layHouse(ctx, put, L); layFerry(ctx, put, L); layFriends(ctx, put, L); layRoad(ctx, put, L);
+    s.l169V = V;
   }
   tickFriends(ctx, L); tickRoad(ctx, put, L); shipTick(ctx, put, "level169", L.ship); questTick(ctx, L);
 }

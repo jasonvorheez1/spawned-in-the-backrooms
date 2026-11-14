@@ -78,7 +78,7 @@ function plan() {
   add("concrete", lx, BF, ZH0 + 0.1, X1 - 0.15, yL, tz);
   for (let j = 1; j <= st.lowN; j++) { const z = tz + (j - 1) * st.lowRun; add("concrete", lx, BF, z, X1 - 0.15, yL - j * st.rise, z + st.lowRun); }
   // the porch
-  add("timber", PX0, 0, Z1 + 0.04, PX1, 0.15, PZ1);
+  add("timber", PX0, 0, Z1 + 0.04, PX1, h.porchUp, PZ1);
   const by = roofY(PZ1 - 0.22) - 0.03;
   for (const px of b.porchPosts) add("post", px - C.x - 0.08, 0.15, PZ1 - 0.3, px - C.x + 0.08, by - 0.16, PZ1 - 0.14);
   add("post", PX0, by - 0.16, PZ1 - 0.31, PX1, by, PZ1 - 0.13);
@@ -209,7 +209,9 @@ function kit(ctx, n) {
   if (n === 2) { boots(ctx, 0.95, 1.0); books(ctx, 0.95, 0.464, 0, 4); mug(ctx, -0.95, 0.464, 0.02, "oklch(0.9 0.03 90)"); crate(ctx, 0, 0, 0, 0.5, 0.3, 0.36, "oklch(0.85 0.06 60)"); blanket(ctx, 0, 0.304, 0, "oklch(0.78 0.09 30)", 2, 0.22, 0.15); }
 }
 const KX = X1 - T - 0.62, KZ0 = 1.6, KZ1 = 5.6, SHX = [4.2, 7.4], TB = [4, 4, 2.6, 1.0]; // counter, can shelves, table (house-local)
-function kitchen(ctx) {
+function kitchen(ctx, P) {
+  shelfUnit(ctx, SHX[0], SHX[1], F, ZH1 + T / 2, 1, ctx.random);
+  if (P.shelfOnly) return;
   const x1 = X1 - T, y = F;
   paint(ctx, "plaster", "oklch(0.9 0.05 150)"); bx(ctx, KX + 0.05, y + 0.1, KZ0, x1, y + 0.86, KZ1, 0.012); paint(ctx, null, "oklch(0.3 0.01 80)"); slab(ctx, [(KX + 0.08 + x1) / 2, y + 0.05, (KZ0 + KZ1) / 2], [(x1 - KX - 0.08) / 2, 0.05, (KZ1 - KZ0) / 2 - 0.01]);
   for (let i = 0; i < 5; i++) { const z0 = KZ0 + 0.05 + i * 0.79; paint(ctx, "plaster", "oklch(0.93 0.05 150)"); bx(ctx, KX + 0.025, y + 0.16, z0, KX + 0.06, y + 0.8, z0 + 0.72, 0.015); paint(ctx, null, "oklch(0.75 0.06 80)"); sphere(ctx, [KX + 0.012, y + 0.62, z0 + 0.62], 0.018, 8); }
@@ -227,7 +229,6 @@ function kitchen(ctx) {
   mug(ctx, cx - 0.05, y + 0.9, rz + 0.4, "oklch(0.85 0.06 30)"); mug(ctx, cx + 0.1, y + 0.9, rz + 0.48, "oklch(0.9 0.03 90)");
   paint(ctx, "linen", "oklch(0.9 0.08 30)"); bx(ctx, cx - 0.12, y + 0.9, sz - 0.75, cx + 0.12, y + 0.93, sz - 0.45, 0.012);
   paint(ctx, null, "oklch(0.55 0.08 30)"); ctx.metalness(0.5); rings(ctx, cx, KZ1 - 0.3, [[0, y + 0.9], [0.1, y + 0.9], [0.11, y + 0.98], [0.07, y + 1.06], [0, y + 1.07]], 12); rod(ctx, [cx - 0.09, y + 0.98, KZ1 - 0.3], [cx - 0.17, y + 1.04, KZ1 - 0.3], 0.012, 6); ctx.metalness(null);
-  shelfUnit(ctx, SHX[0], SHX[1], y, ZH1 + T / 2, 1, ctx.random);
   // the table for eight
   const [tx, tz, tw, td] = TB; tableBase(ctx, tx, y, tz, tw, td);
   paint(ctx, "linen", "oklch(0.93 0.04 85)"); bx(ctx, tx - 0.9, y + 0.76, tz - 0.2, tx + 0.9, y + 0.766, tz + 0.2, 0.003);
@@ -325,14 +326,14 @@ function pot(ctx) { // a stock pot with a lid and two handles
 }
 export function geometry(ctx) {
   const P = ctx.params ?? {};
-  const parts = { shell, yard, kitchen, basement, bench, maptable, mapboard, bed: () => bed(ctx, P), kit: () => kit(ctx, P.n ?? 0), door: () => door(ctx, P), lamp: () => lamp(ctx, P), rug: () => rug(ctx, P), picture: () => picture(ctx, P), roll: () => roll(ctx, P), pot }; (parts[P.part] ?? pot)(ctx); // no part named (a bare preview): the stock pot, never an empty mesh
+  const parts = { shell, yard, basement, bench, maptable, mapboard, kitchen: () => kitchen(ctx, P), bed: () => bed(ctx, P), kit: () => kit(ctx, P.n ?? 0), door: () => door(ctx, P), lamp: () => lamp(ctx, P), rug: () => rug(ctx, P), picture: () => picture(ctx, P), roll: () => roll(ctx, P), pot }; (parts[P.part] ?? pot)(ctx); // no part named (a bare preview): the stock pot, never an empty mesh
 }
 const box = (x0, y0, z0, x1, y1, z1) => ({ kind: "box", width: x1 - x0, height: y1 - y0, depth: z1 - z0, center: [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2] });
 export function collider(ctx) {
   const P = ctx.params ?? {}, p = P.part;
   if (p === "shell") return shellCollider(ctx);
   if (p === "door") return [box(0, 0, -0.025, P.w ?? 1, P.h ?? DH - 0.02, 0.025)];
-  if (p === "bed") return [box(-0.47, 0, -1, 0.47, P.cot ? 0.4 : 0.5, 1)];
+  if (p === "bed") return P.cot ? [box(-0.38, 0, -0.97, 0.38, 0.4, 0.97)] : [box(-0.47, 0, -1, 0.47, 0.5, 1)];
   if (p === "kit") return [box(-1.16, 0, -0.2, -0.74, 0.46, 0.2), box(0.74, 0, -0.2, 1.16, 0.46, 0.2)];
   if (p === "kitchen") return [box(KX, F, KZ0, X1 - T, F + 0.9, KZ1), box(SHX[0], F, ZH1 + T / 2, SHX[1], F + 1.95, ZH1 + T / 2 + 0.32), box(TB[0] - TB[2] / 2, F + 0.66, TB[1] - TB[3] / 2, TB[0] + TB[2] / 2, F + 0.76, TB[1] + TB[3] / 2)];
   if (p === "basement") return [box(XM + 0.6, BF, Z1 - 0.52, XM + 6.5, BF + 1.95, Z1 - 0.2), box(XM + 6.9, BF, Z1 - 0.75, XM + 8.4, BF + 0.5, Z1 - 0.2), box(XM + 0.2, BF, 3.9, XM + 0.95, BF + 0.8, 5)];

@@ -17,7 +17,10 @@ const keyOf = (p, n) => n === "seat" ? "seat-" + p.n : n === "bed" ? "bed-" + p.
 // every named stop in world metres: { x, z, up, fx, fz, out, seat }
 export function stopsOf(L) {
   const S = {}, fu = L.house.floorUp;
-  for (const [k, [room, u, v, fx, fz, out]] of Object.entries(F.stops)) S[k] = { ...at(L, [room, u, v]), up: room === "basement" ? fu - L.friends.basementDown : fu, fx, fz, out: !!out };
+  for (const [k, [room, u, v, fx, fz, out]] of Object.entries(F.stops)) {
+    const up = room === "porch" ? L.house.porchUp : room === "basement" ? fu - L.friends.basementDown : fu;
+    S[k] = { ...at(L, [room, u, v]), up, fx, fz, out: !!out };
+  }
   const t = at(L, L.friends.table);
   const seats = L.friends.seats;
   seats.forEach(([dx, dz, fx, fz], i) => { S["seat-" + (i + 1)] = { x: t.x + dx, z: t.z + dz, up: fu, fx, fz, seat: true }; });
@@ -54,7 +57,7 @@ export function layFriends(ctx, put, L) {
   for (const k of ["l169-friend-tablea", "l169-friend-tableb"]) if (ctx.getObject(k)) ctx.destroy(k);
   for (let i = 1; i <= 7; i++) { const c = S["seat-" + i]; put("l169-friend-chair-" + i, { feetPosition: g(c.x, c.z, fu), rotation: { yaw: yawOf(c.fx, c.fz) }, model: model("dining_chair") }); }
   const st = at(L, L.friends.stove), GEO = (part, extra) => ({ primitive: { kind: "scripted", script: "scripts/l169-house-geo.js", params: { part, ...extra } }, material: { pbr: true }, castShadow: true, receiveShadow: true });
-  put("l169-friend-stove", { feetPosition: g(st.x, st.z, fu), rotation: { yaw: 90 }, model: model("mocha_range"), physics: "static" }); // its knobs face south into the room (Nov 14)
+  put("l169-friend-stove", { feetPosition: g(st.x, st.z, fu), rotation: { yaw: 180 }, model: { id: model("mocha_range"), forward: FUR.pieces.mocha_range.forward }, physics: "static" });
   put("l169-friend-pot", { feetPosition: g(st.x - 0.15, st.z + 0.15, fu + 0.735), ...GEO("pot") });
   // bedrolls: one each, in the three bedrooms
   const QUILT = ["oklch(0.62 0.09 30)", "oklch(0.6 0.07 250)", "oklch(0.65 0.08 140)", "oklch(0.66 0.08 80)", "oklch(0.62 0.07 320)", "oklch(0.55 0.03 250)", "oklch(0.6 0.1 20)"];
@@ -64,27 +67,27 @@ export function layFriends(ctx, put, L) {
   // the den: map table and the checkpoint crates
   const mt = at(L, L.friends.mapTable), cr = at(L, L.friends.crates);
   put("l169-friend-maptable", { feetPosition: g(mt.x, mt.z, fu), model: model("pedestal_table"), physics: "static" });
-  put("l169-friend-map", { feetPosition: g(mt.x, mt.z, fu + 0.775), rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 0.4, segments: 28 }, material: { texture: "cdn/texture-hand-drawn-desert-route-map-on-old-paper.png", roughness: 1, side: "double" } });
+  put("l169-friend-map", { feetPosition: g(mt.x, mt.z, fu + FUR.pieces.pedestal_table.size[1] + 0.002), pivot: "center", rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 0.4, segments: 28 }, material: { texture: "cdn/texture-hand-drawn-desert-route-map-on-old-paper.png", roughness: 1, side: "double" } });
   for (let i = 0; i < 4; i++) put("l169-friend-crate" + i, { feetPosition: g(cr.x - (i % 2) * 0.45, cr.z, fu + (i >> 1) * 0.27), rotation: { yaw: i * 7 - 8 }, model: model("cola_crate") });
   put("l169-friend-denlamp", { feetPosition: g(mt.x, mt.z, fu + 2.1), light: { kind: "point", color: "oklch(0.85 0.09 75)", intensity: 1.6, distance: 7 } });
   // the porch: the road guide's handcart, the weather slate, the newcomer's chair
-  const c = at(L, L.friends.cart), wy = fu + 0.34;
+  const c = at(L, L.friends.cart), deck = L.house.porchUp, wy = deck + 0.34;
   for (const s of [-1, 1]) {
-    put("l169-friend-cart-wheel" + s, { feetPosition: g(c.x, c.z + s * 0.48, wy), primitive: { kind: "torus", radius: 0.3, tube: 0.04, radialSegments: 8, tubularSegments: 24 }, material: WOOD });
+    put("l169-friend-cart-wheel" + s, { feetPosition: g(c.x, c.z + s * 0.48, wy), pivot: "center", primitive: { kind: "torus", radius: 0.3, tube: 0.04, radialSegments: 8, tubularSegments: 24 }, material: WOOD });
     for (let k = 0; k < 3; k++) put("l169-friend-cart-spoke" + s + k, { feetPosition: g(c.x, c.z + s * 0.48, wy), pivot: "center", rotation: { roll: k * 60 }, primitive: { kind: "cylinder", radiusTop: 0.015, radiusBottom: 0.015, height: 0.58, radialSegments: 6 }, material: WOOD });
-    put("l169-friend-cart-shaft" + s, { feetPosition: g(c.x + 0.95, c.z + s * 0.3, fu + 0.52), pivot: "center", rotation: { roll: 82 }, primitive: { kind: "cylinder", radiusTop: 0.022, radiusBottom: 0.028, height: 1, radialSegments: 8 }, material: WOOD });
+    put("l169-friend-cart-shaft" + s, { feetPosition: g(c.x + 0.95, c.z + s * 0.3, deck + 0.52), pivot: "center", rotation: { roll: 82 }, primitive: { kind: "cylinder", radiusTop: 0.022, radiusBottom: 0.028, height: 1, radialSegments: 8 }, material: WOOD });
   }
   put("l169-friend-cart-axle", { feetPosition: g(c.x, c.z, wy), pivot: "center", rotation: { pitch: 90 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.03, height: 1.04, radialSegments: 8 }, material: WOOD });
-  put("l169-friend-cart-bed", { feetPosition: g(c.x, c.z, fu + 0.36), scale: { x: 1.25, y: 1, z: 0.8 }, primitive: { kind: "cylinder", radiusTop: 0.5, radiusBottom: 0.42, height: 0.3, radialSegments: 24 }, material: WOOD, physics: "static" });
-  put("l169-friend-cart-sack", { feetPosition: g(c.x - 0.2, c.z, fu + 0.62), scale: { x: 1.2, y: 0.6, z: 1 }, primitive: { kind: "sphere", radius: 0.24, widthSegments: 14, heightSegments: 10 }, material: { texture: "cdn/texture-coarse-burlap-sackcloth.png", color: "oklch(0.7 0.06 80)", roughness: 1 } });
-  put("l169-friend-cart-crate", { feetPosition: g(c.x + 0.25, c.z, fu + 0.66), rotation: { yaw: 14 }, model: model("cola_crate") });
+  put("l169-friend-cart-bed", { feetPosition: g(c.x, c.z, deck + 0.36), scale: { x: 1.25, y: 1, z: 0.8 }, primitive: { kind: "cylinder", radiusTop: 0.5, radiusBottom: 0.42, height: 0.3, radialSegments: 24 }, material: WOOD, physics: "static" });
+  put("l169-friend-cart-sack", { feetPosition: g(c.x - 0.2, c.z, deck + 0.79), pivot: "center", scale: { x: 1.2, y: 0.6, z: 1 }, primitive: { kind: "sphere", radius: 0.24, widthSegments: 14, heightSegments: 10 }, material: { texture: "cdn/texture-coarse-burlap-sackcloth.png", color: "oklch(0.7 0.06 80)", roughness: 1 } });
+  put("l169-friend-cart-crate", { feetPosition: g(c.x + 0.25, c.z, deck + 0.66), rotation: { yaw: 14 }, model: model("cola_crate") });
   const sl = at(L, L.friends.slate), T0 = slateText(hour, L);
   put("l169-slate", { tags: ["interact"], feetPosition: g(sl.x, sl.z, fu + 1.05), rotation: { yaw: 180 }, primitive: { kind: "box", width: 1.0, height: 0.66, depth: 0.03 }, material: { texture: "cdn/texture-dusty-black-chalkboard-slate.png", color: "oklch(0.3 0.01 250)", roughness: 1 },
     state: { prompt: "Read the slate", note: T0.text, text: T0.text, sub: T0.sub },
     ui: `<div face="front" width="1.0m" style="font:700 78px 'Comic Sans MS',cursive;color:#eeeadc;padding:60px 40px;text-align:center;line-height:1.3">{{ state.text }}<div style="font-size:44px;font-weight:400;opacity:.8;margin-top:30px">{{ state.sub }}</div></div>` });
   for (const [k, dx, dy, w, roll] of [["t", 0, 0.66, 1.08, 90], ["b", 0, 0, 1.08, 90], ["l", -0.52, 0.33, 0.72, 0], ["r", 0.52, 0.33, 0.72, 0]])
     put("l169-slate-frame-" + k, { feetPosition: g(sl.x + dx, sl.z, fu + 1.05 + dy), pivot: "center", rotation: { roll }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.03, height: w, radialSegments: 8 }, material: WOOD });
-  if (S.bench) put("l169-friend-bench", { feetPosition: g(S.bench.x, S.bench.z, fu), rotation: { yaw: yawOf(0, -1) }, model: model("dining_chair") });
+  if (S.bench) put("l169-friend-bench", { feetPosition: g(S.bench.x, S.bench.z, S.bench.up), rotation: { yaw: yawOf(S.bench.fx, S.bench.fz) }, model: model("dining_chair") });
   // the seven
   for (const p of F.people) {
     const [, block] = blockAt(p, hour), rounds = roundsOf(ctx, L, S, p, block), r0 = rounds[0];
@@ -127,7 +130,7 @@ export function tickFriends(ctx, L) {
     if (carrying) ctx.spawn("l169-friend-plate", { parent: ID(1), attachment: { bone: "RightHand" }, feetPosition: { x: 0, y: 0.04, z: 0 }, ...PLATE }); else if (ctx.getObject(ID(1) + "/l169-friend-plate")) ctx.destroy(ID(1) + "/l169-friend-plate"); }
   if (!!ps.l169meal !== meal) { ps.l169meal = meal;
     for (let i = 1; i <= 7; i++) { const c = S["seat-" + i], id = "l169-friend-setting-" + i;
-      if (meal) ctx.spawn(id, { feetPosition: { x: c.x + c.fx * 0.42, z: c.z + c.fz * 0.42, y: { terrain: fu + 0.765 } }, ...PLATE }); else if (ctx.getObject(id)) ctx.destroy(id); } }
+      if (meal) ctx.spawn(id, { feetPosition: { x: c.x + c.fx * 0.5, z: c.z + c.fz * 0.5, y: { terrain: fu + 0.765 } }, ...PLATE }); else if (ctx.getObject(id)) ctx.destroy(id); } }
   // the fixer's shutters: closed for the day, open for the night
   if (ps.l169shut !== day) { ps.l169shut = day;
     for (const r of ctx.query({ tags: ["l169-shutter"] })) { const h = ctx.getObject(r.id); if (h && h.state.closed !== day) { h.state.closed = day; h.state.open = !day; } } }
