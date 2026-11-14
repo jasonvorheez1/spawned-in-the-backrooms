@@ -89,7 +89,7 @@ export function spawnWanderer(ctx, id, pos, face, extra = {}) {
 // A den is a ward, OR, ICU or pharmacy locked from inside. 1-3 armed wanderers wait in it; the door takes a lockpick; once
 // picked they see you and come out. A picked den stays open, then fills and locks again an hour later (the world's respawn
 // rule). place.state.dens[id] = when it was picked. Numbers are Savi's picks.
-export const DEN = { chance: 0.24, types: ["ward", "or", "icu", "pharmacy"], locks: [25, 25, 50, 50, 75], packMin: 1, packMax: 3, refill: 3600000, keepClear: 45 };
+export const DEN = { chance: 0.24, types: ["ward", "or", "icu", "pharmacy"], locks: [25, 25, 50, 50, 75], packMin: 1, packMax: 3, refill: 3600000, keepClear: 65 };
 const hh = (str, salt) => { let x = (2166136261 ^ salt) >>> 0; for (let i = 0; i < str.length; i++) { x ^= str.charCodeAt(i); x = Math.imul(x, 16777619); } return ((x >>> 0) % 100000) / 100000; };
 export function denOf(seed, info) {
   if (!info || !DEN.types.includes(info.type) || info.id === "ns0_0m" || !info.door || nearSpawn(info.door, DEN.keepClear)) return null;
