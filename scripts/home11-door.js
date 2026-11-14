@@ -3,12 +3,8 @@ import TV from "./lib/data/tv-channels.yml";
 import SNACKS from "./lib/data/snacks.yml";
 import { MEAT } from "./lib/items.js";
 import { carryAcross } from "./lib/carry.js";
+import { STATIONS } from "./lib/radio.js";
 // Inside the green house: the front door goes back to the porch, the bed rests you.
-const RADIO = [
-  { name: "pop punk on 98.7", clip: "cdn/music-early-2000s-pop-punk-fast-guitars-drums-anthem-loop.mp3" },
-  { name: "r&b slow jams", clip: "cdn/music-2000s-rnb-smooth-slow-jam-beat-keys-loop.mp3" },
-  { name: "eurodance hits", clip: "cdn/music-2000s-eurodance-trance-synth-club-loop.mp3" },
-];
 const TEXTS = ["u up? lol", "did u see the new episode of laguna beach", "brb mom needs the phone line", "pls add me back to ur top 8", "ttyl going 2 blockbuster", "r u coming 2 the mall later"];
 export function ding(ctx, { by, meat, snack }) {
   ctx.self.state.busy = false; ctx.self.audio = null;
@@ -86,10 +82,13 @@ export const ears = {
       return;
     }
     if (k === "boombox") {
-      const n = RADIO.length, i = ((ctx.self.state.st ?? -1) + 1) % (n + 1); ctx.self.state.st = i;
+      // the boombox tunes the station system (Shelly Nov 14: "every radio instance ... the radio station system"): each press the next station, then off
+      const n = STATIONS.length, i = ((ctx.self.state.st ?? -1) + 1) % (n + 1); ctx.self.state.st = i;
       ctx.emit("playSound", { clip: "cdn/sfx-plastic-boombox-button-click.mp3", position: ctx.self.feetPosition, volume: 0.6 });
-      ctx.self.audio = i < n ? { clip: RADIO[i].clip, loop: true, gain: 0.3, spatial: true, maxDistance: 14, bus: "Music" } : null;
-      w.notice = { text: i < n ? `Boombox: ${RADIO[i].name}` : "Boombox off", at: now };
+      ctx.self.audio = null;
+      const b = [].concat(ctx.self.behavior ?? []); if (!b.includes("scripts/world-radio.js")) ctx.self.behavior = [...b, "scripts/world-radio.js"];
+      Object.assign(ctx.self.state, { on: i < n, station: i < n ? i : 0, clean: true, gain: 0.55, reach: 14 });
+      w.notice = { text: i < n ? `Boombox: ${STATIONS[i].name ?? "station " + (i + 1)}` : "Boombox off", at: now };
       return;
     }
     if (k === "lamp") {

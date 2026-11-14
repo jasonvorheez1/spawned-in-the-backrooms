@@ -233,5 +233,5 @@ function layDress2(ctx, B, tarp) {
   }
   put(ctx, "l02-gd-drip", { feetPosition: { x: cx(0, -1.32), y: BASE + H("paintcan") * 2 - 0.02, z: cz(0, -1.42) }, fx: { script: DRIP } });
   put(ctx, "l02-gd-motes", { feetPosition: { x: X + C * 2, y: BASE + 0.4, z: Z + C * 1.5 }, fx: { script: MOTES } });
-  put(ctx, "l02-gd-radio", { feetPosition: { x: 16.6, y: BASE + 1.2, z: -2 }, audio: { clip: RADIO, loop: true, gain: 0.16, spatial: true, refDistance: 4, maxDistance: 24 } });
+  put(ctx, "l02-gd-radio", { feetPosition: { x: 16.6, y: BASE + 1.2, z: -2 }, behavior: "scripts/world-radio.js", state: { station: 3, gain: 0.3, reach: 24 } }); // through the drywall: Ad Nauseam AM
 }
