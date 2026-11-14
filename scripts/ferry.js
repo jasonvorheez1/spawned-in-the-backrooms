@@ -96,6 +96,7 @@ export function say(ctx, f, on, p) {
 function swing(ctx, f, open, p) {
   const s = f.state; if (!!s.open === open) return;
   s.open = open;
+  if (open) s.openAt = ctx.now();
   animate(ctx, `${f.id}/door`, { "rotation.yaw": open ? -N.openYaw : 0 }, { duration: open ? 0.9 : 0.7, easing: "easeInOutQuad" });
   const cold = ctx.getObject(`${f.id}/cold`);
   if (cold) {
@@ -165,6 +166,6 @@ export function update(ctx) {
     } else if (near && !m.near && !s.open) say(ctx, f, "greet", p);
     m.inside = inside; m.near = near;
   }
-  if (s.open && !close) swing(ctx, f, false, null);
+  if (s.open && !close && ctx.now() - (s.openAt ?? 0) > N.closeAfter * 1000) swing(ctx, f, false, null);
   if (!any) ctx.sleep(3);
 }

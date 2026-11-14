@@ -5,6 +5,7 @@ hungryUnder: 40
 tinHunger: 35
 near: 3            # metres: a player this close gets a greeting
 closeAt: 4.5       # nobody this close: the door swings shut by itself
+closeAfter: 20     # seconds the door waits with nobody close before it shuts
 openYaw: 108       # degrees the door swings
 note: { size: 0.13, grow: 1.7, center: [0.36, 0.86], slots: [[0.13, 1.39], [0.31, 1.41], [0.50, 1.39], [0.15, 0.52]] }
 lines:
