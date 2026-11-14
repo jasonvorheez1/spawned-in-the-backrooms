@@ -21,11 +21,13 @@ import { layVaults } from "../../scripts/lib/level11-vaults.js";
 import { layShop } from "../../scripts/lib/level11-shop.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
+import CIGS from "../../scripts/lib/data/cigs.yml";
+const CIG = (k) => CIGS[k]?.model;
 
 export const cadence = "1s";
 const RENO_FLOOR = 0.32;
 const mallTrash = (i) => ({ x: -15.15 + i * 0.2, y: 0.33, z: 28.1 + i * 0.65 });
-const V = 168; // 168: Chapter 2 Clinic dead-drop and sealed Level ! hospital threshold // 167: stouter columns // 166: 166: riveted Tripo platform columns // 165: 165: ramp lip removed // 164: 164: stair mouth opened to z 63.8 (head room on the last steps) // 163: 163: subway stair ramp carries the feet, Tripo deposit wall // 162: 162: bin true size // // 161: band split at vault door // // 160: vault door fit // // 159: vault door scaled flat // // 158: Tripo vault door + bins // // 157: substation 4 Tripo pieces, vault wall opened (Shelly Nov 13) // // 154: newsbox out of the hot dog cart, printed cards // 148 laid a cut list (a throw mid-lay): 149 lays it whole again // the market court and the central pedestrian route
+const V = 169; // 169: cigarette packs on the apartment counter and Sedco till // 168: 168: Chapter 2 Clinic dead-drop and sealed Level ! hospital threshold // 167: stouter columns // 166: 166: riveted Tripo platform columns // 165: 165: ramp lip removed // 164: 164: stair mouth opened to z 63.8 (head room on the last steps) // 163: 163: subway stair ramp carries the feet, Tripo deposit wall // 162: 162: bin true size // // 161: band split at vault door // // 160: vault door fit // // 159: vault door scaled flat // // 158: Tripo vault door + bins // // 157: substation 4 Tripo pieces, vault wall opened (Shelly Nov 13) // // 154: newsbox out of the hot dog cart, printed cards // 148 laid a cut list (a throw mid-lay): 149 lays it whole again // the market court and the central pedestrian route
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1777,6 +1779,10 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   am("l11-apt-picture-0", "picture", ["wood", "brass"], null, { model: { id: APT_M.picture, forward: "-z", materials: { ...slots("wood", "brass"), canvas: { texture: "cdn/texture-oil-painting-countryside-landscape.png", roughness: 0.7 } } } });
   sp("l11-apt-picture-1", { feetPosition: { x: -45.6, y: 1.585, z: 61.828 }, rotation: { yaw: 180 }, model: { id: APT_M.picture, forward: "-z", materials: { ...slots("wood", "brass"), canvas: { texture: "cdn/texture-oil-painting-harbor-boats.png", roughness: 0.7 } } } });
   // The three working appliances keep their use contract (scripts/level11-use.js)
+  // the creator's cigarette mod: a smoker's pack on the apartment counter (raycast top 1.20), and Sedco's till stock (raycast top 1.16)
+  const cigAt = (id, x, y, z, yaw, k) => { if (CIG(k)) sp(id, { feetPosition: { x, y, z }, rotation: { yaw, pitch: -90 }, pivot: "center", castShadow: false, visibleRange: { max: 25 }, model: { id: CIG(k), forward: "+z" } }); };
+  cigAt("l11-apt-cig-0", -41.6, 1.201, 61.4, 25, "marlboro-marlboropack");
+  for (const [i, [x, z, yaw, k]] of [[24.75, 14.45, 90, "marlboro-marlboropack"], [24.78, 14.6, 84, "marlborolight-pack"], [24.75, 14.75, 95, "camel-camelpack"], [25.15, 16.45, 10, "marlboro-marlborocart"]].entries()) cigAt(`l11-sedco-cig-${i}`, x, 1.161, z, yaw, k);
   am("l11-apt-radio", "radio", ["wood", "bakelite", "cloth", "brass", "dial"], "box", USE("apt-radio", "Capital Vacuum-Tube Radio", "Tune Radio"));
   am("l11-apt-radiator", "radiator", ["radpaint", "pipe", "brass", "iron"], "box", USE("apt-radiator", "Autonomous Steam Radiator", "Warm Hands at Radiator"));
   am("l11-apt-sink", "sink", ["steel", "rubber", "ceramic"], "box", USE("apt-tap", "Kitchen Tap (Pure Almond Water)", "Drink Municipal Tap Water"));
