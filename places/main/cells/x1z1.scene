@@ -289,7 +289,7 @@ xmas-clock:
   layout: {box: {max: {x: 0.275, y: 2.3, z: 0.315}, min: {x: -0.275, y: 0, z: -0.315}}}
   model: {id: /cdn/value.71d4abfce5fc6f32270bd4f4a63d652234cbf80f9de63a8460cb1beeb407ca3e.glb}
   physics: {body: static, collider: box}
-  rotation: {roll: 9, yaw: -90}
+  rotation: {roll: 9, yaw: 180}
   tags: [xmas]
 xmas-clock-light:
   feetPosition: {x: 72, y: 1.9, z: 145.85}
