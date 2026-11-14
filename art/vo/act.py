@@ -75,11 +75,17 @@ def rec(j):
     # Shelly Nov 14 "fix the voice lines theyre laughing": a long direction in the brackets made the voice maker laugh and repeat the line; two or three words only
     feel = emotion(key, line)  # the line's feeling (art/vo/emotion.py), then who they are (the cast tag)
     txt = ''.join(f"[{p}] " for p in (feel, tag) if p) + line
+    words = len(line.split()); cap = 1.5 + words * 0.6 + (1.8 if feel else 0)  # a laugh, sob or sigh earns its seconds; past that it repeated the line
+    best = None
     for _ in range(3):
         r = subprocess.run(['spawn', 'voice', txt, '--voice', v, '--name', 'vo ' + who + ' ' + slug(line, 40)], capture_output=True, text=True)
         m = re.search(r'/cdn/value\.([0-9a-f]+)\.mp3', r.stdout)
-        d = re.search(r'([0-9.]+) s mp3', r.stdout); words = len(line.split())
-        if m and (not d or float(d.group(1)) <= 1.5 + words * 0.6): return k, m.group(1)
+        d = re.search(r'([0-9.]+) s mp3', r.stdout)
+        if not m: continue
+        sec = float(d.group(1)) if d else 0
+        if sec <= cap: return k, m.group(1)
+        if best is None or sec < best[0]: best = (sec, m.group(1))
+    if best and best[0] <= cap * 1.4: return k, best[1]  # shortest of three, still near length
     print('FAIL', who, line[:50], r.stdout[-200:], r.stderr[-200:], flush=True); return k, None
 n = 0
 with ThreadPoolExecutor(8) as ex:
