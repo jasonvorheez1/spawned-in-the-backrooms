@@ -13,7 +13,7 @@ export const PHOEBE_HUMAN = {
   id: "phoebe", fseed: "phoebe", sex: "f", skin: "#f1d2bd", ftype: "pixie", bust: 0.35,
   hair: "f_wolfcut", hairc: "#c4602b", eye: "#ffffff",
   topw: "pgcoat", top: "#b8975c", botw: "skirt", bottom: "#17141a", shoes: "boots", shoec: "#121014",
-  expr: "smug",
+  expr: "neutral",
 }
 const EYES = { color: "#ffffff", roughness: 0.3, metalness: 0, emissive: "#ffffff", emissiveIntensity: 2.2 }
 function humanPhoebe() {
