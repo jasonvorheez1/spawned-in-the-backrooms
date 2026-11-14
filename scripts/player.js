@@ -1884,7 +1884,7 @@ function tickStats(ctx, t, moving) {
       }
     }
   }
-  if (canSaveHere(ctx.self.place) && now - (w.savedAt ?? 0) > 4000) { w.savedAt = now; s.savePos = { x: Math.round(p.x * 10) / 10, y: Math.round(p.y * 10) / 10, z: Math.round(p.z * 10) / 10 }; s.savePlace = ctx.self.place }
+  if (canSaveHere(ctx.self.place) && ctx.self.grounded /* Nov 14: a mid-fall save woke Shelly falling forever in 109 */ && now - (w.savedAt ?? 0) > 4000) { w.savedAt = now; s.savePos = { x: Math.round(p.x * 10) / 10, y: Math.round(p.y * 10) / 10, z: Math.round(p.z * 10) / 10 }; s.savePlace = ctx.self.place }
   // exploring: every new cell is xp
   const { cx, cz } = cellAt(p.x, p.z)
   if (cx >= 0 && cz >= 0 && cx < N && cz < N) {
