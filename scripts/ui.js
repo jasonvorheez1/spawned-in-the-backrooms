@@ -4,7 +4,7 @@ import { wristNav } from './lib/wrist-nav.js'
 import { quickBar } from './lib/hud-quickbar.js'
 import { UI_THEME } from './lib/ui-theme.js'
 import { uiPrefsAttrs, uiPrefsOf, noticeToast, escKeyHandler } from './lib/ui-kit.js'
-import { screen } from './lib/screen.js'
+import { screen, hasHalogen } from './lib/screen.js'
 import { overlay as lagscopeOverlay } from '../mods/lagscope/panel.js'
 import cinemaPanel from '../mods/absolute-cinema/lib/ui-cinema.js'
 import { renderCinemaOverlays } from '../mods/absolute-cinema/lib/ui-cinema-overlays.js'
@@ -460,13 +460,14 @@ function renderHud(ctx, player) {
   const hpColor = hpF > 0.6 ? 'oklch(0.75 0.12 85)' : hpF > 0.3 ? 'oklch(0.72 0.15 55)' : 'oklch(0.65 0.22 28)'
   const sanWord = sanF > 0.75 ? 'steady' : sanF > 0.5 ? 'uneasy' : sanF > 0.25 ? 'fraying' : 'breaking'
   const rar = wp.rarity ? W.rarities?.[wp.rarity] : null
+  const halogen = hasHalogen(s, player.place)
 
 
   return `${THEME}${LIVE}
 ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','journal'].includes(screen(s,player.place))}" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
-  ${questTracker(s, player, ctx)}
-  ${!s.building && screen(s,player.place)==='play' ? quickBar(s,quick) : ''}
-  ${s.nvgOn ? `<div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,oklch(0.75 0.2 145 / .10) 35%,oklch(0.08 0.05 145 / .92) 78%);mix-blend-mode:normal"></div><div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,oklch(0.6 0.2 145 / .08) 0 1px,transparent 1px 3px)"></div><div style="position:absolute;top:18px;left:50%;transform:translateX(-50%);color:#7cf08a;font-size:12px;letter-spacing:.3em;opacity:.8">NV · ${Math.round(s.battery)}%</div>` : ''}${xferCard(s, now)}${tutUi(s, now)}${t0Fade(ctx, player)}${restUi(ctx, s)}${mahjongPanel(s, now)}
+  ${halogen ? questTracker(s, player, ctx) : ''}
+  ${halogen && !s.building && screen(s,player.place)==='play' ? quickBar(s,quick) : ''}
+  ${s.nvgOn ? `<div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,oklch(0.75 0.2 145 / .10) 35%,oklch(0.08 0.05 145 / .92) 78%);mix-blend-mode:normal"></div><div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,oklch(0.6 0.2 145 / .08) 0 1px,transparent 1px 3px)"></div><div style="position:absolute;top:18px;left:50%;transform:translateX(-50%);color:#7cf08a;font-size:12px;letter-spacing:.3em;opacity:.8">NV · ${Math.round(s.battery)}%</div>` : ''}${xferCard(s, now)}${tutUi(s, now, player.place)}${t0Fade(ctx, player)}${restUi(ctx, s)}${mahjongPanel(s, now)}
   ${chatBubbles(ctx, now, player)}
   ${sniperScope(s, wp)}
   <!-- Center Point (hidden during ADS for true ironsights aiming) -->
@@ -481,7 +482,7 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
   ${hpF < 0.3 ? `<div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 60%,rgba(140,20,15,0.6) 100%);animation:pulse-red 1.2s infinite;opacity:${Math.round((0.3 - hpF) * 125) / 50}"></div>` : ''}
 
   <!-- BOTTOM-LEFT: HP, sanity, compass, rank -->
-  <div class="bl" style="position:absolute;left:28px;bottom:22px;width:min(300px,44vw)">
+  ${halogen ? `<div class="bl" style="position:absolute;left:28px;bottom:22px;width:min(300px,44vw)">
     ${bar('HP', s.hp, mh, hpF < 0.3 ? 'oklch(0.68 0.2 35)' : 'var(--a)', `${Math.ceil(s.hp)}/${mh}`)}
     ${bar(`SAN <span style="opacity:.7">· ${sanWord}</span>`, s.sanity, ms, sanF < 0.25 ? 'oklch(0.68 0.2 35)' : 'var(--a)', `${Math.round(Math.max(0,Math.min(1,sanF))*100)}%`)}
     ${(s.cold ?? 0) > 0 ? bar(`COLD <span style="opacity:.7">· ${s.cold >= 70 ? 'freezing' : s.cold >= 40 ? 'shivering' : 'chilly'}</span>`, s.cold, 100, s.cold >= 70 ? 'oklch(0.72 0.14 235)' : 'oklch(0.82 0.08 220)') : ''}
@@ -521,7 +522,7 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
     <div class="muted" style="font-size:12px;margin-top:2px">
       ${zone === 'bonus' ? 'You feel safe. Everyone lands here.' : zone === 'manila' ? 'The Manila Room. The fluorescent hum softens. Sanity recovers.' : zone === 'hub' ? 'Sanity stabilizes here. Nothing follows.' : zone === 'dark' ? 'Total blackout. Watch the corners.' : zone === 'red' ? 'Severe sanity decay.' : zone === 'l5_housekeeping' ? 'M.E.G. Outpost Housekeeping. Sanity and health recover here.' : zone === 'l5_boiler' ? 'The Boiler Room. Extreme heat and heavy sanity drain.' : zone === 'l5_beverly' ? 'The Beverly Room. Hypnotic ballroom music echoes.' : ''}
     </div>
-  </div>`}
+  </div>`}` : ''}
 
   ${s.humAt && now - s.humAt < L.humSpikeLength * 1000 ? `
   <div style="position:absolute;left:0;right:0;top:14%;display:flex;justify-content:center;pointer-events:none">
@@ -554,10 +555,10 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
       <div style="text-align:right;margin-top:12px"><button onclick="sendAction('inv',{k:'read',n:0})" style="background:#2a241a;color:#e9dfc4;border:0;padding:5px 14px;font-family:inherit;cursor:pointer">put it away</button></div>
     </div></div>` : ''}
   ${subtitles(ctx, player, now)}
-  ${compassRead(s, ((player.camera?.rotation?.yaw ?? 0) % 360 + 360) % 360, now)}
+  ${halogen ? compassRead(s, ((player.camera?.rotation?.yaw ?? 0) % 360 + 360) % 360, now) : ''}
   ${noticeToast(s, now)}
   <!-- Subdued Initial Hint -->
-  ${uiPrefsOf(s).hudMinimal ? '' : `<div id="hint" style="position:absolute;left:0;right:0;text-align:center;bottom:180px;font-size:12px;color:rgba(232,228,216,0.45);animation:hud-fade 7s 1s forwards;opacity:0">
+  ${!halogen || uiPrefsOf(s).hudMinimal ? '' : `<div id="hint" style="position:absolute;left:0;right:0;text-align:center;bottom:180px;font-size:12px;color:rgba(232,228,216,0.45);animation:hud-fade 7s 1s forwards;opacity:0">
     <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('emote', 'T')}</kbd> face
   </div>`}
 

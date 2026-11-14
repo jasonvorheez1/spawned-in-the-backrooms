@@ -45,7 +45,7 @@ export const DRAWINGS = [[2, 42.78, -19.5, 90, 0.8], [1, 45.22, -16.2, -90, 0.8]
 export const BEATS = [
   { id: "encounter", box: [-1.5, 1.5, -27.2, -25.2] },
   { id: "smiler", box: [20, 24, -29.5, -26.5] }, // hall C: the lights die from the far end in, and something grins in the dark (Shelly, Nov 8)
-  { id: "halogen", box: [43.5, 46.8, -30, -25] },
+  { id: "halogen", box: [41.8, 48, -33, -23] },
   { id: "drawings", box: [42.5, 45.5, -22, -20.4] },
   { id: "final", circle: SOFT },
 ]
