@@ -1,4 +1,5 @@
 import { raycast } from "builtin/physics";
+import { BLAST, feelBlast } from "./lib/blast-fx.js";
 
 const BOOM = `fx
 pop flash burst=1 life=.18 size=1 col=hdr(4,2,.5) a=1>0 r=sprite(soft-disc,add)
@@ -22,10 +23,12 @@ export function update(ctx, dt) {
       const obstruction = d > 0.1 && raycast(ctx, at, { x: dx / d, y: dy / d, z: dz / d }, { distance: Math.max(0, d - 0.25), bodies: "all", physicsOnly: true, ignoreEntities: [me.id, s.owner, player.id].filter(Boolean) });
       if (obstruction) continue;
       player.state.hp = Math.max(0, (player.state.hp ?? 100) - Math.round(damage * (1 - d / radius * 0.65)));
-      ctx.emit("screenShake", { intensity: 0.45 * (1 - d / radius), duration: 0.3 }, { audience: { player: player.id } });
     }
-    ctx.emit("fx", { position: at, script: BOOM });
-    ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-frag-grenade-explosion.mp3", position: at, volume: 0.9, maxDistance: 45 });
+    ctx.emit("fx", { position: at, script: BLAST, params: { s: s.grenade ? 1 : 1.5 } }); feelBlast(ctx, at, s.grenade ? 1 : 1.5);
+    ctx.emit("shockwave", { position: at, speed: 40, thickness: 2.2, intensity: 1 });
+    ctx.emit("decal", { position: at, normal: hit?.normal ?? { x: 0, y: 1, z: 0 }, texture: "cdn/texture-scorch-mark-blast-decal.png", size: s.grenade ? 2.6 : 4, lifetime: 90, fade: 5 });
+    ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-explosion-concussion-thump-with-debris-rattle-and-room-rumble-tail.mp3", position: at, volume: 0.85, maxDistance: 90 });
+    ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-frag-grenade-explosion.mp3", position: at, volume: 1, maxDistance: 120 });
     ctx.destroy(me.id);
     return;
   }

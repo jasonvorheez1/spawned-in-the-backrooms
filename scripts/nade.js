@@ -5,6 +5,7 @@ import { freshenerAt } from "./lib/remodel-quest.js";
 import { raycast } from "builtin/physics";
 import T from "./lib/data/throwables.yml";
 import { damageEntity } from "./lib/breakables.js";
+import { BLAST, feelBlast } from "./lib/blast-fx.js";
 const SND = "/cdn/moodboard-realistic-gritty/";
 const FOES = ["smiler", "lurker", "hound", "stealer", "moths", "l8spider", "l8-hostile", "npc", "l61fc", "spamboss", "zdrone", "l11foe", "l5rat", "l7beast", "l10worm"];
 const dot = (a, b) => a.x * b.x + a.y * b.y + a.z * b.z;
@@ -113,17 +114,17 @@ function explode(ctx) {
   const self = ctx.place.players.find((p) => p.id === s.ownerId), sf = self?.feetPosition, sd = sf ? Math.hypot(sf.x - c.x, sf.z - c.z) : 99;
   if (s.ownerId) ctx.emit("blast", { hits, self: sd < F.radius ? Math.round(F.damage * 0.5 * (1 - sd / F.radius)) : 0, from: c }, { to: s.ownerId });
   const big = s.kind === "rocket", n = (big && s.hitN) || { x: 0, y: 1, z: 0 };
-  ctx.emit("fx", { position: { x: c.x + n.x * 0.2, y: c.y + 0.2, z: c.z + n.z * 0.2 }, script: big ? ROCKET_BOOM : BOOM });
+  ctx.emit("fx", { position: { x: c.x + n.x * 0.2, y: c.y + 0.2, z: c.z + n.z * 0.2 }, script: BLAST, params: { s: big ? 1.5 : 1 } });
   ctx.emit("decal", { position: c, normal: n, texture: "cdn/texture-scorch-mark-blast-decal.png", size: big ? 4.2 : 2.6, lifetime: big ? 120 : 60, fade: 5 }); // the scorch lands on the wall or floor it hit
   if (big) smashAround(ctx, c, F.radius, n, s.hitId);
   if (big) { // a rocket throws the loose things around it and the shooter feels it land
     for (const o of ctx.query({ center: c, radius: F.radius * 1.4, excludeTags: ["player", "thrown"] })) { const h = ctx.getObject(o.id); if (!h || h.physics?.body !== "dynamic") continue; const dx = o.feetPosition.x - c.x, dz = o.feetPosition.z - c.z, d = Math.hypot(dx, dz) || 1, k = 900 * (1 - Math.min(1, d / (F.radius * 1.4))); ctx.emit("impulse", { target: o.id, impulse: { x: dx / d * k, y: k * 0.6, z: dz / d * k } }); }
     if (s.ownerId) { ctx.emit("hitstop", { duration: 0.07 }, { audience: { player: s.ownerId } }); ctx.emit("playSound", { clip: SND + "sfx-rocket-detonation-huge-boom-with-glass-and-ceiling-debris-falling.mp3", position: c, volume: 1, maxDistance: 140 }); }
   }
-  ctx.emit("shockwave", { position: { ...c, y: c.y + 0.3 }, speed: big ? 40 : 30, thickness: big ? 1.8 : 1.2, intensity: big ? 0.9 : 0.6 });
+  ctx.emit("shockwave", { position: { ...c, y: c.y + 0.3 }, speed: big ? 46 : 34, thickness: big ? 2.6 : 1.8, intensity: big ? 1.2 : 0.85 });
   ctx.emit("playSound", { clip: SND + "sfx-frag-grenade-explosion.mp3", position: c, volume: 1, maxDistance: 120 });
   ctx.emit("playSound", { clip: SND + "sfx-explosion-concussion-thump-with-debris-rattle-and-room-rumble-tail.mp3", position: c, volume: 0.8, maxDistance: 90 });
-  for (const pl of ctx.place.players) { const f = pl.feetPosition, dd = Math.hypot(f.x - c.x, f.y - c.y, f.z - c.z); if (dd < (big ? 24 : 16)) ctx.emit("screenShake", { intensity: (big ? 1.3 : 0.9) * (1 - dd / (big ? 24 : 16)), duration: big ? 0.7 : 0.5 }, { audience: { player: pl.id } }); if (dd < 8) ctx.emit("screenFlash", { color: "oklch(0.95 0.08 70)", duration: 0.18, intensity: 0.14 * (1 - dd / 8) }, { audience: { player: pl.id } }); }
+  feelBlast(ctx, c, big ? 1.5 : 1); // shake, punch, ringing ears; no screen flash (the seizure note)
   ctx.emit("noise", { position: c, radius: 60, kind: "explosion" }, { audience: { nearby: c, radius: 60 } });
   ctx.destroy(me.id);
 }
