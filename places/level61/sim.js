@@ -20,7 +20,7 @@ const CIG = (k) => CIGS[k]?.model;
 export const cadence = "1s";
 const TOILET_GLB = "/cdn/value.584d89d495be90361b2f1c260e71cd5079b14f1e5d1b0a3346dd5bc4c808c0dc.glb";
 const VANITY_GLB = "/cdn/value.fc171ef1463c6b6014a17a934459781e7d541b202325257a5ddb0e02de9788c4.glb";
-const V = 88; // 88: Gib coffee urn is the Tripo steel urn. // 87: tray returns are the Tripo steel cabinet. // 86: corner planters are the Tripo weeping fig. // 85: usable Seal 6.1-02 and service inspection tag. // 84: Clippers stools take a seat (they had no Sit). 83: packs reseated on the lowered bar. 82: Clippers bar and bentwood stools lowered to the 1.25 m patrons. 81: 81: cig packs set down to the raycast bar and desk tops. 80: cig packs on the Clippers bar and the M.E.G. desk. // 79: soda machines are Shelly's cola machine (fnv pack), cola crates by the food-court ones. // 78: liquorette tables carry real cigarette packs (art/cigs). // 77: every store till is the Tripo+Studio register (art/gib/build.py). // 76: every food-court stool is the Tripo+Studio diner stool; Gib counter carries pie case, brewer, condiments (art/gib/build.py). // 75: Gib's Grub, the greasy spoon in the south wall. // 74: supply-room overflow jam (stacked, tipped, wall-facing machines). // 73: bar tops, menus, tills, trays, candles and table drinks follow the lowered Liquorette and Clippers furniture down. // 71: bar counters, stools, chairs and tables in Liquorette and Clippers lowered to fit the 1.2 m critters (Shelly). 70: 70: liquorette tables carry pints, tumblers, ashtrays. 69: liquorette damask walls, tin ceiling, tin sign turned. // 68: toilet repainted white porcelain. 67: restroom toilet + vanity turned to their true front axis and sized to real fixtures. 66: restroom toilets + vanities are Tripo models (art/l61-rest). 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
+const V = 89; // 89: Clippers revamped with scripted mahogany/brass architecture, pendants, sconces, footrail, barware & mirror (no blocky boxes). // 88: Gib coffee urn is the Tripo steel urn. // 87: tray returns are the Tripo steel cabinet. // 86: corner planters are the Tripo weeping fig. // 85: usable Seal 6.1-02 and service inspection tag. // 84: Clippers stools take a seat (they had no Sit). 83: packs reseated on the lowered bar. 82: Clippers bar and bentwood stools lowered to the 1.25 m patrons. 81: 81: cig packs set down to the raycast bar and desk tops. 80: cig packs on the Clippers bar and the M.E.G. desk. // 79: soda machines are Shelly's cola machine (fnv pack), cola crates by the food-court ones. // 78: liquorette tables carry real cigarette packs (art/cigs). // 77: every store till is the Tripo+Studio register (art/gib/build.py). // 76: every food-court stool is the Tripo+Studio diner stool; Gib counter carries pie case, brewer, condiments (art/gib/build.py). // 75: Gib's Grub, the greasy spoon in the south wall. // 74: supply-room overflow jam (stacked, tipped, wall-facing machines). // 73: bar tops, menus, tills, trays, candles and table drinks follow the lowered Liquorette and Clippers furniture down. // 71: bar counters, stools, chairs and tables in Liquorette and Clippers lowered to fit the 1.2 m critters (Shelly). 70: 70: liquorette tables carry pints, tumblers, ashtrays. 69: liquorette damask walls, tin ceiling, tin sign turned. // 68: toilet repainted white porcelain. 67: restroom toilet + vanity turned to their true front axis and sized to real fixtures. 66: restroom toilets + vanities are Tripo models (art/l61-rest). 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -431,25 +431,50 @@ function lay(ctx) {
     box(`l61-${k}-back`, cx, 0, z1, 14, 4, 0.3, wm);
     box(`l61-${k}-wl`, cx - 7, 0, (z0 + z1) / 2, 0.3, 4, 10, wm);
     box(`l61-${k}-wr`, cx + 7, 0, (z0 + z1) / 2, 0.3, 4, 10, wm);
-    for (const dx of [-2.14, 2.14]) box(`l61-${k}-jamb-${dx}`, cx + dx, 0, -HD + 0.08, 0.23, 3.34, 0.31, { color: bg, roughness: 0.55 }, { physics: undefined });
-    box(`l61-${k}-header`, cx, 3.22, -HD + 0.08, 4.48, 0.16, 0.31, { color: bg, roughness: 0.55 }, { physics: undefined });
+    if (k === "clippers") {
+      sp("l61-clip-portal", { feetPosition: { x: cx, y: 0, z: -HD + 0.08 }, primitive: { kind: "scripted", script: "scripts/l61-clippers-geo.js", params: { kind: "portal", w: 4.06, h: 3.22 } }, material: { pbr: true }, visibleRange: { max: 55 }, castShadow: false });
+    } else {
+      for (const dx of [-2.14, 2.14]) box(`l61-${k}-jamb-${dx}`, cx + dx, 0, -HD + 0.08, 0.23, 3.34, 0.31, { color: bg, roughness: 0.55 }, { physics: undefined });
+      box(`l61-${k}-header`, cx, 3.22, -HD + 0.08, 4.48, 0.16, 0.31, { color: bg, roughness: 0.55 }, { physics: undefined });
+    }
     sign(`l61-${k}-sign`, cx, 3.6, -HD + 0.2, 180, 4.6, 1.4, html, bg);
     light(`l61-${k}-l0`, cx - 3, 3.5, -HD - 5, lc, 4, 12);
     light(`l61-${k}-l1`, cx + 3, 3.5, -HD - 5, lc, 4, 12);
   }
 
-  // 1. Clippers: Red 1950s bar, stools, back shelves, and the interactive Wurlitzer 80s Internet Radio Jukebox
+  // 1. Clippers: Red 1950s cocktail lounge — sculpted mahogany/brass architecture, Tripo bar/backbars/stools, pendants, sconces, barware, and the Wurlitzer 80s Jukebox
+  const clipGeo = (id, x, y, z, yaw, params, extra = {}) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, primitive: { kind: "scripted", script: "scripts/l61-clippers-geo.js", params }, material: { pbr: true }, visibleRange: { max: 50 }, castShadow: false, ...extra });
   counter("l61-clip-bar", -21, -30.2, 180, M_BAR10, { scale: { x: 1, y: 0.68, z: 1 }, tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "budweiser,budweiser,jackcoke,whiskey,smirnoffice,coke", name: "Clippers bar", verb: "Order what the menu shows", info: "Clippers drink counter." } });
   const BACKBAR = "/cdn/value.83a6fae404fcf2bb72c4e11afec3b9c5712142e0d7fcfe9164abd539421f97dd.glb", BENT = "/cdn/value.ed5f76cd71ad691cd2fb8e8e8acbf1a9a69e62539e7a7f3cf6bb40bf0fbaa599.glb";
   for (const [k, x] of [-25, -23.4, -22, -18.3, -16.8].entries()) sp(`l61-clip-stool-${k}`, { feetPosition: { x, y: 0, z: -29.05 }, rotation: { yaw: 180 + ((k * 37) % 23) - 11 }, tags: ["seat", "chair"], model: { id: BENT }, layout: { box: { min: { x: -0.275, y: 0, z: -0.25 }, max: { x: 0.275, y: 0.64, z: 0.25 } } }, physics: { body: "static", collider: "cylinder" }, visibleRange: { max: 40 }, state: { seat: { w: 1, d: 0.0 }, verb: "Sit", name: "Bentwood stool" } });
-  for (const [i, x] of [-24.8, -20.5, -17.2].entries()) tableSet(`l61-clip-table-${i}`, x, -25.9, 0);
-  box("l61-clip-lambris", -27.81, 0, -27, 0.08, 1.03, 9.25, DARKWOOD, { physics: undefined });
-  box("l61-clip-back-dado", -21, 0, -31.8, 13.6, 1.05, 0.12, DARKWOOD, { physics: undefined });
-  // the carved back bar: two Tripo mahogany units with stained-glass crowns and a clock, bottles behind glass, flanking the doorway to the till
+  for (const [i, x] of [-24.8, -20.5, -17.2].entries()) {
+    tableSet(`l61-clip-table-${i}`, x, -25.9, 0);
+    clipGeo(`l61-clip-tlamp-${i}`, x, 0.752, -25.9, i * 35, { kind: "tablelamp" }, { light: { kind: "point", color: "oklch(0.84 0.14 68)", intensity: 1.4, distance: 5.5, shadow: { enabled: false }, visibleRange: { max: 35 } } });
+    clipGeo(`l61-clip-tware-${i}`, x + 0.18, 0.752, -25.75, i * 50, { kind: "barware", variant: i === 1 ? "shaker" : "cocktail" }, { visibleRange: { max: 25 } });
+  }
+  // Raised-panel mahogany wainscoting with brass inlay & profiled chair rail on all walls
+  clipGeo("l61-clip-lambris", -27.83, 0, -27.0, -90, { kind: "wainscot", len: 9.55, height: 1.06 });
+  clipGeo("l61-clip-east-dado", -14.17, 0, -27.0, 90, { kind: "wainscot", len: 9.55, height: 1.06 });
+  clipGeo("l61-clip-back-dado", -21, 0, -31.83, 180, { kind: "wainscot", len: 13.6, height: 1.06 });
+  clipGeo("l61-clip-front-dado-l", -25.55, 0, -22.2, 0, { kind: "wainscot", len: 4.5, height: 1.06 });
+  clipGeo("l61-clip-front-dado-r", -16.45, 0, -22.2, 0, { kind: "wainscot", len: 4.5, height: 1.06 });
+  // Coffered mahogany & warm-tin ceiling
+  clipGeo("l61-clip-ceiling", -21, 3.98, -27.0, 0, { kind: "ceiling", w: 13.7, d: 9.7 }, { visibleRange: { max: 60 } });
+  // Brushed-brass bar footrail + arched mahogany back-bar mirror
+  clipGeo("l61-clip-footrail", -21, 0, -29.45, 180, { kind: "footrail", len: 8.6 }, { physics: "static" });
+  clipGeo("l61-clip-barmirror", -21, 1.25, -31.8, 180, { kind: "barmirror", w: 2.2, h: 1.65 });
+  // Carved back bar units + barware on the counter top
   for (const [i, x] of [-23.6, -18.4].entries()) sp(`l61-clip-backbar-${i}`, { feetPosition: { x, y: 0, z: -31.2 }, rotation: { yaw: 90 }, model: { id: BACKBAR }, physics: "static", visibleRange: { max: 55 } });
+  clipGeo("l61-clip-bware-0", -23.8, 0.683, -30.15, 15, { kind: "barware", variant: "shaker" }, { visibleRange: { max: 25 } });
+  clipGeo("l61-clip-bware-1", -19.5, 0.683, -30.18, -35, { kind: "barware", variant: "cocktail" }, { visibleRange: { max: 25 } });
   // the creator's cigarette mod on the Clippers bar top (raycast y 0.818): packs a regular left by the stools, a carton by the till end
   for (const [i, [x, z, yaw, k]] of [[-25.3, -30.05, 30, "camel-camelpack"], [-22.3, -30.0, -70, "ls-pack"], [-18.0, -30.1, 115, "blackdeath-pack"], [-16.6, -30.35, 5, "camel-camelcarton"]].entries()) if (CIG(k)) sp(`l61-clip-cig-${i}`, { feetPosition: { x, y: 0.683, z }, rotation: { yaw, pitch: -90 }, pivot: "center", castShadow: false, visibleRange: { max: 25 }, model: { id: CIG(k), forward: "+z" } });
-  for (const [i, x] of [-25, -20.5, -16.4].entries()) light(`l61-clip-lamp-${i}`, x, 2.55, -28.1, "#ffcf9b", 2, 6);
+  // Spun-brass & amber glass pendant lamps over the bar and dining tables, plus Art-Deco wall sconces
+  for (const [i, x] of [-25, -20.5, -16.4].entries()) clipGeo(`l61-clip-lamp-${i}`, x, 2.55, -28.6, 0, { kind: "pendant", drop: 1.43 }, { light: { kind: "point", color: "#ffcf9b", intensity: 2.1, distance: 7, shadow: { enabled: false }, visibleRange: { max: 40 } } });
+  for (const [i, x] of [-24.8, -20.5, -17.2].entries()) clipGeo(`l61-clip-pendant-t-${i}`, x, 2.55, -25.9, 0, { kind: "pendant", drop: 1.43 }, { light: { kind: "point", color: "#ffcf9b", intensity: 1.6, distance: 6.5, shadow: { enabled: false }, visibleRange: { max: 40 } } });
+  for (const [i, [x, z, yaw]] of [[-27.83, -24.5, -90], [-27.83, -28.5, -90], [-14.17, -24.5, 90], [-14.17, -28.5, 90]].entries()) {
+    clipGeo(`l61-clip-sconce-${i}`, x, 1.95, z, yaw, { kind: "sconce" }, { light: { kind: "point", color: "#ffbe80", intensity: 1.1, distance: 5, shadow: { enabled: false }, visibleRange: { max: 35 } } });
+  }
 
   // THE WURLITZER 80s INTERNET RADIO JUKEBOX in Clippers
   sp("l61-clip-jukebox", {
@@ -492,7 +517,7 @@ function lay(ctx) {
   });
 
   sign("l61-juke-neon", -26.4, 2.7, -25, -90, 1.9, 0.5, `<div style="font-size:68px;letter-spacing:2px;color:#00f0ff;text-shadow:0 0 12px #00d8f0">JUKEBOX HITS</div><div style="font-size:26px;color:#ff3888;text-shadow:0 0 10px #ff3888">80s INTERNET RADIO · LIVE</div>`, "rgba(10,12,20,0.85)");
-  box("l61-clip-wire", -21, 0.06, -23.2, 3.6, 0.015, 0.015, { color: "oklch(0.2 0 0)" }, { physics: undefined });
+  clipGeo("l61-clip-wire", -21, 0, -23.2, 0, { kind: "cable", len: 3.6 }, { visibleRange: { max: 25 } });
 
   // 2. Liquorette: an old-world tavern. A carved arched back bar with stained glass and a clock, a long panelled bar with a brass rail, bentwood stools and chairs,
   //    wooden tables, a mosaic floor, wood-panelled walls, a coffered ceiling, pendant lamps, a copper boiler. (Shelly: massively overhaul it from a photo of an old bar)
