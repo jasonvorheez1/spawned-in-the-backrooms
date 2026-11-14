@@ -1,16 +1,16 @@
 // Level ! dressing: the box shells stay as invisible colliders; real geometry and fitted models stand over them.
 // Gate: place.state.dressV. Bump DRESS_V to re-lay (tagged "lrun-dress" pieces are destroyed first).
 import { CORRIDOR, OBSTACLES } from "./levelrun-mechanics.js";
-export const DRESS_V = 2; // 2: dying cold fluorescent tubes break the red every 26 m
+export const DRESS_V = 3; // 3: studio-cleaned models, cot with mattress, posters dimmed to paper; 2: 2: dying cold fluorescent tubes break the red every 26 m
 const GEO = "scripts/levelrun-geo.js", DOOR = "scripts/door-geo.js";
 export const LRUN_MODELS = {
-  gurney: "/cdn/value.ef9b88f3c37d37786b7fcc4a2101e8b527caf2d2e84876813f963730a5a2f334.glb", // Tripo
-  crashcart: "/cdn/value.70280d9dacb011ea6eaa02df82be7d2bb85f484cccaeedf17edc018dd3de8747.glb", // Tripo
-  barrier: "/cdn/value.da9984d0211013ce3b82dd0ba3aa8ea82fbb519d15e0e4e70c294a1adc3ba0ea.glb", // Tripo
-  wheelchair: "/cdn/value.724a50deea0ae5d507b77458f3bc409e378572c3210a5c648a4385784893cda7.glb", // Tripo
-  kettle: "/cdn/value.8cdc483c4675b9fac43d5effeed7f9e83723bb106383599e277ef2076731b3fb.glb", // Tripo
-  megcrate: "/cdn/value.b0e725b703431b3742971d91c19c94a4eecc76eecdb204a79d911242e753e72f.glb", // Tripo
-  cot: "/cdn/value.0384f22003428901d947444e4280d4609f19461056d365ae5cb4690a4fc0a08f.glb", // Tripo
+  gurney: "/cdn/value.b1dc5ac5f129a0ca27a2aa8cf1add8087d64608161472c14347ebd5d390680e2.glb", // Tripo + studio clean (weld, smooth, slim, -Z)
+  crashcart: "/cdn/value.fc6f9622c8597af8969820692ee18f20f1f054fb44eac9ec771668dd197f7e2e.glb", // Tripo + studio clean (weld, smooth, slim, -Z)
+  barrier: "/cdn/value.6fd26f2cc265c1174759fccdad8b29f8f296ca33a021036e7aa953c658e3749b.glb", // Tripo + studio clean (weld, smooth, slim, -Z)
+  wheelchair: "/cdn/value.dc40bdd97768cd902f5f5dbea8acfadc2c2eba260056263a501dea2748271c87.glb", // Tripo + studio clean (weld, smooth, slim, -Z)
+  kettle: "/cdn/value.810914cfe1e05887a3e49d79f7c7c720cccf01197f4b954ee255229fed98a445.glb", // Tripo + studio clean (weld, smooth, slim, -Z)
+  megcrate: "/cdn/value.64a96b8ea948f646874ae3d6f6e3f8139fcef1699363a1eb7523a8d82f929995.glb", // Tripo + studio clean (weld, smooth, slim, -Z)
+  cot: "/cdn/value.8bdde9f497a06819a0029f9df982d9a2a35c190e91291c4e23ac390e0b66af17.glb", // Tripo + studio clean (weld, smooth, slim, -Z)
   sofa: "/cdn/value.ff13bc205536a957826e2f7fed75554c07ffe7848198e50e1d65f257cabacdd9.glb", // furniture.yml, forward +x
   lamp: "/cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb", // furniture.yml, forward +x
   extinguisher: "/cdn/value.3ef36fc8ed3797c2da4a033df5cbd59dae385b6c2480e1adc53495d0939d0267.glb", // l0-kit-wall.yml
@@ -103,11 +103,11 @@ export function dressWorld(ctx) {
   D("lrun-dress-lamp", { feetPosition: { x: AX + 0.15, y: 0, z: -3.85 }, model: { id: M.lamp, forward: "+x" }, layout: fit(0.26, 1.8, 0.26),
     light: { kind: "point", color: "#ffc98a", intensity: 2.2, distance: 8, shadow: { enabled: false } },
     audio: { clip: "cdn/sfx-quiet-electrical-mains-hum-small-room-loop.mp3", loop: true, gain: 0.14, spatial: true, maxDistance: 11 } });
-  D("lrun-dress-cot", { feetPosition: { x: AX - 4.9, y: 0, z: 1.7 }, rotation: { yaw: 90 }, model: M.cot, layout: fit(0.95, 0.85, 0.6) });
+  D("lrun-dress-cot", { feetPosition: { x: AX - 4.9, y: 0, z: 1.7 }, rotation: { yaw: 90 }, model: M.cot, layout: fit(1.9, 0.56, 0.8) });
   D("lrun-dress-crate", { feetPosition: { x: AX - 4.8, y: 0, z: -3.4 }, rotation: { yaw: 12 }, model: M.megcrate, layout: fit(0.5, 0.56, 0.41) });
   D("lrun-dress-kettle", { feetPosition: { x: AX - 4.7, y: 0.56, z: -3.35 }, rotation: { yaw: 40 }, model: M.kettle, layout: fit(0.12, 0.24, 0.12) });
-  D("lrun-dress-poster-a", { feetPosition: { x: AX + 2.4, y: 1.05, z: -4.36 }, vector: "<svg viewBox='0 0 120 170' width='0.6m'><rect width='120' height='170' fill='#e9e1c8'/><rect x='6' y='6' width='108' height='158' fill='none' stroke='#1d3b5c' stroke-width='3'/><text x='60' y='44' text-anchor='middle' font-family='display' font-size='26' font-weight='bold' fill='#1d3b5c'>M.E.G.</text><text x='60' y='78' text-anchor='middle' font-family='sans-serif' font-size='11' fill='#2a2a2a'>IF YOU CAN READ THIS</text><text x='60' y='94' text-anchor='middle' font-family='sans-serif' font-size='11' fill='#2a2a2a'>YOU ARE SAFE.</text><text x='60' y='118' text-anchor='middle' font-family='sans-serif' font-size='10' fill='#7a1a1a'>DRINK WATER. SLEEP.</text><text x='60' y='150' text-anchor='middle' font-family='sans-serif' font-size='8' fill='#555'>Outpost notice 7-B</text></svg>" });
-  D("lrun-dress-poster-b", { feetPosition: { x: AX - 5.86, y: 1.1, z: -1.2 }, rotation: { yaw: 90 }, vector: "<svg viewBox='0 0 150 100' width='0.75m'><rect width='150' height='100' fill='#d8cfb2'/><path d='M10 80 L40 30 L70 60 L95 20 L140 80 Z' fill='#6f8a6a'/><circle cx='118' cy='28' r='10' fill='#e2b048'/><text x='75' y='95' text-anchor='middle' font-family='serif' font-size='9' fill='#333'>somewhere with a sky</text></svg>" });
+  D("lrun-dress-poster-a", { feetPosition: { x: AX + 2.4, y: 1.05, z: -4.36 }, vector: "<svg viewBox='0 0 120 170' width='0.6m'><rect width='120' height='170' fill='#9d9784'/><rect x='6' y='6' width='108' height='158' fill='none' stroke='#16293f' stroke-width='3'/><text x='60' y='44' text-anchor='middle' font-family='display' font-size='26' font-weight='bold' fill='#16293f'>M.E.G.</text><text x='60' y='78' text-anchor='middle' font-family='sans-serif' font-size='11' fill='#2a2a2a'>IF YOU CAN READ THIS</text><text x='60' y='94' text-anchor='middle' font-family='sans-serif' font-size='11' fill='#2a2a2a'>YOU ARE SAFE.</text><text x='60' y='118' text-anchor='middle' font-family='sans-serif' font-size='10' fill='#7a1a1a'>DRINK WATER. SLEEP.</text><text x='60' y='150' text-anchor='middle' font-family='sans-serif' font-size='8' fill='#555'>Outpost notice 7-B</text></svg>" });
+  D("lrun-dress-poster-b", { feetPosition: { x: AX - 5.86, y: 1.1, z: -1.2 }, rotation: { yaw: 90 }, vector: "<svg viewBox='0 0 150 100' width='0.75m'><rect width='150' height='100' fill='#8f8873'/><path d='M10 80 L40 30 L70 60 L95 20 L140 80 Z' fill='#4a5c47'/><circle cx='118' cy='28' r='10' fill='#9a7a34'/><text x='75' y='95' text-anchor='middle' font-family='serif' font-size='9' fill='#333'>somewhere with a sky</text></svg>" });
   // the Level 11 door keeps its id, behavior and state; it wears a real metal door
   const l11 = objs["lrun-to-l11"];
   if (l11) { for (const c of l11.children ?? []) c.visible = false;
