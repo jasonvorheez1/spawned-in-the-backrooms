@@ -1,21 +1,21 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8530,
-  "updatedAt": "2026-11-14T20:54:21.623Z",
+  "basedOnSpecVersion": 8533,
+  "updatedAt": "2026-11-14T21:00:49.141Z",
   "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Per-place simulations and generators build local spaces while shared registries and handlers coordinate navigation, NPCs, combat, inventory, story, crafting and synchronized radio stations.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes, anomalies and deterministic dressing; momentsV gates fitted wall moments and room-prop regeneration.",
     "places/bonus (3D) - vaporwave mall with shops, simulated staff, arcade, homes and salon; authored placements live in cells. places/testlab - Test Range with loot/enemy bays and HIT SQUAD pad.",
     "places/thehub (3D) - tunnel crossroads, keyed destinations and Camp Amber crews; separate from Bonus room routing, with Level 169 door and destination plaques.",
-    "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office, supplies, encounters and story beats.",
+    "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office, supplies, encounters and story beats; places/home11 is a furnished green-house bedroom with usable boombox.",
     "places/level1 + places/level4 + places/level26 (3D) - M.E.G. camps and authored office mazes; Level 26's S.S. Fun has cabin 23, Partygoer decks/lockdown and aboard gate; Level 1 includes Dina's radio.",
     "places/level9 + places/level11 + places/level61 (3D) - seeded Suburbs, Level 11 city/Base Beta/strip mall/clinic and Chapter 2 trail, and Snackrooms food court/M.E.G. checkpoint with simulated staff and Clippers lounge.",
     "places/level70 (3D) - winter market/civic town, stalls, hotel, office, pump and Dry Pipes landmarks; sim composes civic, wild and life systems with town/path builders.",
     "places/level169 (3D) - seeded desert hazards, well arrival, Ferry's modeled house/yard/trail, friends, checkpoint road and questline; hosts S.S. Fun landings. places/level10 hosts its other port; Level 5 and Level 7 have world radios."
   ],
   "roots": [
-    "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input actions; fall-guard runs before locomotion/player behavior, scripts/radio.js is on the player, and mods/absolute-cinema/node-gizmos.js draws local-only camera markers for the cinema editor.",
+    "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input actions; fall-guard runs before locomotion/player behavior and scripts/radio.js is on the player.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - local config, authored placements and place generation/tick behavior; selected sims compose shared helpers.",
     "places/level169/config.yaml + scripts/terrain169.js + places/level169/sim.js - seeded desert terrain, materials, atmosphere and hazards; versioned setpieces plus YAML-driven house/friends/road, voyage and quest callbacks.",
     "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js - title/settings, new-expedition choices, five-slot save manager and story/tutorial lifecycle; scripts/ui.js composes the in-game HUD and wrist panels.",
@@ -42,10 +42,10 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - shared journal/advancement/reward helpers; containment.js - containment state/pen/door operations; ch2-quest.js - Chapter 2 stages and dialogue helpers.",
     "scripts/lib/run-opts.js - OPTS, DEFAULTS, PICK_DEFAULTS, RATE, PRESETS, runOf, needsMul, sanityMul, noStory, noNpcs, cleanPick, KEEP, SKIP; scripts/main-menu.js exports SLOTS.",
-    "scripts/lib/radio.js - STATIONS, STATION, stationOf, onAir; scripts/lib/npc-gear.js - NPC_POOLS, refPlayerLevel, npcSpread, npcGearLevel, npcPoolKey, rollNpcWeapon, adaptNpcWear, rollNpcPocketLoot; fresh-aura.js - FRESH_BODY, nearFresh."
+    "scripts/lib/radio.js - STATIONS, STATION, stationOf, onAir; scripts/world-radio.js - update; scripts/lib/npc-gear.js - NPC_POOLS, refPlayerLevel, npcSpread, npcGearLevel, npcPoolKey, rollNpcWeapon, adaptNpcWear, rollNpcPocketLoot; fresh-aura.js - FRESH_BODY, nearFresh."
   ],
   "ownership": [
-    "scripts/player.js + scripts/lib/save.js - durable player.state progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, saved place/position, currency, karma/rep and homeKeep; player.js owns player action state.",
+    "scripts/player.js + scripts/lib/save.js - durable player.state progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, saved place/position, currency, karma/rep and homeKeep; player.js owns player actions/session state.",
     "scripts/lib/stats.js - derived attributes, skills and combat/carry stats; scripts/stats-ui.js formats derived stats; scripts/lib/progression.js migrates the xpCurve progression model.",
     "scripts/lib/modifiers.js - player.state bookBonuses/readBooks/genericBooksRead/effects and modifier derivation; scripts/lib/clothes.js owns worn gear records whose passive modifiers feed the modifier engine.",
     "scripts/lib/manuals.js + scripts/player.js - player.state.recipes stores learned recipe IDs; legacy player.state.manuals still grants all recipes of those kinds. Using a manual token learns one unknown recipe of its kind.",
@@ -65,8 +65,8 @@
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold door handlers call carryAcross → held props and nearby following companions cross; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone; scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles, markers and compass place names.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js offers place-matched jobs; carried items/kills/world events advance errands → journal, player.state.errands/qtrack and payouts.",
-    "scripts/talk.js → dialogue.js rootChoices and quest handlers; level quest modules call scripts/lib/quests.js → journal/feed/reputation/reward state; scripts/lib/data/dlg-*.yml supplies character-specific choices and barks.",
-    "scripts/radio.js action → player.state.radioOn/radioSt and scripts/radio-ui.js; scripts/lib/radio.js selects synchronized segments from radio*.yml, HALOGEN seeks on the Radio bus and hushes Music locally, preloading the next two station clips for on-time host lines; world radios play their configured sources."
+    "scripts/talk.js → dialogue.js rootChoices and quest handlers; level quest modules call scripts/lib/quests.js → journal/feed/reputation/reward state; scripts/lib/data/dlg-*.yml supplies lines and scripts/lib/data/voice-cast.yml maps named speakers to performers for art/vo/act.py recording.",
+    "scripts/radio.js action → player.state.radioOn/radioSt and scripts/radio-ui.js; scripts/lib/radio.js onAir synchronizes HALOGEN and scripts/world-radio.js emitters (Level 1 camp, Level 0.2, Levels 5/7 and home11 boombox) to station segments; home11-door.js cycles stations/off."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; menus/staff vary by venue and Level 6.1 fixtures are fitted separately.",
@@ -90,7 +90,7 @@
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together. Keyed doors consume player.state.hubKeys.",
     "Level 109 place.state.l109seed fixes irregular corridor/room rolls; containment books are keyed by room ID and remember pen-door positions. Local terminal host/mode and roomId must stay aligned.",
     "Level 26 society state is split by deck in place.state.pgAlert; Partygoer social memory is session-local, bait records are keyed by route stop, and pgLiftLocked controls only the lower lift.",
-    "Level 169 uses x/z with north at -z and terrain scale 1:10; keep terrain marks, house/trail geometry, road sites and ship berths aligned. Residents' furniture is laid by scripts/lib/l169-friends.js from level169.yml stops/seats/rolls rather than cell placements.",
-    "Radio timing is global room-clock time: keep each YAML segment duration aligned to its clip and HALOGEN/world radios seek onAir offsets. STATIONS order defines persisted radioSt; scripts/lib/data/radio-ads.yml's Ad Nauseam AM segment order is coupled to its clips."
+    "Level 169 uses x/z with north at -z and terrain scale 1:10; keep terrain marks, house/trail geometry, road sites and ship berths aligned. Residents' furniture is laid by scripts/lib/l169-friends.js from level169.yml stops/seats/rolls rather than direct placement.",
+    "Radio timing is global room-clock time: keep YAML segment durations aligned to clips and HALOGEN/world radios seek onAir offsets. STATIONS order defines persisted radioSt and world-radio state.station indices; clean receivers suppress dropouts, while Level 0.2 station 3 is Ad Nauseam AM."
   ]
 }
