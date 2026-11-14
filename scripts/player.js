@@ -704,6 +704,7 @@ function swing(ctx, power = 0) {
   s.loud = { at: now, gun: !!wp.ranged } // hunters hear it (lib/hunt.js)
   const heavyMul = power ? 1 + power * (P.damage - 1) : 1
   const ammoKey = wp.ammoType ?? 'ammo', loadedKey = 'loaded_' + s.equipped
+  if (wp.squirt && s.sqLiq == null) { s.sqLiq = 'water'; s.sqfill = 25 } // a new squirt gun comes with its tank full of tap water
   if (wp.ranged) {
     if (s.reloading) {
       // a shotgun can be fired mid-reload (the reload stops); a magazine gun has to finish
@@ -736,6 +737,7 @@ function swing(ctx, power = 0) {
   { const st = (w.combo3 ??= { n: 0, at: 0 }); st.n = now - st.at > 1100 ? 0 : st.n + 1; st.at = now; if (wp.ranged) fire3(ctx); else swing3(ctx, s.equipped, power, st.n) } // the body's own swing, for the third-person camera and everyone else
   if (s.equipped !== 'fists') s['cnd_' + s.equipped] = Math.max(0, (s['cnd_' + s.equipped] ?? 100) - useWear(wp) * derived(s).wear) // weapons wear with use; Repair slows it
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
+  if (wp.ranged && wp.squirt) { squirtFire(ctx, s, wp); return }
   if (wp.ranged && wp.rocket) { // the M.E.G. launcher: one rocket flies straight and bursts on what it meets (scripts/nade.js rocket)
     const { eye, fwd: fv, pitch: pv } = weaponAim(ctx), R = wp.rocket, cp = Math.cos(pv), sp = Math.sin(pv)
     const dmg = Math.round((wp.damage + (s.level - 1) * L_PER(s) * wp.levelScale) * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)))
@@ -1018,6 +1020,7 @@ function invAction(ctx, d) {
   if (d.k === 'soupEat') { soupEat(ctx); return }
   if (d.k === 'snack') { useSnack(ctx, String(d.c || '')); return }
   if (d.k === 'soupThrow') { s.invOpen = false; soupThrow(ctx); return }
+  if (d.k === 'sqFill' || d.k === 'sqDrink' || d.k === 'sqEmpty') { sqTank(ctx, d); return }
   if (d.k === 'repellent') { s.invOpen = false; useRepellent(ctx); return }
   if (d.k === 'fsThrow') { s.invOpen = false; fsThrow(ctx); return }
   if (d.k === 'fsMelt') { fsMelt(ctx); return }
@@ -1325,6 +1328,78 @@ function fsBoil(ctx) { // a shard dissolved in almond water heats it: boiled cle
   s.firesalt -= 1; s.almonds -= 1; s.almondsB = (s.almondsB ?? 0) + 1
   heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-crystal-dissolving-fizz-in-bottle-water-heating-to-rolling-boil.mp3', position: ctx.self.feetPosition, volume: 0.6, maxDistance: 8 })
   s.notice = { text: 'The shard fizzes away and the bottle boils. Clean, warm almond water', at: now }
+}
+
+// The Squirt Gun (Wikidot object): one liquid in the backpack tank at a time, each with its own effect. Savi's numbers.
+const SQ = {
+  water:     { name: 'water',            col: '<.72,.86,1>',   dmg: 0 },
+  almond:    { name: 'almond water',     col: '<.96,.93,.84>', dmg: 4, per: 15 },
+  pyroil:    { name: 'pyroil',           col: '<1,.62,.3>',    dmg: 5, per: 6, burn: 4 },
+  repellent: { name: 'Smiler Repellent', col: '<.86,.96,.86>', dmg: 0, per: 10 },
+}
+const SQ_ENT = ['smiler', 'lurker', 'hound', 'stealer', 'moths', 'l8spider', 'l8-hostile', 'clump', 'foe', 'hostile', 'beast', 'deathmoth']
+const SQ_JET = `fx
+pop jet burst=?mobile:10|20 life=.3..0.6 v=<%dx|0,%dy|0,%dz|-1>*(13..17)+sdir()*.35 size=.025..0.05 acc=grav()+drag(.4) col=%col|<.72,.86,1> a=.9>.6:.8>0 floor=die r=sprite(droplet,alpha,velocity,.03)
+pop mist burst=?mobile:2|5 life=.4..0.8 v=<%dx|0,%dy|0,%dz|-1>*(4..7)+sdir()*.4 size=.08..0.16 acc=drag(2) sz=$size*(.6>2) col=%col|<.72,.86,1> a=0>.1:.3>0 r=sprite(smoke-puff,alpha)`
+const SQ_SPLASH = `fx
+pop drops burst=?mobile:8|16 life=.3..0.7 v=<%nx|0,%ny|1,%nz|0>*(1.5..3)+sdir()*(.6..1.4)+up(.8) size=.02..0.04 acc=grav()+drag(.4) col=%col|<.72,.86,1> a=1>0 floor=die r=sprite(droplet,alpha,velocity,.02)
+pop wet burst=1 life=1.2 size=.35..0.5 sz=$size*(.6>1) col=%col|<.72,.86,1> a=.35>0 r=sprite(soft-disc,alpha)`
+const SQ_FIRE = `fx
+pop flame burst=?mobile:10|22 on=sphere(.25) life=.4..0.9 v=up(1.2..2.4)+sdir()*.4 size=.18..0.36 acc=buoy(1.6)+curl(.5)+drag(1.2) sz=$size*(.5>1:1>.2) col=hdr(4.4,2.6,.9)>.4:hdr(2.6,.9,.2)>hdr(.6,.15,.03) a=0>.1:1>.7:.8>0 rot=spin(.3) r=sprite(flame-wisp,add)
+pop smoke on=@flame?.25 life=1..1.8 size=.2..0.35 acc=buoy(.8)+drag(1) sz=$size*(.7>2.4) col=<.25,.23,.22> a=0>.2:.3>0 r=sprite(smoke-puff,alpha)
+pop glow burst=1 life=.6 r=light(<1,.55,.2>,18*(1>0),6)`
+function squirtFire(ctx, s, wp) {
+  const now = ctx.now(), L = SQ[s.sqLiq] ?? SQ.water, f = walkOf(ctx).fwd ?? { x: 0, z: -1 }
+  const { eye, fwd: fv, pitch: pv } = weaponAim(ctx), cp = Math.cos(pv), sp = Math.sin(pv), dir = { x: fv.x * cp, y: sp, z: fv.z * cp }
+  const r = raycast(ctx, eye, dir, { distance: wp.range, ignoreEntities: [ctx.self.id] }), m = r?.id ? ctx.getObject(r.id) : null
+  const human = m && (m.tags?.includes('npc') || m.tags?.includes('human') || ctx.place.players.some((p) => p.id === m.id))
+  if (s.sqLiq === 'almond' && human) { s['loaded_' + s.equipped] += 1; s.notice = { text: "The trigger won't pull. Almond water won't fire at a person", at: now }; return } // the lore: it will not even fire
+  const from = { x: eye.x + dir.x * 0.7 - dir.z * 0.12, y: eye.y + dir.y * 0.7 - 0.16, z: eye.z + dir.z * 0.7 + dir.x * 0.12 }
+  ctx.emit('fx', { position: from, script: SQ_JET, params: { dx: dir.x, dy: dir.y + 0.04, dz: dir.z, col: L.col } })
+  s.kick = 0.2
+  if (!r) return
+  const at = r.position, nrm = r.normal ?? { x: 0, y: 1, z: 0 }
+  if (s.sqLiq === 'pyroil') ctx.emit('fx', { position: at, script: SQ_FIRE }) // pyroil ignites on contact
+  else ctx.emit('fx', { position: at, script: SQ_SPLASH, params: { nx: nrm.x, ny: nrm.y, nz: nrm.z, col: L.col } })
+  if (!m || m.state?.dead || (m.state?.hp ?? 1) <= 0) return
+  const ent = SQ_ENT.some((t) => m.tags?.includes(t))
+  if (s.sqLiq === 'repellent') {
+    if (!m.tags?.includes('smiler')) return
+    ctx.emit('fx', { position: m.feetPosition, script: SMILER_GONE })
+    heard(ctx, { clip: '/cdn/moodboard-gothic-horror/sfx-smiler-grin-collapses-into-shrieking-static-and-fades-to-nothing.mp3', position: m.feetPosition, volume: 0.9, maxDistance: 30 })
+    ctx.destroy(m.id); s.notice = { text: 'The spray hits the grin and it comes apart into nothing', at: now }; return
+  }
+  if (s.sqLiq === 'almond' && ent) { hitTarget(ctx, s, m, L.dmg, f, false); if (ctx.random() < 0.25) heard(ctx, { clip: '/cdn/moodboard-gothic-horror/sfx-flesh-sizzle-steam-hiss.mp3', position: at, volume: 0.5, maxDistance: 14 }) }
+  if (s.sqLiq === 'pyroil') {
+    hitTarget(ctx, s, m, L.dmg, f, false)
+    if (now > (m.state?.sqBurnUntil ?? 0)) { m.state.sqBurnUntil = now + 3000; ctx.after(1, 'sqBurn', { id: m.id, n: 3 }) }
+  }
+}
+export function sqBurn(ctx, p) { // pyroil keeps burning on what it hit, once a second
+  const m = ctx.getObject(p.id); if (!m || m.state?.dead || (m.state?.hp ?? 1) <= 0) return
+  hitTarget(ctx, ctx.self.state, m, SQ.pyroil.burn, walkOf(ctx).fwd ?? { x: 0, z: -1 }, false)
+  ctx.emit('fx', { position: m.feetPosition, script: SQ_FIRE })
+  if (p.n > 1) ctx.after(1, 'sqBurn', { id: p.id, n: p.n - 1 })
+}
+function sqTank(ctx, d) { // fill, drink from or empty the backpack tank
+  const s = ctx.self.state, now = ctx.now(), say = (text) => { s.notice = { text, at: now } }
+  const have = (s.sqfill ?? 0) + (s.loaded_squirt_gun ?? 0)
+  if (d.k === 'sqEmpty') { s.sqfill = 0; s.loaded_squirt_gun = 0; s.sqLiq = 'water'; heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-plastic-tank-glugging-empty-onto-floor-splash.mp3', position: ctx.self.feetPosition, volume: 0.5, maxDistance: 8 }); return say('You drain the tank onto the floor') }
+  if (d.k === 'sqDrink') {
+    if (s.sqLiq !== 'almond' || have <= 0) return say('No almond water in the tank')
+    if ((s.sqfill ?? 0) > 0) s.sqfill -= 1; else s.loaded_squirt_gun -= 1
+    s.thirst = Math.min(100, (s.thirst ?? 100) + 12); s.hp = Math.min(maxHp(s.level, s), (s.hp ?? 0) + 4); s.sanity = Math.min(maxSan(s.level, s), (s.sanity ?? 0) + 3)
+    sound(ctx, 'gulping-water-from-plastic-bottle', 0.5, true); return say('A squirt of almond water, straight into your mouth')
+  }
+  const c = String(d.c || ''), L = SQ[c]; if (!L?.per) return
+  if (have > 0 && s.sqLiq !== c && s.sqLiq !== 'water') return say(`The tank holds ${SQ[s.sqLiq].name}. They won't mix, they'd settle in layers: empty it first`)
+  if (s.sqLiq !== c) { s.sqfill = 0; s.loaded_squirt_gun = 0 } // tap water just gets tipped out
+  if (c === 'almond') { if ((s.almonds ?? 0) <= 0) return say('No grey almond water to pour in'); s.almonds -= 1 }
+  if (c === 'pyroil') { if ((s.firesalt ?? 0) <= 0) return say('Pyroil needs a firesalt shard to melt down'); s.firesalt -= 1 }
+  if (c === 'repellent') { if ((s.repellent ?? 0) <= 0) return say('No Smiler Repellent'); s.repellent -= 1 }
+  s.sqLiq = c; s.sqfill = (s.sqfill ?? 0) + L.per
+  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-pouring-liquid-into-plastic-tank-funnel-glug.mp3', position: ctx.self.feetPosition, volume: 0.5, maxDistance: 8 })
+  say(`${L.per} shots of ${L.name} into the tank`)
 }
 
 function toggleLight(ctx) {
