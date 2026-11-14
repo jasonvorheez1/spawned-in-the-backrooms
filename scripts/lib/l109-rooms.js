@@ -4,10 +4,14 @@
 //   sp() tags what it spawns so the room's unload removes it; pass plain specs (feetPosition from R.at).
 // Every model, size and tuned number is in data/l109-rooms.yml. The lane a = -9..-7 from the door stays clear.
 import { buildOutpost } from "./l109-outpost.js";
-import { rand } from "./level109.js";
+import { rand, SPAWN } from "./level109.js";
 import D from "./data/l109-rooms.yml";
 const GEO = "scripts/l109-med-geo.js", VR = { min: 0, max: D.viewRange };
 const BUILD = { supply, or: theatre, icu, pharmacy, biohazard, ward };
+// how a department reads: lit and clean unless this one was left abandoned (data: dept, ruinSafe)
+export function roomLook(seed, info) { const d = D.dept?.[info.type]; if (!d) return null;
+  const ruin = Math.hypot(info.door.x - SPAWN.x, info.door.z - SPAWN.z) > D.ruinSafe && rand(seed, 77, info.r * 7 + info.c.i, info.side + (info.c.ax === "ns" ? 0 : 9)) < d.ruin;
+  return { ...d, abandoned: ruin }; }
 export function buildRoom(ctx, R) { if (["doctors", "or_active", "icu_active", "breach"].includes(R.type) && buildOutpost(ctx, R)) return;
   const f = BUILD[R.type]; if (!f) return;
   let h = 7; for (const ch of String(R.id)) h = (h * 31 + ch.charCodeAt(0)) % 100003;

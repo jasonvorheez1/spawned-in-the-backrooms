@@ -41,3 +41,14 @@ pharmacy: { counterB: 6, aisles: [11, 12.8, 14.6, 16.4, 18.2], perAisle: 5, aisl
 ward:     { rowB: [10, 20], as: [-3, 0.5, 4, 7.5, 11], lockersOpen: 3 }
 # biohazard: past the tape line the air is wrong. Sanity only, it never kills.
 hazard:   { lineB: 19, sanityPerSecond: 0.6, noticeEveryS: 20, notice: "The air back here tastes wrong. Your head swims.", light: "#b9ff86" }
+# departments: how each room type reads the moment its door opens. light = its 4 ceiling troffers (colour, intensity, reach m);
+# ruin = chance a room of that type was left abandoned (half its lights out, papers and tipped chairs); never within ruinSafe m of arrival.
+# sound = one quiet spatial loop at the room's middle (gain, heard to maxDist m).
+ruinSafe: 120
+dept:
+  supply:    { light: "#fff6e0", intensity: 3.0, reach: 17, ruin: 0,    sound: /cdn/moodboard-realistic-gritty/sfx-hospital-storeroom-fluorescent-tube-buzz-quiet-loop.mp3, gain: 0.14, maxDist: 16 }
+  or:        { light: "#eaf6ff", intensity: 2.6, reach: 16, ruin: 0.3,  sound: /cdn/moodboard-realistic-gritty/sfx-operating-room-surgical-light-hum-and-air-filter-loop.mp3, gain: 0.12, maxDist: 16 }
+  icu:       { light: "#e4f2f6", intensity: 2.3, reach: 16, ruin: 0.25, sound: /cdn/moodboard-realistic-gritty/sfx-icu-heart-monitor-slow-beeps-distant-loop.mp3, gain: 0.12, maxDist: 15 }
+  pharmacy:  { light: "#fffbea", intensity: 2.6, reach: 16, ruin: 0.25, sound: /cdn/moodboard-realistic-gritty/sfx-pharmacy-medicine-fridge-compressor-hum-loop.mp3, gain: 0.13, maxDist: 14 }
+  biohazard: { light: "#e8f5c8", intensity: 1.8, reach: 15, ruin: 0.4,  sound: /cdn/moodboard-realistic-gritty/sfx-biohazard-room-negative-pressure-fan-drone-loop.mp3, gain: 0.13, maxDist: 16 }
+  ward:      { light: "#fff0d8", intensity: 2.0, reach: 16, ruin: 0.3,  sound: /cdn/moodboard-realistic-gritty/sfx-hospital-ward-wall-clock-ticking-quiet-loop.mp3, gain: 0.1, maxDist: 12 }

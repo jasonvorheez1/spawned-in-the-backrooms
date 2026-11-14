@@ -6,7 +6,7 @@ import { W, CEIL, H, SEG, ROOM, PITCH, WALL, DOOR_W, DOOR_H, corridor, corridors
 import { questTick } from "../../scripts/lib/level109-quest.js";
 import { penRoll, penLoad, penUnload, looseTick, doorOpen } from "../../scripts/lib/containment.js";
 import { spawnFoe } from "../../scripts/lib/l109-foes.js";
-import { buildRoom } from "../../scripts/lib/l109-rooms.js";
+import { buildRoom, roomLook } from "../../scripts/lib/l109-rooms.js";
 import { wandererTick, denOf, denLock, denLoad, denWatch, denUnload } from "../../scripts/lib/l109-wanderers.js";
 import { inside } from "../../scripts/lib/containment.js";
 import { buildB3, placeLauncher, stairDoorAt, MORGUE, O as B3O, yawFor as yawB3 } from "../../scripts/lib/l109-b3.js";
@@ -50,6 +50,7 @@ function laySeg(ctx, seed, c, k) {
 }
 function layDoor(ctx, c, info, made) {
   const exit = info.type === "exit", id = "l109d-" + info.id, hingeU = info.u - DOOR_W / 2, hinge = toWorld(c, hingeU, info.side * (W / 2 + WALL / 2));
+  if (look?.sound) sp("snd", { feetPosition: toWorld(c, um, vm - vNear + vNear, 1.5), audio: { clip: look.sound, loop: true, gain: look.gain, spatial: true, maxDistance: look.maxDist, bus: "Ambience" } }); // the department's own quiet loop
   const along = toWorld({ ...c, c: 0 }, 1, 0), inward = toWorld({ ...c, c: 0 }, 0, info.side), base = yawFor(along.x, along.z), swung = yawFor(inward.x, inward.z);
   let dy = swung - base; if (dy > 180) dy -= 360; if (dy < -180) dy += 360;
   const open = doorOpen(ctx, info.id);
@@ -65,7 +66,7 @@ function layDoor(ctx, c, info, made) {
 function layRoom(ctx, seed, info) {
   const c = info.c, id = "l109r-" + info.id, u0 = info.r * PITCH + 1, um = u0 + ROOM / 2, vNear = info.side * (W / 2 + WALL), vm = vNear + info.side * ROOM / 2, mid = toWorld(c, um, vm), made = [id];
   const pop = penRoll(ctx, info.id, () => roomPop(seed, info));
-  const lit = info.type === "doctors" || info.type === "or_active" || info.type === "icu_active" || info.type === "supply", back = wallName(c, -info.side); // the room's wall that faces the corridor
+  const look = roomLook(seed, info), lit = look ? !look.abandoned : true, back = wallName(c, -info.side); // the room's wall that faces the corridor
   ctx.spawn(id, { tags: ["l109-room"], feetPosition: mid, castShadow: false, physics: "none", primitive: { kind: "scripted", script: GEO, params: { part: "hall", w: ROOM, d: ROOM, h: 3.4, ceil: 3.0, walls: "nsew", gaps: [{ wall: back, c: wallS(c, -info.side, info.u - um, ROOM), w: DOOR_W, h: DOOR_H, kind: "thru" }], seed: Math.abs(info.r) % 89 + 5, tone: info.type === "biohazard" ? "warm" : "l109", clean: lit, ...(lit ? { wallTex: PLASTER } : {}) } }, material: { pbr: true } });
   const sp = (key, spec) => { const i = `l109o-${info.id}-${key}`; ctx.spawn(i, { ...spec, tags: [...(spec.tags ?? []), "l109-room"] }); made.push(i); return i; };
   sp("f", { ...INVIS, ...uvBox(c, u0, u0 + ROOM, vNear, vNear + info.side * ROOM, -0.3, 0) });
@@ -73,7 +74,7 @@ function layRoom(ctx, seed, info) {
   sp("wa", { ...INVIS, ...uvBox(c, u0 - WALL, u0, vNear, vNear + info.side * ROOM, 0, 3) }); sp("wb", { ...INVIS, ...uvBox(c, u0 + ROOM, u0 + ROOM + WALL, vNear, vNear + info.side * ROOM, 0, 3) });
   sp("wc", { ...INVIS, ...uvBox(c, u0, u0 + ROOM, vNear + info.side * ROOM, vNear + info.side * (ROOM + WALL), 0, 3) });
   for (const [a, b] of [[-7.5, 7.5], [7.5, 7.5], [-7.5, 22.5], [7.5, 22.5]]) { const on = lit || rand(seed, 91, info.r * 4 + a + b, info.side) < 0.4; // an abandoned ward keeps a light or two
-    sp(`l${a}_${b}`, { feetPosition: toWorld(c, um + a, vNear + info.side * b, 2.97), castShadow: false, primitive: { kind: "box", width: 1.2, height: 0.03, depth: 0.6 }, material: on ? TROFFER : { color: "#77756a" }, ...(on ? { light: { kind: "point", color: lit ? "#fff6e0" : "#e9e2c4", intensity: lit ? 2.2 : 1.1, distance: 15, shadow: { enabled: false } } } : {}) }); }
+    sp(`l${a}_${b}`, { feetPosition: toWorld(c, um + a, vNear + info.side * b, 2.97), castShadow: false, primitive: { kind: "box", width: 1.2, height: 0.03, depth: 0.6 }, material: on ? TROFFER : { color: "#77756a" }, ...(on ? { light: { kind: "point", color: look?.light ?? "#fff6e0", intensity: (look?.intensity ?? 2.2) * (lit ? 1 : 0.5), distance: look?.reach ?? 15, shadow: { enabled: false } } } : {}) }); }
   const along = toWorld({ ...c, c: 0 }, 1, 0), inward = toWorld({ ...c, c: 0 }, 0, info.side);
   buildRoom(ctx, { id: info.id, type: info.type, info, seed, sp, abandoned: !lit, pop, at: (a, b, up = 0) => toWorld(c, um + a, vNear + info.side * b, up), yawIn: yawFor(inward.x, inward.z), yawAlong: yawFor(along.x, along.z) });
   if (denOf(seed, info)) denLoad(ctx, seed, info, (a, b) => toWorld(c, um + a, vNear + info.side * b, 0.1), { x: -inward.x, z: -inward.z });
