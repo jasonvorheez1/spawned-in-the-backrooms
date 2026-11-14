@@ -1,7 +1,7 @@
 // Phoebe (johnadams2, Nov 8): a quiet critter in a Partygoer's yellow coat who watches the intro and turns up,
 // face in shadow, at the tutorial's end. Nothing about her is told yet: no name tag, no lines, no tag a player can read.
 // Look from the creator's picture (/cdn/image-u2bhqzx6j.webp): ginger, mustard coat over black, a red tie at the collar.
-import { furrySpec, critterSpec, HUMAN, humanFace, setStyle } from "./critter-model.js"
+import { furrySpec, critterSpec, HUMAN, humanFace, setStyle, seatHead, buildFor, baseBones, CAT_JIGGLE } from "./critter-model.js"
 export const PHOEBE_LOOK = {
   species: "cat", sex: "f", hairc: "#c4602b", fur: "#d9824a", belly: "#f3d9c4", tip: "#f3d9c4", nose: "#c86f6a", 
   topw: "longsleeve", top: "#141216", botw: "skirt", bottom: "#17141a", shoes: "boots", shoec: "#121014",
@@ -29,17 +29,27 @@ export function phoebeSpec(ctx) {
   const spec = human ? humanPhoebe() : furrySpec(PHOEBE_LOOK) // BODIES human: her human self; furry: the ginger cat in her fitted outfit. Its hair and skirt are the outfit's own, so the wardrobe's hair and skirt stay off (Shelly Nov 14: two hairs stacked)
   return { ...spec, human, children: [...(spec.children || []).filter((c) => human || !["cw-hair", "cw-botw"].includes(c.id)), ...(human ? [] : [{ id: "phoebe-outfit", attachment: { skin: true }, model: OUTFIT }])] }
 }
+// the one dress code for every Phoebe (Shelly: "phoebe in the hub should be for all phoebe appearances"):
+// her head, her own hub build, bones, bust and cat jiggle, so the coat sits as fitted wherever she stands
+export function dressPhoebe(ctx, me) {
+  if (!me) return
+  me.state.wear = PHOEBE_LOOK
+  seatHead(ctx, me, PHOEBE_LOOK)
+  const b = buildFor("hub-phoebe", "f"); me.state.build = b; me.scale = { x: b.w, y: b.h, z: b.w }
+  me.bones = baseBones(b, PHOEBE_LOOK); me.morph = { ...(me.morph ?? {}), Bust: b.bust }; me.jiggle = CAT_JIGGLE
+}
 // extra: fields laid over the cut defaults (a talking NPC Phoebe passes audience, tags, physics, behavior, state); same body either way
 export function spawnPhoebe(ctx, id, at, yaw, life, pose, extra) {
   if (ctx.getObject(id)) return id
   const { human, ...spec } = phoebeSpec(ctx)
-  return ctx.spawn(id, {
+  const sid = ctx.spawn(id, {
     tags: ["phoebe"], audience: "local", lifetime: life, feetPosition: at, rotation: { yaw },
     ...spec,
     state: { cutPose: true },
     ...(extra ?? {}),
     anim: { pose: { clip: pose ?? (human ? "cdn/clip-idle-female-loop.glb" : "cdn/clip-idle-loop.glb"), loop: "loop", weight: 1 } }, // never a bind pose: a clip from her first frame (Shelly: "t posing phoebe")
   })
-  return id
+  if (!human) dressPhoebe(ctx, ctx.getObject(sid)) // the hub's build on every cut Phoebe
+  return sid
 }
 export function dropPhoebe(ctx, id) { if (ctx.getObject(id)) ctx.destroy(id) }
