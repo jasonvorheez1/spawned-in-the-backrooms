@@ -24,6 +24,7 @@ export function update(ctx) {
   const roofed = !!raycast(ctx, head, { x: 0, y: 1, z: 0 }, { ...opt, distance: 12 });
   const lit = day && !roofed && !raycast(ctx, head, sunDir(h), opt);
   const gear = s.gear169 ?? {};
+  if (s.l169rest && s.l169rest !== k.restAt) { k.restAt = s.l169rest; k.sun = 0; k.chill = 0; s.l169sun = 0; s.l169st = 0; s.l169chill = 0; } // slept in a bed (scripts/lib/l169-road.js)
   // ---- 1 sun
   k.sun ??= s.l169sun ?? 0;
   const per = 100 / (L.sun.lethalHours * HOUR_S);
