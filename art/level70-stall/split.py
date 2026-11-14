@@ -9,7 +9,7 @@ for f in ["stalla", "stallb"]:
     bpy.ops.object.select_all(action="DESELECT"); o.select_set(True); bpy.context.view_layer.objects.active = o
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     o.parent = None
-    bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT"); bpy.ops.mesh.remove_doubles(threshold=0.0005); bpy.ops.mesh.separate(type="LOOSE"); bpy.ops.object.mode_set(mode="OBJECT")
+    bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT"); bpy.ops.mesh.separate(type="LOOSE"); bpy.ops.object.mode_set(mode="OBJECT")
     parts = [p for p in bpy.context.scene.objects if p.type == "MESH"]
     def bb(p):
         vs = [p.matrix_world @ v.co for v in p.data.vertices]
@@ -37,6 +37,22 @@ for f in ["stalla", "stallb"]:
         for n in names: bpy.data.objects[n].select_set(True)
         bpy.context.view_layer.objects.active = bpy.data.objects[names[0]]
         bpy.ops.object.join(); j = bpy.context.view_layer.objects.active; j.name = f"{f}_{g}"; objs[g] = j
+    # the tarp is welded to the beams: carve it from the frame by face colour above the eave
+    fr = objs["frame"]; me = fr.data
+    img = next(n.image for m in me.materials for n in m.node_tree.nodes if n.type == "TEX_IMAGE")
+    W, Hh = img.size; px = list(img.pixels)
+    uv = me.uv_layers.active.data
+    import colorsys
+    for p in me.polygons:
+        z = (fr.matrix_world @ p.center).z
+        u = sum(uv[l].uv[0] for l in p.loop_indices)/p.loop_total; v = sum(uv[l].uv[1] for l in p.loop_indices)/p.loop_total
+        i = (int((v % 1)*(Hh-1))*W + int((u % 1)*(W-1)))*4; r, g, b = px[i:i+3]
+        h, sat, val = colorsys.rgb_to_hsv(r, g, b)
+        wood = 0.02 < h < 0.13 and sat > 0.3 and val < 0.55
+        p.select = (z - zmin)/H > 0.62 and not wood
+    bpy.ops.object.select_all(action="DESELECT"); fr.select_set(True); bpy.context.view_layer.objects.active = fr
+    bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.separate(type="SELECTED"); bpy.ops.object.mode_set(mode="OBJECT")
+    t = [o for o in bpy.context.selected_objects if o != fr][0]; t.name = f"{f}_tarp"; objs["tarp"] = t
     # the stall's own origin: bottom centre of the frame, shared by every part so they reassemble at one feetPosition
     fb = bb(objs["frame"]); ox, oy = (fb[0].x+fb[1].x)/2, (fb[0].y+fb[1].y)/2
     for g, j in objs.items():
