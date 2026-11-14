@@ -11,10 +11,3 @@ l169-ferry-plan:
   state: {at: 672770117, food: 8, line: Bottles are up top., name: Ferry, note: 0, open: true, openAt: 672770117, pose: point, saidAt: 672770117, took: {}, water: 8}
   tags: [l169-ferry]
   visibleRange: {max: 450}
-l169-house-plan:
-  feetPosition: {x: 18, y: 0, z: -500}
-  id: l169-house-plan
-  material: {kind: scripted, script: engine/blueprint}
-  physics: none
-  primitive: {depth: 14, height: 4, kind: box, width: 20}
-  tags: [blueprint]
