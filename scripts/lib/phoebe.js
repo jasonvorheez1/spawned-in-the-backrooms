@@ -22,7 +22,7 @@ function humanPhoebe() {
   return { ...spec, model: { ...spec.model, materials: { ...spec.model.materials, Iris: EYES } }, morph: { ...spec.morph, ...face } }
 }
 // a local, unsaved watcher: spawned on the viewer's own machine for one beat, gone after `life` seconds
-const OUTFIT = "/cdn/value.79298a18ec7de9993a4751a73c74df7d5db6f26284df69a3a5d3113fc41be488.glb" // the cat outfit wearing her original Nov 8 hair (art/phoebe-outfit/hair_back.py; Shelly Nov 14 "isnt using the model from before")
+const OUTFIT = "/cdn/value.0944d7255be1466469d42ba43941181b4fdcee353786f3742759e83faec9abac.glb" // the cat outfit wearing her original Nov 8 hair (art/phoebe-outfit/hair_back.py; Shelly Nov 14 "isnt using the model from before")
 export function phoebeSpec(ctx) {
   setStyle(ctx.world.state.bodyStyle) // this script's own copy of the BODIES switch reads the world's setting, not its boot default
   const human = ctx.world.state.bodyStyle === "human" && !!HUMAN
