@@ -8,6 +8,7 @@ OUT = 'scripts/lib/data/voice-acted2.yml'  # Nov 14 retake: the first pass laugh
 done = yaml.safe_load(open(OUT)) if os.path.exists(OUT) else {}
 done = done or {}
 import base64
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); from emotion import emotion
 PACK = lambda h: base64.urlsafe_b64encode(bytes.fromhex(h)).decode().rstrip('=') if re.fullmatch(r'[0-9a-f]{64}', h) else h  # voices.js decodes; keeps every level's load small
 NUM = ['zero','one','two','three','four','five','six','seven','eight','nine']
 def jhash(s):
@@ -72,7 +73,8 @@ if dry_run: sys.exit(0)
 def rec(j):
     k, who, key, line = j; v, tag = CAST[who]; mood = MOOD.get(key, '')
     # Shelly Nov 14 "fix the voice lines theyre laughing": a long direction in the brackets made the voice maker laugh and repeat the line; two or three words only
-    txt = f"[{', '.join(part for part in (tag, mood) if part)}] {line}" if (tag or mood) else line
+    feel = emotion(key, line)  # the line's feeling (art/vo/emotion.py), then who they are (the cast tag)
+    txt = ''.join(f"[{p}] " for p in (feel, tag) if p) + line
     for _ in range(3):
         r = subprocess.run(['spawn', 'voice', txt, '--voice', v, '--name', 'vo ' + who + ' ' + slug(line, 40)], capture_output=True, text=True)
         m = re.search(r'/cdn/value\.([0-9a-f]+)\.mp3', r.stdout)
