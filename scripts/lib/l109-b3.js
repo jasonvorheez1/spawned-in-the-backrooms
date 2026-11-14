@@ -1,3 +1,4 @@
+import { medLook } from "./l109-kit.js";
 // Level 109 "B3": the sealed sub-basement under the arrival hall (Shelly, Nov 14: a small dungeon with a rocket launcher, in tune with the lore).
 // The story it tells: M.E.G. ran a forward cache down here while they mapped the hospital, lost the floor to hounds breeding
 // in the morgue drawers, shut the morgue door behind them and left the armory cage as it stood. The hounds are still shut in
@@ -81,8 +82,8 @@ export function buildB3(ctx, seed) {
     state: { items: "bandage,battery,ration", name: "M.E.G. field crate", verb: "Search", kind: "metal" } });
   sp("tape", { tags: ["usable"], feetPosition: P(-6.4, 0.66, 46.0), castShadow: false, behavior: "scripts/b3-use.js", primitive: { kind: "box", width: 0.12, height: 0.03, depth: 0.08 }, material: { color: "#1b1b1b", roughness: 0.5 }, state: { kind: "b3-tape", name: "Tape", verb: "Play", info: "B3 cache log" } });
   sp("table", { feetPosition: P(-6.4, 0, 46.2), physics: "static", primitive: { kind: "box", width: 1.4, height: 0.66, depth: 0.7 }, material: { color: "#55594a", metalness: 0.4, roughness: 0.6 } });
-  sp("breaker", { tags: ["usable"], feetPosition: P(9.92, 1.07, 34.0), rotation: { yaw: yawFor(0, -1) }, castShadow: false, behavior: "scripts/b3-use.js",
-    model: { id: "/cdn/value.98cc7a5e38b998052fe8227c519a305f173d1ae956e559356ebe72214dccef4c.glb", forward: "+z" }, layout: { box: { min: { x: -0.22, y: 0, z: -0.12 }, max: { x: 0.22, y: 0.56, z: 0 } } },
+  sp("breaker", { tags: ["usable"], feetPosition: P(9.92, 1.35, 34.0), rotation: { yaw: yawFor(0, -1) }, castShadow: false, behavior: "scripts/b3-use.js",
+    ...medLook({ part: "breaker" }),
     state: { kind: "b3-breaker", name: "Armory Flood Switch", verb: "Restore Lights", info: "dead ceiling bank", on: false, c: P(9.85, 1.35, 34.0) } });
 }
 // the launcher itself rides apart: placed once in the room's life, gone for good once a hand lifts it

@@ -1,3 +1,4 @@
+import { medLook } from "./l109-kit.js";
 // Level 109's staffed rooms and its quest props. buildOutpost(ctx, R) is called by buildRoom (scripts/lib/l109-rooms.js) for
 // R.type "doctors" | "or_active" | "icu_active" | "breach". Same R as there. Return true when it dressed the room.
 // Numbers live in data/l109-outpost.yml.
@@ -16,7 +17,7 @@ function kit(R, key, p, a, b, yaw = 0, st = {}, o = {}) {
   const at = R.at(a, b, o.up ?? 0);
   return R.sp(key, {
     feetPosition: at, rotation: { yaw: R.yawIn + yaw, pitch: 0, roll: 0 }, castShadow: false,
-    primitive: { kind: "scripted", script: "scripts/l109-med-geo.js", params: p, seed: a + b },
+    ...medLook(p, a + b),
     ...(o.solid ? { physics: "static" } : {}), tags: ["usable"], behavior: "scripts/l109-use.js",
     state: { uid: `op-${R.id}-${key}`, c: { x: at.x, y: at.y + (o.lift ?? 0.9), z: at.z }, ...st }, ...(o.extra ?? {}),
   });

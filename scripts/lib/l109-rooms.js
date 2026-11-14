@@ -1,3 +1,4 @@
+import { medLook } from "./l109-kit.js";
 // What stands inside a Level 109 auditorium. buildRoom(ctx, R) is called once each time a room loads.
 // R = { id, type, info, seed, sp(key, spec) -> id, at(a, b, up) -> world feet, yawIn, yawAlong, abandoned, pop }
 //   a = metres along the door wall from the room's centre (-15..15), b = metres in from the door wall (0..30); the door is at a = -8, b = 0.
@@ -49,7 +50,7 @@ function part(K, p, a, b, yaw = 0, o = {}) { const R = K.R;
     primitive: { kind: "cylinder", radiusTop: 0.035, radiusBottom: 0.035, height: 1.12 }, material: { color: "oklch(0.62 0.01 250)", metalness: 0.8, roughness: 0.4 },
     children: [{ feetPosition: { x: 0, y: -0.01, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.17, radiusBottom: 0.19, height: 0.025 }, material: { color: "oklch(0.45 0.01 250)", metalness: 0.7, roughness: 0.55 } },
       { feetPosition: { x: 0, y: 1.08, z: 0.06 }, model: { id: "/cdn/value.c7be48b31c2cd67c9450ab65e5aefb0247347daa37708c20c6553c25dc2d94bb.glb", forward: "+z" }, layout: { box: { min: { x: -0.17, y: 0, z: -0.11 }, max: { x: 0.17, y: 0.44, z: 0.11 } } } }] });
-  return R.sp(`${p.part}${K.n++}`, { feetPosition: R.at(a, b, (o.up ?? 0) + (o.tip ? TIP_LIFT : 0)), rotation: o.tip ? { yaw: R.yawIn + yaw, pitch: 88, roll: 0 } : { yaw: R.yawIn + yaw, pitch: 0, roll: 0 }, primitive: { kind: "scripted", script: GEO, params: p, seed: K.n },
+  return R.sp(`${p.part}${K.n++}`, { feetPosition: R.at(a, b, (o.up ?? 0) + (o.tip ? TIP_LIFT : 0)), rotation: o.tip ? { yaw: R.yawIn + yaw, pitch: 88, roll: 0 } : { yaw: R.yawIn + yaw, pitch: 0, roll: 0 }, ...medLook(p, K.n),
     visibleRange: VR, castShadow: false, ...(o.solid ? { physics: "static" } : {}), ...(o.spec ?? {}) }); }
 function litter(K) { for (let i = 0; i < 4; i++) part(K, { part: "paper", r: 1.6, n: 14 }, -11 + K.r() * 22, 4 + K.r() * 22, K.r() * 360);
   for (let i = 0; i < 2; i++) put(K, "stackchair", -5 + K.r() * 16, 3 + K.r() * 4, K.r() * 360, { tip: true, solid: false }); }
