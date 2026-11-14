@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 7889,
-  "updatedAt": "2026-11-14T07:09:15.734Z",
+  "basedOnSpecVersion": 7904,
+  "updatedAt": "2026-11-14T07:40:59.869Z",
   "summary": "The Backrooms is a persistent multiplayer survival RPG spanning Level 0, the mall, The Hub and authored lore destinations; player.state carries progression, gear, quests, faction standing and resume location. Shared player behaviors connect authored spaces to generated layouts and encounters, while the common field-kit UI serves the HUD, menus, dialogue, inventory and journal.",
   "scriptPaths": [],
   "places": [
@@ -11,12 +11,12 @@
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation, waking, staged tutorial and HALOGEN handoff to Dina's lead.",
     "places/level9 (3D, The Suburbs) - seeded streets and fitted houses; motel-liquidation furniture substitutes in about a third of house interiors.",
     "places/level11 (3D) - Sedco Spotlight and city blocks; sim builds subway, vault, Robotics crawl and Chapter 2 props; cross-level quest hooks use Bee's 11th Avenue clue, Kael's canal spillway and market stall.",
-    "places/level61 (3D, The Snackrooms) - food court and M.E.G. checkpoint with storefronts, simulated staff, returned trays, Tripo tray-return cabinets and six fitted weeping-fig planters; Wren, Guard, Guild and Sal anchor four cross-level quests.",
+    "places/level61 (3D, The Snackrooms) - food court and M.E.G. checkpoint with storefronts, simulated staff and usable services; Clippers is a 1950s mahogany/brass cocktail lounge using scripted fixtures, alongside new fitted urn, pie stand, payphones and Level 3 vent models.",
     "places/level3 + places/level4 + places/level6 (3D) - Level 3 Guild survey plate, Level 4 vending-drop survey route, and Level 6 Relay 6-A; quest endpoints, with Level 6 sim relocating the relay on layout rebuilds."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input actions.",
-    "places/<place>/config.yaml + cells/*.scene + sim.js - local configuration, authored placements and place generation/tick behavior; Level 61 sim delegates storefront fixtures/services to shared helpers.",
+    "places/<place>/config.yaml + cells/*.scene + sim.js - local configuration, authored placements and place generation/tick behavior; Level 61 sim delegates storefront fixtures/services to shared helpers and scripts/l61-clippers-geo.js.",
     "scripts/main-menu.js + main-menu-ui.js + intake/tutorial scripts + scripts/ui.js - title/settings/pause, character creation, arrival/tutorial, Dina routing and composed HUD/menus.",
     "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, wake/resume, aiming, third-person view and HUD zone naming.",
     "places/main/sim.js + scripts/lib/maze.js + xmas-room.js + level0-moments.js - Level 0 layout and deterministic dressing/encounters.",
@@ -31,8 +31,8 @@
     "scripts/lib/ui-kit.js + scripts/lib/ui-theme.js - escaping, preference normalization/attributes, Escape handling, empty states, notice toasts and shared dialogue styling.",
     "scripts/door-geo.js + scripts/lib/door-swing.js + scripts/lib/level3-hatch.js + scripts/lib/seat.js - parametric doors/motion, paired Level 3 hatches and tagged-seat placement/occupancy helpers.",
     "scripts/lib/data/l9-houses.yml + l9-props.yml + scripts/lib/level9.js - Level 9 house/model/door and prop catalogs plus pure seed-driven layout; consumed by places/level9/sim.js and zone lookup.",
-    "scripts/lib/data/furniture.yml + cigs.yml + fnv-props.yml - furniture and fitted prop catalogs consumed by build-piece, Level 9, Levels 5/11/61 and Level 61 extras.",
-    "scripts/lib/skill-check.js - normalizes structured/legacy dialogue checks and centralizes odds, roll resolution and banners; reused by talk.js, talk-ui.js, npc-talk.js and quest-use handlers; level61-quests.js + quest-prop-use.js serve cross-level quest objectives."
+    "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js - fitted furniture catalog and common build placement/reconstruction; a dining_set composes dining_table with two offset dining_chair children, while home11 and Level 5 retain separate buckets and Level 9 uses motel furniture.",
+    "scripts/lib/skill-check.js + scripts/lib/npc-talk.js - normalized dialogue checks and common odds/rolls plus trader constants/helpers; reused by talk.js, talk-ui.js, Level 6.1 use and quest handlers."
   ],
   "notableExports": [
     "scripts/lib/ui-kit.js - esc, jsStr, SCALE_VALUES/LABELS, uiPrefsOf, uiPrefsAttrs, escKeyHandler, emptyState, classifyNotice, noticeToast.",
@@ -42,12 +42,12 @@
     "scripts/lib/level31-quest.js + level31-parts.js - venue geometry/zones/arrivals/skating/layParts and quest exports; scripts/lib/ch2-quest.js - CH2, syncCh2, setCh2Step, ch2Tick, completeChapter2, ch2Choices, handleDialogueCh2.",
     "scripts/lib/level70-quest.js + scripts/terrain70.js - Level 70 quest, terrain and civic/life layer exports.",
     "scripts/lib/errands.js - ERRANDS, held, errandText, offerErrand, payErrand, tryAlt, deliberateErrands, turnInErrand, errandTick; scripts/lib/rep.js - faction and reputation helpers.",
-    "scripts/lib/skill-check.js - SKILL_NAMES, parseCheck, checkOdds, formatCheckBanner, resolveCheck; scripts/lib/level61-quests.js - QUESTS61, setStep61, finishQuest61, handleDialogueQuest61, l61Choices; scripts/lib/level11-quests.js - QUESTS and handlers."
+    "scripts/lib/skill-check.js - SKILL_NAMES, parseCheck, checkOdds, formatCheckBanner, resolveCheck; scripts/lib/level61-quests.js - QUESTS61, setStep61, finishQuest61, handleDialogueQuest61, l61Choices; scripts/l61-clippers-geo.js - geometry, collider."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable player.state progression, health/sanity, inventory/equipment, needs, combat, access, appearance, saved place/position, tapes, currency, karma/rep and homeKeep.",
     "scripts/lib/stats.js - derived attributes, skills and combat/carry stats; scripts/stats-ui.js formats derived stats, including non-finite capacity as ∞.",
-    "scripts/critter.js - per-player look and creator/wardrobe/salon state; scripts/lib/seat.js - player.state.sit seating lifecycle/phase and stand-up idle transition; scripts/lib/body3.js - session.ready3 and transient melee-carry pose; skill-check.js writes transient ctx._lastCheck for dialogue logging.",
+    "scripts/critter.js - per-player look and creator/wardrobe/salon state; scripts/lib/seat.js - player.state.sit seating lifecycle/phase and stand-up idle transition; scripts/lib/body3.js - session.ready3 and transient melee-carry pose; skill checks use transient ctx._lastCheck.",
     "scripts/lib/quests.js + scripts/lib/dina-quest.js - quests/qtrack/qdone/claimed; Dina trail keys, stages, diary/cut/clue fields and migration.",
     "scripts/lib/errands.js - player.state.errands records, errHints and errand journal entries; completion updates currency, payout, reputation and hints; field-errands.js + hub-errands.js own confirmation maps.",
     "scripts/lib/level31-quest.js + level70-quest.js + remodel-quest.js + level11-quests.js + level61-quests.js + ch2-quest.js - level-specific quest stages, routes and rewards; Chapter 2 owns ch2Q/ch2Done and clue, stance and unlock keys.",
@@ -62,18 +62,18 @@
     "scripts/main-menu-ui.js settings → scripts/main-menu.js mmenu handler → player.state.uiPrefs; scripts/ui.js wraps composed UI with ui-kit preference attributes; menu actions update menu, inventory filter/sort and journal state.",
     "scripts/player.js writes player.state.notice and scripts/stats.js forwards fresh notices into feed → scripts/ui.js renders ui-kit noticeToast; talk-ui and other panels use shared escaping and ui-theme styling.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js offers place-matched jobs; carried items/kills/world events advance errands → quests.js journal, player.state.errands/qtrack and payouts.",
-    "Dialogue choices from quest handlers/npc-starters → scripts/talk.js normalizes legacy tags with skill-check.parseCheck and routes quest dialogue; talk-ui.js uses checkOdds for displayed odds, while npc-talk.rollCheck/resolveCheck rolls the same difficulty model.",
-    "Scripts/talk.js → quest handlers (including level61-quests.js and level11-quests.js); scripted dialogue/use checks share skill-check.resolveCheck, write transient ctx._lastCheck and feed percentage banners/chimes to dialogue or player notice.",
-    "Level 6.1 quest stages in player.state → setStep61/finishQuest61 → shared quest journal, notice/feed, payout, reputation and completion effects; quest-marker.js dynamically registers QUESTS61 marks across Level 11, The Hub, Gamma, Level 3/4/6/10.",
-    "Level 6.1 seal inspection → scripts/l61-use.js; Level 3 Guild plate and Level 6 Relay 6-A → scripts/quest-prop-use.js; Level 4 vending survey via l4-home.js; Level 11 Bee clue/spillway and Sal provisions via level11-use.js → quest stage helpers.",
-    "Level 11 Kael's Paper Bird quest ↔ Level 6.1 Guild: Guild waybill sets craneWaybill and eases spillway repair; Level 6.1 Sal quest consumes Level 10 flour and Level 11 coffee, with Kael's barge completion yielding provisions."
+    "Dialogue choices from quest handlers/npc-starters → scripts/talk.js normalizes legacy tags with skill-check.parseCheck and routes quest dialogue; talk-ui.js uses checkOdds for displayed odds, while npc-talk.rollCheck/resolveCheck rolls the outcome.",
+    "scripts/talk.js → quest handlers (including level61-quests.js and level11-quests.js); scripted dialogue/use checks share skill-check.resolveCheck, write transient ctx._lastCheck and feed percentage banners/chimes to dialogue or player notices.",
+    "Level 6.1 quest stages → setStep61/finishQuest61 → shared quest journal, notice/feed, payout and reputation; l61-use.js handles Seal inspection and venue interactions, Level 3 Guild plate and Level 6 Relay use handlers feed stage changes; quest-marker.js registers cross-place QUESTS61 marks.",
+    "Level 11 Kael's Paper Bird quest ↔ Level 6.1 Guild: Guild waybill sets craneWaybill and eases spillway repair; Level 6.1 Sal quest consumes Level 10 flour and Level 11 coffee, with Kael's barge completion yielding provisions.",
+    "places/level61/sim.js lays Clippers scripted fixtures through scripts/l61-clippers-geo.js geometry/collider and fitted vendor models; its usable counters, stools and services link to l61-use.js, seats to scripts/lib/seat.js, and staff simulation to l61-staff.js."
   ],
   "behaviorFamilies": [
-    "places/bonus mall sims/shopper/salon + places/level61/sim.js and level61-extra/service helpers - authored commercial interiors and simulated staff; Level 6.1 venue menus/staff vary by shop, with new fitted tray-return and planter models; scripts/lib/seat.js supports seats.",
-    "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; home11 and Level 5 use separate buckets; Level 9 uses motel furniture.",
+    "places/bonus mall sims/shopper/salon + places/level61/sim.js and level61-extra/service helpers - authored commercial interiors and simulated staff; venue menus/staff vary by shop; Clippers now combines scripted mahogany/brass lounge fittings with fitted bar/stool and service assets.",
+    "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes a table with two independently fitted chairs; home11 and Level 5 use separate buckets; Level 9 uses motel furniture.",
     "art/cigs/build.py + art/fnv/build.py and nif converters → scripts/lib/data/cigs.yml + fnv-props.yml - creator assets become real-scale GLBs; catalogs supply decoration and fitted furniture/props across Levels 5, 9, 11 and 61.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
-    "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl, tight ceilings/tunnel mouths trigger automatic crawl; Level ! adds corridor-specific constraints.",
+    "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl, tight ceilings/tunnel mouths trigger automatic crawl; Level ! adds corridor-specific crawl spaces.",
     "Level 01/Zenith and Level 1 geometry builders - authored station and car park/service geometry; corridor materials, pipes, fixtures and lights vary deterministically per cell.",
     "scripts/meg-agent.js + npc-temper.js + forgive.js + critter-model.js - NPC reactions, cover, barks, movement/fighting and companion following; faction, role, outfit and assault incidents vary by NPC; cat-wardrobe data supplies fitted cloth.",
     "scripts/lib/level61-quests.js + level11-quests.js + talk.js/use handlers - quest stages and rewards reuse shared journal/rep/feed helpers and skill-check odds/resolution while variations select destinations, checks, items and faction outcomes."
@@ -91,6 +91,6 @@
     "Level 9 keeps l9seed, fog and looted contents across generated rebuilds; motel furniture choice is seed-deterministic, uses furniture.yml's declared dimensions and preserves existing searchable contents.",
     "Weapon meshes fitted by art/weapons/build.py and art/weapons/fit.json must stay in scripts/lib/weapon-look.js's scripted frame; mesh offsets and hand-grip transforms couple to body3 hand offsets and carry poses.",
     "Level ! coordinates are coupled across CORRIDOR, places/levelrun/sim.js and player physics: run proceeds down -Z from -5.5 to collapseZ -198, Safe Alcove is offset to x=80; preserve lrunRescued/checkpoint and cut recovery semantics.",
-    "Level 6.1 quest stages are numeric player.state keys with 99 completion; setStep61 updates the shared journal and finishQuest61 handles one-time rewards. Skill rolls use skill + uniform 1..T.roll against difficulty; skill-check.js is shared by UI odds and runtime rolls, and the transient ctx._lastCheck is consumed/reset by talk.js."
+    "Level 6.1 scripted Clippers geometry and collision proxy come from the same l61-clippers-geo.js kind parameters; keep fixture local origins, placements/yaws and collider dimensions aligned. Furniture set children are separate fitted models positioned from dining_set set offsets; retain their catalog dimensions/orientation."
   ]
 }
