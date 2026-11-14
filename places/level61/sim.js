@@ -18,7 +18,7 @@ import { layService } from "../../scripts/lib/level61-service.js";
 export const cadence = "1s";
 const TOILET_GLB = "/cdn/value.584d89d495be90361b2f1c260e71cd5079b14f1e5d1b0a3346dd5bc4c808c0dc.glb";
 const VANITY_GLB = "/cdn/value.fc171ef1463c6b6014a17a934459781e7d541b202325257a5ddb0e02de9788c4.glb";
-const V = 70; // 70: liquorette tables carry pints, tumblers, ashtrays. 69: liquorette damask walls, tin ceiling, tin sign turned. // 68: toilet repainted white porcelain. 67: restroom toilet + vanity turned to their true front axis and sized to real fixtures. 66: restroom toilets + vanities are Tripo models (art/l61-rest). 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
+const V = 71; // 71: bar counters, stools, chairs and tables in Liquorette and Clippers lowered to fit the 1.2 m critters (Shelly). 70: 70: liquorette tables carry pints, tumblers, ashtrays. 69: liquorette damask walls, tin ceiling, tin sign turned. // 68: toilet repainted white porcelain. 67: restroom toilet + vanity turned to their true front axis and sized to real fixtures. 66: restroom toilets + vanities are Tripo models (art/l61-rest). 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -449,9 +449,9 @@ function lay(ctx) {
   }
 
   // 1. Clippers: Red 1950s bar, stools, back shelves, and the interactive Wurlitzer 80s Internet Radio Jukebox
-  counter("l61-clip-bar", -21, -30.2, 180, M_BAR10, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "budweiser,budweiser,jackcoke,whiskey,smirnoffice,coke", name: "Clippers bar", verb: "Order what the menu shows", info: "Clippers drink counter." } });
+  counter("l61-clip-bar", -21, -30.2, 180, M_BAR10, { layout: { box: { min: { x: -5.04, y: 0, z: -0.485 }, max: { x: 5.04, y: 0.85, z: 0.485 } } }, tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "budweiser,budweiser,jackcoke,whiskey,smirnoffice,coke", name: "Clippers bar", verb: "Order what the menu shows", info: "Clippers drink counter." } });
   const BACKBAR = "/cdn/value.83a6fae404fcf2bb72c4e11afec3b9c5712142e0d7fcfe9164abd539421f97dd.glb", BENT = "/cdn/value.ed5f76cd71ad691cd2fb8e8e8acbf1a9a69e62539e7a7f3cf6bb40bf0fbaa599.glb";
-  for (const [k, x] of [-25, -23.4, -22, -18.3, -16.8].entries()) sp(`l61-clip-stool-${k}`, { feetPosition: { x, y: 0, z: -29.05 }, rotation: { yaw: 180 + ((k * 37) % 23) - 11 }, tags: ["seat", "chair"], model: { id: BENT }, physics: { body: "static", collider: "cylinder" }, visibleRange: { max: 40 } });
+  for (const [k, x] of [-25, -23.4, -22, -18.3, -16.8].entries()) sp(`l61-clip-stool-${k}`, { feetPosition: { x, y: 0, z: -29.05 }, rotation: { yaw: 180 + ((k * 37) % 23) - 11 }, tags: ["seat", "chair"], model: { id: BENT }, layout: { box: { min: { x: -0.275, y: 0, z: -0.25 }, max: { x: 0.275, y: 0.8, z: 0.25 } } }, physics: { body: "static", collider: "cylinder" }, visibleRange: { max: 40 } });
   for (const [i, x] of [-24.8, -20.5, -17.2].entries()) tableSet(`l61-clip-table-${i}`, x, -25.9, 0);
   box("l61-clip-lambris", -27.81, 0, -27, 0.08, 1.03, 9.25, DARKWOOD, { physics: undefined });
   box("l61-clip-back-dado", -21, 0, -31.8, 13.6, 1.05, 0.12, DARKWOOD, { physics: undefined });
@@ -505,15 +505,15 @@ function lay(ctx) {
   // 2. Liquorette: an old-world tavern. A carved arched back bar with stained glass and a clock, a long panelled bar with a brass rail, bentwood stools and chairs,
   //    wooden tables, a mosaic floor, wood-panelled walls, a coffered ceiling, pendant lamps, a copper boiler. (Shelly: massively overhaul it from a photo of an old bar)
   const prop = (id, m, x, z, yaw, extra = {}, y = 0) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, physics: { body: "static", collider: extra.collider ?? "box" }, model: { id: m, forward: "-z" }, ...extra.spec });
-  prop("l61-liq-bar", L_BAR, -11.8, -27, -90, { spec: { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "almond,corona,millerlite,margarita,whiskey,jackcoke", name: "Liquorette bar", verb: "Order what the menu shows", info: "Liquorette drink counter." } } });
+  prop("l61-liq-bar", L_BAR, -11.8, -27, -90, { spec: { layout: { box: { min: { x: -0.585, y: 0, z: -3.25 }, max: { x: 0.585, y: 0.85, z: 3.25 } } }, tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "almond,corona,millerlite,margarita,whiskey,jackcoke", name: "Liquorette bar", verb: "Order what the menu shows", info: "Liquorette drink counter." } } });
   prop("l61-liq-back", L_BACK, -13.45, -27, -90);
   prop("l61-liq-boiler", L_BOILER, -12.1, -29.75, -90, { collider: "cylinder" }, 1.1);
   sp("l61-liq-boiler-steam", { feetPosition: { x: -12.1, y: 2.35, z: -29.75 }, fx: { script: STEAM_FX } });
-  for (let k = 0; k < 6; k++) sp(`l61-liq-stool-${k}`, { feetPosition: { x: -10.85, y: 0, z: -29.55 + k * 1.05 }, rotation: { yaw: 90 }, tags: ["seat", "chair"], physics: { body: "static", collider: "cylinder" }, model: { id: L_STOOL, forward: "-z" }, state: { seat: { w: 1, d: 0.0, y: 0.62 }, verb: "Sit", name: "Bar stool" } });
+  for (let k = 0; k < 6; k++) sp(`l61-liq-stool-${k}`, { feetPosition: { x: -10.85, y: 0, z: -29.55 + k * 1.05 }, rotation: { yaw: 90 }, tags: ["seat", "chair"], physics: { body: "static", collider: "cylinder" }, model: { id: L_STOOL, forward: "-z" }, layout: { box: { min: { x: -0.2, y: 0, z: -0.2 }, max: { x: 0.2, y: 0.8, z: 0.2 } } }, state: { seat: { w: 1, d: 0.0, y: 0.42 }, verb: "Sit", name: "Bar stool" } });
   const TABLES = [[-6.6, -25.2], [-2.6, -25.2], [-6.6, -29.2], [-2.6, -29.2]];
   TABLES.forEach(([tx, tz], k) => {
-    sp(`l61-liq-table-${k}`, { feetPosition: { x: tx, y: 0, z: tz }, rotation: { yaw: k * 17 }, physics: { body: "static", collider: "box" }, model: { id: L_TABLE, forward: "-z" } });
-    for (const [dx, yaw, n] of [[-0.78, -90, "w"], [0.78, 90, "e"]]) sp(`l61-liq-chair-${k}${n}`, { feetPosition: { x: tx + dx, y: 0, z: tz + (k % 2 ? 0.05 : -0.05) }, rotation: { yaw }, tags: ["seat", "chair"], physics: { body: "static", collider: "box" }, model: { id: L_CHAIR, forward: "-z" }, state: { seat: { w: 1, d: 0.02, y: 0.3 }, verb: "Sit", name: "Tavern chair" } });
+    sp(`l61-liq-table-${k}`, { feetPosition: { x: tx, y: 0, z: tz }, rotation: { yaw: k * 17 }, physics: { body: "static", collider: "box" }, model: { id: L_TABLE, forward: "-z" }, layout: { box: { min: { x: -0.45, y: 0, z: -0.45 }, max: { x: 0.45, y: 0.62, z: 0.45 } } } });
+    for (const [dx, yaw, n] of [[-0.78, -90, "w"], [0.78, 90, "e"]]) sp(`l61-liq-chair-${k}${n}`, { feetPosition: { x: tx + dx, y: 0, z: tz + (k % 2 ? 0.05 : -0.05) }, rotation: { yaw }, tags: ["seat", "chair"], physics: { body: "static", collider: "box" }, model: { id: L_CHAIR, forward: "-z" }, layout: { box: { min: { x: -0.21, y: 0, z: -0.21 }, max: { x: 0.21, y: 0.7, z: 0.21 } } }, state: { seat: { w: 1, d: 0.02, y: 0.22 }, verb: "Sit", name: "Tavern chair" } });
     sp(`l61-liq-candle-${k}`, { feetPosition: { x: tx + 0.05, y: 0.86, z: tz + 0.05 }, light: { kind: "point", color: "oklch(0.85 0.16 70)", intensity: 0.9, distance: 3.5 }, primitive: { kind: "sphere", radius: 0.012 }, material: { color: "#ffcc66", emissive: "#ffb040", emissiveIntensity: 4 } });
   });
   // wood-panelled walls: a dado of dark wood with a brass-edged rail, round the back and both sides (the open side faces the hall)
