@@ -108,6 +108,7 @@ export function think(ctx, p, pack, players, now) {
   let prey = null, best = Infinity, spotted = false;
   for (const pl of players) {
     if ((pl.state.hp ?? 1) <= 0) continue;
+    if (pl.state.l26cut) continue; // the arrival cutscene: nobody touches you until it hands the view back
     if (!sees(ctx, p, pl, !!s.hunting)) continue;
     const d = flat(pl.feetPosition, p.feetPosition); if (d < best) { best = d; prey = pl; }
   }

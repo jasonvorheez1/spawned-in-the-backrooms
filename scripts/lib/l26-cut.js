@@ -4,12 +4,7 @@
 // state.l26cut = { at } while it plays; the letterbox and lines are scripts/cutscene-ui.js l26Ui.
 import { spawnPhoebe, dropPhoebe } from "./phoebe.js"
 export const L26_LEN = 38
-export const L26_LINES = [ // [at s, for s, text]: Phoebe's own words, captioned in l26Ui
-  [16.2, 4.5, "Oh. Somebody touched a poster."],
-  [24.6, 3.8, "Don't wander below deck, stray. They're setting up for you."],
-  [28.8, 2.6, "I'd stay and watch. But I've got somewhere to be."],
-  [33.0, 3.0, "Go on below. They saved you a seat."],
-]
+export const L26_LINES = [] // Shelly, Nov 14: Phoebe says nothing here now; she is only seen at the rail
 const V = (w) => `/cdn/voice-soft-breathy-young-woman-whispering-amused-saying-${encodeURIComponent(w)}.mp3` // her one voice, the tutorial's too
 const SCORE = "/cdn/moodboard-realistic-gritty/music-horror-film-cue-38-seconds-ghostly-ocean-drone-warped-distant-calliope-swell-at-8-seconds-music-box-enters-at-16-seconds-strings-sting-at-31-seconds-then-fading.mp3"
 const HORN = "/cdn/moodboard-realistic-gritty/sfx-huge-ship-horn-long-low-blast-in-thick-fog.mp3"
@@ -72,15 +67,12 @@ export function l26Tick(ctx, ses, st) {
     const u = ss(15, 23, t)
     const eye = { x: p.x + 0.5, y: p.y + 1.75, z: p.z - 0.9 }
     ctx.view.camera = { eye, aim: L({ x: p.x + 0.8, y: p.y + 1.9, z: p.z + 6 }, { x: HER.x + 2.2, y: HER.y + 0.9, z: HER.z }, u), fov: 58 - 6 * u } // she drifts into the corner of the frame, never centered (Shelly: you shouldn't see her fully yet)
-    once("l1", () => snd(ctx, V(L26_LINES[0][2]), 0.9, HER))
     return true
   }
   // D, 24-31: close, from below: her, smug, looking down at you
   if (t < 31) {
     const u = ss(24, 31, t)
     ctx.view.camera = { eye: L(head, { x: p.x + 0.3, y: p.y + 1.55, z: p.z - 0.6 }, u), aim: { x: HER.x + 2.4, y: HER.y + 0.7, z: HER.z }, fov: 50 } // still from the deck below: a figure up at the rail, half out of frame
-    once("l2", () => snd(ctx, V(L26_LINES[1][2]), 0.9, HER))
-    if (t > 28.8) once("l3", () => snd(ctx, V(L26_LINES[2][2]), 0.9, HER))
     return true
   }
   // E, 31-36: the green fog rolls over the rail and she is gone; one more line from nowhere
@@ -90,7 +82,6 @@ export function l26Tick(ctx, ses, st) {
       ctx.emit("screenFlash", { color: "#5fe08a", duration: 0.6, intensity: 0.5 }, me1(ctx)); snd(ctx, WHOOSH, 0.8, HER)
     })
     if (t > 31.6) once("drop", () => dropPhoebe(ctx, "phoebe-l26"))
-    if (t > 33) once("l4", () => snd(ctx, V(L26_LINES[3][2]), 0.7, head))
     ctx.view.camera = { eye: { x: p.x + 0.3, y: p.y + 1.55, z: p.z - 0.6 }, aim: { x: HER.x + 2.4, y: HER.y + 0.7, z: HER.z }, fov: 50 }
     return true
   }
