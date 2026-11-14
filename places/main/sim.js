@@ -361,13 +361,13 @@ export function tick(ctx) {
       n++;
     }
   }
-  if (s.momentsV !== 14) { // 14 (2026-11-14): vending, payphone, chair and wanderer's camp now Tripo meshes
+  if (s.momentsV !== 15) { // 14 (2026-11-14): vending, payphone, chair and wanderer's camp now Tripo meshes; 15 (2026-11-14): payphone is the wall-hung steel pair
     if (s.momentsV) {
       for (const m of ctx.query({ tags: ["moment"] })) ctx.destroy(m.id);
       const at = s.moments?.manilaAt; // the old desk almonds lost their "moment" tag and stacked, one per re-lay
       if (at) for (const m of ctx.query({ tags: ["almond"], center: { x: at.x, y: 0.8, z: at.z }, radius: 2 })) ctx.destroy(m.id);
     }
-    s.momentsV = 14;
+    s.momentsV = 15;
     s.moments = layMoments(ctx);
   }
   shift(ctx, s, now);

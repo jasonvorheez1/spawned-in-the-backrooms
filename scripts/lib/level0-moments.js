@@ -14,11 +14,11 @@ const FMODEL = {
 // reused Tripo meshes for the wall moments (2026-11-14: nothing blocky): rusty vending + office chair from l2props (forward +x), street payphone from level11-models (forward -x)
 const MM = {
   vending: { id: "/cdn/value.b5e982116d78ae3868f9b9db3ccbd35f5d24d5d57451cfbb6122f9d28f2e2b53.glb", forward: "+x", box: [0.92, 1.9, 0.8] },
-  payphone: { id: "/cdn/value.3f1d4bfdace9e0a5bab2fd07823e1022063a15ec0ffc77e118074a8f2df30836.glb", forward: "-x", box: [0.6, 1.95, 0.45] },
+  payphone: { id: "/cdn/value.87b3b6e927dff076e1eaad84a88c9243ec9e44fbc67866b80413161b66272ccc.glb", forward: "+x", box: [1.0, 0.95, 0.24], y: 0.8 }, // the wall-hung steel pair from 6.1 (the pedestal one read "PIOGIC")
   chair: { id: "/cdn/value.e02cceb0c66d902fced411a31f21de9e9584de3272263a09e20b85c9455411be.glb", forward: "+x", box: [0.62, 1.0, 0.62] },
 };
 const ALMOND = "/cdn/value.d74570d765a2d43f965fc8756878f7bf22f833db5feaf4c335d84d8dc4ba5b62.glb";
-const wallModel = (k) => { const m = MM[k], [w, h, d] = m.box; return { primitive: null, model: { id: m.id, forward: m.forward }, layout: { box: { min: { x: -w / 2, y: 0, z: -d - 0.02 }, max: { x: w / 2, y: h, z: -0.02 } } } }; }; // stands off the wall face, front into the room (-z)
+const wallModel = (k) => { const m = MM[k], [w, h, d] = m.box, y0 = m.y ?? 0; return { primitive: null, model: { id: m.id, forward: m.forward }, layout: { box: { min: { x: -w / 2, y: y0, z: -d - 0.02 }, max: { x: w / 2, y: y0 + h, z: -0.02 } } } }; }; // stands off the wall face, front into the room (-z)
 const lo = (c) => c * S - HALF;
 const hasWall = (cx, cz, d) => d === 0 ? wallX(cx, cz) && !isArchWall(cx, cz, "x") : d === 1 ? wallZ(cx, cz) && !isArchWall(cx, cz, "z") : d === 2 ? wallX(cx - 1, cz) && !isArchWall(cx - 1, cz, "x") : wallZ(cx, cz - 1) && !isArchWall(cx, cz - 1, "z");
 const YAW = [90, 0, -90, 180];
