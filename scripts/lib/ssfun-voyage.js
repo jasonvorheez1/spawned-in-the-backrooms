@@ -84,7 +84,7 @@ export function shipTick(ctx, put, placeKey, site) {
   const here = v.at === placeKey, t = (now - v.since) / 1000, left = (v.next - now) / 1000;
   if (here) {
     if (t < V.fogSec) { layFog(ctx, B, "ssfun-fog", V.fogSec - t + V.fogLinger); return; }
-    if (!has(ctx, "ssfun-hull") || ps.ssfunAt !== v.since) {
+    if (!has(ctx, "ssfun-hull") || !has(ctx, "ssfun-board") || !has(ctx, "ssfun-gangway") || ps.ssfunAt !== v.since) { // any part gone (a sweep, a save) re-lays the whole ship
       if (ps.ssfunAt !== v.since && t < V.fogSec + V.fogLinger) layFog(ctx, B, "ssfun-fog", V.fogSec + V.fogLinger - t);
       layShip(ctx, B);
       if (ps.ssfunAt !== v.since) {
