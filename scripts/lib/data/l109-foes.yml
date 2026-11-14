@@ -12,6 +12,8 @@ wander: [4, 9]      # seconds between wander picks
 lostSec: 10         # seconds a loose one keeps heading for where it last knew you
 prowlLook: 12       # metres a prowling one looks down each way at a wall
 mgrFollow: 150      # the keeper moves to the nearest wanderer past this
+floorY: 0           # the hospital floor
+sinkLimit: 0.25     # a body this far under the floor is set back on it
 kinds:
   hound:       { hp: 90,  walk: 1.6, run: 5.0, sight: 26, hear: 9,  dmg: 11, reach: 1.5, cd: 0.9, xp: 35 }
   skinstealer: { hp: 120, walk: 1.2, run: 4.2, sight: 22, hear: 7,  dmg: 18, reach: 1.6, cd: 1.3, xp: 60 }
