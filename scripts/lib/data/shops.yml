@@ -298,5 +298,5 @@ sell:
   keycard: 6
   compass: 6
   firesalt: 4
-  weapon: { common: 4, uncommon: 9, rare: 20 }
-  cloth: { common: 3, uncommon: 6, rare: 10, agency: 14 }
+  weapon: { common: 4, uncommon: 9, rare: 20, elite: 55, legendary: 125 }
+  cloth: { common: 3, uncommon: 6, rare: 10, agency: 14, elite: 25 }

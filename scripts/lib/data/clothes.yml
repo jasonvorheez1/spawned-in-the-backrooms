@@ -20,12 +20,13 @@ rarity:
   uncommon: { label: Uncommon, color: "#8fd07a", weight: 4 }
   rare:     { label: Rare,     color: "#6fb4ff", weight: 1.5 }
   agency:   { label: M.E.G.,   color: "#b6e04a", weight: 0.6 }
+  elite:    { label: Elite,    color: "#d38cff", weight: 0.35 }
 regularColours: ["e85d75", "ff9f43", "ffd93d", "6bcb77", "4d96ff", "3d5a98", "9b5de5", "f4f1ea", "2b2b33", "8b5a3c"]
 # Leveled lists (Fallout/Skyrim style). A row's `level` is the lowest level it can turn up at (missing = 1).
 # Loot reads the finder's level (or the place's tier for a drop with no finder); NPCs read their own level.
 leveled:
   placeTier: { main: 1, level1: 4, level2: 8, level3: 12, level4: 10, gamma: 12, level5: 14, level6: 15, level7: 16, level8: 17, level21: 9, debug: 20 }   # Savi's picks
-  rarityAt: { common: 1, uncommon: 4, rare: 10, agency: 14 }   # a rarity never rolls below this level
+  rarityAt: { common: 1, uncommon: 4, rare: 10, agency: 14, elite: 18 }   # a rarity never rolls below this level
   lift: 0.04          # per level past a row's own: rarer rows get this much heavier (a level 20 finder sees more rare cloth)
   # NPC wardrobes by faction: the rows a faction dresses from (ids below), and how often each optional slot is filled
   factions:

@@ -2,7 +2,8 @@
 // A variant entry is its base with the variant's multipliers applied, so every W[k] reader works on it unchanged.
 import Y from './data/weapons.yml'
 
-const RAR = ['common', 'uncommon', 'rare', 'elite']
+export const RARITIES = ['common', 'uncommon', 'rare', 'elite', 'legendary']
+const RAR = RARITIES
 export const baseOf = (k) => String(k ?? 'fists').split('~')[0]
 export const variantOf = (k) => String(k ?? '').split('~')[1] ?? null
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1)
@@ -14,7 +15,7 @@ for (const k of Y.order.slice(1)) {
   for (const [vk, v] of Object.entries(Y.variants ?? {})) {
     if (!fits(k, w, v)) continue
     const m = (f) => (v[f] != null && w[f] != null ? w[f] * v[f] : w[f])
-    const ri = Math.max(0, Math.min(RAR.length - 1, RAR.indexOf(w.rarity) + (v.rarity ?? 0)))
+    const ri = Math.max(0, Math.min(w.rarity === 'legendary' ? 4 : 3, RAR.indexOf(w.rarity) + (v.rarity ?? 0)))
     const req = v.reqDelta && w.req
       ? Object.fromEntries(Object.entries(w.req).map(([key, target]) => [key, Math.max(1, target + (v.reqDelta[key] ?? 0))]))
       : w.req
@@ -37,13 +38,14 @@ for (const k of Y.order.slice(1)) {
 // the variants a kind can roll, with their weights
 export function rollVariant(ctx, k) {
   const opts = [[k, Y.variantPlain ?? 50]]
-  for (const [vk, v] of Object.entries(Y.variants ?? {})) if (W[k + '~' + vk] && !v.unique) opts.push([k + '~' + vk, v.chance ?? 5])
+  for (const [vk, v] of Object.entries(Y.variants ?? {})) if (W[k + '~' + vk] && !v.unique && (v.chance ?? 5) > 0) opts.push([k + '~' + vk, v.chance ?? 5])
   let r = ctx.random() * opts.reduce((a, o) => a + o[1], 0)
   for (const [key, c] of opts) { r -= c; if (r <= 0) return key }
   return k
 }
 // What a player of this level may find (the creator, 2026-11-08: no rare+ finds at level 1). Savi's picks:
 // levels 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite. Applies to found loot only; anything you own still works.
+export const authoredVariant = (k) => !!Y.variants?.[variantOf(k)]?.unique
 export const rarityIdx = (k) => Math.max(0, RAR.indexOf(W[k]?.rarity ?? 'common'))
 export const rarityCap = (level) => (level ?? 1) < 3 ? 0 : level < 6 ? 1 : level < 10 ? 2 : 3
 export default W

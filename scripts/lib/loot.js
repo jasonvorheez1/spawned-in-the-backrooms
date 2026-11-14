@@ -2,7 +2,7 @@ import {interactiveSpec} from './prop-interactions.js'
 // Loot: one place that knows how almond water and weapons appear in the maze, whether from the
 // floor spawner (places/main/sim.js) or from a smiler that just died (scripts/player.js).
 import L from "./data/level0.yml";
-import W, { rollVariant, rarityIdx, rarityCap } from "./weapons.js";
+import W, { rollVariant, rarityIdx, rarityCap, authoredVariant } from "./weapons.js";
 import { SKILL_KEYS } from "./stats.js";
 import { weaponBody } from "./weapon-look.js";
 import { rollCloth, wornTokens, CLOTHES as CL } from "./clothes.js";
@@ -27,11 +27,11 @@ export function spawnShells(ctx, c) {
 
 // Loot pools: a weapon with `pools: [l4, l5]` in weapons.yml turns up only where its pool is rolled (l0 lobby, l1 garage, l2 pipes, l3 station and Gamma,
 // l4 offices, l5 hotel); a weapon with none is a base weapon rolled everywhere. poolOf maps a place id to its pool.
-export const POOL = { main: "l0", level1: "l1", level2: "l2", level3: "l3", gamma: "l3", level4: "l4", level5: "l5", level7: "l7", level8: "l2", level9: "l5", level21: "l2", level70: "l70" };
+export const POOL = { main: "l0", level1: "l1", level2: "l2", level3: "l3", gamma: "l3", level4: "l4", level5: "l5", level7: "l7", level8: "l2", level9: "l5", level21: "l2", level70: "l70", level01: "l01", level10: "l10", level11: "l11", level26: "l26", level31: "l31", level109: "l109" };
 export const poolOf = (place) => POOL[place] ?? "l0";
 // Weighted pick over every found weapon this pool can hold; rarer ones carry a smaller weight in weapons.yml.
 export function rollWeapon(ctx, pool = "l0", cap = 3) {
-  const kinds = W.order.slice(1).filter((k) => !W[k].level1 && !W[k].level2 && !W[k].level3 && (!W[k].pools?.length || W[k].pools.includes(pool)) && rarityIdx(k) <= cap), total = kinds.reduce((a, k) => a + (W[k].weight ?? 1), 0);
+  const kinds = W.order.slice(1).filter((k) => !W[k].unique && (W[k].weight ?? 1) > 0 && !W[k].level1 && !W[k].level2 && !W[k].level3 && (!W[k].pools?.length || W[k].pools.includes(pool)) && rarityIdx(k) <= cap), total = kinds.reduce((a, k) => a + (W[k].weight ?? 1), 0);
   let r = ctx.random() * total;
   for (const k of kinds) { r -= W[k].weight ?? 1; if (r <= 0) { const v = rollVariant(ctx, k); return rarityIdx(v) <= cap ? v : k; } }
   return kinds[0] ?? "table_leg";
@@ -42,13 +42,13 @@ export function gateItems(ctx, items, level, pool = "l0") {
   return String(items ?? "").split(",").filter(Boolean).map((t) => {
     if (!t.startsWith("weapon:")) return t;
     const k = t.slice(7);
-    if (W[k]?.unique) return t; // a one-of-a-kind (the R-55) is never rerolled
+    if (W[k]?.unique || authoredVariant(k)) return t; // a one-of-a-kind (the R-55) is never rerolled
     return rarityIdx(k) <= cap ? t : "weapon:" + rollWeapon(ctx, pool, cap);
   }).join(",");
 }
 
 // ---- containers: a crate in the maze, or the remains of what you killed. Their contents are tokens (scripts/lib/items.js).
-const ITEM_WEIGHTS = [["lobby_wafer", 12], ["meat", 5], ["beans", 6], ["bar", 7], ["ration", 3], ["almond", 40], ["ammo", 16], ["shells", 7], ["weapon", 22], ["kit", 4], ["bobbypin", 10], ["molotov", 1.5], ["book", 3], ["firesalt", 2.5], ["repellent", 0.4], ["cloth", CL.crateWeight]];
+const ITEM_WEIGHTS = [["lobby_wafer", 12], ["meat", 5], ["beans", 6], ["bar", 7], ["ration", 3], ["almond", 40], ["ammo", 16], ["shells", 7], ["weapon", 10], ["kit", 4], ["bobbypin", 10], ["molotov", 1.5], ["book", 3], ["firesalt", 2.5], ["repellent", 0.4], ["cloth", CL.crateWeight]];
 const bookOf = (ctx) => { const ks = SKILL_KEYS.filter((k) => k !== "energy" && k !== "explosives"); return "book:" + ks[Math.floor(ctx.random() * ks.length)]; };
 // some containers are locked, Fallout style: a Lockpick or Science level you need to have. Locked ones hold more.
 export function rollLock(ctx) {
@@ -115,7 +115,7 @@ export function spawnCrateL1(ctx, p) {
   ctx.spawn({ tags: ["container", "crate", "breakable"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { mat: "wood", hp: 60, maxHp: 60, name: lk ? lk.name : ctx.random() < 0.25 ? "Rations crate" : "Wooden crate", items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
 }
 // Level 2: a tool depot. More batteries and ammo, fewer rations; its own tools.
-const L2_WEIGHTS = [["frag", 2], ["firesalt", 5], ["repellent", 0.6], ["meat", 6], ["molotov", 3], ["almond", 14], ["bobbypin", 7], ["ammo", 18], ["shells", 9], ["battery", 14], ["bandage", 10], ["ration", 6], ["weapon", 20], ["kit", 5], ["book", 4], ["cloth", 8], ["tape", 6], ["fuse", 4], ["valve", 3], ["keycard", 2], ["beans", 5], ["bar", 6], ["firstaid", 3], ["compass", 2]]; // cloth: Savi's pick; the rest are Level 2's own finds
+const L2_WEIGHTS = [["frag", 2], ["firesalt", 5], ["repellent", 0.6], ["meat", 6], ["molotov", 3], ["almond", 14], ["bobbypin", 7], ["ammo", 18], ["shells", 9], ["battery", 14], ["bandage", 10], ["ration", 6], ["weapon", 10], ["kit", 5], ["book", 4], ["cloth", 8], ["tape", 6], ["fuse", 4], ["valve", 3], ["keycard", 2], ["beans", 5], ["bar", 6], ["firstaid", 3], ["compass", 2]]; // cloth: Savi's pick; the rest are Level 2's own finds
 export function rollItemL2(ctx) {
   if (ctx.random() < 0.14) return rollCash(ctx);
   const total = L2_WEIGHTS.reduce((a, [, w]) => a + w, 0);

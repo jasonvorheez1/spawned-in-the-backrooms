@@ -7,7 +7,7 @@ import { describe } from "./items.js";
 export const POOLS = ["l0", "l1", "l2", "l3", "l4", "l5", "l7"];
 const POOL_NAME = { l0: "Level 0", l1: "Level 1", l2: "Level 2", l3: "Level 3", l4: "Level 4", l5: "Level 5", l7: "Level 7" };
 const ROLL = { l1: rollItemL1, l2: rollItemL2, l5: rollItemL5 };
-const RAR = ["common", "uncommon", "rare", "elite"], RCOL = ["#cfcfc4", "#7fd38a", "#6fa8ff", "#e0a0ff"];
+const RAR = ["common", "uncommon", "rare", "elite", "legendary"], RCOL = ["#cfcfc4", "#7fd38a", "#6fa8ff", "#e0a0ff", "#ffd36a"];
 const N = 60; // rolls per board (my pick)
 const X0 = 4.5, Z0 = -2; // the lab's centre
 const esc = (t) => String(t).replace(/[<>&'"]/g, "");
@@ -15,12 +15,12 @@ const nameOf = (t) => { try { return describe(t)?.name ?? t; } catch { return t;
 
 function board(level, pool, rolls) {
   const cap = rarityCap(level), weps = rolls.filter((t) => t.startsWith("weapon:"));
-  const byRar = [0, 0, 0, 0]; for (const t of weps) byRar[rarityIdx(baseOf(t.slice(7)))]++;
+  const byRar = [0, 0, 0, 0, 0]; for (const t of weps) byRar[rarityIdx(t.slice(7))]++;
   const tally = {}; for (const t of rolls) { const k = t.startsWith("cash:") ? "cash" : t.startsWith("weapon:") ? "weapon:" + baseOf(t.slice(7)) : t.split(":")[0] === "book" ? "book" : t.startsWith("cloth:") ? "cloth" : t; tally[k] = (tally[k] ?? 0) + 1; }
   const rows = Object.entries(tally).sort((a, b) => b[1] - a[1]).slice(0, 14);
   const line = (k, n, i) => { const y = 150 + i * 30, w = Math.round((n / N) * 420), r = k.startsWith("weapon:") ? rarityIdx(k.slice(7)) : -1;
     return `<text x='30' y='${y}' font-family='sans-serif' font-size='21' fill='${r >= 0 ? RCOL[r] : "#e9e2c4"}'>${esc(k === "cash" ? "Cash" : k === "cloth" ? "Clothing" : k === "book" ? "Book" : nameOf(k.startsWith("weapon:") ? k : k))}</text><rect x='330' y='${y - 17}' width='${w}' height='18' fill='${r >= 0 ? RCOL[r] : "#e8c25a"}' opacity='0.8'/><text x='${340 + w}' y='${y}' font-family='sans-serif' font-size='19' fill='#bdb6a0'>${n}</text>`; };
-  const rar = RAR.map((r, i) => `<text x='${30 + i * 200}' y='620' font-family='sans-serif' font-size='22' fill='${RCOL[i]}' opacity='${i <= cap ? 1 : 0.35}'>${r} ${byRar[i]}${i > cap ? " (locked)" : ""}</text>`).join("");
+  const rar = RAR.map((r, i) => `<text x='${30 + i * 160}' y='620' font-family='sans-serif' font-size='22' fill='${RCOL[i]}' opacity='${i <= cap ? 1 : 0.35}'>${r} ${byRar[i]}${i > cap ? " (locked)" : ""}</text>`).join("");
   return `<svg viewBox='0 0 840 660' width='4.2m' billboard='yaw'><rect width='840' height='660' rx='10' fill='#14161a' opacity='0.92'/><rect x='8' y='8' width='824' height='644' rx='7' fill='none' stroke='#e8c25a' stroke-width='3'/>`
     + `<text x='30' y='60' font-family='display' font-size='38' fill='#f3d27a'>LEVELED LIST · ${POOL_NAME[pool]}</text>`
     + `<text x='30' y='100' font-family='sans-serif' font-size='23' fill='#e9e2c4'>${rolls.length ? `player level ${level} · weapon cap: ${RAR[cap]} · ${N} rolls, gated` : "step on ROLL LIST to roll this pool"}</text>`
