@@ -1,6 +1,7 @@
 // Level 109 medical kit: the pieces the world has no fitted model for. params.part picks one. Origin = floor point unless said.
 // ivstand | monitor {on} | surglamp {on} (origin = lamp head, mount 1.05 m above) | curtain {len, drawn} (rail along X)
 // shutter {w, y0, y1, open} (along X) | cage {w, d, h} (gate on -Z) | sheet {w, h, strips} (along X) | tray | gas
+// intercom {on} | breaker {on, tripped} | alarm | decon {purged} | tube {ready} | cooler | aed | terminal {on}
 // tiles {w, d} floor | tilewall {w, h} (faces -Z) | tape {w} floor line along X | paper {r, n}
 import { face, tube, sphere } from "./lib/shapes.js";
 import D from "./lib/data/l109-rooms.yml";
@@ -129,6 +130,57 @@ function tape(w) {
   const h = w / 2, n = Math.round(w / 0.3); C.roughness(0.6);
   for (let i = 0; i < n; i++) { const xa = -h + (i / n) * w, xb = -h + ((i + 1) / n) * w; C.color(i % 2 ? "#17150f" : "#e8c21a"); C.quad(xa, 0.006, -0.07, xa + 0.07, 0.006, 0.07, xb + 0.07, 0.006, 0.07, xb, 0.006, -0.07); }
 }
+function intercom(on) {
+  C.color("#b9c0c4"); C.metalness(0.75); C.roughness(0.32); box(-0.11, -0.16, -0.035, 0.11, 0.16, 0);
+  C.color(DARK); C.metalness(0.2); for (let i = 0; i < 4; i++) box(-0.07, 0.02 + i * 0.025, -0.04, 0.07, 0.032 + i * 0.025, -0.034);
+  C.color("#c84a3a"); box(-0.055, -0.11, -0.052, 0.015, -0.05, -0.034);
+  C.color(on ? "#4dff8a" : "#ff6a4a"); C.emissive(on ? 0.3 : 1.8, on ? 1.8 : 0.4, 0.25); box(0.035, -0.095, -0.044, 0.068, -0.065, -0.034); C.emissive(null);
+}
+function breaker(on, tripped) {
+  C.color("#6f777a"); C.metalness(0.55); C.roughness(0.45); box(-0.22, -0.28, -0.08, 0.22, 0.28, 0);
+  C.color("#52585b"); box(-0.18, -0.24, -0.092, 0.18, 0.24, -0.078);
+  C.color("#e8c21a"); C.metalness(0.1); box(-0.14, 0.14, -0.096, 0.02, 0.19, -0.09);
+  C.color(on ? "#45e87a" : tripped ? "#ff9830" : "#e8453a"); C.emissive(on ? 0.2 : 2.0, on ? 2.0 : 0.6, 0.15);
+  box(0.06, 0.14, -0.1, 0.13, 0.2, -0.09); C.emissive(null);
+  C.color("#25282a"); C.metalness(0.6); box(on ? 0.19 : 0.18, -0.06, -0.12, 0.23, 0.07, -0.06);
+}
+function alarm() {
+  C.color("#b8221e"); C.metalness(0.2); C.roughness(0.35); box(-0.09, -0.11, -0.055, 0.09, 0.11, 0);
+  C.color("#f2f2ee"); box(-0.065, 0.025, -0.06, 0.065, 0.085, -0.052);
+  C.color("#e6e2d6"); box(-0.055, -0.065, -0.078, 0.055, 0.0, -0.052);
+}
+function decon(purged) {
+  C.color("#d8b822"); C.metalness(0.35); C.roughness(0.4); box(-0.14, -0.18, -0.08, 0.14, 0.18, 0);
+  C.color(DARK); box(-0.1, -0.04, -0.088, 0.1, 0.14, -0.076);
+  C.color(purged ? "#74e8ff" : "#55ff88"); C.emissive(purged ? 0.4 : 0.3, 2.2, purged ? 2.6 : 0.6);
+  sphere(C, [0, 0.05, -0.095], 0.042, 10); C.emissive(null);
+  C.color(STEEL); C.metalness(0.8); cyl(0, -0.09, -0.15, -0.04, 0.015); box(-0.07, -0.16, -0.12, 0.07, -0.14, -0.07);
+}
+function ptube(ready) {
+  C.color(STEEL); C.metalness(0.75); C.roughness(0.3); cyl(0, 0, 0.0, 1.45, 0.075, 0.075, 14);
+  C.color("#c8a048"); C.metalness(0.8); for (const y of [0.15, 0.55, 0.95]) cyl(0, 0, y, y + 0.05, 0.086, 0.086, 14);
+  C.color("#b8dce6", 0.55); C.metalness(0.05); cyl(0, 0, 0.2, 0.52, 0.082, 0.082, 14);
+  C.color(ready ? "#55ff99" : "#d9823a"); C.emissive(ready ? 0.25 : 0.8, ready ? 1.8 : 0.3, 0.25);
+  box(-0.035, 0.62, -0.092, 0.035, 0.69, -0.072); C.emissive(null);
+}
+function cooler() {
+  C.color("#ecece6"); C.metalness(0.1); C.roughness(0.45); box(-0.18, 0, -0.18, 0.18, 0.88, 0.18);
+  C.color("#c9ced1"); box(-0.12, 0.58, -0.19, 0.12, 0.78, -0.175);
+  C.color("#3b78b8"); box(-0.06, 0.72, -0.21, -0.02, 0.76, -0.175); C.color("#d84a3a"); box(0.02, 0.72, -0.21, 0.06, 0.76, -0.175);
+  C.color("#9ad8f0", 0.55); C.metalness(0.05); C.roughness(0.15); cyl(0, 0, 0.88, 1.24, 0.135, 0.135, 14); cyl(0, 0, 1.24, 1.32, 0.135, 0.06, 14);
+}
+function aed() {
+  C.color("#e8ebe8"); C.metalness(0.25); C.roughness(0.35); box(-0.19, -0.21, -0.11, 0.19, 0.21, 0);
+  C.color("#c82c26"); box(-0.15, -0.16, -0.116, 0.15, 0.16, -0.106);
+  C.color("#4dff8a"); C.emissive(0.2, 1.6, 0.5); box(-0.025, -0.08, -0.122, 0.025, 0.08, -0.114); box(-0.08, -0.025, -0.122, 0.08, 0.025, -0.114); C.emissive(null);
+}
+function terminal(on) {
+  C.color("#d4cfc0"); C.metalness(0.15); C.roughness(0.55); box(-0.22, 0, -0.14, 0.22, 0.06, 0.14); box(-0.2, 0.06, -0.06, 0.2, 0.4, 0.16);
+  C.color("#101b14"); C.roughness(0.2); if (on) C.emissive(0.04, 0.16, 0.08);
+  face(C, [-0.16, 0.12, -0.064], [0.16, 0.12, -0.064], [0.16, 0.36, -0.064], [-0.16, 0.36, -0.064], [0, 0, -1]); C.emissive(null);
+  if (on) { C.color("#5cff9a"); C.emissive(0.4, 2.2, 0.8); for (let i = 0; i < 4; i++) box(-0.13, 0.16 + i * 0.045, -0.067, 0.04 + (i % 2) * 0.08, 0.175 + i * 0.045, -0.064); C.emissive(null); }
+  C.color("#9c988c"); box(-0.18, 0.02, -0.24, 0.18, 0.05, -0.14);
+}
 export function geometry(ctx) {
   C = ctx; const p = ctx.params ?? {};
   switch (p.part) {
@@ -141,6 +193,14 @@ export function geometry(ctx) {
     case "sheet": sheet(p.w ?? 4, p.h ?? 2.5, !!p.strips); break;
     case "tray": tray(); break;
     case "gas": gas(); break;
+    case "intercom": intercom(p.on !== false); break;
+    case "breaker": breaker(p.on !== false, !!p.tripped); break;
+    case "alarm": alarm(); break;
+    case "decon": decon(!!p.purged); break;
+    case "tube": ptube(p.ready !== false); break;
+    case "cooler": cooler(); break;
+    case "aed": aed(); break;
+    case "terminal": terminal(p.on !== false); break;
     case "paper": paper(p.r ?? 1.5, p.n ?? 12); return;
     case "tape": tape(p.w ?? 10); return;
     case "tiles": { const x = (p.w ?? 8) / 2, z = (p.d ?? 8) / 2; C.albedo(D.tile); C.roughness(0.25); C.color("#f2f2ee"); C.quad(-x, 0.008, z, x, 0.008, z, x, 0.008, -z, -x, 0.008, -z); C.albedo(null); return; }
@@ -155,5 +215,6 @@ export function collider(ctx) {
   if (p.part === "shutter") { const y0 = p.y0 ?? 0.95, y1 = p.y1 ?? 2.3, bot = y0 + (y1 - y0) * (p.open ?? 0); return { kind: "box", width: p.w ?? 4, height: y1 + 0.26 - bot, depth: 0.08, center: [0, (y1 + 0.26 + bot) / 2, 0] }; }
   if (p.part === "sheet" && !p.strips) return { kind: "box", width: p.w ?? 4, height: p.h ?? 2.5, depth: 0.08, center: [0, (p.h ?? 2.5) / 2, 0] };
   if (p.part === "gas") return { kind: "box", width: 0.55, height: 1.3, depth: 0.4, center: [0, 0.65, 0] };
+  if (p.part === "cooler") return { kind: "box", width: 0.38, height: 1.32, depth: 0.38, center: [0, 0.66, 0] };
   return [];
 }

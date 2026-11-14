@@ -9,6 +9,10 @@ l109-halloran:
   ask:
     - q: "What is this place?"
       a: "A hospital nobody built. Clean halls, unmarked doors, and something behind half of them. We patch people up and keep the lids on."
+    - q: "What's behind the stairwell door back toward arrival?"
+      a: "Sub-level B3. Old M.E.G. cache they walled off when things started climbing out of the morgue drawers. If you go down there, watch the metal door on your right."
+    - q: "Why do I hear knocking on shut doors?"
+      a: "Because whatever's inside learned what a patient sounds like. Never open a door that knocks. Everything alive on this floor is already in our wards."
 l109-petra:
   hi: "Triage. Where does it hurt and can you pay."
   back: ["Back for more stitches?", "Sit. Arm out."]
@@ -41,6 +45,8 @@ l109-doctor:
       a: "Stable. Boring. Boring is my favourite word."
     - q: "What's behind the other doors?"
       a: "Check the whiteboard. If it says do not open, I mean it in capital letters."
+    - q: "Any tips for surviving the deep wings?"
+      a: "Biohazard suites have green decon purge switches outside the yellow tape — hit them before going deep. Pharmacies still run live pneumatic tubes behind the shutters, too."
 l109-guard:
   hi: "M.E.G. Keep moving, keep it calm."
   back: ["Still walking around? Bold.", "Hey. You good?"]
@@ -51,6 +57,8 @@ l109-guard:
       a: "Doctors heal, we watch the doors. Fair trade."
     - q: "Seen anything loose?"
       a: "Down the hall west, a couple hundred metres. Somebody got curious. We heard it from here."
+    - q: "How do I deal with wanderers locked inside the wards?"
+      a: "If a door's lockpicked open, they come out swinging. Trip a red corridor alarm or throw a wing breaker first if you need them looking the other way."
 l109-patient:
   hi: "Mm. Is it morning?"
   bye: "Sleep sounds good."

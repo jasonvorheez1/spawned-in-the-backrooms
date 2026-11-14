@@ -4,21 +4,25 @@
 import { rotate } from "builtin/vec3";
 import { W, CEIL, H, SEG, ROOM, PITCH, WALL, DOOR_W, DOOR_H, corridor, corridorsAt, segInfo, segKey, toWorld, other, linesNear, roomPop, rand } from "../../scripts/lib/level109.js";
 import { questTick } from "../../scripts/lib/level109-quest.js";
-import { penRoll, penLoad, penUnload, looseTick, doorOpen } from "../../scripts/lib/containment.js";
+import { penRoll, penLoad, penUnload, penCount, looseTick, doorOpen } from "../../scripts/lib/containment.js";
 import { spawnFoe } from "../../scripts/lib/l109-foes.js";
 import { buildRoom, roomLook } from "../../scripts/lib/l109-rooms.js";
 import { wandererTick, denOf, denLock, denLoad, denWatch, denUnload } from "../../scripts/lib/l109-wanderers.js";
 import { inside } from "../../scripts/lib/containment.js";
 import { buildB3, placeLauncher, stairDoorAt, MORGUE, O as B3O, yawFor as yawB3 } from "../../scripts/lib/l109-b3.js";
+import { heard } from "../../scripts/lib/hear.js";
 export const cadence = "500ms";
-const GEO = "scripts/levelrun-geo.js", PLASTER = "cdn/texture-clean-smooth-cream-painted-plaster-wall.png", CARPET = "cdn/texture-light-grey-beige-office-carpet-tiles-worn.png";
+const GEO = "scripts/levelrun-geo.js", MED = "scripts/l109-med-geo.js", VEND_GLB = "/cdn/value.841812d69f4307a900ce500187517702dc1f59e427eb8d7599f6c1f463642e54.glb";
+const PLASTER = "cdn/texture-clean-smooth-cream-painted-plaster-wall.png", CARPET = "cdn/texture-light-grey-beige-office-carpet-tiles-worn.png";
+const KNOCK_SFX = "/cdn/moodboard-realistic-gritty/sfx-three-heavy-knocks-from-inside-hollow-stud-wall.mp3";
 const AHEAD = 88, KEEP = 124, ROOM_IN = 46, ROOM_OUT = 84;
-const SEGS = new Map(), ROOMS = new Map(); // key -> what this machine laid
+const SEGS = new Map(), ROOMS = new Map(), KNOCKS = new Map(); // transient engine handles & audio throttle
 let YAW = null; // the yaw that points a thing's local +X along world +x, +z, -x, -z (asked of the engine once, never assumed)
 function yawFor(dx, dz) {
   YAW ??= [0, 90, 180, 270].map((y) => ({ y, d: rotate({ yaw: y }, { x: 1, y: 0, z: 0 }) }));
   let best = YAW[0], bd = -9; for (const c of YAW) { const d = c.d.x * dx + c.d.z * dz; if (d > bd) { bd = d; best = c; } } return best.y;
 }
+const yawFront = (nx, nz) => Math.round(Math.atan2(-nx, -nz) * 180 / Math.PI);
 const INVIS = { visible: false, physics: "static", castShadow: false };
 // a world-aligned box from corridor-frame extents
 function uvBox(c, u0, u1, v0, v1, y0, y1) { const a = toWorld(c, u0, v0), b = toWorld(c, u1, v1); return { feetPosition: { x: (a.x + b.x) / 2, y: y0, z: (a.z + b.z) / 2 }, primitive: { kind: "box", width: Math.abs(b.x - a.x), height: y1 - y0, depth: Math.abs(b.z - a.z) } }; }
@@ -41,12 +45,62 @@ function laySeg(ctx, seed, c, k) {
       if (g.kind === "door") kid("wh" + side, { ...INVIS, ...uvBox(c, um - hw, um + hw, v0, v1, DOOR_H, CEIL) }); }
     if (g?.kind === "door") layDoor(ctx, c, g.info, made);
   }
+  const dark = !!ctx.place.state.l109Dark?.[key];
+  let anyDead = false;
   for (const du of [-4, 4]) { // two troffers a segment; a dead one now and then
     const dead = rand(seed, 71, k * 2 + (du > 0 ? 1 : 0), c.i) < 0.06, p = toWorld(c, um + du, 0, CEIL - 0.03);
-    kid("l" + du, { feetPosition: p, castShadow: false, primitive: { kind: "box", width: c.ax === "ns" ? 0.6 : 1.2, height: 0.03, depth: c.ax === "ns" ? 1.2 : 0.6 }, material: dead ? { color: "#8a887c" } : TROFFER,
-      ...(dead ? {} : { light: { kind: "point", color: "#fff3d6", intensity: 2.2, distance: 11, shadow: { enabled: false } } }) });
+    if (dead) anyDead = true;
+    const off = dead || dark;
+    kid("l" + du, { feetPosition: p, castShadow: false, primitive: { kind: "box", width: c.ax === "ns" ? 0.6 : 1.2, height: 0.03, depth: c.ax === "ns" ? 1.2 : 0.6 }, material: off ? { color: "#8a887c" } : TROFFER,
+      ...(off ? {} : { light: { kind: "point", color: "#fff3d6", intensity: 2.2, distance: 11, shadow: { enabled: false } } }) });
   }
+  laySegFixtures(ctx, seed, c, k, key, um, info, dark, anyDead, kid);
   SEGS.set(key, made);
+}
+function laySegFixtures(ctx, seed, c, k, key, um, info, dark, anyDead, kid) {
+  const b3k = c.ax === "ns" && c.i === 0 ? stairDoorAt(seed).k : null;
+  const wallYaw = (side) => { const inw = toWorld({ ...c, c: 0 }, 0, side); return yawFront(-inw.x, -inw.z); };
+  const clearSide = (side) => !(side < 0 && c.ax === "ns" && c.i === 0 && k === b3k);
+  const sidePick = (salt) => { const s = rand(seed, salt, k, c.i) < 0.5 ? 1 : -1; return clearSide(s) ? s : -s; };
+  if (info.cross) {
+    const label = c.ax === "ns" && c.i === 0 && info.cross.i === 0 ? "CROSSING EW-0  |  ← EXIT 1.3km · DOCTORS 424m →" : `WING ${c.ax.toUpperCase()}-${c.i}  ×  ${other(c.ax).toUpperCase()}-${info.cross.i}`;
+    kid("sign", { feetPosition: toWorld(c, um, 0, CEIL - 0.25), castShadow: false, visibleRange: { max: 35 },
+      vector: `<svg viewBox='0 0 360 54' width='1.4m' billboard='yaw'><rect x='2' y='2' width='356' height='50' rx='4' fill='#14281d' stroke='#8fb89d' stroke-width='3'/><text x='180' y='34' text-anchor='middle' font-family='sans-serif' font-size='20' font-weight='800' fill='#e6f5ea'>${label}</text></svg>` });
+    return;
+  }
+  if (anyDead || k % 5 === 0 || (c.ax === "ns" && c.i === 0 && k === 2)) {
+    const s = sidePick(41), p = toWorld(c, um + 4.4, s * (W / 2 - 0.01), 1.3);
+    kid("brk", { tags: ["usable"], feetPosition: p, rotation: { yaw: wallYaw(s) }, castShadow: false, behavior: "scripts/l109-use.js", visibleRange: { max: 40 },
+      primitive: { kind: "scripted", script: MED, params: { part: "breaker", on: !dark && !anyDead, tripped: anyDead } },
+      state: { kind: "breaker", seg: key, tripped: anyDead, name: "Wing Power Breaker", verb: anyDead ? "Reset Circuit" : dark ? "Restore Lights" : "Cut Lights", info: anyDead ? "tripped · Repair 20 / Science 25" : dark ? "lights cut" : "power on", c: p } });
+  }
+  if (k % 4 === 1 || (c.ax === "ns" && c.i === 0 && k === 1)) {
+    const s = sidePick(43), p = toWorld(c, um - 4.4, s * (W / 2 - 0.01), 1.35);
+    kid("icm", { tags: ["usable"], feetPosition: p, rotation: { yaw: wallYaw(s) }, castShadow: false, behavior: "scripts/l109-use.js", visibleRange: { max: 35 },
+      primitive: { kind: "scripted", script: MED, params: { part: "intercom", on: true } },
+      state: { kind: "intercom", idx: Math.abs(k + c.i * 7), name: "Nurse Call Intercom", verb: "Answer Page", info: "hospital PA line", c: p } });
+  }
+  if (rand(seed, 53, k, c.i) < 0.2 || (c.ax === "ew" && c.i === 0 && (k === 3 || k === 11))) {
+    const s = sidePick(47), p = toWorld(c, um - 3.2, s * (W / 2 - 0.01), 1.32);
+    kid("alm", { tags: ["usable"], feetPosition: p, rotation: { yaw: wallYaw(s) }, castShadow: false, behavior: "scripts/l109-use.js", visibleRange: { max: 35 },
+      primitive: { kind: "scripted", script: MED, params: { part: "alarm" } },
+      state: { kind: "alarm", name: "Code Blue Pull Box", verb: "Pull Alarm", info: "draws nearby hostiles", c: p } });
+  }
+  if (rand(seed, 59, k, c.i) < 0.16 || (c.ax === "ew" && c.i === 0 && k === 25)) {
+    const s = sidePick(51), p = toWorld(c, um + 3.4, s * (W / 2 - 0.22), 0);
+    kid("clr", { tags: ["usable"], feetPosition: p, rotation: { yaw: wallYaw(s) }, physics: "static", castShadow: false, behavior: "scripts/l109-use.js", visibleRange: { max: 40 },
+      primitive: { kind: "scripted", script: MED, params: { part: "cooler" } },
+      state: { kind: "cooler", name: "Hospital Water Cooler", verb: "Drink Water", info: "cold filtered", c: { ...p, y: 0.9 } } });
+  }
+  if (rand(seed, 61, k, c.i) < 0.08 || (c.ax === "ew" && c.i === 0 && k === 24)) {
+    const freeSides = [1, -1].filter((sd) => clearSide(sd) && !info.gaps.some((g) => g.side === sd));
+    if (freeSides.length) {
+      const s = freeSides[0], p = toWorld(c, um, s * (W / 2 - 0.48), 0);
+      kid("vnd", { tags: ["usable"], feetPosition: p, rotation: { yaw: wallYaw(s) }, physics: { body: "static", collider: "box" }, castShadow: false, behavior: "scripts/l109-use.js", visibleRange: { max: 45 },
+        model: { id: VEND_GLB, forward: "-z" }, layout: { box: { min: { x: -0.6, y: 0, z: -0.475 }, max: { x: 0.6, y: 2.1, z: 0.475 } } },
+        state: { kind: "vending", uid: `seg-${key}-vnd`, name: "Hospital Vending Machine", verb: "Buy Drink ($1.00)", info: "or Lockpick 25 / Repair 20 when jammed", c: { ...p, y: 1.1 } } });
+    }
+  }
 }
 function layDoor(ctx, c, info, made) {
   const exit = info.type === "exit", id = "l109d-" + info.id, hingeU = info.u - DOOR_W / 2, hinge = toWorld(c, hingeU, info.side * (W / 2 + WALL / 2));
@@ -112,9 +166,22 @@ export function tick(ctx) {
   for (const [key, made] of SEGS) if (!keep.has(key)) { for (const id of made) ctx.destroy(id); SEGS.delete(key); }
   for (const [id, r] of rooms) if (!ROOMS.has(id) && r.d < ROOM_IN) { layRoom(ctx, seed, r.info); break; } // one room a tick
   denWatch(ctx, [...ROOMS.keys()]);
+  knockTick(ctx, players, rooms);
   for (const [id, r] of ROOMS) if (!rooms.has(id) || rooms.get(id).d > ROOM_OUT) { denUnload(ctx, r.info, (p) => inside(r.info.box, p)); penUnload(ctx, id, r.info.box); for (const o of r.made) ctx.destroy(o); ROOMS.delete(id); }
   looseTick(ctx, spawnFoe);
   flushRooms(ctx);
+}
+function knockTick(ctx, players, rooms) {
+  const now = ctx.now();
+  for (const [id, r] of rooms) {
+    if (r.d > 8 || doorOpen(ctx, id)) continue;
+    if (now < (KNOCKS.get(id) ?? 0)) continue;
+    const occupied = penCount(ctx, id) > 0 || ctx.place.objects["l109d-" + id]?.state?.denLocked;
+    if (!occupied) continue;
+    if (!players.some((p) => p.feetPosition.y > -3 && Math.hypot(p.feetPosition.x - r.info.door.x, p.feetPosition.z - r.info.door.z) < 7.5)) continue;
+    KNOCKS.set(id, now + 22000 + Math.floor(ctx.random() * 18000));
+    if (ctx.random() < 0.65) heard(ctx, { clip: KNOCK_SFX, position: { ...r.info.door, y: 1.2 }, volume: 0.8, maxDistance: 16 });
+  }
 }
 const ROOM_STEP = 30; // Savi's pick: room pieces laid per tick (the walls/floor come first, they were queued first)
 function flushRooms(ctx) {
