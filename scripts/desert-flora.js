@@ -6,7 +6,7 @@
 //   "dead"    a dead grey shrub of bare branches
 const ok = (l, c, h) => `oklch(${l.toFixed(3)} ${c.toFixed(3)} ${h.toFixed(1)})`;
 function lump(ctx, cx, cz, R, H, sec, rings, hue, base) {
-  const k = [...Array(sec)].map(() => 0.72 + ctx.random() * 0.5), q = [...Array(sec)].map(() => 0.8 + ctx.random() * 0.4);
+  const k0 = [...Array(sec)].map(() => 0.78 + ctx.random() * 0.4), k = k0.map((v, i) => (v * 2 + k0[(i + 1) % sec] + k0[(i + sec - 1) % sec]) / 4), q = [...Array(sec)].map(() => 0.8 + ctx.random() * 0.4);
   const P = (r, s) => { // r 0 = crown, rings = foot
     const t = r / rings, a = (s / sec) * Math.PI * 2, ph = t * Math.PI * 0.5;
     const rr = R * Math.sin(ph) * k[s % sec] * (t > 0.85 ? 0.97 : 1), y = H * (Math.cos(ph) * 0.9 + 0.1) * q[(s + 2) % sec] ** (1 - t);
@@ -14,13 +14,13 @@ function lump(ctx, cx, cz, R, H, sec, rings, hue, base) {
   };
   for (let r = 0; r < rings; r++) for (let s = 0; s < sec; s++) {
     const t = (r + 0.5) / rings, a = P(r, s), b = P(r, s + 1), c = P(r + 1, s + 1), d = P(r + 1, s);
-    ctx.color(ok(base - t * 0.14 + (ctx.random() - 0.5) * 0.04, 0.07 + t * 0.02, hue + (ctx.random() - 0.5) * 8));
+    ctx.color(ok(base - t * 0.14, 0.07 + t * 0.02, hue));
     ctx.quad(a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2], d[0], d[1], d[2]);
   }
 }
 function boulder(ctx) {
   const R = 0.5 + ctx.random() * 0.9, H = R * (0.45 + ctx.random() * 0.35), lo = ctx.lod >= 3;
-  lump(ctx, 0, 0, R, H, lo ? 6 : 11, lo ? 2 : 5, 38 + ctx.random() * 14, 0.6);
+  lump(ctx, 0, 0, R, H, lo ? 7 : 16, lo ? 3 : 7, 38 + ctx.random() * 14, 0.6);
   if (!lo && ctx.random() < 0.5) lump(ctx, R * 0.7, R * 0.3, R * 0.45, H * 0.6, 8, 3, 42, 0.56); // a broken-off piece leaning on it
 }
 function pebbles(ctx) {
