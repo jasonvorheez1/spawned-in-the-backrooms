@@ -78,6 +78,19 @@ export function layService(ctx, { box, wallZ, light, vend, PLASTER, CEIL, WAINSC
   vend("l61-vend-overflow-0", -20.5, 45.93, -4, false, { dead: true });
   vend("l61-vend-overflow-1", -18.95, 45.93, 7, true, { dead: true });
   vend("l61-vend-overflow-2", -19.85, 44.1, 90, false, { dead: true, y: 0.43, rot: { pitch: 90 } });
+  // the jam: machines that keep arriving after the room is full. Some face the wall, one rides another, one leans; a gap at the right a body squeezes past
+  for (const [k, x, z, yaw, soda, y, rot] of [
+    [3, -17.35, 45.95, 183, false, 0, null],          // backwards: its glass to the wall
+    [4, -15.9, 45.9, 4, true, 0, { roll: -6 }],        // leaning on its neighbour
+    [5, -20.4, 45.95, -2, true, 1.86, { roll: 3 }],   // riding the first one, nearly touching the tiles
+    [6, -21.2, 42.6, 268, false, 0, null],            // turned into the side wall
+    [7, -18.2, 43.1, 150, true, 0, { pitch: -14 }],   // tipping forward, caught on the pile
+    [8, -16.5, 44.0, 90, false, 0.43, { pitch: 90 }], // flat on its back
+  ]) vend("l61-vend-overflow-" + k, x, z, yaw, soda, { dead: true, y, rot });
+  sp("overflow-flicker", { feetPosition: { x: -18.5, y: 2.9, z: 44.4 }, light: { kind: "point", color: "#e8dcae", intensity: 1.1, distance: 7 },
+    primitive: { kind: "box", width: 1.2, height: 0.04, depth: 0.16 }, material: { color: "#f3ead0", emissive: "#f3ead0", emissiveIntensity: 1.6 },
+    fx: { script: "fx\npop buzz n=1 at=point() glo=flick(7,.85) r=light(<1,.94,.75>,$glo*1.4,6)" } });
+  label("overflow-note", -14.2, 1.55, 46.62, 0, "OVERFLOW", "Count: 9. Recount: 11. Stop recounting.", 1.6, true);
   box("l61-service-sealed", -12.1, 0, 46.59, 2.15, 2.48, 0.16, { color: "#665258", roughness: 0.87 });
   for (const [i, y] of [0.47, 1.19, 1.88].entries()) box("l61-service-brace-" + i, -12.1, y, 46.45, 2.88, 0.18, 0.12,
     { texture: "cdn/texture-raw-plywood-sheet-knots-and-grain.png", color: "#b49b72", roughness: 0.88 }, { physics: undefined, rotation: { roll: i % 2 ? 8 : -6 } });
