@@ -9,6 +9,15 @@ export function knocked(ctx, e, now, dt) {
   if (s.heldBy) { // in someone's arms: the holder's machine places it
     if (now - (s.heldAt ?? 0) > 8000) { s.heldBy = null } else { e.velocity = { x: 0, y: 0, z: 0 }; return true }
   }
+  const L = s.lift
+  if (L) { // balloons tied on (balloon guns, Shelly Nov 14): it floats up helpless, bobs, then the balloons pop and it drops
+    const t = now - L.at
+    if (t > L.ms) { s.lift = null; e.rotation = { yaw, pitch: 0 }; return false }
+    const top = (L.y0 ?? e.feetPosition.y) + L.h, dy = top - e.feetPosition.y
+    e.velocity = { x: 0, y: Math.max(-1, Math.min(2.2, dy * 1.6)) + Math.sin(t / 380) * 0.25, z: 0 }
+    e.rotation = { yaw: yaw + dt * 40, pitch: Math.sin(t / 500) * 12 }
+    return true
+  }
   const d = s.down
   if (d && d.rag) { // a power hit: the body goes limp for real, lies a beat, then gets up where it landed
     const t = now - d.at

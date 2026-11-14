@@ -588,6 +588,27 @@ export function onInput(ctx, input) {
   if (input.released.throw || (walkOf(ctx).nade && !input.held.throw)) letFly(ctx)
 }
 
+// balloon guns (Shelly Nov 14): each hit ties balloons on; enough of them and the thing floats away helpless (lib/knock.js answers state.lift)
+const BALLOON_GLB = "/cdn/value.bbcd28912111e39613cec71f06224b7742148d3493106c89a76f739e3003f366.glb"
+const BALLOON_TINT = ["oklch(0.66 0.22 25)", "oklch(0.72 0.19 140)", "oklch(0.7 0.17 250)", "oklch(0.85 0.17 95)", "oklch(0.7 0.2 330)"]
+function tieBalloons(ctx, m, n, wp) {
+  if (!m.state || m.state.dead || (m.state.hp ?? 1) <= 0) return
+  const now = ctx.now(), L = m.state.lift
+  const tied = Math.min(6, (L && now - L.at < L.ms ? L.n : 0) + Math.max(1, Math.ceil(n / 3)))
+  const hgt = wp.balloonLift * tied
+  m.state.lift = { at: now, ms: wp.balloonMs, h: Math.min(6, hgt), n: tied, y0: L && now - L.at < L.ms ? L.y0 : m.feetPosition.y }
+  for (let i = 0; i < Math.max(1, Math.ceil(n / 3)) && i < 3; i++) {
+    const a = ctx.random() * 6.283
+    ctx.spawn({ parent: m.id, lifetime: wp.balloonMs / 1000, tags: ['tied-balloon'], physics: 'none', castShadow: false,
+      feetPosition: { x: Math.cos(a) * 0.25, y: 1.9 + ctx.random() * 0.5, z: Math.sin(a) * 0.25 },
+      model: { id: BALLOON_GLB, materials: { '*': { color: BALLOON_TINT[(ctx.random() * BALLOON_TINT.length) | 0] } } },
+      layout: { box: { min: { x: -0.2, y: 0, z: -0.2 }, max: { x: 0.2, y: 0.55, z: 0.2 } } } })
+  }
+  const at = { x: m.feetPosition.x, y: m.feetPosition.y + 1.8, z: m.feetPosition.z }
+  ctx.emit('playSound', { clip: SND('rubber-balloons-squeaking-and-inflating-fast'), position: at, volume: 0.9 })
+  if (tied >= 2) ctx.emit('damageNumber', { position: { ...at, y: at.y + 0.6 }, text: 'AIRBORNE', color: '#c8ff60', size: 1.1 })
+}
+
 export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pellets = 1) {
   dmg = Math.max(1, Math.round(vary(ctx, dmg))) // every hit rolls its own 90% to 110% (data/combat.yml)
   if (s.studied && m.tags?.some((tg) => s.studied.split(',').some((k) => tg.includes(k)))) dmg = Math.round(dmg * 1.1) // read its Database page
@@ -754,6 +775,7 @@ function swing(ctx, power = 0) {
       if (t.head) ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2.2, z: m.feetPosition.z }, text: 'HEADSHOT', color: '#ffd23a', size: 1.2 })
       else if (crit) ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2, z: m.feetPosition.z }, text: 'CRIT', color: '#ff5a3a', size: 1.2 })
       hitTarget(ctx, s, m, Math.max(1, Math.round(t.dmg)), f, !wp.quiet, 0, penOf(wp, s.equipped), t.n ?? 1)
+      if (wp.balloon && !m.tags?.includes('l5-beast')) tieBalloons(ctx, m, t.n ?? 1, wp)
     }
     if (!res.targets.length && res.world) {
       const d = res.world.dir, h = Math.hypot(d.x, d.z) || 1
