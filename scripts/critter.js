@@ -245,6 +245,15 @@ function gaitFor(ctx) {
   return (ss.gaitArmed ??= { ...ss.gaitNpc, walk: WARRIOR.walk, run: WARRIOR.run, sprint: WARRIOR.run })
 }
 export function update(ctx) {
+  { // a dance (jukebox, talk) or a sip/eat gesture never outlives its moment: their own one-shot timers can miss, so the body clears them by clock (Shelly Nov 14: arms stuck out, tail spazzing)
+    const a = ctx.self.anim, ss = ctx.self.session, now = ctx.now()
+    for (const [ch, ms] of [['groove', 10500], ['gest', 6000]]) {
+      if (!a?.[ch]) { ss['since_' + ch] = null; continue }
+      ss['since_' + ch] ??= now
+      const end = ch === 'groove' ? (ctx.self.state.grooveEnd ?? ss.since_groove + ms) : ss.since_gest + ms
+      if (now > end) { a[ch] = null; ss['since_' + ch] = null; if (ch === 'groove') delete ctx.self.state.grooveEnd }
+    }
+  }
   { const sty = setStyle(ctx.world.state.bodyStyle), ps = ctx.place?.state, k = sty + ':' + STYLE_V; if (ps && ctx.self.isLocal !== false && ps.bodyStyleV !== k) { ps.bodyStyleV = k; ctx.self.session.rq = restyleQueue(ctx) } const rq = ctx.self.session.rq; if (rq?.length) restyleStep(ctx, rq, 6) } // the sweep runs 6 things a tick, never a whole place at once // the room's people follow the BODIES pick: one sweep per place per flip
   { const sty = setStyle(ctx.world.state.bodyStyle), ss = ctx.self.session; if (ss.style !== sty) { if (ss.style) { ss.lookKey = null; ss.key = null; ss.flair = null; ss.headSwept = false; if (sty === 'furry') ctx.self.anim.idle = null } ss.style = sty } } // the menu's BODIES: humans or furries, everyone in the room
   if (!MESH && !ctx.self.session.headSwept) { ctx.self.session.headSwept = true; dropHead(ctx, ctx.self) }
