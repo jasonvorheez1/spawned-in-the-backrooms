@@ -369,6 +369,7 @@ export function update(ctx) {
     if (ses.tankObj) { try { ctx.destroy(ses.tankObj) } catch (e) {} ses.tankObj = null }
     for (const r of ctx.query({ tags: ['sqtank'], radius: 4 })) if (r.id.startsWith(ctx.self.id + '/')) { try { ctx.destroy(r.id) } catch (e) {} }
     if (wantTank) ses.tankObj = ctx.spawn({ parent: ctx.self.id, tags: ['sqtank'], attachment: { bone: 'Spine2' }, ...SQTANK, visibleInFirstPerson: false, castShadow: true })
+    if (ctx.self.state?.dbgTank) ctx.log('TANKDBG', wantTank, ses.tankObj, !!ctx.getObject(ses.tankObj), JSON.stringify(ctx.getObject(ses.tankObj)?.worldFeetPosition ?? null), JSON.stringify(ctx.self.feetPosition))
   }
 
   // the wardrobe mirror: only on this player's own screen
