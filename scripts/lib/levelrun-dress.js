@@ -104,5 +104,6 @@ export function dressWorld(ctx) {
   if (l11) { for (const c of l11.children ?? []) c.visible = false;
     l11.primitive = { kind: "scripted", script: DOOR, params: { style: "metal", part: "set", w: 1.2, h: 2.3, seed: 11 } }; l11.material = { pbr: true, color: "oklch(0.86 0.02 150)" }; }
   const al = objs["lrun-alcove-light"]; if (al) al.feetPosition = { x: AX + 1.2, y: 2.95, z: 0 };
+  const sm = objs["lrun-pursuer-5"]; if (sm) { for (const c of sm.children ?? []) c.visible = false; sm.primitive = { kind: "scripted", script: GEO, params: { part: "smiler" } }; }
   st.dressV = DRESS_V;
 }
