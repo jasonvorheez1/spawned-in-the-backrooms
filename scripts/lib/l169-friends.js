@@ -57,7 +57,7 @@ export function layFriends(ctx, put, L) {
   for (const k of ["l169-friend-tablea", "l169-friend-tableb"]) if (ctx.getObject(k)) ctx.destroy(k);
   for (let i = 1; i <= 7; i++) { const c = S["seat-" + i]; put("l169-friend-chair-" + i, { feetPosition: g(c.x, c.z, fu), rotation: { yaw: yawOf(c.fx, c.fz) }, model: model("dining_chair") }); }
   const st = at(L, L.friends.stove), GEO = (part, extra) => ({ primitive: { kind: "scripted", script: "scripts/l169-house-geo.js", params: { part, ...extra } }, material: { pbr: true }, castShadow: true, receiveShadow: true });
-  put("l169-friend-stove", { feetPosition: g(st.x, st.z, fu), rotation: { yaw: 180 }, model: { id: model("mocha_range"), forward: FUR.pieces.mocha_range.forward }, physics: "static" });
+  put("l169-friend-stove", { feetPosition: g(st.x, st.z, fu), rotation: { yaw: -90 }, model: { id: model("mocha_range"), forward: FUR.pieces.mocha_range.forward }, physics: "static" });
   put("l169-friend-pot", { feetPosition: g(st.x - 0.15, st.z + 0.15, fu + 0.735), ...GEO("pot") });
   // bedrolls: one each, in the three bedrooms
   const QUILT = ["oklch(0.62 0.09 30)", "oklch(0.6 0.07 250)", "oklch(0.65 0.08 140)", "oklch(0.66 0.08 80)", "oklch(0.62 0.07 320)", "oklch(0.55 0.03 250)", "oklch(0.6 0.1 20)"];
