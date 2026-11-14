@@ -155,7 +155,10 @@ export const weaponOf = (s) => W[s.equipped] ?? W.fists
 const DOWN_MS = 3200 // how long you watch yourself lie there (Savi's pick); camera.js and the creatures read the same window
 // checkpoints: each place's safe spawn plus every doorway's arrival marker; you wake at the nearest one
 const CHECKS = { main: ['main-from-l1'], level1: ['l1-from-main', 'l1-from-l2'], level2: ['l2-from-l1', 'l2-from-l3', 'l2-from-l21'], level21: ['l21-from-l2', 'l21-from-l8'], level3: ['l3-from-l2', 'l3-gamma-door', 'l3-lift-arrive', 'l3-from-l5'], level4: ['l4-lift-arrive', 'l4-from-l5'], level5: ['l5-from-l3', 'l5-from-l4', 'l5-from-l6', 'l5-lobby'], level6: ['l6-from-l5', 'l6-from-l7', 'l6-from-l61'], level61: ['l61-from-l6', 'l61-from-l4', 'l61-arrive'], level11: ['l11-from-l61', 'l11-spawn'], level7: ['l7-from-l6', 'l7-seawatch-spawn', 'l7-fort-spawn'], level8: ['l8-from-l7', 'l8-from-camp', 'l8-from-l21'], level9: ['l9-from-l8', 'l9-from-hub'], gamma: [] }
+import { slotInfo as l109Slot, corridor as l109Cor } from './lib/level109.js'
+const L109_WAKE = { in: 3.5, along: 0.8 } // metres in from the safe supply room's door (ns0_n1p): where a Level 109 death wakes you
 function nearestCheckpoint(ctx, at) {
+  if (ctx.self.place === 'level109') { const seed = ctx.place.state?.l109seed; if (seed != null) { const i = l109Slot(seed, l109Cor(seed, 'ns', 0), -1, 1); return { pos: { x: i.door.x + L109_WAKE.in, y: 0.1, z: i.door.z + L109_WAKE.along }, rot: -90 } } }
   if (ctx.self.place === 'levelrun') return ctx.self.state?.lrunRescued ? { pos: { ...CORRIDOR.safePos }, rot: CORRIDOR.safeYaw } : { pos: { x: 0, y: 0.1, z: 1.5 }, rot: 0 }
   const sp = ctx.place.defaultSpawnPoint ?? {}, yaw0 = ctx.place.defaultSpawnRotation?.yaw
   let best = { pos: { x: sp.x ?? 0, y: 0.1, z: sp.z ?? 0 }, rot: yaw0 }, bd = Math.hypot(best.pos.x - at.x, best.pos.z - at.z)
