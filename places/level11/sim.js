@@ -1918,6 +1918,31 @@ export function tick(ctx) {
     }
     st.propPlacementV = 1;
   }
+  if ((st.propPlacementV ?? 0) < 2) {
+    st.propPlacementV = 2;
+    if (!ctx.place.objects["l11-bee-clue"]) {
+      ctx.spawn("l11-bee-clue", {
+        tags: ["usable"],
+        feetPosition: { x: -14.8, y: 0.25, z: 18.6 },
+        rotation: { yaw: 180 },
+        primitive: { kind: "box", width: 1.5, height: 0.48, depth: 0.56 },
+        material: { color: "oklch(0.36 0.03 55)", roughness: 0.88 },
+        physics: "static",
+        behavior: "scripts/level11-use.js",
+        state: {
+          kind: "bee-clue",
+          name: "11th Ave Bus Bench · Red Wool Scrap",
+          verb: "Inspect bus bench",
+          info: "A red wool coat cuff snagged on the armrest beside a stamped tunnel transfer slip.",
+          tint: "#ff785a",
+        },
+        children: [
+          { feetPosition: { x: 0.45, y: 0.49, z: 0.05 }, rotation: { yaw: 28 }, primitive: { kind: "box", width: 0.28, height: 0.03, depth: 0.14 }, material: { color: "oklch(0.52 0.22 25)", roughness: 0.9 } },
+          { feetPosition: { x: -0.3, y: 0.49, z: -0.06 }, rotation: { yaw: -18 }, primitive: { kind: "box", width: 0.16, height: 0.015, depth: 0.11 }, material: { color: "oklch(0.92 0.02 90)", roughness: 0.8 } },
+        ],
+      });
+    }
+  }
   if ((st.walkV ?? 0) < WALK_V) { st.walkV = WALK_V; layWalkers(ctx); }
   if (!mem.ringAt) mem.ringAt = now + 35000;
   tickCity(ctx, mem, heard);

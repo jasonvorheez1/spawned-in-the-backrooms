@@ -3,6 +3,7 @@
 // fountains, the break room's vending machines, the chained stairwell to Level 5.
 import { notify } from "./lib/notify.js";
 import { heard } from "./lib/hear.js";
+import { setStep61 } from "./lib/level61-quests.js";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const BAND = [82, 96], JUGS = 3, REFILL = 120000; // her pick: a jug back every 2 minutes, three on the shelf
 const say = (who, text, ctx) => notify(ctx, who, text); // scripts/lib/notify.js, shared
@@ -56,6 +57,11 @@ export const ears = {
       say(who, "Cold, sweet, faintly almond. Thirst +30.", ctx); return;
     }
     if (s.kind === "vend") {
+      if (who?.state?.l61GuildQ === 2 && !who.state.l61VendSurvey) {
+        who.state.l61VendSurvey = 1;
+        who.state.payout = { xp: 25, items: [] };
+        setStep61(ctx, who, "guild", 3, "Four Hundred and Thirteen · Logged Level 4's B4 vending drop · Return to Level 6.1 (Guild or M.E.G.)");
+      }
       if (now < (s.next ?? 0)) { say(who, "The coil's empty. It hums, restocking from nowhere.", ctx); return; }
       s.next = now + 150000; snd(ctx, "vending-machine-clunk-item-drop", 0.8); const r = ctx.random();
       if (r < 0.2) { say(who, "You press B4. The glass gives like water and pulls you in. You smell fries.", ctx); ctx.cross(who, "level61#l61-from-l4"); return; } // Level 6.1's way in (wiki: any button on a Level 4 vending machine)

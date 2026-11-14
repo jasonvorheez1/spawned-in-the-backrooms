@@ -36,10 +36,10 @@ export const QUESTS = {
     key: "craneQ",
     name: "The Paper Bird's Blessing",
     tips: {
-      1: "Find the paper crane perched on the canal wall. Canal folk say it roosts near whatever is broken.",
+      1: "Find the paper crane perched on the canal wall (or ask the Guild of Many in Level 6.1 for their barge waybill).",
       2: "Follow the canal walkway to the spillway valve station and free the jammed valve.",
       3: "Press the valve station again to draw a sample of the lock water.",
-      4: "Bring the lock-water sample to Kael's stall at the market.",
+      4: "Bring the lock-water sample to Kael's stall at the market (with the Guild waybill from 6.1 if you have it).",
     },
     marks: { 1: MARK("l11-lucky-crane"), 2: MARK("l11-canal-pump"), 3: MARK("l11-canal-pump"), 4: MARK("l11-trader-kael") },
   },
@@ -219,30 +219,38 @@ export function handleDialogueQuest(ctx, p, npc, text) {
     }
   }
 
-  // ---- The Paper Bird's Blessing (Kael) ----
+  // ---- The Paper Bird's Blessing (Kael <-> Level 6.1 Guild barge) ----
   if (npcId === "l11-trader-kael") {
     if (t.includes("wrong with the canal") && !s.craneQ) {
-      if (repOf(s, "bntg") <= -35) return { reply: "The Guild's got your name on a list. Step away from my stall.", mood: "angry" };
+      if (repOf(s, "bntg") <= -35) return { reply: "The B.N.T.G.'s got your name on a blacklist, boss. Step away from my stall.", mood: "angry" };
       setCraneStep(ctx, p, 1, "Quest Started: The Paper Bird's Blessing · Find the paper crane on the canal wall");
-      return { reply: "Spillway valve's jammed, boss, so the lock won't fill, and the Guild barge from 6.1 is sitting outside it with my coffee on board. The pilot won't bring her in till someone draws a sample and proves the lock water's still almond water. Canal folk say the paper crane on the wall roosts by whatever's broken. Silly. Never wrong, though.", mood: "calm" };
+      return { reply: "Spillway valve's jammed, boss, so the lock won't fill, and the Guild of Many barge from Level 6.1 is sitting outside it with my coffee on board. The pilot won't bring her in till someone draws a sample proving the lock water's still almond water — and checking in with the Guild back through the glass doors speeds up customs too. Canal folk say the paper crane on the wall roosts by whatever's broken.", mood: "calm" };
     }
-    if (t.includes("cleared the canal lock") && s.craneQ === 4) {
+    if ((t.includes("cleared the canal lock") || t.includes("customs waybill from 6.1")) && s.craneQ === 4) {
+      const guildClear = t.includes("customs waybill from 6.1") && !!s.craneWaybill;
       if (t.includes("cut of the cargo") && !s.kaelHaggle) {
         const c = rollCheck(ctx, s, { skill: "barter", difficulty: 40 });
         s.kaelHaggle = c.ok ? 1 : -1;
         if (!c.ok) return { reply: "A cut? Boss, that coffee's spoken for three times over. Forty, as agreed, and the provisions. Hand me the sample.", mood: "annoyed" };
       }
-      const cents = s.kaelHaggle === 1 ? 6500 : 4000;
+      if (guildClear) s.craneGuildClear = 1;
+      const cents = guildClear ? 7500 : s.kaelHaggle === 1 ? 6500 : 4000;
       finishQuest(ctx, p, "crane", {
-        xp: 95, cents, items: ["ration", "almond", "almond"], by: "bntg", rep: [["bntg", 10], ["survivors", 4], ["karma", 2]],
-        text: `Quest Completed: The Paper Bird's Blessing · +95 XP, +$${(cents / 100).toFixed(2)}, Fresh Provisions`,
+        xp: guildClear ? 130 : 95, cents, items: ["ration", "almond", "almond"], by: "bntg",
+        rep: [["bntg", 10], ["survivors", guildClear ? 10 : 4], ["karma", guildClear ? 4 : 2]],
+        text: `Quest Completed: The Paper Bird's Blessing${guildClear ? " (Joint Guild Customs)" : ""} · +${guildClear ? 130 : 95} XP, +$${(cents / 100).toFixed(2)}, Fresh Provisions`,
       });
+      if (guildClear) {
+        return { reply: "Signed straight from the Guild chronicler in 6.1? That cuts an hour off pier tallying! Hear the lock filling? Seventy-five, rations, sealed bottles — and tell the Guild in 6.1 their customs dividend is open whenever you head back through.", mood: "happy" };
+      }
       return s.kaelHaggle === 1
         ? { reply: "Hear the lock filling? Fine, fine, a cut. Sixty-five, the rations and two sealed bottles. You'd make a good Guild trader, boss. That's not a compliment.", mood: "happy" }
         : { reply: "Clear as tap water. Hear the lock filling? That's our barge. Forty, the rations and two sealed bottles. First pot of coffee off her is yours.", mood: "happy" };
     }
     if (t.includes("barge come in all right") && s.craneQ === 99) {
-      return { reply: "Came in Tuesday. Or what passes for Tuesday. Coffee, batteries, and a crate of something the pilot wouldn't name. The paper crane left the wall the morning the lock filled. Nobody's seen it since. I miss it, boss. Bad for business, missing things.", mood: "calm" };
+      return s.craneGuildClear
+        ? { reply: "Docked clean on the first tide, customs stamped at both piers. Coffee, batteries, and the Guild even tucked an extra crate under Sal's label for the Snackrooms. The paper crane vanished the moment the lock topped out.", mood: "happy" }
+        : { reply: "Came in Tuesday. Or what passes for Tuesday. Coffee, batteries, and a crate of something the pilot wouldn't name. The paper crane left the wall the morning the lock filled. Nobody's seen it since. I miss it, boss. Bad for business, missing things.", mood: "calm" };
     }
   }
 
@@ -294,6 +302,7 @@ export function l11Choices(id, s) {
     if (!q && repOf(s, "bntg") > -35) out.push({ text: "Docks are dead quiet. Something wrong with the canal?", tag: "Quest Start" });
     if (q === 4) {
       out.push({ text: "Valve's free. I cleared the canal lock myself.", tag: "Quest Turn-In" });
+      if (s?.craneWaybill) out.push({ text: "I brought the Guild of Many's customs waybill from 6.1 and cleared the canal lock.", tag: "Quest Turn-In" });
       if (!s?.kaelHaggle) out.push({ text: "I cleared the canal lock. I want a cut of the cargo.", tag: "Barter 40" });
     }
     if (q === 99) out.push({ text: "Did the barge come in all right?", tag: "Talk" });

@@ -91,13 +91,21 @@ export function layService(ctx, { box, wallZ, light, vend, PLASTER, CEIL, WAINSC
     primitive: { kind: "box", width: 1.2, height: 0.04, depth: 0.16 }, material: { color: "#f3ead0", emissive: "#f3ead0", emissiveIntensity: 1.6 },
     fx: { script: "fx\npop buzz n=1 at=point() glo=flick(7,.85) r=light(<1,.94,.75>,$glo*1.4,6)" } });
   label("overflow-note", -14.2, 1.55, 46.62, 0, "OVERFLOW", "Count: 9. Recount: 11. Stop recounting.", 1.6, true);
-  box("l61-service-sealed", -12.1, 0, 46.59, 2.15, 2.48, 0.16, { color: "#665258", roughness: 0.87 });
+  sp("l61-service-sealed", {
+    feetPosition: { x: -12.1, y: 0, z: 46.59 },
+    primitive: { kind: "box", width: 2.15, height: 2.48, depth: 0.16 },
+    material: { color: "#665258", roughness: 0.87 },
+    physics: "static",
+    tags: ["usable"],
+    behavior: USE,
+    state: { kind: "seal02", name: "M.E.G. Seal 6.1-02 · Party Room", verb: "Inspect seal", line: "M.E.G. Seal 6.1-02 · Bolted shut over Party Room drywall." },
+  });
   for (const [i, y] of [0.47, 1.19, 1.88].entries()) box("l61-service-brace-" + i, -12.1, y, 46.45, 2.88, 0.18, 0.12,
     { texture: "cdn/texture-raw-plywood-sheet-knots-and-grain.png", color: "#b49b72", roughness: 0.88 }, { physics: undefined, rotation: { roll: i % 2 ? 8 : -6 } });
   label("service-seal-plate", -12.1, 2.82, 46.58, 0, "M.E.G. SEAL  6.1-02", "PARTY ROOM  /  DO NOT OPEN", 2.3, true);
   sp("service-inspection-tag", { feetPosition: { x: -12.1, y: 1.54, z: 46.34 },
     primitive: { kind: "box", width: 0.23, height: 0.34, depth: 0.018 }, material: { color: "#c9b696", roughness: 0.91 },
-    tags: ["usable"], behavior: USE, state: { kind: "notice", name: "Seal inspection", verb: "Read", line: "Seal intact. Birthday music reported behind the door at 03:14. Leave the bolts alone." },
+    tags: ["usable"], behavior: USE, state: { kind: "seal02", name: "M.E.G. Seal 6.1-02 · Party Room", verb: "Inspect seal", line: "Seal intact. Birthday music reported behind the door at 03:14. Leave the bolts alone." },
   });
 
   // A service door is allowed to land at the wrong restaurant. Public storefronts stay reliable.

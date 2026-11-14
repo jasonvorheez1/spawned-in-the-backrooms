@@ -65,6 +65,8 @@ test('each offered job starts its own quest only after acceptance', () => {
     ['l11-realty-agent', 'level11', 'remodQ', 'work for me'], ['l13p-noor', 'level13', 'l13q', 'more than packing'],
     ['l31-q-marlowe', 'level31', 'l31q', 'Buying or selling'], ['l70-npc-marinerson', 'level70', 'l70q', 'dry kettle'],
     ['l70-npc-ines', 'level70', 'l70pelt', 'need doing'],
+    ['l61-amber-a', 'level61', 'l61BeeQ', 'red coat'], ['l61-guard-a', 'level61', 'l61SealQ', 'Seal 6.1-02'],
+    ['l61-guild-a', 'level61', 'l61GuildQ', 'Page 413'], ['l61-sal', 'level61', 'l61SalQ', 'real supplies'],
   ]
   for (const [id, place, key, fragment] of cases) {
     const { s, choose } = scene(id, place)
@@ -97,7 +99,7 @@ test('the early reward agrees with the dialogue and does not give a unique gun',
 })
 
 test('every quest starter from the quest choice providers has an actual briefing', () => {
-  const ids = ['l11-walker-1', 'l11-trader-kael', 'l11-walker-3', 'l10-meg-cooper', 'l10-meg-maeve', 'l8-carla-kid', 'l8-hobb', 'l8-ivo', 'l21-ned', 'l21-goknar', 'l11-realty-agent', 'l13p-noor', 'l31-q-marlowe', 'l70-npc-marinerson', 'l70-npc-ines']
+  const ids = ['l11-walker-1', 'l11-trader-kael', 'l11-walker-3', 'l10-meg-cooper', 'l10-meg-maeve', 'l8-carla-kid', 'l8-hobb', 'l8-ivo', 'l21-ned', 'l21-goknar', 'l11-realty-agent', 'l13p-noor', 'l31-q-marlowe', 'l70-npc-marinerson', 'l70-npc-ines', 'l61-amber-a', 'l61-guard-a', 'l61-guild-a', 'l61-sal']
   for (const id of ids) {
     const npc = { id }
     const choices = questChoices({ now: () => 1000 }, npc, {})

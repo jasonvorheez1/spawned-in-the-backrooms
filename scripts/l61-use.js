@@ -5,9 +5,11 @@ import { animate } from "builtin/tween";
 import { itemSpec } from "./lib/vend-item.js";
 import { handTray, mealKids, TRAY_MODEL } from "./lib/snacktray.js";
 import { errandStep, errandDone } from "./lib/quests.js";
-const BUS = ["l61-tray", "Bus Your Tray", "Finish your food, then slide the tray into the tray return rack in the Level 6.1 food court. The facelings notice who does."]; // the food court's odd job (scripts/lib/quests.js errands)
+const BUS = ["l61-tray", "Bus Your Tray", "Finish your food, then slide the tray into the tray return rack in the Level 6.1 food court. Sal at Burger Bop and the facelings notice who cleans up."]; // the food court's odd job (scripts/lib/quests.js errands)
 import { bring } from "./lib/companion.js";
 import { carryAcross } from "./lib/carry.js";
+import { rollCheck } from "./lib/npc-talk.js";
+import { setStep61 } from "./lib/level61-quests.js";
 import SNACKS from "./lib/data/snacks.yml";
 
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
@@ -55,6 +57,30 @@ export const ears = {
 
     if (s.kind === "notice") {
       w.notice = { text: s.line, at: now };
+      snd("paper-flip-card-stand", 0.3, 5);
+      return;
+    }
+    if (s.kind === "seal02") {
+      if (w.l61SealQ === 1) {
+        w.l61SealInspect = 1;
+        heard(ctx, { clip: "/cdn/moodboard-gothic-horror/sfx-short-wind-up-music-box-carol-melody.mp3", position: pos, volume: 0.45, maxDistance: 10 });
+        setStep61(ctx, who, "seal", 2, "Sealed 6.1-02 · Faint 03:14 music behind the drywall · Take the east vent to Base Gamma's Vale (or pull Level 6's relay tape)");
+        return;
+      }
+      if (w.l61SealQ === 3 && w.l61SealRuling && !w.l61SealClamped) {
+        const c = rollCheck(ctx, w, { skill: "repair", difficulty: 40 });
+        if (!c.ok) {
+          snd("heavy-metal-door-creak-open", 0.4, 8);
+          w.notice = { text: "Seal 6.1-02 · Couldn't torque Vale's harmonic clamp onto the stud [Repair 40]. You can still report straight to the M.E.G. Guard.", at: now };
+          return;
+        }
+        w.l61SealClamped = 1;
+        w.payout = { xp: 35, items: [] };
+        snd("keys-jingle-door-unlock-click", 0.7, 10);
+        w.notice = { text: "Seal 6.1-02 · Clamped Vale's harmonic dampener onto the studs (+35 XP). The 03:14 hum drops dead. Report to the M.E.G. Guard.", at: now };
+        return;
+      }
+      w.notice = { text: w.l61SealClamped ? "M.E.G. Seal 6.1-02 · Braced with Base Gamma's harmonic dampener. Dead silent." : s.line, at: now };
       snd("paper-flip-card-stand", 0.3, 5);
       return;
     }
@@ -161,7 +187,8 @@ export const ears = {
       w.l61Tray = 0; w.l61Hold = null;
       snd("plastic-tray-slid-into-rack-clatter", 0.8, 12);
       w.sanity = Math.min(100, (w.sanity ?? 80) + 3);
-      w.payout = { xp: 3, items: [] }; errandDone(w, BUS[0], BUS[1], "Returned the tray to the rack. The nearest faceling nodded at you. (+3 XP, +3 Sanity)");
+      w.l61TraysReturned = (w.l61TraysReturned ?? 0) + 1;
+      w.payout = { xp: 3, items: [] }; errandDone(w, BUS[0], BUS[1], "Returned the tray to the rack. Sal and the nearest faceling nodded at you. (+3 XP, +3 Sanity)");
       tell("+3 SANITY (TRAY RETURNED)", "#9fe8ff");
 
       // Nearest faceling acknowledges with a nod

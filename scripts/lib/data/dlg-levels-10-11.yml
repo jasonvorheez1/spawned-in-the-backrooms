@@ -473,15 +473,15 @@ l61-sal:
   walk: "Kid, your burger's going cold!"
   ask:
     - q: "Is the food really free?"
-      a: "Never charged a soul. Burgers, fries, shakes. Funny thing, kid. You ever watch somebody finish a plate and make it back out that door?"
+      a: "Never charged a soul. Burgers, fries, shakes. Stock appears in the cold locker before dawn, and someone out in Level 10 or Kael's barge in Level 11 keeps sending real coffee when the grease runs thin. Funny thing, kid—you ever watch somebody finish a plate and still bother walking out that door?"
     - q: "Who runs this place?"
-      a: "The ones with no faces. They don't talk. They know your order before you sit. I just work the grill. Nobody hired me either."
+      a: "The ones with no faces. They don't talk, they clear your tray before the seat cools, and they know your order before you sit. I just work the grill. Nobody hired me either."
     - q: "Where am I?"
-      a: "A diner, kid. Counter, booths, jukebox. There's more diner back there than any diner needs. I stopped walking it."
+      a: "The Snackrooms—Level 6.1, if you use the cartographers' numbers. East glass doors dump straight onto Level 11 concrete; the cold-storage side hums like Level 3 and Level 6 had an argument behind the wall."
     - q: "How do I get out?"
-      a: "Same door you came in. Only go while you're still a little hungry. Full people get comfy. Comfy people stay."
+      a: "Same glass door you came in, or the service vent if you've got wire-nerves and M.E.G. clearance. Just leave while you're still a little hungry. Full people get comfy. Comfy people stay."
     - q: "Ever hear the name Dina?"
-      a: "I know orders, kid, not names. Ask the helpers by the fryer. They keep a board of who's looking for who."
+      a: "I know orders, kid, not names—except once a woman drank three coffees black without eating a fry and left grease-pencil numbers on the salt shaker. Ask Wren by the fryer board; Amber keeps track of who's looking for who."
   barks:
     idle: ["Grill's hot!", "Fries up!", "Who had the shake?"]
     hi: ["Hey hey!", "Hungry, kid?"]
@@ -495,18 +495,18 @@ l61-sal:
   gest: { wave: "Hey hey!", gift: "For me? Here, fries. We're even.", dance: "Jukebox! Let's go!", nodance: "Grill's full, kid!", insult: "That's going on your tab, pal." }
 
 l61-guard-a:
-  hi: "Hold it, walker. This door's ours. Behind it there's no light at all. Go in with one lamp and you won't walk back out."
+  hi: "Hold it, walker. This door's ours. Behind it there's no light at all—Seal 6.1-02 stays bolted unless you want pitch-dark Level 6 spilling into the booths."
   back: ["Two lamps yet, walker?", "Hm. You."]
   bye: "Two lamps."
   ask:
     - q: "What's through the door?"
-      a: "Dark. Wall to wall. Nothing in there wants to be seen. All of it sees you fine."
+      a: "Dark. Wall to wall—straight into Level 6, and a bad splice down the suction vent to Level 3. That's why we strapped Seal 6.1-02 and routed the blackbox telemetry toward Base Gamma. Nothing in there wants to be seen; all of it sees you fine."
     - q: "Where am I?"
-      a: "The diner end of a bad hallway. I guard the door, walker. I don't name the building."
+      a: "The diner end of a bad hallway—Level 6.1. M.E.G. holds the stockroom bulkhead while B.N.T.G. argues with Guild pilots over freight. I guard the door, walker. I don't name the building."
     - q: "How do I get out?"
-      a: "Not through here. This goes deeper. My orders say 'hold the door'. They don't say where up is."
+      a: "Not through Seal 6.1-02. East doors take you out to Level 11 daylight; the suction vent east of the booths drops toward Level 3 if you carry spares and watch the steam."
     - q: "Ever hear the name Dina?"
-      a: "I log who goes through. Short list. No Dina on it. That's good news for her."
+      a: "I log who goes through the stockroom. Short list. No Dina on the official clipboard, though she dropped down the east vent toward Level 3 instead of asking permission. That's smarter than most."
   barks:
     idle: ["Door's quiet.", "Two lamps.", "Nobody through tonight."]
     hi: ["Hold it.", "Hm."]
@@ -519,20 +519,20 @@ l61-guard-a:
     death: ["Hold... the door..."]
   gest: { wave: "Hm.", gift: "Thanks.", dance: "On duty.", nodance: "On duty.", insult: "Move along." }
 l61-amber-a:
-  hi: "Hi, sweetie! We're Camp Amber. We help people get home, or get settled if they can't. Water? A blanket? A look at the board?"
-  back: ["Hi again, sweetie! Any word?", "You're back! Need anything?"]
+  hi: "Hi, sweetie! We're Camp Amber—Wren at the Annex board. We help people get settled at The Hub, or find who stepped off the wrong bus. Water? A blanket? A look at the board?"
+  back: ["Hi again, sweetie! Any word from the bus stop or Jo?", "You're back! Need anything?"]
   bye: "Check the board!"
   ask:
     - q: "What's the board?"
-      a: "By the fryer. Names and descriptions. 'Tall, red coat, answers to Bee.' People find each other on it. Sometimes."
+      a: "By the fryer. Names, coat colors, bus-stop sightings. 'Tall, red coat, answers to Bee'—last seen stepping off toward 11th Avenue in Level 11, trying to make Camp Amber's hub clinic. People find each other on it. Sometimes."
     - q: "Why help people?"
-      a: "Somebody fed me when I was new and didn't ask for a thing. So now it's my turn."
+      a: "Somebody fed me when I was new and didn't ask for a thing. Jo in The Hub runs the real infirmary, and Pip holds the chalk routes; we just keep the warm bench open on this end."
     - q: "Where am I?"
-      a: "Oh, sweetie. You're new. Sit down first. People call all of this the Backrooms. This bit's a diner. You're safe at this table, I promise that much."
+      a: "Oh, sweetie. Sit down first. People call this the Snackrooms—Level 6.1. Sal keeps the grill warm and the Facelings bus every tray so fast it spooks newcomers, but you're safe at this table, I promise that much."
     - q: "How do I get out?"
-      a: "I say we help people get home. Honest answer? We've settled a lot more than we've sent. But I keep the 'home' part on the sign."
+      a: "East glass doors step straight out onto Level 11 concrete, and Pip's chalk runners know how to fold back into The Hub from there. Just mind the Guild pilgrims if you take the metal vent—that drops straight into Level 3."
     - q: "Ever hear the name Dina?"
-      a: "Let me think. There's a card on the board. 'DINA, if you read this, wait here.' No one signed it. It's been up a long time, sweetie."
+      a: "Let me think. There's a card on the board. 'DINA, if you read this, wait here.' No one signed it, and Bee swore she saw a woman matching that tread headed toward the Guild's red-chalk corner. It's been up a long time, sweetie."
   barks:
     idle: ["Check the board!", "Water, blankets.", "Any new names?"]
     hi: ["Hi, sweetie!", "Need anything?"]
@@ -544,18 +544,18 @@ l61-amber-a:
     death: ["The board..."]
   gest: { wave: "Hi!", gift: "For the camp? Thank you!", dance: "Sure!", nodance: "Busy, sweetie!", insult: "Okay. You're tired. It's fine." }
 l61-guild-a:
-  hi: "Many of us, many paths, one road. The Guild welcomes you, traveller. Have you counted the ways out of this room?"
-  back: ["The road goes on, traveller.", "You return. The road bends."]
+  hi: "Many of us, many paths, one road. The Guild of Many welcomes you, traveller. Have you counted the seams between this booth and Level 3?"
+  back: ["The road goes on, traveller.", "You return. Does Page 413 stay open?"]
   bye: "Count the ways."
   ask:
     - q: "What is the Guild?"
-      a: "Pilgrims. We walk every place and write down the ways between. One day the book is whole, and somebody reads the way home in it."
+      a: "Pilgrims and barge-clerks. Our main ledger hangs in Level 11's old wharf district—where Kael runs his crane—and our runners log every grate from Level 3 up to the Level 4 vending wall. One day the Book of Ways is whole, and somebody reads the way home in it."
     - q: "Where am I?"
-      a: "On the road, traveller. This stop has burgers. The book lists it under 'kind, with a cost'."
+      a: "On a braided seam, traveller. Level 6.1 feeds the hungry, yet its grease-traps bleed straight into Level 3's electrical tunnels and our old redoubt plate under the duct, and a stray coin in Level 4's B4 dispenser still drops you back on these tiles."
     - q: "How do I get out?"
-      a: "Four hundred and twelve ways are written. None says home. I believe the next page will. I believed that on the last page too."
+      a: "Four hundred and twelve ways are inked in the Book—some into Level 11, some down the east vent into Level 3, one back up a lift to Level 4's office block. None is labeled 'home'. Wait for Page 413."
     - q: "Ever hear the name Dina?"
-      a: "A woman copied pages from our book and gave the name Dina. She copied only the ways marked 'unsure'. We thought it a strange choice."
+      a: "A woman copied pages from our Book and gave the name Dina. She copied only the ways marked 'unsure'—especially the three-way seam linking Level 6.1, Level 3, and Level 4. We thought it a strange choice."
   barks:
     idle: ["Many paths.", "Count the ways.", "The book grows."]
     hi: ["Traveller.", "Well met."]

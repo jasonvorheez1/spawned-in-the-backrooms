@@ -5,6 +5,7 @@
 
 import { heard } from "./lib/hear.js";
 import { setSedcoStep, setCraneStep, setMaintStep } from "./lib/level11-quests.js";
+import { setStep61 } from "./lib/level61-quests.js";
 import { rollCheck } from "./lib/npc-talk.js";
 import { carryAcross } from "./lib/carry.js";
 
@@ -682,7 +683,8 @@ export const ears = {
       }, { audience: { player: who.id } });
 
       if (w.craneQ === 2) {
-        const c = rollCheck(ctx, w, { skill: "repair", difficulty: w.craneBlessed ? 25 : 35 });
+        const easy = w.craneBlessed || w.craneWaybill;
+        const c = rollCheck(ctx, w, { skill: "repair", difficulty: easy ? 25 : 35 });
         if (!c.ok) { w.hp = Math.max(1, (w.hp ?? 100) - 15); ctx.emit("screenShake", { intensity: 0.4, duration: 0.3 }, { audience: { player: who.id } }); }
         setCraneStep(ctx, who, 3, c.ok
           ? "The Paper Bird's Blessing · You found the paper wedged in the gate and worked it free · Press the valve again to draw a sample"
@@ -695,6 +697,19 @@ export const ears = {
         return;
       }
       if (w) w.notice = { text: "B.N.T.G. Spillway Valve Station: Regulates water balance and locks for trading barges.", at: now };
+      return;
+    }
+
+    // 18. 11th Ave Bus Bench: Bee's torn red coat cuff & Hub transfer ticket (from Level 6.1)
+    if (s.kind === "bee-clue") {
+      heard(ctx, { clip: G("paper-flip-card-stand"), position: pos, volume: 0.45, maxDistance: 10 });
+      if (w?.l61BeeQ === 1) {
+        w.l61BeeClue = 1;
+        w.payout = { xp: 25, items: [] };
+        setStep61(ctx, who, "bee", 2, "Coat of Red · Found Bee's red coat cuff and Hub transit chit · Ask Jo or Pip at Camp Amber in The Hub");
+        return;
+      }
+      if (w) w.notice = { text: "A torn swatch of bright red wool coat beside a damp transit stub stamped: 'TENTH TUNNEL — CAMP AMBER.'", at: now };
       return;
     }
   },

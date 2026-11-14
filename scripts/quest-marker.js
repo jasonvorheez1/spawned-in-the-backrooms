@@ -10,8 +10,8 @@ const art = (c, exit) => `<svg viewBox='0 0 100 86' width='0.9m' billboard='full
 const REG_STATE = { list: null, asked: false }; // the older quests' own tables: { key, name, tips, marks } rows, read once
 function registry() {
   if (REG_STATE.asked) return; REG_STATE.asked = true;
-  Promise.all([import("./lib/level10-quests.js"), import("./lib/level11-quests.js"), import("./lib/level21-quests.js"), import("./lib/level8-quests.js"), import("./lib/zenith-quest.js"), import("./lib/remodel-quest.js"), import("./lib/level1-quests.js")])
-    .then(([a, b, c, d, z, r, l1]) => { REG_STATE.list = [...Object.values(l1.QUESTS1 ?? {}), ...Object.values(r.QUESTS02 ?? {}), ...Object.values(a.QUESTS10 ?? {}), ...Object.values(b.QUESTS ?? {}), ...Object.values(c.QUESTS21 ?? {}), ...Object.values(d.QUESTS8 ?? {}), { key: "zenQ", name: "The Zenith Survey", tips: z.TIPS ?? {}, marks: z.MARKS ?? {} }, NVG_Q].filter((q) => q?.key && q?.name && q?.tips); })
+  Promise.all([import("./lib/level10-quests.js"), import("./lib/level11-quests.js"), import("./lib/level21-quests.js"), import("./lib/level8-quests.js"), import("./lib/zenith-quest.js"), import("./lib/remodel-quest.js"), import("./lib/level1-quests.js"), import("./lib/level61-quests.js")])
+    .then(([a, b, c, d, z, r, l1, l61]) => { REG_STATE.list = [...Object.values(l1.QUESTS1 ?? {}), ...Object.values(r.QUESTS02 ?? {}), ...Object.values(a.QUESTS10 ?? {}), ...Object.values(b.QUESTS ?? {}), ...Object.values(c.QUESTS21 ?? {}), ...Object.values(d.QUESTS8 ?? {}), ...Object.values(l61.QUESTS61 ?? {}), { key: "zenQ", name: "The Zenith Survey", tips: z.TIPS ?? {}, marks: z.MARKS ?? {} }, NVG_Q].filter((q) => q?.key && q?.name && q?.tips); })
     .catch(() => { REG_STATE.list = []; });
 }
 function fold(ctx, s, ses) {
