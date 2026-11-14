@@ -17,8 +17,8 @@ tune: # Savi's picks
   rearmMs: 300000  # a disarmed bait gift is re-wrapped this long after, if its trapper lives
   stopMs: [4000, 9000]
 roles:
-  l26-pg-0:   { role: guard,      deck: up,  route: [[-2.2, 24.5, 180, guard], [2.2, 24.5, 180, guard]] }
-  l26-pg-1:   { role: decorator,  deck: up,  route: [[8.4, 38, -90, decorate], [4.5, 42, 0, decorate], [-4.5, 42, 0, decorate], [-6.5, 38, 90, decorate]] }
+  l26-pg-0:   { role: guard,      deck: up,  route: [[-2.2, 12, 0, guard], [2.2, 12, 0, guard]] }
+  l26-pg-1:   { role: decorator,  deck: up,  route: [[8.4, 4, -90, decorate], [6, -10, 0, decorate], [-6, -10, 0, decorate], [-8, 2, 90, decorate]] }
   l26-pg-2:   { role: organizer,  deck: up,  route: [[-8.3, -4, 0, party], [-6, -1.5, 30, party]] }
   l26-pg-3:   { role: trapper,    deck: up,  route: [[-6.5, 8, 0, trap], [-6, -6, 0, prowl], [6.5, -20, 180, trap]] }
   l26-pg-4:   { role: scout,      deck: up,  route: [[8.5, -30, 0, prowl], [8, 0, 0, prowl], [8, 30, 0, prowl], [-8, 30, 180, prowl], [-8, 0, 180, prowl], [-8, -30, 180, prowl]] }
