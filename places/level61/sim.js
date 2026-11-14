@@ -18,7 +18,7 @@ import { layService } from "../../scripts/lib/level61-service.js";
 export const cadence = "1s";
 const TOILET_GLB = "/cdn/value.584d89d495be90361b2f1c260e71cd5079b14f1e5d1b0a3346dd5bc4c808c0dc.glb";
 const VANITY_GLB = "/cdn/value.fc171ef1463c6b6014a17a934459781e7d541b202325257a5ddb0e02de9788c4.glb";
-const V = 68; // 68: toilet repainted white porcelain. 67: restroom toilet + vanity turned to their true front axis and sized to real fixtures. 66: restroom toilets + vanities are Tripo models (art/l61-rest). 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
+const V = 69; // 69: liquorette damask walls, tin ceiling, tin sign turned. // 68: toilet repainted white porcelain. 67: restroom toilet + vanity turned to their true front axis and sized to real fixtures. 66: restroom toilets + vanities are Tripo models (art/l61-rest). 65: Clippers back bar + bentwood stools are Tripo models (art/l61-clippers/build.py). 64: 63: M.E.G. outpost booth, desk, crates, barrier are Tripo models
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -435,7 +435,7 @@ function lay(ctx) {
   ];
 
   for (const [cx, k, floor, wall, html, bg, lc] of STORES) {
-    const wm = { ...PLASTER, color: wall, roughness: 0.82 }, z0 = -HD - 0.15, z1 = -HD - 10;
+    const wm = k === "liquorette" ? { texture: "cdn/texture-faded-oxblood-and-gold-victorian-damask-wallpaper-seamless.png", color: "oklch(0.78 0.05 40)", roughness: 0.85, textureScale: 1.2 } : { ...PLASTER, color: wall, roughness: 0.82 }, z0 = -HD - 0.15, z1 = -HD - 10;
     box(`l61-${k}-floor`, cx, -0.29, (z0 + z1) / 2, 14, 0.3, 10, floor);
     box(`l61-${k}-roof`, cx, 4, (z0 + z1) / 2, 14, 0.3, 10, { ...CEIL, color: "oklch(0.88 0.01 90)" });
     box(`l61-${k}-back`, cx, 0, z1, 14, 4, 0.3, wm);
@@ -520,7 +520,7 @@ function lay(ctx) {
   const dado = (id, x, z, w, d) => { box(id, x, 0, z, w, 1.25, d, DARKWOOD); box(`${id}-rail`, x, 1.25, z, w + (d < w ? 0 : 0.06), 0.07, d + (d < w ? 0.06 : 0), WOOD); };
   dado("l61-liq-dado-b", -7, -31.86, 13.6, 0.1); dado("l61-liq-dado-l", -13.82, -26.98, 0.1, 9.56); dado("l61-liq-dado-r", -0.18, -26.98, 0.1, 9.56); // sides stop short of the back run so no two faces share a plane (flicker)
   // a coffered ceiling: dark beams across the plaster
-  box("l61-liq-ceil", -7, 3.88, -27.1, 13.7, 0.12, 9.8, { color: "oklch(0.22 0.04 30)", roughness: 0.8 });
+  box("l61-liq-ceil", -7, 3.88, -27.1, 13.7, 0.12, 9.8, { texture: "cdn/texture-aged-copper-pressed-tin-ceiling-tile-seamless.png", color: "oklch(0.62 0.06 55)", metalness: 0.85, roughness: 0.45, textureScale: 0.6 });
   for (let k = 0; k < 5; k++) box(`l61-liq-beam-${k}`, -12 + k * 3, 3.7, -27.1, 0.22, 0.2, 9.8, DARKWOOD, { physics: undefined });
   for (let k = 0; k < 3; k++) box(`l61-liq-xbeam-${k}`, -7, 3.7, -23.9 - k * 3.2, 13.7, 0.2, 0.2, DARKWOOD, { physics: undefined });
   // pendant lamps on short cords: warm glass globes over the bar and the tables
@@ -534,7 +534,7 @@ function lay(ctx) {
   box("l61-liq-door", -2.6, 0, -31.92, 1.3, 2.3, 0.1, { color: "oklch(0.1 0.02 30)", roughness: 0.9 });
   box("l61-liq-doorf-l", -3.32, 0, -31.86, 0.14, 2.45, 0.2, DARKWOOD); box("l61-liq-doorf-r", -1.88, 0, -31.86, 0.14, 2.45, 0.2, DARKWOOD); box("l61-liq-doorf-t", -2.6, 2.3, -31.86, 1.58, 0.16, 0.2, DARKWOOD);
   sp("l61-liq-doorlamp", { feetPosition: { x: -2.6, y: 2.75, z: -31.7 }, primitive: { kind: "sphere", radius: 0.1 }, material: { color: "#ffb347", emissive: "#ff9a2a", emissiveIntensity: 3 }, light: { kind: "point", color: "oklch(0.8 0.17 55)", intensity: 2.6, distance: 5 } });
-  sign("l61-liq-tin", -5.2, 1.8, -31.85, 0, 0.75, 0.75, `<div style="width:92%;height:92%;border-radius:50%;background:#b3231d;border:14px solid #e8d8b0;display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="font-size:92px;color:#f2e6c0;font-family:serif">ALMOND</div><div style="font-size:84px;color:#f2e6c0;font-family:serif">WATER</div></div>`, "oklch(0.2 0.04 40)");
+  sign("l61-liq-tin", -5.2, 1.8, -31.75, 180, 0.75, 0.75, `<div style="width:92%;height:92%;border-radius:50%;background:#b3231d;border:14px solid #e8d8b0;display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="font-size:92px;color:#f2e6c0;font-family:serif">ALMOND</div><div style="font-size:84px;color:#f2e6c0;font-family:serif">WATER</div></div>`, "oklch(0.2 0.04 40)");
   sign("l61-liq-portrait", -0.3, 1.9, -26.5, -90, 0.9, 1.1, `<div style="font-size:70px;color:#d8c9a0;font-family:serif;font-style:italic;text-align:center">The<br>Proprietor</div><div style="font-size:36px;color:#9a8a68;font-family:serif;margin-top:10px">EST. 1954</div>`, "oklch(0.14 0.03 40)");
   sign("l61-liq-hours", -0.3, 1.9, -29.2, -90, 0.9, 0.6, `<div style="font-size:64px;color:#f2d98a;font-family:serif">OPEN</div><div style="font-size:30px;color:#b8e0a8;font-family:serif">ALL HOURS · NO TAB</div>`, "oklch(0.14 0.04 30)");
   sp("l61-liq-murmur", { feetPosition: { x: -7, y: 1.5, z: -27 }, audio: { clip: "cdn/sfx-quiet-tavern-murmur-with-glasses-clinking-room-tone-loop.mp3", loop: true, gain: 0.16, spatial: true, maxDistance: 12 } });
