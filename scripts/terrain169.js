@@ -16,7 +16,7 @@ export function heightAt(ctx) {
   let h = 4 * n(1 / 420, 3, 0) + 1.2 * n(1 / 60, 2, 1); // the rolling pan
   // dunes: long wind-ridged swells lying across the 250° wind, sharper on the lee side; fade out under the mesas
   const dn = n(1 / 260, 2, 4), along = x * 0.34 + z * 0.94, wob = n(1 / 90, 2, 5) * 18;
-  const ph = ((along + wob) / 46) % 1, crest = ph < 0 ? ph + 1 : ph, dshape = crest < 0.75 ? crest / 0.75 : (1 - crest) / 0.25;
+  const ph = ((along + wob) / 70) % 1, crest = ph < 0 ? ph + 1 : ph, dshape = crest < 0.75 ? crest / 0.75 : (1 - crest) / 0.25;
   const duneAmt = ss(-0.05, 0.35, dn);
   // mesas: flat-topped buttes, each wall a cliff band over a long talus apron, never a sheer smeared sheet
   const m = n(1 / 300, 3, 2);
@@ -25,7 +25,7 @@ export function heightAt(ctx) {
   h += mesa + 1.2 * n(1 / 22, 2, 6) * ss(0.1, 0.25, m); // weathered ledges on the walls
   // the track to Ferry's runs in a trough between the dunes, never on top of one
   let dt = 1e9; for (let i = 0; i < TRACK.length - 1; i++) { const [ax, az] = TRACK[i], [bx, bz] = TRACK[i + 1], vx = bx - ax, vz = bz - az; const t = Math.max(0, Math.min(1, ((x - ax) * vx + (z - az) * vz) / (vx * vx + vz * vz))); dt = Math.min(dt, Math.hypot(x - ax - vx * t, z - az - vz * t)); }
-  h += duneAmt * ss(6, 22, dt) * (1 - ss(0.04, 0.16, m)) * (dshape * dshape * (3 - 2 * dshape)) * 3.2;
+  h += duneAmt * ss(6, 22, dt) * (1 - ss(0.04, 0.16, m)) * (dshape * dshape * (3 - 2 * dshape)) * 4.2;
   // a long canyon cutting east-west north of the house
   const cz = -900 + Math.sin(x / 110) * 40;
   h -= ss(42, 8, Math.abs(z - cz)) * 26;
@@ -58,8 +58,8 @@ export function materialAt(ctx) {
     redrock: rock * 0.8,
     rubble: rock * (0.2 + Math.max(0, n) * 0.3) + talus * 0.9,
     wash: (1 - rock) * wash * 0.85,
-    gravel: (1 - rock) * wash * 0.15 + rest * (yard * 0.3 + (1 - yard) * stony * 0.6),
-    hardpan: rest * (yard * 0.7 + (1 - yard) * (1 - dune) * (0.55 - stony * 0.15)),
-    sand: rest * (1 - yard) * (dune + (1 - dune) * (1 - stony) * 0.45),
+    gravel: (1 - rock) * wash * 0.15 + rest * (yard * 0.3 + (1 - yard) * stony * 0.35),
+    hardpan: rest * (yard * 0.7 + (1 - yard) * (1 - dune) * stony * 0.5),
+    sand: rest * (1 - yard) * (dune + (1 - dune) * (1 - stony * 0.7)),
   };
 }

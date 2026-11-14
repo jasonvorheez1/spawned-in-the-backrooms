@@ -66,5 +66,34 @@ function dead(ctx) {
   };
   for (let i = 0; i < 4; i++) br(0, 0, 0, i * 1.6 + ctx.random(), H * 0.6, 0.025, 2);
 }
-const K = { boulder, pebbles, sage, yucca, dead };
+function tube(ctx, pts, rad, sides) { // a ribbed cactus limb along pts [[x,y,z]...], rad(t) radius
+  const rings = pts.map((c, k) => { const t = k / (pts.length - 1), r = rad(t), out = [];
+    for (let s = 0; s < sides; s++) { const a = (s / sides) * 6.283, rib = s % 2 ? 0.86 : 1; out.push([c[0] + Math.cos(a) * r * rib, c[1], c[2] + Math.sin(a) * r * rib]); } return out; });
+  for (let k = 0; k < rings.length - 1; k++) for (let s = 0; s < sides; s++) { const A = rings[k], B = rings[k + 1], s1 = (s + 1) % sides;
+    ctx.quad(...A[s], ...A[s1], ...B[s1], ...B[s]); }
+  const top = pts[pts.length - 1], cap = [top[0], top[1] + rad(1) * 0.6, top[2]], R = rings[rings.length - 1];
+  for (let s = 0; s < sides; s++) ctx.tri(...R[s], ...cap, ...R[(s + 1) % sides]);
+}
+function saguaro(ctx) {
+  const H = 3 + ctx.random() * 3.5, r0 = 0.22 + ctx.random() * 0.08, lo = ctx.lod >= 3, sides = lo ? 6 : 14, seg = lo ? 3 : 8;
+  ctx.color(ok(0.48, 0.09, 140));
+  const trunk = [...Array(seg + 1)].map((_, k) => [Math.sin(k * 0.7) * 0.03, -0.1 + (H + 0.1) * k / seg, 0]);
+  tube(ctx, trunk, (t) => r0 * (1 - t * 0.12), sides);
+  const arms = ctx.random() < 0.2 ? 0 : 1 + Math.floor(ctx.random() * 3);
+  for (let i = 0; i < arms; i++) {
+    const a = ctx.random() * 6.283, y0 = H * (0.35 + ctx.random() * 0.25), out = 0.55 + ctx.random() * 0.35, up = H * (0.25 + ctx.random() * 0.3), ra = r0 * 0.72;
+    const dx = Math.cos(a), dz = Math.sin(a), n = lo ? 4 : 9, P = [];
+    for (let k = 0; k <= n; k++) { const t = k / n, bend = Math.min(1, t * 2.2), x = out * Math.sin(bend * 1.5708), y = y0 + up * Math.max(0, (t - 0.25) / 0.75) + (1 - Math.cos(bend * 1.5708)) * 0.35;
+      P.push([dx * (r0 * 0.6 + x), y, dz * (r0 * 0.6 + x)]); }
+    tube(ctx, P, (t) => ra * (1 - t * 0.1), lo ? 5 : 10);
+  }
+}
+function barrel(ctx) {
+  const r = 0.18 + ctx.random() * 0.14, lo = ctx.lod >= 3;
+  ctx.color(ok(0.5, 0.1, 135));
+  const P = [...Array(lo ? 3 : 6)].map((_, k, A) => { const t = k / (A.length - 1); return [0, -0.05 + r * 1.6 * t, 0]; });
+  tube(ctx, P, (t) => r * (0.75 + Math.sin(Math.PI * (0.2 + t * 0.7)) * 0.3), lo ? 8 : 16);
+  if (!lo) { ctx.color(ok(0.75, 0.15, 80)); for (let i = 0; i < 5; i++) { const a = i * 1.256; ctx.tri(Math.cos(a) * 0.05, r * 1.65, Math.sin(a) * 0.05, Math.cos(a + 0.6) * 0.07, r * 1.75, Math.sin(a + 0.6) * 0.07, 0, r * 1.62, 0); } }
+}
+const K = { boulder, pebbles, sage, yucca, dead, saguaro, barrel };
 export function geometry(ctx) { ctx.smooth?.(); (K[ctx.params?.kind] ?? boulder)(ctx); }
