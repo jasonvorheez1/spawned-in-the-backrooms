@@ -73,13 +73,15 @@ const chrome = () => { C.albedo(null); C.color("oklch(0.86 0.005 250)"); C.metal
 const plastic = (col, rough = 0.45) => { C.albedo(null); C.color(col); C.metalness(0); C.roughness(rough); };
 const HOLE = { x: 0.33, y0: 0.22, y1: 1.66 }, CAB = { cy: 0.925, cz: -0.02, w: 0.8, h: 1.65, d: 0.56 }; // the cabinet: front plane at z 0.26
 
-function cabBody(lod) {
+function cabBody(lod, inner) {
   const n = lod >= 3 ? 1 : 4;
   enamel(); C.smooth();
+  if (!inner) {
   rbox([0, CAB.cy, CAB.cz], CAB.w, CAB.h, CAB.d, 0.06, { n, cuts: [[-HOLE.x, HOLE.x], [HOLE.y0 - CAB.cy, HOLE.y1 - CAB.cy], []], skip: (k, s, m) => k === 2 && s === 1 && Math.abs(m[0]) < HOLE.x && m[1] > HOLE.y0 - CAB.cy && m[1] < HOLE.y1 - CAB.cy });
   // the liner: white, seen from inside
   plastic("oklch(0.97 0.008 220)", 0.5); C.flat();
   rbox([0, (HOLE.y0 + HOLE.y1) / 2, 0.01], HOLE.x * 2, HOLE.y1 - HOLE.y0, 0.5, 0.001, { n: 1, inv: true, faces: (k, s) => !(k === 2 && s === 1) });
+  }
   C.smooth();
   if (lod <= 3) {
     for (const y of [0.5, 0.82, 1.12]) { plastic("oklch(0.93 0.012 210)", 0.3); rbox([0, y, 0.0], 0.655, 0.014, 0.44, 0.006, { n: 1 }); chrome(); rbox([0, y + 0.012, 0.215], 0.655, 0.012, 0.012, 0.005, { n: 1 }); }
@@ -162,6 +164,7 @@ export function geometry(ctx) {
   else if (p.part === "bottle") bottle(lod);
   else if (p.part === "tin") tin(p.col, lod);
   else if (p.part === "dial") dial(lod);
+  else if (p.inner) cabBody(lod, true); // the Tripo shell (art/ferry-fridge) is the body; only shelves, crisper and flap are drawn here
   else { cabBody(lod); feet(lod); }
   ctx.albedo(null); ctx.color(null); ctx.metalness(null); ctx.roughness(null);
 }
@@ -184,6 +187,7 @@ export function shelfSpot(kind, i) { // where stocked item i stands, viewer fram
   if (kind === "water") return [-0.24 + col * 0.16 + (row ? 0.0 : 0.0), row ? 1.127 : 0.827, 0.1];
   return [-0.24 + col * 0.16 + (row ? 0.08 : 0), 0.507, row ? -0.06 : 0.1];
 }
+const SHELL = "/cdn/value.91413621234bed7b9f4ac2f3f4a651a430fbd08d3edcf2f580d582e78c4b5f4f.glb", LEAF = "/cdn/value.f55236e60e8068274df5108e801f4d80fbefeb3df6922f26731bfb0967933903.glb"; // Tripo fridge, split in art/ferry-fridge/build.py
 export function layFerry(ctx, put, L) {
   const F = L.house.ferry, cap = L.ferry.capacity, id = "l169-ferry-plan";
   const old = ctx.getObject(id)?.state, keep = old && typeof old.water === "number" ? { water: old.water, food: old.food, at: old.at } : { water: cap, food: cap, at: ctx.now() };
@@ -195,10 +199,11 @@ export function layFerry(ctx, put, L) {
   MAGNETS.forEach(([k, col], i) => doorKids.push({ id: "m" + i, tags: ["l169-ferry-magnet"], feetPosition: at(0.14 + i * 0.06, 1.25, doorZ(0.14 + i * 0.06, 1.25)), rotation: { yaw: 0, pitch: 0, roll: 0 }, pivot: "center", primitive: part({ part: "magnet", k, col }), material: mats, visibleRange: far, castShadow: false }));
   PAPER.forEach((col, i) => doorKids.push({ id: "n" + i, tags: ["l169-ferry-note"], feetPosition: at(0.13 + i * 0.18, 1.39, doorZ(0.13 + i * 0.18, 1.39) + 0.002), scale: { x: 1, y: 1, z: 1 }, primitive: part({ part: "note", size: 0.13, col }), material: { roughness: 0.9 }, visibleRange: far, castShadow: false, state: { line: "" },
     ui: `<div face="front" width="0.13m" style="width:130px;height:130px;box-sizing:border-box;padding:12px 9px 8px;display:flex;align-items:center;justify-content:center;text-align:center;font:700 23px/1.08 'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive;color:#23304f;transform:rotate(-2deg)">{{ state.line }}</div>` }));
-  children.push(kid("door", { id: "door", tags: ["usable", "interact", "l169-ferry-door"], feetPosition: at(-DOOR.w / 2, DOOR.y0, 0.262), rotation: { yaw: 0 }, primitive: part({ part: "door" }), material: mats, visibleRange: { max: 450 }, castShadow: true, state: { name: "Ferry", verb: "Open", prompt: "Open Ferry", info: "" }, children: doorKids }));
+  children.push(kid("door", { id: "door", tags: ["usable", "interact", "l169-ferry-door"], feetPosition: at(-DOOR.w / 2, DOOR.y0, 0.262), rotation: { yaw: 0 }, model: { id: LEAF }, visibleRange: { max: 450 }, castShadow: true, state: { name: "Ferry", verb: "Open", prompt: "Open Ferry", info: "" }, children: doorKids }));
   for (let i = 0; i < cap; i++) { const [x, y, z] = shelfSpot("water", i); children.push(kid("water", { id: "w" + i, tags: ["usable", "interact"], feetPosition: at(x, y, z), rotation: { yaw: i * 67 }, primitive: part({ part: "bottle" }), material: mats, state: { name: "cold almond water", verb: "Take", prompt: "Take cold almond water", info: "Stays water while it stays cold", taken: true } })); }
   for (let i = 0; i < cap; i++) { const [x, y, z] = shelfSpot("food", i); children.push(kid("food", { id: "f" + i, tags: ["usable", "interact"], feetPosition: at(x, y, z), rotation: { yaw: i * 53 }, primitive: part({ part: "tin", col: TINS[i % TINS.length] }), material: mats, state: { name: "tinned peaches", verb: "Eat", prompt: "Eat tinned peaches", info: "Hunger +35", taken: true } })); }
   children.push(kid("chill", { id: "dial", tags: ["usable", "interact"], feetPosition: at(0.2, 1.49, 0.2), primitive: part({ part: "dial" }), material: mats, state: { name: "", verb: "Hold the door open and cool your bottles", prompt: "Hold the door open and cool your bottles", info: "", taken: true } }));
-  children.push({ id: "cold", feetPosition: at(0, 1.3, 0.12) }); // carries the inside light and the compressor's hum while the door is open
-  put(id, { tags: ["l169-ferry"], feetPosition: { x: F.x, z: F.z, y: { terrain: L.house.floorUp } }, rotation: { yaw: F.yaw }, primitive: part({}), material: mats, physics: "static", behavior: BEHAVIOR, state: { ...keep, open: false, name: "Ferry" }, children });
+  children.push({ id: "cold", feetPosition: at(0, 1.3, 0.12) });
+  children.push({ id: "shell", feetPosition: { x: 0, y: 0, z: 0 }, model: { id: SHELL }, castShadow: true, receiveShadow: true }); // carries the inside light and the compressor's hum while the door is open
+  put(id, { tags: ["l169-ferry"], feetPosition: { x: F.x, z: F.z, y: { terrain: L.house.floorUp } }, rotation: { yaw: F.yaw }, primitive: part({ inner: true }), material: mats, physics: "static", behavior: BEHAVIOR, state: { ...keep, open: false, name: "Ferry" }, children });
 }
