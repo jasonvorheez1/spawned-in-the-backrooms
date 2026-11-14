@@ -635,7 +635,7 @@ export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pe
   if (heavy && !W[s.equipped]?.ranged && powerKnock(ctx, m, f, heavy, attrsOfS(s)) > 0) { ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2.2, z: m.feetPosition.z }, text: 'KNOCKDOWN', color: '#ff9a3c', size: 1.2 }); sound(ctx, 'brutal-kick-body-flies-and-crashes', 1) }
   if (npc || m.tags?.includes('l61fc')) assaulted(ctx, m, ctx.self)
   const hit = { x: m.feetPosition.x, y: m.feetPosition.y + 1.5, z: m.feetPosition.z }
-  if (loud) sound(ctx, 'heavy-pipe-hit-flesh-thud', 0.95)
+  if (loud) { const hw = weaponOf(s); sound(ctx, (!hw?.ranged && hw?.hit) || 'heavy-pipe-hit-flesh-thud', 0.95) } // each melee weapon lands with its own sound (Shelly Nov 14)
   ctx.emit('damageNumber', { position: hit, value: dmg, color: '#f7d98b' })
   ctx.emit('fx', { position: hit, script: m.tags?.includes('stealer') ? CLEAR : m.tags?.includes('zdrone') ? ZAP : ICHOR }) // a drone throws sparks, not blood // blood runs clear, don't get near
   if (L3I.stun.kinds.includes(baseOf(s.equipped ?? 'fists'))) { // the baton arcs: sparks, a zap, and the thing struck staggers
@@ -807,7 +807,7 @@ function swing(ctx, power = 0) {
     }
     found.push({ m, d })
   }
-  if (!wp.ranged) sound(ctx, 'pipe-whoosh-swing', wp.quiet ? 0.3 : power ? 0.9 : 0.55)
+  if (!wp.ranged) sound(ctx, wp.whoosh ?? 'pipe-whoosh-swing', wp.quiet ? 0.3 : power ? 0.9 : 0.55)
   if (!found.length) { // nothing alive in reach: the swing or shot lands on the world (walls, furniture, crates, what was built)
     let pc = ctx.self.camera?.rotation?.pitch ?? 0; if (Math.abs(pc) > 1.6) pc = pc * Math.PI / 180
     if (baseOf(s.equipped) === 'fishing_rod' && startFishing(ctx, s, w, p, f, pc, power)) return
