@@ -13,7 +13,7 @@ const M = (id) => ({ place: "thehub", id });
 export const MK = "hub-missing-key", LR = "hub-lost-records", UP = "hub-uncharted";
 const N = { [MK]: "The Missing Key", [LR]: "Lost Expedition Records", [UP]: "Uncharted Passage" };
 // The catalogue names the surveyed destination. Unbuilt levels are never sold.
-const DRAW = { main: 75, level02: 100, level2: 100, level21: 100, level3: 125, level4: 125, level5: 150, level6: 150, level61: 150, level7: 175, level8: 175, level9: 175, level10: 200, level12: 200, level13: 200, level14: 225, level15: 225, level16: 225, level17: 250, level18: 250, level19: 250, level20: 250 };
+const DRAW = { main: 75, level02: 100, level2: 100, level21: 100, level3: 125, level4: 125, level5: 150, level6: 150, level61: 150, level7: 175, level8: 175, level9: 175, level10: 200, level12: 200, level13: 200, level14: 225, level15: 225, level16: 225, level17: 250, level18: 250, level19: 250, level20: 250, level109: 400 }; // 109: my pick, the dearest key on the board
 const keyOffer = (place, price) => `I'd like the ${KEY_NAMES[place]} key. [$${price}]`;
 const offered = (ctx, place) => !!keyDoor(place) && !sealed(ctx, place);
 const pay = (s, d) => { s.cents = (s.cents ?? 0) + d * 100; };

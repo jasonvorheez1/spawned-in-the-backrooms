@@ -144,6 +144,7 @@ export function completeChapter2(ctx, player, stance) {
   const stanceNote = REPLIES.find((r) => r.id === s.phoebeReaction)?.note ?? "She pulled you out to see what you'd do next.";
 
   endQuest(s, CH2.id, `Survived Level ! and spoke with Phoebe. ${stanceNote}`, "completed");
+  pointCh3(s);
   s.payout = { xp: 450 };
   tellQuest(ctx, player, "Chapter 2 Complete: The Dead Signal · +450 XP");
   pushFeed(s, "Chapter 2 Complete: The Dead Signal (+450 XP)", ctx.now(), "info");
@@ -339,4 +340,18 @@ export function handleDialogueCh2(ctx, player, npc, text) {
   }
 
   return null;
+}
+
+// Chapter 3 opens on Level 109 (shelly Nov 14: Level ! leads to 109 as the next main quest goal). The chapter's own beats are written on Level 109.
+export const CH3 = { id: "the-neon-hospital", name: "The Neon Hospital" };
+export function pointCh3(s) {
+  if (!s || s.ch3Q) return false;
+  return setQuest(s, CH3.id, { name: CH3.name, main: true, step: "There is a second door in the alcove, cream paint, no sign. Phoebe keeps glancing at it. Go through.", mark: { place: "levelrun", id: "lrun-to-l109" } });
+}
+export function startCh3(ctx, player) {
+  const s = player?.state; if (!s || s.ch3Q) return false;
+  s.ch3Q = 1;
+  setQuest(s, CH3.id, { name: CH3.name, main: true, step: "A clean hospital corridor with no end and no signs. Every door is shut for a reason. Find whoever keeps them that way.", mark: { place: "level109", id: "l109-halloran", at: { x: 432, y: 0, z: -88 } } });
+  tellQuest(ctx, player, "Chapter 3: The Neon Hospital");
+  return true;
 }

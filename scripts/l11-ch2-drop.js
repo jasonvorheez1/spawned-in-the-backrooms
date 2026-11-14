@@ -1,7 +1,7 @@
 // Level 11 Clinic dead-drop cache & anomalous Level ! doorway / safe alcove exit interactions.
 import { heard } from "./lib/hear.js";
 import { carryAcross } from "./lib/carry.js";
-import { setCh2Step, syncCh2 } from "./lib/ch2-quest.js";
+import { setCh2Step, syncCh2, startCh3 } from "./lib/ch2-quest.js";
 import { pushFeed } from "./lib/feed.js";
 
 const CLIP_CACHE = "/cdn/moodboard-realistic-gritty/sfx-leather-notebook-elastic-snap-open.mp3";
@@ -76,6 +76,14 @@ export const ears = {
       return;
     }
 
+    if (s.kind === "levelrun-to-109") {
+      if (!w.ch2Done) { heard(ctx, { clip: CLIP_LOCKED, position: pos, volume: 0.7, maxDistance: 10 }); w.notice = { text: w.lrunRescued ? "Phoebe is still watching you. Talk to her first." : "The handle will not turn.", at: now }; return; }
+      startCh3(ctx, who);
+      heard(ctx, { clip: CLIP_DOOR, position: pos, volume: 0.6, maxDistance: 12 });
+      carryAcross(ctx, who, "level109");
+      ctx.cross(who, "level109");
+      return;
+    }
     if (s.kind === "levelrun-exit") {
       if (w.lrunRescued && !w.ch2Done) {
         w.notice = { text: "Speak with Phoebe in the alcove before stepping back to Level 11.", at: now };

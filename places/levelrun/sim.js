@@ -320,6 +320,13 @@ export function tick(ctx) {
     layWorld(ctx);
   }
   dressWorld(ctx);
+  // the way on: an ordinary cream hospital door in the alcove's south wall, into Level 109 (shelly Nov 14)
+  if (!("lrun-to-l109" in (ctx.place.objects ?? {}))) ctx.spawn("lrun-to-l109", {
+    tags: ["usable"], feetPosition: { x: CORRIDOR.safePos.x - 2, y: 0, z: 4.34 },
+    primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: "metal", part: "set", w: 1.2, h: 2.3, seed: 109 } }, material: { pbr: true, color: "oklch(0.9 0.045 92)" },
+    physics: "static", behavior: "scripts/l11-ch2-drop.js", state: { kind: "levelrun-to-109", name: "Unmarked Door", verb: "Open" },
+    children: [{ feetPosition: { x: 0, y: 2.55, z: -0.5 }, light: { kind: "point", color: "#fff1d0", intensity: 1.1, distance: 4.5, shadow: { enabled: false } } }],
+  });
 
   const players = ctx.place.players ?? [];
   if (!players.length) return;
