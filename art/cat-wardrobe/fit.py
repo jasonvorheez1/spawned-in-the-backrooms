@@ -2,7 +2,7 @@
 # garment: Tripo raw (front +X glTF, arms along Z). body: the wisp's cat-<sex>-rigged.glb (front -Y in Blender, arms along X, feet z=0, 1.2 m).
 # Steps: turn to the body's front, cut any hands/feet Tripo grew, two-point scale onto the body's own landmarks, push every vertex out of the skin
 # (margin), copy the Body's bone weights by nearest surface, export garment + armature only (material "cloth", tinted in game by mat-cloth.js).
-import bpy, sys, math, numpy as np
+import bpy, sys, math, os, numpy as np
 from mathutils import Vector, Matrix
 from mathutils.bvhtree import BVHTree
 SL = None   # a sleeveless kind (vest, poncho) once its branch ran
@@ -137,8 +137,13 @@ if KIND == "top" and not SL:   # a hem is one even line: the open edge round the
         print("hem verts", len(hem), "at", round(zh, 3))
     bm.to_mesh(me); bm.free()
 # push out of the skin
-dg = bpy.context.evaluated_depsgraph_get(); bvh = BVHTree.FromObject(body, dg)
-moved = 0; M = 0.022 if SL else {"boots": 0.004, "top": 0.013}.get(KIND, 0.007)   # a top rides well clear: its cloth bends by position, the skin by its own weights, and the gap covers the difference
+# Nov 14 (Shelly: "fitting with the tail when they shouldnt"): the push reads a body with no tail, so cloth hugs the seat and the tail swings free outside it
+_nt = body.copy(); _nt.data = body.data.copy(); bpy.context.scene.collection.objects.link(_nt)
+_tg = {vg.index for vg in _nt.vertex_groups if "Tail" in vg.name}
+_bm = bmesh.new(); _bm.from_mesh(_nt.data); _dl = _bm.verts.layers.deform.verify()
+bmesh.ops.delete(_bm, geom=[v for v in _bm.verts if sum(w for k, w in v[_dl].items() if k in _tg) > 0.3], context="VERTS"); _bm.to_mesh(_nt.data); _bm.free()
+dg = bpy.context.evaluated_depsgraph_get(); bvh = BVHTree.FromObject(_nt, dg)
+moved = 0; M = float(os.environ.get("FIT_M", 0)) or 0.014 if SL else {"boots": 0.004, "top": 0.013}.get(KIND, 0.007)   # a top rides well clear: its cloth bends by position, the skin by its own weights, and the gap covers the difference
 for it in range(3):
     for v in me.vertices:
         hit = bvh.find_nearest(v.co)
