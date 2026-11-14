@@ -1,0 +1,96 @@
+# Kyoto Dreams Radio: Takeshi Moriyama (Kenzo) and Hana Kurosawa (Kaori), samurai from Level 178 (Shelly, #402539).
+# Script and voices are Savi's; songs are Shelly's 12 uploads, one after each act. Arc: bickering -> Sekigahara rivalry -> grief -> dark wall -> duel -> swords down.
+# Lines: art/kyoto/lines.tsv; re-record with art/kyoto/rec.sh <n>.
+name: Kyoto Dreams Radio
+freq: "178.0 FM"
+host: Takeshi & Hana
+gain: 0.55
+static: /cdn/moodboard-realistic-gritty/sfx-old-radio-tuning-static-sweep-short.mp3
+segments:
+  - { kind: host, title: "Dawn Broadcast (Takeshi)", dur: 11.33, clip: "/cdn/value.8ab47f7838ceb7eb6b997085e95a32935c9f4b0733c1aa18302cceb99b8eb1ca.mp3" }
+  - { kind: host, title: "Dawn Broadcast (Hana)", dur: 7.58, clip: "/cdn/value.793a84935a694529ca9ccd888e006774d84af2489f27f03616b119ee03b95b1c.mp3" }
+  - { kind: host, title: "Dawn Broadcast (Takeshi)", dur: 5.02, clip: "/cdn/value.09bb5891510dd6519b6e7993bf29a074e20a4258eafd11a34b6ccffbcb958ff4.mp3" }
+  - { kind: host, title: "Dawn Broadcast (Hana)", dur: 2.38, clip: "/cdn/value.63b046bceb2adc59139f3dc6f37884930312d93761dd7d1e08809a2695f05b09.mp3" }
+  - { kind: host, title: "Dawn Broadcast (Takeshi)", dur: 3.26, clip: "/cdn/value.b8a056f010d159e149e798912316336db0992f06a27b3958cadc8e6d594c127e.mp3" }
+  - { kind: host, title: "Dawn Broadcast (Hana)", dur: 6.38, clip: "/cdn/value.50b32c07c51d3f5888f3f5e9891ab649536e6ff4ccf4e74aef1e47c26e79c1c0.mp3" }
+  - { kind: song, title: "Hard Day's Night (8-bit)", dur: 148.3, clip: "/cdn/the-beatles-a-hard-days-night-8-bit-version-4lk68bmi.mp3" }
+  - { kind: host, title: "How We Got Here (Takeshi)", dur: 9.17, clip: "/cdn/value.8940704844e5c81c541433166274641930b29898a4a680279724d6bfd67e34d9.mp3" }
+  - { kind: host, title: "How We Got Here (Takeshi)", dur: 8.69, clip: "/cdn/value.95a0cf59753eeb0ca0caef5d97c279a4c68d40dce240bd601fc2bbfed1463069.mp3" }
+  - { kind: host, title: "How We Got Here (Hana)", dur: 6.70, clip: "/cdn/value.0a58224242a2de8f8a3dbe4224ecf3496037aff5bfdc663ce481331a39025fd4.mp3" }
+  - { kind: host, title: "How We Got Here (Takeshi)", dur: 2.30, clip: "/cdn/value.ab23286bb396b31f2e3a5dee8898d589bcc0cd20c33f663667b91f04fdbb02f0.mp3" }
+  - { kind: host, title: "How We Got Here (Hana)", dur: 10.37, clip: "/cdn/value.6672484ca2293fddc5eb452979115dcc52c4c1bc05d4fda5f5fcff6eb9003a45.mp3" }
+  - { kind: host, title: "How We Got Here (Takeshi)", dur: 2.62, clip: "/cdn/value.2f823988b6ea6fdeb02e1e016c3916351eff4c3c9b62586985633c0da2cf3a6c.mp3" }
+  - { kind: host, title: "How We Got Here (Hana)", dur: 1.10, clip: "/cdn/value.0b1382d7031503fd6ac17db04e63d8ffdf9ae7117b150589f882c9ceac401adc.mp3" }
+  - { kind: song, title: "Pop'n CM", dur: 125.52, clip: "/cdn/popn-music-cm-ob5salvh.mp3" }
+  - { kind: host, title: "The Rice Incident (Takeshi)", dur: 8.62, clip: "/cdn/value.bdfd1b5650aafd287cef583cedba5c6b34239dcbbb4701f2691ac28cbf37e656.mp3" }
+  - { kind: host, title: "The Rice Incident (Hana)", dur: 1.73, clip: "/cdn/value.b03461858be2fb0625a034e0724198327f77437482d9efe5c012a1b86c27f7a7.mp3" }
+  - { kind: host, title: "The Rice Incident (Takeshi)", dur: 5.09, clip: "/cdn/value.f71edcd9a04346274895cec9bd6729dd675f5b13c1ddc15673c3f153cf6fb6f3.mp3" }
+  - { kind: host, title: "The Rice Incident (Hana)", dur: 4.30, clip: "/cdn/value.09ddae4ca972500ca67f21137d47d18a1bded8fe268a509d771d9b749311d7cc.mp3" }
+  - { kind: host, title: "The Rice Incident (Takeshi)", dur: 3.89, clip: "/cdn/value.4e95e6dafa2cffc04c57dca6ad725967d6accc3b141af05d911860ee3e6a94d9.mp3" }
+  - { kind: host, title: "The Rice Incident (Hana)", dur: 5.33, clip: "/cdn/value.257d6956b7e7acd84de926090e33560c4c125ac376d8eb8dd0d9f8c4bcc25687.mp3" }
+  - { kind: host, title: "The Rice Incident (Takeshi)", dur: 2.14, clip: "/cdn/value.48db553efffb6a8605c671de0f4807f9d771b3a1905782e6067260019b6883b6.mp3" }
+  - { kind: song, title: "Insertion", dur: 106.58, clip: "/cdn/music-insertion-machine-gun-kelly-mix-xx3amhfq.mp3" }
+  - { kind: host, title: "Life of the Sword (Takeshi)", dur: 14.54, clip: "/cdn/value.6e5234407fa4a7e7e571ad64779a150eb7df0a5d8f9c4957cebeaa8e5146bbc1.mp3" }
+  - { kind: host, title: "Life of the Sword (Hana)", dur: 12.05, clip: "/cdn/value.8daecc0af94981156557a98fc57fabaca713aca86697d05a46b97f1a1afa99bb.mp3" }
+  - { kind: host, title: "Life of the Sword (Takeshi)", dur: 1.73, clip: "/cdn/value.6e2669db6e330116ba0689fc9d9c51ed2a48d5d16e0ff40eb1dc0b1fbd5f146a.mp3" }
+  - { kind: host, title: "Life of the Sword (Hana)", dur: 3.58, clip: "/cdn/value.97da5888713600f5156d5590180624f080d23b3b4ba21d1ffc45bd3cb4f79278.mp3" }
+  - { kind: host, title: "Life of the Sword (Takeshi)", dur: 3.41, clip: "/cdn/value.d76ebec3ec6b2031e2d53426f374e8093e1d0466e1dd9b95983d9a2dcc763662.mp3" }
+  - { kind: host, title: "Life of the Sword (Hana)", dur: 3.74, clip: "/cdn/value.d1de07276bea7d3be5ecaa1f5781e4d3349d44fdd7d8b236b96b3a1678f9ac1d.mp3" }
+  - { kind: host, title: "Life of the Sword (Takeshi)", dur: 2.06, clip: "/cdn/value.f0a14c2b96ddfd15208fb0945010c334e3491cefe3d6c3e79f9f2e8b5c9bffbb.mp3" }
+  - { kind: song, title: "Smile dk", dur: 199.03, clip: "/cdn/music-smile-dk-japanese-boy-ag96kxmb.mp3" }
+  - { kind: host, title: "Traveler's Advice (Hana)", dur: 11.74, clip: "/cdn/value.fd4d5b041b1532b25850737fd9d2a05d13abaf849f7f5879d1fbd7f607373590.mp3" }
+  - { kind: host, title: "Traveler's Advice (Takeshi)", dur: 6.62, clip: "/cdn/value.85aeca5c5f23d40944f8ea1ae8e37e2404ec746833526ba1a78a77a6a2dbb7af.mp3" }
+  - { kind: host, title: "Traveler's Advice (Hana)", dur: 4.78, clip: "/cdn/value.a5608472152f88b5760e153f973e44ea8aca2ce6cc5ed49a9eb9011671d7f381.mp3" }
+  - { kind: host, title: "Traveler's Advice (Takeshi)", dur: 2.69, clip: "/cdn/value.e7ffbd153163e702eba6b4fdfaa51283104da9a7ba6ea0866a6a0746405cffd2.mp3" }
+  - { kind: host, title: "Traveler's Advice (Hana)", dur: 7.66, clip: "/cdn/value.cc6a2951b7dc3f2246b93a332341f8665dcdc3832cad18ca62da2e4144358d44.mp3" }
+  - { kind: song, title: "Nadeshiko Rock", dur: 187.12, clip: "/cdn/music-nadeshiko-rock-popn-cafe-j5adxd18.mp3" }
+  - { kind: host, title: "The Eastern Banner (Takeshi)", dur: 8.86, clip: "/cdn/value.0c99d4aa3ea4c287768ec54b506889cf6c8a9a100504f0418a4be246bf7ba893.mp3" }
+  - { kind: host, title: "The Eastern Banner (Hana)", dur: 1.73, clip: "/cdn/value.6cb29948febbb5e03f6000037544a4fae6455b5219a242a38d28c28c64206dde.mp3" }
+  - { kind: host, title: "The Eastern Banner (Takeshi)", dur: 2.86, clip: "/cdn/value.412254db52ea87e24092e24e728a4c7b5d684d2c95ff3b8bfedead258ba0522a.mp3" }
+  - { kind: host, title: "The Eastern Banner (Hana)", dur: 5.09, clip: "/cdn/value.9508c9524bd1986160c43b8f66711070235a9448f985457b1601f6fb3a39f1ff.mp3" }
+  - { kind: host, title: "The Eastern Banner (Takeshi)", dur: 4.22, clip: "/cdn/value.01f53edf5425348624ab93ed5f90bb8a48e1ce17366a3637c1f4e7ea7f555694.mp3" }
+  - { kind: host, title: "The Eastern Banner (Hana)", dur: 3.98, clip: "/cdn/value.d294eac6cda6582c4506cea9d4ce40efc29e194d8e356200a87f7b973d16455e.mp3" }
+  - { kind: host, title: "The Eastern Banner (Takeshi)", dur: 4.22, clip: "/cdn/value.efb356f4906536d8e5800550d3b2333b377cd59429d087e7b10074b16e73cda9.mp3" }
+  - { kind: host, title: "The Eastern Banner (Hana)", dur: 1.66, clip: "/cdn/value.f4b56987146f0d4a4a9bac10ba237ad8e4807ae8da5fd594414c5c918ad518aa.mp3" }
+  - { kind: host, title: "The Eastern Banner (Takeshi)", dur: 2.06, clip: "/cdn/value.0f4cc2b7465a1ebfd05ce51a8ec588f8db0e2c945c1d867e2c74b1fc393fbf62.mp3" }
+  - { kind: host, title: "The Eastern Banner (Hana)", dur: 4.30, clip: "/cdn/value.b6d4a3f2577b0679c9ccbaef8b56b831bffef0117ec0019a01d37aeff406e3db.mp3" }
+  - { kind: song, title: "Red Zone", dur: 216.32, clip: "/cdn/music-red-zone-full-version-f8fdfkay.mp3" }
+  - { kind: host, title: "Dead Air (Hana)", dur: 6.94, clip: "/cdn/value.6212ed0656b839ba0bf1ddd8c33b3f879c07ff33557a37d5d15b851519b04508.mp3" }
+  - { kind: host, title: "Dead Air (Hana)", dur: 11.90, clip: "/cdn/value.488b2fc066bdace899587dfe04b3ede373b4d78cb9d5bb6bdd901368fc17daf2.mp3" }
+  - { kind: host, title: "Dead Air (Hana)", dur: 9.26, clip: "/cdn/value.2a5309238f5a7102a145d8c9077ddbff3665ddd1062bf6aa20bda16ae4e48ad5.mp3" }
+  - { kind: song, title: "Live A Live", dur: 182.88, clip: "/cdn/live-a-live-opening-theme-5wx2x2tv.mp3" }
+  - { kind: host, title: "The Dark Wall (Takeshi)", dur: 7.01, clip: "/cdn/value.33a08fd98eeea0116359a1c1e3d7b8d67bd1ea8996c72e3ac24af61ad24a1de7.mp3" }
+  - { kind: host, title: "The Dark Wall (Hana)", dur: 1.90, clip: "/cdn/value.04ed35dae114f0f277910d5f27c24e943f4552d2dcb5d2a5129e2ec1c34e8e7e.mp3" }
+  - { kind: host, title: "The Dark Wall (Takeshi)", dur: 6.22, clip: "/cdn/value.22aad1d8867bc389a7bc4536c585bfd5ede87a290c402ea86ac7a724dd0be24b.mp3" }
+  - { kind: host, title: "The Dark Wall (Hana)", dur: 6.14, clip: "/cdn/value.44feff46efed53c1450a04fe5aed0bc26e27c307441b9cc28b2dddcc3511b21c.mp3" }
+  - { kind: host, title: "The Dark Wall (Takeshi)", dur: 1.58, clip: "/cdn/value.90422856bf528988a1f405fbe73ef75e0a41827cc3a767e643e8f50869eaf1a9.mp3" }
+  - { kind: host, title: "The Dark Wall (Hana)", dur: 5.81, clip: "/cdn/value.3b48126d703d49198b034fe4782f97d3a9b599eb9927630d5a141bf59f591961.mp3" }
+  - { kind: song, title: "Archon's Roost", dur: 226.09, clip: "/cdn/music-archons-roost-orchestral-theme-xhamppti.mp3" }
+  - { kind: host, title: "Dawn Duel (Takeshi)", dur: 7.66, clip: "/cdn/value.184504f1ef46feb669eeec29da586ff03a93293edce084a6897e6eaa643ece2f.mp3" }
+  - { kind: host, title: "Dawn Duel (Hana)", dur: 4.78, clip: "/cdn/value.eeda098022a2b013189777dc985a96d7a97b0defdce37a89be5e0738197d876d.mp3" }
+  - { kind: host, title: "Dawn Duel (Takeshi)", dur: 2.45, clip: "/cdn/value.70b1a4f440076e4c9ae54068611d44ab29dcf36f907c2317fd35e5d15e725eaa.mp3" }
+  - { kind: host, title: "Dawn Duel (Hana)", dur: 2.14, clip: "/cdn/value.087371f3ed5686a78095ddc2ab0d4d7fa8e0ce79e4e929b938f077afeebcb472.mp3" }
+  - { kind: host, title: "Dawn Duel (Takeshi)", dur: 1.49, clip: "/cdn/value.9cce36aa4f7ae649ae16c0141849298e265a50d4659740c764b4870a2129f54f.mp3" }
+  - { kind: host, title: "Dawn Duel (Hana)", dur: 5.66, clip: "/cdn/value.b7d18ab60905976eeaa89d4c84a3397992a774bac4d3142d8bd0aa7c322f058f.mp3" }
+  - { kind: host, title: "Dawn Duel (Takeshi)", dur: 2.45, clip: "/cdn/value.7f7d8ecb1665ce376e9abcf2982819609a666502974e3fdf5820578edcf6cfc4.mp3" }
+  - { kind: song, title: "Musashi Project", dur: 266.97, clip: "/cdn/music-musashi-project-naruto-theme-1oi9ccto.mp3" }
+  - { kind: host, title: "The Duel (Hana)", dur: 6.29, clip: "/cdn/value.7cc5370146b1bcf4e442558f4d2880d7369f9270283a59570954cf958bb97558.mp3" }
+  - { kind: host, title: "The Duel (Takeshi)", dur: 3.58, clip: "/cdn/value.ba18d95ba475eb16f76cdd43d27a4d7ff4aaccd4b6b91fcbb088203ac0f4acc2.mp3" }
+  - { kind: host, title: "The Duel (Hana)", dur: 4.85, clip: "/cdn/value.3ff89c9df1ee4802be9b61fe2ea2a072d14d49341633d801b0fe21e9dc511faa.mp3" }
+  - { kind: host, title: "The Duel (Takeshi)", dur: 3.58, clip: "/cdn/value.d31513e94cbfb0f4449d9764228a1a2e497b64a0e8602bb422842de804362ed8.mp3" }
+  - { kind: host, title: "The Duel (Hana)", dur: 5.81, clip: "/cdn/value.0e9ecc8070e5ebceab704a3b241fae676708be898d42ab1c6510da47399e5876.mp3" }
+  - { kind: host, title: "The Duel (Takeshi)", dur: 5.42, clip: "/cdn/value.a622ecc09b9832bc542eb8007b409a4997e38a56c2d1df1575e08c0bbc29cb47.mp3" }
+  - { kind: song, title: "Illusion", dur: 232.65, clip: "/cdn/music-illusion-live-a-live-remastered-8rttqzfq.mp3" }
+  - { kind: host, title: "Swords Down (Takeshi)", dur: 7.25, clip: "/cdn/value.2ddd855df2765fc1d1823148104945f5a929489c376afca68b01cff67e59f794.mp3" }
+  - { kind: host, title: "Swords Down (Hana)", dur: 6.62, clip: "/cdn/value.d51b4585da01943a32bf9db48ef1f609a1c729336c15ff9209de6b31cc108bd2.mp3" }
+  - { kind: host, title: "Swords Down (Takeshi)", dur: 2.21, clip: "/cdn/value.1e3693342e6df564f880396901c54ea1ff5be211a5b1f3d42c64a3b0cd9d9470.mp3" }
+  - { kind: host, title: "Swords Down (Hana)", dur: 6.05, clip: "/cdn/value.77453eb6b89848bd0ff92f3465e89291ab7756c170f9974a43479915d55aaf16.mp3" }
+  - { kind: host, title: "Swords Down (Takeshi)", dur: 2.38, clip: "/cdn/value.1cd282c60aace92e9e5f288add414ffb43e9e236973777aec9e45ffd5ac9bf32.mp3" }
+  - { kind: host, title: "Swords Down (Hana)", dur: 3.34, clip: "/cdn/value.581487b52e7f401acb224736f636f716c10e461022510a6a315652f69d14177c.mp3" }
+  - { kind: song, title: "Tokyo Roman", dur: 379.45, clip: "/cdn/music-tokyo-roman-jpop-song-wtwijajp.mp3" }
+  - { kind: host, title: "Sign-Off (Takeshi)", dur: 6.70, clip: "/cdn/value.b9c4749fdbca41f3f1ece2d1b88a4888b91da94ef562753304e5b489a8009aed.mp3" }
+  - { kind: host, title: "Sign-Off (Hana)", dur: 6.46, clip: "/cdn/value.2484cbebfefe241d4118602fbc5830a799cdb8685f6bbb5f03a14b922bf2ba69.mp3" }
+  - { kind: host, title: "Sign-Off (Takeshi)", dur: 4.13, clip: "/cdn/value.9ee375a83a2ffd331d80990b598cac6399ccba7c0b196ff08ddc465c868b20f4.mp3" }
+  - { kind: host, title: "Sign-Off (Hana)", dur: 3.34, clip: "/cdn/value.dd79fe14226e409ad5448130e26fe6a2448e6cbd1ba2f540d66fa8bb543ae60d.mp3" }
+  - { kind: host, title: "Sign-Off (Takeshi)", dur: 1.82, clip: "/cdn/value.532080b8b059c104552fe60fb4ff9458ebd0fa34102c0090b54f140b8b71abf0.mp3" }
+  - { kind: song, title: "Heroic Struggle", dur: 401.03, clip: "/cdn/heroic-struggle-gameplay-ost-ke3ng26y.mp3" }
