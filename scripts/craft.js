@@ -17,6 +17,7 @@ const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
 const note = (s, ctx, text) => { s.notice = { text, at: ctx.now() } }
 
 export function onInput(ctx, input) {
+  if (!input.pressed?.craft && !input.pressed?.make) return // only its own keys: every other press skips the player's whole state read
   const s = ctx.self.state
   if (s.level == null) return
   if (input.pressed?.craft) { if (s.craftOpen) s.craftOpen = ''; else if (canOpen(s, ctx.self.place, 'craft')) { openWrist(s, 'craft', 'hand'); s.craftBench = '' } }
