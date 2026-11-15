@@ -574,7 +574,8 @@ export function update(ctx, dt) {
   }
   if (ctx.self.isLocal !== false && ctx.now() - (ctx.self.session.wreckAt ?? 0) > 5000) { ctx.self.session.wreckAt = ctx.now(); try { regrowWrecks(ctx) } catch (e) { ctx.log('[wreck] ' + e) } } // smashed props near a player stand again after their hour
   const m = mem(ctx), s = ctx.self.state
-  if (s.focus && ctx.getObject(s.focus.id)?.place !== ctx.self.place) { s.focus = null; m.focus = null; m.key = '' } // a prompt left behind in another level (or a thing gone) clears
+  if (s.focus && ctx.getObject(s.focus.id)?.place !== ctx.self.place) { s.focus = null; m.focus = null; m.key = '' }
+  if (s.focus) { const fo = ctx.getObject(s.focus.id), fp = fo?.worldFeetPosition ?? fo?.feetPosition, me = ctx.self.feetPosition; if (!m.ray || !fp || Math.hypot(fp.x - me.x, fp.z - me.z) > (s.sit ? 8 : REACH + 3)) { s.focus = null; m.focus = null; m.key = '' } } // Shelly Nov 15: 'E button indicator stuck': a prompt with no live look ray (a fresh session) or a thing left far behind never cleared // a prompt left behind in another level (or a thing gone) clears
   seatTick(ctx)
   { // the look outline: one thing at a time; the old one is cleared the moment the focus moves, loot opens or the level changes
     const want = (s.level == null || s.lootOpen || (s.sit && m.focus?.tag !== 'npc' && m.focus?.tag !== 'usable') || s.building || screen(s, ctx.self.place) !== 'play') ? null : (m.focus?.id && ctx.getObject(m.focus.id) ? m.focus.id : null) // no outline under a menu, a talk, a cutscene or build mode (which outlines its own target), nor on something already gone
