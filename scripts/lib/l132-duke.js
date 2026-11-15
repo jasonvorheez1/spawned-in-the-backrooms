@@ -16,8 +16,8 @@ pop glow n=1 at=point().c(.2) glo=fire()*(#flame/16)~ r=light(<1,.58,.26>,$glo*1
 const CHIMNEY_FX = `fx
 pop smoke rate=?low:2|mobile:3|5 on=disc(.35) life=5..8 v=up(.7..1.1)+sdir()*.15 size=.6..1 acc=buoy(.15)+curl(.2)*.4+drag(.35)+wind()*.3 sz=$size*(.6>3.4) col=<.42,.4,.4>><.3,.3,.32> a=0>.1:.32>.6:.18>0 rot=spin(.05) r=sprite(smoke-puff,alpha)`
 const WINDOW_FX = `fx
-pop pane n=1 at=point() size=1.6 col=hdr(2.2,1.4,.45)*flick(.6,.08) a=.85 sz=$size r=sprite(soft-disc,add)
-pop halo n=1 at=point() size=3.4 col=hdr(1,.6,.18) a=.35 sz=$size r=sprite(soft-disc,add)`
+pop pane n=1 at=point() size=1.1 col=hdr(2.2,1.4,.45)*flick(.6,.08) a=.85 sz=$size r=sprite(soft-disc,add)
+pop halo n=1 at=point() size=2.4 col=hdr(1,.6,.18) a=.35 sz=$size r=sprite(soft-disc,add)`
 
 function stallsOf(L) {
   const out = []
@@ -73,14 +73,15 @@ export function lay(ctx, L) {
       })
     }
     // the gate and its torches stand on the road side, along the wall (wall runs perpendicular to the keep's facing)
-    const gy = ctx.place.terrain.heightAt(G.at[0], G.at[1]) ?? K.y
-    const along = rot(1, 0, D.keep.yaw)
+    const along = rot(1, 0, D.keep.yaw), inward = rot(0, 1, D.keep.yaw)
+    const gx = G.at[0] + inward.x * G.inset, gz = G.at[1] + inward.z * G.inset
+    const gy = ctx.place.terrain.heightAt(gx, gz) ?? K.y
     if (objs["l132-keep-gate"]) ctx.destroy("l132-keep-gate")
     ctx.spawn("l132-keep-gate", {
       tags: ["l132", "usable", "l132-palace"],
-      feetPosition: { x: G.at[0], y: gy, z: G.at[1] },
+      feetPosition: { x: gx, y: gy, z: gz },
       rotation: { yaw: D.keep.yaw },
-      model: { id: G.model },
+      model: { id: G.model, forward: G.forward },
       layout: { box: { min: { x: -G.size[0] / 2, y: 0, z: -G.size[2] / 2 }, max: { x: G.size[0] / 2, y: G.size[1], z: G.size[2] / 2 } } },
       physics: { body: "static", collider: "box" },
       behavior: "scripts/l132-duke-gate.js",

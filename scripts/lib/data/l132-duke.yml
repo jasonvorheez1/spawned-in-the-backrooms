@@ -25,6 +25,8 @@ keep:
 gate:
   model: /cdn/value.4cc1e813551175e6ceae96b6e11dadbcd8d45c8d4f01eab3eeaa4bf21a25f555.glb
   at: [98, -98]
+  forward: "+x"
+  inset: 0.7          # metres in from (98,-98) toward the keep, into the arch
   size: [3.2, 4.4, 0.5]
   notice: "The Palace opens for the festival. The Duke will send for you."
   knock: /cdn/moodboard-realistic-gritty/sfx-three-heavy-knocks-on-a-great-oak-castle-door.mp3
@@ -32,5 +34,5 @@ torch:
   model: /cdn/value.75ee1026ab64afd722da9116ffe9adde2972c3a464e2a33755a6f68d2a9a88d6.glb
   height: 1.9
   side: 2.6            # metres either side of the gate, along the wall
-chimney: [0, 25.5, 2]  # keep-local (x, y, z), smoke source
-window: [-3, 17, -9.2] # keep-local high window, glows gold
+chimney: [1.5, 24.6, 1]  # keep-local (x, y, z), smoke source
+window: [0, 14.7, -5.6] # keep-local high window, glows gold
