@@ -60,30 +60,30 @@ l132-shop-a-case-1:
   castShadow: true
   feetPosition: {x: 2.3, y: 0.02, z: -38.6}
   id: l132-shop-a-case-1
-  model: /cdn/value.4e4232d504243753b8093ecbded15cf7a15d83caa454d9a7267753de18ec803b.glb
+  model: /cdn/value.d7b4f4d0eae347f7cfdf9086f49eaf7fe3cbe8b827de715a226112071b8d6d93.glb
   physics: {body: static, collider: auto}
   rotation: {yaw: 360}
-  scale: 1
+  scale: 1.5
   state: {}
   tags: [l132]
 l132-shop-a-case-2:
   castShadow: true
-  feetPosition: {x: 4.15, y: 0.02, z: -38.6}
+  feetPosition: {x: 4, y: 0.02, z: -38.6}
   id: l132-shop-a-case-2
-  model: /cdn/value.4e4232d504243753b8093ecbded15cf7a15d83caa454d9a7267753de18ec803b.glb
+  model: /cdn/value.d7b4f4d0eae347f7cfdf9086f49eaf7fe3cbe8b827de715a226112071b8d6d93.glb
   physics: {body: static, collider: auto}
   rotation: {yaw: 360}
-  scale: 1
+  scale: 1.5
   state: {}
   tags: [l132]
 l132-shop-a-case-3:
   castShadow: true
   feetPosition: {x: -4.2, y: 0.02, z: -39.8}
   id: l132-shop-a-case-3
-  model: /cdn/value.4e4232d504243753b8093ecbded15cf7a15d83caa454d9a7267753de18ec803b.glb
+  model: /cdn/value.d7b4f4d0eae347f7cfdf9086f49eaf7fe3cbe8b827de715a226112071b8d6d93.glb
   physics: {body: static, collider: auto}
   rotation: {yaw: 360}
-  scale: 1
+  scale: 1.5
   state: {}
   tags: [l132]
 l132-shop-a-col-back:
@@ -937,10 +937,10 @@ l132-shop-c-vrcase:
   castShadow: true
   feetPosition: {x: -43.9, y: 0.02, z: -5.2}
   id: l132-shop-c-vrcase
-  model: /cdn/value.4e4232d504243753b8093ecbded15cf7a15d83caa454d9a7267753de18ec803b.glb
+  model: /cdn/value.d7b4f4d0eae347f7cfdf9086f49eaf7fe3cbe8b827de715a226112071b8d6d93.glb
   physics: {body: static, collider: auto}
   rotation: {yaw: 450}
-  scale: 1
+  scale: 1.5
   state: {}
   tags: [l132]
 l132-stall-0:
