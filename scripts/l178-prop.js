@@ -34,7 +34,7 @@ function use(ctx, s, at) {
   }
   if (s.kind === "futon") {
     if (now - (ps.l178rest ?? -1e12) < L.rest.cooldown * 1000) { say(ps, "You're rested. The futon will keep.", ctx); return; }
-    ps.l178rest = now; ps.sanity = Math.min(100, (ps.sanity ?? 100) + L.rest.sanity); ps.hp = (ps.hp ?? 100) + L.rest.hp;
+    ps.l178rest = now; ps.sanity = Math.min(100, (ps.sanity ?? 100) + L.rest.sanity);
     ctx.emit("screenFlash", { color: "oklch(0.05 0.01 60)", duration: L.rest.fade, intensity: 1 }, { audience: { player: by } });
     ctx.emit("playSound", { clip: "cdn/sfx-futon-rustle-soft-exhale.mp3", position: at, volume: 0.4 });
     say(ps, "You doze off to birdsong and the spring. You wake warm, and steadier.", ctx);
