@@ -91,7 +91,7 @@ def strip_images():
         if not m.use_nodes: continue
         nt = m.node_tree; b = nt.nodes.get("Principled BSDF")
         for n in [n for n in nt.nodes if n.type == "TEX_IMAGE"]:
-            px = list(n.image.pixels[::97]); c = [sum(px[i::4]) / max(1, len(px[i::4])) for i in range(3)] if px else (.5, .5, .5)
+            px = list(n.image.pixels[:])[::97]; c = [sum(px[i::4]) / max(1, len(px[i::4])) for i in range(3)] if px else (.5, .5, .5)
             if b: b.inputs["Base Color"].default_value = (*c, 1)
             nt.nodes.remove(n)
 def shoot(name, views):
