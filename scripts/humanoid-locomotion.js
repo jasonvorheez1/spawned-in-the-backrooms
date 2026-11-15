@@ -123,7 +123,7 @@ function pacesOf(ctx, gait) {
 // A gait clip's rate: the body's speed over the clip's pace, so the feet cover what the body covers. A running clip
 // (`running`: the Run and the Sprint) past its pace plays at the square root of that ratio. Standing (or with no pace to
 // read) the clip plays as authored. This `speed` is the rate the engine plays: nothing overrules it.
-const STRAFE = { left: 'cdn/clip-rig-running-strafe-left-5398f2c6-loop.glb', right: 'cdn/clip-rig-running-strafe-right-75d4e6cf-loop.glb', back: 'cdn/clip-rig-walking-backwards-f8e0ddf3-loop.glb' }
+const STRAFE = { left: 'cdn/clip-ash-rifle-walk-left-loop.glb', right: 'cdn/clip-ash-rifle-walk-right-a4cb54c4-loop.glb', back: 'cdn/clip-ash-rifle-walk-backward-loop.glb' } // the ash rifle set: mixamo bones, so they fit critters, plymodels and spawn avatars (the rig- set T-posed them)
 function strafeOf(g) { const x = g.mx ?? 0, z = g.mz ?? 0; if (Math.abs(x) > 0.2 && Math.abs(x) >= Math.abs(z) * 0.9) return x > 0 ? 'right' : 'left'; return z < -0.2 ? 'back' : null }
 function paceRate(speed, pace, running) {
   if (!(speed > 0.1) || !(pace > 0)) return 1
@@ -397,7 +397,7 @@ export function update(ctx, dt) {
   const walkRate = Math.max(1 / PACE_BAND, paceRate(clipSpeed, walkPace))
   const sprintRate = paceRate(clipSpeed, sprintPace, true)
   ctx.self.anim.idle = { clip: clips.idle || 'Idle', loop: 'loop', weight: idleWeight, blendIn: 0.15, ...(human && !steered ? { speed: idleRate(ctx) } : {}) }
-  ctx.self.anim.walk = { clip: walkClip, loop: 'loop', weight: walkShare, speed: sd && sd !== 'back' ? 0.75 : walkRate, blendIn: 0.15 }
+  ctx.self.anim.walk = { clip: walkClip, loop: 'loop', weight: walkShare, speed: sd ? 1.1 : walkRate, blendIn: 0.15 }
   ctx.self.anim.run = { clip: runClip, loop: 'loop', weight: rung === 'run' ? 1 : 0.001, speed: runRate, blendIn: 0.15 }
   if (hasSprint) ctx.self.anim.sprint = { clip: sprintClip, loop: 'loop', weight: rung === 'sprint' ? 1 : 0.001, speed: sprintRate, blendIn: 0.15 }
   else if (ctx.self.anim.sprint) ctx.self.anim.sprint = null
