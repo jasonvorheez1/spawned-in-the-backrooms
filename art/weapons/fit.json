@@ -463,7 +463,8 @@
    0.06,
    1.02
   ],
-  "pca": true
+  "pca": true,
+  "spin": 90
  },
  "l178_tanto": {
   "min": [

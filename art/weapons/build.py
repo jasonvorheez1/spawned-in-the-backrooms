@@ -45,6 +45,7 @@ for kind in only:
     put(S3, third, 1)
     if M.determinant() < 0: M[third][S3] *= -1
     ob.data.transform(M.to_4x4())
+    if c.get("spin"): ob.data.transform(Matrix.Rotation(math.radians(c["spin"]), 4, "Y"))  # turn about the length: a blade whose width came out upright lies flat toward +X
     vs = [v.co for v in ob.data.vertices]
     lo = Vector([min(v[i] for v in vs) for i in range(3)]); hi = Vector([max(v[i] for v in vs) for i in range(3)])
     tmin, tmax = g2b(c["min"]), g2b(c["max"])
