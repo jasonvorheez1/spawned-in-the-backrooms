@@ -251,7 +251,30 @@ function soak(ctx, p, feet) {
   say(ctx, p, "Stay in the shallows for " + Math.max(1, Math.ceil(remaining)) + " s to warm up.");
 }
 
+// Lore exit (Shelly #, wiki: "staying in the hot spring long enough and falling asleep" → Level 66 or 132; 66 isn't built, so 132).
+// Standing in the shallows starts a clock (written once, on entry); past L.pool.dozeSec the screen dims and you wake in Lumiria.
+function tickDoze(ctx, p) {
+  const ps = p.state; if (!ps || ps.dead) return;
+  const inside = inShallows(p.worldFeetPosition ?? p.feetPosition);
+  if (!inside) { if (ps.l178dozeAt != null) ps.l178dozeAt = null; return; }
+  if (ps.l178dozeAt == null) { ps.l178dozeAt = ctx.now(); return; }
+  const t = (ctx.now() - ps.l178dozeAt) / 1000, D = L.pool.dozeSec ?? 45;
+  if (t > D * 0.6 && !ps.l178dozeWarned) { ps.l178dozeWarned = true; say(ctx, p, "The water's so warm. Your eyes keep closing..."); }
+  if (t < D || ps.l178dozing) return;
+  ps.l178dozing = true;
+  ctx.emit("screenFlash", { color: "oklch(0.04 0.01 60)", duration: 2.4, intensity: 1 }, { audience: { player: p.id } });
+  say(ctx, p, "You drift off in the steam.");
+  ctx.after(1.6, "dozeAway", { id: p.id });
+}
+export function dozeAway(ctx, { id } = {}) {
+  const p = ctx.place.players.find((q) => q.id === id); if (!p) return;
+  p.state.l178dozeAt = null; p.state.l178dozeWarned = false; p.state.l178dozing = false;
+  if (!inShallows(p.worldFeetPosition ?? p.feetPosition)) return;
+  ctx.cross(p, "level132#l132-arrive");
+}
+
 export function tickSoak(ctx, p) {
+  tickDoze(ctx, p);
   const ps = p.state, start = ps?.l178soakingAt;
   if (start == null) return;
   const elapsed = ctx.now() - start;

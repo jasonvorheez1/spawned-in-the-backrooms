@@ -41,7 +41,7 @@ stock:   # the shared container refill brings these back an hour after they are 
 swing: { door: 100, oven: 80 }      # degrees a cabinet door opens
 drawer: { pull: 0.35, ease: 0.35 }
 tapAt: { y: 0.93 }
-pool: { hx: 3.0, hz: 1.8, top: 0.10, stepZ: 1.1, ripMove: 0.35, soakSec: 15, dozeFade: 1.6 }
+pool: { hx: 3.0, hz: 1.8, top: 0.10, stepZ: 1.1, ripMove: 0.35, soakSec: 15, dozeFade: 1.6, dozeSec: 45 }   # dozeSec: my pick, seconds in the shallows before you fall asleep → Level 132
 quest: { id: "l178-rest", name: "A Place to Rest", near: 3.5, ate: 8 }
 breaks: { warnRadius: 14, compensate: 3 }
 rounds:   # resident stops: [x, z, dwell seconds]; meg-agent walks between them with findPath
