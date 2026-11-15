@@ -4,6 +4,7 @@
 import S from "./data/l132-shops.yml";
 import { raycast } from "builtin/physics";
 import { animate } from "builtin/tween";
+export const RANGE = { small: 32, fixture: 50 }; // metres a shop's inside props draw from (the shells themselves always draw)
 const ME = "scripts/lib/l132-shops.js", FOFF = { "-z": 0, "+z": 180, "+x": 90, "-x": -90 };
 const rot = (x, z, yaw) => { const r = (yaw * Math.PI) / 180, c = Math.cos(r), s = Math.sin(r); return { x: x * c + z * s, z: -x * s + z * c }; };
 const at = (sh, x, z, y) => { const p = rot(x, z, sh.yaw); return { x: sh.x + p.x, y, z: sh.z + p.z }; };
@@ -64,7 +65,7 @@ function buildShop(ctx, key) {
     if (r.wall != null) tags.push("l132-wall");
     const small = r.top != null || r.wall != null;
     ctx.spawn(id, { feetPosition: at(sh, r.x, r.z, y), rotation: { yaw: sh.yaw + r.f + FOFF[fwd] }, scale: r.s ?? sc, tags, state, model: url,
-      physics: r.m === "rug" ? "none" : { body: "static", collider: small ? "box" : "auto" }, behavior: r.u ? ME : undefined, castShadow: !small });
+      physics: r.m === "rug" ? "none" : { body: "static", collider: small ? "box" : "auto" }, behavior: r.u ? ME : undefined, castShadow: !small, visibleRange: { max: small ? RANGE.small : RANGE.fixture } }); // shop insides sit 56-90 m from the arrival: not drawn from across town
     if (r.booth) { // sit spots read off art/l61-booth (booth-local): the side bench and the back bench
       for (const b of [{ k: "a", x: -0.76, z: 0.47, yaw: -90, w: 2, gap: 0.55 }, { k: "b", x: 0.56, z: -0.59, yaw: 180, w: 2, gap: 0.62 }]) {
         const p = rot(b.x, b.z, r.f); seat(`${id}-seat-${b.k}`, r.x + p.x, r.z + p.z, r.f + b.yaw, { w: b.w, gap: b.gap, d: 0.04, y: 0.28 }, "Diner booth");
@@ -72,7 +73,7 @@ function buildShop(ctx, key) {
       const t = rot(0.1, 0.05, r.f), n = id.slice(-1); // a plate and a cup on each booth table
       for (const [m, dx, nm, j] of [["plate", 0, "Plate", 1], ["mug", 0.22, "Coffee cup", 2]]) {
         const wid = `l132-ware-ceramic-b-booth${n}-${j}`; tops.push(wid);
-        ctx.spawn(wid, { feetPosition: at(sh, r.x + t.x + dx, r.z + t.z, F + 0.76), rotation: { yaw: 37 * j }, tags: ["l132", "l132-top", "breakable"], state: { name: nm }, model: S.models[m][0], physics: { body: "static", collider: "box" }, castShadow: false });
+        ctx.spawn(wid, { feetPosition: at(sh, r.x + t.x + dx, r.z + t.z, F + 0.76), rotation: { yaw: 37 * j }, tags: ["l132", "l132-top", "breakable"], state: { name: nm }, model: S.models[m][0], physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: RANGE.small } });
       }
     }
     if (r.pc) { const r2 = (r.f * Math.PI) / 180; seat(`${id}-seat`, r.x - Math.sin(r2) * 0.6, r.z - Math.cos(r2) * 0.6, r.f + 180, { w: 1, d: 0, y: 0.12 }, "Desk chair"); }
