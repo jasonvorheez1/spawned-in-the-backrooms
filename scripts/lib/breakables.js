@@ -238,14 +238,14 @@ function wreck(ctx, o) {
 // the sims call this every few seconds: wrecks whose hour is up stand again, never with someone standing in them
 export function regrowWrecks(ctx) {
   let wr = ctx.place.state.wrecks
-  if (!wr) {
+  if (!Array.isArray(wr)) {
     const found = []
     for (const r of ctx.query({ tags: ['wreck'], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
       found.push(r.id)
     }
-    wr = ctx.place.state.wrecks = found
+    ctx.place.state.wrecks = found; wr = found
   }
-  if (!wr.length) return
+  if (!wr || !wr.length) return
   const now = ctx.now()
   const remaining = []
   for (const id of wr) {
