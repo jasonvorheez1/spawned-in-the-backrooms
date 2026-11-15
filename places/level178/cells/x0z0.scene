@@ -3294,12 +3294,12 @@ l178-story-ricesack:
 l178-story-rota:
   behavior: scripts/l178-prop.js
   castShadow: true
-  feetPosition: {x: 12.4, y: 1.15, z: 4.95}
+  feetPosition: {x: 12.4, y: 1.3, z: 4.95}
   id: l178-story-rota
   layout: {box: {max: {x: 0.3, y: 0.6, z: 0.025}, min: {x: -0.3, y: 0, z: -0.025}}}
   model: /cdn/value.e1001dc69fa9c92bd0642cbec5d679a684ccc5de65150499e9c667c6f59783bf.glb
   receiveShadow: true
-  rotation: {yaw: 0}
+  rotation: {yaw: 180}
   scale: 10
   state: {c: {x: 12.4, y: 1.9, z: 4.95}, kind: read, name: Chalkboard rota, page: 1783, verb: Read}
   tags: [l178-story, usable, l178-prop]
