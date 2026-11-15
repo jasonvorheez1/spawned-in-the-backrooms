@@ -269,3 +269,12 @@ level132:
   - [[l132-margo, "My knees say rain."], [l132-anouk, "It never rains here, Margo."], [l132-margo, "My knees don't know that."]]
   - [[l132-wendell, "Del, the TV in the diner's working again?"], [l132-del, "Works if you hit it. So I hit it."]]
   - [[l132-gus, "Lovely day."], [l132-silas, "Every day's a lovely day."], [l132-gus, "That's what I like about it."]]
+level132_strangers:   # Lumiria's passers-by (npc-social.js small talk): shopping, collections, the Duke, patchy Wi-Fi
+  - [[0, "did you see the new urns at Teodora's?"], [1, "the blue ones? she won't trade them."], [0, "she'll trade them. she just wants a good story."]]
+  - [[0, "the Wi-Fi's down again."], [1, "stand by the tree. it's better by the tree."], [0, "that can't be how Wi-Fi works."], [1, "it works, doesn't it?"]]
+  - [[0, "I finally found a teaspoon for my collection."], [1, "how many is that?"], [0, "two hundred and twelve."], [1, "and you needed one more."]]
+  - [[0, "the Duke was in the square this morning."], [1, "did he look in your bag?"], [0, "he looked in my bag. he took a button."], [1, "lucky. he took my left shoe once."]]
+  - [[0, "Del's making pancakes today."], [1, "she made pancakes yesterday."], [0, "and I'll go again today."]]
+  - [[0, "RadioShed got a whole crate of new phones."], [1, "new new, or old new?"], [0, "both, somehow."]]
+  - [[0, "I traded a painting for a pear."], [1, "a good pear?"], [0, "the best pear. my fruit bowl is complete."]]
+  - [[0, "somebody new came out of the tree."], [1, "nice?"], [0, "seemed confused. give them a day."], [1, "everybody's confused for a day."]]

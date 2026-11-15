@@ -241,3 +241,34 @@ l132-odalys:   # wanderer, newly arrived: earnest, bookish, frazzled, writing fo
       do: "l132:offer:l132-odalys"
     - q: "Tell me about the Duke."
       a: "He read my draft over my shoulder. Called it delightful. Then he asked if I'd like to come to the palace for the festival. I said, um, maybe. Everyone here says yes. Nobody I asked has been back to say how it was."
+
+"lumiria:default":   # anyone in Lumiria without their own entry: friendly passers-by, shoppers, collectors
+  hi: ["Oh, hello! You're new. Everybody's new once.", "Hi there! Lovely day for shopping, isn't it? It's always a lovely day for shopping.", "Hey! Nice bag. What's in it? Sorry. Habit."]
+  back: ["Back again! Find anything good?", "Oh, it's you. Hi!"]
+  bye: ["Happy hunting!", "See you around the stalls!", "Bye! Try the diner, it's great."]
+  walk: ["Okay! Bye!"]
+  ask:
+    - q: "Where am I?"
+      a: ["Lumiria! In the Duchy of Morigont. Best shopping anywhere, and I mean anywhere.", "You're in Lumiria. Don't worry. Nobody's in a hurry here, and nothing out here bites."]
+    - q: "How do I pay for things?"
+      a: ["Pay? Oh, you trade. Bring something somebody's collection is missing and they'll swap you for nearly anything.", "Nobody pays here. You swap. A ring's worth an apple if somebody needs an apple."]
+    - q: "What do you collect?"
+      a: ["Snow globes. Forty-one of them. Forty-two if I find a good one today.", "Old cameras. I don't even use them. I just like the clicks.", "Teaspoons. Don't laugh. Okay, you can laugh a little."]
+    - q: "Who runs this place?"
+      a: ["The Duke! Tall fellow, big crown, gold mask. He'll want to look in your pockets. Let him, he's harmless.", "The Duke of Morigont. His palace is up on the hill. He comes down to shop like the rest of us."]
+    - q: "How do I get out?"
+      a: ["The hollow tree in the middle of the square. Walk into it. Or ask the Duke, he loves showing people the way."]
+  barks:
+    idle: ["Ooh, a new stall sign.", "Where did I put my list?", "One more look at the hats.", "The Wi-Fi's slow today.", "I need a blue one. Just one more."]
+    hi: ["Hi!", "Oh, hello!", "Afternoon!"]
+    close: ["Oh! Excuse me.", "Sorry, just squeezing past."]
+    drawn: ["Whoa. Put that away, please.", "Hey, easy. There's nothing to fight here."]
+    hurt: ["Oh no, you're hurt. Margo has remedies."]
+    hit: ["Ow!", "Hey!"]
+    hostile: ["Stop it!", "Somebody get the Duke!"]
+    flee: ["Help!", "I'm going, I'm going!"]
+    clear: ["Is it over?"]
+    relief: ["Phew."]
+    move: ["Right, next shop."]
+    ambientIdle: ["I love this town.", "Smells like pancakes from the diner.", "Somebody's playing records again."]
+  gest: { wave: "Hi! Hello!", gift: "For me? Oh, that's going straight in my collection.", dance: "Ha! Right here in the square? Okay!", nodance: "Maybe later. My feet are full of shopping.", insult: "Well. That wasn't very Lumirian of you." }

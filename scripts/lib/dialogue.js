@@ -39,7 +39,7 @@ export function archOf(it, place) {
     : /surrender/.test(f) ? "surrender" : /lightless/.test(f) || id.startsWith("l8x") ? "lightless"
     : /tbd/.test(f) || id.startsWith("tbd") ? "tbd" : /amor/.test(f) || id.startsWith("amor") ? "amor"
     : /bntg|trader|merchant/.test(f) ? "bntg" : /homely|hotel/.test(f) ? "hotel" : f === "hk" ? "hk" : f === "orig" ? "orig"
-    : /city/.test(f) || place === "level11" ? "city" : "survivor";
+    : /city/.test(f) || place === "level11" ? "city" : f === "lumiria" || place === "level132" ? "lumiria" : "survivor";
   const rk = ["trader", "merchant", "quarter", "smith"].includes(role) ? "trader" : role === "medic" ? "medic" : ["scout", "guard"].includes(role) ? "scout" : "default";
   return ALL[`${fk}:${rk}`] ? `${fk}:${rk}` : ALL[`${fk}:default`] ? `${fk}:default` : "survivor:default";
 }

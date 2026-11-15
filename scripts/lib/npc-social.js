@@ -31,6 +31,7 @@ const TALK = [
   [[0, "you got a spare lighter?"], [1, "no. you owe me one."], [0, "i do not."], [1, "you do."]],
 ];
 const exchangeFor = (ctx, a, b) => {
+  const own = C[`${a.place}_strangers`]; if (own?.length) return own[Math.floor(ctx.random() * own.length)]; // a level with its own small talk (chatter.yml <place>_strangers)
   const A = lifeOf(a.id), r = ctx.random();
   if (r < 0.17) return [[0, `i want ${A.want} so bad today.`], [1, "today? you said that last week too."], [0, "i say it most weeks."]];
   if (r < 0.3) return [[0, `i thought i saw ${A.fear} earlier.`], [1, "did you?"], [0, "no. probably not."], [1, "okay."]];
