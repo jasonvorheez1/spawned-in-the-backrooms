@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9165,
-  "updatedAt": "2026-11-15T15:53:10.693Z",
+  "basedOnSpecVersion": 9167,
+  "updatedAt": "2026-11-15T15:55:56.994Z",
   "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Global scripts and shared registries coordinate play, while place scenes and simulations compose local spaces and stories, including Kyoto Dreams, Lumiria's countryside and barter economy, Level 10's furnished farmstead searchables, and Level !'s chase finale. The separate Director Savi mod supplies a creator-approved trailer planning, filming and delivery workflow.",
   "scriptPaths": [],
   "places": [
@@ -9,10 +9,10 @@
     "places/bonus + places/testlab (3D) - vaporwave mall with shops, simulated staff, arcade, homes and salon; Test Range has loot/enemy bays and HIT SQUAD pad.",
     "places/thehub (3D) - tunnel crossroads, keyed destinations and Camp Amber crews; sim builds tunnels/doors and staffs camps; t5-a2 leads to Level 178.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; scenes own geometry, sims/cutscenes supply route props and local beats.",
-    "places/level1 + places/level2 + places/level4 + places/level26 (3D) - M.E.G. camps, utility halls and office mazes; Level 2 data tunes its tools/locker/office/cage loot; Level 26's S.S. Fun has cabin 23, Partygoer decks/lockdown and aboard gate; Level 1 includes Dina's radio.",
+    "places/level1 + places/level2 + places/level4 + places/level26 (3D) - M.E.G. camps, utility halls and office mazes; Level 2 data tunes its tools/locker/office/cage loot; Level 26's S.S. Fun has cabin 23, Partygoer decks/lockdown and aboard…",
     "places/level9 + places/level10 + places/level11 + places/level61 + places/level70 (3D) - Suburbs, Bumper Crop farm, city/Base Beta/strip mall/clinic, Snackrooms food court/checkpoint and Froidetown winter market; Level 10 sim furnishes far…",
     "places/level169 + places/level132 (3D) - Level 169 desert, Ferry's house/trail/pantry/basement and Field Office 7; Level 132, The Duchy of Morigont, includes Lumiria's town, collection-based barter, shops and generated countryside.",
-    "places/level178 + places/levelrun + remaining authored level*/bonus places (3D) - Level 178 is Kyoto Dreams, with machiya/courtyard, residents, house quests and searchable containers; Level ! is the Run For Your Life Chapter 2 chase finale; other levels hold authored destinations."
+    "places/level178 + places/levelrun + remaining authored level*/bonus places (3D) - Level 178 is Kyoto Dreams, with machiya/courtyard, residents, house quests and searchable containers; Level ! is the Run For Your Life Chapter 2 chase finale…"
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer/player entry, camera setup, ordered behaviors and input actions; fall-guard runs before movement and radio, barter and phone are player behaviors.",
@@ -65,12 +65,12 @@
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold door handlers call carryAcross → held props and nearby following companions cross; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone (Level 178 maps to l178_house; Level 132 to l132_lumiria); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles, markers and compass place names.",
     "scripts/level-door.js onTriggerEnter resolves threshold ID/partner → destination marker and carryAcross; l132-tree-exit returns to level10#l10-from-l132, while Level 10's hollow tree and Archers' tower thresholds enter level132#l132-arrive.",
-    "places/level10/sim.js tick → versioned layInteriors → static furniture and tagged containers; regeneration preserves existing items/scavved/refillAt container state. Level 132 keeper/stall interactions → l132-barter opens player.state barter.",
-    "places/levelrun/sim.js tick reads player lrunCut/lrunRescued state → starts/stops chase music, advances the horde/collapse rescue and gate doors; player main-menu cut handles the intro, with a duration fallback opening the gate if the intro never runs."
+    "places/level10/sim.js tick → versioned layInteriors → static furniture and tagged containers; regeneration preserves existing items/scavved/refillAt container state. Level 132 keeper/stall interactions → l132-barter opens player.state bart…",
+    "places/levelrun/sim.js tick reads player lrunCut/lrunRescued state → chase/horde/collapse rescue and gate doors; scripts/l11-ch2-drop.js handles the levelrun-to-109 cream door: noStory(w) bypasses the ch2Done lock and skips startCh3, then carryAcross enters Level 109."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes a table with separately fitted chairs; field-fix…",
-    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js + scripts/lib/loot.js - weapon variants share combat and rarity/level gates; level-dependent rare/fresh weapon weights and upgrade rolls tune finds and NPC weapon rolls; manuals teach one recipe per read but have increased weights in general and Level 2 loot pools.",
+    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js + scripts/lib/loot.js - weapon variants share combat and rarity/level gates; level-dependent rare/fresh weapon weights and upgrade rolls tu…",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "scripts/lib/l169-road.js + scripts/lib/l169-road-geo.js + scripts/lib/l169-travel.js + scripts/lib/l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
