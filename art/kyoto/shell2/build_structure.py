@@ -291,8 +291,8 @@ def build_roof():
             xr = round((x - P / 4) / P) * P + P / 4
             if abs(xr) < d0 - .06:
                 c = E + Nn * (f(xr) + .006) + Vector((xr, 0, 0)) - S * .015
-                sweep("kawara", circ(.052, 10), c, c - S * .03 + Vector((0, -.006, 0)), up=(0, 1, 0), seg=1, tile=.4, sa=50)
-                sweep("kawara", circ(.03, 8), c - S * .03, c - S * .036, up=(0, 1, 0), seg=1, tile=.4, sa=50)
+                sweep("kawara", circ(.052, 8), c, c - S * .03 + Vector((0, -.006, 0)), up=(0, 1, 0), seg=1, tile=.4, sa=50)
+                sweep("kawara", circ(.03, 6), c - S * .03, c - S * .036, up=(0, 1, 0), seg=1, tile=.4, sa=50)
             x += P
         # taruki under the outer eave
         if dsign < 0:
