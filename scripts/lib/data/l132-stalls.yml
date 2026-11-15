@@ -3,6 +3,10 @@ v: 4
 size: [3.6, 3, 2.6]
 lamp: { intensity: 2.2, distance: 7, y: 2.1, f: 1.0 }
 sign: { h: 0.95, x: -1.55, y: 1.95, f: 1.45 }
+broken: # a smashed ware: the nearest keeper's word, then it is back on the shelf
+  radius: 12
+  restockS: 120
+  lines: ["Oh! Well. It'll be back on the shelf by teatime.", "That's the third one this week. Don't worry, they grow back.", "Ah, careful! Those come from very far away.", "Shattered! Pretty sound though, wasn't it?", "Butterfingers! The shop will put another out.", "It's fine, it's fine. My heart, less fine."]
 music: { clip: cdn/music-1970s-soul-funk-groove-vinyl-crackle-loop.mp3, gain: 0.12, maxDistance: 11 }
 stalls:
   - { k: 0, name: "Kerameikos Pottery", cat: pottery, lamp: "oklch(0.86 0.09 70)", model: /cdn/value.312c98d7039403458ae27f9b208d5f965757323fb9e22ddd302d79d65ab09e03.glb, sign: /cdn/value.8a28bc5b35ef63e60da11df4015ca70fb3b58774ff163c1f27b0a065769a2c9e.glb, signAt: null, fwd: "+x" }

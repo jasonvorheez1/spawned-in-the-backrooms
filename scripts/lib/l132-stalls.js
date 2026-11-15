@@ -2,6 +2,7 @@
 // press one and the place hears "l132:barter". This file is also each ware's behavior (its press ear).
 // lay(ctx, L) builds once per data version; fragile wares break and restock through lib/breakables.js (idMat rules).
 import D from "./data/l132-stalls.yml";
+import { say } from "./npc-social.js";
 const SELF = "scripts/lib/l132-stalls.js";
 export const ears = { press: (ctx, e) => { ctx.emit("l132:barter", { by: e?.by ?? null, ware: ctx.self.id }); } };
 export function frame(L, k) { // stall k: its spot, its forward (toward the tree) and its right
@@ -36,4 +37,25 @@ export function lay(ctx, L) {
     ctx.spawn(wr.id, spec);
   }
 }
-export function tick(ctx, L) {}
+// a smashed ware: the nearest keeper says so once, and the shelf restocks itself after a while (the town's stores always do)
+const B = D.broken ?? { radius: 12, restockS: 120, lines: ["Oh! That one was old."] };
+export function tick(ctx, L) {
+  const wr = ctx.place.state.wrecks; if (!wr?.length) return;
+  const now = ctx.now(); let left = null;
+  for (const id of wr) {
+    if (!String(id).startsWith("l132-ware-")) continue;
+    const o = ctx.getObject(id), w = o?.state?.wreck; if (!w) continue;
+    if (!o.state.keeperSaw) {
+      o.state.keeperSaw = true;
+      const f = o.feetPosition, k = ctx.query({ tags: ["npc"], center: f, radius: B.radius })[0], h = k && ctx.getObject(k.id);
+      const pl = ctx.place.players.reduce((a, q) => (!a || Math.hypot(q.feetPosition.x - f.x, q.feetPosition.z - f.z) < Math.hypot(a.feetPosition.x - f.x, a.feetPosition.z - f.z) ? q : a), null);
+      if (h && !h.state?.dead) say(ctx, h, B.lines[Math.floor(ctx.random() * B.lines.length)], pl?.id);
+    }
+    if (now - w.at < B.restockS * 1000) continue;
+    const f = o.feetPosition; if (ctx.place.players.some((q) => Math.hypot(q.feetPosition.x - f.x, q.feetPosition.z - f.z) < 1.5)) continue;
+    o.tags = w.tags; o.physics = w.physics; o.visible = true;
+    const st = { ...o.state }; delete st.wreck; delete st.broke; delete st.keeperSaw; st.hp = st.maxHp ?? st.hp; o.state = st;
+    (left ??= new Set()).add(id);
+  }
+  if (left) ctx.place.state.wrecks = wr.filter((id) => !left.has(id));
+}
