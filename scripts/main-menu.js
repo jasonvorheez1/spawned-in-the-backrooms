@@ -152,11 +152,12 @@ function holdTime(ctx, st) {
 }
 
 // ---- new expedition with options (Shelly Nov 14) ----
+const NEW_KEEP = ["uiPrefs", "menuOpen", "menuKind", "menuView", "newRun", "saveList", "saveMsg"] // screen settings only: no look, no madeChar, so the critter room runs fresh
 const returningRun = (st) => !!(st.madeChar || st.t0Done || (st.level ?? 1) > 1 || (st.xp ?? 0) > 0)
 function beginRun(ctx, st, sure) {
   const pick = cleanPick(st.newRun)
   if (returningRun(st) && !sure) { st.newRun = { ...pick, confirm: true }; return } // the menu asks once: this replaces the current expedition
-  for (const k of Object.keys(st)) if (!KEEP.includes(k)) delete st[k]
+  for (const k of Object.keys(st)) if (!NEW_KEEP.includes(k)) delete st[k] // Shelly Nov 15: a new expedition resets EVERYTHING about the character, look included
   st.run = pick; st.saveV = undefined
   if (pick.god === "on") st.god = true
   if (pick.tutorial === "skip") st.t0Done = true
