@@ -85,6 +85,7 @@ export function l132Choices(id, s) {
     if (m > 0 && m < 99 && holds(s, "records")) T("Here's a record for your shelf.", "Quest Turn-In");
     if (m === 99) T("How's the shelf looking?", "Talk");
   } else if (id === "l132-rosalind") {
+    if (m >= 2 && m < 4 && !holds(s, "hats") && holds(s, "fruit")) T("Trade you this apple for a hat.", "Barter");
     if (m >= 2 && m < 4 && !holds(s, "hats")) T("Give me a hat and I'll wear it all over town. Best advert you'll get.", "Speech " + Q.speech, { skill: "speech", difficulty: Q.speech });
     if (owe === 6) T("Sorry about the hatbox. How do I make it right?", "Quest");
   } else if (id === "l132-silas") {
@@ -125,6 +126,7 @@ export function handleDialogueQuest132(ctx, p, npc, text) {
     if (t.includes("shelf looking")) return R("after");
   }
   if (id === "l132-rosalind") {
+    if (t.includes("this apple for a hat") && holds(s, "fruit") && m < 4) { put(p, "fruit", -1); put(p, "hats", 1); step(ctx, p, QM, 4); return R("apple"); }
     if (t.includes("best advert") && m >= 2 && m < 4) {
       const c = rollCheck(ctx, s, { skill: "speech", difficulty: Q.speech }); ctx._lastCheck = c;
       if (c?.ok) { put(p, "hats", 1); step(ctx, p, QM, 4); return R("vouchok"); }

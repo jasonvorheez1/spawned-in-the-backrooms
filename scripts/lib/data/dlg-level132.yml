@@ -126,6 +126,7 @@ l132-dex:   # cartridge and old computer stall: shy, stammers, lights up about g
       a: "The tree. It's like a warp pipe. You don't know where it goes until you're in."
 l132-rosalind:   # hat stall: elegant, arch, theatrical in her own way
   quest:   # quest replies (scripts/lib/l132-quests.js)
+    apple: "An apple. From Gus. Crisp, red, absolutely perfect for the straw hat shot. Done. Take the cloche, and tell Silas it suits him."
     vouchok: "Vouch for me? Darling, that's very forward. I like forward. Take the cloche, and tell Silas it suits him."
     vouchfail: "Charming, but no. A hat is earned. Bring me an apple, or a better speech."
     owe: "My poor hatbox. You'll make it right by running this hat to Silas. He's been sulking for one all week."
