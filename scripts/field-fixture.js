@@ -2,6 +2,8 @@
 import { hands } from "./desk-item.js";
 import { maxHp, maxSan } from "./player.js";
 import { canCarry } from "./lib/stats.js";
+import { itemSpec } from "./lib/vend-item.js";
+import { animate } from "builtin/tween";
 import F from "./lib/data/field-fixtures.yml";
 
 const REACH = 3;
@@ -13,6 +15,11 @@ export { handsOff } from "./desk-item.js";
 const where = (o) => o?.worldFeetPosition ?? o?.feetPosition;
 const gap = (a, b) => a && b ? Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z) : Infinity;
 const tell = (ctx, p, text) => { p.state.notice = { text, at: ctx.now() }; };
+export function startRestPose(ctx, p, seconds) {
+  if (!p.anim || p.state.sit || p.state.crawl || p.state.swimming) return;
+  p.state.fixturePoseUntil = ctx.now() + seconds * 1000;
+  p.anim.fixtureRest = { clip: "cdn/clip-crouch-idle-loop.glb", loop: "loop", weight: 2, blendIn: 0.4, blendOut: 0.35 };
+}
 function reachable(ctx, by) {
   const p = ctx.place.players.find((q) => q.id === by);
   const s = ctx.self.state;
@@ -41,6 +48,7 @@ function startRest(ctx, p) {
   if ((ps.fieldRestPending ?? 0) > now) return;
   const at = now + conf.seconds * 1000;
   ps.fieldRestPending = at;
+  startRestPose(ctx, p, conf.seconds);
   tell(ctx, p, "Stay here a moment to rest.");
   sound(ctx, "cdn/sfx-futon-rustle-soft-exhale.mp3");
   ctx.after(conf.seconds, "finishRest", { by: p.id, at, from: { ...where(p) }, hp: ps.hp });
@@ -70,14 +78,23 @@ function startHeat(ctx, p) {
   s.heatAt = ctx.now() + hot.seconds * 1000;
   s.verb = "Check burner";
   hands(ctx, p);
+  const tin = ctx.spawn("warm-tin", {
+    parent: ctx.self.id, feetPosition: { x: -0.14, y: 0.94, z: 0.1 },
+    castShadow: false, lifetime: hot.seconds + 1,
+    ...itemSpec(hot.cold),
+    light: { kind: "point", color: "#ff8334", distance: 1.8, intensity: 0.75, shadow: { enabled: false } },
+  });
+  animate(ctx, tin, { "feetPosition.y": [1.04, 0.94], "rotation.roll": [12, 0] }, { duration: 0.42, easing: "easeOutQuad" });
   const at = where(ctx.self);
-  ctx.emit("fx", { position: { ...at, y: at.y + 0.95 }, script: STEAM }, { audience: { nearby: at, radius: 12 } });
+  ctx.emit("fx", { position: { ...at, y: at.y + 1.06 }, script: STEAM }, { audience: { nearby: at, radius: 12 } });
   sound(ctx, "cdn/moodboard-realistic-gritty/sfx-lock-picking-click.mp3");
   ctx.after(hot.seconds, "finishHeat", { by: p.id, at: s.heatAt });
 }
 export function finishHeat(ctx, { by, at }) {
   const s = ctx.self.state, { cold, hot } = F.stove;
   if (s.heatAt !== at) return;
+  const tin = ctx.self.id + "/warm-tin";
+  if (ctx.getObject(tin)) ctx.destroy(tin);
   s.heatAt = 0;
   s.verb = "Heat a tin";
   const p = reachable(ctx, by);
@@ -89,6 +106,7 @@ export function finishHeat(ctx, { by, at }) {
   if (!carry.ok) { tell(ctx, p, carry.msg ?? "Your bag is full."); return; }
   ps.snacks = { ...reduced, [hot]: (reduced[hot] ?? 0) + 1 };
   ps.pickedAt = ctx.now();
+  hands(ctx, p);
   tell(ctx, p, "Hot beans · Eat from Aid to warm up.");
 }
 export function onSpawn(ctx) {

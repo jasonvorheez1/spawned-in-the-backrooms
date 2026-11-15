@@ -1,6 +1,8 @@
 // Kyoto's house fixtures. Stocked cabinets use the normal loot and storage UI.
 import { animate } from "builtin/tween";
 import { hands } from "./desk-item.js";
+import { startRestPose } from "./field-fixture.js";
+import { movePart } from "./prop-part.js";
 import { maxHp, maxSan } from "./player.js";
 import { canCarry } from "./lib/stats.js";
 import L from "./lib/data/level178.yml";
@@ -40,8 +42,7 @@ function collect(ctx, p, token) {
 }
 
 function ovenDoor(ctx, goal) {
-  const door = ctx.getObject(ctx.self.id + "/prop-motion-door");
-  if (door) door.state.goal = goal;
+  movePart(ctx, ctx.getObject(ctx.self.id + "/prop-motion-door"), goal);
 }
 
 function closeOvenAfter(ctx, seconds) {
@@ -64,6 +65,7 @@ function useOven(ctx, p) {
     if (now < s.readyAt) { say(ctx, p, "Toasting · " + Math.ceil((s.readyAt - now) / 1000) + " s"); return; }
     if (!collect(ctx, p, "l178_toasted_onigiri")) return;
     s.readyAt = 0;
+    movePart(ctx, ctx.getObject(ctx.self.id + "/prop-motion-light"), 0);
     s.verb = "Toast onigiri";
     s.info = "Requires salmon onigiri";
     closeOvenAfter(ctx, 1.1);
@@ -74,6 +76,7 @@ function useOven(ctx, p) {
   if (!rice) { say(ctx, p, "Take a salmon onigiri from the refrigerator first."); return; }
   ps.snacks = { ...ps.snacks, l178_onigiri: rice - 1 };
   s.readyAt = now + L.oven.seconds * 1000;
+  movePart(ctx, ctx.getObject(ctx.self.id + "/prop-motion-light"), 1);
   s.verb = "Check oven";
   s.info = "Toasting one onigiri";
   ovenDoor(ctx, 1);
@@ -142,7 +145,11 @@ export function teaReady(ctx) {
   s.readyAt = 0;
   s.verb = "Check tea";
   s.info = "Two cups ready to share";
-  for (const cup of cups) setCup(ctx, cup, true);
+  for (const cup of cups) {
+    setCup(ctx, cup, true);
+    const tea = ctx.getObject(cup.id + "/tea");
+    if (tea) animate(ctx, tea.id, { "scale.x": [0.08, 1], "scale.z": [0.08, 1] }, { duration: 0.55, delay: 0.56, easing: "easeOutQuad" });
+  }
   const pot = ctx.getObject(ctx.self.id + "/pot");
   if (pot) animate(ctx, pot.id, {
     "feetPosition.y": [0, 0.09, 0.09, 0],
@@ -234,7 +241,10 @@ function soak(ctx, p, feet) {
   if (!inShallows(feet)) { say(ctx, p, "Step onto the shallow shelf by the south edge."); return; }
   const ps = p.state, now = ctx.now();
   if (now - (ps.l178soak ?? -1e12) < L.soak.cooldown * 1000) { say(ctx, p, "Give yourself time between soaks."); return; }
-  if (ps.l178soakingAt == null) ps.l178soakingAt = now;
+  if (ps.l178soakingAt == null) {
+    ps.l178soakingAt = now;
+    startRestPose(ctx, p, L.soak.seconds);
+  }
   const remaining = L.soak.seconds - (now - ps.l178soakingAt) / 1000;
   say(ctx, p, "Stay in the shallows for " + Math.max(1, Math.ceil(remaining)) + " s to warm up.");
 }
@@ -300,6 +310,7 @@ export const ears = {
         if (!restore(ctx, p, "l178meal", L.meal, "The kitchen hasn't set out another meal yet.")) break;
         p.state.hunger = Math.min(100, (p.state.hunger ?? 100) + L.meal.hunger);
         p.state.thirst = Math.min(100, (p.state.thirst ?? 100) + L.meal.thirst);
+        hands(ctx, p);
         if (p.state.sit?.phase === "sat" && p.state.sit.id?.startsWith("l178-zabuton-")) {
           const max = maxSan(p.state.level ?? 1, p.state);
           p.state.sanity = Math.min(max, (p.state.sanity ?? max) + L.meal.seatedSanity);
@@ -309,7 +320,8 @@ export const ears = {
         break;
       case "futon":
         if (!restore(ctx, p, "l178rest", L.rest, "You're already rested.")) break;
-        ctx.emit("screenFlash", { color: "oklch(0.05 0.01 60)", duration: L.rest.fade, intensity: 1 }, { audience: { player: by } });
+        startRestPose(ctx, p, L.rest.fade + 0.9);
+        ctx.emit("screenFlash", { color: "oklch(0.05 0.01 60)", duration: L.rest.fade, intensity: 0.55 }, { audience: { player: by } });
         sound(ctx, "futon-rustle-soft-exhale");
         say(ctx, p, "You doze off to the sound of the spring.");
         break;

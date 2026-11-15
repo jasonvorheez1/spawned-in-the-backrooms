@@ -13,6 +13,9 @@ import { itemSpec } from "./lib/vend-item.js";
 export { handsOff } from "./desk-item.js";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const BAND = [82, 96], JUGS = 3, REFILL = 120000; // her pick: a jug back every 2 minutes, three on the shelf
+const POUR = `fx
+pop stream rate=?mobile:22|44 on=disc(.006) life=.14..0.20 v=<0,-.65,0> acc=grav() size=.008..0.013 col=<.78,.9,1> a=.68>0 sz=$size r=sprite(soft-disc,alpha,velocity,.018)`;
+const FLOW_TICK = 0.08;
 const say = (who, text, ctx) => notify(ctx, who, text); // scripts/lib/notify.js, shared
 const snd = (ctx, clip, v = 0.6) => heard(ctx, { clip: G(clip), position: { ...ctx.self.worldFeetPosition, y: 1 }, volume: v, maxDistance: 12 });
 function near(ctx, p) {
@@ -25,6 +28,29 @@ function drawJug(ctx) {
   const count = jugs(ctx);
   if (count === JUGS) ctx.self.state.jugAt = ctx.now();
   ctx.self.state.jugs = Math.max(0, count - 1);
+}
+function stopPour(ctx) {
+  ctx.self.state.fillBy = null;
+  ctx.self.state.fill = 0;
+  for (const child of ["bottling-stream", "bottling-bottle"]) {
+    const id = ctx.self.id + "/" + child;
+    if (ctx.getObject(id)) ctx.destroy(id);
+  }
+}
+function startPour(ctx) {
+  const parent = ctx.self.id, bottle = itemSpec("almond");
+  const id = ctx.spawn("bottling-bottle", {
+    parent, ...bottle, feetPosition: { x: 0, y: 0.49, z: -0.265 }, castShadow: false,
+    material: { ...bottle.material, opacity: 0.4 },
+    children: [...bottle.children, {
+      id: "water", feetPosition: { x: 0, y: 0.015, z: 0 },
+      primitive: { kind: "cylinder", radiusTop: 0.023, radiusBottom: 0.025, height: 0.125 },
+      material: { color: "#a6dbef", transparent: true, opacity: 0.72, roughness: 0.14 },
+      scale: { x: 1, y: 0.025, z: 1 },
+    }],
+  });
+  animate(ctx, id, { "feetPosition.y": [0.43, 0.49], "rotation.roll": [-9, 0] }, { duration: 0.28, easing: "easeOutQuad" });
+  ctx.spawn("bottling-stream", { parent, feetPosition: { x: 0, y: 0.83, z: -0.265 }, fx: { script: POUR } });
 }
 const cotState = (id) => ({ kind: "field-rest", plate: id + "-plate", name: "Office cot", verb: "Rest", info: "For the person who claimed the office" });
 
@@ -101,7 +127,7 @@ export const ears = {
       if (owner !== uid) { say(who, `${plate.state.ownerName}'s cooler. Hands off.`, ctx); return; }
       if (s.fillBy && s.fillBy !== by && near(ctx, ctx.getObject(s.fillBy))) { say(who, "The spout is already running.", ctx); return; }
       if (s.fillBy === by) { // the stop: judge where the line sits
-        const f = s.fill ?? 0; s.fillBy = null; s.fill = 0;
+        const f = s.fill ?? 0; stopPour(ctx);
         if (f >= BAND[0] && f <= BAND[1]) { const bonus = ((s.streak ?? 0) + 1) % 3 === 0 ? 1 : 0;
           const carry = canCarryAll(who.state, bonus ? ["almond:grey", "almond:grey"] : ["almond:grey"]);
           if (!carry.ok) { say(who, carry.msg ?? "Your bag is full.", ctx); return; }
@@ -111,7 +137,11 @@ export const ears = {
         return;
       }
       if (jugs(ctx) <= 0) { say(who, "The jug's dry. A fresh one gurgles up in a couple of minutes.", ctx); return; }
-      s.fillBy = by; s.fill = 0; s.rate = 38 + ctx.random() * 26; s.fillAt = now; snd(ctx, "water-cooler-glug-bubbles", 0.7);
+      stopPour(ctx);
+      s.fillBy = by; s.rate = 38 + ctx.random() * 26; s.fillAt = now;
+      s.flowRun = (s.flowRun ?? 0) + 1;
+      hands(ctx, who); startPour(ctx); snd(ctx, "water-cooler-glug-bubbles", 0.7);
+      ctx.after(FLOW_TICK, "fillTick", { run: s.flowRun, then: now });
       say(who, `Filling… press E between ${BAND[0]} and ${BAND[1]}%.`, ctx); return;
     }
     if (s.kind === "fountain") {
@@ -137,17 +167,28 @@ export const ears = {
     if (s.kind === "stairs") { snd(ctx, "heavy-chain-rattle-on-metal-door", 0.7); say(who, "LEVEL 5 · The chain lies on the landing, cut. Walk on down.", ctx); }
   },
 };
-export const updateSchedule = { every: 3 };
-export function update(ctx, dt) {
+export function onSpawn(ctx) {
+  if (ctx.self.state.kind === "cooler" && ctx.self.state.fillBy) stopPour(ctx);
+}
+export function fillTick(ctx, { run, then }) {
   const s = ctx.self.state;
-  if (s.kind !== "cooler") return ctx.sleep();
-  if (!s.fillBy) { jugs(ctx); return ctx.sleep(10); }
+  if (!s.fillBy || s.flowRun !== run) return;
   const filling = ctx.getObject(s.fillBy);
   if (!near(ctx, filling) || ctx.getObject(s.plate)?.state?.owner !== (filling.userId ?? filling.id)) {
-    s.fillBy = null; s.fill = 0; return;
+    stopPour(ctx); return;
   }
-  s.fill = Math.min(100, (s.fill ?? 0) + s.rate * dt * (0.75 + 0.5 * Math.sin((ctx.now() - s.fillAt) / 180))); // the flow surges and sags
-  if (s.fill >= 100) { const who = filling; s.fillBy = null; s.fill = 0; s.streak = 0; drawJug(ctx);
+  const now = ctx.now(), dt = Math.min(0.25, (now - then) / 1000);
+  s.fill = Math.min(100, (s.fill ?? 0) + s.rate * dt * (0.75 + 0.5 * Math.sin((now - s.fillAt) / 180)));
+  const water = ctx.getObject(ctx.self.id + "/bottling-bottle/water");
+  if (water) water.scale = { x: 1, y: Math.max(0.025, s.fill / 100), z: 1 };
+  if (s.fill >= 100) { const who = filling; stopPour(ctx); s.streak = 0; drawJug(ctx);
     heard(ctx, { clip: G("water-splash-spill-on-carpet"), position: { ...ctx.self.worldFeetPosition, y: 0.5 }, volume: 0.7, maxDistance: 12 });
-    say(who, "It overflows onto the carpet. The jug's wasted.", ctx); }
+    say(who, "It overflows onto the carpet. The jug's wasted.", ctx); return; }
+  ctx.after(FLOW_TICK, "fillTick", { run, then: now });
+}
+export const updateSchedule = { every: 3 };
+export function update(ctx) {
+  if (ctx.self.state.kind !== "cooler") return ctx.sleep();
+  jugs(ctx);
+  return ctx.sleep(10);
 }

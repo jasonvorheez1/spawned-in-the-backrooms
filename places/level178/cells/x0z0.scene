@@ -2270,7 +2270,7 @@ l178-out-w9:
   scale: {x: 0.983, y: 1, z: 1}
   tags: [l178]
 l178-oven:
-  children: [{behavior: scripts/prop-part.js, id: prop-motion-door, model: /cdn/value.28a8b24d50ff34ed752870ac1eadc2a5277204bd65ca7e7f3f46e2e7b36a0ddc.glb, pivot: {x: 0, y: 0.14, z: -0.29}, state: {axis: pitch, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -80, value: 0}}]
+  children: [{behavior: scripts/prop-part.js, id: prop-motion-door, model: /cdn/value.28a8b24d50ff34ed752870ac1eadc2a5277204bd65ca7e7f3f46e2e7b36a0ddc.glb, pivot: {x: 0, y: 0.14, z: -0.29}, state: {axis: pitch, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -80, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-light, feetPosition: {x: 0, y: 0.39, z: -0.18}, light: {kind: point, color: "#ff8140", intensity: 0, distance: 1.5, shadow: {enabled: false}}, state: {axis: light, goal: 0, value: 0, power: 0.95}}]
   feetPosition: {x: 12.05, y: 0.45, z: 1.38}
   id: l178-oven
   model: /cdn/value.d48802c292b2b87cb743da09b8f9cc055230e1f64dbee2a91a86f63928930896.glb

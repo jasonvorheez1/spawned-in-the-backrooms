@@ -1,4 +1,6 @@
 import { clearSight } from "./lib/sight.js";
+import { hands } from "./desk-item.js";
+export { handsOff } from "./desk-item.js";
 import { hostileReason, explainHostility, recordIncident } from "./lib/forgive.js";
 import {upgradeNearby,upgradeProp,containerPose,toggleLamp} from './lib/prop-interactions.js'
 import { screen } from './lib/screen.js'
@@ -490,7 +492,9 @@ function lootAction(ctx, d) {
     }
     c.state.refillAt = ctx.now() + REFILL_MS
   }
-  c.state.items = items.join(',')
+  const left = items.join(',')
+  if (c.state.fixedStock && left !== String(c.state.items ?? '')) hands(ctx, ctx.self)
+  c.state.items = left
   if (c.state.refillAt > ctx.now() && !c.tags?.includes('storage')) ledger(ctx, c)
   s.lootList = c.state.items
   if (c.tags?.includes('storage') && c.state.saveKey) s[c.state.saveKey] = c.state.items
@@ -535,6 +539,19 @@ export function onInput(ctx, input) {
 }
 
 export function update(ctx, dt) {
+  const actor = ctx.self, poseAt = actor.state.fixturePoseUntil
+  if (actor.isLocal !== false && poseAt) {
+    const now = ctx.now(), v = actor.velocity
+    const moving = Math.hypot(v?.x ?? 0, v?.z ?? 0) > 0.55
+    if (poseAt <= now || moving || actor.state.dead) {
+      actor.state.fixturePoseUntil = 0
+      if (actor.anim) actor.anim.fixtureRest = null
+      if (moving && actor.state.fieldRestPending > now) {
+        actor.state.fieldRestPending = 0
+        note(ctx, 'You stop resting.')
+      }
+    }
+  }
   if(ctx.self.state.level!=null&&ctx.self.isLocal!==false)upgradeNearby(ctx)
   { // in a car the wheel went back (E inside, or the car let go): step out beside the driver's door
     const car = ctx.self.parent, mm = mem(ctx)

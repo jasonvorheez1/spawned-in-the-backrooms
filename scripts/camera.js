@@ -62,7 +62,8 @@ export function update(ctx, dt) {
   const critter = body.id === ctx.player?.id && (ctx.self.session.critterId === body.id ? ctx.self.session.critter : (ctx.self.session.critterId = body.id, ctx.self.session.critter = !!ctx.getObject(body.id + '/critter-head')))
   const eyeHeight = critter ? finiteNumber(CAMERA.critterEye, 1.39) * finiteNumber(body.effectiveScale?.y, 1) : finiteNumber(CAMERA.eyeHeight, 1.6) * (height > 0 ? height / BODY_HEIGHT : finiteNumber(body.effectiveScale?.y, 1))
   const sat = body.id === ctx.player?.id && body.state?.sit && body.state.sit.phase !== 'up'
-  const crouchWant = sat ? 0.7 : !seated && body.id === ctx.player?.id && body.state?.crawl ? 0.34 : !seated && body.id === ctx.player?.id && body.state?.crouch ? 0.62 : 1 // crawling (scripts/crawl.js): the eye half a metre off the floor
+  const resting = body.state?.fixturePoseUntil > ctx.now()
+  const crouchWant = sat ? 0.7 : !seated && body.id === ctx.player?.id && body.state?.crawl ? 0.34 : !seated && body.id === ctx.player?.id && (body.state?.crouch || resting) ? 0.62 : 1 // crawling (scripts/crawl.js): the eye half a metre off the floor
   const ck = (ctx.self.session.crouchK ??= 1), crouchK = ck + (crouchWant - ck) * Math.min(1, dt * (sat || ck < 0.69 ? 4.5 : 10))
   ctx.self.session.crouchK = crouchK
   const pos = seated ? seated.worldFeetPosition : target.feetPosition
@@ -159,7 +160,7 @@ export function update(ctx, dt) {
   tc.k += (tpWant - tc.k) * Math.min(1, dt * 7)
   if (tc.k > 0.01 && ctx.player && rot) {
     ctx.self.hideLocalPlayer = tc.k < 0.3
-    const v = ctx.player.velocity ?? { x: 0, z: 0 }, speed = Math.hypot(v.x, v.z), ads = !!ps?.ads, crouch = !!ps?.crouch, sprint = speed > 6.2 && !ads
+    const v = ctx.player.velocity ?? { x: 0, z: 0 }, speed = Math.hypot(v.x, v.z), ads = !!ps?.ads, crouch = !!ps?.crouch || resting, sprint = speed > 6.2 && !ads
     const bTop = ctx.player.bounds?.max?.y, fy = (ctx.player.worldFeetPosition ?? ctx.player.feetPosition).y, headH = bTop != null ? Math.min(1.9, Math.max(1.2, bTop - fy)) : 1.7 // the body's height (a tall hat capped)
     const wantD = ads ? 1.8 : sprint ? 3.6 : ps?.crawl ? 1.9 : crouch ? 2.6 : 3.0, wantSh = ads ? 0.45 : sprint ? 0.35 : 0.6, wantH = (ps?.crawl ? 0.55 : crouch ? headH * 0.62 : headH * 0.86), ez = Math.min(1, dt * 6) // Shelly: the pivot at shoulder height, not over the head
     tc.sh += (wantSh - tc.sh) * ez; tc.h += (wantH - tc.h) * ez; tc.sp += ((sprint ? 1 : 0) - tc.sp) * Math.min(1, dt * 4)
