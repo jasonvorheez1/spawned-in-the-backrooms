@@ -106,6 +106,7 @@ export function react3(ctx, me, what) { return play(me, what === 'hit' ? 'hit' :
 // Written only when the mode or the 6-degree pitch step changes, so a held aim costs no traffic.
 export function aimPose(me, fam, mode, pitch = 0) {
   const ss = me.session, G = CA.gun[fam]
+  if (ss.aim3 === undefined) ss.aim3 = me.anim.aim ? '?' : null; ss.headUp3 ??= !!me.anim.headUp // a reload empties the session but keeps the channels: a left-over aim or head hold is cleared, never stuck over the gait
   const key = mode && G ? fam + mode : null
   if (ss.aim3 !== key) { ss.aim3 = key; me.anim.aim = key ? { ...chan(G[mode] ?? G.aim) } : null; ss.aimP3 = null }
   const step = !key ? 0 : mode === 'ready' ? (G.readyPitch ?? 0) : Math.round(pitch / RAD / 6) * 6 // ready: the aim hold dipped low (readyPitch), so the gun stays seated in both hands
@@ -131,6 +132,7 @@ function meleeReady(me, s, now) {
 // the carry channel for any body (players above; armed NPCs in scripts/meg-agent.js): written only when it changes
 export function carry3(me, kind, on) {
   const ss = me.session, fam = famOf(kind), R = CA.melee?.[fam]?.ready, key = on && R ? fam : null
+  if (ss.ready3 === undefined) ss.ready3 = me.anim.ready ? '?' : null
   if (ss.ready3 !== key) { ss.ready3 = key; me.anim.ready = key ? chan(R) : null }
 }
 export const aimMode = (me, aiming, crouch) => { const v = me.velocity ?? {}, sp = Math.hypot(v.x ?? 0, v.z ?? 0); return !aiming ? 'ready' : crouch ? (sp > 0.4 ? 'aimCrouchWalk' : 'aimCrouch') : sp > 3.2 ? 'aimJog' : sp > 0.4 ? 'aimWalk' : 'aim' }
