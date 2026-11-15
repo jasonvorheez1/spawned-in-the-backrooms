@@ -1,0 +1,25 @@
+# Level 178 "Kyoto Dreams": every position and tuned number of the machiya. Metres, north = -Z, house floor y 0.45.
+floorY: 0.45
+arrive: { x: 0, y: 0.45, z: 13, yaw: 0 }
+hubDoor: { x: 0, y: 0.45, z: 16.8 }
+court: { half: 7 }
+porch: { inner: 7, outer: 9.2, postEvery: 2.4 }
+rooms: { inner: 9.2, outer: 17, ceiling: 2.5, kamoi: 1.8 }
+spring: { x: 0, z: 0, w: 6.0, d: 3.6, surface: 0.10, deep: -1.1, shallow: -0.5 }
+shoji: { slide: 0.9, ease: 0.35, leaf: [0.9, 1.8] }
+kitchen: { x0: 9.2, x1: 12.4, z0: -6, z1: 6 }
+studio: { x0: 12.4, x1: 17, z0: -6, z1: 6 }
+dining: { x: 13, z: -13 }
+bedrooms: [{ x: -5.5, z: -13 }, { x: 0, z: -13 }, { x: 5.5, z: -13 }]
+baths: { x: -13, z: 0 }
+lantern: { intensity: 2.2, distance: 9, color: "oklch(0.86 0.1 75)" }
+sound: { falls: 0.2, flute: 0.12, creak: 0.1 }
+residents:
+  l178-irawan: { x: 14.5, z: 1, yaw: 90 }
+  l178-sector-1: { x: 10.8, z: -3, yaw: 90 }
+  l178-sector-2: { x: 10.8, z: 3, yaw: 90 }
+  l178-sector-3: { x: 14.8, z: -3.5, yaw: 0 }
+  l178-sector-4: { x: 13, z: -12, yaw: 180 }
+  l178-order-1: { x: -4, z: 13, yaw: 0 }
+  l178-order-2: { x: -8, z: 4, yaw: 90 }
+  l178-order-3: { x: 3, z: -8, yaw: 180 }
