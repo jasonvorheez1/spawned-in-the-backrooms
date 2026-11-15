@@ -51,9 +51,10 @@ function spawnBot(ctx, id, pos, face) {
     if (ctx.place.objects[id]) return;
     const look = { species: "cat", sex: V.sex, topw: "robochassis", hat: "cowboy" };
     const dress = { robot: V.enamel, hair: "none", fluff: [], beard: "none", eyew: "none", neck: V.neck, neckc: V.neckc, botw: "pants", bottom: V.bottom, botp: "", shoes: "boots", shoec: "#3a2a1e", shoep: "", tail: "whip", snout: "button", ears: "upright", headS: 1, heightS: 1, buildS: 1 };
+    const worn = { ...npcLook(id, look, "frenzied", 8), ...dress }, body = critterSpec(worn);
     ctx.spawn(id, { audience: "all", tags: ["npc", "l169-bot", "l8-hostile", "wretched"], feetPosition: pos, rotation: { yaw: Math.atan2(face.x, face.z) * 180 / Math.PI }, physics: "character",
-      ...critterSpec({ ...npcLook(id, look, "frenzied", 8), ...dress }), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
-      state: { ...npcState(ctx, "agent", V.hp), gearLevel: 8, name: `${V.tag} ${serial} · frenzied unit`, role: "survivor", faction: "lightless", factionName: "Backrooms Robotics units, gone frenzied", nerve: "frenzied", arm: V.arm,
+      ...body, behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
+      state: { ...(body.state ?? {}), look: worn, ...npcState(ctx, "agent", V.hp), gearLevel: 8, name: `${V.tag} ${serial} · frenzied unit`, role: "survivor", faction: "lightless", factionName: "Backrooms Robotics units, gone frenzied", nerve: "frenzied", arm: V.arm,
         barks: D[who]?.barks, dlg: who, voice: who, variant: V.v, rounds: [{ x: pos.x, y: pos.y, z: pos.z, dwell: 20, act: null, look: { x: pos.x + face.x * 10, z: pos.z + face.z * 10 } }], ri: 0, home: { x: pos.x, z: pos.z } } });
     ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: V.arm }, ...weaponBody(V.arm) });
     ctx.emit("playSound", { clip: "/cdn/moodboard-toon-vibrant/sfx-cartoon-robot-boot-up-whirr-and-spur-jingle.mp3", position: pos, volume: 0.9, maxDistance: 50 });
