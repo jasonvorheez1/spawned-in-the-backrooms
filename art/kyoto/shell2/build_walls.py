@@ -9,7 +9,8 @@ kit.M["fusuma_paper"] = ("fusuma_karakami", .42, .85, 0, None, None, 1)
 kit.M["lacquer"] = (None, 1, .18, 0, (.018, .014, .012), None, 1)
 ONLY = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 random.seed(178)
-W, H, KAMOI = 1.82, 2.5, 1.80; LW, LH = 0.91, 1.77; TR = 0.018
+W, H, KAMOI = 1.82, 2.5, 2.00; LW, LH = 0.91, 1.97;   # 2.00 head: a 1.9 m body walks through (was 1.80/1.77)
+DY = KAMOI - 1.80   # everything that sat on the old 1.80 head rides up with it; TR = 0.018
 AX = {"x": 0, "y": 2, "z": 1}
 SEED = [0]
 
@@ -111,13 +112,13 @@ def kamoi_prof(y0, y1, grooves, d=.055, gd=.015, c=.007):
     return pts
 def nageshi(x0, x1):
     for s in (1, -1):
-        p = [(.044, 1.858), (.072, 1.858), (.079, 1.866), (.079, 1.948), (.071, 1.968), (.044, 1.972)]
+        p = [(a, b + DY) for a, b in ((.044, 1.858), (.072, 1.858), (.079, 1.866), (.079, 1.948), (.071, 1.968), (.044, 1.972))]
         p = [(s * a, b) for a, b in p]
         if s < 0: p = p[::-1]
         prism(p, "x", x0, x1, "wood_dark", n=4, jit=.0006)
 def kugikakushi(x):
     for s in (1, -1):
-        disc_z(x, 1.913, s * .079, s, [(.034, 0), (.034, .003), (.026, .006), (.012, .009), (.006, .013), (0, .014)], "brass", 24, 6)
+        disc_z(x, 1.913 + DY, s * .079, s, [(.034, 0), (.034, .003), (.026, .006), (.012, .009), (.006, .013), (0, .014)], "brass", 24, 6)
 def post(x, w=.12, d=.12):
     prism(rect(x - w / 2, x + w / 2, -d / 2, d / 2, .008), "y", 0, H, "wood_dark", n=6, jit=.0008, taper=.012)
 def frame(w=W, ranma="plaster", grooves=False, nage=True, kamoi=True):
@@ -127,21 +128,21 @@ def frame(w=W, ranma="plaster", grooves=False, nage=True, kamoi=True):
     if kamoi: prism(kamoi_prof(KAMOI, KAMOI + .10, grooves), "x", xa, xb, "wood_dark", n=4, jit=.0006)
     prism(rect(-.065, .065, H - .14, H, .009), "x", xa, xb, "wood_dark", n=4, jit=.0008)
     if nage: nageshi(x0 - .06, xb); kugikakushi(x0)
-    if ranma in ("plaster", "ochre"): plaster(xa, xb, 1.90, H - .14, .04, ranma)
+    if ranma in ("plaster", "ochre"): plaster(xa, xb, 1.90 + DY, H - .14, .04, ranma)
     elif ranma == "shoji": transom(xa, xb)
     elif ranma == "osa": osa(xa, xb)
     elif ranma == "board":
-        prism(rect(-.012, .012, 1.90, 2.13, .002), "x", xa, xb, "wood_mid", n=2, jit=.0004)
-        prism(rect(-.012, .012, 2.131, H - .14, .002), "x", xa, xb, "wood_mid", n=2, jit=.0004)
+        prism(rect(-.012, .012, 1.90 + DY, 2.13 + DY, .002), "x", xa, xb, "wood_mid", n=2, jit=.0004)
+        prism(rect(-.012, .012, 2.131 + DY, H - .14, .002), "x", xa, xb, "wood_mid", n=2, jit=.0004)
     return x0, xa, xb
-def transom(xa, xb, y0=1.972, y1=H - .14):
+def transom(xa, xb, y0=1.972 + DY, y1=H - .14):
     for x in (xa + .011, xb - .011): prism(rect(x - .011, x + .011, -.014, .014, .002), "y", y0, y1, "wood_light")
     prism(rect(-.014, .014, y0, y0 + .02, .002), "x", xa + .022, xb - .022, "wood_light")
     n = round((xb - xa) / .14)
     for i in range(1, n): x = xa + (xb - xa) * i / n; prism(rect(x - .004, x + .004, -.006, .006, .001), "y", y0 + .02, y1, "wood_light")
     for k in (1, 2): y = y0 + .02 + (y1 - y0 - .02) * k / 3; prism(rect(-.006, .006, y - .004, y + .004, .001), "x", xa + .022, xb - .022, "wood_light")
     box(xb - xa - .044, y1 - y0 - .02, .0015, ((xa + xb) / 2, y0 + .02, -.00075), "washi", bevel=0)
-def osa(xa, xb, y0=1.972, y1=H - .14):
+def osa(xa, xb, y0=1.972 + DY, y1=H - .14):
     for yy in ((y0, y0 + .025), (y1 - .025, y1)): prism(rect(-.016, .016, yy[0], yy[1], .003), "x", xa, xb, "wood_dark")
     n = round((xb - xa) / .032)
     for i in range(1, n): x = xa + (xb - xa) * i / n; prism(rect(x - .0055, x + .0055, -.01, .01, .0015), "y", y0 + .025, y1 - .025, "wood_dark")
