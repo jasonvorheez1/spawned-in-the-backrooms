@@ -198,7 +198,7 @@ export function mainMenu(ctx, player, launch = false) {
     content = `<div class="col">${controlsView(ctx)}</div>`
   } else {
     content = `<div class="col">
-      ${pause ? '<h1 class="mm-pause-title">Paused</h1>' : '<h1><span>The</span><span>Backrooms</span></h1>'}
+      ${pause ? '<h1 class="mm-pause-title">Paused</h1>' : '<h1><span>Spawned in the</span><span>Backrooms</span></h1>'}
       ${pause ? `<div class="mm-subline">${esc(placeName)} · Level ${esc(s.level ?? 1)}</div>` : ''}
       <nav class="mm-nav" aria-label="${pause ? 'Pause menu' : 'Main menu'}">
         <button class="mm-primary" onclick="sendAction('mmenu',{k:'${k}'},{relockPointer:true})"><span class="mm-number">01</span>${primaryLabel}<span class="mm-arrow" aria-hidden="true">→</span></button>

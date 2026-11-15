@@ -1,5 +1,5 @@
 # name: the game's name: fill it once you know what this is. description: one line for the box art.
-name: "The Backrooms: Level 0"
+name: Spawned in the Backrooms
 description: "Noclip into the yellow maze. Survive the smilers, find the exit, level up with whoever you meet."
 camera: templates/camera.js#camera
 lighting: scripts/lighting.js
