@@ -31,6 +31,7 @@ export const PLACES = {
   level34:   { name: "Level 34",       label: "Level 34 · Sewer System",               title: ["LEVEL 34", "SEWER SYSTEM"] },
   level70:   { name: "Level 70",       label: "Level 70 · Froidetown",                 title: ["LEVEL 70", "FROIDETOWN"] },
   level169:  { name: "Level 169",      label: "Level 169 · Welcome to the Desert",     title: ["LEVEL 169", "WELCOME TO THE DESERT"] },
+  level178:  { name: "Level 178",      label: "Level 178 · Kyoto Dreams",              title: ["LEVEL 178", "KYOTO DREAMS"] },
   level184:  { name: "Level 184",      label: "Level 184 · Field of Forgotten Forts",  title: ["LEVEL 184", "FIELD OF FORGOTTEN FORTS"] },
   level109:  { name: "Level 109",      label: "Level 109 · The Neon Hospital",         title: ["LEVEL 109", "THE NEON HOSPITAL"] },
   level114:  { name: "Level 114",      label: "Level 114 · Sweet Dreams",              title: ["LEVEL 114", "SWEET DREAMS"] },
