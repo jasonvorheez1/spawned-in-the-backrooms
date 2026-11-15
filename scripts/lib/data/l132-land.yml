@@ -1,0 +1,58 @@
+# Level 132 · countryside and the town's edge (scripts/lib/l132-land.js). Metres, north = -Z. Kit built by art/l132-land/build.py (Tripo sources).
+v: 1
+models:
+  c1: /cdn/value.46109691f0ff97c438f25a88be4b1a0ec8b9132280a221ddd4da217b9858521f.glb
+  c2: /cdn/value.d1a3e618f3c084c51b929f31da3a42554d0fef1b3633d8dbb1a8b579fc7d042d.glb
+  c3: /cdn/value.95f6b28a698c61aaaf8d72d91a483ccf0a717836ffcc452fe113418140d20c3e.glb
+  c4: /cdn/value.ac24922a2ef3471f129bde48697f6374ae01e4ef0e97b449a2664d37729ce1bb.glb
+  c5: /cdn/value.829724cf62e38f2e9fabf11c724e1822c7812ac6a1b9fff07588351f492a730d.glb
+  mill: /cdn/value.a623aeb6c9ca510f606ee55ed8a36e15e7aca3bfa584f5a91cc7e5da5644aacc.glb
+  sails: /cdn/value.8449c3b18f1518b09a52e754075d0589c969b8ffd120d46381994c8e509b20cc.glb
+  gate: /cdn/value.334b890ebab43a17d34727e146ef8c4db0dd70216556aeb1dc9cd5efdcaff4a5.glb
+  wall: /cdn/value.7c393bf8b6d8dc538254b2eb5a6ace4bfa5fdee47a424202497c92f62b4a55fa.glb
+  fpw: /cdn/value.9ddad70a799b327021d42b1b013a7f6edc7e4adbd09ebfbe7ae2f52db17cb18e.glb
+  fpe: /cdn/value.e280aac08d284c0170018b034e8c46ed989f5b305daa3093b17a941d2b7a3e2a.glb
+  fpn: /cdn/value.35dca19313e851e3f1a5063f89db07df4e80a7437f9622def7501c1b2f769320.glb
+  fpk: /cdn/value.fd349227698d9a87d6a6368335559913a0f1c0d1038582e7205b01732a888194.glb
+  fps: /cdn/value.275d54c4f06467905bab14c50fc2cc0317d8a6b32eea4ad04f00836fbce59729.glb
+  warn: /cdn/value.c646a8383e44a5e0c0611f73360fc9e6e73fb253dd8bbcb3bef5c8a0f2f66dfc.glb
+  oak: /cdn/value.be11ccbdebdd6b4adddb3f395b1515c1e4d4498e5bf07f9cf3b9a145cdc0a3a7.glb
+  apple: /cdn/value.629183db0258a4725706f2cd7044378d6ea7049d8e46f0317dfb0cc5a1454d4f.glb
+  pear: /cdn/value.1aa707b79547648fc1973b21acbaaa16e121a0393676764578474c5c94d61b0b.glb
+  bale: /cdn/value.cbc3d3429bdfd55e5b435c8f12b8d0836daeb3a2ab1e310bc3f8f011c8164dd3.glb
+  g1: /cdn/value.1e3393b15f1f65e016f874f4a029911af47f76cdc5f2a4f911e8277b101f007a.glb
+  g2: /cdn/value.44449d273b2af95c0972824e6b9f6030da6191fddad1374cad344440e01ce12d.glb
+depth: { c1: 8.17, c2: 5.9, c3: 5.76, c4: 6.04, c5: 4.93 }   # front-to-back, for the garden's stand-off
+cottages:      # [x, z, model, garden, garden side m]
+  - [41.7, 19.4, c1, g1, 2.6]
+  - [29.6, 35.2, c2, g2, -2.6]
+  - [14.2, 43.7, c3, g1, 2.4]
+  - [-14.2, 43.7, c4, g2, -2.4]
+  - [-29.6, 35.2, c5, g1, 2.8]
+  - [-40.6, 21.6, c3, g2, -2.4]
+  - [-41.7, -19.4, c1, g1, 2.6]
+  - [-30.8, -34.2, c5, g2, -2.8]
+  - [20, -44, c4, g1, 2.4]
+  - [45.9, -24.4, c2, g2, -2.6]
+garden: { off: 2.3 }
+gate: { x: 0, z: 30, yaw: 180, post: [2.75, 0.9, 5] }     # post: x offset, box side, box height (unseen colliders)
+wall: { r: 30, angles: [12, 23, 34, 45] }                # degrees either side of the gate, measured at the centre
+posts:         # fingerposts beside each road at r about 60
+  - [fps, 4.8, 60, "Merria · builders"]
+  - [fpw, -60.5, 9.9, "Pollisville · clothing"]
+  - [fpe, 60.8, -12, "Luscio · books"]
+  - [fpn, -16.1, -57.7, "Fosran · food"]
+  - [fpk, 45.9, -38.8, "The Duke's Palace"]
+warn: { r: 371, sink: 0.1 }
+mill: { x: -150, z: 60, sink: 0.1, hubY: 10.6, out: 4.3, sailR: 6.2, turn: 48 }
+bales: [[70, 95], [73, 97], [71.5, 99.6], [-85, 70], [-88, 73], [-110, 95], [120, 40], [123, 42], [121.4, 45], [150, 90], [-60, -110], [-63, -112], [60, 120], [-140, 92], [-120, -60], [-123, -62]]
+trees:
+  seed: 132
+  chunk: 28
+  copses: [[-95, -70], [120, 70], [-70, 130], [60, -150], [190, -40], [-200, -60], [-190, 150], [150, 190], [20, 240], [-110, -210], [230, 90], [-250, 40]]
+  perCopse: 7
+  copseR: 20
+  orchards: [[88, 62], [-92, 48], [-70, -78], [75, -95]]
+  loose: 34
+  roadClear: 8
+  shadowR: 170

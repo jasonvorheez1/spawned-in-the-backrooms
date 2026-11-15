@@ -10,7 +10,34 @@ terrain:
     - { albedo: cdn/texture-terrain-old-rounded-river-cobblestone-street-warm-grey.png, id: cobble, textureScale: 2.4, tint: oklch(0.92 0.02 80) }
     - { albedo: cdn/texture-terrain-packed-dry-country-dirt-road.png, id: dirt, textureScale: 2.6, tint: oklch(0.9 0.04 75) }
     - { albedo: cdn/texture-terrain-pale-chalk-cliff-rock-face.png, id: chalk, textureScale: 4, tint: oklch(0.95 0.01 90) }
-  decorations: null
+  marks:
+    road-south-town: { kind: path, points: [[0, 27], [0, 46]], width: 3.5, material: cobble, grade: true }
+    road-south: { kind: path, points: [[0, 46], [4, 90], [-6, 160]], width: 3.5, material: dirt, edgeMaterial: grass, noise: 0.25, grade: true }
+    road-keep-town: { kind: path, points: [[19, -19], [31.6, -30.6]], width: 3.5, material: cobble, grade: true }
+    road-keep: { kind: path, points: [[31.6, -30.6], [55, -52], [98, -98]], width: 3.5, material: dirt, edgeMaterial: grass, noise: 0.25, grade: true }
+    road-west-town: { kind: path, points: [[-27, 6], [-44, 9.8]], width: 3.5, material: cobble, grade: true }
+    road-west: { kind: path, points: [[-44, 9.8], [-90, 20], [-180, 10]], width: 3.5, material: dirt, edgeMaterial: grass, noise: 0.25, grade: true }
+    road-east-town: { kind: path, points: [[27, -6], [44, -10.9]], width: 3.5, material: cobble, grade: true }
+    road-east: { kind: path, points: [[44, -10.9], [90, -24], [180, -16]], width: 3.5, material: dirt, edgeMaterial: grass, noise: 0.25, grade: true }
+    road-north-town: { kind: path, points: [[-10, -27], [-15, -42.75]], width: 3.5, material: cobble, grade: true }
+    road-north: { kind: path, points: [[-15, -42.75], [-30, -90], [-20, -180]], width: 3.5, material: dirt, edgeMaterial: grass, noise: 0.25, grade: true }
+    mill-pad: { kind: flatten, center: { x: -150, z: 60 }, height: { terrain: 0 }, shape: { kind: circle, radius: 9 }, falloff: 9 }
+  decorations:
+    layers:
+      meadow:
+        items:
+          - { kind: scripted, script: mods/awakening/grass-blades.js, params: { kind: meadow }, scale: [0.5, 0.85], randomRotation: true, useTerrainColor: true, wind: { force: 0.05, scale: 5, speed: 0.8 } }
+        material: { kind: scripted, script: mods/awakening/grass-look.js }
+        density: 10
+      flowers:
+        items:
+          - { kind: scripted, script: scripts/wheat10.js, params: { h: 0.42, n: 4, head: 0.06 }, seed: 21, color: "oklch(0.88 0.17 98)", scale: [0.8, 1.2], randomRotation: true, wind: { force: 0.05, scale: 5, speed: 0.9 } }
+          - { kind: scripted, script: scripts/wheat10.js, params: { h: 0.36, n: 4, head: 0.05 }, seed: 22, color: "oklch(0.94 0.03 95)", scale: [0.8, 1.2], randomRotation: true, wind: { force: 0.05, scale: 5, speed: 0.9 } }
+          - { kind: scripted, script: scripts/wheat10.js, params: { h: 0.48, n: 3, head: 0.07 }, seed: 23, color: "oklch(0.62 0.2 25)", scale: [0.8, 1.2], randomRotation: true, wind: { force: 0.05, scale: 5, speed: 0.9 } }
+        density: 1.6
+        noise: { scale: 26, threshold: 0.58, seed: 7 }
+    bindings: { grass: [meadow, flowers] }
+    settings: { maxDistance: 70, fadeDistance: 20 }
 gravity: { x: 0, y: -24, z: 0 }
 defaultSpawnPoint: { x: 0, y: 0, z: 46 }
 defaultSpawnRotation: { yaw: 0 }
