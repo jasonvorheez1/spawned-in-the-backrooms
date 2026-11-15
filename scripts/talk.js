@@ -2,7 +2,7 @@ import { hostileReason } from "./lib/forgive.js";
 import { hunting } from "./lib/threat.js";
 import { l31Order } from './lib/level31-food.js'
 import { plain } from './lib/plain.js'
-import { actedVoice, hasCast, recordedDuration } from './lib/voices.js'
+import { actedVoice, hasCast, recordedDuration, warmVoices } from './lib/voices.js'
 // Talk with NPCs, on the player. E on a person opens the card (interact.js sets state.talkWith). Everything they say and
 // every choice you get is written by hand (scripts/lib/dialogue.js, data/dlg-*.yml): pick a line, they answer it; checks are rolled here.
 // Traders open a shop from the card. Numbers: lib/data/talk.yml, lib/data/shops.yml.
@@ -459,7 +459,7 @@ function combat(ctx, it, ses) {
 }
 export function update(ctx, dt) {
   const s = ctx.self.state, m = (ctx.self.session.tk ??= { acc: 0 }), ses = ctx.self.session
-  if (!ses.dlgWarm) { ses.dlgWarm = 1; warmDialogue() } // level dialogue tables load once the player stands, not on boot
+  if (!ses.dlgWarm) { ses.dlgWarm = 1; warmDialogue(); warmVoices() } // level dialogue tables load once the player stands, not on boot
   cine(ctx, s)
   if (s.talkWith && ses.talkingTo !== s.talkWith) {
     const it = live(ctx, s.talkWith)
