@@ -55,7 +55,6 @@ export function geometry(ctx) {
     for (let j = 0; j < 4; j++) { const k = (j + 1) % 4; ctx.quad(A[j], A[k], B[k], B[j]); ctx.quad(B[j], B[k], A[k], A[j]); }
     box(ctx, -0.15, 0.55, -0.15, 0.15, 0.75, 0.15);
     ctx.color("oklch(0.4 0.02 60)"); for (const [x, z] of [[-0.5, -0.5], [0.5, -0.5], [-0.5, 0.5], [0.5, 0.5]]) box(ctx, x - 0.04, 0, z - 0.04, x + 0.04, 1.6, z + 0.04);
-    ctx.color("oklch(0.45 0.14 30)"); lathe(ctx, [[0.6, 0.0], [0.6, 0.14], [0.64, 0.14], [0.64, 0.0]], 12, 0, -0.2); // red hand wheel
     ctx.metalness?.(0);
     return;
   }

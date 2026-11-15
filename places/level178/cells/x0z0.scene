@@ -704,68 +704,67 @@ l178-bay-9:
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-cab-1:
-  children: [{id: door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb}]
+  children: [{"id":"prop-motion-door","model":"/cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb","behavior":"scripts/prop-part.js","pivot":{"x":-0.42,"y":0,"z":-0.28},"state":{"axis":"yaw","travel":100,"rest":{"x":0,"y":0,"z":0},"goal":0,"value":0}}]
   feetPosition: {x: 12.05, y: 0.45, z: -1.38}
   id: l178-cab-1
   model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: "l178_miso,almond", name: Kitchen cabinet}
-  tags: [container, l178, l178-prop, breakable]
+  state: {"containerOpen":false,"items":"l178_miso,almond,l178_towel,l178_towel","name":"Kitchen linens","c":{"x":11.770000000000001,"y":1.1300000000000001,"z":-1.38},"propArt":"l178-pantry","interactiveV":3,"fixedStock":true}
+  tags: ["container","l178","l178-prop","breakable"]
 l178-cab-2:
-  children: [{id: door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb}]
+  children: [{"id":"prop-motion-door","model":"/cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb","behavior":"scripts/prop-part.js","pivot":{"x":-0.42,"y":0,"z":-0.28},"state":{"axis":"yaw","travel":100,"rest":{"x":0,"y":0,"z":0},"goal":0,"value":0}}]
   feetPosition: {x: 12.05, y: 0.45, z: 0.46}
   id: l178-cab-2
   model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: warm_tea, name: Kitchen cabinet}
-  tags: [container, l178, l178-prop, breakable]
+  state: {"containerOpen":false,"items":"warm_tea","name":"Share cabinet","c":{"x":11.770000000000001,"y":1.1300000000000001,"z":0.46},"cap":12,"propArt":"l178-pantry","interactiveV":3,"fixedStock":true}
+  tags: ["container","l178","l178-prop","storage"]
 l178-cab-3:
-  children: [{id: door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb}]
+  children: [{"id":"prop-motion-door","model":"/cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb","behavior":"scripts/prop-part.js","pivot":{"x":-0.42,"y":0,"z":-0.28},"state":{"axis":"yaw","travel":100,"rest":{"x":0,"y":0,"z":0},"goal":0,"value":0}}]
   feetPosition: {x: 12.05, y: 0.45, z: 4.6}
   id: l178-cab-3
   model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: l178_onigiri, name: Kitchen cabinet}
-  tags: [container, l178, l178-prop, breakable]
+  state: {"containerOpen":false,"items":"l178_onigiri,bandage,bandage","name":"First-aid cabinet","c":{"x":11.770000000000001,"y":1.1300000000000001,"z":4.6},"propArt":"l178-pantry","interactiveV":3,"fixedStock":true}
+  tags: ["container","l178","l178-prop","breakable"]
 l178-cab-4:
-  children: [{id: door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb}]
+  children: [{"id":"prop-motion-door","model":"/cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb","behavior":"scripts/prop-part.js","pivot":{"x":-0.42,"y":0,"z":-0.28},"state":{"axis":"yaw","travel":100,"rest":{"x":0,"y":0,"z":0},"goal":0,"value":0}}]
   feetPosition: {x: 12.05, y: 0.45, z: 5.5}
   id: l178-cab-4
   model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: "almond,almond", name: Kitchen cabinet}
-  tags: [container, l178, l178-prop, breakable]
+  state: {"containerOpen":false,"items":"almond,almond,tape,akit","name":"Mending cabinet","c":{"x":11.770000000000001,"y":1.1300000000000001,"z":5.5},"propArt":"l178-pantry","interactiveV":3,"fixedStock":true}
+  tags: ["container","l178","l178-prop","breakable"]
 l178-cab-5:
-  children: [{id: door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb}]
+  children: [{"id":"prop-motion-door","model":"/cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb","behavior":"scripts/prop-part.js","pivot":{"x":-0.42,"y":0,"z":-0.28},"state":{"axis":"yaw","travel":100,"rest":{"x":0,"y":0,"z":0},"goal":0,"value":0}}]
   feetPosition: {x: 9.8, y: 0.45, z: 5.6}
   id: l178-cab-5
   model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 180}
-  state: {containerOpen: false, items: l178_bento, name: Kitchen cabinet}
-  tags: [container, l178, l178-prop, breakable]
+  state: {"containerOpen":false,"items":"l178_bento,battery,l178_miso","name":"Travel supplies","c":{"x":9.8,"y":1.1300000000000001,"z":5.88},"propArt":"l178-pantry","interactiveV":3,"fixedStock":true}
+  tags: ["container","l178","l178-prop","breakable"]
 l178-cab-6:
-  children: [{id: door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb}]
+  children: [{"id":"prop-motion-door","model":"/cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb","behavior":"scripts/prop-part.js","pivot":{"x":-0.42,"y":0,"z":-0.28},"state":{"axis":"yaw","travel":100,"rest":{"x":0,"y":0,"z":0},"goal":0,"value":0}}]
   feetPosition: {x: 10.72, y: 0.45, z: 5.6}
   id: l178-cab-6
   model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 180}
-  state: {containerOpen: false, items: "warm_tea,l178_miso", name: Kitchen cabinet}
-  tags: [container, l178, l178-prop, breakable]
+  state: {"containerOpen":false,"items":"warm_tea,l178_miso","name":"Share cabinet","c":{"x":10.72,"y":1.1300000000000001,"z":5.88},"cap":12,"propArt":"l178-pantry","interactiveV":3,"fixedStock":true}
+  tags: ["container","l178","l178-prop","storage"]
 l178-cabinet-swords:
-  behavior: [scripts/l178-prop.js]
   feetPosition: {x: -2.3, y: 0.48, z: 16.6}
   id: l178-cabinet-swords
   model: /cdn/value.0a713aa977e45590e5f0dcf745ecb4e6f320b77560e0b8ab662591653cba3992.glb
   physics: static
   rotation: {yaw: 0}
-  state: {c: {x: -2.3, y: 1.3, z: 16.6}, kind: cabinet, name: Sword cabinet, verb: Look}
-  tags: [l178, l178-prop, usable]
+  state: {"c":{"x":-2.3,"y":0.93,"z":16.34},"name":"Sword cabinet supplies","items":"kit,tape","scavved":true,"fixedStock":true}
+  tags: ["container","l178","l178-prop"]
 l178-ceil-e0:
   feetPosition: {x: 13.1, y: 2.95, z: -7.359999999999999}
   id: l178-ceil-e0
@@ -983,7 +982,7 @@ l178-closet-kimono:
   model: /cdn/value.9c750a5a5945b9fb73192cc3002ae42482f351b46c58b07638a72e826678afca.glb
   physics: static
   rotation: {yaw: 0}
-  state: {c: {x: 2.4, y: 1.2, z: 16.6}, kind: closet, name: Kimono closet, open: false, verb: Open}
+  state: {"c":{"x":2.4,"y":1.2,"z":16.6},"kind":"closet","name":"Kimono closet","open":false,"verb":"Take guest clothes","info":"Folded haori and hachimaki for guests"}
   tags: [l178, l178-prop, usable]
 l178-cupboard-1:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb, pivot: {x: -0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb, pivot: {x: 0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -100, value: 0}}]
@@ -991,7 +990,7 @@ l178-cupboard-1:
   id: l178-cupboard-1
   model: /cdn/value.4f84aae4877da6b601d54be867bc88f00f4a00df180c8ff07d162ad9ffef14a8.glb
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: "l178_miso,l178_onigiri", name: Cupboard, propArt: l178-cupboard}
+  state: {"containerOpen":false,"items":"l178_miso,l178_onigiri","name":"Cupboard","propArt":"l178-cupboard","interactiveV":3}
   tags: [container, l178, l178-prop]
 l178-cupboard-2:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb, pivot: {x: -0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb, pivot: {x: 0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -100, value: 0}}]
@@ -999,7 +998,7 @@ l178-cupboard-2:
   id: l178-cupboard-2
   model: /cdn/value.4f84aae4877da6b601d54be867bc88f00f4a00df180c8ff07d162ad9ffef14a8.glb
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: "warm_tea,almond", name: Cupboard, propArt: l178-cupboard}
+  state: {"containerOpen":false,"items":"warm_tea,almond","name":"Cupboard","propArt":"l178-cupboard","interactiveV":3}
   tags: [container, l178, l178-prop]
 l178-cupboard-3:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb, pivot: {x: -0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb, pivot: {x: 0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -100, value: 0}}]
@@ -1007,7 +1006,7 @@ l178-cupboard-3:
   id: l178-cupboard-3
   model: /cdn/value.4f84aae4877da6b601d54be867bc88f00f4a00df180c8ff07d162ad9ffef14a8.glb
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: l178_bento, name: Cupboard, propArt: l178-cupboard}
+  state: {"containerOpen":false,"items":"l178_bento","name":"Cupboard","propArt":"l178-cupboard","interactiveV":3}
   tags: [container, l178, l178-prop]
 l178-cupboard-4:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb, pivot: {x: -0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb, pivot: {x: 0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -100, value: 0}}]
@@ -1015,7 +1014,7 @@ l178-cupboard-4:
   id: l178-cupboard-4
   model: /cdn/value.4f84aae4877da6b601d54be867bc88f00f4a00df180c8ff07d162ad9ffef14a8.glb
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: "almond,l178_onigiri", name: Cupboard, propArt: l178-cupboard}
+  state: {"containerOpen":false,"items":"almond,l178_onigiri","name":"Cupboard","propArt":"l178-cupboard","interactiveV":3}
   tags: [container, l178, l178-prop]
 l178-dew:
   feetPosition: {x: 0, y: 0.08, z: 0}
@@ -1476,7 +1475,7 @@ l178-fridge:
   model: /cdn/value.d75dc17e2aef9994a67a30ed0afc3f89b2d1ef73cf129f648f6df7d89c4b728d.glb
   physics: static
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: "l178_onigiri,l178_onigiri,l178_bento,almond,almond", name: Refrigerator, propArt: l178-fridge}
+  state: {"containerOpen":false,"items":"l178_onigiri,l178_onigiri,l178_bento,almond,almond","name":"Refrigerator","propArt":"l178-fridge","interactiveV":3}
   tags: [container, l178, l178-prop]
 l178-from-hub:
   feetPosition: {x: 0, y: 0.5, z: 12.6}
@@ -1519,7 +1518,9 @@ l178-geta:
   id: l178-geta
   model: /cdn/value.3ec63a2f1c81226ed1fcad1678fbe4f643df62710493180d5026e10e67c6b8d0.glb
   rotation: {yaw: 20}
-  tags: [l178]
+  tags: ["l178","l178-prop","usable"]
+  behavior: ["scripts/l178-prop.js"]
+  state: {"c":{"x":0.9,"y":0.57,"z":16.5},"kind":"slippers","name":"Tabi and geta","verb":"Take","info":"Equip from Apparel"}
 l178-gravel:
   feetPosition: {x: 0, y: 0.015, z: 0}
   id: l178-gravel
@@ -1599,33 +1600,37 @@ l178-lantern-4:
   model: /cdn/value.d032191aff28d4337b14e4b72bb6058736cb0ec05d8484d4c1e1aa94452dcd1b.glb
   tags: [l178]
 l178-lantern-5:
-  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  children: [{"feetPosition":{"x":0,"y":-0.33,"z":0},"id":"prop-motion-light","light":{"color":"oklch(0.86 0.1 75)","distance":9,"intensity":2.2,"kind":"point"},"behavior":"scripts/prop-part.js","state":{"axis":"light","goal":1,"value":1,"power":2.2}}]
   feetPosition: {x: 13.1, y: 2.37, z: -12.6}
   id: l178-lantern-5
   layout: {box: {max: {x: 0.16, y: 0, z: 0.16}, min: {x: -0.16, y: -0.56, z: -0.16}}}
   model: /cdn/value.d032191aff28d4337b14e4b72bb6058736cb0ec05d8484d4c1e1aa94452dcd1b.glb
-  tags: [l178]
+  tags: ["l178","usable"]
+  state: {"c":{"x":13.1,"y":2.04,"z":-12.6},"lampOn":true,"name":"Dining lantern","propLamp":true,"verb":"Turn off"}
 l178-lantern-6:
-  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  children: [{"feetPosition":{"x":0,"y":-0.33,"z":0},"id":"prop-motion-light","light":{"color":"oklch(0.86 0.1 75)","distance":9,"intensity":2.2,"kind":"point"},"behavior":"scripts/prop-part.js","state":{"axis":"light","goal":1,"value":1,"power":2.2}}]
   feetPosition: {x: -6.1, y: 2.37, z: -13}
   id: l178-lantern-6
   layout: {box: {max: {x: 0.16, y: 0, z: 0.16}, min: {x: -0.16, y: -0.56, z: -0.16}}}
   model: /cdn/value.d032191aff28d4337b14e4b72bb6058736cb0ec05d8484d4c1e1aa94452dcd1b.glb
-  tags: [l178]
+  tags: ["l178","usable"]
+  state: {"c":{"x":-6.1,"y":2.04,"z":-13},"lampOn":true,"name":"Bedroom lantern","propLamp":true,"verb":"Turn off"}
 l178-lantern-7:
-  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  children: [{"feetPosition":{"x":0,"y":-0.33,"z":0},"id":"prop-motion-light","light":{"color":"oklch(0.86 0.1 75)","distance":9,"intensity":2.2,"kind":"point"},"behavior":"scripts/prop-part.js","state":{"axis":"light","goal":1,"value":1,"power":2.2}}]
   feetPosition: {x: 0, y: 2.37, z: -13}
   id: l178-lantern-7
   layout: {box: {max: {x: 0.16, y: 0, z: 0.16}, min: {x: -0.16, y: -0.56, z: -0.16}}}
   model: /cdn/value.d032191aff28d4337b14e4b72bb6058736cb0ec05d8484d4c1e1aa94452dcd1b.glb
-  tags: [l178]
+  tags: ["l178","usable"]
+  state: {"c":{"x":0,"y":2.04,"z":-13},"lampOn":true,"name":"Bedroom lantern","propLamp":true,"verb":"Turn off"}
 l178-lantern-8:
-  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  children: [{"feetPosition":{"x":0,"y":-0.33,"z":0},"id":"prop-motion-light","light":{"color":"oklch(0.86 0.1 75)","distance":9,"intensity":2.2,"kind":"point"},"behavior":"scripts/prop-part.js","state":{"axis":"light","goal":1,"value":1,"power":2.2}}]
   feetPosition: {x: 6.1, y: 2.37, z: -13}
   id: l178-lantern-8
   layout: {box: {max: {x: 0.16, y: 0, z: 0.16}, min: {x: -0.16, y: -0.56, z: -0.16}}}
   model: /cdn/value.d032191aff28d4337b14e4b72bb6058736cb0ec05d8484d4c1e1aa94452dcd1b.glb
-  tags: [l178]
+  tags: ["l178","usable"]
+  state: {"c":{"x":6.1,"y":2.04,"z":-13},"lampOn":true,"name":"Bedroom lantern","propLamp":true,"verb":"Turn off"}
 l178-lantern-9:
   children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
   feetPosition: {x: -13, y: 2.37, z: 0}
@@ -2329,14 +2334,15 @@ l178-out-w9:
   scale: {x: 0.983, y: 1, z: 1}
   tags: [l178]
 l178-oven:
-  children: [{behavior: scripts/prop-part.js, id: prop-motion-door, model: /cdn/value.28a8b24d50ff34ed752870ac1eadc2a5277204bd65ca7e7f3f46e2e7b36a0ddc.glb, pivot: {x: 0, y: 0.14, z: -0.29}, state: {axis: pitch, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -80, value: 0}}]
+  children: [{"behavior":"scripts/prop-part.js","id":"prop-motion-door","model":"/cdn/value.28a8b24d50ff34ed752870ac1eadc2a5277204bd65ca7e7f3f46e2e7b36a0ddc.glb","pivot":{"x":0,"y":0.14,"z":-0.29},"state":{"axis":"pitch","goal":0,"rest":{"x":0,"y":0,"z":0},"travel":-80,"value":0}},{"behavior":"scripts/prop-part.js","id":"prop-motion-light","feetPosition":{"x":0,"y":0.39,"z":-0.18},"light":{"kind":"point","color":"#ff8140","intensity":0,"distance":1.5,"shadow":{"enabled":false}},"state":{"axis":"light","goal":0,"value":0,"power":0.95}}]
   feetPosition: {x: 12.05, y: 0.45, z: 1.38}
   id: l178-oven
   model: /cdn/value.83f08564c223924ef74070a4042e31a638f07d37434cfedbb22b4468f285b0f9.glb
   physics: static
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: "", name: Oven, propArt: l178-oven}
-  tags: [container, l178, l178-prop]
+  state: {"c":{"x":11.72,"y":0.96,"z":1.38},"kind":"oven","name":"Oven","verb":"Toast onigiri","info":"Requires salmon onigiri","readyAt":0}
+  tags: ["l178","l178-prop","usable"]
+  behavior: ["scripts/l178-prop.js"]
 l178-pantry:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb, pivot: {x: -0.42, y: 0, z: -0.28}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
   feetPosition: {x: 12.05, y: 0.45, z: -4.55}
@@ -2344,7 +2350,7 @@ l178-pantry:
   model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: "l178_miso,warm_tea,almond", name: Pantry, propArt: l178-pantry}
+  state: {"containerOpen":false,"items":"l178_miso,warm_tea,almond","name":"Pantry","propArt":"l178-pantry","interactiveV":3}
   tags: [container, l178, l178-prop]
 l178-porch-lantern-0:
   children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 7, intensity: 1.6, kind: point}}]
@@ -2774,7 +2780,9 @@ l178-spring:
   id: l178-spring
   material: {color: oklch(0.82 0.07 185), kind: water, opacity: 0.5, waveIntensity: 0.12}
   primitive: {depth: 3.6, height: 1.3, kind: box, width: 6}
-  tags: [swimwater, l178]
+  tags: ["swimwater","l178","l178-prop","usable"]
+  behavior: ["scripts/l178-prop.js"]
+  state: {"c":{"x":0,"y":0.19,"z":1.22},"kind":"spring","name":"Hot spring","verb":"Soak","info":"Stay on the shallow shelf to warm up"}
 l178-spring-rim:
   feetPosition: {x: 0, y: 0, z: 0}
   id: l178-spring-rim
@@ -3436,16 +3444,16 @@ l178-table-dining:
   model: /cdn/value.10ee070b4185f930786e42cdcab3cf470efe76a72f79d12dfc7d4a7aac94f650.glb
   physics: static
   rotation: {yaw: 0}
-  state: {c: {x: 13.1, y: 0.78, z: -12.6}, kind: table, name: Dining table, verb: Sit for a meal}
+  state: {"c":{"x":12.82,"y":0.83,"z":-12.6},"kind":"table","name":"Dining table","verb":"Have a meal","info":"Take a floor cushion for a quieter meal"}
   tags: [l178, l178-prop, usable]
 l178-tap:
-  behavior: scripts/l178-prop.js
+  behavior: ["scripts/l178-prop.js"]
   feetPosition: {x: 12.05, y: 0.45, z: -0.46}
   id: l178-tap
   model: /cdn/value.26eac501187c10f5586c3089ceee2f94705efd0b14accf2976a9bb6342ff22e9.glb
   rotation: {yaw: 90}
-  state: {c: {x: 12.05, y: 1.05, z: -0.46}, kind: tap, name: Tap, "on": false, verb: Turn on}
-  tags: [l178, l178-prop, usable]
+  state: {"c":{"x":11.78,"y":1.14,"z":-0.46},"kind":"tap","name":"Kitchen tap","on":false,"verb":"Fill bottle","info":"Drinking water"}
+  tags: ["l178","l178-prop","usable"]
 l178-tatami-0:
   feetPosition: {x: -1.82, y: 0.45, z: 11.1}
   id: l178-tatami-0
@@ -3512,6 +3520,32 @@ l178-tatami-9:
   model: {id: /cdn/value.d45d65119b073d0328e25b18cbc37b7b04f1b3259ebff31343e2239a1cdab740.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
+l178-tea-cup-north:
+  behavior: [scripts/l178-prop.js]
+  children:
+    - {id: tea, feetPosition: {x: 0, y: 0.071, z: 0}, primitive: {kind: cylinder, radiusTop: 0.03, radiusBottom: 0.03, height: 0.003}, material: {color: '#a56829', roughness: 0.2}, visible: false}
+  feetPosition: {"x":13.22,"y":0.816,"z":-12.82}
+  id: l178-tea-cup-north
+  model: /cdn/value.603e20634b7c61679301843cedd4119e6e70ba007dbde5f923a21faf2f4636d7.glb
+  state: {c: {x: 13.22, y: 0.891, z: -12.82}, kind: teaCup, full: false, name: Tea cup, verb: Check, info: Brew a fresh pot at the kettle}
+  tags: [l178, l178-prop, usable]
+l178-tea-cup-south:
+  behavior: [scripts/l178-prop.js]
+  children:
+    - {id: tea, feetPosition: {x: 0, y: 0.071, z: 0}, primitive: {kind: cylinder, radiusTop: 0.03, radiusBottom: 0.03, height: 0.003}, material: {color: '#a56829', roughness: 0.2}, visible: false}
+  feetPosition: {"x":13.25,"y":0.816,"z":-12.54}
+  id: l178-tea-cup-south
+  model: /cdn/value.603e20634b7c61679301843cedd4119e6e70ba007dbde5f923a21faf2f4636d7.glb
+  state: {c: {x: 13.25, y: 0.891, z: -12.54}, kind: teaCup, full: false, name: Tea cup, verb: Check, info: Brew a fresh pot at the kettle}
+  tags: [l178, l178-prop, usable]
+l178-tea-kettle:
+  behavior: [scripts/l178-prop.js]
+  children:
+    - {id: pot, feetPosition: {x: 0, y: 0, z: 0}, model: /cdn/value.810914cfe1e05887a3e49d79f7c7c720cccf01197f4b954ee255229fed98a445.glb}
+  feetPosition: {"x":13.6,"y":0.816,"z":-12.86}
+  id: l178-tea-kettle
+  state: {c: {x: 13.6, y: 0.94, z: -12.86}, kind: kettle, name: Tea kettle, verb: Brew tea, info: Needs one bottle of Kyoto tap water, readyAt: 0}
+  tags: [l178, l178-prop, usable]
 l178-to-hub:
   behavior: scripts/level-door.js
   feetPosition: {x: 0, y: 0.45, z: 16.45}
@@ -3561,13 +3595,13 @@ l178-towel-shelf:
   rotation: {yaw: -90}
   tags: [l178]
 l178-towels:
-  behavior: [scripts/l178-prop.js]
+  behavior: ["scripts/l178-prop.js"]
   feetPosition: {x: -9.65, y: 1.05, z: -7.6}
   id: l178-towels
   model: /cdn/value.f1b320647c9f8ac994489eac35f666e56925e71dcce7caf99ed7b5925a710b26.glb
   rotation: {yaw: -90}
-  state: {c: {x: -9.65, y: 1.35, z: -7.6}, kind: towels, name: Towel closet, verb: Take a towel}
-  tags: [l178, l178-prop, usable]
+  state: {"c":{"x":-9.65,"y":1.35,"z":-7.6},"kind":"towels","name":"Fresh towels","verb":"Take one","info":"Use from Aid to warm up"}
+  tags: ["l178","l178-prop","usable"]
 l178-ware-0:
   feetPosition: {x: 12, y: 1.34, z: -1.6}
   id: l178-ware-0
@@ -3635,23 +3669,27 @@ l178-zabuton-0:
   feetPosition: {x: 12.7, y: 0.48, z: -13.35}
   id: l178-zabuton-0
   model: /cdn/value.63ca1d9c5cad00e405f15a7d940238f89dde6e6d4dcb757b0d027d83c80fb9d6.glb
-  rotation: {yaw: 0}
-  tags: [l178]
+  rotation: {"yaw":180}
+  tags: ["l178","seat"]
+  state: {"c":{"x":12.7,"y":0.57,"z":-13.35},"name":"Floor cushion","seat":{"y":0,"out":{"x":0,"z":0.55}}}
 l178-zabuton-1:
   feetPosition: {x: 13.5, y: 0.48, z: -13.35}
   id: l178-zabuton-1
   model: /cdn/value.63ca1d9c5cad00e405f15a7d940238f89dde6e6d4dcb757b0d027d83c80fb9d6.glb
-  rotation: {yaw: 0}
-  tags: [l178]
+  rotation: {"yaw":180}
+  tags: ["l178","seat"]
+  state: {"c":{"x":13.5,"y":0.57,"z":-13.35},"name":"Floor cushion","seat":{"y":0,"out":{"x":0,"z":0.55}}}
 l178-zabuton-2:
   feetPosition: {x: 12.7, y: 0.48, z: -11.85}
   id: l178-zabuton-2
   model: /cdn/value.63ca1d9c5cad00e405f15a7d940238f89dde6e6d4dcb757b0d027d83c80fb9d6.glb
-  rotation: {yaw: 0}
-  tags: [l178]
+  rotation: {"yaw":0}
+  tags: ["l178","seat"]
+  state: {"c":{"x":12.7,"y":0.57,"z":-11.85},"name":"Floor cushion","seat":{"y":0,"out":{"x":0,"z":0.55}}}
 l178-zabuton-3:
   feetPosition: {x: 13.5, y: 0.48, z: -11.85}
   id: l178-zabuton-3
   model: /cdn/value.63ca1d9c5cad00e405f15a7d940238f89dde6e6d4dcb757b0d027d83c80fb9d6.glb
-  rotation: {yaw: 0}
-  tags: [l178]
+  rotation: {"yaw":0}
+  tags: ["l178","seat"]
+  state: {"c":{"x":13.5,"y":0.57,"z":-11.85},"name":"Floor cushion","seat":{"y":0,"out":{"x":0,"z":0.55}}}

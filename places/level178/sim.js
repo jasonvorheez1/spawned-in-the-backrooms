@@ -10,12 +10,13 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import { setQuest, tellQuest, finishLevelQuest } from "../../scripts/lib/quests.js";
 import { questTick178, SPOTS } from "../../scripts/lib/level178-quests.js"; // the six quests after A Place to Rest
+import { tickSoak } from "../../scripts/l178-prop.js";
 const Q = { key: "l178q", id: L.quest.id, name: L.quest.name };
 const mk = (u, label) => ({ place: "level178", x: L.uses[u].c[0], y: 0, z: L.uses[u].c[2], label });
 function quest(ctx, p) { // A Place to Rest: eat at the low table, then doze on a futon (stamps written by scripts/l178-prop.js)
   const ps = p.state; if (!ps || ps[Q.key] === 99) return;
   const front = () => { ps.qtrack = [Q.id, ...(ps.qtrack ?? []).filter((k) => k !== Q.id)].slice(0, 3); };
-  if (!ps[Q.key]) { ps[Q.key] = 1; setQuest(ps, Q.id, { name: Q.name, step: "Irawan's crew leaves breakfast out. Sit at the low table in the dining room", mark: mk("l178-table-dining", "Dining room") }); front(); tellQuest(ctx, p, "New quest: A Place to Rest"); return; }
+  if (!ps[Q.key]) { ps[Q.key] = 1; setQuest(ps, Q.id, { name: Q.name, step: "Irawan's crew leaves breakfast out. Look at the low table in the dining room and choose Have a meal", mark: mk("l178-table-dining", "Dining room") }); front(); tellQuest(ctx, p, "New quest: A Place to Rest"); return; }
   if (ps[Q.key] === 1 && ps.l178meal) { ps[Q.key] = 2; setQuest(ps, Q.id, { name: Q.name, step: "Lie down on a futon in the north bedrooms", mark: mk("l178-futon-2", "Bedrooms") }); return; }
   if (ps[Q.key] === 2 && ps.l178rest && ps.l178rest >= ps.l178meal) finishLevelQuest(ctx, p, Q.key, Q, { xp: 100, cents: 0, items: [], by: "survivors", text: "Quest Completed: A Place to Rest" });
 }
@@ -36,6 +37,6 @@ export function tick(ctx) {
   if ((s.spotsV ?? 0) < 1) { s.spotsV = 1; for (const [k, v] of Object.entries(SPOTS)) if (!ctx.place.objects["l178-qs-" + k]) ctx.spawn("l178-qs-" + k, { tags: ["usable", "l178-prop", "l178-qs"], behavior: "scripts/l178-prop.js", feetPosition: { x: v.x, y: v.y, z: v.z }, state: { kind: "qspot", name: v.name, verb: "Look", why: v.why, c: { x: v.x, y: v.y, z: v.z } } }); } // quiet Look spots on the story props (scripts/lib/level178-quests.js)
   if (!ctx.place.players.length) return;
   if (every(ctx, "l178people", 5000)) keepPeople(ctx, IDS, person);
-  for (const p of ctx.place.players) { quest(ctx, p); questTick178(ctx, p); }
+  for (const p of ctx.place.players) { tickSoak(ctx, p); quest(ctx, p); questTick178(ctx, p); }
   tickChatter(ctx, CHATTER.level178 ?? [], Object.fromEntries(IDS.map((id) => [id, L.people[id]?.voice ?? id]))); // the house talks in its own words, never the Backrooms pool
 }

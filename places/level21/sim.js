@@ -319,7 +319,7 @@ function lay(ctx) {
     feetPosition: { x: edgeOf(fr, 2) + 0.65, y: 0.0, z: fc.z - 2.2 }, tags: ["usable"], physics: BOXC, behavior: "scripts/l21-use.js",
     model: L21M.cooler,
     audio: { clip: "/cdn/sfx-slow-water-drips-into-shallow-puddle-on-concrete-echo-loop.mp3", loop: true, gain: 0.1, spatial: true, maxDistance: 6 },
-    state: { kind: "cooler", name: "Freezer-coil water collector", verb: "Drink cold coil water", info: "Ned rigged copper tubing from the freezer condensers into a 5-gallon jug. Ice-cold, clean water.", tint: "#74d4f8" },
+    state: { kind: "cooler", name: "Freezer-coil water collector", verb: "Drink", info: "Drink here and fill a bottle for the road", tint: "#74d4f8" },
   });
   sp("l21-cooler-puddle", { feetPosition: { x: edgeOf(fr, 2) + 0.65, y: 0.005, z: fc.z - 2.2 }, primitive: { kind: "cylinder", radiusTop: 0.45, radiusBottom: 0.48, height: 0.01 }, material: { color: "#0e1a22", roughness: 0.08, metalness: 0.1 } });
   sp("l21-fridge-frost", { feetPosition: { x: fc.x - 1.5, y: 0.1, z: edgeOf(fr, 3) + 0.6 }, fx: { script: FROST_FX } });
@@ -513,6 +513,14 @@ export function tick(ctx) {
   if ((s.builtV ?? 0) < V) {
     if (Object.keys(ctx.place.objects ?? {}).some((id) => /^l21-/.test(id) && !id.includes("/") && !PEOPLE[id] && !/^l21-smiler/.test(id))) { clearBuilt21(ctx); return; }
     s.builtV = V; lay(ctx); dress21(ctx); s.peopleV = 0;
+  }
+  if (!s.coilBottleV) {
+    const cooler = ctx.getObject("l21-cooler");
+    if (cooler) {
+      cooler.state.verb = "Drink";
+      cooler.state.info = "Drink here and fill a bottle for the road";
+      s.coilBottleV = 1;
+    }
   }
   if ((s.campBenchV ?? 0) < 1) { s.campBenchV = 1; ensureBenches(ctx, l21CampBenches()); }
   if ((s.vaultTintV ?? 0) < 6) { s.vaultTintV = 6; for (let k = 0; k < 4; k++) { const o = ctx.place.objects[`l21-vault-${k}`]; const m = o?.model; const rock = m?.parts?.rock ?? m?.materials?.rock; if (rock) { const { parts, materials, ...rest } = m; o.model = { ...rest, parts: { rock: { ...rock, color: "oklch(0.80 0.012 80)" } } }; o.scale = { x: 1.06, y: 1, z: 1 }; } } } // the Edges stone: neutral grey, vault slimmer over the walkway, in rooms already built (a model reads its slots back as parts)

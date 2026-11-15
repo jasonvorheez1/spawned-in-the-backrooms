@@ -214,7 +214,8 @@ bc-bench-1:
   model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
   physics: {body: "static", collider: "box"}
   rotation: {yaw: 90}
-  tags: ["bonus-court"]
+  tags: ["bonus-court","seat"]
+  state: {"name":"Mall bench","seat":{"w":2,"gap":0.75,"y":0.33}}
 bc-bench-2:
   feetPosition: {x: 4.5, y: 0, z: 23.85}
   id: "bc-bench-2"
@@ -222,7 +223,8 @@ bc-bench-2:
   model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
   physics: {body: "static", collider: "box"}
   rotation: {yaw: -90}
-  tags: ["bonus-court"]
+  tags: ["bonus-court","seat"]
+  state: {"name":"Mall bench","seat":{"w":2,"gap":0.75,"y":0.33}}
 bc-bench-3:
   feetPosition: {x: -4.5, y: 0, z: 5.85}
   id: "bc-bench-3"
@@ -230,7 +232,8 @@ bc-bench-3:
   model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
   physics: {body: "static", collider: "box"}
   rotation: {yaw: 90}
-  tags: ["bonus-court"]
+  tags: ["bonus-court","seat"]
+  state: {"name":"Mall bench","seat":{"w":2,"gap":0.75,"y":0.33}}
 bc-bench-4:
   feetPosition: {x: 4.5, y: 0, z: 5.85}
   id: "bc-bench-4"
@@ -238,7 +241,8 @@ bc-bench-4:
   model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
   physics: {body: "static", collider: "box"}
   rotation: {yaw: -90}
-  tags: ["bonus-court"]
+  tags: ["bonus-court","seat"]
+  state: {"name":"Mall bench","seat":{"w":2,"gap":0.75,"y":0.33}}
 bc-bench-5:
   feetPosition: {x: -4.5, y: 0, z: -22.15}
   id: "bc-bench-5"
@@ -246,7 +250,8 @@ bc-bench-5:
   model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
   physics: {body: "static", collider: "box"}
   rotation: {yaw: 90}
-  tags: ["bonus-court"]
+  tags: ["bonus-court","seat"]
+  state: {"name":"Mall bench","seat":{"w":2,"gap":0.75,"y":0.33}}
 bc-bench-6:
   feetPosition: {x: 1.9, y: 0, z: -22.6}
   id: bc-bench-6
@@ -254,7 +259,8 @@ bc-bench-6:
   model: {id: /cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: -90}
-  tags: [bonus-court]
+  tags: ["bonus-court","seat"]
+  state: {"name":"Mall bench","seat":{"w":2,"gap":0.75,"y":0.33}}
 bc-cab-1:
   feetPosition: {x: 13, y: 0.02, z: -23.25}
   id: "bc-cab-1"
@@ -522,6 +528,8 @@ bc-gbench-1:
   model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
   physics: {body: "static", collider: "box"}
   rotation: {yaw: 90}
+  tags: ["seat"]
+  state: {"name":"Mall bench","seat":{"w":2,"gap":0.75,"y":0.33}}
 bc-gbench-2:
   feetPosition: {x: 19.5, y: 5.5, z: -8}
   id: "bc-gbench-2"
@@ -529,6 +537,8 @@ bc-gbench-2:
   model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
   physics: {body: "static", collider: "box"}
   rotation: {yaw: 90}
+  tags: ["seat"]
+  state: {"name":"Mall bench","seat":{"w":2,"gap":0.75,"y":0.33}}
 bc-glight-1:
   feetPosition: {x: 22.15, y: 10.2, z: -20}
   id: bc-glight-1
@@ -933,6 +943,8 @@ bc-sbench-1:
   model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
   physics: {body: "static", collider: "box"}
   rotation: {yaw: -90}
+  tags: ["seat"]
+  state: {"name":"Mall bench","seat":{"w":2,"gap":0.75,"y":0.33}}
 bc-sbench-2:
   feetPosition: {x: -15.5, y: 5.5, z: -19}
   id: "bc-sbench-2"
@@ -940,6 +952,8 @@ bc-sbench-2:
   model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
   physics: {body: "static", collider: "box"}
   rotation: {yaw: -90}
+  tags: ["seat"]
+  state: {"name":"Mall bench","seat":{"w":2,"gap":0.75,"y":0.33}}
 bc-sbench-3:
   feetPosition: {x: -15.5, y: 5.5, z: -8}
   id: "bc-sbench-3"
@@ -947,6 +961,8 @@ bc-sbench-3:
   model: {id: "/cdn/value.6a2abc0480ba8d1529bb26cd28dafc1eae93f4a93df0f0bd354d51ebd44e0e9c.glb"}
   physics: {body: "static", collider: "box"}
   rotation: {yaw: -90}
+  tags: ["seat"]
+  state: {"name":"Mall bench","seat":{"w":2,"gap":0.75,"y":0.33}}
 bc-skee-1:
   children: [{feetPosition: {x: 0, y: 2.2, z: 0.6}, id: glow, light: {color: "#ffcc33", distance: 4, intensity: 0.9, kind: point}}]
   feetPosition: {x: 19.3, y: 0.02, z: -19.6}
@@ -1059,6 +1075,9 @@ bc-vending-1:
   model: "/cdn/value.8845cbb69caf895635cbffeb1dc69ce931ec9613083b0306a2f50ae671906d28.glb"
   physics: "static"
   rotation: {yaw: -90}
+  behavior: scripts/l61-use.js
+  tags: ["usable"]
+  state: {"name":"Courtyard vending machine","kind":"vend","verb":"Dispense / Collect","info":"Cold cola · free · collect from the tray","gives":"coke","weeklyStock":24,"cooldown":20000,"c":{"x":9.64,"y":1.06,"z":23.75}}
 bc-wordmark:
   feetPosition: {x: 0, y: 9, z: 30}
   id: bc-wordmark
@@ -1131,7 +1150,8 @@ bd-chair-1-1:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 90}
-  tags: [bonus-diner]
+  tags: ["bonus-diner","seat"]
+  state: {"name":"Diner chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 bd-chair-1-2:
   castShadow: false
   feetPosition: {x: -17.2, y: 0, z: -20}
@@ -1140,7 +1160,8 @@ bd-chair-1-2:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: -90}
-  tags: [bonus-diner]
+  tags: ["bonus-diner","seat"]
+  state: {"name":"Diner chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 bd-chair-1-3:
   castShadow: false
   feetPosition: {x: -16.4, y: 0, z: -19.2}
@@ -1149,7 +1170,8 @@ bd-chair-1-3:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 0}
-  tags: [bonus-diner]
+  tags: ["bonus-diner","seat"]
+  state: {"name":"Diner chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 bd-chair-1-4:
   castShadow: false
   feetPosition: {x: -16.4, y: 0, z: -20.8}
@@ -1158,7 +1180,8 @@ bd-chair-1-4:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 180}
-  tags: [bonus-diner]
+  tags: ["bonus-diner","seat"]
+  state: {"name":"Diner chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 bd-chair-2-1:
   castShadow: false
   feetPosition: {x: -11.799999999999999, y: 0, z: -20}
@@ -1167,7 +1190,8 @@ bd-chair-2-1:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 90}
-  tags: [bonus-diner]
+  tags: ["bonus-diner","seat"]
+  state: {"name":"Diner chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 bd-chair-2-2:
   castShadow: false
   feetPosition: {x: -13.4, y: 0, z: -20}
@@ -1176,7 +1200,8 @@ bd-chair-2-2:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: -90}
-  tags: [bonus-diner]
+  tags: ["bonus-diner","seat"]
+  state: {"name":"Diner chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 bd-chair-2-3:
   castShadow: false
   feetPosition: {x: -12.6, y: 0, z: -19.2}
@@ -1185,7 +1210,8 @@ bd-chair-2-3:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 0}
-  tags: [bonus-diner]
+  tags: ["bonus-diner","seat"]
+  state: {"name":"Diner chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 bd-chair-3-1:
   castShadow: false
   feetPosition: {x: -15.599999999999998, y: 0, z: -10.2}
@@ -1194,7 +1220,8 @@ bd-chair-3-1:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 90}
-  tags: [bonus-diner]
+  tags: ["bonus-diner","seat"]
+  state: {"name":"Diner chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 bd-chair-3-2:
   castShadow: false
   feetPosition: {x: -17.2, y: 0, z: -10.2}
@@ -1203,7 +1230,8 @@ bd-chair-3-2:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: -90}
-  tags: [bonus-diner]
+  tags: ["bonus-diner","seat"]
+  state: {"name":"Diner chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 bd-chair-3-3:
   castShadow: false
   feetPosition: {x: -16.4, y: 0, z: -9.399999999999999}
@@ -1212,7 +1240,8 @@ bd-chair-3-3:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 0}
-  tags: [bonus-diner]
+  tags: ["bonus-diner","seat"]
+  state: {"name":"Diner chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 bd-chair-3-4:
   castShadow: false
   feetPosition: {x: -16.4, y: 0, z: -11}
@@ -1221,7 +1250,8 @@ bd-chair-3-4:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 180}
-  tags: [bonus-diner]
+  tags: ["bonus-diner","seat"]
+  state: {"name":"Diner chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 bd-chair-4-1:
   castShadow: false
   feetPosition: {x: -11.799999999999999, y: 0, z: -10.2}
@@ -1230,7 +1260,8 @@ bd-chair-4-1:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 90}
-  tags: [bonus-diner]
+  tags: ["bonus-diner","seat"]
+  state: {"name":"Diner chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 bd-chair-4-2:
   castShadow: false
   feetPosition: {x: -13.4, y: 0, z: -10.2}
@@ -1239,7 +1270,8 @@ bd-chair-4-2:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: -90}
-  tags: [bonus-diner]
+  tags: ["bonus-diner","seat"]
+  state: {"name":"Diner chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 bd-chair-4-3:
   castShadow: false
   feetPosition: {x: -12.6, y: 0, z: -11}
@@ -1248,7 +1280,8 @@ bd-chair-4-3:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 180}
-  tags: [bonus-diner]
+  tags: ["bonus-diner","seat"]
+  state: {"name":"Diner chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 bd-coffee:
   castShadow: false
   feetPosition: {x: -23.5, y: 0.9, z: -17.6}
@@ -1606,6 +1639,8 @@ bl-sofa:
   model: {forward: "+x", id: "/cdn/value.ff13bc205536a957826e2f7fed75554c07ffe7848198e50e1d65f257cabacdd9.glb"}
   physics: "static"
   rotation: {yaw: -90}
+  tags: ["seat"]
+  state: {"name":"Lounge sofa","seat":{"w":2,"gap":0.75,"y":0.31,"d":0.06}}
 bl-table:
   castShadow: false
   feetPosition: {x: 21.35, y: 5.5, z: -3.35}

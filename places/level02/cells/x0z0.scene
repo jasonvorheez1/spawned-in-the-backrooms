@@ -6,6 +6,8 @@ l02-gd-bench:
   model: {forward: "+x", id: /cdn/value.d38530fe8881dbb3291b160c5f1fdd94d2e468130a063e0e7797ff41048561d1.glb}
   physics: static
   rotation: {yaw: 0}
+  tags: ["seat"]
+  state: {"name":"Show-room bench","seat":{"w":2,"gap":0.75,"y":0.33}}
 l02-gd-chair0:
   feetPosition: {x: 5.15, y: -3.4, z: -4.2}
   id: l02-gd-chair0
@@ -13,6 +15,8 @@ l02-gd-chair0:
   model: {id: /cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb}
   physics: static
   rotation: {yaw: 180}
+  tags: ["seat"]
+  state: {"name":"Waiting chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 l02-gd-chair1:
   feetPosition: {x: 6, y: -3.4, z: -4.2}
   id: l02-gd-chair1
@@ -20,6 +24,8 @@ l02-gd-chair1:
   model: {id: /cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb}
   physics: static
   rotation: {yaw: 180}
+  tags: ["seat"]
+  state: {"name":"Waiting chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 l02-gd-chair2:
   feetPosition: {x: 6.85, y: -3.4, z: -4.2}
   id: l02-gd-chair2
@@ -27,6 +33,8 @@ l02-gd-chair2:
   model: {id: /cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb}
   physics: static
   rotation: {yaw: 180}
+  tags: ["seat"]
+  state: {"name":"Waiting chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 l02-gd-chair3:
   feetPosition: {x: 5.15, y: -3.4, z: -3.4}
   id: l02-gd-chair3
@@ -34,6 +42,8 @@ l02-gd-chair3:
   model: {id: /cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb}
   physics: static
   rotation: {yaw: 180}
+  tags: ["seat"]
+  state: {"name":"Waiting chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 l02-gd-chair4:
   feetPosition: {x: 6, y: -3.4, z: -3.4}
   id: l02-gd-chair4
@@ -41,6 +51,8 @@ l02-gd-chair4:
   model: {id: /cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb}
   physics: static
   rotation: {yaw: 180}
+  tags: ["seat"]
+  state: {"name":"Waiting chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 l02-gd-chair5:
   feetPosition: {x: 6.85, y: -3.4, z: -3.4}
   id: l02-gd-chair5
@@ -48,6 +60,8 @@ l02-gd-chair5:
   model: {id: /cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb}
   physics: static
   rotation: {yaw: 180}
+  tags: ["seat"]
+  state: {"name":"Waiting chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 l02-gd-chair6:
   feetPosition: {x: 5.15, y: -3.4, z: -2.5999999999999996}
   id: l02-gd-chair6
@@ -55,6 +69,8 @@ l02-gd-chair6:
   model: {id: /cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb}
   physics: static
   rotation: {yaw: 180}
+  tags: ["seat"]
+  state: {"name":"Waiting chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 l02-gd-chair7:
   feetPosition: {x: 6, y: -3.4, z: -2.5999999999999996}
   id: l02-gd-chair7
@@ -62,6 +78,8 @@ l02-gd-chair7:
   model: {id: /cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb}
   physics: static
   rotation: {yaw: 180}
+  tags: ["seat"]
+  state: {"name":"Waiting chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 l02-gd-chair8:
   feetPosition: {x: 6.85, y: -3.4, z: -2.5999999999999996}
   id: l02-gd-chair8
@@ -69,6 +87,8 @@ l02-gd-chair8:
   model: {id: /cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb}
   physics: static
   rotation: {yaw: 180}
+  tags: ["seat"]
+  state: {"name":"Waiting chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 l02-gd-drywall:
   feetPosition: {x: 6, y: -3.4, z: 1}
   id: l02-gd-drywall

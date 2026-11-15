@@ -4,6 +4,25 @@
 const GEO = "scripts/l169-house-geo.js";
 const SHELL_GLB = "/cdn/value.150c87b478df0c8f2ab37379e19a56d85bda160aaaadbb1080ce0a3d3b1a23a7.glb";
 const ROAD_GEO = "scripts/l169-road-geo.js";
+export function wireGuestFurniture(ctx) {
+  const sofa = ctx.getObject("l169-house-m-sofa"), chair = ctx.getObject("l169-house-m-armchair");
+  const cots = [1, 2].map((i) => ctx.getObject(`l169-house-m-cot-${i}`));
+  if (!sofa || !chair || cots.some((o) => !o)) return false;
+  for (const [o, name, seat] of [[sofa, "House sofa", { w: 2, gap: 0.68 }], [chair, "Reading chair", {}]]) {
+    o.tags = [...new Set([...(o.tags ?? []), "seat"])];
+    Object.assign(o.state, { name, seat });
+  }
+  for (const cot of cots) {
+    cot.tags = [...new Set([...(cot.tags ?? []), "usable"])];
+    cot.behavior = ["scripts/field-fixture.js"];
+    Object.assign(cot.state, { kind: "field-rest", name: "Guest cot", verb: "Rest", info: "A spare cot in the den" });
+  }
+  for (const k of ["bed1", "bed2", "bed3"]) {
+    const hidden = ctx.getObject(`l169-house-bed-${k}`);
+    if (hidden?.tags?.includes("usable")) hidden.tags = hidden.tags.filter((t) => t !== "usable");
+  }
+  return true;
+}
 export function layTrail(ctx, put, L) { // cairns every T.every m up the track mark, arrows facing the walker, and the yard's wind pump
   const T = L.trail; if (!T) return;
   const pts = ctx.place.terrain?.marks?.[T.mark]?.points ?? [[0, -14], [6, -120], [-10, -260], [14, -400], [18, -488]];

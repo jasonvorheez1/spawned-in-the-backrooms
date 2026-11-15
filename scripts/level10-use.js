@@ -5,6 +5,7 @@
 import { heard } from "./lib/hear.js";
 import { setWheatStep, setWatcherStep, setCellarStep } from "./lib/level10-quests.js";
 import { rollCheck } from "./lib/npc-talk.js";
+import { animate } from "builtin/tween";
 
 const WATER_SPLASH = "/cdn/moodboard-realistic-gritty/sfx-water-pour-splash-short.mp3";
 const OVEN_CRACKLE = "/cdn/moodboard-realistic-gritty/sfx-burgers-sizzling-on-flat-top-griddle-loop.mp3";
@@ -13,6 +14,8 @@ const RUSTLE = "/cdn/moodboard-realistic-gritty/sfx-clothing-rustle-getting-up-f
 const DOOR_OPEN = "/cdn/moodboard-realistic-gritty/sfx-old-steamer-trunk-lid-creak-open.mp3";
 const RADIO_STATIC = "/cdn/moodboard-realistic-gritty/sfx-telephone-earpiece-line-static-hiss-and-crackle.mp3";
 const CHIME = "cdn/sfx-soft-bright-two-note-success-chime.mp3";
+const GRAIN = `fx
+pop grain burst=25..35 on=disc(.09) life=.28..0.5 v=<0,-.65,0> acc=grav() size=.012..0.018 col=<.85,.68,.35> a=1>0 sz=$size r=sprite(soft-disc,alpha)`;
 
 const SPARKLE_FX = `fx
 pop puff rate=0 burst=12 life=.5..1.1 on=disc(.2) v=up(.5)+sdir()*.15 size=.08..0.18 acc=drag(1.2) col=<1,.9,.4> a=1>0 sz=$size`;
@@ -21,9 +24,25 @@ export const ears = {
   press: (ctx, { by }) => {
     const s = ctx.self.state;
     const who = ctx.getObject(by);
+    if (!who?.state) return;
     const pos = ctx.self.worldFeetPosition ?? ctx.self.feetPosition;
     const w = who?.state ?? {};
     const now = ctx.now();
+
+    if (s.kind === "silo-hopper") {
+      const p = who.worldFeetPosition ?? who.feetPosition;
+      if (!p || w.dead || Math.hypot(p.x - pos.x, p.y - pos.y, p.z - pos.z) > 3) return;
+      if (now < (s.grainAt ?? 0)) { w.notice = { text: "The chute has run dry. Give it a minute.", at: now }; return; }
+      s.grainAt = now + 60000;
+      w.wheat = (w.wheat ?? 0) + 1;
+      w.pickedAt = now;
+      w.notice = { text: "Grain collected · Grind at the windmill quern", at: now };
+      const wheel = ctx.getObject(ctx.self.id + "/wheel");
+      if (wheel) animate(ctx, wheel.id, { "rotation.yaw": [0, 180, 360] }, { duration: 0.8, easing: "easeInOutQuad" });
+      heard(ctx, { clip: STONE_GRIND, position: pos, volume: 0.3, maxDistance: 8 });
+      ctx.emit("fx", { position: { ...pos, y: pos.y + 0.55 }, script: GRAIN }, { audience: { nearby: pos, radius: 12 } });
+      return;
+    }
 
     // 1. Wheat Harvesting Patch
     if (s.kind === "wheat-patch") {
