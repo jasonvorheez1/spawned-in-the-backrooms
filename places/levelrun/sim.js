@@ -35,7 +35,7 @@ const MAT = {
 };
 
 const HOUND_MODEL = "/cdn/value.180d1072a97d34551e1394960b70202777c9d0b51fb0ca67779a59e429ef6fa7.glb";
-const PARTYGOER_MODEL = "/cdn/value.88565cb1c1182076aa2208922668d2ff4f3349f2e4f1bf06623d5a514653f438.glb";
+const PARTYGOER_MODEL = "/cdn/value.0ac8ed9fa781f9f7a002a249ccb98c55be6cd8f29698bb508e008517c604cc25.glb";
 
 const HORDE_MEMBERS = [
   { id: "lrun-pursuer-1", kind: "hound", dx: -1.4, dz: 0.0 },
