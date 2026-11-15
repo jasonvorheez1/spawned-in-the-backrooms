@@ -2,7 +2,8 @@ import { clockHeal } from "./lib/clock-heal.js"
 import { xpNeed, migrateXp } from './lib/progression.js'
 export { xpNeed } from './lib/progression.js'
 import { migrate, wakePlace, wakeLog, canSaveHere } from "./lib/save.js"
-import { sanityMul } from "./lib/run-opts.js"
+import { sanityMul, isMulti } from "./lib/run-opts.js"
+import { spared } from "./lib/mp-guard.js"
 import { CORRIDOR, agilityProfile, hitObstacle } from './lib/levelrun-mechanics.js'
 import { layout as layout9, zoneAt as zoneAt9 } from './lib/level9.js'
 import { firstPersonGun, firstPersonTuning } from './lib/fp-gun.js'
@@ -714,6 +715,7 @@ export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pe
     ctx.emit('shockwave', { position: hit, speed: 6, thickness: 0.3, intensity: 0.4 * heavy })
     ctx.emit('damageNumber', { position: { ...hit, y: hit.y + 0.4 }, text: 'HEAVY', color: '#ffb347', size: 1.2 })
   }
+  if (m.state.hp <= 0 && !m.state.dead && npc) spared(ctx, m) // multiplayer: people get knocked down, not killed (scripts/lib/mp-guard.js)
   if (m.state.hp <= 0 && !m.state.dead) {
     m.state.dead = true
     if (W[s.equipped]?.vaporize) vaporize(ctx, m, hit, npc) // the R-55: the thing burns to light and ash where it stood
@@ -1958,7 +1960,7 @@ function tickStats(ctx, t, moving) {
     const sp = s.savePos, wp = wakePlace(ctx, s)
     if (s.wakeAtSave && sp && s.savePlace === ctx.self.place) { s.wakeAtSave = null; ctx.self.feetPosition = { x: sp.x, y: sp.y + 0.1, z: sp.z }; return } // the station's last-level ride: back where you stood
     s.wakeAtSave = null
-    if (ctx.self.place === 'bonus' || s.roomHop) { /* the mall and room hops land where their door puts you (scripts/lib/hub.js) */ }
+    if (ctx.self.place === 'bonus' || s.roomHop || (isMulti(s) && !String(ctx.getRoomId?.() ?? '').startsWith('mp-'))) { /* a multiplayer save never wakes into your solo room: Continue takes it to the mall */ /* the mall and room hops land where their door puts you (scripts/lib/hub.js) */ }
     else if (sp && wp && wp !== ctx.self.place && (ctx.session.wakeTry ?? 0) < 3) { ctx.session.wakeTry = (ctx.session.wakeTry ?? 0) + 1; s.wakeAtSave = true; ctx.session.wokeAt = 0; ctx.session.wakeCrossAt = now; ctx.cross(ctx.self, wp); return } // the wake runs again on arrival and stands you on the saved spot (it used to leave you at the level's door); three tries, then you stay put
     if (sp && s.savePlace === ctx.self.place) { ctx.self.feetPosition = { x: sp.x, y: sp.y + 0.1, z: sp.z }; return }
   }

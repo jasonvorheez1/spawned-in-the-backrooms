@@ -32,3 +32,16 @@ export function cleanPick(p) {
 export const KEEP = ["look", "uiPrefs", "bodyStyle", "madeChar", "menuOpen", "menuKind", "menuView", "newRun", "saveList", "saveMsg", "studioOpen"];
 // what a save snapshot leaves out: screens and cutscenes in flight
 export const SKIP = new Set(["menuOpen", "menuKind", "menuView", "newRun", "saveList", "saveMsg", "cut", "arrive", "l26cut", "lrunCut", "dcut", "talkWith", "talk", "sit", "freeze", "studioOpen", "wardrobeOpen", "wrMenu", "craftOpen", "invOpen", "jrnOpen", "guideTip"]);
+
+// Solo or Multiplayer (Shelly Nov 15): multiplayer has no story and no tutorial, starts in the Bonus Rooms and explores in a shared room.
+// One character (level, gear, cash, look) rides both; each mode keeps its own story, quests and where you stood (SQL slots MODE_SLOT).
+export const isMulti = (s) => s?.run?.mode === "multi";
+export const MODE_SLOT = { solo: 91, multi: 92 };
+export function mpRoom(who) { // your party's room, else your own: friends join it through Spawn's Invite or party
+  const pid = who?.party?.id, raw = pid ? "p" + pid : (who?.userId || "guest");
+  return "mp-" + (String(raw).toLowerCase().replace(/[^a-z0-9_-]/g, "").slice(0, 48) || "guest");
+}
+// what belongs to one mode's run, not to the character
+const STORY = new Set(["run", "quests", "qdone", "qtrack", "quest", "errands", "savePlace", "savePos", "visited", "explored", "zone", "rep", "repHistory", "fame", "infamy", "karma", "talks",
+  "hubOffer", "hubSeen", "introFrom", "arrive", "arrivePending", "cut", "dark", "feed", "fieldErrAsk", "funAsk", "phoneNpc", "phoneHello", "pages", "tagsLeft", "escapes", "hordeT", "xfer", "xferTo", "wakeAtSave", "roomHop", "apts", "lootStore", "lootList", "lootName", "lootOpen"]);
+export const isStoryKey = (k) => STORY.has(k) || /^(l\d|t0|lrun|dina|ch2|dcut|home|hub(?!Keys))/.test(k);

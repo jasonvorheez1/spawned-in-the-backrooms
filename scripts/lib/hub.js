@@ -1,4 +1,5 @@
 import { PLACARDS as L5NUM } from "./level5.js";
+import { isMulti, mpRoom } from "./run-opts.js";
 // The Bonus Room's rooms (johnadams2, Nov 8): one shared mall room everyone meets in, a solo room per player for the Backrooms.
 // No yml here: scripts/routing.js imports this file before any world exists.
 export const HUB_ROOM = "bonus"
@@ -27,7 +28,7 @@ export function toHub(ctx, who = ctx.self) {
 }
 // back into your own Backrooms, at a place's door (where = "main", "home11#home-from-l11")
 export function toSolo(ctx, where, who = ctx.self, keepPos = false) {
-  const s = who.state, room = soloRoom(who.userId), place = where.split("#")[0]
+  const s = who.state, room = isMulti(s) ? mpRoom(who) : soloRoom(who.userId), place = where.split("#")[0] // multiplayer runs leave the mall into a shared room (Shelly Nov 15)
   if (!keepPos) { s.savePlace = place; s.savePos = null } // wake where the door puts you, not where you last stood
   if (ctx.getRoomId?.() === room) return ctx.cross(who, where)
   s.roomHop = room
