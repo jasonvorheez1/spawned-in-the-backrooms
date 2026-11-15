@@ -29,6 +29,7 @@ for sex in SEXES:
     if sh.shape_keys: ar.shape_key_clear()
     BW = body.matrix_world.copy(); sh.transform(BW)   # work in world metres (Z-up, front -Y); handed back to the body's own space before export
     bm = bmesh.new(); bm.from_mesh(sh)
+    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0005)   # a .glb splits verts at every UV seam: welded, the torso is one island again
     # find the torso half-width at chest height: arm verts are those farther out than the ribcage
     rib = sx
     kill = []
@@ -98,6 +99,8 @@ for sex in SEXES:
     mid = (lo + hi) / 2; cam.location = (0.55, -0.9, mid + 0.15); d = Vector((0, 0, mid)) - cam.location; cam.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
     l = bpy.data.objects.new("l", bpy.data.lights.new("l", "SUN")); s.collection.objects.link(l); l.rotation_euler = (0.7, 0.2, 0.6)
     s.render.filepath = f"/tmp/robo-{sex}.png"; bpy.ops.render.render(write_still=True)
+    cam.location = (-0.5, 0.9, mid + 0.15); d = Vector((0, 0, mid)) - cam.location; cam.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
+    s.render.filepath = f"/tmp/robo-{sex}-b.png"; bpy.ops.render.render(write_still=True)
     sh.transform(BW.inverted()); ar.matrix_world = BW
     ar.parent = arm; ar.matrix_parent_inverse = arm.matrix_world.inverted()
     if not any(m.type == "ARMATURE" for m in ar.modifiers): ar.modifiers.new("skin", "ARMATURE").object = arm
