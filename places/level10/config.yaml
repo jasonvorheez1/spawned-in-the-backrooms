@@ -26,6 +26,8 @@ terrain:
     stable-pad: { kind: flatten, center: { x: -58, z: -105 }, height: { terrain: 0 }, shape: { kind: rectangle, width: 13, depth: 15 }, falloff: 3, material: dirt, clearScatter: true }
     north-shed-pad: { kind: flatten, center: { x: 36, z: -150 }, height: { terrain: 0 }, shape: { kind: circle, radius: 4.2 }, falloff: 2, material: dirt, clearScatter: true }
     east-shed-pad: { kind: flatten, center: { x: 95, z: -60 }, height: { terrain: 0 }, shape: { kind: circle, radius: 4.4 }, falloff: 2, material: dirt, clearScatter: true }
+    archer-tower-pad: { kind: flatten, center: { x: 11.5, z: -58 }, height: { terrain: 0 }, shape: { kind: circle, radius: 6.5 }, falloff: 4, material: dirt, clearScatter: true }
+    track-tower: { kind: path, points: [[0.8, -58], [5, -57.8], [8.6, -57.6]], width: 1.8, material: dirt, edgeMaterial: grass, noise: 0.2 }
     silo-pad: { kind: flatten, center: { x: -42, z: -22 }, height: { terrain: 0 }, shape: { kind: circle, radius: 5.6 }, falloff: 2, material: dirt, clearScatter: true }
   decorations:
     layers:

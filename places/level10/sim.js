@@ -469,6 +469,28 @@ pop glow n=1 at=disc(.2).c(.45) glo=fire()*(#flame/35)~ r=light(<1,.55,.24>,$glo
   sp("l10-ambience", { feetPosition: T(0, 0), audience: "local", audio: { clip: AMB, gain: 0.2, loop: true, spatial: false, bus: "Ambience" } });
 }
 
+
+// The Archers' tower (canon: Lumiria is reached from Level 10 through a tower of the Archers): a weathered watchtower east of the
+// main track, 89 m north of the Level 11 arrival, nobody home, arrows in the dirt round it; its dark doorway is the threshold to Lumiria.
+const TW = { x: 11, z: -58, yaw: 90, h: 9.5, v: 1 }; // the tower's feet, door faces west to the track (yaw 90: its front -Z turns to -X)
+const TW_MODEL = "/cdn/model-weathered-wooden-archers-watchtower-with-ladder-and-dark-doorway-at-base.glb";
+const ARROW = "/cdn/model-single-wooden-arrow-with-grey-goose-feather-fletching.glb"; // 0.8 m, along X, tip at -X
+const TW_ARROWS = [[5.2, -61.5, 20, 62], [6.4, -55.2, 140, 58], [14.8, -53.6, 250, 66], [16.2, -61.0, 300, 55], [7.0, -63.2, 75, 70], [12.6, -64.4, 200, 60]]; // x, z, yaw, lean
+function layTower(ctx) {
+  const put = (id, spec) => { if (ctx.getObject(id)) ctx.destroy(id); ctx.spawn(id, spec); };
+  const W = (lx, lz) => ({ x: TW.x + lz, z: TW.z - lx }); // tower-local (x, z) to world, yaw 90
+  put("l10-archer-tower", { feetPosition: T(TW.x, TW.z, -0.05), rotation: { yaw: TW.yaw }, model: { id: TW_MODEL }, layout: { box: { min: { x: -5, y: 0, z: -5 }, max: { x: 5, y: TW.h, z: 5 } } }, castShadow: true, receiveShadow: true, visibleRange: { max: 360 } });
+  const box = (id, x, z, w, d, h, up = 0, extra = {}) => put(id, { feetPosition: T(x, z, up), primitive: { kind: "box", width: w, height: h, depth: d }, visible: false, physics: "static", ...extra });
+  box("l10-archer-tower-col", 11.6, -58, 3.03, 5.2, 9); // the body behind the doorway
+  box("l10-archer-tower-jamb-s", 9.48, -56.18, 1.23, 1.55, 9);
+  box("l10-archer-tower-jamb-n", 9.48, -59.43, 1.23, 2.35, 9);
+  // the doorway: dark, and through it Lumiria's south road
+  put("l10-tower-132", { ...DOOR("level132#l132-arrive", 1.0, 2.2, 1.2), feetPosition: T(9.6, -57.6, 0), tags: ["usable"], state: { to: "level132#l132-arrive", name: "Archers' tower doorway", verb: "Step inside" } });
+  put("l10-archer-tower-dust", { feetPosition: T(8.9, -57.6, 0.2), visibleRange: { max: 40 }, fx: { script: `fx
+pop mote rate=?mobile:3|6 on=box(.2,1,.6) life=3..5 v=up(.02..0.08) size=.01..0.02 acc=curl(.3)*.15 col=<1,.85,.55> a=0>.6:.5>0 sz=$size r=sprite(soft-disc,add)` } });
+  TW_ARROWS.forEach(([x, z, yaw, lean], i) => put(`l10-archer-arrow-${i}`, { feetPosition: T(x, z, 0.24), pivot: "center", rotation: { yaw, roll: lean }, model: { id: ARROW }, castShadow: false, visibleRange: { max: 70 } }));
+}
+
 export function tick(ctx) {
   if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level10"); // every sign dressed as its own board (scripts/lib/sign-style.js)
@@ -482,6 +504,7 @@ export function tick(ctx) {
     lay(ctx);
     s.builtV = V;
   }
+  if ((s.towerV ?? 0) < TW.v) { layTower(ctx); s.towerV = TW.v; }
   if ((s.campBenchV ?? 0) < 1) {
     s.campBenchV = 1;
     ensureBenches(ctx, [
