@@ -364,4 +364,4 @@
 360. [applied] XP gains show a Fallout: New Vegas-style notification and cha-ching sound
 361. [applied] Zero sanity does no damage at all; it only lowers the player's stats
 362. [applied] Z keeps its ordinary grab targets and also includes dead bodies
-363. [pending] if code models ever need to be added treat them as immediate replaceables with tripo and 3d modeling studio
+363. [applied] if code models ever need to be added treat them as immediate replaceables with tripo and 3d modeling studio
