@@ -54,7 +54,7 @@ export function phoneUi(ctx, player) {
   const status = s.phoneSent && Date.now() - 0 && (ctx.now?.() ?? 0) - s.phoneSent.at < 6000 ? s.phoneSent.text : "";
   let body = "";
   if (app === "home") body = `<div class="grid">${APPS.map(([k, l]) => {
-    const on = (k === "torch" && s.lightOn) || (k === "radio" && s.radioOn);
+    const on = (k === "torch" && s.light) || (k === "radio" && s.radioOn);
     const click = k === "torch" ? "sendAction('flashlight')" : act({ k: "app", app: k });
     return `<button class="app" onclick="${click}">${ico(k)}<span>${l}${on ? " · on" : ""}</span>${k === "msgs" && unread ? `<span class="dot">${unread}</span>` : ""}</button>`; }).join("")}</div>`;
   if (app === "msgs") { const rows = [...mail.map((m) => ({ id: m.id, who: m.from?.displayName, text: m.text, at: m.at, read: m.read, p: true, uid: m.from?.userId })), ...npc.map((m) => ({ ...m, who: m.from }))].sort((a, b) => b.at - a.at).slice(0, 30);
