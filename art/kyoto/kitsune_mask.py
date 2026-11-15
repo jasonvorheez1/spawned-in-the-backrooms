@@ -29,6 +29,7 @@ for sex in ("f", "m"):
     keep.parent = None
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     keep.vertex_groups.clear(); keep.name = "KitsuneMask"
+    for v in keep.data.vertices: v.co = Vector((v.co.y, -v.co.x, v.co.z))   # the Tripo mask looks down +X: turned to look out the cat front (-Y)
     vs = [v.co.copy() for v in keep.data.vertices]
     a = Vector([min(v[i] for v in vs) for i in range(3)]); b = Vector([max(v[i] for v in vs) for i in range(3)])
     s = fw * 1.0 / (b.x - a.x)                                                # uniform: the mask keeps its own shape
