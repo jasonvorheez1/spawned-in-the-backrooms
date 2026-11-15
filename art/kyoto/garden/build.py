@@ -12,8 +12,10 @@ def clean():
     bpy.ops.wm.read_factory_settings(use_empty=True)
 
 def load(name):
+    before = set(bpy.context.scene.objects)
     bpy.ops.import_scene.gltf(filepath=f"{SRC}/{name}.glb")
-    ms = [o for o in bpy.context.scene.objects if o.type == "MESH"]
+    new = [o for o in bpy.context.scene.objects if o not in before]
+    ms = [o for o in new if o.type == "MESH"]
     bpy.ops.object.select_all(action="DESELECT")
     for o in ms: o.select_set(True)
     bpy.context.view_layer.objects.active = ms[0]
@@ -21,7 +23,7 @@ def load(name):
     o = bpy.context.view_layer.objects.active
     o.parent = None
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-    for e in [x for x in bpy.context.scene.objects if x != o]: bpy.data.objects.remove(e)
+    for e in [x for x in new if x != o]: bpy.data.objects.remove(e)
     return o
 
 def ground(o, cut=0.0):
@@ -66,7 +68,7 @@ def export(o, name, slot):
 
 def tris(o): return sum(len(p.vertices) - 2 for p in o.data.polygons)
 report = {}
-for name, (src, t, slot, cut) in KIT.items():
+for name, (src, t, slot, cut) in (KIT.items() if not os.environ.get("RIMONLY") else []):
     clean(); o = load(src); ground(o, cut); decimate(o, t)
     d = o.dimensions; report[name] = (tris(o), round(d.x, 2), round(d.z, 2), round(d.y, 2), [im.size[:] for im in bpy.data.images])
     export(o, name, slot)
