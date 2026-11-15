@@ -1557,7 +1557,7 @@ l178-geta:
   rotation: {yaw: 20}
   tags: [l178]
 l178-gravel:
-  feetPosition: {x: 0, y: {terrain: 0.012}, z: 0}
+  feetPosition: {x: 0, y: 0.015, z: 0}
   id: l178-gravel
   model: /cdn/value.f3fd84525aa5b722b1750ba825384925c82b0d995fc289ac5c2e3d01f4323450.glb
   receiveShadow: true
