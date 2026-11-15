@@ -141,7 +141,7 @@ export function longHands(me, held, yaw, pitch, aiming, crouch, len = 0.62) {
   const f = { x: -Math.sin(yaw), z: -Math.cos(yaw) }, r = { x: Math.cos(yaw), z: -Math.sin(yaw) }, p = me.feetPosition, sc = me.scale?.y ?? 1, y0 = p.y + (crouch ? 1.0 : 1.38) * sc
   const pc = aiming ? pitch : -0.5, c = Math.cos(pc), sn = Math.sin(pc)
   const at = (fwd, side, up) => ({ x: p.x + f.x * c * fwd + r.x * side, y: y0 + sn * fwd + up, z: p.z + f.z * c * fwd + r.z * side })
-  const R = aiming ? at(0.24, 0.14, -0.12) : at(0.26, 0.2, -0.32)
+  const R = aiming ? at(0.34, 0.17, -0.2) : at(0.26, 0.2, -0.32) // aimed: 34 cm out, 20 cm under the eye line, so a snout clears the stock
   const L = aiming ? at(0.3 + len, 0.0, -0.06) : at(0.26 + len * 0.8, 0.02, -0.32)
   const pole = { x: p.x - r.x * 0.6, y: y0 - 0.6, z: p.z - r.z * 0.6 }
   // the right hand holds the grip at the shoulder pocket; the left hand is solved onto the held gun's foregrip
@@ -191,6 +191,6 @@ export function stance(ctx) {
   aimPose(me, fam, s.reloading ? 'ready' : aimMode(me, aiming, s.crouch), pitch)
   // the clips pose the arms; on our own bodies a long gun's left hand also closes on the gun itself (it rides the gun, never a world point, so it can't flop). Shelly Nov 11: her plymodel held the gun right, the basic bodies' left arm hung off it
   const worn = !!(s.look?.modelUrl || s.look?.model), gun = me.session?.heldObj
-  if (fam === 'long' && gun && ctx.getObject(gun)) /* Nov 15 revamp: worn bodies too; on the ash rifle carry the plymodel's support paw floated off the gun (seen on Shelly's screen) */ return { bones: { LeftHand: { reach: { object: gun, offset: { x: 0, y: -0.04, z: 0.43 }, blendIn: 0.18, blendOut: 0.25 } } }, aiming, armed: true }
+  if (fam === 'long' && gun && ctx.getObject(gun)) /* Nov 15 revamp: worn bodies too; on the ash rifle carry the plymodel's support paw floated off the gun (seen on Shelly's screen) */ { const LH = { reach: { object: gun, offset: { x: 0, y: -0.04, z: 0.43 }, blendIn: 0.18, blendOut: 0.25 } }; if (!aiming) return { bones: { LeftHand: LH }, aiming, armed: true }; const hh = longHands(me, gun, yaw, pitch, true, s.crouch); return { bones: { RightHand: { reach: { to: hh.RightHand.reach.to, blendIn: 0.12, blendOut: 0.25 } }, LeftHand: LH }, aiming, armed: true } } // Nov 15 (Shelly: 'now the aiming'): the sight clip lifts the grip to the eye and the gun crossed a snout; aimed, the grip hand is solved low at the shoulder pocket, forward of the face
   return { bones: null, aiming, armed: true }
 }
