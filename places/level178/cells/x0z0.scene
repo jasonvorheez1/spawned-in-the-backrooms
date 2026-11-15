@@ -2915,6 +2915,39 @@ l178-story-andon-1:
   rotation: {pitch: 0, roll: 0, yaw: 15}
   state: {why: ""}
   tags: [l178-story]
+l178-story-andon-2:
+  castShadow: true
+  children: [{feetPosition: {x: 0, y: 0.372, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 5, intensity: 1.2, kind: point}}]
+  feetPosition: {x: 2.55, y: 0.44983142614364624, z: -16.4}
+  id: l178-story-andon-2
+  layout: {box: {max: {x: 0.14, y: 0.62, z: 0.14}, min: {x: -0.14, y: 0, z: -0.14}}}
+  model: /cdn/value.0f2e136e1e81146ac90b3ba3c6055b6ee9ef050a45847946d6775b8516d51d2a.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: -10}
+  state: {why: ""}
+  tags: [l178-story]
+l178-story-andon-3:
+  castShadow: true
+  children: [{feetPosition: {x: 0, y: 0.372, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 5, intensity: 1.2, kind: point}}]
+  feetPosition: {x: 3.6, y: 0.44983142614364624, z: -16.4}
+  id: l178-story-andon-3
+  layout: {box: {max: {x: 0.14, y: 0.62, z: 0.14}, min: {x: -0.14, y: 0, z: -0.14}}}
+  model: /cdn/value.0f2e136e1e81146ac90b3ba3c6055b6ee9ef050a45847946d6775b8516d51d2a.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 5}
+  state: {why: ""}
+  tags: [l178-story]
+l178-story-andon-4:
+  castShadow: true
+  children: [{feetPosition: {x: 0, y: 0.372, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 5, intensity: 1.2, kind: point}}]
+  feetPosition: {x: 16.55, y: 0.45012607856811127, z: 5.55}
+  id: l178-story-andon-4
+  layout: {box: {max: {x: 0.14, y: 0.62, z: 0.14}, min: {x: -0.14, y: 0, z: -0.14}}}
+  model: /cdn/value.0f2e136e1e81146ac90b3ba3c6055b6ee9ef050a45847946d6775b8516d51d2a.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 0}
+  state: {why: ""}
+  tags: [l178-story]
 l178-story-backpack:
   behavior: scripts/l178-prop.js
   castShadow: true
@@ -2927,6 +2960,46 @@ l178-story-backpack:
   rotation: {pitch: 0, roll: 0, yaw: -20}
   state: {c: {x: -0.95, y: 0.6998314261436462, z: -16.5}, kind: read, name: Note under the backpack, page: 1784, verb: Read}
   tags: [l178-story, usable, l178-prop]
+l178-story-bottle:
+  castShadow: false
+  feetPosition: {x: -0.55, y: 0.44983142614364624, z: -16.2}
+  id: l178-story-bottle
+  layout: {box: {max: {x: 0.12, y: 0.08, z: 0.04}, min: {x: -0.12, y: 0, z: -0.04}}}
+  model: /cdn/value.081c36881c2a0b7c6645cc27fa50fa1fd1ee820145d7abd41b6503ef59e06e88.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 70}
+  state: {why: empty almond water}
+  tags: [l178-story]
+l178-story-broom:
+  castShadow: true
+  feetPosition: {x: -4.8, y: 0, z: 6.95}
+  id: l178-story-broom
+  layout: {box: {max: {x: 0.15, y: 1.3, z: 0.06}, min: {x: -0.15, y: 0, z: -0.06}}}
+  model: /cdn/value.1db258b720759612ed4562f2c36c587542016f0bcc20324935c6bf4a7ccd8f45.glb
+  receiveShadow: true
+  rotation: {pitch: -12, roll: 0, yaw: 0}
+  state: {why: broom against the porch lantern}
+  tags: [l178-story]
+l178-story-bucket-1:
+  castShadow: false
+  feetPosition: {x: -15.35, y: 0.4753917908398645, z: -1}
+  id: l178-story-bucket-1
+  layout: {box: {max: {x: 0.14, y: 0.18, z: 0.14}, min: {x: -0.14, y: 0, z: -0.14}}}
+  model: /cdn/value.a69c1a581e4da208020f85acfc581fcad728f898a9106c49bfc545376ae715d1.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 0}
+  state: {why: ""}
+  tags: [l178-story]
+l178-story-bucket-2:
+  castShadow: false
+  feetPosition: {x: -15.9, y: 0.6900750985073333, z: 0.7}
+  id: l178-story-bucket-2
+  layout: {box: {max: {x: 0.14, y: 0.18, z: 0.14}, min: {x: -0.14, y: 0, z: -0.14}}}
+  model: /cdn/value.a69c1a581e4da208020f85acfc581fcad728f898a9106c49bfc545376ae715d1.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 30}
+  state: {why: ""}
+  tags: [l178-story]
 l178-story-calli-cup:
   castShadow: false
   feetPosition: {x: 3.2, y: 0.8199615442752839, z: 14.8}
@@ -2957,6 +3030,16 @@ l178-story-callidesk:
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 180}
   state: {why: calligraphy practice mid-sheet}
+  tags: [l178-story]
+l178-story-catdish:
+  castShadow: false
+  feetPosition: {x: 6.4, y: 0.4904158115386963, z: 7.55}
+  id: l178-story-catdish
+  layout: {box: {max: {x: 0.08, y: 0.06, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}
+  model: /cdn/value.fef192fdfd2c8cd5d1923b85f851eba63edc989fb4706c56eddc8a3aab456c27.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 0}
+  state: {why: "a cat dish: no cat"}
   tags: [l178-story]
 l178-story-crumpled-1:
   castShadow: false
@@ -2998,6 +3081,16 @@ l178-story-dryrack:
   rotation: {pitch: 0, roll: 0, yaw: 90}
   state: {why: bowls drying in the sink}
   tags: [l178-story]
+l178-story-flashlight:
+  castShadow: false
+  feetPosition: {x: -1.2, y: 0.44983142614364624, z: -16.05}
+  id: l178-story-flashlight
+  layout: {box: {max: {x: 0.11, y: 0.05, z: 0.025}, min: {x: -0.11, y: 0, z: -0.025}}}
+  model: /cdn/value.d626743fa03c074395186d332c3c7f46d470cca69ed88f670db36e6d1ce453b6.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 20}
+  state: {why: "cracked flashlight, no longer needed"}
+  tags: [l178-story]
 l178-story-futon-folded:
   castShadow: true
   feetPosition: {x: -1.9, y: 0.44983142614364624, z: -16.45}
@@ -3030,6 +3123,37 @@ l178-story-getabako:
   rotation: {pitch: 0, roll: 0, yaw: 180}
   state: {why: shoe shelf by the hub door}
   tags: [l178-story]
+l178-story-go-zabuton-1:
+  castShadow: false
+  feetPosition: {x: 15.6, y: 0.4501425674935572, z: 2.95}
+  id: l178-story-go-zabuton-1
+  layout: {box: {max: {x: 0.25, y: 0.1, z: 0.25}, min: {x: -0.25, y: 0, z: -0.25}}}
+  model: /cdn/value.15dc7415aa439093b0d220e0db76e800ec4c88afecdad901ad6f72286582b8e3.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 10}
+  state: {why: ""}
+  tags: [l178-story]
+l178-story-go-zabuton-2:
+  castShadow: false
+  feetPosition: {x: 15.6, y: 0.45011055805084366, z: 4.3}
+  id: l178-story-go-zabuton-2
+  layout: {box: {max: {x: 0.25, y: 0.1, z: 0.25}, min: {x: -0.25, y: 0, z: -0.25}}}
+  model: /cdn/value.15dc7415aa439093b0d220e0db76e800ec4c88afecdad901ad6f72286582b8e3.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: -6}
+  state: {why: ""}
+  tags: [l178-story]
+l178-story-goboard:
+  castShadow: true
+  feetPosition: {x: 15.6, y: 0.45013061384261455, z: 3.6}
+  id: l178-story-goboard
+  layout: {box: {max: {x: 0.275, y: 0.25, z: 0.25}, min: {x: -0.275, y: 0, z: -0.25}}}
+  model: /cdn/value.c8cafcd3f895321c1f741e85642e8cbe5503404a5b70b066a21d9ecfcbfe6378.glb
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 0}
+  state: {why: a game nobody finished}
+  tags: [l178-story]
 l178-story-guestbook:
   behavior: scripts/l178-prop.js
   castShadow: false
@@ -3041,15 +3165,67 @@ l178-story-guestbook:
   rotation: {pitch: 0, roll: 0, yaw: 180}
   state: {c: {x: -1.3, y: 0.9798314261436463, z: 16.77}, kind: read, name: Guestbook, page: 1781, verb: Read}
   tags: [l178-story, usable, l178-prop]
+l178-story-hairpin:
+  castShadow: false
+  feetPosition: {x: -15.9, y: 0.7153892495911174, z: -1}
+  id: l178-story-hairpin
+  layout: {box: {max: {x: 0.085, y: 0.02, z: 0.035}, min: {x: -0.085, y: 0, z: -0.035}}}
+  model: /cdn/value.bf00eaff224250938724cb8e71b8544d2d94142b82c3c512b1dc49a32d35cd32.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 30}
+  state: {why: a forgotten hairpin}
+  tags: [l178-story]
 l178-story-kamidana:
   castShadow: true
-  feetPosition: {x: -2.3, y: 2.6500000000000004, z: 16.95}
+  feetPosition: {x: -2.3, y: 2.28, z: 16.95}
   id: l178-story-kamidana
   layout: {box: {max: {x: 0.375, y: 0.55, z: 0.15}, min: {x: -0.375, y: 0, z: -0.15}}}
   model: /cdn/value.4d2faad8c18b0f45887c5902a49096bf54a143cd0ce7d2d87fc723ada8999320.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 180}
   state: {why: household shrine high over the sword cabinet}
+  tags: [l178-story]
+l178-story-kimono-stand:
+  castShadow: true
+  feetPosition: {x: 8.2, y: 0.44983142614364624, z: -16.45}
+  id: l178-story-kimono-stand
+  layout: {box: {max: {x: 0.65, y: 1.5, z: 0.225}, min: {x: -0.65, y: 0, z: -0.225}}}
+  model: /cdn/value.b118d57b5cfcc7e88ca86588ff53d8a5f7c66069cf792ebda47dd0ee12c16685.glb
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 0}
+  state: {why: kimono airing on its stand}
+  tags: [l178-story]
+l178-story-laundry:
+  castShadow: true
+  feetPosition: {x: -4.6, y: 0, z: 5.6}
+  id: l178-story-laundry
+  layout: {box: {max: {x: 1, y: 1.6, z: 0.3}, min: {x: -1, y: 0, z: -0.3}}}
+  model: /cdn/value.780b9adbc07d7ff8855f56755e5ae39a410e11fb9074dbb33c81209222439f7d.glb
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 10}
+  state: {why: yukata drying}
+  tags: [l178-story]
+l178-story-leaves:
+  castShadow: false
+  feetPosition: {x: -3.9, y: 0, z: 6.3}
+  id: l178-story-leaves
+  layout: {box: {max: {x: 0.3, y: 0.12, z: 0.25}, min: {x: -0.3, y: 0, z: -0.25}}}
+  model: /cdn/value.2359016171d993f4ade41e8c06b36363d1e9fe08419f55f47c805705335adeaf.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 0}
+  state: {why: swept maple leaves}
+  tags: [l178-story]
+l178-story-letter-zabuton:
+  castShadow: false
+  feetPosition: {x: 15.8, y: 0.450121428161563, z: -5.2}
+  id: l178-story-letter-zabuton
+  layout: {box: {max: {x: 0.25, y: 0.1, z: 0.25}, min: {x: -0.25, y: 0, z: -0.25}}}
+  model: /cdn/value.15dc7415aa439093b0d220e0db76e800ec4c88afecdad901ad6f72286582b8e3.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 0}
+  state: {why: ""}
   tags: [l178-story]
 l178-story-paperback:
   castShadow: false
@@ -3113,6 +3289,26 @@ l178-story-scallion:
   rotation: {pitch: 0, roll: 0, yaw: 90}
   state: {why: "scallions half chopped, knife laid down"}
   tags: [l178-story]
+l178-story-shamisen:
+  castShadow: true
+  feetPosition: {x: 16.78, y: 0.45012962953674507, z: -1.4}
+  id: l178-story-shamisen
+  layout: {box: {max: {x: 0.125, y: 0.98, z: 0.06}, min: {x: -0.125, y: 0, z: -0.06}}}
+  model: /cdn/value.1980356289b08c7eaaa2df88d19ffc654a297ecba2d77353e6abba9a4e2455b7.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: -14, yaw: 90}
+  state: {why: leaning on the wall}
+  tags: [l178-story]
+l178-story-slippers:
+  castShadow: false
+  feetPosition: {x: 1.9, y: 0.4904158115386963, z: 7.45}
+  id: l178-story-slippers
+  layout: {box: {max: {x: 0.12, y: 0.05, z: 0.14}, min: {x: -0.12, y: 0, z: -0.14}}}
+  model: /cdn/value.c3fa0485100a7b03f0f1e1d34d385a28281ec3ca2dad9609fd08ab0981f73af9.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 180}
+  state: {why: slippers at the porch edge facing the spring}
+  tags: [l178-story]
 l178-story-sneakers:
   castShadow: false
   feetPosition: {x: 0.46, y: 0.4799615442752838, z: 16.28}
@@ -3122,6 +3318,36 @@ l178-story-sneakers:
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 200}
   state: {why: "a wanderer's muddy sneakers, kicked off at the door"}
+  tags: [l178-story]
+l178-story-stool-1:
+  castShadow: true
+  feetPosition: {x: -15.9, y: 0.4753892495911174, z: -1}
+  id: l178-story-stool-1
+  layout: {box: {max: {x: 0.16, y: 0.24, z: 0.13}, min: {x: -0.16, y: 0, z: -0.13}}}
+  model: /cdn/value.94cf59d6216c28c0ed99b62c942188545170cf5aecefbac8b324fc8bf008908e.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 8}
+  state: {why: ""}
+  tags: [l178-story]
+l178-story-stool-2:
+  castShadow: true
+  feetPosition: {x: -15.9, y: 0.4500750985073333, z: 0.7}
+  id: l178-story-stool-2
+  layout: {box: {max: {x: 0.16, y: 0.24, z: 0.13}, min: {x: -0.16, y: 0, z: -0.13}}}
+  model: /cdn/value.94cf59d6216c28c0ed99b62c942188545170cf5aecefbac8b324fc8bf008908e.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: -12}
+  state: {why: ""}
+  tags: [l178-story]
+l178-story-teatray:
+  castShadow: true
+  feetPosition: {x: 8, y: 0.4904158115386963, z: 2.6}
+  id: l178-story-teatray
+  layout: {box: {max: {x: 0.21, y: 0.22, z: 0.15}, min: {x: -0.21, y: 0, z: -0.15}}}
+  model: /cdn/value.9998018082ef216e7f931e145f49e45ce9de6b4a18ee2bd64e7587c0240d7afc.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 90}
+  state: {why: "tea for two, one cup tipped"}
   tags: [l178-story]
 l178-story-tray-done:
   castShadow: false
@@ -3153,6 +3379,28 @@ l178-story-umbrella:
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 0}
   state: {why: "folded umbrella still dripping: it rains somewhere else"}
+  tags: [l178-story]
+l178-story-writedesk:
+  behavior: scripts/l178-prop.js
+  castShadow: true
+  feetPosition: {x: 16.45, y: 0.45009118930101444, z: -5.2}
+  id: l178-story-writedesk
+  layout: {box: {max: {x: 0.375, y: 0.4, z: 0.225}, min: {x: -0.375, y: 0, z: -0.225}}}
+  model: /cdn/value.4156222f9c28424365fe51d63f615fa9746f4a63da75f914e8de7383fc873cfc.glb
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 270}
+  state: {c: {x: 16.45, y: 0.6500911893010144, z: -5.2}, kind: read, name: Unfinished letter, page: 1782, verb: Read}
+  tags: [l178-story, usable, l178-prop]
+l178-story-yukata-fold:
+  castShadow: false
+  feetPosition: {x: -16.4, y: 0.4501400586504094, z: 2.5}
+  id: l178-story-yukata-fold
+  layout: {box: {max: {x: 0.21, y: 0.12, z: 0.17}, min: {x: -0.21, y: 0, z: -0.17}}}
+  model: /cdn/value.5dcc859cda9394822b2c83bc6d9e12ea04201141add47d2fbe638357884384b5.glb
+  receiveShadow: true
+  rotation: {pitch: 0, roll: 0, yaw: 90}
+  state: {why: someone folded their yukata and went to soak}
   tags: [l178-story]
 l178-table-dining:
   behavior: [scripts/l178-prop.js]
