@@ -2569,7 +2569,7 @@ l178-shoji-1:
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  state: {axis: x, closedX: -0.45, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0.45, slide: 0.9, verb: Close}
   tags: [l178, l178-shoji, usable]
 l178-shoji-10:
   behavior: scripts/l178-prop.js
@@ -2580,7 +2580,7 @@ l178-shoji-10:
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.099, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  state: {axis: x, closedX: -0.45, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0.45, slide: 0.9, verb: Close}
   tags: [l178, l178-shoji, usable]
 l178-shoji-11:
   behavior: scripts/l178-prop.js
@@ -2591,7 +2591,7 @@ l178-shoji-11:
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  state: {axis: x, closedX: -0.45, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0.45, slide: 0.9, verb: Close}
   tags: [l178, l178-shoji, usable]
 l178-shoji-12:
   behavior: scripts/l178-prop.js
@@ -2602,7 +2602,7 @@ l178-shoji-12:
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  state: {axis: x, closedX: -0.45, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0.45, slide: 0.9, verb: Close}
   tags: [l178, l178-shoji, usable]
 l178-shoji-2:
   behavior: scripts/l178-prop.js
@@ -2613,7 +2613,7 @@ l178-shoji-2:
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  state: {axis: x, closedX: -0.45, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0.45, slide: 0.9, verb: Close}
   tags: [l178, l178-shoji, usable]
 l178-shoji-3:
   behavior: scripts/l178-prop.js
@@ -2624,7 +2624,7 @@ l178-shoji-3:
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  state: {axis: x, closedX: -0.45, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0.45, slide: 0.9, verb: Close}
   tags: [l178, l178-shoji, usable]
 l178-shoji-4:
   behavior: scripts/l178-prop.js
@@ -2635,7 +2635,7 @@ l178-shoji-4:
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  state: {axis: x, closedX: -0.45, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0.45, slide: 0.9, verb: Close}
   tags: [l178, l178-shoji, usable]
 l178-shoji-5:
   behavior: scripts/l178-prop.js
@@ -2646,7 +2646,7 @@ l178-shoji-5:
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  state: {axis: x, closedX: -0.45, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0.45, slide: 0.9, verb: Close}
   tags: [l178, l178-shoji, usable]
 l178-shoji-6:
   behavior: scripts/l178-prop.js
@@ -2657,7 +2657,7 @@ l178-shoji-6:
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  state: {axis: x, closedX: -0.45, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0.45, slide: 0.9, verb: Close}
   tags: [l178, l178-shoji, usable]
 l178-shoji-7:
   behavior: scripts/l178-prop.js
@@ -2668,7 +2668,7 @@ l178-shoji-7:
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  state: {axis: x, closedX: -0.45, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0.45, slide: 0.9, verb: Close}
   tags: [l178, l178-shoji, usable]
 l178-shoji-8:
   behavior: scripts/l178-prop.js
@@ -2679,7 +2679,7 @@ l178-shoji-8:
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  state: {axis: x, closedX: -0.45, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0.45, slide: 0.9, verb: Close}
   tags: [l178, l178-shoji, usable]
 l178-shoji-9:
   behavior: scripts/l178-prop.js
@@ -2690,7 +2690,7 @@ l178-shoji-9:
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.099, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  state: {axis: x, closedX: -0.45, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0.45, slide: 0.9, verb: Close}
   tags: [l178, l178-shoji, usable]
 l178-shrub-0:
   feetPosition: {x: -5.6, y: 0, z: -5.8}
