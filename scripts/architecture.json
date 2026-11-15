@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9178,
-  "updatedAt": "2026-11-15T17:08:52.348Z",
+  "basedOnSpecVersion": 9180,
+  "updatedAt": "2026-11-15T17:12:25.439Z",
   "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Global scripts and shared registries coordinate play while place scenes and simulations compose local spaces and stories, now including Level 1.1 Corrupted Corridor, Kyoto Dreams and Lumiria's countryside. The separate Director Savi mod supplies a creator-approved trailer planning, filming and delivery workflow.",
   "scriptPaths": [],
   "places": [
@@ -22,7 +22,7 @@
     "places/level132/sim.js + scripts/lib/data/level132.yml + scripts/lib/l132-*.js - local lay/tick orchestration for square, stalls, shops, land, people, Duke, quests and barter.",
     "places/level178/config.yaml + scripts/terrain178.js + x0z0.scene + sim.js - terrain and authored Kyoto house, resident rounds, arrival quest, one-time finds, searchable containers and breakable sweep.",
     "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js + scripts/ui.js - title/save lifecycle, expedition choices and shared HUD/menu surface; ui.js lazily mounts barter and phone panels from player-state flags.",
-    "world.assets/e6/~2fcdn~2fvalue.94c010e9699ed48f0434b076bc4c70f3c285ebb8156f30f76a14aefed8cee369.mp4.yaml - uploaded video attachment trailer-v4 (76,895,102 bytes); mods/director-savi/commands/director-savi.md → skills/director-savi.md is the trailer workflow entry, with mods/director-savi/card.js as its camera-attached catalog image."
+    "world.assets/d1/~2fcdn~2fvalue.7597878551f0e24a4d66c4978446c87edff9aaa9413eb777ea3ae25559ac7673.mp4.yaml - uploaded video attachment trailer-v5 (83,541,385 bytes); mods/director-savi/commands/director-savi.md → skills/director-savi.md is t…"
   ],
   "shared": [
     "scripts/lib/places.js - canonical per-place names, labels and HUD titles; consumed by feed, quest names and scripts/ui.js; registers Level 1.1 Corrupted Corridor and Level 132's Duchy title.",
