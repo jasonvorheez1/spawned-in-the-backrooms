@@ -449,7 +449,8 @@
    0.05,
    1.0
   ],
-  "pca": true
+  "pca": true,
+  "flipLen": true
  },
  "l178_katana": {
   "min": [
