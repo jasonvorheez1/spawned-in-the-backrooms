@@ -2,13 +2,13 @@
 // transitions to the game name"). Runs on the player's own machine from scripts/main-menu.js in places/tutorial0.
 // state.t0n = beats passed, state.t0cut = { id, at } while one plays; the frame and captions are scripts/cutscene-ui.js t0Ui.
 import { animate } from "builtin/tween"
-import { BEATS, SOFT, ENC, HALO, DRAWINGS, PACE } from "./tut0.js"
+import { BEATS, SOFT, ENC, HALO, PACE } from "./tut0.js"
 import { dinaLead } from "./dina-quest.js"
 import { spawnPhoebe, dropPhoebe } from "./phoebe.js"
-import { tutJump } from "./tutorial.js"
+import { noStory } from "./run-opts.js"
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
 const SMILER_MODEL = { id: "/cdn/value.fb443f6a23bcd4977c437db42b3f9abe2510fcb6cf2076ee4956fb235d581b26.glb", forward: "+x" } // scripts/smilers.js
-export const LEN = { encounter: 16.5, smiler: 11, halogen: 6, drawings: 10, final: 23 }
+export const LEN = { encounter: 16.5, final: 23 }
 const GASP = "/cdn/value.1f5d195f954552c9304c8d13f9177b97b62b100316d004215a918c9282445aad.mp3"   // johnadams2 (Nov 9): "the cutscenes feel like bootleg mobile games": every shot is held by a person, never a tripod.
 // Savi's picks: a slow breathing drift (~1.5 cm at the eye, ~0.35 deg of aim) made of three sines, so no two seconds repeat
 const wob = (t, s) => Math.sin(t * 0.83 + s) * 0.6 + Math.sin(t * 2.1 + s * 2.3) * 0.3 + Math.sin(t * 4.7 + s * 3.7) * 0.1
@@ -32,9 +32,6 @@ const LEG_MODEL = "/cdn/value.4aaf9c7c64978c958d23a7a8a6304f31accb3d391d52f30438
 const yawTo = (a, b) => Math.atan2(-(b.x - a.x), -(b.z - a.z)) * 180 / Math.PI
 const fx1 = (ctx, name, p) => ctx.emit(name, p, { audience: { player: ctx.self.id } })
 function snd(ctx, n, v, at) { ctx.emit("playSound", { clip: SND(n), position: at ?? ctx.self.feetPosition, volume: v, maxDistance: 40 }, { audience: { player: ctx.self.id } }) }
-function endLight(ctx, on) { // the hall's last working fixture stutters; the dead one past it never comes on
-  const o = ctx.getObject("t0-light-13"); if (o?.light) o.light = { ...o.light, intensity: on ? 5 : 0.3 }
-}
 const inBeat = (b, p) => b.circle ? Math.hypot(p.x - b.circle.x, p.z - b.circle.z) < b.circle.r * 0.8 : p.x > b.box[0] && p.x < b.box[1] && p.z > b.box[2] && p.z < b.box[3]
 
 // true while a cutscene owns the player
@@ -42,7 +39,9 @@ export function t0Tick(ctx, ses, st) {
   const me = ctx.self, p = me.feetPosition
   if (!st.t0cut) {
     const b = BEATS[st.t0n ?? 0]
-    if (!b || !inBeat(b, p)) return false
+    if (!b || b.interactive || !inBeat(b, p)) return false
+    if (b.id === "smiler") { walkHall(ctx, ses, st, p); return false }
+    if (b.id === "drawings") { st.t0n = 4; return false }
     st.t0cut = { id: b.id, at: ctx.now() }; ses.t0 = null
   }
   const id = st.t0cut.id, t = (ctx.now() - st.t0cut.at) / 1000 / PACE
@@ -51,55 +50,57 @@ export function t0Tick(ctx, ses, st) {
   if (id !== "final" || t < 3) { me.feetPosition = c.p0 }
   me.velocity = { x: 0, y: 0, z: 0 }
   if (CUE[id]) once("cue", () => raw(ctx, CUE[id], 0.75))
-  const done = BEAT[id](ctx, c, t, once, st)
+  const done = BEAT[id]?.(ctx, c, t, once, st) ?? true // an old room may still be playing a retired cut
   handheld(ctx, t)
   if (!done) return true
   if (id === "halogen") me.bones.RightHand.reach = null
-  if (id === "halogen") { st.creating = false; st.sheetOpen = false; dinaLead(ctx, st) }
-  const nextStep = { encounter: "combat", smiler: "crouch", halogen: "inv", drawings: "go" }[id]
-  if (nextStep) tutJump(ctx, st, nextStep)
-  for (const k of ["smiler", "glint", "dust", "leg", "ent"]) if (c[k]) ctx.destroy(c[k]) // the knocked-down entity (c.ent) stays where it fell
+  if (id === "halogen") { st.creating = false; st.sheetOpen = false; if (!noStory(st)) dinaLead(ctx, st) }
+  if (id === "smiler") hallLights(ctx, false)
+  for (const k of ["smiler", "glint", "dust", "leg", "ent"]) if (c[k]) ctx.destroy(c[k])
   me.anim.cut = null; ctx.view.camera = null; me.hidden = (me.hidden || []).filter((i) => i !== me.id)
   st.t0n = (st.t0n ?? 0) + 1; st.t0cut = null; ses.t0 = null
   return id === "final" ? "level1" : true
 }
 // Shelly's horror pack (scripts/lib/data/sfx-library.yml), Nov 8: "the sounds are stupid as hell": the pack carries the tutorial
 const H = { snap: "/cdn/value.d2518fac095f995e2626438e4d8f582ed04878e448ed62ddd2e45c89e704aa57.mp3", scrape: "/cdn/value.77203ab709373e37101914a819bdb0c3c22ef5f8e40e1211d5e1e1605e64085d.mp3", moan: "/cdn/value.c3763d37a43bab87a54590b4a584b45f56ce2ecf25f4eb2c5e3d645da318cbe3.mp3", rhiss: "/cdn/value.5ff97cbae7433fbe0550c6a16411314a7c725c995893b7e33dbd5ce593baf17e.mp3", switch: "/cdn/value.30ab43703195a3d308cce6e2ea7b32a92438c9e3dff74eb60205f5b9442e02d8.mp3", doom: "/cdn/value.ce9496b9dbf80ca37ab231135330442e462480dc39cf020f0d3e654e12e13361.mp3", slowst: "/cdn/value.e41c59fc8a105919b1a1c930c25409968c1f2d41422ddc584c5625d034e0be64.mp3", cresc: "/cdn/value.d1ae3ebefefdf17be753a4c379970ea2fe9b63f0de9e0797195e92a0c4bc6743.mp3", twang: "/cdn/value.5c93f7a5f22a8eea6e6327bc6710a6be6d1551eb393575c54c144d2b2fdfe908.mp3", growl: "/cdn/value.eff7b4c4645715b8686565c6211d50b2b9e416267f58c3d912e5857768ad366a.mp3", grunt: "/cdn/value.d0066beac8550b339a3eec0d5532997fde8cf394856f8ad3041c909659bea09a.mp3", mbreath: "/cdn/value.783cfc4c74e9c314ae36d9305103e6e8794cf0493ca86f23facf3f4c10d25b1d.mp3", scream: "/cdn/value.e7a73d3533435fe19d5140141081aa76bfe425f66affd0fb7653cd9afc7a7844.mp3", sting1: "/cdn/value.3220d45eae556d4b712b075cd8f883e150c941f2fb8cfbd774f388eebe7c9432.mp3", sting2: "/cdn/value.8c4011cd8c3d14bfeff784df9c17be809b21b0beccfafbea8271a0bc409125bd.mp3", run: "/cdn/value.14f7bc36d15cfcd8449842041089164a319c2ca1ff4917294b7ed2156179b62f.mp3", flashoff: "/cdn/value.6d88ccc0b16b07ffd52f328835bad9d9bf3239d8146e88b2266ff673fbfbde94.mp3", buzz: "/cdn/value.eb34f5496883ceba559e80813abd255098c4a18b2f5d2dbcd6465447d4afa7f2.mp3" }
-// each scene's own score, cut to its length (PACE-stretched seconds in the name). Synced: encounter hit t=10.0 x 1.7 = 17 s (the strings hit), smiler lights-on t=9.41 x 1.7 = 16 s (the cut dead)
+// Each remaining scene has a score cut to its PACE-stretched length.
 const M = (n) => `/cdn/moodboard-realistic-gritty/music-${n}.mp3`
-const CUE = { encounter: M("horror-film-cue-28-seconds-low-cello-drone-creeping-heartbeat-pulse-rising-strings-hit-at-17-seconds-then-frantic-chase-percussion"), smiler: M("horror-film-cue-19-seconds-near-silence-sub-drone-dissonant-piano-notes-swelling-to-a-scream-of-strings-cut-dead-at-16-seconds"), halogen: M("horror-film-cue-10-seconds-cold-analog-synth-hum-mechanical-ticking-ominous-low-brass"), drawings: M("horror-film-cue-17-seconds-music-box-melody-detuned-over-distant-hum-slow-and-sad") }
+const CUE = { encounter: M("horror-film-cue-28-seconds-low-cello-drone-creeping-heartbeat-pulse-rising-strings-hit-at-17-seconds-then-frantic-chase-percussion"), halogen: M("horror-film-cue-10-seconds-cold-analog-synth-hum-mechanical-ticking-ominous-low-brass") }
 const GRIN_SVG = `<svg viewBox='0 0 100 60' width='0.9m' billboard='full'><g filter='drop-shadow(0 0 3px #fffbe8)'><ellipse cx='30' cy='14' rx='7' ry='4.5' fill='#f4f1e2'/><ellipse cx='70' cy='14' rx='7' ry='4.5' fill='#f4f1e2'/><path d='M10 30 Q50 64 90 30 Q50 45 10 30 Z' fill='#f4f1e2'/><path d='M20 34 L22 42 M30 37 L31 47 M40 39 L40 50 M50 40 L50 51 M60 39 L60 50 M70 37 L69 47 M80 34 L78 42' stroke='#17150f' stroke-width='1.8'/></g></svg>`
+function hallLights(ctx, dark) {
+  for (const i of [9, 10, 11, 12, 13]) {
+    const o = ctx.getObject(`t0-light-${i}`)
+    if (o?.light) o.light = { ...o.light, intensity: dark ? (i % 2 ? 0.26 : 0.08) : 5 }
+  }
+  const panels = ctx.getObject("tut0-hallpanels")
+  if (panels?.material) panels.material = { ...panels.material, emissiveIntensity: dark ? 0.1 : 2.4 }
+}
+
+function walkHall(ctx, ses, st, p) {
+  const hall = (ses.t0Hall ??= {})
+  if (p.x >= 36) {
+    if (hall.grin && ctx.getObject(hall.grin)) ctx.destroy(hall.grin)
+    hallLights(ctx, false)
+    raw(ctx, H.buzz, 0.65, p)
+    ses.t0Hall = null
+    st.t0n = 2
+    return
+  }
+  if (!hall.dark) {
+    hall.dark = true
+    hallLights(ctx, true)
+    raw(ctx, H.flashoff, 0.8, p)
+  }
+  if (p.x >= 22 && !hall.warned) {
+    hall.warned = true
+    const quiet = st.crouch && !st.light
+    const pos = { x: quiet ? 34 : Math.min(36, p.x + 5.5), y: 1.45, z: -28.2 }
+    hall.grin = ctx.spawn({ audience: "local", scope: "session", lifetime: 5, feetPosition: pos, vector: GRIN_SVG })
+    raw(ctx, quiet ? H.mbreath : H.sting1, quiet ? 0.42 : 0.7, pos)
+  }
+}
+
 const BEAT = {
-  // hall C: the panels die one by one from the far end toward them; in the black, a grin. It comes closer in jumps. The lights bang back on: nothing there
-  smiler(ctx, c, t, once) {
-    const me = ctx.self, x0 = c.p0.x, z = -28
-    const p = { x: lerp(x0, x0 - 2.2, ss(4.2, 9, t)), y: 0, z: c.p0.z }
-    me.feetPosition = p; me.rotation = { yaw: -90 }
-    me.anim.cut = t > 4.2 && t < 9 ? { clip: "cdn/clip-walk-loop.glb", weight: 4, loop: "loop", speed: -0.6 } : { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" }
-    c.orig ??= {}
-    ;[13, 12, 11, 10, 9].forEach((i, k) => { if (t > 0.7 + k * 0.6) once("die" + i, () => {
-      const o = ctx.getObject(`t0-light-${i}`); if (o?.light) { c.orig[i] = o.light.intensity; o.light = { ...o.light, intensity: 0 } }
-      raw(ctx, H.flashoff, 0.8, o?.feetPosition ?? p)
-    }) })
-    const spots = [[4.0, 13], [6.3, 7.5], [8.1, 3.6]] // [when, metres ahead of where they started]
-    for (const [when, ahead] of spots) if (t > when) once("grin" + when, () => {
-      if (c.smiler) ctx.destroy(c.smiler)
-      c.smiler = ctx.spawn({ audience: "local", scope: "session", lifetime: 30, feetPosition: { x: x0 + ahead, y: 1.45, z }, vector: GRIN_SVG, children: [{ feetPosition: { x: 0, y: 0, z: 0 }, light: { kind: "point", color: "#fffbe8", intensity: 0.25, distance: 1.6 } }] })
-      raw(ctx, (when < 5 ? H.mbreath : when > 8 ? H.sting2 : H.sting1), when < 5 ? 0.7 : 0.9, { x: x0 + ahead, y: 1.4, z })
-      if (when > 5) fx1(ctx, "screenShake", { intensity: when > 8 ? 0.35 : 0.18, duration: 0.3 })
-      if (when > 8) { raw(ctx, GASP, 0.8); fx1(ctx, "cameraPunch", { direction: { x: -1, y: 0, z: 0 }, intensity: 0.6 }) }
-    })
-    if (t > 5) once("breathf", () => raw(ctx, BREATHF, 0.6))
-    if (t > 9.41) once("on", () => {
-      if (c.smiler) { ctx.destroy(c.smiler); c.smiler = null }
-      for (const [i, v] of Object.entries(c.orig)) { const o = ctx.getObject(`t0-light-${i}`); if (o?.light) o.light = { ...o.light, intensity: v } }
-      raw(ctx, H.buzz, 1.0, p); fx1(ctx, "screenFlash", { color: "#fff6c8", duration: 0.2, intensity: 0.6 })
-    })
-    const head = { x: p.x, y: 1.6, z: p.z }
-    ctx.view.camera = { eye: head, aim: { x: p.x + 10, y: 1.45, z }, fov: t < 4 ? 62 : lerp(62, 44, ss(4, 8.4, t)) }
-    if (t > LEN.smiler) return true
-    return false
-  },
   // unarmed. something crawls out of hall C; they back into the corner; the broken desk; a leg on the floor; one swing; run
   encounter(ctx, c, t, once, st) {
     const me = ctx.self, cor = { x: ENC.corner.x, y: 0, z: ENC.corner.z }, legAt = { x: ENC.leg.x, y: 0.05, z: ENC.leg.z }
@@ -188,21 +189,6 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
     else if (t < 2.5) ctx.view.camera = { eye: { x: HALO.x - 1.2, y: 1.5, z: HALO.z + 0.7 }, aim: scr, fov: 30 } // the screen wakes
     else ctx.view.camera = { eye: { x: HALO.x - 1.0, y: 1.3, z: HALO.z - 0.85 }, aim: port, fov: lerp(40, 30, ss(2.5, 3.6, t)) } // the arm in the port
     return t > 4 && !st.sheetOpen
-  },
-  // corridor E: someone came through before them and left notes the whole way down
-  drawings(ctx, c, t, once) {
-    const me = ctx.self, at = (n) => { const d = DRAWINGS.find((r) => r[0] === n); return { x: d[1], y: 1.45, z: d[2] } }
-    me.rotation = { yaw: 180 }; me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" }
-    for (const [k, when] of [["p1", 0.3], ["p2", 3], ["p3", 5.6]]) if (t > when) once(k, () => raw(ctx, H.switch, 0.25))
-    const eye = { x: 44, y: 1.6, z: lerp(c.p0.z, -15, ss(0, 8, t)) }
-    let aim, fov = 42
-    if (t < 2.8) aim = at(2)
-    else if (t < 5.4) aim = L3(at(2), at(1), ss(2.8, 3.6, t))
-    else if (t < 7.6) aim = L3(at(1), at(3), ss(5.4, 6.2, t))
-    else { aim = L3(at(3), at(4), ss(7.6, 8.6, t)); fov = lerp(42, 16, ss(7.8, 9.4, t)) } // all the way down the hall to the last one, over the wet spot
-    ctx.view.camera = { eye, aim, fov }
-    if (t > LEN.drawings) { me.feetPosition = { x: 44, y: 0, z: -15 }; return true }
-    return false
   },
   // the far wall of room F won't sit still: Phoebe watches from the corridor mouth, they turn back, walk into the wallpaper and through it
   final(ctx, c, t, once, st) {

@@ -21,6 +21,9 @@ inputs:
         button: false
     qtrack: {}
     qselect: {}
+    fieldGuide:
+      keys: [j]
+      touch: {button: false}
     quickUse: {}
     quick0:
       keys: ["0"]

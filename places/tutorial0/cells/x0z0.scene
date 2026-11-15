@@ -1,11 +1,4 @@
 # spawn-scene v2 yaml x0z0
-t0-halogen:
-  feetPosition: {x: 47.35, y: 0, z: -27.5}
-  id: t0-halogen
-  model: {forward: "-z", id: /cdn/value.28190f626e7fab441feb638bbf3abfb719b3f9a55a84a8b7dd22457d6897642c.glb, offset: [0.119, -0.005, -0.056]}
-  physics: {body: static, collider: box}
-  rotation: -90
-  tags: [t0prop, halogen-machine]
 tut0:
   castShadow: false
   feetPosition: {x: 0, y: 0, z: 0}

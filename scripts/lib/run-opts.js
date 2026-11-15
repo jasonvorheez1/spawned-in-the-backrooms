@@ -3,7 +3,7 @@
 export const OPTS = [
   { key: "story", label: "Main Story", hint: "Dina's trail, Chapter 2, its cutscenes and Phoebe", vals: [["on", "On"], ["off", "Off"]] },
   { key: "npcs", label: "NPCs", hint: "People in the levels: traders, crews, M.E.G. Monsters stay", vals: [["on", "On"], ["off", "Off"]] },
-  { key: "tutorial", label: "Tutorial", hint: "The first walk through Level 0", vals: [["on", "Play it"], ["skip", "Skip"]] },
+  { key: "tutorial", label: "Tutorial", hint: "The opening route and automatic Field Guide tips", vals: [["on", "Play it"], ["skip", "Skip"]] },
   { key: "needs", label: "Hunger & Thirst", hint: "How fast food and water run down", vals: [["off", "Off"], ["easy", "Slow"], ["normal", "Normal"], ["harsh", "Harsh"]] },
   { key: "sanity", label: "Sanity Drain", hint: "How fast the halls get to you", vals: [["off", "Off"], ["easy", "Slow"], ["normal", "Normal"], ["harsh", "Harsh"]] },
   { key: "god", label: "God Mode", hint: "Never hurt, never hungry", vals: [["off", "Off"], ["on", "On"]] },
@@ -31,4 +31,4 @@ export function cleanPick(p) {
 // what a fresh expedition keeps from the old one: who you are and how the screen reads
 export const KEEP = ["look", "uiPrefs", "bodyStyle", "madeChar", "menuOpen", "menuKind", "menuView", "newRun", "saveList", "saveMsg", "studioOpen"];
 // what a save snapshot leaves out: screens and cutscenes in flight
-export const SKIP = new Set(["menuOpen", "menuKind", "menuView", "newRun", "saveList", "saveMsg", "cut", "arrive", "l26cut", "lrunCut", "dcut", "talkWith", "talk", "sit", "freeze", "studioOpen", "wardrobeOpen", "wrMenu", "craftOpen", "invOpen"]);
+export const SKIP = new Set(["menuOpen", "menuKind", "menuView", "newRun", "saveList", "saveMsg", "cut", "arrive", "l26cut", "lrunCut", "dcut", "talkWith", "talk", "sit", "freeze", "studioOpen", "wardrobeOpen", "wrMenu", "craftOpen", "invOpen", "jrnOpen", "guideTip"]);

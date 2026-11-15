@@ -121,6 +121,7 @@ function controlsView(ctx) {
     ['Flashlight / Cycle Weapon', `${key('flashlight', 'F')} · ${key('cycleWeapon', 'X')}`],
     ['Inventory / Character / Journal / Craft', `${key('inv', 'I')} · ${key('sheet', 'K')} · ${key('journal', 'P')} · ${key('craft', 'Y')}`],
     ['Quick Slots', '0–9'],
+    ['Field Guide', key('fieldGuide', 'J')],
     ['Pause Menu', key('mainmenu', 'Backspace')],
   ]
   return `<div class="mm-sub" role="region" aria-label="Controls and Guide">

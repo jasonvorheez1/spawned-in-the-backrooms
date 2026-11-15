@@ -45,25 +45,23 @@ export function update(ctx) {
     else if (!st.wardrobeOpen && !ses.leftIntake && !st.cut) { ses.leftIntake = true; st.madeChar = true; st.cut = ctx.now(); ses.cut = null } // the intro plays first (scripts/lib/intro-cut.js)
     if (st.cut && lazy("intro", () => import("./lib/intro-cut.js"))?.cutTick?.(ctx, ses, st)) { music(ctx, false); ctx.cross(ctx.self, st.t0Done ? "main" : "tutorial0"); return } // the intro lands you in the tutorial Level 0 the first time, the real one after
   } else ses.inIntake = false
-  // Level 0 after the intro: the ceiling drop (scripts/lib/arrive-cut.js), then the tutorial (scripts/lib/tutorial.js)
+  // Level 0 after the intro: the ceiling drop, then the opening route.
   const story = !noStory(st) // Shelly Nov 14: a run with the main story off skips its cutscenes and trail
   const l0 = place === "main" || place === "tutorial0"
   if (l0 && st.arrivePending && !st.menuOpen) { st.arrivePending = false; st.arrive = ctx.now(); ses.arr = null; if (place === "tutorial0") { st.t0n = 0; st.t0cut = null } }
   if (st.arrive) {
     if (!l0) { st.arrive = null; ses.arr = null; ctx.view.camera = null; return }
-    const tut = lazy("tut", () => import("./lib/tutorial.js"))
-    if (lazy("arr", () => import("./lib/arrive-cut.js"))?.arriveTick?.(ctx, ses, st)) tut?.tutStart?.(ctx, st)
+    lazy("arr", () => import("./lib/arrive-cut.js"))?.arriveTick?.(ctx, ses, st)
     return
   }
   if (story && !st.menuOpen && place === "tutorial0" && !st.t0cut) lazy("dina", () => import("./lib/dina-quest.js"))?.dinaTick?.(ctx, ses, st, place)
-  // the tutorial Level 0's beats (scripts/lib/tut0-cut.js): a fresh visit there without the drop starts the route over
-  if (ses.t0Last !== ctx.self.place) { if (place === "tutorial0" && !st.arrive) { st.t0n = 0; st.t0cut = null; ses.t0 = null; ses.inT0 = true } ses.t0Last = ctx.self.place } // every walk into the tutorial starts at the first beat, whatever a past run left
   if (place === "tutorial0" && !st.menuOpen) {
-    if (!ses.inT0) { ses.inT0 = true; if (!st.arrive) { st.t0n = 0; st.t0cut = null } }
+    if (st.t0Done) { ctx.cross(ctx.self, "level1"); return ctx.sleep(0.75) }
+    st.t0n ??= 0
     const r = lazy("t0", () => import("./lib/tut0-cut.js"))?.t0Tick?.(ctx, ses, st)
-    if (r === "level1") { st.tut = null; ctx.cross(ctx.self, "level1"); return }
+    if (r === "level1") { ctx.cross(ctx.self, "level1"); return ctx.sleep(0.75) }
     if (r) return
-  } else ses.inT0 = false
+  }
   // Level 26: the first time aboard, the ship in the fog and Phoebe at the rail (scripts/lib/l26-cut.js)
   if (story && place === "level26" && !st.menuOpen && (st.l26cut || !st.l26seen)) { if (lazy("l26", () => import("./lib/l26-cut.js"))?.l26Tick?.(ctx, ses, st)) return ctx.sleep(0) }
   if (st.hubcut) st.hubcut = null
@@ -77,7 +75,11 @@ export function update(ctx) {
     }
     lazy("err", () => import("./lib/errands.js"))?.errandTick?.(ctx, ses, st, place) // odd jobs people hand out (scripts/lib/errands.js)
   }
-  if (st.tut) lazy("tut", () => import("./lib/tutorial.js"))?.tutTick?.(ctx, st)
+  let guidePending = false
+  if (!st.menuOpen && place !== "tutorial0" && place !== "intake" && place !== "bonus" && st.level != null && (st.t0Done || st.madeChar)) {
+    const guide = lazy("tut", () => import("./lib/tutorial.js"))
+    guidePending = guide ? !!guide.guideTick?.(ctx, st) : true
+  }
   const playing = music(ctx, place !== "bonus" && ((st.menuOpen && st.menuKind === "title") || (place === "intake" && !st.cut))) // the mall has its own track: the title theme never plays over it (shelly, Nov 12)
   // behind the title the camera slowly looks around the halls from head height; gone the moment it closes
   if (st.menuOpen && st.menuKind === "title") {
@@ -92,13 +94,17 @@ export function update(ctx) {
   if (ses.mmCam) { ses.mmCam = null; ctx.view.camera = null; ctx.self.hidden = (ctx.self.hidden || []).filter((i) => i !== ctx.self.id) }
   if (playing || place === "intake") return // the theme is still fading, or the room is waiting on the creator
   if (place === "tutorial0") return ctx.sleep(0.15) // the beats poll where they stand
-  if (st.tut) return ctx.sleep(0.25) // the tutorial's walking step polls
+  if (guidePending) return ctx.sleep(0.75)
   ctx.sleep()
 }
 
 export function onInput(ctx, input) {
   const st = ctx.self.state
-  if (st.tut) lazy("tut", () => import("./lib/tutorial.js"))?.tutInput?.(ctx, st, input)
+  if (input.pressed?.fieldGuide) {
+    const guide = lazy("tut", () => import("./lib/tutorial.js"))
+    if (guide) guide.guideInput?.(ctx, st, input)
+    else MOD_WAIT.tut?.then((m) => m.guideInput?.(ctx, st, input))
+  }
   if (st.dcut) { const ss = ctx.session; if (input.held?.jump) ss.dskip ??= ctx.now(); else ss.dskip = null } // hold jump 1.2 s skips the diary cutscene
   if (st.l26cut) { const ss = ctx.session; if (input.held?.jump) ss.l26skip ??= ctx.now(); else ss.l26skip = null }
   if (st.lrunCut?.phase === "intro") { const ss = ctx.session; if (input.held?.jump) ss.lrunskip ??= ctx.now(); else ss.lrunskip = null } // hold jump 1.2 s skips Level 26's cutscene

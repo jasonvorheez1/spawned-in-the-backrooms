@@ -6,9 +6,9 @@ export const PACE = 1.7 // every tutorial scene plays this many times slower tha
 export const WALLS = [
   // the drop room
   ["x", -5, -5, 5], ["x", 5, -5, 5], ["z", 5, -5, 5], ["z", -5, -5, -1.5], ["z", -5, 1.5, 5],
-  // corridor A north, with the almond water alcove on its west side
-  ["x", -1.5, -25, -18], ["x", -1.5, -14, -5], ["x", 1.5, -25, -5],
-  ["z", -18, -5, -1.5], ["z", -14, -5, -1.5], ["x", -5, -18, -14],
+  // corridor A north, with a supply loop on its west side
+  ["x", -1.5, -25, -22], ["x", -1.5, -19, -18], ["x", -1.5, -14, -5], ["x", 1.5, -25, -5],
+  ["z", -22, -5, -1.5], ["z", -14, -5, -1.5], ["x", -5, -22, -14], ["z", -18.5, -3, -1.5],
   // room B, the bend
   ["z", -25, -4, -1.5], ["z", -25, 1.5, 4], ["z", -31, -4, 4], ["x", -4, -31, -25], ["x", 4, -31, -29.5], ["x", 4, -26.5, -25],
   // hall C east: the long hall where the lights die
@@ -29,11 +29,8 @@ export const LIGHTS = [
   [44, -30], [44, -26], [44, -18], [44, -12], [41, -5], [49, -5], [41, 2], [49, 2],
 ]
 export const BOUNDS = { x0: -6, x1: 53, z0: -34, z1: 6 }
-export const SHIFT = { x: 40, z0: -29.5, z1: -26.5 } // the wall that rises across hall C
 export const ALMOND = { x: -4.2, y: 0.76, z: -16 }   // on the alcove desk
 export const DESK = { x: -4.2, z: -16 }
-export const UNIT = { x: -4.25, y: 0.76, z: -15.55 }  // the HALOGEN wrist unit beside the bottle
-export const SMILER = { x: 36.5, z: -28 }
 export const SOFT = { x: 45, z: -1.5, r: 1.6 }       // the wet patch that gives way
 // the first entity (johnadams2, Nov 8: "i get cornered, i improvise with a table leg nearby and knock it down and run"): room B
 export const ENC = { from: { x: 9, z: -28 }, corner: { x: -3.0, z: -30.0 }, desk: { x: -2.9, z: -29.6 }, leg: { x: -1.7, z: -30.4 } }
@@ -44,8 +41,8 @@ export const DRAWINGS = [[2, 42.78, -19.5, 90, 0.8], [1, 45.22, -16.2, -90, 0.8]
 // beats, in order: where each one starts (a box the player walks into)
 export const BEATS = [
   { id: "encounter", box: [-1.5, 1.5, -27.2, -25.2] },
-  { id: "smiler", box: [20, 24, -29.5, -26.5] }, // hall C: the lights die from the far end in, and something grins in the dark (Shelly, Nov 8)
-  { id: "halogen", box: [41.8, 48, -33, -23] },
-  { id: "drawings", box: [42.5, 45.5, -22, -20.4] },
+  { id: "smiler", box: [12, 40, -29.5, -26.5] },
+  { id: "halogen", interactive: true },
+  { id: "drawings", box: [42.5, 45.5, -23, -8] },
   { id: "final", circle: SOFT },
 ]

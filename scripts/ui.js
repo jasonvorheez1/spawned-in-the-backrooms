@@ -48,7 +48,7 @@ import { quickItems } from './lib/quick-items.js'
 import { tracked, MAX_TRACK, PLACE_NAMES } from './lib/quests.js'
 import { LEVEL_TITLES as LEVEL_NAMES } from './lib/places.js'
 import { mainMenu } from './main-menu-ui.js'
-import { tutUi } from './tutorial-ui.js'
+import { fieldGuideUi, tutUi } from './tutorial-ui.js'
 import { derived, carried as _kg } from './lib/stats.js'
 import { cndOf, band, bandColor, isBroken } from './lib/condition.js'
 // the .plymodel converter is read on the first upload press, not at boot
@@ -336,6 +336,7 @@ function questTracker(s, player, ctx) {
 // Browsing the journal changes the detail pane independently of the HUD markers.
 function journalUi(s, player, ctx) {
   if (!s.jrnOpen) return ''
+  if (s.jrnOpen === 'guide') return fieldGuideUi(s, player.place)
   const recent = (a, b) => (b.at ?? 0) - (a.at ?? 0)
   const errandLast = (a, b) => Number(a.kind === 'errand') - Number(b.kind === 'errand') // quests first, then errands (scripts/lib/quests.js errandStep)
   const open =Object.entries(s.quests ?? {}).map(([id, q]) => ({ ...q, id, status: 'Current' }))
@@ -386,7 +387,7 @@ function journalUi(s, player, ctx) {
   }
   const fbtn = (k, lbl, n) => `<button class="${qf === k ? 'on' : ''}" onclick="sendAction('qselect',{f:'${k}'})">${lbl} (${n})</button>`
   return `<div id="journal" data-modal tabindex="0" onkeydown="${escKeyHandler("sendAction('journal')")}"><section class="journal-panel" aria-labelledby="journal-title">
-    <header class="journal-header"><h1 id="journal-title">Quests</h1><span>${tr.length} of ${MAX_TRACK} tracked</span><button class="journal-close" onclick="sendAction('journal')">Close <kbd>P</kbd></button></header>
+    <header class="journal-header"><h1 id="journal-title">Quests</h1><span>${tr.length} of ${MAX_TRACK} tracked</span><button onclick="sendAction('fieldGuide',{k:'open'})">Field Guide <kbd>J</kbd></button><button class="journal-close" onclick="sendAction('journal')">Close <kbd>P</kbd></button></header>
     ${wristNav('journal')}
     <div class="journal-filters" role="tablist" aria-label="Quest status filter">${fbtn('all', 'All', allList.length)}${fbtn('active', 'Active', open.length)}${fbtn('completed', 'Completed', completed.length)}${fbtn('failed', 'Failed', failed.length)}</div>
     <div class="quest-layout">
@@ -488,7 +489,7 @@ function renderHud(ctx, player) {
 ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','journal'].includes(screen(s,player.place))}" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
   ${halogen ? questTracker(s, player, ctx) : ''}
   ${halogen && !s.building && screen(s,player.place)==='play' ? quickBar(s,quick) : ''}
-  ${s.nvgOn ? `<div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,oklch(0.75 0.2 145 / .10) 35%,oklch(0.08 0.05 145 / .92) 78%);mix-blend-mode:normal"></div><div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,oklch(0.6 0.2 145 / .08) 0 1px,transparent 1px 3px)"></div><div style="position:absolute;top:18px;left:50%;transform:translateX(-50%);color:#7cf08a;font-size:12px;letter-spacing:.3em;opacity:.8">NV · ${Math.round(s.battery)}%</div>` : ''}${xferCard(s, now)}${tutUi(s, now, player.place)}${s.t0fade && now - s.t0fade <= 3000 ? (lazy('cut', () => import('./cutscene-ui.js'))?.t0Fade?.(ctx, player) ?? '') : ''}${restUi(ctx, s)}${s.mj?.seats ? (lazy('mahjong', () => import('./mahjong-ui.js'))?.mahjongPanel?.(s, now) ?? '') : ''}
+  ${s.nvgOn ? `<div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,oklch(0.75 0.2 145 / .10) 35%,oklch(0.08 0.05 145 / .92) 78%);mix-blend-mode:normal"></div><div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,oklch(0.6 0.2 145 / .08) 0 1px,transparent 1px 3px)"></div><div style="position:absolute;top:18px;left:50%;transform:translateX(-50%);color:#7cf08a;font-size:12px;letter-spacing:.3em;opacity:.8">NV · ${Math.round(s.battery)}%</div>` : ''}${xferCard(s, now)}${tutUi(s, now, player)}${s.t0fade && now - s.t0fade <= 3000 ? (lazy('cut', () => import('./cutscene-ui.js'))?.t0Fade?.(ctx, player) ?? '') : ''}${restUi(ctx, s)}${s.mj?.seats ? (lazy('mahjong', () => import('./mahjong-ui.js'))?.mahjongPanel?.(s, now) ?? '') : ''}
   ${chatBubbles(ctx, now, player)}
   ${sniperScope(s, wp)}
   <!-- Center Point (hidden during ADS for true ironsights aiming) -->
