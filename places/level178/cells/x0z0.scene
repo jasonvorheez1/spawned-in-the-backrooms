@@ -752,14 +752,13 @@ l178-cab-6:
   rotation: {yaw: 180}
   tags: [l178]
 l178-cabinet-swords:
-  behavior: [scripts/l178-prop.js]
   feetPosition: {x: -2.3, y: 0.48, z: 16.6}
   id: l178-cabinet-swords
   model: /cdn/value.845b416129b105ea14cf7d9b98417e91747f0d93d053185f12dcc4875d09e1a3.glb
   physics: static
   rotation: {yaw: 0}
-  state: {c: {x: -2.3, y: 1.3, z: 16.6}, kind: cabinet, name: Sword cabinet, verb: Look}
-  tags: [l178, l178-prop, usable]
+  state: {c: {x: -2.3, y: 0.93, z: 16.34}, name: Sword cabinet supplies, items: "kit,tape", scavved: true}
+  tags: [container, l178, l178-prop]
 l178-ceil-e0:
   feetPosition: {x: 13.1, y: 2.95, z: -7.359999999999999}
   id: l178-ceil-e0
@@ -971,21 +970,20 @@ l178-ceil-w4:
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-closet-kimono:
-  behavior: [scripts/l178-prop.js]
   feetPosition: {x: 2.4, y: 0.48, z: 16.6}
   id: l178-closet-kimono
   model: /cdn/value.0114db78382671f63616c7a780d482d6978e4a695164d461eed3954f68306939.glb
   physics: static
   rotation: {yaw: 0}
-  state: {c: {x: 2.4, y: 1.2, z: 16.6}, kind: closet, name: Kimono closet, open: false, verb: Open}
-  tags: [l178, l178-prop, usable]
+  state: {c: {x: 2.4, y: 1.24, z: 16.46}, name: Guest clothes rack, items: "cloth:topw:pajamas:343f62,cloth:botw:pjpants:343f62", scavved: true}
+  tags: [container, l178, l178-prop]
 l178-cupboard-1:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb, pivot: {x: -0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb, pivot: {x: 0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -100, value: 0}}]
   feetPosition: {x: 12.2, y: 1.9, z: -1.38}
   id: l178-cupboard-1
   model: /cdn/value.5ba57997812cab4aa11f00478ecb52e0f2e266c47d4d3b8e52b9666f8778eb0c.glb
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: "l178_miso,l178_onigiri", name: Cupboard, propArt: l178-cupboard}
+  state: {containerOpen: false, interactiveV: 3, items: "l178_miso,l178_onigiri", name: Cupboard, propArt: l178-cupboard}
   tags: [container, l178, l178-prop]
 l178-cupboard-2:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb, pivot: {x: -0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb, pivot: {x: 0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -100, value: 0}}]
@@ -993,7 +991,7 @@ l178-cupboard-2:
   id: l178-cupboard-2
   model: /cdn/value.5ba57997812cab4aa11f00478ecb52e0f2e266c47d4d3b8e52b9666f8778eb0c.glb
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: "warm_tea,almond", name: Cupboard, propArt: l178-cupboard}
+  state: {containerOpen: false, interactiveV: 3, items: "warm_tea,almond", name: Cupboard, propArt: l178-cupboard}
   tags: [container, l178, l178-prop]
 l178-cupboard-3:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb, pivot: {x: -0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb, pivot: {x: 0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -100, value: 0}}]
@@ -1001,7 +999,7 @@ l178-cupboard-3:
   id: l178-cupboard-3
   model: /cdn/value.5ba57997812cab4aa11f00478ecb52e0f2e266c47d4d3b8e52b9666f8778eb0c.glb
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: l178_bento, name: Cupboard, propArt: l178-cupboard}
+  state: {containerOpen: false, interactiveV: 3, items: l178_bento, name: Cupboard, propArt: l178-cupboard}
   tags: [container, l178, l178-prop]
 l178-cupboard-4:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb, pivot: {x: -0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb, pivot: {x: 0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -100, value: 0}}]
@@ -1009,7 +1007,7 @@ l178-cupboard-4:
   id: l178-cupboard-4
   model: /cdn/value.5ba57997812cab4aa11f00478ecb52e0f2e266c47d4d3b8e52b9666f8778eb0c.glb
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: "almond,l178_onigiri", name: Cupboard, propArt: l178-cupboard}
+  state: {containerOpen: false, interactiveV: 3, items: "almond,l178_onigiri", name: Cupboard, propArt: l178-cupboard}
   tags: [container, l178, l178-prop]
 l178-dew:
   feetPosition: {x: 0, y: 0.08, z: 0}
@@ -1029,43 +1027,43 @@ l178-drawer-1:
   feetPosition: {x: 12.05, y: 0.45, z: -1.38}
   id: l178-drawer-1
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: "", name: Drawer, propArt: l178-drawer}
+  state: {c: {x: 11.72, y: 1.17, z: -1.38}, containerOpen: false, interactiveV: 3, cap: 12, items: "l178_towel,l178_towel", name: Kitchen linens, propArt: l178-drawer, scavved: true}
   tags: [container, l178, l178-prop]
 l178-drawer-2:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
   feetPosition: {x: 12.05, y: 0.45, z: 0.46}
   id: l178-drawer-2
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: "", name: Drawer, propArt: l178-drawer}
-  tags: [container, l178, l178-prop]
+  state: {c: {x: 11.72, y: 1.17, z: 0.46}, containerOpen: false, interactiveV: 3, cap: 12, items: "", name: Share drawer, propArt: l178-drawer, scavved: true}
+  tags: [container, storage, l178, l178-prop]
 l178-drawer-3:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
   feetPosition: {x: 12.05, y: 0.45, z: 4.6}
   id: l178-drawer-3
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: "", name: Drawer, propArt: l178-drawer}
+  state: {c: {x: 11.72, y: 1.17, z: 4.6}, containerOpen: false, interactiveV: 3, cap: 12, items: "bandage,bandage", name: First-aid drawer, propArt: l178-drawer, scavved: true}
   tags: [container, l178, l178-prop]
 l178-drawer-4:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
   feetPosition: {x: 12.05, y: 0.45, z: 5.5}
   id: l178-drawer-4
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: "", name: Drawer, propArt: l178-drawer}
+  state: {c: {x: 11.72, y: 1.17, z: 5.5}, containerOpen: false, interactiveV: 3, cap: 12, items: "tape,akit", name: Mending drawer, propArt: l178-drawer, scavved: true}
   tags: [container, l178, l178-prop]
 l178-drawer-5:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
   feetPosition: {x: 9.8, y: 0.45, z: 5.6}
   id: l178-drawer-5
   rotation: {yaw: 180}
-  state: {containerOpen: false, items: "", name: Drawer, propArt: l178-drawer}
+  state: {c: {x: 11.72, y: 1.17, z: 5.6}, containerOpen: false, interactiveV: 3, cap: 12, items: "battery,l178_miso", name: Travel supplies, propArt: l178-drawer, scavved: true}
   tags: [container, l178, l178-prop]
 l178-drawer-6:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
   feetPosition: {x: 10.72, y: 0.45, z: 5.6}
   id: l178-drawer-6
   rotation: {yaw: 180}
-  state: {containerOpen: false, items: "", name: Drawer, propArt: l178-drawer}
-  tags: [container, l178, l178-prop]
+  state: {c: {x: 11.72, y: 1.17, z: 5.6}, containerOpen: false, interactiveV: 3, cap: 12, items: "", name: Share drawer, propArt: l178-drawer, scavved: true}
+  tags: [container, storage, l178, l178-prop]
 l178-engawa-e0:
   feetPosition: {x: 8.1, y: 0, z: -6}
   id: l178-engawa-e0
@@ -1512,7 +1510,7 @@ l178-fridge:
   model: /cdn/value.285d274e7939c624eabbe16fa51d068cd66e29e8498ab315ecf27f75b117d0d4.glb
   physics: static
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: "l178_onigiri,l178_onigiri,l178_bento,almond,almond", name: Refrigerator, propArt: l178-fridge}
+  state: {containerOpen: false, interactiveV: 3, items: "l178_onigiri,l178_onigiri,l178_bento,almond,almond", name: Refrigerator, propArt: l178-fridge}
   tags: [container, l178, l178-prop]
 l178-from-hub:
   feetPosition: {x: 0, y: 0.5, z: 12.6}
@@ -1555,7 +1553,9 @@ l178-geta:
   id: l178-geta
   model: /cdn/value.2d76afb22d94326794a0d3147b16f9e77c46fb8d1c39f31636522e24b7fadf32.glb
   rotation: {yaw: 20}
-  tags: [l178]
+  tags: [l178, l178-prop, usable]
+  state: {c: {x: 0.9, y: 0.57, z: 16.5}, kind: slippers, name: Guest slippers, verb: Take, info: Equip from Apparel}
+  behavior: [scripts/l178-prop.js]
 l178-kitchen-light-0:
   feetPosition: {x: 10.8, y: 2.55, z: -4.5}
   id: l178-kitchen-light-0
@@ -2272,8 +2272,9 @@ l178-oven:
   model: /cdn/value.d48802c292b2b87cb743da09b8f9cc055230e1f64dbee2a91a86f63928930896.glb
   physics: static
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: "", name: Oven, propArt: l178-oven}
-  tags: [container, l178, l178-prop]
+  state: {c: {x: 11.72, y: 0.96, z: 1.38}, kind: oven, name: Oven, verb: Toast onigiri, info: Requires salmon onigiri, readyAt: 0}
+  tags: [l178, l178-prop, usable]
+  behavior: [scripts/l178-prop.js]
 l178-pantry:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb, pivot: {x: -0.42, y: 0, z: -0.28}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
   feetPosition: {x: 12.05, y: 0.45, z: -4.55}
@@ -2281,7 +2282,7 @@ l178-pantry:
   model: /cdn/value.40a800e450bc9d11302fb04f6ff546f72d2b1714ff3cf839c5073350b852f7b7.glb
   physics: static
   rotation: {yaw: 90}
-  state: {containerOpen: false, items: "l178_miso,warm_tea,almond", name: Pantry, propArt: l178-pantry}
+  state: {containerOpen: false, interactiveV: 3, items: "l178_miso,warm_tea,almond", name: Pantry, propArt: l178-pantry}
   tags: [container, l178, l178-prop]
 l178-porch-lantern-0:
   children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 7, intensity: 1.6, kind: point}}]
@@ -2665,7 +2666,9 @@ l178-spring:
   id: l178-spring
   material: {color: oklch(0.82 0.07 185), kind: water, opacity: 0.5, waveIntensity: 0.12}
   primitive: {depth: 3.6, height: 1.3, kind: box, width: 6}
-  tags: [swimwater, l178]
+  tags: [swimwater, l178, l178-prop, usable]
+  state: {c: {x: 0, y: 0.19, z: 1.22}, kind: spring, name: Hot spring, verb: Soak, info: Step into the shallows}
+  behavior: [scripts/l178-prop.js]
 l178-stair:
   feetPosition: {x: -8.6, y: 0.45, z: -10.2}
   id: l178-stair
@@ -2723,15 +2726,15 @@ l178-table-dining:
   model: /cdn/value.01fc9ac89d1291ebeb8a223fc510907975fff1addf3eb0e45e9d81305ad1ee96.glb
   physics: static
   rotation: {yaw: 0}
-  state: {c: {x: 13.1, y: 0.78, z: -12.6}, kind: table, name: Dining table, verb: Sit for a meal}
+  state: {c: {x: 13.1, y: 0.78, z: -12.6}, kind: table, name: Dining table, verb: Have a meal}
   tags: [l178, l178-prop, usable]
 l178-tap:
-  behavior: scripts/l178-prop.js
+  behavior: [scripts/l178-prop.js]
   feetPosition: {x: 12.05, y: 0.45, z: -0.46}
   id: l178-tap
   model: /cdn/value.26eac501187c10f5586c3089ceee2f94705efd0b14accf2976a9bb6342ff22e9.glb
   rotation: {yaw: 90}
-  state: {c: {x: 12.05, y: 1.05, z: -0.46}, kind: tap, name: Tap, "on": false, verb: Turn on}
+  state: {c: {x: 11.78, y: 1.14, z: -0.46}, kind: tap, name: Kitchen tap, "on": false, verb: Fill bottle, info: Drinking water}
   tags: [l178, l178-prop, usable]
 l178-tatami-0:
   feetPosition: {x: -1.82, y: 0.45, z: 11.1}
@@ -2821,7 +2824,7 @@ l178-towels:
   id: l178-towels
   model: /cdn/value.f99c56b2a91348700f4aa17e60fb69cce7dbcc3d5047bdfa4bc0a670eaa1f3a0.glb
   rotation: {yaw: -90}
-  state: {c: {x: -9.65, y: 1.35, z: -7.6}, kind: towels, name: Towel closet, verb: Take a towel}
+  state: {c: {x: -9.65, y: 1.35, z: -7.6}, kind: towels, name: Fresh towels, verb: Take one, info: Use from Aid to warm up}
   tags: [l178, l178-prop, usable]
 l178-ware-0:
   feetPosition: {x: 12, y: 1.34, z: -1.6}
@@ -2890,23 +2893,27 @@ l178-zabuton-0:
   feetPosition: {x: 12.7, y: 0.48, z: -13.35}
   id: l178-zabuton-0
   model: /cdn/value.15dc7415aa439093b0d220e0db76e800ec4c88afecdad901ad6f72286582b8e3.glb
-  rotation: {yaw: 0}
-  tags: [l178]
+  rotation: {yaw: 180}
+  tags: [l178, seat]
+  state: {c: {x: 12.7, y: 0.57, z: -13.35}, name: Floor cushion, seat: {y: 0, out: {x: 0, z: 0.55}}}
 l178-zabuton-1:
   feetPosition: {x: 13.5, y: 0.48, z: -13.35}
   id: l178-zabuton-1
   model: /cdn/value.15dc7415aa439093b0d220e0db76e800ec4c88afecdad901ad6f72286582b8e3.glb
-  rotation: {yaw: 0}
-  tags: [l178]
+  rotation: {yaw: 180}
+  tags: [l178, seat]
+  state: {c: {x: 13.5, y: 0.57, z: -13.35}, name: Floor cushion, seat: {y: 0, out: {x: 0, z: 0.55}}}
 l178-zabuton-2:
   feetPosition: {x: 12.7, y: 0.48, z: -11.85}
   id: l178-zabuton-2
   model: /cdn/value.15dc7415aa439093b0d220e0db76e800ec4c88afecdad901ad6f72286582b8e3.glb
   rotation: {yaw: 0}
-  tags: [l178]
+  tags: [l178, seat]
+  state: {c: {x: 12.7, y: 0.57, z: -11.85}, name: Floor cushion, seat: {y: 0, out: {x: 0, z: 0.55}}}
 l178-zabuton-3:
   feetPosition: {x: 13.5, y: 0.48, z: -11.85}
   id: l178-zabuton-3
   model: /cdn/value.15dc7415aa439093b0d220e0db76e800ec4c88afecdad901ad6f72286582b8e3.glb
   rotation: {yaw: 0}
-  tags: [l178]
+  tags: [l178, seat]
+  state: {c: {x: 13.5, y: 0.57, z: -11.85}, name: Floor cushion, seat: {y: 0, out: {x: 0, z: 0.55}}}

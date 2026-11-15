@@ -91,3 +91,6 @@ gelucharm70: { name: "Split-feed valve key", info: "Brass, two-headed, cold to t
 l178_onigiri: { name: "Salmon onigiri", info: "Rice pressed warm around salted salmon, wrapped in nori. Made this morning, like every morning", hunger: 24, thirst: -2, sanity: 8, hp: 8, color: "#f2efe4" }
 l178_miso: { name: "Miso soup", info: "Tofu, wakame, spring onion. Still warm in its lidded bowl · chill -10", hunger: 12, thirst: 18, sanity: 10, hp: 6, color: "#c89a5a", warm: 10 }
 l178_bento: { name: "Sector bento", info: "Rice, tamagoyaki, pickles and grilled mackerel in a lacquer box. Irawan's people pack one for anyone walking on", hunger: 38, thirst: -4, sanity: 12, hp: 14, color: "#8a3a2a" }
+l178_toasted_onigiri: { name: "Toasted salmon onigiri", info: "A crisp edge and a warm center. Reduces chill by 12.", hunger: 29, thirst: -2, sanity: 10, hp: 8, color: "#b6834e", warm: 12 }
+l178_water: { name: "Kyoto tap water", info: "A bottle filled at the kitchen sink. Restores 20 thirst.", thirst: 20, drink: true, color: "#b7d7df" }
+l178_towel: { name: "Fresh cotton towel", verb: "Use", info: "Wrap up after a soak. Soothes aches, restores 5 sanity and reduces chill by 15.", hp: 2, sanity: 5, warm: 15, aid: true, color: "#e6dfcd" }
