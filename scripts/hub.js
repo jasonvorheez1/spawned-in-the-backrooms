@@ -21,6 +21,7 @@ export function update(ctx) {
   const s = ctx.self.state, ses = ctx.session, inHub = ctx.self.place === HUB_PLACE
   if (ses.ride) return rideStep(ctx, s, ses)
   if (s.trainHid) { s.trainHid = null; ctx.self.visible = true; ctx.view.camera = null } // off the train: you're seen again
+  { const v = ctx.view.camera; if (v && v.eye && (v.eye.y === 7.4 || v.eye.y === 7.8) && !inHub) { ctx.view.camera = null; ctx.self.visible = true } } // the train's platform camera never follows you out of the mall
   // a death outside the mall: once you're back on your feet, the mall is offered for a few seconds
   const down = !!(s.respawnAt || s.downAt)
   if (ses.hubDown && !down && s.t0Done && !inHub) s.hubOffer = { at: ctx.now() }
@@ -142,6 +143,7 @@ function rideStep(ctx, s, ses) {
     const tr = ses.rideTrain; if (tr && ctx.getObject(tr)) ctx.destroy(tr)
     me.hidden = (me.hidden ?? []).filter((h) => h !== TRAIN.id)
     ses.ride = null; ses.rideTrain = null; s.stungUntil = 0
+    ctx.view.camera = null; me.visible = true; s.trainHid = null // hand the eye back before the trip, not after
     ricoCall(ctx, false)
     if (r.keep) s.wakeAtSave = true
     toSolo(ctx, r.to, me, r.keep)
