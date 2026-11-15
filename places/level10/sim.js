@@ -66,7 +66,7 @@ const ROOMS = [ // [id, piece, x, y, z, yaw, container name, loot]; yaw 0 faces 
   ["fh-chair", "armchair", -26.4, 1.11, -36.4, 120],
   ["fh-tv", "tv", -27.4, 1.11, -41.4, 180],
   ["fh-lamp", "lamp", -29.8, 1.11, -34.5, 0],
-  ["fh-books", "books", -27.8, 1.11, -34.35, 0, "Farmhouse bookshelf", "page:l10_diary_2,tape,battery,compass"],
+  ["fh-books", "books", -27.8, 1.11, -34.35, 0, "Farmhouse bookshelf", "ubook:l10_harvest_unarmed,tape,battery,compass"],
   ["fh-bed", "bed", -24.6, 1.11, -35.1, 0],
   ["fh-dresser", "dresser", -22.4, 1.11, -34.35, 0, "Maeve's dresser", "cloth:topw:jacket:6b5a3c,bandage,bobbypin,cash:60"],
   ["fh-range", "range", -21.1, 1.11, -34.55, 0],
@@ -88,7 +88,7 @@ const ROOMS = [ // [id, piece, x, y, z, yaw, container name, loot]; yaw 0 faces 
   ["st-table", "ptable", -57.6, 1.79, -107.6, 0],
   ["st-chair", "chair", -57.6, 1.79, -106.7, 180],
   ["st-wing", "wing", -60.6, 1.79, -109.8, 45],
-  ["st-cab", "cabinet", -54.95, 1.79, -109.6, 90, "Family cupboard", "ration,almond,page:l10_diary_3,bobbypin"],
+  ["st-cab", "cabinet", -54.95, 1.79, -109.6, 90, "Family cupboard", "ration,almond,bandage,bobbypin"],
   ["st-lantern", "lantern", -57.6, 2.55, -107.6, 0],
   // sheds: a nail crate in A, and what the Stealer hoards in B
   ["sha-crate", "colacrate", 37.3, null, -149.2, 20, "Seed crate", "wheat_sheaf,scrap_wood,cash:25"],
