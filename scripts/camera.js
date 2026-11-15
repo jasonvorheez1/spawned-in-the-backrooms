@@ -49,7 +49,11 @@ export function update(ctx, dt) {
   // The arm and weapon you hold are moved here, once per display frame, so they never step with the game tick.
   poseViewmodel(ctx, dt)
 
-  const target = ctx.self.target
+  let target = ctx.self.target
+  { const me = ctx.player, f = target?.feetPosition, m = me?.feetPosition // a target lost in the void (a ride or body left behind, its position runaway) gives the eye back to the player
+    if (me && m && target && target.id !== me.id && (!f || ![f.x, f.y, f.z].every(Number.isFinite) || Math.abs(f.x - m.x) + Math.abs(f.y - m.y) + Math.abs(f.z - m.z) > 500)) {
+      if (!ctx.self.session.lostTarget) { ctx.self.session.lostTarget = true; ctx.log('[camera] lost target dropped', target.id) }
+      try { ctx.self.target = me.id } catch {} ; target = me } }
   if (!target) return
 
   // While you drive, the target is the ride (a kart, a horse, a ship). Seated on it, the eye is your
